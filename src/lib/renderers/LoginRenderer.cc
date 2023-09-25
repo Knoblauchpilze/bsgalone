@@ -9,9 +9,9 @@ LoginRenderer::LoginRenderer(int width, int height)
   create(width, height);
 }
 
-void LoginRenderer::render(olc::PixelGameEngine *pge, const RenderState & /*state*/) const
+void LoginRenderer::render(SpriteRenderer &engine, const RenderState & /*state*/) const
 {
-  m_menu->render(pge);
+  m_menu->render(engine.getRenderer());
 }
 
 auto LoginRenderer::processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions)

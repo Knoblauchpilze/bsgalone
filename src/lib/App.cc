@@ -64,32 +64,17 @@ void App::onInputs(const controls::State &c, const CoordinateFrame &cf)
   }
 }
 
-void App::loadData()
-{
-  // Create the game and its state.
-  m_game = std::make_shared<Game>();
-}
-
 void App::loadResources()
 {
+  m_spriteRenderer = std::make_unique<SpriteRenderer>(this);
+  m_game           = std::make_shared<Game>();
   setLayerTint(Layer::Draw, olc::Pixel(255, 255, 255, alpha::SemiOpaque));
-}
-
-void App::loadMenuResources()
-{
   m_renderers = m_game->generateRenderers(ScreenWidth(), ScreenHeight());
 }
 
 void App::cleanResources()
 {
-  if (m_packs != nullptr)
-  {
-    m_packs.reset();
-  }
-}
-
-void App::cleanMenuResources()
-{
+  m_spriteRenderer.reset();
   m_renderers.clear();
 }
 
@@ -106,7 +91,7 @@ void App::drawDecal(const RenderState &res)
     return;
   }
 
-  renderer->second->render(this, res);
+  renderer->second->render(*m_spriteRenderer, res);
 
   SetPixelMode(olc::Pixel::NORMAL);
 }
@@ -124,7 +109,7 @@ void App::draw(const RenderState &res)
     return;
   }
 
-  renderer->second->render(this, res);
+  renderer->second->render(*m_spriteRenderer, res);
 
   SetPixelMode(olc::Pixel::NORMAL);
 }
@@ -142,7 +127,7 @@ void App::drawUI(const RenderState &res)
     return;
   }
 
-  renderer->second->render(this, res);
+  renderer->second->render(*m_spriteRenderer, res);
 
   SetPixelMode(olc::Pixel::NORMAL);
 }
@@ -152,13 +137,6 @@ void App::drawDebug(const RenderState &res)
   // Clear rendering target.
   SetPixelMode(olc::Pixel::ALPHA);
   Clear(olc::Pixel(255, 255, 255, alpha::Transparent));
-
-  // In case we're not in game mode, just render the state.
-  if (m_game->getScreen() != Screen::GAME)
-  {
-    SetPixelMode(olc::Pixel::NORMAL);
-    return;
-  }
 
   // Draw cursor's position.
   olc::vi2d mp = GetMousePos();
@@ -188,50 +166,7 @@ void App::renderCursor(const RenderState &res)
   s.x           = mouseTilePosition.x;
   s.y           = mouseTilePosition.y;
   s.sprite.tint = CURSOR_COLOR;
-  drawWarpedRect(s, res.cf);
-}
-
-inline void App::drawSprite(const SpriteDesc &t, const CoordinateFrame &cf)
-{
-  olc::vf2d p = cf.tilesToPixels(t.x, t.y);
-
-  m_packs->draw(this, t.sprite, p, t.radius * cf.tileSize());
-}
-
-inline void App::drawWarpedSprite(const SpriteDesc &t, const CoordinateFrame &cf)
-{
-  auto p0 = cf.tilesToPixels(t.x, t.y + t.radius);
-  auto p1 = cf.tilesToPixels(t.x, t.y);
-  auto p2 = cf.tilesToPixels(t.x + t.radius, t.y);
-  auto p3 = cf.tilesToPixels(t.x + t.radius, t.y + t.radius);
-
-  auto p = std::array<olc::vf2d, 4>{p0, p1, p2, p3};
-  m_packs->draw(this, t.sprite, p);
-}
-
-inline void App::drawRect(const SpriteDesc &t, const CoordinateFrame &cf)
-{
-  olc::vf2d p = cf.tilesToPixels(t.x, t.y);
-  FillRectDecal(p, t.radius * cf.tileSize(), t.sprite.tint);
-}
-
-inline void App::drawWarpedRect(const SpriteDesc &t, const CoordinateFrame &cf)
-{
-  auto p0 = cf.tilesToPixels(t.x, t.y + t.radius);
-  auto p1 = cf.tilesToPixels(t.x, t.y);
-  auto p2 = cf.tilesToPixels(t.x + t.radius, t.y);
-  auto p3 = cf.tilesToPixels(t.x + t.radius, t.y + t.radius);
-
-  // See: FillRectDecal(const olc::vf2d& pos, const olc::vf2d& size, const olc::Pixel col)
-  // in the pixel game engine file.
-  auto p = std::array<olc::vf2d, 4>{p0, p1, p2, p3};
-  std::array<olc::vf2d, 4> uvs;
-  uvs.fill({0, 0});
-
-  std::array<olc::Pixel, 4> colors;
-  colors.fill(t.sprite.tint);
-
-  DrawExplicitDecal(nullptr, p.data(), uvs.data(), colors.data());
+  m_spriteRenderer->drawWarpedRect(s, res.cf);
 }
 
 } // namespace pge

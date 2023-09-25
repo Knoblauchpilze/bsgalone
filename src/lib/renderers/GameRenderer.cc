@@ -8,7 +8,7 @@ GameRenderer::GameRenderer(int width, int height)
   create(width, height);
 }
 
-void GameRenderer::render(olc::PixelGameEngine * /*pge*/, const RenderState & /*state*/) const {}
+void GameRenderer::render(SpriteRenderer & /*engine*/, const RenderState & /*state*/) const {}
 
 auto GameRenderer::processUserInput(const controls::State & /*c*/,
                                     std::vector<ActionShPtr> & /*actions*/) -> menu::InputHandle

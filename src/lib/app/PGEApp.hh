@@ -21,7 +21,7 @@ class PGEApp : public utils::CoreObject, public olc::PixelGameEngine
   /// by the app and set up base properties.
   PGEApp(const AppDesc &desc);
 
-  ~PGEApp() = default;
+  virtual ~PGEApp() = default;
 
   /// @brief - Implementation of the interface method called during the creation of
   /// the application.
@@ -75,29 +75,15 @@ class PGEApp : public utils::CoreObject, public olc::PixelGameEngine
   /// displayed on top of some content if an option is toggled.
   virtual void clearLayer();
 
-  /// @brief - Interface method allowing to load the data needed for the data
-  /// displayed by this app. Called before any call to `draw` is issued.
-  virtual void loadData() = 0;
-
   /// @brief - Interface method allowing inheriting classes to get a chance to
   /// load resources needed for display. This method is guaranteed to be called
   /// before the first call to `draw` is issued.
   virtual void loadResources() = 0;
 
-  /// @brief - Interface method allowing to load and initialize menu resources
-  /// to use for the UI of this app. This method will be called before any call
-  /// to the `drawUI` method is issued.
-  virtual void loadMenuResources() = 0;
-
   /// @brief - Interface method allowing inheriting classes to be notified when
   /// the app is going to be destroyed so that resources can be cleaned.
   /// The default implementation does nothing.
   virtual void cleanResources() = 0;
-
-  /// @brief - Interface method allowing inheriting classes to be notified when
-  /// the app is going to be destroyed so that menu resources can be cleaned.
-  /// The default implementation does nothing.
-  virtual void cleanMenuResources() = 0;
 
   /// @brief - Interface method to display the main content of the app. This
   /// method only handles the decal objects and is called first during the
@@ -164,7 +150,7 @@ class PGEApp : public utils::CoreObject, public olc::PixelGameEngine
   /// user might have used in the game.
   // @return - a state describing the changes processed in this method. It includes
   /// any exit request of the user and changes to the UI.
-  InputChanges handleInputs();
+  auto handleInputs() -> InputChanges;
 
   private:
   /// @brief - The index representing the main layer for this app. Given how the
@@ -223,5 +209,3 @@ class PGEApp : public utils::CoreObject, public olc::PixelGameEngine
 };
 
 } // namespace pge
-
-#include "PGEApp.hxx"
