@@ -111,7 +111,7 @@ void App::loadResources()
 void App::loadMenuResources()
 {
   // Generate the game state.
-  m_state = std::make_shared<GameState>(olc::vi2d(ScreenWidth(), ScreenHeight()), Screen::Home);
+  m_state = std::make_shared<GameState>(olc::vi2d(ScreenWidth(), ScreenHeight()), Screen::LOGIN);
 
   m_menus = m_game->generateMenus(ScreenWidth(), ScreenHeight());
 }
@@ -136,7 +136,7 @@ void App::drawDecal(const RenderDesc &res)
   Clear(olc::VERY_DARK_GREY);
 
   // In case we're not in the game screen, do nothing.
-  if (m_state->getScreen() != Screen::Game)
+  if (m_state->getScreen() != Screen::GAME)
   {
     SetPixelMode(olc::Pixel::NORMAL);
     return;
@@ -158,7 +158,7 @@ void App::draw(const RenderDesc & /*res*/)
   Clear(olc::Pixel(255, 255, 255, alpha::Transparent));
 
   // In case we're not in game mode, just render the state.
-  if (m_state->getScreen() != Screen::Game)
+  if (m_state->getScreen() != Screen::GAME)
   {
     m_state->render(this);
     SetPixelMode(olc::Pixel::NORMAL);
@@ -175,7 +175,7 @@ void App::drawUI(const RenderDesc & /*res*/)
   Clear(olc::Pixel(255, 255, 255, alpha::Transparent));
 
   // In case we're not in game mode, just render the state.
-  if (m_state->getScreen() != Screen::Game)
+  if (m_state->getScreen() != Screen::GAME)
   {
     m_state->render(this);
     SetPixelMode(olc::Pixel::NORMAL);
@@ -198,7 +198,7 @@ void App::drawDebug(const RenderDesc &res)
   Clear(olc::Pixel(255, 255, 255, alpha::Transparent));
 
   // In case we're not in game mode, just render the state.
-  if (m_state->getScreen() != Screen::Game)
+  if (m_state->getScreen() != Screen::GAME)
   {
     m_state->render(this);
     SetPixelMode(olc::Pixel::NORMAL);
