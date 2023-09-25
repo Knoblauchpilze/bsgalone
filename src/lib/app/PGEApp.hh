@@ -5,6 +5,7 @@
 #include "Controls.hh"
 #include "CoordinateFrame.hh"
 #include "FramerateControl.hh"
+#include "RenderState.hh"
 #include "olcEngine.hh"
 #include <core_utils/CoreObject.hh>
 #include <maths_utils/Point2.hh>
@@ -45,30 +46,6 @@ class PGEApp : public utils::CoreObject, public olc::PixelGameEngine
     DrawDecal,
     UI,
     Debug
-  };
-
-  /// @brief - Convenience structure defining the resources
-  /// that can be displayed in any app. It contains pointers
-  /// to the world's data, to the frames allowing to change
-  /// from screen coordinates to world coordinates and the UI.
-  struct RenderDesc
-  {
-    // The coordinate frame to convert tiles to pixels.
-    CoordinateFrame &cf;
-
-    /// @brief - Convenience method allowing to determine if an item is visible
-    /// in the current viewport.
-    /// @param p - the position to check in tiles.
-    /// @param r - the radius of the item.
-    /// @return - `true` if the object is at least partially visible.
-    bool visible(const utils::Point2i &p, float r = 1.0f) const noexcept;
-
-    /// @brief - Similar method to the above but for floating point position and
-    /// a size instead of a radius which allows for non square objects.
-    /// @param p - the position to check in tiles.
-    /// @param sz - the size of the object.
-    /// @return - `true` if the object is at least partially visible.
-    bool visible(const olc::vf2d &p, const olc::vf2d sz = olc::vf2d(1.0f, 1.0f)) const noexcept;
   };
 
   /// @brief - Whether or not the rendering represents the first frame drawn ever.
@@ -127,24 +104,24 @@ class PGEApp : public utils::CoreObject, public olc::PixelGameEngine
   /// rendering step. It means that the content will be overriden by all UI
   /// and debug info.
   /// @param res - the resources to help the drawing.
-  virtual void drawDecal(const RenderDesc &res) = 0;
+  virtual void drawDecal(const RenderState &res) = 0;
 
   /// @brief - Interface method to display the main content of the app. This
   /// method is called to draw the non-decal instances of the content and is
   /// triggered right after the `drawDecal` one. It will still get overriden
   /// by UI and debug.
   /// @param res - the resources that can be drawn.
-  virtual void draw(const RenderDesc &res) = 0;
+  virtual void draw(const RenderState &res) = 0;
 
   /// @brief - Interface method allowing to draw the UI of the application.
   /// This regroups menu and all needed elements that are not game elements.
   /// @param res - the resources that can be drawn.
-  virtual void drawUI(const RenderDesc &res) = 0;
+  virtual void drawUI(const RenderState &res) = 0;
 
   /// @brief - Interface method allowing inheriting classes to perform their
   /// own drawing calls to show debug info.
   /// @param res - the resources that can be drawn.
-  virtual void drawDebug(const RenderDesc &res) = 0;
+  virtual void drawDebug(const RenderState &res) = 0;
 
   /// @brief - Interface method called at each frame to give inheriting classes
   /// an occasion to process the app logic.

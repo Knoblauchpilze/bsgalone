@@ -4,6 +4,7 @@
 #include "Action.hh"
 #include "BackgroundDesc.hh"
 #include "Controls.hh"
+#include "InputHandle.hh"
 #include "MenuContentDesc.hh"
 #include "olcEngine.hh"
 #include <core_utils/CoreObject.hh>
@@ -18,22 +19,12 @@ class Menu;
 using MenuShPtr = std::shared_ptr<Menu>;
 
 namespace menu {
-
 //// @brief - Define a direction for a menu, or in general a layout for
 /// children items.
 enum class Layout
 {
   Horizontal,
   Vertical
-};
-
-/// @brief - Convenience struct defining what can happen while processing
-/// inputs. It is mostly used internally to detect update of children but
-/// can also be interpreted by external callers if needed.
-struct InputHandle
-{
-  bool relevant;
-  bool selected;
 };
 
 /// @brief - Defines a common function called whenever the menu is clicked

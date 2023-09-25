@@ -1,10 +1,14 @@
 
 #pragma once
 
+#include "Action.hh"
+#include "Controls.hh"
+#include "IRenderer.hh"
+#include "Screen.hh"
 #include <core_utils/CoreObject.hh>
 #include <core_utils/TimeUtils.hh>
 #include <memory>
-#include <vector>
+#include <unordered_map>
 
 namespace pge {
 
@@ -13,22 +17,26 @@ namespace pge {
 class Menu;
 using MenuShPtr = std::shared_ptr<Menu>;
 
+class IRenderer;
+using IRendererPtr = std::unique_ptr<IRenderer>;
+
 class Game : public utils::CoreObject
 {
   public:
   /// @brief - Create a new game with default parameters.
   Game();
 
-  ~Game();
+  ~Game() = default;
 
-  /// @brief - Used to perform the creation of the menus allowing to control the
-  /// world wrapped by this game.
-  /// @param width - the width of the window in pixels into which this menu will
-  /// be inserted.
-  /// @param height - the height of the window in pixels into which this menu will
-  /// be inserted.
-  /// @return - the list of menus representing this game.
-  virtual std::vector<MenuShPtr> generateMenus(float width, float height);
+  /// @brief - Retrieves the currently selected screen.
+  /// @return - the currently selected screen.
+  auto getScreen() const noexcept -> Screen;
+
+  /// @brief - Define a new active screen for this game.
+  /// @param screen - the new screen to apply.
+  void setScreen(const Screen &screen);
+
+  auto generateRenderers(int width, int height) const -> std::unordered_map<Screen, IRendererPtr>;
 
   /// @brief - Used to perform an action at the specified location. What needs to
   /// be done exactly is left to the user. This implementation does nothing by
@@ -106,6 +114,10 @@ class Game : public utils::CoreObject
   /// or not.
   struct State
   {
+    /// @brief - Defines the current screen selected in this game. Updated whenever
+    /// the user takes action to change it.
+    Screen screen;
+
     // Defines whether this world is paused (i.e.
     // internal attributes of the mobs/blocks/etc
     // have already been updated to reflect the
@@ -124,17 +136,8 @@ class Game : public utils::CoreObject
     bool terminated{false};
   };
 
-  /// @brief - Convenience structure allowing to regroup all info about the menu
-  /// in a single struct.
-  struct Menus
-  {};
-
   /// @brief - The definition of the game state.
   State m_state{};
-
-  /// @brief - The menus displaying information about the current state of the
-  /// simulation.
-  Menus m_menus{};
 };
 
 using GameShPtr = std::shared_ptr<Game>;

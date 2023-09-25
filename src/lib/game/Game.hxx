@@ -5,6 +5,16 @@
 
 namespace pge {
 
+inline auto Game::getScreen() const noexcept -> Screen
+{
+  return m_state.screen;
+}
+
+inline void Game::setScreen(const Screen &screen)
+{
+  m_state.screen = screen;
+}
+
 inline void Game::terminate() noexcept
 {
   info("Game has been terminated");

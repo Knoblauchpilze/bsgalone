@@ -25,6 +25,10 @@ add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/ui
 	)
 
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/renderers
+	)
+
 target_sources (bsgalone_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/App.cc
 	)
@@ -41,5 +45,7 @@ target_include_directories (bsgalone_lib PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
 	${CMAKE_CURRENT_SOURCE_DIR}/app
 	${CMAKE_CURRENT_SOURCE_DIR}/coordinates
+	${CMAKE_CURRENT_SOURCE_DIR}/game
+	${CMAKE_CURRENT_SOURCE_DIR}/renderers
 	${CMAKE_CURRENT_SOURCE_DIR}/ui
 	)
