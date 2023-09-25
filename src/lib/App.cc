@@ -1,5 +1,6 @@
 
 #include "App.hh"
+#include "Screen.hh"
 
 namespace pge {
 
@@ -33,20 +34,13 @@ void App::onInputs(const controls::State &c, const CoordinateFrame &cf)
     return;
   }
 
-  // Handle menus update and process the
-  // corresponding actions.
   std::vector<ActionShPtr> actions;
   bool relevant = false;
 
-  for (unsigned id = 0u; id < m_menus.size(); ++id)
+  const auto it = m_renderers.find(m_game->getScreen());
+  if (it != m_renderers.end())
   {
-    menu::InputHandle ih = m_menus[id]->processUserInput(c, actions);
-    relevant             = (relevant || ih.relevant);
-  }
-
-  if (m_state != nullptr)
-  {
-    menu::InputHandle ih = m_state->processUserInput(c, actions);
+    menu::InputHandle ih = it->second->processUserInput(c, actions);
     relevant             = (relevant || ih.relevant);
   }
 
@@ -83,8 +77,7 @@ void App::loadResources()
 
 void App::loadMenuResources()
 {
-  m_state = std::make_shared<GameState>(olc::vi2d(ScreenWidth(), ScreenHeight()), Screen::LOGIN);
-  m_menus = m_game->generateMenus(ScreenWidth(), ScreenHeight());
+  m_renderers = m_game->generateRenderers(ScreenWidth(), ScreenHeight());
 }
 
 void App::cleanResources()
@@ -97,80 +90,72 @@ void App::cleanResources()
 
 void App::cleanMenuResources()
 {
-  m_menus.clear();
+  m_renderers.clear();
 }
 
-void App::drawDecal(const RenderDesc &res)
+void App::drawDecal(const RenderState &res)
 {
   // Clear rendering target.
   SetPixelMode(olc::Pixel::ALPHA);
   Clear(olc::VERY_DARK_GREY);
 
-  // In case we're not in the game screen, do nothing.
-  if (m_state->getScreen() != Screen::GAME)
+  const auto renderer = m_renderers.find(m_game->getScreen());
+  if (renderer == m_renderers.end())
   {
     SetPixelMode(olc::Pixel::NORMAL);
     return;
   }
 
-  if (hasCursor())
-  {
-    renderCursor(res);
-  }
+  renderer->second->render(this, res);
 
   SetPixelMode(olc::Pixel::NORMAL);
 }
 
-void App::draw(const RenderDesc & /*res*/)
+void App::draw(const RenderState &res)
+{
+  // Clear rendering target.
+  SetPixelMode(olc::Pixel::ALPHA);
+  Clear(olc::Pixel(255, 255, 255, alpha::Transparent));
+
+  const auto renderer = m_renderers.find(m_game->getScreen());
+  if (renderer == m_renderers.end())
+  {
+    SetPixelMode(olc::Pixel::NORMAL);
+    return;
+  }
+
+  renderer->second->render(this, res);
+
+  SetPixelMode(olc::Pixel::NORMAL);
+}
+
+void App::drawUI(const RenderState &res)
+{
+  // Clear rendering target.
+  SetPixelMode(olc::Pixel::ALPHA);
+  Clear(olc::Pixel(255, 255, 255, alpha::Transparent));
+
+  const auto renderer = m_renderers.find(m_game->getScreen());
+  if (renderer == m_renderers.end())
+  {
+    SetPixelMode(olc::Pixel::NORMAL);
+    return;
+  }
+
+  renderer->second->render(this, res);
+
+  SetPixelMode(olc::Pixel::NORMAL);
+}
+
+void App::drawDebug(const RenderState &res)
 {
   // Clear rendering target.
   SetPixelMode(olc::Pixel::ALPHA);
   Clear(olc::Pixel(255, 255, 255, alpha::Transparent));
 
   // In case we're not in game mode, just render the state.
-  if (m_state->getScreen() != Screen::GAME)
+  if (m_game->getScreen() != Screen::GAME)
   {
-    m_state->render(this);
-    SetPixelMode(olc::Pixel::NORMAL);
-    return;
-  }
-
-  SetPixelMode(olc::Pixel::NORMAL);
-}
-
-void App::drawUI(const RenderDesc & /*res*/)
-{
-  // Clear rendering target.
-  SetPixelMode(olc::Pixel::ALPHA);
-  Clear(olc::Pixel(255, 255, 255, alpha::Transparent));
-
-  // In case we're not in game mode, just render the state.
-  if (m_state->getScreen() != Screen::GAME)
-  {
-    m_state->render(this);
-    SetPixelMode(olc::Pixel::NORMAL);
-    return;
-  }
-
-  // Render the game menus.
-  for (unsigned id = 0u; id < m_menus.size(); ++id)
-  {
-    m_menus[id]->render(this);
-  }
-
-  SetPixelMode(olc::Pixel::NORMAL);
-}
-
-void App::drawDebug(const RenderDesc &res)
-{
-  // Clear rendering target.
-  SetPixelMode(olc::Pixel::ALPHA);
-  Clear(olc::Pixel(255, 255, 255, alpha::Transparent));
-
-  // In case we're not in game mode, just render the state.
-  if (m_state->getScreen() != Screen::GAME)
-  {
-    m_state->render(this);
     SetPixelMode(olc::Pixel::NORMAL);
     return;
   }
@@ -186,10 +171,14 @@ void App::drawDebug(const RenderDesc &res)
   DrawString(olc::vi2d(0, h / 2 + 1 * dOffset), "World cell coords : " + mtp.str(), olc::CYAN);
   DrawString(olc::vi2d(0, h / 2 + 2 * dOffset), "Intra cell        : " + it.str(), olc::CYAN);
 
+  DrawString(olc::vi2d(0, h / 2 + 3 * dOffset),
+             "Screen            : " + str(m_game->getScreen()),
+             olc::DARK_GREEN);
+
   SetPixelMode(olc::Pixel::NORMAL);
 }
 
-void App::renderCursor(const RenderDesc &res)
+void App::renderCursor(const RenderState &res)
 {
   olc::vf2d it;
   const auto mouseTilePosition = res.cf.pixelsToTilesAndIntra(GetMousePos(), &it);

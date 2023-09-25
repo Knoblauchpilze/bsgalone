@@ -1,7 +1,11 @@
 
 #include "Game.hh"
+#include "GameOverRenderer.hh"
+#include "GameRenderer.hh"
+#include "LoginRenderer.hh"
+#include "MapRenderer.hh"
 #include "Menu.hh"
-#include <cxxabi.h>
+#include "OutpostRenderer.hh"
 
 namespace pge {
 
@@ -11,12 +15,18 @@ Game::Game()
   setService("game");
 }
 
-Game::~Game() {}
-
-std::vector<MenuShPtr> Game::generateMenus(float /*width*/, float /*height*/)
+auto Game::generateRenderers(int width, int height) const
+  -> std::unordered_map<Screen, IRendererPtr>
 {
-  info("Generate UI menus here");
-  return std::vector<MenuShPtr>();
+  std::unordered_map<Screen, IRendererPtr> out;
+
+  out[Screen::LOGIN]    = std::make_unique<LoginRenderer>(width, height);
+  out[Screen::GAME]     = std::make_unique<GameRenderer>(width, height);
+  out[Screen::MAP]      = std::make_unique<MapRenderer>(width, height);
+  out[Screen::OUTPOST]  = std::make_unique<OutpostRenderer>(width, height);
+  out[Screen::GAMEOVER] = std::make_unique<GameOverRenderer>(width, height);
+
+  return out;
 }
 
 void Game::performAction(float /*x*/, float /*y*/)

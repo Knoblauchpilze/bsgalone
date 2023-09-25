@@ -78,8 +78,8 @@ bool PGEApp::OnUserUpdate(float fElapsedTime)
   // once the process is done.
   olc::Sprite *base = GetDrawTarget();
 
-  RenderDesc res{
-    *m_frame, // Coordinate frame
+  RenderState res{
+    .cf = *m_frame, // Coordinate frame
   };
 
   // Note that we usually need to clear

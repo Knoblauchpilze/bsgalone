@@ -2,7 +2,7 @@
 #pragma once
 
 #include "Game.hh"
-#include "GameState.hh"
+#include "IRenderer.hh"
 #include "Menu.hh"
 #include "PGEApp.hh"
 #include "TexturePack.hh"
@@ -34,15 +34,15 @@ class App : public PGEApp
 
   void cleanMenuResources() override;
 
-  void drawDecal(const RenderDesc &res) override;
+  void drawDecal(const RenderState &res) override;
 
-  void draw(const RenderDesc &res) override;
+  void draw(const RenderState &res) override;
 
-  void drawUI(const RenderDesc &res) override;
+  void drawUI(const RenderState &res) override;
 
-  void drawDebug(const RenderDesc &res) override;
+  void drawDebug(const RenderState &res) override;
 
-  void renderCursor(const RenderDesc &res);
+  void renderCursor(const RenderState &res);
 
   private:
   /// @brief - Convenience structure regrouping needed props to
@@ -97,9 +97,9 @@ class App : public PGEApp
 
   private:
   GameShPtr m_game{nullptr};
-  GameStateShPtr m_state{nullptr};
-  std::vector<MenuShPtr> m_menus{};
   sprites::TexturePackShPtr m_packs{std::make_shared<sprites::TexturePack>()};
+
+  std::unordered_map<Screen, IRendererPtr> m_renderers{};
 };
 
 } // namespace pge
