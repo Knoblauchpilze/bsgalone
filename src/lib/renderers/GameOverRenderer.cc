@@ -9,9 +9,18 @@ GameOverRenderer::GameOverRenderer(int width, int height)
   create(width, height);
 }
 
-void GameOverRenderer::render(SpriteRenderer &engine, const RenderState & /*state*/) const
+void GameOverRenderer::render(SpriteRenderer &engine,
+                              const RenderState & /*state*/,
+                              const RenderingPass pass) const
 {
-  m_menu->render(engine.getRenderer());
+  switch (pass)
+  {
+    case RenderingPass::UI:
+      m_menu->render(engine.getRenderer());
+      break;
+    default:
+      break;
+  }
 }
 
 auto GameOverRenderer::processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions)

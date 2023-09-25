@@ -9,9 +9,18 @@ LoginRenderer::LoginRenderer(int width, int height)
   create(width, height);
 }
 
-void LoginRenderer::render(SpriteRenderer &engine, const RenderState & /*state*/) const
+void LoginRenderer::render(SpriteRenderer &engine,
+                           const RenderState & /*state*/,
+                           const RenderingPass pass) const
 {
-  m_menu->render(engine.getRenderer());
+  switch (pass)
+  {
+    case RenderingPass::UI:
+      m_menu->render(engine.getRenderer());
+      break;
+    default:
+      break;
+  }
 }
 
 auto LoginRenderer::processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions)

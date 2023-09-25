@@ -91,7 +91,7 @@ void App::drawDecal(const RenderState &res)
     return;
   }
 
-  renderer->second->render(*m_spriteRenderer, res);
+  renderer->second->render(*m_spriteRenderer, res, RenderingPass::DECAL);
 
   SetPixelMode(olc::Pixel::NORMAL);
 }
@@ -109,7 +109,7 @@ void App::draw(const RenderState &res)
     return;
   }
 
-  renderer->second->render(*m_spriteRenderer, res);
+  renderer->second->render(*m_spriteRenderer, res, RenderingPass::SPRITES);
 
   SetPixelMode(olc::Pixel::NORMAL);
 }
@@ -127,7 +127,7 @@ void App::drawUI(const RenderState &res)
     return;
   }
 
-  renderer->second->render(*m_spriteRenderer, res);
+  renderer->second->render(*m_spriteRenderer, res, RenderingPass::UI);
 
   SetPixelMode(olc::Pixel::NORMAL);
 }
@@ -137,6 +137,12 @@ void App::drawDebug(const RenderState &res)
   // Clear rendering target.
   SetPixelMode(olc::Pixel::ALPHA);
   Clear(olc::Pixel(255, 255, 255, alpha::Transparent));
+
+  const auto renderer = m_renderers.find(m_game->getScreen());
+  if (renderer != m_renderers.end())
+  {
+    renderer->second->render(*m_spriteRenderer, res, RenderingPass::DEBUG);
+  }
 
   // Draw cursor's position.
   olc::vi2d mp = GetMousePos();

@@ -9,9 +9,18 @@ MapRenderer::MapRenderer(int width, int height)
   create(width, height);
 }
 
-void MapRenderer::render(SpriteRenderer &engine, const RenderState & /*state*/) const
+void MapRenderer::render(SpriteRenderer &engine,
+                         const RenderState & /*state*/,
+                         const RenderingPass pass) const
 {
-  m_menu->render(engine.getRenderer());
+  switch (pass)
+  {
+    case RenderingPass::UI:
+      m_menu->render(engine.getRenderer());
+      break;
+    default:
+      break;
+  }
 }
 
 auto MapRenderer::processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions)

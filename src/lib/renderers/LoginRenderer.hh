@@ -12,7 +12,9 @@ class LoginRenderer : public IRenderer
   LoginRenderer(int width, int height);
   ~LoginRenderer() override = default;
 
-  void render(SpriteRenderer &engine, const RenderState &state) const override;
+  void render(SpriteRenderer &engine,
+              const RenderState &state,
+              const RenderingPass pass) const override;
   auto processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions)
     -> menu::InputHandle override;
 

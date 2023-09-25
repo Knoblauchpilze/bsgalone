@@ -12,7 +12,9 @@ class GameOverRenderer : public IRenderer
   GameOverRenderer(int width, int height);
   ~GameOverRenderer() override = default;
 
-  void render(SpriteRenderer &engine, const RenderState &state) const override;
+  void render(SpriteRenderer &engine,
+              const RenderState &state,
+              const RenderingPass pass) const override;
   auto processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions)
     -> menu::InputHandle override;
 
