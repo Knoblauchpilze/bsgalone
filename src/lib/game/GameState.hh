@@ -2,23 +2,20 @@
 #pragma once
 
 #include "Menu.hh"
-#include "SavedGames.hh"
 #include "olcEngine.hh"
 #include <core_utils/CoreObject.hh>
 #include <memory>
 
 namespace pge {
 
-/// @brief - Convenience enumeration defining the current state
-/// of the application: each value roughly corresponds
-/// to a distinct menu in the application.
 enum class Screen
 {
-  Home,
-  LoadGame,
-  Game,
-  GameOver,
-  Exit
+  LOGIN,
+  GAME,
+  MAP,
+  OUTPOST,
+  GAMEOVER,
+  EXIT
 };
 
 class GameState : public utils::CoreObject
@@ -30,11 +27,11 @@ class GameState : public utils::CoreObject
   GameState(const olc::vi2d &dims, const Screen &screen);
 
   /// @brief - Destructor to disconnect the signal from the saved games object.
-  ~GameState();
+  ~GameState() override = default;
 
   /// @brief - Retrieves the currently selected screen.
   /// @return - the currently selected screen.
-  Screen getScreen() const noexcept;
+  auto getScreen() const noexcept -> Screen;
 
   /// @brief - Define a new active screen for this game.
   /// @param screen - the new screen to apply.
@@ -51,17 +48,13 @@ class GameState : public utils::CoreObject
   /// @param actions - the list of actions produced by the menu while processing
   /// the events.
   /// @return - the description of what happened when the inputs has been processed.
-  menu::InputHandle processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions);
+  auto processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions)
+    -> menu::InputHandle;
 
   private:
-  /// @brief - A slot used to receive notifications of a user picking a new saved game.
-  /// @param game - the path to the saved game that was picked.
-  void onSavedGamePicked(const std::string &game);
-
-  void generateHomeScreen(const olc::vi2d &dims);
-
-  void generateLoadGameScreen(const olc::vi2d &dims);
-
+  void generateLoginScreen(const olc::vi2d &dims);
+  void generateMapScreen(const olc::vi2d &dims);
+  void generateOutpostScreen(const olc::vi2d &dims);
   void generateGameOverScreen(const olc::vi2d &dims);
 
   private:
@@ -69,17 +62,9 @@ class GameState : public utils::CoreObject
   /// the user takes action to change it.
   Screen m_screen;
 
-  /// @brief - Defines the screen to display when the game is on the home screen.
-  MenuShPtr m_home{nullptr};
-
-  /// @brief - Defines the screen to display when the game is on the loading game
-  /// screen.
-  MenuShPtr m_loadGame{nullptr};
-
-  /// @brief - The data needed to represent the list of games available for loading.
-  SavedGames m_savedGames;
-
-  /// @brief - Defines the menu to display in case the game is over.
+  MenuShPtr m_login{nullptr};
+  MenuShPtr m_map{nullptr};
+  MenuShPtr m_outpost{nullptr};
   MenuShPtr m_gameOver{nullptr};
 };
 

@@ -7,7 +7,7 @@
 
 namespace {
 
-pge::MenuShPtr generateDefaultScreen(const olc::vi2d &dims, const olc::Pixel &color)
+auto generateDefaultScreen(const olc::vi2d &dims, const olc::Pixel &color) -> pge::MenuShPtr
 {
   olc::vi2d size(dims.x * RATIO_MENU_TO_WINDOW, dims.y * RATIO_MENU_TO_WINDOW);
   olc::vi2d pos(dims.x / 2.0f - size.x / 2.0f, dims.y / 2.0f - size.y / 2.0f);
@@ -25,11 +25,11 @@ pge::MenuShPtr generateDefaultScreen(const olc::vi2d &dims, const olc::Pixel &co
                                      false);
 }
 
-pge::MenuShPtr generateScreenOption(const olc::vi2d &dims,
-                                    const std::string &text,
-                                    const olc::Pixel &bgColor,
-                                    const std::string &name,
-                                    bool selectable)
+auto generateScreenOption(const olc::vi2d &dims,
+                          const std::string &text,
+                          const olc::Pixel &bgColor,
+                          const std::string &name,
+                          bool selectable) -> pge::MenuShPtr
 {
   pge::menu::BackgroundDesc bg = pge::menu::newColoredBackground(bgColor);
   bg.hColor                    = olc::GREY;
@@ -58,29 +58,21 @@ GameState::GameState(const olc::vi2d &dims, const Screen &screen)
   // Assign a different screen so that we can use the
   // `setScreen` routine to initialize the visibility
   // status of screens.
-  , m_screen(screen == Screen::Home ? Screen::Exit : Screen::Home)
-  , m_savedGames(10u, "data/saves", "ext")
+  , m_screen(screen == Screen::LOGIN ? Screen::GAMEOVER : Screen::LOGIN)
 {
-  setService("chess");
+  setService("bsgo");
 
-  generateHomeScreen(dims);
-  generateLoadGameScreen(dims);
+  generateLoginScreen(dims);
+  generateMapScreen(dims);
+  generateOutpostScreen(dims);
   generateGameOverScreen(dims);
 
   // Assign the screen, which will handle the visibility
   // update.
   setScreen(screen);
-
-  // Connect the slot to receive updates about saved games.
-  m_savedGames.onSavedGameSelected.connect_member<GameState>(this, &GameState::onSavedGamePicked);
 }
 
-GameState::~GameState()
-{
-  m_savedGames.onSavedGameSelected.disconnectAll();
-}
-
-Screen GameState::getScreen() const noexcept
+auto GameState::getScreen() const noexcept -> Screen
 {
   return m_screen;
 }
@@ -96,29 +88,35 @@ void GameState::setScreen(const Screen &screen)
   m_screen = screen;
 
   // Update screens' visibility.
-  m_home->setVisible(m_screen == Screen::Home);
-  m_loadGame->setVisible(m_screen == Screen::LoadGame);
-  m_gameOver->setVisible(m_screen == Screen::GameOver);
+  m_login->setVisible(m_screen == Screen::LOGIN);
+  m_map->setVisible(m_screen == Screen::MAP);
+  m_outpost->setVisible(m_screen == Screen::OUTPOST);
+  m_gameOver->setVisible(m_screen == Screen::GAMEOVER);
 }
 
 void GameState::render(olc::PixelGameEngine *pge) const
 {
-  m_home->render(pge);
-  m_loadGame->render(pge);
+  m_login->render(pge);
+  m_map->render(pge);
+  m_outpost->render(pge);
   m_gameOver->render(pge);
 }
 
-menu::InputHandle GameState::processUserInput(const controls::State &c,
-                                              std::vector<ActionShPtr> &actions)
+auto GameState::processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions)
+  -> menu::InputHandle
 {
   menu::InputHandle res{false, false};
 
   // Propagate the user input to each screen.
-  menu::InputHandle cur = m_home->processUserInput(c, actions);
+  menu::InputHandle cur = m_login->processUserInput(c, actions);
   res.relevant          = (res.relevant || cur.relevant);
   res.selected          = (res.selected || cur.selected);
 
-  cur          = m_loadGame->processUserInput(c, actions);
+  cur          = m_map->processUserInput(c, actions);
+  res.relevant = (res.relevant || cur.relevant);
+  res.selected = (res.selected || cur.selected);
+
+  cur          = m_outpost->processUserInput(c, actions);
   res.relevant = (res.relevant || cur.relevant);
   res.selected = (res.selected || cur.selected);
 
@@ -129,54 +127,46 @@ menu::InputHandle GameState::processUserInput(const controls::State &c,
   return res;
 }
 
-void GameState::onSavedGamePicked(const std::string &game)
+void GameState::generateLoginScreen(const olc::vi2d &dims)
 {
-  info("Picked saved game \"" + game + "\"");
-  setScreen(Screen::Game);
-}
+  m_login = generateDefaultScreen(dims, olc::DARK_PINK);
 
-void GameState::generateHomeScreen(const olc::vi2d &dims)
-{
-  // Generate the main screen.
-  m_home = generateDefaultScreen(dims, olc::DARK_PINK);
-
-  // Add each option to the screen.
-  MenuShPtr m = generateScreenOption(dims, "New game", olc::VERY_DARK_PINK, "new_game", true);
-  m->setSimpleAction([this](Game & /*g*/) { setScreen(Screen::Game); });
-  m_home->addMenu(m);
-
-  m = generateScreenOption(dims, "Load game", olc::VERY_DARK_PINK, "load_game", true);
-  m->setSimpleAction([this](Game & /*g*/) {
-    // Refresh the saved games list.
-    m_savedGames.refresh();
-    setScreen(Screen::LoadGame);
-  });
-  m_home->addMenu(m);
+  MenuShPtr m = generateScreenOption(dims, "Login", olc::VERY_DARK_PINK, "login", true);
+  m->setSimpleAction([this](Game & /*g*/) { setScreen(Screen::GAME); });
+  m_login->addMenu(m);
 
   m = generateScreenOption(dims, "Quit", olc::VERY_DARK_PINK, "quit", true);
   m->setSimpleAction([this](Game &g) {
-    setScreen(Screen::Exit);
+    setScreen(Screen::EXIT);
     g.terminate();
   });
-  m_home->addMenu(m);
+  m_login->addMenu(m);
 }
 
-void GameState::generateLoadGameScreen(const olc::vi2d &dims)
+void GameState::generateMapScreen(const olc::vi2d &dims)
 {
-  // Generate the main screen.
-  m_loadGame = generateDefaultScreen(dims, olc::DARK_ORANGE);
+  m_map = generateDefaultScreen(dims, olc::DARK_ORANGE);
 
-  // Add each option to the screen.
-  MenuShPtr m
-    = generateScreenOption(dims, "Saved games:", olc::VERY_DARK_ORANGE, "saved_games", false);
-  m_loadGame->addMenu(m);
+  MenuShPtr m = generateScreenOption(dims,
+                                     "Back to game",
+                                     olc::VERY_DARK_ORANGE,
+                                     "back_to_game",
+                                     true);
+  m->setSimpleAction([this](Game & /*g*/) { setScreen(Screen::GAME); });
+  m_map->addMenu(m);
+}
 
-  m = generateScreenOption(dims, "Back to main screen", olc::VERY_DARK_ORANGE, "back_to_main", true);
-  m->setSimpleAction([this](Game & /*g*/) { setScreen(Screen::Home); });
-  m_loadGame->addMenu(m);
+void GameState::generateOutpostScreen(const olc::vi2d &dims)
+{
+  m_outpost = generateDefaultScreen(dims, olc::DARK_YELLOW);
 
-  m_savedGames.generate(m_loadGame);
-  m_savedGames.refresh();
+  MenuShPtr m = generateScreenOption(dims,
+                                     "Back to game",
+                                     olc::VERY_DARK_YELLOW,
+                                     "back_to_game",
+                                     true);
+  m->setSimpleAction([this](Game & /*g*/) { setScreen(Screen::GAME); });
+  m_outpost->addMenu(m);
 }
 
 void GameState::generateGameOverScreen(const olc::vi2d &dims)
@@ -185,20 +175,16 @@ void GameState::generateGameOverScreen(const olc::vi2d &dims)
   m_gameOver = generateDefaultScreen(dims, olc::DARK_MAGENTA);
 
   MenuShPtr m = generateScreenOption(dims,
-                                     "Back to main screen",
+                                     "Back to outpost",
                                      olc::VERY_DARK_MAGENTA,
-                                     "back_to_main",
+                                     "back_to_op",
                                      true);
-  m->setSimpleAction([this](Game & /*g*/) { setScreen(Screen::Home); });
+  m->setSimpleAction([this](Game & /*g*/) { setScreen(Screen::OUTPOST); });
   m_gameOver->addMenu(m);
 
-  m = generateScreenOption(dims, "Restart", olc::VERY_DARK_MAGENTA, "restart", true);
-  m->setSimpleAction([this](Game & /*g*/) { setScreen(Screen::Game); });
-  m_gameOver->addMenu(m);
-
-  m = generateScreenOption(dims, "Quit", olc::VERY_DARK_MAGENTA, "quit", true);
+  m = generateScreenOption(dims, "Logout", olc::VERY_DARK_MAGENTA, "logout", true);
   m->setSimpleAction([this](Game &g) {
-    setScreen(Screen::Exit);
+    setScreen(Screen::EXIT);
     g.terminate();
   });
   m_gameOver->addMenu(m);
