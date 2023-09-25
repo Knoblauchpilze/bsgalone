@@ -9,9 +9,9 @@ OutpostRenderer::OutpostRenderer(int width, int height)
   create(width, height);
 }
 
-void OutpostRenderer::render(olc::PixelGameEngine *pge, const RenderState & /*state*/) const
+void OutpostRenderer::render(SpriteRenderer &engine, const RenderState & /*state*/) const
 {
-  m_menu->render(pge);
+  m_menu->render(engine.getRenderer());
 }
 
 auto OutpostRenderer::processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions)

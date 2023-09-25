@@ -9,9 +9,9 @@ GameOverRenderer::GameOverRenderer(int width, int height)
   create(width, height);
 }
 
-void GameOverRenderer::render(olc::PixelGameEngine *pge, const RenderState & /*state*/) const
+void GameOverRenderer::render(SpriteRenderer &engine, const RenderState & /*state*/) const
 {
-  m_menu->render(pge);
+  m_menu->render(engine.getRenderer());
 }
 
 auto GameOverRenderer::processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions)

@@ -9,9 +9,9 @@ MapRenderer::MapRenderer(int width, int height)
   create(width, height);
 }
 
-void MapRenderer::render(olc::PixelGameEngine *pge, const RenderState & /*state*/) const
+void MapRenderer::render(SpriteRenderer &engine, const RenderState & /*state*/) const
 {
-  m_menu->render(pge);
+  m_menu->render(engine.getRenderer());
 }
 
 auto MapRenderer::processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions)

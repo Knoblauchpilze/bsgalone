@@ -5,7 +5,7 @@
 #include "Controls.hh"
 #include "InputHandle.hh"
 #include "RenderState.hh"
-#include "olcPixelGameEngine.h"
+#include "SpriteRenderer.hh"
 #include <core_utils/CoreObject.hh>
 #include <memory>
 
@@ -20,7 +20,7 @@ class IRenderer : public utils::CoreObject
   IRenderer();
   virtual ~IRenderer() = default;
 
-  virtual void render(olc::PixelGameEngine *pge, const RenderState &state) const = 0;
+  virtual void render(SpriteRenderer &engine, const RenderState &state) const = 0;
   virtual auto processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions)
     -> menu::InputHandle = 0;
 };

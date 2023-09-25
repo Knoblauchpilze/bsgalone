@@ -1,6 +1,7 @@
 
 target_sources (bsgalone_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/IRenderer.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/SpriteRenderer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ScreenCommon.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LoginRenderer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/GameRenderer.cc
