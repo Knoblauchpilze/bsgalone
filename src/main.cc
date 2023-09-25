@@ -26,17 +26,7 @@ int main(int /*argc*/, char ** /*argv*/)
     auto tiles  = pge::CenteredViewport({0.0f, 0.0f}, {4.0f, 3.0f});
     auto pixels = pge::TopLeftViewport({0.0f, 0.0f}, {800.0f, 600.0f});
 
-    pge::CoordinateFramePtr frame;
-    auto useIsometric = true;
-    if (useIsometric)
-    {
-      frame = std::make_shared<pge::IsometricViewFrame>(tiles, pixels);
-    }
-    else
-    {
-      frame = std::make_shared<pge::TopViewFrame>(tiles, pixels);
-    }
-
+    auto frame      = std::make_shared<pge::TopViewFrame>(tiles, pixels);
     pge::AppDesc ad = pge::newDesc(olc::vi2d(800, 600), frame, "bsgalone");
     ad.maxFps       = {50};
     pge::App demo(ad);

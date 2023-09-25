@@ -3,22 +3,10 @@
 
 namespace pge {
 
-// https://opengameart.org/content/tiny-16-basic
-constexpr auto DEFAULT_TEXTURE_PACK_FILE_PATH = "data/tiles/default.png";
-
-constexpr auto DEFAULT_TEXTURE_PACK_WIDTH_IN_TILES  = 8;
-constexpr auto DEFAULT_TEXTURE_PACK_HEIGHT_IN_TILES = 13;
-
-constexpr auto DEFAULT_TEXTURE_PACK_TILE_SIZE_IN_PIXELS = 16;
-
 const auto CURSOR_COLOR = olc::Pixel{255, 255, 0, alpha::SemiOpaque};
 
 App::App(const AppDesc &desc)
   : PGEApp(desc)
-  , m_game(nullptr)
-  , m_state(nullptr)
-  , m_menus()
-  , m_packs(std::make_shared<sprites::TexturePack>())
 {}
 
 bool App::onFrame(float fElapsed)
@@ -90,29 +78,12 @@ void App::loadData()
 
 void App::loadResources()
 {
-  // Assign a specific tint to the regular drawing layer so that we have a built
-  // in transparency.
-  // We can't do it directly when drawing in the rendering function because as the
-  // whole layer will be drawn as one quad in opengl with an opaque alpha, we will
-  // lose this info.
-  // This means that everything is indeed transparent but that's the only way for
-  // now to achieve it.
   setLayerTint(Layer::Draw, olc::Pixel(255, 255, 255, alpha::SemiOpaque));
-
-  auto pack = sprites::PackDesc{.file = DEFAULT_TEXTURE_PACK_FILE_PATH,
-                                .sSize{DEFAULT_TEXTURE_PACK_TILE_SIZE_IN_PIXELS,
-                                       DEFAULT_TEXTURE_PACK_TILE_SIZE_IN_PIXELS},
-                                .layout{DEFAULT_TEXTURE_PACK_WIDTH_IN_TILES,
-                                        DEFAULT_TEXTURE_PACK_HEIGHT_IN_TILES}};
-
-  m_defaultPackId = m_packs->registerPack(pack);
 }
 
 void App::loadMenuResources()
 {
-  // Generate the game state.
   m_state = std::make_shared<GameState>(olc::vi2d(ScreenWidth(), ScreenHeight()), Screen::LOGIN);
-
   m_menus = m_game->generateMenus(ScreenWidth(), ScreenHeight());
 }
 
@@ -142,7 +113,6 @@ void App::drawDecal(const RenderDesc &res)
     return;
   }
 
-  renderDefaultTexturePack(res.cf);
   if (hasCursor())
   {
     renderCursor(res);
@@ -273,46 +243,6 @@ inline void App::drawWarpedRect(const SpriteDesc &t, const CoordinateFrame &cf)
   colors.fill(t.sprite.tint);
 
   DrawExplicitDecal(nullptr, p.data(), uvs.data(), colors.data());
-}
-
-inline void App::renderDefaultTexturePack(const CoordinateFrame &cf)
-{
-  // Define a color gradient.
-  auto tl = olc::RED;
-  auto tr = olc::GREEN;
-
-  auto bl = olc::BLUE;
-  auto br = olc::YELLOW;
-
-  for (int y = 0; y < DEFAULT_TEXTURE_PACK_HEIGHT_IN_TILES; ++y)
-  {
-    auto interpL = colorGradient(bl,
-                                 tl,
-                                 1.0f * y / DEFAULT_TEXTURE_PACK_HEIGHT_IN_TILES,
-                                 alpha::Opaque);
-    auto interpR = colorGradient(br,
-                                 tr,
-                                 1.0f * y / DEFAULT_TEXTURE_PACK_HEIGHT_IN_TILES,
-                                 alpha::Opaque);
-
-    for (int x = 0; x < DEFAULT_TEXTURE_PACK_WIDTH_IN_TILES; ++x)
-    {
-      SpriteDesc t;
-      t.x = x;
-      t.y = y;
-
-      t.radius = 1.0f;
-
-      t.sprite.pack   = m_defaultPackId;
-      t.sprite.sprite = {x, y};
-      t.sprite.tint   = colorGradient(interpL,
-                                    interpR,
-                                    1.0f * x / DEFAULT_TEXTURE_PACK_WIDTH_IN_TILES,
-                                    alpha::Opaque);
-
-      drawWarpedSprite(t, cf);
-    }
-  }
 }
 
 } // namespace pge

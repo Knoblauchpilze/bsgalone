@@ -95,27 +95,11 @@ class App : public PGEApp
   /// position to pixels.
   void drawWarpedRect(const SpriteDesc &t, const CoordinateFrame &cf);
 
-  /// @brief - Example method to render the default texture pack.
-  /// @param cf - the coordinate frame to convert from tiles to pixels space.
-  void renderDefaultTexturePack(const CoordinateFrame &cf);
-
   private:
-  /// @brief - The game managed by this application.
-  GameShPtr m_game;
-
-  /// @brief - The management of the game state, which includes loading the saved
-  /// games, handling game over and the general execution of the game.
-  GameStateShPtr m_state;
-
-  /// @brief - Defines the list of menus available for
-  std::vector<MenuShPtr> m_menus;
-
-  /// @brief - A description of the textures used to represent the elements of
-  /// the game.
-  sprites::TexturePackShPtr m_packs;
-
-  /// @brief - Default texture pack identifier.
-  sprites::PackId m_defaultPackId;
+  GameShPtr m_game{nullptr};
+  GameStateShPtr m_state{nullptr};
+  std::vector<MenuShPtr> m_menus{};
+  sprites::TexturePackShPtr m_packs{std::make_shared<sprites::TexturePack>()};
 };
 
 } // namespace pge
