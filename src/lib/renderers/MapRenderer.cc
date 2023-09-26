@@ -4,8 +4,13 @@
 
 namespace pge {
 
-MapRenderer::MapRenderer(int width, int height)
+MapRenderer::MapRenderer(bsgo::MapViewPtr mapView, int width, int height)
+  : m_mapView(std::move(mapView))
 {
+  if (nullptr == m_mapView)
+  {
+    throw std::invalid_argument("Expected non null map view");
+  }
   create(width, height);
 }
 
