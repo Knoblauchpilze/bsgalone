@@ -2,6 +2,7 @@
 #pragma once
 
 #include "IRenderer.hh"
+#include "MapView.hh"
 #include "Menu.hh"
 
 namespace pge {
@@ -9,7 +10,7 @@ namespace pge {
 class MapRenderer : public IRenderer
 {
   public:
-  MapRenderer(int width, int height);
+  MapRenderer(bsgo::MapViewPtr mapView, int width, int height);
   ~MapRenderer() override = default;
 
   void render(SpriteRenderer &engine,
@@ -19,6 +20,7 @@ class MapRenderer : public IRenderer
     -> menu::InputHandle override;
 
   private:
+  bsgo::MapViewPtr m_mapView;
   MenuShPtr m_menu{nullptr};
 
   void create(int width, int height);

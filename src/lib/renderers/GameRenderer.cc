@@ -3,8 +3,13 @@
 
 namespace pge {
 
-GameRenderer::GameRenderer(int width, int height)
+GameRenderer::GameRenderer(const bsgo::GameViewShPtr gameView, int width, int height)
+  : m_gameView(gameView)
 {
+  if (nullptr == m_gameView)
+  {
+    throw std::invalid_argument("Expected non null game view");
+  }
   create(width, height);
 }
 
