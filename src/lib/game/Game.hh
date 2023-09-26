@@ -36,7 +36,7 @@ class Game : public utils::CoreObject
   /// @param screen - the new screen to apply.
   void setScreen(const Screen &screen);
 
-  auto generateRenderers(int width, int height) const -> std::unordered_map<Screen, IRendererPtr>;
+  auto generateRenderers(int width, int height) -> std::unordered_map<Screen, IRendererPtr>;
 
   /// @brief - Used to perform an action at the specified location. What needs to
   /// be done exactly is left to the user. This implementation does nothing by
@@ -138,6 +138,8 @@ class Game : public utils::CoreObject
 
   /// @brief - The definition of the game state.
   State m_state{};
+
+  std::unordered_map<Screen, IRenderer *> m_renderers{};
 };
 
 using GameShPtr = std::shared_ptr<Game>;

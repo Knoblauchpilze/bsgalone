@@ -18,8 +18,7 @@ Game::Game()
   setService("game");
 }
 
-auto Game::generateRenderers(int width, int height) const
-  -> std::unordered_map<Screen, IRendererPtr>
+auto Game::generateRenderers(int width, int height) -> std::unordered_map<Screen, IRendererPtr>
 {
   std::unordered_map<Screen, IRendererPtr> out;
 
@@ -31,6 +30,11 @@ auto Game::generateRenderers(int width, int height) const
   auto outpostView      = std::make_unique<bsgo::OutpostView>();
   out[Screen::OUTPOST]  = std::make_unique<OutpostRenderer>(std::move(outpostView), width, height);
   out[Screen::GAMEOVER] = std::make_unique<GameOverRenderer>(gameView, width, height);
+
+  for (const auto &[screen, renderer] : out)
+  {
+    m_renderers[screen] = renderer.get();
+  }
 
   return out;
 }
@@ -52,8 +56,6 @@ bool Game::step(float /*tDelta*/)
   {
     return true;
   }
-
-  info("Perform step method of the game");
 
   updateUI();
 
@@ -90,7 +92,13 @@ void Game::enable(bool enable)
 
 void Game::updateUI()
 {
-  info("Perform update of UI menus");
+  const auto it = m_renderers.find(m_state.screen);
+  if (it == m_renderers.end())
+  {
+    return;
+  }
+
+  it->second->updateUi();
 }
 
 bool Game::TimedMenu::update(bool active) noexcept

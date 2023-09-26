@@ -29,6 +29,8 @@ auto LoginRenderer::processUserInput(const controls::State &c, std::vector<Actio
   return m_menu->processUserInput(c, actions);
 }
 
+void LoginRenderer::updateUi() {}
+
 void LoginRenderer::create(int width, int height)
 {
   const olc::vi2d dims{width, height};

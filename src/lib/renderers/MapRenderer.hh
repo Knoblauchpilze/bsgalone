@@ -18,6 +18,7 @@ class MapRenderer : public IRenderer
               const RenderingPass pass) const override;
   auto processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions)
     -> menu::InputHandle override;
+  void updateUi() override;
 
   private:
   bsgo::MapViewPtr m_mapView;

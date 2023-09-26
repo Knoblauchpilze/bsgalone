@@ -31,11 +31,23 @@ void GameRenderer::render(SpriteRenderer &engine,
   }
 }
 
-auto GameRenderer::processUserInput(const controls::State & /*c*/,
-                                    std::vector<ActionShPtr> & /*actions*/) -> menu::InputHandle
+auto GameRenderer::processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions)
+  -> menu::InputHandle
 {
-  return {};
+  bool relevant{false};
+  bool selected{false};
+
+  for (const auto &menu : m_menus)
+  {
+    menu::InputHandle ih = menu->processUserInput(c, actions);
+    relevant             = (relevant || ih.relevant);
+    selected             = (selected || ih.selected);
+  }
+
+  return menu::InputHandle{.relevant = relevant, .selected = selected};
 }
+
+void GameRenderer::updateUi() {}
 
 void GameRenderer::create(int width, int height)
 {
@@ -69,7 +81,7 @@ void GameRenderer::generateAbilityMenus(int width, int height)
     const auto text = "A" + std::to_string(id);
     const auto name = "ability_" + std::to_string(id);
 
-    m_menus[ABILITY_0 + id] = generateMenu(pos, dims, text, name, color, {olc::WHITE});
+    m_menus[ABILITY_0 + id] = generateMenu(pos, dims, text, name, color, {olc::WHITE}, true);
 
     pos.x += (dims.x + SPACING_IN_PIXELS);
   }
@@ -91,7 +103,7 @@ void GameRenderer::generateWeaponMenus(int width, int height)
     const auto text = "W" + std::to_string(id);
     const auto name = "weapon_" + std::to_string(id);
 
-    m_menus[WEAPON_0 + id] = generateMenu(pos, dims, text, name, color, {olc::WHITE});
+    m_menus[WEAPON_0 + id] = generateMenu(pos, dims, text, name, color, {olc::WHITE}, true);
 
     pos.x += (dims.x + SPACING_IN_PIXELS);
   }
