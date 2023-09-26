@@ -48,4 +48,38 @@ auto generateScreenOption(const olc::vi2d &dims,
                                      false);
 }
 
+auto generateMenu(const olc::vi2d &pos,
+                  const olc::vi2d &size,
+                  const std::string &text,
+                  const std::string &name,
+                  olc::Pixel bgColor,
+                  const std::optional<olc::Pixel> &textColor,
+                  bool clickable,
+                  const menu::Layout &layout) -> pge::MenuShPtr
+{
+  auto fd = pge::menu::newMenuContent(text, "", size);
+
+  if (textColor)
+  {
+    fd.color  = *textColor;
+    fd.hColor = modulate(fd.color, 2.0f);
+  }
+  else
+  {
+    fd.color  = bgColor == olc::BLACK ? olc::WHITE : olc::BLACK;
+    fd.hColor = RGBToHSL(bgColor).b < 128 ? olc::WHITE : olc::BLACK;
+  }
+
+  fd.align = pge::menu::Alignment::Center;
+
+  return std::make_shared<pge::Menu>(pos,
+                                     size,
+                                     name,
+                                     pge::menu::newColoredBackground(bgColor),
+                                     fd,
+                                     layout,
+                                     clickable,
+                                     false);
+}
+
 } // namespace pge
