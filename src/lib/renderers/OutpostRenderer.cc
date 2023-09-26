@@ -34,6 +34,8 @@ auto OutpostRenderer::processUserInput(const controls::State &c, std::vector<Act
   return m_menu->processUserInput(c, actions);
 }
 
+void OutpostRenderer::updateUi() {}
+
 void OutpostRenderer::create(int width, int height)
 {
   const olc::vi2d dims{width, height};

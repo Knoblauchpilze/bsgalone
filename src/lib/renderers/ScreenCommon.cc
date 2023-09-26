@@ -55,6 +55,7 @@ auto generateMenu(const olc::vi2d &pos,
                   olc::Pixel bgColor,
                   const std::optional<olc::Pixel> &textColor,
                   bool clickable,
+                  bool selectable,
                   const menu::Layout &layout) -> pge::MenuShPtr
 {
   auto fd = pge::menu::newMenuContent(text, "", size);
@@ -79,7 +80,7 @@ auto generateMenu(const olc::vi2d &pos,
                                      fd,
                                      layout,
                                      clickable,
-                                     false);
+                                     selectable);
 }
 
 } // namespace pge

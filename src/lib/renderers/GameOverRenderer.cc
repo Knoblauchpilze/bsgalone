@@ -34,6 +34,8 @@ auto GameOverRenderer::processUserInput(const controls::State &c, std::vector<Ac
   return m_menu->processUserInput(c, actions);
 }
 
+void GameOverRenderer::updateUi() {}
+
 void GameOverRenderer::create(int width, int height)
 {
   const olc::vi2d dims{width, height};
