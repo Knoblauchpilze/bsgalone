@@ -39,11 +39,7 @@ void MapRenderer::create(int width, int height)
   const olc::vi2d dims{width, height};
   m_menu = generateDefaultScreen(dims, olc::DARK_ORANGE);
 
-  MenuShPtr m = generateScreenOption(dims,
-                                     "Back to game",
-                                     olc::VERY_DARK_ORANGE,
-                                     "back_to_game",
-                                     true);
+  MenuShPtr m = generateScreenOption(dims, "Close", olc::VERY_DARK_ORANGE, "close", true);
   m->setSimpleAction([this](Game &g) { g.setScreen(Screen::GAME); });
   m_menu->addMenu(m);
 }

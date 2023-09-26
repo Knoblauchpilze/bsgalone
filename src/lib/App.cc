@@ -62,6 +62,10 @@ void App::onInputs(const controls::State &c, const CoordinateFrame &cf)
   {
     m_game->togglePause();
   }
+  if (Screen::GAME == m_game->getScreen() && c.keys[controls::keys::M])
+  {
+    m_game->setScreen(Screen::MAP);
+  }
 }
 
 void App::loadResources()
