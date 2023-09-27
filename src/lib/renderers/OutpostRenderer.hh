@@ -3,13 +3,14 @@
 
 #include "IRenderer.hh"
 #include "Menu.hh"
+#include "Views.hh"
 
 namespace pge {
 
 class OutpostRenderer : public IRenderer
 {
   public:
-  OutpostRenderer(int width, int height);
+  OutpostRenderer(const bsgo::Views &views, int width, int height);
   ~OutpostRenderer() override = default;
 
   void render(SpriteRenderer &engine,

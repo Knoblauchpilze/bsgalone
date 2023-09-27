@@ -12,6 +12,6 @@ class SystemView : public utils::CoreObject
   SystemView();
 };
 
-using SystemViewPtr = std::unique_ptr<SystemView>;
+using SystemViewShPtr = std::shared_ptr<SystemView>;
 
 } // namespace bsgo

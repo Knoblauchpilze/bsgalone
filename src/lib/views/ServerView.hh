@@ -12,6 +12,6 @@ class ServerView : public utils::CoreObject
   ServerView();
 };
 
-using ServerViewPtr = std::unique_ptr<ServerView>;
+using ServerViewShPtr = std::shared_ptr<ServerView>;
 
 } // namespace bsgo

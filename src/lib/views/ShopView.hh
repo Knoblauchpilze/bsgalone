@@ -12,6 +12,6 @@ class ShopView : public utils::CoreObject
   ShopView();
 };
 
-using ShopViewPtr = std::unique_ptr<ShopView>;
+using ShopViewShPtr = std::shared_ptr<ShopView>;
 
 } // namespace bsgo

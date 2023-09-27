@@ -19,10 +19,12 @@ auto Game::generateRenderers(int width, int height) -> std::unordered_map<Screen
 {
   std::unordered_map<Screen, IRendererPtr> out;
 
+  bsgo::Views views;
+
   out[Screen::LOGIN]    = std::make_unique<LoginRenderer>(width, height);
-  out[Screen::GAME]     = std::make_unique<GameRenderer>(width, height);
-  out[Screen::MAP]      = std::make_unique<MapRenderer>(width, height);
-  out[Screen::GAMEOVER] = std::make_unique<GameOverRenderer>(width, height);
+  out[Screen::GAME]     = std::make_unique<GameRenderer>(views, width, height);
+  out[Screen::MAP]      = std::make_unique<MapRenderer>(views, width, height);
+  out[Screen::GAMEOVER] = std::make_unique<GameOverRenderer>(views, width, height);
 
   for (const auto &[screen, renderer] : out)
   {

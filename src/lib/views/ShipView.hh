@@ -12,6 +12,6 @@ class ShipView : public utils::CoreObject
   ShipView();
 };
 
-using ShipViewPtr = std::unique_ptr<ShipView>;
+using ShipViewShPtr = std::shared_ptr<ShipView>;
 
 } // namespace bsgo

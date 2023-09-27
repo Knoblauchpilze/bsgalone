@@ -4,7 +4,7 @@
 
 namespace pge {
 
-MapRenderer::MapRenderer(int width, int height)
+MapRenderer::MapRenderer(const bsgo::Views & /*views*/, int width, int height)
 {
   create(width, height);
 }
