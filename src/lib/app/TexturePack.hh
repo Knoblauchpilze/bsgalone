@@ -123,5 +123,5 @@ class TexturePack : public utils::CoreObject
   std::vector<Pack> m_packs;
 };
 
-using TexturePackShPtr = std::shared_ptr<TexturePack>;
+using TexturePackPtr = std::unique_ptr<TexturePack>;
 } // namespace pge::sprites

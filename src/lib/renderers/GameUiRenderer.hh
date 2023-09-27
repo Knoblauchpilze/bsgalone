@@ -10,9 +10,10 @@ namespace pge {
 class GameUiRenderer : public IRenderer
 {
   public:
-  GameUiRenderer(const bsgo::Views &views, int width, int height);
+  GameUiRenderer(const bsgo::Views &views);
   ~GameUiRenderer() override = default;
 
+  void loadResources(int width, int height, sprites::TexturePack &texturesLoader) override;
   void render(SpriteRenderer &engine,
               const RenderState &state,
               const RenderingPass pass) const override;
@@ -45,7 +46,6 @@ class GameUiRenderer : public IRenderer
   };
   std::vector<MenuShPtr> m_menus{};
 
-  void create(int width, int height);
   void generateAbilityMenus(int width, int height);
   void generateWeaponMenus(int width, int height);
 };

@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "GameSystemRenderer.hh"
 #include "GameUiRenderer.hh"
 #include "IRenderer.hh"
 #include "Menu.hh"
@@ -11,9 +12,10 @@ namespace pge {
 class GameRenderer : public IRenderer
 {
   public:
-  GameRenderer(const bsgo::Views &views, int width, int height);
+  GameRenderer(const bsgo::Views &views);
   ~GameRenderer() override = default;
 
+  void loadResources(int width, int height, sprites::TexturePack &texturesLoader) override;
   void render(SpriteRenderer &engine,
               const RenderState &state,
               const RenderingPass pass) const override;
@@ -23,8 +25,7 @@ class GameRenderer : public IRenderer
 
   private:
   GameUiRendererPtr m_uiRenderer;
-
-  void create(const bsgo::Views &views, int width, int height);
+  GameSystemRendererPtr m_systemRenderer;
 };
 
 } // namespace pge

@@ -4,14 +4,29 @@
 
 namespace pge {
 
-GameUiRenderer::GameUiRenderer(const bsgo::Views &views, int width, int height)
+GameUiRenderer::GameUiRenderer(const bsgo::Views &views)
   : m_shipView(views.shipView)
 {
   if (nullptr == m_shipView)
   {
     throw std::invalid_argument("Expected non null ship view");
   }
-  create(width, height);
+}
+
+void GameUiRenderer::loadResources(int width, int height, sprites::TexturePack & /*texturesLoader*/)
+{
+  m_menus.resize(MenuItem::COUNT);
+
+  olc::vi2d pos{5, 5};
+  olc::vi2d dims{200, 15};
+  m_menus[HEALTH]
+    = generateMenu(pos, dims, "Health: N/A", "health", olc::VERY_DARK_RED, {olc::WHITE});
+
+  pos            = olc::vi2d{5, 25};
+  m_menus[POWER] = generateMenu(pos, dims, "Power: N/A", "power", olc::DARK_CYAN, {olc::WHITE});
+
+  generateAbilityMenus(width, height);
+  generateWeaponMenus(width, height);
 }
 
 void GameUiRenderer::render(SpriteRenderer &engine,
@@ -60,22 +75,6 @@ void GameUiRenderer::updateUi()
   text += "/";
   text += std::to_string(static_cast<int>(std::floor(m_shipView->getMaxPower())));
   m_menus[POWER]->setText(text);
-}
-
-void GameUiRenderer::create(int width, int height)
-{
-  m_menus.resize(MenuItem::COUNT);
-
-  olc::vi2d pos{5, 5};
-  olc::vi2d dims{200, 15};
-  m_menus[HEALTH]
-    = generateMenu(pos, dims, "Health: N/A", "health", olc::VERY_DARK_RED, {olc::WHITE});
-
-  pos            = olc::vi2d{5, 25};
-  m_menus[POWER] = generateMenu(pos, dims, "Power: N/A", "power", olc::DARK_CYAN, {olc::WHITE});
-
-  generateAbilityMenus(width, height);
-  generateWeaponMenus(width, height);
 }
 
 void GameUiRenderer::generateAbilityMenus(int width, int height)

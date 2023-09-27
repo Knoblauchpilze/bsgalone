@@ -4,9 +4,23 @@
 
 namespace pge {
 
-LoginRenderer::LoginRenderer(int width, int height)
+LoginRenderer::LoginRenderer() {}
+
+void LoginRenderer::loadResources(int width, int height, sprites::TexturePack & /*texturesLoader*/)
 {
-  create(width, height);
+  const olc::vi2d dims{width, height};
+  m_menu = generateDefaultScreen(dims, olc::DARK_PINK);
+
+  MenuShPtr m = generateScreenOption(dims, "Login", olc::VERY_DARK_PINK, "login", true);
+  m->setSimpleAction([this](Game &g) { g.setScreen(Screen::OUTPOST); });
+  m_menu->addMenu(m);
+
+  m = generateScreenOption(dims, "Quit", olc::VERY_DARK_PINK, "quit", true);
+  m->setSimpleAction([this](Game &g) {
+    g.setScreen(Screen::EXIT);
+    g.terminate();
+  });
+  m_menu->addMenu(m);
 }
 
 void LoginRenderer::render(SpriteRenderer &engine,
@@ -30,22 +44,5 @@ auto LoginRenderer::processUserInput(const controls::State &c, std::vector<Actio
 }
 
 void LoginRenderer::updateUi() {}
-
-void LoginRenderer::create(int width, int height)
-{
-  const olc::vi2d dims{width, height};
-  m_menu = generateDefaultScreen(dims, olc::DARK_PINK);
-
-  MenuShPtr m = generateScreenOption(dims, "Login", olc::VERY_DARK_PINK, "login", true);
-  m->setSimpleAction([this](Game &g) { g.setScreen(Screen::OUTPOST); });
-  m_menu->addMenu(m);
-
-  m = generateScreenOption(dims, "Quit", olc::VERY_DARK_PINK, "quit", true);
-  m->setSimpleAction([this](Game &g) {
-    g.setScreen(Screen::EXIT);
-    g.terminate();
-  });
-  m_menu->addMenu(m);
-}
 
 } // namespace pge

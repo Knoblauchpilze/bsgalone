@@ -4,9 +4,16 @@
 
 namespace pge {
 
-OutpostRenderer::OutpostRenderer(const bsgo::Views & /*views*/, int width, int height)
+OutpostRenderer::OutpostRenderer() {}
+
+void OutpostRenderer::loadResources(int width, int height, sprites::TexturePack & /*texturesLoader*/)
 {
-  create(width, height);
+  const olc::vi2d dims{width, height};
+  m_menu = generateDefaultScreen(dims, olc::DARK_YELLOW);
+
+  MenuShPtr m = generateScreenOption(dims, "Undock", olc::VERY_DARK_YELLOW, "undock", true);
+  m->setSimpleAction([this](Game &g) { g.setScreen(Screen::GAME); });
+  m_menu->addMenu(m);
 }
 
 void OutpostRenderer::render(SpriteRenderer &engine,
@@ -30,15 +37,5 @@ auto OutpostRenderer::processUserInput(const controls::State &c, std::vector<Act
 }
 
 void OutpostRenderer::updateUi() {}
-
-void OutpostRenderer::create(int width, int height)
-{
-  const olc::vi2d dims{width, height};
-  m_menu = generateDefaultScreen(dims, olc::DARK_YELLOW);
-
-  MenuShPtr m = generateScreenOption(dims, "Undock", olc::VERY_DARK_YELLOW, "undock", true);
-  m->setSimpleAction([this](Game &g) { g.setScreen(Screen::GAME); });
-  m_menu->addMenu(m);
-}
 
 } // namespace pge

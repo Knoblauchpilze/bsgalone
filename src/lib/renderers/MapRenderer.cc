@@ -4,9 +4,16 @@
 
 namespace pge {
 
-MapRenderer::MapRenderer(const bsgo::Views & /*views*/, int width, int height)
+MapRenderer::MapRenderer() {}
+
+void MapRenderer::loadResources(int width, int height, sprites::TexturePack & /*texturesLoader*/)
 {
-  create(width, height);
+  const olc::vi2d dims{width, height};
+  m_menu = generateDefaultScreen(dims, olc::DARK_ORANGE);
+
+  MenuShPtr m = generateScreenOption(dims, "Close", olc::VERY_DARK_ORANGE, "close", true);
+  m->setSimpleAction([this](Game &g) { g.setScreen(Screen::GAME); });
+  m_menu->addMenu(m);
 }
 
 void MapRenderer::render(SpriteRenderer &engine,
@@ -30,15 +37,5 @@ auto MapRenderer::processUserInput(const controls::State &c, std::vector<ActionS
 }
 
 void MapRenderer::updateUi() {}
-
-void MapRenderer::create(int width, int height)
-{
-  const olc::vi2d dims{width, height};
-  m_menu = generateDefaultScreen(dims, olc::DARK_ORANGE);
-
-  MenuShPtr m = generateScreenOption(dims, "Close", olc::VERY_DARK_ORANGE, "close", true);
-  m->setSimpleAction([this](Game &g) { g.setScreen(Screen::GAME); });
-  m_menu->addMenu(m);
-}
 
 } // namespace pge

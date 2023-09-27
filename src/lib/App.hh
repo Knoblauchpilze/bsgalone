@@ -6,7 +6,6 @@
 #include "Menu.hh"
 #include "PGEApp.hh"
 #include "SpriteRenderer.hh"
-#include "TexturePack.hh"
 
 namespace pge {
 

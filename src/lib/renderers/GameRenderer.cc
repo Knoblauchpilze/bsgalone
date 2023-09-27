@@ -4,9 +4,15 @@
 
 namespace pge {
 
-GameRenderer::GameRenderer(const bsgo::Views &views, int width, int height)
+GameRenderer::GameRenderer(const bsgo::Views &views)
+  : m_uiRenderer(std::make_unique<GameUiRenderer>(views))
+  , m_systemRenderer(std::make_unique<GameSystemRenderer>(views))
+{}
+
+void GameRenderer::loadResources(int width, int height, sprites::TexturePack &texturesLoader)
 {
-  create(views, width, height);
+  m_uiRenderer->loadResources(width, height, texturesLoader);
+  m_systemRenderer->loadResources(width, height, texturesLoader);
 }
 
 void GameRenderer::render(SpriteRenderer &engine,
@@ -32,11 +38,6 @@ auto GameRenderer::processUserInput(const controls::State &c, std::vector<Action
 void GameRenderer::updateUi()
 {
   m_uiRenderer->updateUi();
-}
-
-void GameRenderer::create(const bsgo::Views &views, int width, int height)
-{
-  m_uiRenderer = std::make_unique<GameUiRenderer>(views, width, height);
 }
 
 } // namespace pge

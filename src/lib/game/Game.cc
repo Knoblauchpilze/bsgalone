@@ -15,17 +15,31 @@ Game::Game()
   setService("game");
 }
 
-auto Game::generateRenderers(int width, int height) -> std::unordered_map<Screen, IRendererPtr>
+auto Game::generateRenderers(int width, int height, SpriteRenderer &spriteRenderer)
+  -> std::unordered_map<Screen, IRendererPtr>
 {
   std::unordered_map<Screen, IRendererPtr> out;
 
   bsgo::Views views;
-  views.shipView = std::make_shared<bsgo::ShipView>();
+  views.shipView        = std::make_shared<bsgo::ShipView>();
+  views.systemView      = std::make_shared<bsgo::SystemView>();
+  auto &texturesHandler = spriteRenderer.getTextureHandler();
 
-  out[Screen::LOGIN]    = std::make_unique<LoginRenderer>(width, height);
-  out[Screen::GAME]     = std::make_unique<GameRenderer>(views, width, height);
-  out[Screen::MAP]      = std::make_unique<MapRenderer>(views, width, height);
-  out[Screen::GAMEOVER] = std::make_unique<GameOverRenderer>(views, width, height);
+  auto login = std::make_unique<LoginRenderer>();
+  login->loadResources(width, height, texturesHandler);
+  out[Screen::LOGIN] = std::move(login);
+
+  auto game = std::make_unique<GameRenderer>(views);
+  game->loadResources(width, height, texturesHandler);
+  out[Screen::GAME] = std::move(game);
+
+  auto map = std::make_unique<MapRenderer>();
+  map->loadResources(width, height, texturesHandler);
+  out[Screen::MAP] = std::move(map);
+
+  auto gameOver = std::make_unique<GameOverRenderer>();
+  gameOver->loadResources(width, height, texturesHandler);
+  out[Screen::GAMEOVER] = std::move(gameOver);
 
   for (const auto &[screen, renderer] : out)
   {

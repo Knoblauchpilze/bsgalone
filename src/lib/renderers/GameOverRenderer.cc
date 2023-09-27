@@ -4,9 +4,29 @@
 
 namespace pge {
 
-GameOverRenderer::GameOverRenderer(const bsgo::Views & /*views*/, int width, int height)
+GameOverRenderer::GameOverRenderer() {}
+
+void GameOverRenderer::loadResources(int width,
+                                     int height,
+                                     sprites::TexturePack & /*texturesLoader*/)
 {
-  create(width, height);
+  const olc::vi2d dims{width, height};
+  m_menu = generateDefaultScreen(dims, olc::DARK_MAGENTA);
+
+  MenuShPtr m = generateScreenOption(dims,
+                                     "Back to outpost",
+                                     olc::VERY_DARK_MAGENTA,
+                                     "back_to_op",
+                                     true);
+  m->setSimpleAction([this](Game &g) { g.setScreen(Screen::OUTPOST); });
+  m_menu->addMenu(m);
+
+  m = generateScreenOption(dims, "Logout", olc::VERY_DARK_MAGENTA, "logout", true);
+  m->setSimpleAction([this](Game &g) {
+    g.setScreen(Screen::EXIT);
+    g.terminate();
+  });
+  m_menu->addMenu(m);
 }
 
 void GameOverRenderer::render(SpriteRenderer &engine,
@@ -30,26 +50,5 @@ auto GameOverRenderer::processUserInput(const controls::State &c, std::vector<Ac
 }
 
 void GameOverRenderer::updateUi() {}
-
-void GameOverRenderer::create(int width, int height)
-{
-  const olc::vi2d dims{width, height};
-  m_menu = generateDefaultScreen(dims, olc::DARK_MAGENTA);
-
-  MenuShPtr m = generateScreenOption(dims,
-                                     "Back to outpost",
-                                     olc::VERY_DARK_MAGENTA,
-                                     "back_to_op",
-                                     true);
-  m->setSimpleAction([this](Game &g) { g.setScreen(Screen::OUTPOST); });
-  m_menu->addMenu(m);
-
-  m = generateScreenOption(dims, "Logout", olc::VERY_DARK_MAGENTA, "logout", true);
-  m->setSimpleAction([this](Game &g) {
-    g.setScreen(Screen::EXIT);
-    g.terminate();
-  });
-  m_menu->addMenu(m);
-}
 
 } // namespace pge

@@ -10,9 +10,10 @@ namespace pge {
 class GameOverRenderer : public IRenderer
 {
   public:
-  GameOverRenderer(const bsgo::Views &views, int width, int height);
+  GameOverRenderer();
   ~GameOverRenderer() override = default;
 
+  void loadResources(int width, int height, sprites::TexturePack &texturesLoader) override;
   void render(SpriteRenderer &engine,
               const RenderState &state,
               const RenderingPass pass) const override;
@@ -22,8 +23,6 @@ class GameOverRenderer : public IRenderer
 
   private:
   MenuShPtr m_menu{nullptr};
-
-  void create(int width, int height);
 };
 
 } // namespace pge
