@@ -37,6 +37,10 @@ auto Game::generateRenderers(int width, int height, SpriteRenderer &spriteRender
   map->loadResources(width, height, texturesHandler);
   out[Screen::MAP] = std::move(map);
 
+  auto outpost = std::make_unique<OutpostRenderer>();
+  outpost->loadResources(width, height, texturesHandler);
+  out[Screen::OUTPOST] = std::move(outpost);
+
   auto gameOver = std::make_unique<GameOverRenderer>();
   gameOver->loadResources(width, height, texturesHandler);
   out[Screen::GAMEOVER] = std::move(gameOver);
