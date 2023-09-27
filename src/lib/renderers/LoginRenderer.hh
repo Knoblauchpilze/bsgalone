@@ -9,9 +9,10 @@ namespace pge {
 class LoginRenderer : public IRenderer
 {
   public:
-  LoginRenderer(int width, int height);
+  LoginRenderer();
   ~LoginRenderer() override = default;
 
+  void loadResources(int width, int height, sprites::TexturePack &texturesLoader) override;
   void render(SpriteRenderer &engine,
               const RenderState &state,
               const RenderingPass pass) const override;
@@ -21,8 +22,6 @@ class LoginRenderer : public IRenderer
 
   private:
   MenuShPtr m_menu{nullptr};
-
-  void create(int width, int height);
 };
 
 } // namespace pge

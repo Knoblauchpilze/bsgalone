@@ -21,9 +21,10 @@ class IRenderer : public utils::CoreObject
   IRenderer();
   virtual ~IRenderer() = default;
 
+  virtual void loadResources(int width, int height, sprites::TexturePack &texturesLoader) = 0;
   virtual void render(SpriteRenderer &engine,
                       const RenderState &state,
-                      const RenderingPass pass) const = 0;
+                      const RenderingPass pass) const                                     = 0;
   virtual auto processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions)
     -> menu::InputHandle  = 0;
   virtual void updateUi() = 0;

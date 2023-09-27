@@ -17,6 +17,11 @@ auto SpriteRenderer::getRenderer() const -> olc::PixelGameEngine *
   return m_renderer;
 }
 
+auto SpriteRenderer::getTextureHandler() noexcept -> sprites::TexturePack &
+{
+  return *m_packs;
+}
+
 void SpriteRenderer::drawSprite(const SpriteDesc &t, const CoordinateFrame &cf)
 {
   olc::vf2d p = cf.tilesToPixels(t.x, t.y);

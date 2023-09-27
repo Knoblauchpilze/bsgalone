@@ -4,14 +4,14 @@
 #include "IRenderer.hh"
 #include "Menu.hh"
 #include "Views.hh"
+#include <memory>
 
 namespace pge {
-
-class MapRenderer : public IRenderer
+class GameSystemRenderer : public IRenderer
 {
   public:
-  MapRenderer();
-  ~MapRenderer() override = default;
+  GameSystemRenderer(const bsgo::Views &views);
+  ~GameSystemRenderer() override = default;
 
   void loadResources(int width, int height, sprites::TexturePack &texturesLoader) override;
   void render(SpriteRenderer &engine,
@@ -22,7 +22,9 @@ class MapRenderer : public IRenderer
   void updateUi() override;
 
   private:
-  MenuShPtr m_menu{nullptr};
+  bsgo::SystemViewShPtr m_systemView;
 };
+
+using GameSystemRendererPtr = std::unique_ptr<GameSystemRenderer>;
 
 } // namespace pge

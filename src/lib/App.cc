@@ -88,7 +88,7 @@ void App::loadResources()
   m_spriteRenderer = std::make_unique<SpriteRenderer>(this);
   m_game           = std::make_shared<Game>();
   setLayerTint(Layer::Draw, olc::Pixel(255, 255, 255, alpha::SemiOpaque));
-  m_renderers = m_game->generateRenderers(ScreenWidth(), ScreenHeight());
+  m_renderers = m_game->generateRenderers(ScreenWidth(), ScreenHeight(), *m_spriteRenderer);
 }
 
 void App::cleanResources()

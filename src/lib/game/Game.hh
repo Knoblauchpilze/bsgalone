@@ -5,6 +5,7 @@
 #include "Controls.hh"
 #include "IRenderer.hh"
 #include "Screen.hh"
+#include "SpriteRenderer.hh"
 #include <core_utils/CoreObject.hh>
 #include <core_utils/TimeUtils.hh>
 #include <memory>
@@ -36,7 +37,8 @@ class Game : public utils::CoreObject
   /// @param screen - the new screen to apply.
   void setScreen(const Screen &screen);
 
-  auto generateRenderers(int width, int height) -> std::unordered_map<Screen, IRendererPtr>;
+  auto generateRenderers(int width, int height, SpriteRenderer &spriteRenderer)
+    -> std::unordered_map<Screen, IRendererPtr>;
 
   /// @brief - Used to perform an action at the specified location. What needs to
   /// be done exactly is left to the user. This implementation does nothing by
