@@ -20,6 +20,7 @@ auto Game::generateRenderers(int width, int height) -> std::unordered_map<Screen
   std::unordered_map<Screen, IRendererPtr> out;
 
   bsgo::Views views;
+  views.shipView = std::make_shared<bsgo::ShipView>();
 
   out[Screen::LOGIN]    = std::make_unique<LoginRenderer>(width, height);
   out[Screen::GAME]     = std::make_unique<GameRenderer>(views, width, height);
