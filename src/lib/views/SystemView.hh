@@ -6,12 +6,12 @@
 
 namespace bsgo {
 
-class MapView : public utils::CoreObject
+class SystemView : public utils::CoreObject
 {
   public:
-  MapView();
+  SystemView();
 };
 
-using MapViewPtr = std::unique_ptr<MapView>;
+using SystemViewPtr = std::unique_ptr<SystemView>;
 
 } // namespace bsgo

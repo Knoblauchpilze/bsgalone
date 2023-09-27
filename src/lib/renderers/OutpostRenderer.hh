@@ -3,14 +3,13 @@
 
 #include "IRenderer.hh"
 #include "Menu.hh"
-#include "OutpostView.hh"
 
 namespace pge {
 
 class OutpostRenderer : public IRenderer
 {
   public:
-  OutpostRenderer(bsgo::OutpostViewPtr outpostView, int width, int height);
+  OutpostRenderer(int width, int height);
   ~OutpostRenderer() override = default;
 
   void render(SpriteRenderer &engine,
@@ -21,7 +20,6 @@ class OutpostRenderer : public IRenderer
   void updateUi() override;
 
   private:
-  bsgo::OutpostViewPtr m_outpostView;
   MenuShPtr m_menu{nullptr};
 
   void create(int width, int height);

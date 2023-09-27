@@ -4,13 +4,8 @@
 
 namespace pge {
 
-OutpostRenderer::OutpostRenderer(bsgo::OutpostViewPtr outpostView, int width, int height)
-  : m_outpostView(std::move(outpostView))
+OutpostRenderer::OutpostRenderer(int width, int height)
 {
-  if (nullptr == m_outpostView)
-  {
-    throw std::invalid_argument("Expected non null outpost view");
-  }
   create(width, height);
 }
 
