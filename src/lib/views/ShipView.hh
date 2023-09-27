@@ -6,12 +6,12 @@
 
 namespace bsgo {
 
-class GameView : public utils::CoreObject
+class ShipView : public utils::CoreObject
 {
   public:
-  GameView();
+  ShipView();
 };
 
-using GameViewShPtr = std::shared_ptr<GameView>;
+using ShipViewPtr = std::unique_ptr<ShipView>;
 
 } // namespace bsgo

@@ -6,12 +6,12 @@
 
 namespace bsgo {
 
-class OutpostView : public utils::CoreObject
+class PlayerView : public utils::CoreObject
 {
   public:
-  OutpostView();
+  PlayerView();
 };
 
-using OutpostViewPtr = std::unique_ptr<OutpostView>;
+using PlayerViewPtr = std::unique_ptr<PlayerView>;
 
 } // namespace bsgo

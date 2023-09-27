@@ -1,7 +1,6 @@
 
 #pragma once
 
-#include "GameView.hh"
 #include "IRenderer.hh"
 #include "Menu.hh"
 
@@ -10,7 +9,7 @@ namespace pge {
 class GameRenderer : public IRenderer
 {
   public:
-  GameRenderer(const bsgo::GameViewShPtr gameView, int width, int height);
+  GameRenderer(int width, int height);
   ~GameRenderer() override = default;
 
   void render(SpriteRenderer &engine,
@@ -21,8 +20,6 @@ class GameRenderer : public IRenderer
   void updateUi() override;
 
   private:
-  bsgo::GameViewShPtr m_gameView;
-
   enum MenuItem
   {
     HEALTH = 0,
