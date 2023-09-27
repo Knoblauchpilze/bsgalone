@@ -4,7 +4,7 @@
 
 namespace pge {
 
-OutpostRenderer::OutpostRenderer(int width, int height)
+OutpostRenderer::OutpostRenderer(const bsgo::Views & /*views*/, int width, int height)
 {
   create(width, height);
 }

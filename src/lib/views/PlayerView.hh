@@ -12,6 +12,6 @@ class PlayerView : public utils::CoreObject
   PlayerView();
 };
 
-using PlayerViewPtr = std::unique_ptr<PlayerView>;
+using PlayerViewShPtr = std::shared_ptr<PlayerView>;
 
 } // namespace bsgo

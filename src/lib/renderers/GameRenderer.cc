@@ -4,7 +4,7 @@
 
 namespace pge {
 
-GameRenderer::GameRenderer(int width, int height)
+GameRenderer::GameRenderer(const bsgo::Views & /*views*/, int width, int height)
 {
   create(width, height);
 }

@@ -3,13 +3,14 @@
 
 #include "IRenderer.hh"
 #include "Menu.hh"
+#include "Views.hh"
 
 namespace pge {
 
 class GameRenderer : public IRenderer
 {
   public:
-  GameRenderer(int width, int height);
+  GameRenderer(const bsgo::Views &views, int width, int height);
   ~GameRenderer() override = default;
 
   void render(SpriteRenderer &engine,

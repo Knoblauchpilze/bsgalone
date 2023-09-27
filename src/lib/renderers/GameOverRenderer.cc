@@ -4,7 +4,7 @@
 
 namespace pge {
 
-GameOverRenderer::GameOverRenderer(int width, int height)
+GameOverRenderer::GameOverRenderer(const bsgo::Views & /*views*/, int width, int height)
 {
   create(width, height);
 }
