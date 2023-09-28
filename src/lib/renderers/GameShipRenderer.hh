@@ -23,6 +23,11 @@ class GameShipRenderer : public IRenderer
 
   private:
   bsgo::ShipViewShPtr m_shipView;
+  bsgo::SystemViewShPtr m_systemView;
+
+  sprites::PackId m_class1TexturesPackId{};
+
+  void renderShip(const bsgo::Uuid &uuid, SpriteRenderer &engine, const RenderState &state) const;
 };
 
 using GameShipRendererPtr = std::unique_ptr<GameShipRenderer>;

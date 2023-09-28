@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "Uuid.hh"
 #include <core_utils/CoreObject.hh>
 #include <memory>
 
@@ -10,6 +11,8 @@ class ShipView : public utils::CoreObject
 {
   public:
   ShipView();
+
+  auto getUuid() const noexcept -> Uuid;
 
   auto getHealth() const noexcept -> float;
   auto getMaxHealth() const noexcept -> float;
