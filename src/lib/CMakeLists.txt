@@ -10,6 +10,10 @@ set (CMAKE_POSITION_INDEPENDENT_CODE ON)
 add_library (bsgalone_lib SHARED "")
 
 add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/bsgo
+	)
+
+add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/coordinates
 	)
 
@@ -48,6 +52,7 @@ target_link_libraries (bsgalone_lib
 target_include_directories (bsgalone_lib PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
 	${CMAKE_CURRENT_SOURCE_DIR}/app
+	${CMAKE_CURRENT_SOURCE_DIR}/bsgo
 	${CMAKE_CURRENT_SOURCE_DIR}/coordinates
 	${CMAKE_CURRENT_SOURCE_DIR}/game
 	${CMAKE_CURRENT_SOURCE_DIR}/views

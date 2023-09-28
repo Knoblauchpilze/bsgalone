@@ -9,6 +9,11 @@ ShipView::ShipView()
   setService("view");
 }
 
+auto ShipView::getUuid() const noexcept -> Uuid
+{
+  return {};
+}
+
 auto ShipView::getHealth() const noexcept -> float
 {
   return 72.3f;
