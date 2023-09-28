@@ -1,20 +1,17 @@
 
 #pragma once
 
-#include "GameShipRenderer.hh"
-#include "GameSystemRenderer.hh"
-#include "GameUiRenderer.hh"
-#include "IRenderer.hh"
+#include "IScreenHandler.hh"
 #include "Menu.hh"
 #include "Views.hh"
+#include <memory>
 
 namespace pge {
-
-class GameRenderer : public IRenderer
+class GameScreenShipHandler : public IScreenHandler
 {
   public:
-  GameRenderer(const bsgo::Views &views);
-  ~GameRenderer() override = default;
+  GameScreenShipHandler(const bsgo::Views &views);
+  ~GameScreenShipHandler() override = default;
 
   void loadResources(int width, int height, sprites::TexturePack &texturesLoader) override;
   void render(SpriteRenderer &engine,
@@ -25,9 +22,14 @@ class GameRenderer : public IRenderer
   void updateUi() override;
 
   private:
-  GameUiRendererPtr m_uiRenderer;
-  GameSystemRendererPtr m_systemRenderer;
-  GameShipRendererPtr m_shipRenderer;
+  bsgo::ShipViewShPtr m_shipView;
+  bsgo::SystemViewShPtr m_systemView;
+
+  sprites::PackId m_class1TexturesPackId{};
+
+  void renderShip(const bsgo::Uuid &uuid, SpriteRenderer &engine, const RenderState &state) const;
 };
+
+using GameScreenShipHandlerPtr = std::unique_ptr<GameScreenShipHandler>;
 
 } // namespace pge

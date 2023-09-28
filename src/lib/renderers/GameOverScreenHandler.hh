@@ -1,17 +1,17 @@
 
 #pragma once
 
-#include "IRenderer.hh"
+#include "IScreenHandler.hh"
 #include "Menu.hh"
 #include "Views.hh"
 
 namespace pge {
 
-class OutpostRenderer : public IRenderer
+class GameOverScreenHandler : public IScreenHandler
 {
   public:
-  OutpostRenderer();
-  ~OutpostRenderer() override = default;
+  GameOverScreenHandler();
+  ~GameOverScreenHandler() override = default;
 
   void loadResources(int width, int height, sprites::TexturePack &texturesLoader) override;
   void render(SpriteRenderer &engine,

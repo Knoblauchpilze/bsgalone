@@ -37,8 +37,8 @@ void App::onInputs(const controls::State &c, const CoordinateFrame &cf)
   std::vector<ActionShPtr> actions;
   bool relevant = false;
 
-  const auto it = m_renderers.find(m_game->getScreen());
-  if (it != m_renderers.end())
+  const auto it = m_handlers.find(m_game->getScreen());
+  if (it != m_handlers.end())
   {
     menu::InputHandle ih = it->second->processUserInput(c, actions);
     relevant             = (relevant || ih.relevant);
@@ -87,14 +87,16 @@ void App::loadResources()
 {
   m_spriteRenderer = std::make_unique<SpriteRenderer>(this);
   m_game           = std::make_shared<Game>();
+  m_game->setScreen(Screen::GAME);
+  m_game->togglePause();
   setLayerTint(Layer::Draw, olc::Pixel(255, 255, 255, alpha::SemiOpaque));
-  m_renderers = m_game->generateRenderers(ScreenWidth(), ScreenHeight(), *m_spriteRenderer);
+  m_handlers = m_game->generateHandlers(ScreenWidth(), ScreenHeight(), *m_spriteRenderer);
 }
 
 void App::cleanResources()
 {
   m_spriteRenderer.reset();
-  m_renderers.clear();
+  m_handlers.clear();
 }
 
 void App::drawDecal(const RenderState &res)
@@ -103,14 +105,14 @@ void App::drawDecal(const RenderState &res)
   SetPixelMode(olc::Pixel::ALPHA);
   Clear(olc::VERY_DARK_GREY);
 
-  const auto renderer = m_renderers.find(m_game->getScreen());
-  if (renderer == m_renderers.end())
+  const auto handler = m_handlers.find(m_game->getScreen());
+  if (handler == m_handlers.end())
   {
     SetPixelMode(olc::Pixel::NORMAL);
     return;
   }
 
-  renderer->second->render(*m_spriteRenderer, res, RenderingPass::DECAL);
+  handler->second->render(*m_spriteRenderer, res, RenderingPass::DECAL);
 
   SetPixelMode(olc::Pixel::NORMAL);
 }
@@ -121,14 +123,14 @@ void App::draw(const RenderState &res)
   SetPixelMode(olc::Pixel::ALPHA);
   Clear(olc::Pixel(255, 255, 255, alpha::Transparent));
 
-  const auto renderer = m_renderers.find(m_game->getScreen());
-  if (renderer == m_renderers.end())
+  const auto handler = m_handlers.find(m_game->getScreen());
+  if (handler == m_handlers.end())
   {
     SetPixelMode(olc::Pixel::NORMAL);
     return;
   }
 
-  renderer->second->render(*m_spriteRenderer, res, RenderingPass::SPRITES);
+  handler->second->render(*m_spriteRenderer, res, RenderingPass::SPRITES);
 
   SetPixelMode(olc::Pixel::NORMAL);
 }
@@ -139,14 +141,14 @@ void App::drawUI(const RenderState &res)
   SetPixelMode(olc::Pixel::ALPHA);
   Clear(olc::Pixel(255, 255, 255, alpha::Transparent));
 
-  const auto renderer = m_renderers.find(m_game->getScreen());
-  if (renderer == m_renderers.end())
+  const auto handler = m_handlers.find(m_game->getScreen());
+  if (handler == m_handlers.end())
   {
     SetPixelMode(olc::Pixel::NORMAL);
     return;
   }
 
-  renderer->second->render(*m_spriteRenderer, res, RenderingPass::UI);
+  handler->second->render(*m_spriteRenderer, res, RenderingPass::UI);
 
   SetPixelMode(olc::Pixel::NORMAL);
 }
@@ -157,10 +159,10 @@ void App::drawDebug(const RenderState &res)
   SetPixelMode(olc::Pixel::ALPHA);
   Clear(olc::Pixel(255, 255, 255, alpha::Transparent));
 
-  const auto renderer = m_renderers.find(m_game->getScreen());
-  if (renderer != m_renderers.end())
+  const auto handler = m_handlers.find(m_game->getScreen());
+  if (handler != m_handlers.end())
   {
-    renderer->second->render(*m_spriteRenderer, res, RenderingPass::DEBUG);
+    handler->second->render(*m_spriteRenderer, res, RenderingPass::DEBUG);
   }
 
   // Draw cursor's position.

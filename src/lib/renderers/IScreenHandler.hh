@@ -15,11 +15,11 @@ namespace pge {
 class Action;
 using ActionShPtr = std::shared_ptr<Action>;
 
-class IRenderer : public utils::CoreObject
+class IScreenHandler : public utils::CoreObject
 {
   public:
-  IRenderer();
-  virtual ~IRenderer() = default;
+  IScreenHandler();
+  virtual ~IScreenHandler() = default;
 
   virtual void loadResources(int width, int height, sprites::TexturePack &texturesLoader) = 0;
   virtual void render(SpriteRenderer &engine,
@@ -30,6 +30,6 @@ class IRenderer : public utils::CoreObject
   virtual void updateUi() = 0;
 };
 
-using IRendererPtr = std::unique_ptr<IRenderer>;
+using IScreenHandlerPtr = std::unique_ptr<IScreenHandler>;
 
 } // namespace pge

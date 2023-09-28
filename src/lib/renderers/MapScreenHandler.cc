@@ -1,12 +1,14 @@
 
-#include "MapRenderer.hh"
+#include "MapScreenHandler.hh"
 #include "ScreenCommon.hh"
 
 namespace pge {
 
-MapRenderer::MapRenderer() {}
+MapScreenHandler::MapScreenHandler() {}
 
-void MapRenderer::loadResources(int width, int height, sprites::TexturePack & /*texturesLoader*/)
+void MapScreenHandler::loadResources(int width,
+                                     int height,
+                                     sprites::TexturePack & /*texturesLoader*/)
 {
   const olc::vi2d dims{width, height};
   m_menu = generateDefaultScreen(dims, olc::DARK_ORANGE);
@@ -16,9 +18,9 @@ void MapRenderer::loadResources(int width, int height, sprites::TexturePack & /*
   m_menu->addMenu(m);
 }
 
-void MapRenderer::render(SpriteRenderer &engine,
-                         const RenderState & /*state*/,
-                         const RenderingPass pass) const
+void MapScreenHandler::render(SpriteRenderer &engine,
+                              const RenderState & /*state*/,
+                              const RenderingPass pass) const
 {
   switch (pass)
   {
@@ -30,12 +32,12 @@ void MapRenderer::render(SpriteRenderer &engine,
   }
 }
 
-auto MapRenderer::processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions)
+auto MapScreenHandler::processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions)
   -> menu::InputHandle
 {
   return m_menu->processUserInput(c, actions);
 }
 
-void MapRenderer::updateUi() {}
+void MapScreenHandler::updateUi() {}
 
 } // namespace pge

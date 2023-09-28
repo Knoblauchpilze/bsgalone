@@ -1,16 +1,17 @@
 
 #pragma once
 
-#include "IRenderer.hh"
+#include "IScreenHandler.hh"
 #include "Menu.hh"
+#include "Views.hh"
+#include <memory>
 
 namespace pge {
-
-class LoginRenderer : public IRenderer
+class GameScreenSystemHandler : public IScreenHandler
 {
   public:
-  LoginRenderer();
-  ~LoginRenderer() override = default;
+  GameScreenSystemHandler(const bsgo::Views &views);
+  ~GameScreenSystemHandler() override = default;
 
   void loadResources(int width, int height, sprites::TexturePack &texturesLoader) override;
   void render(SpriteRenderer &engine,
@@ -21,7 +22,9 @@ class LoginRenderer : public IRenderer
   void updateUi() override;
 
   private:
-  MenuShPtr m_menu{nullptr};
+  bsgo::SystemViewShPtr m_systemView;
 };
+
+using GameScreenSystemHandlerPtr = std::unique_ptr<GameScreenSystemHandler>;
 
 } // namespace pge

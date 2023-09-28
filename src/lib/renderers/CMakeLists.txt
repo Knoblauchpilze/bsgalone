@@ -1,16 +1,16 @@
 
 target_sources (bsgalone_lib PRIVATE
-	${CMAKE_CURRENT_SOURCE_DIR}/IRenderer.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/IScreenHandler.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SpriteRenderer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ScreenCommon.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/LoginRenderer.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/GameUiRenderer.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/GameSystemRenderer.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/GameShipRenderer.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/GameRenderer.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/MapRenderer.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/OutpostRenderer.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/GameOverRenderer.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/LoginScreenHandler.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/GameScreenUiHandler.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/GameScreenSystemHandler.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/GameScreenShipHandler.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/GameScreenHandler.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/MapScreenHandler.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/OutpostScreenHandler.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/GameOverScreenHandler.cc
 	)
 
 target_include_directories (bsgalone_lib PUBLIC

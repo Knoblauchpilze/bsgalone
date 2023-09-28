@@ -1,11 +1,11 @@
 
 #include "Game.hh"
-#include "GameOverRenderer.hh"
-#include "GameRenderer.hh"
-#include "LoginRenderer.hh"
-#include "MapRenderer.hh"
+#include "GameOverScreenHandler.hh"
+#include "GameScreenHandler.hh"
+#include "LoginScreenHandler.hh"
+#include "MapScreenHandler.hh"
 #include "Menu.hh"
-#include "OutpostRenderer.hh"
+#include "OutpostScreenHandler.hh"
 
 namespace pge {
 
@@ -15,39 +15,39 @@ Game::Game()
   setService("game");
 }
 
-auto Game::generateRenderers(int width, int height, SpriteRenderer &spriteRenderer)
-  -> std::unordered_map<Screen, IRendererPtr>
+auto Game::generateHandlers(int width, int height, SpriteRenderer &spriteRenderer)
+  -> std::unordered_map<Screen, IScreenHandlerPtr>
 {
-  std::unordered_map<Screen, IRendererPtr> out;
+  std::unordered_map<Screen, IScreenHandlerPtr> out;
 
   bsgo::Views views;
   views.shipView        = std::make_shared<bsgo::ShipView>();
   views.systemView      = std::make_shared<bsgo::SystemView>();
   auto &texturesHandler = spriteRenderer.getTextureHandler();
 
-  auto login = std::make_unique<LoginRenderer>();
+  auto login = std::make_unique<LoginScreenHandler>();
   login->loadResources(width, height, texturesHandler);
   out[Screen::LOGIN] = std::move(login);
 
-  auto game = std::make_unique<GameRenderer>(views);
+  auto game = std::make_unique<GameScreenHandler>(views);
   game->loadResources(width, height, texturesHandler);
   out[Screen::GAME] = std::move(game);
 
-  auto map = std::make_unique<MapRenderer>();
+  auto map = std::make_unique<MapScreenHandler>();
   map->loadResources(width, height, texturesHandler);
   out[Screen::MAP] = std::move(map);
 
-  auto outpost = std::make_unique<OutpostRenderer>();
+  auto outpost = std::make_unique<OutpostScreenHandler>();
   outpost->loadResources(width, height, texturesHandler);
   out[Screen::OUTPOST] = std::move(outpost);
 
-  auto gameOver = std::make_unique<GameOverRenderer>();
+  auto gameOver = std::make_unique<GameOverScreenHandler>();
   gameOver->loadResources(width, height, texturesHandler);
   out[Screen::GAMEOVER] = std::move(gameOver);
 
-  for (const auto &[screen, renderer] : out)
+  for (const auto &[screen, handler] : out)
   {
-    m_renderers[screen] = renderer.get();
+    m_handlers[screen] = handler.get();
   }
 
   return out;
@@ -106,8 +106,8 @@ void Game::enable(bool enable)
 
 void Game::updateUI()
 {
-  const auto it = m_renderers.find(m_state.screen);
-  if (it == m_renderers.end())
+  const auto it = m_handlers.find(m_state.screen);
+  if (it == m_handlers.end())
   {
     return;
   }

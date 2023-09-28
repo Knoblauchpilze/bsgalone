@@ -1,17 +1,16 @@
 
 #pragma once
 
-#include "IRenderer.hh"
+#include "IScreenHandler.hh"
 #include "Menu.hh"
-#include "Views.hh"
 
 namespace pge {
 
-class MapRenderer : public IRenderer
+class LoginScreenHandler : public IScreenHandler
 {
   public:
-  MapRenderer();
-  ~MapRenderer() override = default;
+  LoginScreenHandler();
+  ~LoginScreenHandler() override = default;
 
   void loadResources(int width, int height, sprites::TexturePack &texturesLoader) override;
   void render(SpriteRenderer &engine,

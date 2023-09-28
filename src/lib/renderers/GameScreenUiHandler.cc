@@ -1,10 +1,10 @@
 
-#include "GameUiRenderer.hh"
+#include "GameScreenUiHandler.hh"
 #include "ScreenCommon.hh"
 
 namespace pge {
 
-GameUiRenderer::GameUiRenderer(const bsgo::Views &views)
+GameScreenUiHandler::GameScreenUiHandler(const bsgo::Views &views)
   : m_shipView(views.shipView)
 {
   if (nullptr == m_shipView)
@@ -13,7 +13,9 @@ GameUiRenderer::GameUiRenderer(const bsgo::Views &views)
   }
 }
 
-void GameUiRenderer::loadResources(int width, int height, sprites::TexturePack & /*texturesLoader*/)
+void GameScreenUiHandler::loadResources(int width,
+                                        int height,
+                                        sprites::TexturePack & /*texturesLoader*/)
 {
   m_menus.resize(MenuItem::COUNT);
 
@@ -29,9 +31,9 @@ void GameUiRenderer::loadResources(int width, int height, sprites::TexturePack &
   generateWeaponMenus(width, height);
 }
 
-void GameUiRenderer::render(SpriteRenderer &engine,
-                            const RenderState & /*state*/,
-                            const RenderingPass pass) const
+void GameScreenUiHandler::render(SpriteRenderer &engine,
+                                 const RenderState & /*state*/,
+                                 const RenderingPass pass) const
 {
   if (pass != RenderingPass::UI)
   {
@@ -44,8 +46,8 @@ void GameUiRenderer::render(SpriteRenderer &engine,
   }
 }
 
-auto GameUiRenderer::processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions)
-  -> menu::InputHandle
+auto GameScreenUiHandler::processUserInput(const controls::State &c,
+                                           std::vector<ActionShPtr> &actions) -> menu::InputHandle
 {
   bool relevant{false};
   bool selected{false};
@@ -60,7 +62,7 @@ auto GameUiRenderer::processUserInput(const controls::State &c, std::vector<Acti
   return menu::InputHandle{.relevant = relevant, .selected = selected};
 }
 
-void GameUiRenderer::updateUi()
+void GameScreenUiHandler::updateUi()
 {
   std::string text;
 
@@ -77,7 +79,7 @@ void GameUiRenderer::updateUi()
   m_menus[POWER]->setText(text);
 }
 
-void GameUiRenderer::generateAbilityMenus(int width, int height)
+void GameScreenUiHandler::generateAbilityMenus(int width, int height)
 {
   olc::vi2d dims{50, 50};
   constexpr auto SPACING_IN_PIXELS = 5;
@@ -99,7 +101,7 @@ void GameUiRenderer::generateAbilityMenus(int width, int height)
   }
 }
 
-void GameUiRenderer::generateWeaponMenus(int width, int height)
+void GameScreenUiHandler::generateWeaponMenus(int width, int height)
 {
   olc::vi2d dims{50, 50};
   constexpr auto SPACING_IN_PIXELS = 5;
