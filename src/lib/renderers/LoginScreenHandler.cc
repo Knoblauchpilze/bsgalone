@@ -1,12 +1,14 @@
 
-#include "LoginRenderer.hh"
+#include "LoginScreenHandler.hh"
 #include "ScreenCommon.hh"
 
 namespace pge {
 
-LoginRenderer::LoginRenderer() {}
+LoginScreenHandler::LoginScreenHandler() {}
 
-void LoginRenderer::loadResources(int width, int height, sprites::TexturePack & /*texturesLoader*/)
+void LoginScreenHandler::loadResources(int width,
+                                       int height,
+                                       sprites::TexturePack & /*texturesLoader*/)
 {
   const olc::vi2d dims{width, height};
   m_menu = generateDefaultScreen(dims, olc::DARK_PINK);
@@ -23,9 +25,9 @@ void LoginRenderer::loadResources(int width, int height, sprites::TexturePack & 
   m_menu->addMenu(m);
 }
 
-void LoginRenderer::render(SpriteRenderer &engine,
-                           const RenderState & /*state*/,
-                           const RenderingPass pass) const
+void LoginScreenHandler::render(SpriteRenderer &engine,
+                                const RenderState & /*state*/,
+                                const RenderingPass pass) const
 {
   switch (pass)
   {
@@ -37,12 +39,12 @@ void LoginRenderer::render(SpriteRenderer &engine,
   }
 }
 
-auto LoginRenderer::processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions)
-  -> menu::InputHandle
+auto LoginScreenHandler::processUserInput(const controls::State &c,
+                                          std::vector<ActionShPtr> &actions) -> menu::InputHandle
 {
   return m_menu->processUserInput(c, actions);
 }
 
-void LoginRenderer::updateUi() {}
+void LoginScreenHandler::updateUi() {}
 
 } // namespace pge

@@ -1,17 +1,17 @@
 
 #pragma once
 
-#include "IRenderer.hh"
+#include "IScreenHandler.hh"
 #include "Menu.hh"
 #include "Views.hh"
 #include <memory>
 
 namespace pge {
-class GameUiRenderer : public IRenderer
+class GameScreenUiHandler : public IScreenHandler
 {
   public:
-  GameUiRenderer(const bsgo::Views &views);
-  ~GameUiRenderer() override = default;
+  GameScreenUiHandler(const bsgo::Views &views);
+  ~GameScreenUiHandler() override = default;
 
   void loadResources(int width, int height, sprites::TexturePack &texturesLoader) override;
   void render(SpriteRenderer &engine,
@@ -50,6 +50,6 @@ class GameUiRenderer : public IRenderer
   void generateWeaponMenus(int width, int height);
 };
 
-using GameUiRendererPtr = std::unique_ptr<GameUiRenderer>;
+using GameScreenUiHandlerPtr = std::unique_ptr<GameScreenUiHandler>;
 
 } // namespace pge

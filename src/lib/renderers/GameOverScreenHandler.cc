@@ -1,14 +1,14 @@
 
-#include "GameOverRenderer.hh"
+#include "GameOverScreenHandler.hh"
 #include "ScreenCommon.hh"
 
 namespace pge {
 
-GameOverRenderer::GameOverRenderer() {}
+GameOverScreenHandler::GameOverScreenHandler() {}
 
-void GameOverRenderer::loadResources(int width,
-                                     int height,
-                                     sprites::TexturePack & /*texturesLoader*/)
+void GameOverScreenHandler::loadResources(int width,
+                                          int height,
+                                          sprites::TexturePack & /*texturesLoader*/)
 {
   const olc::vi2d dims{width, height};
   m_menu = generateDefaultScreen(dims, olc::DARK_MAGENTA);
@@ -29,9 +29,9 @@ void GameOverRenderer::loadResources(int width,
   m_menu->addMenu(m);
 }
 
-void GameOverRenderer::render(SpriteRenderer &engine,
-                              const RenderState & /*state*/,
-                              const RenderingPass pass) const
+void GameOverScreenHandler::render(SpriteRenderer &engine,
+                                   const RenderState & /*state*/,
+                                   const RenderingPass pass) const
 {
   switch (pass)
   {
@@ -43,12 +43,12 @@ void GameOverRenderer::render(SpriteRenderer &engine,
   }
 }
 
-auto GameOverRenderer::processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions)
-  -> menu::InputHandle
+auto GameOverScreenHandler::processUserInput(const controls::State &c,
+                                             std::vector<ActionShPtr> &actions) -> menu::InputHandle
 {
   return m_menu->processUserInput(c, actions);
 }
 
-void GameOverRenderer::updateUi() {}
+void GameOverScreenHandler::updateUi() {}
 
 } // namespace pge

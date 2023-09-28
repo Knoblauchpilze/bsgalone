@@ -2,7 +2,7 @@
 #pragma once
 
 #include "Game.hh"
-#include "IRenderer.hh"
+#include "IScreenHandler.hh"
 #include "Menu.hh"
 #include "PGEApp.hh"
 #include "SpriteRenderer.hh"
@@ -41,7 +41,7 @@ class App : public PGEApp
   private:
   GameShPtr m_game{nullptr};
   SpriteRendererPtr m_spriteRenderer{nullptr};
-  std::unordered_map<Screen, IRendererPtr> m_renderers{};
+  std::unordered_map<Screen, IScreenHandlerPtr> m_handlers{};
 };
 
 } // namespace pge

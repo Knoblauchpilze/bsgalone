@@ -3,7 +3,7 @@
 
 #include "Action.hh"
 #include "Controls.hh"
-#include "IRenderer.hh"
+#include "IScreenHandler.hh"
 #include "Screen.hh"
 #include "SpriteRenderer.hh"
 #include <core_utils/CoreObject.hh>
@@ -18,8 +18,8 @@ namespace pge {
 class Menu;
 using MenuShPtr = std::shared_ptr<Menu>;
 
-class IRenderer;
-using IRendererPtr = std::unique_ptr<IRenderer>;
+class IScreenHandler;
+using IScreenHandlerPtr = std::unique_ptr<IScreenHandler>;
 
 class Game : public utils::CoreObject
 {
@@ -37,8 +37,8 @@ class Game : public utils::CoreObject
   /// @param screen - the new screen to apply.
   void setScreen(const Screen &screen);
 
-  auto generateRenderers(int width, int height, SpriteRenderer &spriteRenderer)
-    -> std::unordered_map<Screen, IRendererPtr>;
+  auto generateHandlers(int width, int height, SpriteRenderer &spriteRenderer)
+    -> std::unordered_map<Screen, IScreenHandlerPtr>;
 
   /// @brief - Used to perform an action at the specified location. What needs to
   /// be done exactly is left to the user. This implementation does nothing by
@@ -141,7 +141,7 @@ class Game : public utils::CoreObject
   /// @brief - The definition of the game state.
   State m_state{};
 
-  std::unordered_map<Screen, IRenderer *> m_renderers{};
+  std::unordered_map<Screen, IScreenHandler *> m_handlers{};
 };
 
 using GameShPtr = std::shared_ptr<Game>;

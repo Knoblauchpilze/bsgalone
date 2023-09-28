@@ -1,10 +1,10 @@
 
-#include "GameShipRenderer.hh"
+#include "GameScreenShipHandler.hh"
 #include "ScreenCommon.hh"
 
 namespace pge {
 
-GameShipRenderer::GameShipRenderer(const bsgo::Views &views)
+GameScreenShipHandler::GameScreenShipHandler(const bsgo::Views &views)
   : m_shipView(views.shipView)
   , m_systemView(views.systemView)
 {
@@ -18,9 +18,9 @@ GameShipRenderer::GameShipRenderer(const bsgo::Views &views)
   }
 }
 
-void GameShipRenderer::loadResources(int /*width*/,
-                                     int /*height*/,
-                                     sprites::TexturePack &texturesLoader)
+void GameScreenShipHandler::loadResources(int /*width*/,
+                                          int /*height*/,
+                                          sprites::TexturePack &texturesLoader)
 {
   constexpr auto CLASS_1_TEXTURE_PACK_FILE_PATH = "data/assets/class_1.png";
   constexpr auto CLASS_1_TILE_WIDTH_PIXELS      = 460;
@@ -32,9 +32,9 @@ void GameShipRenderer::loadResources(int /*width*/,
   m_class1TexturesPackId = texturesLoader.registerPack(pack);
 }
 
-void GameShipRenderer::render(SpriteRenderer &engine,
-                              const RenderState &state,
-                              const RenderingPass pass) const
+void GameScreenShipHandler::render(SpriteRenderer &engine,
+                                   const RenderState &state,
+                                   const RenderingPass pass) const
 {
   if (pass != RenderingPass::DECAL)
   {
@@ -44,17 +44,18 @@ void GameShipRenderer::render(SpriteRenderer &engine,
   renderShip(m_shipView->getUuid(), engine, state);
 }
 
-auto GameShipRenderer::processUserInput(const controls::State & /*c*/,
-                                        std::vector<ActionShPtr> & /*actions*/) -> menu::InputHandle
+auto GameScreenShipHandler::processUserInput(const controls::State & /*c*/,
+                                             std::vector<ActionShPtr> & /*actions*/)
+  -> menu::InputHandle
 {
   return {};
 }
 
-void GameShipRenderer::updateUi() {}
+void GameScreenShipHandler::updateUi() {}
 
-void GameShipRenderer::renderShip(const bsgo::Uuid &uuid,
-                                  SpriteRenderer &engine,
-                                  const RenderState &state) const
+void GameScreenShipHandler::renderShip(const bsgo::Uuid &uuid,
+                                       SpriteRenderer &engine,
+                                       const RenderState &state) const
 {
   const auto shipPosition = m_systemView->getShipPosition(uuid);
 
