@@ -23,6 +23,12 @@ class GameScreenSystemHandler : public IScreenHandler
 
   private:
   bsgo::SystemViewShPtr m_systemView;
+
+  sprites::PackId m_asteroidTexturesPackId{};
+
+  void renderAsteroid(const Eigen::Vector3d &position,
+                      SpriteRenderer &engine,
+                      const RenderState &state) const;
 };
 
 using GameScreenSystemHandlerPtr = std::unique_ptr<GameScreenSystemHandler>;

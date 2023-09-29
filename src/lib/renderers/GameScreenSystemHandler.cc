@@ -15,16 +15,31 @@ GameScreenSystemHandler::GameScreenSystemHandler(const bsgo::Views &views)
 
 void GameScreenSystemHandler::loadResources(int /*width*/,
                                             int /*height*/,
-                                            sprites::TexturePack & /*texturesLoader*/)
-{}
+                                            sprites::TexturePack &texturesLoader)
+{
+  constexpr auto ASTEROID_TEXTURE_PACK_FILE_PATH = "data/assets/asteroid.png";
+  constexpr auto ASTEROID_TILE_WIDTH_PIXELS      = 450;
+  constexpr auto ASTEROID_TILE_HEIGHT_PIXELS     = 404;
+  auto pack = sprites::PackDesc{.file = ASTEROID_TEXTURE_PACK_FILE_PATH,
+                                .sSize{ASTEROID_TILE_WIDTH_PIXELS, ASTEROID_TILE_HEIGHT_PIXELS},
+                                .layout{1, 1}};
 
-void GameScreenSystemHandler::render(SpriteRenderer & /*engine*/,
-                                     const RenderState & /*state*/,
+  m_asteroidTexturesPackId = texturesLoader.registerPack(pack);
+}
+
+void GameScreenSystemHandler::render(SpriteRenderer &engine,
+                                     const RenderState &state,
                                      const RenderingPass pass) const
 {
   if (pass != RenderingPass::DECAL)
   {
     return;
+  }
+
+  const auto asteroids = m_systemView->getAsteroidPositions();
+  for (const auto &asteroidPos : asteroids)
+  {
+    renderAsteroid(asteroidPos, engine, state);
   }
 }
 
@@ -36,5 +51,22 @@ auto GameScreenSystemHandler::processUserInput(const controls::State & /*c*/,
 }
 
 void GameScreenSystemHandler::updateUi() {}
+
+void GameScreenSystemHandler::renderAsteroid(const Eigen::Vector3d &position,
+                                             SpriteRenderer &engine,
+                                             const RenderState &state) const
+{
+  SpriteDesc t;
+  t.x = position(0);
+  t.y = position(1);
+
+  t.radius = 1.0f;
+
+  t.sprite.pack   = m_asteroidTexturesPackId;
+  t.sprite.sprite = {0, 0};
+  t.sprite.tint   = olc::WHITE;
+
+  engine.drawWarpedSprite(t, state.cf);
+}
 
 } // namespace pge
