@@ -14,6 +14,7 @@ class SystemView : public utils::CoreObject
   SystemView();
 
   auto getShipPosition(const Uuid &uuid) const -> Eigen::Vector3d;
+  auto getAsteroidPositions() const -> std::vector<Eigen::Vector3d>;
 };
 
 using SystemViewShPtr = std::shared_ptr<SystemView>;
