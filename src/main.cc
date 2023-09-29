@@ -23,7 +23,7 @@ int main(int /*argc*/, char ** /*argv*/)
   {
     logger.logMessage(utils::Level::Notice, "Starting application");
 
-    auto tiles  = pge::CenteredViewport({0.0f, 0.0f}, {4.0f, 3.0f});
+    auto tiles  = pge::CenteredViewport({0.0f, 0.0f}, {16.0f, 12.0f});
     auto pixels = pge::TopLeftViewport({0.0f, 0.0f}, {800.0f, 600.0f});
 
     auto frame      = std::make_shared<pge::TopViewFrame>(tiles, pixels);
