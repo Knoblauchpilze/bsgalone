@@ -25,6 +25,10 @@ void GameScreenSystemHandler::loadResources(int /*width*/,
                                 .layout{1, 1}};
 
   m_asteroidTexturesPackId = texturesLoader.registerPack(pack);
+
+  constexpr auto BACKGROUND_TILE_SIZE_IN_PIXELS = 300;
+  m_systemBackground = std::make_unique<TiledBackground>(BACKGROUND_TILE_SIZE_IN_PIXELS,
+                                                         texturesLoader);
 }
 
 void GameScreenSystemHandler::render(SpriteRenderer &engine,
@@ -35,6 +39,8 @@ void GameScreenSystemHandler::render(SpriteRenderer &engine,
   {
     return;
   }
+
+  m_systemBackground->render(engine, state);
 
   const auto asteroids = m_systemView->getAsteroidPositions();
   for (const auto &asteroidPos : asteroids)

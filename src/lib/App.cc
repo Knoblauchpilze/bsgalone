@@ -103,7 +103,7 @@ void App::drawDecal(const RenderState &res)
 {
   // Clear rendering target.
   SetPixelMode(olc::Pixel::ALPHA);
-  Clear(olc::VERY_DARK_GREY);
+  Clear(olc::OFF_BLACK);
 
   const auto handler = m_handlers.find(m_game->getScreen());
   if (handler == m_handlers.end())

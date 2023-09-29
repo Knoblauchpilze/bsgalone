@@ -3,6 +3,7 @@
 
 #include "IScreenHandler.hh"
 #include "Menu.hh"
+#include "TiledBackground.hh"
 #include "Views.hh"
 #include <memory>
 
@@ -25,6 +26,7 @@ class GameScreenSystemHandler : public IScreenHandler
   bsgo::SystemViewShPtr m_systemView;
 
   sprites::PackId m_asteroidTexturesPackId{};
+  TiledBackgroundPtr m_systemBackground{};
 
   void renderAsteroid(const Eigen::Vector3d &position,
                       SpriteRenderer &engine,
