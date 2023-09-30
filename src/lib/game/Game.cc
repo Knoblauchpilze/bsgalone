@@ -53,7 +53,7 @@ auto Game::generateHandlers(int width, int height, SpriteRenderer &spriteRendere
   return out;
 }
 
-void Game::performAction(float /*x*/, float /*y*/)
+void Game::performAction(float x, float y, const controls::State &state)
 {
   // Only handle actions when the game is not disabled.
   if (m_state.disabled)
@@ -61,6 +61,14 @@ void Game::performAction(float /*x*/, float /*y*/)
     log("Ignoring action while menu is disabled");
     return;
   }
+
+  const auto it = m_handlers.find(m_state.screen);
+  if (it == m_handlers.end())
+  {
+    return;
+  }
+
+  it->second->performAction(x, y, state);
 }
 
 bool Game::step(float /*tDelta*/)

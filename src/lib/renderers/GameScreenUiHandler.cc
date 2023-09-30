@@ -79,6 +79,9 @@ void GameScreenUiHandler::updateUi()
   m_menus[POWER]->setText(text);
 }
 
+void GameScreenUiHandler::performAction(float /*x*/, float /*y*/, const controls::State & /*state*/)
+{}
+
 void GameScreenUiHandler::generateAbilityMenus(int width, int height)
 {
   olc::vi2d dims{50, 50};

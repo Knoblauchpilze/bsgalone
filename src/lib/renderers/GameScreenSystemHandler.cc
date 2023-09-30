@@ -62,6 +62,11 @@ auto GameScreenSystemHandler::processUserInput(const controls::State & /*c*/,
 
 void GameScreenSystemHandler::updateUi() {}
 
+void GameScreenSystemHandler::performAction(float /*x*/,
+                                            float /*y*/,
+                                            const controls::State & /*state*/)
+{}
+
 void GameScreenSystemHandler::renderAsteroid(const Eigen::Vector3d &position,
                                              SpriteRenderer &engine,
                                              const RenderState &state) const

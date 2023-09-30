@@ -55,7 +55,7 @@ void App::onInputs(const controls::State &c, const CoordinateFrame &cf)
     olc::vf2d it;
     olc::vi2d tp = cf.pixelsToTilesAndIntra(olc::vi2d(c.mPosX, c.mPosY), &it);
 
-    m_game->performAction(tp.x + it.x, tp.y + it.y);
+    m_game->performAction(tp.x + it.x, tp.y + it.y, c);
   }
 
   if (c.keys[controls::keys::P])

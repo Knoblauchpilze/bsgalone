@@ -40,4 +40,7 @@ auto OutpostScreenHandler::processUserInput(const controls::State &c,
 
 void OutpostScreenHandler::updateUi() {}
 
+void OutpostScreenHandler::performAction(float /*x*/, float /*y*/, const controls::State & /*state*/)
+{}
+
 } // namespace pge

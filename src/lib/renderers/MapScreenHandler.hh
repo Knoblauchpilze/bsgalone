@@ -20,6 +20,7 @@ class MapScreenHandler : public IScreenHandler
   auto processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions)
     -> menu::InputHandle override;
   void updateUi() override;
+  void performAction(float x, float y, const controls::State &state) override;
 
   private:
   MenuShPtr m_menu{nullptr};

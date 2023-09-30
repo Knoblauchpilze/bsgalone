@@ -46,4 +46,10 @@ void GameScreenHandler::updateUi()
   m_uiHandler->updateUi();
 }
 
+void GameScreenHandler::performAction(float x, float y, const controls::State &state)
+{
+  m_systemHandler->performAction(x, y, state);
+  m_shipHandler->performAction(x, y, state);
+}
+
 } // namespace pge

@@ -40,4 +40,6 @@ auto MapScreenHandler::processUserInput(const controls::State &c, std::vector<Ac
 
 void MapScreenHandler::updateUi() {}
 
+void MapScreenHandler::performAction(float /*x*/, float /*y*/, const controls::State & /*state*/) {}
+
 } // namespace pge
