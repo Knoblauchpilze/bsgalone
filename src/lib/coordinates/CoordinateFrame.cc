@@ -24,6 +24,11 @@ CenteredViewport CoordinateFrame::tilesViewport() const noexcept
   return m_tilesViewport;
 }
 
+TopLeftViewport CoordinateFrame::pixelsViewport() const noexcept
+{
+  return m_pixelsViewport;
+}
+
 olc::vf2d CoordinateFrame::tilesToPixels(float x, float y) const noexcept
 {
   auto rel = m_tilesViewport.relativeCoords(x, y);
