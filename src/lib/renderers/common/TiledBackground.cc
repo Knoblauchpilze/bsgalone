@@ -51,20 +51,14 @@ void TiledBackground::loadDecal(sprites::TexturePack &texturesLoader)
 
 void TiledBackground::updateBackgroundOffset(const CoordinateFrame &cf)
 {
-  if (!m_savedCenter)
-  {
-    m_savedCenter = cf.tilesViewport().center();
-    return;
-  }
-
   const auto newTileSize = cf.tileSize();
-  if (!m_savedTileDimension || newTileSize.x != m_savedTileDimension->x
+  if (!m_savedCenter || !m_savedTileDimension || newTileSize.x != m_savedTileDimension->x
       || newTileSize.y != m_savedTileDimension->y)
   {
+    m_savedCenter            = cf.tilesViewport().center();
     m_savedTileDimension     = newTileSize;
     m_accumulatedTranslation = {};
     m_offset                 = m_offset;
-    std::cout << "haha" << std::endl;
     return;
   }
 

@@ -27,8 +27,8 @@ void GameScreenSystemHandler::loadResources(int /*width*/,
   m_asteroidTexturesPackId = texturesLoader.registerPack(pack);
 
   const olc::vi2d offset{10, 10};
-  constexpr auto BACKGROUND_TILE_SIZE_IN_PIXELS = 300;
-  constexpr auto BACKGROUND_SLOWDOWN_RATIO      = 5.0f;
+  constexpr auto BACKGROUND_TILE_SIZE_IN_PIXELS = 768;
+  constexpr auto BACKGROUND_SLOWDOWN_RATIO      = 2.0f;
   m_systemBackground                            = std::make_unique<TiledBackground>(offset,
                                                          BACKGROUND_TILE_SIZE_IN_PIXELS,
                                                          BACKGROUND_SLOWDOWN_RATIO,
