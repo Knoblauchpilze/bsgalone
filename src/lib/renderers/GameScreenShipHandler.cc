@@ -53,6 +53,11 @@ auto GameScreenShipHandler::processUserInput(const controls::State & /*c*/,
 
 void GameScreenShipHandler::updateUi() {}
 
+void GameScreenShipHandler::performAction(float /*x*/,
+                                          float /*y*/,
+                                          const controls::State & /*state*/)
+{}
+
 void GameScreenShipHandler::renderShip(const bsgo::Uuid &uuid,
                                        SpriteRenderer &engine,
                                        const RenderState &state) const

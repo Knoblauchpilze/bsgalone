@@ -47,4 +47,7 @@ auto LoginScreenHandler::processUserInput(const controls::State &c,
 
 void LoginScreenHandler::updateUi() {}
 
+void LoginScreenHandler::performAction(float /*x*/, float /*y*/, const controls::State & /*state*/)
+{}
+
 } // namespace pge

@@ -26,8 +26,9 @@ class IScreenHandler : public utils::CoreObject
                       const RenderState &state,
                       const RenderingPass pass) const                                     = 0;
   virtual auto processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions)
-    -> menu::InputHandle  = 0;
-  virtual void updateUi() = 0;
+    -> menu::InputHandle                                                     = 0;
+  virtual void updateUi()                                                    = 0;
+  virtual void performAction(float x, float y, const controls::State &state) = 0;
 };
 
 using IScreenHandlerPtr = std::unique_ptr<IScreenHandler>;

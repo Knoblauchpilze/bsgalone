@@ -23,6 +23,7 @@ class GameScreenHandler : public IScreenHandler
   auto processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions)
     -> menu::InputHandle override;
   void updateUi() override;
+  void performAction(float x, float y, const controls::State &state) override;
 
   private:
   GameScreenUiHandlerPtr m_uiHandler;

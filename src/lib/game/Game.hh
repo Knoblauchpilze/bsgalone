@@ -46,8 +46,9 @@ class Game : public utils::CoreObject
   /// The coordinates are expressed in tiles (and not in pixels).
   /// @param x - x position of where to perform the action.
   /// @param y - y position of where to perform the action.
+  /// @param state - the state of the controls at the moment of the action.
   ////
-  void performAction(float x, float y);
+  void performAction(float x, float y, const controls::State &state);
 
   /// @brief - Requests the game to be terminated. This is applied to the next
   /// iteration of the game loop.

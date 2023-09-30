@@ -51,4 +51,9 @@ auto GameOverScreenHandler::processUserInput(const controls::State &c,
 
 void GameOverScreenHandler::updateUi() {}
 
+void GameOverScreenHandler::performAction(float /*x*/,
+                                          float /*y*/,
+                                          const controls::State & /*state*/)
+{}
+
 } // namespace pge
