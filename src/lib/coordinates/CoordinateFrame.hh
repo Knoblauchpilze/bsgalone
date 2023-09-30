@@ -28,6 +28,10 @@ class CoordinateFrame : public utils::CoreObject
   /// @return - the viewport of this coordinate frame in tiles.
   CenteredViewport tilesViewport() const noexcept;
 
+  /// @brief - Returns the current viewport in pixels.
+  /// @return - the viewport of this coordinate frame in pixels.
+  TopLeftViewport pixelsViewport() const noexcept;
+
   /// @brief - Convert the input tile coordinates to the corresponding
   /// pixel position.
   /// @param x - x coordinate in tiles.
@@ -115,9 +119,9 @@ class CoordinateFrame : public utils::CoreObject
   /// origin.
   olc::vf2d m_pixelsTranslationOrigin;
 
-  /// @brief - Cached position of the top left corner of the pixels viewport
-  /// when starting the translation. Once the translation is performed we are
-  /// able to update the viewport accordingly.
+  /// @brief - Cached position of the center of the tiles viewport when starting
+  /// the translation. Once the translation is performed we are able to update the
+  /// viewport accordingly.
   olc::vf2d m_tilesCachedPOrigin;
 };
 

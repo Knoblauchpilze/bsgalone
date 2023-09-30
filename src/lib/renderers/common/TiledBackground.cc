@@ -3,34 +3,36 @@
 
 namespace pge {
 
-TiledBackground::TiledBackground(const int pixelSize, sprites::TexturePack &texturesLoader)
-  : m_pixelSize(pixelSize)
+TiledBackground::TiledBackground(const olc::vi2d &offset,
+                                 const int pixelSize,
+                                 const float slowdownRatio,
+                                 sprites::TexturePack &texturesLoader)
+  : m_offset(offset)
+  , m_pixelSize(pixelSize)
+  , m_slowdownRatio(slowdownRatio)
 {
   loadDecal(texturesLoader);
 }
 
 void TiledBackground::render(SpriteRenderer &spriteHandler, const RenderState &state)
 {
-  const auto tilesViewport = state.cf.tilesViewport();
-  const auto topLeft       = tilesViewport.topLeft();
-  const auto dims          = tilesViewport.dims();
+  const auto pixelsViewport = state.cf.pixelsViewport();
 
-  const auto bgSizeInTile = m_pixelSize / state.cf.tileSize().x;
+  olc::vi2d bgTileCount;
+  bgTileCount.x = static_cast<int>(std::ceil(pixelsViewport.dims().x / m_pixelSize));
+  bgTileCount.y = static_cast<int>(std::ceil(pixelsViewport.dims().x / m_pixelSize));
 
-  olc::vi2d topLeftTile;
-  topLeftTile.x = static_cast<int>(std::floor(topLeft.x / bgSizeInTile));
-  topLeftTile.y = static_cast<int>(std::ceil(topLeft.y / bgSizeInTile));
+  updateBackgroundOffset(state.cf);
 
-  olc::vi2d bottomRightTile;
-  bottomRightTile.x = static_cast<int>(std::ceil((topLeft.x + dims.x) / bgSizeInTile));
-  bottomRightTile.y = static_cast<int>(std::floor((topLeft.y - dims.y) / bgSizeInTile));
-
-  for (float y = bottomRightTile.y; y <= topLeftTile.y; ++y)
+  for (auto y = -1; y <= bgTileCount.y; ++y)
   {
-    for (float x = topLeftTile.x; x <= bottomRightTile.x; ++x)
+    for (auto x = -1; x <= bgTileCount.x; ++x)
     {
-      const olc::vf2d tilePos{x * bgSizeInTile, y * bgSizeInTile};
-      renderTile(tilePos, bgSizeInTile, spriteHandler, state.cf);
+      olc::vf2d pixelPos = m_offset;
+      pixelPos.x += (x * m_pixelSize);
+      pixelPos.y += (y * m_pixelSize);
+
+      renderBackgroundTile(pixelPos, spriteHandler, state.cf);
     }
   }
 }
@@ -47,16 +49,54 @@ void TiledBackground::loadDecal(sprites::TexturePack &texturesLoader)
   m_bgTexturePackId = texturesLoader.registerPack(pack);
 }
 
-void TiledBackground::renderTile(const olc::vf2d &position,
-                                 const float scale,
-                                 SpriteRenderer &spriteHandler,
-                                 const CoordinateFrame &cf)
+void TiledBackground::updateBackgroundOffset(const CoordinateFrame &cf)
 {
-  SpriteDesc t;
-  t.x = position.x;
-  t.y = position.y;
+  if (!m_savedCenter)
+  {
+    m_savedCenter = cf.tilesViewport().center();
+    return;
+  }
 
-  t.radius = scale;
+  const auto newTileSize = cf.tileSize();
+  if (!m_savedTileDimension || newTileSize.x != m_savedTileDimension->x
+      || newTileSize.y != m_savedTileDimension->y)
+  {
+    m_savedTileDimension     = newTileSize;
+    m_accumulatedTranslation = {};
+    m_offset                 = m_offset;
+    std::cout << "haha" << std::endl;
+    return;
+  }
+
+  const auto newCenter = cf.tilesViewport().center();
+  m_accumulatedTranslation.x += ((m_savedCenter->x - newCenter.x) / m_slowdownRatio);
+  m_accumulatedTranslation.y += ((newCenter.y - m_savedCenter->y) / m_slowdownRatio);
+
+  auto delta = static_cast<int>(std::floor(m_accumulatedTranslation.x));
+  m_offset.x += delta;
+  m_accumulatedTranslation.x -= delta;
+
+  delta = static_cast<int>(std::floor(m_accumulatedTranslation.y));
+  m_offset.y += delta;
+  m_accumulatedTranslation.y -= delta;
+
+  m_savedCenter = newCenter;
+
+  m_offset.x = m_offset.x % m_pixelSize;
+  m_offset.y = m_offset.y % m_pixelSize;
+}
+
+void TiledBackground::renderBackgroundTile(const olc::vi2d &pixelPosition,
+                                           SpriteRenderer &spriteHandler,
+                                           const CoordinateFrame &cf)
+{
+  const auto tilePosition = cf.pixelsToTiles(pixelPosition.x, pixelPosition.y);
+
+  SpriteDesc t;
+  t.x = tilePosition.x;
+  t.y = tilePosition.y;
+
+  t.radius = m_pixelSize / cf.tileSize().x;
 
   t.sprite.pack   = m_bgTexturePackId;
   t.sprite.sprite = {0, 0};
