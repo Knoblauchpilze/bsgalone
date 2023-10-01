@@ -26,3 +26,7 @@ Don't forget to add `/usr/local/lib` to your `LD_LIBRARY_PATH` to be able to loa
 # What is the game about?
 
 The goal is to have a 2d top view space shooter where the user can jump from systems to systems and fight enemies while mining resources and upgrading their ship.
+
+# Useful links
+
+About the entity component system, this [link](https://www.codingwiththomas.com/blog/an-entity-component-system-from-scratch) is useful. Also found [this](https://austinmorlan.com/posts/entity_component_system/) which seems more advanced so we might come back to it later.
