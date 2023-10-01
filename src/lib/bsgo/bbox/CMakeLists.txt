@@ -1,6 +1,6 @@
 
 target_sources (bsgalone_lib PRIVATE
-	${CMAKE_CURRENT_SOURCE_DIR}/TransformComponent.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/CircleBox.cc
 	)
 
 target_include_directories (bsgalone_lib PUBLIC

@@ -29,7 +29,7 @@ class GameScreenSystemHandler : public IScreenHandler
   sprites::PackId m_asteroidTexturesPackId{};
   TiledBackgroundPtr m_systemBackground{};
 
-  void renderAsteroid(const Eigen::Vector3d &position,
+  void renderAsteroid(const Eigen::Vector3f &position,
                       SpriteRenderer &engine,
                       const RenderState &state) const;
 };
