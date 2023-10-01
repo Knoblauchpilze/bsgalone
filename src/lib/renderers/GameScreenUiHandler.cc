@@ -19,16 +19,10 @@ void GameScreenUiHandler::loadResources(int width,
 {
   m_menus.resize(MenuItem::COUNT);
 
-  olc::vi2d pos{5, 5};
-  olc::vi2d dims{200, 15};
-  m_menus[HEALTH]
-    = generateMenu(pos, dims, "Health: N/A", "health", olc::VERY_DARK_RED, {olc::WHITE});
-
-  pos            = olc::vi2d{5, 25};
-  m_menus[POWER] = generateMenu(pos, dims, "Power: N/A", "power", olc::DARK_CYAN, {olc::WHITE});
-
+  generateShipMenus(width, height);
   generateAbilityMenus(width, height);
   generateWeaponMenus(width, height);
+  generateTargetMenus(width, height);
 }
 
 void GameScreenUiHandler::render(SpriteRenderer &engine,
@@ -64,23 +58,23 @@ auto GameScreenUiHandler::processUserInput(const controls::State &c,
 
 void GameScreenUiHandler::updateUi()
 {
-  std::string text;
-
-  text = "Health: ";
-  text += std::to_string(static_cast<int>(std::floor(m_shipView->getHealth())));
-  text += "/";
-  text += std::to_string(static_cast<int>(std::floor(m_shipView->getMaxHealth())));
-  m_menus[HEALTH]->setText(text);
-
-  text = "Power: ";
-  text += std::to_string(static_cast<int>(std::floor(m_shipView->getPower())));
-  text += "/";
-  text += std::to_string(static_cast<int>(std::floor(m_shipView->getMaxPower())));
-  m_menus[POWER]->setText(text);
+  updateShipUi();
+  updateTargetUi();
 }
 
 void GameScreenUiHandler::performAction(float /*x*/, float /*y*/, const controls::State & /*state*/)
 {}
+
+void GameScreenUiHandler::generateShipMenus(int /*width*/, int /*height*/)
+{
+  olc::vi2d pos{5, 5};
+  olc::vi2d dims{200, 15};
+  m_menus[HEALTH]
+    = generateMenu(pos, dims, "Health: N/A", "health", olc::VERY_DARK_RED, {olc::WHITE});
+
+  pos            = olc::vi2d{5, 25};
+  m_menus[POWER] = generateMenu(pos, dims, "Power: N/A", "power", olc::DARK_CYAN, {olc::WHITE});
+}
 
 void GameScreenUiHandler::generateAbilityMenus(int width, int height)
 {
@@ -124,6 +118,60 @@ void GameScreenUiHandler::generateWeaponMenus(int width, int height)
 
     pos.x += (dims.x + SPACING_IN_PIXELS);
   }
+}
+
+void GameScreenUiHandler::generateTargetMenus(int width, int /*height*/)
+{
+  olc::vi2d pos{width / 2, 5};
+  olc::vi2d dims{200, 15};
+  m_menus[TARGET_HEALTH]
+    = generateMenu(pos, dims, "Health: N/A", "health", olc::VERY_DARK_RED, {olc::WHITE});
+
+  pos = olc::vi2d{width / 2, 25};
+  m_menus[TARGET_POWER]
+    = generateMenu(pos, dims, "Power: N/A", "power", olc::DARK_CYAN, {olc::WHITE});
+}
+
+void GameScreenUiHandler::updateShipUi()
+{
+  std::string text;
+
+  text = "Health: ";
+  text += std::to_string(static_cast<int>(std::floor(m_shipView->getHealth())));
+  text += "/";
+  text += std::to_string(static_cast<int>(std::floor(m_shipView->getMaxHealth())));
+  m_menus[HEALTH]->setText(text);
+
+  text = "Power: ";
+  text += std::to_string(static_cast<int>(std::floor(m_shipView->getPower())));
+  text += "/";
+  text += std::to_string(static_cast<int>(std::floor(m_shipView->getMaxPower())));
+  m_menus[POWER]->setText(text);
+}
+
+void GameScreenUiHandler::updateTargetUi()
+{
+  m_menus[TARGET_HEALTH]->setVisible(m_shipView->hasTarget());
+  m_menus[TARGET_POWER]->setVisible(m_shipView->hasTarget());
+
+  if (!m_shipView->hasTarget())
+  {
+    return;
+  }
+
+  std::string text;
+
+  text = "Health: ";
+  text += std::to_string(static_cast<int>(std::floor(m_shipView->getTargetHealth())));
+  text += "/";
+  text += std::to_string(static_cast<int>(std::floor(m_shipView->getTargetMaxHealth())));
+  m_menus[TARGET_HEALTH]->setText(text);
+
+  text = "Power: ";
+  text += std::to_string(static_cast<int>(std::floor(m_shipView->getTargetPower())));
+  text += "/";
+  text += std::to_string(static_cast<int>(std::floor(m_shipView->getTargetMaxPower())));
+  m_menus[TARGET_POWER]->setText(text);
 }
 
 } // namespace pge

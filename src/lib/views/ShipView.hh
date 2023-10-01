@@ -18,6 +18,12 @@ class ShipView : public utils::CoreObject
   auto getMaxHealth() const noexcept -> float;
   auto getPower() const noexcept -> float;
   auto getMaxPower() const noexcept -> float;
+
+  bool hasTarget() const noexcept;
+  auto getTargetHealth() const noexcept -> float;
+  auto getTargetMaxHealth() const noexcept -> float;
+  auto getTargetPower() const noexcept -> float;
+  auto getTargetMaxPower() const noexcept -> float;
 };
 
 using ShipViewShPtr = std::shared_ptr<ShipView>;
