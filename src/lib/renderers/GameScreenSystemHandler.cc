@@ -65,9 +65,11 @@ void GameScreenSystemHandler::updateUi() {}
 void GameScreenSystemHandler::performAction(float /*x*/,
                                             float /*y*/,
                                             const controls::State & /*state*/)
-{}
+{
+  warn("should detect collision");
+}
 
-void GameScreenSystemHandler::renderAsteroid(const Eigen::Vector3d &position,
+void GameScreenSystemHandler::renderAsteroid(const Eigen::Vector3f &position,
                                              SpriteRenderer &engine,
                                              const RenderState &state) const
 {
