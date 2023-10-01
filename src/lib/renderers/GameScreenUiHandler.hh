@@ -43,12 +43,20 @@ class GameScreenUiHandler : public IScreenHandler
     WEAPON_3     = 10,
     WEAPON_COUNT = 4,
 
-    COUNT = 11,
+    TARGET_HEALTH = 11,
+    TARGET_POWER  = 12,
+
+    COUNT = 13,
   };
   std::vector<MenuShPtr> m_menus{};
 
+  void generateShipMenus(int width, int height);
   void generateAbilityMenus(int width, int height);
   void generateWeaponMenus(int width, int height);
+  void generateTargetMenus(int width, int height);
+
+  void updateShipUi();
+  void updateTargetUi();
 };
 
 using GameScreenUiHandlerPtr = std::unique_ptr<GameScreenUiHandler>;
