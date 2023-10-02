@@ -11,8 +11,8 @@ class IBoundingBox
   public:
   virtual ~IBoundingBox() = default;
 
-  virtual auto position() const -> Eigen::Vector3f                   = 0;
-  virtual bool isInside(const float x, const float y) const noexcept = 0;
+  virtual auto position() const -> Eigen::Vector3f                 = 0;
+  virtual bool isInside(const Eigen::Vector3f &pos) const noexcept = 0;
 };
 
 using IBoundingBoxPtr   = std::unique_ptr<IBoundingBox>;

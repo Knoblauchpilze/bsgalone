@@ -31,4 +31,25 @@ auto TransformSystem::getTransformComponent(const Uuid &ent) const
   return {it->second};
 }
 
+auto TransformSystem::getEntityAt(const Eigen::Vector3f &pos) const -> std::optional<Uuid>
+{
+  std::optional<Uuid> out;
+  float best = std::numeric_limits<float>::max();
+
+  for (const auto &[uuid, transform] : m_transforms)
+  {
+    if (transform.contains(pos))
+    {
+      const auto d = (pos - transform.position()).norm();
+      if (d < best)
+      {
+        out  = uuid;
+        best = d;
+      }
+    }
+  }
+
+  return out;
+}
+
 } // namespace bsgo

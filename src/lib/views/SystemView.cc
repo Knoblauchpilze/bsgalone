@@ -30,6 +30,17 @@ auto SystemView::getAsteroidPositions() const -> std::vector<Eigen::Vector3f>
   return out;
 }
 
+auto SystemView::getEntityAt(const Eigen::Vector3f pos) const -> std::optional<Entity>
+{
+  const auto ent = m_coordinator.getTransformSystem().getEntityAt(pos);
+  if (!ent)
+  {
+    return {};
+  }
+
+  return {m_coordinator.getEntity(*ent)};
+}
+
 void SystemView::init()
 {
   constexpr auto SHIP_RADIUS = 1.0f;

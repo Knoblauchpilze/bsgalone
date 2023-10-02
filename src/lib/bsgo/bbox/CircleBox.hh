@@ -13,7 +13,7 @@ class CircleBox : public IBoundingBox
   ~CircleBox() override = default;
 
   auto position() const -> Eigen::Vector3f override;
-  bool isInside(const float x, const float y) const noexcept override;
+  bool isInside(const Eigen::Vector3f &pos) const noexcept override;
 
   private:
   Eigen::Vector3f m_center{Eigen::Vector3f::Zero()};

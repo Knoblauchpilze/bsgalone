@@ -37,4 +37,9 @@ auto Coordinator::getTransformSystem() -> TransformSystem &
   return m_transformSystem;
 }
 
+auto Coordinator::getTransformSystem() const -> const TransformSystem &
+{
+  return m_transformSystem;
+}
+
 } // namespace bsgo

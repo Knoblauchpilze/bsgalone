@@ -6,10 +6,15 @@ namespace pge {
 
 GameScreenSystemHandler::GameScreenSystemHandler(const bsgo::Views &views)
   : m_systemView(views.systemView)
+  , m_shipView(views.shipView)
 {
   if (nullptr == m_systemView)
   {
     throw std::invalid_argument("Expected non null system view");
+  }
+  if (nullptr == m_shipView)
+  {
+    throw std::invalid_argument("Expected non null ship view");
   }
 }
 
@@ -62,11 +67,19 @@ auto GameScreenSystemHandler::processUserInput(const controls::State & /*c*/,
 
 void GameScreenSystemHandler::updateUi() {}
 
-void GameScreenSystemHandler::performAction(float /*x*/,
-                                            float /*y*/,
-                                            const controls::State & /*state*/)
+void GameScreenSystemHandler::performAction(float x, float y, const controls::State & /*state*/)
 {
-  warn("should detect collision");
+  const Eigen::Vector3f pos(x, y, 0.0f);
+  const auto ent = m_systemView->getEntityAt(pos);
+
+  if (ent)
+  {
+    m_shipView->setTarget(ent->uuid);
+  }
+  else
+  {
+    m_shipView->clearTarget();
+  }
 }
 
 void GameScreenSystemHandler::renderAsteroid(const Eigen::Vector3f &position,

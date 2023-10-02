@@ -15,10 +15,9 @@ auto CircleBox::position() const -> Eigen::Vector3f
   return m_center;
 }
 
-bool CircleBox::isInside(const float x, const float y) const noexcept
+bool CircleBox::isInside(const Eigen::Vector3f &pos) const noexcept
 {
-  Eigen::Vector3f p(x, y, 0.0f);
-  return (p - m_center).squaredNorm() < m_squaredRadius;
+  return (pos - m_center).squaredNorm() < m_squaredRadius;
 }
 
 } // namespace bsgo

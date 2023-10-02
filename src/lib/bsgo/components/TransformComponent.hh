@@ -12,7 +12,7 @@ class TransformComponent
   TransformComponent(IBoundingBoxShPtr bbox);
 
   auto position() const -> Eigen::Vector3f;
-  bool contains(const float x, const float y) const noexcept;
+  bool contains(const Eigen::Vector3f &pos) const noexcept;
 
   private:
   IBoundingBoxShPtr m_bbox{};
