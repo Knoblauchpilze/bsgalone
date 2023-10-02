@@ -1,11 +1,11 @@
 
 #pragma once
 
+#include "Entity.hh"
 #include "IBoundingBox.hh"
-#include "TransformComponent.hh"
+#include "TransformSystem.hh"
 #include "Uuid.hh"
 #include <core_utils/CoreObject.hh>
-#include <optional>
 #include <unordered_set>
 
 namespace bsgo {
@@ -17,13 +17,14 @@ class Coordinator : public utils::CoreObject
   virtual ~Coordinator() = default;
 
   auto createEntity() -> Uuid;
+  auto createEntityWithTransform(IBoundingBoxPtr bbox) -> Uuid;
+  auto getEntity(const Uuid &ent) const -> Entity;
 
-  void addTransformComponent(const Uuid &ent, IBoundingBoxPtr bbox);
-  auto getTransformComponent(const Uuid &ent) const -> std::optional<TransformComponent>;
+  auto getTransformSystem() -> TransformSystem &;
 
   private:
   std::unordered_set<Uuid> m_entities{};
-  std::unordered_map<Uuid, TransformComponent> m_transforms{};
+  TransformSystem m_transformSystem{};
 };
 
 } // namespace bsgo

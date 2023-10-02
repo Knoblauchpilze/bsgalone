@@ -16,35 +16,25 @@ auto Coordinator::createEntity() -> Uuid
   return ent;
 }
 
-void Coordinator::addTransformComponent(const Uuid &ent, IBoundingBoxPtr bbox)
+auto Coordinator::createEntityWithTransform(IBoundingBoxPtr bbox) -> Uuid
 {
-  if (!m_entities.contains(ent))
-  {
-    error("Invalid entity", std::to_string(ent) + " is not registered");
-  }
-
-  if (m_transforms.contains(ent))
-  {
-    warn("Overriding transform for entity " + std::to_string(ent));
-  }
-
-  m_transforms[ent] = TransformComponent(std::move(bbox));
+  const auto ent = createEntity();
+  m_transformSystem.addTransformComponent(ent, std::move(bbox));
+  return ent;
 }
 
-auto Coordinator::getTransformComponent(const Uuid &ent) const -> std::optional<TransformComponent>
+auto Coordinator::getEntity(const Uuid &ent) const -> Entity
 {
-  if (!m_entities.contains(ent))
-  {
-    error("Invalid entity", std::to_string(ent) + " is not registered");
-  }
+  Entity out{.uuid = ent};
 
-  const auto it = m_transforms.find(ent);
-  if (m_transforms.end() == it)
-  {
-    return {};
-  }
+  out.transform = m_transformSystem.getTransformComponent(ent);
 
-  return {it->second};
+  return out;
+}
+
+auto Coordinator::getTransformSystem() -> TransformSystem &
+{
+  return m_transformSystem;
 }
 
 } // namespace bsgo
