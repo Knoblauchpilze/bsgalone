@@ -44,8 +44,8 @@ class Game : public utils::CoreObject
   /// be done exactly is left to the user. This implementation does nothing by
   /// default.
   /// The coordinates are expressed in tiles (and not in pixels).
-  /// @param x - x position of where to perform the action.
-  /// @param y - y position of where to perform the action.
+  /// @param x - x position in tiles of where to perform the action.
+  /// @param y - y position in tiles of where to perform the action.
   /// @param state - the state of the controls at the moment of the action.
   ////
   void performAction(float x, float y, const controls::State &state);

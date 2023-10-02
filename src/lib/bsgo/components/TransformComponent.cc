@@ -12,9 +12,9 @@ auto TransformComponent::position() const -> Eigen::Vector3f
   return m_bbox->position();
 }
 
-bool TransformComponent::contains(const float x, const float y) const noexcept
+bool TransformComponent::contains(const Eigen::Vector3f &pos) const noexcept
 {
-  return !m_bbox || m_bbox->isInside(x, y);
+  return !m_bbox || m_bbox->isInside(pos);
 }
 
 } // namespace bsgo

@@ -36,7 +36,17 @@ auto ShipView::getMaxPower() const noexcept -> float
 
 bool ShipView::hasTarget() const noexcept
 {
-  return false;
+  return m_target.has_value();
+}
+
+void ShipView::setTarget(const Uuid &uuid)
+{
+  m_target = uuid;
+}
+
+void ShipView::clearTarget()
+{
+  m_target.reset();
 }
 
 auto ShipView::getTargetHealth() const noexcept -> float

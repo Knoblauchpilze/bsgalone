@@ -18,6 +18,8 @@ class SystemView : public utils::CoreObject
   auto getShipPosition(const Uuid &uuid) const -> Eigen::Vector3f;
   auto getAsteroidPositions() const -> std::vector<Eigen::Vector3f>;
 
+  auto getEntityAt(const Eigen::Vector3f pos) const -> std::optional<Entity>;
+
   private:
   Coordinator m_coordinator{};
 
