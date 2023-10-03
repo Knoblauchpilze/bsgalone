@@ -9,23 +9,30 @@ Coordinator::Coordinator()
   setService("bsgo");
 }
 
-auto Coordinator::createEntity() -> Uuid
+auto Coordinator::createEntity(const EntityKind &kind) -> Uuid
 {
-  auto ent = m_entities.size();
-  m_entities.insert(ent);
+  auto ent        = m_entities.size();
+  m_entities[ent] = kind;
   return ent;
 }
 
-auto Coordinator::createEntityWithTransform(IBoundingBoxPtr bbox) -> Uuid
+auto Coordinator::createEntityWithTransform(const EntityKind &kind, IBoundingBoxPtr bbox) -> Uuid
 {
-  const auto ent = createEntity();
+  const auto ent = createEntity(kind);
   m_transformSystem.addTransformComponent(ent, std::move(bbox));
   return ent;
 }
 
 auto Coordinator::getEntity(const Uuid &ent) const -> Entity
 {
-  Entity out{.uuid = ent};
+  Entity out;
+  out.uuid = ent;
+
+  const auto it = m_entities.find(ent);
+  if (it != m_entities.end())
+  {
+    out.kind = it->second;
+  }
 
   out.transform = m_transformSystem.getTransformComponent(ent);
 

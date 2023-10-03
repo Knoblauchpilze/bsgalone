@@ -6,6 +6,7 @@
 #include <core_utils/CoreObject.hh>
 #include <eigen3/Eigen/Eigen>
 #include <memory>
+#include <optional>
 #include <unordered_set>
 
 namespace bsgo {
@@ -15,11 +16,11 @@ class SystemView : public utils::CoreObject
   public:
   SystemView();
 
-  auto getAsteroidPositions() const -> std::vector<Eigen::Vector3f>;
-
   auto getEntity(const Uuid &ent) const -> Entity;
-  auto getEntityAt(const Eigen::Vector3f &pos) const -> std::optional<Entity>;
-  auto getEntitiesWithin(const IBoundingBox &bbox) const -> std::vector<Entity>;
+  auto getEntityAt(const Eigen::Vector3f &pos, const std::optional<EntityKind> &filter = {}) const
+    -> std::optional<Entity>;
+  auto getEntitiesWithin(const IBoundingBox &bbox,
+                         const std::optional<EntityKind> &filter = {}) const -> std::vector<Entity>;
 
   private:
   Coordinator m_coordinator{};
@@ -28,6 +29,7 @@ class SystemView : public utils::CoreObject
   std::unordered_set<Uuid> m_asteroids{};
 
   void init();
+  bool isValidForFilter(const Uuid &ent, const EntityKind &kind) const;
 };
 
 using SystemViewShPtr = std::shared_ptr<SystemView>;
