@@ -19,6 +19,7 @@ class TransformSystem : public utils::CoreObject
   auto getTransformComponent(const Uuid &ent) const -> std::optional<TransformComponent>;
 
   auto getEntityAt(const Eigen::Vector3f &pos) const -> std::optional<Uuid>;
+  auto getEntitiesWithin(const IBoundingBox &bbox) const -> std::vector<Uuid>;
 
   private:
   std::unordered_map<Uuid, TransformComponent> m_transforms{};

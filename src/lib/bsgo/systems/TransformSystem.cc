@@ -52,4 +52,20 @@ auto TransformSystem::getEntityAt(const Eigen::Vector3f &pos) const -> std::opti
   return out;
 }
 
+auto TransformSystem::getEntitiesWithin(const IBoundingBox &bbox) const -> std::vector<Uuid>
+{
+  std::vector<Uuid> out;
+
+  for (const auto &[uuid, transform] : m_transforms)
+  {
+    /// TODO: We should probably have a 'intersects' method.
+    if (transform.contains(bbox.position()))
+    {
+      out.push_back(uuid);
+    }
+  }
+
+  return out;
+}
+
 } // namespace bsgo

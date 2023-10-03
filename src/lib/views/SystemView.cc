@@ -30,7 +30,7 @@ auto SystemView::getAsteroidPositions() const -> std::vector<Eigen::Vector3f>
   return out;
 }
 
-auto SystemView::getEntityAt(const Eigen::Vector3f pos) const -> std::optional<Entity>
+auto SystemView::getEntityAt(const Eigen::Vector3f &pos) const -> std::optional<Entity>
 {
   const auto ent = m_coordinator.getTransformSystem().getEntityAt(pos);
   if (!ent)
@@ -39,6 +39,19 @@ auto SystemView::getEntityAt(const Eigen::Vector3f pos) const -> std::optional<E
   }
 
   return {m_coordinator.getEntity(*ent)};
+}
+
+auto SystemView::getEntitiesWithin(const IBoundingBox &bbox) const -> std::vector<Entity>
+{
+  const auto uuids = m_coordinator.getTransformSystem().getEntitiesWithin(bbox);
+
+  std::vector<Entity> out;
+  for (const auto &uuid : uuids)
+  {
+    out.push_back(m_coordinator.getEntity(uuid));
+  }
+
+  return out;
 }
 
 void SystemView::init()
