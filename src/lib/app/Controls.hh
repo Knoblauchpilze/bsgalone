@@ -11,17 +11,21 @@ namespace keys {
 /// controls structure.
 enum Keys
 {
-  Right,
-  Up,
-  Left,
-  Down,
+  RIGHT,
+  D,
+  UP,
+  Z,
+  LEFT,
+  Q,
+  DOWN,
+  S,
 
-  Space,
+  SPACE,
 
   P,
   M,
 
-  KeysCount
+  KEYS_COUNT
 };
 
 } // namespace keys
@@ -32,26 +36,26 @@ namespace mouse {
 /// controls.
 enum MouseButton
 {
-  Left,
-  Middle,
-  Right,
+  LEFT,
+  MIDDLE,
+  RIGHT,
 
-  ButtonsCount
+  BUTTONS_COUNT
 };
 
 } // namespace mouse
 
 /// @brief - The possible states for a button. Note
-/// that the `Pressed` state state is only active
+/// that the `PRESSED` state state is only active
 /// once when the button is first pressed. Similarly
-/// the `Released` state is only active once when
+/// the `RELEASED` state is only active once when
 /// the button is first released.
 enum class ButtonState
 {
-  Free,
-  Released,
-  Pressed,
-  Held
+  FREE,
+  RELEASED,
+  PRESSED,
+  HELD
 };
 
 /// @brief - Describe a structure holding the controls
@@ -60,10 +64,10 @@ enum class ButtonState
 struct State
 {
   // The position of the mouse along the x coordinates.
-  int mPosX;
+  int mPosX{0};
 
   // The position of the mouse along the y coordinates.
-  int mPosY;
+  int mPosY{0};
 
   // The current state of the keys.
   std::vector<bool> keys;
@@ -72,7 +76,7 @@ struct State
   std::vector<ButtonState> buttons;
 
   // Whether the tab key is pressed.
-  bool tab;
+  bool tab{false};
 };
 
 /// @brief - Create a new controls structure.

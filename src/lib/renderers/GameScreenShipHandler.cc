@@ -11,19 +11,19 @@ bool GameScreenShipHandler::Motion::isMoving() const
 
 void GameScreenShipHandler::Motion::updateFromKeys(const controls::State &inputs)
 {
-  if (inputs.keys[controls::keys::Left])
+  if (inputs.keys[controls::keys::LEFT] || inputs.keys[controls::keys::Q])
   {
     --x;
   }
-  if (inputs.keys[controls::keys::Right])
+  if (inputs.keys[controls::keys::RIGHT] || inputs.keys[controls::keys::D])
   {
     ++x;
   }
-  if (inputs.keys[controls::keys::Up])
+  if (inputs.keys[controls::keys::UP] || inputs.keys[controls::keys::Z])
   {
     ++y;
   }
-  if (inputs.keys[controls::keys::Down])
+  if (inputs.keys[controls::keys::DOWN] || inputs.keys[controls::keys::S])
   {
     --y;
   }
