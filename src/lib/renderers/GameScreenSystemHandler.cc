@@ -81,6 +81,7 @@ void GameScreenSystemHandler::performAction(float x, float y, const controls::St
 
   if (ent)
   {
+    log("Found target " + ent->str());
     m_shipView->setTarget(ent->uuid);
   }
   else
@@ -93,11 +94,13 @@ void GameScreenSystemHandler::renderAsteroid(const Eigen::Vector3f &position,
                                              SpriteRenderer &engine,
                                              const RenderState &state) const
 {
-  SpriteDesc t;
-  t.x = position(0);
-  t.y = position(1);
+  constexpr auto ASTEROID_RADIUS = 0.5f;
 
-  t.radius = 1.0f;
+  SpriteDesc t;
+  t.x = position(0) - ASTEROID_RADIUS;
+  t.y = position(1) - ASTEROID_RADIUS;
+
+  t.radius = 2.0f * ASTEROID_RADIUS;
 
   t.sprite.pack   = m_asteroidTexturesPackId;
   t.sprite.sprite = {0, 0};
