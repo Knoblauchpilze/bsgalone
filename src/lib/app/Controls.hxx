@@ -9,13 +9,8 @@ inline State newState() noexcept
 {
   State c;
 
-  c.mPosX = 0;
-  c.mPosY = 0;
-
-  c.keys.resize(keys::KeysCount, false);
-  c.buttons.resize(mouse::ButtonsCount, ButtonState::Free);
-
-  c.tab = false;
+  c.keys.resize(keys::KEYS_COUNT, false);
+  c.buttons.resize(mouse::BUTTONS_COUNT, ButtonState::FREE);
 
   return c;
 }

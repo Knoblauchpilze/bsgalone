@@ -15,8 +15,8 @@ TEST(Controls, Test_Constructor)
 
   EXPECT_FALSE(state.tab);
 
-  EXPECT_EQ(state.keys.size(), keys::KeysCount);
-  EXPECT_EQ(state.buttons.size(), mouse::ButtonsCount);
+  EXPECT_EQ(state.keys.size(), keys::KEYS_COUNT);
+  EXPECT_EQ(state.buttons.size(), mouse::BUTTONS_COUNT);
 
   for (const auto &key : state.keys)
   {
@@ -25,7 +25,7 @@ TEST(Controls, Test_Constructor)
 
   for (const auto &button : state.buttons)
   {
-    EXPECT_EQ(ButtonState::Free, button);
+    EXPECT_EQ(ButtonState::FREE, button);
   }
 }
 

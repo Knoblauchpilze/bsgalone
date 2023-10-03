@@ -49,7 +49,7 @@ void App::onInputs(const controls::State &c, CoordinateFrame &cf)
     actions[id]->apply(*m_game);
   }
 
-  bool lClick = (c.buttons[controls::mouse::Left] == controls::ButtonState::Released);
+  bool lClick = (c.buttons[controls::mouse::LEFT] == controls::ButtonState::RELEASED);
   if (lClick && !relevant)
   {
     olc::vf2d it;

@@ -105,7 +105,7 @@ menu::InputHandle Menu::processUserInput(const controls::State &c, std::vector<A
   // following conditions apply: it either mean
   // that the mouse is not inside this menu or
   // that a child is more relevant than we are.
-  bool click = (c.buttons[controls::mouse::Left] == controls::ButtonState::Released);
+  bool click = (c.buttons[controls::mouse::LEFT] == controls::ButtonState::RELEASED);
 
   olc::vi2d ap = absolutePosition();
   if (c.mPosX < ap.x || c.mPosX >= ap.x + m_size.x || c.mPosY < ap.y || c.mPosY >= ap.y + m_size.y

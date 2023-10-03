@@ -249,19 +249,27 @@ auto PGEApp::handleInputs() -> PGEApp::InputChanges
   // motion keys (or commonly used as so) we want to
   // react on the released event only.
   olc::HWButton b                        = GetKey(olc::RIGHT);
-  m_controls.keys[controls::keys::Right] = b.bPressed || b.bHeld;
+  m_controls.keys[controls::keys::RIGHT] = b.bPressed || b.bHeld;
+  b                                      = GetKey(olc::D);
+  m_controls.keys[controls::keys::D]     = b.bPressed || b.bHeld;
 
   b                                   = GetKey(olc::UP);
-  m_controls.keys[controls::keys::Up] = b.bPressed || b.bHeld;
+  m_controls.keys[controls::keys::UP] = b.bPressed || b.bHeld;
+  b                                   = GetKey(olc::Z);
+  m_controls.keys[controls::keys::Z]  = b.bPressed || b.bHeld;
 
   b                                     = GetKey(olc::LEFT);
-  m_controls.keys[controls::keys::Left] = b.bPressed || b.bHeld;
+  m_controls.keys[controls::keys::LEFT] = b.bPressed || b.bHeld;
+  b                                     = GetKey(olc::Q);
+  m_controls.keys[controls::keys::Q]    = b.bPressed || b.bHeld;
 
   b                                     = GetKey(olc::DOWN);
-  m_controls.keys[controls::keys::Down] = b.bPressed || b.bHeld;
+  m_controls.keys[controls::keys::DOWN] = b.bPressed || b.bHeld;
+  b                                     = GetKey(olc::S);
+  m_controls.keys[controls::keys::S]    = b.bPressed || b.bHeld;
 
   b                                      = GetKey(olc::SPACE);
-  m_controls.keys[controls::keys::Space] = b.bPressed || b.bHeld;
+  m_controls.keys[controls::keys::SPACE] = b.bPressed || b.bHeld;
 
   b                                  = GetKey(olc::P);
   m_controls.keys[controls::keys::P] = b.bReleased;
@@ -274,23 +282,23 @@ auto PGEApp::handleInputs() -> PGEApp::InputChanges
   auto analysis = [](const olc::HWButton &b) {
     if (b.bPressed)
     {
-      return controls::ButtonState::Pressed;
+      return controls::ButtonState::PRESSED;
     }
     if (b.bHeld)
     {
-      return controls::ButtonState::Held;
+      return controls::ButtonState::HELD;
     }
     if (b.bReleased)
     {
-      return controls::ButtonState::Released;
+      return controls::ButtonState::RELEASED;
     }
 
-    return controls::ButtonState::Free;
+    return controls::ButtonState::FREE;
   };
 
-  m_controls.buttons[controls::mouse::Left]   = analysis(GetMouse(0));
-  m_controls.buttons[controls::mouse::Right]  = analysis(GetMouse(1));
-  m_controls.buttons[controls::mouse::Middle] = analysis(GetMouse(2));
+  m_controls.buttons[controls::mouse::LEFT]   = analysis(GetMouse(0));
+  m_controls.buttons[controls::mouse::RIGHT]  = analysis(GetMouse(1));
+  m_controls.buttons[controls::mouse::MIDDLE] = analysis(GetMouse(2));
 
   // De/activate the debug mode if needed and
   // handle general simulation control options.
