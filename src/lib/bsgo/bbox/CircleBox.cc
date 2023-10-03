@@ -20,4 +20,9 @@ bool CircleBox::isInside(const Eigen::Vector3f &pos) const noexcept
   return (pos - m_center).squaredNorm() < m_squaredRadius;
 }
 
+void CircleBox::translate(const Eigen::Vector3f &delta)
+{
+  m_center += delta;
+}
+
 } // namespace bsgo

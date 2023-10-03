@@ -17,4 +17,9 @@ bool TransformComponent::contains(const Eigen::Vector3f &pos) const noexcept
   return !m_bbox || m_bbox->isInside(pos);
 }
 
+void TransformComponent::translate(const Eigen::Vector3f &delta)
+{
+  m_bbox->translate(delta);
+}
+
 } // namespace bsgo

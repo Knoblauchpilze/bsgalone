@@ -4,6 +4,31 @@
 
 namespace pge {
 
+bool GameScreenShipHandler::Motion::isMoving() const
+{
+  return x != 0 || y != 0 || z != 0;
+}
+
+void GameScreenShipHandler::Motion::updateFromKeys(const controls::State &inputs)
+{
+  if (inputs.keys[controls::keys::Left])
+  {
+    --x;
+  }
+  if (inputs.keys[controls::keys::Right])
+  {
+    ++x;
+  }
+  if (inputs.keys[controls::keys::Up])
+  {
+    ++y;
+  }
+  if (inputs.keys[controls::keys::Down])
+  {
+    --y;
+  }
+}
+
 GameScreenShipHandler::GameScreenShipHandler(const bsgo::Views &views)
   : m_shipView(views.shipView)
   , m_systemView(views.systemView)
@@ -44,10 +69,17 @@ void GameScreenShipHandler::render(SpriteRenderer &engine,
   renderShip(m_shipView->getUuid(), engine, state);
 }
 
-auto GameScreenShipHandler::processUserInput(const controls::State & /*c*/,
+auto GameScreenShipHandler::processUserInput(const controls::State &c,
                                              std::vector<ActionShPtr> & /*actions*/,
                                              CoordinateFrame &frame) -> menu::InputHandle
 {
+  Motion motion{};
+  motion.updateFromKeys(c);
+  if (motion.isMoving())
+  {
+    moveShip(m_shipView->getUuid(), motion);
+  }
+
   keepShipCentered(frame);
   return {};
 }
@@ -59,15 +91,16 @@ void GameScreenShipHandler::performAction(float /*x*/,
                                           const controls::State & /*state*/)
 {}
 
-void GameScreenShipHandler::renderShip(const bsgo::Uuid &uuid,
+void GameScreenShipHandler::renderShip(const bsgo::Uuid &ship,
                                        SpriteRenderer &engine,
                                        const RenderState &state) const
 {
-  const auto shipPosition = m_systemView->getShipPosition(uuid);
+  const auto ent = m_systemView->getEntity(ship);
 
+  const auto pos = ent.transform->position();
   SpriteDesc t;
-  t.x = shipPosition(0);
-  t.y = shipPosition(1);
+  t.x = pos(0);
+  t.y = pos(1);
 
   t.radius = 1.0f;
 
@@ -78,6 +111,25 @@ void GameScreenShipHandler::renderShip(const bsgo::Uuid &uuid,
   engine.drawWarpedSprite(t, state.cf);
 }
 
-void GameScreenShipHandler::keepShipCentered(CoordinateFrame & /*frame*/) {}
+void GameScreenShipHandler::moveShip(const bsgo::Uuid &ship, const Motion &motion)
+{
+  auto ent = m_systemView->getEntity(ship);
+
+  Eigen::Vector3f delta = Eigen::Vector3f::Zero();
+  delta(0)              = motion.x;
+  delta(1)              = motion.y;
+  delta(2)              = motion.z;
+
+  ent.transform->translate(delta);
+}
+
+void GameScreenShipHandler::keepShipCentered(CoordinateFrame &frame)
+{
+  const auto shipUuid = m_shipView->getUuid();
+  const auto ent      = m_systemView->getEntity(shipUuid);
+  const auto pos      = ent.transform->position();
+  const olc::vf2d pos2d{pos(0), pos(1)};
+  frame.moveTo(pos2d);
+}
 
 } // namespace pge
