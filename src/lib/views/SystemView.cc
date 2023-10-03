@@ -53,13 +53,13 @@ auto SystemView::getEntitiesWithin(const IBoundingBox &bbox,
 
 void SystemView::init()
 {
-  constexpr auto SHIP_RADIUS = 1.0f;
+  constexpr auto SHIP_RADIUS = 0.6f;
   Eigen::Vector3f pos        = Eigen::Vector3f::Zero();
   auto box                   = std::make_unique<CircleBox>(pos, SHIP_RADIUS);
   const auto ship = m_coordinator.createEntityWithTransform(EntityKind::SHIP, std::move(box));
   m_ships.insert(ship);
 
-  constexpr auto ASTEROID_RADIUS = 1.0f;
+  constexpr auto ASTEROID_RADIUS = 0.5f;
   pos                            = Eigen::Vector3f(1.0f, 2.0f, 0.0f);
   box                            = std::make_unique<CircleBox>(pos, ASTEROID_RADIUS);
   auto asteroid = m_coordinator.createEntityWithTransform(EntityKind::ASTEROID, std::move(box));

@@ -95,14 +95,16 @@ void GameScreenShipHandler::renderShip(const bsgo::Uuid &ship,
                                        SpriteRenderer &engine,
                                        const RenderState &state) const
 {
+  constexpr auto SHIP_RADIUS = 0.5f;
+
   const auto ent = m_systemView->getEntity(ship);
 
   const auto pos = ent.transform->position();
   SpriteDesc t;
-  t.x = pos(0);
-  t.y = pos(1);
+  t.x = pos(0) - SHIP_RADIUS;
+  t.y = pos(1) - SHIP_RADIUS;
 
-  t.radius = 1.0f;
+  t.radius = 2.0f * SHIP_RADIUS;
 
   t.sprite.pack   = m_class1TexturesPackId;
   t.sprite.sprite = {0, 0};
