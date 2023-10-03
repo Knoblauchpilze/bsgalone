@@ -6,7 +6,7 @@
 #include "TransformSystem.hh"
 #include "Uuid.hh"
 #include <core_utils/CoreObject.hh>
-#include <unordered_set>
+#include <unordered_map>
 
 namespace bsgo {
 
@@ -16,15 +16,15 @@ class Coordinator : public utils::CoreObject
   Coordinator();
   virtual ~Coordinator() = default;
 
-  auto createEntity() -> Uuid;
-  auto createEntityWithTransform(IBoundingBoxPtr bbox) -> Uuid;
+  auto createEntity(const EntityKind &kind) -> Uuid;
+  auto createEntityWithTransform(const EntityKind &kind, IBoundingBoxPtr bbox) -> Uuid;
   auto getEntity(const Uuid &ent) const -> Entity;
 
   auto getTransformSystem() -> TransformSystem &;
   auto getTransformSystem() const -> const TransformSystem &;
 
   private:
-  std::unordered_set<Uuid> m_entities{};
+  std::unordered_map<Uuid, EntityKind> m_entities{};
   TransformSystem m_transformSystem{};
 };
 

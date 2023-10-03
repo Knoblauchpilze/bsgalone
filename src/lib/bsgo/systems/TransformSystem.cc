@@ -59,7 +59,7 @@ auto TransformSystem::getEntitiesWithin(const IBoundingBox &bbox) const -> std::
   for (const auto &[uuid, transform] : m_transforms)
   {
     /// TODO: We should probably have a 'intersects' method.
-    if (transform.contains(bbox.position()))
+    if (bbox.isInside(transform.position()))
     {
       out.push_back(uuid);
     }
