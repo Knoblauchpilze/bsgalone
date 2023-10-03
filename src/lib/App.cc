@@ -26,7 +26,7 @@ bool App::onFrame(float fElapsed)
   return m_game->terminated();
 }
 
-void App::onInputs(const controls::State &c, const CoordinateFrame &cf)
+void App::onInputs(const controls::State &c, CoordinateFrame &cf)
 {
   // Handle case where no game is defined.
   if (m_game == nullptr)
@@ -40,7 +40,7 @@ void App::onInputs(const controls::State &c, const CoordinateFrame &cf)
   const auto it = m_handlers.find(m_game->getScreen());
   if (it != m_handlers.end())
   {
-    menu::InputHandle ih = it->second->processUserInput(c, actions);
+    menu::InputHandle ih = it->second->processUserInput(c, actions, cf);
     relevant             = (relevant || ih.relevant);
   }
 

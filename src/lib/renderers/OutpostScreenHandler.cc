@@ -33,7 +33,8 @@ void OutpostScreenHandler::render(SpriteRenderer &engine,
 }
 
 auto OutpostScreenHandler::processUserInput(const controls::State &c,
-                                            std::vector<ActionShPtr> &actions) -> menu::InputHandle
+                                            std::vector<ActionShPtr> &actions,
+                                            CoordinateFrame & /*frame*/) -> menu::InputHandle
 {
   return m_menu->processUserInput(c, actions);
 }

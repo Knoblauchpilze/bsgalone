@@ -36,9 +36,19 @@ void GameScreenHandler::render(SpriteRenderer &engine,
 }
 
 auto GameScreenHandler::processUserInput(const controls::State &c,
-                                         std::vector<ActionShPtr> &actions) -> menu::InputHandle
+                                         std::vector<ActionShPtr> &actions,
+                                         CoordinateFrame &frame) -> menu::InputHandle
 {
-  return m_uiHandler->processUserInput(c, actions);
+  const auto systemHandlerOutput = m_systemHandler->processUserInput(c, actions, frame);
+  const auto shipHandlerOutput   = m_shipHandler->processUserInput(c, actions, frame);
+  const auto uiHandlerOutput     = m_uiHandler->processUserInput(c, actions, frame);
+
+  menu::InputHandle out{};
+  out.relevant = systemHandlerOutput.relevant || shipHandlerOutput.relevant
+                 || uiHandlerOutput.relevant;
+  out.selected = systemHandlerOutput.selected || shipHandlerOutput.selected
+                 || uiHandlerOutput.selected;
+  return out;
 }
 
 void GameScreenHandler::updateUi()

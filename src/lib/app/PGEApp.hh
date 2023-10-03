@@ -121,7 +121,7 @@ class PGEApp : public utils::CoreObject, public olc::PixelGameEngine
   /// handled.
   /// @param c - the current state of the controls.
   /// @param cf - the coordinate frame associated to this app.
-  virtual void onInputs(const controls::State &c, const CoordinateFrame &cf) = 0;
+  virtual void onInputs(const controls::State &c, CoordinateFrame &cf) = 0;
 
   private:
   /// @brief - Used to keep track of the changes in the input

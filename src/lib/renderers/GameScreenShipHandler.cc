@@ -45,9 +45,10 @@ void GameScreenShipHandler::render(SpriteRenderer &engine,
 }
 
 auto GameScreenShipHandler::processUserInput(const controls::State & /*c*/,
-                                             std::vector<ActionShPtr> & /*actions*/)
-  -> menu::InputHandle
+                                             std::vector<ActionShPtr> & /*actions*/,
+                                             CoordinateFrame &frame) -> menu::InputHandle
 {
+  keepShipCentered(frame);
   return {};
 }
 
@@ -76,5 +77,7 @@ void GameScreenShipHandler::renderShip(const bsgo::Uuid &uuid,
 
   engine.drawWarpedSprite(t, state.cf);
 }
+
+void GameScreenShipHandler::keepShipCentered(CoordinateFrame & /*frame*/) {}
 
 } // namespace pge

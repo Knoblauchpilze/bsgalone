@@ -17,8 +17,9 @@ class MapScreenHandler : public IScreenHandler
   void render(SpriteRenderer &engine,
               const RenderState &state,
               const RenderingPass pass) const override;
-  auto processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions)
-    -> menu::InputHandle override;
+  auto processUserInput(const controls::State &c,
+                        std::vector<ActionShPtr> &actions,
+                        CoordinateFrame &frame) -> menu::InputHandle override;
   void updateUi() override;
   void performAction(float x, float y, const controls::State &state) override;
 

@@ -41,7 +41,8 @@ void GameScreenUiHandler::render(SpriteRenderer &engine,
 }
 
 auto GameScreenUiHandler::processUserInput(const controls::State &c,
-                                           std::vector<ActionShPtr> &actions) -> menu::InputHandle
+                                           std::vector<ActionShPtr> &actions,
+                                           CoordinateFrame & /*frame*/) -> menu::InputHandle
 {
   bool relevant{false};
   bool selected{false};
