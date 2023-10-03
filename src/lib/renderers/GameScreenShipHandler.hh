@@ -29,7 +29,18 @@ class GameScreenShipHandler : public IScreenHandler
 
   sprites::PackId m_class1TexturesPackId{};
 
-  void renderShip(const bsgo::Uuid &uuid, SpriteRenderer &engine, const RenderState &state) const;
+  struct Motion
+  {
+    int x{0};
+    int y{0};
+    int z{0};
+
+    bool isMoving() const;
+    void updateFromKeys(const controls::State &inputs);
+  };
+
+  void renderShip(const bsgo::Uuid &ship, SpriteRenderer &engine, const RenderState &state) const;
+  void moveShip(const bsgo::Uuid &ship, const Motion &motion);
   void keepShipCentered(CoordinateFrame &frame);
 };
 

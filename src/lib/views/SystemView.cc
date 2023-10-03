@@ -11,12 +11,6 @@ SystemView::SystemView()
   init();
 }
 
-auto SystemView::getShipPosition(const Uuid &uuid) const -> Eigen::Vector3f
-{
-  const auto ship = m_coordinator.getEntity(uuid);
-  return ship.transform->position();
-}
-
 auto SystemView::getAsteroidPositions() const -> std::vector<Eigen::Vector3f>
 {
   std::vector<Eigen::Vector3f> out;
@@ -28,6 +22,11 @@ auto SystemView::getAsteroidPositions() const -> std::vector<Eigen::Vector3f>
   }
 
   return out;
+}
+
+auto SystemView::getEntity(const Uuid &ent) const -> Entity
+{
+  return m_coordinator.getEntity(ent);
 }
 
 auto SystemView::getEntityAt(const Eigen::Vector3f &pos) const -> std::optional<Entity>

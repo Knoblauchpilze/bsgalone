@@ -13,6 +13,8 @@ class IBoundingBox
 
   virtual auto position() const -> Eigen::Vector3f                 = 0;
   virtual bool isInside(const Eigen::Vector3f &pos) const noexcept = 0;
+
+  virtual void translate(const Eigen::Vector3f &delta) = 0;
 };
 
 using IBoundingBoxPtr   = std::unique_ptr<IBoundingBox>;
