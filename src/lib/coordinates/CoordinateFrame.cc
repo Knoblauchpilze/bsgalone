@@ -103,6 +103,11 @@ void CoordinateFrame::translate(const olc::vf2d &pixelsOrigin)
   m_tilesViewport.moveTo(m_tilesCachedPOrigin + translationTiles);
 }
 
+void CoordinateFrame::moveTo(const olc::vf2d &tilesCenter)
+{
+  m_tilesViewport.moveTo(tilesCenter);
+}
+
 void CoordinateFrame::zoom(float factor, const olc::vf2d &pos)
 {
   olc::vf2d dPixels = pos - m_pixelsViewport.topLeft();

@@ -21,19 +21,14 @@ class App : public PGEApp
 
   protected:
   bool onFrame(float fElapsed) override;
-
-  void onInputs(const controls::State &c, const CoordinateFrame &cf) override;
+  void onInputs(const controls::State &c, CoordinateFrame &cf) override;
 
   void loadResources() override;
-
   void cleanResources() override;
 
   void drawDecal(const RenderState &res) override;
-
   void draw(const RenderState &res) override;
-
   void drawUI(const RenderState &res) override;
-
   void drawDebug(const RenderState &res) override;
 
   void renderCursor(const RenderState &res);

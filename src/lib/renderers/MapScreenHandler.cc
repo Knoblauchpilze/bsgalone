@@ -32,8 +32,9 @@ void MapScreenHandler::render(SpriteRenderer &engine,
   }
 }
 
-auto MapScreenHandler::processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions)
-  -> menu::InputHandle
+auto MapScreenHandler::processUserInput(const controls::State &c,
+                                        std::vector<ActionShPtr> &actions,
+                                        CoordinateFrame & /*frame*/) -> menu::InputHandle
 {
   return m_menu->processUserInput(c, actions);
 }

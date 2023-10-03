@@ -79,6 +79,11 @@ class CoordinateFrame : public utils::CoreObject
   /// @param pixelsOrigin - the new position of the origin.
   void translate(const olc::vf2d &pixelsOrigin);
 
+  /// @brief - Move the center of the tiles' viewport of the coordinate frame
+  /// to the desired location.
+  /// @param tilesCenter - the new center of the tiles viewport.
+  void moveTo(const olc::vf2d &tilesCenter);
+
   protected:
   /// @brief - Given some normalized coordinates in tiles space, convert
   /// them to pixels normalized coordinates.
