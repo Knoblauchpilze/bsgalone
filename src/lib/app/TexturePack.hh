@@ -73,11 +73,11 @@ class TexturePack : public utils::CoreObject
   /// @param pge - the engine to use to perform the rendering.
   /// @param s - the sprite to draw.
   /// @param p - the position where the sprite will be drawn.
-  /// @param scale - defines a scaling factor to apply to the sprite.
+  /// @param size - defines the desired size of the sprite in pixels.
   void draw(olc::PixelGameEngine *pge,
             const Sprite &s,
             const olc::vf2d &p,
-            const olc::vf2d &scale = olc::vf2d(1.0f, 1.0f)) const;
+            const olc::vf2d &size) const;
 
   /// @brief - Used to perform the drawing of the sprite as defined by the input
   /// argument using the engine. The sprite will be associated internally with
@@ -87,6 +87,19 @@ class TexturePack : public utils::CoreObject
   /// @param s - the sprite to draw.
   /// @param p - the position of the corners for the sprite.
   void draw(olc::PixelGameEngine *pge, const Sprite &s, const std::array<olc::vf2d, 4> &p) const;
+
+  /// @brief - Used to perform the drawing of the sprite as defined by the input
+  /// argument using the engine. The sprite will be rotated as requested.
+  /// @param pge - the engine to use to perform the rendering.
+  /// @param s - the sprite to draw.
+  /// @param p - the position where the sprite will be drawn.
+  /// @param size - defines the desired size of the sprite in pixels.
+  /// @param angle - the angle with which the sprite is rotated.
+  void draw(olc::PixelGameEngine *pge,
+            const Sprite &s,
+            const olc::vf2d &p,
+            const olc::vf2d &size,
+            const float angle) const;
 
   private:
   /// @brief Internal representation of a loaded texture pack.
@@ -116,6 +129,8 @@ class TexturePack : public utils::CoreObject
     /// @return - a vector representing the pixels coordinates for the input sprite coords.
     olc::vi2d spriteCoords(const olc::vi2d &coord, int id = 0) const;
   };
+
+  auto tryGetPackOrThrow(const int packId) const -> const Pack &;
 
   private:
   /// @brief - The list of packs registered so far for this object. Note that the
