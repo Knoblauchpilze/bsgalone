@@ -59,18 +59,11 @@ PackId TexturePack::registerPack(const PackDesc &pack)
 void TexturePack::draw(olc::PixelGameEngine *pge,
                        const sprites::Sprite &s,
                        const olc::vf2d &p,
-                       const olc::vf2d &scale) const
+                       const olc::vf2d &size) const
 {
-  // Check whether the pack is valid.
-  if (s.pack >= static_cast<int>(m_packs.size()))
-  {
-    log("Invalid pack " + std::to_string(s.pack) + " to draw sprite", utils::Level::Error);
-    return;
-  }
-
-  const Pack &tp = m_packs[s.pack];
-
-  olc::vi2d sCoords = tp.spriteCoords(s.sprite, s.id);
+  const auto &tp        = tryGetPackOrThrow(s.pack);
+  const auto sCoords    = tp.spriteCoords(s.sprite, s.id);
+  const olc::vf2d scale = size / tp.sSize;
   pge->DrawPartialDecal(p, tp.res, sCoords, tp.sSize, scale, s.tint);
 }
 
@@ -78,17 +71,32 @@ void TexturePack::draw(olc::PixelGameEngine *pge,
                        const Sprite &s,
                        const std::array<olc::vf2d, 4> &p) const
 {
-  // Check whether the pack is valid.
-  if (s.pack >= static_cast<int>(m_packs.size()))
+  const auto &tp     = tryGetPackOrThrow(s.pack);
+  const auto sCoords = tp.spriteCoords(s.sprite, s.id);
+  pge->DrawPartialWarpedDecal(tp.res, p, sCoords, tp.sSize, s.tint);
+}
+
+void TexturePack::draw(olc::PixelGameEngine *pge,
+                       const Sprite &s,
+                       const olc::vf2d &p,
+                       const olc::vf2d &size,
+                       const float angle) const
+{
+  const auto &tp        = tryGetPackOrThrow(s.pack);
+  const auto sCoords    = tp.spriteCoords(s.sprite, s.id);
+  const auto sCenter    = sCoords + tp.sSize / 2;
+  const olc::vf2d scale = size / tp.sSize;
+  pge->DrawPartialRotatedDecal(p, tp.res, angle, sCenter, sCoords, tp.sSize, scale, s.tint);
+}
+
+auto TexturePack::tryGetPackOrThrow(const int packId) const -> const Pack &
+{
+  if (packId >= static_cast<int>(m_packs.size()))
   {
-    log("Invalid pack " + std::to_string(s.pack) + " to draw sprite", utils::Level::Error);
-    return;
+    error("Can't draw sprite", "Unknown pack id" + std::to_string(packId));
   }
 
-  const Pack &tp = m_packs[s.pack];
-
-  olc::vi2d sCoords = tp.spriteCoords(s.sprite, s.id);
-  pge->DrawPartialWarpedDecal(tp.res, p, sCoords, tp.sSize, s.tint);
+  return m_packs[packId];
 }
 
 } // namespace pge::sprites

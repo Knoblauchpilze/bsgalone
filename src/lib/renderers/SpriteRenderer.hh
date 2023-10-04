@@ -12,16 +12,11 @@ namespace pge {
 /// draw a sprite.
 struct SpriteDesc
 {
-  // The x coordinate of the sprite.
-  float x;
+  float x{0.0f};
+  float y{0.0f};
+  float radius{1.0f};
+  float rotation{0.0f};
 
-  // The y coordinate of the sprite.
-  float y;
-
-  // The radius of the sprite: applied both along the x and y coordinates.
-  float radius;
-
-  // A description of the sprite.
   sprites::Sprite sprite;
 };
 
@@ -39,6 +34,12 @@ class SpriteRenderer
   /// @param cf - the coordinate frame to use to perform the conversion from tile
   /// position to pixels.
   void drawSprite(const SpriteDesc &t, const CoordinateFrame &cf);
+
+  /// @brief - Render a rotated sprite. The sprite will be rotated about its center.
+  /// @param t - the description of the tile to draw.
+  /// @param cf - the coordinate frame to use to perform the conversion from tile
+  /// position to pixels.
+  void drawRotatedSprite(const SpriteDesc &t, const CoordinateFrame &cf);
 
   /// @brief - Render a warped sprite. The position of the sprite as defined in
   /// the input argument will be used to map the sprite to occupy exactly the part
