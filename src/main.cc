@@ -1,6 +1,5 @@
 
-/// @brief - Canonical application allowing to instantiate a working PGE process
-/// with configurable hooks to customize the behavior.
+/// @brief - A minimalistic bsg implementation
 
 #include "App.hh"
 #include "AppDesc.hh"

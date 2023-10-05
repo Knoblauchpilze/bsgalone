@@ -3,9 +3,10 @@
 
 #include "Entity.hh"
 #include "IBoundingBox.hh"
-#include "TransformSystem.hh"
+#include "MotionSystem.hh"
+#include "Transform.hh"
 #include "Uuid.hh"
-#include "VelocitySystem.hh"
+#include "Velocity.hh"
 #include <core_utils/CoreObject.hh>
 #include <unordered_map>
 
@@ -21,18 +22,24 @@ class Coordinator : public utils::CoreObject
   auto createEntity(const EntityKind &kind, IBoundingBoxPtr bbox) -> Uuid;
   auto createEntity(const EntityKind &kind, IBoundingBoxPtr bbox, const Eigen::Vector3f &speed)
     -> Uuid;
+
   auto getEntity(const Uuid &ent) const -> Entity;
+  auto getTransform(const Uuid &ent) const -> std::optional<TransformShPtr>;
+  auto getVelocity(const Uuid &ent) const -> std::optional<VelocityShPtr>;
 
-  auto getTransformSystem() -> TransformSystem &;
-  auto getTransformSystem() const -> const TransformSystem &;
-
-  auto getVelocitySystem() -> VelocitySystem &;
-  auto getVelocitySystem() const -> const VelocitySystem &;
+  auto getEntityAt(const Eigen::Vector3f &pos) const -> std::optional<Uuid>;
+  auto getEntitiesWithin(const IBoundingBox &bbox) const -> std::vector<Uuid>;
 
   private:
   std::unordered_map<Uuid, EntityKind> m_entities{};
-  TransformSystem m_transformSystem{};
-  VelocitySystem m_velocitySystem{};
+
+  std::unordered_map<Uuid, TransformShPtr> m_transforms{};
+  std::unordered_map<Uuid, VelocityShPtr> m_velocities{};
+
+  MotionSystem m_motionSystem{};
+
+  void addTransform(const Uuid &ent, IBoundingBoxPtr bbox);
+  void addVelocity(const Uuid &ent, const Eigen::Vector3f &speed);
 };
 
 } // namespace bsgo

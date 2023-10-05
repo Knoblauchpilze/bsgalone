@@ -19,7 +19,7 @@ auto Coordinator::createEntity(const EntityKind &kind) -> Uuid
 auto Coordinator::createEntity(const EntityKind &kind, IBoundingBoxPtr bbox) -> Uuid
 {
   const auto ent = createEntity(kind);
-  m_transformSystem.addTransform(ent, std::move(bbox));
+  addTransform(ent, std::move(bbox));
   return ent;
 }
 
@@ -28,8 +28,8 @@ auto Coordinator::createEntity(const EntityKind &kind,
                                const Eigen::Vector3f &speed) -> Uuid
 {
   const auto ent = createEntity(kind);
-  m_transformSystem.addTransform(ent, std::move(bbox));
-  m_velocitySystem.addVelocity(ent, speed);
+  addTransform(ent, std::move(bbox));
+  addVelocity(ent, speed);
   return ent;
 }
 
@@ -44,30 +44,89 @@ auto Coordinator::getEntity(const Uuid &ent) const -> Entity
     out.kind = it->second;
   }
 
-  out.transform = m_transformSystem.getTransform(ent);
-  out.velocity  = m_velocitySystem.getVelocity(ent);
+  out.transform = getTransform(ent);
+  out.velocity  = getVelocity(ent);
 
   return out;
 }
 
-auto Coordinator::getTransformSystem() -> TransformSystem &
+auto Coordinator::getTransform(const Uuid &ent) const -> std::optional<TransformShPtr>
 {
-  return m_transformSystem;
+  const auto it = m_transforms.find(ent);
+  if (m_transforms.end() == it)
+  {
+    return {};
+  }
+
+  return {it->second};
 }
 
-auto Coordinator::getTransformSystem() const -> const TransformSystem &
+auto Coordinator::getVelocity(const Uuid &ent) const -> std::optional<VelocityShPtr>
 {
-  return m_transformSystem;
+  const auto it = m_velocities.find(ent);
+  if (m_velocities.end() == it)
+  {
+    return {};
+  }
+
+  return {it->second};
 }
 
-auto Coordinator::getVelocitySystem() -> VelocitySystem &
+auto Coordinator::getEntityAt(const Eigen::Vector3f &pos) const -> std::optional<Uuid>
 {
-  return m_velocitySystem;
+  std::optional<Uuid> out;
+  float best = std::numeric_limits<float>::max();
+
+  for (const auto &[uuid, transform] : m_transforms)
+  {
+    if (transform->contains(pos))
+    {
+      const auto d = (pos - transform->position()).norm();
+      if (d < best)
+      {
+        out  = uuid;
+        best = d;
+      }
+    }
+  }
+
+  return out;
 }
 
-auto Coordinator::getVelocitySystem() const -> const VelocitySystem &
+auto Coordinator::getEntitiesWithin(const IBoundingBox &bbox) const -> std::vector<Uuid>
 {
-  return m_velocitySystem;
+  std::vector<Uuid> out;
+
+  for (const auto &[uuid, transform] : m_transforms)
+  {
+    /// TODO: We should probably have a 'intersects' method.
+    if (bbox.isInside(transform->position()))
+    {
+      out.push_back(uuid);
+    }
+  }
+
+  return out;
+}
+
+void Coordinator::addTransform(const Uuid &ent, IBoundingBoxPtr bbox)
+{
+  if (m_transforms.contains(ent))
+  {
+    warn("Overriding transform for entity " + std::to_string(ent));
+  }
+
+  m_transforms[ent] = std::make_shared<Transform>(std::move(bbox));
+}
+
+void Coordinator::addVelocity(const Uuid &ent, const Eigen::Vector3f &speed)
+{
+  if (m_velocities.contains(ent))
+  {
+    warn("Overriding velocity for entity " + std::to_string(ent));
+  }
+
+  m_velocities[ent] = std::make_shared<Velocity>(speed);
 }
 
 } // namespace bsgo
