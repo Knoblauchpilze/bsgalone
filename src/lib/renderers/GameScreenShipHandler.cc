@@ -99,12 +99,14 @@ void GameScreenShipHandler::renderShip(const bsgo::Uuid &ship,
 
   const auto ent = m_systemView->getEntity(ship);
 
-  const auto pos = ent.transform->position();
+  const auto pos = (*ent.transform)->position();
   SpriteDesc t;
   t.x = pos(0) - SHIP_RADIUS;
   t.y = pos(1) - SHIP_RADIUS;
 
-  t.radius = 2.0f * SHIP_RADIUS;
+  t.radius         = 2.0f * SHIP_RADIUS;
+  const auto speed = (*ent.velocity)->speed();
+  t.rotation       = std::atan2(speed(0), speed(1));
 
   t.sprite.pack   = m_class1TexturesPackId;
   t.sprite.sprite = {0, 0};
@@ -121,15 +123,17 @@ void GameScreenShipHandler::moveShip(const bsgo::Uuid &ship, const Motion &motio
   delta(0)              = motion.x;
   delta(1)              = motion.y;
   delta(2)              = motion.z;
+  delta.normalize();
 
-  ent.transform->translate(delta);
+  (*ent.transform)->translate(delta);
+  (*ent.velocity)->accelerate(delta);
 }
 
 void GameScreenShipHandler::keepShipCentered(CoordinateFrame &frame)
 {
   const auto shipUuid = m_shipView->getUuid();
   const auto ent      = m_systemView->getEntity(shipUuid);
-  const auto pos      = ent.transform->position();
+  const auto pos      = (*ent.transform)->position();
   const olc::vf2d pos2d{pos(0), pos(1)};
   frame.moveTo(pos2d);
 }

@@ -9,18 +9,17 @@ TransformSystem::TransformSystem()
   setService("system");
 }
 
-void TransformSystem::addTransformComponent(const Uuid &ent, IBoundingBoxPtr bbox)
+void TransformSystem::addTransform(const Uuid &ent, IBoundingBoxPtr bbox)
 {
   if (m_transforms.contains(ent))
   {
     warn("Overriding transform for entity " + std::to_string(ent));
   }
 
-  m_transforms[ent] = TransformComponent(std::move(bbox));
+  m_transforms[ent] = std::make_shared<Transform>(std::move(bbox));
 }
 
-auto TransformSystem::getTransformComponent(const Uuid &ent) const
-  -> std::optional<TransformComponent>
+auto TransformSystem::getTransform(const Uuid &ent) const -> std::optional<TransformShPtr>
 {
   const auto it = m_transforms.find(ent);
   if (m_transforms.end() == it)
@@ -38,9 +37,9 @@ auto TransformSystem::getEntityAt(const Eigen::Vector3f &pos) const -> std::opti
 
   for (const auto &[uuid, transform] : m_transforms)
   {
-    if (transform.contains(pos))
+    if (transform->contains(pos))
     {
-      const auto d = (pos - transform.position()).norm();
+      const auto d = (pos - transform->position()).norm();
       if (d < best)
       {
         out  = uuid;
@@ -59,7 +58,7 @@ auto TransformSystem::getEntitiesWithin(const IBoundingBox &bbox) const -> std::
   for (const auto &[uuid, transform] : m_transforms)
   {
     /// TODO: We should probably have a 'intersects' method.
-    if (bbox.isInside(transform.position()))
+    if (bbox.isInside(transform->position()))
     {
       out.push_back(uuid);
     }

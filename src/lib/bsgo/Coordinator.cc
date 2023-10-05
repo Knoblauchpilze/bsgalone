@@ -16,10 +16,20 @@ auto Coordinator::createEntity(const EntityKind &kind) -> Uuid
   return ent;
 }
 
-auto Coordinator::createEntityWithTransform(const EntityKind &kind, IBoundingBoxPtr bbox) -> Uuid
+auto Coordinator::createEntity(const EntityKind &kind, IBoundingBoxPtr bbox) -> Uuid
 {
   const auto ent = createEntity(kind);
-  m_transformSystem.addTransformComponent(ent, std::move(bbox));
+  m_transformSystem.addTransform(ent, std::move(bbox));
+  return ent;
+}
+
+auto Coordinator::createEntity(const EntityKind &kind,
+                               IBoundingBoxPtr bbox,
+                               const Eigen::Vector3f &speed) -> Uuid
+{
+  const auto ent = createEntity(kind);
+  m_transformSystem.addTransform(ent, std::move(bbox));
+  m_velocitySystem.addVelocity(ent, speed);
   return ent;
 }
 
@@ -34,7 +44,8 @@ auto Coordinator::getEntity(const Uuid &ent) const -> Entity
     out.kind = it->second;
   }
 
-  out.transform = m_transformSystem.getTransformComponent(ent);
+  out.transform = m_transformSystem.getTransform(ent);
+  out.velocity  = m_velocitySystem.getVelocity(ent);
 
   return out;
 }
@@ -47,6 +58,16 @@ auto Coordinator::getTransformSystem() -> TransformSystem &
 auto Coordinator::getTransformSystem() const -> const TransformSystem &
 {
   return m_transformSystem;
+}
+
+auto Coordinator::getVelocitySystem() -> VelocitySystem &
+{
+  return m_velocitySystem;
+}
+
+auto Coordinator::getVelocitySystem() const -> const VelocitySystem &
+{
+  return m_velocitySystem;
 }
 
 } // namespace bsgo

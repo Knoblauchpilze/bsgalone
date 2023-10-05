@@ -14,6 +14,7 @@ TEST(Controls, Test_Constructor)
   EXPECT_EQ(state.mPosY, 0);
 
   EXPECT_FALSE(state.tab);
+  EXPECT_FALSE(state.shift);
 
   EXPECT_EQ(state.keys.size(), keys::KEYS_COUNT);
   EXPECT_EQ(state.buttons.size(), mouse::BUTTONS_COUNT);
