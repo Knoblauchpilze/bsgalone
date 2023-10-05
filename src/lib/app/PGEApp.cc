@@ -277,7 +277,10 @@ auto PGEApp::handleInputs() -> PGEApp::InputChanges
   b                                  = GetKey(olc::M);
   m_controls.keys[controls::keys::M] = b.bReleased;
 
-  b = GetKey(olc::TAB), m_controls.tab = b.bReleased;
+  b                = GetKey(olc::TAB);
+  m_controls.tab   = b.bReleased;
+  b                = GetKey(olc::SHIFT);
+  m_controls.shift = (b.bPressed || b.bHeld);
 
   auto analysis = [](const olc::HWButton &b) {
     if (b.bPressed)
@@ -302,7 +305,7 @@ auto PGEApp::handleInputs() -> PGEApp::InputChanges
 
   // De/activate the debug mode if needed and
   // handle general simulation control options.
-  if (GetKey(olc::D).bReleased)
+  if (GetKey(olc::D).bReleased && m_controls.shift)
   {
     m_debugOn            = !m_debugOn;
     ic.debugLayerToggled = true;
