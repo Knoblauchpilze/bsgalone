@@ -9,4 +9,6 @@ PlayerView::PlayerView()
   setService("view");
 }
 
+void PlayerView::update(const float /*elapsedSeconds*/) {}
+
 } // namespace bsgo

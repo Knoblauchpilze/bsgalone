@@ -9,4 +9,6 @@ ServerView::ServerView()
   setService("view");
 }
 
+void ServerView::update(const float /*elapsedSeconds*/) {}
+
 } // namespace bsgo

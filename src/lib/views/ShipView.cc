@@ -9,6 +9,8 @@ ShipView::ShipView()
   setService("view");
 }
 
+void ShipView::update(const float /*elapsedSeconds*/) {}
+
 auto ShipView::getUuid() const noexcept -> Uuid
 {
   return {};

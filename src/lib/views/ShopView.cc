@@ -9,4 +9,6 @@ ShopView::ShopView()
   setService("view");
 }
 
+void ShopView::update(const float /*elapsedSeconds*/) {}
+
 } // namespace bsgo
