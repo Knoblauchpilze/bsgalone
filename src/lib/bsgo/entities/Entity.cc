@@ -13,7 +13,7 @@ auto Entity::str() const noexcept -> std::string
 
   if (transform)
   {
-    const auto p = transform->position();
+    const auto p = (*transform)->position();
     out += ",";
     out += std::to_string(p(0));
     out += "x";

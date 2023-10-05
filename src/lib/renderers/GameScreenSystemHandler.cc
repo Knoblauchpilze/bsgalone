@@ -61,7 +61,7 @@ void GameScreenSystemHandler::render(SpriteRenderer &engine,
 
   for (const auto &asteroid : asteroids)
   {
-    renderAsteroid(asteroid.transform->position(), engine, state);
+    renderAsteroid((*asteroid.transform)->position(), engine, state);
   }
 }
 

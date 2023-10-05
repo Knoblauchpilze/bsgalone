@@ -56,33 +56,35 @@ void SystemView::init()
   constexpr auto SHIP_RADIUS = 0.6f;
   Eigen::Vector3f pos        = Eigen::Vector3f::Zero();
   auto box                   = std::make_unique<CircleBox>(pos, SHIP_RADIUS);
-  const auto ship = m_coordinator.createEntityWithTransform(EntityKind::SHIP, std::move(box));
+  const auto ship            = m_coordinator.createEntity(EntityKind::SHIP,
+                                               std::move(box),
+                                               Eigen::Vector3f::Zero());
   m_ships.insert(ship);
 
   constexpr auto ASTEROID_RADIUS = 0.5f;
   pos                            = Eigen::Vector3f(1.0f, 2.0f, 0.0f);
   box                            = std::make_unique<CircleBox>(pos, ASTEROID_RADIUS);
-  auto asteroid = m_coordinator.createEntityWithTransform(EntityKind::ASTEROID, std::move(box));
+  auto asteroid                  = m_coordinator.createEntity(EntityKind::ASTEROID, std::move(box));
   m_asteroids.insert(asteroid);
 
   pos      = Eigen::Vector3f(4.0f, 2.0f, 0.0f);
   box      = std::make_unique<CircleBox>(pos, ASTEROID_RADIUS);
-  asteroid = m_coordinator.createEntityWithTransform(EntityKind::ASTEROID, std::move(box));
+  asteroid = m_coordinator.createEntity(EntityKind::ASTEROID, std::move(box));
   m_asteroids.insert(asteroid);
 
   pos      = Eigen::Vector3f(-2.0f, -6.0f, 0.0f);
   box      = std::make_unique<CircleBox>(pos, ASTEROID_RADIUS);
-  asteroid = m_coordinator.createEntityWithTransform(EntityKind::ASTEROID, std::move(box));
+  asteroid = m_coordinator.createEntity(EntityKind::ASTEROID, std::move(box));
   m_asteroids.insert(asteroid);
 
   pos      = Eigen::Vector3f(-3.0f, -4.0f, 0.0f);
   box      = std::make_unique<CircleBox>(pos, ASTEROID_RADIUS);
-  asteroid = m_coordinator.createEntityWithTransform(EntityKind::ASTEROID, std::move(box));
+  asteroid = m_coordinator.createEntity(EntityKind::ASTEROID, std::move(box));
   m_asteroids.insert(asteroid);
 
   pos      = Eigen::Vector3f(15.0f, 17.0f, 0.0f);
   box      = std::make_unique<CircleBox>(pos, ASTEROID_RADIUS);
-  asteroid = m_coordinator.createEntityWithTransform(EntityKind::ASTEROID, std::move(box));
+  asteroid = m_coordinator.createEntity(EntityKind::ASTEROID, std::move(box));
   m_asteroids.insert(asteroid);
 }
 

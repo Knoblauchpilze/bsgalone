@@ -2,8 +2,9 @@
 #pragma once
 
 #include "EntityKind.hh"
-#include "TransformComponent.hh"
+#include "Transform.hh"
 #include "Uuid.hh"
+#include "Velocity.hh"
 #include <optional>
 #include <string>
 
@@ -13,7 +14,8 @@ struct Entity
 {
   Uuid uuid;
   EntityKind kind;
-  std::optional<TransformComponent> transform{};
+  std::optional<TransformShPtr> transform{};
+  std::optional<VelocityShPtr> velocity{};
 
   auto str() const noexcept -> std::string;
 };
