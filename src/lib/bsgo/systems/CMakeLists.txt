@@ -1,7 +1,6 @@
 
 target_sources (bsgalone_lib PRIVATE
-	${CMAKE_CURRENT_SOURCE_DIR}/TransformSystem.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/VelocitySystem.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/MotionSystem.cc
 	)
 
 target_include_directories (bsgalone_lib PUBLIC

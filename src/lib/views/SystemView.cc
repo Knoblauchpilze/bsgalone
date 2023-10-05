@@ -19,7 +19,7 @@ auto SystemView::getEntity(const Uuid &ent) const -> Entity
 auto SystemView::getEntityAt(const Eigen::Vector3f &pos,
                              const std::optional<EntityKind> &filter) const -> std::optional<Entity>
 {
-  const auto ent = m_coordinator.getTransformSystem().getEntityAt(pos);
+  const auto ent = m_coordinator.getEntityAt(pos);
   if (!ent)
   {
     return {};
@@ -37,7 +37,7 @@ auto SystemView::getEntitiesWithin(const IBoundingBox &bbox,
                                    const std::optional<EntityKind> &filter) const
   -> std::vector<Entity>
 {
-  const auto uuids = m_coordinator.getTransformSystem().getEntitiesWithin(bbox);
+  const auto uuids = m_coordinator.getEntitiesWithin(bbox);
 
   std::vector<Entity> out;
   for (const auto &uuid : uuids)
