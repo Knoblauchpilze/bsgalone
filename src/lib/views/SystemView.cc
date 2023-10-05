@@ -11,6 +11,11 @@ SystemView::SystemView()
   init();
 }
 
+void SystemView::update(const float elapsedSeconds)
+{
+  m_coordinator.update(elapsedSeconds);
+}
+
 auto SystemView::getEntity(const Uuid &ent) const -> Entity
 {
   return m_coordinator.getEntity(ent);

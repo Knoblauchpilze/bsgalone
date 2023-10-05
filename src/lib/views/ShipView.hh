@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "IView.hh"
 #include "Uuid.hh"
 #include <core_utils/CoreObject.hh>
 #include <memory>
@@ -8,10 +9,13 @@
 
 namespace bsgo {
 
-class ShipView : public utils::CoreObject
+class ShipView : public utils::CoreObject, public IView
 {
   public:
   ShipView();
+  ~ShipView() override = default;
+
+  void update(const float elapsedSeconds) override;
 
   auto getUuid() const noexcept -> Uuid;
 

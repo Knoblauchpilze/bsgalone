@@ -109,6 +109,11 @@ auto Coordinator::getEntitiesWithin(const IBoundingBox &bbox) const -> std::vect
   return out;
 }
 
+void Coordinator::update(float elapsedSeconds)
+{
+  m_motionSystem.update(elapsedSeconds);
+}
+
 void Coordinator::addTransform(const Uuid &ent, IBoundingBoxPtr bbox)
 {
   if (m_transforms.contains(ent))

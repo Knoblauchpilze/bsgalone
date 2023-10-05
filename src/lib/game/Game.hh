@@ -6,6 +6,7 @@
 #include "IScreenHandler.hh"
 #include "Screen.hh"
 #include "SpriteRenderer.hh"
+#include "Views.hh"
 #include <core_utils/CoreObject.hh>
 #include <core_utils/TimeUtils.hh>
 #include <memory>
@@ -59,10 +60,10 @@ class Game : public utils::CoreObject
   bool terminated() const noexcept;
 
   /// @brief - Forward the call to step one step ahead in time to the internal world.
-  /// @param tDelta - the duration of the last frame in seconds.
+  /// @param elapsedSeconds - the duration of the last frame in seconds.
   /// @param bool - `true` in case the game continues, and `false` otherwise (i.e. if
   /// the game is ended).
-  bool step(float tDelta);
+  bool step(float elapsedSeconds);
 
   /// @brief - Performs the needed operation to handle the pause and resume operation
   /// for this game. It will automatically disable the menu if needed or make it
@@ -142,6 +143,7 @@ class Game : public utils::CoreObject
   /// @brief - The definition of the game state.
   State m_state{};
 
+  std::vector<bsgo::IViewShPtr> m_views{};
   std::unordered_map<Screen, IScreenHandler *> m_handlers{};
 };
 

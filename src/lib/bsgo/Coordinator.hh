@@ -30,6 +30,8 @@ class Coordinator : public utils::CoreObject
   auto getEntityAt(const Eigen::Vector3f &pos) const -> std::optional<Uuid>;
   auto getEntitiesWithin(const IBoundingBox &bbox) const -> std::vector<Uuid>;
 
+  void update(float elapsedSeconds);
+
   private:
   std::unordered_map<Uuid, EntityKind> m_entities{};
 

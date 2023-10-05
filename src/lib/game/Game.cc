@@ -21,8 +21,10 @@ auto Game::generateHandlers(int width, int height, SpriteRenderer &spriteRendere
   std::unordered_map<Screen, IScreenHandlerPtr> out;
 
   bsgo::Views views;
-  views.shipView        = std::make_shared<bsgo::ShipView>();
-  views.systemView      = std::make_shared<bsgo::SystemView>();
+  views.shipView = std::make_shared<bsgo::ShipView>();
+  m_views.push_back(views.shipView);
+  views.systemView = std::make_shared<bsgo::SystemView>();
+  m_views.push_back(views.systemView);
   auto &texturesHandler = spriteRenderer.getTextureHandler();
 
   auto login = std::make_unique<LoginScreenHandler>();
@@ -71,12 +73,17 @@ void Game::performAction(float x, float y, const controls::State &state)
   it->second->performAction(x, y, state);
 }
 
-bool Game::step(float /*tDelta*/)
+bool Game::step(float elapsedSeconds)
 {
   // When the game is paused it is not over yet.
   if (m_state.paused)
   {
     return true;
+  }
+
+  for (const auto &view : m_views)
+  {
+    view->update(elapsedSeconds);
   }
 
   updateUI();
