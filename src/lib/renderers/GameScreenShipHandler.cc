@@ -15,7 +15,7 @@ void GameScreenShipHandler::Motion::updateFromKeys(const controls::State &inputs
   {
     --x;
   }
-  if (inputs.keys[controls::keys::RIGHT] || inputs.keys[controls::keys::D])
+  if (inputs.keys[controls::keys::RIGHT] || (inputs.keys[controls::keys::D] && !inputs.shift))
   {
     ++x;
   }
@@ -110,7 +110,7 @@ void GameScreenShipHandler::renderShip(const bsgo::Uuid &ship,
   t.sprite.sprite = {0, 0};
   t.sprite.tint   = olc::WHITE;
 
-  engine.drawWarpedSprite(t, state.cf);
+  engine.drawRotatedSprite(t, state.cf);
 }
 
 void GameScreenShipHandler::moveShip(const bsgo::Uuid &ship, const Motion &motion)

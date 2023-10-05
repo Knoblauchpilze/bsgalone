@@ -77,6 +77,9 @@ struct State
 
   // Whether the tab key is pressed.
   bool tab{false};
+
+  // Whether the shift key is pressed.
+  bool shift{false};
 };
 
 /// @brief - Create a new controls structure.
