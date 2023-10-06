@@ -9,6 +9,6 @@ MotionSystem::MotionSystem()
   setService("system");
 }
 
-void MotionSystem::update(const float /*elapsedSeconds*/) {}
+void MotionSystem::update(const Components & /*components*/, const float /*elapsedSeconds*/) {}
 
 } // namespace bsgo

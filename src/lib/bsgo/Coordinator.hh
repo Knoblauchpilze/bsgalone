@@ -1,12 +1,11 @@
 
 #pragma once
 
+#include "Components.hh"
 #include "Entity.hh"
 #include "IBoundingBox.hh"
 #include "MotionSystem.hh"
-#include "Transform.hh"
 #include "Uuid.hh"
-#include "Velocity.hh"
 #include <core_utils/CoreObject.hh>
 #include <unordered_map>
 
@@ -34,10 +33,7 @@ class Coordinator : public utils::CoreObject
 
   private:
   std::unordered_map<Uuid, EntityKind> m_entities{};
-
-  std::unordered_map<Uuid, TransformShPtr> m_transforms{};
-  std::unordered_map<Uuid, VelocityShPtr> m_velocities{};
-
+  Components m_components{};
   MotionSystem m_motionSystem{};
 
   void addTransform(const Uuid &ent, IBoundingBoxPtr bbox);

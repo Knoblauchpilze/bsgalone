@@ -13,7 +13,7 @@ class MotionSystem : public utils::CoreObject, public ISystem
   MotionSystem();
   ~MotionSystem() override = default;
 
-  void update(const float elapsedSeconds) override;
+  void update(const Components &components, const float elapsedSeconds) override;
 };
 
 } // namespace bsgo
