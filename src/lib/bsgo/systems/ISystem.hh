@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include "Components.hh"
+
 namespace bsgo {
 
 class ISystem
@@ -8,7 +10,7 @@ class ISystem
   public:
   virtual ~ISystem() = default;
 
-  virtual void update(const float elapsedSeconds) = 0;
+  virtual void update(const Components &components, const float elapsedSeconds) = 0;
 };
 
 } // namespace bsgo
