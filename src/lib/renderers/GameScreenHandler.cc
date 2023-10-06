@@ -30,6 +30,9 @@ void GameScreenHandler::render(SpriteRenderer &engine,
       m_systemHandler->render(engine, state, pass);
       m_shipHandler->render(engine, state, pass);
       break;
+    case RenderingPass::DEBUG:
+      m_shipHandler->render(engine, state, pass);
+      break;
     default:
       break;
   }

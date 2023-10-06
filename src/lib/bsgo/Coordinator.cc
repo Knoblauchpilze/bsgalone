@@ -131,7 +131,7 @@ void Coordinator::addVelocity(const Uuid &ent, const Eigen::Vector3f &speed)
     warn("Overriding velocity for entity " + std::to_string(ent));
   }
 
-  m_components.velocities[ent] = std::make_shared<Velocity>(speed);
+  m_components.velocities[ent] = std::make_shared<Velocity>(Eigen::Vector3f::Zero(), speed);
 }
 
 } // namespace bsgo

@@ -1,6 +1,7 @@
 
 #include "GameScreenUiHandler.hh"
 #include "ScreenCommon.hh"
+#include "StringUtils.hh"
 
 namespace pge {
 
@@ -138,15 +139,15 @@ void GameScreenUiHandler::updateShipUi()
   std::string text;
 
   text = "Health: ";
-  text += std::to_string(static_cast<int>(std::floor(m_shipView->getHealth())));
+  text += floatToStr(std::floor(m_shipView->getHealth()), 0);
   text += "/";
-  text += std::to_string(static_cast<int>(std::floor(m_shipView->getMaxHealth())));
+  text += floatToStr(m_shipView->getMaxHealth(), 0);
   m_menus[HEALTH]->setText(text);
 
   text = "Power: ";
-  text += std::to_string(static_cast<int>(std::floor(m_shipView->getPower())));
+  text += floatToStr(std::floor(m_shipView->getPower()), 0);
   text += "/";
-  text += std::to_string(static_cast<int>(std::floor(m_shipView->getMaxPower())));
+  text += floatToStr(std::floor(m_shipView->getMaxPower()), 0);
   m_menus[POWER]->setText(text);
 }
 
@@ -163,15 +164,15 @@ void GameScreenUiHandler::updateTargetUi()
   std::string text;
 
   text = "Health: ";
-  text += std::to_string(static_cast<int>(std::floor(m_shipView->getTargetHealth())));
+  text += floatToStr(std::floor(m_shipView->getTargetHealth()), 0);
   text += "/";
-  text += std::to_string(static_cast<int>(std::floor(m_shipView->getTargetMaxHealth())));
+  text += floatToStr(std::floor(m_shipView->getTargetMaxHealth()), 0);
   m_menus[TARGET_HEALTH]->setText(text);
 
   text = "Power: ";
-  text += std::to_string(static_cast<int>(std::floor(m_shipView->getTargetPower())));
+  text += floatToStr(std::floor(m_shipView->getTargetPower()), 0);
   text += "/";
-  text += std::to_string(static_cast<int>(std::floor(m_shipView->getTargetMaxPower())));
+  text += floatToStr(std::floor(m_shipView->getTargetMaxPower()), 0);
   m_menus[TARGET_POWER]->setText(text);
 }
 

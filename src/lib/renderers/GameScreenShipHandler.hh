@@ -35,11 +35,11 @@ class GameScreenShipHandler : public IScreenHandler
     int y{0};
     int z{0};
 
-    bool isMoving() const;
     void updateFromKeys(const controls::State &inputs);
   };
 
   void renderShip(const bsgo::Uuid &ship, SpriteRenderer &engine, const RenderState &state) const;
+  void renderDebug(const bsgo::Uuid &ship, SpriteRenderer &engine, const RenderState &state) const;
   void moveShip(const bsgo::Uuid &ship, const Motion &motion);
   void keepShipCentered(CoordinateFrame &frame);
 };
