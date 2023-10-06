@@ -1,13 +1,9 @@
 
 #include "GameScreenShipHandler.hh"
 #include "ScreenCommon.hh"
+#include "StringUtils.hh"
 
 namespace pge {
-
-bool GameScreenShipHandler::Motion::isMoving() const
-{
-  return x != 0 || y != 0 || z != 0;
-}
 
 void GameScreenShipHandler::Motion::updateFromKeys(const controls::State &inputs)
 {
@@ -61,12 +57,14 @@ void GameScreenShipHandler::render(SpriteRenderer &engine,
                                    const RenderState &state,
                                    const RenderingPass pass) const
 {
-  if (pass != RenderingPass::DECAL)
+  if (pass == RenderingPass::DECAL)
   {
-    return;
+    renderShip(m_shipView->getUuid(), engine, state);
   }
-
-  renderShip(m_shipView->getUuid(), engine, state);
+  if (pass == RenderingPass::DEBUG)
+  {
+    renderDebug(m_shipView->getUuid(), engine, state);
+  }
 }
 
 auto GameScreenShipHandler::processUserInput(const controls::State &c,
@@ -75,10 +73,7 @@ auto GameScreenShipHandler::processUserInput(const controls::State &c,
 {
   Motion motion{};
   motion.updateFromKeys(c);
-  if (motion.isMoving())
-  {
-    moveShip(m_shipView->getUuid(), motion);
-  }
+  moveShip(m_shipView->getUuid(), motion);
 
   keepShipCentered(frame);
   return {};
@@ -115,6 +110,37 @@ void GameScreenShipHandler::renderShip(const bsgo::Uuid &ship,
   engine.drawRotatedSprite(t, state.cf);
 }
 
+void GameScreenShipHandler::renderDebug(const bsgo::Uuid &ship,
+                                        SpriteRenderer &engine,
+                                        const RenderState &state) const
+{
+  auto ent = m_systemView->getEntity(ship);
+
+  const auto tilePos = (*ent.transform)->position();
+  olc::vi2d pixelPos = state.cf.tilesToPixels(tilePos(0), tilePos(1));
+
+  olc::vi2d pos    = pixelPos;
+  std::string text = "accel: ";
+  const auto accel = (*ent.velocity)->acceleration();
+  text += floatToStr(accel(0));
+  text += "x";
+  text += floatToStr(accel(1));
+  text += "x";
+  text += floatToStr(accel(2));
+  engine.getRenderer()->DrawString(pos, text, olc::DARK_YELLOW);
+
+  constexpr auto REASONABLE_GAP = 20;
+  pos.y += REASONABLE_GAP;
+  text             = "speed: ";
+  const auto speed = (*ent.velocity)->speed();
+  text += floatToStr(speed(0));
+  text += "x";
+  text += floatToStr(speed(1));
+  text += "x";
+  text += floatToStr(speed(2));
+  engine.getRenderer()->DrawString(pos, text, olc::DARK_GREEN);
+}
+
 void GameScreenShipHandler::moveShip(const bsgo::Uuid &ship, const Motion &motion)
 {
   auto ent = m_systemView->getEntity(ship);
@@ -125,7 +151,6 @@ void GameScreenShipHandler::moveShip(const bsgo::Uuid &ship, const Motion &motio
   delta(2)              = motion.z;
   delta.normalize();
 
-  (*ent.transform)->translate(delta);
   (*ent.velocity)->accelerate(delta);
 }
 
