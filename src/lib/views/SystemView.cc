@@ -16,6 +16,14 @@ SystemView::SystemView(const Repositories &repositories)
   {
     throw std::invalid_argument("Expected non null asteroid repository");
   }
+  if (nullptr == repositories.player)
+  {
+    throw std::invalid_argument("Expected non null player repository");
+  }
+  if (nullptr == repositories.ship)
+  {
+    throw std::invalid_argument("Expected non null ship repository");
+  }
   init(repositories);
 }
 
@@ -66,7 +74,9 @@ auto SystemView::getEntitiesWithin(const IBoundingBox &bbox,
 
 void SystemView::init(const Repositories &repositories)
 {
-  const auto ships = repositories.system->findShips({});
+  const auto systemId = repositories.player->findSystemById({});
+
+  const auto ships = repositories.system->findShips(systemId);
   for (const auto &systemShip : ships)
   {
     const auto ship = repositories.ship->findOneById(systemShip.model);
@@ -79,7 +89,7 @@ void SystemView::init(const Repositories &repositories)
     m_ships.insert(ent);
   }
 
-  const auto asteroids = repositories.system->findAsteroids({});
+  const auto asteroids = repositories.system->findAsteroids(systemId);
   for (const auto &id : asteroids)
   {
     const auto asteroid = repositories.asteroid->findOneById(id);
