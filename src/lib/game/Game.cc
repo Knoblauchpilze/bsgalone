@@ -1,11 +1,14 @@
 
 #include "Game.hh"
+#include "AsteroidRepository.hh"
 #include "GameOverScreenHandler.hh"
 #include "GameScreenHandler.hh"
 #include "LoginScreenHandler.hh"
 #include "MapScreenHandler.hh"
 #include "Menu.hh"
 #include "OutpostScreenHandler.hh"
+#include "Repositories.hh"
+#include "SystemRepository.hh"
 
 namespace pge {
 
@@ -20,10 +23,14 @@ auto Game::generateHandlers(int width, int height, SpriteRenderer &spriteRendere
 {
   std::unordered_map<Screen, IScreenHandlerPtr> out;
 
+  bsgo::Repositories repos;
+  repos.asteroid = std::make_shared<bsgo::AsteroidRepository>();
+  repos.system   = std::make_shared<bsgo::SystemRepository>();
+
   bsgo::Views views;
   views.shipView = std::make_shared<bsgo::ShipView>();
   m_views.push_back(views.shipView);
-  views.systemView = std::make_shared<bsgo::SystemView>();
+  views.systemView = std::make_shared<bsgo::SystemView>(repos);
   m_views.push_back(views.systemView);
   auto &texturesHandler = spriteRenderer.getTextureHandler();
 

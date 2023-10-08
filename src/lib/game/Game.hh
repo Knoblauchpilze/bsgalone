@@ -4,9 +4,9 @@
 #include "Action.hh"
 #include "Controls.hh"
 #include "IScreenHandler.hh"
+#include "IView.hh"
 #include "Screen.hh"
 #include "SpriteRenderer.hh"
-#include "Views.hh"
 #include <core_utils/CoreObject.hh>
 #include <core_utils/TimeUtils.hh>
 #include <memory>

@@ -12,6 +12,8 @@ class CircleBox : public IBoundingBox
   CircleBox(const Eigen::Vector3f &center, const float radius) noexcept;
   ~CircleBox() override = default;
 
+  auto radius() const -> float;
+
   auto position() const -> Eigen::Vector3f override;
   bool isInside(const Eigen::Vector3f &pos) const noexcept override;
 

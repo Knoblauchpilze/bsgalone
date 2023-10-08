@@ -11,6 +11,8 @@ class AxisAlignedBoundingBox : public IBoundingBox
   AxisAlignedBoundingBox(const Eigen::Vector3f &center, const Eigen::Vector3f &dims) noexcept;
   ~AxisAlignedBoundingBox() override = default;
 
+  auto dims() const -> Eigen::Vector3f;
+
   auto position() const -> Eigen::Vector3f override;
   bool isInside(const Eigen::Vector3f &pos) const noexcept override;
 
