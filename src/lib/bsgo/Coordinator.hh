@@ -7,6 +7,7 @@
 #include "MotionSystem.hh"
 #include "Uuid.hh"
 #include <core_utils/CoreObject.hh>
+#include <memory>
 #include <unordered_map>
 
 namespace bsgo {
@@ -39,5 +40,7 @@ class Coordinator : public utils::CoreObject
   void addTransform(const Uuid &ent, IBoundingBoxPtr bbox);
   void addVelocity(const Uuid &ent, const Eigen::Vector3f &speed);
 };
+
+using CoordinatorShPtr = std::shared_ptr<Coordinator>;
 
 } // namespace bsgo

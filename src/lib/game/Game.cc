@@ -27,10 +27,12 @@ auto Game::generateHandlers(int width, int height, SpriteRenderer &spriteRendere
   repos.system   = std::make_shared<bsgo::SystemRepository>();
   repos.player   = std::make_shared<bsgo::PlayerRepository>();
 
+  auto coordinator = std::make_shared<bsgo::Coordinator>();
+
   bsgo::Views views;
   views.shipView = std::make_shared<bsgo::ShipView>(repos);
   m_views.push_back(views.shipView);
-  views.systemView = std::make_shared<bsgo::SystemView>(repos);
+  views.systemView = std::make_shared<bsgo::SystemView>(coordinator, repos);
   m_views.push_back(views.systemView);
   auto &texturesHandler = spriteRenderer.getTextureHandler();
 
