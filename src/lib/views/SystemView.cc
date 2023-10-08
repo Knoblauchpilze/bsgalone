@@ -4,8 +4,9 @@
 
 namespace bsgo {
 
-SystemView::SystemView(const Repositories &repositories)
+SystemView::SystemView(const CoordinatorShPtr &coordinator, const Repositories &repositories)
   : utils::CoreObject("system")
+  , m_coordinator(coordinator)
 {
   setService("view");
   if (nullptr == repositories.system)
@@ -29,18 +30,18 @@ SystemView::SystemView(const Repositories &repositories)
 
 void SystemView::update(const float elapsedSeconds)
 {
-  m_coordinator.update(elapsedSeconds);
+  m_coordinator->update(elapsedSeconds);
 }
 
 auto SystemView::getEntity(const Uuid &ent) const -> Entity
 {
-  return m_coordinator.getEntity(ent);
+  return m_coordinator->getEntity(ent);
 }
 
 auto SystemView::getEntityAt(const Eigen::Vector3f &pos,
                              const std::optional<EntityKind> &filter) const -> std::optional<Entity>
 {
-  const auto ent = m_coordinator.getEntityAt(pos);
+  const auto ent = m_coordinator->getEntityAt(pos);
   if (!ent)
   {
     return {};
@@ -51,21 +52,21 @@ auto SystemView::getEntityAt(const Eigen::Vector3f &pos,
     return {};
   }
 
-  return {m_coordinator.getEntity(*ent)};
+  return {m_coordinator->getEntity(*ent)};
 }
 
 auto SystemView::getEntitiesWithin(const IBoundingBox &bbox,
                                    const std::optional<EntityKind> &filter) const
   -> std::vector<Entity>
 {
-  const auto uuids = m_coordinator.getEntitiesWithin(bbox);
+  const auto uuids = m_coordinator->getEntitiesWithin(bbox);
 
   std::vector<Entity> out;
   for (const auto &uuid : uuids)
   {
     if (!filter || isValidForFilter(uuid, *filter))
     {
-      out.push_back(m_coordinator.getEntity(uuid));
+      out.push_back(m_coordinator->getEntity(uuid));
     }
   }
 
@@ -83,9 +84,9 @@ void SystemView::init(const Repositories &repositories)
     const auto pos  = repositories.ship->findPositionById(systemShip.ship);
 
     auto box       = std::make_unique<CircleBox>(pos, ship.radius);
-    const auto ent = m_coordinator.createEntity(EntityKind::SHIP,
-                                                std::move(box),
-                                                Eigen::Vector3f::Zero());
+    const auto ent = m_coordinator->createEntity(EntityKind::SHIP,
+                                                 std::move(box),
+                                                 Eigen::Vector3f::Zero());
     m_ships.insert(ent);
   }
 
@@ -95,7 +96,7 @@ void SystemView::init(const Repositories &repositories)
     const auto asteroid = repositories.asteroid->findOneById(id);
 
     auto box       = std::make_unique<CircleBox>(asteroid.position, asteroid.radius);
-    const auto ent = m_coordinator.createEntity(EntityKind::ASTEROID, std::move(box));
+    const auto ent = m_coordinator->createEntity(EntityKind::ASTEROID, std::move(box));
     m_asteroids.insert(ent);
   }
 }
