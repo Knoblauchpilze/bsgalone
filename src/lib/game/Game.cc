@@ -25,6 +25,7 @@ auto Game::generateHandlers(int width, int height, SpriteRenderer &spriteRendere
 
   bsgo::Repositories repos;
   repos.asteroid = std::make_shared<bsgo::AsteroidRepository>();
+  repos.ship     = std::make_shared<bsgo::ShipRepository>();
   repos.system   = std::make_shared<bsgo::SystemRepository>();
 
   bsgo::Views views;
