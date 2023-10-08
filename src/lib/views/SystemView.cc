@@ -66,21 +66,26 @@ auto SystemView::getEntitiesWithin(const IBoundingBox &bbox,
 
 void SystemView::init(const Repositories &repositories)
 {
-  constexpr auto SHIP_RADIUS = 0.6f;
-  Eigen::Vector3f pos        = Eigen::Vector3f::Zero();
-  auto box                   = std::make_unique<CircleBox>(pos, SHIP_RADIUS);
-  const auto ship            = m_coordinator.createEntity(EntityKind::SHIP,
-                                               std::move(box),
-                                               Eigen::Vector3f::Zero());
-  m_ships.insert(ship);
+  const auto ships = repositories.system->findShips({});
+  for (const auto &systemShip : ships)
+  {
+    const auto ship = repositories.ship->findOneById(systemShip.model);
+    const auto pos  = repositories.ship->findPositionById(systemShip.ship);
+
+    auto box       = std::make_unique<CircleBox>(pos, ship.radius);
+    const auto ent = m_coordinator.createEntity(EntityKind::SHIP,
+                                                std::move(box),
+                                                Eigen::Vector3f::Zero());
+    m_ships.insert(ent);
+  }
 
   const auto asteroids = repositories.system->findAsteroids({});
   for (const auto &id : asteroids)
   {
     const auto asteroid = repositories.asteroid->findOneById(id);
 
-    box      = std::make_unique<CircleBox>(asteroid.position, asteroid.radius);
-    auto ent = m_coordinator.createEntity(EntityKind::ASTEROID, std::move(box));
+    auto box       = std::make_unique<CircleBox>(asteroid.position, asteroid.radius);
+    const auto ent = m_coordinator.createEntity(EntityKind::ASTEROID, std::move(box));
     m_asteroids.insert(ent);
   }
 }

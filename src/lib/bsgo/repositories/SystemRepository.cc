@@ -12,9 +12,9 @@ auto SystemRepository::findAsteroids(const Uuid & /*system*/) -> std::vector<Uui
   return {Uuid(0), Uuid(1), Uuid(2), Uuid(3), Uuid(4)};
 }
 
-auto SystemRepository::findShips(const Uuid & /*system*/) -> std::vector<Uuid>
+auto SystemRepository::findShips(const Uuid & /*system*/) -> std::vector<SystemShip>
 {
-  return {{}};
+  return {SystemShip{Uuid(0), Uuid(0)}};
 }
 
 } // namespace bsgo
