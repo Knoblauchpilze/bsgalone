@@ -2,6 +2,7 @@
 #pragma once
 
 #include "IView.hh"
+#include "Repositories.hh"
 #include "Uuid.hh"
 #include <core_utils/CoreObject.hh>
 #include <memory>
@@ -12,7 +13,7 @@ namespace bsgo {
 class ShipView : public utils::CoreObject, public IView
 {
   public:
-  ShipView();
+  ShipView(const Repositories &repositories);
   ~ShipView() override = default;
 
   void update(const float elapsedSeconds) override;
@@ -34,6 +35,9 @@ class ShipView : public utils::CoreObject, public IView
   auto getTargetMaxPower() const noexcept -> float;
 
   private:
+  Uuid m_playerId{};
+  PlayerRepositoryShPtr m_playerRepo;
+  ShipRepositoryShPtr m_shipRepo;
   std::optional<Uuid> m_target{};
 };
 

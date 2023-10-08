@@ -3,17 +3,27 @@
 
 namespace bsgo {
 
-ShipView::ShipView()
+ShipView::ShipView(const Repositories &repositories)
   : utils::CoreObject("ship")
+  , m_playerRepo(repositories.player)
+  , m_shipRepo(repositories.ship)
 {
   setService("view");
+  if (nullptr == m_playerRepo)
+  {
+    throw std::invalid_argument("Expected non null player repository");
+  }
+  if (nullptr == m_shipRepo)
+  {
+    throw std::invalid_argument("Expected non null ship repository");
+  }
 }
 
 void ShipView::update(const float /*elapsedSeconds*/) {}
 
 auto ShipView::getUuid() const noexcept -> Uuid
 {
-  return {};
+  return m_playerRepo->findShipById(m_playerId);
 }
 
 auto ShipView::getHealth() const noexcept -> float
@@ -23,7 +33,7 @@ auto ShipView::getHealth() const noexcept -> float
 
 auto ShipView::getMaxHealth() const noexcept -> float
 {
-  return 550.0f;
+  return m_shipRepo->findOneById(m_playerRepo->findShipById(m_playerId)).hullPoints;
 }
 
 auto ShipView::getPower() const noexcept -> float
@@ -33,7 +43,7 @@ auto ShipView::getPower() const noexcept -> float
 
 auto ShipView::getMaxPower() const noexcept -> float
 {
-  return 150.0f;
+  return m_shipRepo->findOneById(m_playerRepo->findShipById(m_playerId)).powerPoints;
 }
 
 bool ShipView::hasTarget() const noexcept

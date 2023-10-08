@@ -1,6 +1,5 @@
 
 #include "Game.hh"
-#include "AsteroidRepository.hh"
 #include "GameOverScreenHandler.hh"
 #include "GameScreenHandler.hh"
 #include "LoginScreenHandler.hh"
@@ -8,7 +7,6 @@
 #include "Menu.hh"
 #include "OutpostScreenHandler.hh"
 #include "Repositories.hh"
-#include "SystemRepository.hh"
 
 namespace pge {
 
@@ -27,9 +25,10 @@ auto Game::generateHandlers(int width, int height, SpriteRenderer &spriteRendere
   repos.asteroid = std::make_shared<bsgo::AsteroidRepository>();
   repos.ship     = std::make_shared<bsgo::ShipRepository>();
   repos.system   = std::make_shared<bsgo::SystemRepository>();
+  repos.player   = std::make_shared<bsgo::PlayerRepository>();
 
   bsgo::Views views;
-  views.shipView = std::make_shared<bsgo::ShipView>();
+  views.shipView = std::make_shared<bsgo::ShipView>(repos);
   m_views.push_back(views.shipView);
   views.systemView = std::make_shared<bsgo::SystemView>(repos);
   m_views.push_back(views.systemView);
