@@ -16,7 +16,7 @@ namespace bsgo {
 class SystemView : public utils::CoreObject, public IView
 {
   public:
-  SystemView(const CoordinatorShPtr &coordinator, const Repositories &repositories);
+  SystemView(const CoordinatorShPtr &coordinator);
   ~SystemView() override = default;
 
   void update(const float elapsedSeconds) override;
@@ -29,12 +29,6 @@ class SystemView : public utils::CoreObject, public IView
 
   private:
   CoordinatorShPtr m_coordinator{};
-
-  std::unordered_set<Uuid> m_ships{};
-  std::unordered_set<Uuid> m_asteroids{};
-
-  void init(const Repositories &repositories);
-  bool isValidForFilter(const Uuid &ent, const EntityKind &kind) const;
 };
 
 using SystemViewShPtr = std::shared_ptr<SystemView>;

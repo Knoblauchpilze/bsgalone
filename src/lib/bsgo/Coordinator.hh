@@ -5,6 +5,7 @@
 #include "Entity.hh"
 #include "IBoundingBox.hh"
 #include "MotionSystem.hh"
+#include "Repositories.hh"
 #include "Uuid.hh"
 #include <core_utils/CoreObject.hh>
 #include <memory>
@@ -15,7 +16,7 @@ namespace bsgo {
 class Coordinator : public utils::CoreObject
 {
   public:
-  Coordinator();
+  Coordinator(const Repositories &repos);
   virtual ~Coordinator() = default;
 
   auto createEntity(const EntityKind &kind) -> Uuid;
@@ -27,8 +28,10 @@ class Coordinator : public utils::CoreObject
   auto getTransform(const Uuid &ent) const -> std::optional<TransformShPtr>;
   auto getVelocity(const Uuid &ent) const -> std::optional<VelocityShPtr>;
 
-  auto getEntityAt(const Eigen::Vector3f &pos) const -> std::optional<Uuid>;
-  auto getEntitiesWithin(const IBoundingBox &bbox) const -> std::vector<Uuid>;
+  auto getEntityAt(const Eigen::Vector3f &pos, const std::optional<EntityKind> &filter = {}) const
+    -> std::optional<Uuid>;
+  auto getEntitiesWithin(const IBoundingBox &bbox,
+                         const std::optional<EntityKind> &filter = {}) const -> std::vector<Uuid>;
 
   void update(float elapsedSeconds);
 
@@ -36,6 +39,10 @@ class Coordinator : public utils::CoreObject
   std::unordered_map<Uuid, EntityKind> m_entities{};
   Components m_components{};
   MotionSystem m_motionSystem{};
+
+  void checkRepositories(const Repositories &repos);
+  void init(const Repositories &repos);
+  bool hasExpectedKind(const Uuid &ent, const std::optional<EntityKind> &kind) const;
 
   void addTransform(const Uuid &ent, IBoundingBoxPtr bbox);
   void addVelocity(const Uuid &ent, const Eigen::Vector3f &speed);
