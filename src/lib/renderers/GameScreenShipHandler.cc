@@ -1,5 +1,6 @@
 
 #include "GameScreenShipHandler.hh"
+#include "EntitiesUtils.hh"
 #include "ScreenCommon.hh"
 #include "StringUtils.hh"
 
@@ -57,13 +58,17 @@ void GameScreenShipHandler::render(SpriteRenderer &engine,
                                    const RenderState &state,
                                    const RenderingPass pass) const
 {
-  if (pass == RenderingPass::DECAL)
+  const auto ships = getEntitiesWithinViewport(*m_systemView, state.cf, bsgo::EntityKind::SHIP);
+  for (const auto &ship : ships)
   {
-    renderShip(m_shipView->getUuid(), engine, state);
-  }
-  if (pass == RenderingPass::DEBUG)
-  {
-    renderDebug(m_shipView->getUuid(), engine, state);
+    if (pass == RenderingPass::DECAL)
+    {
+      renderShip(ship, engine, state);
+    }
+    if (pass == RenderingPass::DEBUG)
+    {
+      renderDebug(ship, engine, state);
+    }
   }
 }
 
@@ -86,21 +91,19 @@ void GameScreenShipHandler::performAction(float /*x*/,
                                           const controls::State & /*state*/)
 {}
 
-void GameScreenShipHandler::renderShip(const bsgo::Uuid &ship,
+void GameScreenShipHandler::renderShip(const bsgo::Entity &ship,
                                        SpriteRenderer &engine,
                                        const RenderState &state) const
 {
   constexpr auto SHIP_RADIUS = 0.5f;
 
-  const auto ent = m_systemView->getEntity(ship);
-
-  const auto pos = (*ent.transform)->position();
+  const auto pos = (*ship.transform)->position();
   SpriteDesc t;
   t.x = pos(0) - SHIP_RADIUS;
   t.y = pos(1) - SHIP_RADIUS;
 
   t.radius         = 2.0f * SHIP_RADIUS;
-  const auto speed = (*ent.velocity)->speed();
+  const auto speed = (*ship.velocity)->speed();
   t.rotation       = std::atan2(speed(0), speed(1));
 
   t.sprite.pack   = m_class1TexturesPackId;
@@ -110,18 +113,16 @@ void GameScreenShipHandler::renderShip(const bsgo::Uuid &ship,
   engine.drawRotatedSprite(t, state.cf);
 }
 
-void GameScreenShipHandler::renderDebug(const bsgo::Uuid &ship,
+void GameScreenShipHandler::renderDebug(const bsgo::Entity &ship,
                                         SpriteRenderer &engine,
                                         const RenderState &state) const
 {
-  auto ent = m_systemView->getEntity(ship);
-
-  const auto tilePos = (*ent.transform)->position();
+  const auto tilePos = (*ship.transform)->position();
   olc::vi2d pixelPos = state.cf.tilesToPixels(tilePos(0), tilePos(1));
 
   olc::vi2d pos    = pixelPos;
   std::string text = "accel: ";
-  const auto accel = (*ent.velocity)->acceleration();
+  const auto accel = (*ship.velocity)->acceleration();
   text += floatToStr(accel(0));
   text += "x";
   text += floatToStr(accel(1));
@@ -132,7 +133,7 @@ void GameScreenShipHandler::renderDebug(const bsgo::Uuid &ship,
   constexpr auto REASONABLE_GAP = 20;
   pos.y += REASONABLE_GAP;
   text             = "speed: ";
-  const auto speed = (*ent.velocity)->speed();
+  const auto speed = (*ship.velocity)->speed();
   text += floatToStr(speed(0));
   text += "x";
   text += floatToStr(speed(1));
