@@ -1,6 +1,6 @@
 
 #include "GameScreenSystemHandler.hh"
-#include "AxisAlignedBoundingBox.hh"
+#include "EntitiesUtils.hh"
 #include "ScreenCommon.hh"
 
 namespace pge {
@@ -52,13 +52,9 @@ void GameScreenSystemHandler::render(SpriteRenderer &engine,
 
   m_systemBackground->render(engine, state);
 
-  const auto vpPos = state.cf.tilesViewport().center();
-  const Eigen::Vector3f p(vpPos.x, vpPos.y, 0.0f);
-  const auto vpDims = state.cf.tilesViewport().dims();
-  const Eigen::Vector3f dims(vpDims.x, vpDims.y, 0.0f);
-  bsgo::AxisAlignedBoundingBox bbox(p, dims);
-  const auto asteroids = m_systemView->getEntitiesWithin(bbox, bsgo::EntityKind::ASTEROID);
-
+  const auto asteroids = getEntitiesWithinViewport(*m_systemView,
+                                                   state.cf,
+                                                   bsgo::EntityKind::ASTEROID);
   for (const auto &asteroid : asteroids)
   {
     renderAsteroid((*asteroid.transform)->position(), engine, state);
