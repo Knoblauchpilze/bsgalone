@@ -10,6 +10,11 @@ CircleBox::CircleBox(const Eigen::Vector3f &center, const float radius) noexcept
   , m_squaredRadius(m_radius * m_radius)
 {}
 
+auto CircleBox::radius() const -> float
+{
+  return m_radius;
+}
+
 auto CircleBox::position() const -> Eigen::Vector3f
 {
   return m_center;

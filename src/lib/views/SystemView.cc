@@ -4,11 +4,19 @@
 
 namespace bsgo {
 
-SystemView::SystemView()
+SystemView::SystemView(const Repositories &repositories)
   : utils::CoreObject("system")
 {
   setService("view");
-  init();
+  if (nullptr == repositories.system)
+  {
+    throw std::invalid_argument("Expected non null system repository");
+  }
+  if (nullptr == repositories.asteroid)
+  {
+    throw std::invalid_argument("Expected non null asteroid repository");
+  }
+  init(repositories);
 }
 
 void SystemView::update(const float elapsedSeconds)
@@ -56,7 +64,7 @@ auto SystemView::getEntitiesWithin(const IBoundingBox &bbox,
   return out;
 }
 
-void SystemView::init()
+void SystemView::init(const Repositories &repositories)
 {
   constexpr auto SHIP_RADIUS = 0.6f;
   Eigen::Vector3f pos        = Eigen::Vector3f::Zero();
@@ -66,31 +74,15 @@ void SystemView::init()
                                                Eigen::Vector3f::Zero());
   m_ships.insert(ship);
 
-  constexpr auto ASTEROID_RADIUS = 0.5f;
-  pos                            = Eigen::Vector3f(1.0f, 2.0f, 0.0f);
-  box                            = std::make_unique<CircleBox>(pos, ASTEROID_RADIUS);
-  auto asteroid                  = m_coordinator.createEntity(EntityKind::ASTEROID, std::move(box));
-  m_asteroids.insert(asteroid);
+  const auto asteroids = repositories.system->findAsteroids({});
+  for (const auto &id : asteroids)
+  {
+    const auto asteroid = repositories.asteroid->findOneById(id);
 
-  pos      = Eigen::Vector3f(4.0f, 2.0f, 0.0f);
-  box      = std::make_unique<CircleBox>(pos, ASTEROID_RADIUS);
-  asteroid = m_coordinator.createEntity(EntityKind::ASTEROID, std::move(box));
-  m_asteroids.insert(asteroid);
-
-  pos      = Eigen::Vector3f(-2.0f, -6.0f, 0.0f);
-  box      = std::make_unique<CircleBox>(pos, ASTEROID_RADIUS);
-  asteroid = m_coordinator.createEntity(EntityKind::ASTEROID, std::move(box));
-  m_asteroids.insert(asteroid);
-
-  pos      = Eigen::Vector3f(-3.0f, -4.0f, 0.0f);
-  box      = std::make_unique<CircleBox>(pos, ASTEROID_RADIUS);
-  asteroid = m_coordinator.createEntity(EntityKind::ASTEROID, std::move(box));
-  m_asteroids.insert(asteroid);
-
-  pos      = Eigen::Vector3f(15.0f, 17.0f, 0.0f);
-  box      = std::make_unique<CircleBox>(pos, ASTEROID_RADIUS);
-  asteroid = m_coordinator.createEntity(EntityKind::ASTEROID, std::move(box));
-  m_asteroids.insert(asteroid);
+    box      = std::make_unique<CircleBox>(asteroid.position, asteroid.radius);
+    auto ent = m_coordinator.createEntity(EntityKind::ASTEROID, std::move(box));
+    m_asteroids.insert(ent);
+  }
 }
 
 bool SystemView::isValidForFilter(const Uuid &ent, const EntityKind &kind) const

@@ -32,6 +32,7 @@ class GameScreenSystemHandler : public IScreenHandler
   TiledBackgroundPtr m_systemBackground{};
 
   void renderAsteroid(const Eigen::Vector3f &position,
+                      const float radius,
                       SpriteRenderer &engine,
                       const RenderState &state) const;
 };

@@ -3,6 +3,7 @@
 
 #include "Coordinator.hh"
 #include "IView.hh"
+#include "Repositories.hh"
 #include "Uuid.hh"
 #include <core_utils/CoreObject.hh>
 #include <eigen3/Eigen/Eigen>
@@ -15,7 +16,7 @@ namespace bsgo {
 class SystemView : public utils::CoreObject, public IView
 {
   public:
-  SystemView();
+  SystemView(const Repositories &repositories);
   ~SystemView() override = default;
 
   void update(const float elapsedSeconds) override;
@@ -32,7 +33,7 @@ class SystemView : public utils::CoreObject, public IView
   std::unordered_set<Uuid> m_ships{};
   std::unordered_set<Uuid> m_asteroids{};
 
-  void init();
+  void init(const Repositories &repositories);
   bool isValidForFilter(const Uuid &ent, const EntityKind &kind) const;
 };
 

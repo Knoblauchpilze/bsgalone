@@ -14,6 +14,7 @@ class Transform
   ~Transform() = default;
 
   auto position() const -> Eigen::Vector3f;
+  auto size() const -> float;
   bool contains(const Eigen::Vector3f &pos) const noexcept;
 
   void translate(const Eigen::Vector3f &delta);

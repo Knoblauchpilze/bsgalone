@@ -9,6 +9,11 @@ AxisAlignedBoundingBox::AxisAlignedBoundingBox(const Eigen::Vector3f &center,
   , m_dims(dims)
 {}
 
+auto AxisAlignedBoundingBox::dims() const -> Eigen::Vector3f
+{
+  return m_dims;
+}
+
 auto AxisAlignedBoundingBox::position() const -> Eigen::Vector3f
 {
   return m_center;

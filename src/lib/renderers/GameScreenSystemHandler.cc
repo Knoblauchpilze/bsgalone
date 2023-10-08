@@ -57,7 +57,7 @@ void GameScreenSystemHandler::render(SpriteRenderer &engine,
                                                    bsgo::EntityKind::ASTEROID);
   for (const auto &asteroid : asteroids)
   {
-    renderAsteroid((*asteroid.transform)->position(), engine, state);
+    renderAsteroid((*asteroid.transform)->position(), (*asteroid.transform)->size(), engine, state);
   }
 }
 
@@ -87,16 +87,15 @@ void GameScreenSystemHandler::performAction(float x, float y, const controls::St
 }
 
 void GameScreenSystemHandler::renderAsteroid(const Eigen::Vector3f &position,
+                                             const float radius,
                                              SpriteRenderer &engine,
                                              const RenderState &state) const
 {
-  constexpr auto ASTEROID_RADIUS = 0.5f;
-
   SpriteDesc t;
-  t.x = position(0) - ASTEROID_RADIUS;
-  t.y = position(1) - ASTEROID_RADIUS;
+  t.x = position(0) - radius;
+  t.y = position(1) - radius;
 
-  t.radius = 2.0f * ASTEROID_RADIUS;
+  t.radius = 2.0f * radius;
 
   t.sprite.pack   = m_asteroidTexturesPackId;
   t.sprite.sprite = {0, 0};
