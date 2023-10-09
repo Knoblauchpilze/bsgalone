@@ -149,5 +149,3 @@ class Game : public utils::CoreObject
 
 using GameShPtr = std::shared_ptr<Game>;
 } // namespace pge
-
-#include "Game.hxx"
