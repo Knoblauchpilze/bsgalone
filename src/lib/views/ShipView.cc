@@ -32,39 +32,4 @@ auto ShipView::getPlayerShip(const Uuid &player) const -> PlayerShip
   return m_playerShipRepo->findOneById(player);
 }
 
-bool ShipView::hasTarget() const noexcept
-{
-  return m_target.has_value();
-}
-
-void ShipView::setTarget(const Uuid &uuid)
-{
-  m_target = uuid;
-}
-
-void ShipView::clearTarget()
-{
-  m_target.reset();
-}
-
-auto ShipView::getTargetHealth() const noexcept -> float
-{
-  return 234.0f;
-}
-
-auto ShipView::getTargetMaxHealth() const noexcept -> float
-{
-  return 7698.7f;
-}
-
-auto ShipView::getTargetPower() const noexcept -> float
-{
-  return 33.8f;
-}
-
-auto ShipView::getTargetMaxPower() const noexcept -> float
-{
-  return 35.1f;
-}
-
 } // namespace bsgo

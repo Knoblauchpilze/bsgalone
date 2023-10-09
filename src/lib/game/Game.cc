@@ -35,6 +35,8 @@ auto Game::generateHandlers(int width, int height, SpriteRenderer &spriteRendere
   m_views.push_back(views.shipView);
   views.systemView = std::make_shared<bsgo::SystemView>(coordinator);
   m_views.push_back(views.systemView);
+  views.targetView = std::make_shared<bsgo::TargetView>(coordinator);
+  m_views.push_back(views.targetView);
   auto &texturesHandler = spriteRenderer.getTextureHandler();
 
   auto login = std::make_unique<LoginScreenHandler>();

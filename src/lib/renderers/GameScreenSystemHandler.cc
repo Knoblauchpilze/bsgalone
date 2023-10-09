@@ -7,15 +7,15 @@ namespace pge {
 
 GameScreenSystemHandler::GameScreenSystemHandler(const bsgo::Views &views)
   : m_systemView(views.systemView)
-  , m_shipView(views.shipView)
+  , m_targetView(views.targetView)
 {
   if (nullptr == m_systemView)
   {
     throw std::invalid_argument("Expected non null system view");
   }
-  if (nullptr == m_shipView)
+  if (nullptr == m_targetView)
   {
-    throw std::invalid_argument("Expected non null ship view");
+    throw std::invalid_argument("Expected non null target view");
   }
 }
 
@@ -78,11 +78,11 @@ void GameScreenSystemHandler::performAction(float x, float y, const controls::St
   if (ent)
   {
     log("Found target " + ent->str());
-    m_shipView->setTarget(ent->uuid);
+    m_targetView->setTarget(ent->uuid);
   }
   else
   {
-    m_shipView->clearTarget();
+    m_targetView->clearTarget();
   }
 }
 

@@ -26,7 +26,7 @@ class GameScreenSystemHandler : public IScreenHandler
 
   private:
   bsgo::SystemViewShPtr m_systemView;
-  bsgo::ShipViewShPtr m_shipView;
+  bsgo::TargetViewShPtr m_targetView;
 
   sprites::PackId m_asteroidTexturesPackId{};
   TiledBackgroundPtr m_systemBackground{};
