@@ -25,8 +25,6 @@ class Coordinator : public utils::CoreObject
     -> Uuid;
 
   auto getEntity(const Uuid &ent) const -> Entity;
-  auto getTransform(const Uuid &ent) const -> std::optional<TransformShPtr>;
-  auto getVelocity(const Uuid &ent) const -> std::optional<VelocityShPtr>;
 
   auto getEntityAt(const Eigen::Vector3f &pos, const std::optional<EntityKind> &filter = {}) const
     -> std::optional<Uuid>;
