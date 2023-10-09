@@ -13,15 +13,14 @@ void SystemView::update(const float elapsedSeconds)
   m_coordinator->update(elapsedSeconds);
 }
 
-auto SystemView::getEntity(const Uuid &ent) const -> Entity
-{
-  return m_coordinator->getEntity(ent);
-}
+// auto SystemView::getEntity(const Uuid &ent) const -> Entity
+// {
+//   return m_coordinator->getEntity(ent);
+// }
 
-auto SystemView::getEntityAt(const Eigen::Vector3f &pos,
-                             const std::optional<EntityKind> &filter) const -> std::optional<Entity>
+auto SystemView::getEntityAt(const Eigen::Vector3f &pos) const -> std::optional<Entity>
 {
-  const auto id = m_coordinator->getEntityAt(pos, filter);
+  const auto id = m_coordinator->getEntityAt(pos, {});
   if (!id)
   {
     return {};
@@ -29,11 +28,9 @@ auto SystemView::getEntityAt(const Eigen::Vector3f &pos,
   return m_coordinator->getEntity(*id);
 }
 
-auto SystemView::getEntitiesWithin(const IBoundingBox &bbox,
-                                   const std::optional<EntityKind> &filter) const
-  -> std::vector<Entity>
+auto SystemView::getAsteroidsWithin(const IBoundingBox &bbox) const -> std::vector<Entity>
 {
-  const auto uuids = m_coordinator->getEntitiesWithin(bbox, filter);
+  const auto uuids = m_coordinator->getEntitiesWithin(bbox, {EntityKind::ASTEROID});
 
   std::vector<Entity> out;
   for (const auto &uuid : uuids)

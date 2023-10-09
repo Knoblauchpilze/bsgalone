@@ -31,7 +31,7 @@ auto Game::generateHandlers(int width, int height, SpriteRenderer &spriteRendere
   auto coordinator = std::make_shared<bsgo::Coordinator>(repos);
 
   bsgo::Views views;
-  views.shipView = std::make_shared<bsgo::ShipView>(repos);
+  views.shipView = std::make_shared<bsgo::ShipView>(coordinator, repos);
   m_views.push_back(views.shipView);
   views.systemView = std::make_shared<bsgo::SystemView>(coordinator);
   m_views.push_back(views.systemView);

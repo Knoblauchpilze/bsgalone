@@ -25,7 +25,6 @@ class GameScreenShipHandler : public IScreenHandler
 
   private:
   bsgo::ShipViewShPtr m_shipView;
-  bsgo::SystemViewShPtr m_systemView;
 
   sprites::PackId m_class1TexturesPackId{};
 
@@ -40,7 +39,7 @@ class GameScreenShipHandler : public IScreenHandler
 
   void renderShip(const bsgo::Entity &ship, SpriteRenderer &engine, const RenderState &state) const;
   void renderDebug(const bsgo::Entity &ship, SpriteRenderer &engine, const RenderState &state) const;
-  void moveShip(const bsgo::Uuid &ship, const Motion &motion);
+  void moveShip(const bsgo::Entity &ship, const Motion &motion);
   void keepShipCentered(CoordinateFrame &frame);
 };
 

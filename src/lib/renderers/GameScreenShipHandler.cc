@@ -28,15 +28,10 @@ void GameScreenShipHandler::Motion::updateFromKeys(const controls::State &inputs
 
 GameScreenShipHandler::GameScreenShipHandler(const bsgo::Views &views)
   : m_shipView(views.shipView)
-  , m_systemView(views.systemView)
 {
   if (nullptr == m_shipView)
   {
     throw std::invalid_argument("Expected non null ship view");
-  }
-  if (nullptr == m_systemView)
-  {
-    throw std::invalid_argument("Expected non null system view");
   }
 }
 
@@ -58,7 +53,8 @@ void GameScreenShipHandler::render(SpriteRenderer &engine,
                                    const RenderState &state,
                                    const RenderingPass pass) const
 {
-  const auto ships = getEntitiesWithinViewport(*m_systemView, state.cf, bsgo::EntityKind::SHIP);
+  const auto bbox  = toIBoundingBox(state.cf);
+  const auto ships = m_shipView->getShipsWithin(bbox);
   for (const auto &ship : ships)
   {
     if (pass == RenderingPass::DECAL)
@@ -78,7 +74,7 @@ auto GameScreenShipHandler::processUserInput(const controls::State &c,
 {
   Motion motion{};
   motion.updateFromKeys(c);
-  moveShip(m_shipView->getPlayerShipId(), motion);
+  moveShip(m_shipView->getPlayerShipEntity(), motion);
 
   keepShipCentered(frame);
   return {};
@@ -142,24 +138,21 @@ void GameScreenShipHandler::renderDebug(const bsgo::Entity &ship,
   engine.getRenderer()->DrawString(pos, text, olc::DARK_GREEN);
 }
 
-void GameScreenShipHandler::moveShip(const bsgo::Uuid &ship, const Motion &motion)
+void GameScreenShipHandler::moveShip(const bsgo::Entity &ship, const Motion &motion)
 {
-  auto ent = m_systemView->getEntity(ship);
-
   Eigen::Vector3f delta = Eigen::Vector3f::Zero();
   delta(0)              = motion.x;
   delta(1)              = motion.y;
   delta(2)              = motion.z;
   delta.normalize();
 
-  (*ent.velocity)->accelerate(delta);
+  (*ship.velocity)->accelerate(delta);
 }
 
 void GameScreenShipHandler::keepShipCentered(CoordinateFrame &frame)
 {
-  const auto shipUuid = m_shipView->getPlayerShipId();
-  const auto ent      = m_systemView->getEntity(shipUuid);
-  const auto pos      = (*ent.transform)->position();
+  const auto ent = m_shipView->getPlayerShipEntity();
+  const auto pos = (*ent.transform)->position();
   const olc::vf2d pos2d{pos(0), pos(1)};
   frame.moveTo(pos2d);
 }

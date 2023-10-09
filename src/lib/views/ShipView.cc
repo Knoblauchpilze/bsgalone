@@ -3,9 +3,10 @@
 
 namespace bsgo {
 
-ShipView::ShipView(const Repositories &repositories)
+ShipView::ShipView(const CoordinatorShPtr &coordinator, const Repositories &repositories)
   : utils::CoreObject("ship")
   , m_playerId(repositories.playerId)
+  , m_coordinator(coordinator)
   , m_playerRepo(repositories.player)
   , m_playerShipRepo(repositories.playerShip)
 {
@@ -22,14 +23,42 @@ ShipView::ShipView(const Repositories &repositories)
 
 void ShipView::update(const float /*elapsedSeconds*/) {}
 
-auto ShipView::getPlayerShipId() const noexcept -> Uuid
+auto ShipView::getPlayerShip() const noexcept -> PlayerShip
 {
-  return m_playerRepo->findShipById(m_playerId);
+  return getShip(m_playerId);
 }
 
-auto ShipView::getPlayerShip(const Uuid &player) const -> PlayerShip
+auto ShipView::getShip(const Uuid &player) const -> PlayerShip
 {
   return m_playerShipRepo->findOneById(player);
+}
+
+auto ShipView::getPlayerShipEntity() const -> Entity
+{
+  return getShipEntity(m_playerId);
+}
+
+auto ShipView::getShipEntity(const Uuid &ship) const -> Entity
+{
+  const auto ent = m_coordinator->getEntity(ship);
+  if (ent.kind != EntityKind::SHIP)
+  {
+    error("Expected " + str(ship) + " to have kind ship");
+  }
+  return ent;
+}
+
+auto ShipView::getShipsWithin(const IBoundingBox &bbox) const -> std::vector<Entity>
+{
+  const auto uuids = m_coordinator->getEntitiesWithin(bbox, {EntityKind::SHIP});
+
+  std::vector<Entity> out;
+  for (const auto &uuid : uuids)
+  {
+    out.push_back(m_coordinator->getEntity(uuid));
+  }
+
+  return out;
 }
 
 } // namespace bsgo

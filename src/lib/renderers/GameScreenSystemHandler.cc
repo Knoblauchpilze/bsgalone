@@ -52,9 +52,8 @@ void GameScreenSystemHandler::render(SpriteRenderer &engine,
 
   m_systemBackground->render(engine, state);
 
-  const auto asteroids = getEntitiesWithinViewport(*m_systemView,
-                                                   state.cf,
-                                                   bsgo::EntityKind::ASTEROID);
+  const auto bbox      = toIBoundingBox(state.cf);
+  const auto asteroids = m_systemView->getAsteroidsWithin(bbox);
   for (const auto &asteroid : asteroids)
   {
     renderAsteroid((*asteroid.transform)->position(), (*asteroid.transform)->size(), engine, state);
