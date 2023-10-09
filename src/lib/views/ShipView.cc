@@ -5,6 +5,7 @@ namespace bsgo {
 
 ShipView::ShipView(const Repositories &repositories)
   : utils::CoreObject("ship")
+  , m_playerId(repositories.playerId)
   , m_playerRepo(repositories.player)
   , m_shipRepo(repositories.ship)
 {
