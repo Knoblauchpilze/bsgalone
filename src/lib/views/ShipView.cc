@@ -27,7 +27,7 @@ auto ShipView::getPlayerShipId() const noexcept -> Uuid
   return m_playerRepo->findShipById(m_playerId);
 }
 
-auto ShipView::getShip(const Uuid &player) const -> PlayerShip
+auto ShipView::getPlayerShip(const Uuid &player) const -> PlayerShip
 {
   return m_playerShipRepo->findOneById(player);
 }

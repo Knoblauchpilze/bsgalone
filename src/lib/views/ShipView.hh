@@ -19,7 +19,7 @@ class ShipView : public utils::CoreObject, public IView
   void update(const float elapsedSeconds) override;
 
   auto getPlayerShipId() const noexcept -> Uuid;
-  auto getShip(const Uuid &player) const -> PlayerShip;
+  auto getPlayerShip(const Uuid &player) const -> PlayerShip;
 
   bool hasTarget() const noexcept;
   void setTarget(const Uuid &uuid);
