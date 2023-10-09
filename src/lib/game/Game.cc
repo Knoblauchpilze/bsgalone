@@ -1,12 +1,12 @@
 
 #include "Game.hh"
+#include "DataSource.hh"
 #include "GameOverScreenHandler.hh"
 #include "GameScreenHandler.hh"
 #include "LoginScreenHandler.hh"
 #include "MapScreenHandler.hh"
 #include "Menu.hh"
 #include "OutpostScreenHandler.hh"
-#include "Repositories.hh"
 
 namespace pge {
 
@@ -31,17 +31,14 @@ auto Game::generateHandlers(int width, int height, SpriteRenderer &spriteRendere
 {
   std::unordered_map<Screen, IScreenHandlerPtr> out;
 
-  bsgo::Repositories repos{};
-  repos.asteroid   = std::make_shared<bsgo::AsteroidRepository>();
-  repos.ship       = std::make_shared<bsgo::ShipRepository>();
-  repos.system     = std::make_shared<bsgo::SystemRepository>();
-  repos.player     = std::make_shared<bsgo::PlayerRepository>();
-  repos.playerShip = std::make_shared<bsgo::PlayerShipRepository>();
+  const bsgo::Uuid playerId{};
 
-  auto coordinator = std::make_shared<bsgo::Coordinator>(repos);
+  auto coordinator = std::make_shared<bsgo::Coordinator>();
+  bsgo::DataSource dataSource(playerId);
+  dataSource.initialize(*coordinator);
 
   bsgo::Views views;
-  views.shipView = std::make_shared<bsgo::ShipView>(coordinator, repos);
+  views.shipView = std::make_shared<bsgo::ShipView>(playerId, coordinator);
   m_views.push_back(views.shipView);
   views.systemView = std::make_shared<bsgo::SystemView>(coordinator);
   m_views.push_back(views.systemView);

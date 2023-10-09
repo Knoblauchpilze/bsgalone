@@ -10,7 +10,7 @@ HullPoints::HullPoints(const float current, const float max)
   validate();
 }
 
-auto HullPoints::power() const -> float
+auto HullPoints::health() const -> float
 {
   return m_current;
 }

@@ -19,11 +19,10 @@ auto getComponent(const Uuid &ent,
 }
 } // namespace
 
-Coordinator::Coordinator(const Repositories &repos)
+Coordinator::Coordinator()
   : utils::CoreObject("coordinator")
 {
   setService("bsgo");
-  init(repos);
 }
 
 auto Coordinator::createEntity(const EntityKind &kind) -> Uuid
@@ -33,21 +32,60 @@ auto Coordinator::createEntity(const EntityKind &kind) -> Uuid
   return ent;
 }
 
-auto Coordinator::createEntity(const EntityKind &kind, IBoundingBoxPtr bbox) -> Uuid
+void Coordinator::addTransform(const Uuid &ent, IBoundingBoxPtr bbox)
 {
-  const auto ent = createEntity(kind);
-  addTransform(ent, std::move(bbox));
-  return ent;
+  if (!m_entities.contains(ent))
+  {
+    error("Unknown entity " + str(ent));
+  }
+  if (m_components.transforms.contains(ent))
+  {
+    warn("Overriding transform for entity " + std::to_string(ent));
+  }
+
+  m_components.transforms[ent] = std::make_shared<Transform>(std::move(bbox));
 }
 
-auto Coordinator::createEntity(const EntityKind &kind,
-                               IBoundingBoxPtr bbox,
-                               const Eigen::Vector3f &speed) -> Uuid
+void Coordinator::addVelocity(const Uuid &ent, const Eigen::Vector3f &speed)
 {
-  const auto ent = createEntity(kind);
-  addTransform(ent, std::move(bbox));
-  addVelocity(ent, speed);
-  return ent;
+  if (!m_entities.contains(ent))
+  {
+    error("Unknown entity " + str(ent));
+  }
+  if (m_components.velocities.contains(ent))
+  {
+    warn("Overriding velocity for entity " + std::to_string(ent));
+  }
+
+  m_components.velocities[ent] = std::make_shared<Velocity>(Eigen::Vector3f::Zero(), speed);
+}
+
+void Coordinator::addHullPoints(const Uuid &ent, const float hp, const float max)
+{
+  if (!m_entities.contains(ent))
+  {
+    error("Unknown entity " + str(ent));
+  }
+  if (m_components.hullPoints.contains(ent))
+  {
+    warn("Overriding hull points for entity " + std::to_string(ent));
+  }
+
+  m_components.hullPoints[ent] = std::make_shared<HullPoints>(hp, max);
+}
+
+void Coordinator::addPower(const Uuid &ent, const float power, const float max)
+{
+  if (!m_entities.contains(ent))
+  {
+    error("Unknown entity " + str(ent));
+  }
+  if (m_components.powers.contains(ent))
+  {
+    warn("Overriding power for entity " + std::to_string(ent));
+  }
+
+  m_components.powers[ent] = std::make_shared<Power>(power, max);
 }
 
 auto Coordinator::getEntity(const Uuid &ent) const -> Entity
@@ -114,52 +152,6 @@ void Coordinator::update(float elapsedSeconds)
   m_motionSystem.update(m_components, elapsedSeconds);
 }
 
-void Coordinator::checkRepositories(const Repositories &repos)
-{
-  if (nullptr == repos.system)
-  {
-    throw std::invalid_argument("Expected non null system repository");
-  }
-  if (nullptr == repos.asteroid)
-  {
-    throw std::invalid_argument("Expected non null asteroid repository");
-  }
-  if (nullptr == repos.player)
-  {
-    throw std::invalid_argument("Expected non null player repository");
-  }
-  if (nullptr == repos.ship)
-  {
-    throw std::invalid_argument("Expected non null ship repository");
-  }
-}
-
-void Coordinator::init(const Repositories &repos)
-{
-  checkRepositories(repos);
-
-  const auto systemId = repos.player->findSystemById(repos.playerId);
-
-  const auto ships = repos.system->findShips(systemId);
-  for (const auto &systemShip : ships)
-  {
-    const auto ship = repos.ship->findOneById(systemShip.model);
-    const auto pos  = repos.ship->findPositionById(systemShip.ship);
-
-    auto box = std::make_unique<CircleBox>(pos, ship.radius);
-    createEntity(EntityKind::SHIP, std::move(box), Eigen::Vector3f::Zero());
-  }
-
-  const auto asteroids = repos.system->findAsteroids(systemId);
-  for (const auto &id : asteroids)
-  {
-    const auto asteroid = repos.asteroid->findOneById(id);
-
-    auto box = std::make_unique<CircleBox>(asteroid.position, asteroid.radius);
-    createEntity(EntityKind::ASTEROID, std::move(box));
-  }
-}
-
 bool Coordinator::hasExpectedKind(const Uuid &ent, const std::optional<EntityKind> &kind) const
 {
   if (!kind)
@@ -169,26 +161,6 @@ bool Coordinator::hasExpectedKind(const Uuid &ent, const std::optional<EntityKin
 
   const auto it = m_entities.find(ent);
   return it != m_entities.end() && it->second == *kind;
-}
-
-void Coordinator::addTransform(const Uuid &ent, IBoundingBoxPtr bbox)
-{
-  if (m_components.transforms.contains(ent))
-  {
-    warn("Overriding transform for entity " + std::to_string(ent));
-  }
-
-  m_components.transforms[ent] = std::make_shared<Transform>(std::move(bbox));
-}
-
-void Coordinator::addVelocity(const Uuid &ent, const Eigen::Vector3f &speed)
-{
-  if (m_components.velocities.contains(ent))
-  {
-    warn("Overriding velocity for entity " + std::to_string(ent));
-  }
-
-  m_components.velocities[ent] = std::make_shared<Velocity>(Eigen::Vector3f::Zero(), speed);
 }
 
 } // namespace bsgo

@@ -12,7 +12,7 @@ class HullPoints
   HullPoints(const float current, const float max);
   ~HullPoints() = default;
 
-  auto power() const -> float;
+  auto health() const -> float;
   auto max() const -> float;
 
   private:

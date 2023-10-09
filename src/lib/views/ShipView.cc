@@ -3,42 +3,22 @@
 
 namespace bsgo {
 
-ShipView::ShipView(const CoordinatorShPtr &coordinator, const Repositories &repositories)
+ShipView::ShipView(const Uuid &playerId, const CoordinatorShPtr &coordinator)
   : utils::CoreObject("ship")
-  , m_playerId(repositories.playerId)
+  , m_playerId(playerId)
   , m_coordinator(coordinator)
-  , m_playerRepo(repositories.player)
-  , m_playerShipRepo(repositories.playerShip)
 {
   setService("view");
-  if (nullptr == m_playerRepo)
-  {
-    throw std::invalid_argument("Expected non null player repository");
-  }
-  if (nullptr == m_playerShipRepo)
-  {
-    throw std::invalid_argument("Expected non null player ship repository");
-  }
 }
 
 void ShipView::update(const float /*elapsedSeconds*/) {}
 
-auto ShipView::getPlayerShip() const noexcept -> PlayerShip
+auto ShipView::getPlayerShip() const -> Entity
 {
   return getShip(m_playerId);
 }
 
-auto ShipView::getShip(const Uuid &player) const -> PlayerShip
-{
-  return m_playerShipRepo->findOneById(player);
-}
-
-auto ShipView::getPlayerShipEntity() const -> Entity
-{
-  return getShipEntity(m_playerId);
-}
-
-auto ShipView::getShipEntity(const Uuid &ship) const -> Entity
+auto ShipView::getShip(const Uuid &ship) const -> Entity
 {
   const auto ent = m_coordinator->getEntity(ship);
   if (ent.kind != EntityKind::SHIP)

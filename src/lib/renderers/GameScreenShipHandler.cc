@@ -74,7 +74,7 @@ auto GameScreenShipHandler::processUserInput(const controls::State &c,
 {
   Motion motion{};
   motion.updateFromKeys(c);
-  moveShip(m_shipView->getPlayerShipEntity(), motion);
+  moveShip(m_shipView->getPlayerShip(), motion);
 
   keepShipCentered(frame);
   return {};
@@ -151,7 +151,7 @@ void GameScreenShipHandler::moveShip(const bsgo::Entity &ship, const Motion &mot
 
 void GameScreenShipHandler::keepShipCentered(CoordinateFrame &frame)
 {
-  const auto ent = m_shipView->getPlayerShipEntity();
+  const auto ent = m_shipView->getPlayerShip();
   const auto pos = (*ent.transform)->position();
   const olc::vf2d pos2d{pos(0), pos(1)};
   frame.moveTo(pos2d);
