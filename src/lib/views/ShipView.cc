@@ -22,33 +22,14 @@ ShipView::ShipView(const Repositories &repositories)
 
 void ShipView::update(const float /*elapsedSeconds*/) {}
 
-auto ShipView::getUuid() const noexcept -> Uuid
+auto ShipView::getPlayerShipId() const noexcept -> Uuid
 {
   return m_playerRepo->findShipById(m_playerId);
 }
 
-auto ShipView::getHealth() const noexcept -> float
+auto ShipView::getShip(const Uuid &player) const -> PlayerShip
 {
-  const auto ship = m_playerShipRepo->findOneById(m_playerId);
-  return ship.hullPoints;
-}
-
-auto ShipView::getMaxHealth() const noexcept -> float
-{
-  const auto ship = m_playerShipRepo->findOneById(m_playerId);
-  return ship.maxHullPoints;
-}
-
-auto ShipView::getPower() const noexcept -> float
-{
-  const auto ship = m_playerShipRepo->findOneById(m_playerId);
-  return ship.powerPoints;
-}
-
-auto ShipView::getMaxPower() const noexcept -> float
-{
-  const auto ship = m_playerShipRepo->findOneById(m_playerId);
-  return ship.maxPowerPoints;
+  return m_playerShipRepo->findOneById(player);
 }
 
 bool ShipView::hasTarget() const noexcept
