@@ -36,6 +36,7 @@ void DataSource::initialize(Coordinator &coordinator) const
     auto box       = std::make_unique<CircleBox>(asteroid.position, asteroid.radius);
     const auto ent = coordinator.createEntity(EntityKind::ASTEROID);
     coordinator.addTransform(ent, std::move(box));
+    coordinator.addHullPoints(ent, asteroid.health, asteroid.health);
   }
 }
 

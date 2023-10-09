@@ -171,16 +171,32 @@ void GameScreenUiHandler::updateTargetUi()
 
   std::string text;
 
-  text = "Health: ";
-  text += floatToStr(std::floor(m_targetView->getTargetHealth()), 0);
-  text += "/";
-  text += floatToStr(std::floor(m_targetView->getTargetMaxHealth()), 0);
+  text                  = "Health: ";
+  const auto healthComp = target->hullPoints;
+  if (!healthComp)
+  {
+    text += "N/A";
+  }
+  else
+  {
+    text += floatToStr(std::floor((*healthComp)->health()), 0);
+    text += "/";
+    text += floatToStr(std::floor((*healthComp)->max()), 0);
+  }
   m_menus[TARGET_HEALTH]->setText(text);
 
-  text = "Power: ";
-  text += floatToStr(std::floor(m_targetView->getTargetPower()), 0);
-  text += "/";
-  text += floatToStr(std::floor(m_targetView->getTargetMaxPower()), 0);
+  text                 = "Power: ";
+  const auto powerComp = target->power;
+  if (!powerComp)
+  {
+    text += "N/A";
+  }
+  else
+  {
+    text += floatToStr(std::floor((*powerComp)->power()), 0);
+    text += "/";
+    text += floatToStr(std::floor((*powerComp)->max()), 0);
+  }
   m_menus[TARGET_POWER]->setText(text);
 }
 
