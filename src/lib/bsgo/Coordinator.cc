@@ -143,7 +143,7 @@ void Coordinator::init(const Repositories &repos)
 {
   checkRepositories(repos);
 
-  const auto systemId = repos.player->findSystemById({});
+  const auto systemId = repos.player->findSystemById(repos.playerId);
 
   const auto ships = repos.system->findShips(systemId);
   for (const auto &systemShip : ships)

@@ -3,7 +3,6 @@
 
 #include "Coordinator.hh"
 #include "IView.hh"
-#include "Repositories.hh"
 #include "Uuid.hh"
 #include <core_utils/CoreObject.hh>
 #include <eigen3/Eigen/Eigen>

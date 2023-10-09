@@ -10,6 +10,8 @@ namespace bsgo {
 
 struct Repositories
 {
+  Uuid playerId{};
+
   AsteroidRepositoryShPtr asteroid{};
   ShipRepositoryShPtr ship{};
   PlayerRepositoryShPtr player{};
