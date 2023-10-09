@@ -7,10 +7,15 @@ namespace pge {
 
 GameScreenUiHandler::GameScreenUiHandler(const bsgo::Views &views)
   : m_shipView(views.shipView)
+  , m_targetView(views.targetView)
 {
   if (nullptr == m_shipView)
   {
     throw std::invalid_argument("Expected non null ship view");
+  }
+  if (nullptr == m_targetView)
+  {
+    throw std::invalid_argument("Expected non null target view");
   }
 }
 
@@ -155,10 +160,11 @@ void GameScreenUiHandler::updateShipUi()
 
 void GameScreenUiHandler::updateTargetUi()
 {
-  m_menus[TARGET_HEALTH]->setVisible(m_shipView->hasTarget());
-  m_menus[TARGET_POWER]->setVisible(m_shipView->hasTarget());
+  const auto target = m_targetView->getTarget();
+  m_menus[TARGET_HEALTH]->setVisible(target.has_value());
+  m_menus[TARGET_POWER]->setVisible(target.has_value());
 
-  if (!m_shipView->hasTarget())
+  if (!target)
   {
     return;
   }
@@ -166,15 +172,15 @@ void GameScreenUiHandler::updateTargetUi()
   std::string text;
 
   text = "Health: ";
-  text += floatToStr(std::floor(m_shipView->getTargetHealth()), 0);
+  text += floatToStr(std::floor(m_targetView->getTargetHealth()), 0);
   text += "/";
-  text += floatToStr(std::floor(m_shipView->getTargetMaxHealth()), 0);
+  text += floatToStr(std::floor(m_targetView->getTargetMaxHealth()), 0);
   m_menus[TARGET_HEALTH]->setText(text);
 
   text = "Power: ";
-  text += floatToStr(std::floor(m_shipView->getTargetPower()), 0);
+  text += floatToStr(std::floor(m_targetView->getTargetPower()), 0);
   text += "/";
-  text += floatToStr(std::floor(m_shipView->getTargetMaxPower()), 0);
+  text += floatToStr(std::floor(m_targetView->getTargetMaxPower()), 0);
   m_menus[TARGET_POWER]->setText(text);
 }
 

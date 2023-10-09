@@ -6,6 +6,7 @@
 #include "ShipView.hh"
 #include "ShopView.hh"
 #include "SystemView.hh"
+#include "TargetView.hh"
 
 namespace bsgo {
 
@@ -16,6 +17,7 @@ struct Views
   ShipViewShPtr shipView{};
   ShopViewShPtr shopView{};
   SystemViewShPtr systemView{};
+  TargetViewShPtr targetView{};
 };
 
 } // namespace bsgo
