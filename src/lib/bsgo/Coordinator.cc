@@ -3,6 +3,21 @@
 #include "CircleBox.hh"
 
 namespace bsgo {
+namespace {
+template<typename ComponentType>
+auto getComponent(const Uuid &ent,
+                  const std::unordered_map<Uuid, std::shared_ptr<ComponentType>> &components)
+  -> std::optional<std::shared_ptr<ComponentType>>
+{
+  const auto it = components.find(ent);
+  if (components.end() == it)
+  {
+    return {};
+  }
+
+  return {it->second};
+}
+} // namespace
 
 Coordinator::Coordinator(const Repositories &repos)
   : utils::CoreObject("coordinator")
@@ -46,32 +61,12 @@ auto Coordinator::getEntity(const Uuid &ent) const -> Entity
     out.kind = it->second;
   }
 
-  out.transform = getTransform(ent);
-  out.velocity  = getVelocity(ent);
+  out.transform  = getComponent(ent, m_components.transforms);
+  out.velocity   = getComponent(ent, m_components.velocities);
+  out.hullPoints = getComponent(ent, m_components.hullPoints);
+  out.power      = getComponent(ent, m_components.powers);
 
   return out;
-}
-
-auto Coordinator::getTransform(const Uuid &ent) const -> std::optional<TransformShPtr>
-{
-  const auto it = m_components.transforms.find(ent);
-  if (m_components.transforms.end() == it)
-  {
-    return {};
-  }
-
-  return {it->second};
-}
-
-auto Coordinator::getVelocity(const Uuid &ent) const -> std::optional<VelocityShPtr>
-{
-  const auto it = m_components.velocities.find(ent);
-  if (m_components.velocities.end() == it)
-  {
-    return {};
-  }
-
-  return {it->second};
 }
 
 auto Coordinator::getEntityAt(const Eigen::Vector3f &pos,
