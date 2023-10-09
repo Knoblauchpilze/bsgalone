@@ -3,6 +3,7 @@
 
 #include "AsteroidRepository.hh"
 #include "PlayerRepository.hh"
+#include "PlayerShipRepository.hh"
 #include "ShipRepository.hh"
 #include "SystemRepository.hh"
 
@@ -16,6 +17,7 @@ struct Repositories
   ShipRepositoryShPtr ship{};
   PlayerRepositoryShPtr player{};
   SystemRepositoryShPtr system{};
+  PlayerShipRepositoryShPtr playerShip{};
 };
 
 } // namespace bsgo
