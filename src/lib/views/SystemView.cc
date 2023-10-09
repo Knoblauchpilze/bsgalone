@@ -13,11 +13,6 @@ void SystemView::update(const float elapsedSeconds)
   m_coordinator->update(elapsedSeconds);
 }
 
-// auto SystemView::getEntity(const Uuid &ent) const -> Entity
-// {
-//   return m_coordinator->getEntity(ent);
-// }
-
 auto SystemView::getEntityAt(const Eigen::Vector3f &pos) const -> std::optional<Entity>
 {
   const auto id = m_coordinator->getEntityAt(pos, {});
