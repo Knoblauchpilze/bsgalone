@@ -31,24 +31,4 @@ void TargetView::clearTarget()
   m_target.reset();
 }
 
-auto TargetView::getTargetHealth() const noexcept -> float
-{
-  return 234.0f;
-}
-
-auto TargetView::getTargetMaxHealth() const noexcept -> float
-{
-  return 7698.7f;
-}
-
-auto TargetView::getTargetPower() const noexcept -> float
-{
-  return 33.8f;
-}
-
-auto TargetView::getTargetMaxPower() const noexcept -> float
-{
-  return 35.1f;
-}
-
 } // namespace bsgo

@@ -23,11 +23,6 @@ class TargetView : public utils::CoreObject, public IView
   auto getTarget() const -> std::optional<Entity>;
   void clearTarget();
 
-  auto getTargetHealth() const noexcept -> float;
-  auto getTargetMaxHealth() const noexcept -> float;
-  auto getTargetPower() const noexcept -> float;
-  auto getTargetMaxPower() const noexcept -> float;
-
   private:
   std::optional<Uuid> m_target{};
   CoordinatorShPtr m_coordinator{};
