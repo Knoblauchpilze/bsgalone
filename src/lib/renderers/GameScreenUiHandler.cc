@@ -138,7 +138,7 @@ void GameScreenUiHandler::updateShipUi()
 {
   std::string text;
 
-  const auto ship = m_shipView->getShip(m_shipView->getPlayerShipId());
+  const auto ship = m_shipView->getPlayerShip(m_shipView->getPlayerShipId());
 
   text = "Health: ";
   text += floatToStr(std::floor(ship.hullPoints), 0);
