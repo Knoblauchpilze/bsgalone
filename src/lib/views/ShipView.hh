@@ -37,7 +37,7 @@ class ShipView : public utils::CoreObject, public IView
   private:
   Uuid m_playerId{};
   PlayerRepositoryShPtr m_playerRepo;
-  ShipRepositoryShPtr m_shipRepo;
+  PlayerShipRepositoryShPtr m_playerShipRepo;
   std::optional<Uuid> m_target{};
 };
 

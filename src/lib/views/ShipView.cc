@@ -7,16 +7,16 @@ ShipView::ShipView(const Repositories &repositories)
   : utils::CoreObject("ship")
   , m_playerId(repositories.playerId)
   , m_playerRepo(repositories.player)
-  , m_shipRepo(repositories.ship)
+  , m_playerShipRepo(repositories.playerShip)
 {
   setService("view");
   if (nullptr == m_playerRepo)
   {
     throw std::invalid_argument("Expected non null player repository");
   }
-  if (nullptr == m_shipRepo)
+  if (nullptr == m_playerShipRepo)
   {
-    throw std::invalid_argument("Expected non null ship repository");
+    throw std::invalid_argument("Expected non null player ship repository");
   }
 }
 
@@ -29,22 +29,26 @@ auto ShipView::getUuid() const noexcept -> Uuid
 
 auto ShipView::getHealth() const noexcept -> float
 {
-  return 72.3f;
+  const auto ship = m_playerShipRepo->findOneById(m_playerId);
+  return ship.hullPoints;
 }
 
 auto ShipView::getMaxHealth() const noexcept -> float
 {
-  return m_shipRepo->findOneById(m_playerRepo->findShipById(m_playerId)).hullPoints;
+  const auto ship = m_playerShipRepo->findOneById(m_playerId);
+  return ship.maxHullPoints;
 }
 
 auto ShipView::getPower() const noexcept -> float
 {
-  return 36.1f;
+  const auto ship = m_playerShipRepo->findOneById(m_playerId);
+  return ship.powerPoints;
 }
 
 auto ShipView::getMaxPower() const noexcept -> float
 {
-  return m_shipRepo->findOneById(m_playerRepo->findShipById(m_playerId)).powerPoints;
+  const auto ship = m_playerShipRepo->findOneById(m_playerId);
+  return ship.maxPowerPoints;
 }
 
 bool ShipView::hasTarget() const noexcept

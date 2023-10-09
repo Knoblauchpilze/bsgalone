@@ -22,10 +22,11 @@ auto Game::generateHandlers(int width, int height, SpriteRenderer &spriteRendere
   std::unordered_map<Screen, IScreenHandlerPtr> out;
 
   bsgo::Repositories repos{};
-  repos.asteroid = std::make_shared<bsgo::AsteroidRepository>();
-  repos.ship     = std::make_shared<bsgo::ShipRepository>();
-  repos.system   = std::make_shared<bsgo::SystemRepository>();
-  repos.player   = std::make_shared<bsgo::PlayerRepository>();
+  repos.asteroid   = std::make_shared<bsgo::AsteroidRepository>();
+  repos.ship       = std::make_shared<bsgo::ShipRepository>();
+  repos.system     = std::make_shared<bsgo::SystemRepository>();
+  repos.player     = std::make_shared<bsgo::PlayerRepository>();
+  repos.playerShip = std::make_shared<bsgo::PlayerShipRepository>();
 
   auto coordinator = std::make_shared<bsgo::Coordinator>(repos);
 
