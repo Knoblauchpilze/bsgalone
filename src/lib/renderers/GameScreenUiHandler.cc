@@ -146,15 +146,15 @@ void GameScreenUiHandler::updateShipUi()
   const auto ship = m_shipView->getPlayerShip();
 
   text = "Health: ";
-  text += floatToStr(std::floor(ship.hullPoints), 0);
+  text += floatToStr(std::floor((*ship.hullPoints)->health()), 0);
   text += "/";
-  text += floatToStr(ship.maxHullPoints, 0);
+  text += floatToStr((*ship.hullPoints)->max(), 0);
   m_menus[HEALTH]->setText(text);
 
   text = "Power: ";
-  text += floatToStr(std::floor(ship.powerPoints), 0);
+  text += floatToStr(std::floor((*ship.power)->power()), 0);
   text += "/";
-  text += floatToStr(std::floor(ship.maxPowerPoints), 0);
+  text += floatToStr(std::floor((*ship.power)->max()), 0);
   m_menus[POWER]->setText(text);
 }
 

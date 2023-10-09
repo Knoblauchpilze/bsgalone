@@ -5,7 +5,6 @@
 #include "Entity.hh"
 #include "IBoundingBox.hh"
 #include "MotionSystem.hh"
-#include "Repositories.hh"
 #include "Uuid.hh"
 #include <core_utils/CoreObject.hh>
 #include <memory>
@@ -16,13 +15,15 @@ namespace bsgo {
 class Coordinator : public utils::CoreObject
 {
   public:
-  Coordinator(const Repositories &repos);
+  Coordinator();
   virtual ~Coordinator() = default;
 
   auto createEntity(const EntityKind &kind) -> Uuid;
-  auto createEntity(const EntityKind &kind, IBoundingBoxPtr bbox) -> Uuid;
-  auto createEntity(const EntityKind &kind, IBoundingBoxPtr bbox, const Eigen::Vector3f &speed)
-    -> Uuid;
+
+  void addTransform(const Uuid &ent, IBoundingBoxPtr bbox);
+  void addVelocity(const Uuid &ent, const Eigen::Vector3f &speed);
+  void addHullPoints(const Uuid &ent, const float hp, const float max);
+  void addPower(const Uuid &ent, const float power, const float max);
 
   auto getEntity(const Uuid &ent) const -> Entity;
 
@@ -38,12 +39,7 @@ class Coordinator : public utils::CoreObject
   Components m_components{};
   MotionSystem m_motionSystem{};
 
-  void checkRepositories(const Repositories &repos);
-  void init(const Repositories &repos);
   bool hasExpectedKind(const Uuid &ent, const std::optional<EntityKind> &kind) const;
-
-  void addTransform(const Uuid &ent, IBoundingBoxPtr bbox);
-  void addVelocity(const Uuid &ent, const Eigen::Vector3f &speed);
 };
 
 using CoordinatorShPtr = std::shared_ptr<Coordinator>;

@@ -25,4 +25,5 @@ add_subdirectory (
 
 target_sources (bsgalone_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/Coordinator.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/DataSource.cc
 	)
