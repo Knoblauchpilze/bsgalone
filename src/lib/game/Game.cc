@@ -16,6 +16,16 @@ Game::Game()
   setService("game");
 }
 
+auto Game::getScreen() const noexcept -> Screen
+{
+  return m_state.screen;
+}
+
+void Game::setScreen(const Screen &screen)
+{
+  m_state.screen = screen;
+}
+
 auto Game::generateHandlers(int width, int height, SpriteRenderer &spriteRenderer)
   -> std::unordered_map<Screen, IScreenHandlerPtr>
 {
@@ -85,6 +95,17 @@ void Game::performAction(float x, float y, const controls::State &state)
   it->second->performAction(x, y, state);
 }
 
+void Game::terminate() noexcept
+{
+  info("Game has been terminated");
+  m_state.terminated = true;
+}
+
+bool Game::terminated() const noexcept
+{
+  return m_state.terminated;
+}
+
 bool Game::step(float elapsedSeconds)
 {
   // When the game is paused it is not over yet.
@@ -115,6 +136,28 @@ void Game::togglePause()
   }
 
   enable(!m_state.paused);
+}
+
+void Game::pause()
+{
+  if (m_state.paused)
+  {
+    return;
+  }
+
+  info("Game is now paused");
+  m_state.paused = true;
+}
+
+void Game::resume()
+{
+  if (!m_state.paused)
+  {
+    return;
+  }
+
+  info("Game is now resumed");
+  m_state.paused = false;
 }
 
 void Game::enable(bool enable)
