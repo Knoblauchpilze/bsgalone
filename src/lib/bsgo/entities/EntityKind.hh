@@ -7,6 +7,7 @@ namespace bsgo {
 
 enum class EntityKind
 {
+  NONE,
   SHIP,
   ASTEROID
 };

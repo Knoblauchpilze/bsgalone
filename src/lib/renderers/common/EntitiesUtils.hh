@@ -1,16 +1,11 @@
 
 #pragma once
 
+#include "AxisAlignedBoundingBox.hh"
 #include "CoordinateFrame.hh"
-#include "Entity.hh"
-#include "EntityKind.hh"
-#include "SystemView.hh"
-#include <vector>
 
-namespace bsgo {
+namespace pge {
 
-auto getEntitiesWithinViewport(const SystemView &system,
-                               const pge::CoordinateFrame &frame,
-                               const EntityKind &filter) -> std::vector<Entity>;
+auto toIBoundingBox(const CoordinateFrame &frame) -> bsgo::AxisAlignedBoundingBox;
 
-}
+} // namespace pge

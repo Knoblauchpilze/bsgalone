@@ -1,21 +1,17 @@
 
 #include "EntitiesUtils.hh"
-#include "AxisAlignedBoundingBox.hh"
 
-namespace bsgo {
+namespace pge {
 
 constexpr auto DEFAULT_Z = 0.0f;
 
-auto getEntitiesWithinViewport(const SystemView &system,
-                               const pge::CoordinateFrame &frame,
-                               const EntityKind &filter) -> std::vector<Entity>
+auto toIBoundingBox(const CoordinateFrame &frame) -> bsgo::AxisAlignedBoundingBox
 {
   const auto vpPos = frame.tilesViewport().center();
   const Eigen::Vector3f p(vpPos.x, vpPos.y, DEFAULT_Z);
   const auto vpDims = frame.tilesViewport().dims();
   const Eigen::Vector3f dims(vpDims.x, vpDims.y, DEFAULT_Z);
-  bsgo::AxisAlignedBoundingBox bbox(p, dims);
-  return system.getEntitiesWithin(bbox, filter);
+  return bsgo::AxisAlignedBoundingBox(p, dims);
 }
 
-} // namespace bsgo
+} // namespace pge

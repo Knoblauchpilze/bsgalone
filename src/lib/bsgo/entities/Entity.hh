@@ -13,7 +13,7 @@ namespace bsgo {
 struct Entity
 {
   Uuid uuid;
-  EntityKind kind;
+  EntityKind kind{EntityKind::NONE};
   std::optional<TransformShPtr> transform{};
   std::optional<VelocityShPtr> velocity{};
 

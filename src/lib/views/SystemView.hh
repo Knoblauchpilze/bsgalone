@@ -20,11 +20,8 @@ class SystemView : public utils::CoreObject, public IView
 
   void update(const float elapsedSeconds) override;
 
-  auto getEntity(const Uuid &ent) const -> Entity;
-  auto getEntityAt(const Eigen::Vector3f &pos, const std::optional<EntityKind> &filter = {}) const
-    -> std::optional<Entity>;
-  auto getEntitiesWithin(const IBoundingBox &bbox,
-                         const std::optional<EntityKind> &filter = {}) const -> std::vector<Entity>;
+  auto getEntityAt(const Eigen::Vector3f &pos) const -> std::optional<Entity>;
+  auto getAsteroidsWithin(const IBoundingBox &bbox) const -> std::vector<Entity>;
 
   private:
   CoordinatorShPtr m_coordinator{};
