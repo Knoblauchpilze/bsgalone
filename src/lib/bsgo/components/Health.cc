@@ -1,26 +1,26 @@
 
-#include "HullPoints.hh"
+#include "Health.hh"
 
 namespace bsgo {
 
-HullPoints::HullPoints(const float current, const float max)
+Health::Health(const float current, const float max)
   : m_current(current)
   , m_max(max)
 {
   validate();
 }
 
-auto HullPoints::health() const -> float
+auto Health::health() const -> float
 {
   return m_current;
 }
 
-auto HullPoints::max() const -> float
+auto Health::max() const -> float
 {
   return m_max;
 }
 
-void HullPoints::validate()
+void Health::validate()
 {
   if (m_current > m_max)
   {
