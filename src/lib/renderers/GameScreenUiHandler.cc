@@ -146,15 +146,15 @@ void GameScreenUiHandler::updateShipUi()
   const auto ship = m_shipView->getPlayerShip();
 
   text = "Health: ";
-  text += floatToStr(std::floor((*ship.health)->health()), 0);
+  text += floatToStr(std::floor(ship.access<bsgo::Health>().health()), 0);
   text += "/";
-  text += floatToStr((*ship.health)->max(), 0);
+  text += floatToStr(ship.access<bsgo::Health>().max(), 0);
   m_menus[HEALTH]->setText(text);
 
   text = "Power: ";
-  text += floatToStr(std::floor((*ship.power)->power()), 0);
+  text += floatToStr(std::floor(ship.access<bsgo::Power>().power()), 0);
   text += "/";
-  text += floatToStr(std::floor((*ship.power)->max()), 0);
+  text += floatToStr(std::floor(ship.access<bsgo::Power>().max()), 0);
   m_menus[POWER]->setText(text);
 }
 
@@ -179,9 +179,10 @@ void GameScreenUiHandler::updateTargetUi()
   }
   else
   {
-    text += floatToStr(std::floor((*healthComp)->health()), 0);
+    const auto &healthPtr = *healthComp;
+    text += floatToStr(std::floor(healthPtr->health()), 0);
     text += "/";
-    text += floatToStr(std::floor((*healthComp)->max()), 0);
+    text += floatToStr(std::floor(healthPtr->max()), 0);
   }
   m_menus[TARGET_HEALTH]->setText(text);
 
@@ -193,9 +194,10 @@ void GameScreenUiHandler::updateTargetUi()
   }
   else
   {
-    text += floatToStr(std::floor((*powerComp)->power()), 0);
+    const auto &powerPtr = *powerComp;
+    text += floatToStr(std::floor(powerPtr->power()), 0);
     text += "/";
-    text += floatToStr(std::floor((*powerComp)->max()), 0);
+    text += floatToStr(std::floor(powerPtr->max()), 0);
   }
   m_menus[TARGET_POWER]->setText(text);
 }

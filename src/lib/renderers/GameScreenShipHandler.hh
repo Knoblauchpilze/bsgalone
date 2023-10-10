@@ -39,7 +39,7 @@ class GameScreenShipHandler : public IScreenHandler
 
   void renderShip(const bsgo::Entity &ship, SpriteRenderer &engine, const RenderState &state) const;
   void renderDebug(const bsgo::Entity &ship, SpriteRenderer &engine, const RenderState &state) const;
-  void moveShip(const bsgo::Entity &ship, const Motion &motion);
+  void moveShip(bsgo::Entity &ship, const Motion &motion);
   void keepShipCentered(CoordinateFrame &frame);
 };
 

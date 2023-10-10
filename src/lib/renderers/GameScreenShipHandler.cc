@@ -74,7 +74,8 @@ auto GameScreenShipHandler::processUserInput(const controls::State &c,
 {
   Motion motion{};
   motion.updateFromKeys(c);
-  moveShip(m_shipView->getPlayerShip(), motion);
+  auto ship = m_shipView->getPlayerShip();
+  moveShip(ship, motion);
 
   keepShipCentered(frame);
   return {};
@@ -93,13 +94,13 @@ void GameScreenShipHandler::renderShip(const bsgo::Entity &ship,
 {
   constexpr auto SHIP_RADIUS = 0.5f;
 
-  const auto pos = (*ship.transform)->position();
+  const auto pos = ship.access<bsgo::Transform>().position();
   SpriteDesc t;
   t.x = pos(0);
   t.y = pos(1);
 
   t.radius         = 2.0f * SHIP_RADIUS;
-  const auto speed = (*ship.velocity)->speed();
+  const auto speed = ship.access<bsgo::Velocity>().speed();
   t.rotation       = std::atan2(speed(0), speed(1));
 
   t.sprite.pack   = m_class1TexturesPackId;
@@ -113,12 +114,12 @@ void GameScreenShipHandler::renderDebug(const bsgo::Entity &ship,
                                         SpriteRenderer &engine,
                                         const RenderState &state) const
 {
-  const auto tilePos = (*ship.transform)->position();
+  const auto tilePos = ship.access<bsgo::Transform>().position();
   olc::vi2d pixelPos = state.cf.tilesToPixels(tilePos(0), tilePos(1));
 
   olc::vi2d pos    = pixelPos;
   std::string text = "accel: ";
-  const auto accel = (*ship.velocity)->acceleration();
+  const auto accel = ship.access<bsgo::Velocity>().acceleration();
   text += floatToStr(accel(0));
   text += "x";
   text += floatToStr(accel(1));
@@ -129,7 +130,7 @@ void GameScreenShipHandler::renderDebug(const bsgo::Entity &ship,
   constexpr auto REASONABLE_GAP = 20;
   pos.y += REASONABLE_GAP;
   text             = "speed: ";
-  const auto speed = (*ship.velocity)->speed();
+  const auto speed = ship.access<bsgo::Velocity>().speed();
   text += floatToStr(speed(0));
   text += "x";
   text += floatToStr(speed(1));
@@ -138,7 +139,7 @@ void GameScreenShipHandler::renderDebug(const bsgo::Entity &ship,
   engine.getRenderer()->DrawString(pos, text, olc::DARK_GREEN);
 }
 
-void GameScreenShipHandler::moveShip(const bsgo::Entity &ship, const Motion &motion)
+void GameScreenShipHandler::moveShip(bsgo::Entity &ship, const Motion &motion)
 {
   Eigen::Vector3f delta = Eigen::Vector3f::Zero();
   delta(0)              = motion.x;
@@ -146,13 +147,13 @@ void GameScreenShipHandler::moveShip(const bsgo::Entity &ship, const Motion &mot
   delta(2)              = motion.z;
   delta.normalize();
 
-  (*ship.velocity)->accelerate(delta);
+  ship.access<bsgo::Velocity>().accelerate(delta);
 }
 
 void GameScreenShipHandler::keepShipCentered(CoordinateFrame &frame)
 {
   const auto ent = m_shipView->getPlayerShip();
-  const auto pos = (*ent.transform)->position();
+  const auto pos = ent.access<bsgo::Transform>().position();
   const olc::vf2d pos2d{pos(0), pos(1)};
   frame.moveTo(pos2d);
 }
