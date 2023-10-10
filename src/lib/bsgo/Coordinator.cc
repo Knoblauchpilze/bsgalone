@@ -60,18 +60,18 @@ void Coordinator::addVelocity(const Uuid &ent, const Eigen::Vector3f &speed)
   m_components.velocities[ent] = std::make_shared<Velocity>(Eigen::Vector3f::Zero(), speed);
 }
 
-void Coordinator::addHullPoints(const Uuid &ent, const float hp, const float max)
+void Coordinator::addHealth(const Uuid &ent, const float hp, const float max)
 {
   if (!m_entities.contains(ent))
   {
     error("Unknown entity " + str(ent));
   }
-  if (m_components.hullPoints.contains(ent))
+  if (m_components.health.contains(ent))
   {
     warn("Overriding hull points for entity " + std::to_string(ent));
   }
 
-  m_components.hullPoints[ent] = std::make_shared<HullPoints>(hp, max);
+  m_components.health[ent] = std::make_shared<Health>(hp, max);
 }
 
 void Coordinator::addPower(const Uuid &ent, const float power, const float max)
@@ -99,10 +99,10 @@ auto Coordinator::getEntity(const Uuid &ent) const -> Entity
     out.kind = it->second;
   }
 
-  out.transform  = getComponent(ent, m_components.transforms);
-  out.velocity   = getComponent(ent, m_components.velocities);
-  out.hullPoints = getComponent(ent, m_components.hullPoints);
-  out.power      = getComponent(ent, m_components.powers);
+  out.transform = getComponent(ent, m_components.transforms);
+  out.velocity  = getComponent(ent, m_components.velocities);
+  out.health    = getComponent(ent, m_components.health);
+  out.power     = getComponent(ent, m_components.powers);
 
   return out;
 }

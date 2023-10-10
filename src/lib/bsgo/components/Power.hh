@@ -21,7 +21,6 @@ class Power
   float m_current{1.0f};
   float m_max{1.0f};
 
-  /// @brief - Verifies that the ranges are valid, throws an exception if not.
   void validate();
 };
 

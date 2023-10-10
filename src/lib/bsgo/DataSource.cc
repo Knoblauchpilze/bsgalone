@@ -24,7 +24,7 @@ void DataSource::initialize(Coordinator &coordinator) const
     const auto ent = coordinator.createEntity(EntityKind::SHIP);
     coordinator.addTransform(ent, std::move(box));
     coordinator.addVelocity(ent, Eigen::Vector3f::Zero());
-    coordinator.addHullPoints(ent, ship.hullPoints, ship.maxHullPoints);
+    coordinator.addHealth(ent, ship.hullPoints, ship.maxHullPoints);
     coordinator.addPower(ent, ship.powerPoints, ship.maxPowerPoints);
   }
 
@@ -36,7 +36,7 @@ void DataSource::initialize(Coordinator &coordinator) const
     auto box       = std::make_unique<CircleBox>(asteroid.position, asteroid.radius);
     const auto ent = coordinator.createEntity(EntityKind::ASTEROID);
     coordinator.addTransform(ent, std::move(box));
-    coordinator.addHullPoints(ent, asteroid.health, asteroid.health);
+    coordinator.addHealth(ent, asteroid.health, asteroid.health);
   }
 }
 

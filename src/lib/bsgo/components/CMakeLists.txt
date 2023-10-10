@@ -2,7 +2,7 @@
 target_sources (bsgalone_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/Transform.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/Velocity.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/HullPoints.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/Health.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/Power.cc
 	)
 
