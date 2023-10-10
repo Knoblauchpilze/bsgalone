@@ -40,7 +40,7 @@ auto Transform::size() const -> float
 
 bool Transform::contains(const Eigen::Vector3f &pos) const noexcept
 {
-  return !m_bbox || m_bbox->isInside(pos);
+  return m_bbox && m_bbox->isInside(pos);
 }
 
 void Transform::translate(const Eigen::Vector3f &delta)
