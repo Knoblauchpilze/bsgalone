@@ -4,6 +4,10 @@ target_include_directories (bsgalone_lib PUBLIC
 	)
 
 add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/common
+	)
+
+add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/bbox
 	)
 

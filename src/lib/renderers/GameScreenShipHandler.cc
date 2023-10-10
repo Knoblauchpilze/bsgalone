@@ -95,8 +95,8 @@ void GameScreenShipHandler::renderShip(const bsgo::Entity &ship,
 
   const auto pos = (*ship.transform)->position();
   SpriteDesc t;
-  t.x = pos(0) - SHIP_RADIUS;
-  t.y = pos(1) - SHIP_RADIUS;
+  t.x = pos(0);
+  t.y = pos(1);
 
   t.radius         = 2.0f * SHIP_RADIUS;
   const auto speed = (*ship.velocity)->speed();
