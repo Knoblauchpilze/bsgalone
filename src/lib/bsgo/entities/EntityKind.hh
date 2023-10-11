@@ -9,7 +9,8 @@ enum class EntityKind
 {
   NONE,
   SHIP,
-  ASTEROID
+  ASTEROID,
+  OUTPOST,
 };
 
 auto str(const EntityKind &kind) noexcept -> std::string;

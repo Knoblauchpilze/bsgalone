@@ -30,9 +30,8 @@ auto ShipView::getShip(const Uuid &ship) const -> Entity
 
 auto ShipView::getShipsWithin(const IBoundingBox &bbox) const -> std::vector<Entity>
 {
-  const auto uuids = m_coordinator->getEntitiesWithin(bbox, {EntityKind::SHIP});
-
   std::vector<Entity> out;
+  const auto uuids = m_coordinator->getEntitiesWithin(bbox, {EntityKind::SHIP});
   for (const auto &uuid : uuids)
   {
     out.push_back(m_coordinator->getEntity(uuid));

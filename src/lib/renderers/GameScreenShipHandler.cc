@@ -47,6 +47,14 @@ void GameScreenShipHandler::loadResources(int /*width*/,
                                 .layout{1, 1}};
 
   m_class1TexturesPackId = texturesLoader.registerPack(pack);
+
+  constexpr auto OUTPOST_TEXTURE_PACK_FILE_PATH = "data/assets/outpost.png";
+  constexpr auto OUTPOST_TILE_WIDTH_PIXELS      = 243;
+  constexpr auto OUTPOST_TILE_HEIGHT_PIXELS     = 177;
+  pack                    = sprites::PackDesc{.file = OUTPOST_TEXTURE_PACK_FILE_PATH,
+                                              .sSize{OUTPOST_TILE_WIDTH_PIXELS, OUTPOST_TILE_HEIGHT_PIXELS},
+                                              .layout{1, 1}};
+  m_outpostTexturesPackId = texturesLoader.registerPack(pack);
 }
 
 void GameScreenShipHandler::render(SpriteRenderer &engine,
@@ -92,18 +100,19 @@ void GameScreenShipHandler::renderShip(const bsgo::Entity &ship,
                                        SpriteRenderer &engine,
                                        const RenderState &state) const
 {
-  constexpr auto SHIP_RADIUS = 0.5f;
+  const auto &transform = ship.access<bsgo::Transform>();
+  const auto pos        = transform.position();
 
-  const auto pos = ship.access<bsgo::Transform>().position();
   SpriteDesc t;
   t.x = pos(0);
   t.y = pos(1);
 
-  t.radius         = 2.0f * SHIP_RADIUS;
+  t.radius         = 2.0f * transform.size();
   const auto speed = ship.access<bsgo::Velocity>().speed();
   t.rotation       = std::atan2(speed(0), speed(1));
 
-  t.sprite.pack   = m_class1TexturesPackId;
+  t.sprite.pack   = (ship.kind == bsgo::EntityKind::SHIP ? m_class1TexturesPackId
+                                                         : m_outpostTexturesPackId);
   t.sprite.sprite = {0, 0};
   t.sprite.tint   = olc::WHITE;
 
