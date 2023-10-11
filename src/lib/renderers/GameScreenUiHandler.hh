@@ -45,10 +45,11 @@ class GameScreenUiHandler : public IScreenHandler
     WEAPON_3     = 10,
     WEAPON_COUNT = 4,
 
-    TARGET_HEALTH = 11,
-    TARGET_POWER  = 12,
+    TARGET_HEALTH   = 11,
+    TARGET_POWER    = 12,
+    TARGET_DISTANCE = 13,
 
-    COUNT = 13,
+    COUNT = 14,
   };
   std::vector<MenuShPtr> m_menus{};
 

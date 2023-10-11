@@ -134,9 +134,18 @@ void GameScreenUiHandler::generateTargetMenus(int width, int /*height*/)
   m_menus[TARGET_HEALTH]
     = generateMenu(pos, dims, "Health: N/A", "health", olc::VERY_DARK_RED, {olc::WHITE});
 
-  pos = olc::vi2d{width / 2, 25};
+  constexpr auto REASONABLE_GAP = 15;
+  pos.y += REASONABLE_GAP;
   m_menus[TARGET_POWER]
     = generateMenu(pos, dims, "Power: N/A", "power", olc::DARK_CYAN, {olc::WHITE});
+
+  pos.y += REASONABLE_GAP;
+  m_menus[TARGET_DISTANCE] = generateMenu(pos,
+                                          dims,
+                                          "N/A m",
+                                          "distance",
+                                          olc::Pixel(0, 0, 0, alpha::Transparent),
+                                          {olc::WHITE});
 }
 
 void GameScreenUiHandler::updateShipUi()
@@ -163,6 +172,7 @@ void GameScreenUiHandler::updateTargetUi()
   const auto target = m_targetView->getTarget();
   m_menus[TARGET_HEALTH]->setVisible(target.has_value());
   m_menus[TARGET_POWER]->setVisible(target.has_value());
+  m_menus[TARGET_DISTANCE]->setVisible(target.has_value());
 
   if (!target)
   {
@@ -200,6 +210,12 @@ void GameScreenUiHandler::updateTargetUi()
     text += floatToStr(std::floor(powerPtr->max()), 0);
   }
   m_menus[TARGET_POWER]->setText(text);
+
+  const auto targetPos  = *target->transform;
+  const auto playerShip = m_shipView->getPlayerShip();
+  const auto d = (targetPos->position() - playerShip.access<bsgo::Transform>().position()).norm();
+  text         = floatToStr(d, 1) + "m";
+  m_menus[TARGET_DISTANCE]->setText(text);
 }
 
 } // namespace pge
