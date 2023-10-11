@@ -13,6 +13,8 @@ auto str(const EntityKind &kind) noexcept -> std::string
       return "ship";
     case EntityKind::ASTEROID:
       return "asteroid";
+    case EntityKind::OUTPOST:
+      return "outpost";
     default:
       return "unknown(" + std::to_string(static_cast<int>(kind)) + ")";
   }

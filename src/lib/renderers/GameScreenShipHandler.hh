@@ -27,6 +27,7 @@ class GameScreenShipHandler : public IScreenHandler
   bsgo::ShipViewShPtr m_shipView;
 
   sprites::PackId m_class1TexturesPackId{};
+  sprites::PackId m_outpostTexturesPackId{};
 
   struct Motion
   {
