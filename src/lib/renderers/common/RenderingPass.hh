@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include <string>
+
 namespace pge {
 
 enum class RenderingPass
@@ -11,4 +13,6 @@ enum class RenderingPass
   DEBUG,
 };
 
-}
+auto str(const RenderingPass pass) -> std::string;
+
+} // namespace pge

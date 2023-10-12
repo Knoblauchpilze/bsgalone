@@ -1,12 +1,18 @@
 
 #include "Game.hh"
 #include "DataSource.hh"
-#include "GameOverScreenHandler.hh"
-#include "GameScreenHandler.hh"
-#include "LoginScreenHandler.hh"
-#include "MapScreenHandler.hh"
+#include "IInputHandler.hh"
+#include "IRenderer.hh"
+#include "IUiHandler.hh"
 #include "Menu.hh"
-#include "OutpostScreenHandler.hh"
+
+#include "GameOverScreenUiHandler.hh"
+#include "GameScreenInputHandler.hh"
+#include "GameScreenRenderer.hh"
+#include "GameScreenUiHandler.hh"
+#include "LoginScreenUiHandler.hh"
+#include "MapScreenUiHandler.hh"
+#include "OutpostScreenUiHandler.hh"
 
 namespace pge {
 
@@ -14,6 +20,7 @@ Game::Game()
   : utils::CoreObject("game")
 {
   setService("game");
+  initialize();
 }
 
 auto Game::getScreen() const noexcept -> Screen
@@ -26,70 +33,133 @@ void Game::setScreen(const Screen &screen)
   m_state.screen = screen;
 }
 
-auto Game::generateHandlers(int width, int height, SpriteRenderer &spriteRenderer)
-  -> std::unordered_map<Screen, IScreenHandlerPtr>
+void Game::generateRenderers(int width, int height, SpriteRenderer &spriteRenderer)
 {
-  std::unordered_map<Screen, IScreenHandlerPtr> out;
-
-  const bsgo::Uuid playerId{};
-
-  auto coordinator = std::make_shared<bsgo::Coordinator>();
-  bsgo::DataSource dataSource(playerId);
-  dataSource.initialize(*coordinator);
-
-  bsgo::Views views;
-  views.shipView = std::make_shared<bsgo::ShipView>(playerId, coordinator);
-  m_views.push_back(views.shipView);
-  views.systemView = std::make_shared<bsgo::SystemView>(coordinator);
-  m_views.push_back(views.systemView);
-  views.targetView = std::make_shared<bsgo::TargetView>(coordinator);
-  m_views.push_back(views.targetView);
-  auto &texturesHandler = spriteRenderer.getTextureHandler();
-
-  auto login = std::make_unique<LoginScreenHandler>();
-  login->loadResources(width, height, texturesHandler);
-  out[Screen::LOGIN] = std::move(login);
-
-  auto game = std::make_unique<GameScreenHandler>(views);
-  game->loadResources(width, height, texturesHandler);
-  out[Screen::GAME] = std::move(game);
-
-  auto map = std::make_unique<MapScreenHandler>();
-  map->loadResources(width, height, texturesHandler);
-  out[Screen::MAP] = std::move(map);
-
-  auto outpost = std::make_unique<OutpostScreenHandler>();
-  outpost->loadResources(width, height, texturesHandler);
-  out[Screen::OUTPOST] = std::move(outpost);
-
-  auto gameOver = std::make_unique<GameOverScreenHandler>();
-  gameOver->loadResources(width, height, texturesHandler);
-  out[Screen::GAMEOVER] = std::move(gameOver);
-
-  for (const auto &[screen, handler] : out)
-  {
-    m_handlers[screen] = handler.get();
-  }
-
-  return out;
+  auto game = std::make_unique<GameScreenRenderer>(m_views);
+  game->loadResources(width, height, spriteRenderer.getTextureHandler());
+  m_renderers[Screen::GAME] = std::move(game);
 }
 
-void Game::performAction(float x, float y, const controls::State &state)
+void Game::generateInputHandlers()
 {
-  // Only handle actions when the game is not disabled.
+  m_inputHandlers[Screen::GAME] = std::make_unique<GameScreenInputHandler>(m_views);
+}
+
+void Game::generateUiHandlers(int width, int height)
+{
+  auto login = std::make_unique<LoginScreenUiHandler>();
+  login->initializeMenus(width, height);
+  m_uiHandlers[Screen::LOGIN] = std::move(login);
+
+  auto outpost = std::make_unique<OutpostScreenUiHandler>();
+  outpost->initializeMenus(width, height);
+  m_uiHandlers[Screen::OUTPOST] = std::move(outpost);
+
+  auto game = std::make_unique<GameScreenUiHandler>(m_views);
+  game->initializeMenus(width, height);
+  m_uiHandlers[Screen::GAME] = std::move(game);
+
+  auto map = std::make_unique<MapScreenUiHandler>();
+  map->initializeMenus(width, height);
+  m_uiHandlers[Screen::MAP] = std::move(map);
+
+  auto gameOver = std::make_unique<GameOverScreenUiHandler>();
+  gameOver->initializeMenus(width, height);
+  m_uiHandlers[Screen::GAMEOVER] = std::move(gameOver);
+}
+
+void Game::processUserInput(const controls::State &c, CoordinateFrame &frame)
+{
   if (m_state.disabled)
   {
     log("Ignoring action while menu is disabled");
     return;
   }
 
-  const auto it = m_handlers.find(m_state.screen);
-  if (it == m_handlers.end())
+  const auto inputHandler = m_inputHandlers.find(getScreen());
+  if (inputHandler != m_inputHandlers.end())
   {
-    return;
+    inputHandler->second->processUserInput(c, frame);
   }
 
-  it->second->performAction(x, y, state);
+  menu::InputHandle res{};
+  const auto uiHandler = m_uiHandlers.find(getScreen());
+  if (uiHandler != m_uiHandlers.end())
+  {
+    std::vector<ActionShPtr> actions;
+    res = uiHandler->second->processUserInput(c, actions);
+
+    for (const auto &action : actions)
+    {
+      action->apply(*this);
+    }
+  }
+
+  const auto lClick = (c.buttons[controls::mouse::LEFT] == controls::ButtonState::RELEASED);
+  if (lClick && inputHandler != m_inputHandlers.end() && !res.relevant)
+  {
+    olc::vf2d it;
+    olc::vi2d tp = frame.pixelsToTilesAndIntra(olc::vi2d(c.mPosX, c.mPosY), &it);
+
+    inputHandler->second->performAction(tp.x + it.x, tp.y + it.y, c);
+  }
+
+  if (c.keys[controls::keys::P])
+  {
+    togglePause();
+  }
+  if (c.keys[controls::keys::M])
+  {
+    std::optional<Screen> nextScreen{};
+    switch (getScreen())
+    {
+      case Screen::GAME:
+        nextScreen = {Screen::MAP};
+        break;
+      case Screen::MAP:
+        nextScreen = {Screen::GAME};
+        break;
+      default:
+        break;
+    }
+    if (nextScreen)
+    {
+      setScreen(*nextScreen);
+    }
+  }
+}
+
+void Game::render(SpriteRenderer &engine, const RenderState &state, const RenderingPass pass) const
+{
+  const auto itRenderer = m_renderers.find(getScreen());
+  const auto itUi       = m_uiHandlers.find(getScreen());
+
+  switch (pass)
+  {
+    case RenderingPass::SPRITES:
+      break;
+    case RenderingPass::DECAL:
+      if (itRenderer != m_renderers.end())
+      {
+        itRenderer->second->render(engine, state, pass);
+      }
+      break;
+    case RenderingPass::UI:
+      if (itUi != m_uiHandlers.end())
+      {
+        itUi->second->render(engine);
+      }
+      break;
+    case RenderingPass::DEBUG:
+      if (itRenderer != m_renderers.end())
+      {
+        itRenderer->second->render(engine, state, pass);
+      }
+      break;
+    default:
+      warn("Unknown rendering pass " + str(pass));
+      break;
+  }
 }
 
 void Game::terminate() noexcept
@@ -111,12 +181,15 @@ bool Game::step(float elapsedSeconds)
     return true;
   }
 
-  for (const auto &view : m_views)
-  {
-    view->update(elapsedSeconds);
-  }
+  m_views.shipView->update(elapsedSeconds);
+  m_views.systemView->update(elapsedSeconds);
+  m_views.targetView->update(elapsedSeconds);
 
-  updateUI();
+  const auto it = m_uiHandlers.find(m_state.screen);
+  if (it != m_uiHandlers.end())
+  {
+    it->second->updateUi();
+  }
 
   return true;
 }
@@ -171,15 +244,17 @@ void Game::enable(bool enable)
   }
 }
 
-void Game::updateUI()
+void Game::initialize()
 {
-  const auto it = m_handlers.find(m_state.screen);
-  if (it == m_handlers.end())
-  {
-    return;
-  }
+  const bsgo::Uuid playerId{};
 
-  it->second->updateUi();
+  auto coordinator = std::make_shared<bsgo::Coordinator>();
+  bsgo::DataSource dataSource(playerId);
+  dataSource.initialize(*coordinator);
+
+  m_views.shipView   = std::make_shared<bsgo::ShipView>(playerId, coordinator);
+  m_views.systemView = std::make_shared<bsgo::SystemView>(coordinator);
+  m_views.targetView = std::make_shared<bsgo::TargetView>(coordinator);
 }
 
 bool Game::TimedMenu::update(bool active) noexcept

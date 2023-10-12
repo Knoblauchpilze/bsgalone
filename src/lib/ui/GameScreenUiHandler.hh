@@ -1,27 +1,22 @@
 
 #pragma once
 
-#include "IScreenHandler.hh"
-#include "Menu.hh"
+#include "IUiHandler.hh"
 #include "Views.hh"
-#include <memory>
 
 namespace pge {
-class GameScreenUiHandler : public IScreenHandler
+
+class GameScreenUiHandler : public IUiHandler
 {
   public:
   GameScreenUiHandler(const bsgo::Views &views);
-  ~GameScreenUiHandler() override = default;
+  virtual ~GameScreenUiHandler() = default;
 
-  void loadResources(int width, int height, sprites::TexturePack &texturesLoader) override;
-  void render(SpriteRenderer &engine,
-              const RenderState &state,
-              const RenderingPass pass) const override;
-  auto processUserInput(const controls::State &c,
-                        std::vector<ActionShPtr> &actions,
-                        CoordinateFrame &frame) -> menu::InputHandle override;
+  void initializeMenus(const int width, const int height) override;
+  auto processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions)
+    -> menu::InputHandle override;
+  void render(SpriteRenderer &engine) const override;
   void updateUi() override;
-  void performAction(float x, float y, const controls::State &state) override;
 
   private:
   bsgo::ShipViewShPtr m_shipView;
@@ -61,7 +56,5 @@ class GameScreenUiHandler : public IScreenHandler
   void updateShipUi();
   void updateTargetUi();
 };
-
-using GameScreenUiHandlerPtr = std::unique_ptr<GameScreenUiHandler>;
 
 } // namespace pge

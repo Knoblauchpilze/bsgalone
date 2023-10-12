@@ -3,10 +3,14 @@
 
 #include "Action.hh"
 #include "Controls.hh"
-#include "IScreenHandler.hh"
-#include "IView.hh"
+#include "IInputHandler.hh"
+#include "IRenderer.hh"
+#include "IUiHandler.hh"
+#include "RenderState.hh"
+#include "RenderingPass.hh"
 #include "Screen.hh"
 #include "SpriteRenderer.hh"
+#include "Views.hh"
 #include <core_utils/CoreObject.hh>
 #include <core_utils/TimeUtils.hh>
 #include <memory>
@@ -19,8 +23,14 @@ namespace pge {
 class Menu;
 using MenuShPtr = std::shared_ptr<Menu>;
 
-class IScreenHandler;
-using IScreenHandlerPtr = std::unique_ptr<IScreenHandler>;
+class IRenderer;
+using IRendererPtr = std::unique_ptr<IRenderer>;
+
+class IUiHandler;
+using IUiHandlerPtr = std::unique_ptr<IUiHandler>;
+
+class IInputHandler;
+using IInputHandlerPtr = std::unique_ptr<IInputHandler>;
 
 class Game : public utils::CoreObject
 {
@@ -38,18 +48,12 @@ class Game : public utils::CoreObject
   /// @param screen - the new screen to apply.
   void setScreen(const Screen &screen);
 
-  auto generateHandlers(int width, int height, SpriteRenderer &spriteRenderer)
-    -> std::unordered_map<Screen, IScreenHandlerPtr>;
+  void generateRenderers(int width, int height, SpriteRenderer &spriteRenderer);
+  void generateInputHandlers();
+  void generateUiHandlers(int width, int height);
 
-  /// @brief - Used to perform an action at the specified location. What needs to
-  /// be done exactly is left to the user. This implementation does nothing by
-  /// default.
-  /// The coordinates are expressed in tiles (and not in pixels).
-  /// @param x - x position in tiles of where to perform the action.
-  /// @param y - y position in tiles of where to perform the action.
-  /// @param state - the state of the controls at the moment of the action.
-  ////
-  void performAction(float x, float y, const controls::State &state);
+  void processUserInput(const controls::State &c, CoordinateFrame &frame);
+  void render(SpriteRenderer &engine, const RenderState &state, const RenderingPass pass) const;
 
   /// @brief - Requests the game to be terminated. This is applied to the next
   /// iteration of the game loop.
@@ -77,16 +81,6 @@ class Game : public utils::CoreObject
   /// @brief - Used to indicate that the world should be resuming its activity. Time
   /// based entities should take actions to be resuming their pathes, motions, etc.
   void resume();
-
-  private:
-  /// @brief - Used to enable or disable the menus that compose the game. This allows
-  /// to easily hide any game related component.
-  /// @param enable - `true` if the menus are enabled.
-  void enable(bool enable);
-
-  /// @brief - Used during the step function and by any process that needs to update
-  /// the UI and the text content of menus.
-  virtual void updateUI();
 
   private:
   /// @brief - Convenience structure allowing to group information
@@ -143,8 +137,16 @@ class Game : public utils::CoreObject
   /// @brief - The definition of the game state.
   State m_state{};
 
-  std::vector<bsgo::IViewShPtr> m_views{};
-  std::unordered_map<Screen, IScreenHandler *> m_handlers{};
+  bsgo::Views m_views;
+  std::unordered_map<Screen, IRendererPtr> m_renderers{};
+  std::unordered_map<Screen, IInputHandlerPtr> m_inputHandlers{};
+  std::unordered_map<Screen, IUiHandlerPtr> m_uiHandlers{};
+
+  /// @brief - Used to enable or disable the menus that compose the game. This allows
+  /// to easily hide any game related component.
+  /// @param enable - `true` if the menus are enabled.
+  void enable(bool enable);
+  void initialize();
 };
 
 using GameShPtr = std::shared_ptr<Game>;
