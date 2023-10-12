@@ -37,6 +37,10 @@ add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/renderers
 	)
 
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/inputs
+	)
+
 target_sources (bsgalone_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/App.cc
 	)

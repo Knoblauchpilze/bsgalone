@@ -34,53 +34,7 @@ void App::onInputs(const controls::State &c, CoordinateFrame &cf)
     return;
   }
 
-  std::vector<ActionShPtr> actions;
-  bool relevant = false;
-
-  const auto it = m_handlers.find(m_game->getScreen());
-  if (it != m_handlers.end())
-  {
-    menu::InputHandle ih = it->second->processUserInput(c, actions, cf);
-    relevant             = (relevant || ih.relevant);
-  }
-
-  for (unsigned id = 0u; id < actions.size(); ++id)
-  {
-    actions[id]->apply(*m_game);
-  }
-
-  bool lClick = (c.buttons[controls::mouse::LEFT] == controls::ButtonState::RELEASED);
-  if (lClick && !relevant)
-  {
-    olc::vf2d it;
-    olc::vi2d tp = cf.pixelsToTilesAndIntra(olc::vi2d(c.mPosX, c.mPosY), &it);
-
-    m_game->performAction(tp.x + it.x, tp.y + it.y, c);
-  }
-
-  if (c.keys[controls::keys::P])
-  {
-    m_game->togglePause();
-  }
-  if (c.keys[controls::keys::M])
-  {
-    std::optional<Screen> nextScreen{};
-    switch (m_game->getScreen())
-    {
-      case Screen::GAME:
-        nextScreen = {Screen::MAP};
-        break;
-      case Screen::MAP:
-        nextScreen = {Screen::GAME};
-        break;
-      default:
-        break;
-    }
-    if (nextScreen)
-    {
-      m_game->setScreen(*nextScreen);
-    }
-  }
+  m_game->processUserInput(c, cf);
 }
 
 void App::loadResources()
@@ -90,13 +44,16 @@ void App::loadResources()
   m_game->setScreen(Screen::GAME);
   m_game->togglePause();
   setLayerTint(Layer::Draw, olc::Pixel(255, 255, 255, alpha::SemiOpaque));
-  m_handlers = m_game->generateHandlers(ScreenWidth(), ScreenHeight(), *m_spriteRenderer);
+
+  m_game->generateRenderers(ScreenWidth(), ScreenHeight(), *m_spriteRenderer);
+  m_game->generateInputHandlers();
+  m_game->generateUiHandlers(ScreenWidth(), ScreenHeight());
 }
 
 void App::cleanResources()
 {
   m_spriteRenderer.reset();
-  m_handlers.clear();
+  m_game.reset();
 }
 
 void App::drawDecal(const RenderState &res)
@@ -105,14 +62,7 @@ void App::drawDecal(const RenderState &res)
   SetPixelMode(olc::Pixel::ALPHA);
   Clear(olc::OFF_BLACK);
 
-  const auto handler = m_handlers.find(m_game->getScreen());
-  if (handler == m_handlers.end())
-  {
-    SetPixelMode(olc::Pixel::NORMAL);
-    return;
-  }
-
-  handler->second->render(*m_spriteRenderer, res, RenderingPass::DECAL);
+  m_game->render(*m_spriteRenderer, res, RenderingPass::DECAL);
 
   SetPixelMode(olc::Pixel::NORMAL);
 }
@@ -123,14 +73,7 @@ void App::draw(const RenderState &res)
   SetPixelMode(olc::Pixel::ALPHA);
   Clear(olc::Pixel(255, 255, 255, alpha::Transparent));
 
-  const auto handler = m_handlers.find(m_game->getScreen());
-  if (handler == m_handlers.end())
-  {
-    SetPixelMode(olc::Pixel::NORMAL);
-    return;
-  }
-
-  handler->second->render(*m_spriteRenderer, res, RenderingPass::SPRITES);
+  m_game->render(*m_spriteRenderer, res, RenderingPass::SPRITES);
 
   SetPixelMode(olc::Pixel::NORMAL);
 }
@@ -141,14 +84,7 @@ void App::drawUI(const RenderState &res)
   SetPixelMode(olc::Pixel::ALPHA);
   Clear(olc::Pixel(255, 255, 255, alpha::Transparent));
 
-  const auto handler = m_handlers.find(m_game->getScreen());
-  if (handler == m_handlers.end())
-  {
-    SetPixelMode(olc::Pixel::NORMAL);
-    return;
-  }
-
-  handler->second->render(*m_spriteRenderer, res, RenderingPass::UI);
+  m_game->render(*m_spriteRenderer, res, RenderingPass::UI);
 
   SetPixelMode(olc::Pixel::NORMAL);
 }
@@ -159,11 +95,7 @@ void App::drawDebug(const RenderState &res)
   SetPixelMode(olc::Pixel::ALPHA);
   Clear(olc::Pixel(255, 255, 255, alpha::Transparent));
 
-  const auto handler = m_handlers.find(m_game->getScreen());
-  if (handler != m_handlers.end())
-  {
-    handler->second->render(*m_spriteRenderer, res, RenderingPass::DEBUG);
-  }
+  m_game->render(*m_spriteRenderer, res, RenderingPass::DEBUG);
 
   // Draw cursor's position.
   olc::vi2d mp = GetMousePos();

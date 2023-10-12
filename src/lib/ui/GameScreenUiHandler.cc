@@ -6,7 +6,8 @@
 namespace pge {
 
 GameScreenUiHandler::GameScreenUiHandler(const bsgo::Views &views)
-  : m_shipView(views.shipView)
+  : IUiHandler("game")
+  , m_shipView(views.shipView)
   , m_targetView(views.targetView)
 {
   if (nullptr == m_shipView)
@@ -19,9 +20,7 @@ GameScreenUiHandler::GameScreenUiHandler(const bsgo::Views &views)
   }
 }
 
-void GameScreenUiHandler::loadResources(int width,
-                                        int height,
-                                        sprites::TexturePack & /*texturesLoader*/)
+void GameScreenUiHandler::initializeMenus(const int width, const int height)
 {
   m_menus.resize(MenuItem::COUNT);
 
@@ -31,36 +30,28 @@ void GameScreenUiHandler::loadResources(int width,
   generateTargetMenus(width, height);
 }
 
-void GameScreenUiHandler::render(SpriteRenderer &engine,
-                                 const RenderState & /*state*/,
-                                 const RenderingPass pass) const
+auto GameScreenUiHandler::processUserInput(const controls::State &c,
+                                           std::vector<ActionShPtr> &actions) -> menu::InputHandle
 {
-  if (pass != RenderingPass::UI)
+  auto relevant{false};
+  auto selected{false};
+
+  for (const auto &menu : m_menus)
   {
-    return;
+    const auto ih = menu->processUserInput(c, actions);
+    relevant      = (relevant || ih.relevant);
+    selected      = (selected || ih.selected);
   }
 
+  return menu::InputHandle{.relevant = relevant, .selected = selected};
+}
+
+void GameScreenUiHandler::render(SpriteRenderer &engine) const
+{
   for (const auto &menu : m_menus)
   {
     menu->render(engine.getRenderer());
   }
-}
-
-auto GameScreenUiHandler::processUserInput(const controls::State &c,
-                                           std::vector<ActionShPtr> &actions,
-                                           CoordinateFrame & /*frame*/) -> menu::InputHandle
-{
-  bool relevant{false};
-  bool selected{false};
-
-  for (const auto &menu : m_menus)
-  {
-    menu::InputHandle ih = menu->processUserInput(c, actions);
-    relevant             = (relevant || ih.relevant);
-    selected             = (selected || ih.selected);
-  }
-
-  return menu::InputHandle{.relevant = relevant, .selected = selected};
 }
 
 void GameScreenUiHandler::updateUi()
@@ -68,9 +59,6 @@ void GameScreenUiHandler::updateUi()
   updateShipUi();
   updateTargetUi();
 }
-
-void GameScreenUiHandler::performAction(float /*x*/, float /*y*/, const controls::State & /*state*/)
-{}
 
 void GameScreenUiHandler::generateShipMenus(int /*width*/, int /*height*/)
 {

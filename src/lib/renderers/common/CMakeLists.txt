@@ -4,7 +4,8 @@ target_include_directories (bsgalone_lib PUBLIC
 	)
 
 target_sources (bsgalone_lib PRIVATE
+	${CMAKE_CURRENT_SOURCE_DIR}/RenderingPass.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/TiledBackground.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/StringUtils.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/EntitiesUtils.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/SpriteRenderer.cc
 	)
