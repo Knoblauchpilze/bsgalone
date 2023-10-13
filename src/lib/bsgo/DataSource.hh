@@ -3,6 +3,7 @@
 
 #include "AsteroidRepository.hh"
 #include "Coordinator.hh"
+#include "OutpostRepository.hh"
 #include "PlayerRepository.hh"
 #include "PlayerShipRepository.hh"
 #include "ShipRepository.hh"
@@ -27,6 +28,7 @@ class DataSource : public utils::CoreObject
   PlayerRepository m_playerRepo{};
   SystemRepository m_systemRepo{};
   PlayerShipRepository m_playerShipRepo{};
+  OutpostRepository m_outpostRepo{};
 };
 
 } // namespace bsgo

@@ -15,7 +15,7 @@ auto PlayerShipRepository::findOneById(const Uuid &id) const -> PlayerShip
   }
 
   PlayerShip out;
-  out.radius         = 0.5;
+  out.radius         = 0.5f;
   out.hullPoints     = 369.2f;
   out.maxHullPoints  = 585.0f;
   out.powerPoints    = 11.9f;

@@ -15,7 +15,7 @@ auto ShipRepository::findOneById(const Uuid &id) const -> Ship
   }
 
   Ship out;
-  out.radius       = 0.5;
+  out.radius       = 0.5f;
   out.hullPoints   = 585.0f;
   out.powerPoints  = 150.0f;
   out.acceleration = 5.0f;

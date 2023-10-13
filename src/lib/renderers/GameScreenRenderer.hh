@@ -28,14 +28,17 @@ class GameScreenRenderer : public IRenderer
 
   sprites::PackId m_asteroidTexturesPackId{};
   sprites::PackId m_class1TexturesPackId{};
+  sprites::PackId m_outpostTexturesPackId{};
 
   void renderDecal(SpriteRenderer &engine, const RenderState &state) const;
   void renderDebug(SpriteRenderer &engine, const RenderState &state) const;
 
-  void renderAsteroid(const Eigen::Vector3f &position,
-                      const float radius,
+  void renderAsteroid(const bsgo::Entity &asteroid,
                       SpriteRenderer &engine,
                       const RenderState &state) const;
+  void renderOutpost(const bsgo::Entity &outpost,
+                     SpriteRenderer &engine,
+                     const RenderState &state) const;
   void renderShip(const bsgo::Entity &ship, SpriteRenderer &engine, const RenderState &state) const;
   void renderShipDebug(const bsgo::Entity &ship,
                        SpriteRenderer &engine,

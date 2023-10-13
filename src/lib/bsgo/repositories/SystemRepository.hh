@@ -20,8 +20,9 @@ class SystemRepository : public IRepository
   SystemRepository();
   ~SystemRepository() override = default;
 
-  auto findAsteroids(const Uuid &system) const -> std::vector<Uuid>;
-  auto findShips(const Uuid &system) const -> std::vector<SystemShip>;
+  auto findAllAsteroidsBySystem(const Uuid &system) const -> std::vector<Uuid>;
+  auto findAllShipsBySystem(const Uuid &system) const -> std::vector<SystemShip>;
+  auto findAllOutpostsBySystem(const Uuid &system) const -> std::vector<Uuid>;
 };
 
 using SystemRepositoryShPtr = std::shared_ptr<SystemRepository>;
