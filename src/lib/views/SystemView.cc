@@ -36,4 +36,17 @@ auto SystemView::getAsteroidsWithin(const IBoundingBox &bbox) const -> std::vect
   return out;
 }
 
+auto SystemView::getOutpostsWithin(const IBoundingBox &bbox) const -> std::vector<Entity>
+{
+  const auto uuids = m_coordinator->getEntitiesWithin(bbox, {EntityKind::OUTPOST});
+
+  std::vector<Entity> out;
+  for (const auto &uuid : uuids)
+  {
+    out.push_back(m_coordinator->getEntity(uuid));
+  }
+
+  return out;
+}
+
 } // namespace bsgo

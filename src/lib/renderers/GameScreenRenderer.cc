@@ -48,6 +48,15 @@ void GameScreenRenderer::loadResources(int /*width*/,
 
   m_asteroidTexturesPackId = texturesLoader.registerPack(pack);
 
+  constexpr auto OUTPOST_TEXTURE_PACK_FILE_PATH = "data/assets/outpost.png";
+  constexpr auto OUTPOST_TILE_WIDTH_PIXELS      = 243;
+  constexpr auto OUTPOST_TILE_HEIGHT_PIXELS     = 177;
+  pack = sprites::PackDesc{.file = OUTPOST_TEXTURE_PACK_FILE_PATH,
+                           .sSize{OUTPOST_TILE_WIDTH_PIXELS, OUTPOST_TILE_HEIGHT_PIXELS},
+                           .layout{1, 1}};
+
+  m_outpostTexturesPackId = texturesLoader.registerPack(pack);
+
   const olc::vi2d offset{10, 10};
   constexpr auto BACKGROUND_TILE_SIZE_IN_PIXELS = 768;
   constexpr auto BACKGROUND_SLOWDOWN_RATIO      = 2.0f;
@@ -80,14 +89,17 @@ void GameScreenRenderer::renderDecal(SpriteRenderer &engine, const RenderState &
 
   const auto bbox      = toIBoundingBox(state.cf);
   const auto asteroids = m_systemView->getAsteroidsWithin(bbox);
+  const auto outposts  = m_systemView->getOutpostsWithin(bbox);
   const auto ships     = m_shipView->getShipsWithin(bbox);
 
   for (const auto &asteroid : asteroids)
   {
-    renderAsteroid(asteroid.access<bsgo::Transform>().position(),
-                   asteroid.access<bsgo::Transform>().size(),
-                   engine,
-                   state);
+    renderAsteroid(asteroid, engine, state);
+  }
+
+  for (const auto &outpost : outposts)
+  {
+    renderOutpost(outpost, engine, state);
   }
 
   for (const auto &ship : ships)
@@ -107,18 +119,40 @@ void GameScreenRenderer::renderDebug(SpriteRenderer &engine, const RenderState &
   }
 }
 
-void GameScreenRenderer::renderAsteroid(const Eigen::Vector3f &position,
-                                        const float radius,
+void GameScreenRenderer::renderAsteroid(const bsgo::Entity &asteroid,
                                         SpriteRenderer &engine,
                                         const RenderState &state) const
 {
-  SpriteDesc t;
-  t.x = position(0) - radius;
-  t.y = position(1) - radius;
+  const auto &transform = asteroid.access<bsgo::Transform>();
+  const auto pos        = transform.position();
 
-  t.radius = 2.0f * radius;
+  SpriteDesc t;
+  t.x = pos(0) - transform.size();
+  t.y = pos(1) - transform.size();
+
+  t.radius = 2.0f * transform.size();
 
   t.sprite.pack   = m_asteroidTexturesPackId;
+  t.sprite.sprite = {0, 0};
+  t.sprite.tint   = olc::WHITE;
+
+  engine.drawWarpedSprite(t, state.cf);
+}
+
+void GameScreenRenderer::renderOutpost(const bsgo::Entity &outpost,
+                                       SpriteRenderer &engine,
+                                       const RenderState &state) const
+{
+  const auto &transform = outpost.access<bsgo::Transform>();
+  const auto pos        = transform.position();
+
+  SpriteDesc t;
+  t.x = pos(0) - transform.size();
+  t.y = pos(1) - transform.size();
+
+  t.radius = 2.0f * transform.size();
+
+  t.sprite.pack   = m_outpostTexturesPackId;
   t.sprite.sprite = {0, 0};
   t.sprite.tint   = olc::WHITE;
 
