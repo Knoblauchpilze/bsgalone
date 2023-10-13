@@ -14,8 +14,8 @@ class PlayerRepository : public IRepository
   PlayerRepository();
   ~PlayerRepository() override = default;
 
-  auto findSystemById(const Uuid &id) const -> Uuid;
-  auto findShipById(const Uuid &id) const -> Uuid;
+  auto findSystemById(const Uuid &player) const -> Uuid;
+  auto findShipById(const Uuid &player) const -> Uuid;
 };
 
 using PlayerRepositoryShPtr = std::shared_ptr<PlayerRepository>;

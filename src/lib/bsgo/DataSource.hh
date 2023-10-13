@@ -14,13 +14,16 @@ namespace bsgo {
 class DataSource : public utils::CoreObject
 {
   public:
-  DataSource(const Uuid &playerId);
+  DataSource();
   ~DataSource() override = default;
+
+  auto playerId() const -> Uuid;
+  auto playerShipId() const -> Uuid;
 
   void initialize(Coordinator &coordinator) const;
 
   private:
-  Uuid m_playerId;
+  Uuid m_playerId{};
 
   AsteroidRepository m_asteroidRepo{};
   PlayerRepository m_playerRepo{};

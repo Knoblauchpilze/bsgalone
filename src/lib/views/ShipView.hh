@@ -14,7 +14,7 @@ namespace bsgo {
 class ShipView : public utils::CoreObject, public IView
 {
   public:
-  ShipView(const Uuid &playerId, const CoordinatorShPtr &coordinator);
+  ShipView(const Uuid &playerShipId, const CoordinatorShPtr &coordinator);
   ~ShipView() override = default;
 
   void update(const float elapsedSeconds) override;
@@ -25,7 +25,7 @@ class ShipView : public utils::CoreObject, public IView
   auto getShipsWithin(const IBoundingBox &bbox) const -> std::vector<Entity>;
 
   private:
-  Uuid m_playerId;
+  Uuid m_playerShipId;
   CoordinatorShPtr m_coordinator;
 };
 

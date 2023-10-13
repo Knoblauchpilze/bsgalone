@@ -7,12 +7,12 @@ PlayerRepository::PlayerRepository()
   : IRepository("player")
 {}
 
-auto PlayerRepository::findSystemById(const Uuid & /*id*/) const -> Uuid
+auto PlayerRepository::findSystemById(const Uuid & /*player*/) const -> Uuid
 {
   return {};
 }
 
-auto PlayerRepository::findShipById(const Uuid & /*id*/) const -> Uuid
+auto PlayerRepository::findShipById(const Uuid & /*player*/) const -> Uuid
 {
   return {};
 }

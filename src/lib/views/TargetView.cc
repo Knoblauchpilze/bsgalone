@@ -3,8 +3,9 @@
 
 namespace bsgo {
 
-TargetView::TargetView(const CoordinatorShPtr &coordinator)
+TargetView::TargetView(const Uuid &playerShipId, const CoordinatorShPtr &coordinator)
   : utils::CoreObject("target")
+  , m_playerShipId(playerShipId)
   , m_coordinator(coordinator)
 {
   setService("view");
@@ -26,9 +27,29 @@ auto TargetView::getTarget() const -> std::optional<Entity>
   return m_coordinator->getEntity(*m_target);
 }
 
+auto TargetView::distanceToTarget() const -> float
+{
+  if (!m_target)
+  {
+    error("Can't get distance to non existing target");
+  }
+
+  const auto playerPos = getPlayerShipPosition();
+  const auto target    = m_coordinator->getEntity(*m_target);
+  const auto targetPos = target.access<bsgo::Transform>().position();
+
+  return (targetPos - playerPos).norm();
+}
+
 void TargetView::clearTarget()
 {
   m_target.reset();
+}
+
+auto TargetView::getPlayerShipPosition() const -> Eigen::Vector3f
+{
+  const auto ship = m_coordinator->getEntity(m_playerShipId);
+  return ship.access<Transform>().position();
 }
 
 } // namespace bsgo
