@@ -144,6 +144,7 @@ void GameScreenUiHandler::generateOutpostMenus(int width, int /*height*/)
   olc::vi2d dims{100, 25};
 
   m_menus[DOCK] = generateMenu(pos, dims, "Dock", "dock", olc::VERY_DARK_GREY, {olc::WHITE}, true);
+  m_menus[DOCK]->setSimpleAction([](Game &g) { g.setScreen(Screen::OUTPOST); });
 }
 
 void GameScreenUiHandler::updateShipUi()
