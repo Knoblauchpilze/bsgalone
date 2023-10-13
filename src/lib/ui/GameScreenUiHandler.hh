@@ -44,7 +44,9 @@ class GameScreenUiHandler : public IUiHandler
     TARGET_POWER    = 12,
     TARGET_DISTANCE = 13,
 
-    COUNT = 14,
+    DOCK = 14,
+
+    COUNT = 15,
   };
   std::vector<MenuShPtr> m_menus{};
 
@@ -52,9 +54,11 @@ class GameScreenUiHandler : public IUiHandler
   void generateAbilityMenus(int width, int height);
   void generateWeaponMenus(int width, int height);
   void generateTargetMenus(int width, int height);
+  void generateOutpostMenus(int width, int height);
 
   void updateShipUi();
   void updateTargetUi();
+  void updateOutpostUi();
 };
 
 } // namespace pge

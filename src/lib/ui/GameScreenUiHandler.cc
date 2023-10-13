@@ -28,6 +28,7 @@ void GameScreenUiHandler::initializeMenus(const int width, const int height)
   generateAbilityMenus(width, height);
   generateWeaponMenus(width, height);
   generateTargetMenus(width, height);
+  generateOutpostMenus(width, height);
 }
 
 auto GameScreenUiHandler::processUserInput(const controls::State &c,
@@ -58,6 +59,7 @@ void GameScreenUiHandler::updateUi()
 {
   updateShipUi();
   updateTargetUi();
+  updateOutpostUi();
 }
 
 void GameScreenUiHandler::generateShipMenus(int /*width*/, int /*height*/)
@@ -136,6 +138,14 @@ void GameScreenUiHandler::generateTargetMenus(int width, int /*height*/)
                                           {olc::WHITE});
 }
 
+void GameScreenUiHandler::generateOutpostMenus(int width, int /*height*/)
+{
+  olc::vi2d pos{width / 2, 55};
+  olc::vi2d dims{100, 25};
+
+  m_menus[DOCK] = generateMenu(pos, dims, "Dock", "dock", olc::VERY_DARK_GREY, {olc::WHITE}, true);
+}
+
 void GameScreenUiHandler::updateShipUi()
 {
   std::string text;
@@ -202,6 +212,20 @@ void GameScreenUiHandler::updateTargetUi()
   const auto d = m_targetView->distanceToTarget();
   text         = floatToStr(d, 1) + "m";
   m_menus[TARGET_DISTANCE]->setText(text);
+}
+
+void GameScreenUiHandler::updateOutpostUi()
+{
+  auto dockButtonVisible{false};
+
+  const auto target                       = m_targetView->getTarget();
+  constexpr auto MAXIMUM_DISTANCE_TO_DOCK = 5.0f;
+  if (target && bsgo::EntityKind::OUTPOST == target->kind)
+  {
+    dockButtonVisible = m_targetView->distanceToTarget() <= MAXIMUM_DISTANCE_TO_DOCK;
+  }
+
+  m_menus[DOCK]->setVisible(dockButtonVisible);
 }
 
 } // namespace pge
