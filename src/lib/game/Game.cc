@@ -246,15 +246,16 @@ void Game::enable(bool enable)
 
 void Game::initialize()
 {
-  const bsgo::Uuid playerId{};
+  bsgo::DataSource dataSource;
+  const auto playerId     = dataSource.playerId();
+  const auto playerShipId = dataSource.playerShipId();
 
   auto coordinator = std::make_shared<bsgo::Coordinator>();
-  bsgo::DataSource dataSource(playerId);
   dataSource.initialize(*coordinator);
 
   m_views.shipView   = std::make_shared<bsgo::ShipView>(playerId, coordinator);
   m_views.systemView = std::make_shared<bsgo::SystemView>(coordinator);
-  m_views.targetView = std::make_shared<bsgo::TargetView>(coordinator);
+  m_views.targetView = std::make_shared<bsgo::TargetView>(playerShipId, coordinator);
 }
 
 bool Game::TimedMenu::update(bool active) noexcept

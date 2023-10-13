@@ -1,4 +1,6 @@
 
+#pragma once
+
 #include "Entity.hh"
 
 namespace bsgo {
@@ -40,55 +42,32 @@ inline auto safeAccess(const std::optional<std::shared_ptr<Component>> &comp,
 }
 } // namespace details
 
-auto Entity::str() const noexcept -> std::string
-{
-  std::string out("[");
-
-  out += std::to_string(uuid);
-  out += ",";
-  out += bsgo::str(kind);
-
-  if (transform)
-  {
-    const auto p = (*transform)->position();
-    out += ",";
-    out += std::to_string(p(0));
-    out += "x";
-    out += std::to_string(p(1));
-    out += "x";
-    out += std::to_string(p(2));
-  }
-
-  out += "]";
-  return out;
-}
-
 template<>
-auto Entity::access<Transform>() const -> const Transform &
+inline auto Entity::access<Transform>() const -> const Transform &
 {
   return details::safeConstAccess<Transform>(transform, *this, "Transform");
 }
 
 template<>
-auto Entity::access<Velocity>() const -> const Velocity &
+inline auto Entity::access<Velocity>() const -> const Velocity &
 {
   return details::safeConstAccess(velocity, *this, "Velocity");
 }
 
 template<>
-auto Entity::access<Health>() const -> const Health &
+inline auto Entity::access<Health>() const -> const Health &
 {
   return details::safeConstAccess(health, *this, "Health");
 }
 
 template<>
-auto Entity::access<Power>() const -> const Power &
+inline auto Entity::access<Power>() const -> const Power &
 {
   return details::safeConstAccess(power, *this, "Power");
 }
 
 template<>
-auto Entity::access<Velocity>() -> Velocity &
+inline auto Entity::access<Velocity>() -> Velocity &
 {
   return details::safeAccess(velocity, *this, "Velocity");
 }

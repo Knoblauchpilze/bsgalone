@@ -4,11 +4,20 @@
 
 namespace bsgo {
 
-DataSource::DataSource(const Uuid &playerId)
+DataSource::DataSource()
   : utils::CoreObject("bsgo")
-  , m_playerId(playerId)
 {
   setService("data");
+}
+
+auto DataSource::playerId() const -> Uuid
+{
+  return m_playerId;
+}
+
+auto DataSource::playerShipId() const -> Uuid
+{
+  return m_playerRepo.findShipById(m_playerId);
 }
 
 void DataSource::initialize(Coordinator &coordinator) const

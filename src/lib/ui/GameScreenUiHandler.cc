@@ -199,9 +199,7 @@ void GameScreenUiHandler::updateTargetUi()
   }
   m_menus[TARGET_POWER]->setText(text);
 
-  const auto targetPos  = *target->transform;
-  const auto playerShip = m_shipView->getPlayerShip();
-  const auto d = (targetPos->position() - playerShip.access<bsgo::Transform>().position()).norm();
+  const auto d = m_targetView->distanceToTarget();
   text         = floatToStr(d, 1) + "m";
   m_menus[TARGET_DISTANCE]->setText(text);
 }
