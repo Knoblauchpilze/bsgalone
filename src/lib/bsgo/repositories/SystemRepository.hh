@@ -8,12 +8,6 @@
 
 namespace bsgo {
 
-struct SystemShip
-{
-  Uuid model{};
-  Uuid ship{};
-};
-
 class SystemRepository : public IRepository
 {
   public:
@@ -21,7 +15,7 @@ class SystemRepository : public IRepository
   ~SystemRepository() override = default;
 
   auto findAllAsteroidsBySystem(const Uuid &system) const -> std::vector<Uuid>;
-  auto findAllShipsBySystem(const Uuid &system) const -> std::vector<SystemShip>;
+  auto findAllShipsBySystem(const Uuid &system) const -> std::vector<Uuid>;
   auto findAllOutpostsBySystem(const Uuid &system) const -> std::vector<Uuid>;
 };
 

@@ -6,7 +6,6 @@
 #include "OutpostRepository.hh"
 #include "PlayerRepository.hh"
 #include "PlayerShipRepository.hh"
-#include "ShipRepository.hh"
 #include "SystemRepository.hh"
 #include <core_utils/CoreObject.hh>
 
@@ -24,7 +23,6 @@ class DataSource : public utils::CoreObject
   Uuid m_playerId;
 
   AsteroidRepository m_asteroidRepo{};
-  ShipRepository m_shipRepo{};
   PlayerRepository m_playerRepo{};
   SystemRepository m_systemRepo{};
   PlayerShipRepository m_playerShipRepo{};

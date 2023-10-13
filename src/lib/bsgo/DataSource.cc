@@ -16,9 +16,9 @@ void DataSource::initialize(Coordinator &coordinator) const
   const auto systemId = m_playerRepo.findSystemById(m_playerId);
 
   const auto ships = m_systemRepo.findAllShipsBySystem(systemId);
-  for (const auto &systemShip : ships)
+  for (const auto &id : ships)
   {
-    const auto ship = m_playerShipRepo.findOneById(systemShip.ship);
+    const auto ship = m_playerShipRepo.findOneById(id);
 
     auto box       = std::make_unique<CircleBox>(ship.position, ship.radius);
     const auto ent = coordinator.createEntity(EntityKind::SHIP);
