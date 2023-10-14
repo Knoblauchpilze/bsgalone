@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "Faction.hh"
 #include "IRepository.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
@@ -10,6 +11,7 @@ namespace bsgo {
 
 struct Outpost
 {
+  Faction faction;
   float hullPoints{0.0f};
   float powerPoints{0.0f};
   float radius{2.0f};
