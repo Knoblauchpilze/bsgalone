@@ -4,14 +4,10 @@
 namespace bsgo {
 
 TargetView::TargetView(const Uuid &playerShipId, const CoordinatorShPtr &coordinator)
-  : utils::CoreObject("target")
+  : IView("target")
   , m_playerShipId(playerShipId)
   , m_coordinator(coordinator)
-{
-  setService("view");
-}
-
-void TargetView::update(const float /*elapsedSeconds*/) {}
+{}
 
 void TargetView::setTarget(const Uuid &uuid)
 {

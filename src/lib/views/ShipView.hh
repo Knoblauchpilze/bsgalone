@@ -5,19 +5,16 @@
 #include "Entity.hh"
 #include "IView.hh"
 #include "Uuid.hh"
-#include <core_utils/CoreObject.hh>
 #include <memory>
 #include <optional>
 
 namespace bsgo {
 
-class ShipView : public utils::CoreObject, public IView
+class ShipView : public IView
 {
   public:
   ShipView(const Uuid &playerShipId, const CoordinatorShPtr &coordinator);
   ~ShipView() override = default;
-
-  void update(const float elapsedSeconds) override;
 
   auto getPlayerShip() const -> Entity;
   auto getShip(const Uuid &ship) const -> Entity;

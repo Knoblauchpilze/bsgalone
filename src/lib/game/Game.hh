@@ -137,6 +137,7 @@ class Game : public utils::CoreObject
   /// @brief - The definition of the game state.
   State m_state{};
 
+  bsgo::CoordinatorShPtr m_coordinator{nullptr};
   bsgo::Views m_views;
   std::unordered_map<Screen, IRendererPtr> m_renderers{};
   std::unordered_map<Screen, IInputHandlerPtr> m_inputHandlers{};
