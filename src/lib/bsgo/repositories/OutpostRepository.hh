@@ -22,7 +22,7 @@ class OutpostRepository : public IRepository
   OutpostRepository();
   ~OutpostRepository() override = default;
 
-  auto findOneById(const Uuid &id) const -> Outpost;
+  auto findOneById(const Uuid &outpost) const -> Outpost;
 };
 
 using OutpostRepositoryShPtr = std::shared_ptr<OutpostRepository>;
