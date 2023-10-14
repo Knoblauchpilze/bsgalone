@@ -3,10 +3,9 @@
 
 namespace pge::sprites {
 
-inline olc::vi2d TexturePack::Pack::spriteCoords(const olc::vi2d &coord, int id) const
+inline auto TexturePack::Pack::spriteCoords(const olc::vi2d &coord, int id) const -> olc::vi2d
 {
-  int lID = coord.y * layout.x + coord.x + id;
-
+  const auto lID = coord.y * layout.x + coord.x + id;
   // Go back to 2D coordinates using the layout on the linearized ID and the
   // size of the sprite to obtain a pixels position.
   return olc::vi2d((lID % layout.x) * sSize.x, (lID / layout.x) * sSize.y);
@@ -19,39 +18,28 @@ TexturePack::TexturePack()
   setService("textures");
 }
 
-TexturePack::~TexturePack()
+auto TexturePack::loadDecal(const std::string &fileName) -> DecalPtr
 {
-  for (unsigned id = 0; id < m_packs.size(); ++id)
+  auto sprite = new olc::Sprite(fileName);
+  if (nullptr == sprite)
   {
-    if (m_packs[id].res != nullptr)
-    {
-      delete m_packs[id].res;
-    }
+    error("Failed to create decal from \"" + fileName + "\"", "Failed to create sprite");
   }
 
-  m_packs.clear();
+  const auto decal = new olc::Decal(sprite);
+  return std::unique_ptr<olc::Decal, DecalDeleter>(decal);
 }
 
-PackId TexturePack::registerPack(const PackDesc &pack)
+auto TexturePack::registerPack(const PackDesc &pack) -> PackId
 {
-  // Load the file as a sprite and then convert it
-  // to a faster `Decal` resource.
-  olc::Sprite *spr = new olc::Sprite(pack.file);
-  if (spr == nullptr)
-  {
-    error("Failed to load texture pack \"" + pack.file + "\"", "Loading returned null");
-  }
-
-  // Build the internal structure, register it and
-  // return the corresponding identifier.
   Pack p;
   p.sSize  = pack.sSize;
   p.layout = pack.layout;
 
-  p.res = new olc::Decal(spr);
+  p.decal = loadDecal(pack.file);
 
-  auto id = static_cast<PackId>(m_packs.size());
-  m_packs.push_back(p);
+  const auto id = static_cast<PackId>(m_packs.size());
+  m_packs.push_back(std::move(p));
 
   return id;
 }
@@ -64,7 +52,7 @@ void TexturePack::draw(olc::PixelGameEngine *pge,
   const auto &tp        = tryGetPackOrThrow(s.pack);
   const auto sCoords    = tp.spriteCoords(s.sprite, s.id);
   const olc::vf2d scale = size / tp.sSize;
-  pge->DrawPartialDecal(p, tp.res, sCoords, tp.sSize, scale, s.tint);
+  pge->DrawPartialDecal(p, tp.decal.get(), sCoords, tp.sSize, scale, s.tint);
 }
 
 void TexturePack::draw(olc::PixelGameEngine *pge,
@@ -73,7 +61,7 @@ void TexturePack::draw(olc::PixelGameEngine *pge,
 {
   const auto &tp     = tryGetPackOrThrow(s.pack);
   const auto sCoords = tp.spriteCoords(s.sprite, s.id);
-  pge->DrawPartialWarpedDecal(tp.res, p, sCoords, tp.sSize, s.tint);
+  pge->DrawPartialWarpedDecal(tp.decal.get(), p, sCoords, tp.sSize, s.tint);
 }
 
 void TexturePack::draw(olc::PixelGameEngine *pge,
@@ -90,7 +78,7 @@ void TexturePack::draw(olc::PixelGameEngine *pge,
   // make it consistent to provide a direct rotation. See this page in
   // French for more details: https://fr.wikipedia.org/wiki/Sens_de_rotation
   const auto olcAngle = angle;
-  pge->DrawPartialRotatedDecal(p, tp.res, olcAngle, sCenter, sCoords, tp.sSize, scale, s.tint);
+  pge->DrawPartialRotatedDecal(p, tp.decal.get(), olcAngle, sCenter, sCoords, tp.sSize, scale, s.tint);
 }
 
 auto TexturePack::tryGetPackOrThrow(const int packId) const -> const Pack &
