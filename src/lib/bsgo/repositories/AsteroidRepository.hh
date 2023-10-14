@@ -21,7 +21,7 @@ class AsteroidRepository : public IRepository
   AsteroidRepository();
   ~AsteroidRepository() override = default;
 
-  auto findOneById(const Uuid &id) const -> Asteroid;
+  auto findOneById(const Uuid &asteroid) const -> Asteroid;
 };
 
 using AsteroidRepositoryShPtr = std::shared_ptr<AsteroidRepository>;

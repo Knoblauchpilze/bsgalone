@@ -7,11 +7,11 @@ PlayerShipRepository::PlayerShipRepository()
   : IRepository("ship")
 {}
 
-auto PlayerShipRepository::findOneById(const Uuid &id) const -> PlayerShip
+auto PlayerShipRepository::findOneById(const Uuid &player) const -> PlayerShip
 {
-  if (0 != id)
+  if (0 != player)
   {
-    error("Ship " + str(id) + "not found");
+    error("Ship for player " + str(player) + " not found");
   }
 
   PlayerShip out;

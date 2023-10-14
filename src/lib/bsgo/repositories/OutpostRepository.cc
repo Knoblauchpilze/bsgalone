@@ -7,11 +7,11 @@ OutpostRepository::OutpostRepository()
   : IRepository("outpost")
 {}
 
-auto OutpostRepository::findOneById(const Uuid &id) const -> Outpost
+auto OutpostRepository::findOneById(const Uuid &outpost) const -> Outpost
 {
-  if (0 != id)
+  if (0 != outpost)
   {
-    error("Outpost " + str(id) + "not found");
+    error("Outpost " + str(outpost) + " not found");
   }
 
   Outpost out;

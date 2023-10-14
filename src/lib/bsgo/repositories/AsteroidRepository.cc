@@ -7,13 +7,13 @@ AsteroidRepository::AsteroidRepository()
   : IRepository("asteroid")
 {}
 
-auto AsteroidRepository::findOneById(const Uuid &id) const -> Asteroid
+auto AsteroidRepository::findOneById(const Uuid &asteroid) const -> Asteroid
 {
   constexpr auto SMALL_ASTEROID_RADIUS = 0.5f;
   constexpr auto BIG_ASTEROID_RADIUS   = 1.0f;
   Asteroid out;
 
-  switch (id)
+  switch (asteroid)
   {
     case 0:
       out.position = Eigen::Vector3f(1.0f, 2.0f, 0.0f);
@@ -41,7 +41,7 @@ auto AsteroidRepository::findOneById(const Uuid &id) const -> Asteroid
       out.health   = 2345.0f;
       break;
     default:
-      error("Asteroid " + str(id) + "not found");
+      error("Asteroid " + str(asteroid) + " not found");
       break;
   }
   return out;
