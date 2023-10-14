@@ -12,6 +12,7 @@
 #include "GameScreenUiHandler.hh"
 #include "LoginScreenUiHandler.hh"
 #include "MapScreenUiHandler.hh"
+#include "OutpostScreenRenderer.hh"
 #include "OutpostScreenUiHandler.hh"
 
 namespace pge {
@@ -38,6 +39,10 @@ void Game::generateRenderers(int width, int height, SpriteRenderer &spriteRender
   auto game = std::make_unique<GameScreenRenderer>(m_views);
   game->loadResources(width, height, spriteRenderer.getTextureHandler());
   m_renderers[Screen::GAME] = std::move(game);
+
+  auto outpost = std::make_unique<OutpostScreenRenderer>();
+  outpost->loadResources(width, height, spriteRenderer.getTextureHandler());
+  m_renderers[Screen::OUTPOST] = std::move(outpost);
 }
 
 void Game::generateInputHandlers()
