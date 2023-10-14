@@ -4,6 +4,12 @@
 namespace bsgo {
 namespace details {
 template<typename Component>
+inline bool checkComponentExists(const std::optional<std::shared_ptr<Component>> &comp)
+{
+  return comp && (nullptr != *comp);
+}
+
+template<typename Component>
 inline void checkAccessIsSafe(const std::optional<std::shared_ptr<Component>> &comp,
                               const Entity &entity,
                               const std::string &compName)
@@ -64,9 +70,33 @@ auto Entity::str() const noexcept -> std::string
 }
 
 template<>
+bool Entity::exists<Transform>() const
+{
+  return details::checkComponentExists(transform);
+}
+
+template<>
+bool Entity::exists<Velocity>() const
+{
+  return details::checkComponentExists(velocity);
+}
+
+template<>
+bool Entity::exists<Health>() const
+{
+  return details::checkComponentExists(health);
+}
+
+template<>
+bool Entity::exists<Power>() const
+{
+  return details::checkComponentExists(power);
+}
+
+template<>
 auto Entity::access<Transform>() const -> const Transform &
 {
-  return details::safeConstAccess<Transform>(transform, *this, "Transform");
+  return details::safeConstAccess(transform, *this, "Transform");
 }
 
 template<>

@@ -180,33 +180,29 @@ void GameScreenUiHandler::updateTargetUi()
 
   std::string text;
 
-  text                  = "Health: ";
-  const auto healthComp = target->health;
-  if (!healthComp)
+  text = "Health: ";
+  if (!target->exists<bsgo::Health>())
   {
     text += "N/A";
   }
   else
   {
-    const auto &healthPtr = *healthComp;
-    text += floatToStr(std::floor(healthPtr->health()), 0);
+    text += floatToStr(std::floor(target->access<bsgo::Health>().health()), 0);
     text += "/";
-    text += floatToStr(std::floor(healthPtr->max()), 0);
+    text += floatToStr(std::floor(target->access<bsgo::Health>().max()), 0);
   }
   m_menus[TARGET_HEALTH]->setText(text);
 
-  text                 = "Power: ";
-  const auto powerComp = target->power;
-  if (!powerComp)
+  text = "Power: ";
+  if (!target->exists<bsgo::Power>())
   {
     text += "N/A";
   }
   else
   {
-    const auto &powerPtr = *powerComp;
-    text += floatToStr(std::floor(powerPtr->power()), 0);
+    text += floatToStr(std::floor(target->access<bsgo::Power>().power()), 0);
     text += "/";
-    text += floatToStr(std::floor(powerPtr->max()), 0);
+    text += floatToStr(std::floor(target->access<bsgo::Power>().max()), 0);
   }
   m_menus[TARGET_POWER]->setText(text);
 
