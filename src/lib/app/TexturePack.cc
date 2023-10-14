@@ -18,7 +18,7 @@ TexturePack::TexturePack()
   setService("textures");
 }
 
-auto TexturePack::loadDecal(const std::string &fileName) -> DecalPtr
+auto TexturePack::loadDecal(const std::string &fileName) -> DecalResourcePtr
 {
   auto sprite = new olc::Sprite(fileName);
   if (nullptr == sprite)
@@ -27,7 +27,7 @@ auto TexturePack::loadDecal(const std::string &fileName) -> DecalPtr
   }
 
   const auto decal = new olc::Decal(sprite);
-  return std::unique_ptr<olc::Decal, DecalDeleter>(decal);
+  return std::make_unique<DecalResource>(decal);
 }
 
 auto TexturePack::registerPack(const PackDesc &pack) -> PackId
@@ -52,7 +52,7 @@ void TexturePack::draw(olc::PixelGameEngine *pge,
   const auto &tp        = tryGetPackOrThrow(s.pack);
   const auto sCoords    = tp.spriteCoords(s.sprite, s.id);
   const olc::vf2d scale = size / tp.sSize;
-  pge->DrawPartialDecal(p, tp.decal.get(), sCoords, tp.sSize, scale, s.tint);
+  pge->DrawPartialDecal(p, tp.decal->get(), sCoords, tp.sSize, scale, s.tint);
 }
 
 void TexturePack::draw(olc::PixelGameEngine *pge,
@@ -61,7 +61,7 @@ void TexturePack::draw(olc::PixelGameEngine *pge,
 {
   const auto &tp     = tryGetPackOrThrow(s.pack);
   const auto sCoords = tp.spriteCoords(s.sprite, s.id);
-  pge->DrawPartialWarpedDecal(tp.decal.get(), p, sCoords, tp.sSize, s.tint);
+  pge->DrawPartialWarpedDecal(tp.decal->get(), p, sCoords, tp.sSize, s.tint);
 }
 
 void TexturePack::draw(olc::PixelGameEngine *pge,
@@ -78,7 +78,14 @@ void TexturePack::draw(olc::PixelGameEngine *pge,
   // make it consistent to provide a direct rotation. See this page in
   // French for more details: https://fr.wikipedia.org/wiki/Sens_de_rotation
   const auto olcAngle = angle;
-  pge->DrawPartialRotatedDecal(p, tp.decal.get(), olcAngle, sCenter, sCoords, tp.sSize, scale, s.tint);
+  pge->DrawPartialRotatedDecal(p,
+                               tp.decal->get(),
+                               olcAngle,
+                               sCenter,
+                               sCoords,
+                               tp.sSize,
+                               scale,
+                               s.tint);
 }
 
 auto TexturePack::tryGetPackOrThrow(const int packId) const -> const Pack &

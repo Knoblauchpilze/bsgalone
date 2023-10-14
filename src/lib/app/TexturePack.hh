@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "DecalWrapper.hh"
+#include "DecalResource.hh"
 #include "olcEngine.hh"
 #include <core_utils/CoreObject.hh>
 #include <memory>
@@ -61,7 +61,7 @@ class TexturePack : public utils::CoreObject
   /// The memory management is the responsibility of the caller.
   /// @param fileName - the name of the sprite to load.
   /// @return - the decal built from the input file.
-  auto loadDecal(const std::string &fileName) -> DecalPtr;
+  auto loadDecal(const std::string &fileName) -> DecalResourcePtr;
 
   /// @brief - Performs the registration of the input pack and return the
   /// corresponding pack identifier so that the caller can refer to this pack
@@ -116,7 +116,7 @@ class TexturePack : public utils::CoreObject
     olc::vi2d layout;
 
     // The raw data pointing to the sprites.
-    DecalPtr decal;
+    DecalResourcePtr decal;
 
     /// @brief - Used to convert from sprite coordinates to the corresponding pixels
     /// coordinates. This method should mostly be used to locate a sprite in a resource
