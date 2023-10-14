@@ -181,9 +181,7 @@ bool Game::step(float elapsedSeconds)
     return true;
   }
 
-  m_views.shipView->update(elapsedSeconds);
-  m_views.systemView->update(elapsedSeconds);
-  m_views.targetView->update(elapsedSeconds);
+  m_coordinator->update(elapsedSeconds);
 
   const auto it = m_uiHandlers.find(m_state.screen);
   if (it != m_uiHandlers.end())
@@ -250,12 +248,12 @@ void Game::initialize()
   const auto playerId     = dataSource.playerId();
   const auto playerShipId = dataSource.playerShipId();
 
-  auto coordinator = std::make_shared<bsgo::Coordinator>();
-  dataSource.initialize(*coordinator);
+  m_coordinator = std::make_shared<bsgo::Coordinator>();
+  dataSource.initialize(*m_coordinator);
 
-  m_views.shipView   = std::make_shared<bsgo::ShipView>(playerId, coordinator);
-  m_views.systemView = std::make_shared<bsgo::SystemView>(coordinator);
-  m_views.targetView = std::make_shared<bsgo::TargetView>(playerShipId, coordinator);
+  m_views.shipView   = std::make_shared<bsgo::ShipView>(playerId, m_coordinator);
+  m_views.systemView = std::make_shared<bsgo::SystemView>(m_coordinator);
+  m_views.targetView = std::make_shared<bsgo::TargetView>(playerShipId, m_coordinator);
 }
 
 bool Game::TimedMenu::update(bool active) noexcept

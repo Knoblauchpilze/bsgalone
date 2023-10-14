@@ -4,14 +4,10 @@
 namespace bsgo {
 
 ShipView::ShipView(const Uuid &playerShipId, const CoordinatorShPtr &coordinator)
-  : utils::CoreObject("ship")
+  : IView("ship")
   , m_playerShipId(playerShipId)
   , m_coordinator(coordinator)
-{
-  setService("view");
-}
-
-void ShipView::update(const float /*elapsedSeconds*/) {}
+{}
 
 auto ShipView::getPlayerShip() const -> Entity
 {

@@ -5,19 +5,17 @@
 #include "Entity.hh"
 #include "IView.hh"
 #include "Uuid.hh"
-#include <core_utils/CoreObject.hh>
+#include <eigen3/Eigen/Eigen>
 #include <memory>
 #include <optional>
 
 namespace bsgo {
 
-class TargetView : public utils::CoreObject, public IView
+class TargetView : public IView
 {
   public:
   TargetView(const Uuid &playerShipId, const CoordinatorShPtr &coordinator);
   ~TargetView() override = default;
-
-  void update(const float elapsedSeconds) override;
 
   void setTarget(const Uuid &uuid);
   auto getTarget() const -> std::optional<Entity>;

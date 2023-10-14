@@ -1,16 +1,16 @@
 
 #pragma once
 
+#include <core_utils/CoreObject.hh>
 #include <memory>
 
 namespace bsgo {
 
-class IView
+class IView : public utils::CoreObject
 {
   public:
+  IView(const std::string &name);
   virtual ~IView() = default;
-
-  virtual void update(const float elapsedSeconds) = 0;
 };
 
 using IViewShPtr = std::shared_ptr<IView>;

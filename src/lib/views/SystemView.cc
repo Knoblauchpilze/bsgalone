@@ -4,14 +4,9 @@
 namespace bsgo {
 
 SystemView::SystemView(const CoordinatorShPtr &coordinator)
-  : utils::CoreObject("system")
+  : IView("system")
   , m_coordinator(coordinator)
 {}
-
-void SystemView::update(const float elapsedSeconds)
-{
-  m_coordinator->update(elapsedSeconds);
-}
 
 auto SystemView::getEntityAt(const Eigen::Vector3f &pos) const -> std::optional<Entity>
 {
