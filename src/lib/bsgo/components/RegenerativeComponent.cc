@@ -55,7 +55,7 @@ void RegenerativeComponent::validate()
     throw std::invalid_argument("Expected value (" + std::to_string(m_value)
                                 + ") to be smaller than max (" + std::to_string(m_max) + ")");
   }
-  if (m_regenPerSecond <= 0.0f)
+  if (m_regenPerSecond < 0.0f)
   {
     throw std::invalid_argument("Expected regeneration (" + std::to_string(m_regenPerSecond)
                                 + ") to be greater than 0");

@@ -22,7 +22,7 @@ class Coordinator : public utils::CoreObject
 
   void addTransform(const Uuid &ent, IBoundingBoxPtr bbox);
   void addVelocity(const Uuid &ent, const float maxAcceleration);
-  void addHealth(const Uuid &ent, const float hp, const float max);
+  void addHealth(const Uuid &ent, const float hp, const float max, const float regen);
   void addPower(const Uuid &ent, const float power, const float max, const float regen);
 
   auto getEntity(const Uuid &ent) const -> Entity;

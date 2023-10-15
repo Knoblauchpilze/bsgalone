@@ -14,6 +14,7 @@ struct Outpost
   Faction faction;
 
   float hullPoints{0.0f};
+  float hullPointsRegen{150.0f};
 
   float powerPoints{0.0f};
   float powerRegen{50.0f};

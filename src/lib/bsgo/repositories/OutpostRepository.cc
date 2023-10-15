@@ -17,7 +17,8 @@ auto OutpostRepository::findOneById(const Uuid &outpost) const -> Outpost
   Outpost out;
   out.faction = Faction::CYLON;
 
-  out.hullPoints = 30000.0f;
+  out.hullPoints      = 30000.0f;
+  out.hullPointsRegen = 120.0f;
 
   out.powerPoints = 4500.0f;
   out.powerRegen  = 100.0f;

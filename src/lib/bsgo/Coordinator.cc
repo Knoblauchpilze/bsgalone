@@ -1,6 +1,7 @@
 
 #include "Coordinator.hh"
 #include "CircleBox.hh"
+#include "HealthSystem.hh"
 #include "MotionSystem.hh"
 #include "PowerSystem.hh"
 
@@ -63,7 +64,7 @@ void Coordinator::addVelocity(const Uuid &ent, const float maxAcceleration)
   m_components.velocities[ent] = std::make_shared<Velocity>(maxAcceleration);
 }
 
-void Coordinator::addHealth(const Uuid &ent, const float hp, const float max)
+void Coordinator::addHealth(const Uuid &ent, const float hp, const float max, const float regen)
 {
   if (!m_entities.contains(ent))
   {
@@ -74,7 +75,7 @@ void Coordinator::addHealth(const Uuid &ent, const float hp, const float max)
     warn("Overriding hull points for entity " + std::to_string(ent));
   }
 
-  m_components.health[ent] = std::make_shared<Health>(hp, max);
+  m_components.health[ent] = std::make_shared<Health>(hp, max, regen);
 }
 
 void Coordinator::addPower(const Uuid &ent, const float power, const float max, const float regen)
@@ -162,6 +163,9 @@ void Coordinator::createSystems()
 {
   auto motion = std::make_unique<MotionSystem>();
   m_systems.push_back(std::move(motion));
+
+  auto health = std::make_unique<HealthSystem>();
+  m_systems.push_back(std::move(health));
 
   auto power = std::make_unique<PowerSystem>();
   m_systems.push_back(std::move(power));

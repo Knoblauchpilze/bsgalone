@@ -15,6 +15,7 @@ struct PlayerShip
 
   float hullPoints{0.0f};
   float maxHullPoints{0.0f};
+  float hullPointsRegen{0.0f};
 
   float powerPoints{0.0f};
   float maxPowerPoints{0.0f};
