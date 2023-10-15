@@ -9,6 +9,7 @@ GameScreenUiHandler::GameScreenUiHandler(const bsgo::Views &views)
   : IUiHandler("game")
   , m_shipView(views.shipView)
   , m_targetView(views.targetView)
+  , m_weaponsUi(std::make_unique<WeaponsUiHandler>(views))
 {
   if (nullptr == m_shipView)
   {
@@ -26,25 +27,27 @@ void GameScreenUiHandler::initializeMenus(const int width, const int height)
 
   generateShipMenus(width, height);
   generateAbilityMenus(width, height);
-  generateWeaponMenus(width, height);
   generateTargetMenus(width, height);
   generateOutpostMenus(width, height);
+
+  m_weaponsUi->initializeMenus(width, height);
 }
 
 auto GameScreenUiHandler::processUserInput(const controls::State &c,
                                            std::vector<ActionShPtr> &actions) -> menu::InputHandle
 {
-  auto relevant{false};
-  auto selected{false};
-
-  for (const auto &menu : m_menus)
+  auto out = m_weaponsUi->processUserInput(c, actions);
+  if (!out.relevant && !out.selected)
   {
-    const auto ih = menu->processUserInput(c, actions);
-    relevant      = (relevant || ih.relevant);
-    selected      = (selected || ih.selected);
+    for (const auto &menu : m_menus)
+    {
+      const auto ih = menu->processUserInput(c, actions);
+      out.relevant  = (out.relevant || ih.relevant);
+      out.selected  = (out.selected || ih.selected);
+    }
   }
 
-  return menu::InputHandle{.relevant = relevant, .selected = selected};
+  return out;
 }
 
 void GameScreenUiHandler::render(SpriteRenderer &engine) const
@@ -53,6 +56,8 @@ void GameScreenUiHandler::render(SpriteRenderer &engine) const
   {
     menu->render(engine.getRenderer());
   }
+
+  m_weaponsUi->render(engine);
 }
 
 void GameScreenUiHandler::updateUi()
@@ -60,6 +65,8 @@ void GameScreenUiHandler::updateUi()
   updateShipUi();
   updateTargetUi();
   updateOutpostUi();
+
+  m_weaponsUi->updateUi();
 }
 
 void GameScreenUiHandler::generateShipMenus(int /*width*/, int /*height*/)
@@ -90,28 +97,6 @@ void GameScreenUiHandler::generateAbilityMenus(int width, int height)
     const auto name = "ability_" + std::to_string(id);
 
     m_menus[ABILITY_0 + id] = generateMenu(pos, dims, text, name, color, {olc::WHITE}, true);
-
-    pos.x += (dims.x + SPACING_IN_PIXELS);
-  }
-}
-
-void GameScreenUiHandler::generateWeaponMenus(int width, int height)
-{
-  olc::vi2d dims{50, 50};
-  constexpr auto SPACING_IN_PIXELS = 5;
-  olc::vi2d pos;
-  pos.x = width - WEAPON_COUNT * (dims.x + SPACING_IN_PIXELS);
-  pos.y = height / 2;
-
-  olc::Pixel color = olc::VERY_DARK_RED;
-  color.a          = alpha::SemiOpaque;
-
-  for (auto id = 0; id < WEAPON_COUNT; ++id)
-  {
-    const auto text = "W" + std::to_string(id);
-    const auto name = "weapon_" + std::to_string(id);
-
-    m_menus[WEAPON_0 + id] = generateMenu(pos, dims, text, name, color, {olc::WHITE}, true);
 
     pos.x += (dims.x + SPACING_IN_PIXELS);
   }
