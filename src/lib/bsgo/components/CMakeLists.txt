@@ -1,7 +1,9 @@
 
 target_sources (bsgalone_lib PRIVATE
+	${CMAKE_CURRENT_SOURCE_DIR}/IComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/Transform.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/Velocity.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/RegenerativeComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/Health.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/Power.cc
 	)
