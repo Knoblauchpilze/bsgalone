@@ -3,10 +3,14 @@
 
 namespace bsgo {
 
-Velocity::Velocity(const Eigen::Vector3f &acceleration, const Eigen::Vector3f &speed)
-  : m_acceleration(acceleration)
-  , m_speed(speed)
-{}
+Velocity::Velocity(const float maxAcceleration, const std::optional<Eigen::Vector3f> &speed)
+  : m_maxAcceleration(maxAcceleration)
+{
+  if (speed)
+  {
+    m_speed = *speed;
+  }
+}
 
 auto Velocity::acceleration() const noexcept -> Eigen::Vector3f
 {
@@ -18,9 +22,10 @@ auto Velocity::speed() const noexcept -> Eigen::Vector3f
   return m_speed;
 }
 
-void Velocity::accelerate(const Eigen::Vector3f &acc)
+void Velocity::accelerate(const Eigen::Vector3f &direction)
 {
-  m_acceleration = acc;
+  const Eigen::Vector3f nDir = direction.normalized();
+  m_acceleration             = nDir * m_maxAcceleration;
 }
 
 void Velocity::update(const float elapsedSeconds)
