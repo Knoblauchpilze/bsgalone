@@ -46,7 +46,7 @@ void Coordinator::addTransform(const Uuid &ent, IBoundingBoxPtr bbox)
   m_components.transforms[ent] = std::make_shared<Transform>(std::move(bbox));
 }
 
-void Coordinator::addVelocity(const Uuid &ent, const Eigen::Vector3f &speed)
+void Coordinator::addVelocity(const Uuid &ent, const float maxAcceleration)
 {
   if (!m_entities.contains(ent))
   {
@@ -57,7 +57,7 @@ void Coordinator::addVelocity(const Uuid &ent, const Eigen::Vector3f &speed)
     warn("Overriding velocity for entity " + std::to_string(ent));
   }
 
-  m_components.velocities[ent] = std::make_shared<Velocity>(Eigen::Vector3f::Zero(), speed);
+  m_components.velocities[ent] = std::make_shared<Velocity>(maxAcceleration);
 }
 
 void Coordinator::addHealth(const Uuid &ent, const float hp, const float max)
