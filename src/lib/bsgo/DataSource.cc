@@ -68,8 +68,8 @@ void DataSource::initializeOutposts(Coordinator &coordinator, const Uuid &system
     auto box       = std::make_unique<CircleBox>(outpost.position, outpost.radius);
     const auto ent = coordinator.createEntity(EntityKind::OUTPOST);
     coordinator.addTransform(ent, std::move(box));
-    coordinator.addHealth(ent, outpost.hullPoints, outpost.hullPoints, outpost.hullPointsRegen);
-    coordinator.addPower(ent, outpost.powerPoints, outpost.powerPoints, outpost.powerRegen);
+    coordinator.addHealth(ent, outpost.hullPoints, outpost.maxHullPoints, outpost.hullPointsRegen);
+    coordinator.addPower(ent, outpost.powerPoints, outpost.maxPowerPoints, outpost.powerRegen);
   }
 }
 
