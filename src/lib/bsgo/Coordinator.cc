@@ -1,6 +1,8 @@
 
 #include "Coordinator.hh"
 #include "CircleBox.hh"
+#include "MotionSystem.hh"
+#include "PowerSystem.hh"
 
 namespace bsgo {
 namespace {
@@ -23,6 +25,7 @@ Coordinator::Coordinator()
   : utils::CoreObject("coordinator")
 {
   setService("bsgo");
+  createSystems();
 }
 
 auto Coordinator::createEntity(const EntityKind &kind) -> Uuid
@@ -74,7 +77,7 @@ void Coordinator::addHealth(const Uuid &ent, const float hp, const float max)
   m_components.health[ent] = std::make_shared<Health>(hp, max);
 }
 
-void Coordinator::addPower(const Uuid &ent, const float power, const float max)
+void Coordinator::addPower(const Uuid &ent, const float power, const float max, const float regen)
 {
   if (!m_entities.contains(ent))
   {
@@ -85,7 +88,7 @@ void Coordinator::addPower(const Uuid &ent, const float power, const float max)
     warn("Overriding power for entity " + std::to_string(ent));
   }
 
-  m_components.powers[ent] = std::make_shared<Power>(power, max);
+  m_components.powers[ent] = std::make_shared<Power>(power, max, regen);
 }
 
 auto Coordinator::getEntity(const Uuid &ent) const -> Entity
@@ -149,7 +152,19 @@ auto Coordinator::getEntitiesWithin(const IBoundingBox &bbox,
 
 void Coordinator::update(float elapsedSeconds)
 {
-  m_motionSystem.update(m_components, elapsedSeconds);
+  for (const auto &system : m_systems)
+  {
+    system->update(m_components, elapsedSeconds);
+  }
+}
+
+void Coordinator::createSystems()
+{
+  auto motion = std::make_unique<MotionSystem>();
+  m_systems.push_back(std::move(motion));
+
+  auto power = std::make_unique<PowerSystem>();
+  m_systems.push_back(std::move(power));
 }
 
 bool Coordinator::hasExpectedKind(const Uuid &ent, const std::optional<EntityKind> &kind) const

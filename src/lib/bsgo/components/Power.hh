@@ -1,27 +1,16 @@
 
 #pragma once
 
-#include <memory>
-#include <optional>
+#include "RegenerativeComponent.hh"
 
 namespace bsgo {
 
-class Power
+class Power : public RegenerativeComponent
 {
   public:
-  Power() = default;
-  Power(const float current, const float max, const std::optional<float> min = {});
+  // Power();
+  Power(const float current, const float max, const float regen);
   ~Power() = default;
-
-  auto power() const -> float;
-  auto max() const -> float;
-
-  private:
-  float m_min{0.0f};
-  float m_current{1.0f};
-  float m_max{1.0f};
-
-  void validate();
 };
 
 using PowerShPtr = std::shared_ptr<Power>;

@@ -8,6 +8,7 @@ namespace bsgo {
 
 class RegenerativeComponent : public IComponent
 {
+  public:
   RegenerativeComponent(const std::string &name,
                         const float min,
                         const float value,
@@ -16,6 +17,10 @@ class RegenerativeComponent : public IComponent
   ~RegenerativeComponent() override = default;
 
   void update(const float elapsedSeconds) override;
+
+  auto min() const -> float;
+  auto value() const -> float;
+  auto max() const -> float;
 
   private:
   float m_min;

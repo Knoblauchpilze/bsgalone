@@ -54,7 +54,7 @@ void DataSource::initializeShips(Coordinator &coordinator, const Uuid &system) c
     coordinator.addTransform(ent, std::move(box));
     coordinator.addVelocity(ent, ship.acceleration);
     coordinator.addHealth(ent, ship.hullPoints, ship.maxHullPoints);
-    coordinator.addPower(ent, ship.powerPoints, ship.maxPowerPoints);
+    coordinator.addPower(ent, ship.powerPoints, ship.maxPowerPoints, ship.powerRegen);
   }
 }
 
@@ -69,7 +69,7 @@ void DataSource::initializeOutposts(Coordinator &coordinator, const Uuid &system
     const auto ent = coordinator.createEntity(EntityKind::OUTPOST);
     coordinator.addTransform(ent, std::move(box));
     coordinator.addHealth(ent, outpost.hullPoints, outpost.hullPoints);
-    coordinator.addPower(ent, outpost.powerPoints, outpost.powerPoints);
+    coordinator.addPower(ent, outpost.powerPoints, outpost.powerPoints, outpost.powerRegen);
   }
 }
 

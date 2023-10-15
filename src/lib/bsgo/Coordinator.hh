@@ -4,7 +4,7 @@
 #include "Components.hh"
 #include "Entity.hh"
 #include "IBoundingBox.hh"
-#include "MotionSystem.hh"
+#include "ISystem.hh"
 #include "Uuid.hh"
 #include <core_utils/CoreObject.hh>
 #include <memory>
@@ -23,7 +23,7 @@ class Coordinator : public utils::CoreObject
   void addTransform(const Uuid &ent, IBoundingBoxPtr bbox);
   void addVelocity(const Uuid &ent, const float maxAcceleration);
   void addHealth(const Uuid &ent, const float hp, const float max);
-  void addPower(const Uuid &ent, const float power, const float max);
+  void addPower(const Uuid &ent, const float power, const float max, const float regen);
 
   auto getEntity(const Uuid &ent) const -> Entity;
 
@@ -37,8 +37,9 @@ class Coordinator : public utils::CoreObject
   private:
   std::unordered_map<Uuid, EntityKind> m_entities{};
   Components m_components{};
-  MotionSystem m_motionSystem{};
+  std::vector<ISystemPtr> m_systems{};
 
+  void createSystems();
   bool hasExpectedKind(const Uuid &ent, const std::optional<EntityKind> &kind) const;
 };
 

@@ -23,6 +23,21 @@ void RegenerativeComponent::update(const float elapsedSeconds)
   m_value            = std::clamp(updated, m_min, m_max);
 }
 
+auto RegenerativeComponent::min() const -> float
+{
+  return m_min;
+}
+
+auto RegenerativeComponent::value() const -> float
+{
+  return m_value;
+}
+
+auto RegenerativeComponent::max() const -> float
+{
+  return m_max;
+}
+
 void RegenerativeComponent::validate()
 {
   if (m_max < m_min)

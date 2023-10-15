@@ -15,11 +15,15 @@ auto OutpostRepository::findOneById(const Uuid &outpost) const -> Outpost
   }
 
   Outpost out;
-  out.faction     = Faction::CYLON;
-  out.radius      = 2.0f;
-  out.hullPoints  = 30000.0f;
+  out.faction = Faction::CYLON;
+
+  out.hullPoints = 30000.0f;
+
   out.powerPoints = 4500.0f;
-  out.position    = Eigen::Vector3f(-6.0f, 3.2f, 0.0f);
+  out.powerRegen  = 100.0f;
+
+  out.radius   = 2.0f;
+  out.position = Eigen::Vector3f(-6.0f, 3.2f, 0.0f);
 
   return out;
 }

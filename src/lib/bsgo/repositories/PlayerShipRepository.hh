@@ -18,6 +18,7 @@ struct PlayerShip
 
   float powerPoints{0.0f};
   float maxPowerPoints{0.0f};
+  float powerRegen{0.0f};
 
   float acceleration{5.0f};
 
