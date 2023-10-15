@@ -30,6 +30,10 @@ class DataSource : public utils::CoreObject
   SystemRepository m_systemRepo{};
   PlayerShipRepository m_playerShipRepo{};
   OutpostRepository m_outpostRepo{};
+
+  void initializeAsteroids(Coordinator &coordinator, const Uuid &system) const;
+  void initializeShips(Coordinator &coordinator, const Uuid &system) const;
+  void initializeOutposts(Coordinator &coordinator, const Uuid &system) const;
 };
 
 } // namespace bsgo
