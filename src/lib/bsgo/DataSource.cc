@@ -23,8 +23,14 @@ auto DataSource::playerShipId() const -> Uuid
 void DataSource::initialize(Coordinator &coordinator) const
 {
   const auto systemId = m_playerRepo.findSystemById(m_playerId);
+  initializeAsteroids(coordinator, systemId);
+  initializeShips(coordinator, systemId);
+  initializeOutposts(coordinator, systemId);
+}
 
-  const auto ships = m_systemRepo.findAllShipsBySystem(systemId);
+void DataSource::initializeAsteroids(Coordinator &coordinator, const Uuid &system) const
+{
+  const auto ships = m_systemRepo.findAllShipsBySystem(system);
   for (const auto &id : ships)
   {
     const auto ship = m_playerShipRepo.findOneById(id);
@@ -36,8 +42,11 @@ void DataSource::initialize(Coordinator &coordinator) const
     coordinator.addHealth(ent, ship.hullPoints, ship.maxHullPoints);
     coordinator.addPower(ent, ship.powerPoints, ship.maxPowerPoints);
   }
+}
 
-  const auto asteroids = m_systemRepo.findAllAsteroidsBySystem(systemId);
+void DataSource::initializeShips(Coordinator &coordinator, const Uuid &system) const
+{
+  const auto asteroids = m_systemRepo.findAllAsteroidsBySystem(system);
   for (const auto &id : asteroids)
   {
     const auto asteroid = m_asteroidRepo.findOneById(id);
@@ -47,8 +56,11 @@ void DataSource::initialize(Coordinator &coordinator) const
     coordinator.addTransform(ent, std::move(box));
     coordinator.addHealth(ent, asteroid.health, asteroid.health);
   }
+}
 
-  const auto outposts = m_systemRepo.findAllOutpostsBySystem(systemId);
+void DataSource::initializeOutposts(Coordinator &coordinator, const Uuid &system) const
+{
+  const auto outposts = m_systemRepo.findAllOutpostsBySystem(system);
   for (const auto &id : outposts)
   {
     const auto outpost = m_outpostRepo.findOneById(id);

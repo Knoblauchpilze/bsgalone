@@ -12,11 +12,15 @@ namespace bsgo {
 struct PlayerShip
 {
   Faction faction;
+
   float hullPoints{0.0f};
   float maxHullPoints{0.0f};
+
   float powerPoints{0.0f};
   float maxPowerPoints{0.0f};
+
   float acceleration{5.0f};
+
   float radius{0.5f};
   Eigen::Vector3f position{Eigen::Vector3f::Zero()};
 };
