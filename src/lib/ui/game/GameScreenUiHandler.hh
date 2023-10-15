@@ -3,6 +3,7 @@
 
 #include "IUiHandler.hh"
 #include "Views.hh"
+#include "WeaponsUiHandler.hh"
 
 namespace pge {
 
@@ -34,25 +35,20 @@ class GameScreenUiHandler : public IUiHandler
     ABILITY_4     = 6,
     ABILITY_COUNT = 5,
 
-    WEAPON_0     = 7,
-    WEAPON_1     = 8,
-    WEAPON_2     = 9,
-    WEAPON_3     = 10,
-    WEAPON_COUNT = 4,
+    TARGET_HEALTH   = 6,
+    TARGET_POWER    = 7,
+    TARGET_DISTANCE = 8,
 
-    TARGET_HEALTH   = 11,
-    TARGET_POWER    = 12,
-    TARGET_DISTANCE = 13,
+    DOCK = 9,
 
-    DOCK = 14,
-
-    COUNT = 15,
+    COUNT = 10,
   };
   std::vector<MenuShPtr> m_menus{};
 
+  WeaponsUiHandlerPtr m_weaponsUi{};
+
   void generateShipMenus(int width, int height);
   void generateAbilityMenus(int width, int height);
-  void generateWeaponMenus(int width, int height);
   void generateTargetMenus(int width, int height);
   void generateOutpostMenus(int width, int height);
 
