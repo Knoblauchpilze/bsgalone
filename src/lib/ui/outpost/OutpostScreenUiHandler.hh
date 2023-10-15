@@ -19,7 +19,23 @@ class OutpostScreenUiHandler : public IUiHandler
   void updateUi() override;
 
   private:
-  MenuShPtr m_menu{};
+  enum MenuItem
+  {
+    UNDOCK     = 0,
+    VIEWS_MENU = 1,
+
+    SHOP   = 2,
+    LOCKER = 3,
+    HANGAR = 4,
+
+    COUNT = 5,
+  };
+  std::vector<MenuShPtr> m_menus{};
+
+  void generateGeneralMenu(const int width, const int height);
+  void generateShopView(const int width, const int height);
+  void generateLockerView(const int width, const int height);
+  void generateHangarView(const int width, const int height);
 };
 
 } // namespace pge
