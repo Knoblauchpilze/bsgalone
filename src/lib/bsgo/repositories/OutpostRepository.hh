@@ -14,10 +14,12 @@ struct Outpost
   Faction faction;
 
   float hullPoints{0.0f};
-  float hullPointsRegen{150.0f};
+  float maxHullPoints{0.0f};
+  float hullPointsRegen{0.0f};
 
   float powerPoints{0.0f};
-  float powerRegen{50.0f};
+  float maxPowerPoints{0.0f};
+  float powerRegen{0.0f};
 
   float radius{2.0f};
   Eigen::Vector3f position{Eigen::Vector3f::Zero()};

@@ -17,11 +17,13 @@ auto OutpostRepository::findOneById(const Uuid &outpost) const -> Outpost
   Outpost out;
   out.faction = Faction::CYLON;
 
-  out.hullPoints      = 30000.0f;
+  out.hullPoints      = 12728.0f;
+  out.maxHullPoints   = 30000.0f;
   out.hullPointsRegen = 120.0f;
 
-  out.powerPoints = 4500.0f;
-  out.powerRegen  = 100.0f;
+  out.powerPoints    = 732.0f;
+  out.maxPowerPoints = 4500.0f;
+  out.powerRegen     = 100.0f;
 
   out.radius   = 2.0f;
   out.position = Eigen::Vector3f(-6.0f, 3.2f, 0.0f);
