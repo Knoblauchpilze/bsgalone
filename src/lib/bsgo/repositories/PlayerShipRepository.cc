@@ -15,14 +15,19 @@ auto PlayerShipRepository::findOneById(const Uuid &player) const -> PlayerShip
   }
 
   PlayerShip out;
-  out.faction        = Faction::COLONIAL;
-  out.radius         = 0.5f;
-  out.hullPoints     = 369.2f;
-  out.maxHullPoints  = 585.0f;
+  out.faction = Faction::COLONIAL;
+
+  out.hullPoints    = 369.2f;
+  out.maxHullPoints = 585.0f;
+
   out.powerPoints    = 11.9f;
   out.maxPowerPoints = 150.0f;
-  out.acceleration   = 5.0f;
-  out.position       = Eigen::Vector3f::Zero();
+  out.powerRegen     = 2.0f;
+
+  out.acceleration = 5.0f;
+
+  out.radius   = 0.5f;
+  out.position = Eigen::Vector3f::Zero();
 
   return out;
 }

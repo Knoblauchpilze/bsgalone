@@ -160,7 +160,7 @@ void GameScreenUiHandler::updateShipUi()
   m_menus[HEALTH]->setText(text);
 
   text = "Power: ";
-  text += floatToStr(std::floor(ship.access<bsgo::Power>().power()), 0);
+  text += floatToStr(std::floor(ship.access<bsgo::Power>().value()), 0);
   text += "/";
   text += floatToStr(std::floor(ship.access<bsgo::Power>().max()), 0);
   m_menus[POWER]->setText(text);
@@ -200,7 +200,7 @@ void GameScreenUiHandler::updateTargetUi()
   }
   else
   {
-    text += floatToStr(std::floor(target->access<bsgo::Power>().power()), 0);
+    text += floatToStr(std::floor(target->access<bsgo::Power>().value()), 0);
     text += "/";
     text += floatToStr(std::floor(target->access<bsgo::Power>().max()), 0);
   }

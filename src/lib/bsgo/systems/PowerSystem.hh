@@ -5,11 +5,11 @@
 
 namespace bsgo {
 
-class MotionSystem : public ISystem
+class PowerSystem : public ISystem
 {
   public:
-  MotionSystem();
-  ~MotionSystem() override = default;
+  PowerSystem();
+  ~PowerSystem() override = default;
 
   void update(const Components &components, const float elapsedSeconds) override;
 };
