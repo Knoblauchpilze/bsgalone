@@ -19,7 +19,7 @@ auto ShipView::getShip(const Uuid &ship) const -> Entity
   const auto ent = m_coordinator->getEntity(ship);
   if (ent.kind != EntityKind::SHIP)
   {
-    error("Expected " + str(ship) + " to have kind ship");
+    error("Expected " + str(ship) + " to have kind ship but got " + ent.str());
   }
   return ent;
 }

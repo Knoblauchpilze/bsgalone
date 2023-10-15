@@ -23,28 +23,12 @@ auto DataSource::playerShipId() const -> Uuid
 void DataSource::initialize(Coordinator &coordinator) const
 {
   const auto systemId = m_playerRepo.findSystemById(m_playerId);
-  initializeAsteroids(coordinator, systemId);
   initializeShips(coordinator, systemId);
+  initializeAsteroids(coordinator, systemId);
   initializeOutposts(coordinator, systemId);
 }
 
 void DataSource::initializeAsteroids(Coordinator &coordinator, const Uuid &system) const
-{
-  const auto ships = m_systemRepo.findAllShipsBySystem(system);
-  for (const auto &id : ships)
-  {
-    const auto ship = m_playerShipRepo.findOneById(id);
-
-    auto box       = std::make_unique<CircleBox>(ship.position, ship.radius);
-    const auto ent = coordinator.createEntity(EntityKind::SHIP);
-    coordinator.addTransform(ent, std::move(box));
-    coordinator.addVelocity(ent, Eigen::Vector3f::Zero());
-    coordinator.addHealth(ent, ship.hullPoints, ship.maxHullPoints);
-    coordinator.addPower(ent, ship.powerPoints, ship.maxPowerPoints);
-  }
-}
-
-void DataSource::initializeShips(Coordinator &coordinator, const Uuid &system) const
 {
   const auto asteroids = m_systemRepo.findAllAsteroidsBySystem(system);
   for (const auto &id : asteroids)
@@ -58,6 +42,22 @@ void DataSource::initializeShips(Coordinator &coordinator, const Uuid &system) c
   }
 }
 
+void DataSource::initializeShips(Coordinator &coordinator, const Uuid &system) const
+{
+  const auto ships = m_systemRepo.findAllShipsBySystem(system);
+  for (const auto &id : ships)
+  {
+    const auto ship = m_playerShipRepo.findOneById(id);
+
+    auto box       = std::make_unique<CircleBox>(ship.position, ship.radius);
+    const auto ent = coordinator.createEntity(EntityKind::SHIP);
+    coordinator.addTransform(ent, std::move(box));
+    coordinator.addVelocity(ent, ship.acceleration);
+    coordinator.addHealth(ent, ship.hullPoints, ship.maxHullPoints);
+    coordinator.addPower(ent, ship.powerPoints, ship.maxPowerPoints);
+  }
+}
+
 void DataSource::initializeOutposts(Coordinator &coordinator, const Uuid &system) const
 {
   const auto outposts = m_systemRepo.findAllOutpostsBySystem(system);
@@ -67,8 +67,6 @@ void DataSource::initializeOutposts(Coordinator &coordinator, const Uuid &system
 
     auto box       = std::make_unique<CircleBox>(outpost.position, outpost.radius);
     const auto ent = coordinator.createEntity(EntityKind::OUTPOST);
-    log("entity outpost is " + std::to_string(ent) + " with radius "
-        + std::to_string(outpost.radius));
     coordinator.addTransform(ent, std::move(box));
     coordinator.addHealth(ent, outpost.hullPoints, outpost.hullPoints);
     coordinator.addPower(ent, outpost.powerPoints, outpost.powerPoints);
