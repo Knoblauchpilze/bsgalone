@@ -1,18 +1,16 @@
 
 #pragma once
 
+#include "IComponent.hh"
 #include <eigen3/Eigen/Eigen>
-#include <memory>
-#include <optional>
 
 namespace bsgo {
 
-class Velocity
+class Velocity : public IComponent
 {
   public:
-  Velocity() = default;
-  Velocity(const float maxAcceleration, const std::optional<Eigen::Vector3f> &speed = {});
-  ~Velocity() = default;
+  Velocity(const float maxAcceleration);
+  ~Velocity() override = default;
 
   auto acceleration() const noexcept -> Eigen::Vector3f;
   auto speed() const noexcept -> Eigen::Vector3f;
@@ -22,7 +20,7 @@ class Velocity
   /// @param direction - the direction to accelerate into.
   void accelerate(const Eigen::Vector3f &direction);
 
-  void update(const float elapsedSeconds);
+  void update(const float elapsedSeconds) override;
 
   private:
   float m_maxAcceleration;
