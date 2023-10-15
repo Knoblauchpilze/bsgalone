@@ -154,7 +154,7 @@ void GameScreenUiHandler::updateShipUi()
   const auto ship = m_shipView->getPlayerShip();
 
   text = "Health: ";
-  text += floatToStr(std::floor(ship.access<bsgo::Health>().health()), 0);
+  text += floatToStr(std::floor(ship.access<bsgo::Health>().value()), 0);
   text += "/";
   text += floatToStr(ship.access<bsgo::Health>().max(), 0);
   m_menus[HEALTH]->setText(text);
@@ -187,7 +187,7 @@ void GameScreenUiHandler::updateTargetUi()
   }
   else
   {
-    text += floatToStr(std::floor(target->access<bsgo::Health>().health()), 0);
+    text += floatToStr(std::floor(target->access<bsgo::Health>().value()), 0);
     text += "/";
     text += floatToStr(std::floor(target->access<bsgo::Health>().max()), 0);
   }

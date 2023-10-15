@@ -38,7 +38,7 @@ void DataSource::initializeAsteroids(Coordinator &coordinator, const Uuid &syste
     auto box       = std::make_unique<CircleBox>(asteroid.position, asteroid.radius);
     const auto ent = coordinator.createEntity(EntityKind::ASTEROID);
     coordinator.addTransform(ent, std::move(box));
-    coordinator.addHealth(ent, asteroid.health, asteroid.health);
+    coordinator.addHealth(ent, asteroid.health, asteroid.health, 0.0f);
   }
 }
 
@@ -53,7 +53,7 @@ void DataSource::initializeShips(Coordinator &coordinator, const Uuid &system) c
     const auto ent = coordinator.createEntity(EntityKind::SHIP);
     coordinator.addTransform(ent, std::move(box));
     coordinator.addVelocity(ent, ship.acceleration);
-    coordinator.addHealth(ent, ship.hullPoints, ship.maxHullPoints);
+    coordinator.addHealth(ent, ship.hullPoints, ship.maxHullPoints, ship.hullPointsRegen);
     coordinator.addPower(ent, ship.powerPoints, ship.maxPowerPoints, ship.powerRegen);
   }
 }
@@ -68,7 +68,7 @@ void DataSource::initializeOutposts(Coordinator &coordinator, const Uuid &system
     auto box       = std::make_unique<CircleBox>(outpost.position, outpost.radius);
     const auto ent = coordinator.createEntity(EntityKind::OUTPOST);
     coordinator.addTransform(ent, std::move(box));
-    coordinator.addHealth(ent, outpost.hullPoints, outpost.hullPoints);
+    coordinator.addHealth(ent, outpost.hullPoints, outpost.hullPoints, outpost.hullPointsRegen);
     coordinator.addPower(ent, outpost.powerPoints, outpost.powerPoints, outpost.powerRegen);
   }
 }

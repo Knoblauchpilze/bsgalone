@@ -17,8 +17,9 @@ auto PlayerShipRepository::findOneById(const Uuid &player) const -> PlayerShip
   PlayerShip out;
   out.faction = Faction::COLONIAL;
 
-  out.hullPoints    = 369.2f;
-  out.maxHullPoints = 585.0f;
+  out.hullPoints      = 369.2f;
+  out.maxHullPoints   = 585.0f;
+  out.hullPointsRegen = 0.5f;
 
   out.powerPoints    = 11.9f;
   out.maxPowerPoints = 150.0f;

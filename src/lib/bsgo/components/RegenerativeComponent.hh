@@ -2,7 +2,6 @@
 #pragma once
 
 #include "IComponent.hh"
-#include <memory>
 
 namespace bsgo {
 

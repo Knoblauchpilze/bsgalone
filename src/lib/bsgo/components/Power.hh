@@ -8,9 +8,8 @@ namespace bsgo {
 class Power : public RegenerativeComponent
 {
   public:
-  // Power();
   Power(const float current, const float max, const float regen);
-  ~Power() = default;
+  ~Power() override = default;
 };
 
 using PowerShPtr = std::shared_ptr<Power>;
