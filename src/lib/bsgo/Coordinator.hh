@@ -24,6 +24,7 @@ class Coordinator : public utils::CoreObject
   void addVelocity(const Uuid &ent, const float maxAcceleration);
   void addHealth(const Uuid &ent, const float hp, const float max, const float regen);
   void addPower(const Uuid &ent, const float power, const float max, const float regen);
+  void addWeapon(const Uuid &ent, const Weapon &weapon);
 
   auto getEntity(const Uuid &ent) const -> Entity;
 
@@ -41,6 +42,12 @@ class Coordinator : public utils::CoreObject
 
   void createSystems();
   bool hasExpectedKind(const Uuid &ent, const std::optional<EntityKind> &kind) const;
+
+  template<typename ComponentType>
+  void checkForOverrides(
+    const Uuid &ent,
+    const std::string &componentName,
+    const std::unordered_map<Uuid, std::shared_ptr<ComponentType>> &components) const;
 };
 
 using CoordinatorShPtr = std::shared_ptr<Coordinator>;

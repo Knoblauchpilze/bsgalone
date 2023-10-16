@@ -7,6 +7,7 @@
 #include "PlayerRepository.hh"
 #include "PlayerShipRepository.hh"
 #include "SystemRepository.hh"
+#include "WeaponRepository.hh"
 #include <core_utils/CoreObject.hh>
 
 namespace bsgo {
@@ -30,6 +31,7 @@ class DataSource : public utils::CoreObject
   SystemRepository m_systemRepo{};
   PlayerShipRepository m_playerShipRepo{};
   OutpostRepository m_outpostRepo{};
+  WeaponRepository m_weaponRepository{};
 
   void initializeAsteroids(Coordinator &coordinator, const Uuid &system) const;
   void initializeShips(Coordinator &coordinator, const Uuid &system) const;
@@ -37,6 +39,7 @@ class DataSource : public utils::CoreObject
   void registerAsteroid(Coordinator &coordinator, const Uuid &asteroid) const;
   void registerShip(Coordinator &coordinator, const Uuid &ship) const;
   void registerOutpost(Coordinator &coordinator, const Uuid &outpost) const;
+  void registerWeapon(Coordinator &coordinator, const Uuid &ship, const Uuid &weapon) const;
 };
 
 } // namespace bsgo

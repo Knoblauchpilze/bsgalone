@@ -38,58 +38,32 @@ auto Coordinator::createEntity(const EntityKind &kind) -> Uuid
 
 void Coordinator::addTransform(const Uuid &ent, IBoundingBoxPtr bbox)
 {
-  if (!m_entities.contains(ent))
-  {
-    error("Unknown entity " + str(ent));
-  }
-  if (m_components.transforms.contains(ent))
-  {
-    warn("Overriding transform for entity " + std::to_string(ent));
-  }
-
+  checkForOverrides(ent, "transform", m_components.transforms);
   m_components.transforms[ent] = std::make_shared<Transform>(std::move(bbox));
 }
 
 void Coordinator::addVelocity(const Uuid &ent, const float maxAcceleration)
 {
-  if (!m_entities.contains(ent))
-  {
-    error("Unknown entity " + str(ent));
-  }
-  if (m_components.velocities.contains(ent))
-  {
-    warn("Overriding velocity for entity " + std::to_string(ent));
-  }
-
+  checkForOverrides(ent, "velocity", m_components.velocities);
   m_components.velocities[ent] = std::make_shared<Velocity>(maxAcceleration);
 }
 
 void Coordinator::addHealth(const Uuid &ent, const float hp, const float max, const float regen)
 {
-  if (!m_entities.contains(ent))
-  {
-    error("Unknown entity " + str(ent));
-  }
-  if (m_components.health.contains(ent))
-  {
-    warn("Overriding hull points for entity " + std::to_string(ent));
-  }
-
-  m_components.health[ent] = std::make_shared<Health>(hp, max, regen);
+  checkForOverrides(ent, "health", m_components.healths);
+  m_components.healths[ent] = std::make_shared<Health>(hp, max, regen);
 }
 
 void Coordinator::addPower(const Uuid &ent, const float power, const float max, const float regen)
 {
-  if (!m_entities.contains(ent))
-  {
-    error("Unknown entity " + str(ent));
-  }
-  if (m_components.powers.contains(ent))
-  {
-    warn("Overriding power for entity " + std::to_string(ent));
-  }
-
+  checkForOverrides(ent, "power", m_components.powers);
   m_components.powers[ent] = std::make_shared<Power>(power, max, regen);
+}
+
+void Coordinator::addWeapon(const Uuid &ent, const Weapon &weapon)
+{
+  checkForOverrides(ent, "weapon", m_components.weapons);
+  m_components.weapons[ent] = std::make_shared<WeaponSlot>(weapon);
 }
 
 auto Coordinator::getEntity(const Uuid &ent) const -> Entity
@@ -105,8 +79,14 @@ auto Coordinator::getEntity(const Uuid &ent) const -> Entity
 
   out.transform = getComponent(ent, m_components.transforms);
   out.velocity  = getComponent(ent, m_components.velocities);
-  out.health    = getComponent(ent, m_components.health);
+  out.health    = getComponent(ent, m_components.healths);
   out.power     = getComponent(ent, m_components.powers);
+
+  auto weapon = getComponent(ent, m_components.weapons);
+  if (weapon)
+  {
+    out.weapons.push_back(*weapon);
+  }
 
   return out;
 }
@@ -180,6 +160,22 @@ bool Coordinator::hasExpectedKind(const Uuid &ent, const std::optional<EntityKin
 
   const auto it = m_entities.find(ent);
   return it != m_entities.end() && it->second == *kind;
+}
+
+template<typename ComponentType>
+void Coordinator::checkForOverrides(
+  const Uuid &ent,
+  const std::string &componentName,
+  const std::unordered_map<Uuid, std::shared_ptr<ComponentType>> &components) const
+{
+  if (!m_entities.contains(ent))
+  {
+    error("Unknown entity " + str(ent));
+  }
+  if (components.contains(ent))
+  {
+    warn("Overriding " + componentName + " for entity " + std::to_string(ent));
+  }
 }
 
 } // namespace bsgo

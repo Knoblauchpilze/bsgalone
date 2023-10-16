@@ -5,7 +5,6 @@
 #include "IRepository.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
-#include <memory>
 
 namespace bsgo {
 
@@ -33,7 +32,5 @@ class OutpostRepository : public IRepository
 
   auto findOneById(const Uuid &outpost) const -> Outpost;
 };
-
-using OutpostRepositoryShPtr = std::shared_ptr<OutpostRepository>;
 
 } // namespace bsgo
