@@ -34,6 +34,9 @@ class DataSource : public utils::CoreObject
   void initializeAsteroids(Coordinator &coordinator, const Uuid &system) const;
   void initializeShips(Coordinator &coordinator, const Uuid &system) const;
   void initializeOutposts(Coordinator &coordinator, const Uuid &system) const;
+  void registerAsteroid(Coordinator &coordinator, const Uuid &asteroid) const;
+  void registerShip(Coordinator &coordinator, const Uuid &ship) const;
+  void registerOutpost(Coordinator &coordinator, const Uuid &outpost) const;
 };
 
 } // namespace bsgo

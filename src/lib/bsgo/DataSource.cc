@@ -33,12 +33,7 @@ void DataSource::initializeAsteroids(Coordinator &coordinator, const Uuid &syste
   const auto asteroids = m_systemRepo.findAllAsteroidsBySystem(system);
   for (const auto &id : asteroids)
   {
-    const auto asteroid = m_asteroidRepo.findOneById(id);
-
-    auto box       = std::make_unique<CircleBox>(asteroid.position, asteroid.radius);
-    const auto ent = coordinator.createEntity(EntityKind::ASTEROID);
-    coordinator.addTransform(ent, std::move(box));
-    coordinator.addHealth(ent, asteroid.health, asteroid.health, 0.0f);
+    registerAsteroid(coordinator, id);
   }
 }
 
@@ -47,14 +42,7 @@ void DataSource::initializeShips(Coordinator &coordinator, const Uuid &system) c
   const auto ships = m_systemRepo.findAllShipsBySystem(system);
   for (const auto &id : ships)
   {
-    const auto ship = m_playerShipRepo.findOneById(id);
-
-    auto box       = std::make_unique<CircleBox>(ship.position, ship.radius);
-    const auto ent = coordinator.createEntity(EntityKind::SHIP);
-    coordinator.addTransform(ent, std::move(box));
-    coordinator.addVelocity(ent, ship.acceleration);
-    coordinator.addHealth(ent, ship.hullPoints, ship.maxHullPoints, ship.hullPointsRegen);
-    coordinator.addPower(ent, ship.powerPoints, ship.maxPowerPoints, ship.powerRegen);
+    registerShip(coordinator, id);
   }
 }
 
@@ -63,14 +51,41 @@ void DataSource::initializeOutposts(Coordinator &coordinator, const Uuid &system
   const auto outposts = m_systemRepo.findAllOutpostsBySystem(system);
   for (const auto &id : outposts)
   {
-    const auto outpost = m_outpostRepo.findOneById(id);
-
-    auto box       = std::make_unique<CircleBox>(outpost.position, outpost.radius);
-    const auto ent = coordinator.createEntity(EntityKind::OUTPOST);
-    coordinator.addTransform(ent, std::move(box));
-    coordinator.addHealth(ent, outpost.hullPoints, outpost.maxHullPoints, outpost.hullPointsRegen);
-    coordinator.addPower(ent, outpost.powerPoints, outpost.maxPowerPoints, outpost.powerRegen);
+    registerOutpost(coordinator, id);
   }
+}
+
+void DataSource::registerAsteroid(Coordinator &coordinator, const Uuid &asteroid) const
+{
+  const auto data = m_asteroidRepo.findOneById(asteroid);
+
+  auto box       = std::make_unique<CircleBox>(data.position, data.radius);
+  const auto ent = coordinator.createEntity(EntityKind::ASTEROID);
+  coordinator.addTransform(ent, std::move(box));
+  coordinator.addHealth(ent, data.health, data.health, 0.0f);
+}
+
+void DataSource::registerShip(Coordinator &coordinator, const Uuid &ship) const
+{
+  const auto data = m_playerShipRepo.findOneById(ship);
+
+  auto box       = std::make_unique<CircleBox>(data.position, data.radius);
+  const auto ent = coordinator.createEntity(EntityKind::SHIP);
+  coordinator.addTransform(ent, std::move(box));
+  coordinator.addVelocity(ent, data.acceleration);
+  coordinator.addHealth(ent, data.hullPoints, data.maxHullPoints, data.hullPointsRegen);
+  coordinator.addPower(ent, data.powerPoints, data.maxPowerPoints, data.powerRegen);
+}
+
+void DataSource::registerOutpost(Coordinator &coordinator, const Uuid &outpost) const
+{
+  const auto data = m_outpostRepo.findOneById(outpost);
+
+  auto box       = std::make_unique<CircleBox>(data.position, data.radius);
+  const auto ent = coordinator.createEntity(EntityKind::OUTPOST);
+  coordinator.addTransform(ent, std::move(box));
+  coordinator.addHealth(ent, data.hullPoints, data.maxHullPoints, data.hullPointsRegen);
+  coordinator.addPower(ent, data.powerPoints, data.maxPowerPoints, data.powerRegen);
 }
 
 } // namespace bsgo
