@@ -49,31 +49,31 @@ void WeaponsUiHandler::render(SpriteRenderer &engine) const
   }
 }
 
-constexpr auto MAX_WEAPONS_COUNT = 2;
+void WeaponsUiHandler::updateUi() {}
 
-void WeaponsUiHandler::updateUi()
-{
-  const auto ship = m_shipView->getPlayerShip();
-  if (ship.weapons.size() > MAX_WEAPONS_COUNT)
-  {
-    error("Failed to adapt UI for ship " + ship.str(),
-          "Expected maximum " + std::to_string(MAX_WEAPONS_COUNT) + " weapon(s), got "
-            + std::to_string(ship.weapons.size()));
-  }
-}
+constexpr auto REASONABLE_MAXIMUM_NUMBER_OF_WEAPONS = 4;
 
 void WeaponsUiHandler::generateWeaponMenus(int width, int height)
 {
+  const auto ship         = m_shipView->getPlayerShip();
+  const auto weaponsCount = ship.weapons.size();
+  if (weaponsCount > REASONABLE_MAXIMUM_NUMBER_OF_WEAPONS)
+  {
+    error("Failed to adapt UI for ship " + ship.str(),
+          "Expected maximum " + std::to_string(REASONABLE_MAXIMUM_NUMBER_OF_WEAPONS)
+            + " weapon(s), got " + std::to_string(ship.weapons.size()));
+  }
+
   olc::vi2d dims{50, 50};
   constexpr auto SPACING_IN_PIXELS = 5;
   olc::vi2d pos;
-  pos.x = width - MAX_WEAPONS_COUNT * (dims.x + SPACING_IN_PIXELS);
+  pos.x = width - weaponsCount * (dims.x + SPACING_IN_PIXELS);
   pos.y = height / 2;
 
   olc::Pixel color = olc::VERY_DARK_RED;
   color.a          = alpha::SemiOpaque;
 
-  for (auto id = 0; id < MAX_WEAPONS_COUNT; ++id)
+  for (auto id = 0u; id < weaponsCount; ++id)
   {
     const auto text = "W" + std::to_string(id);
     const auto name = "weapon_" + std::to_string(id);
