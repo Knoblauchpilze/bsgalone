@@ -20,6 +20,28 @@ auto getComponent(const Uuid &ent,
 
   return {it->second};
 }
+
+template<typename ComponentType>
+auto getAllComponent(const Uuid &ent,
+                     const std::unordered_multimap<Uuid, std::shared_ptr<ComponentType>> &components)
+  -> std::vector<std::shared_ptr<ComponentType>>
+{
+  const auto range = components.equal_range(ent);
+  if (range.first == range.second)
+  {
+    return {};
+  }
+
+  std::vector<std::shared_ptr<ComponentType>> out;
+  for (auto it = range.first; it != range.second; ++it)
+  {
+    {
+      out.push_back(it->second);
+    }
+  }
+
+  return out;
+}
 } // namespace
 
 Coordinator::Coordinator()
@@ -62,8 +84,8 @@ void Coordinator::addPower(const Uuid &ent, const float power, const float max, 
 
 void Coordinator::addWeapon(const Uuid &ent, const Weapon &weapon)
 {
-  checkForOverrides(ent, "weapon", m_components.weapons);
-  m_components.weapons[ent] = std::make_shared<WeaponSlot>(weapon);
+  checkEntityExist(ent, "weapon");
+  m_components.weapons.emplace(ent, std::make_shared<WeaponSlot>(weapon));
 }
 
 auto Coordinator::getEntity(const Uuid &ent) const -> Entity
@@ -82,11 +104,7 @@ auto Coordinator::getEntity(const Uuid &ent) const -> Entity
   out.health    = getComponent(ent, m_components.healths);
   out.power     = getComponent(ent, m_components.powers);
 
-  auto weapon = getComponent(ent, m_components.weapons);
-  if (weapon)
-  {
-    out.weapons.push_back(*weapon);
-  }
+  out.weapons = getAllComponent(ent, m_components.weapons);
 
   return out;
 }
@@ -162,16 +180,20 @@ bool Coordinator::hasExpectedKind(const Uuid &ent, const std::optional<EntityKin
   return it != m_entities.end() && it->second == *kind;
 }
 
-template<typename ComponentType>
-void Coordinator::checkForOverrides(
-  const Uuid &ent,
-  const std::string &componentName,
-  const std::unordered_map<Uuid, std::shared_ptr<ComponentType>> &components) const
+void Coordinator::checkEntityExist(const Uuid &ent, const std::string &componentName) const
 {
   if (!m_entities.contains(ent))
   {
-    error("Unknown entity " + str(ent));
+    error("Failed to add component " + componentName + " to unknown entity " + str(ent));
   }
+}
+
+template<typename ContainerType>
+void Coordinator::checkForOverrides(const Uuid &ent,
+                                    const std::string &componentName,
+                                    const ContainerType &components) const
+{
+  checkEntityExist(ent, componentName);
   if (components.contains(ent))
   {
     warn("Overriding " + componentName + " for entity " + std::to_string(ent));

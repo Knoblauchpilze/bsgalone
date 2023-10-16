@@ -7,6 +7,7 @@
 #include "ISystem.hh"
 #include "Uuid.hh"
 #include <core_utils/CoreObject.hh>
+#include <map>
 #include <memory>
 #include <unordered_map>
 
@@ -43,11 +44,11 @@ class Coordinator : public utils::CoreObject
   void createSystems();
   bool hasExpectedKind(const Uuid &ent, const std::optional<EntityKind> &kind) const;
 
-  template<typename ComponentType>
-  void checkForOverrides(
-    const Uuid &ent,
-    const std::string &componentName,
-    const std::unordered_map<Uuid, std::shared_ptr<ComponentType>> &components) const;
+  void checkEntityExist(const Uuid &ent, const std::string &componentName) const;
+  template<typename ContainerType>
+  void checkForOverrides(const Uuid &ent,
+                         const std::string &componentName,
+                         const ContainerType &components) const;
 };
 
 using CoordinatorShPtr = std::shared_ptr<Coordinator>;
