@@ -5,7 +5,6 @@
 #include "IRepository.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
-#include <memory>
 
 namespace bsgo {
 
@@ -25,6 +24,8 @@ struct PlayerShip
 
   float radius{0.5f};
   Eigen::Vector3f position{Eigen::Vector3f::Zero()};
+
+  std::vector<Uuid> weapons{};
 };
 
 class PlayerShipRepository : public IRepository
@@ -35,7 +36,5 @@ class PlayerShipRepository : public IRepository
 
   auto findOneById(const Uuid &player) const -> PlayerShip;
 };
-
-using PlayerShipRepositoryShPtr = std::shared_ptr<PlayerShipRepository>;
 
 } // namespace bsgo

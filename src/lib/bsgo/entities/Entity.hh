@@ -7,6 +7,7 @@
 #include "Transform.hh"
 #include "Uuid.hh"
 #include "Velocity.hh"
+#include "WeaponSlot.hh"
 #include <optional>
 #include <string>
 
@@ -20,6 +21,7 @@ struct Entity
   std::optional<VelocityShPtr> velocity{};
   std::optional<HealthShPtr> health{};
   std::optional<PowerShPtr> power{};
+  std::vector<WeaponSlotShPtr> weapons{};
 
   auto str() const noexcept -> std::string;
 

@@ -75,6 +75,11 @@ void DataSource::registerShip(Coordinator &coordinator, const Uuid &ship) const
   coordinator.addVelocity(ent, data.acceleration);
   coordinator.addHealth(ent, data.hullPoints, data.maxHullPoints, data.hullPointsRegen);
   coordinator.addPower(ent, data.powerPoints, data.maxPowerPoints, data.powerRegen);
+
+  for (const auto &weapon : data.weapons)
+  {
+    registerWeapon(coordinator, ent, weapon);
+  }
 }
 
 void DataSource::registerOutpost(Coordinator &coordinator, const Uuid &outpost) const
@@ -86,6 +91,12 @@ void DataSource::registerOutpost(Coordinator &coordinator, const Uuid &outpost) 
   coordinator.addTransform(ent, std::move(box));
   coordinator.addHealth(ent, data.hullPoints, data.maxHullPoints, data.hullPointsRegen);
   coordinator.addPower(ent, data.powerPoints, data.maxPowerPoints, data.powerRegen);
+}
+
+void DataSource::registerWeapon(Coordinator &coordinator, const Uuid &ship, const Uuid &weapon) const
+{
+  const auto data = m_weaponRepository.findOneById(weapon);
+  coordinator.addWeapon(ship, data);
 }
 
 } // namespace bsgo

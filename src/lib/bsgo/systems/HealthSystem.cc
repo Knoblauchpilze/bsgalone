@@ -9,7 +9,7 @@ HealthSystem::HealthSystem()
 
 void HealthSystem::update(const Components &components, const float elapsedSeconds)
 {
-  for (const auto &[_, health] : components.health)
+  for (const auto &[_, health] : components.healths)
   {
     health->update(elapsedSeconds);
   }
