@@ -17,7 +17,7 @@ struct Components
   std::unordered_map<Uuid, VelocityShPtr> velocities{};
   std::unordered_map<Uuid, HealthShPtr> healths{};
   std::unordered_map<Uuid, PowerShPtr> powers{};
-  std::unordered_map<Uuid, WeaponSlotShPtr> weapons{};
+  std::unordered_multimap<Uuid, WeaponSlotShPtr> weapons{};
 };
 
 } // namespace bsgo

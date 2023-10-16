@@ -49,22 +49,31 @@ void WeaponsUiHandler::render(SpriteRenderer &engine) const
   }
 }
 
-void WeaponsUiHandler::updateUi() {}
+constexpr auto MAX_WEAPONS_COUNT = 2;
 
-constexpr auto WEAPONS_COUNT = 4;
+void WeaponsUiHandler::updateUi()
+{
+  const auto ship = m_shipView->getPlayerShip();
+  if (ship.weapons.size() > MAX_WEAPONS_COUNT)
+  {
+    error("Failed to adapt UI for ship " + ship.str(),
+          "Expected maximum " + std::to_string(MAX_WEAPONS_COUNT) + " weapon(s), got "
+            + std::to_string(ship.weapons.size()));
+  }
+}
 
 void WeaponsUiHandler::generateWeaponMenus(int width, int height)
 {
   olc::vi2d dims{50, 50};
   constexpr auto SPACING_IN_PIXELS = 5;
   olc::vi2d pos;
-  pos.x = width - WEAPONS_COUNT * (dims.x + SPACING_IN_PIXELS);
+  pos.x = width - MAX_WEAPONS_COUNT * (dims.x + SPACING_IN_PIXELS);
   pos.y = height / 2;
 
   olc::Pixel color = olc::VERY_DARK_RED;
   color.a          = alpha::SemiOpaque;
 
-  for (auto id = 0; id < WEAPONS_COUNT; ++id)
+  for (auto id = 0; id < MAX_WEAPONS_COUNT; ++id)
   {
     const auto text = "W" + std::to_string(id);
     const auto name = "weapon_" + std::to_string(id);
