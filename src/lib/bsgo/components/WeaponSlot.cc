@@ -12,4 +12,14 @@ WeaponSlot::WeaponSlot(const Weapon &weapon)
   , m_maxDamage(weapon.maxDamage)
 {}
 
+auto WeaponSlot::minDamage() const -> float
+{
+  return m_minDamage;
+}
+
+auto WeaponSlot::maxDamage() const -> float
+{
+  return m_maxDamage;
+}
+
 } // namespace bsgo

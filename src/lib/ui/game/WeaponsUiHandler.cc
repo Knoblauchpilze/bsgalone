@@ -80,7 +80,7 @@ void WeaponsUiHandler::generateWeaponMenus(int width, int height)
   pos.x = width - weaponsCount * (dims.x + SPACING_IN_PIXELS);
   pos.y = height / 2;
 
-  olc::Pixel color = olc::VERY_DARK_RED;
+  olc::Pixel color = olc::Pixel{0, 0, 0, alpha::Transparent};
   color.a          = alpha::SemiOpaque;
 
   for (auto id = 0u; id < weaponsCount; ++id)
@@ -90,6 +90,16 @@ void WeaponsUiHandler::generateWeaponMenus(int width, int height)
 
     auto menu = generateMenu(pos, dims, text, name, color, {olc::WHITE}, true);
     m_weapons.push_back(menu);
+
+    const auto range = generateMenu(pos, dims, "range", "range", color, {olc::WHITE});
+    menu->addMenu(range);
+    m_ranges.push_back(range);
+    auto damage = generateMenu(pos, dims, "min damage", "min_damage", color, {olc::WHITE});
+    menu->addMenu(damage);
+    m_damages.push_back(damage);
+    damage = generateMenu(pos, dims, "max damage", "max_damage", color, {olc::WHITE});
+    menu->addMenu(damage);
+    m_damages.push_back(damage);
 
     pos.x += (dims.x + SPACING_IN_PIXELS);
   }
@@ -114,12 +124,24 @@ void WeaponsUiHandler::updateWeaponMenu(const bsgo::WeaponSlot &weapon,
   {
     bgColor = olc::DARK_ORANGE;
   }
-  else if (weapon.canFire())
+  else if (!weapon.canFire())
   {
     bgColor = olc::DARK_YELLOW;
   }
+  else
+  {
+    bgColor = olc::DARK_GREEN;
+  }
 
   menu.setBackgroundColor(bgColor);
+
+  auto &range = *m_ranges[id];
+  range.setText(floatToStr(weapon.range(), 0) + "m");
+
+  auto &minDamage = *m_damages[2 * id];
+  minDamage.setText(floatToStr(weapon.minDamage()));
+  auto &maxDamage = *m_damages[2 * id + 1];
+  maxDamage.setText(floatToStr(weapon.maxDamage()));
 }
 
 } // namespace pge
