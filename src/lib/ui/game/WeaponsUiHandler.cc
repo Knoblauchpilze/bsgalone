@@ -31,7 +31,7 @@ auto WeaponsUiHandler::processUserInput(const controls::State &c, std::vector<Ac
   auto relevant{false};
   auto selected{false};
 
-  for (const auto &menu : m_menus)
+  for (const auto &menu : m_weapons)
   {
     const auto ih = menu->processUserInput(c, actions);
     relevant      = (relevant || ih.relevant);
@@ -43,13 +43,23 @@ auto WeaponsUiHandler::processUserInput(const controls::State &c, std::vector<Ac
 
 void WeaponsUiHandler::render(SpriteRenderer &engine) const
 {
-  for (const auto &menu : m_menus)
+  for (const auto &menu : m_weapons)
   {
     menu->render(engine.getRenderer());
   }
 }
 
-void WeaponsUiHandler::updateUi() {}
+void WeaponsUiHandler::updateUi()
+{
+  const auto ship = m_shipView->getPlayerShip();
+
+  auto id = 0;
+  for (const auto &weapon : ship.weapons)
+  {
+    updateWeaponMenu(*weapon, id, ship);
+    ++id;
+  }
+}
 
 constexpr auto REASONABLE_MAXIMUM_NUMBER_OF_WEAPONS = 4;
 
@@ -79,10 +89,37 @@ void WeaponsUiHandler::generateWeaponMenus(int width, int height)
     const auto name = "weapon_" + std::to_string(id);
 
     auto menu = generateMenu(pos, dims, text, name, color, {olc::WHITE}, true);
-    m_menus.push_back(menu);
+    m_weapons.push_back(menu);
 
     pos.x += (dims.x + SPACING_IN_PIXELS);
   }
+}
+
+void WeaponsUiHandler::updateWeaponMenu(const bsgo::WeaponSlot &weapon,
+                                        const int id,
+                                        const bsgo::Entity &ship)
+{
+  const auto target = m_targetView->getTarget();
+
+  auto &menu = *m_weapons[id];
+
+  menu.setEnabled(target.has_value());
+
+  auto bgColor = olc::DARK_GREEN;
+  if (!target || weapon.range() < m_targetView->distanceToTarget())
+  {
+    bgColor = olc::DARK_RED;
+  }
+  else if (ship.access<bsgo::Power>().value() < weapon.powerCost())
+  {
+    bgColor = olc::DARK_ORANGE;
+  }
+  else if (weapon.canFire())
+  {
+    bgColor = olc::DARK_YELLOW;
+  }
+
+  menu.setBackgroundColor(bgColor);
 }
 
 } // namespace pge

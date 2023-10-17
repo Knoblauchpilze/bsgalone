@@ -62,6 +62,16 @@ inline void Menu::setBackground(const menu::BackgroundDesc &bg)
   }
 }
 
+inline void Menu::setBackgroundColor(const olc::Pixel &color)
+{
+  menu::updateFromColor(m_bg, color);
+
+  if (m_parent != nullptr)
+  {
+    m_parent->updateChildren();
+  }
+}
+
 inline void Menu::setContent(const menu::MenuContentDesc &mcd)
 {
   clearContent();
