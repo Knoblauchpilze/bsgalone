@@ -170,9 +170,8 @@ void GameScreenRenderer::renderShip(const bsgo::Entity &ship,
   t.x = pos(0);
   t.y = pos(1);
 
-  t.radius         = 2.0f * transform.size();
-  const auto speed = ship.access<bsgo::Velocity>().speed();
-  t.rotation       = std::atan2(speed(0), speed(1));
+  t.radius   = 2.0f * transform.size();
+  t.rotation = transform.heading();
 
   t.sprite.pack   = m_class1TexturesPackId;
   t.sprite.sprite = {0, 0};

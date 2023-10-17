@@ -15,7 +15,7 @@ class Velocity : public IComponent
   auto acceleration() const noexcept -> Eigen::Vector3f;
   auto speed() const noexcept -> Eigen::Vector3f;
 
-  /// @brief - Sets the maximum acceleration directed in the input direction for
+  /// @brief - Set the maximum acceleration directed in the input direction for
   /// this component.
   /// @param direction - the direction to accelerate into.
   void accelerate(const Eigen::Vector3f &direction);
