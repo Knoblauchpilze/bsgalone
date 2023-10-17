@@ -90,7 +90,7 @@ class Menu : public utils::CoreObject
 
   /// @brief - Return the background color for this menu.
   /// @return - the background color.
-  olc::Pixel getBackgroundColor() const noexcept;
+  auto getBackgroundColor() const noexcept -> olc::Pixel;
 
   /// @brief- Interface method allowing to render a menu in a parent application.
   /// This is used to offload some of the rendering code from the main app and
@@ -124,6 +124,10 @@ class Menu : public utils::CoreObject
   /// @brief - Replace the existing background content with the new one.
   /// @param bg - the new background description.
   void setBackground(const menu::BackgroundDesc &bg);
+
+  /// @brief - Replace the existing background color by the input one.
+  /// @param bg - the new background color.
+  void setBackgroundColor(const olc::Pixel &color);
 
   /// @brief - Replace the existing content with the new one.
   /// @param mcd - the new content description for this menu.
