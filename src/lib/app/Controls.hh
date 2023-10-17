@@ -24,6 +24,7 @@ enum Keys
 
   P,
   M,
+  G,
 
   KEYS_COUNT
 };

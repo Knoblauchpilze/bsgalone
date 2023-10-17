@@ -27,10 +27,11 @@ void GameScreenInputHandler::processUserInput(const controls::State &c, Coordina
 {
   Motion motion{};
   motion.updateFromKeys(c);
+
   auto ship = m_shipView->getPlayerShip();
   moveShip(ship, motion);
-
   keepShipCentered(frame);
+  handleWeaponsState(c, ship);
 }
 
 void GameScreenInputHandler::performAction(float x, float y, const controls::State & /*state*/)
@@ -66,6 +67,19 @@ void GameScreenInputHandler::keepShipCentered(CoordinateFrame &frame)
   const auto pos = ent.access<bsgo::Transform>().position();
   const olc::vf2d pos2d{pos(0), pos(1)};
   frame.moveTo(pos2d);
+}
+
+void GameScreenInputHandler::handleWeaponsState(const controls::State &c, bsgo::Entity &ship)
+{
+  if (!c.keys[controls::keys::G])
+  {
+    return;
+  }
+
+  for (const auto &weapon : ship.weapons)
+  {
+    weapon->toggle();
+  }
 }
 
 } // namespace pge

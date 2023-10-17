@@ -22,4 +22,14 @@ auto WeaponSlot::maxDamage() const -> float
   return m_maxDamage;
 }
 
+bool WeaponSlot::active() const
+{
+  return m_active;
+}
+
+void WeaponSlot::toggle()
+{
+  m_active = !m_active;
+}
+
 } // namespace bsgo
