@@ -12,6 +12,9 @@ class WeaponSlot : public SlotComponent
   WeaponSlot(const Weapon &weapon);
   ~WeaponSlot() override = default;
 
+  auto minDamage() const -> float;
+  auto maxDamage() const -> float;
+
   private:
   float m_minDamage;
   float m_maxDamage;
