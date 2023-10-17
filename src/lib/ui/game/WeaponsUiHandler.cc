@@ -116,7 +116,11 @@ void WeaponsUiHandler::updateWeaponMenu(const bsgo::WeaponSlot &weapon,
   menu.setEnabled(target.has_value());
 
   auto bgColor = olc::DARK_GREEN;
-  if (!target || weapon.range() < m_targetView->distanceToTarget())
+  if (!weapon.active())
+  {
+    bgColor = olc::DARK_GREY;
+  }
+  else if (!target || weapon.range() < m_targetView->distanceToTarget())
   {
     bgColor = olc::DARK_RED;
   }
