@@ -22,8 +22,13 @@ void MotionSystem::update(const Components &components, const float elapsedSecon
       continue;
     }
 
-    Eigen::Vector3f dv = vel->second->speed() * elapsedSeconds;
+    const Eigen::Vector3f speed = vel->second->speed();
+    Eigen::Vector3f dv          = speed * elapsedSeconds;
     transform->translate(dv);
+    if (!speed.isZero())
+    {
+      transform->setHeading(std::atan2(speed(0), speed(1)));
+    }
   }
 }
 

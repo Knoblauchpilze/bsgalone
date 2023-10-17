@@ -38,6 +38,11 @@ auto Transform::size() const -> float
   throw std::invalid_argument("Unsupported bounding box type " + name);
 }
 
+auto Transform::heading() const noexcept -> float
+{
+  return m_heading;
+}
+
 bool Transform::contains(const Eigen::Vector3f &pos) const noexcept
 {
   return m_bbox && m_bbox->isInside(pos);
@@ -46,6 +51,11 @@ bool Transform::contains(const Eigen::Vector3f &pos) const noexcept
 void Transform::translate(const Eigen::Vector3f &delta)
 {
   m_bbox->translate(delta);
+}
+
+void Transform::setHeading(const float heading)
+{
+  m_heading = heading;
 }
 
 } // namespace bsgo
