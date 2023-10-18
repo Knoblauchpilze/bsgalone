@@ -139,15 +139,15 @@ void GameScreenUiHandler::updateShipUi()
   const auto ship = m_shipView->getPlayerShip();
 
   text = "Health: ";
-  text += floatToStr(std::floor(ship.access<bsgo::Health>().value()), 0);
+  text += floatToStr(std::floor(ship.access<bsgo::HealthComponent>().value()), 0);
   text += "/";
-  text += floatToStr(ship.access<bsgo::Health>().max(), 0);
+  text += floatToStr(ship.access<bsgo::HealthComponent>().max(), 0);
   m_menus[HEALTH]->setText(text);
 
   text = "Power: ";
-  text += floatToStr(std::floor(ship.access<bsgo::Power>().value()), 0);
+  text += floatToStr(std::floor(ship.access<bsgo::PowerComponent>().value()), 0);
   text += "/";
-  text += floatToStr(std::floor(ship.access<bsgo::Power>().max()), 0);
+  text += floatToStr(std::floor(ship.access<bsgo::PowerComponent>().max()), 0);
   m_menus[POWER]->setText(text);
 }
 
@@ -166,28 +166,28 @@ void GameScreenUiHandler::updateTargetUi()
   std::string text;
 
   text = "Health: ";
-  if (!target->exists<bsgo::Health>())
+  if (!target->exists<bsgo::HealthComponent>())
   {
     text += "N/A";
   }
   else
   {
-    text += floatToStr(std::floor(target->access<bsgo::Health>().value()), 0);
+    text += floatToStr(std::floor(target->access<bsgo::HealthComponent>().value()), 0);
     text += "/";
-    text += floatToStr(std::floor(target->access<bsgo::Health>().max()), 0);
+    text += floatToStr(std::floor(target->access<bsgo::HealthComponent>().max()), 0);
   }
   m_menus[TARGET_HEALTH]->setText(text);
 
   text = "Power: ";
-  if (!target->exists<bsgo::Power>())
+  if (!target->exists<bsgo::PowerComponent>())
   {
     text += "N/A";
   }
   else
   {
-    text += floatToStr(std::floor(target->access<bsgo::Power>().value()), 0);
+    text += floatToStr(std::floor(target->access<bsgo::PowerComponent>().value()), 0);
     text += "/";
-    text += floatToStr(std::floor(target->access<bsgo::Power>().max()), 0);
+    text += floatToStr(std::floor(target->access<bsgo::PowerComponent>().max()), 0);
   }
   m_menus[TARGET_POWER]->setText(text);
 

@@ -3,7 +3,7 @@
 
 #include "IUiHandler.hh"
 #include "Views.hh"
-#include "WeaponSlot.hh"
+#include "WeaponSlotComponent.hh"
 #include <memory>
 
 namespace pge {
@@ -29,7 +29,9 @@ class WeaponsUiHandler : public IUiHandler
   std::vector<MenuShPtr> m_damages{};
 
   void generateWeaponMenus(int width, int height);
-  void updateWeaponMenu(const bsgo::WeaponSlot &weapon, const int id, const bsgo::Entity &ship);
+  void updateWeaponMenu(const bsgo::WeaponSlotComponent &weapon,
+                        const int id,
+                        const bsgo::Entity &ship);
 };
 
 using WeaponsUiHandlerPtr = std::unique_ptr<WeaponsUiHandler>;

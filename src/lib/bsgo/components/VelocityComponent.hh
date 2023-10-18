@@ -6,11 +6,11 @@
 
 namespace bsgo {
 
-class Velocity : public IComponent
+class VelocityComponent : public IComponent
 {
   public:
-  Velocity(const float maxAcceleration);
-  ~Velocity() override = default;
+  VelocityComponent(const float maxAcceleration);
+  ~VelocityComponent() override = default;
 
   auto acceleration() const noexcept -> Eigen::Vector3f;
   auto speed() const noexcept -> Eigen::Vector3f;
@@ -28,6 +28,6 @@ class Velocity : public IComponent
   Eigen::Vector3f m_speed{Eigen::Vector3f::Zero()};
 };
 
-using VelocityShPtr = std::shared_ptr<Velocity>;
+using VelocityComponentShPtr = std::shared_ptr<VelocityComponent>;
 
 } // namespace bsgo

@@ -6,12 +6,11 @@
 
 namespace bsgo {
 
-class Transform
+class TransformComponent
 {
   public:
-  Transform() = default;
-  Transform(IBoundingBoxShPtr bbox);
-  ~Transform() = default;
+  TransformComponent(IBoundingBoxShPtr bbox);
+  ~TransformComponent() = default;
 
   auto position() const -> Eigen::Vector3f;
   auto size() const -> float;
@@ -26,6 +25,6 @@ class Transform
   float m_heading{};
 };
 
-using TransformShPtr = std::shared_ptr<Transform>;
+using TransformComponentShPtr = std::shared_ptr<TransformComponent>;
 
 } // namespace bsgo

@@ -1,9 +1,9 @@
 
-#include "WeaponSlot.hh"
+#include "WeaponSlotComponent.hh"
 
 namespace bsgo {
 
-WeaponSlot::WeaponSlot(const Weapon &weapon)
+WeaponSlotComponent::WeaponSlotComponent(const Weapon &weapon)
   : SlotComponent("weapon",
                   SlotComponentData{.powerCost  = weapon.powerCost,
                                     .range      = weapon.range,
@@ -12,22 +12,22 @@ WeaponSlot::WeaponSlot(const Weapon &weapon)
   , m_maxDamage(weapon.maxDamage)
 {}
 
-auto WeaponSlot::minDamage() const -> float
+auto WeaponSlotComponent::minDamage() const -> float
 {
   return m_minDamage;
 }
 
-auto WeaponSlot::maxDamage() const -> float
+auto WeaponSlotComponent::maxDamage() const -> float
 {
   return m_maxDamage;
 }
 
-bool WeaponSlot::active() const
+bool WeaponSlotComponent::active() const
 {
   return m_active;
 }
 
-void WeaponSlot::toggle()
+void WeaponSlotComponent::toggle()
 {
   m_active = !m_active;
 }
