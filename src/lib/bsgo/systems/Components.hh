@@ -3,6 +3,7 @@
 
 #include "HealthComponent.hh"
 #include "PowerComponent.hh"
+#include "TargetComponent.hh"
 #include "TransformComponent.hh"
 #include "Uuid.hh"
 #include "VelocityComponent.hh"
@@ -18,6 +19,7 @@ struct Components
   std::unordered_map<Uuid, HealthComponentShPtr> healths{};
   std::unordered_map<Uuid, PowerComponentShPtr> powers{};
   std::unordered_multimap<Uuid, WeaponSlotComponentShPtr> weapons{};
+  std::unordered_map<Uuid, TargetComponentShPtr> targets{};
 };
 
 } // namespace bsgo

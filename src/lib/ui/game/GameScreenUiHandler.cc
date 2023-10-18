@@ -8,16 +8,11 @@ namespace pge {
 GameScreenUiHandler::GameScreenUiHandler(const bsgo::Views &views)
   : IUiHandler("game")
   , m_shipView(views.shipView)
-  , m_targetView(views.targetView)
   , m_weaponsUi(std::make_unique<WeaponsUiHandler>(views))
 {
   if (nullptr == m_shipView)
   {
     throw std::invalid_argument("Expected non null ship view");
-  }
-  if (nullptr == m_targetView)
-  {
-    throw std::invalid_argument("Expected non null target view");
   }
 }
 
@@ -153,7 +148,7 @@ void GameScreenUiHandler::updateShipUi()
 
 void GameScreenUiHandler::updateTargetUi()
 {
-  const auto target = m_targetView->getTarget();
+  const auto target = m_shipView->getPlayerTarget();
   m_menus[TARGET_HEALTH]->setVisible(target.has_value());
   m_menus[TARGET_POWER]->setVisible(target.has_value());
   m_menus[TARGET_DISTANCE]->setVisible(target.has_value());
@@ -191,7 +186,7 @@ void GameScreenUiHandler::updateTargetUi()
   }
   m_menus[TARGET_POWER]->setText(text);
 
-  const auto d = m_targetView->distanceToTarget();
+  const auto d = m_shipView->distanceToTarget();
   text         = floatToStr(d, 1) + "m";
   m_menus[TARGET_DISTANCE]->setText(text);
 }
@@ -200,11 +195,11 @@ void GameScreenUiHandler::updateOutpostUi()
 {
   auto dockButtonVisible{false};
 
-  const auto target                       = m_targetView->getTarget();
+  const auto target                       = m_shipView->getPlayerTarget();
   constexpr auto MAXIMUM_DISTANCE_TO_DOCK = 5.0f;
   if (target && bsgo::EntityKind::OUTPOST == target->kind)
   {
-    dockButtonVisible = m_targetView->distanceToTarget() <= MAXIMUM_DISTANCE_TO_DOCK;
+    dockButtonVisible = m_shipView->distanceToTarget() <= MAXIMUM_DISTANCE_TO_DOCK;
   }
 
   m_menus[DOCK]->setVisible(dockButtonVisible);

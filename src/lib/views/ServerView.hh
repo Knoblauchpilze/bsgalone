@@ -9,7 +9,7 @@ namespace bsgo {
 class ServerView : public IView
 {
   public:
-  ServerView();
+  ServerView(const CoordinatorShPtr &coordinator);
 };
 
 using ServerViewShPtr = std::shared_ptr<ServerView>;

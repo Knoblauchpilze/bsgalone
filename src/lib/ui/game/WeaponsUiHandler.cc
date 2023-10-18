@@ -8,15 +8,10 @@ namespace pge {
 WeaponsUiHandler::WeaponsUiHandler(const bsgo::Views &views)
   : IUiHandler("weapons")
   , m_shipView(views.shipView)
-  , m_targetView(views.targetView)
 {
   if (nullptr == m_shipView)
   {
     throw std::invalid_argument("Expected non null ship view");
-  }
-  if (nullptr == m_targetView)
-  {
-    throw std::invalid_argument("Expected non null target view");
   }
 }
 
@@ -109,7 +104,7 @@ void WeaponsUiHandler::updateWeaponMenu(const bsgo::WeaponSlotComponent &weapon,
                                         const int id,
                                         const bsgo::Entity &ship)
 {
-  const auto target = m_targetView->getTarget();
+  const auto target = m_shipView->getPlayerTarget();
 
   auto &menu = *m_weapons[id];
 
@@ -120,7 +115,7 @@ void WeaponsUiHandler::updateWeaponMenu(const bsgo::WeaponSlotComponent &weapon,
   {
     bgColor = olc::DARK_GREY;
   }
-  else if (!target || weapon.range() < m_targetView->distanceToTarget())
+  else if (!target || weapon.range() < m_shipView->distanceToTarget())
   {
     bgColor = olc::DARK_RED;
   }

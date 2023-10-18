@@ -7,7 +7,6 @@ GameScreenInputHandler::GameScreenInputHandler(const bsgo::Views &views)
   : IInputHandler("game")
   , m_shipView(views.shipView)
   , m_systemView(views.systemView)
-  , m_targetView(views.targetView)
 {
   if (nullptr == m_shipView)
   {
@@ -16,10 +15,6 @@ GameScreenInputHandler::GameScreenInputHandler(const bsgo::Views &views)
   if (nullptr == m_systemView)
   {
     throw std::invalid_argument("Expected non null system view");
-  }
-  if (nullptr == m_targetView)
-  {
-    throw std::invalid_argument("Expected non null target view");
   }
 }
 
@@ -37,16 +32,17 @@ void GameScreenInputHandler::processUserInput(const controls::State &c, Coordina
 void GameScreenInputHandler::performAction(float x, float y, const controls::State & /*state*/)
 {
   const Eigen::Vector3f pos(x, y, 0.0f);
-  const auto ent = m_systemView->getEntityAt(pos);
+  const auto ent  = m_systemView->getEntityAt(pos);
+  auto playerShip = m_shipView->getPlayerShip();
 
   if (ent)
   {
     log("Found target " + ent->str());
-    m_targetView->setTarget(ent->uuid);
+    playerShip.access<bsgo::TargetComponent>().setTarget(ent->uuid);
   }
   else
   {
-    m_targetView->clearTarget();
+    playerShip.access<bsgo::TargetComponent>().clearTarget();
   }
 }
 

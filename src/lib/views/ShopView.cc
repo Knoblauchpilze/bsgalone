@@ -3,8 +3,8 @@
 
 namespace bsgo {
 
-ShopView::ShopView()
-  : IView("shop")
+ShopView::ShopView(const CoordinatorShPtr &coordinator)
+  : IView("shop", coordinator)
 {}
 
 } // namespace bsgo

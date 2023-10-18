@@ -10,7 +10,6 @@ GameScreenRenderer::GameScreenRenderer(const bsgo::Views &views)
   : IRenderer("game")
   , m_shipView(views.shipView)
   , m_systemView(views.systemView)
-  , m_targetView(views.targetView)
 {
   if (nullptr == m_shipView)
   {
@@ -19,10 +18,6 @@ GameScreenRenderer::GameScreenRenderer(const bsgo::Views &views)
   if (nullptr == m_systemView)
   {
     throw std::invalid_argument("Expected non null system view");
-  }
-  if (nullptr == m_targetView)
-  {
-    throw std::invalid_argument("Expected non null target view");
   }
 }
 

@@ -21,9 +21,12 @@ class ShipView : public IView
 
   auto getShipsWithin(const IBoundingBox &bbox) const -> std::vector<Entity>;
 
+  auto getPlayerTarget() const -> std::optional<Entity>;
+  auto distanceToTarget() const -> float;
+  auto getTarget(const Uuid &ship) const -> std::optional<Entity>;
+
   private:
   Uuid m_playerShipId;
-  CoordinatorShPtr m_coordinator;
 };
 
 using ShipViewShPtr = std::shared_ptr<ShipView>;

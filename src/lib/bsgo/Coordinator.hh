@@ -7,8 +7,8 @@
 #include "ISystem.hh"
 #include "Uuid.hh"
 #include <core_utils/CoreObject.hh>
-#include <map>
 #include <memory>
+#include <optional>
 #include <unordered_map>
 
 namespace bsgo {
@@ -26,6 +26,7 @@ class Coordinator : public utils::CoreObject
   void addHealth(const Uuid &ent, const float hp, const float max, const float regen);
   void addPower(const Uuid &ent, const float power, const float max, const float regen);
   void addWeapon(const Uuid &ent, const Weapon &weapon);
+  void addTarget(const Uuid &ent);
 
   auto getEntity(const Uuid &ent) const -> Entity;
 

@@ -3,8 +3,8 @@
 
 namespace bsgo {
 
-PlayerView::PlayerView()
-  : IView("player")
+PlayerView::PlayerView(const CoordinatorShPtr &coordinator)
+  : IView("player", coordinator)
 {}
 
 } // namespace bsgo
