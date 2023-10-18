@@ -4,6 +4,7 @@
 #include "EntityKind.hh"
 #include "HealthComponent.hh"
 #include "PowerComponent.hh"
+#include "TargetComponent.hh"
 #include "TransformComponent.hh"
 #include "Uuid.hh"
 #include "VelocityComponent.hh"
@@ -22,6 +23,7 @@ struct Entity
   std::optional<HealthComponentShPtr> health{};
   std::optional<PowerComponentShPtr> power{};
   std::vector<WeaponSlotComponentShPtr> weapons{};
+  std::optional<TargetComponentShPtr> target{};
 
   auto str() const noexcept -> std::string;
 

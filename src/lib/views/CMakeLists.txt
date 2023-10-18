@@ -5,7 +5,6 @@ target_sources (bsgalone_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/ServerView.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ShipView.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ShopView.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/TargetView.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SystemView.cc
 	)
 

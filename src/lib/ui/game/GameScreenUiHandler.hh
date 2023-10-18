@@ -21,7 +21,6 @@ class GameScreenUiHandler : public IUiHandler
 
   private:
   bsgo::ShipViewShPtr m_shipView;
-  bsgo::TargetViewShPtr m_targetView;
 
   enum MenuItem
   {

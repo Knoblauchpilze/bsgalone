@@ -22,7 +22,6 @@ class WeaponsUiHandler : public IUiHandler
 
   private:
   bsgo::ShipViewShPtr m_shipView;
-  bsgo::TargetViewShPtr m_targetView;
 
   std::vector<MenuShPtr> m_weapons{};
   std::vector<MenuShPtr> m_ranges{};

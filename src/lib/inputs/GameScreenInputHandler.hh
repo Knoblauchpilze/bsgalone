@@ -20,7 +20,6 @@ class GameScreenInputHandler : public IInputHandler
   private:
   bsgo::ShipViewShPtr m_shipView;
   bsgo::SystemViewShPtr m_systemView;
-  bsgo::TargetViewShPtr m_targetView;
 
   void moveShip(bsgo::Entity &ship, const Motion &motion);
   void keepShipCentered(CoordinateFrame &frame);

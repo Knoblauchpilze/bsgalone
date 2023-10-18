@@ -22,7 +22,6 @@ class GameScreenRenderer : public IRenderer
   private:
   bsgo::ShipViewShPtr m_shipView;
   bsgo::SystemViewShPtr m_systemView;
-  bsgo::TargetViewShPtr m_targetView;
 
   TiledBackgroundPtr m_systemBackground{};
 

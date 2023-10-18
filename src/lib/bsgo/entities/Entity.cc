@@ -118,9 +118,21 @@ auto Entity::access<PowerComponent>() const -> const PowerComponent &
 }
 
 template<>
+auto Entity::access<TargetComponent>() const -> const TargetComponent &
+{
+  return details::safeConstAccess(target, *this, "Target");
+}
+
+template<>
 auto Entity::access<VelocityComponent>() -> VelocityComponent &
 {
   return details::safeAccess(velocity, *this, "Velocity");
+}
+
+template<>
+auto Entity::access<TargetComponent>() -> TargetComponent &
+{
+  return details::safeAccess(target, *this, "Target");
 }
 
 } // namespace bsgo

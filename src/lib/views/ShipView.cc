@@ -4,9 +4,8 @@
 namespace bsgo {
 
 ShipView::ShipView(const Uuid &playerShipId, const CoordinatorShPtr &coordinator)
-  : IView("ship")
+  : IView("ship", coordinator)
   , m_playerShipId(playerShipId)
-  , m_coordinator(coordinator)
 {}
 
 auto ShipView::getPlayerShip() const -> Entity
@@ -34,6 +33,38 @@ auto ShipView::getShipsWithin(const IBoundingBox &bbox) const -> std::vector<Ent
   }
 
   return out;
+}
+
+auto ShipView::getPlayerTarget() const -> std::optional<Entity>
+{
+  return getTarget(m_playerShipId);
+}
+
+auto ShipView::distanceToTarget() const -> float
+{
+  const auto target = getPlayerTarget();
+  if (!target)
+  {
+    error("Can't get distance to non existing target");
+  }
+
+  const auto playerShip = getPlayerShip();
+  const auto playerPos  = playerShip.access<TransformComponent>().position();
+  const auto targetPos  = target->access<TransformComponent>().position();
+
+  return (targetPos - playerPos).norm();
+}
+
+auto ShipView::getTarget(const Uuid &ship) const -> std::optional<Entity>
+{
+  const auto ent      = getShip(ship);
+  const auto targetId = ent.access<TargetComponent>().target();
+  if (!targetId)
+  {
+    return {};
+  }
+
+  return {getEntity(*targetId)};
 }
 
 } // namespace bsgo

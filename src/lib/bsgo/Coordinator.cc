@@ -88,6 +88,12 @@ void Coordinator::addWeapon(const Uuid &ent, const Weapon &weapon)
   m_components.weapons.emplace(ent, std::make_shared<WeaponSlotComponent>(weapon));
 }
 
+void Coordinator::addTarget(const Uuid &ent)
+{
+  checkForOverrides(ent, "target", m_components.targets);
+  m_components.targets[ent] = std::make_shared<TargetComponent>();
+}
+
 auto Coordinator::getEntity(const Uuid &ent) const -> Entity
 {
   Entity out;
@@ -105,6 +111,8 @@ auto Coordinator::getEntity(const Uuid &ent) const -> Entity
   out.power     = getComponent(ent, m_components.powers);
 
   out.weapons = getAllComponent(ent, m_components.weapons);
+
+  out.target = getComponent(ent, m_components.targets);
 
   return out;
 }
