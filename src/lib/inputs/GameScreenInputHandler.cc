@@ -58,13 +58,13 @@ void GameScreenInputHandler::moveShip(bsgo::Entity &ship, const Motion &motion)
   direction(2)              = motion.z;
   direction.normalize();
 
-  ship.access<bsgo::Velocity>().accelerate(direction);
+  ship.access<bsgo::VelocityComponent>().accelerate(direction);
 }
 
 void GameScreenInputHandler::keepShipCentered(CoordinateFrame &frame)
 {
   const auto ent = m_shipView->getPlayerShip();
-  const auto pos = ent.access<bsgo::Transform>().position();
+  const auto pos = ent.access<bsgo::TransformComponent>().position();
   const olc::vf2d pos2d{pos(0), pos(1)};
   frame.moveTo(pos2d);
 }

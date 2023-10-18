@@ -70,55 +70,55 @@ auto Entity::str() const noexcept -> std::string
 }
 
 template<>
-bool Entity::exists<Transform>() const
+bool Entity::exists<TransformComponent>() const
 {
   return details::checkComponentExists(transform);
 }
 
 template<>
-bool Entity::exists<Velocity>() const
+bool Entity::exists<VelocityComponent>() const
 {
   return details::checkComponentExists(velocity);
 }
 
 template<>
-bool Entity::exists<Health>() const
+bool Entity::exists<HealthComponent>() const
 {
   return details::checkComponentExists(health);
 }
 
 template<>
-bool Entity::exists<Power>() const
+bool Entity::exists<PowerComponent>() const
 {
   return details::checkComponentExists(power);
 }
 
 template<>
-auto Entity::access<Transform>() const -> const Transform &
+auto Entity::access<TransformComponent>() const -> const TransformComponent &
 {
   return details::safeConstAccess(transform, *this, "Transform");
 }
 
 template<>
-auto Entity::access<Velocity>() const -> const Velocity &
+auto Entity::access<VelocityComponent>() const -> const VelocityComponent &
 {
   return details::safeConstAccess(velocity, *this, "Velocity");
 }
 
 template<>
-auto Entity::access<Health>() const -> const Health &
+auto Entity::access<HealthComponent>() const -> const HealthComponent &
 {
   return details::safeConstAccess(health, *this, "Health");
 }
 
 template<>
-auto Entity::access<Power>() const -> const Power &
+auto Entity::access<PowerComponent>() const -> const PowerComponent &
 {
   return details::safeConstAccess(power, *this, "Power");
 }
 
 template<>
-auto Entity::access<Velocity>() -> Velocity &
+auto Entity::access<VelocityComponent>() -> VelocityComponent &
 {
   return details::safeAccess(velocity, *this, "Velocity");
 }

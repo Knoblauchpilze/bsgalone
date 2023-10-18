@@ -1,21 +1,21 @@
 
-#include "Transform.hh"
+#include "TransformComponent.hh"
 #include "AxisAlignedBoundingBox.hh"
 #include "CircleBox.hh"
 #include <cxxabi.h>
 
 namespace bsgo {
 
-Transform::Transform(IBoundingBoxShPtr bbox)
+TransformComponent::TransformComponent(IBoundingBoxShPtr bbox)
   : m_bbox(std::move(bbox))
 {}
 
-auto Transform::position() const -> Eigen::Vector3f
+auto TransformComponent::position() const -> Eigen::Vector3f
 {
   return m_bbox->position();
 }
 
-auto Transform::size() const -> float
+auto TransformComponent::size() const -> float
 {
   if (!m_bbox)
   {
@@ -38,22 +38,22 @@ auto Transform::size() const -> float
   throw std::invalid_argument("Unsupported bounding box type " + name);
 }
 
-auto Transform::heading() const noexcept -> float
+auto TransformComponent::heading() const noexcept -> float
 {
   return m_heading;
 }
 
-bool Transform::contains(const Eigen::Vector3f &pos) const noexcept
+bool TransformComponent::contains(const Eigen::Vector3f &pos) const noexcept
 {
   return m_bbox && m_bbox->isInside(pos);
 }
 
-void Transform::translate(const Eigen::Vector3f &delta)
+void TransformComponent::translate(const Eigen::Vector3f &delta)
 {
   m_bbox->translate(delta);
 }
 
-void Transform::setHeading(const float heading)
+void TransformComponent::setHeading(const float heading)
 {
   m_heading = heading;
 }

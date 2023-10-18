@@ -61,31 +61,31 @@ auto Coordinator::createEntity(const EntityKind &kind) -> Uuid
 void Coordinator::addTransform(const Uuid &ent, IBoundingBoxPtr bbox)
 {
   checkForOverrides(ent, "transform", m_components.transforms);
-  m_components.transforms[ent] = std::make_shared<Transform>(std::move(bbox));
+  m_components.transforms[ent] = std::make_shared<TransformComponent>(std::move(bbox));
 }
 
 void Coordinator::addVelocity(const Uuid &ent, const float maxAcceleration)
 {
   checkForOverrides(ent, "velocity", m_components.velocities);
-  m_components.velocities[ent] = std::make_shared<Velocity>(maxAcceleration);
+  m_components.velocities[ent] = std::make_shared<VelocityComponent>(maxAcceleration);
 }
 
 void Coordinator::addHealth(const Uuid &ent, const float hp, const float max, const float regen)
 {
   checkForOverrides(ent, "health", m_components.healths);
-  m_components.healths[ent] = std::make_shared<Health>(hp, max, regen);
+  m_components.healths[ent] = std::make_shared<HealthComponent>(hp, max, regen);
 }
 
 void Coordinator::addPower(const Uuid &ent, const float power, const float max, const float regen)
 {
   checkForOverrides(ent, "power", m_components.powers);
-  m_components.powers[ent] = std::make_shared<Power>(power, max, regen);
+  m_components.powers[ent] = std::make_shared<PowerComponent>(power, max, regen);
 }
 
 void Coordinator::addWeapon(const Uuid &ent, const Weapon &weapon)
 {
   checkEntityExist(ent, "weapon");
-  m_components.weapons.emplace(ent, std::make_shared<WeaponSlot>(weapon));
+  m_components.weapons.emplace(ent, std::make_shared<WeaponSlotComponent>(weapon));
 }
 
 auto Coordinator::getEntity(const Uuid &ent) const -> Entity

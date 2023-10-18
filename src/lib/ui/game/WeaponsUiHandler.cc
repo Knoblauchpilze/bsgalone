@@ -105,7 +105,7 @@ void WeaponsUiHandler::generateWeaponMenus(int width, int height)
   }
 }
 
-void WeaponsUiHandler::updateWeaponMenu(const bsgo::WeaponSlot &weapon,
+void WeaponsUiHandler::updateWeaponMenu(const bsgo::WeaponSlotComponent &weapon,
                                         const int id,
                                         const bsgo::Entity &ship)
 {
@@ -124,7 +124,7 @@ void WeaponsUiHandler::updateWeaponMenu(const bsgo::WeaponSlot &weapon,
   {
     bgColor = olc::DARK_RED;
   }
-  else if (ship.access<bsgo::Power>().value() < weapon.powerCost())
+  else if (ship.access<bsgo::PowerComponent>().value() < weapon.powerCost())
   {
     bgColor = olc::DARK_ORANGE;
   }

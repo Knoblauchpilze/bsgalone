@@ -6,11 +6,11 @@
 
 namespace bsgo {
 
-class WeaponSlot : public SlotComponent
+class WeaponSlotComponent : public SlotComponent
 {
   public:
-  WeaponSlot(const Weapon &weapon);
-  ~WeaponSlot() override = default;
+  WeaponSlotComponent(const Weapon &weapon);
+  ~WeaponSlotComponent() override = default;
 
   auto minDamage() const -> float;
   auto maxDamage() const -> float;
@@ -24,6 +24,6 @@ class WeaponSlot : public SlotComponent
   bool m_active{false};
 };
 
-using WeaponSlotShPtr = std::shared_ptr<WeaponSlot>;
+using WeaponSlotComponentShPtr = std::shared_ptr<WeaponSlotComponent>;
 
 } // namespace bsgo

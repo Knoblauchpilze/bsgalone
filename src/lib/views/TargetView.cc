@@ -32,7 +32,7 @@ auto TargetView::distanceToTarget() const -> float
 
   const auto playerPos = getPlayerShipPosition();
   const auto target    = m_coordinator->getEntity(*m_target);
-  const auto targetPos = target.access<bsgo::Transform>().position();
+  const auto targetPos = target.access<bsgo::TransformComponent>().position();
 
   return (targetPos - playerPos).norm();
 }
@@ -45,7 +45,7 @@ void TargetView::clearTarget()
 auto TargetView::getPlayerShipPosition() const -> Eigen::Vector3f
 {
   const auto ship = m_coordinator->getEntity(m_playerShipId);
-  return ship.access<Transform>().position();
+  return ship.access<TransformComponent>().position();
 }
 
 } // namespace bsgo

@@ -1,30 +1,30 @@
 
-#include "Velocity.hh"
+#include "VelocityComponent.hh"
 
 namespace bsgo {
 
-Velocity::Velocity(const float maxAcceleration)
+VelocityComponent::VelocityComponent(const float maxAcceleration)
   : IComponent("velocity")
   , m_maxAcceleration(maxAcceleration)
 {}
 
-auto Velocity::acceleration() const noexcept -> Eigen::Vector3f
+auto VelocityComponent::acceleration() const noexcept -> Eigen::Vector3f
 {
   return m_acceleration;
 }
 
-auto Velocity::speed() const noexcept -> Eigen::Vector3f
+auto VelocityComponent::speed() const noexcept -> Eigen::Vector3f
 {
   return m_speed;
 }
 
-void Velocity::accelerate(const Eigen::Vector3f &direction)
+void VelocityComponent::accelerate(const Eigen::Vector3f &direction)
 {
   const Eigen::Vector3f nDir = direction.normalized();
   m_acceleration             = nDir * m_maxAcceleration;
 }
 
-void Velocity::update(const float elapsedSeconds)
+void VelocityComponent::update(const float elapsedSeconds)
 {
   m_speed += m_acceleration * elapsedSeconds;
 

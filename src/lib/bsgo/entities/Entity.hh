@@ -2,12 +2,12 @@
 #pragma once
 
 #include "EntityKind.hh"
-#include "Health.hh"
-#include "Power.hh"
-#include "Transform.hh"
+#include "HealthComponent.hh"
+#include "PowerComponent.hh"
+#include "TransformComponent.hh"
 #include "Uuid.hh"
-#include "Velocity.hh"
-#include "WeaponSlot.hh"
+#include "VelocityComponent.hh"
+#include "WeaponSlotComponent.hh"
 #include <optional>
 #include <string>
 
@@ -17,11 +17,11 @@ struct Entity
 {
   Uuid uuid;
   EntityKind kind{EntityKind::NONE};
-  std::optional<TransformShPtr> transform{};
-  std::optional<VelocityShPtr> velocity{};
-  std::optional<HealthShPtr> health{};
-  std::optional<PowerShPtr> power{};
-  std::vector<WeaponSlotShPtr> weapons{};
+  std::optional<TransformComponentShPtr> transform{};
+  std::optional<VelocityComponentShPtr> velocity{};
+  std::optional<HealthComponentShPtr> health{};
+  std::optional<PowerComponentShPtr> power{};
+  std::vector<WeaponSlotComponentShPtr> weapons{};
 
   auto str() const noexcept -> std::string;
 
