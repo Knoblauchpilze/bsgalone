@@ -21,6 +21,8 @@ class RegenerativeComponent : public IComponent
   auto value() const -> float;
   auto max() const -> float;
 
+  void use(const float amount);
+
   private:
   float m_min;
   float m_value;

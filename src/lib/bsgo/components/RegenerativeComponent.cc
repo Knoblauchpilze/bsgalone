@@ -38,6 +38,15 @@ auto RegenerativeComponent::max() const -> float
   return m_max;
 }
 
+void RegenerativeComponent::use(const float amount)
+{
+  if (m_value < amount)
+  {
+    error("Can't use " + std::to_string(amount), "Only " + std::to_string(m_value) + " available");
+  }
+  m_value -= amount;
+}
+
 void RegenerativeComponent::validate()
 {
   if (m_max < m_min)

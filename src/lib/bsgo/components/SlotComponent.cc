@@ -32,6 +32,16 @@ bool SlotComponent::canFire() const noexcept
   return !m_elapsedSinceLastFired;
 }
 
+void SlotComponent::fire()
+{
+  if (!canFire())
+  {
+    error("Failed to use slot", "Still reloading");
+  }
+
+  m_elapsedSinceLastFired = utils::Duration(0);
+}
+
 void SlotComponent::handleReload(const float elapsedSeconds)
 {
   if (!m_elapsedSinceLastFired)

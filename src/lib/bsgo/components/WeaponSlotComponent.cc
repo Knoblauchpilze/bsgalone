@@ -32,4 +32,9 @@ void WeaponSlotComponent::toggle()
   m_active = !m_active;
 }
 
+auto WeaponSlotComponent::generateDamage() const -> float
+{
+  return (m_minDamage + m_maxDamage) / 2.0f;
+}
+
 } // namespace bsgo

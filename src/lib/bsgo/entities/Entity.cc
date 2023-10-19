@@ -130,6 +130,18 @@ auto Entity::access<VelocityComponent>() -> VelocityComponent &
 }
 
 template<>
+auto Entity::access<HealthComponent>() -> HealthComponent &
+{
+  return details::safeAccess(health, *this, "Heath");
+}
+
+template<>
+auto Entity::access<PowerComponent>() -> PowerComponent &
+{
+  return details::safeAccess(power, *this, "Power");
+}
+
+template<>
 auto Entity::access<TargetComponent>() -> TargetComponent &
 {
   return details::safeAccess(target, *this, "Target");

@@ -26,6 +26,8 @@ class SlotComponent : public IComponent
   auto range() const -> float;
   bool canFire() const noexcept;
 
+  void fire();
+
   private:
   float m_powerCost;
   float m_range;

@@ -18,6 +18,8 @@ class WeaponSlotComponent : public SlotComponent
 
   void toggle();
 
+  auto generateDamage() const -> float;
+
   private:
   float m_minDamage;
   float m_maxDamage;
