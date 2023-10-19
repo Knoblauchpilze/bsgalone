@@ -1,19 +1,19 @@
 
 #pragma once
 
-#include "ISystem.hh"
+#include "AbstractSystem.hh"
 
 namespace bsgo {
 
-class HealthSystem : public ISystem
+class HealthSystem : public AbstractSystem
 {
   public:
   HealthSystem();
   ~HealthSystem() override = default;
 
-  void update(const Components &components,
-              const Coordinator &coordinator,
-              const float elapsedSeconds) override;
+  void updateEntity(Entity &entity,
+                    const Coordinator &coordinator,
+                    const float elapsedSeconds) override;
 };
 
 } // namespace bsgo

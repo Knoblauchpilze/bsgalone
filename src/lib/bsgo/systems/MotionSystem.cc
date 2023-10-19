@@ -2,35 +2,32 @@
 #include "MotionSystem.hh"
 
 namespace bsgo {
+namespace {
+bool isEntityRelevant(const Entity &ent)
+{
+  return ent.exists<TransformComponent>() && ent.exists<VelocityComponent>();
+}
+} // namespace
 
 MotionSystem::MotionSystem()
-  : ISystem("motion")
+  : AbstractSystem("motion", isEntityRelevant)
 {}
 
-void MotionSystem::update(const Components &components,
-                          const Coordinator & /*coordinator*/,
-                          const float elapsedSeconds)
+void MotionSystem::updateEntity(Entity &entity,
+                                const Coordinator & /*coordinator*/,
+                                const float elapsedSeconds)
 {
-  for (const auto &[_, velocity] : components.velocities)
-  {
-    velocity->update(elapsedSeconds);
-  }
+  auto &velocity  = entity.access<VelocityComponent>();
+  auto &transform = entity.access<TransformComponent>();
 
-  for (const auto &[uuid, transform] : components.transforms)
-  {
-    const auto vel = components.velocities.find(uuid);
-    if (components.velocities.end() == vel)
-    {
-      continue;
-    }
+  velocity.update(elapsedSeconds);
 
-    const Eigen::Vector3f speed = vel->second->speed();
-    Eigen::Vector3f dv          = speed * elapsedSeconds;
-    transform->translate(dv);
-    if (!speed.isZero())
-    {
-      transform->setHeading(std::atan2(speed(0), speed(1)));
-    }
+  const Eigen::Vector3f speed = velocity.speed();
+  Eigen::Vector3f dv          = speed * elapsedSeconds;
+  transform.translate(dv);
+  if (!speed.isZero())
+  {
+    transform.setHeading(std::atan2(speed(0), speed(1)));
   }
 }
 

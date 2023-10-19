@@ -15,10 +15,7 @@ class ISystem : public utils::CoreObject
   ISystem(const std::string &name);
   virtual ~ISystem() = default;
 
-  virtual void update(const Components &components,
-                      const Coordinator &coordinator,
-                      const float elapsedSeconds)
-    = 0;
+  virtual void update(const Coordinator &coordinator, const float elapsedSeconds) = 0;
 };
 
 using ISystemPtr = std::unique_ptr<ISystem>;

@@ -1,20 +1,19 @@
 
 #pragma once
 
-#include "Entity.hh"
-#include "ISystem.hh"
+#include "AbstractSystem.hh"
 
 namespace bsgo {
 
-class WeaponSystem : public ISystem
+class WeaponSystem : public AbstractSystem
 {
   public:
   WeaponSystem();
   ~WeaponSystem() override = default;
 
-  void update(const Components &components,
-              const Coordinator &coordinator,
-              const float elapsedSeconds) override;
+  void updateEntity(Entity &entity,
+                    const Coordinator &coordinator,
+                    const float elapsedSeconds) override;
 
   private:
   void fireWeaponsForEntity(Entity &ent, Entity &target);

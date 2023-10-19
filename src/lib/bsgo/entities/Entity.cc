@@ -94,6 +94,12 @@ bool Entity::exists<PowerComponent>() const
 }
 
 template<>
+bool Entity::exists<TargetComponent>() const
+{
+  return details::checkComponentExists(target);
+}
+
+template<>
 auto Entity::access<TransformComponent>() const -> const TransformComponent &
 {
   return details::safeConstAccess(transform, *this, "Transform");
@@ -121,6 +127,12 @@ template<>
 auto Entity::access<TargetComponent>() const -> const TargetComponent &
 {
   return details::safeConstAccess(target, *this, "Target");
+}
+
+template<>
+auto Entity::access<TransformComponent>() -> TransformComponent &
+{
+  return details::safeAccess(transform, *this, "Transform");
 }
 
 template<>

@@ -2,16 +2,22 @@
 #include "SlotSystem.hh"
 
 namespace bsgo {
+namespace {
+bool isEntityRelevant(const Entity &entity)
+{
+  return !entity.weapons.empty();
+}
+} // namespace
 
 SlotSystem::SlotSystem()
-  : ISystem("slot")
+  : AbstractSystem("slot", isEntityRelevant)
 {}
 
-void SlotSystem::update(const Components &components,
-                        const Coordinator & /*coordinator*/,
-                        const float elapsedSeconds)
+void SlotSystem::updateEntity(Entity &entity,
+                              const Coordinator & /*coordinator*/,
+                              const float elapsedSeconds)
 {
-  for (const auto &[_, weapon] : components.weapons)
+  for (const auto &weapon : entity.weapons)
   {
     weapon->update(elapsedSeconds);
   }

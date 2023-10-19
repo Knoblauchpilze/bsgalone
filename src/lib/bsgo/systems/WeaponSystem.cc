@@ -4,11 +4,9 @@
 
 namespace bsgo {
 namespace {
-bool isEntityAbleToFire(const Uuid &entity,
-                        const EntityKind & /*kind*/,
-                        const Components &components)
+bool isEntityRelevant(const Entity &entity)
 {
-  return components.hasAtLeastOneWeapon(entity) && components.hasTarget(entity);
+  return !entity.weapons.empty() && entity.exists<TargetComponent>();
 }
 
 bool isWeaponAbleToFireOn(const Entity &ent, const WeaponSlotComponent &weapon, const Entity &target)
@@ -38,28 +36,22 @@ bool isWeaponAbleToFireOn(const Entity &ent, const WeaponSlotComponent &weapon, 
 } // namespace
 
 WeaponSystem::WeaponSystem()
-  : ISystem("weapon")
+  : AbstractSystem("weapon", isEntityRelevant)
 {}
 
-void WeaponSystem::update(const Components & /*components*/,
-                          const Coordinator &coordinator,
-                          const float /*elapsedSeconds*/)
+void WeaponSystem::updateEntity(Entity &entity,
+                                const Coordinator &coordinator,
+                                const float /*elapsedSeconds*/)
 {
-  /// https://gamedev.stackexchange.com/questions/71711/ecs-how-to-access-multiple-components-not-the-same-one-in-a-system
-  const auto ids = coordinator.getEntitiesSatistying(isEntityAbleToFire);
-  for (const auto &id : ids)
+  const auto target = entity.access<TargetComponent>().target();
+  if (!target)
   {
-    auto ent          = coordinator.getEntity(id);
-    const auto target = ent.access<TargetComponent>().target();
-    if (!target)
-    {
-      continue;
-    }
-
-    auto targetEnt = coordinator.getEntity(*target);
-
-    fireWeaponsForEntity(ent, targetEnt);
+    return;
   }
+
+  auto targetEnt = coordinator.getEntity(*target);
+
+  fireWeaponsForEntity(entity, targetEnt);
 }
 
 void WeaponSystem::fireWeaponsForEntity(Entity &ent, Entity &target)

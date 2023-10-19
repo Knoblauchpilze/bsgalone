@@ -2,19 +2,22 @@
 #include "HealthSystem.hh"
 
 namespace bsgo {
+namespace {
+bool isEntityRelevant(const Entity &ent)
+{
+  return ent.exists<HealthComponent>();
+}
+} // namespace
 
 HealthSystem::HealthSystem()
-  : ISystem("health")
+  : AbstractSystem("health", isEntityRelevant)
 {}
 
-void HealthSystem::update(const Components &components,
-                          const Coordinator & /*coordinator*/,
-                          const float elapsedSeconds)
+void HealthSystem::updateEntity(Entity &entity,
+                                const Coordinator & /*coordinator*/,
+                                const float elapsedSeconds)
 {
-  for (const auto &[_, health] : components.healths)
-  {
-    health->update(elapsedSeconds);
-  }
+  entity.access<HealthComponent>().update(elapsedSeconds);
 }
 
 } // namespace bsgo
