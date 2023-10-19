@@ -35,6 +35,10 @@ class Coordinator : public utils::CoreObject
   auto getEntitiesWithin(const IBoundingBox &bbox,
                          const std::optional<EntityKind> &filter = {}) const -> std::vector<Uuid>;
 
+  using EntityPredicate
+    = std::function<bool(const Uuid &entity, const EntityKind &kind, const Components &components)>;
+  auto getEntitiesSatistying(const EntityPredicate &predicate) const -> std::vector<Uuid>;
+
   void update(float elapsedSeconds);
 
   private:

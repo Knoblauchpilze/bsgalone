@@ -157,6 +157,21 @@ auto Coordinator::getEntitiesWithin(const IBoundingBox &bbox,
   return out;
 }
 
+auto Coordinator::getEntitiesSatistying(const EntityPredicate &predicate) const -> std::vector<Uuid>
+{
+  std::vector<Uuid> out;
+
+  for (const auto [ent, kind] : m_entities)
+  {
+    if (predicate(ent, kind, m_components))
+    {
+      out.push_back(ent);
+    }
+  }
+
+  return out;
+}
+
 void Coordinator::update(float elapsedSeconds)
 {
   for (const auto &system : m_systems)
