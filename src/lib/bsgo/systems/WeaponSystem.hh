@@ -5,11 +5,11 @@
 
 namespace bsgo {
 
-class PowerSystem : public ISystem
+class WeaponSystem : public ISystem
 {
   public:
-  PowerSystem();
-  ~PowerSystem() override = default;
+  WeaponSystem();
+  ~WeaponSystem() override = default;
 
   void update(const Components &components,
               const Coordinator &coordinator,

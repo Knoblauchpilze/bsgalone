@@ -4,6 +4,8 @@
 #include "HealthSystem.hh"
 #include "MotionSystem.hh"
 #include "PowerSystem.hh"
+#include "SlotSystem.hh"
+#include "WeaponSystem.hh"
 
 namespace bsgo {
 namespace {
@@ -176,7 +178,7 @@ void Coordinator::update(float elapsedSeconds)
 {
   for (const auto &system : m_systems)
   {
-    system->update(m_components, elapsedSeconds);
+    system->update(m_components, *this, elapsedSeconds);
   }
 }
 
@@ -190,6 +192,12 @@ void Coordinator::createSystems()
 
   auto power = std::make_unique<PowerSystem>();
   m_systems.push_back(std::move(power));
+
+  auto slot = std::make_unique<SlotSystem>();
+  m_systems.push_back(std::move(slot));
+
+  auto weapon = std::make_unique<WeaponSystem>();
+  m_systems.push_back(std::move(weapon));
 }
 
 bool Coordinator::hasExpectedKind(const Uuid &ent, const std::optional<EntityKind> &kind) const

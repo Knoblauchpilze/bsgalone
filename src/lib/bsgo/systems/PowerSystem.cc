@@ -7,7 +7,9 @@ PowerSystem::PowerSystem()
   : ISystem("power")
 {}
 
-void PowerSystem::update(const Components &components, const float elapsedSeconds)
+void PowerSystem::update(const Components &components,
+                         const Coordinator & /*coordinator*/,
+                         const float elapsedSeconds)
 {
   for (const auto &[_, power] : components.powers)
   {

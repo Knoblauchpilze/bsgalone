@@ -7,13 +7,18 @@
 
 namespace bsgo {
 
+class Coordinator;
+
 class ISystem : public utils::CoreObject
 {
   public:
   ISystem(const std::string &name);
   virtual ~ISystem() = default;
 
-  virtual void update(const Components &components, const float elapsedSeconds) = 0;
+  virtual void update(const Components &components,
+                      const Coordinator &coordinator,
+                      const float elapsedSeconds)
+    = 0;
 };
 
 using ISystemPtr = std::unique_ptr<ISystem>;

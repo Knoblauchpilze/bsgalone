@@ -7,7 +7,9 @@ HealthSystem::HealthSystem()
   : ISystem("health")
 {}
 
-void HealthSystem::update(const Components &components, const float elapsedSeconds)
+void HealthSystem::update(const Components &components,
+                          const Coordinator & /*coordinator*/,
+                          const float elapsedSeconds)
 {
   for (const auto &[_, health] : components.healths)
   {

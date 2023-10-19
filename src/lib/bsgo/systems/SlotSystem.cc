@@ -4,10 +4,12 @@
 namespace bsgo {
 
 SlotSystem::SlotSystem()
-  : ISystem("weapon")
+  : ISystem("slot")
 {}
 
-void SlotSystem::update(const Components &components, const float elapsedSeconds)
+void SlotSystem::update(const Components &components,
+                        const Coordinator & /*coordinator*/,
+                        const float elapsedSeconds)
 {
   for (const auto &[_, weapon] : components.weapons)
   {
