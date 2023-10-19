@@ -7,7 +7,9 @@ MotionSystem::MotionSystem()
   : ISystem("motion")
 {}
 
-void MotionSystem::update(const Components &components, const float elapsedSeconds)
+void MotionSystem::update(const Components &components,
+                          const Coordinator & /*coordinator*/,
+                          const float elapsedSeconds)
 {
   for (const auto &[_, velocity] : components.velocities)
   {
