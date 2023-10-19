@@ -20,13 +20,6 @@ struct Components
   std::unordered_map<Uuid, PowerComponentShPtr> powers{};
   std::unordered_multimap<Uuid, WeaponSlotComponentShPtr> weapons{};
   std::unordered_map<Uuid, TargetComponentShPtr> targets{};
-
-  bool hasTransform(const Uuid &ent) const;
-  bool hasVelocity(const Uuid &ent) const;
-  bool hasHealth(const Uuid &ent) const;
-  bool hasPower(const Uuid &ent) const;
-  bool hasAtLeastOneWeapon(const Uuid &ent) const;
-  bool hasTarget(const Uuid &ent) const;
 };
 
 } // namespace bsgo

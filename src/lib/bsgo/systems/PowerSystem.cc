@@ -2,19 +2,22 @@
 #include "PowerSystem.hh"
 
 namespace bsgo {
+namespace {
+bool isEntityRelevant(const Entity &ent)
+{
+  return ent.exists<PowerComponent>();
+}
+} // namespace
 
 PowerSystem::PowerSystem()
-  : ISystem("power")
+  : AbstractSystem("power", isEntityRelevant)
 {}
 
-void PowerSystem::update(const Components &components,
-                         const Coordinator & /*coordinator*/,
-                         const float elapsedSeconds)
+void PowerSystem::updateEntity(Entity &entity,
+                               const Coordinator & /*coordinator*/,
+                               const float elapsedSeconds)
 {
-  for (const auto &[_, power] : components.powers)
-  {
-    power->update(elapsedSeconds);
-  }
+  entity.access<PowerComponent>().update(elapsedSeconds);
 }
 
 } // namespace bsgo
