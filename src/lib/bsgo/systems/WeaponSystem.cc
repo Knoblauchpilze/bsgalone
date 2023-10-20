@@ -60,15 +60,20 @@ void WeaponSystem::fireWeaponForEntity(Entity &ent, WeaponSlotComponent &weapon,
     return;
   }
 
+  weapon.fire();
+
   const auto powerUsed = weapon.powerCost();
-  ent.access<PowerComponent>().use(powerUsed);
+  ent.access<PowerComponent>().usePower(powerUsed);
 
   const auto damage = weapon.generateDamage();
-  target.access<HealthComponent>().use(damage);
+  target.access<HealthComponent>().damage(damage);
 
   log("Dealing " + std::to_string(damage) + " to " + target.str());
 
-  weapon.fire();
+  if (!target.access<HealthComponent>().isAlive())
+  {
+    ent.access<TargetComponent>().clearTarget();
+  }
 }
 
 } // namespace bsgo
