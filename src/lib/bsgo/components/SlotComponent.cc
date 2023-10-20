@@ -32,6 +32,18 @@ bool SlotComponent::canFire() const noexcept
   return !m_elapsedSinceLastFired;
 }
 
+auto SlotComponent::reloadPercentage() const -> float
+{
+  if (canFire())
+  {
+    return 1.0f;
+  }
+
+  // https://stackoverflow.com/questions/76522118/dividing-two-chronodurations-to-get-fraction
+  const auto reloadAsFloat = std::chrono::duration<float, std::milli>(m_reloadTime);
+  return *m_elapsedSinceLastFired / reloadAsFloat;
+}
+
 void SlotComponent::fire()
 {
   if (!canFire())
