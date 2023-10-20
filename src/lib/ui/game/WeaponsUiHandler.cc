@@ -125,7 +125,10 @@ void WeaponsUiHandler::updateWeaponMenu(const bsgo::WeaponSlotComponent &weapon,
   }
   else if (!weapon.canFire())
   {
-    bgColor = olc::DARK_YELLOW;
+    bgColor = colorGradient(olc::DARK_YELLOW,
+                            olc::DARK_GREEN,
+                            weapon.reloadPercentage(),
+                            alpha::Opaque);
   }
   else
   {

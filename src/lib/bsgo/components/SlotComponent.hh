@@ -25,6 +25,7 @@ class SlotComponent : public IComponent
   auto powerCost() const -> float;
   auto range() const -> float;
   bool canFire() const noexcept;
+  auto reloadPercentage() const -> float;
 
   void fire();
 
