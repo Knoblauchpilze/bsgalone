@@ -21,7 +21,19 @@ bool isWeaponAbleToFireOn(const Entity &ent, const WeaponSlotComponent &weapon, 
   const Eigen::Vector3f targetPos = target.access<TransformComponent>().position();
 
   const auto d = (targetPos - pos).norm();
-  return d <= weapon.range();
+  if (d > weapon.range())
+  {
+    return false;
+  }
+
+  const auto &entHasFaction    = ent.exists<FactionComponent>();
+  const auto &targetHasFaction = target.exists<FactionComponent>();
+  if (entHasFaction && targetHasFaction)
+  {
+    return ent.access<FactionComponent>().faction() != target.access<FactionComponent>().faction();
+  }
+
+  return true;
 }
 
 } // namespace

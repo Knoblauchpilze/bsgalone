@@ -200,6 +200,12 @@ void GameScreenUiHandler::updateOutpostUi()
   if (target && bsgo::EntityKind::OUTPOST == target->kind)
   {
     dockButtonVisible = m_shipView->distanceToTarget() <= MAXIMUM_DISTANCE_TO_DOCK;
+
+    const auto ship              = m_shipView->getPlayerShip();
+    const auto factionIsMatching = target->access<bsgo::FactionComponent>().faction()
+                                   == ship.access<bsgo::FactionComponent>().faction();
+
+    dockButtonVisible &= factionIsMatching;
   }
 
   m_menus[DOCK]->setVisible(dockButtonVisible);

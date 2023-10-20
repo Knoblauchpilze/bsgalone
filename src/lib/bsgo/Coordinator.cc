@@ -63,38 +63,44 @@ auto Coordinator::createEntity(const EntityKind &kind) -> Uuid
 
 void Coordinator::addTransform(const Uuid &ent, IBoundingBoxPtr bbox)
 {
-  checkForOverrides(ent, "transform", m_components.transforms);
+  checkForOverrides(ent, "Transform", m_components.transforms);
   m_components.transforms[ent] = std::make_shared<TransformComponent>(std::move(bbox));
 }
 
 void Coordinator::addVelocity(const Uuid &ent, const float maxAcceleration)
 {
-  checkForOverrides(ent, "velocity", m_components.velocities);
+  checkForOverrides(ent, "Velocity", m_components.velocities);
   m_components.velocities[ent] = std::make_shared<VelocityComponent>(maxAcceleration);
 }
 
 void Coordinator::addHealth(const Uuid &ent, const float hp, const float max, const float regen)
 {
-  checkForOverrides(ent, "health", m_components.healths);
+  checkForOverrides(ent, "Health", m_components.healths);
   m_components.healths[ent] = std::make_shared<HealthComponent>(hp, max, regen);
 }
 
 void Coordinator::addPower(const Uuid &ent, const float power, const float max, const float regen)
 {
-  checkForOverrides(ent, "power", m_components.powers);
+  checkForOverrides(ent, "Power", m_components.powers);
   m_components.powers[ent] = std::make_shared<PowerComponent>(power, max, regen);
 }
 
 void Coordinator::addWeapon(const Uuid &ent, const Weapon &weapon)
 {
-  checkEntityExist(ent, "weapon");
+  checkEntityExist(ent, "Weapon");
   m_components.weapons.emplace(ent, std::make_shared<WeaponSlotComponent>(weapon));
 }
 
 void Coordinator::addTarget(const Uuid &ent)
 {
-  checkForOverrides(ent, "target", m_components.targets);
+  checkForOverrides(ent, "Target", m_components.targets);
   m_components.targets[ent] = std::make_shared<TargetComponent>();
+}
+
+void Coordinator::addFaction(const Uuid &ent, const Faction &faction)
+{
+  checkForOverrides(ent, "Factions", m_components.factions);
+  m_components.factions[ent] = std::make_shared<FactionComponent>(faction);
 }
 
 auto Coordinator::getEntity(const Uuid &ent) const -> Entity
@@ -115,7 +121,8 @@ auto Coordinator::getEntity(const Uuid &ent) const -> Entity
 
   out.weapons = getAllComponent(ent, m_components.weapons);
 
-  out.target = getComponent(ent, m_components.targets);
+  out.target  = getComponent(ent, m_components.targets);
+  out.faction = getComponent(ent, m_components.factions);
 
   return out;
 }
@@ -137,6 +144,7 @@ void Coordinator::deleteEntity(const Uuid &ent)
   m_components.weapons.erase(ent);
 
   m_components.targets.erase(ent);
+  m_components.factions.erase(ent);
 }
 
 auto Coordinator::getEntityAt(const Eigen::Vector3f &pos,
