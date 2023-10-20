@@ -76,6 +76,7 @@ void DataSource::registerShip(Coordinator &coordinator, const Uuid &ship) const
   coordinator.addHealth(ent, data.hullPoints, data.maxHullPoints, data.hullPointsRegen);
   coordinator.addPower(ent, data.powerPoints, data.maxPowerPoints, data.powerRegen);
   coordinator.addTarget(ent);
+  coordinator.addFaction(ent, data.faction);
 
   for (const auto &weapon : data.weapons)
   {
@@ -93,6 +94,7 @@ void DataSource::registerOutpost(Coordinator &coordinator, const Uuid &outpost) 
   coordinator.addHealth(ent, data.hullPoints, data.maxHullPoints, data.hullPointsRegen);
   coordinator.addPower(ent, data.powerPoints, data.maxPowerPoints, data.powerRegen);
   coordinator.addTarget(ent);
+  coordinator.addFaction(ent, data.faction);
 }
 
 void DataSource::registerWeapon(Coordinator &coordinator, const Uuid &ship, const Uuid &weapon) const
