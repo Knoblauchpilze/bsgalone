@@ -6,6 +6,7 @@
 #include "PowerSystem.hh"
 #include "SlotSystem.hh"
 #include "WeaponSystem.hh"
+#include <unordered_set>
 
 namespace bsgo {
 namespace {
@@ -119,6 +120,25 @@ auto Coordinator::getEntity(const Uuid &ent) const -> Entity
   return out;
 }
 
+void Coordinator::deleteEntity(const Uuid &ent)
+{
+  if (!m_entities.contains(ent))
+  {
+    error("Failed to delete entity " + str(ent), "Unknown entity");
+  }
+
+  m_entities.erase(ent);
+
+  m_components.transforms.erase(ent);
+  m_components.velocities.erase(ent);
+  m_components.healths.erase(ent);
+  m_components.powers.erase(ent);
+
+  m_components.weapons.erase(ent);
+
+  m_components.targets.erase(ent);
+}
+
 auto Coordinator::getEntityAt(const Eigen::Vector3f &pos,
                               const std::optional<EntityKind> &filter) const -> std::optional<Uuid>
 {
@@ -182,6 +202,8 @@ void Coordinator::update(float elapsedSeconds)
   {
     system->update(*this, elapsedSeconds);
   }
+
+  cleanUpDeadEntities();
 }
 
 void Coordinator::createSystems()
@@ -230,6 +252,29 @@ void Coordinator::checkForOverrides(const Uuid &ent,
   if (components.contains(ent))
   {
     warn("Overriding " + componentName + " for entity " + std::to_string(ent));
+  }
+}
+
+void Coordinator::cleanUpDeadEntities()
+{
+  std::unordered_set<Uuid> deletedEntities;
+  for (const auto &[id, _] : m_entities)
+  {
+    const auto ent = getEntity(id);
+    if (ent.exists<HealthComponent>() && !ent.access<HealthComponent>().isAlive())
+    {
+      deletedEntities.insert(id);
+    }
+  }
+
+  for (const auto &ent : deletedEntities)
+  {
+    deleteEntity(ent);
+  }
+
+  if (!deletedEntities.empty())
+  {
+    log("Deleted " + std::to_string(deletedEntities.size()) + " entities");
   }
 }
 

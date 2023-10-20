@@ -29,6 +29,7 @@ class Coordinator : public utils::CoreObject
   void addTarget(const Uuid &ent);
 
   auto getEntity(const Uuid &ent) const -> Entity;
+  void deleteEntity(const Uuid &ent);
 
   auto getEntityAt(const Eigen::Vector3f &pos, const std::optional<EntityKind> &filter = {}) const
     -> std::optional<Uuid>;
@@ -53,6 +54,8 @@ class Coordinator : public utils::CoreObject
   void checkForOverrides(const Uuid &ent,
                          const std::string &componentName,
                          const ContainerType &components) const;
+
+  void cleanUpDeadEntities();
 };
 
 using CoordinatorShPtr = std::shared_ptr<Coordinator>;
