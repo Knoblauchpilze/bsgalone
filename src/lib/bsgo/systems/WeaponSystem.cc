@@ -77,15 +77,22 @@ void WeaponSystem::fireWeaponForEntity(Entity &ent, WeaponSlotComponent &weapon,
   const auto powerUsed = weapon.powerCost();
   ent.access<PowerComponent>().usePower(powerUsed);
 
-  const auto damage = weapon.generateDamage();
-  target.access<HealthComponent>().damage(damage);
+  const auto damage      = weapon.generateDamage();
+  const auto finalDamage = updateDamageWithAbilities(ent, damage);
+  target.access<HealthComponent>().damage(finalDamage);
 
-  log("Dealing " + std::to_string(damage) + " to " + target.str());
+  log("Dealing " + std::to_string(finalDamage) + " (from " + std::to_string(damage) + ") to "
+      + target.str());
 
   if (!target.access<HealthComponent>().isAlive())
   {
     ent.access<TargetComponent>().clearTarget();
   }
+}
+
+auto WeaponSystem::updateDamageWithAbilities(Entity & /*ent*/, const float damage) const -> float
+{
+  return damage;
 }
 
 } // namespace bsgo

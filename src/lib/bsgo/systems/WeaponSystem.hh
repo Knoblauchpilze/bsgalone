@@ -18,6 +18,8 @@ class WeaponSystem : public AbstractSystem
   private:
   void fireWeaponsForEntity(Entity &ent, Entity &target);
   void fireWeaponForEntity(Entity &ent, WeaponSlotComponent &weapon, Entity &target);
+
+  auto updateDamageWithAbilities(Entity &ent, const float damage) const -> float;
 };
 
 } // namespace bsgo
