@@ -147,11 +147,11 @@ void Coordinator::deleteEntity(const Uuid &ent)
   m_components.velocities.erase(ent);
   m_components.healths.erase(ent);
   m_components.powers.erase(ent);
-
-  m_components.weapons.erase(ent);
-
   m_components.targets.erase(ent);
   m_components.factions.erase(ent);
+
+  m_components.weapons.erase(ent);
+  m_components.computers.erase(ent);
 }
 
 auto Coordinator::getEntityAt(const Eigen::Vector3f &pos,

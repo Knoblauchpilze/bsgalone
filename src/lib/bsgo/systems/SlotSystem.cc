@@ -5,7 +5,7 @@ namespace bsgo {
 namespace {
 bool isEntityRelevant(const Entity &entity)
 {
-  return !entity.weapons.empty();
+  return !entity.weapons.empty() || !entity.computers.empty();
 }
 } // namespace
 
@@ -20,6 +20,10 @@ void SlotSystem::updateEntity(Entity &entity,
   for (const auto &weapon : entity.weapons)
   {
     weapon->update(elapsedSeconds);
+  }
+  for (const auto &computer : entity.computers)
+  {
+    computer->update(elapsedSeconds);
   }
 }
 
