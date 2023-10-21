@@ -7,6 +7,7 @@ target_sources (bsgalone_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/SystemRepository.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/OutpostRepository.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/WeaponRepository.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/ComputerRepository.cc
 	)
 
 target_include_directories (bsgalone_lib PUBLIC

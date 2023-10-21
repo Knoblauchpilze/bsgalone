@@ -86,12 +86,6 @@ void Coordinator::addPower(const Uuid &ent, const float power, const float max, 
   m_components.powers[ent] = std::make_shared<PowerComponent>(power, max, regen);
 }
 
-void Coordinator::addWeapon(const Uuid &ent, const Weapon &weapon)
-{
-  checkEntityExist(ent, "Weapon");
-  m_components.weapons.emplace(ent, std::make_shared<WeaponSlotComponent>(weapon));
-}
-
 void Coordinator::addTarget(const Uuid &ent)
 {
   checkForOverrides(ent, "Target", m_components.targets);
@@ -102,6 +96,18 @@ void Coordinator::addFaction(const Uuid &ent, const Faction &faction)
 {
   checkForOverrides(ent, "Factions", m_components.factions);
   m_components.factions[ent] = std::make_shared<FactionComponent>(faction);
+}
+
+void Coordinator::addWeapon(const Uuid &ent, const Weapon &weapon)
+{
+  checkEntityExist(ent, "Weapon");
+  m_components.weapons.emplace(ent, std::make_shared<WeaponSlotComponent>(weapon));
+}
+
+void Coordinator::addComputer(const Uuid &ent, const Computer &computer)
+{
+  checkEntityExist(ent, "Computer");
+  m_components.computers.emplace(ent, std::make_shared<ComputerSlotComponent>(computer));
 }
 
 auto Coordinator::getEntity(const Uuid &ent) const -> Entity
@@ -119,11 +125,11 @@ auto Coordinator::getEntity(const Uuid &ent) const -> Entity
   out.velocity  = getComponent(ent, m_components.velocities);
   out.health    = getComponent(ent, m_components.healths);
   out.power     = getComponent(ent, m_components.powers);
+  out.target    = getComponent(ent, m_components.targets);
+  out.faction   = getComponent(ent, m_components.factions);
 
-  out.weapons = getAllComponent(ent, m_components.weapons);
-
-  out.target  = getComponent(ent, m_components.targets);
-  out.faction = getComponent(ent, m_components.factions);
+  out.weapons   = getAllComponent(ent, m_components.weapons);
+  out.computers = getAllComponent(ent, m_components.computers);
 
   return out;
 }
