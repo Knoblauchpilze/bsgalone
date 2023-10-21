@@ -9,6 +9,8 @@ auto str(const Slot slot) -> std::string
   {
     case Slot::WEAPON:
       return "weapon";
+    case Slot::COMPUTER:
+      return "computer";
     default:
       return "unknown";
   }

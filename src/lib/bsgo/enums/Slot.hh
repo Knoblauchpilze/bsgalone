@@ -8,6 +8,7 @@ namespace bsgo {
 enum class Slot
 {
   WEAPON,
+  COMPUTER,
 };
 
 auto str(const Slot slot) -> std::string;

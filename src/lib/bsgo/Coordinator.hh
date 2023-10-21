@@ -25,9 +25,10 @@ class Coordinator : public utils::CoreObject
   void addVelocity(const Uuid &ent, const float maxAcceleration);
   void addHealth(const Uuid &ent, const float hp, const float max, const float regen);
   void addPower(const Uuid &ent, const float power, const float max, const float regen);
-  void addWeapon(const Uuid &ent, const Weapon &weapon);
   void addTarget(const Uuid &ent);
   void addFaction(const Uuid &ent, const Faction &faction);
+  void addWeapon(const Uuid &ent, const Weapon &weapon);
+  void addComputer(const Uuid &ent, const Computer &computer);
 
   auto getEntity(const Uuid &ent) const -> Entity;
   void deleteEntity(const Uuid &ent);
