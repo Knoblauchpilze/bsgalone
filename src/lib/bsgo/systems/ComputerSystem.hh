@@ -5,11 +5,11 @@
 
 namespace bsgo {
 
-class SlotSystem : public AbstractSystem
+class ComputerSystem : public AbstractSystem
 {
   public:
-  SlotSystem();
-  ~SlotSystem() override = default;
+  ComputerSystem();
+  ~ComputerSystem() override = default;
 
   void updateEntity(Entity &entity,
                     const Coordinator &coordinator,

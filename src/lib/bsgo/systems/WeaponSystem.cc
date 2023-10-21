@@ -44,17 +44,19 @@ WeaponSystem::WeaponSystem()
 
 void WeaponSystem::updateEntity(Entity &entity,
                                 const Coordinator &coordinator,
-                                const float /*elapsedSeconds*/)
+                                const float elapsedSeconds)
 {
   const auto target = entity.access<TargetComponent>().target();
-  if (!target)
+  if (target)
   {
-    return;
+    auto targetEnt = coordinator.getEntity(*target);
+    fireWeaponsForEntity(entity, targetEnt);
   }
 
-  auto targetEnt = coordinator.getEntity(*target);
-
-  fireWeaponsForEntity(entity, targetEnt);
+  for (const auto &weapon : entity.weapons)
+  {
+    weapon->update(elapsedSeconds);
+  }
 }
 
 void WeaponSystem::fireWeaponsForEntity(Entity &ent, Entity &target)
