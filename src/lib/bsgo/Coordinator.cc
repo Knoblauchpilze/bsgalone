@@ -5,6 +5,7 @@
 #include "MotionSystem.hh"
 #include "PowerSystem.hh"
 #include "SlotSystem.hh"
+#include "TargetSystem.hh"
 #include "WeaponSystem.hh"
 #include <unordered_set>
 
@@ -230,6 +231,9 @@ void Coordinator::createSystems()
 
   auto weapon = std::make_unique<WeaponSystem>();
   m_systems.push_back(std::move(weapon));
+
+  auto target = std::make_unique<TargetSystem>();
+  m_systems.push_back(std::move(target));
 }
 
 bool Coordinator::hasExpectedKind(const Uuid &ent, const std::optional<EntityKind> &kind) const
