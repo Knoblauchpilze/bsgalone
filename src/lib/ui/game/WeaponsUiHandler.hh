@@ -27,7 +27,7 @@ class WeaponsUiHandler : public IUiHandler
   std::vector<MenuShPtr> m_ranges{};
   std::vector<MenuShPtr> m_damages{};
 
-  void generateWeaponMenus(int width, int height);
+  void generateWeaponsMenus(int width, int height);
   void updateWeaponMenu(const bsgo::WeaponSlotComponent &weapon,
                         const int id,
                         const bsgo::Entity &ship);
