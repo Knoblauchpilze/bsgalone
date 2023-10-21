@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "AbilitiesUiHandler.hh"
 #include "IUiHandler.hh"
 #include "Views.hh"
 #include "WeaponsUiHandler.hh"
@@ -27,27 +28,20 @@ class GameScreenUiHandler : public IUiHandler
     HEALTH = 0,
     POWER  = 1,
 
-    ABILITY_0     = 2,
-    ABILITY_1     = 3,
-    ABILITY_2     = 4,
-    ABILITY_3     = 5,
-    ABILITY_4     = 6,
-    ABILITY_COUNT = 5,
+    TARGET_HEALTH   = 2,
+    TARGET_POWER    = 3,
+    TARGET_DISTANCE = 4,
 
-    TARGET_HEALTH   = 6,
-    TARGET_POWER    = 7,
-    TARGET_DISTANCE = 8,
+    DOCK = 5,
 
-    DOCK = 9,
-
-    COUNT = 10,
+    COUNT = 6,
   };
   std::vector<MenuShPtr> m_menus{};
 
   WeaponsUiHandlerPtr m_weaponsUi{};
+  AbilitiesUiHandlerPtr m_abilitiesUi{};
 
   void generateShipMenus(int width, int height);
-  void generateAbilityMenus(int width, int height);
   void generateTargetMenus(int width, int height);
   void generateOutpostMenus(int width, int height);
 

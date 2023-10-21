@@ -17,7 +17,7 @@ WeaponsUiHandler::WeaponsUiHandler(const bsgo::Views &views)
 
 void WeaponsUiHandler::initializeMenus(const int width, const int height)
 {
-  generateWeaponMenus(width, height);
+  generateWeaponsMenus(width, height);
 }
 
 auto WeaponsUiHandler::processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions)
@@ -58,7 +58,7 @@ void WeaponsUiHandler::updateUi()
 
 constexpr auto REASONABLE_MAXIMUM_NUMBER_OF_WEAPONS = 4;
 
-void WeaponsUiHandler::generateWeaponMenus(int width, int height)
+void WeaponsUiHandler::generateWeaponsMenus(int width, int height)
 {
   const auto ship         = m_shipView->getPlayerShip();
   const auto weaponsCount = ship.weapons.size();

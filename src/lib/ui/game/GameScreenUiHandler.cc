@@ -9,6 +9,7 @@ GameScreenUiHandler::GameScreenUiHandler(const bsgo::Views &views)
   : IUiHandler("game")
   , m_shipView(views.shipView)
   , m_weaponsUi(std::make_unique<WeaponsUiHandler>(views))
+  , m_abilitiesUi(std::make_unique<AbilitiesUiHandler>(views))
 {
   if (nullptr == m_shipView)
   {
@@ -21,17 +22,21 @@ void GameScreenUiHandler::initializeMenus(const int width, const int height)
   m_menus.resize(MenuItem::COUNT);
 
   generateShipMenus(width, height);
-  generateAbilityMenus(width, height);
   generateTargetMenus(width, height);
   generateOutpostMenus(width, height);
 
   m_weaponsUi->initializeMenus(width, height);
+  m_abilitiesUi->initializeMenus(width, height);
 }
 
 auto GameScreenUiHandler::processUserInput(const controls::State &c,
                                            std::vector<ActionShPtr> &actions) -> menu::InputHandle
 {
   auto out = m_weaponsUi->processUserInput(c, actions);
+  if (!out.relevant && !out.selected)
+  {
+    out = m_abilitiesUi->processUserInput(c, actions);
+  }
   if (!out.relevant && !out.selected)
   {
     for (const auto &menu : m_menus)
@@ -53,6 +58,7 @@ void GameScreenUiHandler::render(SpriteRenderer &engine) const
   }
 
   m_weaponsUi->render(engine);
+  m_abilitiesUi->render(engine);
 }
 
 void GameScreenUiHandler::updateUi()
@@ -62,6 +68,7 @@ void GameScreenUiHandler::updateUi()
   updateOutpostUi();
 
   m_weaponsUi->updateUi();
+  m_abilitiesUi->updateUi();
 }
 
 void GameScreenUiHandler::generateShipMenus(int /*width*/, int /*height*/)
@@ -73,28 +80,6 @@ void GameScreenUiHandler::generateShipMenus(int /*width*/, int /*height*/)
 
   pos            = olc::vi2d{5, 25};
   m_menus[POWER] = generateMenu(pos, dims, "Power: N/A", "power", olc::DARK_CYAN, {olc::WHITE});
-}
-
-void GameScreenUiHandler::generateAbilityMenus(int width, int height)
-{
-  olc::vi2d dims{50, 50};
-  constexpr auto SPACING_IN_PIXELS = 5;
-  olc::vi2d pos;
-  pos.x = width - ABILITY_COUNT * (dims.x + SPACING_IN_PIXELS);
-  pos.y = height - SPACING_IN_PIXELS - dims.y;
-
-  olc::Pixel color = olc::VERY_DARK_RED;
-  color.a          = alpha::SemiOpaque;
-
-  for (auto id = 0; id < ABILITY_COUNT; ++id)
-  {
-    const auto text = "A" + std::to_string(id);
-    const auto name = "ability_" + std::to_string(id);
-
-    m_menus[ABILITY_0 + id] = generateMenu(pos, dims, text, name, color, {olc::WHITE}, true);
-
-    pos.x += (dims.x + SPACING_IN_PIXELS);
-  }
 }
 
 void GameScreenUiHandler::generateTargetMenus(int width, int /*height*/)
