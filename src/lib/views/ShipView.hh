@@ -25,6 +25,8 @@ class ShipView : public IView
   auto distanceToTarget() const -> float;
   auto getTarget(const Uuid &ship) const -> std::optional<Entity>;
 
+  void tryActivateSlot(const Uuid &ship, const int slotId);
+
   private:
   Uuid m_playerShipId;
 };

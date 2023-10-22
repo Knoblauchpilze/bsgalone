@@ -233,6 +233,11 @@ void Game::resume()
   m_state.paused = false;
 }
 
+void Game::tryActivateSlot(const bsgo::Uuid &ship, const int &slotId)
+{
+  m_views.shipView->tryActivateSlot(ship, slotId);
+}
+
 void Game::enable(bool enable)
 {
   m_state.disabled = !enable;

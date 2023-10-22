@@ -82,6 +82,8 @@ class Game : public utils::CoreObject
   /// based entities should take actions to be resuming their pathes, motions, etc.
   void resume();
 
+  void tryActivateSlot(const bsgo::Uuid &ship, const int &slotId);
+
   private:
   /// @brief - Convenience structure allowing to group information
   /// about a timed menu.
