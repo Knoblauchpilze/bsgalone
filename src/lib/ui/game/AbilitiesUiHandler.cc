@@ -61,6 +61,7 @@ constexpr auto NUMBER_OF_ABILITIES = 4;
 void AbilitiesUiHandler::generateCompmutersMenus(int width, int height)
 {
   const auto ship           = m_shipView->getPlayerShip();
+  const auto shipId         = ship.uuid;
   const auto computersCount = ship.computers.size();
   if (computersCount > NUMBER_OF_ABILITIES)
   {
@@ -85,6 +86,11 @@ void AbilitiesUiHandler::generateCompmutersMenus(int width, int height)
 
     const auto enabled = id < computersCount;
     auto menu          = generateMenu(pos, dims, text, name, color, {olc::WHITE}, enabled);
+    if (enabled)
+    {
+      menu->setSimpleAction([shipId, id](Game &g) { g.tryActivateSlot(shipId, id); });
+    }
+
     m_computers.push_back(menu);
 
     pos.x += (dims.x + SPACING_IN_PIXELS);

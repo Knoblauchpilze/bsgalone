@@ -67,4 +67,22 @@ auto ShipView::getTarget(const Uuid &ship) const -> std::optional<Entity>
   return {getEntity(*targetId)};
 }
 
+void ShipView::tryActivateSlot(const Uuid &ship, const int slotId)
+{
+  if (ship != m_playerShipId)
+  {
+    error("Failed to activate slot " + std::to_string(slotId),
+          "Expected ship " + str(m_playerShipId) + " but got " + str(ship));
+  }
+
+  const auto data = getPlayerShip();
+  if (data.computers.size() < static_cast<std::size_t>(slotId))
+  {
+    error("Failed to activate slot " + std::to_string(slotId),
+          "Ship only has " + std::to_string(data.computers.size()) + " computer(s)");
+  }
+
+  /// TODO: Handle creation of effect.
+}
+
 } // namespace bsgo
