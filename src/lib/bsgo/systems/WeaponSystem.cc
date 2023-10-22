@@ -88,9 +88,19 @@ void WeaponSystem::fireWeaponForEntity(Entity &ent,
       + target.str());
 }
 
-auto WeaponSystem::updateDamageWithAbilities(Entity & /*ent*/, const float damage) const -> float
+auto WeaponSystem::updateDamageWithAbilities(Entity &ent, const float damage) const -> float
 {
-  return damage;
+  auto multiplier = 1.0f;
+  for (const auto &effect : ent.effects)
+  {
+    const auto modifier = effect->damageModifier();
+    if (modifier)
+    {
+      multiplier *= *modifier;
+    }
+  }
+
+  return damage * multiplier;
 }
 
 } // namespace bsgo
