@@ -75,7 +75,7 @@ void ShipView::tryActivateSlot(const Uuid &ship, const int slotId)
           "Expected ship " + str(m_playerShipId) + " but got " + str(ship));
   }
 
-  const auto data = getPlayerShip();
+  auto data = getPlayerShip();
   if (data.computers.size() < static_cast<std::size_t>(slotId))
   {
     error("Failed to activate slot " + std::to_string(slotId),
@@ -101,6 +101,9 @@ void ShipView::tryActivateSlot(const Uuid &ship, const int slotId)
   }
 
   computer->fire();
+
+  const auto powerUsed = computer->powerCost();
+  data.powerComp().usePower(powerUsed);
 }
 
 } // namespace bsgo
