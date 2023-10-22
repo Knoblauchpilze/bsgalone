@@ -119,7 +119,7 @@ void WeaponsUiHandler::updateWeaponMenu(const bsgo::WeaponSlotComponent &weapon,
   {
     bgColor = olc::DARK_RED;
   }
-  else if (ship.access<bsgo::PowerComponent>().value() < weapon.powerCost())
+  else if (ship.powerComp().value() < weapon.powerCost())
   {
     bgColor = olc::DARK_ORANGE;
   }

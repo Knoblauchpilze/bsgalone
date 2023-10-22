@@ -38,11 +38,11 @@ void GameScreenInputHandler::performAction(float x, float y, const controls::Sta
   if (ent)
   {
     log("Found target " + ent->str());
-    playerShip.access<bsgo::TargetComponent>().setTarget(ent->uuid);
+    playerShip.targetComp().setTarget(ent->uuid);
   }
   else
   {
-    playerShip.access<bsgo::TargetComponent>().clearTarget();
+    playerShip.targetComp().clearTarget();
   }
 }
 
@@ -54,13 +54,13 @@ void GameScreenInputHandler::moveShip(bsgo::Entity &ship, const Motion &motion)
   direction(2)              = motion.z;
   direction.normalize();
 
-  ship.access<bsgo::VelocityComponent>().accelerate(direction);
+  ship.velocityComp().accelerate(direction);
 }
 
 void GameScreenInputHandler::keepShipCentered(CoordinateFrame &frame)
 {
   const auto ent = m_shipView->getPlayerShip();
-  const auto pos = ent.access<bsgo::TransformComponent>().position();
+  const auto pos = ent.transformComp().position();
   const olc::vf2d pos2d{pos(0), pos(1)};
   frame.moveTo(pos2d);
 }

@@ -105,68 +105,57 @@ bool Entity::exists<FactionComponent>() const
   return details::checkComponentExists(faction);
 }
 
-template<>
-auto Entity::access<TransformComponent>() const -> const TransformComponent &
+auto Entity::transformComp() const -> const TransformComponent &
 {
   return details::safeConstAccess(transform, *this, "Transform");
 }
 
-template<>
-auto Entity::access<VelocityComponent>() const -> const VelocityComponent &
+auto Entity::velocityComp() const -> const VelocityComponent &
 {
   return details::safeConstAccess(velocity, *this, "Velocity");
 }
 
-template<>
-auto Entity::access<HealthComponent>() const -> const HealthComponent &
+auto Entity::healthComp() const -> const HealthComponent &
 {
   return details::safeConstAccess(health, *this, "Health");
 }
 
-template<>
-auto Entity::access<PowerComponent>() const -> const PowerComponent &
+auto Entity::powerComp() const -> const PowerComponent &
 {
   return details::safeConstAccess(power, *this, "Power");
 }
 
-template<>
-auto Entity::access<TargetComponent>() const -> const TargetComponent &
+auto Entity::targetComp() const -> const TargetComponent &
 {
   return details::safeConstAccess(target, *this, "Target");
 }
 
-template<>
-auto Entity::access<FactionComponent>() const -> const FactionComponent &
+auto Entity::factionComp() const -> const FactionComponent &
 {
   return details::safeConstAccess(faction, *this, "Faction");
 }
 
-template<>
-auto Entity::access<TransformComponent>() -> TransformComponent &
+auto Entity::transformComp() -> TransformComponent &
 {
   return details::safeAccess(transform, *this, "Transform");
 }
 
-template<>
-auto Entity::access<VelocityComponent>() -> VelocityComponent &
+auto Entity::velocityComp() -> VelocityComponent &
 {
   return details::safeAccess(velocity, *this, "Velocity");
 }
 
-template<>
-auto Entity::access<HealthComponent>() -> HealthComponent &
+auto Entity::healthComp() -> HealthComponent &
 {
-  return details::safeAccess(health, *this, "Heath");
+  return details::safeAccess(health, *this, "Health");
 }
 
-template<>
-auto Entity::access<PowerComponent>() -> PowerComponent &
+auto Entity::powerComp() -> PowerComponent &
 {
   return details::safeAccess(power, *this, "Power");
 }
 
-template<>
-auto Entity::access<TargetComponent>() -> TargetComponent &
+auto Entity::targetComp() -> TargetComponent &
 {
   return details::safeAccess(target, *this, "Target");
 }

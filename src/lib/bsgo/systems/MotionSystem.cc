@@ -17,8 +17,8 @@ void MotionSystem::updateEntity(Entity &entity,
                                 const Coordinator & /*coordinator*/,
                                 const float elapsedSeconds)
 {
-  auto &velocity  = entity.access<VelocityComponent>();
-  auto &transform = entity.access<TransformComponent>();
+  auto &velocity  = entity.velocityComp();
+  auto &transform = entity.transformComp();
 
   velocity.update(elapsedSeconds);
 
