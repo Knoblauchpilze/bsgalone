@@ -9,6 +9,7 @@ namespace bsgo {
 
 struct SlotComponentData
 {
+  bool offensive;
   float powerCost;
   float range;
   utils::Duration reloadTime;
@@ -22,6 +23,7 @@ class SlotComponent : public IComponent
 
   void update(const float elapsedSeconds) override;
 
+  bool isOffensive() const;
   auto powerCost() const -> float;
   auto range() const -> float;
   bool canFire() const noexcept;
@@ -30,6 +32,7 @@ class SlotComponent : public IComponent
   void fire();
 
   private:
+  bool m_offensive;
   float m_powerCost;
   float m_range;
   utils::Duration m_reloadTime;

@@ -11,6 +11,7 @@ ComputerRepository::ComputerRepository()
 auto ComputerRepository::findOneById(const Uuid & /*computer*/) const -> Computer
 {
   Computer out;
+  out.offensive                    = false;
   out.powerCost                    = 20.0f;
   out.range                        = 4.1f;
   constexpr auto RELOAD_TIME_IN_MS = 10000;

@@ -5,6 +5,7 @@ namespace bsgo {
 
 SlotComponent::SlotComponent(const std::string &name, const SlotComponentData &data)
   : IComponent(name)
+  , m_offensive(data.offensive)
   , m_powerCost(data.powerCost)
   , m_range(data.range)
   , m_reloadTime(data.reloadTime)
@@ -15,6 +16,11 @@ SlotComponent::SlotComponent(const std::string &name, const SlotComponentData &d
 void SlotComponent::update(const float elapsedSeconds)
 {
   handleReload(elapsedSeconds);
+}
+
+bool SlotComponent::isOffensive() const
+{
+  return m_offensive;
 }
 
 auto SlotComponent::powerCost() const -> float

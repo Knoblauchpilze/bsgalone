@@ -1,6 +1,7 @@
 
 #include "WeaponsUiHandler.hh"
 #include "ScreenCommon.hh"
+#include "SlotComponentUtils.hh"
 #include "StringUtils.hh"
 
 namespace pge {
@@ -110,29 +111,16 @@ void WeaponsUiHandler::updateWeaponMenu(const bsgo::WeaponSlotComponent &weapon,
 
   menu.setEnabled(target.has_value());
 
-  auto bgColor = olc::DARK_GREEN;
-  if (!weapon.active())
+  auto bgColor = olc::DARK_GREY;
+  if (weapon.active())
   {
-    bgColor = olc::DARK_GREY;
-  }
-  else if (!target || weapon.range() < m_shipView->distanceToTarget())
-  {
-    bgColor = olc::DARK_RED;
-  }
-  else if (ship.powerComp().value() < weapon.powerCost())
-  {
-    bgColor = olc::DARK_ORANGE;
-  }
-  else if (!weapon.canFire())
-  {
-    bgColor = colorGradient(olc::DARK_YELLOW,
-                            olc::DARK_GREEN,
-                            weapon.reloadPercentage(),
-                            alpha::Opaque);
-  }
-  else
-  {
-    bgColor = olc::DARK_GREEN;
+    const auto power = ship.powerComp().value();
+    std::optional<float> dToTarget;
+    if (target)
+    {
+      dToTarget = m_shipView->distanceToTarget();
+    }
+    bgColor = bgColorFromReloadTime(weapon, power, dToTarget);
   }
 
   menu.setBackgroundColor(bgColor);

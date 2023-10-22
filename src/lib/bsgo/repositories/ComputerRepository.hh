@@ -10,6 +10,7 @@ namespace bsgo {
 
 struct Computer
 {
+  bool offensive;
   float powerCost;
   float range;
   utils::Duration reloadTime;
