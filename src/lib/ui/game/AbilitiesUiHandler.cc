@@ -1,6 +1,7 @@
 
 #include "AbilitiesUiHandler.hh"
 #include "ScreenCommon.hh"
+#include "SlotComponentUtils.hh"
 #include "StringUtils.hh"
 
 namespace pge {
@@ -97,13 +98,22 @@ void AbilitiesUiHandler::generateCompmutersMenus(int width, int height)
   }
 }
 
-void AbilitiesUiHandler::updateComputerMenu(const bsgo::ComputerSlotComponent & /*computer*/,
+void AbilitiesUiHandler::updateComputerMenu(const bsgo::ComputerSlotComponent &computer,
                                             const int id,
-                                            const bsgo::Entity & /*ship*/)
+                                            const bsgo::Entity &ship)
 {
   auto &menu = *m_computers[id];
 
-  menu.setBackgroundColor(olc::DARK_CYAN);
+  const auto power  = ship.powerComp().value();
+  const auto target = m_shipView->getPlayerTarget();
+  std::optional<float> dToTarget;
+  if (target)
+  {
+    dToTarget = m_shipView->distanceToTarget();
+  }
+  const auto bgColor = bgColorFromReloadTime(computer, power, dToTarget);
+
+  menu.setBackgroundColor(bgColor);
 }
 
 } // namespace pge
