@@ -9,7 +9,7 @@ AbstractSystem::AbstractSystem(const std::string &name,
   , m_entitiesFilter(entitiesFilter)
 {}
 
-void AbstractSystem::update(const Coordinator &coordinator, const float elapsedSeconds)
+void AbstractSystem::update(Coordinator &coordinator, const float elapsedSeconds) const
 {
   /// https://gamedev.stackexchange.com/questions/71711/ecs-how-to-access-multiple-components-not-the-same-one-in-a-system
   auto entities = coordinator.getEntitiesSatistying(m_entitiesFilter);

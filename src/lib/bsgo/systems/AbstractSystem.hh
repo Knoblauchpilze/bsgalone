@@ -13,12 +13,11 @@ class AbstractSystem : public ISystem
   AbstractSystem(const std::string &name, const Coordinator::EntityPredicate &entitiesFilter);
   ~AbstractSystem() override = default;
 
-  void update(const Coordinator &coordinator, const float elapsedSeconds) override;
+  void update(Coordinator &coordinator, const float elapsedSeconds) const override;
 
   virtual void updateEntity(Entity &entity,
-                            const Coordinator &coordinator,
-                            const float elapsedSeconds)
-    = 0;
+                            Coordinator &coordinator,
+                            const float elapsedSeconds) const = 0;
 
   private:
   Coordinator::EntityPredicate m_entitiesFilter;

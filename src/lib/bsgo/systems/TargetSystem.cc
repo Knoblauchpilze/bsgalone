@@ -14,8 +14,8 @@ TargetSystem::TargetSystem()
 {}
 
 void TargetSystem::updateEntity(Entity &entity,
-                                const Coordinator &coordinator,
-                                const float elapsedSeconds)
+                                Coordinator &coordinator,
+                                const float elapsedSeconds) const
 {
   auto &targetComp = entity.targetComp();
   targetComp.update(elapsedSeconds);
@@ -28,7 +28,8 @@ void TargetSystem::updateEntity(Entity &entity,
   clearTargetIfDead(targetComp, coordinator);
 }
 
-void TargetSystem::clearTargetIfDead(TargetComponent &targetComp, const Coordinator &coordinator)
+void TargetSystem::clearTargetIfDead(TargetComponent &targetComp,
+                                     const Coordinator &coordinator) const
 {
   const auto target = coordinator.getEntity(*targetComp.target());
   if (!target.exists<HealthComponent>())

@@ -12,12 +12,12 @@ class WeaponSystem : public AbstractSystem
   ~WeaponSystem() override = default;
 
   void updateEntity(Entity &entity,
-                    const Coordinator &coordinator,
-                    const float elapsedSeconds) override;
+                    Coordinator &coordinator,
+                    const float elapsedSeconds) const override;
 
   private:
-  void fireWeaponsForEntity(Entity &ent, Entity &target);
-  void fireWeaponForEntity(Entity &ent, WeaponSlotComponent &weapon, Entity &target);
+  void fireWeaponsForEntity(Entity &ent, Entity &target) const;
+  void fireWeaponForEntity(Entity &ent, WeaponSlotComponent &weapon, Entity &target) const;
 
   auto updateDamageWithAbilities(Entity &ent, const float damage) const -> float;
 };

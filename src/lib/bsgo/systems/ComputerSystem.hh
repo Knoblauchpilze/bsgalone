@@ -12,8 +12,8 @@ class ComputerSystem : public AbstractSystem
   ~ComputerSystem() override = default;
 
   void updateEntity(Entity &entity,
-                    const Coordinator &coordinator,
-                    const float elapsedSeconds) override;
+                    Coordinator &coordinator,
+                    const float elapsedSeconds) const override;
 };
 
 } // namespace bsgo

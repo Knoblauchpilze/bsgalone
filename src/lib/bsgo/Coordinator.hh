@@ -7,6 +7,7 @@
 #include "ISystem.hh"
 #include "Uuid.hh"
 #include <core_utils/CoreObject.hh>
+#include <core_utils/TimeUtils.hh>
 #include <memory>
 #include <optional>
 #include <unordered_map>
@@ -29,6 +30,9 @@ class Coordinator : public utils::CoreObject
   void addFaction(const Uuid &ent, const Faction &faction);
   void addWeapon(const Uuid &ent, const Weapon &weapon);
   void addComputer(const Uuid &ent, const Computer &computer);
+  void addWeaponEffect(const Uuid &ent, const utils::Duration &duration, const float damageModifier);
+
+  void removeEffect(const Uuid &ent, const EffectComponentShPtr &effect);
 
   auto getEntity(const Uuid &ent) const -> Entity;
   void deleteEntity(const Uuid &ent);

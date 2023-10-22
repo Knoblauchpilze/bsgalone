@@ -14,8 +14,8 @@ HealthSystem::HealthSystem()
 {}
 
 void HealthSystem::updateEntity(Entity &entity,
-                                const Coordinator & /*coordinator*/,
-                                const float elapsedSeconds)
+                                Coordinator & /*coordinator*/,
+                                const float elapsedSeconds) const
 {
   entity.healthComp().update(elapsedSeconds);
 }

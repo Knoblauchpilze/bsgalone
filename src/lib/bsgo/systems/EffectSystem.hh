@@ -5,15 +5,18 @@
 
 namespace bsgo {
 
-class MotionSystem : public AbstractSystem
+class EffectSystem : public AbstractSystem
 {
   public:
-  MotionSystem();
-  ~MotionSystem() override = default;
+  EffectSystem();
+  ~EffectSystem() override = default;
 
   void updateEntity(Entity &entity,
                     Coordinator &coordinator,
                     const float elapsedSeconds) const override;
+
+  private:
+  void cleanUpFinishedEffects(const Entity &entity, Coordinator &coordinator) const;
 };
 
 } // namespace bsgo
