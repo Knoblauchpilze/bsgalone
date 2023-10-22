@@ -119,15 +119,15 @@ void GameScreenUiHandler::updateShipUi()
   const auto ship = m_shipView->getPlayerShip();
 
   text = "Health: ";
-  text += floatToStr(std::floor(ship.access<bsgo::HealthComponent>().value()), 0);
+  text += floatToStr(std::floor(ship.healthComp().value()), 0);
   text += "/";
-  text += floatToStr(ship.access<bsgo::HealthComponent>().max(), 0);
+  text += floatToStr(ship.healthComp().max(), 0);
   m_menus[HEALTH]->setText(text);
 
   text = "Power: ";
-  text += floatToStr(std::floor(ship.access<bsgo::PowerComponent>().value()), 0);
+  text += floatToStr(std::floor(ship.powerComp().value()), 0);
   text += "/";
-  text += floatToStr(std::floor(ship.access<bsgo::PowerComponent>().max()), 0);
+  text += floatToStr(std::floor(ship.powerComp().max()), 0);
   m_menus[POWER]->setText(text);
 }
 
@@ -152,9 +152,9 @@ void GameScreenUiHandler::updateTargetUi()
   }
   else
   {
-    text += floatToStr(std::floor(target->access<bsgo::HealthComponent>().value()), 0);
+    text += floatToStr(std::floor(target->healthComp().value()), 0);
     text += "/";
-    text += floatToStr(std::floor(target->access<bsgo::HealthComponent>().max()), 0);
+    text += floatToStr(std::floor(target->healthComp().max()), 0);
   }
   m_menus[TARGET_HEALTH]->setText(text);
 
@@ -165,9 +165,9 @@ void GameScreenUiHandler::updateTargetUi()
   }
   else
   {
-    text += floatToStr(std::floor(target->access<bsgo::PowerComponent>().value()), 0);
+    text += floatToStr(std::floor(target->powerComp().value()), 0);
     text += "/";
-    text += floatToStr(std::floor(target->access<bsgo::PowerComponent>().max()), 0);
+    text += floatToStr(std::floor(target->powerComp().max()), 0);
   }
   m_menus[TARGET_POWER]->setText(text);
 
@@ -187,8 +187,7 @@ void GameScreenUiHandler::updateOutpostUi()
     dockButtonVisible = m_shipView->distanceToTarget() <= MAXIMUM_DISTANCE_TO_DOCK;
 
     const auto ship              = m_shipView->getPlayerShip();
-    const auto factionIsMatching = target->access<bsgo::FactionComponent>().faction()
-                                   == ship.access<bsgo::FactionComponent>().faction();
+    const auto factionIsMatching = target->factionComp().faction() == ship.factionComp().faction();
 
     dockButtonVisible &= factionIsMatching;
   }

@@ -17,7 +17,7 @@ void TargetSystem::updateEntity(Entity &entity,
                                 const Coordinator &coordinator,
                                 const float elapsedSeconds)
 {
-  auto targetComp = entity.access<TargetComponent>();
+  auto &targetComp = entity.targetComp();
   targetComp.update(elapsedSeconds);
 
   if (!targetComp.target())
@@ -36,7 +36,7 @@ void TargetSystem::clearTargetIfDead(TargetComponent &targetComp, const Coordina
     return;
   }
 
-  if (target.access<HealthComponent>().isAlive())
+  if (target.healthComp().isAlive())
   {
     return;
   }

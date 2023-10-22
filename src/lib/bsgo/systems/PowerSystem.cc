@@ -17,7 +17,7 @@ void PowerSystem::updateEntity(Entity &entity,
                                const Coordinator & /*coordinator*/,
                                const float elapsedSeconds)
 {
-  entity.access<PowerComponent>().update(elapsedSeconds);
+  entity.powerComp().update(elapsedSeconds);
 }
 
 } // namespace bsgo

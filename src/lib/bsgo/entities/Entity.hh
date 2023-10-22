@@ -37,15 +37,21 @@ struct Entity
   template<typename Component>
   bool exists() const;
 
-  /// @brief - Safely attempts to access the component with the specified type and
-  /// raises an exception if it either doesn't exist or is invalid.
-  /// @tparam Component - the type of the component to access.
-  /// @return - a reference to the component if it exists.
-  template<typename Component>
-  auto access() const -> const Component &;
+  /// @brief - Safe attempt to access the transform component of this entity. It
+  /// will raise an exception in case the component doesn't exist.
+  /// @return - the transform component if it exists.
+  auto transformComp() const -> const TransformComponent &;
+  auto velocityComp() const -> const VelocityComponent &;
+  auto healthComp() const -> const HealthComponent &;
+  auto powerComp() const -> const PowerComponent &;
+  auto targetComp() const -> const TargetComponent &;
+  auto factionComp() const -> const FactionComponent &;
 
-  template<typename Component>
-  auto access() -> Component &;
+  auto transformComp() -> TransformComponent &;
+  auto velocityComp() -> VelocityComponent &;
+  auto healthComp() -> HealthComponent &;
+  auto powerComp() -> PowerComponent &;
+  auto targetComp() -> TargetComponent &;
 };
 
 } // namespace bsgo

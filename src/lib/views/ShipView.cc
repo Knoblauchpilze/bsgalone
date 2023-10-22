@@ -49,8 +49,8 @@ auto ShipView::distanceToTarget() const -> float
   }
 
   const auto playerShip = getPlayerShip();
-  const auto playerPos  = playerShip.access<TransformComponent>().position();
-  const auto targetPos  = target->access<TransformComponent>().position();
+  const auto playerPos  = playerShip.transformComp().position();
+  const auto targetPos  = target->transformComp().position();
 
   return (targetPos - playerPos).norm();
 }
@@ -58,7 +58,7 @@ auto ShipView::distanceToTarget() const -> float
 auto ShipView::getTarget(const Uuid &ship) const -> std::optional<Entity>
 {
   const auto ent      = getShip(ship);
-  const auto targetId = ent.access<TargetComponent>().target();
+  const auto targetId = ent.targetComp().target();
   if (!targetId)
   {
     return {};

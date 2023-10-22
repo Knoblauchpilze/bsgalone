@@ -11,14 +11,13 @@ bool isEntityRelevant(const Entity &entity)
 
 bool isWeaponAbleToFire(const Entity &ent, const WeaponSlotComponent &weapon)
 {
-  return weapon.active() && weapon.canFire()
-         && (weapon.powerCost() <= ent.access<PowerComponent>().value());
+  return weapon.active() && weapon.canFire() && (weapon.powerCost() <= ent.powerComp().value());
 }
 
 bool isWeaponAbleToFireOn(const Entity &ent, const WeaponSlotComponent &weapon, const Entity &target)
 {
-  const Eigen::Vector3f pos       = ent.access<TransformComponent>().position();
-  const Eigen::Vector3f targetPos = target.access<TransformComponent>().position();
+  const Eigen::Vector3f pos       = ent.transformComp().position();
+  const Eigen::Vector3f targetPos = target.transformComp().position();
 
   const auto d = (targetPos - pos).norm();
   if (d > weapon.range())
@@ -30,7 +29,7 @@ bool isWeaponAbleToFireOn(const Entity &ent, const WeaponSlotComponent &weapon, 
   const auto &targetHasFaction = target.exists<FactionComponent>();
   if (entHasFaction && targetHasFaction)
   {
-    return ent.access<FactionComponent>().faction() != target.access<FactionComponent>().faction();
+    return ent.factionComp().faction() != target.factionComp().faction();
   }
 
   return true;
@@ -46,7 +45,7 @@ void WeaponSystem::updateEntity(Entity &entity,
                                 const Coordinator &coordinator,
                                 const float elapsedSeconds)
 {
-  const auto target = entity.access<TargetComponent>().target();
+  const auto target = entity.targetComp().target();
   if (target)
   {
     auto targetEnt = coordinator.getEntity(*target);
@@ -77,19 +76,14 @@ void WeaponSystem::fireWeaponForEntity(Entity &ent, WeaponSlotComponent &weapon,
   weapon.fire();
 
   const auto powerUsed = weapon.powerCost();
-  ent.access<PowerComponent>().usePower(powerUsed);
+  ent.powerComp().usePower(powerUsed);
 
   const auto damage      = weapon.generateDamage();
   const auto finalDamage = updateDamageWithAbilities(ent, damage);
-  target.access<HealthComponent>().damage(finalDamage);
+  target.healthComp().damage(finalDamage);
 
   log("Dealing " + std::to_string(finalDamage) + " (from " + std::to_string(damage) + ") to "
       + target.str());
-
-  if (!target.access<HealthComponent>().isAlive())
-  {
-    ent.access<TargetComponent>().clearTarget();
-  }
 }
 
 auto WeaponSystem::updateDamageWithAbilities(Entity & /*ent*/, const float damage) const -> float

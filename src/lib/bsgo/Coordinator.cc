@@ -279,7 +279,7 @@ void Coordinator::cleanUpDeadEntities()
   for (const auto &[id, _] : m_entities)
   {
     const auto ent = getEntity(id);
-    if (ent.exists<HealthComponent>() && !ent.access<HealthComponent>().isAlive())
+    if (ent.exists<HealthComponent>() && !ent.healthComp().isAlive())
     {
       deletedEntities.insert(id);
     }

@@ -118,7 +118,7 @@ void GameScreenRenderer::renderAsteroid(const bsgo::Entity &asteroid,
                                         SpriteRenderer &engine,
                                         const RenderState &state) const
 {
-  const auto &transform = asteroid.access<bsgo::TransformComponent>();
+  const auto &transform = asteroid.transformComp();
   const auto pos        = transform.position();
 
   SpriteDesc t;
@@ -138,7 +138,7 @@ void GameScreenRenderer::renderOutpost(const bsgo::Entity &outpost,
                                        SpriteRenderer &engine,
                                        const RenderState &state) const
 {
-  const auto &transform = outpost.access<bsgo::TransformComponent>();
+  const auto &transform = outpost.transformComp();
   const auto pos        = transform.position();
 
   SpriteDesc t;
@@ -158,7 +158,7 @@ void GameScreenRenderer::renderShip(const bsgo::Entity &ship,
                                     SpriteRenderer &engine,
                                     const RenderState &state) const
 {
-  const auto &transform = ship.access<bsgo::TransformComponent>();
+  const auto &transform = ship.transformComp();
   const auto pos        = transform.position();
 
   SpriteDesc t;
@@ -179,12 +179,12 @@ void GameScreenRenderer::renderShipDebug(const bsgo::Entity &ship,
                                          SpriteRenderer &engine,
                                          const RenderState &state) const
 {
-  const auto tilePos = ship.access<bsgo::TransformComponent>().position();
+  const auto tilePos = ship.transformComp().position();
   olc::vi2d pixelPos = state.cf.tilesToPixels(tilePos(0), tilePos(1));
 
   olc::vi2d pos    = pixelPos;
   std::string text = "accel: ";
-  const auto accel = ship.access<bsgo::VelocityComponent>().acceleration();
+  const auto accel = ship.velocityComp().acceleration();
   text += floatToStr(accel(0));
   text += "x";
   text += floatToStr(accel(1));
@@ -195,7 +195,7 @@ void GameScreenRenderer::renderShipDebug(const bsgo::Entity &ship,
   constexpr auto REASONABLE_GAP = 20;
   pos.y += REASONABLE_GAP;
   text             = "speed: ";
-  const auto speed = ship.access<bsgo::VelocityComponent>().speed();
+  const auto speed = ship.velocityComp().speed();
   text += floatToStr(speed(0));
   text += "x";
   text += floatToStr(speed(1));
