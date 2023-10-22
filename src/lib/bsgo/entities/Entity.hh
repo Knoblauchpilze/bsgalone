@@ -2,6 +2,7 @@
 #pragma once
 
 #include "ComputerSlotComponent.hh"
+#include "EffectComponent.hh"
 #include "EntityKind.hh"
 #include "FactionComponent.hh"
 #include "HealthComponent.hh"
@@ -28,6 +29,7 @@ struct Entity
   std::optional<FactionComponentShPtr> faction{};
   std::vector<WeaponSlotComponentShPtr> weapons{};
   std::vector<ComputerSlotComponentShPtr> computers{};
+  std::vector<EffectComponentShPtr> effects{};
 
   auto str() const noexcept -> std::string;
 

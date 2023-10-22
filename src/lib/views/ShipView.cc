@@ -82,7 +82,19 @@ void ShipView::tryActivateSlot(const Uuid &ship, const int slotId)
           "Ship only has " + std::to_string(data.computers.size()) + " computer(s)");
   }
 
-  /// TODO: Handle creation of effect.
+  const auto computer = data.computers[slotId];
+  const auto duration = computer->duration();
+  if (!duration)
+  {
+    error("Failed to activate slot " + std::to_string(slotId), "Expected slot to define a duration");
+  }
+  const auto damage = computer->damageModifier();
+  if (damage)
+  {
+    log("Adding weapon effect for " + data.str() + " with duration "
+        + utils::durationToString(*duration));
+    m_coordinator->addWeaponEffect(ship, *duration, *damage);
+  }
 }
 
 } // namespace bsgo

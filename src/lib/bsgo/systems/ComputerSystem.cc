@@ -14,8 +14,8 @@ ComputerSystem::ComputerSystem()
 {}
 
 void ComputerSystem::updateEntity(Entity &entity,
-                                  const Coordinator & /*coordinator*/,
-                                  const float elapsedSeconds)
+                                  Coordinator & /*coordinator*/,
+                                  const float elapsedSeconds) const
 {
   for (const auto &computer : entity.computers)
   {

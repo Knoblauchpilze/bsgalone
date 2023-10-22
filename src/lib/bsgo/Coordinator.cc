@@ -2,10 +2,12 @@
 #include "Coordinator.hh"
 #include "CircleBox.hh"
 #include "ComputerSystem.hh"
+#include "EffectSystem.hh"
 #include "HealthSystem.hh"
 #include "MotionSystem.hh"
 #include "PowerSystem.hh"
 #include "TargetSystem.hh"
+#include "WeaponEffectComponent.hh"
 #include "WeaponSystem.hh"
 #include <unordered_set>
 
@@ -110,6 +112,44 @@ void Coordinator::addComputer(const Uuid &ent, const Computer &computer)
   m_components.computers.emplace(ent, std::make_shared<ComputerSlotComponent>(computer));
 }
 
+void Coordinator::addWeaponEffect(const Uuid &ent,
+                                  const utils::Duration &duration,
+                                  const float damageModifier)
+{
+  checkEntityExist(ent, "WeaponEffect");
+  m_components.effects.emplace(ent,
+                               std::make_shared<WeaponEffectComponent>(duration, damageModifier));
+}
+
+void Coordinator::removeEffect(const Uuid &ent, const EffectComponentShPtr &effect)
+{
+  checkEntityExist(ent, "Effect");
+  const auto range = m_components.effects.equal_range(ent);
+
+  auto found = false;
+  auto it    = range.first;
+  while (!found && it != range.second)
+  {
+    if (it->second == effect)
+    {
+      m_components.effects.erase(it);
+      found = true;
+    }
+    if (!found)
+    {
+      ++it;
+    }
+  }
+
+  const auto entity = getEntity(ent);
+  if (!found)
+  {
+    error("Failed to remove effect for entity " + entity.str());
+  }
+
+  log("Removed 1 effect for entity " + entity.str());
+}
+
 auto Coordinator::getEntity(const Uuid &ent) const -> Entity
 {
   Entity out;
@@ -130,6 +170,7 @@ auto Coordinator::getEntity(const Uuid &ent) const -> Entity
 
   out.weapons   = getAllComponent(ent, m_components.weapons);
   out.computers = getAllComponent(ent, m_components.computers);
+  out.effects   = getAllComponent(ent, m_components.effects);
 
   return out;
 }
@@ -152,6 +193,7 @@ void Coordinator::deleteEntity(const Uuid &ent)
 
   m_components.weapons.erase(ent);
   m_components.computers.erase(ent);
+  m_components.effects.erase(ent);
 }
 
 auto Coordinator::getEntityAt(const Eigen::Vector3f &pos,
@@ -240,6 +282,9 @@ void Coordinator::createSystems()
 
   auto computer = std::make_unique<ComputerSystem>();
   m_systems.push_back(std::move(computer));
+
+  auto effect = std::make_unique<EffectSystem>();
+  m_systems.push_back(std::move(effect));
 }
 
 bool Coordinator::hasExpectedKind(const Uuid &ent, const std::optional<EntityKind> &kind) const

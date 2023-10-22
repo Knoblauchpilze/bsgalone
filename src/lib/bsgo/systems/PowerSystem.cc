@@ -14,8 +14,8 @@ PowerSystem::PowerSystem()
 {}
 
 void PowerSystem::updateEntity(Entity &entity,
-                               const Coordinator & /*coordinator*/,
-                               const float elapsedSeconds)
+                               Coordinator & /*coordinator*/,
+                               const float elapsedSeconds) const
 {
   entity.powerComp().update(elapsedSeconds);
 }

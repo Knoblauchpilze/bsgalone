@@ -42,8 +42,8 @@ WeaponSystem::WeaponSystem()
 {}
 
 void WeaponSystem::updateEntity(Entity &entity,
-                                const Coordinator &coordinator,
-                                const float elapsedSeconds)
+                                Coordinator &coordinator,
+                                const float elapsedSeconds) const
 {
   const auto target = entity.targetComp().target();
   if (target)
@@ -58,7 +58,7 @@ void WeaponSystem::updateEntity(Entity &entity,
   }
 }
 
-void WeaponSystem::fireWeaponsForEntity(Entity &ent, Entity &target)
+void WeaponSystem::fireWeaponsForEntity(Entity &ent, Entity &target) const
 {
   for (const auto &weapon : ent.weapons)
   {
@@ -66,7 +66,9 @@ void WeaponSystem::fireWeaponsForEntity(Entity &ent, Entity &target)
   }
 }
 
-void WeaponSystem::fireWeaponForEntity(Entity &ent, WeaponSlotComponent &weapon, Entity &target)
+void WeaponSystem::fireWeaponForEntity(Entity &ent,
+                                       WeaponSlotComponent &weapon,
+                                       Entity &target) const
 {
   if (!isWeaponAbleToFire(ent, weapon) || !isWeaponAbleToFireOn(ent, weapon, target))
   {

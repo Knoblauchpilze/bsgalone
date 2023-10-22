@@ -2,6 +2,7 @@
 #pragma once
 
 #include "ComputerSlotComponent.hh"
+#include "EffectComponent.hh"
 #include "FactionComponent.hh"
 #include "HealthComponent.hh"
 #include "PowerComponent.hh"
@@ -24,6 +25,7 @@ struct Components
   std::unordered_map<Uuid, FactionComponentShPtr> factions{};
   std::unordered_multimap<Uuid, WeaponSlotComponentShPtr> weapons{};
   std::unordered_multimap<Uuid, ComputerSlotComponentShPtr> computers{};
+  std::unordered_multimap<Uuid, EffectComponentShPtr> effects{};
 };
 
 } // namespace bsgo

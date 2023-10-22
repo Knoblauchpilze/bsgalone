@@ -12,11 +12,11 @@ class TargetSystem : public AbstractSystem
   ~TargetSystem() override = default;
 
   void updateEntity(Entity &entity,
-                    const Coordinator &coordinator,
-                    const float elapsedSeconds) override;
+                    Coordinator &coordinator,
+                    const float elapsedSeconds) const override;
 
   private:
-  void clearTargetIfDead(TargetComponent &targetComp, const Coordinator &coordinator);
+  void clearTargetIfDead(TargetComponent &targetComp, const Coordinator &coordinator) const;
 };
 
 } // namespace bsgo
