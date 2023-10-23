@@ -12,4 +12,11 @@ auto floatToStr(const float value, const int decimals) -> std::string
   return ss.str();
 }
 
+auto floatToSignedStr(const float value, const int decimals) -> std::string
+{
+  std::stringstream ss;
+  ss << std::fixed << std::showpos << std::setprecision(decimals) << value;
+  return ss.str();
+}
+
 } // namespace pge
