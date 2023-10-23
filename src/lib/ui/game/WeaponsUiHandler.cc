@@ -96,6 +96,9 @@ void WeaponsUiHandler::generateWeaponsMenus(int width, int height)
     damage = generateMenu(pos, dims, "max damage", "max_damage", color, {olc::WHITE});
     menu->addMenu(damage);
     m_damages.push_back(damage);
+    const auto status = generateMenu(pos, dims, "status", "status", color, {olc::WHITE});
+    menu->addMenu(status);
+    m_statuses.push_back(status);
 
     pos.x += (dims.x + SPACING_IN_PIXELS);
   }
@@ -132,6 +135,18 @@ void WeaponsUiHandler::updateWeaponMenu(const bsgo::WeaponSlotComponent &weapon,
   minDamage.setText(floatToStr(weapon.minDamage()));
   auto &maxDamage = *m_damages[2 * id + 1];
   maxDamage.setText(floatToStr(weapon.maxDamage()));
+
+  std::string statusText("ready");
+  if (!weapon.active())
+  {
+    statusText = "off";
+  }
+  if (!weapon.canFire())
+  {
+    constexpr auto PERCENTAGE_MULTIPLIER = 100.0f;
+    statusText = floatToStr(PERCENTAGE_MULTIPLIER * weapon.reloadPercentage()) + "%";
+  }
+  m_statuses[id]->setText(statusText);
 }
 
 } // namespace pge
