@@ -47,6 +47,7 @@ class Menu : public utils::CoreObject
   /// represented in the menu.
   /// @param clickable - indicates whether this menu can be clicked.
   /// @param selectable - indicates whether this menu can be selected.
+  /// @param ignoreChildrenInput - whether children should be called for interactions.
   /// @param parent - the parent menu for this element. Specify `null` in case
   /// the menu is the root of the subsystem.
   Menu(const olc::vi2d &pos,
@@ -57,6 +58,7 @@ class Menu : public utils::CoreObject
        const menu::Layout &layout = menu::Layout::Horizontal,
        bool clickable             = true,
        bool selectable            = true,
+       bool ignoreChildrenInput   = false,
        Menu *parent               = nullptr);
 
   ~Menu();
@@ -219,6 +221,9 @@ class Menu : public utils::CoreObject
     // of a click within the menu.
     bool selectable;
 
+    /// Whether the children should be ignored for input processing.
+    bool ignoreChildrenInput;
+
     // Whether or not this menu is currently highlighted.
     bool highlighted;
 
@@ -246,7 +251,7 @@ class Menu : public utils::CoreObject
 
   /// @brief - Hold the sprite used as an icon for this menu. It might be `null`
   /// in case none is used in the menu's content.
-  olc::Decal *m_fgSprite;
+  olc::Decal *m_fgSprite{nullptr};
 
   /// @brief - The layout for this menu. Allow to define how the children will
   /// be displayed in this menu.
@@ -258,10 +263,10 @@ class Menu : public utils::CoreObject
 
   /// @brief - The list of children menu for this element. Children may or may
   /// not be active and are always repainted on the parent.
-  std::vector<MenuShPtr> m_children;
+  std::vector<MenuShPtr> m_children{};
 
   /// @brief - The callback to trigger whenver this menu is clicked upon.
-  menu::RegisterAction m_callback;
+  menu::RegisterAction m_callback{};
 };
 
 } // namespace pge

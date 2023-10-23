@@ -30,13 +30,13 @@ auto generateScreenOption(const olc::vi2d &dims,
                           const std::string &name,
                           bool selectable) -> MenuShPtr
 {
-  pge::menu::BackgroundDesc bg = pge::menu::newColoredBackground(bgColor);
-  bg.hColor                    = olc::GREY;
+  auto bg   = pge::menu::newColoredBackground(bgColor);
+  bg.hColor = olc::GREY;
 
-  pge::menu::MenuContentDesc fd = pge::menu::newMenuContent(text, "", dims);
-  fd.color                      = olc::WHITE;
-  fd.hColor                     = olc::BLACK;
-  fd.align                      = pge::menu::Alignment::Center;
+  auto fd   = pge::menu::newMenuContent(text, "", dims);
+  fd.color  = olc::WHITE;
+  fd.hColor = olc::BLACK;
+  fd.align  = pge::menu::Alignment::Center;
 
   return std::make_shared<pge::Menu>(olc::vi2d(),
                                      dims,
@@ -48,17 +48,13 @@ auto generateScreenOption(const olc::vi2d &dims,
                                      false);
 }
 
-auto generateMenu(const olc::vi2d &pos,
-                  const olc::vi2d &size,
-                  const std::string &text,
-                  const std::string &name,
-                  olc::Pixel bgColor,
-                  const std::optional<olc::Pixel> &textColor,
-                  bool clickable,
-                  bool selectable,
-                  const menu::Layout &layout) -> pge::MenuShPtr
+namespace {
+auto generateForegroundDesc(const std::string &text,
+                            const olc::vi2d &size,
+                            const olc::Pixel &bgColor,
+                            const std::optional<olc::Pixel> &textColor) -> menu::MenuContentDesc
 {
-  auto fd = pge::menu::newMenuContent(text, "", size);
+  auto fd = menu::newMenuContent(text, "", size);
 
   if (textColor)
   {
@@ -71,16 +67,53 @@ auto generateMenu(const olc::vi2d &pos,
     fd.hColor = RGBToHSL(bgColor).b < 128 ? olc::WHITE : olc::BLACK;
   }
 
-  fd.align = pge::menu::Alignment::Center;
+  fd.align = menu::Alignment::Center;
 
+  return fd;
+}
+} // namespace
+
+auto generateMenu(const olc::vi2d &pos,
+                  const olc::vi2d &size,
+                  const std::string &text,
+                  const std::string &name,
+                  olc::Pixel bgColor,
+                  const std::optional<olc::Pixel> &textColor,
+                  bool clickable,
+                  bool selectable,
+                  const menu::Layout &layout) -> pge::MenuShPtr
+{
+  const auto fd = generateForegroundDesc(text, size, bgColor, textColor);
   return std::make_shared<pge::Menu>(pos,
                                      size,
                                      name,
-                                     pge::menu::newColoredBackground(bgColor),
+                                     menu::newColoredBackground(bgColor),
                                      fd,
                                      layout,
                                      clickable,
                                      selectable);
+}
+
+auto generateSlotMenu(const olc::vi2d &pos,
+                      const olc::vi2d &size,
+                      const std::string &text,
+                      const std::string &name,
+                      olc::Pixel bgColor,
+                      const std::optional<olc::Pixel> &textColor,
+                      bool clickable,
+                      bool selectable,
+                      const menu::Layout &layout) -> pge::MenuShPtr
+{
+  const auto fd = generateForegroundDesc(text, size, bgColor, textColor);
+  return std::make_shared<pge::Menu>(pos,
+                                     size,
+                                     name,
+                                     menu::newColoredBackground(bgColor),
+                                     fd,
+                                     layout,
+                                     clickable,
+                                     selectable,
+                                     true);
 }
 
 } // namespace pge
