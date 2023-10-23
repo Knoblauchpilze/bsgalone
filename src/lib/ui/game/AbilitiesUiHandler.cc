@@ -85,7 +85,7 @@ void AbilitiesUiHandler::generateCompmutersMenus(int width, int height)
     const auto name = "ability_" + std::to_string(id);
 
     const auto enabled = id < computersCount;
-    auto menu          = generateMenu(pos, dims, "", name, color, {olc::WHITE}, enabled);
+    auto menu          = generateSlotMenu(pos, dims, "", name, color, {olc::WHITE}, enabled);
     if (enabled)
     {
       menu->setSimpleAction([shipId, id](Game &g) { g.tryActivateSlot(shipId, id); });
@@ -128,7 +128,7 @@ void AbilitiesUiHandler::updateComputerMenu(const bsgo::ComputerSlotComponent &c
   {
     constexpr auto PERCENTAGE_MULTIPLIER = 100.0f;
     const auto multiplier                = PERCENTAGE_MULTIPLIER * (*damage - 1.0f);
-    m_damages[id]->setText("Dmg:" + floatToStr(multiplier, 0) + "%");
+    m_damages[id]->setText("Dmg:" + floatToSignedStr(multiplier, 0) + "%");
   }
 
   std::string statusText("ready");
