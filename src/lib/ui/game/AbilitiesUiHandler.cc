@@ -71,7 +71,7 @@ void AbilitiesUiHandler::generateCompmutersMenus(int width, int height)
             + std::to_string(ship.computers.size()));
   }
 
-  olc::vi2d dims{50, 50};
+  olc::vi2d dims{70, 50};
   constexpr auto SPACING_IN_PIXELS = 5;
   olc::vi2d pos;
   pos.x = width - NUMBER_OF_ABILITIES * (dims.x + SPACING_IN_PIXELS);
@@ -82,14 +82,21 @@ void AbilitiesUiHandler::generateCompmutersMenus(int width, int height)
 
   for (auto id = 0u; id < NUMBER_OF_ABILITIES; ++id)
   {
-    const auto text = "C" + std::to_string(id);
-    const auto name = "computer_" + std::to_string(id);
+    const auto name = "ability_" + std::to_string(id);
 
     const auto enabled = id < computersCount;
-    auto menu          = generateMenu(pos, dims, text, name, color, {olc::WHITE}, enabled);
+    auto menu          = generateMenu(pos, dims, "", name, color, {olc::WHITE}, enabled);
     if (enabled)
     {
       menu->setSimpleAction([shipId, id](Game &g) { g.tryActivateSlot(shipId, id); });
+
+      const auto damage = generateMenu(pos, dims, "damage", "damage", color, {olc::WHITE});
+      menu->addMenu(damage);
+      m_damages.push_back(damage);
+
+      const auto status = generateMenu(pos, dims, "status", "status", color, {olc::WHITE});
+      menu->addMenu(status);
+      m_statuses.push_back(status);
     }
 
     m_computers.push_back(menu);
@@ -114,6 +121,23 @@ void AbilitiesUiHandler::updateComputerMenu(const bsgo::ComputerSlotComponent &c
   const auto bgColor = bgColorFromReloadTime(computer, power, dToTarget);
 
   menu.setBackgroundColor(bgColor);
+
+  const auto damage = computer.damageModifier();
+  m_damages[id]->setVisible(damage.has_value());
+  if (damage)
+  {
+    constexpr auto PERCENTAGE_MULTIPLIER = 100.0f;
+    const auto multiplier                = PERCENTAGE_MULTIPLIER * (*damage - 1.0f);
+    m_damages[id]->setText("Dmg:" + floatToStr(multiplier, 0) + "%");
+  }
+
+  std::string statusText("ready");
+  if (!computer.canFire())
+  {
+    constexpr auto PERCENTAGE_MULTIPLIER = 100.0f;
+    statusText = floatToStr(PERCENTAGE_MULTIPLIER * computer.reloadPercentage()) + "%";
+  }
+  m_statuses[id]->setText(statusText);
 }
 
 } // namespace pge
