@@ -11,37 +11,22 @@ Menu::Menu(const olc::vi2d &pos,
            const menu::Layout &layout,
            bool clickable,
            bool selectable,
+           bool ignoreChildrenInput,
            Menu *parent)
   : utils::CoreObject(name)
-  ,
-
-  m_state(State{
-    true,       // visible
-    true,       // enabled
-    clickable,  // clickable
-    selectable, // selectable
-    false,      // highlighted
-    false       // selected
-  })
-  ,
-
-  m_pos(pos)
+  , m_state(State{.visible             = true,
+                  .enabled             = true,
+                  .clickable           = clickable,
+                  .selectable          = selectable,
+                  .ignoreChildrenInput = ignoreChildrenInput,
+                  .highlighted         = false,
+                  .selected            = false})
+  , m_pos(pos)
   , m_size(size)
-  ,
-
-  m_bg(bg)
+  , m_bg(bg)
   , m_fg(fg)
-  , m_fgSprite(nullptr)
-  ,
-
-  m_layout(layout)
-  ,
-
-  m_parent(parent)
-  , m_children()
-  ,
-
-  m_callback()
+  , m_layout(layout)
+  , m_parent(parent)
 {
   setService("menu");
 
@@ -87,14 +72,15 @@ menu::InputHandle Menu::processUserInput(const controls::State &c, std::vector<A
     return res;
   }
 
-  // Make sure that the children get their chance
-  // to process the event.
-  for (unsigned id = 0u; id < m_children.size(); ++id)
+  if (!m_state.ignoreChildrenInput)
   {
-    menu::InputHandle rc = m_children[id]->processUserInput(c, actions);
+    for (unsigned id = 0u; id < m_children.size(); ++id)
+    {
+      const auto rc = m_children[id]->processUserInput(c, actions);
 
-    res.relevant = res.relevant || rc.relevant;
-    res.selected = res.selected || rc.selected;
+      res.relevant = res.relevant || rc.relevant;
+      res.selected = res.selected || rc.selected;
+    }
   }
 
   // If the mouse is not inside this element, stop
