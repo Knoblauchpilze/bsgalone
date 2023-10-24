@@ -1,38 +1,12 @@
 
 #include "WeaponSystem.hh"
-#include "Coordinator.hh"
+#include "SystemUtils.hh"
 
 namespace bsgo {
 namespace {
 bool isEntityRelevant(const Entity &entity)
 {
   return !entity.weapons.empty() && entity.exists<TargetComponent>();
-}
-
-bool isWeaponAbleToFire(const Entity &ent, const WeaponSlotComponent &weapon)
-{
-  return weapon.active() && weapon.canFire() && (weapon.powerCost() <= ent.powerComp().value());
-}
-
-bool isWeaponAbleToFireOn(const Entity &ent, const WeaponSlotComponent &weapon, const Entity &target)
-{
-  const Eigen::Vector3f pos       = ent.transformComp().position();
-  const Eigen::Vector3f targetPos = target.transformComp().position();
-
-  const auto d = (targetPos - pos).norm();
-  if (d > weapon.range())
-  {
-    return false;
-  }
-
-  const auto &entHasFaction    = ent.exists<FactionComponent>();
-  const auto &targetHasFaction = target.exists<FactionComponent>();
-  if (entHasFaction && targetHasFaction)
-  {
-    return ent.factionComp().faction() != target.factionComp().faction();
-  }
-
-  return true;
 }
 
 } // namespace
@@ -46,35 +20,59 @@ void WeaponSystem::updateEntity(Entity &entity,
                                 const float elapsedSeconds) const
 {
   const auto target = entity.targetComp().target();
+  std::optional<Entity> targetEnt;
   if (target)
   {
-    auto targetEnt = coordinator.getEntity(*target);
-    fireWeaponsForEntity(entity, targetEnt);
+    targetEnt = coordinator.getEntity(*target);
   }
 
   for (const auto &weapon : entity.weapons)
   {
-    weapon->update(elapsedSeconds);
+    updateWeapon(entity, weapon, targetEnt, elapsedSeconds);
+    if (weapon->canFire())
+    {
+      fireWeaponForEntity(entity, *weapon, *targetEnt);
+    }
   }
 }
 
-void WeaponSystem::fireWeaponsForEntity(Entity &ent, Entity &target) const
+void WeaponSystem::updateWeapon(const Entity &ent,
+                                const WeaponSlotComponentShPtr &weapon,
+                                const std::optional<Entity> &target,
+                                const float elapsedSeconds) const
 {
-  for (const auto &weapon : ent.weapons)
+  auto state{FiringState::READY};
+
+  weapon->update(elapsedSeconds);
+
+  if (!weapon->active())
   {
-    fireWeaponForEntity(ent, *weapon, target);
+    state = FiringState::DISABLED;
   }
+  else if (!target.has_value() || !hasTargetDifferentFaction(ent, *target))
+  {
+    state = FiringState::INVALID_TARGET;
+  }
+  else if (distanceToTarget(ent, *target) > weapon->range())
+  {
+    state = FiringState::OUT_OF_RANGE;
+  }
+  else if (weapon->powerCost() > ent.powerComp().value())
+  {
+    state = FiringState::OUT_OF_POWER;
+  }
+  else if (weapon->isReloading())
+  {
+    state = FiringState::RELOADING;
+  }
+
+  weapon->setFiringState(state);
 }
 
 void WeaponSystem::fireWeaponForEntity(Entity &ent,
                                        WeaponSlotComponent &weapon,
                                        Entity &target) const
 {
-  if (!isWeaponAbleToFire(ent, weapon) || !isWeaponAbleToFireOn(ent, weapon, target))
-  {
-    return;
-  }
-
   weapon.fire();
 
   const auto powerUsed = weapon.powerCost();

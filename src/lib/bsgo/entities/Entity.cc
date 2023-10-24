@@ -17,12 +17,13 @@ inline void checkAccessIsSafe(const std::optional<std::shared_ptr<Component>> &c
   if (!comp)
   {
     throw std::invalid_argument("Expected entity " + bsgo::str(entity.uuid) + "/"
-                                + bsgo::str(entity.kind) + " to have a " + compName + " component");
+                                + bsgo::str(entity.kind->kind()) + " to have a " + compName
+                                + " component");
   }
   if (nullptr == *comp)
   {
     throw std::invalid_argument("Expected entity " + bsgo::str(entity.uuid) + "/"
-                                + bsgo::str(entity.kind) + " to have a valid " + compName
+                                + bsgo::str(entity.kind->kind()) + " to have a valid " + compName
                                 + " component");
   }
 }
@@ -52,7 +53,7 @@ auto Entity::str() const noexcept -> std::string
 
   out += std::to_string(uuid);
   out += ",";
-  out += bsgo::str(kind);
+  out += bsgo::str(kind->kind());
 
   if (transform)
   {
@@ -105,6 +106,18 @@ bool Entity::exists<FactionComponent>() const
   return details::checkComponentExists(faction);
 }
 
+template<>
+bool Entity::exists<LootComponent>() const
+{
+  return details::checkComponentExists(loot);
+}
+
+template<>
+bool Entity::exists<ScannedComponent>() const
+{
+  return details::checkComponentExists(scanned);
+}
+
 auto Entity::transformComp() const -> const TransformComponent &
 {
   return details::safeConstAccess(transform, *this, "Transform");
@@ -133,6 +146,16 @@ auto Entity::targetComp() const -> const TargetComponent &
 auto Entity::factionComp() const -> const FactionComponent &
 {
   return details::safeConstAccess(faction, *this, "Faction");
+}
+
+auto Entity::lootComp() const -> const LootComponent &
+{
+  return details::safeConstAccess(loot, *this, "Loot");
+}
+
+auto Entity::scannedComp() const -> const ScannedComponent &
+{
+  return details::safeConstAccess(scanned, *this, "Scanned");
 }
 
 auto Entity::transformComp() -> TransformComponent &

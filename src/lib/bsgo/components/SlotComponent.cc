@@ -28,19 +28,38 @@ auto SlotComponent::powerCost() const -> float
   return m_powerCost;
 }
 
-auto SlotComponent::range() const -> float
+auto SlotComponent::maybeRange() const -> std::optional<float>
 {
   return m_range;
 }
 
+auto SlotComponent::range() const -> float
+{
+  if (!m_range)
+  {
+    error("Expected component to have a range");
+  }
+  return *m_range;
+}
+
+auto SlotComponent::firingState() const noexcept -> FiringState
+{
+  return m_firingState;
+}
+
 bool SlotComponent::canFire() const noexcept
 {
-  return !m_elapsedSinceLastFired;
+  return FiringState::READY == firingState();
+}
+
+bool SlotComponent::isReloading() const noexcept
+{
+  return m_elapsedSinceLastFired.has_value();
 }
 
 auto SlotComponent::reloadPercentage() const -> float
 {
-  if (canFire())
+  if (!isReloading())
   {
     return 1.0f;
   }
@@ -48,6 +67,11 @@ auto SlotComponent::reloadPercentage() const -> float
   // https://stackoverflow.com/questions/76522118/dividing-two-chronodurations-to-get-fraction
   const auto reloadAsFloat = std::chrono::duration<float, std::milli>(m_reloadTime);
   return *m_elapsedSinceLastFired / reloadAsFloat;
+}
+
+void SlotComponent::setFiringState(const FiringState &firingState)
+{
+  m_firingState = firingState;
 }
 
 void SlotComponent::fire()
@@ -71,7 +95,7 @@ void SlotComponent::handleReload(const float elapsedSeconds)
   (*m_elapsedSinceLastFired) += utils::Milliseconds(
     static_cast<int>(elapsedSeconds * MILLISECONDS_IN_A_SECONDS));
 
-  if (*m_elapsedSinceLastFired > m_reloadTime)
+  if (*m_elapsedSinceLastFired >= m_reloadTime)
   {
     m_elapsedSinceLastFired.reset();
   }

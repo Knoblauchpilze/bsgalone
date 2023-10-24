@@ -5,7 +5,10 @@
 #include "EffectComponent.hh"
 #include "FactionComponent.hh"
 #include "HealthComponent.hh"
+#include "KindComponent.hh"
+#include "LootComponent.hh"
 #include "PowerComponent.hh"
+#include "ScannedComponent.hh"
 #include "TargetComponent.hh"
 #include "TransformComponent.hh"
 #include "Uuid.hh"
@@ -22,7 +25,10 @@ struct Components
   std::unordered_map<Uuid, HealthComponentShPtr> healths{};
   std::unordered_map<Uuid, PowerComponentShPtr> powers{};
   std::unordered_map<Uuid, TargetComponentShPtr> targets{};
+  std::unordered_map<Uuid, KindComponentShPtr> kinds{};
   std::unordered_map<Uuid, FactionComponentShPtr> factions{};
+  std::unordered_map<Uuid, LootComponentShPtr> loots{};
+  std::unordered_map<Uuid, ScannedComponentShPtr> scanned{};
   std::unordered_multimap<Uuid, WeaponSlotComponentShPtr> weapons{};
   std::unordered_multimap<Uuid, ComputerSlotComponentShPtr> computers{};
   std::unordered_multimap<Uuid, EffectComponentShPtr> effects{};

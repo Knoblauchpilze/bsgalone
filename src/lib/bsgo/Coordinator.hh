@@ -10,7 +10,7 @@
 #include <core_utils/TimeUtils.hh>
 #include <memory>
 #include <optional>
-#include <unordered_map>
+#include <unordered_set>
 
 namespace bsgo {
 
@@ -28,6 +28,8 @@ class Coordinator : public utils::CoreObject
   void addPower(const Uuid &ent, const float power, const float max, const float regen);
   void addTarget(const Uuid &ent);
   void addFaction(const Uuid &ent, const Faction &faction);
+  void addLoot(const Uuid &ent, const float &amount);
+  void addScanned(const Uuid &ent);
   void addWeapon(const Uuid &ent, const Weapon &weapon);
   void addComputer(const Uuid &ent, const Computer &computer);
   void addWeaponEffect(const Uuid &ent, const utils::Duration &duration, const float damageModifier);
@@ -48,7 +50,7 @@ class Coordinator : public utils::CoreObject
   void update(float elapsedSeconds);
 
   private:
-  std::unordered_map<Uuid, EntityKind> m_entities{};
+  std::unordered_set<Uuid> m_entities{};
   Components m_components{};
   std::vector<ISystemPtr> m_systems{};
 

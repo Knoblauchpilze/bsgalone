@@ -24,13 +24,12 @@ class AbilitiesUiHandler : public IUiHandler
   bsgo::ShipViewShPtr m_shipView;
 
   std::vector<MenuShPtr> m_computers{};
+  std::vector<MenuShPtr> m_ranges{};
   std::vector<MenuShPtr> m_damages{};
   std::vector<MenuShPtr> m_statuses{};
 
   void generateCompmutersMenus(int width, int height);
-  void updateComputerMenu(const bsgo::ComputerSlotComponent &computer,
-                          const int id,
-                          const bsgo::Entity &ship);
+  void updateComputerMenu(const bsgo::ComputerSlotComponent &computer, const int id);
 };
 
 using AbilitiesUiHandlerPtr = std::unique_ptr<AbilitiesUiHandler>;

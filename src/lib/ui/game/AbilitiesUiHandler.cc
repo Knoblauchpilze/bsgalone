@@ -52,7 +52,7 @@ void AbilitiesUiHandler::updateUi()
   auto id = 0;
   for (const auto &computer : ship.computers)
   {
-    updateComputerMenu(*computer, id, ship);
+    updateComputerMenu(*computer, id);
     ++id;
   }
 }
@@ -90,8 +90,20 @@ void AbilitiesUiHandler::generateCompmutersMenus(int width, int height)
     {
       menu->setSimpleAction([shipId, id](Game &g) { g.tryActivateSlot(shipId, id); });
 
-      const auto damage = generateMenu(pos, dims, "damage", "damage", color, {olc::WHITE});
-      menu->addMenu(damage);
+      MenuShPtr range;
+      if (ship.computers[id]->maybeRange())
+      {
+        range = generateMenu(pos, dims, "range", "range", color, {olc::WHITE});
+        menu->addMenu(range);
+      }
+      m_ranges.push_back(range);
+
+      MenuShPtr damage;
+      if (ship.computers[id]->damageModifier())
+      {
+        damage = generateMenu(pos, dims, "damage", "damage", color, {olc::WHITE});
+        menu->addMenu(damage);
+      }
       m_damages.push_back(damage);
 
       const auto status = generateMenu(pos, dims, "status", "status", color, {olc::WHITE});
@@ -106,24 +118,20 @@ void AbilitiesUiHandler::generateCompmutersMenus(int width, int height)
 }
 
 void AbilitiesUiHandler::updateComputerMenu(const bsgo::ComputerSlotComponent &computer,
-                                            const int id,
-                                            const bsgo::Entity &ship)
+                                            const int id)
 {
   auto &menu = *m_computers[id];
 
-  const auto power  = ship.powerComp().value();
-  const auto target = m_shipView->getPlayerTarget();
-  std::optional<float> dToTarget;
-  if (target)
-  {
-    dToTarget = m_shipView->distanceToTarget();
-  }
-  const auto bgColor = bgColorFromReloadTime(computer, power, dToTarget);
-
+  auto bgColor = bgColorFromFiringState(computer);
   menu.setBackgroundColor(bgColor);
 
+  const auto range = computer.maybeRange();
+  if (range)
+  {
+    m_ranges[id]->setText(floatToStr(*range, 0) + "m");
+  }
+
   const auto damage = computer.damageModifier();
-  m_damages[id]->setVisible(damage.has_value());
   if (damage)
   {
     constexpr auto PERCENTAGE_MULTIPLIER = 100.0f;

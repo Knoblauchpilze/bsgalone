@@ -77,7 +77,6 @@ void Game::processUserInput(const controls::State &c, CoordinateFrame &frame)
 {
   if (m_state.disabled)
   {
-    log("Ignoring action while menu is disabled");
     return;
   }
 

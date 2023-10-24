@@ -8,18 +8,33 @@ ComputerRepository::ComputerRepository()
   : IRepository("computer")
 {}
 
-auto ComputerRepository::findOneById(const Uuid & /*computer*/) const -> Computer
+auto ComputerRepository::findOneById(const Uuid &computer) const -> Computer
 {
   Computer out;
-  out.offensive                    = false;
-  out.powerCost                    = 20.0f;
-  out.range                        = 4.1f;
-  constexpr auto RELOAD_TIME_IN_MS = 10000;
-  out.reloadTime                   = utils::Milliseconds(RELOAD_TIME_IN_MS);
 
-  constexpr auto DURATION_IN_MS = 1500;
-  out.duration                  = {utils::Milliseconds(DURATION_IN_MS)};
-  out.damageModifier            = {1.5f};
+  switch (computer)
+  {
+    case 0:
+      out.offensive  = false;
+      out.powerCost  = 20.0f;
+      out.reloadTime = utils::Milliseconds(10000);
+
+      out.duration       = {utils::Milliseconds(3500)};
+      out.damageModifier = {1.5f};
+      break;
+    case 1:
+      out.offensive  = true;
+      out.powerCost  = 5.0f;
+      out.range      = {6.0f};
+      out.reloadTime = utils::Milliseconds(2000);
+
+      out.duration       = {};
+      out.damageModifier = {};
+      break;
+    default:
+      error("Computer " + str(computer) + " not found");
+      break;
+  }
 
   return out;
 }

@@ -7,7 +7,7 @@ WeaponSlotComponent::WeaponSlotComponent(const Weapon &weapon)
   : SlotComponent("weapon",
                   SlotComponentData{.offensive  = true,
                                     .powerCost  = weapon.powerCost,
-                                    .range      = weapon.range,
+                                    .range      = {weapon.range},
                                     .reloadTime = weapon.reloadTime})
   , m_minDamage(weapon.minDamage)
   , m_maxDamage(weapon.maxDamage)

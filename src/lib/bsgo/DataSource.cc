@@ -63,6 +63,11 @@ void DataSource::registerAsteroid(Coordinator &coordinator, const Uuid &asteroid
   const auto ent = coordinator.createEntity(EntityKind::ASTEROID);
   coordinator.addTransform(ent, std::move(box));
   coordinator.addHealth(ent, data.health, data.health, 0.0f);
+  coordinator.addScanned(ent);
+  if (data.resource)
+  {
+    coordinator.addLoot(ent, *data.resource);
+  }
 }
 
 void DataSource::registerShip(Coordinator &coordinator, const Uuid &ship) const

@@ -3,29 +3,27 @@
 
 namespace pge {
 
-auto bgColorFromReloadTime(const bsgo::SlotComponent &component,
-                           const float availablePower,
-                           const std::optional<float> &distanceToTarget) -> olc::Pixel
+auto bgColorFromFiringState(const bsgo::SlotComponent &component) -> olc::Pixel
 {
-  auto out = olc::DARK_GREEN;
-
-  if (component.isOffensive() && (!distanceToTarget || component.range() < *distanceToTarget))
+  switch (component.firingState())
   {
-    out = olc::DARK_RED;
+    case bsgo::FiringState::READY:
+      return olc::DARK_GREEN;
+    case bsgo::FiringState::DISABLED:
+      return olc::DARK_GREY;
+    case bsgo::FiringState::INVALID_TARGET:
+    case bsgo::FiringState::OUT_OF_RANGE:
+      return olc::DARK_RED;
+    case bsgo::FiringState::OUT_OF_POWER:
+      return olc::DARK_ORANGE;
+    case bsgo::FiringState::RELOADING:
+      return colorGradient(olc::DARK_YELLOW,
+                           olc::DARK_GREEN,
+                           component.reloadPercentage(),
+                           alpha::Opaque);
+    default:
+      return olc::PINK;
   }
-  else if (availablePower < component.powerCost())
-  {
-    out = olc::DARK_ORANGE;
-  }
-  else if (!component.canFire())
-  {
-    out = colorGradient(olc::DARK_YELLOW,
-                        olc::DARK_GREEN,
-                        component.reloadPercentage(),
-                        alpha::Opaque);
-  }
-
-  return out;
 }
 
 } // namespace pge

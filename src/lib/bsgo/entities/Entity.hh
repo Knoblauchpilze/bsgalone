@@ -6,7 +6,10 @@
 #include "EntityKind.hh"
 #include "FactionComponent.hh"
 #include "HealthComponent.hh"
+#include "KindComponent.hh"
+#include "LootComponent.hh"
 #include "PowerComponent.hh"
+#include "ScannedComponent.hh"
 #include "TargetComponent.hh"
 #include "TransformComponent.hh"
 #include "Uuid.hh"
@@ -20,13 +23,15 @@ namespace bsgo {
 struct Entity
 {
   Uuid uuid;
-  EntityKind kind{EntityKind::NONE};
+  KindComponentShPtr kind{};
   std::optional<TransformComponentShPtr> transform{};
   std::optional<VelocityComponentShPtr> velocity{};
   std::optional<HealthComponentShPtr> health{};
   std::optional<PowerComponentShPtr> power{};
   std::optional<TargetComponentShPtr> target{};
   std::optional<FactionComponentShPtr> faction{};
+  std::optional<LootComponentShPtr> loot{};
+  std::optional<ScannedComponentShPtr> scanned{};
   std::vector<WeaponSlotComponentShPtr> weapons{};
   std::vector<ComputerSlotComponentShPtr> computers{};
   std::vector<EffectComponentShPtr> effects{};
@@ -48,6 +53,8 @@ struct Entity
   auto powerComp() const -> const PowerComponent &;
   auto targetComp() const -> const TargetComponent &;
   auto factionComp() const -> const FactionComponent &;
+  auto lootComp() const -> const LootComponent &;
+  auto scannedComp() const -> const ScannedComponent &;
 
   auto transformComp() -> TransformComponent &;
   auto velocityComp() -> VelocityComponent &;

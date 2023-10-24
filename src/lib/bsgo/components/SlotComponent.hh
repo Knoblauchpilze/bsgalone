@@ -11,8 +11,18 @@ struct SlotComponentData
 {
   bool offensive;
   float powerCost;
-  float range;
+  std::optional<float> range;
   utils::Duration reloadTime;
+};
+
+enum class FiringState
+{
+  READY,
+  DISABLED,
+  INVALID_TARGET,
+  OUT_OF_RANGE,
+  OUT_OF_POWER,
+  RELOADING
 };
 
 class SlotComponent : public IComponent
@@ -25,17 +35,22 @@ class SlotComponent : public IComponent
 
   bool isOffensive() const;
   auto powerCost() const -> float;
+  auto maybeRange() const -> std::optional<float>;
   auto range() const -> float;
+  auto firingState() const noexcept -> FiringState;
   bool canFire() const noexcept;
+  bool isReloading() const noexcept;
   auto reloadPercentage() const -> float;
 
+  void setFiringState(const FiringState &firingState);
   void fire();
 
   private:
   bool m_offensive;
   float m_powerCost;
-  float m_range;
+  std::optional<float> m_range;
   utils::Duration m_reloadTime;
+  FiringState m_firingState{FiringState::READY};
 
   std::optional<utils::Duration> m_elapsedSinceLastFired{};
 
