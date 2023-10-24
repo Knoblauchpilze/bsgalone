@@ -29,9 +29,7 @@ class WeaponsUiHandler : public IUiHandler
   std::vector<MenuShPtr> m_statuses{};
 
   void generateWeaponsMenus(int width, int height);
-  void updateWeaponMenu(const bsgo::WeaponSlotComponent &weapon,
-                        const int id,
-                        const bsgo::Entity &ship);
+  void updateWeaponMenu(const bsgo::WeaponSlotComponent &weapon, const int id);
 };
 
 using WeaponsUiHandlerPtr = std::unique_ptr<WeaponsUiHandler>;

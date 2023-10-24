@@ -52,7 +52,7 @@ void WeaponsUiHandler::updateUi()
   auto id = 0;
   for (const auto &weapon : ship.weapons)
   {
-    updateWeaponMenu(*weapon, id, ship);
+    updateWeaponMenu(*weapon, id);
     ++id;
   }
 }
@@ -104,9 +104,7 @@ void WeaponsUiHandler::generateWeaponsMenus(int width, int height)
   }
 }
 
-void WeaponsUiHandler::updateWeaponMenu(const bsgo::WeaponSlotComponent &weapon,
-                                        const int id,
-                                        const bsgo::Entity &ship)
+void WeaponsUiHandler::updateWeaponMenu(const bsgo::WeaponSlotComponent &weapon, const int id)
 {
   const auto target = m_shipView->getPlayerTarget();
 
@@ -114,18 +112,7 @@ void WeaponsUiHandler::updateWeaponMenu(const bsgo::WeaponSlotComponent &weapon,
 
   menu.setEnabled(target.has_value());
 
-  auto bgColor = olc::DARK_GREY;
-  if (weapon.active())
-  {
-    const auto power = ship.powerComp().value();
-    std::optional<float> dToTarget;
-    if (target)
-    {
-      dToTarget = m_shipView->distanceToTarget();
-    }
-    bgColor = bgColorFromReloadTime(weapon, power, dToTarget);
-  }
-
+  auto bgColor = bgColorFromFiringState(weapon);
   menu.setBackgroundColor(bgColor);
 
   auto &range = *m_ranges[id];

@@ -6,8 +6,6 @@
 
 namespace pge {
 
-auto bgColorFromReloadTime(const bsgo::SlotComponent &component,
-                           const float availablePower,
-                           const std::optional<float> &distanceToTarget) -> olc::Pixel;
+auto bgColorFromFiringState(const bsgo::SlotComponent &component) -> olc::Pixel;
 
 }

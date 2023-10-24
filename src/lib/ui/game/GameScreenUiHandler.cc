@@ -182,7 +182,7 @@ void GameScreenUiHandler::updateOutpostUi()
 
   const auto target                       = m_shipView->getPlayerTarget();
   constexpr auto MAXIMUM_DISTANCE_TO_DOCK = 5.0f;
-  if (target && bsgo::EntityKind::OUTPOST == target->kind)
+  if (target && bsgo::EntityKind::OUTPOST == target->kind->kind())
   {
     dockButtonVisible = m_shipView->distanceToTarget() <= MAXIMUM_DISTANCE_TO_DOCK;
 

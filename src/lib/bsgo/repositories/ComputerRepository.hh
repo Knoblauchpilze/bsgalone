@@ -12,7 +12,7 @@ struct Computer
 {
   bool offensive;
   float powerCost;
-  float range;
+  std::optional<float> range{};
   utils::Duration reloadTime;
 
   std::optional<utils::Duration> duration{};

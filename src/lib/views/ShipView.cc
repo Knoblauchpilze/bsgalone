@@ -16,7 +16,7 @@ auto ShipView::getPlayerShip() const -> Entity
 auto ShipView::getShip(const Uuid &ship) const -> Entity
 {
   const auto ent = m_coordinator->getEntity(ship);
-  if (ent.kind != EntityKind::SHIP)
+  if (ent.kind->kind() != EntityKind::SHIP)
   {
     error("Expected " + str(ship) + " to have kind ship but got " + ent.str());
   }
@@ -83,11 +83,6 @@ void ShipView::tryActivateSlot(const Uuid &ship, const int slotId)
   }
 
   const auto computer = data.computers[slotId];
-  const auto duration = computer->duration();
-  if (!duration)
-  {
-    error("Failed to activate slot " + std::to_string(slotId), "Expected slot to define a duration");
-  }
   if (!computer->canFire())
   {
     return;
@@ -95,6 +90,12 @@ void ShipView::tryActivateSlot(const Uuid &ship, const int slotId)
   const auto damage = computer->damageModifier();
   if (damage)
   {
+    const auto duration = computer->duration();
+    if (!duration)
+    {
+      error("Failed to activate slot " + std::to_string(slotId),
+            "Expected slot to define a duration");
+    }
     log("Adding weapon effect for " + data.str() + " with duration "
         + utils::durationToString(*duration));
     m_coordinator->addWeaponEffect(ship, *duration, *damage);

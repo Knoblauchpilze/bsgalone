@@ -11,7 +11,7 @@ WeaponRepository::WeaponRepository()
 auto WeaponRepository::findOneById(const Uuid &weapon) const -> Weapon
 {
   Weapon out;
-  out.powerCost = 0.5f;
+  out.powerCost = 2.0f;
 
   out.range = 2.3f;
 

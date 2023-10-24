@@ -118,8 +118,10 @@ void GameScreenRenderer::renderAsteroid(const bsgo::Entity &asteroid,
                                         SpriteRenderer &engine,
                                         const RenderState &state) const
 {
-  const auto &transform = asteroid.transformComp();
-  const auto pos        = transform.position();
+  const auto &transform   = asteroid.transformComp();
+  const auto pos          = transform.position();
+  const auto scanned      = asteroid.scannedComp().scanned();
+  const auto containsLoot = asteroid.exists<bsgo::LootComponent>();
 
   SpriteDesc t;
   t.x = pos(0) - transform.size();
@@ -129,7 +131,13 @@ void GameScreenRenderer::renderAsteroid(const bsgo::Entity &asteroid,
 
   t.sprite.pack   = m_asteroidTexturesPackId;
   t.sprite.sprite = {0, 0};
-  t.sprite.tint   = olc::WHITE;
+
+  auto tint = olc::WHITE;
+  if (scanned)
+  {
+    tint = containsLoot ? olc::YELLOW : olc::RED;
+  }
+  t.sprite.tint = tint;
 
   engine.drawWarpedSprite(t, state.cf);
 }

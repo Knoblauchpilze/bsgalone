@@ -13,6 +13,9 @@ target_sources (bsgalone_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/ComputerSlotComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/EffectComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/WeaponEffectComponent.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/KindComponent.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/ScannedComponent.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/LootComponent.cc
 	)
 
 target_include_directories (bsgalone_lib PUBLIC

@@ -59,8 +59,9 @@ Coordinator::Coordinator()
 
 auto Coordinator::createEntity(const EntityKind &kind) -> Uuid
 {
-  auto ent        = m_entities.size();
-  m_entities[ent] = kind;
+  auto ent = m_entities.size();
+  m_entities.insert(ent);
+  m_components.kinds[ent] = std::make_shared<KindComponent>(kind);
   return ent;
 }
 
@@ -96,8 +97,20 @@ void Coordinator::addTarget(const Uuid &ent)
 
 void Coordinator::addFaction(const Uuid &ent, const Faction &faction)
 {
-  checkForOverrides(ent, "Factions", m_components.factions);
+  checkForOverrides(ent, "Faction", m_components.factions);
   m_components.factions[ent] = std::make_shared<FactionComponent>(faction);
+}
+
+void Coordinator::addLoot(const Uuid &ent, const float &amount)
+{
+  checkForOverrides(ent, "Loot", m_components.loots);
+  m_components.loots[ent] = std::make_shared<LootComponent>(amount);
+}
+
+void Coordinator::addScanned(const Uuid &ent)
+{
+  checkForOverrides(ent, "Scanned", m_components.scanned);
+  m_components.scanned[ent] = std::make_shared<ScannedComponent>();
 }
 
 void Coordinator::addWeapon(const Uuid &ent, const Weapon &weapon)
@@ -154,12 +167,7 @@ auto Coordinator::getEntity(const Uuid &ent) const -> Entity
 {
   Entity out;
   out.uuid = ent;
-
-  const auto it = m_entities.find(ent);
-  if (it != m_entities.end())
-  {
-    out.kind = it->second;
-  }
+  out.kind = *getComponent(ent, m_components.kinds);
 
   out.transform = getComponent(ent, m_components.transforms);
   out.velocity  = getComponent(ent, m_components.velocities);
@@ -167,6 +175,8 @@ auto Coordinator::getEntity(const Uuid &ent) const -> Entity
   out.power     = getComponent(ent, m_components.powers);
   out.target    = getComponent(ent, m_components.targets);
   out.faction   = getComponent(ent, m_components.factions);
+  out.loot      = getComponent(ent, m_components.loots);
+  out.scanned   = getComponent(ent, m_components.scanned);
 
   out.weapons   = getAllComponent(ent, m_components.weapons);
   out.computers = getAllComponent(ent, m_components.computers);
@@ -189,7 +199,10 @@ void Coordinator::deleteEntity(const Uuid &ent)
   m_components.healths.erase(ent);
   m_components.powers.erase(ent);
   m_components.targets.erase(ent);
+  m_components.kinds.erase(ent);
   m_components.factions.erase(ent);
+  m_components.loots.erase(ent);
+  m_components.scanned.erase(ent);
 
   m_components.weapons.erase(ent);
   m_components.computers.erase(ent);
@@ -241,7 +254,7 @@ auto Coordinator::getEntitiesSatistying(const EntityPredicate &predicate) const
 {
   std::vector<Entity> out;
 
-  for (const auto [id, kind] : m_entities)
+  for (const auto &id : m_entities)
   {
     const auto ent = getEntity(id);
     if (predicate(ent))
@@ -294,8 +307,8 @@ bool Coordinator::hasExpectedKind(const Uuid &ent, const std::optional<EntityKin
     return true;
   }
 
-  const auto it = m_entities.find(ent);
-  return it != m_entities.end() && it->second == *kind;
+  const auto entKind = m_components.kinds.at(ent);
+  return entKind->kind() == *kind;
 }
 
 void Coordinator::checkEntityExist(const Uuid &ent, const std::string &componentName) const
@@ -321,7 +334,7 @@ void Coordinator::checkForOverrides(const Uuid &ent,
 void Coordinator::cleanUpDeadEntities()
 {
   std::unordered_set<Uuid> deletedEntities;
-  for (const auto &[id, _] : m_entities)
+  for (const auto &id : m_entities)
   {
     const auto ent = getEntity(id);
     if (ent.exists<HealthComponent>() && !ent.healthComp().isAlive())
