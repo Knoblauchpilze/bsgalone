@@ -20,6 +20,10 @@ class ComputerSystem : public AbstractSystem
                       const ComputerSlotComponentShPtr &computer,
                       const std::optional<Entity> &target,
                       const float elapsedSeconds) const;
+
+  void processFireRequest(Entity &ent,
+                          const ComputerSlotComponentShPtr &computer,
+                          Coordinator &coordinator) const;
 };
 
 } // namespace bsgo

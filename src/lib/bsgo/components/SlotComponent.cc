@@ -74,14 +74,30 @@ void SlotComponent::setFiringState(const FiringState &firingState)
   m_firingState = firingState;
 }
 
+void SlotComponent::registerFireRequest()
+{
+  m_fireRequest = true;
+}
+
+bool SlotComponent::hasFireRequest() const
+{
+  return m_fireRequest;
+}
+
 void SlotComponent::fire()
 {
+  clearFireRequest();
   if (!canFire())
   {
     error("Failed to use slot", "Still reloading");
   }
 
   m_elapsedSinceLastFired = utils::Duration(0);
+}
+
+void SlotComponent::clearFireRequest()
+{
+  m_fireRequest = false;
 }
 
 void SlotComponent::handleReload(const float elapsedSeconds)

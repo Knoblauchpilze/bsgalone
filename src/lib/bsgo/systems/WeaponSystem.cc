@@ -29,6 +29,7 @@ void WeaponSystem::updateEntity(Entity &entity,
   for (const auto &weapon : entity.weapons)
   {
     updateWeapon(entity, weapon, targetEnt, elapsedSeconds);
+    weapon->clearFireRequest();
     if (weapon->canFire())
     {
       fireWeaponForEntity(entity, *weapon, *targetEnt);
