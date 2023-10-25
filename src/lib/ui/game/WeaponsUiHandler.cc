@@ -106,11 +106,8 @@ void WeaponsUiHandler::generateWeaponsMenus(int width, int height)
 
 void WeaponsUiHandler::updateWeaponMenu(const bsgo::WeaponSlotComponent &weapon, const int id)
 {
-  const auto target = m_shipView->getPlayerTarget();
-
   auto &menu = *m_weapons[id];
-
-  menu.setEnabled(target.has_value());
+  menu.setEnabled(m_shipView->hasTarget());
 
   auto bgColor = bgColorFromFiringState(weapon);
   menu.setBackgroundColor(bgColor);
