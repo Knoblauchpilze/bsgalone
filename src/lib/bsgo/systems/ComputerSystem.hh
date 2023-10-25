@@ -24,6 +24,9 @@ class ComputerSystem : public AbstractSystem
   void processFireRequest(Entity &ent,
                           const ComputerSlotComponentShPtr &computer,
                           Coordinator &coordinator) const;
+  void applyComputerEffects(Entity &ent,
+                            const ComputerSlotComponentShPtr &computer,
+                            Coordinator &coordinator) const;
 };
 
 } // namespace bsgo

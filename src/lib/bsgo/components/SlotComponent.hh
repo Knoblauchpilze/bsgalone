@@ -53,10 +53,9 @@ class SlotComponent : public IComponent
   float m_powerCost;
   std::optional<float> m_range;
   utils::Duration m_reloadTime;
-  FiringState m_firingState{FiringState::READY};
 
   bool m_fireRequest{false};
-
+  FiringState m_firingState{FiringState::READY};
   std::optional<utils::Duration> m_elapsedSinceLastFired{};
 
   void handleReload(const float elapsedSeconds);

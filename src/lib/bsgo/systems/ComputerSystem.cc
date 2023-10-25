@@ -8,6 +8,13 @@ bool isEntityRelevant(const Entity &entity)
 {
   return !entity.computers.empty();
 }
+
+bool isValidTarget(const Entity &entity, const Entity &target, const ComputerSlotComponent &computer)
+{
+  const auto matchingTargetKind = !computer.allowedTargets()
+                                  || hasEntityMatchingKind(target, *computer.allowedTargets());
+  return matchingTargetKind && hasTargetDifferentFaction(entity, target);
+}
 } // namespace
 
 ComputerSystem::ComputerSystem()
@@ -44,7 +51,7 @@ void ComputerSystem::updateComputer(const Entity &ent,
 
   computer->update(elapsedSeconds);
 
-  if (computer->isOffensive() && (!target.has_value() || !hasTargetDifferentFaction(ent, *target)))
+  if (computer->isOffensive() && (!target.has_value() || !isValidTarget(ent, *target, *computer)))
   {
     state = FiringState::INVALID_TARGET;
   }
@@ -75,6 +82,17 @@ void ComputerSystem::processFireRequest(Entity &ent,
     return;
   }
 
+  computer->fire();
+  const auto powerUsed = computer->powerCost();
+  ent.powerComp().usePower(powerUsed);
+
+  applyComputerEffects(ent, computer, coordinator);
+}
+
+void ComputerSystem::applyComputerEffects(Entity &ent,
+                                          const ComputerSlotComponentShPtr &computer,
+                                          Coordinator &coordinator) const
+{
   const auto damage = computer->damageModifier();
   if (damage)
   {
@@ -87,10 +105,6 @@ void ComputerSystem::processFireRequest(Entity &ent,
         + utils::durationToString(*duration));
     coordinator.addWeaponEffect(ent.uuid, *duration, *damage);
   }
-
-  computer->fire();
-  const auto powerUsed = computer->powerCost();
-  ent.powerComp().usePower(powerUsed);
 }
 
 } // namespace bsgo
