@@ -78,28 +78,7 @@ void ShipView::tryActivateSlot(const Uuid &ship, const int slotId)
   }
 
   const auto computer = data.computers[slotId];
-  if (!computer->canFire())
-  {
-    return;
-  }
-  const auto damage = computer->damageModifier();
-  if (damage)
-  {
-    const auto duration = computer->duration();
-    if (!duration)
-    {
-      error("Failed to activate slot " + std::to_string(slotId),
-            "Expected slot to define a duration");
-    }
-    log("Adding weapon effect for " + data.str() + " with duration "
-        + utils::durationToString(*duration));
-    m_coordinator->addWeaponEffect(ship, *duration, *damage);
-  }
-
-  computer->fire();
-
-  const auto powerUsed = computer->powerCost();
-  data.powerComp().usePower(powerUsed);
+  computer->registerFireRequest();
 }
 
 } // namespace bsgo

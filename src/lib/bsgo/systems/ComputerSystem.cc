@@ -28,6 +28,10 @@ void ComputerSystem::updateEntity(Entity &entity,
   for (const auto &computer : entity.computers)
   {
     updateComputer(entity, computer, targetEnt, elapsedSeconds);
+    if (computer->hasFireRequest())
+    {
+      processFireRequest(entity, computer, coordinator);
+    }
   }
 }
 
@@ -58,6 +62,35 @@ void ComputerSystem::updateComputer(const Entity &ent,
   }
 
   computer->setFiringState(state);
+}
+
+void ComputerSystem::processFireRequest(Entity &ent,
+                                        const ComputerSlotComponentShPtr &computer,
+                                        Coordinator &coordinator) const
+{
+  computer->clearFireRequest();
+
+  if (!computer->canFire())
+  {
+    return;
+  }
+
+  const auto damage = computer->damageModifier();
+  if (damage)
+  {
+    const auto duration = computer->duration();
+    if (!duration)
+    {
+      error("Failed to activate computer", "Expected slot to define a duration");
+    }
+    log("Adding weapon effect for " + ent.str() + " with duration "
+        + utils::durationToString(*duration));
+    coordinator.addWeaponEffect(ent.uuid, *duration, *damage);
+  }
+
+  computer->fire();
+  const auto powerUsed = computer->powerCost();
+  ent.powerComp().usePower(powerUsed);
 }
 
 } // namespace bsgo

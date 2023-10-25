@@ -43,7 +43,10 @@ class SlotComponent : public IComponent
   auto reloadPercentage() const -> float;
 
   void setFiringState(const FiringState &firingState);
+  void registerFireRequest();
+  bool hasFireRequest() const;
   void fire();
+  void clearFireRequest();
 
   private:
   bool m_offensive;
@@ -51,6 +54,8 @@ class SlotComponent : public IComponent
   std::optional<float> m_range;
   utils::Duration m_reloadTime;
   FiringState m_firingState{FiringState::READY};
+
+  bool m_fireRequest{false};
 
   std::optional<utils::Duration> m_elapsedSinceLastFired{};
 
