@@ -22,9 +22,9 @@ class ShipView : public IView
 
   auto getShipsWithin(const IBoundingBox &bbox) const -> std::vector<Entity>;
 
-  public:
   auto distanceToTarget() const -> float;
 
+  void tryActivateWeapon(const Uuid &ship, const int weaponId);
   void tryActivateSlot(const Uuid &ship, const int slotId);
 
   private:

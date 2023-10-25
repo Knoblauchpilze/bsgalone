@@ -62,6 +62,25 @@ auto ShipView::distanceToTarget() const -> float
   return (targetPos - playerPos).norm();
 }
 
+void ShipView::tryActivateWeapon(const Uuid &ship, const int weaponId)
+{
+  if (ship != m_playerShipId)
+  {
+    error("Failed to activate weapon " + std::to_string(weaponId),
+          "Expected ship " + str(m_playerShipId) + " but got " + str(ship));
+  }
+
+  auto data = getPlayerShip();
+  if (data.weapons.size() < static_cast<std::size_t>(weaponId))
+  {
+    error("Failed to activate weapon " + std::to_string(weaponId),
+          "Ship only has " + std::to_string(data.weapons.size()) + " weapon(s)");
+  }
+
+  const auto weapon = data.weapons[weaponId];
+  weapon->toggle();
+}
+
 void ShipView::tryActivateSlot(const Uuid &ship, const int slotId)
 {
   if (ship != m_playerShipId)

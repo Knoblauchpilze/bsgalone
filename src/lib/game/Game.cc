@@ -232,6 +232,11 @@ void Game::resume()
   m_state.paused = false;
 }
 
+void Game::tryActivateWeapon(const bsgo::Uuid &ship, const int &weaponId)
+{
+  m_views.shipView->tryActivateWeapon(ship, weaponId);
+}
+
 void Game::tryActivateSlot(const bsgo::Uuid &ship, const int &slotId)
 {
   m_views.shipView->tryActivateSlot(ship, slotId);
