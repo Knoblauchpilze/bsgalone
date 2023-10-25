@@ -61,6 +61,7 @@ struct Entity
   auto healthComp() -> HealthComponent &;
   auto powerComp() -> PowerComponent &;
   auto targetComp() -> TargetComponent &;
+  auto scannedComp() -> ScannedComponent &;
 };
 
 } // namespace bsgo

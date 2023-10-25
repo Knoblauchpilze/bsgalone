@@ -37,7 +37,7 @@ void ComputerSystem::updateEntity(Entity &entity,
     updateComputer(entity, computer, targetEnt, elapsedSeconds);
     if (computer->hasFireRequest())
     {
-      processFireRequest(entity, computer, coordinator);
+      processFireRequest(entity, computer, targetEnt, coordinator);
     }
   }
 }
@@ -73,6 +73,7 @@ void ComputerSystem::updateComputer(const Entity &ent,
 
 void ComputerSystem::processFireRequest(Entity &ent,
                                         const ComputerSlotComponentShPtr &computer,
+                                        std::optional<Entity> &target,
                                         Coordinator &coordinator) const
 {
   computer->clearFireRequest();
@@ -86,12 +87,16 @@ void ComputerSystem::processFireRequest(Entity &ent,
   const auto powerUsed = computer->powerCost();
   ent.powerComp().usePower(powerUsed);
 
-  applyComputerEffects(ent, computer, coordinator);
+  applyEmitterEffects(ent, computer, coordinator);
+  if (computer->isOffensive() && target)
+  {
+    applyReceiverEffects(*target, computer, coordinator);
+  }
 }
 
-void ComputerSystem::applyComputerEffects(Entity &ent,
-                                          const ComputerSlotComponentShPtr &computer,
-                                          Coordinator &coordinator) const
+void ComputerSystem::applyEmitterEffects(Entity &ent,
+                                         const ComputerSlotComponentShPtr &computer,
+                                         Coordinator &coordinator) const
 {
   const auto damage = computer->damageModifier();
   if (damage)
@@ -104,6 +109,16 @@ void ComputerSystem::applyComputerEffects(Entity &ent,
     log("Adding weapon effect for " + ent.str() + " with duration "
         + utils::durationToString(*duration));
     coordinator.addWeaponEffect(ent.uuid, *duration, *damage);
+  }
+}
+
+void ComputerSystem::applyReceiverEffects(Entity &target,
+                                          const ComputerSlotComponentShPtr & /*computer*/,
+                                          Coordinator & /*coordinator*/) const
+{
+  if (target.exists<ScannedComponent>())
+  {
+    target.scannedComp().scan();
   }
 }
 
