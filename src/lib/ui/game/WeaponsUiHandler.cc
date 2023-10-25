@@ -62,6 +62,7 @@ constexpr auto REASONABLE_MAXIMUM_NUMBER_OF_WEAPONS = 4;
 void WeaponsUiHandler::generateWeaponsMenus(int width, int height)
 {
   const auto ship         = m_shipView->getPlayerShip();
+  const auto shipId       = ship.uuid;
   const auto weaponsCount = ship.weapons.size();
   if (weaponsCount > REASONABLE_MAXIMUM_NUMBER_OF_WEAPONS)
   {
@@ -84,7 +85,8 @@ void WeaponsUiHandler::generateWeaponsMenus(int width, int height)
     const auto text = "W" + std::to_string(id);
     const auto name = "weapon_" + std::to_string(id);
 
-    auto menu = generateMenu(pos, dims, text, name, color, {olc::WHITE}, true);
+    auto menu = generateSlotMenu(pos, dims, text, name, color, {olc::WHITE}, true);
+    menu->setSimpleAction([shipId, id](Game &g) { g.tryActivateWeapon(shipId, id); });
     m_weapons.push_back(menu);
 
     const auto range = generateMenu(pos, dims, "range", "range", color, {olc::WHITE});
@@ -107,7 +109,6 @@ void WeaponsUiHandler::generateWeaponsMenus(int width, int height)
 void WeaponsUiHandler::updateWeaponMenu(const bsgo::WeaponSlotComponent &weapon, const int id)
 {
   auto &menu = *m_weapons[id];
-  menu.setEnabled(m_shipView->hasTarget());
 
   auto bgColor = bgColorFromFiringState(weapon);
   menu.setBackgroundColor(bgColor);

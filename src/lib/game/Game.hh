@@ -82,6 +82,7 @@ class Game : public utils::CoreObject
   /// based entities should take actions to be resuming their pathes, motions, etc.
   void resume();
 
+  void tryActivateWeapon(const bsgo::Uuid &ship, const int &weaponId);
   void tryActivateSlot(const bsgo::Uuid &ship, const int &slotId);
 
   private:
