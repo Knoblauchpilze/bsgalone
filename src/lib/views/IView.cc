@@ -14,9 +14,4 @@ IView::IView(const std::string &name, const CoordinatorShPtr &coordinator)
   }
 }
 
-auto IView::getEntity(const Uuid &ent) const -> Entity
-{
-  return m_coordinator->getEntity(ent);
-}
-
 } // namespace bsgo

@@ -10,17 +10,29 @@ ShipView::ShipView(const Uuid &playerShipId, const CoordinatorShPtr &coordinator
 
 auto ShipView::getPlayerShip() const -> Entity
 {
-  return getShip(m_playerShipId);
-}
-
-auto ShipView::getShip(const Uuid &ship) const -> Entity
-{
-  const auto ent = m_coordinator->getEntity(ship);
+  const auto ent = m_coordinator->getEntity(m_playerShipId);
   if (ent.kind->kind() != EntityKind::SHIP)
   {
-    error("Expected " + str(ship) + " to have kind ship but got " + ent.str());
+    error("Expected " + str(m_playerShipId) + " to have kind ship but got " + ent.str());
   }
   return ent;
+}
+
+bool ShipView::hasTarget() const
+{
+  return getPlayerTarget().has_value();
+}
+
+auto ShipView::getPlayerTarget() const -> std::optional<Entity>
+{
+  const auto ent      = m_coordinator->getEntity(m_playerShipId);
+  const auto targetId = ent.targetComp().target();
+  if (!targetId)
+  {
+    return {};
+  }
+
+  return {m_coordinator->getEntity(*targetId)};
 }
 
 auto ShipView::getShipsWithin(const IBoundingBox &bbox) const -> std::vector<Entity>
@@ -33,11 +45,6 @@ auto ShipView::getShipsWithin(const IBoundingBox &bbox) const -> std::vector<Ent
   }
 
   return out;
-}
-
-auto ShipView::getPlayerTarget() const -> std::optional<Entity>
-{
-  return getTarget(m_playerShipId);
 }
 
 auto ShipView::distanceToTarget() const -> float
@@ -53,18 +60,6 @@ auto ShipView::distanceToTarget() const -> float
   const auto targetPos  = target->transformComp().position();
 
   return (targetPos - playerPos).norm();
-}
-
-auto ShipView::getTarget(const Uuid &ship) const -> std::optional<Entity>
-{
-  const auto ent      = getShip(ship);
-  const auto targetId = ent.targetComp().target();
-  if (!targetId)
-  {
-    return {};
-  }
-
-  return {getEntity(*targetId)};
 }
 
 void ShipView::tryActivateSlot(const Uuid &ship, const int slotId)

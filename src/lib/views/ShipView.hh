@@ -17,13 +17,13 @@ class ShipView : public IView
   ~ShipView() override = default;
 
   auto getPlayerShip() const -> Entity;
-  auto getShip(const Uuid &ship) const -> Entity;
+  bool hasTarget() const;
+  auto getPlayerTarget() const -> std::optional<Entity>;
 
   auto getShipsWithin(const IBoundingBox &bbox) const -> std::vector<Entity>;
 
-  auto getPlayerTarget() const -> std::optional<Entity>;
+  public:
   auto distanceToTarget() const -> float;
-  auto getTarget(const Uuid &ship) const -> std::optional<Entity>;
 
   void tryActivateSlot(const Uuid &ship, const int slotId);
 

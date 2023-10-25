@@ -14,8 +14,6 @@ class IView : public utils::CoreObject
   IView(const std::string &name, const CoordinatorShPtr &coordinator);
   virtual ~IView() = default;
 
-  auto getEntity(const Uuid &ent) const -> Entity;
-
   protected:
   CoordinatorShPtr m_coordinator;
 };
