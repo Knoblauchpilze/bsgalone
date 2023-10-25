@@ -23,8 +23,12 @@ class ComputerSystem : public AbstractSystem
 
   void processFireRequest(Entity &ent,
                           const ComputerSlotComponentShPtr &computer,
+                          std::optional<Entity> &target,
                           Coordinator &coordinator) const;
-  void applyComputerEffects(Entity &ent,
+  void applyEmitterEffects(Entity &ent,
+                           const ComputerSlotComponentShPtr &computer,
+                           Coordinator &coordinator) const;
+  void applyReceiverEffects(Entity &target,
                             const ComputerSlotComponentShPtr &computer,
                             Coordinator &coordinator) const;
 };

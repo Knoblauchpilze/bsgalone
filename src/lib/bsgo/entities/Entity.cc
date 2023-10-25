@@ -183,4 +183,9 @@ auto Entity::targetComp() -> TargetComponent &
   return details::safeAccess(target, *this, "Target");
 }
 
+auto Entity::scannedComp() -> ScannedComponent &
+{
+  return details::safeAccess(scanned, *this, "Scanned");
+}
+
 } // namespace bsgo
