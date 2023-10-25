@@ -15,6 +15,11 @@ bool hasTargetDifferentFaction(const Entity &ent, const Entity &target)
   return true;
 }
 
+bool hasEntityMatchingKind(const Entity &entity, const std::unordered_set<EntityKind> &acceptedKinds)
+{
+  return acceptedKinds.contains(entity.kind->kind());
+}
+
 auto distanceToTarget(const Entity &ent, const Entity &target) -> float
 {
   const Eigen::Vector3f pos       = ent.transformComp().position();

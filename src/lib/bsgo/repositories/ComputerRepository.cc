@@ -29,6 +29,7 @@ auto ComputerRepository::findOneById(const Uuid &computer) const -> Computer
       out.reloadTime = utils::Milliseconds(2000);
 
       out.duration       = {};
+      out.allowedTargets = {{EntityKind::ASTEROID}};
       out.damageModifier = {};
       break;
     default:
