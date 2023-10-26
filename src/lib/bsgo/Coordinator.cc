@@ -4,6 +4,7 @@
 #include "ComputerSystem.hh"
 #include "EffectSystem.hh"
 #include "HealthSystem.hh"
+#include "LootSystem.hh"
 #include "MotionSystem.hh"
 #include "PowerSystem.hh"
 #include "TargetSystem.hh"
@@ -298,6 +299,9 @@ void Coordinator::createSystems()
 
   auto effect = std::make_unique<EffectSystem>();
   m_systems.push_back(std::move(effect));
+
+  auto loot = std::make_unique<LootSystem>();
+  m_systems.push_back(std::move(loot));
 }
 
 bool Coordinator::hasExpectedKind(const Uuid &ent, const std::optional<EntityKind> &kind) const

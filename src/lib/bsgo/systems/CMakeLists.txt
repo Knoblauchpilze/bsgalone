@@ -10,6 +10,7 @@ target_sources (bsgalone_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/TargetSystem.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ComputerSystem.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/EffectSystem.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/LootSystem.cc
 	)
 
 target_include_directories (bsgalone_lib PUBLIC
