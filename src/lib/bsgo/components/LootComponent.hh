@@ -16,6 +16,8 @@ class LootComponent : public IComponent
   auto amount() const -> float;
   void registerRecipient(const Uuid &entity);
 
+  auto recipients() const -> std::unordered_set<Uuid>;
+
   void update(const float elapsedSeconds) override;
 
   private:
