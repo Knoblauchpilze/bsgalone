@@ -118,6 +118,12 @@ bool Entity::exists<ScannedComponent>() const
   return details::checkComponentExists(scanned);
 }
 
+template<>
+bool Entity::exists<PlayerComponent>() const
+{
+  return details::checkComponentExists(player);
+}
+
 auto Entity::transformComp() const -> const TransformComponent &
 {
   return details::safeConstAccess(transform, *this, "Transform");
@@ -156,6 +162,11 @@ auto Entity::lootComp() const -> const LootComponent &
 auto Entity::scannedComp() const -> const ScannedComponent &
 {
   return details::safeConstAccess(scanned, *this, "Scanned");
+}
+
+auto Entity::playerComp() const -> const PlayerComponent &
+{
+  return details::safeConstAccess(player, *this, "Player");
 }
 
 auto Entity::transformComp() -> TransformComponent &

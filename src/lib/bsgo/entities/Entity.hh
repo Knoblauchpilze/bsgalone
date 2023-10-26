@@ -8,6 +8,7 @@
 #include "HealthComponent.hh"
 #include "KindComponent.hh"
 #include "LootComponent.hh"
+#include "PlayerComponent.hh"
 #include "PowerComponent.hh"
 #include "ScannedComponent.hh"
 #include "TargetComponent.hh"
@@ -32,6 +33,7 @@ struct Entity
   std::optional<FactionComponentShPtr> faction{};
   std::optional<LootComponentShPtr> loot{};
   std::optional<ScannedComponentShPtr> scanned{};
+  std::optional<PlayerComponentShPtr> player{};
   std::vector<WeaponSlotComponentShPtr> weapons{};
   std::vector<ComputerSlotComponentShPtr> computers{};
   std::vector<EffectComponentShPtr> effects{};
@@ -55,6 +57,7 @@ struct Entity
   auto factionComp() const -> const FactionComponent &;
   auto lootComp() const -> const LootComponent &;
   auto scannedComp() const -> const ScannedComponent &;
+  auto playerComp() const -> const PlayerComponent &;
 
   auto transformComp() -> TransformComponent &;
   auto velocityComp() -> VelocityComponent &;

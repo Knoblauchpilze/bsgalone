@@ -5,12 +5,14 @@
 #include "IRepository.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
+#include <optional>
 
 namespace bsgo {
 
 struct PlayerShip
 {
   Faction faction;
+  std::optional<Uuid> player{};
 
   float hullPoints{0.0f};
   float maxHullPoints{0.0f};
