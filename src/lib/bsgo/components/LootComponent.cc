@@ -18,6 +18,11 @@ auto LootComponent::amount() const -> float
   return m_amount;
 }
 
+void LootComponent::registerRecipient(const Uuid &entity)
+{
+  m_recipients.insert(entity);
+}
+
 void LootComponent::update(const float /*elapsedSeconds*/) {}
 
 } // namespace bsgo

@@ -83,6 +83,11 @@ void WeaponSystem::fireWeaponForEntity(Entity &ent,
   const auto finalDamage = updateDamageWithAbilities(ent, damage);
   target.healthComp().damage(finalDamage);
 
+  if (target.exists<LootComponent>())
+  {
+    target.lootComp().registerRecipient(ent.uuid);
+  }
+
   log("Dealing " + std::to_string(finalDamage) + " (from " + std::to_string(damage) + ") to "
       + target.str());
 }
