@@ -29,15 +29,20 @@ void LootSystem::updateEntity(Entity &entity,
 
   for (const auto &recipient : recipients)
   {
-    const auto ent = coordinator.getEntity(recipient);
-    if (!ent.exists<PlayerComponent>())
-    {
-      continue;
-    }
-
-    const auto &player = ent.playerComp();
-    warn("shoud distribute to " + str(player.player()));
+    distributeLootTo(recipient, coordinator);
   }
+}
+
+void LootSystem::distributeLootTo(const Uuid &recipient, Coordinator &coordinator) const
+{
+  const auto ent = coordinator.getEntity(recipient);
+  if (!ent.exists<PlayerComponent>())
+  {
+    return;
+  }
+
+  const auto &player = ent.playerComp();
+  warn("shoud distribute to " + str(player.player()));
 }
 
 } // namespace bsgo

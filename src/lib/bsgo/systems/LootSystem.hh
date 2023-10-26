@@ -14,6 +14,9 @@ class LootSystem : public AbstractSystem
   void updateEntity(Entity &entity,
                     Coordinator &coordinator,
                     const float elapsedSeconds) const override;
+
+  private:
+  void distributeLootTo(const Uuid &recipient, Coordinator &coordinator) const;
 };
 
 } // namespace bsgo
