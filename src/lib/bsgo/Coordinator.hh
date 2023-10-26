@@ -30,6 +30,7 @@ class Coordinator : public utils::CoreObject
   void addFaction(const Uuid &ent, const Faction &faction);
   void addLoot(const Uuid &ent, const float &amount);
   void addScanned(const Uuid &ent);
+  void addPlayer(const Uuid &ent, const Uuid &player);
   void addWeapon(const Uuid &ent, const Weapon &weapon);
   void addComputer(const Uuid &ent, const Computer &computer);
   void addWeaponEffect(const Uuid &ent, const utils::Duration &duration, const float damageModifier);

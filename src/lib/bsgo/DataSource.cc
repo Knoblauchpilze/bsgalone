@@ -82,6 +82,10 @@ void DataSource::registerShip(Coordinator &coordinator, const Uuid &ship) const
   coordinator.addPower(ent, data.powerPoints, data.maxPowerPoints, data.powerRegen);
   coordinator.addTarget(ent);
   coordinator.addFaction(ent, data.faction);
+  if (data.player)
+  {
+    coordinator.addPlayer(ent, *data.player);
+  }
 
   for (const auto &weapon : data.weapons)
   {

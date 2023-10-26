@@ -30,7 +30,13 @@ void LootSystem::updateEntity(Entity &entity,
   for (const auto &recipient : recipients)
   {
     const auto ent = coordinator.getEntity(recipient);
-    warn("shoud distribute to " + ent.str());
+    if (!ent.exists<PlayerComponent>())
+    {
+      continue;
+    }
+
+    const auto &player = ent.playerComp();
+    warn("shoud distribute to " + str(player.player()));
   }
 }
 

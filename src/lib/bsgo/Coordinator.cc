@@ -114,6 +114,12 @@ void Coordinator::addScanned(const Uuid &ent)
   m_components.scanned[ent] = std::make_shared<ScannedComponent>();
 }
 
+void Coordinator::addPlayer(const Uuid &ent, const Uuid &player)
+{
+  checkForOverrides(ent, "Player", m_components.players);
+  m_components.players[ent] = std::make_shared<PlayerComponent>(player);
+}
+
 void Coordinator::addWeapon(const Uuid &ent, const Weapon &weapon)
 {
   checkEntityExist(ent, "Weapon");
@@ -178,6 +184,7 @@ auto Coordinator::getEntity(const Uuid &ent) const -> Entity
   out.faction   = getComponent(ent, m_components.factions);
   out.loot      = getComponent(ent, m_components.loots);
   out.scanned   = getComponent(ent, m_components.scanned);
+  out.player    = getComponent(ent, m_components.players);
 
   out.weapons   = getAllComponent(ent, m_components.weapons);
   out.computers = getAllComponent(ent, m_components.computers);
@@ -204,6 +211,7 @@ void Coordinator::deleteEntity(const Uuid &ent)
   m_components.factions.erase(ent);
   m_components.loots.erase(ent);
   m_components.scanned.erase(ent);
+  m_components.players.erase(ent);
 
   m_components.weapons.erase(ent);
   m_components.computers.erase(ent);
