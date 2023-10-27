@@ -7,6 +7,7 @@
 #include "FactionComponent.hh"
 #include "HealthComponent.hh"
 #include "KindComponent.hh"
+#include "LockerComponent.hh"
 #include "LootComponent.hh"
 #include "PlayerComponent.hh"
 #include "PowerComponent.hh"
@@ -34,6 +35,7 @@ struct Entity
   std::optional<LootComponentShPtr> loot{};
   std::optional<ScannedComponentShPtr> scanned{};
   std::optional<PlayerComponentShPtr> player{};
+  std::optional<LockerComponentShPtr> locker{};
   std::vector<WeaponSlotComponentShPtr> weapons{};
   std::vector<ComputerSlotComponentShPtr> computers{};
   std::vector<EffectComponentShPtr> effects{};
@@ -58,6 +60,7 @@ struct Entity
   auto lootComp() const -> const LootComponent &;
   auto scannedComp() const -> const ScannedComponent &;
   auto playerComp() const -> const PlayerComponent &;
+  auto lockerComp() const -> const LockerComponent &;
 
   auto transformComp() -> TransformComponent &;
   auto velocityComp() -> VelocityComponent &;
@@ -66,6 +69,7 @@ struct Entity
   auto targetComp() -> TargetComponent &;
   auto lootComp() -> LootComponent &;
   auto scannedComp() -> ScannedComponent &;
+  auto lockerComp() -> LockerComponent &;
 };
 
 } // namespace bsgo

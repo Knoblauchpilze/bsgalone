@@ -41,8 +41,14 @@ void LootSystem::distributeLootTo(const Uuid &recipient, Coordinator &coordinato
     return;
   }
 
-  const auto &player = ent.playerComp();
-  warn("shoud distribute to " + str(player.player()));
+  const auto player = coordinator.getEntity(ent.playerComp().player());
+  if (player.exists<LockerComponent>())
+  {
+    warn("Entity " + ent.str() + " has player component but no locker");
+    return;
+  }
+
+  warn("shoud distribute to " + str(player.uuid));
 }
 
 } // namespace bsgo

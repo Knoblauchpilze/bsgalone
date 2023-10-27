@@ -17,6 +17,7 @@ target_sources (bsgalone_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/ScannedComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LootComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/PlayerComponent.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/LockerComponent.cc
 	)
 
 target_include_directories (bsgalone_lib PUBLIC

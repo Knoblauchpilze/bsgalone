@@ -120,6 +120,12 @@ void Coordinator::addPlayer(const Uuid &ent, const Uuid &player)
   m_components.players[ent] = std::make_shared<PlayerComponent>(player);
 }
 
+void Coordinator::addLockerComponent(const Uuid &ent)
+{
+  checkForOverrides(ent, "Locker", m_components.lockers);
+  m_components.lockers[ent] = std::make_shared<LockerComponent>();
+}
+
 void Coordinator::addWeapon(const Uuid &ent, const Weapon &weapon)
 {
   checkEntityExist(ent, "Weapon");
@@ -185,6 +191,7 @@ auto Coordinator::getEntity(const Uuid &ent) const -> Entity
   out.loot      = getComponent(ent, m_components.loots);
   out.scanned   = getComponent(ent, m_components.scanned);
   out.player    = getComponent(ent, m_components.players);
+  out.locker    = getComponent(ent, m_components.lockers);
 
   out.weapons   = getAllComponent(ent, m_components.weapons);
   out.computers = getAllComponent(ent, m_components.computers);
@@ -212,6 +219,7 @@ void Coordinator::deleteEntity(const Uuid &ent)
   m_components.loots.erase(ent);
   m_components.scanned.erase(ent);
   m_components.players.erase(ent);
+  m_components.lockers.erase(ent);
 
   m_components.weapons.erase(ent);
   m_components.computers.erase(ent);

@@ -4,6 +4,7 @@
 #include "AsteroidRepository.hh"
 #include "ComputerRepository.hh"
 #include "Coordinator.hh"
+#include "LootRepository.hh"
 #include "OutpostRepository.hh"
 #include "PlayerRepository.hh"
 #include "PlayerShipRepository.hh"
@@ -20,12 +21,14 @@ class DataSource : public utils::CoreObject
   ~DataSource() override = default;
 
   auto playerId() const -> Uuid;
-  auto playerShipId() const -> Uuid;
+  auto playerShipEntityId() const -> Uuid;
 
   void initialize(Coordinator &coordinator) const;
 
   private:
   Uuid m_playerId{};
+  mutable std::optional<Uuid> m_playerEntityId{};
+  mutable std::optional<Uuid> m_playerShipEntityId{};
 
   AsteroidRepository m_asteroidRepo{};
   PlayerRepository m_playerRepo{};
@@ -34,7 +37,9 @@ class DataSource : public utils::CoreObject
   OutpostRepository m_outpostRepo{};
   WeaponRepository m_weaponRepository{};
   ComputerRepository m_computerRepository{};
+  LootRepository m_lootRepository{};
 
+  void initializePlayer(Coordinator &coordinator) const;
   void initializeAsteroids(Coordinator &coordinator, const Uuid &system) const;
   void initializeShips(Coordinator &coordinator, const Uuid &system) const;
   void initializeOutposts(Coordinator &coordinator, const Uuid &system) const;

@@ -15,6 +15,8 @@ auto str(const EntityKind &kind) noexcept -> std::string
       return "asteroid";
     case EntityKind::OUTPOST:
       return "outpost";
+    case EntityKind::PLAYER:
+      return "player";
     default:
       return "unknown(" + std::to_string(static_cast<int>(kind)) + ")";
   }

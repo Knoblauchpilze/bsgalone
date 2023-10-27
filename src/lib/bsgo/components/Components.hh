@@ -6,6 +6,7 @@
 #include "FactionComponent.hh"
 #include "HealthComponent.hh"
 #include "KindComponent.hh"
+#include "LockerComponent.hh"
 #include "LootComponent.hh"
 #include "PlayerComponent.hh"
 #include "PowerComponent.hh"
@@ -31,6 +32,7 @@ struct Components
   std::unordered_map<Uuid, LootComponentShPtr> loots{};
   std::unordered_map<Uuid, ScannedComponentShPtr> scanned{};
   std::unordered_map<Uuid, PlayerComponentShPtr> players{};
+  std::unordered_map<Uuid, LockerComponentShPtr> lockers{};
   std::unordered_multimap<Uuid, WeaponSlotComponentShPtr> weapons{};
   std::unordered_multimap<Uuid, ComputerSlotComponentShPtr> computers{};
   std::unordered_multimap<Uuid, EffectComponentShPtr> effects{};
