@@ -24,7 +24,7 @@ auto AsteroidRepository::findOneById(const Uuid &asteroid) const -> Asteroid
     case 1:
       out.position = Eigen::Vector3f(4.0f, 2.0f, 0.0f);
       out.radius   = BIG_ASTEROID_RADIUS;
-      out.health   = 2222.0f;
+      out.health   = 222.0f;
       break;
     case 2:
       out.position = Eigen::Vector3f(-2.0f, -6.0f, 0.0f);
@@ -46,6 +46,7 @@ auto AsteroidRepository::findOneById(const Uuid &asteroid) const -> Asteroid
       error("Asteroid " + str(asteroid) + " not found");
       break;
   }
+
   return out;
 }
 

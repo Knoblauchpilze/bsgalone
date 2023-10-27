@@ -15,17 +15,28 @@ auto DataSource::playerId() const -> Uuid
   return m_playerId;
 }
 
-auto DataSource::playerShipId() const -> Uuid
+auto DataSource::playerShipEntityId() const -> Uuid
 {
-  return m_playerRepo.findShipById(m_playerId);
+  if (!m_playerShipEntityId)
+  {
+    error("Expedted to have a player ship entity id");
+  }
+  return *m_playerShipEntityId;
 }
 
 void DataSource::initialize(Coordinator &coordinator) const
 {
   const auto systemId = m_playerRepo.findSystemById(m_playerId);
+
+  initializePlayer(coordinator);
   initializeShips(coordinator, systemId);
   initializeAsteroids(coordinator, systemId);
   initializeOutposts(coordinator, systemId);
+}
+
+void DataSource::initializePlayer(Coordinator &coordinator) const
+{
+  m_playerEntityId = coordinator.createEntity(EntityKind::PLAYER);
 }
 
 void DataSource::initializeAsteroids(Coordinator &coordinator, const Uuid &system) const
@@ -82,9 +93,20 @@ void DataSource::registerShip(Coordinator &coordinator, const Uuid &ship) const
   coordinator.addPower(ent, data.powerPoints, data.maxPowerPoints, data.powerRegen);
   coordinator.addTarget(ent);
   coordinator.addFaction(ent, data.faction);
-  if (data.player)
+  if (data.player && *data.player == m_playerId)
   {
-    coordinator.addPlayer(ent, *data.player);
+    if (!m_playerEntityId)
+    {
+      error("Failed to create ship " + str(ship), "Expected player entity to be created already");
+    }
+    if (m_playerShipEntityId)
+    {
+      error("Failed to create ship " + str(ship),
+            "Player ship id is already assigned entity " + str(*m_playerShipEntityId));
+    }
+
+    m_playerShipEntityId = ent;
+    coordinator.addPlayer(ent, *m_playerEntityId);
   }
 
   for (const auto &weapon : data.weapons)

@@ -11,6 +11,7 @@ enum class EntityKind
   SHIP,
   ASTEROID,
   OUTPOST,
+  PLAYER
 };
 
 auto str(const EntityKind &kind) noexcept -> std::string;
