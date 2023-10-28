@@ -1,11 +1,12 @@
 
 #pragma once
 
-#include "Coordinator.hh"
 #include "Repositories.hh"
 #include <core_utils/CoreObject.hh>
 
 namespace bsgo {
+
+class Coordinator;
 
 class DataSource : public utils::CoreObject
 {
@@ -13,6 +14,7 @@ class DataSource : public utils::CoreObject
   DataSource();
   ~DataSource() override = default;
 
+  auto repositories() const -> Repositories;
   auto playerId() const -> Uuid;
   auto playerShipEntityId() const -> Uuid;
 

@@ -2,6 +2,7 @@
 #include "Coordinator.hh"
 #include "CircleBox.hh"
 #include "ComputerSystem.hh"
+#include "DataSource.hh"
 #include "EffectSystem.hh"
 #include "HealthSystem.hh"
 #include "LootSystem.hh"
@@ -56,6 +57,17 @@ Coordinator::Coordinator()
 {
   setService("bsgo");
   createSystems();
+}
+
+void Coordinator::initialize(const DataSource &source)
+{
+  source.initialize(*this);
+  m_repositories = source.repositories();
+}
+
+auto Coordinator::repositories() const -> Repositories
+{
+  return m_repositories;
 }
 
 auto Coordinator::createEntity(const EntityKind &kind) -> Uuid

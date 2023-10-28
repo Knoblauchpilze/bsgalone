@@ -5,6 +5,7 @@
 #include "Entity.hh"
 #include "IBoundingBox.hh"
 #include "ISystem.hh"
+#include "Repositories.hh"
 #include "Uuid.hh"
 #include <core_utils/CoreObject.hh>
 #include <core_utils/TimeUtils.hh>
@@ -14,11 +15,16 @@
 
 namespace bsgo {
 
+class DataSource;
+
 class Coordinator : public utils::CoreObject
 {
   public:
   Coordinator();
   virtual ~Coordinator() = default;
+
+  void initialize(const DataSource &source);
+  auto repositories() const -> Repositories;
 
   auto createEntity(const EntityKind &kind) -> Uuid;
 
@@ -52,6 +58,7 @@ class Coordinator : public utils::CoreObject
   void update(float elapsedSeconds);
 
   private:
+  Repositories m_repositories{};
   std::unordered_set<Uuid> m_entities{};
   Components m_components{};
   std::vector<ISystemPtr> m_systems{};
