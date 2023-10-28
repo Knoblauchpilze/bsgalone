@@ -19,7 +19,7 @@ auto AsteroidRepository::findOneById(const Uuid &asteroid) const -> Asteroid
       out.position = Eigen::Vector3f(1.0f, 2.0f, 0.0f);
       out.radius   = SMALL_ASTEROID_RADIUS;
       out.health   = 85.0f;
-      out.resource = {32.0f};
+      out.loot     = {Uuid(0)};
       break;
     case 1:
       out.position = Eigen::Vector3f(4.0f, 2.0f, 0.0f);
@@ -30,7 +30,7 @@ auto AsteroidRepository::findOneById(const Uuid &asteroid) const -> Asteroid
       out.position = Eigen::Vector3f(-2.0f, -6.0f, 0.0f);
       out.radius   = SMALL_ASTEROID_RADIUS;
       out.health   = 150.0f;
-      out.resource = {27.0f};
+      out.loot     = {Uuid(1)};
       break;
     case 3:
       out.position = Eigen::Vector3f(-3.0f, -4.0f, 0.0f);

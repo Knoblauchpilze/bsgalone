@@ -4,8 +4,10 @@
 namespace bsgo {
 
 PlayerShipRepository::PlayerShipRepository()
-  : IRepository("ship")
-{}
+  : IRepository("player")
+{
+  addModule("ship");
+}
 
 auto PlayerShipRepository::findOneById(const Uuid &player) const -> PlayerShip
 {

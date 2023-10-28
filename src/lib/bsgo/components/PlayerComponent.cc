@@ -3,7 +3,7 @@
 
 namespace bsgo {
 
-PlayerComponent::PlayerComponent(const Uuid player)
+PlayerComponent::PlayerComponent(const Uuid &player)
   : IComponent("player")
   , m_player(player)
 {}

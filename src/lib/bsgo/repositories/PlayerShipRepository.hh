@@ -5,6 +5,7 @@
 #include "IRepository.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
+#include <memory>
 #include <optional>
 
 namespace bsgo {
@@ -39,5 +40,7 @@ class PlayerShipRepository : public IRepository
 
   auto findOneById(const Uuid &player) const -> PlayerShip;
 };
+
+using PlayerShipRepositoryShPtr = std::shared_ptr<PlayerShipRepository>;
 
 } // namespace bsgo

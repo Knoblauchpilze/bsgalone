@@ -28,7 +28,7 @@ class Coordinator : public utils::CoreObject
   void addPower(const Uuid &ent, const float power, const float max, const float regen);
   void addTarget(const Uuid &ent);
   void addFaction(const Uuid &ent, const Faction &faction);
-  void addLoot(const Uuid &ent, const float &amount);
+  void addLoot(const Uuid &ent, const Uuid &loot, const Item &type);
   void addScanned(const Uuid &ent);
   void addPlayer(const Uuid &ent, const Uuid &player);
   void addLockerComponent(const Uuid &ent);
