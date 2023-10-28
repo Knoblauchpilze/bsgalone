@@ -1,10 +1,10 @@
 
 #pragma once
 
+#include "AsteroidLootRepository.hh"
 #include "AsteroidRepository.hh"
 #include "ComputerRepository.hh"
 #include "Coordinator.hh"
-#include "LootRepository.hh"
 #include "OutpostRepository.hh"
 #include "PlayerRepository.hh"
 #include "PlayerShipRepository.hh"
@@ -37,7 +37,7 @@ class DataSource : public utils::CoreObject
   OutpostRepository m_outpostRepo{};
   WeaponRepository m_weaponRepository{};
   ComputerRepository m_computerRepository{};
-  LootRepository m_lootRepository{};
+  AsteroidLootRepository m_asteroidLootRepository{};
 
   void initializePlayer(Coordinator &coordinator) const;
   void initializeAsteroids(Coordinator &coordinator, const Uuid &system) const;
