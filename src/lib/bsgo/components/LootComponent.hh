@@ -2,6 +2,7 @@
 #pragma once
 
 #include "IComponent.hh"
+#include "Item.hh"
 #include "Uuid.hh"
 #include <unordered_set>
 
@@ -10,10 +11,11 @@ namespace bsgo {
 class LootComponent : public IComponent
 {
   public:
-  LootComponent(const float amount);
+  LootComponent(const Uuid &loot, const Item &type);
   ~LootComponent() override = default;
 
-  auto amount() const -> float;
+  auto loot() const -> Uuid;
+  auto type() const -> Item;
   void registerRecipient(const Uuid &entity);
 
   auto recipients() const -> std::unordered_set<Uuid>;
@@ -21,7 +23,8 @@ class LootComponent : public IComponent
   void update(const float elapsedSeconds) override;
 
   private:
-  float m_amount;
+  Uuid m_loot;
+  Item m_type;
   std::unordered_set<Uuid> m_recipients{};
 };
 

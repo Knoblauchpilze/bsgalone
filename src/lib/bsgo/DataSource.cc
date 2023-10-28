@@ -26,7 +26,7 @@ auto DataSource::playerShipEntityId() const -> Uuid
 
 void DataSource::initialize(Coordinator &coordinator) const
 {
-  const auto systemId = m_playerRepo.findSystemById(m_playerId);
+  const auto systemId = m_repositories.playerRepository->findSystemById(m_playerId);
 
   initializePlayer(coordinator);
   initializeShips(coordinator, systemId);
@@ -41,7 +41,7 @@ void DataSource::initializePlayer(Coordinator &coordinator) const
 
 void DataSource::initializeAsteroids(Coordinator &coordinator, const Uuid &system) const
 {
-  const auto asteroids = m_systemRepo.findAllAsteroidsBySystem(system);
+  const auto asteroids = m_repositories.systemRepository->findAllAsteroidsBySystem(system);
   for (const auto &id : asteroids)
   {
     registerAsteroid(coordinator, id);
@@ -50,7 +50,7 @@ void DataSource::initializeAsteroids(Coordinator &coordinator, const Uuid &syste
 
 void DataSource::initializeShips(Coordinator &coordinator, const Uuid &system) const
 {
-  const auto ships = m_systemRepo.findAllShipsBySystem(system);
+  const auto ships = m_repositories.systemRepository->findAllShipsBySystem(system);
   for (const auto &id : ships)
   {
     registerShip(coordinator, id);
@@ -59,7 +59,7 @@ void DataSource::initializeShips(Coordinator &coordinator, const Uuid &system) c
 
 void DataSource::initializeOutposts(Coordinator &coordinator, const Uuid &system) const
 {
-  const auto outposts = m_systemRepo.findAllOutpostsBySystem(system);
+  const auto outposts = m_repositories.systemRepository->findAllOutpostsBySystem(system);
   for (const auto &id : outposts)
   {
     registerOutpost(coordinator, id);
@@ -68,22 +68,22 @@ void DataSource::initializeOutposts(Coordinator &coordinator, const Uuid &system
 
 void DataSource::registerAsteroid(Coordinator &coordinator, const Uuid &asteroid) const
 {
-  const auto data = m_asteroidRepo.findOneById(asteroid);
+  const auto data = m_repositories.asteroidRepository->findOneById(asteroid);
 
   auto box       = std::make_unique<CircleBox>(data.position, data.radius);
   const auto ent = coordinator.createEntity(EntityKind::ASTEROID);
   coordinator.addTransform(ent, std::move(box));
   coordinator.addHealth(ent, data.health, data.health, 0.0f);
   coordinator.addScanned(ent);
-  if (data.resource)
+  if (data.loot)
   {
-    coordinator.addLoot(ent, *data.resource);
+    coordinator.addLoot(ent, *data.loot, Item::RESOURCE);
   }
 }
 
 void DataSource::registerShip(Coordinator &coordinator, const Uuid &ship) const
 {
-  const auto data = m_playerShipRepo.findOneById(ship);
+  const auto data = m_repositories.playerShipRepository->findOneById(ship);
 
   auto box       = std::make_unique<CircleBox>(data.position, data.radius);
   const auto ent = coordinator.createEntity(EntityKind::SHIP);
@@ -121,7 +121,7 @@ void DataSource::registerShip(Coordinator &coordinator, const Uuid &ship) const
 
 void DataSource::registerOutpost(Coordinator &coordinator, const Uuid &outpost) const
 {
-  const auto data = m_outpostRepo.findOneById(outpost);
+  const auto data = m_repositories.outpostRepository->findOneById(outpost);
 
   auto box       = std::make_unique<CircleBox>(data.position, data.radius);
   const auto ent = coordinator.createEntity(EntityKind::OUTPOST);
@@ -134,7 +134,7 @@ void DataSource::registerOutpost(Coordinator &coordinator, const Uuid &outpost) 
 
 void DataSource::registerWeapon(Coordinator &coordinator, const Uuid &ship, const Uuid &weapon) const
 {
-  const auto data = m_weaponRepository.findOneById(weapon);
+  const auto data = m_repositories.weaponRepository->findOneById(weapon);
   coordinator.addWeapon(ship, data);
 }
 
@@ -142,7 +142,7 @@ void DataSource::registerComputer(Coordinator &coordinator,
                                   const Uuid &ship,
                                   const Uuid &computer) const
 {
-  const auto data = m_computerRepository.findOneById(computer);
+  const auto data = m_repositories.computerRepository->findOneById(computer);
   coordinator.addComputer(ship, data);
 }
 

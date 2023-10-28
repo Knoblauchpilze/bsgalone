@@ -102,10 +102,10 @@ void Coordinator::addFaction(const Uuid &ent, const Faction &faction)
   m_components.factions[ent] = std::make_shared<FactionComponent>(faction);
 }
 
-void Coordinator::addLoot(const Uuid &ent, const float &amount)
+void Coordinator::addLoot(const Uuid &ent, const Uuid &loot, const Item &type)
 {
   checkForOverrides(ent, "Loot", m_components.loots);
-  m_components.loots[ent] = std::make_shared<LootComponent>(amount);
+  m_components.loots[ent] = std::make_shared<LootComponent>(loot, type);
 }
 
 void Coordinator::addScanned(const Uuid &ent)

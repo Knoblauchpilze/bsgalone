@@ -3,6 +3,7 @@
 
 #include "IRepository.hh"
 #include "Uuid.hh"
+#include <memory>
 #include <vector>
 
 namespace bsgo {
@@ -17,5 +18,7 @@ class SystemRepository : public IRepository
   auto findAllShipsBySystem(const Uuid &system) const -> std::vector<Uuid>;
   auto findAllOutpostsBySystem(const Uuid &system) const -> std::vector<Uuid>;
 };
+
+using SystemRepositoryShPtr = std::shared_ptr<SystemRepository>;
 
 } // namespace bsgo

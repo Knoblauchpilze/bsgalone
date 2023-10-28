@@ -9,6 +9,7 @@ target_sources (bsgalone_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/WeaponRepository.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ComputerRepository.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/AsteroidLootRepository.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/PlayerResourceRepository.cc
 	)
 
 target_include_directories (bsgalone_lib PUBLIC

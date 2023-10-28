@@ -3,19 +3,20 @@
 
 namespace bsgo {
 
-LootComponent::LootComponent(const float amount)
+LootComponent::LootComponent(const Uuid &loot, const Item &type)
   : IComponent("loot")
-  , m_amount(amount)
+  , m_loot(loot)
+  , m_type(type)
+{}
+
+auto LootComponent::loot() const -> Uuid
 {
-  if (m_amount <= 0.0f)
-  {
-    throw std::invalid_argument("Expected positive amount got " + std::to_string(amount));
-  }
+  return m_loot;
 }
 
-auto LootComponent::amount() const -> float
+auto LootComponent::type() const -> Item
 {
-  return m_amount;
+  return m_type;
 }
 
 void LootComponent::registerRecipient(const Uuid &entity)

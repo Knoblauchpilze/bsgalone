@@ -10,7 +10,7 @@ namespace bsgo {
 class PlayerComponent : public IComponent
 {
   public:
-  PlayerComponent(const Uuid player);
+  PlayerComponent(const Uuid &player);
   ~PlayerComponent() override = default;
 
   auto player() const -> Uuid;

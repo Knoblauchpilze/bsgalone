@@ -5,6 +5,7 @@
 #include "IRepository.hh"
 #include "Uuid.hh"
 #include <core_utils/TimeUtils.hh>
+#include <memory>
 #include <optional>
 #include <unordered_set>
 
@@ -30,5 +31,7 @@ class ComputerRepository : public IRepository
 
   auto findOneById(const Uuid &computer) const -> Computer;
 };
+
+using ComputerRepositoryShPtr = std::shared_ptr<ComputerRepository>;
 
 } // namespace bsgo

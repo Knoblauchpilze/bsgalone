@@ -1,15 +1,8 @@
 
 #pragma once
 
-#include "AsteroidLootRepository.hh"
-#include "AsteroidRepository.hh"
-#include "ComputerRepository.hh"
 #include "Coordinator.hh"
-#include "OutpostRepository.hh"
-#include "PlayerRepository.hh"
-#include "PlayerShipRepository.hh"
-#include "SystemRepository.hh"
-#include "WeaponRepository.hh"
+#include "Repositories.hh"
 #include <core_utils/CoreObject.hh>
 
 namespace bsgo {
@@ -30,14 +23,7 @@ class DataSource : public utils::CoreObject
   mutable std::optional<Uuid> m_playerEntityId{};
   mutable std::optional<Uuid> m_playerShipEntityId{};
 
-  AsteroidRepository m_asteroidRepo{};
-  PlayerRepository m_playerRepo{};
-  SystemRepository m_systemRepo{};
-  PlayerShipRepository m_playerShipRepo{};
-  OutpostRepository m_outpostRepo{};
-  WeaponRepository m_weaponRepository{};
-  ComputerRepository m_computerRepository{};
-  AsteroidLootRepository m_asteroidLootRepository{};
+  Repositories m_repositories{};
 
   void initializePlayer(Coordinator &coordinator) const;
   void initializeAsteroids(Coordinator &coordinator, const Uuid &system) const;
