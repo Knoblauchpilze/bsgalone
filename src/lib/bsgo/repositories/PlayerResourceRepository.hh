@@ -21,6 +21,9 @@ class PlayerResourceRepository : public IRepository
   ~PlayerResourceRepository() override = default;
 
   auto findOneById(const Uuid &player) const -> std::vector<Resource>;
+  auto findOneByIdAndResource(const Uuid &player, const Uuid &resource) const -> Resource;
+
+  void save(Resource resource);
 };
 
 using PlayerResourceRepositoryShPtr = std::shared_ptr<PlayerResourceRepository>;

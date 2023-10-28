@@ -16,7 +16,11 @@ class LootSystem : public AbstractSystem
                     const float elapsedSeconds) const override;
 
   private:
-  void distributeLootTo(const Uuid &recipient, Coordinator &coordinator) const;
+  void distributeLoot(const LootComponent &loot, Coordinator &coordinator) const;
+  void distributeLootTo(const Uuid &recipient,
+                        const LootComponent &loot,
+                        Coordinator &coordinator) const;
+  void distributeResourceTo(const Uuid &player, const Uuid &loot, Coordinator &coordinator) const;
 };
 
 } // namespace bsgo
