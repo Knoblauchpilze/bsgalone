@@ -259,9 +259,8 @@ void Game::enable(bool enable)
 void Game::initialize()
 {
   bsgo::DataSource dataSource;
-
   m_coordinator = std::make_shared<bsgo::Coordinator>();
-  dataSource.initialize(*m_coordinator);
+  m_coordinator->initialize(dataSource);
 
   const auto playerShipEntityId = dataSource.playerShipEntityId();
   m_views.shipView   = std::make_shared<bsgo::ShipView>(playerShipEntityId, m_coordinator);

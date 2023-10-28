@@ -1,6 +1,7 @@
 
 #include "DataSource.hh"
 #include "CircleBox.hh"
+#include "Coordinator.hh"
 
 namespace bsgo {
 
@@ -8,6 +9,11 @@ DataSource::DataSource()
   : utils::CoreObject("bsgo")
 {
   setService("data");
+}
+
+auto DataSource::repositories() const -> Repositories
+{
+  return m_repositories;
 }
 
 auto DataSource::playerId() const -> Uuid
