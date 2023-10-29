@@ -65,11 +65,6 @@ void Coordinator::initialize(const DataSource &source)
   m_repositories = source.repositories();
 }
 
-auto Coordinator::repositories() const -> Repositories
-{
-  return m_repositories;
-}
-
 auto Coordinator::createEntity(const EntityKind &kind) -> Uuid
 {
   auto ent = m_entities.size();
@@ -114,10 +109,10 @@ void Coordinator::addFaction(const Uuid &ent, const Faction &faction)
   m_components.factions[ent] = std::make_shared<FactionComponent>(faction);
 }
 
-void Coordinator::addLoot(const Uuid &ent, const Uuid &loot, const Item &type)
+void Coordinator::addLoot(const Uuid &ent)
 {
   checkForOverrides(ent, "Loot", m_components.loots);
-  m_components.loots[ent] = std::make_shared<LootComponent>(loot, type);
+  m_components.loots[ent] = std::make_shared<LootComponent>();
 }
 
 void Coordinator::addScanned(const Uuid &ent)
@@ -132,12 +127,6 @@ void Coordinator::addPlayer(const Uuid &ent, const Uuid &player)
   m_components.players[ent] = std::make_shared<PlayerComponent>(player);
 }
 
-void Coordinator::addLockerComponent(const Uuid &ent)
-{
-  checkForOverrides(ent, "Locker", m_components.lockers);
-  m_components.lockers[ent] = std::make_shared<LockerComponent>();
-}
-
 void Coordinator::addWeapon(const Uuid &ent, const Weapon &weapon)
 {
   checkEntityExist(ent, "Weapon");
@@ -148,6 +137,12 @@ void Coordinator::addComputer(const Uuid &ent, const Computer &computer)
 {
   checkEntityExist(ent, "Computer");
   m_components.computers.emplace(ent, std::make_shared<ComputerSlotComponent>(computer));
+}
+
+void Coordinator::addResourceComponent(const Uuid &ent, const Uuid &resource, const float amount)
+{
+  checkEntityExist(ent, "Resource");
+  m_components.resources.emplace(ent, std::make_shared<ResourceComponent>(resource, amount));
 }
 
 void Coordinator::addWeaponEffect(const Uuid &ent,
@@ -203,11 +198,11 @@ auto Coordinator::getEntity(const Uuid &ent) const -> Entity
   out.loot      = getComponent(ent, m_components.loots);
   out.scanned   = getComponent(ent, m_components.scanned);
   out.player    = getComponent(ent, m_components.players);
-  out.locker    = getComponent(ent, m_components.lockers);
 
   out.weapons   = getAllComponent(ent, m_components.weapons);
   out.computers = getAllComponent(ent, m_components.computers);
   out.effects   = getAllComponent(ent, m_components.effects);
+  out.resources = getAllComponent(ent, m_components.resources);
 
   return out;
 }
@@ -231,11 +226,11 @@ void Coordinator::deleteEntity(const Uuid &ent)
   m_components.loots.erase(ent);
   m_components.scanned.erase(ent);
   m_components.players.erase(ent);
-  m_components.lockers.erase(ent);
 
   m_components.weapons.erase(ent);
   m_components.computers.erase(ent);
   m_components.effects.erase(ent);
+  m_components.resources.erase(ent);
 }
 
 auto Coordinator::getEntityAt(const Eigen::Vector3f &pos,

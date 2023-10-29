@@ -43,6 +43,12 @@ void DataSource::initialize(Coordinator &coordinator) const
 void DataSource::initializePlayer(Coordinator &coordinator) const
 {
   m_playerEntityId = coordinator.createEntity(EntityKind::PLAYER);
+
+  const auto resources = m_repositories.playerResourceRepository->findOneById(m_playerId);
+  for (const auto &resource : resources)
+  {
+    coordinator.addResourceComponent(*m_playerEntityId, resource.resource, resource.amount);
+  }
 }
 
 void DataSource::initializeAsteroids(Coordinator &coordinator, const Uuid &system) const
@@ -83,7 +89,9 @@ void DataSource::registerAsteroid(Coordinator &coordinator, const Uuid &asteroid
   coordinator.addScanned(ent);
   if (data.loot)
   {
-    coordinator.addLoot(ent, *data.loot, Item::RESOURCE);
+    coordinator.addLoot(ent);
+    const auto loot = m_repositories.asteroidLootRepository->findOneById(asteroid);
+    coordinator.addResourceComponent(ent, loot.resource, loot.amount);
   }
 }
 

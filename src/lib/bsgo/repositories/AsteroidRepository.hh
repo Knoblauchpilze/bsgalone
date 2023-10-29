@@ -15,7 +15,7 @@ struct Asteroid
   float health{0.0f};
   float radius{0.5f};
 
-  std::optional<Uuid> loot{};
+  bool loot{false};
 };
 
 class AsteroidRepository : public IRepository

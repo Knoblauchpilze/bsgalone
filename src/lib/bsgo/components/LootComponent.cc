@@ -3,21 +3,9 @@
 
 namespace bsgo {
 
-LootComponent::LootComponent(const Uuid &loot, const Item &type)
+LootComponent::LootComponent()
   : IComponent("loot")
-  , m_loot(loot)
-  , m_type(type)
 {}
-
-auto LootComponent::loot() const -> Uuid
-{
-  return m_loot;
-}
-
-auto LootComponent::type() const -> Item
-{
-  return m_type;
-}
 
 void LootComponent::registerRecipient(const Uuid &entity)
 {

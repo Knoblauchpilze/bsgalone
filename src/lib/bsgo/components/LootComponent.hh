@@ -11,11 +11,9 @@ namespace bsgo {
 class LootComponent : public IComponent
 {
   public:
-  LootComponent(const Uuid &loot, const Item &type);
+  LootComponent();
   ~LootComponent() override = default;
 
-  auto loot() const -> Uuid;
-  auto type() const -> Item;
   void registerRecipient(const Uuid &entity);
 
   auto recipients() const -> std::unordered_set<Uuid>;
@@ -23,8 +21,6 @@ class LootComponent : public IComponent
   void update(const float elapsedSeconds) override;
 
   private:
-  Uuid m_loot;
-  Item m_type;
   std::unordered_set<Uuid> m_recipients{};
 };
 
