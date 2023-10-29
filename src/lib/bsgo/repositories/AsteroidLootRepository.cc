@@ -9,22 +9,22 @@ AsteroidLootRepository::AsteroidLootRepository()
   addModule("asteroid");
 }
 
-auto AsteroidLootRepository::findOneById(const Uuid &loot) const -> AsteroidLoot
+auto AsteroidLootRepository::findOneById(const Uuid &asteroid) const -> AsteroidLoot
 {
   AsteroidLoot out;
 
-  switch (loot)
+  switch (asteroid)
   {
     case 0:
       out.resource = Uuid(0);
       out.amount   = 10;
       break;
-    case 1:
+    case 2:
       out.resource = Uuid(0);
       out.amount   = 2;
       break;
     default:
-      error("Asteroid loot " + str(loot) + " not found");
+      error("Loot for asteroid " + str(asteroid) + " not found");
       break;
   }
 

@@ -24,7 +24,6 @@ class Coordinator : public utils::CoreObject
   virtual ~Coordinator() = default;
 
   void initialize(const DataSource &source);
-  auto repositories() const -> Repositories;
 
   auto createEntity(const EntityKind &kind) -> Uuid;
 
@@ -34,14 +33,14 @@ class Coordinator : public utils::CoreObject
   void addPower(const Uuid &ent, const float power, const float max, const float regen);
   void addTarget(const Uuid &ent);
   void addFaction(const Uuid &ent, const Faction &faction);
-  void addLoot(const Uuid &ent, const Uuid &loot, const Item &type);
+  void addLoot(const Uuid &ent);
   void addScanned(const Uuid &ent);
   void addPlayer(const Uuid &ent, const Uuid &player);
-  void addLockerComponent(const Uuid &ent);
   void addWeapon(const Uuid &ent, const Weapon &weapon);
   void addComputer(const Uuid &ent, const Computer &computer);
-  void addWeaponEffect(const Uuid &ent, const utils::Duration &duration, const float damageModifier);
+  void addResourceComponent(const Uuid &ent, const Uuid &resource, const float amount);
 
+  void addWeaponEffect(const Uuid &ent, const utils::Duration &duration, const float damageModifier);
   void removeEffect(const Uuid &ent, const EffectComponentShPtr &effect);
 
   auto getEntity(const Uuid &ent) const -> Entity;

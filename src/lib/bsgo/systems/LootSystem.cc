@@ -8,6 +8,21 @@ bool isEntityRelevant(const Entity &entity)
   return entity.exists<LootComponent>() && entity.exists<HealthComponent>();
 }
 
+auto findCorrespondingPlayerResource(const Entity &player, const Uuid &resource)
+  -> std::optional<ResourceComponentShPtr>
+{
+  auto it = player.resources.begin();
+  while (it != player.resources.end())
+  {
+    if ((*it)->resource() == resource)
+    {
+      return {*it};
+    }
+    ++it;
+  }
+
+  return {};
+}
 } // namespace
 
 LootSystem::LootSystem()
@@ -29,22 +44,22 @@ void LootSystem::updateEntity(Entity &entity,
     error("Failed to distribute loot", "Expected asteroid but got " + entity.str());
   }
 
-  const auto &loot = entity.lootComp();
-  distributeLoot(loot, coordinator);
+  distributeLoot(entity, coordinator);
 }
 
-void LootSystem::distributeLoot(const LootComponent &loot, Coordinator &coordinator) const
+void LootSystem::distributeLoot(const Entity &entity, Coordinator &coordinator) const
 {
+  const auto &loot      = entity.lootComp();
   const auto recipients = loot.recipients();
 
   for (const auto &recipient : recipients)
   {
-    distributeLootTo(recipient, loot, coordinator);
+    distributeLootTo(recipient, entity, coordinator);
   }
 }
 
 void LootSystem::distributeLootTo(const Uuid &recipient,
-                                  const LootComponent &loot,
+                                  const Entity &deadTarget,
                                   Coordinator &coordinator) const
 {
   const auto ent = coordinator.getEntity(recipient);
@@ -54,34 +69,28 @@ void LootSystem::distributeLootTo(const Uuid &recipient,
     return;
   }
 
-  const auto player = ent.playerComp();
+  const auto player = coordinator.getEntity(ent.playerComp().player());
 
-  switch (loot.type())
-  {
-    case Item::RESOURCE:
-      distributeResourceTo(player.player(), loot.loot(), coordinator);
-      break;
-    default:
-      error("Failed to distribute loot", "Unsupported loot type " + str(loot.type()));
-      break;
-  }
+  distributeResourcesTo(player, deadTarget);
 }
 
-void LootSystem::distributeResourceTo(const Uuid &player,
-                                      const Uuid &loot,
-                                      Coordinator &coordinator) const
+void LootSystem::distributeResourcesTo(const Entity &player, const Entity &deadTarget) const
 {
-  const auto repositories = coordinator.repositories();
+  for (const auto &resource : deadTarget.resources)
+  {
+    const auto maybePlayerResource = findCorrespondingPlayerResource(player, resource->resource());
+    if (!maybePlayerResource)
+    {
+      error("Failed to distribute loot of " + deadTarget.str(),
+            "Player " + player.str() + " doesn't define resource " + str(resource->resource()));
+    }
 
-  const auto lootData = repositories.asteroidLootRepository->findOneById(loot);
-  auto resource       = repositories.playerResourceRepository->findOneByIdAndResource(player,
-                                                                                lootData.resource);
-
-  info("Distributing " + std::to_string(lootData.amount) + " of " + str(lootData.resource) + " to "
-       + str(player));
-  resource.amount += lootData.amount;
-
-  repositories.playerResourceRepository->save(resource);
+    info("Distributing " + std::to_string(resource->amount()) + " of " + str(resource->resource())
+         + " to " + player.str() + " (existing: " + std::to_string((*maybePlayerResource)->amount())
+         + ")");
+    const auto total = (*maybePlayerResource)->amount() + resource->amount();
+    (*maybePlayerResource)->setAmount(total);
+  }
 }
 
 } // namespace bsgo

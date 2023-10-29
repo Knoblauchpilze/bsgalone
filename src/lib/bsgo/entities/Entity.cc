@@ -124,12 +124,6 @@ bool Entity::exists<PlayerComponent>() const
   return details::checkComponentExists(player);
 }
 
-template<>
-bool Entity::exists<LockerComponent>() const
-{
-  return details::checkComponentExists(locker);
-}
-
 auto Entity::transformComp() const -> const TransformComponent &
 {
   return details::safeConstAccess(transform, *this, "Transform");
@@ -175,11 +169,6 @@ auto Entity::playerComp() const -> const PlayerComponent &
   return details::safeConstAccess(player, *this, "Player");
 }
 
-auto Entity::lockerComp() const -> const LockerComponent &
-{
-  return details::safeConstAccess(locker, *this, "Locker");
-}
-
 auto Entity::transformComp() -> TransformComponent &
 {
   return details::safeAccess(transform, *this, "Transform");
@@ -213,11 +202,6 @@ auto Entity::lootComp() -> LootComponent &
 auto Entity::scannedComp() -> ScannedComponent &
 {
   return details::safeAccess(scanned, *this, "Scanned");
-}
-
-auto Entity::lockerComp() -> LockerComponent &
-{
-  return details::safeAccess(locker, *this, "Locker");
 }
 
 } // namespace bsgo
