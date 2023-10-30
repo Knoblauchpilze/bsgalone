@@ -59,12 +59,6 @@ Coordinator::Coordinator()
   createSystems();
 }
 
-void Coordinator::initialize(const DataSource &source)
-{
-  source.initialize(*this);
-  m_repositories = source.repositories();
-}
-
 auto Coordinator::createEntity(const EntityKind &kind) -> Uuid
 {
   auto ent = m_entities.size();
