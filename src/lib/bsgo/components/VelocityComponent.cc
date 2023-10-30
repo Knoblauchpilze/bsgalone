@@ -28,8 +28,8 @@ void VelocityComponent::update(const float elapsedSeconds)
 {
   m_speed += m_acceleration * elapsedSeconds;
 
-  constexpr auto FRICTION_PERCENTAGE = 0.01f;
-  Eigen::Vector3f friction           = -FRICTION_PERCENTAGE * m_speed;
+  constexpr auto FRICTION_ACCELERATION = 0.5f;
+  Eigen::Vector3f friction = -FRICTION_ACCELERATION * elapsedSeconds * m_speed.normalized();
   m_speed += friction;
 
   constexpr auto SLOW_SPEED_STOP_THRESHOLD = 0.2f;
