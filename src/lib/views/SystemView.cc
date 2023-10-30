@@ -43,4 +43,17 @@ auto SystemView::getOutpostsWithin(const IBoundingBox &bbox) const -> std::vecto
   return out;
 }
 
+auto SystemView::getBulletsWithin(const IBoundingBox &bbox) const -> std::vector<Entity>
+{
+  const auto uuids = m_coordinator->getEntitiesWithin(bbox, {EntityKind::BULLET});
+
+  std::vector<Entity> out;
+  for (const auto &uuid : uuids)
+  {
+    out.push_back(m_coordinator->getEntity(uuid));
+  }
+
+  return out;
+}
+
 } // namespace bsgo
