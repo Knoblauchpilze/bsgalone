@@ -1,5 +1,6 @@
 
 #include "Coordinator.hh"
+#include "BulletSystem.hh"
 #include "CircleBox.hh"
 #include "ComputerSystem.hh"
 #include "DataSource.hh"
@@ -307,6 +308,9 @@ void Coordinator::createSystems()
 
   auto weapon = std::make_unique<WeaponSystem>();
   m_systems.push_back(std::move(weapon));
+
+  auto bullet = std::make_unique<BulletSystem>();
+  m_systems.push_back(std::move(bullet));
 
   auto target = std::make_unique<TargetSystem>();
   m_systems.push_back(std::move(target));

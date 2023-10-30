@@ -17,6 +17,8 @@ auto str(const EntityKind &kind) noexcept -> std::string
       return "outpost";
     case EntityKind::PLAYER:
       return "player";
+    case EntityKind::BULLET:
+      return "bullet";
     default:
       return "unknown(" + std::to_string(static_cast<int>(kind)) + ")";
   }
