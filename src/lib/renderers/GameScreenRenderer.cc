@@ -52,6 +52,15 @@ void GameScreenRenderer::loadResources(int /*width*/,
 
   m_outpostTexturesPackId = texturesLoader.registerPack(pack);
 
+  constexpr auto BULLET_TEXTURE_PACK_FILE_PATH = "data/assets/bullet.png";
+  constexpr auto BULLET_TILE_WIDTH_PIXELS      = 485;
+  constexpr auto BULLET_TILE_HEIGHT_PIXELS     = 492;
+  pack = sprites::PackDesc{.file = BULLET_TEXTURE_PACK_FILE_PATH,
+                           .sSize{BULLET_TILE_WIDTH_PIXELS, BULLET_TILE_HEIGHT_PIXELS},
+                           .layout{1, 1}};
+
+  m_bulletTexturesPackId = texturesLoader.registerPack(pack);
+
   const olc::vi2d offset{10, 10};
   constexpr auto BACKGROUND_TILE_SIZE_IN_PIXELS = 768;
   constexpr auto BACKGROUND_SLOWDOWN_RATIO      = 2.0f;
@@ -85,6 +94,7 @@ void GameScreenRenderer::renderDecal(SpriteRenderer &engine, const RenderState &
   const auto bbox      = toIBoundingBox(state.cf);
   const auto asteroids = m_systemView->getAsteroidsWithin(bbox);
   const auto outposts  = m_systemView->getOutpostsWithin(bbox);
+  const auto bullets   = m_systemView->getBulletsWithin(bbox);
   const auto ships     = m_shipView->getShipsWithin(bbox);
 
   for (const auto &asteroid : asteroids)
@@ -95,6 +105,11 @@ void GameScreenRenderer::renderDecal(SpriteRenderer &engine, const RenderState &
   for (const auto &outpost : outposts)
   {
     renderOutpost(outpost, engine, state);
+  }
+
+  for (const auto &bullet : bullets)
+  {
+    renderBullet(bullet, engine, state);
   }
 
   for (const auto &ship : ships)
@@ -156,6 +171,26 @@ void GameScreenRenderer::renderOutpost(const bsgo::Entity &outpost,
   t.radius = 2.0f * transform.size();
 
   t.sprite.pack   = m_outpostTexturesPackId;
+  t.sprite.sprite = {0, 0};
+  t.sprite.tint   = olc::WHITE;
+
+  engine.drawWarpedSprite(t, state.cf);
+}
+
+void GameScreenRenderer::renderBullet(const bsgo::Entity &bullet,
+                                      SpriteRenderer &engine,
+                                      const RenderState &state) const
+{
+  const auto &transform = bullet.transformComp();
+  const auto pos        = transform.position();
+
+  SpriteDesc t;
+  t.x = pos(0) - transform.size();
+  t.y = pos(1) - transform.size();
+
+  t.radius = 2.0f * transform.size();
+
+  t.sprite.pack   = m_bulletTexturesPackId;
   t.sprite.sprite = {0, 0};
   t.sprite.tint   = olc::WHITE;
 
