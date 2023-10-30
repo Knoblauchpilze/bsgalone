@@ -10,6 +10,7 @@ class VelocityComponent : public IComponent
 {
   public:
   VelocityComponent(const float maxAcceleration);
+  VelocityComponent(const Eigen::Vector3f &speed);
   ~VelocityComponent() override = default;
 
   auto acceleration() const noexcept -> Eigen::Vector3f;

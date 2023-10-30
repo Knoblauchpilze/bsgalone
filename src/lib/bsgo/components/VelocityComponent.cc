@@ -2,10 +2,17 @@
 #include "VelocityComponent.hh"
 
 namespace bsgo {
+constexpr auto FRICTION_ACCELERATION = 0.5f;
 
 VelocityComponent::VelocityComponent(const float maxAcceleration)
   : IComponent("velocity")
   , m_maxAcceleration(maxAcceleration)
+{}
+
+VelocityComponent::VelocityComponent(const Eigen::Vector3f &speed)
+  : IComponent("velocity")
+  , m_maxAcceleration(FRICTION_ACCELERATION)
+  , m_speed(speed)
 {}
 
 auto VelocityComponent::acceleration() const noexcept -> Eigen::Vector3f
@@ -28,7 +35,6 @@ void VelocityComponent::update(const float elapsedSeconds)
 {
   m_speed += m_acceleration * elapsedSeconds;
 
-  constexpr auto FRICTION_ACCELERATION = 0.5f;
   Eigen::Vector3f friction = -FRICTION_ACCELERATION * elapsedSeconds * m_speed.normalized();
   m_speed += friction;
 
