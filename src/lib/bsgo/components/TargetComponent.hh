@@ -11,6 +11,7 @@ class TargetComponent : public IComponent
 {
   public:
   TargetComponent();
+  TargetComponent(const Uuid &target);
   ~TargetComponent() = default;
 
   auto target() const -> std::optional<Uuid>;

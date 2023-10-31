@@ -7,6 +7,11 @@ TargetComponent::TargetComponent()
   : IComponent("target")
 {}
 
+TargetComponent::TargetComponent(const Uuid &target)
+  : IComponent("target")
+  , m_target(target)
+{}
+
 auto TargetComponent::target() const -> std::optional<Uuid>
 {
   return m_target;

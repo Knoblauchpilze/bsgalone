@@ -24,6 +24,7 @@ struct PlayerShip
   float powerRegen{0.0f};
 
   float acceleration{5.0f};
+  float speed{4.0f};
 
   float radius{0.5f};
   Eigen::Vector3f position{Eigen::Vector3f::Zero()};

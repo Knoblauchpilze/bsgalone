@@ -1,5 +1,6 @@
 
 #include "WeaponSystem.hh"
+#include "CircleBox.hh"
 #include "SystemUtils.hh"
 
 namespace bsgo {
@@ -32,7 +33,7 @@ void WeaponSystem::updateEntity(Entity &entity,
     weapon->clearFireRequest();
     if (weapon->canFire())
     {
-      fireWeaponForEntity(entity, *weapon, *targetEnt);
+      fireWeaponForEntity(entity, *weapon, *targetEnt, coordinator);
     }
   }
 }
@@ -72,7 +73,8 @@ void WeaponSystem::updateWeapon(const Entity &ent,
 
 void WeaponSystem::fireWeaponForEntity(Entity &ent,
                                        WeaponSlotComponent &weapon,
-                                       Entity &target) const
+                                       Entity &target,
+                                       Coordinator &coordinator) const
 {
   weapon.fire();
 
@@ -81,15 +83,8 @@ void WeaponSystem::fireWeaponForEntity(Entity &ent,
 
   const auto damage      = weapon.generateDamage();
   const auto finalDamage = updateDamageWithAbilities(ent, damage);
-  target.healthComp().damage(finalDamage);
 
-  if (target.exists<LootComponent>())
-  {
-    target.lootComp().registerRecipient(ent.uuid);
-  }
-
-  log("Dealing " + std::to_string(finalDamage) + " (from " + std::to_string(damage) + ") to "
-      + target.str());
+  createBulletDirectedTowards(ent, finalDamage, target, coordinator);
 }
 
 auto WeaponSystem::updateDamageWithAbilities(Entity &ent, const float damage) const -> float
@@ -105,6 +100,35 @@ auto WeaponSystem::updateDamageWithAbilities(Entity &ent, const float damage) co
   }
 
   return damage * multiplier;
+}
+
+void WeaponSystem::createBulletDirectedTowards(const Entity &ent,
+                                               const float damage,
+                                               const Entity &target,
+                                               Coordinator &coordinator) const
+{
+  const auto pos       = ent.transformComp().position();
+  const auto targetPos = target.transformComp().position();
+
+  const auto bullet = coordinator.createEntity(EntityKind::BULLET);
+  coordinator.addFaction(bullet, ent.factionComp().faction());
+
+  constexpr auto BULLET_RADIUS = 0.2f;
+  auto box                     = std::make_unique<CircleBox>(pos, BULLET_RADIUS);
+  coordinator.addTransform(bullet, std::move(box));
+
+  coordinator.addDamage(bullet, damage);
+
+  coordinator.addOwner(bullet, ent.uuid);
+
+  coordinator.addRemoval(bullet);
+
+  constexpr auto BULLET_SPEED = 8.0f;
+  const Eigen::Vector3f v0    = BULLET_SPEED * (targetPos - pos).normalized();
+  VelocityData vData{.maxSpeed = BULLET_SPEED, .initialSpeed = {v0}, .speedMode = SpeedMode::FIXED};
+  coordinator.addVelocity(bullet, vData);
+
+  coordinator.addTarget(bullet, target.uuid);
 }
 
 } // namespace bsgo

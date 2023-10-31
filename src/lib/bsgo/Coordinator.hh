@@ -25,14 +25,17 @@ class Coordinator : public utils::CoreObject
   auto createEntity(const EntityKind &kind) -> Uuid;
 
   void addTransform(const Uuid &ent, IBoundingBoxPtr bbox);
-  void addVelocity(const Uuid &ent, const float maxAcceleration);
+  void addVelocity(const Uuid &ent, const VelocityData &data);
   void addHealth(const Uuid &ent, const float hp, const float max, const float regen);
   void addPower(const Uuid &ent, const float power, const float max, const float regen);
   void addTarget(const Uuid &ent);
+  void addTarget(const Uuid &ent, const Uuid &target);
   void addFaction(const Uuid &ent, const Faction &faction);
   void addLoot(const Uuid &ent);
   void addScanned(const Uuid &ent);
-  void addPlayer(const Uuid &ent, const Uuid &player);
+  void addOwner(const Uuid &ent, const Uuid &owner);
+  void addDamage(const Uuid &ent, const float damage);
+  void addRemoval(const Uuid &ent);
   void addWeapon(const Uuid &ent, const Weapon &weapon);
   void addComputer(const Uuid &ent, const Computer &computer);
   void addResourceComponent(const Uuid &ent, const Uuid &resource, const float amount);
@@ -54,6 +57,7 @@ class Coordinator : public utils::CoreObject
   void update(float elapsedSeconds);
 
   private:
+  Uuid m_nextEntity{Uuid(0)};
   std::unordered_set<Uuid> m_entities{};
   Components m_components{};
   std::vector<ISystemPtr> m_systems{};
