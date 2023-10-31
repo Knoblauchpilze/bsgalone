@@ -14,6 +14,11 @@ class BulletSystem : public AbstractSystem
   void updateEntity(Entity &entity,
                     Coordinator &coordinator,
                     const float elapsedSeconds) const override;
+
+  private:
+  bool killIfTargetIsDead(Entity &entity) const;
+  void accelerateTowardsTarget(Entity &entity, const Entity &target) const;
+  void damageOnImpact(Entity &entity, Entity &target) const;
 };
 
 } // namespace bsgo

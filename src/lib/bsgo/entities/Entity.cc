@@ -119,9 +119,21 @@ bool Entity::exists<ScannedComponent>() const
 }
 
 template<>
-bool Entity::exists<PlayerComponent>() const
+bool Entity::exists<OwnerComponent>() const
 {
-  return details::checkComponentExists(player);
+  return details::checkComponentExists(owner);
+}
+
+template<>
+bool Entity::exists<DamageComponent>() const
+{
+  return details::checkComponentExists(damage);
+}
+
+template<>
+bool Entity::exists<RemovalComponent>() const
+{
+  return details::checkComponentExists(removal);
 }
 
 auto Entity::transformComp() const -> const TransformComponent &
@@ -164,9 +176,19 @@ auto Entity::scannedComp() const -> const ScannedComponent &
   return details::safeConstAccess(scanned, *this, "Scanned");
 }
 
-auto Entity::playerComp() const -> const PlayerComponent &
+auto Entity::ownerComp() const -> const OwnerComponent &
 {
-  return details::safeConstAccess(player, *this, "Player");
+  return details::safeConstAccess(owner, *this, "Owner");
+}
+
+auto Entity::damageComp() const -> const DamageComponent &
+{
+  return details::safeConstAccess(damage, *this, "Damage");
+}
+
+auto Entity::removalComp() const -> const RemovalComponent &
+{
+  return details::safeConstAccess(removal, *this, "Removal");
 }
 
 auto Entity::transformComp() -> TransformComponent &
@@ -202,6 +224,11 @@ auto Entity::lootComp() -> LootComponent &
 auto Entity::scannedComp() -> ScannedComponent &
 {
   return details::safeAccess(scanned, *this, "Scanned");
+}
+
+auto Entity::removalComp() -> RemovalComponent &
+{
+  return details::safeAccess(removal, *this, "Removal");
 }
 
 } // namespace bsgo

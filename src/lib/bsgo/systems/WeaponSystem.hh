@@ -21,8 +21,16 @@ class WeaponSystem : public AbstractSystem
                     const std::optional<Entity> &target,
                     const float elapsedSeconds) const;
 
-  void fireWeaponForEntity(Entity &ent, WeaponSlotComponent &weapon, Entity &target) const;
+  void fireWeaponForEntity(Entity &ent,
+                           WeaponSlotComponent &weapon,
+                           Entity &target,
+                           Coordinator &coordinator) const;
   auto updateDamageWithAbilities(Entity &ent, const float damage) const -> float;
+
+  void createBulletDirectedTowards(const Entity &ent,
+                                   const float damage,
+                                   const Entity &target,
+                                   Coordinator &coordinator) const;
 };
 
 } // namespace bsgo

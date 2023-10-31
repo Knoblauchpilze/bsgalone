@@ -29,6 +29,7 @@ auto PlayerShipRepository::findOneById(const Uuid &player) const -> PlayerShip
   out.powerRegen     = 2.0f;
 
   out.acceleration = 5.0f;
+  out.speed        = 4.0f;
 
   out.radius   = 0.5f;
   out.position = Eigen::Vector3f::Zero();

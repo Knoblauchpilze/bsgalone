@@ -102,7 +102,8 @@ void DataSource::registerShip(Coordinator &coordinator, const Uuid &ship) const
   auto box       = std::make_unique<CircleBox>(data.position, data.radius);
   const auto ent = coordinator.createEntity(EntityKind::SHIP);
   coordinator.addTransform(ent, std::move(box));
-  coordinator.addVelocity(ent, data.acceleration);
+  VelocityData vData{.maxAcceleration = data.acceleration, .maxSpeed = data.speed};
+  coordinator.addVelocity(ent, vData);
   coordinator.addHealth(ent, data.hullPoints, data.maxHullPoints, data.hullPointsRegen);
   coordinator.addPower(ent, data.powerPoints, data.maxPowerPoints, data.powerRegen);
   coordinator.addTarget(ent);
@@ -120,7 +121,7 @@ void DataSource::registerShip(Coordinator &coordinator, const Uuid &ship) const
     }
 
     m_playerShipEntityId = ent;
-    coordinator.addPlayer(ent, *m_playerEntityId);
+    coordinator.addOwner(ent, *m_playerEntityId);
   }
 
   for (const auto &weapon : data.weapons)

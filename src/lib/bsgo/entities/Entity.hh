@@ -2,14 +2,16 @@
 #pragma once
 
 #include "ComputerSlotComponent.hh"
+#include "DamageComponent.hh"
 #include "EffectComponent.hh"
 #include "EntityKind.hh"
 #include "FactionComponent.hh"
 #include "HealthComponent.hh"
 #include "KindComponent.hh"
 #include "LootComponent.hh"
-#include "PlayerComponent.hh"
+#include "OwnerComponent.hh"
 #include "PowerComponent.hh"
+#include "RemovalComponent.hh"
 #include "ResourceComponent.hh"
 #include "ScannedComponent.hh"
 #include "TargetComponent.hh"
@@ -34,7 +36,9 @@ struct Entity
   std::optional<FactionComponentShPtr> faction{};
   std::optional<LootComponentShPtr> loot{};
   std::optional<ScannedComponentShPtr> scanned{};
-  std::optional<PlayerComponentShPtr> player{};
+  std::optional<OwnerComponentShPtr> owner{};
+  std::optional<DamageComponentShPtr> damage{};
+  std::optional<RemovalComponentShPtr> removal{};
   std::vector<WeaponSlotComponentShPtr> weapons{};
   std::vector<ComputerSlotComponentShPtr> computers{};
   std::vector<EffectComponentShPtr> effects{};
@@ -59,7 +63,9 @@ struct Entity
   auto factionComp() const -> const FactionComponent &;
   auto lootComp() const -> const LootComponent &;
   auto scannedComp() const -> const ScannedComponent &;
-  auto playerComp() const -> const PlayerComponent &;
+  auto ownerComp() const -> const OwnerComponent &;
+  auto damageComp() const -> const DamageComponent &;
+  auto removalComp() const -> const RemovalComponent &;
 
   auto transformComp() -> TransformComponent &;
   auto velocityComp() -> VelocityComponent &;
@@ -68,6 +74,7 @@ struct Entity
   auto targetComp() -> TargetComponent &;
   auto lootComp() -> LootComponent &;
   auto scannedComp() -> ScannedComponent &;
+  auto removalComp() -> RemovalComponent &;
 };
 
 } // namespace bsgo

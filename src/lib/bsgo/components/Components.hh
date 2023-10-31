@@ -2,13 +2,15 @@
 #pragma once
 
 #include "ComputerSlotComponent.hh"
+#include "DamageComponent.hh"
 #include "EffectComponent.hh"
 #include "FactionComponent.hh"
 #include "HealthComponent.hh"
 #include "KindComponent.hh"
 #include "LootComponent.hh"
-#include "PlayerComponent.hh"
+#include "OwnerComponent.hh"
 #include "PowerComponent.hh"
+#include "RemovalComponent.hh"
 #include "ResourceComponent.hh"
 #include "ScannedComponent.hh"
 #include "TargetComponent.hh"
@@ -31,7 +33,9 @@ struct Components
   std::unordered_map<Uuid, FactionComponentShPtr> factions{};
   std::unordered_map<Uuid, LootComponentShPtr> loots{};
   std::unordered_map<Uuid, ScannedComponentShPtr> scanned{};
-  std::unordered_map<Uuid, PlayerComponentShPtr> players{};
+  std::unordered_map<Uuid, OwnerComponentShPtr> owners{};
+  std::unordered_map<Uuid, DamageComponentShPtr> damages{};
+  std::unordered_map<Uuid, RemovalComponentShPtr> removals{};
   std::unordered_multimap<Uuid, WeaponSlotComponentShPtr> weapons{};
   std::unordered_multimap<Uuid, ComputerSlotComponentShPtr> computers{};
   std::unordered_multimap<Uuid, EffectComponentShPtr> effects{};
