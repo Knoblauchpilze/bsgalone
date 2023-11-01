@@ -9,7 +9,7 @@ namespace bsgo {
 class PlayerView : public IView
 {
   public:
-  PlayerView(const CoordinatorShPtr &coordinator);
+  PlayerView(const CoordinatorShPtr &coordinator, const Repositories &repositories);
   ~PlayerView() override = default;
 };
 
