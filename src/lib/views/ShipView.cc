@@ -3,19 +3,19 @@
 
 namespace bsgo {
 
-ShipView::ShipView(const Uuid &playerShipId,
+ShipView::ShipView(const Uuid &playerShipEntityId,
                    const CoordinatorShPtr &coordinator,
                    const Repositories &repositories)
   : IView("ship", coordinator, repositories)
-  , m_playerShipId(playerShipId)
+  , m_playerShipEntityId(playerShipEntityId)
 {}
 
 auto ShipView::getPlayerShip() const -> Entity
 {
-  const auto ent = m_coordinator->getEntity(m_playerShipId);
+  const auto ent = m_coordinator->getEntity(m_playerShipEntityId);
   if (ent.kind->kind() != EntityKind::SHIP)
   {
-    error("Expected " + str(m_playerShipId) + " to have kind ship but got " + ent.str());
+    error("Expected " + str(m_playerShipEntityId) + " to have kind ship but got " + ent.str());
   }
   return ent;
 }
@@ -27,7 +27,7 @@ bool ShipView::hasTarget() const
 
 auto ShipView::getPlayerTarget() const -> std::optional<Entity>
 {
-  const auto ent      = m_coordinator->getEntity(m_playerShipId);
+  const auto ent      = m_coordinator->getEntity(m_playerShipEntityId);
   const auto targetId = ent.targetComp().target();
   if (!targetId)
   {
@@ -66,10 +66,10 @@ auto ShipView::distanceToTarget() const -> float
 
 void ShipView::tryActivateWeapon(const Uuid &ship, const int weaponId)
 {
-  if (ship != m_playerShipId)
+  if (ship != m_playerShipEntityId)
   {
     error("Failed to activate weapon " + std::to_string(weaponId),
-          "Expected ship " + str(m_playerShipId) + " but got " + str(ship));
+          "Expected ship " + str(m_playerShipEntityId) + " but got " + str(ship));
   }
 
   auto data = getPlayerShip();
@@ -85,10 +85,10 @@ void ShipView::tryActivateWeapon(const Uuid &ship, const int weaponId)
 
 void ShipView::tryActivateSlot(const Uuid &ship, const int slotId)
 {
-  if (ship != m_playerShipId)
+  if (ship != m_playerShipEntityId)
   {
     error("Failed to activate slot " + std::to_string(slotId),
-          "Expected ship " + str(m_playerShipId) + " but got " + str(ship));
+          "Expected ship " + str(m_playerShipEntityId) + " but got " + str(ship));
   }
 
   auto data = getPlayerShip();
