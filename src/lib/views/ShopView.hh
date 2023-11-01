@@ -9,7 +9,7 @@ namespace bsgo {
 class ShopView : public IView
 {
   public:
-  ShopView(const CoordinatorShPtr &coordinator);
+  ShopView(const CoordinatorShPtr &coordinator, const Repositories &repositories);
   ~ShopView() override = default;
 };
 

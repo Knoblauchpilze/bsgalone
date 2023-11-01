@@ -3,8 +3,8 @@
 
 namespace bsgo {
 
-SystemView::SystemView(const CoordinatorShPtr &coordinator)
-  : IView("system", coordinator)
+SystemView::SystemView(const CoordinatorShPtr &coordinator, const Repositories &repositories)
+  : IView("system", coordinator, repositories)
 {}
 
 auto SystemView::getEntityAt(const Eigen::Vector3f &pos) const -> std::optional<Entity>

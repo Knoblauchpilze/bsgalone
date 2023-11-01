@@ -13,7 +13,9 @@ namespace bsgo {
 class ShipView : public IView
 {
   public:
-  ShipView(const Uuid &playerShipId, const CoordinatorShPtr &coordinator);
+  ShipView(const Uuid &playerShipId,
+           const CoordinatorShPtr &coordinator,
+           const Repositories &repositories);
   ~ShipView() override = default;
 
   auto getPlayerShip() const -> Entity;

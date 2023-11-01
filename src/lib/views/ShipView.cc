@@ -3,8 +3,10 @@
 
 namespace bsgo {
 
-ShipView::ShipView(const Uuid &playerShipId, const CoordinatorShPtr &coordinator)
-  : IView("ship", coordinator)
+ShipView::ShipView(const Uuid &playerShipId,
+                   const CoordinatorShPtr &coordinator,
+                   const Repositories &repositories)
+  : IView("ship", coordinator, repositories)
   , m_playerShipId(playerShipId)
 {}
 

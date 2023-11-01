@@ -1,6 +1,5 @@
 
 #include "Game.hh"
-#include "DataSource.hh"
 #include "IInputHandler.hh"
 #include "IRenderer.hh"
 #include "IUiHandler.hh"
@@ -259,12 +258,15 @@ void Game::enable(bool enable)
 void Game::initialize()
 {
   m_coordinator = std::make_shared<bsgo::Coordinator>();
-  bsgo::DataSource dataSource;
-  dataSource.initialize(*m_coordinator);
+  m_dataSource.initialize(*m_coordinator);
 
-  const auto playerShipEntityId = dataSource.playerShipEntityId();
-  m_views.shipView   = std::make_shared<bsgo::ShipView>(playerShipEntityId, m_coordinator);
-  m_views.systemView = std::make_shared<bsgo::SystemView>(m_coordinator);
+  const auto playerShipEntityId = m_dataSource.playerShipEntityId();
+  m_views.shipView              = std::make_shared<bsgo::ShipView>(playerShipEntityId,
+                                                      m_coordinator,
+                                                      m_dataSource.repositories());
+
+  m_views.systemView = std::make_shared<bsgo::SystemView>(m_coordinator,
+                                                          m_dataSource.repositories());
 }
 
 bool Game::TimedMenu::update(bool active) noexcept

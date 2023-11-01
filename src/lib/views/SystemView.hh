@@ -13,7 +13,7 @@ namespace bsgo {
 class SystemView : public IView
 {
   public:
-  SystemView(const CoordinatorShPtr &coordinator);
+  SystemView(const CoordinatorShPtr &coordinator, const Repositories &repositories);
   ~SystemView() override = default;
 
   auto getEntityAt(const Eigen::Vector3f &pos) const -> std::optional<Entity>;

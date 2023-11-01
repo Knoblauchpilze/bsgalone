@@ -3,8 +3,8 @@
 
 namespace bsgo {
 
-ServerView::ServerView(const CoordinatorShPtr &coordinator)
-  : IView("server", coordinator)
+ServerView::ServerView(const CoordinatorShPtr &coordinator, const Repositories &repositories)
+  : IView("server", coordinator, repositories)
 {}
 
 } // namespace bsgo

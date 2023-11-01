@@ -3,6 +3,7 @@
 
 #include "Action.hh"
 #include "Controls.hh"
+#include "DataSource.hh"
 #include "IInputHandler.hh"
 #include "IRenderer.hh"
 #include "IUiHandler.hh"
@@ -140,6 +141,7 @@ class Game : public utils::CoreObject
   /// @brief - The definition of the game state.
   State m_state{};
 
+  bsgo::DataSource m_dataSource{};
   bsgo::CoordinatorShPtr m_coordinator{nullptr};
   bsgo::Views m_views;
   std::unordered_map<Screen, IRendererPtr> m_renderers{};
