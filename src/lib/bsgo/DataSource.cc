@@ -124,10 +124,7 @@ void DataSource::registerShip(Coordinator &coordinator, const Uuid &ship) const
     coordinator.addOwner(ent, *m_playerEntityId);
   }
 
-  for (const auto &weapon : data.weapons)
-  {
-    registerWeapon(coordinator, ent, weapon);
-  }
+  registerShipWeapons(coordinator, ship, ent);
   for (const auto &computer : data.computers)
   {
     registerComputer(coordinator, ent, computer);
@@ -147,10 +144,16 @@ void DataSource::registerOutpost(Coordinator &coordinator, const Uuid &outpost) 
   coordinator.addFaction(ent, data.faction);
 }
 
-void DataSource::registerWeapon(Coordinator &coordinator, const Uuid &ship, const Uuid &weapon) const
+void DataSource::registerShipWeapons(Coordinator &coordinator,
+                                     const Uuid &ship,
+                                     const Uuid &shipEntity) const
 {
-  const auto data = m_repositories.weaponRepository->findOneById(weapon);
-  coordinator.addWeapon(ship, data);
+  const auto weapons = m_repositories.shipWeaponRepository->findAllById(ship);
+  for (const auto &weapon : weapons)
+  {
+    const auto data = m_repositories.weaponRepository->findOneById(weapon);
+    coordinator.addWeapon(shipEntity, data);
+  }
 }
 
 void DataSource::registerComputer(Coordinator &coordinator,

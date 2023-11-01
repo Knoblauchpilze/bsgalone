@@ -34,7 +34,6 @@ auto PlayerShipRepository::findOneById(const Uuid &player) const -> PlayerShip
   out.radius   = 0.5f;
   out.position = Eigen::Vector3f::Zero();
 
-  out.weapons   = {Uuid(0), Uuid(1)};
   out.computers = {Uuid(0), Uuid(1)};
 
   return out;

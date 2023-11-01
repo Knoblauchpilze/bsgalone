@@ -35,7 +35,7 @@ class DataSource : public utils::CoreObject
   void registerShip(Coordinator &coordinator, const Uuid &ship) const;
   void registerOutpost(Coordinator &coordinator, const Uuid &outpost) const;
 
-  void registerWeapon(Coordinator &coordinator, const Uuid &ship, const Uuid &weapon) const;
+  void registerShipWeapons(Coordinator &coordinator, const Uuid &ship, const Uuid &shipEntity) const;
   void registerComputer(Coordinator &coordinator, const Uuid &ship, const Uuid &computer) const;
 };
 

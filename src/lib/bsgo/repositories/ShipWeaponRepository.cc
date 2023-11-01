@@ -11,7 +11,7 @@ ShipWeaponRepository::ShipWeaponRepository()
 
 auto ShipWeaponRepository::findAllById(const Uuid & /*player*/) const -> std::vector<Uuid>
 {
-  return {};
+  return {Uuid(0), Uuid(1)};
 }
 
 } // namespace bsgo
