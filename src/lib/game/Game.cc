@@ -56,7 +56,7 @@ void Game::generateUiHandlers(int width, int height)
   login->initializeMenus(width, height);
   m_uiHandlers[Screen::LOGIN] = std::move(login);
 
-  auto outpost = std::make_unique<OutpostScreenUiHandler>();
+  auto outpost = std::make_unique<OutpostScreenUiHandler>(m_views);
   outpost->initializeMenus(width, height);
   m_uiHandlers[Screen::OUTPOST] = std::move(outpost);
 
