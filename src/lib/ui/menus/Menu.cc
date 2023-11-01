@@ -161,14 +161,14 @@ void Menu::addMenu(MenuShPtr child)
   updateChildren();
 }
 
-void Menu::setAction(menu::RegisterAction action)
+void Menu::setAction(menu::MenuCallback action)
 {
   m_callback = action;
 }
 
 void Menu::setSimpleAction(action::Process process)
 {
-  m_callback = [process](std::vector<ActionShPtr> &actions) {
+  m_actionCallback = [process](std::vector<ActionShPtr> &actions) {
     actions.push_back(std::make_shared<Action>(process));
   };
 }
