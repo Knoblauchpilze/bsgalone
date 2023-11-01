@@ -36,7 +36,9 @@ class DataSource : public utils::CoreObject
   void registerOutpost(Coordinator &coordinator, const Uuid &outpost) const;
 
   void registerShipWeapons(Coordinator &coordinator, const Uuid &ship, const Uuid &shipEntity) const;
-  void registerComputer(Coordinator &coordinator, const Uuid &ship, const Uuid &computer) const;
+  void registerShipComputers(Coordinator &coordinator,
+                             const Uuid &ship,
+                             const Uuid &shipEntity) const;
 };
 
 } // namespace bsgo

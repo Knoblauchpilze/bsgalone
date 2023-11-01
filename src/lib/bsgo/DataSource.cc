@@ -125,10 +125,7 @@ void DataSource::registerShip(Coordinator &coordinator, const Uuid &ship) const
   }
 
   registerShipWeapons(coordinator, ship, ent);
-  for (const auto &computer : data.computers)
-  {
-    registerComputer(coordinator, ent, computer);
-  }
+  registerShipComputers(coordinator, ship, ent);
 }
 
 void DataSource::registerOutpost(Coordinator &coordinator, const Uuid &outpost) const
@@ -156,12 +153,16 @@ void DataSource::registerShipWeapons(Coordinator &coordinator,
   }
 }
 
-void DataSource::registerComputer(Coordinator &coordinator,
-                                  const Uuid &ship,
-                                  const Uuid &computer) const
+void DataSource::registerShipComputers(Coordinator &coordinator,
+                                       const Uuid &ship,
+                                       const Uuid &shipEntity) const
 {
-  const auto data = m_repositories.computerRepository->findOneById(computer);
-  coordinator.addComputer(ship, data);
+  const auto computers = m_repositories.shipComputerRepository->findAllById(ship);
+  for (const auto &computer : computers)
+  {
+    const auto data = m_repositories.computerRepository->findOneById(computer);
+    coordinator.addComputer(shipEntity, data);
+  }
 }
 
 } // namespace bsgo

@@ -28,8 +28,6 @@ struct PlayerShip
 
   float radius{0.5f};
   Eigen::Vector3f position{Eigen::Vector3f::Zero()};
-
-  std::vector<Uuid> computers{};
 };
 
 class PlayerShipRepository : public IRepository
