@@ -21,11 +21,20 @@ auto DataSource::playerId() const -> Uuid
   return m_playerId;
 }
 
+auto DataSource::playerEntityId() const -> Uuid
+{
+  if (!m_playerEntityId)
+  {
+    error("Expected to have a player entity id");
+  }
+  return *m_playerEntityId;
+}
+
 auto DataSource::playerShipEntityId() const -> Uuid
 {
   if (!m_playerShipEntityId)
   {
-    error("Expedted to have a player ship entity id");
+    error("Expected to have a player ship entity id");
   }
   return *m_playerShipEntityId;
 }
@@ -44,7 +53,7 @@ void DataSource::initializePlayer(Coordinator &coordinator) const
 {
   m_playerEntityId = coordinator.createEntity(EntityKind::PLAYER);
 
-  const auto resources = m_repositories.playerResourceRepository->findOneById(m_playerId);
+  const auto resources = m_repositories.playerResourceRepository->findAllByPlayer(m_playerId);
   for (const auto &resource : resources)
   {
     coordinator.addResourceComponent(*m_playerEntityId, resource.resource, resource.amount);

@@ -16,6 +16,7 @@ class DataSource : public utils::CoreObject
 
   auto repositories() const -> Repositories;
   auto playerId() const -> Uuid;
+  auto playerEntityId() const -> Uuid;
   auto playerShipEntityId() const -> Uuid;
 
   void initialize(Coordinator &coordinator) const;

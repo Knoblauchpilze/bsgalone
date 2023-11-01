@@ -260,13 +260,15 @@ void Game::initialize()
   m_coordinator = std::make_shared<bsgo::Coordinator>();
   m_dataSource.initialize(*m_coordinator);
 
+  const auto repositories       = m_dataSource.repositories();
+  const auto playerId           = m_dataSource.playerId();
   const auto playerShipEntityId = m_dataSource.playerShipEntityId();
-  m_views.shipView              = std::make_shared<bsgo::ShipView>(playerShipEntityId,
-                                                      m_coordinator,
-                                                      m_dataSource.repositories());
 
-  m_views.systemView = std::make_shared<bsgo::SystemView>(m_coordinator,
-                                                          m_dataSource.repositories());
+  m_views.shipView   = std::make_shared<bsgo::ShipView>(playerShipEntityId,
+                                                      m_coordinator,
+                                                      repositories);
+  m_views.systemView = std::make_shared<bsgo::SystemView>(m_coordinator, repositories);
+  m_views.playerView = std::make_shared<bsgo::PlayerView>(playerId, m_coordinator, repositories);
 }
 
 bool Game::TimedMenu::update(bool active) noexcept

@@ -2,8 +2,10 @@
 #pragma once
 
 #include "IUiHandler.hh"
+#include "PlayerView.hh"
 #include "Views.hh"
 #include <memory>
+#include <vector>
 
 namespace pge {
 
@@ -20,7 +22,12 @@ class LockerUiHandler : public IUiHandler
   void updateUi() override;
 
   private:
+  bsgo::PlayerViewShPtr m_playerView;
+
   MenuShPtr m_menu{};
+  std::vector<MenuShPtr> m_resources{};
+
+  void generateResourcesMenus();
 };
 
 using LockerUiHandlerPtr = std::unique_ptr<LockerUiHandler>;
