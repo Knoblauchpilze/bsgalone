@@ -29,7 +29,6 @@ struct PlayerShip
   float radius{0.5f};
   Eigen::Vector3f position{Eigen::Vector3f::Zero()};
 
-  std::vector<Uuid> weapons{};
   std::vector<Uuid> computers{};
 };
 

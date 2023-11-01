@@ -8,6 +8,8 @@
 #include "PlayerRepository.hh"
 #include "PlayerResourceRepository.hh"
 #include "PlayerShipRepository.hh"
+#include "PlayerWeaponRepository.hh"
+#include "ShipWeaponRepository.hh"
 #include "SystemRepository.hh"
 #include "WeaponRepository.hh"
 
@@ -25,6 +27,8 @@ struct Repositories
   PlayerShipRepositoryShPtr playerShipRepository{std::make_shared<PlayerShipRepository>()};
   SystemRepositoryShPtr systemRepository{std::make_shared<SystemRepository>()};
   WeaponRepositoryShPtr weaponRepository{std::make_shared<WeaponRepository>()};
+  PlayerWeaponRepositoryShPtr playerWeaponRepository{std::make_shared<PlayerWeaponRepository>()};
+  ShipWeaponRepositoryShPtr shipWeaponRepository{std::make_shared<ShipWeaponRepository>()};
 };
 
 } // namespace bsgo
