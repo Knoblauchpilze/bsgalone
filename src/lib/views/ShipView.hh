@@ -13,7 +13,7 @@ namespace bsgo {
 class ShipView : public IView
 {
   public:
-  ShipView(const Uuid &playerShipId,
+  ShipView(const Uuid &playerShipEntityId,
            const CoordinatorShPtr &coordinator,
            const Repositories &repositories);
   ~ShipView() override = default;
@@ -30,7 +30,7 @@ class ShipView : public IView
   void tryActivateSlot(const Uuid &ship, const int slotId);
 
   private:
-  Uuid m_playerShipId;
+  Uuid m_playerShipEntityId;
 };
 
 using ShipViewShPtr = std::shared_ptr<ShipView>;
