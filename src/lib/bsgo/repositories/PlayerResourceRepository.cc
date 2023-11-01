@@ -9,7 +9,7 @@ PlayerResourceRepository::PlayerResourceRepository()
   addModule("resource");
 }
 
-auto PlayerResourceRepository::findOneById(const Uuid &player) const -> std::vector<Resource>
+auto PlayerResourceRepository::findAllByPlayer(const Uuid &player) const -> std::vector<Resource>
 {
   if (player != Uuid(0))
   {
@@ -20,7 +20,13 @@ auto PlayerResourceRepository::findOneById(const Uuid &player) const -> std::vec
 
   out.push_back(Resource{
     .resource = Uuid(0),
+    .name     = "tylium",
     .amount   = 1.2,
+  });
+  out.push_back(Resource{
+    .resource = Uuid(1),
+    .name     = "titane",
+    .amount   = 2.7,
   });
 
   return out;
@@ -29,17 +35,28 @@ auto PlayerResourceRepository::findOneById(const Uuid &player) const -> std::vec
 auto PlayerResourceRepository::findOneByIdAndResource(const Uuid &player,
                                                       const Uuid &resource) const -> Resource
 {
-  if (player != Uuid(0) || resource != Uuid(0))
+  if (player != Uuid{0})
   {
     error("Player " + str(player) + " and resource " + str(resource) + " not found");
   }
 
-  Resource out{
-    .resource = Uuid(0),
-    .amount   = 1.2,
-  };
+  switch (resource)
+  {
+    case Uuid{0}:
+      return Resource{
+        .resource = Uuid{0},
+        .name     = "tylium",
+        .amount   = 1.2,
+      };
+    case Uuid{1}:
+      return Resource{.resource = Uuid{1}, .name = "titane", .amount = 2.7};
+    default:
+      error("Player " + str(player) + " and resource " + str(resource) + " not found");
+      break;
+  }
 
-  return out;
+  // Can't happen because of the error above.
+  return {};
 }
 
 void PlayerResourceRepository::save(Resource resource)
