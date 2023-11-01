@@ -27,10 +27,8 @@ enum class Layout
   Vertical
 };
 
-/// @brief - Defines a common function called whenever the menu is clicked
-/// upon. This allows to specialize the menu class easily when not much is
-/// needed.
-using RegisterAction = std::function<void(std::vector<ActionShPtr> &)>;
+using MenuCallback       = std::function<void()>;
+using MenuActionCallback = std::function<void(std::vector<ActionShPtr> &)>;
 
 } // namespace menu
 
@@ -141,7 +139,7 @@ class Menu : public utils::CoreObject
 
   /// @brief - Assigns a new action attached to this menu.
   /// @param action - the action attached to the menu.
-  void setAction(menu::RegisterAction action);
+  void setAction(menu::MenuCallback action);
 
   /// @brief - Used to define a new simple action where the process would be to
   /// push the input callback to the provided vector of actions.
@@ -265,8 +263,11 @@ class Menu : public utils::CoreObject
   /// not be active and are always repainted on the parent.
   std::vector<MenuShPtr> m_children{};
 
-  /// @brief - The callback to trigger whenver this menu is clicked upon.
-  menu::RegisterAction m_callback{};
+  /// @brief - The action-free callback to trigger when this menu is clicked upon.
+  menu::MenuCallback m_callback{};
+
+  /// @brief - The callback to trigger whenever this menu is clicked upon.
+  menu::MenuActionCallback m_actionCallback{};
 };
 
 } // namespace pge

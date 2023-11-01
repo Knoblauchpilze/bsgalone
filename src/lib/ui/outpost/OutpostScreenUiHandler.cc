@@ -112,18 +112,15 @@ void OutpostScreenUiHandler::generateGeneralMenu(const int width, const int heig
 
   auto menu
     = generateMenu(pos, dims, "Shop", "shop", olc::DARK_COBALT_BLUE, {olc::WHITE}, true, true);
-  menu->setAction(
-    [this](std::vector<ActionShPtr> & /*actions*/) { setActiveScreen(ActiveScreen::SHOP); });
+  menu->setAction([this]() { setActiveScreen(ActiveScreen::SHOP); });
   m_menus[VIEWS_MENU]->addMenu(menu);
 
   menu = generateMenu(pos, dims, "Locker", "locker", olc::DARK_COBALT_BLUE, {olc::WHITE}, true, true);
-  menu->setAction(
-    [this](std::vector<ActionShPtr> & /*actions*/) { setActiveScreen(ActiveScreen::LOCKER); });
+  menu->setAction([this]() { setActiveScreen(ActiveScreen::LOCKER); });
   m_menus[VIEWS_MENU]->addMenu(menu);
 
   menu = generateMenu(pos, dims, "Hangar", "hangar", olc::DARK_COBALT_BLUE, {olc::WHITE}, true, true);
-  menu->setAction(
-    [this](std::vector<ActionShPtr> & /*actions*/) { setActiveScreen(ActiveScreen::HANGAR); });
+  menu->setAction([this]() { setActiveScreen(ActiveScreen::HANGAR); });
   m_menus[VIEWS_MENU]->addMenu(menu);
 }
 

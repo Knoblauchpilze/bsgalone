@@ -98,10 +98,13 @@ inline void Menu::setText(const std::string &text)
 
 inline void Menu::onClick(std::vector<ActionShPtr> &actions) const
 {
-  // Trigger the callback if it is defined.
   if (m_callback)
   {
-    m_callback(actions);
+    m_callback();
+  }
+  if (m_actionCallback)
+  {
+    m_actionCallback(actions);
   }
 }
 
