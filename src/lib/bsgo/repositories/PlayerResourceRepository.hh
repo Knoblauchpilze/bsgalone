@@ -8,7 +8,7 @@
 
 namespace bsgo {
 
-struct Resource
+struct PlayerResource
 {
   Uuid resource;
   std::string name;
@@ -21,10 +21,8 @@ class PlayerResourceRepository : public IRepository
   PlayerResourceRepository();
   ~PlayerResourceRepository() override = default;
 
-  auto findAllByPlayer(const Uuid &player) const -> std::vector<Resource>;
-  auto findOneByIdAndResource(const Uuid &player, const Uuid &resource) const -> Resource;
-
-  void save(Resource resource);
+  auto findOneById(const Uuid &resource) const -> PlayerResource;
+  auto findAllByPlayer(const Uuid &player) const -> std::vector<Uuid>;
 };
 
 using PlayerResourceRepositoryShPtr = std::shared_ptr<PlayerResourceRepository>;
