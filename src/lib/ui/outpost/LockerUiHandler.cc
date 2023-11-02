@@ -48,7 +48,7 @@ void LockerUiHandler::generateResourcesMenus()
   const auto resources = m_playerView->getPlayerResources();
   for (const auto &resource : resources)
   {
-    auto text = resource.name + ": " + floatToStr(resource.amount, 0);
+    auto text = resource.name + ": " + floatToStr(std::floor(resource.amount), 0);
     auto menu = generateMenu(olc::vi2d{}, olc::vi2d{}, text, resource.name, olc::VERY_DARK_GREEN);
     m_menu->addMenu(menu);
     m_resources.push_back(menu);
