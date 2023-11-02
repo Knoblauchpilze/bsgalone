@@ -30,6 +30,15 @@ auto DataSource::playerEntityId() const -> Uuid
   return *m_playerEntityId;
 }
 
+auto DataSource::playerShipId() const -> Uuid
+{
+  if (!m_playerShipId)
+  {
+    error("Expected to have a player ship id");
+  }
+  return *m_playerShipId;
+}
+
 auto DataSource::playerShipEntityId() const -> Uuid
 {
   if (!m_playerShipEntityId)
@@ -124,12 +133,18 @@ void DataSource::registerShip(Coordinator &coordinator, const Uuid &ship) const
     {
       error("Failed to create ship " + str(ship), "Expected player entity to be created already");
     }
+    if (m_playerShipId)
+    {
+      error("Failed to create ship " + str(ship),
+            "Player ship id is already assigned entity " + str(*m_playerShipId));
+    }
     if (m_playerShipEntityId)
     {
       error("Failed to create ship " + str(ship),
-            "Player ship id is already assigned entity " + str(*m_playerShipEntityId));
+            "Player ship entity id is already assigned entity " + str(*m_playerShipEntityId));
     }
 
+    m_playerShipId       = ship;
     m_playerShipEntityId = ent;
     coordinator.addOwner(ent, *m_playerEntityId);
   }

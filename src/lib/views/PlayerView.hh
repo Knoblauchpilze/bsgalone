@@ -10,6 +10,7 @@ class PlayerView : public IView
 {
   public:
   PlayerView(const Uuid &playerId,
+             const Uuid &playerShipId,
              const CoordinatorShPtr &coordinator,
              const Repositories &repositories);
   ~PlayerView() override = default;
@@ -20,6 +21,7 @@ class PlayerView : public IView
 
   private:
   Uuid m_playerId;
+  Uuid m_playerShipId;
 };
 
 using PlayerViewShPtr = std::shared_ptr<PlayerView>;
