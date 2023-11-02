@@ -56,7 +56,8 @@ void DataSource::initializePlayer(Coordinator &coordinator) const
   const auto resources = m_repositories.playerResourceRepository->findAllByPlayer(m_playerId);
   for (const auto &resource : resources)
   {
-    coordinator.addResourceComponent(*m_playerEntityId, resource.resource, resource.amount);
+    const auto data = m_repositories.playerResourceRepository->findOneById(resource);
+    coordinator.addResourceComponent(*m_playerEntityId, data.resource, data.amount);
   }
 }
 

@@ -14,7 +14,9 @@ class PlayerView : public IView
              const Repositories &repositories);
   ~PlayerView() override = default;
 
-  auto getPlayerResources() const -> std::vector<Resource>;
+  auto getPlayerResources() const -> std::vector<PlayerResource>;
+  auto getPlayerWeapons() const -> std::vector<PlayerWeapon>;
+  auto getPlayerComputers() const -> std::vector<PlayerComputer>;
 
   private:
   Uuid m_playerId;

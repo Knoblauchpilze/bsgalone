@@ -9,59 +9,37 @@ PlayerResourceRepository::PlayerResourceRepository()
   addModule("resource");
 }
 
-auto PlayerResourceRepository::findAllByPlayer(const Uuid &player) const -> std::vector<Resource>
+auto PlayerResourceRepository::findOneById(const Uuid &resource) const -> PlayerResource
+{
+  PlayerResource out;
+  out.resource = resource;
+
+  switch (resource)
+  {
+    case Uuid{0}:
+      out.name   = "tylium";
+      out.amount = 1.2f;
+      break;
+    case Uuid{1}:
+      out.name   = "titane";
+      out.amount = 2.7f;
+      break;
+    default:
+      error("Resource " + str(resource) + " not found");
+      break;
+  }
+
+  return out;
+}
+
+auto PlayerResourceRepository::findAllByPlayer(const Uuid &player) const -> std::vector<Uuid>
 {
   if (player != Uuid(0))
   {
     error("Player " + str(player) + " not found");
   }
 
-  std::vector<Resource> out;
-
-  out.push_back(Resource{
-    .resource = Uuid(0),
-    .name     = "tylium",
-    .amount   = 1.2,
-  });
-  out.push_back(Resource{
-    .resource = Uuid(1),
-    .name     = "titane",
-    .amount   = 2.7,
-  });
-
-  return out;
-}
-
-auto PlayerResourceRepository::findOneByIdAndResource(const Uuid &player,
-                                                      const Uuid &resource) const -> Resource
-{
-  if (player != Uuid{0})
-  {
-    error("Player " + str(player) + " and resource " + str(resource) + " not found");
-  }
-
-  switch (resource)
-  {
-    case Uuid{0}:
-      return Resource{
-        .resource = Uuid{0},
-        .name     = "tylium",
-        .amount   = 1.2,
-      };
-    case Uuid{1}:
-      return Resource{.resource = Uuid{1}, .name = "titane", .amount = 2.7};
-    default:
-      error("Player " + str(player) + " and resource " + str(resource) + " not found");
-      break;
-  }
-
-  // Can't happen because of the error above.
-  return {};
-}
-
-void PlayerResourceRepository::save(Resource resource)
-{
-  warn("Should save " + str(resource.resource) + " with amount " + std::to_string(resource.amount));
+  return {Uuid{0}, Uuid{1}};
 }
 
 } // namespace bsgo
