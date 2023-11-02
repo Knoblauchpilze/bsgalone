@@ -13,7 +13,7 @@ class ShipWeaponRepository : public IRepository
   ShipWeaponRepository();
   ~ShipWeaponRepository() override = default;
 
-  auto findAllById(const Uuid &ship) const -> std::vector<Uuid>;
+  auto findAllByShip(const Uuid &ship) const -> std::vector<Uuid>;
 };
 
 using ShipWeaponRepositoryShPtr = std::shared_ptr<ShipWeaponRepository>;

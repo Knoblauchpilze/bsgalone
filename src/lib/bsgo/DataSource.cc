@@ -154,7 +154,7 @@ void DataSource::registerShipWeapons(Coordinator &coordinator,
                                      const Uuid &ship,
                                      const Uuid &shipEntity) const
 {
-  const auto weapons = m_repositories.shipWeaponRepository->findAllById(ship);
+  const auto weapons = m_repositories.shipWeaponRepository->findAllByShip(ship);
   for (const auto &weapon : weapons)
   {
     const auto data = m_repositories.playerWeaponRepository->findOneById(weapon);
@@ -166,7 +166,7 @@ void DataSource::registerShipComputers(Coordinator &coordinator,
                                        const Uuid &ship,
                                        const Uuid &shipEntity) const
 {
-  const auto computers = m_repositories.shipComputerRepository->findAllById(ship);
+  const auto computers = m_repositories.shipComputerRepository->findAllByShip(ship);
   for (const auto &computer : computers)
   {
     const auto data = m_repositories.playerComputerRepository->findOneById(computer);

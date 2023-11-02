@@ -9,7 +9,7 @@ ShipWeaponRepository::ShipWeaponRepository()
   addModule("ship");
 }
 
-auto ShipWeaponRepository::findAllById(const Uuid &ship) const -> std::vector<Uuid>
+auto ShipWeaponRepository::findAllByShip(const Uuid &ship) const -> std::vector<Uuid>
 {
   if (ship != Uuid{0})
   {

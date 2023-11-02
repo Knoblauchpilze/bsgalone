@@ -13,7 +13,7 @@ class ShipComputerRepository : public IRepository
   ShipComputerRepository();
   ~ShipComputerRepository() override = default;
 
-  auto findAllById(const Uuid &ship) const -> std::vector<Uuid>;
+  auto findAllByShip(const Uuid &ship) const -> std::vector<Uuid>;
 };
 
 using ShipComputerRepositoryShPtr = std::shared_ptr<ShipComputerRepository>;
