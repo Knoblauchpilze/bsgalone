@@ -169,7 +169,7 @@ void DataSource::registerShipComputers(Coordinator &coordinator,
   const auto computers = m_repositories.shipComputerRepository->findAllById(ship);
   for (const auto &computer : computers)
   {
-    const auto data = m_repositories.computerRepository->findOneById(computer);
+    const auto data = m_repositories.playerComputerRepository->findOneById(computer);
     coordinator.addComputer(shipEntity, data);
   }
 }

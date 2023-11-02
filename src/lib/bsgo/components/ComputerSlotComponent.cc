@@ -3,7 +3,7 @@
 
 namespace bsgo {
 
-ComputerSlotComponent::ComputerSlotComponent(const Computer &computer)
+ComputerSlotComponent::ComputerSlotComponent(const PlayerComputer &computer)
   : SlotComponent("computer",
                   SlotComponentData{.offensive  = computer.offensive,
                                     .powerCost  = computer.powerCost,
