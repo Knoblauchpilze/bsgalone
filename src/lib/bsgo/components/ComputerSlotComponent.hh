@@ -1,8 +1,8 @@
 
 #pragma once
 
-#include "ComputerRepository.hh"
 #include "EntityKind.hh"
+#include "PlayerComputerRepository.hh"
 #include "SlotComponent.hh"
 #include <core_utils/TimeUtils.hh>
 #include <optional>
@@ -13,7 +13,7 @@ namespace bsgo {
 class ComputerSlotComponent : public SlotComponent
 {
   public:
-  ComputerSlotComponent(const Computer &computer);
+  ComputerSlotComponent(const PlayerComputer &computer);
   ~ComputerSlotComponent() override = default;
 
   auto duration() const -> std::optional<utils::Duration>;
