@@ -143,7 +143,7 @@ void Coordinator::addRemoval(const Uuid &ent)
   m_components.removals[ent] = std::make_shared<RemovalComponent>();
 }
 
-void Coordinator::addWeapon(const Uuid &ent, const Weapon &weapon)
+void Coordinator::addWeapon(const Uuid &ent, const PlayerWeapon &weapon)
 {
   checkEntityExist(ent, "Weapon");
   m_components.weapons.emplace(ent, std::make_shared<WeaponSlotComponent>(weapon));

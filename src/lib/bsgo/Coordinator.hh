@@ -36,7 +36,7 @@ class Coordinator : public utils::CoreObject
   void addOwner(const Uuid &ent, const Uuid &owner);
   void addDamage(const Uuid &ent, const float damage);
   void addRemoval(const Uuid &ent);
-  void addWeapon(const Uuid &ent, const Weapon &weapon);
+  void addWeapon(const Uuid &ent, const PlayerWeapon &weapon);
   void addComputer(const Uuid &ent, const Computer &computer);
   void addResourceComponent(const Uuid &ent, const Uuid &resource, const float amount);
 

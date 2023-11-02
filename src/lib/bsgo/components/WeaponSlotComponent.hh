@@ -1,15 +1,15 @@
 
 #pragma once
 
+#include "PlayerWeaponRepository.hh"
 #include "SlotComponent.hh"
-#include "WeaponRepository.hh"
 
 namespace bsgo {
 
 class WeaponSlotComponent : public SlotComponent
 {
   public:
-  WeaponSlotComponent(const Weapon &weapon);
+  WeaponSlotComponent(const PlayerWeapon &weapon);
   ~WeaponSlotComponent() override = default;
 
   auto minDamage() const -> float;

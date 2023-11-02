@@ -157,7 +157,7 @@ void DataSource::registerShipWeapons(Coordinator &coordinator,
   const auto weapons = m_repositories.shipWeaponRepository->findAllById(ship);
   for (const auto &weapon : weapons)
   {
-    const auto data = m_repositories.weaponRepository->findOneById(weapon);
+    const auto data = m_repositories.playerWeaponRepository->findOneById(weapon);
     coordinator.addWeapon(shipEntity, data);
   }
 }

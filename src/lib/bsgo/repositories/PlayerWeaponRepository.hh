@@ -3,9 +3,24 @@
 
 #include "IRepository.hh"
 #include "Uuid.hh"
+#include <core_utils/TimeUtils.hh>
 #include <memory>
 
 namespace bsgo {
+
+struct PlayerWeapon
+{
+  int level;
+
+  float minDamage;
+  float maxDamage;
+
+  float powerCost;
+
+  float range;
+
+  utils::Duration reloadTime;
+};
 
 class PlayerWeaponRepository : public IRepository
 {
@@ -13,7 +28,8 @@ class PlayerWeaponRepository : public IRepository
   PlayerWeaponRepository();
   ~PlayerWeaponRepository() override = default;
 
-  auto findAllById(const Uuid &player) const -> std::vector<Uuid>;
+  auto findOneById(const Uuid &weapon) const -> PlayerWeapon;
+  auto findAllByPlayer(const Uuid &player) const -> std::vector<Uuid>;
 };
 
 using PlayerWeaponRepositoryShPtr = std::shared_ptr<PlayerWeaponRepository>;
