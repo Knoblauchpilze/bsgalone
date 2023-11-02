@@ -9,7 +9,7 @@ ShipComputerRepository::ShipComputerRepository()
   addModule("ship");
 }
 
-auto ShipComputerRepository::findAllByShip(const Uuid &ship) const -> std::vector<Uuid>
+auto ShipComputerRepository::findAllByShip(const Uuid &ship) const -> std::unordered_set<Uuid>
 {
   if (ship != Uuid{0})
   {

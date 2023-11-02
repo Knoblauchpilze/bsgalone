@@ -4,7 +4,7 @@
 #include "IRepository.hh"
 #include "Uuid.hh"
 #include <memory>
-#include <vector>
+#include <unordered_set>
 
 namespace bsgo {
 
@@ -22,7 +22,7 @@ class PlayerResourceRepository : public IRepository
   ~PlayerResourceRepository() override = default;
 
   auto findOneById(const Uuid &resource) const -> PlayerResource;
-  auto findAllByPlayer(const Uuid &player) const -> std::vector<Uuid>;
+  auto findAllByPlayer(const Uuid &player) const -> std::unordered_set<Uuid>;
 };
 
 using PlayerResourceRepositoryShPtr = std::shared_ptr<PlayerResourceRepository>;

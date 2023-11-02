@@ -5,6 +5,7 @@
 #include "Uuid.hh"
 #include <core_utils/TimeUtils.hh>
 #include <memory>
+#include <unordered_set>
 
 namespace bsgo {
 
@@ -29,7 +30,7 @@ class PlayerWeaponRepository : public IRepository
   ~PlayerWeaponRepository() override = default;
 
   auto findOneById(const Uuid &weapon) const -> PlayerWeapon;
-  auto findAllByPlayer(const Uuid &player) const -> std::vector<Uuid>;
+  auto findAllByPlayer(const Uuid &player) const -> std::unordered_set<Uuid>;
 };
 
 using PlayerWeaponRepositoryShPtr = std::shared_ptr<PlayerWeaponRepository>;
