@@ -15,7 +15,7 @@ auto PlayerComputerRepository::findOneById(const Uuid &computer) const -> Player
 
   switch (computer)
   {
-    case 0:
+    case Uuid{0}:
       out.level      = 1;
       out.offensive  = false;
       out.powerCost  = 20.0f;
@@ -24,7 +24,7 @@ auto PlayerComputerRepository::findOneById(const Uuid &computer) const -> Player
       out.duration       = {utils::Milliseconds(3500)};
       out.damageModifier = {1.5f};
       break;
-    case 1:
+    case Uuid{1}:
       out.level      = 5;
       out.offensive  = true;
       out.powerCost  = 5.0f;
@@ -34,6 +34,15 @@ auto PlayerComputerRepository::findOneById(const Uuid &computer) const -> Player
       out.duration       = {};
       out.allowedTargets = {{EntityKind::ASTEROID}};
       out.damageModifier = {};
+      break;
+    case Uuid{2}:
+      out.level      = 6;
+      out.offensive  = false;
+      out.powerCost  = 18.0f;
+      out.reloadTime = utils::Milliseconds(8000);
+
+      out.duration       = {utils::Milliseconds(4000)};
+      out.damageModifier = {1.7f};
       break;
     default:
       error("Computer " + str(computer) + " not found");
@@ -49,7 +58,7 @@ auto PlayerComputerRepository::findAllByPlayer(const Uuid &player) const -> std:
   {
     error("Player " + str(player) + " not found");
   }
-  return {};
+  return {Uuid{0}, Uuid{1}, Uuid{2}};
 }
 
 } // namespace bsgo

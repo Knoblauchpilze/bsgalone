@@ -17,6 +17,7 @@ class DataSource : public utils::CoreObject
   auto repositories() const -> Repositories;
   auto playerId() const -> Uuid;
   auto playerEntityId() const -> Uuid;
+  auto playerShipId() const -> Uuid;
   auto playerShipEntityId() const -> Uuid;
 
   void initialize(Coordinator &coordinator) const;
@@ -24,6 +25,7 @@ class DataSource : public utils::CoreObject
   private:
   Uuid m_playerId{};
   mutable std::optional<Uuid> m_playerEntityId{};
+  mutable std::optional<Uuid> m_playerShipId{};
   mutable std::optional<Uuid> m_playerShipEntityId{};
 
   Repositories m_repositories{};

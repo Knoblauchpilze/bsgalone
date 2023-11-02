@@ -28,6 +28,8 @@ void LockerUiHandler::initializeMenus(const int width, const int height)
   m_menu = generateMenu(pos, dims, "", "locker", olc::DARK_YELLOW, {olc::WHITE});
 
   generateResourcesMenus();
+  generateWeaponsMenus();
+  generateComputersMenus();
 }
 
 auto LockerUiHandler::processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions)
@@ -52,6 +54,42 @@ void LockerUiHandler::generateResourcesMenus()
     auto menu = generateMenu(olc::vi2d{}, olc::vi2d{}, text, resource.name, olc::VERY_DARK_GREEN);
     m_menu->addMenu(menu);
     m_resources.push_back(menu);
+  }
+}
+
+void LockerUiHandler::generateWeaponsMenus()
+{
+  const auto weapons = m_playerView->getPlayerWeapons();
+  auto id            = 0;
+  for (const auto &weapon : weapons)
+  {
+    auto text = "Level: " + std::to_string(weapon.level) + ", range " + floatToStr(weapon.range, 0);
+    const auto name = "weapon_" + std::to_string(id);
+    auto menu       = generateMenu(olc::vi2d{}, olc::vi2d{}, text, name, olc::VERY_DARK_RED);
+    m_menu->addMenu(menu);
+    m_weapons.push_back(menu);
+
+    ++id;
+  }
+}
+
+void LockerUiHandler::generateComputersMenus()
+{
+  const auto computers = m_playerView->getPlayerComputers();
+  auto id              = 0;
+  for (const auto &computer : computers)
+  {
+    auto text = "Level: " + std::to_string(computer.level);
+    if (computer.range)
+    {
+      text += ", range " + floatToStr(*computer.range, 0);
+    }
+    const auto name = "computer_" + std::to_string(id);
+    auto menu       = generateMenu(olc::vi2d{}, olc::vi2d{}, text, name, olc::VERY_DARK_BLUE);
+    m_menu->addMenu(menu);
+    m_computers.push_back(menu);
+
+    ++id;
   }
 }
 

@@ -21,15 +21,25 @@ auto PlayerWeaponRepository::findOneById(const Uuid &weapon) const -> PlayerWeap
 
   switch (weapon)
   {
-    case 0:
+    case Uuid{0}:
       out.level     = 2;
       out.minDamage = 1.1f;
       out.maxDamage = 11.0f;
       break;
-    case 1:
+    case Uuid{1}:
       out.level     = 1;
       out.minDamage = 1.0f;
       out.maxDamage = 10.0f;
+      break;
+    case Uuid{2}:
+      out.level     = 6;
+      out.minDamage = 1.6f;
+      out.maxDamage = 16.0f;
+      break;
+    case Uuid{3}:
+      out.level     = 7;
+      out.minDamage = 1.7f;
+      out.maxDamage = 17.0f;
       break;
     default:
       error("Weapon " + str(weapon) + " not found");
@@ -46,7 +56,7 @@ auto PlayerWeaponRepository::findAllByPlayer(const Uuid &player) const -> std::u
     error("Player " + str(player) + " not found");
   }
 
-  return {Uuid{0}, Uuid{1}};
+  return {Uuid{0}, Uuid{1}, Uuid{2}, Uuid{3}};
 }
 
 } // namespace bsgo

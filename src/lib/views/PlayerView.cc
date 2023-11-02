@@ -4,10 +4,12 @@
 namespace bsgo {
 
 PlayerView::PlayerView(const Uuid &playerId,
+                       const Uuid &playerShipId,
                        const CoordinatorShPtr &coordinator,
                        const Repositories &repositories)
   : IView("player", coordinator, repositories)
   , m_playerId(playerId)
+  , m_playerShipId(playerShipId)
 {}
 
 auto PlayerView::getPlayerResources() const -> std::vector<PlayerResource>
@@ -25,7 +27,12 @@ auto PlayerView::getPlayerResources() const -> std::vector<PlayerResource>
 
 auto PlayerView::getPlayerWeapons() const -> std::vector<PlayerWeapon>
 {
-  const auto ids = m_repositories.playerWeaponRepository->findAllByPlayer(m_playerId);
+  const auto usedIds = m_repositories.shipWeaponRepository->findAllByShip(m_playerShipId);
+  auto ids           = m_repositories.playerWeaponRepository->findAllByPlayer(m_playerId);
+  for (const auto usedId : usedIds)
+  {
+    ids.erase(usedId);
+  }
 
   std::vector<PlayerWeapon> out;
   for (const auto &id : ids)
@@ -38,7 +45,12 @@ auto PlayerView::getPlayerWeapons() const -> std::vector<PlayerWeapon>
 
 auto PlayerView::getPlayerComputers() const -> std::vector<PlayerComputer>
 {
-  const auto ids = m_repositories.playerComputerRepository->findAllByPlayer(m_playerId);
+  const auto usedIds = m_repositories.shipComputerRepository->findAllByShip(m_playerShipId);
+  auto ids           = m_repositories.playerComputerRepository->findAllByPlayer(m_playerId);
+  for (const auto usedId : usedIds)
+  {
+    ids.erase(usedId);
+  }
 
   std::vector<PlayerComputer> out;
   for (const auto &id : ids)
