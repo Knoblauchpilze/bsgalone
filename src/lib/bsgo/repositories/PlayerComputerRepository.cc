@@ -43,7 +43,7 @@ auto PlayerComputerRepository::findOneById(const Uuid &computer) const -> Player
   return out;
 }
 
-auto PlayerComputerRepository::findAllByPlayer(const Uuid &player) const -> std::vector<Uuid>
+auto PlayerComputerRepository::findAllByPlayer(const Uuid &player) const -> std::unordered_set<Uuid>
 {
   if (player != Uuid{0})
   {

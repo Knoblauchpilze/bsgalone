@@ -32,7 +32,7 @@ class PlayerComputerRepository : public IRepository
   ~PlayerComputerRepository() override = default;
 
   auto findOneById(const Uuid &computer) const -> PlayerComputer;
-  auto findAllByPlayer(const Uuid &player) const -> std::vector<Uuid>;
+  auto findAllByPlayer(const Uuid &player) const -> std::unordered_set<Uuid>;
 };
 
 using PlayerComputerRepositoryShPtr = std::shared_ptr<PlayerComputerRepository>;

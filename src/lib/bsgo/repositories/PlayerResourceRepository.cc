@@ -32,7 +32,7 @@ auto PlayerResourceRepository::findOneById(const Uuid &resource) const -> Player
   return out;
 }
 
-auto PlayerResourceRepository::findAllByPlayer(const Uuid &player) const -> std::vector<Uuid>
+auto PlayerResourceRepository::findAllByPlayer(const Uuid &player) const -> std::unordered_set<Uuid>
 {
   if (player != Uuid(0))
   {
