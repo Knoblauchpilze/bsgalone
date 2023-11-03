@@ -74,18 +74,8 @@ void TexturePack::draw(olc::PixelGameEngine *pge,
   const auto sCoords    = tp.spriteCoords(s.sprite, s.id);
   const auto sCenter    = sCoords + tp.sSize / 2;
   const olc::vf2d scale = size / tp.sSize;
-  // The minus comes from the interpretation of the PixelGameEngine to
-  // make it consistent to provide a direct rotation. See this page in
-  // French for more details: https://fr.wikipedia.org/wiki/Sens_de_rotation
-  const auto olcAngle = angle;
-  pge->DrawPartialRotatedDecal(p,
-                               tp.decal->get(),
-                               olcAngle,
-                               sCenter,
-                               sCoords,
-                               tp.sSize,
-                               scale,
-                               s.tint);
+
+  pge->DrawPartialRotatedDecal(p, tp.decal->get(), angle, sCenter, sCoords, tp.sSize, scale, s.tint);
 }
 
 auto TexturePack::tryGetPackOrThrow(const int packId) const -> const Pack &
