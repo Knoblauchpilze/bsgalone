@@ -1,6 +1,8 @@
 
 #include "WeaponPriceRepository.hh"
 
+#include <iostream>
+
 namespace bsgo {
 
 WeaponPriceRepository::WeaponPriceRepository()
@@ -12,7 +14,16 @@ WeaponPriceRepository::WeaponPriceRepository()
 auto WeaponPriceRepository::findAllByWeapon(const Uuid &weapon) const
   -> std::unordered_map<Uuid, int>
 {
-  error("Weapon " + str(weapon) + " not found");
+  switch (weapon)
+  {
+    case Uuid{0}:
+      return {{Uuid{1}, 12}};
+    default:
+      error("Weapon " + str(weapon) + " not found");
+      break;
+  }
+
+  // Can't happen because of the error above.
   return {};
 }
 

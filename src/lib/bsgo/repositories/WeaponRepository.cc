@@ -8,6 +8,11 @@ WeaponRepository::WeaponRepository()
   : IRepository("weapon")
 {}
 
+auto WeaponRepository::findAll() const -> std::unordered_set<Uuid>
+{
+  return {Uuid{0}};
+}
+
 auto WeaponRepository::findOneById(const Uuid &weapon) const -> Weapon
 {
   Weapon out;

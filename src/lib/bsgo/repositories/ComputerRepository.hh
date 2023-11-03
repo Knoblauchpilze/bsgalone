@@ -30,6 +30,7 @@ class ComputerRepository : public IRepository
   ComputerRepository();
   ~ComputerRepository() override = default;
 
+  auto findAll() const -> std::unordered_set<Uuid>;
   auto findOneById(const Uuid &computer) const -> Computer;
 };
 
