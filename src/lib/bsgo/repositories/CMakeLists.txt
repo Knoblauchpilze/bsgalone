@@ -15,6 +15,8 @@ target_sources (bsgalone_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/ShipComputerRepository.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/PlayerComputerRepository.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ResourceRepository.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/WeaponPriceRepository.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/ComputerPriceRepository.cc
 	)
 
 target_include_directories (bsgalone_lib PUBLIC
