@@ -100,204 +100,204 @@ The locker is then just the collection of items from the player which are either
 
 ## Steps
 
-✅ Extract the coordinator from the view and remove the update method from the IView interface.
+✅ Extract the coordinator from the view and remove the update method from the IView interface.  
 ✅ Call the update method of the coordinator in the step method of the game.
 
-✅ Répertoire pour la ui de l'outpost
-✅ Modifier le texture pack pour gérer mieux la mémoire pour les olc::Decal
-✅ Créer une méthode pour avoir uniquement un Decal et pas forcément un Pack
-✅ Une image de fond genre docking bay
-✅ Un menu général avec shop/locker/hangar
-Le menu Locker présente une vue de la liste des items dans la partie gauche et une liste des Slots a droite 
-Le Locker est une liste de slot avec un type et un id qui indique dans quel repo aller chercher les information
+✅ Répertoire pour la ui de l'outpost  
+✅ Modifier le texture pack pour gérer mieux la mémoire pour les olc::Decal  
+✅ Créer une méthode pour avoir uniquement un Decal et pas forcément un Pack  
+✅ Une image de fond genre docking bay  
+✅ Un menu général avec shop/locker/hangar  
+✅ Le menu Locker présente une vue de la liste des items dans la partie gauche et une liste des Slots a droite  
+✅ Le Locker est une liste de slot avec un type et un id qui indique dans quel repo aller chercher les information
 
-✅ Introduire la notion de faction: créer un répertoire enums dans le folder bsgo avec ça
+✅ Introduire la notion de faction: créer un répertoire enums dans le folder bsgo avec ça  
 ✅ Chaque ship et outpost ont une faction
 
-✅ Introduire la notion de slot type, similaire à la notion de faction
+✅ Introduire la notion de slot type, similaire à la notion de faction  
 ❌ Chaque ship a un count de slot de chaque type
 
-✅ Rename findOneById dans le ship repository
-❌ Ajouter un findSlotByIdAndType dedans qui retourne une list d'id.
+✅ Rename findOneById dans le ship repository  
+❌ Ajouter un findSlotByIdAndType dedans qui retourne une list d'id
 
-✅ Séparer les différents aspects du loading dans le DataSource.
-✅ Refine le Velocity component pour inclure l'accélération maximale.
-✅ Utiliser l'accélération maximale du vaisseau dans le component.
+✅ Séparer les différents aspects du loading dans le DataSource  
+✅ Refine le Velocity component pour inclure l'accélération maximale  
+✅ Utiliser l'accélération maximale du vaisseau dans le component
 
-✅ Le PlayerShip definit un vector pour les id des slots de chaque type.
-✅ Ajouter un WeaponRepository qui permet d'accéder aux weapons dont l'id a été retourné dans le ShipRepository
+✅ Le PlayerShip definit un vector pour les id des slots de chaque type  
+✅ Ajouter un WeaponRepository qui permet d'accéder aux weapons dont l'id a été retourné dans le ShipRepository  
 ✅ Il retourne une weapon avec dedans un niveau de dégâts et un reload time et un coût énergétique et une portée
 
-✅ Ajouter un IComponent interface
-✅ Ajouter un RegenerativeComponent
+✅ Ajouter un IComponent interface  
+✅ Ajouter un RegenerativeComponent  
 ✅ Faire en sorte que Power et Health derive de celui ci
 
-✅ Le bouton de dock ne doit être accessible qu'aux ships de la bonne faction 
+✅ Le bouton de dock ne doit être accessible qu'aux ships de la bonne faction
 
-✅ Faire en sorte que la couleur de BG de la weapon UI change de couleur en fonction du statut de l'arme : vert si elle peut tirer, orange si pas assez d'énergie, jaune si reload et rouge si hors portée
+✅ Faire en sorte que la couleur de BG de la weapon UI change de couleur en fonction du statut de l'arme : vert si elle peut tirer, orange si pas assez d'énergie, jaune si reload et rouge si hors portée  
 ✅ Afficher la portée et les dégâsses sur le menu
 
-✅ Ajouter un attribut heading dans le transform component
-✅ Orienter le vaisseau basé là dessus et pas sur la vitesse
+✅ Ajouter un attribut heading dans le transform component  
+✅ Orienter le vaisseau basé là dessus et pas sur la vitesse  
 ✅ La vitesse modifie le heading immédiatement
 
-✅ Ajouter un attribut on/off sur les WeaponSlot
+✅ Ajouter un attribut on/off sur les WeaponSlot  
 ✅ Attacher la touche G pour modifier toutes mes armes dans le GameScreenInputHandler
 
-✅ Créer un TargetComponent et remplacer ce que de droit
-✅ Dans le DataSource on crée le target component pour les entités de type ship et outpost
-✅ Dans le GameScreenInputHandler on n'update plus la TargetView mais le component de l'entity
-✅ Dans le GameScreenUi on ne prend plus la target view mais le component de l'entity 
+✅ Créer un TargetComponent et remplacer ce que de droit  
+✅ Dans le DataSource on crée le target component pour les entités de type ship et outpost  
+✅ Dans le GameScreenInputHandler on n'update plus la TargetView mais le component de l'entity  
+✅ Dans le GameScreenUi on ne prend plus la target view mais le component de l'entity  
 ✅ On peut probablement supprimer la TargetView
 
-❌ Ajouter un onEntityAdded sur le ISystem?
+❌ Ajouter un onEntityAdded sur le ISystem?  
 ❌ Ajouter un onComponentAdded sur le ISystem?
 
-✅ Créer un WeaponSystem
-✅ D'après https://gamedev.stackexchange.com/questions/71711/ecs-how-to-access-multiple-components-not-the-same-one-in-a-system ce système itere sur les entités au lieu des components et accède uniquement a celle qui ont une weapon (puisque tout le monde a une transform)
+✅ Créer un WeaponSystem  
+✅ D'après https://gamedev.stackexchange.com/questions/71711/ecs-how-to-access-multiple-components-not-the-same-one-in-a-system ce système itere sur les entités au lieu des components et accède uniquement a celle qui ont une weapon (puisque tout le monde a une transform)  
 ✅ Si l'arme est on et a portée on essaie de l'utiliser sur la target si elle est valide en decrementant le power component
 
-✅ Créer un AbstractSystem pour itérer sur les entités. Il prend en paramètre une fonction pour filtrer les entités
+✅ Créer un AbstractSystem pour itérer sur les entités. Il prend en paramètre une fonction pour filtrer les entités  
 ✅ Les autres systèmes héritent de cette classe
 
-✅ On ne peut tirer que sur les entités qui ne sont pas de notre faction
+✅ On ne peut tirer que sur les entités qui ne sont pas de notre faction  
 ✅ Créer un FactionComponent
 
-❌ Dans Coordinator remplacer la map m_entities par une map avec une struct comme valeur. Cette struct possède le kind et un flag active
-❌ Ajouter une méthode deleteEntity qui met ce flag a false
-✅ Supprimer le use du RegenerativeComponent et le mettre dans les Power et Health components
-✅ Ajouter une methode isAlive dans le Health
-❌ Les autres méthodes utilisent ce flag pour récupérer les entités -> pas besoin puisque chaque entite est supprimée dans la même frame qu'elle est détruite
-✅ Ajouter une méthode cleanUpEntities qui itere sur la liste m_entities et qui supprime celles qui sont désactivées
-✅ Appeler cette méthode dans le update
-✅ Le WeaponSystem enleve la target d'une entite si elle est morte
-✅ Dans le WeaponSystem on vérifie si la vie est trop basse auquel cas on set le flag active de l'entité 
+❌ Dans Coordinator remplacer la map m_entities par une map avec une struct comme valeur. Cette struct possède le kind et un flag active  
+❌ Ajouter une méthode deleteEntity qui met ce flag a false  
+✅ Supprimer le use du RegenerativeComponent et le mettre dans les Power et Health components  
+✅ Ajouter une methode isAlive dans le Health  
+❌ Les autres méthodes utilisent ce flag pour récupérer les entités -> pas besoin puisque chaque entite est supprimée dans la même frame qu'elle est détruite  
+✅ Ajouter une méthode cleanUpEntities qui itere sur la liste m_entities et qui supprime celles qui sont désactivées  
+✅ Appeler cette méthode dans le update  
+✅ Le WeaponSystem enleve la target d'une entite si elle est morte  
+✅ Dans le WeaponSystem on vérifie si la vie est trop basse auquel cas on set le flag active de l'entité
 
-❌ Comment gérer la soute ?
+❌ Comment gérer la soute ?  
 ✅ Ajouter un LockerComponent ? -> Oui
 
-✅ Ajouter un optional d'une ressource dans un astéroïde (juste un float)
+✅ Ajouter un optional d'une ressource dans un astéroïde (juste un float)  
 ✅ Ajouter un LootComponent dans le cas où l'astéroïde a une resource : ce composant a besoin d'un endroit où stocker le loot
 
-✅ Computer sont une autre classe qui hérite de SlotComponent : elle a des méthodes similaires
-✅ Chaque ordinateur dans la DB sera définit avec in enum type qui dit qu'elle caractéristique est amelioré mais est utilisé dans le ECS comme ayant l'ensemble des stats améliorées (certaines étant 0)
-✅ On peut l'ajouter dans le PlayerShip et aussi dans le DataSource en tant que SlotComponent
-✅ L'entité a une liste de Computer comme elle a une liste de weapons
+✅ Computer sont une autre classe qui hérite de SlotComponent : elle a des méthodes similaires  
+✅ Chaque ordinateur dans la DB sera définit avec in enum type qui dit qu'elle caractéristique est amelioré mais est utilisé dans le ECS comme ayant l'ensemble des stats améliorées (certaines étant 0)  
+✅ On peut l'ajouter dans le PlayerShip et aussi dans le DataSource en tant que SlotComponent  
+✅ L'entité a une liste de Computer comme elle a une liste de weapons  
 ✅ Le WeaponSystem parcourt la liste des ordis et applique le résultat sur chaque arme
 
-✅ Plutot que de partir avec les slot d'ordi, on peut créer un EffectComponent qui a une durée et un effet
-✅ Le WeaponChangeComponent peut soit buf/debuff les armes : on pourra ajouter d'autres effets plus tard
-✅ Lorsqu'on clique sur un ordi, on ajoute un component qui correspond à l'effet de l'ordi
-✅ Un systeme se charge d'update les effets et de supprimer les components quand ils sont terminés
+✅ Plutot que de partir avec les slot d'ordi, on peut créer un EffectComponent qui a une durée et un effet  
+✅ Le WeaponChangeComponent peut soit buf/debuff les armes : on pourra ajouter d'autres effets plus tard  
+✅ Lorsqu'on clique sur un ordi, on ajoute un component qui correspond à l'effet de l'ordi  
+✅ Un systeme se charge d'update les effets et de supprimer les components quand ils sont terminés  
 ✅ Ajouter une methode removeXY pour un EffectComponent chaque component dans le coordinator
 
 ✅ Comment gérer le player ? Est ce une entité ? -> Oui
 
-✅ Créer un target system qui clear les target si elles sont dead 
+✅ Créer un target system qui clear les target si elles sont dead  
 ✅ Ease of use for the Entity struct
 
-✅ Changer ISystem pour que update soit const
-✅ Changer AbstractSystem pour que updateEntity soit const
-✅ Appliquer le damage modifier dans le WeaponSystem
-✅ Faire en sorte qu'un ordi ait un temps de recharge
-✅ Afficher le temps de recharge de maniere visible
-✅ Faire en sorte que les ordis consomment de l'energie
+✅ Changer ISystem pour que update soit const  
+✅ Changer AbstractSystem pour que updateEntity soit const  
+✅ Appliquer le damage modifier dans le WeaponSystem  
+✅ Faire en sorte qu'un ordi ait un temps de recharge  
+✅ Afficher le temps de recharge de maniere visible  
+✅ Faire en sorte que les ordis consomment de l'energie  
 ✅ Afficher les info de l'ordi dans la UI
 
-✅ Afficher le reload time dans la UI
-✅ Vérifier que les armes ne tirent pas toutes en même temps s'il n'y a que de l'énergie pour une seule 
-✅ Ajouter un parametere pour ignorer les enfants dans le menu pour le processUserInput
+✅ Afficher le reload time dans la UI  
+✅ Vérifier que les armes ne tirent pas toutes en même temps s'il n'y a que de l'énergie pour une seule  
+✅ Ajouter un parametere pour ignorer les enfants dans le menu pour le processUserInput  
 ✅ Les armes peuvent etre des/activees en cliquant dessus
 
-✅ Le scan est un ordi offensif sans modifier
-✅ Chaque astéro a un scanned component
+✅ Le scan est un ordi offensif sans modifier  
+✅ Chaque astéro a un scanned component  
 ✅ Le renderer prend en compte le scanned et affiche le loot
 
-✅ Trouver un moyen de faire en sorte que le clic sur un ordi n'active pas mais fasse une requete de clic?
-✅ Rajouter une list de kind pour les ordis qui definit sur lesquels il s'appliquent
-✅ Modifier le computer system pour qu'il regarde pas hasTargetDifferentFaction mais plutot hasTargetRightKind
-✅ Tout comme on a un addWeaponEffect dans le WeaponSystem on peut detecter que le computer s'applique sur les astero et declencher le scanned component
+✅ Trouver un moyen de faire en sorte que le clic sur un ordi n'active pas mais fasse une requete de clic?  
+✅ Rajouter une list de kind pour les ordis qui definit sur lesquels il s'appliquent  
+✅ Modifier le computer system pour qu'il regarde pas hasTargetDifferentFaction mais plutot hasTargetRightKind  
+✅ Tout comme on a un addWeaponEffect dans le WeaponSystem on peut detecter que le computer s'applique  sur les astero et declencher le scanned component
 
 ✅ Ne pas exposer la methode getEntity publiquement sur la IView : on doit passer par les systemes
 
-✅ Le LootComponent est piloté par un LootSystem
-✅ Dans le WeaponSystem, quand on damage une entité on cherche si elle a un composant loot et si oui on s'enregistre dans la liste des gens qui ont fait du dégâts
-✅ Le LootSystem s'occupe des entités qui sont mortes et distribue le loot a ceux qui se sont enregistré dans les dégâsses
-✅ Créer un PlayerComponent
-✅ Ajouter dans le PlayerShip un id qui correspond au player
-✅ Dans le DataSource on ajoute le PlayerComponent si le ship a un player id
+✅ Le LootComponent est piloté par un LootSystem  
+✅ Dans le WeaponSystem, quand on damage une entité on cherche si elle a un composant loot et si oui on s'enregistre dans la liste des gens qui ont fait du dégâts  
+✅ Le LootSystem s'occupe des entités qui sont mortes et distribue le loot a ceux qui se sont enregistré dans les dégâsses  
+✅ Créer un PlayerComponent  
+✅ Ajouter dans le PlayerShip un id qui correspond au player  
+✅ Dans le DataSource on ajoute le PlayerComponent si le ship a un player id  
 ✅ Le LootSystem prend en compte le PlayerComponent pour savoir s'il y a du loot à distribuer
 
-❌ Comment stocker ce loot ? Dans le repository ?
+❌ Comment stocker ce loot ? Dans le repository ?  
 ✅ Dans une autre entité qui serait le player et qui aurait un LockerComponent ? Une entite qui ne serait pas visible ? -> On a une entité player qui contient tout le locker en tant que components (y compris les resources)
 
-✅ Creer une nouvelle entite dans le DataSource qui correspond au player
-✅ Dans le DataSource on n'enregiste l'id non pas du player mais de cette entité dans le PlayerComponent
-✅ Le LootSystem recupère cette entité et ajoute le loot
-✅ Créer un LockerComponent
-✅ Créer un AsteroidRepository qui permet de recuperer le loot d'un asteroid
-❌ Créer un Loot qui a un type et un DbId qui correspond à un id dans l'un des repository (weapon, computer)
-❌ Le type d'un item est une enum class comme faction ou entity kind
-✅ Le LootComponent devrait avoir acces a l'item venant du AsteroidLootRepository
-✅ Modifier le Asteroid pour que la resource soit un id qui correspond au loot
-✅ Adapter le DataSource pour ajouter ca au LootComponent
-✅ Le LootComponent en plus du db id prend un type de loot en argument. Cela permet au LootSystem d'adapter correctement la distribution
-✅ Le LootComponent permet de retrouver le type et l'id
-❌ Le LootSystem ajoute le loot dans le LockerComponent du player en transferant l'id et le type au locker
-❌ Le LockerComponent détient une liste d'id avec leur type
-✅ Le LootSystem ajoute une entree dans le repository correspondant au type de loot
+✅ Creer une nouvelle entite dans le DataSource qui correspond au player  
+✅ Dans le DataSource on n'enregiste l'id non pas du player mais de cette entité dans le PlayerComponent  
+✅ Le LootSystem recupère cette entité et ajoute le loot  
+✅ Créer un LockerComponent  
+✅ Créer un AsteroidRepository qui permet de recuperer le loot d'un asteroid  
+❌ Créer un Loot qui a un type et un DbId qui correspond à un id dans l'un des repository (weapon, computer)  
+❌ Le type d'un item est une enum class comme faction ou entity kind  
+✅ Le LootComponent devrait avoir acces a l'item venant du AsteroidLootRepository  
+✅ Modifier le Asteroid pour que la resource soit un id qui correspond au loot  
+✅ Adapter le DataSource pour ajouter ca au LootComponent  
+✅ Le LootComponent en plus du db id prend un type de loot en argument. Cela permet au LootSystem d'adapter correctement la distribution  
+✅ Le LootComponent permet de retrouver le type et l'id  
+❌ Le LootSystem ajoute le loot dans le LockerComponent du player en transferant l'id et le type au locker  
+❌ Le LockerComponent détient une liste d'id avec leur type  
+✅ Le LootSystem ajoute une entree dans le repository correspondant au type de loot  
 ✅ Créer un PlayerResourceRepository qui retourne une struct resource avec un nom et une amount
 
-❌ A-t-on besoin du LockerComponent  ? -> A priori non
+❌ A-t-on besoin du LockerComponent ? -> A priori non
 
-✅ On pourrait attacher des composants resource a l'entité player, un par resource 
-✅ Le LootSystem pour les resources update ce composant au lieu d'update la db
+✅ On pourrait attacher des composants resource a l'entité player, un par resource  
+✅ Le LootSystem pour les resources update ce composant au lieu d'update la db  
 La UI peut aussi utiliser ce composant pour savoir combien de resource afficher
 
-✅ Supprimer les repositories du Coordinator
+✅ Supprimer les repositories du Coordinator  
 ✅ Rendre les repositories accessibles depuis le DataSource
 
-✅ Bullets
-✅ Changer la friction pour qu'elle multiplie le elapsedSeconds et pas la vitesse
-✅ Rendre le VelocityComponent capable de prendre une vitesse en paramètre de constructor: dans ce cas l'accélération est faire de telle sorte qu'elle match la friction
-✅ Rajouter une entrée Bullet dans le EntityKind
-✅ Le WeaponSystem si l'arme peut tirer créer une entité Bullet qui a une Velocity et une Transform et une valeur de dommage
-✅ Faire un système de rendu pour les bullets avec un sprite
-✅ Créer un DamageComponent qui contient la valeur de damage d'une bullet
-✅ Créer une BulletSystem qui prend en compte les bullets et quand elles arrivent trop près de leur cibles on les fait exploser : le code est le même que ce qu'il y a dans le WeaponSystem
-✅ Le BulletSystem marque la bullet pour destruction quand elle fait du dégât
-✅ Le BulletSystem change l'accélération de la Bullet pour toujours être dirigée vers la target
-✅ Quand la target meurt, la Bullet meurt aussi
-✅ Renommer le PlayerComponent en OwnerComponent
+✅ Bullets  
+✅ Changer la friction pour qu'elle multiplie le elapsedSeconds et pas la vitesse  
+✅ Rendre le VelocityComponent capable de prendre une vitesse en paramètre de constructor: dans ce cas l'accélération est faire de telle sorte qu'elle match la friction  
+✅ Rajouter une entrée Bullet dans le EntityKind  
+✅ Le WeaponSystem si l'arme peut tirer créer une entité Bullet qui a une Velocity et une Transform et une valeur de dommage  
+✅ Faire un système de rendu pour les bullets avec un sprite  
+✅ Créer un DamageComponent qui contient la valeur de damage d'une bullet  
+✅ Créer une BulletSystem qui prend en compte les bullets et quand elles arrivent trop près de leur cibles on les fait exploser : le code est le même que ce qu'il y a dans le WeaponSystem  
+✅ Le BulletSystem marque la bullet pour destruction quand elle fait du dégât  
+✅ Le BulletSystem change l'accélération de la Bullet pour toujours être dirigée vers la target  
+✅ Quand la target meurt, la Bullet meurt aussi  
+✅ Renommer le PlayerComponent en OwnerComponent  
 ✅ S'assurer que le BulletSystem s'enregistre dans le LootComponent avec le bon id (celui du ship, pas celui de la bullet)
 
 ✅ Le VelocityComponent ne marche pas comme il devrait. La friction et la vitesse sont pas terrible -> solved par un article et un Fixed mode pour la vitesse
 
-✅ Locker UI
-✅ Le plus simple est sûrement d'avoir accès aux repositories depuis la UI -> fait via les views
-✅ Créer un PlayerWeaponRepository, un ShipWeaponRepository
-✅ Modifier le DataSource pour que le ship retourné par PlayerShipRepository n'ait pas de weapon : elle sont retournées par une autre requête a ce ShipWeaponRepository puis au PlayerWeaponRepository
-✅ Faire pareil pour les ordinateurs
-✅ Eclater la UI de l'outpost en plus petits morceaux
+✅ Locker UI  
+✅ Le plus simple est sûrement d'avoir accès aux repositories depuis la UI -> fait via les views  
+✅ Créer un PlayerWeaponRepository, un ShipWeaponRepository  
+✅ Modifier le DataSource pour que le ship retourné par PlayerShipRepository n'ait pas de weapon : elle sont retournées par une autre requête a ce ShipWeaponRepository puis au PlayerWeaponRepository  
+✅ Faire pareil pour les ordinateurs  
+✅ Eclater la UI de l'outpost en plus petits morceaux  
 ✅ La UI interroge le PlayerResourceRepository pour avoir la liste des ressources. On récupère le nom et la quantité
 
-✅ La UI interroge le PlayerWeaponRepository pour récupérer la liste des armes. Elle croise ça avec le data de ShipWeaponRepository pour avoir la liste dans le Locker
-✅ On peut extraire cela dans la PlayerView et peut être la ShipView
-✅ Les menus sont juste composé d'un agrégat avec l'id de l'item pour l'instant
-✅ Ajouter un nom au computer et aux weapons
+✅ La UI interroge le PlayerWeaponRepository pour récupérer la liste des armes. Elle croise ça avec le data de ShipWeaponRepository pour avoir la liste dans le Locker  
+✅ On peut extraire cela dans la PlayerView et peut être la ShipView  
+✅ Les menus sont juste composé d'un agrégat avec l'id de l'item pour l'instant  
+✅ Ajouter un nom au computer et aux weapons  
 ✅ Afficher ce nom dans la UI
 
-✅ Shop UI
-✅ La UI interroge le WeaponRepository et le Computer repository pour récupérer la liste des templates de chaque type
-✅ On peut extraire ca dans la ShopView
-✅ Créer un ResourceRepository : il retourne une struct avec le nom de la resource et c'est tout
-✅ Créer un WeaponPriceRepository pour représenter le prix d'une weapon. Ce prix fait référence a des id de ressources (dans le ResourceRepository) et des quantités 
-✅ Pareil pour les ordis
-✅ La UI affiche juste le prix en resource avec le nom et une couleur pour chaque type d'item
+✅ Shop UI  
+✅ La UI interroge le WeaponRepository et le Computer repository pour récupérer la liste des templates de chaque type  
+✅ On peut extraire ca dans la ShopView  
+✅ Créer un ResourceRepository : il retourne une struct avec le nom de la resource et c'est tout  
+✅ Créer un WeaponPriceRepository pour représenter le prix d'une weapon. Ce prix fait référence a des id de ressources (dans le ResourceRepository) et des quantités  
+✅ Pareil pour les ordis  
+✅ La UI affiche juste le prix en resource avec le nom et une couleur pour chaque type d'item  
 ✅ Ajouter un ordi et une weapon a acheter
 
 ✅ UI pour le outpost
 
-Améliorer le systeme dans lequel le joueur evolue
-Autre vaisseaux dans le jeu
+Améliorer le systeme dans lequel le joueur evolue  
+Autre vaisseaux dans le jeu  
 DB pour les données
