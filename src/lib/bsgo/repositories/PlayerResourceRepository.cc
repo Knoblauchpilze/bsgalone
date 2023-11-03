@@ -12,17 +12,18 @@ PlayerResourceRepository::PlayerResourceRepository()
 auto PlayerResourceRepository::findOneById(const Uuid &resource) const -> PlayerResource
 {
   PlayerResource out;
-  out.resource = resource;
 
   switch (resource)
   {
     case Uuid{0}:
-      out.name   = "tylium";
-      out.amount = 1.2f;
+      out.resource = Uuid{1};
+      out.name     = "titane";
+      out.amount   = 1.2f;
       break;
     case Uuid{1}:
-      out.name   = "titane";
-      out.amount = 2.7f;
+      out.resource = Uuid{0};
+      out.name     = "tylium";
+      out.amount   = 2.7f;
       break;
     default:
       error("Resource " + str(resource) + " not found");
