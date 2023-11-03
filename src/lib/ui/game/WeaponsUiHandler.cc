@@ -77,28 +77,27 @@ void WeaponsUiHandler::generateWeaponsMenus(int width, int height)
   pos.x = width - weaponsCount * (dims.x + SPACING_IN_PIXELS);
   pos.y = height / 2;
 
-  olc::Pixel color = olc::Pixel{0, 0, 0, alpha::Transparent};
-  color.a          = alpha::SemiOpaque;
+  olc::Pixel transparentBg = olc::Pixel{0, 0, 0, alpha::Transparent};
 
   for (auto id = 0u; id < weaponsCount; ++id)
   {
     const auto text = "W" + std::to_string(id);
     const auto name = "weapon_" + std::to_string(id);
 
-    auto menu = generateSlotMenu(pos, dims, text, name, color, {olc::WHITE}, true);
+    auto menu = generateSlotMenu(pos, dims, text, name, transparentBg, {olc::WHITE}, true);
     menu->setSimpleAction([shipId, id](Game &g) { g.tryActivateWeapon(shipId, id); });
     m_weapons.push_back(menu);
 
-    const auto range = generateMenu(pos, dims, "range", "range", color, {olc::WHITE});
+    const auto range = generateMenu(pos, dims, "range", "range", transparentBg, {olc::WHITE});
     menu->addMenu(range);
     m_ranges.push_back(range);
-    auto damage = generateMenu(pos, dims, "min damage", "min_damage", color, {olc::WHITE});
+    auto damage = generateMenu(pos, dims, "min damage", "min_damage", transparentBg, {olc::WHITE});
     menu->addMenu(damage);
     m_damages.push_back(damage);
-    damage = generateMenu(pos, dims, "max damage", "max_damage", color, {olc::WHITE});
+    damage = generateMenu(pos, dims, "max damage", "max_damage", transparentBg, {olc::WHITE});
     menu->addMenu(damage);
     m_damages.push_back(damage);
-    const auto status = generateMenu(pos, dims, "status", "status", color, {olc::WHITE});
+    const auto status = generateMenu(pos, dims, "status", "status", transparentBg, {olc::WHITE});
     menu->addMenu(status);
     m_statuses.push_back(status);
 
@@ -111,6 +110,7 @@ void WeaponsUiHandler::updateWeaponMenu(const bsgo::WeaponSlotComponent &weapon,
   auto &menu = *m_weapons[id];
 
   auto bgColor = bgColorFromFiringState(weapon);
+  bgColor.a    = alpha::SemiOpaque;
   menu.setBackgroundColor(bgColor);
 
   auto &range = *m_ranges[id];

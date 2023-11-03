@@ -16,6 +16,7 @@ auto PlayerComputerRepository::findOneById(const Uuid &computer) const -> Player
   switch (computer)
   {
     case Uuid{0}:
+      out.name       = "Weapon buff";
       out.level      = 1;
       out.offensive  = false;
       out.powerCost  = 20.0f;
@@ -25,6 +26,7 @@ auto PlayerComputerRepository::findOneById(const Uuid &computer) const -> Player
       out.damageModifier = {1.5f};
       break;
     case Uuid{1}:
+      out.name       = "Scan";
       out.level      = 5;
       out.offensive  = true;
       out.powerCost  = 5.0f;
@@ -36,6 +38,7 @@ auto PlayerComputerRepository::findOneById(const Uuid &computer) const -> Player
       out.damageModifier = {};
       break;
     case Uuid{2}:
+      out.name       = "Weapon buff";
       out.level      = 6;
       out.offensive  = false;
       out.powerCost  = 18.0f;

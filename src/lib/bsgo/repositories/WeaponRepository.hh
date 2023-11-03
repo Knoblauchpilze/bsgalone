@@ -10,6 +10,8 @@ namespace bsgo {
 
 struct Weapon
 {
+  std::string name;
+
   float minDamage;
   float maxDamage;
 

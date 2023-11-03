@@ -29,6 +29,7 @@ class LockerUiHandler : public IUiHandler
   std::vector<MenuShPtr> m_weapons{};
   std::vector<MenuShPtr> m_computers{};
 
+  void initializeLayout();
   void generateResourcesMenus();
   void generateWeaponsMenus();
   void generateComputersMenus();

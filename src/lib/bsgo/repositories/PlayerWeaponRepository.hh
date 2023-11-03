@@ -11,6 +11,7 @@ namespace bsgo {
 
 struct PlayerWeapon
 {
+  std::string name;
   int level;
 
   float minDamage;

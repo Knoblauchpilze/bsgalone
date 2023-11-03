@@ -27,6 +27,7 @@ void LockerUiHandler::initializeMenus(const int width, const int height)
   const olc::vi2d dims{viewWidth, viewHeight};
   m_menu = generateMenu(pos, dims, "", "locker", olc::DARK_YELLOW, {olc::WHITE});
 
+  initializeLayout();
   generateResourcesMenus();
   generateWeaponsMenus();
   generateComputersMenus();
@@ -45,29 +46,84 @@ void LockerUiHandler::render(SpriteRenderer &engine) const
 
 void LockerUiHandler::updateUi() {}
 
+void LockerUiHandler::initializeLayout()
+{
+  const olc::vi2d pos{};
+  const olc::vi2d dims{10, 10};
+
+  const auto resources = m_playerView->getPlayerResources();
+  for (auto id = 0u; id < resources.size(); ++id)
+  {
+    auto text = "base_resource" + std::to_string(id);
+    auto resourceMenu
+      = generateSlotMenu(pos, dims, "", text, olc::VERY_DARK_GREEN, {olc::WHITE}, true);
+    m_menu->addMenu(resourceMenu);
+    m_resources.push_back(resourceMenu);
+  }
+
+  const auto weapons = m_playerView->getPlayerWeapons();
+  for (auto id = 0u; id < weapons.size(); ++id)
+  {
+    auto text       = "base_weapon" + std::to_string(id);
+    auto weaponMenu = generateSlotMenu(pos, dims, "", text, olc::VERY_DARK_RED, {olc::WHITE}, true);
+    m_menu->addMenu(weaponMenu);
+    m_weapons.push_back(weaponMenu);
+  }
+
+  const auto computers = m_playerView->getPlayerComputers();
+  for (auto id = 0u; id < computers.size(); ++id)
+  {
+    auto text = "base_computer" + std::to_string(id);
+    auto computerMenu
+      = generateSlotMenu(pos, dims, "", text, olc::VERY_DARK_BLUE, {olc::WHITE}, true);
+    m_menu->addMenu(computerMenu);
+    m_computers.push_back(computerMenu);
+  }
+}
+
 void LockerUiHandler::generateResourcesMenus()
 {
+  const olc::vi2d pos{};
+  const olc::vi2d dims{10, 10};
+  olc::Pixel transparentBg = olc::Pixel{0, 0, 0, alpha::Transparent};
+
   const auto resources = m_playerView->getPlayerResources();
+
+  auto id = 0;
   for (const auto &resource : resources)
   {
-    auto text = resource.name + ": " + floatToStr(std::floor(resource.amount), 0);
-    auto menu = generateMenu(olc::vi2d{}, olc::vi2d{}, text, resource.name, olc::VERY_DARK_GREEN);
-    m_menu->addMenu(menu);
-    m_resources.push_back(menu);
+    auto name = generateMenu(pos, dims, resource.name, "name", transparentBg);
+    m_resources[id]->addMenu(name);
+
+    const auto text = "Amount: " + floatToStr(std::floor(resource.amount), 0);
+    auto amount     = generateMenu(pos, dims, text, "amount", transparentBg);
+    m_resources[id]->addMenu(amount);
+
+    ++id;
   }
 }
 
 void LockerUiHandler::generateWeaponsMenus()
 {
+  const olc::vi2d pos{};
+  const olc::vi2d dims{10, 10};
+  olc::Pixel transparentBg = olc::Pixel{0, 0, 0, alpha::Transparent};
+
   const auto weapons = m_playerView->getPlayerWeapons();
-  auto id            = 0;
+
+  auto id = 0;
   for (const auto &weapon : weapons)
   {
-    auto text = "Level: " + std::to_string(weapon.level) + ", range " + floatToStr(weapon.range, 0);
-    const auto name = "weapon_" + std::to_string(id);
-    auto menu       = generateMenu(olc::vi2d{}, olc::vi2d{}, text, name, olc::VERY_DARK_RED);
-    m_menu->addMenu(menu);
-    m_weapons.push_back(menu);
+    auto name = generateMenu(pos, dims, weapon.name, "name", transparentBg);
+    m_weapons[id]->addMenu(name);
+
+    auto text  = "Level: " + std::to_string(weapon.level);
+    auto level = generateMenu(pos, dims, text, "level", transparentBg);
+    m_weapons[id]->addMenu(level);
+
+    text       = "Range: " + floatToStr(weapon.range, 0) + "m";
+    auto range = generateMenu(olc::vi2d{}, dims, text, "range", transparentBg);
+    m_weapons[id]->addMenu(range);
 
     ++id;
   }
@@ -75,19 +131,33 @@ void LockerUiHandler::generateWeaponsMenus()
 
 void LockerUiHandler::generateComputersMenus()
 {
+  const olc::vi2d pos{};
+  const olc::vi2d dims{10, 10};
+  olc::Pixel transparentBg = olc::Pixel{0, 0, 0, alpha::Transparent};
+
   const auto computers = m_playerView->getPlayerComputers();
-  auto id              = 0;
+
+  auto id = 0;
+
   for (const auto &computer : computers)
   {
-    auto text = "Level: " + std::to_string(computer.level);
+    auto name = generateMenu(pos, dims, computer.name, "name", transparentBg);
+    m_computers[id]->addMenu(name);
+
+    auto text  = "Level: " + std::to_string(computer.level);
+    auto level = generateMenu(pos, dims, text, "level", transparentBg);
+    m_computers[id]->addMenu(level);
+
     if (computer.range)
     {
-      text += ", range " + floatToStr(*computer.range, 0);
+      text = "Range: " + floatToStr(*computer.range, 0) + "m";
     }
-    const auto name = "computer_" + std::to_string(id);
-    auto menu       = generateMenu(olc::vi2d{}, olc::vi2d{}, text, name, olc::VERY_DARK_BLUE);
-    m_menu->addMenu(menu);
-    m_computers.push_back(menu);
+    else
+    {
+      text = "Area";
+    }
+    auto range = generateMenu(olc::vi2d{}, dims, text, "range", transparentBg);
+    m_computers[id]->addMenu(range);
 
     ++id;
   }

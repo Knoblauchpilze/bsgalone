@@ -77,15 +77,14 @@ void AbilitiesUiHandler::generateCompmutersMenus(int width, int height)
   pos.x = width - NUMBER_OF_ABILITIES * (dims.x + SPACING_IN_PIXELS);
   pos.y = height - SPACING_IN_PIXELS - dims.y;
 
-  olc::Pixel color = olc::Pixel{0, 0, 0, alpha::Transparent};
-  color.a          = alpha::SemiOpaque;
+  olc::Pixel transparentBg = olc::Pixel{0, 0, 0, alpha::Transparent};
 
   for (auto id = 0u; id < NUMBER_OF_ABILITIES; ++id)
   {
     const auto name = "ability_" + std::to_string(id);
 
     const auto enabled = id < computersCount;
-    auto menu          = generateSlotMenu(pos, dims, "", name, color, {olc::WHITE}, enabled);
+    auto menu = generateSlotMenu(pos, dims, "", name, transparentBg, {olc::WHITE}, enabled);
     if (enabled)
     {
       menu->setSimpleAction([shipId, id](Game &g) { g.tryActivateSlot(shipId, id); });
@@ -93,7 +92,7 @@ void AbilitiesUiHandler::generateCompmutersMenus(int width, int height)
       MenuShPtr range;
       if (ship.computers[id]->maybeRange())
       {
-        range = generateMenu(pos, dims, "range", "range", color, {olc::WHITE});
+        range = generateMenu(pos, dims, "range", "range", transparentBg, {olc::WHITE});
         menu->addMenu(range);
       }
       m_ranges.push_back(range);
@@ -101,12 +100,12 @@ void AbilitiesUiHandler::generateCompmutersMenus(int width, int height)
       MenuShPtr damage;
       if (ship.computers[id]->damageModifier())
       {
-        damage = generateMenu(pos, dims, "damage", "damage", color, {olc::WHITE});
+        damage = generateMenu(pos, dims, "damage", "damage", transparentBg, {olc::WHITE});
         menu->addMenu(damage);
       }
       m_damages.push_back(damage);
 
-      const auto status = generateMenu(pos, dims, "status", "status", color, {olc::WHITE});
+      const auto status = generateMenu(pos, dims, "status", "status", transparentBg, {olc::WHITE});
       menu->addMenu(status);
       m_statuses.push_back(status);
     }
@@ -123,6 +122,7 @@ void AbilitiesUiHandler::updateComputerMenu(const bsgo::ComputerSlotComponent &c
   auto &menu = *m_computers[id];
 
   auto bgColor = bgColorFromFiringState(computer);
+  bgColor.a    = alpha::SemiOpaque;
   menu.setBackgroundColor(bgColor);
 
   const auto range = computer.maybeRange();
