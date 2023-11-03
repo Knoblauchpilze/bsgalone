@@ -13,6 +13,7 @@ namespace bsgo {
 
 struct Computer
 {
+  std::string name;
   bool offensive;
   float powerCost;
   std::optional<float> range{};

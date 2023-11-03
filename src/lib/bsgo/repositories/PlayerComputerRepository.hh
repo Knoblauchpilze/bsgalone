@@ -13,6 +13,7 @@ namespace bsgo {
 
 struct PlayerComputer
 {
+  std::string name;
   int level;
 
   bool offensive;
