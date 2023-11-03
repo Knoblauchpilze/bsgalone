@@ -20,7 +20,16 @@ class ShopUiHandler : public IUiHandler
   void updateUi() override;
 
   private:
+  bsgo::ShopViewShPtr m_shopView;
+
   MenuShPtr m_menu{};
+  std::vector<MenuShPtr> m_items{};
+
+  void initializeLayout();
+  void generateItemsMenus();
+  void generateWeaponMenu(const int itemId, const bsgo::ShopItem &item);
+  void generateComputerMenu(const int itemId, const bsgo::ShopItem &item);
+  void generatePriceMenus(const int itemId, const bsgo::ShopItem &item);
 };
 
 using ShopUiHandlerPtr = std::unique_ptr<ShopUiHandler>;

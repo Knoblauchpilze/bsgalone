@@ -8,6 +8,11 @@ ComputerRepository::ComputerRepository()
   : IRepository("computer")
 {}
 
+auto ComputerRepository::findAll() const -> std::unordered_set<Uuid>
+{
+  return {Uuid{0}};
+}
+
 auto ComputerRepository::findOneById(const Uuid &computer) const -> Computer
 {
   Computer out;

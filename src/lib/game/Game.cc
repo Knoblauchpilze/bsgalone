@@ -274,6 +274,7 @@ void Game::initialize()
                                                           playerShipId,
                                                           m_coordinator,
                                                           repositories);
+  m_views.shopView   = std::make_shared<bsgo::ShopView>(m_coordinator, repositories);
 }
 
 bool Game::TimedMenu::update(bool active) noexcept

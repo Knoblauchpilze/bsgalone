@@ -75,7 +75,7 @@ void LockerUiHandler::initializeLayout()
   {
     auto text = "base_computer" + std::to_string(id);
     auto computerMenu
-      = generateSlotMenu(pos, dims, "", text, olc::VERY_DARK_BLUE, {olc::WHITE}, true);
+      = generateSlotMenu(pos, dims, "", text, olc::VERY_DARK_YELLOW, {olc::WHITE}, true);
     m_menu->addMenu(computerMenu);
     m_computers.push_back(computerMenu);
   }
