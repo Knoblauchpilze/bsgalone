@@ -35,7 +35,14 @@ void GameScreenInputHandler::performAction(float x, float y, const controls::Sta
   const auto ent  = m_systemView->getEntityAt(pos);
   auto playerShip = m_shipView->getPlayerShip();
 
-  if (ent)
+  auto visible{true};
+  if (ent && ent->exists<bsgo::StatusComponent>()
+      && bsgo::Status::VISIBLE != ent->statusComp().status())
+  {
+    visible = false;
+  }
+
+  if (ent && visible)
   {
     log("Found target " + ent->str());
     playerShip.targetComp().setTarget(ent->uuid);

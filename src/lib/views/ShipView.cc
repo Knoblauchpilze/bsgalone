@@ -50,7 +50,13 @@ auto ShipView::getShipsWithin(const IBoundingBox &bbox) const -> std::vector<Ent
   const auto uuids = m_coordinator->getEntitiesWithin(bbox, {EntityKind::SHIP});
   for (const auto &uuid : uuids)
   {
-    out.push_back(m_coordinator->getEntity(uuid));
+    const auto entity = m_coordinator->getEntity(uuid);
+    if (entity.exists<StatusComponent>() && Status::DOCKED == entity.statusComp().status())
+    {
+      continue;
+    }
+
+    out.push_back(entity);
   }
 
   return out;
