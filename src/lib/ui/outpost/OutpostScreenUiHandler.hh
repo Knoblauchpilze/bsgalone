@@ -23,6 +23,8 @@ class OutpostScreenUiHandler : public IUiHandler
   void updateUi() override;
 
   private:
+  bsgo::ShipViewShPtr m_shipView;
+
   enum MenuItem
   {
     UNDOCK     = 0,

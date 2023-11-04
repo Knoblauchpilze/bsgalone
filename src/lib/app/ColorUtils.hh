@@ -39,21 +39,29 @@ olc::Pixel modulate(const olc::Pixel &in, float factor) noexcept;
 namespace alpha {
 
 /// @brief - Alpha value for an opaque color.
-constexpr int Opaque = 255;
+constexpr uint8_t Opaque = 255;
 
 /// @brief - Alpha value for an almost opaque color.
-constexpr int AlmostOpaque = 192;
+constexpr uint8_t AlmostOpaque = 192;
 
 /// @brief - Alpha value for a semi opaque color.
-constexpr int SemiOpaque = 128;
+constexpr uint8_t SemiOpaque = 128;
 
 /// @brief - Alpha value for an almost transparent color.
-constexpr int AlmostTransparent = 64;
+constexpr uint8_t AlmostTransparent = 64;
 
 /// @brief - Alpha value for a transparent color.
-constexpr int Transparent = 0;
+constexpr uint8_t Transparent = 0;
 
 } // namespace alpha
+
+/// @brief - Return a modified version of the input color with the
+/// desired alpha value.
+/// @param in - the input color.
+/// @param alpha - the alpha to apply to the color.
+/// @return - the input color with the desired transparency.
+auto transparent(const olc::Pixel &in, const uint8_t alpha) -> olc::Pixel;
+
 } // namespace pge
 
 /// @brief - Provides a human readable display of a color.

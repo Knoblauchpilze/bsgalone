@@ -127,6 +127,7 @@ void DataSource::registerShip(Coordinator &coordinator, const Uuid &ship) const
   coordinator.addPower(ent, data.powerPoints, data.maxPowerPoints, data.powerRegen);
   coordinator.addTarget(ent);
   coordinator.addFaction(ent, data.faction);
+  coordinator.addStatus(ent, Status::VISIBLE);
   if (data.player && *data.player == m_playerId)
   {
     if (!m_playerEntityId)

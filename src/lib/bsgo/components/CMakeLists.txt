@@ -20,6 +20,7 @@ target_sources (bsgalone_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/ResourceComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/DamageComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/RemovalComponent.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/StatusComponent.cc
 	)
 
 target_include_directories (bsgalone_lib PUBLIC

@@ -28,8 +28,10 @@ class ShipView : public IView
 
   auto distanceToTarget() const -> float;
 
-  void tryActivateWeapon(const Uuid &ship, const int weaponId);
-  void tryActivateSlot(const Uuid &ship, const int slotId);
+  void tryActivateWeapon(const Uuid &ship, const int weaponId) const;
+  void tryActivateSlot(const Uuid &ship, const int slotId) const;
+  void dockPlayerShip() const;
+  void undockPlayerShip() const;
 
   private:
   Uuid m_playerShipId;

@@ -14,6 +14,7 @@
 #include "RemovalComponent.hh"
 #include "ResourceComponent.hh"
 #include "ScannedComponent.hh"
+#include "StatusComponent.hh"
 #include "TargetComponent.hh"
 #include "TransformComponent.hh"
 #include "Uuid.hh"
@@ -39,6 +40,7 @@ struct Entity
   std::optional<OwnerComponentShPtr> owner{};
   std::optional<DamageComponentShPtr> damage{};
   std::optional<RemovalComponentShPtr> removal{};
+  std::optional<StatusComponentShPtr> status{};
   std::vector<WeaponSlotComponentShPtr> weapons{};
   std::vector<ComputerSlotComponentShPtr> computers{};
   std::vector<EffectComponentShPtr> effects{};
@@ -66,6 +68,7 @@ struct Entity
   auto ownerComp() const -> const OwnerComponent &;
   auto damageComp() const -> const DamageComponent &;
   auto removalComp() const -> const RemovalComponent &;
+  auto statusComp() const -> const StatusComponent &;
 
   auto transformComp() -> TransformComponent &;
   auto velocityComp() -> VelocityComponent &;
@@ -75,6 +78,7 @@ struct Entity
   auto lootComp() -> LootComponent &;
   auto scannedComp() -> ScannedComponent &;
   auto removalComp() -> RemovalComponent &;
+  auto statusComp() -> StatusComponent &;
 };
 
 } // namespace bsgo
