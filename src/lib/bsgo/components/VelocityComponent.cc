@@ -40,6 +40,12 @@ void VelocityComponent::setSpeed(const Eigen::Vector3f &direction)
   m_speed                    = nDir * m_maxSpeed;
 }
 
+void VelocityComponent::immobilize()
+{
+  m_acceleration = Eigen::Vector3f::Zero();
+  m_speed        = Eigen::Vector3f::Zero();
+}
+
 void VelocityComponent::update(const float elapsedSeconds)
 {
   switch (m_speedMode)
@@ -57,12 +63,7 @@ void VelocityComponent::update(const float elapsedSeconds)
   }
 }
 
-void VelocityComponent::updateFixedSpeed(const float /*elapsedSeconds*/)
-{
-  // log("speed before friction is " + str(m_speed) + " due to accel " + str(m_acceleration));
-  // log("speed after friction is " + str(m_speed) + " due to friction " + str(friction));
-  // log("speed after clamp is " + str(m_speed) + " due to max speed " + std::to_string(m_maxSpeed));
-}
+void VelocityComponent::updateFixedSpeed(const float /*elapsedSeconds*/) {}
 
 void VelocityComponent::updateVariableSpeed(const float elapsedSeconds)
 {

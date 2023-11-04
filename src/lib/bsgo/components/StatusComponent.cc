@@ -13,6 +13,16 @@ auto StatusComponent::status() const -> Status
   return m_status;
 }
 
+bool StatusComponent::justChanged() const
+{
+  return m_justChanged;
+}
+
+void StatusComponent::resetChanged()
+{
+  m_justChanged = false;
+}
+
 auto StatusComponent::getElapsedSinceLastChange() const -> utils::Duration
 {
   return m_elapsedSinceLastChange;
@@ -21,6 +31,7 @@ auto StatusComponent::getElapsedSinceLastChange() const -> utils::Duration
 void StatusComponent::setStatus(const Status &status)
 {
   m_status                 = status;
+  m_justChanged            = true;
   m_elapsedSinceLastChange = utils::Duration{0};
 }
 

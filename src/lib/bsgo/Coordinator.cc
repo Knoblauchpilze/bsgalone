@@ -331,6 +331,9 @@ void Coordinator::update(float elapsedSeconds)
 
 void Coordinator::createSystems()
 {
+  auto status = std::make_unique<StatusSystem>();
+  m_systems.push_back(std::move(status));
+
   auto motion = std::make_unique<MotionSystem>();
   m_systems.push_back(std::move(motion));
 
@@ -357,9 +360,6 @@ void Coordinator::createSystems()
 
   auto loot = std::make_unique<LootSystem>();
   m_systems.push_back(std::move(loot));
-
-  auto status = std::make_unique<StatusSystem>();
-  m_systems.push_back(std::move(status));
 }
 
 bool Coordinator::hasExpectedKind(const Uuid &ent, const std::optional<EntityKind> &kind) const

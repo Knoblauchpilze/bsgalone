@@ -42,6 +42,8 @@ class VelocityComponent : public IComponent
   /// @param direction - the direction towards which the speed points to.
   void setSpeed(const Eigen::Vector3f &direction);
 
+  void immobilize();
+
   void update(const float elapsedSeconds) override;
 
   private:
