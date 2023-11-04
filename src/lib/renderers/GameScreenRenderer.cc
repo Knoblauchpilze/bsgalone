@@ -204,6 +204,8 @@ void GameScreenRenderer::renderShip(const bsgo::Entity &ship,
   const auto &transform = ship.transformComp();
   const auto pos        = transform.position();
 
+  const auto status = ship.statusComp().status();
+
   SpriteDesc t;
   t.x = pos(0);
   t.y = pos(1);
@@ -213,7 +215,22 @@ void GameScreenRenderer::renderShip(const bsgo::Entity &ship,
 
   t.sprite.pack   = m_class1TexturesPackId;
   t.sprite.sprite = {0, 0};
-  t.sprite.tint   = olc::WHITE;
+
+  switch (status)
+  {
+    case bsgo::Status::VISIBLE:
+      t.sprite.tint = olc::WHITE;
+      break;
+    case bsgo::Status::DOCKED:
+      t.sprite.tint = alpha::transparent(olc::WHITE, alpha::Transparent);
+      break;
+    case bsgo::Status::APPEARING:
+      t.sprite.tint = alpha::transparent(olc::WHITE, alpha::SemiOpaque);
+      break;
+    default:
+      error("Failed to render ship", "Unknown status " + str(status));
+      break;
+  }
 
   engine.drawRotatedSprite(t, state.cf);
 }

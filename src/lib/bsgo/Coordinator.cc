@@ -9,6 +9,7 @@
 #include "LootSystem.hh"
 #include "MotionSystem.hh"
 #include "PowerSystem.hh"
+#include "StatusSystem.hh"
 #include "TargetSystem.hh"
 #include "WeaponEffectComponent.hh"
 #include "WeaponSystem.hh"
@@ -143,6 +144,12 @@ void Coordinator::addRemoval(const Uuid &ent)
   m_components.removals[ent] = std::make_shared<RemovalComponent>();
 }
 
+void Coordinator::addStatus(const Uuid &ent, const Status &status)
+{
+  checkForOverrides(ent, "Status", m_components.statuses);
+  m_components.statuses[ent] = std::make_shared<StatusComponent>(status);
+}
+
 void Coordinator::addWeapon(const Uuid &ent, const PlayerWeapon &weapon)
 {
   checkEntityExist(ent, "Weapon");
@@ -216,6 +223,7 @@ auto Coordinator::getEntity(const Uuid &ent) const -> Entity
   out.owner     = getComponent(ent, m_components.owners);
   out.damage    = getComponent(ent, m_components.damages);
   out.removal   = getComponent(ent, m_components.removals);
+  out.status    = getComponent(ent, m_components.statuses);
 
   out.weapons   = getAllComponent(ent, m_components.weapons);
   out.computers = getAllComponent(ent, m_components.computers);
@@ -246,6 +254,7 @@ void Coordinator::deleteEntity(const Uuid &ent)
   m_components.owners.erase(ent);
   m_components.damages.erase(ent);
   m_components.removals.erase(ent);
+  m_components.statuses.erase(ent);
 
   m_components.weapons.erase(ent);
   m_components.computers.erase(ent);
@@ -348,6 +357,9 @@ void Coordinator::createSystems()
 
   auto loot = std::make_unique<LootSystem>();
   m_systems.push_back(std::move(loot));
+
+  auto status = std::make_unique<StatusSystem>();
+  m_systems.push_back(std::move(status));
 }
 
 bool Coordinator::hasExpectedKind(const Uuid &ent, const std::optional<EntityKind> &kind) const

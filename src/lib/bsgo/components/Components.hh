@@ -13,6 +13,7 @@
 #include "RemovalComponent.hh"
 #include "ResourceComponent.hh"
 #include "ScannedComponent.hh"
+#include "StatusComponent.hh"
 #include "TargetComponent.hh"
 #include "TransformComponent.hh"
 #include "Uuid.hh"
@@ -36,6 +37,7 @@ struct Components
   std::unordered_map<Uuid, OwnerComponentShPtr> owners{};
   std::unordered_map<Uuid, DamageComponentShPtr> damages{};
   std::unordered_map<Uuid, RemovalComponentShPtr> removals{};
+  std::unordered_map<Uuid, StatusComponentShPtr> statuses{};
   std::unordered_multimap<Uuid, WeaponSlotComponentShPtr> weapons{};
   std::unordered_multimap<Uuid, ComputerSlotComponentShPtr> computers{};
   std::unordered_multimap<Uuid, EffectComponentShPtr> effects{};

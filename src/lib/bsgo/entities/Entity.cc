@@ -136,6 +136,12 @@ bool Entity::exists<RemovalComponent>() const
   return details::checkComponentExists(removal);
 }
 
+template<>
+bool Entity::exists<StatusComponent>() const
+{
+  return details::checkComponentExists(status);
+}
+
 auto Entity::transformComp() const -> const TransformComponent &
 {
   return details::safeConstAccess(transform, *this, "Transform");
@@ -191,6 +197,11 @@ auto Entity::removalComp() const -> const RemovalComponent &
   return details::safeConstAccess(removal, *this, "Removal");
 }
 
+auto Entity::statusComp() const -> const StatusComponent &
+{
+  return details::safeConstAccess(status, *this, "Status");
+}
+
 auto Entity::transformComp() -> TransformComponent &
 {
   return details::safeAccess(transform, *this, "Transform");
@@ -229,6 +240,11 @@ auto Entity::scannedComp() -> ScannedComponent &
 auto Entity::removalComp() -> RemovalComponent &
 {
   return details::safeAccess(removal, *this, "Removal");
+}
+
+auto Entity::statusComp() -> StatusComponent &
+{
+  return details::safeAccess(status, *this, "Status");
 }
 
 } // namespace bsgo

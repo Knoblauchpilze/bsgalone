@@ -7,10 +7,16 @@ namespace pge {
 
 OutpostScreenUiHandler::OutpostScreenUiHandler(const bsgo::Views &views)
   : IUiHandler("outpost")
+  , m_shipView(views.shipView)
   , m_lockerUi(std::make_unique<LockerUiHandler>(views))
   , m_shopUi(std::make_unique<ShopUiHandler>(views))
   , m_hangarUi(std::make_unique<HangarUiHandler>(views))
-{}
+{
+  if (nullptr == m_shipView)
+  {
+    throw std::invalid_argument("Expected non null ship view");
+  }
+}
 
 void OutpostScreenUiHandler::initializeMenus(const int width, const int height)
 {
@@ -21,7 +27,10 @@ void OutpostScreenUiHandler::initializeMenus(const int width, const int height)
   const olc::vi2d dims{UNDOCK_BUTTON_WIDTH, 50};
   m_menus[UNDOCK]
     = generateMenu(pos, dims, "Undock", "undock", olc::VERY_DARK_GREY, {olc::WHITE}, true);
-  m_menus[UNDOCK]->setSimpleAction([this](Game &g) { g.setScreen(Screen::GAME); });
+  m_menus[UNDOCK]->setSimpleAction([this](Game &g) {
+    m_shipView->undockPlayerShip();
+    g.setScreen(Screen::GAME);
+  });
 
   generateGeneralMenu(width, height);
 

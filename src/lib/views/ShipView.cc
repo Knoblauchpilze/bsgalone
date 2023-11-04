@@ -71,7 +71,7 @@ auto ShipView::distanceToTarget() const -> float
   return (targetPos - playerPos).norm();
 }
 
-void ShipView::tryActivateWeapon(const Uuid &ship, const int weaponId)
+void ShipView::tryActivateWeapon(const Uuid &ship, const int weaponId) const
 {
   if (ship != m_playerShipEntityId)
   {
@@ -90,7 +90,7 @@ void ShipView::tryActivateWeapon(const Uuid &ship, const int weaponId)
   weapon->toggle();
 }
 
-void ShipView::tryActivateSlot(const Uuid &ship, const int slotId)
+void ShipView::tryActivateSlot(const Uuid &ship, const int slotId) const
 {
   if (ship != m_playerShipEntityId)
   {
@@ -107,6 +107,18 @@ void ShipView::tryActivateSlot(const Uuid &ship, const int slotId)
 
   const auto computer = data.computers[slotId];
   computer->registerFireRequest();
+}
+
+void ShipView::dockPlayerShip() const
+{
+  auto playerShip = getPlayerShip();
+  playerShip.statusComp().setStatus(Status::DOCKED);
+}
+
+void ShipView::undockPlayerShip() const
+{
+  auto playerShip = getPlayerShip();
+  playerShip.statusComp().setStatus(Status::APPEARING);
 }
 
 } // namespace bsgo
