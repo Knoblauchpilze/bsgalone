@@ -14,6 +14,8 @@ class StatusComponent : public IComponent
   ~StatusComponent() = default;
 
   auto status() const -> Status;
+  bool justChanged() const;
+  void resetChanged();
   auto getElapsedSinceLastChange() const -> utils::Duration;
   void setStatus(const Status &status);
 
@@ -21,6 +23,7 @@ class StatusComponent : public IComponent
 
   private:
   Status m_status;
+  bool m_justChanged{false};
   utils::Duration m_elapsedSinceLastChange{};
 };
 

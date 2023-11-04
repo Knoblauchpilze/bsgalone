@@ -14,6 +14,10 @@ class StatusSystem : public AbstractSystem
   void updateEntity(Entity &entity,
                     Coordinator &coordinator,
                     const float elapsedSeconds) const override;
+
+  private:
+  void handleAppearingState(Entity &entity, StatusComponent &statusComp) const;
+  void handleJustChangedState(Entity &entity, StatusComponent &statusComp) const;
 };
 
 } // namespace bsgo
