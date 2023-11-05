@@ -31,8 +31,10 @@ LootSystem::LootSystem()
 
 void LootSystem::updateEntity(Entity &entity,
                               Coordinator &coordinator,
-                              const float /*elapsedSeconds*/) const
+                              const float elapsedSeconds) const
 {
+  entity.lootComp().update(elapsedSeconds);
+
   const auto &health = entity.healthComp();
   if (health.isAlive())
   {
