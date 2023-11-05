@@ -11,11 +11,18 @@ ShipComputerRepository::ShipComputerRepository()
 
 auto ShipComputerRepository::findAllByShip(const Uuid &ship) const -> std::unordered_set<Uuid>
 {
-  if (ship != Uuid{0})
+  switch (ship)
   {
-    error("Ship " + str(ship) + " not found");
+    case Uuid{0}:
+      return {Uuid(0), Uuid(1)};
+    case Uuid{1}:
+      return {};
+    default:
+      error("Ship " + str(ship) + " not found");
+      break;
   }
-  return {Uuid(0), Uuid(1)};
+
+  return {};
 }
 
 } // namespace bsgo
