@@ -1,5 +1,6 @@
 
 #include "Coordinator.hh"
+#include "AISystem.hh"
 #include "BulletSystem.hh"
 #include "CircleBox.hh"
 #include "ComputerSystem.hh"
@@ -150,6 +151,12 @@ void Coordinator::addStatus(const Uuid &ent, const Status &status)
   m_components.statuses[ent] = std::make_shared<StatusComponent>(status);
 }
 
+void Coordinator::addAI(const Uuid &ent)
+{
+  checkForOverrides(ent, "AI", m_components.ais);
+  m_components.ais[ent] = std::make_shared<AIComponent>();
+}
+
 void Coordinator::addWeapon(const Uuid &ent, const PlayerWeapon &weapon)
 {
   checkEntityExist(ent, "Weapon");
@@ -224,6 +231,7 @@ auto Coordinator::getEntity(const Uuid &ent) const -> Entity
   out.damage    = getComponent(ent, m_components.damages);
   out.removal   = getComponent(ent, m_components.removals);
   out.status    = getComponent(ent, m_components.statuses);
+  out.ai        = getComponent(ent, m_components.ais);
 
   out.weapons   = getAllComponent(ent, m_components.weapons);
   out.computers = getAllComponent(ent, m_components.computers);
@@ -255,6 +263,7 @@ void Coordinator::deleteEntity(const Uuid &ent)
   m_components.damages.erase(ent);
   m_components.removals.erase(ent);
   m_components.statuses.erase(ent);
+  m_components.ais.erase(ent);
 
   m_components.weapons.erase(ent);
   m_components.computers.erase(ent);
@@ -348,6 +357,9 @@ void Coordinator::createSystems()
 
   auto bullet = std::make_unique<BulletSystem>();
   m_systems.push_back(std::move(bullet));
+
+  auto ai = std::make_unique<AISystem>();
+  m_systems.push_back(std::move(ai));
 
   auto target = std::make_unique<TargetSystem>();
   m_systems.push_back(std::move(target));

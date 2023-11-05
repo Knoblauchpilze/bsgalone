@@ -128,7 +128,12 @@ void DataSource::registerShip(Coordinator &coordinator, const Uuid &ship) const
   coordinator.addTarget(ent);
   coordinator.addFaction(ent, data.faction);
   coordinator.addStatus(ent, Status::VISIBLE);
-  if (data.player && *data.player == m_playerId)
+  if (!data.player)
+  {
+    log("haha");
+    coordinator.addAI(ent);
+  }
+  else if (*data.player == m_playerId)
   {
     if (!m_playerEntityId)
     {

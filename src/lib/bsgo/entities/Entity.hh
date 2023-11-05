@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "AIComponent.hh"
 #include "ComputerSlotComponent.hh"
 #include "DamageComponent.hh"
 #include "EffectComponent.hh"
@@ -41,6 +42,7 @@ struct Entity
   std::optional<DamageComponentShPtr> damage{};
   std::optional<RemovalComponentShPtr> removal{};
   std::optional<StatusComponentShPtr> status{};
+  std::optional<AIComponentShPtr> ai{};
   std::vector<WeaponSlotComponentShPtr> weapons{};
   std::vector<ComputerSlotComponentShPtr> computers{};
   std::vector<EffectComponentShPtr> effects{};
@@ -69,6 +71,7 @@ struct Entity
   auto damageComp() const -> const DamageComponent &;
   auto removalComp() const -> const RemovalComponent &;
   auto statusComp() const -> const StatusComponent &;
+  auto aiComp() const -> const AIComponent &;
 
   auto transformComp() -> TransformComponent &;
   auto velocityComp() -> VelocityComponent &;
@@ -79,6 +82,7 @@ struct Entity
   auto scannedComp() -> ScannedComponent &;
   auto removalComp() -> RemovalComponent &;
   auto statusComp() -> StatusComponent &;
+  auto aiComp() -> AIComponent &;
 };
 
 } // namespace bsgo
