@@ -142,6 +142,12 @@ bool Entity::exists<StatusComponent>() const
   return details::checkComponentExists(status);
 }
 
+template<>
+bool Entity::exists<AIComponent>() const
+{
+  return details::checkComponentExists(ai);
+}
+
 auto Entity::transformComp() const -> const TransformComponent &
 {
   return details::safeConstAccess(transform, *this, "Transform");
@@ -202,6 +208,11 @@ auto Entity::statusComp() const -> const StatusComponent &
   return details::safeConstAccess(status, *this, "Status");
 }
 
+auto Entity::aiComp() const -> const AIComponent &
+{
+  return details::safeConstAccess(ai, *this, "AI");
+}
+
 auto Entity::transformComp() -> TransformComponent &
 {
   return details::safeAccess(transform, *this, "Transform");
@@ -245,6 +256,11 @@ auto Entity::removalComp() -> RemovalComponent &
 auto Entity::statusComp() -> StatusComponent &
 {
   return details::safeAccess(status, *this, "Status");
+}
+
+auto Entity::aiComp() -> AIComponent &
+{
+  return details::safeAccess(ai, *this, "AI");
 }
 
 } // namespace bsgo

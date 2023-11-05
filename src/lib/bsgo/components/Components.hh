@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "AIComponent.hh"
 #include "ComputerSlotComponent.hh"
 #include "DamageComponent.hh"
 #include "EffectComponent.hh"
@@ -38,6 +39,7 @@ struct Components
   std::unordered_map<Uuid, DamageComponentShPtr> damages{};
   std::unordered_map<Uuid, RemovalComponentShPtr> removals{};
   std::unordered_map<Uuid, StatusComponentShPtr> statuses{};
+  std::unordered_map<Uuid, AIComponentShPtr> ais{};
   std::unordered_multimap<Uuid, WeaponSlotComponentShPtr> weapons{};
   std::unordered_multimap<Uuid, ComputerSlotComponentShPtr> computers{};
   std::unordered_multimap<Uuid, EffectComponentShPtr> effects{};
