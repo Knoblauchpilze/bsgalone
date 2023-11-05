@@ -204,8 +204,6 @@ void GameScreenRenderer::renderShip(const bsgo::Entity &ship,
   const auto &transform = ship.transformComp();
   const auto pos        = transform.position();
 
-  const auto status = ship.statusComp().status();
-
   SpriteDesc t;
   t.x = pos(0);
   t.y = pos(1);
@@ -216,16 +214,32 @@ void GameScreenRenderer::renderShip(const bsgo::Entity &ship,
   t.sprite.pack   = m_class1TexturesPackId;
   t.sprite.sprite = {0, 0};
 
+  const auto faction = ship.factionComp().faction();
+  olc::Pixel tint{olc::WHITE};
+  switch (faction)
+  {
+    case bsgo::Faction::COLONIAL:
+      tint = olc::Pixel{153, 193, 241};
+      break;
+    case bsgo::Faction::CYLON:
+      tint = olc::Pixel{191, 64, 64};
+      break;
+    default:
+      error("Failed to render ship", "Unknown faction " + str(faction));
+      break;
+  }
+
+  const auto status = ship.statusComp().status();
   switch (status)
   {
     case bsgo::Status::VISIBLE:
-      t.sprite.tint = olc::WHITE;
+      t.sprite.tint = tint;
       break;
     case bsgo::Status::DOCKED:
-      t.sprite.tint = alpha::transparent(olc::WHITE, alpha::Transparent);
+      t.sprite.tint = alpha::transparent(tint, alpha::Transparent);
       break;
     case bsgo::Status::APPEARING:
-      t.sprite.tint = alpha::transparent(olc::WHITE, alpha::SemiOpaque);
+      t.sprite.tint = alpha::transparent(tint, alpha::SemiOpaque);
       break;
     default:
       error("Failed to render ship", "Unknown status " + str(status));
