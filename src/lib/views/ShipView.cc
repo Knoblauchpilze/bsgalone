@@ -77,6 +77,11 @@ auto ShipView::distanceToTarget() const -> float
   return (targetPos - playerPos).norm();
 }
 
+auto ShipView::getAbilitiesCount() const -> int
+{
+  return getPlayerShip().computers.size();
+}
+
 void ShipView::tryActivateWeapon(const Uuid &ship, const int weaponId) const
 {
   if (ship != m_playerShipEntityId)

@@ -278,6 +278,19 @@ auto PGEApp::handleInputs() -> PGEApp::InputChanges
   b                                  = GetKey(olc::G);
   m_controls.keys[controls::keys::G] = b.bReleased;
 
+  b                                   = GetKey(olc::W);
+  m_controls.keys[controls::keys::W]  = b.bReleased;
+  b                                   = GetKey(olc::X);
+  m_controls.keys[controls::keys::X]  = b.bReleased;
+  b                                   = GetKey(olc::C);
+  m_controls.keys[controls::keys::C]  = b.bReleased;
+  b                                   = GetKey(olc::V);
+  m_controls.keys[controls::keys::V]  = b.bReleased;
+  b                                   = GetKey(olc::K1);
+  m_controls.keys[controls::keys::K1] = b.bReleased;
+  b                                   = GetKey(olc::K2);
+  m_controls.keys[controls::keys::K2] = b.bReleased;
+
   b                = GetKey(olc::TAB);
   m_controls.tab   = b.bReleased;
   b                = GetKey(olc::SHIFT);
