@@ -26,6 +26,13 @@ enum Keys
   M,
   G,
 
+  W,
+  X,
+  C,
+  V,
+  K1,
+  K2,
+
   KEYS_COUNT
 };
 

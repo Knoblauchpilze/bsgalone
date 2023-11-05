@@ -27,6 +27,7 @@ class ShipView : public IView
   auto getShipsWithin(const IBoundingBox &bbox) const -> std::vector<Entity>;
 
   auto distanceToTarget() const -> float;
+  auto getAbilitiesCount() const -> int;
 
   void tryActivateWeapon(const Uuid &ship, const int weaponId) const;
   void tryActivateSlot(const Uuid &ship, const int slotId) const;
