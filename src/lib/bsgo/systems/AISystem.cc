@@ -17,7 +17,11 @@ void AISystem::updateEntity(Entity &entity,
                             Coordinator & /*coordinator*/,
                             const float elapsedSeconds) const
 {
-  entity.aiComp().update(elapsedSeconds);
+  auto &aiComp = entity.aiComp();
+  aiComp.update(elapsedSeconds);
+
+  TickData data{.ent = entity};
+  aiComp.behavior().tick(data);
 }
 
 } // namespace bsgo
