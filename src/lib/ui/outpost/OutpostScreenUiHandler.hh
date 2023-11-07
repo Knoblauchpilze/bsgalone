@@ -14,7 +14,7 @@ class OutpostScreenUiHandler : public IUiHandler
 {
   public:
   OutpostScreenUiHandler(const bsgo::Views &views);
-  virtual ~OutpostScreenUiHandler() = default;
+  ~OutpostScreenUiHandler() override = default;
 
   void initializeMenus(const int width, const int height) override;
   auto processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions)

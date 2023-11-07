@@ -11,7 +11,7 @@ class ShopUiHandler : public IUiHandler
 {
   public:
   ShopUiHandler(const bsgo::Views &views);
-  virtual ~ShopUiHandler() = default;
+  ~ShopUiHandler() override = default;
 
   void initializeMenus(const int width, const int height) override;
   auto processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions)

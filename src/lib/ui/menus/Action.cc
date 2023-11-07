@@ -12,8 +12,6 @@ Action::Action(const action::Process &cb, const std::string &name)
   setService("action");
 }
 
-Action::~Action() {}
-
 void Action::apply(Game &g) const
 {
   m_callback(g);

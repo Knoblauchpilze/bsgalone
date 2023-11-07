@@ -10,7 +10,7 @@ class FactionComponent : public IComponent
 {
   public:
   FactionComponent(const Faction &faction);
-  ~FactionComponent() = default;
+  ~FactionComponent() override = default;
 
   auto faction() const noexcept -> Faction;
 
