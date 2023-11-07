@@ -1,4 +1,16 @@
 
+target_include_directories (bsgalone_lib PUBLIC
+	"${CMAKE_CURRENT_SOURCE_DIR}"
+	)
+
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/tree
+	)
+
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/behavior
+	)
+
 target_sources (bsgalone_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/SystemUtils.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ISystem.cc
@@ -14,8 +26,4 @@ target_sources (bsgalone_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/LootSystem.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/BulletSystem.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/StatusSystem.cc
-	)
-
-target_include_directories (bsgalone_lib PUBLIC
-	"${CMAKE_CURRENT_SOURCE_DIR}"
-	)
+)
