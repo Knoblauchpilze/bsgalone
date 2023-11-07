@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "INode.hh"
 #include "Repositories.hh"
 #include <core_utils/CoreObject.hh>
 
@@ -42,6 +43,8 @@ class DataSource : public utils::CoreObject
   void registerShipComputers(Coordinator &coordinator,
                              const Uuid &ship,
                              const Uuid &shipEntity) const;
+
+  auto generateBehaviorTree(const Uuid &entity, const Eigen::Vector3f &center) const -> INodePtr;
 };
 
 } // namespace bsgo

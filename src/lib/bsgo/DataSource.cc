@@ -2,6 +2,12 @@
 #include "DataSource.hh"
 #include "CircleBox.hh"
 #include "Coordinator.hh"
+#include "VectorUtils.hh"
+#include <core_utils/RNG.hh>
+
+#include "RepeaterNode.hh"
+#include "SequenceNode.hh"
+#include "TargetNode.hh"
 
 namespace bsgo {
 
@@ -130,8 +136,7 @@ void DataSource::registerShip(Coordinator &coordinator, const Uuid &ship) const
   coordinator.addStatus(ent, Status::VISIBLE);
   if (!data.player)
   {
-    log("haha");
-    coordinator.addAI(ent);
+    coordinator.addAI(ent, generateBehaviorTree(ship, data.position));
   }
   else if (*data.player == m_playerId)
   {
@@ -194,6 +199,45 @@ void DataSource::registerShipComputers(Coordinator &coordinator,
     const auto data = m_repositories.playerComputerRepository->findOneById(computer);
     coordinator.addComputer(shipEntity, data);
   }
+}
+
+auto DataSource::generateBehaviorTree(const Uuid &entity, const Eigen::Vector3f &center) const
+  -> INodePtr
+{
+  constexpr auto RADIUS_TO_PICK_A_TARGET = 5.0f;
+  utils::RNG rng(entity);
+
+  auto dx                       = rng.rndFloat(-RADIUS_TO_PICK_A_TARGET, RADIUS_TO_PICK_A_TARGET);
+  auto dy                       = rng.rndFloat(-RADIUS_TO_PICK_A_TARGET, RADIUS_TO_PICK_A_TARGET);
+  const Eigen::Vector3f target1 = center + Eigen::Vector3f(dx, dy, 0.0f);
+  log("Picked first target " + str(target1) + " for " + str(entity));
+
+  dx                            = rng.rndFloat(-RADIUS_TO_PICK_A_TARGET, RADIUS_TO_PICK_A_TARGET);
+  dy                            = rng.rndFloat(-RADIUS_TO_PICK_A_TARGET, RADIUS_TO_PICK_A_TARGET);
+  const Eigen::Vector3f target2 = center + Eigen::Vector3f(dx, dy, 0.0f);
+  log("Picked second target " + str(target2) + " for " + str(entity));
+
+  dx                            = rng.rndFloat(-RADIUS_TO_PICK_A_TARGET, RADIUS_TO_PICK_A_TARGET);
+  dy                            = rng.rndFloat(-RADIUS_TO_PICK_A_TARGET, RADIUS_TO_PICK_A_TARGET);
+  const Eigen::Vector3f target3 = center + Eigen::Vector3f(dx, dy, 0.0f);
+  log("Picked third target " + str(target3) + " for " + str(entity));
+
+  dx                            = rng.rndFloat(-RADIUS_TO_PICK_A_TARGET, RADIUS_TO_PICK_A_TARGET);
+  dy                            = rng.rndFloat(-RADIUS_TO_PICK_A_TARGET, RADIUS_TO_PICK_A_TARGET);
+  const Eigen::Vector3f target4 = center + Eigen::Vector3f(dx, dy, 0.0f);
+  log("Picked fourth target " + str(target4) + " for " + str(entity));
+
+  auto targetNode1 = std::make_unique<TargetNode>(target1);
+  auto targetNode2 = std::make_unique<TargetNode>(target2);
+  auto targetNode3 = std::make_unique<TargetNode>(target3);
+  auto targetNode4 = std::make_unique<TargetNode>(target4);
+  auto sequence    = std::make_unique<SequenceNode>();
+  sequence->addChild(std::move(targetNode1));
+  sequence->addChild(std::move(targetNode2));
+  sequence->addChild(std::move(targetNode3));
+  sequence->addChild(std::move(targetNode4));
+  auto repeater = std::make_unique<RepeaterNode>(std::move(sequence));
+  return repeater;
 }
 
 } // namespace bsgo
