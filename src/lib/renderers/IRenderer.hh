@@ -14,7 +14,7 @@ class IRenderer : public utils::CoreObject
 {
   public:
   IRenderer(const std::string &name);
-  virtual ~IRenderer() = default;
+  ~IRenderer() override = default;
 
   virtual void loadResources(int width, int height, sprites::TexturePack &texturesLoader) = 0;
   virtual void render(SpriteRenderer &engine,

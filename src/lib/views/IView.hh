@@ -15,7 +15,7 @@ class IView : public utils::CoreObject
   IView(const std::string &name,
         const CoordinatorShPtr &coordinator,
         const Repositories &repositories);
-  virtual ~IView() = default;
+  ~IView() override = default;
 
   protected:
   CoordinatorShPtr m_coordinator;

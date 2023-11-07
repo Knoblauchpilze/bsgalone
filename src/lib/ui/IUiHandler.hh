@@ -17,7 +17,7 @@ class IUiHandler : public utils::CoreObject
 {
   public:
   IUiHandler(const std::string &name);
-  virtual ~IUiHandler() = default;
+  ~IUiHandler() override = default;
 
   virtual void initializeMenus(const int width, const int height) = 0;
   virtual auto processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions)

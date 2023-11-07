@@ -7,7 +7,8 @@
 namespace bsgo {
 
 TransformComponent::TransformComponent(IBoundingBoxShPtr bbox)
-  : m_bbox(std::move(bbox))
+  : IComponent("transform")
+  , m_bbox(std::move(bbox))
 {}
 
 auto TransformComponent::position() const -> Eigen::Vector3f
@@ -57,5 +58,7 @@ void TransformComponent::setHeading(const float heading)
 {
   m_heading = heading;
 }
+
+void TransformComponent::update(const float /*elapsedSeconds*/) {}
 
 } // namespace bsgo

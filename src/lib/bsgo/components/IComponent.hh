@@ -10,7 +10,7 @@ class IComponent : public utils::CoreObject
 {
   public:
   IComponent(const std::string &name);
-  virtual ~IComponent() = default;
+  ~IComponent() override = default;
 
   virtual void update(const float elapsedSeconds) = 0;
 };

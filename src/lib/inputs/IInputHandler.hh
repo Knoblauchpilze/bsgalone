@@ -13,7 +13,7 @@ class IInputHandler : public utils::CoreObject
 {
   public:
   IInputHandler(const std::string &name);
-  virtual ~IInputHandler() = default;
+  ~IInputHandler() override = default;
 
   virtual void processUserInput(const controls::State &c, CoordinateFrame &frame) = 0;
   virtual void performAction(float x, float y, const controls::State &state)      = 0;

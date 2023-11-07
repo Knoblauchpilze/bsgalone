@@ -13,7 +13,7 @@ class ISystem : public utils::CoreObject
 {
   public:
   ISystem(const std::string &name);
-  virtual ~ISystem() = default;
+  ~ISystem() override = default;
 
   virtual void update(Coordinator &coordinator, const float elapsedSeconds) const = 0;
 };

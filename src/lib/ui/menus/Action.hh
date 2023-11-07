@@ -25,7 +25,7 @@ class Action : public utils::CoreObject
   /// @param name - the name of the action (for logging purposes).
   Action(const action::Process &cb, const std::string &name = "action");
 
-  virtual ~Action();
+  ~Action() override = default;
 
   /// @brief - Interface method allowing to perform an action. Nothing is known
   /// of the actual process performed by the action and we don't need to.

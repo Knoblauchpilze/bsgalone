@@ -12,7 +12,7 @@ class TargetComponent : public IComponent
   public:
   TargetComponent();
   TargetComponent(const Uuid &target);
-  ~TargetComponent() = default;
+  ~TargetComponent() override = default;
 
   auto target() const -> std::optional<Uuid>;
   void clearTarget();

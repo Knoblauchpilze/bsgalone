@@ -10,7 +10,7 @@ class KindComponent : public IComponent
 {
   public:
   KindComponent(const EntityKind &kind);
-  ~KindComponent() = default;
+  ~KindComponent() override = default;
 
   auto kind() const noexcept -> EntityKind;
 

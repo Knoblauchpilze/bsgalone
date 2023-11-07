@@ -12,7 +12,7 @@ class GameScreenInputHandler : public IInputHandler
 {
   public:
   GameScreenInputHandler(const bsgo::Views &views);
-  virtual ~GameScreenInputHandler() = default;
+  ~GameScreenInputHandler() override = default;
 
   void processUserInput(const controls::State &c, CoordinateFrame &frame) override;
   void performAction(float x, float y, const controls::State &state) override;

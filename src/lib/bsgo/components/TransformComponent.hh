@@ -2,15 +2,15 @@
 #pragma once
 
 #include "IBoundingBox.hh"
-#include <memory>
+#include "IComponent.hh"
 
 namespace bsgo {
 
-class TransformComponent
+class TransformComponent : public IComponent
 {
   public:
   TransformComponent(IBoundingBoxShPtr bbox);
-  ~TransformComponent() = default;
+  ~TransformComponent() override = default;
 
   auto position() const -> Eigen::Vector3f;
   auto size() const -> float;
@@ -19,6 +19,8 @@ class TransformComponent
 
   void translate(const Eigen::Vector3f &delta);
   void setHeading(const float heading);
+
+  void update(const float elapsedSeconds) override;
 
   private:
   IBoundingBoxShPtr m_bbox{};

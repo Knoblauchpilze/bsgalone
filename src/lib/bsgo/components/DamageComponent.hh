@@ -9,7 +9,7 @@ class DamageComponent : public IComponent
 {
   public:
   DamageComponent(const float damage);
-  ~DamageComponent() = default;
+  ~DamageComponent() override = default;
 
   auto damage() const noexcept -> float;
 

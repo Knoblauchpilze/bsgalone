@@ -10,7 +10,7 @@ class LoginScreenUiHandler : public IUiHandler
 {
   public:
   LoginScreenUiHandler();
-  virtual ~LoginScreenUiHandler() = default;
+  ~LoginScreenUiHandler() override = default;
 
   void initializeMenus(const int width, const int height) override;
   auto processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions)
