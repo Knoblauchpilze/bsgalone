@@ -1,7 +1,7 @@
 
 #include "TargetNode.hh"
 #include "Entity.hh"
-
+#include "NodeUtils.hh"
 #include "VectorUtils.hh"
 
 namespace bsgo {
@@ -23,19 +23,12 @@ void TargetNode::run(const TickData &data)
     return;
   }
 
-  const auto &transform                        = data.ent.transformComp();
-  const Eigen::Vector3f toTarget               = m_target - transform.position();
-  const auto d                                 = toTarget.norm();
-  constexpr auto THRESHOLD_TO_ARRIVE_AT_TARGET = 0.5f;
-  if (d < THRESHOLD_TO_ARRIVE_AT_TARGET)
+  const auto reachedTarget = moveTowardsTarget(data.ent, m_target);
+  if (reachedTarget)
   {
-    log("Reached target " + str(m_target) + " (d: " + std::to_string(d) + ")");
+    log("Reached target " + str(m_target));
     finish();
-    return;
   }
-
-  auto &velocity = data.ent.velocityComp();
-  velocity.accelerate(toTarget.normalized());
 }
 
 } // namespace bsgo

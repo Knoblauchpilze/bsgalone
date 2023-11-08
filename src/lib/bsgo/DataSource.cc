@@ -5,9 +5,15 @@
 #include "VectorUtils.hh"
 #include <core_utils/RNG.hh>
 
+#include "FallbackNode.hh"
+#include "FireNode.hh"
+#include "FollowTargetNode.hh"
+#include "PickTargetNode.hh"
 #include "RepeaterNode.hh"
 #include "SequenceNode.hh"
 #include "TargetNode.hh"
+
+#include <iostream>
 
 namespace bsgo {
 
@@ -227,16 +233,31 @@ auto DataSource::generateBehaviorTree(const Uuid &entity, const Eigen::Vector3f 
   const Eigen::Vector3f target4 = center + Eigen::Vector3f(dx, dy, 0.0f);
   log("Picked fourth target " + str(target4) + " for " + str(entity));
 
-  auto targetNode1 = std::make_unique<TargetNode>(target1);
-  auto targetNode2 = std::make_unique<TargetNode>(target2);
-  auto targetNode3 = std::make_unique<TargetNode>(target3);
-  auto targetNode4 = std::make_unique<TargetNode>(target4);
-  auto sequence    = std::make_unique<SequenceNode>();
-  sequence->addChild(std::move(targetNode1));
-  sequence->addChild(std::move(targetNode2));
-  sequence->addChild(std::move(targetNode3));
-  sequence->addChild(std::move(targetNode4));
-  auto repeater = std::make_unique<RepeaterNode>(std::move(sequence));
+  auto targetNode1  = std::make_unique<TargetNode>(target1);
+  auto targetNode2  = std::make_unique<TargetNode>(target2);
+  auto targetNode3  = std::make_unique<TargetNode>(target3);
+  auto targetNode4  = std::make_unique<TargetNode>(target4);
+  auto sequenceIdle = std::make_unique<SequenceNode>();
+  sequenceIdle->addChild(std::move(targetNode1));
+  sequenceIdle->addChild(std::move(targetNode2));
+  sequenceIdle->addChild(std::move(targetNode3));
+  sequenceIdle->addChild(std::move(targetNode4));
+
+  auto pickTarget = std::make_unique<PickTargetNode>();
+  auto target     = std::make_unique<FollowTargetNode>();
+  auto fire       = std::make_unique<FireNode>();
+
+  auto sequenceAttack = std::make_unique<SequenceNode>();
+  sequenceAttack->addChild(std::move(pickTarget));
+  sequenceAttack->addChild(std::move(target));
+  sequenceAttack->addChild(std::move(fire));
+
+  auto fallbackNode = std::make_unique<FallbackNode>();
+  fallbackNode->addChild(std::move(sequenceAttack));
+  fallbackNode->addChild(std::move(sequenceIdle));
+
+  auto repeater = std::make_unique<RepeaterNode>(std::move(fallbackNode));
+
   return repeater;
 }
 

@@ -55,6 +55,8 @@ class Coordinator : public utils::CoreObject
 
   using EntityPredicate = std::function<bool(const Entity &entity)>;
   auto getEntitiesSatistying(const EntityPredicate &predicate) const -> std::vector<Entity>;
+  auto getEntitiesWithinSatistying(const IBoundingBox &bbox, const EntityPredicate &predicate) const
+    -> std::vector<Entity>;
 
   void update(float elapsedSeconds);
 

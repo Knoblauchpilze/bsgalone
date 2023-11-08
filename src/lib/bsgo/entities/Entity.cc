@@ -1,5 +1,6 @@
 
 #include "Entity.hh"
+#include "VectorUtils.hh"
 
 namespace bsgo {
 namespace details {
@@ -55,15 +56,18 @@ auto Entity::str() const noexcept -> std::string
   out += ",";
   out += bsgo::str(kind->kind());
 
+  if (faction)
+  {
+    const auto f = (*faction)->faction();
+    out += ",";
+    out += bsgo::str(f);
+  }
+
   if (transform)
   {
     const auto p = (*transform)->position();
     out += ",";
-    out += std::to_string(p(0));
-    out += "x";
-    out += std::to_string(p(1));
-    out += "x";
-    out += std::to_string(p(2));
+    out += bsgo::str(p);
   }
 
   out += "]";

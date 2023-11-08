@@ -14,13 +14,13 @@ AISystem::AISystem()
 {}
 
 void AISystem::updateEntity(Entity &entity,
-                            Coordinator & /*coordinator*/,
+                            Coordinator &coordinator,
                             const float elapsedSeconds) const
 {
   auto &aiComp = entity.aiComp();
   aiComp.update(elapsedSeconds);
 
-  TickData data{.ent = entity};
+  TickData data{.ent = entity, .coordinator = coordinator};
   aiComp.behavior().tick(data);
 }
 
