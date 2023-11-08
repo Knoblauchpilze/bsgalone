@@ -6,7 +6,7 @@
 
 namespace bsgo {
 
-using Condition = std::function<bool(TickData)>;
+using Condition = std::function<bool(const TickData &)>;
 
 class ConditionNode : public INode
 {

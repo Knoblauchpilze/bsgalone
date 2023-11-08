@@ -16,6 +16,8 @@
 #include "WeaponSystem.hh"
 #include <unordered_set>
 
+#include "VectorUtils.hh"
+
 namespace bsgo {
 namespace {
 template<typename ComponentType>
@@ -317,6 +319,26 @@ auto Coordinator::getEntitiesSatistying(const EntityPredicate &predicate) const
   std::vector<Entity> out;
 
   for (const auto &id : m_entities)
+  {
+    const auto ent = getEntity(id);
+    if (predicate(ent))
+    {
+      out.push_back(ent);
+    }
+  }
+
+  return out;
+}
+
+auto Coordinator::getEntitiesWithinSatistying(const IBoundingBox &bbox,
+                                              const EntityPredicate &predicate) const
+  -> std::vector<Entity>
+{
+  const auto entities = getEntitiesWithin(bbox);
+
+  std::vector<Entity> out;
+
+  for (const auto &id : entities)
   {
     const auto ent = getEntity(id);
     if (predicate(ent))
