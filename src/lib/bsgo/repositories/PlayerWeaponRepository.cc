@@ -45,6 +45,12 @@ auto PlayerWeaponRepository::findOneById(const Uuid &weapon) const -> PlayerWeap
       out.minDamage = 1.7f;
       out.maxDamage = 17.0f;
       break;
+    case Uuid{4}:
+      out.name      = "Medium range cannon";
+      out.level     = 20;
+      out.minDamage = 2.5f;
+      out.maxDamage = 25.0f;
+      break;
     default:
       error("Weapon " + str(weapon) + " not found");
       break;
