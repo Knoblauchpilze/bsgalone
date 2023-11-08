@@ -6,7 +6,7 @@ namespace bsgo {
 LeafNode::LeafNode(const std::string &name)
   : INode(name)
 {
-  setService("leaf");
+  addModule("leaf");
 }
 
 auto LeafNode::tick(const TickData &data) -> NodeState
