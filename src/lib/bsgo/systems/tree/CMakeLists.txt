@@ -11,4 +11,5 @@ target_sources (bsgalone_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/SequenceNode.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/RepeaterNode.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LeafNode.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/ConditionNode.cc
 )
