@@ -63,7 +63,7 @@ auto PlayerView::getPlayerComputers() const -> std::vector<PlayerComputer>
 
 auto PlayerView::getPlayerShips() const -> std::vector<PlayerShip>
 {
-  const auto ids = m_repositories.playerShipRepository->findAllByPlayer(m_playerShipId);
+  const auto ids = m_repositories.playerShipRepository->findAllByPlayer(m_playerId);
 
   std::vector<PlayerShip> out;
   for (const auto &id : ids)
