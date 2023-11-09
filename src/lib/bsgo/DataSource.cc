@@ -163,7 +163,7 @@ void DataSource::registerShip(Coordinator &coordinator, const Uuid &ship) const
 
     m_playerShipId       = ship;
     m_playerShipEntityId = ent;
-    coordinator.addOwner(ent, *m_playerEntityId);
+    coordinator.addOwner(ent, *m_playerEntityId, OwnerType::PLAYER);
   }
 
   registerShipWeapons(coordinator, ship, ent);

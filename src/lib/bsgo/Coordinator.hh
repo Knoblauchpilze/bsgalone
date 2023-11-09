@@ -33,7 +33,7 @@ class Coordinator : public utils::CoreObject
   void addFaction(const Uuid &ent, const Faction &faction);
   void addLoot(const Uuid &ent);
   void addScanned(const Uuid &ent);
-  void addOwner(const Uuid &ent, const Uuid &owner);
+  void addOwner(const Uuid &ent, const Uuid &owner, const OwnerType &ownerType);
   void addDamage(const Uuid &ent, const float damage);
   void addRemoval(const Uuid &ent);
   void addStatus(const Uuid &ent, const Status &status);
