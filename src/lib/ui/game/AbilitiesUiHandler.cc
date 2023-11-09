@@ -77,7 +77,7 @@ void AbilitiesUiHandler::generateCompmutersMenus(int width, int height)
   pos.x = width - NUMBER_OF_ABILITIES * (dims.x + SPACING_IN_PIXELS);
   pos.y = height - SPACING_IN_PIXELS - dims.y;
 
-  olc::Pixel transparentBg = olc::Pixel{0, 0, 0, alpha::Transparent};
+  olc::Pixel transparentBg = olc::Pixel{0, 0, 0, alpha::SemiOpaque};
 
   for (auto id = 0u; id < NUMBER_OF_ABILITIES; ++id)
   {
