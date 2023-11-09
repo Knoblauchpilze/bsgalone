@@ -34,6 +34,9 @@ class ShipView : public IView
   void dockPlayerShip() const;
   void undockPlayerShip() const;
 
+  auto getPlayerShipWeapons() const -> std::vector<PlayerWeapon>;
+  auto getPlayerShipComputers() const -> std::vector<PlayerComputer>;
+
   private:
   Uuid m_playerShipId;
   Uuid m_playerShipEntityId;

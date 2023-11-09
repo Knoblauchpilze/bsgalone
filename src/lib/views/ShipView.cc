@@ -132,4 +132,30 @@ void ShipView::undockPlayerShip() const
   playerShip.statusComp().setStatus(Status::APPEARING);
 }
 
+auto ShipView::getPlayerShipWeapons() const -> std::vector<PlayerWeapon>
+{
+  const auto ids = m_repositories.shipWeaponRepository->findAllByShip(m_playerShipId);
+
+  std::vector<PlayerWeapon> out;
+  for (const auto &id : ids)
+  {
+    const auto weapon = m_repositories.playerWeaponRepository->findOneById(id);
+    out.push_back(weapon);
+  }
+  return out;
+}
+
+auto ShipView::getPlayerShipComputers() const -> std::vector<PlayerComputer>
+{
+  const auto ids = m_repositories.shipComputerRepository->findAllByShip(m_playerShipId);
+
+  std::vector<PlayerComputer> out;
+  for (const auto &id : ids)
+  {
+    const auto computer = m_repositories.playerComputerRepository->findOneById(id);
+    out.push_back(computer);
+  }
+  return out;
+}
+
 } // namespace bsgo
