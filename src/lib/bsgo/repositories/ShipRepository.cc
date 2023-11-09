@@ -15,6 +15,7 @@ auto ShipRepository::findOneById(const Uuid &ship) const -> Ship
   {
     case Uuid{0}:
       out.faction = Faction::COLONIAL;
+      out.name    = "Viper mark II";
 
       out.maxHullPoints   = 585.0f;
       out.hullPointsRegen = 0.5f;
@@ -29,6 +30,7 @@ auto ShipRepository::findOneById(const Uuid &ship) const -> Ship
       break;
     case Uuid{1}:
       out.faction = Faction::CYLON;
+      out.name    = "Cylon Raider";
 
       out.maxHullPoints   = 300.0f;
       out.hullPointsRegen = 1.0f;
@@ -43,6 +45,7 @@ auto ShipRepository::findOneById(const Uuid &ship) const -> Ship
       break;
     case Uuid{2}:
       out.faction = Faction::COLONIAL;
+      out.name    = "Jotunn";
 
       out.maxHullPoints   = 3000.0f;
       out.hullPointsRegen = 50.0f;
