@@ -57,50 +57,54 @@ void WeaponsUiHandler::updateUi()
   }
 }
 
-constexpr auto REASONABLE_MAXIMUM_NUMBER_OF_WEAPONS = 4;
+constexpr auto NUMBER_OF_WEAPONS = 4;
 
 void WeaponsUiHandler::generateWeaponsMenus(int width, int height)
 {
   const auto ship         = m_shipView->getPlayerShip();
   const auto shipId       = ship.uuid;
   const auto weaponsCount = ship.weapons.size();
-  if (weaponsCount > REASONABLE_MAXIMUM_NUMBER_OF_WEAPONS)
+  if (weaponsCount > NUMBER_OF_WEAPONS)
   {
     error("Failed to adapt UI for ship " + ship.str(),
-          "Expected maximum " + std::to_string(REASONABLE_MAXIMUM_NUMBER_OF_WEAPONS)
-            + " weapon(s), got " + std::to_string(ship.weapons.size()));
+          "Expected maximum " + std::to_string(NUMBER_OF_WEAPONS) + " weapon(s), got "
+            + std::to_string(ship.weapons.size()));
   }
 
   olc::vi2d dims{50, 50};
   constexpr auto SPACING_IN_PIXELS = 5;
   olc::vi2d pos;
-  pos.x = width - weaponsCount * (dims.x + SPACING_IN_PIXELS);
+  pos.x = width - NUMBER_OF_WEAPONS * (dims.x + SPACING_IN_PIXELS);
   pos.y = height / 2;
 
-  olc::Pixel transparentBg = olc::Pixel{0, 0, 0, alpha::Transparent};
+  olc::Pixel transparentBg = olc::Pixel{0, 0, 0, alpha::SemiOpaque};
 
-  for (auto id = 0u; id < weaponsCount; ++id)
+  for (auto id = 0u; id < NUMBER_OF_WEAPONS; ++id)
   {
-    const auto text = "W" + std::to_string(id);
     const auto name = "weapon_" + std::to_string(id);
 
-    auto menu = generateSlotMenu(pos, dims, text, name, transparentBg, {olc::WHITE}, true);
-    menu->setSimpleAction([shipId, id](Game &g) { g.tryActivateWeapon(shipId, id); });
+    const auto enabled = id < weaponsCount;
+    auto menu          = generateSlotMenu(pos, dims, "", name, transparentBg, {olc::WHITE}, true);
+    menu->setEnabled(enabled);
+    if (enabled)
+    {
+      menu->setSimpleAction([shipId, id](Game &g) { g.tryActivateWeapon(shipId, id); });
+
+      const auto range = generateMenu(pos, dims, "range", "range", transparentBg, {olc::WHITE});
+      menu->addMenu(range);
+      m_ranges.push_back(range);
+      auto damage = generateMenu(pos, dims, "min damage", "min_damage", transparentBg, {olc::WHITE});
+      menu->addMenu(damage);
+      m_damages.push_back(damage);
+      damage = generateMenu(pos, dims, "max damage", "max_damage", transparentBg, {olc::WHITE});
+      menu->addMenu(damage);
+      m_damages.push_back(damage);
+      const auto status = generateMenu(pos, dims, "status", "status", transparentBg, {olc::WHITE});
+      menu->addMenu(status);
+      m_statuses.push_back(status);
+    }
+
     m_weapons.push_back(menu);
-
-    const auto range = generateMenu(pos, dims, "range", "range", transparentBg, {olc::WHITE});
-    menu->addMenu(range);
-    m_ranges.push_back(range);
-    auto damage = generateMenu(pos, dims, "min damage", "min_damage", transparentBg, {olc::WHITE});
-    menu->addMenu(damage);
-    m_damages.push_back(damage);
-    damage = generateMenu(pos, dims, "max damage", "max_damage", transparentBg, {olc::WHITE});
-    menu->addMenu(damage);
-    m_damages.push_back(damage);
-    const auto status = generateMenu(pos, dims, "status", "status", transparentBg, {olc::WHITE});
-    menu->addMenu(status);
-    m_statuses.push_back(status);
-
     pos.x += (dims.x + SPACING_IN_PIXELS);
   }
 }
