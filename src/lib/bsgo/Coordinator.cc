@@ -129,10 +129,10 @@ void Coordinator::addScanned(const Uuid &ent)
   m_components.scanned[ent] = std::make_shared<ScannedComponent>();
 }
 
-void Coordinator::addOwner(const Uuid &ent, const Uuid &owner)
+void Coordinator::addOwner(const Uuid &ent, const Uuid &owner, const OwnerType &ownerType)
 {
   checkForOverrides(ent, "Owner", m_components.owners);
-  m_components.owners[ent] = std::make_shared<OwnerComponent>(owner);
+  m_components.owners[ent] = std::make_shared<OwnerComponent>(owner, ownerType);
 }
 
 void Coordinator::addDamage(const Uuid &ent, const float damage)
