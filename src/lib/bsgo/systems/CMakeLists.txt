@@ -26,4 +26,5 @@ target_sources (bsgalone_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/LootSystem.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/BulletSystem.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/StatusSystem.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/OwnerSystem.cc
 )

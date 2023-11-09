@@ -26,7 +26,7 @@ void OwnerSystem::updateEntity(Entity &entity,
   }
 
   entity.removalComp().markForRemoval(false);
-  entity.statusComp().setStatus(Status::DOCKED);
+  entity.statusComp().setStatus(Status::DEAD);
 }
 
 } // namespace bsgo

@@ -119,7 +119,7 @@ void WeaponSystem::createBulletDirectedTowards(const Entity &ent,
 
   coordinator.addDamage(bullet, damage);
 
-  coordinator.addOwner(bullet, ent.uuid);
+  coordinator.addOwner(bullet, ent.uuid, OwnerType::SHIP);
 
   coordinator.addRemoval(bullet);
 

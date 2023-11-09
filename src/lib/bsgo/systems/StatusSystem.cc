@@ -43,7 +43,9 @@ void StatusSystem::handleJustChangedState(Entity &entity, StatusComponent &statu
     return;
   }
 
-  if (Status::DOCKED == statusComp.status() && entity.exists<VelocityComponent>())
+  const auto statusRequiresImmobilization = Status::DOCKED == statusComp.status()
+                                            || Status::DEAD == statusComp.status();
+  if (statusRequiresImmobilization && entity.exists<VelocityComponent>())
   {
     auto &velocity = entity.velocityComp();
     velocity.immobilize();

@@ -13,6 +13,8 @@ auto str(const Status &status) -> std::string
       return "appearing";
     case Status::DOCKED:
       return "docked";
+    case Status::DEAD:
+      return "dead";
     default:
       return "unknown";
   };

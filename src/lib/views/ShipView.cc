@@ -46,20 +46,20 @@ auto ShipView::getPlayerTarget() const -> std::optional<Entity>
 
 auto ShipView::getShipsWithin(const IBoundingBox &bbox) const -> std::vector<Entity>
 {
-  std::vector<Entity> out;
-  const auto uuids = m_coordinator->getEntitiesWithin(bbox, {EntityKind::SHIP});
-  for (const auto &uuid : uuids)
-  {
-    const auto entity = m_coordinator->getEntity(uuid);
-    if (entity.exists<StatusComponent>() && Status::DOCKED == entity.statusComp().status())
+  const auto predicate = [](const Entity &entity) {
+    if (entity.kind->kind() != EntityKind::SHIP)
     {
-      continue;
+      return false;
     }
+    if (!entity.exists<StatusComponent>())
+    {
+      return true;
+    }
+    return Status::VISIBLE == entity.statusComp().status()
+           || Status::APPEARING == entity.statusComp().status();
+  };
 
-    out.push_back(entity);
-  }
-
-  return out;
+  return m_coordinator->getEntitiesWithinSatistying(bbox, predicate);
 }
 
 auto ShipView::distanceToTarget() const -> float
