@@ -117,6 +117,7 @@ void DataSource::registerAsteroid(Coordinator &coordinator, const Uuid &asteroid
   const auto ent = coordinator.createEntity(EntityKind::ASTEROID);
   coordinator.addTransform(ent, std::move(box));
   coordinator.addHealth(ent, data.health, data.health, 0.0f);
+  coordinator.addRemoval(ent);
   coordinator.addScanned(ent);
   if (data.loot)
   {
@@ -136,6 +137,7 @@ void DataSource::registerShip(Coordinator &coordinator, const Uuid &ship) const
   VelocityData vData{.maxAcceleration = data.acceleration, .maxSpeed = data.speed};
   coordinator.addVelocity(ent, vData);
   coordinator.addHealth(ent, data.hullPoints, data.maxHullPoints, data.hullPointsRegen);
+  coordinator.addRemoval(ent);
   coordinator.addPower(ent, data.powerPoints, data.maxPowerPoints, data.powerRegen);
   coordinator.addTarget(ent);
   coordinator.addFaction(ent, data.faction);
@@ -178,6 +180,7 @@ void DataSource::registerOutpost(Coordinator &coordinator, const Uuid &outpost) 
   const auto ent = coordinator.createEntity(EntityKind::OUTPOST);
   coordinator.addTransform(ent, std::move(box));
   coordinator.addHealth(ent, data.hullPoints, data.maxHullPoints, data.hullPointsRegen);
+  coordinator.addRemoval(ent);
   coordinator.addPower(ent, data.powerPoints, data.maxPowerPoints, data.powerRegen);
   coordinator.addTarget(ent);
   coordinator.addFaction(ent, data.faction);

@@ -18,6 +18,17 @@ void HealthSystem::updateEntity(Entity &entity,
                                 const float elapsedSeconds) const
 {
   entity.healthComp().update(elapsedSeconds);
+  tryMarkForDelettion(entity);
+}
+
+void HealthSystem::tryMarkForDelettion(Entity &entity) const
+{
+  if (entity.healthComp().isAlive() || !entity.exists<RemovalComponent>())
+  {
+    return;
+  }
+
+  entity.removalComp().markForRemoval();
 }
 
 } // namespace bsgo
