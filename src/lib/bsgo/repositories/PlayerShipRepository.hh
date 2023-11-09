@@ -15,6 +15,7 @@ struct PlayerShip
   Faction faction;
   std::optional<Uuid> player{};
   std::string name;
+  bool active;
 
   float hullPoints{0.0f};
   float maxHullPoints{0.0f};
