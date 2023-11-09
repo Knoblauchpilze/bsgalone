@@ -17,6 +17,8 @@ auto ShipComputerRepository::findAllByShip(const Uuid &ship) const -> std::unord
       return {Uuid(0), Uuid(1)};
     case Uuid{1}:
       return {};
+    case Uuid{2}:
+      return {};
     default:
       error("Ship " + str(ship) + " not found");
       break;

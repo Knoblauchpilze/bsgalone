@@ -17,6 +17,8 @@ auto ShipWeaponRepository::findAllByShip(const Uuid &ship) const -> std::unorder
       return {Uuid(0), Uuid(1)};
     case Uuid{1}:
       return {Uuid{4}};
+    case Uuid{2}:
+      return {};
     default:
       error("Ship " + str(ship) + " not found");
       break;
