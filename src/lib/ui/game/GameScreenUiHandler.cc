@@ -10,6 +10,7 @@ GameScreenUiHandler::GameScreenUiHandler(const bsgo::Views &views)
   , m_shipView(views.shipView)
   , m_weaponsUi(std::make_unique<WeaponsUiHandler>(views))
   , m_abilitiesUi(std::make_unique<AbilitiesUiHandler>(views))
+  , m_gameOverUi(std::make_unique<GameOverUiHandler>(views))
 {
   if (nullptr == m_shipView)
   {
@@ -27,6 +28,7 @@ void GameScreenUiHandler::initializeMenus(const int width, const int height)
 
   m_weaponsUi->initializeMenus(width, height);
   m_abilitiesUi->initializeMenus(width, height);
+  m_gameOverUi->initializeMenus(width, height);
 }
 
 auto GameScreenUiHandler::processUserInput(const controls::State &c,
@@ -36,6 +38,10 @@ auto GameScreenUiHandler::processUserInput(const controls::State &c,
   if (!out.relevant && !out.selected)
   {
     out = m_abilitiesUi->processUserInput(c, actions);
+  }
+  if (!out.relevant && !out.selected)
+  {
+    out = m_gameOverUi->processUserInput(c, actions);
   }
   if (!out.relevant && !out.selected)
   {
@@ -59,6 +65,7 @@ void GameScreenUiHandler::render(SpriteRenderer &engine) const
 
   m_weaponsUi->render(engine);
   m_abilitiesUi->render(engine);
+  m_gameOverUi->render(engine);
 }
 
 void GameScreenUiHandler::updateUi()
@@ -69,6 +76,7 @@ void GameScreenUiHandler::updateUi()
 
   m_weaponsUi->updateUi();
   m_abilitiesUi->updateUi();
+  m_gameOverUi->updateUi();
 }
 
 void GameScreenUiHandler::generateShipMenus(int /*width*/, int /*height*/)
