@@ -9,6 +9,8 @@ set (CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 add_library (bsgalone_lib SHARED "")
 
+find_package (libpqxx REQUIRED)
+
 add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/bsgo
 	)
@@ -51,6 +53,8 @@ target_link_libraries (bsgalone_lib
 	GL
 	pthread
 	stdc++fs
+	pq
+	pqxx
 	)
 
 target_include_directories (bsgalone_lib PUBLIC

@@ -17,6 +17,7 @@ project(bsgalone_tests LANGUAGES CXX)
 
 find_package (Eigen3 3.4 REQUIRED NO_MODULE)
 find_package (GTest REQUIRED)
+find_package (libpqxx REQUIRED)
 
 add_executable(bsgalone-tests)
 
@@ -37,4 +38,6 @@ target_link_libraries(bsgalone-tests
 	bsgalone_lib
 	Eigen3::Eigen
 	${GTEST_LIBRARIES}
+	pq
+	pqxx
 	)
