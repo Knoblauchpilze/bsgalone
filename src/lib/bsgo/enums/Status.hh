@@ -9,7 +9,8 @@ enum class Status
 {
   VISIBLE,
   APPEARING,
-  DOCKED
+  DOCKED,
+  DEAD
 };
 
 auto str(const Status &status) -> std::string;
