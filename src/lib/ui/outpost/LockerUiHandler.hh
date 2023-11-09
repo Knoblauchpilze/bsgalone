@@ -23,16 +23,25 @@ class LockerUiHandler : public IUiHandler
 
   private:
   bsgo::PlayerViewShPtr m_playerView;
+  bsgo::ShipViewShPtr m_shipView;
 
   MenuShPtr m_menu{};
+  MenuShPtr m_locker{};
+  MenuShPtr m_ship{};
   std::vector<MenuShPtr> m_resources{};
-  std::vector<MenuShPtr> m_weapons{};
-  std::vector<MenuShPtr> m_computers{};
+  std::vector<MenuShPtr> m_lockerWeapons{};
+  std::vector<MenuShPtr> m_lockerComputers{};
+  std::vector<MenuShPtr> m_shipWeapons{};
+  std::vector<MenuShPtr> m_shipComputers{};
 
   void initializeLayout();
+  void initializeLockerLayout();
+  void initializeShipLayout();
   void generateResourcesMenus();
-  void generateWeaponsMenus();
-  void generateComputersMenus();
+  void generateLockerWeaponsMenus();
+  void generateLockerComputersMenus();
+  void generateShipWeaponsMenus();
+  void generateShipComputersMenus();
 };
 
 using LockerUiHandlerPtr = std::unique_ptr<LockerUiHandler>;
