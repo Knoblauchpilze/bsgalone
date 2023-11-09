@@ -2,6 +2,7 @@
 #pragma once
 
 #include "AbilitiesUiHandler.hh"
+#include "GameOverUiHandler.hh"
 #include "IUiHandler.hh"
 #include "Views.hh"
 #include "WeaponsUiHandler.hh"
@@ -40,6 +41,7 @@ class GameScreenUiHandler : public IUiHandler
 
   WeaponsUiHandlerPtr m_weaponsUi{};
   AbilitiesUiHandlerPtr m_abilitiesUi{};
+  GameOverUiHandlerPtr m_gameOverUi{};
 
   void generateShipMenus(int width, int height);
   void generateTargetMenus(int width, int height);
