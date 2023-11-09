@@ -16,7 +16,7 @@ auto SystemRepository::findAllAsteroidsBySystem(const Uuid & /*system*/) const
 auto SystemRepository::findAllShipsBySystem(const Uuid & /*system*/) const
   -> std::unordered_set<Uuid>
 {
-  return {Uuid(0), Uuid{1}};
+  return {Uuid{0}, Uuid{1}};
 }
 
 auto SystemRepository::findAllOutpostsBySystem(const Uuid & /*system*/) const
