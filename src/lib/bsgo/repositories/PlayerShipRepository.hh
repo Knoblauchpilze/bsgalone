@@ -37,6 +37,7 @@ class PlayerShipRepository : public IRepository
   ~PlayerShipRepository() override = default;
 
   auto findOneById(const Uuid &ship) const -> PlayerShip;
+  auto findAllByPlayer(const Uuid &player) const -> std::vector<Uuid>;
 };
 
 using PlayerShipRepositoryShPtr = std::shared_ptr<PlayerShipRepository>;
