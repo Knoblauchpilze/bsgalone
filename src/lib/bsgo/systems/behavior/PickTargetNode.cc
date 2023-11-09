@@ -11,14 +11,25 @@ PickTargetNode::PickTargetNode()
 
 void PickTargetNode::run(const TickData &data)
 {
-  constexpr auto ENEMY_DETECTION_RANGE = 1.3f;
+  constexpr auto ENEMY_DETECTION_RANGE = 5.3f;
 
-  const auto box = CircleBox(data.ent.transformComp().position(), ENEMY_DETECTION_RANGE);
-  const auto enemies
-    = data.coordinator.getEntitiesWithinSatistying(box, [&data](const Entity &entity) {
-        return EntityKind::SHIP == entity.kind->kind()
-               && data.ent.factionComp().faction() != entity.factionComp().faction();
-      });
+  const auto box     = CircleBox(data.ent.transformComp().position(), ENEMY_DETECTION_RANGE);
+  const auto enemies = data.coordinator
+                         .getEntitiesWithinSatistying(box, [&data](const Entity &entity) {
+                           if (EntityKind::SHIP != entity.kind->kind())
+                           {
+                             return false;
+                           }
+                           if (data.ent.factionComp().faction() == entity.factionComp().faction())
+                           {
+                             return false;
+                           }
+                           if (Status::VISIBLE != data.ent.statusComp().status())
+                           {
+                             return false;
+                           }
+                           return true;
+                         });
 
   if (enemies.empty())
   {
