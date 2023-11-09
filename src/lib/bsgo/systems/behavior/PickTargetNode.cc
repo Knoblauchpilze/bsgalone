@@ -24,7 +24,7 @@ void PickTargetNode::run(const TickData &data)
                            {
                              return false;
                            }
-                           if (Status::VISIBLE != data.ent.statusComp().status())
+                           if (Status::VISIBLE != entity.statusComp().status())
                            {
                              return false;
                            }
