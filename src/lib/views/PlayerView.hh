@@ -18,6 +18,7 @@ class PlayerView : public IView
   auto getPlayerResources() const -> std::vector<PlayerResource>;
   auto getPlayerWeapons() const -> std::vector<PlayerWeapon>;
   auto getPlayerComputers() const -> std::vector<PlayerComputer>;
+  auto getPlayerShips() const -> std::vector<PlayerShip>;
 
   private:
   Uuid m_playerId;

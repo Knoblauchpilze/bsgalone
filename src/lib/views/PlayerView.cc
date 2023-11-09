@@ -61,4 +61,18 @@ auto PlayerView::getPlayerComputers() const -> std::vector<PlayerComputer>
   return out;
 }
 
+auto PlayerView::getPlayerShips() const -> std::vector<PlayerShip>
+{
+  const auto ids = m_repositories.playerShipRepository->findAllByPlayer(m_playerShipId);
+
+  std::vector<PlayerShip> out;
+  for (const auto &id : ids)
+  {
+    const auto ship = m_repositories.playerShipRepository->findOneById(id);
+    out.push_back(ship);
+  }
+
+  return out;
+}
+
 } // namespace bsgo
