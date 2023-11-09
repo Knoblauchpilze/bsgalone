@@ -20,7 +20,13 @@ class HangarUiHandler : public IUiHandler
   void updateUi() override;
 
   private:
+  bsgo::PlayerViewShPtr m_playerView;
+
   MenuShPtr m_menu{};
+  std::vector<MenuShPtr> m_ships{};
+
+  void initializeLayout();
+  void generateShipsMenus();
 };
 
 using HangarUiHandlerPtr = std::unique_ptr<HangarUiHandler>;
