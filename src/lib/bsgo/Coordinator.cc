@@ -9,6 +9,7 @@
 #include "HealthSystem.hh"
 #include "LootSystem.hh"
 #include "MotionSystem.hh"
+#include "OwnerSystem.hh"
 #include "PowerSystem.hh"
 #include "StatusSystem.hh"
 #include "TargetSystem.hh"
@@ -365,11 +366,14 @@ void Coordinator::createSystems()
   auto status = std::make_unique<StatusSystem>();
   m_systems.push_back(std::move(status));
 
+  auto computer = std::make_unique<ComputerSystem>();
+  m_systems.push_back(std::move(computer));
+
+  auto effect = std::make_unique<EffectSystem>();
+  m_systems.push_back(std::move(effect));
+
   auto motion = std::make_unique<MotionSystem>();
   m_systems.push_back(std::move(motion));
-
-  auto health = std::make_unique<HealthSystem>();
-  m_systems.push_back(std::move(health));
 
   auto power = std::make_unique<PowerSystem>();
   m_systems.push_back(std::move(power));
@@ -383,17 +387,17 @@ void Coordinator::createSystems()
   auto ai = std::make_unique<AISystem>();
   m_systems.push_back(std::move(ai));
 
+  auto health = std::make_unique<HealthSystem>();
+  m_systems.push_back(std::move(health));
+
   auto target = std::make_unique<TargetSystem>();
   m_systems.push_back(std::move(target));
 
-  auto computer = std::make_unique<ComputerSystem>();
-  m_systems.push_back(std::move(computer));
-
-  auto effect = std::make_unique<EffectSystem>();
-  m_systems.push_back(std::move(effect));
-
   auto loot = std::make_unique<LootSystem>();
   m_systems.push_back(std::move(loot));
+
+  auto owner = std::make_unique<OwnerSystem>();
+  m_systems.push_back(std::move(owner));
 }
 
 bool Coordinator::hasExpectedKind(const Uuid &ent, const std::optional<EntityKind> &kind) const
@@ -433,10 +437,6 @@ void Coordinator::cleanUpDeadEntities()
   for (const auto &id : m_entities)
   {
     const auto ent = getEntity(id);
-    if (ent.exists<HealthComponent>() && !ent.healthComp().isAlive())
-    {
-      deletedEntities.insert(id);
-    }
     if (ent.exists<RemovalComponent>() && ent.removalComp().toBeDeleted())
     {
       deletedEntities.insert(id);

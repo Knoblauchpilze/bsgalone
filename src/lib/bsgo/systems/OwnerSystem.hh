@@ -5,18 +5,15 @@
 
 namespace bsgo {
 
-class HealthSystem : public AbstractSystem
+class OwnerSystem : public AbstractSystem
 {
   public:
-  HealthSystem();
-  ~HealthSystem() override = default;
+  OwnerSystem();
+  ~OwnerSystem() override = default;
 
   void updateEntity(Entity &entity,
                     Coordinator &coordinator,
                     const float elapsedSeconds) const override;
-
-  private:
-  void tryMarkForDelettion(Entity &entity) const;
 };
 
 } // namespace bsgo
