@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "IRepository.hh"
+#include "AbstractRepository.hh"
 #include "Uuid.hh"
 #include <memory>
 #include <unordered_set>
@@ -15,10 +15,10 @@ struct PlayerResource
   float amount;
 };
 
-class PlayerResourceRepository : public IRepository
+class PlayerResourceRepository : public AbstractRepository
 {
   public:
-  PlayerResourceRepository();
+  PlayerResourceRepository(const DbConnectionShPtr &connection);
   ~PlayerResourceRepository() override = default;
 
   auto findOneById(const Uuid &resource) const -> PlayerResource;

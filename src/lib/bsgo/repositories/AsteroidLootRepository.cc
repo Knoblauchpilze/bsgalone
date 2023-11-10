@@ -3,8 +3,8 @@
 
 namespace bsgo {
 
-AsteroidLootRepository::AsteroidLootRepository()
-  : IRepository("loot")
+AsteroidLootRepository::AsteroidLootRepository(const DbConnectionShPtr &connection)
+  : AbstractRepository("loot", connection)
 {
   addModule("asteroid");
 }

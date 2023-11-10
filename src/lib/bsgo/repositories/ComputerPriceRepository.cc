@@ -3,8 +3,8 @@
 
 namespace bsgo {
 
-ComputerPriceRepository::ComputerPriceRepository()
-  : IRepository("computer")
+ComputerPriceRepository::ComputerPriceRepository(const DbConnectionShPtr &connection)
+  : AbstractRepository("computer", connection)
 {
   addModule("price");
 }

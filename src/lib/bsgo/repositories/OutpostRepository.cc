@@ -3,8 +3,8 @@
 
 namespace bsgo {
 
-OutpostRepository::OutpostRepository()
-  : IRepository("outpost")
+OutpostRepository::OutpostRepository(const DbConnectionShPtr &connection)
+  : AbstractRepository("outpost", connection)
 {}
 
 auto OutpostRepository::findOneById(const Uuid &outpost) const -> Outpost

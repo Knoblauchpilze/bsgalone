@@ -4,8 +4,8 @@
 
 namespace bsgo {
 
-ComputerRepository::ComputerRepository()
-  : IRepository("computer")
+ComputerRepository::ComputerRepository(const DbConnectionShPtr &connection)
+  : AbstractRepository("computer", connection)
 {}
 
 auto ComputerRepository::findAll() const -> std::unordered_set<Uuid>

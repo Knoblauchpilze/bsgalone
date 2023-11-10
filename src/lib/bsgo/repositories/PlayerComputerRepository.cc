@@ -3,8 +3,8 @@
 
 namespace bsgo {
 
-PlayerComputerRepository::PlayerComputerRepository()
-  : IRepository("computer")
+PlayerComputerRepository::PlayerComputerRepository(const DbConnectionShPtr &connection)
+  : AbstractRepository("computer", connection)
 {
   addModule("player");
 }

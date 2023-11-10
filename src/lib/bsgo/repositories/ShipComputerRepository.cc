@@ -3,8 +3,8 @@
 
 namespace bsgo {
 
-ShipComputerRepository::ShipComputerRepository()
-  : IRepository("computer")
+ShipComputerRepository::ShipComputerRepository(const DbConnectionShPtr &connection)
+  : AbstractRepository("computer", connection)
 {
   addModule("ship");
 }

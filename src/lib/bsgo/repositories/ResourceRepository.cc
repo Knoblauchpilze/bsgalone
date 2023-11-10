@@ -3,8 +3,8 @@
 
 namespace bsgo {
 
-ResourceRepository::ResourceRepository()
-  : IRepository("resource")
+ResourceRepository::ResourceRepository(const DbConnectionShPtr &connection)
+  : AbstractRepository("resource", connection)
 {}
 
 auto ResourceRepository::findOneById(const Uuid &resource) const -> Resource

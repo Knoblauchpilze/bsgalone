@@ -1,17 +1,17 @@
 
 #pragma once
 
-#include "IRepository.hh"
+#include "AbstractRepository.hh"
 #include "Uuid.hh"
 #include <memory>
 #include <unordered_map>
 
 namespace bsgo {
 
-class WeaponPriceRepository : public IRepository
+class WeaponPriceRepository : public AbstractRepository
 {
   public:
-  WeaponPriceRepository();
+  WeaponPriceRepository(const DbConnectionShPtr &connection);
   ~WeaponPriceRepository() override = default;
 
   auto findAllByWeapon(const Uuid &weapon) const -> std::unordered_map<Uuid, int>;

@@ -1,8 +1,8 @@
 
 #pragma once
 
+#include "AbstractRepository.hh"
 #include "Faction.hh"
-#include "IRepository.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
 #include <memory>
@@ -32,10 +32,10 @@ struct PlayerShip
   Eigen::Vector3f position{Eigen::Vector3f::Zero()};
 };
 
-class PlayerShipRepository : public IRepository
+class PlayerShipRepository : public AbstractRepository
 {
   public:
-  PlayerShipRepository();
+  PlayerShipRepository(const DbConnectionShPtr &connection);
   ~PlayerShipRepository() override = default;
 
   auto findOneById(const Uuid &ship) const -> PlayerShip;

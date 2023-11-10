@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "IRepository.hh"
+#include "AbstractRepository.hh"
 #include "Uuid.hh"
 #include <core_utils/TimeUtils.hh>
 #include <memory>
@@ -24,10 +24,10 @@ struct PlayerWeapon
   utils::Duration reloadTime;
 };
 
-class PlayerWeaponRepository : public IRepository
+class PlayerWeaponRepository : public AbstractRepository
 {
   public:
-  PlayerWeaponRepository();
+  PlayerWeaponRepository(const DbConnectionShPtr &connection);
   ~PlayerWeaponRepository() override = default;
 
   auto findOneById(const Uuid &weapon) const -> PlayerWeapon;

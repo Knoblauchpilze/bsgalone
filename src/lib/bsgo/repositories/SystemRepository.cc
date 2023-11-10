@@ -3,8 +3,8 @@
 
 namespace bsgo {
 
-SystemRepository::SystemRepository()
-  : IRepository("system")
+SystemRepository::SystemRepository(const DbConnectionShPtr &connection)
+  : AbstractRepository("system", connection)
 {}
 
 auto SystemRepository::findAllAsteroidsBySystem(const Uuid & /*system*/) const

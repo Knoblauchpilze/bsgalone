@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "IRepository.hh"
+#include "AbstractRepository.hh"
 #include "Item.hh"
 #include "Uuid.hh"
 #include <memory>
@@ -14,10 +14,10 @@ struct AsteroidLoot
   float amount;
 };
 
-class AsteroidLootRepository : public IRepository
+class AsteroidLootRepository : public AbstractRepository
 {
   public:
-  AsteroidLootRepository();
+  AsteroidLootRepository(const DbConnectionShPtr &connection);
   ~AsteroidLootRepository() override = default;
 
   auto findOneById(const Uuid &asteroid) const -> AsteroidLoot;

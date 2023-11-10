@@ -3,8 +3,8 @@
 
 namespace bsgo {
 
-PlayerResourceRepository::PlayerResourceRepository()
-  : IRepository("player")
+PlayerResourceRepository::PlayerResourceRepository(const DbConnectionShPtr &connection)
+  : AbstractRepository("player", connection)
 {
   addModule("resource");
 }

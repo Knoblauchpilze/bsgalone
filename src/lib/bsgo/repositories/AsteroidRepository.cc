@@ -3,8 +3,8 @@
 
 namespace bsgo {
 
-AsteroidRepository::AsteroidRepository()
-  : IRepository("asteroid")
+AsteroidRepository::AsteroidRepository(const DbConnectionShPtr &connection)
+  : AbstractRepository("asteroid", connection)
 {}
 
 auto AsteroidRepository::findOneById(const Uuid &asteroid) const -> Asteroid

@@ -3,8 +3,8 @@
 
 namespace bsgo {
 
-PlayerShipRepository::PlayerShipRepository()
-  : IRepository("player")
+PlayerShipRepository::PlayerShipRepository(const DbConnectionShPtr &connection)
+  : AbstractRepository("player", connection)
 {
   addModule("ship");
 }

@@ -1,8 +1,8 @@
 
 #pragma once
 
+#include "AbstractRepository.hh"
 #include "EntityKind.hh"
-#include "IRepository.hh"
 #include "Uuid.hh"
 #include <core_utils/TimeUtils.hh>
 #include <memory>
@@ -26,10 +26,10 @@ struct PlayerComputer
   std::optional<float> damageModifier{};
 };
 
-class PlayerComputerRepository : public IRepository
+class PlayerComputerRepository : public AbstractRepository
 {
   public:
-  PlayerComputerRepository();
+  PlayerComputerRepository(const DbConnectionShPtr &connection);
   ~PlayerComputerRepository() override = default;
 
   auto findOneById(const Uuid &computer) const -> PlayerComputer;

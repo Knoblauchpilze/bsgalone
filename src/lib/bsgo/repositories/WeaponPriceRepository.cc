@@ -5,8 +5,8 @@
 
 namespace bsgo {
 
-WeaponPriceRepository::WeaponPriceRepository()
-  : IRepository("weapon")
+WeaponPriceRepository::WeaponPriceRepository(const DbConnectionShPtr &connection)
+  : AbstractRepository("weapon", connection)
 {
   addModule("price");
 }

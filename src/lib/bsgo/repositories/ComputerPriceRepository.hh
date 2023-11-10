@@ -1,17 +1,17 @@
 
 #pragma once
 
-#include "IRepository.hh"
+#include "AbstractRepository.hh"
 #include "Uuid.hh"
 #include <memory>
 #include <unordered_map>
 
 namespace bsgo {
 
-class ComputerPriceRepository : public IRepository
+class ComputerPriceRepository : public AbstractRepository
 {
   public:
-  ComputerPriceRepository();
+  ComputerPriceRepository(const DbConnectionShPtr &connection);
   ~ComputerPriceRepository() override = default;
 
   auto findAllByComputer(const Uuid &computer) const -> std::unordered_map<Uuid, int>;
