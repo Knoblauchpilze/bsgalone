@@ -4,7 +4,7 @@ Yet another copy of a famous game which will be probably not as polished and not
 
 # What is the game about?
 
-The goal is to have a 2d top view space shooter where the user can jump from systems to systems and fight enemies while mining resources and upgrading their ship.
+The goal is to have a 2d top view space shooter where the user can travel from systems to systems and fight enemies while mining resources and upgrading their ship.
 
 # Installation
 
