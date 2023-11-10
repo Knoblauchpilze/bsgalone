@@ -4,8 +4,8 @@
 
 namespace bsgo {
 
-WeaponRepository::WeaponRepository()
-  : IRepository("weapon")
+WeaponRepository::WeaponRepository(const DbConnectionShPtr &connection)
+  : AbstractRepository("weapon", connection)
 {}
 
 auto WeaponRepository::findAll() const -> std::unordered_set<Uuid>

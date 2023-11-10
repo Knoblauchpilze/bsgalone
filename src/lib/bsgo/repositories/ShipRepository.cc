@@ -3,8 +3,8 @@
 
 namespace bsgo {
 
-ShipRepository::ShipRepository()
-  : IRepository("ship")
+ShipRepository::ShipRepository(const DbConnectionShPtr &connection)
+  : AbstractRepository("ship", connection)
 {}
 
 auto ShipRepository::findOneById(const Uuid &ship) const -> Ship

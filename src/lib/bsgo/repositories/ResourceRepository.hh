@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "IRepository.hh"
+#include "AbstractRepository.hh"
 #include "Uuid.hh"
 #include <core_utils/TimeUtils.hh>
 #include <memory>
@@ -13,10 +13,10 @@ struct Resource
   std::string name;
 };
 
-class ResourceRepository : public IRepository
+class ResourceRepository : public AbstractRepository
 {
   public:
-  ResourceRepository();
+  ResourceRepository(const DbConnectionShPtr &connection);
   ~ResourceRepository() override = default;
 
   auto findOneById(const Uuid &resource) const -> Resource;

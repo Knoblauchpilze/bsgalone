@@ -3,8 +3,8 @@
 
 namespace bsgo {
 
-PlayerRepository::PlayerRepository()
-  : IRepository("player")
+PlayerRepository::PlayerRepository(const DbConnectionShPtr &connection)
+  : AbstractRepository("player", connection)
 {}
 
 auto PlayerRepository::findSystemById(const Uuid & /*player*/) const -> Uuid

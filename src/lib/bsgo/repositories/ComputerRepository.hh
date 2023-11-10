@@ -1,8 +1,8 @@
 
 #pragma once
 
+#include "AbstractRepository.hh"
 #include "EntityKind.hh"
-#include "IRepository.hh"
 #include "Uuid.hh"
 #include <core_utils/TimeUtils.hh>
 #include <memory>
@@ -24,10 +24,10 @@ struct Computer
   std::optional<float> damageModifier{};
 };
 
-class ComputerRepository : public IRepository
+class ComputerRepository : public AbstractRepository
 {
   public:
-  ComputerRepository();
+  ComputerRepository(const DbConnectionShPtr &connection);
   ~ComputerRepository() override = default;
 
   auto findAll() const -> std::unordered_set<Uuid>;

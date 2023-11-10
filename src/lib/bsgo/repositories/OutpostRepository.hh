@@ -1,8 +1,8 @@
 
 #pragma once
 
+#include "AbstractRepository.hh"
 #include "Faction.hh"
-#include "IRepository.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
 #include <memory>
@@ -25,10 +25,10 @@ struct Outpost
   Eigen::Vector3f position{Eigen::Vector3f::Zero()};
 };
 
-class OutpostRepository : public IRepository
+class OutpostRepository : public AbstractRepository
 {
   public:
-  OutpostRepository();
+  OutpostRepository(const DbConnectionShPtr &connection);
   ~OutpostRepository() override = default;
 
   auto findOneById(const Uuid &outpost) const -> Outpost;

@@ -1,8 +1,8 @@
 
 #pragma once
 
+#include "AbstractRepository.hh"
 #include "Faction.hh"
-#include "IRepository.hh"
 #include "Uuid.hh"
 #include <memory>
 
@@ -25,10 +25,10 @@ struct Ship
   float radius{0.5f};
 };
 
-class ShipRepository : public IRepository
+class ShipRepository : public AbstractRepository
 {
   public:
-  ShipRepository();
+  ShipRepository(const DbConnectionShPtr &connection);
   ~ShipRepository() override = default;
 
   auto findOneById(const Uuid &ship) const -> Ship;

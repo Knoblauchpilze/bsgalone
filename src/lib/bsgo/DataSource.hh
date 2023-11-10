@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "DbConnection.hh"
 #include "INode.hh"
 #include "Repositories.hh"
 #include <core_utils/CoreObject.hh>
@@ -29,6 +30,7 @@ class DataSource : public utils::CoreObject
   mutable std::optional<Uuid> m_playerShipId{};
   mutable std::optional<Uuid> m_playerShipEntityId{};
 
+  DbConnectionShPtr m_connection{std::make_shared<DbConnection>()};
   Repositories m_repositories{};
 
   void initializePlayer(Coordinator &coordinator) const;

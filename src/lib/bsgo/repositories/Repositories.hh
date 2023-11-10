@@ -5,6 +5,7 @@
 #include "AsteroidRepository.hh"
 #include "ComputerPriceRepository.hh"
 #include "ComputerRepository.hh"
+#include "DbConnection.hh"
 #include "OutpostRepository.hh"
 #include "PlayerComputerRepository.hh"
 #include "PlayerRepository.hh"
@@ -22,24 +23,24 @@ namespace bsgo {
 
 struct Repositories
 {
-  AsteroidLootRepositoryShPtr asteroidLootRepository{std::make_shared<AsteroidLootRepository>()};
-  AsteroidRepositoryShPtr asteroidRepository{std::make_shared<AsteroidRepository>()};
-  ComputerPriceRepositoryShPtr computerPriceRepository{std::make_shared<ComputerPriceRepository>()};
-  ComputerRepositoryShPtr computerRepository{std::make_shared<ComputerRepository>()};
-  OutpostRepositoryShPtr outpostRepository{std::make_shared<OutpostRepository>()};
-  PlayerComputerRepositoryShPtr playerComputerRepository{
-    std::make_shared<PlayerComputerRepository>()};
-  PlayerRepositoryShPtr playerRepository{std::make_shared<PlayerRepository>()};
-  PlayerResourceRepositoryShPtr playerResourceRepository{
-    std::make_shared<PlayerResourceRepository>()};
-  PlayerShipRepositoryShPtr playerShipRepository{std::make_shared<PlayerShipRepository>()};
-  PlayerWeaponRepositoryShPtr playerWeaponRepository{std::make_shared<PlayerWeaponRepository>()};
-  ResourceRepositoryShPtr resourceRepository{std::make_shared<ResourceRepository>()};
-  ShipComputerRepositoryShPtr shipComputerRepository{std::make_shared<ShipComputerRepository>()};
-  ShipWeaponRepositoryShPtr shipWeaponRepository{std::make_shared<ShipWeaponRepository>()};
-  SystemRepositoryShPtr systemRepository{std::make_shared<SystemRepository>()};
-  WeaponPriceRepositoryShPtr weaponPriceRepository{std::make_shared<WeaponPriceRepository>()};
-  WeaponRepositoryShPtr weaponRepository{std::make_shared<WeaponRepository>()};
+  AsteroidLootRepositoryShPtr asteroidLootRepository{};
+  AsteroidRepositoryShPtr asteroidRepository{};
+  ComputerPriceRepositoryShPtr computerPriceRepository{};
+  ComputerRepositoryShPtr computerRepository{};
+  OutpostRepositoryShPtr outpostRepository{};
+  PlayerComputerRepositoryShPtr playerComputerRepository{};
+  PlayerRepositoryShPtr playerRepository{};
+  PlayerResourceRepositoryShPtr playerResourceRepository{};
+  PlayerShipRepositoryShPtr playerShipRepository{};
+  PlayerWeaponRepositoryShPtr playerWeaponRepository{};
+  ResourceRepositoryShPtr resourceRepository{};
+  ShipComputerRepositoryShPtr shipComputerRepository{};
+  ShipWeaponRepositoryShPtr shipWeaponRepository{};
+  SystemRepositoryShPtr systemRepository{};
+  WeaponPriceRepositoryShPtr weaponPriceRepository{};
+  WeaponRepositoryShPtr weaponRepository{};
 };
+
+auto createRepositories(const DbConnectionShPtr &dbConnection) -> Repositories;
 
 } // namespace bsgo

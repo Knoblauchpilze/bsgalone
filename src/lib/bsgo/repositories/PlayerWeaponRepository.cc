@@ -3,8 +3,8 @@
 
 namespace bsgo {
 
-PlayerWeaponRepository::PlayerWeaponRepository()
-  : IRepository("weapon")
+PlayerWeaponRepository::PlayerWeaponRepository(const DbConnectionShPtr &connection)
+  : AbstractRepository("weapon", connection)
 {
   addModule("player");
 }

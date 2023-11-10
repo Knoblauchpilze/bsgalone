@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "IRepository.hh"
+#include "AbstractRepository.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
 #include <memory>
@@ -18,10 +18,10 @@ struct Asteroid
   bool loot{false};
 };
 
-class AsteroidRepository : public IRepository
+class AsteroidRepository : public AbstractRepository
 {
   public:
-  AsteroidRepository();
+  AsteroidRepository(const DbConnectionShPtr &connection);
   ~AsteroidRepository() override = default;
 
   auto findOneById(const Uuid &asteroid) const -> Asteroid;

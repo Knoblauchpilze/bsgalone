@@ -19,8 +19,10 @@ namespace bsgo {
 
 DataSource::DataSource()
   : utils::CoreObject("bsgo")
+  , m_repositories(createRepositories(m_connection))
 {
   setService("data");
+  m_connection->connect();
 }
 
 auto DataSource::repositories() const -> Repositories

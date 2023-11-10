@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "IRepository.hh"
+#include "AbstractRepository.hh"
 #include "Uuid.hh"
 #include <core_utils/TimeUtils.hh>
 #include <memory>
@@ -23,10 +23,10 @@ struct Weapon
   utils::Duration reloadTime;
 };
 
-class WeaponRepository : public IRepository
+class WeaponRepository : public AbstractRepository
 {
   public:
-  WeaponRepository();
+  WeaponRepository(const DbConnectionShPtr &connection);
   ~WeaponRepository() override = default;
 
   auto findAll() const -> std::unordered_set<Uuid>;

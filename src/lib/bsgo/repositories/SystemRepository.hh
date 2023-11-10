@@ -1,17 +1,17 @@
 
 #pragma once
 
-#include "IRepository.hh"
+#include "AbstractRepository.hh"
 #include "Uuid.hh"
 #include <memory>
 #include <unordered_set>
 
 namespace bsgo {
 
-class SystemRepository : public IRepository
+class SystemRepository : public AbstractRepository
 {
   public:
-  SystemRepository();
+  SystemRepository(const DbConnectionShPtr &connection);
   ~SystemRepository() override = default;
 
   auto findAllAsteroidsBySystem(const Uuid &system) const -> std::unordered_set<Uuid>;

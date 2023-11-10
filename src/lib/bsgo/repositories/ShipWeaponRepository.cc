@@ -3,8 +3,8 @@
 
 namespace bsgo {
 
-ShipWeaponRepository::ShipWeaponRepository()
-  : IRepository("weapon")
+ShipWeaponRepository::ShipWeaponRepository(const DbConnectionShPtr &connection)
+  : AbstractRepository("weapon", connection)
 {
   addModule("ship");
 }

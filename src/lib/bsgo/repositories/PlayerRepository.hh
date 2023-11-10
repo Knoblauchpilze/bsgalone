@@ -1,17 +1,17 @@
 
 #pragma once
 
-#include "IRepository.hh"
+#include "AbstractRepository.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
 #include <memory>
 
 namespace bsgo {
 
-class PlayerRepository : public IRepository
+class PlayerRepository : public AbstractRepository
 {
   public:
-  PlayerRepository();
+  PlayerRepository(const DbConnectionShPtr &connection);
   ~PlayerRepository() override = default;
 
   auto findSystemById(const Uuid &player) const -> Uuid;
