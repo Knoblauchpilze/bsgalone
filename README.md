@@ -2,6 +2,10 @@
 
 Yet another copy of a famous game which will be probably not as polished and not as fun as the original. This time we try out: BSGO.
 
+# What is the game about?
+
+The goal is to have a 2d top view space shooter where the user can jump from systems to systems and fight enemies while mining resources and upgrading their ship.
+
 # Installation
 
 ## Prerequisite
@@ -13,6 +17,7 @@ This projects uses:
 - [eigen](https://eigen.tuxfamily.org/index.php?title=Main_Page): installation instructions [here](https://www.cyberithub.com/how-to-install-eigen3-on-ubuntu-20-04-lts-focal-fossa/) for Ubuntu 20.04, a simple `sudo apt install libeigen3-dev` should be enough.
 - [libpqxx](https://github.com/jtv/libpqxx) for db connection. See installation instructions [here](https://github.com/jtv/libpqxx/blob/master/BUILDING-cmake.md#option-b-make-use-of-a-separately-installed-libpqxx) in the README of the github repository.
 - [golang migrate](https://github.com/golang-migrate/migrate/blob/master/cmd/migrate/README.md): following the instructions there should be enough.
+- postgresql which can be taken from the packages with `sudo apt-get install postgresql-14` for example.
 
 ## Instructions
 
@@ -27,7 +32,7 @@ Don't forget to add `/usr/local/lib` to your `LD_LIBRARY_PATH` to be able to loa
 
 ### libpqxx
 
-The README in the repo is not exactly working. You need to install `libpq-dev`: while not indicated it is clear from the build process.
+The [README](https://github.com/jtv/libpqxx/blob/master/BUILDING-cmake.md) in the repo is not exactly working. You need to install `libpq-dev`: while not indicated it is clear from the build process.
 
 Then the commands are not as described [here](https://github.com/jtv/libpqxx/blob/master/BUILDING-cmake.md#building-and-installing-libpqxx-yourself) but rather:
 ```bash
@@ -38,7 +43,7 @@ cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=1 ..
 sudo cmake --install .
 ```
 
-Those were taking from [this](https://preshing.com/20170511/how-to-build-a-cmake-based-project/#running-cmake-from-the-command-line) tutorial and [this](https://stackoverflow.com/questions/67425557/how-do-i-build-a-cmake-project) StackOverflow post. By default libpqxx generates a static library which is not really suited for our purposes. The option `BUILD_SHARED_LIBS` forces to create them. This was indicated in the [README](https://github.com/jtv/libpqxx/blob/master/BUILDING-cmake.md#cheat-sheet).
+Those were taken from [this](https://preshing.com/20170511/how-to-build-a-cmake-based-project/#running-cmake-from-the-command-line) tutorial and [this](https://stackoverflow.com/questions/67425557/how-do-i-build-a-cmake-project) Stack Overflow post. By default libpqxx generates a static library which is not really suited for our purposes. The option `BUILD_SHARED_LIBS` forces to create them. This was indicated in the [README](https://github.com/jtv/libpqxx/blob/master/BUILDING-cmake.md#cheat-sheet).
 
 Then we can attach the library as a dependency of the project as described in the rest of the install [guide](https://github.com/jtv/libpqxx/blob/master/BUILDING-cmake.md#option-b-make-use-of-a-separately-installed-libpqxx).
 
@@ -53,19 +58,19 @@ sudo apt-get install postgresql-14
 
 ## How to send commands to the postgres server
 
-In order to create the database and then perform the migration, we need to at least use the default `postgres` user to create a new user which can then perform all the rest.
+In order to create the database and then perform the migration, we need to use at least once the default `postgres` user to create a new one. This new user will then be used to perform all the rest.
 
-On first inspection it seems like to do that we need to authenticate with the user. The first thing which was not working as easily as we thought is that running the default `psql` command is trying to connect using Unix sockets which are apparently configured to use peer authentication. This can be checked in the file `/etc/postgresql/14/main/pg_hba.conf`:
+On first inspection it seems like to do that we need to authenticate with the `postgres` user. The first thing which was not working as easily as we thought is that running the default `psql` command is trying to connect using Unix sockets which are apparently configured to use peer authentication. This can be checked in the file `/etc/postgresql/14/main/pg_hba.conf`:
 
 ```
 local   all             postgres                                peer
 ```
 
-According to this [stackoverflow post](https://stackoverflow.com/questions/66915087/postgresql-psql-error-fatal-peer-authentication-failed-for-user-userrole) a way to change this behavior is either to change the `peer` value to something else or to use TCP for example by adding `-h 127.0.0.1` in the command line.
+According to this [Stack Overflow post](https://stackoverflow.com/questions/66915087/postgresql-psql-error-fatal-peer-authentication-failed-for-user-userrole) a way to change this behavior is either to change the `peer` value to something else or to use TCP for example by adding `-h 127.0.0.1` or `-h localhost` as an option of the command line.
 
 ## Altering the postgres password
 
-The second problem that arised was that once we were able to communicate with TCP, we were prompted the `postgres` user password. This is not known to us. This [stackoverflow post](https://stackoverflow.com/questions/27107557/what-is-the-default-password-for-postgres) provided useful guidance to do this.
+The second problem that arised was that once we were able to communicate with TCP, we were prompted the `postgres` user password. This is not known to us. This [Stack Overflow post](https://stackoverflow.com/questions/27107557/what-is-the-default-password-for-postgres) provided useful guidance to change it to something we know.
 
 ## Creating the database
 
@@ -78,38 +83,33 @@ We use `migrate` to manage the database and perform the data migrations. Once th
 make migrate
 ```
 
-This will **on a fresh database** trigger all the migrations in order. If the database is in an intermediate state then it will run the missing migrations.
+**On a fresh database**, this will trigger all the migrations in order. If the database is in an intermediate state then it will only run the missing migrations.
 
 ## Managing the database
 
-Once the database is created, one can add migrations in the folder and run again `make migrate` to apply them. If one needs to be reverted, `make demigrateO` can be used to undo the last migration while `make demigrate` will undo all the migrations and basically restore the database to its initial (empty) state.
+Once the database is created, it is easy to add migration files in the folder and run again `make migrate` to apply them. If one of them needs to be reverted, `make demigrateO` can be used to undo the last migration while `make demigrate` will undo all the migrations and basically restore the database to its initial (empty) state.
 
 ## Drop the database
 
 In case it is required to drop the database completely, a convenience script is available under [drop_database.sh](database/drop_database.sh). It is possible to recreate the database again by following the same procedure starting from the top [section](#creating-the-database).
 
-## Creating migrations
+## Creating migrations and generating uuids
 
-According to this [stackoverflow](https://stackoverflow.com/questions/72144228/sequelize-migration-throws-error-function-uuid-generate-v4-does-not-exist) question it seems like we can directly use `gen_random_uuid` with versions of postgres more recent than 14. This is our case.
+According to this [Stack Overflow](https://stackoverflow.com/questions/72144228/sequelize-migration-throws-error-function-uuid-generate-v4-does-not-exist) question it seems like we can directly use `gen_random_uuid` with versions of postgres more recent than 14. This is our case.
 
-# What is the game about?
+# Development log and findings
 
-The goal is to have a 2d top view space shooter where the user can jump from systems to systems and fight enemies while mining resources and upgrading their ship.
+## Goal
 
-# Useful links
+Progressively clone bsgo.
+
+## Useful links
 
 About the entity component system, this [link](https://www.codingwiththomas.com/blog/an-entity-component-system-from-scratch) is useful. Also found [this](https://austinmorlan.com/posts/entity_component_system/) which seems more advanced so we might come back to it later.
 
 The art for spaceships comes from [imgur](https://imgur.com/im8ukHF) and [deviantart](https://www.deviantart.com/ariochiv/art/Stars-in-Shadow-Phidi-Ships-378251756).
 
-# Development process
-
-Progressively clone bsgo
-
 ## Useful libraries
-
-Postgresql library for cpp:
-https://www.postgresql.org/docs/7.2/libpqplusplus.html
 
 Json nlohmann:
 https://github.com/nlohmann/json
@@ -117,52 +117,49 @@ https://github.com/nlohmann/json
 ORM in cpp:
 https://github.com/silverqx/TinyORM
 
-Postgresql lib:
-https://github.com/jtv/libpqxx
+# Structure of the DB
 
-## Structure of the DB
-
-### System table
+## System table
 Contains the system id, its name and position on the map and also maybe cap for people
 
-### Asteroid table
+## Asteroid table
 Contains the position and helath points of the asteroid in a system. Foreign key on the system id
 
-### Player table
+## Player table
 Contains the id of the player and its name
 
-### Ship table
+## Ship table
 Contains the definition of ships. They are just templates with the base statistics such as speed, acceleration, hull points, etc
 
-### Player ship table
+## Player ship table
 Contains the acual instantiation of the ships for each player. When a player buys a ship we create a new entry in this table from the template. It has a foreign key representing the player owning the ship
 
-### Outpost table
+## Outpost table
 Similar to the ship table in purpose but for outpost. Defines the base statistics for the outposts of each faction
 
-### System outpost table
+## System outpost table
 Similar to the player ship table in purpose. Contains a foreign key on the system and the actual instantiation of the outpost for a given system. When an outpost spawns in a system we duplicate an entry from the outpost table into this table
 
-### Weapon table
+## Weapon table
 Contains the definition of weapons in the game. Defines the statistics such as damage, reload time and power cost
 
-### Player weapon table
+## Player weapon table
 Instantiation of the template of the weapons for each player. The level is added here and specific to each weapon. Each weapon has its own id. Not all weapons have an entry in the ship weapon table below
 
-### Ship weapon table
+## Ship weapon table
 Associates the weapon id from the table above with the player ship id. This links together the weapon and make it used by a ship. 
 
-### Note for computers
+## Note for computers
 Very similar system as for weapons: we have a template table, the instantiation per player and the association table for each ship
 
-### Resource table
+## Resource table
 Define the list of resources available in the game with an id and a name
 
-### Asteroid loot table
+## Asteroid loot table
 Define the list of asteroids having a loot as resource. It links an id of an asteroid (as defined in the asteroid table) with the id of a resource (taken from the resource table) and an amount. When the asteroid is destroyed we should clear this line in the DB
 
-### Player resource table
+## Player resource table
 Contains rows with the player id, a resource id and the amount. Unique on (playerId, resourceId). Each time a loot is taken, we update this value
 
-### Locker
+## Locker
 The locker is then just the collection of items from the player which are either resources (as resources can't be equiped) or weapons/computers/etc which have no entry in the corresponding ShipWeaponTable/ShipComputerTable/etc
