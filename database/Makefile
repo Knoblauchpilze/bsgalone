@@ -8,13 +8,14 @@ MIGRATION_STEPS ?= 1
 
 
 # Target allowing to connect to the db in the image.
+# https://stackoverflow.com/questions/6405127/how-do-i-specify-a-password-to-psql-non-interactively
 connect:
-	psql -U ${DB_USER} -d ${DB_NAME} -h ${DB_HOST} -p ${DB_PORT}
+	psql postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
 
 # Target allowing to migrate the db to latest defined step.
 .PHONY: migrate
 migrate:
-	migrate -path ${PWD}/migrations -database postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable up
+	migrate -path ${PWD}/migrations -database postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME} up
 	# Target allowing to migrate the db to latest defined step.
 
 # Target allowing to migrate the db one step further.
