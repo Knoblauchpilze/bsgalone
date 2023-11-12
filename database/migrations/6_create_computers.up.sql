@@ -35,7 +35,6 @@ CREATE TABLE player_computer (
   player INTEGER NOT NULL,
   level INTEGER NOT NULL,
   PRIMARY KEY (id),
-  UNIQUE (computer, player),
   FOREIGN KEY (computer) REFERENCES computer(id),
   FOREIGN KEY (player) REFERENCES player(id)
 );
