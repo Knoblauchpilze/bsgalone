@@ -14,15 +14,7 @@ PlayerView::PlayerView(const Uuid &playerId,
 
 auto PlayerView::getPlayerResources() const -> std::vector<PlayerResource>
 {
-  const auto ids = m_repositories.playerResourceRepository->findAllByPlayer(m_playerId);
-
-  std::vector<PlayerResource> out;
-  for (const auto &id : ids)
-  {
-    const auto resource = m_repositories.playerResourceRepository->findOneById(id);
-    out.push_back(resource);
-  }
-  return out;
+  return m_repositories.playerResourceRepository->findAllByPlayer(m_playerId);
 }
 
 auto PlayerView::getPlayerWeapons() const -> std::vector<PlayerWeapon>
