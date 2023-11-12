@@ -9,38 +9,41 @@ PlayerResourceRepository::PlayerResourceRepository(const DbConnectionShPtr &conn
   addModule("resource");
 }
 
-auto PlayerResourceRepository::findOneById(const Uuid &resource) const -> PlayerResource
+namespace {
+constexpr auto SQL_QUERY_PLAYER_RESOURCES
+  = "SELECT resource.id, resource.name, player_resource.amount FROM player_resource LEFT JOIN resource on player_resource.resource = resource.name WHERE player = ";
+
+auto generateSqlQuery(const Uuid &player) -> std::string
 {
-  PlayerResource out;
-
-  switch (resource)
-  {
-    case Uuid{0}:
-      out.resource = Uuid{1};
-      out.name     = "titane";
-      out.amount   = 1.2f;
-      break;
-    case Uuid{1}:
-      out.resource = Uuid{0};
-      out.name     = "tylium";
-      out.amount   = 2.7f;
-      break;
-    default:
-      error("Resource " + str(resource) + " not found");
-      break;
-  }
-
-  return out;
+  return SQL_QUERY_PLAYER_RESOURCES + str(player + 1);
 }
+} // namespace
 
-auto PlayerResourceRepository::findAllByPlayer(const Uuid &player) const -> std::unordered_set<Uuid>
+auto PlayerResourceRepository::findAllByPlayer(const Uuid &player) const
+  -> std::vector<PlayerResource>
 {
+  // https://www.tutorialspoint.com/postgresql/pdf/postgresql_c_cpp.pdf
   if (player != Uuid(0))
   {
     error("Player " + str(player) + " not found");
   }
 
-  return {Uuid{0}, Uuid{1}};
+  const auto sql = generateSqlQuery(player);
+
+  pqxx::nontransaction work(m_connection->connection());
+  pqxx::result rows(work.exec(sql));
+
+  std::vector<PlayerResource> out;
+  for (const auto record : rows)
+  {
+    const auto resource = record[0].as<Uuid>();
+    const auto name     = record[1].as<std::string>();
+    const auto amount   = record[2].as<float>();
+
+    out.emplace_back(resource, name, amount);
+  }
+
+  return out;
 }
 
 } // namespace bsgo

@@ -12,7 +12,7 @@ class AbstractRepository : public IRepository
   AbstractRepository(const std::string &name, const DbConnectionShPtr &connection);
   ~AbstractRepository() override = default;
 
-  private:
+  protected:
   DbConnectionShPtr m_connection;
 };
 

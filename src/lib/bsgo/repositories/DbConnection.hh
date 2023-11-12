@@ -16,6 +16,8 @@ class DbConnection : public utils::CoreObject
   void connect();
   void disconnect();
 
+  auto connection() -> pqxx::connection &;
+
   private:
   std::unique_ptr<pqxx::connection> m_connection{};
 

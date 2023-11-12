@@ -21,8 +21,7 @@ class PlayerResourceRepository : public AbstractRepository
   PlayerResourceRepository(const DbConnectionShPtr &connection);
   ~PlayerResourceRepository() override = default;
 
-  auto findOneById(const Uuid &resource) const -> PlayerResource;
-  auto findAllByPlayer(const Uuid &player) const -> std::unordered_set<Uuid>;
+  auto findAllByPlayer(const Uuid &player) const -> std::vector<PlayerResource>;
 };
 
 using PlayerResourceRepositoryShPtr = std::shared_ptr<PlayerResourceRepository>;

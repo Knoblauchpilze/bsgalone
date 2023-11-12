@@ -53,6 +53,11 @@ void DbConnection::disconnect()
   m_connection.reset();
 }
 
+auto DbConnection::connection() -> pqxx::connection &
+{
+  return *m_connection;
+}
+
 void DbConnection::setupDbConnection()
 {
   const auto connectionStr = generateConnectionString();
