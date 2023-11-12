@@ -11,13 +11,13 @@ INSERT INTO public.computer ("name", "offensive", "power_cost", "reload_time_ms"
 INSERT INTO public.computer_price ("computer", "resource", "cost")
   VALUES (
     (SELECT id FROM computer WHERE name = 'Weapon buff'),
-    'tylium',
+    (SELECT id FROM resource WHERE name = 'tylium'),
     6500.0
   );
 INSERT INTO public.computer_price ("computer", "resource", "cost")
   VALUES (
     (SELECT id FROM computer WHERE name = 'Scan'),
-    'tylium',
+    (SELECT id FROM resource WHERE name = 'tylium'),
     5000.0
   );
 

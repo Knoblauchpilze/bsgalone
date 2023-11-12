@@ -14,11 +14,11 @@ CREATE TABLE computer (
 
 CREATE TABLE computer_price (
   computer INTEGER NOT NULL,
-  resource TEXT NOT NULL,
+  resource INTEGER NOT NULL,
   cost NUMERIC(8, 2) NOT NULL,
   PRIMARY KEY (computer, resource),
   FOREIGN KEY (computer) REFERENCES computer(id),
-  FOREIGN KEY (resource) REFERENCES resource(name)
+  FOREIGN KEY (resource) REFERENCES resource(id)
 );
 
 CREATE TABLE computer_allowed_target (

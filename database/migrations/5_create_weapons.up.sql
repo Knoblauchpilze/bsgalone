@@ -13,11 +13,11 @@ CREATE TABLE weapon (
 
 CREATE TABLE weapon_price (
   weapon INTEGER NOT NULL,
-  resource TEXT NOT NULL,
+  resource INTEGER NOT NULL,
   cost NUMERIC(8, 2) NOT NULL,
   PRIMARY KEY (weapon, resource),
   FOREIGN KEY (weapon) REFERENCES weapon(id),
-  FOREIGN KEY (resource) REFERENCES resource(name)
+  FOREIGN KEY (resource) REFERENCES resource(id)
 );
 
 CREATE TABLE player_weapon (

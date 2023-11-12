@@ -10,9 +10,9 @@ CREATE TABLE player (
 
 CREATE TABLE player_resource (
   player INTEGER NOT NULL,
-  resource TEXT NOT NULL,
+  resource INTEGER NOT NULL,
   amount NUMERIC(12, 2) NOT NULL,
   PRIMARY KEY (player, resource),
   FOREIGN KEY (player) REFERENCES player(id),
-  FOREIGN KEY (resource) REFERENCES resource(name)
+  FOREIGN KEY (resource) REFERENCES resource(id)
 );
