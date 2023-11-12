@@ -11,6 +11,15 @@ CREATE TABLE weapon (
   UNIQUE (name)
 );
 
+CREATE TABLE weapon_price (
+  weapon INTEGER NOT NULL,
+  resource TEXT NOT NULL,
+  cost NUMERIC(8, 2) NOT NULL,
+  PRIMARY KEY (weapon, resource),
+  FOREIGN KEY (weapon) REFERENCES weapon(id),
+  FOREIGN KEY (resource) REFERENCES resource(name)
+);
+
 CREATE TABLE player_weapon (
   id INTEGER GENERATED ALWAYS AS IDENTITY,
   weapon INTEGER NOT NULL,
