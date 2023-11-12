@@ -15,6 +15,7 @@
 #include "ResourceRepository.hh"
 #include "ShipComputerRepository.hh"
 #include "ShipWeaponRepository.hh"
+#include "SystemOutpostRepository.hh"
 #include "SystemRepository.hh"
 #include "WeaponPriceRepository.hh"
 #include "WeaponRepository.hh"
@@ -39,6 +40,7 @@ struct Repositories
   SystemRepositoryShPtr systemRepository{};
   WeaponPriceRepositoryShPtr weaponPriceRepository{};
   WeaponRepositoryShPtr weaponRepository{};
+  SystemOutpostRepositoryShPtr systemOutpostRepository{};
 };
 
 auto createRepositories(const DbConnectionShPtr &dbConnection) -> Repositories;

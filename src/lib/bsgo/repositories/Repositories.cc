@@ -23,6 +23,7 @@ auto createRepositories(const DbConnectionShPtr &dbConnection) -> Repositories
   out.systemRepository         = std::make_shared<SystemRepository>(dbConnection);
   out.weaponPriceRepository    = std::make_shared<WeaponPriceRepository>(dbConnection);
   out.weaponRepository         = std::make_shared<WeaponRepository>(dbConnection);
+  out.systemOutpostRepository  = std::make_shared<SystemOutpostRepository>(dbConnection);
 
   return out;
 }

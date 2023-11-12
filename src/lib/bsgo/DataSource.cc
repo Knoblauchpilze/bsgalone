@@ -176,7 +176,7 @@ void DataSource::registerShip(Coordinator &coordinator, const Uuid &ship) const
 
 void DataSource::registerOutpost(Coordinator &coordinator, const Uuid &outpost) const
 {
-  const auto data = m_repositories.outpostRepository->findOneById(outpost);
+  const auto data = m_repositories.systemOutpostRepository->findOneById(outpost);
 
   auto box       = std::make_unique<CircleBox>(data.position, data.radius);
   const auto ent = coordinator.createEntity(EntityKind::OUTPOST);
