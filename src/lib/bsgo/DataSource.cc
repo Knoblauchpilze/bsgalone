@@ -143,7 +143,7 @@ void DataSource::registerShip(Coordinator &coordinator, const Uuid &ship) const
   coordinator.addPower(ent, data.powerPoints, data.maxPowerPoints, data.powerRegen);
   coordinator.addTarget(ent);
   coordinator.addFaction(ent, data.faction);
-  coordinator.addStatus(ent, Status::VISIBLE);
+  coordinator.addStatus(ent, Status::APPEARING);
   if (!data.player)
   {
     coordinator.addAI(ent, generateBehaviorTree(ship, data.position));
