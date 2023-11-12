@@ -12,6 +12,15 @@ CREATE TABLE computer (
   UNIQUE (name)
 );
 
+CREATE TABLE computer_price (
+  computer INTEGER NOT NULL,
+  resource TEXT NOT NULL,
+  cost NUMERIC(8, 2) NOT NULL,
+  PRIMARY KEY (computer, resource),
+  FOREIGN KEY (computer) REFERENCES computer(id),
+  FOREIGN KEY (resource) REFERENCES resource(name)
+);
+
 CREATE TABLE computer_allowed_target (
   computer INTEGER NOT NULL,
   entity TEXT NOT NULL,
