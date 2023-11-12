@@ -1,15 +1,17 @@
 
-#include "OutpostRepository.hh"
+#include "SystemOutpostRepository.hh"
 
 namespace bsgo {
 
-OutpostRepository::OutpostRepository(const DbConnectionShPtr &connection)
-  : AbstractRepository("outpost", connection)
-{}
-
-auto OutpostRepository::findOneById(const Uuid &outpost) const -> Outpost
+SystemOutpostRepository::SystemOutpostRepository(const DbConnectionShPtr &connection)
+  : AbstractRepository("system", connection)
 {
-  Outpost out;
+  addModule("outpost");
+}
+
+auto SystemOutpostRepository::findOneById(const Uuid &outpost) const -> SystemOutpost
+{
+  SystemOutpost out;
 
   switch (outpost)
   {
@@ -24,7 +26,8 @@ auto OutpostRepository::findOneById(const Uuid &outpost) const -> Outpost
       out.maxPowerPoints = 4500.0f;
       out.powerRegen     = 100.0f;
 
-      out.radius = 2.0f;
+      out.radius   = 2.0f;
+      out.position = Eigen::Vector3f(-6.0f, 3.2f, 0.0f);
       break;
     case 1:
       out.faction = Faction::CYLON;
@@ -37,7 +40,8 @@ auto OutpostRepository::findOneById(const Uuid &outpost) const -> Outpost
       out.maxPowerPoints = 600.0f;
       out.powerRegen     = 12.0f;
 
-      out.radius = 3.0f;
+      out.radius   = 3.0f;
+      out.position = Eigen::Vector3f(6.0f, -3.2f, 0.0f);
       break;
     default:
       error("Outpost " + str(outpost) + " not found");

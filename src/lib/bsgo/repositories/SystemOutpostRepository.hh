@@ -9,7 +9,7 @@
 
 namespace bsgo {
 
-struct Outpost
+struct SystemOutpost
 {
   Faction faction;
 
@@ -22,17 +22,18 @@ struct Outpost
   float powerRegen{0.0f};
 
   float radius{2.0f};
+  Eigen::Vector3f position{Eigen::Vector3f::Zero()};
 };
 
-class OutpostRepository : public AbstractRepository
+class SystemOutpostRepository : public AbstractRepository
 {
   public:
-  OutpostRepository(const DbConnectionShPtr &connection);
-  ~OutpostRepository() override = default;
+  SystemOutpostRepository(const DbConnectionShPtr &connection);
+  ~SystemOutpostRepository() override = default;
 
-  auto findOneById(const Uuid &outpost) const -> Outpost;
+  auto findOneById(const Uuid &outpost) const -> SystemOutpost;
 };
 
-using OutpostRepositoryShPtr = std::shared_ptr<OutpostRepository>;
+using SystemOutpostRepositoryShPtr = std::shared_ptr<SystemOutpostRepository>;
 
 } // namespace bsgo
