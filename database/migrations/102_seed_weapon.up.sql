@@ -9,24 +9,24 @@ INSERT INTO public.weapon ("name", "min_damage", "max_damage", "power_cost", "ra
 INSERT INTO public.weapon_price ("weapon", "resource", "cost")
   VALUES (
     (SELECT id FROM weapon WHERE name = 'Short range cannon'),
-    'tylium',
+    (SELECT id FROM resource WHERE name = 'tylium'),
     10000.0
   );
 INSERT INTO public.weapon_price ("weapon", "resource", "cost")
   VALUES (
     (SELECT id FROM weapon WHERE name = 'Short range cannon'),
-    'titane',
+    (SELECT id FROM resource WHERE name = 'titane'),
     1000.0
   );
 INSERT INTO public.weapon_price ("weapon", "resource", "cost")
   VALUES (
     (SELECT id FROM weapon WHERE name = 'Medium range cannon'),
-    'tylium',
+    (SELECT id FROM resource WHERE name = 'tylium'),
     11000.0
   );
 INSERT INTO public.weapon_price ("weapon", "resource", "cost")
   VALUES (
     (SELECT id FROM weapon WHERE name = 'Long range cannon'),
-    'tylium',
+    (SELECT id FROM resource WHERE name = 'tylium'),
     12000.0
   );

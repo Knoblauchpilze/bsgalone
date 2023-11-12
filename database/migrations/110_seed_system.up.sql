@@ -35,13 +35,13 @@ INSERT INTO public.asteroid ("system", "health", "radius")
 INSERT INTO public.asteroid_loot ("asteroid", "resource", "amount")
   VALUES (
     (SELECT id FROM asteroid WHERE health = 85.0),
-    'tylium',
+    (SELECT id FROM resource WHERE name = 'tylium'),
     10.0
   );
 INSERT INTO public.asteroid_loot ("asteroid", "resource", "amount")
   VALUES (
     (SELECT id FROM asteroid WHERE health = 150.0),
-    'titane',
+    (SELECT id FROM resource WHERE name = 'titane'),
     2.0
   );
 

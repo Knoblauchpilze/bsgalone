@@ -12,7 +12,8 @@ CREATE TABLE entity (
 CREATE TABLE resource (
   id INTEGER GENERATED ALWAYS AS IDENTITY,
   name TEXT NOT NULL,
-  PRIMARY KEY (name)
+  PRIMARY KEY (id),
+  UNIQUE (name)
 );
 
 INSERT INTO public.faction ("name") VALUES('cylon');

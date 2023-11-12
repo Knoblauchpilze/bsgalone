@@ -17,11 +17,11 @@ CREATE TABLE asteroid (
 
 CREATE TABLE asteroid_loot (
   asteroid INTEGER NOT NULL,
-  resource TEXT NOT NULL,
+  resource INTEGER NOT NULL,
   amount NUMERIC(12, 2) NOT NULL,
   PRIMARY KEY (asteroid),
   FOREIGN KEY (asteroid) REFERENCES asteroid(id),
-  FOREIGN KEY (resource) REFERENCES resource(name)
+  FOREIGN KEY (resource) REFERENCES resource(id)
 );
 
 CREATE TABLE outpost (
