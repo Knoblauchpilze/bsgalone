@@ -19,7 +19,7 @@ CREATE TABLE ship (
 CREATE TABLE player_ship (
   id INTEGER GENERATED ALWAYS AS IDENTITY,
   ship INTEGER NOT NULL,
-  player INTEGER NOT NULL,
+  player INTEGER,
   hull_points NUMERIC(8, 2) NOT NULL,
   power_points NUMERIC(8, 2) NOT NULL,
   PRIMARY KEY (id),

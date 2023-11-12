@@ -23,10 +23,9 @@ CREATE TABLE weapon_price (
 CREATE TABLE player_weapon (
   id INTEGER GENERATED ALWAYS AS IDENTITY,
   weapon INTEGER NOT NULL,
-  player INTEGER NOT NULL,
+  player INTEGER,
   level INTEGER NOT NULL,
   PRIMARY KEY (id),
-  UNIQUE (weapon, player),
   FOREIGN KEY (weapon) REFERENCES weapon(id),
   FOREIGN KEY (player) REFERENCES player(id)
 );

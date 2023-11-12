@@ -20,6 +20,7 @@ CREATE TABLE asteroid_loot (
   resource TEXT NOT NULL,
   amount NUMERIC(12, 2) NOT NULL,
   PRIMARY KEY (asteroid),
+  FOREIGN KEY (asteroid) REFERENCES asteroid(id),
   FOREIGN KEY (resource) REFERENCES resource(name)
 );
 
