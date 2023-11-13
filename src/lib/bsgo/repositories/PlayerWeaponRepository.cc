@@ -17,7 +17,7 @@ auto generateAllSqlQuery(const Uuid &player) -> std::string
 }
 
 constexpr auto SQL_QUERY
-  = "SELECT w.name, w.min_damage, w.max_damage, w.power_cost, w.range, w.reload_time_ms FROM player_weapon AS pw LEFT JOIN weapon AS w ON pw.weapon = w.id WHERE pw.id = ";
+  = "SELECT w.name, w.min_damage, w.max_damage, w.power_cost, w.range, w.reload_time_ms, pw.level FROM player_weapon AS pw LEFT JOIN weapon AS w ON pw.weapon = w.id WHERE pw.id = ";
 auto generateSqlQuery(const Uuid &weapon) -> std::string
 {
   return SQL_QUERY + std::to_string(toDbId(weapon));
@@ -45,6 +45,7 @@ auto PlayerWeaponRepository::findOneById(const Uuid &weapon) const -> PlayerWeap
   out.powerCost      = record[3].as<float>();
   out.range          = record[4].as<float>();
   out.reloadTime     = utils::Milliseconds(record[5].as<int>());
+  out.level          = record[6].as<int>();
 
   return out;
 }
