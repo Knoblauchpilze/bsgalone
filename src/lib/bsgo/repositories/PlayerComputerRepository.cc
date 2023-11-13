@@ -17,7 +17,7 @@ auto generateAllSqlQuery(const Uuid &player) -> std::string
 }
 
 constexpr auto SQL_QUERY
-  = "SELECT c.name, c.offensive, c.power_cost, c.range, c.reload_time_ms, c.duration_ms, c.damage_modifier FROM player_computer AS pc LEFT JOIN computer AS c ON pc.computer = c.id WHERE pc.id = ";
+  = "SELECT c.name, c.offensive, c.power_cost, c.range, c.reload_time_ms, c.duration_ms, c.damage_modifier, pc.level FROM player_computer AS pc LEFT JOIN computer AS c ON pc.computer = c.id WHERE pc.id = ";
 auto generateSqlQuery(const Uuid &computer) -> std::string
 {
   return SQL_QUERY + std::to_string(toDbId(computer));
@@ -87,6 +87,7 @@ auto PlayerComputerRepository::fetchComputerBase(const Uuid &computer) const -> 
   {
     out.damageModifier = {record[6].as<float>()};
   }
+  out.level = record[7].as<int>();
 
   return out;
 }
