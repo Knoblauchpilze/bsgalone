@@ -10,7 +10,7 @@ namespace bsgo {
 
 struct Resource
 {
-  std::string name;
+  std::string name{};
 };
 
 class ResourceRepository : public AbstractRepository

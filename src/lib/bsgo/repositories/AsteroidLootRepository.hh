@@ -10,8 +10,8 @@ namespace bsgo {
 
 struct AsteroidLoot
 {
-  Uuid resource;
-  float amount;
+  Uuid resource{};
+  float amount{};
 };
 
 class AsteroidLootRepository : public AbstractRepository
