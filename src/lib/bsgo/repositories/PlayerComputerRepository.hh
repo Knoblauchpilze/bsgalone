@@ -34,6 +34,10 @@ class PlayerComputerRepository : public AbstractRepository
 
   auto findOneById(const Uuid &computer) const -> PlayerComputer;
   auto findAllByPlayer(const Uuid &player) const -> std::unordered_set<Uuid>;
+
+  private:
+  auto fetchComputerBase(const Uuid &computer) const -> PlayerComputer;
+  void fetchAllowedTargets(const Uuid &computer, PlayerComputer &out) const;
 };
 
 using PlayerComputerRepositoryShPtr = std::shared_ptr<PlayerComputerRepository>;
