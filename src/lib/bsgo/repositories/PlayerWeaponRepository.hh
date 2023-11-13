@@ -11,17 +11,17 @@ namespace bsgo {
 
 struct PlayerWeapon
 {
-  std::string name;
-  int level;
+  std::string name{};
+  int level{};
 
-  float minDamage;
-  float maxDamage;
+  float minDamage{};
+  float maxDamage{};
 
-  float powerCost;
+  float powerCost{};
 
-  float range;
+  float range{};
 
-  utils::Duration reloadTime;
+  utils::Duration reloadTime{};
 };
 
 class PlayerWeaponRepository : public AbstractRepository

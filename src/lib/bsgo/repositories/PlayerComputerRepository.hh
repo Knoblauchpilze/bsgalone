@@ -13,13 +13,13 @@ namespace bsgo {
 
 struct PlayerComputer
 {
-  std::string name;
-  int level;
+  std::string name{};
+  int level{};
 
-  bool offensive;
-  float powerCost;
+  bool offensive{};
+  float powerCost{};
   std::optional<float> range{};
-  utils::Duration reloadTime;
+  utils::Duration reloadTime{};
 
   std::optional<utils::Duration> duration{};
   std::optional<std::unordered_set<EntityKind>> allowedTargets{};

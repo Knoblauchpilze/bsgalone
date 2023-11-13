@@ -10,9 +10,9 @@ namespace bsgo {
 
 struct PlayerResource
 {
-  Uuid resource;
-  std::string name;
-  float amount;
+  Uuid resource{};
+  std::string name{};
+  float amount{};
 };
 
 class PlayerResourceRepository : public AbstractRepository

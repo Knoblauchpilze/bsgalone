@@ -10,8 +10,8 @@ namespace bsgo {
 
 struct Ship
 {
-  Faction faction;
-  std::string name;
+  Faction faction{};
+  std::string name{};
 
   float maxHullPoints{0.0f};
   float hullPointsRegen{0.0f};
