@@ -7,61 +7,40 @@ ShipRepository::ShipRepository(const DbConnectionShPtr &connection)
   : AbstractRepository("ship", connection)
 {}
 
+namespace {
+constexpr auto SQL_QUERY
+  = "SELECT faction, name, max_hull_points, hull_points_regen, max_power_points, power_points_regen, max_acceleration, max_speed, radius FROM ship WHERE id = ";
+
+auto generateSqlQuery(const Uuid &ship) -> std::string
+{
+  return SQL_QUERY + std::to_string(toDbId(ship));
+}
+} // namespace
+
 auto ShipRepository::findOneById(const Uuid &ship) const -> Ship
 {
+  const auto sql = generateSqlQuery(ship);
+
+  pqxx::nontransaction work(m_connection->connection());
+  pqxx::result rows(work.exec(sql));
+
+  if (rows.size() != 1)
+  {
+    error("Expected to find only one ship with id " + str(ship));
+  }
+
   Ship out;
 
-  switch (ship)
-  {
-    case Uuid{0}:
-      out.faction = Faction::COLONIAL;
-      out.name    = "Viper mark II";
-
-      out.maxHullPoints   = 585.0f;
-      out.hullPointsRegen = 0.5f;
-
-      out.maxPowerPoints = 150.0f;
-      out.powerRegen     = 2.0f;
-
-      out.acceleration = 5.0f;
-      out.speed        = 4.0f;
-
-      out.radius = 0.5f;
-      break;
-    case Uuid{1}:
-      out.faction = Faction::CYLON;
-      out.name    = "Cylon Raider";
-
-      out.maxHullPoints   = 300.0f;
-      out.hullPointsRegen = 1.0f;
-
-      out.maxPowerPoints = 75.0f;
-      out.powerRegen     = 5.0f;
-
-      out.acceleration = 7.0f;
-      out.speed        = 6.0f;
-
-      out.radius = 0.7f;
-      break;
-    case Uuid{2}:
-      out.faction = Faction::COLONIAL;
-      out.name    = "Jotunn";
-
-      out.maxHullPoints   = 3000.0f;
-      out.hullPointsRegen = 50.0f;
-
-      out.maxPowerPoints = 750.0f;
-      out.powerRegen     = 32.0f;
-
-      out.acceleration = 1.0f;
-      out.speed        = 2.0f;
-
-      out.radius = 2.0f;
-      break;
-    default:
-      error("Ship " + str(ship) + " not found");
-      break;
-  }
+  const auto &record  = rows[0];
+  out.faction         = fromDbFaction(record[0].as<std::string>());
+  out.name            = record[1].as<std::string>();
+  out.maxHullPoints   = record[2].as<float>();
+  out.hullPointsRegen = record[3].as<float>();
+  out.maxPowerPoints  = record[4].as<float>();
+  out.powerRegen      = record[5].as<float>();
+  out.acceleration    = record[6].as<float>();
+  out.speed           = record[7].as<float>();
+  out.radius          = record[8].as<float>();
 
   return out;
 }

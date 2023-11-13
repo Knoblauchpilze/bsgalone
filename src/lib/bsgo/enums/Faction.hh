@@ -12,5 +12,7 @@ enum class Faction
 };
 
 auto str(const Faction faction) -> std::string;
+auto toDbFaction(const Faction faction) -> std::string;
+auto fromDbFaction(const std::string &dbFaction) -> Faction;
 
 } // namespace bsgo
