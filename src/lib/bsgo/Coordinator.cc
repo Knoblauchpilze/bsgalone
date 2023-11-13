@@ -387,11 +387,11 @@ void Coordinator::createSystems()
   auto ai = std::make_unique<AISystem>();
   m_systems.push_back(std::move(ai));
 
-  auto health = std::make_unique<HealthSystem>();
-  m_systems.push_back(std::move(health));
-
   auto target = std::make_unique<TargetSystem>();
   m_systems.push_back(std::move(target));
+
+  auto health = std::make_unique<HealthSystem>();
+  m_systems.push_back(std::move(health));
 
   auto loot = std::make_unique<LootSystem>();
   m_systems.push_back(std::move(loot));
