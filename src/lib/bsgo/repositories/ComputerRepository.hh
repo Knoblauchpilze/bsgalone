@@ -13,11 +13,11 @@ namespace bsgo {
 
 struct Computer
 {
-  std::string name;
-  bool offensive;
-  float powerCost;
+  std::string name{};
+  bool offensive{};
+  float powerCost{};
   std::optional<float> range{};
-  utils::Duration reloadTime;
+  utils::Duration reloadTime{};
 
   std::optional<utils::Duration> duration{};
   std::optional<std::unordered_set<EntityKind>> allowedTargets{};
@@ -32,6 +32,10 @@ class ComputerRepository : public AbstractRepository
 
   auto findAll() const -> std::unordered_set<Uuid>;
   auto findOneById(const Uuid &computer) const -> Computer;
+
+  private:
+  auto fetchComputerBase(const Uuid &computer) const -> Computer;
+  void fetchAllowedTargets(const Uuid &computer, Computer &out) const;
 };
 
 using ComputerRepositoryShPtr = std::shared_ptr<ComputerRepository>;

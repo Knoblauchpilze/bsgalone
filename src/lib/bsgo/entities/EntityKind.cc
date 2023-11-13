@@ -1,5 +1,6 @@
 
 #include "EntityKind.hh"
+#include <stdexcept>
 
 namespace bsgo {
 
@@ -22,6 +23,21 @@ auto str(const EntityKind &kind) noexcept -> std::string
     default:
       return "unknown(" + std::to_string(static_cast<int>(kind)) + ")";
   }
+}
+
+auto toDbEntityKind(const EntityKind &kind) -> std::string
+{
+  return str(kind);
+}
+
+auto fromDbEntityKind(const std::string &dbKind) -> EntityKind
+{
+  if ("asteroid" == dbKind)
+  {
+    return EntityKind::ASTEROID;
+  }
+
+  throw std::invalid_argument("Unknown entity kind \"" + dbKind + "\"");
 }
 
 } // namespace bsgo
