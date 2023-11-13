@@ -8,33 +8,52 @@ WeaponRepository::WeaponRepository(const DbConnectionShPtr &connection)
   : AbstractRepository("weapon", connection)
 {}
 
+namespace {
+constexpr auto SQL_QUERY_ALL = "SELECT id FROM weapon";
+constexpr auto SQL_QUERY
+  = "SELECT name, min_damage, max_damage, power_cost, range, reload_time_ms FROM weapon WHERE id = ";
+
+auto generateSqlQuery(const Uuid &weapon) -> std::string
+{
+  return SQL_QUERY + std::to_string(toDbId(weapon));
+}
+} // namespace
+
 auto WeaponRepository::findAll() const -> std::unordered_set<Uuid>
 {
-  return {Uuid{0}};
+  pqxx::nontransaction work(m_connection->connection());
+  pqxx::result rows(work.exec(SQL_QUERY_ALL));
+
+  std::unordered_set<Uuid> out;
+  for (const auto record : rows)
+  {
+    out.emplace(fromDbId(record[0].as<int>()));
+  }
+
+  return out;
 }
 
 auto WeaponRepository::findOneById(const Uuid &weapon) const -> Weapon
 {
-  Weapon out;
+  const auto sql = generateSqlQuery(weapon);
 
-  out.powerCost = 1.0f;
+  pqxx::nontransaction work(m_connection->connection());
+  pqxx::result rows(work.exec(sql));
 
-  out.range = 5.1f;
-
-  constexpr auto RELOAD_TIME_IN_MS = 200;
-  out.reloadTime                   = utils::Milliseconds(RELOAD_TIME_IN_MS);
-
-  switch (weapon)
+  if (rows.size() != 1)
   {
-    case Uuid{0}:
-      out.name      = "Short range cannon";
-      out.minDamage = 1.0f;
-      out.maxDamage = 10.0f;
-      break;
-    default:
-      error("Weapon " + str(weapon) + " not found");
-      break;
+    error("Expected to find only one weapon with id " + str(weapon));
   }
+
+  Weapon out{};
+
+  const auto &record = rows[0];
+  out.name           = record[0].as<std::string>();
+  out.minDamage      = record[1].as<float>();
+  out.maxDamage      = record[2].as<float>();
+  out.powerCost      = record[3].as<float>();
+  out.range          = record[4].as<float>();
+  out.reloadTime     = utils::Milliseconds(record[5].as<int>());
 
   return out;
 }
