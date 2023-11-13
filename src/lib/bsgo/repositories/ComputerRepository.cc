@@ -10,17 +10,16 @@ ComputerRepository::ComputerRepository(const DbConnectionShPtr &connection)
 
 namespace {
 constexpr auto SQL_QUERY_ALL = "SELECT id FROM computer";
+
 constexpr auto SQL_QUERY
   = "SELECT name, offensive, power_cost, range, reload_time_ms, duration_ms, damage_modifier FROM computer WHERE id = ";
-
 auto generateSqlQuery(const Uuid &computer) -> std::string
 {
   return SQL_QUERY + std::to_string(toDbId(computer));
 }
 
 constexpr auto SQL_QUERY_TARGET
-  = "SELECT entity FROM computer_allowed_target AS cat LEFT JOIN computer AS c ON cat.computer = c.id WHERE c.id = ";
-
+  = "SELECT cat.entity FROM computer_allowed_target AS cat LEFT JOIN computer AS c ON cat.computer = c.id WHERE c.id = ";
 auto generateTargetsSqlQuery(const Uuid &computer) -> std::string
 {
   return SQL_QUERY_TARGET + std::to_string(toDbId(computer));

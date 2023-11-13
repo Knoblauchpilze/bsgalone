@@ -10,9 +10,9 @@ WeaponRepository::WeaponRepository(const DbConnectionShPtr &connection)
 
 namespace {
 constexpr auto SQL_QUERY_ALL = "SELECT id FROM weapon";
+
 constexpr auto SQL_QUERY
   = "SELECT name, min_damage, max_damage, power_cost, range, reload_time_ms FROM weapon WHERE id = ";
-
 auto generateSqlQuery(const Uuid &weapon) -> std::string
 {
   return SQL_QUERY + std::to_string(toDbId(weapon));

@@ -9,59 +9,102 @@ PlayerComputerRepository::PlayerComputerRepository(const DbConnectionShPtr &conn
   addModule("player");
 }
 
+namespace {
+constexpr auto SQL_QUERY_ALL = "SELECT id FROM player_computer WHERE player = ";
+auto generateAllSqlQuery(const Uuid &player) -> std::string
+{
+  return SQL_QUERY_ALL + std::to_string(toDbId(player));
+}
+
+constexpr auto SQL_QUERY
+  = "SELECT c.name, c.offensive, c.power_cost, c.range, c.reload_time_ms, c.duration_ms, c.damage_modifier FROM player_computer AS pc LEFT JOIN computer AS c ON pc.computer = c.id WHERE pc.id = ";
+auto generateSqlQuery(const Uuid &computer) -> std::string
+{
+  return SQL_QUERY + std::to_string(toDbId(computer));
+}
+
+constexpr auto SQL_QUERY_TARGET
+  = "SELECT cat.entity FROM computer_allowed_target AS cat LEFT JOIN computer AS c ON cat.computer = c.id LEFT JOIN player_computer AS pc ON pc.computer = c.id WHERE pc.id = ";
+
+auto generateTargetsSqlQuery(const Uuid &computer) -> std::string
+{
+  return SQL_QUERY_TARGET + std::to_string(toDbId(computer));
+}
+} // namespace
+
 auto PlayerComputerRepository::findOneById(const Uuid &computer) const -> PlayerComputer
 {
-  PlayerComputer out;
-
-  switch (computer)
-  {
-    case Uuid{0}:
-      out.name       = "Weapon buff";
-      out.level      = 1;
-      out.offensive  = false;
-      out.powerCost  = 20.0f;
-      out.reloadTime = utils::Milliseconds(10000);
-
-      out.duration       = {utils::Milliseconds(3500)};
-      out.damageModifier = {1.5f};
-      break;
-    case Uuid{1}:
-      out.name       = "Scan";
-      out.level      = 5;
-      out.offensive  = true;
-      out.powerCost  = 5.0f;
-      out.range      = {6.0f};
-      out.reloadTime = utils::Milliseconds(2000);
-
-      out.duration       = {};
-      out.allowedTargets = {{EntityKind::ASTEROID}};
-      out.damageModifier = {};
-      break;
-    case Uuid{2}:
-      out.name       = "Weapon buff";
-      out.level      = 6;
-      out.offensive  = false;
-      out.powerCost  = 18.0f;
-      out.reloadTime = utils::Milliseconds(8000);
-
-      out.duration       = {utils::Milliseconds(4000)};
-      out.damageModifier = {1.7f};
-      break;
-    default:
-      error("Computer " + str(computer) + " not found");
-      break;
-  }
+  auto out = fetchComputerBase(computer);
+  fetchAllowedTargets(computer, out);
 
   return out;
 }
 
 auto PlayerComputerRepository::findAllByPlayer(const Uuid &player) const -> std::unordered_set<Uuid>
 {
-  if (player != Uuid{0})
+  const auto sql = generateAllSqlQuery(player);
+
+  pqxx::nontransaction work(m_connection->connection());
+  pqxx::result rows(work.exec(sql));
+
+  std::unordered_set<Uuid> out;
+  for (const auto record : rows)
   {
-    error("Player " + str(player) + " not found");
+    out.emplace(fromDbId(record[0].as<int>()));
   }
-  return {Uuid{0}, Uuid{1}, Uuid{2}};
+
+  return out;
+}
+
+auto PlayerComputerRepository::fetchComputerBase(const Uuid &computer) const -> PlayerComputer
+{
+  const auto sql = generateSqlQuery(computer);
+
+  pqxx::nontransaction work(m_connection->connection());
+  pqxx::result rows(work.exec(sql));
+
+  if (rows.size() != 1)
+  {
+    error("Expected to find only one computer with id " + str(computer));
+  }
+
+  PlayerComputer out{};
+
+  const auto &record = rows[0];
+  out.name           = record[0].as<std::string>();
+  out.offensive      = record[1].as<bool>();
+  out.powerCost      = record[2].as<float>();
+  if (!record[3].is_null())
+  {
+    out.range = {record[3].as<float>()};
+  }
+  out.reloadTime = utils::Milliseconds(record[4].as<int>());
+  if (!record[5].is_null())
+  {
+    out.duration = {utils::Milliseconds(record[5].as<int>())};
+  }
+  if (!record[6].is_null())
+  {
+    out.damageModifier = {record[6].as<float>()};
+  }
+
+  return out;
+}
+
+void PlayerComputerRepository::fetchAllowedTargets(const Uuid &computer, PlayerComputer &out) const
+{
+  const auto sql = generateTargetsSqlQuery(computer);
+
+  pqxx::nontransaction work(m_connection->connection());
+  pqxx::result rows(work.exec(sql));
+
+  std::unordered_set<EntityKind> targets;
+  for (const auto record : rows)
+  {
+    targets.emplace(fromDbEntityKind(record[0].as<std::string>()));
+  }
+
+  out.allowedTargets = {targets};
 }
 
 } // namespace bsgo
