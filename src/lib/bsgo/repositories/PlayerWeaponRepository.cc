@@ -9,64 +9,60 @@ PlayerWeaponRepository::PlayerWeaponRepository(const DbConnectionShPtr &connecti
   addModule("player");
 }
 
+namespace {
+constexpr auto SQL_QUERY_ALL = "SELECT id FROM player_weapon WHERE player = ";
+auto generateAllSqlQuery(const Uuid &player) -> std::string
+{
+  return SQL_QUERY_ALL + std::to_string(toDbId(player));
+}
+
+constexpr auto SQL_QUERY
+  = "SELECT w.name, w.min_damage, w.max_damage, w.power_cost, w.range, w.reload_time_ms FROM player_weapon AS pw LEFT JOIN weapon AS w ON pw.weapon = w.id WHERE pw.id = ";
+auto generateSqlQuery(const Uuid &weapon) -> std::string
+{
+  return SQL_QUERY + std::to_string(toDbId(weapon));
+}
+} // namespace
+
 auto PlayerWeaponRepository::findOneById(const Uuid &weapon) const -> PlayerWeapon
 {
-  PlayerWeapon out;
-  out.powerCost = 2.0f;
+  const auto sql = generateSqlQuery(weapon);
 
-  out.range = 2.3f;
+  pqxx::nontransaction work(m_connection->connection());
+  pqxx::result rows(work.exec(sql));
 
-  constexpr auto RELOAD_TIME_IN_MS = 500;
-  out.reloadTime                   = utils::Milliseconds(RELOAD_TIME_IN_MS);
-
-  switch (weapon)
+  if (rows.size() != 1)
   {
-    case Uuid{0}:
-      out.name      = "Medium range cannon";
-      out.level     = 2;
-      out.minDamage = 1.1f;
-      out.maxDamage = 11.0f;
-      break;
-    case Uuid{1}:
-      out.name      = "Short range cannon";
-      out.level     = 1;
-      out.minDamage = 1.0f;
-      out.maxDamage = 10.0f;
-      break;
-    case Uuid{2}:
-      out.name      = "Long range cannon";
-      out.level     = 6;
-      out.minDamage = 1.6f;
-      out.maxDamage = 16.0f;
-      break;
-    case Uuid{3}:
-      out.name      = "Long range (P) cannon";
-      out.level     = 7;
-      out.minDamage = 1.7f;
-      out.maxDamage = 17.0f;
-      break;
-    case Uuid{4}:
-      out.name      = "Medium range cannon";
-      out.level     = 20;
-      out.minDamage = 2.5f;
-      out.maxDamage = 25.0f;
-      break;
-    default:
-      error("Weapon " + str(weapon) + " not found");
-      break;
+    error("Expected to find only one weapon with id " + str(weapon));
   }
+
+  PlayerWeapon out{};
+
+  const auto &record = rows[0];
+  out.name           = record[0].as<std::string>();
+  out.minDamage      = record[1].as<float>();
+  out.maxDamage      = record[2].as<float>();
+  out.powerCost      = record[3].as<float>();
+  out.range          = record[4].as<float>();
+  out.reloadTime     = utils::Milliseconds(record[5].as<int>());
 
   return out;
 }
 
 auto PlayerWeaponRepository::findAllByPlayer(const Uuid &player) const -> std::unordered_set<Uuid>
 {
-  if (player != Uuid{0})
+  const auto sql = generateAllSqlQuery(player);
+
+  pqxx::nontransaction work(m_connection->connection());
+  pqxx::result rows(work.exec(sql));
+
+  std::unordered_set<Uuid> out;
+  for (const auto record : rows)
   {
-    error("Player " + str(player) + " not found");
+    out.emplace(fromDbId(record[0].as<int>()));
   }
 
-  return {Uuid{0}, Uuid{1}, Uuid{2}, Uuid{3}};
+  return out;
 }
 
 } // namespace bsgo
