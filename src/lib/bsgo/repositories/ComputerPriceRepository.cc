@@ -9,20 +9,33 @@ ComputerPriceRepository::ComputerPriceRepository(const DbConnectionShPtr &connec
   addModule("price");
 }
 
+namespace {
+constexpr auto SQL_QUERY = "SELECT resource, cost FROM computer_price WHERE computer = ";
+
+auto generateSqlQuery(const Uuid &computer) -> std::string
+{
+  return SQL_QUERY + std::to_string(toDbId(computer));
+}
+} // namespace
+
 auto ComputerPriceRepository::findAllByComputer(const Uuid &computer) const
   -> std::unordered_map<Uuid, int>
 {
-  switch (computer)
+  const auto sql = generateSqlQuery(computer);
+
+  pqxx::nontransaction work(m_connection->connection());
+  pqxx::result rows(work.exec(sql));
+
+  std::unordered_map<Uuid, int> out;
+  for (const auto record : rows)
   {
-    case Uuid{0}:
-      return {{Uuid{0}, 1}, {Uuid{1}, 6}};
-    default:
-      error("Computer " + str(computer) + " not found");
-      break;
+    const auto resource = fromDbId(record[0].as<int>());
+    const auto cost     = record[1].as<float>();
+
+    out[resource] = cost;
   }
 
-  // Can't happen because of the error above.
-  return {};
+  return out;
 }
 
 } // namespace bsgo
