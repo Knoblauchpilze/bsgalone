@@ -16,5 +16,7 @@ enum class EntityKind
 };
 
 auto str(const EntityKind &kind) noexcept -> std::string;
+auto toDbEntityKind(const EntityKind &kind) -> std::string;
+auto fromDbEntityKind(const std::string &dbKind) -> EntityKind;
 
 } // namespace bsgo

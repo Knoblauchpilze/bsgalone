@@ -8,43 +8,96 @@ ComputerRepository::ComputerRepository(const DbConnectionShPtr &connection)
   : AbstractRepository("computer", connection)
 {}
 
+namespace {
+constexpr auto SQL_QUERY_ALL = "SELECT id FROM computer";
+constexpr auto SQL_QUERY
+  = "SELECT name, offensive, power_cost, range, reload_time_ms, duration_ms, damage_modifier FROM computer WHERE id = ";
+
+auto generateSqlQuery(const Uuid &computer) -> std::string
+{
+  return SQL_QUERY + std::to_string(toDbId(computer));
+}
+
+constexpr auto SQL_QUERY_TARGET
+  = "SELECT entity FROM computer_allowed_target AS cat LEFT JOIN computer AS c ON cat.computer = c.id WHERE c.id = ";
+
+auto generateTargetsSqlQuery(const Uuid &computer) -> std::string
+{
+  return SQL_QUERY_TARGET + std::to_string(toDbId(computer));
+}
+} // namespace
+
 auto ComputerRepository::findAll() const -> std::unordered_set<Uuid>
 {
-  return {Uuid{0}};
+  pqxx::nontransaction work(m_connection->connection());
+  pqxx::result rows(work.exec(SQL_QUERY_ALL));
+
+  std::unordered_set<Uuid> out;
+  for (const auto record : rows)
+  {
+    out.emplace(fromDbId(record[0].as<int>()));
+  }
+
+  return out;
 }
 
 auto ComputerRepository::findOneById(const Uuid &computer) const -> Computer
 {
-  Computer out;
+  auto out = fetchComputerBase(computer);
+  fetchAllowedTargets(computer, out);
 
-  switch (computer)
+  return out;
+}
+
+auto ComputerRepository::fetchComputerBase(const Uuid &computer) const -> Computer
+{
+  const auto sql = generateSqlQuery(computer);
+
+  pqxx::nontransaction work(m_connection->connection());
+  pqxx::result rows(work.exec(sql));
+
+  if (rows.size() != 1)
   {
-    case Uuid{0}:
-      out.name       = "Weapon debuff";
-      out.offensive  = false;
-      out.powerCost  = 20.0f;
-      out.reloadTime = utils::Milliseconds(10000);
+    error("Expected to find only one computer with id " + str(computer));
+  }
 
-      out.duration       = {utils::Milliseconds(3500)};
-      out.damageModifier = {0.5f};
-      break;
-    case Uuid{1}:
-      out.name       = "Scan";
-      out.offensive  = true;
-      out.powerCost  = 5.0f;
-      out.range      = {6.0f};
-      out.reloadTime = utils::Milliseconds(2000);
+  Computer out{};
 
-      out.duration       = {};
-      out.allowedTargets = {{EntityKind::ASTEROID}};
-      out.damageModifier = {};
-      break;
-    default:
-      error("Computer " + str(computer) + " not found");
-      break;
+  const auto &record = rows[0];
+  out.name           = record[0].as<std::string>();
+  out.offensive      = record[1].as<bool>();
+  out.powerCost      = record[2].as<float>();
+  if (!record[3].is_null())
+  {
+    out.range = {record[3].as<float>()};
+  }
+  out.reloadTime = utils::Milliseconds(record[4].as<int>());
+  if (!record[5].is_null())
+  {
+    out.duration = {utils::Milliseconds(record[5].as<int>())};
+  }
+  if (!record[6].is_null())
+  {
+    out.damageModifier = {record[6].as<float>()};
   }
 
   return out;
+}
+
+void ComputerRepository::fetchAllowedTargets(const Uuid &computer, Computer &out) const
+{
+  const auto sql = generateTargetsSqlQuery(computer);
+
+  pqxx::nontransaction work(m_connection->connection());
+  pqxx::result rows(work.exec(sql));
+
+  std::unordered_set<EntityKind> targets;
+  for (const auto record : rows)
+  {
+    targets.emplace(fromDbEntityKind(record[0].as<std::string>()));
+  }
+
+  out.allowedTargets = {targets};
 }
 
 } // namespace bsgo
