@@ -9,24 +9,33 @@ AsteroidLootRepository::AsteroidLootRepository(const DbConnectionShPtr &connecti
   addModule("asteroid");
 }
 
+namespace {
+constexpr auto SQL_QUERY_ASTEROID_LOOT
+  = "SELECT resource, amount FROM asteroid_loot WHERE asteroid = ";
+
+auto generateSqlQuery(const Uuid &asteroid) -> std::string
+{
+  return SQL_QUERY_ASTEROID_LOOT + str(asteroid + 1);
+}
+} // namespace
+
 auto AsteroidLootRepository::findOneById(const Uuid &asteroid) const -> AsteroidLoot
 {
+  const auto sql = generateSqlQuery(asteroid);
+
+  pqxx::nontransaction work(m_connection->connection());
+  pqxx::result rows(work.exec(sql));
+
+  if (1u != rows.size())
+  {
+    error("Expected to find loot for asteroid " + str(asteroid));
+  }
+
   AsteroidLoot out;
 
-  switch (asteroid)
-  {
-    case 0:
-      out.resource = Uuid(0);
-      out.amount   = 10;
-      break;
-    case 2:
-      out.resource = Uuid(0);
-      out.amount   = 2;
-      break;
-    default:
-      error("Loot for asteroid " + str(asteroid) + " not found");
-      break;
-  }
+  const auto &record = rows[0];
+  out.resource       = record[0].as<Uuid>() - 1u;
+  out.amount         = record[1].as<float>();
 
   return out;
 }

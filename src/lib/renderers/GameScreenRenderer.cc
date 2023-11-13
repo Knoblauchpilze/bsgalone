@@ -148,9 +148,32 @@ void GameScreenRenderer::renderAsteroid(const bsgo::Entity &asteroid,
   t.sprite.sprite = {0, 0};
 
   auto tint = olc::WHITE;
-  if (scanned)
+  if (scanned && !containsLoot)
   {
-    tint = containsLoot ? olc::YELLOW : olc::RED;
+    tint = olc::RED;
+  }
+  else if (scanned && containsLoot)
+  {
+    if (1u != asteroid.resources.size())
+    {
+      error("Failed to render asteroid " + bsgo::str(asteroid.uuid),
+            "Asteroid contains " + std::to_string(asteroid.resources.size()) + " resource(s)");
+    }
+
+    const auto &res = asteroid.resources[0]->resource();
+    switch (res)
+    {
+      case bsgo::Uuid{0}:
+        tint = olc::YELLOW;
+        break;
+      case bsgo::Uuid{1}:
+        tint = olc::PURPLE;
+        break;
+      default:
+        error("Failed to render asteroid " + bsgo::str(asteroid.uuid),
+              "Unknown resource " + bsgo::str(res));
+        break;
+    }
   }
   t.sprite.tint = tint;
 
