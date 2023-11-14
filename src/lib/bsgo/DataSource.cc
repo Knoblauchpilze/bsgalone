@@ -64,7 +64,7 @@ auto DataSource::playerShipEntityId() const -> Uuid
 
 void DataSource::initialize(Coordinator &coordinator) const
 {
-  const auto systemId = m_repositories.playerRepository->findSystemById(m_playerId);
+  const auto systemId = m_repositories.playerRepository->findSystemByPlayer(m_playerId);
 
   initializePlayer(coordinator);
   initializeShips(coordinator, systemId);
