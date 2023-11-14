@@ -16,7 +16,6 @@ auto generateSqlQuery(const Uuid &outpost) -> std::string
 {
   return SQL_QUERY + std::to_string(toDbId(outpost));
 }
-
 } // namespace
 
 auto SystemOutpostRepository::findOneById(const Uuid &outpost) const -> SystemOutpost
