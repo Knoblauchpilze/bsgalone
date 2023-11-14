@@ -12,7 +12,6 @@ PlayerResourceRepository::PlayerResourceRepository(const DbConnectionShPtr &conn
 namespace {
 constexpr auto SQL_QUERY
   = "SELECT resource.id, resource.name, player_resource.amount FROM player_resource LEFT JOIN resource on player_resource.resource = resource.id WHERE player = ";
-
 auto generateSqlQuery(const Uuid &player) -> std::string
 {
   return SQL_QUERY + std::to_string(toDbId(player));

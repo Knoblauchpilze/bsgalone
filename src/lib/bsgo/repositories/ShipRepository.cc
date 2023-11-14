@@ -10,7 +10,6 @@ ShipRepository::ShipRepository(const DbConnectionShPtr &connection)
 namespace {
 constexpr auto SQL_QUERY
   = "SELECT faction, name, max_hull_points, hull_points_regen, max_power_points, power_points_regen, max_acceleration, max_speed, radius FROM ship WHERE id = ";
-
 auto generateSqlQuery(const Uuid &ship) -> std::string
 {
   return SQL_QUERY + std::to_string(toDbId(ship));

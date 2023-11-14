@@ -13,7 +13,6 @@ WeaponPriceRepository::WeaponPriceRepository(const DbConnectionShPtr &connection
 
 namespace {
 constexpr auto SQL_QUERY = "SELECT resource, cost FROM weapon_price WHERE weapon = ";
-
 auto generateSqlQuery(const Uuid &weapon) -> std::string
 {
   return SQL_QUERY + std::to_string(toDbId(weapon));
