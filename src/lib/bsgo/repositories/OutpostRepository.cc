@@ -7,42 +7,36 @@ OutpostRepository::OutpostRepository(const DbConnectionShPtr &connection)
   : AbstractRepository("outpost", connection)
 {}
 
+namespace {
+constexpr auto SQL_QUERY
+  = "SELECT faction, max_hull_points, hull_points_regen, max_power_points, power_points_regen, radius FROM outpost WHERE id = ";
+auto generateSqlQuery(const Uuid &ship) -> std::string
+{
+  return SQL_QUERY + std::to_string(toDbId(ship));
+}
+} // namespace
+
 auto OutpostRepository::findOneById(const Uuid &outpost) const -> Outpost
 {
+  const auto sql = generateSqlQuery(outpost);
+
+  pqxx::nontransaction work(m_connection->connection());
+  pqxx::result rows(work.exec(sql));
+
+  if (rows.size() != 1)
+  {
+    error("Expected to find only one outpost with id " + str(outpost));
+  }
+
   Outpost out;
 
-  switch (outpost)
-  {
-    case 0:
-      out.faction = Faction::COLONIAL;
-
-      out.hullPoints      = 12728.0f;
-      out.maxHullPoints   = 30000.0f;
-      out.hullPointsRegen = 120.0f;
-
-      out.powerPoints    = 732.0f;
-      out.maxPowerPoints = 4500.0f;
-      out.powerRegen     = 100.0f;
-
-      out.radius = 2.0f;
-      break;
-    case 1:
-      out.faction = Faction::CYLON;
-
-      out.hullPoints      = 12728.0f;
-      out.maxHullPoints   = 19000.0f;
-      out.hullPointsRegen = 80.0f;
-
-      out.powerPoints    = 152.0f;
-      out.maxPowerPoints = 600.0f;
-      out.powerRegen     = 12.0f;
-
-      out.radius = 3.0f;
-      break;
-    default:
-      error("Outpost " + str(outpost) + " not found");
-      break;
-  }
+  const auto &record  = rows[0];
+  out.faction         = fromDbFaction(record[0].as<std::string>());
+  out.maxHullPoints   = record[1].as<float>();
+  out.hullPointsRegen = record[2].as<float>();
+  out.maxPowerPoints  = record[3].as<float>();
+  out.powerRegen      = record[4].as<float>();
+  out.radius          = record[5].as<float>();
 
   return out;
 }
