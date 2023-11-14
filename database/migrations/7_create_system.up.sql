@@ -6,6 +6,14 @@ CREATE TABLE system (
   UNIQUE (name)
 );
 
+CREATE TABLE player_system (
+  system INTEGER NOT NULL,
+  player INTEGER NOT NULL,
+  PRIMARY KEY (system, player),
+  FOREIGN KEY (system) REFERENCES system(id),
+  FOREIGN KEY (player) REFERENCES player(id)
+);
+
 CREATE TABLE asteroid (
   id INTEGER GENERATED ALWAYS AS IDENTITY,
   system INTEGER NOT NULL,

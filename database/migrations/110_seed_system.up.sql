@@ -1,5 +1,12 @@
 
 INSERT INTO public.system ("name") VALUES ('Munnin');
+INSERT INTO public.system ("name") VALUES ('169 aretis');
+
+INSERT INTO public.player_system ("system", "player")
+  VALUES (
+    (SELECT id FROM system WHERE name = 'Munnin'),
+    (SELECT id FROM player WHERE name = 'grouton')
+  );
 
 INSERT INTO public.asteroid ("system", "health", "radius", "x_pos", "y_pos", "z_pos")
   VALUES (

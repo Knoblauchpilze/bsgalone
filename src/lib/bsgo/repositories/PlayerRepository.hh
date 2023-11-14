@@ -14,7 +14,7 @@ class PlayerRepository : public AbstractRepository
   PlayerRepository(const DbConnectionShPtr &connection);
   ~PlayerRepository() override = default;
 
-  auto findSystemById(const Uuid &player) const -> Uuid;
+  auto findSystemByPlayer(const Uuid &player) const -> Uuid;
 };
 
 using PlayerRepositoryShPtr = std::shared_ptr<PlayerRepository>;
