@@ -3,7 +3,7 @@ INSERT INTO public.player_ship ("ship", "player", "active", "hull_points", "powe
   VALUES (
       (SELECT id FROM ship WHERE name = 'Viper Mark II'),
       (SELECT id FROM player WHERE name = 'grouton'),
-      false,
+      true,
       369.2,
       11.9,
       0.0,
@@ -25,7 +25,7 @@ INSERT INTO public.player_ship ("ship", "player", "active", "hull_points", "powe
   VALUES (
       (SELECT id FROM ship WHERE name = 'Jotunn'),
       (SELECT id FROM player WHERE name = 'grouton'),
-      true,
+      false,
       3000.0,
       500.0,
       0.0,

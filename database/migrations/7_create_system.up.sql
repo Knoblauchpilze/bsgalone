@@ -6,12 +6,12 @@ CREATE TABLE system (
   UNIQUE (name)
 );
 
-CREATE TABLE player_system (
+CREATE TABLE ship_system (
+  ship INTEGER NOT NULL,
   system INTEGER NOT NULL,
-  player INTEGER NOT NULL,
-  PRIMARY KEY (system, player),
-  FOREIGN KEY (system) REFERENCES system(id),
-  FOREIGN KEY (player) REFERENCES player(id)
+  PRIMARY KEY (ship, system),
+  FOREIGN KEY (ship) REFERENCES player_ship(id),
+  FOREIGN KEY (system) REFERENCES system(id)
 );
 
 CREATE TABLE asteroid (

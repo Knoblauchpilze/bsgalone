@@ -8,7 +8,8 @@ PlayerRepository::PlayerRepository(const DbConnectionShPtr &connection)
 {}
 
 namespace {
-constexpr auto SQL_QUERY = "SELECT system FROM player_system WHERE player = ";
+constexpr auto SQL_QUERY
+  = "SELECT ss.system FROM player_ship AS ps LEFT JOIN ship_system AS ss ON ps.ship = ss.ship LEFT JOIN player AS p ON ps.player = p.id WHERE ps.active = true AND ps.player IS NOT NULL AND ps.player = ";
 auto generateSqlQuery(const Uuid &player) -> std::string
 {
   return SQL_QUERY + std::to_string(toDbId(player));
