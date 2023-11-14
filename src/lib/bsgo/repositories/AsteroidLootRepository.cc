@@ -11,7 +11,6 @@ AsteroidLootRepository::AsteroidLootRepository(const DbConnectionShPtr &connecti
 
 namespace {
 constexpr auto SQL_QUERY = "SELECT resource, amount FROM asteroid_loot WHERE asteroid = ";
-
 auto generateSqlQuery(const Uuid &asteroid) -> std::string
 {
   return SQL_QUERY + std::to_string(toDbId(asteroid));

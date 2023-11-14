@@ -9,7 +9,6 @@ ResourceRepository::ResourceRepository(const DbConnectionShPtr &connection)
 
 namespace {
 constexpr auto SQL_QUERY = "SELECT name FROM resource WHERE id = ";
-
 auto generateSqlQuery(const Uuid &resource) -> std::string
 {
   return SQL_QUERY + std::to_string(toDbId(resource));

@@ -11,7 +11,6 @@ ComputerPriceRepository::ComputerPriceRepository(const DbConnectionShPtr &connec
 
 namespace {
 constexpr auto SQL_QUERY = "SELECT resource, cost FROM computer_price WHERE computer = ";
-
 auto generateSqlQuery(const Uuid &computer) -> std::string
 {
   return SQL_QUERY + std::to_string(toDbId(computer));
