@@ -2,10 +2,15 @@
 INSERT INTO public.system ("name") VALUES ('Munnin');
 INSERT INTO public.system ("name") VALUES ('169 aretis');
 
-INSERT INTO public.player_system ("system", "player")
+INSERT INTO public.ship_system ("ship", "system")
   VALUES (
-    (SELECT id FROM system WHERE name = 'Munnin'),
-    (SELECT id FROM player WHERE name = 'grouton')
+    (SELECT player_ship.id FROM player_ship LEFT JOIN player ON player_ship.player = player.id WHERE player.name = 'grouton' AND player_ship.active = true),
+    (SELECT id FROM system WHERE name = 'Munnin')
+  );
+INSERT INTO public.ship_system ("ship", "system")
+  VALUES (
+    (SELECT player_ship.id FROM player_ship WHERE player_ship.player is NULL),
+    (SELECT id FROM system WHERE name = 'Munnin')
   );
 
 INSERT INTO public.asteroid ("system", "health", "radius", "x_pos", "y_pos", "z_pos")
