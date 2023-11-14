@@ -65,17 +65,23 @@ INSERT INTO outpost ("faction", "max_hull_points", "hull_points_regen", "max_pow
 INSERT INTO outpost ("faction", "max_hull_points", "hull_points_regen", "max_power_points", "power_points_regen", "radius")
   VALUES ('cylon', 19000.0, 80.0, 600.0, 12.0, 3.0);
 
-INSERT INTO public.system_outpost ("outpost", "system", "hull_points", "power_points")
+INSERT INTO public.system_outpost ("outpost", "system", "hull_points", "power_points", "x_pos", "y_pos", "z_pos")
   VALUES (
     (SELECT id FROM outpost WHERE faction = 'colonial'),
     (SELECT id FROM system WHERE name = 'Munnin'),
     12728.0,
-    732.0
+    732.0,
+    -6.0,
+    3.2,
+    0.0
   );
-INSERT INTO public.system_outpost ("outpost", "system", "hull_points", "power_points")
+INSERT INTO public.system_outpost ("outpost", "system", "hull_points", "power_points", "x_pos", "y_pos", "z_pos")
   VALUES (
     (SELECT id FROM outpost WHERE faction = 'cylon'),
     (SELECT id FROM system WHERE name = 'Munnin'),
     13400.0,
-    152.0
+    152.0,
+    6.0,
+    -3.2,
+    0.0
   );
