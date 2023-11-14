@@ -9,22 +9,28 @@ ShipComputerRepository::ShipComputerRepository(const DbConnectionShPtr &connecti
   addModule("ship");
 }
 
+namespace {
+constexpr auto SQL_QUERY = "SELECT computer FROM ship_computer WHERE ship = ";
+auto generateSqlQuery(const Uuid &ship) -> std::string
+{
+  return SQL_QUERY + std::to_string(toDbId(ship));
+}
+} // namespace
+
 auto ShipComputerRepository::findAllByShip(const Uuid &ship) const -> std::unordered_set<Uuid>
 {
-  switch (ship)
+  const auto sql = generateSqlQuery(ship);
+
+  pqxx::nontransaction work(m_connection->connection());
+  pqxx::result rows(work.exec(sql));
+
+  std::unordered_set<Uuid> out;
+  for (const auto record : rows)
   {
-    case Uuid{0}:
-      return {Uuid(0), Uuid(1)};
-    case Uuid{1}:
-      return {};
-    case Uuid{2}:
-      return {};
-    default:
-      error("Ship " + str(ship) + " not found");
-      break;
+    out.emplace(fromDbId(record[0].as<int>()));
   }
 
-  return {};
+  return out;
 }
 
 } // namespace bsgo
