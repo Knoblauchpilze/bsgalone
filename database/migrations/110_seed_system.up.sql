@@ -1,35 +1,50 @@
 
 INSERT INTO public.system ("name") VALUES ('Munnin');
 
-INSERT INTO public.asteroid ("system", "health", "radius")
+INSERT INTO public.asteroid ("system", "health", "radius", "x_pos", "y_pos", "z_pos")
   VALUES (
     (SELECT id FROM system WHERE name = 'Munnin'),
     85.0,
-    0.5
+    0.5,
+    1.0,
+    2.0,
+    0.0
   );
-INSERT INTO public.asteroid ("system", "health", "radius")
+INSERT INTO public.asteroid ("system", "health", "radius", "x_pos", "y_pos", "z_pos")
   VALUES (
     (SELECT id FROM system WHERE name = 'Munnin'),
     222.0,
-    1.0
+    1.0,
+    4.0,
+    2.0,
+    0.0
   );
-INSERT INTO public.asteroid ("system", "health", "radius")
+INSERT INTO public.asteroid ("system", "health", "radius", "x_pos", "y_pos", "z_pos")
   VALUES (
     (SELECT id FROM system WHERE name = 'Munnin'),
     150.0,
-    0.5
+    0.5,
+    -2.0,
+    -6.0,
+    0.0
   );
-INSERT INTO public.asteroid ("system", "health", "radius")
+INSERT INTO public.asteroid ("system", "health", "radius", "x_pos", "y_pos", "z_pos")
   VALUES (
     (SELECT id FROM system WHERE name = 'Munnin'),
     3333.0,
-    1.0
+    1.0,
+    -3.0,
+    -4.0,
+    0.0
   );
-INSERT INTO public.asteroid ("system", "health", "radius")
+INSERT INTO public.asteroid ("system", "health", "radius", "x_pos", "y_pos", "z_pos")
   VALUES (
     (SELECT id FROM system WHERE name = 'Munnin'),
     2345.0,
-    1.0
+    1.0,
+    15.0,
+    17.0,
+    0.0
   );
 
 INSERT INTO public.asteroid_loot ("asteroid", "resource", "amount")

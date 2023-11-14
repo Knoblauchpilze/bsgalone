@@ -7,45 +7,36 @@ AsteroidRepository::AsteroidRepository(const DbConnectionShPtr &connection)
   : AbstractRepository("asteroid", connection)
 {}
 
+namespace {
+constexpr auto SQL_QUERY = "SELECT health, radius, x_pos, y_pos, z_pos FROM asteroid WHERE id = ";
+auto generateSqlQuery(const Uuid &asteroid) -> std::string
+{
+  return SQL_QUERY + std::to_string(toDbId(asteroid));
+}
+} // namespace
+
 auto AsteroidRepository::findOneById(const Uuid &asteroid) const -> Asteroid
 {
-  constexpr auto SMALL_ASTEROID_RADIUS = 0.5f;
-  constexpr auto BIG_ASTEROID_RADIUS   = 1.0f;
+  const auto sql = generateSqlQuery(asteroid);
+
+  pqxx::nontransaction work(m_connection->connection());
+  pqxx::result rows(work.exec(sql));
+
+  if (rows.size() != 1)
+  {
+    error("Expected to find only one asteroid with id " + str(asteroid));
+  }
+
   Asteroid out;
 
-  switch (asteroid)
-  {
-    case 0:
-      out.position = Eigen::Vector3f(1.0f, 2.0f, 0.0f);
-      out.radius   = SMALL_ASTEROID_RADIUS;
-      out.health   = 85.0f;
-      out.loot     = true;
-      break;
-    case 1:
-      out.position = Eigen::Vector3f(4.0f, 2.0f, 0.0f);
-      out.radius   = BIG_ASTEROID_RADIUS;
-      out.health   = 222.0f;
-      break;
-    case 2:
-      out.position = Eigen::Vector3f(-2.0f, -6.0f, 0.0f);
-      out.radius   = SMALL_ASTEROID_RADIUS;
-      out.health   = 150.0f;
-      out.loot     = true;
-      break;
-    case 3:
-      out.position = Eigen::Vector3f(-3.0f, -4.0f, 0.0f);
-      out.radius   = BIG_ASTEROID_RADIUS;
-      out.health   = 3333.0f;
-      break;
-    case 4:
-      out.position = Eigen::Vector3f(15.0f, 17.0f, 0.0f);
-      out.radius   = BIG_ASTEROID_RADIUS;
-      out.health   = 2345.0f;
-      break;
-    default:
-      error("Asteroid " + str(asteroid) + " not found");
-      break;
-  }
+  const auto &record = rows[0];
+  out.health         = record[0].as<float>();
+  out.radius         = record[1].as<float>();
+
+  const auto x = record[2].as<float>();
+  const auto y = record[3].as<float>();
+  const auto z = record[4].as<float>();
+  out.position = Eigen::Vector3f(x, y, z);
 
   return out;
 }

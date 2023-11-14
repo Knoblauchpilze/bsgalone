@@ -11,6 +11,9 @@ CREATE TABLE asteroid (
   system INTEGER NOT NULL,
   health NUMERIC(12, 2) NOT NULL,
   radius NUMERIC(12, 2) NOT NULL,
+  x_pos NUMERIC(12, 2) NOT NULL,
+  y_pos NUMERIC(12, 2) NOT NULL,
+  z_pos NUMERIC(12, 2) NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY (system) REFERENCES system(id)
 );
