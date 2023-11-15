@@ -14,9 +14,24 @@ auto generateSqlQuery(const Uuid &ship) -> std::string
 {
   return SQL_QUERY + std::to_string(toDbId(ship));
 }
+
+constexpr auto SQL_QUERY_SLOT       = "SELECT type, count(id) FROM ship_slot WHERE ship = ";
+constexpr auto SQL_QUERY_SLOT_GROUP = " GROUP BY type";
+auto generateSlotSqlQuery(const Uuid &ship) -> std::string
+{
+  return SQL_QUERY_SLOT + std::to_string(toDbId(ship)) + SQL_QUERY_SLOT_GROUP;
+}
 } // namespace
 
 auto ShipRepository::findOneById(const Uuid &ship) const -> Ship
+{
+  auto out = fetchShipBase(ship);
+  fetchSlots(ship, out);
+
+  return out;
+}
+
+auto ShipRepository::fetchShipBase(const Uuid &ship) const -> Ship
 {
   const auto sql = generateSqlQuery(ship);
 
@@ -42,6 +57,22 @@ auto ShipRepository::findOneById(const Uuid &ship) const -> Ship
   out.radius          = record[8].as<float>();
 
   return out;
+}
+
+void ShipRepository::fetchSlots(const Uuid &ship, Ship &out) const
+{
+  const auto sql = generateSlotSqlQuery(ship);
+
+  pqxx::nontransaction work(m_connection->connection());
+  pqxx::result rows(work.exec(sql));
+
+  for (const auto record : rows)
+  {
+    const auto slot  = fromDbSlot(record[0].as<std::string>());
+    const auto count = record[1].as<int>();
+
+    out.slots[slot] = count;
+  }
 }
 
 } // namespace bsgo
