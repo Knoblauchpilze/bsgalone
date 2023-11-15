@@ -11,3 +11,120 @@ INSERT INTO public.ship ("name", "faction", "max_hull_points", "hull_points_rege
   VALUES (
       'Jotunn', 'colonial', 3000.0, 50.0, 500.0, 5.0, 1.0, 2.0, 2.0
   );
+
+-- Viper Mark II
+INSERT INTO public.ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
+  VALUES (
+    (SELECT id FROM ship WHERE name = 'Viper Mark II'),
+    'weapon',
+    -0.25, 0.25, 0.0
+  );
+INSERT INTO public.ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
+  VALUES (
+    (SELECT id FROM ship WHERE name = 'Viper Mark II'),
+    'weapon',
+    0.0, 0.25, 0.0
+  );
+INSERT INTO public.ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
+  VALUES (
+    (SELECT id FROM ship WHERE name = 'Viper Mark II'),
+    'weapon',
+    0.25, 0.25, 0.0
+  );
+
+INSERT INTO public.ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
+  VALUES (
+    (SELECT id FROM ship WHERE name = 'Viper Mark II'),
+    'computer',
+    0.0, 0.0, 0.0
+  );
+INSERT INTO public.ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
+  VALUES (
+    (SELECT id FROM ship WHERE name = 'Viper Mark II'),
+    'computer',
+    0.0, 0.0, 0.0
+  );
+
+-- Cylon Raider
+INSERT INTO public.ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
+  VALUES (
+    (SELECT id FROM ship WHERE name = 'Cylon Raider'),
+    'weapon',
+    -0.25, 0.25, 0.0
+  );
+INSERT INTO public.ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
+  VALUES (
+    (SELECT id FROM ship WHERE name = 'Cylon Raider'),
+    'weapon',
+    0.0, 0.25, 0.0
+  );
+INSERT INTO public.ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
+  VALUES (
+    (SELECT id FROM ship WHERE name = 'Cylon Raider'),
+    'weapon',
+    0.25, 0.25, 0.0
+  );
+
+INSERT INTO public.ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
+  VALUES (
+    (SELECT id FROM ship WHERE name = 'Cylon Raider'),
+    'computer',
+    0.0, 0.0, 0.0
+  );
+INSERT INTO public.ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
+  VALUES (
+    (SELECT id FROM ship WHERE name = 'Cylon Raider'),
+    'computer',
+    0.0, 0.0, 0.0
+  );
+
+-- Jotunn
+INSERT INTO public.ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
+  VALUES (
+    (SELECT id FROM ship WHERE name = 'Jotunn'),
+    'weapon',
+    -0.25, -0.25, 0.0
+  );
+INSERT INTO public.ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
+  VALUES (
+    (SELECT id FROM ship WHERE name = 'Jotunn'),
+    'weapon',
+    -0.25, 0.0, 0.0
+  );
+INSERT INTO public.ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
+  VALUES (
+    (SELECT id FROM ship WHERE name = 'Jotunn'),
+    'weapon',
+    -0.25, 0.25, 0.0
+  );
+INSERT INTO public.ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
+  VALUES (
+    (SELECT id FROM ship WHERE name = 'Jotunn'),
+    'weapon',
+    0.25, 0.25, 0.0
+  );
+INSERT INTO public.ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
+  VALUES (
+    (SELECT id FROM ship WHERE name = 'Jotunn'),
+    'weapon',
+    0.25, 0.0, 0.0
+  );
+INSERT INTO public.ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
+  VALUES (
+    (SELECT id FROM ship WHERE name = 'Jotunn'),
+    'weapon',
+    0.25, -0.25, 0.0
+  );
+
+INSERT INTO public.ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
+  VALUES (
+    (SELECT id FROM ship WHERE name = 'Jotunn'),
+    'computer',
+    0.0, 0.0, 0.0
+  );
+INSERT INTO public.ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
+  VALUES (
+    (SELECT id FROM ship WHERE name = 'Jotunn'),
+    'computer',
+    0.0, 0.0, 0.0
+  );
