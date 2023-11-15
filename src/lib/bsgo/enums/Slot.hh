@@ -12,5 +12,7 @@ enum class Slot
 };
 
 auto str(const Slot slot) -> std::string;
+auto toDbSlot(const Slot slot) -> std::string;
+auto fromDbSlot(const std::string &dbSlot) -> Slot;
 
 } // namespace bsgo
