@@ -1,3 +1,3 @@
 
-DELETE FROM public.weapon_price;
-DELETE FROM public.weapon;
+DELETE FROM weapon_price;
+DELETE FROM weapon;

@@ -1,3 +1,3 @@
 
-DELETE FROM public.player_resource;
-DELETE FROM public.player;
+DELETE FROM player_resource;
+DELETE FROM player;
