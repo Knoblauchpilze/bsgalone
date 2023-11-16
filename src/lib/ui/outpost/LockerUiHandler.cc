@@ -113,8 +113,10 @@ void LockerUiHandler::initializeShipLayout()
   const olc::vi2d pos{};
   const olc::vi2d dims{10, 10};
 
-  const auto weapons = m_shipView->getPlayerShipWeapons();
-  for (auto id = 0u; id < weapons.size(); ++id)
+  const auto slots = m_shipView->getPlayerShipSlots();
+
+  const auto weaponsCount = slots.contains(bsgo::Slot::WEAPON) ? slots.at(bsgo::Slot::WEAPON) : 0;
+  for (auto id = 0; id < weaponsCount; ++id)
   {
     auto text       = "ship_weapon" + std::to_string(id);
     auto weaponMenu = generateSlotMenu(pos, dims, "", text, olc::DARK_RED, {olc::WHITE}, true);
@@ -122,8 +124,9 @@ void LockerUiHandler::initializeShipLayout()
     m_shipWeapons.push_back(weaponMenu);
   }
 
-  const auto computers = m_shipView->getPlayerShipComputers();
-  for (auto id = 0u; id < computers.size(); ++id)
+  const auto computersCount = slots.contains(bsgo::Slot::COMPUTER) ? slots.at(bsgo::Slot::COMPUTER)
+                                                                   : 0;
+  for (auto id = 0; id < computersCount; ++id)
   {
     auto text         = "ship_computer" + std::to_string(id);
     auto computerMenu = generateSlotMenu(pos, dims, "", text, olc::DARK_YELLOW, {olc::WHITE}, true);
