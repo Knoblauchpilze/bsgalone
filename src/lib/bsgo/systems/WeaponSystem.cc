@@ -87,7 +87,8 @@ void WeaponSystem::fireWeaponForEntity(Entity &ent,
 
   const auto damage      = weapon.generateDamage();
   const auto finalDamage = updateDamageWithAbilities(ent, damage);
-  const auto offset      = weapon.position();
+  /// TODO: Should be using the heading of the ship as well.
+  const auto offset = weapon.position();
 
   createBulletDirectedTowards(ent, offset, finalDamage, target, coordinator);
 }
