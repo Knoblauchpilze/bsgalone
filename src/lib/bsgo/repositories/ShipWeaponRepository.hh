@@ -3,10 +3,17 @@
 
 #include "AbstractRepository.hh"
 #include "Uuid.hh"
+#include <eigen3/Eigen/Eigen>
 #include <memory>
-#include <unordered_set>
+#include <vector>
 
 namespace bsgo {
+
+struct ShipWeapon
+{
+  Uuid id{};
+  Eigen::Vector3f slotPosition{};
+};
 
 class ShipWeaponRepository : public AbstractRepository
 {
@@ -14,7 +21,7 @@ class ShipWeaponRepository : public AbstractRepository
   ShipWeaponRepository(const DbConnectionShPtr &connection);
   ~ShipWeaponRepository() override = default;
 
-  auto findAllByShip(const Uuid &ship) const -> std::unordered_set<Uuid>;
+  auto findAllByShip(const Uuid &ship) const -> std::vector<ShipWeapon>;
 };
 
 using ShipWeaponRepositoryShPtr = std::shared_ptr<ShipWeaponRepository>;

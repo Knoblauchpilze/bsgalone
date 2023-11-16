@@ -3,6 +3,8 @@
 #include "CircleBox.hh"
 #include "SystemUtils.hh"
 
+#include "VectorUtils.hh"
+
 namespace bsgo {
 namespace {
 bool isEntityRelevant(const Entity &entity)
@@ -85,8 +87,9 @@ void WeaponSystem::fireWeaponForEntity(Entity &ent,
 
   const auto damage      = weapon.generateDamage();
   const auto finalDamage = updateDamageWithAbilities(ent, damage);
+  const auto offset      = weapon.position();
 
-  createBulletDirectedTowards(ent, finalDamage, target, coordinator);
+  createBulletDirectedTowards(ent, offset, finalDamage, target, coordinator);
 }
 
 auto WeaponSystem::updateDamageWithAbilities(Entity &ent, const float damage) const -> float
@@ -105,11 +108,12 @@ auto WeaponSystem::updateDamageWithAbilities(Entity &ent, const float damage) co
 }
 
 void WeaponSystem::createBulletDirectedTowards(const Entity &ent,
+                                               const Eigen::Vector3f &weaponOffset,
                                                const float damage,
                                                const Entity &target,
                                                Coordinator &coordinator) const
 {
-  const auto pos       = ent.transformComp().position();
+  const auto pos       = ent.transformComp().position() + weaponOffset;
   const auto targetPos = target.transformComp().position();
 
   const auto bullet = coordinator.createEntity(EntityKind::BULLET);

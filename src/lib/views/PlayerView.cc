@@ -19,11 +19,11 @@ auto PlayerView::getPlayerResources() const -> std::vector<PlayerResource>
 
 auto PlayerView::getPlayerWeapons() const -> std::vector<PlayerWeapon>
 {
-  const auto usedIds = m_repositories.shipWeaponRepository->findAllByShip(m_playerShipId);
-  auto ids           = m_repositories.playerWeaponRepository->findAllByPlayer(m_playerId);
-  for (const auto usedId : usedIds)
+  const auto shipWeapons = m_repositories.shipWeaponRepository->findAllByShip(m_playerShipId);
+  auto ids               = m_repositories.playerWeaponRepository->findAllByPlayer(m_playerId);
+  for (const auto &shipWeapon : shipWeapons)
   {
-    ids.erase(usedId);
+    ids.erase(shipWeapon.id);
   }
 
   std::vector<PlayerWeapon> out;

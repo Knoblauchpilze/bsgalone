@@ -17,19 +17,19 @@ INSERT INTO public.ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
   VALUES (
     (SELECT id FROM ship WHERE name = 'Viper Mark II'),
     'weapon',
-    -0.25, 0.25, 0.0
+    -0.5, 0.5, 0.0
   );
 INSERT INTO public.ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
   VALUES (
     (SELECT id FROM ship WHERE name = 'Viper Mark II'),
     'weapon',
-    0.0, 0.25, 0.0
+    0.0, 0.5, 0.0
   );
 INSERT INTO public.ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
   VALUES (
     (SELECT id FROM ship WHERE name = 'Viper Mark II'),
     'weapon',
-    0.25, 0.25, 0.0
+    0.5, 0.5, 0.0
   );
 
 INSERT INTO public.ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
@@ -50,19 +50,19 @@ INSERT INTO public.ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
   VALUES (
     (SELECT id FROM ship WHERE name = 'Cylon Raider'),
     'weapon',
-    -0.25, 0.25, 0.0
+    -0.5, 0.5, 0.0
   );
 INSERT INTO public.ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
   VALUES (
     (SELECT id FROM ship WHERE name = 'Cylon Raider'),
     'weapon',
-    0.0, 0.25, 0.0
+    0.0, 0.5, 0.0
   );
 INSERT INTO public.ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
   VALUES (
     (SELECT id FROM ship WHERE name = 'Cylon Raider'),
     'weapon',
-    0.25, 0.25, 0.0
+    0.5, 0.5, 0.0
   );
 
 INSERT INTO public.ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
@@ -83,37 +83,37 @@ INSERT INTO public.ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
   VALUES (
     (SELECT id FROM ship WHERE name = 'Jotunn'),
     'weapon',
-    -0.25, -0.25, 0.0
+    -0.5, -0.5, 0.0
   );
 INSERT INTO public.ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
   VALUES (
     (SELECT id FROM ship WHERE name = 'Jotunn'),
     'weapon',
-    -0.25, 0.0, 0.0
+    -0.5, 0.0, 0.0
   );
 INSERT INTO public.ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
   VALUES (
     (SELECT id FROM ship WHERE name = 'Jotunn'),
     'weapon',
-    -0.25, 0.25, 0.0
+    -0.5, 0.5, 0.0
   );
 INSERT INTO public.ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
   VALUES (
     (SELECT id FROM ship WHERE name = 'Jotunn'),
     'weapon',
-    0.25, 0.25, 0.0
+    0.5, 0.5, 0.0
   );
 INSERT INTO public.ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
   VALUES (
     (SELECT id FROM ship WHERE name = 'Jotunn'),
     'weapon',
-    0.25, 0.0, 0.0
+    0.5, 0.0, 0.0
   );
 INSERT INTO public.ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
   VALUES (
     (SELECT id FROM ship WHERE name = 'Jotunn'),
     'weapon',
-    0.25, -0.25, 0.0
+    0.5, -0.5, 0.0
   );
 
 INSERT INTO public.ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")

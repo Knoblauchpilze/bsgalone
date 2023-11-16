@@ -64,20 +64,23 @@ INSERT INTO public.player_weapon ("weapon", "player", "level")
     20
   );
 
-INSERT INTO public.ship_weapon ("ship", "weapon")
+INSERT INTO public.ship_weapon ("ship", "weapon", "slot")
   VALUES (
     (SELECT player_ship.id FROM player_ship LEFT JOIN player ON player.id = player_ship.player LEFT JOIN ship ON player_ship.ship = ship.id WHERE player.name = 'grouton' AND ship.name = 'Viper Mark II'),
-    (SELECT player_weapon.id FROM player_weapon LEFT JOIN player ON player.id = player_weapon.player LEFT JOIN weapon ON player_weapon.weapon = weapon.id WHERE player.name = 'grouton' AND weapon.name = 'Medium range cannon')
+    (SELECT player_weapon.id FROM player_weapon LEFT JOIN player ON player.id = player_weapon.player LEFT JOIN weapon ON player_weapon.weapon = weapon.id WHERE player.name = 'grouton' AND weapon.name = 'Medium range cannon'),
+    (SELECT ship_slot.id FROM ship_slot LEFT JOIN ship ON ship_slot.ship = ship.id WHERE ship.name = 'Viper Mark II' AND ship_slot.type = 'weapon' AND ship_slot.x_pos = -0.5)
   );
-INSERT INTO public.ship_weapon ("ship", "weapon")
+INSERT INTO public.ship_weapon ("ship", "weapon", "slot")
   VALUES (
     (SELECT player_ship.id FROM player_ship LEFT JOIN player ON player.id = player_ship.player LEFT JOIN ship ON player_ship.ship = ship.id WHERE player.name = 'grouton' AND ship.name = 'Viper Mark II'),
-    (SELECT player_weapon.id FROM player_weapon LEFT JOIN player ON player.id = player_weapon.player LEFT JOIN weapon ON player_weapon.weapon = weapon.id WHERE player.name = 'grouton' AND weapon.name = 'Short range cannon')
+    (SELECT player_weapon.id FROM player_weapon LEFT JOIN player ON player.id = player_weapon.player LEFT JOIN weapon ON player_weapon.weapon = weapon.id WHERE player.name = 'grouton' AND weapon.name = 'Short range cannon'),
+    (SELECT ship_slot.id FROM ship_slot LEFT JOIN ship ON ship_slot.ship = ship.id WHERE ship.name = 'Viper Mark II' AND ship_slot.type = 'weapon' AND ship_slot.x_pos = 0.0)
   );
-INSERT INTO public.ship_weapon ("ship", "weapon")
+INSERT INTO public.ship_weapon ("ship", "weapon", "slot")
   VALUES (
     (SELECT id FROM player_ship WHERE player is NULL),
-    (SELECT player_weapon.id FROM player_weapon LEFT JOIN player ON player.id = player_weapon.player LEFT JOIN weapon ON player_weapon.weapon = weapon.id WHERE player.name = 'grouton' AND weapon.name = 'Medium range cannon')
+    (SELECT player_weapon.id FROM player_weapon LEFT JOIN player ON player.id = player_weapon.player LEFT JOIN weapon ON player_weapon.weapon = weapon.id WHERE player.name = 'grouton' AND weapon.name = 'Medium range cannon'),
+    (SELECT ship_slot.id FROM ship_slot LEFT JOIN ship ON ship_slot.ship = ship.id WHERE ship.name = 'Cylon Raider' AND ship_slot.type = 'weapon' AND ship_slot.x_pos = -0.5)
   );
 
 

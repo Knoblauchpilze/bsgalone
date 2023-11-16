@@ -2,6 +2,7 @@
 #pragma once
 
 #include "AbstractSystem.hh"
+#include <eigen3/Eigen/Eigen>
 
 namespace bsgo {
 
@@ -28,6 +29,7 @@ class WeaponSystem : public AbstractSystem
   auto updateDamageWithAbilities(Entity &ent, const float damage) const -> float;
 
   void createBulletDirectedTowards(const Entity &ent,
+                                   const Eigen::Vector3f &weaponOffset,
                                    const float damage,
                                    const Entity &target,
                                    Coordinator &coordinator) const;

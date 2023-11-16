@@ -33,7 +33,9 @@ CREATE TABLE player_weapon (
 CREATE TABLE ship_weapon (
   ship INTEGER NOT NULL,
   weapon INTEGER NOT NULL,
+  slot INTEGER NOT NULL,
   PRIMARY KEY (ship, weapon),
+  UNIQUE (ship, slot),
   FOREIGN KEY (ship) REFERENCES player_ship(id),
   FOREIGN KEY (weapon) REFERENCES player_weapon(id)
 );
