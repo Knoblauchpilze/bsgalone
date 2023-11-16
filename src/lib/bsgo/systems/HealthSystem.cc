@@ -17,8 +17,8 @@ void HealthSystem::updateEntity(Entity &entity,
                                 Coordinator & /*coordinator*/,
                                 const float elapsedSeconds) const
 {
-  entity.healthComp().update(elapsedSeconds);
   tryMarkForDelettion(entity);
+  entity.healthComp().update(elapsedSeconds);
 }
 
 void HealthSystem::tryMarkForDelettion(Entity &entity) const
