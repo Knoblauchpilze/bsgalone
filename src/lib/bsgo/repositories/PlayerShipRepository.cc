@@ -16,9 +16,47 @@ auto generateSqlQuery(const Uuid &ship) -> std::string
 {
   return SQL_QUERY + std::to_string(toDbId(ship));
 }
+
+constexpr auto SQL_QUERY_SLOT       = "SELECT type, count(id) FROM ship_slot WHERE ship = ";
+constexpr auto SQL_QUERY_SLOT_GROUP = " GROUP BY type";
+auto generateSlotSqlQuery(const Uuid &ship) -> std::string
+{
+  /// TODO: Fix this.
+  return SQL_QUERY_SLOT + std::to_string(toDbId(ship)) + SQL_QUERY_SLOT_GROUP;
+}
+
+constexpr auto SQL_QUERY_ALL = "SELECT id FROM player_ship WHERE player = ";
+auto generateAllSqlQuery(const Uuid &player) -> std::string
+{
+  return SQL_QUERY_ALL + std::to_string(toDbId(player));
+}
 } // namespace
 
 auto PlayerShipRepository::findOneById(const Uuid &ship) const -> PlayerShip
+{
+  auto out = fetchShipBase(ship);
+  fetchSlots(ship, out);
+
+  return out;
+}
+
+auto PlayerShipRepository::findAllByPlayer(const Uuid &player) const -> std::unordered_set<Uuid>
+{
+  const auto sql = generateAllSqlQuery(player);
+
+  pqxx::nontransaction work(m_connection->connection());
+  pqxx::result rows(work.exec(sql));
+
+  std::unordered_set<Uuid> out;
+  for (const auto record : rows)
+  {
+    out.emplace(fromDbId(record[0].as<int>()));
+  }
+
+  return out;
+}
+
+auto PlayerShipRepository::fetchShipBase(const Uuid &ship) const -> PlayerShip
 {
   const auto sql = generateSqlQuery(ship);
 
@@ -57,13 +95,20 @@ auto PlayerShipRepository::findOneById(const Uuid &ship) const -> PlayerShip
   return out;
 }
 
-auto PlayerShipRepository::findAllByPlayer(const Uuid &player) const -> std::vector<Uuid>
+void PlayerShipRepository::fetchSlots(const Uuid &ship, PlayerShip &out) const
 {
-  if (player != Uuid{0})
+  const auto sql = generateSlotSqlQuery(ship);
+
+  pqxx::nontransaction work(m_connection->connection());
+  pqxx::result rows(work.exec(sql));
+
+  for (const auto record : rows)
   {
-    error("Player " + str(player) + " not found");
+    const auto slot  = fromDbSlot(record[0].as<std::string>());
+    const auto count = record[1].as<int>();
+
+    out.slots[slot] = count;
   }
-  return {Uuid{0}, Uuid{2}};
 }
 
 } // namespace bsgo
