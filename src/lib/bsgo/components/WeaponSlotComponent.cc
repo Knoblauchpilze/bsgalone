@@ -3,7 +3,7 @@
 
 namespace bsgo {
 
-WeaponSlotComponent::WeaponSlotComponent(const PlayerWeapon &weapon)
+WeaponSlotComponent::WeaponSlotComponent(const PlayerWeapon &weapon, const Eigen::Vector3f &position)
   : SlotComponent("weapon",
                   SlotComponentData{.offensive  = true,
                                     .powerCost  = weapon.powerCost,
@@ -11,6 +11,7 @@ WeaponSlotComponent::WeaponSlotComponent(const PlayerWeapon &weapon)
                                     .reloadTime = weapon.reloadTime})
   , m_minDamage(weapon.minDamage)
   , m_maxDamage(weapon.maxDamage)
+  , m_position(position)
 {}
 
 auto WeaponSlotComponent::minDamage() const -> float
@@ -26,6 +27,11 @@ auto WeaponSlotComponent::maxDamage() const -> float
 bool WeaponSlotComponent::active() const
 {
   return m_active;
+}
+
+auto WeaponSlotComponent::position() const -> Eigen::Vector3f
+{
+  return m_position;
 }
 
 void WeaponSlotComponent::toggle()

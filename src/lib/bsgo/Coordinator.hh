@@ -8,6 +8,7 @@
 #include "Uuid.hh"
 #include <core_utils/CoreObject.hh>
 #include <core_utils/TimeUtils.hh>
+#include <eigen3/Eigen/Eigen>
 #include <memory>
 #include <optional>
 #include <unordered_set>
@@ -38,7 +39,7 @@ class Coordinator : public utils::CoreObject
   void addRemoval(const Uuid &ent);
   void addStatus(const Uuid &ent, const Status &status);
   void addAI(const Uuid &ent, INodePtr behavior);
-  void addWeapon(const Uuid &ent, const PlayerWeapon &weapon);
+  void addWeapon(const Uuid &ent, const PlayerWeapon &weapon, const Eigen::Vector3f &position);
   void addComputer(const Uuid &ent, const PlayerComputer &computer);
   void addResourceComponent(const Uuid &ent, const Uuid &resource, const float amount);
 

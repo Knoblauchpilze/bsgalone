@@ -160,10 +160,12 @@ void Coordinator::addAI(const Uuid &ent, INodePtr behavior)
   m_components.ais[ent] = std::make_shared<AIComponent>(std::move(behavior));
 }
 
-void Coordinator::addWeapon(const Uuid &ent, const PlayerWeapon &weapon)
+void Coordinator::addWeapon(const Uuid &ent,
+                            const PlayerWeapon &weapon,
+                            const Eigen::Vector3f &position)
 {
   checkEntityExist(ent, "Weapon");
-  m_components.weapons.emplace(ent, std::make_shared<WeaponSlotComponent>(weapon));
+  m_components.weapons.emplace(ent, std::make_shared<WeaponSlotComponent>(weapon, position));
 }
 
 void Coordinator::addComputer(const Uuid &ent, const PlayerComputer &computer)

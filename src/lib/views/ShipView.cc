@@ -134,13 +134,13 @@ void ShipView::undockPlayerShip() const
 
 auto ShipView::getPlayerShipWeapons() const -> std::vector<PlayerWeapon>
 {
-  const auto ids = m_repositories.shipWeaponRepository->findAllByShip(m_playerShipId);
+  const auto weapons = m_repositories.shipWeaponRepository->findAllByShip(m_playerShipId);
 
   std::vector<PlayerWeapon> out;
-  for (const auto &id : ids)
+  for (const auto &weapon : weapons)
   {
-    const auto weapon = m_repositories.playerWeaponRepository->findOneById(id);
-    out.push_back(weapon);
+    const auto data = m_repositories.playerWeaponRepository->findOneById(weapon.id);
+    out.push_back(data);
   }
   return out;
 }
