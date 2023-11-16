@@ -11,7 +11,7 @@ PlayerShipRepository::PlayerShipRepository(const DbConnectionShPtr &connection)
 
 namespace {
 constexpr auto SQL_QUERY
-  = "SELECT s.faction, s.name, ps.player, ps.hull_points, s.max_hull_points, s.hull_points_regen, ps.power_points, s.max_power_points, s.power_points_regen, s.max_acceleration, s.max_speed, s.radius, ps.x_pos, ps.y_pos, ps.z_pos FROM player_ship AS ps LEFT JOIN ship AS s ON ps.ship = s.id WHERE ps.id = ";
+  = "SELECT s.faction, s.name, ps.player, ps.active, ps.hull_points, s.max_hull_points, s.hull_points_regen, ps.power_points, s.max_power_points, s.power_points_regen, s.max_acceleration, s.max_speed, s.radius, ps.x_pos, ps.y_pos, ps.z_pos FROM player_ship AS ps LEFT JOIN ship AS s ON ps.ship = s.id WHERE ps.id = ";
 auto generateSqlQuery(const Uuid &ship) -> std::string
 {
   return SQL_QUERY + std::to_string(toDbId(ship));
@@ -77,19 +77,20 @@ auto PlayerShipRepository::fetchShipBase(const Uuid &ship) const -> PlayerShip
   {
     out.player = {fromDbId(record[2].as<int>())};
   }
-  out.hullPoints      = record[3].as<float>();
-  out.maxHullPoints   = record[4].as<float>();
-  out.hullPointsRegen = record[5].as<float>();
-  out.powerPoints     = record[6].as<float>();
-  out.maxPowerPoints  = record[7].as<float>();
-  out.powerRegen      = record[8].as<float>();
-  out.acceleration    = record[9].as<float>();
-  out.speed           = record[10].as<float>();
-  out.radius          = record[11].as<float>();
+  out.active          = record[3].as<bool>();
+  out.hullPoints      = record[4].as<float>();
+  out.maxHullPoints   = record[5].as<float>();
+  out.hullPointsRegen = record[6].as<float>();
+  out.powerPoints     = record[7].as<float>();
+  out.maxPowerPoints  = record[8].as<float>();
+  out.powerRegen      = record[9].as<float>();
+  out.acceleration    = record[10].as<float>();
+  out.speed           = record[11].as<float>();
+  out.radius          = record[12].as<float>();
 
-  const auto x = record[12].as<float>();
-  const auto y = record[13].as<float>();
-  const auto z = record[14].as<float>();
+  const auto x = record[13].as<float>();
+  const auto y = record[14].as<float>();
+  const auto z = record[15].as<float>();
   out.position = Eigen::Vector3f(x, y, z);
 
   return out;
