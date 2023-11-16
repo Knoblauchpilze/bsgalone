@@ -158,4 +158,10 @@ auto ShipView::getPlayerShipComputers() const -> std::vector<PlayerComputer>
   return out;
 }
 
+auto ShipView::getPlayerShipSlots() const -> std::unordered_map<Slot, int>
+{
+  const auto ship = m_repositories.playerShipRepository->findOneById(m_playerShipId);
+  return ship.slots;
+}
+
 } // namespace bsgo

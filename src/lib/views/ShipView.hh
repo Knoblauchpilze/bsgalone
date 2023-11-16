@@ -7,6 +7,7 @@
 #include "Uuid.hh"
 #include <memory>
 #include <optional>
+#include <unordered_map>
 
 namespace bsgo {
 
@@ -36,6 +37,7 @@ class ShipView : public IView
 
   auto getPlayerShipWeapons() const -> std::vector<PlayerWeapon>;
   auto getPlayerShipComputers() const -> std::vector<PlayerComputer>;
+  auto getPlayerShipSlots() const -> std::unordered_map<Slot, int>;
 
   private:
   Uuid m_playerShipId;
