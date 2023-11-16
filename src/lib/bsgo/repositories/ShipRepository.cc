@@ -15,7 +15,7 @@ auto generateSqlQuery(const Uuid &ship) -> std::string
   return SQL_QUERY + std::to_string(toDbId(ship));
 }
 
-constexpr auto SQL_QUERY_SLOT       = "SELECT type, count(id) FROM ship_slot WHERE ship = ";
+constexpr auto SQL_QUERY_SLOT       = "SELECT type, COUNT(id) FROM ship_slot WHERE ship = ";
 constexpr auto SQL_QUERY_SLOT_GROUP = " GROUP BY type";
 auto generateSlotSqlQuery(const Uuid &ship) -> std::string
 {

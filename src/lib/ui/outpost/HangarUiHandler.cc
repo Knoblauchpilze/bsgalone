@@ -99,6 +99,18 @@ void HangarUiHandler::generateShipsMenus()
     auto powerPointsRegen = generateMenu(pos, dims, text, "power_regen", transparentBg);
     m_ships[id]->addMenu(powerPointsRegen);
 
+    text = "";
+    for (const auto &[slot, count] : ship.slots)
+    {
+      if (!text.empty())
+      {
+        text += ", ";
+      }
+      text += std::to_string(count) + " " + bsgo::str(slot);
+    }
+    auto slots = generateMenu(pos, dims, text, "slots", transparentBg);
+    m_ships[id]->addMenu(slots);
+
     ++id;
   }
 }

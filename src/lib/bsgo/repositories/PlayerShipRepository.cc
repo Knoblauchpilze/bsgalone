@@ -17,11 +17,11 @@ auto generateSqlQuery(const Uuid &ship) -> std::string
   return SQL_QUERY + std::to_string(toDbId(ship));
 }
 
-constexpr auto SQL_QUERY_SLOT       = "SELECT type, count(id) FROM ship_slot WHERE ship = ";
-constexpr auto SQL_QUERY_SLOT_GROUP = " GROUP BY type";
+constexpr auto SQL_QUERY_SLOT
+  = "SELECT ss.type, COUNT(ss.id) FROM player_ship AS ps LEFT JOIN ship AS s ON ps.ship = s.id LEFT JOIN ship_slot AS ss ON s.id = ss.ship WHERE ps.id = ";
+constexpr auto SQL_QUERY_SLOT_GROUP = " GROUP BY ss.type";
 auto generateSlotSqlQuery(const Uuid &ship) -> std::string
 {
-  /// TODO: Fix this.
   return SQL_QUERY_SLOT + std::to_string(toDbId(ship)) + SQL_QUERY_SLOT_GROUP;
 }
 
