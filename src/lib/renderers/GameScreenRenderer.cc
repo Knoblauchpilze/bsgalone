@@ -26,8 +26,8 @@ void GameScreenRenderer::loadResources(int /*width*/,
                                        sprites::TexturePack &texturesLoader)
 {
   constexpr auto CLASS_1_TEXTURE_PACK_FILE_PATH = "data/assets/class_1.png";
-  constexpr auto CLASS_1_TILE_WIDTH_PIXELS      = 460;
-  constexpr auto CLASS_1_TILE_HEIGHT_PIXELS     = 783;
+  constexpr auto CLASS_1_TILE_WIDTH_PIXELS      = 168;
+  constexpr auto CLASS_1_TILE_HEIGHT_PIXELS     = 188;
   auto pack = sprites::PackDesc{.file = CLASS_1_TEXTURE_PACK_FILE_PATH,
                                 .sSize{CLASS_1_TILE_WIDTH_PIXELS, CLASS_1_TILE_HEIGHT_PIXELS},
                                 .layout{1, 1}};
@@ -44,11 +44,11 @@ void GameScreenRenderer::loadResources(int /*width*/,
   m_asteroidTexturesPackId = texturesLoader.registerPack(pack);
 
   constexpr auto OUTPOST_TEXTURE_PACK_FILE_PATH = "data/assets/outpost.png";
-  constexpr auto OUTPOST_TILE_WIDTH_PIXELS      = 243;
-  constexpr auto OUTPOST_TILE_HEIGHT_PIXELS     = 177;
+  constexpr auto OUTPOST_TILE_WIDTH_PIXELS      = 535;
+  constexpr auto OUTPOST_TILE_HEIGHT_PIXELS     = 575;
   pack = sprites::PackDesc{.file = OUTPOST_TEXTURE_PACK_FILE_PATH,
                            .sSize{OUTPOST_TILE_WIDTH_PIXELS, OUTPOST_TILE_HEIGHT_PIXELS},
-                           .layout{1, 1}};
+                           .layout{2, 1}};
 
   m_outpostTexturesPackId = texturesLoader.registerPack(pack);
 
@@ -180,6 +180,21 @@ void GameScreenRenderer::renderAsteroid(const bsgo::Entity &asteroid,
   engine.drawWarpedSprite(t, state.cf);
 }
 
+namespace {
+auto tintFromFaction(const bsgo::Faction &faction) -> olc::Pixel
+{
+  switch (faction)
+  {
+    case bsgo::Faction::COLONIAL:
+      return olc::Pixel{153, 193, 241};
+    case bsgo::Faction::CYLON:
+      return olc::Pixel{191, 64, 64};
+    default:
+      return olc::RED;
+  }
+}
+} // namespace
+
 void GameScreenRenderer::renderOutpost(const bsgo::Entity &outpost,
                                        SpriteRenderer &engine,
                                        const RenderState &state) const
@@ -194,8 +209,9 @@ void GameScreenRenderer::renderOutpost(const bsgo::Entity &outpost,
   t.radius = 2.0f * transform.size();
 
   t.sprite.pack   = m_outpostTexturesPackId;
-  t.sprite.sprite = {0, 0};
-  t.sprite.tint   = olc::WHITE;
+  const auto id   = outpost.factionComp().faction() == bsgo::Faction::COLONIAL ? 1 : 0;
+  t.sprite.sprite = {id, 0};
+  t.sprite.tint   = tintFromFaction(outpost.factionComp().faction());
 
   engine.drawWarpedSprite(t, state.cf);
 }
@@ -237,20 +253,7 @@ void GameScreenRenderer::renderShip(const bsgo::Entity &ship,
   t.sprite.pack   = m_class1TexturesPackId;
   t.sprite.sprite = {0, 0};
 
-  const auto faction = ship.factionComp().faction();
-  olc::Pixel tint{olc::WHITE};
-  switch (faction)
-  {
-    case bsgo::Faction::COLONIAL:
-      tint = olc::Pixel{153, 193, 241};
-      break;
-    case bsgo::Faction::CYLON:
-      tint = olc::Pixel{191, 64, 64};
-      break;
-    default:
-      error("Failed to render ship", "Unknown faction " + str(faction));
-      break;
-  }
+  auto tint = tintFromFaction(ship.factionComp().faction());
 
   const auto status = ship.statusComp().status();
   switch (status)

@@ -75,7 +75,7 @@ INSERT INTO public.asteroid_loot ("asteroid", "resource", "amount")
 INSERT INTO outpost ("faction", "max_hull_points", "hull_points_regen", "max_power_points", "power_points_regen", "radius")
   VALUES ('colonial', 30000.0, 120.0, 4500.0, 100.0, 2.0);
 INSERT INTO outpost ("faction", "max_hull_points", "hull_points_regen", "max_power_points", "power_points_regen", "radius")
-  VALUES ('cylon', 19000.0, 80.0, 600.0, 12.0, 3.0);
+  VALUES ('cylon', 30000.0, 120.0, 4500.0, 100.0, 2.0);
 
 INSERT INTO public.system_outpost ("outpost", "system", "hull_points", "power_points", "x_pos", "y_pos", "z_pos")
   VALUES (
