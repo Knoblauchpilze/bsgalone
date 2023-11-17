@@ -3,6 +3,7 @@
 
 #include "AbstractRepository.hh"
 #include "Faction.hh"
+#include "ShipClass.hh"
 #include "Slot.hh"
 #include "Uuid.hh"
 #include <memory>
@@ -12,6 +13,7 @@ namespace bsgo {
 struct Ship
 {
   Faction faction{};
+  ShipClass shipClass{};
   std::string name{};
 
   float maxHullPoints{0.0f};

@@ -160,6 +160,12 @@ void Coordinator::addAI(const Uuid &ent, INodePtr behavior)
   m_components.ais[ent] = std::make_shared<AIComponent>(std::move(behavior));
 }
 
+void Coordinator::addShipClass(const Uuid &ent, const ShipClass &shipClass)
+{
+  checkForOverrides(ent, "ShipClass", m_components.shipClasses);
+  m_components.shipClasses[ent] = std::make_shared<ShipClassComponent>(shipClass);
+}
+
 void Coordinator::addWeapon(const Uuid &ent,
                             const PlayerWeapon &weapon,
                             const Eigen::Vector3f &position)
@@ -237,6 +243,7 @@ auto Coordinator::getEntity(const Uuid &ent) const -> Entity
   out.removal   = getComponent(ent, m_components.removals);
   out.status    = getComponent(ent, m_components.statuses);
   out.ai        = getComponent(ent, m_components.ais);
+  out.shipClass = getComponent(ent, m_components.shipClasses);
 
   out.weapons   = getAllComponent(ent, m_components.weapons);
   out.computers = getAllComponent(ent, m_components.computers);
@@ -269,6 +276,7 @@ void Coordinator::deleteEntity(const Uuid &ent)
   m_components.removals.erase(ent);
   m_components.statuses.erase(ent);
   m_components.ais.erase(ent);
+  m_components.shipClasses.erase(ent);
 
   m_components.weapons.erase(ent);
   m_components.computers.erase(ent);

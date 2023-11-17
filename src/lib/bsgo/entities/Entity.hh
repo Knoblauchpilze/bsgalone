@@ -15,6 +15,7 @@
 #include "RemovalComponent.hh"
 #include "ResourceComponent.hh"
 #include "ScannedComponent.hh"
+#include "ShipClassComponent.hh"
 #include "StatusComponent.hh"
 #include "TargetComponent.hh"
 #include "TransformComponent.hh"
@@ -43,6 +44,7 @@ struct Entity
   std::optional<RemovalComponentShPtr> removal{};
   std::optional<StatusComponentShPtr> status{};
   std::optional<AIComponentShPtr> ai{};
+  std::optional<ShipClassComponentShPtr> shipClass{};
   std::vector<WeaponSlotComponentShPtr> weapons{};
   std::vector<ComputerSlotComponentShPtr> computers{};
   std::vector<EffectComponentShPtr> effects{};
@@ -72,6 +74,7 @@ struct Entity
   auto removalComp() const -> const RemovalComponent &;
   auto statusComp() const -> const StatusComponent &;
   auto aiComp() const -> const AIComponent &;
+  auto shipClassComp() const -> const ShipClassComponent &;
 
   auto transformComp() -> TransformComponent &;
   auto velocityComp() -> VelocityComponent &;

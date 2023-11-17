@@ -27,6 +27,7 @@ class GameScreenRenderer : public IRenderer
 
   sprites::PackId m_asteroidTexturesPackId{};
   sprites::PackId m_class1TexturesPackId{};
+  sprites::PackId m_class3TexturesPackId{};
   sprites::PackId m_outpostTexturesPackId{};
   sprites::PackId m_bulletTexturesPackId{};
 

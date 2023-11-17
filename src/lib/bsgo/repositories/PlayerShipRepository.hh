@@ -3,6 +3,7 @@
 
 #include "AbstractRepository.hh"
 #include "Faction.hh"
+#include "ShipClass.hh"
 #include "Slot.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
@@ -15,6 +16,7 @@ namespace bsgo {
 struct PlayerShip
 {
   Faction faction{};
+  ShipClass shipClass{};
   std::optional<Uuid> player{};
   std::string name{};
   bool active{};

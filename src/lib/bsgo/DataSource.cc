@@ -143,6 +143,7 @@ void DataSource::registerShip(Coordinator &coordinator, const Uuid &ship) const
   coordinator.addTarget(ent);
   coordinator.addFaction(ent, data.faction);
   coordinator.addStatus(ent, Status::APPEARING);
+  coordinator.addShipClass(ent, data.shipClass);
   if (!data.player)
   {
     coordinator.addAI(ent, generateBehaviorTree(ship, data.position));

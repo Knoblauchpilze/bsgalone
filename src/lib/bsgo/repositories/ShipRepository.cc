@@ -9,7 +9,7 @@ ShipRepository::ShipRepository(const DbConnectionShPtr &connection)
 
 namespace {
 constexpr auto SQL_QUERY
-  = "SELECT faction, name, max_hull_points, hull_points_regen, max_power_points, power_points_regen, max_acceleration, max_speed, radius FROM ship WHERE id = ";
+  = "SELECT faction, class, name, max_hull_points, hull_points_regen, max_power_points, power_points_regen, max_acceleration, max_speed, radius FROM ship WHERE id = ";
 auto generateSqlQuery(const Uuid &ship) -> std::string
 {
   return SQL_QUERY + std::to_string(toDbId(ship));
@@ -47,14 +47,15 @@ auto ShipRepository::fetchShipBase(const Uuid &ship) const -> Ship
 
   const auto &record  = rows[0];
   out.faction         = fromDbFaction(record[0].as<std::string>());
-  out.name            = record[1].as<std::string>();
-  out.maxHullPoints   = record[2].as<float>();
-  out.hullPointsRegen = record[3].as<float>();
-  out.maxPowerPoints  = record[4].as<float>();
-  out.powerRegen      = record[5].as<float>();
-  out.acceleration    = record[6].as<float>();
-  out.speed           = record[7].as<float>();
-  out.radius          = record[8].as<float>();
+  out.shipClass       = fromDbShipClass(record[1].as<std::string>());
+  out.name            = record[2].as<std::string>();
+  out.maxHullPoints   = record[3].as<float>();
+  out.hullPointsRegen = record[4].as<float>();
+  out.maxPowerPoints  = record[5].as<float>();
+  out.powerRegen      = record[6].as<float>();
+  out.acceleration    = record[7].as<float>();
+  out.speed           = record[8].as<float>();
+  out.radius          = record[9].as<float>();
 
   return out;
 }

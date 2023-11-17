@@ -14,6 +14,7 @@
 #include "RemovalComponent.hh"
 #include "ResourceComponent.hh"
 #include "ScannedComponent.hh"
+#include "ShipClassComponent.hh"
 #include "StatusComponent.hh"
 #include "TargetComponent.hh"
 #include "TransformComponent.hh"
@@ -40,6 +41,7 @@ struct Components
   std::unordered_map<Uuid, RemovalComponentShPtr> removals{};
   std::unordered_map<Uuid, StatusComponentShPtr> statuses{};
   std::unordered_map<Uuid, AIComponentShPtr> ais{};
+  std::unordered_map<Uuid, ShipClassComponentShPtr> shipClasses{};
   std::unordered_multimap<Uuid, WeaponSlotComponentShPtr> weapons{};
   std::unordered_multimap<Uuid, ComputerSlotComponentShPtr> computers{};
   std::unordered_multimap<Uuid, EffectComponentShPtr> effects{};
