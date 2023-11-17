@@ -1,9 +1,15 @@
 
+CREATE TABLE ship_class (
+  name TEXT NOT NULL,
+  PRIMARY KEY (name)
+);
+
 -- https://www.postgresqltutorial.com/postgresql-tutorial/postgresql-numeric/
 CREATE TABLE ship (
   id INTEGER GENERATED ALWAYS AS IDENTITY,
   name TEXT NOT NULL,
   faction TEXT NOT NULL,
+  class TEXT NOT NULL,
   max_hull_points NUMERIC(8, 2) NOT NULL,
   hull_points_regen NUMERIC(8, 2) NOT NULL,
   max_power_points NUMERIC(8, 2) NOT NULL,
@@ -13,7 +19,8 @@ CREATE TABLE ship (
   radius NUMERIC(8, 2) NOT NULL,
   PRIMARY KEY (id),
   UNIQUE (name),
-  FOREIGN KEY (faction) REFERENCES faction(name)
+  FOREIGN KEY (faction) REFERENCES faction(name),
+  FOREIGN KEY (class) REFERENCES ship_class(name)
 );
 
 CREATE TABLE ship_slot (

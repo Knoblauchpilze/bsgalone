@@ -152,6 +152,12 @@ bool Entity::exists<AIComponent>() const
   return details::checkComponentExists(ai);
 }
 
+template<>
+bool Entity::exists<ShipClassComponent>() const
+{
+  return details::checkComponentExists(shipClass);
+}
+
 auto Entity::transformComp() const -> const TransformComponent &
 {
   return details::safeConstAccess(transform, *this, "Transform");
@@ -215,6 +221,11 @@ auto Entity::statusComp() const -> const StatusComponent &
 auto Entity::aiComp() const -> const AIComponent &
 {
   return details::safeConstAccess(ai, *this, "AI");
+}
+
+auto Entity::shipClassComp() const -> const ShipClassComponent &
+{
+  return details::safeConstAccess(shipClass, *this, "ShipClass");
 }
 
 auto Entity::transformComp() -> TransformComponent &

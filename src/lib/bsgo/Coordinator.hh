@@ -39,6 +39,7 @@ class Coordinator : public utils::CoreObject
   void addRemoval(const Uuid &ent);
   void addStatus(const Uuid &ent, const Status &status);
   void addAI(const Uuid &ent, INodePtr behavior);
+  void addShipClass(const Uuid &ent, const ShipClass &shipClass);
   void addWeapon(const Uuid &ent, const PlayerWeapon &weapon, const Eigen::Vector3f &position);
   void addComputer(const Uuid &ent, const PlayerComputer &computer);
   void addResourceComponent(const Uuid &ent, const Uuid &resource, const float amount);

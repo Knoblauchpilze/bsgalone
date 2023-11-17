@@ -25,23 +25,32 @@ void GameScreenRenderer::loadResources(int /*width*/,
                                        int /*height*/,
                                        sprites::TexturePack &texturesLoader)
 {
-  constexpr auto CLASS_1_TEXTURE_PACK_FILE_PATH = "data/assets/class_1.png";
-  constexpr auto CLASS_1_TILE_WIDTH_PIXELS      = 168;
-  constexpr auto CLASS_1_TILE_HEIGHT_PIXELS     = 188;
-  auto pack = sprites::PackDesc{.file = CLASS_1_TEXTURE_PACK_FILE_PATH,
-                                .sSize{CLASS_1_TILE_WIDTH_PIXELS, CLASS_1_TILE_HEIGHT_PIXELS},
-                                .layout{1, 1}};
-
-  m_class1TexturesPackId = texturesLoader.registerPack(pack);
-
   constexpr auto ASTEROID_TEXTURE_PACK_FILE_PATH = "data/assets/asteroid.png";
   constexpr auto ASTEROID_TILE_WIDTH_PIXELS      = 450;
   constexpr auto ASTEROID_TILE_HEIGHT_PIXELS     = 404;
-  pack = sprites::PackDesc{.file = ASTEROID_TEXTURE_PACK_FILE_PATH,
-                           .sSize{ASTEROID_TILE_WIDTH_PIXELS, ASTEROID_TILE_HEIGHT_PIXELS},
-                           .layout{1, 1}};
+  auto pack = sprites::PackDesc{.file = ASTEROID_TEXTURE_PACK_FILE_PATH,
+                                .sSize{ASTEROID_TILE_WIDTH_PIXELS, ASTEROID_TILE_HEIGHT_PIXELS},
+                                .layout{1, 1}};
 
   m_asteroidTexturesPackId = texturesLoader.registerPack(pack);
+
+  constexpr auto CLASS_1_TEXTURE_PACK_FILE_PATH = "data/assets/class_1.png";
+  constexpr auto CLASS_1_TILE_WIDTH_PIXELS      = 168;
+  constexpr auto CLASS_1_TILE_HEIGHT_PIXELS     = 188;
+  pack = sprites::PackDesc{.file = CLASS_1_TEXTURE_PACK_FILE_PATH,
+                           .sSize{CLASS_1_TILE_WIDTH_PIXELS, CLASS_1_TILE_HEIGHT_PIXELS},
+                           .layout{1, 1}};
+
+  m_class1TexturesPackId = texturesLoader.registerPack(pack);
+
+  constexpr auto CLASS_3_TEXTURE_PACK_FILE_PATH = "data/assets/class_3.png";
+  constexpr auto CLASS_3_TILE_WIDTH_PIXELS      = 388;
+  constexpr auto CLASS_3_TILE_HEIGHT_PIXELS     = 504;
+  pack = sprites::PackDesc{.file = CLASS_3_TEXTURE_PACK_FILE_PATH,
+                           .sSize{CLASS_3_TILE_WIDTH_PIXELS, CLASS_3_TILE_HEIGHT_PIXELS},
+                           .layout{1, 1}};
+
+  m_class3TexturesPackId = texturesLoader.registerPack(pack);
 
   constexpr auto OUTPOST_TEXTURE_PACK_FILE_PATH = "data/assets/outpost.png";
   constexpr auto OUTPOST_TILE_WIDTH_PIXELS      = 535;
@@ -250,8 +259,10 @@ void GameScreenRenderer::renderShip(const bsgo::Entity &ship,
   t.radius   = 2.0f * transform.size();
   t.rotation = transform.heading();
 
-  t.sprite.pack   = m_class1TexturesPackId;
-  t.sprite.sprite = {0, 0};
+  const auto shipClass = ship.shipClassComp().shipClass();
+  t.sprite.pack        = bsgo::ShipClass::STRIKE == shipClass ? m_class1TexturesPackId
+                                                              : m_class3TexturesPackId;
+  t.sprite.sprite      = {0, 0};
 
   auto tint = tintFromFaction(ship.factionComp().faction());
 

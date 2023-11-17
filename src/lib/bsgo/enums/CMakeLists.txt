@@ -4,6 +4,7 @@ target_sources (bsgalone_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/Slot.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/Item.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/Status.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/ShipClass.cc
 	)
 
 target_include_directories (bsgalone_lib PUBLIC
