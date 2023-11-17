@@ -26,16 +26,18 @@ class GameScreenUiHandler : public IUiHandler
 
   enum MenuItem
   {
-    HEALTH = 0,
-    POWER  = 1,
+    NAME   = 0,
+    HEALTH = 1,
+    POWER  = 2,
 
-    TARGET_HEALTH   = 2,
-    TARGET_POWER    = 3,
-    TARGET_DISTANCE = 4,
+    TARGET_NAME     = 3,
+    TARGET_HEALTH   = 4,
+    TARGET_POWER    = 5,
+    TARGET_DISTANCE = 6,
 
-    DOCK = 5,
+    DOCK = 7,
 
-    COUNT = 6,
+    COUNT = 8,
   };
   std::vector<MenuShPtr> m_menus{};
 

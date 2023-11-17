@@ -17,6 +17,12 @@ auto ShipView::getPlayerShipId() const -> Uuid
   return m_playerShipId;
 }
 
+auto ShipView::getPlayerShipName() const -> std::string
+{
+  const auto ship = m_repositories.playerShipRepository->findOneById(m_playerShipId);
+  return ship.name;
+}
+
 auto ShipView::getPlayerShip() const -> Entity
 {
   const auto ent = m_coordinator->getEntity(m_playerShipEntityId);
@@ -30,6 +36,37 @@ auto ShipView::getPlayerShip() const -> Entity
 bool ShipView::hasTarget() const
 {
   return getPlayerTarget().has_value();
+}
+
+auto ShipView::getPlayerTargetName() const -> std::optional<std::string>
+{
+  const auto ent      = m_coordinator->getEntity(m_playerShipEntityId);
+  const auto targetId = ent.targetComp().target();
+  if (!targetId)
+  {
+    return {};
+  }
+
+  const auto target     = m_coordinator->getEntity(*targetId);
+  const auto targetKind = target.kind->kind();
+  if (EntityKind::ASTEROID == targetKind)
+  {
+    return "asteroid";
+  }
+  if (EntityKind::OUTPOST == targetKind)
+  {
+    const auto faction = target.factionComp().faction();
+    return str(faction) + " outpost";
+  }
+  if (EntityKind::SHIP == targetKind)
+  {
+    const auto faction = target.factionComp().faction();
+    return str(faction) + " ship";
+  }
+
+  error("Failed to return target name", "Unknown kind " + bsgo::str(targetKind));
+  // Not needed because of the error above.
+  return {};
 }
 
 auto ShipView::getPlayerTarget() const -> std::optional<Entity>
