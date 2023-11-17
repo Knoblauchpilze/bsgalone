@@ -21,8 +21,10 @@ class ShipView : public IView
   ~ShipView() override = default;
 
   auto getPlayerShipId() const -> Uuid;
+  auto getPlayerShipName() const -> std::string;
   auto getPlayerShip() const -> Entity;
   bool hasTarget() const;
+  auto getPlayerTargetName() const -> std::optional<std::string>;
   auto getPlayerTarget() const -> std::optional<Entity>;
 
   auto getShipsWithin(const IBoundingBox &bbox) const -> std::vector<Entity>;

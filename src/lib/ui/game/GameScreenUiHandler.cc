@@ -83,10 +83,16 @@ void GameScreenUiHandler::generateShipMenus(int /*width*/, int /*height*/)
 {
   olc::vi2d pos{5, 5};
   olc::vi2d dims{200, 15};
+
+  const olc::Pixel transparentBg{0, 0, 0, alpha::Transparent};
+  m_menus[NAME] = generateMenu(pos, dims, "N/A", "name", transparentBg, {olc::WHITE});
+
+  constexpr auto REASONABLE_GAP = 15;
+  pos.y += REASONABLE_GAP;
   m_menus[HEALTH]
     = generateMenu(pos, dims, "Health: N/A", "health", olc::VERY_DARK_RED, {olc::WHITE});
 
-  pos            = olc::vi2d{5, 25};
+  pos.y += REASONABLE_GAP;
   m_menus[POWER] = generateMenu(pos, dims, "Power: N/A", "power", olc::DARK_CYAN, {olc::WHITE});
 }
 
@@ -94,10 +100,15 @@ void GameScreenUiHandler::generateTargetMenus(int width, int /*height*/)
 {
   olc::vi2d pos{width / 2, 5};
   olc::vi2d dims{200, 15};
+
+  const olc::Pixel transparentBg{0, 0, 0, alpha::Transparent};
+  m_menus[TARGET_NAME] = generateMenu(pos, dims, "N/A", "name", transparentBg, {olc::WHITE});
+
+  constexpr auto REASONABLE_GAP = 15;
+  pos.y += REASONABLE_GAP;
   m_menus[TARGET_HEALTH]
     = generateMenu(pos, dims, "Health: N/A", "health", olc::VERY_DARK_RED, {olc::WHITE});
 
-  constexpr auto REASONABLE_GAP = 15;
   pos.y += REASONABLE_GAP;
   m_menus[TARGET_POWER]
     = generateMenu(pos, dims, "Power: N/A", "power", olc::DARK_CYAN, {olc::WHITE});
@@ -129,6 +140,15 @@ void GameScreenUiHandler::updateShipUi()
 
   const auto ship = m_shipView->getPlayerShip();
 
+  text = m_shipView->getPlayerShipName();
+  m_menus[NAME]->setText(text);
+
+  text = "Health: ";
+  text += floatToStr(std::floor(ship.healthComp().value()), 0);
+  text += "/";
+  text += floatToStr(ship.healthComp().max(), 0);
+  m_menus[HEALTH]->setText(text);
+
   text = "Health: ";
   text += floatToStr(std::floor(ship.healthComp().value()), 0);
   text += "/";
@@ -145,6 +165,7 @@ void GameScreenUiHandler::updateShipUi()
 void GameScreenUiHandler::updateTargetUi()
 {
   const auto target = m_shipView->getPlayerTarget();
+  m_menus[TARGET_NAME]->setVisible(target.has_value());
   m_menus[TARGET_HEALTH]->setVisible(target.has_value());
   m_menus[TARGET_POWER]->setVisible(target.has_value());
   m_menus[TARGET_DISTANCE]->setVisible(target.has_value());
@@ -155,6 +176,9 @@ void GameScreenUiHandler::updateTargetUi()
   }
 
   std::string text;
+
+  text = m_shipView->getPlayerTargetName().value();
+  m_menus[TARGET_NAME]->setText(text);
 
   text = "Health: ";
   if (!target->exists<bsgo::HealthComponent>())
