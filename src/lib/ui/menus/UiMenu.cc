@@ -1,0 +1,208 @@
+
+#include "UiMenu.hh"
+
+namespace pge {
+
+UiMenu::UiMenu(const MenuConfig &config, const BackgroundConfig &bg)
+  : utils::CoreObject("menu")
+  , m_bg(bg)
+{
+  initializeFromConfig(config);
+}
+
+UiMenu::UiMenu(const MenuConfig &config, const BackgroundConfig &bg, const TextConfig &text)
+  : utils::CoreObject("menu")
+  , m_bg(bg)
+  , m_text(text)
+{
+  initializeFromConfig(config);
+}
+
+bool UiMenu::visible() const noexcept
+{
+  return m_state.visible;
+}
+
+void UiMenu::setVisible(const bool visible) noexcept
+{
+  m_state.visible = visible;
+}
+
+void UiMenu::addMenu(UiMenuPtr child)
+{
+  m_children.push_back(std::move(child));
+}
+
+void UiMenu::render(olc::PixelGameEngine *pge) const
+{
+  if (!m_state.visible)
+  {
+    return;
+  }
+
+  renderSelf(pge);
+  for (const auto &child : m_children)
+  {
+    child->render(pge);
+  }
+}
+
+bool UiMenu::processUserInput(const controls::State &controls)
+{
+  if (!m_state.visible)
+  {
+    return false;
+  }
+
+  auto inputRelevantForChildren{false};
+  if (m_state.propagateEventsToChildren)
+  {
+    for (const auto &child : m_children)
+    {
+      inputRelevantForChildren |= child->processUserInput(controls);
+    }
+  }
+
+  const olc::vi2d mPos{controls.mPosX, controls.mPosY};
+  if (!isWithinMenu(mPos) || inputRelevantForChildren)
+  {
+    m_state.highlighted = false;
+    return inputRelevantForChildren;
+  }
+
+  onRelevantInput(controls);
+
+  return true;
+}
+
+void UiMenu::initializeFromConfig(const MenuConfig &config)
+{
+  m_pos  = config.pos;
+  m_dims = config.dims;
+
+  m_layout = config.layout;
+
+  m_state.visible                   = config.visible;
+  m_state.higlightable              = config.highligtable;
+  m_state.propagateEventsToChildren = config.propagateEventsToChildren;
+
+  m_highlightCallback = config.highlightCallback;
+  m_clickCallback     = config.clickCallback;
+}
+
+inline auto UiMenu::absolutePosition() const noexcept -> olc::vi2d
+{
+  auto p = m_pos;
+  if (m_parent != nullptr)
+  {
+    p += m_parent->absolutePosition();
+  }
+  return p;
+}
+
+void UiMenu::renderSelf(olc::PixelGameEngine *pge) const
+{
+  const auto color = getColorFromState();
+  pge->FillRectDecal(m_pos, m_dims, color);
+  renderText(pge);
+}
+
+namespace {
+auto computeTextPositionFromAlignement(const olc::vi2d &offset,
+                                       const olc::vi2d &dims,
+                                       const olc::vi2d &textDims,
+                                       const TextAlignment &align) -> olc::vi2d
+{
+  olc::vi2d textPos{};
+  switch (align)
+  {
+    case TextAlignment::CENTER:
+      textPos.x = static_cast<int>(offset.x + (dims.x - textDims.x) / 2.0f);
+      textPos.y = static_cast<int>(offset.y + (dims.y - textDims.y) / 2.0f);
+      break;
+    case TextAlignment::RIGHT:
+      textPos.x = offset.x + dims.x - textDims.x;
+      textPos.y = static_cast<int>(offset.y + (dims.y - textDims.y) / 2.0f);
+      break;
+    case TextAlignment::LEFT:
+    default:
+      textPos.x = offset.x;
+      textPos.y = static_cast<int>(offset.y + (dims.y - textDims.y) / 2.0f);
+      break;
+  }
+
+  return textPos;
+}
+} // namespace
+
+void UiMenu::renderText(olc::PixelGameEngine *pge) const
+{
+  if (!m_text)
+  {
+    return;
+  }
+
+  const auto absPos   = absolutePosition();
+  const auto textDims = pge->GetTextSize(m_text->text);
+  const auto textPos  = computeTextPositionFromAlignement(absPos, m_dims, textDims, m_text->align);
+  const auto color    = getTextColorFromState();
+
+  pge->DrawStringDecal(textPos, m_text->text, color);
+}
+
+auto UiMenu::getColorFromState() const -> olc::Pixel
+{
+  if (m_state.higlightable && m_state.highlighted)
+  {
+    return m_bg.hColor;
+  }
+  return m_bg.color;
+}
+
+auto UiMenu::getTextColorFromState() const -> olc::Pixel
+{
+  if (m_state.higlightable && m_state.highlighted)
+  {
+    return m_text->hColor;
+  }
+  return m_text->color;
+}
+
+bool UiMenu::isWithinMenu(const olc::vi2d &pos) const
+{
+  const auto absPos = absolutePosition();
+  const auto minX   = absPos.x;
+  const auto minY   = absPos.y;
+  const auto maxX   = absPos.x + m_dims.x;
+  const auto maxY   = absPos.y + m_dims.y;
+
+  if (pos.x < minX || pos.x > maxX)
+  {
+    return false;
+  }
+  if (pos.y < minY || pos.y > maxY)
+  {
+    return false;
+  }
+
+  return true;
+}
+
+void UiMenu::onRelevantInput(const controls::State &controls)
+{
+  m_state.highlighted = true;
+
+  if (m_highlightCallback)
+  {
+    (*m_highlightCallback)();
+  }
+
+  const auto userClicked = (controls::ButtonState::RELEASED
+                            == controls.buttons[controls::mouse::LEFT]);
+  if (userClicked && m_clickCallback)
+  {
+    (*m_clickCallback)();
+  }
+}
+
+} // namespace pge
