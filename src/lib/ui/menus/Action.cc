@@ -3,11 +3,9 @@
 
 namespace pge {
 
-Action::Action(const action::Process &cb, const std::string &name)
-  : utils::CoreObject(name)
-  ,
-
-  m_callback(cb)
+Action::Action(const GameCallback &callback)
+  : utils::CoreObject("action")
+  , m_callback(callback)
 {
   setService("action");
 }
@@ -15,11 +13,6 @@ Action::Action(const action::Process &cb, const std::string &name)
 void Action::apply(Game &g) const
 {
   m_callback(g);
-}
-
-void Action::setProcess(const action::Process &cb)
-{
-  m_callback = cb;
 }
 
 } // namespace pge

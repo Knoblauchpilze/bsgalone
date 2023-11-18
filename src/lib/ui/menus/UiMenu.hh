@@ -5,6 +5,7 @@
 #include "Controls.hh"
 #include "MenuConfig.hh"
 #include "TextConfig.hh"
+#include "UserInputData.hh"
 #include "olcEngine.hh"
 #include <core_utils/CoreObject.hh>
 #include <optional>
@@ -19,7 +20,7 @@ class UiMenu : public utils::CoreObject
   public:
   UiMenu(const MenuConfig &config, const BackgroundConfig &bg);
   UiMenu(const MenuConfig &config, const BackgroundConfig &bg, const TextConfig &text);
-  ~UiMenu() = default;
+  ~UiMenu() override = default;
 
   bool visible() const noexcept;
   void setVisible(const bool visible) noexcept;
@@ -27,7 +28,7 @@ class UiMenu : public utils::CoreObject
   void addMenu(UiMenuPtr child);
 
   void render(olc::PixelGameEngine *pge) const;
-  bool processUserInput(const controls::State &controls);
+  bool processUserInput(UserInputData &inputData);
 
   private:
   struct State

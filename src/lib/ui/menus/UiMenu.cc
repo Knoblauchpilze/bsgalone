@@ -55,7 +55,7 @@ void UiMenu::render(olc::PixelGameEngine *pge) const
   }
 }
 
-bool UiMenu::processUserInput(const controls::State &controls)
+bool UiMenu::processUserInput(UserInputData &inputData)
 {
   if (!m_state.visible)
   {
@@ -67,18 +67,18 @@ bool UiMenu::processUserInput(const controls::State &controls)
   {
     for (const auto &child : m_children)
     {
-      inputRelevantForChildren |= child->processUserInput(controls);
+      inputRelevantForChildren |= child->processUserInput(inputData);
     }
   }
 
-  const olc::vi2d mPos{controls.mPosX, controls.mPosY};
+  const olc::vi2d mPos{inputData.controls.mPosX, inputData.controls.mPosY};
   if (!isWithinMenu(mPos) || inputRelevantForChildren)
   {
     m_state.highlighted = false;
     return inputRelevantForChildren;
   }
 
-  onRelevantInput(controls);
+  onRelevantInput(inputData.controls);
 
   return true;
 }

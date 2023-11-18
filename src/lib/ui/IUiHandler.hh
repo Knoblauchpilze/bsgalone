@@ -4,6 +4,7 @@
 #include "Action.hh"
 #include "Controls.hh"
 #include "CoordinateFrame.hh"
+#include "Game.hh"
 #include "InputHandle.hh"
 #include <core_utils/CoreObject.hh>
 #include <memory>
