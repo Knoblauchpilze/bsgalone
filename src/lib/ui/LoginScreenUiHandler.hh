@@ -10,7 +10,7 @@ namespace pge {
 class LoginScreenUiHandler : public IUiHandler
 {
   public:
-  LoginScreenUiHandler();
+  LoginScreenUiHandler(const bsgo::Views &views);
   ~LoginScreenUiHandler() override = default;
 
   void initializeMenus(const int width, const int height) override;
@@ -19,13 +19,19 @@ class LoginScreenUiHandler : public IUiHandler
   void updateUi() override;
 
   private:
+  bsgo::PlayerViewShPtr m_playerView;
+
   UiMenuPtr m_loginPanel{};
+  UiMenu *m_nameTextField{};
+  UiMenu *m_passwordTextField{};
   UiMenuPtr m_loginButton{};
   UiMenuPtr m_quitButton{};
 
   void generateLoginMenu(const int width, const int height);
   void generateLoginButton(const int width, const int height);
   void generateQuitMenu(const int width, const int height);
+
+  void tryLogin(Game &game);
 };
 
 } // namespace pge
