@@ -15,8 +15,8 @@ class IInputHandler : public utils::CoreObject
   IInputHandler(const std::string &name);
   ~IInputHandler() override = default;
 
-  virtual void processUserInput(const controls::State &c, CoordinateFrame &frame) = 0;
-  virtual void performAction(float x, float y, const controls::State &state)      = 0;
+  virtual void processUserInput(const controls::State &controls, CoordinateFrame &frame) = 0;
+  virtual void performAction(float x, float y, const controls::State &controls)          = 0;
 };
 
 using IInputHandlerPtr = std::unique_ptr<IInputHandler>;

@@ -18,15 +18,16 @@ GameScreenInputHandler::GameScreenInputHandler(const bsgo::Views &views)
   }
 }
 
-void GameScreenInputHandler::processUserInput(const controls::State &c, CoordinateFrame &frame)
+void GameScreenInputHandler::processUserInput(const controls::State &controls,
+                                              CoordinateFrame &frame)
 {
   Motion motion{};
-  motion.updateFromKeys(c);
+  motion.updateFromKeys(controls);
 
   auto ship = m_shipView->getPlayerShip();
   moveShip(ship, motion);
   keepShipCentered(frame);
-  handleWeaponsState(c, ship);
+  handleWeaponsState(controls, ship);
 }
 
 void GameScreenInputHandler::performAction(float x, float y, const controls::State & /*state*/)

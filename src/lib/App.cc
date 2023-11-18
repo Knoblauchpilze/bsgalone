@@ -26,7 +26,7 @@ bool App::onFrame(float fElapsed)
   return m_game->terminated();
 }
 
-void App::onInputs(const controls::State &c, CoordinateFrame &cf)
+void App::onInputs(const controls::State &controls, CoordinateFrame &cf)
 {
   // Handle case where no game is defined.
   if (m_game == nullptr)
@@ -34,7 +34,7 @@ void App::onInputs(const controls::State &c, CoordinateFrame &cf)
     return;
   }
 
-  m_game->processUserInput(c, cf);
+  m_game->processUserInput(controls, cf);
 }
 
 void App::loadResources()
