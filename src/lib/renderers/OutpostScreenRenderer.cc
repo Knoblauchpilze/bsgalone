@@ -3,7 +3,7 @@
 
 namespace pge {
 
-constexpr auto OUTPOST_TEXTURE_PACK_FILE_PATH = "data/assets/outpost_bg.png";
+constexpr auto OUTPOST_TEXTURE_FILE_PATH = "data/assets/outpost_bg.png";
 
 OutpostScreenRenderer::OutpostScreenRenderer()
   : IRenderer("outpost")
@@ -13,7 +13,7 @@ void OutpostScreenRenderer::loadResources(int width,
                                           int height,
                                           sprites::TexturePack &texturesLoader)
 {
-  m_outpostDecal = texturesLoader.loadDecal(OUTPOST_TEXTURE_PACK_FILE_PATH);
+  m_outpostDecal = texturesLoader.loadDecal(OUTPOST_TEXTURE_FILE_PATH);
   m_scale.x      = 1.0f * width / m_outpostDecal->w();
   m_scale.y      = 1.0f * height / m_outpostDecal->h();
 }
