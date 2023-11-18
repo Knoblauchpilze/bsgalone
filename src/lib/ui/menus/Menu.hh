@@ -145,7 +145,7 @@ class Menu : public utils::CoreObject
   /// push the input callback to the provided vector of actions.
   /// @param process - the callback to be pushed to the list of action whenever
   /// the callback linked to this menu is triggered.
-  void setSimpleAction(action::Process process);
+  void setSimpleAction(GameCallback process);
 
   protected:
   /// @brief - Interface method allowing inheriting classes to perform their own

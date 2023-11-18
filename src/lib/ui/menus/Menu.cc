@@ -166,7 +166,7 @@ void Menu::setAction(menu::MenuCallback action)
   m_callback = action;
 }
 
-void Menu::setSimpleAction(action::Process process)
+void Menu::setSimpleAction(GameCallback process)
 {
   m_actionCallback = [process](std::vector<ActionShPtr> &actions) {
     actions.push_back(std::make_shared<Action>(process));
