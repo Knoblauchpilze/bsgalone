@@ -25,6 +25,8 @@ class UiMenu : public utils::CoreObject
   bool visible() const noexcept;
   void setVisible(const bool visible) noexcept;
 
+  auto tryGetText() const noexcept -> std::optional<std::string>;
+
   void addMenu(UiMenuPtr child);
 
   void render(olc::PixelGameEngine *pge) const;
