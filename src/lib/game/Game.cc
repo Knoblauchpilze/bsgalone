@@ -9,6 +9,7 @@
 #include "GameScreenInputHandler.hh"
 #include "GameScreenRenderer.hh"
 #include "GameScreenUiHandler.hh"
+#include "LoginScreenRenderer.hh"
 #include "LoginScreenUiHandler.hh"
 #include "MapScreenUiHandler.hh"
 #include "OutpostScreenRenderer.hh"
@@ -42,6 +43,10 @@ void Game::generateRenderers(int width, int height, SpriteRenderer &spriteRender
   auto outpost = std::make_unique<OutpostScreenRenderer>();
   outpost->loadResources(width, height, spriteRenderer.getTextureHandler());
   m_renderers[Screen::OUTPOST] = std::move(outpost);
+
+  auto login = std::make_unique<LoginScreenRenderer>();
+  login->loadResources(width, height, spriteRenderer.getTextureHandler());
+  m_renderers[Screen::LOGIN] = std::move(login);
 }
 
 void Game::generateInputHandlers()

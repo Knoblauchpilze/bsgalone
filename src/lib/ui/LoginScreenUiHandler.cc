@@ -49,7 +49,7 @@ void LoginScreenUiHandler::generateLoginMenu(const int width, const int /*height
   m_loginPanel = std::make_unique<UiMenu>(config, bg);
 
   bg         = bgConfigFromColor(transparent(olc::DARK_BLUE, alpha::SemiOpaque));
-  auto text  = textConfigFromColor("Name:", olc::DARK_GREY, TextAlignment::LEFT);
+  auto text  = textConfigFromColor("Name:", olc::BLACK, TextAlignment::LEFT);
   auto label = std::make_unique<UiMenu>(config, bg, text);
   m_loginPanel->addMenu(std::move(label));
 
@@ -59,7 +59,7 @@ void LoginScreenUiHandler::generateLoginMenu(const int width, const int /*height
   m_loginPanel->addMenu(std::move(label));
 
   bg    = bgConfigFromColor(transparent(olc::DARK_BLUE, alpha::SemiOpaque));
-  text  = textConfigFromColor("Password:", olc::DARK_GREY, TextAlignment::LEFT);
+  text  = textConfigFromColor("Password:", olc::BLACK, TextAlignment::LEFT);
   label = std::make_unique<UiMenu>(config, bg, text);
   m_loginPanel->addMenu(std::move(label));
 
