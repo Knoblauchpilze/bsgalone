@@ -19,8 +19,13 @@ class LoginScreenUiHandler : public IUiHandler
   void updateUi() override;
 
   private:
-  MenuShPtr m_menu{};
-  UiMenuPtr m_uiMenu{};
+  UiMenuPtr m_loginPanel{};
+  UiMenuPtr m_loginButton{};
+  UiMenuPtr m_quitButton{};
+
+  void generateLoginMenu(const int width, const int height);
+  void generateLoginButton(const int width, const int height);
+  void generateQuitMenu(const int width, const int height);
 };
 
 } // namespace pge
