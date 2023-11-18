@@ -28,6 +28,16 @@ void UiMenu::setVisible(const bool visible) noexcept
   m_state.visible = visible;
 }
 
+auto UiMenu::tryGetText() const noexcept -> std::optional<std::string>
+{
+  if (!m_text)
+  {
+    return {};
+  }
+
+  return m_text->text;
+}
+
 void UiMenu::addMenu(UiMenuPtr child)
 {
   if (child->m_parent != nullptr)
