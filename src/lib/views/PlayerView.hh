@@ -20,6 +20,8 @@ class PlayerView : public IView
   auto getPlayerComputers() const -> std::vector<PlayerComputer>;
   auto getPlayerShips() const -> std::vector<PlayerShip>;
 
+  auto tryLogin(const std::string &name, const std::string &password) const -> std::optional<Uuid>;
+
   private:
   Uuid m_playerId;
   Uuid m_playerShipId;
