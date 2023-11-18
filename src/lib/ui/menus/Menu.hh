@@ -28,7 +28,7 @@ enum class Layout
 };
 
 using MenuCallback       = std::function<void()>;
-using MenuActionCallback = std::function<void(std::vector<ActionShPtr> &)>;
+using MenuActionCallback = std::function<void(std::vector<ActionPtr> &)>;
 
 } // namespace menu
 
@@ -106,7 +106,7 @@ class Menu : public utils::CoreObject
   /// @param actions - the list of actions produced by the menu while processing the
   /// events.
   /// @return - the description of what happened when the inputs has been processed.
-  menu::InputHandle processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions);
+  menu::InputHandle processUserInput(const controls::State &c, std::vector<ActionPtr> &actions);
 
   /// @brief - Adds the input menu as a child of this one.
   /// @param child - the child menu to register.
@@ -159,7 +159,7 @@ class Menu : public utils::CoreObject
   /// For now this method is only triggered when a click with the left mouse button
   /// is detected. The default implementation does nothing.
   /// @param actions - output vector to register actions if needed.
-  virtual void onClick(std::vector<ActionShPtr> &actions) const;
+  virtual void onClick(std::vector<ActionPtr> &actions) const;
 
   /// @brief - Interface method called right before this menu is changed to selected:
   /// this gives the chance to inheriting classes to react to a user event.

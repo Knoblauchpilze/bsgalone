@@ -62,7 +62,7 @@ void Menu::render(olc::PixelGameEngine *pge) const
   }
 }
 
-menu::InputHandle Menu::processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions)
+menu::InputHandle Menu::processUserInput(const controls::State &c, std::vector<ActionPtr> &actions)
 {
   menu::InputHandle res{false, false};
 
@@ -168,8 +168,8 @@ void Menu::setAction(menu::MenuCallback action)
 
 void Menu::setSimpleAction(GameCallback process)
 {
-  m_actionCallback = [process](std::vector<ActionShPtr> &actions) {
-    actions.push_back(std::make_shared<Action>(process));
+  m_actionCallback = [process](std::vector<ActionPtr> &actions) {
+    actions.push_back(std::make_unique<Action>(process));
   };
 }
 

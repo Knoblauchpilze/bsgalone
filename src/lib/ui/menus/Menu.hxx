@@ -96,7 +96,7 @@ inline void Menu::setText(const std::string &text)
   }
 }
 
-inline void Menu::onClick(std::vector<ActionShPtr> &actions) const
+inline void Menu::onClick(std::vector<ActionPtr> &actions) const
 {
   if (m_callback)
   {

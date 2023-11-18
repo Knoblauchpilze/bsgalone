@@ -18,10 +18,10 @@ void MapScreenUiHandler::initializeMenus(const int width, const int height)
   m_menu->addMenu(m);
 }
 
-auto MapScreenUiHandler::processUserInput(const controls::State &c,
-                                          std::vector<ActionShPtr> &actions) -> menu::InputHandle
+bool MapScreenUiHandler::processUserInput(UserInputData &inputData)
 {
-  return m_menu->processUserInput(c, actions);
+  const auto out = m_menu->processUserInput(inputData.controls, inputData.actions);
+  return out.relevant;
 }
 
 void MapScreenUiHandler::render(SpriteRenderer &engine) const

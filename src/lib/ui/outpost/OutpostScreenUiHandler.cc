@@ -39,30 +39,27 @@ void OutpostScreenUiHandler::initializeMenus(const int width, const int height)
   m_hangarUi->initializeMenus(width, height);
 }
 
-auto OutpostScreenUiHandler::processUserInput(const controls::State &c,
-                                              std::vector<ActionShPtr> &actions)
-  -> menu::InputHandle
+bool OutpostScreenUiHandler::processUserInput(UserInputData &inputData)
 {
-  menu::InputHandle out;
+  bool out{false};
   switch (m_activeScreen)
   {
     case ActiveScreen::HANGAR:
-      out = m_hangarUi->processUserInput(c, actions);
+      out = m_hangarUi->processUserInput(inputData);
       break;
     case ActiveScreen::SHOP:
-      out = m_shopUi->processUserInput(c, actions);
+      out = m_shopUi->processUserInput(inputData);
       break;
     case ActiveScreen::LOCKER:
-      out = m_lockerUi->processUserInput(c, actions);
+      out = m_lockerUi->processUserInput(inputData);
       break;
   }
-  if (!out.relevant && !out.selected)
+  if (!out)
   {
     for (const auto &menu : m_menus)
     {
-      const auto ih = menu->processUserInput(c, actions);
-      out.relevant  = (out.relevant || ih.relevant);
-      out.selected  = (out.selected || ih.selected);
+      const auto ih = menu->processUserInput(inputData.controls, inputData.actions);
+      out |= ih.relevant;
     }
   }
 

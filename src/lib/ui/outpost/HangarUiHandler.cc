@@ -31,10 +31,10 @@ void HangarUiHandler::initializeMenus(const int width, const int height)
   generateShipsMenus();
 }
 
-auto HangarUiHandler::processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions)
-  -> menu::InputHandle
+bool HangarUiHandler::processUserInput(UserInputData &inputData)
 {
-  return m_menu->processUserInput(c, actions);
+  const auto out = m_menu->processUserInput(inputData.controls, inputData.actions);
+  return out.relevant;
 }
 
 void HangarUiHandler::render(SpriteRenderer &engine) const
