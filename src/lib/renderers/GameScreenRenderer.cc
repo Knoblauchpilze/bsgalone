@@ -274,10 +274,10 @@ void GameScreenRenderer::renderShip(const bsgo::Entity &ship,
       break;
     case bsgo::Status::DOCKED:
     case bsgo::Status::DEAD:
-      t.sprite.tint = alpha::transparent(tint, alpha::Transparent);
+      t.sprite.tint = transparent(tint, alpha::Transparent);
       break;
     case bsgo::Status::APPEARING:
-      t.sprite.tint = alpha::transparent(tint, alpha::SemiOpaque);
+      t.sprite.tint = transparent(tint, alpha::SemiOpaque);
       break;
     default:
       error("Failed to render ship", "Unknown status " + str(status));

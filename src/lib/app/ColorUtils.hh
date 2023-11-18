@@ -60,7 +60,7 @@ constexpr uint8_t Transparent = 0;
 /// @param in - the input color.
 /// @param alpha - the alpha to apply to the color.
 /// @return - the input color with the desired transparency.
-auto transparent(const olc::Pixel &in, const uint8_t alpha) -> olc::Pixel;
+auto transparent(const olc::Pixel &in, const uint8_t alpha = alpha::Transparent) -> olc::Pixel;
 
 } // namespace pge
 

@@ -153,12 +153,10 @@ inline olc::Pixel modulate(const olc::Pixel &in, float factor) noexcept
   return HSLToRGB(hsl);
 }
 
-namespace alpha {
 inline auto transparent(const olc::Pixel &in, const uint8_t alpha) -> olc::Pixel
 {
   return olc::Pixel{in.r, in.g, in.b, alpha};
 }
-} // namespace alpha
 
 } // namespace pge
 
