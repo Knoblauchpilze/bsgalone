@@ -14,8 +14,8 @@ class GameScreenInputHandler : public IInputHandler
   GameScreenInputHandler(const bsgo::Views &views);
   ~GameScreenInputHandler() override = default;
 
-  void processUserInput(const controls::State &c, CoordinateFrame &frame) override;
-  void performAction(float x, float y, const controls::State &state) override;
+  void processUserInput(const controls::State &controls, CoordinateFrame &frame) override;
+  void performAction(float x, float y, const controls::State &controls) override;
 
   private:
   bsgo::ShipViewShPtr m_shipView;
@@ -23,7 +23,7 @@ class GameScreenInputHandler : public IInputHandler
 
   void moveShip(bsgo::Entity &ship, const Motion &motion);
   void keepShipCentered(CoordinateFrame &frame);
-  void handleWeaponsState(const controls::State &c, bsgo::Entity &ship);
+  void handleWeaponsState(const controls::State &controls, bsgo::Entity &ship);
 };
 
 } // namespace pge

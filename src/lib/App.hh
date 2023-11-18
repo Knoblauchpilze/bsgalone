@@ -20,7 +20,7 @@ class App : public PGEApp
 
   protected:
   bool onFrame(float fElapsed) override;
-  void onInputs(const controls::State &c, CoordinateFrame &cf) override;
+  void onInputs(const controls::State &controls, CoordinateFrame &cf) override;
 
   void loadResources() override;
   void cleanResources() override;

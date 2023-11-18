@@ -53,7 +53,7 @@ class Game : public utils::CoreObject
   void generateInputHandlers();
   void generateUiHandlers(int width, int height);
 
-  void processUserInput(const controls::State &c, CoordinateFrame &frame);
+  void processUserInput(const controls::State &controls, CoordinateFrame &frame);
   void render(SpriteRenderer &engine, const RenderState &state, const RenderingPass pass) const;
 
   /// @brief - Requests the game to be terminated. This is applied to the next

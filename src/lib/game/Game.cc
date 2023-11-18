@@ -77,7 +77,7 @@ void Game::generateUiHandlers(int width, int height)
   m_uiHandlers[Screen::GAMEOVER] = std::move(gameOver);
 }
 
-void Game::processUserInput(const controls::State &c, CoordinateFrame &frame)
+void Game::processUserInput(const controls::State &controls, CoordinateFrame &frame)
 {
   if (m_state.disabled)
   {
@@ -87,10 +87,10 @@ void Game::processUserInput(const controls::State &c, CoordinateFrame &frame)
   const auto inputHandler = m_inputHandlers.find(getScreen());
   if (inputHandler != m_inputHandlers.end())
   {
-    inputHandler->second->processUserInput(c, frame);
+    inputHandler->second->processUserInput(controls, frame);
   }
 
-  UserInputData uid{.controls = c};
+  UserInputData uid{.controls = controls};
   bool userInputRelevant{false};
   const auto uiHandler = m_uiHandlers.find(getScreen());
   if (uiHandler != m_uiHandlers.end())
@@ -103,20 +103,20 @@ void Game::processUserInput(const controls::State &c, CoordinateFrame &frame)
     }
   }
 
-  const auto lClick = (c.buttons[controls::mouse::LEFT] == controls::ButtonState::RELEASED);
+  const auto lClick = (controls.buttons[controls::mouse::LEFT] == controls::ButtonState::RELEASED);
   if (lClick && inputHandler != m_inputHandlers.end() && !userInputRelevant)
   {
     olc::vf2d it;
-    olc::vi2d tp = frame.pixelsToTilesAndIntra(olc::vi2d(c.mPosX, c.mPosY), &it);
+    olc::vi2d tp = frame.pixelsToTilesAndIntra(olc::vi2d(controls.mPosX, controls.mPosY), &it);
 
-    inputHandler->second->performAction(tp.x + it.x, tp.y + it.y, c);
+    inputHandler->second->performAction(tp.x + it.x, tp.y + it.y, controls);
   }
 
-  if (c.keys[controls::keys::P])
+  if (controls.keys[controls::keys::P])
   {
     togglePause();
   }
-  if (c.keys[controls::keys::M])
+  if (controls.keys[controls::keys::M])
   {
     std::optional<Screen> nextScreen{};
     switch (getScreen())
