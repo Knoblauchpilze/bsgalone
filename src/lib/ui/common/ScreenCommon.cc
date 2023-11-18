@@ -2,7 +2,7 @@
 #include "ScreenCommon.hh"
 
 /// @brief - Ratio of the size of the menus compared to the total size of the window.
-#define RATIO_MENU_TO_WINDOW 0.6
+constexpr auto RATIO_MENU_TO_WINDOW = 0.6;
 
 namespace pge {
 
