@@ -31,25 +31,23 @@ void GameScreenUiHandler::initializeMenus(const int width, const int height)
   m_gameOverUi->initializeMenus(width, height);
 }
 
-auto GameScreenUiHandler::processUserInput(const controls::State &c,
-                                           std::vector<ActionShPtr> &actions) -> menu::InputHandle
+bool GameScreenUiHandler::processUserInput(UserInputData &inputData)
 {
-  auto out = m_weaponsUi->processUserInput(c, actions);
-  if (!out.relevant && !out.selected)
+  auto out = m_weaponsUi->processUserInput(inputData);
+  if (!out)
   {
-    out = m_abilitiesUi->processUserInput(c, actions);
+    out = m_abilitiesUi->processUserInput(inputData);
   }
-  if (!out.relevant && !out.selected)
+  if (!out)
   {
-    out = m_gameOverUi->processUserInput(c, actions);
+    out = m_gameOverUi->processUserInput(inputData);
   }
-  if (!out.relevant && !out.selected)
+  if (!out)
   {
     for (const auto &menu : m_menus)
     {
-      const auto ih = menu->processUserInput(c, actions);
-      out.relevant  = (out.relevant || ih.relevant);
-      out.selected  = (out.selected || ih.selected);
+      const auto ih = menu->processUserInput(inputData.controls, inputData.actions);
+      out |= ih.relevant;
     }
   }
 

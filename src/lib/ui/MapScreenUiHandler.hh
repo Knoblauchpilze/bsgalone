@@ -13,8 +13,7 @@ class MapScreenUiHandler : public IUiHandler
   ~MapScreenUiHandler() override = default;
 
   void initializeMenus(const int width, const int height) override;
-  auto processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions)
-    -> menu::InputHandle override;
+  bool processUserInput(UserInputData &inputData) override;
   void render(SpriteRenderer &engine) const override;
   void updateUi() override;
 

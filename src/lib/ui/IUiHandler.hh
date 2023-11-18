@@ -5,7 +5,7 @@
 #include "Controls.hh"
 #include "CoordinateFrame.hh"
 #include "Game.hh"
-#include "InputHandle.hh"
+#include "UserInputData.hh"
 #include <core_utils/CoreObject.hh>
 #include <memory>
 
@@ -21,10 +21,9 @@ class IUiHandler : public utils::CoreObject
   ~IUiHandler() override = default;
 
   virtual void initializeMenus(const int width, const int height) = 0;
-  virtual auto processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions)
-    -> menu::InputHandle                            = 0;
-  virtual void render(SpriteRenderer &engine) const = 0;
-  virtual void updateUi()                           = 0;
+  virtual bool processUserInput(UserInputData &inputData)         = 0;
+  virtual void render(SpriteRenderer &engine) const               = 0;
+  virtual void updateUi()                                         = 0;
 };
 
 using IUiHandlerPtr = std::unique_ptr<IUiHandler>;

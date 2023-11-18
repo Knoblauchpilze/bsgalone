@@ -21,20 +21,17 @@ void AbilitiesUiHandler::initializeMenus(const int width, const int height)
   generateCompmutersMenus(width, height);
 }
 
-auto AbilitiesUiHandler::processUserInput(const controls::State &c,
-                                          std::vector<ActionShPtr> &actions) -> menu::InputHandle
+bool AbilitiesUiHandler::processUserInput(UserInputData &inputData)
 {
   auto relevant{false};
-  auto selected{false};
 
   for (const auto &menu : m_computers)
   {
-    const auto ih = menu->processUserInput(c, actions);
+    const auto ih = menu->processUserInput(inputData.controls, inputData.actions);
     relevant      = (relevant || ih.relevant);
-    selected      = (selected || ih.selected);
   }
 
-  return menu::InputHandle{.relevant = relevant, .selected = selected};
+  return relevant;
 }
 
 void AbilitiesUiHandler::render(SpriteRenderer &engine) const

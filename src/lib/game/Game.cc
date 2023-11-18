@@ -85,21 +85,21 @@ void Game::processUserInput(const controls::State &c, CoordinateFrame &frame)
     inputHandler->second->processUserInput(c, frame);
   }
 
-  menu::InputHandle res{};
+  UserInputData uid{.controls = c};
+  bool userInputRelevant{false};
   const auto uiHandler = m_uiHandlers.find(getScreen());
   if (uiHandler != m_uiHandlers.end())
   {
-    std::vector<ActionShPtr> actions;
-    res = uiHandler->second->processUserInput(c, actions);
+    userInputRelevant = uiHandler->second->processUserInput(uid);
 
-    for (const auto &action : actions)
+    for (const auto &action : uid.actions)
     {
       action->apply(*this);
     }
   }
 
   const auto lClick = (c.buttons[controls::mouse::LEFT] == controls::ButtonState::RELEASED);
-  if (lClick && inputHandler != m_inputHandlers.end() && !res.relevant)
+  if (lClick && inputHandler != m_inputHandlers.end() && !userInputRelevant)
   {
     olc::vf2d it;
     olc::vi2d tp = frame.pixelsToTilesAndIntra(olc::vi2d(c.mPosX, c.mPosY), &it);

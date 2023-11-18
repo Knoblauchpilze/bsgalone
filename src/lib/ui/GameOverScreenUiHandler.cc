@@ -29,11 +29,10 @@ void GameOverScreenUiHandler::initializeMenus(const int width, const int height)
   m_menu->addMenu(m);
 }
 
-auto GameOverScreenUiHandler::processUserInput(const controls::State &c,
-                                               std::vector<ActionShPtr> &actions)
-  -> menu::InputHandle
+bool GameOverScreenUiHandler::processUserInput(UserInputData &inputData)
 {
-  return m_menu->processUserInput(c, actions);
+  const auto out = m_menu->processUserInput(inputData.controls, inputData.actions);
+  return out.relevant;
 }
 
 void GameOverScreenUiHandler::render(SpriteRenderer &engine) const

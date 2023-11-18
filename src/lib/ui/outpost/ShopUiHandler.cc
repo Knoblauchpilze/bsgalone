@@ -31,10 +31,10 @@ void ShopUiHandler::initializeMenus(const int width, const int height)
   generateItemsMenus();
 }
 
-auto ShopUiHandler::processUserInput(const controls::State &c, std::vector<ActionShPtr> &actions)
-  -> menu::InputHandle
+bool ShopUiHandler::processUserInput(UserInputData &inputData)
 {
-  return m_menu->processUserInput(c, actions);
+  const auto out = m_menu->processUserInput(inputData.controls, inputData.actions);
+  return out.relevant;
 }
 
 void ShopUiHandler::render(SpriteRenderer &engine) const

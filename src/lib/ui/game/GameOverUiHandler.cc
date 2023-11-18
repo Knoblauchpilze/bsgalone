@@ -36,10 +36,10 @@ void GameOverUiHandler::initializeMenus(const int width, const int height)
   m_menu->setVisible(false);
 }
 
-auto GameOverUiHandler::processUserInput(const controls::State &c,
-                                         std::vector<ActionShPtr> &actions) -> menu::InputHandle
+bool GameOverUiHandler::processUserInput(UserInputData &inputData)
 {
-  return m_menu->processUserInput(c, actions);
+  const auto out = m_menu->processUserInput(inputData.controls, inputData.actions);
+  return out.relevant;
 }
 
 void GameOverUiHandler::render(SpriteRenderer &engine) const
