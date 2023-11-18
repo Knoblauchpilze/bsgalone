@@ -51,6 +51,7 @@ class UiMenu : public utils::CoreObject
 
   std::optional<HighlightCallback> m_highlightCallback{};
   std::optional<ClickCallback> m_clickCallback{};
+  std::optional<GameCallback> m_gameClickCallback{};
 
   UiMenu *m_parent{nullptr};
   std::vector<UiMenuPtr> m_children{};
@@ -62,7 +63,7 @@ class UiMenu : public utils::CoreObject
   auto getColorFromState() const -> olc::Pixel;
   auto getTextColorFromState() const -> olc::Pixel;
   bool isWithinMenu(const olc::vi2d &pos) const;
-  void onRelevantInput(const controls::State &controls);
+  void onRelevantInput(UserInputData &inputData);
   void updateLayoutAfterChildChange();
   void adaptChildrenToMatchHorizontalSize(const float desiredXSize);
   void adaptChildrenToMatchVerticalSize(const float desiredYSize);

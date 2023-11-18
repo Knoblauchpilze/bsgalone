@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "Action.hh"
 #include "olcEngine.hh"
 #include <optional>
 
@@ -28,6 +29,7 @@ struct MenuConfig
 
   std::optional<HighlightCallback> highlightCallback{};
   std::optional<ClickCallback> clickCallback{};
+  std::optional<GameCallback> gameClickCallBack{};
 };
 
 } // namespace pge

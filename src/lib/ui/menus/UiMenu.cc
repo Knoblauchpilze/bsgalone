@@ -78,7 +78,7 @@ bool UiMenu::processUserInput(UserInputData &inputData)
     return inputRelevantForChildren;
   }
 
-  onRelevantInput(inputData.controls);
+  onRelevantInput(inputData);
 
   return true;
 }
@@ -96,6 +96,7 @@ void UiMenu::initializeFromConfig(const MenuConfig &config)
 
   m_highlightCallback = config.highlightCallback;
   m_clickCallback     = config.clickCallback;
+  m_gameClickCallback = config.gameClickCallBack;
 }
 
 inline auto UiMenu::absolutePosition() const noexcept -> olc::vi2d
@@ -197,7 +198,7 @@ bool UiMenu::isWithinMenu(const olc::vi2d &pos) const
   return true;
 }
 
-void UiMenu::onRelevantInput(const controls::State &controls)
+void UiMenu::onRelevantInput(UserInputData &inputData)
 {
   m_state.highlighted = true;
 
@@ -207,10 +208,17 @@ void UiMenu::onRelevantInput(const controls::State &controls)
   }
 
   const auto userClicked = (controls::ButtonState::RELEASED
-                            == controls.buttons[controls::mouse::LEFT]);
-  if (userClicked && m_clickCallback)
+                            == inputData.controls.buttons[controls::mouse::LEFT]);
+  if (userClicked)
   {
-    (*m_clickCallback)();
+    if (m_clickCallback)
+    {
+      (*m_clickCallback)();
+    }
+    if (m_gameClickCallback)
+    {
+      inputData.actions.emplace_back(std::make_unique<Action>(*m_gameClickCallback));
+    }
   }
 }
 
