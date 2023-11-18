@@ -13,9 +13,23 @@ auto generateSqlQuery(const Uuid &asteroid) -> std::string
 {
   return SQL_QUERY + std::to_string(toDbId(asteroid));
 }
+
+constexpr auto SQL_QUERY_LOOT = "SELECT count(resource) FROM asteroid_loot WHERE asteroid = ";
+auto generateLootSqlQuery(const Uuid &asteroid) -> std::string
+{
+  return SQL_QUERY_LOOT + std::to_string(toDbId(asteroid));
+}
 } // namespace
 
 auto AsteroidRepository::findOneById(const Uuid &asteroid) const -> Asteroid
+{
+  auto out = fetchAsteroidBase(asteroid);
+  fetchLoot(asteroid, out);
+
+  return out;
+}
+
+auto AsteroidRepository::fetchAsteroidBase(const Uuid &asteroid) const -> Asteroid
 {
   const auto sql = generateSqlQuery(asteroid);
 
@@ -39,6 +53,22 @@ auto AsteroidRepository::findOneById(const Uuid &asteroid) const -> Asteroid
   out.position = Eigen::Vector3f(x, y, z);
 
   return out;
+}
+
+void AsteroidRepository::fetchLoot(const Uuid &asteroid, Asteroid &out) const
+{
+  const auto sql = generateLootSqlQuery(asteroid);
+
+  pqxx::nontransaction work(m_connection->connection());
+  pqxx::result rows(work.exec(sql));
+
+  if (rows.size() != 1)
+  {
+    error("Expected to find only one loot for asteroid with id " + str(asteroid));
+  }
+
+  const auto &record = rows[0];
+  out.loot           = record[0].as<int>() > 0;
 }
 
 } // namespace bsgo
