@@ -30,7 +30,15 @@ void UiMenu::setVisible(const bool visible) noexcept
 
 void UiMenu::addMenu(UiMenuPtr child)
 {
+  if (child->m_parent != nullptr)
+  {
+    warn("Reparenting menu \"" + child->getName() + "\" from \"" + child->m_parent->getName()
+         + "\"");
+  }
+
+  child->m_parent = this;
   m_children.push_back(std::move(child));
+  updateLayoutAfterChildChange();
 }
 
 void UiMenu::render(olc::PixelGameEngine *pge) const
@@ -102,8 +110,9 @@ inline auto UiMenu::absolutePosition() const noexcept -> olc::vi2d
 
 void UiMenu::renderSelf(olc::PixelGameEngine *pge) const
 {
-  const auto color = getColorFromState();
-  pge->FillRectDecal(m_pos, m_dims, color);
+  const auto absPos = absolutePosition();
+  const auto color  = getColorFromState();
+  pge->FillRectDecal(absPos, m_dims, color);
   renderText(pge);
 }
 
@@ -202,6 +211,104 @@ void UiMenu::onRelevantInput(const controls::State &controls)
   if (userClicked && m_clickCallback)
   {
     (*m_clickCallback)();
+  }
+}
+
+void UiMenu::updateLayoutAfterChildChange()
+{
+  const auto sizeToDistribute = (m_layout == MenuLayout::Horizontal ? m_dims.x : m_dims.y);
+  const auto count            = static_cast<int>(m_children.size());
+  const auto sizeForEachChild = 1.0f * sizeToDistribute / count;
+
+  switch (m_layout)
+  {
+    case MenuLayout::Horizontal:
+      adaptChildrenToMatchHorizontalSize(sizeForEachChild);
+      break;
+    case MenuLayout::Vertical:
+      adaptChildrenToMatchVerticalSize(sizeForEachChild);
+      break;
+    default:
+      error("Failed to update layout",
+            "Unknown layout " + std::to_string(static_cast<int>(m_layout)));
+      break;
+  }
+
+  for (const auto &child : m_children)
+  {
+    child->updateLayoutAfterChildChange();
+  }
+}
+
+namespace {
+auto floorToInt(const float v) -> int
+{
+  return static_cast<int>(std::floor(v));
+}
+
+auto roundToInt(const float v) -> int
+{
+  return static_cast<int>(std::round(v));
+}
+} // namespace
+
+void UiMenu::adaptChildrenToMatchHorizontalSize(const float desiredXSize)
+{
+  auto delta  = 0.0f;
+  auto offset = 0.0f;
+
+  for (const auto &child : m_children)
+  {
+    child->m_dims.x = floorToInt(desiredXSize);
+    delta += (desiredXSize - child->m_dims.x);
+    child->m_dims.y = std::min(m_dims.y, child->m_dims.y);
+
+    if (delta > 1.0f)
+    {
+      const auto additionalSize = floorToInt(delta);
+      child->m_dims.x += additionalSize;
+      delta -= additionalSize;
+    }
+
+    child->m_pos.x = offset;
+    child->m_pos.y = (m_dims.y - child->m_dims.y) / 2;
+
+    offset += child->m_dims.x;
+  }
+
+  if (delta > 0.0f)
+  {
+    m_children.back()->m_dims.x += roundToInt(delta);
+  }
+}
+
+void UiMenu::adaptChildrenToMatchVerticalSize(const float desiredYSize)
+{
+  auto delta  = 0.0f;
+  auto offset = 0.0f;
+
+  for (const auto &child : m_children)
+  {
+    child->m_dims.x = std::min(m_dims.x, child->m_dims.x);
+    child->m_dims.y = floorToInt(desiredYSize);
+    delta += (desiredYSize - child->m_dims.y);
+
+    if (delta > 1.0f)
+    {
+      const auto additionalSize = floorToInt(delta);
+      child->m_dims.y += additionalSize;
+      delta -= additionalSize;
+    }
+
+    child->m_pos.x = (m_dims.x - child->m_dims.x) / 2;
+    child->m_pos.y = offset;
+
+    offset += child->m_dims.y;
+  }
+
+  if (delta > 0.0f)
+  {
+    m_children.back()->m_dims.y += roundToInt(delta);
   }
 }
 

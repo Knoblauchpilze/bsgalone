@@ -62,6 +62,9 @@ class UiMenu : public utils::CoreObject
   auto getTextColorFromState() const -> olc::Pixel;
   bool isWithinMenu(const olc::vi2d &pos) const;
   void onRelevantInput(const controls::State &controls);
+  void updateLayoutAfterChildChange();
+  void adaptChildrenToMatchHorizontalSize(const float desiredXSize);
+  void adaptChildrenToMatchVerticalSize(const float desiredYSize);
 };
 
 } // namespace pge
