@@ -77,7 +77,9 @@ void LoginScreenUiHandler::generateLoginButton(const int width, const int height
   const olc::vi2d loginButtonPos{(width - loginButtonDimsPixels.x) / 2,
                                  height - REASONABLE_GAP_SIZE - loginButtonDimsPixels.y};
 
-  const MenuConfig config{.pos = loginButtonPos, .dims = loginButtonDimsPixels};
+  const MenuConfig config{.pos               = loginButtonPos,
+                          .dims              = loginButtonDimsPixels,
+                          .gameClickCallBack = [](Game &g) { g.setScreen(Screen::OUTPOST); }};
 
   const auto bg   = bgConfigFromColor(olc::DARK_COBALT_BLUE);
   const auto text = textConfigFromColor("AU JEU!!", olc::WHITE);
