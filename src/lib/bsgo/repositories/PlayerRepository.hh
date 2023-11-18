@@ -5,8 +5,16 @@
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
 #include <memory>
+#include <optional>
 
 namespace bsgo {
+
+struct Player
+{
+  Uuid id{};
+  std::string name{};
+  std::string password{};
+};
 
 class PlayerRepository : public AbstractRepository
 {
@@ -14,6 +22,7 @@ class PlayerRepository : public AbstractRepository
   PlayerRepository(const DbConnectionShPtr &connection);
   ~PlayerRepository() override = default;
 
+  auto findOneByName(const std::string &name) const -> std::optional<Player>;
   auto findSystemByPlayer(const Uuid &player) const -> Uuid;
 };
 
