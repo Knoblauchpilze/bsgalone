@@ -14,13 +14,12 @@ namespace bsgo {
 class ShipView : public IView
 {
   public:
-  ShipView(const Uuid &playerShipId,
-           const Uuid &playerShipEntityId,
-           const CoordinatorShPtr &coordinator,
-           const Repositories &repositories);
+  ShipView(const CoordinatorShPtr &coordinator, const Repositories &repositories);
   ~ShipView() override = default;
 
-  auto getPlayerShipId() const -> Uuid;
+  void setPlayerShipDbId(const Uuid &ship);
+  void setPlayerShipEntityId(const Uuid &ship);
+
   auto getPlayerShipName() const -> std::string;
   auto getPlayerShip() const -> Entity;
   bool hasTarget() const;
@@ -42,8 +41,8 @@ class ShipView : public IView
   auto getPlayerShipSlots() const -> std::unordered_map<Slot, int>;
 
   private:
-  Uuid m_playerShipId;
-  Uuid m_playerShipEntityId;
+  std::optional<Uuid> m_playerShipDbId{};
+  std::optional<Uuid> m_playerShipEntityId{};
 };
 
 using ShipViewShPtr = std::shared_ptr<ShipView>;

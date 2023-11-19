@@ -25,14 +25,14 @@ DataSource::DataSource()
   m_connection->connect();
 }
 
+void DataSource::setPlayerId(const Uuid &player)
+{
+  m_playerId = player;
+}
+
 auto DataSource::repositories() const -> Repositories
 {
   return m_repositories;
-}
-
-auto DataSource::playerId() const -> Uuid
-{
-  return m_playerId;
 }
 
 auto DataSource::playerEntityId() const -> Uuid
@@ -64,7 +64,12 @@ auto DataSource::playerShipEntityId() const -> Uuid
 
 void DataSource::initialize(Coordinator &coordinator) const
 {
-  const auto systemId = m_repositories.playerRepository->findSystemByPlayer(m_playerId);
+  if (!m_playerId)
+  {
+    error("Failed to initialize the game", "No player id defined");
+  }
+
+  const auto systemId = m_repositories.playerRepository->findSystemByPlayer(*m_playerId);
 
   initializePlayer(coordinator);
   initializeShips(coordinator, systemId);
@@ -76,7 +81,7 @@ void DataSource::initializePlayer(Coordinator &coordinator) const
 {
   m_playerEntityId = coordinator.createEntity(EntityKind::PLAYER);
 
-  const auto resources = m_repositories.playerResourceRepository->findAllByPlayer(m_playerId);
+  const auto resources = m_repositories.playerResourceRepository->findAllByPlayer(*m_playerId);
   for (const auto &resource : resources)
   {
     coordinator.addResourceComponent(*m_playerEntityId, resource.resource, resource.amount);

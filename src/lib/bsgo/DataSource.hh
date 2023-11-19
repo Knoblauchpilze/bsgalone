@@ -16,8 +16,9 @@ class DataSource : public utils::CoreObject
   DataSource();
   ~DataSource() override = default;
 
+  void setPlayerId(const Uuid &player);
+
   auto repositories() const -> Repositories;
-  auto playerId() const -> Uuid;
   auto playerEntityId() const -> Uuid;
   auto playerShipId() const -> Uuid;
   auto playerShipEntityId() const -> Uuid;
@@ -25,7 +26,7 @@ class DataSource : public utils::CoreObject
   void initialize(Coordinator &coordinator) const;
 
   private:
-  Uuid m_playerId{};
+  std::optional<Uuid> m_playerId{};
   mutable std::optional<Uuid> m_playerEntityId{};
   mutable std::optional<Uuid> m_playerShipId{};
   mutable std::optional<Uuid> m_playerShipEntityId{};

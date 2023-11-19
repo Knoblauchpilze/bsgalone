@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "LoginView.hh"
 #include "PlayerView.hh"
 #include "ServerView.hh"
 #include "ShipView.hh"
@@ -16,6 +17,7 @@ struct Views
   ShipViewShPtr shipView{};
   ShopViewShPtr shopView{};
   SystemViewShPtr systemView{};
+  LoginViewShPtr loginView{};
 };
 
 } // namespace bsgo

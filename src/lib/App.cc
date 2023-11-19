@@ -44,9 +44,7 @@ void App::loadResources()
   m_game->setScreen(Screen::LOGIN);
   setLayerTint(Layer::Draw, olc::Pixel(255, 255, 255, alpha::SemiOpaque));
 
-  m_game->generateRenderers(ScreenWidth(), ScreenHeight(), *m_spriteRenderer);
-  m_game->generateInputHandlers();
-  m_game->generateUiHandlers(ScreenWidth(), ScreenHeight());
+  m_game->generateLoginScreen(ScreenWidth(), ScreenHeight(), *m_spriteRenderer);
 }
 
 void App::cleanResources()

@@ -41,17 +41,10 @@ class Game : public utils::CoreObject
 
   ~Game() = default;
 
-  /// @brief - Retrieves the currently selected screen.
-  /// @return - the currently selected screen.
   auto getScreen() const noexcept -> Screen;
-
-  /// @brief - Define a new active screen for this game.
-  /// @param screen - the new screen to apply.
   void setScreen(const Screen &screen);
 
-  void generateRenderers(int width, int height, SpriteRenderer &spriteRenderer);
-  void generateInputHandlers();
-  void generateUiHandlers(int width, int height);
+  void generateLoginScreen(int width, int height, SpriteRenderer &spriteRenderer);
 
   void processUserInput(const controls::State &controls, CoordinateFrame &frame);
   void render(SpriteRenderer &engine, const RenderState &state, const RenderingPass pass) const;
@@ -72,6 +65,7 @@ class Game : public utils::CoreObject
 
   void tryActivateWeapon(const bsgo::Uuid &ship, const int &weaponId);
   void tryActivateSlot(const bsgo::Uuid &ship, const int &slotId);
+  void login(const bsgo::Uuid &playerDbId);
 
   private:
   /// @brief - Convenience structure allowing to group information
@@ -118,13 +112,24 @@ class Game : public utils::CoreObject
   State m_state{};
 
   bsgo::DataSource m_dataSource{};
-  bsgo::CoordinatorShPtr m_coordinator{nullptr};
+  bsgo::CoordinatorShPtr m_coordinator{std::make_shared<bsgo::Coordinator>()};
   bsgo::Views m_views;
   std::unordered_map<Screen, IRendererPtr> m_renderers{};
   std::unordered_map<Screen, IInputHandlerPtr> m_inputHandlers{};
   std::unordered_map<Screen, IUiHandlerPtr> m_uiHandlers{};
 
+  struct InitializationData
+  {
+    int width{};
+    int height{};
+    SpriteRenderer *spriteRenderer{};
+  };
+
+  InitializationData m_initializationData{};
+
   void initialize();
+  void generateGameScreen();
+  void generateOutpostScreen();
 };
 
 using GameShPtr = std::shared_ptr<Game>;

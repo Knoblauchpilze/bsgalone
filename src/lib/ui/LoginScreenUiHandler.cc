@@ -6,11 +6,11 @@ namespace pge {
 
 LoginScreenUiHandler::LoginScreenUiHandler(const bsgo::Views &views)
   : IUiHandler("login")
-  , m_playerView(views.playerView)
+  , m_loginView(views.loginView)
 {
-  if (nullptr == m_playerView)
+  if (nullptr == m_loginView)
   {
-    throw std::invalid_argument("Expected non null player view");
+    throw std::invalid_argument("Expected non null login view");
   }
 }
 
@@ -125,13 +125,11 @@ void LoginScreenUiHandler::tryLogin(Game &game)
     return;
   }
 
-  const auto id = m_playerView->tryLogin(name, password);
-  if (id)
+  const auto playerId = m_loginView->tryLogin(name, password);
+  if (playerId)
   {
-    /// TODO: Should propagate this to the PlayerView and the other views.
-    warn("Should correctly handle player id");
+    game.login(*playerId);
   }
-  game.setScreen(Screen::OUTPOST);
 }
 
 } // namespace pge

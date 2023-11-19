@@ -3,32 +3,32 @@
 
 namespace bsgo {
 
-ShipView::ShipView(const Uuid &playerShipId,
-                   const Uuid &playerShipEntityId,
-                   const CoordinatorShPtr &coordinator,
-                   const Repositories &repositories)
+ShipView::ShipView(const CoordinatorShPtr &coordinator, const Repositories &repositories)
   : IView("ship", coordinator, repositories)
-  , m_playerShipId(playerShipId)
-  , m_playerShipEntityId(playerShipEntityId)
 {}
 
-auto ShipView::getPlayerShipId() const -> Uuid
+void ShipView::setPlayerShipDbId(const Uuid &ship)
 {
-  return m_playerShipId;
+  m_playerShipDbId = ship;
+}
+
+void ShipView::setPlayerShipEntityId(const Uuid &ship)
+{
+  m_playerShipEntityId = ship;
 }
 
 auto ShipView::getPlayerShipName() const -> std::string
 {
-  const auto ship = m_repositories.playerShipRepository->findOneById(m_playerShipId);
+  const auto ship = m_repositories.playerShipRepository->findOneById(*m_playerShipDbId);
   return ship.name;
 }
 
 auto ShipView::getPlayerShip() const -> Entity
 {
-  const auto ent = m_coordinator->getEntity(m_playerShipEntityId);
+  const auto ent = m_coordinator->getEntity(*m_playerShipEntityId);
   if (ent.kind->kind() != EntityKind::SHIP)
   {
-    error("Expected " + str(m_playerShipEntityId) + " to have kind ship but got " + ent.str());
+    error("Expected " + str(*m_playerShipEntityId) + " to have kind ship but got " + ent.str());
   }
   return ent;
 }
@@ -40,7 +40,7 @@ bool ShipView::hasTarget() const
 
 auto ShipView::getPlayerTargetName() const -> std::optional<std::string>
 {
-  const auto ent      = m_coordinator->getEntity(m_playerShipEntityId);
+  const auto ent      = m_coordinator->getEntity(*m_playerShipEntityId);
   const auto targetId = ent.targetComp().target();
   if (!targetId)
   {
@@ -71,7 +71,7 @@ auto ShipView::getPlayerTargetName() const -> std::optional<std::string>
 
 auto ShipView::getPlayerTarget() const -> std::optional<Entity>
 {
-  const auto ent      = m_coordinator->getEntity(m_playerShipEntityId);
+  const auto ent      = m_coordinator->getEntity(*m_playerShipEntityId);
   const auto targetId = ent.targetComp().target();
   if (!targetId)
   {
@@ -121,10 +121,10 @@ auto ShipView::getAbilitiesCount() const -> int
 
 void ShipView::tryActivateWeapon(const Uuid &ship, const int weaponId) const
 {
-  if (ship != m_playerShipEntityId)
+  if (ship != *m_playerShipEntityId)
   {
     error("Failed to activate weapon " + std::to_string(weaponId),
-          "Expected ship " + str(m_playerShipEntityId) + " but got " + str(ship));
+          "Expected ship " + str(*m_playerShipEntityId) + " but got " + str(ship));
   }
 
   auto data = getPlayerShip();
@@ -140,10 +140,10 @@ void ShipView::tryActivateWeapon(const Uuid &ship, const int weaponId) const
 
 void ShipView::tryActivateSlot(const Uuid &ship, const int slotId) const
 {
-  if (ship != m_playerShipEntityId)
+  if (ship != *m_playerShipEntityId)
   {
     error("Failed to activate slot " + std::to_string(slotId),
-          "Expected ship " + str(m_playerShipEntityId) + " but got " + str(ship));
+          "Expected ship " + str(*m_playerShipEntityId) + " but got " + str(ship));
   }
 
   auto data = getPlayerShip();
@@ -171,7 +171,7 @@ void ShipView::undockPlayerShip() const
 
 auto ShipView::getPlayerShipWeapons() const -> std::vector<PlayerWeapon>
 {
-  const auto weapons = m_repositories.shipWeaponRepository->findAllByShip(m_playerShipId);
+  const auto weapons = m_repositories.shipWeaponRepository->findAllByShip(*m_playerShipDbId);
 
   std::vector<PlayerWeapon> out;
   for (const auto &weapon : weapons)
@@ -184,7 +184,7 @@ auto ShipView::getPlayerShipWeapons() const -> std::vector<PlayerWeapon>
 
 auto ShipView::getPlayerShipComputers() const -> std::vector<PlayerComputer>
 {
-  const auto ids = m_repositories.shipComputerRepository->findAllByShip(m_playerShipId);
+  const auto ids = m_repositories.shipComputerRepository->findAllByShip(*m_playerShipDbId);
 
   std::vector<PlayerComputer> out;
   for (const auto &id : ids)
@@ -197,7 +197,7 @@ auto ShipView::getPlayerShipComputers() const -> std::vector<PlayerComputer>
 
 auto ShipView::getPlayerShipSlots() const -> std::unordered_map<Slot, int>
 {
-  const auto ship = m_repositories.playerShipRepository->findOneById(m_playerShipId);
+  const auto ship = m_repositories.playerShipRepository->findOneById(*m_playerShipDbId);
   return ship.slots;
 }
 
