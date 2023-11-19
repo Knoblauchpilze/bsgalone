@@ -61,9 +61,9 @@ void LoginScreenUiHandler::generateLoginMenu(const int width, const int /*height
 
   bg              = bgConfigFromColor(transparent(olc::WHITE, alpha::SemiOpaque));
   text            = textConfigFromColor("grouton", olc::BLACK, TextAlignment::LEFT);
-  label           = std::make_unique<UiTextMenu>(config, bg, text);
-  m_nameTextField = label.get();
-  m_loginPanel->addMenu(std::move(label));
+  auto field      = std::make_unique<UiTextField>(config, bg, text);
+  m_nameTextField = field.get();
+  m_loginPanel->addMenu(std::move(field));
 
   bg    = bgConfigFromColor(transparent(olc::DARK_BLUE, alpha::SemiOpaque));
   text  = textConfigFromColor("Password:", olc::BLACK, TextAlignment::LEFT);
@@ -72,9 +72,9 @@ void LoginScreenUiHandler::generateLoginMenu(const int width, const int /*height
 
   bg                  = bgConfigFromColor(transparent(olc::WHITE, alpha::SemiOpaque));
   text                = textConfigFromColor("123456", olc::BLACK, TextAlignment::LEFT);
-  label               = std::make_unique<UiTextMenu>(config, bg, text);
-  m_passwordTextField = label.get();
-  m_loginPanel->addMenu(std::move(label));
+  field               = std::make_unique<UiTextField>(config, bg, text);
+  m_passwordTextField = field.get();
+  m_loginPanel->addMenu(std::move(field));
 }
 
 void LoginScreenUiHandler::generateLoginButton(const int width, const int height)

@@ -15,4 +15,5 @@ target_sources (bsgalone_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/UiMenu.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/TextConfig.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/UiTextMenu.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/UiTextField.cc
 	)

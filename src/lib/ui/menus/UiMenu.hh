@@ -27,7 +27,7 @@ class UiMenu : public utils::CoreObject
   void addMenu(UiMenuPtr child);
 
   void render(olc::PixelGameEngine *pge) const;
-  bool processUserInput(UserInputData &inputData);
+  virtual bool processUserInput(UserInputData &inputData);
 
   protected:
   auto absolutePosition() const noexcept -> olc::vi2d;

@@ -13,6 +13,7 @@ class UiTextMenu : public UiMenu
   ~UiTextMenu() override = default;
 
   auto getText() const noexcept -> std::string;
+  void setText(const std::string &text);
 
   protected:
   void renderCustom(olc::PixelGameEngine *pge) const override;

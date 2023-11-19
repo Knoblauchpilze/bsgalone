@@ -4,6 +4,7 @@
 #include "IUiHandler.hh"
 #include "Menu.hh"
 #include "UiMenu.hh"
+#include "UiTextField.hh"
 #include "UiTextMenu.hh"
 
 namespace pge {
@@ -23,8 +24,8 @@ class LoginScreenUiHandler : public IUiHandler
   bsgo::PlayerViewShPtr m_playerView;
 
   UiMenuPtr m_loginPanel{};
-  UiTextMenu *m_nameTextField{};
-  UiTextMenu *m_passwordTextField{};
+  UiTextField *m_nameTextField{};
+  UiTextField *m_passwordTextField{};
   UiTextMenuPtr m_loginButton{};
   UiTextMenuPtr m_quitButton{};
 
