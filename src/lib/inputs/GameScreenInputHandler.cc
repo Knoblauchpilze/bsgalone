@@ -83,9 +83,9 @@ void GameScreenInputHandler::keepShipCentered(CoordinateFrame &frame)
   frame.moveTo(pos2d);
 }
 
-void GameScreenInputHandler::handleWeaponsState(const controls::State &c, bsgo::Entity &ship)
+void GameScreenInputHandler::handleWeaponsState(const controls::State &controls, bsgo::Entity &ship)
 {
-  if (c.keys[controls::keys::G])
+  if (controls.released(controls::keys::G))
   {
     for (const auto &weapon : ship.weapons)
     {
@@ -94,34 +94,30 @@ void GameScreenInputHandler::handleWeaponsState(const controls::State &c, bsgo::
     return;
   }
 
-  if (c.keys[controls::keys::K1] && !ship.weapons.empty())
+  if (controls.released(controls::keys::K1) && !ship.weapons.empty())
   {
     ship.weapons[0]->toggle();
   }
-  if (c.keys[controls::keys::K2] && ship.weapons.size() > 1)
+  if (controls.released(controls::keys::K2) && ship.weapons.size() > 1)
   {
     ship.weapons[1]->toggle();
   }
 
-  if (c.keys[controls::keys::W] && m_shipView->getAbilitiesCount() > 0)
+  if (controls.released(controls::keys::W) && m_shipView->getAbilitiesCount() > 0)
   {
     m_shipView->tryActivateSlot(ship.uuid, 0);
   }
-  if (c.keys[controls::keys::X] && m_shipView->getAbilitiesCount() > 1)
+  if (controls.released(controls::keys::X) && m_shipView->getAbilitiesCount() > 1)
   {
     m_shipView->tryActivateSlot(ship.uuid, 1);
   }
-  if (c.keys[controls::keys::C] && m_shipView->getAbilitiesCount() > 2)
+  if (controls.released(controls::keys::C) && m_shipView->getAbilitiesCount() > 2)
   {
     m_shipView->tryActivateSlot(ship.uuid, 2);
   }
-  if (c.keys[controls::keys::V] && m_shipView->getAbilitiesCount() > 3)
+  if (controls.released(controls::keys::V) && m_shipView->getAbilitiesCount() > 3)
   {
     m_shipView->tryActivateSlot(ship.uuid, 3);
-  }
-  if (c.keys[controls::keys::W] && m_shipView->getAbilitiesCount() > 0)
-  {
-    m_shipView->tryActivateSlot(ship.uuid, 0);
   }
 }
 
