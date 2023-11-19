@@ -45,13 +45,6 @@ void LockerUiHandler::initializeMenus(const int width, const int height)
 
   m_ship = generateMenu(pos, dims, "", "ship", olc::DARK_YELLOW, {olc::WHITE});
   m_menu->addMenu(m_ship);
-
-  initializeLayout();
-  generateResourcesMenus();
-  generateLockerWeaponsMenus();
-  generateLockerComputersMenus();
-  generateShipWeaponsMenus();
-  generateShipComputersMenus();
 }
 
 bool LockerUiHandler::processUserInput(UserInputData &inputData)
@@ -65,7 +58,29 @@ void LockerUiHandler::render(SpriteRenderer &engine) const
   m_menu->render(engine.getRenderer());
 }
 
-void LockerUiHandler::updateUi() {}
+void LockerUiHandler::updateUi()
+{
+  if (!m_playerView->isReady() || !m_shipView->isReady())
+  {
+    return;
+  }
+  if (!m_initialized)
+  {
+    initializeLocker();
+  }
+}
+
+void LockerUiHandler::initializeLocker()
+{
+  initializeLayout();
+  generateResourcesMenus();
+  generateLockerWeaponsMenus();
+  generateLockerComputersMenus();
+  generateShipWeaponsMenus();
+  generateShipComputersMenus();
+
+  m_initialized = true;
+}
 
 void LockerUiHandler::initializeLayout()
 {

@@ -43,15 +43,10 @@ void App::loadResources()
 
   m_spriteRenderer = std::make_unique<SpriteRenderer>(this);
   m_game           = std::make_shared<Game>();
-#define START_AT_LOGIN
-#ifdef START_AT_LOGIN
-  m_game->setScreen(Screen::LOGIN);
-  m_game->generateLoginScreen(ScreenWidth(), ScreenHeight(), *m_spriteRenderer);
-#else
-  m_game->generateLoginScreen(ScreenWidth(), ScreenHeight(), *m_spriteRenderer);
-  m_game->login(bsgo::Uuid{0});
-  m_game->setScreen(Screen::GAME);
-#endif
+
+  m_game->generateRenderers(ScreenWidth(), ScreenHeight(), *m_spriteRenderer);
+  m_game->generateInputHandlers();
+  m_game->generateUiHandlers(ScreenWidth(), ScreenHeight());
 }
 
 void App::cleanResources()

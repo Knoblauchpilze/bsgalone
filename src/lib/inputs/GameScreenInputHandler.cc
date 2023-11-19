@@ -21,6 +21,11 @@ GameScreenInputHandler::GameScreenInputHandler(const bsgo::Views &views)
 void GameScreenInputHandler::processUserInput(const controls::State &controls,
                                               CoordinateFrame &frame)
 {
+  if (!m_shipView->isReady())
+  {
+    return;
+  }
+
   Motion motion{};
   motion.updateFromKeys(controls);
 
@@ -32,6 +37,11 @@ void GameScreenInputHandler::processUserInput(const controls::State &controls,
 
 void GameScreenInputHandler::performAction(float x, float y, const controls::State & /*state*/)
 {
+  if (!m_shipView->isReady() || !m_systemView->isReady())
+  {
+    return;
+  }
+
   const Eigen::Vector3f pos(x, y, 0.0f);
   const auto ent  = m_systemView->getEntityAt(pos);
   auto playerShip = m_shipView->getPlayerShip();

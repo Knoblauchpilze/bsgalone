@@ -18,7 +18,7 @@ AbilitiesUiHandler::AbilitiesUiHandler(const bsgo::Views &views)
 
 void AbilitiesUiHandler::initializeMenus(const int width, const int height)
 {
-  generateCompmutersMenus(width, height);
+  generateComputersMenus(width, height);
 }
 
 bool AbilitiesUiHandler::processUserInput(UserInputData &inputData)
@@ -44,6 +44,15 @@ void AbilitiesUiHandler::render(SpriteRenderer &engine) const
 
 void AbilitiesUiHandler::updateUi()
 {
+  if (!m_shipView->isReady())
+  {
+    return;
+  }
+  if (!m_initialized)
+  {
+    initializeAbilities();
+  }
+
   const auto ship = m_shipView->getPlayerShip();
 
   auto id = 0;
@@ -56,7 +65,26 @@ void AbilitiesUiHandler::updateUi()
 
 constexpr auto NUMBER_OF_ABILITIES = 4;
 
-void AbilitiesUiHandler::generateCompmutersMenus(int width, int height)
+void AbilitiesUiHandler::generateComputersMenus(int width, int height)
+{
+  olc::vi2d dims{70, 50};
+  constexpr auto SPACING_IN_PIXELS = 5;
+  olc::vi2d pos;
+  pos.x = width - NUMBER_OF_ABILITIES * (dims.x + SPACING_IN_PIXELS);
+  pos.y = height - SPACING_IN_PIXELS - dims.y;
+  const olc::Pixel transparentBg{0, 0, 0, alpha::SemiOpaque};
+
+  for (auto id = 0u; id < NUMBER_OF_ABILITIES; ++id)
+  {
+    const auto name = "ability_" + std::to_string(id);
+    auto menu       = generateSlotMenu(pos, dims, "", name, transparentBg, {olc::WHITE}, false);
+    m_computers.push_back(menu);
+
+    pos.x += (dims.x + SPACING_IN_PIXELS);
+  }
+}
+
+void AbilitiesUiHandler::initializeAbilities()
 {
   const auto ship           = m_shipView->getPlayerShip();
   const auto shipId         = ship.uuid;
@@ -68,49 +96,39 @@ void AbilitiesUiHandler::generateCompmutersMenus(int width, int height)
             + std::to_string(ship.computers.size()));
   }
 
-  olc::vi2d dims{70, 50};
-  constexpr auto SPACING_IN_PIXELS = 5;
-  olc::vi2d pos;
-  pos.x = width - NUMBER_OF_ABILITIES * (dims.x + SPACING_IN_PIXELS);
-  pos.y = height - SPACING_IN_PIXELS - dims.y;
-
-  olc::Pixel transparentBg = olc::Pixel{0, 0, 0, alpha::SemiOpaque};
-
-  for (auto id = 0u; id < NUMBER_OF_ABILITIES; ++id)
+  const olc::vi2d dummyPos{0, 0};
+  const olc::vi2d dummyDims{10, 10};
+  const olc::Pixel transparentBg{0, 0, 0, alpha::SemiOpaque};
+  for (auto id = 0u; id < computersCount; ++id)
   {
-    const auto name = "ability_" + std::to_string(id);
+    auto &menu = m_computers[id];
 
-    const auto enabled = id < computersCount;
-    auto menu = generateSlotMenu(pos, dims, "", name, transparentBg, {olc::WHITE}, enabled);
-    if (enabled)
+    menu->setSimpleAction([shipId, id](Game &g) { g.tryActivateSlot(shipId, id); });
+    menu->setEnabled(true);
+
+    MenuShPtr range;
+    if (ship.computers[id]->maybeRange())
     {
-      menu->setSimpleAction([shipId, id](Game &g) { g.tryActivateSlot(shipId, id); });
-
-      MenuShPtr range;
-      if (ship.computers[id]->maybeRange())
-      {
-        range = generateMenu(pos, dims, "range", "range", transparentBg, {olc::WHITE});
-        menu->addMenu(range);
-      }
-      m_ranges.push_back(range);
-
-      MenuShPtr damage;
-      if (ship.computers[id]->damageModifier())
-      {
-        damage = generateMenu(pos, dims, "damage", "damage", transparentBg, {olc::WHITE});
-        menu->addMenu(damage);
-      }
-      m_damages.push_back(damage);
-
-      const auto status = generateMenu(pos, dims, "status", "status", transparentBg, {olc::WHITE});
-      menu->addMenu(status);
-      m_statuses.push_back(status);
+      range = generateMenu(dummyPos, dummyDims, "range", "range", transparentBg, {olc::WHITE});
+      menu->addMenu(range);
     }
+    m_ranges.push_back(range);
 
-    m_computers.push_back(menu);
+    MenuShPtr damage;
+    if (ship.computers[id]->damageModifier())
+    {
+      damage = generateMenu(dummyPos, dummyDims, "damage", "damage", transparentBg, {olc::WHITE});
+      menu->addMenu(damage);
+    }
+    m_damages.push_back(damage);
 
-    pos.x += (dims.x + SPACING_IN_PIXELS);
+    const auto status
+      = generateMenu(dummyPos, dummyDims, "status", "status", transparentBg, {olc::WHITE});
+    menu->addMenu(status);
+    m_statuses.push_back(status);
   }
+
+  m_initialized = true;
 }
 
 void AbilitiesUiHandler::updateComputerMenu(const bsgo::ComputerSlotComponent &computer,

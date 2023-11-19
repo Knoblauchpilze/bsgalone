@@ -21,13 +21,15 @@ class AbilitiesUiHandler : public IUiHandler
 
   private:
   bsgo::ShipViewShPtr m_shipView;
+  bool m_initialized{false};
 
   std::vector<MenuShPtr> m_computers{};
   std::vector<MenuShPtr> m_ranges{};
   std::vector<MenuShPtr> m_damages{};
   std::vector<MenuShPtr> m_statuses{};
 
-  void generateCompmutersMenus(int width, int height);
+  void generateComputersMenus(int width, int height);
+  void initializeAbilities();
   void updateComputerMenu(const bsgo::ComputerSlotComponent &computer, const int id);
 };
 

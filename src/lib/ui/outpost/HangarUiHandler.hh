@@ -20,10 +20,12 @@ class HangarUiHandler : public IUiHandler
 
   private:
   bsgo::PlayerViewShPtr m_playerView;
+  bool m_initialized{false};
 
   MenuShPtr m_menu{};
   std::vector<MenuShPtr> m_ships{};
 
+  void initializeHangar();
   void initializeLayout();
   void generateShipsMenus();
 };

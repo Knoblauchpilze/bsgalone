@@ -26,9 +26,6 @@ void HangarUiHandler::initializeMenus(const int width, const int height)
                       height - viewHeight - VIEW_TO_RIGHT_OF_SCREEN_IN_PIXELS};
   const olc::vi2d dims{viewWidth, viewHeight};
   m_menu = generateMenu(pos, dims, "", "shop", olc::DARK_BROWN, {olc::WHITE});
-
-  initializeLayout();
-  generateShipsMenus();
 }
 
 bool HangarUiHandler::processUserInput(UserInputData &inputData)
@@ -44,6 +41,15 @@ void HangarUiHandler::render(SpriteRenderer &engine) const
 
 void HangarUiHandler::updateUi()
 {
+  if (!m_playerView->isReady())
+  {
+    return;
+  }
+  if (!m_initialized)
+  {
+    initializeHangar();
+  }
+
   const auto ships = m_playerView->getPlayerShips();
 
   for (auto id = 0u; id < ships.size(); ++id)
@@ -51,6 +57,13 @@ void HangarUiHandler::updateUi()
     const auto bgColor = ships[id].active ? olc::VERY_DARK_BROWN : olc::VERY_DARK_APPLE_GREEN;
     m_ships[id]->setBackgroundColor(bgColor);
   }
+}
+
+void HangarUiHandler::initializeHangar()
+{
+  initializeLayout();
+  generateShipsMenus();
+  m_initialized = true;
 }
 
 void HangarUiHandler::initializeLayout()

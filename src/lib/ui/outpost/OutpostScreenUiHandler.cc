@@ -28,8 +28,11 @@ void OutpostScreenUiHandler::initializeMenus(const int width, const int height)
   m_menus[UNDOCK]
     = generateMenu(pos, dims, "Undock", "undock", olc::VERY_DARK_GREY, {olc::WHITE}, true);
   m_menus[UNDOCK]->setSimpleAction([this](Game &g) {
-    m_shipView->undockPlayerShip();
-    g.setScreen(Screen::GAME);
+    if (m_shipView->isReady())
+    {
+      m_shipView->undockPlayerShip();
+      g.setScreen(Screen::GAME);
+    }
   });
 
   generateGeneralMenu(width, height);
