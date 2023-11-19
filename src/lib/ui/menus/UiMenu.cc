@@ -10,14 +10,6 @@ UiMenu::UiMenu(const MenuConfig &config, const BackgroundConfig &bg)
   initializeFromConfig(config);
 }
 
-UiMenu::UiMenu(const MenuConfig &config, const BackgroundConfig &bg, const TextConfig &text)
-  : utils::CoreObject("menu")
-  , m_bg(bg)
-  , m_text(text)
-{
-  initializeFromConfig(config);
-}
-
 bool UiMenu::visible() const noexcept
 {
   return m_state.visible;
@@ -26,16 +18,6 @@ bool UiMenu::visible() const noexcept
 void UiMenu::setVisible(const bool visible) noexcept
 {
   m_state.visible = visible;
-}
-
-auto UiMenu::tryGetText() const noexcept -> std::optional<std::string>
-{
-  if (!m_text)
-  {
-    return {};
-  }
-
-  return m_text->text;
 }
 
 void UiMenu::addMenu(UiMenuPtr child)
@@ -93,6 +75,31 @@ bool UiMenu::processUserInput(UserInputData &inputData)
   return true;
 }
 
+auto UiMenu::absolutePosition() const noexcept -> olc::vi2d
+{
+  auto p = m_pos;
+  if (m_parent != nullptr)
+  {
+    p += m_parent->absolutePosition();
+  }
+  return p;
+}
+
+auto UiMenu::dims() const noexcept -> olc::vi2d
+{
+  return m_dims;
+}
+
+auto UiMenu::state() const noexcept -> const State &
+{
+  return m_state;
+}
+
+void UiMenu::renderCustom(olc::PixelGameEngine * /*pge*/) const
+{
+  // Intentionally empty to allow subclassing.
+}
+
 void UiMenu::initializeFromConfig(const MenuConfig &config)
 {
   m_pos  = config.pos;
@@ -109,65 +116,12 @@ void UiMenu::initializeFromConfig(const MenuConfig &config)
   m_gameClickCallback = config.gameClickCallBack;
 }
 
-inline auto UiMenu::absolutePosition() const noexcept -> olc::vi2d
-{
-  auto p = m_pos;
-  if (m_parent != nullptr)
-  {
-    p += m_parent->absolutePosition();
-  }
-  return p;
-}
-
 void UiMenu::renderSelf(olc::PixelGameEngine *pge) const
 {
   const auto absPos = absolutePosition();
   const auto color  = getColorFromState();
   pge->FillRectDecal(absPos, m_dims, color);
-  renderText(pge);
-}
-
-namespace {
-auto computeTextPositionFromAlignement(const olc::vi2d &offset,
-                                       const olc::vi2d &dims,
-                                       const olc::vi2d &textDims,
-                                       const TextAlignment &align) -> olc::vi2d
-{
-  olc::vi2d textPos{};
-  switch (align)
-  {
-    case TextAlignment::CENTER:
-      textPos.x = static_cast<int>(offset.x + (dims.x - textDims.x) / 2.0f);
-      textPos.y = static_cast<int>(offset.y + (dims.y - textDims.y) / 2.0f);
-      break;
-    case TextAlignment::RIGHT:
-      textPos.x = offset.x + dims.x - textDims.x;
-      textPos.y = static_cast<int>(offset.y + (dims.y - textDims.y) / 2.0f);
-      break;
-    case TextAlignment::LEFT:
-    default:
-      textPos.x = offset.x;
-      textPos.y = static_cast<int>(offset.y + (dims.y - textDims.y) / 2.0f);
-      break;
-  }
-
-  return textPos;
-}
-} // namespace
-
-void UiMenu::renderText(olc::PixelGameEngine *pge) const
-{
-  if (!m_text)
-  {
-    return;
-  }
-
-  const auto absPos   = absolutePosition();
-  const auto textDims = pge->GetTextSize(m_text->text);
-  const auto textPos  = computeTextPositionFromAlignement(absPos, m_dims, textDims, m_text->align);
-  const auto color    = getTextColorFromState();
-
-  pge->DrawStringDecal(textPos, m_text->text, color);
+  renderCustom(pge);
 }
 
 auto UiMenu::getColorFromState() const -> olc::Pixel
@@ -177,15 +131,6 @@ auto UiMenu::getColorFromState() const -> olc::Pixel
     return m_bg.hColor;
   }
   return m_bg.color;
-}
-
-auto UiMenu::getTextColorFromState() const -> olc::Pixel
-{
-  if (m_state.higlightable && m_state.highlighted)
-  {
-    return m_text->hColor;
-  }
-  return m_text->color;
 }
 
 bool UiMenu::isWithinMenu(const olc::vi2d &pos) const

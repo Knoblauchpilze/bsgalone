@@ -56,23 +56,23 @@ void LoginScreenUiHandler::generateLoginMenu(const int width, const int /*height
 
   bg         = bgConfigFromColor(transparent(olc::DARK_BLUE, alpha::SemiOpaque));
   auto text  = textConfigFromColor("Name:", olc::BLACK, TextAlignment::LEFT);
-  auto label = std::make_unique<UiMenu>(config, bg, text);
+  auto label = std::make_unique<UiTextMenu>(config, bg, text);
   m_loginPanel->addMenu(std::move(label));
 
   bg              = bgConfigFromColor(transparent(olc::WHITE, alpha::SemiOpaque));
   text            = textConfigFromColor("grouton", olc::BLACK, TextAlignment::LEFT);
-  label           = std::make_unique<UiMenu>(config, bg, text);
+  label           = std::make_unique<UiTextMenu>(config, bg, text);
   m_nameTextField = label.get();
   m_loginPanel->addMenu(std::move(label));
 
   bg    = bgConfigFromColor(transparent(olc::DARK_BLUE, alpha::SemiOpaque));
   text  = textConfigFromColor("Password:", olc::BLACK, TextAlignment::LEFT);
-  label = std::make_unique<UiMenu>(config, bg, text);
+  label = std::make_unique<UiTextMenu>(config, bg, text);
   m_loginPanel->addMenu(std::move(label));
 
   bg                  = bgConfigFromColor(transparent(olc::WHITE, alpha::SemiOpaque));
   text                = textConfigFromColor("123456", olc::BLACK, TextAlignment::LEFT);
-  label               = std::make_unique<UiMenu>(config, bg, text);
+  label               = std::make_unique<UiTextMenu>(config, bg, text);
   m_passwordTextField = label.get();
   m_loginPanel->addMenu(std::move(label));
 }
@@ -91,7 +91,7 @@ void LoginScreenUiHandler::generateLoginButton(const int width, const int height
 
   const auto bg   = bgConfigFromColor(olc::DARK_COBALT_BLUE);
   const auto text = textConfigFromColor("AU JEU!!", olc::WHITE);
-  m_loginButton   = std::make_unique<UiMenu>(config, bg, text);
+  m_loginButton   = std::make_unique<UiTextMenu>(config, bg, text);
 }
 
 void LoginScreenUiHandler::generateQuitMenu(const int width, const int /*height*/)
@@ -110,25 +110,21 @@ void LoginScreenUiHandler::generateQuitMenu(const int width, const int /*height*
 
   const auto bg   = bgConfigFromColor(olc::VERY_DARK_GREY);
   const auto text = textConfigFromColor("Quit", olc::WHITE);
-  m_quitButton    = std::make_unique<UiMenu>(config, bg, text);
+  m_quitButton    = std::make_unique<UiTextMenu>(config, bg, text);
 }
 
 void LoginScreenUiHandler::tryLogin(Game &game)
 {
-  const auto name     = m_nameTextField->tryGetText();
-  const auto password = m_passwordTextField->tryGetText();
+  const auto name     = m_nameTextField->getText();
+  const auto password = m_passwordTextField->getText();
 
-  if (!name || !password)
-  {
-    error("Expected valid name and password from text field");
-  }
-  if (name->empty() || password->empty())
+  if (name.empty() || password.empty())
   {
     warn("Can't login with empty name or password");
     return;
   }
 
-  const auto id = m_playerView->tryLogin(*name, *password);
+  const auto id = m_playerView->tryLogin(name, password);
   if (id)
   {
     /// TODO: Should propagate this to the PlayerView and the other views.
