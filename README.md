@@ -119,49 +119,6 @@ https://github.com/nlohmann/json
 ORM in cpp:
 https://github.com/silverqx/TinyORM
 
-# Structure of the DB
+# Current progress of the game
 
-## System table
-Contains the system id, its name and position on the map and also maybe cap for people
-
-## Asteroid table
-Contains the position and helath points of the asteroid in a system. Foreign key on the system id
-
-## Player table
-Contains the id of the player and its name
-
-## Ship table
-Contains the definition of ships. They are just templates with the base statistics such as speed, acceleration, hull points, etc
-
-## Player ship table
-Contains the acual instantiation of the ships for each player. When a player buys a ship we create a new entry in this table from the template. It has a foreign key representing the player owning the ship
-
-## Outpost table
-Similar to the ship table in purpose but for outpost. Defines the base statistics for the outposts of each faction
-
-## System outpost table
-Similar to the player ship table in purpose. Contains a foreign key on the system and the actual instantiation of the outpost for a given system. When an outpost spawns in a system we duplicate an entry from the outpost table into this table
-
-## Weapon table
-Contains the definition of weapons in the game. Defines the statistics such as damage, reload time and power cost
-
-## Player weapon table
-Instantiation of the template of the weapons for each player. The level is added here and specific to each weapon. Each weapon has its own id. Not all weapons have an entry in the ship weapon table below
-
-## Ship weapon table
-Associates the weapon id from the table above with the player ship id. This links together the weapon and make it used by a ship. 
-
-## Note for computers
-Very similar system as for weapons: we have a template table, the instantiation per player and the association table for each ship
-
-## Resource table
-Define the list of resources available in the game with an id and a name
-
-## Asteroid loot table
-Define the list of asteroids having a loot as resource. It links an id of an asteroid (as defined in the asteroid table) with the id of a resource (taken from the resource table) and an amount. When the asteroid is destroyed we should clear this line in the DB
-
-## Player resource table
-Contains rows with the player id, a resource id and the amount. Unique on (playerId, resourceId). Each time a loot is taken, we update this value
-
-## Locker
-The locker is then just the collection of items from the player which are either resources (as resources can't be equiped) or weapons/computers/etc which have no entry in the corresponding ShipWeaponTable/ShipComputerTable/etc
+![state of the game](resources/state_of_the_game.png)
