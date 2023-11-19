@@ -53,6 +53,47 @@ const KeyMapping KEYS_TO_TEXT_MAPPING_WITH_SHIFT
      {controls::keys::S, 'S'}, {controls::keys::T, 'T'}, {controls::keys::U, 'U'},
      {controls::keys::V, 'V'}, {controls::keys::W, 'W'}, {controls::keys::X, 'X'},
      {controls::keys::Y, 'Y'}, {controls::keys::Z, 'Z'}};
+
+auto addOrAppend(std::string &str, const int size, const char letter)
+{
+  const auto textSize = static_cast<int>(str.size());
+  if (size >= textSize)
+  {
+    str += letter;
+  }
+  else
+  {
+    str.insert(str.begin() + size, letter);
+  }
+}
+
+constexpr auto CHARACTERS_TO_REMOVE = 1;
+
+auto eraseOrTrim(std::string &str, const int size) -> int
+{
+  const auto textSize = static_cast<int>(str.size());
+  if (size >= textSize)
+  {
+    str.pop_back();
+    return size - 1;
+  }
+  else if (size >= 1)
+  {
+    str.erase(size - 1, CHARACTERS_TO_REMOVE);
+    return size - 1;
+  }
+
+  return size;
+}
+
+void deleteFrom(std::string &str, const int size)
+{
+  const auto textSize = static_cast<int>(str.size());
+  if (size < textSize)
+  {
+    str.erase(size, CHARACTERS_TO_REMOVE);
+  }
+}
 } // namespace
 
 void UiTextField::updateInternalText(const controls::State &controls)
@@ -64,14 +105,18 @@ void UiTextField::updateInternalText(const controls::State &controls)
   {
     if (controls.released(key))
     {
-      /// TODO: Handle cursor position
-      m_fullText += mapping;
+      addOrAppend(m_fullText, m_cursorPos, mapping);
+      ++m_cursorPos;
     }
   }
 
   if (controls.released(controls::keys::BACK) && !m_fullText.empty())
   {
-    m_fullText.pop_back();
+    m_cursorPos = eraseOrTrim(m_fullText, m_cursorPos);
+  }
+  if (controls.released(controls::keys::DEL) && !m_fullText.empty())
+  {
+    deleteFrom(m_fullText, m_cursorPos);
   }
 }
 
@@ -99,7 +144,11 @@ void UiTextField::updateCursorPosition(const controls::State &controls)
 
 void UiTextField::generateDisplayedText()
 {
-  warn("should display " + m_fullText);
+  constexpr auto CURSOR_CHARACTER = '|';
+
+  auto text = m_fullText;
+  addOrAppend(text, m_cursorPos, CURSOR_CHARACTER);
+  setText(text);
 }
 
 } // namespace pge
