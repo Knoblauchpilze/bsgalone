@@ -17,6 +17,11 @@ void ShipView::setPlayerShipEntityId(const Uuid &ship)
   m_playerShipEntityId = ship;
 }
 
+bool ShipView::isReady() const noexcept
+{
+  return m_playerShipDbId && m_playerShipEntityId;
+}
+
 auto ShipView::getPlayerShipName() const -> std::string
 {
   const auto ship = m_repositories.playerShipRepository->findOneById(*m_playerShipDbId);

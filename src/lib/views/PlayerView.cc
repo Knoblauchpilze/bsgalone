@@ -17,6 +17,11 @@ void PlayerView::setPlayerShipDbId(const Uuid &ship)
   m_playerShipDbId = ship;
 }
 
+bool PlayerView::isReady() const noexcept
+{
+  return m_playerDbId && m_playerShipDbId;
+}
+
 auto PlayerView::getPlayerResources() const -> std::vector<PlayerResource>
 {
   return m_repositories.playerResourceRepository->findAllByPlayer(*m_playerDbId);

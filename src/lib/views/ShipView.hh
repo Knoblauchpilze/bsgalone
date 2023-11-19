@@ -20,6 +20,8 @@ class ShipView : public IView
   void setPlayerShipDbId(const Uuid &ship);
   void setPlayerShipEntityId(const Uuid &ship);
 
+  bool isReady() const noexcept override;
+
   auto getPlayerShipName() const -> std::string;
   auto getPlayerShip() const -> Entity;
   bool hasTarget() const;

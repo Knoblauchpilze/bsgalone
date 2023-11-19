@@ -15,6 +15,8 @@ class PlayerView : public IView
   void setPlayerDbId(const Uuid &player);
   void setPlayerShipDbId(const Uuid &ship);
 
+  bool isReady() const noexcept override;
+
   auto getPlayerResources() const -> std::vector<PlayerResource>;
   auto getPlayerWeapons() const -> std::vector<PlayerWeapon>;
   auto getPlayerComputers() const -> std::vector<PlayerComputer>;
