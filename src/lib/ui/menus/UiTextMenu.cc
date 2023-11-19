@@ -15,6 +15,11 @@ auto UiTextMenu::getText() const noexcept -> std::string
   return m_text.text;
 }
 
+void UiTextMenu::setText(const std::string &text)
+{
+  m_text.text = text;
+}
+
 namespace {
 auto computeTextPositionFromAlignement(const olc::vi2d &offset,
                                        const olc::vi2d &dims,
