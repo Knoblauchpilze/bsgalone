@@ -5,7 +5,6 @@
 #include "IUiHandler.hh"
 #include "Menu.hh"
 
-#include "GameOverScreenUiHandler.hh"
 #include "GameScreenInputHandler.hh"
 #include "GameScreenRenderer.hh"
 #include "GameScreenUiHandler.hh"
@@ -71,10 +70,6 @@ void Game::generateUiHandlers(int width, int height)
   auto map = std::make_unique<MapScreenUiHandler>();
   map->initializeMenus(width, height);
   m_uiHandlers[Screen::MAP] = std::move(map);
-
-  auto gameOver = std::make_unique<GameOverScreenUiHandler>();
-  gameOver->initializeMenus(width, height);
-  m_uiHandlers[Screen::GAMEOVER] = std::move(gameOver);
 }
 
 void Game::processUserInput(const controls::State &controls, CoordinateFrame &frame)

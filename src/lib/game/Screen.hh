@@ -11,7 +11,6 @@ enum class Screen
   GAME,
   MAP,
   OUTPOST,
-  GAMEOVER,
   EXIT
 };
 

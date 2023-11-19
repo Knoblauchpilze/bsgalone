@@ -15,8 +15,6 @@ auto str(const Screen s) noexcept -> std::string
       return "map";
     case Screen::OUTPOST:
       return "outpost";
-    case Screen::GAMEOVER:
-      return "gameover";
     case Screen::EXIT:
       return "exit";
     default:
