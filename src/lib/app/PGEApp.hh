@@ -188,7 +188,7 @@ class PGEApp : public utils::CoreObject, public olc::PixelGameEngine
 
   /// @brief - A map to keep track of the state of the controls to be transmitted
   /// to the world's entities for the simulation.
-  controls::State m_controls;
+  controls::State m_controls{};
 
   /// @brief - Boolean allowing to display logs only on the first frame. Or do any
   /// other process a single time upon rendering the first frame.

@@ -217,9 +217,7 @@ void UiMenu::onRelevantInput(UserInputData &inputData)
     (*m_highlightCallback)();
   }
 
-  const auto userClicked = (controls::ButtonState::RELEASED
-                            == inputData.controls.buttons[controls::mouse::LEFT]);
-  if (userClicked)
+  if (inputData.controls.clicked(controls::mouse::LEFT))
   {
     if (m_clickCallback)
     {

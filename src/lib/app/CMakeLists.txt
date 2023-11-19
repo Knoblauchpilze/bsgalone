@@ -1,6 +1,7 @@
 
 target_sources (bsgalone_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/olcEngine.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/Controls.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/DecalResource.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/TexturePack.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/FramerateControl.cc
