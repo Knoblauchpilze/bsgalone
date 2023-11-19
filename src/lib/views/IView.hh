@@ -17,6 +17,8 @@ class IView : public utils::CoreObject
         const Repositories &repositories);
   ~IView() override = default;
 
+  virtual bool isReady() const noexcept;
+
   protected:
   CoordinatorShPtr m_coordinator;
   Repositories m_repositories;

@@ -17,4 +17,9 @@ IView::IView(const std::string &name,
   }
 }
 
+bool IView::isReady() const noexcept
+{
+  return true;
+}
+
 } // namespace bsgo
