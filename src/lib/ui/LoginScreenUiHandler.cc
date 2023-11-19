@@ -59,9 +59,10 @@ void LoginScreenUiHandler::generateLoginMenu(const int width, const int /*height
   auto label = std::make_unique<UiTextMenu>(config, bg, text);
   m_loginPanel->addMenu(std::move(label));
 
+  TextFieldConfig fieldConfig{.pos = loginPos, .dims = loginDimsPixels};
   bg              = bgConfigFromColor(transparent(olc::WHITE, alpha::SemiOpaque));
   text            = textConfigFromColor("grouton", olc::BLACK, TextAlignment::LEFT);
-  auto field      = std::make_unique<UiTextField>(config, bg, text);
+  auto field      = std::make_unique<UiTextField>(fieldConfig, bg, text);
   m_nameTextField = field.get();
   m_loginPanel->addMenu(std::move(field));
 
@@ -72,7 +73,7 @@ void LoginScreenUiHandler::generateLoginMenu(const int width, const int /*height
 
   bg                  = bgConfigFromColor(transparent(olc::WHITE, alpha::SemiOpaque));
   text                = textConfigFromColor("123456", olc::BLACK, TextAlignment::LEFT);
-  field               = std::make_unique<UiTextField>(config, bg, text);
+  field               = std::make_unique<UiTextField>(fieldConfig, bg, text);
   m_passwordTextField = field.get();
   m_loginPanel->addMenu(std::move(field));
 }
@@ -87,7 +88,7 @@ void LoginScreenUiHandler::generateLoginButton(const int width, const int height
 
   const MenuConfig config{.pos               = loginButtonPos,
                           .dims              = loginButtonDimsPixels,
-                          .gameClickCallBack = [this](Game &g) { tryLogin(g); }};
+                          .gameClickCallback = [this](Game &g) { tryLogin(g); }};
 
   const auto bg   = bgConfigFromColor(olc::DARK_COBALT_BLUE);
   const auto text = textConfigFromColor("AU JEU!!", olc::WHITE);
@@ -103,7 +104,7 @@ void LoginScreenUiHandler::generateQuitMenu(const int width, const int /*height*
 
   const MenuConfig config{.pos               = quitButtonPos,
                           .dims              = quitButtonDimsPixels,
-                          .gameClickCallBack = [](Game &g) {
+                          .gameClickCallback = [](Game &g) {
                             g.setScreen(Screen::EXIT);
                             g.terminate();
                           }};

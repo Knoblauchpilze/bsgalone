@@ -4,17 +4,42 @@
 
 namespace pge {
 
-UiTextField::UiTextField(const MenuConfig &config,
+UiTextField::UiTextField(const TextFieldConfig &config,
                          const BackgroundConfig &bg,
                          const TextConfig &text)
-  : UiTextMenu(config, bg, text)
+  : UiTextMenu(
+    MenuConfig{
+      .pos                       = config.pos,
+      .dims                      = config.dims,
+      .layout                    = MenuLayout::Horizontal,
+      .visible                   = config.visible,
+      .highligtable              = false,
+      .propagateEventsToChildren = false,
+      .highlightCallback         = {},
+      .clickCallback             = {},
+      .lostFocusCallback         = {},
+      .gameClickCallback         = config.gameClickCallback,
+    },
+    bg,
+    text)
   , m_fullText(text.text)
-{}
+{
+  setClickCallback([this]() { m_editing = true; });
+  setLostFocusCallback([this]() { m_editing = false; });
+}
+
+auto UiTextField::getText() const noexcept -> std::string
+{
+  return m_fullText;
+}
 
 bool UiTextField::processUserInput(UserInputData &inputData)
 {
-  updateInternalText(inputData.controls);
-  updateCursorPosition(inputData.controls);
+  if (m_editing)
+  {
+    updateInternalText(inputData.controls);
+    updateCursorPosition(inputData.controls);
+  }
   generateDisplayedText();
 
   return UiTextMenu::processUserInput(inputData);
@@ -147,7 +172,10 @@ void UiTextField::generateDisplayedText()
   constexpr auto CURSOR_CHARACTER = '|';
 
   auto text = m_fullText;
-  addOrAppend(text, m_cursorPos, CURSOR_CHARACTER);
+  if (m_editing)
+  {
+    addOrAppend(text, m_cursorPos, CURSOR_CHARACTER);
+  }
   setText(text);
 }
 

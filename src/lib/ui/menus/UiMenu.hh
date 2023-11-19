@@ -44,6 +44,8 @@ class UiMenu : public utils::CoreObject
   };
 
   auto state() const noexcept -> const State &;
+  void setClickCallback(const ClickCallback &callback);
+  void setLostFocusCallback(const ClickCallback &callback);
 
   virtual void renderCustom(olc::PixelGameEngine *pge) const;
 
@@ -57,6 +59,7 @@ class UiMenu : public utils::CoreObject
 
   std::optional<HighlightCallback> m_highlightCallback{};
   std::optional<ClickCallback> m_clickCallback{};
+  std::optional<LostFocusCallback> m_lostFocusCallback{};
   std::optional<GameCallback> m_gameClickCallback{};
 
   UiMenu *m_parent{nullptr};

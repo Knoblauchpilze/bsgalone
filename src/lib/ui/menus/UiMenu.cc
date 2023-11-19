@@ -67,6 +67,13 @@ bool UiMenu::processUserInput(UserInputData &inputData)
   if (!isWithinMenu(mPos) || inputRelevantForChildren)
   {
     m_state.highlighted = false;
+
+    if (!inputRelevantForChildren && inputData.controls.released(controls::mouse::LEFT)
+        && m_lostFocusCallback)
+    {
+      (*m_lostFocusCallback)();
+    }
+
     return inputRelevantForChildren;
   }
 
@@ -95,6 +102,16 @@ auto UiMenu::state() const noexcept -> const State &
   return m_state;
 }
 
+void UiMenu::setClickCallback(const ClickCallback &callback)
+{
+  m_clickCallback = callback;
+}
+
+void UiMenu::setLostFocusCallback(const ClickCallback &callback)
+{
+  m_lostFocusCallback = callback;
+}
+
 void UiMenu::renderCustom(olc::PixelGameEngine * /*pge*/) const
 {
   // Intentionally empty to allow subclassing.
@@ -113,7 +130,8 @@ void UiMenu::initializeFromConfig(const MenuConfig &config)
 
   m_highlightCallback = config.highlightCallback;
   m_clickCallback     = config.clickCallback;
-  m_gameClickCallback = config.gameClickCallBack;
+  m_gameClickCallback = config.gameClickCallback;
+  m_lostFocusCallback = config.lostFocusCallback;
 }
 
 void UiMenu::renderSelf(olc::PixelGameEngine *pge) const

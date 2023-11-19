@@ -15,6 +15,7 @@ enum class MenuLayout
 
 using ClickCallback     = std::function<void()>;
 using HighlightCallback = std::function<void()>;
+using LostFocusCallback = std::function<void()>;
 
 struct MenuConfig
 {
@@ -29,7 +30,8 @@ struct MenuConfig
 
   std::optional<HighlightCallback> highlightCallback{};
   std::optional<ClickCallback> clickCallback{};
-  std::optional<GameCallback> gameClickCallBack{};
+  std::optional<LostFocusCallback> lostFocusCallback{};
+  std::optional<GameCallback> gameClickCallback{};
 };
 
 } // namespace pge
