@@ -24,11 +24,15 @@ bool PlayerView::isReady() const noexcept
 
 auto PlayerView::getPlayerResources() const -> std::vector<PlayerResource>
 {
+  checkPlayerDbIdExists();
   return m_repositories.playerResourceRepository->findAllByPlayer(*m_playerDbId);
 }
 
 auto PlayerView::getPlayerWeapons() const -> std::vector<PlayerWeapon>
 {
+  checkPlayerDbIdExists();
+  checkPlayerShipDbIdExists();
+
   const auto shipWeapons = m_repositories.shipWeaponRepository->findAllByShip(*m_playerShipDbId);
   auto ids               = m_repositories.playerWeaponRepository->findAllByPlayer(*m_playerDbId);
   for (const auto &shipWeapon : shipWeapons)
@@ -47,6 +51,9 @@ auto PlayerView::getPlayerWeapons() const -> std::vector<PlayerWeapon>
 
 auto PlayerView::getPlayerComputers() const -> std::vector<PlayerComputer>
 {
+  checkPlayerDbIdExists();
+  checkPlayerShipDbIdExists();
+
   const auto usedIds = m_repositories.shipComputerRepository->findAllByShip(*m_playerShipDbId);
   auto ids           = m_repositories.playerComputerRepository->findAllByPlayer(*m_playerDbId);
   for (const auto usedId : usedIds)
@@ -65,6 +72,8 @@ auto PlayerView::getPlayerComputers() const -> std::vector<PlayerComputer>
 
 auto PlayerView::getPlayerShips() const -> std::vector<PlayerShip>
 {
+  checkPlayerDbIdExists();
+
   const auto ids = m_repositories.playerShipRepository->findAllByPlayer(*m_playerDbId);
 
   std::vector<PlayerShip> out;
@@ -75,6 +84,22 @@ auto PlayerView::getPlayerShips() const -> std::vector<PlayerShip>
   }
 
   return out;
+}
+
+void PlayerView::checkPlayerDbIdExists() const
+{
+  if (!m_playerDbId)
+  {
+    error("Expected player db id to exist but it does not");
+  }
+}
+
+void PlayerView::checkPlayerShipDbIdExists() const
+{
+  if (!m_playerShipDbId)
+  {
+    error("Expected player ship db id to exist but it does not");
+  }
 }
 
 } // namespace bsgo

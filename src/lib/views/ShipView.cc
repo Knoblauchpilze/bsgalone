@@ -24,12 +24,16 @@ bool ShipView::isReady() const noexcept
 
 auto ShipView::getPlayerShipName() const -> std::string
 {
+  checkPlayerShipDbIdExists();
+
   const auto ship = m_repositories.playerShipRepository->findOneById(*m_playerShipDbId);
   return ship.name;
 }
 
 auto ShipView::getPlayerShip() const -> Entity
 {
+  checkPlayerShipEntityIdExists();
+
   const auto ent = m_coordinator->getEntity(*m_playerShipEntityId);
   if (ent.kind->kind() != EntityKind::SHIP)
   {
@@ -45,6 +49,8 @@ bool ShipView::hasTarget() const
 
 auto ShipView::getPlayerTargetName() const -> std::optional<std::string>
 {
+  checkPlayerShipEntityIdExists();
+
   const auto ent      = m_coordinator->getEntity(*m_playerShipEntityId);
   const auto targetId = ent.targetComp().target();
   if (!targetId)
@@ -76,6 +82,8 @@ auto ShipView::getPlayerTargetName() const -> std::optional<std::string>
 
 auto ShipView::getPlayerTarget() const -> std::optional<Entity>
 {
+  checkPlayerShipEntityIdExists();
+
   const auto ent      = m_coordinator->getEntity(*m_playerShipEntityId);
   const auto targetId = ent.targetComp().target();
   if (!targetId)
@@ -126,6 +134,7 @@ auto ShipView::getAbilitiesCount() const -> int
 
 void ShipView::tryActivateWeapon(const Uuid &ship, const int weaponId) const
 {
+  checkPlayerShipEntityIdExists();
   if (ship != *m_playerShipEntityId)
   {
     error("Failed to activate weapon " + std::to_string(weaponId),
@@ -145,6 +154,7 @@ void ShipView::tryActivateWeapon(const Uuid &ship, const int weaponId) const
 
 void ShipView::tryActivateSlot(const Uuid &ship, const int slotId) const
 {
+  checkPlayerShipEntityIdExists();
   if (ship != *m_playerShipEntityId)
   {
     error("Failed to activate slot " + std::to_string(slotId),
@@ -176,6 +186,8 @@ void ShipView::undockPlayerShip() const
 
 auto ShipView::getPlayerShipWeapons() const -> std::vector<PlayerWeapon>
 {
+  checkPlayerShipDbIdExists();
+
   const auto weapons = m_repositories.shipWeaponRepository->findAllByShip(*m_playerShipDbId);
 
   std::vector<PlayerWeapon> out;
@@ -189,6 +201,8 @@ auto ShipView::getPlayerShipWeapons() const -> std::vector<PlayerWeapon>
 
 auto ShipView::getPlayerShipComputers() const -> std::vector<PlayerComputer>
 {
+  checkPlayerShipDbIdExists();
+
   const auto ids = m_repositories.shipComputerRepository->findAllByShip(*m_playerShipDbId);
 
   std::vector<PlayerComputer> out;
@@ -202,8 +216,26 @@ auto ShipView::getPlayerShipComputers() const -> std::vector<PlayerComputer>
 
 auto ShipView::getPlayerShipSlots() const -> std::unordered_map<Slot, int>
 {
+  checkPlayerShipDbIdExists();
+
   const auto ship = m_repositories.playerShipRepository->findOneById(*m_playerShipDbId);
   return ship.slots;
+}
+
+void ShipView::checkPlayerShipDbIdExists() const
+{
+  if (!m_playerShipDbId)
+  {
+    error("Expected player ship db id to exist but it does not");
+  }
+}
+
+void ShipView::checkPlayerShipEntityIdExists() const
+{
+  if (!m_playerShipEntityId)
+  {
+    error("Expected player ship entity id to exist but it does not");
+  }
 }
 
 } // namespace bsgo
