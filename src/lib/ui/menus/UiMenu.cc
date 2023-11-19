@@ -162,7 +162,7 @@ void UiMenu::onRelevantInput(UserInputData &inputData)
     (*m_highlightCallback)();
   }
 
-  if (inputData.controls.clicked(controls::mouse::LEFT))
+  if (inputData.controls.released(controls::mouse::LEFT))
   {
     if (m_clickCallback)
     {

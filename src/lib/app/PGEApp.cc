@@ -264,9 +264,9 @@ auto PGEApp::handleInputs() -> PGEApp::InputChanges
 {
   InputChanges ic{false, false};
 
-  // Detect press on `Escape` key to shutdown the app.
-  olc::HWButton esc = GetKey(olc::ESCAPE);
-  if (esc.bReleased)
+  updateControls(this, m_controls);
+
+  if (m_controls.released(controls::keys::ESCAPE))
   {
     ic.quit = true;
     return ic;
@@ -274,16 +274,11 @@ auto PGEApp::handleInputs() -> PGEApp::InputChanges
 
   if (!m_fixedFrame)
   {
-    // In case we're dragging the right mouse button we
-    // will update the world's position (panning). What
-    // we want is to remember the position at the moment
-    // of the click and then continuously move the world
-    // to match the current displacement.
-    if (GetMouse(1).bPressed)
+    if (m_controls.pressed(controls::keys::RIGHT))
     {
       m_frame->beginTranslation(GetMousePos());
     }
-    if (GetMouse(1).bHeld)
+    if (m_controls.held(controls::keys::RIGHT))
     {
       m_frame->translate(GetMousePos());
     }
@@ -306,16 +301,12 @@ auto PGEApp::handleInputs() -> PGEApp::InputChanges
     }
   }
 
-  updateControls(this, m_controls);
-
-  // De/activate the debug mode if needed and
-  // handle general simulation control options.
-  if (GetKey(olc::D).bReleased && m_controls.shift)
+  if (m_controls.released(controls::keys::D) && m_controls.shift)
   {
     m_debugOn            = !m_debugOn;
     ic.debugLayerToggled = true;
   }
-  if (GetKey(olc::U).bReleased)
+  if (m_controls.released(controls::keys::U) && m_controls.shift)
   {
     m_uiOn = !m_uiOn;
   }

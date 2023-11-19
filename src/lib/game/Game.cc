@@ -103,7 +103,7 @@ void Game::processUserInput(const controls::State &controls, CoordinateFrame &fr
     }
   }
 
-  if (controls.clicked(controls::mouse::LEFT) && inputHandler != m_inputHandlers.end()
+  if (controls.released(controls::mouse::LEFT) && inputHandler != m_inputHandlers.end()
       && !userInputRelevant)
   {
     olc::vf2d it;
