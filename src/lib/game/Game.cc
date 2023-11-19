@@ -79,11 +79,6 @@ void Game::generateUiHandlers(int width, int height)
 
 void Game::processUserInput(const controls::State &controls, CoordinateFrame &frame)
 {
-  if (m_state.disabled)
-  {
-    return;
-  }
-
   const auto inputHandler = m_inputHandlers.find(getScreen());
   if (inputHandler != m_inputHandlers.end())
   {
@@ -112,10 +107,6 @@ void Game::processUserInput(const controls::State &controls, CoordinateFrame &fr
     inputHandler->second->performAction(tp.x + it.x, tp.y + it.y, controls);
   }
 
-  if (controls.keys[controls::keys::P])
-  {
-    togglePause();
-  }
   if (controls.keys[controls::keys::M])
   {
     std::optional<Screen> nextScreen{};
@@ -183,12 +174,6 @@ bool Game::terminated() const noexcept
 
 bool Game::step(float elapsedSeconds)
 {
-  // When the game is paused it is not over yet.
-  if (m_state.paused)
-  {
-    return true;
-  }
-
   m_coordinator->update(elapsedSeconds);
 
   const auto it = m_uiHandlers.find(m_state.screen);
@@ -200,42 +185,6 @@ bool Game::step(float elapsedSeconds)
   return true;
 }
 
-void Game::togglePause()
-{
-  if (m_state.paused)
-  {
-    resume();
-  }
-  else
-  {
-    pause();
-  }
-
-  enable(!m_state.paused);
-}
-
-void Game::pause()
-{
-  if (m_state.paused)
-  {
-    return;
-  }
-
-  info("Game is now paused");
-  m_state.paused = true;
-}
-
-void Game::resume()
-{
-  if (!m_state.paused)
-  {
-    return;
-  }
-
-  info("Game is now resumed");
-  m_state.paused = false;
-}
-
 void Game::tryActivateWeapon(const bsgo::Uuid &ship, const int &weaponId)
 {
   m_views.shipView->tryActivateWeapon(ship, weaponId);
@@ -244,20 +193,6 @@ void Game::tryActivateWeapon(const bsgo::Uuid &ship, const int &weaponId)
 void Game::tryActivateSlot(const bsgo::Uuid &ship, const int &slotId)
 {
   m_views.shipView->tryActivateSlot(ship, slotId);
-}
-
-void Game::enable(bool enable)
-{
-  m_state.disabled = !enable;
-
-  if (m_state.disabled)
-  {
-    log("Disabled game UI", utils::Level::Verbose);
-  }
-  else
-  {
-    log("Enabled game UI", utils::Level::Verbose);
-  }
 }
 
 void Game::initialize()

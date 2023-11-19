@@ -70,19 +70,6 @@ class Game : public utils::CoreObject
   /// the game is ended).
   bool step(float elapsedSeconds);
 
-  /// @brief - Performs the needed operation to handle the pause and resume operation
-  /// for this game. It will automatically disable the menu if needed or make it
-  /// visible again.
-  void togglePause();
-
-  /// @brief - Used to indicate that the world should be paused. Time based entities
-  /// and actions should take actions to correctly resume at a later time.
-  void pause();
-
-  /// @brief - Used to indicate that the world should be resuming its activity. Time
-  /// based entities should take actions to be resuming their pathes, motions, etc.
-  void resume();
-
   void tryActivateWeapon(const bsgo::Uuid &ship, const int &weaponId);
   void tryActivateSlot(const bsgo::Uuid &ship, const int &slotId);
 
@@ -120,17 +107,6 @@ class Game : public utils::CoreObject
     /// the user takes action to change it.
     Screen screen;
 
-    // Defines whether this world is paused (i.e.
-    // internal attributes of the mobs/blocks/etc
-    // have already been updated to reflect the
-    // pause status) or not. This allows to react
-    // to consecutive pause requests and prevent
-    // weird behaviors to occur.
-    bool paused{true};
-
-    // Whether or not the UI is disabled.
-    bool disabled{true};
-
     // Used to hold whether or not the game has been shut
     // down. It usually indicates that no simulation will
     // be performed anymore and usually indicates that a
@@ -148,10 +124,6 @@ class Game : public utils::CoreObject
   std::unordered_map<Screen, IInputHandlerPtr> m_inputHandlers{};
   std::unordered_map<Screen, IUiHandlerPtr> m_uiHandlers{};
 
-  /// @brief - Used to enable or disable the menus that compose the game. This allows
-  /// to easily hide any game related component.
-  /// @param enable - `true` if the menus are enabled.
-  void enable(bool enable);
   void initialize();
 };
 
