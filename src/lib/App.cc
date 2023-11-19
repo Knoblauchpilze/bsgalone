@@ -43,7 +43,8 @@ void App::loadResources()
 
   m_spriteRenderer = std::make_unique<SpriteRenderer>(this);
   m_game           = std::make_shared<Game>();
-#ifdef LOGIN
+#define START_AT_LOGIN
+#ifdef START_AT_LOGIN
   m_game->setScreen(Screen::LOGIN);
   m_game->generateLoginScreen(ScreenWidth(), ScreenHeight(), *m_spriteRenderer);
 #else
