@@ -39,12 +39,18 @@ void App::onInputs(const controls::State &controls, CoordinateFrame &cf)
 
 void App::loadResources()
 {
-  m_spriteRenderer = std::make_unique<SpriteRenderer>(this);
-  m_game           = std::make_shared<Game>();
-  m_game->setScreen(Screen::LOGIN);
   setLayerTint(Layer::Draw, olc::Pixel(255, 255, 255, alpha::SemiOpaque));
 
+  m_spriteRenderer = std::make_unique<SpriteRenderer>(this);
+  m_game           = std::make_shared<Game>();
+#ifdef LOGIN
+  m_game->setScreen(Screen::LOGIN);
   m_game->generateLoginScreen(ScreenWidth(), ScreenHeight(), *m_spriteRenderer);
+#else
+  m_game->generateLoginScreen(ScreenWidth(), ScreenHeight(), *m_spriteRenderer);
+  m_game->login(bsgo::Uuid{0});
+  m_game->setScreen(Screen::GAME);
+#endif
 }
 
 void App::cleanResources()
