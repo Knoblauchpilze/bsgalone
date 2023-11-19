@@ -45,6 +45,9 @@ class ShipView : public IView
   private:
   std::optional<Uuid> m_playerShipDbId{};
   std::optional<Uuid> m_playerShipEntityId{};
+
+  void checkPlayerShipDbIdExists() const;
+  void checkPlayerShipEntityIdExists() const;
 };
 
 using ShipViewShPtr = std::shared_ptr<ShipView>;

@@ -25,6 +25,9 @@ class PlayerView : public IView
   private:
   std::optional<Uuid> m_playerDbId{};
   std::optional<Uuid> m_playerShipDbId{};
+
+  void checkPlayerDbIdExists() const;
+  void checkPlayerShipDbIdExists() const;
 };
 
 using PlayerViewShPtr = std::shared_ptr<PlayerView>;
