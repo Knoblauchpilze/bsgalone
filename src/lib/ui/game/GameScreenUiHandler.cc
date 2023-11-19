@@ -127,18 +127,24 @@ void GameScreenUiHandler::generateOutpostMenus(int width, int /*height*/)
 
   m_menus[DOCK] = generateMenu(pos, dims, "Dock", "dock", olc::VERY_DARK_GREY, {olc::WHITE}, true);
   m_menus[DOCK]->setSimpleAction([this](Game &g) {
-    m_shipView->dockPlayerShip();
-    g.setScreen(Screen::OUTPOST);
+    if (m_shipView->isReady())
+    {
+      m_shipView->dockPlayerShip();
+      g.setScreen(Screen::OUTPOST);
+    }
   });
 }
 
 void GameScreenUiHandler::updateShipUi()
 {
-  std::string text;
+  if (!m_shipView->isReady())
+  {
+    return;
+  }
 
   const auto ship = m_shipView->getPlayerShip();
 
-  text = m_shipView->getPlayerShipName();
+  auto text = m_shipView->getPlayerShipName();
   m_menus[NAME]->setText(text);
 
   text = "Health: ";
@@ -162,6 +168,11 @@ void GameScreenUiHandler::updateShipUi()
 
 void GameScreenUiHandler::updateTargetUi()
 {
+  if (!m_shipView->isReady())
+  {
+    return;
+  }
+
   const auto target = m_shipView->getPlayerTarget();
   m_menus[TARGET_NAME]->setVisible(target.has_value());
   m_menus[TARGET_HEALTH]->setVisible(target.has_value());
@@ -211,10 +222,14 @@ void GameScreenUiHandler::updateTargetUi()
 
 void GameScreenUiHandler::updateOutpostUi()
 {
-  auto dockButtonVisible{false};
+  if (!m_shipView->isReady())
+  {
+    return;
+  }
 
   const auto target                       = m_shipView->getPlayerTarget();
   constexpr auto MAXIMUM_DISTANCE_TO_DOCK = 5.0f;
+  auto dockButtonVisible{false};
   if (target && bsgo::EntityKind::OUTPOST == target->kind->kind())
   {
     dockButtonVisible = m_shipView->distanceToTarget() <= MAXIMUM_DISTANCE_TO_DOCK;

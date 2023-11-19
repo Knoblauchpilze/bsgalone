@@ -23,6 +23,7 @@ class LockerUiHandler : public IUiHandler
   private:
   bsgo::PlayerViewShPtr m_playerView;
   bsgo::ShipViewShPtr m_shipView;
+  bool m_initialized{false};
 
   MenuShPtr m_menu{};
   MenuShPtr m_locker{};
@@ -33,6 +34,7 @@ class LockerUiHandler : public IUiHandler
   std::vector<MenuShPtr> m_shipWeapons{};
   std::vector<MenuShPtr> m_shipComputers{};
 
+  void initializeLocker();
   void initializeLayout();
   void initializeLockerLayout();
   void initializeShipLayout();

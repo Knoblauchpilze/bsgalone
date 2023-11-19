@@ -44,7 +44,9 @@ class Game : public utils::CoreObject
   auto getScreen() const noexcept -> Screen;
   void setScreen(const Screen &screen);
 
-  void generateLoginScreen(int width, int height, SpriteRenderer &spriteRenderer);
+  void generateRenderers(int width, int height, SpriteRenderer &spriteRenderer);
+  void generateInputHandlers();
+  void generateUiHandlers(int width, int height);
 
   void processUserInput(const controls::State &controls, CoordinateFrame &frame);
   void render(SpriteRenderer &engine, const RenderState &state, const RenderingPass pass) const;
@@ -118,18 +120,7 @@ class Game : public utils::CoreObject
   std::unordered_map<Screen, IInputHandlerPtr> m_inputHandlers{};
   std::unordered_map<Screen, IUiHandlerPtr> m_uiHandlers{};
 
-  struct InitializationData
-  {
-    int width{};
-    int height{};
-    SpriteRenderer *spriteRenderer{};
-  };
-
-  InitializationData m_initializationData{};
-
   void initialize();
-  void generateGameScreen();
-  void generateOutpostScreen();
 };
 
 using GameShPtr = std::shared_ptr<Game>;

@@ -30,8 +30,11 @@ void GameOverUiHandler::initializeMenus(const int width, const int height)
                         {olc::WHITE},
                         true);
   m_menu->setSimpleAction([this](Game &g) {
-    m_shipView->dockPlayerShip();
-    g.setScreen(Screen::OUTPOST);
+    if (m_shipView->isReady())
+    {
+      m_shipView->dockPlayerShip();
+      g.setScreen(Screen::OUTPOST);
+    }
   });
   m_menu->setVisible(false);
 }
@@ -49,8 +52,12 @@ void GameOverUiHandler::render(SpriteRenderer &engine) const
 
 void GameOverUiHandler::updateUi()
 {
-  const auto ship = m_shipView->getPlayerShip();
+  if (!m_shipView->isReady())
+  {
+    return;
+  }
 
+  const auto ship = m_shipView->getPlayerShip();
   m_menu->setVisible(bsgo::Status::DEAD == ship.statusComp().status());
 }
 

@@ -21,6 +21,7 @@ class WeaponsUiHandler : public IUiHandler
 
   private:
   bsgo::ShipViewShPtr m_shipView;
+  bool m_initialized{false};
 
   std::vector<MenuShPtr> m_weapons{};
   std::vector<MenuShPtr> m_ranges{};
@@ -28,6 +29,7 @@ class WeaponsUiHandler : public IUiHandler
   std::vector<MenuShPtr> m_statuses{};
 
   void generateWeaponsMenus(int width, int height);
+  void initializeWeapons();
   void updateWeaponMenu(const bsgo::WeaponSlotComponent &weapon, const int id);
 };
 

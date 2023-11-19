@@ -44,6 +44,15 @@ void WeaponsUiHandler::render(SpriteRenderer &engine) const
 
 void WeaponsUiHandler::updateUi()
 {
+  if (!m_shipView->isReady())
+  {
+    return;
+  }
+  if (!m_initialized)
+  {
+    initializeWeapons();
+  }
+
   const auto ship = m_shipView->getPlayerShip();
 
   auto id = 0;
@@ -58,6 +67,25 @@ constexpr auto NUMBER_OF_WEAPONS = 4;
 
 void WeaponsUiHandler::generateWeaponsMenus(int width, int height)
 {
+  olc::vi2d dims{50, 50};
+  constexpr auto SPACING_IN_PIXELS = 5;
+  olc::vi2d pos;
+  pos.x = width - NUMBER_OF_WEAPONS * (dims.x + SPACING_IN_PIXELS);
+  pos.y = height / 2;
+  const olc::Pixel transparentBg{0, 0, 0, alpha::SemiOpaque};
+
+  for (auto id = 0u; id < NUMBER_OF_WEAPONS; ++id)
+  {
+    const auto name = "weapon_" + std::to_string(id);
+    auto menu       = generateSlotMenu(pos, dims, "", name, transparentBg, {olc::WHITE}, true);
+    m_weapons.push_back(menu);
+
+    pos.x += (dims.x + SPACING_IN_PIXELS);
+  }
+}
+
+void WeaponsUiHandler::initializeWeapons()
+{
   const auto ship         = m_shipView->getPlayerShip();
   const auto shipId       = ship.uuid;
   const auto weaponsCount = ship.weapons.size();
@@ -68,42 +96,35 @@ void WeaponsUiHandler::generateWeaponsMenus(int width, int height)
             + std::to_string(ship.weapons.size()));
   }
 
-  olc::vi2d dims{50, 50};
-  constexpr auto SPACING_IN_PIXELS = 5;
-  olc::vi2d pos;
-  pos.x = width - NUMBER_OF_WEAPONS * (dims.x + SPACING_IN_PIXELS);
-  pos.y = height / 2;
-
-  olc::Pixel transparentBg = olc::Pixel{0, 0, 0, alpha::SemiOpaque};
-
-  for (auto id = 0u; id < NUMBER_OF_WEAPONS; ++id)
+  const olc::vi2d dummyPos{0, 0};
+  const olc::vi2d dummyDims{10, 10};
+  const olc::Pixel transparentBg{0, 0, 0, alpha::SemiOpaque};
+  for (auto id = 0u; id < weaponsCount; ++id)
   {
-    const auto name = "weapon_" + std::to_string(id);
+    auto &menu = m_weapons[id];
 
-    const auto enabled = id < weaponsCount;
-    auto menu          = generateSlotMenu(pos, dims, "", name, transparentBg, {olc::WHITE}, true);
-    menu->setEnabled(enabled);
-    if (enabled)
-    {
-      menu->setSimpleAction([shipId, id](Game &g) { g.tryActivateWeapon(shipId, id); });
+    menu->setSimpleAction([shipId, id](Game &g) { g.tryActivateWeapon(shipId, id); });
+    menu->setEnabled(true);
 
-      const auto range = generateMenu(pos, dims, "range", "range", transparentBg, {olc::WHITE});
-      menu->addMenu(range);
-      m_ranges.push_back(range);
-      auto damage = generateMenu(pos, dims, "min damage", "min_damage", transparentBg, {olc::WHITE});
-      menu->addMenu(damage);
-      m_damages.push_back(damage);
-      damage = generateMenu(pos, dims, "max damage", "max_damage", transparentBg, {olc::WHITE});
-      menu->addMenu(damage);
-      m_damages.push_back(damage);
-      const auto status = generateMenu(pos, dims, "status", "status", transparentBg, {olc::WHITE});
-      menu->addMenu(status);
-      m_statuses.push_back(status);
-    }
-
-    m_weapons.push_back(menu);
-    pos.x += (dims.x + SPACING_IN_PIXELS);
+    const auto range
+      = generateMenu(dummyPos, dummyDims, "range", "range", transparentBg, {olc::WHITE});
+    menu->addMenu(range);
+    m_ranges.push_back(range);
+    auto damage
+      = generateMenu(dummyPos, dummyDims, "min damage", "min_damage", transparentBg, {olc::WHITE});
+    menu->addMenu(damage);
+    m_damages.push_back(damage);
+    damage
+      = generateMenu(dummyPos, dummyDims, "max damage", "max_damage", transparentBg, {olc::WHITE});
+    menu->addMenu(damage);
+    m_damages.push_back(damage);
+    const auto status
+      = generateMenu(dummyPos, dummyDims, "status", "status", transparentBg, {olc::WHITE});
+    menu->addMenu(status);
+    m_statuses.push_back(status);
   }
+
+  m_initialized = true;
 }
 
 void WeaponsUiHandler::updateWeaponMenu(const bsgo::WeaponSlotComponent &weapon, const int id)
