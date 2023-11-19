@@ -97,7 +97,7 @@ menu::InputHandle Menu::processUserInput(const controls::State &c, std::vector<A
   {
     m_state.highlighted = false;
 
-    if (res.selected || c.clicked(controls::mouse::LEFT))
+    if (res.selected || c.released(controls::mouse::LEFT))
     {
       m_state.selected = false;
     }
@@ -114,7 +114,7 @@ menu::InputHandle Menu::processUserInput(const controls::State &c, std::vector<A
 
   // In case the user clicks on the menu, we need
   // to trigger the corresponding handler.
-  if (c.clicked(controls::mouse::LEFT))
+  if (c.released(controls::mouse::LEFT))
   {
     // Only trigger the `onClick` in case the user
     // indicated to do so when building the menu.

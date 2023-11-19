@@ -138,7 +138,10 @@ struct State
   bool tab{false};
   bool shift{false};
 
-  bool clicked(const mouse::Button &button) const;
+  bool pressed(const mouse::Button &button) const;
+  bool held(const mouse::Button &button) const;
+  bool released(const mouse::Button &button) const;
+
   bool pressed(const keys::Keys &key) const;
   bool held(const keys::Keys &key) const;
   bool released(const keys::Keys &key) const;
