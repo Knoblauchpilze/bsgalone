@@ -12,7 +12,7 @@ class UiTextMenu : public UiMenu
   UiTextMenu(const MenuConfig &config, const BackgroundConfig &bg, const TextConfig &text);
   ~UiTextMenu() override = default;
 
-  auto getText() const noexcept -> std::string;
+  virtual auto getText() const noexcept -> std::string;
   void setText(const std::string &text);
 
   protected:
