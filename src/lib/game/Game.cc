@@ -34,47 +34,19 @@ void Game::setScreen(const Screen &screen)
   m_state.screen = screen;
 }
 
-void Game::generateRenderers(int width, int height, SpriteRenderer &spriteRenderer)
+void Game::generateLoginScreen(int width, int height, SpriteRenderer &spriteRenderer)
 {
-  auto game = std::make_unique<GameScreenRenderer>(m_views);
-  game->loadResources(width, height, spriteRenderer.getTextureHandler());
-  m_renderers[Screen::GAME] = std::move(game);
+  auto loginRenderer = std::make_unique<LoginScreenRenderer>();
+  loginRenderer->loadResources(width, height, spriteRenderer.getTextureHandler());
+  m_renderers[Screen::LOGIN] = std::move(loginRenderer);
 
-  auto outpost = std::make_unique<OutpostScreenRenderer>();
-  outpost->loadResources(width, height, spriteRenderer.getTextureHandler());
-  m_renderers[Screen::OUTPOST] = std::move(outpost);
+  auto loginUi = std::make_unique<LoginScreenUiHandler>(m_views);
+  loginUi->initializeMenus(width, height);
+  m_uiHandlers[Screen::LOGIN] = std::move(loginUi);
 
-  auto login = std::make_unique<LoginScreenRenderer>();
-  login->loadResources(width, height, spriteRenderer.getTextureHandler());
-  m_renderers[Screen::LOGIN] = std::move(login);
-}
-
-void Game::generateInputHandlers()
-{
-  m_inputHandlers[Screen::GAME] = std::make_unique<GameScreenInputHandler>(m_views);
-}
-
-void Game::generateUiHandlers(int width, int height)
-{
-  auto login = std::make_unique<LoginScreenUiHandler>(m_views);
-  login->initializeMenus(width, height);
-  m_uiHandlers[Screen::LOGIN] = std::move(login);
-
-  auto outpost = std::make_unique<OutpostScreenUiHandler>(m_views);
-  outpost->initializeMenus(width, height);
-  m_uiHandlers[Screen::OUTPOST] = std::move(outpost);
-
-  auto game = std::make_unique<GameScreenUiHandler>(m_views);
-  game->initializeMenus(width, height);
-  m_uiHandlers[Screen::GAME] = std::move(game);
-
-  auto map = std::make_unique<MapScreenUiHandler>();
-  map->initializeMenus(width, height);
-  m_uiHandlers[Screen::MAP] = std::move(map);
-
-  auto gameOver = std::make_unique<GameOverScreenUiHandler>();
-  gameOver->initializeMenus(width, height);
-  m_uiHandlers[Screen::GAMEOVER] = std::move(gameOver);
+  m_initializationData.width          = width;
+  m_initializationData.height         = height;
+  m_initializationData.spriteRenderer = &spriteRenderer;
 }
 
 void Game::processUserInput(const controls::State &controls, CoordinateFrame &frame)
@@ -195,26 +167,70 @@ void Game::tryActivateSlot(const bsgo::Uuid &ship, const int &slotId)
   m_views.shipView->tryActivateSlot(ship, slotId);
 }
 
-void Game::initialize()
+void Game::login(const bsgo::Uuid &playerDbId)
 {
-  m_coordinator = std::make_shared<bsgo::Coordinator>();
+  m_dataSource.setPlayerId(playerDbId);
   m_dataSource.initialize(*m_coordinator);
 
-  const auto repositories       = m_dataSource.repositories();
-  const auto playerId           = m_dataSource.playerId();
   const auto playerShipId       = m_dataSource.playerShipId();
   const auto playerShipEntityId = m_dataSource.playerShipEntityId();
 
-  m_views.shipView   = std::make_shared<bsgo::ShipView>(playerShipId,
-                                                      playerShipEntityId,
-                                                      m_coordinator,
-                                                      repositories);
+  m_views.playerView->setPlayerDbId(playerDbId);
+  m_views.playerView->setPlayerShipDbId(playerShipId);
+  m_views.shipView->setPlayerShipDbId(playerShipId);
+  m_views.shipView->setPlayerShipEntityId(playerShipEntityId);
+
+  generateGameScreen();
+  generateOutpostScreen();
+
+  setScreen(Screen::OUTPOST);
+}
+
+void Game::initialize()
+{
+  const auto repositories = m_dataSource.repositories();
+
+  m_views.loginView  = std::make_shared<bsgo::LoginView>(m_coordinator, repositories);
+  m_views.shipView   = std::make_shared<bsgo::ShipView>(m_coordinator, repositories);
   m_views.systemView = std::make_shared<bsgo::SystemView>(m_coordinator, repositories);
-  m_views.playerView = std::make_shared<bsgo::PlayerView>(playerId,
-                                                          playerShipId,
-                                                          m_coordinator,
-                                                          repositories);
+  m_views.playerView = std::make_shared<bsgo::PlayerView>(m_coordinator, repositories);
   m_views.shopView   = std::make_shared<bsgo::ShopView>(m_coordinator, repositories);
+}
+
+void Game::generateGameScreen()
+{
+  auto gameRenderer = std::make_unique<GameScreenRenderer>(m_views);
+  gameRenderer->loadResources(m_initializationData.width,
+                              m_initializationData.height,
+                              m_initializationData.spriteRenderer->getTextureHandler());
+  m_renderers[Screen::GAME] = std::move(gameRenderer);
+
+  m_inputHandlers[Screen::GAME] = std::make_unique<GameScreenInputHandler>(m_views);
+
+  auto gameUi = std::make_unique<GameScreenUiHandler>(m_views);
+  gameUi->initializeMenus(m_initializationData.width, m_initializationData.height);
+  m_uiHandlers[Screen::GAME] = std::move(gameUi);
+
+  auto map = std::make_unique<MapScreenUiHandler>();
+  map->initializeMenus(m_initializationData.width, m_initializationData.height);
+  m_uiHandlers[Screen::MAP] = std::move(map);
+
+  auto gameOver = std::make_unique<GameOverScreenUiHandler>();
+  gameOver->initializeMenus(m_initializationData.width, m_initializationData.height);
+  m_uiHandlers[Screen::GAMEOVER] = std::move(gameOver);
+}
+
+void Game::generateOutpostScreen()
+{
+  auto outpostRenderer = std::make_unique<OutpostScreenRenderer>();
+  outpostRenderer->loadResources(m_initializationData.width,
+                                 m_initializationData.height,
+                                 m_initializationData.spriteRenderer->getTextureHandler());
+  m_renderers[Screen::OUTPOST] = std::move(outpostRenderer);
+
+  auto outpostUi = std::make_unique<OutpostScreenUiHandler>(m_views);
+  outpostUi->initializeMenus(m_initializationData.width, m_initializationData.height);
+  m_uiHandlers[Screen::OUTPOST] = std::move(outpostUi);
 }
 
 bool Game::TimedMenu::update(bool active) noexcept

@@ -9,22 +9,20 @@ namespace bsgo {
 class PlayerView : public IView
 {
   public:
-  PlayerView(const Uuid &playerId,
-             const Uuid &playerShipId,
-             const CoordinatorShPtr &coordinator,
-             const Repositories &repositories);
+  PlayerView(const CoordinatorShPtr &coordinator, const Repositories &repositories);
   ~PlayerView() override = default;
+
+  void setPlayerDbId(const Uuid &player);
+  void setPlayerShipDbId(const Uuid &ship);
 
   auto getPlayerResources() const -> std::vector<PlayerResource>;
   auto getPlayerWeapons() const -> std::vector<PlayerWeapon>;
   auto getPlayerComputers() const -> std::vector<PlayerComputer>;
   auto getPlayerShips() const -> std::vector<PlayerShip>;
 
-  auto tryLogin(const std::string &name, const std::string &password) const -> std::optional<Uuid>;
-
   private:
-  Uuid m_playerId;
-  Uuid m_playerShipId;
+  std::optional<Uuid> m_playerDbId{};
+  std::optional<Uuid> m_playerShipDbId{};
 };
 
 using PlayerViewShPtr = std::shared_ptr<PlayerView>;

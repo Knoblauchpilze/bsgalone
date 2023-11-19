@@ -21,7 +21,7 @@ class LoginScreenUiHandler : public IUiHandler
   void updateUi() override;
 
   private:
-  bsgo::PlayerViewShPtr m_playerView;
+  bsgo::LoginViewShPtr m_loginView;
 
   UiMenuPtr m_loginPanel{};
   UiTextField *m_nameTextField{};
