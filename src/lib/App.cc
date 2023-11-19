@@ -47,6 +47,12 @@ void App::loadResources()
   m_game->generateRenderers(ScreenWidth(), ScreenHeight(), *m_spriteRenderer);
   m_game->generateInputHandlers();
   m_game->generateUiHandlers(ScreenWidth(), ScreenHeight());
+
+// #define START_AT_LOGIN
+#ifndef START_AT_LOGIN
+  m_game->login(bsgo::Uuid{0});
+  m_game->setScreen(Screen::GAME);
+#endif
 }
 
 void App::cleanResources()
