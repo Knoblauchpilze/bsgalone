@@ -91,15 +91,13 @@ menu::InputHandle Menu::processUserInput(const controls::State &c, std::vector<A
   // following conditions apply: it either mean
   // that the mouse is not inside this menu or
   // that a child is more relevant than we are.
-  bool click = (c.buttons[controls::mouse::LEFT] == controls::ButtonState::RELEASED);
-
   olc::vi2d ap = absolutePosition();
   if (c.mPosX < ap.x || c.mPosX >= ap.x + m_size.x || c.mPosY < ap.y || c.mPosY >= ap.y + m_size.y
       || res.relevant || res.selected)
   {
     m_state.highlighted = false;
 
-    if (res.selected || click)
+    if (res.selected || c.clicked(controls::mouse::LEFT))
     {
       m_state.selected = false;
     }
@@ -116,7 +114,7 @@ menu::InputHandle Menu::processUserInput(const controls::State &c, std::vector<A
 
   // In case the user clicks on the menu, we need
   // to trigger the corresponding handler.
-  if (click)
+  if (c.clicked(controls::mouse::LEFT))
   {
     // Only trigger the `onClick` in case the user
     // indicated to do so when building the menu.

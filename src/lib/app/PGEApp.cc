@@ -6,7 +6,6 @@ namespace pge {
 PGEApp::PGEApp(const AppDesc &desc)
   : utils::CoreObject(desc.name)
   , olc::PixelGameEngine()
-  , m_controls(controls::newState())
   , m_fixedFrame(desc.fixedFrame)
   , m_frame(desc.frame)
 {
@@ -199,6 +198,68 @@ inline void PGEApp::initialize(const olc::vi2d &dims, const olc::vi2d &pixRatio)
   }
 }
 
+namespace {
+auto stateFromMouseButton(const olc::HWButton &button) -> controls::mouse::State
+{
+  if (button.bPressed)
+  {
+    return controls::mouse::PRESSED;
+  }
+  else if (button.bHeld)
+  {
+    return controls::mouse::HELD;
+  }
+  else if (button.bReleased)
+  {
+    return controls::mouse::RELEASED;
+  }
+  else
+  {
+    return controls::mouse::FREE;
+  }
+}
+
+auto stateFromKey(const olc::HWButton &button) -> controls::keys::State
+{
+  if (button.bPressed)
+  {
+    return controls::keys::PRESSED;
+  }
+  else if (button.bHeld)
+  {
+    return controls::keys::HELD;
+  }
+  else if (button.bReleased)
+  {
+    return controls::keys::RELEASED;
+  }
+  else
+  {
+    return controls::keys::FREE;
+  }
+}
+
+void updateControls(const olc::PixelGameEngine *const pge, controls::State &controls)
+{
+  for (auto keyId = 0; keyId < controls::keys::KEYS_COUNT; ++keyId)
+  {
+    const auto key = pge->GetKey(static_cast<olc::Key>(keyId));
+    controls.keys[static_cast<controls::keys::Keys>(keyId)] = stateFromKey(key);
+  }
+
+  controls.tab   = controls.keys[controls::keys::TAB];
+  controls.shift = controls.keys[controls::keys::SHIFT];
+
+  const auto mouseLeft   = pge->GetMouse(0);
+  const auto mouseRight  = pge->GetMouse(1);
+  const auto mouseMiddle = pge->GetMouse(2);
+
+  controls.buttons[controls::mouse::LEFT]   = stateFromMouseButton(mouseLeft);
+  controls.buttons[controls::mouse::RIGHT]  = stateFromMouseButton(mouseRight);
+  controls.buttons[controls::mouse::MIDDLE] = stateFromMouseButton(mouseMiddle);
+}
+} // namespace
+
 auto PGEApp::handleInputs() -> PGEApp::InputChanges
 {
   InputChanges ic{false, false};
@@ -245,77 +306,7 @@ auto PGEApp::handleInputs() -> PGEApp::InputChanges
     }
   }
 
-  // Handle inputs. Note that for keys apart for the
-  // motion keys (or commonly used as so) we want to
-  // react on the released event only.
-  olc::HWButton b                        = GetKey(olc::RIGHT);
-  m_controls.keys[controls::keys::RIGHT] = b.bPressed || b.bHeld;
-  b                                      = GetKey(olc::D);
-  m_controls.keys[controls::keys::D]     = b.bPressed || b.bHeld;
-
-  b                                   = GetKey(olc::UP);
-  m_controls.keys[controls::keys::UP] = b.bPressed || b.bHeld;
-  b                                   = GetKey(olc::Z);
-  m_controls.keys[controls::keys::Z]  = b.bPressed || b.bHeld;
-
-  b                                     = GetKey(olc::LEFT);
-  m_controls.keys[controls::keys::LEFT] = b.bPressed || b.bHeld;
-  b                                     = GetKey(olc::Q);
-  m_controls.keys[controls::keys::Q]    = b.bPressed || b.bHeld;
-
-  b                                     = GetKey(olc::DOWN);
-  m_controls.keys[controls::keys::DOWN] = b.bPressed || b.bHeld;
-  b                                     = GetKey(olc::S);
-  m_controls.keys[controls::keys::S]    = b.bPressed || b.bHeld;
-
-  b                                      = GetKey(olc::SPACE);
-  m_controls.keys[controls::keys::SPACE] = b.bPressed || b.bHeld;
-
-  b                                  = GetKey(olc::P);
-  m_controls.keys[controls::keys::P] = b.bReleased;
-  b                                  = GetKey(olc::M);
-  m_controls.keys[controls::keys::M] = b.bReleased;
-  b                                  = GetKey(olc::G);
-  m_controls.keys[controls::keys::G] = b.bReleased;
-
-  b                                   = GetKey(olc::W);
-  m_controls.keys[controls::keys::W]  = b.bReleased;
-  b                                   = GetKey(olc::X);
-  m_controls.keys[controls::keys::X]  = b.bReleased;
-  b                                   = GetKey(olc::C);
-  m_controls.keys[controls::keys::C]  = b.bReleased;
-  b                                   = GetKey(olc::V);
-  m_controls.keys[controls::keys::V]  = b.bReleased;
-  b                                   = GetKey(olc::K1);
-  m_controls.keys[controls::keys::K1] = b.bReleased;
-  b                                   = GetKey(olc::K2);
-  m_controls.keys[controls::keys::K2] = b.bReleased;
-
-  b                = GetKey(olc::TAB);
-  m_controls.tab   = b.bReleased;
-  b                = GetKey(olc::SHIFT);
-  m_controls.shift = (b.bPressed || b.bHeld);
-
-  auto analysis = [](const olc::HWButton &b) {
-    if (b.bPressed)
-    {
-      return controls::ButtonState::PRESSED;
-    }
-    if (b.bHeld)
-    {
-      return controls::ButtonState::HELD;
-    }
-    if (b.bReleased)
-    {
-      return controls::ButtonState::RELEASED;
-    }
-
-    return controls::ButtonState::FREE;
-  };
-
-  m_controls.buttons[controls::mouse::LEFT]   = analysis(GetMouse(0));
-  m_controls.buttons[controls::mouse::RIGHT]  = analysis(GetMouse(1));
-  m_controls.buttons[controls::mouse::MIDDLE] = analysis(GetMouse(2));
+  updateControls(this, m_controls);
 
   // De/activate the debug mode if needed and
   // handle general simulation control options.

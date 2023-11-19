@@ -103,8 +103,8 @@ void Game::processUserInput(const controls::State &controls, CoordinateFrame &fr
     }
   }
 
-  const auto lClick = (controls.buttons[controls::mouse::LEFT] == controls::ButtonState::RELEASED);
-  if (lClick && inputHandler != m_inputHandlers.end() && !userInputRelevant)
+  if (controls.clicked(controls::mouse::LEFT) && inputHandler != m_inputHandlers.end()
+      && !userInputRelevant)
   {
     olc::vf2d it;
     olc::vi2d tp = frame.pixelsToTilesAndIntra(olc::vi2d(controls.mPosX, controls.mPosY), &it);

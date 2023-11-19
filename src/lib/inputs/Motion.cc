@@ -5,19 +5,19 @@ namespace pge {
 
 void Motion::updateFromKeys(const controls::State &inputs)
 {
-  if (inputs.keys[controls::keys::LEFT] || inputs.keys[controls::keys::Q])
+  if (inputs.held(controls::keys::LEFT) || inputs.held(controls::keys::Q))
   {
     --x;
   }
-  if (inputs.keys[controls::keys::RIGHT] || (inputs.keys[controls::keys::D] && !inputs.shift))
+  if (inputs.held(controls::keys::RIGHT) || (inputs.held(controls::keys::D) && !inputs.shift))
   {
     ++x;
   }
-  if (inputs.keys[controls::keys::UP] || inputs.keys[controls::keys::Z])
+  if (inputs.held(controls::keys::UP) || inputs.held(controls::keys::Z))
   {
     ++y;
   }
-  if (inputs.keys[controls::keys::DOWN] || inputs.keys[controls::keys::S])
+  if (inputs.held(controls::keys::DOWN) || inputs.held(controls::keys::S))
   {
     --y;
   }

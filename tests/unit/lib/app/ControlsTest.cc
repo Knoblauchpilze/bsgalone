@@ -8,7 +8,7 @@ namespace pge::controls {
 
 TEST(Controls, Test_Constructor)
 {
-  auto state = newState();
+  const State state{};
 
   EXPECT_EQ(state.mPosX, 0);
   EXPECT_EQ(state.mPosY, 0);
@@ -21,12 +21,12 @@ TEST(Controls, Test_Constructor)
 
   for (const auto &key : state.keys)
   {
-    EXPECT_FALSE(key);
+    EXPECT_EQ(mouse::FREE, key);
   }
 
   for (const auto &button : state.buttons)
   {
-    EXPECT_EQ(ButtonState::FREE, button);
+    EXPECT_EQ(mouse::FREE, button);
   }
 }
 
