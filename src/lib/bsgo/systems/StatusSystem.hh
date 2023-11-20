@@ -17,6 +17,7 @@ class StatusSystem : public AbstractSystem
 
   private:
   void handleAppearingState(Entity &entity, StatusComponent &statusComp) const;
+  void handleThreatState(Entity &entity, StatusComponent &statusComp) const;
   void handleJustChangedState(Entity &entity, StatusComponent &statusComp) const;
 };
 
