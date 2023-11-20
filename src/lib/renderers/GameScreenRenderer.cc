@@ -270,6 +270,7 @@ void GameScreenRenderer::renderShip(const bsgo::Entity &ship,
   switch (status)
   {
     case bsgo::Status::VISIBLE:
+    case bsgo::Status::THREAT:
       t.sprite.tint = tint;
       break;
     case bsgo::Status::DOCKED:

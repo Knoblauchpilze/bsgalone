@@ -105,8 +105,7 @@ auto ShipView::getShipsWithin(const IBoundingBox &bbox) const -> std::vector<Ent
     {
       return true;
     }
-    return Status::VISIBLE == entity.statusComp().status()
-           || Status::APPEARING == entity.statusComp().status();
+    return isInteractableStatus(entity.statusComp().status());
   };
 
   return m_coordinator->getEntitiesWithinSatistying(bbox, predicate);
