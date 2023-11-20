@@ -191,6 +191,7 @@ void DataSource::registerOutpost(Coordinator &coordinator, const Uuid &outpost) 
   coordinator.addPower(ent, data.powerPoints, data.maxPowerPoints, data.powerRegen);
   coordinator.addTarget(ent);
   coordinator.addFaction(ent, data.faction);
+  coordinator.addStatus(ent, Status::VISIBLE);
 }
 
 void DataSource::registerShipWeapons(Coordinator &coordinator,
