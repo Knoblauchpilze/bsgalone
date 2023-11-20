@@ -17,6 +17,7 @@ class HealthSystem : public AbstractSystem
 
   private:
   void tryMarkForDelettion(Entity &entity) const;
+  bool canRegenerateHealth(Entity &entity) const;
 };
 
 } // namespace bsgo
