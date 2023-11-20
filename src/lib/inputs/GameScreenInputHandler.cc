@@ -48,7 +48,7 @@ void GameScreenInputHandler::performAction(float x, float y, const controls::Sta
 
   auto visible{true};
   if (ent && ent->exists<bsgo::StatusComponent>()
-      && bsgo::Status::VISIBLE != ent->statusComp().status())
+      && !bsgo::isVisibleStatus(ent->statusComp().status()))
   {
     visible = false;
   }
