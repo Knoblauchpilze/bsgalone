@@ -73,6 +73,10 @@ void BulletSystem::damageOnImpact(Entity &entity, Entity &target) const
   {
     target.lootComp().registerRecipient(entity.ownerComp().owner());
   }
+  if (target.exists<StatusComponent>())
+  {
+    target.statusComp().setStatus(Status::THREAT);
+  }
 
   entity.removalComp().markForRemoval();
 }
