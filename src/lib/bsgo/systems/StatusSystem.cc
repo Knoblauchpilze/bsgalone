@@ -14,6 +14,7 @@ StatusSystem::StatusSystem()
 {}
 
 constexpr auto TIME_TO_STAY_IN_APPEARED_MODE = utils::Milliseconds{10'000};
+constexpr auto TIME_TO_STAY_IN_THREAT_MODE   = utils::Milliseconds{3'000};
 
 void StatusSystem::updateEntity(Entity &entity,
                                 Coordinator & /*coordinator*/,
@@ -23,6 +24,7 @@ void StatusSystem::updateEntity(Entity &entity,
   statusComp.update(elapsedSeconds);
 
   handleAppearingState(entity, statusComp);
+  handleThreatState(entity, statusComp);
   handleJustChangedState(entity, statusComp);
 }
 
@@ -31,7 +33,17 @@ void StatusSystem::handleAppearingState(Entity &entity, StatusComponent &statusC
   const auto lastUpdate = statusComp.getElapsedSinceLastChange();
   if (Status::APPEARING == statusComp.status() && lastUpdate >= TIME_TO_STAY_IN_APPEARED_MODE)
   {
-    log("Switching " + entity.str() + " to visible");
+    log("Switching " + entity.str() + " from appeating to visible");
+    statusComp.setStatus(Status::VISIBLE);
+  }
+}
+
+void StatusSystem::handleThreatState(Entity &entity, StatusComponent &statusComp) const
+{
+  const auto lastUpdate = statusComp.getElapsedSinceLastChange();
+  if (Status::THREAT == statusComp.status() && lastUpdate >= TIME_TO_STAY_IN_THREAT_MODE)
+  {
+    log("Switching " + entity.str() + " from threat to visible");
     statusComp.setStatus(Status::VISIBLE);
   }
 }
