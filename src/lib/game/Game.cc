@@ -102,7 +102,7 @@ void Game::processUserInput(const controls::State &controls, CoordinateFrame &fr
     inputHandler->second->performAction(tp.x + it.x, tp.y + it.y, controls);
   }
 
-  if (controls.keys[controls::keys::M])
+  if (controls.released(controls::keys::M))
   {
     std::optional<Screen> nextScreen{};
     switch (getScreen())
