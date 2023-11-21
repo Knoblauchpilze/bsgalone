@@ -1,6 +1,8 @@
 
-INSERT INTO public.ship_class ("name") VALUES ('strike');
-INSERT INTO public.ship_class ("name") VALUES ('line');
+INSERT INTO public.ship_class ("name", "jump_time_ms", "jump_time_threat_ms")
+  VALUES ('strike', 15000, 60000);
+INSERT INTO public.ship_class ("name", "jump_time_ms", "jump_time_threat_ms")
+  VALUES ('line', 25000, 100000);
 
 INSERT INTO public.ship ("name", "faction", "class", "max_hull_points", "hull_points_regen", "max_power_points", "power_points_regen", "max_acceleration", "max_speed", "radius")
   VALUES (
