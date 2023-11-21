@@ -30,7 +30,7 @@ class LoginScreenUiHandler : public IUiHandler
 
   void generateLoginMenu(const int width, const int height);
   void generateLoginButton(const int width, const int height);
-  void generateQuitMenu(const int width, const int height);
+  void generateQuitButton(const int width, const int height);
 
   void tryLogin(Game &game);
 };

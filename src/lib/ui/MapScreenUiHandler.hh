@@ -2,7 +2,7 @@
 #pragma once
 
 #include "IUiHandler.hh"
-#include "Menu.hh"
+#include "UiTextMenu.hh"
 
 namespace pge {
 
@@ -18,7 +18,9 @@ class MapScreenUiHandler : public IUiHandler
   void updateUi() override;
 
   private:
-  MenuShPtr m_menu{};
+  UiTextMenuPtr m_quitButton{};
+
+  void generateQuitButton(const int width, const int height);
 };
 
 } // namespace pge

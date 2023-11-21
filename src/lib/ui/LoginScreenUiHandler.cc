@@ -18,7 +18,7 @@ void LoginScreenUiHandler::initializeMenus(const int width, const int height)
 {
   generateLoginMenu(width, height);
   generateLoginButton(width, height);
-  generateQuitMenu(width, height);
+  generateQuitButton(width, height);
 }
 
 bool LoginScreenUiHandler::processUserInput(UserInputData &inputData)
@@ -95,7 +95,7 @@ void LoginScreenUiHandler::generateLoginButton(const int width, const int height
   m_loginButton   = std::make_unique<UiTextMenu>(config, bg, text);
 }
 
-void LoginScreenUiHandler::generateQuitMenu(const int width, const int /*height*/)
+void LoginScreenUiHandler::generateQuitButton(const int width, const int /*height*/)
 {
   constexpr auto REASONABLE_GAP_SIZE = 20;
   const olc::vi2d quitButtonDimsPixels{100, 50};
