@@ -10,6 +10,7 @@
 #include "GameScreenUiHandler.hh"
 #include "LoginScreenRenderer.hh"
 #include "LoginScreenUiHandler.hh"
+#include "MapScreenRenderer.hh"
 #include "MapScreenUiHandler.hh"
 #include "OutpostScreenRenderer.hh"
 #include "OutpostScreenUiHandler.hh"
@@ -35,17 +36,21 @@ void Game::setScreen(const Screen &screen)
 
 void Game::generateRenderers(int width, int height, SpriteRenderer &spriteRenderer)
 {
-  auto game = std::make_unique<GameScreenRenderer>(m_views);
-  game->loadResources(width, height, spriteRenderer.getTextureHandler());
-  m_renderers[Screen::GAME] = std::move(game);
+  auto login = std::make_unique<LoginScreenRenderer>();
+  login->loadResources(width, height, spriteRenderer.getTextureHandler());
+  m_renderers[Screen::LOGIN] = std::move(login);
 
   auto outpost = std::make_unique<OutpostScreenRenderer>();
   outpost->loadResources(width, height, spriteRenderer.getTextureHandler());
   m_renderers[Screen::OUTPOST] = std::move(outpost);
 
-  auto login = std::make_unique<LoginScreenRenderer>();
-  login->loadResources(width, height, spriteRenderer.getTextureHandler());
-  m_renderers[Screen::LOGIN] = std::move(login);
+  auto game = std::make_unique<GameScreenRenderer>(m_views);
+  game->loadResources(width, height, spriteRenderer.getTextureHandler());
+  m_renderers[Screen::GAME] = std::move(game);
+
+  auto map = std::make_unique<MapScreenRenderer>();
+  map->loadResources(width, height, spriteRenderer.getTextureHandler());
+  m_renderers[Screen::MAP] = std::move(map);
 }
 
 void Game::generateInputHandlers()
