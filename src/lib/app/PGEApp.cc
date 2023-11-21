@@ -247,8 +247,8 @@ void updateControls(const olc::PixelGameEngine *const pge, controls::State &cont
     controls.keys[static_cast<controls::keys::Keys>(keyId)] = stateFromKey(key);
   }
 
-  controls.tab   = controls.keys[controls::keys::TAB];
-  controls.shift = controls.keys[controls::keys::SHIFT];
+  controls.tab   = controls.held(controls::keys::TAB);
+  controls.shift = controls.held(controls::keys::SHIFT);
 
   const auto mouseLeft   = pge->GetMouse(0);
   const auto mouseRight  = pge->GetMouse(1);
