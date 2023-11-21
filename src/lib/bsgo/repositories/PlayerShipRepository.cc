@@ -11,7 +11,7 @@ PlayerShipRepository::PlayerShipRepository(const DbConnectionShPtr &connection)
 
 namespace {
 constexpr auto SQL_QUERY
-  = "SELECT s.faction, s.class, s.name, ps.player, ps.active, ps.hull_points, s.max_hull_points, s.hull_points_regen, ps.power_points, s.max_power_points, s.power_points_regen, s.max_acceleration, s.max_speed, s.radius, ps.x_pos, ps.y_pos, ps.z_pos FROM player_ship AS ps LEFT JOIN ship AS s ON ps.ship = s.id WHERE ps.id = ";
+  = "SELECT s.faction, s.class, s.name, ps.player, ps.active, ps.hull_points, s.max_hull_points, s.hull_points_regen, ps.power_points, s.max_power_points, s.power_points_regen, s.max_acceleration, s.max_speed, s.radius, ps.x_pos, ps.y_pos, ps.z_pos, sc.jump_time_ms, sc.jump_time_threat_ms FROM player_ship AS ps LEFT JOIN ship AS s ON ps.ship = s.id LEFT JOIN ship_class AS sc ON s.class = sc.name WHERE ps.id = ";
 auto generateSqlQuery(const Uuid &ship) -> std::string
 {
   return SQL_QUERY + std::to_string(toDbId(ship));
@@ -93,6 +93,9 @@ auto PlayerShipRepository::fetchShipBase(const Uuid &ship) const -> PlayerShip
   const auto y = record[15].as<float>();
   const auto z = record[16].as<float>();
   out.position = Eigen::Vector3f(x, y, z);
+
+  out.jumpTime         = utils::Milliseconds(record[17].as<int>());
+  out.jumpTimeInThreat = utils::Milliseconds(record[18].as<int>());
 
   return out;
 }

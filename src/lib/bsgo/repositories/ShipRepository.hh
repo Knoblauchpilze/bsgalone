@@ -6,6 +6,7 @@
 #include "ShipClass.hh"
 #include "Slot.hh"
 #include "Uuid.hh"
+#include <core_utils/TimeUtils.hh>
 #include <memory>
 
 namespace bsgo {
@@ -26,6 +27,9 @@ struct Ship
   float speed{4.0f};
 
   float radius{0.5f};
+
+  utils::Duration jumpTime{};
+  utils::Duration jumpTimeInThreat{};
 
   std::unordered_map<Slot, int> slots{};
 };

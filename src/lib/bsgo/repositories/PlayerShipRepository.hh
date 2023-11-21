@@ -6,6 +6,7 @@
 #include "ShipClass.hh"
 #include "Slot.hh"
 #include "Uuid.hh"
+#include <core_utils/TimeUtils.hh>
 #include <eigen3/Eigen/Eigen>
 #include <memory>
 #include <optional>
@@ -34,6 +35,9 @@ struct PlayerShip
 
   float radius{0.5f};
   Eigen::Vector3f position{Eigen::Vector3f::Zero()};
+
+  utils::Duration jumpTime{};
+  utils::Duration jumpTimeInThreat{};
 
   std::unordered_map<Slot, int> slots{};
 };

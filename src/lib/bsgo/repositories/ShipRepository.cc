@@ -9,7 +9,7 @@ ShipRepository::ShipRepository(const DbConnectionShPtr &connection)
 
 namespace {
 constexpr auto SQL_QUERY
-  = "SELECT faction, class, name, max_hull_points, hull_points_regen, max_power_points, power_points_regen, max_acceleration, max_speed, radius FROM ship WHERE id = ";
+  = "SELECT s.faction, sc.class, s.name, s.max_hull_points, s.hull_points_regen, s.max_power_points, s.power_points_regen, s.max_acceleration, s.max_speed, s.radius sc.jump_time_ms, sc.jump_time_threat_ms FROM ship AS s LEFT JOIN ship_class AS sc ON s.class = sc.name WHERE s.id = ";
 auto generateSqlQuery(const Uuid &ship) -> std::string
 {
   return SQL_QUERY + std::to_string(toDbId(ship));
@@ -45,17 +45,19 @@ auto ShipRepository::fetchShipBase(const Uuid &ship) const -> Ship
 
   Ship out;
 
-  const auto &record  = rows[0];
-  out.faction         = fromDbFaction(record[0].as<std::string>());
-  out.shipClass       = fromDbShipClass(record[1].as<std::string>());
-  out.name            = record[2].as<std::string>();
-  out.maxHullPoints   = record[3].as<float>();
-  out.hullPointsRegen = record[4].as<float>();
-  out.maxPowerPoints  = record[5].as<float>();
-  out.powerRegen      = record[6].as<float>();
-  out.acceleration    = record[7].as<float>();
-  out.speed           = record[8].as<float>();
-  out.radius          = record[9].as<float>();
+  const auto &record   = rows[0];
+  out.faction          = fromDbFaction(record[0].as<std::string>());
+  out.shipClass        = fromDbShipClass(record[1].as<std::string>());
+  out.name             = record[2].as<std::string>();
+  out.maxHullPoints    = record[3].as<float>();
+  out.hullPointsRegen  = record[4].as<float>();
+  out.maxPowerPoints   = record[5].as<float>();
+  out.powerRegen       = record[6].as<float>();
+  out.acceleration     = record[7].as<float>();
+  out.speed            = record[8].as<float>();
+  out.radius           = record[9].as<float>();
+  out.jumpTime         = utils::Milliseconds(record[10].as<int>());
+  out.jumpTimeInThreat = utils::Milliseconds(record[11].as<int>());
 
   return out;
 }
