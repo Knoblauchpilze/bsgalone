@@ -80,7 +80,8 @@ void WeaponSystem::fireWeaponForEntity(Entity &ent,
 {
   weapon.fire();
 
-  ent.statusComp().setStatus(Status::THREAT);
+  const auto currentStatus = ent.statusComp().status();
+  ent.statusComp().setStatus(updateStatusWithThreat(currentStatus));
 
   const auto powerUsed = weapon.powerCost();
   ent.powerComp().usePower(powerUsed);

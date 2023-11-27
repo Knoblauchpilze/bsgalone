@@ -1,5 +1,6 @@
 
 #include "Status.hh"
+#include <stdexcept>
 
 namespace bsgo {
 
@@ -19,10 +20,10 @@ auto str(const Status &status) -> std::string
       return "dead";
     default:
       return "unknown";
-  };
+  }
 }
 
-bool isInteractableStatus(const Status &status)
+bool statusAllowsInteratction(const Status &status)
 {
   switch (status)
   {
@@ -35,7 +36,7 @@ bool isInteractableStatus(const Status &status)
   }
 }
 
-bool isVisibleStatus(const Status &status)
+bool statusVisibleFromDradis(const Status &status)
 {
   switch (status)
   {
@@ -44,6 +45,86 @@ bool isVisibleStatus(const Status &status)
       return true;
     default:
       return false;
+  }
+}
+
+bool statusAllowsRegeneration(const Status &status)
+{
+  switch (status)
+  {
+    case Status::THREAT:
+      return false;
+    default:
+      return true;
+  }
+}
+
+bool statusRequiresImmobilization(const Status &status)
+{
+  switch (status)
+  {
+    case Status::DOCKED:
+    case Status::DEAD:
+      return true;
+    default:
+      return false;
+  }
+}
+
+bool statusIndicatesThreat(const Status &status)
+{
+  switch (status)
+  {
+    case Status::THREAT:
+      return true;
+    default:
+      return false;
+  }
+}
+
+bool statusIndicatesAppearing(const Status &status)
+{
+  switch (status)
+  {
+    case Status::APPEARING:
+      return true;
+    default:
+      return false;
+  }
+}
+
+auto updateStatusWithThreat(const Status &in) -> Status
+{
+  switch (in)
+  {
+    case Status::VISIBLE:
+    case Status::APPEARING:
+    case Status::THREAT:
+      return Status::THREAT;
+    default:
+      throw std::invalid_argument("invalid status (" + str(in) + ") to go in threat");
+  }
+}
+
+auto updateStatusAfterSpawn(const Status &in) -> Status
+{
+  switch (in)
+  {
+    case Status::APPEARING:
+      return Status::VISIBLE;
+    default:
+      throw std::invalid_argument("invalid status (" + str(in) + ") to spawn");
+  }
+}
+
+auto updateStatusAfterThreatEnded(const Status &in) -> Status
+{
+  switch (in)
+  {
+    case Status::THREAT:
+      return Status::VISIBLE;
+    default:
+      throw std::invalid_argument("invalid status (" + str(in) + ")to clear threat");
   }
 }
 

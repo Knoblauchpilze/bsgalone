@@ -40,8 +40,7 @@ bool HealthSystem::canRegenerateHealth(Entity &entity) const
   {
     return true;
   }
-  return Status::THREAT != entity.statusComp().status()
-         && Status::DEAD != entity.statusComp().status();
+  return statusAllowsRegeneration(entity.statusComp().status());
 }
 
 } // namespace bsgo

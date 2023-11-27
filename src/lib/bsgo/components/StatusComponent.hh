@@ -20,6 +20,7 @@ class StatusComponent : public IComponent
   bool justChanged() const;
   void resetChanged();
   auto getElapsedSinceLastChange() const -> utils::Duration;
+
   void setStatus(const Status &status);
 
   void update(const float elapsedSeconds) override;
