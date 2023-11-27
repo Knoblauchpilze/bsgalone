@@ -143,6 +143,19 @@ bool statusIndicatesAppearing(const Status &status)
   }
 }
 
+bool statusIndicatesJump(const Status &status)
+{
+  switch (status)
+  {
+    case Status::JUMP:
+    case Status::JUMP_APPEARING:
+    case Status::JUMP_THREAT:
+      return true;
+    default:
+      return false;
+  }
+}
+
 auto updateStatusWithThreat(const Status &in) -> Status
 {
   switch (in)
