@@ -271,6 +271,8 @@ void GameScreenRenderer::renderShip(const bsgo::Entity &ship,
   {
     case bsgo::Status::VISIBLE:
     case bsgo::Status::THREAT:
+    case bsgo::Status::JUMP:
+    case bsgo::Status::JUMP_THREAT:
       t.sprite.tint = tint;
       break;
     case bsgo::Status::DOCKED:
@@ -278,6 +280,7 @@ void GameScreenRenderer::renderShip(const bsgo::Entity &ship,
       t.sprite.tint = transparent(tint, alpha::Transparent);
       break;
     case bsgo::Status::APPEARING:
+    case bsgo::Status::JUMP_APPEARING:
       t.sprite.tint = transparent(tint, alpha::SemiOpaque);
       break;
     default:

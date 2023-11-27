@@ -11,6 +11,9 @@ enum class Status
   APPEARING,
   DOCKED,
   THREAT,
+  JUMP,
+  JUMP_APPEARING,
+  JUMP_THREAT,
   DEAD
 };
 
@@ -27,5 +30,7 @@ bool statusRequiresThreatReset(const Status &status);
 auto updateStatusWithThreat(const Status &in) -> Status;
 auto updateStatusAfterSpawn(const Status &in) -> Status;
 auto updateStatusAfterThreatEnded(const Status &in) -> Status;
+auto updateStatusForJump(const Status &in) -> Status;
+auto updateStatusAfterJumpCancellation(const Status &in) -> Status;
 
 } // namespace bsgo
