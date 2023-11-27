@@ -16,7 +16,7 @@ class TargetSystem : public AbstractSystem
                     const float elapsedSeconds) const override;
 
   private:
-  void clearTargetIfDead(TargetComponent &targetComp, const Coordinator &coordinator) const;
+  void clearTargetIfNotReachable(TargetComponent &targetComp, const Coordinator &coordinator) const;
 };
 
 } // namespace bsgo

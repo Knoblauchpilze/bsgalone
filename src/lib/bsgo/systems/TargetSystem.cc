@@ -25,24 +25,41 @@ void TargetSystem::updateEntity(Entity &entity,
     return;
   }
 
-  clearTargetIfDead(targetComp, coordinator);
+  clearTargetIfNotReachable(targetComp, coordinator);
 }
 
-void TargetSystem::clearTargetIfDead(TargetComponent &targetComp,
-                                     const Coordinator &coordinator) const
+namespace {
+bool targetIsDead(const Entity &target)
 {
-  const auto target = coordinator.getEntity(*targetComp.target());
   if (!target.exists<HealthComponent>())
   {
-    return;
+    return false;
   }
+  return !target.healthComp().isAlive();
+}
 
-  if (target.healthComp().isAlive())
+bool targetHasDocked(const Entity &target)
+{
+  if (!target.exists<StatusComponent>())
   {
-    return;
+    return false;
   }
+  return Status::DOCKED == target.statusComp().status();
+}
+} // namespace
 
-  targetComp.clearTarget();
+void TargetSystem::clearTargetIfNotReachable(TargetComponent &targetComp,
+                                             const Coordinator &coordinator) const
+{
+  const auto target = coordinator.getEntity(*targetComp.target());
+
+  const auto dead   = targetIsDead(target);
+  const auto docked = targetHasDocked(target);
+
+  if (dead || docked)
+  {
+    targetComp.clearTarget();
+  }
 }
 
 } // namespace bsgo
