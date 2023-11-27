@@ -185,16 +185,30 @@ void ShipView::undockPlayerShip() const
 
 void ShipView::startJump() const
 {
-  auto playerShip      = getPlayerShip();
-  const auto status    = playerShip.statusComp().status();
+  auto playerShip   = getPlayerShip();
+  const auto status = playerShip.statusComp().status();
+
+  if (bsgo::statusIndicatesJump(status))
+  {
+    return;
+  }
+
+  log("Starting jump");
   const auto newStatus = updateStatusForJump(status);
   playerShip.statusComp().setStatus(newStatus);
 }
 
 void ShipView::cancelJump() const
 {
-  auto playerShip      = getPlayerShip();
-  const auto status    = playerShip.statusComp().status();
+  auto playerShip   = getPlayerShip();
+  const auto status = playerShip.statusComp().status();
+
+  if (!bsgo::statusIndicatesJump(status))
+  {
+    return;
+  }
+
+  log("Cancelling jump");
   const auto newStatus = updateStatusAfterJumpCancellation(status);
   playerShip.statusComp().setStatus(newStatus);
 }
