@@ -148,10 +148,13 @@ void Coordinator::addRemoval(const Uuid &ent)
   m_components.removals[ent] = std::make_shared<RemovalComponent>();
 }
 
-void Coordinator::addStatus(const Uuid &ent, const Status &status)
+void Coordinator::addStatus(const Uuid &ent,
+                            const Status &status,
+                            const std::optional<utils::Duration> &jumpTime,
+                            const std::optional<utils::Duration> &threatJumpTime)
 {
   checkForOverrides(ent, "Status", m_components.statuses);
-  m_components.statuses[ent] = std::make_shared<StatusComponent>(status);
+  m_components.statuses[ent] = std::make_shared<StatusComponent>(status, jumpTime, threatJumpTime);
 }
 
 void Coordinator::addAI(const Uuid &ent, INodePtr behavior)
