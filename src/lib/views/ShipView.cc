@@ -188,7 +188,6 @@ void ShipView::startJump() const
   auto playerShip      = getPlayerShip();
   const auto status    = playerShip.statusComp().status();
   const auto newStatus = updateStatusForJump(status);
-  log("new status: " + bsgo::str(newStatus));
   playerShip.statusComp().setStatus(newStatus);
 }
 
