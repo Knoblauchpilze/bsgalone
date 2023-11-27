@@ -24,6 +24,7 @@ class GameScreenInputHandler : public IInputHandler
   void moveShip(bsgo::Entity &ship, const Motion &motion);
   void keepShipCentered(CoordinateFrame &frame);
   void handleWeaponsState(const controls::State &controls, bsgo::Entity &ship);
+  void handleJumpState(const controls::State &controls);
 };
 
 } // namespace pge

@@ -37,6 +37,8 @@ class ShipView : public IView
   void tryActivateSlot(const Uuid &ship, const int slotId) const;
   void dockPlayerShip() const;
   void undockPlayerShip() const;
+  void startJump() const;
+  void cancelJump() const;
 
   auto getPlayerShipWeapons() const -> std::vector<PlayerWeapon>;
   auto getPlayerShipComputers() const -> std::vector<PlayerComputer>;

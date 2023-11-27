@@ -33,6 +33,7 @@ void GameScreenInputHandler::processUserInput(const controls::State &controls,
   moveShip(ship, motion);
   keepShipCentered(frame);
   handleWeaponsState(controls, ship);
+  handleJumpState(controls);
 }
 
 void GameScreenInputHandler::performAction(float x, float y, const controls::State & /*state*/)
@@ -118,6 +119,20 @@ void GameScreenInputHandler::handleWeaponsState(const controls::State &controls,
   if (controls.released(controls::keys::V) && m_shipView->getAbilitiesCount() > 3)
   {
     m_shipView->tryActivateSlot(ship.uuid, 3);
+  }
+}
+
+void GameScreenInputHandler::handleJumpState(const controls::State &controls)
+{
+  if (controls.released(controls::keys::J))
+  {
+    log("Starting jump");
+    m_shipView->startJump();
+  }
+  if (controls.released(controls::keys::K))
+  {
+    log("Cancelling jump");
+    m_shipView->cancelJump();
   }
 }
 

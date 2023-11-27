@@ -183,6 +183,23 @@ void ShipView::undockPlayerShip() const
   playerShip.statusComp().setStatus(Status::APPEARING);
 }
 
+void ShipView::startJump() const
+{
+  auto playerShip      = getPlayerShip();
+  const auto status    = playerShip.statusComp().status();
+  const auto newStatus = updateStatusForJump(status);
+  log("new status: " + bsgo::str(newStatus));
+  playerShip.statusComp().setStatus(newStatus);
+}
+
+void ShipView::cancelJump() const
+{
+  auto playerShip      = getPlayerShip();
+  const auto status    = playerShip.statusComp().status();
+  const auto newStatus = updateStatusAfterJumpCancellation(status);
+  playerShip.statusComp().setStatus(newStatus);
+}
+
 auto ShipView::getPlayerShipWeapons() const -> std::vector<PlayerWeapon>
 {
   checkPlayerShipDbIdExists();
