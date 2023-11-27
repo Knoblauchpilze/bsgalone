@@ -93,6 +93,17 @@ bool statusIndicatesAppearing(const Status &status)
   }
 }
 
+bool statusRequiresThreatReset(const Status &status)
+{
+  switch (status)
+  {
+    case Status::DOCKED:
+      return true;
+    default:
+      return false;
+  }
+}
+
 auto updateStatusWithThreat(const Status &in) -> Status
 {
   switch (in)
@@ -123,6 +134,8 @@ auto updateStatusAfterThreatEnded(const Status &in) -> Status
   {
     case Status::THREAT:
       return Status::VISIBLE;
+    case Status::DOCKED:
+      return in;
     default:
       throw std::invalid_argument("invalid status (" + str(in) + ")to clear threat");
   }

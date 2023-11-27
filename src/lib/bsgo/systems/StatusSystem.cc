@@ -57,10 +57,15 @@ void StatusSystem::handleJustChangedState(Entity &entity, StatusComponent &statu
     return;
   }
 
-  if (statusRequiresImmobilization(statusComp.status()) && entity.exists<VelocityComponent>())
+  const auto status = statusComp.status();
+  if (statusRequiresImmobilization(status) && entity.exists<VelocityComponent>())
   {
     auto &velocity = entity.velocityComp();
     velocity.immobilize();
+  }
+  if (statusRequiresThreatReset(status))
+  {
+    statusComp.setStatus(updateStatusAfterThreatEnded(status));
   }
 
   statusComp.resetChanged();
