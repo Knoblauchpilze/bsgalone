@@ -17,7 +17,19 @@ void PowerSystem::updateEntity(Entity &entity,
                                Coordinator & /*coordinator*/,
                                const float elapsedSeconds) const
 {
-  entity.powerComp().update(elapsedSeconds);
+  if (canRegeneratePower(entity))
+  {
+    entity.powerComp().update(elapsedSeconds);
+  }
+}
+
+bool PowerSystem::canRegeneratePower(Entity &entity) const
+{
+  if (!entity.exists<StatusComponent>())
+  {
+    return true;
+  }
+  return statusAllowsPowerRegeneration(entity.statusComp().status());
 }
 
 } // namespace bsgo

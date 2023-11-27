@@ -67,6 +67,11 @@ void StatusSystem::handleJustChangedState(Entity &entity, StatusComponent &statu
   {
     statusComp.setStatus(updateStatusAfterThreatEnded(status));
   }
+  if (statusRequiresPowerReset(status) && entity.exists<PowerComponent>())
+  {
+    auto &power = entity.powerComp();
+    power.useAll();
+  }
 
   statusComp.resetChanged();
 }

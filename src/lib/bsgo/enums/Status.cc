@@ -59,11 +59,24 @@ bool statusVisibleFromDradis(const Status &status)
   }
 }
 
-bool statusAllowsRegeneration(const Status &status)
+bool statusAllowsHealthRegeneration(const Status &status)
 {
   switch (status)
   {
     case Status::THREAT:
+      return false;
+    default:
+      return true;
+  }
+}
+
+bool statusAllowsPowerRegeneration(const Status &status)
+{
+  switch (status)
+  {
+    case Status::JUMP:
+    case Status::JUMP_APPEARING:
+    case Status::JUMP_THREAT:
       return false;
     default:
       return true;
@@ -117,17 +130,32 @@ bool statusRequiresThreatReset(const Status &status)
   }
 }
 
+bool statusRequiresPowerReset(const Status &status)
+{
+  switch (status)
+  {
+    case Status::JUMP:
+    case Status::JUMP_APPEARING:
+    case Status::JUMP_THREAT:
+      return true;
+    default:
+      return false;
+  }
+}
+
 auto updateStatusWithThreat(const Status &in) -> Status
 {
   switch (in)
   {
     case Status::VISIBLE:
     case Status::APPEARING:
-    case Status::THREAT:
       return Status::THREAT;
     case Status::JUMP:
     case Status::JUMP_APPEARING:
       return Status::JUMP_THREAT;
+    case Status::THREAT:
+    case Status::JUMP_THREAT:
+      return in;
     default:
       throw std::invalid_argument("invalid status (" + str(in) + ") to go in threat");
   }
