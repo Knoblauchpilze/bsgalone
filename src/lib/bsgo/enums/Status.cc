@@ -29,14 +29,12 @@ auto str(const Status &status) -> std::string
   }
 }
 
-bool statusAllowsInteratction(const Status &status)
+bool statusVisibleFromDradis(const Status &status)
 {
   switch (status)
   {
     case Status::VISIBLE:
     case Status::THREAT:
-    case Status::APPEARING:
-    case Status::JUMP_APPEARING:
     case Status::JUMP:
     case Status::JUMP_THREAT:
       return true;
@@ -45,12 +43,14 @@ bool statusAllowsInteratction(const Status &status)
   }
 }
 
-bool statusVisibleFromDradis(const Status &status)
+bool statusAllowsInteratction(const Status &status)
 {
   switch (status)
   {
     case Status::VISIBLE:
     case Status::THREAT:
+    case Status::APPEARING:
+    case Status::JUMP_APPEARING:
     case Status::JUMP:
     case Status::JUMP_THREAT:
       return true;
@@ -95,30 +95,6 @@ bool statusRequiresImmobilization(const Status &status)
   }
 }
 
-bool statusIndicatesThreat(const Status &status)
-{
-  switch (status)
-  {
-    case Status::THREAT:
-    case Status::JUMP_THREAT:
-      return true;
-    default:
-      return false;
-  }
-}
-
-bool statusIndicatesAppearing(const Status &status)
-{
-  switch (status)
-  {
-    case Status::APPEARING:
-    case Status::JUMP_APPEARING:
-      return true;
-    default:
-      return false;
-  }
-}
-
 bool statusRequiresThreatReset(const Status &status)
 {
   switch (status)
@@ -137,6 +113,30 @@ bool statusRequiresPowerReset(const Status &status)
     case Status::JUMP:
     case Status::JUMP_APPEARING:
     case Status::JUMP_THREAT:
+      return true;
+    default:
+      return false;
+  }
+}
+
+bool statusIndicatesThreat(const Status &status)
+{
+  switch (status)
+  {
+    case Status::THREAT:
+    case Status::JUMP_THREAT:
+      return true;
+    default:
+      return false;
+  }
+}
+
+bool statusIndicatesAppearing(const Status &status)
+{
+  switch (status)
+  {
+    case Status::APPEARING:
+    case Status::JUMP_APPEARING:
       return true;
     default:
       return false;
