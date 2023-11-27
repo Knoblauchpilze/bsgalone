@@ -37,7 +37,10 @@ class Coordinator : public utils::CoreObject
   void addOwner(const Uuid &ent, const Uuid &owner, const OwnerType &ownerType);
   void addDamage(const Uuid &ent, const float damage);
   void addRemoval(const Uuid &ent);
-  void addStatus(const Uuid &ent, const Status &status);
+  void addStatus(const Uuid &ent,
+                 const Status &status,
+                 const std::optional<utils::Duration> &jumpTime,
+                 const std::optional<utils::Duration> &threatJumpTime);
   void addAI(const Uuid &ent, INodePtr behavior);
   void addShipClass(const Uuid &ent, const ShipClass &shipClass);
   void addWeapon(const Uuid &ent, const PlayerWeapon &weapon, const Eigen::Vector3f &position);

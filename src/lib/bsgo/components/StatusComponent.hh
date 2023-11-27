@@ -4,13 +4,16 @@
 #include "IComponent.hh"
 #include "Status.hh"
 #include <core_utils/TimeUtils.hh>
+#include <optional>
 
 namespace bsgo {
 
 class StatusComponent : public IComponent
 {
   public:
-  StatusComponent(const Status &status);
+  StatusComponent(const Status &status,
+                  const std::optional<utils::Duration> &jumpTime,
+                  const std::optional<utils::Duration> &threatJumpTime);
   ~StatusComponent() = default;
 
   auto status() const -> Status;
@@ -23,6 +26,8 @@ class StatusComponent : public IComponent
 
   private:
   Status m_status;
+  std::optional<utils::Duration> m_jumpTime{};
+  std::optional<utils::Duration> m_threatJumpTime{};
   bool m_justChanged{false};
   utils::Duration m_elapsedSinceLastChange{};
 };

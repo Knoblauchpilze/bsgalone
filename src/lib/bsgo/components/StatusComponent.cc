@@ -3,9 +3,13 @@
 
 namespace bsgo {
 
-StatusComponent::StatusComponent(const Status &status)
+StatusComponent::StatusComponent(const Status &status,
+                                 const std::optional<utils::Duration> &jumpTime,
+                                 const std::optional<utils::Duration> &threatJumpTime)
   : IComponent("status")
   , m_status(status)
+  , m_jumpTime(jumpTime)
+  , m_threatJumpTime(threatJumpTime)
 {}
 
 auto StatusComponent::status() const -> Status
