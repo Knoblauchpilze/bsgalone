@@ -14,6 +14,9 @@ class PowerSystem : public AbstractSystem
   void updateEntity(Entity &entity,
                     Coordinator &coordinator,
                     const float elapsedSeconds) const override;
+
+  private:
+  bool canRegeneratePower(Entity &entity) const;
 };
 
 } // namespace bsgo

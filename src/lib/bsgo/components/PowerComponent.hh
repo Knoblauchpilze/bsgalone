@@ -12,6 +12,7 @@ class PowerComponent : public RegenerativeComponent
   ~PowerComponent() override = default;
 
   void usePower(const float power);
+  void useAll();
 };
 
 using PowerComponentShPtr = std::shared_ptr<PowerComponent>;

@@ -12,4 +12,9 @@ void PowerComponent::usePower(const float power)
   updateValue(-power);
 }
 
+void PowerComponent::useAll()
+{
+  updateValue(-value());
+}
+
 } // namespace bsgo
