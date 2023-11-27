@@ -30,21 +30,23 @@ void StatusSystem::updateEntity(Entity &entity,
 
 void StatusSystem::handleAppearingState(Entity &entity, StatusComponent &statusComp) const
 {
+  const auto status     = statusComp.status();
   const auto lastUpdate = statusComp.getElapsedSinceLastChange();
-  if (Status::APPEARING == statusComp.status() && lastUpdate >= TIME_TO_STAY_IN_APPEARED_MODE)
+  if (statusIndicatesAppearing(status) && lastUpdate >= TIME_TO_STAY_IN_APPEARED_MODE)
   {
     log("Switching " + entity.str() + " from appeating to visible");
-    statusComp.setStatus(Status::VISIBLE);
+    statusComp.setStatus(updateStatusAfterSpawn(status));
   }
 }
 
 void StatusSystem::handleThreatState(Entity &entity, StatusComponent &statusComp) const
 {
+  const auto status     = statusComp.status();
   const auto lastUpdate = statusComp.getElapsedSinceLastChange();
-  if (Status::THREAT == statusComp.status() && lastUpdate >= TIME_TO_STAY_IN_THREAT_MODE)
+  if (statusIndicatesThreat(status) && lastUpdate >= TIME_TO_STAY_IN_THREAT_MODE)
   {
-    log("Switching " + entity.str() + " from threat to visible");
-    statusComp.setStatus(Status::VISIBLE);
+    log(entity.str() + " is no more in threat");
+    statusComp.setStatus(updateStatusAfterThreatEnded(status));
   }
 }
 
@@ -55,9 +57,7 @@ void StatusSystem::handleJustChangedState(Entity &entity, StatusComponent &statu
     return;
   }
 
-  const auto statusRequiresImmobilization = Status::DOCKED == statusComp.status()
-                                            || Status::DEAD == statusComp.status();
-  if (statusRequiresImmobilization && entity.exists<VelocityComponent>())
+  if (statusRequiresImmobilization(statusComp.status()) && entity.exists<VelocityComponent>())
   {
     auto &velocity = entity.velocityComp();
     velocity.immobilize();

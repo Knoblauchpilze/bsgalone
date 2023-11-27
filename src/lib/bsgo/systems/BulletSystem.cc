@@ -75,7 +75,8 @@ void BulletSystem::damageOnImpact(Entity &entity, Entity &target) const
   }
   if (target.exists<StatusComponent>())
   {
-    target.statusComp().setStatus(Status::THREAT);
+    const auto currentStatus = target.statusComp().status();
+    target.statusComp().setStatus(updateStatusWithThreat(currentStatus));
   }
 
   entity.removalComp().markForRemoval();
