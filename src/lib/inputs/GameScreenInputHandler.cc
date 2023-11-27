@@ -126,12 +126,10 @@ void GameScreenInputHandler::handleJumpState(const controls::State &controls)
 {
   if (controls.released(controls::keys::J))
   {
-    log("Starting jump");
     m_shipView->startJump();
   }
   if (controls.released(controls::keys::K))
   {
-    log("Cancelling jump");
     m_shipView->cancelJump();
   }
 }

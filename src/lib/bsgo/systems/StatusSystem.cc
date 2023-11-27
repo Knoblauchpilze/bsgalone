@@ -26,6 +26,7 @@ void StatusSystem::updateEntity(Entity &entity,
   handleAppearingState(entity, statusComp);
   handleThreatState(entity, statusComp);
   handleJustChangedState(entity, statusComp);
+  handleJumpState(entity, statusComp);
 }
 
 void StatusSystem::handleAppearingState(Entity &entity, StatusComponent &statusComp) const
@@ -74,6 +75,23 @@ void StatusSystem::handleJustChangedState(Entity &entity, StatusComponent &statu
   }
 
   statusComp.resetChanged();
+}
+
+void StatusSystem::handleJumpState(Entity & /*entity*/, StatusComponent &statusComp) const
+{
+  const auto status = statusComp.status();
+  if (!statusIndicatesJump(status))
+  {
+    return;
+  }
+
+  const auto elapsed  = statusComp.tryGetElapsedSinceJumpStarted();
+  const auto jumpTime = statusComp.tryGetCurrentJumpTime();
+  if (elapsed > jumpTime)
+  {
+    /// TODO: Should handle jumping
+    warn("Should handle jump");
+  }
 }
 
 } // namespace bsgo

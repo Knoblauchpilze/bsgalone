@@ -17,9 +17,13 @@ class StatusComponent : public IComponent
   ~StatusComponent() = default;
 
   auto status() const -> Status;
+  auto jumpTime() const -> utils::Duration;
+  auto threatJumpTime() const -> utils::Duration;
   bool justChanged() const;
   void resetChanged();
   auto getElapsedSinceLastChange() const -> utils::Duration;
+  auto tryGetCurrentJumpTime() const -> utils::Duration;
+  auto tryGetElapsedSinceJumpStarted() const -> utils::Duration;
 
   void setStatus(const Status &status);
 
@@ -31,6 +35,10 @@ class StatusComponent : public IComponent
   std::optional<utils::Duration> m_threatJumpTime{};
   bool m_justChanged{false};
   utils::Duration m_elapsedSinceLastChange{};
+  std::optional<utils::Duration> m_elapsedSinceJumpStarted{};
+  std::optional<utils::Duration> m_currentJumpTime{};
+
+  void updateJumpState(const Status &newStatus);
 };
 
 using StatusComponentShPtr = std::shared_ptr<StatusComponent>;

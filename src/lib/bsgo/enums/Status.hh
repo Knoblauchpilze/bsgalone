@@ -28,6 +28,7 @@ bool statusRequiresThreatReset(const Status &status);
 bool statusRequiresPowerReset(const Status &status);
 bool statusIndicatesThreat(const Status &status);
 bool statusIndicatesAppearing(const Status &status);
+bool statusIndicatesJump(const Status &status);
 
 auto updateStatusWithThreat(const Status &in) -> Status;
 auto updateStatusAfterSpawn(const Status &in) -> Status;
