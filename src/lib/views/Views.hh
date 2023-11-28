@@ -3,6 +3,7 @@
 
 #include "LoginView.hh"
 #include "PlayerView.hh"
+#include "ServerView.hh"
 #include "ShipView.hh"
 #include "ShopView.hh"
 #include "SystemView.hh"
@@ -16,6 +17,7 @@ struct Views
   ShopViewShPtr shopView{};
   SystemViewShPtr systemView{};
   LoginViewShPtr loginView{};
+  ServerViewShPtr serverView{};
 };
 
 } // namespace bsgo

@@ -2,6 +2,7 @@
 #pragma once
 
 #include "IUiHandler.hh"
+#include "UiMenu.hh"
 #include "UiTextMenu.hh"
 
 namespace pge {
@@ -9,7 +10,7 @@ namespace pge {
 class MapScreenUiHandler : public IUiHandler
 {
   public:
-  MapScreenUiHandler();
+  MapScreenUiHandler(const bsgo::Views &views);
   ~MapScreenUiHandler() override = default;
 
   void initializeMenus(const int width, const int height) override;
@@ -18,9 +19,13 @@ class MapScreenUiHandler : public IUiHandler
   void updateUi() override;
 
   private:
+  bsgo::ServerViewShPtr m_serverView;
+
   UiTextMenuPtr m_quitButton{};
+  std::vector<UiMenuPtr> m_systemButtons{};
 
   void generateQuitButton(const int width, const int height);
+  void generateSystemButtons(const int width, const int height);
 };
 
 } // namespace pge
