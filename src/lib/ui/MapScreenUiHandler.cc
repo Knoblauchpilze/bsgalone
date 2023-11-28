@@ -2,9 +2,6 @@
 #include "MapScreenUiHandler.hh"
 #include "ScreenCommon.hh"
 
-#include "VectorUtils.hh"
-#include <iostream>
-
 namespace pge {
 
 MapScreenUiHandler::MapScreenUiHandler(const bsgo::Views &views)
@@ -75,19 +72,23 @@ auto systemPosToRatio(const bsgo::ServerView::Bounds &bounds, const Eigen::Vecto
   const auto range  = bounds.max - bounds.min;
   const auto offset = pos - bounds.min;
 
-  constexpr auto IS_ZERO_DIGIT_PRECISION = 0.001f;
-  std::cout << "range: " << range << ", offset: " << offset
-            << ", check: " << offset.row(0).isZero(IS_ZERO_DIGIT_PRECISION)
-            << " because of row(0) = " << offset.row(0) << ", row(1) = " << offset.row(1)
-            << std::endl;
-
   Eigen::Vector3f out{};
 
   /// https://stackoverflow.com/questions/25055571/checking-if-all-entries-in-the-matrix-are-zero-in-eigen-library
+  constexpr auto IS_ZERO_DIGIT_PRECISION = 0.001f;
   out(0) = offset.row(0).isZero(IS_ZERO_DIGIT_PRECISION) ? 0 : offset(0) / range(0);
   out(1) = offset.row(1).isZero(IS_ZERO_DIGIT_PRECISION) ? 0 : offset(1) / range(1);
   out(2) = offset.row(2).isZero(IS_ZERO_DIGIT_PRECISION) ? 0 : offset(2) / range(2);
 
+  return out;
+}
+
+auto remapRatioToScale(const Eigen::Vector3f &ratio, const float scale) -> Eigen::Vector3f
+{
+  const Eigen::Vector3f offset = Eigen::Vector3f::Ones() * 0.5f * (1.0f - 1.0f / scale);
+
+  Eigen::Vector3f out = ratio;
+  out.noalias()       = out / scale + offset;
   return out;
 }
 
@@ -106,35 +107,27 @@ auto posRatioToPixelPos(const Eigen::Vector3f &posRatio,
 
 void MapScreenUiHandler::generateSystemButtons(const int width, const int height)
 {
-  auto bounds = m_serverView->getMapBounds();
-
-  constexpr auto BOUNDS_TO_SCREEN_RATIO = 2.0f;
-  bounds.min *= BOUNDS_TO_SCREEN_RATIO;
-  bounds.max *= BOUNDS_TO_SCREEN_RATIO;
-
-  log("min: " + bsgo::str(bounds.min) + ", max: " + bsgo::str(bounds.max));
-
+  const auto bounds  = m_serverView->getMapBounds();
   const auto systems = m_serverView->getAllSystems();
 
   constexpr auto SYSTEM_BUTTON_SIZE = 10;
   const olc::vi2d systemButtonDimsPixels{SYSTEM_BUTTON_SIZE, SYSTEM_BUTTON_SIZE};
 
-  constexpr auto MAP_OFFSET = 10;
+  constexpr auto SERVER_MAP_TO_PIXEL_MAP_SCALE = 1.5f;
+  constexpr auto MAP_OFFSET                    = 10;
   const olc::vi2d mapOffset{MAP_OFFSET, MAP_OFFSET};
   const olc::vi2d mapDims{width - 2 * MAP_OFFSET, height - 2 * MAP_OFFSET};
 
   for (const auto &system : systems)
   {
     const auto posRatio       = systemPosToRatio(bounds, system.position);
-    const auto posPixels      = posRatioToPixelPos(posRatio, mapOffset, mapDims);
+    const auto ratioRemapped  = remapRatioToScale(posRatio, SERVER_MAP_TO_PIXEL_MAP_SCALE);
+    const auto posPixels      = posRatioToPixelPos(ratioRemapped, mapOffset, mapDims);
     const olc::vi2d buttonPos = posPixels - systemButtonDimsPixels / 2;
 
     const MenuConfig config{.pos = buttonPos, .dims = systemButtonDimsPixels};
 
-    log("system " + system.name + " is at " + bsgo::str(system.position) + " with ratio "
-        + bsgo::str(posRatio) + " and to " + posPixels.str() + ", dims: " + mapDims.str());
-
-    const auto bg = bgConfigFromColor(olc::VERY_DARK_COBALT_BLUE);
+    const auto bg = bgConfigFromColor(olc::BLACK);
     auto button   = std::make_unique<UiMenu>(config, bg);
     m_systemButtons.push_back(std::move(button));
   }
