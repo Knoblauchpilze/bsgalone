@@ -72,7 +72,7 @@ void Game::generateUiHandlers(int width, int height)
   game->initializeMenus(width, height);
   m_uiHandlers[Screen::GAME] = std::move(game);
 
-  auto map = std::make_unique<MapScreenUiHandler>();
+  auto map = std::make_unique<MapScreenUiHandler>(m_views);
   map->initializeMenus(width, height);
   m_uiHandlers[Screen::MAP] = std::move(map);
 }
@@ -226,6 +226,7 @@ void Game::initialize()
   m_views.systemView = std::make_shared<bsgo::SystemView>(m_coordinator, repositories);
   m_views.playerView = std::make_shared<bsgo::PlayerView>(m_coordinator, repositories);
   m_views.shopView   = std::make_shared<bsgo::ShopView>(m_coordinator, repositories);
+  m_views.serverView = std::make_shared<bsgo::ServerView>(m_coordinator, repositories);
 }
 
 bool Game::TimedMenu::update(bool active) noexcept
