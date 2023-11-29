@@ -11,6 +11,7 @@ namespace bsgo {
 
 struct System
 {
+  Uuid id{};
   std::string name{};
   Eigen::Vector3f position{};
 };
