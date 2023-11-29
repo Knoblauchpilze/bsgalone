@@ -3,6 +3,7 @@
 
 #include "IUiHandler.hh"
 #include "UiMenu.hh"
+#include <optional>
 
 namespace pge {
 
@@ -21,13 +22,25 @@ class MapScreenUiHandler : public IUiHandler
   bsgo::ServerViewShPtr m_serverView;
 
   std::vector<UiMenuPtr> m_buttons{};
+  UiMenu *m_jumpButton{};
 
-  void generateQuitButton(const int width, const int height);
+  struct SelectedSystem
+  {
+    bsgo::Uuid systemId{};
+    int labelId{};
+  };
+  std::optional<SelectedSystem> m_selectedSystem{};
+
+  void generateControlButtons(const int width, const int height);
   void generateMap(const int width, const int height);
   void generateSystemButtons(const bsgo::System &system,
                              const bsgo::ServerView::Bounds &bounds,
                              const olc::vi2d &mapOffset,
                              const olc::vi2d &mapDims);
+
+  void resetSelectedSystem();
+  void onSystemSelected(const bsgo::Uuid &systemId, const int labelId);
+  void onJumpRequested(Game &g);
 };
 
 } // namespace pge

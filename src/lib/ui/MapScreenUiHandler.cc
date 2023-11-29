@@ -4,6 +4,10 @@
 #include "UiTextMenu.hh"
 
 namespace pge {
+namespace {
+const auto SYSTEM_LABEL_DEFAULT_BG_COLOR  = olc::DARK_GREY;
+const auto SYSTEM_LABEL_SELECTED_BG_COLOR = olc::DARK_GREEN;
+} // namespace
 
 MapScreenUiHandler::MapScreenUiHandler(const bsgo::Views &views)
   : IUiHandler("map")
@@ -17,7 +21,7 @@ MapScreenUiHandler::MapScreenUiHandler(const bsgo::Views &views)
 
 void MapScreenUiHandler::initializeMenus(const int width, const int height)
 {
-  generateQuitButton(width, height);
+  generateControlButtons(width, height);
   generateMap(width, height);
 }
 
@@ -31,6 +35,11 @@ bool MapScreenUiHandler::processUserInput(UserInputData &inputData)
     }
   }
 
+  if (m_selectedSystem && inputData.controls.released(controls::mouse::LEFT))
+  {
+    resetSelectedSystem();
+  }
+
   return false;
 }
 
@@ -42,23 +51,38 @@ void MapScreenUiHandler::render(SpriteRenderer &engine) const
   }
 }
 
-void MapScreenUiHandler::updateUi() {}
+void MapScreenUiHandler::updateUi()
+{
+  m_jumpButton->setVisible(m_selectedSystem.has_value());
+}
 
-void MapScreenUiHandler::generateQuitButton(const int width, const int height)
+void MapScreenUiHandler::generateControlButtons(const int width, const int height)
 {
   constexpr auto REASONABLE_GAP_SIZE = 20;
-  const olc::vi2d quitButtonDimsPixels{50, 20};
-  const olc::vi2d quitButtonPos{width - REASONABLE_GAP_SIZE - quitButtonDimsPixels.x,
-                                height - REASONABLE_GAP_SIZE - quitButtonDimsPixels.y};
+  const olc::vi2d controlButtonDimsPixels{100, 30};
+  const olc::vi2d buttonPos{width - REASONABLE_GAP_SIZE - controlButtonDimsPixels.x,
+                            height - REASONABLE_GAP_SIZE - controlButtonDimsPixels.y};
 
-  const MenuConfig config{.pos               = quitButtonPos,
-                          .dims              = quitButtonDimsPixels,
-                          .gameClickCallback = [](Game &g) { g.setScreen(Screen::GAME); }};
+  MenuConfig config{.pos               = buttonPos,
+                    .dims              = controlButtonDimsPixels,
+                    .gameClickCallback = [this](Game &g) {
+                      resetSelectedSystem();
+                      g.setScreen(Screen::GAME);
+                    }};
 
-  const auto bg   = bgConfigFromColor(olc::VERY_DARK_COBALT_BLUE);
-  const auto text = textConfigFromColor("Close", olc::WHITE);
+  auto bg         = bgConfigFromColor(olc::VERY_DARK_COBALT_BLUE);
+  auto text       = textConfigFromColor("Close", olc::WHITE);
   auto quitButton = std::make_unique<UiTextMenu>(config, bg, text);
   m_buttons.push_back(std::move(quitButton));
+
+  config.visible = false;
+  config.pos.y -= (REASONABLE_GAP_SIZE + controlButtonDimsPixels.y);
+  config.gameClickCallback = [this](Game &g) { onJumpRequested(g); };
+
+  text.text       = "Jump";
+  auto jumpButton = std::make_unique<UiTextMenu>(config, bg, text);
+  m_jumpButton    = jumpButton.get();
+  m_buttons.push_back(std::move(jumpButton));
 }
 
 void MapScreenUiHandler::generateMap(const int width, const int height)
@@ -130,7 +154,14 @@ void MapScreenUiHandler::generateSystemButtons(const bsgo::System &system,
   const auto posPixels      = posRatioToPixelPos(ratioRemapped, mapOffset, mapDims);
   const olc::vi2d buttonPos = posPixels - systemButtonDimsPixels / 2;
 
-  const MenuConfig buttonConfig{.pos = buttonPos, .dims = systemButtonDimsPixels};
+  const auto systemId                 = system.id;
+  constexpr auto OFFSET_DUE_TO_BUTTON = 1;
+  const auto labelId                  = m_buttons.size() + OFFSET_DUE_TO_BUTTON;
+  const MenuConfig buttonConfig{.pos           = buttonPos,
+                                .dims          = systemButtonDimsPixels,
+                                .clickCallback = [this, systemId, labelId]() {
+                                  onSystemSelected(systemId, labelId);
+                                }};
   const auto buttonBg = bgConfigFromColor(olc::DARK_CYAN);
   auto button         = std::make_unique<UiMenu>(buttonConfig, buttonBg);
   m_buttons.push_back(std::move(button));
@@ -145,10 +176,40 @@ void MapScreenUiHandler::generateSystemButtons(const bsgo::System &system,
                              + GAP_BETWEEN_BUTTON_AND_LABEL_PIXELS};
 
   const MenuConfig labelConfig{.pos = labelPos, .dims = labelDimsPixels, .highligtable = false};
-  const auto labelBg = bgConfigFromColor(olc::DARK_GREY);
+  const auto labelBg = bgConfigFromColor(SYSTEM_LABEL_DEFAULT_BG_COLOR);
   const auto text    = textConfigFromColor(system.name, olc::WHITE);
   auto label         = std::make_unique<UiTextMenu>(labelConfig, labelBg, text);
   m_buttons.push_back(std::move(label));
+}
+
+void MapScreenUiHandler::resetSelectedSystem()
+{
+  if (!m_selectedSystem)
+  {
+    return;
+  }
+
+  m_buttons[m_selectedSystem->labelId]->updateBgColor(SYSTEM_LABEL_DEFAULT_BG_COLOR);
+}
+
+void MapScreenUiHandler::onSystemSelected(const bsgo::Uuid &systemId, const int labelId)
+{
+  resetSelectedSystem();
+
+  m_selectedSystem = SelectedSystem{.systemId = systemId, .labelId = labelId};
+  m_buttons[labelId]->updateBgColor(SYSTEM_LABEL_SELECTED_BG_COLOR);
+}
+
+void MapScreenUiHandler::onJumpRequested(Game &g)
+{
+  if (!m_selectedSystem)
+  {
+    error("Failed to start jump", "No selected system");
+  }
+
+  const auto systemId = m_selectedSystem->systemId;
+  resetSelectedSystem();
+  g.requestJump(systemId);
 }
 
 } // namespace pge
