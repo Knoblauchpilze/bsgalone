@@ -25,6 +25,7 @@ class UiMenu : public utils::CoreObject
   void setVisible(const bool visible) noexcept;
 
   void addMenu(UiMenuPtr child);
+  void updateBgColor(const olc::Pixel &color);
 
   void render(olc::PixelGameEngine *pge) const;
   virtual bool processUserInput(UserInputData &inputData);
