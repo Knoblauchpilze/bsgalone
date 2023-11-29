@@ -183,6 +183,11 @@ void ShipView::undockPlayerShip() const
   playerShip.statusComp().setStatus(Status::APPEARING);
 }
 
+void ShipView::setJumpSystem(const Uuid &system)
+{
+  m_systemToJumpTo = system;
+}
+
 void ShipView::startJump() const
 {
   auto playerShip   = getPlayerShip();
@@ -192,8 +197,12 @@ void ShipView::startJump() const
   {
     return;
   }
+  if (!m_systemToJumpTo)
+  {
+    return;
+  }
 
-  log("Starting jump");
+  log("Starting jump to " + str(*m_systemToJumpTo));
   const auto newStatus = updateStatusForJump(status);
   playerShip.statusComp().setStatus(newStatus);
 }

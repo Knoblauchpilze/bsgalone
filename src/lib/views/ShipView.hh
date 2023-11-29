@@ -37,6 +37,7 @@ class ShipView : public IView
   void tryActivateSlot(const Uuid &ship, const int slotId) const;
   void dockPlayerShip() const;
   void undockPlayerShip() const;
+  void setJumpSystem(const Uuid &system);
   void startJump() const;
   void cancelJump() const;
 
@@ -47,6 +48,7 @@ class ShipView : public IView
   private:
   std::optional<Uuid> m_playerShipDbId{};
   std::optional<Uuid> m_playerShipEntityId{};
+  std::optional<Uuid> m_systemToJumpTo{};
 
   void checkPlayerShipDbIdExists() const;
   void checkPlayerShipEntityIdExists() const;

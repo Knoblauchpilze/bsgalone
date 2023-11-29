@@ -219,7 +219,8 @@ void Game::login(const bsgo::Uuid &playerDbId)
 
 void Game::requestJump(const bsgo::Uuid &systemId)
 {
-  warn("Should jump to " + bsgo::str(systemId));
+  m_views.shipView->setJumpSystem(systemId);
+  m_views.shipView->startJump();
   setScreen(Screen::GAME);
 }
 
