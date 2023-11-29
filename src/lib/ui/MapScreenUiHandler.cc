@@ -1,6 +1,7 @@
 
 #include "MapScreenUiHandler.hh"
 #include "ScreenCommon.hh"
+#include "UiTextMenu.hh"
 
 namespace pge {
 
@@ -17,7 +18,7 @@ MapScreenUiHandler::MapScreenUiHandler(const bsgo::Views &views)
 void MapScreenUiHandler::initializeMenus(const int width, const int height)
 {
   generateQuitButton(width, height);
-  generateSystemButtons(width, height);
+  generateMap(width, height);
 }
 
 bool MapScreenUiHandler::processUserInput(UserInputData &inputData)
@@ -60,6 +61,21 @@ void MapScreenUiHandler::generateQuitButton(const int width, const int height)
   m_buttons.push_back(std::move(quitButton));
 }
 
+void MapScreenUiHandler::generateMap(const int width, const int height)
+{
+  const auto bounds  = m_serverView->getMapBounds();
+  const auto systems = m_serverView->getAllSystems();
+
+  constexpr auto MAP_OFFSET = 10;
+  const olc::vi2d mapOffset{MAP_OFFSET, MAP_OFFSET};
+  const olc::vi2d mapDims{width - 2 * MAP_OFFSET, height - 2 * MAP_OFFSET};
+
+  for (const auto &system : systems)
+  {
+    generateSystemButtons(system, bounds, mapOffset, mapDims);
+  }
+}
+
 namespace {
 auto systemPosToRatio(const bsgo::ServerView::Bounds &bounds, const Eigen::Vector3f &pos)
   -> Eigen::Vector3f
@@ -100,32 +116,39 @@ auto posRatioToPixelPos(const Eigen::Vector3f &posRatio,
 }
 } // namespace
 
-void MapScreenUiHandler::generateSystemButtons(const int width, const int height)
+void MapScreenUiHandler::generateSystemButtons(const bsgo::System &system,
+                                               const bsgo::ServerView::Bounds &bounds,
+                                               const olc::vi2d &mapOffset,
+                                               const olc::vi2d &mapDims)
 {
-  const auto bounds  = m_serverView->getMapBounds();
-  const auto systems = m_serverView->getAllSystems();
-
-  constexpr auto SYSTEM_BUTTON_SIZE = 10;
+  constexpr auto SERVER_MAP_TO_PIXEL_MAP_SCALE = 1.5f;
+  constexpr auto SYSTEM_BUTTON_SIZE            = 10;
   const olc::vi2d systemButtonDimsPixels{SYSTEM_BUTTON_SIZE, SYSTEM_BUTTON_SIZE};
 
-  constexpr auto SERVER_MAP_TO_PIXEL_MAP_SCALE = 1.5f;
-  constexpr auto MAP_OFFSET                    = 10;
-  const olc::vi2d mapOffset{MAP_OFFSET, MAP_OFFSET};
-  const olc::vi2d mapDims{width - 2 * MAP_OFFSET, height - 2 * MAP_OFFSET};
+  const auto posRatio       = systemPosToRatio(bounds, system.position);
+  const auto ratioRemapped  = remapRatioToScale(posRatio, SERVER_MAP_TO_PIXEL_MAP_SCALE);
+  const auto posPixels      = posRatioToPixelPos(ratioRemapped, mapOffset, mapDims);
+  const olc::vi2d buttonPos = posPixels - systemButtonDimsPixels / 2;
 
-  for (const auto &system : systems)
-  {
-    const auto posRatio       = systemPosToRatio(bounds, system.position);
-    const auto ratioRemapped  = remapRatioToScale(posRatio, SERVER_MAP_TO_PIXEL_MAP_SCALE);
-    const auto posPixels      = posRatioToPixelPos(ratioRemapped, mapOffset, mapDims);
-    const olc::vi2d buttonPos = posPixels - systemButtonDimsPixels / 2;
+  const MenuConfig buttonConfig{.pos = buttonPos, .dims = systemButtonDimsPixels};
+  const auto buttonBg = bgConfigFromColor(olc::DARK_CYAN);
+  auto button         = std::make_unique<UiMenu>(buttonConfig, buttonBg);
+  m_buttons.push_back(std::move(button));
 
-    const MenuConfig config{.pos = buttonPos, .dims = systemButtonDimsPixels};
+  constexpr auto LABEL_BUTTON_WIDTH  = 100;
+  constexpr auto LABEL_BUTTON_HEIGHT = 20;
+  const olc::vi2d labelDimsPixels{LABEL_BUTTON_WIDTH, LABEL_BUTTON_HEIGHT};
 
-    const auto bg = bgConfigFromColor(olc::BLACK);
-    auto button   = std::make_unique<UiMenu>(config, bg);
-    m_buttons.push_back(std::move(button));
-  }
+  constexpr auto GAP_BETWEEN_BUTTON_AND_LABEL_PIXELS = 5;
+  const olc::vi2d labelPos{posPixels.x - LABEL_BUTTON_WIDTH / 2,
+                           posPixels.y + systemButtonDimsPixels.y / 2
+                             + GAP_BETWEEN_BUTTON_AND_LABEL_PIXELS};
+
+  const MenuConfig labelConfig{.pos = labelPos, .dims = labelDimsPixels, .highligtable = false};
+  const auto labelBg = bgConfigFromColor(olc::DARK_GREY);
+  const auto text    = textConfigFromColor(system.name, olc::WHITE);
+  auto label         = std::make_unique<UiTextMenu>(labelConfig, labelBg, text);
+  m_buttons.push_back(std::move(label));
 }
 
 } // namespace pge

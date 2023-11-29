@@ -3,7 +3,6 @@
 
 #include "IUiHandler.hh"
 #include "UiMenu.hh"
-#include "UiTextMenu.hh"
 
 namespace pge {
 
@@ -24,7 +23,11 @@ class MapScreenUiHandler : public IUiHandler
   std::vector<UiMenuPtr> m_buttons{};
 
   void generateQuitButton(const int width, const int height);
-  void generateSystemButtons(const int width, const int height);
+  void generateMap(const int width, const int height);
+  void generateSystemButtons(const bsgo::System &system,
+                             const bsgo::ServerView::Bounds &bounds,
+                             const olc::vi2d &mapOffset,
+                             const olc::vi2d &mapDims);
 };
 
 } // namespace pge
