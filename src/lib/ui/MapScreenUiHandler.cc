@@ -22,14 +22,9 @@ void MapScreenUiHandler::initializeMenus(const int width, const int height)
 
 bool MapScreenUiHandler::processUserInput(UserInputData &inputData)
 {
-  if (m_quitButton->processUserInput(inputData))
+  for (const auto &menu : m_buttons)
   {
-    return true;
-  }
-
-  for (const auto &system : m_systemButtons)
-  {
-    if (system->processUserInput(inputData))
+    if (menu->processUserInput(inputData))
     {
       return true;
     }
@@ -40,10 +35,9 @@ bool MapScreenUiHandler::processUserInput(UserInputData &inputData)
 
 void MapScreenUiHandler::render(SpriteRenderer &engine) const
 {
-  m_quitButton->render(engine.getRenderer());
-  for (const auto &system : m_systemButtons)
+  for (const auto &menu : m_buttons)
   {
-    system->render(engine.getRenderer());
+    menu->render(engine.getRenderer());
   }
 }
 
@@ -62,7 +56,8 @@ void MapScreenUiHandler::generateQuitButton(const int width, const int height)
 
   const auto bg   = bgConfigFromColor(olc::VERY_DARK_COBALT_BLUE);
   const auto text = textConfigFromColor("Close", olc::WHITE);
-  m_quitButton    = std::make_unique<UiTextMenu>(config, bg, text);
+  auto quitButton = std::make_unique<UiTextMenu>(config, bg, text);
+  m_buttons.push_back(std::move(quitButton));
 }
 
 namespace {
@@ -129,7 +124,7 @@ void MapScreenUiHandler::generateSystemButtons(const int width, const int height
 
     const auto bg = bgConfigFromColor(olc::BLACK);
     auto button   = std::make_unique<UiMenu>(config, bg);
-    m_systemButtons.push_back(std::move(button));
+    m_buttons.push_back(std::move(button));
   }
 }
 

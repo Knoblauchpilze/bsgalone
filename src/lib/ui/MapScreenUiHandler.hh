@@ -21,8 +21,7 @@ class MapScreenUiHandler : public IUiHandler
   private:
   bsgo::ServerViewShPtr m_serverView;
 
-  UiTextMenuPtr m_quitButton{};
-  std::vector<UiMenuPtr> m_systemButtons{};
+  std::vector<UiMenuPtr> m_buttons{};
 
   void generateQuitButton(const int width, const int height);
   void generateSystemButtons(const int width, const int height);
