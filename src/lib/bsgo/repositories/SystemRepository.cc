@@ -64,6 +64,7 @@ auto SystemRepository::findOneById(const Uuid &system) const -> System
   System out{};
 
   const auto &record = rows[0];
+  out.id             = system;
   out.name           = record[0].as<std::string>();
 
   const auto x = record[1].as<float>();
