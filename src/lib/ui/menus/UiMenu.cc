@@ -33,6 +33,11 @@ void UiMenu::addMenu(UiMenuPtr child)
   updateLayoutAfterChildChange();
 }
 
+void UiMenu::updateBgColor(const olc::Pixel &color)
+{
+  m_bg = bgConfigFromColor(color);
+}
+
 void UiMenu::render(olc::PixelGameEngine *pge) const
 {
   if (!m_state.visible)
