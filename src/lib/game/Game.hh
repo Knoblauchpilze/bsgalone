@@ -68,6 +68,7 @@ class Game : public utils::CoreObject
   void tryActivateWeapon(const bsgo::Uuid &ship, const int &weaponId);
   void tryActivateSlot(const bsgo::Uuid &ship, const int &slotId);
   void login(const bsgo::Uuid &playerDbId);
+  void requestJump(const bsgo::Uuid &systemId);
 
   private:
   /// @brief - Convenience structure allowing to group information

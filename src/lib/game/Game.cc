@@ -217,6 +217,12 @@ void Game::login(const bsgo::Uuid &playerDbId)
   setScreen(Screen::OUTPOST);
 }
 
+void Game::requestJump(const bsgo::Uuid &systemId)
+{
+  warn("Should jump to " + bsgo::str(systemId));
+  setScreen(Screen::GAME);
+}
+
 void Game::initialize()
 {
   const auto repositories = m_dataSource.repositories();
