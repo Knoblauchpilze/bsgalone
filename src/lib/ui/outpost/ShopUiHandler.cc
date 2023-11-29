@@ -88,11 +88,10 @@ void ShopUiHandler::generateWeaponMenu(const int itemId, const bsgo::ShopItem &i
 {
   const olc::vi2d pos{};
   const olc::vi2d dims{10, 10};
-  olc::Pixel transparentBg = olc::Pixel{0, 0, 0, alpha::Transparent};
 
   const auto &weapon = *item.weapon;
 
-  auto name = generateMenu(pos, dims, weapon.name, "name", transparentBg);
+  auto name = generateMenu(pos, dims, weapon.name, "name", olc::BLANK);
   m_items[itemId]->addMenu(name);
 }
 
@@ -100,11 +99,10 @@ void ShopUiHandler::generateComputerMenu(const int itemId, const bsgo::ShopItem 
 {
   const olc::vi2d pos{};
   const olc::vi2d dims{10, 10};
-  olc::Pixel transparentBg = olc::Pixel{0, 0, 0, alpha::Transparent};
 
   const auto &computer = *item.computer;
 
-  auto name = generateMenu(pos, dims, computer.name, "name", transparentBg);
+  auto name = generateMenu(pos, dims, computer.name, "name", olc::BLANK);
   m_items[itemId]->addMenu(name);
 }
 
@@ -112,12 +110,11 @@ void ShopUiHandler::generatePriceMenus(const int itemId, const bsgo::ShopItem &i
 {
   const olc::vi2d pos{};
   const olc::vi2d dims{10, 10};
-  olc::Pixel transparentBg = olc::Pixel{0, 0, 0, alpha::Transparent};
 
   for (const auto &cost : item.price)
   {
     auto text     = cost.resource.name + ": " + std::to_string(cost.amount);
-    auto costMenu = generateMenu(pos, dims, text, "name", transparentBg);
+    auto costMenu = generateMenu(pos, dims, text, "name", olc::BLANK);
     m_items[itemId]->addMenu(costMenu);
   }
 }

@@ -82,8 +82,7 @@ void GameScreenUiHandler::generateShipMenus(int /*width*/, int /*height*/)
   olc::vi2d pos{5, 5};
   olc::vi2d dims{200, 15};
 
-  const olc::Pixel transparentBg{0, 0, 0, alpha::Transparent};
-  m_menus[NAME] = generateMenu(pos, dims, "N/A", "name", transparentBg, {olc::WHITE});
+  m_menus[NAME] = generateMenu(pos, dims, "N/A", "name", olc::BLANK, {olc::WHITE});
 
   constexpr auto REASONABLE_GAP = 15;
   pos.y += REASONABLE_GAP;
@@ -99,8 +98,7 @@ void GameScreenUiHandler::generateTargetMenus(int width, int /*height*/)
   olc::vi2d pos{width / 2, 5};
   olc::vi2d dims{200, 15};
 
-  const olc::Pixel transparentBg{0, 0, 0, alpha::Transparent};
-  m_menus[TARGET_NAME] = generateMenu(pos, dims, "N/A", "name", transparentBg, {olc::WHITE});
+  m_menus[TARGET_NAME] = generateMenu(pos, dims, "N/A", "name", olc::BLANK, {olc::WHITE});
 
   constexpr auto REASONABLE_GAP = 15;
   pos.y += REASONABLE_GAP;

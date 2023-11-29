@@ -86,30 +86,29 @@ void HangarUiHandler::generateShipsMenus()
 {
   const olc::vi2d pos{};
   const olc::vi2d dims{10, 10};
-  olc::Pixel transparentBg = olc::Pixel{0, 0, 0, alpha::Transparent};
 
   const auto ships = m_playerView->getPlayerShips();
 
   auto id = 0;
   for (const auto &ship : ships)
   {
-    auto name = generateMenu(pos, dims, ship.name, "name", transparentBg);
+    auto name = generateMenu(pos, dims, ship.name, "name", olc::BLANK);
     m_ships[id]->addMenu(name);
 
     auto text       = "Hull points: " + floatToStr(std::floor(ship.maxHullPoints), 0);
-    auto hullPoints = generateMenu(pos, dims, text, "hull_points", transparentBg);
+    auto hullPoints = generateMenu(pos, dims, text, "hull_points", olc::BLANK);
     m_ships[id]->addMenu(hullPoints);
 
     text                 = "Hull points regen: " + floatToStr(std::floor(ship.hullPointsRegen), 0);
-    auto hullPointsRegen = generateMenu(pos, dims, text, "hull_regen", transparentBg);
+    auto hullPointsRegen = generateMenu(pos, dims, text, "hull_regen", olc::BLANK);
     m_ships[id]->addMenu(hullPointsRegen);
 
     text             = "Power points: " + floatToStr(std::floor(ship.maxPowerPoints), 0);
-    auto powerPoints = generateMenu(pos, dims, text, "power_points", transparentBg);
+    auto powerPoints = generateMenu(pos, dims, text, "power_points", olc::BLANK);
     m_ships[id]->addMenu(powerPoints);
 
     text                  = "Power regen: " + floatToStr(std::floor(ship.powerRegen), 0);
-    auto powerPointsRegen = generateMenu(pos, dims, text, "power_regen", transparentBg);
+    auto powerPointsRegen = generateMenu(pos, dims, text, "power_regen", olc::BLANK);
     m_ships[id]->addMenu(powerPointsRegen);
 
     text = "";
@@ -121,7 +120,7 @@ void HangarUiHandler::generateShipsMenus()
       }
       text += std::to_string(count) + " " + bsgo::str(slot);
     }
-    auto slots = generateMenu(pos, dims, text, "slots", transparentBg);
+    auto slots = generateMenu(pos, dims, text, "slots", olc::BLANK);
     m_ships[id]->addMenu(slots);
 
     ++id;
