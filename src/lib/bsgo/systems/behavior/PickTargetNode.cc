@@ -47,7 +47,7 @@ void PickTargetNode::run(const TickData &data)
     }
   }
 
-  log("Picked enemy target " + str(*data.ent.targetComp().target()));
+  log("Picked enemy target " + str(*data.ent.targetComp().target()), utils::Level::Verbose);
   finish();
 }
 
