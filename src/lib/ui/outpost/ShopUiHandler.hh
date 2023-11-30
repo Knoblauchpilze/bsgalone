@@ -2,6 +2,7 @@
 #pragma once
 
 #include "IUiHandler.hh"
+#include "UiMenu.hh"
 #include "Views.hh"
 #include <memory>
 
@@ -21,8 +22,8 @@ class ShopUiHandler : public IUiHandler
   private:
   bsgo::ShopViewShPtr m_shopView;
 
-  MenuShPtr m_menu{};
-  std::vector<MenuShPtr> m_items{};
+  UiMenuPtr m_menu{};
+  std::vector<UiMenu *> m_items{};
 
   void initializeLayout();
   void generateItemsMenus();
