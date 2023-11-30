@@ -2,6 +2,7 @@
 #pragma once
 
 #include "Menu.hh"
+#include "UiMenu.hh"
 #include <optional>
 #include <string>
 
@@ -34,5 +35,7 @@ auto generateSlotMenu(const olc::vi2d &pos,
                       bool clickable                             = false,
                       bool selectable                            = false,
                       const menu::Layout &layout = menu::Layout::Vertical) -> pge::MenuShPtr;
+
+auto generateSpacer(const std::optional<olc::vi2d> &dims = {}) -> UiMenuPtr;
 
 } // namespace pge

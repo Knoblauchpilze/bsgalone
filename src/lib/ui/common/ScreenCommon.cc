@@ -116,4 +116,15 @@ auto generateSlotMenu(const olc::vi2d &pos,
                                      true);
 }
 
+auto generateSpacer(const std::optional<olc::vi2d> &dims) -> UiMenuPtr
+{
+  MenuConfig config{.highlightable = false};
+  if (dims)
+  {
+    config.dims = *dims;
+  }
+  const auto bg = bgConfigFromColor(olc::BLANK);
+  return std::make_unique<UiMenu>(config, bg);
+}
+
 } // namespace pge
