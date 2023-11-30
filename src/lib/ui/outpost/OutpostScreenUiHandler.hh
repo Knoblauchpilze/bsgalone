@@ -4,8 +4,8 @@
 #include "HangarUiHandler.hh"
 #include "IUiHandler.hh"
 #include "LockerUiHandler.hh"
-#include "Menu.hh"
 #include "ShopUiHandler.hh"
+#include "UiMenu.hh"
 #include "Views.hh"
 
 namespace pge {
@@ -31,7 +31,7 @@ class OutpostScreenUiHandler : public IUiHandler
 
     COUNT = 2,
   };
-  std::vector<MenuShPtr> m_menus{};
+  std::vector<UiMenuPtr> m_menus{};
 
   enum class ActiveScreen
   {

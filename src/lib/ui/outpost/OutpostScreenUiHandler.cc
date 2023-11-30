@@ -2,6 +2,7 @@
 #include "OutpostScreenUiHandler.hh"
 #include "Constants.hh"
 #include "ScreenCommon.hh"
+#include "UiTextMenu.hh"
 
 namespace pge {
 
@@ -25,15 +26,18 @@ void OutpostScreenUiHandler::initializeMenus(const int width, const int height)
   constexpr auto UNDOCK_BUTTON_WIDTH = 100;
   const olc::vi2d pos{(width - UNDOCK_BUTTON_WIDTH) / 2, 10};
   const olc::vi2d dims{UNDOCK_BUTTON_WIDTH, 50};
-  m_menus[UNDOCK]
-    = generateMenu(pos, dims, "Undock", "undock", olc::VERY_DARK_GREY, {olc::WHITE}, true);
-  m_menus[UNDOCK]->setSimpleAction([this](Game &g) {
-    if (m_shipView->isReady())
-    {
-      m_shipView->undockPlayerShip();
-      g.setScreen(Screen::GAME);
-    }
-  });
+
+  const MenuConfig config{.pos = pos, .dims = dims, .gameClickCallback = [this](Game &g) {
+                            if (m_shipView->isReady())
+                            {
+                              m_shipView->undockPlayerShip();
+                              g.setScreen(Screen::GAME);
+                            }
+                          }};
+
+  auto bg         = bgConfigFromColor(olc::VERY_DARK_GREY);
+  auto text       = textConfigFromColor("Undock", olc::WHITE);
+  m_menus[UNDOCK] = std::make_unique<UiTextMenu>(config, bg, text);
 
   generateGeneralMenu(width, height);
 
@@ -57,12 +61,15 @@ bool OutpostScreenUiHandler::processUserInput(UserInputData &inputData)
       out = m_lockerUi->processUserInput(inputData);
       break;
   }
+
   if (!out)
   {
     for (const auto &menu : m_menus)
     {
-      const auto ih = menu->processUserInput(inputData.controls, inputData.actions);
-      out |= ih.relevant;
+      if (menu->processUserInput(inputData))
+      {
+        return true;
+      }
     }
   }
 
@@ -116,21 +123,26 @@ void OutpostScreenUiHandler::generateGeneralMenu(const int width, const int heig
 
   const olc::vi2d pos{10, (height - viewMenuHeight) / 2};
   const olc::vi2d dims{viewMenuWidth, viewMenuHeight};
-  m_menus[VIEWS_MENU]
-    = generateMenu(pos, dims, "", "views", olc::VERY_DARK_COBALT_BLUE, {olc::WHITE});
 
-  auto menu
-    = generateMenu(pos, dims, "Shop", "shop", olc::DARK_COBALT_BLUE, {olc::WHITE}, true, true);
-  menu->setAction([this]() { setActiveScreen(ActiveScreen::SHOP); });
-  m_menus[VIEWS_MENU]->addMenu(menu);
+  MenuConfig config{.pos = pos, .dims = dims};
+  auto bg             = bgConfigFromColor(olc::BLANK);
+  m_menus[VIEWS_MENU] = std::make_unique<UiMenu>(config, bg);
 
-  menu = generateMenu(pos, dims, "Locker", "locker", olc::DARK_COBALT_BLUE, {olc::WHITE}, true, true);
-  menu->setAction([this]() { setActiveScreen(ActiveScreen::LOCKER); });
-  m_menus[VIEWS_MENU]->addMenu(menu);
+  config.clickCallback = [this]() { setActiveScreen(ActiveScreen::SHOP); };
+  bg                   = bgConfigFromColor(olc::DARK_COBALT_BLUE);
+  auto text            = textConfigFromColor("Shop", olc::WHITE);
+  auto menu            = std::make_unique<UiTextMenu>(config, bg, text);
+  m_menus[VIEWS_MENU]->addMenu(std::move(menu));
 
-  menu = generateMenu(pos, dims, "Hangar", "hangar", olc::DARK_COBALT_BLUE, {olc::WHITE}, true, true);
-  menu->setAction([this]() { setActiveScreen(ActiveScreen::HANGAR); });
-  m_menus[VIEWS_MENU]->addMenu(menu);
+  config.clickCallback = [this]() { setActiveScreen(ActiveScreen::LOCKER); };
+  text                 = textConfigFromColor("Locker", olc::WHITE);
+  menu                 = std::make_unique<UiTextMenu>(config, bg, text);
+  m_menus[VIEWS_MENU]->addMenu(std::move(menu));
+
+  config.clickCallback = [this]() { setActiveScreen(ActiveScreen::HANGAR); };
+  text                 = textConfigFromColor("Hangar", olc::WHITE);
+  menu                 = std::make_unique<UiTextMenu>(config, bg, text);
+  m_menus[VIEWS_MENU]->addMenu(std::move(menu));
 }
 
 void OutpostScreenUiHandler::setActiveScreen(const ActiveScreen &screen)
