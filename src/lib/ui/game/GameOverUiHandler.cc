@@ -22,27 +22,25 @@ void GameOverUiHandler::initializeMenus(const int width, const int height)
   pos.x = (width - dims.x) / 2;
   pos.y = (height - dims.y) / 2;
 
-  m_menu = generateMenu(pos,
-                        dims,
-                        "Return to outpost",
-                        "respawn",
-                        olc::VERY_DARK_GREY,
-                        {olc::WHITE},
-                        true);
-  m_menu->setSimpleAction([this](Game &g) {
-    if (m_shipView->isReady())
-    {
-      m_shipView->dockPlayerShip();
-      g.setScreen(Screen::OUTPOST);
-    }
-  });
-  m_menu->setVisible(false);
+  const MenuConfig config{.pos               = pos,
+                          .dims              = dims,
+                          .visible           = false,
+                          .gameClickCallback = [this](Game &g) {
+                            if (m_shipView->isReady())
+                            {
+                              m_shipView->dockPlayerShip();
+                              g.setScreen(Screen::OUTPOST);
+                            }
+                          }};
+
+  auto bg   = bgConfigFromColor(olc::VERY_DARK_GREY);
+  auto text = textConfigFromColor("Return to outpost", olc::BLACK);
+  m_menu    = std::make_unique<UiTextMenu>(config, bg, text);
 }
 
 bool GameOverUiHandler::processUserInput(UserInputData &inputData)
 {
-  const auto out = m_menu->processUserInput(inputData.controls, inputData.actions);
-  return out.relevant;
+  return m_menu->processUserInput(inputData);
 }
 
 void GameOverUiHandler::render(SpriteRenderer &engine) const

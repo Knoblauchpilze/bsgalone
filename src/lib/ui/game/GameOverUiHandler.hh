@@ -2,6 +2,7 @@
 #pragma once
 
 #include "IUiHandler.hh"
+#include "UiTextMenu.hh"
 #include "Views.hh"
 #include <memory>
 
@@ -21,7 +22,7 @@ class GameOverUiHandler : public IUiHandler
   private:
   bsgo::ShipViewShPtr m_shipView;
 
-  MenuShPtr m_menu{};
+  UiTextMenuPtr m_menu{};
 };
 
 using GameOverUiHandlerPtr = std::unique_ptr<GameOverUiHandler>;
