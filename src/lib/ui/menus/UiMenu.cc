@@ -127,7 +127,8 @@ void UiMenu::initializeFromConfig(const MenuConfig &config)
   m_pos  = config.pos;
   m_dims = config.dims;
 
-  m_layout = config.layout;
+  m_layout              = config.layout;
+  m_expandChildrenToFit = config.expandChildrenToFit;
 
   m_state.visible                   = config.visible;
   m_state.higlightable              = config.highlightable;
@@ -245,7 +246,14 @@ void UiMenu::adaptChildrenToMatchHorizontalSize(const float desiredXSize)
   {
     child->m_dims.x = floorToInt(desiredXSize);
     delta += (desiredXSize - child->m_dims.x);
-    child->m_dims.y = std::min(m_dims.y, child->m_dims.y);
+    if (m_expandChildrenToFit)
+    {
+      child->m_dims.y = m_dims.y;
+    }
+    else
+    {
+      child->m_dims.y = std::min(m_dims.y, child->m_dims.y);
+    }
 
     if (delta > 1.0f)
     {
@@ -273,7 +281,14 @@ void UiMenu::adaptChildrenToMatchVerticalSize(const float desiredYSize)
 
   for (const auto &child : m_children)
   {
-    child->m_dims.x = std::min(m_dims.x, child->m_dims.x);
+    if (m_expandChildrenToFit)
+    {
+      child->m_dims.x = m_dims.x;
+    }
+    else
+    {
+      child->m_dims.x = std::min(m_dims.x, child->m_dims.x);
+    }
     child->m_dims.y = floorToInt(desiredYSize);
     delta += (desiredYSize - child->m_dims.y);
 
