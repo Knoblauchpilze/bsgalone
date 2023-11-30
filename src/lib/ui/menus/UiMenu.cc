@@ -130,7 +130,7 @@ void UiMenu::initializeFromConfig(const MenuConfig &config)
   m_layout = config.layout;
 
   m_state.visible                   = config.visible;
-  m_state.higlightable              = config.highligtable;
+  m_state.higlightable              = config.highlightable;
   m_state.propagateEventsToChildren = config.propagateEventsToChildren;
 
   m_highlightCallback = config.highlightCallback;

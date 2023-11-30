@@ -50,7 +50,7 @@ void LoginScreenUiHandler::generateLoginMenu(const int width, const int /*height
   constexpr auto LOGIN_PANEL_Y_PIXELS = 30;
   const olc::vi2d loginPos{(width - loginDimsPixels.x) / 2, LOGIN_PANEL_Y_PIXELS};
 
-  MenuConfig config{.pos = loginPos, .dims = loginDimsPixels, .highligtable = false};
+  MenuConfig config{.pos = loginPos, .dims = loginDimsPixels, .highlightable = false};
   auto bg      = bgConfigFromColor(transparent(olc::WHITE));
   m_loginPanel = std::make_unique<UiMenu>(config, bg);
 

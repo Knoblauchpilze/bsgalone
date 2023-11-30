@@ -175,7 +175,7 @@ void MapScreenUiHandler::generateSystemButtons(const bsgo::System &system,
                            posPixels.y + systemButtonDimsPixels.y / 2
                              + GAP_BETWEEN_BUTTON_AND_LABEL_PIXELS};
 
-  const MenuConfig labelConfig{.pos = labelPos, .dims = labelDimsPixels, .highligtable = false};
+  const MenuConfig labelConfig{.pos = labelPos, .dims = labelDimsPixels, .highlightable = false};
   const auto labelBg = bgConfigFromColor(SYSTEM_LABEL_DEFAULT_BG_COLOR);
   const auto text    = textConfigFromColor(system.name, olc::WHITE);
   auto label         = std::make_unique<UiTextMenu>(labelConfig, labelBg, text);

@@ -25,7 +25,7 @@ struct MenuConfig
   MenuLayout layout{MenuLayout::Vertical};
 
   bool visible{true};
-  bool highligtable{true};
+  bool highlightable{true};
   bool propagateEventsToChildren{true};
 
   std::optional<HighlightCallback> highlightCallback{};
