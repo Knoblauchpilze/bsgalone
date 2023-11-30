@@ -27,6 +27,7 @@ struct MenuConfig
   bool visible{true};
   bool highlightable{true};
   bool propagateEventsToChildren{true};
+  bool expandChildrenToFit{true};
 
   std::optional<HighlightCallback> highlightCallback{};
   std::optional<ClickCallback> clickCallback{};

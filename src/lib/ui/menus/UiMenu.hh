@@ -56,6 +56,7 @@ class UiMenu : public utils::CoreObject
 
   State m_state{};
   MenuLayout m_layout{MenuLayout::Vertical};
+  bool m_expandChildrenToFit{true};
   BackgroundConfig m_bg{};
 
   std::optional<HighlightCallback> m_highlightCallback{};
