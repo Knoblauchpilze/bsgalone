@@ -10,6 +10,7 @@ namespace bsgo {
 
 struct Resource
 {
+  Uuid id{};
   std::string name{};
 };
 
