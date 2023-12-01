@@ -213,6 +213,7 @@ void Game::login(const bsgo::Uuid &playerDbId)
   m_views.playerView->setPlayerShipDbId(playerShipId);
   m_views.shipView->setPlayerShipDbId(playerShipId);
   m_views.shipView->setPlayerShipEntityId(playerShipEntityId);
+  m_views.shopView->setPlayerDbId(playerDbId);
 
   setScreen(Screen::OUTPOST);
 }
