@@ -27,9 +27,9 @@ class ShopUiHandler : public IUiHandler
 
   void initializeLayout();
   void generateItemsMenus();
-  void generateWeaponMenu(const int itemId, const bsgo::ShopItem &item);
-  void generateComputerMenu(const int itemId, const bsgo::ShopItem &item);
-  void generatePriceMenus(const int itemId, const bsgo::ShopItem &item);
+  auto generateItemMenus(const bsgo::ShopItem &item) -> UiMenuPtr;
+
+  void onPurchaseRequest(const bsgo::Uuid &itemId, const bsgo::Item &itemType);
 };
 
 using ShopUiHandlerPtr = std::unique_ptr<ShopUiHandler>;

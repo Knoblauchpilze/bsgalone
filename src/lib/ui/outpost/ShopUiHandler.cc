@@ -57,7 +57,7 @@ void ShopUiHandler::initializeLayout()
   {
     auto bgColor = (items[id].computer ? olc::VERY_DARK_YELLOW : olc::VERY_DARK_RED);
 
-    const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .propagateEventsToChildren = false};
+    const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .layout = MenuLayout::HORIZONTAL};
     const auto bg = bgConfigFromColor(bgColor);
     auto itemMenu = std::make_unique<UiMenu>(config, bg);
     m_items.push_back(itemMenu.get());
@@ -65,62 +65,122 @@ void ShopUiHandler::initializeLayout()
   }
 }
 
-void ShopUiHandler::generateItemsMenus()
+namespace {
+auto generateWeaponMenu(const bsgo::Weapon &weapon) -> UiTextMenuPtr
 {
-  const auto items = m_shopView->getShopItems();
-
-  auto id = 0;
-  for (const auto &item : items)
-  {
-    if (item.weapon)
-    {
-      generateWeaponMenu(id, item);
-    }
-    else if (item.computer)
-    {
-      generateComputerMenu(id, item);
-    }
-
-    generatePriceMenus(id, item);
-
-    ++id;
-  }
-}
-
-void ShopUiHandler::generateWeaponMenu(const int itemId, const bsgo::ShopItem &item)
-{
-  const auto &weapon = *item.weapon;
-
-  const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION};
+  const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .highlightable = false};
   const auto bg   = bgConfigFromColor(olc::BLANK);
   const auto text = textConfigFromColor(weapon.name, olc::WHITE);
-  auto menu       = std::make_unique<UiTextMenu>(config, bg, text);
-  m_items[itemId]->addMenu(std::move(menu));
+  return std::make_unique<UiTextMenu>(config, bg, text);
 }
 
-void ShopUiHandler::generateComputerMenu(const int itemId, const bsgo::ShopItem &item)
+auto generateComputerMenu(const bsgo::Computer &computer) -> UiTextMenuPtr
 {
-  const auto &computer = *item.computer;
-
-  const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION};
+  const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .highlightable = false};
   const auto bg   = bgConfigFromColor(olc::BLANK);
   const auto text = textConfigFromColor(computer.name, olc::WHITE);
-  auto menu       = std::make_unique<UiTextMenu>(config, bg, text);
-  m_items[itemId]->addMenu(std::move(menu));
+  return std::make_unique<UiTextMenu>(config, bg, text);
 }
 
-void ShopUiHandler::generatePriceMenus(const int itemId, const bsgo::ShopItem &item)
+auto generatePriceMenus(const bsgo::ShopItem &item) -> std::vector<UiTextMenuPtr>
 {
+  std::vector<UiTextMenuPtr> out;
+
   for (const auto &cost : item.price)
   {
     auto text = cost.resource.name + ": " + std::to_string(cost.amount);
 
-    const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION};
+    const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .highlightable = false};
     const auto bg       = bgConfigFromColor(olc::BLANK);
     const auto textConf = textConfigFromColor(text, olc::WHITE);
     auto menu           = std::make_unique<UiTextMenu>(config, bg, textConf);
-    m_items[itemId]->addMenu(std::move(menu));
+    out.push_back(std::move(menu));
   }
+
+  return out;
+}
+
+auto generateBuySection(const std::optional<ClickCallback> &clickCallback) -> UiMenuPtr
+{
+  auto middleSection = generateBlankVerticalMenu();
+  middleSection->addMenu(generateSpacer());
+
+  MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION};
+  olc::Pixel bgColor;
+  if (clickCallback)
+  {
+    config.clickCallback = *clickCallback;
+    bgColor              = olc::DARK_GREEN;
+  }
+  else
+  {
+    config.highlightable = false;
+    bgColor              = olc::VERY_DARK_GREY;
+  }
+
+  const auto bg       = bgConfigFromColor(bgColor);
+  const auto textConf = textConfigFromColor("Buy", olc::WHITE);
+  auto buyButton      = std::make_unique<UiTextMenu>(config, bg, textConf);
+  middleSection->addMenu(std::move(buyButton));
+
+  middleSection->addMenu(generateSpacer());
+
+  auto menu = generateBlankHorizontalMenu();
+  menu->addMenu(generateSpacer());
+  menu->addMenu(std::move(middleSection));
+  menu->addMenu(generateSpacer());
+
+  return menu;
+}
+
+} // namespace
+
+void ShopUiHandler::generateItemsMenus()
+{
+  const auto items = m_shopView->getShopItems();
+
+  auto itemId = 0;
+  for (const auto &item : items)
+  {
+    auto itemSection = generateItemMenus(item);
+    m_items[itemId]->addMenu(std::move(itemSection));
+
+    auto dbId       = item.id();
+    auto itemType   = item.type();
+    auto buySection = generateBuySection(
+      [this, dbId, itemType]() { onPurchaseRequest(dbId, itemType); });
+    m_items[itemId]->addMenu(std::move(buySection));
+
+    ++itemId;
+  }
+}
+
+auto ShopUiHandler::generateItemMenus(const bsgo::ShopItem &item) -> UiMenuPtr
+{
+  auto menu = generateBlankVerticalMenu();
+  if (item.weapon)
+  {
+    auto itemMenu = generateWeaponMenu(*item.weapon);
+    menu->addMenu(std::move(itemMenu));
+  }
+  else if (item.computer)
+  {
+    auto itemMenu = generateComputerMenu(*item.computer);
+    menu->addMenu(std::move(itemMenu));
+  }
+
+  for (auto &cost : generatePriceMenus(item))
+  {
+    menu->addMenu(std::move(cost));
+  }
+
+  return menu;
+}
+
+void ShopUiHandler::onPurchaseRequest(const bsgo::Uuid &itemId, const bsgo::Item &itemType)
+{
+  /// TODO: Handle the purchase request.
+  warn("should buy " + bsgo::str(itemId) + " with type " + bsgo::str(itemType));
 }
 
 } // namespace pge
