@@ -52,11 +52,11 @@ void updateBuyButtonState(UiMenu &buyButton, const bool enable)
 
   if (!enable)
   {
-    buyButton.updateBgColor(olc::VERY_DARK_GREY);
+    buyButton.updateBgColor(olc::DARK_GREY);
   }
   else
   {
-    buyButton.updateBgColor(olc::VERY_DARK_GREEN);
+    buyButton.updateBgColor(olc::DARK_GREEN);
   }
 }
 } // namespace
@@ -127,32 +127,6 @@ auto generatePriceMenus(const bsgo::ShopItem &item) -> std::vector<UiTextMenuPtr
 
   return out;
 }
-
-auto generateBuySection(const ClickCallback &clickCallback) -> UiMenuPtr
-{
-  auto middleSection = generateBlankVerticalMenu();
-  middleSection->addMenu(generateSpacer());
-
-  MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .clickCallback = clickCallback};
-
-  const auto bg       = bgConfigFromColor(olc::BLANK);
-  const auto textConf = textConfigFromColor("Buy", olc::WHITE);
-  auto buyButton      = std::make_unique<UiTextMenu>(config, bg, textConf);
-
-  updateBuyButtonState(*buyButton, false);
-
-  middleSection->addMenu(std::move(buyButton));
-
-  middleSection->addMenu(generateSpacer());
-
-  auto menu = generateBlankHorizontalMenu();
-  menu->addMenu(generateSpacer());
-  menu->addMenu(std::move(middleSection));
-  menu->addMenu(generateSpacer());
-
-  return menu;
-}
-
 } // namespace
 
 void ShopUiHandler::generateItemsMenus()
@@ -165,10 +139,7 @@ void ShopUiHandler::generateItemsMenus()
     auto itemSection = generateItemMenus(item);
     m_items[itemId]->addMenu(std::move(itemSection));
 
-    auto dbId       = item.id();
-    auto itemType   = item.type();
-    auto buySection = generateBuySection(
-      [this, dbId, itemType]() { onPurchaseRequest(dbId, itemType); });
+    auto buySection = generateBuySection(item);
     m_items[itemId]->addMenu(std::move(buySection));
 
     ++itemId;
@@ -197,10 +168,42 @@ auto ShopUiHandler::generateItemMenus(const bsgo::ShopItem &item) -> UiMenuPtr
   return menu;
 }
 
-void ShopUiHandler::onPurchaseRequest(const bsgo::Uuid &itemId, const bsgo::Item &itemType)
+auto ShopUiHandler::generateBuySection(const bsgo::ShopItem &item) -> UiMenuPtr
 {
+  auto middleSection = generateBlankVerticalMenu();
+  middleSection->addMenu(generateSpacer());
+
+  const auto buttonId = static_cast<int>(m_buyButtons.size());
+  MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .clickCallback = [this, buttonId]() {
+                      onPurchaseRequest(buttonId);
+                    }};
+
+  const auto bg       = bgConfigFromColor(olc::BLANK);
+  const auto textConf = textConfigFromColor("Buy", olc::WHITE);
+  auto buyButton      = std::make_unique<UiTextMenu>(config, bg, textConf);
+
+  BuyButton save{.itemId = item.id(), .itemType = item.type(), .menu = buyButton.get()};
+  m_buyButtons.push_back(save);
+
+  updateBuyButtonState(*buyButton, false);
+
+  middleSection->addMenu(std::move(buyButton));
+
+  middleSection->addMenu(generateSpacer());
+
+  auto menu = generateBlankHorizontalMenu();
+  menu->addMenu(generateSpacer());
+  menu->addMenu(std::move(middleSection));
+  menu->addMenu(generateSpacer());
+
+  return menu;
+}
+
+void ShopUiHandler::onPurchaseRequest(const int buyButtonId)
+{
+  const auto &purchase = m_buyButtons.at(buyButtonId);
   /// TODO: Handle the purchase request.
-  warn("should buy " + bsgo::str(itemId) + " with type " + bsgo::str(itemType));
+  warn("should buy " + bsgo::str(purchase.itemId) + " with type " + bsgo::str(purchase.itemType));
 }
 
 } // namespace pge

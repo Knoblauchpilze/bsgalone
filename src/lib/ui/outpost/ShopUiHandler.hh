@@ -36,8 +36,9 @@ class ShopUiHandler : public IUiHandler
   void initializeLayout();
   void generateItemsMenus();
   auto generateItemMenus(const bsgo::ShopItem &item) -> UiMenuPtr;
+  auto generateBuySection(const bsgo::ShopItem &item) -> UiMenuPtr;
 
-  void onPurchaseRequest(const bsgo::Uuid &itemId, const bsgo::Item &itemType);
+  void onPurchaseRequest(const int buyButtonId);
 };
 
 using ShopUiHandlerPtr = std::unique_ptr<ShopUiHandler>;
