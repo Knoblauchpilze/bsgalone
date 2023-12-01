@@ -9,6 +9,10 @@ auto str(const Item item) -> std::string
   {
     case Item::RESOURCE:
       return "resource";
+    case Item::WEAPON:
+      return "weapon";
+    case Item::COMPUTER:
+      return "computer";
     default:
       return "unknown";
   }
