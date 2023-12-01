@@ -23,6 +23,7 @@ class UiMenu : public utils::CoreObject
 
   bool visible() const noexcept;
   void setVisible(const bool visible) noexcept;
+  void setEnabled(const bool enabled) noexcept;
 
   void addMenu(UiMenuPtr child);
   void updateBgColor(const olc::Pixel &color);
@@ -38,6 +39,7 @@ class UiMenu : public utils::CoreObject
   {
     bool visible{true};
 
+    bool disabled{false};
     bool higlightable{false};
     bool highlighted{false};
 

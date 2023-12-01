@@ -20,6 +20,11 @@ void UiMenu::setVisible(const bool visible) noexcept
   m_state.visible = visible;
 }
 
+void UiMenu::setEnabled(const bool enabled) noexcept
+{
+  m_state.disabled = !enabled;
+}
+
 void UiMenu::addMenu(UiMenuPtr child)
 {
   if (child->m_parent != nullptr)
@@ -66,6 +71,11 @@ bool UiMenu::processUserInput(UserInputData &inputData)
     {
       inputRelevantForChildren |= child->processUserInput(inputData);
     }
+  }
+
+  if (m_state.disabled)
+  {
+    return inputRelevantForChildren;
   }
 
   const olc::vi2d mPos{inputData.controls.mPosX, inputData.controls.mPosY};
