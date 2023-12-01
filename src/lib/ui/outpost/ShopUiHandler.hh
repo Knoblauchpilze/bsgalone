@@ -25,6 +25,14 @@ class ShopUiHandler : public IUiHandler
   UiMenuPtr m_menu{};
   std::vector<UiMenu *> m_items{};
 
+  struct BuyButton
+  {
+    bsgo::Uuid itemId{};
+    bsgo::Item itemType{};
+    UiMenu *menu{};
+  };
+  std::vector<BuyButton> m_buyButtons{};
+
   void initializeLayout();
   void generateItemsMenus();
   auto generateItemMenus(const bsgo::ShopItem &item) -> UiMenuPtr;
