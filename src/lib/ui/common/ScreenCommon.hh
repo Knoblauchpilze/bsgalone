@@ -36,6 +36,8 @@ auto generateSlotMenu(const olc::vi2d &pos,
                       bool selectable                            = false,
                       const menu::Layout &layout = menu::Layout::Vertical) -> pge::MenuShPtr;
 
+auto generateBlankHorizontalMenu(const std::optional<olc::vi2d> &dims = {}) -> UiMenuPtr;
+auto generateBlankVerticalMenu(const std::optional<olc::vi2d> &dims = {}) -> UiMenuPtr;
 auto generateSpacer(const std::optional<olc::vi2d> &dims = {}) -> UiMenuPtr;
 
 } // namespace pge

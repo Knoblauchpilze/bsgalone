@@ -9,8 +9,8 @@ namespace pge {
 
 enum class MenuLayout
 {
-  Horizontal,
-  Vertical
+  HORIZONTAL,
+  VERTICAL
 };
 
 using ClickCallback     = std::function<void()>;
@@ -22,7 +22,7 @@ struct MenuConfig
   olc::vi2d pos{};
   olc::vi2d dims{10, 10};
 
-  MenuLayout layout{MenuLayout::Vertical};
+  MenuLayout layout{MenuLayout::VERTICAL};
 
   bool visible{true};
   bool highlightable{true};
