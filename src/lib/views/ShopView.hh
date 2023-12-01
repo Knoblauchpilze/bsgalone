@@ -32,7 +32,7 @@ class ShopView : public IView
   bool isReady() const noexcept override;
 
   auto getShopItems() const -> std::vector<ShopItem>;
-  bool canAfford(const Uuid &id, Item &type) const;
+  bool canAfford(const Uuid &id, const Item &type) const;
 
   private:
   std::optional<Uuid> m_playerDbId{};

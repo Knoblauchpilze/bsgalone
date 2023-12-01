@@ -80,7 +80,7 @@ bool playerHasEnoughResources(const std::vector<PlayerResource> &resources, cons
 }
 } // namespace
 
-bool ShopView::canAfford(const Uuid &id, Item &type) const
+bool ShopView::canAfford(const Uuid &id, const Item &type) const
 {
   checkPlayerDbIdExists();
 
