@@ -11,7 +11,7 @@ UiTextField::UiTextField(const TextFieldConfig &config,
     MenuConfig{
       .pos                       = config.pos,
       .dims                      = config.dims,
-      .layout                    = MenuLayout::Horizontal,
+      .layout                    = MenuLayout::HORIZONTAL,
       .visible                   = config.visible,
       .highlightable             = false,
       .propagateEventsToChildren = false,

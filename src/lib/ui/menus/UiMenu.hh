@@ -55,7 +55,7 @@ class UiMenu : public utils::CoreObject
   olc::vi2d m_dims{10, 10};
 
   State m_state{};
-  MenuLayout m_layout{MenuLayout::Vertical};
+  MenuLayout m_layout{MenuLayout::VERTICAL};
   bool m_expandChildrenToFit{true};
   BackgroundConfig m_bg{};
 

@@ -201,16 +201,16 @@ void UiMenu::onRelevantInput(UserInputData &inputData)
 
 void UiMenu::updateLayoutAfterChildChange()
 {
-  const auto sizeToDistribute = (m_layout == MenuLayout::Horizontal ? m_dims.x : m_dims.y);
+  const auto sizeToDistribute = (m_layout == MenuLayout::HORIZONTAL ? m_dims.x : m_dims.y);
   const auto count            = static_cast<int>(m_children.size());
   const auto sizeForEachChild = 1.0f * sizeToDistribute / count;
 
   switch (m_layout)
   {
-    case MenuLayout::Horizontal:
+    case MenuLayout::HORIZONTAL:
       adaptChildrenToMatchHorizontalSize(sizeForEachChild);
       break;
-    case MenuLayout::Vertical:
+    case MenuLayout::VERTICAL:
       adaptChildrenToMatchVerticalSize(sizeForEachChild);
       break;
     default:
