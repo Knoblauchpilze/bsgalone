@@ -11,6 +11,7 @@ namespace bsgo {
 
 struct Weapon
 {
+  Uuid id{};
   std::string name{};
 
   float minDamage{};
