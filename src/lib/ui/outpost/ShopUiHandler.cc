@@ -45,6 +45,22 @@ void ShopUiHandler::render(SpriteRenderer &engine) const
   m_menu->render(engine.getRenderer());
 }
 
+namespace {
+void updateBuyButtonState(UiMenu &buyButton, const bool enable)
+{
+  buyButton.setEnabled(enable);
+
+  if (!enable)
+  {
+    buyButton.updateBgColor(olc::VERY_DARK_GREY);
+  }
+  else
+  {
+    buyButton.updateBgColor(olc::VERY_DARK_GREEN);
+  }
+}
+} // namespace
+
 void ShopUiHandler::updateUi() {}
 
 constexpr auto DUMMY_PIXEL_DIMENSION = 10;
@@ -100,27 +116,19 @@ auto generatePriceMenus(const bsgo::ShopItem &item) -> std::vector<UiTextMenuPtr
   return out;
 }
 
-auto generateBuySection(const std::optional<ClickCallback> &clickCallback) -> UiMenuPtr
+auto generateBuySection(const ClickCallback &clickCallback) -> UiMenuPtr
 {
   auto middleSection = generateBlankVerticalMenu();
   middleSection->addMenu(generateSpacer());
 
-  MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION};
-  olc::Pixel bgColor;
-  if (clickCallback)
-  {
-    config.clickCallback = *clickCallback;
-    bgColor              = olc::DARK_GREEN;
-  }
-  else
-  {
-    config.highlightable = false;
-    bgColor              = olc::VERY_DARK_GREY;
-  }
+  MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .clickCallback = clickCallback};
 
-  const auto bg       = bgConfigFromColor(bgColor);
+  const auto bg       = bgConfigFromColor(olc::BLANK);
   const auto textConf = textConfigFromColor("Buy", olc::WHITE);
   auto buyButton      = std::make_unique<UiTextMenu>(config, bg, textConf);
+
+  updateBuyButtonState(*buyButton, false);
+
   middleSection->addMenu(std::move(buyButton));
 
   middleSection->addMenu(generateSpacer());
