@@ -17,6 +17,9 @@ struct ShopItem
   std::vector<ResourceCost> price;
   std::optional<Weapon> weapon{};
   std::optional<Computer> computer{};
+
+  auto id() const -> Uuid;
+  auto type() const -> Item;
 };
 
 class ShopView : public IView

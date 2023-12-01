@@ -1,7 +1,36 @@
 
 #include "ShopView.hh"
+#include <stdexcept>
 
 namespace bsgo {
+
+auto ShopItem::id() const -> Uuid
+{
+  if (weapon)
+  {
+    return weapon->id;
+  }
+  else if (computer)
+  {
+    return computer->id;
+  }
+
+  throw std::invalid_argument("Expected shop item to be a weapon or a computer");
+}
+
+auto ShopItem::type() const -> Item
+{
+  if (weapon)
+  {
+    return Item::WEAPON;
+  }
+  else if (computer)
+  {
+    return Item::COMPUTER;
+  }
+
+  throw std::invalid_argument("Expected shop item to be a weapon or a computer");
+}
 
 ShopView::ShopView(const CoordinatorShPtr &coordinator, const Repositories &repositories)
   : IView("shop", coordinator, repositories)
