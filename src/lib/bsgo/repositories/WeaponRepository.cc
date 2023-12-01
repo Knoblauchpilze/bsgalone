@@ -48,6 +48,7 @@ auto WeaponRepository::findOneById(const Uuid &weapon) const -> Weapon
   Weapon out{};
 
   const auto &record = rows[0];
+  out.id             = weapon;
   out.name           = record[0].as<std::string>();
   out.minDamage      = record[1].as<float>();
   out.maxDamage      = record[2].as<float>();

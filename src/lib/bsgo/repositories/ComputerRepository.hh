@@ -13,6 +13,7 @@ namespace bsgo {
 
 struct Computer
 {
+  Uuid id{};
   std::string name{};
   bool offensive{};
   float powerCost{};
