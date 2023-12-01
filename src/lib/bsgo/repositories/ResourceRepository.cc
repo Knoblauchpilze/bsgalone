@@ -30,6 +30,7 @@ auto ResourceRepository::findOneById(const Uuid &resource) const -> Resource
   Resource out;
 
   const auto &record = rows[0];
+  out.id             = resource;
   out.name           = record[0].as<std::string>();
 
   return out;
