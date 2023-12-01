@@ -61,7 +61,19 @@ void updateBuyButtonState(UiMenu &buyButton, const bool enable)
 }
 } // namespace
 
-void ShopUiHandler::updateUi() {}
+void ShopUiHandler::updateUi()
+{
+  if (!m_shopView->isReady())
+  {
+    return;
+  }
+
+  for (const auto &buyButton : m_buyButtons)
+  {
+    const auto affordable = m_shopView->canAfford(buyButton.itemId, buyButton.itemType);
+    updateBuyButtonState(*buyButton.menu, affordable);
+  }
+}
 
 constexpr auto DUMMY_PIXEL_DIMENSION = 10;
 const olc::vi2d DUMMY_DIMENSION{DUMMY_PIXEL_DIMENSION, DUMMY_PIXEL_DIMENSION};
