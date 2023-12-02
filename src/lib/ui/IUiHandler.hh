@@ -24,6 +24,8 @@ class IUiHandler : public utils::CoreObject
   virtual bool processUserInput(UserInputData &inputData)         = 0;
   virtual void render(SpriteRenderer &engine) const               = 0;
   virtual void updateUi()                                         = 0;
+
+  virtual void reset();
 };
 
 using IUiHandlerPtr = std::unique_ptr<IUiHandler>;

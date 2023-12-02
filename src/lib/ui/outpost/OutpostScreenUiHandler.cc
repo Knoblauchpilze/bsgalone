@@ -113,6 +113,13 @@ void OutpostScreenUiHandler::updateUi()
   }
 }
 
+void OutpostScreenUiHandler::reset()
+{
+  m_lockerUi->reset();
+  m_shopUi->reset();
+  m_hangarUi->reset();
+}
+
 constexpr auto VIEW_LIST_WIDTH_TO_SCREEN_WIDTH_RATIO   = 0.2f;
 constexpr auto VIEW_LIST_HEIGHT_TO_SCREEN_HEIGHT_RATIO = 0.5f;
 
