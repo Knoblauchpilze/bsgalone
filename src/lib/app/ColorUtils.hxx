@@ -158,10 +158,10 @@ inline auto transparent(const olc::Pixel &in, const uint8_t alpha) -> olc::Pixel
   return olc::Pixel{in.r, in.g, in.b, alpha};
 }
 
-} // namespace pge
-
-inline std::string toString(const olc::Pixel &p) noexcept
+inline auto str(const olc::Pixel &p) noexcept -> std::string
 {
   return std::string("[r: ") + std::to_string(p.r) + ", g: " + std::to_string(p.g)
          + ", b: " + std::to_string(p.b) + ", a: " + std::to_string(p.a) + "]";
 }
+
+} // namespace pge
