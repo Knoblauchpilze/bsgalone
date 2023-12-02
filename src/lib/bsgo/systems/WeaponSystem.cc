@@ -28,6 +28,10 @@ void WeaponSystem::updateEntity(Entity &entity,
   {
     targetEnt = coordinator.getEntity(*target);
   }
+  if (!canTargetBeFiredOn(*targetEnt))
+  {
+    return;
+  }
 
   for (const auto &weapon : entity.weapons)
   {
@@ -38,6 +42,16 @@ void WeaponSystem::updateEntity(Entity &entity,
       fireWeaponForEntity(entity, *weapon, *targetEnt, coordinator);
     }
   }
+}
+
+bool WeaponSystem::canTargetBeFiredOn(const Entity &target) const
+{
+  if (!target.exists<StatusComponent>())
+  {
+    return true;
+  }
+
+  return statusAllowsInteratction(target.statusComp().status());
 }
 
 void WeaponSystem::updateWeapon(const Entity &ent,

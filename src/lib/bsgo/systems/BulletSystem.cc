@@ -25,6 +25,11 @@ void BulletSystem::updateEntity(Entity &entity,
   }
 
   auto target = coordinator.getEntity(*entity.targetComp().target());
+  if (killIfTargetIsNotAccessible(entity, target))
+  {
+    return;
+  }
+
   accelerateTowardsTarget(entity, target);
   damageOnImpact(entity, target);
 }
@@ -40,6 +45,22 @@ bool BulletSystem::killIfTargetIsDead(Entity &entity) const
   entity.removalComp().markForRemoval();
 
   return true;
+}
+
+bool BulletSystem::killIfTargetIsNotAccessible(Entity &entity, Entity &target) const
+{
+  if (!target.exists<StatusComponent>())
+  {
+    return false;
+  }
+
+  const auto accessible = statusAllowsInteratction(target.statusComp().status());
+  if (!accessible)
+  {
+    entity.removalComp().markForRemoval();
+  }
+
+  return !accessible;
 }
 
 void BulletSystem::accelerateTowardsTarget(Entity &entity, const Entity &target) const
