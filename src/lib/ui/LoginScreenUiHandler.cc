@@ -44,6 +44,48 @@ void LoginScreenUiHandler::render(SpriteRenderer &engine) const
 
 void LoginScreenUiHandler::updateUi() {}
 
+namespace {
+constexpr auto DUMMY_PIXEL_DIMENSION = 10;
+const olc::vi2d DUMMY_DIMENSION{DUMMY_PIXEL_DIMENSION, DUMMY_PIXEL_DIMENSION};
+
+void addLoginTitleToMenu(UiMenu &mainPanel)
+{
+  const MenuConfig config{.dims = DUMMY_DIMENSION, .highlightable = false};
+
+  auto bg   = bgConfigFromColor(transparent(olc::DARK_BLUE, alpha::SemiOpaque));
+  auto text = textConfigFromColor("Login", olc::GREY, TextAlignment::CENTER);
+  auto menu = std::make_unique<UiTextMenu>(config, bg, text);
+
+  mainPanel.addMenu(std::move(menu));
+}
+
+auto addTextFieldSectionToMenu(UiMenu &mainPanel,
+                               const std::string &textFieldlabel,
+                               const std::optional<std::string> &defaultValue = {}) -> UiTextField *
+{
+  auto textFieldSection = generateBlankHorizontalMenu();
+
+  const MenuConfig config{.dims = DUMMY_DIMENSION, .highlightable = false};
+  auto bg    = bgConfigFromColor(transparent(olc::DARK_BLUE, alpha::SemiOpaque));
+  auto text  = textConfigFromColor(textFieldlabel, olc::GREY, TextAlignment::RIGHT);
+  auto label = std::make_unique<UiTextMenu>(config, bg, text);
+  textFieldSection->addMenu(std::move(label));
+
+  TextFieldConfig fieldConfig{.dims = DUMMY_DIMENSION};
+  bg               = bgConfigFromColor(transparent(olc::WHITE, alpha::SemiOpaque));
+  const auto value = defaultValue.value_or("");
+  text             = textConfigFromColor(value, olc::BLACK, TextAlignment::LEFT);
+
+  auto field = std::make_unique<UiTextField>(fieldConfig, bg, text);
+  auto out   = field.get();
+  textFieldSection->addMenu(std::move(field));
+
+  mainPanel.addMenu(std::move(textFieldSection));
+
+  return out;
+}
+} // namespace
+
 void LoginScreenUiHandler::generateLoginMenu(const int width, const int /*height*/)
 {
   const olc::vi2d loginDimsPixels{400, 400};
@@ -51,31 +93,12 @@ void LoginScreenUiHandler::generateLoginMenu(const int width, const int /*height
   const olc::vi2d loginPos{(width - loginDimsPixels.x) / 2, LOGIN_PANEL_Y_PIXELS};
 
   MenuConfig config{.pos = loginPos, .dims = loginDimsPixels, .highlightable = false};
-  auto bg      = bgConfigFromColor(transparent(olc::WHITE));
-  m_loginPanel = std::make_unique<UiMenu>(config, bg);
+  m_loginPanel = generateBlankVerticalMenu(loginPos, loginDimsPixels);
 
-  bg         = bgConfigFromColor(transparent(olc::DARK_BLUE, alpha::SemiOpaque));
-  auto text  = textConfigFromColor("Name:", olc::BLACK, TextAlignment::LEFT);
-  auto label = std::make_unique<UiTextMenu>(config, bg, text);
-  m_loginPanel->addMenu(std::move(label));
-
-  TextFieldConfig fieldConfig{.pos = loginPos, .dims = loginDimsPixels};
-  bg              = bgConfigFromColor(transparent(olc::WHITE, alpha::SemiOpaque));
-  text            = textConfigFromColor("grouton", olc::BLACK, TextAlignment::LEFT);
-  auto field      = std::make_unique<UiTextField>(fieldConfig, bg, text);
-  m_nameTextField = field.get();
-  m_loginPanel->addMenu(std::move(field));
-
-  bg    = bgConfigFromColor(transparent(olc::DARK_BLUE, alpha::SemiOpaque));
-  text  = textConfigFromColor("Password:", olc::BLACK, TextAlignment::LEFT);
-  label = std::make_unique<UiTextMenu>(config, bg, text);
-  m_loginPanel->addMenu(std::move(label));
-
-  bg                  = bgConfigFromColor(transparent(olc::WHITE, alpha::SemiOpaque));
-  text                = textConfigFromColor("123456", olc::BLACK, TextAlignment::LEFT);
-  field               = std::make_unique<UiTextField>(fieldConfig, bg, text);
-  m_passwordTextField = field.get();
-  m_loginPanel->addMenu(std::move(field));
+  addLoginTitleToMenu(*m_loginPanel);
+  m_loginPanel->addMenu(generateColoredSpacer(transparent(olc::DARK_BLUE, alpha::SemiOpaque)));
+  m_nameTextField     = addTextFieldSectionToMenu(*m_loginPanel, "Name:", "grouton");
+  m_passwordTextField = addTextFieldSectionToMenu(*m_loginPanel, "Password:", {});
 }
 
 void LoginScreenUiHandler::generateLoginButton(const int width, const int height)
