@@ -2,6 +2,8 @@
 #pragma once
 
 #include "IUiHandler.hh"
+#include "UiMenu.hh"
+#include "UiTextMenu.hh"
 #include "Views.hh"
 #include "WeaponSlotComponent.hh"
 #include <memory>
@@ -18,15 +20,16 @@ class WeaponsUiHandler : public IUiHandler
   bool processUserInput(UserInputData &inputData) override;
   void render(SpriteRenderer &engine) const override;
   void updateUi() override;
+  void reset() override;
 
   private:
   bsgo::ShipViewShPtr m_shipView;
   bool m_initialized{false};
 
-  std::vector<MenuShPtr> m_weapons{};
-  std::vector<MenuShPtr> m_ranges{};
-  std::vector<MenuShPtr> m_damages{};
-  std::vector<MenuShPtr> m_statuses{};
+  std::vector<UiMenuPtr> m_weapons{};
+  std::vector<UiTextMenu *> m_ranges{};
+  std::vector<UiTextMenu *> m_damages{};
+  std::vector<UiTextMenu *> m_statuses{};
 
   void generateWeaponsMenus(int width, int height);
   void initializeWeapons();
