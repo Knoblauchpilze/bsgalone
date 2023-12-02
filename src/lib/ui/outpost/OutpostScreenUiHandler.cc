@@ -35,7 +35,7 @@ void OutpostScreenUiHandler::initializeMenus(const int width, const int height)
                             }
                           }};
 
-  auto bg         = bgConfigFromColor(olc::VERY_DARK_GREY);
+  auto bg         = bgConfigFromColor(olc::DARK_GREY);
   auto text       = textConfigFromColor("Undock", olc::WHITE);
   m_menus[UNDOCK] = std::make_unique<UiTextMenu>(config, bg, text);
 
