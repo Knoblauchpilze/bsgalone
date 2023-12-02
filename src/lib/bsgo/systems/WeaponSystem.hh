@@ -17,6 +17,8 @@ class WeaponSystem : public AbstractSystem
                     const float elapsedSeconds) const override;
 
   private:
+  bool canTargetBeFiredOn(const Entity &target) const;
+
   void updateWeapon(const Entity &ent,
                     const WeaponSlotComponentShPtr &weapon,
                     const std::optional<Entity> &target,
