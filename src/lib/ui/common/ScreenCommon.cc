@@ -118,22 +118,40 @@ auto generateSlotMenu(const olc::vi2d &pos,
 
 auto generateBlankHorizontalMenu(const std::optional<olc::vi2d> &dims) -> UiMenuPtr
 {
-  MenuConfig config{.layout = MenuLayout::HORIZONTAL};
-  if (dims)
-  {
-    config.dims = *dims;
-  }
-  const auto bg = bgConfigFromColor(olc::BLANK);
-  return std::make_unique<UiMenu>(config, bg);
+  return generateBlankHorizontalMenu(olc::vi2d{}, dims);
+}
+
+auto generateBlankHorizontalMenu(const olc::vi2d &pos, const std::optional<olc::vi2d> &dims)
+  -> UiMenuPtr
+{
+  return generateBlankMenu(pos, MenuLayout::HORIZONTAL, dims);
 }
 
 auto generateBlankVerticalMenu(const std::optional<olc::vi2d> &dims) -> UiMenuPtr
 {
-  MenuConfig config{};
+  return generateBlankVerticalMenu(olc::vi2d{}, dims);
+}
+
+auto generateBlankVerticalMenu(const olc::vi2d &pos, const std::optional<olc::vi2d> &dims)
+  -> UiMenuPtr
+{
+  return generateBlankMenu(pos, MenuLayout::VERTICAL, dims);
+}
+
+auto generateBlankMenu(const olc::vi2d &pos,
+                       const MenuLayout &layout,
+                       const std::optional<olc::vi2d> &dims) -> UiMenuPtr
+{
+  MenuConfig config{.pos = pos, .layout = layout};
   if (dims)
   {
     config.dims = *dims;
   }
+  return generateBlankMenu(config);
+}
+
+auto generateBlankMenu(const MenuConfig &config) -> UiMenuPtr
+{
   const auto bg = bgConfigFromColor(olc::BLANK);
   return std::make_unique<UiMenu>(config, bg);
 }
