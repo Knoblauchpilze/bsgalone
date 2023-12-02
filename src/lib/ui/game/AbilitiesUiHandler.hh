@@ -3,6 +3,8 @@
 
 #include "ComputerSlotComponent.hh"
 #include "IUiHandler.hh"
+#include "UiMenu.hh"
+#include "UiTextMenu.hh"
 #include "Views.hh"
 #include <memory>
 
@@ -18,15 +20,16 @@ class AbilitiesUiHandler : public IUiHandler
   bool processUserInput(UserInputData &inputData) override;
   void render(SpriteRenderer &engine) const override;
   void updateUi() override;
+  void reset() override;
 
   private:
   bsgo::ShipViewShPtr m_shipView;
   bool m_initialized{false};
 
-  std::vector<MenuShPtr> m_computers{};
-  std::vector<MenuShPtr> m_ranges{};
-  std::vector<MenuShPtr> m_damages{};
-  std::vector<MenuShPtr> m_statuses{};
+  std::vector<UiMenuPtr> m_computers{};
+  std::vector<UiTextMenu *> m_ranges{};
+  std::vector<UiTextMenu *> m_damages{};
+  std::vector<UiTextMenu *> m_statuses{};
 
   void generateComputersMenus(int width, int height);
   void initializeAbilities();

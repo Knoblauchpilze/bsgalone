@@ -23,15 +23,15 @@ void AbilitiesUiHandler::initializeMenus(const int width, const int height)
 
 bool AbilitiesUiHandler::processUserInput(UserInputData &inputData)
 {
-  auto relevant{false};
-
   for (const auto &menu : m_computers)
   {
-    const auto ih = menu->processUserInput(inputData.controls, inputData.actions);
-    relevant      = (relevant || ih.relevant);
+    if (menu->processUserInput(inputData))
+    {
+      return true;
+    }
   }
 
-  return relevant;
+  return false;
 }
 
 void AbilitiesUiHandler::render(SpriteRenderer &engine) const
@@ -63,26 +63,45 @@ void AbilitiesUiHandler::updateUi()
   }
 }
 
+void AbilitiesUiHandler::reset()
+{
+  m_ranges.clear();
+  m_damages.clear();
+  m_statuses.clear();
+
+  for (auto &computer : m_computers)
+  {
+    computer->clearChildren();
+  }
+
+  m_initialized = false;
+}
+
 constexpr auto NUMBER_OF_ABILITIES = 4;
 
 void AbilitiesUiHandler::generateComputersMenus(int width, int height)
 {
-  olc::vi2d dims{70, 50};
+  const olc::vi2d abilityMenuDims{70, 50};
   constexpr auto SPACING_IN_PIXELS = 5;
-  olc::vi2d pos;
-  pos.x = width - NUMBER_OF_ABILITIES * (dims.x + SPACING_IN_PIXELS);
-  pos.y = height - SPACING_IN_PIXELS - dims.y;
-  const olc::Pixel transparentBg{0, 0, 0, alpha::SemiOpaque};
+  const olc::vi2d pos{width - NUMBER_OF_ABILITIES * (abilityMenuDims.x + SPACING_IN_PIXELS),
+                      height - SPACING_IN_PIXELS - abilityMenuDims.y};
+
+  MenuConfig config{.pos = pos, .dims = abilityMenuDims, .propagateEventsToChildren = false};
+  const auto bg = bgConfigFromColor(olc::Pixel{0, 0, 0, alpha::SemiOpaque});
 
   for (auto id = 0u; id < NUMBER_OF_ABILITIES; ++id)
   {
-    const auto name = "ability_" + std::to_string(id);
-    auto menu       = generateSlotMenu(pos, dims, "", name, transparentBg, {olc::WHITE}, false);
-    m_computers.push_back(menu);
+    auto menu = std::make_unique<UiMenu>(config, bg);
+    m_computers.push_back(std::move(menu));
 
-    pos.x += (dims.x + SPACING_IN_PIXELS);
+    config.pos.x += (abilityMenuDims.x + SPACING_IN_PIXELS);
   }
 }
+
+namespace {
+constexpr auto DUMMY_PIXEL_DIMENSION = 10;
+const olc::vi2d DUMMY_DIMENSION{DUMMY_PIXEL_DIMENSION, DUMMY_PIXEL_DIMENSION};
+} // namespace
 
 void AbilitiesUiHandler::initializeAbilities()
 {
@@ -96,36 +115,42 @@ void AbilitiesUiHandler::initializeAbilities()
             + std::to_string(ship.computers.size()));
   }
 
-  const olc::vi2d dummyPos{0, 0};
-  const olc::vi2d dummyDims{10, 10};
-  const olc::Pixel transparentBg{0, 0, 0, alpha::SemiOpaque};
+  const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION};
+  const auto bg = bgConfigFromColor(olc::BLANK);
+  auto textConf = textConfigFromColor("", olc::WHITE);
+
   for (auto id = 0u; id < computersCount; ++id)
   {
     auto &menu = m_computers[id];
 
-    menu->setSimpleAction([shipId, id](Game &g) { g.tryActivateSlot(shipId, id); });
+    menu->setGameClickCallback([shipId, id](Game &g) { g.tryActivateSlot(shipId, id); });
     menu->setEnabled(true);
 
-    MenuShPtr range;
-    if (ship.computers[id]->maybeRange())
+    if (!ship.computers[id]->maybeRange())
     {
-      range = generateMenu(dummyPos, dummyDims, "range", "range", transparentBg, {olc::WHITE});
-      menu->addMenu(range);
+      m_ranges.push_back(nullptr);
     }
-    m_ranges.push_back(range);
-
-    MenuShPtr damage;
-    if (ship.computers[id]->damageModifier())
+    else
     {
-      damage = generateMenu(dummyPos, dummyDims, "damage", "damage", transparentBg, {olc::WHITE});
-      menu->addMenu(damage);
+      auto prop = std::make_unique<UiTextMenu>(config, bg, textConf);
+      m_ranges.push_back(prop.get());
+      menu->addMenu(std::move(prop));
     }
-    m_damages.push_back(damage);
 
-    const auto status
-      = generateMenu(dummyPos, dummyDims, "status", "status", transparentBg, {olc::WHITE});
-    menu->addMenu(status);
-    m_statuses.push_back(status);
+    if (!ship.computers[id]->damageModifier())
+    {
+      m_damages.push_back(nullptr);
+    }
+    else
+    {
+      auto prop = std::make_unique<UiTextMenu>(config, bg, textConf);
+      m_damages.push_back(prop.get());
+      menu->addMenu(std::move(prop));
+    }
+
+    auto prop = std::make_unique<UiTextMenu>(config, bg, textConf);
+    m_statuses.push_back(prop.get());
+    menu->addMenu(std::move(prop));
   }
 
   m_initialized = true;
@@ -138,7 +163,7 @@ void AbilitiesUiHandler::updateComputerMenu(const bsgo::ComputerSlotComponent &c
 
   auto bgColor = bgColorFromFiringState(computer);
   bgColor.a    = alpha::SemiOpaque;
-  menu.setBackgroundColor(bgColor);
+  menu.updateBgColor(bgColor);
 
   const auto range = computer.maybeRange();
   if (range)
