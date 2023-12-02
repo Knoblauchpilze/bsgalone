@@ -81,6 +81,13 @@ void GameScreenUiHandler::updateUi()
   m_gameOverUi->updateUi();
 }
 
+void GameScreenUiHandler::reset()
+{
+  m_weaponsUi->reset();
+  m_abilitiesUi->reset();
+  m_gameOverUi->reset();
+}
+
 void GameScreenUiHandler::generateShipMenus(int /*width*/, int /*height*/)
 {
   const olc::vi2d SHIP_UI_PIXEL_POS{5, 5};
