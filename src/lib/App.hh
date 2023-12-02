@@ -2,7 +2,6 @@
 #pragma once
 
 #include "Game.hh"
-#include "Menu.hh"
 #include "PGEApp.hh"
 #include "SpriteRenderer.hh"
 
