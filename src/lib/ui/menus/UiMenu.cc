@@ -25,6 +25,11 @@ void UiMenu::setEnabled(const bool enabled) noexcept
   m_state.disabled = !enabled;
 }
 
+void UiMenu::setGameClickCallback(const GameCallback &callback)
+{
+  m_gameClickCallback = callback;
+}
+
 void UiMenu::addMenu(UiMenuPtr child)
 {
   if (child->m_parent != nullptr)

@@ -25,6 +25,8 @@ class UiMenu : public utils::CoreObject
   void setVisible(const bool visible) noexcept;
   void setEnabled(const bool enabled) noexcept;
 
+  void setGameClickCallback(const GameCallback &callback);
+
   void addMenu(UiMenuPtr child);
   void clearChildren();
   void updateBgColor(const olc::Pixel &color);
