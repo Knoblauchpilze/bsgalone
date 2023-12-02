@@ -75,8 +75,10 @@ void ShopUiHandler::updateUi()
   }
 }
 
+namespace {
 constexpr auto DUMMY_PIXEL_DIMENSION = 10;
 const olc::vi2d DUMMY_DIMENSION{DUMMY_PIXEL_DIMENSION, DUMMY_PIXEL_DIMENSION};
+} // namespace
 
 void ShopUiHandler::initializeLayout()
 {
