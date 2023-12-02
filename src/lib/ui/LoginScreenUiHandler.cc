@@ -98,7 +98,7 @@ void LoginScreenUiHandler::generateLoginMenu(const int width, const int /*height
   addLoginTitleToMenu(*m_loginPanel);
   m_loginPanel->addMenu(generateColoredSpacer(transparent(olc::DARK_BLUE, alpha::SemiOpaque)));
   m_nameTextField     = addTextFieldSectionToMenu(*m_loginPanel, "Name:", "grouton");
-  m_passwordTextField = addTextFieldSectionToMenu(*m_loginPanel, "Password:", {});
+  m_passwordTextField = addTextFieldSectionToMenu(*m_loginPanel, "Password:");
 }
 
 void LoginScreenUiHandler::generateLoginButton(const int width, const int height)
