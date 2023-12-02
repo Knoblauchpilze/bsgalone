@@ -1,7 +1,6 @@
 
 #pragma once
 
-#include "Action.hh"
 #include "Controls.hh"
 #include "DataSource.hh"
 #include "IInputHandler.hh"

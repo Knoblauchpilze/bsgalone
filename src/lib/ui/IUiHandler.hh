@@ -1,7 +1,6 @@
 
 #pragma once
 
-#include "Action.hh"
 #include "Controls.hh"
 #include "CoordinateFrame.hh"
 #include "Game.hh"
@@ -10,9 +9,6 @@
 #include <memory>
 
 namespace pge {
-
-class Action;
-using ActionShPtr = std::shared_ptr<Action>;
 
 class IUiHandler : public utils::CoreObject
 {
