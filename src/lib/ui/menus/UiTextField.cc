@@ -22,6 +22,7 @@ UiTextField::UiTextField(const TextFieldConfig &config,
     },
     bg,
     text)
+  , m_cursorPos(static_cast<int>(text.text.size()))
   , m_fullText(text.text)
 {
   setClickCallback([this]() { m_editing = true; });
