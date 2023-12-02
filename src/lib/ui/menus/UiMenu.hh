@@ -26,6 +26,7 @@ class UiMenu : public utils::CoreObject
   void setEnabled(const bool enabled) noexcept;
 
   void addMenu(UiMenuPtr child);
+  void clearChildren();
   void updateBgColor(const olc::Pixel &color);
 
   void render(olc::PixelGameEngine *pge) const;

@@ -38,6 +38,11 @@ void UiMenu::addMenu(UiMenuPtr child)
   updateLayoutAfterChildChange();
 }
 
+void UiMenu::clearChildren()
+{
+  m_children.clear();
+}
+
 void UiMenu::updateBgColor(const olc::Pixel &color)
 {
   m_bg = bgConfigFromColor(color);
