@@ -277,7 +277,7 @@ void GameScreenRenderer::renderShip(const bsgo::Entity &ship,
       break;
     case bsgo::Status::DOCKED:
     case bsgo::Status::DEAD:
-      t.sprite.tint = transparent(tint, alpha::Transparent);
+      t.sprite.tint = olc::BLANK;
       break;
     case bsgo::Status::APPEARING:
     case bsgo::Status::JUMP_APPEARING:
