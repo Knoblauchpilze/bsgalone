@@ -3,6 +3,8 @@
 #include "ScreenCommon.hh"
 #include "StringUtils.hh"
 
+#include "ColorUtils.hh"
+
 namespace pge {
 
 GameScreenUiHandler::GameScreenUiHandler(const bsgo::Views &views)
@@ -46,8 +48,10 @@ bool GameScreenUiHandler::processUserInput(UserInputData &inputData)
   {
     for (const auto &menu : m_menus)
     {
-      const auto ih = menu->processUserInput(inputData.controls, inputData.actions);
-      out |= ih.relevant;
+      if (menu->processUserInput(inputData))
+      {
+        return true;
+      }
     }
   }
 
@@ -79,58 +83,78 @@ void GameScreenUiHandler::updateUi()
 
 void GameScreenUiHandler::generateShipMenus(int /*width*/, int /*height*/)
 {
-  olc::vi2d pos{5, 5};
-  olc::vi2d dims{200, 15};
+  const olc::vi2d SHIP_UI_PIXEL_POS{5, 5};
+  const olc::vi2d SHIP_UI_PIXEL_DIMENSION{200, 15};
+  constexpr auto REASONABLE_PIXEL_GAP = 15;
 
-  m_menus[NAME] = generateMenu(pos, dims, "N/A", "name", olc::BLANK, {olc::WHITE});
+  MenuConfig config{.pos           = SHIP_UI_PIXEL_POS,
+                    .dims          = SHIP_UI_PIXEL_DIMENSION,
+                    .highlightable = false};
 
-  constexpr auto REASONABLE_GAP = 15;
-  pos.y += REASONABLE_GAP;
-  m_menus[HEALTH]
-    = generateMenu(pos, dims, "Health: N/A", "health", olc::VERY_DARK_RED, {olc::WHITE});
+  auto bg       = bgConfigFromColor(olc::BLANK);
+  auto text     = textConfigFromColor("N/A", olc::WHITE);
+  m_menus[NAME] = std::make_unique<UiTextMenu>(config, bg, text);
 
-  pos.y += REASONABLE_GAP;
-  m_menus[POWER] = generateMenu(pos, dims, "Power: N/A", "power", olc::DARK_CYAN, {olc::WHITE});
+  config.pos.y += REASONABLE_PIXEL_GAP;
+  bg              = bgConfigFromColor(olc::VERY_DARK_RED);
+  text            = textConfigFromColor("Health: N/A", olc::WHITE);
+  m_menus[HEALTH] = std::make_unique<UiTextMenu>(config, bg, text);
+
+  config.pos.y += REASONABLE_PIXEL_GAP;
+  bg             = bgConfigFromColor(olc::DARK_CYAN);
+  text           = textConfigFromColor("Power: N/A", olc::WHITE);
+  m_menus[POWER] = std::make_unique<UiTextMenu>(config, bg, text);
 }
 
 void GameScreenUiHandler::generateTargetMenus(int width, int /*height*/)
 {
-  olc::vi2d pos{width / 2, 5};
-  olc::vi2d dims{200, 15};
+  const olc::vi2d TARGET_UI_PIXEL_POS{width / 2, 5};
+  const olc::vi2d TARGET_UI_PIXEL_DIMENSION{200, 15};
+  constexpr auto REASONABLE_PIXEL_GAP = 15;
 
-  m_menus[TARGET_NAME] = generateMenu(pos, dims, "N/A", "name", olc::BLANK, {olc::WHITE});
+  MenuConfig config{.pos           = TARGET_UI_PIXEL_POS,
+                    .dims          = TARGET_UI_PIXEL_DIMENSION,
+                    .highlightable = false};
 
-  constexpr auto REASONABLE_GAP = 15;
-  pos.y += REASONABLE_GAP;
-  m_menus[TARGET_HEALTH]
-    = generateMenu(pos, dims, "Health: N/A", "health", olc::VERY_DARK_RED, {olc::WHITE});
+  auto bg              = bgConfigFromColor(olc::BLANK);
+  auto text            = textConfigFromColor("N/A", olc::WHITE);
+  m_menus[TARGET_NAME] = std::make_unique<UiTextMenu>(config, bg, text);
 
-  pos.y += REASONABLE_GAP;
-  m_menus[TARGET_POWER]
-    = generateMenu(pos, dims, "Power: N/A", "power", olc::DARK_CYAN, {olc::WHITE});
+  config.pos.y += REASONABLE_PIXEL_GAP;
+  bg                     = bgConfigFromColor(olc::VERY_DARK_RED);
+  text                   = textConfigFromColor("Health: N/A", olc::WHITE);
+  m_menus[TARGET_HEALTH] = std::make_unique<UiTextMenu>(config, bg, text);
 
-  pos.y += REASONABLE_GAP;
-  m_menus[TARGET_DISTANCE] = generateMenu(pos,
-                                          dims,
-                                          "N/A m",
-                                          "distance",
-                                          olc::Pixel(0, 0, 0, alpha::Transparent),
-                                          {olc::WHITE});
+  config.pos.y += REASONABLE_PIXEL_GAP;
+  bg                    = bgConfigFromColor(olc::DARK_CYAN);
+  text                  = textConfigFromColor("Power: N/A", olc::WHITE);
+  m_menus[TARGET_POWER] = std::make_unique<UiTextMenu>(config, bg, text);
+
+  config.pos.y += REASONABLE_PIXEL_GAP;
+  bg                       = bgConfigFromColor(olc::BLANK);
+  text                     = textConfigFromColor("N/A m", olc::WHITE);
+  m_menus[TARGET_DISTANCE] = std::make_unique<UiTextMenu>(config, bg, text);
 }
 
 void GameScreenUiHandler::generateOutpostMenus(int width, int /*height*/)
 {
-  olc::vi2d pos{width / 2, 55};
-  olc::vi2d dims{100, 25};
+  const olc::vi2d OUTPOST_UI_PIXEL_POS{width / 2, 70};
+  const olc::vi2d OUTPOST_UI_PIXEL_DIMENSION{100, 25};
 
-  m_menus[DOCK] = generateMenu(pos, dims, "Dock", "dock", olc::VERY_DARK_GREY, {olc::WHITE}, true);
-  m_menus[DOCK]->setSimpleAction([this](Game &g) {
-    if (m_shipView->isReady())
-    {
-      m_shipView->dockPlayerShip();
-      g.setScreen(Screen::OUTPOST);
-    }
-  });
+  MenuConfig config{.pos               = OUTPOST_UI_PIXEL_POS,
+                    .dims              = OUTPOST_UI_PIXEL_DIMENSION,
+                    .gameClickCallback = [this](Game &g) {
+                      if (m_shipView->isReady())
+                      {
+                        m_shipView->dockPlayerShip();
+                        g.setScreen(Screen::OUTPOST);
+                      }
+                    }};
+
+  auto bg   = bgConfigFromColor(olc::DARK_GREY);
+  auto text = textConfigFromColor("Dock", olc::WHITE);
+  log("t: " + str(text.color) + ", ht: " + str(text.hColor));
+  m_menus[DOCK] = std::make_unique<UiTextMenu>(config, bg, text);
 }
 
 void GameScreenUiHandler::updateShipUi()

@@ -4,6 +4,7 @@
 #include "AbilitiesUiHandler.hh"
 #include "GameOverUiHandler.hh"
 #include "IUiHandler.hh"
+#include "UiTextMenu.hh"
 #include "Views.hh"
 #include "WeaponsUiHandler.hh"
 
@@ -38,7 +39,7 @@ class GameScreenUiHandler : public IUiHandler
 
     COUNT = 8,
   };
-  std::vector<MenuShPtr> m_menus{};
+  std::vector<UiTextMenuPtr> m_menus{};
 
   WeaponsUiHandlerPtr m_weaponsUi{};
   AbilitiesUiHandlerPtr m_abilitiesUi{};
