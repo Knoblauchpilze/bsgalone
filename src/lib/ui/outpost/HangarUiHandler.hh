@@ -18,6 +18,7 @@ class HangarUiHandler : public IUiHandler
   bool processUserInput(UserInputData &inputData) override;
   void render(SpriteRenderer &engine) const override;
   void updateUi() override;
+  void reset() override;
 
   private:
   bsgo::PlayerViewShPtr m_playerView;

@@ -59,6 +59,13 @@ void HangarUiHandler::updateUi()
   }
 }
 
+void HangarUiHandler::reset()
+{
+  m_ships.clear();
+  m_menu->clearChildren();
+  m_initialized = false;
+}
+
 void HangarUiHandler::initializeHangar()
 {
   initializeLayout();
