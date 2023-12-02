@@ -2,6 +2,7 @@
 #pragma once
 
 #include "IUiHandler.hh"
+#include "UiMenu.hh"
 #include "Views.hh"
 #include <memory>
 
@@ -22,8 +23,8 @@ class HangarUiHandler : public IUiHandler
   bsgo::PlayerViewShPtr m_playerView;
   bool m_initialized{false};
 
-  MenuShPtr m_menu{};
-  std::vector<MenuShPtr> m_ships{};
+  UiMenuPtr m_menu{};
+  std::vector<UiMenu *> m_ships{};
 
   void initializeHangar();
   void initializeLayout();
