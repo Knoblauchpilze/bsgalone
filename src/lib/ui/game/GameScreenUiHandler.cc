@@ -151,9 +151,8 @@ void GameScreenUiHandler::generateOutpostMenus(int width, int /*height*/)
                       }
                     }};
 
-  auto bg   = bgConfigFromColor(olc::DARK_GREY);
-  auto text = textConfigFromColor("Dock", olc::WHITE);
-  log("t: " + str(text.color) + ", ht: " + str(text.hColor));
+  auto bg       = bgConfigFromColor(olc::DARK_GREY);
+  auto text     = textConfigFromColor("Dock", olc::WHITE);
   m_menus[DOCK] = std::make_unique<UiTextMenu>(config, bg, text);
 }
 
