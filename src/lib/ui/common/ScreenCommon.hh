@@ -48,5 +48,7 @@ auto generateBlankMenu(const olc::vi2d &pos,
 auto generateBlankMenu(const MenuConfig &config) -> UiMenuPtr;
 
 auto generateSpacer(const std::optional<olc::vi2d> &dims = {}) -> UiMenuPtr;
+auto generateColoredSpacer(const olc::Pixel &color, const std::optional<olc::vi2d> &dims = {})
+  -> UiMenuPtr;
 
 } // namespace pge

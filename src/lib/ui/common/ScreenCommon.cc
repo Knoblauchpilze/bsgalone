@@ -158,12 +158,18 @@ auto generateBlankMenu(const MenuConfig &config) -> UiMenuPtr
 
 auto generateSpacer(const std::optional<olc::vi2d> &dims) -> UiMenuPtr
 {
+  return generateColoredSpacer(olc::BLANK, dims);
+}
+
+auto generateColoredSpacer(const olc::Pixel &color, const std::optional<olc::vi2d> &dims)
+  -> UiMenuPtr
+{
   MenuConfig config{.highlightable = false, .propagateEventsToChildren = false};
   if (dims)
   {
     config.dims = *dims;
   }
-  const auto bg = bgConfigFromColor(olc::BLANK);
+  const auto bg = bgConfigFromColor(color);
   return std::make_unique<UiMenu>(config, bg);
 }
 
