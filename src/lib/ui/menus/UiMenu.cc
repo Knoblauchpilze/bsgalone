@@ -214,7 +214,7 @@ void UiMenu::onRelevantInput(UserInputData &inputData)
     }
     if (m_gameClickCallback)
     {
-      inputData.actions.emplace_back(std::make_unique<Action>(*m_gameClickCallback));
+      inputData.actions.emplace_back(*m_gameClickCallback);
     }
   }
 }

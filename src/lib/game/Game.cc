@@ -93,7 +93,7 @@ void Game::processUserInput(const controls::State &controls, CoordinateFrame &fr
 
     for (const auto &action : uid.actions)
     {
-      action->apply(*this);
+      action(*this);
     }
   }
 

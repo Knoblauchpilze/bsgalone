@@ -1,15 +1,18 @@
 
 #pragma once
 
-#include "Action.hh"
 #include "Controls.hh"
 
 namespace pge {
 
+class Game;
+
+using GameCallback = std::function<void(Game &)>;
+
 struct UserInputData
 {
   controls::State controls{};
-  std::vector<ActionPtr> actions{};
+  std::vector<GameCallback> actions{};
 };
 
 } // namespace pge
