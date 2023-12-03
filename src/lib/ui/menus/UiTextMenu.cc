@@ -20,6 +20,11 @@ void UiTextMenu::setText(const std::string &text)
   m_text.text = text;
 }
 
+void UiTextMenu::updateTextColor(const olc::Pixel &color)
+{
+  m_text = textConfigFromColor(m_text.text, color, m_text.align);
+}
+
 namespace {
 auto computeTextPositionFromAlignement(const olc::vi2d &offset,
                                        const olc::vi2d &dims,
