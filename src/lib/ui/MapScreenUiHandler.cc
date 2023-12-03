@@ -7,6 +7,7 @@ namespace pge {
 namespace {
 const auto SYSTEM_LABEL_DEFAULT_BG_COLOR  = olc::DARK_GREY;
 const auto SYSTEM_LABEL_SELECTED_BG_COLOR = olc::DARK_GREEN;
+const auto SYSTEM_LABEL_CURRENT_BG_COLOR  = olc::DARK_CYAN;
 } // namespace
 
 MapScreenUiHandler::MapScreenUiHandler(const bsgo::Views &views)
@@ -60,12 +61,17 @@ void MapScreenUiHandler::updateUi()
 
   m_jumpButton->setVisible(m_selectedSystem.has_value());
 
+  const auto currentSystem = m_serverView->getPlayerSystem();
   for (const auto &[systemId, menu] : m_systemMenus)
   {
     const auto isSelected = m_selectedSystem && (systemId == m_selectedSystem->systemId);
     if (isSelected)
     {
       menu->updateBgColor(SYSTEM_LABEL_SELECTED_BG_COLOR);
+    }
+    else if (currentSystem == systemId)
+    {
+      menu->updateBgColor(SYSTEM_LABEL_CURRENT_BG_COLOR);
     }
     else
     {
@@ -200,6 +206,15 @@ void MapScreenUiHandler::generateSystemButtons(const bsgo::System &system,
 
 void MapScreenUiHandler::onSystemSelected(const bsgo::Uuid &systemId, const int labelId)
 {
+  if (!m_serverView->isReady())
+  {
+    return;
+  }
+
+  if (systemId == m_serverView->getPlayerSystem())
+  {
+    return;
+  }
   m_selectedSystem = SelectedSystem{.systemId = systemId, .labelId = labelId};
 }
 
