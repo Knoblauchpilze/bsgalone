@@ -5,6 +5,7 @@
 #include "UiMenu.hh"
 #include "UiTextField.hh"
 #include "UiTextMenu.hh"
+#include "UiTimedMenu.hh"
 
 namespace pge {
 
@@ -28,9 +29,12 @@ class LoginScreenUiHandler : public IUiHandler
   UiTextMenuPtr m_loginButton{};
   UiTextMenuPtr m_quitButton{};
 
+  UiTimedMenuPtr m_loginFailureMenu{};
+
   void generateLoginMenu(const int width, const int height);
   void generateLoginButton(const int width, const int height);
   void generateQuitButton(const int width, const int height);
+  void generateLoginFailureMenu(const int width, const int height);
 
   void tryLogin(Game &game);
 };

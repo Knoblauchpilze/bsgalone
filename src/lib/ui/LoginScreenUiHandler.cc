@@ -19,6 +19,7 @@ void LoginScreenUiHandler::initializeMenus(const int width, const int height)
   generateLoginMenu(width, height);
   generateLoginButton(width, height);
   generateQuitButton(width, height);
+  generateLoginFailureMenu(width, height);
 }
 
 bool LoginScreenUiHandler::processUserInput(UserInputData &inputData)
@@ -40,9 +41,13 @@ void LoginScreenUiHandler::render(SpriteRenderer &engine) const
   m_loginPanel->render(engine.getRenderer());
   m_loginButton->render(engine.getRenderer());
   m_quitButton->render(engine.getRenderer());
+  m_loginFailureMenu->render(engine.getRenderer());
 }
 
-void LoginScreenUiHandler::updateUi() {}
+void LoginScreenUiHandler::updateUi()
+{
+  m_loginFailureMenu->update();
+}
 
 namespace {
 constexpr auto DUMMY_PIXEL_DIMENSION = 10;
@@ -137,6 +142,23 @@ void LoginScreenUiHandler::generateQuitButton(const int width, const int /*heigh
   m_quitButton    = std::make_unique<UiTextMenu>(config, bg, text);
 }
 
+void LoginScreenUiHandler::generateLoginFailureMenu(const int width, const int height)
+{
+  const olc::vi2d failureMenuDimsPixels{300, 150};
+  const olc::vi2d failureMenuPos{(width - failureMenuDimsPixels.x) / 2,
+                                 (height - failureMenuDimsPixels.y) / 2};
+
+  const MenuConfig config{.pos           = failureMenuPos,
+                          .dims          = failureMenuDimsPixels,
+                          .highlightable = false};
+
+  const auto bg   = bgConfigFromColor(olc::DARK_RED);
+  const auto text = textConfigFromColor("Login failed, check your credentials!", olc::BLACK);
+
+  auto menu          = std::make_unique<UiTextMenu>(config, bg, text);
+  m_loginFailureMenu = std::make_unique<UiTimedMenu>(std::move(menu));
+}
+
 void LoginScreenUiHandler::tryLogin(Game &game)
 {
   const auto name     = m_nameTextField->getText();
@@ -145,6 +167,7 @@ void LoginScreenUiHandler::tryLogin(Game &game)
   if (name.empty() || password.empty())
   {
     warn("Can't login with empty name or password");
+    m_loginFailureMenu->trigger();
     return;
   }
 
@@ -152,6 +175,10 @@ void LoginScreenUiHandler::tryLogin(Game &game)
   if (playerId)
   {
     game.login(*playerId);
+  }
+  else
+  {
+    m_loginFailureMenu->trigger();
   }
 }
 
