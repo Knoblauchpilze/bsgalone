@@ -158,6 +158,20 @@ inline auto transparent(const olc::Pixel &in, const uint8_t alpha) -> olc::Pixel
   return olc::Pixel{in.r, in.g, in.b, alpha};
 }
 
+inline auto opacityFromPercentage(const float perc) -> uint8_t
+{
+  const auto normalized = std::min(1.0f, std::max(0.0f, perc));
+  const auto opacity    = static_cast<int>(normalized * alpha::Opaque);
+  return static_cast<uint8_t>(std::min(255, std::max(0, opacity)));
+}
+
+inline auto opacifyFromPercentage(const olc::Pixel &in, const float perc) -> olc::Pixel
+{
+  auto out = in;
+  out.a    = opacityFromPercentage(perc);
+  return out;
+}
+
 inline auto str(const olc::Pixel &p) noexcept -> std::string
 {
   return std::string("[r: ") + std::to_string(p.r) + ", g: " + std::to_string(p.g)

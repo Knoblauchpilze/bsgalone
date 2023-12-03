@@ -62,6 +62,10 @@ constexpr uint8_t Transparent = 0;
 /// @return - the input color with the desired transparency.
 auto transparent(const olc::Pixel &in, const uint8_t alpha = alpha::Transparent) -> olc::Pixel;
 
+auto opacityFromPercentage(const float perc) -> uint8_t;
+
+auto opacifyFromPercentage(const olc::Pixel &in, const float perc) -> olc::Pixel;
+
 /// @brief - Provides a human readable display of a color.
 /// @param p - the pixel to convert to a string.
 /// @return - a human readable representing the color.
