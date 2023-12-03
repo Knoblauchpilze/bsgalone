@@ -20,6 +20,11 @@ void UiTextMenu::setText(const std::string &text)
   m_text.text = text;
 }
 
+auto UiTextMenu::getTextColor() const -> olc::Pixel
+{
+  return m_text.color;
+}
+
 void UiTextMenu::updateTextColor(const olc::Pixel &color)
 {
   m_text = textConfigFromColor(m_text.text, color, m_text.align);

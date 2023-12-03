@@ -14,6 +14,7 @@ class UiTextMenu : public UiMenu
 
   virtual auto getText() const noexcept -> std::string;
   void setText(const std::string &text);
+  auto getTextColor() const -> olc::Pixel;
   void updateTextColor(const olc::Pixel &color);
 
   protected:
