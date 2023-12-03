@@ -3,6 +3,7 @@
 
 #include "IUiHandler.hh"
 #include "UiMenu.hh"
+#include "UiTextMenu.hh"
 #include "Views.hh"
 #include <memory>
 
@@ -25,20 +26,21 @@ class ShopUiHandler : public IUiHandler
   UiMenuPtr m_menu{};
   std::vector<UiMenu *> m_items{};
 
-  struct BuyButton
+  struct ItemData
   {
     bsgo::Uuid itemId{};
     bsgo::Item itemType{};
     UiMenu *menu{};
+    std::unordered_map<bsgo::Uuid, UiTextMenu *> prices{};
   };
-  std::vector<BuyButton> m_buyButtons{};
+  std::vector<ItemData> m_itemsData{};
 
   void initializeLayout();
   void generateItemsMenus();
-  auto generateItemMenus(const bsgo::ShopItem &item) -> UiMenuPtr;
-  auto generateBuySection(const bsgo::ShopItem &item) -> UiMenuPtr;
+  auto generateItemMenus(const bsgo::ShopItem &item, const int itemId) -> UiMenuPtr;
+  auto generateBuySection(const int itemId) -> UiMenuPtr;
 
-  void onPurchaseRequest(const int buyButtonId);
+  void onPurchaseRequest(const int itemId);
 };
 
 using ShopUiHandlerPtr = std::unique_ptr<ShopUiHandler>;

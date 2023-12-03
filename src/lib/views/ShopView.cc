@@ -80,7 +80,7 @@ bool playerHasEnoughResources(const std::vector<PlayerResource> &resources, cons
 }
 } // namespace
 
-bool ShopView::canAfford(const Uuid &id, const Item &type) const
+auto ShopView::computeAffordability(const Uuid &id, const Item &type) const -> Affordability
 {
   checkPlayerDbIdExists();
 
@@ -101,15 +101,19 @@ bool ShopView::canAfford(const Uuid &id, const Item &type) const
 
   const auto playerResources = m_repositories.playerResourceRepository->findAllByPlayer(
     *m_playerDbId);
+  Affordability out{.canAfford = true};
+
   for (const auto &cost : item.price)
   {
-    if (!playerHasEnoughResources(playerResources, cost))
+    const auto enough                          = playerHasEnoughResources(playerResources, cost);
+    out.resourceAvailibility[cost.resource.id] = enough;
+    if (!enough)
     {
-      return false;
+      out.canAfford = false;
     }
   }
 
-  return true;
+  return out;
 }
 
 void ShopView::checkPlayerDbIdExists() const
