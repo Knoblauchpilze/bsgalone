@@ -3,6 +3,7 @@
 
 #include "IView.hh"
 #include <memory>
+#include <unordered_map>
 
 namespace bsgo {
 
@@ -32,7 +33,13 @@ class ShopView : public IView
   bool isReady() const noexcept override;
 
   auto getShopItems() const -> std::vector<ShopItem>;
-  bool canAfford(const Uuid &id, const Item &type) const;
+
+  struct Affordability
+  {
+    bool canAfford{false};
+    std::unordered_map<Uuid, bool> resourceAvailibility{};
+  };
+  auto computeAffordability(const Uuid &id, const Item &type) const -> Affordability;
 
   private:
   std::optional<Uuid> m_playerDbId{};

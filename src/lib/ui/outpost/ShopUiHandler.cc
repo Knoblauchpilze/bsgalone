@@ -59,6 +59,18 @@ void updateBuyButtonState(UiMenu &buyButton, const bool enable)
     buyButton.updateBgColor(olc::DARK_GREEN);
   }
 }
+
+void updatePricesState(const std::unordered_map<bsgo::Uuid, UiTextMenu *> &prices,
+                       const std::unordered_map<bsgo::Uuid, bool> &resourcesAvailability)
+{
+  for (const auto &[resource, menu] : prices)
+  {
+    const auto available = resourcesAvailability.contains(resource)
+                           && true == resourcesAvailability.at(resource);
+    const auto color = available ? olc::DARK_GREEN : olc::DARK_RED;
+    menu->updateTextColor(color);
+  }
+}
 } // namespace
 
 void ShopUiHandler::updateUi()
@@ -68,10 +80,11 @@ void ShopUiHandler::updateUi()
     return;
   }
 
-  for (const auto &buyButton : m_buyButtons)
+  for (const auto &itemData : m_itemsData)
   {
-    const auto affordable = m_shopView->canAfford(buyButton.itemId, buyButton.itemType);
-    updateBuyButtonState(*buyButton.menu, affordable);
+    const auto affordability = m_shopView->computeAffordability(itemData.itemId, itemData.itemType);
+    updateBuyButtonState(*itemData.menu, affordability.canAfford);
+    updatePricesState(itemData.prices, affordability.resourceAvailibility);
   }
 }
 
@@ -138,17 +151,20 @@ void ShopUiHandler::generateItemsMenus()
   auto itemId = 0;
   for (const auto &item : items)
   {
-    auto itemSection = generateItemMenus(item);
+    ItemData data{.itemId = item.id(), .itemType = item.type()};
+    m_itemsData.push_back(data);
+
+    auto itemSection = generateItemMenus(item, itemId);
     m_items[itemId]->addMenu(std::move(itemSection));
 
-    auto buySection = generateBuySection(item);
+    auto buySection = generateBuySection(itemId);
     m_items[itemId]->addMenu(std::move(buySection));
 
     ++itemId;
   }
 }
 
-auto ShopUiHandler::generateItemMenus(const bsgo::ShopItem &item) -> UiMenuPtr
+auto ShopUiHandler::generateItemMenus(const bsgo::ShopItem &item, const int itemId) -> UiMenuPtr
 {
   auto menu = generateBlankVerticalMenu();
   if (item.weapon)
@@ -162,31 +178,34 @@ auto ShopUiHandler::generateItemMenus(const bsgo::ShopItem &item) -> UiMenuPtr
     menu->addMenu(std::move(itemMenu));
   }
 
-  for (auto &cost : generatePriceMenus(item))
+  auto id = 0;
+  for (auto &costMenu : generatePriceMenus(item))
   {
-    menu->addMenu(std::move(cost));
+    const auto cost = item.price.at(id);
+
+    m_itemsData.at(itemId).prices[cost.resource.id] = costMenu.get();
+    menu->addMenu(std::move(costMenu));
+
+    ++id;
   }
 
   return menu;
 }
 
-auto ShopUiHandler::generateBuySection(const bsgo::ShopItem &item) -> UiMenuPtr
+auto ShopUiHandler::generateBuySection(const int itemId) -> UiMenuPtr
 {
   auto middleSection = generateBlankVerticalMenu();
   middleSection->addMenu(generateSpacer());
 
-  const auto buttonId = static_cast<int>(m_buyButtons.size());
-  MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .clickCallback = [this, buttonId]() {
-                      onPurchaseRequest(buttonId);
+  MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .clickCallback = [this, itemId]() {
+                      onPurchaseRequest(itemId);
                     }};
 
   const auto bg       = bgConfigFromColor(olc::BLANK);
   const auto textConf = textConfigFromColor("Buy", olc::WHITE);
   auto buyButton      = std::make_unique<UiTextMenu>(config, bg, textConf);
 
-  BuyButton save{.itemId = item.id(), .itemType = item.type(), .menu = buyButton.get()};
-  m_buyButtons.push_back(save);
-
+  m_itemsData.at(itemId).menu = buyButton.get();
   updateBuyButtonState(*buyButton, false);
 
   middleSection->addMenu(std::move(buyButton));
@@ -201,9 +220,9 @@ auto ShopUiHandler::generateBuySection(const bsgo::ShopItem &item) -> UiMenuPtr
   return menu;
 }
 
-void ShopUiHandler::onPurchaseRequest(const int buyButtonId)
+void ShopUiHandler::onPurchaseRequest(const int itemId)
 {
-  const auto &purchase = m_buyButtons.at(buyButtonId);
+  const auto &purchase = m_itemsData.at(itemId);
   /// TODO: Handle the purchase request.
   warn("should buy " + bsgo::str(purchase.itemId) + " with type " + bsgo::str(purchase.itemType));
 }
