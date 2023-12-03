@@ -18,11 +18,6 @@
 
 namespace pge {
 
-// Forward declaration of the `Menu` class to be able
-// to use it right away.
-class Menu;
-using MenuShPtr = std::shared_ptr<Menu>;
-
 class IRenderer;
 using IRendererPtr = std::unique_ptr<IRenderer>;
 
@@ -70,29 +65,6 @@ class Game : public utils::CoreObject
   void requestJump(const bsgo::Uuid &systemId);
 
   private:
-  /// @brief - Convenience structure allowing to group information
-  /// about a timed menu.
-  struct TimedMenu
-  {
-    // Information about when the menu started appearing.
-    utils::TimeStamp date;
-
-    // Keep track of whether the menu was already active.
-    bool wasActive;
-
-    // The alert menu indicating controlled by this object.
-    MenuShPtr menu;
-
-    // The duration of the alert.
-    int duration;
-
-    /// @brief - Used to update the internal attribute with the current value
-    /// of whether the menu should be active or not.
-    /// @param active - `true` if the menu should still be active.
-    /// @return - `true` if the menu is still visible.
-    bool update(bool active) noexcept;
-  };
-
   /// @brief - Convenience information defining the state of the
   /// game. It includes information about whether the menus should
   /// be displayed and if the user actions should be interpreted
