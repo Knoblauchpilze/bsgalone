@@ -4,7 +4,6 @@
 #include "BackgroundConfig.hh"
 #include "Controls.hh"
 #include "MenuConfig.hh"
-#include "UserInputData.hh"
 #include "olcEngine.hh"
 #include <core_utils/CoreObject.hh>
 #include <memory>
