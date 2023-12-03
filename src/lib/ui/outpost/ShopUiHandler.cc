@@ -135,7 +135,7 @@ auto generatePriceMenus(const bsgo::ShopItem &item) -> std::vector<UiTextMenuPtr
 
     const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .highlightable = false};
     const auto bg       = bgConfigFromColor(olc::BLANK);
-    const auto textConf = textConfigFromColor(text, olc::WHITE);
+    const auto textConf = textConfigFromColor(text, olc::DARK_RED);
     auto menu           = std::make_unique<UiTextMenu>(config, bg, textConf);
     out.push_back(std::move(menu));
   }
