@@ -65,6 +65,20 @@ void LockerUiHandler::updateUi()
   }
 }
 
+void LockerUiHandler::reset()
+{
+  m_locker->clearChildren();
+  m_ship->clearChildren();
+
+  m_resources.clear();
+  m_lockerWeapons.clear();
+  m_lockerComputers.clear();
+  m_shipWeapons.clear();
+  m_shipComputers.clear();
+
+  m_initialized = false;
+}
+
 void LockerUiHandler::initializeLocker()
 {
   initializeLayout();
