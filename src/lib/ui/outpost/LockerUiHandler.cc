@@ -4,6 +4,7 @@
 #include "ScreenCommon.hh"
 #include "SlotComponentUtils.hh"
 #include "StringUtils.hh"
+#include "UiTextMenu.hh"
 
 namespace pge {
 
@@ -30,27 +31,21 @@ void LockerUiHandler::initializeMenus(const int width, const int height)
   const olc::vi2d pos{width - viewWidth - VIEW_TO_RIGHT_OF_SCREEN_IN_PIXELS,
                       height - viewHeight - VIEW_TO_RIGHT_OF_SCREEN_IN_PIXELS};
   const olc::vi2d dims{viewWidth, viewHeight};
-  m_menu = generateMenu(pos,
-                        dims,
-                        "",
-                        "background",
-                        olc::DARK_YELLOW,
-                        {olc::WHITE},
-                        false,
-                        false,
-                        menu::Layout::Horizontal);
 
-  m_locker = generateMenu(pos, dims, "", "locker", olc::DARK_YELLOW, {olc::WHITE});
-  m_menu->addMenu(m_locker);
+  m_menu = generateBlankHorizontalMenu(pos, dims);
 
-  m_ship = generateMenu(pos, dims, "", "ship", olc::DARK_YELLOW, {olc::WHITE});
-  m_menu->addMenu(m_ship);
+  auto locker = generateBlankVerticalMenu(pos, dims);
+  m_locker    = locker.get();
+  m_menu->addMenu(std::move(locker));
+
+  auto ship = generateBlankVerticalMenu(pos, dims);
+  m_ship    = ship.get();
+  m_menu->addMenu(std::move(ship));
 }
 
 bool LockerUiHandler::processUserInput(UserInputData &inputData)
 {
-  const auto out = m_menu->processUserInput(inputData.controls, inputData.actions);
-  return out.relevant;
+  return m_menu->processUserInput(inputData);
 }
 
 void LockerUiHandler::render(SpriteRenderer &engine) const
@@ -88,84 +83,91 @@ void LockerUiHandler::initializeLayout()
   initializeShipLayout();
 }
 
+namespace {
+constexpr auto DUMMY_PIXEL_DIMENSION = 10;
+const olc::vi2d DUMMY_DIMENSION{DUMMY_PIXEL_DIMENSION, DUMMY_PIXEL_DIMENSION};
+} // namespace
+
 void LockerUiHandler::initializeLockerLayout()
 {
-  const olc::vi2d pos{};
-  const olc::vi2d dims{10, 10};
+  const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .propagateEventsToChildren = false};
 
-  const auto resources = m_playerView->getPlayerResources();
+  const auto resources  = m_playerView->getPlayerResources();
+  const auto bgResource = bgConfigFromColor(olc::DARK_GREEN);
   for (auto id = 0u; id < resources.size(); ++id)
   {
-    auto text = "base_resource" + std::to_string(id);
-    auto resourceMenu
-      = generateSlotMenu(pos, dims, "", text, olc::VERY_DARK_GREEN, {olc::WHITE}, true);
-    m_locker->addMenu(resourceMenu);
-    m_resources.push_back(resourceMenu);
+    auto menu = std::make_unique<UiMenu>(config, bgResource);
+    m_resources.push_back(menu.get());
+    m_locker->addMenu(std::move(menu));
   }
 
-  const auto weapons = m_playerView->getPlayerWeapons();
+  const auto weapons  = m_playerView->getPlayerWeapons();
+  const auto bgWeapon = bgConfigFromColor(olc::DARK_RED);
   for (auto id = 0u; id < weapons.size(); ++id)
   {
-    auto text       = "locker_weapon" + std::to_string(id);
-    auto weaponMenu = generateSlotMenu(pos, dims, "", text, olc::VERY_DARK_RED, {olc::WHITE}, true);
-    m_locker->addMenu(weaponMenu);
-    m_lockerWeapons.push_back(weaponMenu);
+    auto menu = std::make_unique<UiMenu>(config, bgWeapon);
+    m_lockerWeapons.push_back(menu.get());
+    m_locker->addMenu(std::move(menu));
   }
 
-  const auto computers = m_playerView->getPlayerComputers();
+  const auto computers  = m_playerView->getPlayerComputers();
+  const auto bgComputer = bgConfigFromColor(olc::DARK_YELLOW);
   for (auto id = 0u; id < computers.size(); ++id)
   {
-    auto text = "locker_computer" + std::to_string(id);
-    auto computerMenu
-      = generateSlotMenu(pos, dims, "", text, olc::VERY_DARK_YELLOW, {olc::WHITE}, true);
-    m_locker->addMenu(computerMenu);
-    m_lockerComputers.push_back(computerMenu);
+    auto menu = std::make_unique<UiMenu>(config, bgComputer);
+    m_lockerComputers.push_back(menu.get());
+    m_locker->addMenu(std::move(menu));
   }
 }
 
 void LockerUiHandler::initializeShipLayout()
 {
-  const olc::vi2d pos{};
-  const olc::vi2d dims{10, 10};
-
   const auto slots = m_shipView->getPlayerShipSlots();
 
-  const auto weaponsCount = slots.contains(bsgo::Slot::WEAPON) ? slots.at(bsgo::Slot::WEAPON) : 0;
-  for (auto id = 0; id < weaponsCount; ++id)
+  const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .propagateEventsToChildren = false};
+
+  if (slots.contains(bsgo::Slot::WEAPON))
   {
-    auto text       = "ship_weapon" + std::to_string(id);
-    auto weaponMenu = generateSlotMenu(pos, dims, "", text, olc::DARK_RED, {olc::WHITE}, true);
-    m_ship->addMenu(weaponMenu);
-    m_shipWeapons.push_back(weaponMenu);
+    const auto weaponsCount = slots.at(bsgo::Slot::WEAPON);
+    const auto bg           = bgConfigFromColor(olc::DARK_RED);
+    for (auto id = 0; id < weaponsCount; ++id)
+    {
+      auto menu = std::make_unique<UiMenu>(config, bg);
+      m_shipWeapons.push_back(menu.get());
+      m_ship->addMenu(std::move(menu));
+    }
   }
 
-  const auto computersCount = slots.contains(bsgo::Slot::COMPUTER) ? slots.at(bsgo::Slot::COMPUTER)
-                                                                   : 0;
-  for (auto id = 0; id < computersCount; ++id)
+  if (slots.contains(bsgo::Slot::COMPUTER))
   {
-    auto text         = "ship_computer" + std::to_string(id);
-    auto computerMenu = generateSlotMenu(pos, dims, "", text, olc::DARK_YELLOW, {olc::WHITE}, true);
-    m_ship->addMenu(computerMenu);
-    m_shipComputers.push_back(computerMenu);
+    const auto computersCount = slots.at(bsgo::Slot::COMPUTER);
+    const auto bg             = bgConfigFromColor(olc::DARK_YELLOW);
+    for (auto id = 0; id < computersCount; ++id)
+    {
+      auto menu = std::make_unique<UiMenu>(config, bg);
+      m_shipComputers.push_back(menu.get());
+      m_ship->addMenu(std::move(menu));
+    }
   }
 }
 
 void LockerUiHandler::generateResourcesMenus()
 {
-  const olc::vi2d pos{};
-  const olc::vi2d dims{10, 10};
-
   const auto resources = m_playerView->getPlayerResources();
 
-  auto id = 0;
+  const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .propagateEventsToChildren = false};
+  const auto bg = bgConfigFromColor(olc::BLANK);
+  auto id       = 0;
+
   for (const auto &resource : resources)
   {
-    auto name = generateMenu(pos, dims, resource.name, "name", olc::BLANK);
-    m_resources[id]->addMenu(name);
+    auto textConf = textConfigFromColor(resource.name, olc::BLACK);
+    auto field    = std::make_unique<UiTextMenu>(config, bg, textConf);
+    m_resources[id]->addMenu(std::move(field));
 
-    const auto text = "Amount: " + floatToStr(std::floor(resource.amount), 0);
-    auto amount     = generateMenu(pos, dims, text, "amount", olc::BLANK);
-    m_resources[id]->addMenu(amount);
+    textConf.text = "Amount: " + floatToStr(std::floor(resource.amount), 0);
+    field         = std::make_unique<UiTextMenu>(config, bg, textConf);
+    m_resources[id]->addMenu(std::move(field));
 
     ++id;
   }
@@ -173,24 +175,25 @@ void LockerUiHandler::generateResourcesMenus()
 
 void LockerUiHandler::generateLockerWeaponsMenus()
 {
-  const olc::vi2d pos{};
-  const olc::vi2d dims{10, 10};
-
   const auto weapons = m_playerView->getPlayerWeapons();
 
-  auto id = 0;
+  const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .propagateEventsToChildren = false};
+  const auto bg = bgConfigFromColor(olc::BLANK);
+  auto id       = 0;
+
   for (const auto &weapon : weapons)
   {
-    auto name = generateMenu(pos, dims, weapon.name, "name", olc::BLANK);
-    m_lockerWeapons[id]->addMenu(name);
+    auto textConf = textConfigFromColor(weapon.name, olc::BLACK);
+    auto field    = std::make_unique<UiTextMenu>(config, bg, textConf);
+    m_lockerWeapons[id]->addMenu(std::move(field));
 
-    auto text  = "Level: " + std::to_string(weapon.level);
-    auto level = generateMenu(pos, dims, text, "level", olc::BLANK);
-    m_lockerWeapons[id]->addMenu(level);
+    textConf.text = "Level: " + std::to_string(weapon.level);
+    field         = std::make_unique<UiTextMenu>(config, bg, textConf);
+    m_lockerWeapons[id]->addMenu(std::move(field));
 
-    text       = "Range: " + floatToStr(weapon.range, 0) + "m";
-    auto range = generateMenu(olc::vi2d{}, dims, text, "range", olc::BLANK);
-    m_lockerWeapons[id]->addMenu(range);
+    textConf.text = "Range: " + floatToStr(weapon.range, 0) + "m";
+    field         = std::make_unique<UiTextMenu>(config, bg, textConf);
+    m_lockerWeapons[id]->addMenu(std::move(field));
 
     ++id;
   }
@@ -198,32 +201,32 @@ void LockerUiHandler::generateLockerWeaponsMenus()
 
 void LockerUiHandler::generateLockerComputersMenus()
 {
-  const olc::vi2d pos{};
-  const olc::vi2d dims{10, 10};
-
   const auto computers = m_playerView->getPlayerComputers();
 
-  auto id = 0;
+  const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .propagateEventsToChildren = false};
+  const auto bg = bgConfigFromColor(olc::BLANK);
+  auto id       = 0;
 
   for (const auto &computer : computers)
   {
-    auto name = generateMenu(pos, dims, computer.name, "name", olc::BLANK);
-    m_lockerComputers[id]->addMenu(name);
+    auto textConf = textConfigFromColor(computer.name, olc::BLACK);
+    auto field    = std::make_unique<UiTextMenu>(config, bg, textConf);
+    m_lockerComputers[id]->addMenu(std::move(field));
 
-    auto text  = "Level: " + std::to_string(computer.level);
-    auto level = generateMenu(pos, dims, text, "level", olc::BLANK);
-    m_lockerComputers[id]->addMenu(level);
+    textConf.text = "Level: " + std::to_string(computer.level);
+    field         = std::make_unique<UiTextMenu>(config, bg, textConf);
+    m_lockerComputers[id]->addMenu(std::move(field));
 
     if (computer.range)
     {
-      text = "Range: " + floatToStr(*computer.range, 0) + "m";
+      textConf.text = "Range: " + floatToStr(*computer.range, 0) + "m";
     }
     else
     {
-      text = "Area";
+      textConf.text = "Area";
     }
-    auto range = generateMenu(olc::vi2d{}, dims, text, "range", olc::BLANK);
-    m_lockerComputers[id]->addMenu(range);
+    field = std::make_unique<UiTextMenu>(config, bg, textConf);
+    m_lockerComputers[id]->addMenu(std::move(field));
 
     ++id;
   }
@@ -231,24 +234,25 @@ void LockerUiHandler::generateLockerComputersMenus()
 
 void LockerUiHandler::generateShipWeaponsMenus()
 {
-  const olc::vi2d pos{};
-  const olc::vi2d dims{10, 10};
-
   const auto weapons = m_shipView->getPlayerShipWeapons();
 
-  auto id = 0;
+  const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .propagateEventsToChildren = false};
+  const auto bg = bgConfigFromColor(olc::BLANK);
+  auto id       = 0;
+
   for (const auto &weapon : weapons)
   {
-    auto name = generateMenu(pos, dims, weapon.name, "name", olc::BLANK);
-    m_shipWeapons[id]->addMenu(name);
+    auto textConf = textConfigFromColor(weapon.name, olc::BLACK);
+    auto field    = std::make_unique<UiTextMenu>(config, bg, textConf);
+    m_shipWeapons[id]->addMenu(std::move(field));
 
-    auto text  = "Level: " + std::to_string(weapon.level);
-    auto level = generateMenu(pos, dims, text, "level", olc::BLANK);
-    m_shipWeapons[id]->addMenu(level);
+    textConf.text = "Level: " + std::to_string(weapon.level);
+    field         = std::make_unique<UiTextMenu>(config, bg, textConf);
+    m_shipWeapons[id]->addMenu(std::move(field));
 
-    text       = "Range: " + floatToStr(weapon.range, 0) + "m";
-    auto range = generateMenu(olc::vi2d{}, dims, text, "range", olc::BLANK);
-    m_shipWeapons[id]->addMenu(range);
+    textConf.text = "Range: " + floatToStr(weapon.range, 0) + "m";
+    field         = std::make_unique<UiTextMenu>(config, bg, textConf);
+    m_shipWeapons[id]->addMenu(std::move(field));
 
     ++id;
   }
@@ -256,32 +260,32 @@ void LockerUiHandler::generateShipWeaponsMenus()
 
 void LockerUiHandler::generateShipComputersMenus()
 {
-  const olc::vi2d pos{};
-  const olc::vi2d dims{10, 10};
-
   const auto computers = m_shipView->getPlayerShipComputers();
 
-  auto id = 0;
+  const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .propagateEventsToChildren = false};
+  const auto bg = bgConfigFromColor(olc::BLANK);
+  auto id       = 0;
 
   for (const auto &computer : computers)
   {
-    auto name = generateMenu(pos, dims, computer.name, "name", olc::BLANK);
-    m_shipComputers[id]->addMenu(name);
+    auto textConf = textConfigFromColor(computer.name, olc::BLACK);
+    auto field    = std::make_unique<UiTextMenu>(config, bg, textConf);
+    m_shipComputers[id]->addMenu(std::move(field));
 
-    auto text  = "Level: " + std::to_string(computer.level);
-    auto level = generateMenu(pos, dims, text, "level", olc::BLANK);
-    m_shipComputers[id]->addMenu(level);
+    textConf.text = "Level: " + std::to_string(computer.level);
+    field         = std::make_unique<UiTextMenu>(config, bg, textConf);
+    m_shipComputers[id]->addMenu(std::move(field));
 
     if (computer.range)
     {
-      text = "Range: " + floatToStr(*computer.range, 0) + "m";
+      textConf.text = "Range: " + floatToStr(*computer.range, 0) + "m";
     }
     else
     {
-      text = "Area";
+      textConf.text = "Area";
     }
-    auto range = generateMenu(olc::vi2d{}, dims, text, "range", olc::BLANK);
-    m_shipComputers[id]->addMenu(range);
+    field = std::make_unique<UiTextMenu>(config, bg, textConf);
+    m_shipComputers[id]->addMenu(std::move(field));
 
     ++id;
   }

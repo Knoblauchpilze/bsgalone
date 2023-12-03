@@ -3,6 +3,7 @@
 
 #include "IUiHandler.hh"
 #include "PlayerView.hh"
+#include "UiMenu.hh"
 #include "Views.hh"
 #include <memory>
 #include <vector>
@@ -25,14 +26,14 @@ class LockerUiHandler : public IUiHandler
   bsgo::ShipViewShPtr m_shipView;
   bool m_initialized{false};
 
-  MenuShPtr m_menu{};
-  MenuShPtr m_locker{};
-  MenuShPtr m_ship{};
-  std::vector<MenuShPtr> m_resources{};
-  std::vector<MenuShPtr> m_lockerWeapons{};
-  std::vector<MenuShPtr> m_lockerComputers{};
-  std::vector<MenuShPtr> m_shipWeapons{};
-  std::vector<MenuShPtr> m_shipComputers{};
+  UiMenuPtr m_menu{};
+  UiMenu *m_locker{};
+  UiMenu *m_ship{};
+  std::vector<UiMenu *> m_resources{};
+  std::vector<UiMenu *> m_lockerWeapons{};
+  std::vector<UiMenu *> m_lockerComputers{};
+  std::vector<UiMenu *> m_shipWeapons{};
+  std::vector<UiMenu *> m_shipComputers{};
 
   void initializeLocker();
   void initializeLayout();
