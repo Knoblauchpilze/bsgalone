@@ -28,6 +28,7 @@ class UiMenu : public utils::CoreObject
 
   void addMenu(UiMenuPtr child);
   void clearChildren();
+  auto getBgColor() const -> olc::Pixel;
   void updateBgColor(const olc::Pixel &color);
 
   void render(olc::PixelGameEngine *pge) const;

@@ -48,6 +48,11 @@ void UiMenu::clearChildren()
   m_children.clear();
 }
 
+auto UiMenu::getBgColor() const -> olc::Pixel
+{
+  return m_bg.color;
+}
+
 void UiMenu::updateBgColor(const olc::Pixel &color)
 {
   m_bg = bgConfigFromColor(color);
