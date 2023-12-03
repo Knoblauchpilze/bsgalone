@@ -4,6 +4,7 @@
 #include "IUiHandler.hh"
 #include "UiMenu.hh"
 #include <optional>
+#include <unordered_map>
 
 namespace pge {
 
@@ -23,6 +24,7 @@ class MapScreenUiHandler : public IUiHandler
 
   std::vector<UiMenuPtr> m_buttons{};
   UiMenu *m_jumpButton{};
+  std::unordered_map<bsgo::Uuid, UiMenu *> m_systemMenus{};
 
   struct SelectedSystem
   {
@@ -38,7 +40,6 @@ class MapScreenUiHandler : public IUiHandler
                              const olc::vi2d &mapOffset,
                              const olc::vi2d &mapDims);
 
-  void resetSelectedSystem();
   void onSystemSelected(const bsgo::Uuid &systemId, const int labelId);
   void onJumpRequested(Game &g);
 };

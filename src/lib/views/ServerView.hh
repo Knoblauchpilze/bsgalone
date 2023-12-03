@@ -14,6 +14,10 @@ class ServerView : public IView
   ServerView(const CoordinatorShPtr &coordinator, const Repositories &repositories);
   ~ServerView() override = default;
 
+  void setPlayerDbId(const Uuid &player);
+  bool isReady() const noexcept override;
+
+  auto getPlayerSystem() const -> Uuid;
   auto getAllSystems() const -> std::vector<System>;
 
   struct Bounds
@@ -22,6 +26,11 @@ class ServerView : public IView
     Eigen::Vector3f max{};
   };
   auto getMapBounds() const -> Bounds;
+
+  private:
+  std::optional<Uuid> m_playerDbId{};
+
+  void checkPlayerDbIdExists() const;
 };
 
 using ServerViewShPtr = std::shared_ptr<ServerView>;

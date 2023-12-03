@@ -37,7 +37,7 @@ bool MapScreenUiHandler::processUserInput(UserInputData &inputData)
 
   if (m_selectedSystem && inputData.controls.released(controls::mouse::LEFT))
   {
-    resetSelectedSystem();
+    m_selectedSystem.reset();
   }
 
   return false;
@@ -53,7 +53,25 @@ void MapScreenUiHandler::render(SpriteRenderer &engine) const
 
 void MapScreenUiHandler::updateUi()
 {
+  if (!m_serverView->isReady())
+  {
+    return;
+  }
+
   m_jumpButton->setVisible(m_selectedSystem.has_value());
+
+  for (const auto &[systemId, menu] : m_systemMenus)
+  {
+    const auto isSelected = m_selectedSystem && (systemId == m_selectedSystem->systemId);
+    if (isSelected)
+    {
+      menu->updateBgColor(SYSTEM_LABEL_SELECTED_BG_COLOR);
+    }
+    else
+    {
+      menu->updateBgColor(SYSTEM_LABEL_DEFAULT_BG_COLOR);
+    }
+  }
 }
 
 void MapScreenUiHandler::generateControlButtons(const int width, const int height)
@@ -65,10 +83,7 @@ void MapScreenUiHandler::generateControlButtons(const int width, const int heigh
 
   MenuConfig config{.pos               = buttonPos,
                     .dims              = controlButtonDimsPixels,
-                    .gameClickCallback = [this](Game &g) {
-                      resetSelectedSystem();
-                      g.setScreen(Screen::GAME);
-                    }};
+                    .gameClickCallback = [this](Game &g) { g.setScreen(Screen::GAME); }};
 
   auto bg         = bgConfigFromColor(olc::VERY_DARK_COBALT_BLUE);
   auto text       = textConfigFromColor("Close", olc::WHITE);
@@ -176,28 +191,16 @@ void MapScreenUiHandler::generateSystemButtons(const bsgo::System &system,
                              + GAP_BETWEEN_BUTTON_AND_LABEL_PIXELS};
 
   const MenuConfig labelConfig{.pos = labelPos, .dims = labelDimsPixels, .highlightable = false};
-  const auto labelBg = bgConfigFromColor(SYSTEM_LABEL_DEFAULT_BG_COLOR);
-  const auto text    = textConfigFromColor(system.name, olc::WHITE);
-  auto label         = std::make_unique<UiTextMenu>(labelConfig, labelBg, text);
+  const auto labelBg       = bgConfigFromColor(SYSTEM_LABEL_DEFAULT_BG_COLOR);
+  const auto text          = textConfigFromColor(system.name, olc::WHITE);
+  auto label               = std::make_unique<UiTextMenu>(labelConfig, labelBg, text);
+  m_systemMenus[system.id] = label.get();
   m_buttons.push_back(std::move(label));
-}
-
-void MapScreenUiHandler::resetSelectedSystem()
-{
-  if (!m_selectedSystem)
-  {
-    return;
-  }
-
-  m_buttons[m_selectedSystem->labelId]->updateBgColor(SYSTEM_LABEL_DEFAULT_BG_COLOR);
 }
 
 void MapScreenUiHandler::onSystemSelected(const bsgo::Uuid &systemId, const int labelId)
 {
-  resetSelectedSystem();
-
   m_selectedSystem = SelectedSystem{.systemId = systemId, .labelId = labelId};
-  m_buttons[labelId]->updateBgColor(SYSTEM_LABEL_SELECTED_BG_COLOR);
 }
 
 void MapScreenUiHandler::onJumpRequested(Game &g)
@@ -208,7 +211,6 @@ void MapScreenUiHandler::onJumpRequested(Game &g)
   }
 
   const auto systemId = m_selectedSystem->systemId;
-  resetSelectedSystem();
   g.requestJump(systemId);
 }
 

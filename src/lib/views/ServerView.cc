@@ -7,6 +7,22 @@ ServerView::ServerView(const CoordinatorShPtr &coordinator, const Repositories &
   : IView("server", coordinator, repositories)
 {}
 
+void ServerView::setPlayerDbId(const Uuid &player)
+{
+  m_playerDbId = player;
+}
+
+bool ServerView::isReady() const noexcept
+{
+  return m_playerDbId.has_value();
+}
+
+auto ServerView::getPlayerSystem() const -> Uuid
+{
+  checkPlayerDbIdExists();
+  return m_repositories.playerRepository->findSystemByPlayer(*m_playerDbId);
+}
+
 auto ServerView::getAllSystems() const -> std::vector<System>
 {
   std::vector<System> out;
@@ -63,6 +79,14 @@ auto ServerView::getMapBounds() const -> Bounds
   }
 
   return out;
+}
+
+void ServerView::checkPlayerDbIdExists() const
+{
+  if (!m_playerDbId)
+  {
+    error("Expected player db id to exist but it does not");
+  }
 }
 
 } // namespace bsgo
