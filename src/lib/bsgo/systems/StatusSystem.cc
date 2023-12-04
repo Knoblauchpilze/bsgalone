@@ -32,8 +32,8 @@ void StatusSystem::updateEntity(Entity &entity,
 void StatusSystem::handleAppearingState(Entity &entity, StatusComponent &statusComp) const
 {
   const auto status     = statusComp.status();
-  const auto lastUpdate = statusComp.getElapsedSinceLastChange();
-  if (statusIndicatesAppearing(status) && lastUpdate >= TIME_TO_STAY_IN_APPEARED_MODE)
+  const auto lastUpdate = statusComp.tryGetElapsedSinceLastAppearing();
+  if (statusIndicatesAppearing(status) && lastUpdate && *lastUpdate >= TIME_TO_STAY_IN_APPEARED_MODE)
   {
     log("Switching " + entity.str() + " from appeating to visible");
     statusComp.setStatus(updateStatusAfterSpawn(status));

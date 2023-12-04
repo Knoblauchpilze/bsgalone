@@ -10,7 +10,10 @@ StatusComponent::StatusComponent(const Status &status,
   , m_status(status)
   , m_jumpTime(jumpTime)
   , m_threatJumpTime(threatJumpTime)
-{}
+{
+  updateJumpState(m_status, true);
+  updateAppearingState(m_status);
+}
 
 auto StatusComponent::status() const -> Status
 {
@@ -50,6 +53,11 @@ auto StatusComponent::getElapsedSinceLastChange() const -> utils::Duration
   return m_elapsedSinceLastChange;
 }
 
+auto StatusComponent::tryGetElapsedSinceLastAppearing() const -> std::optional<utils::Duration>
+{
+  return m_elapsedSinceAppearing;
+}
+
 auto StatusComponent::tryGetCurrentJumpTime() const -> utils::Duration
 {
   if (!m_currentJumpTime)
@@ -78,7 +86,8 @@ auto StatusComponent::tryGetRemainingJumpTime() const -> utils::Duration
 
 void StatusComponent::setStatus(const Status &status)
 {
-  updateJumpState(status);
+  updateJumpState(status, false);
+  updateAppearingState(m_status);
 
   m_status                 = status;
   m_justChanged            = true;
@@ -92,20 +101,24 @@ void StatusComponent::update(const float elapsedSeconds)
     static_cast<int>(elapsedSeconds * MILLISECONDS_IN_A_SECONDS));
 
   m_elapsedSinceLastChange += elapsedMillis;
+  if (m_elapsedSinceAppearing)
+  {
+    *m_elapsedSinceAppearing += elapsedMillis;
+  }
   if (m_elapsedSinceJumpStarted)
   {
     *m_elapsedSinceJumpStarted += elapsedMillis;
   }
 }
 
-void StatusComponent::updateJumpState(const Status &newStatus)
+void StatusComponent::updateJumpState(const Status &newStatus, const bool forceUpdate)
 {
   if (!m_jumpTime || !m_threatJumpTime)
   {
     return;
   }
 
-  const auto wasJumping = statusIndicatesJump(m_status);
+  const auto wasJumping = statusIndicatesJump(m_status) && !forceUpdate;
   const auto isJumping  = statusIndicatesJump(newStatus);
   if (!wasJumping && isJumping)
   {
@@ -116,6 +129,19 @@ void StatusComponent::updateJumpState(const Status &newStatus)
   {
     m_elapsedSinceJumpStarted.reset();
     m_currentJumpTime.reset();
+  }
+}
+
+void StatusComponent::updateAppearingState(const Status &newStatus)
+{
+  if (m_elapsedSinceAppearing)
+  {
+    return;
+  }
+
+  if (statusIndicatesAppearing(newStatus))
+  {
+    m_elapsedSinceAppearing = utils::Duration{0};
   }
 }
 
