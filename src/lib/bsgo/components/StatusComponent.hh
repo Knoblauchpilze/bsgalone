@@ -24,6 +24,7 @@ class StatusComponent : public IComponent
   auto getElapsedSinceLastChange() const -> utils::Duration;
   auto tryGetCurrentJumpTime() const -> utils::Duration;
   auto tryGetElapsedSinceJumpStarted() const -> utils::Duration;
+  auto tryGetRemainingJumpTime() const -> utils::Duration;
 
   void setStatus(const Status &status);
 

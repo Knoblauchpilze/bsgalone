@@ -68,6 +68,14 @@ auto StatusComponent::tryGetElapsedSinceJumpStarted() const -> utils::Duration
   return *m_elapsedSinceJumpStarted;
 }
 
+auto StatusComponent::tryGetRemainingJumpTime() const -> utils::Duration
+{
+  const auto jumpTime = tryGetCurrentJumpTime();
+  const auto elapsed  = tryGetElapsedSinceJumpStarted();
+
+  return jumpTime - elapsed;
+}
+
 void StatusComponent::setStatus(const Status &status)
 {
   updateJumpState(status);
