@@ -190,10 +190,7 @@ void ShipView::setJumpSystem(const Uuid &system)
 
 void ShipView::startJump() const
 {
-  auto playerShip   = getPlayerShip();
-  const auto status = playerShip.statusComp().status();
-
-  if (bsgo::statusIndicatesJump(status))
+  if (isJumping())
   {
     return;
   }
@@ -202,6 +199,9 @@ void ShipView::startJump() const
     return;
   }
 
+  auto playerShip   = getPlayerShip();
+  const auto status = playerShip.statusComp().status();
+
   log("Starting jump to " + str(*m_systemToJumpTo));
   const auto newStatus = updateStatusForJump(status);
   playerShip.statusComp().setStatus(newStatus);
@@ -209,13 +209,13 @@ void ShipView::startJump() const
 
 void ShipView::cancelJump() const
 {
-  auto playerShip   = getPlayerShip();
-  const auto status = playerShip.statusComp().status();
-
-  if (!bsgo::statusIndicatesJump(status))
+  if (!isJumping())
   {
     return;
   }
+
+  auto playerShip   = getPlayerShip();
+  const auto status = playerShip.statusComp().status();
 
   log("Cancelling jump");
   const auto newStatus = updateStatusAfterJumpCancellation(status);
@@ -258,6 +258,34 @@ auto ShipView::getPlayerShipSlots() const -> std::unordered_map<Slot, int>
 
   const auto ship = m_repositories.playerShipRepository->findOneById(*m_playerShipDbId);
   return ship.slots;
+}
+
+bool ShipView::isJumping() const
+{
+  const auto ship = getPlayerShip();
+  return bsgo::statusIndicatesJump(ship.statusComp().status());
+}
+
+auto ShipView::getJumpData() const -> JumpData
+{
+  if (!isJumping())
+  {
+    error("Expected jump to be started but it is not");
+  }
+  if (!m_systemToJumpTo)
+  {
+    error("Expected to have a system to jump to");
+  }
+
+  JumpData out{};
+
+  const auto system = m_repositories.systemRepository->findOneById(*m_systemToJumpTo);
+  out.systemName    = system.name;
+
+  const auto ship = getPlayerShip();
+  out.jumpTime    = ship.statusComp().tryGetRemainingJumpTime();
+
+  return out;
 }
 
 void ShipView::checkPlayerShipDbIdExists() const

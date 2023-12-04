@@ -41,6 +41,9 @@ class GameScreenUiHandler : public IUiHandler
     COUNT = 8,
   };
   std::vector<UiTextMenuPtr> m_menus{};
+  UiMenuPtr m_jumpPanel{};
+  UiTextMenu *m_jumpDestination{};
+  UiTextMenu *m_jumpTime{};
 
   WeaponsUiHandlerPtr m_weaponsUi{};
   AbilitiesUiHandlerPtr m_abilitiesUi{};
@@ -49,10 +52,12 @@ class GameScreenUiHandler : public IUiHandler
   void generateShipMenus(int width, int height);
   void generateTargetMenus(int width, int height);
   void generateOutpostMenus(int width, int height);
+  void generateJumpMenus(int width, int height);
 
   void updateShipUi();
   void updateTargetUi();
   void updateOutpostUi();
+  void updateJumpUi();
 };
 
 } // namespace pge
