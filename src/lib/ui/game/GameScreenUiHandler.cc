@@ -27,6 +27,7 @@ void GameScreenUiHandler::initializeMenus(const int width, const int height)
   generateShipMenus(width, height);
   generateTargetMenus(width, height);
   generateOutpostMenus(width, height);
+  generateJumpMenus(width, height);
 
   m_weaponsUi->initializeMenus(width, height);
   m_abilitiesUi->initializeMenus(width, height);
@@ -43,6 +44,10 @@ bool GameScreenUiHandler::processUserInput(UserInputData &inputData)
   if (!out)
   {
     out = m_gameOverUi->processUserInput(inputData);
+  }
+  if (!out)
+  {
+    out = m_jumpPanel->processUserInput(inputData);
   }
   if (!out)
   {
@@ -65,6 +70,8 @@ void GameScreenUiHandler::render(SpriteRenderer &engine) const
     menu->render(engine.getRenderer());
   }
 
+  m_jumpPanel->render(engine.getRenderer());
+
   m_weaponsUi->render(engine);
   m_abilitiesUi->render(engine);
   m_gameOverUi->render(engine);
@@ -72,9 +79,13 @@ void GameScreenUiHandler::render(SpriteRenderer &engine) const
 
 void GameScreenUiHandler::updateUi()
 {
-  updateShipUi();
-  updateTargetUi();
-  updateOutpostUi();
+  if (m_shipView->isReady())
+  {
+    updateShipUi();
+    updateTargetUi();
+    updateOutpostUi();
+    updateJumpUi();
+  }
 
   m_weaponsUi->updateUi();
   m_abilitiesUi->updateUi();
@@ -148,28 +159,67 @@ void GameScreenUiHandler::generateOutpostMenus(int width, int /*height*/)
   const olc::vi2d OUTPOST_UI_PIXEL_POS{width / 2, 70};
   const olc::vi2d OUTPOST_UI_PIXEL_DIMENSION{100, 25};
 
-  MenuConfig config{.pos               = OUTPOST_UI_PIXEL_POS,
-                    .dims              = OUTPOST_UI_PIXEL_DIMENSION,
-                    .gameClickCallback = [this](Game &g) {
-                      if (m_shipView->isReady())
-                      {
-                        m_shipView->dockPlayerShip();
-                        g.setScreen(Screen::OUTPOST);
-                      }
-                    }};
+  const MenuConfig config{.pos               = OUTPOST_UI_PIXEL_POS,
+                          .dims              = OUTPOST_UI_PIXEL_DIMENSION,
+                          .gameClickCallback = [this](Game &g) {
+                            if (m_shipView->isReady())
+                            {
+                              m_shipView->dockPlayerShip();
+                              g.setScreen(Screen::OUTPOST);
+                            }
+                          }};
 
   auto bg       = bgConfigFromColor(olc::DARK_GREY);
   auto text     = textConfigFromColor("Dock", olc::WHITE);
   m_menus[DOCK] = std::make_unique<UiTextMenu>(config, bg, text);
 }
 
+void GameScreenUiHandler::generateJumpMenus(int width, int height)
+{
+  const olc::vi2d JUMP_UI_PIXEL_DIMENSION{100, 100};
+  constexpr auto REASONABLE_GAP_PIXELS = 15;
+  const olc::vi2d JUMP_UI_PIXEL_POS{(width - JUMP_UI_PIXEL_DIMENSION.x) / 2,
+                                    height - JUMP_UI_PIXEL_DIMENSION.y - REASONABLE_GAP_PIXELS};
+
+  const MenuConfig config{.pos           = JUMP_UI_PIXEL_POS,
+                          .dims          = JUMP_UI_PIXEL_DIMENSION,
+                          .highlightable = false};
+
+  auto bg     = bgConfigFromColor(transparent(olc::DARK_RED, alpha::SemiOpaque));
+  m_jumpPanel = std::make_unique<UiMenu>(config, bg);
+
+  bg        = bgConfigFromColor(olc::BLANK);
+  auto text = textConfigFromColor("FTL Jump", olc::WHITE);
+  auto menu = std::make_unique<UiTextMenu>(config, bg, text);
+  m_jumpPanel->addMenu(std::move(menu));
+
+  m_jumpPanel->addMenu(generateSpacer());
+
+  text = textConfigFromColor("Destination:", olc::WHITE);
+  menu = std::make_unique<UiTextMenu>(config, bg, text);
+  m_jumpPanel->addMenu(std::move(menu));
+
+  text              = textConfigFromColor("N/A", olc::WHITE);
+  menu              = std::make_unique<UiTextMenu>(config, bg, text);
+  m_jumpDestination = menu.get();
+  m_jumpPanel->addMenu(std::move(menu));
+
+  m_jumpPanel->addMenu(generateSpacer());
+
+  text = textConfigFromColor("Remaining:", olc::WHITE);
+  menu = std::make_unique<UiTextMenu>(config, bg, text);
+  m_jumpPanel->addMenu(std::move(menu));
+
+  text       = textConfigFromColor("N/A", olc::WHITE);
+  menu       = std::make_unique<UiTextMenu>(config, bg, text);
+  m_jumpTime = menu.get();
+  m_jumpPanel->addMenu(std::move(menu));
+
+  m_jumpPanel->addMenu(generateSpacer());
+}
+
 void GameScreenUiHandler::updateShipUi()
 {
-  if (!m_shipView->isReady())
-  {
-    return;
-  }
-
   const auto ship = m_shipView->getPlayerShip();
 
   auto text = m_shipView->getPlayerShipName();
@@ -196,11 +246,6 @@ void GameScreenUiHandler::updateShipUi()
 
 void GameScreenUiHandler::updateTargetUi()
 {
-  if (!m_shipView->isReady())
-  {
-    return;
-  }
-
   const auto target = m_shipView->getPlayerTarget();
   m_menus[TARGET_NAME]->setVisible(target.has_value());
   m_menus[TARGET_HEALTH]->setVisible(target.has_value());
@@ -250,11 +295,6 @@ void GameScreenUiHandler::updateTargetUi()
 
 void GameScreenUiHandler::updateOutpostUi()
 {
-  if (!m_shipView->isReady())
-  {
-    return;
-  }
-
   const auto target                       = m_shipView->getPlayerTarget();
   constexpr auto MAXIMUM_DISTANCE_TO_DOCK = 5.0f;
   auto dockButtonVisible{false};
@@ -269,6 +309,21 @@ void GameScreenUiHandler::updateOutpostUi()
   }
 
   m_menus[DOCK]->setVisible(dockButtonVisible);
+}
+
+void GameScreenUiHandler::updateJumpUi()
+{
+  const auto jumping = m_shipView->isJumping();
+  m_jumpPanel->setVisible(jumping);
+
+  if (!jumping)
+  {
+    return;
+  }
+
+  const auto data = m_shipView->getJumpData();
+  m_jumpDestination->setText(data.systemName);
+  m_jumpTime->setText(utils::durationToPrettyString(data.jumpTime));
 }
 
 } // namespace pge

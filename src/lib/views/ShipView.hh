@@ -45,6 +45,14 @@ class ShipView : public IView
   auto getPlayerShipComputers() const -> std::vector<PlayerComputer>;
   auto getPlayerShipSlots() const -> std::unordered_map<Slot, int>;
 
+  bool isJumping() const;
+  struct JumpData
+  {
+    std::string systemName{};
+    utils::Duration jumpTime{};
+  };
+  auto getJumpData() const -> JumpData;
+
   private:
   std::optional<Uuid> m_playerShipDbId{};
   std::optional<Uuid> m_playerShipEntityId{};
