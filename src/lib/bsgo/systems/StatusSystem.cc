@@ -85,9 +85,8 @@ void StatusSystem::handleJumpState(Entity & /*entity*/, StatusComponent &statusC
     return;
   }
 
-  const auto elapsed  = statusComp.tryGetElapsedSinceJumpStarted();
-  const auto jumpTime = statusComp.tryGetCurrentJumpTime();
-  if (elapsed > jumpTime)
+  const auto remaining = statusComp.tryGetRemainingJumpTime();
+  if (remaining < utils::Duration{0})
   {
     /// TODO: Should handle jumping
     warn("Should handle jump");
