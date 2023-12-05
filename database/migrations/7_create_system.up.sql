@@ -2,6 +2,7 @@
 CREATE TABLE system (
   id INTEGER GENERATED ALWAYS AS IDENTITY,
   name TEXT NOT NULL,
+  starting_system BOOLEAN NOT NULL,
   x_pos NUMERIC(6, 2) NOT NULL,
   y_pos NUMERIC(6, 2) NOT NULL,
   z_pos NUMERIC(6, 2) NOT NULL,

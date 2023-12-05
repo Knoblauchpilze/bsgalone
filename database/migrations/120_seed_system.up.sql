@@ -1,8 +1,8 @@
 
-INSERT INTO public.system ("name", "x_pos", "y_pos", "z_pos")
-  VALUES ('Munnin', -2.5, 3.0, 0.0);
-INSERT INTO public.system ("name", "x_pos", "y_pos", "z_pos")
-  VALUES ('169 aretis', 3.0, -4.7, 0.0);
+INSERT INTO public.system ("name", "starting_system", "x_pos", "y_pos", "z_pos")
+  VALUES ('Munnin', true, -2.5, 3.0, 0.0);
+INSERT INTO public.system ("name", "starting_system", "x_pos", "y_pos", "z_pos")
+  VALUES ('169 aretis', false, 3.0, -4.7, 0.0);
 
 INSERT INTO public.ship_system ("ship", "system")
   VALUES (
