@@ -2,12 +2,19 @@
 CREATE TABLE system (
   id INTEGER GENERATED ALWAYS AS IDENTITY,
   name TEXT NOT NULL,
-  starting_system BOOLEAN NOT NULL,
   x_pos NUMERIC(6, 2) NOT NULL,
   y_pos NUMERIC(6, 2) NOT NULL,
   z_pos NUMERIC(6, 2) NOT NULL,
   PRIMARY KEY (id),
   UNIQUE (name)
+);
+
+CREATE TABLE starting_system (
+  system INTEGER NOT NULL,
+  faction TEXT NOT NULL,
+  PRIMARY KEY (system, faction),
+  FOREIGN KEY (system) REFERENCES system(id),
+  FOREIGN KEY (faction) REFERENCES faction(name)
 );
 
 CREATE TABLE ship_system (
