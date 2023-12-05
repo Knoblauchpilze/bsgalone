@@ -12,6 +12,7 @@ CREATE TABLE ship (
   name TEXT NOT NULL,
   faction TEXT NOT NULL,
   class TEXT NOT NULL,
+  starting_ship BOOLEAN NOT NULL,
   max_hull_points NUMERIC(8, 2) NOT NULL,
   hull_points_regen NUMERIC(8, 2) NOT NULL,
   max_power_points NUMERIC(8, 2) NOT NULL,

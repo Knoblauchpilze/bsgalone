@@ -4,17 +4,17 @@ INSERT INTO public.ship_class ("name", "jump_time_ms", "jump_time_threat_ms")
 INSERT INTO public.ship_class ("name", "jump_time_ms", "jump_time_threat_ms")
   VALUES ('line', 25000, 100000);
 
-INSERT INTO public.ship ("name", "faction", "class", "max_hull_points", "hull_points_regen", "max_power_points", "power_points_regen", "max_acceleration", "max_speed", "radius")
+INSERT INTO public.ship ("name", "faction", "class", "starting_ship", "max_hull_points", "hull_points_regen", "max_power_points", "power_points_regen", "max_acceleration", "max_speed", "radius")
   VALUES (
-      'Viper Mark II', 'colonial', 'strike', 450.0, 3.0, 100.0, 2.0, 5.0, 4.0, 0.5
+      'Viper Mark II', 'colonial', 'strike', true, 450.0, 3.0, 100.0, 2.0, 5.0, 4.0, 0.5
   );
-INSERT INTO public.ship ("name", "faction", "class", "max_hull_points", "hull_points_regen", "max_power_points", "power_points_regen", "max_acceleration", "max_speed", "radius")
+INSERT INTO public.ship ("name", "faction", "class", "starting_ship", "max_hull_points", "hull_points_regen", "max_power_points", "power_points_regen", "max_acceleration", "max_speed", "radius")
   VALUES (
-      'Cylon Raider', 'cylon', 'strike', 450.0, 3.0, 100.0, 2.0, 5.0, 4.0, 0.5
+      'Cylon Raider', 'cylon', 'strike', true, 450.0, 3.0, 100.0, 2.0, 5.0, 4.0, 0.5
   );
-INSERT INTO public.ship ("name", "faction", "class", "max_hull_points", "hull_points_regen", "max_power_points", "power_points_regen", "max_acceleration", "max_speed", "radius")
+INSERT INTO public.ship ("name", "faction", "class", "starting_ship", "max_hull_points", "hull_points_regen", "max_power_points", "power_points_regen", "max_acceleration", "max_speed", "radius")
   VALUES (
-      'Jotunn', 'colonial', 'line', 3000.0, 50.0, 500.0, 5.0, 1.0, 2.0, 2.0
+      'Jotunn', 'colonial', 'line', false, 3000.0, 50.0, 500.0, 5.0, 1.0, 2.0, 2.0
   );
 
 -- Viper Mark II
