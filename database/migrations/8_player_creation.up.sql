@@ -43,7 +43,7 @@ BEGIN
     -- spawn the ship in the starting system
     INSERT INTO public.ship_system ("ship", "system")
       VALUES (
-        (SELECT player_ship.id FROM player_ship WHERE player_ship.player is NULL),
+        (SELECT player_ship.id FROM player_ship LEFT JOIN player ON player_ship.player = player.id WHERE player.name = player_name),
         (SELECT system FROM starting_system WHERE faction = player_faction)
       );
 END;$$
