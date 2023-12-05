@@ -25,6 +25,11 @@ void UiMenu::setEnabled(const bool enabled) noexcept
   m_state.disabled = !enabled;
 }
 
+void UiMenu::setHighlightable(const bool highlightable) noexcept
+{
+  m_state.highlightable = highlightable;
+}
+
 void UiMenu::setGameClickCallback(const GameCallback &callback)
 {
   m_gameClickCallback = callback;
@@ -156,7 +161,7 @@ void UiMenu::initializeFromConfig(const MenuConfig &config)
   m_expandChildrenToFit = config.expandChildrenToFit;
 
   m_state.visible                   = config.visible;
-  m_state.higlightable              = config.highlightable;
+  m_state.highlightable             = config.highlightable;
   m_state.propagateEventsToChildren = config.propagateEventsToChildren;
 
   m_highlightCallback = config.highlightCallback;
@@ -175,7 +180,7 @@ void UiMenu::renderSelf(olc::PixelGameEngine *pge) const
 
 auto UiMenu::getColorFromState() const -> olc::Pixel
 {
-  if (m_state.higlightable && m_state.highlighted)
+  if (m_state.highlightable && m_state.highlighted)
   {
     return m_bg.hColor;
   }

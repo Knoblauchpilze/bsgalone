@@ -70,7 +70,7 @@ void UiTextMenu::renderCustom(olc::PixelGameEngine *pge) const
 
 auto UiTextMenu::getTextColorFromState() const -> olc::Pixel
 {
-  if (state().higlightable && state().highlighted)
+  if (state().highlightable && state().highlighted)
   {
     return m_text.hColor;
   }
