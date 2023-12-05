@@ -16,6 +16,7 @@ LoginScreenUiHandler::LoginScreenUiHandler(const bsgo::Views &views)
 
 void LoginScreenUiHandler::initializeMenus(const int width, const int height)
 {
+  generateLoginModePanel(width, height);
   generateProceedButton(width, height);
   generateQuitButton(width, height);
   generateFailureMenu(width, height);
@@ -25,11 +26,14 @@ void LoginScreenUiHandler::initializeMenus(const int width, const int height)
 
 bool LoginScreenUiHandler::processUserInput(UserInputData &inputData)
 {
+  if (m_loginModePanel->processUserInput(inputData))
+  {
+    return true;
+  }
   if (m_credentialsUiHandler.processUserInput(inputData))
   {
     return true;
   }
-
   if (m_quitButton->processUserInput(inputData))
   {
     return true;
@@ -39,6 +43,7 @@ bool LoginScreenUiHandler::processUserInput(UserInputData &inputData)
 
 void LoginScreenUiHandler::render(SpriteRenderer &engine) const
 {
+  m_loginModePanel->render(engine.getRenderer());
   m_proceedButton->render(engine.getRenderer());
   m_quitButton->render(engine.getRenderer());
   m_failureMenu->render(engine.getRenderer());
@@ -46,14 +51,56 @@ void LoginScreenUiHandler::render(SpriteRenderer &engine) const
   m_credentialsUiHandler.render(engine);
 }
 
+namespace {
+const auto LOGIN_BUTTON_ACTIVE_COLOR   = transparent(olc::DARK_GREEN, alpha::SemiOpaque);
+const auto LOGIN_BUTTON_INACTIVE_COLOR = transparent(olc::DARK_BLUE, alpha::SemiOpaque);
+} // namespace
+
 void LoginScreenUiHandler::updateUi()
 {
+  const auto loginButtonColor  = Mode::LOGIN == m_mode ? LOGIN_BUTTON_ACTIVE_COLOR
+                                                       : LOGIN_BUTTON_INACTIVE_COLOR;
+  const auto signupButtonColor = Mode::SIGNUP == m_mode ? LOGIN_BUTTON_ACTIVE_COLOR
+                                                        : LOGIN_BUTTON_INACTIVE_COLOR;
+
+  m_loginButton->updateBgColor(loginButtonColor);
+  m_loginButton->setHighlightable(Mode::LOGIN != m_mode);
+  m_signupButton->updateBgColor(signupButtonColor);
+  m_signupButton->setHighlightable(Mode::SIGNUP != m_mode);
+
   m_failureMenu->update();
 }
 
 void LoginScreenUiHandler::reset()
 {
   m_credentialsUiHandler.reset();
+}
+
+namespace {
+constexpr auto DUMMY_PIXEL_DIMS = 10;
+const auto DUMMY_DIMENSIONS     = olc::vi2d{DUMMY_PIXEL_DIMS, DUMMY_PIXEL_DIMS};
+} // namespace
+
+void LoginScreenUiHandler::generateLoginModePanel(const int width, const int /*height*/)
+{
+  constexpr auto LOGIN_MODE_Y_PIXELS = 50;
+  const olc::vi2d loginModeDimsPixels{200, 80};
+  const olc::vi2d loginModePos{(width - loginModeDimsPixels.x) / 2, LOGIN_MODE_Y_PIXELS};
+
+  m_loginModePanel = generateBlankHorizontalMenu(loginModePos, loginModeDimsPixels);
+
+  const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSIONS};
+  const auto bg = bgConfigFromColor(LOGIN_BUTTON_ACTIVE_COLOR);
+
+  auto text     = textConfigFromColor("Login", olc::WHITE);
+  auto button   = std::make_unique<UiTextMenu>(config, bg, text);
+  m_loginButton = button.get();
+  m_loginModePanel->addMenu(std::move(button));
+
+  text           = textConfigFromColor("Sign up", olc::WHITE);
+  button         = std::make_unique<UiTextMenu>(config, bg, text);
+  m_signupButton = button.get();
+  m_loginModePanel->addMenu(std::move(button));
 }
 
 void LoginScreenUiHandler::generateProceedButton(const int width, const int height)
