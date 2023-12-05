@@ -40,6 +40,7 @@ class LoginScreenUiHandler : public IUiHandler
   UiTextMenuPtr m_quitButton{};
 
   UiTimedMenuPtr m_failureMenu{};
+  UiTextMenu *m_failureMenuText{};
 
   void generateLoginModePanel(const int width, const int height);
   void generateProceedButton(const int width, const int height);

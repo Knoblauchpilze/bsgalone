@@ -48,7 +48,7 @@ auto addTextFieldSectionToMenu(UiMenu &mainPanel,
 void CredentialsUiHandler::initializeMenus(const int width, const int /*height*/)
 {
   const olc::vi2d loginDimsPixels{400, 200};
-  constexpr auto LOGIN_PANEL_Y_PIXELS = 200;
+  constexpr auto LOGIN_PANEL_Y_PIXELS = 150;
   const olc::vi2d loginPos{(width - loginDimsPixels.x) / 2, LOGIN_PANEL_Y_PIXELS};
 
   MenuConfig config{.pos = loginPos, .dims = loginDimsPixels, .highlightable = false};
