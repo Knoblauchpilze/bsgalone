@@ -46,6 +46,7 @@ class LoginScreenUiHandler : public IUiHandler
   void generateQuitButton(const int width, const int height);
   void generateFailureMenu(const int width, const int height);
 
+  void setLoginMode(const Mode &mode);
   void tryLogin(Game &game);
 };
 

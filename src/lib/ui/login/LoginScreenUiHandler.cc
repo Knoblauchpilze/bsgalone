@@ -54,6 +54,9 @@ void LoginScreenUiHandler::render(SpriteRenderer &engine) const
 namespace {
 const auto LOGIN_BUTTON_ACTIVE_COLOR   = transparent(olc::DARK_GREEN, alpha::SemiOpaque);
 const auto LOGIN_BUTTON_INACTIVE_COLOR = transparent(olc::DARK_BLUE, alpha::SemiOpaque);
+
+constexpr auto LOGIN_TEXT  = "AU JEU!!";
+constexpr auto SIGNUP_TEXT = "Sign up";
 } // namespace
 
 void LoginScreenUiHandler::updateUi()
@@ -67,6 +70,9 @@ void LoginScreenUiHandler::updateUi()
   m_loginButton->setHighlightable(Mode::LOGIN != m_mode);
   m_signupButton->updateBgColor(signupButtonColor);
   m_signupButton->setHighlightable(Mode::SIGNUP != m_mode);
+
+  const auto text = Mode::LOGIN == m_mode ? LOGIN_TEXT : SIGNUP_TEXT;
+  m_proceedButton->setText(text);
 
   m_failureMenu->update();
 }
@@ -89,17 +95,19 @@ void LoginScreenUiHandler::generateLoginModePanel(const int width, const int /*h
 
   m_loginModePanel = generateBlankHorizontalMenu(loginModePos, loginModeDimsPixels);
 
-  const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSIONS};
+  MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSIONS};
   const auto bg = bgConfigFromColor(LOGIN_BUTTON_ACTIVE_COLOR);
 
-  auto text     = textConfigFromColor("Login", olc::WHITE);
-  auto button   = std::make_unique<UiTextMenu>(config, bg, text);
-  m_loginButton = button.get();
+  config.clickCallback = [this]() { setLoginMode(Mode::LOGIN); };
+  auto text            = textConfigFromColor("Login", olc::WHITE);
+  auto button          = std::make_unique<UiTextMenu>(config, bg, text);
+  m_loginButton        = button.get();
   m_loginModePanel->addMenu(std::move(button));
 
-  text           = textConfigFromColor("Sign up", olc::WHITE);
-  button         = std::make_unique<UiTextMenu>(config, bg, text);
-  m_signupButton = button.get();
+  config.clickCallback = [this]() { setLoginMode(Mode::SIGNUP); };
+  text                 = textConfigFromColor("Sign up", olc::WHITE);
+  button               = std::make_unique<UiTextMenu>(config, bg, text);
+  m_signupButton       = button.get();
   m_loginModePanel->addMenu(std::move(button));
 }
 
@@ -116,7 +124,7 @@ void LoginScreenUiHandler::generateProceedButton(const int width, const int heig
                           .gameClickCallback = [this](Game &g) { tryLogin(g); }};
 
   const auto bg   = bgConfigFromColor(olc::DARK_COBALT_BLUE);
-  const auto text = textConfigFromColor("AU JEU!!", olc::WHITE);
+  const auto text = textConfigFromColor(LOGIN_TEXT, olc::WHITE);
   m_proceedButton = std::make_unique<UiTextMenu>(config, bg, text);
 }
 
@@ -154,6 +162,11 @@ void LoginScreenUiHandler::generateFailureMenu(const int width, const int height
 
   auto menu     = std::make_unique<UiTextMenu>(config, bg, text);
   m_failureMenu = std::make_unique<UiTimedMenu>(std::move(menu));
+}
+
+void LoginScreenUiHandler::setLoginMode(const Mode &mode)
+{
+  m_mode = mode;
 }
 
 void LoginScreenUiHandler::tryLogin(Game &game)
