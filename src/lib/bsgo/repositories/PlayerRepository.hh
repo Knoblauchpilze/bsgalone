@@ -2,6 +2,7 @@
 #pragma once
 
 #include "AbstractRepository.hh"
+#include "Faction.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
 #include <memory>
@@ -14,6 +15,7 @@ struct Player
   Uuid id{};
   std::string name{};
   std::string password{};
+  Faction faction{};
 };
 
 class PlayerRepository : public AbstractRepository
