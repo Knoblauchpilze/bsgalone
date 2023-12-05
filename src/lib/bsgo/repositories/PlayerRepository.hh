@@ -26,6 +26,8 @@ class PlayerRepository : public AbstractRepository
 
   auto findOneByName(const std::string &name) const -> std::optional<Player>;
   auto findSystemByPlayer(const Uuid &player) const -> Uuid;
+
+  auto save(const Player &player) -> std::optional<Uuid>;
 };
 
 using PlayerRepositoryShPtr = std::shared_ptr<PlayerRepository>;

@@ -26,4 +26,20 @@ auto LoginView::tryLogin(const std::string &name, const std::string &password) c
   return maybePlayer->id;
 }
 
+auto LoginView::trySignup(const std::string &name, const std::string &password) const
+  -> std::optional<Uuid>
+{
+  const auto maybePlayer = m_repositories.playerRepository->findOneByName(name);
+  if (maybePlayer)
+  {
+    warn("Player with name \"" + name + "\" already exists");
+    return {};
+  }
+
+  /// TODO: Should handle faction.
+  Player player{.name = name, .password = password, .faction = Faction::COLONIAL};
+
+  return m_repositories.playerRepository->save(player);
+}
+
 } // namespace bsgo

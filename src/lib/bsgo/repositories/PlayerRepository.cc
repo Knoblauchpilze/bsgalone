@@ -20,6 +20,24 @@ auto generateSystemSqlQuery(const Uuid &player) -> std::string
 {
   return SQL_QUERY_SYSTEM + std::to_string(toDbId(player));
 }
+
+constexpr auto SQL_CREATE_PLAYER_PROCEDURE_NAME = "player_signup";
+auto generateSignupSqlQuery(const Player &player) -> std::string
+{
+  std::string out = "CALL ";
+  out += SQL_CREATE_PLAYER_PROCEDURE_NAME;
+
+  out += " (";
+  out += '\'' + player.name + '\'';
+  out += ",";
+  out += '\'' + player.password + '\'';
+  out += ",";
+  out += '\'' + toDbFaction(player.faction) + '\'';
+  out += ")";
+
+  return out;
+}
+
 } // namespace
 
 auto PlayerRepository::findOneByName(const std::string &name) const -> std::optional<Player>
@@ -27,7 +45,7 @@ auto PlayerRepository::findOneByName(const std::string &name) const -> std::opti
   const auto sql = generateNameSqlQuery(name);
 
   pqxx::nontransaction work(m_connection->connection());
-  pqxx::result rows(work.exec(sql));
+  const auto rows(work.exec(sql));
 
   if (rows.empty())
   {
@@ -55,7 +73,7 @@ auto PlayerRepository::findSystemByPlayer(const Uuid &player) const -> Uuid
   const auto sql = generateSystemSqlQuery(player);
 
   pqxx::nontransaction work(m_connection->connection());
-  pqxx::result rows(work.exec(sql));
+  const auto rows(work.exec(sql));
 
   if (rows.size() != 1)
   {
@@ -64,6 +82,26 @@ auto PlayerRepository::findSystemByPlayer(const Uuid &player) const -> Uuid
 
   const auto &record = rows[0];
   return fromDbId(record[0].as<int>());
+}
+
+auto PlayerRepository::save(const Player &player) -> std::optional<Uuid>
+{
+  const auto sql = generateSignupSqlQuery(player);
+
+  const auto result = m_connection->safeExecute(sql);
+  if (result.error)
+  {
+    return {};
+  }
+
+  const auto dbPlayer = findOneByName(player.name);
+  if (dbPlayer)
+  {
+    warn("Player not found despite no error during insertion");
+    return {};
+  }
+
+  return dbPlayer->id;
 }
 
 } // namespace bsgo

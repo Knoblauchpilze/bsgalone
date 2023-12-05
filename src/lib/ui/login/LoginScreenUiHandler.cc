@@ -186,7 +186,20 @@ void LoginScreenUiHandler::tryLogin(Game &game)
     return;
   }
 
-  const auto playerId = m_loginView->tryLogin(data.name, data.password);
+  std::optional<bsgo::Uuid> playerId;
+  switch (m_mode)
+  {
+    case Mode::LOGIN:
+      playerId = m_loginView->tryLogin(data.name, data.password);
+      break;
+    case Mode::SIGNUP:
+      playerId = m_loginView->trySignup(data.name, data.password);
+      break;
+    default:
+      error("Unknown mode");
+      break;
+  }
+
   if (playerId)
   {
     game.login(*playerId);
