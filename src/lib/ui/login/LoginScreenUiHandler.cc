@@ -57,6 +57,9 @@ const auto LOGIN_BUTTON_INACTIVE_COLOR = transparent(olc::DARK_BLUE, alpha::Semi
 
 constexpr auto LOGIN_TEXT  = "AU JEU!!";
 constexpr auto SIGNUP_TEXT = "Sign up";
+
+constexpr auto LOGIN_FAILURE_TEXT  = "Login failed, check your credentials!";
+constexpr auto SIGNUP_FAILURE_TEXT = "Sign up failed, check your credentials!";
 } // namespace
 
 void LoginScreenUiHandler::updateUi()
@@ -73,6 +76,9 @@ void LoginScreenUiHandler::updateUi()
 
   const auto text = Mode::LOGIN == m_mode ? LOGIN_TEXT : SIGNUP_TEXT;
   m_proceedButton->setText(text);
+
+  const auto failureText = Mode::LOGIN == m_mode ? LOGIN_FAILURE_TEXT : SIGNUP_FAILURE_TEXT;
+  m_failureMenuText->setText(failureText);
 
   m_failureMenu->update();
 }
@@ -147,21 +153,21 @@ void LoginScreenUiHandler::generateQuitButton(const int width, const int /*heigh
   m_quitButton    = std::make_unique<UiTextMenu>(config, bg, text);
 }
 
-void LoginScreenUiHandler::generateFailureMenu(const int width, const int height)
+void LoginScreenUiHandler::generateFailureMenu(const int width, const int /*height*/)
 {
-  const olc::vi2d failureMenuDimsPixels{300, 150};
-  const olc::vi2d failureMenuPos{(width - failureMenuDimsPixels.x) / 2,
-                                 (height - failureMenuDimsPixels.y) / 2};
+  const olc::vi2d failureMenuDimsPixels{350, 80};
+  const olc::vi2d failureMenuPos{(width - failureMenuDimsPixels.x) / 2, 370};
 
   const MenuConfig config{.pos           = failureMenuPos,
                           .dims          = failureMenuDimsPixels,
                           .highlightable = false};
 
   const auto bg   = bgConfigFromColor(olc::DARK_RED);
-  const auto text = textConfigFromColor("Login failed, check your credentials!", olc::BLACK);
+  const auto text = textConfigFromColor(LOGIN_FAILURE_TEXT, olc::BLACK);
 
-  auto menu     = std::make_unique<UiTextMenu>(config, bg, text);
-  m_failureMenu = std::make_unique<UiTimedMenu>(std::move(menu));
+  auto menu         = std::make_unique<UiTextMenu>(config, bg, text);
+  m_failureMenuText = menu.get();
+  m_failureMenu     = std::make_unique<UiTimedMenu>(std::move(menu));
 }
 
 void LoginScreenUiHandler::setLoginMode(const Mode &mode)
