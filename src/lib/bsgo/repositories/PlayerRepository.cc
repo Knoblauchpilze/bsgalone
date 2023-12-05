@@ -8,7 +8,7 @@ PlayerRepository::PlayerRepository(const DbConnectionShPtr &connection)
 {}
 
 namespace {
-constexpr auto SQL_QUERY_NAME = "SELECT id, password FROM player WHERE name = ";
+constexpr auto SQL_QUERY_NAME = "SELECT id, password, faction FROM player WHERE name = ";
 auto generateNameSqlQuery(const std::string &name) -> std::string
 {
   return std::string(SQL_QUERY_NAME) + "'" + name + "'";
@@ -45,6 +45,7 @@ auto PlayerRepository::findOneByName(const std::string &name) const -> std::opti
   out.id             = fromDbId(record[0].as<int>());
   out.name           = name;
   out.password       = record[1].as<std::string>();
+  out.faction        = fromDbFaction(record[2].as<std::string>());
 
   return out;
 }
