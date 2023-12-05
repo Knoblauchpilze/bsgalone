@@ -18,6 +18,13 @@ class DbConnection : public utils::CoreObject
 
   auto connection() -> pqxx::connection &;
 
+  struct SqlResult
+  {
+    std::optional<pqxx::result> result{};
+    std::optional<std::string> error{};
+  };
+  auto safeExecute(const std::string &sql) -> SqlResult;
+
   private:
   std::unique_ptr<pqxx::connection> m_connection{};
 

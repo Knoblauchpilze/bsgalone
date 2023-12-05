@@ -58,6 +58,24 @@ auto DbConnection::connection() -> pqxx::connection &
   return *m_connection;
 }
 
+auto DbConnection::safeExecute(const std::string &sql) -> SqlResult
+{
+  SqlResult out{};
+
+  try
+  {
+    pqxx::nontransaction work(*m_connection);
+    out.result = work.exec(sql);
+  }
+  catch (const pqxx::sql_error &e)
+  {
+    warn("failed: " + e.query() + ", " + e.sqlstate());
+    out.error = e.sqlstate();
+  }
+
+  return out;
+}
+
 void DbConnection::setupDbConnection()
 {
   const auto connectionStr = generateConnectionString();
