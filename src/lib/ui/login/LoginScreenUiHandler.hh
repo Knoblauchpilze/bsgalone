@@ -1,9 +1,9 @@
 
 #pragma once
 
+#include "CredentialsUiHandler.hh"
 #include "IUiHandler.hh"
 #include "UiMenu.hh"
-#include "UiTextField.hh"
 #include "UiTextMenu.hh"
 #include "UiTimedMenu.hh"
 
@@ -19,22 +19,27 @@ class LoginScreenUiHandler : public IUiHandler
   bool processUserInput(UserInputData &inputData) override;
   void render(SpriteRenderer &engine) const override;
   void updateUi() override;
+  void reset() override;
 
   private:
   bsgo::LoginViewShPtr m_loginView;
 
-  UiMenuPtr m_loginPanel{};
-  UiTextField *m_nameTextField{};
-  UiTextField *m_passwordTextField{};
-  UiTextMenuPtr m_loginButton{};
+  enum class Mode
+  {
+    LOGIN,
+    SIGNUP,
+  };
+  Mode m_mode{Mode::LOGIN};
+
+  CredentialsUiHandler m_credentialsUiHandler{};
+  UiTextMenuPtr m_proceedButton{};
   UiTextMenuPtr m_quitButton{};
 
-  UiTimedMenuPtr m_loginFailureMenu{};
+  UiTimedMenuPtr m_failureMenu{};
 
-  void generateLoginMenu(const int width, const int height);
-  void generateLoginButton(const int width, const int height);
+  void generateProceedButton(const int width, const int height);
   void generateQuitButton(const int width, const int height);
-  void generateLoginFailureMenu(const int width, const int height);
+  void generateFailureMenu(const int width, const int height);
 
   void tryLogin(Game &game);
 };

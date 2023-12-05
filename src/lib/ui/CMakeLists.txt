@@ -19,8 +19,11 @@ add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/outpost
 	)
 
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/login
+	)
+
 target_sources (bsgalone_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/IUiHandler.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/MapScreenUiHandler.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/LoginScreenUiHandler.cc
 	)
