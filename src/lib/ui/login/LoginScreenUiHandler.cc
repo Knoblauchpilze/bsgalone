@@ -86,16 +86,20 @@ void LoginScreenUiHandler::updateUi()
   m_signupButton->updateBgColor(signupButtonColor);
   m_signupButton->setHighlightable(Mode::SIGNUP != m_mode);
 
-  const auto colonialButtonColor = bsgo::Faction::COLONIAL == m_faction
-                                     ? COLONIAL_BUTTON_ACTIVE_COLOR
-                                     : COLONIAL_BUTTON_INACTIVE_COLOR;
-  const auto cylonButtonColor    = bsgo::Faction::CYLON == m_faction ? CYLON_BUTTON_ACTIVE_COLOR
-                                                                     : CYLON_BUTTON_INACTIVE_COLOR;
+  m_factionPanel->setVisible(Mode::SIGNUP == m_mode);
+  if (Mode::SIGNUP == m_mode)
+  {
+    const auto colonialButtonColor = bsgo::Faction::COLONIAL == m_faction
+                                       ? COLONIAL_BUTTON_ACTIVE_COLOR
+                                       : COLONIAL_BUTTON_INACTIVE_COLOR;
+    const auto cylonButtonColor    = bsgo::Faction::CYLON == m_faction ? CYLON_BUTTON_ACTIVE_COLOR
+                                                                       : CYLON_BUTTON_INACTIVE_COLOR;
 
-  m_colonialButton->updateBgColor(colonialButtonColor);
-  m_colonialButton->setHighlightable(bsgo::Faction::COLONIAL != m_faction);
-  m_cylonButton->updateBgColor(cylonButtonColor);
-  m_cylonButton->setHighlightable(bsgo::Faction::CYLON != m_faction);
+    m_colonialButton->updateBgColor(colonialButtonColor);
+    m_colonialButton->setHighlightable(bsgo::Faction::COLONIAL != m_faction);
+    m_cylonButton->updateBgColor(cylonButtonColor);
+    m_cylonButton->setHighlightable(bsgo::Faction::CYLON != m_faction);
+  }
 
   const auto text = Mode::LOGIN == m_mode ? LOGIN_TEXT : SIGNUP_TEXT;
   m_proceedButton->setText(text);
