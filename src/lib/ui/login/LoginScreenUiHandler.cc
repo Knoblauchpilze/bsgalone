@@ -95,8 +95,8 @@ const auto DUMMY_DIMENSIONS     = olc::vi2d{DUMMY_PIXEL_DIMS, DUMMY_PIXEL_DIMS};
 
 void LoginScreenUiHandler::generateLoginModePanel(const int width, const int /*height*/)
 {
-  constexpr auto LOGIN_MODE_Y_PIXELS = 50;
-  const olc::vi2d loginModeDimsPixels{200, 80};
+  constexpr auto LOGIN_MODE_Y_PIXELS = 20;
+  const olc::vi2d loginModeDimsPixels{200, 50};
   const olc::vi2d loginModePos{(width - loginModeDimsPixels.x) / 2, LOGIN_MODE_Y_PIXELS};
 
   m_loginModePanel = generateBlankHorizontalMenu(loginModePos, loginModeDimsPixels);
@@ -119,9 +119,9 @@ void LoginScreenUiHandler::generateLoginModePanel(const int width, const int /*h
 
 void LoginScreenUiHandler::generateProceedButton(const int width, const int height)
 {
-  constexpr auto REASONABLE_GAP_SIZE = 60;
+  constexpr auto REASONABLE_GAP_SIZE = 20;
 
-  const olc::vi2d loginButtonDimsPixels{200, 60};
+  const olc::vi2d loginButtonDimsPixels{200, 50};
   const olc::vi2d loginButtonPos{(width - loginButtonDimsPixels.x) / 2,
                                  height - REASONABLE_GAP_SIZE - loginButtonDimsPixels.y};
 
@@ -156,7 +156,7 @@ void LoginScreenUiHandler::generateQuitButton(const int width, const int /*heigh
 void LoginScreenUiHandler::generateFailureMenu(const int width, const int /*height*/)
 {
   const olc::vi2d failureMenuDimsPixels{350, 80};
-  const olc::vi2d failureMenuPos{(width - failureMenuDimsPixels.x) / 2, 370};
+  const olc::vi2d failureMenuPos{(width - failureMenuDimsPixels.x) / 2, 430};
 
   const MenuConfig config{.pos           = failureMenuPos,
                           .dims          = failureMenuDimsPixels,
