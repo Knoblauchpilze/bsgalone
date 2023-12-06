@@ -15,7 +15,7 @@ auto generateNameSqlQuery(const std::string &name) -> std::string
 }
 
 constexpr auto SQL_QUERY_SYSTEM
-  = "SELECT ss.system FROM player_ship AS ps LEFT JOIN ship_system AS ss ON ps.ship = ss.ship LEFT JOIN player AS p ON ps.player = p.id WHERE ps.active = true AND ps.player IS NOT NULL AND ps.player = ";
+  = "SELECT ss.system FROM player_ship AS ps LEFT JOIN ship_system AS ss ON ps.id = ss.ship LEFT JOIN player AS p ON ps.player = p.id WHERE ps.active = true AND ps.player IS NOT NULL AND ps.player = ";
 auto generateSystemSqlQuery(const Uuid &player) -> std::string
 {
   return SQL_QUERY_SYSTEM + std::to_string(toDbId(player));
@@ -95,7 +95,7 @@ auto PlayerRepository::save(const Player &player) -> std::optional<Uuid>
   }
 
   const auto dbPlayer = findOneByName(player.name);
-  if (dbPlayer)
+  if (!dbPlayer)
   {
     warn("Player not found despite no error during insertion");
     return {};
