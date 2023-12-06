@@ -26,8 +26,9 @@ auto LoginView::tryLogin(const std::string &name, const std::string &password) c
   return maybePlayer->id;
 }
 
-auto LoginView::trySignup(const std::string &name, const std::string &password) const
-  -> std::optional<Uuid>
+auto LoginView::trySignup(const std::string &name,
+                          const std::string &password,
+                          const Faction &faction) const -> std::optional<Uuid>
 {
   const auto maybePlayer = m_repositories.playerRepository->findOneByName(name);
   if (maybePlayer)
@@ -36,8 +37,7 @@ auto LoginView::trySignup(const std::string &name, const std::string &password) 
     return {};
   }
 
-  /// TODO: Should handle faction.
-  Player player{.name = name, .password = password, .faction = Faction::COLONIAL};
+  Player player{.name = name, .password = password, .faction = faction};
 
   return m_repositories.playerRepository->save(player);
 }
