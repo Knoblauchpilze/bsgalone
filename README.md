@@ -103,11 +103,92 @@ Another approach as we need to deserialize the data from the database is to use 
 
 ## Goal
 
-Progressively clone bsgo.
+The goal of the game is to try to mimic some aspects of [Battlestar Galactica Online](https://www.mmorpg.com/battlestar-galactica-online) until we decide to actually move away from it.
+
+It is similar in having players fight with each other in space ships. It is different in the sense that it is a 2d game.
+
+We aim at progressively transition from a single computer, local game to a multiplayer online game while learning in the meantime how to do it.
+
+## AI of bots
+
+It seems there are two main ways to handle AI for NPCs:
+* behavior trees
+* state machines
+
+### Behavior trees
+
+While searching for some resources, we gathered the following collection of articles:
+* one on [gamedeveloper](https://www.gamedeveloper.com/programming/behavior-trees-for-ai-how-they-work).
+* one on the root website of the approach (as it seems :D) at [behaviortree.dev](https://www.behaviortree.dev/).
+* and of course on [wikipedia](https://en.wikipedia.org/wiki/Behavior_tree_(artificial_intelligence,_robotics_and_control)).
+
+### State machines
+
+State machines seem pretty linked to Unity which probably has an implementation of them. The collection of articles below present the concept:
+* one explaining how it works [in Unity](https://pavcreations.com/finite-state-machine-for-ai-enemy-controller-in-2d/2/#Activity-class).
+* this one without Unity over at [tutsplus](https://code.tutsplus.com/finite-state-machines-theory-and-implementation--gamedev-11867t).
+* this [one](https://www.gamedeveloper.com/programming/designing-a-simple-game-ai-using-finite-state-machines) is similar to the previous one but simpler.
+
+### Decision
+
+For our purposes it seems like both things could work:
+* state machines might be easier if it's easy to come up with all the states beforehand: then it's clear what are the transitions and what can happen in any state.
+* decision trees might require a more careful definition of what can happen in which scenario. The fallback mechanisms are also not as clear as with the state machine where it's just transitioning to another state: here we would have to go up the hierarchy and see what to do.
+
+After pondering a bit, we decided to go for behavior tree. The state machine seems similar to how we already approached AI in the past so maybe it's a good idea to try something new.
+
+### Current state of the AI
+
+The idea behind the behavior tree is to have a list of nodes arranged in a graph. They are executed at each step which allows to easily react to new situations. Contraty to state machines, we don't have to think about switching from any state to any other state: at each frame we just start from the root again and see which state we end up with when the execution of the tree is finished.
+
+The following image shows an example of how the very simplistic AI works at the moment:
+
+![Behavior tree](resources/behavior_tree_example.png)
+
+In this example the root node is a repeater: this is usually advised as then we have an infinite behavior. We then have two main mode: the attack mode and the idle mode. Both of them are composed of a succession of actions. These are composed together with a fallback node, meaning that if the first strategy fail we will go on with the second one.
+
+#### Attack mode
+
+In the attack mode, the first thing is to pick a target: to that purpose the AI will scan its surroundings for a valid target. Two main results: success or failure.
+
+In case it succeeds, we continue to the next: the AI will try to follow the target. This action just takes into consideration the target and tries to come closer to it: it succeeds immediately but also work iteratively. After this the Fire mode will be triggered which will check if the AI is close enough to the target and try to shoot at it.
+
+In case it fails, then the parent sequence node will also fail as one of its child couldn't succeed and the repreater will then go on to the next element.
+
+#### Idle mode
+
+At any point the attack mode can fail: for example if the target goes too far from the AI, or if there's no target in the first place. In this case we count on the fallback node to start the idle mode.
+
+The idle mode is composed of a succession of node to go to a target. This defines a patrol for the AI to loop through while waiting for something to happen.
+
+This mode can't fail: the AI will just loop indefinitely until something else happens.
+
+#### Orchestration
+
+At each loop of the game we just iterate over the whole tree again. Usually it is advised to keep the processing time of nodes small so that it's not an issue to iterate over them very often.
+
+Due to the dynamic nature of the tree and the fact that we iterate over it all the time, we can very easily react to a change:
+* we're in idle mode but a target arrives? The attack mode will trigger itself on its own because the `PickTarget`` node will suddenly return a valid target.
+* we're shooting at the enemy but it dies? The next iteration will fail to find a target and we go back to idle mode.
+
+This is much easier than having the AI in a certain state and then having at the very beginning of each state to do something like:
+```cpp
+if (determineState() != m_currentState) {
+  return otherStateMethod();
+}
+```
+
+It keeps the reactions of the AI dynamic by codifying them into the structure of the tree.
+
+## Entity Component System
+
+TODO
+About the entity component system:
+this [link](https://www.codingwiththomas.com/blog/an-entity-component-system-from-scratch) is useful. Also found [this](https://austinmorlan.com/posts/entity_component_system/) which seems more advanced so we might come back to it later.
+
+# Future work
 
 ## Useful links
-
-About the entity component system, this [link](https://www.codingwiththomas.com/blog/an-entity-component-system-from-scratch) is useful. Also found [this](https://austinmorlan.com/posts/entity_component_system/) which seems more advanced so we might come back to it later.
 
 The art for spaceships comes from [imgur](https://imgur.com/im8ukHF) and [deviantart](https://www.deviantart.com/ariochiv/art/Stars-in-Shadow-Phidi-Ships-378251756).
 
