@@ -37,6 +37,8 @@ class LoginScreenUiHandler : public IUiHandler
   UiTextMenu *m_signupButton{};
 
   UiMenuPtr m_factionPanel{};
+  UiTextMenu *m_colonialButton{};
+  UiTextMenu *m_cylonButton{};
 
   CredentialsUiHandler m_credentialsUiHandler{};
   UiTextMenuPtr m_proceedButton{};

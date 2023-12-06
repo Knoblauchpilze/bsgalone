@@ -66,6 +66,12 @@ constexpr auto SIGNUP_TEXT = "Sign up";
 
 constexpr auto LOGIN_FAILURE_TEXT  = "Login failed, check your credentials!";
 constexpr auto SIGNUP_FAILURE_TEXT = "Sign up failed, check your credentials!";
+
+const auto COLONIAL_BUTTON_ACTIVE_COLOR   = transparent(olc::VERY_DARK_BLUE, alpha::AlmostOpaque);
+const auto COLONIAL_BUTTON_INACTIVE_COLOR = transparent(olc::DARK_BLUE, alpha::AlmostOpaque);
+
+const auto CYLON_BUTTON_ACTIVE_COLOR   = transparent(olc::VERY_DARK_RED, alpha::AlmostOpaque);
+const auto CYLON_BUTTON_INACTIVE_COLOR = transparent(olc::DARK_RED, alpha::AlmostOpaque);
 } // namespace
 
 void LoginScreenUiHandler::updateUi()
@@ -79,6 +85,17 @@ void LoginScreenUiHandler::updateUi()
   m_loginButton->setHighlightable(Mode::LOGIN != m_mode);
   m_signupButton->updateBgColor(signupButtonColor);
   m_signupButton->setHighlightable(Mode::SIGNUP != m_mode);
+
+  const auto colonialButtonColor = bsgo::Faction::COLONIAL == m_faction
+                                     ? COLONIAL_BUTTON_ACTIVE_COLOR
+                                     : COLONIAL_BUTTON_INACTIVE_COLOR;
+  const auto cylonButtonColor    = bsgo::Faction::CYLON == m_faction ? CYLON_BUTTON_ACTIVE_COLOR
+                                                                     : CYLON_BUTTON_INACTIVE_COLOR;
+
+  m_colonialButton->updateBgColor(colonialButtonColor);
+  m_colonialButton->setHighlightable(bsgo::Faction::COLONIAL != m_faction);
+  m_cylonButton->updateBgColor(cylonButtonColor);
+  m_cylonButton->setHighlightable(bsgo::Faction::CYLON != m_faction);
 
   const auto text = Mode::LOGIN == m_mode ? LOGIN_TEXT : SIGNUP_TEXT;
   m_proceedButton->setText(text);
@@ -132,16 +149,19 @@ void LoginScreenUiHandler::generateFactionPanel(const int width, const int /*hei
   m_factionPanel = generateBlankHorizontalMenu(factionPos, factionDimsPixels);
 
   MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSIONS};
-  const auto bg = bgConfigFromColor(LOGIN_BUTTON_ACTIVE_COLOR);
 
   config.clickCallback = [this]() { setFaction(bsgo::Faction::COLONIAL); };
+  auto bg              = bgConfigFromColor(COLONIAL_BUTTON_ACTIVE_COLOR);
   auto text            = textConfigFromColor("Colonial", olc::WHITE);
   auto button          = std::make_unique<UiTextMenu>(config, bg, text);
+  m_colonialButton     = button.get();
   m_factionPanel->addMenu(std::move(button));
 
   config.clickCallback = [this]() { setFaction(bsgo::Faction::CYLON); };
+  bg                   = bgConfigFromColor(CYLON_BUTTON_INACTIVE_COLOR);
   text                 = textConfigFromColor("Cylon", olc::WHITE);
   button               = std::make_unique<UiTextMenu>(config, bg, text);
+  m_cylonButton        = button.get();
   m_factionPanel->addMenu(std::move(button));
 }
 
