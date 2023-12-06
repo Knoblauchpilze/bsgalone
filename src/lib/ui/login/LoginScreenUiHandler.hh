@@ -30,10 +30,13 @@ class LoginScreenUiHandler : public IUiHandler
     SIGNUP,
   };
   Mode m_mode{Mode::LOGIN};
+  bsgo::Faction m_faction{bsgo::Faction::COLONIAL};
 
   UiMenuPtr m_loginModePanel{};
   UiTextMenu *m_loginButton{};
   UiTextMenu *m_signupButton{};
+
+  UiMenuPtr m_factionPanel{};
 
   CredentialsUiHandler m_credentialsUiHandler{};
   UiTextMenuPtr m_proceedButton{};
@@ -43,11 +46,13 @@ class LoginScreenUiHandler : public IUiHandler
   UiTextMenu *m_failureMenuText{};
 
   void generateLoginModePanel(const int width, const int height);
+  void generateFactionPanel(const int width, const int height);
   void generateProceedButton(const int width, const int height);
   void generateQuitButton(const int width, const int height);
   void generateFailureMenu(const int width, const int height);
 
   void setLoginMode(const Mode &mode);
+  void setFaction(const bsgo::Faction &faction);
   void tryLogin(Game &game);
 };
 

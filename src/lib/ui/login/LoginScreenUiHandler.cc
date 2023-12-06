@@ -17,6 +17,7 @@ LoginScreenUiHandler::LoginScreenUiHandler(const bsgo::Views &views)
 void LoginScreenUiHandler::initializeMenus(const int width, const int height)
 {
   generateLoginModePanel(width, height);
+  generateFactionPanel(width, height);
   generateProceedButton(width, height);
   generateQuitButton(width, height);
   generateFailureMenu(width, height);
@@ -27,6 +28,10 @@ void LoginScreenUiHandler::initializeMenus(const int width, const int height)
 bool LoginScreenUiHandler::processUserInput(UserInputData &inputData)
 {
   if (m_loginModePanel->processUserInput(inputData))
+  {
+    return true;
+  }
+  if (m_factionPanel->processUserInput(inputData))
   {
     return true;
   }
@@ -44,6 +49,7 @@ bool LoginScreenUiHandler::processUserInput(UserInputData &inputData)
 void LoginScreenUiHandler::render(SpriteRenderer &engine) const
 {
   m_loginModePanel->render(engine.getRenderer());
+  m_factionPanel->render(engine.getRenderer());
   m_proceedButton->render(engine.getRenderer());
   m_quitButton->render(engine.getRenderer());
   m_failureMenu->render(engine.getRenderer());
@@ -117,6 +123,28 @@ void LoginScreenUiHandler::generateLoginModePanel(const int width, const int /*h
   m_loginModePanel->addMenu(std::move(button));
 }
 
+void LoginScreenUiHandler::generateFactionPanel(const int width, const int /*height*/)
+{
+  constexpr auto FACTION_Y_PIXELS = 110;
+  const olc::vi2d factionDimsPixels{200, 50};
+  const olc::vi2d factionPos{(width - factionDimsPixels.x) / 2, FACTION_Y_PIXELS};
+
+  m_factionPanel = generateBlankHorizontalMenu(factionPos, factionDimsPixels);
+
+  MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSIONS};
+  const auto bg = bgConfigFromColor(LOGIN_BUTTON_ACTIVE_COLOR);
+
+  config.clickCallback = [this]() { setFaction(bsgo::Faction::COLONIAL); };
+  auto text            = textConfigFromColor("Colonial", olc::WHITE);
+  auto button          = std::make_unique<UiTextMenu>(config, bg, text);
+  m_factionPanel->addMenu(std::move(button));
+
+  config.clickCallback = [this]() { setFaction(bsgo::Faction::CYLON); };
+  text                 = textConfigFromColor("Cylon", olc::WHITE);
+  button               = std::make_unique<UiTextMenu>(config, bg, text);
+  m_factionPanel->addMenu(std::move(button));
+}
+
 void LoginScreenUiHandler::generateProceedButton(const int width, const int height)
 {
   constexpr auto REASONABLE_GAP_SIZE = 20;
@@ -173,6 +201,11 @@ void LoginScreenUiHandler::generateFailureMenu(const int width, const int /*heig
 void LoginScreenUiHandler::setLoginMode(const Mode &mode)
 {
   m_mode = mode;
+}
+
+void LoginScreenUiHandler::setFaction(const bsgo::Faction &faction)
+{
+  m_faction = faction;
 }
 
 void LoginScreenUiHandler::tryLogin(Game &game)
