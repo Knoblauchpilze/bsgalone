@@ -63,7 +63,10 @@ void VelocityComponent::update(const float elapsedSeconds)
   }
 }
 
-void VelocityComponent::updateFixedSpeed(const float /*elapsedSeconds*/) {}
+void VelocityComponent::updateFixedSpeed(const float /*elapsedSeconds*/)
+{
+  // Intentionally empty.
+}
 
 void VelocityComponent::updateVariableSpeed(const float elapsedSeconds)
 {
