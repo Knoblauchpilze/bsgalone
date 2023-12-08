@@ -13,8 +13,6 @@ class LoginView : public IView
   ~LoginView() override = default;
 
   auto tryLogin(const std::string &name, const std::string &password) const -> std::optional<Uuid>;
-  auto trySignup(const std::string &name, const std::string &password, const Faction &faction) const
-    -> std::optional<Uuid>;
 };
 
 using LoginViewShPtr = std::shared_ptr<LoginView>;
