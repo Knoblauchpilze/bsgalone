@@ -5,7 +5,7 @@ namespace bsgo {
 
 auto createRepositories(const DbConnectionShPtr &dbConnection) -> Repositories
 {
-  Repositories out;
+  Repositories out{};
 
   out.asteroidLootRepository   = std::make_shared<AsteroidLootRepository>(dbConnection);
   out.asteroidRepository       = std::make_shared<AsteroidRepository>(dbConnection);
