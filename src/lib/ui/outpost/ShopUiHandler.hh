@@ -12,7 +12,7 @@ namespace pge {
 class ShopUiHandler : public IUiHandler
 {
   public:
-  ShopUiHandler(const bsgo::Views &views);
+  ShopUiHandler(const bsgo::Views &views, const bsgo::Services &services);
   ~ShopUiHandler() override = default;
 
   void initializeMenus(const int width, const int height) override;
@@ -22,6 +22,7 @@ class ShopUiHandler : public IUiHandler
 
   private:
   bsgo::ShopViewShPtr m_shopView;
+  bsgo::PurchaseServiceShPtr m_purchaseService{};
 
   UiMenuPtr m_menu{};
   std::vector<UiMenu *> m_items{};
