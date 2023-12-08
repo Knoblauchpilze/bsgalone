@@ -215,6 +215,8 @@ void Game::login(const bsgo::Uuid &playerDbId)
   m_views.shopView->setPlayerDbId(playerDbId);
   m_views.serverView->setPlayerDbId(playerDbId);
 
+  m_services.purchase->setPlayerDbId(playerDbId);
+
   setScreen(Screen::OUTPOST);
 }
 

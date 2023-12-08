@@ -116,27 +116,6 @@ auto ShopView::computeAffordability(const Uuid &id, const Item &type) const -> A
   return out;
 }
 
-bool ShopView::tryPurchase(const Uuid &id, const Item &type)
-{
-  checkPlayerDbIdExists();
-
-  bool result{false};
-  switch (type)
-  {
-    case Item::COMPUTER:
-      result = m_repositories.computerRepository->saveForPlayer(*m_playerDbId, id);
-      break;
-    case Item::WEAPON:
-      result = m_repositories.weaponRepository->saveForPlayer(*m_playerDbId, id);
-      break;
-    default:
-      error("Invalid kind of item to buy", "Unsupported item " + str(type));
-      break;
-  }
-
-  return result;
-}
-
 void ShopView::checkPlayerDbIdExists() const
 {
   if (!m_playerDbId)
