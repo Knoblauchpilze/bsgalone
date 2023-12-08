@@ -24,6 +24,21 @@ auto generateTargetsSqlQuery(const Uuid &computer) -> std::string
 {
   return SQL_QUERY_TARGET + std::to_string(toDbId(computer));
 }
+
+constexpr auto SQL_PURCHASE_PROCEDURE_NAME = "player_buy_computer";
+auto generatePurchaseSqlQuery(const Uuid &player, const Uuid &computer) -> std::string
+{
+  std::string out = "CALL ";
+  out += SQL_PURCHASE_PROCEDURE_NAME;
+
+  out += " (";
+  out += "\'" + std::to_string(toDbId(player)) + "\'";
+  out += ",";
+  out += "\'" + std::to_string(toDbId(computer)) + "\'";
+  out += ")";
+
+  return out;
+}
 } // namespace
 
 auto ComputerRepository::findAll() const -> std::unordered_set<Uuid>
@@ -46,6 +61,22 @@ auto ComputerRepository::findOneById(const Uuid &computer) const -> Computer
   fetchAllowedTargets(computer, out);
 
   return out;
+}
+
+bool ComputerRepository::saveForPlayer(const Uuid &player, const Uuid &computer)
+
+{
+  const auto sql = generatePurchaseSqlQuery(player, computer);
+
+  log("s: " + sql);
+  const auto result = m_connection->safeExecute(sql);
+  if (result.error)
+  {
+    warn("Failed to purchase computer: " + *result.error);
+    return false;
+  }
+
+  return true;
 }
 
 auto ComputerRepository::fetchComputerBase(const Uuid &computer) const -> Computer

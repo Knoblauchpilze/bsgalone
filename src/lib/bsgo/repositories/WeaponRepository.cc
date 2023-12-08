@@ -17,6 +17,21 @@ auto generateSqlQuery(const Uuid &weapon) -> std::string
 {
   return SQL_QUERY + std::to_string(toDbId(weapon));
 }
+
+constexpr auto SQL_PURCHASE_PROCEDURE_NAME = "player_buy_weapon";
+auto generatePurchaseSqlQuery(const Uuid &player, const Uuid &weapon) -> std::string
+{
+  std::string out = "CALL ";
+  out += SQL_PURCHASE_PROCEDURE_NAME;
+
+  out += " (";
+  out += "\'" + std::to_string(toDbId(player)) + "\'";
+  out += ",";
+  out += "\'" + std::to_string(toDbId(weapon)) + "\'";
+  out += ")";
+
+  return out;
+}
 } // namespace
 
 auto WeaponRepository::findAll() const -> std::unordered_set<Uuid>
@@ -57,6 +72,20 @@ auto WeaponRepository::findOneById(const Uuid &weapon) const -> Weapon
   out.reloadTime     = utils::Milliseconds(record[5].as<int>());
 
   return out;
+}
+
+bool WeaponRepository::saveForPlayer(const Uuid &player, const Uuid &weapon)
+{
+  const auto sql = generatePurchaseSqlQuery(player, weapon);
+
+  const auto result = m_connection->safeExecute(sql);
+  if (result.error)
+  {
+    warn("Failed to purchase weapon: " + *result.error);
+    return false;
+  }
+
+  return true;
 }
 
 } // namespace bsgo
