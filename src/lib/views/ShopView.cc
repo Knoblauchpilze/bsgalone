@@ -124,10 +124,10 @@ bool ShopView::tryPurchase(const Uuid &id, const Item &type)
   switch (type)
   {
     case Item::COMPUTER:
-      result = m_repositories.computerRepository->saveForPlayer(id, *m_playerDbId);
+      result = m_repositories.computerRepository->saveForPlayer(*m_playerDbId, id);
       break;
     case Item::WEAPON:
-      result = m_repositories.weaponRepository->saveForPlayer(id, *m_playerDbId);
+      result = m_repositories.weaponRepository->saveForPlayer(*m_playerDbId, id);
       break;
     default:
       error("Invalid kind of item to buy", "Unsupported item " + str(type));
