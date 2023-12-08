@@ -25,7 +25,7 @@ auto PlayerResourceRepository::findAllByPlayer(const Uuid &player) const
   const auto sql = generateSqlQuery(player);
 
   pqxx::nontransaction work(m_connection->connection());
-  pqxx::result rows(work.exec(sql));
+  const auto rows(work.exec(sql));
 
   std::vector<PlayerResource> out;
   for (const auto record : rows)

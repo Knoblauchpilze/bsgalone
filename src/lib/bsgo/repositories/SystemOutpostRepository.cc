@@ -23,7 +23,7 @@ auto SystemOutpostRepository::findOneById(const Uuid &outpost) const -> SystemOu
   const auto sql = generateSqlQuery(outpost);
 
   pqxx::nontransaction work(m_connection->connection());
-  pqxx::result rows(work.exec(sql));
+  const auto rows(work.exec(sql));
 
   if (rows.size() != 1)
   {

@@ -23,7 +23,7 @@ auto ShipWeaponRepository::findAllByShip(const Uuid &ship) const -> std::vector<
   const auto sql = generateSqlQuery(ship);
 
   pqxx::nontransaction work(m_connection->connection());
-  pqxx::result rows(work.exec(sql));
+  const auto rows(work.exec(sql));
 
   std::vector<ShipWeapon> out;
   for (const auto record : rows)

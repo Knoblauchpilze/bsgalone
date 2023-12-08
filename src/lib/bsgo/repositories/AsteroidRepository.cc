@@ -34,7 +34,7 @@ auto AsteroidRepository::fetchAsteroidBase(const Uuid &asteroid) const -> Astero
   const auto sql = generateSqlQuery(asteroid);
 
   pqxx::nontransaction work(m_connection->connection());
-  pqxx::result rows(work.exec(sql));
+  const auto rows(work.exec(sql));
 
   if (rows.size() != 1)
   {
@@ -60,7 +60,7 @@ void AsteroidRepository::fetchLoot(const Uuid &asteroid, Asteroid &out) const
   const auto sql = generateLootSqlQuery(asteroid);
 
   pqxx::nontransaction work(m_connection->connection());
-  pqxx::result rows(work.exec(sql));
+  const auto rows(work.exec(sql));
 
   if (rows.size() != 1)
   {

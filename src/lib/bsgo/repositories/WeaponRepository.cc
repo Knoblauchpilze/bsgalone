@@ -22,7 +22,7 @@ auto generateSqlQuery(const Uuid &weapon) -> std::string
 auto WeaponRepository::findAll() const -> std::unordered_set<Uuid>
 {
   pqxx::nontransaction work(m_connection->connection());
-  pqxx::result rows(work.exec(SQL_QUERY_ALL));
+  const auto rows(work.exec(SQL_QUERY_ALL));
 
   std::unordered_set<Uuid> out;
   for (const auto record : rows)
@@ -38,7 +38,7 @@ auto WeaponRepository::findOneById(const Uuid &weapon) const -> Weapon
   const auto sql = generateSqlQuery(weapon);
 
   pqxx::nontransaction work(m_connection->connection());
-  pqxx::result rows(work.exec(sql));
+  const auto rows(work.exec(sql));
 
   if (rows.size() != 1)
   {
