@@ -223,10 +223,11 @@ auto ShopUiHandler::generateBuySection(const int itemId) -> UiMenuPtr
 void ShopUiHandler::onPurchaseRequest(const int itemId)
 {
   const auto &purchase = m_itemsData.at(itemId);
-  if (m_shopView->tryPurchase(purchase.itemId, purchase.itemType))
+  if (!m_shopView->tryPurchase(purchase.itemId, purchase.itemType))
   {
     warn("Failed to buy buy " + bsgo::str(purchase.itemId) + " with type "
          + bsgo::str(purchase.itemType));
+    return;
   }
 }
 
