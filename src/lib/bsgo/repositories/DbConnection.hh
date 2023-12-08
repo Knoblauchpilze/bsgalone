@@ -25,6 +25,9 @@ class DbConnection : public utils::CoreObject
   };
   auto safeExecute(const std::string &sql) -> SqlResult;
 
+  using SqlQuery = std::function<std::optional<pqxx::result>(pqxx::connection &)>;
+  auto safeExecute(const SqlQuery &query) -> SqlResult;
+
   private:
   std::unique_ptr<pqxx::connection> m_connection{};
 

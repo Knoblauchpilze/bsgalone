@@ -60,12 +60,19 @@ auto DbConnection::connection() -> pqxx::connection &
 
 auto DbConnection::safeExecute(const std::string &sql) -> SqlResult
 {
+  return safeExecute([&sql](pqxx::connection &conn) {
+    pqxx::nontransaction work(conn);
+    return work.exec(sql);
+  });
+}
+
+auto DbConnection::safeExecute(const SqlQuery &query) -> SqlResult
+{
   SqlResult out{};
 
   try
   {
-    pqxx::nontransaction work(*m_connection);
-    out.result = work.exec(sql);
+    out.result = query(*m_connection);
   }
   catch (const pqxx::sql_error &e)
   {
