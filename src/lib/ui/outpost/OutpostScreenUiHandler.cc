@@ -6,7 +6,8 @@
 
 namespace pge {
 
-OutpostScreenUiHandler::OutpostScreenUiHandler(const bsgo::Views &views)
+OutpostScreenUiHandler::OutpostScreenUiHandler(const bsgo::Views &views,
+                                               const bsgo::Services & /*services*/)
   : IUiHandler("outpost")
   , m_shipView(views.shipView)
   , m_lockerUi(std::make_unique<LockerUiHandler>(views))

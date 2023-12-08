@@ -4,7 +4,8 @@
 
 namespace pge {
 
-LoginScreenUiHandler::LoginScreenUiHandler(const bsgo::Views &views)
+LoginScreenUiHandler::LoginScreenUiHandler(const bsgo::Views &views,
+                                           const bsgo::Services & /*services*/)
   : IUiHandler("login")
   , m_loginView(views.loginView)
 {
