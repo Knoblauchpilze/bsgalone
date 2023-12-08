@@ -255,7 +255,7 @@ void LoginScreenUiHandler::tryLogin(Game &game)
       playerId = m_loginView->tryLogin(data.name, data.password);
       break;
     case Mode::SIGNUP:
-      playerId = m_loginView->trySignup(data.name, data.password, m_faction);
+      playerId = m_signupService->trySignup(data.name, data.password, m_faction);
       break;
     default:
       error("Unknown mode");
