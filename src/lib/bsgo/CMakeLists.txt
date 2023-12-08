@@ -31,6 +31,10 @@ add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/repositories
 	)
 
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/services
+	)
+
 target_sources (bsgalone_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/Coordinator.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/DataSource.cc
