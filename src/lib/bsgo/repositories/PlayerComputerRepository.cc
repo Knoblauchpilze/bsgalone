@@ -71,6 +71,7 @@ auto PlayerComputerRepository::fetchComputerBase(const Uuid &computer) const -> 
   PlayerComputer out{};
 
   const auto &record = rows[0];
+  out.id             = computer;
   out.name           = record[0].as<std::string>();
   out.offensive      = record[1].as<bool>();
   out.powerCost      = record[2].as<float>();

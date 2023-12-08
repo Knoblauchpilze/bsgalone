@@ -11,6 +11,7 @@ namespace bsgo {
 
 struct PlayerWeapon
 {
+  Uuid id{};
   std::string name{};
   int level{};
 

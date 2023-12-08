@@ -29,7 +29,7 @@ auto PlayerWeaponRepository::findOneById(const Uuid &weapon) const -> PlayerWeap
   const auto sql = generateSqlQuery(weapon);
 
   pqxx::nontransaction work(m_connection->connection());
-  pqxx::result rows(work.exec(sql));
+  const auto rows(work.exec(sql));
 
   if (rows.size() != 1)
   {
@@ -39,6 +39,7 @@ auto PlayerWeaponRepository::findOneById(const Uuid &weapon) const -> PlayerWeap
   PlayerWeapon out{};
 
   const auto &record = rows[0];
+  out.id             = weapon;
   out.name           = record[0].as<std::string>();
   out.minDamage      = record[1].as<float>();
   out.maxDamage      = record[2].as<float>();
@@ -55,7 +56,7 @@ auto PlayerWeaponRepository::findAllByPlayer(const Uuid &player) const -> std::u
   const auto sql = generateAllSqlQuery(player);
 
   pqxx::nontransaction work(m_connection->connection());
-  pqxx::result rows(work.exec(sql));
+  const auto rows(work.exec(sql));
 
   std::unordered_set<Uuid> out;
   for (const auto record : rows)
