@@ -228,6 +228,7 @@ void Game::requestJump(const bsgo::Uuid &systemId)
 void Game::initialize()
 {
   const auto repositories = m_dataSource.repositories();
+  m_services              = bsgo::createServices(repositories);
 
   m_views.loginView  = std::make_shared<bsgo::LoginView>(m_coordinator, repositories);
   m_views.shipView   = std::make_shared<bsgo::ShipView>(m_coordinator, repositories);

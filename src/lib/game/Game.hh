@@ -9,6 +9,7 @@
 #include "RenderState.hh"
 #include "RenderingPass.hh"
 #include "Screen.hh"
+#include "Services.hh"
 #include "SpriteRenderer.hh"
 #include "Views.hh"
 #include <core_utils/CoreObject.hh>
@@ -86,6 +87,7 @@ class Game : public utils::CoreObject
   State m_state{};
 
   bsgo::DataSource m_dataSource{};
+  bsgo::Services m_services{};
   bsgo::CoordinatorShPtr m_coordinator{std::make_shared<bsgo::Coordinator>()};
   bsgo::Views m_views;
   std::unordered_map<Screen, IRendererPtr> m_renderers{};
