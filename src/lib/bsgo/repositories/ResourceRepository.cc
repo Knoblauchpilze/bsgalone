@@ -20,7 +20,7 @@ auto ResourceRepository::findOneById(const Uuid &resource) const -> Resource
   const auto sql = generateSqlQuery(resource);
 
   pqxx::nontransaction work(m_connection->connection());
-  pqxx::result rows(work.exec(sql));
+  const auto rows(work.exec(sql));
 
   if (rows.size() != 1)
   {

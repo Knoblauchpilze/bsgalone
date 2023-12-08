@@ -45,7 +45,7 @@ auto PlayerShipRepository::findAllByPlayer(const Uuid &player) const -> std::uno
   const auto sql = generateAllSqlQuery(player);
 
   pqxx::nontransaction work(m_connection->connection());
-  pqxx::result rows(work.exec(sql));
+  const auto rows(work.exec(sql));
 
   std::unordered_set<Uuid> out;
   for (const auto record : rows)
@@ -61,7 +61,7 @@ auto PlayerShipRepository::fetchShipBase(const Uuid &ship) const -> PlayerShip
   const auto sql = generateSqlQuery(ship);
 
   pqxx::nontransaction work(m_connection->connection());
-  pqxx::result rows(work.exec(sql));
+  const auto rows(work.exec(sql));
 
   if (rows.size() != 1)
   {
@@ -105,7 +105,7 @@ void PlayerShipRepository::fetchSlots(const Uuid &ship, PlayerShip &out) const
   const auto sql = generateSlotSqlQuery(ship);
 
   pqxx::nontransaction work(m_connection->connection());
-  pqxx::result rows(work.exec(sql));
+  const auto rows(work.exec(sql));
 
   for (const auto record : rows)
   {

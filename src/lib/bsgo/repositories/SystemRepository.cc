@@ -38,7 +38,7 @@ auto generateOutpostSqlQuery(const Uuid &system) -> std::string
 auto SystemRepository::findAll() const -> std::unordered_set<Uuid>
 {
   pqxx::nontransaction work(m_connection->connection());
-  pqxx::result rows(work.exec(SQL_QUERY_ALL));
+  const auto rows(work.exec(SQL_QUERY_ALL));
 
   std::unordered_set<Uuid> out;
   for (const auto record : rows)
@@ -54,7 +54,7 @@ auto SystemRepository::findOneById(const Uuid &system) const -> System
   const auto sql = generateSystemSqlQuery(system);
 
   pqxx::nontransaction work(m_connection->connection());
-  pqxx::result rows(work.exec(sql));
+  const auto rows(work.exec(sql));
 
   if (rows.size() != 1)
   {
@@ -81,7 +81,7 @@ auto SystemRepository::findAllAsteroidsBySystem(const Uuid &system) const
   const auto sql = generateAsteroidSqlQuery(system);
 
   pqxx::nontransaction work(m_connection->connection());
-  pqxx::result rows(work.exec(sql));
+  const auto rows(work.exec(sql));
 
   std::unordered_set<Uuid> out;
   for (const auto record : rows)
@@ -97,7 +97,7 @@ auto SystemRepository::findAllShipsBySystem(const Uuid &system) const -> std::un
   const auto sql = generateShipSqlQuery(system);
 
   pqxx::nontransaction work(m_connection->connection());
-  pqxx::result rows(work.exec(sql));
+  const auto rows(work.exec(sql));
 
   std::unordered_set<Uuid> out;
   for (const auto record : rows)
@@ -113,7 +113,7 @@ auto SystemRepository::findAllOutpostsBySystem(const Uuid &system) const -> std:
   const auto sql = generateOutpostSqlQuery(system);
 
   pqxx::nontransaction work(m_connection->connection());
-  pqxx::result rows(work.exec(sql));
+  const auto rows(work.exec(sql));
 
   std::unordered_set<Uuid> out;
   for (const auto record : rows)

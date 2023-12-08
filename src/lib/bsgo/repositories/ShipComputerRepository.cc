@@ -22,7 +22,7 @@ auto ShipComputerRepository::findAllByShip(const Uuid &ship) const -> std::unord
   const auto sql = generateSqlQuery(ship);
 
   pqxx::nontransaction work(m_connection->connection());
-  pqxx::result rows(work.exec(sql));
+  const auto rows(work.exec(sql));
 
   std::unordered_set<Uuid> out;
   for (const auto record : rows)

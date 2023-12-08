@@ -29,7 +29,7 @@ auto generateTargetsSqlQuery(const Uuid &computer) -> std::string
 auto ComputerRepository::findAll() const -> std::unordered_set<Uuid>
 {
   pqxx::nontransaction work(m_connection->connection());
-  pqxx::result rows(work.exec(SQL_QUERY_ALL));
+  const auto rows(work.exec(SQL_QUERY_ALL));
 
   std::unordered_set<Uuid> out;
   for (const auto record : rows)
@@ -53,7 +53,7 @@ auto ComputerRepository::fetchComputerBase(const Uuid &computer) const -> Comput
   const auto sql = generateSqlQuery(computer);
 
   pqxx::nontransaction work(m_connection->connection());
-  pqxx::result rows(work.exec(sql));
+  const auto rows(work.exec(sql));
 
   if (rows.size() != 1)
   {
@@ -89,7 +89,7 @@ void ComputerRepository::fetchAllowedTargets(const Uuid &computer, Computer &out
   const auto sql = generateTargetsSqlQuery(computer);
 
   pqxx::nontransaction work(m_connection->connection());
-  pqxx::result rows(work.exec(sql));
+  const auto rows(work.exec(sql));
 
   std::unordered_set<EntityKind> targets;
   for (const auto record : rows)

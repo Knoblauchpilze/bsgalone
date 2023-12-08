@@ -36,7 +36,7 @@ auto ShipRepository::fetchShipBase(const Uuid &ship) const -> Ship
   const auto sql = generateSqlQuery(ship);
 
   pqxx::nontransaction work(m_connection->connection());
-  pqxx::result rows(work.exec(sql));
+  const auto rows(work.exec(sql));
 
   if (rows.size() != 1)
   {
@@ -67,7 +67,7 @@ void ShipRepository::fetchSlots(const Uuid &ship, Ship &out) const
   const auto sql = generateSlotSqlQuery(ship);
 
   pqxx::nontransaction work(m_connection->connection());
-  pqxx::result rows(work.exec(sql));
+  const auto rows(work.exec(sql));
 
   for (const auto record : rows)
   {

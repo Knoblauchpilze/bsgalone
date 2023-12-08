@@ -45,7 +45,7 @@ auto PlayerComputerRepository::findAllByPlayer(const Uuid &player) const -> std:
   const auto sql = generateAllSqlQuery(player);
 
   pqxx::nontransaction work(m_connection->connection());
-  pqxx::result rows(work.exec(sql));
+  const auto rows(work.exec(sql));
 
   std::unordered_set<Uuid> out;
   for (const auto record : rows)
@@ -61,7 +61,7 @@ auto PlayerComputerRepository::fetchComputerBase(const Uuid &computer) const -> 
   const auto sql = generateSqlQuery(computer);
 
   pqxx::nontransaction work(m_connection->connection());
-  pqxx::result rows(work.exec(sql));
+  const auto rows(work.exec(sql));
 
   if (rows.size() != 1)
   {
@@ -97,7 +97,7 @@ void PlayerComputerRepository::fetchAllowedTargets(const Uuid &computer, PlayerC
   const auto sql = generateTargetsSqlQuery(computer);
 
   pqxx::nontransaction work(m_connection->connection());
-  pqxx::result rows(work.exec(sql));
+  const auto rows(work.exec(sql));
 
   std::unordered_set<EntityKind> targets;
   for (const auto record : rows)

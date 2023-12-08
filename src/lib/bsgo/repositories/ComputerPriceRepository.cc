@@ -23,7 +23,7 @@ auto ComputerPriceRepository::findAllByComputer(const Uuid &computer) const
   const auto sql = generateSqlQuery(computer);
 
   pqxx::nontransaction work(m_connection->connection());
-  pqxx::result rows(work.exec(sql));
+  const auto rows(work.exec(sql));
 
   std::unordered_map<Uuid, int> out;
   for (const auto record : rows)
