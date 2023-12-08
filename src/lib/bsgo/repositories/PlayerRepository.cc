@@ -28,16 +28,15 @@ auto generateSignupSqlQuery(const Player &player) -> std::string
   out += SQL_CREATE_PLAYER_PROCEDURE_NAME;
 
   out += " (";
-  out += '\'' + player.name + '\'';
+  out += "\'" + player.name + "\'";
   out += ",";
-  out += '\'' + player.password + '\'';
+  out += "\'" + player.password + "\'";
   out += ",";
-  out += '\'' + toDbFaction(player.faction) + '\'';
+  out += "\'" + toDbFaction(player.faction) + "\'";
   out += ")";
 
   return out;
 }
-
 } // namespace
 
 auto PlayerRepository::findOneByName(const std::string &name) const -> std::optional<Player>
