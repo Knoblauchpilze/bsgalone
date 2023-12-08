@@ -4,6 +4,7 @@
 #include "HangarUiHandler.hh"
 #include "IUiHandler.hh"
 #include "LockerUiHandler.hh"
+#include "Services.hh"
 #include "ShopUiHandler.hh"
 #include "UiMenu.hh"
 #include "Views.hh"
@@ -13,7 +14,7 @@ namespace pge {
 class OutpostScreenUiHandler : public IUiHandler
 {
   public:
-  OutpostScreenUiHandler(const bsgo::Views &views);
+  OutpostScreenUiHandler(const bsgo::Views &views, const bsgo::Services &services);
   ~OutpostScreenUiHandler() override = default;
 
   void initializeMenus(const int width, const int height) override;

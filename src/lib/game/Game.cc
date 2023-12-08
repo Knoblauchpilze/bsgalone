@@ -59,11 +59,11 @@ void Game::generateInputHandlers()
 
 void Game::generateUiHandlers(int width, int height)
 {
-  auto login = std::make_unique<LoginScreenUiHandler>(m_views);
+  auto login = std::make_unique<LoginScreenUiHandler>(m_views, m_services);
   login->initializeMenus(width, height);
   m_uiHandlers[Screen::LOGIN] = std::move(login);
 
-  auto outpost = std::make_unique<OutpostScreenUiHandler>(m_views);
+  auto outpost = std::make_unique<OutpostScreenUiHandler>(m_views, m_services);
   outpost->initializeMenus(width, height);
   m_uiHandlers[Screen::OUTPOST] = std::move(outpost);
 

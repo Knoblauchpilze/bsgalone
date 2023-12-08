@@ -3,16 +3,18 @@
 
 #include "CredentialsUiHandler.hh"
 #include "IUiHandler.hh"
+#include "Services.hh"
 #include "UiMenu.hh"
 #include "UiTextMenu.hh"
 #include "UiTimedMenu.hh"
+#include "Views.hh"
 
 namespace pge {
 
 class LoginScreenUiHandler : public IUiHandler
 {
   public:
-  LoginScreenUiHandler(const bsgo::Views &views);
+  LoginScreenUiHandler(const bsgo::Views &views, const bsgo::Services &services);
   ~LoginScreenUiHandler() override = default;
 
   void initializeMenus(const int width, const int height) override;
