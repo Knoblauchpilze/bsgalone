@@ -32,6 +32,8 @@ class WeaponRepository : public AbstractRepository
 
   auto findAll() const -> std::unordered_set<Uuid>;
   auto findOneById(const Uuid &weapon) const -> Weapon;
+
+  bool saveForPlayer(const Uuid &player, const Uuid &weapon);
 };
 
 using WeaponRepositoryShPtr = std::shared_ptr<WeaponRepository>;
