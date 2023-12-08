@@ -2,9 +2,9 @@
 -- https://www.postgresqltutorial.com/postgresql-plpgsql/postgresql-create-procedure/
 -- https://stackoverflow.com/questions/26406111/execute-postgresql-stored-procedure-as-one-transaction
 CREATE PROCEDURE player_signup (
-  player_name text,
-  player_password text,
-  player_faction text
+  player_name TEXT,
+  player_password TEXT,
+  player_faction TEXT
 )
 LANGUAGE plpgsql
 AS $$
@@ -46,4 +46,5 @@ BEGIN
         (SELECT player_ship.id FROM player_ship LEFT JOIN player ON player_ship.player = player.id WHERE player.name = player_name),
         (SELECT system FROM starting_system WHERE faction = player_faction)
       );
-END;$$
+END
+$$;
