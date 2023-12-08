@@ -41,8 +41,6 @@ class ShopView : public IView
   };
   auto computeAffordability(const Uuid &id, const Item &type) const -> Affordability;
 
-  bool tryPurchase(const Uuid &id, const Item &type);
-
   private:
   std::optional<Uuid> m_playerDbId{};
 

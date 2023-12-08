@@ -9,4 +9,9 @@ IService::IService(const std::string &name)
   setService("service");
 }
 
+bool IService::isReady() const noexcept
+{
+  return true;
+}
+
 } // namespace bsgo
