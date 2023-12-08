@@ -24,7 +24,8 @@ class LoginScreenUiHandler : public IUiHandler
   void reset() override;
 
   private:
-  bsgo::LoginViewShPtr m_loginView;
+  bsgo::LoginViewShPtr m_loginView{};
+  bsgo::SignupServiceShPtr m_signupService{};
 
   enum class Mode
   {

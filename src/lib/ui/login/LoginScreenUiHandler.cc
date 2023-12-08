@@ -4,14 +4,18 @@
 
 namespace pge {
 
-LoginScreenUiHandler::LoginScreenUiHandler(const bsgo::Views &views,
-                                           const bsgo::Services & /*services*/)
+LoginScreenUiHandler::LoginScreenUiHandler(const bsgo::Views &views, const bsgo::Services &services)
   : IUiHandler("login")
   , m_loginView(views.loginView)
+  , m_signupService(services.signup)
 {
   if (nullptr == m_loginView)
   {
     throw std::invalid_argument("Expected non null login view");
+  }
+  if (nullptr == m_signupService)
+  {
+    throw std::invalid_argument("Expected non null signup service");
   }
 }
 

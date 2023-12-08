@@ -7,11 +7,11 @@
 namespace pge {
 
 OutpostScreenUiHandler::OutpostScreenUiHandler(const bsgo::Views &views,
-                                               const bsgo::Services & /*services*/)
+                                               const bsgo::Services &services)
   : IUiHandler("outpost")
   , m_shipView(views.shipView)
   , m_lockerUi(std::make_unique<LockerUiHandler>(views))
-  , m_shopUi(std::make_unique<ShopUiHandler>(views))
+  , m_shopUi(std::make_unique<ShopUiHandler>(views, services))
   , m_hangarUi(std::make_unique<HangarUiHandler>(views))
 {
   if (nullptr == m_shipView)
