@@ -68,9 +68,10 @@ auto PlayerRepository::save(const Player &player) -> std::optional<Uuid>
 {
   const auto sql = generateSignupSqlQuery(player);
 
-  const auto result = m_connection->safeExecute(sql);
+  const auto result = m_connection->tryExecuteQuery(sql);
   if (result.error)
   {
+    warn("Failed to save player: " + *result.error);
     return {};
   }
 
