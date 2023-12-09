@@ -32,6 +32,7 @@ class DbConnection : public utils::CoreObject
   auto safeExecute(const SqlQuery &query) -> SqlResult;
 
   private:
+  // https://www.tutorialspoint.com/postgresql/pdf/postgresql_c_cpp.pdf
   std::unique_ptr<pqxx::connection> m_connection{};
 
   void setupDbConnection();

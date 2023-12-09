@@ -48,6 +48,8 @@ class PlayerShipRepository : public AbstractRepository
   PlayerShipRepository(const DbConnectionShPtr &connection);
   ~PlayerShipRepository() override = default;
 
+  void initialize() override;
+
   auto findOneById(const Uuid &ship) const -> PlayerShip;
   auto findAllByPlayer(const Uuid &player) const -> std::unordered_set<Uuid>;
 

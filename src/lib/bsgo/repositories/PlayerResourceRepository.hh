@@ -22,6 +22,8 @@ class PlayerResourceRepository : public AbstractRepository
   PlayerResourceRepository(const DbConnectionShPtr &connection);
   ~PlayerResourceRepository() override = default;
 
+  void initialize() override;
+
   auto findAllByPlayer(const Uuid &player) const -> std::vector<PlayerResource>;
 
   void save(const PlayerResource &resource);

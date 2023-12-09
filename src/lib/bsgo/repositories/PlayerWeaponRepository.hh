@@ -31,8 +31,12 @@ class PlayerWeaponRepository : public AbstractRepository
   PlayerWeaponRepository(const DbConnectionShPtr &connection);
   ~PlayerWeaponRepository() override = default;
 
+  void initialize() override;
+
   auto findOneById(const Uuid &weapon) const -> PlayerWeapon;
   auto findAllByPlayer(const Uuid &player) const -> std::unordered_set<Uuid>;
+
+  void save(const PlayerWeapon &weapon);
 };
 
 using PlayerWeaponRepositoryShPtr = std::shared_ptr<PlayerWeaponRepository>;
