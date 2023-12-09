@@ -104,6 +104,7 @@ auto DbConnection::tryExecuteTransaction(const SqlTransaction &query) -> SqlResu
   {
     auto work  = transaction();
     out.result = query(work);
+    work.commit();
   }
   catch (const pqxx::sql_error &e)
   {
