@@ -19,10 +19,10 @@ namespace bsgo {
 
 DataSource::DataSource()
   : utils::CoreObject("bsgo")
-  , m_repositories(createRepositories(m_connection))
 {
   setService("data");
   m_connection->connect();
+  m_repositories = createRepositories(m_connection);
 }
 
 void DataSource::setPlayerId(const Uuid &player)
