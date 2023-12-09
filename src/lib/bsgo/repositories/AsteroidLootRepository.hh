@@ -20,6 +20,8 @@ class AsteroidLootRepository : public AbstractRepository
   AsteroidLootRepository(const DbConnectionShPtr &connection);
   ~AsteroidLootRepository() override = default;
 
+  void initialize() override;
+
   auto findOneById(const Uuid &asteroid) const -> AsteroidLoot;
 };
 
