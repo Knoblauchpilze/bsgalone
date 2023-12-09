@@ -9,42 +9,29 @@ ComputerRepository::ComputerRepository(const DbConnectionShPtr &connection)
 {}
 
 namespace {
-constexpr auto SQL_QUERY_ALL = "SELECT id FROM computer";
+constexpr auto FIND_ALL_QUERY_NAME = "computer_find_all";
+constexpr auto FIND_ALL_QUERY      = "SELECT id FROM computer";
 
-constexpr auto SQL_QUERY
-  = "SELECT name, offensive, power_cost, range, reload_time_ms, duration_ms, damage_modifier FROM computer WHERE id = ";
-auto generateSqlQuery(const Uuid &computer) -> std::string
-{
-  return SQL_QUERY + std::to_string(toDbId(computer));
-}
+constexpr auto FIND_ONE_QUERY_NAME = "computer_find_one";
+constexpr auto FIND_ONE_QUERY
+  = "SELECT name, offensive, power_cost, range, reload_time_ms, duration_ms, damage_modifier FROM computer WHERE id = $1";
 
-constexpr auto SQL_QUERY_TARGET
-  = "SELECT cat.entity FROM computer_allowed_target AS cat LEFT JOIN computer AS c ON cat.computer = c.id WHERE c.id = ";
-auto generateTargetsSqlQuery(const Uuid &computer) -> std::string
-{
-  return SQL_QUERY_TARGET + std::to_string(toDbId(computer));
-}
-
-constexpr auto SQL_PURCHASE_PROCEDURE_NAME = "player_buy_computer";
-auto generatePurchaseSqlQuery(const Uuid &player, const Uuid &computer) -> std::string
-{
-  std::string out = "CALL ";
-  out += SQL_PURCHASE_PROCEDURE_NAME;
-
-  out += " (";
-  out += "\'" + std::to_string(toDbId(player)) + "\'";
-  out += ",";
-  out += "\'" + std::to_string(toDbId(computer)) + "\'";
-  out += ")";
-
-  return out;
-}
+constexpr auto FIND_ALLOWED_TARGETS_QUERY_NAME = "computer_find_targets";
+constexpr auto FIND_ALLOWED_TARGETS_QUERY
+  = "SELECT cat.entity FROM computer_allowed_target AS cat LEFT JOIN computer AS c ON cat.computer = c.id WHERE c.id = $1";
 } // namespace
+
+void ComputerRepository::initialize()
+{
+  m_connection->prepare(FIND_ALL_QUERY_NAME, FIND_ALL_QUERY);
+  m_connection->prepare(FIND_ONE_QUERY_NAME, FIND_ONE_QUERY);
+  m_connection->prepare(FIND_ALLOWED_TARGETS_QUERY_NAME, FIND_ALLOWED_TARGETS_QUERY);
+}
 
 auto ComputerRepository::findAll() const -> std::unordered_set<Uuid>
 {
-  pqxx::nontransaction work(m_connection->connection());
-  const auto rows(work.exec(SQL_QUERY_ALL));
+  auto work       = m_connection->nonTransaction();
+  const auto rows = work.exec_prepared(FIND_ALL_QUERY_NAME);
 
   std::unordered_set<Uuid> out;
   for (const auto record : rows)
@@ -63,12 +50,27 @@ auto ComputerRepository::findOneById(const Uuid &computer) const -> Computer
   return out;
 }
 
-bool ComputerRepository::saveForPlayer(const Uuid &player, const Uuid &computer)
+namespace {
+constexpr auto SQL_PURCHASE_PROCEDURE_NAME = "player_buy_computer";
+auto generatePurchaseSqlQuery(const Uuid &player, const Uuid &computer) -> std::string
+{
+  std::string out = "CALL ";
+  out += SQL_PURCHASE_PROCEDURE_NAME;
 
+  out += " (";
+  out += "\'" + std::to_string(toDbId(player)) + "\'";
+  out += ",";
+  out += "\'" + std::to_string(toDbId(computer)) + "\'";
+  out += ")";
+
+  return out;
+}
+} // namespace
+
+bool ComputerRepository::saveForPlayer(const Uuid &player, const Uuid &computer)
 {
   const auto sql = generatePurchaseSqlQuery(player, computer);
 
-  log("s: " + sql);
   const auto result = m_connection->safeExecute(sql);
   if (result.error)
   {
@@ -81,23 +83,15 @@ bool ComputerRepository::saveForPlayer(const Uuid &player, const Uuid &computer)
 
 auto ComputerRepository::fetchComputerBase(const Uuid &computer) const -> Computer
 {
-  const auto sql = generateSqlQuery(computer);
-
-  pqxx::nontransaction work(m_connection->connection());
-  const auto rows(work.exec(sql));
-
-  if (rows.size() != 1)
-  {
-    error("Expected to find only one computer with id " + str(computer));
-  }
+  auto work         = m_connection->nonTransaction();
+  const auto record = work.exec_prepared1(FIND_ONE_QUERY_NAME, toDbId(computer));
 
   Computer out{};
 
-  const auto &record = rows[0];
-  out.id             = computer;
-  out.name           = record[0].as<std::string>();
-  out.offensive      = record[1].as<bool>();
-  out.powerCost      = record[2].as<float>();
+  out.id        = computer;
+  out.name      = record[0].as<std::string>();
+  out.offensive = record[1].as<bool>();
+  out.powerCost = record[2].as<float>();
   if (!record[3].is_null())
   {
     out.range = {record[3].as<float>()};
@@ -117,10 +111,8 @@ auto ComputerRepository::fetchComputerBase(const Uuid &computer) const -> Comput
 
 void ComputerRepository::fetchAllowedTargets(const Uuid &computer, Computer &out) const
 {
-  const auto sql = generateTargetsSqlQuery(computer);
-
-  pqxx::nontransaction work(m_connection->connection());
-  const auto rows(work.exec(sql));
+  auto work       = m_connection->nonTransaction();
+  const auto rows = work.exec_prepared(FIND_ALLOWED_TARGETS_QUERY_NAME, toDbId(computer));
 
   std::unordered_set<EntityKind> targets;
   for (const auto record : rows)
