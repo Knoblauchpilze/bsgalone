@@ -8,30 +8,24 @@ ResourceRepository::ResourceRepository(const DbConnectionShPtr &connection)
 {}
 
 namespace {
-constexpr auto SQL_QUERY = "SELECT name FROM resource WHERE id = ";
-auto generateSqlQuery(const Uuid &resource) -> std::string
-{
-  return SQL_QUERY + std::to_string(toDbId(resource));
-}
+constexpr auto FIND_ONE_QUERY_NAME = "resource_find_one";
+constexpr auto FIND_ONE_QUERY      = "SELECT name FROM resource WHERE id = $1";
 } // namespace
+
+void ResourceRepository::initialize()
+{
+  m_connection->prepare(FIND_ONE_QUERY_NAME, FIND_ONE_QUERY);
+}
 
 auto ResourceRepository::findOneById(const Uuid &resource) const -> Resource
 {
-  const auto sql = generateSqlQuery(resource);
-
-  pqxx::nontransaction work(m_connection->connection());
-  const auto rows(work.exec(sql));
-
-  if (rows.size() != 1)
-  {
-    error("Expected to find resource " + str(resource));
-  }
+  auto work         = m_connection->nonTransaction();
+  const auto record = work.exec_prepared1(FIND_ONE_QUERY_NAME, toDbId(resource));
 
   Resource out;
 
-  const auto &record = rows[0];
-  out.id             = resource;
-  out.name           = record[0].as<std::string>();
+  out.id   = resource;
+  out.name = record[0].as<std::string>();
 
   return out;
 }
