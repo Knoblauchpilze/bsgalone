@@ -22,6 +22,8 @@ class SystemRepository : public AbstractRepository
   SystemRepository(const DbConnectionShPtr &connection);
   ~SystemRepository() override = default;
 
+  void initialize() override;
+
   auto findAll() const -> std::unordered_set<Uuid>;
   auto findOneById(const Uuid &system) const -> System;
 
