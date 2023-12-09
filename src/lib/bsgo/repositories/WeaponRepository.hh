@@ -30,6 +30,8 @@ class WeaponRepository : public AbstractRepository
   WeaponRepository(const DbConnectionShPtr &connection);
   ~WeaponRepository() override = default;
 
+  void initialize() override;
+
   auto findAll() const -> std::unordered_set<Uuid>;
   auto findOneById(const Uuid &weapon) const -> Weapon;
 
