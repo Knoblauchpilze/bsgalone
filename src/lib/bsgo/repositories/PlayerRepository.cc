@@ -24,15 +24,26 @@ void PlayerRepository::initialize()
 
 auto PlayerRepository::findOneByName(const std::string &name) const -> std::optional<Player>
 {
-  auto work         = m_connection->nonTransaction();
-  const auto record = work.exec_prepared1(FIND_ONE_QUERY_NAME, name);
+  auto work       = m_connection->nonTransaction();
+  const auto rows = work.exec_prepared(FIND_ONE_QUERY_NAME, name);
+
+  if (rows.empty())
+  {
+    return {};
+  }
+
+  if (rows.size() != 1)
+  {
+    error("Expected to find only one player with name \"" + name + "\"");
+  }
 
   Player out;
 
-  out.id       = fromDbId(record[0].as<int>());
-  out.name     = name;
-  out.password = record[1].as<std::string>();
-  out.faction  = fromDbFaction(record[2].as<std::string>());
+  const auto &record = rows[0];
+  out.id             = fromDbId(record[0].as<int>());
+  out.name           = name;
+  out.password       = record[1].as<std::string>();
+  out.faction        = fromDbFaction(record[2].as<std::string>());
 
   return out;
 }
