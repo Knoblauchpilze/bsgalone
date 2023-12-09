@@ -53,6 +53,16 @@ void DbConnection::disconnect()
   m_connection.reset();
 }
 
+void DbConnection::prepare(const std::string &queryName, const std::string &sql)
+{
+  m_connection->prepare(queryName, sql);
+}
+
+auto DbConnection::nonTransaction() -> pqxx::nontransaction
+{
+  return pqxx::nontransaction(*m_connection);
+}
+
 auto DbConnection::connection() -> pqxx::connection &
 {
   return *m_connection;
