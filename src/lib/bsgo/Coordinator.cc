@@ -403,11 +403,11 @@ void Coordinator::createSystems()
   auto target = std::make_unique<TargetSystem>();
   m_systems.push_back(std::move(target));
 
-  auto health = std::make_unique<HealthSystem>();
-  m_systems.push_back(std::move(health));
-
   auto loot = std::make_unique<LootSystem>();
   m_systems.push_back(std::move(loot));
+
+  auto health = std::make_unique<HealthSystem>();
+  m_systems.push_back(std::move(health));
 
   auto owner = std::make_unique<OwnerSystem>();
   m_systems.push_back(std::move(owner));
