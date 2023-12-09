@@ -14,6 +14,8 @@ class WeaponPriceRepository : public AbstractRepository
   WeaponPriceRepository(const DbConnectionShPtr &connection);
   ~WeaponPriceRepository() override = default;
 
+  void initialize() override;
+
   auto findAllByWeapon(const Uuid &weapon) const -> std::unordered_map<Uuid, int>;
 };
 

@@ -12,20 +12,20 @@ WeaponPriceRepository::WeaponPriceRepository(const DbConnectionShPtr &connection
 }
 
 namespace {
-constexpr auto SQL_QUERY = "SELECT resource, cost FROM weapon_price WHERE weapon = ";
-auto generateSqlQuery(const Uuid &weapon) -> std::string
-{
-  return SQL_QUERY + std::to_string(toDbId(weapon));
-}
+constexpr auto FIND_ALL_QUERY_NAME = "weapon_price_find_all";
+constexpr auto FIND_ALL_QUERY      = "SELECT resource, cost FROM weapon_price WHERE weapon = $1";
 } // namespace
+
+void WeaponPriceRepository::initialize()
+{
+  m_connection->prepare(FIND_ALL_QUERY_NAME, FIND_ALL_QUERY);
+}
 
 auto WeaponPriceRepository::findAllByWeapon(const Uuid &weapon) const
   -> std::unordered_map<Uuid, int>
 {
-  const auto sql = generateSqlQuery(weapon);
-
-  pqxx::nontransaction work(m_connection->connection());
-  const auto rows(work.exec(sql));
+  auto work       = m_connection->nonTransaction();
+  const auto rows = work.exec_prepared(FIND_ALL_QUERY_NAME, toDbId(weapon));
 
   std::unordered_map<Uuid, int> out;
   for (const auto record : rows)
