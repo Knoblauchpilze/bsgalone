@@ -25,6 +25,24 @@ auto createRepositories(const DbConnectionShPtr &dbConnection) -> Repositories
   out.weaponRepository         = std::make_shared<WeaponRepository>(dbConnection);
   out.systemOutpostRepository  = std::make_shared<SystemOutpostRepository>(dbConnection);
 
+  out.asteroidLootRepository->initialize();
+  out.asteroidRepository->initialize();
+  out.computerPriceRepository->initialize();
+  out.computerRepository->initialize();
+  out.outpostRepository->initialize();
+  out.playerComputerRepository->initialize();
+  out.playerRepository->initialize();
+  out.playerResourceRepository->initialize();
+  out.playerShipRepository->initialize();
+  out.playerWeaponRepository->initialize();
+  out.resourceRepository->initialize();
+  out.shipComputerRepository->initialize();
+  out.shipWeaponRepository->initialize();
+  out.systemRepository->initialize();
+  out.weaponPriceRepository->initialize();
+  out.weaponRepository->initialize();
+  out.systemOutpostRepository->initialize();
+
   return out;
 }
 
