@@ -10,53 +10,43 @@ PlayerWeaponRepository::PlayerWeaponRepository(const DbConnectionShPtr &connecti
 }
 
 namespace {
-constexpr auto SQL_QUERY_ALL = "SELECT id FROM player_weapon WHERE player = ";
-auto generateAllSqlQuery(const Uuid &player) -> std::string
-{
-  return SQL_QUERY_ALL + std::to_string(toDbId(player));
-}
+constexpr auto FIND_ALL_QUERY_NAME = "player_weapon_find_all";
+constexpr auto FIND_ALL_QUERY      = "SELECT id FROM player_weapon WHERE player = $1";
 
-constexpr auto SQL_QUERY
-  = "SELECT w.name, w.min_damage, w.max_damage, w.power_cost, w.range, w.reload_time_ms, pw.level FROM player_weapon AS pw LEFT JOIN weapon AS w ON pw.weapon = w.id WHERE pw.id = ";
-auto generateSqlQuery(const Uuid &weapon) -> std::string
-{
-  return SQL_QUERY + std::to_string(toDbId(weapon));
-}
+constexpr auto FIND_ONE_QUERY_NAME = "player_weapon_find_one";
+constexpr auto FIND_ONE_QUERY
+  = "SELECT w.name, w.min_damage, w.max_damage, w.power_cost, w.range, w.reload_time_ms, pw.level FROM player_weapon AS pw LEFT JOIN weapon AS w ON pw.weapon = w.id WHERE pw.id = $1";
 } // namespace
+
+void PlayerWeaponRepository::initialize()
+{
+  m_connection->prepare(FIND_ALL_QUERY_NAME, FIND_ALL_QUERY);
+  m_connection->prepare(FIND_ONE_QUERY_NAME, FIND_ONE_QUERY);
+}
 
 auto PlayerWeaponRepository::findOneById(const Uuid &weapon) const -> PlayerWeapon
 {
-  const auto sql = generateSqlQuery(weapon);
-
-  pqxx::nontransaction work(m_connection->connection());
-  const auto rows(work.exec(sql));
-
-  if (rows.size() != 1)
-  {
-    error("Expected to find only one weapon with id " + str(weapon));
-  }
+  auto work         = m_connection->nonTransaction();
+  const auto record = work.exec_prepared1(FIND_ONE_QUERY_NAME, toDbId(weapon));
 
   PlayerWeapon out{};
 
-  const auto &record = rows[0];
-  out.id             = weapon;
-  out.name           = record[0].as<std::string>();
-  out.minDamage      = record[1].as<float>();
-  out.maxDamage      = record[2].as<float>();
-  out.powerCost      = record[3].as<float>();
-  out.range          = record[4].as<float>();
-  out.reloadTime     = utils::Milliseconds(record[5].as<int>());
-  out.level          = record[6].as<int>();
+  out.id         = weapon;
+  out.name       = record[0].as<std::string>();
+  out.minDamage  = record[1].as<float>();
+  out.maxDamage  = record[2].as<float>();
+  out.powerCost  = record[3].as<float>();
+  out.range      = record[4].as<float>();
+  out.reloadTime = utils::Milliseconds(record[5].as<int>());
+  out.level      = record[6].as<int>();
 
   return out;
 }
 
 auto PlayerWeaponRepository::findAllByPlayer(const Uuid &player) const -> std::unordered_set<Uuid>
 {
-  const auto sql = generateAllSqlQuery(player);
-
-  pqxx::nontransaction work(m_connection->connection());
-  const auto rows(work.exec(sql));
+  auto work       = m_connection->nonTransaction();
+  const auto rows = work.exec_prepared(FIND_ALL_QUERY_NAME, toDbId(player));
 
   std::unordered_set<Uuid> out;
   for (const auto record : rows)
@@ -66,5 +56,7 @@ auto PlayerWeaponRepository::findAllByPlayer(const Uuid &player) const -> std::u
 
   return out;
 }
+
+void PlayerWeaponRepository::save(const PlayerWeapon & /*weapon*/) {}
 
 } // namespace bsgo
