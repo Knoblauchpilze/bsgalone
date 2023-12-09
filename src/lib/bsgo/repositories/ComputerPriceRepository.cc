@@ -10,20 +10,20 @@ ComputerPriceRepository::ComputerPriceRepository(const DbConnectionShPtr &connec
 }
 
 namespace {
-constexpr auto SQL_QUERY = "SELECT resource, cost FROM computer_price WHERE computer = ";
-auto generateSqlQuery(const Uuid &computer) -> std::string
-{
-  return SQL_QUERY + std::to_string(toDbId(computer));
-}
+constexpr auto FIND_ALL_QUERY_NAME = "computer_price_find_all";
+constexpr auto FIND_ALL_QUERY = "SELECT resource, cost FROM computer_price WHERE computer = $1";
 } // namespace
+
+void ComputerPriceRepository::initialize()
+{
+  m_connection->prepare(FIND_ALL_QUERY_NAME, FIND_ALL_QUERY);
+}
 
 auto ComputerPriceRepository::findAllByComputer(const Uuid &computer) const
   -> std::unordered_map<Uuid, int>
 {
-  const auto sql = generateSqlQuery(computer);
-
-  pqxx::nontransaction work(m_connection->connection());
-  const auto rows(work.exec(sql));
+  auto work       = m_connection->nonTransaction();
+  const auto rows = work.exec_prepared(FIND_ALL_QUERY_NAME, toDbId(computer));
 
   std::unordered_map<Uuid, int> out;
   for (const auto record : rows)
