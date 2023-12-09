@@ -20,7 +20,11 @@ constexpr auto UPDATE_RESOURCE_QUERY = R"(
 INSERT INTO player_resource (player, resource, amount)
   VALUES ($1, $2, $3)
   ON CONFLICT (player, resource) DO UPDATE
-  SET amount = player_resource.amount + excluded.amount
+  SET
+    amount = player_resource.amount + excluded.amount
+  WHERE
+    player_resource.player = excluded.player
+    AND player_resource.resource = excluded.resource
 )";
 } // namespace
 
@@ -51,7 +55,7 @@ auto PlayerResourceRepository::findAllByPlayer(const Uuid &player) const
 
 void PlayerResourceRepository::save(const PlayerResource &resource)
 {
-  // https://gist.github.com/fearofcode/7516c9b7b18922386148195be5660329
+  // https://gist.github.com/fearofcode/7516c9b7b18922386148195be5660329#file-libpqxx_test-cpp-L24
   auto query = [&resource](pqxx::work &transaction) {
     return transaction.exec_prepared0(UPDATE_RESOURCE_QUERY_NAME,
                                       toDbId(resource.player),
