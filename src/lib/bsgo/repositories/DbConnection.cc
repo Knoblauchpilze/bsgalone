@@ -58,6 +58,11 @@ void DbConnection::prepare(const std::string &queryName, const std::string &sql)
   m_connection->prepare(queryName, sql);
 }
 
+auto DbConnection::transaction() -> pqxx::work
+{
+  return pqxx::work(*m_connection);
+}
+
 auto DbConnection::nonTransaction() -> pqxx::nontransaction
 {
   return pqxx::nontransaction(*m_connection);
@@ -68,21 +73,37 @@ auto DbConnection::connection() -> pqxx::connection &
   return *m_connection;
 }
 
-auto DbConnection::safeExecute(const std::string &sql) -> SqlResult
+auto DbConnection::tryExecuteQuery(const std::string &sql) -> SqlResult
 {
-  return safeExecute([&sql](pqxx::connection &conn) {
-    pqxx::nontransaction work(conn);
-    return work.exec(sql);
-  });
+  return tryExecuteQuery([&sql](pqxx::nontransaction &work) { return work.exec(sql); });
 }
 
-auto DbConnection::safeExecute(const SqlQuery &query) -> SqlResult
+auto DbConnection::tryExecuteQuery(const SqlQuery &query) -> SqlResult
 {
   SqlResult out{};
 
   try
   {
-    out.result = query(*m_connection);
+    auto work  = nonTransaction();
+    out.result = query(work);
+  }
+  catch (const pqxx::sql_error &e)
+  {
+    warn("failed: " + e.query() + ", " + e.sqlstate());
+    out.error = e.sqlstate();
+  }
+
+  return out;
+}
+
+auto DbConnection::tryExecuteTransaction(const SqlTransaction &query) -> SqlResult
+{
+  SqlResult out{};
+
+  try
+  {
+    auto work  = transaction();
+    out.result = query(work);
   }
   catch (const pqxx::sql_error &e)
   {

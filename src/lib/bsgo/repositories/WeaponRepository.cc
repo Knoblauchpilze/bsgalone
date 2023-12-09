@@ -75,7 +75,7 @@ bool WeaponRepository::saveForPlayer(const Uuid &player, const Uuid &weapon)
 {
   const auto sql = generatePurchaseSqlQuery(player, weapon);
 
-  const auto result = m_connection->safeExecute(sql);
+  const auto result = m_connection->tryExecuteQuery(sql);
   if (result.error)
   {
     warn("Failed to purchase weapon: " + *result.error);

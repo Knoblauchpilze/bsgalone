@@ -71,7 +71,7 @@ bool ComputerRepository::saveForPlayer(const Uuid &player, const Uuid &computer)
 {
   const auto sql = generatePurchaseSqlQuery(player, computer);
 
-  const auto result = m_connection->safeExecute(sql);
+  const auto result = m_connection->tryExecuteQuery(sql);
   if (result.error)
   {
     warn("Failed to purchase computer: " + *result.error);

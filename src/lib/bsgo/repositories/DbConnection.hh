@@ -17,6 +17,7 @@ class DbConnection : public utils::CoreObject
   void disconnect();
 
   void prepare(const std::string &queryName, const std::string &sql);
+  auto transaction() -> pqxx::work;
   auto nonTransaction() -> pqxx::nontransaction;
 
   auto connection() -> pqxx::connection &;
@@ -26,10 +27,14 @@ class DbConnection : public utils::CoreObject
     std::optional<pqxx::result> result{};
     std::optional<std::string> error{};
   };
-  auto safeExecute(const std::string &sql) -> SqlResult;
 
-  using SqlQuery = std::function<std::optional<pqxx::result>(pqxx::connection &)>;
-  auto safeExecute(const SqlQuery &query) -> SqlResult;
+  auto tryExecuteQuery(const std::string &sql) -> SqlResult;
+
+  using SqlQuery = std::function<pqxx::result(pqxx::nontransaction &)>;
+  auto tryExecuteQuery(const SqlQuery &query) -> SqlResult;
+
+  using SqlTransaction = std::function<pqxx::result(pqxx::work &)>;
+  auto tryExecuteTransaction(const SqlTransaction &query) -> SqlResult;
 
   private:
   // https://www.tutorialspoint.com/postgresql/pdf/postgresql_c_cpp.pdf
