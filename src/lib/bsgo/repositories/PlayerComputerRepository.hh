@@ -33,8 +33,12 @@ class PlayerComputerRepository : public AbstractRepository
   PlayerComputerRepository(const DbConnectionShPtr &connection);
   ~PlayerComputerRepository() override = default;
 
+  void initialize() override;
+
   auto findOneById(const Uuid &computer) const -> PlayerComputer;
   auto findAllByPlayer(const Uuid &player) const -> std::unordered_set<Uuid>;
+
+  void save(const PlayerComputer &computer);
 
   private:
   auto fetchComputerBase(const Uuid &computer) const -> PlayerComputer;
