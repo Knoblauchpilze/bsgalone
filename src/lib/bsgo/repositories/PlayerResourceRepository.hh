@@ -10,6 +10,7 @@ namespace bsgo {
 
 struct PlayerResource
 {
+  Uuid player{};
   Uuid resource{};
   std::string name{};
   float amount{};
@@ -22,6 +23,8 @@ class PlayerResourceRepository : public AbstractRepository
   ~PlayerResourceRepository() override = default;
 
   auto findAllByPlayer(const Uuid &player) const -> std::vector<PlayerResource>;
+
+  void save(const PlayerResource &resource);
 };
 
 using PlayerResourceRepositoryShPtr = std::shared_ptr<PlayerResourceRepository>;

@@ -16,6 +16,9 @@ class DbConnection : public utils::CoreObject
   void connect();
   void disconnect();
 
+  void prepare(const std::string &queryName, const std::string &sql);
+  auto nonTransaction() -> pqxx::nontransaction;
+
   auto connection() -> pqxx::connection &;
 
   struct SqlResult
