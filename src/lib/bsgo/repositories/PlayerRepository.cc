@@ -8,19 +8,44 @@ PlayerRepository::PlayerRepository(const DbConnectionShPtr &connection)
 {}
 
 namespace {
-constexpr auto SQL_QUERY_NAME = "SELECT id, password, faction FROM player WHERE name = ";
-auto generateNameSqlQuery(const std::string &name) -> std::string
+constexpr auto FIND_ONE_QUERY_NAME = "player_find_one";
+constexpr auto FIND_ONE_QUERY      = "SELECT id, password, faction FROM player WHERE name = $1";
+
+constexpr auto FIND_SYSTEM_QUERY_NAME = "player_find_system";
+constexpr auto FIND_SYSTEM_QUERY
+  = "SELECT ss.system FROM player_ship AS ps LEFT JOIN ship_system AS ss ON ps.id = ss.ship LEFT JOIN player AS p ON ps.player = p.id WHERE ps.active = true AND ps.player IS NOT NULL AND ps.player = $1";
+} // namespace
+
+void PlayerRepository::initialize()
 {
-  return std::string(SQL_QUERY_NAME) + "'" + name + "'";
+  m_connection->prepare(FIND_ONE_QUERY_NAME, FIND_ONE_QUERY);
+  m_connection->prepare(FIND_SYSTEM_QUERY_NAME, FIND_SYSTEM_QUERY);
 }
 
-constexpr auto SQL_QUERY_SYSTEM
-  = "SELECT ss.system FROM player_ship AS ps LEFT JOIN ship_system AS ss ON ps.id = ss.ship LEFT JOIN player AS p ON ps.player = p.id WHERE ps.active = true AND ps.player IS NOT NULL AND ps.player = ";
-auto generateSystemSqlQuery(const Uuid &player) -> std::string
+auto PlayerRepository::findOneByName(const std::string &name) const -> std::optional<Player>
 {
-  return SQL_QUERY_SYSTEM + std::to_string(toDbId(player));
+  auto work         = m_connection->nonTransaction();
+  const auto record = work.exec_prepared1(FIND_ONE_QUERY_NAME, name);
+
+  Player out;
+
+  out.id       = fromDbId(record[0].as<int>());
+  out.name     = name;
+  out.password = record[1].as<std::string>();
+  out.faction  = fromDbFaction(record[2].as<std::string>());
+
+  return out;
 }
 
+auto PlayerRepository::findSystemByPlayer(const Uuid &player) const -> Uuid
+{
+  auto work         = m_connection->nonTransaction();
+  const auto record = work.exec_prepared1(FIND_SYSTEM_QUERY_NAME, toDbId(player));
+
+  return fromDbId(record[0].as<int>());
+}
+
+namespace {
 constexpr auto SQL_CREATE_PLAYER_PROCEDURE_NAME = "player_signup";
 auto generateSignupSqlQuery(const Player &player) -> std::string
 {
@@ -38,50 +63,6 @@ auto generateSignupSqlQuery(const Player &player) -> std::string
   return out;
 }
 } // namespace
-
-auto PlayerRepository::findOneByName(const std::string &name) const -> std::optional<Player>
-{
-  const auto sql = generateNameSqlQuery(name);
-
-  pqxx::nontransaction work(m_connection->connection());
-  const auto rows(work.exec(sql));
-
-  if (rows.empty())
-  {
-    return {};
-  }
-
-  if (rows.size() != 1)
-  {
-    error("Expected to find only one player with name \"" + name + "\"");
-  }
-
-  Player out;
-
-  const auto &record = rows[0];
-  out.id             = fromDbId(record[0].as<int>());
-  out.name           = name;
-  out.password       = record[1].as<std::string>();
-  out.faction        = fromDbFaction(record[2].as<std::string>());
-
-  return out;
-}
-
-auto PlayerRepository::findSystemByPlayer(const Uuid &player) const -> Uuid
-{
-  const auto sql = generateSystemSqlQuery(player);
-
-  pqxx::nontransaction work(m_connection->connection());
-  const auto rows(work.exec(sql));
-
-  if (rows.size() != 1)
-  {
-    error("Expected to find only one system for player with id " + str(player));
-  }
-
-  const auto &record = rows[0];
-  return fromDbId(record[0].as<int>());
-}
 
 auto PlayerRepository::save(const Player &player) -> std::optional<Uuid>
 {

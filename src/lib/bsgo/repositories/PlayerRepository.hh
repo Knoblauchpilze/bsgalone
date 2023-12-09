@@ -24,6 +24,8 @@ class PlayerRepository : public AbstractRepository
   PlayerRepository(const DbConnectionShPtr &connection);
   ~PlayerRepository() override = default;
 
+  void initialize() override;
+
   auto findOneByName(const std::string &name) const -> std::optional<Player>;
   auto findSystemByPlayer(const Uuid &player) const -> Uuid;
 
