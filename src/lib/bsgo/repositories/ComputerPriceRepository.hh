@@ -14,6 +14,8 @@ class ComputerPriceRepository : public AbstractRepository
   ComputerPriceRepository(const DbConnectionShPtr &connection);
   ~ComputerPriceRepository() override = default;
 
+  void initialize() override;
+
   auto findAllByComputer(const Uuid &computer) const -> std::unordered_map<Uuid, int>;
 };
 
