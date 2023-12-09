@@ -20,6 +20,8 @@ class ResourceRepository : public AbstractRepository
   ResourceRepository(const DbConnectionShPtr &connection);
   ~ResourceRepository() override = default;
 
+  void initialize() override;
+
   auto findOneById(const Uuid &resource) const -> Resource;
 };
 
