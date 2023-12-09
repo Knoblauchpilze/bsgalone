@@ -16,7 +16,8 @@ BEGIN
   FROM
     weapon_price
   WHERE
-    player_resource.player = player_id
+    player_resource.resource = weapon_price.resource
+    AND player_resource.player = player_id
     AND weapon_price.weapon = weapon_id;
 END
 $$;
@@ -38,7 +39,8 @@ BEGIN
   FROM
     computer_price
   WHERE
-    player_resource.player = player_id
+    player_resource.resource = computer_price.resource
+    AND player_resource.player = player_id
     AND computer_price.computer = computer_id;
 END
 $$;
