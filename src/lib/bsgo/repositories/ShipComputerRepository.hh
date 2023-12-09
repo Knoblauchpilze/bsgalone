@@ -14,6 +14,8 @@ class ShipComputerRepository : public AbstractRepository
   ShipComputerRepository(const DbConnectionShPtr &connection);
   ~ShipComputerRepository() override = default;
 
+  void initialize() override;
+
   auto findAllByShip(const Uuid &ship) const -> std::unordered_set<Uuid>;
 };
 

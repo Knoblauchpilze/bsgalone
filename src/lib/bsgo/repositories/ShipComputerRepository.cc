@@ -10,19 +10,19 @@ ShipComputerRepository::ShipComputerRepository(const DbConnectionShPtr &connecti
 }
 
 namespace {
-constexpr auto SQL_QUERY = "SELECT computer FROM ship_computer WHERE ship = ";
-auto generateSqlQuery(const Uuid &ship) -> std::string
-{
-  return SQL_QUERY + std::to_string(toDbId(ship));
-}
+constexpr auto FIND_ALL_QUERY_NAME = "ship_computer_find_all";
+constexpr auto FIND_ALL_QUERY      = "SELECT computer FROM ship_computer WHERE ship = $1";
 } // namespace
+
+void ShipComputerRepository::initialize()
+{
+  m_connection->prepare(FIND_ALL_QUERY_NAME, FIND_ALL_QUERY);
+}
 
 auto ShipComputerRepository::findAllByShip(const Uuid &ship) const -> std::unordered_set<Uuid>
 {
-  const auto sql = generateSqlQuery(ship);
-
-  pqxx::nontransaction work(m_connection->connection());
-  const auto rows(work.exec(sql));
+  auto work       = m_connection->nonTransaction();
+  const auto rows = work.exec_prepared(FIND_ALL_QUERY_NAME, toDbId(ship));
 
   std::unordered_set<Uuid> out;
   for (const auto record : rows)
