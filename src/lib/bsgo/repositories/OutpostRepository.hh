@@ -30,6 +30,8 @@ class OutpostRepository : public AbstractRepository
   OutpostRepository(const DbConnectionShPtr &connection);
   ~OutpostRepository() override = default;
 
+  void initialize() override;
+
   auto findOneById(const Uuid &outpost) const -> Outpost;
 };
 
