@@ -8,18 +8,19 @@ AsteroidRepository::AsteroidRepository(const DbConnectionShPtr &connection)
 {}
 
 namespace {
-constexpr auto SQL_QUERY = "SELECT health, radius, x_pos, y_pos, z_pos FROM asteroid WHERE id = ";
-auto generateSqlQuery(const Uuid &asteroid) -> std::string
-{
-  return SQL_QUERY + std::to_string(toDbId(asteroid));
-}
+constexpr auto FIND_ONE_QUERY_NAME = "asteroid_find_one";
+constexpr auto FIND_ONE_QUERY
+  = "SELECT health, radius, x_pos, y_pos, z_pos FROM asteroid WHERE id = $1";
 
-constexpr auto SQL_QUERY_LOOT = "SELECT count(resource) FROM asteroid_loot WHERE asteroid = ";
-auto generateLootSqlQuery(const Uuid &asteroid) -> std::string
-{
-  return SQL_QUERY_LOOT + std::to_string(toDbId(asteroid));
-}
+constexpr auto FIND_LOOT_QUERY_NAME = "asteroid_find_loot";
+constexpr auto FIND_LOOT_QUERY = "SELECT count(resource) FROM asteroid_loot WHERE asteroid = $1";
 } // namespace
+
+void AsteroidRepository::initialize()
+{
+  m_connection->prepare(FIND_ONE_QUERY_NAME, FIND_ONE_QUERY);
+  m_connection->prepare(FIND_LOOT_QUERY_NAME, FIND_LOOT_QUERY);
+}
 
 auto AsteroidRepository::findOneById(const Uuid &asteroid) const -> Asteroid
 {
@@ -31,21 +32,13 @@ auto AsteroidRepository::findOneById(const Uuid &asteroid) const -> Asteroid
 
 auto AsteroidRepository::fetchAsteroidBase(const Uuid &asteroid) const -> Asteroid
 {
-  const auto sql = generateSqlQuery(asteroid);
-
-  pqxx::nontransaction work(m_connection->connection());
-  const auto rows(work.exec(sql));
-
-  if (rows.size() != 1)
-  {
-    error("Expected to find only one asteroid with id " + str(asteroid));
-  }
+  auto work         = m_connection->nonTransaction();
+  const auto record = work.exec_prepared1(FIND_ONE_QUERY_NAME, toDbId(asteroid));
 
   Asteroid out;
 
-  const auto &record = rows[0];
-  out.health         = record[0].as<float>();
-  out.radius         = record[1].as<float>();
+  out.health = record[0].as<float>();
+  out.radius = record[1].as<float>();
 
   const auto x = record[2].as<float>();
   const auto y = record[3].as<float>();
@@ -57,18 +50,10 @@ auto AsteroidRepository::fetchAsteroidBase(const Uuid &asteroid) const -> Astero
 
 void AsteroidRepository::fetchLoot(const Uuid &asteroid, Asteroid &out) const
 {
-  const auto sql = generateLootSqlQuery(asteroid);
+  auto work         = m_connection->nonTransaction();
+  const auto record = work.exec_prepared1(FIND_LOOT_QUERY_NAME, toDbId(asteroid));
 
-  pqxx::nontransaction work(m_connection->connection());
-  const auto rows(work.exec(sql));
-
-  if (rows.size() != 1)
-  {
-    error("Expected to find only one loot for asteroid with id " + str(asteroid));
-  }
-
-  const auto &record = rows[0];
-  out.loot           = record[0].as<int>() > 0;
+  out.loot = record[0].as<int>() > 0;
 }
 
 } // namespace bsgo
