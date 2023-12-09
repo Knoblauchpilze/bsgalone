@@ -10,20 +10,20 @@ ShipWeaponRepository::ShipWeaponRepository(const DbConnectionShPtr &connection)
 }
 
 namespace {
-constexpr auto SQL_QUERY
-  = "SELECT sw.weapon, ss.x_pos, ss.y_pos, ss.z_pos FROM ship_weapon AS sw LEFT JOIN ship_slot AS ss ON sw.slot = ss.id WHERE sw.ship = ";
-auto generateSqlQuery(const Uuid &ship) -> std::string
-{
-  return SQL_QUERY + std::to_string(toDbId(ship));
-}
+constexpr auto FIND_ALL_QUERY_NAME = "ship_weapon_find_all";
+constexpr auto FIND_ALL_QUERY
+  = "SELECT sw.weapon, ss.x_pos, ss.y_pos, ss.z_pos FROM ship_weapon AS sw LEFT JOIN ship_slot AS ss ON sw.slot = ss.id WHERE sw.ship = $1";
 } // namespace
+
+void ShipWeaponRepository::initialize()
+{
+  m_connection->prepare(FIND_ALL_QUERY_NAME, FIND_ALL_QUERY);
+}
 
 auto ShipWeaponRepository::findAllByShip(const Uuid &ship) const -> std::vector<ShipWeapon>
 {
-  const auto sql = generateSqlQuery(ship);
-
-  pqxx::nontransaction work(m_connection->connection());
-  const auto rows(work.exec(sql));
+  auto work       = m_connection->nonTransaction();
+  const auto rows = work.exec_prepared(FIND_ALL_QUERY_NAME, toDbId(ship));
 
   std::vector<ShipWeapon> out;
   for (const auto record : rows)

@@ -40,6 +40,8 @@ class ShipRepository : public AbstractRepository
   ShipRepository(const DbConnectionShPtr &connection);
   ~ShipRepository() override = default;
 
+  void initialize() override;
+
   auto findOneById(const Uuid &ship) const -> Ship;
 
   private:

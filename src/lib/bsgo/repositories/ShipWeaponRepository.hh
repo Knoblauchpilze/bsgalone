@@ -21,6 +21,8 @@ class ShipWeaponRepository : public AbstractRepository
   ShipWeaponRepository(const DbConnectionShPtr &connection);
   ~ShipWeaponRepository() override = default;
 
+  void initialize() override;
+
   auto findAllByShip(const Uuid &ship) const -> std::vector<ShipWeapon>;
 };
 
