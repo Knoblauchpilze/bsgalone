@@ -24,6 +24,8 @@ class AsteroidRepository : public AbstractRepository
   AsteroidRepository(const DbConnectionShPtr &connection);
   ~AsteroidRepository() override = default;
 
+  void initialize() override;
+
   auto findOneById(const Uuid &asteroid) const -> Asteroid;
 
   private:
