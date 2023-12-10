@@ -22,6 +22,17 @@ constexpr auto FIND_SHIPS_QUERY      = "SELECT ship FROM ship_system WHERE syste
 
 constexpr auto FIND_OUTPOSTS_QUERY_NAME = "system_find_outposts";
 constexpr auto FIND_OUTPOSTS_QUERY      = "SELECT id FROM system_outpost WHERE system = $1";
+
+constexpr auto UPDATE_SYSTEM_QUERY_NAME = "system_update_ship";
+constexpr auto UPDATE_SYSTEM_QUERY      = R"(
+INSERT INTO ship_system (ship, system)
+  VALUES ($1, $2)
+  ON CONFLICT (ship, system) DO UPDATE
+  SET
+    system = excluded.system
+  WHERE
+    ship_system.ship = excluded.ship
+)";
 } // namespace
 
 void SystemRepository::initialize()
@@ -31,6 +42,7 @@ void SystemRepository::initialize()
   m_connection->prepare(FIND_ASTEROIDS_QUERY_NAME, FIND_ASTEROIDS_QUERY);
   m_connection->prepare(FIND_SHIPS_QUERY_NAME, FIND_SHIPS_QUERY);
   m_connection->prepare(FIND_OUTPOSTS_QUERY_NAME, FIND_OUTPOSTS_QUERY);
+  m_connection->prepare(UPDATE_SYSTEM_QUERY_NAME, UPDATE_SYSTEM_QUERY);
 }
 
 auto SystemRepository::findAll() const -> std::unordered_set<Uuid>
@@ -106,6 +118,19 @@ auto SystemRepository::findAllOutpostsBySystem(const Uuid &system) const -> std:
   }
 
   return out;
+}
+
+void SystemRepository::updateSystemForShip(const Uuid &ship, const Uuid &system)
+{
+  auto query = [&ship, &system](pqxx::work &transaction) {
+    return transaction.exec_prepared0(UPDATE_SYSTEM_QUERY_NAME, toDbId(ship), toDbId(system));
+  };
+
+  const auto res = m_connection->tryExecuteTransaction(query);
+  if (res.error)
+  {
+    error("Failed to update system for ship: " + *res.error);
+  }
 }
 
 } // namespace bsgo
