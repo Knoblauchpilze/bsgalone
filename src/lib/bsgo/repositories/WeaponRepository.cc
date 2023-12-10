@@ -55,34 +55,4 @@ auto WeaponRepository::findOneById(const Uuid &weapon) const -> Weapon
   return out;
 }
 
-namespace {
-constexpr auto SQL_PURCHASE_PROCEDURE_NAME = "player_buy_weapon";
-auto generatePurchaseSqlQuery(const Uuid &player, const Uuid &weapon) -> std::string
-{
-  std::string out = "CALL ";
-  out += SQL_PURCHASE_PROCEDURE_NAME;
-
-  out += " (";
-  out += "\'" + std::to_string(toDbId(player)) + "\'";
-  out += ",";
-  out += "\'" + std::to_string(toDbId(weapon)) + "\'";
-  out += ")";
-
-  return out;
-}
-} // namespace
-bool WeaponRepository::saveForPlayer(const Uuid &player, const Uuid &weapon)
-{
-  const auto sql = generatePurchaseSqlQuery(player, weapon);
-
-  const auto result = m_connection->tryExecuteQuery(sql);
-  if (result.error)
-  {
-    warn("Failed to purchase weapon: " + *result.error);
-    return false;
-  }
-
-  return true;
-}
-
 } // namespace bsgo

@@ -36,8 +36,6 @@ class ComputerRepository : public AbstractRepository
   auto findAll() const -> std::unordered_set<Uuid>;
   auto findOneById(const Uuid &computer) const -> Computer;
 
-  bool saveForPlayer(const Uuid &player, const Uuid &computer);
-
   private:
   auto fetchComputerBase(const Uuid &computer) const -> Computer;
   void fetchAllowedTargets(const Uuid &computer, Computer &out) const;

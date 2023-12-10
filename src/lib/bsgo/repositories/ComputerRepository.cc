@@ -50,37 +50,6 @@ auto ComputerRepository::findOneById(const Uuid &computer) const -> Computer
   return out;
 }
 
-namespace {
-constexpr auto SQL_PURCHASE_PROCEDURE_NAME = "player_buy_computer";
-auto generatePurchaseSqlQuery(const Uuid &player, const Uuid &computer) -> std::string
-{
-  std::string out = "CALL ";
-  out += SQL_PURCHASE_PROCEDURE_NAME;
-
-  out += " (";
-  out += "\'" + std::to_string(toDbId(player)) + "\'";
-  out += ",";
-  out += "\'" + std::to_string(toDbId(computer)) + "\'";
-  out += ")";
-
-  return out;
-}
-} // namespace
-
-bool ComputerRepository::saveForPlayer(const Uuid &player, const Uuid &computer)
-{
-  const auto sql = generatePurchaseSqlQuery(player, computer);
-
-  const auto result = m_connection->tryExecuteQuery(sql);
-  if (result.error)
-  {
-    warn("Failed to purchase computer: " + *result.error);
-    return false;
-  }
-
-  return true;
-}
-
 auto ComputerRepository::fetchComputerBase(const Uuid &computer) const -> Computer
 {
   auto work         = m_connection->nonTransaction();
