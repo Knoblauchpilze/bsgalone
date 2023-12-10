@@ -87,7 +87,7 @@ void ShopUiHandler::updateUi()
 
   for (const auto &itemData : m_itemsData)
   {
-    const auto affordability = m_shopView->computeAffordability(itemData.itemId, itemData.itemType);
+    const auto affordability = m_shopView->canPlayerAfford(itemData.itemId, itemData.itemType);
     updateBuyButtonState(*itemData.menu, affordability.canAfford);
     updatePricesState(itemData.prices, affordability.resourceAvailibility);
   }

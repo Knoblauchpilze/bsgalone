@@ -65,55 +65,19 @@ auto ShopView::getShopItems() const -> std::vector<ShopItem>
   return out;
 }
 
-namespace {
-bool playerHasEnoughResources(const std::vector<PlayerResource> &resources, const ResourceCost &cost)
-{
-  for (const auto &resource : resources)
-  {
-    if (resource.resource == cost.resource.id)
-    {
-      return resource.amount >= cost.amount;
-    }
-  }
-
-  return false;
-}
-} // namespace
-
-auto ShopView::computeAffordability(const Uuid &id, const Item &type) const -> Affordability
+auto ShopView::canPlayerAfford(const Uuid &id, const Item &type) const -> Affordability
 {
   checkPlayerDbIdExists();
 
-  ShopItem item{};
-  switch (type)
-  {
-    case Item::WEAPON:
-      item = getWeaponAsShopItem(id);
-      break;
-    case Item::COMPUTER:
-      item = getComputerAsShopItem(id);
-      break;
-    default:
-      error("Failed to determine affordability of item with id " + str(id) + " and type "
-            + str(type));
-      break;
-  }
-
-  const auto playerResources = m_repositories.playerResourceRepository->findAllByPlayer(
-    *m_playerDbId);
-  Affordability out{.canAfford = true};
-
-  for (const auto &cost : item.price)
-  {
-    const auto enough                          = playerHasEnoughResources(playerResources, cost);
-    out.resourceAvailibility[cost.resource.id] = enough;
-    if (!enough)
-    {
-      out.canAfford = false;
-    }
-  }
-
-  return out;
+  AffordabilityData data{
+    .playerId          = *m_playerDbId,
+    .itemId            = id,
+    .itemType          = type,
+    .resourceRepo      = m_repositories.playerResourceRepository,
+    .weaponPriceRepo   = m_repositories.weaponPriceRepository,
+    .computerPriceRepo = m_repositories.computerPriceRepository,
+  };
+  return computeAffordability(data);
 }
 
 void ShopView::checkPlayerDbIdExists() const

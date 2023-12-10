@@ -2,6 +2,7 @@
 #pragma once
 
 #include "IView.hh"
+#include "PurchaseUtils.hh"
 #include <memory>
 #include <unordered_map>
 
@@ -33,13 +34,7 @@ class ShopView : public IView
   bool isReady() const noexcept override;
 
   auto getShopItems() const -> std::vector<ShopItem>;
-
-  struct Affordability
-  {
-    bool canAfford{false};
-    std::unordered_map<Uuid, bool> resourceAvailibility{};
-  };
-  auto computeAffordability(const Uuid &id, const Item &type) const -> Affordability;
+  auto canPlayerAfford(const Uuid &id, const Item &type) const -> Affordability;
 
   private:
   std::optional<Uuid> m_playerDbId{};
