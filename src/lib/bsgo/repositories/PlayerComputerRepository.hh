@@ -14,6 +14,9 @@ namespace bsgo {
 struct PlayerComputer
 {
   Uuid id{};
+  Uuid computer{};
+  Uuid player{};
+
   std::string name{};
   int level{};
 
