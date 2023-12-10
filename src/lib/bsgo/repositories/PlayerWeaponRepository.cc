@@ -16,12 +16,19 @@ constexpr auto FIND_ALL_QUERY      = "SELECT id FROM player_weapon WHERE player 
 constexpr auto FIND_ONE_QUERY_NAME = "player_weapon_find_one";
 constexpr auto FIND_ONE_QUERY
   = "SELECT pw.weapon, pw.player, w.name, w.min_damage, w.max_damage, w.power_cost, w.range, w.reload_time_ms, pw.level FROM player_weapon AS pw LEFT JOIN weapon AS w ON pw.weapon = w.id WHERE pw.id = $1";
+
+constexpr auto UPDATE_WEAPON_QUERY_NAME = "player_weapon_update";
+constexpr auto UPDATE_WEAPON_QUERY      = R"(
+INSERT INTO player_weapon (weapon, player, level)
+  VALUES ($1, $2, 1)
+)";
 } // namespace
 
 void PlayerWeaponRepository::initialize()
 {
   m_connection->prepare(FIND_ALL_QUERY_NAME, FIND_ALL_QUERY);
   m_connection->prepare(FIND_ONE_QUERY_NAME, FIND_ONE_QUERY);
+  m_connection->prepare(UPDATE_WEAPON_QUERY_NAME, UPDATE_WEAPON_QUERY);
 }
 
 auto PlayerWeaponRepository::findOneById(const Uuid &weapon) const -> PlayerWeapon
@@ -59,6 +66,19 @@ auto PlayerWeaponRepository::findAllByPlayer(const Uuid &player) const -> std::u
   return out;
 }
 
-void PlayerWeaponRepository::save(const PlayerWeapon & /*weapon*/) {}
+void PlayerWeaponRepository::save(const PlayerWeapon &weapon)
+{
+  auto query = [&weapon](pqxx::work &transaction) {
+    return transaction.exec_prepared0(UPDATE_WEAPON_QUERY_NAME,
+                                      toDbId(weapon.weapon),
+                                      toDbId(weapon.player));
+  };
+
+  const auto res = m_connection->tryExecuteTransaction(query);
+  if (res.error)
+  {
+    error("Failed to save player weapon: " + *res.error);
+  }
+}
 
 } // namespace bsgo
