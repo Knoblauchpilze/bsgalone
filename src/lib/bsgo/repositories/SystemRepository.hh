@@ -2,6 +2,7 @@
 #pragma once
 
 #include "AbstractRepository.hh"
+#include "Faction.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
 #include <memory>
@@ -26,6 +27,7 @@ class SystemRepository : public AbstractRepository
 
   auto findAll() const -> std::unordered_set<Uuid>;
   auto findOneById(const Uuid &system) const -> System;
+  auto findOneByFactionAndStarting(const Faction &faction) const -> Uuid;
 
   auto findAllAsteroidsBySystem(const Uuid &system) const -> std::unordered_set<Uuid>;
   auto findAllShipsBySystem(const Uuid &system) const -> std::unordered_set<Uuid>;

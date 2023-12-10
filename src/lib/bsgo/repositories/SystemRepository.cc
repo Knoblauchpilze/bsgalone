@@ -14,6 +14,9 @@ constexpr auto FIND_ALL_QUERY      = "SELECT id FROM system";
 constexpr auto FIND_ONE_QUERY_NAME = "system_find_one";
 constexpr auto FIND_ONE_QUERY      = "SELECT name, x_pos, y_pos, z_pos FROM system WHERE id = $1";
 
+constexpr auto FIND_ONE_BY_FACTION_QUERY_NAME = "system_find_one_by_faction";
+constexpr auto FIND_ONE_BY_FACTION_QUERY = "SELECT system FROM starting_system WHERE faction = $1";
+
 constexpr auto FIND_ASTEROIDS_QUERY_NAME = "system_find_asteroids";
 constexpr auto FIND_ASTEROIDS_QUERY      = "SELECT id FROM asteroid WHERE system = $1";
 
@@ -39,6 +42,7 @@ void SystemRepository::initialize()
 {
   m_connection->prepare(FIND_ALL_QUERY_NAME, FIND_ALL_QUERY);
   m_connection->prepare(FIND_ONE_QUERY_NAME, FIND_ONE_QUERY);
+  m_connection->prepare(FIND_ONE_BY_FACTION_QUERY_NAME, FIND_ONE_BY_FACTION_QUERY);
   m_connection->prepare(FIND_ASTEROIDS_QUERY_NAME, FIND_ASTEROIDS_QUERY);
   m_connection->prepare(FIND_SHIPS_QUERY_NAME, FIND_SHIPS_QUERY);
   m_connection->prepare(FIND_OUTPOSTS_QUERY_NAME, FIND_OUTPOSTS_QUERY);
@@ -75,6 +79,14 @@ auto SystemRepository::findOneById(const Uuid &system) const -> System
   out.position = Eigen::Vector3f(x, y, z);
 
   return out;
+}
+
+auto SystemRepository::findOneByFactionAndStarting(const Faction &faction) const -> Uuid
+{
+  auto work         = m_connection->nonTransaction();
+  const auto record = work.exec_prepared1(FIND_ONE_BY_FACTION_QUERY_NAME, toDbFaction(faction));
+
+  return fromDbId(record[0].as<int>());
 }
 
 auto SystemRepository::findAllAsteroidsBySystem(const Uuid &system) const
