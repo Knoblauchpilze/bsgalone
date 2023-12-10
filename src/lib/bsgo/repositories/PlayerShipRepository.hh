@@ -18,8 +18,9 @@ struct PlayerShip
 {
   Faction faction{};
   ShipClass shipClass{};
-  std::optional<Uuid> player{};
+  Uuid ship{};
   std::string name{};
+  std::optional<Uuid> player{};
   bool active{};
 
   float hullPoints{0.0f};
@@ -52,6 +53,8 @@ class PlayerShipRepository : public AbstractRepository
 
   auto findOneById(const Uuid &ship) const -> PlayerShip;
   auto findAllByPlayer(const Uuid &player) const -> std::unordered_set<Uuid>;
+
+  void save(const PlayerShip &ship);
 
   private:
   auto fetchShipBase(const Uuid &ship) const -> PlayerShip;

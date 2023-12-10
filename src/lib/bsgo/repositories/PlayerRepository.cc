@@ -14,12 +14,19 @@ constexpr auto FIND_ONE_QUERY      = "SELECT id, password, faction FROM player W
 constexpr auto FIND_SYSTEM_QUERY_NAME = "player_find_system";
 constexpr auto FIND_SYSTEM_QUERY
   = "SELECT ss.system FROM player_ship AS ps LEFT JOIN ship_system AS ss ON ps.id = ss.ship LEFT JOIN player AS p ON ps.player = p.id WHERE ps.active = true AND ps.player IS NOT NULL AND ps.player = $1";
+
+constexpr auto UPDATE_PLAYER_QUERY_NAME = "player_update";
+constexpr auto UPDATE_PLAYER_QUERY      = R"(
+INSERT INTO player (name, password, faction)
+  VALUES ($1, $2, $3)
+)";
 } // namespace
 
 void PlayerRepository::initialize()
 {
   m_connection->prepare(FIND_ONE_QUERY_NAME, FIND_ONE_QUERY);
   m_connection->prepare(FIND_SYSTEM_QUERY_NAME, FIND_SYSTEM_QUERY);
+  m_connection->prepare(UPDATE_PLAYER_QUERY_NAME, UPDATE_PLAYER_QUERY);
 }
 
 auto PlayerRepository::findOneByName(const std::string &name) const -> std::optional<Player>
@@ -56,44 +63,20 @@ auto PlayerRepository::findSystemByPlayer(const Uuid &player) const -> Uuid
   return fromDbId(record[0].as<int>());
 }
 
-namespace {
-constexpr auto SQL_CREATE_PLAYER_PROCEDURE_NAME = "player_signup";
-auto generateSignupSqlQuery(const Player &player) -> std::string
+void PlayerRepository::save(const Player &player)
 {
-  std::string out = "CALL ";
-  out += SQL_CREATE_PLAYER_PROCEDURE_NAME;
+  auto query = [&player](pqxx::work &transaction) {
+    return transaction.exec_prepared0(UPDATE_PLAYER_QUERY_NAME,
+                                      player.name,
+                                      player.password,
+                                      toDbFaction(player.faction));
+  };
 
-  out += " (";
-  out += "\'" + player.name + "\'";
-  out += ",";
-  out += "\'" + player.password + "\'";
-  out += ",";
-  out += "\'" + toDbFaction(player.faction) + "\'";
-  out += ")";
-
-  return out;
-}
-} // namespace
-
-auto PlayerRepository::save(const Player &player) -> std::optional<Uuid>
-{
-  const auto sql = generateSignupSqlQuery(player);
-
-  const auto result = m_connection->tryExecuteQuery(sql);
-  if (result.error)
+  const auto res = m_connection->tryExecuteTransaction(query);
+  if (res.error)
   {
-    warn("Failed to save player: " + *result.error);
-    return {};
+    error("Failed to save player: " + *res.error);
   }
-
-  const auto dbPlayer = findOneByName(player.name);
-  if (!dbPlayer)
-  {
-    warn("Player not found despite no error during insertion");
-    return {};
-  }
-
-  return dbPlayer->id;
 }
 
 } // namespace bsgo
