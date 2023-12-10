@@ -10,8 +10,8 @@ namespace bsgo {
 
 struct ResourceCost
 {
-  Resource resource;
-  int amount;
+  Resource resource{};
+  float amount{};
 };
 
 struct ShopItem
