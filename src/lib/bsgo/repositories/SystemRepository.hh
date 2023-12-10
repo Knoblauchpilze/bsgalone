@@ -30,6 +30,8 @@ class SystemRepository : public AbstractRepository
   auto findAllAsteroidsBySystem(const Uuid &system) const -> std::unordered_set<Uuid>;
   auto findAllShipsBySystem(const Uuid &system) const -> std::unordered_set<Uuid>;
   auto findAllOutpostsBySystem(const Uuid &system) const -> std::unordered_set<Uuid>;
+
+  void updateSystemForShip(const Uuid &ship, const Uuid &system);
 };
 
 using SystemRepositoryShPtr = std::shared_ptr<SystemRepository>;
