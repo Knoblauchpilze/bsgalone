@@ -218,6 +218,20 @@ For this project we wanted to revisit this hypothesis and see if it was relative
 
 It seems like this can be justified to sometimes have a bit of logic in the database but should (based on these two examples) be avoided.
 
+In this context, we implemented a business logic layer which aims at separating the concerns to update the database and how to do it. Typically each action that the user can take usually involves multiple operations in the database. For example signing up means:
+* registering the player
+* adding some starting resources/gear
+* register at least one ship
+* set the current system of the ship to the starting system
+
+This is probably why it's not popular to put all of this logic in a stored procedure: it is quite complex and can get messy really fast when writing it in the language of the procedure. It is also not easy to debug or validate parameters within the procedures. On the other hand we can very easily do this if we keep a business logic layer in the application.
+
+We chose to use a concept of services, all inheriting from a base [IService](src/lib/bsgo/services/IService.hh) class: there's a service for each kind of action (for example signing up, purchasing an item, etc.). Each of them define the conditions to meet for an action to be allowed, and the logic to actually perform the action.
+
+Later on, it can also be relatively easily be extended to not do all the validations locally but rather by contacting a remote server.
+
+**Note:** for now we don't use a single transaction to perform a complete action. This probably needs to be changed in the future to not leave the database in an inconsistent state.
+
 # Future work
 
 ## Useful links
