@@ -10,17 +10,23 @@ ShipRepository::ShipRepository(const DbConnectionShPtr &connection)
 namespace {
 constexpr auto FIND_ONE_QUERY_NAME = "ship_find_one";
 constexpr auto FIND_ONE_QUERY
-  = "SELECT s.faction, sc.class, s.name, s.max_hull_points, s.hull_points_regen, s.max_power_points, s.power_points_regen, s.max_acceleration, s.max_speed, s.radius sc.jump_time_ms, sc.jump_time_threat_ms FROM ship AS s LEFT JOIN ship_class AS sc ON s.class = sc.name WHERE s.id = $1";
+  = "SELECT s.faction, s.class, s.name, s.max_hull_points, s.hull_points_regen, s.max_power_points, s.power_points_regen, s.max_acceleration, s.max_speed, s.radius, sc.jump_time_ms, sc.jump_time_threat_ms FROM ship AS s LEFT JOIN ship_class AS sc ON s.class = sc.name WHERE s.id = $1";
 
 constexpr auto FIND_SLOTS_QUERY_NAME = "ship_find_slots";
 constexpr auto FIND_SLOTS_QUERY
   = "SELECT type, COUNT(id) FROM ship_slot WHERE ship = $1 GROUP BY type";
+
+constexpr auto FIND_ONE_BY_STARTING_AND_FACTION_QUERY_NAME = "ship_find_starting_faction";
+constexpr auto FIND_ONE_BY_STARTING_AND_FACTION_QUERY
+  = "SELECT id FROM ship WHERE faction = $1 AND starting_ship = $2";
 } // namespace
 
 void ShipRepository::initialize()
 {
   m_connection->prepare(FIND_ONE_QUERY_NAME, FIND_ONE_QUERY);
   m_connection->prepare(FIND_SLOTS_QUERY_NAME, FIND_SLOTS_QUERY);
+  m_connection->prepare(FIND_ONE_BY_STARTING_AND_FACTION_QUERY_NAME,
+                        FIND_ONE_BY_STARTING_AND_FACTION_QUERY);
 }
 
 auto ShipRepository::findOneById(const Uuid &ship) const -> Ship
@@ -31,6 +37,17 @@ auto ShipRepository::findOneById(const Uuid &ship) const -> Ship
   return out;
 }
 
+auto ShipRepository::findOneByFactionAndStarting(const Faction &faction,
+                                                 const bool startingShip) const -> Ship
+{
+  auto work         = m_connection->nonTransaction();
+  const auto record = work.exec_prepared1(FIND_ONE_BY_STARTING_AND_FACTION_QUERY_NAME,
+                                          toDbFaction(faction),
+                                          startingShip);
+
+  return findOneById(fromDbId(record[0].as<int>()));
+}
+
 auto ShipRepository::fetchShipBase(const Uuid &ship) const -> Ship
 {
   auto work         = m_connection->nonTransaction();
@@ -38,6 +55,7 @@ auto ShipRepository::fetchShipBase(const Uuid &ship) const -> Ship
 
   Ship out;
 
+  out.id               = ship;
   out.faction          = fromDbFaction(record[0].as<std::string>());
   out.shipClass        = fromDbShipClass(record[1].as<std::string>());
   out.name             = record[2].as<std::string>();

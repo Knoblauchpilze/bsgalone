@@ -13,6 +13,7 @@ namespace bsgo {
 
 struct Ship
 {
+  Uuid id{};
   Faction faction{};
   ShipClass shipClass{};
   std::string name{};
@@ -43,6 +44,7 @@ class ShipRepository : public AbstractRepository
   void initialize() override;
 
   auto findOneById(const Uuid &ship) const -> Ship;
+  auto findOneByFactionAndStarting(const Faction &faction, const bool startingShip) const -> Ship;
 
   private:
   auto fetchShipBase(const Uuid &ship) const -> Ship;
