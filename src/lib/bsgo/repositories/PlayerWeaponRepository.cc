@@ -15,7 +15,7 @@ constexpr auto FIND_ALL_QUERY      = "SELECT id FROM player_weapon WHERE player 
 
 constexpr auto FIND_ONE_QUERY_NAME = "player_weapon_find_one";
 constexpr auto FIND_ONE_QUERY
-  = "SELECT w.name, w.min_damage, w.max_damage, w.power_cost, w.range, w.reload_time_ms, pw.level FROM player_weapon AS pw LEFT JOIN weapon AS w ON pw.weapon = w.id WHERE pw.id = $1";
+  = "SELECT pw.weapon, pw.player, w.name, w.min_damage, w.max_damage, w.power_cost, w.range, w.reload_time_ms, pw.level FROM player_weapon AS pw LEFT JOIN weapon AS w ON pw.weapon = w.id WHERE pw.id = $1";
 } // namespace
 
 void PlayerWeaponRepository::initialize()
@@ -32,13 +32,15 @@ auto PlayerWeaponRepository::findOneById(const Uuid &weapon) const -> PlayerWeap
   PlayerWeapon out{};
 
   out.id         = weapon;
-  out.name       = record[0].as<std::string>();
-  out.minDamage  = record[1].as<float>();
-  out.maxDamage  = record[2].as<float>();
-  out.powerCost  = record[3].as<float>();
-  out.range      = record[4].as<float>();
-  out.reloadTime = utils::Milliseconds(record[5].as<int>());
-  out.level      = record[6].as<int>();
+  out.weapon     = fromDbId(record[0].as<int>());
+  out.player     = fromDbId(record[1].as<int>());
+  out.name       = record[2].as<std::string>();
+  out.minDamage  = record[3].as<float>();
+  out.maxDamage  = record[4].as<float>();
+  out.powerCost  = record[5].as<float>();
+  out.range      = record[6].as<float>();
+  out.reloadTime = utils::Milliseconds(record[7].as<int>());
+  out.level      = record[8].as<int>();
 
   return out;
 }
