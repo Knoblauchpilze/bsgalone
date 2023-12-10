@@ -15,11 +15,17 @@ constexpr auto FIND_ALL_QUERY      = "SELECT id FROM player_computer WHERE playe
 
 constexpr auto FIND_ONE_QUERY_NAME = "player_computer_find_one";
 constexpr auto FIND_ONE_QUERY
-  = "SELECT c.name, c.offensive, c.power_cost, c.range, c.reload_time_ms, c.duration_ms, c.damage_modifier, pc.level FROM player_computer AS pc LEFT JOIN computer AS c ON pc.computer = c.id WHERE pc.id = $1";
+  = "SELECT pc.computer, pc.player, c.name, c.offensive, c.power_cost, c.range, c.reload_time_ms, c.duration_ms, c.damage_modifier, pc.level FROM player_computer AS pc LEFT JOIN computer AS c ON pc.computer = c.id WHERE pc.id = $1";
 
 constexpr auto FIND_ALLOWED_TARGETS_QUERY_NAME = "player_computer_find_targets";
 constexpr auto FIND_ALLOWED_TARGETS_QUERY
   = "SELECT cat.entity FROM computer_allowed_target AS cat LEFT JOIN computer AS c ON cat.computer = c.id LEFT JOIN player_computer AS pc ON pc.computer = c.id WHERE pc.id = $1";
+
+constexpr auto UPDATE_COMPUTER_QUERY_NAME = "player_computer_update";
+constexpr auto UPDATE_COMPUTER_QUERY      = R"(
+INSERT INTO player_computer (computer, player, level)
+  VALUES ($1, $2, 1)
+)";
 } // namespace
 
 void PlayerComputerRepository::initialize()
@@ -27,6 +33,7 @@ void PlayerComputerRepository::initialize()
   m_connection->prepare(FIND_ALL_QUERY_NAME, FIND_ALL_QUERY);
   m_connection->prepare(FIND_ONE_QUERY_NAME, FIND_ONE_QUERY);
   m_connection->prepare(FIND_ALLOWED_TARGETS_QUERY_NAME, FIND_ALLOWED_TARGETS_QUERY);
+  m_connection->prepare(UPDATE_COMPUTER_QUERY_NAME, UPDATE_COMPUTER_QUERY);
 }
 
 auto PlayerComputerRepository::findOneById(const Uuid &computer) const -> PlayerComputer
@@ -51,7 +58,20 @@ auto PlayerComputerRepository::findAllByPlayer(const Uuid &player) const -> std:
   return out;
 }
 
-void PlayerComputerRepository::save(const PlayerComputer & /*computer*/) {}
+void PlayerComputerRepository::save(const PlayerComputer &computer)
+{
+  auto query = [&computer](pqxx::work &transaction) {
+    return transaction.exec_prepared0(UPDATE_COMPUTER_QUERY_NAME,
+                                      toDbId(computer.computer),
+                                      toDbId(computer.player));
+  };
+
+  const auto res = m_connection->tryExecuteTransaction(query);
+  if (res.error)
+  {
+    error("Failed to save player computer: " + *res.error);
+  }
+}
 
 auto PlayerComputerRepository::fetchComputerBase(const Uuid &computer) const -> PlayerComputer
 {
@@ -61,23 +81,25 @@ auto PlayerComputerRepository::fetchComputerBase(const Uuid &computer) const -> 
   PlayerComputer out{};
 
   out.id        = computer;
-  out.name      = record[0].as<std::string>();
-  out.offensive = record[1].as<bool>();
-  out.powerCost = record[2].as<float>();
-  if (!record[3].is_null())
-  {
-    out.range = {record[3].as<float>()};
-  }
-  out.reloadTime = utils::Milliseconds(record[4].as<int>());
+  out.computer  = fromDbId(record[0].as<int>());
+  out.player    = fromDbId(record[1].as<int>());
+  out.name      = record[2].as<std::string>();
+  out.offensive = record[3].as<bool>();
+  out.powerCost = record[4].as<float>();
   if (!record[5].is_null())
   {
-    out.duration = {utils::Milliseconds(record[5].as<int>())};
+    out.range = {record[5].as<float>()};
   }
-  if (!record[6].is_null())
+  out.reloadTime = utils::Milliseconds(record[6].as<int>());
+  if (!record[7].is_null())
   {
-    out.damageModifier = {record[6].as<float>()};
+    out.duration = {utils::Milliseconds(record[7].as<int>())};
   }
-  out.level = record[7].as<int>();
+  if (!record[8].is_null())
+  {
+    out.damageModifier = {record[8].as<float>()};
+  }
+  out.level = record[9].as<int>();
 
   return out;
 }
