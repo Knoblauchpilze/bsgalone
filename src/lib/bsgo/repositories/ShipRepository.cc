@@ -40,12 +40,16 @@ auto ShipRepository::findOneById(const Uuid &ship) const -> Ship
 auto ShipRepository::findOneByFactionAndStarting(const Faction &faction,
                                                  const bool startingShip) const -> Ship
 {
-  auto work         = m_connection->nonTransaction();
-  const auto record = work.exec_prepared1(FIND_ONE_BY_STARTING_AND_FACTION_QUERY_NAME,
-                                          toDbFaction(faction),
-                                          startingShip);
+  Uuid shipId{};
+  {
+    auto work         = m_connection->nonTransaction();
+    const auto record = work.exec_prepared1(FIND_ONE_BY_STARTING_AND_FACTION_QUERY_NAME,
+                                            toDbFaction(faction),
+                                            startingShip);
+    shipId            = fromDbId(record[0].as<int>());
+  }
 
-  return findOneById(fromDbId(record[0].as<int>()));
+  return findOneById(shipId);
 }
 
 auto ShipRepository::fetchShipBase(const Uuid &ship) const -> Ship
