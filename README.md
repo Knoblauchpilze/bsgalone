@@ -168,7 +168,7 @@ This mode can't fail: the AI will just loop indefinitely until something else ha
 At each loop of the game we just iterate over the whole tree again. Usually it is advised to keep the processing time of nodes small so that it's not an issue to iterate over them very often.
 
 Due to the dynamic nature of the tree and the fact that we iterate over it all the time, we can very easily react to a change:
-* we're in idle mode but a target arrives? The attack mode will trigger itself on its own because the `PickTarget`` node will suddenly return a valid target.
+* we're in idle mode but a target arrives? The attack mode will trigger itself on its own because the `PickTarget` node will suddenly return a valid target.
 * we're shooting at the enemy but it dies? The next iteration will fail to find a target and we go back to idle mode.
 
 This is much easier than having the AI in a certain state and then having at the very beginning of each state to do something like:
