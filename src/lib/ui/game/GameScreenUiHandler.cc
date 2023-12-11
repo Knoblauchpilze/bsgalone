@@ -6,10 +6,28 @@
 #include "ColorUtils.hh"
 
 namespace pge {
+namespace {
+const olc::vi2d SHIP_UI_PIXEL_POS{5, 30};
+const olc::vi2d TARGET_UI_PIXEL_POS{400, 30};
+} // namespace
 
 GameScreenUiHandler::GameScreenUiHandler(const bsgo::Views &views)
   : IUiHandler("game")
   , m_shipView(views.shipView)
+  , m_shipUi(std::make_unique<ShipUiHandler>(ShipUiConfig{.offset          = SHIP_UI_PIXEL_POS,
+                                                          .displayDistance = false,
+                                                          .getEntity =
+                                                            [](const bsgo::ShipView &shipView) {
+                                                              return shipView.getPlayerShip();
+                                                            }},
+                                             views))
+  , m_targetUi(std::make_unique<ShipUiHandler>(ShipUiConfig{.offset          = TARGET_UI_PIXEL_POS,
+                                                            .displayDistance = true,
+                                                            .getEntity =
+                                                              [](const bsgo::ShipView &shipView) {
+                                                                return shipView.getPlayerTarget();
+                                                              }},
+                                               views))
   , m_weaponsUi(std::make_unique<WeaponsUiHandler>(views))
   , m_abilitiesUi(std::make_unique<AbilitiesUiHandler>(views))
   , m_gameOverUi(std::make_unique<GameOverUiHandler>(views))
@@ -22,13 +40,11 @@ GameScreenUiHandler::GameScreenUiHandler(const bsgo::Views &views)
 
 void GameScreenUiHandler::initializeMenus(const int width, const int height)
 {
-  m_menus.resize(MenuItem::COUNT);
-
-  generateShipMenus(width, height);
-  generateTargetMenus(width, height);
   generateOutpostMenus(width, height);
   generateJumpMenus(width, height);
 
+  m_shipUi->initializeMenus(width, height);
+  m_targetUi->initializeMenus(width, height);
   m_weaponsUi->initializeMenus(width, height);
   m_abilitiesUi->initializeMenus(width, height);
   m_gameOverUi->initializeMenus(width, height);
@@ -36,7 +52,15 @@ void GameScreenUiHandler::initializeMenus(const int width, const int height)
 
 bool GameScreenUiHandler::processUserInput(UserInputData &inputData)
 {
-  auto out = m_weaponsUi->processUserInput(inputData);
+  auto out = m_shipUi->processUserInput(inputData);
+  if (!out)
+  {
+    out = m_targetUi->processUserInput(inputData);
+  }
+  if (!out)
+  {
+    m_weaponsUi->processUserInput(inputData);
+  }
   if (!out)
   {
     out = m_abilitiesUi->processUserInput(inputData);
@@ -47,17 +71,11 @@ bool GameScreenUiHandler::processUserInput(UserInputData &inputData)
   }
   if (!out)
   {
-    out = m_jumpPanel->processUserInput(inputData);
+    out = m_dock->processUserInput(inputData);
   }
   if (!out)
   {
-    for (const auto &menu : m_menus)
-    {
-      if (menu->processUserInput(inputData))
-      {
-        return true;
-      }
-    }
+    out = m_jumpPanel->processUserInput(inputData);
   }
 
   return out;
@@ -65,13 +83,11 @@ bool GameScreenUiHandler::processUserInput(UserInputData &inputData)
 
 void GameScreenUiHandler::render(SpriteRenderer &engine) const
 {
-  for (const auto &menu : m_menus)
-  {
-    menu->render(engine.getRenderer());
-  }
-
+  m_dock->render(engine.getRenderer());
   m_jumpPanel->render(engine.getRenderer());
 
+  m_shipUi->render(engine);
+  m_targetUi->render(engine);
   m_weaponsUi->render(engine);
   m_abilitiesUi->render(engine);
   m_gameOverUi->render(engine);
@@ -81,12 +97,12 @@ void GameScreenUiHandler::updateUi()
 {
   if (m_shipView->isReady())
   {
-    updateShipUi();
-    updateTargetUi();
     updateOutpostUi();
     updateJumpUi();
   }
 
+  m_shipUi->updateUi();
+  m_targetUi->updateUi();
   m_weaponsUi->updateUi();
   m_abilitiesUi->updateUi();
   m_gameOverUi->updateUi();
@@ -94,64 +110,11 @@ void GameScreenUiHandler::updateUi()
 
 void GameScreenUiHandler::reset()
 {
+  m_shipUi->reset();
+  m_targetUi->reset();
   m_weaponsUi->reset();
   m_abilitiesUi->reset();
   m_gameOverUi->reset();
-}
-
-void GameScreenUiHandler::generateShipMenus(int /*width*/, int /*height*/)
-{
-  const olc::vi2d SHIP_UI_PIXEL_POS{5, 5};
-  const olc::vi2d SHIP_UI_PIXEL_DIMENSION{200, 15};
-  constexpr auto REASONABLE_PIXEL_GAP = 15;
-
-  MenuConfig config{.pos           = SHIP_UI_PIXEL_POS,
-                    .dims          = SHIP_UI_PIXEL_DIMENSION,
-                    .highlightable = false};
-
-  auto bg       = bgConfigFromColor(olc::BLANK);
-  auto text     = textConfigFromColor("N/A", olc::WHITE);
-  m_menus[NAME] = std::make_unique<UiTextMenu>(config, bg, text);
-
-  config.pos.y += REASONABLE_PIXEL_GAP;
-  bg              = bgConfigFromColor(olc::VERY_DARK_RED);
-  text            = textConfigFromColor("Health: N/A", olc::WHITE);
-  m_menus[HEALTH] = std::make_unique<UiTextMenu>(config, bg, text);
-
-  config.pos.y += REASONABLE_PIXEL_GAP;
-  bg             = bgConfigFromColor(olc::DARK_CYAN);
-  text           = textConfigFromColor("Power: N/A", olc::WHITE);
-  m_menus[POWER] = std::make_unique<UiTextMenu>(config, bg, text);
-}
-
-void GameScreenUiHandler::generateTargetMenus(int width, int /*height*/)
-{
-  const olc::vi2d TARGET_UI_PIXEL_POS{width / 2, 5};
-  const olc::vi2d TARGET_UI_PIXEL_DIMENSION{200, 15};
-  constexpr auto REASONABLE_PIXEL_GAP = 15;
-
-  MenuConfig config{.pos           = TARGET_UI_PIXEL_POS,
-                    .dims          = TARGET_UI_PIXEL_DIMENSION,
-                    .highlightable = false};
-
-  auto bg              = bgConfigFromColor(olc::BLANK);
-  auto text            = textConfigFromColor("N/A", olc::WHITE);
-  m_menus[TARGET_NAME] = std::make_unique<UiTextMenu>(config, bg, text);
-
-  config.pos.y += REASONABLE_PIXEL_GAP;
-  bg                     = bgConfigFromColor(olc::VERY_DARK_RED);
-  text                   = textConfigFromColor("Health: N/A", olc::WHITE);
-  m_menus[TARGET_HEALTH] = std::make_unique<UiTextMenu>(config, bg, text);
-
-  config.pos.y += REASONABLE_PIXEL_GAP;
-  bg                    = bgConfigFromColor(olc::DARK_CYAN);
-  text                  = textConfigFromColor("Power: N/A", olc::WHITE);
-  m_menus[TARGET_POWER] = std::make_unique<UiTextMenu>(config, bg, text);
-
-  config.pos.y += REASONABLE_PIXEL_GAP;
-  bg                       = bgConfigFromColor(olc::BLANK);
-  text                     = textConfigFromColor("N/A m", olc::WHITE);
-  m_menus[TARGET_DISTANCE] = std::make_unique<UiTextMenu>(config, bg, text);
 }
 
 void GameScreenUiHandler::generateOutpostMenus(int width, int /*height*/)
@@ -169,9 +132,9 @@ void GameScreenUiHandler::generateOutpostMenus(int width, int /*height*/)
                             }
                           }};
 
-  auto bg       = bgConfigFromColor(olc::DARK_GREY);
-  auto text     = textConfigFromColor("Dock", olc::WHITE);
-  m_menus[DOCK] = std::make_unique<UiTextMenu>(config, bg, text);
+  auto bg   = bgConfigFromColor(olc::DARK_GREY);
+  auto text = textConfigFromColor("Dock", olc::WHITE);
+  m_dock    = std::make_unique<UiTextMenu>(config, bg, text);
 }
 
 void GameScreenUiHandler::generateJumpMenus(int width, int height)
@@ -218,81 +181,6 @@ void GameScreenUiHandler::generateJumpMenus(int width, int height)
   m_jumpPanel->addMenu(generateSpacer());
 }
 
-void GameScreenUiHandler::updateShipUi()
-{
-  const auto ship = m_shipView->getPlayerShip();
-
-  auto text = m_shipView->getPlayerShipName();
-  m_menus[NAME]->setText(text);
-
-  text = "Health: ";
-  text += floatToStr(std::floor(ship.healthComp().value()), 0);
-  text += "/";
-  text += floatToStr(ship.healthComp().max(), 0);
-  m_menus[HEALTH]->setText(text);
-
-  text = "Health: ";
-  text += floatToStr(std::floor(ship.healthComp().value()), 0);
-  text += "/";
-  text += floatToStr(ship.healthComp().max(), 0);
-  m_menus[HEALTH]->setText(text);
-
-  text = "Power: ";
-  text += floatToStr(std::floor(ship.powerComp().value()), 0);
-  text += "/";
-  text += floatToStr(std::floor(ship.powerComp().max()), 0);
-  m_menus[POWER]->setText(text);
-}
-
-void GameScreenUiHandler::updateTargetUi()
-{
-  const auto target = m_shipView->getPlayerTarget();
-  m_menus[TARGET_NAME]->setVisible(target.has_value());
-  m_menus[TARGET_HEALTH]->setVisible(target.has_value());
-  m_menus[TARGET_POWER]->setVisible(target.has_value());
-  m_menus[TARGET_DISTANCE]->setVisible(target.has_value());
-
-  if (!target)
-  {
-    return;
-  }
-
-  std::string text;
-
-  text = m_shipView->getPlayerTargetName().value();
-  m_menus[TARGET_NAME]->setText(text);
-
-  text = "Health: ";
-  if (!target->exists<bsgo::HealthComponent>())
-  {
-    text += "N/A";
-  }
-  else
-  {
-    text += floatToStr(std::floor(target->healthComp().value()), 0);
-    text += "/";
-    text += floatToStr(std::floor(target->healthComp().max()), 0);
-  }
-  m_menus[TARGET_HEALTH]->setText(text);
-
-  text = "Power: ";
-  if (!target->exists<bsgo::PowerComponent>())
-  {
-    text += "N/A";
-  }
-  else
-  {
-    text += floatToStr(std::floor(target->powerComp().value()), 0);
-    text += "/";
-    text += floatToStr(std::floor(target->powerComp().max()), 0);
-  }
-  m_menus[TARGET_POWER]->setText(text);
-
-  const auto d = m_shipView->distanceToTarget();
-  text         = floatToStr(d, 1) + "m";
-  m_menus[TARGET_DISTANCE]->setText(text);
-}
-
 void GameScreenUiHandler::updateOutpostUi()
 {
   const auto target                       = m_shipView->getPlayerTarget();
@@ -308,7 +196,7 @@ void GameScreenUiHandler::updateOutpostUi()
     dockButtonVisible &= factionIsMatching;
   }
 
-  m_menus[DOCK]->setVisible(dockButtonVisible);
+  m_dock->setVisible(dockButtonVisible);
 }
 
 void GameScreenUiHandler::updateJumpUi()
