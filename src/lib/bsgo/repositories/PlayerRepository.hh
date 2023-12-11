@@ -26,6 +26,7 @@ class PlayerRepository : public AbstractRepository
 
   void initialize() override;
 
+  auto findOneById(const Uuid &player) const -> Player;
   auto findOneByName(const std::string &name) const -> std::optional<Player>;
   auto findSystemByPlayer(const Uuid &player) const -> Uuid;
 

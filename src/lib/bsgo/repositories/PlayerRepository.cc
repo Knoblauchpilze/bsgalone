@@ -9,7 +9,10 @@ PlayerRepository::PlayerRepository(const DbConnectionShPtr &connection)
 
 namespace {
 constexpr auto FIND_ONE_QUERY_NAME = "player_find_one";
-constexpr auto FIND_ONE_QUERY      = "SELECT id, password, faction FROM player WHERE name = $1";
+constexpr auto FIND_ONE_QUERY      = "SELECT name, password, faction FROM player WHERE id = $1";
+
+constexpr auto FIND_ONE_BY_NAME_QUERY_NAME = "player_find_one_by_player";
+constexpr auto FIND_ONE_BY_NAME_QUERY = "SELECT id, password, faction FROM player WHERE name = $1";
 
 constexpr auto FIND_SYSTEM_QUERY_NAME = "player_find_system";
 constexpr auto FIND_SYSTEM_QUERY
@@ -25,14 +28,30 @@ INSERT INTO player (name, password, faction)
 void PlayerRepository::initialize()
 {
   m_connection->prepare(FIND_ONE_QUERY_NAME, FIND_ONE_QUERY);
+  m_connection->prepare(FIND_ONE_BY_NAME_QUERY_NAME, FIND_ONE_BY_NAME_QUERY);
   m_connection->prepare(FIND_SYSTEM_QUERY_NAME, FIND_SYSTEM_QUERY);
   m_connection->prepare(UPDATE_PLAYER_QUERY_NAME, UPDATE_PLAYER_QUERY);
+}
+
+auto PlayerRepository::findOneById(const Uuid &player) const -> Player
+{
+  auto work         = m_connection->nonTransaction();
+  const auto record = work.exec_prepared1(FIND_ONE_QUERY_NAME, toDbId(player));
+
+  Player out;
+
+  out.id       = player;
+  out.name     = record[0].as<std::string>();
+  out.password = record[1].as<std::string>();
+  out.faction  = fromDbFaction(record[2].as<std::string>());
+
+  return out;
 }
 
 auto PlayerRepository::findOneByName(const std::string &name) const -> std::optional<Player>
 {
   auto work       = m_connection->nonTransaction();
-  const auto rows = work.exec_prepared(FIND_ONE_QUERY_NAME, name);
+  const auto rows = work.exec_prepared(FIND_ONE_BY_NAME_QUERY_NAME, name);
 
   if (rows.empty())
   {
