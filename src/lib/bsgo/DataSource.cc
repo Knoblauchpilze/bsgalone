@@ -81,6 +81,9 @@ void DataSource::initializePlayer(Coordinator &coordinator) const
 {
   m_playerEntityId = coordinator.createEntity(EntityKind::PLAYER);
 
+  const auto player = m_repositories.playerRepository->findOneById(*m_playerId);
+  coordinator.addName(*m_playerEntityId, player.name);
+
   const auto resources = m_repositories.playerResourceRepository->findAllByPlayer(*m_playerId);
   for (const auto &resource : resources)
   {
