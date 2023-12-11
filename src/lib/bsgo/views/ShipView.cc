@@ -22,14 +22,6 @@ bool ShipView::isReady() const noexcept
   return m_playerShipDbId && m_playerShipEntityId;
 }
 
-auto ShipView::getPlayerShipName() const -> std::string
-{
-  checkPlayerShipDbIdExists();
-
-  const auto ship = m_repositories.playerShipRepository->findOneById(*m_playerShipDbId);
-  return ship.name;
-}
-
 auto ShipView::getPlayerShip() const -> Entity
 {
   checkPlayerShipEntityIdExists();
@@ -47,39 +39,6 @@ bool ShipView::hasTarget() const
   return getPlayerTarget().has_value();
 }
 
-auto ShipView::getPlayerTargetName() const -> std::optional<std::string>
-{
-  checkPlayerShipEntityIdExists();
-
-  const auto ent      = m_coordinator->getEntity(*m_playerShipEntityId);
-  const auto targetId = ent.targetComp().target();
-  if (!targetId)
-  {
-    return {};
-  }
-
-  const auto target     = m_coordinator->getEntity(*targetId);
-  const auto targetKind = target.kind->kind();
-  if (EntityKind::ASTEROID == targetKind)
-  {
-    return "asteroid";
-  }
-  if (EntityKind::OUTPOST == targetKind)
-  {
-    const auto faction = target.factionComp().faction();
-    return str(faction) + " outpost";
-  }
-  if (EntityKind::SHIP == targetKind)
-  {
-    const auto faction = target.factionComp().faction();
-    return str(faction) + " ship";
-  }
-
-  error("Failed to return target name", "Unknown kind " + bsgo::str(targetKind));
-  // Not needed because of the error above.
-  return {};
-}
-
 auto ShipView::getPlayerTarget() const -> std::optional<Entity>
 {
   checkPlayerShipEntityIdExists();
@@ -92,6 +51,23 @@ auto ShipView::getPlayerTarget() const -> std::optional<Entity>
   }
 
   return {m_coordinator->getEntity(*targetId)};
+}
+
+auto ShipView::getEntityName(const Entity &entity) const -> std::string
+{
+  switch (entity.kind->kind())
+  {
+    case EntityKind::ASTEROID:
+      return "asteroid";
+    case EntityKind::OUTPOST:
+      return str(entity.factionComp().faction()) + " outpost";
+    case EntityKind::SHIP:
+      return entity.nameComp().name();
+    default:
+      error("Failed to return target name", "Unknown kind " + bsgo::str(entity.kind->kind()));
+      // Not needed because of the error above.
+      return {};
+  }
 }
 
 auto ShipView::getShipsWithin(const IBoundingBox &bbox) const -> std::vector<Entity>

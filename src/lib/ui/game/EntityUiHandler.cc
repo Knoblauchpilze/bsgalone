@@ -1,10 +1,10 @@
 
-#include "ShipUiHandler.hh"
+#include "EntityUiHandler.hh"
 #include "StringUtils.hh"
 
 namespace pge {
 
-ShipUiHandler::ShipUiHandler(const ShipUiConfig &config, const bsgo::Views &views)
+EntityUiHandler::EntityUiHandler(const EntityUiConfig &config, const bsgo::Views &views)
   : IUiHandler("ship")
   , m_config(config)
   , m_shipView(views.shipView)
@@ -15,7 +15,7 @@ ShipUiHandler::ShipUiHandler(const ShipUiConfig &config, const bsgo::Views &view
   }
 }
 
-void ShipUiHandler::initializeMenus(const int /*width*/, const int /*height*/)
+void EntityUiHandler::initializeMenus(const int /*width*/, const int /*height*/)
 {
   m_menus.resize(MenuItem::COUNT);
 
@@ -46,7 +46,7 @@ void ShipUiHandler::initializeMenus(const int /*width*/, const int /*height*/)
   m_menus[DISTANCE] = std::make_unique<UiTextMenu>(config, bg, text);
 }
 
-bool ShipUiHandler::processUserInput(UserInputData &inputData)
+bool EntityUiHandler::processUserInput(UserInputData &inputData)
 {
   for (const auto &menu : m_menus)
   {
@@ -59,7 +59,7 @@ bool ShipUiHandler::processUserInput(UserInputData &inputData)
   return false;
 }
 
-void ShipUiHandler::render(SpriteRenderer &engine) const
+void EntityUiHandler::render(SpriteRenderer &engine) const
 {
   for (const auto &menu : m_menus)
   {
@@ -67,7 +67,7 @@ void ShipUiHandler::render(SpriteRenderer &engine) const
   }
 }
 
-void ShipUiHandler::updateUi()
+void EntityUiHandler::updateUi()
 {
   if (!m_shipView->isReady())
   {
@@ -96,44 +96,42 @@ void ShipUiHandler::updateUi()
   }
 }
 
-void ShipUiHandler::updateNameComponent(const bsgo::Entity & /*ship*/)
+void EntityUiHandler::updateNameComponent(const bsgo::Entity &entity)
 {
-  //auto text = m_shipView->getPlayerShipName();
-  //text = m_shipView->getPlayerTargetName().value();
-  m_menus[NAME]->setText("placeholder");
+  m_menus[NAME]->setText(m_shipView->getEntityName(entity));
 }
 
-void ShipUiHandler::updateHealthComponent(const bsgo::Entity &ship)
+void EntityUiHandler::updateHealthComponent(const bsgo::Entity &entity)
 {
-  if (!ship.exists<bsgo::HealthComponent>())
+  if (!entity.exists<bsgo::HealthComponent>())
   {
     m_menus[HEALTH]->setText("Health: N/A");
     return;
   }
 
   std::string text{"Health: "};
-  text += floatToStr(std::floor(ship.healthComp().value()), 0);
+  text += floatToStr(std::floor(entity.healthComp().value()), 0);
   text += "/";
-  text += floatToStr(std::floor(ship.healthComp().max()), 0);
+  text += floatToStr(std::floor(entity.healthComp().max()), 0);
   m_menus[HEALTH]->setText(text);
 }
 
-void ShipUiHandler::updatePowerComponent(const bsgo::Entity &ship)
+void EntityUiHandler::updatePowerComponent(const bsgo::Entity &entity)
 {
-  if (!ship.exists<bsgo::PowerComponent>())
+  if (!entity.exists<bsgo::PowerComponent>())
   {
     m_menus[POWER]->setText("Power: N/A");
     return;
   }
 
   std::string text{"Power: "};
-  text += floatToStr(std::floor(ship.powerComp().value()), 0);
+  text += floatToStr(std::floor(entity.powerComp().value()), 0);
   text += "/";
-  text += floatToStr(std::floor(ship.powerComp().max()), 0);
+  text += floatToStr(std::floor(entity.powerComp().max()), 0);
   m_menus[POWER]->setText(text);
 }
 
-void ShipUiHandler::updateDistanceComponent()
+void EntityUiHandler::updateDistanceComponent()
 {
   const auto d = m_shipView->distanceToTarget();
   m_menus[DISTANCE]->setText(floatToStr(d, 1) + "m");

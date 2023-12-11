@@ -22,11 +22,11 @@ class ShipView : public IView
 
   bool isReady() const noexcept override;
 
-  auto getPlayerShipName() const -> std::string;
   auto getPlayerShip() const -> Entity;
   bool hasTarget() const;
-  auto getPlayerTargetName() const -> std::optional<std::string>;
   auto getPlayerTarget() const -> std::optional<Entity>;
+
+  auto getEntityName(const Entity &entity) const -> std::string;
 
   auto getShipsWithin(const IBoundingBox &bbox) const -> std::vector<Entity>;
 

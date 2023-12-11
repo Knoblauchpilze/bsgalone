@@ -2,9 +2,9 @@
 #pragma once
 
 #include "AbilitiesUiHandler.hh"
+#include "EntityUiHandler.hh"
 #include "GameOverUiHandler.hh"
 #include "IUiHandler.hh"
-#include "ShipUiHandler.hh"
 #include "UiTextMenu.hh"
 #include "Views.hh"
 #include "WeaponsUiHandler.hh"
@@ -31,8 +31,8 @@ class GameScreenUiHandler : public IUiHandler
   UiTextMenu *m_jumpDestination{};
   UiTextMenu *m_jumpTime{};
 
-  ShipUiHandlerPtr m_shipUi{};
-  ShipUiHandlerPtr m_targetUi{};
+  EntityUiHandlerPtr m_shipUi{};
+  EntityUiHandlerPtr m_targetUi{};
   WeaponsUiHandlerPtr m_weaponsUi{};
   AbilitiesUiHandlerPtr m_abilitiesUi{};
   GameOverUiHandlerPtr m_gameOverUi{};
