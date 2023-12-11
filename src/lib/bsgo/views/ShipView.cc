@@ -53,6 +53,21 @@ auto ShipView::getPlayerTarget() const -> std::optional<Entity>
   return {m_coordinator->getEntity(*targetId)};
 }
 
+namespace {
+auto determineShipName(const Entity &ship, const Coordinator &coordinator) -> std::string
+{
+  if (ship.exists<OwnerComponent>())
+  {
+    const auto playerEntityId = ship.ownerComp().owner();
+    const auto player         = coordinator.getEntity(playerEntityId);
+
+    return player.nameComp().name();
+  }
+
+  return ship.nameComp().name();
+}
+} // namespace
+
 auto ShipView::getEntityName(const Entity &entity) const -> std::string
 {
   switch (entity.kind->kind())
@@ -62,7 +77,7 @@ auto ShipView::getEntityName(const Entity &entity) const -> std::string
     case EntityKind::OUTPOST:
       return str(entity.factionComp().faction()) + " outpost";
     case EntityKind::SHIP:
-      return entity.nameComp().name();
+      return determineShipName(entity, *m_coordinator);
     default:
       error("Failed to return target name", "Unknown kind " + bsgo::str(entity.kind->kind()));
       // Not needed because of the error above.
