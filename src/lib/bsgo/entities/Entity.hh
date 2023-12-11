@@ -10,6 +10,7 @@
 #include "HealthComponent.hh"
 #include "KindComponent.hh"
 #include "LootComponent.hh"
+#include "NameComponent.hh"
 #include "OwnerComponent.hh"
 #include "PowerComponent.hh"
 #include "RemovalComponent.hh"
@@ -45,6 +46,7 @@ struct Entity
   std::optional<StatusComponentShPtr> status{};
   std::optional<AIComponentShPtr> ai{};
   std::optional<ShipClassComponentShPtr> shipClass{};
+  std::optional<NameComponentShPtr> name{};
   std::vector<WeaponSlotComponentShPtr> weapons{};
   std::vector<ComputerSlotComponentShPtr> computers{};
   std::vector<EffectComponentShPtr> effects{};
@@ -75,6 +77,7 @@ struct Entity
   auto statusComp() const -> const StatusComponent &;
   auto aiComp() const -> const AIComponent &;
   auto shipClassComp() const -> const ShipClassComponent &;
+  auto nameComp() const -> const NameComponent &;
 
   auto transformComp() -> TransformComponent &;
   auto velocityComp() -> VelocityComponent &;

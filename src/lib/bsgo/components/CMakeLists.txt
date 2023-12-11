@@ -9,6 +9,7 @@ target_sources (bsgalone_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/HealthComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/KindComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LootComponent.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/NameComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/OwnerComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/PowerComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/RegenerativeComponent.cc
