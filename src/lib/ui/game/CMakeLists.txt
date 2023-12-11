@@ -9,4 +9,5 @@ target_sources (bsgalone_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/AbilitiesUiHandler.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/GameOverUiHandler.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/EntityUiHandler.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/StatusUiHandler.cc
 	)
