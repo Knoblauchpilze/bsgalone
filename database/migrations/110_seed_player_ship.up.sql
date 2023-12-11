@@ -1,8 +1,9 @@
 
-INSERT INTO public.player_ship ("ship", "player", "active", "hull_points", "power_points", "x_pos", "y_pos", "z_pos")
+INSERT INTO public.player_ship ("ship", "player", "name", "active", "hull_points", "power_points", "x_pos", "y_pos", "z_pos")
   VALUES (
       (SELECT id FROM ship WHERE name = 'Viper Mark II'),
       (SELECT id FROM player WHERE name = 'grouton'),
+      'my-awesome-ship',
       true,
       369.2,
       11.9,
@@ -10,10 +11,11 @@ INSERT INTO public.player_ship ("ship", "player", "active", "hull_points", "powe
       0.0,
       0.0
   );
-INSERT INTO public.player_ship ("ship", "player", "active", "hull_points", "power_points", "x_pos", "y_pos", "z_pos")
+INSERT INTO public.player_ship ("ship", "player", "name", "active", "hull_points", "power_points", "x_pos", "y_pos", "z_pos")
   VALUES (
       (SELECT id FROM ship WHERE name = 'Cylon Raider'),
       NULL,
+      'Basic cylon raider',
       true,
       280.0,
       23.2,
@@ -21,10 +23,11 @@ INSERT INTO public.player_ship ("ship", "player", "active", "hull_points", "powe
       0.0,
       0.0
   );
-INSERT INTO public.player_ship ("ship", "player", "active", "hull_points", "power_points", "x_pos", "y_pos", "z_pos")
+INSERT INTO public.player_ship ("ship", "player", "name", "active", "hull_points", "power_points", "x_pos", "y_pos", "z_pos")
   VALUES (
       (SELECT id FROM ship WHERE name = 'Jotunn'),
       (SELECT id FROM player WHERE name = 'grouton'),
+      'Jotunn',
       false,
       3000.0,
       500.0,

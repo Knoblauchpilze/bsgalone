@@ -42,6 +42,7 @@ CREATE TABLE player_ship (
   id INTEGER GENERATED ALWAYS AS IDENTITY,
   ship INTEGER NOT NULL,
   player INTEGER DEFAULT NULL,
+  name TEXT NOT NULL,
   active BOOLEAN NOT NULL,
   hull_points NUMERIC(8, 2) NOT NULL,
   power_points NUMERIC(8, 2) NOT NULL,
