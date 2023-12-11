@@ -1,42 +1,24 @@
 
 #include "GameScreenUiHandler.hh"
+#include "AbilitiesUiHandler.hh"
+#include "EntityUiHandler.hh"
+#include "GameOverUiHandler.hh"
 #include "ScreenCommon.hh"
+#include "StatusUiHandler.hh"
 #include "StringUtils.hh"
-
-#include "ColorUtils.hh"
+#include "WeaponsUiHandler.hh"
 
 namespace pge {
-namespace {
-const olc::vi2d SHIP_UI_PIXEL_POS{5, 30};
-const olc::vi2d TARGET_UI_PIXEL_POS{400, 30};
-} // namespace
 
 GameScreenUiHandler::GameScreenUiHandler(const bsgo::Views &views)
   : IUiHandler("game")
   , m_shipView(views.shipView)
-  , m_shipUi(std::make_unique<EntityUiHandler>(EntityUiConfig{.offset          = SHIP_UI_PIXEL_POS,
-                                                              .displayDistance = false,
-                                                              .getEntity =
-                                                                [](const bsgo::ShipView &shipView) {
-                                                                  return shipView.getPlayerShip();
-                                                                }},
-                                               views))
-  , m_targetUi(
-      std::make_unique<EntityUiHandler>(EntityUiConfig{.offset          = TARGET_UI_PIXEL_POS,
-                                                       .displayDistance = true,
-                                                       .getEntity =
-                                                         [](const bsgo::ShipView &shipView) {
-                                                           return shipView.getPlayerTarget();
-                                                         }},
-                                        views))
-  , m_weaponsUi(std::make_unique<WeaponsUiHandler>(views))
-  , m_abilitiesUi(std::make_unique<AbilitiesUiHandler>(views))
-  , m_gameOverUi(std::make_unique<GameOverUiHandler>(views))
 {
   if (nullptr == m_shipView)
   {
     throw std::invalid_argument("Expected non null ship view");
   }
+  initializeUis(views);
 }
 
 void GameScreenUiHandler::initializeMenus(const int width, const int height)
@@ -44,42 +26,27 @@ void GameScreenUiHandler::initializeMenus(const int width, const int height)
   generateOutpostMenus(width, height);
   generateJumpMenus(width, height);
 
-  m_shipUi->initializeMenus(width, height);
-  m_targetUi->initializeMenus(width, height);
-  m_weaponsUi->initializeMenus(width, height);
-  m_abilitiesUi->initializeMenus(width, height);
-  m_gameOverUi->initializeMenus(width, height);
+  for (const auto &ui : m_uis)
+  {
+    ui->initializeMenus(width, height);
+  }
 }
 
 bool GameScreenUiHandler::processUserInput(UserInputData &inputData)
 {
-  auto out = m_shipUi->processUserInput(inputData);
-  if (!out)
+  for (const auto &ui : m_uis)
   {
-    out = m_targetUi->processUserInput(inputData);
-  }
-  if (!out)
-  {
-    m_weaponsUi->processUserInput(inputData);
-  }
-  if (!out)
-  {
-    out = m_abilitiesUi->processUserInput(inputData);
-  }
-  if (!out)
-  {
-    out = m_gameOverUi->processUserInput(inputData);
-  }
-  if (!out)
-  {
-    out = m_dock->processUserInput(inputData);
-  }
-  if (!out)
-  {
-    out = m_jumpPanel->processUserInput(inputData);
+    if (ui->processUserInput(inputData))
+    {
+      return true;
+    }
   }
 
-  return out;
+  if (m_dock->processUserInput(inputData))
+  {
+    return true;
+  }
+  return m_jumpPanel->processUserInput(inputData);
 }
 
 void GameScreenUiHandler::render(SpriteRenderer &engine) const
@@ -87,11 +54,10 @@ void GameScreenUiHandler::render(SpriteRenderer &engine) const
   m_dock->render(engine.getRenderer());
   m_jumpPanel->render(engine.getRenderer());
 
-  m_shipUi->render(engine);
-  m_targetUi->render(engine);
-  m_weaponsUi->render(engine);
-  m_abilitiesUi->render(engine);
-  m_gameOverUi->render(engine);
+  for (const auto &ui : m_uis)
+  {
+    ui->render(engine);
+  }
 }
 
 void GameScreenUiHandler::updateUi()
@@ -102,20 +68,59 @@ void GameScreenUiHandler::updateUi()
     updateJumpUi();
   }
 
-  m_shipUi->updateUi();
-  m_targetUi->updateUi();
-  m_weaponsUi->updateUi();
-  m_abilitiesUi->updateUi();
-  m_gameOverUi->updateUi();
+  for (const auto &ui : m_uis)
+  {
+    ui->updateUi();
+  }
 }
 
 void GameScreenUiHandler::reset()
 {
-  m_shipUi->reset();
-  m_targetUi->reset();
-  m_weaponsUi->reset();
-  m_abilitiesUi->reset();
-  m_gameOverUi->reset();
+  for (const auto &ui : m_uis)
+  {
+    ui->reset();
+  }
+}
+
+namespace {
+const olc::vi2d STATUS_UI_PIXEL_POS{5, 5};
+const olc::vi2d SHIP_UI_PIXEL_POS{5, 30};
+const olc::vi2d TARGET_UI_PIXEL_POS{400, 30};
+} // namespace
+
+void GameScreenUiHandler::initializeUis(const bsgo::Views &views)
+{
+  auto statusUi = std::make_unique<StatusUiHandler>(STATUS_UI_PIXEL_POS, views);
+  m_uis.emplace_back(std::move(statusUi));
+
+  auto shipUi
+    = std::make_unique<EntityUiHandler>(EntityUiConfig{.offset          = SHIP_UI_PIXEL_POS,
+                                                       .displayDistance = false,
+                                                       .getEntity =
+                                                         [](const bsgo::ShipView &shipView) {
+                                                           return shipView.getPlayerShip();
+                                                         }},
+                                        views);
+  m_uis.emplace_back(std::move(shipUi));
+
+  auto targetUi
+    = std::make_unique<EntityUiHandler>(EntityUiConfig{.offset          = TARGET_UI_PIXEL_POS,
+                                                       .displayDistance = true,
+                                                       .getEntity =
+                                                         [](const bsgo::ShipView &shipView) {
+                                                           return shipView.getPlayerTarget();
+                                                         }},
+                                        views);
+  m_uis.emplace_back(std::move(targetUi));
+
+  auto weaponsUi = std::make_unique<WeaponsUiHandler>(views);
+  m_uis.emplace_back(std::move(weaponsUi));
+
+  auto abilitiesUi = std::make_unique<AbilitiesUiHandler>(views);
+  m_uis.emplace_back(std::move(abilitiesUi));
+
+  auto gameOverUi = std::make_unique<GameOverUiHandler>(views);
+  m_uis.emplace_back(std::move(gameOverUi));
 }
 
 void GameScreenUiHandler::generateOutpostMenus(int width, int /*height*/)

@@ -1,13 +1,9 @@
 
 #pragma once
 
-#include "AbilitiesUiHandler.hh"
-#include "EntityUiHandler.hh"
-#include "GameOverUiHandler.hh"
 #include "IUiHandler.hh"
 #include "UiTextMenu.hh"
 #include "Views.hh"
-#include "WeaponsUiHandler.hh"
 
 namespace pge {
 
@@ -31,12 +27,9 @@ class GameScreenUiHandler : public IUiHandler
   UiTextMenu *m_jumpDestination{};
   UiTextMenu *m_jumpTime{};
 
-  EntityUiHandlerPtr m_shipUi{};
-  EntityUiHandlerPtr m_targetUi{};
-  WeaponsUiHandlerPtr m_weaponsUi{};
-  AbilitiesUiHandlerPtr m_abilitiesUi{};
-  GameOverUiHandlerPtr m_gameOverUi{};
+  std::vector<IUiHandlerPtr> m_uis{};
 
+  void initializeUis(const bsgo::Views &views);
   void generateOutpostMenus(int width, int height);
   void generateJumpMenus(int width, int height);
 
