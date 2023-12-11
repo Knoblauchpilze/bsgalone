@@ -14,20 +14,21 @@ const olc::vi2d TARGET_UI_PIXEL_POS{400, 30};
 GameScreenUiHandler::GameScreenUiHandler(const bsgo::Views &views)
   : IUiHandler("game")
   , m_shipView(views.shipView)
-  , m_shipUi(std::make_unique<ShipUiHandler>(ShipUiConfig{.offset          = SHIP_UI_PIXEL_POS,
-                                                          .displayDistance = false,
-                                                          .getEntity =
-                                                            [](const bsgo::ShipView &shipView) {
-                                                              return shipView.getPlayerShip();
-                                                            }},
-                                             views))
-  , m_targetUi(std::make_unique<ShipUiHandler>(ShipUiConfig{.offset          = TARGET_UI_PIXEL_POS,
-                                                            .displayDistance = true,
-                                                            .getEntity =
-                                                              [](const bsgo::ShipView &shipView) {
-                                                                return shipView.getPlayerTarget();
-                                                              }},
+  , m_shipUi(std::make_unique<EntityUiHandler>(EntityUiConfig{.offset          = SHIP_UI_PIXEL_POS,
+                                                              .displayDistance = false,
+                                                              .getEntity =
+                                                                [](const bsgo::ShipView &shipView) {
+                                                                  return shipView.getPlayerShip();
+                                                                }},
                                                views))
+  , m_targetUi(
+      std::make_unique<EntityUiHandler>(EntityUiConfig{.offset          = TARGET_UI_PIXEL_POS,
+                                                       .displayDistance = true,
+                                                       .getEntity =
+                                                         [](const bsgo::ShipView &shipView) {
+                                                           return shipView.getPlayerTarget();
+                                                         }},
+                                        views))
   , m_weaponsUi(std::make_unique<WeaponsUiHandler>(views))
   , m_abilitiesUi(std::make_unique<AbilitiesUiHandler>(views))
   , m_gameOverUi(std::make_unique<GameOverUiHandler>(views))

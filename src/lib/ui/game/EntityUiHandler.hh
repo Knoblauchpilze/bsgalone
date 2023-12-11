@@ -8,18 +8,18 @@
 namespace pge {
 
 using EntityFetcher = std::function<std::optional<bsgo::Entity>(const bsgo::ShipView &)>;
-struct ShipUiConfig
+struct EntityUiConfig
 {
   olc::vi2d offset{};
   bool displayDistance{false};
   EntityFetcher getEntity{};
 };
 
-class ShipUiHandler : public IUiHandler
+class EntityUiHandler : public IUiHandler
 {
   public:
-  ShipUiHandler(const ShipUiConfig &config, const bsgo::Views &views);
-  ~ShipUiHandler() override = default;
+  EntityUiHandler(const EntityUiConfig &config, const bsgo::Views &views);
+  ~EntityUiHandler() override = default;
 
   void initializeMenus(const int width, const int height) override;
   bool processUserInput(UserInputData &inputData) override;
@@ -27,7 +27,7 @@ class ShipUiHandler : public IUiHandler
   void updateUi() override;
 
   private:
-  ShipUiConfig m_config{};
+  EntityUiConfig m_config{};
   bsgo::ShipViewShPtr m_shipView{};
 
   enum MenuItem
@@ -41,12 +41,12 @@ class ShipUiHandler : public IUiHandler
   };
   std::vector<UiTextMenuPtr> m_menus{};
 
-  void updateNameComponent(const bsgo::Entity &ship);
-  void updateHealthComponent(const bsgo::Entity &ship);
-  void updatePowerComponent(const bsgo::Entity &ship);
+  void updateNameComponent(const bsgo::Entity &entity);
+  void updateHealthComponent(const bsgo::Entity &entity);
+  void updatePowerComponent(const bsgo::Entity &entity);
   void updateDistanceComponent();
 };
 
-using ShipUiHandlerPtr = std::unique_ptr<ShipUiHandler>;
+using EntityUiHandlerPtr = std::unique_ptr<EntityUiHandler>;
 
 } // namespace pge
