@@ -23,10 +23,18 @@ class StatusUiHandler : public IUiHandler
   bsgo::ShipViewShPtr m_shipView{};
   bsgo::ServerViewShPtr m_serverView{};
 
-  UiMenuPtr m_menu{};
+  bool m_logoutRequested{false};
+
+  UiMenuPtr m_statusBar{};
   UiTextMenu *m_system{};
+  UiMenuPtr m_logoutConfirmation{};
 
   void generateLogoutButton(const int width, const int height);
+  void generateLogoutConfirmationPanel(const int width, const int height);
+
+  void requestLogout();
+  void confirmLogout(Game &g);
+  void cancelLogout();
 };
 
 using StatusUiHandlerPtr = std::unique_ptr<StatusUiHandler>;
