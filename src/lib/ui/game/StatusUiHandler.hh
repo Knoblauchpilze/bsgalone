@@ -21,8 +21,12 @@ class StatusUiHandler : public IUiHandler
   private:
   olc::vi2d m_offset{};
   bsgo::ShipViewShPtr m_shipView{};
+  bsgo::ServerViewShPtr m_serverView{};
 
-  std::vector<UiTextMenuPtr> m_menus{};
+  UiMenuPtr m_menu{};
+  UiTextMenu *m_system{};
+
+  void generateLogoutButton(const int width, const int height);
 };
 
 using StatusUiHandlerPtr = std::unique_ptr<StatusUiHandler>;
