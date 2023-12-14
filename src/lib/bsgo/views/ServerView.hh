@@ -18,6 +18,7 @@ class ServerView : public IView
   bool isReady() const noexcept override;
 
   auto getPlayerSystem() const -> Uuid;
+  auto getPlayerSystemName() const -> std::string;
   auto getAllSystems() const -> std::vector<System>;
 
   struct Bounds
