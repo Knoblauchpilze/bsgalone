@@ -23,6 +23,13 @@ auto ServerView::getPlayerSystem() const -> Uuid
   return m_repositories.playerRepository->findSystemByPlayer(*m_playerDbId);
 }
 
+auto ServerView::getPlayerSystemName() const -> std::string
+{
+  const auto id     = getPlayerSystem();
+  const auto system = m_repositories.systemRepository->findOneById(id);
+  return system.name;
+}
+
 auto ServerView::getAllSystems() const -> std::vector<System>
 {
   std::vector<System> out;
