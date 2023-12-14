@@ -25,4 +25,9 @@ auto textConfigFromColor(const std::string &text,
                          const olc::Pixel &color,
                          const TextAlignment &align = TextAlignment::CENTER) -> TextConfig;
 
+auto textConfigFromColor(const std::string &text,
+                         const olc::Pixel &color,
+                         const olc::Pixel &hColor,
+                         const TextAlignment &align = TextAlignment::CENTER) -> TextConfig;
+
 } // namespace pge
