@@ -35,30 +35,36 @@ void StatusUiHandler::initializeMenus(const int width, const int height)
                           .highlightable = false};
   auto bg = bgConfigFromColor(transparent(olc::WHITE, alpha::AlmostTransparent));
 
-  m_menu = std::make_unique<UiMenu>(config, bg);
+  m_statusBar = std::make_unique<UiMenu>(config, bg);
 
   bg = bgConfigFromColor(olc::BLANK);
 
   auto text = textConfigFromColor("N/A", olc::BLACK);
   auto menu = std::make_unique<UiTextMenu>(config, bg, text);
   m_system  = menu.get();
-  m_menu->addMenu(std::move(menu));
+  m_statusBar->addMenu(std::move(menu));
 
-  m_menu->addMenu(generateSpacer());
-  m_menu->addMenu(generateSpacer());
-  m_menu->addMenu(generateSpacer());
+  m_statusBar->addMenu(generateSpacer());
+  m_statusBar->addMenu(generateSpacer());
+  m_statusBar->addMenu(generateSpacer());
 
   generateLogoutButton(width, height);
+  generateLogoutConfirmationPanel(width, height);
 }
 
 bool StatusUiHandler::processUserInput(UserInputData &inputData)
 {
-  return m_menu->processUserInput(inputData);
+  if (m_statusBar->processUserInput(inputData))
+  {
+    return true;
+  }
+  return m_logoutConfirmation->processUserInput(inputData);
 }
 
 void StatusUiHandler::render(SpriteRenderer &engine) const
 {
-  m_menu->render(engine.getRenderer());
+  m_statusBar->render(engine.getRenderer());
+  m_logoutConfirmation->render(engine.getRenderer());
 }
 
 void StatusUiHandler::updateUi()
@@ -69,6 +75,7 @@ void StatusUiHandler::updateUi()
   }
 
   m_system->setText(m_serverView->getPlayerSystemName());
+  m_logoutConfirmation->setVisible(m_logoutRequested);
 }
 
 namespace {
@@ -78,14 +85,71 @@ const olc::vi2d DUMMY_DIMENSION{DUMMY_PIXEL_DIMENSION, DUMMY_PIXEL_DIMENSION};
 
 void StatusUiHandler::generateLogoutButton(const int /*width*/, const int /*height*/)
 {
-  const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .gameClickCallback = [](Game &g) {
-                            g.setScreen(Screen::LOGIN);
+  const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .clickCallback = [this]() {
+                            requestLogout();
                           }};
   const auto bg   = bgConfigFromColor(olc::VERY_DARK_GREY);
   const auto text = textConfigFromColor("Logout", olc::BLACK, olc::RED);
 
   auto logout = std::make_unique<UiTextMenu>(config, bg, text);
-  m_menu->addMenu(std::move(logout));
+  m_statusBar->addMenu(std::move(logout));
+}
+
+void StatusUiHandler::generateLogoutConfirmationPanel(const int width, const int height)
+{
+  auto innerPanel = generateBlankHorizontalMenu();
+  innerPanel->addMenu(generateSpacer());
+
+  auto bg = bgConfigFromColor(olc::VERY_DARK_RED);
+  MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .gameClickCallback = [this](Game &g) {
+                      confirmLogout(g);
+                    }};
+  auto text   = textConfigFromColor("Yes", olc::DARK_RED);
+  auto button = std::make_unique<UiTextMenu>(config, bg, text);
+  innerPanel->addMenu(std::move(button));
+
+  innerPanel->addMenu(generateSpacer());
+
+  bg                       = bgConfigFromColor(olc::VERY_DARK_GREEN);
+  config.gameClickCallback = {};
+  config.clickCallback     = [this]() { cancelLogout(); };
+  text                     = textConfigFromColor("No", olc::DARK_GREEN);
+  button                   = std::make_unique<UiTextMenu>(config, bg, text);
+  innerPanel->addMenu(std::move(button));
+
+  innerPanel->addMenu(generateSpacer());
+
+  const olc::vi2d logoutDims{width / 3, height / 4};
+  const olc::vi2d logoutPos{(width - logoutDims.x) / 2, (height - logoutDims.y) / 2};
+
+  config               = MenuConfig{.pos = logoutPos, .dims = logoutDims};
+  bg                   = bgConfigFromColor(transparent(olc::BLACK, alpha::AlmostOpaque));
+  m_logoutConfirmation = std::make_unique<UiMenu>(config, bg);
+
+  m_logoutConfirmation->addMenu(generateSpacer());
+
+  config.highlightable = false;
+  text                 = textConfigFromColor("Do you really want to logout?", olc::WHITE);
+  auto label           = std::make_unique<UiTextMenu>(config, bg, text);
+  m_logoutConfirmation->addMenu(std::move(label));
+
+  m_logoutConfirmation->addMenu(std::move(innerPanel));
+  m_logoutConfirmation->addMenu(generateSpacer());
+}
+
+void StatusUiHandler::requestLogout()
+{
+  m_logoutRequested = true;
+}
+
+void StatusUiHandler::confirmLogout(Game &g)
+{
+  g.setScreen(Screen::LOGIN);
+}
+
+void StatusUiHandler::cancelLogout()
+{
+  m_logoutRequested = false;
 }
 
 } // namespace pge
