@@ -4,6 +4,7 @@
 #include "EntityUiHandler.hh"
 #include "GameOverUiHandler.hh"
 #include "ScreenCommon.hh"
+#include "ShipStatusUiHandler.hh"
 #include "StatusUiHandler.hh"
 #include "StringUtils.hh"
 #include "WeaponsUiHandler.hh"
@@ -12,19 +13,12 @@ namespace pge {
 
 GameScreenUiHandler::GameScreenUiHandler(const bsgo::Views &views)
   : IUiHandler("game")
-  , m_shipView(views.shipView)
 {
-  if (nullptr == m_shipView)
-  {
-    throw std::invalid_argument("Expected non null ship view");
-  }
   initializeUis(views);
 }
 
 void GameScreenUiHandler::initializeMenus(const int width, const int height)
 {
-  generateJumpMenus(width, height);
-
   for (const auto &ui : m_uis)
   {
     ui->initializeMenus(width, height);
@@ -41,13 +35,11 @@ bool GameScreenUiHandler::processUserInput(UserInputData &inputData)
     }
   }
 
-  return m_jumpPanel->processUserInput(inputData);
+  return false;
 }
 
 void GameScreenUiHandler::render(SpriteRenderer &engine) const
 {
-  m_jumpPanel->render(engine.getRenderer());
-
   for (const auto &ui : m_uis)
   {
     ui->render(engine);
@@ -56,11 +48,6 @@ void GameScreenUiHandler::render(SpriteRenderer &engine) const
 
 void GameScreenUiHandler::updateUi()
 {
-  if (m_shipView->isReady())
-  {
-    updateJumpUi();
-  }
-
   for (const auto &ui : m_uis)
   {
     ui->updateUi();
@@ -114,65 +101,9 @@ void GameScreenUiHandler::initializeUis(const bsgo::Views &views)
 
   auto gameOverUi = std::make_unique<GameOverUiHandler>(views);
   m_uis.emplace_back(std::move(gameOverUi));
-}
 
-void GameScreenUiHandler::generateJumpMenus(int width, int height)
-{
-  const olc::vi2d JUMP_UI_PIXEL_DIMENSION{100, 100};
-  constexpr auto REASONABLE_GAP_PIXELS = 15;
-  const olc::vi2d JUMP_UI_PIXEL_POS{(width - JUMP_UI_PIXEL_DIMENSION.x) / 2,
-                                    height - JUMP_UI_PIXEL_DIMENSION.y - REASONABLE_GAP_PIXELS};
-
-  const MenuConfig config{.pos           = JUMP_UI_PIXEL_POS,
-                          .dims          = JUMP_UI_PIXEL_DIMENSION,
-                          .highlightable = false};
-
-  auto bg     = bgConfigFromColor(transparent(olc::DARK_RED, alpha::SemiOpaque));
-  m_jumpPanel = std::make_unique<UiMenu>(config, bg);
-
-  bg        = bgConfigFromColor(olc::BLANK);
-  auto text = textConfigFromColor("FTL Jump", olc::WHITE);
-  auto menu = std::make_unique<UiTextMenu>(config, bg, text);
-  m_jumpPanel->addMenu(std::move(menu));
-
-  m_jumpPanel->addMenu(generateSpacer());
-
-  text = textConfigFromColor("Destination:", olc::WHITE);
-  menu = std::make_unique<UiTextMenu>(config, bg, text);
-  m_jumpPanel->addMenu(std::move(menu));
-
-  text              = textConfigFromColor("N/A", olc::WHITE);
-  menu              = std::make_unique<UiTextMenu>(config, bg, text);
-  m_jumpDestination = menu.get();
-  m_jumpPanel->addMenu(std::move(menu));
-
-  m_jumpPanel->addMenu(generateSpacer());
-
-  text = textConfigFromColor("Remaining:", olc::WHITE);
-  menu = std::make_unique<UiTextMenu>(config, bg, text);
-  m_jumpPanel->addMenu(std::move(menu));
-
-  text       = textConfigFromColor("N/A", olc::WHITE);
-  menu       = std::make_unique<UiTextMenu>(config, bg, text);
-  m_jumpTime = menu.get();
-  m_jumpPanel->addMenu(std::move(menu));
-
-  m_jumpPanel->addMenu(generateSpacer());
-}
-
-void GameScreenUiHandler::updateJumpUi()
-{
-  const auto jumping = m_shipView->isJumping();
-  m_jumpPanel->setVisible(jumping);
-
-  if (!jumping)
-  {
-    return;
-  }
-
-  const auto data = m_shipView->getJumpData();
-  m_jumpDestination->setText(data.systemName);
-  m_jumpTime->setText(utils::durationToPrettyString(data.jumpTime));
+  auto shipStatusUi = std::make_unique<ShipStatusUiHandler>(views);
+  m_uis.emplace_back(std::move(shipStatusUi));
 }
 
 } // namespace pge
