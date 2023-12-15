@@ -22,7 +22,6 @@ class GameScreenUiHandler : public IUiHandler
   private:
   bsgo::ShipViewShPtr m_shipView;
 
-  UiTextMenuPtr m_dock{};
   UiMenuPtr m_jumpPanel{};
   UiTextMenu *m_jumpDestination{};
   UiTextMenu *m_jumpTime{};
@@ -30,10 +29,8 @@ class GameScreenUiHandler : public IUiHandler
   std::vector<IUiHandlerPtr> m_uis{};
 
   void initializeUis(const bsgo::Views &views);
-  void generateOutpostMenus(int width, int height);
   void generateJumpMenus(int width, int height);
 
-  void updateOutpostUi();
   void updateJumpUi();
 };
 

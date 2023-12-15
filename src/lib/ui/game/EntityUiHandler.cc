@@ -44,6 +44,20 @@ void EntityUiHandler::initializeMenus(const int /*width*/, const int /*height*/)
   bg                = bgConfigFromColor(olc::BLANK);
   text              = textConfigFromColor("N/A m", olc::WHITE);
   m_menus[DISTANCE] = std::make_unique<UiTextMenu>(config, bg, text);
+
+  config.pos.y += REASONABLE_PIXEL_GAP;
+  config.highlightable     = true;
+  config.dims              = olc::vi2d{100, 25};
+  config.gameClickCallback = [this](Game &g) {
+    if (m_shipView->isReady())
+    {
+      m_shipView->dockPlayerShip();
+      g.setScreen(Screen::OUTPOST);
+    }
+  };
+  bg            = bgConfigFromColor(olc::DARK_GREY);
+  text          = textConfigFromColor("Dock", olc::WHITE);
+  m_menus[DOCK] = std::make_unique<UiTextMenu>(config, bg, text);
 }
 
 bool EntityUiHandler::processUserInput(UserInputData &inputData)
@@ -83,6 +97,7 @@ void EntityUiHandler::updateUi()
 
   if (!maybeShip)
   {
+    m_menus[DOCK]->setVisible(false);
     return;
   }
 
@@ -94,6 +109,7 @@ void EntityUiHandler::updateUi()
   {
     updateDistanceComponent();
   }
+  updateDockComponent(ship);
 }
 
 void EntityUiHandler::updateNameComponent(const bsgo::Entity &entity)
@@ -135,6 +151,26 @@ void EntityUiHandler::updateDistanceComponent()
 {
   const auto d = m_shipView->distanceToTarget();
   m_menus[DISTANCE]->setText(floatToStr(d, 1) + "m");
+}
+
+void EntityUiHandler::updateDockComponent(const bsgo::Entity &entity)
+{
+  if (bsgo::EntityKind::OUTPOST != entity.kind->kind())
+  {
+    m_menus[DOCK]->setVisible(false);
+    return;
+  }
+
+  constexpr auto MAXIMUM_DISTANCE_TO_DOCK = 5.0f;
+  auto dockButtonVisible = m_shipView->distanceToTarget() <= MAXIMUM_DISTANCE_TO_DOCK;
+
+  const auto playerShip        = m_shipView->getPlayerShip();
+  const auto factionIsMatching = entity.factionComp().faction()
+                                 == playerShip.factionComp().faction();
+
+  dockButtonVisible &= factionIsMatching;
+
+  m_menus[DOCK]->setVisible(dockButtonVisible);
 }
 
 } // namespace pge
