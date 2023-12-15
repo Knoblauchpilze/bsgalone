@@ -217,6 +217,11 @@ void Game::login(const bsgo::Uuid &playerDbId)
 
   m_services.purchase->setPlayerDbId(playerDbId);
 
+  for (const auto &[_, handler] : m_uiHandlers)
+  {
+    handler->reset();
+  }
+
   setScreen(Screen::OUTPOST);
 }
 
