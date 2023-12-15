@@ -23,6 +23,8 @@ class Coordinator : public utils::CoreObject
   Coordinator();
   ~Coordinator() override = default;
 
+  void clear();
+
   auto createEntity(const EntityKind &kind) -> Uuid;
 
   void addTransform(const Uuid &ent, IBoundingBoxPtr bbox);

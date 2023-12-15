@@ -28,6 +28,10 @@ DataSource::DataSource()
 void DataSource::setPlayerId(const Uuid &player)
 {
   m_playerId = player;
+
+  m_playerEntityId.reset();
+  m_playerShipId.reset();
+  m_playerShipEntityId.reset();
 }
 
 auto DataSource::repositories() const -> Repositories
@@ -68,6 +72,8 @@ void DataSource::initialize(Coordinator &coordinator) const
   {
     error("Failed to initialize the game", "No player id defined");
   }
+
+  coordinator.clear();
 
   const auto systemId = m_repositories.playerRepository->findSystemByPlayer(*m_playerId);
 
