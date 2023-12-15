@@ -279,6 +279,12 @@ auto ShipView::getJumpData() const -> JumpData
   return out;
 }
 
+bool ShipView::isInThreat() const
+{
+  const auto ship = getPlayerShip();
+  return bsgo::statusIndicatesThreat(ship.statusComp().status());
+}
+
 void ShipView::checkPlayerShipDbIdExists() const
 {
   if (!m_playerShipDbId)
