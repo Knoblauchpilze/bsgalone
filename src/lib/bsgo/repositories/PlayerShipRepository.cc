@@ -23,8 +23,8 @@ constexpr auto FIND_SLOTS_QUERY
 
 constexpr auto UPDATE_SHIP_QUERY_NAME = "player_ship_update";
 constexpr auto UPDATE_SHIP_QUERY      = R"(
-INSERT INTO player_ship (ship, player, active, hull_points, power_points, x_pos, y_pos, z_pos)
-  VALUES ($1, $2, $3, $4, $5, 0, 0, 0)
+INSERT INTO player_ship (ship, player, name, active, hull_points, power_points, x_pos, y_pos, z_pos)
+  VALUES ($1, $2, $3, $4, $5, $6, 0, 0, 0)
   ON CONFLICT (ship, player) DO UPDATE
   SET
     hull_points = excluded.hull_points,
@@ -74,6 +74,7 @@ void PlayerShipRepository::save(const PlayerShip &ship)
     return transaction.exec_prepared0(UPDATE_SHIP_QUERY_NAME,
                                       toDbId(ship.ship),
                                       toDbId(*ship.player),
+                                      ship.name,
                                       ship.active,
                                       ship.hullPoints,
                                       ship.powerPoints);
