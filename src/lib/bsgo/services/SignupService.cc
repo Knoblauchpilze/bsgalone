@@ -72,6 +72,7 @@ void SignupService::registerShip(const Player &player) const
   PlayerShip ship{
     .faction     = shipTemplate.faction,
     .ship        = shipTemplate.id,
+    .name        = shipTemplate.name,
     .player      = player.id,
     .active      = true,
     .hullPoints  = shipTemplate.maxHullPoints,
