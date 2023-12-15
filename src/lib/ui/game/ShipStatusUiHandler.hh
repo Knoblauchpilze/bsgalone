@@ -20,11 +20,18 @@ class ShipStatusUiHandler : public IUiHandler
 
   private:
   bsgo::ShipViewShPtr m_shipView{};
-  bsgo::ServerViewShPtr m_serverView{};
+
+  UiTextMenuPtr m_threatLabel{};
 
   UiMenuPtr m_jumpPanel{};
   UiTextMenu *m_jumpDestination{};
   UiTextMenu *m_jumpTime{};
+
+  void initializeThreatPanel(const int width, const int height);
+  void initializeJumpPanel(const int width, const int height);
+
+  void updateThreatPanel();
+  void updateJumpPanel();
 };
 
 using ShipStatusUiHandlerPtr = std::unique_ptr<ShipStatusUiHandler>;
