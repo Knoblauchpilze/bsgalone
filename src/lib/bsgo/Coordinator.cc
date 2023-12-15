@@ -65,6 +65,13 @@ Coordinator::Coordinator()
   createSystems();
 }
 
+void Coordinator::clear()
+{
+  m_nextEntity = Uuid{};
+  m_entities.clear();
+  m_components.clear();
+}
+
 auto Coordinator::createEntity(const EntityKind &kind) -> Uuid
 {
   auto ent = m_nextEntity;

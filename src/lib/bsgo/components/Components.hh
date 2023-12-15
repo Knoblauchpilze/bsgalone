@@ -48,6 +48,8 @@ struct Components
   std::unordered_multimap<Uuid, ComputerSlotComponentShPtr> computers{};
   std::unordered_multimap<Uuid, EffectComponentShPtr> effects{};
   std::unordered_multimap<Uuid, ResourceComponentShPtr> resources{};
+
+  void clear();
 };
 
 } // namespace bsgo

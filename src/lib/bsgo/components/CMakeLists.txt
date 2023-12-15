@@ -24,6 +24,7 @@ target_sources (bsgalone_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/VelocityComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/WeaponEffectComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/WeaponSlotComponent.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/Components.cc
 	)
 
 target_include_directories (bsgalone_lib PUBLIC
