@@ -8,29 +8,73 @@ namespace pge {
 ShipStatusUiHandler::ShipStatusUiHandler(const bsgo::Views &views)
   : IUiHandler("ship_status")
   , m_shipView(views.shipView)
-  , m_serverView(views.serverView)
 {
   if (nullptr == m_shipView)
   {
     throw std::invalid_argument("Expected non null ship view");
   }
-  if (nullptr == m_serverView)
+}
+
+void ShipStatusUiHandler::initializeMenus(const int width, const int height)
+{
+  initializeThreatPanel(width, height);
+  initializeJumpPanel(width, height);
+}
+
+bool ShipStatusUiHandler::processUserInput(UserInputData &inputData)
+{
+  if (m_threatLabel->processUserInput(inputData))
   {
-    throw std::invalid_argument("Expected non null server view");
+    return true;
   }
+  return m_jumpPanel->processUserInput(inputData);
+}
+
+void ShipStatusUiHandler::render(SpriteRenderer &engine) const
+{
+  m_threatLabel->render(engine.getRenderer());
+  m_jumpPanel->render(engine.getRenderer());
+}
+
+void ShipStatusUiHandler::updateUi()
+{
+  if (!m_shipView->isReady())
+  {
+    return;
+  }
+
+  updateThreatPanel();
+  updateJumpPanel();
 }
 
 namespace {
+const olc::vi2d THREAT_UI_PIXEL_DIMENSION{100, 20};
 const olc::vi2d JUMP_UI_PIXEL_DIMENSION{100, 100};
 constexpr auto REASONABLE_GAP_PIXELS = 15;
 } // namespace
 
-void ShipStatusUiHandler::initializeMenus(const int width, const int height)
+void ShipStatusUiHandler::initializeThreatPanel(const int width, const int height)
 {
-  const olc::vi2d JUMP_UI_PIXEL_POS{(width - JUMP_UI_PIXEL_DIMENSION.x) / 2,
-                                    height - JUMP_UI_PIXEL_DIMENSION.y - REASONABLE_GAP_PIXELS};
+  const olc::vi2d threatPixelPos{(width - THREAT_UI_PIXEL_DIMENSION.x) / 2,
+                                 height - JUMP_UI_PIXEL_DIMENSION.y - REASONABLE_GAP_PIXELS
+                                   - THREAT_UI_PIXEL_DIMENSION.y};
 
-  const MenuConfig config{.pos           = JUMP_UI_PIXEL_POS,
+  const MenuConfig config{.pos           = threatPixelPos,
+                          .dims          = THREAT_UI_PIXEL_DIMENSION,
+                          .highlightable = false};
+
+  const auto bg   = bgConfigFromColor(olc::BLANK);
+  const auto text = textConfigFromColor("Threat", olc::RED);
+
+  m_threatLabel = std::make_unique<UiTextMenu>(config, bg, text);
+}
+
+void ShipStatusUiHandler::initializeJumpPanel(const int width, const int height)
+{
+  const olc::vi2d jumpUiPixelPos{(width - JUMP_UI_PIXEL_DIMENSION.x) / 2,
+                                 height - JUMP_UI_PIXEL_DIMENSION.y - REASONABLE_GAP_PIXELS};
+
+  const MenuConfig config{.pos           = jumpUiPixelPos,
                           .dims          = JUMP_UI_PIXEL_DIMENSION,
                           .highlightable = false};
 
@@ -67,23 +111,13 @@ void ShipStatusUiHandler::initializeMenus(const int width, const int height)
   m_jumpPanel->addMenu(generateSpacer());
 }
 
-bool ShipStatusUiHandler::processUserInput(UserInputData &inputData)
+void ShipStatusUiHandler::updateThreatPanel()
 {
-  return m_jumpPanel->processUserInput(inputData);
+  m_threatLabel->setVisible(m_shipView->isInThreat());
 }
 
-void ShipStatusUiHandler::render(SpriteRenderer &engine) const
+void ShipStatusUiHandler::updateJumpPanel()
 {
-  m_jumpPanel->render(engine.getRenderer());
-}
-
-void ShipStatusUiHandler::updateUi()
-{
-  if (!m_serverView->isReady())
-  {
-    return;
-  }
-
   const auto jumping = m_shipView->isJumping();
   m_jumpPanel->setVisible(jumping);
 
