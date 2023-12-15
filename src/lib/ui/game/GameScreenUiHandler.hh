@@ -20,18 +20,9 @@ class GameScreenUiHandler : public IUiHandler
   void reset() override;
 
   private:
-  bsgo::ShipViewShPtr m_shipView;
-
-  UiMenuPtr m_jumpPanel{};
-  UiTextMenu *m_jumpDestination{};
-  UiTextMenu *m_jumpTime{};
-
   std::vector<IUiHandlerPtr> m_uis{};
 
   void initializeUis(const bsgo::Views &views);
-  void generateJumpMenus(int width, int height);
-
-  void updateJumpUi();
 };
 
 } // namespace pge
