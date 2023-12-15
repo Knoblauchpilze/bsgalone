@@ -53,6 +53,8 @@ class ShipView : public IView
   };
   auto getJumpData() const -> JumpData;
 
+  bool isInThreat() const;
+
   private:
   std::optional<Uuid> m_playerShipDbId{};
   std::optional<Uuid> m_playerShipEntityId{};
