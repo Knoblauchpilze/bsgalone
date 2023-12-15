@@ -37,7 +37,9 @@ class EntityUiHandler : public IUiHandler
     POWER    = 2,
     DISTANCE = 3,
 
-    COUNT = 4,
+    DOCK = 4,
+
+    COUNT = 5,
   };
   std::vector<UiTextMenuPtr> m_menus{};
 
@@ -45,6 +47,7 @@ class EntityUiHandler : public IUiHandler
   void updateHealthComponent(const bsgo::Entity &entity);
   void updatePowerComponent(const bsgo::Entity &entity);
   void updateDistanceComponent();
+  void updateDockComponent(const bsgo::Entity &entity);
 };
 
 using EntityUiHandlerPtr = std::unique_ptr<EntityUiHandler>;

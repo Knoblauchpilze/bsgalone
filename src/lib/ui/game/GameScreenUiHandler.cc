@@ -23,7 +23,6 @@ GameScreenUiHandler::GameScreenUiHandler(const bsgo::Views &views)
 
 void GameScreenUiHandler::initializeMenus(const int width, const int height)
 {
-  generateOutpostMenus(width, height);
   generateJumpMenus(width, height);
 
   for (const auto &ui : m_uis)
@@ -42,16 +41,11 @@ bool GameScreenUiHandler::processUserInput(UserInputData &inputData)
     }
   }
 
-  if (m_dock->processUserInput(inputData))
-  {
-    return true;
-  }
   return m_jumpPanel->processUserInput(inputData);
 }
 
 void GameScreenUiHandler::render(SpriteRenderer &engine) const
 {
-  m_dock->render(engine.getRenderer());
   m_jumpPanel->render(engine.getRenderer());
 
   for (const auto &ui : m_uis)
@@ -64,7 +58,6 @@ void GameScreenUiHandler::updateUi()
 {
   if (m_shipView->isReady())
   {
-    updateOutpostUi();
     updateJumpUi();
   }
 
@@ -123,26 +116,6 @@ void GameScreenUiHandler::initializeUis(const bsgo::Views &views)
   m_uis.emplace_back(std::move(gameOverUi));
 }
 
-void GameScreenUiHandler::generateOutpostMenus(int width, int /*height*/)
-{
-  const olc::vi2d OUTPOST_UI_PIXEL_POS{width / 2, 70};
-  const olc::vi2d OUTPOST_UI_PIXEL_DIMENSION{100, 25};
-
-  const MenuConfig config{.pos               = OUTPOST_UI_PIXEL_POS,
-                          .dims              = OUTPOST_UI_PIXEL_DIMENSION,
-                          .gameClickCallback = [this](Game &g) {
-                            if (m_shipView->isReady())
-                            {
-                              m_shipView->dockPlayerShip();
-                              g.setScreen(Screen::OUTPOST);
-                            }
-                          }};
-
-  auto bg   = bgConfigFromColor(olc::DARK_GREY);
-  auto text = textConfigFromColor("Dock", olc::WHITE);
-  m_dock    = std::make_unique<UiTextMenu>(config, bg, text);
-}
-
 void GameScreenUiHandler::generateJumpMenus(int width, int height)
 {
   const olc::vi2d JUMP_UI_PIXEL_DIMENSION{100, 100};
@@ -185,24 +158,6 @@ void GameScreenUiHandler::generateJumpMenus(int width, int height)
   m_jumpPanel->addMenu(std::move(menu));
 
   m_jumpPanel->addMenu(generateSpacer());
-}
-
-void GameScreenUiHandler::updateOutpostUi()
-{
-  const auto target                       = m_shipView->getPlayerTarget();
-  constexpr auto MAXIMUM_DISTANCE_TO_DOCK = 5.0f;
-  auto dockButtonVisible{false};
-  if (target && bsgo::EntityKind::OUTPOST == target->kind->kind())
-  {
-    dockButtonVisible = m_shipView->distanceToTarget() <= MAXIMUM_DISTANCE_TO_DOCK;
-
-    const auto ship              = m_shipView->getPlayerShip();
-    const auto factionIsMatching = target->factionComp().faction() == ship.factionComp().faction();
-
-    dockButtonVisible &= factionIsMatching;
-  }
-
-  m_dock->setVisible(dockButtonVisible);
 }
 
 void GameScreenUiHandler::updateJumpUi()
