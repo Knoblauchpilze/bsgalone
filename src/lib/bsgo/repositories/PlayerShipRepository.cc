@@ -27,6 +27,7 @@ INSERT INTO player_ship (ship, player, name, active, hull_points, power_points, 
   VALUES ($1, $2, $3, $4, $5, $6, 0, 0, 0)
   ON CONFLICT (ship, player) DO UPDATE
   SET
+    name = excluded.name,
     hull_points = excluded.hull_points,
     power_points = excluded.power_points,
     x_pos = excluded.x_pos,
