@@ -78,6 +78,11 @@ void StatusUiHandler::updateUi()
   m_logoutConfirmation->setVisible(m_logoutRequested);
 }
 
+void StatusUiHandler::reset()
+{
+  m_logoutRequested = false;
+}
+
 namespace {
 constexpr auto DUMMY_PIXEL_DIMENSION = 10;
 const olc::vi2d DUMMY_DIMENSION{DUMMY_PIXEL_DIMENSION, DUMMY_PIXEL_DIMENSION};
