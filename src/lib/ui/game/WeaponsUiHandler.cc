@@ -63,6 +63,11 @@ void WeaponsUiHandler::updateUi()
   }
 }
 
+namespace {
+constexpr auto NUMBER_OF_WEAPONS = 4;
+const olc::Pixel SEMI_OPAQUE_BLACK{0, 0, 0, alpha::SemiOpaque};
+} // namespace
+
 void WeaponsUiHandler::reset()
 {
   m_ranges.clear();
@@ -72,12 +77,11 @@ void WeaponsUiHandler::reset()
   for (auto &weapon : m_weapons)
   {
     weapon->clearChildren();
+    weapon->updateBgColor(SEMI_OPAQUE_BLACK);
   }
 
   m_initialized = false;
 }
-
-constexpr auto NUMBER_OF_WEAPONS = 4;
 
 void WeaponsUiHandler::generateWeaponsMenus(int width, int height)
 {
@@ -88,7 +92,7 @@ void WeaponsUiHandler::generateWeaponsMenus(int width, int height)
                       height / 2};
 
   MenuConfig config{.pos = pos, .dims = weaponMenuDims, .propagateEventsToChildren = false};
-  const auto bg = bgConfigFromColor(olc::Pixel{0, 0, 0, alpha::SemiOpaque});
+  const auto bg = bgConfigFromColor(SEMI_OPAQUE_BLACK);
 
   for (auto id = 0u; id < NUMBER_OF_WEAPONS; ++id)
   {

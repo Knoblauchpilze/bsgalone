@@ -63,6 +63,11 @@ void AbilitiesUiHandler::updateUi()
   }
 }
 
+namespace {
+constexpr auto NUMBER_OF_ABILITIES = 4;
+const olc::Pixel SEMI_OPAQUE_BLACK{0, 0, 0, alpha::SemiOpaque};
+} // namespace
+
 void AbilitiesUiHandler::reset()
 {
   m_ranges.clear();
@@ -72,12 +77,11 @@ void AbilitiesUiHandler::reset()
   for (auto &computer : m_computers)
   {
     computer->clearChildren();
+    computer->updateBgColor(SEMI_OPAQUE_BLACK);
   }
 
   m_initialized = false;
 }
-
-constexpr auto NUMBER_OF_ABILITIES = 4;
 
 void AbilitiesUiHandler::generateComputersMenus(int width, int height)
 {
@@ -87,7 +91,7 @@ void AbilitiesUiHandler::generateComputersMenus(int width, int height)
                       height - SPACING_IN_PIXELS - abilityMenuDims.y};
 
   MenuConfig config{.pos = pos, .dims = abilityMenuDims, .propagateEventsToChildren = false};
-  const auto bg = bgConfigFromColor(olc::Pixel{0, 0, 0, alpha::SemiOpaque});
+  const auto bg = bgConfigFromColor(SEMI_OPAQUE_BLACK);
 
   for (auto id = 0u; id < NUMBER_OF_ABILITIES; ++id)
   {
