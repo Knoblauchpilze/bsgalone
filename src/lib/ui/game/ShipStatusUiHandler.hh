@@ -2,6 +2,7 @@
 #pragma once
 
 #include "IUiHandler.hh"
+#include "UiBlinkingMenu.hh"
 #include "UiTextMenu.hh"
 #include <memory>
 
@@ -21,7 +22,7 @@ class ShipStatusUiHandler : public IUiHandler
   private:
   bsgo::ShipViewShPtr m_shipView{};
 
-  UiTextMenuPtr m_threatLabel{};
+  UiBlinkingMenuPtr m_threatLabel{};
 
   UiMenuPtr m_jumpPanel{};
   UiTextMenu *m_jumpDestination{};
