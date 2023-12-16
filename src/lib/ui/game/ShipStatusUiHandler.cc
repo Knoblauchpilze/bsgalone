@@ -23,10 +23,6 @@ void ShipStatusUiHandler::initializeMenus(const int width, const int height)
 
 bool ShipStatusUiHandler::processUserInput(UserInputData &inputData)
 {
-  if (m_threatLabel->processUserInput(inputData))
-  {
-    return true;
-  }
   return m_jumpPanel->processUserInput(inputData);
 }
 
@@ -66,7 +62,10 @@ void ShipStatusUiHandler::initializeThreatPanel(const int width, const int heigh
   const auto bg   = bgConfigFromColor(olc::BLANK);
   const auto text = textConfigFromColor("Threat", olc::RED);
 
-  m_threatLabel = std::make_unique<UiTextMenu>(config, bg, text);
+  auto label = std::make_unique<UiTextMenu>(config, bg, text);
+  BlinkingMenuConfig blinkConfig{};
+  blinkConfig.applyToBackground = false;
+  m_threatLabel                 = std::make_unique<UiBlinkingMenu>(blinkConfig, std::move(label));
 }
 
 void ShipStatusUiHandler::initializeJumpPanel(const int width, const int height)
@@ -114,6 +113,7 @@ void ShipStatusUiHandler::initializeJumpPanel(const int width, const int height)
 void ShipStatusUiHandler::updateThreatPanel()
 {
   m_threatLabel->setVisible(m_shipView->isInThreat());
+  m_threatLabel->update();
 }
 
 void ShipStatusUiHandler::updateJumpPanel()
