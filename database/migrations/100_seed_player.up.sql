@@ -8,7 +8,7 @@ INSERT INTO public.player_resource ("player", "resource", "amount")
   VALUES (
     (SELECT id FROM player WHERE name = 'grouton'),
     (SELECT id FROM resource WHERE name = 'tylium'),
-    10501.2
+    100501.2
   );
 INSERT INTO public.player_resource ("player", "resource", "amount")
   VALUES (
