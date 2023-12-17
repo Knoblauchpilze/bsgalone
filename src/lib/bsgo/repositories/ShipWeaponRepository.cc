@@ -12,7 +12,7 @@ ShipWeaponRepository::ShipWeaponRepository(const DbConnectionShPtr &connection)
 namespace {
 constexpr auto FIND_ALL_QUERY_NAME = "ship_weapon_find_all";
 constexpr auto FIND_ALL_QUERY
-  = "SELECT sw.weapon, ss.x_pos, ss.y_pos, ss.z_pos FROM ship_weapon AS sw LEFT JOIN ship_slot AS ss ON sw.slot = ss.id WHERE sw.ship = $1";
+  = "SELECT sw.weapon, sw.slot, ss.x_pos, ss.y_pos, ss.z_pos FROM ship_weapon AS sw LEFT JOIN ship_slot AS ss ON sw.slot = ss.id WHERE sw.ship = $1";
 } // namespace
 
 void ShipWeaponRepository::initialize()
@@ -28,17 +28,22 @@ auto ShipWeaponRepository::findAllByShip(const Uuid &ship) const -> std::vector<
   std::vector<ShipWeapon> out;
   for (const auto record : rows)
   {
-    const auto weapon = fromDbId(record[0].as<int>());
+    ShipWeapon data{};
+    data.ship   = ship;
+    data.weapon = fromDbId(record[0].as<int>());
+    data.slot   = record[1].as<int>();
 
-    const auto x       = record[1].as<float>();
-    const auto y       = record[2].as<float>();
-    const auto z       = record[3].as<float>();
-    const auto slotPos = Eigen::Vector3f(x, y, z);
+    const auto x      = record[2].as<float>();
+    const auto y      = record[3].as<float>();
+    const auto z      = record[4].as<float>();
+    data.slotPosition = Eigen::Vector3f(x, y, z);
 
-    out.emplace_back(ship, weapon, slotPos);
+    out.emplace_back(std::move(data));
   }
 
   return out;
 }
+
+void ShipWeaponRepository::save(const ShipWeapon & /*weapon*/) {}
 
 } // namespace bsgo
