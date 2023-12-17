@@ -28,14 +28,14 @@ auto ShipWeaponRepository::findAllByShip(const Uuid &ship) const -> std::vector<
   std::vector<ShipWeapon> out;
   for (const auto record : rows)
   {
-    const auto id = fromDbId(record[0].as<int>());
+    const auto weapon = fromDbId(record[0].as<int>());
 
     const auto x       = record[1].as<float>();
     const auto y       = record[2].as<float>();
     const auto z       = record[3].as<float>();
     const auto slotPos = Eigen::Vector3f(x, y, z);
 
-    out.emplace_back(id, slotPos);
+    out.emplace_back(ship, weapon, slotPos);
   }
 
   return out;

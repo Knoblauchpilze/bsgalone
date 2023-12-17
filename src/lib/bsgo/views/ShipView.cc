@@ -222,7 +222,7 @@ auto ShipView::getPlayerShipWeapons() const -> std::vector<PlayerWeapon>
   std::vector<PlayerWeapon> out;
   for (const auto &weapon : weapons)
   {
-    const auto data = m_repositories.playerWeaponRepository->findOneById(weapon.id);
+    const auto data = m_repositories.playerWeaponRepository->findOneById(weapon.weapon);
     out.push_back(data);
   }
   return out;

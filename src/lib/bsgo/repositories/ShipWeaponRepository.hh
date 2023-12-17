@@ -11,7 +11,8 @@ namespace bsgo {
 
 struct ShipWeapon
 {
-  Uuid id{};
+  Uuid ship{};
+  Uuid weapon{};
   Eigen::Vector3f slotPosition{};
 };
 
