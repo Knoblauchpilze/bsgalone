@@ -49,6 +49,8 @@ class OutpostScreenUiHandler : public IUiHandler
 
   void generateGeneralMenu(const int width, const int height);
   void setActiveScreen(const ActiveScreen &screen);
+
+  void onPurchaseRequest();
 };
 
 } // namespace pge
