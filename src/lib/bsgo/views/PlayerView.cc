@@ -37,7 +37,7 @@ auto PlayerView::getPlayerWeapons() const -> std::vector<PlayerWeapon>
   auto ids               = m_repositories.playerWeaponRepository->findAllByPlayer(*m_playerDbId);
   for (const auto &shipWeapon : shipWeapons)
   {
-    ids.erase(shipWeapon.id);
+    ids.erase(shipWeapon.weapon);
   }
 
   std::vector<PlayerWeapon> out;
