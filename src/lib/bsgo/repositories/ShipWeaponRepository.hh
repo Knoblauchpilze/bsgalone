@@ -13,6 +13,7 @@ struct ShipWeapon
 {
   Uuid ship{};
   Uuid weapon{};
+  int slot{};
   Eigen::Vector3f slotPosition{};
 };
 
@@ -25,6 +26,8 @@ class ShipWeaponRepository : public AbstractRepository
   void initialize() override;
 
   auto findAllByShip(const Uuid &ship) const -> std::vector<ShipWeapon>;
+
+  void save(const ShipWeapon &weapon);
 };
 
 using ShipWeaponRepositoryShPtr = std::shared_ptr<ShipWeaponRepository>;
