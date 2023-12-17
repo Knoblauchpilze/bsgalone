@@ -239,6 +239,8 @@ void ShopUiHandler::onPurchaseRequest(const int itemId)
          + bsgo::str(purchase.itemType));
     return;
   }
+
+  onItemPurchased.safeEmit("onPurchaseRequest");
 }
 
 } // namespace pge
