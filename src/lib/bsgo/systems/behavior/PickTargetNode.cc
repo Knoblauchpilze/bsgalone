@@ -11,7 +11,7 @@ PickTargetNode::PickTargetNode()
 
 void PickTargetNode::run(const TickData &data)
 {
-  constexpr auto ENEMY_DETECTION_RANGE = 5.3f;
+  constexpr auto ENEMY_DETECTION_RANGE = 15.0f;
 
   const auto box     = CircleBox(data.ent.transformComp().position(), ENEMY_DETECTION_RANGE);
   const auto enemies = data.coordinator

@@ -51,7 +51,7 @@ void App::loadResources()
 // #define START_AT_LOGIN
 #ifndef START_AT_LOGIN
   m_game->login(bsgo::Uuid{0});
-  m_game->setScreen(Screen::GAME);
+  m_game->setScreen(Screen::OUTPOST);
 #endif
 }
 
