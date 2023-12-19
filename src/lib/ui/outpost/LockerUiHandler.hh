@@ -45,6 +45,9 @@ class LockerUiHandler : public IUiHandler
   void generateLockerComputersMenus();
   void generateShipWeaponsMenus();
   void generateShipComputersMenus();
+
+  void onInstallRequest(const bsgo::Item &type, const int id);
+  void onUninstallRequest(const bsgo::Item &type, const int id);
 };
 
 using LockerUiHandlerPtr = std::unique_ptr<LockerUiHandler>;
