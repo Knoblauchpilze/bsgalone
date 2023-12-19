@@ -53,6 +53,23 @@ void LockerUiHandler::render(SpriteRenderer &engine) const
   m_menu->render(engine.getRenderer());
 }
 
+namespace {
+void updateButtonState(UiMenu &button, const bool enable)
+{
+  button.setEnabled(enable);
+
+  if (!enable)
+  {
+    button.updateBgColor(olc::VERY_DARK_GREY);
+  }
+  else
+  {
+    button.updateBgColor(olc::VERY_DARK_GREEN);
+  }
+}
+
+} // namespace
+
 void LockerUiHandler::updateUi()
 {
   if (!m_playerView->isReady() || !m_shipView->isReady())
@@ -63,6 +80,11 @@ void LockerUiHandler::updateUi()
   {
     initializeLocker();
   }
+
+  for (const auto weaponMenu : m_lockerWeaponData)
+  {
+    updateButtonState(*weaponMenu.equip, false);
+  }
 }
 
 void LockerUiHandler::reset()
@@ -72,6 +94,7 @@ void LockerUiHandler::reset()
 
   m_resources.clear();
   m_lockerWeapons.clear();
+  m_lockerWeaponData.clear();
   m_lockerComputers.clear();
   m_shipWeapons.clear();
   m_shipComputers.clear();
@@ -210,9 +233,17 @@ auto generateWeaponMenu(const bsgo::PlayerWeapon &weapon) -> UiMenuPtr
   return menu;
 }
 
-auto generateInteractiveSection(const std::string &buttonText, const ClickCallback &callback)
-  -> UiMenuPtr
+struct InteractiveSection
 {
+  UiMenuPtr menu{};
+  UiMenu *button{};
+};
+
+auto generateInteractiveSection(const std::string &buttonText, const ClickCallback &callback)
+  -> InteractiveSection
+{
+  InteractiveSection section{};
+
   auto middleSection = generateBlankVerticalMenu();
   middleSection->addMenu(generateSpacer());
 
@@ -221,16 +252,17 @@ auto generateInteractiveSection(const std::string &buttonText, const ClickCallba
   const auto bg       = bgConfigFromColor(olc::VERY_DARK_GREEN);
   const auto textConf = textConfigFromColor(buttonText, olc::WHITE, olc::WHITE);
   auto button         = std::make_unique<UiTextMenu>(config, bg, textConf);
+  section.button      = button.get();
 
   middleSection->addMenu(std::move(button));
 
   middleSection->addMenu(generateSpacer());
 
-  auto menu = generateBlankHorizontalMenu();
-  menu->addMenu(std::move(middleSection));
-  menu->addMenu(generateSpacer());
+  section.menu = generateBlankHorizontalMenu();
+  section.menu->addMenu(std::move(middleSection));
+  section.menu->addMenu(generateSpacer());
 
-  return menu;
+  return section;
 }
 } // namespace
 
@@ -243,10 +275,11 @@ void LockerUiHandler::generateLockerWeaponsMenus()
   {
     auto details = generateWeaponMenu(weapon);
     m_lockerWeapons[id]->addMenu(std::move(details));
-    auto install = generateInteractiveSection("Equip", [this, id]() {
+    auto section = generateInteractiveSection("Equip", [this, id]() {
       onInstallRequest(bsgo::Item::WEAPON, id);
     });
-    m_lockerWeapons[id]->addMenu(std::move(install));
+    m_lockerWeapons[id]->addMenu(std::move(section.menu));
+    m_lockerWeaponData.emplace_back(section.button);
 
     ++id;
   }
@@ -294,10 +327,10 @@ void LockerUiHandler::generateShipWeaponsMenus()
   {
     auto details = generateWeaponMenu(weapon);
     m_shipWeapons[id]->addMenu(std::move(details));
-    auto install = generateInteractiveSection("Remove", [this, id]() {
+    auto section = generateInteractiveSection("Remove", [this, id]() {
       onUninstallRequest(bsgo::Item::WEAPON, id);
     });
-    m_shipWeapons[id]->addMenu(std::move(install));
+    m_shipWeapons[id]->addMenu(std::move(section.menu));
 
     ++id;
   }
