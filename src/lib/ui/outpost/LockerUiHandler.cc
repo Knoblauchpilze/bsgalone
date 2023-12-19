@@ -117,9 +117,12 @@ void LockerUiHandler::initializeLockerLayout()
 
   const auto weapons  = m_playerView->getPlayerWeapons();
   const auto bgWeapon = bgConfigFromColor(olc::DARK_RED);
+  const MenuConfig configWeapon{.pos    = {},
+                                .dims   = DUMMY_DIMENSION,
+                                .layout = MenuLayout::HORIZONTAL};
   for (auto id = 0u; id < weapons.size(); ++id)
   {
-    auto menu = std::make_unique<UiMenu>(config, bgWeapon);
+    auto menu = std::make_unique<UiMenu>(configWeapon, bgWeapon);
     m_lockerWeapons.push_back(menu.get());
     m_locker->addMenu(std::move(menu));
   }
@@ -144,6 +147,7 @@ void LockerUiHandler::initializeShipLayout()
   {
     const auto weaponsCount = slots.at(bsgo::Slot::WEAPON);
     const auto bg           = bgConfigFromColor(olc::DARK_RED);
+    const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .layout = MenuLayout::HORIZONTAL};
     for (auto id = 0; id < weaponsCount; ++id)
     {
       auto menu = std::make_unique<UiMenu>(config, bg);
@@ -187,27 +191,62 @@ void LockerUiHandler::generateResourcesMenus()
   }
 }
 
+namespace {
+auto generateWeaponMenu(const bsgo::PlayerWeapon &weapon) -> UiMenuPtr
+{
+  auto menu = generateBlankVerticalMenu();
+
+  const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .highlightable = false};
+  const auto bg = bgConfigFromColor(olc::BLANK);
+
+  auto textConf = textConfigFromColor(weapon.name, olc::BLACK);
+  auto field    = std::make_unique<UiTextMenu>(config, bg, textConf);
+  menu->addMenu(std::move(field));
+
+  textConf.text = "Level: " + std::to_string(weapon.level);
+  field         = std::make_unique<UiTextMenu>(config, bg, textConf);
+  menu->addMenu(std::move(field));
+
+  return menu;
+}
+
+auto generateInteractiveSection(const std::string &buttonText, const ClickCallback &callback)
+  -> UiMenuPtr
+{
+  auto middleSection = generateBlankVerticalMenu();
+  middleSection->addMenu(generateSpacer());
+
+  const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .clickCallback = callback};
+
+  const auto bg       = bgConfigFromColor(olc::VERY_DARK_GREEN);
+  const auto textConf = textConfigFromColor(buttonText, olc::WHITE, olc::WHITE);
+  auto button         = std::make_unique<UiTextMenu>(config, bg, textConf);
+
+  middleSection->addMenu(std::move(button));
+
+  middleSection->addMenu(generateSpacer());
+
+  auto menu = generateBlankHorizontalMenu();
+  menu->addMenu(std::move(middleSection));
+  menu->addMenu(generateSpacer());
+
+  return menu;
+}
+} // namespace
+
 void LockerUiHandler::generateLockerWeaponsMenus()
 {
+  auto id = 0;
+
   const auto weapons = m_playerView->getPlayerWeapons();
-
-  const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .propagateEventsToChildren = false};
-  const auto bg = bgConfigFromColor(olc::BLANK);
-  auto id       = 0;
-
   for (const auto &weapon : weapons)
   {
-    auto textConf = textConfigFromColor(weapon.name, olc::BLACK);
-    auto field    = std::make_unique<UiTextMenu>(config, bg, textConf);
-    m_lockerWeapons[id]->addMenu(std::move(field));
-
-    textConf.text = "Level: " + std::to_string(weapon.level);
-    field         = std::make_unique<UiTextMenu>(config, bg, textConf);
-    m_lockerWeapons[id]->addMenu(std::move(field));
-
-    textConf.text = "Range: " + floatToStr(weapon.range, 0) + "m";
-    field         = std::make_unique<UiTextMenu>(config, bg, textConf);
-    m_lockerWeapons[id]->addMenu(std::move(field));
+    auto details = generateWeaponMenu(weapon);
+    m_lockerWeapons[id]->addMenu(std::move(details));
+    auto install = generateInteractiveSection("Equip", [this, id]() {
+      onInstallRequest(bsgo::Item::WEAPON, id);
+    });
+    m_lockerWeapons[id]->addMenu(std::move(install));
 
     ++id;
   }
@@ -248,25 +287,17 @@ void LockerUiHandler::generateLockerComputersMenus()
 
 void LockerUiHandler::generateShipWeaponsMenus()
 {
+  auto id = 0;
+
   const auto weapons = m_shipView->getPlayerShipWeapons();
-
-  const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .propagateEventsToChildren = false};
-  const auto bg = bgConfigFromColor(olc::BLANK);
-  auto id       = 0;
-
   for (const auto &weapon : weapons)
   {
-    auto textConf = textConfigFromColor(weapon.name, olc::BLACK);
-    auto field    = std::make_unique<UiTextMenu>(config, bg, textConf);
-    m_shipWeapons[id]->addMenu(std::move(field));
-
-    textConf.text = "Level: " + std::to_string(weapon.level);
-    field         = std::make_unique<UiTextMenu>(config, bg, textConf);
-    m_shipWeapons[id]->addMenu(std::move(field));
-
-    textConf.text = "Range: " + floatToStr(weapon.range, 0) + "m";
-    field         = std::make_unique<UiTextMenu>(config, bg, textConf);
-    m_shipWeapons[id]->addMenu(std::move(field));
+    auto details = generateWeaponMenu(weapon);
+    m_shipWeapons[id]->addMenu(std::move(details));
+    auto install = generateInteractiveSection("Remove", [this, id]() {
+      onUninstallRequest(bsgo::Item::WEAPON, id);
+    });
+    m_shipWeapons[id]->addMenu(std::move(install));
 
     ++id;
   }
@@ -303,6 +334,16 @@ void LockerUiHandler::generateShipComputersMenus()
 
     ++id;
   }
+}
+
+void LockerUiHandler::onInstallRequest(const bsgo::Item &type, const int id)
+{
+  warn("Should process install: " + bsgo::str(type) + ", " + std::to_string(id));
+}
+
+void LockerUiHandler::onUninstallRequest(const bsgo::Item &type, const int id)
+{
+  warn("Should process uninstall: " + bsgo::str(type) + ", " + std::to_string(id));
 }
 
 } // namespace pge
