@@ -251,6 +251,23 @@ auto ShipView::getPlayerShipSlots() const -> std::unordered_map<Slot, int>
   return ship.slots;
 }
 
+bool ShipView::canStillEquipItem(const Item &type) const
+{
+  checkPlayerShipDbIdExists();
+
+  bool equipable{false};
+  if (Item::WEAPON == type)
+  {
+    const auto weapons = getPlayerShipWeapons();
+    const auto slots   = getPlayerShipSlots();
+
+    const auto alreadyEquiped = static_cast<int>(weapons.size());
+    equipable                 = alreadyEquiped < slots.at(Slot::WEAPON);
+  }
+
+  return equipable;
+}
+
 bool ShipView::isJumping() const
 {
   const auto ship = getPlayerShip();
