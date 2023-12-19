@@ -31,7 +31,15 @@ class LockerUiHandler : public IUiHandler
   UiMenu *m_locker{};
   UiMenu *m_ship{};
   std::vector<UiMenu *> m_resources{};
+
+  struct LockerItem
+  {
+    UiMenu *equip{};
+  };
+
   std::vector<UiMenu *> m_lockerWeapons{};
+  std::vector<LockerItem> m_lockerWeaponData{};
+
   std::vector<UiMenu *> m_lockerComputers{};
   std::vector<UiMenu *> m_shipWeapons{};
   std::vector<UiMenu *> m_shipComputers{};
