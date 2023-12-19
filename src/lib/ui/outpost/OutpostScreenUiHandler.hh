@@ -42,7 +42,7 @@ class OutpostScreenUiHandler : public IUiHandler
     SHOP
   };
 
-  ActiveScreen m_activeScreen{ActiveScreen::SHOP};
+  ActiveScreen m_activeScreen{ActiveScreen::LOCKER};
   LockerUiHandlerPtr m_lockerUi{};
   ShopUiHandlerPtr m_shopUi{};
   HangarUiHandlerPtr m_hangarUi{};

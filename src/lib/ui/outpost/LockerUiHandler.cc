@@ -8,10 +8,11 @@
 
 namespace pge {
 
-LockerUiHandler::LockerUiHandler(const bsgo::Views &views)
+LockerUiHandler::LockerUiHandler(const bsgo::Views &views, const bsgo::Services &services)
   : IUiHandler("locker")
   , m_playerView(views.playerView)
   , m_shipView(views.shipView)
+  , m_lockerService(services.locker)
 {
   if (nullptr == m_playerView)
   {
@@ -20,6 +21,10 @@ LockerUiHandler::LockerUiHandler(const bsgo::Views &views)
   if (nullptr == m_shipView)
   {
     throw std::invalid_argument("Expected non null ship view");
+  }
+  if (nullptr == m_lockerService)
+  {
+    throw std::invalid_argument("Expected non null locker service");
   }
 }
 

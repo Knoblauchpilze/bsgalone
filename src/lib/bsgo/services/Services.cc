@@ -9,6 +9,7 @@ auto createServices(const Repositories &repositories) -> Services
 
   out.signup   = std::make_shared<SignupService>(repositories);
   out.purchase = std::make_shared<PurchaseService>(repositories);
+  out.locker   = std::make_shared<LockerService>(repositories);
 
   return out;
 }
