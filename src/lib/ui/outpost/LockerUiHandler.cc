@@ -83,7 +83,8 @@ void LockerUiHandler::updateUi()
 
   for (const auto weaponMenu : m_lockerWeaponData)
   {
-    updateButtonState(*weaponMenu.equip, false);
+    const auto equipable = m_shipView->canStillEquipItem(bsgo::Item::WEAPON);
+    updateButtonState(*weaponMenu.equip, equipable);
   }
 }
 
