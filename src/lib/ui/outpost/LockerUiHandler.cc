@@ -393,7 +393,7 @@ void LockerUiHandler::onInstallRequest(const int itemId)
     return;
   }
 
-  warn("Should emit an event to refresh the ui");
+  onItemEquiped.safeEmit("onInstallRequest");
 }
 
 void LockerUiHandler::onUninstallRequest(const bsgo::Item &type, const int id)

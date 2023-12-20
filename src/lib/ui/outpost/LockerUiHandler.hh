@@ -7,6 +7,7 @@
 #include "ShipView.hh"
 #include "UiMenu.hh"
 #include "Views.hh"
+#include <core_utils/Signal.hh>
 #include <memory>
 #include <vector>
 
@@ -61,6 +62,9 @@ class LockerUiHandler : public IUiHandler
 
   void onInstallRequest(const int id);
   void onUninstallRequest(const bsgo::Item &type, const int id);
+
+  public:
+  utils::Signal<> onItemEquiped{};
 };
 
 using LockerUiHandlerPtr = std::unique_ptr<LockerUiHandler>;
