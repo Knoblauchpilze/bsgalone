@@ -23,6 +23,8 @@ OutpostScreenUiHandler::OutpostScreenUiHandler(const bsgo::Views &views,
     .connect_member<OutpostScreenUiHandler>(this, &OutpostScreenUiHandler::onChildUiChanged);
   m_lockerUi->onItemEquiped
     .connect_member<OutpostScreenUiHandler>(this, &OutpostScreenUiHandler::onChildUiChanged);
+  m_lockerUi->onItemUnequiped
+    .connect_member<OutpostScreenUiHandler>(this, &OutpostScreenUiHandler::onChildUiChanged);
 }
 
 void OutpostScreenUiHandler::initializeMenus(const int width, const int height)
