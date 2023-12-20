@@ -205,17 +205,19 @@ void Game::login(const bsgo::Uuid &playerDbId)
   m_dataSource.setPlayerId(playerDbId);
   m_dataSource.initialize(*m_coordinator);
 
-  const auto playerShipId       = m_dataSource.playerShipId();
+  const auto playerShipDbId     = m_dataSource.playerShipId();
   const auto playerShipEntityId = m_dataSource.playerShipEntityId();
 
   m_views.playerView->setPlayerDbId(playerDbId);
-  m_views.playerView->setPlayerShipDbId(playerShipId);
-  m_views.shipView->setPlayerShipDbId(playerShipId);
+  m_views.playerView->setPlayerShipDbId(playerShipDbId);
+  m_views.shipView->setPlayerShipDbId(playerShipDbId);
   m_views.shipView->setPlayerShipEntityId(playerShipEntityId);
   m_views.shopView->setPlayerDbId(playerDbId);
   m_views.serverView->setPlayerDbId(playerDbId);
 
   m_services.purchase->setPlayerDbId(playerDbId);
+  m_services.locker->setPlayerDbId(playerDbId);
+  m_services.locker->setPlayerShipDbId(playerShipDbId);
 
   for (const auto &[_, handler] : m_uiHandlers)
   {

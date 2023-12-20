@@ -1,5 +1,6 @@
 
 #include "LockerService.hh"
+#include "LockerUtils.hh"
 
 namespace bsgo {
 
@@ -12,9 +13,38 @@ void LockerService::setPlayerDbId(const Uuid &player)
   m_playerDbId = player;
 }
 
+void LockerService::setPlayerShipDbId(const Uuid &ship)
+{
+  m_playerShipDbId = ship;
+}
+
 bool LockerService::isReady() const noexcept
 {
-  return m_playerDbId.has_value();
+  return m_playerDbId.has_value() && m_playerShipDbId.has_value();
+}
+
+bool LockerService::tryEquip(const Uuid &id, const Item &type) const
+{
+  checkPlayerDbIdExists();
+  checkPlayerShipDbIdExists();
+
+  if (!verifySlotAvailability(type))
+  {
+    return false;
+  }
+
+  const auto slot = determineNextSlot(type);
+  switch (type)
+  {
+    case Item::WEAPON:
+      tryEquipWeapon(id, slot);
+      break;
+    default:
+      error("Invalid kind of item to equip", "Unsupported item " + str(type));
+      break;
+  }
+
+  return true;
 }
 
 void LockerService::checkPlayerDbIdExists() const
@@ -23,6 +53,61 @@ void LockerService::checkPlayerDbIdExists() const
   {
     error("Expected player db id to exist but it does not");
   }
+}
+
+void LockerService::checkPlayerShipDbIdExists() const
+{
+  if (!m_playerShipDbId)
+  {
+    error("Expected player ship db id to exist but it does not");
+  }
+}
+
+bool LockerService::verifySlotAvailability(const Item &type) const
+{
+  EquipData data{.shipId         = *m_playerShipDbId,
+                 .shipWeaponRepo = m_repositories.shipWeaponRepository,
+                 .playerShipRepo = m_repositories.playerShipRepository};
+
+  switch (type)
+  {
+    case Item::WEAPON:
+      return canStillEquipWeapon(data);
+    default:
+      error("Failed to verify slot availability", "Unsupported item " + str(type));
+  }
+
+  // Redundant because of the error above.
+  return false;
+}
+
+auto LockerService::determineNextSlot(const Item &type) const -> Uuid
+{
+  std::set<Uuid> slots{};
+
+  switch (type)
+  {
+    case Item::WEAPON:
+      slots = m_repositories.playerShipRepository->findAllAvailableByIdAndType(*m_playerShipDbId,
+                                                                               Slot::WEAPON);
+      break;
+    default:
+      error("Failed to determine available slot", "Unsupported item " + str(type));
+  }
+
+  if (slots.empty())
+  {
+    error("Failed to find available slot for " + str(type));
+  }
+
+  return *slots.begin();
+}
+
+void LockerService::tryEquipWeapon(const Uuid &id, const Uuid slot) const
+{
+  ShipWeapon weapon{.ship = *m_playerShipDbId, .weapon = id, .slot = slot};
+  log("Installing weapon " + str(id) + " in slot " + str(slot));
+  m_repositories.shipWeaponRepository->save(weapon);
 }
 
 } // namespace bsgo
