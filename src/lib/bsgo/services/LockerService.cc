@@ -8,11 +8,6 @@ LockerService::LockerService(const Repositories &repositories)
   : AbstractService("locker", repositories)
 {}
 
-void LockerService::setPlayerDbId(const Uuid &player)
-{
-  m_playerDbId = player;
-}
-
 void LockerService::setPlayerShipDbId(const Uuid &ship)
 {
   m_playerShipDbId = ship;
@@ -20,12 +15,11 @@ void LockerService::setPlayerShipDbId(const Uuid &ship)
 
 bool LockerService::isReady() const noexcept
 {
-  return m_playerDbId.has_value() && m_playerShipDbId.has_value();
+  return m_playerShipDbId.has_value();
 }
 
 bool LockerService::tryEquip(const Uuid &id, const Item &type) const
 {
-  checkPlayerDbIdExists();
   checkPlayerShipDbIdExists();
 
   if (!verifySlotAvailability(type))
@@ -47,12 +41,10 @@ bool LockerService::tryEquip(const Uuid &id, const Item &type) const
   return true;
 }
 
-void LockerService::checkPlayerDbIdExists() const
+bool LockerService::tryUnequip(const Uuid &id, const Item &type) const
 {
-  if (!m_playerDbId)
-  {
-    error("Expected player db id to exist but it does not");
-  }
+  warn("Failed to unequip " + str(id) + " with type " + str(type));
+  return false;
 }
 
 void LockerService::checkPlayerShipDbIdExists() const
