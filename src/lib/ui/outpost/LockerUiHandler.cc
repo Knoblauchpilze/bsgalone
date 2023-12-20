@@ -337,10 +337,14 @@ void LockerUiHandler::generateShipWeaponsMenus()
   {
     auto details = generateWeaponMenu(weapon);
     m_shipWeapons[id]->addMenu(std::move(details));
-    auto section = generateInteractiveSection("Remove", [this, id]() {
-      onUninstallRequest(bsgo::Item::WEAPON, id);
-    });
+
+    const auto itemId = static_cast<int>(m_shipItemsData.size());
+    auto section      = generateInteractiveSection("Remove",
+                                              [this, itemId]() { onUninstallRequest(itemId); });
     m_shipWeapons[id]->addMenu(std::move(section.menu));
+
+    ShipItem data{.itemId = weapon.id, .itemType = bsgo::Item::WEAPON};
+    m_shipItemsData.emplace_back(std::move(data));
 
     ++id;
   }
@@ -396,9 +400,20 @@ void LockerUiHandler::onInstallRequest(const int itemId)
   onItemEquiped.safeEmit("onInstallRequest");
 }
 
-void LockerUiHandler::onUninstallRequest(const bsgo::Item &type, const int id)
+void LockerUiHandler::onUninstallRequest(const int itemId)
 {
-  warn("Should process uninstall: " + bsgo::str(type) + ", " + std::to_string(id));
+  if (!m_lockerService->isReady())
+  {
+    return;
+  }
+
+  const auto &equip = m_shipItemsData.at(itemId);
+  if (!m_lockerService->tryUnequip(equip.itemId, equip.itemType))
+  {
+    return;
+  }
+
+  onItemUnequiped.safeEmit("onUninstallRequest");
 }
 
 } // namespace pge
