@@ -24,8 +24,10 @@ class LockerService : public AbstractService
   void checkPlayerShipDbIdExists() const;
 
   bool verifySlotAvailability(const Item &type) const;
+  bool verifyItemIsEquiped(const Uuid &item, const Item &type) const;
   auto determineNextSlot(const Item &type) const -> Uuid;
   void tryEquipWeapon(const Uuid &id, const Uuid slot) const;
+  void tryUnequipWeapon(const Uuid &weapon) const;
 };
 
 using LockerServiceShPtr = std::shared_ptr<LockerService>;

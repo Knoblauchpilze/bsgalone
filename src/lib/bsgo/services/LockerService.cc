@@ -43,8 +43,24 @@ bool LockerService::tryEquip(const Uuid &id, const Item &type) const
 
 bool LockerService::tryUnequip(const Uuid &id, const Item &type) const
 {
-  warn("Failed to unequip " + str(id) + " with type " + str(type));
-  return false;
+  checkPlayerShipDbIdExists();
+
+  if (!verifyItemIsEquiped(id, type))
+  {
+    return false;
+  }
+
+  switch (type)
+  {
+    case Item::WEAPON:
+      tryUnequipWeapon(id);
+      break;
+    default:
+      error("Invalid kind of item to unequip", "Unsupported item " + str(type));
+      break;
+  }
+
+  return true;
 }
 
 void LockerService::checkPlayerShipDbIdExists() const
@@ -71,6 +87,23 @@ bool LockerService::verifySlotAvailability(const Item &type) const
 
   // Redundant because of the error above.
   return false;
+}
+
+bool LockerService::verifyItemIsEquiped(const Uuid &item, const Item &type) const
+{
+  bool equiped{false};
+
+  switch (type)
+  {
+    case Item::WEAPON:
+      equiped = m_repositories.shipWeaponRepository->findOneByShipAndWeapon(*m_playerShipDbId, item)
+                  .has_value();
+      break;
+    default:
+      error("Failed to verify slot availability", "Unsupported item " + str(type));
+  }
+
+  return equiped;
 }
 
 auto LockerService::determineNextSlot(const Item &type) const -> Uuid
@@ -100,6 +133,14 @@ void LockerService::tryEquipWeapon(const Uuid &id, const Uuid slot) const
   ShipWeapon weapon{.ship = *m_playerShipDbId, .weapon = id, .slot = slot};
   log("Installing weapon " + str(id) + " in slot " + str(slot));
   m_repositories.shipWeaponRepository->save(weapon);
+}
+
+void LockerService::tryUnequipWeapon(const Uuid &weapon) const
+{
+  const auto data = m_repositories.shipWeaponRepository->findOneByShipAndWeapon(*m_playerShipDbId,
+                                                                                weapon);
+  log("Uninstalling weapon " + str(data->weapon) + " from slot " + str(data->slot));
+  m_repositories.shipWeaponRepository->deleteByShipAndSlot(*data);
 }
 
 } // namespace bsgo
