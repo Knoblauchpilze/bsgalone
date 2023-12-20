@@ -43,6 +43,7 @@ class OutpostScreenUiHandler : public IUiHandler
   };
 
   ActiveScreen m_activeScreen{ActiveScreen::LOCKER};
+  bool m_refreshRequested{false};
   LockerUiHandlerPtr m_lockerUi{};
   ShopUiHandlerPtr m_shopUi{};
   HangarUiHandlerPtr m_hangarUi{};
@@ -50,7 +51,7 @@ class OutpostScreenUiHandler : public IUiHandler
   void generateGeneralMenu(const int width, const int height);
   void setActiveScreen(const ActiveScreen &screen);
 
-  void onPurchaseRequest();
+  void onChildUiChanged();
 };
 
 } // namespace pge
