@@ -25,12 +25,16 @@ INSERT INTO ship_weapon (ship, weapon, slot)
     ship_weapon.ship = excluded.ship
     AND ship_weapon.weapon = excluded.weapon
 )";
+
+constexpr auto DELETE_WEAPON_QUERY_NAME = "ship_weapon_delete";
+constexpr auto DELETE_WEAPON_QUERY      = "DELETE FROM ship_weapon WHERE ship = $1 AND slot = $2";
 } // namespace
 
 void ShipWeaponRepository::initialize()
 {
   m_connection->prepare(FIND_ALL_QUERY_NAME, FIND_ALL_QUERY);
   m_connection->prepare(UPDATE_WEAPON_QUERY_NAME, UPDATE_WEAPON_QUERY);
+  m_connection->prepare(DELETE_WEAPON_QUERY_NAME, DELETE_WEAPON_QUERY);
 }
 
 auto ShipWeaponRepository::findAllByShip(const Uuid &ship) const -> std::vector<ShipWeapon>
@@ -70,6 +74,19 @@ void ShipWeaponRepository::save(const ShipWeapon &weapon)
   if (res.error)
   {
     error("Failed to save ship weapon: " + *res.error);
+  }
+}
+
+void ShipWeaponRepository::deleteByShipAndSlot(const ShipWeapon &weapon)
+{
+  auto query = [&weapon](pqxx::work &transaction) {
+    return transaction.exec_prepared0(DELETE_WEAPON_QUERY, toDbId(weapon.ship), toDbId(weapon.slot));
+  };
+
+  const auto res = m_connection->tryExecuteTransaction(query);
+  if (res.error)
+  {
+    error("Failed to delete ship weapon: " + *res.error);
   }
 }
 

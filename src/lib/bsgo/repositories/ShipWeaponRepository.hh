@@ -28,6 +28,7 @@ class ShipWeaponRepository : public AbstractRepository
   auto findAllByShip(const Uuid &ship) const -> std::vector<ShipWeapon>;
 
   void save(const ShipWeapon &weapon);
+  void deleteByShipAndSlot(const ShipWeapon &weapon);
 };
 
 using ShipWeaponRepositoryShPtr = std::shared_ptr<ShipWeaponRepository>;
