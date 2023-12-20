@@ -43,15 +43,28 @@ void ShipWeaponRepository::initialize()
 }
 
 auto ShipWeaponRepository::findOneByShipAndWeapon(const Uuid &ship, const Uuid &weapon) const
-  -> ShipWeapon
+  -> std::optional<ShipWeapon>
 {
-  auto work         = m_connection->nonTransaction();
-  const auto record = work.exec_prepared1(FIND_ONE_QUERY_NAME, toDbId(ship), toDbId(weapon));
+  auto work       = m_connection->nonTransaction();
+  const auto rows = work.exec_prepared(FIND_ONE_QUERY_NAME, toDbId(ship), toDbId(weapon));
+
+  if (rows.empty())
+  {
+    return {};
+  }
+
+  if (rows.size() != 1)
+  {
+    error("Expected to find only one slot for ship " + str(ship) + " and weapon " + str(weapon));
+  }
 
   ShipWeapon out;
+
   out.ship   = ship;
   out.weapon = weapon;
-  out.slot   = fromDbId(record[0].as<int>());
+
+  const auto &record = rows[0];
+  out.slot           = fromDbId(record[0].as<int>());
 
   const auto x     = record[1].as<float>();
   const auto y     = record[2].as<float>();
@@ -103,8 +116,12 @@ void ShipWeaponRepository::save(const ShipWeapon &weapon)
 
 void ShipWeaponRepository::deleteByShipAndSlot(const ShipWeapon &weapon)
 {
+  log("ship: " + std::to_string(toDbId(weapon.ship))
+      + ", slot: " + std::to_string(toDbId(weapon.slot)));
   auto query = [&weapon](pqxx::work &transaction) {
-    return transaction.exec_prepared0(DELETE_WEAPON_QUERY, toDbId(weapon.ship), toDbId(weapon.slot));
+    return transaction.exec_prepared0(DELETE_WEAPON_QUERY_NAME,
+                                      toDbId(weapon.ship),
+                                      toDbId(weapon.slot));
   };
 
   const auto res = m_connection->tryExecuteTransaction(query);
