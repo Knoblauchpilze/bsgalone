@@ -72,7 +72,6 @@ void updateButtonState(UiMenu &button, const bool enable)
     button.updateBgColor(olc::VERY_DARK_GREEN);
   }
 }
-
 } // namespace
 
 void LockerUiHandler::updateUi()
@@ -86,10 +85,10 @@ void LockerUiHandler::updateUi()
     initializeLocker();
   }
 
-  for (const auto weaponMenu : m_lockerWeaponData)
+  for (const auto data : m_lockerItemsData)
   {
-    const auto equipable = m_shipView->canStillEquipItem(bsgo::Item::WEAPON);
-    updateButtonState(*weaponMenu.equip, equipable);
+    const auto equipable = m_shipView->canStillEquipItem(data.itemType);
+    updateButtonState(*data.button, equipable);
   }
 }
 
@@ -99,9 +98,11 @@ void LockerUiHandler::reset()
   m_ship->clearChildren();
 
   m_resources.clear();
+
   m_lockerWeapons.clear();
-  m_lockerWeaponData.clear();
   m_lockerComputers.clear();
+  m_lockerItemsData.clear();
+
   m_shipWeapons.clear();
   m_shipComputers.clear();
 
@@ -281,11 +282,14 @@ void LockerUiHandler::generateLockerWeaponsMenus()
   {
     auto details = generateWeaponMenu(weapon);
     m_lockerWeapons[id]->addMenu(std::move(details));
-    auto section = generateInteractiveSection("Equip", [this, id]() {
-      onInstallRequest(bsgo::Item::WEAPON, id);
-    });
+
+    const auto itemId = static_cast<int>(m_lockerItemsData.size());
+    auto section      = generateInteractiveSection("Equip",
+                                              [this, itemId]() { onInstallRequest(itemId); });
     m_lockerWeapons[id]->addMenu(std::move(section.menu));
-    m_lockerWeaponData.emplace_back(section.button);
+
+    LockerItem data{.itemId = weapon.id, .itemType = bsgo::Item::WEAPON, .button = section.button};
+    m_lockerItemsData.emplace_back(std::move(data));
 
     ++id;
   }
@@ -375,9 +379,21 @@ void LockerUiHandler::generateShipComputersMenus()
   }
 }
 
-void LockerUiHandler::onInstallRequest(const bsgo::Item &type, const int id)
+void LockerUiHandler::onInstallRequest(const int itemId)
 {
-  warn("Should process install: " + bsgo::str(type) + ", " + std::to_string(id));
+  if (!m_lockerService->isReady())
+  {
+    return;
+  }
+
+  const auto &equip = m_lockerItemsData.at(itemId);
+  if (!m_lockerService->tryEquip(equip.itemId, equip.itemType))
+  {
+    warn("Failed to equip " + bsgo::str(equip.itemId) + " with type " + bsgo::str(equip.itemType));
+    return;
+  }
+
+  warn("Should emit an event to refresh the ui");
 }
 
 void LockerUiHandler::onUninstallRequest(const bsgo::Item &type, const int id)
