@@ -14,6 +14,10 @@ constexpr auto FIND_ALL_QUERY_NAME = "ship_weapon_find_all";
 constexpr auto FIND_ALL_QUERY
   = "SELECT sw.weapon, sw.slot, ss.x_pos, ss.y_pos, ss.z_pos FROM ship_weapon AS sw LEFT JOIN ship_slot AS ss ON sw.slot = ss.id WHERE sw.ship = $1";
 
+constexpr auto FIND_ONE_QUERY_NAME = "ship_weapon_find_one";
+constexpr auto FIND_ONE_QUERY
+  = "SELECT sw.slot, ss.x_pos, ss.y_pos, ss.z_pos FROM ship_weapon AS sw LEFT JOIN ship_slot AS ss ON sw.slot = ss.id WHERE sw.ship = $1 AND sw.weapon = $2";
+
 constexpr auto UPDATE_WEAPON_QUERY_NAME = "ship_weapon_update";
 constexpr auto UPDATE_WEAPON_QUERY      = R"(
 INSERT INTO ship_weapon (ship, weapon, slot)
@@ -33,8 +37,28 @@ constexpr auto DELETE_WEAPON_QUERY      = "DELETE FROM ship_weapon WHERE ship = 
 void ShipWeaponRepository::initialize()
 {
   m_connection->prepare(FIND_ALL_QUERY_NAME, FIND_ALL_QUERY);
+  m_connection->prepare(FIND_ONE_QUERY_NAME, FIND_ONE_QUERY);
   m_connection->prepare(UPDATE_WEAPON_QUERY_NAME, UPDATE_WEAPON_QUERY);
   m_connection->prepare(DELETE_WEAPON_QUERY_NAME, DELETE_WEAPON_QUERY);
+}
+
+auto ShipWeaponRepository::findOneByShipAndWeapon(const Uuid &ship, const Uuid &weapon) const
+  -> ShipWeapon
+{
+  auto work         = m_connection->nonTransaction();
+  const auto record = work.exec_prepared1(FIND_ONE_QUERY_NAME, toDbId(ship), toDbId(weapon));
+
+  ShipWeapon out;
+  out.ship   = ship;
+  out.weapon = weapon;
+  out.slot   = fromDbId(record[0].as<int>());
+
+  const auto x     = record[1].as<float>();
+  const auto y     = record[2].as<float>();
+  const auto z     = record[3].as<float>();
+  out.slotPosition = Eigen::Vector3f(x, y, z);
+
+  return out;
 }
 
 auto ShipWeaponRepository::findAllByShip(const Uuid &ship) const -> std::vector<ShipWeapon>
