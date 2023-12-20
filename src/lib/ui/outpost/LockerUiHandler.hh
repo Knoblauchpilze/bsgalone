@@ -37,13 +37,15 @@ class LockerUiHandler : public IUiHandler
 
   struct LockerItem
   {
-    UiMenu *equip{};
+    bsgo::Uuid itemId{};
+    bsgo::Item itemType{};
+    UiMenu *button{};
   };
 
   std::vector<UiMenu *> m_lockerWeapons{};
-  std::vector<LockerItem> m_lockerWeaponData{};
-
   std::vector<UiMenu *> m_lockerComputers{};
+  std::vector<LockerItem> m_lockerItemsData{};
+
   std::vector<UiMenu *> m_shipWeapons{};
   std::vector<UiMenu *> m_shipComputers{};
 
@@ -57,7 +59,7 @@ class LockerUiHandler : public IUiHandler
   void generateShipWeaponsMenus();
   void generateShipComputersMenus();
 
-  void onInstallRequest(const bsgo::Item &type, const int id);
+  void onInstallRequest(const int id);
   void onUninstallRequest(const bsgo::Item &type, const int id);
 };
 
