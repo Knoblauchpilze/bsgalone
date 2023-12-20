@@ -116,8 +116,6 @@ void ShipWeaponRepository::save(const ShipWeapon &weapon)
 
 void ShipWeaponRepository::deleteByShipAndSlot(const ShipWeapon &weapon)
 {
-  log("ship: " + std::to_string(toDbId(weapon.ship))
-      + ", slot: " + std::to_string(toDbId(weapon.slot)));
   auto query = [&weapon](pqxx::work &transaction) {
     return transaction.exec_prepared0(DELETE_WEAPON_QUERY_NAME,
                                       toDbId(weapon.ship),
