@@ -10,6 +10,7 @@
 #include <eigen3/Eigen/Eigen>
 #include <memory>
 #include <optional>
+#include <set>
 #include <unordered_set>
 
 namespace bsgo {
@@ -53,6 +54,7 @@ class PlayerShipRepository : public AbstractRepository
 
   auto findOneById(const Uuid &ship) const -> PlayerShip;
   auto findAllByPlayer(const Uuid &player) const -> std::unordered_set<Uuid>;
+  auto findAllAvailableByIdAndType(const Uuid &ship, const Slot &slot) -> std::set<Uuid>;
 
   void save(const PlayerShip &ship);
 
