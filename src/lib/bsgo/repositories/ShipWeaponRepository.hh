@@ -5,6 +5,7 @@
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
 #include <memory>
+#include <optional>
 #include <vector>
 
 namespace bsgo {
@@ -25,7 +26,8 @@ class ShipWeaponRepository : public AbstractRepository
 
   void initialize() override;
 
-  auto findOneByShipAndWeapon(const Uuid &ship, const Uuid &weapon) const -> ShipWeapon;
+  auto findOneByShipAndWeapon(const Uuid &ship, const Uuid &weapon) const
+    -> std::optional<ShipWeapon>;
   auto findAllByShip(const Uuid &ship) const -> std::vector<ShipWeapon>;
 
   void save(const ShipWeapon &weapon);
