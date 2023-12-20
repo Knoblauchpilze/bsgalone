@@ -235,7 +235,7 @@ void ShopUiHandler::onPurchaseRequest(const int itemId)
   const auto &purchase = m_itemsData.at(itemId);
   if (!m_purchaseService->tryPurchase(purchase.itemId, purchase.itemType))
   {
-    warn("Failed to buy buy " + bsgo::str(purchase.itemId) + " with type "
+    warn("Failed to buy " + bsgo::str(purchase.itemId) + " with type "
          + bsgo::str(purchase.itemType));
     return;
   }
