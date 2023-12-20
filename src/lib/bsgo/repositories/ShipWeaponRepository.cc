@@ -44,7 +44,7 @@ auto ShipWeaponRepository::findAllByShip(const Uuid &ship) const -> std::vector<
     ShipWeapon data{};
     data.ship   = ship;
     data.weapon = fromDbId(record[0].as<int>());
-    data.slot   = record[1].as<int>();
+    data.slot   = fromDbId(record[1].as<int>());
 
     const auto x      = record[2].as<float>();
     const auto y      = record[3].as<float>();
@@ -63,7 +63,7 @@ void ShipWeaponRepository::save(const ShipWeapon &weapon)
     return transaction.exec_prepared0(UPDATE_WEAPON_QUERY_NAME,
                                       toDbId(weapon.ship),
                                       toDbId(weapon.weapon),
-                                      weapon.slot);
+                                      toDbId(weapon.slot));
   };
 
   const auto res = m_connection->tryExecuteTransaction(query);

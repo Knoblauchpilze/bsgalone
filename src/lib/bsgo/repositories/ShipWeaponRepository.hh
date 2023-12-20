@@ -13,7 +13,7 @@ struct ShipWeapon
 {
   Uuid ship{};
   Uuid weapon{};
-  int slot{};
+  Uuid slot{};
   Eigen::Vector3f slotPosition{};
 };
 
