@@ -134,7 +134,17 @@ const olc::vi2d DUMMY_DIMENSION{DUMMY_PIXEL_DIMENSION, DUMMY_PIXEL_DIMENSION};
 
 void LockerUiHandler::initializeLockerLayout()
 {
-  const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .propagateEventsToChildren = false};
+  MenuConfig config{.pos                       = {},
+                    .dims                      = DUMMY_DIMENSION,
+                    .highlightable             = false,
+                    .propagateEventsToChildren = false};
+
+  const auto bg   = bgConfigFromColor(olc::DARK_GREY);
+  const auto text = textConfigFromColor("Locker", olc::BLACK);
+  auto title      = std::make_unique<UiTextMenu>(config, bg, text);
+  m_locker->addMenu(std::move(title));
+
+  config.highlightable = true;
 
   const auto resources  = m_playerView->getPlayerResources();
   const auto bgResource = bgConfigFromColor(olc::DARK_GREEN);
@@ -169,18 +179,29 @@ void LockerUiHandler::initializeLockerLayout()
 
 void LockerUiHandler::initializeShipLayout()
 {
+  MenuConfig config{.pos                       = {},
+                    .dims                      = DUMMY_DIMENSION,
+                    .highlightable             = false,
+                    .propagateEventsToChildren = false};
+
+  const auto bg   = bgConfigFromColor(olc::DARK_GREY);
+  const auto text = textConfigFromColor("Ship", olc::BLACK);
+  auto title      = std::make_unique<UiTextMenu>(config, bg, text);
+  m_ship->addMenu(std::move(title));
+
+  config.highlightable = true;
+
   const auto slots = m_shipView->getPlayerShipSlots();
-
-  const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .propagateEventsToChildren = false};
-
   if (slots.contains(bsgo::Slot::WEAPON))
   {
     const auto weaponsCount = slots.at(bsgo::Slot::WEAPON);
     const auto bg           = bgConfigFromColor(olc::DARK_RED);
-    const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .layout = MenuLayout::HORIZONTAL};
+    const MenuConfig weaponConfig{.pos    = {},
+                                  .dims   = DUMMY_DIMENSION,
+                                  .layout = MenuLayout::HORIZONTAL};
     for (auto id = 0; id < weaponsCount; ++id)
     {
-      auto menu = std::make_unique<UiMenu>(config, bg);
+      auto menu = std::make_unique<UiMenu>(weaponConfig, bg);
       m_shipWeapons.push_back(menu.get());
       m_ship->addMenu(std::move(menu));
     }
