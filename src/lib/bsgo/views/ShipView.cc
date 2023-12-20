@@ -1,5 +1,6 @@
 
 #include "ShipView.hh"
+#include "LockerUtils.hh"
 
 namespace bsgo {
 
@@ -258,11 +259,10 @@ bool ShipView::canStillEquipItem(const Item &type) const
   bool equipable{false};
   if (Item::WEAPON == type)
   {
-    const auto weapons = getPlayerShipWeapons();
-    const auto slots   = getPlayerShipSlots();
-
-    const auto alreadyEquiped = static_cast<int>(weapons.size());
-    equipable                 = alreadyEquiped < slots.at(Slot::WEAPON);
+    EquipData data{.shipId         = *m_playerShipDbId,
+                   .shipWeaponRepo = m_repositories.shipWeaponRepository,
+                   .playerShipRepo = m_repositories.playerShipRepository};
+    equipable = canStillEquipWeapon(data);
   }
 
   return equipable;
