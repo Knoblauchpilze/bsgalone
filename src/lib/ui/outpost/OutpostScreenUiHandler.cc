@@ -20,7 +20,9 @@ OutpostScreenUiHandler::OutpostScreenUiHandler(const bsgo::Views &views,
   }
 
   m_shopUi->onItemPurchased
-    .connect_member<OutpostScreenUiHandler>(this, &OutpostScreenUiHandler::onPurchaseRequest);
+    .connect_member<OutpostScreenUiHandler>(this, &OutpostScreenUiHandler::onChildUiChanged);
+  m_lockerUi->onItemEquiped
+    .connect_member<OutpostScreenUiHandler>(this, &OutpostScreenUiHandler::onChildUiChanged);
 }
 
 void OutpostScreenUiHandler::initializeMenus(const int width, const int height)
@@ -103,6 +105,12 @@ void OutpostScreenUiHandler::render(SpriteRenderer &engine) const
 
 void OutpostScreenUiHandler::updateUi()
 {
+  if (m_refreshRequested)
+  {
+    reset();
+    m_refreshRequested = false;
+  }
+
   switch (m_activeScreen)
   {
     case ActiveScreen::HANGAR:
@@ -161,9 +169,9 @@ void OutpostScreenUiHandler::setActiveScreen(const ActiveScreen &screen)
   m_activeScreen = screen;
 }
 
-void OutpostScreenUiHandler::onPurchaseRequest()
+void OutpostScreenUiHandler::onChildUiChanged()
 {
-  reset();
+  m_refreshRequested = true;
 }
 
 } // namespace pge
