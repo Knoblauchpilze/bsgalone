@@ -37,5 +37,6 @@ CREATE TABLE ship_weapon (
   PRIMARY KEY (ship, weapon),
   UNIQUE (ship, slot),
   FOREIGN KEY (ship) REFERENCES player_ship(id),
-  FOREIGN KEY (weapon) REFERENCES player_weapon(id)
+  FOREIGN KEY (weapon) REFERENCES player_weapon(id),
+  FOREIGN KEY (slot) REFERENCES ship_slot(id)
 );
