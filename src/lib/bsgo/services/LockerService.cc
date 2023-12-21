@@ -55,6 +55,9 @@ bool LockerService::tryUnequip(const Uuid &id, const Item &type) const
     case Item::WEAPON:
       tryUnequipWeapon(id);
       break;
+    case Item::COMPUTER:
+      tryUnequipComputer(id);
+      break;
     default:
       error("Invalid kind of item to unequip", "Unsupported item " + str(type));
       break;
@@ -73,14 +76,17 @@ void LockerService::checkPlayerShipDbIdExists() const
 
 bool LockerService::verifySlotAvailability(const Item &type) const
 {
-  EquipData data{.shipId         = *m_playerShipDbId,
-                 .shipWeaponRepo = m_repositories.shipWeaponRepository,
-                 .playerShipRepo = m_repositories.playerShipRepository};
+  EquipData data{.shipId           = *m_playerShipDbId,
+                 .shipWeaponRepo   = m_repositories.shipWeaponRepository,
+                 .shipComputerRepo = m_repositories.shipComputerRepository,
+                 .playerShipRepo   = m_repositories.playerShipRepository};
 
   switch (type)
   {
     case Item::WEAPON:
       return canStillEquipWeapon(data);
+    case Item::COMPUTER:
+      return canStillEquipComputer(data);
     default:
       error("Failed to verify slot availability", "Unsupported item " + str(type));
   }
@@ -99,8 +105,12 @@ bool LockerService::verifyItemIsEquiped(const Uuid &item, const Item &type) cons
       equiped = m_repositories.shipWeaponRepository->findOneByShipAndWeapon(*m_playerShipDbId, item)
                   .has_value();
       break;
+    case Item::COMPUTER:
+      equiped = m_repositories.shipComputerRepository->existByShipAndComputer(*m_playerShipDbId,
+                                                                              item);
+      break;
     default:
-      error("Failed to verify slot availability", "Unsupported item " + str(type));
+      error("Failed to verify item is equiped", "Unsupported item " + str(type));
   }
 
   return equiped;
@@ -141,6 +151,11 @@ void LockerService::tryUnequipWeapon(const Uuid &weapon) const
                                                                                 weapon);
   log("Uninstalling weapon " + str(data->weapon) + " from slot " + str(data->slot));
   m_repositories.shipWeaponRepository->deleteByShipAndSlot(*data);
+}
+
+void LockerService::tryUnequipComputer(const Uuid &computer) const
+{
+  warn("Should unequip " + str(computer));
 }
 
 } // namespace bsgo
