@@ -1,6 +1,6 @@
 
 INSERT INTO public.player ("name", "password", "faction")
-  VALUES ('grouton', '123456', 'cylon');
+  VALUES ('grouton', 'aze', 'cylon');
 INSERT INTO public.player ("name", "password", "faction")
   VALUES ('knoppgrunt', '654321', 'colonial');
 
