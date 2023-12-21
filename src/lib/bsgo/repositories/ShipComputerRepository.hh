@@ -16,6 +16,7 @@ class ShipComputerRepository : public AbstractRepository
 
   void initialize() override;
 
+  bool existByShipAndComputer(const Uuid &ship, const Uuid &computer) const;
   auto findAllByShip(const Uuid &ship) const -> std::unordered_set<Uuid>;
 };
 
