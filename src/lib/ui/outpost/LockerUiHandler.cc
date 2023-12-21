@@ -169,9 +169,12 @@ void LockerUiHandler::initializeLockerLayout()
 
   const auto computers  = m_playerView->getPlayerComputers();
   const auto bgComputer = bgConfigFromColor(olc::DARK_YELLOW);
+  const MenuConfig configComputer{.pos    = {},
+                                  .dims   = DUMMY_DIMENSION,
+                                  .layout = MenuLayout::HORIZONTAL};
   for (auto id = 0u; id < computers.size(); ++id)
   {
-    auto menu = std::make_unique<UiMenu>(config, bgComputer);
+    auto menu = std::make_unique<UiMenu>(configComputer, bgComputer);
     m_lockerComputers.push_back(menu.get());
     m_locker->addMenu(std::move(menu));
   }
@@ -211,9 +214,12 @@ void LockerUiHandler::initializeShipLayout()
   {
     const auto computersCount = slots.at(bsgo::Slot::COMPUTER);
     const auto bg             = bgConfigFromColor(olc::DARK_YELLOW);
+    const MenuConfig computerConfig{.pos    = {},
+                                    .dims   = DUMMY_DIMENSION,
+                                    .layout = MenuLayout::HORIZONTAL};
     for (auto id = 0; id < computersCount; ++id)
     {
-      auto menu = std::make_unique<UiMenu>(config, bg);
+      auto menu = std::make_unique<UiMenu>(computerConfig, bg);
       m_shipComputers.push_back(menu.get());
       m_ship->addMenu(std::move(menu));
     }
@@ -316,34 +322,45 @@ void LockerUiHandler::generateLockerWeaponsMenus()
   }
 }
 
+namespace {
+auto generateComputerMenu(const bsgo::PlayerComputer &computer) -> UiMenuPtr
+{
+  auto menu = generateBlankVerticalMenu();
+
+  const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .highlightable = false};
+  const auto bg = bgConfigFromColor(olc::BLANK);
+
+  auto textConf = textConfigFromColor(computer.name, olc::BLACK);
+  auto field    = std::make_unique<UiTextMenu>(config, bg, textConf);
+  menu->addMenu(std::move(field));
+
+  textConf.text = "Level: " + std::to_string(computer.level);
+  field         = std::make_unique<UiTextMenu>(config, bg, textConf);
+  menu->addMenu(std::move(field));
+
+  return menu;
+}
+} // namespace
+
 void LockerUiHandler::generateLockerComputersMenus()
 {
+  auto id = 0;
+
   const auto computers = m_playerView->getPlayerComputers();
-
-  const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .propagateEventsToChildren = false};
-  const auto bg = bgConfigFromColor(olc::BLANK);
-  auto id       = 0;
-
   for (const auto &computer : computers)
   {
-    auto textConf = textConfigFromColor(computer.name, olc::BLACK);
-    auto field    = std::make_unique<UiTextMenu>(config, bg, textConf);
-    m_lockerComputers[id]->addMenu(std::move(field));
+    auto details = generateComputerMenu(computer);
+    m_lockerComputers[id]->addMenu(std::move(details));
 
-    textConf.text = "Level: " + std::to_string(computer.level);
-    field         = std::make_unique<UiTextMenu>(config, bg, textConf);
-    m_lockerComputers[id]->addMenu(std::move(field));
+    const auto itemId = static_cast<int>(m_lockerItemsData.size());
+    auto section      = generateInteractiveSection("Equip",
+                                              [this, itemId]() { onInstallRequest(itemId); });
+    m_lockerComputers[id]->addMenu(std::move(section.menu));
 
-    if (computer.range)
-    {
-      textConf.text = "Range: " + floatToStr(*computer.range, 0) + "m";
-    }
-    else
-    {
-      textConf.text = "Area";
-    }
-    field = std::make_unique<UiTextMenu>(config, bg, textConf);
-    m_lockerComputers[id]->addMenu(std::move(field));
+    LockerItem data{.itemId   = computer.id,
+                    .itemType = bsgo::Item::COMPUTER,
+                    .button   = section.button};
+    m_lockerItemsData.emplace_back(std::move(data));
 
     ++id;
   }
@@ -373,32 +390,21 @@ void LockerUiHandler::generateShipWeaponsMenus()
 
 void LockerUiHandler::generateShipComputersMenus()
 {
+  auto id = 0;
+
   const auto computers = m_shipView->getPlayerShipComputers();
-
-  const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .propagateEventsToChildren = false};
-  const auto bg = bgConfigFromColor(olc::BLANK);
-  auto id       = 0;
-
   for (const auto &computer : computers)
   {
-    auto textConf = textConfigFromColor(computer.name, olc::BLACK);
-    auto field    = std::make_unique<UiTextMenu>(config, bg, textConf);
-    m_shipComputers[id]->addMenu(std::move(field));
+    auto details = generateComputerMenu(computer);
+    m_shipComputers[id]->addMenu(std::move(details));
 
-    textConf.text = "Level: " + std::to_string(computer.level);
-    field         = std::make_unique<UiTextMenu>(config, bg, textConf);
-    m_shipComputers[id]->addMenu(std::move(field));
+    const auto itemId = static_cast<int>(m_shipItemsData.size());
+    auto section      = generateInteractiveSection("Remove",
+                                              [this, itemId]() { onUninstallRequest(itemId); });
+    m_shipComputers[id]->addMenu(std::move(section.menu));
 
-    if (computer.range)
-    {
-      textConf.text = "Range: " + floatToStr(*computer.range, 0) + "m";
-    }
-    else
-    {
-      textConf.text = "Area";
-    }
-    field = std::make_unique<UiTextMenu>(config, bg, textConf);
-    m_shipComputers[id]->addMenu(std::move(field));
+    ShipItem data{.itemId = computer.id, .itemType = bsgo::Item::COMPUTER};
+    m_shipItemsData.emplace_back(std::move(data));
 
     ++id;
   }
