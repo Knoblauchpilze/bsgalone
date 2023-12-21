@@ -28,6 +28,7 @@ class LockerService : public AbstractService
   auto determineNextSlot(const Item &type) const -> Uuid;
   void tryEquipWeapon(const Uuid &id, const Uuid slot) const;
   void tryUnequipWeapon(const Uuid &weapon) const;
+  void tryUnequipComputer(const Uuid &computer) const;
 };
 
 using LockerServiceShPtr = std::shared_ptr<LockerService>;
