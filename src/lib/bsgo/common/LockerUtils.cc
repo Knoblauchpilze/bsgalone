@@ -13,4 +13,13 @@ bool canStillEquipWeapon(const EquipData &data)
   return alreadyEquiped < slots.at(Slot::WEAPON);
 }
 
+bool canStillEquipComputer(const EquipData &data)
+{
+  const auto computers = data.shipComputerRepo->findAllByShip(data.shipId);
+  const auto slots     = data.playerShipRepo->findOneById(data.shipId).slots;
+
+  const auto alreadyEquiped = static_cast<int>(computers.size());
+  return alreadyEquiped < slots.at(Slot::COMPUTER);
+}
+
 } // namespace bsgo
