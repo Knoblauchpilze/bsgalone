@@ -28,8 +28,27 @@ auto Game::getScreen() const noexcept -> Screen
   return m_state.screen;
 }
 
+namespace {
+bool shouldUpdateCoordinatorAfterScreenTransition(const Screen &current, const Screen &next)
+{
+  return Screen::OUTPOST == current && Screen::GAME == next;
+}
+} // namespace
+
 void Game::setScreen(const Screen &screen)
 {
+  if (shouldUpdateCoordinatorAfterScreenTransition(m_state.screen, screen))
+  {
+    info("Resetting game data");
+    m_dataSource.initialize(*m_coordinator);
+  }
+
+  const auto ui = m_uiHandlers.find(screen);
+  if (ui != m_uiHandlers.cend())
+  {
+    ui->second->reset();
+  }
+
   m_state.screen = screen;
 }
 
