@@ -155,7 +155,8 @@ void LockerService::tryUnequipWeapon(const Uuid &weapon) const
 
 void LockerService::tryUnequipComputer(const Uuid &computer) const
 {
-  warn("Should unequip " + str(computer));
+  log("Uninstalling computer " + str(computer) + " from ship " + str(*m_playerShipDbId));
+  m_repositories.shipComputerRepository->deleteByShipAndId(*m_playerShipDbId, computer);
 }
 
 } // namespace bsgo
