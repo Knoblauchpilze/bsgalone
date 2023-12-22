@@ -54,7 +54,7 @@ class PlayerShipRepository : public AbstractRepository
 
   auto findOneById(const Uuid &ship) const -> PlayerShip;
   auto findAllByPlayer(const Uuid &player) const -> std::unordered_set<Uuid>;
-  auto findAllAvailableByIdAndType(const Uuid &ship, const Slot &slot) -> std::set<Uuid>;
+  auto findAllAvailableWeaponSlotByShip(const Uuid &ship) -> std::set<Uuid>;
 
   void save(const PlayerShip &ship);
 
