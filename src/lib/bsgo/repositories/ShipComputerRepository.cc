@@ -17,12 +17,15 @@ constexpr auto FIND_ONE_QUERY_NAME = "ship_computer_find_one";
 constexpr auto FIND_ONE_QUERY
   = "SELECT COUNT(ship) FROM ship_computer WHERE ship = $1 AND computer = $2";
 
+constexpr auto DELETE_COMPUTER_QUERY_NAME = "ship_computer_delete";
+constexpr auto DELETE_COMPUTER_QUERY = "DELETE FROM ship_computer WHERE ship = $1 AND computer = $2";
 } // namespace
 
 void ShipComputerRepository::initialize()
 {
   m_connection->prepare(FIND_ALL_QUERY_NAME, FIND_ALL_QUERY);
   m_connection->prepare(FIND_ONE_QUERY_NAME, FIND_ONE_QUERY);
+  m_connection->prepare(DELETE_COMPUTER_QUERY_NAME, DELETE_COMPUTER_QUERY);
 }
 
 bool ShipComputerRepository::existByShipAndComputer(const Uuid &ship, const Uuid &computer) const
@@ -45,6 +48,19 @@ auto ShipComputerRepository::findAllByShip(const Uuid &ship) const -> std::unord
   }
 
   return out;
+}
+
+void ShipComputerRepository::deleteByShipAndId(const Uuid &ship, const Uuid &computer)
+{
+  auto query = [&ship, &computer](pqxx::work &transaction) {
+    return transaction.exec_prepared0(DELETE_COMPUTER_QUERY_NAME, toDbId(ship), toDbId(computer));
+  };
+
+  const auto res = m_connection->tryExecuteTransaction(query);
+  if (res.error)
+  {
+    error("Failed to delete ship computer: " + *res.error);
+  }
 }
 
 } // namespace bsgo
