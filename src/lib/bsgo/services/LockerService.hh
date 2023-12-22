@@ -25,8 +25,7 @@ class LockerService : public AbstractService
 
   bool verifySlotAvailability(const Item &type) const;
   bool verifyItemIsEquiped(const Uuid &item, const Item &type) const;
-  auto determineNextSlot(const Item &type) const -> Uuid;
-  void tryEquipWeapon(const Uuid &id, const Uuid slot) const;
+  void tryEquipWeapon(const Uuid &id) const;
   void tryUnequipWeapon(const Uuid &weapon) const;
   void tryUnequipComputer(const Uuid &computer) const;
 };

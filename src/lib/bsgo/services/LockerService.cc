@@ -27,11 +27,10 @@ bool LockerService::tryEquip(const Uuid &id, const Item &type) const
     return false;
   }
 
-  const auto slot = determineNextSlot(type);
   switch (type)
   {
     case Item::WEAPON:
-      tryEquipWeapon(id, slot);
+      tryEquipWeapon(id);
       break;
     default:
       error("Invalid kind of item to equip", "Unsupported item " + str(type));
@@ -116,30 +115,16 @@ bool LockerService::verifyItemIsEquiped(const Uuid &item, const Item &type) cons
   return equiped;
 }
 
-auto LockerService::determineNextSlot(const Item &type) const -> Uuid
+void LockerService::tryEquipWeapon(const Uuid &id) const
 {
-  std::set<Uuid> slots{};
-
-  switch (type)
-  {
-    case Item::WEAPON:
-      slots = m_repositories.playerShipRepository->findAllAvailableByIdAndType(*m_playerShipDbId,
-                                                                               Slot::WEAPON);
-      break;
-    default:
-      error("Failed to determine available slot", "Unsupported item " + str(type));
-  }
-
+  const auto slots = m_repositories.playerShipRepository->findAllAvailableWeaponSlotByShip(
+    *m_playerShipDbId);
   if (slots.empty())
   {
-    error("Failed to find available slot for " + str(type));
+    error("Failed to find available weapon slots");
   }
+  const auto slot = *slots.begin();
 
-  return *slots.begin();
-}
-
-void LockerService::tryEquipWeapon(const Uuid &id, const Uuid slot) const
-{
   ShipWeapon weapon{.ship = *m_playerShipDbId, .weapon = id, .slot = slot};
   log("Installing weapon " + str(id) + " in slot " + str(slot));
   m_repositories.shipWeaponRepository->save(weapon);

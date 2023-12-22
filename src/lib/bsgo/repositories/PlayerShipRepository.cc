@@ -21,9 +21,9 @@ constexpr auto FIND_SLOTS_QUERY_NAME = "player_ship_find_slots";
 constexpr auto FIND_SLOTS_QUERY
   = "SELECT ss.type, COUNT(ss.id) FROM player_ship AS ps LEFT JOIN ship AS s ON ps.ship = s.id LEFT JOIN ship_slot AS ss ON s.id = ss.ship WHERE ps.id = $1 GROUP BY ss.type";
 
-constexpr auto FIND_EMPTY_SLOTS_QUERY_NAME = "player_ship_find_empty_slots";
-constexpr auto FIND_EMPTY_SLOTS_QUERY
-  = "select ss.id FROM ship AS s LEFT JOIN ship_slot AS ss ON s.id = ss.ship LEFT JOIN player_ship AS ps ON ps.ship = s.id LEFT JOIN ship_weapon AS sw ON sw.ship = ps.id AND sw.slot = ss.id WHERE ps.id = $1 AND ss.type = $2 AND sw.weapon IS NULL";
+constexpr auto FIND_EMPTY_WEAPON_SLOTS_QUERY_NAME = "player_ship_find_empty_slots";
+constexpr auto FIND_EMPTY_WEAPON_SLOTS_QUERY
+  = "select ss.id FROM ship AS s LEFT JOIN ship_slot AS ss ON s.id = ss.ship LEFT JOIN player_ship AS ps ON ps.ship = s.id LEFT JOIN ship_weapon AS sw ON sw.ship = ps.id AND sw.slot = ss.id WHERE ps.id = $1 AND ss.type = 'weapon' AND sw.weapon IS NULL";
 
 constexpr auto UPDATE_SHIP_QUERY_NAME = "player_ship_update";
 constexpr auto UPDATE_SHIP_QUERY      = R"(
@@ -48,7 +48,7 @@ void PlayerShipRepository::initialize()
   m_connection->prepare(FIND_ALL_QUERY_NAME, FIND_ALL_QUERY);
   m_connection->prepare(FIND_ONE_QUERY_NAME, FIND_ONE_QUERY);
   m_connection->prepare(FIND_SLOTS_QUERY_NAME, FIND_SLOTS_QUERY);
-  m_connection->prepare(FIND_EMPTY_SLOTS_QUERY_NAME, FIND_EMPTY_SLOTS_QUERY);
+  m_connection->prepare(FIND_EMPTY_WEAPON_SLOTS_QUERY_NAME, FIND_EMPTY_WEAPON_SLOTS_QUERY);
   m_connection->prepare(UPDATE_SHIP_QUERY_NAME, UPDATE_SHIP_QUERY);
 }
 
@@ -74,11 +74,10 @@ auto PlayerShipRepository::findAllByPlayer(const Uuid &player) const -> std::uno
   return out;
 }
 
-auto PlayerShipRepository::findAllAvailableByIdAndType(const Uuid &ship, const Slot &slot)
-  -> std::set<Uuid>
+auto PlayerShipRepository::findAllAvailableWeaponSlotByShip(const Uuid &ship) -> std::set<Uuid>
 {
   auto work       = m_connection->nonTransaction();
-  const auto rows = work.exec_prepared(FIND_EMPTY_SLOTS_QUERY_NAME, toDbId(ship), toDbSlot(slot));
+  const auto rows = work.exec_prepared(FIND_EMPTY_WEAPON_SLOTS_QUERY_NAME, toDbId(ship));
 
   std::set<Uuid> out;
   for (const auto record : rows)
