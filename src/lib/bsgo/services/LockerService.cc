@@ -8,6 +8,11 @@ LockerService::LockerService(const Repositories &repositories)
   : AbstractService("locker", repositories)
 {}
 
+void LockerService::setPlayerDbId(const Uuid &player)
+{
+  m_playerDbId = player;
+}
+
 void LockerService::setPlayerShipDbId(const Uuid &ship)
 {
   m_playerShipDbId = ship;
@@ -15,14 +20,19 @@ void LockerService::setPlayerShipDbId(const Uuid &ship)
 
 bool LockerService::isReady() const noexcept
 {
-  return m_playerShipDbId.has_value();
+  return m_playerDbId.has_value() && m_playerShipDbId.has_value();
 }
 
 bool LockerService::tryEquip(const Uuid &id, const Item &type) const
 {
+  checkPlayerDbIdExists();
   checkPlayerShipDbIdExists();
 
   if (!verifySlotAvailability(type))
+  {
+    return false;
+  }
+  if (!verifyItemBelongsToPlayer(id, type))
   {
     return false;
   }
@@ -31,6 +41,9 @@ bool LockerService::tryEquip(const Uuid &id, const Item &type) const
   {
     case Item::WEAPON:
       tryEquipWeapon(id);
+      break;
+    case Item::COMPUTER:
+      tryEquipComputer(id);
       break;
     default:
       error("Invalid kind of item to equip", "Unsupported item " + str(type));
@@ -42,9 +55,14 @@ bool LockerService::tryEquip(const Uuid &id, const Item &type) const
 
 bool LockerService::tryUnequip(const Uuid &id, const Item &type) const
 {
+  checkPlayerDbIdExists();
   checkPlayerShipDbIdExists();
 
   if (!verifyItemIsEquiped(id, type))
+  {
+    return false;
+  }
+  if (!verifyItemBelongsToPlayer(id, type))
   {
     return false;
   }
@@ -63,6 +81,14 @@ bool LockerService::tryUnequip(const Uuid &id, const Item &type) const
   }
 
   return true;
+}
+
+void LockerService::checkPlayerDbIdExists() const
+{
+  if (!m_playerDbId)
+  {
+    error("Expected player db id to exist but it does not");
+  }
 }
 
 void LockerService::checkPlayerShipDbIdExists() const
@@ -92,6 +118,24 @@ bool LockerService::verifySlotAvailability(const Item &type) const
 
   // Redundant because of the error above.
   return false;
+}
+
+bool LockerService::verifyItemBelongsToPlayer(const Uuid &item, const Item &type) const
+{
+  bool belong{false};
+  switch (type)
+  {
+    case Item::WEAPON:
+      belong = m_repositories.playerWeaponRepository->findAllByPlayer(*m_playerDbId).contains(item);
+      break;
+    case Item::COMPUTER:
+      belong = m_repositories.playerComputerRepository->findAllByPlayer(*m_playerDbId).contains(item);
+      break;
+    default:
+      error("Failed to verify if item belongs to player", "Unsupported item " + str(type));
+  }
+
+  return belong;
 }
 
 bool LockerService::verifyItemIsEquiped(const Uuid &item, const Item &type) const
@@ -128,6 +172,12 @@ void LockerService::tryEquipWeapon(const Uuid &id) const
   ShipWeapon weapon{.ship = *m_playerShipDbId, .weapon = id, .slot = slot};
   log("Installing weapon " + str(id) + " in slot " + str(slot));
   m_repositories.shipWeaponRepository->save(weapon);
+}
+
+void LockerService::tryEquipComputer(const Uuid &id) const
+{
+  log("Installing computer " + str(id) + " for ship " + str(*m_playerShipDbId));
+  m_repositories.shipComputerRepository->save(*m_playerShipDbId, id);
 }
 
 void LockerService::tryUnequipWeapon(const Uuid &weapon) const
