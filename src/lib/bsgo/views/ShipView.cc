@@ -259,10 +259,19 @@ bool ShipView::canStillEquipItem(const Item &type) const
   bool equipable{false};
   if (Item::WEAPON == type)
   {
-    EquipData data{.shipId         = *m_playerShipDbId,
-                   .shipWeaponRepo = m_repositories.shipWeaponRepository,
-                   .playerShipRepo = m_repositories.playerShipRepository};
+    EquipData data{.shipId           = *m_playerShipDbId,
+                   .shipWeaponRepo   = m_repositories.shipWeaponRepository,
+                   .shipComputerRepo = m_repositories.shipComputerRepository,
+                   .playerShipRepo   = m_repositories.playerShipRepository};
     equipable = canStillEquipWeapon(data);
+  }
+  if (Item::COMPUTER == type)
+  {
+    EquipData data{.shipId           = *m_playerShipDbId,
+                   .shipWeaponRepo   = m_repositories.shipWeaponRepository,
+                   .shipComputerRepo = m_repositories.shipComputerRepository,
+                   .playerShipRepo   = m_repositories.playerShipRepository};
+    equipable = canStillEquipComputer(data);
   }
 
   return equipable;
