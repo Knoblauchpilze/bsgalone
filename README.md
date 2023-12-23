@@ -232,6 +232,45 @@ Later on, it can also be relatively easily be extended to not do all the validat
 
 **Note:** for now we don't use a single transaction to perform a complete action. This probably needs to be changed in the future to not leave the database in an inconsistent state.
 
+## Interaction between the database and the ECS
+
+### The problem statement
+
+When the user is playing, there are some interactions which need to be persisted to the database. This will ultimately mean sending these commands through the network to the server which can then make the necessary verifications before allowing them.
+
+A typical example is the jump. When the user selects a destination and initiates a jump, we register this in one of the component of the ship and decrement the countdown until it reaches zero. We have to persist the information that the ship is jumping somehow to the database but this information is within a component of the ECS.
+
+Another example is when a player mines an asteroid and is supposed to gain some resources. This also relates to dealing damage in the first place and also killing an entity. These changes of state should be communicated to the database (and to the server) from within the ECS.
+
+### Research
+
+A straightforward solution is to make the systems aware of the database and just let them save whatever data they assume is meaningful to it. This has the benefit that it is simple to implement.
+
+However thinking a bit ahead, what is supposed to happen when we will split the application into client/server? It seems like essentially every system would have to handle the networking aspect of getting data from the server and potentially patching whathever discrepencies might be detected between local and remote data.
+
+We could find a bunch of relevant links on how to deal with this on the internet.
+
+In [How to sync entities in an ecs game](https://gamedev.stackexchange.com/questions/178469/how-to-sync-entities-in-an-ecs-game) and [Networking with entity component system](https://www.reddit.com/r/gamedev/comments/5oib5v/networking_with_entity_component_system/) the recommendation is to use a `NetworkSynComponent` or something similar. The idea in each case is to have some dedicated `NetworkSystem` which takes care of receiving data and updated the entities which have a network component. The network component can presumably be either very stupid (just flagging the entity as having some form of networking aspect) or a bit smarter and define for example the properties of other components needing to be synced.
+
+The topic in [How to network this entity system](https://gamedev.stackexchange.com/questions/21032/how-to-network-this-entity-system) does not recommend to go for a 'smart' network component as this is essentially mirroring what already exists in other components. Instead it seems like the approach would then be to have the `NetworkSystem` be able to deal with each component in a way similar to:
+* check if the entity has a network aspect
+* if yes iterates over all registered component
+* for each component call an internal method that indicates which properties need to be updated and how
+
+One drawback of this is that the `NetworkSystem` will grow quite a bit due to handling all the components we have in the game. The plus is that there's a single place which should deal with network communication. We could possibly also include the various reconciliation mechanisms here.
+
+Finally the [Documentation of Space Station 14](https://docs.spacestation14.com/en/robust-toolbox/ecs.html) indicates some sort of `dirty` property to attach to component which would make the job of the `NetworkSystem` easier: by checking this we know if it should send data to the network or not. This is quite interesting as it allows to not keep track internally in the system of the previous states of all components to detect modification.
+
+### Possible solution
+
+To come back to our jump/mining examples, here's how we could do it:
+* create a network component which contains a `dirty` property.
+* this property is updated by the systems when an action requires it (typically a jump is started or the health is changed or the loot is distributed, etc.).
+* create a `NetworkSystem` which loops over entities having a network component.
+* this system loops over the components of the entities and perform the syncing (for now to the database) for each of them.
+
+For additional flexibility we could also create an enum which defines the type of component and register a list of enum values in the network component. This would allow to only sync some aspects of an entity rather than automatically syncing all its components.
+
 # Future work
 
 ## Useful links
