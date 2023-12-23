@@ -7,22 +7,6 @@ bool isEntityRelevant(const Entity &entity)
 {
   return entity.exists<LootComponent>() && entity.exists<HealthComponent>();
 }
-
-auto findCorrespondingPlayerResource(const Entity &player, const Uuid &resource)
-  -> std::optional<ResourceComponentShPtr>
-{
-  auto it = player.resources.begin();
-  while (it != player.resources.end())
-  {
-    if ((*it)->resource() == resource)
-    {
-      return {*it};
-    }
-    ++it;
-  }
-
-  return {};
-}
 } // namespace
 
 LootSystem::LootSystem()
@@ -75,6 +59,24 @@ void LootSystem::distributeLootTo(const Uuid &recipient,
 
   distributeResourcesTo(player, deadTarget);
 }
+
+namespace {
+auto findCorrespondingPlayerResource(const Entity &player, const Uuid &resource)
+  -> std::optional<ResourceComponentShPtr>
+{
+  auto it = player.resources.begin();
+  while (it != player.resources.end())
+  {
+    if ((*it)->resource() == resource)
+    {
+      return {*it};
+    }
+    ++it;
+  }
+
+  return {};
+}
+} // namespace
 
 void LootSystem::distributeResourcesTo(const Entity &player, const Entity &deadTarget) const
 {
