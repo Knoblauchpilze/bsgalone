@@ -20,7 +20,7 @@ void OwnerSystem::updateEntity(Entity &entity,
   entity.removalComp().update(elapsedSeconds);
 
   if (!entity.exists<RemovalComponent>() || !entity.removalComp().toBeDeleted()
-      || OwnerType::PLAYER != entity.ownerComp().type())
+      || OwnerType::PLAYER != entity.ownerComp().category())
   {
     return;
   }
