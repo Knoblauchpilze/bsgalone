@@ -2,6 +2,7 @@
 target_sources (bsgalone_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/IComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/AIComponent.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/ComponentType.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ComputerSlotComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/DamageComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/EffectComponent.cc
