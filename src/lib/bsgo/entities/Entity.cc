@@ -245,6 +245,11 @@ auto Entity::nameComp() const -> const NameComponent &
   return details::safeConstAccess(name, *this, "Name");
 }
 
+auto Entity::networkComp() const -> const NetworkComponent &
+{
+  return details::safeConstAccess(network, *this, "Network");
+}
+
 auto Entity::transformComp() -> TransformComponent &
 {
   return details::safeAccess(transform, *this, "Transform");
@@ -293,6 +298,11 @@ auto Entity::statusComp() -> StatusComponent &
 auto Entity::aiComp() -> AIComponent &
 {
   return details::safeAccess(ai, *this, "AI");
+}
+
+auto Entity::networkComp() -> NetworkComponent &
+{
+  return details::safeAccess(network, *this, "Network");
 }
 
 } // namespace bsgo

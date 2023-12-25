@@ -80,6 +80,7 @@ struct Entity
   auto aiComp() const -> const AIComponent &;
   auto shipClassComp() const -> const ShipClassComponent &;
   auto nameComp() const -> const NameComponent &;
+  auto networkComp() const -> const NetworkComponent &;
 
   auto transformComp() -> TransformComponent &;
   auto velocityComp() -> VelocityComponent &;
@@ -91,6 +92,7 @@ struct Entity
   auto removalComp() -> RemovalComponent &;
   auto statusComp() -> StatusComponent &;
   auto aiComp() -> AIComponent &;
+  auto networkComp() -> NetworkComponent &;
 };
 
 } // namespace bsgo
