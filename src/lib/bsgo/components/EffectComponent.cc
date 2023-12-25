@@ -3,8 +3,8 @@
 
 namespace bsgo {
 
-EffectComponent::EffectComponent(const std::string &name, const utils::Duration &duration)
-  : IComponent(name)
+EffectComponent::EffectComponent(const ComponentType &type, const utils::Duration &duration)
+  : AbstractComponent(type)
   , m_duration(duration)
 {
   addModule("effect");

@@ -5,7 +5,7 @@ namespace bsgo {
 
 WeaponEffectComponent::WeaponEffectComponent(const utils::Duration &duration,
                                              const float damageModifier)
-  : EffectComponent("weapon", duration)
+  : EffectComponent(ComponentType::WEAPON_EFFECT, duration)
   , m_damageModifier(damageModifier)
 {
   addModule("effect");

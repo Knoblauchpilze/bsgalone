@@ -1,12 +1,12 @@
 
 #pragma once
 
+#include "AbstractComponent.hh"
 #include "Faction.hh"
-#include "IComponent.hh"
 
 namespace bsgo {
 
-class FactionComponent : public IComponent
+class FactionComponent : public AbstractComponent
 {
   public:
   FactionComponent(const Faction &faction);

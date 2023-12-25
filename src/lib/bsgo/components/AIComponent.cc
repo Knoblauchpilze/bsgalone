@@ -4,7 +4,7 @@
 namespace bsgo {
 
 AIComponent::AIComponent(INodePtr behavior)
-  : IComponent("ai")
+  : AbstractComponent(ComponentType::AI)
   , m_behavior(std::move(behavior))
 {
   if (nullptr == m_behavior)

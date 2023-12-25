@@ -1,12 +1,12 @@
 
 #pragma once
 
+#include "AbstractComponent.hh"
 #include "IBoundingBox.hh"
-#include "IComponent.hh"
 
 namespace bsgo {
 
-class TransformComponent : public IComponent
+class TransformComponent : public AbstractComponent
 {
   public:
   TransformComponent(IBoundingBoxShPtr bbox);

@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "IComponent.hh"
+#include "AbstractComponent.hh"
 #include <core_utils/TimeUtils.hh>
 #include <optional>
 
@@ -25,10 +25,10 @@ enum class FiringState
   RELOADING
 };
 
-class SlotComponent : public IComponent
+class SlotComponent : public AbstractComponent
 {
   public:
-  SlotComponent(const std::string &name, const SlotComponentData &data);
+  SlotComponent(const ComponentType &type, const SlotComponentData &data);
   ~SlotComponent() override = default;
 
   void update(const float elapsedSeconds) override;

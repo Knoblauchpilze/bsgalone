@@ -1,14 +1,14 @@
 
 #pragma once
 
-#include "IComponent.hh"
+#include "AbstractComponent.hh"
 
 namespace bsgo {
 
-class RegenerativeComponent : public IComponent
+class RegenerativeComponent : public AbstractComponent
 {
   public:
-  RegenerativeComponent(const std::string &name,
+  RegenerativeComponent(const ComponentType &type,
                         const float min,
                         const float value,
                         const float max,

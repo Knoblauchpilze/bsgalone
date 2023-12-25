@@ -1,11 +1,11 @@
 
 #pragma once
 
-#include "IComponent.hh"
+#include "AbstractComponent.hh"
 
 namespace bsgo {
 
-class RemovalComponent : public IComponent
+class RemovalComponent : public AbstractComponent
 {
   public:
   RemovalComponent();

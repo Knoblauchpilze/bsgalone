@@ -3,8 +3,8 @@
 
 namespace bsgo {
 
-AbstractComponent::AbstractComponent(const std::string &name, const ComponentType &type)
-  : IComponent(name)
+AbstractComponent::AbstractComponent(const ComponentType &type)
+  : IComponent(str(type))
   , m_componentType(type)
 {}
 

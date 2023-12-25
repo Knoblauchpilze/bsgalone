@@ -7,7 +7,7 @@ namespace bsgo {
 constexpr auto FRICTION_ACCELERATION = 0.5f;
 
 VelocityComponent::VelocityComponent(const VelocityData &data)
-  : IComponent("velocity")
+  : AbstractComponent(ComponentType::VELOCITY)
   , m_speedMode(data.speedMode)
   , m_maxAcceleration(data.maxAcceleration)
   , m_maxSpeed(data.maxSpeed)

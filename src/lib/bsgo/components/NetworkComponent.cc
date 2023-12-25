@@ -4,7 +4,7 @@
 namespace bsgo {
 
 NetworkComponent::NetworkComponent()
-  : IComponent("network")
+  : AbstractComponent(ComponentType::NETWORK)
 {}
 
 void NetworkComponent::update(const float /*elapsedSeconds*/) {}

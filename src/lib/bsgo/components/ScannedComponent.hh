@@ -1,11 +1,11 @@
 
 #pragma once
 
-#include "IComponent.hh"
+#include "AbstractComponent.hh"
 
 namespace bsgo {
 
-class ScannedComponent : public IComponent
+class ScannedComponent : public AbstractComponent
 {
   public:
   ScannedComponent();

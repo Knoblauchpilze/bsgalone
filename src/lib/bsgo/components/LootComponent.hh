@@ -1,14 +1,14 @@
 
 #pragma once
 
-#include "IComponent.hh"
+#include "AbstractComponent.hh"
 #include "Item.hh"
 #include "Uuid.hh"
 #include <unordered_set>
 
 namespace bsgo {
 
-class LootComponent : public IComponent
+class LootComponent : public AbstractComponent
 {
   public:
   LootComponent();

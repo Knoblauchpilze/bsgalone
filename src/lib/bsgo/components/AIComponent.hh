@@ -1,12 +1,12 @@
 
 #pragma once
 
-#include "IComponent.hh"
+#include "AbstractComponent.hh"
 #include "INode.hh"
 
 namespace bsgo {
 
-class AIComponent : public IComponent
+class AIComponent : public AbstractComponent
 {
   public:
   AIComponent(INodePtr behavior);

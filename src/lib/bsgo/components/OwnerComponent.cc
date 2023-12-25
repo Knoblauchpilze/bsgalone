@@ -4,7 +4,7 @@
 namespace bsgo {
 
 OwnerComponent::OwnerComponent(const Uuid &owner, const OwnerType &ownerType)
-  : IComponent("owner")
+  : AbstractComponent(ComponentType::OWNER)
   , m_owner(owner)
   , m_ownerType(ownerType)
 {}

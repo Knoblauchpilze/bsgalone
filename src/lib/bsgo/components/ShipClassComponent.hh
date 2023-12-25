@@ -1,12 +1,12 @@
 
 #pragma once
 
-#include "IComponent.hh"
+#include "AbstractComponent.hh"
 #include "ShipClass.hh"
 
 namespace bsgo {
 
-class ShipClassComponent : public IComponent
+class ShipClassComponent : public AbstractComponent
 {
   public:
   ShipClassComponent(const ShipClass &shipClass);

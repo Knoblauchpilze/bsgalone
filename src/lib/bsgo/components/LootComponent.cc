@@ -4,7 +4,7 @@
 namespace bsgo {
 
 LootComponent::LootComponent()
-  : IComponent("loot")
+  : AbstractComponent(ComponentType::LOOT)
 {}
 
 void LootComponent::registerRecipient(const Uuid &entity)

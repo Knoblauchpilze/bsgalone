@@ -1,13 +1,13 @@
 
 #pragma once
 
-#include "IComponent.hh"
+#include "AbstractComponent.hh"
 #include "Uuid.hh"
 #include <optional>
 
 namespace bsgo {
 
-class TargetComponent : public IComponent
+class TargetComponent : public AbstractComponent
 {
   public:
   TargetComponent();

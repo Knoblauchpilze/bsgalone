@@ -1,11 +1,11 @@
 
 #pragma once
 
-#include "IComponent.hh"
+#include "AbstractComponent.hh"
 
 namespace bsgo {
 
-class DamageComponent : public IComponent
+class DamageComponent : public AbstractComponent
 {
   public:
   DamageComponent(const float damage);
