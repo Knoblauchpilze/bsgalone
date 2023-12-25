@@ -9,6 +9,7 @@
 #include "HealthSystem.hh"
 #include "LootSystem.hh"
 #include "MotionSystem.hh"
+#include "NetworkSystem.hh"
 #include "OwnerSystem.hh"
 #include "PowerSystem.hh"
 #include "StatusSystem.hh"
@@ -428,6 +429,9 @@ void Coordinator::createSystems()
 
   auto owner = std::make_unique<OwnerSystem>();
   m_systems.push_back(std::move(owner));
+
+  auto network = std::make_unique<NetworkSystem>();
+  m_systems.push_back(std::move(network));
 }
 
 bool Coordinator::hasExpectedKind(const Uuid &ent, const std::optional<EntityKind> &kind) const
