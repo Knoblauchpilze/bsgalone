@@ -55,9 +55,15 @@ void LootSystem::distributeLootTo(const Uuid &recipient,
     return;
   }
 
-  const auto player = coordinator.getEntity(ent.ownerComp().owner());
+  auto player = coordinator.getEntity(ent.ownerComp().owner());
 
   distributeResourcesTo(player, deadTarget);
+
+  if (player.exists<NetworkComponent>())
+  {
+    auto &networkComp = player.networkComp();
+    networkComp.markForSync();
+  }
 }
 
 namespace {
