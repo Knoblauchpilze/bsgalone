@@ -16,15 +16,16 @@ target_sources (bsgalone_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/ISystem.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/AbstractSystem.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/AISystem.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/MotionSystem.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/HealthSystem.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/PowerSystem.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/WeaponSystem.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/TargetSystem.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/BulletSystem.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ComputerSystem.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/EffectSystem.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/HealthSystem.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LootSystem.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/BulletSystem.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/StatusSystem.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/MotionSystem.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/NetworkSystem.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/OwnerSystem.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/PowerSystem.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/StatusSystem.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/TargetSystem.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/WeaponSystem.cc
 	)
