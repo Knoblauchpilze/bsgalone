@@ -95,6 +95,9 @@ void DataSource::initializePlayer(Coordinator &coordinator) const
   {
     coordinator.addResourceComponent(*m_playerEntityId, resource.resource, resource.amount);
   }
+
+  const std::unordered_set<ComponentType> toSync{ComponentType::RESOURCE};
+  coordinator.addNetwork(*m_playerEntityId, toSync);
 }
 
 void DataSource::initializeAsteroids(Coordinator &coordinator, const Uuid &system) const

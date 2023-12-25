@@ -183,6 +183,12 @@ void Coordinator::addName(const Uuid &ent, const std::string &name)
   m_components.names[ent] = std::make_shared<NameComponent>(name);
 }
 
+void Coordinator::addNetwork(const Uuid &ent, const std::unordered_set<ComponentType> &toSync)
+{
+  checkForOverrides(ent, "Network", m_components.networks);
+  m_components.networks[ent] = std::make_shared<NetworkComponent>(toSync);
+}
+
 void Coordinator::addWeapon(const Uuid &ent,
                             const PlayerWeapon &weapon,
                             const Eigen::Vector3f &position)
