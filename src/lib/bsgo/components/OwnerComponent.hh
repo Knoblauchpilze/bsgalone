@@ -20,7 +20,7 @@ class OwnerComponent : public IComponent
   ~OwnerComponent() override = default;
 
   auto owner() const -> Uuid;
-  auto type() const -> OwnerType;
+  auto category() const -> OwnerType;
 
   void update(const float elapsedSeconds) override;
 

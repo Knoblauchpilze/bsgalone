@@ -14,7 +14,7 @@ auto OwnerComponent::owner() const -> Uuid
   return m_owner;
 }
 
-auto OwnerComponent::type() const -> OwnerType
+auto OwnerComponent::category() const -> OwnerType
 {
   return m_ownerType;
 }
