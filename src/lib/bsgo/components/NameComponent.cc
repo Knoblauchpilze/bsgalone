@@ -4,7 +4,7 @@
 namespace bsgo {
 
 NameComponent::NameComponent(const std::string &name)
-  : IComponent("name")
+  : AbstractComponent(ComponentType::NAME)
   , m_name(name)
 {}
 

@@ -6,7 +6,7 @@ namespace bsgo {
 StatusComponent::StatusComponent(const Status &status,
                                  const std::optional<utils::Duration> &jumpTime,
                                  const std::optional<utils::Duration> &threatJumpTime)
-  : IComponent("status")
+  : AbstractComponent(ComponentType::STATUS)
   , m_status(status)
   , m_jumpTime(jumpTime)
   , m_threatJumpTime(threatJumpTime)

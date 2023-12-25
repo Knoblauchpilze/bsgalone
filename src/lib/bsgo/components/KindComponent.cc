@@ -4,7 +4,7 @@
 namespace bsgo {
 
 KindComponent::KindComponent(const EntityKind &kind)
-  : IComponent("kind")
+  : AbstractComponent(ComponentType::KIND)
   , m_kind(kind)
 {}
 

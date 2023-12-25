@@ -4,7 +4,7 @@
 namespace bsgo {
 
 WeaponSlotComponent::WeaponSlotComponent(const PlayerWeapon &weapon, const Eigen::Vector3f &position)
-  : SlotComponent("weapon",
+  : SlotComponent(ComponentType::WEAPON_SLOT,
                   SlotComponentData{.offensive  = true,
                                     .powerCost  = weapon.powerCost,
                                     .range      = {weapon.range},

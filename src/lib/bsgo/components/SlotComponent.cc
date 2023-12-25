@@ -3,8 +3,8 @@
 
 namespace bsgo {
 
-SlotComponent::SlotComponent(const std::string &name, const SlotComponentData &data)
-  : IComponent(name)
+SlotComponent::SlotComponent(const ComponentType &type, const SlotComponentData &data)
+  : AbstractComponent(type)
   , m_offensive(data.offensive)
   , m_powerCost(data.powerCost)
   , m_range(data.range)

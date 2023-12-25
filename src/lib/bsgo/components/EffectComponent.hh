@@ -1,16 +1,16 @@
 
 #pragma once
 
-#include "IComponent.hh"
+#include "AbstractComponent.hh"
 #include <core_utils/TimeUtils.hh>
 #include <optional>
 
 namespace bsgo {
 
-class EffectComponent : public IComponent
+class EffectComponent : public AbstractComponent
 {
   public:
-  EffectComponent(const std::string &name, const utils::Duration &duration);
+  EffectComponent(const ComponentType &type, const utils::Duration &duration);
   ~EffectComponent() override = default;
 
   bool isFinished() const;

@@ -1,14 +1,14 @@
 
 #pragma once
 
-#include "IComponent.hh"
+#include "AbstractComponent.hh"
 #include "Status.hh"
 #include <core_utils/TimeUtils.hh>
 #include <optional>
 
 namespace bsgo {
 
-class StatusComponent : public IComponent
+class StatusComponent : public AbstractComponent
 {
   public:
   StatusComponent(const Status &status,

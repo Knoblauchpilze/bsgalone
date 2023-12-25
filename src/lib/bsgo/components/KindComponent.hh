@@ -1,12 +1,12 @@
 
 #pragma once
 
+#include "AbstractComponent.hh"
 #include "EntityKind.hh"
-#include "IComponent.hh"
 
 namespace bsgo {
 
-class KindComponent : public IComponent
+class KindComponent : public AbstractComponent
 {
   public:
   KindComponent(const EntityKind &kind);

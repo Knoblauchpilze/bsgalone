@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "ComponentType.hh"
 #include <core_utils/CoreObject.hh>
 #include <memory>
 
@@ -11,6 +12,8 @@ class IComponent : public utils::CoreObject
   public:
   IComponent(const std::string &name);
   ~IComponent() override = default;
+
+  virtual auto type() const -> ComponentType = 0;
 
   virtual void update(const float elapsedSeconds) = 0;
 };

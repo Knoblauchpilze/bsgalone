@@ -1,12 +1,12 @@
 
 #pragma once
 
-#include "IComponent.hh"
+#include "AbstractComponent.hh"
 #include "Uuid.hh"
 
 namespace bsgo {
 
-class ResourceComponent : public IComponent
+class ResourceComponent : public AbstractComponent
 {
   public:
   ResourceComponent(const Uuid &resource, const float amount);

@@ -4,7 +4,7 @@
 namespace bsgo {
 
 FactionComponent::FactionComponent(const Faction &faction)
-  : IComponent("faction")
+  : AbstractComponent(ComponentType::FACTION)
   , m_faction(faction)
 {}
 

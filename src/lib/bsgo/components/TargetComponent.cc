@@ -4,11 +4,11 @@
 namespace bsgo {
 
 TargetComponent::TargetComponent()
-  : IComponent("target")
+  : AbstractComponent(ComponentType::TARGET)
 {}
 
 TargetComponent::TargetComponent(const Uuid &target)
-  : IComponent("target")
+  : AbstractComponent(ComponentType::TARGET)
   , m_target(target)
 {}
 

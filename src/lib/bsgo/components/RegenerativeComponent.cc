@@ -3,12 +3,12 @@
 
 namespace bsgo {
 
-RegenerativeComponent::RegenerativeComponent(const std::string &name,
+RegenerativeComponent::RegenerativeComponent(const ComponentType &type,
                                              const float min,
                                              const float value,
                                              const float max,
                                              const float regenPerSecond)
-  : IComponent(name)
+  : AbstractComponent(type)
   , m_min(min)
   , m_value(value)
   , m_max(max)

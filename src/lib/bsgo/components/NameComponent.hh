@@ -1,11 +1,11 @@
 
 #pragma once
 
-#include "IComponent.hh"
+#include "AbstractComponent.hh"
 
 namespace bsgo {
 
-class NameComponent : public IComponent
+class NameComponent : public AbstractComponent
 {
   public:
   NameComponent(const std::string &name);

@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "IComponent.hh"
+#include "AbstractComponent.hh"
 #include "Uuid.hh"
 
 namespace bsgo {
@@ -13,7 +13,7 @@ enum class OwnerType
   SHIP,
 };
 
-class OwnerComponent : public IComponent
+class OwnerComponent : public AbstractComponent
 {
   public:
   OwnerComponent(const Uuid &owner, const OwnerType &ownerType);

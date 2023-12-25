@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "IComponent.hh"
+#include "AbstractComponent.hh"
 #include <eigen3/Eigen/Eigen>
 #include <optional>
 
@@ -23,7 +23,7 @@ struct VelocityData
   SpeedMode speedMode{SpeedMode::VARIABLE};
 };
 
-class VelocityComponent : public IComponent
+class VelocityComponent : public AbstractComponent
 {
   public:
   VelocityComponent(const VelocityData &data);
