@@ -1,6 +1,7 @@
 
 target_sources (bsgalone_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/IComponent.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/AbstractComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/AIComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ComponentType.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ComputerSlotComponent.cc
