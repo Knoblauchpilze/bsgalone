@@ -164,6 +164,12 @@ bool Entity::exists<NameComponent>() const
   return details::checkComponentExists(name);
 }
 
+template<>
+bool Entity::exists<NetworkComponent>() const
+{
+  return details::checkComponentExists(network);
+}
+
 auto Entity::transformComp() const -> const TransformComponent &
 {
   return details::safeConstAccess(transform, *this, "Transform");

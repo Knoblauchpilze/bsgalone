@@ -11,6 +11,7 @@
 #include "KindComponent.hh"
 #include "LootComponent.hh"
 #include "NameComponent.hh"
+#include "NetworkComponent.hh"
 #include "OwnerComponent.hh"
 #include "PowerComponent.hh"
 #include "RemovalComponent.hh"
@@ -47,6 +48,7 @@ struct Entity
   std::optional<AIComponentShPtr> ai{};
   std::optional<ShipClassComponentShPtr> shipClass{};
   std::optional<NameComponentShPtr> name{};
+  std::optional<NetworkComponentShPtr> network{};
   std::vector<WeaponSlotComponentShPtr> weapons{};
   std::vector<ComputerSlotComponentShPtr> computers{};
   std::vector<EffectComponentShPtr> effects{};

@@ -261,6 +261,7 @@ auto Coordinator::getEntity(const Uuid &ent) const -> Entity
   out.ai        = getComponent(ent, m_components.ais);
   out.shipClass = getComponent(ent, m_components.shipClasses);
   out.name      = getComponent(ent, m_components.names);
+  out.network   = getComponent(ent, m_components.networks);
 
   out.weapons   = getAllComponent(ent, m_components.weapons);
   out.computers = getAllComponent(ent, m_components.computers);
@@ -295,6 +296,7 @@ void Coordinator::deleteEntity(const Uuid &ent)
   m_components.ais.erase(ent);
   m_components.shipClasses.erase(ent);
   m_components.names.erase(ent);
+  m_components.networks.erase(ent);
 
   m_components.weapons.erase(ent);
   m_components.computers.erase(ent);
