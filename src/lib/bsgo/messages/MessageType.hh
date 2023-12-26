@@ -8,8 +8,7 @@ namespace bsgo {
 
 enum class MessageType
 {
-  SYSTEM,
-  COUNT
+  SYSTEM
 };
 
 auto str(const MessageType &type) -> std::string;
