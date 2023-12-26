@@ -10,7 +10,7 @@ bool isEntityRelevant(const Entity &ent)
 } // namespace
 
 MotionSystem::MotionSystem()
-  : AbstractSystem("motion", isEntityRelevant)
+  : AbstractSystem(SystemType::MOTION, isEntityRelevant)
 {}
 
 void MotionSystem::updateEntity(Entity &entity,

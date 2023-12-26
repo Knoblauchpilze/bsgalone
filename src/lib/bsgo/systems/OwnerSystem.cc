@@ -10,7 +10,7 @@ bool isEntityRelevant(const Entity &ent)
 } // namespace
 
 OwnerSystem::OwnerSystem()
-  : AbstractSystem("owner", isEntityRelevant)
+  : AbstractSystem(SystemType::OWNER, isEntityRelevant)
 {}
 
 void OwnerSystem::updateEntity(Entity &entity,

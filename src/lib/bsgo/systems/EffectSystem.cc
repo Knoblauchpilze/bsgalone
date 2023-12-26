@@ -10,7 +10,7 @@ bool isEntityRelevant(const Entity &entity)
 } // namespace
 
 EffectSystem::EffectSystem()
-  : AbstractSystem("effect", isEntityRelevant)
+  : AbstractSystem(SystemType::EFFECT, isEntityRelevant)
 {}
 
 void EffectSystem::updateEntity(Entity &entity,

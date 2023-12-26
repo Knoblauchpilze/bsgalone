@@ -10,7 +10,7 @@ bool isEntityRelevant(const Entity &ent)
 } // namespace
 
 HealthSystem::HealthSystem()
-  : AbstractSystem("health", isEntityRelevant)
+  : AbstractSystem(SystemType::HEALTH, isEntityRelevant)
 {}
 
 void HealthSystem::updateEntity(Entity &entity,

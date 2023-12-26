@@ -2,6 +2,7 @@
 #pragma once
 
 #include "Components.hh"
+#include "SystemType.hh"
 #include <core_utils/CoreObject.hh>
 #include <memory>
 
@@ -14,6 +15,8 @@ class ISystem : public utils::CoreObject
   public:
   ISystem(const std::string &name);
   ~ISystem() override = default;
+
+  virtual auto type() const -> SystemType = 0;
 
   virtual void update(Coordinator &coordinator, const float elapsedSeconds) const = 0;
 };

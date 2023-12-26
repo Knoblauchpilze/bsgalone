@@ -10,7 +10,7 @@ bool isEntityRelevant(const Entity &ent)
 } // namespace
 
 StatusSystem::StatusSystem()
-  : AbstractSystem("status", isEntityRelevant)
+  : AbstractSystem(SystemType::STATUS, isEntityRelevant)
 {}
 
 constexpr auto TIME_TO_STAY_IN_APPEARED_MODE = utils::Milliseconds{10'000};

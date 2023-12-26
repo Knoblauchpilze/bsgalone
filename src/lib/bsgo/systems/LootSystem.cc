@@ -10,7 +10,7 @@ bool isEntityRelevant(const Entity &entity)
 } // namespace
 
 LootSystem::LootSystem()
-  : AbstractSystem("loot", isEntityRelevant)
+  : AbstractSystem(SystemType::LOOT, isEntityRelevant)
 {}
 
 void LootSystem::updateEntity(Entity &entity,

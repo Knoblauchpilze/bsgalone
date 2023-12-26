@@ -10,7 +10,7 @@ bool isEntityRelevant(const Entity &ent)
 } // namespace
 
 AISystem::AISystem()
-  : AbstractSystem("ai", isEntityRelevant)
+  : AbstractSystem(SystemType::AI, isEntityRelevant)
 {}
 
 void AISystem::updateEntity(Entity &entity,

@@ -1,7 +1,6 @@
 
 #pragma once
 
-#include "ComponentType.hh"
 #include "IComponent.hh"
 #include <string>
 
