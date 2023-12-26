@@ -12,4 +12,9 @@ void IUiHandler::reset()
   // Intentionally empty.
 }
 
+void IUiHandler::connectToMessageQueue(bsgo::IMessageQueue & /*messageQueue*/)
+{
+  // Intentionally empty.
+}
+
 } // namespace pge
