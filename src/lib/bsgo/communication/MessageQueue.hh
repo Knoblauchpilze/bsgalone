@@ -15,7 +15,7 @@ class MessageQueue : public IMessageQueue, public utils::CoreObject
   ~MessageQueue() override = default;
 
   void pushMessage(IMessagePtr message) override;
-  void addListener(const MessageType &messageType, IMessageListener *listener) override;
+  void addListener(IMessageListener *listener) override;
 
   void processMessages() override;
 
