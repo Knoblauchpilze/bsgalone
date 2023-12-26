@@ -15,14 +15,20 @@ void MessageQueue::pushMessage(IMessagePtr message)
   m_messages.emplace_back(std::move(message));
 }
 
-void MessageQueue::addListener(const MessageType &messageType, IMessageListener *listener)
+void MessageQueue::addListener(IMessageListener *listener)
 {
   if (nullptr == listener)
   {
     error("Failed to add listener", "Null listener");
   }
 
-  m_listeners.emplace(messageType, listener);
+  for (const auto &messageType : allMessageTypes())
+  {
+    if (listener->isMessageRelevant(messageType))
+    {
+      m_listeners.emplace(messageType, listener);
+    }
+  }
 }
 
 void MessageQueue::processMessages()
