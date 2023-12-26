@@ -94,6 +94,11 @@ void Game::generateUiHandlers(int width, int height)
   auto map = std::make_unique<MapScreenUiHandler>(m_views);
   map->initializeMenus(width, height);
   m_uiHandlers[Screen::MAP] = std::move(map);
+
+  for (const auto &[_, handler] : m_uiHandlers)
+  {
+    handler->connectToMessageQueue(*m_messageQueue);
+  }
 }
 
 void Game::processUserInput(const controls::State &controls, CoordinateFrame &frame)
