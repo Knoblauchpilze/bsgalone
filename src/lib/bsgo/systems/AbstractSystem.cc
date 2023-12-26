@@ -30,7 +30,7 @@ void AbstractSystem::update(Coordinator &coordinator, const float elapsedSeconds
   }
 }
 
-void AbstractSystem::pushMessage(IMessagePtr message)
+void AbstractSystem::pushMessage(IMessagePtr message) const
 {
   if (nullptr == m_messageQueue)
   {

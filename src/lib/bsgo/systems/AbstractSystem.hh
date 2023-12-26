@@ -23,7 +23,7 @@ class AbstractSystem : public ISystem
                             const float elapsedSeconds) const = 0;
 
   protected:
-  void pushMessage(IMessagePtr message);
+  void pushMessage(IMessagePtr message) const;
 
   private:
   SystemType m_systemType{};
