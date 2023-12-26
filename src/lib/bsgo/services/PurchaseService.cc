@@ -90,14 +90,39 @@ void PurchaseService::tryPurchaseComputer(const Uuid &id) const
   m_repositories.playerComputerRepository->save(computer);
 }
 
+namespace {
+auto findExistingAmount(const std::vector<PlayerResource> &resources, const Uuid &toFind)
+  -> std::optional<float>
+{
+  for (const auto &resource : resources)
+  {
+    if (toFind == resource.resource)
+    {
+      return resource.amount;
+    }
+  }
+
+  return {};
+}
+} // namespace
+
 void PurchaseService::debitResources(const std::unordered_map<Uuid, float> &costs) const
 {
+  const auto funds = m_repositories.playerResourceRepository->findAllByPlayer(*m_playerDbId);
+
   for (const auto &[resource, amount] : costs)
   {
+    const auto fund = findExistingAmount(funds, resource);
+    auto sum        = -amount;
+    if (fund)
+    {
+      sum += *fund;
+    }
+
     PlayerResource data{
       .player   = *m_playerDbId,
       .resource = resource,
-      .amount   = -amount,
+      .amount   = sum,
     };
 
     m_repositories.playerResourceRepository->save(data);
