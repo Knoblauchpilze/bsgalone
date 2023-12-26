@@ -3,6 +3,7 @@
 #include "IInputHandler.hh"
 #include "IRenderer.hh"
 #include "IUiHandler.hh"
+#include "NetworkSystem.hh"
 
 #include "GameScreenInputHandler.hh"
 #include "GameScreenRenderer.hh"
@@ -224,6 +225,8 @@ void Game::login(const bsgo::Uuid &playerDbId)
   m_dataSource.setPlayerId(playerDbId);
   m_dataSource.initialize(*m_coordinator);
 
+  m_networkSystem->setPlayerDbId(playerDbId);
+
   const auto playerShipDbId     = m_dataSource.playerShipId();
   const auto playerShipEntityId = m_dataSource.playerShipEntityId();
 
@@ -257,6 +260,10 @@ void Game::initialize()
 {
   const auto repositories = m_dataSource.repositories();
   m_services              = bsgo::createServices(repositories);
+
+  auto networkSystem = std::make_unique<bsgo::NetworkSystem>(repositories);
+  m_networkSystem    = networkSystem.get();
+  m_coordinator      = std::make_shared<bsgo::Coordinator>(std::move(networkSystem));
 
   m_views.loginView  = std::make_shared<bsgo::LoginView>(m_coordinator, repositories);
   m_views.shipView   = std::make_shared<bsgo::ShipView>(m_coordinator, repositories);
