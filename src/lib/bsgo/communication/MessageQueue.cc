@@ -27,7 +27,22 @@ void MessageQueue::addListener(const MessageType &messageType, IMessageListener 
 
 void MessageQueue::processMessages()
 {
-  warn("should process messages");
+  for (const auto &message : m_messages)
+  {
+    processMessage(*message);
+  }
+
+  m_messages.clear();
+}
+
+void MessageQueue::processMessage(const IMessage &message) const
+{
+  // https://stackoverflow.com/questions/72841621/finding-all-the-values-with-given-key-for-multimap
+  auto [it, end] = m_listeners.equal_range(message.type());
+  for (; it != end; ++it)
+  {
+    it->second->onMessageReceived(message);
+  }
 }
 
 } // namespace bsgo
