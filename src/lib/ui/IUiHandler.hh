@@ -4,6 +4,7 @@
 #include "Controls.hh"
 #include "CoordinateFrame.hh"
 #include "Game.hh"
+#include "IMessageQueue.hh"
 #include "UserInputData.hh"
 #include <core_utils/CoreObject.hh>
 #include <memory>
@@ -22,6 +23,7 @@ class IUiHandler : public utils::CoreObject
   virtual void updateUi()                                         = 0;
 
   virtual void reset();
+  virtual void connectToMessageQueue(bsgo::IMessageQueue &messageQueue);
 };
 
 using IUiHandlerPtr = std::unique_ptr<IUiHandler>;
