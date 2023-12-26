@@ -38,6 +38,11 @@ void MessageQueue::processMessages()
     processMessage(*message);
   }
 
+  if (!m_messages.empty())
+  {
+    info("Processed " + std::to_string(m_messages.size()) + " message(s)");
+  }
+
   m_messages.clear();
 }
 
