@@ -3,6 +3,7 @@
 #include "AbilitiesUiHandler.hh"
 #include "EntityUiHandler.hh"
 #include "GameOverUiHandler.hh"
+#include "LogUiHandler.hh"
 #include "ScreenCommon.hh"
 #include "ShipStatusUiHandler.hh"
 #include "StatusUiHandler.hh"
@@ -104,6 +105,9 @@ void GameScreenUiHandler::initializeUis(const bsgo::Views &views)
 
   auto shipStatusUi = std::make_unique<ShipStatusUiHandler>(views);
   m_uis.emplace_back(std::move(shipStatusUi));
+
+  auto logUi = std::make_unique<LogUiHandler>(views);
+  m_uis.emplace_back(std::move(logUi));
 }
 
 } // namespace pge
