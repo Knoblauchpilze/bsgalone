@@ -18,7 +18,7 @@ bool isValidTarget(const Entity &entity, const Entity &target, const ComputerSlo
 } // namespace
 
 ComputerSystem::ComputerSystem()
-  : AbstractSystem("computer", isEntityRelevant)
+  : AbstractSystem(SystemType::COMPUTER, isEntityRelevant)
 {}
 
 void ComputerSystem::updateEntity(Entity &entity,

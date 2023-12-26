@@ -10,7 +10,7 @@ bool isEntityRelevant(const Entity &ent)
 } // namespace
 
 NetworkSystem::NetworkSystem(const Repositories &repositories)
-  : AbstractSystem("network", isEntityRelevant)
+  : AbstractSystem(SystemType::NETWORK, isEntityRelevant)
   , m_repositories(repositories)
 {}
 

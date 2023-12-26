@@ -10,7 +10,7 @@ bool isEntityRelevant(const Entity &ent)
 } // namespace
 
 PowerSystem::PowerSystem()
-  : AbstractSystem("power", isEntityRelevant)
+  : AbstractSystem(SystemType::POWER, isEntityRelevant)
 {}
 
 void PowerSystem::updateEntity(Entity &entity,

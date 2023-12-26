@@ -15,7 +15,7 @@ bool isEntityRelevant(const Entity &entity)
 } // namespace
 
 WeaponSystem::WeaponSystem()
-  : AbstractSystem("weapon", isEntityRelevant)
+  : AbstractSystem(SystemType::WEAPON, isEntityRelevant)
 {}
 
 void WeaponSystem::updateEntity(Entity &entity,

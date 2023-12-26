@@ -12,7 +12,7 @@ bool isEntityRelevant(const Entity &entity)
 } // namespace
 
 BulletSystem::BulletSystem()
-  : AbstractSystem("bullet", isEntityRelevant)
+  : AbstractSystem(SystemType::BULLET, isEntityRelevant)
 {}
 
 void BulletSystem::updateEntity(Entity &entity,

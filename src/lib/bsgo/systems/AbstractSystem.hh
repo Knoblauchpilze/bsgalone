@@ -10,8 +10,10 @@ namespace bsgo {
 class AbstractSystem : public ISystem
 {
   public:
-  AbstractSystem(const std::string &name, const Coordinator::EntityPredicate &entitiesFilter);
+  AbstractSystem(const SystemType &type, const Coordinator::EntityPredicate &entitiesFilter);
   ~AbstractSystem() override = default;
+
+  auto type() const -> SystemType override;
 
   void update(Coordinator &coordinator, const float elapsedSeconds) const override;
 
@@ -20,6 +22,7 @@ class AbstractSystem : public ISystem
                             const float elapsedSeconds) const = 0;
 
   private:
+  SystemType m_systemType{};
   Coordinator::EntityPredicate m_entitiesFilter;
 };
 

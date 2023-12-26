@@ -10,7 +10,7 @@ bool isEntityRelevant(const Entity &ent)
 } // namespace
 
 TargetSystem::TargetSystem()
-  : AbstractSystem("target", isEntityRelevant)
+  : AbstractSystem(SystemType::TARGET, isEntityRelevant)
 {}
 
 void TargetSystem::updateEntity(Entity &entity,

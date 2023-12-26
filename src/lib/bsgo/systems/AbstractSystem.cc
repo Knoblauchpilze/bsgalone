@@ -3,11 +3,17 @@
 
 namespace bsgo {
 
-AbstractSystem::AbstractSystem(const std::string &name,
+AbstractSystem::AbstractSystem(const SystemType &type,
                                const Coordinator::EntityPredicate &entitiesFilter)
-  : ISystem(name)
+  : ISystem(str(type))
+  , m_systemType(type)
   , m_entitiesFilter(entitiesFilter)
 {}
+
+auto AbstractSystem::type() const -> SystemType
+{
+  return m_systemType;
+}
 
 void AbstractSystem::update(Coordinator &coordinator, const float elapsedSeconds) const
 {
