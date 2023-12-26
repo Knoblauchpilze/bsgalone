@@ -264,9 +264,10 @@ void Game::initialize()
 
   auto networkSystem = std::make_unique<bsgo::NetworkSystem>(repositories);
   m_networkSystem    = networkSystem.get();
-  m_coordinator      = std::make_shared<bsgo::Coordinator>(std::move(networkSystem));
+  m_messageQueue     = std::make_unique<bsgo::MessageQueue>();
 
-  m_messageQueue = std::make_unique<bsgo::MessageQueue>();
+  m_coordinator = std::make_shared<bsgo::Coordinator>(std::move(networkSystem),
+                                                      m_messageQueue.get());
 
   m_views.loginView  = std::make_shared<bsgo::LoginView>(m_coordinator, repositories);
   m_views.shipView   = std::make_shared<bsgo::ShipView>(m_coordinator, repositories);

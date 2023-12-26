@@ -4,6 +4,7 @@
 #include "Components.hh"
 #include "Entity.hh"
 #include "IBoundingBox.hh"
+#include "IMessageQueue.hh"
 #include "ISystem.hh"
 #include "Uuid.hh"
 #include <core_utils/CoreObject.hh>
@@ -20,7 +21,7 @@ class DataSource;
 class Coordinator : public utils::CoreObject
 {
   public:
-  Coordinator(ISystemPtr networkSystem);
+  Coordinator(ISystemPtr networkSystem, IMessageQueue *messageQueue);
   ~Coordinator() override = default;
 
   void clear();
@@ -75,7 +76,7 @@ class Coordinator : public utils::CoreObject
   Components m_components{};
   std::vector<ISystemPtr> m_systems{};
 
-  void createSystems(ISystemPtr networkSystem);
+  void createSystems(ISystemPtr networkSystem, IMessageQueue *messageQueue);
   bool hasExpectedKind(const Uuid &ent, const std::optional<EntityKind> &kind) const;
 
   void checkEntityExist(const Uuid &ent, const std::string &componentName) const;
