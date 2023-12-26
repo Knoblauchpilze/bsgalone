@@ -6,6 +6,7 @@
 #include "IInputHandler.hh"
 #include "IRenderer.hh"
 #include "IUiHandler.hh"
+#include "MessageQueue.hh"
 #include "NetworkSystem.hh"
 #include "RenderState.hh"
 #include "RenderingPass.hh"
@@ -90,6 +91,7 @@ class Game : public utils::CoreObject
   bsgo::DataSource m_dataSource{};
   bsgo::Services m_services{};
   bsgo::CoordinatorShPtr m_coordinator{};
+  bsgo::IMessageQueuePtr m_messageQueue{};
   bsgo::NetworkSystem *m_networkSystem{};
   bsgo::Views m_views;
   std::unordered_map<Screen, IRendererPtr> m_renderers{};

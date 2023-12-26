@@ -194,6 +194,7 @@ bool Game::terminated() const noexcept
 bool Game::step(float elapsedSeconds)
 {
   m_coordinator->update(elapsedSeconds);
+  m_messageQueue->processMessages();
 
   const auto it = m_uiHandlers.find(m_state.screen);
   if (it != m_uiHandlers.end())
@@ -264,6 +265,8 @@ void Game::initialize()
   auto networkSystem = std::make_unique<bsgo::NetworkSystem>(repositories);
   m_networkSystem    = networkSystem.get();
   m_coordinator      = std::make_shared<bsgo::Coordinator>(std::move(networkSystem));
+
+  m_messageQueue = std::make_unique<bsgo::MessageQueue>();
 
   m_views.loginView  = std::make_shared<bsgo::LoginView>(m_coordinator, repositories);
   m_views.shipView   = std::make_shared<bsgo::ShipView>(m_coordinator, repositories);
