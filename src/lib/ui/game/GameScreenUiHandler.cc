@@ -63,6 +63,14 @@ void GameScreenUiHandler::reset()
   }
 }
 
+void GameScreenUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQueue)
+{
+  for (const auto &ui : m_uis)
+  {
+    ui->connectToMessageQueue(messageQueue);
+  }
+}
+
 namespace {
 const olc::vi2d STATUS_UI_PIXEL_POS{5, 5};
 const olc::vi2d SHIP_UI_PIXEL_POS{5, 30};

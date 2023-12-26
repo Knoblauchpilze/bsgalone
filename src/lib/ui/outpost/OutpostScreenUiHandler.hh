@@ -22,6 +22,7 @@ class OutpostScreenUiHandler : public IUiHandler
   void render(SpriteRenderer &engine) const override;
   void updateUi() override;
   void reset() override;
+  void connectToMessageQueue(bsgo::IMessageQueue &messageQueue) override;
 
   private:
   bsgo::ShipViewShPtr m_shipView;

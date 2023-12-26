@@ -18,6 +18,7 @@ class GameScreenUiHandler : public IUiHandler
   void render(SpriteRenderer &engine) const override;
   void updateUi() override;
   void reset() override;
+  void connectToMessageQueue(bsgo::IMessageQueue &messageQueue) override;
 
   private:
   std::vector<IUiHandlerPtr> m_uis{};
