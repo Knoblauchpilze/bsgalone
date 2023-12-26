@@ -134,6 +134,13 @@ void OutpostScreenUiHandler::reset()
   m_hangarUi->reset();
 }
 
+void OutpostScreenUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQueue)
+{
+  m_lockerUi->connectToMessageQueue(messageQueue);
+  m_shopUi->connectToMessageQueue(messageQueue);
+  m_hangarUi->connectToMessageQueue(messageQueue);
+}
+
 constexpr auto VIEW_LIST_WIDTH_TO_SCREEN_WIDTH_RATIO   = 0.2f;
 constexpr auto VIEW_LIST_HEIGHT_TO_SCREEN_HEIGHT_RATIO = 0.5f;
 

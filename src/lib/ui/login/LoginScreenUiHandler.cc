@@ -120,6 +120,11 @@ void LoginScreenUiHandler::reset()
   m_credentialsUiHandler.reset();
 }
 
+void LoginScreenUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQueue)
+{
+  m_credentialsUiHandler.connectToMessageQueue(messageQueue);
+}
+
 namespace {
 constexpr auto DUMMY_PIXEL_DIMS = 10;
 const auto DUMMY_DIMENSIONS     = olc::vi2d{DUMMY_PIXEL_DIMS, DUMMY_PIXEL_DIMS};

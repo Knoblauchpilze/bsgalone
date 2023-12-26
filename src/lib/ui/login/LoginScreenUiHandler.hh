@@ -22,6 +22,7 @@ class LoginScreenUiHandler : public IUiHandler
   void render(SpriteRenderer &engine) const override;
   void updateUi() override;
   void reset() override;
+  void connectToMessageQueue(bsgo::IMessageQueue &messageQueue) override;
 
   private:
   bsgo::LoginViewShPtr m_loginView{};
