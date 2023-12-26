@@ -20,7 +20,7 @@ class DataSource;
 class Coordinator : public utils::CoreObject
 {
   public:
-  Coordinator();
+  Coordinator(ISystemPtr networkSystem);
   ~Coordinator() override = default;
 
   void clear();
@@ -75,7 +75,7 @@ class Coordinator : public utils::CoreObject
   Components m_components{};
   std::vector<ISystemPtr> m_systems{};
 
-  void createSystems();
+  void createSystems(ISystemPtr networkSystem);
   bool hasExpectedKind(const Uuid &ent, const std::optional<EntityKind> &kind) const;
 
   void checkEntityExist(const Uuid &ent, const std::string &componentName) const;
