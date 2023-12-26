@@ -1,13 +1,14 @@
 
 #pragma once
 
+#include "AbstractMessageListener.hh"
 #include "IUiHandler.hh"
 #include "Views.hh"
 #include <memory>
 
 namespace pge {
 
-class LogUiHandler : public IUiHandler
+class LogUiHandler : public IUiHandler, public bsgo::AbstractMessageListener
 {
   public:
   LogUiHandler(const bsgo::Views &views);
@@ -18,6 +19,9 @@ class LogUiHandler : public IUiHandler
   void render(SpriteRenderer &engine) const override;
   void updateUi() override;
   void reset() override;
+
+  void connectToMessageQueue(bsgo::IMessageQueue &messageQueue) override;
+  void onMessageReceived(const bsgo::IMessage &message) override;
 
   private:
 };
