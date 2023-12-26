@@ -21,7 +21,7 @@ INSERT INTO player_resource (player, resource, amount)
   VALUES ($1, $2, $3)
   ON CONFLICT (player, resource) DO UPDATE
   SET
-    amount = player_resource.amount + excluded.amount
+    amount = excluded.amount
   WHERE
     player_resource.player = excluded.player
     AND player_resource.resource = excluded.resource
