@@ -6,7 +6,9 @@ namespace bsgo {
 AbstractMessage::AbstractMessage(const MessageType &type)
   : IMessage(str(type))
   , m_messageType(type)
-{}
+{
+  addModule(str(type));
+}
 
 auto AbstractMessage::type() const -> MessageType
 {
