@@ -13,6 +13,7 @@ add_subdirectory (
 
 target_sources (bsgalone_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/SystemUtils.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/SystemType.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ISystem.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/AbstractSystem.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/AISystem.cc
