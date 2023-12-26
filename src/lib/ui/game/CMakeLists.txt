@@ -11,4 +11,5 @@ target_sources (bsgalone_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/EntityUiHandler.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/StatusUiHandler.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ShipStatusUiHandler.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/LogUiHandler.cc
 	)
