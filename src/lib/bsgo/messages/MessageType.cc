@@ -14,4 +14,9 @@ auto str(const MessageType &type) -> std::string
   }
 }
 
+auto allMessageTypes() -> std::array<MessageType, 1>
+{
+  return {MessageType::SYSTEM};
+}
+
 } // namespace bsgo
