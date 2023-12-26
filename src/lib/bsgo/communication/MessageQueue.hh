@@ -22,6 +22,8 @@ class MessageQueue : public IMessageQueue, public utils::CoreObject
   private:
   std::vector<IMessagePtr> m_messages{};
   std::unordered_multimap<MessageType, IMessageListener *> m_listeners{};
+
+  void processMessage(const IMessage &message) const;
 };
 
 } // namespace bsgo
