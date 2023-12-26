@@ -3,7 +3,6 @@
 
 #include "Coordinator.hh"
 #include "Entity.hh"
-#include "IMessageQueue.hh"
 #include "ISystem.hh"
 
 namespace bsgo {
@@ -15,7 +14,7 @@ class AbstractSystem : public ISystem
   ~AbstractSystem() override = default;
 
   auto type() const -> SystemType override;
-  void installMessageQueue(IMessageQueue *messageQueue);
+  void installMessageQueue(IMessageQueue *messageQueue) override;
 
   void update(Coordinator &coordinator, const float elapsedSeconds) const override;
 
