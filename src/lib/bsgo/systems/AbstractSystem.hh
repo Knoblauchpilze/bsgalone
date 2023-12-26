@@ -3,6 +3,7 @@
 
 #include "Coordinator.hh"
 #include "Entity.hh"
+#include "IMessageQueue.hh"
 #include "ISystem.hh"
 
 namespace bsgo {
@@ -14,6 +15,7 @@ class AbstractSystem : public ISystem
   ~AbstractSystem() override = default;
 
   auto type() const -> SystemType override;
+  void installMessageQueue(IMessageQueue *messageQueue);
 
   void update(Coordinator &coordinator, const float elapsedSeconds) const override;
 
@@ -21,9 +23,13 @@ class AbstractSystem : public ISystem
                             Coordinator &coordinator,
                             const float elapsedSeconds) const = 0;
 
+  protected:
+  void pushMessage(IMessagePtr message);
+
   private:
   SystemType m_systemType{};
-  Coordinator::EntityPredicate m_entitiesFilter;
+  Coordinator::EntityPredicate m_entitiesFilter{};
+  IMessageQueue *m_messageQueue{};
 };
 
 } // namespace bsgo
