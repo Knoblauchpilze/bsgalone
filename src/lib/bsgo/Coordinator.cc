@@ -59,11 +59,11 @@ auto getAllComponent(const Uuid &ent,
 }
 } // namespace
 
-Coordinator::Coordinator(ISystemPtr networkSystem)
+Coordinator::Coordinator(ISystemPtr networkSystem, IMessageQueue *messageQueue)
   : utils::CoreObject("coordinator")
 {
   setService("bsgo");
-  createSystems(std::move(networkSystem));
+  createSystems(std::move(networkSystem), messageQueue);
 }
 
 void Coordinator::clear()
@@ -398,7 +398,7 @@ void Coordinator::update(float elapsedSeconds)
   cleanUpDeadEntities();
 }
 
-void Coordinator::createSystems(ISystemPtr networkSystem)
+void Coordinator::createSystems(ISystemPtr networkSystem, IMessageQueue *messageQueue)
 {
   auto status = std::make_unique<StatusSystem>();
   m_systems.push_back(std::move(status));
@@ -437,6 +437,11 @@ void Coordinator::createSystems(ISystemPtr networkSystem)
   m_systems.push_back(std::move(owner));
 
   m_systems.emplace_back(std::move(networkSystem));
+
+  for (auto &system : m_systems)
+  {
+    system->installMessageQueue(messageQueue);
+  }
 }
 
 bool Coordinator::hasExpectedKind(const Uuid &ent, const std::optional<EntityKind> &kind) const
