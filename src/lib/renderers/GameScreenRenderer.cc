@@ -1,6 +1,7 @@
 
 #include "GameScreenRenderer.hh"
 #include "EntitiesUtils.hh"
+#include "ResourceUtils.hh"
 #include "ScreenCommon.hh"
 #include "StringUtils.hh"
 
@@ -10,6 +11,7 @@ GameScreenRenderer::GameScreenRenderer(const bsgo::Views &views)
   : IRenderer("game")
   , m_shipView(views.shipView)
   , m_systemView(views.systemView)
+  , m_resourceView(views.resourceView)
 {
   if (nullptr == m_shipView)
   {
@@ -18,6 +20,10 @@ GameScreenRenderer::GameScreenRenderer(const bsgo::Views &views)
   if (nullptr == m_systemView)
   {
     throw std::invalid_argument("Expected non null system view");
+  }
+  if (nullptr == m_resourceView)
+  {
+    throw std::invalid_argument("Expected non null resource view");
   }
 }
 
@@ -169,20 +175,8 @@ void GameScreenRenderer::renderAsteroid(const bsgo::Entity &asteroid,
             "Asteroid contains " + std::to_string(asteroid.resources.size()) + " resource(s)");
     }
 
-    const auto &res = asteroid.resources[0]->resource();
-    switch (res)
-    {
-      case bsgo::Uuid{0}:
-        tint = olc::YELLOW;
-        break;
-      case bsgo::Uuid{1}:
-        tint = olc::PURPLE;
-        break;
-      default:
-        error("Failed to render asteroid " + bsgo::str(asteroid.uuid),
-              "Unknown resource " + bsgo::str(res));
-        break;
-    }
+    const auto res = m_resourceView->getResourceName(asteroid.resources[0]->resource());
+    tint           = colorFromResourceName(res);
   }
   t.sprite.tint = tint;
 
