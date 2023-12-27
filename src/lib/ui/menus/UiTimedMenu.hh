@@ -14,6 +14,7 @@ struct TimedMenuConfig
 
   bool fadeOut{true};
   utils::Duration fadeOutDuration{utils::Milliseconds(1000)};
+  bool applyToBackGround{true};
 };
 
 class UiTimedMenu : public utils::CoreObject
@@ -34,6 +35,7 @@ class UiTimedMenu : public utils::CoreObject
   UiMenuPtr m_menu{};
   utils::Duration m_duration{};
   std::optional<utils::Duration> m_fadeOutDuration{};
+  bool m_applyToBackGround{true};
 
   std::optional<utils::TimeStamp> m_lastTrigger{};
   std::optional<utils::TimeStamp> m_fadeOutStartTime{};
