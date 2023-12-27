@@ -274,12 +274,13 @@ void Game::initialize()
   m_coordinator = std::make_shared<bsgo::Coordinator>(std::move(networkSystem),
                                                       m_messageQueue.get());
 
-  m_views.loginView  = std::make_shared<bsgo::LoginView>(m_coordinator, repositories);
-  m_views.shipView   = std::make_shared<bsgo::ShipView>(m_coordinator, repositories);
-  m_views.systemView = std::make_shared<bsgo::SystemView>(m_coordinator, repositories);
-  m_views.playerView = std::make_shared<bsgo::PlayerView>(m_coordinator, repositories);
-  m_views.shopView   = std::make_shared<bsgo::ShopView>(m_coordinator, repositories);
-  m_views.serverView = std::make_shared<bsgo::ServerView>(m_coordinator, repositories);
+  m_views.loginView    = std::make_shared<bsgo::LoginView>(m_coordinator, repositories);
+  m_views.shipView     = std::make_shared<bsgo::ShipView>(m_coordinator, repositories);
+  m_views.systemView   = std::make_shared<bsgo::SystemView>(m_coordinator, repositories);
+  m_views.playerView   = std::make_shared<bsgo::PlayerView>(m_coordinator, repositories);
+  m_views.shopView     = std::make_shared<bsgo::ShopView>(m_coordinator, repositories);
+  m_views.serverView   = std::make_shared<bsgo::ServerView>(m_coordinator, repositories);
+  m_views.resourceView = std::make_shared<bsgo::ResourceView>(m_coordinator, repositories);
 }
 
 } // namespace pge
