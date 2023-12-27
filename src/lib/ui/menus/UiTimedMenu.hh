@@ -26,6 +26,8 @@ class UiTimedMenu : public utils::CoreObject
   void trigger();
   void update();
 
+  bool finished() const;
+
   void render(olc::PixelGameEngine *pge) const;
 
   private:

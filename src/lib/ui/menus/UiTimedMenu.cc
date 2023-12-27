@@ -55,6 +55,11 @@ void UiTimedMenu::update()
   }
 }
 
+bool UiTimedMenu::finished() const
+{
+  return m_lastTrigger.has_value();
+}
+
 void UiTimedMenu::render(olc::PixelGameEngine *pge) const
 {
   m_menu->render(pge);
