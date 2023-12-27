@@ -1,5 +1,6 @@
 
 #include "LootSystem.hh"
+#include "LootMessage.hh"
 
 namespace bsgo {
 namespace {
@@ -100,6 +101,8 @@ void LootSystem::distributeResourcesTo(const Entity &player, const Entity &deadT
          + ")");
     const auto total = (*maybePlayerResource)->amount() + resource->amount();
     (*maybePlayerResource)->setAmount(total);
+
+    pushMessage(std::make_unique<LootMessage>(resource->resource(), resource->amount()));
   }
 }
 
