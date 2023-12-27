@@ -22,20 +22,26 @@ bool LogUiHandler::processUserInput(UserInputData & /*inputData*/)
 
 void LogUiHandler::render(SpriteRenderer &engine) const
 {
-  for (const auto &menu : m_logs)
+  for (const auto &message : m_logs)
   {
-    menu->render(engine.getRenderer());
+    message.menu->render(engine.getRenderer());
   }
 }
 
 void LogUiHandler::updateUi()
 {
-  for (const auto &menu : m_logs)
+  for (const auto &menu : m_logsToTrigger)
   {
-    menu->update();
+    menu->trigger();
+  }
+  m_logsToTrigger.clear();
+
+  for (const auto &message : m_logs)
+  {
+    message.menu->update();
   }
 
-  std::erase_if(m_logs, [](const UiTimedMenuPtr &menu) { return menu->finished(); });
+  std::erase_if(m_logs, [](const LogMessage &data) { return data.menu->finished(); });
 }
 
 void LogUiHandler::reset()
@@ -50,6 +56,8 @@ void LogUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQueue)
 
 namespace {
 constexpr std::size_t MAXIMUM_NUMBER_OF_LOGS_DISPLAYED = 5;
+const auto LOG_MENU_DIMS                               = olc::vi2d{150, 30};
+constexpr auto LOG_FADE_OUT_DURATION_MS                = 5000;
 } // namespace
 
 void LogUiHandler::onMessageReceived(const bsgo::IMessage &message)
@@ -60,31 +68,36 @@ void LogUiHandler::onMessageReceived(const bsgo::IMessage &message)
   }
 
   auto logMenu = createMenuFromMessage(message);
-  logMenu->trigger();
-  /// TODO: Should push the menus down the screen
-  m_logs.push_front(std::move(logMenu));
+  LogMessage data{};
+  data.rawMenu = logMenu.get();
+
+  TimedMenuConfig timedConfig{.duration          = utils::Milliseconds(LOG_FADE_OUT_DURATION_MS),
+                              .fadeOut           = true,
+                              .fadeOutDuration   = utils::Milliseconds(LOG_FADE_OUT_DURATION_MS),
+                              .applyToBackGround = false};
+  data.menu = std::make_unique<UiTimedMenu>(timedConfig, std::move(logMenu));
+
+  auto id = 1;
+  for (const auto &data : m_logs)
+  {
+    const auto y = m_offset.y + id * LOG_MENU_DIMS.y;
+    const olc::vi2d pos{m_offset.x - LOG_MENU_DIMS.x / 2, y};
+    data.rawMenu->setPosition(pos);
+    ++id;
+  }
+
+  m_logsToTrigger.push_back(data.menu.get());
+  m_logs.emplace_front(std::move(data));
 }
 
-namespace {
-constexpr auto LOG_FADE_OUT_DURATION_MS = 5000;
-
-const auto LOG_MENU_DIMS = olc::vi2d{150, 30};
-} // namespace
-
-auto LogUiHandler::createMenuFromMessage(const bsgo::IMessage & /*message*/) -> UiTimedMenuPtr
+auto LogUiHandler::createMenuFromMessage(const bsgo::IMessage & /*message*/) -> UiMenuPtr
 {
   const olc::vi2d pos{m_offset.x - LOG_MENU_DIMS.x / 2, m_offset.y};
   const MenuConfig config{.pos = pos, .dims = LOG_MENU_DIMS, .highlightable = false};
   const BackgroundConfig bg = bgConfigFromColor(transparent(olc::WHITE, alpha::Transparent));
   const TextConfig text     = textConfigFromColor("Message", olc::WHITE);
 
-  auto menu = std::make_unique<UiTextMenu>(config, bg, text);
-
-  TimedMenuConfig timedConfig{.duration          = utils::Milliseconds(LOG_FADE_OUT_DURATION_MS),
-                              .fadeOut           = true,
-                              .fadeOutDuration   = utils::Milliseconds(LOG_FADE_OUT_DURATION_MS),
-                              .applyToBackGround = false};
-  return std::make_unique<UiTimedMenu>(timedConfig, std::move(menu));
+  return std::make_unique<UiTextMenu>(config, bg, text);
 }
 
 } // namespace pge
