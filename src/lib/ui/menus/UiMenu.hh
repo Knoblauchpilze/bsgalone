@@ -24,6 +24,7 @@ class UiMenu : public utils::CoreObject
   void setVisible(const bool visible) noexcept;
   void setEnabled(const bool enabled) noexcept;
   void setHighlightable(const bool highlightable) noexcept;
+  void setPosition(const olc::vi2d &position);
 
   void setGameClickCallback(const GameCallback &callback);
 
