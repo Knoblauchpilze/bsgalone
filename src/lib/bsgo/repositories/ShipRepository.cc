@@ -10,7 +10,7 @@ ShipRepository::ShipRepository(const DbConnectionShPtr &connection)
 namespace {
 constexpr auto FIND_ONE_QUERY_NAME = "ship_find_one";
 constexpr auto FIND_ONE_QUERY
-  = "SELECT s.faction, s.class, s.name, s.max_hull_points, s.hull_points_regen, s.max_power_points, s.power_points_regen, s.max_acceleration, s.max_speed, s.radius, sc.jump_time_ms, sc.jump_time_threat_ms FROM ship AS s LEFT JOIN ship_class AS sc ON s.class = sc.name WHERE s.id = $1";
+  = "SELECT s.id, s.faction, s.class, s.name, s.max_hull_points, s.hull_points_regen, s.max_power_points, s.power_points_regen, s.max_acceleration, s.max_speed, s.radius, sc.jump_time_ms, sc.jump_time_threat_ms FROM ship AS s LEFT JOIN ship_class AS sc ON s.class = sc.name WHERE s.id = $1";
 
 constexpr auto FIND_ALL_BY_FACTION_QUERY_NAME = "ship_find_all_by_faction";
 constexpr auto FIND_ALL_BY_FACTION_QUERY
@@ -43,6 +43,26 @@ auto ShipRepository::findOneById(const Uuid &ship) const -> Ship
 }
 
 namespace {
+auto fetchShipFromSqlResult(const pqxx::const_result_iterator &record) -> Ship
+{
+  Ship ship{};
+  ship.id               = fromDbId(record[0].as<int>());
+  ship.faction          = fromDbFaction(record[1].as<std::string>());
+  ship.shipClass        = fromDbShipClass(record[2].as<std::string>());
+  ship.name             = record[3].as<std::string>();
+  ship.maxHullPoints    = record[4].as<float>();
+  ship.hullPointsRegen  = record[5].as<float>();
+  ship.maxPowerPoints   = record[6].as<float>();
+  ship.powerRegen       = record[7].as<float>();
+  ship.acceleration     = record[8].as<float>();
+  ship.speed            = record[9].as<float>();
+  ship.radius           = record[10].as<float>();
+  ship.jumpTime         = utils::Milliseconds(record[11].as<int>());
+  ship.jumpTimeInThreat = utils::Milliseconds(record[12].as<int>());
+
+  return ship;
+}
+
 auto fetchAllShipsByFaction(const Faction &faction, DbConnection &connection) -> std::vector<Ship>
 {
   std::vector<Ship> out;
@@ -52,22 +72,7 @@ auto fetchAllShipsByFaction(const Faction &faction, DbConnection &connection) ->
 
   for (const auto record : rows)
   {
-    Ship ship{};
-    ship.id               = fromDbId(record[0].as<int>());
-    ship.faction          = fromDbFaction(record[1].as<std::string>());
-    ship.shipClass        = fromDbShipClass(record[2].as<std::string>());
-    ship.name             = record[3].as<std::string>();
-    ship.maxHullPoints    = record[4].as<float>();
-    ship.hullPointsRegen  = record[5].as<float>();
-    ship.maxPowerPoints   = record[6].as<float>();
-    ship.powerRegen       = record[7].as<float>();
-    ship.acceleration     = record[8].as<float>();
-    ship.speed            = record[9].as<float>();
-    ship.radius           = record[10].as<float>();
-    ship.jumpTime         = utils::Milliseconds(record[11].as<int>());
-    ship.jumpTimeInThreat = utils::Milliseconds(record[12].as<int>());
-
-    out.emplace_back(ship);
+    out.emplace_back(fetchShipFromSqlResult(record));
   }
 
   return out;
@@ -105,23 +110,7 @@ auto ShipRepository::fetchShipBase(const Uuid &ship) const -> Ship
   auto work         = m_connection->nonTransaction();
   const auto record = work.exec_prepared1(FIND_ONE_QUERY_NAME, toDbId(ship));
 
-  Ship out;
-
-  out.id               = ship;
-  out.faction          = fromDbFaction(record[0].as<std::string>());
-  out.shipClass        = fromDbShipClass(record[1].as<std::string>());
-  out.name             = record[2].as<std::string>();
-  out.maxHullPoints    = record[3].as<float>();
-  out.hullPointsRegen  = record[4].as<float>();
-  out.maxPowerPoints   = record[5].as<float>();
-  out.powerRegen       = record[6].as<float>();
-  out.acceleration     = record[7].as<float>();
-  out.speed            = record[8].as<float>();
-  out.radius           = record[9].as<float>();
-  out.jumpTime         = utils::Milliseconds(record[10].as<int>());
-  out.jumpTimeInThreat = utils::Milliseconds(record[11].as<int>());
-
-  return out;
+  return fetchShipFromSqlResult(record);
 }
 
 void ShipRepository::fetchSlots(const Uuid &ship, Ship &out) const
