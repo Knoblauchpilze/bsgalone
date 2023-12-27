@@ -44,6 +44,7 @@ class ShipRepository : public AbstractRepository
   void initialize() override;
 
   auto findOneById(const Uuid &ship) const -> Ship;
+  auto findAllByFaction(const Faction &faction) -> std::vector<Ship>;
   auto findOneByFactionAndStarting(const Faction &faction, const bool startingShip) const -> Ship;
 
   private:
