@@ -26,6 +26,8 @@ class LogUiHandler : public IUiHandler, public bsgo::AbstractMessageListener
   void onMessageReceived(const bsgo::IMessage &message) override;
 
   private:
+  bsgo::SystemViewShPtr m_systemView{};
+  bsgo::ResourceViewShPtr m_resourceView{};
   olc::vi2d m_offset{};
 
   struct LogMessage
