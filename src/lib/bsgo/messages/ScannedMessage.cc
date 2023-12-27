@@ -3,14 +3,14 @@
 
 namespace bsgo {
 
-ScannedMessage::ScannedMessage(const Uuid &asteroidDbId)
+ScannedMessage::ScannedMessage(const Uuid &asteroidEntityId)
   : SystemMessage(SystemType::COMPUTER)
-  , m_asteroidDbId(asteroidDbId)
+  , m_asteroidEntityId(asteroidEntityId)
 {}
 
-auto ScannedMessage::asteroidDbId() const -> Uuid
+auto ScannedMessage::asteroidEntityId() const -> Uuid
 {
-  return m_asteroidDbId;
+  return m_asteroidEntityId;
 }
 
 } // namespace bsgo
