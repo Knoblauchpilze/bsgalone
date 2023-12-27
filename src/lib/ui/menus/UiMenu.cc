@@ -30,6 +30,17 @@ void UiMenu::setHighlightable(const bool highlightable) noexcept
   m_state.highlightable = highlightable;
 }
 
+void UiMenu::setPosition(const olc::vi2d &position)
+{
+  if (m_parent != nullptr)
+  {
+    error("Failed to set new position", "Menu is not a root menu");
+  }
+
+  m_pos = position;
+  updateLayoutAfterChildChange();
+}
+
 void UiMenu::setGameClickCallback(const GameCallback &callback)
 {
   m_gameClickCallback = callback;
