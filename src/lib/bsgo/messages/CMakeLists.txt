@@ -9,5 +9,6 @@ target_sources (bsgalone_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/AbstractMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SystemMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ScannedMessage.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/LootMessage.cc
 	)
 
