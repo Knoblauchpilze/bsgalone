@@ -1,0 +1,43 @@
+
+#include "OutpostDataSource.hh"
+#include "CircleBox.hh"
+#include "Coordinator.hh"
+
+namespace bsgo {
+
+OutpostDataSource::OutpostDataSource(const Repositories &repositories, const Uuid &playerDbId)
+  : utils::CoreObject("bsgo")
+  , m_playerDbId(playerDbId)
+  , m_repositories(repositories)
+{
+  setService("data");
+  addModule("outpost");
+}
+
+void OutpostDataSource::initialize(Coordinator &coordinator) const
+{
+  const auto systemId = m_repositories.playerRepository->findSystemByPlayer(m_playerDbId);
+
+  const auto outposts = m_repositories.systemRepository->findAllOutpostsBySystem(systemId);
+  for (const auto &id : outposts)
+  {
+    registerOutpost(coordinator, id);
+  }
+}
+
+void OutpostDataSource::registerOutpost(Coordinator &coordinator, const Uuid &outpost) const
+{
+  const auto data = m_repositories.systemOutpostRepository->findOneById(outpost);
+
+  auto box       = std::make_unique<CircleBox>(data.position, data.radius);
+  const auto ent = coordinator.createEntity(EntityKind::OUTPOST);
+  coordinator.addTransform(ent, std::move(box));
+  coordinator.addHealth(ent, data.hullPoints, data.maxHullPoints, data.hullPointsRegen);
+  coordinator.addRemoval(ent);
+  coordinator.addPower(ent, data.powerPoints, data.maxPowerPoints, data.powerRegen);
+  coordinator.addTarget(ent);
+  coordinator.addFaction(ent, data.faction);
+  coordinator.addStatus(ent, Status::VISIBLE, {}, {});
+}
+
+} // namespace bsgo

@@ -228,12 +228,12 @@ void Game::tryActivateSlot(const bsgo::Uuid &ship, const int &slotId)
 
 void Game::login(const bsgo::Uuid &playerDbId)
 {
-  m_dataSource.setPlayerId(playerDbId);
+  m_dataSource.setPlayerDbId(playerDbId);
   m_dataSource.initialize(*m_coordinator);
 
   m_networkSystem->setPlayerDbId(playerDbId);
 
-  const auto playerShipDbId     = m_dataSource.playerShipId();
+  const auto playerShipDbId     = m_dataSource.playerShipDbId();
   const auto playerShipEntityId = m_dataSource.playerShipEntityId();
 
   m_views.playerView->setPlayerDbId(playerDbId);

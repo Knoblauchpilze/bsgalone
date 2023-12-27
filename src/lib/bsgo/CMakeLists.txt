@@ -47,7 +47,10 @@ add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/communication
 	)
 
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/data
+	)
+
 target_sources (bsgalone_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/Coordinator.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/DataSource.cc
 	)
