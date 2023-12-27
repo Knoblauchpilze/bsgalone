@@ -57,7 +57,7 @@ void UiTimedMenu::update()
 
 bool UiTimedMenu::finished() const
 {
-  return m_lastTrigger.has_value();
+  return !m_lastTrigger.has_value();
 }
 
 void UiTimedMenu::render(olc::PixelGameEngine *pge) const
@@ -75,6 +75,8 @@ void UiTimedMenu::initializeFromConfig(const TimedMenuConfig &config)
   }
 
   m_fadeOutDuration = config.fadeOutDuration;
+
+  m_applyToBackGround = config.applyToBackGround;
 }
 
 void UiTimedMenu::handleFadeOut(const utils::TimeStamp &now)
@@ -92,8 +94,11 @@ void UiTimedMenu::handleFadeOut(const utils::TimeStamp &now)
 
 void UiTimedMenu::updateOpacity(const float perc)
 {
-  const auto bg = opacifyFromPercentage(m_menu->getBgColor(), perc);
-  m_menu->updateBgColor(bg);
+  if (m_applyToBackGround)
+  {
+    const auto bg = opacifyFromPercentage(m_menu->getBgColor(), perc);
+    m_menu->updateBgColor(bg);
+  }
 
   const auto maybeTextMenu = dynamic_cast<UiTextMenu *>(m_menu.get());
   if (nullptr != maybeTextMenu)
