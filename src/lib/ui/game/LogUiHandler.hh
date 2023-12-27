@@ -27,9 +27,17 @@ class LogUiHandler : public IUiHandler, public bsgo::AbstractMessageListener
 
   private:
   olc::vi2d m_offset{};
-  std::deque<UiTimedMenuPtr> m_logs{};
 
-  auto createMenuFromMessage(const bsgo::IMessage &message) -> UiTimedMenuPtr;
+  struct LogMessage
+  {
+    UiTimedMenuPtr menu{};
+    UiMenu *rawMenu{};
+  };
+
+  std::deque<LogMessage> m_logs{};
+  std::vector<UiTimedMenu *> m_logsToTrigger{};
+
+  auto createMenuFromMessage(const bsgo::IMessage &message) -> UiMenuPtr;
 };
 
 using LogUiHandlerPtr = std::unique_ptr<LogUiHandler>;
