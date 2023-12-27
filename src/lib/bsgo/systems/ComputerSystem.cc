@@ -1,5 +1,6 @@
 
 #include "ComputerSystem.hh"
+#include "ScannedMessage.hh"
 #include "SystemUtils.hh"
 
 namespace bsgo {
@@ -119,6 +120,7 @@ void ComputerSystem::applyReceiverEffects(Entity &target,
   if (target.exists<ScannedComponent>())
   {
     target.scannedComp().scan();
+    pushMessage(std::make_unique<ScannedMessage>(target.uuid));
   }
 }
 

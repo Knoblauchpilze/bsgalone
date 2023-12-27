@@ -1,13 +1,29 @@
 
 #include "LogUiHandler.hh"
+#include "ResourceUtils.hh"
+#include "StringUtils.hh"
 #include "UiTextMenu.hh"
+
+#include "ScannedMessage.hh"
+#include "SystemMessage.hh"
 
 namespace pge {
 
-LogUiHandler::LogUiHandler(const bsgo::Views & /*views*/)
+LogUiHandler::LogUiHandler(const bsgo::Views &views)
   : IUiHandler("log")
   , AbstractMessageListener({bsgo::MessageType::SYSTEM})
-{}
+  , m_systemView(views.systemView)
+  , m_resourceView(views.resourceView)
+{
+  if (nullptr == m_systemView)
+  {
+    throw std::invalid_argument("Expected non null system view");
+  }
+  if (nullptr == m_resourceView)
+  {
+    throw std::invalid_argument("Expected non null resource view");
+  }
+}
 
 void LogUiHandler::initializeMenus(const int width, const int height)
 {
@@ -56,8 +72,8 @@ void LogUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQueue)
 
 namespace {
 constexpr std::size_t MAXIMUM_NUMBER_OF_LOGS_DISPLAYED = 5;
-const auto LOG_MENU_DIMS                               = olc::vi2d{150, 30};
-constexpr auto LOG_FADE_OUT_DURATION_MS                = 5000;
+const auto LOG_MENU_DIMS                               = olc::vi2d{150, 20};
+constexpr auto LOG_FADE_OUT_DURATION_MS                = 7000;
 } // namespace
 
 void LogUiHandler::onMessageReceived(const bsgo::IMessage &message)
@@ -90,12 +106,71 @@ void LogUiHandler::onMessageReceived(const bsgo::IMessage &message)
   m_logs.emplace_front(std::move(data));
 }
 
-auto LogUiHandler::createMenuFromMessage(const bsgo::IMessage & /*message*/) -> UiMenuPtr
+namespace {
+constexpr auto NO_USEFUL_RESOURCES_TEXT = "Mineral analysis: no useful resources";
+
+auto createMineralAnalysisMessage(const bsgo::ScannedMessage &message,
+                                  const bsgo::SystemView &systemView,
+                                  const bsgo::ResourceView &resourceView) -> TextConfig
+{
+  const auto asteroid = systemView.getAsteroid(message.asteroidEntityId());
+
+  if (!asteroid.exists<bsgo::LootComponent>())
+  {
+    return textConfigFromColor(NO_USEFUL_RESOURCES_TEXT, olc::WHITE);
+  }
+
+  if (asteroid.resources.size() > 1)
+  {
+    throw std::invalid_argument("Expected asteroid to contain only one resource as loot but got "
+                                + std::to_string(asteroid.resources.size()));
+  }
+  const auto loot = asteroid.resources.at(0);
+
+  const auto resource = resourceView.getResourceName(loot->resource());
+  const auto text     = "Mineral analysis: " + floatToStr(loot->amount(), 0) + " " + resource;
+  const auto color    = colorFromResourceName(resource);
+  return textConfigFromColor(text, color);
+}
+
+auto createTextConfigForSystemMessage(const bsgo::SystemMessage &message,
+                                      const bsgo::SystemView &systemView,
+                                      const bsgo::ResourceView &resourceView) -> TextConfig
+{
+  TextConfig config{};
+
+  switch (message.systemType())
+  {
+    case bsgo::SystemType::COMPUTER:
+      return createMineralAnalysisMessage(dynamic_cast<const bsgo::ScannedMessage &>(message),
+                                          systemView,
+                                          resourceView);
+    default:
+      throw std::invalid_argument("Unsupported system type " + bsgo::str(message.systemType()));
+  }
+
+  return config;
+}
+} // namespace
+
+auto LogUiHandler::createMenuFromMessage(const bsgo::IMessage &message) -> UiMenuPtr
 {
   const olc::vi2d pos{m_offset.x - LOG_MENU_DIMS.x / 2, m_offset.y};
   const MenuConfig config{.pos = pos, .dims = LOG_MENU_DIMS, .highlightable = false};
   const BackgroundConfig bg = bgConfigFromColor(transparent(olc::WHITE, alpha::Transparent));
-  const TextConfig text     = textConfigFromColor("Message", olc::WHITE);
+
+  TextConfig text{};
+  switch (message.type())
+  {
+    case bsgo::MessageType::SYSTEM:
+      text = createTextConfigForSystemMessage(dynamic_cast<const bsgo::SystemMessage &>(message),
+                                              *m_systemView,
+                                              *m_resourceView);
+      break;
+    default:
+      error("Failed to interpret message", "Unsupported type " + bsgo::str(message.type()));
+      break;
+  }
 
   return std::make_unique<UiTextMenu>(config, bg, text);
 }

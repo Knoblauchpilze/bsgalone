@@ -56,4 +56,9 @@ auto SystemView::getBulletsWithin(const IBoundingBox &bbox) const -> std::vector
   return out;
 }
 
+auto SystemView::getAsteroid(const Uuid &asteroid) const -> Entity
+{
+  return m_coordinator->getEntity(asteroid);
+}
+
 } // namespace bsgo
