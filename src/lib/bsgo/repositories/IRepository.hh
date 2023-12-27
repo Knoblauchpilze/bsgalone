@@ -14,7 +14,7 @@ class IRepository : public utils::CoreObject
   /// @brief - To reimplement to prepare the queries used by this repository.
   /// This is useful to make the subsequent executions of the queries faster.
   /// See: https://libpqxx.readthedocs.io/en/6.4/a01480.html
-  virtual void initialize();
+  virtual void initialize() = 0;
 };
 
 } // namespace bsgo
