@@ -4,6 +4,7 @@
 #include "StringUtils.hh"
 #include "UiTextMenu.hh"
 
+#include "LootMessage.hh"
 #include "ScannedMessage.hh"
 #include "SystemMessage.hh"
 
@@ -133,6 +134,15 @@ auto createMineralAnalysisMessage(const bsgo::ScannedMessage &message,
   return textConfigFromColor(text, color);
 }
 
+auto createLootMessage(const bsgo::LootMessage &message, const bsgo::ResourceView &resourceView)
+  -> TextConfig
+{
+  const auto resource = resourceView.getResourceName(message.resourceId());
+  const auto text     = "+" + floatToStr(message.amount(), 0) + " " + resource;
+  const auto color    = colorFromResourceName(resource);
+  return textConfigFromColor(text, color);
+}
+
 auto createTextConfigForSystemMessage(const bsgo::SystemMessage &message,
                                       const bsgo::SystemView &systemView,
                                       const bsgo::ResourceView &resourceView) -> TextConfig
@@ -145,6 +155,8 @@ auto createTextConfigForSystemMessage(const bsgo::SystemMessage &message,
       return createMineralAnalysisMessage(dynamic_cast<const bsgo::ScannedMessage &>(message),
                                           systemView,
                                           resourceView);
+    case bsgo::SystemType::LOOT:
+      return createLootMessage(dynamic_cast<const bsgo::LootMessage &>(message), resourceView);
     default:
       throw std::invalid_argument("Unsupported system type " + bsgo::str(message.systemType()));
   }
