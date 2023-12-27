@@ -9,13 +9,13 @@ namespace bsgo {
 class ScannedMessage : public SystemMessage
 {
   public:
-  ScannedMessage(const Uuid &asteroidDbId);
+  ScannedMessage(const Uuid &asteroidEntityId);
   ~ScannedMessage() override = default;
 
-  auto asteroidDbId() const -> Uuid;
+  auto asteroidEntityId() const -> Uuid;
 
   private:
-  Uuid m_asteroidDbId{};
+  Uuid m_asteroidEntityId{};
 };
 
 } // namespace bsgo
