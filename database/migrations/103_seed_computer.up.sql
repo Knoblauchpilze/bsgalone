@@ -5,7 +5,7 @@ INSERT INTO public.computer ("name", "offensive", "power_cost", "reload_time_ms"
   );
 INSERT INTO public.computer ("name", "offensive", "power_cost", "reload_time_ms", "range", "duration_ms", "damage_modifier")
   VALUES (
-    'Scan', true, 5.0, 2000.0, 6.0, NULL, NULL
+    'Scan', true, 5.0, 500.0, 6.0, NULL, NULL
   );
 
 INSERT INTO public.computer_price ("computer", "resource", "cost")
