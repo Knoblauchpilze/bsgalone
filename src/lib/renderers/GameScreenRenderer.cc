@@ -1,7 +1,7 @@
 
 #include "GameScreenRenderer.hh"
 #include "EntitiesUtils.hh"
-#include "ResourceUtils.hh"
+#include "GameColorUtils.hh"
 #include "ScreenCommon.hh"
 #include "StringUtils.hh"
 

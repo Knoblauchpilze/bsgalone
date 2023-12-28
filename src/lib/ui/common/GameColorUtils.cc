@@ -1,5 +1,5 @@
 
-#include "ResourceUtils.hh"
+#include "GameColorUtils.hh"
 
 namespace pge {
 constexpr auto TYLIUM_NAME = "tylium";

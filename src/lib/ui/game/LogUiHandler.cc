@@ -1,6 +1,6 @@
 
 #include "LogUiHandler.hh"
-#include "ResourceUtils.hh"
+#include "GameColorUtils.hh"
 #include "StringUtils.hh"
 #include "UiTextMenu.hh"
 
