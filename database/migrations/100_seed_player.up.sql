@@ -1,8 +1,8 @@
 
 INSERT INTO public.player ("name", "password", "faction")
-  VALUES ('grouton', 'aze', 'cylon');
+  VALUES ('grouton', 'aze', 'colonial');
 INSERT INTO public.player ("name", "password", "faction")
-  VALUES ('knoppgrunt', '654321', 'colonial');
+  VALUES ('knoppgrunt', '654321', 'cylon');
 
 INSERT INTO public.player_resource ("player", "resource", "amount")
   VALUES (
