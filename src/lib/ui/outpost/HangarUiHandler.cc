@@ -276,7 +276,7 @@ void HangarUiHandler::onShipRequest(const int shipIndex)
       onPurchaseRequest(shipIndex);
       break;
     case State::TO_EQUIP:
-      onEquipRequest(shipIndex);
+      onSelectRequest(shipIndex);
       break;
     default:
       error("Failed to handle ship request",
@@ -288,11 +288,13 @@ void HangarUiHandler::onShipRequest(const int shipIndex)
 void HangarUiHandler::onPurchaseRequest(const int shipIndex)
 {
   warn("should handle purchase request for " + std::to_string(shipIndex));
+  onShipPurchased.safeEmit("onPurchaseRequest");
 }
 
-void HangarUiHandler::onEquipRequest(const int shipIndex)
+void HangarUiHandler::onSelectRequest(const int shipIndex)
 {
   warn("should handle equip request for " + std::to_string(shipIndex));
+  onShipSelected.safeEmit("onSelectRequest");
 }
 
 } // namespace pge
