@@ -1,6 +1,7 @@
 
 #include "HangarUiHandler.hh"
 #include "Constants.hh"
+#include "GameColorUtils.hh"
 #include "ScreenCommon.hh"
 #include "SlotComponentUtils.hh"
 #include "StringUtils.hh"
@@ -11,10 +12,15 @@ namespace pge {
 HangarUiHandler::HangarUiHandler(const bsgo::Views &views)
   : IUiHandler("hangar")
   , m_playerView(views.playerView)
+  , m_shopView(views.shopView)
 {
   if (nullptr == m_playerView)
   {
     throw std::invalid_argument("Expected non null player view");
+  }
+  if (nullptr == m_shopView)
+  {
+    throw std::invalid_argument("Expected non null shop view");
   }
 }
 
@@ -49,19 +55,11 @@ void HangarUiHandler::updateUi()
   {
     initializeHangar();
   }
-
-  const auto ships = m_playerView->getPlayerShips();
-
-  for (auto id = 0u; id < ships.size(); ++id)
-  {
-    const auto bgColor = ships[id].active ? olc::VERY_DARK_BROWN : olc::VERY_DARK_APPLE_GREEN;
-    m_ships[id]->updateBgColor(bgColor);
-  }
 }
 
 void HangarUiHandler::reset()
 {
-  m_ships.clear();
+  m_shipsData.clear();
   m_menu->clearChildren();
   m_initialized = false;
 }
@@ -69,79 +67,217 @@ void HangarUiHandler::reset()
 void HangarUiHandler::initializeHangar()
 {
   initializeLayout();
-  generateShipsMenus();
+  updateShipMenus();
   m_initialized = true;
 }
 
 namespace {
 constexpr auto DUMMY_PIXEL_DIMENSION = 10;
 const olc::vi2d DUMMY_DIMENSION{DUMMY_PIXEL_DIMENSION, DUMMY_PIXEL_DIMENSION};
+
+auto generateShipDescription(const bsgo::Ship &ship) -> UiMenuPtr
+{
+  const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .highlightable = false};
+  auto bg = bgConfigFromColor(olc::BLANK);
+
+  auto desc = std::make_unique<UiMenu>(config, bg);
+
+  desc->addMenu(generateSpacer());
+
+  bg         = bgConfigFromColor(olc::BLANK);
+  auto label = ship.name + " (" + bsgo::str(ship.shipClass) + ")";
+  auto text  = textConfigFromColor(ship.name, olc::WHITE);
+  auto prop  = std::make_unique<UiTextMenu>(config, bg, text);
+  desc->addMenu(std::move(prop));
+
+  label = floatToStr(ship.maxHullPoints, 0) + " hull points (+"
+          + floatToStr(ship.hullPointsRegen, 2) + "/s)";
+  text = textConfigFromColor(label, olc::WHITE);
+  prop = std::make_unique<UiTextMenu>(config, bg, text);
+  desc->addMenu(std::move(prop));
+
+  label = floatToStr(ship.maxPowerPoints, 0) + " power (+" + floatToStr(ship.powerRegen, 2) + "/s)";
+  text  = textConfigFromColor(label, olc::WHITE);
+  prop  = std::make_unique<UiTextMenu>(config, bg, text);
+  desc->addMenu(std::move(prop));
+
+  label = floatToStr(ship.speed, 2) + "m/s";
+  text  = textConfigFromColor(label, olc::WHITE);
+  prop  = std::make_unique<UiTextMenu>(config, bg, text);
+  desc->addMenu(std::move(prop));
+
+  label = "";
+  for (const auto &[slot, count] : ship.slots)
+  {
+    if (!label.empty())
+    {
+      label += ", ";
+    }
+    label += std::to_string(count) + " " + bsgo::str(slot);
+    if (count > 1)
+    {
+      label += "s";
+    }
+  }
+  text = textConfigFromColor(label, olc::WHITE);
+  prop = std::make_unique<UiTextMenu>(config, bg, text);
+  desc->addMenu(std::move(prop));
+
+  // for (const auto &ship : ships)
+  // {
+  //   auto textConf = textConfigFromColor(ship.name, olc::BLACK);
+  //   auto prop     = std::make_unique<UiTextMenu>(config, bg, textConf);
+  //   m_ships[id]->addMenu(std::move(prop));
+
+  //   auto text = "Hull points: " + floatToStr(std::floor(ship.maxHullPoints), 0);
+  //   textConf  = textConfigFromColor(text, olc::BLACK);
+  //   prop      = std::make_unique<UiTextMenu>(config, bg, textConf);
+  //   m_ships[id]->addMenu(std::move(prop));
+
+  //   text     = "Hull points regen: " + floatToStr(std::floor(ship.hullPointsRegen), 0);
+  //   textConf = textConfigFromColor(text, olc::BLACK);
+  //   prop     = std::make_unique<UiTextMenu>(config, bg, textConf);
+  //   m_ships[id]->addMenu(std::move(prop));
+
+  //   text     = "Power points: " + floatToStr(std::floor(ship.maxPowerPoints), 0);
+  //   textConf = textConfigFromColor(text, olc::BLACK);
+  //   prop     = std::make_unique<UiTextMenu>(config, bg, textConf);
+  //   m_ships[id]->addMenu(std::move(prop));
+
+  //   text     = "Power regen: " + floatToStr(std::floor(ship.powerRegen), 0);
+  //   textConf = textConfigFromColor(text, olc::BLACK);
+  //   prop     = std::make_unique<UiTextMenu>(config, bg, textConf);
+  //   m_ships[id]->addMenu(std::move(prop));
+
+  //   text = "";
+  //   for (const auto &[slot, count] : ship.slots)
+  //   {
+  //     if (!text.empty())
+  //     {
+  //       text += ", ";
+  //     }
+  //     text += std::to_string(count) + " " + bsgo::str(slot);
+  //   }
+  //   textConf = textConfigFromColor(text, olc::BLACK);
+  //   prop     = std::make_unique<UiTextMenu>(config, bg, textConf);
+  //   m_ships[id]->addMenu(std::move(prop));
+
+  //   ++id;
+  // }
+
+  desc->addMenu(generateSpacer());
+
+  return desc;
+}
+
 } // namespace
 
 void HangarUiHandler::initializeLayout()
 {
-  const auto ships = m_playerView->getPlayerShips();
-  for (auto id = 0u; id < ships.size(); ++id)
-  {
-    auto bgColor = ships[id].active ? olc::VERY_DARK_BROWN : olc::VERY_DARK_APPLE_GREEN;
+  const auto faction  = m_playerView->getPlayerFaction();
+  const auto allShips = m_shopView->getAllShipsForFaction(faction);
 
-    const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .propagateEventsToChildren = false};
-    const auto bg = bgConfigFromColor(bgColor);
+  const MenuConfig config{.pos           = {},
+                          .dims          = DUMMY_DIMENSION,
+                          .layout        = MenuLayout::HORIZONTAL,
+                          .highlightable = false};
+  const auto bg = bgConfigFromColor(colorFromFaction(faction));
+
+  auto shipIndex = 0;
+  for (const auto &ship : allShips)
+  {
     auto shipMenu = std::make_unique<UiMenu>(config, bg);
 
-    m_ships.push_back(shipMenu.get());
+    ShipData data{.shipDbId = ship.id, .menu = shipMenu.get()};
+    m_shipsData.emplace_back(std::move(data));
+
+    auto shipDesc = generateShipDescription(ship);
+    shipMenu->addMenu(std::move(shipDesc));
+
+    auto section = generateShipInteractiveSection(shipIndex);
+    shipMenu->addMenu(std::move(section));
+
     m_menu->addMenu(std::move(shipMenu));
+
+    ++shipIndex;
   }
 }
 
-void HangarUiHandler::generateShipsMenus()
+auto HangarUiHandler::generateShipInteractiveSection(const int itemId) -> UiMenuPtr
+{
+  auto middleSection = generateBlankVerticalMenu();
+  middleSection->addMenu(generateSpacer());
+  middleSection->addMenu(generateSpacer());
+
+  MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION};
+
+  const auto bg       = bgConfigFromColor(olc::DARK_GREY);
+  const auto textConf = textConfigFromColor("", olc::WHITE);
+  auto button         = std::make_unique<UiTextMenu>(config, bg, textConf);
+
+  m_shipsData.at(itemId).button = button.get();
+
+  middleSection->addMenu(std::move(button));
+
+  middleSection->addMenu(generateSpacer());
+  middleSection->addMenu(generateSpacer());
+
+  auto menu = generateBlankHorizontalMenu();
+  menu->addMenu(generateSpacer());
+  menu->addMenu(std::move(middleSection));
+  menu->addMenu(generateSpacer());
+
+  return menu;
+}
+
+namespace {
+constexpr auto BUY_SHIP_BUTTON_TEXT = "Purchase";
+constexpr auto USE_SHIP_BUTTON_TEXT = "Select";
+
+auto getPlayerShipWithId(const std::vector<bsgo::PlayerShip> &ships, const bsgo::Uuid &shipId)
+  -> std::optional<bsgo::PlayerShip>
+{
+  for (const auto &ship : ships)
+  {
+    if (shipId == ship.ship)
+    {
+      return ship;
+    }
+  }
+
+  return {};
+}
+} // namespace
+
+void HangarUiHandler::updateShipMenus()
 {
   const auto ships = m_playerView->getPlayerShips();
 
-  auto id = 0;
-  const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .propagateEventsToChildren = false};
-  const auto bg = bgConfigFromColor(olc::BLANK);
-
-  for (const auto &ship : ships)
+  auto shipIndex = 0;
+  for (const auto &shipData : m_shipsData)
   {
-    auto textConf = textConfigFromColor(ship.name, olc::BLACK);
-    auto prop     = std::make_unique<UiTextMenu>(config, bg, textConf);
-    m_ships[id]->addMenu(std::move(prop));
+    const auto maybePlayerShip = getPlayerShipWithId(ships, shipData.shipDbId);
 
-    auto text = "Hull points: " + floatToStr(std::floor(ship.maxHullPoints), 0);
-    textConf  = textConfigFromColor(text, olc::BLACK);
-    prop      = std::make_unique<UiTextMenu>(config, bg, textConf);
-    m_ships[id]->addMenu(std::move(prop));
-
-    text     = "Hull points regen: " + floatToStr(std::floor(ship.hullPointsRegen), 0);
-    textConf = textConfigFromColor(text, olc::BLACK);
-    prop     = std::make_unique<UiTextMenu>(config, bg, textConf);
-    m_ships[id]->addMenu(std::move(prop));
-
-    text     = "Power points: " + floatToStr(std::floor(ship.maxPowerPoints), 0);
-    textConf = textConfigFromColor(text, olc::BLACK);
-    prop     = std::make_unique<UiTextMenu>(config, bg, textConf);
-    m_ships[id]->addMenu(std::move(prop));
-
-    text     = "Power regen: " + floatToStr(std::floor(ship.powerRegen), 0);
-    textConf = textConfigFromColor(text, olc::BLACK);
-    prop     = std::make_unique<UiTextMenu>(config, bg, textConf);
-    m_ships[id]->addMenu(std::move(prop));
-
-    text = "";
-    for (const auto &[slot, count] : ship.slots)
+    if (!maybePlayerShip)
     {
-      if (!text.empty())
-      {
-        text += ", ";
-      }
-      text += std::to_string(count) + " " + bsgo::str(slot);
+      shipData.button->setText(BUY_SHIP_BUTTON_TEXT);
     }
-    textConf = textConfigFromColor(text, olc::BLACK);
-    prop     = std::make_unique<UiTextMenu>(config, bg, textConf);
-    m_ships[id]->addMenu(std::move(prop));
+    else
+    {
+      shipData.button->setText(USE_SHIP_BUTTON_TEXT);
+      if (maybePlayerShip->active)
+      {
+        shipData.button->updateBgColor(olc::DARK_GREY);
+      }
+      else
+      {
+        shipData.button->updateBgColor(olc::DARK_GREEN);
+      }
+    }
 
-    ++id;
+    shipData.button->setEnabled(!maybePlayerShip || !maybePlayerShip->active);
+
+    ++shipIndex;
   }
 }
 
