@@ -19,4 +19,17 @@ auto colorFromResourceName(const std::string &name) -> olc::Pixel
   throw std::invalid_argument("Unsupported resource name " + name);
 }
 
+auto colorFromFaction(const bsgo::Faction &faction) -> olc::Pixel
+{
+  switch (faction)
+  {
+    case bsgo::Faction::COLONIAL:
+      return olc::DARK_BLUE;
+    case bsgo::Faction::CYLON:
+      return olc::DARK_RED;
+    default:
+      throw std::invalid_argument("Unsupported faction " + bsgo::str(faction));
+  }
+}
+
 } // namespace pge

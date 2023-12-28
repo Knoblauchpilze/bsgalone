@@ -3,6 +3,7 @@
 
 #include "IUiHandler.hh"
 #include "UiMenu.hh"
+#include "UiTextMenu.hh"
 #include "Views.hh"
 #include <memory>
 
@@ -22,14 +23,25 @@ class HangarUiHandler : public IUiHandler
 
   private:
   bsgo::PlayerViewShPtr m_playerView;
+  bsgo::ShopViewShPtr m_shopView;
   bool m_initialized{false};
 
   UiMenuPtr m_menu{};
-  std::vector<UiMenu *> m_ships{};
+
+  struct ShipData
+  {
+    bsgo::Uuid shipDbId{};
+    UiMenu *menu{};
+    UiTextMenu *button{};
+  };
+  std::vector<ShipData> m_shipsData{};
 
   void initializeHangar();
+
   void initializeLayout();
-  void generateShipsMenus();
+
+  auto generateShipInteractiveSection(const int itemId) -> UiMenuPtr;
+  void updateShipMenus();
 };
 
 using HangarUiHandlerPtr = std::unique_ptr<HangarUiHandler>;
