@@ -161,19 +161,21 @@ void HangarUiHandler::initializeLayout()
   }
 }
 
-auto HangarUiHandler::generateShipInteractiveSection(const int itemId) -> UiMenuPtr
+auto HangarUiHandler::generateShipInteractiveSection(const int shipIndex) -> UiMenuPtr
 {
   auto middleSection = generateBlankVerticalMenu();
   middleSection->addMenu(generateSpacer());
   middleSection->addMenu(generateSpacer());
 
-  MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION};
+  MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .clickCallback = [this, shipIndex]() {
+                      onShipRequest(shipIndex);
+                    }};
 
   const auto bg       = bgConfigFromColor(olc::DARK_GREY);
   const auto textConf = textConfigFromColor("", olc::WHITE);
   auto button         = std::make_unique<UiTextMenu>(config, bg, textConf);
 
-  m_shipsData.at(itemId).button = button.get();
+  m_shipsData.at(shipIndex).button = button.get();
 
   middleSection->addMenu(std::move(button));
 
@@ -212,7 +214,7 @@ void HangarUiHandler::updateShipMenus()
   const auto ships = m_playerView->getPlayerShips();
 
   auto shipIndex = 0;
-  for (const auto &shipData : m_shipsData)
+  for (auto &shipData : m_shipsData)
   {
     const auto maybePlayerShip = getPlayerShipWithId(ships, shipData.shipDbId);
 
@@ -225,30 +227,39 @@ void HangarUiHandler::updateShipMenus()
       shipData.button->setHighlightable(affordability.canAfford);
       if (affordability.canAfford)
       {
+        shipData.state = State::TO_BUY;
         shipData.button->updateBgColor(olc::DARK_GREEN);
       }
       else
       {
+        shipData.state = State::UNAFFORDABLE;
         shipData.button->updateBgColor(olc::DARK_RED);
       }
     }
     else
     {
       shipData.button->setText(USE_SHIP_BUTTON_TEXT);
+
+      shipData.button->setEnabled(!maybePlayerShip->active);
       if (maybePlayerShip->active)
       {
+        shipData.state = State::EQUIPED;
         shipData.button->updateBgColor(olc::DARK_GREY);
       }
       else
       {
+        shipData.state = State::TO_EQUIP;
         shipData.button->updateBgColor(olc::DARK_GREEN);
       }
     }
 
-    shipData.button->setEnabled(!maybePlayerShip || !maybePlayerShip->active);
-
     ++shipIndex;
   }
+}
+
+void HangarUiHandler::onShipRequest(const int shipIndex)
+{
+  warn("should handle request for " + std::to_string(shipIndex));
 }
 
 } // namespace pge

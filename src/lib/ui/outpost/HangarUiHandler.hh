@@ -28,11 +28,20 @@ class HangarUiHandler : public IUiHandler
 
   UiMenuPtr m_menu{};
 
+  enum class State
+  {
+    TO_BUY,
+    UNAFFORDABLE,
+    TO_EQUIP,
+    EQUIPED
+  };
+
   struct ShipData
   {
     bsgo::Uuid shipDbId{};
     UiMenu *menu{};
     UiTextMenu *button{};
+    State state{State::UNAFFORDABLE};
   };
   std::vector<ShipData> m_shipsData{};
 
@@ -40,8 +49,10 @@ class HangarUiHandler : public IUiHandler
 
   void initializeLayout();
 
-  auto generateShipInteractiveSection(const int itemId) -> UiMenuPtr;
+  auto generateShipInteractiveSection(const int shipIndex) -> UiMenuPtr;
   void updateShipMenus();
+
+  void onShipRequest(const int shipIndex);
 };
 
 using HangarUiHandlerPtr = std::unique_ptr<HangarUiHandler>;
