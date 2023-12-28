@@ -36,6 +36,8 @@ class ShopView : public IView
   auto getShopItems() const -> std::vector<ShopItem>;
   auto canPlayerAfford(const Uuid &id, const Item &type) const -> Affordability;
 
+  auto getAllShipsForFaction(const Faction &faction) const -> std::vector<Ship>;
+
   private:
   std::optional<Uuid> m_playerDbId{};
 
