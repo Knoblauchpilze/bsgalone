@@ -123,48 +123,6 @@ auto generateShipDescription(const bsgo::Ship &ship) -> UiMenuPtr
   prop = std::make_unique<UiTextMenu>(config, bg, text);
   desc->addMenu(std::move(prop));
 
-  // for (const auto &ship : ships)
-  // {
-  //   auto textConf = textConfigFromColor(ship.name, olc::BLACK);
-  //   auto prop     = std::make_unique<UiTextMenu>(config, bg, textConf);
-  //   m_ships[id]->addMenu(std::move(prop));
-
-  //   auto text = "Hull points: " + floatToStr(std::floor(ship.maxHullPoints), 0);
-  //   textConf  = textConfigFromColor(text, olc::BLACK);
-  //   prop      = std::make_unique<UiTextMenu>(config, bg, textConf);
-  //   m_ships[id]->addMenu(std::move(prop));
-
-  //   text     = "Hull points regen: " + floatToStr(std::floor(ship.hullPointsRegen), 0);
-  //   textConf = textConfigFromColor(text, olc::BLACK);
-  //   prop     = std::make_unique<UiTextMenu>(config, bg, textConf);
-  //   m_ships[id]->addMenu(std::move(prop));
-
-  //   text     = "Power points: " + floatToStr(std::floor(ship.maxPowerPoints), 0);
-  //   textConf = textConfigFromColor(text, olc::BLACK);
-  //   prop     = std::make_unique<UiTextMenu>(config, bg, textConf);
-  //   m_ships[id]->addMenu(std::move(prop));
-
-  //   text     = "Power regen: " + floatToStr(std::floor(ship.powerRegen), 0);
-  //   textConf = textConfigFromColor(text, olc::BLACK);
-  //   prop     = std::make_unique<UiTextMenu>(config, bg, textConf);
-  //   m_ships[id]->addMenu(std::move(prop));
-
-  //   text = "";
-  //   for (const auto &[slot, count] : ship.slots)
-  //   {
-  //     if (!text.empty())
-  //     {
-  //       text += ", ";
-  //     }
-  //     text += std::to_string(count) + " " + bsgo::str(slot);
-  //   }
-  //   textConf = textConfigFromColor(text, olc::BLACK);
-  //   prop     = std::make_unique<UiTextMenu>(config, bg, textConf);
-  //   m_ships[id]->addMenu(std::move(prop));
-
-  //   ++id;
-  // }
-
   desc->addMenu(generateSpacer());
 
   return desc;
