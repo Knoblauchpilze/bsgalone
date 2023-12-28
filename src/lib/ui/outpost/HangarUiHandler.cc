@@ -9,10 +9,12 @@
 
 namespace pge {
 
-HangarUiHandler::HangarUiHandler(const bsgo::Views &views)
+HangarUiHandler::HangarUiHandler(const bsgo::Views &views, const bsgo::Services &services)
   : IUiHandler("hangar")
   , m_playerView(views.playerView)
   , m_shopView(views.shopView)
+  , m_purchaseService(services.purchase)
+  , m_shipService(services.ship)
 {
   if (nullptr == m_playerView)
   {
@@ -21,6 +23,14 @@ HangarUiHandler::HangarUiHandler(const bsgo::Views &views)
   if (nullptr == m_shopView)
   {
     throw std::invalid_argument("Expected non null shop view");
+  }
+  if (nullptr == m_purchaseService)
+  {
+    throw std::invalid_argument("Expected non null purchase service");
+  }
+  if (nullptr == m_shipService)
+  {
+    throw std::invalid_argument("Expected non null ship service");
   }
 }
 
