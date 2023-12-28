@@ -17,6 +17,7 @@ class PlayerView : public IView
 
   bool isReady() const noexcept override;
 
+  auto getPlayerFaction() const -> Faction;
   auto getPlayerResources() const -> std::vector<PlayerResource>;
   auto getPlayerWeapons() const -> std::vector<PlayerWeapon>;
   auto getPlayerComputers() const -> std::vector<PlayerComputer>;

@@ -22,6 +22,13 @@ bool PlayerView::isReady() const noexcept
   return m_playerDbId && m_playerShipDbId;
 }
 
+auto PlayerView::getPlayerFaction() const -> Faction
+{
+  checkPlayerDbIdExists();
+  const auto player = m_repositories.playerRepository->findOneById(*m_playerDbId);
+  return player.faction;
+}
+
 auto PlayerView::getPlayerResources() const -> std::vector<PlayerResource>
 {
   checkPlayerDbIdExists();
