@@ -259,7 +259,30 @@ void HangarUiHandler::updateShipMenus()
 
 void HangarUiHandler::onShipRequest(const int shipIndex)
 {
-  warn("should handle request for " + std::to_string(shipIndex));
+  const auto data = m_shipsData.at(shipIndex);
+  switch (data.state)
+  {
+    case State::TO_BUY:
+      onPurchaseRequest(shipIndex);
+      break;
+    case State::TO_EQUIP:
+      onEquipRequest(shipIndex);
+      break;
+    default:
+      error("Failed to handle ship request",
+            "Invalid state " + std::to_string(static_cast<int>(data.state)));
+      break;
+  }
+}
+
+void HangarUiHandler::onPurchaseRequest(const int shipIndex)
+{
+  warn("should handle purchase request for " + std::to_string(shipIndex));
+}
+
+void HangarUiHandler::onEquipRequest(const int shipIndex)
+{
+  warn("should handle equip request for " + std::to_string(shipIndex));
 }
 
 } // namespace pge
