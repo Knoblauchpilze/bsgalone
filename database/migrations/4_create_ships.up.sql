@@ -26,6 +26,15 @@ CREATE TABLE ship (
   FOREIGN KEY (class) REFERENCES ship_class(name)
 );
 
+CREATE TABLE ship_price (
+  ship INTEGER NOT NULL,
+  resource INTEGER NOT NULL,
+  cost NUMERIC(8, 2) NOT NULL,
+  PRIMARY KEY (ship, resource),
+  FOREIGN KEY (ship) REFERENCES ship(id),
+  FOREIGN KEY (resource) REFERENCES resource(id)
+);
+
 CREATE TABLE ship_slot (
   id INTEGER GENERATED ALWAYS AS IDENTITY,
   ship INTEGER NOT NULL,
