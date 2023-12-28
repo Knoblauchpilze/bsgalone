@@ -287,7 +287,18 @@ void HangarUiHandler::onShipRequest(const int shipIndex)
 
 void HangarUiHandler::onPurchaseRequest(const int shipIndex)
 {
-  warn("should handle purchase request for " + std::to_string(shipIndex));
+  if (!m_purchaseService->isReady())
+  {
+    return;
+  }
+
+  const auto &purchase = m_shipsData.at(shipIndex);
+  if (!m_purchaseService->tryPurchase(purchase.shipDbId, bsgo::Item::SHIP))
+  {
+    warn("Failed to buy ship with id " + bsgo::str(purchase.shipDbId));
+    return;
+  }
+
   onShipPurchased.safeEmit("onPurchaseRequest");
 }
 

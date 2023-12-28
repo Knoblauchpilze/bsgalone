@@ -22,8 +22,10 @@ class PurchaseService : public AbstractService
 
   void checkPlayerDbIdExists() const;
   bool verifyAffordability(const Uuid &id, const Item &type) const;
+  bool verifyPreconditions(const Uuid &id, const Item &type) const;
   void tryPurchaseWeapon(const Uuid &id) const;
   void tryPurchaseComputer(const Uuid &id) const;
+  void tryPurchaseShip(const Uuid &id) const;
   void debitResources(const std::unordered_map<Uuid, float> &costs) const;
 };
 
