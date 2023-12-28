@@ -9,7 +9,8 @@ enum class Item
 {
   RESOURCE,
   WEAPON,
-  COMPUTER
+  COMPUTER,
+  SHIP
 };
 
 auto str(const Item item) -> std::string;

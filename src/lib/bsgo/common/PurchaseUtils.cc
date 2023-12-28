@@ -52,6 +52,19 @@ auto getComputerPrice(const Uuid &computerId, const ComputerPriceRepository &rep
 
   return out;
 }
+
+auto getShipPrice(const Uuid &shipId, const ShipPriceRepository &repository) -> std::vector<Cost>
+{
+  std::vector<Cost> out{};
+
+  const auto price = repository.findAllByShip(shipId);
+  for (const auto &[resourceId, cost] : price)
+  {
+    out.emplace_back(resourceId, cost);
+  }
+
+  return out;
+}
 } // namespace
 
 auto computeAffordability(const AffordabilityData &data) -> Affordability
@@ -64,6 +77,9 @@ auto computeAffordability(const AffordabilityData &data) -> Affordability
       break;
     case Item::COMPUTER:
       costs = getComputerPrice(data.itemId, *data.computerPriceRepo);
+      break;
+    case Item::SHIP:
+      costs = getShipPrice(data.itemId, *data.shipPriceRepo);
       break;
     default:
       throw std::invalid_argument("Failed to determine affordability of item with id "
