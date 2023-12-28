@@ -219,6 +219,18 @@ void HangarUiHandler::updateShipMenus()
     if (!maybePlayerShip)
     {
       shipData.button->setText(BUY_SHIP_BUTTON_TEXT);
+      const auto affordability = m_shopView->canPlayerAfford(shipData.shipDbId, bsgo::Item::SHIP);
+
+      shipData.button->setEnabled(affordability.canAfford);
+      shipData.button->setHighlightable(affordability.canAfford);
+      if (affordability.canAfford)
+      {
+        shipData.button->updateBgColor(olc::DARK_GREEN);
+      }
+      else
+      {
+        shipData.button->updateBgColor(olc::DARK_RED);
+      }
     }
     else
     {
