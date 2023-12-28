@@ -53,6 +53,8 @@ class HangarUiHandler : public IUiHandler
   void updateShipMenus();
 
   void onShipRequest(const int shipIndex);
+  void onPurchaseRequest(const int shipIndex);
+  void onEquipRequest(const int shipIndex);
 };
 
 using HangarUiHandlerPtr = std::unique_ptr<HangarUiHandler>;
