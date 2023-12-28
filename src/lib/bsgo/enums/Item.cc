@@ -13,6 +13,8 @@ auto str(const Item item) -> std::string
       return "weapon";
     case Item::COMPUTER:
       return "computer";
+    case Item::SHIP:
+      return "ship";
     default:
       return "unknown";
   }

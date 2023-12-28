@@ -4,6 +4,7 @@
 #include "ComputerPriceRepository.hh"
 #include "Item.hh"
 #include "PlayerResourceRepository.hh"
+#include "ShipPriceRepository.hh"
 #include "Uuid.hh"
 #include "WeaponPriceRepository.hh"
 #include <memory>
@@ -20,6 +21,7 @@ struct AffordabilityData
   PlayerResourceRepositoryShPtr resourceRepo{};
   WeaponPriceRepositoryShPtr weaponPriceRepo{};
   ComputerPriceRepositoryShPtr computerPriceRepo{};
+  ShipPriceRepositoryShPtr shipPriceRepo{};
 };
 
 struct Affordability

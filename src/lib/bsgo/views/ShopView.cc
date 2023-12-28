@@ -76,6 +76,7 @@ auto ShopView::canPlayerAfford(const Uuid &id, const Item &type) const -> Afford
     .resourceRepo      = m_repositories.playerResourceRepository,
     .weaponPriceRepo   = m_repositories.weaponPriceRepository,
     .computerPriceRepo = m_repositories.computerPriceRepository,
+    .shipPriceRepo     = m_repositories.shipPriceRepository,
   };
   return computeAffordability(data);
 }
