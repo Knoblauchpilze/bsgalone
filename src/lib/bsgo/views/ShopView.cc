@@ -80,6 +80,11 @@ auto ShopView::canPlayerAfford(const Uuid &id, const Item &type) const -> Afford
   return computeAffordability(data);
 }
 
+auto ShopView::getAllShipsForFaction(const Faction &faction) const -> std::vector<Ship>
+{
+  return m_repositories.shipRepository->findAllByFaction(faction);
+}
+
 void ShopView::checkPlayerDbIdExists() const
 {
   if (!m_playerDbId)
