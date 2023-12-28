@@ -5,6 +5,7 @@
 #include "UiMenu.hh"
 #include "UiTextMenu.hh"
 #include "Views.hh"
+#include <core_utils/Signal.hh>
 #include <memory>
 
 namespace pge {
@@ -56,7 +57,11 @@ class HangarUiHandler : public IUiHandler
 
   void onShipRequest(const int shipIndex);
   void onPurchaseRequest(const int shipIndex);
-  void onEquipRequest(const int shipIndex);
+  void onSelectRequest(const int shipIndex);
+
+  public:
+  utils::Signal<> onShipPurchased{};
+  utils::Signal<> onShipSelected{};
 };
 
 using HangarUiHandlerPtr = std::unique_ptr<HangarUiHandler>;
