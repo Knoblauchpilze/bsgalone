@@ -34,6 +34,7 @@ class SystemRepository : public AbstractRepository
   auto findAllOutpostsBySystem(const Uuid &system) const -> std::unordered_set<Uuid>;
 
   void updateSystemForShip(const Uuid &ship, const Uuid &system);
+  void updateShipForSystem(const Uuid &currentShip, const Uuid &newShip);
 };
 
 using SystemRepositoryShPtr = std::shared_ptr<SystemRepository>;
