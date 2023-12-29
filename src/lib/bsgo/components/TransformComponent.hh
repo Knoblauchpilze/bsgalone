@@ -22,6 +22,8 @@ class TransformComponent : public AbstractComponent
 
   void update(const float elapsedSeconds) override;
 
+  auto transformToGlobal(const Eigen::Vector3f &localPos) const -> Eigen::Vector3f;
+
   private:
   IBoundingBoxShPtr m_bbox{};
   float m_heading{};
