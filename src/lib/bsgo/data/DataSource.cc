@@ -21,6 +21,11 @@ void DataSource::setPlayerDbId(const Uuid &player)
   m_playerDbId = player;
 }
 
+auto DataSource::playerDbId() const -> std::optional<Uuid>
+{
+  return m_playerDbId;
+}
+
 auto DataSource::repositories() const -> Repositories
 {
   return m_repositories;
