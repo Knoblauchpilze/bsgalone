@@ -19,6 +19,7 @@ class DataSource : public utils::CoreObject
   void setPlayerDbId(const Uuid &player);
 
   auto repositories() const -> Repositories;
+  auto playerDbId() const -> std::optional<Uuid>;
   auto playerEntityId() const -> Uuid;
   auto playerShipDbId() const -> Uuid;
   auto playerShipEntityId() const -> Uuid;
