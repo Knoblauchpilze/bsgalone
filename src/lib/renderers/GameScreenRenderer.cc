@@ -122,14 +122,14 @@ void GameScreenRenderer::renderDecal(SpriteRenderer &engine, const RenderState &
     renderOutpost(outpost, engine, state);
   }
 
-  for (const auto &bullet : bullets)
-  {
-    renderBullet(bullet, engine, state);
-  }
-
   for (const auto &ship : ships)
   {
     renderShip(ship, engine, state);
+  }
+
+  for (const auto &bullet : bullets)
+  {
+    renderBullet(bullet, engine, state);
   }
 }
 
@@ -285,6 +285,25 @@ void GameScreenRenderer::renderShip(const bsgo::Entity &ship,
   engine.drawRotatedSprite(t, state.cf);
 }
 
+namespace {
+constexpr auto WEAPON_INDICATOR_SIZE_PIXELS = 6.0f;
+const auto WEAPON_INDICATOR_SIZE            = olc::vf2d{WEAPON_INDICATOR_SIZE_PIXELS,
+                                             WEAPON_INDICATOR_SIZE_PIXELS};
+
+void renderWeaponIndicator(const bsgo::TransformComponent &ship,
+                           const bsgo::WeaponSlotComponent &weapon,
+                           SpriteRenderer &engine,
+                           const CoordinateFrame &frame)
+{
+  const Eigen::Vector3f weaponPos = ship.transformToGlobal(weapon.position());
+
+  const auto pixelPos     = frame.tilesToPixels(weaponPos(0), weaponPos(1));
+  const auto indicatorPos = pixelPos - WEAPON_INDICATOR_SIZE / 2.0f;
+
+  engine.getRenderer()->FillRectDecal(indicatorPos, WEAPON_INDICATOR_SIZE, olc::YELLOW);
+}
+} // namespace
+
 void GameScreenRenderer::renderShipDebug(const bsgo::Entity &ship,
                                          SpriteRenderer &engine,
                                          const RenderState &state) const
@@ -312,6 +331,11 @@ void GameScreenRenderer::renderShipDebug(const bsgo::Entity &ship,
   text += "x";
   text += floatToStr(speed(2));
   engine.getRenderer()->DrawString(pos, text, olc::DARK_GREEN);
+
+  for (const auto &weapon : ship.weapons)
+  {
+    renderWeaponIndicator(ship.transformComp(), *weapon, engine, state.cf);
+  }
 }
 
 } // namespace pge
