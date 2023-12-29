@@ -230,6 +230,7 @@ void HangarUiHandler::updateShipMenus()
 
     if (!maybePlayerShip)
     {
+      shipData.playerShipDbId.reset();
       shipData.button->setText(BUY_SHIP_BUTTON_TEXT);
       const auto affordability = m_shopView->canPlayerAfford(shipData.shipDbId, bsgo::Item::SHIP);
 
@@ -248,6 +249,7 @@ void HangarUiHandler::updateShipMenus()
     }
     else
     {
+      shipData.playerShipDbId = maybePlayerShip->id;
       shipData.button->setText(USE_SHIP_BUTTON_TEXT);
 
       shipData.button->setEnabled(!maybePlayerShip->active);
@@ -292,10 +294,10 @@ void HangarUiHandler::onPurchaseRequest(const int shipIndex)
     return;
   }
 
-  const auto &purchase = m_shipsData.at(shipIndex);
-  if (!m_purchaseService->tryPurchase(purchase.shipDbId, bsgo::Item::SHIP))
+  const auto &data = m_shipsData.at(shipIndex);
+  if (!m_purchaseService->tryPurchase(data.shipDbId, bsgo::Item::SHIP))
   {
-    warn("Failed to buy ship with id " + bsgo::str(purchase.shipDbId));
+    warn("Failed to buy ship with id " + bsgo::str(data.shipDbId));
     return;
   }
 
@@ -304,7 +306,18 @@ void HangarUiHandler::onPurchaseRequest(const int shipIndex)
 
 void HangarUiHandler::onSelectRequest(const int shipIndex)
 {
-  warn("should handle equip request for " + std::to_string(shipIndex));
+  if (!m_shipService->isReady())
+  {
+    return;
+  }
+
+  const auto &data = m_shipsData.at(shipIndex);
+  if (!m_shipService->trySelectShip(*data.playerShipDbId))
+  {
+    warn("Failed to buy ship with id " + bsgo::str(data.shipDbId));
+    return;
+  }
+
   onShipSelected.safeEmit("onSelectRequest");
 }
 
