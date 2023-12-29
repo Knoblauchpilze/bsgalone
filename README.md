@@ -271,6 +271,34 @@ To come back to our jump/mining examples, here's how we could do it:
 
 For additional flexibility we could also create an enum which defines the type of component and register a list of enum values in the network component. This would allow to only sync some aspects of an entity rather than automatically syncing all its components.
 
+## Messaging
+
+The application also needs to make some changes in the UI based on what is happening in the ECS. For example when an asteroid is scanned, we want to display a message indicating the result of the analysis. Or when an entity is killed or an asteroid destroyed, we might also want to display some message to represent it.
+
+In order to achieve this, we created a messaging system. This allows communicating from the systems operating on the entities to the UI in a decoupled and asynchronous way.
+
+### Message queue
+
+The [IMessageQueue](src/lib/bsgo/communication/IMessageQueue.hh) allows to keep track of all the messages needing to be processed. These messages can be registred through the interface method `pushMessage`.
+
+The `Game` class holds an attribute of type message queue and takes care of calling the `processMessages` once per frame. This could be refined in the future: for example when these events will be generated on the server side, we might want to have a processing thread sending the messages back to the clients.
+
+### Listeners
+
+The [IMessageListener](src/lib/bsgo/communication/IMessageListener.hh) allows anyone to register to the message queue and get notified of the messages. We expect such objects to provide indications about which messages they are interested about and to feed them a message. It is guaranteed that the messages receieved through the `onMessageReceived` method will be of the right type for the listener.
+
+### Messages
+
+The meat of the messaging process is the [IMessage](src/lib/bsgo/messages/IMessage.hh) class. This interface just defines a type: for now we only support system messages. Those are messages produced by the systems of the ECS.
+
+We chose to subclass the base interface into a [SystemMessage](src/lib/bsgo/messages/SystemMessage.hh) which is then further subclassed into specific events (such as a scan event).
+
+### Communication between the UI and the ECS
+
+In the application we made the [UiHandlers](src/lib/ui/) implements the message listener interface. They register themselves to the message queue and can be notified of relevant messages.
+
+On the other hand, the systems are pushing messages to the queue not knowing (and not caring) if some component will read and process them or not. This seems quite interesting when considering the future client/server architecture.
+
 # Future work
 
 ## Useful links
