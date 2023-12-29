@@ -25,9 +25,9 @@ OutpostScreenUiHandler::OutpostScreenUiHandler(const bsgo::Views &views,
     .connect_member<OutpostScreenUiHandler>(this, &OutpostScreenUiHandler::onChildUiChanged);
   m_lockerUi->onItemUnequiped
     .connect_member<OutpostScreenUiHandler>(this, &OutpostScreenUiHandler::onChildUiChanged);
-  m_hangarUi->onShipSelected
-    .connect_member<OutpostScreenUiHandler>(this, &OutpostScreenUiHandler::onChildUiChanged);
   m_hangarUi->onShipPurchased
+    .connect_member<OutpostScreenUiHandler>(this, &OutpostScreenUiHandler::onChildUiChanged);
+  m_hangarUi->onShipSelected
     .connect_member<OutpostScreenUiHandler>(this, &OutpostScreenUiHandler::onChildUiChanged);
 }
 

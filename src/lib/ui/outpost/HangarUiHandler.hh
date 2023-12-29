@@ -57,9 +57,9 @@ class HangarUiHandler : public IUiHandler
   auto generateShipInteractiveSection(const int shipIndex) -> UiMenuPtr;
   void updateShipMenus();
 
-  void onShipRequest(const int shipIndex);
+  void onShipRequest(const int shipIndex, Game &game);
   void onPurchaseRequest(const int shipIndex);
-  void onSelectRequest(const int shipIndex);
+  void onSelectRequest(const int shipIndex, Game &game);
 
   public:
   utils::Signal<> onShipPurchased{};
