@@ -40,12 +40,21 @@ auto PlayerView::getPlayerWeapons() const -> std::vector<PlayerWeapon>
   checkPlayerDbIdExists();
   checkPlayerShipDbIdExists();
 
-  const auto shipWeapons = m_repositories.shipWeaponRepository->findAllByShip(*m_playerShipDbId);
-  auto ids               = m_repositories.playerWeaponRepository->findAllByPlayer(*m_playerDbId);
+  std::vector<ShipWeapon> shipWeapons{};
+  const auto ships = m_repositories.playerShipRepository->findAllByPlayer(*m_playerDbId);
+  for (const auto &shipId : ships)
+  {
+    const auto weapons = m_repositories.shipWeaponRepository->findAllByShip(shipId);
+    shipWeapons.insert(shipWeapons.end(), weapons.begin(), weapons.end());
+  }
+
+  auto ids = m_repositories.playerWeaponRepository->findAllByPlayer(*m_playerDbId);
   for (const auto &shipWeapon : shipWeapons)
   {
     ids.erase(shipWeapon.weapon);
   }
+
+  log("After clearing ship weapons, only " + std::to_string(ids.size()) + " weapon(s) are left");
 
   std::vector<PlayerWeapon> out;
   for (const auto &id : ids)
@@ -61,11 +70,18 @@ auto PlayerView::getPlayerComputers() const -> std::vector<PlayerComputer>
   checkPlayerDbIdExists();
   checkPlayerShipDbIdExists();
 
-  const auto usedIds = m_repositories.shipComputerRepository->findAllByShip(*m_playerShipDbId);
-  auto ids           = m_repositories.playerComputerRepository->findAllByPlayer(*m_playerDbId);
-  for (const auto usedId : usedIds)
+  std::vector<Uuid> shipComputers{};
+  const auto ships = m_repositories.playerShipRepository->findAllByPlayer(*m_playerDbId);
+  for (const auto &shipId : ships)
   {
-    ids.erase(usedId);
+    const auto computers = m_repositories.shipComputerRepository->findAllByShip(shipId);
+    shipComputers.insert(shipComputers.end(), computers.begin(), computers.end());
+  }
+
+  auto ids = m_repositories.playerComputerRepository->findAllByPlayer(*m_playerDbId);
+  for (const auto shipComputer : shipComputers)
+  {
+    ids.erase(shipComputer);
   }
 
   std::vector<PlayerComputer> out;
