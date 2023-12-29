@@ -64,7 +64,7 @@ void WeaponsUiHandler::updateUi()
 }
 
 namespace {
-constexpr auto NUMBER_OF_WEAPONS = 4;
+constexpr auto NUMBER_OF_WEAPONS = 6;
 const olc::Pixel SEMI_OPAQUE_BLACK{0, 0, 0, alpha::SemiOpaque};
 } // namespace
 
