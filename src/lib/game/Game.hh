@@ -66,6 +66,7 @@ class Game : public utils::CoreObject
   void tryActivateSlot(const bsgo::Uuid &ship, const int &slotId);
   void login(const bsgo::Uuid &playerDbId);
   void requestJump(const bsgo::Uuid &systemId);
+  void activeShipChanged();
 
   private:
   /// @brief - Convenience information defining the state of the
@@ -99,6 +100,7 @@ class Game : public utils::CoreObject
   std::unordered_map<Screen, IUiHandlerPtr> m_uiHandlers{};
 
   void initialize();
+  void resetViewsAndUi();
 };
 
 using GameShPtr = std::shared_ptr<Game>;

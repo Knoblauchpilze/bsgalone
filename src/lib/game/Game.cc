@@ -229,30 +229,7 @@ void Game::tryActivateSlot(const bsgo::Uuid &ship, const int &slotId)
 void Game::login(const bsgo::Uuid &playerDbId)
 {
   m_dataSource.setPlayerDbId(playerDbId);
-  m_dataSource.initialize(*m_coordinator);
-
-  m_networkSystem->setPlayerDbId(playerDbId);
-
-  const auto playerShipDbId     = m_dataSource.playerShipDbId();
-  const auto playerShipEntityId = m_dataSource.playerShipEntityId();
-
-  m_views.playerView->setPlayerDbId(playerDbId);
-  m_views.playerView->setPlayerShipDbId(playerShipDbId);
-  m_views.shipView->setPlayerShipDbId(playerShipDbId);
-  m_views.shipView->setPlayerShipEntityId(playerShipEntityId);
-  m_views.shopView->setPlayerDbId(playerDbId);
-  m_views.serverView->setPlayerDbId(playerDbId);
-
-  m_services.purchase->setPlayerDbId(playerDbId);
-  m_services.locker->setPlayerDbId(playerDbId);
-  m_services.locker->setPlayerShipDbId(playerShipDbId);
-  m_services.ship->setPlayerDbId(playerDbId);
-
-  for (const auto &[_, handler] : m_uiHandlers)
-  {
-    handler->reset();
-  }
-
+  resetViewsAndUi();
   setScreen(Screen::OUTPOST);
 }
 
@@ -261,6 +238,11 @@ void Game::requestJump(const bsgo::Uuid &systemId)
   m_views.shipView->setJumpSystem(systemId);
   m_views.shipView->startJump();
   setScreen(Screen::GAME);
+}
+
+void Game::activeShipChanged()
+{
+  resetViewsAndUi();
 }
 
 void Game::initialize()
@@ -282,6 +264,39 @@ void Game::initialize()
   m_views.shopView     = std::make_shared<bsgo::ShopView>(m_coordinator, repositories);
   m_views.serverView   = std::make_shared<bsgo::ServerView>(m_coordinator, repositories);
   m_views.resourceView = std::make_shared<bsgo::ResourceView>(m_coordinator, repositories);
+}
+
+void Game::resetViewsAndUi()
+{
+  m_dataSource.initialize(*m_coordinator);
+
+  const auto maybePlayerDbId = m_dataSource.playerDbId();
+  if (!maybePlayerDbId)
+  {
+    error("Failed to reset views and UI", "Expected to have a player defined");
+  }
+
+  m_networkSystem->setPlayerDbId(*maybePlayerDbId);
+
+  const auto playerShipDbId     = m_dataSource.playerShipDbId();
+  const auto playerShipEntityId = m_dataSource.playerShipEntityId();
+
+  m_views.playerView->setPlayerDbId(*maybePlayerDbId);
+  m_views.playerView->setPlayerShipDbId(playerShipDbId);
+  m_views.shipView->setPlayerShipDbId(playerShipDbId);
+  m_views.shipView->setPlayerShipEntityId(playerShipEntityId);
+  m_views.shopView->setPlayerDbId(*maybePlayerDbId);
+  m_views.serverView->setPlayerDbId(*maybePlayerDbId);
+
+  m_services.purchase->setPlayerDbId(*maybePlayerDbId);
+  m_services.locker->setPlayerDbId(*maybePlayerDbId);
+  m_services.locker->setPlayerShipDbId(playerShipDbId);
+  m_services.ship->setPlayerDbId(*maybePlayerDbId);
+
+  for (const auto &[_, handler] : m_uiHandlers)
+  {
+    handler->reset();
+  }
 }
 
 } // namespace pge
