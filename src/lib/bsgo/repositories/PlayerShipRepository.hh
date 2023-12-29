@@ -17,6 +17,7 @@ namespace bsgo {
 
 struct PlayerShip
 {
+  Uuid id{};
   Faction faction{};
   ShipClass shipClass{};
   Uuid ship{};
