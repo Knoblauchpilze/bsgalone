@@ -7,6 +7,7 @@
 #include "Views.hh"
 #include <core_utils/Signal.hh>
 #include <memory>
+#include <optional>
 
 namespace pge {
 
@@ -42,6 +43,7 @@ class HangarUiHandler : public IUiHandler
   struct ShipData
   {
     bsgo::Uuid shipDbId{};
+    std::optional<bsgo::Uuid> playerShipDbId{};
     UiMenu *menu{};
     UiTextMenu *button{};
     State state{State::UNAFFORDABLE};
