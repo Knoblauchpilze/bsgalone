@@ -61,4 +61,15 @@ void TransformComponent::setHeading(const float heading)
 
 void TransformComponent::update(const float /*elapsedSeconds*/) {}
 
+namespace {
+const Eigen::Vector3f Z_AXIS = Eigen::Vector3f(0.0, 0.0, 1.0);
+}
+
+auto TransformComponent::transformToGlobal(const Eigen::Vector3f &localPos) const -> Eigen::Vector3f
+{
+  const Eigen::AngleAxisf rotation(-m_heading, Z_AXIS);
+  const Eigen::Vector3f offset = rotation * localPos;
+  return m_bbox->position() + offset;
+}
+
 } // namespace bsgo
