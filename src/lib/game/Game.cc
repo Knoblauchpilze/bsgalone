@@ -246,6 +246,7 @@ void Game::login(const bsgo::Uuid &playerDbId)
   m_services.purchase->setPlayerDbId(playerDbId);
   m_services.locker->setPlayerDbId(playerDbId);
   m_services.locker->setPlayerShipDbId(playerShipDbId);
+  m_services.ship->setPlayerDbId(playerDbId);
 
   for (const auto &[_, handler] : m_uiHandlers)
   {
