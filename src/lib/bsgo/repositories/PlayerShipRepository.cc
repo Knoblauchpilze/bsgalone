@@ -17,6 +17,10 @@ constexpr auto FIND_ONE_QUERY_NAME = "player_ship_find_one";
 constexpr auto FIND_ONE_QUERY
   = "SELECT s.faction, s.class, s.id, ps.name, ps.player, ps.active, ps.hull_points, s.max_hull_points, s.hull_points_regen, ps.power_points, s.max_power_points, s.power_points_regen, s.max_acceleration, s.max_speed, s.radius, ps.x_pos, ps.y_pos, ps.z_pos, sc.jump_time_ms, sc.jump_time_threat_ms FROM player_ship AS ps LEFT JOIN ship AS s ON ps.ship = s.id LEFT JOIN ship_class AS sc ON s.class = sc.name WHERE ps.id = $1";
 
+constexpr auto FIND_ONE_BY_PLAYER_AND_ACTIVE_QUERY_NAME = "player_ship_find_one_by_player_and_active";
+constexpr auto FIND_ONE_BY_PLAYER_AND_ACTIVE_QUERY
+  = "SELECT id FROM player_ship WHERE player = $1 AND active = 'true'";
+
 constexpr auto FIND_SLOTS_QUERY_NAME = "player_ship_find_slots";
 constexpr auto FIND_SLOTS_QUERY
   = "SELECT ss.type, COUNT(ss.id) FROM player_ship AS ps LEFT JOIN ship AS s ON ps.ship = s.id LEFT JOIN ship_slot AS ss ON s.id = ss.ship WHERE ps.id = $1 GROUP BY ss.type";
@@ -47,6 +51,8 @@ void PlayerShipRepository::initialize()
 {
   m_connection->prepare(FIND_ALL_QUERY_NAME, FIND_ALL_QUERY);
   m_connection->prepare(FIND_ONE_QUERY_NAME, FIND_ONE_QUERY);
+  m_connection->prepare(FIND_ONE_BY_PLAYER_AND_ACTIVE_QUERY_NAME,
+                        FIND_ONE_BY_PLAYER_AND_ACTIVE_QUERY);
   m_connection->prepare(FIND_SLOTS_QUERY_NAME, FIND_SLOTS_QUERY);
   m_connection->prepare(FIND_EMPTY_WEAPON_SLOTS_QUERY_NAME, FIND_EMPTY_WEAPON_SLOTS_QUERY);
   m_connection->prepare(UPDATE_SHIP_QUERY_NAME, UPDATE_SHIP_QUERY);
@@ -56,6 +62,23 @@ auto PlayerShipRepository::findOneById(const Uuid &ship) const -> PlayerShip
 {
   auto out = fetchShipBase(ship);
   fetchSlots(ship, out);
+
+  return out;
+}
+
+auto PlayerShipRepository::findOneByPlayerAndActive(const Uuid &player) const -> PlayerShip
+{
+  Uuid shipId{};
+
+  {
+    auto work         = m_connection->nonTransaction();
+    const auto record = work.exec_prepared1(FIND_ONE_BY_PLAYER_AND_ACTIVE_QUERY_NAME,
+                                            toDbId(player));
+    shipId            = fromDbId(record[0].as<int>());
+  }
+
+  auto out = fetchShipBase(shipId);
+  fetchSlots(shipId, out);
 
   return out;
 }
