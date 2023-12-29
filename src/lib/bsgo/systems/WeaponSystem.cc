@@ -4,6 +4,7 @@
 #include "SystemUtils.hh"
 
 #include "VectorUtils.hh"
+#include <iostream>
 
 namespace bsgo {
 namespace {
@@ -102,10 +103,10 @@ void WeaponSystem::fireWeaponForEntity(Entity &ent,
 
   const auto damage      = weapon.generateDamage();
   const auto finalDamage = updateDamageWithAbilities(ent, damage);
-  /// TODO: Should be using the heading of the ship as well.
-  const auto offset = weapon.position();
 
-  createBulletDirectedTowards(ent, offset, finalDamage, target, coordinator);
+  const Eigen::Vector3f weaponPos = ent.transformComp().transformToGlobal(weapon.position());
+
+  createBulletDirectedTowards(ent, weaponPos, finalDamage, target, coordinator);
 }
 
 auto WeaponSystem::updateDamageWithAbilities(Entity &ent, const float damage) const -> float
@@ -124,19 +125,18 @@ auto WeaponSystem::updateDamageWithAbilities(Entity &ent, const float damage) co
 }
 
 void WeaponSystem::createBulletDirectedTowards(const Entity &ent,
-                                               const Eigen::Vector3f &weaponOffset,
+                                               const Eigen::Vector3f &weaponPosition,
                                                const float damage,
                                                const Entity &target,
                                                Coordinator &coordinator) const
 {
-  const auto pos       = ent.transformComp().position() + weaponOffset;
   const auto targetPos = target.transformComp().position();
 
   const auto bullet = coordinator.createEntity(EntityKind::BULLET);
   coordinator.addFaction(bullet, ent.factionComp().faction());
 
   constexpr auto BULLET_RADIUS = 0.2f;
-  auto box                     = std::make_unique<CircleBox>(pos, BULLET_RADIUS);
+  auto box                     = std::make_unique<CircleBox>(weaponPosition, BULLET_RADIUS);
   coordinator.addTransform(bullet, std::move(box));
 
   coordinator.addDamage(bullet, damage);
@@ -146,7 +146,7 @@ void WeaponSystem::createBulletDirectedTowards(const Entity &ent,
   coordinator.addRemoval(bullet);
 
   constexpr auto BULLET_SPEED = 8.0f;
-  const Eigen::Vector3f v0    = BULLET_SPEED * (targetPos - pos).normalized();
+  const Eigen::Vector3f v0    = BULLET_SPEED * (targetPos - weaponPosition).normalized();
   VelocityData vData{.maxSpeed = BULLET_SPEED, .initialSpeed = {v0}, .speedMode = SpeedMode::FIXED};
   coordinator.addVelocity(bullet, vData);
 
