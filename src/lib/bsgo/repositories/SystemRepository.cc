@@ -26,7 +26,7 @@ constexpr auto FIND_SHIPS_QUERY      = "SELECT ship FROM ship_system WHERE syste
 constexpr auto FIND_OUTPOSTS_QUERY_NAME = "system_find_outposts";
 constexpr auto FIND_OUTPOSTS_QUERY      = "SELECT id FROM system_outpost WHERE system = $1";
 
-constexpr auto UPDATE_SYSTEM_QUERY_NAME = "system_update_ship";
+constexpr auto UPDATE_SYSTEM_QUERY_NAME = "system_update_system_for_ship";
 constexpr auto UPDATE_SYSTEM_QUERY      = R"(
 INSERT INTO ship_system (ship, system)
   VALUES ($1, $2)
@@ -35,6 +35,15 @@ INSERT INTO ship_system (ship, system)
     system = excluded.system
   WHERE
     ship_system.ship = excluded.ship
+)";
+
+constexpr auto UPDATE_SHIP_QUERY_NAME = "system_update_ship_for_system";
+constexpr auto UPDATE_SHIP_QUERY      = R"(
+UPDATE ship_system
+  SET
+    ship = $1
+  WHERE
+    ship_system.ship = $2
 )";
 } // namespace
 
@@ -47,6 +56,7 @@ void SystemRepository::initialize()
   m_connection->prepare(FIND_SHIPS_QUERY_NAME, FIND_SHIPS_QUERY);
   m_connection->prepare(FIND_OUTPOSTS_QUERY_NAME, FIND_OUTPOSTS_QUERY);
   m_connection->prepare(UPDATE_SYSTEM_QUERY_NAME, UPDATE_SYSTEM_QUERY);
+  m_connection->prepare(UPDATE_SHIP_QUERY_NAME, UPDATE_SHIP_QUERY);
 }
 
 auto SystemRepository::findAll() const -> std::unordered_set<Uuid>
@@ -142,6 +152,19 @@ void SystemRepository::updateSystemForShip(const Uuid &ship, const Uuid &system)
   if (res.error)
   {
     error("Failed to update system for ship: " + *res.error);
+  }
+}
+
+void SystemRepository::updateShipForSystem(const Uuid &currentShip, const Uuid &newShip)
+{
+  auto query = [&currentShip, &newShip](pqxx::work &transaction) {
+    return transaction.exec_prepared0(UPDATE_SHIP_QUERY_NAME, toDbId(newShip), toDbId(currentShip));
+  };
+
+  const auto res = m_connection->tryExecuteTransaction(query);
+  if (res.error)
+  {
+    error("Failed to update ship in system: " + *res.error);
   }
 }
 
