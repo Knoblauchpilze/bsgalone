@@ -36,6 +36,7 @@ INSERT INTO player_ship (ship, player, name, active, hull_points, power_points, 
   ON CONFLICT (ship, player) DO UPDATE
   SET
     name = excluded.name,
+    active = excluded.active,
     hull_points = excluded.hull_points,
     power_points = excluded.power_points,
     x_pos = excluded.x_pos,
@@ -137,6 +138,7 @@ auto PlayerShipRepository::fetchShipBase(const Uuid &ship) const -> PlayerShip
 
   PlayerShip out;
 
+  out.id        = ship;
   out.faction   = fromDbFaction(record[0].as<std::string>());
   out.shipClass = fromDbShipClass(record[1].as<std::string>());
   out.ship      = fromDbId(record[2].as<int>());
