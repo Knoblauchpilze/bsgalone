@@ -54,8 +54,6 @@ auto PlayerView::getPlayerWeapons() const -> std::vector<PlayerWeapon>
     ids.erase(shipWeapon.weapon);
   }
 
-  log("After clearing ship weapons, only " + std::to_string(ids.size()) + " weapon(s) are left");
-
   std::vector<PlayerWeapon> out;
   for (const auto &id : ids)
   {
