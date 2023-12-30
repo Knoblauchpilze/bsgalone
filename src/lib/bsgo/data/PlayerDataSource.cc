@@ -19,6 +19,7 @@ auto PlayerDataSource::initialize(Coordinator &coordinator) const -> Uuid
 
   const auto player = m_repositories.playerRepository->findOneById(m_playerDbId);
   coordinator.addName(playerEntityId, player.name);
+  coordinator.addDbId(playerEntityId, m_playerDbId);
 
   const auto resources = m_repositories.playerResourceRepository->findAllByPlayer(m_playerDbId);
   for (const auto &resource : resources)

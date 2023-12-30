@@ -31,6 +31,7 @@ void AsteroidDataSource::registerAsteroid(Coordinator &coordinator, const Uuid &
 
   auto box       = std::make_unique<CircleBox>(data.position, data.radius);
   const auto ent = coordinator.createEntity(EntityKind::ASTEROID);
+  coordinator.addDbId(ent, asteroid);
   coordinator.addTransform(ent, std::move(box));
   coordinator.addHealth(ent, data.health, data.health, 0.0f);
   coordinator.addRemoval(ent);
