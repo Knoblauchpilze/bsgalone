@@ -78,7 +78,13 @@ constexpr auto LOG_FADE_OUT_DURATION_MS                = 7000;
 
 bool shouldMessageBeFiltered(const bsgo::SystemMessage &message)
 {
-  return bsgo::SystemType::STATUS == message.systemType();
+  if (message.systemType() != bsgo::SystemType::STATUS)
+  {
+    return false;
+  }
+
+  const auto &statusMessage = dynamic_cast<const bsgo::StatusMessage &>(message);
+  return bsgo::JumpState::FINISHED == statusMessage.getJumpState();
 }
 } // namespace
 
@@ -154,6 +160,24 @@ auto createLootMessage(const bsgo::LootMessage &message, const bsgo::ResourceVie
   return textConfigFromColor(text, color);
 }
 
+constexpr auto FTL_JUMP_STARTED_TEXT   = "FTL jump sequence started";
+constexpr auto FTL_JUMP_CANCELLED_TEXT = "FTL jump sequence aborted";
+
+auto createStatusMessage(const bsgo::StatusMessage &message)
+{
+  const auto color = olc::WHITE;
+
+  switch (message.getJumpState())
+  {
+    case bsgo::JumpState::STARTED:
+      return textConfigFromColor(FTL_JUMP_STARTED_TEXT, color);
+    case bsgo::JumpState::CANCELLED:
+      return textConfigFromColor(FTL_JUMP_CANCELLED_TEXT, color);
+    default:
+      throw std::invalid_argument("Unsupported jump state to produce message");
+  }
+}
+
 auto createTextConfigForSystemMessage(const bsgo::SystemMessage &message,
                                       const bsgo::SystemView &systemView,
                                       const bsgo::ResourceView &resourceView) -> TextConfig
@@ -168,6 +192,8 @@ auto createTextConfigForSystemMessage(const bsgo::SystemMessage &message,
                                           resourceView);
     case bsgo::SystemType::LOOT:
       return createLootMessage(dynamic_cast<const bsgo::LootMessage &>(message), resourceView);
+    case bsgo::SystemType::STATUS:
+      return createStatusMessage(dynamic_cast<const bsgo::StatusMessage &>(message));
     default:
       throw std::invalid_argument("Unsupported system type " + bsgo::str(message.systemType()));
   }
