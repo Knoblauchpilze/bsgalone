@@ -19,6 +19,10 @@ void StatusMessageConsumer::onMessageReceived(const IMessage &message)
   }
 
   const auto &statusMessage = dynamic_cast<const bsgo::StatusMessage &>(systemMessage);
+  if (statusMessage.getJumpState() != JumpState::FINISHED)
+  {
+    return;
+  }
 
   warn("Should handle jump of " + bsgo::str(statusMessage.getShipDbId()));
 }
