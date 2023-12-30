@@ -13,7 +13,7 @@ class ServerView : public AbstractView
   public:
   ServerView(const CoordinatorShPtr &coordinator,
              const Repositories &repositories,
-             const IMessageQueue *messageQueue);
+             IMessageQueue *const messageQueue);
   ~ServerView() override = default;
 
   void setPlayerDbId(const Uuid &player);

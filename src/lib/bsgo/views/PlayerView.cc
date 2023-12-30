@@ -5,7 +5,7 @@ namespace bsgo {
 
 PlayerView::PlayerView(const CoordinatorShPtr &coordinator,
                        const Repositories &repositories,
-                       const IMessageQueue *messageQueue)
+                       IMessageQueue *const messageQueue)
   : AbstractView("player", coordinator, repositories, messageQueue)
 {}
 

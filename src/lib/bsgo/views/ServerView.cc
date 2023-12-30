@@ -5,7 +5,7 @@ namespace bsgo {
 
 ServerView::ServerView(const CoordinatorShPtr &coordinator,
                        const Repositories &repositories,
-                       const IMessageQueue *messageQueue)
+                       IMessageQueue *const messageQueue)
   : AbstractView("server", coordinator, repositories, messageQueue)
 {}
 

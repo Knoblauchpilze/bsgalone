@@ -5,7 +5,7 @@ namespace bsgo {
 
 ResourceView::ResourceView(const CoordinatorShPtr &coordinator,
                            const Repositories &repositories,
-                           const IMessageQueue *messageQueue)
+                           IMessageQueue *const messageQueue)
   : AbstractView("resource", coordinator, repositories, messageQueue)
 {}
 

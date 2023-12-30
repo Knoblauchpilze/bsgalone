@@ -34,7 +34,7 @@ auto ShopItem::type() const -> Item
 
 ShopView::ShopView(const CoordinatorShPtr &coordinator,
                    const Repositories &repositories,
-                   const IMessageQueue *messageQueue)
+                   IMessageQueue *const messageQueue)
   : AbstractView("shop", coordinator, repositories, messageQueue)
 {}
 

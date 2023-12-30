@@ -11,7 +11,7 @@ class LoginView : public AbstractView
   public:
   LoginView(const CoordinatorShPtr &coordinator,
             const Repositories &repositories,
-            const IMessageQueue *messageQueue);
+            IMessageQueue *const messageQueue);
   ~LoginView() override = default;
 
   auto tryLogin(const std::string &name, const std::string &password) const -> std::optional<Uuid>;

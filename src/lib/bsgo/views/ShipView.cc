@@ -1,12 +1,13 @@
 
 #include "ShipView.hh"
 #include "LockerUtils.hh"
+#include "StatusMessage.hh"
 
 namespace bsgo {
 
 ShipView::ShipView(const CoordinatorShPtr &coordinator,
                    const Repositories &repositories,
-                   const IMessageQueue *messageQueue)
+                   IMessageQueue *const messageQueue)
   : AbstractView("ship", coordinator, repositories, messageQueue)
 {}
 
@@ -199,6 +200,9 @@ void ShipView::startJump() const
   log("Starting jump to " + str(*m_systemToJumpTo));
   const auto newStatus = updateStatusForJump(status);
   playerShip.statusComp().setStatus(newStatus);
+
+  auto message = std::make_unique<StatusMessage>(*m_playerShipDbId, JumpState::STARTED);
+  m_messageQueue->pushMessage(std::move(message));
 }
 
 void ShipView::cancelJump() const
@@ -214,6 +218,9 @@ void ShipView::cancelJump() const
   log("Cancelling jump");
   const auto newStatus = updateStatusAfterJumpCancellation(status);
   playerShip.statusComp().setStatus(newStatus);
+
+  auto message = std::make_unique<StatusMessage>(*m_playerShipDbId, JumpState::CANCELLED);
+  m_messageQueue->pushMessage(std::move(message));
 }
 
 auto ShipView::getPlayerShipWeapons() const -> std::vector<PlayerWeapon>
