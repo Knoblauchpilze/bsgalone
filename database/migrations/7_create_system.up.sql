@@ -25,6 +25,14 @@ CREATE TABLE ship_system (
   FOREIGN KEY (system) REFERENCES system(id)
 );
 
+CREATE TABLE ship_jump (
+  ship INTEGER NOT NULL,
+  system INTEGER NOT NULL,
+  PRIMARY KEY (ship, system),
+  FOREIGN KEY (ship) REFERENCES player_ship(id),
+  FOREIGN KEY (system) REFERENCES system(id)
+);
+
 CREATE TABLE asteroid (
   id INTEGER GENERATED ALWAYS AS IDENTITY,
   system INTEGER NOT NULL,
