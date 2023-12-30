@@ -64,6 +64,8 @@ class PlayerShipRepository : public AbstractRepository
   private:
   auto fetchShipBase(const Uuid &ship) const -> PlayerShip;
   void fetchSlots(const Uuid &ship, PlayerShip &out) const;
+  void registerShipJump(const Uuid &ship, const Uuid &system) const;
+  void cancelShipJump(const Uuid &ship) const;
 };
 
 using PlayerShipRepositoryShPtr = std::shared_ptr<PlayerShipRepository>;
