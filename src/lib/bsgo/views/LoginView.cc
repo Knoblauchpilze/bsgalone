@@ -3,8 +3,10 @@
 
 namespace bsgo {
 
-LoginView::LoginView(const CoordinatorShPtr &coordinator, const Repositories &repositories)
-  : AbstractView("login", coordinator, repositories)
+LoginView::LoginView(const CoordinatorShPtr &coordinator,
+                     const Repositories &repositories,
+                     const IMessageQueue *messageQueue)
+  : AbstractView("login", coordinator, repositories, messageQueue)
 {}
 
 auto LoginView::tryLogin(const std::string &name, const std::string &password) const

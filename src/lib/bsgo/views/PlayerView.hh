@@ -9,7 +9,9 @@ namespace bsgo {
 class PlayerView : public AbstractView
 {
   public:
-  PlayerView(const CoordinatorShPtr &coordinator, const Repositories &repositories);
+  PlayerView(const CoordinatorShPtr &coordinator,
+             const Repositories &repositories,
+             const IMessageQueue *messageQueue);
   ~PlayerView() override = default;
 
   void setPlayerDbId(const Uuid &player);

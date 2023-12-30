@@ -4,8 +4,10 @@
 
 namespace bsgo {
 
-ShipView::ShipView(const CoordinatorShPtr &coordinator, const Repositories &repositories)
-  : AbstractView("ship", coordinator, repositories)
+ShipView::ShipView(const CoordinatorShPtr &coordinator,
+                   const Repositories &repositories,
+                   const IMessageQueue *messageQueue)
+  : AbstractView("ship", coordinator, repositories, messageQueue)
 {}
 
 void ShipView::setPlayerShipDbId(const Uuid &ship)

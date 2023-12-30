@@ -3,8 +3,10 @@
 
 namespace bsgo {
 
-ResourceView::ResourceView(const CoordinatorShPtr &coordinator, const Repositories &repositories)
-  : AbstractView("resource", coordinator, repositories)
+ResourceView::ResourceView(const CoordinatorShPtr &coordinator,
+                           const Repositories &repositories,
+                           const IMessageQueue *messageQueue)
+  : AbstractView("resource", coordinator, repositories, messageQueue)
 {}
 
 auto ResourceView::getResourceName(const Uuid &resource) const -> std::string

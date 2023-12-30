@@ -11,7 +11,9 @@ namespace bsgo {
 class ServerView : public AbstractView
 {
   public:
-  ServerView(const CoordinatorShPtr &coordinator, const Repositories &repositories);
+  ServerView(const CoordinatorShPtr &coordinator,
+             const Repositories &repositories,
+             const IMessageQueue *messageQueue);
   ~ServerView() override = default;
 
   void setPlayerDbId(const Uuid &player);

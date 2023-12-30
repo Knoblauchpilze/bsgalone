@@ -3,8 +3,10 @@
 
 namespace bsgo {
 
-PlayerView::PlayerView(const CoordinatorShPtr &coordinator, const Repositories &repositories)
-  : AbstractView("player", coordinator, repositories)
+PlayerView::PlayerView(const CoordinatorShPtr &coordinator,
+                       const Repositories &repositories,
+                       const IMessageQueue *messageQueue)
+  : AbstractView("player", coordinator, repositories, messageQueue)
 {}
 
 void PlayerView::setPlayerDbId(const Uuid &player)
