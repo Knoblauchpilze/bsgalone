@@ -31,6 +31,7 @@ void OutpostDataSource::registerOutpost(Coordinator &coordinator, const Uuid &ou
 
   auto box       = std::make_unique<CircleBox>(data.position, data.radius);
   const auto ent = coordinator.createEntity(EntityKind::OUTPOST);
+  coordinator.addDbId(ent, outpost);
   coordinator.addTransform(ent, std::move(box));
   coordinator.addHealth(ent, data.hullPoints, data.maxHullPoints, data.hullPointsRegen);
   coordinator.addRemoval(ent);
