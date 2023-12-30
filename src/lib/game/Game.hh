@@ -4,6 +4,7 @@
 #include "Controls.hh"
 #include "DataSource.hh"
 #include "IInputHandler.hh"
+#include "IMessageListener.hh"
 #include "IRenderer.hh"
 #include "IUiHandler.hh"
 #include "MessageQueue.hh"
@@ -98,6 +99,7 @@ class Game : public utils::CoreObject
   std::unordered_map<Screen, IRendererPtr> m_renderers{};
   std::unordered_map<Screen, IInputHandlerPtr> m_inputHandlers{};
   std::unordered_map<Screen, IUiHandlerPtr> m_uiHandlers{};
+  std::vector<bsgo::IMessageListenerPtr> m_messageConsumers{};
 
   void initialize();
   void resetViewsAndUi();
