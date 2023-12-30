@@ -4,7 +4,7 @@
 namespace bsgo {
 
 LoginView::LoginView(const CoordinatorShPtr &coordinator, const Repositories &repositories)
-  : IView("login", coordinator, repositories)
+  : AbstractView("login", coordinator, repositories)
 {}
 
 auto LoginView::tryLogin(const std::string &name, const std::string &password) const

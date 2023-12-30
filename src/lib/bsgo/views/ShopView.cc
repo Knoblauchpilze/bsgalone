@@ -33,7 +33,7 @@ auto ShopItem::type() const -> Item
 }
 
 ShopView::ShopView(const CoordinatorShPtr &coordinator, const Repositories &repositories)
-  : IView("shop", coordinator, repositories)
+  : AbstractView("shop", coordinator, repositories)
 {}
 
 void ShopView::setPlayerDbId(const Uuid &player)

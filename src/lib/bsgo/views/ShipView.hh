@@ -1,9 +1,9 @@
 
 #pragma once
 
+#include "AbstractView.hh"
 #include "Coordinator.hh"
 #include "Entity.hh"
-#include "IView.hh"
 #include "Uuid.hh"
 #include <memory>
 #include <optional>
@@ -11,7 +11,7 @@
 
 namespace bsgo {
 
-class ShipView : public IView
+class ShipView : public AbstractView
 {
   public:
   ShipView(const CoordinatorShPtr &coordinator, const Repositories &repositories);

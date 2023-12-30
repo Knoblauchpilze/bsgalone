@@ -1,27 +1,17 @@
 
 #pragma once
 
-#include "Coordinator.hh"
-#include "Entity.hh"
-#include "Repositories.hh"
-#include <core_utils/CoreObject.hh>
 #include <memory>
 
 namespace bsgo {
 
-class IView : public utils::CoreObject
+class IView
 {
   public:
-  IView(const std::string &name,
-        const CoordinatorShPtr &coordinator,
-        const Repositories &repositories);
-  ~IView() override = default;
+  IView()          = default;
+  virtual ~IView() = default;
 
-  virtual bool isReady() const noexcept;
-
-  protected:
-  CoordinatorShPtr m_coordinator;
-  Repositories m_repositories;
+  virtual bool isReady() const noexcept = 0;
 };
 
 using IViewShPtr = std::shared_ptr<IView>;
