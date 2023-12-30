@@ -69,13 +69,19 @@ bool canShipCompleteJump(const PlayerShip &ship)
 
 bool JumpService::tryJump(const Uuid &shipId) const
 {
-  const auto ship = m_repositories.playerShipRepository->findOneById(shipId);
+  auto ship = m_repositories.playerShipRepository->findOneById(shipId);
   if (!canShipCompleteJump(ship))
   {
     return false;
   }
 
-  warn("should try to jump " + str(shipId));
+  const auto system = m_repositories.systemRepository->findOneById(*ship.jumpSystem);
+
+  m_repositories.systemRepository->updateSystemForShip(ship.id, *ship.jumpSystem);
+  ship.jumpSystem.reset();
+  m_repositories.playerShipRepository->save(ship);
+
+  info("Completed jump to " + system.name + " for " + str(shipId));
   return true;
 }
 
