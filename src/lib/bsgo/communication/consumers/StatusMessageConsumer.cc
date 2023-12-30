@@ -1,11 +1,12 @@
 
 #include "StatusMessageConsumer.hh"
+#include "StatusMessage.hh"
 #include "SystemMessage.hh"
 
 namespace bsgo {
 
 StatusMessageConsumer::StatusMessageConsumer()
-  : AbstractMessageListener({bsgo::MessageType::SYSTEM})
+  : AbstractMessageConsumer("status", {bsgo::MessageType::SYSTEM})
 {}
 
 void StatusMessageConsumer::onMessageReceived(const IMessage &message)
@@ -16,6 +17,10 @@ void StatusMessageConsumer::onMessageReceived(const IMessage &message)
   {
     return;
   }
+
+  const auto &statusMessage = dynamic_cast<const bsgo::StatusMessage &>(systemMessage);
+
+  warn("Should handle jump of " + bsgo::str(statusMessage.getShipEntityId()));
 }
 
 } // namespace bsgo

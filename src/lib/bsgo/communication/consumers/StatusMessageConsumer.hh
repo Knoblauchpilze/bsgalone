@@ -1,11 +1,11 @@
 
 #pragma once
 
-#include "AbstractMessageListener.hh"
+#include "AbstractMessageConsumer.hh"
 
 namespace bsgo {
 
-class StatusMessageConsumer : public AbstractMessageListener
+class StatusMessageConsumer : public AbstractMessageConsumer
 {
   public:
   StatusMessageConsumer();
