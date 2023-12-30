@@ -189,6 +189,12 @@ void Coordinator::addNetwork(const Uuid &ent, const std::unordered_set<Component
   m_components.networks[ent] = std::make_shared<NetworkComponent>(toSync);
 }
 
+void Coordinator::addDbId(const Uuid &ent, const Uuid &dbId)
+{
+  checkForOverrides(ent, "Db", m_components.dbs);
+  m_components.dbs[ent] = std::make_shared<DbComponent>(dbId);
+}
+
 void Coordinator::addWeapon(const Uuid &ent,
                             const PlayerWeapon &weapon,
                             const Eigen::Vector3f &position)
@@ -269,6 +275,7 @@ auto Coordinator::getEntity(const Uuid &ent) const -> Entity
   out.shipClass = getComponent(ent, m_components.shipClasses);
   out.name      = getComponent(ent, m_components.names);
   out.network   = getComponent(ent, m_components.networks);
+  out.db        = getComponent(ent, m_components.dbs);
 
   out.weapons   = getAllComponent(ent, m_components.weapons);
   out.computers = getAllComponent(ent, m_components.computers);
@@ -304,6 +311,7 @@ void Coordinator::deleteEntity(const Uuid &ent)
   m_components.shipClasses.erase(ent);
   m_components.names.erase(ent);
   m_components.networks.erase(ent);
+  m_components.dbs.erase(ent);
 
   m_components.weapons.erase(ent);
   m_components.computers.erase(ent);

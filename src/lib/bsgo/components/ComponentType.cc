@@ -13,6 +13,8 @@ auto str(const ComponentType &type) -> std::string
       return "computer_slot";
     case ComponentType::DAMAGE:
       return "damage";
+    case ComponentType::DB:
+      return "db";
     case ComponentType::FACTION:
       return "faction";
     case ComponentType::HEALTH:

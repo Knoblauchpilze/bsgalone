@@ -4,6 +4,7 @@
 #include "AIComponent.hh"
 #include "ComputerSlotComponent.hh"
 #include "DamageComponent.hh"
+#include "DbComponent.hh"
 #include "EffectComponent.hh"
 #include "EntityKind.hh"
 #include "FactionComponent.hh"
@@ -49,6 +50,7 @@ struct Entity
   std::optional<ShipClassComponentShPtr> shipClass{};
   std::optional<NameComponentShPtr> name{};
   std::optional<NetworkComponentShPtr> network{};
+  std::optional<DbComponentShPtr> db{};
   std::vector<WeaponSlotComponentShPtr> weapons{};
   std::vector<ComputerSlotComponentShPtr> computers{};
   std::vector<EffectComponentShPtr> effects{};
@@ -81,6 +83,7 @@ struct Entity
   auto shipClassComp() const -> const ShipClassComponent &;
   auto nameComp() const -> const NameComponent &;
   auto networkComp() const -> const NetworkComponent &;
+  auto dbComp() const -> const DbComponent &;
 
   auto transformComp() -> TransformComponent &;
   auto velocityComp() -> VelocityComponent &;
