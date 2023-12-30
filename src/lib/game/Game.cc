@@ -4,6 +4,7 @@
 #include "IRenderer.hh"
 #include "IUiHandler.hh"
 #include "NetworkSystem.hh"
+#include "StatusMessageConsumer.hh"
 
 #include "GameScreenInputHandler.hh"
 #include "GameScreenRenderer.hh"
@@ -264,6 +265,10 @@ void Game::initialize()
   m_views.shopView     = std::make_shared<bsgo::ShopView>(m_coordinator, repositories);
   m_views.serverView   = std::make_shared<bsgo::ServerView>(m_coordinator, repositories);
   m_views.resourceView = std::make_shared<bsgo::ResourceView>(m_coordinator, repositories);
+
+  auto consumer = std::make_unique<bsgo::StatusMessageConsumer>();
+  m_messageQueue->addListener(consumer.get());
+  m_messageConsumers.emplace_back(std::move(consumer));
 }
 
 void Game::resetViewsAndUi()
