@@ -46,6 +46,22 @@ INSERT INTO player_ship (ship, player, name, active, hull_points, power_points, 
     player_ship.ship = excluded.ship
     AND player_ship.player = excluded.player
 )";
+
+constexpr auto UPDATE_SHIP_JUMP_QUERY_NAME = "player_ship_update_jump";
+constexpr auto UPDATE_SHIP_JUMP_QUERY      = R"(
+INSERT INTO ship_jump (ship, system)
+  VALUES ($1, $2)
+  ON CONFLICT (ship, system) DO UPDATE
+  SET
+    system = excluded.system
+  WHERE
+    ship_jump.ship = excluded.ship
+)";
+
+constexpr auto CANCEL_SHIP_JUMP_QUERY_NAME = "player_ship_cancel_jump";
+constexpr auto CANCEL_SHIP_JUMP_QUERY      = R"(
+DELETE FROM ship_jump WHERE ship = $1;
+)";
 } // namespace
 
 void PlayerShipRepository::initialize()
@@ -57,6 +73,8 @@ void PlayerShipRepository::initialize()
   m_connection->prepare(FIND_SLOTS_QUERY_NAME, FIND_SLOTS_QUERY);
   m_connection->prepare(FIND_EMPTY_WEAPON_SLOTS_QUERY_NAME, FIND_EMPTY_WEAPON_SLOTS_QUERY);
   m_connection->prepare(UPDATE_SHIP_QUERY_NAME, UPDATE_SHIP_QUERY);
+  m_connection->prepare(UPDATE_SHIP_JUMP_QUERY_NAME, UPDATE_SHIP_JUMP_QUERY);
+  m_connection->prepare(CANCEL_SHIP_JUMP_QUERY_NAME, CANCEL_SHIP_JUMP_QUERY);
 }
 
 auto PlayerShipRepository::findOneById(const Uuid &ship) const -> PlayerShip
@@ -124,10 +142,19 @@ void PlayerShipRepository::save(const PlayerShip &ship)
                                       ship.powerPoints);
   };
 
-  const auto res = m_connection->tryExecuteTransaction(query);
+  auto res = m_connection->tryExecuteTransaction(query);
   if (res.error)
   {
     error("Failed to save player ship: " + *res.error);
+  }
+
+  if (ship.jumpSystem)
+  {
+    registerShipJump(ship.id, *ship.jumpSystem);
+  }
+  else
+  {
+    cancelShipJump(ship.id);
   }
 }
 
@@ -184,6 +211,32 @@ void PlayerShipRepository::fetchSlots(const Uuid &ship, PlayerShip &out) const
     const auto count = record[1].as<int>();
 
     out.slots[slot] = count;
+  }
+}
+
+void PlayerShipRepository::registerShipJump(const Uuid &ship, const Uuid &system) const
+{
+  const auto query = [&ship, &system](pqxx::work &transaction) {
+    return transaction.exec_prepared0(UPDATE_SHIP_JUMP_QUERY_NAME, toDbId(ship), toDbId(system));
+  };
+
+  const auto res = m_connection->tryExecuteTransaction(query);
+  if (res.error)
+  {
+    error("Failed to save player ship jump: " + *res.error);
+  }
+}
+
+void PlayerShipRepository::cancelShipJump(const Uuid &ship) const
+{
+  const auto query = [&ship](pqxx::work &transaction) {
+    return transaction.exec_prepared0(CANCEL_SHIP_JUMP_QUERY_NAME, toDbId(ship));
+  };
+
+  const auto res = m_connection->tryExecuteTransaction(query);
+  if (res.error)
+  {
+    error("Failed to cancel player ship jump: " + *res.error);
   }
 }
 
