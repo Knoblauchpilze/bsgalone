@@ -11,6 +11,7 @@ auto createServices(const Repositories &repositories) -> Services
   out.purchase = std::make_shared<PurchaseService>(repositories);
   out.locker   = std::make_shared<LockerService>(repositories);
   out.ship     = std::make_shared<ShipService>(repositories);
+  out.jump     = std::make_shared<JumpService>(repositories);
 
   return out;
 }
