@@ -27,7 +27,9 @@ struct ShopItem
 class ShopView : public AbstractView
 {
   public:
-  ShopView(const CoordinatorShPtr &coordinator, const Repositories &repositories);
+  ShopView(const CoordinatorShPtr &coordinator,
+           const Repositories &repositories,
+           const IMessageQueue *messageQueue);
   ~ShopView() override = default;
 
   void setPlayerDbId(const Uuid &player);

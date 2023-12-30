@@ -9,7 +9,9 @@ namespace bsgo {
 class ResourceView : public AbstractView
 {
   public:
-  ResourceView(const CoordinatorShPtr &coordinator, const Repositories &repositories);
+  ResourceView(const CoordinatorShPtr &coordinator,
+               const Repositories &repositories,
+               const IMessageQueue *messageQueue);
   ~ResourceView() override = default;
 
   auto getResourceName(const Uuid &resource) const -> std::string;
