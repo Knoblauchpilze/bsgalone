@@ -6,7 +6,7 @@
 
 #include "LootMessage.hh"
 #include "ScannedMessage.hh"
-#include "SystemMessage.hh"
+#include "StatusMessage.hh"
 
 namespace pge {
 
@@ -75,6 +75,11 @@ namespace {
 constexpr std::size_t MAXIMUM_NUMBER_OF_LOGS_DISPLAYED = 5;
 const auto LOG_MENU_DIMS                               = olc::vi2d{150, 20};
 constexpr auto LOG_FADE_OUT_DURATION_MS                = 7000;
+
+bool shouldMessageBeFiltered(const bsgo::SystemMessage &message)
+{
+  return bsgo::SystemType::STATUS == message.systemType();
+}
 } // namespace
 
 void LogUiHandler::onMessageReceived(const bsgo::IMessage &message)
@@ -84,7 +89,13 @@ void LogUiHandler::onMessageReceived(const bsgo::IMessage &message)
     m_logs.pop_back();
   }
 
-  auto logMenu = createMenuFromMessage(message);
+  const auto &systemMessage = dynamic_cast<const bsgo::SystemMessage &>(message);
+  if (shouldMessageBeFiltered(systemMessage))
+  {
+    return;
+  }
+
+  auto logMenu = createMenuFromMessage(systemMessage);
   LogMessage data{};
   data.rawMenu = logMenu.get();
 
@@ -165,24 +176,16 @@ auto createTextConfigForSystemMessage(const bsgo::SystemMessage &message,
 }
 } // namespace
 
-auto LogUiHandler::createMenuFromMessage(const bsgo::IMessage &message) -> UiMenuPtr
+auto LogUiHandler::createMenuFromMessage(const bsgo::SystemMessage &message) -> UiMenuPtr
 {
   const olc::vi2d pos{m_offset.x - LOG_MENU_DIMS.x / 2, m_offset.y};
   const MenuConfig config{.pos = pos, .dims = LOG_MENU_DIMS, .highlightable = false};
   const BackgroundConfig bg = bgConfigFromColor(transparent(olc::WHITE, alpha::Transparent));
 
-  TextConfig text{};
-  switch (message.type())
-  {
-    case bsgo::MessageType::SYSTEM:
-      text = createTextConfigForSystemMessage(dynamic_cast<const bsgo::SystemMessage &>(message),
-                                              *m_systemView,
-                                              *m_resourceView);
-      break;
-    default:
-      error("Failed to interpret message", "Unsupported type " + bsgo::str(message.type()));
-      break;
-  }
+  const auto text = createTextConfigForSystemMessage(dynamic_cast<const bsgo::SystemMessage &>(
+                                                       message),
+                                                     *m_systemView,
+                                                     *m_resourceView);
 
   return std::make_unique<UiTextMenu>(config, bg, text);
 }
