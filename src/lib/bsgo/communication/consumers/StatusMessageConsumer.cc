@@ -20,7 +20,7 @@ void StatusMessageConsumer::onMessageReceived(const IMessage &message)
 
   const auto &statusMessage = dynamic_cast<const bsgo::StatusMessage &>(systemMessage);
 
-  warn("Should handle jump of " + bsgo::str(statusMessage.getShipEntityId()));
+  warn("Should handle jump of " + bsgo::str(statusMessage.getShipDbId()));
 }
 
 } // namespace bsgo
