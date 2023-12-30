@@ -1,12 +1,13 @@
 
-#include "IView.hh"
+#include "AbstractView.hh"
 
 namespace bsgo {
 
-IView::IView(const std::string &name,
-             const CoordinatorShPtr &coordinator,
-             const Repositories &repositories)
+AbstractView::AbstractView(const std::string &name,
+                           const CoordinatorShPtr &coordinator,
+                           const Repositories &repositories)
   : utils::CoreObject(name)
+  , IView()
   , m_coordinator(coordinator)
   , m_repositories(repositories)
 {
@@ -17,7 +18,7 @@ IView::IView(const std::string &name,
   }
 }
 
-bool IView::isReady() const noexcept
+bool AbstractView::isReady() const noexcept
 {
   return true;
 }

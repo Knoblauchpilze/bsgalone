@@ -1,12 +1,12 @@
 
 #pragma once
 
-#include "IView.hh"
+#include "AbstractView.hh"
 #include <memory>
 
 namespace bsgo {
 
-class PlayerView : public IView
+class PlayerView : public AbstractView
 {
   public:
   PlayerView(const CoordinatorShPtr &coordinator, const Repositories &repositories);

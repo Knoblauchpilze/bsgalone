@@ -1,8 +1,8 @@
 
 #pragma once
 
+#include "AbstractView.hh"
 #include "Coordinator.hh"
-#include "IView.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
 #include <memory>
@@ -10,7 +10,7 @@
 
 namespace bsgo {
 
-class SystemView : public IView
+class SystemView : public AbstractView
 {
   public:
   SystemView(const CoordinatorShPtr &coordinator, const Repositories &repositories);

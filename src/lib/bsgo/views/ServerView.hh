@@ -1,14 +1,14 @@
 
 #pragma once
 
+#include "AbstractView.hh"
 #include "Coordinator.hh"
-#include "IView.hh"
 #include <eigen3/Eigen/Eigen>
 #include <memory>
 
 namespace bsgo {
 
-class ServerView : public IView
+class ServerView : public AbstractView
 {
   public:
   ServerView(const CoordinatorShPtr &coordinator, const Repositories &repositories);

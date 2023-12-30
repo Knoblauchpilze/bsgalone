@@ -4,7 +4,7 @@
 namespace bsgo {
 
 SystemView::SystemView(const CoordinatorShPtr &coordinator, const Repositories &repositories)
-  : IView("system", coordinator, repositories)
+  : AbstractView("system", coordinator, repositories)
 {}
 
 auto SystemView::getEntityAt(const Eigen::Vector3f &pos) const -> std::optional<Entity>

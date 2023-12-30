@@ -4,7 +4,7 @@
 namespace bsgo {
 
 PlayerView::PlayerView(const CoordinatorShPtr &coordinator, const Repositories &repositories)
-  : IView("player", coordinator, repositories)
+  : AbstractView("player", coordinator, repositories)
 {}
 
 void PlayerView::setPlayerDbId(const Uuid &player)

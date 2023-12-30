@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "IView.hh"
+#include "AbstractView.hh"
 #include "PurchaseUtils.hh"
 #include <memory>
 #include <unordered_map>
@@ -24,7 +24,7 @@ struct ShopItem
   auto type() const -> Item;
 };
 
-class ShopView : public IView
+class ShopView : public AbstractView
 {
   public:
   ShopView(const CoordinatorShPtr &coordinator, const Repositories &repositories);
