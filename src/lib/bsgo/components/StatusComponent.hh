@@ -21,6 +21,7 @@ class StatusComponent : public AbstractComponent
   auto threatJumpTime() const -> utils::Duration;
   bool justChanged() const;
   void resetChanged();
+  void resetAppearingTime();
   auto getElapsedSinceLastChange() const -> utils::Duration;
   auto tryGetElapsedSinceLastAppearing() const -> std::optional<utils::Duration>;
   auto tryGetCurrentJumpTime() const -> utils::Duration;

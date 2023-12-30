@@ -48,6 +48,11 @@ void StatusComponent::resetChanged()
   m_justChanged = false;
 }
 
+void StatusComponent::resetAppearingTime()
+{
+  m_elapsedSinceAppearing = utils::Duration{0};
+}
+
 auto StatusComponent::getElapsedSinceLastChange() const -> utils::Duration
 {
   return m_elapsedSinceLastChange;
