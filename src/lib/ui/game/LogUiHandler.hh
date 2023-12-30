@@ -3,6 +3,7 @@
 
 #include "AbstractMessageListener.hh"
 #include "IUiHandler.hh"
+#include "SystemMessage.hh"
 #include "UiTimedMenu.hh"
 #include "Views.hh"
 #include <deque>
@@ -39,7 +40,7 @@ class LogUiHandler : public IUiHandler, public bsgo::AbstractMessageListener
   std::deque<LogMessage> m_logs{};
   std::vector<UiTimedMenu *> m_logsToTrigger{};
 
-  auto createMenuFromMessage(const bsgo::IMessage &message) -> UiMenuPtr;
+  auto createMenuFromMessage(const bsgo::SystemMessage &message) -> UiMenuPtr;
 };
 
 using LogUiHandlerPtr = std::unique_ptr<LogUiHandler>;
