@@ -9,13 +9,13 @@ namespace bsgo {
 class StatusMessage : public SystemMessage
 {
   public:
-  StatusMessage(const Uuid &playerDbId);
+  StatusMessage(const Uuid &shipEntityId);
   ~StatusMessage() override = default;
 
-  auto getPlayerDbId() const -> Uuid;
+  auto getShipEntityId() const -> Uuid;
 
   private:
-  Uuid m_playerDbId{};
+  Uuid m_shipEntityId{};
 };
 
 } // namespace bsgo

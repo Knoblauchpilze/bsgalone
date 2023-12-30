@@ -1,5 +1,6 @@
 
 #include "StatusSystem.hh"
+#include "StatusMessage.hh"
 
 namespace bsgo {
 namespace {
@@ -77,7 +78,7 @@ void StatusSystem::handleJustChangedState(Entity &entity, StatusComponent &statu
   statusComp.resetChanged();
 }
 
-void StatusSystem::handleJumpState(Entity & /*entity*/, StatusComponent &statusComp) const
+void StatusSystem::handleJumpState(Entity &entity, StatusComponent &statusComp) const
 {
   const auto status = statusComp.status();
   if (!statusIndicatesJump(status))
@@ -86,11 +87,13 @@ void StatusSystem::handleJumpState(Entity & /*entity*/, StatusComponent &statusC
   }
 
   const auto remaining = statusComp.tryGetRemainingJumpTime();
-  if (remaining < utils::Duration{0})
+  if (remaining >= utils::Duration{0})
   {
-    /// TODO: Should handle jumping
-    warn("Should handle jump");
+    return;
   }
+
+  auto message = std::make_unique<StatusMessage>(entity.uuid);
+  pushMessage(std::move(message));
 }
 
 } // namespace bsgo
