@@ -12,6 +12,8 @@ class AbstractService : public IService
   AbstractService(const std::string &name, const Repositories &repositories);
   ~AbstractService() override = default;
 
+  bool isReady() const noexcept override;
+
   protected:
   Repositories m_repositories{};
 };

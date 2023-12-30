@@ -14,7 +14,7 @@ class IService : public utils::CoreObject
   IService(const std::string &name);
   ~IService() override = default;
 
-  virtual bool isReady() const noexcept;
+  virtual bool isReady() const noexcept = 0;
 };
 
 using IServicePtr = std::unique_ptr<IService>;
