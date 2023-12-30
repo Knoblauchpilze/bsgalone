@@ -45,7 +45,7 @@ void StatusMessageConsumer::onMessageReceived(const IMessage &message)
 
   if (!success)
   {
-    error("Failed to process jump message for ship " + str(shipId));
+    warn("Failed to process jump message for ship " + str(shipId));
   }
 }
 
