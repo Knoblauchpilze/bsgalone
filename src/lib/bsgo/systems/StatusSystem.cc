@@ -36,7 +36,7 @@ void StatusSystem::handleAppearingState(Entity &entity, StatusComponent &statusC
   const auto lastUpdate = statusComp.tryGetElapsedSinceLastAppearing();
   if (statusIndicatesAppearing(status) && lastUpdate && *lastUpdate >= TIME_TO_STAY_IN_APPEARED_MODE)
   {
-    log("Switching " + entity.str() + " from appeating to visible");
+    log("Switching " + entity.str() + " from appearing to visible");
     statusComp.setStatus(updateStatusAfterSpawn(status));
   }
 }
@@ -94,6 +94,9 @@ void StatusSystem::handleJumpState(Entity &entity, StatusComponent &statusComp) 
 
   auto message = std::make_unique<StatusMessage>(entity.dbComp().dbId(), JumpState::FINISHED);
   pushMessage(std::move(message));
+
+  statusComp.setStatus(Status::APPEARING);
+  statusComp.resetAppearingTime();
 }
 
 } // namespace bsgo
