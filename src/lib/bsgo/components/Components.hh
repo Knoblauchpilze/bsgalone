@@ -4,6 +4,7 @@
 #include "AIComponent.hh"
 #include "ComputerSlotComponent.hh"
 #include "DamageComponent.hh"
+#include "DbComponent.hh"
 #include "EffectComponent.hh"
 #include "FactionComponent.hh"
 #include "HealthComponent.hh"
@@ -46,6 +47,7 @@ struct Components
   std::unordered_map<Uuid, ShipClassComponentShPtr> shipClasses{};
   std::unordered_map<Uuid, NameComponentShPtr> names{};
   std::unordered_map<Uuid, NetworkComponentShPtr> networks{};
+  std::unordered_map<Uuid, DbComponentShPtr> dbs{};
   std::unordered_multimap<Uuid, WeaponSlotComponentShPtr> weapons{};
   std::unordered_multimap<Uuid, ComputerSlotComponentShPtr> computers{};
   std::unordered_multimap<Uuid, EffectComponentShPtr> effects{};

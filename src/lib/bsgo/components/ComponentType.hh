@@ -10,6 +10,7 @@ enum class ComponentType
   AI,
   COMPUTER_SLOT,
   DAMAGE,
+  DB,
   FACTION,
   HEALTH,
   KIND,

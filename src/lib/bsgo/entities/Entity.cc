@@ -170,6 +170,12 @@ bool Entity::exists<NetworkComponent>() const
   return details::checkComponentExists(network);
 }
 
+template<>
+bool Entity::exists<DbComponent>() const
+{
+  return details::checkComponentExists(db);
+}
+
 auto Entity::transformComp() const -> const TransformComponent &
 {
   return details::safeConstAccess(transform, *this, "Transform");
@@ -248,6 +254,11 @@ auto Entity::nameComp() const -> const NameComponent &
 auto Entity::networkComp() const -> const NetworkComponent &
 {
   return details::safeConstAccess(network, *this, "Network");
+}
+
+auto Entity::dbComp() const -> const DbComponent &
+{
+  return details::safeConstAccess(db, *this, "Db");
 }
 
 auto Entity::transformComp() -> TransformComponent &
