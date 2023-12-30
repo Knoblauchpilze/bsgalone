@@ -201,7 +201,9 @@ void ShipView::startJump() const
   const auto newStatus = updateStatusForJump(status);
   playerShip.statusComp().setStatus(newStatus);
 
-  auto message = std::make_unique<StatusMessage>(*m_playerShipDbId, JumpState::STARTED);
+  auto message = std::make_unique<StatusMessage>(*m_playerShipDbId,
+                                                 JumpState::STARTED,
+                                                 m_systemToJumpTo);
   m_messageQueue->pushMessage(std::move(message));
 }
 
