@@ -5,7 +5,7 @@ namespace bsgo {
 
 LoginView::LoginView(const CoordinatorShPtr &coordinator,
                      const Repositories &repositories,
-                     const IMessageQueue *messageQueue)
+                     IMessageQueue *const messageQueue)
   : AbstractView("login", coordinator, repositories, messageQueue)
 {}
 

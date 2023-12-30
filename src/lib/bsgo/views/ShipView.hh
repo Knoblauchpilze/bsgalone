@@ -16,7 +16,7 @@ class ShipView : public AbstractView
   public:
   ShipView(const CoordinatorShPtr &coordinator,
            const Repositories &repositories,
-           const IMessageQueue *messageQueue);
+           IMessageQueue *const messageQueue);
   ~ShipView() override = default;
 
   void setPlayerShipDbId(const Uuid &ship);

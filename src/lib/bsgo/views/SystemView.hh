@@ -15,7 +15,7 @@ class SystemView : public AbstractView
   public:
   SystemView(const CoordinatorShPtr &coordinator,
              const Repositories &repositories,
-             const IMessageQueue *messageQueue);
+             IMessageQueue *const messageQueue);
   ~SystemView() override = default;
 
   auto getEntityAt(const Eigen::Vector3f &pos) const -> std::optional<Entity>;

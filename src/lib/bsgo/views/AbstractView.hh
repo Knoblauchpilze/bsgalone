@@ -17,7 +17,7 @@ class AbstractView : public utils::CoreObject, public IView
   AbstractView(const std::string &name,
                const CoordinatorShPtr &coordinator,
                const Repositories &repositories,
-               const IMessageQueue *messageQueue);
+               IMessageQueue *const messageQueue);
   ~AbstractView() override = default;
 
   bool isReady() const noexcept override;
@@ -25,7 +25,7 @@ class AbstractView : public utils::CoreObject, public IView
   protected:
   CoordinatorShPtr m_coordinator{};
   Repositories m_repositories{};
-  const IMessageQueue *m_messageQueue{};
+  IMessageQueue *const m_messageQueue{};
 };
 
 } // namespace bsgo
