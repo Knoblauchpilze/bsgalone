@@ -15,7 +15,7 @@ constexpr auto FIND_ALL_QUERY      = "SELECT id FROM player_ship WHERE player = 
 
 constexpr auto FIND_ONE_QUERY_NAME = "player_ship_find_one";
 constexpr auto FIND_ONE_QUERY
-  = "SELECT s.faction, s.class, s.id, ps.name, ps.player, ps.active, ps.hull_points, s.max_hull_points, s.hull_points_regen, ps.power_points, s.max_power_points, s.power_points_regen, s.max_acceleration, s.max_speed, s.radius, ps.x_pos, ps.y_pos, ps.z_pos, sc.jump_time_ms, sc.jump_time_threat_ms FROM player_ship AS ps LEFT JOIN ship AS s ON ps.ship = s.id LEFT JOIN ship_class AS sc ON s.class = sc.name WHERE ps.id = $1";
+  = "SELECT s.faction, s.class, s.id, ps.name, ps.player, ps.active, ps.hull_points, s.max_hull_points, s.hull_points_regen, ps.power_points, s.max_power_points, s.power_points_regen, s.max_acceleration, s.max_speed, s.radius, ps.x_pos, ps.y_pos, ps.z_pos, sc.jump_time_ms, sc.jump_time_threat_ms, sj.system FROM player_ship AS ps LEFT JOIN ship AS s ON ps.ship = s.id LEFT JOIN ship_class AS sc ON s.class = sc.name LEFT JOIN ship_jump AS sj ON ps.id = sj.ship WHERE ps.id = $1";
 
 constexpr auto FIND_ONE_BY_PLAYER_AND_ACTIVE_QUERY_NAME = "player_ship_find_one_by_player_and_active";
 constexpr auto FIND_ONE_BY_PLAYER_AND_ACTIVE_QUERY
@@ -145,7 +145,7 @@ auto PlayerShipRepository::fetchShipBase(const Uuid &ship) const -> PlayerShip
   out.name      = record[3].as<std::string>();
   if (!record[4].is_null())
   {
-    out.player = {fromDbId(record[4].as<int>())};
+    out.player = fromDbId(record[4].as<int>());
   }
   out.active          = record[5].as<bool>();
   out.hullPoints      = record[6].as<float>();
@@ -165,6 +165,10 @@ auto PlayerShipRepository::fetchShipBase(const Uuid &ship) const -> PlayerShip
 
   out.jumpTime         = utils::Milliseconds(record[18].as<int>());
   out.jumpTimeInThreat = utils::Milliseconds(record[19].as<int>());
+  if (!record[20].is_null())
+  {
+    out.jumpSystem = fromDbId(record[20].as<int>());
+  }
 
   return out;
 }

@@ -41,6 +41,7 @@ struct PlayerShip
 
   utils::Duration jumpTime{};
   utils::Duration jumpTimeInThreat{};
+  std::optional<Uuid> jumpSystem{};
 
   std::unordered_map<Slot, int> slots{};
 };
