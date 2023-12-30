@@ -148,6 +148,8 @@ void SystemRepository::updateSystemForShip(const Uuid &ship, const Uuid &system)
     return transaction.exec_prepared0(UPDATE_SYSTEM_QUERY_NAME, toDbId(ship), toDbId(system));
   };
 
+  /// TODO: Should perform the delete of the existing row if any.
+
   const auto res = m_connection->tryExecuteTransaction(query);
   if (res.error)
   {
