@@ -20,7 +20,7 @@ CREATE TABLE starting_system (
 CREATE TABLE ship_system (
   ship INTEGER NOT NULL,
   system INTEGER NOT NULL,
-  PRIMARY KEY (ship, system),
+  PRIMARY KEY (ship),
   FOREIGN KEY (ship) REFERENCES player_ship(id),
   FOREIGN KEY (system) REFERENCES system(id)
 );

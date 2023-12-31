@@ -30,7 +30,7 @@ constexpr auto UPDATE_SYSTEM_QUERY_NAME = "system_update_system_for_ship";
 constexpr auto UPDATE_SYSTEM_QUERY      = R"(
 INSERT INTO ship_system (ship, system)
   VALUES ($1, $2)
-  ON CONFLICT (ship, system) DO UPDATE
+  ON CONFLICT (ship) DO UPDATE
   SET
     system = excluded.system
   WHERE
@@ -147,8 +147,6 @@ void SystemRepository::updateSystemForShip(const Uuid &ship, const Uuid &system)
   auto query = [&ship, &system](pqxx::work &transaction) {
     return transaction.exec_prepared0(UPDATE_SYSTEM_QUERY_NAME, toDbId(ship), toDbId(system));
   };
-
-  /// TODO: Should perform the delete of the existing row if any.
 
   const auto res = m_connection->tryExecuteTransaction(query);
   if (res.error)
