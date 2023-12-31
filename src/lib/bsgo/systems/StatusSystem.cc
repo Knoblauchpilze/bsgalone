@@ -92,7 +92,7 @@ void StatusSystem::handleJumpState(Entity &entity, StatusComponent &statusComp) 
     return;
   }
 
-  auto message = std::make_unique<StatusMessage>(entity.dbComp().dbId(), JumpState::FINISHED);
+  auto message = std::make_unique<StatusMessage>(entity.dbComp().dbId(), JumpState::RUNNING);
   pushMessage(std::move(message));
 
   statusComp.setStatus(Status::APPEARING);

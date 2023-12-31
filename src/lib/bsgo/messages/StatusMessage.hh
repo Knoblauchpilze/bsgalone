@@ -11,7 +11,8 @@ enum class JumpState
 {
   STARTED,
   CANCELLED,
-  FINISHED
+  RUNNING,
+  COMPLETED
 };
 
 class StatusMessage : public SystemMessage
