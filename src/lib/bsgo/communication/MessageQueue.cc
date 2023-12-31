@@ -33,17 +33,18 @@ void MessageQueue::addListener(IMessageListener *listener)
 
 void MessageQueue::processMessages()
 {
-  for (const auto &message : m_messages)
+  std::vector<IMessagePtr> messages;
+  std::swap(messages, m_messages);
+
+  for (const auto &message : messages)
   {
     processMessage(*message);
   }
 
-  if (!m_messages.empty())
+  if (!messages.empty())
   {
-    info("Processed " + std::to_string(m_messages.size()) + " message(s)");
+    info("Processed " + std::to_string(messages.size()) + " message(s)");
   }
-
-  m_messages.clear();
 }
 
 void MessageQueue::processMessage(const IMessage &message) const
