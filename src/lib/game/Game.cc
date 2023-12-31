@@ -280,7 +280,7 @@ void Game::initialize()
                                                               repositories,
                                                               m_messageQueue.get());
 
-  auto consumer = std::make_unique<bsgo::StatusMessageConsumer>(m_services);
+  auto consumer = std::make_unique<bsgo::StatusMessageConsumer>(m_services, m_messageQueue.get());
   m_messageQueue->addListener(consumer.get());
   m_messageConsumers.emplace_back(std::move(consumer));
 }

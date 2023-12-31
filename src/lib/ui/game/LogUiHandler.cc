@@ -75,6 +75,8 @@ namespace {
 constexpr std::size_t MAXIMUM_NUMBER_OF_LOGS_DISPLAYED = 5;
 const auto LOG_MENU_DIMS                               = olc::vi2d{150, 20};
 constexpr auto LOG_FADE_OUT_DURATION_MS                = 7000;
+const std::unordered_set<bsgo::JumpState> JUMP_STATES_NOT_TRIGGERING_LOG
+  = {bsgo::JumpState::RUNNING, bsgo::JumpState::COMPLETED};
 
 bool shouldMessageBeFiltered(const bsgo::SystemMessage &message)
 {
@@ -84,7 +86,7 @@ bool shouldMessageBeFiltered(const bsgo::SystemMessage &message)
   }
 
   const auto &statusMessage = dynamic_cast<const bsgo::StatusMessage &>(message);
-  return bsgo::JumpState::FINISHED == statusMessage.getJumpState();
+  return JUMP_STATES_NOT_TRIGGERING_LOG.contains(statusMessage.getJumpState());
 }
 } // namespace
 
