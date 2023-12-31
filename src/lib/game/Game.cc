@@ -20,6 +20,7 @@ namespace pge {
 
 Game::Game()
   : utils::CoreObject("game")
+  , m_messageModule(this)
 {
   setService("game");
   initialize();
@@ -246,6 +247,11 @@ void Game::activeShipChanged()
   resetViewsAndUi();
 }
 
+void Game::activeSystemChanged()
+{
+  resetViewsAndUi();
+}
+
 void Game::initialize()
 {
   const auto repositories = m_dataSource.repositories();
@@ -283,6 +289,8 @@ void Game::initialize()
   auto consumer = std::make_unique<bsgo::StatusMessageConsumer>(m_services, m_messageQueue.get());
   m_messageQueue->addListener(consumer.get());
   m_messageConsumers.emplace_back(std::move(consumer));
+
+  m_messageQueue->addListener(&m_messageModule);
 }
 
 void Game::resetViewsAndUi()
@@ -311,6 +319,8 @@ void Game::resetViewsAndUi()
   m_services.locker->setPlayerDbId(*maybePlayerDbId);
   m_services.locker->setPlayerShipDbId(playerShipDbId);
   m_services.ship->setPlayerDbId(*maybePlayerDbId);
+
+  m_messageModule.setPlayerShipDbId(playerShipDbId);
 
   for (const auto &[_, handler] : m_uiHandlers)
   {

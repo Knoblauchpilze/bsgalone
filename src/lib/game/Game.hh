@@ -3,6 +3,7 @@
 
 #include "Controls.hh"
 #include "DataSource.hh"
+#include "GameMessageModule.hh"
 #include "IInputHandler.hh"
 #include "IMessageListener.hh"
 #include "IRenderer.hh"
@@ -68,6 +69,7 @@ class Game : public utils::CoreObject
   void login(const bsgo::Uuid &playerDbId);
   void requestJump(const bsgo::Uuid &systemId);
   void activeShipChanged();
+  void activeSystemChanged();
 
   private:
   /// @brief - Convenience information defining the state of the
@@ -100,6 +102,7 @@ class Game : public utils::CoreObject
   std::unordered_map<Screen, IInputHandlerPtr> m_inputHandlers{};
   std::unordered_map<Screen, IUiHandlerPtr> m_uiHandlers{};
   std::vector<bsgo::IMessageListenerPtr> m_messageConsumers{};
+  GameMessageModule m_messageModule;
 
   void initialize();
   void resetViewsAndUi();
