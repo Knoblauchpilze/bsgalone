@@ -25,7 +25,7 @@ void GameMessageModule::setPlayerShipDbId(const bsgo::Uuid &shipDbId)
 
 void GameMessageModule::onMessageReceived(const bsgo::IMessage &message)
 {
-  const auto &jumpMessage = dynamic_cast<const bsgo::JumpMessage &>(message);
+  const auto &jumpMessage = message.as<bsgo::JumpMessage>();
 
   checkIfPlayerShipDbIdExists();
 

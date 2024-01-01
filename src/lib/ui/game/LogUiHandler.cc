@@ -88,7 +88,7 @@ bool shouldMessageBeFiltered(const bsgo::IMessage &message)
     return false;
   }
 
-  const auto &jumpMessage = dynamic_cast<const bsgo::JumpMessage &>(message);
+  const auto &jumpMessage = message.as<bsgo::JumpMessage>();
   return JUMP_STATES_NOT_TRIGGERING_LOG.contains(jumpMessage.getJumpState());
 }
 } // namespace
@@ -191,13 +191,13 @@ auto createTextConfigForMessage(const bsgo::IMessage &message,
   switch (message.type())
   {
     case bsgo::MessageType::SCANNED:
-      return createMineralAnalysisMessage(dynamic_cast<const bsgo::ScannedMessage &>(message),
+      return createMineralAnalysisMessage(message.as<bsgo::ScannedMessage>(),
                                           systemView,
                                           resourceView);
     case bsgo::MessageType::LOOT:
-      return createLootMessage(dynamic_cast<const bsgo::LootMessage &>(message), resourceView);
+      return createLootMessage(message.as<bsgo::LootMessage>(), resourceView);
     case bsgo::MessageType::JUMP:
-      return createStatusMessage(dynamic_cast<const bsgo::JumpMessage &>(message));
+      return createStatusMessage(message.as<bsgo::JumpMessage>());
     default:
       throw std::invalid_argument("Unsupported message type " + bsgo::str(message.type()));
   }
