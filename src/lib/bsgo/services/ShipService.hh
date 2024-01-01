@@ -10,7 +10,7 @@ namespace bsgo {
 class ShipService : public AbstractService
 {
   public:
-  ShipService(const Repositories &repositories);
+  ShipService(const Repositories &repositories, const CoordinatorShPtr &coordinator);
   ~ShipService() override = default;
 
   void setPlayerDbId(const Uuid &player);

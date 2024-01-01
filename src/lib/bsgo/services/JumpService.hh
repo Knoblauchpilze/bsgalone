@@ -9,7 +9,7 @@ namespace bsgo {
 class JumpService : public AbstractService
 {
   public:
-  JumpService(const Repositories &repositories);
+  JumpService(const Repositories &repositories, const CoordinatorShPtr &coordinator);
   ~JumpService() override = default;
 
   bool tryRegisterJump(const Uuid &shipId, const Uuid &system) const;

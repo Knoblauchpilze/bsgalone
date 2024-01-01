@@ -9,7 +9,7 @@ namespace bsgo {
 class LockerService : public AbstractService
 {
   public:
-  LockerService(const Repositories &repositories);
+  LockerService(const Repositories &repositories, const CoordinatorShPtr &coordinator);
   ~LockerService() override = default;
 
   void setPlayerDbId(const Uuid &player);

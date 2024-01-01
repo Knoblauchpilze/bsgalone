@@ -3,8 +3,8 @@
 
 namespace bsgo {
 
-ShipService::ShipService(const Repositories &repositories)
-  : AbstractService("ship", repositories)
+ShipService::ShipService(const Repositories &repositories, const CoordinatorShPtr &coordinator)
+  : AbstractService("ship", repositories, coordinator)
 {}
 
 void ShipService::setPlayerDbId(const Uuid &player)
