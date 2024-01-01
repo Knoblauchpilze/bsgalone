@@ -20,9 +20,11 @@ bool canShipJump(const PlayerShip &ship)
 
 } // namespace
 
-bool JumpService::tryRegisterJump(const Uuid &shipId, const Uuid &system) const
+bool JumpService::tryRegisterJump(const Uuid &shipDbId,
+                                  const Uuid &shipEntityId,
+                                  const Uuid &system) const
 {
-  auto ship = m_repositories.playerShipRepository->findOneById(shipId);
+  auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
   if (!canShipJump(ship))
   {
     return false;
@@ -31,7 +33,13 @@ bool JumpService::tryRegisterJump(const Uuid &shipId, const Uuid &system) const
   ship.jumpSystem = system;
   m_repositories.playerShipRepository->save(ship);
 
-  info("Registered jump to " + str(system) + " for ship " + str(shipId));
+  info("Registered jump to " + str(system) + " for ship " + str(shipDbId));
+
+  auto playerShip   = m_coordinator->getEntity(shipEntityId);
+  const auto status = playerShip.statusComp().status();
+
+  const auto newStatus = updateStatusForJump(status);
+  playerShip.statusComp().setStatus(newStatus);
 
   return true;
 }
@@ -43,9 +51,9 @@ bool canShipCancelJump(const PlayerShip &ship)
 }
 } // namespace
 
-bool JumpService::tryCancelJump(const Uuid &shipId) const
+bool JumpService::tryCancelJump(const Uuid &shipDbId, const Uuid &shipEntityId) const
 {
-  auto ship = m_repositories.playerShipRepository->findOneById(shipId);
+  auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
   if (!canShipCancelJump(ship))
   {
     return false;
@@ -54,7 +62,13 @@ bool JumpService::tryCancelJump(const Uuid &shipId) const
   ship.jumpSystem.reset();
   m_repositories.playerShipRepository->save(ship);
 
-  info("Cancelled jump for ship " + str(shipId));
+  info("Cancelled jump for ship " + str(shipDbId));
+
+  auto playerShip   = m_coordinator->getEntity(shipEntityId);
+  const auto status = playerShip.statusComp().status();
+
+  const auto newStatus = updateStatusAfterJumpCancellation(status);
+  playerShip.statusComp().setStatus(newStatus);
 
   return true;
 }
@@ -67,9 +81,9 @@ bool canShipCompleteJump(const PlayerShip &ship)
 }
 } // namespace
 
-bool JumpService::tryJump(const Uuid &shipId) const
+bool JumpService::tryJump(const Uuid &shipDbId, const Uuid &shipEntityId) const
 {
-  auto ship = m_repositories.playerShipRepository->findOneById(shipId);
+  auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
   if (!canShipCompleteJump(ship))
   {
     return false;
@@ -81,7 +95,12 @@ bool JumpService::tryJump(const Uuid &shipId) const
   ship.jumpSystem.reset();
   m_repositories.playerShipRepository->save(ship);
 
-  info("Completed jump to " + system.name + " for " + str(shipId));
+  info("Completed jump to " + system.name + " for " + str(shipDbId));
+
+  auto playerShip = m_coordinator->getEntity(shipEntityId);
+  playerShip.statusComp().setStatus(Status::APPEARING);
+  playerShip.statusComp().resetAppearingTime();
+
   return true;
 }
 

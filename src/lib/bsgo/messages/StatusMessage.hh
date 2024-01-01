@@ -18,16 +18,21 @@ enum class JumpState
 class StatusMessage : public SystemMessage
 {
   public:
-  StatusMessage(const Uuid &shipDbId, const JumpState &jumpState);
-  StatusMessage(const Uuid &shipDbId, const JumpState &jumpState, const std::optional<Uuid> &system);
+  StatusMessage(const Uuid &shipDbId, const Uuid &shipEntityId, const JumpState &jumpState);
+  StatusMessage(const Uuid &shipDbId,
+                const Uuid &shipEntityId,
+                const JumpState &jumpState,
+                const std::optional<Uuid> &system);
   ~StatusMessage() override = default;
 
   auto getShipDbId() const -> Uuid;
+  auto getShipEntityId() const -> Uuid;
   auto getJumpState() const -> JumpState;
   auto getJumpSystem() const -> std::optional<Uuid>;
 
   private:
   Uuid m_shipDbId{};
+  Uuid m_shipEntityId{};
   JumpState m_jumpState{};
   std::optional<Uuid> m_system{};
 };

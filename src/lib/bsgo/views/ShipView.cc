@@ -194,14 +194,10 @@ void ShipView::startJump() const
     return;
   }
 
-  auto playerShip   = getPlayerShip();
-  const auto status = playerShip.statusComp().status();
-
-  log("Starting jump to " + str(*m_systemToJumpTo));
-  const auto newStatus = updateStatusForJump(status);
-  playerShip.statusComp().setStatus(newStatus);
+  checkPlayerShipDbIdExists();
 
   auto message = std::make_unique<StatusMessage>(*m_playerShipDbId,
+                                                 *m_playerShipEntityId,
                                                  JumpState::STARTED,
                                                  m_systemToJumpTo);
   m_messageQueue->pushMessage(std::move(message));
@@ -214,14 +210,11 @@ void ShipView::cancelJump() const
     return;
   }
 
-  auto playerShip   = getPlayerShip();
-  const auto status = playerShip.statusComp().status();
+  checkPlayerShipDbIdExists();
 
-  log("Cancelling jump");
-  const auto newStatus = updateStatusAfterJumpCancellation(status);
-  playerShip.statusComp().setStatus(newStatus);
-
-  auto message = std::make_unique<StatusMessage>(*m_playerShipDbId, JumpState::CANCELLED);
+  auto message = std::make_unique<StatusMessage>(*m_playerShipDbId,
+                                                 *m_playerShipEntityId,
+                                                 JumpState::CANCELLED);
   m_messageQueue->pushMessage(std::move(message));
 }
 

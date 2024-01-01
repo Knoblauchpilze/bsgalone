@@ -12,9 +12,9 @@ class JumpService : public AbstractService
   JumpService(const Repositories &repositories, const CoordinatorShPtr &coordinator);
   ~JumpService() override = default;
 
-  bool tryRegisterJump(const Uuid &shipId, const Uuid &system) const;
-  bool tryCancelJump(const Uuid &shipId) const;
-  bool tryJump(const Uuid &shipId) const;
+  bool tryRegisterJump(const Uuid &shipDbId, const Uuid &shipEntityId, const Uuid &system) const;
+  bool tryCancelJump(const Uuid &shipDbId, const Uuid &shipEntityId) const;
+  bool tryJump(const Uuid &shipDbId, const Uuid &shipEntityId) const;
 };
 
 using JumpServiceShPtr = std::shared_ptr<JumpService>;

@@ -92,11 +92,10 @@ void StatusSystem::handleJumpState(Entity &entity, StatusComponent &statusComp) 
     return;
   }
 
-  auto message = std::make_unique<StatusMessage>(entity.dbComp().dbId(), JumpState::RUNNING);
+  auto message = std::make_unique<StatusMessage>(entity.dbComp().dbId(),
+                                                 entity.uuid,
+                                                 JumpState::RUNNING);
   pushMessage(std::move(message));
-
-  statusComp.setStatus(Status::APPEARING);
-  statusComp.resetAppearingTime();
 }
 
 } // namespace bsgo
