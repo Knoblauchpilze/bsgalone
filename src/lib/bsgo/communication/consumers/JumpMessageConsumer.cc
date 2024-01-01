@@ -21,7 +21,7 @@ JumpMessageConsumer::JumpMessageConsumer(const Services &services, IMessageQueue
 
 void JumpMessageConsumer::onMessageReceived(const IMessage &message)
 {
-  const auto &jumpMessage = dynamic_cast<const bsgo::JumpMessage &>(message);
+  const auto &jumpMessage = message.as<bsgo::JumpMessage>();
   const auto shipDbId     = jumpMessage.getShipDbId();
   const auto shipEntityId = jumpMessage.getShipEntityId();
   const auto jumpSystem   = jumpMessage.getJumpSystem();

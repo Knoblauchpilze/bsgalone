@@ -14,8 +14,13 @@ class IMessage : public utils::CoreObject
   ~IMessage() override = default;
 
   virtual auto type() const -> MessageType = 0;
+
+  template<typename Message>
+  auto as() const -> const Message &;
 };
 
 using IMessagePtr = std::unique_ptr<IMessage>;
 
 } // namespace bsgo
+
+#include "IMessage.hxx"
