@@ -4,6 +4,7 @@
 #include "Coordinator.hh"
 #include "JumpService.hh"
 #include "LockerService.hh"
+#include "LoginService.hh"
 #include "PurchaseService.hh"
 #include "Repositories.hh"
 #include "ShipService.hh"
@@ -14,6 +15,7 @@ namespace bsgo {
 struct Services
 {
   SignupServiceShPtr signup{};
+  LoginServiceShPtr login{};
   PurchaseServiceShPtr purchase{};
   LockerServiceShPtr locker{};
   ShipServiceShPtr ship{};

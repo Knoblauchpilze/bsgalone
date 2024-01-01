@@ -1,15 +1,13 @@
 
-#include "LoginView.hh"
+#include "LoginService.hh"
 
 namespace bsgo {
 
-LoginView::LoginView(const CoordinatorShPtr &coordinator,
-                     const Repositories &repositories,
-                     IMessageQueue *const messageQueue)
-  : AbstractView("login", coordinator, repositories, messageQueue)
+LoginService::LoginService(const Repositories &repositories, const CoordinatorShPtr &coordinator)
+  : AbstractService("login", repositories, coordinator)
 {}
 
-auto LoginView::tryLogin(const std::string &name, const std::string &password) const
+auto LoginService::tryLogin(const std::string &name, const std::string &password) const
   -> std::optional<Uuid>
 {
   const auto maybePlayer = m_repositories.playerRepository->findOneByName(name);

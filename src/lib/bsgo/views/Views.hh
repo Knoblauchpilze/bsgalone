@@ -1,7 +1,6 @@
 
 #pragma once
 
-#include "LoginView.hh"
 #include "PlayerView.hh"
 #include "ResourceView.hh"
 #include "ServerView.hh"
@@ -17,7 +16,6 @@ struct Views
   ShipViewShPtr shipView{};
   ShopViewShPtr shopView{};
   SystemViewShPtr systemView{};
-  LoginViewShPtr loginView{};
   ServerViewShPtr serverView{};
   ResourceViewShPtr resourceView{};
 };
