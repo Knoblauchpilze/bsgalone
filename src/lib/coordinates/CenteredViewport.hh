@@ -58,5 +58,3 @@ class CenteredViewport : public Viewport
 };
 
 } // namespace pge
-
-#include "CenteredViewport.hxx"

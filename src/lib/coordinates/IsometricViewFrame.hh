@@ -13,5 +13,3 @@ class IsometricViewFrame : public TransformedViewFrame
 };
 
 } // namespace pge
-
-#include "IsometricViewFrame.hxx"
