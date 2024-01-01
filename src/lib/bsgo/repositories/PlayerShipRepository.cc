@@ -29,6 +29,9 @@ constexpr auto FIND_EMPTY_WEAPON_SLOTS_QUERY_NAME = "player_ship_find_empty_slot
 constexpr auto FIND_EMPTY_WEAPON_SLOTS_QUERY
   = "select ss.id FROM ship AS s LEFT JOIN ship_slot AS ss ON s.id = ss.ship LEFT JOIN player_ship AS ps ON ps.ship = s.id LEFT JOIN ship_weapon AS sw ON sw.ship = ps.id AND sw.slot = ss.id WHERE ps.id = $1 AND ss.type = 'weapon' AND sw.weapon IS NULL";
 
+constexpr auto FIND_SYSTEM_BY_ID_QUERY_NAME = "player_ship_find_system";
+constexpr auto FIND_SYSTEM_BY_ID_QUERY      = "SELECT system FROM ship_system WHERE ship = $1";
+
 constexpr auto UPDATE_SHIP_QUERY_NAME = "player_ship_update";
 constexpr auto UPDATE_SHIP_QUERY      = R"(
 INSERT INTO player_ship (ship, player, name, active, hull_points, power_points, x_pos, y_pos, z_pos)
@@ -59,9 +62,7 @@ INSERT INTO ship_jump (ship, system)
 )";
 
 constexpr auto CANCEL_SHIP_JUMP_QUERY_NAME = "player_ship_cancel_jump";
-constexpr auto CANCEL_SHIP_JUMP_QUERY      = R"(
-DELETE FROM ship_jump WHERE ship = $1;
-)";
+constexpr auto CANCEL_SHIP_JUMP_QUERY      = "DELETE FROM ship_jump WHERE ship = $1";
 } // namespace
 
 void PlayerShipRepository::initialize()
@@ -72,6 +73,7 @@ void PlayerShipRepository::initialize()
                         FIND_ONE_BY_PLAYER_AND_ACTIVE_QUERY);
   m_connection->prepare(FIND_SLOTS_QUERY_NAME, FIND_SLOTS_QUERY);
   m_connection->prepare(FIND_EMPTY_WEAPON_SLOTS_QUERY_NAME, FIND_EMPTY_WEAPON_SLOTS_QUERY);
+  m_connection->prepare(FIND_SYSTEM_BY_ID_QUERY_NAME, FIND_SYSTEM_BY_ID_QUERY);
   m_connection->prepare(UPDATE_SHIP_QUERY_NAME, UPDATE_SHIP_QUERY);
   m_connection->prepare(UPDATE_SHIP_JUMP_QUERY_NAME, UPDATE_SHIP_JUMP_QUERY);
   m_connection->prepare(CANCEL_SHIP_JUMP_QUERY_NAME, CANCEL_SHIP_JUMP_QUERY);
@@ -128,6 +130,25 @@ auto PlayerShipRepository::findAllAvailableWeaponSlotByShip(const Uuid &ship) ->
   }
 
   return out;
+}
+
+auto PlayerShipRepository::findSystemById(const Uuid &ship) const -> std::optional<Uuid>
+{
+  auto work       = m_connection->nonTransaction();
+  const auto rows = work.exec_prepared(FIND_SYSTEM_BY_ID_QUERY_NAME, toDbId(ship));
+
+  if (rows.empty())
+  {
+    return {};
+  }
+
+  if (rows.size() != 1)
+  {
+    error("Expected to find only one system for ship " + str(ship));
+  }
+
+  const auto &record = rows[0];
+  return fromDbId(record[0].as<int>());
 }
 
 void PlayerShipRepository::save(const PlayerShip &ship)
