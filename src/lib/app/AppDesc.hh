@@ -13,22 +13,22 @@ namespace pge {
 struct AppDesc
 {
   // The dimension of the window for this app in pixels.
-  olc::vi2d dims;
-
-  // A ratio defining how many 'logical' pixels will be
-  // mapped to 'screen' pixels.
-  olc::vi2d pixRatio;
-
-  // The name of the window.
-  std::string name;
+  olc::vi2d dims{};
 
   // The coordinate frame to use to convert dimensions in
   // tiles to screen and pixels coordinates.
-  CoordinateFramePtr frame;
+  CoordinateFramePtr frame{};
+
+  // A ratio defining how many 'logical' pixels will be
+  // mapped to 'screen' pixels.
+  olc::vi2d pixRatio{1, 1};
+
+  // The name of the window.
+  std::string name{"pge_app"};
 
   // Whether or not the coordinate frame is fixed (meaning
   // that panning and zooming is disabled) or not.
-  bool fixedFrame;
+  bool fixedFrame{false};
 
   // The maximum FPS that the app should try to maintain. If
   // it is able to render faster than this, it will sleep to
@@ -37,15 +37,4 @@ struct AppDesc
   std::optional<int> maxFps{};
 };
 
-/// @brief - Creates a default app description.
-/// @param dims - the dimensions of the application's main canvas in pixels.
-/// @param cf - the coordinate frame to associate to the application.
-/// @param name - the name of the application.
-/// @return - the default description of an app.
-AppDesc newDesc(const olc::vi2d &dims,
-                CoordinateFramePtr cf,
-                const std::string &name = "pge_app") noexcept;
-
 } // namespace pge
-
-#include "AppDesc.hxx"
