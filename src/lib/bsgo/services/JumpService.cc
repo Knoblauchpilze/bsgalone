@@ -13,9 +13,12 @@ bool isShipActive(const PlayerShip &ship)
   return ship.player.has_value() && ship.active;
 }
 
-bool canShipJump(const PlayerShip &ship)
+bool canShipJump(const PlayerShip &ship,
+                 const std::optional<Uuid> &currentSystem,
+                 const Uuid &newSystem)
 {
-  return isShipActive(ship) && !ship.jumpSystem.has_value();
+  return isShipActive(ship) && !ship.jumpSystem.has_value() && currentSystem.has_value()
+         && *currentSystem != newSystem;
 }
 
 } // namespace
@@ -24,8 +27,9 @@ bool JumpService::tryRegisterJump(const Uuid &shipDbId,
                                   const Uuid &shipEntityId,
                                   const Uuid &system) const
 {
-  auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
-  if (!canShipJump(ship))
+  auto ship             = m_repositories.playerShipRepository->findOneById(shipDbId);
+  const auto shipSystem = m_repositories.playerShipRepository->findSystemById(shipDbId);
+  if (!canShipJump(ship, shipSystem, system))
   {
     return false;
   }
@@ -74,17 +78,18 @@ bool JumpService::tryCancelJump(const Uuid &shipDbId, const Uuid &shipEntityId) 
 }
 
 namespace {
-bool canShipCompleteJump(const PlayerShip &ship)
+bool canShipCompleteJump(const PlayerShip &ship, const std::optional<Uuid> &currentSystem)
 {
-  // Same conditions.
-  return canShipCancelJump(ship);
+  return isShipActive(ship) && ship.jumpSystem.has_value() && currentSystem.has_value()
+         && *currentSystem != *ship.jumpSystem;
 }
 } // namespace
 
 bool JumpService::tryJump(const Uuid &shipDbId, const Uuid &shipEntityId) const
 {
-  auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
-  if (!canShipCompleteJump(ship))
+  auto ship             = m_repositories.playerShipRepository->findOneById(shipDbId);
+  const auto shipSystem = m_repositories.playerShipRepository->findSystemById(shipDbId);
+  if (!canShipCompleteJump(ship, shipSystem))
   {
     return false;
   }
