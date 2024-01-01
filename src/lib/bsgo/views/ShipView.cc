@@ -1,7 +1,7 @@
 
 #include "ShipView.hh"
+#include "JumpMessage.hh"
 #include "LockerUtils.hh"
-#include "StatusMessage.hh"
 
 namespace bsgo {
 
@@ -201,10 +201,10 @@ void ShipView::startJump() const
 
   checkPlayerShipDbIdExists();
 
-  auto message = std::make_unique<StatusMessage>(*m_playerShipDbId,
-                                                 *m_playerShipEntityId,
-                                                 JumpState::STARTED,
-                                                 m_systemToJumpTo);
+  auto message = std::make_unique<JumpMessage>(*m_playerShipDbId,
+                                               *m_playerShipEntityId,
+                                               JumpState::STARTED,
+                                               m_systemToJumpTo);
   m_messageQueue->pushMessage(std::move(message));
 }
 
@@ -217,9 +217,9 @@ void ShipView::cancelJump() const
 
   checkPlayerShipDbIdExists();
 
-  auto message = std::make_unique<StatusMessage>(*m_playerShipDbId,
-                                                 *m_playerShipEntityId,
-                                                 JumpState::CANCELLED);
+  auto message = std::make_unique<JumpMessage>(*m_playerShipDbId,
+                                               *m_playerShipEntityId,
+                                               JumpState::CANCELLED);
   m_messageQueue->pushMessage(std::move(message));
 }
 

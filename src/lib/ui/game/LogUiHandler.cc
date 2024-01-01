@@ -4,15 +4,18 @@
 #include "StringUtils.hh"
 #include "UiTextMenu.hh"
 
+#include "JumpMessage.hh"
 #include "LootMessage.hh"
 #include "ScannedMessage.hh"
-#include "StatusMessage.hh"
 
 namespace pge {
 
+const std::unordered_set<bsgo::MessageType> RELEVANT_MESSAGE_TYPES_TO_LOG
+  = {bsgo::MessageType::SCANNED, bsgo::MessageType::LOOT, bsgo::MessageType::JUMP};
+
 LogUiHandler::LogUiHandler(const bsgo::Views &views)
   : IUiHandler("log")
-  , AbstractMessageListener({bsgo::MessageType::SYSTEM})
+  , AbstractMessageListener(RELEVANT_MESSAGE_TYPES_TO_LOG)
   , m_systemView(views.systemView)
   , m_resourceView(views.resourceView)
 {
@@ -78,15 +81,15 @@ constexpr auto LOG_FADE_OUT_DURATION_MS                = 7000;
 const std::unordered_set<bsgo::JumpState> JUMP_STATES_NOT_TRIGGERING_LOG
   = {bsgo::JumpState::RUNNING, bsgo::JumpState::COMPLETED};
 
-bool shouldMessageBeFiltered(const bsgo::SystemMessage &message)
+bool shouldMessageBeFiltered(const bsgo::IMessage &message)
 {
-  if (message.systemType() != bsgo::SystemType::STATUS)
+  if (message.type() != bsgo::MessageType::JUMP)
   {
     return false;
   }
 
-  const auto &statusMessage = dynamic_cast<const bsgo::StatusMessage &>(message);
-  return JUMP_STATES_NOT_TRIGGERING_LOG.contains(statusMessage.getJumpState());
+  const auto &jumpMessage = dynamic_cast<const bsgo::JumpMessage &>(message);
+  return JUMP_STATES_NOT_TRIGGERING_LOG.contains(jumpMessage.getJumpState());
 }
 } // namespace
 
@@ -97,13 +100,12 @@ void LogUiHandler::onMessageReceived(const bsgo::IMessage &message)
     m_logs.pop_back();
   }
 
-  const auto &systemMessage = dynamic_cast<const bsgo::SystemMessage &>(message);
-  if (shouldMessageBeFiltered(systemMessage))
+  if (shouldMessageBeFiltered(message))
   {
     return;
   }
 
-  auto logMenu = createMenuFromMessage(systemMessage);
+  auto logMenu = createMenuFromMessage(message);
   LogMessage data{};
   data.rawMenu = logMenu.get();
 
@@ -165,7 +167,7 @@ auto createLootMessage(const bsgo::LootMessage &message, const bsgo::ResourceVie
 constexpr auto FTL_JUMP_STARTED_TEXT   = "FTL jump sequence started";
 constexpr auto FTL_JUMP_CANCELLED_TEXT = "FTL jump sequence aborted";
 
-auto createStatusMessage(const bsgo::StatusMessage &message)
+auto createStatusMessage(const bsgo::JumpMessage &message)
 {
   const auto color = olc::WHITE;
 
@@ -180,40 +182,37 @@ auto createStatusMessage(const bsgo::StatusMessage &message)
   }
 }
 
-auto createTextConfigForSystemMessage(const bsgo::SystemMessage &message,
-                                      const bsgo::SystemView &systemView,
-                                      const bsgo::ResourceView &resourceView) -> TextConfig
+auto createTextConfigForMessage(const bsgo::IMessage &message,
+                                const bsgo::SystemView &systemView,
+                                const bsgo::ResourceView &resourceView) -> TextConfig
 {
   TextConfig config{};
 
-  switch (message.systemType())
+  switch (message.type())
   {
-    case bsgo::SystemType::COMPUTER:
+    case bsgo::MessageType::SCANNED:
       return createMineralAnalysisMessage(dynamic_cast<const bsgo::ScannedMessage &>(message),
                                           systemView,
                                           resourceView);
-    case bsgo::SystemType::LOOT:
+    case bsgo::MessageType::LOOT:
       return createLootMessage(dynamic_cast<const bsgo::LootMessage &>(message), resourceView);
-    case bsgo::SystemType::STATUS:
-      return createStatusMessage(dynamic_cast<const bsgo::StatusMessage &>(message));
+    case bsgo::MessageType::JUMP:
+      return createStatusMessage(dynamic_cast<const bsgo::JumpMessage &>(message));
     default:
-      throw std::invalid_argument("Unsupported system type " + bsgo::str(message.systemType()));
+      throw std::invalid_argument("Unsupported message type " + bsgo::str(message.type()));
   }
 
   return config;
 }
 } // namespace
 
-auto LogUiHandler::createMenuFromMessage(const bsgo::SystemMessage &message) -> UiMenuPtr
+auto LogUiHandler::createMenuFromMessage(const bsgo::IMessage &message) -> UiMenuPtr
 {
   const olc::vi2d pos{m_offset.x - LOG_MENU_DIMS.x / 2, m_offset.y};
   const MenuConfig config{.pos = pos, .dims = LOG_MENU_DIMS, .highlightable = false};
   const BackgroundConfig bg = bgConfigFromColor(transparent(olc::WHITE, alpha::Transparent));
 
-  const auto text = createTextConfigForSystemMessage(dynamic_cast<const bsgo::SystemMessage &>(
-                                                       message),
-                                                     *m_systemView,
-                                                     *m_resourceView);
+  const auto text = createTextConfigForMessage(message, *m_systemView, *m_resourceView);
 
   return std::make_unique<UiTextMenu>(config, bg, text);
 }

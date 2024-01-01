@@ -289,9 +289,7 @@ The [IMessageListener](src/lib/bsgo/communication/IMessageListener.hh) allows an
 
 ### Messages
 
-The meat of the messaging process is the [IMessage](src/lib/bsgo/messages/IMessage.hh) class. This interface just defines a type: for now we only support system messages. Those are messages produced by the systems of the ECS.
-
-We chose to subclass the base interface into a [SystemMessage](src/lib/bsgo/messages/SystemMessage.hh) which is then further subclassed into specific events (such as a scan event).
+The meat of the messaging process is the [IMessage](src/lib/bsgo/messages/IMessage.hh) class. This interface defines a type of message and we can add more type as we see fit. Most of the time a message corresponds to a flow in the game, such as jumping or scanning a resource.
 
 ### Communication between the UI and the ECS
 

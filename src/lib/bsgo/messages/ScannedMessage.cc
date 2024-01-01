@@ -4,7 +4,7 @@
 namespace bsgo {
 
 ScannedMessage::ScannedMessage(const Uuid &asteroidEntityId)
-  : SystemMessage(SystemType::COMPUTER)
+  : AbstractMessage(MessageType::SCANNED)
   , m_asteroidEntityId(asteroidEntityId)
 {}
 

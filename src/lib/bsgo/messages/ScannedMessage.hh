@@ -1,12 +1,12 @@
 
 #pragma once
 
-#include "SystemMessage.hh"
+#include "AbstractMessage.hh"
 #include "Uuid.hh"
 
 namespace bsgo {
 
-class ScannedMessage : public SystemMessage
+class ScannedMessage : public AbstractMessage
 {
   public:
   ScannedMessage(const Uuid &asteroidEntityId);

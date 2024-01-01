@@ -1,12 +1,12 @@
 
 #pragma once
 
-#include "SystemMessage.hh"
+#include "AbstractMessage.hh"
 #include "Uuid.hh"
 
 namespace bsgo {
 
-class LootMessage : public SystemMessage
+class LootMessage : public AbstractMessage
 {
   public:
   LootMessage(const Uuid &resourceId, const float amount);

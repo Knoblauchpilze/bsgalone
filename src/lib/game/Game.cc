@@ -3,8 +3,8 @@
 #include "IInputHandler.hh"
 #include "IRenderer.hh"
 #include "IUiHandler.hh"
+#include "JumpMessageConsumer.hh"
 #include "NetworkSystem.hh"
-#include "StatusMessageConsumer.hh"
 
 #include "GameScreenInputHandler.hh"
 #include "GameScreenRenderer.hh"
@@ -287,7 +287,7 @@ void Game::initialize()
                                                               repositories,
                                                               m_messageQueue.get());
 
-  auto consumer = std::make_unique<bsgo::StatusMessageConsumer>(m_services, m_messageQueue.get());
+  auto consumer = std::make_unique<bsgo::JumpMessageConsumer>(m_services, m_messageQueue.get());
   m_messageQueue->addListener(consumer.get());
   m_messageConsumers.emplace_back(std::move(consumer));
 
