@@ -12,5 +12,3 @@ class TopViewFrame : public TransformedViewFrame
 };
 
 } // namespace pge
-
-#include "TopViewFrame.hxx"

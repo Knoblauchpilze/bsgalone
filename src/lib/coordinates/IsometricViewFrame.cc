@@ -1,13 +1,10 @@
 
-#pragma once
-
 #include "IsometricViewFrame.hh"
 #include <numbers>
 
 namespace pge {
 
-inline IsometricViewFrame::IsometricViewFrame(const CenteredViewport &tiles,
-                                              const TopLeftViewport &pixels)
+IsometricViewFrame::IsometricViewFrame(const CenteredViewport &tiles, const TopLeftViewport &pixels)
   :
 
   // Eigen uses clockwise rotations, so to rotate in the usual trigonometric

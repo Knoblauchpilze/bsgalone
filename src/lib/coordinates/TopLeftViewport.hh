@@ -56,5 +56,3 @@ class TopLeftViewport : public Viewport
 };
 
 } // namespace pge
-
-#include "TopLeftViewport.hxx"
