@@ -1,13 +1,11 @@
 
-#include "StatusMessageConsumer.hh"
-#include "StatusMessage.hh"
-#include "SystemMessage.hh"
+#include "JumpMessageConsumer.hh"
+#include "JumpMessage.hh"
 
 namespace bsgo {
 
-StatusMessageConsumer::StatusMessageConsumer(const Services &services,
-                                             IMessageQueue *const messageQueue)
-  : AbstractMessageConsumer("status", {bsgo::MessageType::SYSTEM})
+JumpMessageConsumer::JumpMessageConsumer(const Services &services, IMessageQueue *const messageQueue)
+  : AbstractMessageConsumer("jump", {bsgo::MessageType::JUMP})
   , m_jumpService(services.jump)
   , m_messageQueue(messageQueue)
 {
@@ -21,20 +19,13 @@ StatusMessageConsumer::StatusMessageConsumer(const Services &services,
   }
 }
 
-void StatusMessageConsumer::onMessageReceived(const IMessage &message)
+void JumpMessageConsumer::onMessageReceived(const IMessage &message)
 {
-  const auto &systemMessage = dynamic_cast<const bsgo::SystemMessage &>(message);
-
-  if (SystemType::STATUS != systemMessage.systemType())
-  {
-    return;
-  }
-
-  const auto &statusMessage = dynamic_cast<const bsgo::StatusMessage &>(systemMessage);
-  const auto shipDbId       = statusMessage.getShipDbId();
-  const auto shipEntityId   = statusMessage.getShipEntityId();
-  const auto jumpSystem     = statusMessage.getJumpSystem();
-  const auto state          = statusMessage.getJumpState();
+  const auto &jumpMessage = dynamic_cast<const bsgo::JumpMessage &>(message);
+  const auto shipDbId     = jumpMessage.getShipDbId();
+  const auto shipEntityId = jumpMessage.getShipEntityId();
+  const auto jumpSystem   = jumpMessage.getJumpSystem();
+  const auto state        = jumpMessage.getJumpState();
 
   bool success{false};
 
@@ -61,7 +52,7 @@ void StatusMessageConsumer::onMessageReceived(const IMessage &message)
   if (success && bsgo::JumpState::RUNNING == state)
   {
     m_messageQueue->pushMessage(
-      std::make_unique<bsgo::StatusMessage>(shipDbId, shipEntityId, bsgo::JumpState::COMPLETED));
+      std::make_unique<bsgo::JumpMessage>(shipDbId, shipEntityId, bsgo::JumpState::COMPLETED));
   }
 }
 

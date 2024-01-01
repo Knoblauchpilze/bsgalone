@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "SystemMessage.hh"
+#include "AbstractMessage.hh"
 #include "Uuid.hh"
 #include <optional>
 
@@ -15,15 +15,15 @@ enum class JumpState
   COMPLETED
 };
 
-class StatusMessage : public SystemMessage
+class JumpMessage : public AbstractMessage
 {
   public:
-  StatusMessage(const Uuid &shipDbId, const Uuid &shipEntityId, const JumpState &jumpState);
-  StatusMessage(const Uuid &shipDbId,
-                const Uuid &shipEntityId,
-                const JumpState &jumpState,
-                const std::optional<Uuid> &system);
-  ~StatusMessage() override = default;
+  JumpMessage(const Uuid &shipDbId, const Uuid &shipEntityId, const JumpState &jumpState);
+  JumpMessage(const Uuid &shipDbId,
+              const Uuid &shipEntityId,
+              const JumpState &jumpState,
+              const std::optional<Uuid> &system);
+  ~JumpMessage() override = default;
 
   auto getShipDbId() const -> Uuid;
   auto getShipEntityId() const -> Uuid;

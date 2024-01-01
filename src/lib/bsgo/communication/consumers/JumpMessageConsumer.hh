@@ -7,11 +7,11 @@
 
 namespace bsgo {
 
-class StatusMessageConsumer : public AbstractMessageConsumer
+class JumpMessageConsumer : public AbstractMessageConsumer
 {
   public:
-  StatusMessageConsumer(const Services &services, IMessageQueue *const messageQueue);
-  ~StatusMessageConsumer() override = default;
+  JumpMessageConsumer(const Services &services, IMessageQueue *const messageQueue);
+  ~JumpMessageConsumer() override = default;
 
   void onMessageReceived(const IMessage &message) override;
 

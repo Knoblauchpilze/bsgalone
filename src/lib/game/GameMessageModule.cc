@@ -1,13 +1,12 @@
 
 #include "GameMessageModule.hh"
 #include "Game.hh"
-#include "StatusMessage.hh"
-#include "SystemMessage.hh"
+#include "JumpMessage.hh"
 
 namespace pge {
 
 GameMessageModule::GameMessageModule(Game *game)
-  : bsgo::AbstractMessageListener({bsgo::MessageType::SYSTEM})
+  : bsgo::AbstractMessageListener({bsgo::MessageType::JUMP})
   , utils::CoreObject("message")
   , m_game(game)
 {
@@ -26,19 +25,12 @@ void GameMessageModule::setPlayerShipDbId(const bsgo::Uuid &shipDbId)
 
 void GameMessageModule::onMessageReceived(const bsgo::IMessage &message)
 {
-  const auto &systemMessage = dynamic_cast<const bsgo::SystemMessage &>(message);
-
-  if (bsgo::SystemType::STATUS != systemMessage.systemType())
-  {
-    return;
-  }
-
-  const auto &statusMessage = dynamic_cast<const bsgo::StatusMessage &>(systemMessage);
+  const auto &jumpMessage = dynamic_cast<const bsgo::JumpMessage &>(message);
 
   checkIfPlayerShipDbIdExists();
 
-  const auto ship  = statusMessage.getShipDbId();
-  const auto state = statusMessage.getJumpState();
+  const auto ship  = jumpMessage.getShipDbId();
+  const auto state = jumpMessage.getJumpState();
   if (bsgo::JumpState::COMPLETED != state || *m_playerShipDbId != ship)
   {
     return;
