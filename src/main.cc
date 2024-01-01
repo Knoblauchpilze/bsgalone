@@ -25,10 +25,11 @@ int main(int /*argc*/, char ** /*argv*/)
     auto tiles  = pge::CenteredViewport({0.0f, 0.0f}, {16.0f, 12.0f});
     auto pixels = pge::TopLeftViewport({0.0f, 0.0f}, {800.0f, 600.0f});
 
-    auto frame      = std::make_shared<pge::TopViewFrame>(tiles, pixels);
-    pge::AppDesc ad = pge::newDesc(olc::vi2d(800, 600), frame, "bsgalone");
-    ad.maxFps       = {20};
-    ad.fixedFrame   = true;
+    pge::AppDesc ad{.dims       = olc::vi2d{800, 600},
+                    .frame      = std::make_shared<pge::TopViewFrame>(tiles, pixels),
+                    .name       = "bsgalone",
+                    .fixedFrame = true,
+                    .maxFps     = 20};
     pge::App demo(ad);
 
     demo.Start();
