@@ -40,6 +40,7 @@ class ShipView : public AbstractView
   void dockPlayerShip() const;
   void undockPlayerShip() const;
   void setJumpSystem(const Uuid &system);
+  void clearJumpSystem();
   void startJump() const;
   void cancelJump() const;
 
