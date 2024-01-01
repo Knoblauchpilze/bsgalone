@@ -4,18 +4,18 @@
 
 namespace pge {
 
-LoginScreenUiHandler::LoginScreenUiHandler(const bsgo::Views &views, const bsgo::Services &services)
+LoginScreenUiHandler::LoginScreenUiHandler(const bsgo::Services &services)
   : IUiHandler("login")
-  , m_loginView(views.loginView)
   , m_signupService(services.signup)
+  , m_loginService(services.login)
 {
-  if (nullptr == m_loginView)
-  {
-    throw std::invalid_argument("Expected non null login view");
-  }
   if (nullptr == m_signupService)
   {
     throw std::invalid_argument("Expected non null signup service");
+  }
+  if (nullptr == m_loginService)
+  {
+    throw std::invalid_argument("Expected non null login service");
   }
 }
 
@@ -257,7 +257,7 @@ void LoginScreenUiHandler::tryLogin(Game &game)
   switch (m_mode)
   {
     case Mode::LOGIN:
-      playerId = m_loginView->tryLogin(data.name, data.password);
+      playerId = m_loginService->tryLogin(data.name, data.password);
       break;
     case Mode::SIGNUP:
       playerId = m_signupService->trySignup(data.name, data.password, m_faction);

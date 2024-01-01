@@ -81,7 +81,7 @@ void Game::generateInputHandlers()
 
 void Game::generateUiHandlers(int width, int height)
 {
-  auto login = std::make_unique<LoginScreenUiHandler>(m_views, m_services);
+  auto login = std::make_unique<LoginScreenUiHandler>(m_services);
   login->initializeMenus(width, height);
   m_uiHandlers[Screen::LOGIN] = std::move(login);
 
@@ -265,9 +265,6 @@ void Game::initialize()
                                                       m_messageQueue.get());
   m_services    = bsgo::createServices(repositories, m_coordinator);
 
-  m_views.loginView    = std::make_shared<bsgo::LoginView>(m_coordinator,
-                                                        repositories,
-                                                        m_messageQueue.get());
   m_views.shipView     = std::make_shared<bsgo::ShipView>(m_coordinator,
                                                       repositories,
                                                       m_messageQueue.get());

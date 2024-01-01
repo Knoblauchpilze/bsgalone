@@ -14,7 +14,7 @@ namespace pge {
 class LoginScreenUiHandler : public IUiHandler
 {
   public:
-  LoginScreenUiHandler(const bsgo::Views &views, const bsgo::Services &services);
+  LoginScreenUiHandler(const bsgo::Services &services);
   ~LoginScreenUiHandler() override = default;
 
   void initializeMenus(const int width, const int height) override;
@@ -25,8 +25,8 @@ class LoginScreenUiHandler : public IUiHandler
   void connectToMessageQueue(bsgo::IMessageQueue &messageQueue) override;
 
   private:
-  bsgo::LoginViewShPtr m_loginView{};
   bsgo::SignupServiceShPtr m_signupService{};
+  bsgo::LoginServiceShPtr m_loginService{};
 
   enum class Mode
   {
