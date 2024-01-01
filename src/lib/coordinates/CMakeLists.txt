@@ -1,5 +1,6 @@
 
 target_sources (bsgalone_lib PRIVATE
+	${CMAKE_CURRENT_SOURCE_DIR}/Viewport.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/CenteredViewport.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/TopLeftViewport.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/CoordinateFrame.cc
