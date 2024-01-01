@@ -3,8 +3,8 @@
 
 namespace bsgo {
 
-SignupService::SignupService(const Repositories &repositories)
-  : AbstractService("signup", repositories)
+SignupService::SignupService(const Repositories &repositories, const CoordinatorShPtr &coordinator)
+  : AbstractService("signup", repositories, coordinator)
 {}
 
 auto SignupService::trySignup(const std::string &name,

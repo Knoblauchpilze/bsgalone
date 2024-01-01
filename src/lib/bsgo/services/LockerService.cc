@@ -4,8 +4,8 @@
 
 namespace bsgo {
 
-LockerService::LockerService(const Repositories &repositories)
-  : AbstractService("locker", repositories)
+LockerService::LockerService(const Repositories &repositories, const CoordinatorShPtr &coordinator)
+  : AbstractService("locker", repositories, coordinator)
 {}
 
 void LockerService::setPlayerDbId(const Uuid &player)

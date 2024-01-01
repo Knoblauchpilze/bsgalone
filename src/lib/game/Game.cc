@@ -255,7 +255,6 @@ void Game::activeSystemChanged()
 void Game::initialize()
 {
   const auto repositories = m_dataSource.repositories();
-  m_services              = bsgo::createServices(repositories);
 
   auto networkSystem = std::make_unique<bsgo::NetworkSystem>(repositories);
   m_networkSystem    = networkSystem.get();
@@ -263,6 +262,7 @@ void Game::initialize()
 
   m_coordinator = std::make_shared<bsgo::Coordinator>(std::move(networkSystem),
                                                       m_messageQueue.get());
+  m_services    = bsgo::createServices(repositories, m_coordinator);
 
   m_views.loginView    = std::make_shared<bsgo::LoginView>(m_coordinator,
                                                         repositories,

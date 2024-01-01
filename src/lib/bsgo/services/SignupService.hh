@@ -11,7 +11,7 @@ namespace bsgo {
 class SignupService : public AbstractService
 {
   public:
-  SignupService(const Repositories &repositories);
+  SignupService(const Repositories &repositories, const CoordinatorShPtr &coordinator);
   ~SignupService() override = default;
 
   auto trySignup(const std::string &name, const std::string &password, const Faction &faction) const

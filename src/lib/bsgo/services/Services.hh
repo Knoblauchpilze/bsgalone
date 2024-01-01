@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "Coordinator.hh"
 #include "JumpService.hh"
 #include "LockerService.hh"
 #include "PurchaseService.hh"
@@ -19,6 +20,7 @@ struct Services
   JumpServiceShPtr jump{};
 };
 
-auto createServices(const Repositories &repositories) -> Services;
+auto createServices(const Repositories &repositories, const CoordinatorShPtr &coordinator)
+  -> Services;
 
 } // namespace bsgo
