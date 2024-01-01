@@ -31,7 +31,8 @@ void StatusMessageConsumer::onMessageReceived(const IMessage &message)
   }
 
   const auto &statusMessage = dynamic_cast<const bsgo::StatusMessage &>(systemMessage);
-  const auto shipId         = statusMessage.getShipDbId();
+  const auto shipDbId       = statusMessage.getShipDbId();
+  const auto shipEntityId   = statusMessage.getShipEntityId();
   const auto jumpSystem     = statusMessage.getJumpSystem();
   const auto state          = statusMessage.getJumpState();
 
@@ -40,13 +41,13 @@ void StatusMessageConsumer::onMessageReceived(const IMessage &message)
   switch (state)
   {
     case bsgo::JumpState::STARTED:
-      success = m_jumpService->tryRegisterJump(shipId, *jumpSystem);
+      success = m_jumpService->tryRegisterJump(shipDbId, shipEntityId, *jumpSystem);
       break;
     case bsgo::JumpState::CANCELLED:
-      success = m_jumpService->tryCancelJump(shipId);
+      success = m_jumpService->tryCancelJump(shipDbId, shipEntityId);
       break;
     case bsgo::JumpState::RUNNING:
-      success = m_jumpService->tryJump(shipId);
+      success = m_jumpService->tryJump(shipDbId, shipEntityId);
       break;
     case bsgo::JumpState::COMPLETED:
       success = true;
@@ -55,12 +56,12 @@ void StatusMessageConsumer::onMessageReceived(const IMessage &message)
 
   if (!success)
   {
-    warn("Failed to process jump message for ship " + str(shipId));
+    warn("Failed to process jump message for ship " + str(shipDbId));
   }
   if (success && bsgo::JumpState::RUNNING == state)
   {
     m_messageQueue->pushMessage(
-      std::make_unique<bsgo::StatusMessage>(shipId, bsgo::JumpState::COMPLETED));
+      std::make_unique<bsgo::StatusMessage>(shipDbId, shipEntityId, bsgo::JumpState::COMPLETED));
   }
 }
 
