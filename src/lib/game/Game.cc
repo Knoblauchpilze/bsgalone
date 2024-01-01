@@ -249,6 +249,7 @@ void Game::activeShipChanged()
 
 void Game::activeSystemChanged()
 {
+  m_views.shipView->clearJumpSystem();
   resetViewsAndUi();
 }
 

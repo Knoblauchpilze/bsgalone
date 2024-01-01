@@ -183,6 +183,11 @@ void ShipView::setJumpSystem(const Uuid &system)
   m_systemToJumpTo = system;
 }
 
+void ShipView::clearJumpSystem()
+{
+  m_systemToJumpTo.reset();
+}
+
 void ShipView::startJump() const
 {
   if (isJumping())
