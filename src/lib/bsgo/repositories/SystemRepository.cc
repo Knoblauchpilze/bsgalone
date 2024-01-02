@@ -28,11 +28,12 @@ constexpr auto FIND_OUTPOSTS_QUERY      = "SELECT id FROM system_outpost WHERE s
 
 constexpr auto UPDATE_SYSTEM_QUERY_NAME = "system_update_system_for_ship";
 constexpr auto UPDATE_SYSTEM_QUERY      = R"(
-INSERT INTO ship_system (ship, system)
-  VALUES ($1, $2)
+INSERT INTO ship_system (ship, system, docked)
+  VALUES ($1, $2, $3)
   ON CONFLICT (ship) DO UPDATE
   SET
-    system = excluded.system
+    system = excluded.system,
+    docked = excluded.docked
   WHERE
     ship_system.ship = excluded.ship
 )";
@@ -142,10 +143,13 @@ auto SystemRepository::findAllOutpostsBySystem(const Uuid &system) const -> std:
   return out;
 }
 
-void SystemRepository::updateSystemForShip(const Uuid &ship, const Uuid &system)
+void SystemRepository::updateSystemForShip(const Uuid &ship, const Uuid &system, const bool docked)
 {
-  auto query = [&ship, &system](pqxx::work &transaction) {
-    return transaction.exec_prepared0(UPDATE_SYSTEM_QUERY_NAME, toDbId(ship), toDbId(system));
+  auto query = [&ship, &system, docked](pqxx::work &transaction) {
+    return transaction.exec_prepared0(UPDATE_SYSTEM_QUERY_NAME,
+                                      toDbId(ship),
+                                      toDbId(system),
+                                      docked);
   };
 
   const auto res = m_connection->tryExecuteTransaction(query);
