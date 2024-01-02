@@ -7,24 +7,26 @@ ShipService::ShipService(const Repositories &repositories, const CoordinatorShPt
   : AbstractService("ship", repositories, coordinator)
 {}
 
-void ShipService::setPlayerDbId(const Uuid &player)
-{
-  m_playerDbId = player;
-}
-
-bool ShipService::isReady() const noexcept
-{
-  return m_playerDbId.has_value();
-}
-
 bool ShipService::trySelectShip(const Uuid &shipDbId) const
 {
-  checkPlayerDbIdExists();
+  const auto newActiveShip = m_repositories.playerShipRepository->findOneById(shipDbId);
+  if (!newActiveShip.player)
+  {
+    return false;
+  }
 
   const auto currentActiveShip = m_repositories.playerShipRepository->findOneByPlayerAndActive(
-    *m_playerDbId);
-  const auto newActiveShip = m_repositories.playerShipRepository->findOneById(shipDbId);
-  if (!verifyPreconditions(newActiveShip))
+    *newActiveShip.player);
+
+  if (!currentActiveShip.player)
+  {
+    return false;
+  }
+  if (newActiveShip.active)
+  {
+    return false;
+  }
+  if (*currentActiveShip.player != *newActiveShip.player)
   {
     return false;
   }
@@ -63,19 +65,6 @@ bool ShipService::tryUndock(const Uuid &shipEntityId) const
   ship.statusComp().setStatus(Status::APPEARING);
 
   return true;
-}
-
-void ShipService::checkPlayerDbIdExists() const
-{
-  if (!m_playerDbId)
-  {
-    error("Expected player db id to exist but it does not");
-  }
-}
-
-bool ShipService::verifyPreconditions(const PlayerShip &ship) const
-{
-  return !ship.active && *m_playerDbId == ship.player;
 }
 
 void ShipService::switchActiveShip(PlayerShip currentActiveShip, PlayerShip newActiveShip) const

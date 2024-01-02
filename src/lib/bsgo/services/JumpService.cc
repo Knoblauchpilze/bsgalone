@@ -27,9 +27,8 @@ bool JumpService::tryRegisterJump(const Uuid &shipDbId,
                                   const Uuid &shipEntityId,
                                   const Uuid &system) const
 {
-  auto ship             = m_repositories.playerShipRepository->findOneById(shipDbId);
-  const auto shipSystem = m_repositories.playerShipRepository->findSystemById(shipDbId);
-  if (!canShipJump(ship, shipSystem, system))
+  auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
+  if (!canShipJump(ship, ship.system, system))
   {
     return false;
   }
@@ -87,9 +86,8 @@ bool canShipCompleteJump(const PlayerShip &ship, const std::optional<Uuid> &curr
 
 bool JumpService::tryJump(const Uuid &shipDbId, const Uuid &shipEntityId) const
 {
-  auto ship             = m_repositories.playerShipRepository->findOneById(shipDbId);
-  const auto shipSystem = m_repositories.playerShipRepository->findSystemById(shipDbId);
-  if (!canShipCompleteJump(ship, shipSystem))
+  auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
+  if (!canShipCompleteJump(ship, ship.system))
   {
     return false;
   }
