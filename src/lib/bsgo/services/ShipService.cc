@@ -37,32 +37,38 @@ bool ShipService::trySelectShip(const Uuid &shipDbId) const
   return true;
 }
 
-bool ShipService::tryDock(const Uuid &shipEntityId) const
+bool ShipService::tryDock(const Uuid &shipDbId, const Uuid &shipEntityId) const
 {
-  auto ship              = m_coordinator->getEntity(shipEntityId);
-  const auto &statusComp = ship.statusComp();
+  auto shipEntity  = m_coordinator->getEntity(shipEntityId);
+  auto &statusComp = shipEntity.statusComp();
 
   if (Status::DOCKED == statusComp.status())
   {
     return false;
   }
 
-  ship.statusComp().setStatus(Status::DOCKED);
+  const auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
+  m_repositories.systemRepository->updateSystemForShip(shipDbId, *ship.system, true);
+
+  statusComp.setStatus(Status::DOCKED);
 
   return true;
 }
 
-bool ShipService::tryUndock(const Uuid &shipEntityId) const
+bool ShipService::tryUndock(const Uuid &shipDbId, const Uuid &shipEntityId) const
 {
-  auto ship              = m_coordinator->getEntity(shipEntityId);
-  const auto &statusComp = ship.statusComp();
+  auto shipEntity  = m_coordinator->getEntity(shipEntityId);
+  auto &statusComp = shipEntity.statusComp();
 
   if (statusComp.status() != Status::DOCKED)
   {
     return false;
   }
 
-  ship.statusComp().setStatus(Status::APPEARING);
+  const auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
+  m_repositories.systemRepository->updateSystemForShip(shipDbId, *ship.system, false);
+
+  statusComp.setStatus(Status::APPEARING);
 
   return true;
 }
