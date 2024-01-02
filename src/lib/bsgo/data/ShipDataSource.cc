@@ -62,7 +62,8 @@ void ShipDataSource::registerShip(Coordinator &coordinator, const Uuid &ship) co
   coordinator.addPower(ent, data.powerPoints, data.maxPowerPoints, data.powerRegen);
   coordinator.addTarget(ent);
   coordinator.addFaction(ent, data.faction);
-  coordinator.addStatus(ent, Status::APPEARING, data.jumpTime, data.jumpTimeInThreat);
+  const auto status = data.docked ? Status::DOCKED : Status::APPEARING;
+  coordinator.addStatus(ent, status, data.jumpTime, data.jumpTimeInThreat);
   coordinator.addShipClass(ent, data.shipClass);
   coordinator.addName(ent, data.name);
   coordinator.addDbId(ent, data.id);
