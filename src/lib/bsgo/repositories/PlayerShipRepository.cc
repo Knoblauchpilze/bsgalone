@@ -14,23 +14,74 @@ constexpr auto FIND_ALL_QUERY_NAME = "player_ship_find_all";
 constexpr auto FIND_ALL_QUERY      = "SELECT id FROM player_ship WHERE player = $1";
 
 constexpr auto FIND_ONE_QUERY_NAME = "player_ship_find_one";
-constexpr auto FIND_ONE_QUERY
-  = "SELECT s.faction, s.class, s.id, ps.name, ps.player, ps.active, ps.hull_points, s.max_hull_points, s.hull_points_regen, ps.power_points, s.max_power_points, s.power_points_regen, s.max_acceleration, s.max_speed, s.radius, ps.x_pos, ps.y_pos, ps.z_pos, sc.jump_time_ms, sc.jump_time_threat_ms, sj.system FROM player_ship AS ps LEFT JOIN ship AS s ON ps.ship = s.id LEFT JOIN ship_class AS sc ON s.class = sc.name LEFT JOIN ship_jump AS sj ON ps.id = sj.ship WHERE ps.id = $1";
+constexpr auto FIND_ONE_QUERY      = R"(
+SELECT
+  s.faction,
+  s.class,
+  s.id,
+  ps.name,
+  ps.player,
+  ps.active,
+  ps.hull_points,
+  s.max_hull_points,
+  s.hull_points_regen,
+  ps.power_points,
+  s.max_power_points,
+  s.power_points_regen,
+  s.max_acceleration,
+  s.max_speed,
+  s.radius,
+  ps.x_pos,
+  ps.y_pos,
+  ps.z_pos,
+  ss.system,
+  ss.docked,
+  sc.jump_time_ms,
+  sc.jump_time_threat_ms,
+  sj.system
+FROM
+  player_ship AS ps
+  LEFT JOIN ship AS s ON ps.ship = s.id
+  LEFT JOIN ship_class AS sc ON s.class = sc.name
+  LEFT JOIN ship_system AS ss ON ps.id = ss.ship
+  LEFT JOIN ship_jump AS sj ON ps.id = sj.ship
+WHERE
+  ps.id = $1;
+)";
 
 constexpr auto FIND_ONE_BY_PLAYER_AND_ACTIVE_QUERY_NAME = "player_ship_find_one_by_player_and_active";
 constexpr auto FIND_ONE_BY_PLAYER_AND_ACTIVE_QUERY
   = "SELECT id FROM player_ship WHERE player = $1 AND active = 'true'";
 
 constexpr auto FIND_SLOTS_QUERY_NAME = "player_ship_find_slots";
-constexpr auto FIND_SLOTS_QUERY
-  = "SELECT ss.type, COUNT(ss.id) FROM player_ship AS ps LEFT JOIN ship AS s ON ps.ship = s.id LEFT JOIN ship_slot AS ss ON s.id = ss.ship WHERE ps.id = $1 GROUP BY ss.type";
+constexpr auto FIND_SLOTS_QUERY      = R"(
+SELECT
+  ss.type,
+  COUNT(ss.id)
+FROM
+  player_ship AS ps
+  LEFT JOIN ship AS s ON ps.ship = s.id
+  LEFT JOIN ship_slot AS ss ON s.id = ss.ship
+WHERE
+  ps.id = $1
+GROUP BY
+  ss.type
+)";
 
 constexpr auto FIND_EMPTY_WEAPON_SLOTS_QUERY_NAME = "player_ship_find_empty_slots";
-constexpr auto FIND_EMPTY_WEAPON_SLOTS_QUERY
-  = "select ss.id FROM ship AS s LEFT JOIN ship_slot AS ss ON s.id = ss.ship LEFT JOIN player_ship AS ps ON ps.ship = s.id LEFT JOIN ship_weapon AS sw ON sw.ship = ps.id AND sw.slot = ss.id WHERE ps.id = $1 AND ss.type = 'weapon' AND sw.weapon IS NULL";
-
-constexpr auto FIND_SYSTEM_BY_ID_QUERY_NAME = "player_ship_find_system";
-constexpr auto FIND_SYSTEM_BY_ID_QUERY      = "SELECT system FROM ship_system WHERE ship = $1";
+constexpr auto FIND_EMPTY_WEAPON_SLOTS_QUERY      = R"(
+SELECT
+  ss.id
+FROM
+  ship AS s
+  LEFT JOIN ship_slot AS ss ON s.id = ss.ship
+  LEFT JOIN player_ship AS ps ON ps.ship = s.id
+  LEFT JOIN ship_weapon AS sw ON sw.ship = ps.id AND sw.slot = ss.id
+WHERE
+  ps.id = $1
+  AND ss.type = 'weapon'
+  AND sw.weapon IS NULL
+)";
 
 constexpr auto UPDATE_SHIP_QUERY_NAME = "player_ship_update";
 constexpr auto UPDATE_SHIP_QUERY      = R"(
@@ -73,7 +124,6 @@ void PlayerShipRepository::initialize()
                         FIND_ONE_BY_PLAYER_AND_ACTIVE_QUERY);
   m_connection->prepare(FIND_SLOTS_QUERY_NAME, FIND_SLOTS_QUERY);
   m_connection->prepare(FIND_EMPTY_WEAPON_SLOTS_QUERY_NAME, FIND_EMPTY_WEAPON_SLOTS_QUERY);
-  m_connection->prepare(FIND_SYSTEM_BY_ID_QUERY_NAME, FIND_SYSTEM_BY_ID_QUERY);
   m_connection->prepare(UPDATE_SHIP_QUERY_NAME, UPDATE_SHIP_QUERY);
   m_connection->prepare(UPDATE_SHIP_JUMP_QUERY_NAME, UPDATE_SHIP_JUMP_QUERY);
   m_connection->prepare(CANCEL_SHIP_JUMP_QUERY_NAME, CANCEL_SHIP_JUMP_QUERY);
@@ -130,25 +180,6 @@ auto PlayerShipRepository::findAllAvailableWeaponSlotByShip(const Uuid &ship) ->
   }
 
   return out;
-}
-
-auto PlayerShipRepository::findSystemById(const Uuid &ship) const -> std::optional<Uuid>
-{
-  auto work       = m_connection->nonTransaction();
-  const auto rows = work.exec_prepared(FIND_SYSTEM_BY_ID_QUERY_NAME, toDbId(ship));
-
-  if (rows.empty())
-  {
-    return {};
-  }
-
-  if (rows.size() != 1)
-  {
-    error("Expected to find only one system for ship " + str(ship));
-  }
-
-  const auto &record = rows[0];
-  return fromDbId(record[0].as<int>());
 }
 
 void PlayerShipRepository::save(const PlayerShip &ship)
@@ -211,11 +242,17 @@ auto PlayerShipRepository::fetchShipBase(const Uuid &ship) const -> PlayerShip
   const auto z = record[17].as<float>();
   out.position = Eigen::Vector3f(x, y, z);
 
-  out.jumpTime         = utils::Milliseconds(record[18].as<int>());
-  out.jumpTimeInThreat = utils::Milliseconds(record[19].as<int>());
-  if (!record[20].is_null())
+  if (!record[18].is_null())
   {
-    out.jumpSystem = fromDbId(record[20].as<int>());
+    out.system = fromDbId(record[18].as<int>());
+  }
+  out.docked = record[19].as<bool>();
+
+  out.jumpTime         = utils::Milliseconds(record[20].as<int>());
+  out.jumpTimeInThreat = utils::Milliseconds(record[21].as<int>());
+  if (!record[22].is_null())
+  {
+    out.jumpSystem = fromDbId(record[22].as<int>());
   }
 
   return out;

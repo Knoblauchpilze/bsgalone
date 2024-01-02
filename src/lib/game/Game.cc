@@ -333,7 +333,6 @@ void Game::resetViewsAndUi()
   m_services.purchase->setPlayerDbId(*maybePlayerDbId);
   m_services.locker->setPlayerDbId(*maybePlayerDbId);
   m_services.locker->setPlayerShipDbId(playerShipDbId);
-  m_services.ship->setPlayerDbId(*maybePlayerDbId);
 
   m_messageModule.setPlayerShipDbId(playerShipDbId);
 
