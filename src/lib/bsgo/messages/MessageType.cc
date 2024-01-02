@@ -13,14 +13,16 @@ auto str(const MessageType &type) -> std::string
       return "loot";
     case MessageType::JUMP:
       return "jump";
+    case MessageType::DOCK:
+      return "dock";
     default:
       return "unknown";
   }
 }
 
-auto allMessageTypes() -> std::array<MessageType, 3>
+auto allMessageTypes() -> std::array<MessageType, 4>
 {
-  return {MessageType::SCANNED, MessageType::LOOT, MessageType::JUMP};
+  return {MessageType::SCANNED, MessageType::LOOT, MessageType::JUMP, MessageType::DOCK};
 }
 
 } // namespace bsgo

@@ -2,6 +2,8 @@
 #pragma once
 
 #include "AbstractMessageListener.hh"
+#include "DockMessage.hh"
+#include "JumpMessage.hh"
 #include "Uuid.hh"
 #include <core_utils/CoreObject.hh>
 #include <optional>
@@ -25,6 +27,9 @@ class GameMessageModule : public bsgo::AbstractMessageListener, public utils::Co
   std::optional<bsgo::Uuid> m_playerShipDbId{};
 
   void checkIfPlayerShipDbIdExists();
+
+  void handleJumpMessage(const bsgo::JumpMessage &message);
+  void handleDockMessage(const bsgo::DockMessage &message);
 };
 
 } // namespace pge

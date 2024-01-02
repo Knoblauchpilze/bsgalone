@@ -17,13 +17,13 @@ bool ShipService::isReady() const noexcept
   return m_playerDbId.has_value();
 }
 
-bool ShipService::trySelectShip(const Uuid &playerShipId) const
+bool ShipService::trySelectShip(const Uuid &shipDbId) const
 {
   checkPlayerDbIdExists();
 
   const auto currentActiveShip = m_repositories.playerShipRepository->findOneByPlayerAndActive(
     *m_playerDbId);
-  const auto newActiveShip = m_repositories.playerShipRepository->findOneById(playerShipId);
+  const auto newActiveShip = m_repositories.playerShipRepository->findOneById(shipDbId);
   if (!verifyPreconditions(newActiveShip))
   {
     return false;
@@ -31,6 +31,21 @@ bool ShipService::trySelectShip(const Uuid &playerShipId) const
 
   switchActiveShip(currentActiveShip, newActiveShip);
   switchShipSystem(currentActiveShip, newActiveShip);
+
+  return true;
+}
+
+bool ShipService::tryDock(const Uuid &shipEntityId) const
+{
+  auto ship              = m_coordinator->getEntity(shipEntityId);
+  const auto &statusComp = ship.statusComp();
+
+  if (Status::DOCKED == statusComp.status())
+  {
+    return false;
+  }
+
+  ship.statusComp().setStatus(Status::DOCKED);
 
   return true;
 }

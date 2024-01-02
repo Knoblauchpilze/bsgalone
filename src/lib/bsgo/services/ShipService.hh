@@ -16,7 +16,8 @@ class ShipService : public AbstractService
   void setPlayerDbId(const Uuid &player);
   bool isReady() const noexcept override;
 
-  bool trySelectShip(const Uuid &playerShipId) const;
+  bool trySelectShip(const Uuid &shipDbId) const;
+  bool tryDock(const Uuid &shipEntityId) const;
 
   private:
   std::optional<Uuid> m_playerDbId{};

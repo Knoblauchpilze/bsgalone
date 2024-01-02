@@ -105,6 +105,9 @@ class Game : public utils::CoreObject
   GameMessageModule m_messageModule;
 
   void initialize();
+  void initializeViews();
+  void initializeMessageSystem();
+
   void resetViewsAndUi();
 };
 
