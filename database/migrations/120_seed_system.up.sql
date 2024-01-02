@@ -15,15 +15,17 @@ INSERT INTO public.starting_system ("system", "faction")
     'colonial'
   );
 
-INSERT INTO public.ship_system ("ship", "system")
+INSERT INTO public.ship_system ("ship", "system", "docked")
   VALUES (
     (SELECT player_ship.id FROM player_ship LEFT JOIN player ON player_ship.player = player.id WHERE player.name = 'grouton' AND player_ship.active = true),
-    (SELECT id FROM system WHERE name = 'Munnin')
+    (SELECT id FROM system WHERE name = 'Munnin'),
+    false
   );
-INSERT INTO public.ship_system ("ship", "system")
+INSERT INTO public.ship_system ("ship", "system", "docked")
   VALUES (
     (SELECT player_ship.id FROM player_ship WHERE player_ship.player is NULL),
-    (SELECT id FROM system WHERE name = 'Munnin')
+    (SELECT id FROM system WHERE name = 'Munnin'),
+    false
   );
 
 INSERT INTO public.asteroid ("system", "health", "radius", "x_pos", "y_pos", "z_pos")
