@@ -37,7 +37,7 @@ void DockMessageConsumer::onMessageReceived(const IMessage &message)
 
 void DockMessageConsumer::handleDocking(const Uuid &shipDbId, const Uuid &shipEntityId) const
 {
-  if (!m_shipService->tryDock(shipEntityId))
+  if (!m_shipService->tryDock(shipDbId, shipEntityId))
   {
     warn("Failed to process dock message for ship " + str(shipDbId));
     return;
@@ -49,7 +49,7 @@ void DockMessageConsumer::handleDocking(const Uuid &shipDbId, const Uuid &shipEn
 
 void DockMessageConsumer::handleUndocking(const Uuid &shipDbId, const Uuid &shipEntityId) const
 {
-  if (!m_shipService->tryUndock(shipEntityId))
+  if (!m_shipService->tryUndock(shipDbId, shipEntityId))
   {
     warn("Failed to process undock message for ship " + str(shipDbId));
     return;

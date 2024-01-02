@@ -14,8 +14,8 @@ class ShipService : public AbstractService
   ~ShipService() override = default;
 
   bool trySelectShip(const Uuid &shipDbId) const;
-  bool tryDock(const Uuid &shipEntityId) const;
-  bool tryUndock(const Uuid &shipEntityId) const;
+  bool tryDock(const Uuid &shipDbId, const Uuid &shipEntityId) const;
+  bool tryUndock(const Uuid &shipDbId, const Uuid &shipEntityId) const;
 
   private:
   void switchActiveShip(PlayerShip currentActiveShip, PlayerShip newActiveShip) const;
