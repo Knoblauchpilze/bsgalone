@@ -330,7 +330,6 @@ void Game::resetViewsAndUi()
   m_views.shopView->setPlayerDbId(*maybePlayerDbId);
   m_views.serverView->setPlayerDbId(*maybePlayerDbId);
 
-  m_services.purchase->setPlayerDbId(*maybePlayerDbId);
   m_services.locker->setPlayerDbId(*maybePlayerDbId);
   m_services.locker->setPlayerShipDbId(playerShipDbId);
 

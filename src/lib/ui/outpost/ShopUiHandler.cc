@@ -11,11 +11,16 @@ namespace pge {
 ShopUiHandler::ShopUiHandler(const bsgo::Views &views, const bsgo::Services &services)
   : IUiHandler("shop")
   , m_shopView(views.shopView)
+  , m_playerView(views.playerView)
   , m_purchaseService(services.purchase)
 {
   if (nullptr == m_shopView)
   {
     throw std::invalid_argument("Expected non null shop view");
+  }
+  if (nullptr == m_playerView)
+  {
+    throw std::invalid_argument("Expected non null player view");
   }
   if (nullptr == m_purchaseService)
   {
@@ -227,13 +232,15 @@ auto ShopUiHandler::generateBuySection(const int itemId) -> UiMenuPtr
 
 void ShopUiHandler::onPurchaseRequest(const int itemId)
 {
-  if (!m_purchaseService->isReady())
+  if (!m_purchaseService->isReady() || !m_playerView->isReady())
   {
     return;
   }
 
   const auto &purchase = m_itemsData.at(itemId);
-  if (!m_purchaseService->tryPurchase(purchase.itemId, purchase.itemType))
+  if (!m_purchaseService->tryPurchase(m_playerView->getPlayerDbId(),
+                                      purchase.itemId,
+                                      purchase.itemType))
   {
     warn("Failed to buy " + bsgo::str(purchase.itemId) + " with type "
          + bsgo::str(purchase.itemType));

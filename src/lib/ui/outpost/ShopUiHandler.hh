@@ -23,6 +23,7 @@ class ShopUiHandler : public IUiHandler
 
   private:
   bsgo::ShopViewShPtr m_shopView;
+  bsgo::PlayerViewShPtr m_playerView;
   bsgo::PurchaseServiceShPtr m_purchaseService{};
 
   UiMenuPtr m_menu{};

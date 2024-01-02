@@ -24,6 +24,12 @@ bool PlayerView::isReady() const noexcept
   return m_playerDbId && m_playerShipDbId;
 }
 
+auto PlayerView::getPlayerDbId() const -> Uuid
+{
+  checkPlayerDbIdExists();
+  return *m_playerDbId;
+}
+
 auto PlayerView::getPlayerFaction() const -> Faction
 {
   checkPlayerDbIdExists();
