@@ -13,12 +13,30 @@ bool isShipActive(const PlayerShip &ship)
   return ship.player.has_value() && ship.active;
 }
 
-bool canShipJump(const PlayerShip &ship,
-                 const std::optional<Uuid> &currentSystem,
-                 const Uuid &newSystem)
+bool canShipJump(const PlayerShip &ship, const Uuid &newSystem)
 {
-  return isShipActive(ship) && !ship.jumpSystem.has_value() && currentSystem.has_value()
-         && *currentSystem != newSystem;
+  if (!isShipActive(ship))
+  {
+    return false;
+  }
+  if (!ship.system.has_value())
+  {
+    return false;
+  }
+  if (ship.jumpSystem.has_value())
+  {
+    return false;
+  }
+  if (*ship.system == newSystem)
+  {
+    return false;
+  }
+  if (ship.docked)
+  {
+    return false;
+  }
+
+  return true;
 }
 
 } // namespace
@@ -28,7 +46,7 @@ bool JumpService::tryRegisterJump(const Uuid &shipDbId,
                                   const Uuid &system) const
 {
   auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
-  if (!canShipJump(ship, ship.system, system))
+  if (!canShipJump(ship, system))
   {
     return false;
   }
@@ -50,7 +68,20 @@ bool JumpService::tryRegisterJump(const Uuid &shipDbId,
 namespace {
 bool canShipCancelJump(const PlayerShip &ship)
 {
-  return isShipActive(ship) && ship.jumpSystem.has_value();
+  if (!isShipActive(ship))
+  {
+    return false;
+  }
+  if (!ship.jumpSystem.has_value())
+  {
+    return false;
+  }
+  if (ship.docked)
+  {
+    return false;
+  }
+
+  return true;
 }
 } // namespace
 
@@ -77,24 +108,44 @@ bool JumpService::tryCancelJump(const Uuid &shipDbId, const Uuid &shipEntityId) 
 }
 
 namespace {
-bool canShipCompleteJump(const PlayerShip &ship, const std::optional<Uuid> &currentSystem)
+bool canShipCompleteJump(const PlayerShip &ship)
 {
-  return isShipActive(ship) && ship.jumpSystem.has_value() && currentSystem.has_value()
-         && *currentSystem != *ship.jumpSystem;
+  if (!isShipActive(ship))
+  {
+    return false;
+  }
+  if (!ship.jumpSystem.has_value())
+  {
+    return false;
+  }
+  if (!ship.system.has_value())
+  {
+    return false;
+  }
+  if (*ship.jumpSystem == *ship.system)
+  {
+    return false;
+  }
+  if (ship.docked)
+  {
+    return false;
+  }
+
+  return true;
 }
 } // namespace
 
 bool JumpService::tryJump(const Uuid &shipDbId, const Uuid &shipEntityId) const
 {
   auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
-  if (!canShipCompleteJump(ship, ship.system))
+  if (!canShipCompleteJump(ship))
   {
     return false;
   }
 
   const auto system = m_repositories.systemRepository->findOneById(*ship.jumpSystem);
 
-  m_repositories.systemRepository->updateSystemForShip(ship.id, *ship.jumpSystem);
+  m_repositories.systemRepository->updateSystemForShip(ship.id, *ship.jumpSystem, ship.docked);
   ship.jumpSystem.reset();
   m_repositories.playerShipRepository->save(ship);
 

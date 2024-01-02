@@ -90,7 +90,7 @@ void SignupService::registerShip(const Player &player) const
 
   const auto startingSystem = m_repositories.systemRepository->findOneByFactionAndStarting(
     player.faction);
-  m_repositories.systemRepository->updateSystemForShip(dbShip, startingSystem);
+  m_repositories.systemRepository->updateSystemForShip(dbShip, startingSystem, true);
 }
 
 } // namespace bsgo

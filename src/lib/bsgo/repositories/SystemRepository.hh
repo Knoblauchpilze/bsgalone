@@ -33,7 +33,7 @@ class SystemRepository : public AbstractRepository
   auto findAllShipsBySystem(const Uuid &system) const -> std::unordered_set<Uuid>;
   auto findAllOutpostsBySystem(const Uuid &system) const -> std::unordered_set<Uuid>;
 
-  void updateSystemForShip(const Uuid &ship, const Uuid &system);
+  void updateSystemForShip(const Uuid &ship, const Uuid &system, const bool docked);
   void updateShipForSystem(const Uuid &currentShip, const Uuid &newShip);
 };
 
