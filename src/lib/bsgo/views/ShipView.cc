@@ -182,7 +182,13 @@ void ShipView::dockPlayerShip() const
 void ShipView::undockPlayerShip() const
 {
   auto playerShip = getPlayerShip();
-  playerShip.statusComp().setStatus(Status::APPEARING);
+  checkPlayerShipDbIdExists();
+
+  auto message = std::make_unique<DockMessage>(*m_playerShipDbId,
+                                               playerShip.uuid,
+                                               false,
+                                               DockState::STARTED);
+  m_messageQueue->pushMessage(std::move(message));
 }
 
 void ShipView::setJumpSystem(const Uuid &system)
