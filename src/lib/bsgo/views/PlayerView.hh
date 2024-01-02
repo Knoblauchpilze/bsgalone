@@ -19,6 +19,7 @@ class PlayerView : public AbstractView
 
   bool isReady() const noexcept override;
 
+  auto getPlayerDbId() const -> Uuid;
   auto getPlayerFaction() const -> Faction;
   auto getPlayerResources() const -> std::vector<PlayerResource>;
   auto getPlayerWeapons() const -> std::vector<PlayerWeapon>;

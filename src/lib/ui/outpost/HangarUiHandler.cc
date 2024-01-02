@@ -291,13 +291,15 @@ void HangarUiHandler::onShipRequest(const int shipIndex, Game &game)
 
 void HangarUiHandler::onPurchaseRequest(const int shipIndex)
 {
-  if (!m_purchaseService->isReady())
+  if (!m_purchaseService->isReady() || !m_playerView->isReady())
   {
     return;
   }
 
   const auto &data = m_shipsData.at(shipIndex);
-  if (!m_purchaseService->tryPurchase(data.shipDbId, bsgo::Item::SHIP))
+  if (!m_purchaseService->tryPurchase(m_playerView->getPlayerDbId(),
+                                      data.shipDbId,
+                                      bsgo::Item::SHIP))
   {
     warn("Failed to buy ship with id " + bsgo::str(data.shipDbId));
     return;
