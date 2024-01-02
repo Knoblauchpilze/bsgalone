@@ -20,6 +20,7 @@ class DockMessageConsumer : public AbstractMessageConsumer
   IMessageQueue *const m_messageQueue{};
 
   void handleDocking(const Uuid &shipDbId, const Uuid &shipEntityId) const;
+  void handleUndocking(const Uuid &shipDbId, const Uuid &shipEntityId) const;
 };
 
 } // namespace bsgo

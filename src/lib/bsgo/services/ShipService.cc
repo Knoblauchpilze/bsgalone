@@ -50,6 +50,21 @@ bool ShipService::tryDock(const Uuid &shipEntityId) const
   return true;
 }
 
+bool ShipService::tryUndock(const Uuid &shipEntityId) const
+{
+  auto ship              = m_coordinator->getEntity(shipEntityId);
+  const auto &statusComp = ship.statusComp();
+
+  if (statusComp.status() != Status::DOCKED)
+  {
+    return false;
+  }
+
+  ship.statusComp().setStatus(Status::APPEARING);
+
+  return true;
+}
+
 void ShipService::checkPlayerDbIdExists() const
 {
   if (!m_playerDbId)

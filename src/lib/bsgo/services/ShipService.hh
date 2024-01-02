@@ -18,6 +18,7 @@ class ShipService : public AbstractService
 
   bool trySelectShip(const Uuid &shipDbId) const;
   bool tryDock(const Uuid &shipEntityId) const;
+  bool tryUndock(const Uuid &shipEntityId) const;
 
   private:
   std::optional<Uuid> m_playerDbId{};

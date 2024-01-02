@@ -23,9 +23,15 @@ void DockMessageConsumer::onMessageReceived(const IMessage &message)
 {
   const auto &dockMessage = message.as<bsgo::DockMessage>();
 
-  if (dockMessage.isDocking() && DockState::STARTED == dockMessage.getDockState())
+  const auto procedureStarted = DockState::STARTED == dockMessage.getDockState();
+
+  if (dockMessage.isDocking() && procedureStarted)
   {
     handleDocking(dockMessage.getShipDbId(), dockMessage.getShipEntityId());
+  }
+  if (!dockMessage.isDocking() && procedureStarted)
+  {
+    handleUndocking(dockMessage.getShipDbId(), dockMessage.getShipEntityId());
   }
 }
 
@@ -39,6 +45,18 @@ void DockMessageConsumer::handleDocking(const Uuid &shipDbId, const Uuid &shipEn
 
   m_messageQueue->pushMessage(
     std::make_unique<bsgo::DockMessage>(shipDbId, shipEntityId, true, DockState::COMPLETED));
+}
+
+void DockMessageConsumer::handleUndocking(const Uuid &shipDbId, const Uuid &shipEntityId) const
+{
+  if (!m_shipService->tryUndock(shipEntityId))
+  {
+    warn("Failed to process undock message for ship " + str(shipDbId));
+    return;
+  }
+
+  m_messageQueue->pushMessage(
+    std::make_unique<bsgo::DockMessage>(shipDbId, shipEntityId, false, DockState::COMPLETED));
 }
 
 } // namespace bsgo

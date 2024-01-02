@@ -39,11 +39,10 @@ void OutpostScreenUiHandler::initializeMenus(const int width, const int height)
   const olc::vi2d pos{(width - UNDOCK_BUTTON_WIDTH) / 2, 10};
   const olc::vi2d dims{UNDOCK_BUTTON_WIDTH, 50};
 
-  const MenuConfig config{.pos = pos, .dims = dims, .gameClickCallback = [this](Game &g) {
+  const MenuConfig config{.pos = pos, .dims = dims, .clickCallback = [this]() {
                             if (m_shipView->isReady())
                             {
                               m_shipView->undockPlayerShip();
-                              g.setScreen(Screen::GAME);
                             }
                           }};
 

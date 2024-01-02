@@ -68,7 +68,14 @@ void GameMessageModule::handleDockMessage(const bsgo::DockMessage &message)
     return;
   }
 
-  m_game->setScreen(Screen::OUTPOST);
+  if (message.isDocking())
+  {
+    m_game->setScreen(Screen::OUTPOST);
+  }
+  else
+  {
+    m_game->setScreen(Screen::GAME);
+  }
 }
 
 } // namespace pge
