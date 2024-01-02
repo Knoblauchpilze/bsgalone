@@ -1,5 +1,6 @@
 
 #include "ShipView.hh"
+#include "DockMessage.hh"
 #include "JumpMessage.hh"
 #include "LockerUtils.hh"
 
@@ -169,7 +170,12 @@ void ShipView::tryActivateSlot(const Uuid &ship, const int slotId) const
 void ShipView::dockPlayerShip() const
 {
   auto playerShip = getPlayerShip();
-  playerShip.statusComp().setStatus(Status::DOCKED);
+
+  auto message = std::make_unique<DockMessage>(*m_playerShipDbId,
+                                               playerShip.uuid,
+                                               true,
+                                               DockState::STARTED);
+  m_messageQueue->pushMessage(std::move(message));
 }
 
 void ShipView::undockPlayerShip() const

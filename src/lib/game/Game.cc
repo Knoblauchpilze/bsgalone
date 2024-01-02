@@ -3,7 +3,6 @@
 #include "IInputHandler.hh"
 #include "IRenderer.hh"
 #include "IUiHandler.hh"
-#include "JumpMessageConsumer.hh"
 #include "NetworkSystem.hh"
 
 #include "GameScreenInputHandler.hh"
@@ -15,6 +14,9 @@
 #include "MapScreenUiHandler.hh"
 #include "OutpostScreenRenderer.hh"
 #include "OutpostScreenUiHandler.hh"
+
+#include "DockMessageConsumer.hh"
+#include "JumpMessageConsumer.hh"
 
 namespace pge {
 
@@ -265,6 +267,14 @@ void Game::initialize()
                                                       m_messageQueue.get());
   m_services    = bsgo::createServices(repositories, m_coordinator);
 
+  initializeViews();
+  initializeMessageSystem();
+}
+
+void Game::initializeViews()
+{
+  const auto repositories = m_dataSource.repositories();
+
   m_views.shipView     = std::make_shared<bsgo::ShipView>(m_coordinator,
                                                       repositories,
                                                       m_messageQueue.get());
@@ -283,10 +293,17 @@ void Game::initialize()
   m_views.resourceView = std::make_shared<bsgo::ResourceView>(m_coordinator,
                                                               repositories,
                                                               m_messageQueue.get());
+}
 
-  auto consumer = std::make_unique<bsgo::JumpMessageConsumer>(m_services, m_messageQueue.get());
-  m_messageQueue->addListener(consumer.get());
-  m_messageConsumers.emplace_back(std::move(consumer));
+void Game::initializeMessageSystem()
+{
+  auto jump = std::make_unique<bsgo::JumpMessageConsumer>(m_services, m_messageQueue.get());
+  m_messageQueue->addListener(jump.get());
+  m_messageConsumers.emplace_back(std::move(jump));
+
+  auto dock = std::make_unique<bsgo::DockMessageConsumer>(m_services, m_messageQueue.get());
+  m_messageQueue->addListener(dock.get());
+  m_messageConsumers.emplace_back(std::move(dock));
 
   m_messageQueue->addListener(&m_messageModule);
 }

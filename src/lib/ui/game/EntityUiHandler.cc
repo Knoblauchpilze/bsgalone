@@ -46,13 +46,12 @@ void EntityUiHandler::initializeMenus(const int /*width*/, const int /*height*/)
   m_menus[DISTANCE] = std::make_unique<UiTextMenu>(config, bg, text);
 
   config.pos.y += REASONABLE_PIXEL_GAP;
-  config.highlightable     = true;
-  config.dims              = olc::vi2d{100, 25};
-  config.gameClickCallback = [this](Game &g) {
+  config.highlightable = true;
+  config.dims          = olc::vi2d{100, 25};
+  config.clickCallback = [this]() {
     if (m_shipView->isReady())
     {
       m_shipView->dockPlayerShip();
-      g.setScreen(Screen::OUTPOST);
     }
   };
   bg            = bgConfigFromColor(olc::DARK_GREY);
