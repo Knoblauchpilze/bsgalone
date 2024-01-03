@@ -1,11 +1,11 @@
 
 #include "GameScreenInputHandler.hh"
+#include "SlotMessage.hh"
 
 namespace pge {
 
-GameScreenInputHandler::GameScreenInputHandler(const bsgo::Views &views,
-                                               bsgo::IMessageQueue *const messageQueue)
-  : AbstractInputHandler("game", messageQueue)
+GameScreenInputHandler::GameScreenInputHandler(const bsgo::Views &views)
+  : IInputHandler("game")
   , m_shipView(views.shipView)
   , m_systemView(views.systemView)
 {
@@ -33,7 +33,8 @@ void GameScreenInputHandler::processUserInput(const controls::State &controls,
   auto ship = m_shipView->getPlayerShip();
   moveShip(ship, motion);
   keepShipCentered(frame);
-  handleWeaponsState(controls, ship);
+  handleWeapons(controls, ship);
+  handleAbilities(controls, ship);
   handleJumpState(controls);
 }
 
@@ -85,26 +86,35 @@ void GameScreenInputHandler::keepShipCentered(CoordinateFrame &frame)
   frame.moveTo(pos2d);
 }
 
-void GameScreenInputHandler::handleWeaponsState(const controls::State &controls, bsgo::Entity &ship)
+void GameScreenInputHandler::handleWeapons(const controls::State &controls, bsgo::Entity &ship)
 {
   if (controls.released(controls::keys::G))
   {
-    for (const auto &weapon : ship.weapons)
+    for (auto id = 0u; id < ship.weapons.size(); ++id)
     {
-      weapon->toggle();
+      {
+        m_shipView->tryActivateWeapon(ship.uuid, id);
+      }
+      return;
     }
-    return;
   }
 
   if (controls.released(controls::keys::K1) && !ship.weapons.empty())
   {
-    ship.weapons[0]->toggle();
+    m_shipView->tryActivateWeapon(ship.uuid, 0);
   }
   if (controls.released(controls::keys::K2) && ship.weapons.size() > 1)
   {
-    ship.weapons[1]->toggle();
+    m_shipView->tryActivateWeapon(ship.uuid, 1);
   }
+  if (controls.released(controls::keys::K3) && ship.weapons.size() > 2)
+  {
+    m_shipView->tryActivateWeapon(ship.uuid, 2);
+  }
+}
 
+void GameScreenInputHandler::handleAbilities(const controls::State &controls, bsgo::Entity &ship)
+{
   if (controls.released(controls::keys::W) && m_shipView->getAbilitiesCount() > 0)
   {
     m_shipView->tryActivateSlot(ship.uuid, 0);
