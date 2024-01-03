@@ -5,7 +5,7 @@
 namespace bsgo {
 
 DockMessageConsumer::DockMessageConsumer(const Services &services, IMessageQueue *const messageQueue)
-  : AbstractMessageConsumer("dock", {bsgo::MessageType::DOCK})
+  : AbstractMessageConsumer("dock", {MessageType::DOCK})
   , m_shipService(services.ship)
   , m_messageQueue(messageQueue)
 {
@@ -21,7 +21,7 @@ DockMessageConsumer::DockMessageConsumer(const Services &services, IMessageQueue
 
 void DockMessageConsumer::onMessageReceived(const IMessage &message)
 {
-  const auto &dockMessage = message.as<bsgo::DockMessage>();
+  const auto &dockMessage = message.as<DockMessage>();
 
   const auto procedureStarted = DockState::STARTED == dockMessage.getDockState();
 
@@ -44,7 +44,7 @@ void DockMessageConsumer::handleDocking(const Uuid &shipDbId, const Uuid &shipEn
   }
 
   m_messageQueue->pushMessage(
-    std::make_unique<bsgo::DockMessage>(shipDbId, shipEntityId, true, DockState::COMPLETED));
+    std::make_unique<DockMessage>(shipDbId, shipEntityId, true, DockState::COMPLETED));
 }
 
 void DockMessageConsumer::handleUndocking(const Uuid &shipDbId, const Uuid &shipEntityId) const
@@ -56,7 +56,7 @@ void DockMessageConsumer::handleUndocking(const Uuid &shipDbId, const Uuid &ship
   }
 
   m_messageQueue->pushMessage(
-    std::make_unique<bsgo::DockMessage>(shipDbId, shipEntityId, false, DockState::COMPLETED));
+    std::make_unique<DockMessage>(shipDbId, shipEntityId, false, DockState::COMPLETED));
 }
 
 } // namespace bsgo
