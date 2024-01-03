@@ -17,6 +17,10 @@ constexpr auto FIND_ONE_QUERY_NAME = "ship_computer_find_one";
 constexpr auto FIND_ONE_QUERY
   = "SELECT COUNT(ship) FROM ship_computer WHERE ship = $1 AND computer = $2";
 
+constexpr auto FIND_ONE_BY_COMPUTER_QUERY_NAME = "ship_computer_find_one_by_computer";
+constexpr auto FIND_ONE_BY_COMPUTER_QUERY
+  = "SELECT COUNT(ship) FROM ship_computer WHERE computer = $1";
+
 constexpr auto UPDATE_COMPUTER_QUERY_NAME = "ship_computer_update";
 constexpr auto UPDATE_COMPUTER_QUERY      = R"(
 INSERT INTO ship_computer (ship, computer)
@@ -31,6 +35,7 @@ void ShipComputerRepository::initialize()
 {
   m_connection->prepare(FIND_ALL_QUERY_NAME, FIND_ALL_QUERY);
   m_connection->prepare(FIND_ONE_QUERY_NAME, FIND_ONE_QUERY);
+  m_connection->prepare(FIND_ONE_BY_COMPUTER_QUERY_NAME, FIND_ONE_BY_COMPUTER_QUERY);
   m_connection->prepare(UPDATE_COMPUTER_QUERY_NAME, UPDATE_COMPUTER_QUERY);
   m_connection->prepare(DELETE_COMPUTER_QUERY_NAME, DELETE_COMPUTER_QUERY);
 }
@@ -39,6 +44,14 @@ bool ShipComputerRepository::existByShipAndComputer(const Uuid &ship, const Uuid
 {
   auto work         = m_connection->nonTransaction();
   const auto record = work.exec_prepared1(FIND_ONE_QUERY_NAME, toDbId(ship), toDbId(computer));
+
+  return record[0].as<int>() > 0;
+}
+
+bool ShipComputerRepository::existByComputer(const Uuid &computer) const
+{
+  auto work         = m_connection->nonTransaction();
+  const auto record = work.exec_prepared1(FIND_ONE_BY_COMPUTER_QUERY_NAME, toDbId(computer));
 
   return record[0].as<int>() > 0;
 }
