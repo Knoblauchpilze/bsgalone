@@ -3,6 +3,7 @@
 #include "DockMessage.hh"
 #include "JumpMessage.hh"
 #include "LockerUtils.hh"
+#include "SlotMessage.hh"
 
 namespace bsgo {
 
@@ -135,42 +136,28 @@ auto ShipView::getAbilitiesCount() const -> int
 
 void ShipView::tryActivateWeapon(const Uuid &ship, const int weaponId) const
 {
-  checkPlayerShipEntityIdExists();
-  if (ship != *m_playerShipEntityId)
+  const auto playerShip = getPlayerShip();
+  if (ship != playerShip.uuid)
   {
     error("Failed to activate weapon " + std::to_string(weaponId),
-          "Expected ship " + str(*m_playerShipEntityId) + " but got " + str(ship));
+          "Expected ship " + str(playerShip.uuid) + " but got " + str(ship));
   }
 
-  auto data = getPlayerShip();
-  if (data.weapons.size() < static_cast<std::size_t>(weaponId))
-  {
-    error("Failed to activate weapon " + std::to_string(weaponId),
-          "Ship only has " + std::to_string(data.weapons.size()) + " weapon(s)");
-  }
-
-  const auto weapon = data.weapons[weaponId];
-  weapon->toggle();
+  auto message = std::make_unique<SlotMessage>(ship, weaponId, Slot::WEAPON, SlotState::ACTIVATED);
+  m_messageQueue->pushMessage(std::move(message));
 }
 
 void ShipView::tryActivateSlot(const Uuid &ship, const int slotId) const
 {
-  checkPlayerShipEntityIdExists();
-  if (ship != *m_playerShipEntityId)
+  const auto playerShip = getPlayerShip();
+  if (ship != playerShip.uuid)
   {
     error("Failed to activate slot " + std::to_string(slotId),
-          "Expected ship " + str(*m_playerShipEntityId) + " but got " + str(ship));
+          "Expected ship " + str(playerShip.uuid) + " but got " + str(ship));
   }
 
-  auto data = getPlayerShip();
-  if (data.computers.size() < static_cast<std::size_t>(slotId))
-  {
-    error("Failed to activate slot " + std::to_string(slotId),
-          "Ship only has " + std::to_string(data.computers.size()) + " computer(s)");
-  }
-
-  const auto computer = data.computers[slotId];
-  computer->registerFireRequest();
+  auto message = std::make_unique<SlotMessage>(ship, slotId, Slot::COMPUTER, SlotState::ACTIVATED);
+  m_messageQueue->pushMessage(std::move(message));
 }
 
 void ShipView::dockPlayerShip() const
