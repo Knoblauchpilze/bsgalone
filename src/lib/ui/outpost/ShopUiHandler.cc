@@ -232,7 +232,7 @@ auto ShopUiHandler::generateBuySection(const int itemId) -> UiMenuPtr
 
 void ShopUiHandler::onPurchaseRequest(const int itemId)
 {
-  if (!m_purchaseService->isReady() || !m_playerView->isReady())
+  if (!m_playerView->isReady())
   {
     return;
   }
