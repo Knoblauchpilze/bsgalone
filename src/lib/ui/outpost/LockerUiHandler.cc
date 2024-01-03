@@ -418,7 +418,10 @@ void LockerUiHandler::onInstallRequest(const int itemId)
   }
 
   const auto &equip = m_lockerItemsData.at(itemId);
-  if (!m_lockerService->tryEquip(equip.itemId, equip.itemType))
+  const bsgo::LockerItemData data{.dbId     = equip.itemId,
+                                  .type     = equip.itemType,
+                                  .shipDbId = m_shipView->getPlayerShipDbId()};
+  if (!m_lockerService->tryEquip(data))
   {
     warn("Failed to equip " + bsgo::str(equip.itemId) + " with type " + bsgo::str(equip.itemType));
     return;
@@ -435,7 +438,10 @@ void LockerUiHandler::onUninstallRequest(const int itemId)
   }
 
   const auto &equip = m_shipItemsData.at(itemId);
-  if (!m_lockerService->tryUnequip(equip.itemId, equip.itemType))
+  const bsgo::LockerItemData data{.dbId     = equip.itemId,
+                                  .type     = equip.itemType,
+                                  .shipDbId = m_shipView->getPlayerShipDbId()};
+  if (!m_lockerService->tryUnequip(data))
   {
     return;
   }
