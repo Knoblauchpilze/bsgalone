@@ -11,12 +11,49 @@ ShipWeaponRepository::ShipWeaponRepository(const DbConnectionShPtr &connection)
 
 namespace {
 constexpr auto FIND_ALL_QUERY_NAME = "ship_weapon_find_all";
-constexpr auto FIND_ALL_QUERY
-  = "SELECT sw.weapon, sw.slot, ss.x_pos, ss.y_pos, ss.z_pos FROM ship_weapon AS sw LEFT JOIN ship_slot AS ss ON sw.slot = ss.id WHERE sw.ship = $1";
+constexpr auto FIND_ALL_QUERY      = R"(
+SELECT
+  sw.weapon,
+  sw.slot,
+  ss.x_pos,
+  ss.y_pos,
+  ss.z_pos
+FROM
+  ship_weapon AS sw
+  LEFT JOIN ship_slot AS ss ON sw.slot = ss.id
+WHERE
+  sw.ship = $1
+)";
 
 constexpr auto FIND_ONE_QUERY_NAME = "ship_weapon_find_one";
-constexpr auto FIND_ONE_QUERY
-  = "SELECT sw.slot, ss.x_pos, ss.y_pos, ss.z_pos FROM ship_weapon AS sw LEFT JOIN ship_slot AS ss ON sw.slot = ss.id WHERE sw.ship = $1 AND sw.weapon = $2";
+constexpr auto FIND_ONE_QUERY      = R"(
+SELECT
+  sw.slot,
+  ss.x_pos,
+  ss.y_pos,
+  ss.z_pos
+FROM
+  ship_weapon AS sw
+  LEFT JOIN ship_slot AS ss ON sw.slot = ss.id
+WHERE
+  sw.ship = $1
+  AND sw.weapon = $2
+)";
+
+constexpr auto FIND_ONE_BY_WEAPON_QUERY_NAME = "ship_weapon_find_one_by_weapon";
+constexpr auto FIND_ONE_BY_WEAPON_QUERY      = R"(
+SELECT
+  sw.ship,
+  sw.slot,
+  ss.x_pos,
+  ss.y_pos,
+  ss.z_pos
+FROM
+  ship_weapon AS sw
+  LEFT JOIN ship_slot AS ss ON sw.slot = ss.id
+WHERE
+  sw.weapon = $1
+)";
 
 constexpr auto UPDATE_WEAPON_QUERY_NAME = "ship_weapon_update";
 constexpr auto UPDATE_WEAPON_QUERY      = R"(
@@ -38,6 +75,7 @@ void ShipWeaponRepository::initialize()
 {
   m_connection->prepare(FIND_ALL_QUERY_NAME, FIND_ALL_QUERY);
   m_connection->prepare(FIND_ONE_QUERY_NAME, FIND_ONE_QUERY);
+  m_connection->prepare(FIND_ONE_BY_WEAPON_QUERY_NAME, FIND_ONE_BY_WEAPON_QUERY);
   m_connection->prepare(UPDATE_WEAPON_QUERY_NAME, UPDATE_WEAPON_QUERY);
   m_connection->prepare(DELETE_WEAPON_QUERY_NAME, DELETE_WEAPON_QUERY);
 }
@@ -69,6 +107,37 @@ auto ShipWeaponRepository::findOneByShipAndWeapon(const Uuid &ship, const Uuid &
   const auto x     = record[1].as<float>();
   const auto y     = record[2].as<float>();
   const auto z     = record[3].as<float>();
+  out.slotPosition = Eigen::Vector3f(x, y, z);
+
+  return out;
+}
+
+auto ShipWeaponRepository::findOneByWeapon(const Uuid &weapon) const -> std::optional<ShipWeapon>
+{
+  auto work       = m_connection->nonTransaction();
+  const auto rows = work.exec_prepared(FIND_ONE_BY_WEAPON_QUERY_NAME, toDbId(weapon));
+
+  if (rows.empty())
+  {
+    return {};
+  }
+
+  if (rows.size() != 1)
+  {
+    error("Expected to find only one slot for weapon " + str(weapon));
+  }
+
+  ShipWeapon out;
+  out.weapon = weapon;
+
+  const auto &record = rows[0];
+
+  out.ship = fromDbId(record[0].as<int>());
+  out.slot = fromDbId(record[1].as<int>());
+
+  const auto x     = record[2].as<float>();
+  const auto y     = record[3].as<float>();
+  const auto z     = record[4].as<float>();
   out.slotPosition = Eigen::Vector3f(x, y, z);
 
   return out;
