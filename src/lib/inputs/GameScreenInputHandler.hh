@@ -1,17 +1,17 @@
 
 #pragma once
 
+#include "AbstractInputHandler.hh"
 #include "Entity.hh"
-#include "IInputHandler.hh"
 #include "Motion.hh"
 #include "Views.hh"
 
 namespace pge {
 
-class GameScreenInputHandler : public IInputHandler
+class GameScreenInputHandler : public AbstractInputHandler
 {
   public:
-  GameScreenInputHandler(const bsgo::Views &views);
+  GameScreenInputHandler(const bsgo::Views &views, bsgo::IMessageQueue *const messageQueue);
   ~GameScreenInputHandler() override = default;
 
   void processUserInput(const controls::State &controls, CoordinateFrame &frame) override;
