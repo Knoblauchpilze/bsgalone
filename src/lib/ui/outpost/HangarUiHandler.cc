@@ -291,7 +291,7 @@ void HangarUiHandler::onShipRequest(const int shipIndex, Game &game)
 
 void HangarUiHandler::onPurchaseRequest(const int shipIndex)
 {
-  if (!m_purchaseService->isReady() || !m_playerView->isReady())
+  if (!m_playerView->isReady())
   {
     return;
   }
@@ -310,11 +310,6 @@ void HangarUiHandler::onPurchaseRequest(const int shipIndex)
 
 void HangarUiHandler::onSelectRequest(const int shipIndex, Game &game)
 {
-  if (!m_shipService->isReady())
-  {
-    return;
-  }
-
   const auto &data = m_shipsData.at(shipIndex);
   if (!m_shipService->trySelectShip(*data.playerShipDbId))
   {

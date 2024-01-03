@@ -412,7 +412,7 @@ void LockerUiHandler::generateShipComputersMenus()
 
 void LockerUiHandler::onInstallRequest(const int itemId)
 {
-  if (!m_lockerService->isReady())
+  if (!m_shipView->isReady())
   {
     return;
   }
@@ -432,7 +432,7 @@ void LockerUiHandler::onInstallRequest(const int itemId)
 
 void LockerUiHandler::onUninstallRequest(const int itemId)
 {
-  if (!m_lockerService->isReady())
+  if (!m_shipView->isReady())
   {
     return;
   }
