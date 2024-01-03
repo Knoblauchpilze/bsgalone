@@ -7,17 +7,22 @@
 #include "JumpMessage.hh"
 #include "LootMessage.hh"
 #include "ScannedMessage.hh"
+#include "SlotMessage.hh"
 
 namespace pge {
 
 const std::unordered_set<bsgo::MessageType> RELEVANT_MESSAGE_TYPES_TO_LOG
-  = {bsgo::MessageType::SCANNED, bsgo::MessageType::LOOT, bsgo::MessageType::JUMP};
+  = {bsgo::MessageType::JUMP,
+     bsgo::MessageType::LOOT,
+     bsgo::MessageType::SCANNED,
+     bsgo::MessageType::SLOT};
 
 LogUiHandler::LogUiHandler(const bsgo::Views &views)
   : IUiHandler("log")
   , AbstractMessageListener(RELEVANT_MESSAGE_TYPES_TO_LOG)
   , m_systemView(views.systemView)
   , m_resourceView(views.resourceView)
+  , m_shipView(views.shipView)
 {
   if (nullptr == m_systemView)
   {
@@ -26,6 +31,10 @@ LogUiHandler::LogUiHandler(const bsgo::Views &views)
   if (nullptr == m_resourceView)
   {
     throw std::invalid_argument("Expected non null resource view");
+  }
+  if (nullptr == m_shipView)
+  {
+    throw std::invalid_argument("Expected non null ship view");
   }
 }
 
@@ -78,29 +87,50 @@ namespace {
 constexpr std::size_t MAXIMUM_NUMBER_OF_LOGS_DISPLAYED = 5;
 const auto LOG_MENU_DIMS                               = olc::vi2d{150, 20};
 constexpr auto LOG_FADE_OUT_DURATION_MS                = 7000;
+
 const std::unordered_set<bsgo::JumpState> JUMP_STATES_NOT_TRIGGERING_LOG
   = {bsgo::JumpState::RUNNING, bsgo::JumpState::COMPLETED};
 
-bool shouldMessageBeFiltered(const bsgo::IMessage &message)
+bool shouldMessageBeFiltered(const bsgo::IMessage &message, const bsgo::Entity &playerShip)
 {
-  if (message.type() != bsgo::MessageType::JUMP)
+  if (bsgo::MessageType::JUMP == message.type())
   {
-    return false;
+    const auto &jumpMessage = message.as<bsgo::JumpMessage>();
+    return JUMP_STATES_NOT_TRIGGERING_LOG.contains(jumpMessage.getJumpState());
   }
 
-  const auto &jumpMessage = message.as<bsgo::JumpMessage>();
-  return JUMP_STATES_NOT_TRIGGERING_LOG.contains(jumpMessage.getJumpState());
+  if (bsgo::MessageType::SLOT == message.type())
+  {
+    const auto &slotMessage = message.as<bsgo::SlotMessage>();
+    if (bsgo::Slot::WEAPON == slotMessage.getSlotType())
+    {
+      return true;
+    }
+
+    const auto computerIsOffensive = playerShip.computers.at(slotMessage.getSlotIndex())
+                                       ->isOffensive();
+    const auto computerIsFired = bsgo::SlotState::FIRED == slotMessage.getSlotState();
+    return computerIsOffensive || !computerIsFired;
+  }
+
+  return false;
 }
 } // namespace
 
 void LogUiHandler::onMessageReceived(const bsgo::IMessage &message)
 {
+  if (!m_shipView->isReady())
+  {
+    return;
+  }
+
   if (m_logs.size() > MAXIMUM_NUMBER_OF_LOGS_DISPLAYED)
   {
     m_logs.pop_back();
   }
 
-  if (shouldMessageBeFiltered(message))
+  const auto ship = m_shipView->getPlayerShip();
+  if (shouldMessageBeFiltered(message, ship))
   {
     return;
   }
@@ -129,11 +159,38 @@ void LogUiHandler::onMessageReceived(const bsgo::IMessage &message)
 }
 
 namespace {
+constexpr auto FTL_JUMP_STARTED_TEXT   = "FTL jump sequence started";
+constexpr auto FTL_JUMP_CANCELLED_TEXT = "FTL jump sequence aborted";
+
+auto createJumpMessage(const bsgo::JumpMessage &message)
+{
+  const auto color = olc::WHITE;
+
+  switch (message.getJumpState())
+  {
+    case bsgo::JumpState::STARTED:
+      return textConfigFromColor(FTL_JUMP_STARTED_TEXT, color);
+    case bsgo::JumpState::CANCELLED:
+      return textConfigFromColor(FTL_JUMP_CANCELLED_TEXT, color);
+    default:
+      throw std::invalid_argument("Unsupported jump state to produce message");
+  }
+}
+
+auto createLootMessage(const bsgo::LootMessage &message, const bsgo::ResourceView &resourceView)
+  -> TextConfig
+{
+  const auto resource = resourceView.getResourceName(message.resourceId());
+  const auto text     = "+" + floatToStr(message.amount(), 0) + " " + resource;
+  const auto color    = colorFromResourceName(resource);
+  return textConfigFromColor(text, color);
+}
+
 constexpr auto NO_USEFUL_RESOURCES_TEXT = "Mineral analysis: no useful resources";
 
-auto createMineralAnalysisMessage(const bsgo::ScannedMessage &message,
-                                  const bsgo::SystemView &systemView,
-                                  const bsgo::ResourceView &resourceView) -> TextConfig
+auto createScannedMessage(const bsgo::ScannedMessage &message,
+                          const bsgo::SystemView &systemView,
+                          const bsgo::ResourceView &resourceView) -> TextConfig
 {
   const auto asteroid = systemView.getAsteroid(message.asteroidEntityId());
 
@@ -155,31 +212,11 @@ auto createMineralAnalysisMessage(const bsgo::ScannedMessage &message,
   return textConfigFromColor(text, color);
 }
 
-auto createLootMessage(const bsgo::LootMessage &message, const bsgo::ResourceView &resourceView)
-  -> TextConfig
+constexpr auto ELECTRONIC_SUPPORT_TEXT = "Your systems are being improved by electronic support";
+
+auto createSlotMessage(const bsgo::SlotMessage & /*message*/) -> TextConfig
 {
-  const auto resource = resourceView.getResourceName(message.resourceId());
-  const auto text     = "+" + floatToStr(message.amount(), 0) + " " + resource;
-  const auto color    = colorFromResourceName(resource);
-  return textConfigFromColor(text, color);
-}
-
-constexpr auto FTL_JUMP_STARTED_TEXT   = "FTL jump sequence started";
-constexpr auto FTL_JUMP_CANCELLED_TEXT = "FTL jump sequence aborted";
-
-auto createStatusMessage(const bsgo::JumpMessage &message)
-{
-  const auto color = olc::WHITE;
-
-  switch (message.getJumpState())
-  {
-    case bsgo::JumpState::STARTED:
-      return textConfigFromColor(FTL_JUMP_STARTED_TEXT, color);
-    case bsgo::JumpState::CANCELLED:
-      return textConfigFromColor(FTL_JUMP_CANCELLED_TEXT, color);
-    default:
-      throw std::invalid_argument("Unsupported jump state to produce message");
-  }
+  return textConfigFromColor(ELECTRONIC_SUPPORT_TEXT, olc::APPLE_GREEN);
 }
 
 auto createTextConfigForMessage(const bsgo::IMessage &message,
@@ -190,14 +227,14 @@ auto createTextConfigForMessage(const bsgo::IMessage &message,
 
   switch (message.type())
   {
-    case bsgo::MessageType::SCANNED:
-      return createMineralAnalysisMessage(message.as<bsgo::ScannedMessage>(),
-                                          systemView,
-                                          resourceView);
+    case bsgo::MessageType::JUMP:
+      return createJumpMessage(message.as<bsgo::JumpMessage>());
     case bsgo::MessageType::LOOT:
       return createLootMessage(message.as<bsgo::LootMessage>(), resourceView);
-    case bsgo::MessageType::JUMP:
-      return createStatusMessage(message.as<bsgo::JumpMessage>());
+    case bsgo::MessageType::SCANNED:
+      return createScannedMessage(message.as<bsgo::ScannedMessage>(), systemView, resourceView);
+    case bsgo::MessageType::SLOT:
+      return createSlotMessage(message.as<bsgo::SlotMessage>());
     default:
       throw std::invalid_argument("Unsupported message type " + bsgo::str(message.type()));
   }
