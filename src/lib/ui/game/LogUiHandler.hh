@@ -28,6 +28,7 @@ class LogUiHandler : public IUiHandler, public bsgo::AbstractMessageListener
   private:
   bsgo::SystemViewShPtr m_systemView{};
   bsgo::ResourceViewShPtr m_resourceView{};
+  bsgo::ShipViewShPtr m_shipView{};
   olc::vi2d m_offset{};
 
   struct LogMessage
