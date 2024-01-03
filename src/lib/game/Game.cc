@@ -79,7 +79,8 @@ void Game::generateRenderers(int width, int height, SpriteRenderer &spriteRender
 
 void Game::generateInputHandlers()
 {
-  m_inputHandlers[Screen::GAME] = std::make_unique<GameScreenInputHandler>(m_views);
+  m_inputHandlers[Screen::GAME] = std::make_unique<GameScreenInputHandler>(m_views,
+                                                                           m_messageQueue.get());
 }
 
 void Game::generateUiHandlers(int width, int height)
