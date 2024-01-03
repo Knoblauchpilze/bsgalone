@@ -9,6 +9,7 @@
 #include "Repositories.hh"
 #include "ShipService.hh"
 #include "SignupService.hh"
+#include "SlotService.hh"
 
 namespace bsgo {
 
@@ -20,6 +21,7 @@ struct Services
   LockerServiceShPtr locker{};
   ShipServiceShPtr ship{};
   JumpServiceShPtr jump{};
+  SlotServiceShPtr slot{};
 };
 
 auto createServices(const Repositories &repositories, const CoordinatorShPtr &coordinator)
