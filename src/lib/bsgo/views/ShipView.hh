@@ -24,6 +24,7 @@ class ShipView : public AbstractView
 
   bool isReady() const noexcept override;
 
+  auto getPlayerShipDbId() const -> Uuid;
   auto getPlayerShip() const -> Entity;
   bool hasTarget() const;
   auto getPlayerTarget() const -> std::optional<Entity>;

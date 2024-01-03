@@ -27,6 +27,12 @@ bool ShipView::isReady() const noexcept
   return m_playerShipDbId && m_playerShipEntityId;
 }
 
+auto ShipView::getPlayerShipDbId() const -> Uuid
+{
+  checkPlayerShipDbIdExists();
+  return *m_playerShipDbId;
+}
+
 auto ShipView::getPlayerShip() const -> Entity
 {
   checkPlayerShipEntityIdExists();
