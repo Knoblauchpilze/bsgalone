@@ -17,6 +17,7 @@
 
 #include "DockMessageConsumer.hh"
 #include "JumpMessageConsumer.hh"
+#include "SlotMessageConsumer.hh"
 
 namespace pge {
 
@@ -304,6 +305,10 @@ void Game::initializeMessageSystem()
   auto dock = std::make_unique<bsgo::DockMessageConsumer>(m_services, m_messageQueue.get());
   m_messageQueue->addListener(dock.get());
   m_messageConsumers.emplace_back(std::move(dock));
+
+  auto slot = std::make_unique<bsgo::SlotMessageConsumer>(m_services, m_messageQueue.get());
+  m_messageQueue->addListener(slot.get());
+  m_messageConsumers.emplace_back(std::move(slot));
 
   m_messageQueue->addListener(&m_messageModule);
 }
