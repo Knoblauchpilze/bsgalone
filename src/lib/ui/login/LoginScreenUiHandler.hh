@@ -3,7 +3,6 @@
 
 #include "CredentialsUiHandler.hh"
 #include "IUiHandler.hh"
-#include "Services.hh"
 #include "UiMenu.hh"
 #include "UiTextMenu.hh"
 #include "UiTimedMenu.hh"
@@ -14,7 +13,7 @@ namespace pge {
 class LoginScreenUiHandler : public IUiHandler
 {
   public:
-  LoginScreenUiHandler(const bsgo::Services &services);
+  LoginScreenUiHandler(const bsgo::Views &views);
   ~LoginScreenUiHandler() override = default;
 
   void initializeMenus(const int width, const int height) override;
@@ -25,8 +24,7 @@ class LoginScreenUiHandler : public IUiHandler
   void connectToMessageQueue(bsgo::IMessageQueue &messageQueue) override;
 
   private:
-  bsgo::SignupServiceShPtr m_signupService{};
-  bsgo::LoginServiceShPtr m_loginService{};
+  bsgo::PlayerViewShPtr m_playerView{};
 
   enum class Mode
   {
@@ -59,7 +57,7 @@ class LoginScreenUiHandler : public IUiHandler
 
   void setLoginMode(const Mode &mode);
   void setFaction(const bsgo::Faction &faction);
-  void tryLogin(Game &game);
+  void tryLogin();
 };
 
 } // namespace pge
