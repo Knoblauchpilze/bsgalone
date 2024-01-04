@@ -9,6 +9,7 @@ namespace bsgo {
 enum class MessageType
 {
   DOCK,
+  HANGAR,
   JUMP,
   LOOT,
   SCANNED,
@@ -17,6 +18,6 @@ enum class MessageType
 };
 
 auto str(const MessageType &type) -> std::string;
-auto allMessageTypes() -> std::array<MessageType, 6>;
+auto allMessageTypes() -> std::array<MessageType, 7>;
 
 } // namespace bsgo
