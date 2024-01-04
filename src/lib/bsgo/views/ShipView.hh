@@ -5,6 +5,7 @@
 #include "Coordinator.hh"
 #include "Entity.hh"
 #include "Uuid.hh"
+#include <eigen3/Eigen/Eigen>
 #include <memory>
 #include <optional>
 #include <unordered_map>
@@ -44,6 +45,8 @@ class ShipView : public AbstractView
   void clearJumpSystem();
   void startJump() const;
   void cancelJump() const;
+
+  void accelerateShip(const Uuid &ship, const Eigen::Vector3f &acceleration) const;
 
   auto getPlayerShipWeapons() const -> std::vector<PlayerWeapon>;
   auto getPlayerShipComputers() const -> std::vector<PlayerComputer>;

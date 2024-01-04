@@ -2,6 +2,7 @@
 #pragma once
 
 #include "AbstractService.hh"
+#include <eigen3/Eigen/Eigen>
 #include <memory>
 #include <optional>
 
@@ -16,6 +17,8 @@ class ShipService : public AbstractService
   bool trySelectShip(const Uuid &shipDbId) const;
   bool tryDock(const Uuid &shipDbId, const Uuid &shipEntityId) const;
   bool tryUndock(const Uuid &shipDbId, const Uuid &shipEntityId) const;
+
+  bool accelerateShip(const Uuid &shipEntityId, const Eigen::Vector3f &acceleration) const;
 
   private:
   void switchActiveShip(PlayerShip currentActiveShip, PlayerShip newActiveShip) const;
