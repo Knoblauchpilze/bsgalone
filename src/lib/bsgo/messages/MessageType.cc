@@ -17,18 +17,21 @@ auto str(const MessageType &type) -> std::string
       return "scanned";
     case MessageType::SLOT:
       return "slot";
+    case MessageType::VELOCITY:
+      return "velocity";
     default:
       return "unknown";
   }
 }
 
-auto allMessageTypes() -> std::array<MessageType, 5>
+auto allMessageTypes() -> std::array<MessageType, 6>
 {
   return {MessageType::DOCK,
           MessageType::JUMP,
           MessageType::LOOT,
           MessageType::SCANNED,
-          MessageType::SLOT};
+          MessageType::SLOT,
+          MessageType::VELOCITY};
 }
 
 } // namespace bsgo
