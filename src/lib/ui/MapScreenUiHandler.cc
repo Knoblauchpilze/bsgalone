@@ -13,10 +13,15 @@ const auto SYSTEM_LABEL_CURRENT_BG_COLOR  = olc::DARK_CYAN;
 MapScreenUiHandler::MapScreenUiHandler(const bsgo::Views &views)
   : IUiHandler("map")
   , m_serverView(views.serverView)
+  , m_shipView(views.shipView)
 {
   if (nullptr == m_serverView)
   {
     throw std::invalid_argument("Expected non null server view");
+  }
+  if (nullptr == m_shipView)
+  {
+    throw std::invalid_argument("Expected non null ship view");
   }
 }
 
@@ -98,7 +103,7 @@ void MapScreenUiHandler::generateControlButtons(const int width, const int heigh
 
   config.visible = false;
   config.pos.y -= (REASONABLE_GAP_SIZE + controlButtonDimsPixels.y);
-  config.gameClickCallback = [this](Game &g) { onJumpRequested(g); };
+  config.clickCallback = [this]() { onJumpRequested(); };
 
   text.text       = "Jump";
   auto jumpButton = std::make_unique<UiTextMenu>(config, bg, text);
@@ -218,15 +223,20 @@ void MapScreenUiHandler::onSystemSelected(const bsgo::Uuid &systemId, const int 
   m_selectedSystem = SelectedSystem{.systemId = systemId, .labelId = labelId};
 }
 
-void MapScreenUiHandler::onJumpRequested(Game &g)
+void MapScreenUiHandler::onJumpRequested()
 {
   if (!m_selectedSystem)
   {
     error("Failed to start jump", "No selected system");
   }
+  if (!m_shipView->isReady())
+  {
+    return;
+  }
 
   const auto systemId = m_selectedSystem->systemId;
-  g.requestJump(systemId);
+  m_shipView->setJumpSystem(systemId);
+  m_shipView->startJump();
 }
 
 } // namespace pge

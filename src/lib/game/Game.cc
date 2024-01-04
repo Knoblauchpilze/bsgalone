@@ -222,13 +222,6 @@ void Game::login(const bsgo::Uuid &playerDbId)
   setScreen(Screen::OUTPOST);
 }
 
-void Game::requestJump(const bsgo::Uuid &systemId)
-{
-  m_views.shipView->setJumpSystem(systemId);
-  m_views.shipView->startJump();
-  setScreen(Screen::GAME);
-}
-
 void Game::activeShipChanged()
 {
   resetViewsAndUi();
