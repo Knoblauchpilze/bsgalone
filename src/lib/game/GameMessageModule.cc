@@ -4,10 +4,11 @@
 #include <unordered_set>
 
 namespace pge {
-
-const std::unordered_set<bsgo::MessageType> GAME_CHANGING_MESSAGE_TYPES = {bsgo::MessageType::DOCK,
-                                                                           bsgo::MessageType::HANGAR,
-                                                                           bsgo::MessageType::JUMP};
+using Messages                             = std::unordered_set<bsgo::MessageType>;
+const Messages GAME_CHANGING_MESSAGE_TYPES = {bsgo::MessageType::DOCK,
+                                              bsgo::MessageType::HANGAR,
+                                              bsgo::MessageType::JUMP,
+                                              bsgo::MessageType::LOGIN};
 
 GameMessageModule::GameMessageModule(Game *game)
   : bsgo::AbstractMessageListener(GAME_CHANGING_MESSAGE_TYPES)
@@ -39,6 +40,9 @@ void GameMessageModule::onMessageReceived(const bsgo::IMessage &message)
       break;
     case bsgo::MessageType::JUMP:
       handleJumpMessage(message.as<bsgo::JumpMessage>());
+      break;
+    case bsgo::MessageType::LOGIN:
+      handleLoginMessage(message.as<bsgo::LoginMessage>());
       break;
     default:
       error("Unsupported message type " + bsgo::str(message.type()));
@@ -93,6 +97,16 @@ void GameMessageModule::handleJumpMessage(const bsgo::JumpMessage &message)
   }
 
   m_game->activeSystemChanged();
+}
+
+void GameMessageModule::handleLoginMessage(const bsgo::LoginMessage &message)
+{
+  if (message.getLoginState() != bsgo::LoginState::VALIDATED)
+  {
+    return;
+  }
+
+  m_game->login(*message.getPlayerId());
 }
 
 } // namespace pge
