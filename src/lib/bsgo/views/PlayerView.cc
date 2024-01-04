@@ -1,6 +1,7 @@
 
 #include "PlayerView.hh"
 #include "HangarMessage.hh"
+#include "LoginMessage.hh"
 
 namespace bsgo {
 
@@ -116,10 +117,22 @@ auto PlayerView::getPlayerShips() const -> std::vector<PlayerShip>
   return out;
 }
 
-void PlayerView::trySelectShip(const Uuid &shipDbId)
+void PlayerView::trySelectShip(const Uuid &shipDbId) const
 {
   m_messageQueue->pushMessage(
     std::make_unique<HangarMessage>(shipDbId, ShipSwitchRequestState::REQUESTED));
+}
+
+void PlayerView::tryLogin(const std::string &name, const std::string &password) const
+{
+  m_messageQueue->pushMessage(std::make_unique<bsgo::LoginMessage>(name, password));
+}
+
+void PlayerView::trySignup(const std::string &name,
+                           const std::string &password,
+                           const Faction &faction) const
+{
+  m_messageQueue->pushMessage(std::make_unique<bsgo::LoginMessage>(name, password, faction));
 }
 
 void PlayerView::checkPlayerDbIdExists() const
