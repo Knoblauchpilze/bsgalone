@@ -130,6 +130,11 @@ auto ShipView::distanceToTarget() const -> float
   return (targetPos - playerPos).norm();
 }
 
+auto ShipView::getWeaponsCount() const -> int
+{
+  return getPlayerShip().weapons.size();
+}
+
 auto ShipView::getAbilitiesCount() const -> int
 {
   return getPlayerShip().computers.size();
