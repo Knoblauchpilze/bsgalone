@@ -27,8 +27,6 @@ OutpostScreenUiHandler::OutpostScreenUiHandler(const bsgo::Views &views,
     .connect_member<OutpostScreenUiHandler>(this, &OutpostScreenUiHandler::onChildUiChanged);
   m_hangarUi->onShipPurchased
     .connect_member<OutpostScreenUiHandler>(this, &OutpostScreenUiHandler::onChildUiChanged);
-  m_hangarUi->onShipSelected
-    .connect_member<OutpostScreenUiHandler>(this, &OutpostScreenUiHandler::onChildUiChanged);
 }
 
 void OutpostScreenUiHandler::initializeMenus(const int width, const int height)

@@ -57,13 +57,12 @@ class HangarUiHandler : public IUiHandler
   auto generateShipInteractiveSection(const int shipIndex) -> UiMenuPtr;
   void updateShipMenus();
 
-  void onShipRequest(const int shipIndex, Game &game);
+  void onShipRequest(const int shipIndex);
   void onPurchaseRequest(const int shipIndex);
-  void onSelectRequest(const int shipIndex, Game &game);
+  void onSelectRequest(const int shipIndex);
 
   public:
   utils::Signal<> onShipPurchased{};
-  utils::Signal<> onShipSelected{};
 };
 
 using HangarUiHandlerPtr = std::unique_ptr<HangarUiHandler>;
