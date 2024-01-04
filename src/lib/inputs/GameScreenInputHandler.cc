@@ -97,11 +97,9 @@ void GameScreenInputHandler::handleWeapons(const controls::State &controls, bsgo
   {
     for (auto id = 0u; id < ship.weapons.size(); ++id)
     {
-      {
-        m_shipView->tryActivateWeapon(ship.uuid, id);
-      }
-      return;
+      m_shipView->tryActivateWeapon(ship.uuid, id);
     }
+    return;
   }
 
   if (controls.released(controls::keys::K1) && !ship.weapons.empty())
