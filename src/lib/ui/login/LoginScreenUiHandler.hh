@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "AbstractMessageListener.hh"
 #include "CredentialsUiHandler.hh"
 #include "IUiHandler.hh"
 #include "UiMenu.hh"
@@ -10,7 +11,7 @@
 
 namespace pge {
 
-class LoginScreenUiHandler : public IUiHandler
+class LoginScreenUiHandler : public IUiHandler, public bsgo::AbstractMessageListener
 {
   public:
   LoginScreenUiHandler(const bsgo::Views &views);
@@ -21,7 +22,9 @@ class LoginScreenUiHandler : public IUiHandler
   void render(SpriteRenderer &engine) const override;
   void updateUi() override;
   void reset() override;
+
   void connectToMessageQueue(bsgo::IMessageQueue &messageQueue) override;
+  void onMessageReceived(const bsgo::IMessage &message) override;
 
   private:
   bsgo::PlayerViewShPtr m_playerView{};

@@ -44,28 +44,30 @@ void LoginMessageConsumer::onMessageReceived(const IMessage &message)
 
 void LoginMessageConsumer::handleLogin(const std::string &name, const std::string &password) const
 {
+  auto state          = LoginState::VALIDATED;
   const auto playerId = m_loginService->tryLogin(name, password);
   if (!playerId)
   {
     warn("Failed to process login message for player " + name);
-    return;
+    state = LoginState::REJECTED;
   }
 
-  m_messageQueue->pushMessage(std::make_unique<LoginMessage>(LoginType::LOGIN, *playerId));
+  m_messageQueue->pushMessage(std::make_unique<LoginMessage>(LoginType::LOGIN, *playerId, state));
 }
 
 void LoginMessageConsumer::handleSignup(const std::string &name,
                                         const std::string &password,
                                         const Faction &faction) const
 {
+  auto state          = LoginState::VALIDATED;
   const auto playerId = m_signupService->trySignup(name, password, faction);
   if (!playerId)
   {
     warn("Failed to process signup message for player " + name);
-    return;
+    state = LoginState::REJECTED;
   }
 
-  m_messageQueue->pushMessage(std::make_unique<LoginMessage>(LoginType::SIGNUP, *playerId));
+  m_messageQueue->pushMessage(std::make_unique<LoginMessage>(LoginType::SIGNUP, *playerId, state));
 }
 
 } // namespace bsgo

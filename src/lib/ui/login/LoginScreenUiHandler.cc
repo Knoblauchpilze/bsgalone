@@ -7,6 +7,7 @@ namespace pge {
 
 LoginScreenUiHandler::LoginScreenUiHandler(const bsgo::Views &views)
   : IUiHandler("login")
+  , AbstractMessageListener({bsgo::MessageType::LOGIN})
   , m_playerView(views.playerView)
 {
   if (nullptr == m_playerView)
@@ -119,6 +120,17 @@ void LoginScreenUiHandler::reset()
 void LoginScreenUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQueue)
 {
   m_credentialsUiHandler.connectToMessageQueue(messageQueue);
+
+  messageQueue.addListener(this);
+}
+
+void LoginScreenUiHandler::onMessageReceived(const bsgo::IMessage &message)
+{
+  const auto &loginMessage = message.as<bsgo::LoginMessage>();
+  if (bsgo::LoginState::REJECTED == loginMessage.getLoginState())
+  {
+    m_failureMenu->trigger();
+  }
 }
 
 namespace {
