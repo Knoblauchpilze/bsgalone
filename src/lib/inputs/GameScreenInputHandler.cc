@@ -69,13 +69,18 @@ void GameScreenInputHandler::performAction(float x, float y, const controls::Sta
 
 void GameScreenInputHandler::moveShip(bsgo::Entity &ship, const Motion &motion)
 {
+  if (!m_shipView->isReady())
+  {
+    return;
+  }
+
   Eigen::Vector3f direction = Eigen::Vector3f::Zero();
   direction(0)              = motion.x;
   direction(1)              = motion.y;
   direction(2)              = motion.z;
   direction.normalize();
 
-  ship.velocityComp().accelerate(direction);
+  m_shipView->accelerateShip(ship.uuid, direction);
 }
 
 void GameScreenInputHandler::keepShipCentered(CoordinateFrame &frame)
