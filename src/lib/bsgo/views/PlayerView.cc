@@ -1,5 +1,6 @@
 
 #include "PlayerView.hh"
+#include "HangarMessage.hh"
 
 namespace bsgo {
 
@@ -113,6 +114,12 @@ auto PlayerView::getPlayerShips() const -> std::vector<PlayerShip>
   }
 
   return out;
+}
+
+void PlayerView::trySelectShip(const Uuid &shipDbId)
+{
+  m_messageQueue->pushMessage(
+    std::make_unique<HangarMessage>(shipDbId, ShipSwitchRequestState::REQUESTED));
 }
 
 void PlayerView::checkPlayerDbIdExists() const

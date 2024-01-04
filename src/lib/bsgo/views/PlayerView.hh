@@ -26,6 +26,8 @@ class PlayerView : public AbstractView
   auto getPlayerComputers() const -> std::vector<PlayerComputer>;
   auto getPlayerShips() const -> std::vector<PlayerShip>;
 
+  void trySelectShip(const Uuid &shipDbId);
+
   private:
   std::optional<Uuid> m_playerDbId{};
   std::optional<Uuid> m_playerShipDbId{};
