@@ -23,12 +23,14 @@ auto str(const MessageType &type) -> std::string
       return "slot";
     case MessageType::VELOCITY:
       return "velocity";
+    case MessageType::TARGET:
+      return "target";
     default:
       return "unknown";
   }
 }
 
-auto allMessageTypes() -> std::array<MessageType, 8>
+auto allMessageTypes() -> std::array<MessageType, 9>
 {
   return {MessageType::DOCK,
           MessageType::HANGAR,
@@ -37,7 +39,8 @@ auto allMessageTypes() -> std::array<MessageType, 8>
           MessageType::LOGIN,
           MessageType::SCANNED,
           MessageType::SLOT,
-          MessageType::VELOCITY};
+          MessageType::VELOCITY,
+          MessageType::TARGET};
 }
 
 } // namespace bsgo
