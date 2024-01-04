@@ -20,7 +20,8 @@ class MapScreenUiHandler : public IUiHandler
   void updateUi() override;
 
   private:
-  bsgo::ServerViewShPtr m_serverView;
+  bsgo::ServerViewShPtr m_serverView{};
+  bsgo::ShipViewShPtr m_shipView{};
 
   std::vector<UiMenuPtr> m_buttons{};
   UiMenu *m_jumpButton{};
@@ -41,7 +42,7 @@ class MapScreenUiHandler : public IUiHandler
                              const olc::vi2d &mapDims);
 
   void onSystemSelected(const bsgo::Uuid &systemId, const int labelId);
-  void onJumpRequested(Game &g);
+  void onJumpRequested();
 };
 
 } // namespace pge

@@ -65,7 +65,6 @@ class Game : public utils::CoreObject
   bool step(float elapsedSeconds);
 
   void login(const bsgo::Uuid &playerDbId);
-  void requestJump(const bsgo::Uuid &systemId);
   void activeShipChanged();
   void activeSystemChanged();
 
