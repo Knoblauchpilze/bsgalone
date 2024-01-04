@@ -1,12 +1,16 @@
 
 #include "GameMessageModule.hh"
 #include "Game.hh"
-#include "JumpMessage.hh"
+#include <unordered_set>
 
 namespace pge {
 
+const std::unordered_set<bsgo::MessageType> GAME_CHANGING_MESSAGE_TYPES = {bsgo::MessageType::DOCK,
+                                                                           bsgo::MessageType::HANGAR,
+                                                                           bsgo::MessageType::JUMP};
+
 GameMessageModule::GameMessageModule(Game *game)
-  : bsgo::AbstractMessageListener({bsgo::MessageType::JUMP, bsgo::MessageType::DOCK})
+  : bsgo::AbstractMessageListener(GAME_CHANGING_MESSAGE_TYPES)
   , utils::CoreObject("message")
   , m_game(game)
 {
@@ -27,11 +31,14 @@ void GameMessageModule::onMessageReceived(const bsgo::IMessage &message)
 {
   switch (message.type())
   {
-    case bsgo::MessageType::JUMP:
-      handleJumpMessage(message.as<bsgo::JumpMessage>());
-      break;
     case bsgo::MessageType::DOCK:
       handleDockMessage(message.as<bsgo::DockMessage>());
+      break;
+    case bsgo::MessageType::HANGAR:
+      handleHangarMessage(message.as<bsgo::HangarMessage>());
+      break;
+    case bsgo::MessageType::JUMP:
+      handleJumpMessage(message.as<bsgo::JumpMessage>());
       break;
     default:
       error("Unsupported message type " + bsgo::str(message.type()));
@@ -45,20 +52,6 @@ void GameMessageModule::checkIfPlayerShipDbIdExists()
   {
     error("Expected player ship id to be defined");
   }
-}
-
-void GameMessageModule::handleJumpMessage(const bsgo::JumpMessage &message)
-{
-  checkIfPlayerShipDbIdExists();
-
-  const auto ship  = message.getShipDbId();
-  const auto state = message.getJumpState();
-  if (bsgo::JumpState::COMPLETED != state || *m_playerShipDbId != ship)
-  {
-    return;
-  }
-
-  m_game->activeSystemChanged();
 }
 
 void GameMessageModule::handleDockMessage(const bsgo::DockMessage &message)
@@ -76,6 +69,30 @@ void GameMessageModule::handleDockMessage(const bsgo::DockMessage &message)
   {
     m_game->setScreen(Screen::GAME);
   }
+}
+
+void GameMessageModule::handleHangarMessage(const bsgo::HangarMessage &message)
+{
+  if (bsgo::ShipSwitchRequestState::COMPLETED != message.getRequestState())
+  {
+    return;
+  }
+
+  m_game->activeShipChanged();
+}
+
+void GameMessageModule::handleJumpMessage(const bsgo::JumpMessage &message)
+{
+  checkIfPlayerShipDbIdExists();
+
+  const auto ship  = message.getShipDbId();
+  const auto state = message.getJumpState();
+  if (bsgo::JumpState::COMPLETED != state || *m_playerShipDbId != ship)
+  {
+    return;
+  }
+
+  m_game->activeSystemChanged();
 }
 
 } // namespace pge

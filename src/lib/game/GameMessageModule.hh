@@ -3,6 +3,7 @@
 
 #include "AbstractMessageListener.hh"
 #include "DockMessage.hh"
+#include "HangarMessage.hh"
 #include "JumpMessage.hh"
 #include "Uuid.hh"
 #include <core_utils/CoreObject.hh>
@@ -28,8 +29,9 @@ class GameMessageModule : public bsgo::AbstractMessageListener, public utils::Co
 
   void checkIfPlayerShipDbIdExists();
 
-  void handleJumpMessage(const bsgo::JumpMessage &message);
   void handleDockMessage(const bsgo::DockMessage &message);
+  void handleHangarMessage(const bsgo::HangarMessage &message);
+  void handleJumpMessage(const bsgo::JumpMessage &message);
 };
 
 } // namespace pge
