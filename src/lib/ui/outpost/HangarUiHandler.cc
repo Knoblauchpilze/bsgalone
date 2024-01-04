@@ -177,10 +177,8 @@ auto HangarUiHandler::generateShipInteractiveSection(const int shipIndex) -> UiM
   middleSection->addMenu(generateSpacer());
   middleSection->addMenu(generateSpacer());
 
-  MenuConfig config{.pos               = {},
-                    .dims              = DUMMY_DIMENSION,
-                    .gameClickCallback = [this, shipIndex](Game &g) {
-                      onShipRequest(shipIndex, g);
+  MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .clickCallback = [this, shipIndex]() {
+                      onShipRequest(shipIndex);
                     }};
 
   const auto bg       = bgConfigFromColor(olc::DARK_GREY);
@@ -271,7 +269,7 @@ void HangarUiHandler::updateShipMenus()
   }
 }
 
-void HangarUiHandler::onShipRequest(const int shipIndex, Game &game)
+void HangarUiHandler::onShipRequest(const int shipIndex)
 {
   const auto data = m_shipsData.at(shipIndex);
   switch (data.state)
@@ -280,7 +278,7 @@ void HangarUiHandler::onShipRequest(const int shipIndex, Game &game)
       onPurchaseRequest(shipIndex);
       break;
     case State::TO_EQUIP:
-      onSelectRequest(shipIndex, game);
+      onSelectRequest(shipIndex);
       break;
     default:
       error("Failed to handle ship request",
@@ -308,17 +306,10 @@ void HangarUiHandler::onPurchaseRequest(const int shipIndex)
   onShipPurchased.safeEmit("onPurchaseRequest");
 }
 
-void HangarUiHandler::onSelectRequest(const int shipIndex, Game &game)
+void HangarUiHandler::onSelectRequest(const int shipIndex)
 {
   const auto &data = m_shipsData.at(shipIndex);
-  if (!m_shipService->trySelectShip(*data.playerShipDbId))
-  {
-    warn("Failed to buy ship with id " + bsgo::str(data.shipDbId));
-    return;
-  }
-
-  onShipSelected.safeEmit("onSelectRequest");
-  game.activeShipChanged();
+  m_playerView->trySelectShip(*data.playerShipDbId);
 }
 
 } // namespace pge
