@@ -31,6 +31,27 @@ void MessageQueue::addListener(IMessageListener *listener)
   }
 }
 
+namespace {
+auto messagesTypesToString(const std::vector<IMessagePtr> &messages) -> std::string
+{
+  std::string out = "{";
+
+  auto id = 0;
+  for (const auto &message : messages)
+  {
+    if (id > 0)
+    {
+      out += ", ";
+    }
+    out += str(message->type());
+    ++id;
+  }
+
+  out += "}";
+  return out;
+}
+} // namespace
+
 void MessageQueue::processMessages()
 {
   std::vector<IMessagePtr> messages;
@@ -43,7 +64,8 @@ void MessageQueue::processMessages()
 
   if (!messages.empty())
   {
-    info("Processed " + std::to_string(messages.size()) + " message(s)");
+    const auto allTypes = messagesTypesToString(messages);
+    info("Processed " + std::to_string(messages.size()) + " message(s): " + allTypes);
   }
 }
 
