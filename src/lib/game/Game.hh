@@ -64,8 +64,6 @@ class Game : public utils::CoreObject
   /// the game is ended).
   bool step(float elapsedSeconds);
 
-  void tryActivateWeapon(const bsgo::Uuid &ship, const int &weaponId);
-  void tryActivateSlot(const bsgo::Uuid &ship, const int &slotId);
   void login(const bsgo::Uuid &playerDbId);
   void requestJump(const bsgo::Uuid &systemId);
   void activeShipChanged();
