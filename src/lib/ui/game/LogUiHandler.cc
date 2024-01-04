@@ -76,6 +76,7 @@ void LogUiHandler::updateUi()
 void LogUiHandler::reset()
 {
   m_logs.clear();
+  m_logsToTrigger.clear();
 }
 
 void LogUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQueue)
