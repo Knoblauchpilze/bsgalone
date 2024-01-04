@@ -2,12 +2,14 @@
 #pragma once
 
 #include "AbstractMessageListener.hh"
-#include "DockMessage.hh"
-#include "HangarMessage.hh"
-#include "JumpMessage.hh"
 #include "Uuid.hh"
 #include <core_utils/CoreObject.hh>
 #include <optional>
+
+#include "DockMessage.hh"
+#include "HangarMessage.hh"
+#include "JumpMessage.hh"
+#include "LoginMessage.hh"
 
 namespace pge {
 
@@ -32,6 +34,7 @@ class GameMessageModule : public bsgo::AbstractMessageListener, public utils::Co
   void handleDockMessage(const bsgo::DockMessage &message);
   void handleHangarMessage(const bsgo::HangarMessage &message);
   void handleJumpMessage(const bsgo::JumpMessage &message);
+  void handleLoginMessage(const bsgo::LoginMessage &message);
 };
 
 } // namespace pge
