@@ -2,6 +2,7 @@
 #pragma once
 
 #include "AbstractView.hh"
+#include "Faction.hh"
 #include <memory>
 
 namespace bsgo {
@@ -26,7 +27,10 @@ class PlayerView : public AbstractView
   auto getPlayerComputers() const -> std::vector<PlayerComputer>;
   auto getPlayerShips() const -> std::vector<PlayerShip>;
 
-  void trySelectShip(const Uuid &shipDbId);
+  void trySelectShip(const Uuid &shipDbId) const;
+
+  void tryLogin(const std::string &name, const std::string &password) const;
+  void trySignup(const std::string &name, const std::string &password, const Faction &faction) const;
 
   private:
   std::optional<Uuid> m_playerDbId{};
