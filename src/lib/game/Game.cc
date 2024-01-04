@@ -18,6 +18,7 @@
 #include "DockMessageConsumer.hh"
 #include "HangarMessageConsumer.hh"
 #include "JumpMessageConsumer.hh"
+#include "LoginMessageConsumer.hh"
 #include "SlotMessageConsumer.hh"
 #include "VelocityMessageConsumer.hh"
 
@@ -296,6 +297,10 @@ void Game::initializeMessageSystem()
   auto hangar = std::make_unique<bsgo::HangarMessageConsumer>(m_services, m_messageQueue.get());
   m_messageQueue->addListener(hangar.get());
   m_messageConsumers.emplace_back(std::move(hangar));
+
+  auto login = std::make_unique<bsgo::LoginMessageConsumer>(m_services, m_messageQueue.get());
+  m_messageQueue->addListener(login.get());
+  m_messageConsumers.emplace_back(std::move(login));
 
   m_messageQueue->addListener(&m_messageModule);
 }
