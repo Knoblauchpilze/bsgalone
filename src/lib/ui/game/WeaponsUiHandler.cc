@@ -128,7 +128,13 @@ void WeaponsUiHandler::initializeWeapons()
   {
     auto &menu = m_weapons[id];
 
-    menu->setGameClickCallback([shipId, id](Game &g) { g.tryActivateWeapon(shipId, id); });
+    menu->setClickCallback([this, shipId, id]() {
+      if (!m_shipView->isReady())
+      {
+        return;
+      }
+      m_shipView->tryActivateWeapon(shipId, id);
+    });
     menu->setEnabled(true);
 
     auto prop = std::make_unique<UiTextMenu>(config, bg, textConf);

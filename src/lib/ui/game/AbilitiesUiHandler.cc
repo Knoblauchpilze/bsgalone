@@ -127,7 +127,13 @@ void AbilitiesUiHandler::initializeAbilities()
   {
     auto &menu = m_computers[id];
 
-    menu->setGameClickCallback([shipId, id](Game &g) { g.tryActivateSlot(shipId, id); });
+    menu->setClickCallback([this, shipId, id]() {
+      if (!m_shipView->isReady())
+      {
+        return;
+      }
+      m_shipView->tryActivateSlot(shipId, id);
+    });
     menu->setEnabled(true);
 
     if (!ship.computers[id]->maybeRange())

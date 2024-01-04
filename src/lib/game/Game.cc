@@ -215,22 +215,6 @@ bool Game::step(float elapsedSeconds)
   return true;
 }
 
-void Game::tryActivateWeapon(const bsgo::Uuid &ship, const int &weaponId)
-{
-  if (m_views.shipView->isReady())
-  {
-    m_views.shipView->tryActivateWeapon(ship, weaponId);
-  }
-}
-
-void Game::tryActivateSlot(const bsgo::Uuid &ship, const int &slotId)
-{
-  if (m_views.shipView->isReady())
-  {
-    m_views.shipView->tryActivateSlot(ship, slotId);
-  }
-}
-
 void Game::login(const bsgo::Uuid &playerDbId)
 {
   m_dataSource.setPlayerDbId(playerDbId);
