@@ -87,7 +87,7 @@ void Game::generateInputHandlers()
 
 void Game::generateUiHandlers(int width, int height)
 {
-  auto login = std::make_unique<LoginScreenUiHandler>(m_services);
+  auto login = std::make_unique<LoginScreenUiHandler>(m_views);
   login->initializeMenus(width, height);
   m_uiHandlers[Screen::LOGIN] = std::move(login);
 

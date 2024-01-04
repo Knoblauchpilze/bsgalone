@@ -1,21 +1,17 @@
 
 #include "LoginScreenUiHandler.hh"
+#include "LoginMessage.hh"
 #include "ScreenCommon.hh"
 
 namespace pge {
 
-LoginScreenUiHandler::LoginScreenUiHandler(const bsgo::Services &services)
+LoginScreenUiHandler::LoginScreenUiHandler(const bsgo::Views &views)
   : IUiHandler("login")
-  , m_signupService(services.signup)
-  , m_loginService(services.login)
+  , m_playerView(views.playerView)
 {
-  if (nullptr == m_signupService)
+  if (nullptr == m_playerView)
   {
-    throw std::invalid_argument("Expected non null signup service");
-  }
-  if (nullptr == m_loginService)
-  {
-    throw std::invalid_argument("Expected non null login service");
+    throw std::invalid_argument("Expected non null player view");
   }
 }
 
@@ -187,9 +183,9 @@ void LoginScreenUiHandler::generateProceedButton(const int width, const int heig
   const olc::vi2d loginButtonPos{(width - loginButtonDimsPixels.x) / 2,
                                  height - REASONABLE_GAP_SIZE - loginButtonDimsPixels.y};
 
-  const MenuConfig config{.pos               = loginButtonPos,
-                          .dims              = loginButtonDimsPixels,
-                          .gameClickCallback = [this](Game &g) { tryLogin(g); }};
+  const MenuConfig config{.pos           = loginButtonPos,
+                          .dims          = loginButtonDimsPixels,
+                          .clickCallback = [this]() { tryLogin(); }};
 
   const auto bg   = bgConfigFromColor(olc::DARK_COBALT_BLUE);
   const auto text = textConfigFromColor(LOGIN_TEXT, olc::WHITE);
@@ -242,7 +238,7 @@ void LoginScreenUiHandler::setFaction(const bsgo::Faction &faction)
   m_faction = faction;
 }
 
-void LoginScreenUiHandler::tryLogin(Game &game)
+void LoginScreenUiHandler::tryLogin()
 {
   const auto data = m_credentialsUiHandler.getCredentials();
 
@@ -253,27 +249,17 @@ void LoginScreenUiHandler::tryLogin(Game &game)
     return;
   }
 
-  std::optional<bsgo::Uuid> playerId;
   switch (m_mode)
   {
     case Mode::LOGIN:
-      playerId = m_loginService->tryLogin(data.name, data.password);
+      m_playerView->tryLogin(data.name, data.password);
       break;
     case Mode::SIGNUP:
-      playerId = m_signupService->trySignup(data.name, data.password, m_faction);
+      m_playerView->trySignup(data.name, data.password, m_faction);
       break;
     default:
       error("Unknown mode");
       break;
-  }
-
-  if (playerId)
-  {
-    game.login(*playerId);
-  }
-  else
-  {
-    m_failureMenu->trigger();
   }
 }
 
