@@ -4,6 +4,7 @@
 #include "JumpMessage.hh"
 #include "LockerUtils.hh"
 #include "SlotMessage.hh"
+#include "TargetMessage.hh"
 #include "VelocityMessage.hh"
 
 namespace bsgo {
@@ -238,6 +239,11 @@ void ShipView::cancelJump() const
 void ShipView::accelerateShip(const Uuid &ship, const Eigen::Vector3f &acceleration) const
 {
   m_messageQueue->pushMessage(std::make_unique<VelocityMessage>(ship, acceleration));
+}
+
+void ShipView::tryAcquireTarget(const Uuid &ship, const Eigen::Vector3f &position) const
+{
+  m_messageQueue->pushMessage(std::make_unique<TargetMessage>(ship, position));
 }
 
 auto ShipView::getPlayerShipWeapons() const -> std::vector<PlayerWeapon>
