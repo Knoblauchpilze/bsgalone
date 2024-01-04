@@ -41,6 +41,11 @@ void UiMenu::setPosition(const olc::vi2d &position)
   updateLayoutAfterChildChange();
 }
 
+void UiMenu::setClickCallback(const ClickCallback &callback)
+{
+  m_clickCallback = callback;
+}
+
 void UiMenu::setGameClickCallback(const GameCallback &callback)
 {
   m_gameClickCallback = callback;
@@ -146,11 +151,6 @@ auto UiMenu::dims() const noexcept -> olc::vi2d
 auto UiMenu::state() const noexcept -> const State &
 {
   return m_state;
-}
-
-void UiMenu::setClickCallback(const ClickCallback &callback)
-{
-  m_clickCallback = callback;
 }
 
 void UiMenu::setLostFocusCallback(const ClickCallback &callback)

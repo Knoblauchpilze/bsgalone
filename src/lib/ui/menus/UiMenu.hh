@@ -26,6 +26,7 @@ class UiMenu : public utils::CoreObject
   void setHighlightable(const bool highlightable) noexcept;
   void setPosition(const olc::vi2d &position);
 
+  void setClickCallback(const ClickCallback &callback);
   void setGameClickCallback(const GameCallback &callback);
 
   void addMenu(UiMenuPtr child);
@@ -52,7 +53,6 @@ class UiMenu : public utils::CoreObject
   };
 
   auto state() const noexcept -> const State &;
-  void setClickCallback(const ClickCallback &callback);
   void setLostFocusCallback(const ClickCallback &callback);
 
   virtual void renderCustom(olc::PixelGameEngine *pge) const;
