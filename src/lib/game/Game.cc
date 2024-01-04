@@ -16,6 +16,7 @@
 #include "OutpostScreenUiHandler.hh"
 
 #include "DockMessageConsumer.hh"
+#include "HangarMessageConsumer.hh"
 #include "JumpMessageConsumer.hh"
 #include "SlotMessageConsumer.hh"
 #include "VelocityMessageConsumer.hh"
@@ -291,6 +292,10 @@ void Game::initializeMessageSystem()
   auto velocity = std::make_unique<bsgo::VelocityMessageConsumer>(m_services, m_messageQueue.get());
   m_messageQueue->addListener(velocity.get());
   m_messageConsumers.emplace_back(std::move(velocity));
+
+  auto hangar = std::make_unique<bsgo::HangarMessageConsumer>(m_services, m_messageQueue.get());
+  m_messageQueue->addListener(hangar.get());
+  m_messageConsumers.emplace_back(std::move(hangar));
 
   m_messageQueue->addListener(&m_messageModule);
 }
