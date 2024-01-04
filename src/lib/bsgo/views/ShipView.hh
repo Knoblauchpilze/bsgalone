@@ -49,6 +49,8 @@ class ShipView : public AbstractView
 
   void accelerateShip(const Uuid &ship, const Eigen::Vector3f &acceleration) const;
 
+  void tryAcquireTarget(const Uuid &ship, const Eigen::Vector3f &position) const;
+
   auto getPlayerShipWeapons() const -> std::vector<PlayerWeapon>;
   auto getPlayerShipComputers() const -> std::vector<PlayerComputer>;
   auto getPlayerShipSlots() const -> std::unordered_map<Slot, int>;

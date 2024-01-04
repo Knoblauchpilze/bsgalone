@@ -7,15 +7,10 @@ namespace pge {
 GameScreenInputHandler::GameScreenInputHandler(const bsgo::Views &views)
   : IInputHandler("game")
   , m_shipView(views.shipView)
-  , m_systemView(views.systemView)
 {
   if (nullptr == m_shipView)
   {
     throw std::invalid_argument("Expected non null ship view");
-  }
-  if (nullptr == m_systemView)
-  {
-    throw std::invalid_argument("Expected non null system view");
   }
 }
 
@@ -40,31 +35,15 @@ void GameScreenInputHandler::processUserInput(const controls::State &controls,
 
 void GameScreenInputHandler::performAction(float x, float y, const controls::State & /*state*/)
 {
-  if (!m_shipView->isReady() || !m_systemView->isReady())
+  if (!m_shipView->isReady())
   {
     return;
   }
 
   const Eigen::Vector3f pos(x, y, 0.0f);
-  const auto ent  = m_systemView->getEntityAt(pos);
-  auto playerShip = m_shipView->getPlayerShip();
 
-  auto visible{true};
-  if (ent && ent->exists<bsgo::StatusComponent>()
-      && !bsgo::statusVisibleFromDradis(ent->statusComp().status()))
-  {
-    visible = false;
-  }
-
-  if (ent && visible)
-  {
-    info("Found target " + ent->str());
-    playerShip.targetComp().setTarget(ent->uuid);
-  }
-  else
-  {
-    playerShip.targetComp().clearTarget();
-  }
+  const auto ship = m_shipView->getPlayerShip();
+  m_shipView->tryAcquireTarget(ship.uuid, pos);
 }
 
 void GameScreenInputHandler::moveShip(const Motion &motion, const bsgo::Uuid &shipEntityId)
