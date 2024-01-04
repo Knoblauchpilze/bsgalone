@@ -88,6 +88,25 @@ bool ShipService::accelerateShip(const Uuid &shipEntityId, const Eigen::Vector3f
   return true;
 }
 
+void ShipService::tryAcquireTarget(const Uuid &shipEntityId, const Eigen::Vector3f &position) const
+{
+  auto ship          = m_coordinator->getEntity(shipEntityId);
+  auto maybeTargetId = m_coordinator->getEntityAt(position);
+
+  if (maybeTargetId)
+  {
+    const auto target = m_coordinator->getEntity(*maybeTargetId);
+
+    if (target.exists<bsgo::StatusComponent>()
+        && !bsgo::statusVisibleFromDradis(target.statusComp().status()))
+    {
+      maybeTargetId.reset();
+    }
+  }
+
+  updateEntityTarget(ship, maybeTargetId);
+}
+
 void ShipService::switchActiveShip(PlayerShip currentActiveShip, PlayerShip newActiveShip) const
 {
   currentActiveShip.active = false;
@@ -101,6 +120,26 @@ void ShipService::switchShipSystem(const PlayerShip &currentActiveShip,
                                    const PlayerShip &newActiveShip) const
 {
   m_repositories.systemRepository->updateShipForSystem(currentActiveShip.id, newActiveShip.id);
+}
+
+void ShipService::updateEntityTarget(Entity &entity, const std::optional<Uuid> &targetId) const
+{
+  if (!entity.exists<TargetComponent>())
+  {
+    return;
+  }
+
+  auto &targetComp = entity.targetComp();
+  if (!targetId)
+  {
+    targetComp.clearTarget();
+    return;
+  }
+
+  const auto target = m_coordinator->getEntity(*targetId);
+  info("Found target " + target.str());
+
+  targetComp.setTarget(*targetId);
 }
 
 } // namespace bsgo
