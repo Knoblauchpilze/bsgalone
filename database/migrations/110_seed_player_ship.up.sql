@@ -82,7 +82,7 @@ INSERT INTO public.ship_weapon ("ship", "weapon", "slot")
 INSERT INTO public.ship_weapon ("ship", "weapon", "slot")
   VALUES (
     (SELECT id FROM player_ship WHERE player is NULL),
-    (SELECT player_weapon.id FROM player_weapon LEFT JOIN player ON player.id = player_weapon.player LEFT JOIN weapon ON player_weapon.weapon = weapon.id WHERE player.name = 'grouton' AND weapon.name = 'Medium range cannon'),
+    (SELECT player_weapon.id FROM player_weapon LEFT JOIN weapon ON player_weapon.weapon = weapon.id WHERE player_weapon.player is NULL AND weapon.name = 'Medium range cannon'),
     (SELECT ship_slot.id FROM ship_slot LEFT JOIN ship ON ship_slot.ship = ship.id WHERE ship.name = 'Cylon Raider' AND ship_slot.type = 'weapon' AND ship_slot.x_pos = -0.5)
   );
 
