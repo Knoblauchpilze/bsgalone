@@ -20,9 +20,13 @@ class ShipService : public AbstractService
 
   bool accelerateShip(const Uuid &shipEntityId, const Eigen::Vector3f &acceleration) const;
 
+  void tryAcquireTarget(const Uuid &shipEntityId, const Eigen::Vector3f &position) const;
+
   private:
   void switchActiveShip(PlayerShip currentActiveShip, PlayerShip newActiveShip) const;
   void switchShipSystem(const PlayerShip &currentActiveShip, const PlayerShip &newActiveShip) const;
+
+  void updateEntityTarget(Entity &entity, const std::optional<Uuid> &targetId) const;
 };
 
 using ShipServiceShPtr = std::shared_ptr<ShipService>;

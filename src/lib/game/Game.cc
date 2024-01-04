@@ -20,6 +20,7 @@
 #include "JumpMessageConsumer.hh"
 #include "LoginMessageConsumer.hh"
 #include "SlotMessageConsumer.hh"
+#include "TargetMessageConsumer.hh"
 #include "VelocityMessageConsumer.hh"
 
 namespace pge {
@@ -301,6 +302,10 @@ void Game::initializeMessageSystem()
   auto login = std::make_unique<bsgo::LoginMessageConsumer>(m_services, m_messageQueue.get());
   m_messageQueue->addListener(login.get());
   m_messageConsumers.emplace_back(std::move(login));
+
+  auto target = std::make_unique<bsgo::TargetMessageConsumer>(m_services, m_messageQueue.get());
+  m_messageQueue->addListener(target.get());
+  m_messageConsumers.emplace_back(std::move(target));
 
   m_messageQueue->addListener(&m_messageModule);
 }

@@ -11,4 +11,5 @@ target_sources (bsgalone_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/LoginMessageConsumer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SlotMessageConsumer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/VelocityMessageConsumer.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/TargetMessageConsumer.cc
 	)
