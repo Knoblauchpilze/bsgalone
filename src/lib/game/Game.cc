@@ -18,6 +18,7 @@
 #include "DockMessageConsumer.hh"
 #include "JumpMessageConsumer.hh"
 #include "SlotMessageConsumer.hh"
+#include "VelocityMessageConsumer.hh"
 
 namespace pge {
 
@@ -286,6 +287,10 @@ void Game::initializeMessageSystem()
   auto slot = std::make_unique<bsgo::SlotMessageConsumer>(m_services, m_messageQueue.get());
   m_messageQueue->addListener(slot.get());
   m_messageConsumers.emplace_back(std::move(slot));
+
+  auto velocity = std::make_unique<bsgo::VelocityMessageConsumer>(m_services, m_messageQueue.get());
+  m_messageQueue->addListener(velocity.get());
+  m_messageConsumers.emplace_back(std::move(velocity));
 
   m_messageQueue->addListener(&m_messageModule);
 }
