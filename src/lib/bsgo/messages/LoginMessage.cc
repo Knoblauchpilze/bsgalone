@@ -22,10 +22,10 @@ LoginMessage::LoginMessage(const std::string &name,
   , m_state(LoginState::PENDING)
 {}
 
-LoginMessage::LoginMessage(const LoginType &type, const Uuid &playerId)
+LoginMessage::LoginMessage(const LoginType &type, const Uuid &playerId, const LoginState &state)
   : AbstractMessage(MessageType::LOGIN)
   , m_type(type)
-  , m_state(LoginState::VALIDATED)
+  , m_state(state)
   , m_playerId(playerId)
 {}
 

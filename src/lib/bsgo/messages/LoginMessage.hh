@@ -18,7 +18,8 @@ enum class LoginType
 enum class LoginState
 {
   PENDING,
-  VALIDATED
+  VALIDATED,
+  REJECTED
 };
 
 class LoginMessage : public AbstractMessage
@@ -26,7 +27,7 @@ class LoginMessage : public AbstractMessage
   public:
   LoginMessage(const std::string &name, const std::string &password);
   LoginMessage(const std::string &name, const std::string &password, const Faction &faction);
-  LoginMessage(const LoginType &type, const Uuid &playerId);
+  LoginMessage(const LoginType &type, const Uuid &playerId, const LoginState &state);
   ~LoginMessage() override = default;
 
   auto getLoginType() const -> LoginType;
