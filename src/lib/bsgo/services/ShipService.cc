@@ -73,6 +73,21 @@ bool ShipService::tryUndock(const Uuid &shipDbId, const Uuid &shipEntityId) cons
   return true;
 }
 
+bool ShipService::accelerateShip(const Uuid &shipEntityId, const Eigen::Vector3f &acceleration) const
+{
+  auto shipEntity = m_coordinator->getEntity(shipEntityId);
+
+  if (!shipEntity.exists<OwnerComponent>())
+  {
+    return false;
+  }
+
+  auto &velocity = shipEntity.velocityComp();
+  velocity.accelerate(acceleration);
+
+  return true;
+}
+
 void ShipService::switchActiveShip(PlayerShip currentActiveShip, PlayerShip newActiveShip) const
 {
   currentActiveShip.active = false;
