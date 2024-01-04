@@ -5,6 +5,7 @@
 #include "Uuid.hh"
 #include <core_utils/TimeUtils.hh>
 #include <memory>
+#include <optional>
 #include <unordered_set>
 
 namespace bsgo {
@@ -13,7 +14,7 @@ struct PlayerWeapon
 {
   Uuid id{};
   Uuid weapon{};
-  Uuid player{};
+  std::optional<Uuid> player{};
 
   std::string name{};
   int level{};
