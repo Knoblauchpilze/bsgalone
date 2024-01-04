@@ -35,6 +35,7 @@ class ShipView : public AbstractView
   auto getShipsWithin(const IBoundingBox &bbox) const -> std::vector<Entity>;
 
   auto distanceToTarget() const -> float;
+  auto getWeaponsCount() const -> int;
   auto getAbilitiesCount() const -> int;
 
   void tryActivateWeapon(const Uuid &ship, const int weaponId) const;
