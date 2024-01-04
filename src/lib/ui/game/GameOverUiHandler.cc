@@ -22,14 +22,10 @@ void GameOverUiHandler::initializeMenus(const int width, const int height)
   pos.x = (width - dims.x) / 2;
   pos.y = (height - dims.y) / 2;
 
-  const MenuConfig config{.pos               = pos,
-                          .dims              = dims,
-                          .visible           = false,
-                          .gameClickCallback = [this](Game &g) {
+  const MenuConfig config{.pos = pos, .dims = dims, .visible = false, .clickCallback = [this]() {
                             if (m_shipView->isReady())
                             {
                               m_shipView->dockPlayerShip();
-                              g.setScreen(Screen::OUTPOST);
                             }
                           }};
 
