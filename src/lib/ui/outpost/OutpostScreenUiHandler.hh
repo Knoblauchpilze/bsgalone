@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "AbstractMessageListener.hh"
 #include "HangarUiHandler.hh"
 #include "IUiHandler.hh"
 #include "LockerUiHandler.hh"
@@ -11,7 +12,7 @@
 
 namespace pge {
 
-class OutpostScreenUiHandler : public IUiHandler
+class OutpostScreenUiHandler : public IUiHandler, public bsgo::AbstractMessageListener
 {
   public:
   OutpostScreenUiHandler(const bsgo::Views &views, const bsgo::Services &services);
@@ -22,7 +23,9 @@ class OutpostScreenUiHandler : public IUiHandler
   void render(SpriteRenderer &engine) const override;
   void updateUi() override;
   void reset() override;
+
   void connectToMessageQueue(bsgo::IMessageQueue &messageQueue) override;
+  void onMessageReceived(const bsgo::IMessage &message) override;
 
   private:
   bsgo::ShipViewShPtr m_shipView;

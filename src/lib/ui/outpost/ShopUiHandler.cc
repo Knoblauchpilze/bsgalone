@@ -238,16 +238,8 @@ void ShopUiHandler::onPurchaseRequest(const int itemId)
   }
 
   const auto &purchase = m_itemsData.at(itemId);
-  if (!m_purchaseService->tryPurchase(m_playerView->getPlayerDbId(),
-                                      purchase.itemId,
-                                      purchase.itemType))
-  {
-    warn("Failed to buy " + bsgo::str(purchase.itemId) + " with type "
-         + bsgo::str(purchase.itemType));
-    return;
-  }
 
-  onItemPurchased.safeEmit("onPurchaseRequest");
+  m_playerView->tryPurchase(purchase.itemType, purchase.itemId);
 }
 
 } // namespace pge

@@ -5,7 +5,6 @@
 #include "UiMenu.hh"
 #include "UiTextMenu.hh"
 #include "Views.hh"
-#include <core_utils/Signal.hh>
 #include <memory>
 
 namespace pge {
@@ -44,9 +43,6 @@ class ShopUiHandler : public IUiHandler
   auto generateBuySection(const int itemId) -> UiMenuPtr;
 
   void onPurchaseRequest(const int itemId);
-
-  public:
-  utils::Signal<> onItemPurchased{};
 };
 
 using ShopUiHandlerPtr = std::unique_ptr<ShopUiHandler>;
