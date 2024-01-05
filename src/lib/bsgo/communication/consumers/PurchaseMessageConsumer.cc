@@ -12,7 +12,7 @@ PurchaseMessageConsumer::PurchaseMessageConsumer(const Services &services,
 {
   if (nullptr == m_purchaseService)
   {
-    throw std::invalid_argument("Expected non null slot service");
+    throw std::invalid_argument("Expected non null purchase service");
   }
   if (nullptr == m_messageQueue)
   {
