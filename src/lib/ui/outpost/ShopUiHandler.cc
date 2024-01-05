@@ -238,7 +238,6 @@ void ShopUiHandler::onPurchaseRequest(const int itemId)
   }
 
   const auto &purchase = m_itemsData.at(itemId);
-
   m_playerView->tryPurchase(purchase.itemType, purchase.itemId);
 }
 

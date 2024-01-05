@@ -295,15 +295,7 @@ void HangarUiHandler::onPurchaseRequest(const int shipIndex)
   }
 
   const auto &data = m_shipsData.at(shipIndex);
-  if (!m_purchaseService->tryPurchase(m_playerView->getPlayerDbId(),
-                                      data.shipDbId,
-                                      bsgo::Item::SHIP))
-  {
-    warn("Failed to buy ship with id " + bsgo::str(data.shipDbId));
-    return;
-  }
-
-  onShipPurchased.safeEmit("onPurchaseRequest");
+  m_playerView->tryPurchase(bsgo::Item::SHIP, data.shipDbId);
 }
 
 void HangarUiHandler::onSelectRequest(const int shipIndex)
