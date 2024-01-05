@@ -13,8 +13,8 @@ OutpostScreenUiHandler::OutpostScreenUiHandler(const bsgo::Views &views,
   , bsgo::AbstractMessageListener({bsgo::MessageType::PURCHASE})
   , m_shipView(views.shipView)
   , m_lockerUi(std::make_unique<LockerUiHandler>(views, services))
-  , m_shopUi(std::make_unique<ShopUiHandler>(views, services))
-  , m_hangarUi(std::make_unique<HangarUiHandler>(views, services))
+  , m_shopUi(std::make_unique<ShopUiHandler>(views))
+  , m_hangarUi(std::make_unique<HangarUiHandler>(views))
 {
   if (nullptr == m_shipView)
   {

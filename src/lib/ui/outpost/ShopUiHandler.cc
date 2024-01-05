@@ -8,11 +8,10 @@
 
 namespace pge {
 
-ShopUiHandler::ShopUiHandler(const bsgo::Views &views, const bsgo::Services &services)
+ShopUiHandler::ShopUiHandler(const bsgo::Views &views)
   : IUiHandler("shop")
   , m_shopView(views.shopView)
   , m_playerView(views.playerView)
-  , m_purchaseService(services.purchase)
 {
   if (nullptr == m_shopView)
   {
@@ -21,10 +20,6 @@ ShopUiHandler::ShopUiHandler(const bsgo::Views &views, const bsgo::Services &ser
   if (nullptr == m_playerView)
   {
     throw std::invalid_argument("Expected non null player view");
-  }
-  if (nullptr == m_purchaseService)
-  {
-    throw std::invalid_argument("Expected non null purchase service");
   }
 }
 

@@ -13,7 +13,7 @@ namespace pge {
 class HangarUiHandler : public IUiHandler
 {
   public:
-  HangarUiHandler(const bsgo::Views &views, const bsgo::Services &services);
+  HangarUiHandler(const bsgo::Views &views);
   ~HangarUiHandler() override = default;
 
   void initializeMenus(const int width, const int height) override;
@@ -25,8 +25,6 @@ class HangarUiHandler : public IUiHandler
   private:
   bsgo::PlayerViewShPtr m_playerView;
   bsgo::ShopViewShPtr m_shopView;
-  bsgo::PurchaseServiceShPtr m_purchaseService{};
-  bsgo::ShipServiceShPtr m_shipService{};
   bool m_initialized{false};
 
   UiMenuPtr m_menu{};
