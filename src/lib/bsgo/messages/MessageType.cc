@@ -17,6 +17,8 @@ auto str(const MessageType &type) -> std::string
       return "login";
     case MessageType::LOOT:
       return "loot";
+    case MessageType::PURCHASE:
+      return "purchase";
     case MessageType::SCANNED:
       return "scanned";
     case MessageType::SLOT:
@@ -30,12 +32,13 @@ auto str(const MessageType &type) -> std::string
   }
 }
 
-auto allMessageTypes() -> std::array<MessageType, 9>
+auto allMessageTypes() -> std::array<MessageType, 10>
 {
   return {MessageType::DOCK,
           MessageType::HANGAR,
           MessageType::JUMP,
           MessageType::LOOT,
+          MessageType::PURCHASE,
           MessageType::LOGIN,
           MessageType::SCANNED,
           MessageType::SLOT,
