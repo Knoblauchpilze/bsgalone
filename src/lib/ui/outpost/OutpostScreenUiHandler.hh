@@ -54,8 +54,6 @@ class OutpostScreenUiHandler : public IUiHandler, public bsgo::AbstractMessageLi
 
   void generateGeneralMenu(const int width, const int height);
   void setActiveScreen(const ActiveScreen &screen);
-
-  void onChildUiChanged();
 };
 
 } // namespace pge

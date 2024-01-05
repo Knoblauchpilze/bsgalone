@@ -21,11 +21,6 @@ OutpostScreenUiHandler::OutpostScreenUiHandler(const bsgo::Views &views,
   {
     throw std::invalid_argument("Expected non null ship view");
   }
-
-  m_lockerUi->onItemEquiped
-    .connect_member<OutpostScreenUiHandler>(this, &OutpostScreenUiHandler::onChildUiChanged);
-  m_lockerUi->onItemUnequiped
-    .connect_member<OutpostScreenUiHandler>(this, &OutpostScreenUiHandler::onChildUiChanged);
 }
 
 void OutpostScreenUiHandler::initializeMenus(const int width, const int height)
@@ -198,11 +193,6 @@ void OutpostScreenUiHandler::generateGeneralMenu(const int width, const int heig
 void OutpostScreenUiHandler::setActiveScreen(const ActiveScreen &screen)
 {
   m_activeScreen = screen;
-}
-
-void OutpostScreenUiHandler::onChildUiChanged()
-{
-  m_refreshRequested = true;
 }
 
 } // namespace pge
