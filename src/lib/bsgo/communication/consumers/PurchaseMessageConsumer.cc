@@ -38,6 +38,9 @@ void PurchaseMessageConsumer::onMessageReceived(const IMessage &message)
     case Item::COMPUTER:
       handleComputerPurchase(playerDbId, itemDbId);
       break;
+    case Item::SHIP:
+      handleShipPurchase(playerDbId, itemDbId);
+      break;
     case Item::WEAPON:
       handleWeaponPurchase(playerDbId, itemDbId);
       break;
@@ -61,6 +64,19 @@ void PurchaseMessageConsumer::handleComputerPurchase(const Uuid &playerDbId,
                                                                 Item::COMPUTER,
                                                                 computerDbId,
                                                                 PurchaseState::COMPLETED));
+}
+
+void PurchaseMessageConsumer::handleShipPurchase(const Uuid &playerDbId, const Uuid &shipDbId) const
+{
+  if (!m_purchaseService->tryPurchase(playerDbId, shipDbId, Item::SHIP))
+  {
+    warn("Failed to process purchase message for player " + str(playerDbId) + " for ship "
+         + str(shipDbId));
+    return;
+  }
+
+  m_messageQueue->pushMessage(
+    std::make_unique<PurchaseMessage>(playerDbId, Item::SHIP, shipDbId, PurchaseState::COMPLETED));
 }
 
 void PurchaseMessageConsumer::handleWeaponPurchase(const Uuid &playerDbId,
