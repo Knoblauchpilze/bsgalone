@@ -1,6 +1,7 @@
 
 #include "OutpostScreenUiHandler.hh"
 #include "Constants.hh"
+#include "EquipMessage.hh"
 #include "PurchaseMessage.hh"
 #include "ScreenCommon.hh"
 #include "UiTextMenu.hh"
@@ -10,7 +11,7 @@ namespace pge {
 OutpostScreenUiHandler::OutpostScreenUiHandler(const bsgo::Views &views,
                                                const bsgo::Services &services)
   : IUiHandler("outpost")
-  , bsgo::AbstractMessageListener({bsgo::MessageType::PURCHASE})
+  , bsgo::AbstractMessageListener({bsgo::MessageType::PURCHASE, bsgo::MessageType::EQUIP})
   , m_shipView(views.shipView)
   , m_lockerUi(std::make_unique<LockerUiHandler>(views, services))
   , m_shopUi(std::make_unique<ShopUiHandler>(views))
@@ -144,10 +145,21 @@ void OutpostScreenUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQ
 
 void OutpostScreenUiHandler::onMessageReceived(const bsgo::IMessage &message)
 {
-  const auto &purchaseMessage = message.as<bsgo::PurchaseMessage>();
-  if (bsgo::PurchaseState::COMPLETED == purchaseMessage.getPurchaseState())
+  if (bsgo::MessageType::PURCHASE == message.type())
   {
-    m_refreshRequested = true;
+    const auto &purchase = message.as<bsgo::PurchaseMessage>();
+    if (bsgo::PurchaseState::COMPLETED == purchase.getPurchaseState())
+    {
+      m_refreshRequested = true;
+    }
+  }
+  if (bsgo::MessageType::EQUIP == message.type())
+  {
+    const auto &equip = message.as<bsgo::EquipMessage>();
+    if (bsgo::EquipState::COMPLETED == equip.getEquipState())
+    {
+      m_refreshRequested = true;
+    }
   }
 }
 

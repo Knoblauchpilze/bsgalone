@@ -418,16 +418,7 @@ void LockerUiHandler::onInstallRequest(const int itemId)
   }
 
   const auto &equip = m_lockerItemsData.at(itemId);
-  const bsgo::LockerItemData data{.dbId     = equip.itemId,
-                                  .type     = equip.itemType,
-                                  .shipDbId = m_shipView->getPlayerShipDbId()};
-  if (!m_lockerService->tryEquip(data))
-  {
-    warn("Failed to equip " + bsgo::str(equip.itemId) + " with type " + bsgo::str(equip.itemType));
-    return;
-  }
-
-  onItemEquiped.safeEmit("onInstallRequest");
+  m_shipView->tryEquipItem(equip.itemType, equip.itemId);
 }
 
 void LockerUiHandler::onUninstallRequest(const int itemId)
@@ -438,15 +429,7 @@ void LockerUiHandler::onUninstallRequest(const int itemId)
   }
 
   const auto &equip = m_shipItemsData.at(itemId);
-  const bsgo::LockerItemData data{.dbId     = equip.itemId,
-                                  .type     = equip.itemType,
-                                  .shipDbId = m_shipView->getPlayerShipDbId()};
-  if (!m_lockerService->tryUnequip(data))
-  {
-    return;
-  }
-
-  onItemUnequiped.safeEmit("onUninstallRequest");
+  m_shipView->tryUnequipItem(equip.itemType, equip.itemId);
 }
 
 } // namespace pge

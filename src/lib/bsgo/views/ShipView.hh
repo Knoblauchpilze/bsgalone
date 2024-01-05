@@ -51,6 +51,9 @@ class ShipView : public AbstractView
 
   void tryAcquireTarget(const Uuid &ship, const Eigen::Vector3f &position) const;
 
+  void tryEquipItem(const Item &itemType, const bsgo::Uuid &itemDbId) const;
+  void tryUnequipItem(const Item &itemType, const bsgo::Uuid &itemDbId) const;
+
   auto getPlayerShipWeapons() const -> std::vector<PlayerWeapon>;
   auto getPlayerShipComputers() const -> std::vector<PlayerComputer>;
   auto getPlayerShipSlots() const -> std::unordered_map<Slot, int>;

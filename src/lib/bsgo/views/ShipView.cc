@@ -1,6 +1,7 @@
 
 #include "ShipView.hh"
 #include "DockMessage.hh"
+#include "EquipMessage.hh"
 #include "JumpMessage.hh"
 #include "LockerUtils.hh"
 #include "SlotMessage.hh"
@@ -244,6 +245,26 @@ void ShipView::accelerateShip(const Uuid &ship, const Eigen::Vector3f &accelerat
 void ShipView::tryAcquireTarget(const Uuid &ship, const Eigen::Vector3f &position) const
 {
   m_messageQueue->pushMessage(std::make_unique<TargetMessage>(ship, position));
+}
+
+void ShipView::tryEquipItem(const Item &itemType, const bsgo::Uuid &itemDbId) const
+{
+  checkPlayerShipDbIdExists();
+  m_messageQueue->pushMessage(std::make_unique<EquipMessage>(bsgo::EquipType::EQUIP,
+                                                             *m_playerShipDbId,
+                                                             itemType,
+                                                             itemDbId,
+                                                             bsgo::EquipState::REQUESTED));
+}
+
+void ShipView::tryUnequipItem(const Item &itemType, const bsgo::Uuid &itemDbId) const
+{
+  checkPlayerShipDbIdExists();
+  m_messageQueue->pushMessage(std::make_unique<EquipMessage>(bsgo::EquipType::UNEQUIP,
+                                                             *m_playerShipDbId,
+                                                             itemType,
+                                                             itemDbId,
+                                                             bsgo::EquipState::REQUESTED));
 }
 
 auto ShipView::getPlayerShipWeapons() const -> std::vector<PlayerWeapon>
