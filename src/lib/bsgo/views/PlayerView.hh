@@ -28,6 +28,7 @@ class PlayerView : public AbstractView
   auto getPlayerShips() const -> std::vector<PlayerShip>;
 
   void trySelectShip(const Uuid &shipDbId) const;
+  void tryPurchase(const Item &type, const Uuid &itemDbId) const;
 
   void tryLogin(const std::string &name, const std::string &password) const;
   void trySignup(const std::string &name, const std::string &password, const Faction &faction) const;

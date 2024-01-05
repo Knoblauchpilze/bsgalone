@@ -2,6 +2,7 @@
 #include "PlayerView.hh"
 #include "HangarMessage.hh"
 #include "LoginMessage.hh"
+#include "PurchaseMessage.hh"
 
 namespace bsgo {
 
@@ -121,6 +122,13 @@ void PlayerView::trySelectShip(const Uuid &shipDbId) const
 {
   m_messageQueue->pushMessage(
     std::make_unique<HangarMessage>(shipDbId, ShipSwitchRequestState::REQUESTED));
+}
+
+void PlayerView::tryPurchase(const Item &type, const Uuid &itemDbId) const
+{
+  checkPlayerDbIdExists();
+  m_messageQueue->pushMessage(
+    std::make_unique<PurchaseMessage>(*m_playerDbId, type, itemDbId, PurchaseState::REQUESTED));
 }
 
 void PlayerView::tryLogin(const std::string &name, const std::string &password) const

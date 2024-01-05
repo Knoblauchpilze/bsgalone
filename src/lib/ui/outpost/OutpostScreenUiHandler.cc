@@ -1,6 +1,7 @@
 
 #include "OutpostScreenUiHandler.hh"
 #include "Constants.hh"
+#include "PurchaseMessage.hh"
 #include "ScreenCommon.hh"
 #include "UiTextMenu.hh"
 
@@ -9,6 +10,7 @@ namespace pge {
 OutpostScreenUiHandler::OutpostScreenUiHandler(const bsgo::Views &views,
                                                const bsgo::Services &services)
   : IUiHandler("outpost")
+  , bsgo::AbstractMessageListener({bsgo::MessageType::PURCHASE})
   , m_shipView(views.shipView)
   , m_lockerUi(std::make_unique<LockerUiHandler>(views, services))
   , m_shopUi(std::make_unique<ShopUiHandler>(views, services))
@@ -19,8 +21,6 @@ OutpostScreenUiHandler::OutpostScreenUiHandler(const bsgo::Views &views,
     throw std::invalid_argument("Expected non null ship view");
   }
 
-  m_shopUi->onItemPurchased
-    .connect_member<OutpostScreenUiHandler>(this, &OutpostScreenUiHandler::onChildUiChanged);
   m_lockerUi->onItemEquiped
     .connect_member<OutpostScreenUiHandler>(this, &OutpostScreenUiHandler::onChildUiChanged);
   m_lockerUi->onItemUnequiped
@@ -140,6 +140,17 @@ void OutpostScreenUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQ
   m_lockerUi->connectToMessageQueue(messageQueue);
   m_shopUi->connectToMessageQueue(messageQueue);
   m_hangarUi->connectToMessageQueue(messageQueue);
+
+  messageQueue.addListener(this);
+}
+
+void OutpostScreenUiHandler::onMessageReceived(const bsgo::IMessage &message)
+{
+  const auto &purchaseMessage = message.as<bsgo::PurchaseMessage>();
+  if (bsgo::PurchaseState::COMPLETED == purchaseMessage.getPurchaseState())
+  {
+    m_refreshRequested = true;
+  }
 }
 
 constexpr auto VIEW_LIST_WIDTH_TO_SCREEN_WIDTH_RATIO   = 0.2f;
