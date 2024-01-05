@@ -19,6 +19,7 @@
 #include "HangarMessageConsumer.hh"
 #include "JumpMessageConsumer.hh"
 #include "LoginMessageConsumer.hh"
+#include "PurchaseMessageConsumer.hh"
 #include "SlotMessageConsumer.hh"
 #include "TargetMessageConsumer.hh"
 #include "VelocityMessageConsumer.hh"
@@ -306,6 +307,10 @@ void Game::initializeMessageSystem()
   auto target = std::make_unique<bsgo::TargetMessageConsumer>(m_services, m_messageQueue.get());
   m_messageQueue->addListener(target.get());
   m_messageConsumers.emplace_back(std::move(target));
+
+  auto purchase = std::make_unique<bsgo::PurchaseMessageConsumer>(m_services, m_messageQueue.get());
+  m_messageQueue->addListener(purchase.get());
+  m_messageConsumers.emplace_back(std::move(purchase));
 
   m_messageQueue->addListener(&m_messageModule);
 }
