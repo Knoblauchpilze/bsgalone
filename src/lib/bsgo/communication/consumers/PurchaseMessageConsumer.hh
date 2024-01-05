@@ -20,6 +20,7 @@ class PurchaseMessageConsumer : public AbstractMessageConsumer
   IMessageQueue *const m_messageQueue{};
 
   void handleComputerPurchase(const Uuid &playerDbId, const Uuid &computerDbId) const;
+  void handleShipPurchase(const Uuid &playerDbId, const Uuid &shipDbId) const;
   void handleWeaponPurchase(const Uuid &playerDbId, const Uuid &weaponDbId) const;
 };
 
