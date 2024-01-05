@@ -15,7 +15,7 @@ namespace pge {
 class OutpostScreenUiHandler : public IUiHandler, public bsgo::AbstractMessageListener
 {
   public:
-  OutpostScreenUiHandler(const bsgo::Views &views, const bsgo::Services &services);
+  OutpostScreenUiHandler(const bsgo::Views &views);
   ~OutpostScreenUiHandler() override = default;
 
   void initializeMenus(const int width, const int height) override;

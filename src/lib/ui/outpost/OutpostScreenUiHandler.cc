@@ -8,12 +8,11 @@
 
 namespace pge {
 
-OutpostScreenUiHandler::OutpostScreenUiHandler(const bsgo::Views &views,
-                                               const bsgo::Services &services)
+OutpostScreenUiHandler::OutpostScreenUiHandler(const bsgo::Views &views)
   : IUiHandler("outpost")
   , bsgo::AbstractMessageListener({bsgo::MessageType::PURCHASE, bsgo::MessageType::EQUIP})
   , m_shipView(views.shipView)
-  , m_lockerUi(std::make_unique<LockerUiHandler>(views, services))
+  , m_lockerUi(std::make_unique<LockerUiHandler>(views))
   , m_shopUi(std::make_unique<ShopUiHandler>(views))
   , m_hangarUi(std::make_unique<HangarUiHandler>(views))
 {
