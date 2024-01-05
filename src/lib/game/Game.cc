@@ -16,6 +16,7 @@
 #include "OutpostScreenUiHandler.hh"
 
 #include "DockMessageConsumer.hh"
+#include "EquipMessageConsumer.hh"
 #include "HangarMessageConsumer.hh"
 #include "JumpMessageConsumer.hh"
 #include "LoginMessageConsumer.hh"
@@ -311,6 +312,10 @@ void Game::initializeMessageSystem()
   auto purchase = std::make_unique<bsgo::PurchaseMessageConsumer>(m_services, m_messageQueue.get());
   m_messageQueue->addListener(purchase.get());
   m_messageConsumers.emplace_back(std::move(purchase));
+
+  auto equip = std::make_unique<bsgo::EquipMessageConsumer>(m_services, m_messageQueue.get());
+  m_messageQueue->addListener(equip.get());
+  m_messageConsumers.emplace_back(std::move(equip));
 
   m_messageQueue->addListener(&m_messageModule);
 }
