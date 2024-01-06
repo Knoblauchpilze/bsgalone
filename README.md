@@ -297,6 +297,48 @@ In the application we made the [UiHandlers](src/lib/ui/) implements the message 
 
 On the other hand, the systems are pushing messages to the queue not knowing (and not caring) if some component will read and process them or not. This seems quite interesting when considering the future client/server architecture.
 
+# Client/Server architecture
+
+## Generalities
+
+The aim of the project is to provide a client server architecture where multiple players can connect to the game and play together. In order to achieve this we decided to go for an authoritative server and separate client.
+
+From the code perspective there are elements and structures that will be used both by the client and the server.
+
+It is not so clear cut whether writing the server and the client in the same language bring huge benefits. This [article](https://softwareengineering.stackexchange.com/questions/171343/how-important-is-using-the-same-language-for-client-and-server) summarizes the research we did on this topic. As a summary: it depends™.
+
+## Discussion on our approach
+
+For now the client is written in C++ thanks to the `PixelGameEngine` renderer. We also developed the rest of the game (the ECS and the interaction with the database) in C++ for this reason.
+
+As we only started to have a look at the server a bit later on, we had a choice to make between continuing the implementation of the server also in C++ or using a different language.
+
+Our initial idea was to use `Go` as the server's language: we are more familiar with it and it handles the threading and networking quite well.
+
+However the problem with it would be that we would have to essentially make some wrappers around the core game classes (the ECS system) as we don't want to rewrite it. Also the network part would probably involve some conversions between the data structure we receive in Go and the binding to communicate to the server in C++. This is a similar situation as we havd in the past for other projects and it was usually a bit of a pain to handle. Moreover, the networking shouldn't be such an issue that we would consider writing the server in another language: as we anyway will have to handle some level of networking on the client, it seems a bit counterproductive to do it a second time in the server.
+
+## Structure of this repository
+
+We divided the [source](src) folder into several directories to make it easy to segregate code that belong to one application from the rest.
+
+### bsgo
+
+Thie [bsgo](src/bsgo) folder contains the core library defining the Entity Component System and the interaction with the database. This will most likely be used both in the server and the client side.
+
+### client
+
+The [client](src/client) folder regroups all the code that is used exclusively by the client. It links against the core library and enriches it to present a compelling application to the player.
+
+### server
+
+The [server](src/server) folder defines all the server specific code. It will most likely be a smart wrapper around the core library of the project to expose some networking capabilities.
+
+### Add elements to the project
+
+When developing new features, we will now ask ourselves the question whether it can potentially be used both by the client and the server or only one of them. Depending on the answer to this question we will put the code in the adequate folder.
+
+It can also be that later on we realize that the `bsgo` library is too big, or that some separate features (for example networking or Data Transfer Objects) can be shared: this could be achieved by adding more top level folders in the [src](src) directory.
+
 # Future work
 
 ## Useful links
