@@ -47,6 +47,47 @@ Those were taken from [this](https://preshing.com/20170511/how-to-build-a-cmake-
 
 Then we can attach the library as a dependency of the project as described in the rest of the install [guide](https://github.com/jtv/libpqxx/blob/master/BUILDING-cmake.md#option-b-make-use-of-a-separately-installed-libpqxx).
 
+### asio
+
+#### Install on the system
+
+This [Stack Overflow topic](https://stackoverflow.com/questions/70848366/unable-to-move-asiosslstream-to-handler) seems to indicate that there's a package for it under:
+```bash
+apt-get install libasio-dev
+```
+
+However this seems to be a relatively old version (1.18, from August 2020). Instead, we decided to download the newest revision from the [official website](https://think-async.com/Asio/). Click on the download link from the [download page](https://think-async.com/Asio/Download.html).
+
+The download process gives a `tar.bz2` file which can be extracted with (change the version as needed):
+```bash
+tar -xvjf asio-1.28.0.tar.bz2
+```
+
+**Note:** we used version `1.28` for the development.
+
+Asio is a header only library so we then just need to copy this to `usr/local/include`:
+```bash
+sudo cp -r asio-1.28.0/include /usr/local/include
+```
+
+You can remove the `Makefile.am` and `Makefile.in` files from this directory to not pollute the includes.
+
+#### Use the library in the project
+
+After this we need to instruct cmake to find the library. This shouldn't be an issue as it is now installed on the system directories. However we faced another problem. When looking at `asio.hpp` the includes look fine:
+
+![Asio include ok](resources/asio_include_ok.png)
+
+But when going into for example `any_completion_executor.hpp` we see this:
+
+![Asio include ko](resources/asio_include_ko.png)
+
+This is a problem as relatively to the `any_completion_executor.hpp` the config file is in the same directory. So it seems the library expect to have the `/usr/local/include` directory as a `-I` directive to correctly be set up.
+
+Looking at a few topics on the internet it seems like this is usually handled by putting the library directly in the project's folder, or by adding some include pathes in the CMake files (see [1](https://stackoverflow.com/questions/60592615/how-would-i-include-asio-library-using-cmake) or [2](https://stackoverflow.com/questions/53945148/how-to-use-the-c-standalone-asio-library)). Another way is to write manually a `FindAsio.cmake` file to find the corresponding package and set the include path automatically.
+
+We also used this approach in the [CMakeLists.txt](src/server/CMakeLists.txt) of the server for example. This is sufficient to allow development, we might revisit this later on.
+
 # Setting up the DB
 
 ## Install postgresql
