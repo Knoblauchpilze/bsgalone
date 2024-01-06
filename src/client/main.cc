@@ -39,16 +39,19 @@ int main(int /*argc*/, char ** /*argv*/)
     logger.logError(utils::Level::Critical,
                     "Caught internal exception while setting up application",
                     e.what());
+    return EXIT_FAILURE;
   }
   catch (const std::exception &e)
   {
     logger.logError(utils::Level::Critical,
                     "Caught internal exception while setting up application",
                     e.what());
+    return EXIT_FAILURE;
   }
   catch (...)
   {
     logger.logMessage(utils::Level::Critical, "Unexpected error while setting up application");
+    return EXIT_FAILURE;
   }
 
   return EXIT_SUCCESS;
