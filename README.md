@@ -192,21 +192,21 @@ In comparison with the `agents` project we decide to follow the paradigm a bit b
 
 ### Entity
 
-The [Entity](src/lib/bsgo/entities/Entity.hh) is the base class and is basically just an identifier with a list of components. We just added some convenience methods to assess the existence of some component and access them in a secure way.
+The [Entity](src/bsgo/entities/Entity.hh) is the base class and is basically just an identifier with a list of components. We just added some convenience methods to assess the existence of some component and access them in a secure way.
 
 ### Component
 
-A [Component](src/lib/bsgo/components/IComponent.hh) is the base class for all components. It just defines one basic method to update the component with some elapsed time. This might or might not be useful to the inheriting components but allows to have some quantity varying over time.
+A [Component](src/bsgo/components/IComponent.hh) is the base class for all components. It just defines one basic method to update the component with some elapsed time. This might or might not be useful to the inheriting components but allows to have some quantity varying over time.
 
 The goal of the implementation is to keep away the processing from the components in favour of putting all of them in the systems.
 
 ### System
 
-A [System](src/lib/bsgo/systems/ISystem.hh) is iterating over the entities and only processing the ones that are interesting. Our implementation defines an `AbstractSystem` which aims at iterating over the entities.
+A [System](src/bsgo/systems/ISystem.hh) is iterating over the entities and only processing the ones that are interesting. Our implementation defines an `AbstractSystem` which aims at iterating over the entities.
 
 The constructor expects the inheriting classes to pass a callback which will be used to filter the entities and keep only the ones that are interesting for the system. This typically involves checking if an entity has some components which are handled by the system.
 
-Typically if an entity defines a [HealthComponent](src/lib/bsgo/components/HealthComponent.hh) we expect it to be processed by the [HealthSystem](src/lib/bsgo/systems/HealthSystem.hh).
+Typically if an entity defines a [HealthComponent](src/bsgo/components/HealthComponent.hh) we expect it to be processed by the [HealthSystem](src/bsgo/systems/HealthSystem.hh).
 
 ## Database interaction
 
@@ -226,7 +226,7 @@ In this context, we implemented a business logic layer which aims at separating 
 
 This is probably why it's not popular to put all of this logic in a stored procedure: it is quite complex and can get messy really fast when writing it in the language of the procedure. It is also not easy to debug or validate parameters within the procedures. On the other hand we can very easily do this if we keep a business logic layer in the application.
 
-We chose to use a concept of services, all inheriting from a base [IService](src/lib/bsgo/services/IService.hh) class: there's a service for each kind of action (for example signing up, purchasing an item, etc.). Each of them define the conditions to meet for an action to be allowed, and the logic to actually perform the action.
+We chose to use a concept of services, all inheriting from a base [IService](src/bsgo/services/IService.hh) class: there's a service for each kind of action (for example signing up, purchasing an item, etc.). Each of them define the conditions to meet for an action to be allowed, and the logic to actually perform the action.
 
 Later on, it can also be relatively easily be extended to not do all the validations locally but rather by contacting a remote server.
 
@@ -279,21 +279,21 @@ In order to achieve this, we created a messaging system. This allows communicati
 
 ### Message queue
 
-The [IMessageQueue](src/lib/bsgo/communication/IMessageQueue.hh) allows to keep track of all the messages needing to be processed. These messages can be registred through the interface method `pushMessage`.
+The [IMessageQueue](src/bsgo/communication/IMessageQueue.hh) allows to keep track of all the messages needing to be processed. These messages can be registred through the interface method `pushMessage`.
 
 The `Game` class holds an attribute of type message queue and takes care of calling the `processMessages` once per frame. This could be refined in the future: for example when these events will be generated on the server side, we might want to have a processing thread sending the messages back to the clients.
 
 ### Listeners
 
-The [IMessageListener](src/lib/bsgo/communication/IMessageListener.hh) allows anyone to register to the message queue and get notified of the messages. We expect such objects to provide indications about which messages they are interested about and to feed them a message. It is guaranteed that the messages receieved through the `onMessageReceived` method will be of the right type for the listener.
+The [IMessageListener](src/bsgo/communication/IMessageListener.hh) allows anyone to register to the message queue and get notified of the messages. We expect such objects to provide indications about which messages they are interested about and to feed them a message. It is guaranteed that the messages receieved through the `onMessageReceived` method will be of the right type for the listener.
 
 ### Messages
 
-The meat of the messaging process is the [IMessage](src/lib/bsgo/messages/IMessage.hh) class. This interface defines a type of message and we can add more type as we see fit. Most of the time a message corresponds to a flow in the game, such as jumping or scanning a resource.
+The meat of the messaging process is the [IMessage](src/bsgo/messages/IMessage.hh) class. This interface defines a type of message and we can add more type as we see fit. Most of the time a message corresponds to a flow in the game, such as jumping or scanning a resource.
 
 ### Communication between the UI and the ECS
 
-In the application we made the [UiHandlers](src/lib/ui/) implements the message listener interface. They register themselves to the message queue and can be notified of relevant messages.
+In the application we made the [UiHandlers](src/ui) implements the message listener interface. They register themselves to the message queue and can be notified of relevant messages.
 
 On the other hand, the systems are pushing messages to the queue not knowing (and not caring) if some component will read and process them or not. This seems quite interesting when considering the future client/server architecture.
 
