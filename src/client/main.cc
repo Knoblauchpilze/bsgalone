@@ -1,5 +1,5 @@
 
-/// @brief - A minimalistic bsg implementation
+/// @brief - A minimalistic bsg client implementation
 
 #include "App.hh"
 #include "AppDesc.hh"

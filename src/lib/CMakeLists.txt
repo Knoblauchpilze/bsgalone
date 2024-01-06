@@ -1,13 +1,7 @@
-project (bsgalone_lib)
-
-set (CMAKE_CXX_STANDARD 20)
-set (CMAKE_CXX_STANDARD_REQUIRED ON)
-set (CMAKE_CXX_EXTENSIONS OFF)
-
-#set (CMAKE_VERBOSE_MAKEFILE ON)
-set (CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 add_library (bsgalone_lib SHARED "")
+
+set (CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 find_package (libpqxx REQUIRED)
 
