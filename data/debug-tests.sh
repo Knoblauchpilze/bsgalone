@@ -2,4 +2,4 @@
 
 CURR_DIR=$(dirname $0)
 
-gdb --args ./bin/bsgalone-tests
+gdb --args ./bin/bsgalone_tests
