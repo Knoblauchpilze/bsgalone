@@ -275,6 +275,12 @@ For additional flexibility we could also create an enum which defines the type o
 
 The application also needs to make some changes in the UI based on what is happening in the ECS. For example when an asteroid is scanned, we want to display a message indicating the result of the analysis. Or when an entity is killed or an asteroid destroyed, we might also want to display some message to represent it.
 
+Similarly, when the user clicks on interactive parts of the UI, we might need to make some changes to the entities: for example if the `DOCK` button is clicked, or an item is purchased, we need to reflect this in the ECS if it is relevant.
+
+Later on when the application will be split into a client/server architecture, some of the interactions we presented before will be either received from the server (an enemy died) or sent to the server for validation (request to purchase an item).
+
+These considerations made us realize that we needed some decoupling between what happens in the UI (respectively the ECS) and how is it applied to the ECS (respectively the UI).
+
 In order to achieve this, we created a messaging system. This allows communicating from the systems operating on the entities to the UI in a decoupled and asynchronous way.
 
 ### Message queue
@@ -291,11 +297,33 @@ The [IMessageListener](src/bsgo/communication/IMessageListener.hh) allows anyone
 
 The meat of the messaging process is the [IMessage](src/bsgo/messages/IMessage.hh) class. This interface defines a type of message and we can add more type as we see fit. Most of the time a message corresponds to a flow in the game, such as jumping or scanning a resource.
 
+You can find other examples of messages in the same source folder.
+
 ### Communication between the UI and the ECS
 
-In the application we made the [UiHandlers](src/ui) implements the message listener interface. They register themselves to the message queue and can be notified of relevant messages.
+In the application we gave the [UiHandlers](src/client/lib/ui) the possibility to register themselves (or some other components) to the message queue of the application.
 
-On the other hand, the systems are pushing messages to the queue not knowing (and not caring) if some component will read and process them or not. This seems quite interesting when considering the future client/server architecture.
+A common pattern is to make the handler implement the message listener interface and handle some relevant messages.
+
+On the other hand, the systems are pushing messages to the queue not knowing (and not caring) if some component will read and process them or not. This seems quite interesting when considering the future client/server architecture. For example when the `DOCK` button is clicked, the UI will send a message indicating that such an event happened. If the event is successfully processed and considered valid, we consider that some other part of the application will most likely change the active screen.
+
+### Consumers
+
+We followed the [Publish-Subscribe](https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern) pattern when handling messages. For each type of message we have a corresponding consumer. For example for dock messages we have a [DockMessageConsumer](src/bsgo/communication/consumers/DockMessageConsumer.hh).
+
+This component registers itself to the message queue and indicates its interest in receiving the dock messages. When one is received, we can intercept the message and perform the necessary verification before processing it: for example we might check that the ship concerned by the message is not already docked, or that it is close enough to the outpost or that it does not try to dock to an outpost in a different system etc.
+
+Most of the time, the consumers are just calling the corresponding service (for example the `DockMessageConsumer` relies on the [ShipService](src/bsgo/services/ShipService.hh)).
+
+This approach is flexible as it allows to easily keep messages which would fail to be processed for later analysis and also probably also make it easy to send those messages to the server from each client.
+
+### Updating the Game
+
+With the previous example of the dock button being clicked, we still have to explain how the UI is finally notified about the success or the failure of the operation.
+
+We implemented a [GameMessageModule](src/client/lib/game/GameMessageModule.hh) class. This class is a message listener and registers itself for certain messages which impact the UI. Typically the `DockMessage` will be receieved by this class and analyzed: if it succeeds we can notify the `Game` class by a direct method call to update the active screen.
+
+The strength of this system is that if the processing fails for whatever reason we will never receive the message indicating that the dock succeeded (because it did not) and so the UI will not make any changes that would have to be reverted.
 
 # Client/Server architecture
 
