@@ -35,13 +35,13 @@ drunclient: sandboxDebug
 
 # Run server
 runserver: sandbox
-	cd sandbox && ./run.sh bsgalone-server
+	cd sandbox && ./run.sh bsgalone_server
 
 # Debug server
 drunserver: sandboxDebug
 
 v: sandboxDebug
-	cd sandbox && ./valgrind.sh bsgalone-server
+	cd sandbox && ./valgrind.sh bsgalone_server
 
 profile: sandboxDebug
 	cd sandbox && ./profile.sh local
