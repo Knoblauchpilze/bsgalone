@@ -1,10 +1,6 @@
 
-/// @brief - A minimalistic bsg client implementation
+/// @brief - A minimalistic bsg server implementation
 
-#include "App.hh"
-#include "AppDesc.hh"
-#include "IsometricViewFrame.hh"
-#include "TopViewFrame.hh"
 #include <core_utils/CoreException.hh>
 #include <core_utils/LoggerLocator.hh>
 #include <core_utils/PrefixedLogger.hh>

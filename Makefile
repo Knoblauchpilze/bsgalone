@@ -27,11 +27,11 @@ sandboxDebug: debug copy copyDebug
 
 # Run client
 runclient: sandbox
-	cd sandbox && ./run.sh bsgalone-client
+	cd sandbox && ./run.sh bsgalone_client
 
 # Debug client
 drunclient: sandboxDebug
-	cd sandbox && ./debug.sh bsgalone-client
+	cd sandbox && ./debug.sh bsgalone_client
 
 # Run server
 runserver: sandbox
