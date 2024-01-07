@@ -96,14 +96,14 @@ void UiTimedMenu::updateOpacity(const float perc)
 {
   if (m_applyToBackGround)
   {
-    const auto bg = opacifyFromPercentage(m_menu->getBgColor(), perc);
+    const auto bg = makeTransparentFromPercentage(m_menu->getBgColor(), perc);
     m_menu->updateBgColor(bg);
   }
 
   const auto maybeTextMenu = dynamic_cast<UiTextMenu *>(m_menu.get());
   if (nullptr != maybeTextMenu)
   {
-    const auto text = opacifyFromPercentage(maybeTextMenu->getTextColor(), perc);
+    const auto text = makeTransparentFromPercentage(maybeTextMenu->getTextColor(), perc);
     maybeTextMenu->updateTextColor(text);
   }
 }

@@ -96,7 +96,7 @@ void MapScreenUiHandler::generateControlButtons(const int width, const int heigh
                     .dims              = controlButtonDimsPixels,
                     .gameClickCallback = [this](Game &g) { g.setScreen(Screen::GAME); }};
 
-  auto bg         = bgConfigFromColor(olc::VERY_DARK_COBALT_BLUE);
+  auto bg         = bgConfigFromColor(toOlcPixel(Color::VERY_DARK_COBALT_BLUE));
   auto text       = textConfigFromColor("Close", olc::WHITE);
   auto quitButton = std::make_unique<UiTextMenu>(config, bg, text);
   m_buttons.push_back(std::move(quitButton));

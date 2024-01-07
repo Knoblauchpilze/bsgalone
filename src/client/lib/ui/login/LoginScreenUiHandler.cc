@@ -60,8 +60,8 @@ void LoginScreenUiHandler::render(SpriteRenderer &engine) const
 }
 
 namespace {
-const auto LOGIN_BUTTON_ACTIVE_COLOR   = transparent(olc::DARK_GREEN, alpha::SemiOpaque);
-const auto LOGIN_BUTTON_INACTIVE_COLOR = transparent(olc::DARK_BLUE, alpha::SemiOpaque);
+const auto LOGIN_BUTTON_ACTIVE_COLOR   = makeTransparent(olc::DARK_GREEN, alpha::SEMI_OPAQUE);
+const auto LOGIN_BUTTON_INACTIVE_COLOR = makeTransparent(olc::DARK_BLUE, alpha::SEMI_OPAQUE);
 
 constexpr auto LOGIN_TEXT  = "AU JEU!!";
 constexpr auto SIGNUP_TEXT = "Sign up";
@@ -69,11 +69,11 @@ constexpr auto SIGNUP_TEXT = "Sign up";
 constexpr auto LOGIN_FAILURE_TEXT  = "Login failed, check your credentials!";
 constexpr auto SIGNUP_FAILURE_TEXT = "Sign up failed, check your credentials!";
 
-const auto COLONIAL_BUTTON_ACTIVE_COLOR   = transparent(olc::VERY_DARK_BLUE, alpha::AlmostOpaque);
-const auto COLONIAL_BUTTON_INACTIVE_COLOR = transparent(olc::DARK_BLUE, alpha::AlmostOpaque);
+const auto COLONIAL_BUTTON_ACTIVE_COLOR = makeTransparent(olc::VERY_DARK_BLUE, alpha::ALMOST_OPAQUE);
+const auto COLONIAL_BUTTON_INACTIVE_COLOR = makeTransparent(olc::DARK_BLUE, alpha::ALMOST_OPAQUE);
 
-const auto CYLON_BUTTON_ACTIVE_COLOR   = transparent(olc::VERY_DARK_RED, alpha::AlmostOpaque);
-const auto CYLON_BUTTON_INACTIVE_COLOR = transparent(olc::DARK_RED, alpha::AlmostOpaque);
+const auto CYLON_BUTTON_ACTIVE_COLOR   = makeTransparent(olc::VERY_DARK_RED, alpha::ALMOST_OPAQUE);
+const auto CYLON_BUTTON_INACTIVE_COLOR = makeTransparent(olc::DARK_RED, alpha::ALMOST_OPAQUE);
 } // namespace
 
 void LoginScreenUiHandler::updateUi()
@@ -199,7 +199,7 @@ void LoginScreenUiHandler::generateProceedButton(const int width, const int heig
                           .dims          = loginButtonDimsPixels,
                           .clickCallback = [this]() { tryLogin(); }};
 
-  const auto bg   = bgConfigFromColor(olc::DARK_COBALT_BLUE);
+  const auto bg   = bgConfigFromColor(toOlcPixel(Color::DARK_COBALT_BLUE));
   const auto text = textConfigFromColor(LOGIN_TEXT, olc::WHITE);
   m_proceedButton = std::make_unique<UiTextMenu>(config, bg, text);
 }

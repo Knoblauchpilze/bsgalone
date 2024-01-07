@@ -25,13 +25,13 @@ auto addTextFieldSectionToMenu(UiMenu &mainPanel,
   auto textFieldSection = generateBlankHorizontalMenu();
 
   const MenuConfig config{.dims = DUMMY_DIMENSION, .highlightable = false};
-  auto bg    = bgConfigFromColor(transparent(olc::DARK_BLUE, alpha::SemiOpaque));
+  auto bg    = bgConfigFromColor(makeTransparent(olc::DARK_BLUE, alpha::SEMI_OPAQUE));
   auto text  = textConfigFromColor(textFieldlabel, olc::GREY, TextAlignment::RIGHT);
   auto label = std::make_unique<UiTextMenu>(config, bg, text);
   textFieldSection->addMenu(std::move(label));
 
   TextFieldConfig fieldConfig{.dims = DUMMY_DIMENSION};
-  bg               = bgConfigFromColor(transparent(olc::WHITE, alpha::SemiOpaque));
+  bg               = bgConfigFromColor(makeTransparent(olc::WHITE, alpha::SEMI_OPAQUE));
   const auto value = defaultValue.value_or("");
   text             = textConfigFromColor(value, olc::BLACK, TextAlignment::LEFT);
 

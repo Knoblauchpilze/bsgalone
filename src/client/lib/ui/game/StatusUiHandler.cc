@@ -33,7 +33,7 @@ void StatusUiHandler::initializeMenus(const int width, const int height)
                           .dims          = statusMenuDims,
                           .layout        = MenuLayout::HORIZONTAL,
                           .highlightable = false};
-  auto bg = bgConfigFromColor(transparent(olc::WHITE, alpha::AlmostTransparent));
+  auto bg = bgConfigFromColor(makeTransparent(olc::WHITE, alpha::ALMOST_TRANSPARENT));
 
   m_statusBar = std::make_unique<UiMenu>(config, bg);
 
@@ -128,7 +128,7 @@ void StatusUiHandler::generateLogoutConfirmationPanel(const int width, const int
   const olc::vi2d logoutPos{(width - logoutDims.x) / 2, (height - logoutDims.y) / 2};
 
   config               = MenuConfig{.pos = logoutPos, .dims = logoutDims};
-  bg                   = bgConfigFromColor(transparent(olc::BLACK, alpha::AlmostOpaque));
+  bg                   = bgConfigFromColor(makeTransparent(olc::BLACK, alpha::ALMOST_OPAQUE));
   m_logoutConfirmation = std::make_unique<UiMenu>(config, bg);
 
   m_logoutConfirmation->addMenu(generateSpacer());

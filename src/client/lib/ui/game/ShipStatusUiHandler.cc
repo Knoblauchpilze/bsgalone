@@ -77,7 +77,7 @@ void ShipStatusUiHandler::initializeJumpPanel(const int width, const int height)
                           .dims          = JUMP_UI_PIXEL_DIMENSION,
                           .highlightable = false};
 
-  auto bg     = bgConfigFromColor(transparent(olc::DARK_RED, alpha::SemiOpaque));
+  auto bg     = bgConfigFromColor(makeTransparent(olc::DARK_RED, alpha::SEMI_OPAQUE));
   m_jumpPanel = std::make_unique<UiMenu>(config, bg);
 
   bg        = bgConfigFromColor(olc::BLANK);
