@@ -22,37 +22,37 @@ class CoordinateFrame : public utils::CoreObject
   /// is computed from the ratio between the tiles viewport and the
   /// pixels viewport.
   /// @return - the size of a tile in pixels.
-  olc::vf2d tileSize() const noexcept;
+  auto tileSize() const noexcept -> olc::vf2d;
 
   /// @brief - Returns the current viewport in tiles.
   /// @return - the viewport of this coordinate frame in tiles.
-  CenteredViewport tilesViewport() const noexcept;
+  auto tilesViewport() const noexcept -> CenteredViewport;
 
   /// @brief - Returns the current viewport in pixels.
   /// @return - the viewport of this coordinate frame in pixels.
-  TopLeftViewport pixelsViewport() const noexcept;
+  auto pixelsViewport() const noexcept -> TopLeftViewport;
 
   /// @brief - Convert the input tile coordinates to the corresponding
   /// pixel position.
   /// @param x - x coordinate in tiles.
   /// @param y - y coordinate in tiles.
   /// @return - the pixel position for the input tile position.
-  olc::vf2d tilesToPixels(float x, float y) const noexcept;
+  auto tilesToPixels(float x, float y) const noexcept -> olc::vf2d;
 
   /// @brief - Convert the input pixel coordinates to the corresponding
   /// tile coordinates.
   /// @param x - x coordinate in pixels.
   /// @param y - y coordinate in pixels.
   /// @return - the tile position for the input pixel position.
-  olc::vf2d pixelsToTiles(float x, float y) const noexcept;
+  auto pixelsToTiles(float x, float y) const noexcept -> olc::vf2d;
 
   /// @brief - Similar to the above method but convert the tiles position
   /// to an integer representation.
   /// @param pixels - pixels position to convert.
   /// @param intraTile - output argument storing the fractional tile part.
   /// @return - the integer tiles position.
-  olc::vi2d pixelsToTilesAndIntra(const olc::vf2d &pixels,
-                                  olc::vf2d *intraTile = nullptr) const noexcept;
+  auto pixelsToTilesAndIntra(const olc::vf2d &pixels, olc::vf2d *intraTile = nullptr) const noexcept
+    -> olc::vi2d;
 
   /// @brief - Zoom on the specified position expressed in pixels
   /// coordinate frame. This will fix this position and make the
@@ -89,13 +89,13 @@ class CoordinateFrame : public utils::CoreObject
   /// them to pixels normalized coordinates.
   /// @param tiles - normalized coordinate in tiles.
   /// @return - the normalized pixel position for the input tile position.
-  virtual olc::vf2d normalizedTilesToPixels(const olc::vf2d &tiles) const noexcept = 0;
+  virtual auto normalizedTilesToPixels(const olc::vf2d &tiles) const noexcept -> olc::vf2d = 0;
 
   /// @brief - Given some normalized coordinates in pixels space, convert
   /// them to tiles normalized coordinates.
   /// @param pixels - normalized coordinate in pixels.
   /// @return - the normalized tile position for the input pixel position.
-  virtual olc::vf2d normalizedPixelsToTiles(const olc::vf2d &pixels) const noexcept = 0;
+  virtual auto normalizedPixelsToTiles(const olc::vf2d &pixels) const noexcept -> olc::vf2d = 0;
 
   private:
   /// @brief - Perform the zoom operation to fix the position in input (in

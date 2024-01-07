@@ -15,33 +15,33 @@ class Viewport
 
   /// @brief - Returns the center of this viewport.
   /// @return - the center of the viewport.
-  virtual Vectorf center() const noexcept = 0;
+  virtual auto center() const noexcept -> Vectorf = 0;
 
   /// @brief - Returns the top left corner of this viewport.
   /// @return - the top left corner of the viewport.
-  virtual Vectorf topLeft() const noexcept = 0;
+  virtual auto topLeft() const noexcept -> Vectorf = 0;
 
   /// @brief - Returns the dimensions of the viewport.
   /// @return - the dimensions of the viewport.
-  virtual Vectorf dims() const noexcept = 0;
+  virtual auto dims() const noexcept -> Vectorf = 0;
 
-  Vectorf relativeCoords(const Vectorf &pos) const noexcept;
+  auto relativeCoords(const Vectorf &pos) const noexcept -> Vectorf;
 
   /// @brief - Returns the relative coordinates of the input position
   /// compared to this viewport. In this mode, the output coordinates
   /// range from `[0; 1]` when one axis is within the viewport.
   /// @param pos - the position to convert.
   /// @return - the relative coords for this position.
-  virtual Vectorf relativeCoords(const float x, const float y) const noexcept = 0;
+  virtual auto relativeCoords(const float x, const float y) const noexcept -> Vectorf = 0;
 
-  Vectorf absoluteCoords(const Vectorf &pos) const noexcept;
+  auto absoluteCoords(const Vectorf &pos) const noexcept -> Vectorf;
 
   /// @brief - Returns the absolute coordinates of the input position
   /// compared to this viewport. In this mode, the input coordinates
   /// range from `[0; 1]` when one axis is within the viewport.
   /// @param pos - the position to convert.
   /// @return - the absolute coords for this position.
-  virtual Vectorf absoluteCoords(const float x, const float y) const noexcept = 0;
+  virtual auto absoluteCoords(const float x, const float y) const noexcept -> Vectorf = 0;
 
   /// @brief - Moves this viewport to the new position. Depending
   /// on the semantic of the viewport it might have a different
@@ -99,5 +99,5 @@ class Viewport
                        const float sy) const noexcept = 0;
 };
 
-using ViewportPtr = std::shared_ptr<Viewport>;
+using ViewportPtr = std::unique_ptr<Viewport>;
 } // namespace pge
