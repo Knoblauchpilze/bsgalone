@@ -73,18 +73,18 @@ class CoordinateFrame : public utils::CoreObject
   /// @param pixelsOrigin - the origin represents where the translation
   /// started. This position will be kept constant (i.e. under the mouse
   /// cursor) during the translation process.
-  void beginTranslation(const olc::vf2d &pixelsOrigin);
+  void beginTranslation(const Vec2f &pixelsOrigin);
 
   /// @brief - Translate the coordinate frame. The input parameter represents
   /// the new position of the origin passed when calling the `beginTranslation`
   /// method.
   /// @param pixelsOrigin - the new position of the origin.
-  void translate(const olc::vf2d &pixelsOrigin);
+  void translate(const Vec2f &pixelsOrigin);
 
   /// @brief - Move the center of the tiles' viewport of the coordinate frame
   /// to the desired location.
   /// @param tilesCenter - the new center of the tiles viewport.
-  void moveTo(const olc::vf2d &tilesCenter);
+  void moveTo(const Vec2f &tilesCenter);
 
   protected:
   /// @brief - Given some normalized coordinates in tiles space, convert

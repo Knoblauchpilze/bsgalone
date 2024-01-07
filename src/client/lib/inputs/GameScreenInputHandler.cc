@@ -66,7 +66,7 @@ void GameScreenInputHandler::keepShipCentered(CoordinateFrame &frame)
 {
   const auto ent = m_shipView->getPlayerShip();
   const auto pos = ent.transformComp().position();
-  const olc::vf2d pos2d{pos(0), pos(1)};
+  const Vec2f pos2d{pos(0), pos(1)};
   frame.moveTo(pos2d);
 }
 

@@ -132,14 +132,14 @@ TEST(Unit_TopViewFrame, Translate)
 {
   auto frame = generateTopViewFrame();
 
-  olc::vf2d origin{20.0f, 51.0f};
+  Vec2f origin{20.0f, 51.0f};
   frame->beginTranslation(origin);
 
-  olc::vf2d translationTiles{2.6f, -1.7f};
+  Vec2f translationTiles{2.6f, -1.7f};
   const olc::vf2d scale{constants::Pixels::DIMS.x / constants::Tiles::DIMS.x,
                         constants::Pixels::DIMS.y / constants::Tiles::DIMS.y};
 
-  auto final = origin + translationTiles * scale;
+  auto final = origin + translationTiles * Vec2f(scale.x, scale.y);
   frame->translate(final);
 
   auto tiles = frame->tilesViewport();
@@ -163,10 +163,10 @@ TEST(Unit_TopViewFrame, Translate_PreserveTileSize)
                            constants::Pixels::DIMS.y / constants::Tiles::DIMS.y};
   EXPECT_EQ(tile, expectedSize);
 
-  olc::vf2d origin{20.0f, 51.0f};
+  Vec2f origin{20.0f, 51.0f};
   frame->beginTranslation(origin);
 
-  olc::vf2d final{37.2f, 43.2f};
+  Vec2f final{37.2f, 43.2f};
   frame->translate(final);
 
   tile = frame->tileSize();
