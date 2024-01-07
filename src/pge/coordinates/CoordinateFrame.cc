@@ -11,7 +11,7 @@ CoordinateFrame::CoordinateFrame(const CenteredViewport &tiles, const TopLeftVie
   setService("coordinate");
 }
 
-olc::vf2d CoordinateFrame::tileSize() const noexcept
+auto CoordinateFrame::tileSize() const noexcept -> olc::vf2d
 {
   const auto tilesDims  = m_tilesViewport.dims();
   const auto pixelsDims = m_pixelsViewport.dims();
@@ -19,17 +19,17 @@ olc::vf2d CoordinateFrame::tileSize() const noexcept
   return pixelsDims / tilesDims;
 }
 
-CenteredViewport CoordinateFrame::tilesViewport() const noexcept
+auto CoordinateFrame::tilesViewport() const noexcept -> CenteredViewport
 {
   return m_tilesViewport;
 }
 
-TopLeftViewport CoordinateFrame::pixelsViewport() const noexcept
+auto CoordinateFrame::pixelsViewport() const noexcept -> TopLeftViewport
 {
   return m_pixelsViewport;
 }
 
-olc::vf2d CoordinateFrame::tilesToPixels(float x, float y) const noexcept
+auto CoordinateFrame::tilesToPixels(float x, float y) const noexcept -> olc::vf2d
 {
   auto rel = m_tilesViewport.relativeCoords(x, y);
 
@@ -50,7 +50,7 @@ olc::vf2d CoordinateFrame::tilesToPixels(float x, float y) const noexcept
   return m_pixelsViewport.absoluteCoords(transformed.x, transformed.y);
 }
 
-olc::vf2d CoordinateFrame::pixelsToTiles(float x, float y) const noexcept
+auto CoordinateFrame::pixelsToTiles(float x, float y) const noexcept -> olc::vf2d
 {
   auto rel = m_pixelsViewport.relativeCoords(x, y);
   // Reverse operation of the `tilesToPixels`.
@@ -62,8 +62,8 @@ olc::vf2d CoordinateFrame::pixelsToTiles(float x, float y) const noexcept
   return m_tilesViewport.absoluteCoords(transformed.x, transformed.y);
 }
 
-olc::vi2d CoordinateFrame::pixelsToTilesAndIntra(const olc::vf2d &pixels,
-                                                 olc::vf2d *intraTile) const noexcept
+auto CoordinateFrame::pixelsToTilesAndIntra(const olc::vf2d &pixels,
+                                            olc::vf2d *intraTile) const noexcept -> olc::vi2d
 {
   auto tiles = pixelsToTiles(pixels.x, pixels.y);
 
@@ -96,9 +96,9 @@ void CoordinateFrame::beginTranslation(const olc::vf2d &pixelsOrigin)
 
 void CoordinateFrame::translate(const olc::vf2d &pixelsOrigin)
 {
-  olc::vf2d originTiles = pixelsToTiles(m_pixelsTranslationOrigin.x, m_pixelsTranslationOrigin.y);
-  olc::vf2d posTiles    = pixelsToTiles(pixelsOrigin.x, pixelsOrigin.y);
-  olc::vf2d translationTiles = originTiles - posTiles;
+  auto originTiles      = pixelsToTiles(m_pixelsTranslationOrigin.x, m_pixelsTranslationOrigin.y);
+  auto posTiles         = pixelsToTiles(pixelsOrigin.x, pixelsOrigin.y);
+  auto translationTiles = originTiles - posTiles;
 
   m_tilesViewport.moveTo(m_tilesCachedPOrigin + translationTiles);
 }
@@ -110,10 +110,10 @@ void CoordinateFrame::moveTo(const olc::vf2d &tilesCenter)
 
 void CoordinateFrame::zoom(float factor, const olc::vf2d &pos)
 {
-  olc::vf2d dPixels = pos - m_pixelsViewport.topLeft();
+  auto dPixels = pos - m_pixelsViewport.topLeft();
 
-  olc::vf2d pTiles = pixelsToTiles(pos.x, pos.y);
-  olc::vf2d dTiles = pTiles - m_tilesViewport.center();
+  auto pTiles = pixelsToTiles(pos.x, pos.y);
+  auto dTiles = pTiles - m_tilesViewport.center();
 
   dPixels /= factor;
   dTiles /= factor;
