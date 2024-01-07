@@ -21,13 +21,15 @@ TransformedViewFrame::TransformedViewFrame(const CenteredViewport &tiles,
   m_pixelsToTilesTransform = m_tilesToPixelsTransform.inverse();
 }
 
-olc::vf2d TransformedViewFrame::normalizedTilesToPixels(const olc::vf2d &tiles) const noexcept
+auto TransformedViewFrame::normalizedTilesToPixels(const olc::vf2d &tiles) const noexcept
+  -> olc::vf2d
 {
   Eigen::Vector2f transformed = m_tilesToPixelsTransform * Eigen::Vector2f{tiles.x, tiles.y};
   return olc::vf2d{transformed(0), transformed(1)};
 }
 
-olc::vf2d TransformedViewFrame::normalizedPixelsToTiles(const olc::vf2d &pixels) const noexcept
+auto TransformedViewFrame::normalizedPixelsToTiles(const olc::vf2d &pixels) const noexcept
+  -> olc::vf2d
 {
   Eigen::Vector2f transformed = m_pixelsToTilesTransform * Eigen::Vector2f{pixels.x, pixels.y};
   return olc::vf2d{transformed(0), transformed(1)};
