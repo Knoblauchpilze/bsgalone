@@ -14,7 +14,7 @@ struct TestCaseTilesToPixels
   CoordinateFramePtr frame;
 
   Vec2f tiles;
-  olc::vf2d expected;
+  Vec2f expected;
 };
 
 using TilesToPixels = ::testing::TestWithParam<TestCaseTilesToPixels>;

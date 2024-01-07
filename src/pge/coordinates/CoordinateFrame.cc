@@ -40,7 +40,7 @@ auto CoordinateFrame::pixelsViewport() const noexcept -> TopLeftViewport
   return m_pixelsViewport;
 }
 
-auto CoordinateFrame::tilesToPixels(float x, float y) const noexcept -> olc::vf2d
+auto CoordinateFrame::tilesToPixels(float x, float y) const noexcept -> Vec2f
 {
   auto rel = m_tilesViewport.relativeCoords(x, y);
 
@@ -58,7 +58,7 @@ auto CoordinateFrame::tilesToPixels(float x, float y) const noexcept -> olc::vf2
   // value.
   transformed.y = (1.0f - transformed.y) / 2.0f;
 
-  return toVf2d(m_pixelsViewport.absoluteCoords(transformed.x, transformed.y));
+  return m_pixelsViewport.absoluteCoords(transformed.x, transformed.y);
 }
 
 auto CoordinateFrame::pixelsToTiles(float x, float y) const noexcept -> olc::vf2d
