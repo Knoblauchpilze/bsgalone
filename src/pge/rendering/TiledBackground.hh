@@ -9,8 +9,6 @@
 #include <optional>
 #include <string>
 
-#include "olcEngine.hh"
-
 namespace pge {
 
 class TiledBackground
@@ -34,7 +32,7 @@ class TiledBackground
 
   std::optional<Vec2f> m_savedCenter{};
   std::optional<Vec2f> m_savedTileDimension{};
-  olc::vf2d m_accumulatedTranslation{};
+  Vec2f m_accumulatedTranslation{};
 
   void loadDecal(sprites::TexturePack &texturesLoader);
   void updateBackgroundOffset(const CoordinateFrame &cf);
