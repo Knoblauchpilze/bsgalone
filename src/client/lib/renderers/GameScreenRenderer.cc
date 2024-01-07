@@ -76,7 +76,7 @@ void GameScreenRenderer::loadResources(int /*width*/,
 
   m_bulletTexturesPackId = texturesLoader.registerPack(pack);
 
-  const olc::vi2d offset{10, 10};
+  const Vec2i offset{10, 10};
   constexpr auto BACKGROUND_TILE_SIZE_IN_PIXELS = 768;
   constexpr auto BACKGROUND_SLOWDOWN_RATIO      = 2.0f;
   m_systemBackground                            = std::make_unique<TiledBackground>(offset,

@@ -4,17 +4,19 @@
 #include "RenderState.hh"
 #include "SpriteRenderer.hh"
 #include "TexturePack.hh"
-#include "olcPixelGameEngine.h"
+#include "Vector2d.hh"
 #include <memory>
 #include <optional>
 #include <string>
+
+#include "olcEngine.hh"
 
 namespace pge {
 
 class TiledBackground
 {
   public:
-  TiledBackground(const olc::vi2d &offset,
+  TiledBackground(const Vec2i &offset,
                   const int pixelSize,
                   const float slowdownRatio,
                   sprites::TexturePack &texturesLoader);
@@ -22,7 +24,7 @@ class TiledBackground
   void render(SpriteRenderer &spriteHandler, const RenderState &state);
 
   private:
-  olc::vi2d m_offset{};
+  Vec2i m_offset{};
   static constexpr auto DEFAULT_BACKGROUND_SIZE_IN_PIXELS = 100;
   int m_pixelSize{DEFAULT_BACKGROUND_SIZE_IN_PIXELS};
   static constexpr auto DEFAULT_SLOWDOWN_FACTOR = 100.0f;
@@ -36,7 +38,7 @@ class TiledBackground
 
   void loadDecal(sprites::TexturePack &texturesLoader);
   void updateBackgroundOffset(const CoordinateFrame &cf);
-  void renderBackgroundTile(const olc::vi2d &pixelPosition,
+  void renderBackgroundTile(const Vec2i &pixelPosition,
                             SpriteRenderer &spriteHandler,
                             const CoordinateFrame &cf);
 };
