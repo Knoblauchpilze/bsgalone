@@ -3,8 +3,9 @@
 
 #include "CoordinateFrame.hh"
 #include "TexturePack.hh"
-#include "olcPixelGameEngine.h"
 #include <memory>
+
+#include "olcEngine.hh"
 
 namespace pge {
 
