@@ -3,29 +3,29 @@
 
 namespace pge {
 
-TopLeftViewport::TopLeftViewport(const Vectorf &tl, const Vectorf &dims) noexcept
+TopLeftViewport::TopLeftViewport(const Vec2f &tl, const Vec2f &dims) noexcept
   : m_topLeft(tl)
   , m_dims(dims)
 {}
 
-auto TopLeftViewport::center() const noexcept -> Vectorf
+auto TopLeftViewport::center() const noexcept -> Vec2f
 {
-  return Vectorf(m_topLeft.x + m_dims.x / 2.0f, m_topLeft.y + m_dims.y / 2.0f);
+  return Vec2f(m_topLeft.x + m_dims.x / 2.0f, m_topLeft.y + m_dims.y / 2.0f);
 }
 
-auto TopLeftViewport::topLeft() const noexcept -> Vectorf
+auto TopLeftViewport::topLeft() const noexcept -> Vec2f
 {
   return m_topLeft;
 }
 
-auto TopLeftViewport::dims() const noexcept -> Vectorf
+auto TopLeftViewport::dims() const noexcept -> Vec2f
 {
   return m_dims;
 }
 
-auto TopLeftViewport::relativeCoords(const float x, const float y) const noexcept -> Vectorf
+auto TopLeftViewport::relativeCoords(const float x, const float y) const noexcept -> Vec2f
 {
-  Vectorf out(x, y);
+  Vec2f out(x, y);
 
   out.x -= m_topLeft.x;
   out.y -= m_topLeft.y;
@@ -36,9 +36,9 @@ auto TopLeftViewport::relativeCoords(const float x, const float y) const noexcep
   return out;
 }
 
-auto TopLeftViewport::absoluteCoords(const float x, const float y) const noexcept -> Vectorf
+auto TopLeftViewport::absoluteCoords(const float x, const float y) const noexcept -> Vec2f
 {
-  Vectorf out(x, y);
+  Vec2f out(x, y);
 
   out.x *= m_dims.x;
   out.y *= m_dims.y;
@@ -49,12 +49,12 @@ auto TopLeftViewport::absoluteCoords(const float x, const float y) const noexcep
   return out;
 }
 
-void TopLeftViewport::moveTo(const Vectorf &topLeft) noexcept
+void TopLeftViewport::moveTo(const Vec2f &topLeft) noexcept
 {
   m_topLeft = topLeft;
 }
 
-void TopLeftViewport::translate(const Vectorf &delta) noexcept
+void TopLeftViewport::translate(const Vec2f &delta) noexcept
 {
   m_topLeft += delta;
 }

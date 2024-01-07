@@ -13,7 +13,7 @@ struct TestCaseTilesToPixels
   std::string name;
   CoordinateFramePtr frame;
 
-  olc::vf2d tiles;
+  Vec2f tiles;
   olc::vf2d expected;
 };
 
@@ -27,7 +27,7 @@ struct TestCasePixelsToTiles
   std::string name;
   CoordinateFramePtr frame;
 
-  olc::vf2d pixels;
+  Vec2f pixels;
   olc::vf2d expected;
 };
 
@@ -54,13 +54,13 @@ auto generateTestNamePixelsToTilesIntra(
 namespace constants {
 struct Tiles
 {
-  static const olc::vf2d CENTER;
-  static const olc::vf2d DIMS;
+  static const Vec2f CENTER;
+  static const Vec2f DIMS;
 
-  static const olc::vf2d TOP_LEFT;
-  static const olc::vf2d TOP_RIGHT;
-  static const olc::vf2d BOTTOM_RIGHT;
-  static const olc::vf2d BOTTOM_LEFT;
+  static const Vec2f TOP_LEFT;
+  static const Vec2f TOP_RIGHT;
+  static const Vec2f BOTTOM_RIGHT;
+  static const Vec2f BOTTOM_LEFT;
 };
 
 struct Pixels

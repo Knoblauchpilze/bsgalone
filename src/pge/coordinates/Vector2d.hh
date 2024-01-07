@@ -46,6 +46,19 @@ class Vector2d
   T y{0};
 };
 
+template<class T>
+Vector2d<T> operator*(const float lhs, const Vector2d<T> &rhs);
+template<class T>
+Vector2d<T> operator*(const double lhs, const Vector2d<T> &rhs);
+template<class T>
+Vector2d<T> operator*(const int lhs, const Vector2d<T> &rhs);
+template<class T>
+Vector2d<T> operator/(const float lhs, const Vector2d<T> &rhs);
+template<class T>
+Vector2d<T> operator/(const double lhs, const Vector2d<T> &rhs);
+template<class T>
+Vector2d<T> operator/(const int lhs, const Vector2d<T> &rhs);
+
 using Vec2i = Vector2d<int>;
 using Vec2f = Vector2d<float>;
 

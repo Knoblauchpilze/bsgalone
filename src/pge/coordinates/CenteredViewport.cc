@@ -3,30 +3,30 @@
 
 namespace pge {
 
-CenteredViewport::CenteredViewport(const Vectorf &center, const Vectorf &dims) noexcept
+CenteredViewport::CenteredViewport(const Vec2f &center, const Vec2f &dims) noexcept
   : Viewport()
   , m_center(center)
   , m_dims(dims)
 {}
 
-auto CenteredViewport::center() const noexcept -> Vectorf
+auto CenteredViewport::center() const noexcept -> Vec2f
 {
   return m_center;
 }
 
-auto CenteredViewport::topLeft() const noexcept -> Vectorf
+auto CenteredViewport::topLeft() const noexcept -> Vec2f
 {
-  return Vectorf(m_center.x - m_dims.x / 2.0f, m_center.y + m_dims.y / 2.0f);
+  return Vec2f(m_center.x - m_dims.x / 2.0f, m_center.y + m_dims.y / 2.0f);
 }
 
-auto CenteredViewport::dims() const noexcept -> Vectorf
+auto CenteredViewport::dims() const noexcept -> Vec2f
 {
   return m_dims;
 }
 
-auto CenteredViewport::relativeCoords(const float x, const float y) const noexcept -> Vectorf
+auto CenteredViewport::relativeCoords(const float x, const float y) const noexcept -> Vec2f
 {
-  Vectorf out(x, y);
+  Vec2f out(x, y);
 
   out.x -= m_center.x;
   out.y -= m_center.y;
@@ -37,9 +37,9 @@ auto CenteredViewport::relativeCoords(const float x, const float y) const noexce
   return out;
 }
 
-auto CenteredViewport::absoluteCoords(const float x, const float y) const noexcept -> Vectorf
+auto CenteredViewport::absoluteCoords(const float x, const float y) const noexcept -> Vec2f
 {
-  Vectorf out(x, y);
+  Vec2f out(x, y);
 
   out.x *= (m_dims.x / 2.0f);
   out.y *= (m_dims.y / 2.0f);
@@ -50,12 +50,12 @@ auto CenteredViewport::absoluteCoords(const float x, const float y) const noexce
   return out;
 }
 
-void CenteredViewport::moveTo(const Vectorf &center) noexcept
+void CenteredViewport::moveTo(const Vec2f &center) noexcept
 {
   m_center = center;
 }
 
-void CenteredViewport::translate(const Vectorf &delta) noexcept
+void CenteredViewport::translate(const Vec2f &delta) noexcept
 {
   m_center += delta;
 }

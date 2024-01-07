@@ -21,18 +21,16 @@ TransformedViewFrame::TransformedViewFrame(const CenteredViewport &tiles,
   m_pixelsToTilesTransform = m_tilesToPixelsTransform.inverse();
 }
 
-auto TransformedViewFrame::normalizedTilesToPixels(const olc::vf2d &tiles) const noexcept
-  -> olc::vf2d
+auto TransformedViewFrame::normalizedTilesToPixels(const Vec2f &tiles) const noexcept -> Vec2f
 {
   Eigen::Vector2f transformed = m_tilesToPixelsTransform * Eigen::Vector2f{tiles.x, tiles.y};
-  return olc::vf2d{transformed(0), transformed(1)};
+  return Vec2f{transformed(0), transformed(1)};
 }
 
-auto TransformedViewFrame::normalizedPixelsToTiles(const olc::vf2d &pixels) const noexcept
-  -> olc::vf2d
+auto TransformedViewFrame::normalizedPixelsToTiles(const Vec2f &pixels) const noexcept -> Vec2f
 {
   Eigen::Vector2f transformed = m_pixelsToTilesTransform * Eigen::Vector2f{pixels.x, pixels.y};
-  return olc::vf2d{transformed(0), transformed(1)};
+  return Vec2f{transformed(0), transformed(1)};
 }
 
 } // namespace pge

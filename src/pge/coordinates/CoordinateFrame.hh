@@ -6,6 +6,8 @@
 #include <core_utils/CoreObject.hh>
 #include <memory>
 
+#include "olcEngine.hh"
+
 namespace pge {
 
 class CoordinateFrame : public utils::CoreObject
@@ -89,13 +91,13 @@ class CoordinateFrame : public utils::CoreObject
   /// them to pixels normalized coordinates.
   /// @param tiles - normalized coordinate in tiles.
   /// @return - the normalized pixel position for the input tile position.
-  virtual auto normalizedTilesToPixels(const olc::vf2d &tiles) const noexcept -> olc::vf2d = 0;
+  virtual auto normalizedTilesToPixels(const Vec2f &tiles) const noexcept -> Vec2f = 0;
 
   /// @brief - Given some normalized coordinates in pixels space, convert
   /// them to tiles normalized coordinates.
   /// @param pixels - normalized coordinate in pixels.
   /// @return - the normalized tile position for the input pixel position.
-  virtual auto normalizedPixelsToTiles(const olc::vf2d &pixels) const noexcept -> olc::vf2d = 0;
+  virtual auto normalizedPixelsToTiles(const Vec2f &pixels) const noexcept -> Vec2f = 0;
 
   private:
   /// @brief - Perform the zoom operation to fix the position in input (in
@@ -105,7 +107,7 @@ class CoordinateFrame : public utils::CoreObject
   /// `1` then the zoom is a dezoom.
   /// @param pos - the position to fixe during the zoom process. Before and
   /// after the zoom operation this position will stay fixed.
-  void zoom(float factor, const olc::vf2d &pos);
+  void zoom(float factor, const Vec2f &pos);
 
   protected:
   /// @brief - Define the viewport for this coordinate frame. It represent the
@@ -122,12 +124,12 @@ class CoordinateFrame : public utils::CoreObject
   /// @brief - The origin of the translation (i.e. the pixels position when it
   /// started). Allows to compute the accumulated transform to apply to the world
   /// origin.
-  olc::vf2d m_pixelsTranslationOrigin;
+  Vec2f m_pixelsTranslationOrigin;
 
   /// @brief - Cached position of the center of the tiles viewport when starting
   /// the translation. Once the translation is performed we are able to update the
   /// viewport accordingly.
-  olc::vf2d m_tilesCachedPOrigin;
+  Vec2f m_tilesCachedPOrigin;
 };
 
 using CoordinateFramePtr = std::shared_ptr<CoordinateFrame>;

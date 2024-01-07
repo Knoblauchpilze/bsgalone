@@ -3,12 +3,12 @@
 
 namespace pge {
 
-auto Viewport::relativeCoords(const Vectorf &pos) const noexcept -> Vectorf
+auto Viewport::relativeCoords(const Vec2f &pos) const noexcept -> Vec2f
 {
   return relativeCoords(pos.x, pos.y);
 }
 
-auto Viewport::absoluteCoords(const Vectorf &pos) const noexcept -> Vectorf
+auto Viewport::absoluteCoords(const Vec2f &pos) const noexcept -> Vec2f
 {
   return absoluteCoords(pos.x, pos.y);
 }
@@ -23,7 +23,7 @@ bool Viewport::visible(const float x, const float y, const float radius) const n
   return visible(x, y, radius, radius);
 }
 
-bool Viewport::visible(const Vectorf &p, const Vectorf &sz) const noexcept
+bool Viewport::visible(const Vec2f &p, const Vec2f &sz) const noexcept
 {
   return visible(p.x, p.y, sz.x, sz.y);
 }

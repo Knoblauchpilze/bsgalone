@@ -121,8 +121,8 @@ inline auto Vector2d<T>::operator*=(const T &rhs) -> Vector2d &
 template<class T>
 inline auto Vector2d<T>::operator/=(const T &rhs) -> Vector2d &
 {
-  x /= rhs.x;
-  y /= rhs.y;
+  x /= rhs;
+  y /= rhs;
   return *this;
 }
 
@@ -154,6 +154,42 @@ template<class T>
 inline auto Vector2d<T>::str() const -> std::string
 {
   return "(" + std::to_string(x) + "," + std::to_string(y) + ")";
+}
+
+template<class T>
+inline Vector2d<T> operator*(const float lhs, const Vector2d<T> &rhs)
+{
+  return Vector2d(lhs * rhs.x, lhs * rhs.y);
+}
+
+template<class T>
+inline Vector2d<T> operator*(const double lhs, const Vector2d<T> &rhs)
+{
+  return Vector2d(lhs * rhs.x, lhs * rhs.y);
+}
+
+template<class T>
+inline Vector2d<T> operator*(const int lhs, const Vector2d<T> &rhs)
+{
+  return Vector2d(lhs * rhs.x, lhs * rhs.y);
+}
+
+template<class T>
+inline Vector2d<T> operator/(const float lhs, const Vector2d<T> &rhs)
+{
+  return Vector2d(lhs / rhs.x, lhs / rhs.y);
+}
+
+template<class T>
+inline Vector2d<T> operator/(const double lhs, const Vector2d<T> &rhs)
+{
+  return Vector2d(lhs / rhs.x, lhs / rhs.y);
+}
+
+template<class T>
+inline Vector2d<T> operator/(const int lhs, const Vector2d<T> &rhs)
+{
+  return Vector2d(lhs / rhs.x, lhs / rhs.y);
 }
 
 } // namespace pge
