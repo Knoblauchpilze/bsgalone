@@ -1,5 +1,5 @@
 
-target_sources (bsgalone_client_lib PRIVATE
+target_sources (pge_app_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/olcEngine.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/Controls.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/DecalResource.cc
@@ -9,6 +9,6 @@ target_sources (bsgalone_client_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/PGEApp.cc
 	)
 
-target_include_directories (bsgalone_client_lib PUBLIC
+target_include_directories (pge_app_lib PUBLIC
 	"${CMAKE_CURRENT_SOURCE_DIR}"
 	)
