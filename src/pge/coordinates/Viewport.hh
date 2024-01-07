@@ -4,55 +4,51 @@
 #include "Vector2d.hh"
 #include <memory>
 
-#include "olcEngine.hh"
-
 namespace pge {
-
-using Vectorf = olc::vf2d;
 
 class Viewport
 {
   public:
   /// @brief - Returns the center of this viewport.
   /// @return - the center of the viewport.
-  virtual auto center() const noexcept -> Vectorf = 0;
+  virtual auto center() const noexcept -> Vec2f = 0;
 
   /// @brief - Returns the top left corner of this viewport.
   /// @return - the top left corner of the viewport.
-  virtual auto topLeft() const noexcept -> Vectorf = 0;
+  virtual auto topLeft() const noexcept -> Vec2f = 0;
 
   /// @brief - Returns the dimensions of the viewport.
   /// @return - the dimensions of the viewport.
-  virtual auto dims() const noexcept -> Vectorf = 0;
+  virtual auto dims() const noexcept -> Vec2f = 0;
 
-  auto relativeCoords(const Vectorf &pos) const noexcept -> Vectorf;
+  auto relativeCoords(const Vec2f &pos) const noexcept -> Vec2f;
 
   /// @brief - Returns the relative coordinates of the input position
   /// compared to this viewport. In this mode, the output coordinates
   /// range from `[0; 1]` when one axis is within the viewport.
   /// @param pos - the position to convert.
   /// @return - the relative coords for this position.
-  virtual auto relativeCoords(const float x, const float y) const noexcept -> Vectorf = 0;
+  virtual auto relativeCoords(const float x, const float y) const noexcept -> Vec2f = 0;
 
-  auto absoluteCoords(const Vectorf &pos) const noexcept -> Vectorf;
+  auto absoluteCoords(const Vec2f &pos) const noexcept -> Vec2f;
 
   /// @brief - Returns the absolute coordinates of the input position
   /// compared to this viewport. In this mode, the input coordinates
   /// range from `[0; 1]` when one axis is within the viewport.
   /// @param pos - the position to convert.
   /// @return - the absolute coords for this position.
-  virtual auto absoluteCoords(const float x, const float y) const noexcept -> Vectorf = 0;
+  virtual auto absoluteCoords(const float x, const float y) const noexcept -> Vec2f = 0;
 
   /// @brief - Moves this viewport to the new position. Depending
   /// on the semantic of the viewport it might have a different
   /// operation.
   /// @param center - the new position of the viewport.
-  virtual void moveTo(const Vectorf &position) noexcept = 0;
+  virtual void moveTo(const Vec2f &position) noexcept = 0;
 
   /// @brief - Translates this viewport by the specified amount.
   /// @param delta - the delta to apply to the position of this
   /// viewport.
-  virtual void translate(const Vectorf &delta) noexcept = 0;
+  virtual void translate(const Vec2f &delta) noexcept = 0;
 
   void scale(const float factor) noexcept;
 
@@ -81,7 +77,7 @@ class Viewport
   /// @param sz - the size of the element.
   /// @return - `true` if such an element is at least partially visible
   /// in the viewport.
-  bool visible(const Vectorf &p, const Vectorf &sz = Vectorf(1.0f, 1.0f)) const noexcept;
+  bool visible(const Vec2f &p, const Vec2f &sz = Vec2f(1.0f, 1.0f)) const noexcept;
 
   /// @brief - Whether an element having the specified coordinates and
   /// size is visible in the viewport.

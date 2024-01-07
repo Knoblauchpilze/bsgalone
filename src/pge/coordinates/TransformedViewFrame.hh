@@ -14,8 +14,8 @@ class TransformedViewFrame : public CoordinateFrame
                        const TopLeftViewport &pixels);
 
   protected:
-  auto normalizedTilesToPixels(const olc::vf2d &tiles) const noexcept -> olc::vf2d override;
-  auto normalizedPixelsToTiles(const olc::vf2d &pixels) const noexcept -> olc::vf2d override;
+  auto normalizedTilesToPixels(const Vec2f &tiles) const noexcept -> Vec2f override;
+  auto normalizedPixelsToTiles(const Vec2f &pixels) const noexcept -> Vec2f override;
 
   private:
   /// @brief - The transformation matrix to convert from tiles space to pixels

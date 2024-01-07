@@ -2,8 +2,6 @@
 #pragma once
 
 #include "Viewport.hh"
-#include "olcEngine.hh"
-#include <maths_utils/Vector2.hh>
 
 namespace pge {
 
@@ -13,24 +11,24 @@ class TopLeftViewport : public Viewport
   public:
   /// @brief - Create a viewport with the specified size and top
   /// left corner.
-  TopLeftViewport(const Vectorf &tl, const Vectorf &dims) noexcept;
+  TopLeftViewport(const Vec2f &tl, const Vec2f &dims) noexcept;
 
-  auto center() const noexcept -> Vectorf override;
-  auto topLeft() const noexcept -> Vectorf override;
-  auto dims() const noexcept -> Vectorf override;
-  auto relativeCoords(const float x, const float y) const noexcept -> Vectorf override;
-  auto absoluteCoords(const float x, const float y) const noexcept -> Vectorf override;
+  auto center() const noexcept -> Vec2f override;
+  auto topLeft() const noexcept -> Vec2f override;
+  auto dims() const noexcept -> Vec2f override;
+  auto relativeCoords(const float x, const float y) const noexcept -> Vec2f override;
+  auto absoluteCoords(const float x, const float y) const noexcept -> Vec2f override;
 
   /// @brief - Moves the reference corner of this viewport to
   /// the new position.
   /// @param topLeft - the new position of the reference corner
   /// for this viewport.
-  void moveTo(const Vectorf &topLeft) noexcept override;
+  void moveTo(const Vec2f &topLeft) noexcept override;
 
   /// @brief - Translates this viewport by the specified amount.
   /// @param delta - the delta to apply to the position of this
   /// viewport.
-  void translate(const Vectorf &delta) noexcept override;
+  void translate(const Vec2f &delta) noexcept override;
 
   /// @brief  - Keeps the reference corner constant but scales
   /// the dimensions by the specified factor.
@@ -42,10 +40,10 @@ class TopLeftViewport : public Viewport
 
   private:
   /// @brief - The top left corner of this viewport.
-  Vectorf m_topLeft;
+  Vec2f m_topLeft;
 
   /// @brief - The dimensions of the view along each axis.
-  Vectorf m_dims;
+  Vec2f m_dims;
 };
 
 } // namespace pge

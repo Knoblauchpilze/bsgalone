@@ -30,7 +30,7 @@ class TiledBackground
 
   sprites::PackId m_bgTexturePackId{};
 
-  std::optional<olc::vf2d> m_savedCenter{};
+  std::optional<Vec2f> m_savedCenter{};
   std::optional<olc::vf2d> m_savedTileDimension{};
   olc::vf2d m_accumulatedTranslation{};
 

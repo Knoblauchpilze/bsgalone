@@ -6,17 +6,17 @@ using namespace ::testing;
 
 namespace pge::tests {
 namespace constants {
-const olc::vf2d Tiles::CENTER = {1.0f, 2.0f};
-const olc::vf2d Tiles::DIMS   = {4.0f, 10.0f};
+const Vec2f Tiles::CENTER = {1.0f, 2.0f};
+const Vec2f Tiles::DIMS   = {4.0f, 10.0f};
 
-const olc::vf2d Tiles::TOP_LEFT     = {Tiles::CENTER.x - Tiles::DIMS.x / 2.0f,
-                                       Tiles::CENTER.y + Tiles::DIMS.y / 2.0f};
-const olc::vf2d Tiles::TOP_RIGHT    = {Tiles::CENTER.x + Tiles::DIMS.x / 2.0f,
-                                       Tiles::CENTER.y + Tiles::DIMS.y / 2.0f};
-const olc::vf2d Tiles::BOTTOM_RIGHT = {Tiles::CENTER.x + Tiles::DIMS.x / 2.0f,
-                                       Tiles::CENTER.y - Tiles::DIMS.y / 2.0f};
-const olc::vf2d Tiles::BOTTOM_LEFT  = {Tiles::CENTER.x - Tiles::DIMS.x / 2.0f,
-                                       Tiles::CENTER.y - Tiles::DIMS.y / 2.0f};
+const Vec2f Tiles::TOP_LEFT     = {Tiles::CENTER.x - Tiles::DIMS.x / 2.0f,
+                                   Tiles::CENTER.y + Tiles::DIMS.y / 2.0f};
+const Vec2f Tiles::TOP_RIGHT    = {Tiles::CENTER.x + Tiles::DIMS.x / 2.0f,
+                                   Tiles::CENTER.y + Tiles::DIMS.y / 2.0f};
+const Vec2f Tiles::BOTTOM_RIGHT = {Tiles::CENTER.x + Tiles::DIMS.x / 2.0f,
+                                   Tiles::CENTER.y - Tiles::DIMS.y / 2.0f};
+const Vec2f Tiles::BOTTOM_LEFT  = {Tiles::CENTER.x - Tiles::DIMS.x / 2.0f,
+                                   Tiles::CENTER.y - Tiles::DIMS.y / 2.0f};
 
 const olc::vf2d Pixels::TOP_LEFT = {10.0f, 32.0f};
 const olc::vf2d Pixels::DIMS     = {128.0f, 58.0f};

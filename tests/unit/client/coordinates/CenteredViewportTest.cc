@@ -6,8 +6,8 @@
 using namespace ::testing;
 
 namespace pge::tests {
-const olc::vf2d CENTER{-12.0f, 5.0f};
-const olc::vf2d DIMS{4.0f, 10.0f};
+const Vec2f CENTER{-12.0f, 5.0f};
+const Vec2f DIMS{4.0f, 10.0f};
 
 auto generateCenteredViewport() -> ViewportPtr
 {
@@ -39,7 +39,7 @@ TEST(Unit_CenteredViewport, Constructor)
 {
   auto viewport = generateCenteredViewport();
 
-  olc::vf2d topLeft;
+  Vec2f topLeft;
   topLeft.x = CENTER.x - DIMS.x / 2.0f;
   topLeft.y = CENTER.y + DIMS.y / 2.0f;
 
@@ -80,10 +80,10 @@ TEST(Unit_CenteredViewport, MoveTo)
 {
   auto viewport = generateCenteredViewport();
 
-  olc::vf2d origin(2.0f, 3.0f);
+  Vec2f origin(2.0f, 3.0f);
   viewport->moveTo(origin);
 
-  olc::vf2d topLeft;
+  Vec2f topLeft;
   topLeft.x = origin.x - DIMS.x / 2.0f;
   topLeft.y = origin.y + DIMS.y / 2.0f;
 
@@ -96,10 +96,10 @@ TEST(Unit_CenteredViewport, Translate)
 {
   auto viewport = generateCenteredViewport();
 
-  olc::vf2d delta(2.0f, 3.0f);
+  Vec2f delta(2.0f, 3.0f);
   viewport->translate(delta);
 
-  olc::vf2d topLeft;
+  Vec2f topLeft;
   topLeft.x = CENTER.x + delta.x - DIMS.x / 2.0f;
   topLeft.y = CENTER.y + delta.y + DIMS.y / 2.0f;
 
@@ -116,7 +116,7 @@ TEST(Unit_CenteredViewport, Scale)
   auto factor = 2.0f;
   viewport->scale(factor, factor);
 
-  olc::vf2d topLeft;
+  Vec2f topLeft;
   topLeft.x = CENTER.x - factor * DIMS.x / 2.0f;
   topLeft.y = CENTER.y + factor * DIMS.y / 2.0f;
 

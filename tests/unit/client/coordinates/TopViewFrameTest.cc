@@ -11,7 +11,10 @@ namespace pge::tests {
 auto generateTopViewFrame() -> CoordinateFramePtr
 {
   CenteredViewport tiles = {constants::Tiles::CENTER, constants::Tiles::DIMS};
-  TopLeftViewport pixels = {constants::Pixels::TOP_LEFT, constants::Pixels::DIMS};
+
+  Vec2f topLeft(constants::Pixels::TOP_LEFT.x, constants::Pixels::TOP_LEFT.y);
+  Vec2f dims(constants::Pixels::DIMS.x, constants::Pixels::DIMS.y);
+  TopLeftViewport pixels = {topLeft, dims};
   return std::make_shared<TopViewFrame>(tiles, pixels);
 }
 
@@ -24,11 +27,13 @@ TEST(Unit_TopViewFrame, Constructor)
   EXPECT_EQ(tiles.dims(), constants::Tiles::DIMS);
 
   auto tile = frame->tileSize();
-  EXPECT_EQ(tile, constants::Pixels::DIMS / constants::Tiles::DIMS);
+  const olc::vf2d expectedSize{constants::Pixels::DIMS.x / constants::Tiles::DIMS.x,
+                               constants::Pixels::DIMS.y / constants::Tiles::DIMS.y};
+  EXPECT_EQ(tile, expectedSize);
 }
 
 auto generateTopTestCaseTilesToPixels(const std::string &name,
-                                      const olc::vf2d &tiles,
+                                      const Vec2f &tiles,
                                       const olc::vf2d &expected) -> TestCaseTilesToPixels
 {
   return TestCaseTilesToPixels{name, generateTopViewFrame(), tiles, expected};
@@ -61,9 +66,12 @@ INSTANTIATE_TEST_CASE_P(
 
 auto generateTopTestCasePixelsToTiles(const std::string &name,
                                       const olc::vf2d &pixels,
-                                      const olc::vf2d &expected) -> TestCasePixelsToTiles
+                                      const Vec2f &expected) -> TestCasePixelsToTiles
 {
-  return TestCasePixelsToTiles{name, generateTopViewFrame(), pixels, expected};
+  return TestCasePixelsToTiles{name,
+                               generateTopViewFrame(),
+                               Vec2f(pixels.x, pixels.y),
+                               olc::vf2d(expected.x, expected.y)};
 }
 
 INSTANTIATE_TEST_CASE_P(
@@ -130,7 +138,8 @@ TEST(Unit_TopViewFrame, Translate)
   frame->beginTranslation(origin);
 
   olc::vf2d translationTiles{2.6f, -1.7f};
-  olc::vf2d scale = constants::Pixels::DIMS / constants::Tiles::DIMS;
+  const olc::vf2d scale{constants::Pixels::DIMS.x / constants::Tiles::DIMS.x,
+                        constants::Pixels::DIMS.y / constants::Tiles::DIMS.y};
 
   auto final = origin + translationTiles * scale;
   frame->translate(final);
@@ -142,7 +151,7 @@ TEST(Unit_TopViewFrame, Translate)
   // accomodate for `origin` being at its new position
   // on screen. As the y coordinate moves in opposite
   // direction, we have to adjust the translation.
-  olc::vf2d centerTranslation{translationTiles.x, -translationTiles.y};
+  Vec2f centerTranslation{translationTiles.x, -translationTiles.y};
   auto finalTiles = constants::Tiles::CENTER - centerTranslation;
   EXPECT_EQ(tiles.center(), finalTiles);
 }
@@ -152,7 +161,9 @@ TEST(Unit_TopViewFrame, Translate_PreserveTileSize)
   auto frame = generateTopViewFrame();
 
   auto tile = frame->tileSize();
-  EXPECT_EQ(tile, constants::Pixels::DIMS / constants::Tiles::DIMS);
+  const olc::vf2d expectedSize{constants::Pixels::DIMS.x / constants::Tiles::DIMS.x,
+                               constants::Pixels::DIMS.y / constants::Tiles::DIMS.y};
+  EXPECT_EQ(tile, expectedSize);
 
   olc::vf2d origin{20.0f, 51.0f};
   frame->beginTranslation(origin);
@@ -161,7 +172,7 @@ TEST(Unit_TopViewFrame, Translate_PreserveTileSize)
   frame->translate(final);
 
   tile = frame->tileSize();
-  EXPECT_EQ(tile, constants::Pixels::DIMS / constants::Tiles::DIMS);
+  EXPECT_EQ(tile, expectedSize);
 }
 
 TEST(Unit_TopViewFrame, ZoomIn)
@@ -185,7 +196,9 @@ TEST(Unit_TopViewFrame, ZoomIn_DoubleTileDimensions)
   frame->zoomIn(zoomCenter);
 
   auto tile = frame->tileSize();
-  EXPECT_EQ(tile, (constants::Pixels::DIMS / constants::Tiles::DIMS) * 2.0f);
+  const olc::vf2d expectedSize{2.0f * constants::Pixels::DIMS.x / constants::Tiles::DIMS.x,
+                               2.0f * constants::Pixels::DIMS.y / constants::Tiles::DIMS.y};
+  EXPECT_EQ(tile, expectedSize);
 }
 
 TEST(Unit_TopViewFrame, ZoomIn_HalveTilesViewport)
@@ -220,7 +233,9 @@ TEST(Unit_TopViewFrame, ZoomOut_HalveTileDimensions)
   frame->zoomOut(zoomCenter);
 
   auto tile = frame->tileSize();
-  EXPECT_EQ(tile, (constants::Pixels::DIMS / constants::Tiles::DIMS) / 2.0f);
+  const olc::vf2d expectedSize{constants::Pixels::DIMS.x / (constants::Tiles::DIMS.x * 2.0f),
+                               constants::Pixels::DIMS.y / (constants::Tiles::DIMS.y * 2.0f)};
+  EXPECT_EQ(tile, expectedSize);
 }
 
 TEST(Unit_TopViewFrame, ZoomOut_DoubleTilesViewport)

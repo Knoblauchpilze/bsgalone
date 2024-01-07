@@ -7,8 +7,8 @@
 using namespace ::testing;
 
 namespace pge::tests {
-const olc::vf2d TOP_LEFT{-12.0f, 5.0f};
-const olc::vf2d DIMS{4.0f, 15.0f};
+const Vec2f TOP_LEFT{-12.0f, 5.0f};
+const Vec2f DIMS{4.0f, 15.0f};
 
 auto generateTopLeftViewport() -> ViewportPtr
 {
@@ -78,7 +78,7 @@ TEST(Unit_TopLeftViewport, MoveTo)
 {
   auto viewport = generateTopLeftViewport();
 
-  olc::vf2d origin(2.0f, 3.0f);
+  Vec2f origin(2.0f, 3.0f);
   viewport->moveTo(origin);
 
   EXPECT_EQ(viewport->topLeft(), origin);
@@ -91,7 +91,7 @@ TEST(Unit_TopLeftViewport, Translate)
 {
   auto viewport = generateTopLeftViewport();
 
-  olc::vf2d delta(2.0f, 3.0f);
+  Vec2f delta(2.0f, 3.0f);
   viewport->translate(delta);
 
   auto topLeft = TOP_LEFT + delta;

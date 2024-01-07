@@ -2,8 +2,6 @@
 #pragma once
 
 #include "Viewport.hh"
-#include "olcEngine.hh"
-#include <maths_utils/Vector2.hh>
 
 namespace pge {
 
@@ -17,22 +15,22 @@ class CenteredViewport : public Viewport
   /// `center.x + dims.x / 2` and same along the `y` axis.
   /// @param center - the center of the viewport.
   /// @param dims - the dimensions of the viewport.
-  CenteredViewport(const Vectorf &center, const Vectorf &dims) noexcept;
+  CenteredViewport(const Vec2f &center, const Vec2f &dims) noexcept;
 
-  auto center() const noexcept -> Vectorf override;
-  auto topLeft() const noexcept -> Vectorf override;
-  auto dims() const noexcept -> Vectorf override;
-  auto relativeCoords(const float x, const float y) const noexcept -> Vectorf override;
-  auto absoluteCoords(const float x, const float y) const noexcept -> Vectorf override;
+  auto center() const noexcept -> Vec2f override;
+  auto topLeft() const noexcept -> Vec2f override;
+  auto dims() const noexcept -> Vec2f override;
+  auto relativeCoords(const float x, const float y) const noexcept -> Vec2f override;
+  auto absoluteCoords(const float x, const float y) const noexcept -> Vec2f override;
 
   /// @brief - Moves the center of this viewport to the new position.
   /// @param topLeft - the new position of the center for this viewport.
-  void moveTo(const Vectorf &center) noexcept override;
+  void moveTo(const Vec2f &center) noexcept override;
 
   /// @brief - Translates this viewport by the specified amount.
   /// @param delta - the delta to apply to the position of this
   /// viewport.
-  void translate(const Vectorf &delta) noexcept override;
+  void translate(const Vec2f &delta) noexcept override;
 
   /// @brief  - Keeps the center constant but scales the dimensions
   /// by the specified factor.
@@ -44,10 +42,10 @@ class CenteredViewport : public Viewport
 
   private:
   /// @brief - The center of this viewport.
-  Vectorf m_center;
+  Vec2f m_center;
 
   /// @brief - The dimensions of the viewport along each axis.
-  Vectorf m_dims;
+  Vec2f m_dims;
 };
 
 } // namespace pge
