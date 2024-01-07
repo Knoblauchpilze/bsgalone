@@ -30,4 +30,9 @@ auto makeTransparent(const olc::Pixel &in, const uint8_t alpha = alpha::TRANSPAR
 /// @return - the modified transparent color.
 auto makeTransparentFromPercentage(const olc::Pixel &in, const float perc) -> olc::Pixel;
 
+auto almostOpaque(const olc::Pixel &in) -> olc::Pixel;
+auto semiOpaque(const olc::Pixel &in) -> olc::Pixel;
+auto almostTransparent(const olc::Pixel &in) -> olc::Pixel;
+auto transparent(const olc::Pixel &in) -> olc::Pixel;
+
 } // namespace pge

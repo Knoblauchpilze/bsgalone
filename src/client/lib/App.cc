@@ -4,8 +4,6 @@
 
 namespace pge {
 
-const auto CURSOR_COLOR = olc::Pixel{255, 255, 0, alpha::SEMI_OPAQUE};
-
 App::App(const AppDesc &desc)
   : PGEApp(desc)
 {}
@@ -39,7 +37,7 @@ void App::onInputs(const controls::State &controls, CoordinateFrame &cf)
 
 void App::loadResources()
 {
-  setLayerTint(Layer::Draw, olc::Pixel(255, 255, 255, alpha::SEMI_OPAQUE));
+  setLayerTint(Layer::Draw, semiOpaque(olc::WHITE));
 
   m_spriteRenderer = std::make_unique<SpriteRenderer>(this);
   m_game           = std::make_shared<Game>();
@@ -129,7 +127,7 @@ void App::renderCursor(const RenderState &res)
   s.radius      = 1.0f;
   s.x           = mouseTilePosition.x;
   s.y           = mouseTilePosition.y;
-  s.sprite.tint = CURSOR_COLOR;
+  s.sprite.tint = semiOpaque(olc::YELLOW);
   m_spriteRenderer->drawWarpedRect(s, res.cf);
 }
 

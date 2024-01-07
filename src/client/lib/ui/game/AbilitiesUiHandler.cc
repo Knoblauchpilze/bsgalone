@@ -65,7 +65,6 @@ void AbilitiesUiHandler::updateUi()
 
 namespace {
 constexpr auto NUMBER_OF_ABILITIES = 4;
-const olc::Pixel SEMI_OPAQUE_BLACK{0, 0, 0, alpha::SEMI_OPAQUE};
 } // namespace
 
 void AbilitiesUiHandler::reset()
@@ -77,7 +76,7 @@ void AbilitiesUiHandler::reset()
   for (auto &computer : m_computers)
   {
     computer->clearChildren();
-    computer->updateBgColor(SEMI_OPAQUE_BLACK);
+    computer->updateBgColor(semiOpaque(olc::BLACK));
   }
 
   m_initialized = false;
@@ -91,7 +90,7 @@ void AbilitiesUiHandler::generateComputersMenus(int width, int height)
                       height - SPACING_IN_PIXELS - abilityMenuDims.y};
 
   MenuConfig config{.pos = pos, .dims = abilityMenuDims, .propagateEventsToChildren = false};
-  const auto bg = bgConfigFromColor(SEMI_OPAQUE_BLACK);
+  const auto bg = bgConfigFromColor(semiOpaque(olc::BLACK));
 
   for (auto id = 0u; id < NUMBER_OF_ABILITIES; ++id)
   {
@@ -171,8 +170,7 @@ void AbilitiesUiHandler::updateComputerMenu(const bsgo::ComputerSlotComponent &c
 {
   auto &menu = *m_computers[id];
 
-  auto bgColor = bgColorFromFiringState(computer);
-  bgColor.a    = alpha::SEMI_OPAQUE;
+  auto bgColor = semiOpaque(bgColorFromFiringState(computer));
   menu.updateBgColor(bgColor);
 
   const auto range = computer.maybeRange();
