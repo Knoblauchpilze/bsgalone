@@ -26,8 +26,8 @@ TEST(Unit_IsometricViewFrame, Constructor)
   EXPECT_EQ(tiles.dims(), constants::Tiles::DIMS);
 
   auto tile = frame->tileSize();
-  const olc::vf2d expectedSize{constants::Pixels::DIMS.x / constants::Tiles::DIMS.x,
-                               constants::Pixels::DIMS.y / constants::Tiles::DIMS.y};
+  const Vec2f expectedSize{constants::Pixels::DIMS.x / constants::Tiles::DIMS.x,
+                           constants::Pixels::DIMS.y / constants::Tiles::DIMS.y};
   EXPECT_EQ(tile, expectedSize);
 }
 
@@ -169,8 +169,8 @@ TEST(Unit_IsometricViewFrame, Translate_PreserveTileSize)
   auto frame = generateIsometricViewFrame();
 
   auto tile = frame->tileSize();
-  const olc::vf2d expectedSize{constants::Pixels::DIMS.x / constants::Tiles::DIMS.x,
-                               constants::Pixels::DIMS.y / constants::Tiles::DIMS.y};
+  const Vec2f expectedSize{constants::Pixels::DIMS.x / constants::Tiles::DIMS.x,
+                           constants::Pixels::DIMS.y / constants::Tiles::DIMS.y};
   EXPECT_EQ(tile, expectedSize);
 
   olc::vf2d origin{20.0f, 51.0f};
@@ -204,8 +204,8 @@ TEST(Unit_IsometricViewFrame, ZoomIn_DoubleTileDimensions)
   frame->zoomIn(zoomCenter);
 
   auto tile = frame->tileSize();
-  const olc::vf2d expectedSize{2.0f * constants::Pixels::DIMS.x / constants::Tiles::DIMS.x,
-                               2.0f * constants::Pixels::DIMS.y / constants::Tiles::DIMS.y};
+  const Vec2f expectedSize{2.0f * constants::Pixels::DIMS.x / constants::Tiles::DIMS.x,
+                           2.0f * constants::Pixels::DIMS.y / constants::Tiles::DIMS.y};
   EXPECT_EQ(tile, expectedSize);
 }
 
@@ -241,8 +241,8 @@ TEST(Unit_IsometricViewFrame, ZoomOut_HalveTileDimensions)
   frame->zoomOut(zoomCenter);
 
   auto tile = frame->tileSize();
-  const olc::vf2d expectedSize{constants::Pixels::DIMS.x / (constants::Tiles::DIMS.x * 2.0f),
-                               constants::Pixels::DIMS.y / (constants::Tiles::DIMS.y * 2.0f)};
+  const Vec2f expectedSize{constants::Pixels::DIMS.x / (constants::Tiles::DIMS.x * 2.0f),
+                           constants::Pixels::DIMS.y / (constants::Tiles::DIMS.y * 2.0f)};
   EXPECT_EQ(tile, expectedSize);
 }
 

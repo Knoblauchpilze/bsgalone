@@ -31,7 +31,7 @@ class TiledBackground
   sprites::PackId m_bgTexturePackId{};
 
   std::optional<Vec2f> m_savedCenter{};
-  std::optional<olc::vf2d> m_savedTileDimension{};
+  std::optional<Vec2f> m_savedTileDimension{};
   olc::vf2d m_accumulatedTranslation{};
 
   void loadDecal(sprites::TexturePack &texturesLoader);

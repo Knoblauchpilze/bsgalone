@@ -12,11 +12,19 @@ add_subdirectory (
 	)
 
 add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/vector
+	)
+
+add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/colors
 	)
 
 add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/sprites
+	)
+
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/rendering
 	)
 
 add_subdirectory (

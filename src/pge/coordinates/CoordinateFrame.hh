@@ -24,7 +24,7 @@ class CoordinateFrame : public utils::CoreObject
   /// is computed from the ratio between the tiles viewport and the
   /// pixels viewport.
   /// @return - the size of a tile in pixels.
-  auto tileSize() const noexcept -> olc::vf2d;
+  auto tileSize() const noexcept -> Vec2f;
 
   /// @brief - Returns the current viewport in tiles.
   /// @return - the viewport of this coordinate frame in tiles.
