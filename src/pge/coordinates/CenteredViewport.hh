@@ -19,15 +19,11 @@ class CenteredViewport : public Viewport
   /// @param dims - the dimensions of the viewport.
   CenteredViewport(const Vectorf &center, const Vectorf &dims) noexcept;
 
-  Vectorf center() const noexcept override;
-
-  Vectorf topLeft() const noexcept override;
-
-  Vectorf dims() const noexcept override;
-
-  Vectorf relativeCoords(const float x, const float y) const noexcept override;
-
-  Vectorf absoluteCoords(const float x, const float y) const noexcept override;
+  auto center() const noexcept -> Vectorf override;
+  auto topLeft() const noexcept -> Vectorf override;
+  auto dims() const noexcept -> Vectorf override;
+  auto relativeCoords(const float x, const float y) const noexcept -> Vectorf override;
+  auto absoluteCoords(const float x, const float y) const noexcept -> Vectorf override;
 
   /// @brief - Moves the center of this viewport to the new position.
   /// @param topLeft - the new position of the center for this viewport.
@@ -44,10 +40,7 @@ class CenteredViewport : public Viewport
   /// @param sy - the scale on the `y` axis.
   void scale(const float sx, const float sy) noexcept override;
 
-  virtual bool visible(const float x,
-                       const float y,
-                       const float sx,
-                       const float sy) const noexcept override;
+  bool visible(const float x, const float y, const float sx, const float sy) const noexcept override;
 
   private:
   /// @brief - The center of this viewport.
