@@ -18,7 +18,7 @@ void TiledBackground::render(SpriteRenderer &spriteHandler, const RenderState &s
 {
   const auto pixelsViewport = state.cf.pixelsViewport();
 
-  olc::vi2d bgTileCount;
+  Vec2i bgTileCount;
   bgTileCount.x = static_cast<int>(std::ceil(pixelsViewport.dims().x / m_pixelSize));
   bgTileCount.y = static_cast<int>(std::ceil(pixelsViewport.dims().x / m_pixelSize));
 
