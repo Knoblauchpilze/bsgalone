@@ -2,7 +2,6 @@
 #pragma once
 
 #include "CoordinateFrame.hh"
-#include <maths_utils/Point2.hh>
 
 namespace pge {
 
@@ -20,14 +19,14 @@ struct RenderState
   /// @param p - the position to check in tiles.
   /// @param r - the radius of the item.
   /// @return - `true` if the object is at least partially visible.
-  bool visible(const utils::Point2i &p, float r = 1.0f) const noexcept;
+  bool visible(const Vec2i &p, const float r = 1.0f) const noexcept;
 
   /// @brief - Similar method to the above but for floating point position and
   /// a size instead of a radius which allows for non square objects.
   /// @param p - the position to check in tiles.
   /// @param sz - the size of the object.
   /// @return - `true` if the object is at least partially visible.
-  bool visible(const olc::vf2d &p, const olc::vf2d sz = olc::vf2d(1.0f, 1.0f)) const noexcept;
+  bool visible(const Vec2f &p, const Vec2f sz = Vec2f(1.0f, 1.0f)) const noexcept;
 };
 
 } // namespace pge

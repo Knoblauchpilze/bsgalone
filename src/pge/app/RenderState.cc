@@ -3,12 +3,12 @@
 
 namespace pge {
 
-bool RenderState::visible(const utils::Point2i &p, float r) const noexcept
+bool RenderState::visible(const Vec2i &p, float r) const noexcept
 {
-  return cf.tilesViewport().visible(p.x(), p.y(), r, r);
+  return cf.tilesViewport().visible(p.x, p.y, r, r);
 }
 
-bool RenderState::visible(const olc::vf2d &p, const olc::vf2d sz) const noexcept
+bool RenderState::visible(const Vec2f &p, const Vec2f sz) const noexcept
 {
   return cf.tilesViewport().visible(p.x, p.y, sz.x, sz.y);
 }
