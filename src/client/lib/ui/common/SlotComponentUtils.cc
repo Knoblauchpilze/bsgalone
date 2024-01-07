@@ -15,14 +15,14 @@ auto bgColorFromFiringState(const bsgo::SlotComponent &component) -> olc::Pixel
     case bsgo::FiringState::OUT_OF_RANGE:
       return olc::DARK_RED;
     case bsgo::FiringState::OUT_OF_POWER:
-      return toOlcPixel(Color::DARK_ORANGE);
+      return colors::toOlcPixel(colors::Name::DARK_ORANGE);
     case bsgo::FiringState::RELOADING:
       return colorGradient(olc::DARK_YELLOW,
                            olc::DARK_GREEN,
                            component.reloadPercentage(),
                            alpha::OPAQUE);
     default:
-      return toOlcPixel(Color::PINK);
+      return colors::toOlcPixel(colors::Name::PINK);
   }
 }
 

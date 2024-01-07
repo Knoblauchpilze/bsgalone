@@ -199,7 +199,7 @@ void LoginScreenUiHandler::generateProceedButton(const int width, const int heig
                           .dims          = loginButtonDimsPixels,
                           .clickCallback = [this]() { tryLogin(); }};
 
-  const auto bg   = bgConfigFromColor(toOlcPixel(Color::DARK_COBALT_BLUE));
+  const auto bg   = bgConfigFromColor(colors::toOlcPixel(colors::Name::DARK_COBALT_BLUE));
   const auto text = textConfigFromColor(LOGIN_TEXT, olc::WHITE);
   m_proceedButton = std::make_unique<UiTextMenu>(config, bg, text);
 }

@@ -180,7 +180,7 @@ void PGEApp::clearLayer()
 {
   // Clear the canvas with a neutral fully transparent color.
   SetPixelMode(olc::Pixel::ALPHA);
-  Clear(toOlcPixel(Color::TRANSPARENT_WHITE));
+  Clear(colors::toOlcPixel(colors::Name::TRANSPARENT_WHITE));
   SetPixelMode(olc::Pixel::NORMAL);
 }
 
