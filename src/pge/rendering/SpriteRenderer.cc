@@ -1,5 +1,6 @@
 
 #include "SpriteRenderer.hh"
+#include "VectorConversion.hh"
 
 namespace pge {
 
@@ -25,7 +26,7 @@ auto SpriteRenderer::getTextureHandler() noexcept -> sprites::TexturePack &
 void SpriteRenderer::drawSprite(const SpriteDesc &t, const CoordinateFrame &cf)
 {
   const auto p = cf.tilesToPixels(t.x, t.y);
-  m_packs->draw(m_renderer, t.sprite, p, t.radius * cf.tileSize());
+  m_packs->draw(m_renderer, t.sprite, toVec2f(p), t.radius * cf.tileSize());
 }
 
 void SpriteRenderer::drawWarpedSprite(const SpriteDesc &t, const CoordinateFrame &cf)
@@ -35,14 +36,14 @@ void SpriteRenderer::drawWarpedSprite(const SpriteDesc &t, const CoordinateFrame
   const auto p2 = cf.tilesToPixels(t.x + t.radius, t.y);
   const auto p3 = cf.tilesToPixels(t.x + t.radius, t.y + t.radius);
 
-  const auto p = std::array<olc::vf2d, 4>{p0, p1, p2, p3};
+  const auto p = std::array<Vec2f, 4>{toVec2f(p0), toVec2f(p1), toVec2f(p2), toVec2f(p3)};
   m_packs->draw(m_renderer, t.sprite, p);
 }
 
 void SpriteRenderer::drawRotatedSprite(const SpriteDesc &t, const CoordinateFrame &cf)
 {
   const auto p = cf.tilesToPixels(t.x, t.y);
-  m_packs->draw(m_renderer, t.sprite, p, t.radius * cf.tileSize(), t.rotation);
+  m_packs->draw(m_renderer, t.sprite, toVec2f(p), t.radius * cf.tileSize(), t.rotation);
 }
 
 void SpriteRenderer::drawRect(const SpriteDesc &t, const CoordinateFrame &cf)
@@ -51,7 +52,7 @@ void SpriteRenderer::drawRect(const SpriteDesc &t, const CoordinateFrame &cf)
   // The FillRect draws in screen space below the input position. We want it
   // the other way around.
   p.y -= cf.tileSize().y;
-  m_renderer->FillRectDecal(p, t.radius * cf.tileSize(), t.sprite.tint);
+  m_renderer->FillRectDecal(p, t.radius * toVf2d(cf.tileSize()), t.sprite.tint);
 }
 
 void SpriteRenderer::drawWarpedRect(const SpriteDesc &t, const CoordinateFrame &cf)

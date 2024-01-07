@@ -1,14 +1,15 @@
 
 #include "TexturePack.hh"
+#include "VectorConversion.hh"
 
 namespace pge::sprites {
 
-inline auto TexturePack::Pack::spriteCoords(const olc::vi2d &coord, int id) const -> olc::vi2d
+inline auto TexturePack::Pack::spriteCoords(const Vec2i &coord, int id) const -> Vec2i
 {
   const auto lID = coord.y * layout.x + coord.x + id;
   // Go back to 2D coordinates using the layout on the linearized ID and the
   // size of the sprite to obtain a pixels position.
-  return olc::vi2d((lID % layout.x) * sSize.x, (lID / layout.x) * sSize.y);
+  return Vec2i{(lID % layout.x) * sSize.x, (lID / layout.x) * sSize.y};
 }
 
 TexturePack::TexturePack()
@@ -46,36 +47,46 @@ auto TexturePack::registerPack(const PackDesc &pack) -> PackId
 
 void TexturePack::draw(olc::PixelGameEngine *pge,
                        const sprites::Sprite &s,
-                       const olc::vf2d &p,
-                       const olc::vf2d &size) const
-{
-  const auto &tp        = tryGetPackOrThrow(s.pack);
-  const auto sCoords    = tp.spriteCoords(s.sprite, s.id);
-  const olc::vf2d scale = size / tp.sSize;
-  pge->DrawPartialDecal(p, tp.decal->get(), sCoords, tp.sSize, scale, s.tint);
-}
-
-void TexturePack::draw(olc::PixelGameEngine *pge,
-                       const Sprite &s,
-                       const std::array<olc::vf2d, 4> &p) const
+                       const Vec2f &p,
+                       const Vec2f &size) const
 {
   const auto &tp     = tryGetPackOrThrow(s.pack);
   const auto sCoords = tp.spriteCoords(s.sprite, s.id);
-  pge->DrawPartialWarpedDecal(tp.decal->get(), p, sCoords, tp.sSize, s.tint);
+
+  const olc::vf2d scale{size.x / tp.sSize.x, size.y / tp.sSize.y};
+  pge->DrawPartialDecal(toVf2d(p), tp.decal->get(), toVi2d(sCoords), toVi2d(tp.sSize), scale, s.tint);
 }
 
 void TexturePack::draw(olc::PixelGameEngine *pge,
                        const Sprite &s,
-                       const olc::vf2d &p,
-                       const olc::vf2d &size,
+                       const std::array<Vec2f, 4> &p) const
+{
+  const auto &tp     = tryGetPackOrThrow(s.pack);
+  const auto sCoords = tp.spriteCoords(s.sprite, s.id);
+
+  const std::array<olc::vf2d, 4> olcArray{toVf2d(p[0]), toVf2d(p[1]), toVf2d(p[2]), toVf2d(p[3])};
+  pge->DrawPartialWarpedDecal(tp.decal->get(), olcArray, toVi2d(sCoords), toVi2d(tp.sSize), s.tint);
+}
+
+void TexturePack::draw(olc::PixelGameEngine *pge,
+                       const Sprite &s,
+                       const Vec2f &p,
+                       const Vec2f &size,
                        const float angle) const
 {
-  const auto &tp        = tryGetPackOrThrow(s.pack);
-  const auto sCoords    = tp.spriteCoords(s.sprite, s.id);
-  const auto sCenter    = sCoords + tp.sSize / 2;
-  const olc::vf2d scale = size / tp.sSize;
+  const auto &tp     = tryGetPackOrThrow(s.pack);
+  const auto sCoords = tp.spriteCoords(s.sprite, s.id);
+  const auto sCenter = sCoords + tp.sSize / 2;
 
-  pge->DrawPartialRotatedDecal(p, tp.decal->get(), angle, sCenter, sCoords, tp.sSize, scale, s.tint);
+  const olc::vf2d scale{size.x / tp.sSize.x, size.y / tp.sSize.y};
+  pge->DrawPartialRotatedDecal(toVf2d(p),
+                               tp.decal->get(),
+                               angle,
+                               toVi2d(sCenter),
+                               toVi2d(sCoords),
+                               toVi2d(tp.sSize),
+                               scale,
+                               s.tint);
 }
 
 auto TexturePack::tryGetPackOrThrow(const int packId) const -> const Pack &

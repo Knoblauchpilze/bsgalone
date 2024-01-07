@@ -22,12 +22,12 @@ CoordinateFrame::CoordinateFrame(const CenteredViewport &tiles, const TopLeftVie
   setService("coordinate");
 }
 
-auto CoordinateFrame::tileSize() const noexcept -> olc::vf2d
+auto CoordinateFrame::tileSize() const noexcept -> Vec2f
 {
   const auto tilesDims  = m_tilesViewport.dims();
   const auto pixelsDims = m_pixelsViewport.dims();
 
-  return toVf2d(pixelsDims / tilesDims);
+  return pixelsDims / tilesDims;
 }
 
 auto CoordinateFrame::tilesViewport() const noexcept -> CenteredViewport

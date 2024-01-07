@@ -2,9 +2,11 @@
 #pragma once
 
 #include "DecalResource.hh"
-#include "olcEngine.hh"
+#include "Vector2d.hh"
 #include <core_utils/CoreObject.hh>
 #include <memory>
+
+#include "olcEngine.hh"
 
 namespace pge::sprites {
 
@@ -18,12 +20,12 @@ struct PackDesc
   // Defines the size of a single texture inside the pack in pixels.
   // Should match the file layout otherwise the sprite indices will
   // not work correctly, resulting in truncated sprites.
-  olc::vi2d sSize;
+  Vec2i sSize;
 
   // Defines the dimensions of the pack in sprites. This helps to
   // load the relevant content and only consider portions of the
   // file if needed.
-  olc::vi2d layout;
+  Vec2i layout;
 };
 
 /// @brief - An identifier for a texture pack.
@@ -39,7 +41,7 @@ struct Sprite
   // The `sprite` defines an identifier for the sprite. The
   // position of the sprite in the resource pack will be
   // computed from this identifier.
-  olc::vi2d sprite;
+  Vec2i sprite;
 
   // The `id` allows to select a variant for the sprite. By
   // default this value is `0` meaning the principal display
@@ -77,10 +79,7 @@ class TexturePack : public utils::CoreObject
   /// @param s - the sprite to draw.
   /// @param p - the position where the sprite will be drawn.
   /// @param size - defines the desired size of the sprite in pixels.
-  void draw(olc::PixelGameEngine *pge,
-            const Sprite &s,
-            const olc::vf2d &p,
-            const olc::vf2d &size) const;
+  void draw(olc::PixelGameEngine *pge, const Sprite &s, const Vec2f &p, const Vec2f &size) const;
 
   /// @brief - Used to perform the drawing of the sprite as defined by the input
   /// argument using the engine. The sprite will be associated internally with
@@ -89,7 +88,7 @@ class TexturePack : public utils::CoreObject
   /// @param pge - the engine to use to perform the rendering.
   /// @param s - the sprite to draw.
   /// @param p - the position of the corners for the sprite.
-  void draw(olc::PixelGameEngine *pge, const Sprite &s, const std::array<olc::vf2d, 4> &p) const;
+  void draw(olc::PixelGameEngine *pge, const Sprite &s, const std::array<Vec2f, 4> &p) const;
 
   /// @brief - Used to perform the drawing of the sprite as defined by the input
   /// argument using the engine. The sprite will be rotated as requested.
@@ -100,8 +99,8 @@ class TexturePack : public utils::CoreObject
   /// @param angle - the angle with which the sprite is rotated.
   void draw(olc::PixelGameEngine *pge,
             const Sprite &s,
-            const olc::vf2d &p,
-            const olc::vf2d &size,
+            const Vec2f &p,
+            const Vec2f &size,
             const float angle) const;
 
   private:
@@ -109,11 +108,11 @@ class TexturePack : public utils::CoreObject
   struct Pack
   {
     // Defines the size in pixels of an individual sprite in the pack.
-    olc::vi2d sSize;
+    Vec2i sSize;
 
     // The layout of the sprites in the pack. This defines how many
     // sprites are available in the pack.
-    olc::vi2d layout;
+    Vec2i layout;
 
     // The raw data pointing to the sprites.
     DecalResourcePtr decal;
@@ -130,7 +129,7 @@ class TexturePack : public utils::CoreObject
     /// pack.
     /// @param id - the index of the variation of the sprite to use: default is `0`.
     /// @return - a vector representing the pixels coordinates for the input sprite coords.
-    olc::vi2d spriteCoords(const olc::vi2d &coord, int id = 0) const;
+    auto spriteCoords(const Vec2i &coord, const int id = 0) const -> Vec2i;
   };
 
   auto tryGetPackOrThrow(const int packId) const -> const Pack &;
@@ -142,4 +141,5 @@ class TexturePack : public utils::CoreObject
 };
 
 using TexturePackPtr = std::unique_ptr<TexturePack>;
+
 } // namespace pge::sprites
