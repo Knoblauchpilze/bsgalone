@@ -2,7 +2,7 @@
 #pragma once
 
 #include "RenderState.hh"
-#include "SpriteRenderer.hh"
+#include "Renderer.hh"
 #include "TexturePack.hh"
 #include "Vector2d.hh"
 #include <memory>
@@ -19,7 +19,7 @@ class TiledBackground
                   const float slowdownRatio,
                   sprites::TexturePack &texturesLoader);
 
-  void render(SpriteRenderer &spriteHandler, const RenderState &state);
+  void render(Renderer &engine, const RenderState &state);
 
   private:
   Vec2i m_offset{};
@@ -36,9 +36,7 @@ class TiledBackground
 
   void loadDecal(sprites::TexturePack &texturesLoader);
   void updateBackgroundOffset(const CoordinateFrame &cf);
-  void renderBackgroundTile(const Vec2i &pixelPosition,
-                            SpriteRenderer &spriteHandler,
-                            const CoordinateFrame &cf);
+  void renderBackgroundTile(const Vec2i &pixelPosition, Renderer &engine, const CoordinateFrame &cf);
 };
 
 using TiledBackgroundPtr = std::unique_ptr<TiledBackground>;

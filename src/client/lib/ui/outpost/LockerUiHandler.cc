@@ -48,7 +48,7 @@ bool LockerUiHandler::processUserInput(UserInputData &inputData)
   return m_menu->processUserInput(inputData);
 }
 
-void LockerUiHandler::render(SpriteRenderer &engine) const
+void LockerUiHandler::render(Renderer &engine) const
 {
   m_menu->render(engine.getRenderer());
 }

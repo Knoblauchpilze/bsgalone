@@ -40,12 +40,12 @@ struct Sprite
 {
   // The `pack` defines the identifier of the pack from
   // which the sprite should be picked.
-  PackId pack;
+  PackId pack{0};
 
   // The `sprite` defines an identifier for the sprite. The
   // position of the sprite in the resource pack will be
   // computed from this identifier.
-  Vec2i sprite;
+  Vec2i sprite{0, 0};
 
   // The `id` allows to select a variant for the sprite. By
   // default this value is `0` meaning the principal display

@@ -34,7 +34,7 @@ bool WeaponsUiHandler::processUserInput(UserInputData &inputData)
   return false;
 }
 
-void WeaponsUiHandler::render(SpriteRenderer &engine) const
+void WeaponsUiHandler::render(Renderer &engine) const
 {
   for (const auto &menu : m_weapons)
   {

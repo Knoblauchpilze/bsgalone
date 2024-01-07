@@ -49,7 +49,7 @@ bool MapScreenUiHandler::processUserInput(UserInputData &inputData)
   return false;
 }
 
-void MapScreenUiHandler::render(SpriteRenderer &engine) const
+void MapScreenUiHandler::render(Renderer &engine) const
 {
   for (const auto &menu : m_buttons)
   {

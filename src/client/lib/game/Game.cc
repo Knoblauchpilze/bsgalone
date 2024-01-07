@@ -64,22 +64,22 @@ void Game::setScreen(const Screen &screen)
   m_state.screen = screen;
 }
 
-void Game::generateRenderers(int width, int height, SpriteRenderer &spriteRenderer)
+void Game::generateRenderers(int width, int height, Renderer &engine)
 {
   auto login = std::make_unique<LoginScreenRenderer>();
-  login->loadResources(width, height, spriteRenderer.getTextureHandler());
+  login->loadResources(width, height, engine.getTextureHandler());
   m_renderers[Screen::LOGIN] = std::move(login);
 
   auto outpost = std::make_unique<OutpostScreenRenderer>();
-  outpost->loadResources(width, height, spriteRenderer.getTextureHandler());
+  outpost->loadResources(width, height, engine.getTextureHandler());
   m_renderers[Screen::OUTPOST] = std::move(outpost);
 
   auto game = std::make_unique<GameScreenRenderer>(m_views);
-  game->loadResources(width, height, spriteRenderer.getTextureHandler());
+  game->loadResources(width, height, engine.getTextureHandler());
   m_renderers[Screen::GAME] = std::move(game);
 
   auto map = std::make_unique<MapScreenRenderer>();
-  map->loadResources(width, height, spriteRenderer.getTextureHandler());
+  map->loadResources(width, height, engine.getTextureHandler());
   m_renderers[Screen::MAP] = std::move(map);
 }
 
@@ -162,7 +162,7 @@ void Game::processUserInput(const controls::State &controls, CoordinateFrame &fr
   }
 }
 
-void Game::render(SpriteRenderer &engine, const RenderState &state, const RenderingPass pass) const
+void Game::render(Renderer &engine, const RenderState &state, const RenderingPass pass) const
 {
   const auto itRenderer = m_renderers.find(getScreen());
   const auto itUi       = m_uiHandlers.find(getScreen());

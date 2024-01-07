@@ -72,7 +72,7 @@ bool EntityUiHandler::processUserInput(UserInputData &inputData)
   return false;
 }
 
-void EntityUiHandler::render(SpriteRenderer &engine) const
+void EntityUiHandler::render(Renderer &engine) const
 {
   for (const auto &menu : m_menus)
   {

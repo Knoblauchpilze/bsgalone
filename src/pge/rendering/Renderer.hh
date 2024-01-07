@@ -23,10 +23,10 @@ struct SpriteDesc
   sprites::Sprite sprite;
 };
 
-class SpriteRenderer
+class Renderer
 {
   public:
-  SpriteRenderer(olc::PixelGameEngine *const renderer);
+  Renderer(olc::PixelGameEngine *const renderer);
 
   auto getRenderer() const -> olc::PixelGameEngine *;
   auto getTextureHandler() noexcept -> sprites::TexturePack &;
@@ -75,6 +75,6 @@ class SpriteRenderer
   sprites::TexturePackPtr m_packs{};
 };
 
-using SpriteRendererPtr = std::unique_ptr<SpriteRenderer>;
+using RendererPtr = std::unique_ptr<Renderer>;
 
 } // namespace pge

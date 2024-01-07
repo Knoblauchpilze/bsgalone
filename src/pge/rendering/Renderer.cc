@@ -1,11 +1,11 @@
 
-#include "SpriteRenderer.hh"
+#include "Renderer.hh"
 #include "VectorConversion.hh"
 #include "olcEngine.hh"
 
 namespace pge {
 
-SpriteRenderer::SpriteRenderer(olc::PixelGameEngine *const renderer)
+Renderer::Renderer(olc::PixelGameEngine *const renderer)
   : m_renderer(renderer)
 {
   if (nullptr == m_renderer)
@@ -16,23 +16,23 @@ SpriteRenderer::SpriteRenderer(olc::PixelGameEngine *const renderer)
   m_packs = std::make_unique<sprites::TexturePack>(m_renderer);
 }
 
-auto SpriteRenderer::getRenderer() const -> olc::PixelGameEngine *
+auto Renderer::getRenderer() const -> olc::PixelGameEngine *
 {
   return m_renderer;
 }
 
-auto SpriteRenderer::getTextureHandler() noexcept -> sprites::TexturePack &
+auto Renderer::getTextureHandler() noexcept -> sprites::TexturePack &
 {
   return *m_packs;
 }
 
-void SpriteRenderer::drawSprite(const SpriteDesc &t, const CoordinateFrame &cf)
+void Renderer::drawSprite(const SpriteDesc &t, const CoordinateFrame &cf)
 {
   const auto p = cf.tilesToPixels(t.x, t.y);
   m_packs->draw(t.sprite, p, t.radius * cf.tileSize());
 }
 
-void SpriteRenderer::drawWarpedSprite(const SpriteDesc &t, const CoordinateFrame &cf)
+void Renderer::drawWarpedSprite(const SpriteDesc &t, const CoordinateFrame &cf)
 {
   const auto p0 = cf.tilesToPixels(t.x, t.y + t.radius);
   const auto p1 = cf.tilesToPixels(t.x, t.y);
@@ -43,13 +43,13 @@ void SpriteRenderer::drawWarpedSprite(const SpriteDesc &t, const CoordinateFrame
   m_packs->draw(t.sprite, p);
 }
 
-void SpriteRenderer::drawRotatedSprite(const SpriteDesc &t, const CoordinateFrame &cf)
+void Renderer::drawRotatedSprite(const SpriteDesc &t, const CoordinateFrame &cf)
 {
   const auto p = cf.tilesToPixels(t.x, t.y);
   m_packs->draw(t.sprite, p, t.radius * cf.tileSize(), t.rotation);
 }
 
-void SpriteRenderer::drawRect(const SpriteDesc &t, const CoordinateFrame &cf)
+void Renderer::drawRect(const SpriteDesc &t, const CoordinateFrame &cf)
 {
   auto p = cf.tilesToPixels(t.x, t.y);
   // The FillRect draws in screen space below the input position. We want it
@@ -58,7 +58,7 @@ void SpriteRenderer::drawRect(const SpriteDesc &t, const CoordinateFrame &cf)
   m_renderer->FillRectDecal(toVf2d(p), t.radius * toVf2d(cf.tileSize()), t.sprite.tint);
 }
 
-void SpriteRenderer::drawWarpedRect(const SpriteDesc &t, const CoordinateFrame &cf)
+void Renderer::drawWarpedRect(const SpriteDesc &t, const CoordinateFrame &cf)
 {
   const auto p0 = toVf2d(cf.tilesToPixels(t.x, t.y + t.radius));
   const auto p1 = toVf2d(cf.tilesToPixels(t.x, t.y));

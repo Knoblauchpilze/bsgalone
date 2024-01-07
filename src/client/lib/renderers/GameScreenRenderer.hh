@@ -15,9 +15,7 @@ class GameScreenRenderer : public IRenderer
   ~GameScreenRenderer() override = default;
 
   void loadResources(int width, int height, sprites::TexturePack &texturesLoader) override;
-  void render(SpriteRenderer &engine,
-              const RenderState &state,
-              const RenderingPass pass) const override;
+  void render(Renderer &engine, const RenderState &state, const RenderingPass pass) const override;
 
   private:
   bsgo::ShipViewShPtr m_shipView;
@@ -32,22 +30,16 @@ class GameScreenRenderer : public IRenderer
   sprites::PackId m_outpostTexturesPackId{};
   sprites::PackId m_bulletTexturesPackId{};
 
-  void renderDecal(SpriteRenderer &engine, const RenderState &state) const;
-  void renderDebug(SpriteRenderer &engine, const RenderState &state) const;
+  void renderDecal(Renderer &engine, const RenderState &state) const;
+  void renderDebug(Renderer &engine, const RenderState &state) const;
 
   void renderAsteroid(const bsgo::Entity &asteroid,
-                      SpriteRenderer &engine,
+                      Renderer &engine,
                       const RenderState &state) const;
-  void renderOutpost(const bsgo::Entity &outpost,
-                     SpriteRenderer &engine,
-                     const RenderState &state) const;
-  void renderBullet(const bsgo::Entity &bullet,
-                    SpriteRenderer &engine,
-                    const RenderState &state) const;
-  void renderShip(const bsgo::Entity &ship, SpriteRenderer &engine, const RenderState &state) const;
-  void renderShipDebug(const bsgo::Entity &ship,
-                       SpriteRenderer &engine,
-                       const RenderState &state) const;
+  void renderOutpost(const bsgo::Entity &outpost, Renderer &engine, const RenderState &state) const;
+  void renderBullet(const bsgo::Entity &bullet, Renderer &engine, const RenderState &state) const;
+  void renderShip(const bsgo::Entity &ship, Renderer &engine, const RenderState &state) const;
+  void renderShipDebug(const bsgo::Entity &ship, Renderer &engine, const RenderState &state) const;
 };
 
 } // namespace pge

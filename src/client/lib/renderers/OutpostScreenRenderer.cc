@@ -18,7 +18,7 @@ void OutpostScreenRenderer::loadResources(int width,
   m_scale.y      = 1.0f * height / m_outpostDecal->h();
 }
 
-void OutpostScreenRenderer::render(SpriteRenderer &engine,
+void OutpostScreenRenderer::render(Renderer &engine,
                                    const RenderState & /*state*/,
                                    const RenderingPass pass) const
 {

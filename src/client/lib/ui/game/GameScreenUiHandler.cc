@@ -39,7 +39,7 @@ bool GameScreenUiHandler::processUserInput(UserInputData &inputData)
   return false;
 }
 
-void GameScreenUiHandler::render(SpriteRenderer &engine) const
+void GameScreenUiHandler::render(Renderer &engine) const
 {
   for (const auto &ui : m_uis)
   {

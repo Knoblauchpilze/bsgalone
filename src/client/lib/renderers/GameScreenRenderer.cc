@@ -85,7 +85,7 @@ void GameScreenRenderer::loadResources(int /*width*/,
                                                          texturesLoader);
 }
 
-void GameScreenRenderer::render(SpriteRenderer &engine,
+void GameScreenRenderer::render(Renderer &engine,
                                 const RenderState &state,
                                 const RenderingPass pass) const
 {
@@ -102,7 +102,7 @@ void GameScreenRenderer::render(SpriteRenderer &engine,
   }
 }
 
-void GameScreenRenderer::renderDecal(SpriteRenderer &engine, const RenderState &state) const
+void GameScreenRenderer::renderDecal(Renderer &engine, const RenderState &state) const
 {
   m_systemBackground->render(engine, state);
 
@@ -133,7 +133,7 @@ void GameScreenRenderer::renderDecal(SpriteRenderer &engine, const RenderState &
   }
 }
 
-void GameScreenRenderer::renderDebug(SpriteRenderer &engine, const RenderState &state) const
+void GameScreenRenderer::renderDebug(Renderer &engine, const RenderState &state) const
 {
   const auto bbox  = toIBoundingBox(state.cf);
   const auto ships = m_shipView->getShipsWithin(bbox);
@@ -145,7 +145,7 @@ void GameScreenRenderer::renderDebug(SpriteRenderer &engine, const RenderState &
 }
 
 void GameScreenRenderer::renderAsteroid(const bsgo::Entity &asteroid,
-                                        SpriteRenderer &engine,
+                                        Renderer &engine,
                                         const RenderState &state) const
 {
   const auto &transform   = asteroid.transformComp();
@@ -199,7 +199,7 @@ auto tintFromFaction(const bsgo::Faction &faction) -> olc::Pixel
 } // namespace
 
 void GameScreenRenderer::renderOutpost(const bsgo::Entity &outpost,
-                                       SpriteRenderer &engine,
+                                       Renderer &engine,
                                        const RenderState &state) const
 {
   const auto &transform = outpost.transformComp();
@@ -220,7 +220,7 @@ void GameScreenRenderer::renderOutpost(const bsgo::Entity &outpost,
 }
 
 void GameScreenRenderer::renderBullet(const bsgo::Entity &bullet,
-                                      SpriteRenderer &engine,
+                                      Renderer &engine,
                                       const RenderState &state) const
 {
   const auto &transform = bullet.transformComp();
@@ -240,7 +240,7 @@ void GameScreenRenderer::renderBullet(const bsgo::Entity &bullet,
 }
 
 void GameScreenRenderer::renderShip(const bsgo::Entity &ship,
-                                    SpriteRenderer &engine,
+                                    Renderer &engine,
                                     const RenderState &state) const
 {
   const auto &transform = ship.transformComp();
@@ -292,7 +292,7 @@ const auto WEAPON_INDICATOR_SIZE            = olc::vf2d{WEAPON_INDICATOR_SIZE_PI
 
 void renderWeaponIndicator(const bsgo::TransformComponent &ship,
                            const bsgo::WeaponSlotComponent &weapon,
-                           SpriteRenderer &engine,
+                           Renderer &engine,
                            const CoordinateFrame &frame)
 {
   const Eigen::Vector3f weaponPos = ship.transformToGlobal(weapon.position());
@@ -305,7 +305,7 @@ void renderWeaponIndicator(const bsgo::TransformComponent &ship,
 } // namespace
 
 void GameScreenRenderer::renderShipDebug(const bsgo::Entity &ship,
-                                         SpriteRenderer &engine,
+                                         Renderer &engine,
                                          const RenderState &state) const
 {
   const auto tilePos  = ship.transformComp().position();

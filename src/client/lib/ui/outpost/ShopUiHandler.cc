@@ -45,7 +45,7 @@ bool ShopUiHandler::processUserInput(UserInputData &inputData)
   return m_menu->processUserInput(inputData);
 }
 
-void ShopUiHandler::render(SpriteRenderer &engine) const
+void ShopUiHandler::render(Renderer &engine) const
 {
   m_menu->render(engine.getRenderer());
 }

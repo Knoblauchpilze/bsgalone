@@ -11,10 +11,10 @@
 #include "MessageQueue.hh"
 #include "NetworkSystem.hh"
 #include "RenderState.hh"
+#include "Renderer.hh"
 #include "RenderingPass.hh"
 #include "Screen.hh"
 #include "Services.hh"
-#include "SpriteRenderer.hh"
 #include "Views.hh"
 #include <core_utils/CoreObject.hh>
 #include <core_utils/TimeUtils.hh>
@@ -43,12 +43,12 @@ class Game : public utils::CoreObject
   auto getScreen() const noexcept -> Screen;
   void setScreen(const Screen &screen);
 
-  void generateRenderers(int width, int height, SpriteRenderer &spriteRenderer);
+  void generateRenderers(int width, int height, Renderer &engine);
   void generateInputHandlers();
   void generateUiHandlers(int width, int height);
 
   void processUserInput(const controls::State &controls, CoordinateFrame &frame);
-  void render(SpriteRenderer &engine, const RenderState &state, const RenderingPass pass) const;
+  void render(Renderer &engine, const RenderState &state, const RenderingPass pass) const;
 
   /// @brief - Requests the game to be terminated. This is applied to the next
   /// iteration of the game loop.

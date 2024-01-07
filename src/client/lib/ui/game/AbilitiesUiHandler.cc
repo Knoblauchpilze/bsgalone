@@ -34,7 +34,7 @@ bool AbilitiesUiHandler::processUserInput(UserInputData &inputData)
   return false;
 }
 
-void AbilitiesUiHandler::render(SpriteRenderer &engine) const
+void AbilitiesUiHandler::render(Renderer &engine) const
 {
   for (const auto &menu : m_computers)
   {

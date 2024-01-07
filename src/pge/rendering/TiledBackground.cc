@@ -14,7 +14,7 @@ TiledBackground::TiledBackground(const Vec2i &offset,
   loadDecal(texturesLoader);
 }
 
-void TiledBackground::render(SpriteRenderer &spriteHandler, const RenderState &state)
+void TiledBackground::render(Renderer &engine, const RenderState &state)
 {
   const auto pixelsViewport = state.cf.pixelsViewport();
 
@@ -32,7 +32,7 @@ void TiledBackground::render(SpriteRenderer &spriteHandler, const RenderState &s
       pixelPos.x += (x * m_pixelSize);
       pixelPos.y += (y * m_pixelSize);
 
-      renderBackgroundTile(pixelPos, spriteHandler, state.cf);
+      renderBackgroundTile(pixelPos, engine, state.cf);
     }
   }
 }
@@ -81,7 +81,7 @@ void TiledBackground::updateBackgroundOffset(const CoordinateFrame &cf)
 }
 
 void TiledBackground::renderBackgroundTile(const Vec2i &pixelPosition,
-                                           SpriteRenderer &spriteHandler,
+                                           Renderer &engine,
                                            const CoordinateFrame &cf)
 {
   const auto tilePosition = cf.pixelsToTiles(pixelPosition.x, pixelPosition.y);
@@ -92,11 +92,9 @@ void TiledBackground::renderBackgroundTile(const Vec2i &pixelPosition,
 
   t.radius = m_pixelSize / cf.tileSize().x;
 
-  t.sprite.pack   = m_bgTexturePackId;
-  t.sprite.sprite = {0, 0};
-  t.sprite.tint   = olc::WHITE;
+  t.sprite.pack = m_bgTexturePackId;
 
-  spriteHandler.drawWarpedSprite(t, cf);
+  engine.drawWarpedSprite(t, cf);
 }
 
 } // namespace pge

@@ -26,7 +26,7 @@ bool ShipStatusUiHandler::processUserInput(UserInputData &inputData)
   return m_jumpPanel->processUserInput(inputData);
 }
 
-void ShipStatusUiHandler::render(SpriteRenderer &engine) const
+void ShipStatusUiHandler::render(Renderer &engine) const
 {
   m_threatLabel->render(engine.getRenderer());
   m_jumpPanel->render(engine.getRenderer());

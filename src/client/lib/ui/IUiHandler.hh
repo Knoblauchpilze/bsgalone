@@ -19,7 +19,7 @@ class IUiHandler : public utils::CoreObject
 
   virtual void initializeMenus(const int width, const int height) = 0;
   virtual bool processUserInput(UserInputData &inputData)         = 0;
-  virtual void render(SpriteRenderer &engine) const               = 0;
+  virtual void render(Renderer &engine) const                     = 0;
   virtual void updateUi()                                         = 0;
 
   virtual void reset();

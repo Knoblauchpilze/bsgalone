@@ -48,7 +48,7 @@ bool LoginScreenUiHandler::processUserInput(UserInputData &inputData)
   return m_proceedButton->processUserInput(inputData);
 }
 
-void LoginScreenUiHandler::render(SpriteRenderer &engine) const
+void LoginScreenUiHandler::render(Renderer &engine) const
 {
   m_loginModePanel->render(engine.getRenderer());
   m_factionPanel->render(engine.getRenderer());

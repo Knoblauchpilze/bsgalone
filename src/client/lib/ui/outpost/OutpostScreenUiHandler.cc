@@ -78,7 +78,7 @@ bool OutpostScreenUiHandler::processUserInput(UserInputData &inputData)
   return out;
 }
 
-void OutpostScreenUiHandler::render(SpriteRenderer &engine) const
+void OutpostScreenUiHandler::render(Renderer &engine) const
 {
   for (const auto &menu : m_menus)
   {
