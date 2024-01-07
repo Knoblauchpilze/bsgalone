@@ -1,8 +1,11 @@
 
 #pragma once
 
-#include "olcPixelGameEngine.h"
 #include <memory>
+
+namespace olc {
+class Decal;
+}
 
 namespace pge {
 

@@ -1,5 +1,6 @@
 
 #include "DecalResource.hh"
+#include "olcEngine.hh"
 
 namespace pge {
 
