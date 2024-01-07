@@ -141,10 +141,10 @@ class PGEApp : public utils::CoreObject, public olc::PixelGameEngine
   /// @brief - Performs the initialization of the engine to make it suits our needs.
   /// @param dims - a vector describing the dimensions of the canvas for this app in
   /// pixels.
-  /// @param pixRatio - the ratio of a pixel in the app compared to a pixel on screen.
-  /// If this value is set set to `2` it means that each pixel in the app's canvas
-  /// will be 2x2 pixels on screen.
-  void initialize(const olc::vi2d &dims, const olc::vi2d &pixRatio);
+  /// @param screenPixToEnginePixRatio - the ratio of a pixel in the app compared to
+  /// a pixel on screen. If this value is set set to `2` it means that each pixel in
+  /// the app's canvas will be 2x2 pixels on screen.
+  void initialize(const Vec2i &dims, const Vec2i &enginePixToScreenPixRatio);
 
   /// @brief - Used to perform the necessary update based on the controls that the
   /// user might have used in the game.

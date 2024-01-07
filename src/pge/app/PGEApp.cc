@@ -25,7 +25,7 @@ PGEApp::PGEApp(const AppDesc &desc)
   }
 
   // Generate and construct the window.
-  initialize(desc.dims, desc.pixRatio);
+  initialize(desc.dims, desc.enginePixToScreenPixRatio);
 }
 
 bool PGEApp::OnUserCreate()
@@ -184,17 +184,12 @@ void PGEApp::clearLayer()
   SetPixelMode(olc::Pixel::NORMAL);
 }
 
-inline void PGEApp::initialize(const olc::vi2d &dims, const olc::vi2d &pixRatio)
+inline void PGEApp::initialize(const Vec2i &dims, const Vec2i &enginePixToScreenPixRatio)
 {
-  // Construct the window. Note that we use a pixel size
-  // to screen size ratio of `1` (meaning that each pixel
-  // of the viewport will be represented by a pixel on
-  // the screen).
-  olc::rcode c = Construct(dims.x, dims.y, pixRatio.x, pixRatio.y);
-
+  const auto c = Construct(dims.x, dims.y, enginePixToScreenPixRatio.x, enginePixToScreenPixRatio.y);
   if (c != olc::OK)
   {
-    error("Could not build new frontiers application", "Initialization failed");
+    error("Could not build application", "Initialization failed");
   }
 }
 
