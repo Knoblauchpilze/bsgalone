@@ -28,7 +28,7 @@ struct TestCasePixelsToTiles
   CoordinateFramePtr frame;
 
   Vec2f pixels;
-  olc::vf2d expected;
+  Vec2f expected;
 };
 
 using PixelsToTiles = ::testing::TestWithParam<TestCasePixelsToTiles>;
@@ -65,12 +65,12 @@ struct Tiles
 
 struct Pixels
 {
-  static const olc::vf2d TOP_LEFT;
-  static const olc::vf2d DIMS;
+  static const Vec2f TOP_LEFT;
+  static const Vec2f DIMS;
 
-  static const olc::vf2d TOP_RIGHT;
-  static const olc::vf2d BOTTOM_RIGHT;
-  static const olc::vf2d BOTTOM_LEFT;
+  static const Vec2f TOP_RIGHT;
+  static const Vec2f BOTTOM_RIGHT;
+  static const Vec2f BOTTOM_LEFT;
 };
 } // namespace constants
 

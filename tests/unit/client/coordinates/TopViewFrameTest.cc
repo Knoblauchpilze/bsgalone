@@ -10,11 +10,8 @@ namespace pge::tests {
 
 auto generateTopViewFrame() -> CoordinateFramePtr
 {
-  CenteredViewport tiles = {constants::Tiles::CENTER, constants::Tiles::DIMS};
-
-  Vec2f topLeft(constants::Pixels::TOP_LEFT.x, constants::Pixels::TOP_LEFT.y);
-  Vec2f dims(constants::Pixels::DIMS.x, constants::Pixels::DIMS.y);
-  TopLeftViewport pixels = {topLeft, dims};
+  CenteredViewport tiles{constants::Tiles::CENTER, constants::Tiles::DIMS};
+  TopLeftViewport pixels{constants::Pixels::TOP_LEFT, constants::Pixels::DIMS};
   return std::make_shared<TopViewFrame>(tiles, pixels);
 }
 
@@ -27,16 +24,14 @@ TEST(Unit_TopViewFrame, Constructor)
   EXPECT_EQ(tiles.dims(), constants::Tiles::DIMS);
 
   auto tile = frame->tileSize();
-  const Vec2f expectedSize{constants::Pixels::DIMS.x / constants::Tiles::DIMS.x,
-                           constants::Pixels::DIMS.y / constants::Tiles::DIMS.y};
-  EXPECT_EQ(tile, expectedSize);
+  EXPECT_EQ(tile, constants::Pixels::DIMS / constants::Tiles::DIMS);
 }
 
 auto generateTopTestCaseTilesToPixels(const std::string &name,
                                       const Vec2f &tiles,
-                                      const olc::vf2d &expected) -> TestCaseTilesToPixels
+                                      const Vec2f &expected) -> TestCaseTilesToPixels
 {
-  return TestCaseTilesToPixels{name, generateTopViewFrame(), tiles, Vec2f{expected.x, expected.y}};
+  return TestCaseTilesToPixels{name, generateTopViewFrame(), tiles, expected};
 }
 
 // Useful IEEE calculators:
@@ -65,13 +60,10 @@ INSTANTIATE_TEST_CASE_P(
   generateTestNameTilesToPixels);
 
 auto generateTopTestCasePixelsToTiles(const std::string &name,
-                                      const olc::vf2d &pixels,
+                                      const Vec2f &pixels,
                                       const Vec2f &expected) -> TestCasePixelsToTiles
 {
-  return TestCasePixelsToTiles{name,
-                               generateTopViewFrame(),
-                               Vec2f(pixels.x, pixels.y),
-                               olc::vf2d(expected.x, expected.y)};
+  return TestCasePixelsToTiles{name, generateTopViewFrame(), pixels, expected};
 }
 
 INSTANTIATE_TEST_CASE_P(
@@ -136,10 +128,9 @@ TEST(Unit_TopViewFrame, Translate)
   frame->beginTranslation(origin);
 
   Vec2f translationTiles{2.6f, -1.7f};
-  const olc::vf2d scale{constants::Pixels::DIMS.x / constants::Tiles::DIMS.x,
-                        constants::Pixels::DIMS.y / constants::Tiles::DIMS.y};
+  const auto scale = constants::Pixels::DIMS / constants::Tiles::DIMS;
 
-  auto final = origin + translationTiles * Vec2f(scale.x, scale.y);
+  auto final = origin + translationTiles * scale;
   frame->translate(final);
 
   auto tiles = frame->tilesViewport();
@@ -159,9 +150,7 @@ TEST(Unit_TopViewFrame, Translate_PreserveTileSize)
   auto frame = generateTopViewFrame();
 
   auto tile = frame->tileSize();
-  const Vec2f expectedSize{constants::Pixels::DIMS.x / constants::Tiles::DIMS.x,
-                           constants::Pixels::DIMS.y / constants::Tiles::DIMS.y};
-  EXPECT_EQ(tile, expectedSize);
+  EXPECT_EQ(tile, constants::Pixels::DIMS / constants::Tiles::DIMS);
 
   Vec2f origin{20.0f, 51.0f};
   frame->beginTranslation(origin);
@@ -170,7 +159,7 @@ TEST(Unit_TopViewFrame, Translate_PreserveTileSize)
   frame->translate(final);
 
   tile = frame->tileSize();
-  EXPECT_EQ(tile, expectedSize);
+  EXPECT_EQ(tile, constants::Pixels::DIMS / constants::Tiles::DIMS);
 }
 
 TEST(Unit_TopViewFrame, ZoomIn)
@@ -194,9 +183,7 @@ TEST(Unit_TopViewFrame, ZoomIn_DoubleTileDimensions)
   frame->zoomIn(zoomCenter);
 
   auto tile = frame->tileSize();
-  const Vec2f expectedSize{2.0f * constants::Pixels::DIMS.x / constants::Tiles::DIMS.x,
-                           2.0f * constants::Pixels::DIMS.y / constants::Tiles::DIMS.y};
-  EXPECT_EQ(tile, expectedSize);
+  EXPECT_EQ(tile, 2.0f * constants::Pixels::DIMS / constants::Tiles::DIMS);
 }
 
 TEST(Unit_TopViewFrame, ZoomIn_HalveTilesViewport)
@@ -231,9 +218,7 @@ TEST(Unit_TopViewFrame, ZoomOut_HalveTileDimensions)
   frame->zoomOut(zoomCenter);
 
   auto tile = frame->tileSize();
-  const Vec2f expectedSize{constants::Pixels::DIMS.x / (constants::Tiles::DIMS.x * 2.0f),
-                           constants::Pixels::DIMS.y / (constants::Tiles::DIMS.y * 2.0f)};
-  EXPECT_EQ(tile, expectedSize);
+  EXPECT_EQ(tile, (constants::Pixels::DIMS / constants::Tiles::DIMS) / 2.0f);
 }
 
 TEST(Unit_TopViewFrame, ZoomOut_DoubleTilesViewport)
