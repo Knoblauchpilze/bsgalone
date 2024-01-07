@@ -177,7 +177,7 @@ TEST(Unit_TopViewFrame, ZoomIn)
 {
   auto frame = generateTopViewFrame();
 
-  olc::vf2d zoomCenter{35.0f, 56.0f};
+  Vec2f zoomCenter{35.0f, 56.0f};
   auto tilesPos = frame->pixelsToTiles(zoomCenter.x, zoomCenter.y);
 
   frame->zoomIn(zoomCenter);
@@ -190,7 +190,7 @@ TEST(Unit_TopViewFrame, ZoomIn_DoubleTileDimensions)
 {
   auto frame = generateTopViewFrame();
 
-  olc::vf2d zoomCenter{35.0f, 56.0f};
+  Vec2f zoomCenter{35.0f, 56.0f};
   frame->zoomIn(zoomCenter);
 
   auto tile = frame->tileSize();
@@ -203,7 +203,7 @@ TEST(Unit_TopViewFrame, ZoomIn_HalveTilesViewport)
 {
   auto frame = generateTopViewFrame();
 
-  olc::vf2d zoomCenter{35.0f, 56.0f};
+  Vec2f zoomCenter{35.0f, 56.0f};
   frame->zoomIn(zoomCenter);
 
   auto dims = frame->tilesViewport().dims();
@@ -214,7 +214,7 @@ TEST(Unit_TopViewFrame, ZoomOut)
 {
   auto frame = generateTopViewFrame();
 
-  olc::vf2d zoomCenter{118.0f, 72.0f};
+  Vec2f zoomCenter{118.0f, 72.0f};
   auto tilesPos = frame->pixelsToTiles(zoomCenter.x, zoomCenter.y);
 
   frame->zoomOut(zoomCenter);
@@ -227,7 +227,7 @@ TEST(Unit_TopViewFrame, ZoomOut_HalveTileDimensions)
 {
   auto frame = generateTopViewFrame();
 
-  olc::vf2d zoomCenter{35.0f, 56.0f};
+  Vec2f zoomCenter{35.0f, 56.0f};
   frame->zoomOut(zoomCenter);
 
   auto tile = frame->tileSize();
@@ -240,7 +240,7 @@ TEST(Unit_TopViewFrame, ZoomOut_DoubleTilesViewport)
 {
   auto frame = generateTopViewFrame();
 
-  olc::vf2d zoomCenter{35.0f, 56.0f};
+  Vec2f zoomCenter{35.0f, 56.0f};
   frame->zoomOut(zoomCenter);
 
   auto dims = frame->tilesViewport().dims();

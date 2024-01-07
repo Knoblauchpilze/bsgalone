@@ -279,20 +279,20 @@ auto PGEApp::handleInputs() -> PGEApp::InputChanges
     }
   }
 
-  olc::vi2d mPos   = GetMousePos();
-  m_controls.mPosX = mPos.x;
-  m_controls.mPosY = mPos.y;
+  Vec2f mPos(GetMousePos().x, GetMousePos().y);
+  m_controls.mPosX = static_cast<int>(mPos.x);
+  m_controls.mPosY = static_cast<int>(mPos.y);
 
   if (!m_fixedFrame)
   {
     int scroll = GetMouseWheel();
     if (scroll > 0)
     {
-      m_frame->zoomIn(GetMousePos());
+      m_frame->zoomIn(mPos);
     }
     if (scroll < 0)
     {
-      m_frame->zoomOut(GetMousePos());
+      m_frame->zoomOut(mPos);
     }
   }
 
