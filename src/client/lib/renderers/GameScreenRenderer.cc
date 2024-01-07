@@ -298,7 +298,7 @@ void renderWeaponIndicator(const bsgo::TransformComponent &ship,
   const Eigen::Vector3f weaponPos = ship.transformToGlobal(weapon.position());
 
   const auto pixelPos     = frame.tilesToPixels(weaponPos(0), weaponPos(1));
-  const auto indicatorPos = pixelPos - WEAPON_INDICATOR_SIZE / 2.0f;
+  const auto indicatorPos = olc::vf2d{pixelPos.x, pixelPos.y} - WEAPON_INDICATOR_SIZE / 2.0f;
 
   engine.getRenderer()->FillRectDecal(indicatorPos, WEAPON_INDICATOR_SIZE, olc::YELLOW);
 }
@@ -308,10 +308,10 @@ void GameScreenRenderer::renderShipDebug(const bsgo::Entity &ship,
                                          SpriteRenderer &engine,
                                          const RenderState &state) const
 {
-  const auto tilePos = ship.transformComp().position();
-  olc::vi2d pixelPos = state.cf.tilesToPixels(tilePos(0), tilePos(1));
+  const auto tilePos  = ship.transformComp().position();
+  const auto pixelPos = state.cf.tilesToPixels(tilePos(0), tilePos(1));
 
-  olc::vi2d pos    = pixelPos;
+  olc::vi2d pos{static_cast<int>(pixelPos.x), static_cast<int>(pixelPos.y)};
   std::string text = "accel: ";
   const auto accel = ship.velocityComp().acceleration();
   text += floatToStr(accel(0));

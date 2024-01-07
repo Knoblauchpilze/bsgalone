@@ -33,7 +33,7 @@ TEST(Unit_IsometricViewFrame, Constructor)
 
 auto generateIsometricTestCaseTilesToPixels(const std::string &name,
                                             const Vec2f &tiles,
-                                            const olc::vf2d &expected) -> TestCaseTilesToPixels
+                                            const Vec2f &expected) -> TestCaseTilesToPixels
 {
   return TestCaseTilesToPixels{name, generateIsometricViewFrame(), tiles, expected};
 }

@@ -30,7 +30,7 @@ TEST_P(TilesToPixels, Test)
 {
   const auto param = GetParam();
 
-  olc::vf2d pixels = param.frame->tilesToPixels(param.tiles.x, param.tiles.y);
+  const auto pixels = param.frame->tilesToPixels(param.tiles.x, param.tiles.y);
 
   EXPECT_EQ(param.expected, pixels);
 }

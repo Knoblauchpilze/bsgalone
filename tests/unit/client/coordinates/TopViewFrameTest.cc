@@ -36,7 +36,7 @@ auto generateTopTestCaseTilesToPixels(const std::string &name,
                                       const Vec2f &tiles,
                                       const olc::vf2d &expected) -> TestCaseTilesToPixels
 {
-  return TestCaseTilesToPixels{name, generateTopViewFrame(), tiles, expected};
+  return TestCaseTilesToPixels{name, generateTopViewFrame(), tiles, Vec2f{expected.x, expected.y}};
 }
 
 // Useful IEEE calculators:

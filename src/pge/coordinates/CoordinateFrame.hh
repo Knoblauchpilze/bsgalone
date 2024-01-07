@@ -39,7 +39,7 @@ class CoordinateFrame : public utils::CoreObject
   /// @param x - x coordinate in tiles.
   /// @param y - y coordinate in tiles.
   /// @return - the pixel position for the input tile position.
-  auto tilesToPixels(float x, float y) const noexcept -> olc::vf2d;
+  auto tilesToPixels(float x, float y) const noexcept -> Vec2f;
 
   /// @brief - Convert the input pixel coordinates to the corresponding
   /// tile coordinates.
