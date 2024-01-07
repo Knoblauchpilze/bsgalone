@@ -267,19 +267,20 @@ auto PGEApp::handleInputs() -> PGEApp::InputChanges
     return ic;
   }
 
+  Vec2f mPos(GetMousePos().x, GetMousePos().y);
+
   if (!m_fixedFrame)
   {
     if (m_controls.pressed(controls::keys::RIGHT))
     {
-      m_frame->beginTranslation(GetMousePos());
+      m_frame->beginTranslation(mPos);
     }
     if (m_controls.held(controls::keys::RIGHT))
     {
-      m_frame->translate(GetMousePos());
+      m_frame->translate(mPos);
     }
   }
 
-  Vec2f mPos(GetMousePos().x, GetMousePos().y);
   m_controls.mPosX = static_cast<int>(mPos.x);
   m_controls.mPosY = static_cast<int>(mPos.y);
 

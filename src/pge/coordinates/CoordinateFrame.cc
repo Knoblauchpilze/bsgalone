@@ -99,13 +99,13 @@ void CoordinateFrame::zoomOut(const Vec2f &pos)
   zoom(0.5f, pos);
 }
 
-void CoordinateFrame::beginTranslation(const olc::vf2d &pixelsOrigin)
+void CoordinateFrame::beginTranslation(const Vec2f &pixelsOrigin)
 {
-  m_pixelsTranslationOrigin = toVec2f(pixelsOrigin);
+  m_pixelsTranslationOrigin = pixelsOrigin;
   m_tilesCachedPOrigin      = m_tilesViewport.center();
 }
 
-void CoordinateFrame::translate(const olc::vf2d &pixelsOrigin)
+void CoordinateFrame::translate(const Vec2f &pixelsOrigin)
 {
   auto originTiles      = pixelsToTiles(m_pixelsTranslationOrigin.x, m_pixelsTranslationOrigin.y);
   auto posTiles         = pixelsToTiles(pixelsOrigin.x, pixelsOrigin.y);
@@ -114,9 +114,9 @@ void CoordinateFrame::translate(const olc::vf2d &pixelsOrigin)
   m_tilesViewport.moveTo(m_tilesCachedPOrigin + translationTiles);
 }
 
-void CoordinateFrame::moveTo(const olc::vf2d &tilesCenter)
+void CoordinateFrame::moveTo(const Vec2f &tilesCenter)
 {
-  m_tilesViewport.moveTo(toVec2f(tilesCenter));
+  m_tilesViewport.moveTo(tilesCenter);
 }
 
 void CoordinateFrame::zoom(float factor, const Vec2f &pos)

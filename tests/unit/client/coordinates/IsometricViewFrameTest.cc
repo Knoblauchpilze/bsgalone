@@ -153,10 +153,10 @@ TEST(Unit_IsometricViewFrame, Translate)
 {
   auto frame = generateIsometricViewFrame();
 
-  olc::vf2d origin{20.0f, 51.0f};
+  Vec2f origin{20.0f, 51.0f};
   frame->beginTranslation(origin);
 
-  olc::vf2d final{110.0f, 75.0f};
+  Vec2f final{110.0f, 75.0f};
   frame->translate(final);
 
   auto tiles = frame->tilesViewport();
@@ -173,10 +173,10 @@ TEST(Unit_IsometricViewFrame, Translate_PreserveTileSize)
                            constants::Pixels::DIMS.y / constants::Tiles::DIMS.y};
   EXPECT_EQ(tile, expectedSize);
 
-  olc::vf2d origin{20.0f, 51.0f};
+  Vec2f origin{20.0f, 51.0f};
   frame->beginTranslation(origin);
 
-  olc::vf2d final{37.2f, 43.2f};
+  Vec2f final{37.2f, 43.2f};
   frame->translate(final);
 
   tile = frame->tileSize();
