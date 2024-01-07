@@ -136,9 +136,8 @@ void Game::processUserInput(const controls::State &controls, CoordinateFrame &fr
   if (controls.released(controls::mouse::LEFT) && inputHandler != m_inputHandlers.end()
       && !userInputRelevant)
   {
-    olc::vf2d it;
-    olc::vi2d tp = frame.pixelsToTilesAndIntra(olc::vi2d(controls.mPosX, controls.mPosY), &it);
-
+    Vec2f it;
+    const auto tp = frame.pixelsToTilesAndIntra(Vec2f(controls.mPosX, controls.mPosY), &it);
     inputHandler->second->performAction(tp.x + it.x, tp.y + it.y, controls);
   }
 

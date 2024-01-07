@@ -73,12 +73,12 @@ auto CoordinateFrame::pixelsToTiles(float x, float y) const noexcept -> olc::vf2
   return toVf2d(m_tilesViewport.absoluteCoords(transformed.x, transformed.y));
 }
 
-auto CoordinateFrame::pixelsToTilesAndIntra(const olc::vf2d &pixels,
-                                            olc::vf2d *intraTile) const noexcept -> olc::vi2d
+auto CoordinateFrame::pixelsToTilesAndIntra(const Vec2f &pixels, Vec2f *intraTile) const noexcept
+  -> Vec2i
 {
   auto tiles = pixelsToTiles(pixels.x, pixels.y);
 
-  olc::vi2d out(static_cast<int>(std::floor(tiles.x)), static_cast<int>(std::floor(tiles.y)));
+  Vec2i out(static_cast<int>(std::floor(tiles.x)), static_cast<int>(std::floor(tiles.y)));
 
   if (intraTile != nullptr)
   {

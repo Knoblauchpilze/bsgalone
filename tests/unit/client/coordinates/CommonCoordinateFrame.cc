@@ -60,8 +60,8 @@ TEST_P(PixelsToTilesIntra, Test)
 {
   const auto param = GetParam();
 
-  olc::vf2d intra;
-  olc::vi2d tiles = param.frame->pixelsToTilesAndIntra(param.pixels, &intra);
+  Vec2f intra;
+  const auto tiles = param.frame->pixelsToTilesAndIntra(param.pixels, &intra);
 
   EXPECT_EQ(param.expectedTiles, tiles);
   EXPECT_EQ(param.expectedIntra, intra);
