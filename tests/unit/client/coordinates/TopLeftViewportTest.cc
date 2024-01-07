@@ -12,7 +12,7 @@ const olc::vf2d DIMS{4.0f, 15.0f};
 
 auto generateTopLeftViewport() -> ViewportPtr
 {
-  return std::make_shared<TopLeftViewport>(TOP_LEFT, DIMS);
+  return std::make_unique<TopLeftViewport>(TOP_LEFT, DIMS);
 }
 
 auto generateTopLeftTestCaseRelative(const std::string &name,

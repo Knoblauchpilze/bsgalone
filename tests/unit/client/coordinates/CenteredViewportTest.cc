@@ -11,7 +11,7 @@ const olc::vf2d DIMS{4.0f, 10.0f};
 
 auto generateCenteredViewport() -> ViewportPtr
 {
-  return std::make_shared<CenteredViewport>(CENTER, DIMS);
+  return std::make_unique<CenteredViewport>(CENTER, DIMS);
 }
 
 auto generateCenteredTestCaseRelative(const std::string &name,
