@@ -63,7 +63,7 @@ void App::drawDecal(const RenderState &res)
 {
   // Clear rendering target.
   SetPixelMode(olc::Pixel::ALPHA);
-  Clear(toOlcPixel(Color::OFF_BLACK));
+  Clear(colors::toOlcPixel(colors::Name::OFF_BLACK));
 
   m_game->render(*m_spriteRenderer, res, RenderingPass::DECAL);
 
@@ -74,7 +74,7 @@ void App::draw(const RenderState &res)
 {
   // Clear rendering target.
   SetPixelMode(olc::Pixel::ALPHA);
-  Clear(toOlcPixel(Color::TRANSPARENT_WHITE));
+  Clear(colors::toOlcPixel(colors::Name::TRANSPARENT_WHITE));
 
   m_game->render(*m_spriteRenderer, res, RenderingPass::SPRITES);
 
@@ -85,7 +85,7 @@ void App::drawUI(const RenderState &res)
 {
   // Clear rendering target.
   SetPixelMode(olc::Pixel::ALPHA);
-  Clear(toOlcPixel(Color::TRANSPARENT_WHITE));
+  Clear(colors::toOlcPixel(colors::Name::TRANSPARENT_WHITE));
 
   m_game->render(*m_spriteRenderer, res, RenderingPass::UI);
 
@@ -96,7 +96,7 @@ void App::drawDebug(const RenderState &res)
 {
   // Clear rendering target.
   SetPixelMode(olc::Pixel::ALPHA);
-  Clear(toOlcPixel(Color::TRANSPARENT_WHITE));
+  Clear(colors::toOlcPixel(colors::Name::TRANSPARENT_WHITE));
 
   m_game->render(*m_spriteRenderer, res, RenderingPass::DEBUG);
 

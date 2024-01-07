@@ -217,7 +217,7 @@ constexpr auto ELECTRONIC_SUPPORT_TEXT = "Your systems are being improved by ele
 
 auto createSlotMessage(const bsgo::SlotMessage & /*message*/) -> TextConfig
 {
-  return textConfigFromColor(ELECTRONIC_SUPPORT_TEXT, toOlcPixel(Color::APPLE_GREEN));
+  return textConfigFromColor(ELECTRONIC_SUPPORT_TEXT, colors::toOlcPixel(colors::Name::APPLE_GREEN));
 }
 
 auto createTextConfigForMessage(const bsgo::IMessage &message,
@@ -248,7 +248,7 @@ auto LogUiHandler::createMenuFromMessage(const bsgo::IMessage &message) -> UiMen
 {
   const olc::vi2d pos{m_offset.x - LOG_MENU_DIMS.x / 2, m_offset.y};
   const MenuConfig config{.pos = pos, .dims = LOG_MENU_DIMS, .highlightable = false};
-  const BackgroundConfig bg = bgConfigFromColor(toOlcPixel(Color::TRANSPARENT_WHITE));
+  const BackgroundConfig bg = bgConfigFromColor(colors::toOlcPixel(colors::Name::TRANSPARENT_WHITE));
 
   const auto text = createTextConfigForMessage(message, *m_systemView, *m_resourceView);
 

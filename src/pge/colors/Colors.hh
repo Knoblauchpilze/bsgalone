@@ -3,9 +3,9 @@
 
 #include "olcEngine.hh"
 
-namespace pge {
+namespace pge::colors {
 
-enum class Color
+enum class Name
 {
   AMBER,
   AMETHYST,
@@ -71,6 +71,6 @@ enum class Color
   TRANSPARENT_BLACK
 };
 
-auto toOlcPixel(const Color &color) -> olc::Pixel;
+auto toOlcPixel(const Name &name) -> olc::Pixel;
 
-} // namespace pge
+} // namespace pge::colors

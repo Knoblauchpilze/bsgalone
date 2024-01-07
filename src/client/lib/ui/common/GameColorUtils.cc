@@ -13,7 +13,7 @@ auto colorFromResourceName(const std::string &name) -> olc::Pixel
   }
   if (TITANE_NAME == name)
   {
-    return toOlcPixel(Color::PURPLE);
+    return colors::toOlcPixel(colors::Name::PURPLE);
   }
 
   throw std::invalid_argument("Unsupported resource name " + name);
