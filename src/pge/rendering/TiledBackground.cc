@@ -3,7 +3,7 @@
 
 namespace pge {
 
-TiledBackground::TiledBackground(const olc::vi2d &offset,
+TiledBackground::TiledBackground(const Vec2i &offset,
                                  const int pixelSize,
                                  const float slowdownRatio,
                                  sprites::TexturePack &texturesLoader)
@@ -28,7 +28,7 @@ void TiledBackground::render(SpriteRenderer &spriteHandler, const RenderState &s
   {
     for (auto x = -1; x <= bgTileCount.x; ++x)
     {
-      olc::vf2d pixelPos = m_offset;
+      Vec2i pixelPos = m_offset;
       pixelPos.x += (x * m_pixelSize);
       pixelPos.y += (y * m_pixelSize);
 
@@ -80,7 +80,7 @@ void TiledBackground::updateBackgroundOffset(const CoordinateFrame &cf)
   m_offset.y = m_offset.y % m_pixelSize;
 }
 
-void TiledBackground::renderBackgroundTile(const olc::vi2d &pixelPosition,
+void TiledBackground::renderBackgroundTile(const Vec2i &pixelPosition,
                                            SpriteRenderer &spriteHandler,
                                            const CoordinateFrame &cf)
 {
