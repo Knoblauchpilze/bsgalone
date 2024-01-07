@@ -2,17 +2,6 @@
 #include "CoordinateFrame.hh"
 
 namespace pge {
-namespace {
-auto toVf2d(const Vec2f &in) -> olc::vf2d
-{
-  return olc::vf2d{in.x, in.y};
-}
-
-auto toVec2f(const olc::vf2d &in) -> Vec2f
-{
-  return Vec2f{in.x, in.y};
-}
-} // namespace
 
 CoordinateFrame::CoordinateFrame(const CenteredViewport &tiles, const TopLeftViewport &pixels)
   : utils::CoreObject("frame")
@@ -61,7 +50,7 @@ auto CoordinateFrame::tilesToPixels(float x, float y) const noexcept -> Vec2f
   return m_pixelsViewport.absoluteCoords(transformed.x, transformed.y);
 }
 
-auto CoordinateFrame::pixelsToTiles(float x, float y) const noexcept -> olc::vf2d
+auto CoordinateFrame::pixelsToTiles(float x, float y) const noexcept -> Vec2f
 {
   auto rel = m_pixelsViewport.relativeCoords(x, y);
   // Reverse operation of the `tilesToPixels`.
@@ -70,7 +59,7 @@ auto CoordinateFrame::pixelsToTiles(float x, float y) const noexcept -> olc::vf2
 
   auto transformed = normalizedPixelsToTiles(rel);
 
-  return toVf2d(m_tilesViewport.absoluteCoords(transformed.x, transformed.y));
+  return m_tilesViewport.absoluteCoords(transformed.x, transformed.y);
 }
 
 auto CoordinateFrame::pixelsToTilesAndIntra(const Vec2f &pixels, Vec2f *intraTile) const noexcept
@@ -109,7 +98,7 @@ void CoordinateFrame::translate(const Vec2f &pixelsOrigin)
 {
   auto originTiles      = pixelsToTiles(m_pixelsTranslationOrigin.x, m_pixelsTranslationOrigin.y);
   auto posTiles         = pixelsToTiles(pixelsOrigin.x, pixelsOrigin.y);
-  auto translationTiles = toVec2f(originTiles - posTiles);
+  auto translationTiles = originTiles - posTiles;
 
   m_tilesViewport.moveTo(m_tilesCachedPOrigin + translationTiles);
 }
@@ -123,7 +112,7 @@ void CoordinateFrame::zoom(float factor, const Vec2f &pos)
 {
   auto dPixels = pos - m_pixelsViewport.topLeft();
 
-  auto pTiles = toVec2f(pixelsToTiles(pos.x, pos.y));
+  auto pTiles = pixelsToTiles(pos.x, pos.y);
   auto dTiles = pTiles - m_tilesViewport.center();
 
   dPixels /= factor;

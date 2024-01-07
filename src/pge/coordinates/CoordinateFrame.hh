@@ -6,8 +6,6 @@
 #include <core_utils/CoreObject.hh>
 #include <memory>
 
-#include "olcEngine.hh"
-
 namespace pge {
 
 class CoordinateFrame : public utils::CoreObject
@@ -46,7 +44,7 @@ class CoordinateFrame : public utils::CoreObject
   /// @param x - x coordinate in pixels.
   /// @param y - y coordinate in pixels.
   /// @return - the tile position for the input pixel position.
-  auto pixelsToTiles(float x, float y) const noexcept -> olc::vf2d;
+  auto pixelsToTiles(float x, float y) const noexcept -> Vec2f;
 
   /// @brief - Similar to the above method but convert the tiles position
   /// to an integer representation.
