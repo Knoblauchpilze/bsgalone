@@ -39,7 +39,7 @@ bool GameOverUiHandler::processUserInput(UserInputData &inputData)
   return m_menu->processUserInput(inputData);
 }
 
-void GameOverUiHandler::render(SpriteRenderer &engine) const
+void GameOverUiHandler::render(Renderer &engine) const
 {
   m_menu->render(engine.getRenderer());
 }

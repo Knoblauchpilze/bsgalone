@@ -3,8 +3,8 @@
 
 #include "CoordinateFrame.hh"
 #include "RenderState.hh"
+#include "Renderer.hh"
 #include "RenderingPass.hh"
-#include "SpriteRenderer.hh"
 #include <core_utils/CoreObject.hh>
 #include <memory>
 
@@ -17,7 +17,7 @@ class IRenderer : public utils::CoreObject
   ~IRenderer() override = default;
 
   virtual void loadResources(int width, int height, sprites::TexturePack &texturesLoader) = 0;
-  virtual void render(SpriteRenderer &engine,
+  virtual void render(Renderer &engine,
                       const RenderState &state,
                       const RenderingPass pass) const                                     = 0;
 };

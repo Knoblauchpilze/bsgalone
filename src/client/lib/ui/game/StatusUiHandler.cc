@@ -61,7 +61,7 @@ bool StatusUiHandler::processUserInput(UserInputData &inputData)
   return m_logoutConfirmation->processUserInput(inputData);
 }
 
-void StatusUiHandler::render(SpriteRenderer &engine) const
+void StatusUiHandler::render(Renderer &engine) const
 {
   m_statusBar->render(engine.getRenderer());
   m_logoutConfirmation->render(engine.getRenderer());

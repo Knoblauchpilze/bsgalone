@@ -39,10 +39,10 @@ void App::loadResources()
 {
   setLayerTint(Layer::Draw, semiOpaque(olc::WHITE));
 
-  m_spriteRenderer = std::make_unique<SpriteRenderer>(this);
-  m_game           = std::make_shared<Game>();
+  m_renderer = std::make_unique<Renderer>(this);
+  m_game     = std::make_shared<Game>();
 
-  m_game->generateRenderers(ScreenWidth(), ScreenHeight(), *m_spriteRenderer);
+  m_game->generateRenderers(ScreenWidth(), ScreenHeight(), *m_renderer);
   m_game->generateInputHandlers();
   m_game->generateUiHandlers(ScreenWidth(), ScreenHeight());
 
@@ -55,7 +55,7 @@ void App::loadResources()
 
 void App::cleanResources()
 {
-  m_spriteRenderer.reset();
+  m_renderer.reset();
   m_game.reset();
 }
 
@@ -65,7 +65,7 @@ void App::drawDecal(const RenderState &res)
   SetPixelMode(olc::Pixel::ALPHA);
   Clear(colors::toOlcPixel(colors::Name::OFF_BLACK));
 
-  m_game->render(*m_spriteRenderer, res, RenderingPass::DECAL);
+  m_game->render(*m_renderer, res, RenderingPass::DECAL);
 
   SetPixelMode(olc::Pixel::NORMAL);
 }
@@ -76,7 +76,7 @@ void App::draw(const RenderState &res)
   SetPixelMode(olc::Pixel::ALPHA);
   Clear(colors::toOlcPixel(colors::Name::TRANSPARENT_WHITE));
 
-  m_game->render(*m_spriteRenderer, res, RenderingPass::SPRITES);
+  m_game->render(*m_renderer, res, RenderingPass::SPRITES);
 
   SetPixelMode(olc::Pixel::NORMAL);
 }
@@ -87,7 +87,7 @@ void App::drawUI(const RenderState &res)
   SetPixelMode(olc::Pixel::ALPHA);
   Clear(colors::toOlcPixel(colors::Name::TRANSPARENT_WHITE));
 
-  m_game->render(*m_spriteRenderer, res, RenderingPass::UI);
+  m_game->render(*m_renderer, res, RenderingPass::UI);
 
   SetPixelMode(olc::Pixel::NORMAL);
 }
@@ -98,7 +98,7 @@ void App::drawDebug(const RenderState &res)
   SetPixelMode(olc::Pixel::ALPHA);
   Clear(colors::toOlcPixel(colors::Name::TRANSPARENT_WHITE));
 
-  m_game->render(*m_spriteRenderer, res, RenderingPass::DEBUG);
+  m_game->render(*m_renderer, res, RenderingPass::DEBUG);
 
   // Draw cursor's position.
   const Vec2f mp(GetMousePos().x, GetMousePos().y);
@@ -129,7 +129,7 @@ void App::renderCursor(const RenderState &res)
   s.x           = mouseTilePosition.x;
   s.y           = mouseTilePosition.y;
   s.sprite.tint = semiOpaque(olc::YELLOW);
-  m_spriteRenderer->drawWarpedRect(s, res.cf);
+  m_renderer->drawWarpedRect(s, res.cf);
 }
 
 } // namespace pge

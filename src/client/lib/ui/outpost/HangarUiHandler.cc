@@ -40,7 +40,7 @@ bool HangarUiHandler::processUserInput(UserInputData &inputData)
   return m_menu->processUserInput(inputData);
 }
 
-void HangarUiHandler::render(SpriteRenderer &engine) const
+void HangarUiHandler::render(Renderer &engine) const
 {
   m_menu->render(engine.getRenderer());
 }

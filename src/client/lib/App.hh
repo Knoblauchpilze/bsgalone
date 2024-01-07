@@ -3,7 +3,7 @@
 
 #include "Game.hh"
 #include "PGEApp.hh"
-#include "SpriteRenderer.hh"
+#include "Renderer.hh"
 
 namespace pge {
 
@@ -33,7 +33,7 @@ class App : public PGEApp
 
   private:
   GameShPtr m_game{nullptr};
-  SpriteRendererPtr m_spriteRenderer{nullptr};
+  RendererPtr m_renderer{nullptr};
 };
 
 } // namespace pge

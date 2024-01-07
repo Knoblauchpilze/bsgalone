@@ -49,7 +49,7 @@ bool LogUiHandler::processUserInput(UserInputData & /*inputData*/)
   return false;
 }
 
-void LogUiHandler::render(SpriteRenderer &engine) const
+void LogUiHandler::render(Renderer &engine) const
 {
   for (const auto &message : m_logs)
   {

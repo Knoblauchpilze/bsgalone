@@ -16,7 +16,7 @@ void LoginScreenRenderer::loadResources(int width, int height, sprites::TextureP
   m_scale.y = 1.0f * height / m_bgDecal->h();
 }
 
-void LoginScreenRenderer::render(SpriteRenderer &engine,
+void LoginScreenRenderer::render(Renderer &engine,
                                  const RenderState & /*state*/,
                                  const RenderingPass pass) const
 {

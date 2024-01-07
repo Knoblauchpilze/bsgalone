@@ -16,7 +16,7 @@ void MapScreenRenderer::loadResources(int width, int height, sprites::TexturePac
   m_scale.y = 1.0f * height / m_bgDecal->h();
 }
 
-void MapScreenRenderer::render(SpriteRenderer &engine,
+void MapScreenRenderer::render(Renderer &engine,
                                const RenderState & /*state*/,
                                const RenderingPass pass) const
 {

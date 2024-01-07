@@ -63,7 +63,7 @@ bool CredentialsUiHandler::processUserInput(UserInputData &inputData)
   return m_credentialsPanel->processUserInput(inputData);
 }
 
-void CredentialsUiHandler::render(SpriteRenderer &engine) const
+void CredentialsUiHandler::render(Renderer &engine) const
 {
   m_credentialsPanel->render(engine.getRenderer());
 }
