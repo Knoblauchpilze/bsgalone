@@ -25,7 +25,7 @@ int main(int /*argc*/, char ** /*argv*/)
     auto tiles  = pge::CenteredViewport({0.0f, 0.0f}, {16.0f, 12.0f});
     auto pixels = pge::TopLeftViewport({0.0f, 0.0f}, {800.0f, 600.0f});
 
-    pge::AppDesc ad{.dims       = olc::vi2d{800, 600},
+    pge::AppDesc ad{.dims       = pge::Vec2i{800, 600},
                     .frame      = std::make_shared<pge::TopViewFrame>(tiles, pixels),
                     .name       = "bsgalone",
                     .fixedFrame = true,
