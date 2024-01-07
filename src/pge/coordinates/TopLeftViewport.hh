@@ -15,15 +15,11 @@ class TopLeftViewport : public Viewport
   /// left corner.
   TopLeftViewport(const Vectorf &tl, const Vectorf &dims) noexcept;
 
-  Vectorf center() const noexcept override;
-
-  Vectorf topLeft() const noexcept override;
-
-  Vectorf dims() const noexcept override;
-
-  Vectorf relativeCoords(const float x, const float y) const noexcept override;
-
-  Vectorf absoluteCoords(const float x, const float y) const noexcept override;
+  auto center() const noexcept -> Vectorf override;
+  auto topLeft() const noexcept -> Vectorf override;
+  auto dims() const noexcept -> Vectorf override;
+  auto relativeCoords(const float x, const float y) const noexcept -> Vectorf override;
+  auto absoluteCoords(const float x, const float y) const noexcept -> Vectorf override;
 
   /// @brief - Moves the reference corner of this viewport to
   /// the new position.
@@ -42,10 +38,7 @@ class TopLeftViewport : public Viewport
   /// @param sy - the scale on the `y` axis.
   void scale(const float sx, const float sy) noexcept override;
 
-  virtual bool visible(const float x,
-                       const float y,
-                       const float sx,
-                       const float sy) const noexcept override;
+  bool visible(const float x, const float y, const float sx, const float sy) const noexcept override;
 
   private:
   /// @brief - The top left corner of this viewport.
