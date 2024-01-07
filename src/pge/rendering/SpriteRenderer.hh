@@ -5,7 +5,9 @@
 #include "TexturePack.hh"
 #include <memory>
 
-#include "olcEngine.hh"
+namespace olc {
+class PixelGameEngine;
+}
 
 namespace pge {
 
@@ -24,7 +26,7 @@ struct SpriteDesc
 class SpriteRenderer
 {
   public:
-  SpriteRenderer(olc::PixelGameEngine *renderer);
+  SpriteRenderer(olc::PixelGameEngine *const renderer);
 
   auto getRenderer() const -> olc::PixelGameEngine *;
   auto getTextureHandler() noexcept -> sprites::TexturePack &;
@@ -70,7 +72,7 @@ class SpriteRenderer
 
   private:
   olc::PixelGameEngine *m_renderer{nullptr};
-  sprites::TexturePackPtr m_packs{std::make_unique<sprites::TexturePack>()};
+  sprites::TexturePackPtr m_packs{};
 };
 
 using SpriteRendererPtr = std::unique_ptr<SpriteRenderer>;
