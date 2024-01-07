@@ -89,14 +89,14 @@ auto CoordinateFrame::pixelsToTilesAndIntra(const Vec2f &pixels, Vec2f *intraTil
   return out;
 }
 
-void CoordinateFrame::zoomIn(const olc::vf2d &pos)
+void CoordinateFrame::zoomIn(const Vec2f &pos)
 {
-  zoom(2.0f, toVec2f(pos));
+  zoom(2.0f, pos);
 }
 
-void CoordinateFrame::zoomOut(const olc::vf2d &pos)
+void CoordinateFrame::zoomOut(const Vec2f &pos)
 {
-  zoom(0.5f, toVec2f(pos));
+  zoom(0.5f, pos);
 }
 
 void CoordinateFrame::beginTranslation(const olc::vf2d &pixelsOrigin)

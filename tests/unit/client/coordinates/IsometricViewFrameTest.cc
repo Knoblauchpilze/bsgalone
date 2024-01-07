@@ -187,7 +187,7 @@ TEST(Unit_IsometricViewFrame, ZoomIn)
 {
   auto frame = generateIsometricViewFrame();
 
-  olc::vf2d zoomCenter{35.0f, 56.0f};
+  Vec2f zoomCenter{35.0f, 56.0f};
   auto tilesPos = frame->pixelsToTiles(zoomCenter.x, zoomCenter.y);
 
   frame->zoomIn(zoomCenter);
@@ -200,7 +200,7 @@ TEST(Unit_IsometricViewFrame, ZoomIn_DoubleTileDimensions)
 {
   auto frame = generateIsometricViewFrame();
 
-  olc::vf2d zoomCenter{35.0f, 56.0f};
+  Vec2f zoomCenter{35.0f, 56.0f};
   frame->zoomIn(zoomCenter);
 
   auto tile = frame->tileSize();
@@ -213,7 +213,7 @@ TEST(Unit_IsometricViewFrame, ZoomIn_HalveTilesViewport)
 {
   auto frame = generateIsometricViewFrame();
 
-  olc::vf2d zoomCenter{35.0f, 56.0f};
+  Vec2f zoomCenter{35.0f, 56.0f};
   frame->zoomIn(zoomCenter);
 
   auto dims = frame->tilesViewport().dims();
@@ -224,7 +224,7 @@ TEST(Unit_IsometricViewFrame, ZoomOut)
 {
   auto frame = generateIsometricViewFrame();
 
-  olc::vf2d zoomCenter{118.0f, 72.0f};
+  Vec2f zoomCenter{118.0f, 72.0f};
   auto tilesPos = frame->pixelsToTiles(zoomCenter.x, zoomCenter.y);
 
   frame->zoomOut(zoomCenter);
@@ -237,7 +237,7 @@ TEST(Unit_IsometricViewFrame, ZoomOut_HalveTileDimensions)
 {
   auto frame = generateIsometricViewFrame();
 
-  olc::vf2d zoomCenter{35.0f, 56.0f};
+  Vec2f zoomCenter{35.0f, 56.0f};
   frame->zoomOut(zoomCenter);
 
   auto tile = frame->tileSize();
@@ -250,7 +250,7 @@ TEST(Unit_IsometricViewFrame, ZoomOut_DoubleTilesViewport)
 {
   auto frame = generateIsometricViewFrame();
 
-  olc::vf2d zoomCenter{35.0f, 56.0f};
+  Vec2f zoomCenter{35.0f, 56.0f};
   frame->zoomOut(zoomCenter);
 
   auto dims = frame->tilesViewport().dims();

@@ -61,12 +61,12 @@ class CoordinateFrame : public utils::CoreObject
   /// rest of the viewport proportionally smaller while keeping
   /// the position at its current position in the pixels viewport.
   /// @param pos - the pixels position to fix.
-  void zoomIn(const olc::vf2d &pos);
+  void zoomIn(const Vec2f &pos);
 
   /// @brief - Reverse operation to zoom out while still fixing
   /// the input position in pixels space.
   /// @param pos - the pixels position to fix.
-  void zoomOut(const olc::vf2d &pos);
+  void zoomOut(const Vec2f &pos);
 
   /// @brief - Begin a translation of the coordinate frame started at the
   /// input position.
