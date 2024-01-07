@@ -41,9 +41,9 @@ struct TestCasePixelsToTilesIntra
   std::string name;
   CoordinateFramePtr frame;
 
-  olc::vf2d pixels;
-  olc::vi2d expectedTiles;
-  olc::vf2d expectedIntra;
+  Vec2f pixels;
+  Vec2i expectedTiles;
+  Vec2f expectedIntra;
 };
 
 using PixelsToTilesIntra = ::testing::TestWithParam<TestCasePixelsToTilesIntra>;

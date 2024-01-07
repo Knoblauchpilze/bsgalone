@@ -101,9 +101,9 @@ void App::drawDebug(const RenderState &res)
   m_game->render(*m_spriteRenderer, res, RenderingPass::DEBUG);
 
   // Draw cursor's position.
-  olc::vi2d mp = GetMousePos();
-  olc::vf2d it;
-  olc::vi2d mtp = res.cf.pixelsToTilesAndIntra(mp, &it);
+  const Vec2f mp(GetMousePos().x, GetMousePos().y);
+  Vec2f it;
+  const auto mtp = res.cf.pixelsToTilesAndIntra(mp, &it);
 
   int h       = GetDrawTargetHeight();
   int dOffset = 15;
@@ -120,8 +120,9 @@ void App::drawDebug(const RenderState &res)
 
 void App::renderCursor(const RenderState &res)
 {
-  olc::vf2d it;
-  const auto mouseTilePosition = res.cf.pixelsToTilesAndIntra(GetMousePos(), &it);
+  const Vec2f mp(GetMousePos().x, GetMousePos().y);
+  Vec2f it;
+  const auto mouseTilePosition = res.cf.pixelsToTilesAndIntra(mp, &it);
 
   SpriteDesc s;
   s.radius      = 1.0f;

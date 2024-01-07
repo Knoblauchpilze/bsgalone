@@ -97,10 +97,9 @@ INSTANTIATE_TEST_CASE_P(
   generateTestNamePixelsToTiles);
 
 auto generateTopTestCasePixelsToTilesIntra(const std::string &name,
-                                           const olc::vf2d &pixels,
-                                           const olc::vi2d &expectedTiles,
-                                           const olc::vf2d &expectedIntra)
-  -> TestCasePixelsToTilesIntra
+                                           const Vec2f &pixels,
+                                           const Vec2i &expectedTiles,
+                                           const Vec2f &expectedIntra) -> TestCasePixelsToTilesIntra
 {
   return TestCasePixelsToTilesIntra{name,
                                     generateTopViewFrame(),
@@ -109,26 +108,25 @@ auto generateTopTestCasePixelsToTilesIntra(const std::string &name,
                                     expectedIntra};
 }
 
-INSTANTIATE_TEST_CASE_P(
-  Unit_TopViewFrame,
-  PixelsToTilesIntra,
-  Values(generateTopTestCasePixelsToTilesIntra("top_left_quadrant",
-                                               olc::vf2d{12.0f, 35.0f},
-                                               olc::vi2d{-1, 6},
-                                               olc::vf2d{0.0625f, 0.482758522f}),
-         generateTopTestCasePixelsToTilesIntra("top_right_quadrant",
-                                               olc::vf2d{134.0f, 40.0f},
-                                               olc::vi2d{2, 5},
-                                               olc::vf2d{0.875f, 0.620689392f}),
-         generateTopTestCasePixelsToTilesIntra("bottom_right_quadrant",
-                                               olc::vf2d{86.0f, 87.0f},
-                                               olc::vi2d{1, -3},
-                                               olc::vf2d{0.375f, 0.517241478f}),
-         generateTopTestCasePixelsToTilesIntra("bottom_left_quadrant",
-                                               olc::vf2d{27.0f, 67.0f},
-                                               olc::vi2d{-1, 0},
-                                               olc::vf2d{0.53125f, 0.965517282f})),
-  generateTestNamePixelsToTilesIntra);
+INSTANTIATE_TEST_CASE_P(Unit_TopViewFrame,
+                        PixelsToTilesIntra,
+                        Values(generateTopTestCasePixelsToTilesIntra("top_left_quadrant",
+                                                                     Vec2f{12.0f, 35.0f},
+                                                                     Vec2i{-1, 6},
+                                                                     Vec2f{0.0625f, 0.482758522f}),
+                               generateTopTestCasePixelsToTilesIntra("top_right_quadrant",
+                                                                     Vec2f{134.0f, 40.0f},
+                                                                     Vec2i{2, 5},
+                                                                     Vec2f{0.875f, 0.620689392f}),
+                               generateTopTestCasePixelsToTilesIntra("bottom_right_quadrant",
+                                                                     Vec2f{86.0f, 87.0f},
+                                                                     Vec2i{1, -3},
+                                                                     Vec2f{0.375f, 0.517241478f}),
+                               generateTopTestCasePixelsToTilesIntra("bottom_left_quadrant",
+                                                                     Vec2f{27.0f, 67.0f},
+                                                                     Vec2i{-1, 0},
+                                                                     Vec2f{0.53125f, 0.965517282f})),
+                        generateTestNamePixelsToTilesIntra);
 
 TEST(Unit_TopViewFrame, Translate)
 {
