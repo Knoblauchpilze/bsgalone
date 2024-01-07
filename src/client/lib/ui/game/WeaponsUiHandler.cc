@@ -65,7 +65,7 @@ void WeaponsUiHandler::updateUi()
 
 namespace {
 constexpr auto NUMBER_OF_WEAPONS = 6;
-const olc::Pixel SEMI_OPAQUE_BLACK{0, 0, 0, alpha::SemiOpaque};
+const olc::Pixel SEMI_OPAQUE_BLACK{0, 0, 0, alpha::SEMI_OPAQUE};
 } // namespace
 
 void WeaponsUiHandler::reset()
@@ -162,7 +162,7 @@ void WeaponsUiHandler::updateWeaponMenu(const bsgo::WeaponSlotComponent &weapon,
   auto &menu = *m_weapons[id];
 
   auto bgColor = bgColorFromFiringState(weapon);
-  bgColor.a    = alpha::SemiOpaque;
+  bgColor.a    = alpha::SEMI_OPAQUE;
   menu.updateBgColor(bgColor);
 
   auto &range = *m_ranges[id];

@@ -1,9 +1,6 @@
 
 target_sources (pge_app_lib PRIVATE
-	${CMAKE_CURRENT_SOURCE_DIR}/olcEngine.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/Controls.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/DecalResource.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/TexturePack.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/FramerateControl.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/RenderState.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/PGEApp.cc

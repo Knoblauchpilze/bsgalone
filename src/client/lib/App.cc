@@ -4,7 +4,7 @@
 
 namespace pge {
 
-const auto CURSOR_COLOR = olc::Pixel{255, 255, 0, alpha::SemiOpaque};
+const auto CURSOR_COLOR = olc::Pixel{255, 255, 0, alpha::SEMI_OPAQUE};
 
 App::App(const AppDesc &desc)
   : PGEApp(desc)
@@ -39,7 +39,7 @@ void App::onInputs(const controls::State &controls, CoordinateFrame &cf)
 
 void App::loadResources()
 {
-  setLayerTint(Layer::Draw, olc::Pixel(255, 255, 255, alpha::SemiOpaque));
+  setLayerTint(Layer::Draw, olc::Pixel(255, 255, 255, alpha::SEMI_OPAQUE));
 
   m_spriteRenderer = std::make_unique<SpriteRenderer>(this);
   m_game           = std::make_shared<Game>();
@@ -65,7 +65,7 @@ void App::drawDecal(const RenderState &res)
 {
   // Clear rendering target.
   SetPixelMode(olc::Pixel::ALPHA);
-  Clear(olc::OFF_BLACK);
+  Clear(toOlcPixel(Color::OFF_BLACK));
 
   m_game->render(*m_spriteRenderer, res, RenderingPass::DECAL);
 
@@ -76,7 +76,7 @@ void App::draw(const RenderState &res)
 {
   // Clear rendering target.
   SetPixelMode(olc::Pixel::ALPHA);
-  Clear(olc::Pixel(255, 255, 255, alpha::Transparent));
+  Clear(toOlcPixel(Color::TRANSPARENT_WHITE));
 
   m_game->render(*m_spriteRenderer, res, RenderingPass::SPRITES);
 
@@ -87,7 +87,7 @@ void App::drawUI(const RenderState &res)
 {
   // Clear rendering target.
   SetPixelMode(olc::Pixel::ALPHA);
-  Clear(olc::Pixel(255, 255, 255, alpha::Transparent));
+  Clear(toOlcPixel(Color::TRANSPARENT_WHITE));
 
   m_game->render(*m_spriteRenderer, res, RenderingPass::UI);
 
@@ -98,7 +98,7 @@ void App::drawDebug(const RenderState &res)
 {
   // Clear rendering target.
   SetPixelMode(olc::Pixel::ALPHA);
-  Clear(olc::Pixel(255, 255, 255, alpha::Transparent));
+  Clear(toOlcPixel(Color::TRANSPARENT_WHITE));
 
   m_game->render(*m_spriteRenderer, res, RenderingPass::DEBUG);
 

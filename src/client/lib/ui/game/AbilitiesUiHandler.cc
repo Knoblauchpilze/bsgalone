@@ -65,7 +65,7 @@ void AbilitiesUiHandler::updateUi()
 
 namespace {
 constexpr auto NUMBER_OF_ABILITIES = 4;
-const olc::Pixel SEMI_OPAQUE_BLACK{0, 0, 0, alpha::SemiOpaque};
+const olc::Pixel SEMI_OPAQUE_BLACK{0, 0, 0, alpha::SEMI_OPAQUE};
 } // namespace
 
 void AbilitiesUiHandler::reset()
@@ -172,7 +172,7 @@ void AbilitiesUiHandler::updateComputerMenu(const bsgo::ComputerSlotComponent &c
   auto &menu = *m_computers[id];
 
   auto bgColor = bgColorFromFiringState(computer);
-  bgColor.a    = alpha::SemiOpaque;
+  bgColor.a    = alpha::SEMI_OPAQUE;
   menu.updateBgColor(bgColor);
 
   const auto range = computer.maybeRange();
