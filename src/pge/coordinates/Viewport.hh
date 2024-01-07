@@ -1,18 +1,18 @@
 
 #pragma once
 
-#include <maths_utils/Vector2.hh>
+#include "Vector2d.hh"
 #include <memory>
 
 #include "olcEngine.hh"
 
 namespace pge {
 
+using Vectorf = olc::vf2d;
+
 class Viewport
 {
   public:
-  using Vectorf = olc::vf2d;
-
   /// @brief - Returns the center of this viewport.
   /// @return - the center of the viewport.
   virtual auto center() const noexcept -> Vectorf = 0;
