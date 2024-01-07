@@ -15,21 +15,21 @@ auto generateCenteredViewport() -> ViewportPtr
 }
 
 auto generateCenteredTestCaseRelative(const std::string &name,
-                                      const olc::vf2d &coords,
-                                      const olc::vf2d &expected) -> TestCaseRelative
+                                      const Vec2f &coords,
+                                      const Vec2f &expected) -> TestCaseRelative
 {
   return TestCaseRelative{name, generateCenteredViewport, coords, expected};
 }
 
 auto generateCenteredTestCaseAbsolute(const std::string &name,
-                                      const olc::vf2d &coords,
-                                      const olc::vf2d &expected) -> TestCaseAbsolute
+                                      const Vec2f &coords,
+                                      const Vec2f &expected) -> TestCaseAbsolute
 {
   return TestCaseAbsolute{name, generateCenteredViewport, coords, expected};
 }
 
 auto generateCenteredTestCaseVisibility(const std::string &name,
-                                        const olc::vf2d &coords,
+                                        const Vec2f &coords,
                                         const bool expectedVisibility) -> TestCaseVisibility
 {
   return TestCaseVisibility{name, generateCenteredViewport, coords, expectedVisibility};
