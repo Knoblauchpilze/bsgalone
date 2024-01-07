@@ -65,7 +65,6 @@ void WeaponsUiHandler::updateUi()
 
 namespace {
 constexpr auto NUMBER_OF_WEAPONS = 6;
-const olc::Pixel SEMI_OPAQUE_BLACK{0, 0, 0, alpha::SEMI_OPAQUE};
 } // namespace
 
 void WeaponsUiHandler::reset()
@@ -77,7 +76,7 @@ void WeaponsUiHandler::reset()
   for (auto &weapon : m_weapons)
   {
     weapon->clearChildren();
-    weapon->updateBgColor(SEMI_OPAQUE_BLACK);
+    weapon->updateBgColor(semiOpaque(olc::BLACK));
   }
 
   m_initialized = false;
@@ -92,7 +91,7 @@ void WeaponsUiHandler::generateWeaponsMenus(int width, int height)
                       height / 2};
 
   MenuConfig config{.pos = pos, .dims = weaponMenuDims, .propagateEventsToChildren = false};
-  const auto bg = bgConfigFromColor(SEMI_OPAQUE_BLACK);
+  const auto bg = bgConfigFromColor(semiOpaque(olc::BLACK));
 
   for (auto id = 0u; id < NUMBER_OF_WEAPONS; ++id)
   {
@@ -161,8 +160,7 @@ void WeaponsUiHandler::updateWeaponMenu(const bsgo::WeaponSlotComponent &weapon,
 {
   auto &menu = *m_weapons[id];
 
-  auto bgColor = bgColorFromFiringState(weapon);
-  bgColor.a    = alpha::SEMI_OPAQUE;
+  auto bgColor = semiOpaque(bgColorFromFiringState(weapon));
   menu.updateBgColor(bgColor);
 
   auto &range = *m_ranges[id];

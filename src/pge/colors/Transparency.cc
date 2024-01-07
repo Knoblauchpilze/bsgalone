@@ -26,4 +26,24 @@ auto makeTransparentFromPercentage(const olc::Pixel &in, const float perc) -> ol
   return out;
 }
 
+auto almostOpaque(const olc::Pixel &in) -> olc::Pixel
+{
+  return makeTransparent(in, alpha::ALMOST_OPAQUE);
+}
+
+auto semiOpaque(const olc::Pixel &in) -> olc::Pixel
+{
+  return makeTransparent(in, alpha::SEMI_OPAQUE);
+}
+
+auto almostTransparent(const olc::Pixel &in) -> olc::Pixel
+{
+  return makeTransparent(in, alpha::ALMOST_TRANSPARENT);
+}
+
+auto transparent(const olc::Pixel &in) -> olc::Pixel
+{
+  return makeTransparent(in, alpha::TRANSPARENT);
+}
+
 } // namespace pge

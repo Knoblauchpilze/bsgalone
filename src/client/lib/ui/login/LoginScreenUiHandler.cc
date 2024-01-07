@@ -60,8 +60,8 @@ void LoginScreenUiHandler::render(SpriteRenderer &engine) const
 }
 
 namespace {
-const auto LOGIN_BUTTON_ACTIVE_COLOR   = makeTransparent(olc::DARK_GREEN, alpha::SEMI_OPAQUE);
-const auto LOGIN_BUTTON_INACTIVE_COLOR = makeTransparent(olc::DARK_BLUE, alpha::SEMI_OPAQUE);
+const auto LOGIN_BUTTON_ACTIVE_COLOR   = semiOpaque(olc::DARK_GREEN);
+const auto LOGIN_BUTTON_INACTIVE_COLOR = semiOpaque(olc::DARK_BLUE);
 
 constexpr auto LOGIN_TEXT  = "AU JEU!!";
 constexpr auto SIGNUP_TEXT = "Sign up";
@@ -69,11 +69,11 @@ constexpr auto SIGNUP_TEXT = "Sign up";
 constexpr auto LOGIN_FAILURE_TEXT  = "Login failed, check your credentials!";
 constexpr auto SIGNUP_FAILURE_TEXT = "Sign up failed, check your credentials!";
 
-const auto COLONIAL_BUTTON_ACTIVE_COLOR = makeTransparent(olc::VERY_DARK_BLUE, alpha::ALMOST_OPAQUE);
-const auto COLONIAL_BUTTON_INACTIVE_COLOR = makeTransparent(olc::DARK_BLUE, alpha::ALMOST_OPAQUE);
+const auto COLONIAL_BUTTON_ACTIVE_COLOR   = almostOpaque(olc::VERY_DARK_BLUE);
+const auto COLONIAL_BUTTON_INACTIVE_COLOR = almostOpaque(olc::DARK_BLUE);
 
-const auto CYLON_BUTTON_ACTIVE_COLOR   = makeTransparent(olc::VERY_DARK_RED, alpha::ALMOST_OPAQUE);
-const auto CYLON_BUTTON_INACTIVE_COLOR = makeTransparent(olc::DARK_RED, alpha::ALMOST_OPAQUE);
+const auto CYLON_BUTTON_ACTIVE_COLOR   = almostOpaque(olc::VERY_DARK_RED);
+const auto CYLON_BUTTON_INACTIVE_COLOR = almostOpaque(olc::DARK_RED);
 } // namespace
 
 void LoginScreenUiHandler::updateUi()
