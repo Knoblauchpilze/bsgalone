@@ -16,21 +16,21 @@ auto generateTopLeftViewport() -> ViewportPtr
 }
 
 auto generateTopLeftTestCaseRelative(const std::string &name,
-                                     const olc::vf2d &coords,
-                                     const olc::vf2d &expected) -> TestCaseRelative
+                                     const Vec2f &coords,
+                                     const Vec2f &expected) -> TestCaseRelative
 {
   return TestCaseRelative{name, generateTopLeftViewport, coords, expected};
 }
 
 auto generateTopLeftTestCaseAbsolute(const std::string &name,
-                                     const olc::vf2d &coords,
-                                     const olc::vf2d &expected) -> TestCaseAbsolute
+                                     const Vec2f &coords,
+                                     const Vec2f &expected) -> TestCaseAbsolute
 {
   return TestCaseAbsolute{name, generateTopLeftViewport, coords, expected};
 }
 
 auto generateTopLeftTestCaseVisibility(const std::string &name,
-                                       const olc::vf2d &coords,
+                                       const Vec2f &coords,
                                        const bool expectedVisibility) -> TestCaseVisibility
 {
   return TestCaseVisibility{name, generateTopLeftViewport, coords, expectedVisibility};

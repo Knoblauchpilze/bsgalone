@@ -15,8 +15,8 @@ struct TestCaseRelative
   std::string name;
   ViewportGenerator generator;
 
-  olc::vf2d coords;
-  olc::vf2d expected;
+  Vec2f coords;
+  Vec2f expected;
 };
 
 using RelativeCoordinates = ::testing::TestWithParam<TestCaseRelative>;
@@ -29,8 +29,8 @@ struct TestCaseAbsolute
   std::string name;
   ViewportGenerator generator;
 
-  olc::vf2d coords;
-  olc::vf2d expected;
+  Vec2f coords;
+  Vec2f expected;
 };
 
 using AbsoluteCoordinates = ::testing::TestWithParam<TestCaseAbsolute>;
@@ -43,7 +43,7 @@ struct TestCaseVisibility
   std::string name;
   ViewportGenerator generator;
 
-  olc::vf2d coords;
+  Vec2f coords;
   bool expectedVisibility;
 };
 
