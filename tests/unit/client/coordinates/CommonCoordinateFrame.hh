@@ -3,7 +3,6 @@
 
 #include <CoordinateFrame.hh>
 #include <gtest/gtest.h>
-#include <olcEngine.hh>
 #include <optional>
 
 namespace pge::tests {
