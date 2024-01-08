@@ -1,7 +1,7 @@
 
 #include "Renderer.hh"
+#include "ColorConversion.hh"
 #include "VectorConversion.hh"
-#include "olcEngine.hh"
 
 namespace pge {
 
@@ -50,7 +50,9 @@ void Renderer::drawRect(const SpriteDesc &t, const CoordinateFrame &cf)
   // The FillRect draws in screen space below the input position. We want it
   // the other way around.
   p.y -= cf.tileSize().y;
-  m_renderer->FillRectDecal(toVf2d(p), t.radius * toVf2d(cf.tileSize()), t.sprite.tint);
+  m_renderer->FillRectDecal(toVf2d(p),
+                            t.radius * toVf2d(cf.tileSize()),
+                            colors::toOlcPixel(t.sprite.tint));
 }
 
 void Renderer::drawWarpedRect(const SpriteDesc &t, const CoordinateFrame &cf)
@@ -67,7 +69,7 @@ void Renderer::drawWarpedRect(const SpriteDesc &t, const CoordinateFrame &cf)
   uvs.fill({0, 0});
 
   std::array<olc::Pixel, 4> colors;
-  colors.fill(t.sprite.tint);
+  colors.fill(colors::toOlcPixel(t.sprite.tint));
 
   m_renderer->DrawExplicitDecal(nullptr, p.data(), uvs.data(), colors.data());
 }
@@ -75,22 +77,22 @@ void Renderer::drawWarpedRect(const SpriteDesc &t, const CoordinateFrame &cf)
 void Renderer::drawDecal(const Vec2f &pos,
                          const DecalResource &decal,
                          const Vec2f &scale,
-                         const olc::Pixel &tint)
+                         const Color &tint)
 {
-  m_renderer->DrawDecal(toVf2d(pos), decal.get(), toVf2d(scale), tint);
+  m_renderer->DrawDecal(toVf2d(pos), decal.get(), toVf2d(scale), colors::toOlcPixel(tint));
 }
 
-void Renderer::fillRect(const Vec2f &pos, const Vec2f &size, const olc::Pixel tint)
+void Renderer::fillRect(const Vec2f &pos, const Vec2f &size, const Color tint)
 {
-  m_renderer->FillRectDecal(toVf2d(pos), toVf2d(size), tint);
+  m_renderer->FillRectDecal(toVf2d(pos), toVf2d(size), colors::toOlcPixel(tint));
 }
 
 void Renderer::drawString(const Vec2f &pos,
                           const std::string &text,
-                          const olc::Pixel tint,
+                          const Color tint,
                           const Vec2f &scale)
 {
-  m_renderer->DrawStringDecal(toVf2d(pos), text, tint, toVf2d(scale));
+  m_renderer->DrawStringDecal(toVf2d(pos), text, colors::toOlcPixel(tint), toVf2d(scale));
 }
 
 auto Renderer::getTextSize(const std::string &text) const -> Vec2i

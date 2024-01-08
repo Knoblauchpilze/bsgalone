@@ -77,13 +77,13 @@ class Renderer
   void drawDecal(const Vec2f &pos,
                  const DecalResource &decal,
                  const Vec2f &scale,
-                 const olc::Pixel &tint = olc::WHITE);
+                 const Color &tint = colors::WHITE);
 
   /// @brief - Render a simple rectangle with a flat color.
   /// @param pos - the position to render to (top left corner).
   /// @param size - the size of the patch of color.
   /// @param tint - the tint of the uniform patch of color.
-  void fillRect(const Vec2f &pos, const Vec2f &size, const olc::Pixel tint);
+  void fillRect(const Vec2f &pos, const Vec2f &size, const Color tint);
 
   /// @brief - Render a string with the specified color.
   /// @param pos - the position to render the string at (top left corner).
@@ -92,7 +92,7 @@ class Renderer
   /// @param scale - additional scaling to apply to the text.
   void drawString(const Vec2f &pos,
                   const std::string &text,
-                  const olc::Pixel tint,
+                  const Color tint,
                   const Vec2f &scale = Vec2f(1.0f, 1.0f));
 
   /// @brief - Return an estimation of the size the input text would occupy

@@ -19,14 +19,14 @@ auto colorFromResourceName(const std::string &name) -> Color
   throw std::invalid_argument("Unsupported resource name " + name);
 }
 
-auto colorFromFaction(const bsgo::Faction &faction) -> olc::Pixel
+auto colorFromFaction(const bsgo::Faction &faction) -> Color
 {
   switch (faction)
   {
     case bsgo::Faction::COLONIAL:
-      return olc::DARK_BLUE;
+      return Color{.rgb = RgbData{153, 193, 241}};
     case bsgo::Faction::CYLON:
-      return olc::DARK_RED;
+      return Color{.rgb = RgbData{191, 64, 64}};
     default:
       throw std::invalid_argument("Unsupported faction " + bsgo::str(faction));
   }

@@ -9,6 +9,6 @@
 namespace pge {
 
 auto colorFromResourceName(const std::string &name) -> Color;
-auto colorFromFaction(const bsgo::Faction &faction) -> olc::Pixel;
+auto colorFromFaction(const bsgo::Faction &faction) -> Color;
 
 } // namespace pge

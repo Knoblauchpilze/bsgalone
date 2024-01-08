@@ -1,5 +1,6 @@
 
 #include "TexturePack.hh"
+#include "ColorConversion.hh"
 #include "VectorConversion.hh"
 
 namespace pge::sprites {
@@ -62,7 +63,7 @@ void TexturePack::draw(const sprites::Sprite &s, const Vec2f &p, const Vec2f &si
                              toVi2d(sCoords),
                              toVi2d(tp.sSize),
                              scale,
-                             s.tint);
+                             colors::toOlcPixel(s.tint));
 }
 
 void TexturePack::draw(const Sprite &s, const std::array<Vec2f, 4> &p) const
@@ -75,7 +76,7 @@ void TexturePack::draw(const Sprite &s, const std::array<Vec2f, 4> &p) const
                                    olcArray,
                                    toVi2d(sCoords),
                                    toVi2d(tp.sSize),
-                                   s.tint);
+                                   colors::toOlcPixel(s.tint));
 }
 
 void TexturePack::draw(const Sprite &s, const Vec2f &p, const Vec2f &size, const float angle) const
@@ -92,7 +93,7 @@ void TexturePack::draw(const Sprite &s, const Vec2f &p, const Vec2f &size, const
                                     toVi2d(sCoords),
                                     toVi2d(tp.sSize),
                                     scale,
-                                    s.tint);
+                                    colors::toOlcPixel(s.tint));
 }
 
 auto TexturePack::tryGetPackOrThrow(const int packId) const -> const Pack &

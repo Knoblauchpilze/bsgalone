@@ -133,7 +133,7 @@ void HangarUiHandler::initializeLayout()
   const auto allShips = m_shopView->getAllShipsForFaction(faction);
 
   const MenuConfig config{.layout = MenuLayout::HORIZONTAL, .highlightable = false};
-  const auto bg = bgConfigFromColor(colorFromFaction(faction));
+  const auto bg = bgConfigFromColor(colors::toOlcPixel(colorFromFaction(faction)));
 
   auto shipIndex = 0;
   for (const auto &ship : allShips)

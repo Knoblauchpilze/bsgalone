@@ -66,7 +66,7 @@ void UiTextMenu::renderCustom(Renderer &engine) const
   const auto textPos  = computeTextPositionFromAlignement(absPos, dims(), textDims, m_text.align);
   const auto color    = getTextColorFromState();
 
-  engine.drawString(toVec2f(textPos), m_text.text, colors::toOlcPixel(color));
+  engine.drawString(toVec2f(textPos), m_text.text, color);
 }
 
 auto UiTextMenu::getTextColorFromState() const -> Color

@@ -186,7 +186,7 @@ void UiMenu::renderSelf(Renderer &engine) const
 {
   const auto absPos = absolutePosition();
   const auto color  = getColorFromState();
-  engine.fillRect(toVec2f(absPos), toVec2f(m_dims), color);
+  engine.fillRect(toVec2f(absPos), toVec2f(m_dims), colors::toColor(color));
   renderCustom(engine);
 }
 
