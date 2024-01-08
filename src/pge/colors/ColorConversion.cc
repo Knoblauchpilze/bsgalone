@@ -74,7 +74,7 @@ auto toOlcPixel(const Name &name) -> olc::Pixel
     case Name::PLATINUM:
       return olc::Pixel(229, 228, 226);
     case Name::PURPLE:
-      return olc::Pixel(208, 186, 255);
+      return olc::Pixel(145, 61, 255);
     case Name::RED:
       return olc::RED;
     case Name::SILVER:
