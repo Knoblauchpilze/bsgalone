@@ -10,7 +10,7 @@ namespace pge {
 
 struct Color
 {
-  std::optional<colors::Name> name{};
+  std::optional<colors::Name> name{colors::Name::WHITE};
   std::optional<RgbData> rgb{};
   uint8_t alpha{alpha::OPAQUE};
 };
