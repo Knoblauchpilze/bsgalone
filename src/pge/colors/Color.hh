@@ -15,4 +15,6 @@ struct Color
   uint8_t alpha{alpha::OPAQUE};
 };
 
+auto toRgb(const Color &color) -> Color;
+
 } // namespace pge
