@@ -1,28 +1,28 @@
 
 #pragma once
 
-#include "olcEngine.hh"
+#include "Color.hh"
 
 namespace pge {
 
-auto colorGradient(const olc::Pixel &low, const olc::Pixel &high, float ratio, int alpha) noexcept
-  -> olc::Pixel;
+auto colorGradient(const Color &low, const Color &high, float ratio, const uint8_t alpha) noexcept
+  -> Color;
 
 /// @brief - Convert the input color expressed in `RGB` color space to a color
 /// in `HSL` space.
 /// Note that some precision is lost when the output channels are converted to
 /// integer values.
-/// @param rgb - the input color to convert.
+/// @param color - the input color to convert in rgb space.
 /// @return - the equivalent in `HSL` color space.
-auto RGBToHSL(const olc::Pixel &rgb) noexcept -> olc::Pixel;
+auto RGBToHSL(const Color &color) noexcept -> Color;
 
 /// @brief - Convert the input color expressed in `HSL` color space to a color
 /// in `RGB` space.
 /// Note that some precision is lost when the output channels are converted to
 /// integer values.
-/// @param hsl - the input color to convert.
+/// @param color - the input color to convert in hsl space.
 /// @return - the equivalent in `RGB` color space.
-auto HSLToRGB(const olc::Pixel &hsl) noexcept -> olc::Pixel;
+auto HSLToRGB(const Color &color) noexcept -> Color;
 
 /// @brief - Modulate the luminance of the input color by the specified factor.
 /// We convert the color into `HSL` space to change the `L` component and then
@@ -32,6 +32,6 @@ auto HSLToRGB(const olc::Pixel &hsl) noexcept -> olc::Pixel;
 /// larger than `1` will brighten the color and a value in the range `0` to `1`
 /// will darken it. Any negative value will be clamped to `0`.
 /// @return - the modulated color.
-auto modulate(const olc::Pixel &in, float factor) noexcept -> olc::Pixel;
+auto modulate(const Color &in, float factor) noexcept -> Color;
 
 } // namespace pge
