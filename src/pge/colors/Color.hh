@@ -17,6 +17,6 @@ struct Color
 
 auto toRgb(const Color &color) -> Color;
 
-#include "Colors.hh"
-
 } // namespace pge
+
+#include "Colors.hh"
