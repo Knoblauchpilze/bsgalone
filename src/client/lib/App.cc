@@ -37,7 +37,8 @@ void App::onInputs(const controls::State &controls, CoordinateFrame &cf)
 
 void App::loadResources()
 {
-  setLayerTint(Layer::Draw, semiOpaque(olc::WHITE));
+  const Color tint{.name = colors::Name::WHITE, .alpha = alpha::SEMI_OPAQUE};
+  setLayerTint(Layer::Draw, tint);
 
   m_renderer = std::make_unique<Renderer>(this);
   m_game     = std::make_shared<Game>();

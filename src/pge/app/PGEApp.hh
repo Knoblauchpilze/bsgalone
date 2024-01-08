@@ -68,7 +68,7 @@ class PGEApp : public utils::CoreObject, public olc::PixelGameEngine
   /// descriptor.
   /// @param layer - the layer for which a tint should be assigned.
   /// @param tint - the tint to associate to the layer.
-  void setLayerTint(const Layer &layer, const olc::Pixel &tint);
+  void setLayerTint(const Layer &layer, const Color &tint);
 
   /// @brief - Another interface method allowing to clear a rendering layer when
   /// it's disabled. This allows to make sure that we won't keep old frames
