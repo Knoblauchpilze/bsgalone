@@ -2,7 +2,6 @@
 #pragma once
 
 #include "Color.hh"
-#include "Colors.hh"
 #include <string>
 
 namespace pge {
