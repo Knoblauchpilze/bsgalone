@@ -72,12 +72,9 @@ void HangarUiHandler::initializeHangar()
 }
 
 namespace {
-constexpr auto DUMMY_PIXEL_DIMENSION = 10;
-const olc::vi2d DUMMY_DIMENSION{DUMMY_PIXEL_DIMENSION, DUMMY_PIXEL_DIMENSION};
-
 auto generateShipDescription(const bsgo::Ship &ship) -> UiMenuPtr
 {
-  const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .highlightable = false};
+  const MenuConfig config{.highlightable = false};
   auto bg = bgConfigFromColor(olc::BLANK);
 
   auto desc = std::make_unique<UiMenu>(config, bg);
@@ -135,10 +132,7 @@ void HangarUiHandler::initializeLayout()
   const auto faction  = m_playerView->getPlayerFaction();
   const auto allShips = m_shopView->getAllShipsForFaction(faction);
 
-  const MenuConfig config{.pos           = {},
-                          .dims          = DUMMY_DIMENSION,
-                          .layout        = MenuLayout::HORIZONTAL,
-                          .highlightable = false};
+  const MenuConfig config{.layout = MenuLayout::HORIZONTAL, .highlightable = false};
   const auto bg = bgConfigFromColor(colorFromFaction(faction));
 
   auto shipIndex = 0;
@@ -167,9 +161,7 @@ auto HangarUiHandler::generateShipInteractiveSection(const int shipIndex) -> UiM
   middleSection->addMenu(generateSpacer());
   middleSection->addMenu(generateSpacer());
 
-  MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .clickCallback = [this, shipIndex]() {
-                      onShipRequest(shipIndex);
-                    }};
+  MenuConfig config{.clickCallback = [this, shipIndex]() { onShipRequest(shipIndex); }};
 
   const auto bg       = bgConfigFromColor(olc::DARK_GREY);
   const auto textConf = textConfigFromColor("", olc::WHITE);

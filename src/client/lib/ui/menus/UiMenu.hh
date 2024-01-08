@@ -24,7 +24,7 @@ class UiMenu : public utils::CoreObject
   void setVisible(const bool visible) noexcept;
   void setEnabled(const bool enabled) noexcept;
   void setHighlightable(const bool highlightable) noexcept;
-  void setPosition(const olc::vi2d &position);
+  void setPosition(const Vec2i &position);
 
   void setClickCallback(const ClickCallback &callback);
   void setGameClickCallback(const GameCallback &callback);
@@ -38,8 +38,8 @@ class UiMenu : public utils::CoreObject
   virtual bool processUserInput(UserInputData &inputData);
 
   protected:
-  auto absolutePosition() const noexcept -> olc::vi2d;
-  auto dims() const noexcept -> olc::vi2d;
+  auto absolutePosition() const noexcept -> Vec2i;
+  auto dims() const noexcept -> Vec2i;
 
   struct State
   {
@@ -58,8 +58,8 @@ class UiMenu : public utils::CoreObject
   virtual void renderCustom(Renderer &engine) const;
 
   private:
-  olc::vf2d m_pos{};
-  olc::vi2d m_dims{10, 10};
+  Vec2i m_pos{};
+  Vec2i m_dims{10, 10};
 
   State m_state{};
   MenuLayout m_layout{MenuLayout::VERTICAL};
@@ -77,7 +77,7 @@ class UiMenu : public utils::CoreObject
   void initializeFromConfig(const MenuConfig &config);
   void renderSelf(Renderer &engine) const;
   auto getColorFromState() const -> olc::Pixel;
-  bool isWithinMenu(const olc::vi2d &pos) const;
+  bool isWithinMenu(const Vec2i &pos) const;
   void onRelevantInput(UserInputData &inputData);
   void updateLayoutAfterChildChange();
   void adaptChildrenToMatchHorizontalSize(const float desiredXSize);

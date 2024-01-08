@@ -38,8 +38,8 @@ class MapScreenUiHandler : public IUiHandler
   void generateMap(const int width, const int height);
   void generateSystemButtons(const bsgo::System &system,
                              const bsgo::ServerView::Bounds &bounds,
-                             const olc::vi2d &mapOffset,
-                             const olc::vi2d &mapDims);
+                             const Vec2i &mapOffset,
+                             const Vec2i &mapDims);
 
   void onSystemSelected(const bsgo::Uuid &systemId, const int labelId);
   void onJumpRequested();

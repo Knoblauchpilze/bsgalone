@@ -122,17 +122,9 @@ void LockerUiHandler::initializeLayout()
   initializeShipLayout();
 }
 
-namespace {
-constexpr auto DUMMY_PIXEL_DIMENSION = 10;
-const olc::vi2d DUMMY_DIMENSION{DUMMY_PIXEL_DIMENSION, DUMMY_PIXEL_DIMENSION};
-} // namespace
-
 void LockerUiHandler::initializeLockerLayout()
 {
-  MenuConfig config{.pos                       = {},
-                    .dims                      = DUMMY_DIMENSION,
-                    .highlightable             = false,
-                    .propagateEventsToChildren = false};
+  MenuConfig config{.highlightable = false, .propagateEventsToChildren = false};
 
   const auto bg   = bgConfigFromColor(olc::DARK_GREY);
   const auto text = textConfigFromColor("Locker", olc::BLACK);
@@ -152,9 +144,7 @@ void LockerUiHandler::initializeLockerLayout()
 
   const auto weapons  = m_playerView->getPlayerWeapons();
   const auto bgWeapon = bgConfigFromColor(olc::DARK_RED);
-  const MenuConfig configWeapon{.pos    = {},
-                                .dims   = DUMMY_DIMENSION,
-                                .layout = MenuLayout::HORIZONTAL};
+  const MenuConfig configWeapon{.layout = MenuLayout::HORIZONTAL};
   for (auto id = 0u; id < weapons.size(); ++id)
   {
     auto menu = std::make_unique<UiMenu>(configWeapon, bgWeapon);
@@ -164,9 +154,7 @@ void LockerUiHandler::initializeLockerLayout()
 
   const auto computers  = m_playerView->getPlayerComputers();
   const auto bgComputer = bgConfigFromColor(olc::DARK_YELLOW);
-  const MenuConfig configComputer{.pos    = {},
-                                  .dims   = DUMMY_DIMENSION,
-                                  .layout = MenuLayout::HORIZONTAL};
+  const MenuConfig configComputer{.layout = MenuLayout::HORIZONTAL};
   for (auto id = 0u; id < computers.size(); ++id)
   {
     auto menu = std::make_unique<UiMenu>(configComputer, bgComputer);
@@ -177,10 +165,7 @@ void LockerUiHandler::initializeLockerLayout()
 
 void LockerUiHandler::initializeShipLayout()
 {
-  MenuConfig config{.pos                       = {},
-                    .dims                      = DUMMY_DIMENSION,
-                    .highlightable             = false,
-                    .propagateEventsToChildren = false};
+  MenuConfig config{.highlightable = false, .propagateEventsToChildren = false};
 
   const auto bg   = bgConfigFromColor(olc::DARK_GREY);
   const auto text = textConfigFromColor("Ship", olc::BLACK);
@@ -194,9 +179,7 @@ void LockerUiHandler::initializeShipLayout()
   {
     const auto weaponsCount = slots.at(bsgo::Slot::WEAPON);
     const auto bg           = bgConfigFromColor(olc::DARK_RED);
-    const MenuConfig weaponConfig{.pos    = {},
-                                  .dims   = DUMMY_DIMENSION,
-                                  .layout = MenuLayout::HORIZONTAL};
+    const MenuConfig weaponConfig{.layout = MenuLayout::HORIZONTAL};
     for (auto id = 0; id < weaponsCount; ++id)
     {
       auto menu = std::make_unique<UiMenu>(weaponConfig, bg);
@@ -209,9 +192,7 @@ void LockerUiHandler::initializeShipLayout()
   {
     const auto computersCount = slots.at(bsgo::Slot::COMPUTER);
     const auto bg             = bgConfigFromColor(olc::DARK_YELLOW);
-    const MenuConfig computerConfig{.pos    = {},
-                                    .dims   = DUMMY_DIMENSION,
-                                    .layout = MenuLayout::HORIZONTAL};
+    const MenuConfig computerConfig{.layout = MenuLayout::HORIZONTAL};
     for (auto id = 0; id < computersCount; ++id)
     {
       auto menu = std::make_unique<UiMenu>(computerConfig, bg);
@@ -225,7 +206,7 @@ void LockerUiHandler::generateResourcesMenus()
 {
   const auto resources = m_playerView->getPlayerResources();
 
-  const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .propagateEventsToChildren = false};
+  const MenuConfig config{.propagateEventsToChildren = false};
   const auto bg = bgConfigFromColor(olc::BLANK);
   auto id       = 0;
 
@@ -248,7 +229,7 @@ auto generateWeaponMenu(const bsgo::PlayerWeapon &weapon) -> UiMenuPtr
 {
   auto menu = generateBlankVerticalMenu();
 
-  const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .highlightable = false};
+  const MenuConfig config{.highlightable = false};
   const auto bg = bgConfigFromColor(olc::BLANK);
 
   auto textConf = textConfigFromColor(weapon.name, olc::BLACK);
@@ -276,7 +257,7 @@ auto generateInteractiveSection(const std::string &buttonText, const ClickCallba
   auto middleSection = generateBlankVerticalMenu();
   middleSection->addMenu(generateSpacer());
 
-  const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .clickCallback = callback};
+  const MenuConfig config{.clickCallback = callback};
 
   const auto bg       = bgConfigFromColor(olc::VERY_DARK_GREEN);
   const auto textConf = textConfigFromColor(buttonText, olc::WHITE, olc::WHITE);
@@ -322,7 +303,7 @@ auto generateComputerMenu(const bsgo::PlayerComputer &computer) -> UiMenuPtr
 {
   auto menu = generateBlankVerticalMenu();
 
-  const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .highlightable = false};
+  const MenuConfig config{.highlightable = false};
   const auto bg = bgConfigFromColor(olc::BLANK);
 
   auto textConf = textConfigFromColor(computer.name, olc::BLACK);

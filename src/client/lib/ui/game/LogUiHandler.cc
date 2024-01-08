@@ -86,8 +86,8 @@ void LogUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQueue)
 
 namespace {
 constexpr std::size_t MAXIMUM_NUMBER_OF_LOGS_DISPLAYED = 5;
-const auto LOG_MENU_DIMS                               = olc::vi2d{150, 20};
-constexpr auto LOG_FADE_OUT_DURATION_MS                = 7000;
+const Vec2i LOG_MENU_DIMS{150, 20};
+constexpr auto LOG_FADE_OUT_DURATION_MS = 7000;
 
 const std::unordered_set<bsgo::JumpState> JUMP_STATES_NOT_TRIGGERING_LOG
   = {bsgo::JumpState::RUNNING, bsgo::JumpState::COMPLETED};
@@ -150,7 +150,7 @@ void LogUiHandler::onMessageReceived(const bsgo::IMessage &message)
   for (const auto &data : m_logs)
   {
     const auto y = m_offset.y + id * LOG_MENU_DIMS.y;
-    const olc::vi2d pos{m_offset.x - LOG_MENU_DIMS.x / 2, y};
+    const Vec2i pos{m_offset.x - LOG_MENU_DIMS.x / 2, y};
     data.rawMenu->setPosition(pos);
     ++id;
   }
@@ -246,7 +246,7 @@ auto createTextConfigForMessage(const bsgo::IMessage &message,
 
 auto LogUiHandler::createMenuFromMessage(const bsgo::IMessage &message) -> UiMenuPtr
 {
-  const olc::vi2d pos{m_offset.x - LOG_MENU_DIMS.x / 2, m_offset.y};
+  const Vec2i pos{m_offset.x - LOG_MENU_DIMS.x / 2, m_offset.y};
   const MenuConfig config{.pos = pos, .dims = LOG_MENU_DIMS, .highlightable = false};
   const BackgroundConfig bg = bgConfigFromColor(colors::toOlcPixel(colors::Name::TRANSPARENT_WHITE));
 

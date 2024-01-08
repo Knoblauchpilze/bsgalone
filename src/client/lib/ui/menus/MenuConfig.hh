@@ -2,7 +2,7 @@
 #pragma once
 
 #include "UserInputData.hh"
-#include "olcEngine.hh"
+#include "Vector2d.hh"
 #include <optional>
 
 namespace pge {
@@ -19,8 +19,8 @@ using LostFocusCallback = std::function<void()>;
 
 struct MenuConfig
 {
-  olc::vi2d pos{};
-  olc::vi2d dims{10, 10};
+  Vec2i pos{};
+  Vec2i dims{10, 10};
 
   MenuLayout layout{MenuLayout::VERTICAL};
 

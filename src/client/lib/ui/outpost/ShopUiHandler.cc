@@ -28,9 +28,9 @@ void ShopUiHandler::initializeMenus(const int width, const int height)
   const auto viewWidth  = static_cast<int>(MAIN_VIEW_WIDTH_TO_SCREEN_WIDTH_RATIO * width);
   const auto viewHeight = static_cast<int>(MAIN_VIEW_HEIGHT_TO_SCREEN_HEIGHT_RATIO * height);
 
-  const olc::vi2d pos{width - viewWidth - VIEW_TO_RIGHT_OF_SCREEN_IN_PIXELS,
-                      height - viewHeight - VIEW_TO_RIGHT_OF_SCREEN_IN_PIXELS};
-  const olc::vi2d dims{viewWidth, viewHeight};
+  const Vec2i pos{width - viewWidth - VIEW_TO_RIGHT_OF_SCREEN_IN_PIXELS,
+                  height - viewHeight - VIEW_TO_RIGHT_OF_SCREEN_IN_PIXELS};
+  const Vec2i dims{viewWidth, viewHeight};
 
   const MenuConfig config{.pos = pos, .dims = dims, .highlightable = false};
   const auto bg = bgConfigFromColor(olc::DARK_MAGENTA);
@@ -93,11 +93,6 @@ void ShopUiHandler::updateUi()
   }
 }
 
-namespace {
-constexpr auto DUMMY_PIXEL_DIMENSION = 10;
-const olc::vi2d DUMMY_DIMENSION{DUMMY_PIXEL_DIMENSION, DUMMY_PIXEL_DIMENSION};
-} // namespace
-
 void ShopUiHandler::initializeLayout()
 {
   const auto items = m_shopView->getShopItems();
@@ -105,7 +100,7 @@ void ShopUiHandler::initializeLayout()
   {
     auto bgColor = (items[id].computer ? olc::VERY_DARK_YELLOW : olc::VERY_DARK_RED);
 
-    const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .layout = MenuLayout::HORIZONTAL};
+    const MenuConfig config{.layout = MenuLayout::HORIZONTAL};
     const auto bg = bgConfigFromColor(bgColor);
     auto itemMenu = std::make_unique<UiMenu>(config, bg);
     m_items.push_back(itemMenu.get());
@@ -116,7 +111,7 @@ void ShopUiHandler::initializeLayout()
 namespace {
 auto generateWeaponMenu(const bsgo::Weapon &weapon) -> UiTextMenuPtr
 {
-  const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .highlightable = false};
+  const MenuConfig config{.highlightable = false};
   const auto bg   = bgConfigFromColor(olc::BLANK);
   const auto text = textConfigFromColor(weapon.name, olc::WHITE);
   return std::make_unique<UiTextMenu>(config, bg, text);
@@ -124,7 +119,7 @@ auto generateWeaponMenu(const bsgo::Weapon &weapon) -> UiTextMenuPtr
 
 auto generateComputerMenu(const bsgo::Computer &computer) -> UiTextMenuPtr
 {
-  const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .highlightable = false};
+  const MenuConfig config{.highlightable = false};
   const auto bg   = bgConfigFromColor(olc::BLANK);
   const auto text = textConfigFromColor(computer.name, olc::WHITE);
   return std::make_unique<UiTextMenu>(config, bg, text);
@@ -138,7 +133,7 @@ auto generatePriceMenus(const bsgo::ShopItem &item) -> std::vector<UiTextMenuPtr
   {
     auto text = cost.resource.name + ": " + floatToStr(cost.amount, 0);
 
-    const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .highlightable = false};
+    const MenuConfig config{.highlightable = false};
     const auto bg       = bgConfigFromColor(olc::BLANK);
     const auto textConf = textConfigFromColor(text, olc::DARK_RED);
     auto menu           = std::make_unique<UiTextMenu>(config, bg, textConf);
@@ -202,9 +197,7 @@ auto ShopUiHandler::generateBuySection(const int itemId) -> UiMenuPtr
   auto middleSection = generateBlankVerticalMenu();
   middleSection->addMenu(generateSpacer());
 
-  MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .clickCallback = [this, itemId]() {
-                      onPurchaseRequest(itemId);
-                    }};
+  MenuConfig config{.clickCallback = [this, itemId]() { onPurchaseRequest(itemId); }};
 
   const auto bg       = bgConfigFromColor(olc::BLANK);
   const auto textConf = textConfigFromColor("Buy", olc::WHITE);

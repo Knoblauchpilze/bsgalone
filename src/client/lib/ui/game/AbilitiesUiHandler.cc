@@ -84,10 +84,10 @@ void AbilitiesUiHandler::reset()
 
 void AbilitiesUiHandler::generateComputersMenus(int width, int height)
 {
-  const olc::vi2d abilityMenuDims{70, 50};
+  const Vec2i abilityMenuDims{70, 50};
   constexpr auto SPACING_IN_PIXELS = 5;
-  const olc::vi2d pos{width - NUMBER_OF_ABILITIES * (abilityMenuDims.x + SPACING_IN_PIXELS),
-                      height - SPACING_IN_PIXELS - abilityMenuDims.y};
+  const Vec2i pos{width - NUMBER_OF_ABILITIES * (abilityMenuDims.x + SPACING_IN_PIXELS),
+                  height - SPACING_IN_PIXELS - abilityMenuDims.y};
 
   MenuConfig config{.pos = pos, .dims = abilityMenuDims, .propagateEventsToChildren = false};
   const auto bg = bgConfigFromColor(semiOpaque(olc::BLACK));
@@ -101,11 +101,6 @@ void AbilitiesUiHandler::generateComputersMenus(int width, int height)
   }
 }
 
-namespace {
-constexpr auto DUMMY_PIXEL_DIMENSION = 10;
-const olc::vi2d DUMMY_DIMENSION{DUMMY_PIXEL_DIMENSION, DUMMY_PIXEL_DIMENSION};
-} // namespace
-
 void AbilitiesUiHandler::initializeAbilities()
 {
   const auto ship           = m_shipView->getPlayerShip();
@@ -118,7 +113,7 @@ void AbilitiesUiHandler::initializeAbilities()
             + std::to_string(ship.computers.size()));
   }
 
-  const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION};
+  const MenuConfig config{};
   const auto bg = bgConfigFromColor(olc::BLANK);
   auto textConf = textConfigFromColor("", olc::WHITE);
 

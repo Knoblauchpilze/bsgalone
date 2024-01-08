@@ -7,8 +7,8 @@ namespace pge {
 
 struct TextFieldConfig
 {
-  olc::vi2d pos{};
-  olc::vi2d dims{10, 10};
+  Vec2i pos{};
+  Vec2i dims{10, 10};
 
   bool visible{true};
 

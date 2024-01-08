@@ -1,5 +1,6 @@
 
 #include "ScreenCommon.hh"
+#include "VectorConversion.hh"
 
 namespace pge {
 
@@ -29,10 +30,10 @@ auto generateBlankMenu(const olc::vi2d &pos,
                        const MenuLayout &layout,
                        const std::optional<olc::vi2d> &dims) -> UiMenuPtr
 {
-  MenuConfig config{.pos = pos, .layout = layout};
+  MenuConfig config{.pos = toVec2i(pos), .layout = layout};
   if (dims)
   {
-    config.dims = *dims;
+    config.dims = toVec2i(*dims);
   }
   return generateBlankMenu(config);
 }
@@ -54,7 +55,7 @@ auto generateColoredSpacer(const olc::Pixel &color, const std::optional<olc::vi2
   MenuConfig config{.highlightable = false, .propagateEventsToChildren = false};
   if (dims)
   {
-    config.dims = *dims;
+    config.dims = toVec2i(*dims);
   }
   const auto bg = bgConfigFromColor(color);
   return std::make_unique<UiMenu>(config, bg);

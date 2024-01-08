@@ -23,4 +23,9 @@ auto toVec2i(const olc::vi2d &v) -> Vec2i
   return Vec2i{v.x, v.y};
 }
 
+auto toVec2f(const Vec2i &v) -> Vec2f
+{
+  return Vec2f{static_cast<float>(v.x), static_cast<float>(v.y)};
+}
+
 } // namespace pge

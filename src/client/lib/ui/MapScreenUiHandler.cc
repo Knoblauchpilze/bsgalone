@@ -88,9 +88,9 @@ void MapScreenUiHandler::updateUi()
 void MapScreenUiHandler::generateControlButtons(const int width, const int height)
 {
   constexpr auto REASONABLE_GAP_SIZE = 20;
-  const olc::vi2d controlButtonDimsPixels{100, 30};
-  const olc::vi2d buttonPos{width - REASONABLE_GAP_SIZE - controlButtonDimsPixels.x,
-                            height - REASONABLE_GAP_SIZE - controlButtonDimsPixels.y};
+  const Vec2i controlButtonDimsPixels{100, 30};
+  const Vec2i buttonPos{width - REASONABLE_GAP_SIZE - controlButtonDimsPixels.x,
+                        height - REASONABLE_GAP_SIZE - controlButtonDimsPixels.y};
 
   MenuConfig config{.pos               = buttonPos,
                     .dims              = controlButtonDimsPixels,
@@ -117,8 +117,8 @@ void MapScreenUiHandler::generateMap(const int width, const int height)
   const auto systems = m_serverView->getAllSystems();
 
   constexpr auto MAP_OFFSET = 10;
-  const olc::vi2d mapOffset{MAP_OFFSET, MAP_OFFSET};
-  const olc::vi2d mapDims{width - 2 * MAP_OFFSET, height - 2 * MAP_OFFSET};
+  const Vec2i mapOffset{MAP_OFFSET, MAP_OFFSET};
+  const Vec2i mapDims{width - 2 * MAP_OFFSET, height - 2 * MAP_OFFSET};
 
   for (const auto &system : systems)
   {
@@ -153,32 +153,28 @@ auto remapRatioToScale(const Eigen::Vector3f &ratio, const float scale) -> Eigen
   return out;
 }
 
-auto posRatioToPixelPos(const Eigen::Vector3f &posRatio,
-                        const olc::vi2d &offset,
-                        const olc::vi2d &dims) -> olc::vi2d
+auto posRatioToPixelPos(const Eigen::Vector3f &posRatio, const Vec2i &offset, const Vec2i &dims)
+  -> Vec2i
 {
-  olc::vi2d out{};
-
+  Vec2i out{};
   out.x = offset.x + static_cast<int>(posRatio(0) * dims.x);
   out.y = offset.y + static_cast<int>(posRatio(1) * dims.y);
-
   return out;
 }
 } // namespace
 
 void MapScreenUiHandler::generateSystemButtons(const bsgo::System &system,
                                                const bsgo::ServerView::Bounds &bounds,
-                                               const olc::vi2d &mapOffset,
-                                               const olc::vi2d &mapDims)
+                                               const Vec2i &mapOffset,
+                                               const Vec2i &mapDims)
 {
   constexpr auto SERVER_MAP_TO_PIXEL_MAP_SCALE = 1.5f;
-  constexpr auto SYSTEM_BUTTON_SIZE            = 10;
-  const olc::vi2d systemButtonDimsPixels{SYSTEM_BUTTON_SIZE, SYSTEM_BUTTON_SIZE};
+  const Vec2i systemButtonDimsPixels{10, 10};
 
-  const auto posRatio       = systemPosToRatio(bounds, system.position);
-  const auto ratioRemapped  = remapRatioToScale(posRatio, SERVER_MAP_TO_PIXEL_MAP_SCALE);
-  const auto posPixels      = posRatioToPixelPos(ratioRemapped, mapOffset, mapDims);
-  const olc::vi2d buttonPos = posPixels - systemButtonDimsPixels / 2;
+  const auto posRatio      = systemPosToRatio(bounds, system.position);
+  const auto ratioRemapped = remapRatioToScale(posRatio, SERVER_MAP_TO_PIXEL_MAP_SCALE);
+  const auto posPixels     = posRatioToPixelPos(ratioRemapped, mapOffset, mapDims);
+  const Vec2i buttonPos    = posPixels - systemButtonDimsPixels / 2;
 
   const auto systemId                 = system.id;
   constexpr auto OFFSET_DUE_TO_BUTTON = 1;
@@ -194,12 +190,12 @@ void MapScreenUiHandler::generateSystemButtons(const bsgo::System &system,
 
   constexpr auto LABEL_BUTTON_WIDTH  = 100;
   constexpr auto LABEL_BUTTON_HEIGHT = 20;
-  const olc::vi2d labelDimsPixels{LABEL_BUTTON_WIDTH, LABEL_BUTTON_HEIGHT};
+  const Vec2i labelDimsPixels{LABEL_BUTTON_WIDTH, LABEL_BUTTON_HEIGHT};
 
   constexpr auto GAP_BETWEEN_BUTTON_AND_LABEL_PIXELS = 5;
-  const olc::vi2d labelPos{posPixels.x - LABEL_BUTTON_WIDTH / 2,
-                           posPixels.y + systemButtonDimsPixels.y / 2
-                             + GAP_BETWEEN_BUTTON_AND_LABEL_PIXELS};
+  const Vec2i labelPos{posPixels.x - LABEL_BUTTON_WIDTH / 2,
+                       posPixels.y + systemButtonDimsPixels.y / 2
+                         + GAP_BETWEEN_BUTTON_AND_LABEL_PIXELS};
 
   const MenuConfig labelConfig{.pos = labelPos, .dims = labelDimsPixels, .highlightable = false};
   const auto labelBg       = bgConfigFromColor(SYSTEM_LABEL_DEFAULT_BG_COLOR);

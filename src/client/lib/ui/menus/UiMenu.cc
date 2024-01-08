@@ -31,7 +31,7 @@ void UiMenu::setHighlightable(const bool highlightable) noexcept
   m_state.highlightable = highlightable;
 }
 
-void UiMenu::setPosition(const olc::vi2d &position)
+void UiMenu::setPosition(const Vec2i &position)
 {
   if (m_parent != nullptr)
   {
@@ -115,7 +115,7 @@ bool UiMenu::processUserInput(UserInputData &inputData)
     return inputRelevantForChildren;
   }
 
-  const olc::vi2d mPos{inputData.controls.mPosX, inputData.controls.mPosY};
+  const Vec2i mPos{inputData.controls.mPosX, inputData.controls.mPosY};
   if (!isWithinMenu(mPos) || inputRelevantForChildren)
   {
     m_state.highlighted = false;
@@ -134,7 +134,7 @@ bool UiMenu::processUserInput(UserInputData &inputData)
   return true;
 }
 
-auto UiMenu::absolutePosition() const noexcept -> olc::vi2d
+auto UiMenu::absolutePosition() const noexcept -> Vec2i
 {
   auto p = m_pos;
   if (m_parent != nullptr)
@@ -144,7 +144,7 @@ auto UiMenu::absolutePosition() const noexcept -> olc::vi2d
   return p;
 }
 
-auto UiMenu::dims() const noexcept -> olc::vi2d
+auto UiMenu::dims() const noexcept -> Vec2i
 {
   return m_dims;
 }
@@ -199,7 +199,7 @@ auto UiMenu::getColorFromState() const -> olc::Pixel
   return m_bg.color;
 }
 
-bool UiMenu::isWithinMenu(const olc::vi2d &pos) const
+bool UiMenu::isWithinMenu(const Vec2i &pos) const
 {
   const auto absPos = absolutePosition();
   const auto minX   = absPos.x;
