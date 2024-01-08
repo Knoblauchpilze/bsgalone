@@ -87,7 +87,7 @@ void StatusUiHandler::generateLogoutButton(const int /*width*/, const int /*heig
 {
   const MenuConfig config{.clickCallback = [this]() { requestLogout(); }};
   const auto bg   = bgConfigFromColor(olc::VERY_DARK_GREY);
-  const auto text = textConfigFromColor("Logout", olc::BLACK, olc::RED);
+  const auto text = textConfigFromColor("Logout", colors::BLACK, colors::RED);
 
   auto logout = std::make_unique<UiTextMenu>(config, bg, text);
   m_statusBar->addMenu(std::move(logout));

@@ -14,8 +14,8 @@ class UiTextMenu : public UiMenu
 
   virtual auto getText() const noexcept -> std::string;
   void setText(const std::string &text);
-  auto getTextColor() const -> olc::Pixel;
-  void updateTextColor(const olc::Pixel &color);
+  auto getTextColor() const -> Color;
+  void updateTextColor(const Color &color);
 
   protected:
   void renderCustom(Renderer &engine) const override;
@@ -23,7 +23,7 @@ class UiTextMenu : public UiMenu
   private:
   TextConfig m_text{};
 
-  auto getTextColorFromState() const -> olc::Pixel;
+  auto getTextColorFromState() const -> Color;
 };
 
 using UiTextMenuPtr = std::unique_ptr<UiTextMenu>;

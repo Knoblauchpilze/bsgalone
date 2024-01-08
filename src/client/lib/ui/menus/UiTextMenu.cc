@@ -21,14 +21,14 @@ void UiTextMenu::setText(const std::string &text)
   m_text.text = text;
 }
 
-auto UiTextMenu::getTextColor() const -> olc::Pixel
+auto UiTextMenu::getTextColor() const -> Color
 {
   return m_text.color;
 }
 
-void UiTextMenu::updateTextColor(const olc::Pixel &color)
+void UiTextMenu::updateTextColor(const Color &color)
 {
-  m_text = textConfigFromColor(m_text.text, color, m_text.align);
+  m_text = textConfigFromColor(m_text.text, colors::toOlcPixel(color), m_text.align);
 }
 
 namespace {
@@ -66,10 +66,10 @@ void UiTextMenu::renderCustom(Renderer &engine) const
   const auto textPos  = computeTextPositionFromAlignement(absPos, dims(), textDims, m_text.align);
   const auto color    = getTextColorFromState();
 
-  engine.drawString(toVec2f(textPos), m_text.text, color);
+  engine.drawString(toVec2f(textPos), m_text.text, colors::toOlcPixel(color));
 }
 
-auto UiTextMenu::getTextColorFromState() const -> olc::Pixel
+auto UiTextMenu::getTextColorFromState() const -> Color
 {
   if (state().highlightable && state().highlighted)
   {

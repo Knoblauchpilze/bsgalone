@@ -72,7 +72,7 @@ void updatePricesState(const std::unordered_map<bsgo::Uuid, UiTextMenu *> &price
   {
     const auto available = resourcesAvailability.contains(resource)
                            && true == resourcesAvailability.at(resource);
-    const auto color = available ? olc::DARK_GREEN : olc::DARK_RED;
+    const auto color = available ? colors::DARK_GREEN : colors::DARK_RED;
     menu->updateTextColor(color);
   }
 }
