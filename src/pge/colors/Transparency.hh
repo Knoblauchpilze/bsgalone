@@ -1,7 +1,6 @@
 
 #pragma once
 
-#include "Alpha.hh"
 #include "olcEngine.hh"
 
 namespace pge {
@@ -27,5 +26,13 @@ auto almostOpaque(const olc::Pixel &in) -> olc::Pixel;
 auto semiOpaque(const olc::Pixel &in) -> olc::Pixel;
 auto almostTransparent(const olc::Pixel &in) -> olc::Pixel;
 auto transparent(const olc::Pixel &in) -> olc::Pixel;
+
+auto makeTransparent(const Color &in, const uint8_t alpha) -> Color;
+auto makeTransparentFromPercentage(const Color &in, const float perc) -> Color;
+
+auto almostOpaque(const Color &in) -> Color;
+auto semiOpaque(const Color &in) -> Color;
+auto almostTransparent(const Color &in) -> Color;
+auto transparent(const Color &in) -> Color;
 
 } // namespace pge
