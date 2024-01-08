@@ -47,7 +47,7 @@ bool ShopUiHandler::processUserInput(UserInputData &inputData)
 
 void ShopUiHandler::render(Renderer &engine) const
 {
-  m_menu->render(engine.getRenderer());
+  m_menu->render(engine);
 }
 
 namespace {

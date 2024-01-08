@@ -28,8 +28,8 @@ bool ShipStatusUiHandler::processUserInput(UserInputData &inputData)
 
 void ShipStatusUiHandler::render(Renderer &engine) const
 {
-  m_threatLabel->render(engine.getRenderer());
-  m_jumpPanel->render(engine.getRenderer());
+  m_threatLabel->render(engine);
+  m_jumpPanel->render(engine);
 }
 
 void ShipStatusUiHandler::updateUi()

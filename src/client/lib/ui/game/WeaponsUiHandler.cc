@@ -38,7 +38,7 @@ void WeaponsUiHandler::render(Renderer &engine) const
 {
   for (const auto &menu : m_weapons)
   {
-    menu->render(engine.getRenderer());
+    menu->render(engine);
   }
 }
 

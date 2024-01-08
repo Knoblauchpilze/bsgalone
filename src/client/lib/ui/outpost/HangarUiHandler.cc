@@ -42,7 +42,7 @@ bool HangarUiHandler::processUserInput(UserInputData &inputData)
 
 void HangarUiHandler::render(Renderer &engine) const
 {
-  m_menu->render(engine.getRenderer());
+  m_menu->render(engine);
 }
 
 void HangarUiHandler::updateUi()

@@ -1,5 +1,6 @@
 
 #include "UiMenu.hh"
+#include "VectorConversion.hh"
 
 namespace pge {
 
@@ -79,17 +80,17 @@ void UiMenu::updateBgColor(const olc::Pixel &color)
   m_bg = bgConfigFromColor(color);
 }
 
-void UiMenu::render(olc::PixelGameEngine *pge) const
+void UiMenu::render(Renderer &engine) const
 {
   if (!m_state.visible)
   {
     return;
   }
 
-  renderSelf(pge);
+  renderSelf(engine);
   for (const auto &child : m_children)
   {
-    child->render(pge);
+    child->render(engine);
   }
 }
 
@@ -158,7 +159,7 @@ void UiMenu::setLostFocusCallback(const ClickCallback &callback)
   m_lostFocusCallback = callback;
 }
 
-void UiMenu::renderCustom(olc::PixelGameEngine * /*pge*/) const
+void UiMenu::renderCustom(Renderer & /*engine*/) const
 {
   // Intentionally empty to allow subclassing.
 }
@@ -181,12 +182,12 @@ void UiMenu::initializeFromConfig(const MenuConfig &config)
   m_lostFocusCallback = config.lostFocusCallback;
 }
 
-void UiMenu::renderSelf(olc::PixelGameEngine *pge) const
+void UiMenu::renderSelf(Renderer &engine) const
 {
   const auto absPos = absolutePosition();
   const auto color  = getColorFromState();
-  pge->FillRectDecal(absPos, m_dims, color);
-  renderCustom(pge);
+  engine.fillRect(toVec2f(absPos), toVec2f(m_dims), color);
+  renderCustom(engine);
 }
 
 auto UiMenu::getColorFromState() const -> olc::Pixel

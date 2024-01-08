@@ -65,7 +65,7 @@ bool CredentialsUiHandler::processUserInput(UserInputData &inputData)
 
 void CredentialsUiHandler::render(Renderer &engine) const
 {
-  m_credentialsPanel->render(engine.getRenderer());
+  m_credentialsPanel->render(engine);
 }
 
 void CredentialsUiHandler::updateUi() {}

@@ -16,11 +16,6 @@ Renderer::Renderer(olc::PixelGameEngine *const renderer)
   m_packs = std::make_unique<sprites::TexturePack>(m_renderer);
 }
 
-auto Renderer::getRenderer() const -> olc::PixelGameEngine *
-{
-  return m_renderer;
-}
-
 auto Renderer::getTextureHandler() noexcept -> sprites::TexturePack &
 {
   return *m_packs;

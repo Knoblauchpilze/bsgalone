@@ -29,7 +29,7 @@ class UiTimedMenu : public utils::CoreObject
 
   bool finished() const;
 
-  void render(olc::PixelGameEngine *pge) const;
+  void render(Renderer &engine) const;
 
   private:
   UiMenuPtr m_menu{};

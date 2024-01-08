@@ -53,7 +53,7 @@ void MapScreenUiHandler::render(Renderer &engine) const
 {
   for (const auto &menu : m_buttons)
   {
-    menu->render(engine.getRenderer());
+    menu->render(engine);
   }
 }
 

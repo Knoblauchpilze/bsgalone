@@ -18,7 +18,7 @@ class UiTextMenu : public UiMenu
   void updateTextColor(const olc::Pixel &color);
 
   protected:
-  void renderCustom(olc::PixelGameEngine *pge) const override;
+  void renderCustom(Renderer &engine) const override;
 
   private:
   TextConfig m_text{};

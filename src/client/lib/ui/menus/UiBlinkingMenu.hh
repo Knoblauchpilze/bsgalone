@@ -26,7 +26,7 @@ class UiBlinkingMenu : public utils::CoreObject
   void setVisible(const bool visible);
   void update();
 
-  void render(olc::PixelGameEngine *pge) const;
+  void render(Renderer &engine) const;
 
   private:
   UiMenuPtr m_menu{};

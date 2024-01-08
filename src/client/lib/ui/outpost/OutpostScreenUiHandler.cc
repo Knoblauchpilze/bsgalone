@@ -82,7 +82,7 @@ void OutpostScreenUiHandler::render(Renderer &engine) const
 {
   for (const auto &menu : m_menus)
   {
-    menu->render(engine.getRenderer());
+    menu->render(engine);
   }
 
   switch (m_activeScreen)

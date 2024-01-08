@@ -53,7 +53,7 @@ void LogUiHandler::render(Renderer &engine) const
 {
   for (const auto &message : m_logs)
   {
-    message.menu->render(engine.getRenderer());
+    message.menu->render(engine);
   }
 }
 

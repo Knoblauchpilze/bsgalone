@@ -63,8 +63,8 @@ bool StatusUiHandler::processUserInput(UserInputData &inputData)
 
 void StatusUiHandler::render(Renderer &engine) const
 {
-  m_statusBar->render(engine.getRenderer());
-  m_logoutConfirmation->render(engine.getRenderer());
+  m_statusBar->render(engine);
+  m_logoutConfirmation->render(engine);
 }
 
 void StatusUiHandler::updateUi()

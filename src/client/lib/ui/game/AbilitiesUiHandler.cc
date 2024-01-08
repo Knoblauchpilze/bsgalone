@@ -38,7 +38,7 @@ void AbilitiesUiHandler::render(Renderer &engine) const
 {
   for (const auto &menu : m_computers)
   {
-    menu->render(engine.getRenderer());
+    menu->render(engine);
   }
 }
 

@@ -41,7 +41,7 @@ bool GameOverUiHandler::processUserInput(UserInputData &inputData)
 
 void GameOverUiHandler::render(Renderer &engine) const
 {
-  m_menu->render(engine.getRenderer());
+  m_menu->render(engine);
 }
 
 void GameOverUiHandler::updateUi()
