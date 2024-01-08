@@ -16,8 +16,8 @@ enum class TextAlignment
 struct TextConfig
 {
   std::string text{""};
-  olc::Pixel color{olc::BLACK};
-  olc::Pixel hColor{olc::WHITE};
+  Color color{colors::BLACK};
+  Color hColor{colors::WHITE};
   TextAlignment align{TextAlignment::CENTER};
 };
 
@@ -26,8 +26,8 @@ auto textConfigFromColor(const std::string &text,
                          const TextAlignment &align = TextAlignment::CENTER) -> TextConfig;
 
 auto textConfigFromColor(const std::string &text,
-                         const olc::Pixel &color,
-                         const olc::Pixel &hColor,
+                         const Color &color,
+                         const Color &hColor,
                          const TextAlignment &align = TextAlignment::CENTER) -> TextConfig;
 
 } // namespace pge

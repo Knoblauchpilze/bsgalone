@@ -260,7 +260,7 @@ auto generateInteractiveSection(const std::string &buttonText, const ClickCallba
   const MenuConfig config{.clickCallback = callback};
 
   const auto bg       = bgConfigFromColor(olc::VERY_DARK_GREEN);
-  const auto textConf = textConfigFromColor(buttonText, olc::WHITE, olc::WHITE);
+  const auto textConf = textConfigFromColor(buttonText, colors::WHITE, colors::WHITE);
   auto button         = std::make_unique<UiTextMenu>(config, bg, textConf);
   section.button      = button.get();
 

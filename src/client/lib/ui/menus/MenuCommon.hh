@@ -1,10 +1,10 @@
 
 #pragma once
 
-#include "olcEngine.hh"
+#include "Color.hh"
 
 namespace pge {
 
-auto findHighlightColor(const olc::Pixel &color) -> olc::Pixel;
+auto findHighlightColor(const Color &color) -> Color;
 
 }
