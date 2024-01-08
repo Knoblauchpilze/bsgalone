@@ -1,12 +1,11 @@
 
 #pragma once
 
+#include "Color.hh"
 #include "DecalResource.hh"
 #include "Vector2d.hh"
 #include <core_utils/CoreObject.hh>
 #include <memory>
-
-#include "olcEngine.hh"
 
 namespace olc {
 class PixelGameEngine;
@@ -54,7 +53,7 @@ struct Sprite
 
   // The `tint` defines a color to apply to tint the sprite
   // as a whole. Can also be used to provide some alpha.
-  olc::Pixel tint{olc::WHITE};
+  Color tint{colors::WHITE};
 };
 
 class TexturePack : public utils::CoreObject

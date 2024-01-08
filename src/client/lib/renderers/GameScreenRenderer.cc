@@ -162,10 +162,10 @@ void GameScreenRenderer::renderAsteroid(const bsgo::Entity &asteroid,
   t.sprite.pack   = m_asteroidTexturesPackId;
   t.sprite.sprite = {0, 0};
 
-  auto tint = olc::WHITE;
+  auto tint = colors::WHITE;
   if (scanned && !containsLoot)
   {
-    tint = olc::RED;
+    tint = colors::RED;
   }
   else if (scanned && containsLoot)
   {
@@ -176,27 +176,12 @@ void GameScreenRenderer::renderAsteroid(const bsgo::Entity &asteroid,
     }
 
     const auto res = m_resourceView->getResourceName(asteroid.resources[0]->resource());
-    tint           = colors::toOlcPixel(colorFromResourceName(res));
+    tint           = colorFromResourceName(res);
   }
   t.sprite.tint = tint;
 
   engine.drawWarpedSprite(t, state.cf);
 }
-
-namespace {
-auto tintFromFaction(const bsgo::Faction &faction) -> olc::Pixel
-{
-  switch (faction)
-  {
-    case bsgo::Faction::COLONIAL:
-      return olc::Pixel{153, 193, 241};
-    case bsgo::Faction::CYLON:
-      return olc::Pixel{191, 64, 64};
-    default:
-      return olc::RED;
-  }
-}
-} // namespace
 
 void GameScreenRenderer::renderOutpost(const bsgo::Entity &outpost,
                                        Renderer &engine,
@@ -214,7 +199,7 @@ void GameScreenRenderer::renderOutpost(const bsgo::Entity &outpost,
   t.sprite.pack   = m_outpostTexturesPackId;
   const auto id   = outpost.factionComp().faction() == bsgo::Faction::COLONIAL ? 1 : 0;
   t.sprite.sprite = {id, 0};
-  t.sprite.tint   = tintFromFaction(outpost.factionComp().faction());
+  t.sprite.tint   = colorFromFaction(outpost.factionComp().faction());
 
   engine.drawWarpedSprite(t, state.cf);
 }
@@ -234,7 +219,7 @@ void GameScreenRenderer::renderBullet(const bsgo::Entity &bullet,
 
   t.sprite.pack   = m_bulletTexturesPackId;
   t.sprite.sprite = {0, 0};
-  t.sprite.tint   = olc::WHITE;
+  t.sprite.tint   = colors::WHITE;
 
   engine.drawWarpedSprite(t, state.cf);
 }
@@ -258,7 +243,7 @@ void GameScreenRenderer::renderShip(const bsgo::Entity &ship,
                                                               : m_class3TexturesPackId;
   t.sprite.sprite      = {0, 0};
 
-  auto tint = tintFromFaction(ship.factionComp().faction());
+  auto tint = colorFromFaction(ship.factionComp().faction());
 
   const auto status = ship.statusComp().status();
   switch (status)
@@ -271,7 +256,7 @@ void GameScreenRenderer::renderShip(const bsgo::Entity &ship,
       break;
     case bsgo::Status::DOCKED:
     case bsgo::Status::DEAD:
-      t.sprite.tint = olc::BLANK;
+      t.sprite.tint = colors::BLANK;
       break;
     case bsgo::Status::APPEARING:
     case bsgo::Status::JUMP_APPEARING:
@@ -299,7 +284,7 @@ void renderWeaponIndicator(const bsgo::TransformComponent &ship,
   const auto pixelPos     = frame.tilesToPixels(weaponPos(0), weaponPos(1));
   const auto indicatorPos = pixelPos - WEAPON_INDICATOR_SIZE / 2.0f;
 
-  engine.fillRect(indicatorPos, WEAPON_INDICATOR_SIZE, olc::YELLOW);
+  engine.fillRect(indicatorPos, WEAPON_INDICATOR_SIZE, colors::YELLOW);
 }
 } // namespace
 
@@ -317,7 +302,7 @@ void GameScreenRenderer::renderShipDebug(const bsgo::Entity &ship,
   text += floatToStr(accel(1));
   text += "x";
   text += floatToStr(accel(2));
-  engine.drawString(pixelPos, text, olc::DARK_YELLOW);
+  engine.drawString(pixelPos, text, colors::DARK_YELLOW);
 
   constexpr auto REASONABLE_GAP = 20;
   pixelPos.y += REASONABLE_GAP;
@@ -328,7 +313,7 @@ void GameScreenRenderer::renderShipDebug(const bsgo::Entity &ship,
   text += floatToStr(speed(1));
   text += "x";
   text += floatToStr(speed(2));
-  engine.drawString(pixelPos, text, olc::DARK_GREEN);
+  engine.drawString(pixelPos, text, colors::DARK_GREEN);
 
   for (const auto &weapon : ship.weapons)
   {
