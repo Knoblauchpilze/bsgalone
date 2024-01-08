@@ -1,8 +1,6 @@
 
 #pragma once
 
-#include "olcEngine.hh"
-
 namespace pge::colors {
 
 enum class Name
@@ -70,7 +68,5 @@ enum class Name
   TRANSPARENT_WHITE,
   TRANSPARENT_BLACK
 };
-
-auto toOlcPixel(const Name &name) -> olc::Pixel;
 
 } // namespace pge::colors

@@ -2,7 +2,7 @@
 #pragma once
 
 #include "Alpha.hh"
-#include "Colors.hh"
+#include "ColorNames.hh"
 #include "RgbData.hh"
 #include <optional>
 
