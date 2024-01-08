@@ -37,7 +37,7 @@ void OutpostScreenUiHandler::initializeMenus(const int width, const int height)
                             }
                           }};
 
-  auto bg         = bgConfigFromColor(olc::DARK_GREY);
+  auto bg         = bgConfigFromColor(colors::DARK_GREY);
   auto text       = textConfigFromColor("Undock", colors::WHITE);
   m_menus[UNDOCK] = std::make_unique<UiTextMenu>(config, bg, text);
 
@@ -169,11 +169,11 @@ void OutpostScreenUiHandler::generateGeneralMenu(const int width, const int heig
   const Vec2i dims{viewMenuWidth, viewMenuHeight};
 
   MenuConfig config{.pos = pos, .dims = dims};
-  auto bg             = bgConfigFromColor(olc::BLANK);
+  auto bg             = bgConfigFromColor(colors::BLANK);
   m_menus[VIEWS_MENU] = std::make_unique<UiMenu>(config, bg);
 
   config.clickCallback = [this]() { setActiveScreen(ActiveScreen::SHOP); };
-  bg                   = bgConfigFromColor(colors::toOlcPixel(colors::Name::DARK_COBALT_BLUE));
+  bg                   = bgConfigFromColor(colors::DARK_COBALT_BLUE);
   auto text            = textConfigFromColor("Shop", colors::WHITE);
   auto menu            = std::make_unique<UiTextMenu>(config, bg, text);
   m_menus[VIEWS_MENU]->addMenu(std::move(menu));

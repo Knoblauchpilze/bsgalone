@@ -1,16 +1,16 @@
 
 #pragma once
 
-#include "olcEngine.hh"
+#include "Color.hh"
 
 namespace pge {
 
 struct BackgroundConfig
 {
-  olc::Pixel color{olc::VERY_DARK_GREY};
-  olc::Pixel hColor{olc::GREY};
+  Color color{colors::VERY_DARK_GREY};
+  Color hColor{colors::GREY};
 };
 
-auto bgConfigFromColor(const olc::Pixel &bgColor) -> BackgroundConfig;
+auto bgConfigFromColor(const Color &color) -> BackgroundConfig;
 
 } // namespace pge

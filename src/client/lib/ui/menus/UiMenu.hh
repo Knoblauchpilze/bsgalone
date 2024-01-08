@@ -31,8 +31,8 @@ class UiMenu : public utils::CoreObject
 
   void addMenu(UiMenuPtr child);
   void clearChildren();
-  auto getBgColor() const -> olc::Pixel;
-  void updateBgColor(const olc::Pixel &color);
+  auto getBgColor() const -> Color;
+  void updateBgColor(const Color &color);
 
   void render(Renderer &engine) const;
   virtual bool processUserInput(UserInputData &inputData);
@@ -76,7 +76,7 @@ class UiMenu : public utils::CoreObject
 
   void initializeFromConfig(const MenuConfig &config);
   void renderSelf(Renderer &engine) const;
-  auto getColorFromState() const -> olc::Pixel;
+  auto getColorFromState() const -> Color;
   bool isWithinMenu(const Vec2i &pos) const;
   void onRelevantInput(UserInputData &inputData);
   void updateLayoutAfterChildChange();

@@ -11,7 +11,7 @@ constexpr Color ANTIQUE_BRONZE{.name = Name::ANTIQUE_BRONZE};
 constexpr Color APPLE_GREEN{.name = Name::APPLE_GREEN};
 constexpr Color BIDOOF{.name = Name::BIDOOF};
 constexpr Color BLACK{.name = Name::BLACK};
-constexpr Color BLANK{.name = Name::BLANK};
+constexpr Color BLANK{.name = Name::BLANK, .alpha = alpha::TRANSPARENT};
 constexpr Color BLUE{.name = Name::BLUE};
 constexpr Color BRONZE{.name = Name::BRONZE};
 constexpr Color BROWN{.name = Name::BROWN};

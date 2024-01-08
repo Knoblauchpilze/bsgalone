@@ -4,11 +4,9 @@
 
 namespace pge {
 
-auto bgConfigFromColor(const olc::Pixel &bgColor) -> BackgroundConfig
+auto bgConfigFromColor(const Color &color) -> BackgroundConfig
 {
-  return BackgroundConfig{.color  = bgColor,
-                          .hColor = colors::toOlcPixel(
-                            findHighlightColor(colors::toColor(bgColor)))};
+  return BackgroundConfig{.color = color, .hColor = findHighlightColor(color)};
 }
 
 } // namespace pge

@@ -60,8 +60,8 @@ void LoginScreenUiHandler::render(Renderer &engine) const
 }
 
 namespace {
-const auto LOGIN_BUTTON_ACTIVE_COLOR   = semiOpaque(olc::DARK_GREEN);
-const auto LOGIN_BUTTON_INACTIVE_COLOR = semiOpaque(olc::DARK_BLUE);
+constexpr auto LOGIN_BUTTON_ACTIVE_COLOR   = semiOpaque(colors::DARK_GREEN);
+constexpr auto LOGIN_BUTTON_INACTIVE_COLOR = semiOpaque(colors::DARK_BLUE);
 
 constexpr auto LOGIN_TEXT  = "AU JEU!!";
 constexpr auto SIGNUP_TEXT = "Sign up";
@@ -69,11 +69,11 @@ constexpr auto SIGNUP_TEXT = "Sign up";
 constexpr auto LOGIN_FAILURE_TEXT  = "Login failed, check your credentials!";
 constexpr auto SIGNUP_FAILURE_TEXT = "Sign up failed, check your credentials!";
 
-const auto COLONIAL_BUTTON_ACTIVE_COLOR   = almostOpaque(olc::VERY_DARK_BLUE);
-const auto COLONIAL_BUTTON_INACTIVE_COLOR = almostOpaque(olc::DARK_BLUE);
+constexpr auto COLONIAL_BUTTON_ACTIVE_COLOR   = almostOpaque(colors::VERY_DARK_BLUE);
+constexpr auto COLONIAL_BUTTON_INACTIVE_COLOR = almostOpaque(colors::DARK_BLUE);
 
-const auto CYLON_BUTTON_ACTIVE_COLOR   = almostOpaque(olc::VERY_DARK_RED);
-const auto CYLON_BUTTON_INACTIVE_COLOR = almostOpaque(olc::DARK_RED);
+constexpr auto CYLON_BUTTON_ACTIVE_COLOR   = almostOpaque(colors::VERY_DARK_RED);
+constexpr auto CYLON_BUTTON_INACTIVE_COLOR = almostOpaque(colors::DARK_RED);
 } // namespace
 
 void LoginScreenUiHandler::updateUi()
@@ -194,7 +194,7 @@ void LoginScreenUiHandler::generateProceedButton(const int width, const int heig
                           .dims          = loginButtonDimsPixels,
                           .clickCallback = [this]() { tryLogin(); }};
 
-  const auto bg   = bgConfigFromColor(colors::toOlcPixel(colors::Name::DARK_COBALT_BLUE));
+  const auto bg   = bgConfigFromColor(colors::DARK_COBALT_BLUE);
   const auto text = textConfigFromColor(LOGIN_TEXT, colors::WHITE);
   m_proceedButton = std::make_unique<UiTextMenu>(config, bg, text);
 }
@@ -213,7 +213,7 @@ void LoginScreenUiHandler::generateQuitButton(const int width, const int /*heigh
                             g.terminate();
                           }};
 
-  const auto bg   = bgConfigFromColor(olc::VERY_DARK_GREY);
+  const auto bg   = bgConfigFromColor(colors::VERY_DARK_GREY);
   const auto text = textConfigFromColor("Quit", colors::WHITE);
   m_quitButton    = std::make_unique<UiTextMenu>(config, bg, text);
 }
@@ -227,7 +227,7 @@ void LoginScreenUiHandler::generateFailureMenu(const int width, const int /*heig
                           .dims          = failureMenuDimsPixels,
                           .highlightable = false};
 
-  const auto bg   = bgConfigFromColor(olc::DARK_RED);
+  const auto bg   = bgConfigFromColor(colors::DARK_RED);
   const auto text = textConfigFromColor(LOGIN_FAILURE_TEXT, colors::BLACK);
 
   auto menu         = std::make_unique<UiTextMenu>(config, bg, text);

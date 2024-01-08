@@ -5,9 +5,9 @@
 
 namespace pge {
 namespace {
-const auto SYSTEM_LABEL_DEFAULT_BG_COLOR  = olc::DARK_GREY;
-const auto SYSTEM_LABEL_SELECTED_BG_COLOR = olc::DARK_GREEN;
-const auto SYSTEM_LABEL_CURRENT_BG_COLOR  = olc::DARK_CYAN;
+constexpr auto SYSTEM_LABEL_DEFAULT_BG_COLOR  = colors::DARK_GREY;
+constexpr auto SYSTEM_LABEL_SELECTED_BG_COLOR = colors::DARK_GREEN;
+constexpr auto SYSTEM_LABEL_CURRENT_BG_COLOR  = colors::DARK_CYAN;
 } // namespace
 
 MapScreenUiHandler::MapScreenUiHandler(const bsgo::Views &views)
@@ -96,7 +96,7 @@ void MapScreenUiHandler::generateControlButtons(const int width, const int heigh
                     .dims              = controlButtonDimsPixels,
                     .gameClickCallback = [this](Game &g) { g.setScreen(Screen::GAME); }};
 
-  auto bg         = bgConfigFromColor(colors::toOlcPixel(colors::Name::VERY_DARK_COBALT_BLUE));
+  auto bg         = bgConfigFromColor(colors::VERY_DARK_COBALT_BLUE);
   auto text       = textConfigFromColor("Close", colors::WHITE);
   auto quitButton = std::make_unique<UiTextMenu>(config, bg, text);
   m_buttons.push_back(std::move(quitButton));
@@ -184,7 +184,7 @@ void MapScreenUiHandler::generateSystemButtons(const bsgo::System &system,
                                 .clickCallback = [this, systemId, labelId]() {
                                   onSystemSelected(systemId, labelId);
                                 }};
-  const auto buttonBg = bgConfigFromColor(olc::DARK_CYAN);
+  const auto buttonBg = bgConfigFromColor(colors::DARK_CYAN);
   auto button         = std::make_unique<UiMenu>(buttonConfig, buttonBg);
   m_buttons.push_back(std::move(button));
 

@@ -59,7 +59,7 @@ void ShipStatusUiHandler::initializeThreatPanel(const int width, const int heigh
                           .dims          = THREAT_UI_PIXEL_DIMENSION,
                           .highlightable = false};
 
-  const auto bg   = bgConfigFromColor(olc::BLANK);
+  const auto bg   = bgConfigFromColor(colors::BLANK);
   const auto text = textConfigFromColor("Threat", colors::RED);
 
   auto label = std::make_unique<UiTextMenu>(config, bg, text);
@@ -77,10 +77,10 @@ void ShipStatusUiHandler::initializeJumpPanel(const int width, const int height)
                           .dims          = JUMP_UI_PIXEL_DIMENSION,
                           .highlightable = false};
 
-  auto bg     = bgConfigFromColor(semiOpaque(olc::DARK_RED));
+  auto bg     = bgConfigFromColor(semiOpaque(colors::DARK_RED));
   m_jumpPanel = std::make_unique<UiMenu>(config, bg);
 
-  bg        = bgConfigFromColor(olc::BLANK);
+  bg        = bgConfigFromColor(colors::BLANK);
   auto text = textConfigFromColor("FTL Jump", colors::WHITE);
   auto menu = std::make_unique<UiTextMenu>(config, bg, text);
   m_jumpPanel->addMenu(std::move(menu));
