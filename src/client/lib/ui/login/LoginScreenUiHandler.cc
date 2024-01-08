@@ -136,8 +136,8 @@ void LoginScreenUiHandler::onMessageReceived(const bsgo::IMessage &message)
 void LoginScreenUiHandler::generateLoginModePanel(const int width, const int /*height*/)
 {
   constexpr auto LOGIN_MODE_Y_PIXELS = 20;
-  const olc::vi2d loginModeDimsPixels{200, 50};
-  const olc::vi2d loginModePos{(width - loginModeDimsPixels.x) / 2, LOGIN_MODE_Y_PIXELS};
+  const Vec2i loginModeDimsPixels{200, 50};
+  const Vec2i loginModePos{(width - loginModeDimsPixels.x) / 2, LOGIN_MODE_Y_PIXELS};
 
   m_loginModePanel = generateBlankHorizontalMenu(loginModePos, loginModeDimsPixels);
 
@@ -160,8 +160,8 @@ void LoginScreenUiHandler::generateLoginModePanel(const int width, const int /*h
 void LoginScreenUiHandler::generateFactionPanel(const int width, const int /*height*/)
 {
   constexpr auto FACTION_Y_PIXELS = 110;
-  const olc::vi2d factionDimsPixels{200, 50};
-  const olc::vi2d factionPos{(width - factionDimsPixels.x) / 2, FACTION_Y_PIXELS};
+  const Vec2i factionDimsPixels{200, 50};
+  const Vec2i factionPos{(width - factionDimsPixels.x) / 2, FACTION_Y_PIXELS};
 
   m_factionPanel = generateBlankHorizontalMenu(factionPos, factionDimsPixels);
 
