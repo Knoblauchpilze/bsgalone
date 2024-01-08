@@ -77,4 +77,12 @@ void Renderer::drawWarpedRect(const SpriteDesc &t, const CoordinateFrame &cf)
   m_renderer->DrawExplicitDecal(nullptr, p.data(), uvs.data(), colors.data());
 }
 
+void Renderer::drawDecal(const Vec2f &pos,
+                         const DecalResource &decal,
+                         const Vec2f &scale,
+                         const olc::Pixel &tint)
+{
+  m_renderer->DrawDecal(toVf2d(pos), decal.get(), toVf2d(scale), tint);
+}
+
 } // namespace pge
