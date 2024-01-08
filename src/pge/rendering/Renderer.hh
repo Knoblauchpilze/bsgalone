@@ -70,6 +70,16 @@ class Renderer
   /// position to pixels.
   void drawWarpedRect(const SpriteDesc &t, const CoordinateFrame &cf);
 
+  /// @brief - Render the decal with the specified position, scale and tint.
+  /// @param pos - the position to render the decal at
+  /// @param decal - the resource to render
+  /// @param scale - additional scale to apply to the decal
+  /// @param tint - a tint to apply to the rendered object
+  void drawDecal(const Vec2f &pos,
+                 const DecalResource &decal,
+                 const Vec2f &scale,
+                 const olc::Pixel &tint = olc::WHITE);
+
   private:
   olc::PixelGameEngine *m_renderer{nullptr};
   sprites::TexturePackPtr m_packs{};

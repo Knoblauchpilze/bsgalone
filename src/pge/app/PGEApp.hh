@@ -6,10 +6,10 @@
 #include "CoordinateFrame.hh"
 #include "FramerateControl.hh"
 #include "RenderState.hh"
-#include "olcEngine.hh"
 #include <core_utils/CoreObject.hh>
-#include <maths_utils/Point2.hh>
 #include <optional>
+
+#include "olcEngine.hh"
 
 namespace pge {
 
