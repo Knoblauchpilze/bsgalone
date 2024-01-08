@@ -83,23 +83,23 @@ auto generateShipDescription(const bsgo::Ship &ship) -> UiMenuPtr
 
   bg         = bgConfigFromColor(olc::BLANK);
   auto label = ship.name + " (" + bsgo::str(ship.shipClass) + ")";
-  auto text  = textConfigFromColor(ship.name, olc::WHITE);
+  auto text  = textConfigFromColor(ship.name, colors::WHITE);
   auto prop  = std::make_unique<UiTextMenu>(config, bg, text);
   desc->addMenu(std::move(prop));
 
   label = floatToStr(ship.maxHullPoints, 0) + " hull points (+"
           + floatToStr(ship.hullPointsRegen, 2) + "/s)";
-  text = textConfigFromColor(label, olc::WHITE);
+  text = textConfigFromColor(label, colors::WHITE);
   prop = std::make_unique<UiTextMenu>(config, bg, text);
   desc->addMenu(std::move(prop));
 
   label = floatToStr(ship.maxPowerPoints, 0) + " power (+" + floatToStr(ship.powerRegen, 2) + "/s)";
-  text  = textConfigFromColor(label, olc::WHITE);
+  text  = textConfigFromColor(label, colors::WHITE);
   prop  = std::make_unique<UiTextMenu>(config, bg, text);
   desc->addMenu(std::move(prop));
 
   label = floatToStr(ship.speed, 2) + "m/s";
-  text  = textConfigFromColor(label, olc::WHITE);
+  text  = textConfigFromColor(label, colors::WHITE);
   prop  = std::make_unique<UiTextMenu>(config, bg, text);
   desc->addMenu(std::move(prop));
 
@@ -116,7 +116,7 @@ auto generateShipDescription(const bsgo::Ship &ship) -> UiMenuPtr
       label += "s";
     }
   }
-  text = textConfigFromColor(label, olc::WHITE);
+  text = textConfigFromColor(label, colors::WHITE);
   prop = std::make_unique<UiTextMenu>(config, bg, text);
   desc->addMenu(std::move(prop));
 
@@ -164,7 +164,7 @@ auto HangarUiHandler::generateShipInteractiveSection(const int shipIndex) -> UiM
   MenuConfig config{.clickCallback = [this, shipIndex]() { onShipRequest(shipIndex); }};
 
   const auto bg       = bgConfigFromColor(olc::DARK_GREY);
-  const auto textConf = textConfigFromColor("", olc::WHITE);
+  const auto textConf = textConfigFromColor("", colors::WHITE);
   auto button         = std::make_unique<UiTextMenu>(config, bg, textConf);
 
   m_shipsData.at(shipIndex).button = button.get();

@@ -39,7 +39,7 @@ void StatusUiHandler::initializeMenus(const int width, const int height)
 
   bg = bgConfigFromColor(olc::BLANK);
 
-  auto text = textConfigFromColor("N/A", olc::BLACK);
+  auto text = textConfigFromColor("N/A", colors::BLACK);
   auto menu = std::make_unique<UiTextMenu>(config, bg, text);
   m_system  = menu.get();
   m_statusBar->addMenu(std::move(menu));
@@ -100,7 +100,7 @@ void StatusUiHandler::generateLogoutConfirmationPanel(const int width, const int
 
   auto bg = bgConfigFromColor(olc::VERY_DARK_RED);
   MenuConfig config{.gameClickCallback = [this](Game &g) { confirmLogout(g); }};
-  auto text   = textConfigFromColor("Yes", olc::DARK_RED);
+  auto text   = textConfigFromColor("Yes", colors::DARK_RED);
   auto button = std::make_unique<UiTextMenu>(config, bg, text);
   innerPanel->addMenu(std::move(button));
 
@@ -109,7 +109,7 @@ void StatusUiHandler::generateLogoutConfirmationPanel(const int width, const int
   bg                       = bgConfigFromColor(olc::VERY_DARK_GREEN);
   config.gameClickCallback = {};
   config.clickCallback     = [this]() { cancelLogout(); };
-  text                     = textConfigFromColor("No", olc::DARK_GREEN);
+  text                     = textConfigFromColor("No", colors::DARK_GREEN);
   button                   = std::make_unique<UiTextMenu>(config, bg, text);
   innerPanel->addMenu(std::move(button));
 
@@ -125,7 +125,7 @@ void StatusUiHandler::generateLogoutConfirmationPanel(const int width, const int
   m_logoutConfirmation->addMenu(generateSpacer());
 
   config.highlightable = false;
-  text                 = textConfigFromColor("Do you really want to logout?", olc::WHITE);
+  text                 = textConfigFromColor("Do you really want to logout?", colors::WHITE);
   auto label           = std::make_unique<UiTextMenu>(config, bg, text);
   m_logoutConfirmation->addMenu(std::move(label));
 

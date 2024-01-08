@@ -4,12 +4,10 @@
 
 namespace pge {
 
-auto textConfigFromColor(const std::string &text,
-                         const olc::Pixel &color,
-                         const TextAlignment &align) -> TextConfig
+auto textConfigFromColor(const std::string &text, const Color &color, const TextAlignment &align)
+  -> TextConfig
 {
-  const auto in = colors::toColor(color);
-  return textConfigFromColor(text, in, findHighlightColor(in), align);
+  return textConfigFromColor(text, color, findHighlightColor(color), align);
 }
 
 auto textConfigFromColor(const std::string &text,

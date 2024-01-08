@@ -27,22 +27,22 @@ void EntityUiHandler::initializeMenus(const int /*width*/, const int /*height*/)
                     .highlightable = false};
 
   auto bg       = bgConfigFromColor(olc::BLANK);
-  auto text     = textConfigFromColor("N/A", olc::WHITE);
+  auto text     = textConfigFromColor("N/A", colors::WHITE);
   m_menus[NAME] = std::make_unique<UiTextMenu>(config, bg, text);
 
   config.pos.y += REASONABLE_PIXEL_GAP;
   bg              = bgConfigFromColor(olc::VERY_DARK_RED);
-  text            = textConfigFromColor("Health: N/A", olc::WHITE);
+  text            = textConfigFromColor("Health: N/A", colors::WHITE);
   m_menus[HEALTH] = std::make_unique<UiTextMenu>(config, bg, text);
 
   config.pos.y += REASONABLE_PIXEL_GAP;
   bg             = bgConfigFromColor(olc::DARK_CYAN);
-  text           = textConfigFromColor("Power: N/A", olc::WHITE);
+  text           = textConfigFromColor("Power: N/A", colors::WHITE);
   m_menus[POWER] = std::make_unique<UiTextMenu>(config, bg, text);
 
   config.pos.y += REASONABLE_PIXEL_GAP;
   bg                = bgConfigFromColor(olc::BLANK);
-  text              = textConfigFromColor("N/A m", olc::WHITE);
+  text              = textConfigFromColor("N/A m", colors::WHITE);
   m_menus[DISTANCE] = std::make_unique<UiTextMenu>(config, bg, text);
 
   config.pos.y += REASONABLE_PIXEL_GAP;
@@ -55,7 +55,7 @@ void EntityUiHandler::initializeMenus(const int /*width*/, const int /*height*/)
     }
   };
   bg            = bgConfigFromColor(olc::DARK_GREY);
-  text          = textConfigFromColor("Dock", olc::WHITE);
+  text          = textConfigFromColor("Dock", colors::WHITE);
   m_menus[DOCK] = std::make_unique<UiTextMenu>(config, bg, text);
 }
 

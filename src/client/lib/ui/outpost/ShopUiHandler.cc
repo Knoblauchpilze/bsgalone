@@ -113,7 +113,7 @@ auto generateWeaponMenu(const bsgo::Weapon &weapon) -> UiTextMenuPtr
 {
   const MenuConfig config{.highlightable = false};
   const auto bg   = bgConfigFromColor(olc::BLANK);
-  const auto text = textConfigFromColor(weapon.name, olc::WHITE);
+  const auto text = textConfigFromColor(weapon.name, colors::WHITE);
   return std::make_unique<UiTextMenu>(config, bg, text);
 }
 
@@ -121,7 +121,7 @@ auto generateComputerMenu(const bsgo::Computer &computer) -> UiTextMenuPtr
 {
   const MenuConfig config{.highlightable = false};
   const auto bg   = bgConfigFromColor(olc::BLANK);
-  const auto text = textConfigFromColor(computer.name, olc::WHITE);
+  const auto text = textConfigFromColor(computer.name, colors::WHITE);
   return std::make_unique<UiTextMenu>(config, bg, text);
 }
 
@@ -135,7 +135,7 @@ auto generatePriceMenus(const bsgo::ShopItem &item) -> std::vector<UiTextMenuPtr
 
     const MenuConfig config{.highlightable = false};
     const auto bg       = bgConfigFromColor(olc::BLANK);
-    const auto textConf = textConfigFromColor(text, olc::DARK_RED);
+    const auto textConf = textConfigFromColor(text, colors::DARK_RED);
     auto menu           = std::make_unique<UiTextMenu>(config, bg, textConf);
     out.push_back(std::move(menu));
   }
@@ -200,7 +200,7 @@ auto ShopUiHandler::generateBuySection(const int itemId) -> UiMenuPtr
   MenuConfig config{.clickCallback = [this, itemId]() { onPurchaseRequest(itemId); }};
 
   const auto bg       = bgConfigFromColor(olc::BLANK);
-  const auto textConf = textConfigFromColor("Buy", olc::WHITE);
+  const auto textConf = textConfigFromColor("Buy", colors::WHITE);
   auto buyButton      = std::make_unique<UiTextMenu>(config, bg, textConf);
 
   m_itemsData.at(itemId).menu = buyButton.get();

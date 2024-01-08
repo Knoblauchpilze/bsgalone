@@ -127,7 +127,7 @@ void LockerUiHandler::initializeLockerLayout()
   MenuConfig config{.highlightable = false, .propagateEventsToChildren = false};
 
   const auto bg   = bgConfigFromColor(olc::DARK_GREY);
-  const auto text = textConfigFromColor("Locker", olc::BLACK);
+  const auto text = textConfigFromColor("Locker", colors::BLACK);
   auto title      = std::make_unique<UiTextMenu>(config, bg, text);
   m_locker->addMenu(std::move(title));
 
@@ -168,7 +168,7 @@ void LockerUiHandler::initializeShipLayout()
   MenuConfig config{.highlightable = false, .propagateEventsToChildren = false};
 
   const auto bg   = bgConfigFromColor(olc::DARK_GREY);
-  const auto text = textConfigFromColor("Ship", olc::BLACK);
+  const auto text = textConfigFromColor("Ship", colors::BLACK);
   auto title      = std::make_unique<UiTextMenu>(config, bg, text);
   m_ship->addMenu(std::move(title));
 
@@ -212,7 +212,7 @@ void LockerUiHandler::generateResourcesMenus()
 
   for (const auto &resource : resources)
   {
-    auto textConf = textConfigFromColor(resource.name, olc::BLACK);
+    auto textConf = textConfigFromColor(resource.name, colors::BLACK);
     auto field    = std::make_unique<UiTextMenu>(config, bg, textConf);
     m_resources[id]->addMenu(std::move(field));
 
@@ -232,7 +232,7 @@ auto generateWeaponMenu(const bsgo::PlayerWeapon &weapon) -> UiMenuPtr
   const MenuConfig config{.highlightable = false};
   const auto bg = bgConfigFromColor(olc::BLANK);
 
-  auto textConf = textConfigFromColor(weapon.name, olc::BLACK);
+  auto textConf = textConfigFromColor(weapon.name, colors::BLACK);
   auto field    = std::make_unique<UiTextMenu>(config, bg, textConf);
   menu->addMenu(std::move(field));
 
@@ -306,7 +306,7 @@ auto generateComputerMenu(const bsgo::PlayerComputer &computer) -> UiMenuPtr
   const MenuConfig config{.highlightable = false};
   const auto bg = bgConfigFromColor(olc::BLANK);
 
-  auto textConf = textConfigFromColor(computer.name, olc::BLACK);
+  auto textConf = textConfigFromColor(computer.name, colors::BLACK);
   auto field    = std::make_unique<UiTextMenu>(config, bg, textConf);
   menu->addMenu(std::move(field));
 
