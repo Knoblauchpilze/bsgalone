@@ -17,8 +17,8 @@ GameOverUiHandler::GameOverUiHandler(const bsgo::Views &views)
 
 void GameOverUiHandler::initializeMenus(const int width, const int height)
 {
-  olc::vi2d dims{200, 70};
-  olc::vi2d pos;
+  Vec2i dims{200, 70};
+  Vec2i pos;
   pos.x = (width - dims.x) / 2;
   pos.y = (height - dims.y) / 2;
 

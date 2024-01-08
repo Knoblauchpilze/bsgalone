@@ -85,10 +85,9 @@ void WeaponsUiHandler::reset()
 void WeaponsUiHandler::generateWeaponsMenus(int width, int height)
 {
   constexpr auto WEAPON_MENU_PIXEL_DIMS = 50;
-  const olc::vi2d weaponMenuDims{WEAPON_MENU_PIXEL_DIMS, WEAPON_MENU_PIXEL_DIMS};
+  const Vec2i weaponMenuDims{WEAPON_MENU_PIXEL_DIMS, WEAPON_MENU_PIXEL_DIMS};
   constexpr auto SPACING_IN_PIXELS = 5;
-  const olc::vi2d pos{width - NUMBER_OF_WEAPONS * (weaponMenuDims.x + SPACING_IN_PIXELS),
-                      height / 2};
+  const Vec2i pos{width - NUMBER_OF_WEAPONS * (weaponMenuDims.x + SPACING_IN_PIXELS), height / 2};
 
   MenuConfig config{.pos = pos, .dims = weaponMenuDims, .propagateEventsToChildren = false};
   const auto bg = bgConfigFromColor(semiOpaque(olc::BLACK));
@@ -102,11 +101,6 @@ void WeaponsUiHandler::generateWeaponsMenus(int width, int height)
   }
 }
 
-namespace {
-constexpr auto DUMMY_PIXEL_DIMENSION = 10;
-const olc::vi2d DUMMY_DIMENSION{DUMMY_PIXEL_DIMENSION, DUMMY_PIXEL_DIMENSION};
-} // namespace
-
 void WeaponsUiHandler::initializeWeapons()
 {
   const auto ship         = m_shipView->getPlayerShip();
@@ -119,7 +113,7 @@ void WeaponsUiHandler::initializeWeapons()
             + std::to_string(ship.weapons.size()));
   }
 
-  const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION};
+  const MenuConfig config{};
   const auto bg = bgConfigFromColor(olc::BLANK);
   auto textConf = textConfigFromColor("", olc::WHITE);
 

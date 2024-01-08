@@ -5,7 +5,7 @@
 
 namespace pge {
 
-StatusUiHandler::StatusUiHandler(const olc::vi2d &offset, const bsgo::Views &views)
+StatusUiHandler::StatusUiHandler(const Vec2i &offset, const bsgo::Views &views)
   : IUiHandler("status")
   , m_offset(offset)
   , m_shipView(views.shipView)
@@ -27,7 +27,7 @@ constexpr auto STATUS_MENU_HEIGHT = 20;
 
 void StatusUiHandler::initializeMenus(const int width, const int height)
 {
-  const olc::vi2d statusMenuDims{width - 2 * m_offset.x, STATUS_MENU_HEIGHT};
+  const Vec2i statusMenuDims{width - 2 * m_offset.x, STATUS_MENU_HEIGHT};
 
   const MenuConfig config{.pos           = m_offset,
                           .dims          = statusMenuDims,
@@ -83,16 +83,9 @@ void StatusUiHandler::reset()
   m_logoutRequested = false;
 }
 
-namespace {
-constexpr auto DUMMY_PIXEL_DIMENSION = 10;
-const olc::vi2d DUMMY_DIMENSION{DUMMY_PIXEL_DIMENSION, DUMMY_PIXEL_DIMENSION};
-} // namespace
-
 void StatusUiHandler::generateLogoutButton(const int /*width*/, const int /*height*/)
 {
-  const MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .clickCallback = [this]() {
-                            requestLogout();
-                          }};
+  const MenuConfig config{.clickCallback = [this]() { requestLogout(); }};
   const auto bg   = bgConfigFromColor(olc::VERY_DARK_GREY);
   const auto text = textConfigFromColor("Logout", olc::BLACK, olc::RED);
 
@@ -106,9 +99,7 @@ void StatusUiHandler::generateLogoutConfirmationPanel(const int width, const int
   innerPanel->addMenu(generateSpacer());
 
   auto bg = bgConfigFromColor(olc::VERY_DARK_RED);
-  MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSION, .gameClickCallback = [this](Game &g) {
-                      confirmLogout(g);
-                    }};
+  MenuConfig config{.gameClickCallback = [this](Game &g) { confirmLogout(g); }};
   auto text   = textConfigFromColor("Yes", olc::DARK_RED);
   auto button = std::make_unique<UiTextMenu>(config, bg, text);
   innerPanel->addMenu(std::move(button));
@@ -124,8 +115,8 @@ void StatusUiHandler::generateLogoutConfirmationPanel(const int width, const int
 
   innerPanel->addMenu(generateSpacer());
 
-  const olc::vi2d logoutDims{width / 3, height / 4};
-  const olc::vi2d logoutPos{(width - logoutDims.x) / 2, (height - logoutDims.y) / 2};
+  const Vec2i logoutDims{width / 3, height / 4};
+  const Vec2i logoutPos{(width - logoutDims.x) / 2, (height - logoutDims.y) / 2};
 
   config               = MenuConfig{.pos = logoutPos, .dims = logoutDims};
   bg                   = bgConfigFromColor(almostOpaque(olc::BLACK));

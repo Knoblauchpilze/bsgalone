@@ -10,7 +10,7 @@ namespace pge {
 class StatusUiHandler : public IUiHandler
 {
   public:
-  StatusUiHandler(const olc::vi2d &offset, const bsgo::Views &views);
+  StatusUiHandler(const Vec2i &offset, const bsgo::Views &views);
   ~StatusUiHandler() override = default;
 
   void initializeMenus(const int width, const int height) override;
@@ -20,7 +20,7 @@ class StatusUiHandler : public IUiHandler
   void reset() override;
 
   private:
-  olc::vi2d m_offset{};
+  Vec2i m_offset{};
   bsgo::ShipViewShPtr m_shipView{};
   bsgo::ServerViewShPtr m_serverView{};
 

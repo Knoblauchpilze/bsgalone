@@ -27,8 +27,8 @@ void OutpostScreenUiHandler::initializeMenus(const int width, const int height)
   m_menus.resize(MenuItem::COUNT);
 
   constexpr auto UNDOCK_BUTTON_WIDTH = 100;
-  const olc::vi2d pos{(width - UNDOCK_BUTTON_WIDTH) / 2, 10};
-  const olc::vi2d dims{UNDOCK_BUTTON_WIDTH, 50};
+  const Vec2i pos{(width - UNDOCK_BUTTON_WIDTH) / 2, 10};
+  const Vec2i dims{UNDOCK_BUTTON_WIDTH, 50};
 
   const MenuConfig config{.pos = pos, .dims = dims, .clickCallback = [this]() {
                             if (m_shipView->isReady())
@@ -165,8 +165,8 @@ void OutpostScreenUiHandler::generateGeneralMenu(const int width, const int heig
   const auto viewMenuWidth  = static_cast<int>(VIEW_LIST_WIDTH_TO_SCREEN_WIDTH_RATIO * width);
   const auto viewMenuHeight = static_cast<int>(VIEW_LIST_HEIGHT_TO_SCREEN_HEIGHT_RATIO * height);
 
-  const olc::vi2d pos{10, (height - viewMenuHeight) / 2};
-  const olc::vi2d dims{viewMenuWidth, viewMenuHeight};
+  const Vec2i pos{10, (height - viewMenuHeight) / 2};
+  const Vec2i dims{viewMenuWidth, viewMenuHeight};
 
   MenuConfig config{.pos = pos, .dims = dims};
   auto bg             = bgConfigFromColor(olc::BLANK);

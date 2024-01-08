@@ -32,12 +32,12 @@ void UiTextMenu::updateTextColor(const olc::Pixel &color)
 }
 
 namespace {
-auto computeTextPositionFromAlignement(const olc::vi2d &offset,
-                                       const olc::vi2d &dims,
-                                       const olc::vi2d &textDims,
-                                       const TextAlignment &align) -> olc::vi2d
+auto computeTextPositionFromAlignement(const Vec2i &offset,
+                                       const Vec2i &dims,
+                                       const Vec2i &textDims,
+                                       const TextAlignment &align) -> Vec2i
 {
-  olc::vi2d textPos{};
+  Vec2i textPos{};
   switch (align)
   {
     case TextAlignment::CENTER:
@@ -63,14 +63,10 @@ void UiTextMenu::renderCustom(Renderer &engine) const
 {
   const auto absPos   = absolutePosition();
   const auto textDims = engine.getTextSize(m_text.text);
-  const auto textPos  = computeTextPositionFromAlignement(absPos,
-                                                         dims(),
-                                                         toVi2d(textDims),
-                                                         m_text.align);
+  const auto textPos  = computeTextPositionFromAlignement(absPos, dims(), textDims, m_text.align);
   const auto color    = getTextColorFromState();
 
-  const auto tPos = Vec2f{static_cast<float>(textPos.x), static_cast<float>(textPos.y)};
-  engine.drawString(tPos, m_text.text, color);
+  engine.drawString(toVec2f(textPos), m_text.text, color);
 }
 
 auto UiTextMenu::getTextColorFromState() const -> olc::Pixel

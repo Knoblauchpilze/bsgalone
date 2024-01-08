@@ -15,22 +15,19 @@ auto CredentialsUiHandler::getCredentials() const -> PlayerCredentials
 }
 
 namespace {
-constexpr auto DUMMY_PIXEL_DIMENSION = 10;
-const olc::vi2d DUMMY_DIMENSION{DUMMY_PIXEL_DIMENSION, DUMMY_PIXEL_DIMENSION};
-
 auto addTextFieldSectionToMenu(UiMenu &mainPanel,
                                const std::string &textFieldlabel,
                                const std::optional<std::string> &defaultValue = {}) -> UiTextField *
 {
   auto textFieldSection = generateBlankHorizontalMenu();
 
-  const MenuConfig config{.dims = DUMMY_DIMENSION, .highlightable = false};
+  const MenuConfig config{.highlightable = false};
   auto bg    = bgConfigFromColor(semiOpaque(olc::DARK_BLUE));
   auto text  = textConfigFromColor(textFieldlabel, olc::GREY, TextAlignment::RIGHT);
   auto label = std::make_unique<UiTextMenu>(config, bg, text);
   textFieldSection->addMenu(std::move(label));
 
-  TextFieldConfig fieldConfig{.dims = DUMMY_DIMENSION};
+  TextFieldConfig fieldConfig{};
   bg               = bgConfigFromColor(semiOpaque(olc::WHITE));
   const auto value = defaultValue.value_or("");
   text             = textConfigFromColor(value, olc::BLACK, TextAlignment::LEFT);
@@ -51,7 +48,6 @@ void CredentialsUiHandler::initializeMenus(const int width, const int /*height*/
   constexpr auto LOGIN_PANEL_Y_PIXELS = 200;
   const olc::vi2d loginPos{(width - loginDimsPixels.x) / 2, LOGIN_PANEL_Y_PIXELS};
 
-  MenuConfig config{.pos = loginPos, .dims = loginDimsPixels, .highlightable = false};
   m_credentialsPanel = generateBlankVerticalMenu(loginPos, loginDimsPixels);
 
   m_nameTextField     = addTextFieldSectionToMenu(*m_credentialsPanel, "Name:", "grouton");

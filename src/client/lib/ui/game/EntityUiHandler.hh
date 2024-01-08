@@ -10,7 +10,7 @@ namespace pge {
 using EntityFetcher = std::function<std::optional<bsgo::Entity>(const bsgo::ShipView &)>;
 struct EntityUiConfig
 {
-  olc::vi2d offset{};
+  Vec2i offset{};
   bool displayDistance{false};
   EntityFetcher getEntity{};
 };

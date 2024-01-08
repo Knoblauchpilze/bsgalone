@@ -19,7 +19,7 @@ void EntityUiHandler::initializeMenus(const int /*width*/, const int /*height*/)
 {
   m_menus.resize(MenuItem::COUNT);
 
-  const olc::vi2d TARGET_UI_PIXEL_DIMENSION{200, 15};
+  const Vec2i TARGET_UI_PIXEL_DIMENSION{200, 15};
   constexpr auto REASONABLE_PIXEL_GAP = 15;
 
   MenuConfig config{.pos           = m_config.offset,
@@ -47,7 +47,7 @@ void EntityUiHandler::initializeMenus(const int /*width*/, const int /*height*/)
 
   config.pos.y += REASONABLE_PIXEL_GAP;
   config.highlightable = true;
-  config.dims          = olc::vi2d{100, 25};
+  config.dims          = Vec2i{100, 25};
   config.clickCallback = [this]() {
     if (m_shipView->isReady())
     {

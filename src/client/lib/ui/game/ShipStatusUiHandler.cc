@@ -44,16 +44,16 @@ void ShipStatusUiHandler::updateUi()
 }
 
 namespace {
-const olc::vi2d THREAT_UI_PIXEL_DIMENSION{100, 20};
-const olc::vi2d JUMP_UI_PIXEL_DIMENSION{100, 100};
+const Vec2i THREAT_UI_PIXEL_DIMENSION{100, 20};
+const Vec2i JUMP_UI_PIXEL_DIMENSION{100, 100};
 constexpr auto REASONABLE_GAP_PIXELS = 15;
 } // namespace
 
 void ShipStatusUiHandler::initializeThreatPanel(const int width, const int height)
 {
-  const olc::vi2d threatPixelPos{(width - THREAT_UI_PIXEL_DIMENSION.x) / 2,
-                                 height - JUMP_UI_PIXEL_DIMENSION.y - REASONABLE_GAP_PIXELS
-                                   - THREAT_UI_PIXEL_DIMENSION.y};
+  const Vec2i threatPixelPos{(width - THREAT_UI_PIXEL_DIMENSION.x) / 2,
+                             height - JUMP_UI_PIXEL_DIMENSION.y - REASONABLE_GAP_PIXELS
+                               - THREAT_UI_PIXEL_DIMENSION.y};
 
   const MenuConfig config{.pos           = threatPixelPos,
                           .dims          = THREAT_UI_PIXEL_DIMENSION,
@@ -70,8 +70,8 @@ void ShipStatusUiHandler::initializeThreatPanel(const int width, const int heigh
 
 void ShipStatusUiHandler::initializeJumpPanel(const int width, const int height)
 {
-  const olc::vi2d jumpUiPixelPos{(width - JUMP_UI_PIXEL_DIMENSION.x) / 2,
-                                 height - JUMP_UI_PIXEL_DIMENSION.y - REASONABLE_GAP_PIXELS};
+  const Vec2i jumpUiPixelPos{(width - JUMP_UI_PIXEL_DIMENSION.x) / 2,
+                             height - JUMP_UI_PIXEL_DIMENSION.y - REASONABLE_GAP_PIXELS};
 
   const MenuConfig config{.pos           = jumpUiPixelPos,
                           .dims          = JUMP_UI_PIXEL_DIMENSION,

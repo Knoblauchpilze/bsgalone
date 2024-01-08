@@ -72,9 +72,9 @@ void GameScreenUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQueu
 }
 
 namespace {
-const olc::vi2d STATUS_UI_PIXEL_POS{5, 5};
-const olc::vi2d SHIP_UI_PIXEL_POS{5, 30};
-const olc::vi2d TARGET_UI_PIXEL_POS{400, 30};
+const Vec2i STATUS_UI_PIXEL_POS{5, 5};
+const Vec2i SHIP_UI_PIXEL_POS{5, 30};
+const Vec2i TARGET_UI_PIXEL_POS{400, 30};
 } // namespace
 
 void GameScreenUiHandler::initializeUis(const bsgo::Views &views)

@@ -133,11 +133,6 @@ void LoginScreenUiHandler::onMessageReceived(const bsgo::IMessage &message)
   }
 }
 
-namespace {
-constexpr auto DUMMY_PIXEL_DIMS = 10;
-const auto DUMMY_DIMENSIONS     = olc::vi2d{DUMMY_PIXEL_DIMS, DUMMY_PIXEL_DIMS};
-} // namespace
-
 void LoginScreenUiHandler::generateLoginModePanel(const int width, const int /*height*/)
 {
   constexpr auto LOGIN_MODE_Y_PIXELS = 20;
@@ -146,7 +141,7 @@ void LoginScreenUiHandler::generateLoginModePanel(const int width, const int /*h
 
   m_loginModePanel = generateBlankHorizontalMenu(loginModePos, loginModeDimsPixels);
 
-  MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSIONS};
+  MenuConfig config{};
   const auto bg = bgConfigFromColor(LOGIN_BUTTON_ACTIVE_COLOR);
 
   config.clickCallback = [this]() { setLoginMode(Mode::LOGIN); };
@@ -170,7 +165,7 @@ void LoginScreenUiHandler::generateFactionPanel(const int width, const int /*hei
 
   m_factionPanel = generateBlankHorizontalMenu(factionPos, factionDimsPixels);
 
-  MenuConfig config{.pos = {}, .dims = DUMMY_DIMENSIONS};
+  MenuConfig config{};
 
   config.clickCallback = [this]() { setFaction(bsgo::Faction::COLONIAL); };
   auto bg              = bgConfigFromColor(COLONIAL_BUTTON_ACTIVE_COLOR);
@@ -191,9 +186,9 @@ void LoginScreenUiHandler::generateProceedButton(const int width, const int heig
 {
   constexpr auto REASONABLE_GAP_SIZE = 20;
 
-  const olc::vi2d loginButtonDimsPixels{200, 50};
-  const olc::vi2d loginButtonPos{(width - loginButtonDimsPixels.x) / 2,
-                                 height - REASONABLE_GAP_SIZE - loginButtonDimsPixels.y};
+  const Vec2i loginButtonDimsPixels{200, 50};
+  const Vec2i loginButtonPos{(width - loginButtonDimsPixels.x) / 2,
+                             height - REASONABLE_GAP_SIZE - loginButtonDimsPixels.y};
 
   const MenuConfig config{.pos           = loginButtonPos,
                           .dims          = loginButtonDimsPixels,
@@ -207,9 +202,9 @@ void LoginScreenUiHandler::generateProceedButton(const int width, const int heig
 void LoginScreenUiHandler::generateQuitButton(const int width, const int /*height*/)
 {
   constexpr auto REASONABLE_GAP_SIZE = 20;
-  const olc::vi2d quitButtonDimsPixels{100, 50};
-  const olc::vi2d quitButtonPos{width - REASONABLE_GAP_SIZE - quitButtonDimsPixels.x,
-                                REASONABLE_GAP_SIZE};
+  const Vec2i quitButtonDimsPixels{100, 50};
+  const Vec2i quitButtonPos{width - REASONABLE_GAP_SIZE - quitButtonDimsPixels.x,
+                            REASONABLE_GAP_SIZE};
 
   const MenuConfig config{.pos               = quitButtonPos,
                           .dims              = quitButtonDimsPixels,
@@ -225,8 +220,8 @@ void LoginScreenUiHandler::generateQuitButton(const int width, const int /*heigh
 
 void LoginScreenUiHandler::generateFailureMenu(const int width, const int /*height*/)
 {
-  const olc::vi2d failureMenuDimsPixels{350, 80};
-  const olc::vi2d failureMenuPos{(width - failureMenuDimsPixels.x) / 2, 430};
+  const Vec2i failureMenuDimsPixels{350, 80};
+  const Vec2i failureMenuPos{(width - failureMenuDimsPixels.x) / 2, 430};
 
   const MenuConfig config{.pos           = failureMenuPos,
                           .dims          = failureMenuDimsPixels,
