@@ -7,19 +7,19 @@
 
 namespace pge {
 
-auto generateBlankHorizontalMenu(const std::optional<olc::vi2d> &dims = {}) -> UiMenuPtr;
-auto generateBlankHorizontalMenu(const olc::vi2d &pos, const std::optional<olc::vi2d> &dims = {})
+auto generateBlankHorizontalMenu(const std::optional<Vec2i> &dims = {}) -> UiMenuPtr;
+auto generateBlankHorizontalMenu(const Vec2i &pos, const std::optional<Vec2i> &dims = {})
   -> UiMenuPtr;
-auto generateBlankVerticalMenu(const std::optional<olc::vi2d> &dims = {}) -> UiMenuPtr;
-auto generateBlankVerticalMenu(const olc::vi2d &pos, const std::optional<olc::vi2d> &dims = {})
+auto generateBlankVerticalMenu(const std::optional<Vec2i> &dims = {}) -> UiMenuPtr;
+auto generateBlankVerticalMenu(const Vec2i &pos, const std::optional<Vec2i> &dims = {})
   -> UiMenuPtr;
-auto generateBlankMenu(const olc::vi2d &pos,
+auto generateBlankMenu(const Vec2i &pos,
                        const MenuLayout &layout,
-                       const std::optional<olc::vi2d> &dims = {}) -> UiMenuPtr;
+                       const std::optional<Vec2i> &dims = {}) -> UiMenuPtr;
 auto generateBlankMenu(const MenuConfig &config) -> UiMenuPtr;
 
-auto generateSpacer(const std::optional<olc::vi2d> &dims = {}) -> UiMenuPtr;
-auto generateColoredSpacer(const olc::Pixel &color, const std::optional<olc::vi2d> &dims = {})
+auto generateSpacer(const std::optional<Vec2i> &dims = {}) -> UiMenuPtr;
+auto generateColoredSpacer(const olc::Pixel &color, const std::optional<Vec2i> &dims = {})
   -> UiMenuPtr;
 
 } // namespace pge

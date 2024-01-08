@@ -29,9 +29,9 @@ void HangarUiHandler::initializeMenus(const int width, const int height)
   const auto viewWidth  = static_cast<int>(MAIN_VIEW_WIDTH_TO_SCREEN_WIDTH_RATIO * width);
   const auto viewHeight = static_cast<int>(MAIN_VIEW_HEIGHT_TO_SCREEN_HEIGHT_RATIO * height);
 
-  const olc::vi2d pos{width - viewWidth - VIEW_TO_RIGHT_OF_SCREEN_IN_PIXELS,
-                      height - viewHeight - VIEW_TO_RIGHT_OF_SCREEN_IN_PIXELS};
-  const olc::vi2d dims{viewWidth, viewHeight};
+  const Vec2i pos{width - viewWidth - VIEW_TO_RIGHT_OF_SCREEN_IN_PIXELS,
+                  height - viewHeight - VIEW_TO_RIGHT_OF_SCREEN_IN_PIXELS};
+  const Vec2i dims{viewWidth, viewHeight};
   m_menu = generateBlankVerticalMenu(pos, dims);
 }
 

@@ -44,9 +44,9 @@ auto addTextFieldSectionToMenu(UiMenu &mainPanel,
 
 void CredentialsUiHandler::initializeMenus(const int width, const int /*height*/)
 {
-  const olc::vi2d loginDimsPixels{400, 200};
+  const Vec2i loginDimsPixels{400, 200};
   constexpr auto LOGIN_PANEL_Y_PIXELS = 200;
-  const olc::vi2d loginPos{(width - loginDimsPixels.x) / 2, LOGIN_PANEL_Y_PIXELS};
+  const Vec2i loginPos{(width - loginDimsPixels.x) / 2, LOGIN_PANEL_Y_PIXELS};
 
   m_credentialsPanel = generateBlankVerticalMenu(loginPos, loginDimsPixels);
 
