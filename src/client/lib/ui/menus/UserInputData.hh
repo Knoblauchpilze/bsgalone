@@ -2,6 +2,7 @@
 #pragma once
 
 #include "Controls.hh"
+#include <functional>
 
 namespace pge {
 

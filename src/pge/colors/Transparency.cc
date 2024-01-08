@@ -46,34 +46,9 @@ auto transparent(const olc::Pixel &in) -> olc::Pixel
   return makeTransparent(in, alpha::TRANSPARENT);
 }
 
-auto makeTransparent(const Color &in, const uint8_t alpha) -> Color
-{
-  return Color{.name = in.name, .rgb = in.rgb, .alpha = alpha};
-}
-
 auto makeTransparentFromPercentage(const Color &in, const float perc) -> Color
 {
   return Color{.name = in.name, .rgb = in.rgb, .alpha = opacityFromPercentage(perc)};
-}
-
-auto almostOpaque(const Color &in) -> Color
-{
-  return makeTransparent(in, alpha::ALMOST_OPAQUE);
-}
-
-auto semiOpaque(const Color &in) -> Color
-{
-  return makeTransparent(in, alpha::SEMI_OPAQUE);
-}
-
-auto almostTransparent(const Color &in) -> Color
-{
-  return makeTransparent(in, alpha::ALMOST_TRANSPARENT);
-}
-
-auto transparent(const Color &in) -> Color
-{
-  return makeTransparent(in, alpha::TRANSPARENT);
 }
 
 } // namespace pge

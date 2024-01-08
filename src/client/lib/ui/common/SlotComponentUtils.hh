@@ -6,6 +6,6 @@
 
 namespace pge {
 
-auto bgColorFromFiringState(const bsgo::SlotComponent &component) -> olc::Pixel;
+auto bgColorFromFiringState(const bsgo::SlotComponent &component) -> Color;
 
 }

@@ -76,7 +76,7 @@ void AbilitiesUiHandler::reset()
   for (auto &computer : m_computers)
   {
     computer->clearChildren();
-    computer->updateBgColor(semiOpaque(olc::BLACK));
+    computer->updateBgColor(semiOpaque(colors::BLACK));
   }
 
   m_initialized = false;
@@ -90,7 +90,7 @@ void AbilitiesUiHandler::generateComputersMenus(int width, int height)
                   height - SPACING_IN_PIXELS - abilityMenuDims.y};
 
   MenuConfig config{.pos = pos, .dims = abilityMenuDims, .propagateEventsToChildren = false};
-  const auto bg = bgConfigFromColor(semiOpaque(olc::BLACK));
+  const auto bg = bgConfigFromColor(semiOpaque(colors::BLACK));
 
   for (auto id = 0u; id < NUMBER_OF_ABILITIES; ++id)
   {
@@ -114,7 +114,7 @@ void AbilitiesUiHandler::initializeAbilities()
   }
 
   const MenuConfig config{};
-  const auto bg = bgConfigFromColor(olc::BLANK);
+  const auto bg = bgConfigFromColor(colors::BLANK);
   auto textConf = textConfigFromColor("", colors::WHITE);
 
   for (auto id = 0u; id < computersCount; ++id)

@@ -19,7 +19,6 @@ auto generateBlankMenu(const Vec2i &pos,
 auto generateBlankMenu(const MenuConfig &config) -> UiMenuPtr;
 
 auto generateSpacer(const std::optional<Vec2i> &dims = {}) -> UiMenuPtr;
-auto generateColoredSpacer(const olc::Pixel &color, const std::optional<Vec2i> &dims = {})
-  -> UiMenuPtr;
+auto generateColoredSpacer(const Color &color, const std::optional<Vec2i> &dims = {}) -> UiMenuPtr;
 
 } // namespace pge

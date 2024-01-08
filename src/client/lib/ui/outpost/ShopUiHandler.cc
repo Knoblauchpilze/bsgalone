@@ -33,7 +33,7 @@ void ShopUiHandler::initializeMenus(const int width, const int height)
   const Vec2i dims{viewWidth, viewHeight};
 
   const MenuConfig config{.pos = pos, .dims = dims, .highlightable = false};
-  const auto bg = bgConfigFromColor(olc::DARK_MAGENTA);
+  const auto bg = bgConfigFromColor(colors::DARK_MAGENTA);
   m_menu        = std::make_unique<UiMenu>(config, bg);
 
   initializeLayout();
@@ -57,11 +57,11 @@ void updateBuyButtonState(UiMenu &buyButton, const bool enable)
 
   if (!enable)
   {
-    buyButton.updateBgColor(olc::DARK_GREY);
+    buyButton.updateBgColor(colors::DARK_GREY);
   }
   else
   {
-    buyButton.updateBgColor(olc::DARK_GREEN);
+    buyButton.updateBgColor(colors::DARK_GREEN);
   }
 }
 
@@ -98,7 +98,7 @@ void ShopUiHandler::initializeLayout()
   const auto items = m_shopView->getShopItems();
   for (auto id = 0u; id < items.size(); ++id)
   {
-    auto bgColor = (items[id].computer ? olc::VERY_DARK_YELLOW : olc::VERY_DARK_RED);
+    auto bgColor = (items[id].computer ? colors::VERY_DARK_YELLOW : colors::VERY_DARK_RED);
 
     const MenuConfig config{.layout = MenuLayout::HORIZONTAL};
     const auto bg = bgConfigFromColor(bgColor);
@@ -112,7 +112,7 @@ namespace {
 auto generateWeaponMenu(const bsgo::Weapon &weapon) -> UiTextMenuPtr
 {
   const MenuConfig config{.highlightable = false};
-  const auto bg   = bgConfigFromColor(olc::BLANK);
+  const auto bg   = bgConfigFromColor(colors::BLANK);
   const auto text = textConfigFromColor(weapon.name, colors::WHITE);
   return std::make_unique<UiTextMenu>(config, bg, text);
 }
@@ -120,7 +120,7 @@ auto generateWeaponMenu(const bsgo::Weapon &weapon) -> UiTextMenuPtr
 auto generateComputerMenu(const bsgo::Computer &computer) -> UiTextMenuPtr
 {
   const MenuConfig config{.highlightable = false};
-  const auto bg   = bgConfigFromColor(olc::BLANK);
+  const auto bg   = bgConfigFromColor(colors::BLANK);
   const auto text = textConfigFromColor(computer.name, colors::WHITE);
   return std::make_unique<UiTextMenu>(config, bg, text);
 }
@@ -134,7 +134,7 @@ auto generatePriceMenus(const bsgo::ShopItem &item) -> std::vector<UiTextMenuPtr
     auto text = cost.resource.name + ": " + floatToStr(cost.amount, 0);
 
     const MenuConfig config{.highlightable = false};
-    const auto bg       = bgConfigFromColor(olc::BLANK);
+    const auto bg       = bgConfigFromColor(colors::BLANK);
     const auto textConf = textConfigFromColor(text, colors::DARK_RED);
     auto menu           = std::make_unique<UiTextMenu>(config, bg, textConf);
     out.push_back(std::move(menu));
@@ -199,7 +199,7 @@ auto ShopUiHandler::generateBuySection(const int itemId) -> UiMenuPtr
 
   MenuConfig config{.clickCallback = [this, itemId]() { onPurchaseRequest(itemId); }};
 
-  const auto bg       = bgConfigFromColor(olc::BLANK);
+  const auto bg       = bgConfigFromColor(colors::BLANK);
   const auto textConf = textConfigFromColor("Buy", colors::WHITE);
   auto buyButton      = std::make_unique<UiTextMenu>(config, bg, textConf);
 

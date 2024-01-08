@@ -75,13 +75,13 @@ namespace {
 auto generateShipDescription(const bsgo::Ship &ship) -> UiMenuPtr
 {
   const MenuConfig config{.highlightable = false};
-  auto bg = bgConfigFromColor(olc::BLANK);
+  auto bg = bgConfigFromColor(colors::BLANK);
 
   auto desc = std::make_unique<UiMenu>(config, bg);
 
   desc->addMenu(generateSpacer());
 
-  bg         = bgConfigFromColor(olc::BLANK);
+  bg         = bgConfigFromColor(colors::BLANK);
   auto label = ship.name + " (" + bsgo::str(ship.shipClass) + ")";
   auto text  = textConfigFromColor(ship.name, colors::WHITE);
   auto prop  = std::make_unique<UiTextMenu>(config, bg, text);
@@ -133,7 +133,7 @@ void HangarUiHandler::initializeLayout()
   const auto allShips = m_shopView->getAllShipsForFaction(faction);
 
   const MenuConfig config{.layout = MenuLayout::HORIZONTAL, .highlightable = false};
-  const auto bg = bgConfigFromColor(colors::toOlcPixel(colorFromFaction(faction)));
+  const auto bg = bgConfigFromColor(colorFromFaction(faction));
 
   auto shipIndex = 0;
   for (const auto &ship : allShips)
@@ -163,7 +163,7 @@ auto HangarUiHandler::generateShipInteractiveSection(const int shipIndex) -> UiM
 
   MenuConfig config{.clickCallback = [this, shipIndex]() { onShipRequest(shipIndex); }};
 
-  const auto bg       = bgConfigFromColor(olc::DARK_GREY);
+  const auto bg       = bgConfigFromColor(colors::DARK_GREY);
   const auto textConf = textConfigFromColor("", colors::WHITE);
   auto button         = std::make_unique<UiTextMenu>(config, bg, textConf);
 
@@ -221,12 +221,12 @@ void HangarUiHandler::updateShipMenus()
       if (affordability.canAfford)
       {
         shipData.state = State::TO_BUY;
-        shipData.button->updateBgColor(olc::DARK_GREEN);
+        shipData.button->updateBgColor(colors::DARK_GREEN);
       }
       else
       {
         shipData.state = State::UNAFFORDABLE;
-        shipData.button->updateBgColor(olc::DARK_RED);
+        shipData.button->updateBgColor(colors::DARK_RED);
       }
     }
     else
@@ -238,12 +238,12 @@ void HangarUiHandler::updateShipMenus()
       if (maybePlayerShip->active)
       {
         shipData.state = State::EQUIPED;
-        shipData.button->updateBgColor(olc::DARK_GREY);
+        shipData.button->updateBgColor(colors::DARK_GREY);
       }
       else
       {
         shipData.state = State::TO_EQUIP;
-        shipData.button->updateBgColor(olc::DARK_GREEN);
+        shipData.button->updateBgColor(colors::DARK_GREEN);
       }
     }
 

@@ -76,7 +76,7 @@ void WeaponsUiHandler::reset()
   for (auto &weapon : m_weapons)
   {
     weapon->clearChildren();
-    weapon->updateBgColor(semiOpaque(olc::BLACK));
+    weapon->updateBgColor(semiOpaque(colors::BLACK));
   }
 
   m_initialized = false;
@@ -90,7 +90,7 @@ void WeaponsUiHandler::generateWeaponsMenus(int width, int height)
   const Vec2i pos{width - NUMBER_OF_WEAPONS * (weaponMenuDims.x + SPACING_IN_PIXELS), height / 2};
 
   MenuConfig config{.pos = pos, .dims = weaponMenuDims, .propagateEventsToChildren = false};
-  const auto bg = bgConfigFromColor(semiOpaque(olc::BLACK));
+  const auto bg = bgConfigFromColor(semiOpaque(colors::BLACK));
 
   for (auto id = 0u; id < NUMBER_OF_WEAPONS; ++id)
   {
@@ -114,7 +114,7 @@ void WeaponsUiHandler::initializeWeapons()
   }
 
   const MenuConfig config{};
-  const auto bg = bgConfigFromColor(olc::BLANK);
+  const auto bg = bgConfigFromColor(colors::BLANK);
   auto textConf = textConfigFromColor("", colors::WHITE);
 
   for (auto id = 0u; id < weaponsCount; ++id)

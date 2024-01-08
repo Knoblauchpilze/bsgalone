@@ -60,11 +60,11 @@ void updateButtonState(UiMenu &button, const bool enable)
 
   if (!enable)
   {
-    button.updateBgColor(olc::VERY_DARK_GREY);
+    button.updateBgColor(colors::VERY_DARK_GREY);
   }
   else
   {
-    button.updateBgColor(olc::VERY_DARK_GREEN);
+    button.updateBgColor(colors::VERY_DARK_GREEN);
   }
 }
 } // namespace
@@ -126,7 +126,7 @@ void LockerUiHandler::initializeLockerLayout()
 {
   MenuConfig config{.highlightable = false, .propagateEventsToChildren = false};
 
-  const auto bg   = bgConfigFromColor(olc::DARK_GREY);
+  const auto bg   = bgConfigFromColor(colors::DARK_GREY);
   const auto text = textConfigFromColor("Locker", colors::BLACK);
   auto title      = std::make_unique<UiTextMenu>(config, bg, text);
   m_locker->addMenu(std::move(title));
@@ -134,7 +134,7 @@ void LockerUiHandler::initializeLockerLayout()
   config.highlightable = true;
 
   const auto resources  = m_playerView->getPlayerResources();
-  const auto bgResource = bgConfigFromColor(olc::DARK_GREEN);
+  const auto bgResource = bgConfigFromColor(colors::DARK_GREEN);
   for (auto id = 0u; id < resources.size(); ++id)
   {
     auto menu = std::make_unique<UiMenu>(config, bgResource);
@@ -143,7 +143,7 @@ void LockerUiHandler::initializeLockerLayout()
   }
 
   const auto weapons  = m_playerView->getPlayerWeapons();
-  const auto bgWeapon = bgConfigFromColor(olc::DARK_RED);
+  const auto bgWeapon = bgConfigFromColor(colors::DARK_RED);
   const MenuConfig configWeapon{.layout = MenuLayout::HORIZONTAL};
   for (auto id = 0u; id < weapons.size(); ++id)
   {
@@ -153,7 +153,7 @@ void LockerUiHandler::initializeLockerLayout()
   }
 
   const auto computers  = m_playerView->getPlayerComputers();
-  const auto bgComputer = bgConfigFromColor(olc::DARK_YELLOW);
+  const auto bgComputer = bgConfigFromColor(colors::DARK_YELLOW);
   const MenuConfig configComputer{.layout = MenuLayout::HORIZONTAL};
   for (auto id = 0u; id < computers.size(); ++id)
   {
@@ -167,7 +167,7 @@ void LockerUiHandler::initializeShipLayout()
 {
   MenuConfig config{.highlightable = false, .propagateEventsToChildren = false};
 
-  const auto bg   = bgConfigFromColor(olc::DARK_GREY);
+  const auto bg   = bgConfigFromColor(colors::DARK_GREY);
   const auto text = textConfigFromColor("Ship", colors::BLACK);
   auto title      = std::make_unique<UiTextMenu>(config, bg, text);
   m_ship->addMenu(std::move(title));
@@ -178,7 +178,7 @@ void LockerUiHandler::initializeShipLayout()
   if (slots.contains(bsgo::Slot::WEAPON))
   {
     const auto weaponsCount = slots.at(bsgo::Slot::WEAPON);
-    const auto bg           = bgConfigFromColor(olc::DARK_RED);
+    const auto bg           = bgConfigFromColor(colors::DARK_RED);
     const MenuConfig weaponConfig{.layout = MenuLayout::HORIZONTAL};
     for (auto id = 0; id < weaponsCount; ++id)
     {
@@ -191,7 +191,7 @@ void LockerUiHandler::initializeShipLayout()
   if (slots.contains(bsgo::Slot::COMPUTER))
   {
     const auto computersCount = slots.at(bsgo::Slot::COMPUTER);
-    const auto bg             = bgConfigFromColor(olc::DARK_YELLOW);
+    const auto bg             = bgConfigFromColor(colors::DARK_YELLOW);
     const MenuConfig computerConfig{.layout = MenuLayout::HORIZONTAL};
     for (auto id = 0; id < computersCount; ++id)
     {
@@ -207,7 +207,7 @@ void LockerUiHandler::generateResourcesMenus()
   const auto resources = m_playerView->getPlayerResources();
 
   const MenuConfig config{.propagateEventsToChildren = false};
-  const auto bg = bgConfigFromColor(olc::BLANK);
+  const auto bg = bgConfigFromColor(colors::BLANK);
   auto id       = 0;
 
   for (const auto &resource : resources)
@@ -230,7 +230,7 @@ auto generateWeaponMenu(const bsgo::PlayerWeapon &weapon) -> UiMenuPtr
   auto menu = generateBlankVerticalMenu();
 
   const MenuConfig config{.highlightable = false};
-  const auto bg = bgConfigFromColor(olc::BLANK);
+  const auto bg = bgConfigFromColor(colors::BLANK);
 
   auto textConf = textConfigFromColor(weapon.name, colors::BLACK);
   auto field    = std::make_unique<UiTextMenu>(config, bg, textConf);
@@ -259,7 +259,7 @@ auto generateInteractiveSection(const std::string &buttonText, const ClickCallba
 
   const MenuConfig config{.clickCallback = callback};
 
-  const auto bg       = bgConfigFromColor(olc::VERY_DARK_GREEN);
+  const auto bg       = bgConfigFromColor(colors::VERY_DARK_GREEN);
   const auto textConf = textConfigFromColor(buttonText, colors::WHITE, colors::WHITE);
   auto button         = std::make_unique<UiTextMenu>(config, bg, textConf);
   section.button      = button.get();
@@ -304,7 +304,7 @@ auto generateComputerMenu(const bsgo::PlayerComputer &computer) -> UiMenuPtr
   auto menu = generateBlankVerticalMenu();
 
   const MenuConfig config{.highlightable = false};
-  const auto bg = bgConfigFromColor(olc::BLANK);
+  const auto bg = bgConfigFromColor(colors::BLANK);
 
   auto textConf = textConfigFromColor(computer.name, colors::BLACK);
   auto field    = std::make_unique<UiTextMenu>(config, bg, textConf);

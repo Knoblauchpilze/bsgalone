@@ -29,7 +29,7 @@ void GameOverUiHandler::initializeMenus(const int width, const int height)
                             }
                           }};
 
-  auto bg   = bgConfigFromColor(olc::VERY_DARK_GREY);
+  auto bg   = bgConfigFromColor(colors::VERY_DARK_GREY);
   auto text = textConfigFromColor("Return to outpost", colors::BLACK);
   m_menu    = std::make_unique<UiTextMenu>(config, bg, text);
 }

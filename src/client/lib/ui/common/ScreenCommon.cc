@@ -37,16 +37,16 @@ auto generateBlankMenu(const Vec2i &pos, const MenuLayout &layout, const std::op
 
 auto generateBlankMenu(const MenuConfig &config) -> UiMenuPtr
 {
-  const auto bg = bgConfigFromColor(olc::BLANK);
+  const auto bg = bgConfigFromColor(colors::BLANK);
   return std::make_unique<UiMenu>(config, bg);
 }
 
 auto generateSpacer(const std::optional<Vec2i> &dims) -> UiMenuPtr
 {
-  return generateColoredSpacer(olc::BLANK, dims);
+  return generateColoredSpacer(colors::BLANK, dims);
 }
 
-auto generateColoredSpacer(const olc::Pixel &color, const std::optional<Vec2i> &dims) -> UiMenuPtr
+auto generateColoredSpacer(const Color &color, const std::optional<Vec2i> &dims) -> UiMenuPtr
 {
   MenuConfig config{.highlightable = false, .propagateEventsToChildren = false};
   if (dims)

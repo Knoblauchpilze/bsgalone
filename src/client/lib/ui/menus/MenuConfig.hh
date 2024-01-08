@@ -3,6 +3,7 @@
 
 #include "UserInputData.hh"
 #include "Vector2d.hh"
+#include <functional>
 #include <optional>
 
 namespace pge {

@@ -70,12 +70,12 @@ void UiMenu::clearChildren()
   m_children.clear();
 }
 
-auto UiMenu::getBgColor() const -> olc::Pixel
+auto UiMenu::getBgColor() const -> Color
 {
   return m_bg.color;
 }
 
-void UiMenu::updateBgColor(const olc::Pixel &color)
+void UiMenu::updateBgColor(const Color &color)
 {
   m_bg = bgConfigFromColor(color);
 }
@@ -186,11 +186,11 @@ void UiMenu::renderSelf(Renderer &engine) const
 {
   const auto absPos = absolutePosition();
   const auto color  = getColorFromState();
-  engine.fillRect(toVec2f(absPos), toVec2f(m_dims), colors::toColor(color));
+  engine.fillRect(toVec2f(absPos), toVec2f(m_dims), color);
   renderCustom(engine);
 }
 
-auto UiMenu::getColorFromState() const -> olc::Pixel
+auto UiMenu::getColorFromState() const -> Color
 {
   if (m_state.highlightable && m_state.highlighted)
   {
