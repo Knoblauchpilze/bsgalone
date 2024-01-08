@@ -50,11 +50,11 @@ bool LoginScreenUiHandler::processUserInput(UserInputData &inputData)
 
 void LoginScreenUiHandler::render(Renderer &engine) const
 {
-  m_loginModePanel->render(engine.getRenderer());
-  m_factionPanel->render(engine.getRenderer());
-  m_proceedButton->render(engine.getRenderer());
-  m_quitButton->render(engine.getRenderer());
-  m_failureMenu->render(engine.getRenderer());
+  m_loginModePanel->render(engine);
+  m_factionPanel->render(engine);
+  m_proceedButton->render(engine);
+  m_quitButton->render(engine);
+  m_failureMenu->render(engine);
 
   m_credentialsUiHandler.render(engine);
 }

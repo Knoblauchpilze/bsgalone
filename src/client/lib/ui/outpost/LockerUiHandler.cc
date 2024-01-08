@@ -50,7 +50,7 @@ bool LockerUiHandler::processUserInput(UserInputData &inputData)
 
 void LockerUiHandler::render(Renderer &engine) const
 {
-  m_menu->render(engine.getRenderer());
+  m_menu->render(engine);
 }
 
 namespace {

@@ -287,8 +287,7 @@ void GameScreenRenderer::renderShip(const bsgo::Entity &ship,
 
 namespace {
 constexpr auto WEAPON_INDICATOR_SIZE_PIXELS = 6.0f;
-const auto WEAPON_INDICATOR_SIZE            = olc::vf2d{WEAPON_INDICATOR_SIZE_PIXELS,
-                                             WEAPON_INDICATOR_SIZE_PIXELS};
+const auto WEAPON_INDICATOR_SIZE = Vec2f{WEAPON_INDICATOR_SIZE_PIXELS, WEAPON_INDICATOR_SIZE_PIXELS};
 
 void renderWeaponIndicator(const bsgo::TransformComponent &ship,
                            const bsgo::WeaponSlotComponent &weapon,
@@ -298,9 +297,9 @@ void renderWeaponIndicator(const bsgo::TransformComponent &ship,
   const Eigen::Vector3f weaponPos = ship.transformToGlobal(weapon.position());
 
   const auto pixelPos     = frame.tilesToPixels(weaponPos(0), weaponPos(1));
-  const auto indicatorPos = olc::vf2d{pixelPos.x, pixelPos.y} - WEAPON_INDICATOR_SIZE / 2.0f;
+  const auto indicatorPos = pixelPos - WEAPON_INDICATOR_SIZE / 2.0f;
 
-  engine.getRenderer()->FillRectDecal(indicatorPos, WEAPON_INDICATOR_SIZE, olc::YELLOW);
+  engine.fillRect(indicatorPos, WEAPON_INDICATOR_SIZE, olc::YELLOW);
 }
 } // namespace
 
@@ -308,10 +307,9 @@ void GameScreenRenderer::renderShipDebug(const bsgo::Entity &ship,
                                          Renderer &engine,
                                          const RenderState &state) const
 {
-  const auto tilePos  = ship.transformComp().position();
-  const auto pixelPos = state.cf.tilesToPixels(tilePos(0), tilePos(1));
+  const auto tilePos = ship.transformComp().position();
+  auto pixelPos      = state.cf.tilesToPixels(tilePos(0), tilePos(1));
 
-  olc::vi2d pos{static_cast<int>(pixelPos.x), static_cast<int>(pixelPos.y)};
   std::string text = "accel: ";
   const auto accel = ship.velocityComp().acceleration();
   text += floatToStr(accel(0));
@@ -319,10 +317,10 @@ void GameScreenRenderer::renderShipDebug(const bsgo::Entity &ship,
   text += floatToStr(accel(1));
   text += "x";
   text += floatToStr(accel(2));
-  engine.getRenderer()->DrawString(pos, text, olc::DARK_YELLOW);
+  engine.drawString(pixelPos, text, olc::DARK_YELLOW);
 
   constexpr auto REASONABLE_GAP = 20;
-  pos.y += REASONABLE_GAP;
+  pixelPos.y += REASONABLE_GAP;
   text             = "speed: ";
   const auto speed = ship.velocityComp().speed();
   text += floatToStr(speed(0));
@@ -330,7 +328,7 @@ void GameScreenRenderer::renderShipDebug(const bsgo::Entity &ship,
   text += floatToStr(speed(1));
   text += "x";
   text += floatToStr(speed(2));
-  engine.getRenderer()->DrawString(pos, text, olc::DARK_GREEN);
+  engine.drawString(pixelPos, text, olc::DARK_GREEN);
 
   for (const auto &weapon : ship.weapons)
   {

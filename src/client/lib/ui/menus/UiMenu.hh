@@ -4,7 +4,7 @@
 #include "BackgroundConfig.hh"
 #include "Controls.hh"
 #include "MenuConfig.hh"
-#include "olcEngine.hh"
+#include "Renderer.hh"
 #include <core_utils/CoreObject.hh>
 #include <memory>
 #include <optional>
@@ -34,7 +34,7 @@ class UiMenu : public utils::CoreObject
   auto getBgColor() const -> olc::Pixel;
   void updateBgColor(const olc::Pixel &color);
 
-  void render(olc::PixelGameEngine *pge) const;
+  void render(Renderer &engine) const;
   virtual bool processUserInput(UserInputData &inputData);
 
   protected:
@@ -55,7 +55,7 @@ class UiMenu : public utils::CoreObject
   auto state() const noexcept -> const State &;
   void setLostFocusCallback(const ClickCallback &callback);
 
-  virtual void renderCustom(olc::PixelGameEngine *pge) const;
+  virtual void renderCustom(Renderer &engine) const;
 
   private:
   olc::vf2d m_pos{};
@@ -75,7 +75,7 @@ class UiMenu : public utils::CoreObject
   std::vector<UiMenuPtr> m_children{};
 
   void initializeFromConfig(const MenuConfig &config);
-  void renderSelf(olc::PixelGameEngine *pge) const;
+  void renderSelf(Renderer &engine) const;
   auto getColorFromState() const -> olc::Pixel;
   bool isWithinMenu(const olc::vi2d &pos) const;
   void onRelevantInput(UserInputData &inputData);

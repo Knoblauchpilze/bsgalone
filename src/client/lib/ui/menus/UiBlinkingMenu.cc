@@ -63,9 +63,9 @@ void UiBlinkingMenu::update()
   }
 }
 
-void UiBlinkingMenu::render(olc::PixelGameEngine *pge) const
+void UiBlinkingMenu::render(Renderer &engine) const
 {
-  m_menu->render(pge);
+  m_menu->render(engine);
 }
 
 void UiBlinkingMenu::initializeFromConfig(const BlinkingMenuConfig &config)

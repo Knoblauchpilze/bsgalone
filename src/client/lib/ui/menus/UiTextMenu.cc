@@ -1,5 +1,6 @@
 
 #include "UiTextMenu.hh"
+#include "VectorConversion.hh"
 
 namespace pge {
 
@@ -58,14 +59,18 @@ auto computeTextPositionFromAlignement(const olc::vi2d &offset,
 }
 } // namespace
 
-void UiTextMenu::renderCustom(olc::PixelGameEngine *pge) const
+void UiTextMenu::renderCustom(Renderer &engine) const
 {
   const auto absPos   = absolutePosition();
-  const auto textDims = pge->GetTextSize(m_text.text);
-  const auto textPos  = computeTextPositionFromAlignement(absPos, dims(), textDims, m_text.align);
+  const auto textDims = engine.getTextSize(m_text.text);
+  const auto textPos  = computeTextPositionFromAlignement(absPos,
+                                                         dims(),
+                                                         toVi2d(textDims),
+                                                         m_text.align);
   const auto color    = getTextColorFromState();
 
-  pge->DrawStringDecal(textPos, m_text.text, color);
+  const auto tPos = Vec2f{static_cast<float>(textPos.x), static_cast<float>(textPos.y)};
+  engine.drawString(tPos, m_text.text, color);
 }
 
 auto UiTextMenu::getTextColorFromState() const -> olc::Pixel

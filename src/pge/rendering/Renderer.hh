@@ -28,7 +28,6 @@ class Renderer
   public:
   Renderer(olc::PixelGameEngine *const renderer);
 
-  auto getRenderer() const -> olc::PixelGameEngine *;
   auto getTextureHandler() noexcept -> sprites::TexturePack &;
 
   /// @brief - Used to draw the tile referenced by the input struct to the screen
@@ -94,7 +93,7 @@ class Renderer
   void drawString(const Vec2f &pos,
                   const std::string &text,
                   const olc::Pixel tint,
-                  const Vec2f &scale);
+                  const Vec2f &scale = Vec2f(1.0f, 1.0f));
 
   /// @brief - Return an estimation of the size the input text would occupy
   /// on screen if rendered.

@@ -60,9 +60,9 @@ bool UiTimedMenu::finished() const
   return !m_lastTrigger.has_value();
 }
 
-void UiTimedMenu::render(olc::PixelGameEngine *pge) const
+void UiTimedMenu::render(Renderer &engine) const
 {
-  m_menu->render(pge);
+  m_menu->render(engine);
 }
 
 void UiTimedMenu::initializeFromConfig(const TimedMenuConfig &config)
