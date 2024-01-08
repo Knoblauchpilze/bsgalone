@@ -85,12 +85,19 @@ class Renderer
   /// @param tint - the tint of the uniform patch of color.
   void fillRect(const Vec2f &pos, const Vec2f &size, const Color tint);
 
+  void fillRect(const Vec2i &pos, const Vec2i &size, const Color tint);
+
   /// @brief - Render a string with the specified color.
   /// @param pos - the position to render the string at (top left corner).
   /// @param text - the text to render.
   /// @param tint - the color of the text.
   /// @param scale - additional scaling to apply to the text.
   void drawString(const Vec2f &pos,
+                  const std::string &text,
+                  const Color tint,
+                  const Vec2f &scale = Vec2f(1.0f, 1.0f));
+
+  void drawString(const Vec2i &pos,
                   const std::string &text,
                   const Color tint,
                   const Vec2f &scale = Vec2f(1.0f, 1.0f));

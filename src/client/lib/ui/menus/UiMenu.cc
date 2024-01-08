@@ -1,6 +1,5 @@
 
 #include "UiMenu.hh"
-#include "VectorConversion.hh"
 
 namespace pge {
 
@@ -186,7 +185,7 @@ void UiMenu::renderSelf(Renderer &engine) const
 {
   const auto absPos = absolutePosition();
   const auto color  = getColorFromState();
-  engine.fillRect(toVec2f(absPos), toVec2f(m_dims), color);
+  engine.fillRect(absPos, m_dims, color);
   renderCustom(engine);
 }
 

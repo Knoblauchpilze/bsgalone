@@ -1,6 +1,6 @@
 
 #include "DecalResource.hh"
-#include "olcEngine.hh"
+#include "olcPixelGameEngine.h"
 
 namespace pge {
 

@@ -14,38 +14,6 @@ auto opacityFromPercentage(const float perc) -> uint8_t
   return static_cast<uint8_t>(std::clamp(opacity, MINIMUM_ALPHA, MAXIMUM_ALPHA));
 }
 
-auto makeTransparent(const olc::Pixel &in, const uint8_t alpha) -> olc::Pixel
-{
-  return olc::Pixel{in.r, in.g, in.b, alpha};
-}
-
-auto makeTransparentFromPercentage(const olc::Pixel &in, const float perc) -> olc::Pixel
-{
-  auto out = in;
-  out.a    = opacityFromPercentage(perc);
-  return out;
-}
-
-auto almostOpaque(const olc::Pixel &in) -> olc::Pixel
-{
-  return makeTransparent(in, alpha::ALMOST_OPAQUE);
-}
-
-auto semiOpaque(const olc::Pixel &in) -> olc::Pixel
-{
-  return makeTransparent(in, alpha::SEMI_OPAQUE);
-}
-
-auto almostTransparent(const olc::Pixel &in) -> olc::Pixel
-{
-  return makeTransparent(in, alpha::ALMOST_TRANSPARENT);
-}
-
-auto transparent(const olc::Pixel &in) -> olc::Pixel
-{
-  return makeTransparent(in, alpha::TRANSPARENT);
-}
-
 auto makeTransparentFromPercentage(const Color &in, const float perc) -> Color
 {
   return Color{.name = in.name, .rgb = in.rgb, .alpha = opacityFromPercentage(perc)};

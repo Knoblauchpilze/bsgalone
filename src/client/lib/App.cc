@@ -2,6 +2,8 @@
 #include "App.hh"
 #include "Screen.hh"
 
+#include "ColorConversion.hh"
+
 namespace pge {
 
 App::App(const AppDesc &desc)

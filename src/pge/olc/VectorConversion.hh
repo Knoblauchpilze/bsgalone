@@ -2,7 +2,7 @@
 #pragma once
 
 #include "Vector2d.hh"
-#include "olcEngine.hh"
+#include "olcPixelGameEngine.h"
 
 namespace pge {
 
