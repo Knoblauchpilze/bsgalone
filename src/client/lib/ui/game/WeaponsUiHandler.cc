@@ -115,7 +115,7 @@ void WeaponsUiHandler::initializeWeapons()
 
   const MenuConfig config{};
   const auto bg = bgConfigFromColor(olc::BLANK);
-  auto textConf = textConfigFromColor("", olc::WHITE);
+  auto textConf = textConfigFromColor("", colors::WHITE);
 
   for (auto id = 0u; id < weaponsCount; ++id)
   {

@@ -97,7 +97,7 @@ void MapScreenUiHandler::generateControlButtons(const int width, const int heigh
                     .gameClickCallback = [this](Game &g) { g.setScreen(Screen::GAME); }};
 
   auto bg         = bgConfigFromColor(colors::toOlcPixel(colors::Name::VERY_DARK_COBALT_BLUE));
-  auto text       = textConfigFromColor("Close", olc::WHITE);
+  auto text       = textConfigFromColor("Close", colors::WHITE);
   auto quitButton = std::make_unique<UiTextMenu>(config, bg, text);
   m_buttons.push_back(std::move(quitButton));
 
@@ -199,7 +199,7 @@ void MapScreenUiHandler::generateSystemButtons(const bsgo::System &system,
 
   const MenuConfig labelConfig{.pos = labelPos, .dims = labelDimsPixels, .highlightable = false};
   const auto labelBg       = bgConfigFromColor(SYSTEM_LABEL_DEFAULT_BG_COLOR);
-  const auto text          = textConfigFromColor(system.name, olc::WHITE);
+  const auto text          = textConfigFromColor(system.name, colors::WHITE);
   auto label               = std::make_unique<UiTextMenu>(labelConfig, labelBg, text);
   m_systemMenus[system.id] = label.get();
   m_buttons.push_back(std::move(label));

@@ -145,13 +145,13 @@ void LoginScreenUiHandler::generateLoginModePanel(const int width, const int /*h
   const auto bg = bgConfigFromColor(LOGIN_BUTTON_ACTIVE_COLOR);
 
   config.clickCallback = [this]() { setLoginMode(Mode::LOGIN); };
-  auto text            = textConfigFromColor("Login", olc::WHITE);
+  auto text            = textConfigFromColor("Login", colors::WHITE);
   auto button          = std::make_unique<UiTextMenu>(config, bg, text);
   m_loginButton        = button.get();
   m_loginModePanel->addMenu(std::move(button));
 
   config.clickCallback = [this]() { setLoginMode(Mode::SIGNUP); };
-  text                 = textConfigFromColor("Sign up", olc::WHITE);
+  text                 = textConfigFromColor("Sign up", colors::WHITE);
   button               = std::make_unique<UiTextMenu>(config, bg, text);
   m_signupButton       = button.get();
   m_loginModePanel->addMenu(std::move(button));
@@ -169,14 +169,14 @@ void LoginScreenUiHandler::generateFactionPanel(const int width, const int /*hei
 
   config.clickCallback = [this]() { setFaction(bsgo::Faction::COLONIAL); };
   auto bg              = bgConfigFromColor(COLONIAL_BUTTON_ACTIVE_COLOR);
-  auto text            = textConfigFromColor("Colonial", olc::WHITE);
+  auto text            = textConfigFromColor("Colonial", colors::WHITE);
   auto button          = std::make_unique<UiTextMenu>(config, bg, text);
   m_colonialButton     = button.get();
   m_factionPanel->addMenu(std::move(button));
 
   config.clickCallback = [this]() { setFaction(bsgo::Faction::CYLON); };
   bg                   = bgConfigFromColor(CYLON_BUTTON_INACTIVE_COLOR);
-  text                 = textConfigFromColor("Cylon", olc::WHITE);
+  text                 = textConfigFromColor("Cylon", colors::WHITE);
   button               = std::make_unique<UiTextMenu>(config, bg, text);
   m_cylonButton        = button.get();
   m_factionPanel->addMenu(std::move(button));
@@ -195,7 +195,7 @@ void LoginScreenUiHandler::generateProceedButton(const int width, const int heig
                           .clickCallback = [this]() { tryLogin(); }};
 
   const auto bg   = bgConfigFromColor(colors::toOlcPixel(colors::Name::DARK_COBALT_BLUE));
-  const auto text = textConfigFromColor(LOGIN_TEXT, olc::WHITE);
+  const auto text = textConfigFromColor(LOGIN_TEXT, colors::WHITE);
   m_proceedButton = std::make_unique<UiTextMenu>(config, bg, text);
 }
 
@@ -214,7 +214,7 @@ void LoginScreenUiHandler::generateQuitButton(const int width, const int /*heigh
                           }};
 
   const auto bg   = bgConfigFromColor(olc::VERY_DARK_GREY);
-  const auto text = textConfigFromColor("Quit", olc::WHITE);
+  const auto text = textConfigFromColor("Quit", colors::WHITE);
   m_quitButton    = std::make_unique<UiTextMenu>(config, bg, text);
 }
 
@@ -228,7 +228,7 @@ void LoginScreenUiHandler::generateFailureMenu(const int width, const int /*heig
                           .highlightable = false};
 
   const auto bg   = bgConfigFromColor(olc::DARK_RED);
-  const auto text = textConfigFromColor(LOGIN_FAILURE_TEXT, olc::BLACK);
+  const auto text = textConfigFromColor(LOGIN_FAILURE_TEXT, colors::BLACK);
 
   auto menu         = std::make_unique<UiTextMenu>(config, bg, text);
   m_failureMenuText = menu.get();

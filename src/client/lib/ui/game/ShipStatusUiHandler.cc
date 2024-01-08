@@ -60,7 +60,7 @@ void ShipStatusUiHandler::initializeThreatPanel(const int width, const int heigh
                           .highlightable = false};
 
   const auto bg   = bgConfigFromColor(olc::BLANK);
-  const auto text = textConfigFromColor("Threat", olc::RED);
+  const auto text = textConfigFromColor("Threat", colors::RED);
 
   auto label = std::make_unique<UiTextMenu>(config, bg, text);
   BlinkingMenuConfig blinkConfig{};
@@ -81,28 +81,28 @@ void ShipStatusUiHandler::initializeJumpPanel(const int width, const int height)
   m_jumpPanel = std::make_unique<UiMenu>(config, bg);
 
   bg        = bgConfigFromColor(olc::BLANK);
-  auto text = textConfigFromColor("FTL Jump", olc::WHITE);
+  auto text = textConfigFromColor("FTL Jump", colors::WHITE);
   auto menu = std::make_unique<UiTextMenu>(config, bg, text);
   m_jumpPanel->addMenu(std::move(menu));
 
   m_jumpPanel->addMenu(generateSpacer());
 
-  text = textConfigFromColor("Destination:", olc::WHITE);
+  text = textConfigFromColor("Destination:", colors::WHITE);
   menu = std::make_unique<UiTextMenu>(config, bg, text);
   m_jumpPanel->addMenu(std::move(menu));
 
-  text              = textConfigFromColor("N/A", olc::WHITE);
+  text              = textConfigFromColor("N/A", colors::WHITE);
   menu              = std::make_unique<UiTextMenu>(config, bg, text);
   m_jumpDestination = menu.get();
   m_jumpPanel->addMenu(std::move(menu));
 
   m_jumpPanel->addMenu(generateSpacer());
 
-  text = textConfigFromColor("Remaining:", olc::WHITE);
+  text = textConfigFromColor("Remaining:", colors::WHITE);
   menu = std::make_unique<UiTextMenu>(config, bg, text);
   m_jumpPanel->addMenu(std::move(menu));
 
-  text       = textConfigFromColor("N/A", olc::WHITE);
+  text       = textConfigFromColor("N/A", colors::WHITE);
   menu       = std::make_unique<UiTextMenu>(config, bg, text);
   m_jumpTime = menu.get();
   m_jumpPanel->addMenu(std::move(menu));

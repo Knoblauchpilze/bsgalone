@@ -5,15 +5,15 @@ namespace pge {
 constexpr auto TYLIUM_NAME = "tylium";
 constexpr auto TITANE_NAME = "titane";
 
-auto colorFromResourceName(const std::string &name) -> olc::Pixel
+auto colorFromResourceName(const std::string &name) -> Color
 {
   if (TYLIUM_NAME == name)
   {
-    return olc::YELLOW;
+    return colors::YELLOW;
   }
   if (TITANE_NAME == name)
   {
-    return colors::toOlcPixel(colors::Name::PURPLE);
+    return colors::PURPLE;
   }
 
   throw std::invalid_argument("Unsupported resource name " + name);

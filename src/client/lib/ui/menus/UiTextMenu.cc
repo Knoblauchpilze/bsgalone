@@ -28,7 +28,7 @@ auto UiTextMenu::getTextColor() const -> Color
 
 void UiTextMenu::updateTextColor(const Color &color)
 {
-  m_text = textConfigFromColor(m_text.text, colors::toOlcPixel(color), m_text.align);
+  m_text = textConfigFromColor(m_text.text, color, m_text.align);
 }
 
 namespace {

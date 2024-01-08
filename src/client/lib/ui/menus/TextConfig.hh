@@ -1,7 +1,8 @@
 
 #pragma once
 
-#include "olcEngine.hh"
+#include "Color.hh"
+#include "Colors.hh"
 #include <string>
 
 namespace pge {
@@ -22,7 +23,7 @@ struct TextConfig
 };
 
 auto textConfigFromColor(const std::string &text,
-                         const olc::Pixel &color,
+                         const Color &color,
                          const TextAlignment &align = TextAlignment::CENTER) -> TextConfig;
 
 auto textConfigFromColor(const std::string &text,

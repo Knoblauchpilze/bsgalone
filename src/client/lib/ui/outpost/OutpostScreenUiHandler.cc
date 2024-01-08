@@ -38,7 +38,7 @@ void OutpostScreenUiHandler::initializeMenus(const int width, const int height)
                           }};
 
   auto bg         = bgConfigFromColor(olc::DARK_GREY);
-  auto text       = textConfigFromColor("Undock", olc::WHITE);
+  auto text       = textConfigFromColor("Undock", colors::WHITE);
   m_menus[UNDOCK] = std::make_unique<UiTextMenu>(config, bg, text);
 
   generateGeneralMenu(width, height);
@@ -174,17 +174,17 @@ void OutpostScreenUiHandler::generateGeneralMenu(const int width, const int heig
 
   config.clickCallback = [this]() { setActiveScreen(ActiveScreen::SHOP); };
   bg                   = bgConfigFromColor(colors::toOlcPixel(colors::Name::DARK_COBALT_BLUE));
-  auto text            = textConfigFromColor("Shop", olc::WHITE);
+  auto text            = textConfigFromColor("Shop", colors::WHITE);
   auto menu            = std::make_unique<UiTextMenu>(config, bg, text);
   m_menus[VIEWS_MENU]->addMenu(std::move(menu));
 
   config.clickCallback = [this]() { setActiveScreen(ActiveScreen::LOCKER); };
-  text                 = textConfigFromColor("Locker", olc::WHITE);
+  text                 = textConfigFromColor("Locker", colors::WHITE);
   menu                 = std::make_unique<UiTextMenu>(config, bg, text);
   m_menus[VIEWS_MENU]->addMenu(std::move(menu));
 
   config.clickCallback = [this]() { setActiveScreen(ActiveScreen::HANGAR); };
-  text                 = textConfigFromColor("Hangar", olc::WHITE);
+  text                 = textConfigFromColor("Hangar", colors::WHITE);
   menu                 = std::make_unique<UiTextMenu>(config, bg, text);
   m_menus[VIEWS_MENU]->addMenu(std::move(menu));
 }

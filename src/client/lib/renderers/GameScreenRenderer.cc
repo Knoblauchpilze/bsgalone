@@ -176,7 +176,7 @@ void GameScreenRenderer::renderAsteroid(const bsgo::Entity &asteroid,
     }
 
     const auto res = m_resourceView->getResourceName(asteroid.resources[0]->resource());
-    tint           = colorFromResourceName(res);
+    tint           = colors::toOlcPixel(colorFromResourceName(res));
   }
   t.sprite.tint = tint;
 

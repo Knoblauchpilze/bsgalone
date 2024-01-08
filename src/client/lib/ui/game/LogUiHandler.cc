@@ -165,14 +165,12 @@ constexpr auto FTL_JUMP_CANCELLED_TEXT = "FTL jump sequence aborted";
 
 auto createJumpMessage(const bsgo::JumpMessage &message)
 {
-  const auto color = olc::WHITE;
-
   switch (message.getJumpState())
   {
     case bsgo::JumpState::STARTED:
-      return textConfigFromColor(FTL_JUMP_STARTED_TEXT, color);
+      return textConfigFromColor(FTL_JUMP_STARTED_TEXT, colors::WHITE);
     case bsgo::JumpState::CANCELLED:
-      return textConfigFromColor(FTL_JUMP_CANCELLED_TEXT, color);
+      return textConfigFromColor(FTL_JUMP_CANCELLED_TEXT, colors::WHITE);
     default:
       throw std::invalid_argument("Unsupported jump state to produce message");
   }
@@ -197,7 +195,7 @@ auto createScannedMessage(const bsgo::ScannedMessage &message,
 
   if (!asteroid.exists<bsgo::LootComponent>())
   {
-    return textConfigFromColor(NO_USEFUL_RESOURCES_TEXT, olc::WHITE);
+    return textConfigFromColor(NO_USEFUL_RESOURCES_TEXT, colors::WHITE);
   }
 
   if (asteroid.resources.size() > 1)
@@ -217,7 +215,7 @@ constexpr auto ELECTRONIC_SUPPORT_TEXT = "Your systems are being improved by ele
 
 auto createSlotMessage(const bsgo::SlotMessage & /*message*/) -> TextConfig
 {
-  return textConfigFromColor(ELECTRONIC_SUPPORT_TEXT, colors::toOlcPixel(colors::Name::APPLE_GREEN));
+  return textConfigFromColor(ELECTRONIC_SUPPORT_TEXT, colors::APPLE_GREEN);
 }
 
 auto createTextConfigForMessage(const bsgo::IMessage &message,
