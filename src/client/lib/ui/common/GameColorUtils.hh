@@ -3,7 +3,6 @@
 
 #include "Color.hh"
 #include "Faction.hh"
-#include "olcEngine.hh"
 #include <string>
 
 namespace pge {

@@ -1,5 +1,6 @@
 
 #include "GameColorUtils.hh"
+#include <stdexcept>
 
 namespace pge {
 constexpr auto TYLIUM_NAME = "tylium";

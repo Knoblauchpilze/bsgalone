@@ -87,12 +87,25 @@ void Renderer::fillRect(const Vec2f &pos, const Vec2f &size, const Color tint)
   m_renderer->FillRectDecal(toVf2d(pos), toVf2d(size), colors::toOlcPixel(tint));
 }
 
+void Renderer::fillRect(const Vec2i &pos, const Vec2i &size, const Color tint)
+{
+  fillRect(toVec2f(pos), toVec2f(size), tint);
+}
+
 void Renderer::drawString(const Vec2f &pos,
                           const std::string &text,
                           const Color tint,
                           const Vec2f &scale)
 {
   m_renderer->DrawStringDecal(toVf2d(pos), text, colors::toOlcPixel(tint), toVf2d(scale));
+}
+
+void Renderer::drawString(const Vec2i &pos,
+                          const std::string &text,
+                          const Color tint,
+                          const Vec2f &scale)
+{
+  return drawString(toVec2f(pos), text, tint, scale);
 }
 
 auto Renderer::getTextSize(const std::string &text) const -> Vec2i

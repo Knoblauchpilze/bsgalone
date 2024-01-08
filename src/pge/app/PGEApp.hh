@@ -2,6 +2,7 @@
 #pragma once
 
 #include "AppDesc.hh"
+#include "Color.hh"
 #include "Controls.hh"
 #include "CoordinateFrame.hh"
 #include "FramerateControl.hh"
@@ -9,7 +10,7 @@
 #include <core_utils/CoreObject.hh>
 #include <optional>
 
-#include "olcEngine.hh"
+#include "olcPixelGameEngine.h"
 
 namespace pge {
 

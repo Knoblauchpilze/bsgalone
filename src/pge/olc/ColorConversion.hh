@@ -2,7 +2,7 @@
 #pragma once
 
 #include "Color.hh"
-#include "olcEngine.hh"
+#include "olcPixelGameEngine.h"
 
 namespace pge::colors {
 

@@ -1,8 +1,8 @@
 
 #pragma once
 
+#include "Color.hh"
 #include "SlotComponent.hh"
-#include "olcEngine.hh"
 
 namespace pge {
 

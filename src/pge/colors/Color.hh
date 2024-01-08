@@ -19,5 +19,6 @@ auto toRgb(const Color &color) -> Color;
 
 } // namespace pge
 
+#include "ColorSpace.hh"
 #include "Colors.hh"
 #include "Transparency.hh"
