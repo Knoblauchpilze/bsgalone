@@ -1,26 +1,32 @@
 
 #include "ColorSpace.hh"
 #include <algorithm>
+#include <cmath>
 
 namespace pge {
 
-auto colorGradient(const olc::Pixel &low, const olc::Pixel &high, float ratio, int alpha) noexcept
-  -> olc::Pixel
+auto colorGradient(const Color &low, const Color &high, float ratio, const uint8_t alpha) noexcept
+  -> Color
 {
-  ratio = std::clamp(ratio, 0.0f, 1.0f);
-  return olc::Pixel(static_cast<int>((1.0f - ratio) * low.r + ratio * high.r),
-                    static_cast<int>((1.0f - ratio) * low.g + ratio * high.g),
-                    static_cast<int>((1.0f - ratio) * low.b + ratio * high.b),
-                    alpha);
+  ratio              = std::clamp(ratio, 0.0f, 1.0f);
+  const auto rgbLow  = toRgb(low);
+  const auto rgbHigh = toRgb(high);
+
+  RgbData out{.r = static_cast<uint8_t>((1.0f - ratio) * rgbLow.rgb->r + ratio * rgbHigh.rgb->r),
+              .g = static_cast<uint8_t>((1.0f - ratio) * rgbLow.rgb->g + ratio * rgbHigh.rgb->g),
+              .b = static_cast<uint8_t>((1.0f - ratio) * rgbLow.rgb->b + ratio * rgbHigh.rgb->b)};
+
+  return Color{.rgb = out, .alpha = alpha};
 }
 
-auto RGBToHSL(const olc::Pixel &rgb) noexcept -> olc::Pixel
+auto RGBToHSL(const Color &color) noexcept -> Color
 {
   // See here for more info:
   // https://stackoverflow.com/questions/47785905/converting-rgb-to-hsl-in-c
-  const auto r = rgb.r / 255.0f;
-  const auto g = rgb.g / 255.0f;
-  const auto b = rgb.b / 255.0f;
+  const auto in = toRgb(color);
+  const auto r  = in.rgb->r / 255.0f;
+  const auto g  = in.rgb->g / 255.0f;
+  const auto b  = in.rgb->b / 255.0f;
 
   const auto cMin = std::min(std::min(r, g), b);
   const auto cMax = std::max(std::max(r, g), b);
@@ -64,16 +70,18 @@ auto RGBToHSL(const olc::Pixel &rgb) noexcept -> olc::Pixel
   const auto s = static_cast<uint8_t>(std::clamp(static_cast<int>(255.0f * S), 0, 255));
   const auto l = static_cast<uint8_t>(std::clamp(static_cast<int>(255.0f * L), 0, 255));
 
-  return olc::Pixel(h, s, l, rgb.a);
+  RgbData out{.r = h, .g = s, .b = l};
+  return Color{.rgb = out, .alpha = in.alpha};
 }
 
-auto HSLToRGB(const olc::Pixel &hsl) noexcept -> olc::Pixel
+auto HSLToRGB(const Color &color) noexcept -> Color
 {
   // See here for more info:
   // https://www.rapidtables.com/convert/color/hsl-to-rgb.html
-  const auto h = 360.0f * hsl.r / 255.0f;
-  const auto s = hsl.g / 255.0f;
-  const auto l = hsl.b / 255.0f;
+  const auto in = toRgb(color);
+  const auto h  = 360.0f * in.rgb->r / 255.0f;
+  const auto s  = in.rgb->g / 255.0f;
+  const auto l  = in.rgb->b / 255.0f;
 
   const auto C = (1.0f - std::abs(2.0f * l - 1.0f)) * s;
   const auto X = C * (1.0f - std::abs(std::fmod(h / 60.0f, 2.0f) - 1.0f));
@@ -122,10 +130,11 @@ auto HSLToRGB(const olc::Pixel &hsl) noexcept -> olc::Pixel
   const auto g = static_cast<uint8_t>(std::clamp(static_cast<int>((G + m) * 255.0f), 0, 255));
   const auto b = static_cast<uint8_t>(std::clamp(static_cast<int>((B + m) * 255.0f), 0, 255));
 
-  return olc::Pixel(r, g, b, hsl.a);
+  RgbData out{.r = r, .g = g, .b = b};
+  return Color{.rgb = out, .alpha = in.alpha};
 }
 
-auto modulate(const olc::Pixel &in, float factor) noexcept -> olc::Pixel
+auto modulate(const Color &in, float factor) noexcept -> Color
 {
   // Convert to `HSL` color space, change the lightness
   // and convert back to `RGB`. Also clamp the `factor`.
@@ -141,10 +150,11 @@ auto modulate(const olc::Pixel &in, float factor) noexcept -> olc::Pixel
   // Note that as the `hsl` values are in the range
   // `[0; 255]` we're checking against `0.01 * 255`.
   constexpr auto LUMINANCE_THRESHOLD_TO_USE_OFFSET_APPROACH = 2;
-  const auto nL = (hsl.b < LUMINANCE_THRESHOLD_TO_USE_OFFSET_APPROACH ? hsl.b + 255.0f / factor
-                                                                      : hsl.b * factor);
+  const auto nL = (hsl.rgb->b < LUMINANCE_THRESHOLD_TO_USE_OFFSET_APPROACH
+                     ? hsl.rgb->b + 255.0f / factor
+                     : hsl.rgb->b * factor);
 
-  hsl.b = static_cast<uint8_t>(std::clamp(static_cast<int>(nL), 0, 255));
+  hsl.rgb->b = static_cast<uint8_t>(std::clamp(static_cast<int>(nL), 0, 255));
 
   return HSLToRGB(hsl);
 }
