@@ -18,4 +18,9 @@ auto toVec2f(const olc::vf2d &v) -> Vec2f
   return Vec2f{v.x, v.y};
 }
 
+auto toVec2i(const olc::vi2d &v) -> Vec2i
+{
+  return Vec2i{v.x, v.y};
+}
+
 } // namespace pge

@@ -71,14 +71,36 @@ class Renderer
   void drawWarpedRect(const SpriteDesc &t, const CoordinateFrame &cf);
 
   /// @brief - Render the decal with the specified position, scale and tint.
-  /// @param pos - the position to render the decal at
-  /// @param decal - the resource to render
-  /// @param scale - additional scale to apply to the decal
-  /// @param tint - a tint to apply to the rendered object
+  /// @param pos - the position to render the decal at.
+  /// @param decal - the resource to render.
+  /// @param scale - additional scale to apply to the decal.
+  /// @param tint - a tint to apply to the rendered object.
   void drawDecal(const Vec2f &pos,
                  const DecalResource &decal,
                  const Vec2f &scale,
                  const olc::Pixel &tint = olc::WHITE);
+
+  /// @brief - Render a simple rectangle with a flat color.
+  /// @param pos - the position to render to (top left corner).
+  /// @param size - the size of the patch of color.
+  /// @param tint - the tint of the uniform patch of color.
+  void fillRect(const Vec2f &pos, const Vec2f &size, const olc::Pixel tint);
+
+  /// @brief - Render a string with the specified color.
+  /// @param pos - the position to render the string at (top left corner).
+  /// @param text - the text to render.
+  /// @param tint - the color of the text.
+  /// @param scale - additional scaling to apply to the text.
+  void drawString(const Vec2f &pos,
+                  const std::string &text,
+                  const olc::Pixel tint,
+                  const Vec2f &scale);
+
+  /// @brief - Return an estimation of the size the input text would occupy
+  /// on screen if rendered.
+  /// @param text - the text which size should be estimated.
+  /// @return - an estimation of the size in pixels of the input text.
+  auto getTextSize(const std::string &text) const -> Vec2i;
 
   private:
   olc::PixelGameEngine *m_renderer{nullptr};

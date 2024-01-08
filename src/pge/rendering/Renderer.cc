@@ -85,4 +85,22 @@ void Renderer::drawDecal(const Vec2f &pos,
   m_renderer->DrawDecal(toVf2d(pos), decal.get(), toVf2d(scale), tint);
 }
 
+void Renderer::fillRect(const Vec2f &pos, const Vec2f &size, const olc::Pixel tint)
+{
+  m_renderer->FillRectDecal(toVf2d(pos), toVf2d(size), tint);
+}
+
+void Renderer::drawString(const Vec2f &pos,
+                          const std::string &text,
+                          const olc::Pixel tint,
+                          const Vec2f &scale)
+{
+  m_renderer->DrawStringDecal(toVf2d(pos), text, tint, toVf2d(scale));
+}
+
+auto Renderer::getTextSize(const std::string &text) const -> Vec2i
+{
+  return toVec2i(m_renderer->GetTextSize(text));
+}
+
 } // namespace pge
