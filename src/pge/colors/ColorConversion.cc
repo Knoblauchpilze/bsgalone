@@ -136,4 +136,23 @@ auto toOlcPixel(const Name &name) -> olc::Pixel
   }
 }
 
+auto toOlcPixel(const Color &color) -> olc::Pixel
+{
+  auto pixel = olc::BLANK;
+
+  if (color.name)
+  {
+    pixel = toOlcPixel(*color.name);
+  }
+  if (color.rgb)
+  {
+    pixel.r = color.rgb->r;
+    pixel.g = color.rgb->g;
+    pixel.b = color.rgb->b;
+  }
+
+  pixel.a = color.alpha;
+  return pixel;
+}
+
 } // namespace pge::colors

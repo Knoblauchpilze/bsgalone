@@ -156,22 +156,24 @@ bool PGEApp::hasCursor() const noexcept
   return m_cursorOn;
 }
 
-void PGEApp::setLayerTint(const Layer &layer, const olc::Pixel &tint)
+void PGEApp::setLayerTint(const Layer &layer, const Color &tint)
 {
+  const auto olcTint = colors::toOlcPixel(tint);
+
   switch (layer)
   {
     case Layer::Draw:
-      SetLayerTint(m_mLayer, tint);
+      SetLayerTint(m_mLayer, olcTint);
       break;
     case Layer::DrawDecal:
-      SetLayerTint(m_mDecalLayer, tint);
+      SetLayerTint(m_mDecalLayer, olcTint);
       break;
     case Layer::UI:
-      SetLayerTint(m_uiLayer, tint);
+      SetLayerTint(m_uiLayer, olcTint);
       break;
     case Layer::Debug:
     default:
-      SetLayerTint(m_dLayer, tint);
+      SetLayerTint(m_dLayer, olcTint);
       break;
   }
 }
