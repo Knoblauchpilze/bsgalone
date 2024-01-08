@@ -126,11 +126,6 @@ auto toOlcPixel(const Name &name) -> olc::Pixel
     case Name::VERY_DARK_YELLOW:
       return olc::VERY_DARK_YELLOW;
 
-    case Name::TRANSPARENT_WHITE:
-      return olc::Pixel{255, 255, 255, alpha::TRANSPARENT};
-    case Name::TRANSPARENT_BLACK:
-      return olc::Pixel{0, 0, 0, alpha::TRANSPARENT};
-
     default:
       throw std::invalid_argument("Unsupported color to convert to olc::Pixel");
   }

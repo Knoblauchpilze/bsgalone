@@ -75,7 +75,7 @@ void App::draw(const RenderState &res)
 {
   // Clear rendering target.
   SetPixelMode(olc::Pixel::ALPHA);
-  Clear(colors::toOlcPixel(colors::Name::TRANSPARENT_WHITE));
+  Clear(colors::toOlcPixel(colors::TRANSPARENT_WHITE));
 
   m_game->render(*m_renderer, res, RenderingPass::SPRITES);
 
@@ -86,7 +86,7 @@ void App::drawUI(const RenderState &res)
 {
   // Clear rendering target.
   SetPixelMode(olc::Pixel::ALPHA);
-  Clear(colors::toOlcPixel(colors::Name::TRANSPARENT_WHITE));
+  Clear(colors::toOlcPixel(colors::TRANSPARENT_WHITE));
 
   m_game->render(*m_renderer, res, RenderingPass::UI);
 
@@ -97,7 +97,7 @@ void App::drawDebug(const RenderState &res)
 {
   // Clear rendering target.
   SetPixelMode(olc::Pixel::ALPHA);
-  Clear(colors::toOlcPixel(colors::Name::TRANSPARENT_WHITE));
+  Clear(colors::toOlcPixel(colors::TRANSPARENT_WHITE));
 
   m_game->render(*m_renderer, res, RenderingPass::DEBUG);
 

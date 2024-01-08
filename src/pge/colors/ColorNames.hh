@@ -63,10 +63,7 @@ enum class Name
   VERY_DARK_MAGENTA,
   VERY_DARK_ORANGE,
   VERY_DARK_RED,
-  VERY_DARK_YELLOW,
-
-  TRANSPARENT_WHITE,
-  TRANSPARENT_BLACK
+  VERY_DARK_YELLOW
 };
 
 } // namespace pge::colors

@@ -248,7 +248,7 @@ auto LogUiHandler::createMenuFromMessage(const bsgo::IMessage &message) -> UiMen
 {
   const Vec2i pos{m_offset.x - LOG_MENU_DIMS.x / 2, m_offset.y};
   const MenuConfig config{.pos = pos, .dims = LOG_MENU_DIMS, .highlightable = false};
-  const BackgroundConfig bg = bgConfigFromColor(colors::toOlcPixel(colors::Name::TRANSPARENT_WHITE));
+  const BackgroundConfig bg = bgConfigFromColor(colors::toOlcPixel(colors::TRANSPARENT_WHITE));
 
   const auto text = createTextConfigForMessage(message, *m_systemView, *m_resourceView);
 
