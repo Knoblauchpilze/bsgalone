@@ -29,7 +29,7 @@ class LogUiHandler : public IUiHandler, public bsgo::AbstractMessageListener
   bsgo::SystemViewShPtr m_systemView{};
   bsgo::ResourceViewShPtr m_resourceView{};
   bsgo::ShipViewShPtr m_shipView{};
-  olc::vi2d m_offset{};
+  Vec2i m_offset{};
 
   struct LogMessage
   {
