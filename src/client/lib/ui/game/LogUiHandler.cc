@@ -40,7 +40,7 @@ LogUiHandler::LogUiHandler(const bsgo::Views &views)
 
 void LogUiHandler::initializeMenus(const int width, const int height)
 {
-  m_offset = olc::vi2d{width / 2, height / 4};
+  m_offset = Vec2i{width / 2, height / 4};
 }
 
 bool LogUiHandler::processUserInput(UserInputData & /*inputData*/)
