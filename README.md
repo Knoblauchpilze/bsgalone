@@ -88,6 +88,14 @@ Looking at a few topics on the internet it seems like this is usually handled by
 
 We also used this approach in the [CMakeLists.txt](src/server/CMakeLists.txt) of the server for example. This is sufficient to allow development, we might revisit this later on.
 
+### PixelGameEngine
+
+The application is built around the [PixelGameEngine](https://github.com/OneLoneCoder/olcPixelGameEngine). We found it is a reliable engine to create 2D applications and display some graphics. However, there are a couple of compilation problems when we add the typical options we use (such as `-Wall` and `-Werror`) due to the `#ifdef` directives to support multiple platforms.
+
+We isolated the `PixelGameEngine` into its own library in [src/pge](src/pge) and abstracted the use of the graphic resources and rendering elements into it. This is not 100% enough as we still get some errors when compiling the library. We allowed unknown pragmas and fixed the unused parameters manually in [fa73574](https://github.com/Knoblauchpilze/bsgalone/commit/fa73574d0cd47cea663305058f257abad7e1ce7e).
+
+In case of a future update we can port those changes or adapt them.
+
 # Setting up the DB
 
 ## Install postgresql
