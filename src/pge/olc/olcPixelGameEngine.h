@@ -2707,7 +2707,7 @@ namespace olc
 
 		if (structure == olc::DecalStructure::LIST)
 		{			
-			for (int tri = 0; tri < vPoints.size() / 3; tri++)
+			for (std::size_t tri = 0; tri < vPoints.size() / 3; tri++)
 			{
 				std::vector<olc::vf2d> vP = { vPoints[tri * 3 + 0], vPoints[tri * 3 + 1], vPoints[tri * 3 + 2] };
 				std::vector<olc::vf2d> vT = { vTex[tri * 3 + 0], vTex[tri * 3 + 1], vTex[tri * 3 + 2] };
@@ -2719,7 +2719,7 @@ namespace olc
 
 		if (structure == olc::DecalStructure::STRIP)
 		{
-			for (int tri = 2; tri < vPoints.size(); tri++)
+			for (std::size_t tri = 2; tri < vPoints.size(); tri++)
 			{
 				std::vector<olc::vf2d> vP = { vPoints[tri - 2], vPoints[tri-1], vPoints[tri] };
 				std::vector<olc::vf2d> vT = { vTex[tri - 2], vTex[tri - 1], vTex[tri] };
@@ -2731,7 +2731,7 @@ namespace olc
 
 		if (structure == olc::DecalStructure::FAN)
 		{
-			for (int tri = 2; tri < vPoints.size(); tri++)
+			for (std::size_t tri = 2; tri < vPoints.size(); tri++)
 			{
 				std::vector<olc::vf2d> vP = { vPoints[0], vPoints[tri - 1], vPoints[tri] };
 				std::vector<olc::vf2d> vT = { vTex[0], vTex[tri - 1], vTex[tri] };
@@ -3508,7 +3508,7 @@ namespace olc
 		vConsoleSize = (vViewSize / olc::vi2d(8, 16)) - olc::vi2d(2, 4);
 
 		// If console has changed size, simply reset it
-		if (vConsoleSize.y != sConsoleLines.size())
+		if (static_cast<std::size_t>(vConsoleSize.y) != sConsoleLines.size())
 		{
 			vConsoleCursor = { 0,0 };
 			sConsoleLines.clear();
@@ -3531,7 +3531,7 @@ namespace olc
 			if (vConsoleCursor.y >= vConsoleSize.y)
 			{
 				vConsoleCursor.y = vConsoleSize.y - 1;
-				for (size_t i = 1; i < vConsoleSize.y; i++)
+				for (int32_t i = 1; i < vConsoleSize.y; i++)
 					sConsoleLines[i - 1] = sConsoleLines[i];
 				sConsoleLines[vConsoleCursor.y].clear();
 			}
@@ -3609,7 +3609,7 @@ namespace olc
 			sTextEntryString.erase(nTextEntryCursor-1, 1);
 			nTextEntryCursor = std::max(0, nTextEntryCursor - 1);
 		}
-		if (GetKey(olc::Key::DEL).bPressed && nTextEntryCursor < sTextEntryString.size())
+		if (GetKey(olc::Key::DEL).bPressed && static_cast<std::size_t>(nTextEntryCursor) < sTextEntryString.size())
 			sTextEntryString.erase(nTextEntryCursor, 1);	
 
 		if (GetKey(olc::Key::UP).bPressed)
@@ -4039,8 +4039,8 @@ namespace olc
 	PGEX::PGEX(bool bHook) { if(bHook) pge->pgex_Register(this); }
 	void PGEX::OnBeforeUserCreate() {}
 	void PGEX::OnAfterUserCreate()	{}
-	bool PGEX::OnBeforeUserUpdate(float& fElapsedTime) { return false; }
-	void PGEX::OnAfterUserUpdate(float fElapsedTime) {}
+	bool PGEX::OnBeforeUserUpdate(float& /*fElapsedTime*/) { return false; }
+	void PGEX::OnAfterUserUpdate(float /*fElapsedTime*/) {}
 
 	// Need a couple of statics as these are singleton instances
 	// read from multiple locations
@@ -4245,7 +4245,7 @@ namespace olc
 #endif
 		}
 
-		olc::rcode CreateDevice(std::vector<void*> params, bool bFullScreen, bool bVSYNC) override
+		olc::rcode CreateDevice(std::vector<void*> params, bool /*bFullScreen*/, bool bVSYNC) override
 		{
 #if defined(OLC_PLATFORM_WINAPI)
 			// Create Device Context
@@ -4528,7 +4528,7 @@ namespace olc
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, spr->width, spr->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, spr->GetData());
 		}
 
-		void ReadTexture(uint32_t id, olc::Sprite* spr) override
+		void ReadTexture(uint32_t /*id*/, olc::Sprite* spr) override
 		{
 			glReadPixels(0, 0, spr->width, spr->height, GL_RGBA, GL_UNSIGNED_BYTE, spr->GetData());
 		}
@@ -5334,7 +5334,7 @@ namespace olc
 			return olc::rcode::FAIL;
 		}
 
-		olc::rcode SaveImageResource(olc::Sprite* spr, const std::string& sImageFile) override
+		olc::rcode SaveImageResource(olc::Sprite* /*spr*/, const std::string& /*sImageFile*/) override
 		{
 			return olc::rcode::OK;
 		}
