@@ -5,6 +5,8 @@ CREATE TABLE system (
   x_pos NUMERIC(6, 2) NOT NULL,
   y_pos NUMERIC(6, 2) NOT NULL,
   z_pos NUMERIC(6, 2) NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE,
   PRIMARY KEY (id),
   UNIQUE (name)
 );
@@ -21,6 +23,8 @@ CREATE TABLE ship_system (
   ship INTEGER NOT NULL,
   system INTEGER NOT NULL,
   docked BOOLEAN NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE,
   PRIMARY KEY (ship),
   FOREIGN KEY (ship) REFERENCES player_ship(id),
   FOREIGN KEY (system) REFERENCES system(id)
@@ -42,6 +46,8 @@ CREATE TABLE asteroid (
   x_pos NUMERIC(12, 2) NOT NULL,
   y_pos NUMERIC(12, 2) NOT NULL,
   z_pos NUMERIC(12, 2) NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE,
   PRIMARY KEY (id),
   FOREIGN KEY (system) REFERENCES system(id)
 );
@@ -77,8 +83,30 @@ CREATE TABLE system_outpost (
   x_pos NUMERIC(12, 2) NOT NULL,
   y_pos NUMERIC(12, 2) NOT NULL,
   z_pos NUMERIC(12, 2) NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE,
   PRIMARY KEY (id),
   UNIQUE (outpost, system),
   FOREIGN KEY (outpost) REFERENCES outpost(id),
   FOREIGN KEY (system) REFERENCES system(id)
 );
+
+CREATE TRIGGER trigger_system_updated_at
+  BEFORE UPDATE OR INSERT ON system
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at();
+
+CREATE TRIGGER trigger_ship_system_updated_at
+  BEFORE UPDATE OR INSERT ON ship_system
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at();
+
+CREATE TRIGGER trigger_asteroid_updated_at
+  BEFORE UPDATE OR INSERT ON asteroid
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at();
+
+CREATE TRIGGER trigger_system_outpost_updated_at
+  BEFORE UPDATE OR INSERT ON system_outpost
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at();

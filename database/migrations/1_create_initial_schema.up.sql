@@ -5,11 +5,10 @@ SET client_encoding = 'UTF8';
 SET search_path = public, pg_catalog;
 SET default_tablespace = '';
 
--- Register a function to automatically update the `created_at` field
--- of a new object to insert in the database.
-CREATE OR REPLACE FUNCTION update_created_at() RETURNS TRIGGER AS $$
+-- https://www.postgresql.org/docs/current/sql-createtrigger.html
+CREATE OR REPLACE FUNCTION update_updated_at() RETURNS TRIGGER AS $$
   BEGIN
-    NEW.created_at = now();
+    NEW.updated_at = now();
     RETURN NEW;
   END;
 $$ language 'plpgsql';

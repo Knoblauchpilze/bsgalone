@@ -8,6 +8,8 @@ CREATE TABLE computer (
   range NUMERIC(8, 2) DEFAULT NULL,
   duration_ms INTEGER DEFAULT NULL,
   damage_modifier NUMERIC(8, 2) DEFAULT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE,
   PRIMARY KEY (id),
   UNIQUE (name)
 );
@@ -34,6 +36,8 @@ CREATE TABLE player_computer (
   computer INTEGER NOT NULL,
   player INTEGER NOT NULL,
   level INTEGER NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE,
   PRIMARY KEY (id),
   FOREIGN KEY (computer) REFERENCES computer(id),
   FOREIGN KEY (player) REFERENCES player(id)
@@ -42,7 +46,24 @@ CREATE TABLE player_computer (
 CREATE TABLE ship_computer (
   ship INTEGER NOT NULL,
   computer INTEGER NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE,
   PRIMARY KEY (ship, computer),
   FOREIGN KEY (ship) REFERENCES player_ship(id),
   FOREIGN KEY (computer) REFERENCES player_computer(id)
 );
+
+CREATE TRIGGER trigger_computer_updated_at
+  BEFORE UPDATE OR INSERT ON computer
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at();
+
+CREATE TRIGGER trigger_player_computer_updated_at
+  BEFORE UPDATE OR INSERT ON player_computer
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at();
+
+CREATE TRIGGER trigger_ship_computer_updated_at
+  BEFORE UPDATE OR INSERT ON ship_computer
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at();
