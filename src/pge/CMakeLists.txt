@@ -4,8 +4,7 @@ add_library (pge_app_lib SHARED "")
 set (CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 target_compile_options(pge_app_lib PRIVATE
-	-Wno-error=unknown-pragmas
-	-Wno-error=unused-function)
+	-Wno-error=unknown-pragmas)
 
 add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/olc
