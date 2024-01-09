@@ -154,7 +154,7 @@ bool PGEApp::onUpdate(const float elapsedSeconds)
 
   auto *baseDrawTarget = m_engine->GetDrawTarget();
 
-  RenderState state{.cf = *m_frame, .renderer = *m_renderer};
+  RenderState state{.frame = *m_frame, .renderer = *m_renderer};
 
   renderLayer(*m_engine, m_decalLayer, state, [this](RenderState &state) { drawDecal(state); });
   renderLayer(*m_engine, m_drawLayer, state, [this](RenderState &state) { draw(state); });

@@ -26,7 +26,7 @@ bool App::onFrame(const float elapsedSeconds)
   return m_game->terminated();
 }
 
-void App::onInputs(const controls::State &controls, CoordinateFrame &cf)
+void App::onInputs(const controls::State &controls, CoordinateFrame &frame)
 {
   // Handle case where no game is defined.
   if (m_game == nullptr)
@@ -34,7 +34,7 @@ void App::onInputs(const controls::State &controls, CoordinateFrame &cf)
     return;
   }
 
-  m_game->processUserInput(controls, cf);
+  m_game->processUserInput(controls, frame);
 }
 
 void App::loadResources(const Vec2i &screenDims, Renderer &engine)
@@ -50,7 +50,7 @@ void App::loadResources(const Vec2i &screenDims, Renderer &engine)
 // #define START_AT_LOGIN
 #ifndef START_AT_LOGIN
   m_game->login(bsgo::Uuid{0});
-  m_game->setScreen(Screen::OUTPOST);
+  m_game->setScreen(Screen::GAME);
 #endif
 }
 
@@ -61,7 +61,6 @@ void App::cleanResources()
 
 void App::drawDecal(const RenderState &state)
 {
-  // Clear(colors::toOlcPixel(colors::Name::OFF_BLACK));
   m_game->render(state, RenderingPass::DECAL);
 }
 
@@ -80,7 +79,7 @@ void App::drawDebug(const RenderState &state, const Vec2f &mouseScreenPos)
   m_game->render(state, RenderingPass::DEBUG);
 
   Vec2f it;
-  const auto mtp = state.cf.pixelsToTilesAndIntra(mouseScreenPos, &it);
+  const auto mtp = state.frame.pixelsToTilesAndIntra(mouseScreenPos, &it);
 
   constexpr auto DEBUG_PIXELS_Y       = 400;
   constexpr auto REASONABLE_PIXEL_GAP = 15;

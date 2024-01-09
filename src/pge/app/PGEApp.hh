@@ -100,9 +100,9 @@ class PGEApp : public utils::CoreObject
 
   /// @brief - Interface method called at each frame when the inputs should be
   /// handled.
-  /// @param c - the current state of the controls.
-  /// @param cf - the coordinate frame associated to this app.
-  virtual void onInputs(const controls::State &controls, CoordinateFrame &cf) = 0;
+  /// @param controls - the current state of the controls.
+  /// @param frame - the coordinate frame associated to this app.
+  virtual void onInputs(const controls::State &controls, CoordinateFrame &frame) = 0;
 
   private:
   /// @brief - The pixel game engine used to run the application.
