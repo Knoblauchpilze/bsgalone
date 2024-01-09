@@ -7,14 +7,18 @@
 #include "CoordinateFrame.hh"
 #include "FramerateControl.hh"
 #include "RenderState.hh"
+#include "Renderer.hh"
 #include <core_utils/CoreObject.hh>
+#include <memory>
 #include <optional>
 
-#include "olcPixelGameEngine.h"
+namespace olc {
+class PixelGameEngine;
+}
 
 namespace pge {
 
-class PGEApp : public utils::CoreObject, public olc::PixelGameEngine
+class PGEApp : public utils::CoreObject
 {
   public:
   /// @brief - Create a new default pixel game engine app.
@@ -22,48 +26,26 @@ class PGEApp : public utils::CoreObject, public olc::PixelGameEngine
   /// by the app and set up base properties.
   PGEApp(const AppDesc &desc);
 
-  virtual ~PGEApp() = default;
+  ~PGEApp() override;
 
-  /// @brief - Implementation of the interface method called during the creation of
-  /// the application.
-  /// @return - `true` if the initialization succeeded.
-  bool OnUserCreate() override;
-
-  /// @brief - Override of the main update function called at each frame.
-  /// @param fElapsedTime - the duration elapsed since last frame.
-  /// @return - `true` if the update succeeded.
-  bool OnUserUpdate(float fElapsedTime) override;
-
-  /// @brief - Override of the destroy function which allows to release resources
-  /// before the OpenGL context gets destroyed.
-  /// @return - `true` if the release of resources succeeded.
-  bool OnUserDestroy() override;
+  /// @brief - Call this method to start a blocking call to the main loop of
+  /// the application. This method will only return when the user requested
+  /// to exit the application.
+  void run();
 
   protected:
   /// @brief - Convenience define refering to a drawing layer.
   enum class Layer
   {
-    Draw,
-    DrawDecal,
+    DRAW,
+    DECAL,
     UI,
-    Debug
+    DEBUG
   };
 
-  /// @brief - Whether or not the rendering represents the first frame drawn ever.
-  /// Allows to display a log only once for example.
-  /// @return - `true` if this is the first frame.
   bool isFirstFrame() const noexcept;
-
-  /// @brief - Returns `true` in case the debug layer has been activated.
-  /// @return - `true` if the debug layer is active.
   bool hasDebug() const noexcept;
-
-  /// @brief - Returns `true` in case the UI layer has been activated.
-  /// @return - `true` if the UI layer is active.
-  bool hasUI() const noexcept;
-
-  /// @brief - Returns `true` in case the cursor should be visible.
-  bool hasCursor() const noexcept;
+  bool hasUi() const noexcept;
 
   /// @brief - Used to assign a certain tint to the layer defined by the input
   /// descriptor.
@@ -71,15 +53,12 @@ class PGEApp : public utils::CoreObject, public olc::PixelGameEngine
   /// @param tint - the tint to associate to the layer.
   void setLayerTint(const Layer &layer, const Color &tint);
 
-  /// @brief - Another interface method allowing to clear a rendering layer when
-  /// it's disabled. This allows to make sure that we won't keep old frames
-  /// displayed on top of some content if an option is toggled.
-  virtual void clearLayer();
-
   /// @brief - Interface method allowing inheriting classes to get a chance to
   /// load resources needed for display. This method is guaranteed to be called
   /// before the first call to `draw` is issued.
-  virtual void loadResources() = 0;
+  /// @param screenDims - the dimensions of the rendering canvas in pixels.
+  /// @param engine - utility object to load graphic resources.
+  virtual void loadResources(const Vec2i &screenDims, Renderer &engine) = 0;
 
   /// @brief - Interface method allowing inheriting classes to be notified when
   /// the app is going to be destroyed so that resources can be cleaned.
@@ -90,25 +69,26 @@ class PGEApp : public utils::CoreObject, public olc::PixelGameEngine
   /// method only handles the decal objects and is called first during the
   /// rendering step. It means that the content will be overriden by all UI
   /// and debug info.
-  /// @param res - the resources to help the drawing.
-  virtual void drawDecal(const RenderState &res) = 0;
+  /// @param state - the resources to help the drawing.
+  virtual void drawDecal(const RenderState &state) = 0;
 
   /// @brief - Interface method to display the main content of the app. This
   /// method is called to draw the non-decal instances of the content and is
   /// triggered right after the `drawDecal` one. It will still get overriden
   /// by UI and debug.
-  /// @param res - the resources that can be drawn.
-  virtual void draw(const RenderState &res) = 0;
+  /// @param state - the resources that can be drawn.
+  virtual void draw(const RenderState &state) = 0;
 
   /// @brief - Interface method allowing to draw the UI of the application.
   /// This regroups menu and all needed elements that are not game elements.
-  /// @param res - the resources that can be drawn.
-  virtual void drawUI(const RenderState &res) = 0;
+  /// @param state - the resources that can be drawn.
+  virtual void drawUi(const RenderState &state) = 0;
 
   /// @brief - Interface method allowing inheriting classes to perform their
   /// own drawing calls to show debug info.
-  /// @param res - the resources that can be drawn.
-  virtual void drawDebug(const RenderState &res) = 0;
+  /// @param state - the resources that can be drawn.
+  /// @param mouseScreenPos - the position of the mouse in screen coordinates.
+  virtual void drawDebug(const RenderState &state, const Vec2f &mouseScreenPos) = 0;
 
   /// @brief - Interface method called at each frame to give inheriting classes
   /// an occasion to process the app logic.
@@ -125,53 +105,30 @@ class PGEApp : public utils::CoreObject, public olc::PixelGameEngine
   virtual void onInputs(const controls::State &controls, CoordinateFrame &cf) = 0;
 
   private:
-  /// @brief - Used to keep track of the changes in the input
-  /// that were processed during a frame. It helps determining
-  /// whether some unique processes need to be triggered, such
-  /// as cleaning of rendering layers that will not be updated
-  /// anymore.
-  struct InputChanges
-  {
-    // A request to exit the program has been received.
-    bool quit;
+  /// @brief - The pixel game engine used to run the application.
+  std::unique_ptr<olc::PixelGameEngine> m_engine{nullptr};
 
-    // Whether the debug layer should be visible.
-    bool debugLayerToggled;
-  };
+  /// @brief - A wrapper for the rendering engine.
+  RendererPtr m_renderer{nullptr};
 
-  /// @brief - Performs the initialization of the engine to make it suits our needs.
-  /// @param dims - a vector describing the dimensions of the canvas for this app in
-  /// pixels.
-  /// @param screenPixToEnginePixRatio - the ratio of a pixel in the app compared to
-  /// a pixel on screen. If this value is set set to `2` it means that each pixel in
-  /// the app's canvas will be 2x2 pixels on screen.
-  void initialize(const Vec2i &dims, const Vec2i &enginePixToScreenPixRatio);
-
-  /// @brief - Used to perform the necessary update based on the controls that the
-  /// user might have used in the game.
-  // @return - a state describing the changes processed in this method. It includes
-  /// any exit request of the user and changes to the UI.
-  auto handleInputs() -> InputChanges;
-
-  private:
   /// @brief - The index representing the main layer for this app. Given how the
   /// pixel game engine is designed we display layers with the highest order first
   /// and then in descending order.
   /// As we want the debug and UI layers to be on top of the base layer, we need
   /// to give it the largest index so that it is displayed first, and then the
   /// rest on top.
-  uint32_t m_mDecalLayer{};
+  uint32_t m_decalLayer{};
 
   //// @brief - The index representing the main layer but where only non-decal
   /// objects can be drawn. This layer will be displayed on top of the `m_mLayer`
   /// so it limits a bit how we can intertwine the items in the rendering.
-  uint32_t m_mLayer{};
+  uint32_t m_drawLayer{};
 
   /// @brief - The index of the layer allowing to display debug information. This
   /// layer will be assigned to the default layer created by the pixel game engine.
   /// It is needed in order to initialize the last of the layers (and thus the one
   /// that will be set on top of all the others) with meaningful data.
-  uint32_t m_dLayer{};
+  uint32_t m_debugLayer{};
 
   //// @brief - A layer used to represent all the UI elements of the application
   /// (menu, etc).
@@ -183,9 +140,6 @@ class PGEApp : public utils::CoreObject, public olc::PixelGameEngine
   /// @brief - Similar to the `m_debugOn` but controls whether the UI is active or
   /// not.
   bool m_uiOn{true};
-
-  /// @brief - Defines whether or not the cursor should be displayed.
-  bool m_cursorOn{true};
 
   /// @brief - A map to keep track of the state of the controls to be transmitted
   /// to the world's entities for the simulation.
@@ -207,6 +161,38 @@ class PGEApp : public utils::CoreObject, public olc::PixelGameEngine
   /// value is not assigned, the app will run as fast as possible, otherwise it
   /// will try to maintain the maximum desired fps.
   std::optional<FramerateControl> m_fpsControl{};
+
+  /// @brief - Performs the initialization of the engine to make it suits our needs.
+  /// @param appName - the name of the app.
+  /// @param dims - a vector describing the dimensions of the canvas for this app in
+  /// pixels.
+  /// @param screenPixToEnginePixRatio - the ratio of a pixel in the app compared to
+  /// a pixel on screen. If this value is set set to `2` it means that each pixel in
+  /// the app's canvas will be 2x2 pixels on screen.
+  void initialize(const std::string &appName,
+                  const Vec2i &dims,
+                  const Vec2i &enginePixToScreenPixRatio);
+
+  bool onCreate();
+  bool onUpdate(const float elapsedSeconds);
+  bool onDestroy();
+
+  /// @brief - Used to keep track of the changes in the input
+  /// that were processed during a frame. It helps determining
+  /// whether some unique processes need to be triggered, such
+  /// as cleaning of rendering layers that will not be updated
+  /// anymore.
+  struct InputChanges
+  {
+    bool quit{false};
+    bool debugLayerToggled{false};
+  };
+
+  /// @brief - Used to perform the necessary update based on the controls that the
+  /// user might have used in the game.
+  // @return - a state describing the changes processed in this method. It includes
+  /// any exit request of the user and changes to the UI.
+  auto handleInputs() -> InputChanges;
 };
 
 } // namespace pge

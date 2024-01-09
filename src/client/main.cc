@@ -32,7 +32,7 @@ int main(int /*argc*/, char ** /*argv*/)
                     .maxFps     = 20};
     pge::App demo(ad);
 
-    demo.Start();
+    demo.run();
   }
   catch (const utils::CoreException &e)
   {

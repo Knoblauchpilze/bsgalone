@@ -162,7 +162,7 @@ void Game::processUserInput(const controls::State &controls, CoordinateFrame &fr
   }
 }
 
-void Game::render(Renderer &engine, const RenderState &state, const RenderingPass pass) const
+void Game::render(const RenderState &state, const RenderingPass pass) const
 {
   const auto itRenderer = m_renderers.find(getScreen());
   const auto itUi       = m_uiHandlers.find(getScreen());
@@ -174,19 +174,19 @@ void Game::render(Renderer &engine, const RenderState &state, const RenderingPas
     case RenderingPass::DECAL:
       if (itRenderer != m_renderers.end())
       {
-        itRenderer->second->render(engine, state, pass);
+        itRenderer->second->render(state.renderer, state, pass);
       }
       break;
     case RenderingPass::UI:
       if (itUi != m_uiHandlers.end())
       {
-        itUi->second->render(engine);
+        itUi->second->render(state.renderer);
       }
       break;
     case RenderingPass::DEBUG:
       if (itRenderer != m_renderers.end())
       {
-        itRenderer->second->render(engine, state, pass);
+        itRenderer->second->render(state.renderer, state, pass);
       }
       break;
     default:

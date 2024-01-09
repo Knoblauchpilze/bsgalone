@@ -2,6 +2,7 @@
 #pragma once
 
 #include "CoordinateFrame.hh"
+#include "Renderer.hh"
 
 namespace pge {
 
@@ -11,8 +12,11 @@ namespace pge {
 /// from screen coordinates to world coordinates and the UI.
 struct RenderState
 {
-  // The coordinate frame to convert tiles to pixels.
+  /// @brief - The coordinate frame to convert tiles to pixels.
   CoordinateFrame &cf;
+
+  /// @brief - The renderer object to perform draw calls.
+  Renderer &renderer;
 
   /// @brief - Convenience method allowing to determine if an item is visible
   /// in the current viewport.

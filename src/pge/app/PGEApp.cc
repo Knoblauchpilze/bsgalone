@@ -1,20 +1,17 @@
 
 #include "PGEApp.hh"
 #include "ColorConversion.hh"
+#include "PgeWrapper.hh"
 
 namespace pge {
 
 PGEApp::PGEApp(const AppDesc &desc)
   : utils::CoreObject(desc.name)
-  , olc::PixelGameEngine()
   , m_fixedFrame(desc.fixedFrame)
   , m_frame(desc.frame)
 {
-  // Initialize the application settings.
-  sAppName = desc.name;
   setService("app");
 
-  // Make sure that a coordinate frame is provided.
   if (m_frame == nullptr)
   {
     error("Unable to create PGE application", "Invalid null coordinate frame provided");
@@ -26,115 +23,17 @@ PGEApp::PGEApp(const AppDesc &desc)
   }
 
   // Generate and construct the window.
-  initialize(desc.dims, desc.enginePixToScreenPixRatio);
+  initialize(desc.name, desc.dims, desc.enginePixToScreenPixRatio);
 }
 
-bool PGEApp::OnUserCreate()
+PGEApp::~PGEApp()
 {
-  // The debug layer is the default layer: it is always
-  // provided by the pixel game engine.
-  m_dLayer = 0u;
-
-  // Create a layer for the UI elements and enable it.
-  m_uiLayer = CreateLayer();
-  EnableLayer(m_uiLayer, true);
-
-  // And finally create the two layers for the main content:
-  // one allowing to draw the decal objects and one all the
-  // regular ones. As the pixel game engine draws layers
-  // from back to front the main content should be at the
-  // back so that all other elements are displayed on top
-  // of it.
-  m_mLayer = CreateLayer();
-  EnableLayer(m_mLayer, true);
-
-  m_mDecalLayer = CreateLayer();
-  EnableLayer(m_mDecalLayer, true);
-
-  loadResources();
-
-  return true;
+  // Intentionally empty.
 }
 
-bool PGEApp::OnUserUpdate(float fElapsedTime)
+void PGEApp::run()
 {
-  // Handle inputs.
-  InputChanges ic = handleInputs();
-
-  // Handle user inputs.
-  onInputs(m_controls, *m_frame);
-
-  // Handle game logic.
-  bool quit = onFrame(fElapsedTime);
-
-  // Handle rendering: for each function
-  // we will assign the draw target first
-  // so that the function does not have
-  // to handle it. We want to save the
-  // current draw target to restore it
-  // once the process is done.
-  olc::Sprite *base = GetDrawTarget();
-
-  RenderState res{
-    .cf = *m_frame, // Coordinate frame
-  };
-
-  // Note that we usually need to clear
-  // the layer at least once to `activate`
-  // them: otherwise the window usually
-  // stays black.
-  SetDrawTarget(m_mDecalLayer);
-  drawDecal(res);
-
-  SetDrawTarget(m_mLayer);
-  draw(res);
-
-  if (hasUI())
-  {
-    SetDrawTarget(m_uiLayer);
-    drawUI(res);
-  }
-  if (!hasUI() && isFirstFrame())
-  {
-    SetDrawTarget(m_uiLayer);
-    clearLayer();
-  }
-
-  // Draw the debug layer. As it is saved in the layer `0` we need to clear it
-  // when it is not displayed as it will be rendered on top of any other layer
-  // and thus we would still display the last frame when it is inactive.
-  // Note that we also clear it in case the debug is set to `false` from the
-  // beginning of the rendering: if we don't do this nothing will be visible
-  // as the `0`-th layer would never be updated.
-  if (hasDebug())
-  {
-    SetDrawTarget(m_dLayer);
-    drawDebug(res);
-  }
-  if (!hasDebug() && (ic.debugLayerToggled || isFirstFrame()))
-  {
-    SetDrawTarget(m_dLayer);
-    clearLayer();
-  }
-
-  // Restore the target.
-  SetDrawTarget(base);
-
-  // Not the first frame anymore.
-  m_first = false;
-
-  if (m_fpsControl)
-  {
-    m_fpsControl->throttle();
-  }
-
-  return !ic.quit && !quit;
-}
-
-bool PGEApp::OnUserDestroy()
-{
-  cleanResources();
-  return true;
+  m_engine->Start();
 }
 
 bool PGEApp::isFirstFrame() const noexcept
@@ -147,14 +46,9 @@ bool PGEApp::hasDebug() const noexcept
   return m_debugOn;
 }
 
-bool PGEApp::hasUI() const noexcept
+bool PGEApp::hasUi() const noexcept
 {
   return m_uiOn;
-}
-
-bool PGEApp::hasCursor() const noexcept
-{
-  return m_cursorOn;
 }
 
 void PGEApp::setLayerTint(const Layer &layer, const Color &tint)
@@ -163,37 +57,144 @@ void PGEApp::setLayerTint(const Layer &layer, const Color &tint)
 
   switch (layer)
   {
-    case Layer::Draw:
-      SetLayerTint(m_mLayer, olcTint);
+    case Layer::DRAW:
+      m_engine->SetLayerTint(m_drawLayer, olcTint);
       break;
-    case Layer::DrawDecal:
-      SetLayerTint(m_mDecalLayer, olcTint);
+    case Layer::DECAL:
+      m_engine->SetLayerTint(m_decalLayer, olcTint);
       break;
     case Layer::UI:
-      SetLayerTint(m_uiLayer, olcTint);
+      m_engine->SetLayerTint(m_uiLayer, olcTint);
       break;
-    case Layer::Debug:
+    case Layer::DEBUG:
     default:
-      SetLayerTint(m_dLayer, olcTint);
+      m_engine->SetLayerTint(m_debugLayer, olcTint);
       break;
   }
 }
 
-void PGEApp::clearLayer()
+inline void PGEApp::initialize(const std::string &appName,
+                               const Vec2i &dims,
+                               const Vec2i &enginePixToScreenPixRatio)
 {
-  // Clear the canvas with a neutral fully transparent color.
-  SetPixelMode(olc::Pixel::ALPHA);
-  Clear(colors::toOlcPixel(colors::TRANSPARENT_WHITE));
-  SetPixelMode(olc::Pixel::NORMAL);
-}
+  const WrapperCallbacks callbacks{.createCallback = [this]() { return onCreate(); },
+                                   .updateCallback =
+                                     [this](const float elapsedTime) {
+                                       return onUpdate(elapsedTime);
+                                     },
+                                   .destroyCallback = [this]() { return onDestroy(); }};
+  m_engine           = std::make_unique<PgeWrapper>(callbacks);
+  m_engine->sAppName = appName;
 
-inline void PGEApp::initialize(const Vec2i &dims, const Vec2i &enginePixToScreenPixRatio)
-{
-  const auto c = Construct(dims.x, dims.y, enginePixToScreenPixRatio.x, enginePixToScreenPixRatio.y);
+  const auto c = m_engine->Construct(dims.x,
+                                     dims.y,
+                                     enginePixToScreenPixRatio.x,
+                                     enginePixToScreenPixRatio.y);
   if (c != olc::OK)
   {
     error("Could not build application", "Initialization failed");
   }
+}
+
+bool PGEApp::onCreate()
+{
+  m_debugLayer = 0u;
+
+  m_uiLayer = m_engine->CreateLayer();
+  m_engine->EnableLayer(m_uiLayer, true);
+
+  m_drawLayer = m_engine->CreateLayer();
+  m_engine->EnableLayer(m_drawLayer, true);
+
+  m_decalLayer = m_engine->CreateLayer();
+  m_engine->EnableLayer(m_decalLayer, true);
+
+  m_renderer = std::make_unique<Renderer>(m_engine.get());
+
+  const Vec2i screenDims{m_engine->ScreenWidth(), m_engine->ScreenHeight()};
+  loadResources(screenDims, *m_renderer);
+
+  return true;
+}
+
+namespace {
+void setupLayerForRendering(olc::PixelGameEngine &engine)
+{
+  engine.SetPixelMode(olc::Pixel::ALPHA);
+  engine.Clear(colors::toOlcPixel(colors::TRANSPARENT_WHITE));
+}
+
+void finalizeLayerRendering(olc::PixelGameEngine &engine)
+{
+  engine.SetPixelMode(olc::Pixel::NORMAL);
+}
+
+using Draw = std::function<void(RenderState &)>;
+
+void renderLayer(olc::PixelGameEngine &engine,
+                 const uint8_t layer,
+                 RenderState &renderState,
+                 const std::optional<Draw> &drawCall)
+{
+  engine.SetDrawTarget(layer);
+  setupLayerForRendering(engine);
+  if (drawCall)
+  {
+    (*drawCall)(renderState);
+  }
+  finalizeLayerRendering(engine);
+}
+} // namespace
+
+bool PGEApp::onUpdate(const float elapsedSeconds)
+{
+  const auto ic = handleInputs();
+  onInputs(m_controls, *m_frame);
+  const auto quit = onFrame(elapsedSeconds);
+
+  auto *baseDrawTarget = m_engine->GetDrawTarget();
+
+  RenderState state{.cf = *m_frame, .renderer = *m_renderer};
+
+  renderLayer(*m_engine, m_decalLayer, state, [this](RenderState &state) { drawDecal(state); });
+  renderLayer(*m_engine, m_drawLayer, state, [this](RenderState &state) { draw(state); });
+  if (hasUi())
+  {
+    renderLayer(*m_engine, m_uiLayer, state, [this](RenderState &state) { drawUi(state); });
+  }
+  else if (isFirstFrame())
+  {
+    renderLayer(*m_engine, m_uiLayer, state, {});
+  }
+  if (hasDebug())
+  {
+    Vec2f mPos(m_controls.mPosX, m_controls.mPosY);
+    renderLayer(*m_engine, m_debugLayer, state, [this, &mPos](RenderState &state) {
+      drawDebug(state, mPos);
+    });
+  }
+  else if (ic.debugLayerToggled || isFirstFrame())
+  {
+    renderLayer(*m_engine, m_debugLayer, state, {});
+  }
+
+  m_engine->SetDrawTarget(baseDrawTarget);
+
+  m_first = false;
+
+  if (m_fpsControl)
+  {
+    m_fpsControl->throttle();
+  }
+
+  return !ic.quit && !quit;
+}
+
+bool PGEApp::onDestroy()
+{
+  cleanResources();
+  m_renderer.reset();
+  return true;
 }
 
 namespace {
@@ -258,11 +259,11 @@ void updateControls(const olc::PixelGameEngine *const pge, controls::State &cont
 }
 } // namespace
 
-auto PGEApp::handleInputs() -> PGEApp::InputChanges
+auto PGEApp::handleInputs() -> InputChanges
 {
-  InputChanges ic{false, false};
+  InputChanges ic{};
 
-  updateControls(this, m_controls);
+  updateControls(m_engine.get(), m_controls);
 
   if (m_controls.released(controls::keys::ESCAPE))
   {
@@ -270,7 +271,7 @@ auto PGEApp::handleInputs() -> PGEApp::InputChanges
     return ic;
   }
 
-  Vec2f mPos(GetMousePos().x, GetMousePos().y);
+  Vec2f mPos(m_engine->GetMousePos().x, m_engine->GetMousePos().y);
 
   if (!m_fixedFrame)
   {
@@ -289,7 +290,7 @@ auto PGEApp::handleInputs() -> PGEApp::InputChanges
 
   if (!m_fixedFrame)
   {
-    int scroll = GetMouseWheel();
+    int scroll = m_engine->GetMouseWheel();
     if (scroll > 0)
     {
       m_frame->zoomIn(mPos);

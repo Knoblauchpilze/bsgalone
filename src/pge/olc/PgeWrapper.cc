@@ -19,11 +19,11 @@ bool PgeWrapper::OnUserCreate()
   return true;
 }
 
-bool PgeWrapper::OnUserUpdate(float fElapsedTime)
+bool PgeWrapper::OnUserUpdate(float elapsedSeconds)
 {
   if (m_updateCallback)
   {
-    return (*m_updateCallback)(fElapsedTime);
+    return (*m_updateCallback)(elapsedSeconds);
   }
   return true;
 }
