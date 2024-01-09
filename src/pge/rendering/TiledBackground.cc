@@ -16,13 +16,13 @@ TiledBackground::TiledBackground(const Vec2i &offset,
 
 void TiledBackground::render(Renderer &engine, const RenderState &state)
 {
-  const auto pixelsViewport = state.cf.pixelsViewport();
+  const auto pixelsViewport = state.frame.pixelsViewport();
 
   Vec2i bgTileCount;
   bgTileCount.x = static_cast<int>(std::ceil(pixelsViewport.dims().x / m_pixelSize));
   bgTileCount.y = static_cast<int>(std::ceil(pixelsViewport.dims().x / m_pixelSize));
 
-  updateBackgroundOffset(state.cf);
+  updateBackgroundOffset(state.frame);
 
   for (auto y = -1; y <= bgTileCount.y; ++y)
   {
@@ -32,7 +32,7 @@ void TiledBackground::render(Renderer &engine, const RenderState &state)
       pixelPos.x += (x * m_pixelSize);
       pixelPos.y += (y * m_pixelSize);
 
-      renderBackgroundTile(pixelPos, engine, state.cf);
+      renderBackgroundTile(pixelPos, engine, state.frame);
     }
   }
 }
@@ -49,20 +49,20 @@ void TiledBackground::loadDecal(sprites::TexturePack &texturesLoader)
   m_bgTexturePackId = texturesLoader.registerPack(pack);
 }
 
-void TiledBackground::updateBackgroundOffset(const CoordinateFrame &cf)
+void TiledBackground::updateBackgroundOffset(const CoordinateFrame &frame)
 {
-  const auto newTileSize = cf.tileSize();
+  const auto newTileSize = frame.tileSize();
   if (!m_savedCenter || !m_savedTileDimension || newTileSize.x != m_savedTileDimension->x
       || newTileSize.y != m_savedTileDimension->y)
   {
-    m_savedCenter            = cf.tilesViewport().center();
+    m_savedCenter            = frame.tilesViewport().center();
     m_savedTileDimension     = newTileSize;
     m_accumulatedTranslation = {};
     m_offset                 = m_offset;
     return;
   }
 
-  const auto newCenter = cf.tilesViewport().center();
+  const auto newCenter = frame.tilesViewport().center();
   m_accumulatedTranslation.x += ((m_savedCenter->x - newCenter.x) / m_slowdownRatio);
   m_accumulatedTranslation.y += ((newCenter.y - m_savedCenter->y) / m_slowdownRatio);
 
@@ -82,19 +82,19 @@ void TiledBackground::updateBackgroundOffset(const CoordinateFrame &cf)
 
 void TiledBackground::renderBackgroundTile(const Vec2i &pixelPosition,
                                            Renderer &engine,
-                                           const CoordinateFrame &cf)
+                                           const CoordinateFrame &frame)
 {
-  const auto tilePosition = cf.pixelsToTiles(pixelPosition.x, pixelPosition.y);
+  const auto tilePosition = frame.pixelsToTiles(pixelPosition.x, pixelPosition.y);
 
   SpriteDesc t;
   t.x = tilePosition.x;
   t.y = tilePosition.y;
 
-  t.radius = m_pixelSize / cf.tileSize().x;
+  t.radius = m_pixelSize / frame.tileSize().x;
 
   t.sprite.pack = m_bgTexturePackId;
 
-  engine.drawWarpedSprite(t, cf);
+  engine.drawWarpedSprite(t, frame);
 }
 
 } // namespace pge

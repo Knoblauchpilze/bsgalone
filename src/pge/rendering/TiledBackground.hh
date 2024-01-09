@@ -35,8 +35,10 @@ class TiledBackground
   Vec2f m_accumulatedTranslation{};
 
   void loadDecal(sprites::TexturePack &texturesLoader);
-  void updateBackgroundOffset(const CoordinateFrame &cf);
-  void renderBackgroundTile(const Vec2i &pixelPosition, Renderer &engine, const CoordinateFrame &cf);
+  void updateBackgroundOffset(const CoordinateFrame &frame);
+  void renderBackgroundTile(const Vec2i &pixelPosition,
+                            Renderer &engine,
+                            const CoordinateFrame &frame);
 };
 
 using TiledBackgroundPtr = std::unique_ptr<TiledBackground>;

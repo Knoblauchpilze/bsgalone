@@ -13,7 +13,7 @@ namespace pge {
 struct RenderState
 {
   /// @brief - The coordinate frame to convert tiles to pixels.
-  CoordinateFrame &cf;
+  CoordinateFrame &frame;
 
   /// @brief - The renderer object to perform draw calls.
   Renderer &renderer;

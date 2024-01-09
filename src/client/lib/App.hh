@@ -18,7 +18,7 @@ class App : public PGEApp
 
   protected:
   bool onFrame(const float elapsedSeconds) override;
-  void onInputs(const controls::State &controls, CoordinateFrame &cf) override;
+  void onInputs(const controls::State &controls, CoordinateFrame &frame) override;
 
   void loadResources(const Vec2i &screenDims, Renderer &engine) override;
   void cleanResources() override;

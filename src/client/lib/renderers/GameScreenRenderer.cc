@@ -106,7 +106,7 @@ void GameScreenRenderer::renderDecal(Renderer &engine, const RenderState &state)
 {
   m_systemBackground->render(engine, state);
 
-  const auto bbox      = toIBoundingBox(state.cf);
+  const auto bbox      = toIBoundingBox(state.frame);
   const auto asteroids = m_systemView->getAsteroidsWithin(bbox);
   const auto outposts  = m_systemView->getOutpostsWithin(bbox);
   const auto bullets   = m_systemView->getBulletsWithin(bbox);
@@ -135,7 +135,7 @@ void GameScreenRenderer::renderDecal(Renderer &engine, const RenderState &state)
 
 void GameScreenRenderer::renderDebug(Renderer &engine, const RenderState &state) const
 {
-  const auto bbox  = toIBoundingBox(state.cf);
+  const auto bbox  = toIBoundingBox(state.frame);
   const auto ships = m_shipView->getShipsWithin(bbox);
 
   for (const auto &ship : ships)
@@ -180,7 +180,7 @@ void GameScreenRenderer::renderAsteroid(const bsgo::Entity &asteroid,
   }
   t.sprite.tint = tint;
 
-  engine.drawWarpedSprite(t, state.cf);
+  engine.drawWarpedSprite(t, state.frame);
 }
 
 void GameScreenRenderer::renderOutpost(const bsgo::Entity &outpost,
@@ -201,7 +201,7 @@ void GameScreenRenderer::renderOutpost(const bsgo::Entity &outpost,
   t.sprite.sprite = {id, 0};
   t.sprite.tint   = colorFromFaction(outpost.factionComp().faction());
 
-  engine.drawWarpedSprite(t, state.cf);
+  engine.drawWarpedSprite(t, state.frame);
 }
 
 void GameScreenRenderer::renderBullet(const bsgo::Entity &bullet,
@@ -221,7 +221,7 @@ void GameScreenRenderer::renderBullet(const bsgo::Entity &bullet,
   t.sprite.sprite = {0, 0};
   t.sprite.tint   = colors::WHITE;
 
-  engine.drawWarpedSprite(t, state.cf);
+  engine.drawWarpedSprite(t, state.frame);
 }
 
 void GameScreenRenderer::renderShip(const bsgo::Entity &ship,
@@ -267,7 +267,7 @@ void GameScreenRenderer::renderShip(const bsgo::Entity &ship,
       break;
   }
 
-  engine.drawRotatedSprite(t, state.cf);
+  engine.drawRotatedSprite(t, state.frame);
 }
 
 namespace {
@@ -293,7 +293,7 @@ void GameScreenRenderer::renderShipDebug(const bsgo::Entity &ship,
                                          const RenderState &state) const
 {
   const auto tilePos = ship.transformComp().position();
-  auto pixelPos      = state.cf.tilesToPixels(tilePos(0), tilePos(1));
+  auto pixelPos      = state.frame.tilesToPixels(tilePos(0), tilePos(1));
 
   std::string text = "accel: ";
   const auto accel = ship.velocityComp().acceleration();
@@ -317,7 +317,7 @@ void GameScreenRenderer::renderShipDebug(const bsgo::Entity &ship,
 
   for (const auto &weapon : ship.weapons)
   {
-    renderWeaponIndicator(ship.transformComp(), *weapon, engine, state.cf);
+    renderWeaponIndicator(ship.transformComp(), *weapon, engine, state.frame);
   }
 }
 
