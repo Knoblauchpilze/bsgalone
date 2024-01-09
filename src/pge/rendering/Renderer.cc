@@ -108,6 +108,11 @@ void Renderer::drawString(const Vec2i &pos,
   return drawString(toVec2f(pos), text, tint, scale);
 }
 
+void Renderer::drawDebugString(const Vec2i &pos, const std::string &text, const Color &tint)
+{
+  m_renderer->DrawString(toVi2d(pos), text, colors::toOlcPixel(tint));
+}
+
 auto Renderer::getTextSize(const std::string &text) const -> Vec2i
 {
   return toVec2i(m_renderer->GetTextSize(text));

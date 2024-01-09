@@ -102,6 +102,13 @@ class Renderer
                   const Color tint,
                   const Vec2f &scale = Vec2f(1.0f, 1.0f));
 
+  /// @brief - Render a debug string in a slower way but which should be displayed
+  /// on top of everything else.
+  /// @param pos - the position to render the string at (top left corner).
+  /// @param text - the text to render.
+  /// @param tint - the color of the text.
+  void drawDebugString(const Vec2i &pos, const std::string &text, const Color &tint);
+
   /// @brief - Return an estimation of the size the input text would occupy
   /// on screen if rendered.
   /// @param text - the text which size should be estimated.

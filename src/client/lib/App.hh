@@ -3,7 +3,6 @@
 
 #include "Game.hh"
 #include "PGEApp.hh"
-#include "Renderer.hh"
 
 namespace pge {
 
@@ -18,22 +17,19 @@ class App : public PGEApp
   ~App() = default;
 
   protected:
-  bool onFrame(float fElapsed) override;
+  bool onFrame(const float elapsedSeconds) override;
   void onInputs(const controls::State &controls, CoordinateFrame &cf) override;
 
-  void loadResources() override;
+  void loadResources(const Vec2i &screenDims, Renderer &engine) override;
   void cleanResources() override;
 
-  void drawDecal(const RenderState &res) override;
-  void draw(const RenderState &res) override;
-  void drawUI(const RenderState &res) override;
-  void drawDebug(const RenderState &res) override;
-
-  void renderCursor(const RenderState &res);
+  void drawDecal(const RenderState &state) override;
+  void draw(const RenderState &state) override;
+  void drawUi(const RenderState &state) override;
+  void drawDebug(const RenderState &state, const Vec2f &mouseScreenPos) override;
 
   private:
   GameShPtr m_game{nullptr};
-  RendererPtr m_renderer{nullptr};
 };
 
 } // namespace pge

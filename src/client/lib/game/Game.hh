@@ -48,7 +48,7 @@ class Game : public utils::CoreObject
   void generateUiHandlers(int width, int height);
 
   void processUserInput(const controls::State &controls, CoordinateFrame &frame);
-  void render(Renderer &engine, const RenderState &state, const RenderingPass pass) const;
+  void render(const RenderState &state, const RenderingPass pass) const;
 
   /// @brief - Requests the game to be terminated. This is applied to the next
   /// iteration of the game loop.

@@ -8,7 +8,7 @@
 namespace pge {
 
 using UserCreateCallback  = std::function<bool()>;
-using UserUpdateCallback  = std::function<bool(const float elapsedTime)>;
+using UserUpdateCallback  = std::function<bool(const float)>;
 using UserDestroyCallback = std::function<bool()>;
 
 struct WrapperCallbacks
@@ -25,7 +25,7 @@ class PgeWrapper : public olc::PixelGameEngine
   ~PgeWrapper() override = default;
 
   bool OnUserCreate() override;
-  bool OnUserUpdate(float fElapsedTime) override;
+  bool OnUserUpdate(float elapsedSeconds) override;
   bool OnUserDestroy() override;
 
   private:
