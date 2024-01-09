@@ -15,7 +15,7 @@ INSERT INTO public.player_ship ("ship", "player", "name", "active", "hull_points
   VALUES (
       (SELECT id FROM ship WHERE name = 'Cylon Raider'),
       NULL,
-      'Basic cylon raider',
+      'AI Cylon Raider',
       true,
       280.0,
       23.2,
