@@ -73,9 +73,9 @@ void PGEApp::setLayerTint(const Layer &layer, const Color &tint)
   }
 }
 
-inline void PGEApp::initialize(const std::string &appName,
-                               const Vec2i &dims,
-                               const Vec2i &enginePixToScreenPixRatio)
+void PGEApp::initialize(const std::string &appName,
+                        const Vec2i &dims,
+                        const Vec2i &enginePixToScreenPixRatio)
 {
   const WrapperCallbacks callbacks{.createCallback = [this]() { return onCreate(); },
                                    .updateCallback =
