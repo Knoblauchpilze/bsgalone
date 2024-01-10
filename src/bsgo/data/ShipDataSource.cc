@@ -126,22 +126,22 @@ auto ShipDataSource::generateBehaviorTree(const Uuid &entity, const Eigen::Vecto
   auto dx                       = rng.rndFloat(-RADIUS_TO_PICK_A_TARGET, RADIUS_TO_PICK_A_TARGET);
   auto dy                       = rng.rndFloat(-RADIUS_TO_PICK_A_TARGET, RADIUS_TO_PICK_A_TARGET);
   const Eigen::Vector3f target1 = center + Eigen::Vector3f(dx, dy, 0.0f);
-  log("Picked first target " + str(target1) + " for " + str(entity));
+  debug("Picked first target " + str(target1) + " for " + str(entity));
 
   dx                            = rng.rndFloat(-RADIUS_TO_PICK_A_TARGET, RADIUS_TO_PICK_A_TARGET);
   dy                            = rng.rndFloat(-RADIUS_TO_PICK_A_TARGET, RADIUS_TO_PICK_A_TARGET);
   const Eigen::Vector3f target2 = center + Eigen::Vector3f(dx, dy, 0.0f);
-  log("Picked second target " + str(target2) + " for " + str(entity));
+  debug("Picked second target " + str(target2) + " for " + str(entity));
 
   dx                            = rng.rndFloat(-RADIUS_TO_PICK_A_TARGET, RADIUS_TO_PICK_A_TARGET);
   dy                            = rng.rndFloat(-RADIUS_TO_PICK_A_TARGET, RADIUS_TO_PICK_A_TARGET);
   const Eigen::Vector3f target3 = center + Eigen::Vector3f(dx, dy, 0.0f);
-  log("Picked third target " + str(target3) + " for " + str(entity));
+  debug("Picked third target " + str(target3) + " for " + str(entity));
 
   dx                            = rng.rndFloat(-RADIUS_TO_PICK_A_TARGET, RADIUS_TO_PICK_A_TARGET);
   dy                            = rng.rndFloat(-RADIUS_TO_PICK_A_TARGET, RADIUS_TO_PICK_A_TARGET);
   const Eigen::Vector3f target4 = center + Eigen::Vector3f(dx, dy, 0.0f);
-  log("Picked fourth target " + str(target4) + " for " + str(entity));
+  debug("Picked fourth target " + str(target4) + " for " + str(entity));
 
   auto targetNode1  = std::make_unique<TargetNode>(target1);
   auto targetNode2  = std::make_unique<TargetNode>(target2);

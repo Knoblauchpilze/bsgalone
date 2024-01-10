@@ -15,7 +15,7 @@ void FollowTargetNode::run(const TickData &data)
 {
   if (NodeState::IDLE == m_state)
   {
-    log("Trying to reach target of " + data.ent.str());
+    debug("Trying to reach target of " + data.ent.str());
     start();
   }
   if (NodeState::RUNNING != m_state)
@@ -26,7 +26,7 @@ void FollowTargetNode::run(const TickData &data)
   const auto &targetComp = data.ent.targetComp();
   if (!targetComp.target())
   {
-    log(data.ent.str() + " doesn't have target anymore");
+    debug(data.ent.str() + " doesn't have target anymore");
     fail();
     return;
   }
@@ -37,7 +37,7 @@ void FollowTargetNode::run(const TickData &data)
   const auto reachedTarget = moveTowardsTarget(data.ent, targetPosition);
   if (reachedTarget)
   {
-    log("Reached target " + target.str());
+    debug("Reached target " + target.str());
     finish();
   }
 }

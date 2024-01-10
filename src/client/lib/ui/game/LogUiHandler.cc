@@ -250,7 +250,6 @@ auto LogUiHandler::createMenuFromMessage(const bsgo::IMessage &message) -> UiMen
 
   const auto text = createTextConfigForMessage(message, *m_systemView, *m_resourceView);
 
-  log("haha");
   return std::make_unique<UiTextMenu>(config, bg, text);
 }
 

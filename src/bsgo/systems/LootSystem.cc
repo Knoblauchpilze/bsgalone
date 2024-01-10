@@ -52,7 +52,7 @@ void LootSystem::distributeLootTo(const Uuid &recipient,
   const auto ent = coordinator.getEntity(recipient);
   if (!ent.exists<OwnerComponent>())
   {
-    log("Skipping " + ent.str() + " as it is not a player or it is dead");
+    debug("Skipping " + ent.str() + " as it is not a player or it is dead");
     return;
   }
 

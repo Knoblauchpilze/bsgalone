@@ -36,7 +36,7 @@ void StatusSystem::handleAppearingState(Entity &entity, StatusComponent &statusC
   const auto lastUpdate = statusComp.tryGetElapsedSinceLastAppearing();
   if (statusIndicatesAppearing(status) && lastUpdate && *lastUpdate >= TIME_TO_STAY_IN_APPEARED_MODE)
   {
-    log("Switching " + entity.str() + " from appearing to visible");
+    debug("Switching " + entity.str() + " from appearing to visible");
     statusComp.setStatus(updateStatusAfterSpawn(status));
   }
 }
@@ -47,7 +47,7 @@ void StatusSystem::handleThreatState(Entity &entity, StatusComponent &statusComp
   const auto lastUpdate = statusComp.getElapsedSinceLastChange();
   if (statusIndicatesThreat(status) && lastUpdate >= TIME_TO_STAY_IN_THREAT_MODE)
   {
-    log(entity.str() + " is no more in threat");
+    debug(entity.str() + " is no more in threat");
     statusComp.setStatus(updateStatusAfterThreatEnded(status));
   }
 }

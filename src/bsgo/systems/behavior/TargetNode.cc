@@ -15,7 +15,7 @@ void TargetNode::run(const TickData &data)
 {
   if (NodeState::IDLE == m_state)
   {
-    log("Trying to reach " + str(m_target));
+    debug("Trying to reach " + str(m_target));
     start();
   }
   if (NodeState::RUNNING != m_state)
@@ -26,7 +26,7 @@ void TargetNode::run(const TickData &data)
   const auto reachedTarget = moveTowardsTarget(data.ent, m_target);
   if (reachedTarget)
   {
-    log("Reached target " + str(m_target));
+    debug("Reached target " + str(m_target));
     finish();
   }
 }

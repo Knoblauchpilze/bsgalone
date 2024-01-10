@@ -22,7 +22,6 @@ bool LockerService::tryEquip(const LockerItemData &item) const
   }
   if (!verifyItemIsNotEquiped(item.dbId, item.type))
   {
-    log("haha");
     return false;
   }
   if (!verifyItemBelongsToPlayer(*ship.player, item.dbId, item.type))
@@ -171,26 +170,26 @@ void LockerService::tryEquipWeapon(const Uuid &shipDbId, const Uuid &weaponId) c
   const auto slot = *slots.begin();
 
   ShipWeapon weapon{.ship = shipDbId, .weapon = weaponId, .slot = slot};
-  log("Installing weapon " + str(weaponId) + " in slot " + str(slot));
+  debug("Installing weapon " + str(weaponId) + " in slot " + str(slot));
   m_repositories.shipWeaponRepository->save(weapon);
 }
 
 void LockerService::tryEquipComputer(const Uuid &shipDbId, const Uuid &computerId) const
 {
-  log("Installing computer " + str(computerId) + " for ship " + str(shipDbId));
+  debug("Installing computer " + str(computerId) + " for ship " + str(shipDbId));
   m_repositories.shipComputerRepository->save(shipDbId, computerId);
 }
 
 void LockerService::tryUnequipWeapon(const Uuid &shipDbId, const Uuid &weaponId) const
 {
   const auto data = m_repositories.shipWeaponRepository->findOneByShipAndWeapon(shipDbId, weaponId);
-  log("Uninstalling weapon " + str(data->weapon) + " from slot " + str(data->slot));
+  debug("Uninstalling weapon " + str(data->weapon) + " from slot " + str(data->slot));
   m_repositories.shipWeaponRepository->deleteByShipAndSlot(*data);
 }
 
 void LockerService::tryUnequipComputer(const Uuid &shipDbId, const Uuid &computerId) const
 {
-  log("Uninstalling computer " + str(computerId) + " from ship " + str(shipDbId));
+  debug("Uninstalling computer " + str(computerId) + " from ship " + str(shipDbId));
   m_repositories.shipComputerRepository->deleteByShipAndId(shipDbId, computerId);
 }
 
