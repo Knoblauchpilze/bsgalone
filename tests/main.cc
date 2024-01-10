@@ -8,13 +8,12 @@
 
 int main(int argc, char **argv)
 {
-  testing::InitGoogleTest(&argc, argv);
-
-  // Create the logger.
   utils::log::StdLogger raw;
   raw.setLevel(utils::log::Severity::DEBUG);
   utils::log::PrefixedLogger logger("pge", "main");
   utils::log::Locator::provide(&raw);
+
+  testing::InitGoogleTest(&argc, argv);
 
   return RUN_ALL_TESTS();
 }
