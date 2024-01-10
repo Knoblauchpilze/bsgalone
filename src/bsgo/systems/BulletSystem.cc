@@ -88,7 +88,7 @@ void BulletSystem::damageOnImpact(Entity &entity, Entity &target) const
   const auto damage = entity.damageComp().damage();
   target.healthComp().damage(damage);
 
-  log(entity.str() + " deals " + std::to_string(damage) + " to " + target.str());
+  debug(entity.str() + " deals " + std::to_string(damage) + " to " + target.str());
 
   if (target.exists<LootComponent>())
   {

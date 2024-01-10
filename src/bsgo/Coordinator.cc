@@ -250,7 +250,7 @@ void Coordinator::removeEffect(const Uuid &ent, const EffectComponentShPtr &effe
     error("Failed to remove effect for entity " + entity.str());
   }
 
-  log("Removed 1 effect for entity " + entity.str());
+  debug("Removed 1 effect for entity " + entity.str());
 }
 
 auto Coordinator::getEntity(const Uuid &ent) const -> Entity
