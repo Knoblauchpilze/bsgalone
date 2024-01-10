@@ -1,5 +1,5 @@
 
-add_executable(bsgalone_server)
+add_executable (bsgalone_server)
 
 target_sources (bsgalone_server PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/main.cc

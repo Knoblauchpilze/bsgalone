@@ -1,5 +1,5 @@
 
-add_executable(bsgalone_client)
+add_executable (bsgalone_client)
 
 add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/lib
