@@ -5,7 +5,7 @@
 
 namespace pge::sprites {
 
-inline auto TexturePack::Pack::spriteCoords(const Vec2i &coord, int id) const -> Vec2i
+auto TexturePack::Pack::spriteCoords(const Vec2i &coord, int id) const -> Vec2i
 {
   const auto lID = coord.y * layout.x + coord.x + id;
   // Go back to 2D coordinates using the layout on the linearized ID and the

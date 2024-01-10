@@ -5,15 +5,15 @@
 namespace bsgo {
 namespace details {
 template<typename Component>
-inline bool checkComponentExists(const std::optional<std::shared_ptr<Component>> &comp)
+bool checkComponentExists(const std::optional<std::shared_ptr<Component>> &comp)
 {
   return comp && (nullptr != *comp);
 }
 
 template<typename Component>
-inline void checkAccessIsSafe(const std::optional<std::shared_ptr<Component>> &comp,
-                              const Entity &entity,
-                              const std::string &compName)
+void checkAccessIsSafe(const std::optional<std::shared_ptr<Component>> &comp,
+                       const Entity &entity,
+                       const std::string &compName)
 {
   if (!comp)
   {
@@ -30,18 +30,18 @@ inline void checkAccessIsSafe(const std::optional<std::shared_ptr<Component>> &c
 }
 
 template<typename Component>
-inline auto safeConstAccess(const std::optional<std::shared_ptr<Component>> &comp,
-                            const Entity &entity,
-                            const std::string &compName) -> const Component &
+auto safeConstAccess(const std::optional<std::shared_ptr<Component>> &comp,
+                     const Entity &entity,
+                     const std::string &compName) -> const Component &
 {
   checkAccessIsSafe(comp, entity, compName);
   return **comp;
 }
 
 template<typename Component>
-inline auto safeAccess(const std::optional<std::shared_ptr<Component>> &comp,
-                       const Entity &entity,
-                       const std::string &compName) -> Component &
+auto safeAccess(const std::optional<std::shared_ptr<Component>> &comp,
+                const Entity &entity,
+                const std::string &compName) -> Component &
 {
   checkAccessIsSafe(comp, entity, compName);
   return **comp;
