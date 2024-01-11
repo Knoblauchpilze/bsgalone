@@ -3,9 +3,9 @@
 
 namespace net {
 
-Connection::Connection(asio::ip::tcp::socket socket)
+Connection::Connection(asio::io_context &context)
   : utils::CoreObject("connection")
-  , m_socket(std::move(socket))
+  , m_socket(context)
 {
   setService("net");
 }

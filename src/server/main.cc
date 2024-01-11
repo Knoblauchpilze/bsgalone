@@ -7,7 +7,7 @@
 #include <core_utils/log/StdLogger.hh>
 
 #include "Connection.hh"
-#include <asio/asio.hpp>
+#include "Context.hh"
 
 int main(int /*argc*/, char ** /*argv*/)
 {
@@ -21,10 +21,10 @@ int main(int /*argc*/, char ** /*argv*/)
   {
     logger.notice("Starting application");
 
-    asio::io_context context;
+    net::Context context{};
+    const auto connection = context.createConnection();
 
-    net::Connection connection{asio::ip::tcp::socket{context}};
-    if (connection.isConnected())
+    if (connection->isConnected())
     {
       logger.info("connected");
     }
