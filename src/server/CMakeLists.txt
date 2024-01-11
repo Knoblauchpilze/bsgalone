@@ -10,5 +10,5 @@ target_include_directories (bsgalone_server PUBLIC
 
 target_link_libraries(bsgalone_server
 	core_utils
-	bsgalone_core_lib
+	bsgalone_net_lib
 	)
