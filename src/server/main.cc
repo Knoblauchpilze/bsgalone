@@ -6,6 +6,9 @@
 #include <core_utils/log/PrefixedLogger.hh>
 #include <core_utils/log/StdLogger.hh>
 
+#include "Connection.hh"
+#include <asio/asio.hpp>
+
 int main(int /*argc*/, char ** /*argv*/)
 {
   // Create the logger.
@@ -17,6 +20,18 @@ int main(int /*argc*/, char ** /*argv*/)
   try
   {
     logger.notice("Starting application");
+
+    asio::io_context context;
+
+    net::Connection connection{asio::ip::tcp::socket{context}};
+    if (connection.isConnected())
+    {
+      logger.info("connected");
+    }
+    else
+    {
+      logger.warn("disconnected");
+    }
   }
   catch (const utils::CoreException &e)
   {

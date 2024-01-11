@@ -82,11 +82,11 @@ But when going into for example `any_completion_executor.hpp` we see this:
 
 ![Asio include ko](resources/asio_include_ko.png)
 
-This is a problem as relatively to the `any_completion_executor.hpp` the config file is in the same directory. So it seems the library expect to have the `/usr/local/include` directory as a `-I` directive to correctly be set up.
+This is a problem as relatively to the `any_completion_executor.hpp` the config file is in the same directory. So it seems the library expects to have the `/usr/local/include` directory as a `-I` directive to correctly be set up.
 
 Looking at a few topics on the internet it seems like this is usually handled by putting the library directly in the project's folder, or by adding some include pathes in the CMake files (see [1](https://stackoverflow.com/questions/60592615/how-would-i-include-asio-library-using-cmake) or [2](https://stackoverflow.com/questions/53945148/how-to-use-the-c-standalone-asio-library)). Another way is to write manually a `FindAsio.cmake` file to find the corresponding package and set the include path automatically.
 
-We also used this approach in the [CMakeLists.txt](src/server/CMakeLists.txt) of the server for example. This is sufficient to allow development, we might revisit this later on.
+We also used this approach in the [CMakeLists.txt](src/net/CMakeLists.txt) of the net library for example. This is sufficient to allow development, we might revisit this later on.
 
 ### PixelGameEngine
 
