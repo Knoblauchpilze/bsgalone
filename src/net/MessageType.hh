@@ -1,11 +1,12 @@
 
 #pragma once
 
+#include <cstdint>
 #include <string>
 
 namespace net {
 
-enum class MessageType
+enum class MessageType : int32_t
 {
   LOGIN_REQUEST
 };
