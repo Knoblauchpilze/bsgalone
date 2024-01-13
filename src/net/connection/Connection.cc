@@ -16,6 +16,7 @@ Connection::Connection(asio::ip::tcp::socket &&socket, const ConnectionType type
   : utils::CoreObject("connection")
   , m_type(type)
   , m_socket(std::move(socket))
+  , m_incomingDataTempBuffer(INCOMING_DATA_BUFFER_SIZE, 0)
 {
   setService("net");
 }
@@ -75,9 +76,24 @@ void Connection::onDataReceived(const std::error_code &code, const std::size_t c
   }
 
   registerToAsio();
-  warn("should processed data received (so far: " + std::to_string(contentLength) + ")");
 
-  /// TODO: Read data from connection.
+  debug("Received " + std::to_string(contentLength) + " on " + str());
+  std::move(std::begin(m_incomingDataTempBuffer),
+            std::begin(m_incomingDataTempBuffer) + contentLength,
+            std::back_inserter(m_partialMessageData));
+  handlePartialData();
+}
+
+void Connection::handlePartialData()
+{
+  /// TODO: Handle partial data.
+  std::string out;
+  for (const auto &c : m_partialMessageData)
+  {
+    out += c;
+  }
+
+  warn("partial data: " + out);
   // // A complete message header has been read, check if this message
   // // has a body to follow...
   // if (m_msgTemporaryIn.header.size > 0)

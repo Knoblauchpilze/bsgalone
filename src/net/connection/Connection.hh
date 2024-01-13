@@ -5,6 +5,7 @@
 #include "Message.hh"
 #include <asio/asio.hpp>
 #include <core_utils/CoreObject.hh>
+#include <deque>
 #include <memory>
 #include <vector>
 
@@ -31,11 +32,13 @@ class Connection : public utils::CoreObject
 
   void registerToAsio();
 
-  static constexpr auto MESSAGE_HEADER_DATA_SIZE = messageTypeSize();
-  std::vector<char> m_incomingDataTempBuffer{MESSAGE_HEADER_DATA_SIZE, 0};
+  static constexpr auto INCOMING_DATA_BUFFER_SIZE = 50 * 1'024;
+  std::vector<char> m_incomingDataTempBuffer{};
+  std::deque<char> m_partialMessageData{};
 
   void registerServerConnectionToAsio();
   void onDataReceived(const std::error_code &code, const std::size_t contentLength);
+  void handlePartialData();
 };
 
 using ConnectionPtr = std::unique_ptr<Connection>;
