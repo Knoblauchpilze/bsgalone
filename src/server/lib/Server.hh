@@ -13,11 +13,15 @@ class Server : public utils::CoreObject
   Server();
   ~Server() override = default;
 
-  void start();
-  void stop();
+  void run();
+  void requestStop();
 
   private:
   net::Context m_context{};
   std::atomic_bool m_running{false};
+
+  void setup();
+  void activeRunLoop();
+  void shutdown();
 };
 } // namespace bsgo
