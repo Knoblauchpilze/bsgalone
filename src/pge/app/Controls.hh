@@ -132,11 +132,13 @@ struct State
   int mPosX{0};
   int mPosY{0};
 
-  std::vector<keys::State> keys{keys::KEYS_COUNT, keys::FREE};
-  std::vector<mouse::State> buttons{mouse::BUTTONS_COUNT, mouse::FREE};
+  std::vector<keys::State> keys{};
+  std::vector<mouse::State> buttons{};
 
   bool tab{false};
   bool shift{false};
+
+  State();
 
   bool pressed(const mouse::Button &button) const;
   bool held(const mouse::Button &button) const;
