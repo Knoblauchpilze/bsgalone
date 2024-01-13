@@ -27,8 +27,8 @@ int main(int /*argc*/, char ** /*argv*/)
 
   try
   {
-    logger.notice("Starting application");
-    bsgo::Server server;
+    constexpr auto DEFAULT_SERVER_PORT = 60000;
+    bsgo::Server server(DEFAULT_SERVER_PORT);
 
     sigIntProcessing = [&server](const int /*signal*/) { server.requestStop(); };
     std::signal(SIGINT, sigIntInterceptor);
