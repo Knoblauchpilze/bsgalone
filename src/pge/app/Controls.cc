@@ -3,6 +3,11 @@
 
 namespace pge::controls {
 
+State::State()
+  : keys(keys::KEYS_COUNT, keys::FREE)
+  , buttons(mouse::BUTTONS_COUNT, mouse::FREE)
+{}
+
 bool State::pressed(const mouse::Button &button) const
 {
   return mouse::PRESSED == buttons[button];
