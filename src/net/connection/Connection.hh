@@ -11,6 +11,7 @@ class Connection : public utils::CoreObject
 {
   public:
   Connection(asio::io_context &context);
+  Connection(asio::ip::tcp::socket &&socket);
   ~Connection() override = default;
 
   bool isConnected() const;

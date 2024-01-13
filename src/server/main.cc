@@ -27,13 +27,12 @@ int main(int /*argc*/, char ** /*argv*/)
 
   try
   {
-    constexpr auto DEFAULT_SERVER_PORT = 60000;
-    bsgo::Server server(DEFAULT_SERVER_PORT);
-
+    bsgo::Server server;
     sigIntProcessing = [&server](const int /*signal*/) { server.requestStop(); };
     std::signal(SIGINT, sigIntInterceptor);
 
-    server.run();
+    constexpr auto DEFAULT_SERVER_PORT = 60000;
+    server.run(DEFAULT_SERVER_PORT);
   }
   catch (const utils::CoreException &e)
   {
