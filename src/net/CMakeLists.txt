@@ -11,6 +11,10 @@ add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/messages
 	)
 
+add_subdirectory(
+	${CMAKE_CURRENT_SOURCE_DIR}/server
+	)
+
 target_link_libraries (bsgalone_net_lib
 	)
 

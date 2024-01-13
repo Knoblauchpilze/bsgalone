@@ -5,17 +5,16 @@
 
 namespace bsgo {
 
-Server::Server(const int port)
+Server::Server()
   : utils::CoreObject("server")
-  , m_tcpServer(m_context, port)
 {
   setService("server");
 }
 
-void Server::run()
+void Server::run(const int port)
 {
   debug("Starting server...");
-  setup();
+  setup(port);
 
   activeRunLoop();
 
@@ -28,9 +27,15 @@ void Server::requestStop()
   m_running.store(false);
 }
 
-void Server::setup()
+void Server::setup(const int port)
 {
-  info("Starting listening on port " + std::to_string(m_tcpServer.port()));
+  const net::ServerConfig config{.acceptor = [this](const net::Connection &connection) {
+    return onConnectionReceived(connection);
+  }};
+
+  m_tcpServer = std::make_unique<net::TcpServer>(m_context, port, config);
+
+  info("Starting listening on port " + std::to_string(m_tcpServer->port()));
   m_context.start();
 }
 
@@ -50,6 +55,13 @@ void Server::activeRunLoop()
 void Server::shutdown()
 {
   m_context.stop();
+}
+
+bool Server::onConnectionReceived(const net::Connection & /*connection*/) const
+{
+  /// TODO: Handle connection approval/denial.
+  warn("should approve or veto connection");
+  return true;
 }
 
 } // namespace bsgo

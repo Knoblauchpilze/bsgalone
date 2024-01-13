@@ -11,19 +11,21 @@ namespace bsgo {
 class Server : public utils::CoreObject
 {
   public:
-  Server(const int port);
+  Server();
   ~Server() override = default;
 
-  void run();
+  void run(const int port);
   void requestStop();
 
   private:
   net::Context m_context{};
   std::atomic_bool m_running{false};
-  net::TcpServer m_tcpServer;
+  net::TcpServerPtr m_tcpServer{};
 
-  void setup();
+  void setup(const int port);
   void activeRunLoop();
   void shutdown();
+
+  bool onConnectionReceived(const net::Connection &connection) const;
 };
 } // namespace bsgo
