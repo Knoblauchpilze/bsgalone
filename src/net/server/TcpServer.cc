@@ -49,12 +49,12 @@ void TcpServer::onConnectionRequest(const std::error_code &code, asio::ip::tcp::
   auto connection = std::make_unique<Connection>(std::move(socket));
   if (m_acceptor && !(*m_acceptor)(*connection))
   {
-    info("Refused connection from " + client);
+    warn("Refused connection from " + connection->str());
     return;
   }
 
+  info("Approved connection from " + connection->str());
   m_connections.emplace_back(std::move(connection));
-  info("Approved connection from " + client);
   /// TODO: Handle priming context with socket data receiver.
   /// And very important! Issue a task to the connection's
   /// asio context to sit and wait for bytes to arrive!
