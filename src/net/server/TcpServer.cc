@@ -23,7 +23,8 @@ auto TcpServer::port() const -> int
 
 void TcpServer::initializeFromConfig(const ServerConfig &config)
 {
-  m_acceptor = config.acceptor;
+  m_acceptor          = config.acceptor;
+  m_disconnectHandler = config.disconnectHandler;
 }
 
 void TcpServer::registerToAsio()
