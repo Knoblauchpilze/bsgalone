@@ -39,7 +39,7 @@ void TcpServer::onConnectionRequest(const std::error_code &code, asio::ip::tcp::
 
   if (code)
   {
-    warn("Received error when processing incoming connection", code.message());
+    warn("Error detected when processing incoming connection", code.message());
     return;
   }
 
@@ -54,11 +54,8 @@ void TcpServer::onConnectionRequest(const std::error_code &code, asio::ip::tcp::
   }
 
   info("Approved connection from " + connection->str());
+  connection->activate();
   m_connections.emplace_back(std::move(connection));
-  /// TODO: Handle priming context with socket data receiver.
-  /// And very important! Issue a task to the connection's
-  /// asio context to sit and wait for bytes to arrive!
-  /// m_deqConnections.back()->ConnectToClient(nIDCounter++);
 }
 
 } // namespace net

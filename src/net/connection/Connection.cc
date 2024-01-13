@@ -37,4 +37,62 @@ bool Connection::isConnected() const
   return m_socket.is_open();
 }
 
+void Connection::activate()
+{
+  registerToAsio();
+}
+
+void Connection::registerToAsio()
+{
+  switch (m_type)
+  {
+    case ConnectionType::SERVER:
+      registerServerConnectionToAsio();
+      break;
+    case ConnectionType::CLIENT:
+    default:
+      throw std::invalid_argument("Unsupported connection type " + net::str(m_type));
+  }
+}
+
+void Connection::registerServerConnectionToAsio()
+{
+  asio::async_read(m_socket,
+                   asio::buffer(m_incomingDataTempBuffer.data(), m_incomingDataTempBuffer.size()),
+                   std::bind(&Connection::onDataReceived,
+                             this,
+                             std::placeholders::_1,
+                             std::placeholders::_2));
+}
+
+void Connection::onDataReceived(const std::error_code &code, const std::size_t contentLength)
+{
+  if (code)
+  {
+    warn("Error detected when receiving data for connection", code.message());
+    m_socket.close();
+    return;
+  }
+
+  registerToAsio();
+  warn("should processed data received (so far: " + std::to_string(contentLength) + ")");
+
+  /// TODO: Read data from connection.
+  // // A complete message header has been read, check if this message
+  // // has a body to follow...
+  // if (m_msgTemporaryIn.header.size > 0)
+  // {
+  //   // ...it does, so allocate enough space in the messages' body
+  //   // vector, and issue asio with the task to read the body.
+  //   m_msgTemporaryIn.body.resize(m_msgTemporaryIn.header.size);
+  //   ReadBody();
+  // }
+  // else
+  // {
+  //   // it doesn't, so add this bodyless message to the connections
+  //   // incoming message queue
+  //   AddToIncomingMessageQueue();
+  // }
+}
+
 } // namespace net

@@ -14,7 +14,7 @@ auto Message::type() const -> MessageType
 
 auto Message::size() const -> std::size_t
 {
-  return sizeof(std::underlying_type<MessageType>::type) + m_body.size();
+  return messageTypeSize() + m_body.size();
 }
 
 bool Message::hasBody() const
