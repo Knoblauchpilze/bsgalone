@@ -1,13 +1,21 @@
 
 /// @brief - A minimalistic bsg server implementation
 
+#include "Server.hh"
 #include <core_utils/CoreException.hh>
 #include <core_utils/log/Locator.hh>
 #include <core_utils/log/PrefixedLogger.hh>
 #include <core_utils/log/StdLogger.hh>
+#include <functional>
 
-#include "Connection.hh"
-#include "Context.hh"
+namespace {
+// https://stackoverflow.com/questions/11468414/using-auto-and-lambda-to-handle-signal
+std::function<void(int)> sigIntProcessing;
+void sigIntInterceptor(const int signal)
+{
+  sigIntProcessing(signal);
+}
+} // namespace
 
 int main(int /*argc*/, char ** /*argv*/)
 {
@@ -20,18 +28,12 @@ int main(int /*argc*/, char ** /*argv*/)
   try
   {
     logger.notice("Starting application");
+    bsgo::Server server;
 
-    net::Context context{};
-    const auto connection = context.createConnection();
+    sigIntProcessing = [&server](const int /*signal*/) { server.stop(); };
+    std::signal(SIGINT, sigIntInterceptor);
 
-    if (connection->isConnected())
-    {
-      logger.info("connected");
-    }
-    else
-    {
-      logger.warn("disconnected");
-    }
+    server.start();
   }
   catch (const utils::CoreException &e)
   {
