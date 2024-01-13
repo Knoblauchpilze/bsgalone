@@ -4,20 +4,22 @@
 #include <core_utils/TimeUtils.hh>
 
 namespace bsgo {
-Server::Server()
+
+Server::Server(const int port)
   : utils::CoreObject("server")
+  , m_tcpServer(m_context, port)
 {
   setService("server");
 }
 
 void Server::run()
 {
-  info("Starting server...");
+  debug("Starting server...");
   setup();
 
   activeRunLoop();
 
-  info("Shutting down server...");
+  debug("Shutting down server...");
   shutdown();
 }
 
@@ -28,6 +30,7 @@ void Server::requestStop()
 
 void Server::setup()
 {
+  info("Starting listening on port " + std::to_string(m_tcpServer.port()));
   m_context.start();
 }
 

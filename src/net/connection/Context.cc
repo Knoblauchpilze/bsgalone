@@ -10,6 +10,11 @@ Context::Context()
   setService("net");
 }
 
+auto Context::get() -> asio::io_context &
+{
+  return m_asioContext;
+}
+
 auto Context::createConnection() -> ConnectionPtr
 {
   return std::make_unique<Connection>(m_asioContext);
@@ -27,7 +32,7 @@ void Context::start()
   m_running.store(true);
   m_contextThread = std::thread([this]() { m_asioContext.run(); });
 
-  info("Successfully started asio context");
+  debug("Successfully started asio context");
 }
 
 void Context::stop()
@@ -44,7 +49,7 @@ void Context::stop()
 
   waitForThreadToFinish();
 
-  info("Successfully stopped asio context");
+  debug("Successfully stopped asio context");
 }
 
 void Context::waitForThreadToFinish()

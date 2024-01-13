@@ -16,6 +16,8 @@ class Context : public utils::CoreObject
   Context();
   ~Context() override = default;
 
+  auto get() -> asio::io_context &;
+
   auto createConnection() -> ConnectionPtr;
 
   void start();
