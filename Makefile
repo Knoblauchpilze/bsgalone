@@ -39,6 +39,7 @@ runserver: sandbox
 
 # Debug server
 drunserver: sandboxDebug
+	cd sandbox && ./debug.sh bsgalone_server
 
 v: sandboxDebug
 	cd sandbox && ./valgrind.sh bsgalone_server
