@@ -22,7 +22,7 @@ int main(int /*argc*/, char ** /*argv*/)
   // Create the logger.
   utils::log::StdLogger raw;
   raw.setLevel(utils::log::Severity::DEBUG);
-  utils::log::PrefixedLogger logger("pge", "main");
+  utils::log::PrefixedLogger logger("server", "main");
   utils::log::Locator::provide(&raw);
 
   try
@@ -30,10 +30,10 @@ int main(int /*argc*/, char ** /*argv*/)
     logger.notice("Starting application");
     bsgo::Server server;
 
-    sigIntProcessing = [&server](const int /*signal*/) { server.stop(); };
+    sigIntProcessing = [&server](const int /*signal*/) { server.requestStop(); };
     std::signal(SIGINT, sigIntInterceptor);
 
-    server.start();
+    server.run();
   }
   catch (const utils::CoreException &e)
   {
