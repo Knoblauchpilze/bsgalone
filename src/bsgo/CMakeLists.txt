@@ -60,6 +60,7 @@ target_sources (bsgalone_core_lib PRIVATE
 target_link_libraries (bsgalone_core_lib
 	pq
 	pqxx
+	bsgalone_net_lib
 	)
 
 target_include_directories (bsgalone_core_lib PUBLIC
