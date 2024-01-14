@@ -1,5 +1,6 @@
 
 #include "MessageType.hh"
+#include <iostream>
 
 namespace bsgo {
 
@@ -47,6 +48,37 @@ auto allMessageTypes() -> std::array<MessageType, 11>
           MessageType::SLOT,
           MessageType::VELOCITY,
           MessageType::TARGET};
+}
+
+namespace {
+inline constexpr auto messageTypeSize() -> std::size_t
+{
+  return sizeof(std::underlying_type<MessageType>::type);
+}
+} // namespace
+
+auto operator<<(std::ostream &out, const MessageType &type) -> std::ostream &
+{
+  const auto typeAsChar = reinterpret_cast<const char *>(type);
+  const auto size       = messageTypeSize();
+  for (auto id = 0u; id < size; ++id)
+  {
+    out << typeAsChar[id];
+  }
+
+  return out;
+}
+
+auto operator>>(std::istream &in, MessageType &type) -> std::istream &
+{
+  auto typeAsChar = reinterpret_cast<char *>(type);
+  const auto size = messageTypeSize();
+  for (auto id = 0u; id < size; ++id)
+  {
+    in >> typeAsChar[id];
+  }
+
+  return in;
 }
 
 } // namespace bsgo
