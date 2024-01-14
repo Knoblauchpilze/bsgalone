@@ -4,9 +4,12 @@
 
 namespace net {
 
-Connection::Connection(asio::io_context &context)
+Connection::Connection(const std::string &url, const int port, asio::io_context &context)
   : Connection(asio::ip::tcp::socket(context), ConnectionType::CLIENT)
-{}
+{
+  asio::ip::tcp::resolver resolver(context);
+  m_endpoints = resolver.resolve(url, std::to_string(port));
+}
 
 Connection::Connection(asio::ip::tcp::socket &&socket)
   : Connection(std::move(socket), ConnectionType::SERVER)
@@ -56,6 +59,8 @@ void Connection::registerToAsio()
       registerServerConnectionToAsio();
       break;
     case ConnectionType::CLIENT:
+      registerClientConnectionToAsio();
+      break;
     default:
       throw std::invalid_argument("Unsupported connection type " + net::str(m_type));
   }
@@ -69,6 +74,38 @@ void Connection::registerServerConnectionToAsio()
                              this,
                              std::placeholders::_1,
                              std::placeholders::_2));
+}
+
+void Connection::registerClientConnectionToAsio()
+{
+  if (!m_endpoints)
+  {
+    error("Failed to register client connection", "No endpoints provided");
+  }
+
+  debug("trying to connect to " + net::str(*m_endpoints->begin()) + ", "
+        + std::to_string(m_endpoints->size()));
+  asio::async_connect(m_socket,
+                      *m_endpoints,
+                      std::bind(&Connection::onConnectionEstablished,
+                                this,
+                                std::placeholders::_1,
+                                std::placeholders::_2));
+}
+
+void Connection::onConnectionEstablished(const std::error_code &code,
+                                         const asio::ip::tcp::endpoint &endpoint)
+{
+  if (code)
+  {
+    /// TODO: Maybe this is a bigger failure but for now we allow failing to
+    /// contact the server for development purposes.
+    warn("Error detected when connecting to " + net::str(endpoint), code.message());
+    m_socket.close();
+    return;
+  }
+
+  info("Successfully connected to " + net::str(endpoint));
 }
 
 void Connection::onDataReceived(const std::error_code &code, const std::size_t contentLength)
