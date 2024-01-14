@@ -7,9 +7,12 @@
 #include <core_utils/CoreObject.hh>
 #include <deque>
 #include <memory>
+#include <optional>
 #include <vector>
 
 namespace net {
+
+using DataReceivedHandler = std::function<int(const std::deque<char> &)>;
 
 class Connection : public utils::CoreObject
 {
@@ -23,6 +26,7 @@ class Connection : public utils::CoreObject
   bool isConnected() const;
 
   void activate();
+  void setDataHandler(const DataReceivedHandler &dataHandler);
 
   private:
   ConnectionType m_type;
@@ -35,10 +39,10 @@ class Connection : public utils::CoreObject
   static constexpr auto INCOMING_DATA_BUFFER_SIZE = 50 * 1'024;
   std::vector<char> m_incomingDataTempBuffer{};
   std::deque<char> m_partialMessageData{};
+  std::optional<DataReceivedHandler> m_dataHandler{};
 
   void registerServerConnectionToAsio();
   void onDataReceived(const std::error_code &code, const std::size_t contentLength);
-  void handlePartialData();
 };
 
 using ConnectionPtr = std::unique_ptr<Connection>;

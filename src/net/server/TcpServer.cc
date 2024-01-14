@@ -23,8 +23,9 @@ auto TcpServer::port() const -> int
 
 void TcpServer::initializeFromConfig(const ServerConfig &config)
 {
-  m_acceptor          = config.acceptor;
-  m_disconnectHandler = config.disconnectHandler;
+  m_acceptor              = config.acceptor;
+  m_disconnectHandler     = config.disconnectHandler;
+  m_connectionDataHandler = config.connectionDataHandler;
 }
 
 void TcpServer::registerToAsio()
@@ -55,6 +56,10 @@ void TcpServer::onConnectionRequest(const std::error_code &code, asio::ip::tcp::
   }
 
   info("Approved connection from " + connection->str());
+  if (m_connectionDataHandler)
+  {
+    connection->setDataHandler(*m_connectionDataHandler);
+  }
   connection->activate();
   m_connections.emplace_back(std::move(connection));
 }

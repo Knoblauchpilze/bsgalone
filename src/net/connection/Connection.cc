@@ -43,6 +43,11 @@ void Connection::activate()
   registerToAsio();
 }
 
+void Connection::setDataHandler(const DataReceivedHandler &dataHandler)
+{
+  m_dataHandler = dataHandler;
+}
+
 void Connection::registerToAsio()
 {
   switch (m_type)
@@ -77,38 +82,21 @@ void Connection::onDataReceived(const std::error_code &code, const std::size_t c
 
   registerToAsio();
 
-  debug("Received " + std::to_string(contentLength) + " on " + str());
+  debug("Received " + std::to_string(contentLength) + " byte(s) on " + str());
+  if (!m_dataHandler)
+  {
+    warn("Discarding " + std::to_string(contentLength) + " byte(s) as there's no data handler");
+    return;
+  }
+
   std::move(std::begin(m_incomingDataTempBuffer),
             std::begin(m_incomingDataTempBuffer) + contentLength,
             std::back_inserter(m_partialMessageData));
-  handlePartialData();
-}
 
-void Connection::handlePartialData()
-{
-  /// TODO: Handle partial data.
-  std::string out;
-  for (const auto &c : m_partialMessageData)
-  {
-    out += c;
-  }
-
-  warn("partial data: " + out);
-  // // A complete message header has been read, check if this message
-  // // has a body to follow...
-  // if (m_msgTemporaryIn.header.size > 0)
-  // {
-  //   // ...it does, so allocate enough space in the messages' body
-  //   // vector, and issue asio with the task to read the body.
-  //   m_msgTemporaryIn.body.resize(m_msgTemporaryIn.header.size);
-  //   ReadBody();
-  // }
-  // else
-  // {
-  //   // it doesn't, so add this bodyless message to the connections
-  //   // incoming message queue
-  //   AddToIncomingMessageQueue();
-  // }
+  const auto processed = (*m_dataHandler)(m_partialMessageData);
+  m_partialMessageData.erase(m_partialMessageData.begin(), m_partialMessageData.begin() + processed);
+  debug("Processed " + std::to_string(processed) + " byte(s), "
+        + std::to_string(m_partialMessageData.size()) + " byte(s) remaining");
 }
 
 } // namespace net
