@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "Context.hh"
 #include "Controls.hh"
 #include "DataSource.hh"
 #include "GameMessageModule.hh"
@@ -35,10 +36,8 @@ using IInputHandlerPtr = std::unique_ptr<IInputHandler>;
 class Game : public utils::CoreObject
 {
   public:
-  /// @brief - Create a new game with default parameters.
   Game();
-
-  ~Game() = default;
+  ~Game() override;
 
   auto getScreen() const noexcept -> Screen;
   void setScreen(const Screen &screen);
@@ -93,6 +92,7 @@ class Game : public utils::CoreObject
   bsgo::Services m_services{};
   bsgo::CoordinatorShPtr m_coordinator{};
   bsgo::IMessageQueuePtr m_messageQueue{};
+  net::ContextPtr m_networkContext{std::make_unique<net::Context>()};
   bsgo::NetworkSystem *m_networkSystem{};
   bsgo::Views m_views;
   std::unordered_map<Screen, IRendererPtr> m_renderers{};

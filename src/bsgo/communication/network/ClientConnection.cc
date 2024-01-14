@@ -10,4 +10,10 @@ ClientConnection::ClientConnection(net::Context &networkContext)
   setService("network");
 }
 
+void ClientConnection::sendMessage(const IMessage &message)
+{
+  warn("should message with type " + str(message.type()));
+  /// TODO: Handle sending messages.
+}
+
 } // namespace bsgo

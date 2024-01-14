@@ -3,10 +3,11 @@
 
 namespace bsgo {
 
-NetworkMessageQueue::NetworkMessageQueue(IMessageQueuePtr localQueue)
+NetworkMessageQueue::NetworkMessageQueue(IMessageQueuePtr localQueue, ClientConnectionPtr connection)
   : IMessageQueue()
   , utils::CoreObject("message")
   , m_localQueue(std::move(localQueue))
+  , m_connection(std::move(connection))
 {
   addModule("queue");
   setService("network");
@@ -14,6 +15,7 @@ NetworkMessageQueue::NetworkMessageQueue(IMessageQueuePtr localQueue)
 
 void NetworkMessageQueue::pushMessage(IMessagePtr message)
 {
+  m_connection->sendMessage(*message);
   m_localQueue->pushMessage(std::move(message));
 }
 

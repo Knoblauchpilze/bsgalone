@@ -36,6 +36,11 @@ Game::Game()
   initialize();
 }
 
+Game::~Game()
+{
+  m_networkContext->stop();
+}
+
 auto Game::getScreen() const noexcept -> Screen
 {
   return m_state.screen;
@@ -246,7 +251,9 @@ void Game::initialize()
   auto networkSystem = std::make_unique<bsgo::NetworkSystem>(repositories);
   m_networkSystem    = networkSystem.get();
   auto localQueue    = std::make_unique<bsgo::MessageQueue>();
-  m_messageQueue     = std::make_unique<bsgo::NetworkMessageQueue>(std::move(localQueue));
+  auto connection    = std::make_unique<bsgo::ClientConnection>(*m_networkContext);
+  m_messageQueue     = std::make_unique<bsgo::NetworkMessageQueue>(std::move(localQueue),
+                                                               std::move(connection));
 
   m_coordinator = std::make_shared<bsgo::Coordinator>(std::move(networkSystem),
                                                       m_messageQueue.get());
@@ -254,6 +261,8 @@ void Game::initialize()
 
   initializeViews();
   initializeMessageSystem();
+
+  m_networkContext->start();
 }
 
 void Game::initializeViews()

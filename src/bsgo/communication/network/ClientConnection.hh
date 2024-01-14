@@ -2,7 +2,9 @@
 #pragma once
 
 #include "Context.hh"
+#include "IMessage.hh"
 #include <core_utils/CoreObject.hh>
+#include <memory>
 
 namespace bsgo {
 
@@ -12,8 +14,12 @@ class ClientConnection : public utils::CoreObject
   ClientConnection(net::Context &networkContext);
   ~ClientConnection() override = default;
 
+  void sendMessage(const IMessage &message);
+
   private:
   net::ConnectionPtr m_connection{};
 };
+
+using ClientConnectionPtr = std::unique_ptr<ClientConnection>;
 
 } // namespace bsgo
