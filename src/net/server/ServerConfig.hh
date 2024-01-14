@@ -14,6 +14,7 @@ struct ServerConfig
 {
   std::optional<ConnectionAcceptor> acceptor{};
   std::optional<ConnectionLostHandler> disconnectHandler{};
+  std::optional<DataReceivedHandler> connectionDataHandler{};
 };
 
 } // namespace net

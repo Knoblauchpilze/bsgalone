@@ -29,9 +29,14 @@ void Server::requestStop()
 
 void Server::setup(const int port)
 {
-  const net::ServerConfig config{.acceptor = [this](const net::Connection &connection) {
-    return onConnectionReceived(connection);
-  }};
+  const net::ServerConfig config{.acceptor =
+                                   [this](const net::Connection &connection) {
+                                     return onConnectionReceived(connection);
+                                   },
+                                 .connectionDataHandler =
+                                   [this](const std::deque<char> &data) {
+                                     return onDataReceived(data);
+                                   }};
 
   m_tcpServer = std::make_unique<net::TcpServer>(m_context, port, config);
 
@@ -62,6 +67,13 @@ bool Server::onConnectionReceived(const net::Connection & /*connection*/) const
   /// TODO: Handle connection approval/denial.
   warn("should approve or veto connection");
   return true;
+}
+
+auto Server::onDataReceived(const std::deque<char> &data) -> int
+{
+  /// TODO: Handle data processing.
+  warn("should handle " + std::to_string(data.size()) + " byte(s)");
+  return data.size();
 }
 
 } // namespace bsgo

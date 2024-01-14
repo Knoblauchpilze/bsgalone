@@ -26,6 +26,7 @@ class TcpServer : public utils::CoreObject
 
   std::optional<ConnectionAcceptor> m_acceptor{};
   std::optional<ConnectionLostHandler> m_disconnectHandler{};
+  std::optional<DataReceivedHandler> m_connectionDataHandler{};
 
   std::vector<ConnectionPtr> m_connections{};
 
