@@ -5,6 +5,7 @@
 #include <asio/asio.hpp>
 #include <atomic>
 #include <core_utils/CoreObject.hh>
+#include <memory>
 #include <mutex>
 #include <thread>
 
@@ -31,5 +32,7 @@ class Context : public utils::CoreObject
 
   void waitForThreadToFinish();
 };
+
+using ContextPtr = std::unique_ptr<Context>;
 
 } // namespace net
