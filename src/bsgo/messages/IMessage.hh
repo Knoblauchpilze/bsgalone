@@ -13,7 +13,9 @@ class IMessage : public utils::CoreObject
   IMessage(const std::string &name);
   ~IMessage() override = default;
 
-  virtual auto type() const -> MessageType = 0;
+  virtual auto type() const -> MessageType                           = 0;
+  virtual auto operator<<(std::ostream &out) const -> std::ostream & = 0;
+  virtual auto operator>>(std::istream &in) -> std::istream        & = 0;
 
   template<typename Message>
   auto as() const -> const Message &;

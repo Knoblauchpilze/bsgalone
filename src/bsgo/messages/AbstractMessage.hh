@@ -13,6 +13,9 @@ class AbstractMessage : public IMessage
 
   auto type() const -> MessageType override;
 
+  auto operator<<(std::ostream &out) const -> std::ostream & override;
+  auto operator>>(std::istream &in) -> std::istream & override;
+
   private:
   MessageType m_messageType{};
 };
