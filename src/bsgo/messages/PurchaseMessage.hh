@@ -27,6 +27,9 @@ class PurchaseMessage : public AbstractMessage
   auto getItemDbId() const -> Uuid;
   auto getPurchaseState() const -> PurchaseState;
 
+  auto operator<<(std::ostream &out) const -> std::ostream & override;
+  auto operator>>(std::istream &in) -> std::istream & override;
+
   private:
   Uuid m_playerDbId{};
   Item m_type{};

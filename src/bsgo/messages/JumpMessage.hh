@@ -30,6 +30,9 @@ class JumpMessage : public AbstractMessage
   auto getJumpState() const -> JumpState;
   auto getJumpSystem() const -> std::optional<Uuid>;
 
+  auto operator<<(std::ostream &out) const -> std::ostream & override;
+  auto operator>>(std::istream &in) -> std::istream & override;
+
   private:
   Uuid m_shipDbId{};
   Uuid m_shipEntityId{};

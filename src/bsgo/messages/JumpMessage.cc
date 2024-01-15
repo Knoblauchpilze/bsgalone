@@ -1,5 +1,6 @@
 
 #include "JumpMessage.hh"
+#include <core_utils/SerializationUtils.hh>
 
 namespace bsgo {
 
@@ -36,6 +37,30 @@ auto JumpMessage::getJumpState() const -> JumpState
 auto JumpMessage::getJumpSystem() const -> std::optional<Uuid>
 {
   return m_system;
+}
+
+auto JumpMessage::operator<<(std::ostream &out) const -> std::ostream &
+{
+  utils::serialize(out, m_messageType);
+
+  out << m_shipDbId;
+  out << m_shipEntityId;
+  utils::serialize(out, m_jumpState);
+  utils::serialize(out, m_system);
+
+  return out;
+}
+
+auto JumpMessage::operator>>(std::istream &in) -> std::istream &
+{
+  utils::deserialize(in, m_messageType);
+
+  in >> m_shipDbId;
+  in >> m_shipEntityId;
+  utils::deserialize(in, m_jumpState);
+  utils::deserialize(in, m_system);
+
+  return in;
 }
 
 } // namespace bsgo
