@@ -1,5 +1,6 @@
 
 #include "ClientConnection.hh"
+#include <osstream>
 
 namespace bsgo {
 constexpr auto DEFAULT_SERVER_URL  = "127.0.0.1";
@@ -15,8 +16,11 @@ ClientConnection::ClientConnection(net::Context &networkContext)
 
 void ClientConnection::sendMessage(const IMessage &message)
 {
-  warn("should message with type " + str(message.type()));
+  std::ostringstream out{};
+  out << message;
+
   /// TODO: Handle sending messages.
+  warn("should message with type " + str(message.type()) + ": \"" + out.str() + "\"");
 }
 
 } // namespace bsgo
