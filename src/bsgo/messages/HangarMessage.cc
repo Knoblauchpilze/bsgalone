@@ -21,7 +21,7 @@ auto HangarMessage::getRequestState() const -> ShipSwitchRequestState
   return m_state;
 }
 
-auto HangarMessage::operator<<(std::ostream &out) const -> std::ostream &
+auto HangarMessage::serialize(std::ostream &out) const -> std::ostream &
 {
   utils::serialize(out, m_messageType);
 
@@ -31,7 +31,7 @@ auto HangarMessage::operator<<(std::ostream &out) const -> std::ostream &
   return out;
 }
 
-auto HangarMessage::operator>>(std::istream &in) -> std::istream &
+auto HangarMessage::deserialize(std::istream &in) -> std::istream &
 {
   utils::deserialize(in, m_messageType);
 

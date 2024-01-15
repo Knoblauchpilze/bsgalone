@@ -35,7 +35,7 @@ auto DockMessage::getDockState() const -> DockState
   return m_state;
 }
 
-auto DockMessage::operator<<(std::ostream &out) const -> std::ostream &
+auto DockMessage::serialize(std::ostream &out) const -> std::ostream &
 {
   utils::serialize(out, m_messageType);
 
@@ -47,7 +47,7 @@ auto DockMessage::operator<<(std::ostream &out) const -> std::ostream &
   return out;
 }
 
-auto DockMessage::operator>>(std::istream &in) -> std::istream &
+auto DockMessage::deserialize(std::istream &in) -> std::istream &
 {
   utils::deserialize(in, m_messageType);
 

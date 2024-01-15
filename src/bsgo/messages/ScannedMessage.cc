@@ -14,7 +14,7 @@ auto ScannedMessage::asteroidEntityId() const -> Uuid
   return m_asteroidEntityId;
 }
 
-auto ScannedMessage::operator<<(std::ostream &out) const -> std::ostream &
+auto ScannedMessage::serialize(std::ostream &out) const -> std::ostream &
 {
   utils::serialize(out, m_messageType);
 
@@ -23,7 +23,7 @@ auto ScannedMessage::operator<<(std::ostream &out) const -> std::ostream &
   return out;
 }
 
-auto ScannedMessage::operator>>(std::istream &in) -> std::istream &
+auto ScannedMessage::deserialize(std::istream &in) -> std::istream &
 {
   utils::deserialize(in, m_messageType);
 

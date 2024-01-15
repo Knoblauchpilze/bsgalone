@@ -39,7 +39,7 @@ auto JumpMessage::getJumpSystem() const -> std::optional<Uuid>
   return m_system;
 }
 
-auto JumpMessage::operator<<(std::ostream &out) const -> std::ostream &
+auto JumpMessage::serialize(std::ostream &out) const -> std::ostream &
 {
   utils::serialize(out, m_messageType);
 
@@ -51,7 +51,7 @@ auto JumpMessage::operator<<(std::ostream &out) const -> std::ostream &
   return out;
 }
 
-auto JumpMessage::operator>>(std::istream &in) -> std::istream &
+auto JumpMessage::deserialize(std::istream &in) -> std::istream &
 {
   utils::deserialize(in, m_messageType);
 

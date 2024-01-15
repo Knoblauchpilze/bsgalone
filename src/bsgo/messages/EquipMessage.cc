@@ -42,7 +42,7 @@ auto EquipMessage::getEquipState() const -> EquipState
   return m_state;
 }
 
-auto EquipMessage::operator<<(std::ostream &out) const -> std::ostream &
+auto EquipMessage::serialize(std::ostream &out) const -> std::ostream &
 {
   utils::serialize(out, m_messageType);
 
@@ -55,7 +55,7 @@ auto EquipMessage::operator<<(std::ostream &out) const -> std::ostream &
   return out;
 }
 
-auto EquipMessage::operator>>(std::istream &in) -> std::istream &
+auto EquipMessage::deserialize(std::istream &in) -> std::istream &
 {
   utils::deserialize(in, m_messageType);
 
