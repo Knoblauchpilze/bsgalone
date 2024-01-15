@@ -16,4 +16,22 @@ auto str(const Eigen::Vector3f &v) -> std::string
   return out;
 }
 
+auto serialize(std::ostream &out, const Eigen::Vector3f &v) -> std::ostream &
+{
+  out << v(0);
+  out << v(1);
+  out << v(2);
+
+  return out;
+}
+
+auto deserialize(std::istream &in, Eigen::Vector3f &v) -> std::istream &
+{
+  in >> v(0);
+  in >> v(1);
+  in >> v(2);
+
+  return in;
+}
+
 } // namespace bsgo
