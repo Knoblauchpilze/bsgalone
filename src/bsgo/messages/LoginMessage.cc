@@ -65,8 +65,8 @@ auto LoginMessage::operator<<(std::ostream &out) const -> std::ostream &
   utils::serialize(out, m_messageType);
 
   utils::serialize(out, m_type);
-  /// TODO: Handle strings std::string m_name{};
-  /// TODO: Handle strings std::string m_password{};
+  utils::serialize(out, m_name);
+  utils::serialize(out, m_password);
   utils::serialize(out, m_faction);
 
   utils::serialize(out, m_state);
@@ -80,8 +80,8 @@ auto LoginMessage::operator>>(std::istream &in) -> std::istream &
   utils::deserialize(in, m_messageType);
 
   utils::deserialize(in, m_type);
-  /// TODO: Handle strings std::string m_name{};
-  /// TODO: Handle strings std::string m_password{};
+  utils::deserialize(in, m_name);
+  utils::deserialize(in, m_password);
   utils::deserialize(in, m_faction);
 
   utils::deserialize(in, m_state);
