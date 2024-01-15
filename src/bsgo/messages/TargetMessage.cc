@@ -1,6 +1,7 @@
 
 
 #include "TargetMessage.hh"
+#include "VectorUtils.hh"
 #include <core_utils/SerializationUtils.hh>
 
 namespace bsgo {
@@ -26,7 +27,7 @@ auto TargetMessage::serialize(std::ostream &out) const -> std::ostream &
   utils::serialize(out, m_messageType);
 
   out << m_shipEntityId;
-  /// TODO: Position Eigen::Vector3f m_position{};
+  bsgo::serialize(out, m_position);
 
   return out;
 }
@@ -36,7 +37,7 @@ auto TargetMessage::deserialize(std::istream &in) -> std::istream &
   utils::deserialize(in, m_messageType);
 
   in >> m_shipEntityId;
-  /// TODO: Position Eigen::Vector3f m_position{};
+  bsgo::deserialize(in, m_position);
 
   return in;
 }

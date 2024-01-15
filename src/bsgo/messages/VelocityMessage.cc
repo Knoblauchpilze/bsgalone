@@ -1,6 +1,7 @@
 
 
 #include "VelocityMessage.hh"
+#include "VectorUtils.hh"
 #include <core_utils/SerializationUtils.hh>
 
 namespace bsgo {
@@ -26,7 +27,7 @@ auto VelocityMessage::serialize(std::ostream &out) const -> std::ostream &
   utils::serialize(out, m_messageType);
 
   out << m_shipEntityId;
-  /// TODO: acceleration Eigen::Vector3f m_acceleration{};
+  bsgo::serialize(out, m_acceleration);
 
   return out;
 }
@@ -36,7 +37,7 @@ auto VelocityMessage::deserialize(std::istream &in) -> std::istream &
   utils::deserialize(in, m_messageType);
 
   in >> m_shipEntityId;
-  /// TODO: acceleration Eigen::Vector3f m_acceleration{};
+  bsgo::deserialize(in, m_acceleration);
 
   return in;
 }
