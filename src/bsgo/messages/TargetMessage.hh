@@ -17,6 +17,9 @@ class TargetMessage : public AbstractMessage
   auto getShipEntityId() const -> Uuid;
   auto getPosition() const -> Eigen::Vector3f;
 
+  auto operator<<(std::ostream &out) const -> std::ostream & override;
+  auto operator>>(std::istream &in) -> std::istream & override;
+
   private:
   Uuid m_shipEntityId{};
   Eigen::Vector3f m_position{};

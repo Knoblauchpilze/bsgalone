@@ -1,6 +1,7 @@
 
 
 #include "HangarMessage.hh"
+#include <core_utils/SerializationUtils.hh>
 
 namespace bsgo {
 
@@ -18,6 +19,26 @@ auto HangarMessage::getShipDbId() const -> Uuid
 auto HangarMessage::getRequestState() const -> ShipSwitchRequestState
 {
   return m_state;
+}
+
+auto HangarMessage::operator<<(std::ostream &out) const -> std::ostream &
+{
+  utils::serialize(out, m_messageType);
+
+  out << m_shipDbId;
+  utils::serialize(out, m_state);
+
+  return out;
+}
+
+auto HangarMessage::operator>>(std::istream &in) -> std::istream &
+{
+  utils::deserialize(in, m_messageType);
+
+  in >> m_shipDbId;
+  utils::deserialize(in, m_state);
+
+  return in;
 }
 
 } // namespace bsgo

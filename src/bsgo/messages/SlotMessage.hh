@@ -28,6 +28,9 @@ class SlotMessage : public AbstractMessage
   auto getSlotType() const -> Slot;
   auto getSlotState() const -> SlotState;
 
+  auto operator<<(std::ostream &out) const -> std::ostream & override;
+  auto operator>>(std::istream &in) -> std::istream & override;
+
   private:
   Uuid m_shipEntityId{};
   int m_slotIndex{};

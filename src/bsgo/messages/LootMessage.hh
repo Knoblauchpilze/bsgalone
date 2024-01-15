@@ -15,6 +15,9 @@ class LootMessage : public AbstractMessage
   auto resourceId() const -> Uuid;
   auto amount() const -> float;
 
+  auto operator<<(std::ostream &out) const -> std::ostream & override;
+  auto operator>>(std::istream &in) -> std::istream & override;
+
   private:
   Uuid m_resourceId{};
   float m_amount{};

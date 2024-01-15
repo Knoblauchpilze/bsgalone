@@ -27,6 +27,9 @@ class DockMessage : public AbstractMessage
   bool isDocking() const;
   auto getDockState() const -> DockState;
 
+  auto operator<<(std::ostream &out) const -> std::ostream & override;
+  auto operator>>(std::istream &in) -> std::istream & override;
+
   private:
   Uuid m_shipDbId{};
   Uuid m_shipEntityId{};

@@ -23,6 +23,9 @@ class HangarMessage : public AbstractMessage
   auto getShipDbId() const -> Uuid;
   auto getRequestState() const -> ShipSwitchRequestState;
 
+  auto operator<<(std::ostream &out) const -> std::ostream & override;
+  auto operator>>(std::istream &in) -> std::istream & override;
+
   private:
   Uuid m_shipDbId{};
   ShipSwitchRequestState m_state{};

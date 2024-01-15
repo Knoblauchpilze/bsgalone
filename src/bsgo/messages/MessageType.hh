@@ -24,7 +24,4 @@ enum class MessageType
 auto str(const MessageType &type) -> std::string;
 auto allMessageTypes() -> std::array<MessageType, 11>;
 
-auto operator<<(std::ostream &out, const MessageType &type) -> std::ostream &;
-auto operator>>(std::istream &in, MessageType &type) -> std::istream &;
-
 } // namespace bsgo

@@ -1,5 +1,6 @@
 
 #include "PurchaseMessage.hh"
+#include <core_utils/SerializationUtils.hh>
 
 namespace bsgo {
 
@@ -32,6 +33,30 @@ auto PurchaseMessage::getItemDbId() const -> Uuid
 auto PurchaseMessage::getPurchaseState() const -> PurchaseState
 {
   return m_state;
+}
+
+auto PurchaseMessage::operator<<(std::ostream &out) const -> std::ostream &
+{
+  utils::serialize(out, m_messageType);
+
+  out << m_playerDbId;
+  utils::serialize(out, m_type);
+  out << m_itemDbId;
+  utils::serialize(out, m_state);
+
+  return out;
+}
+
+auto PurchaseMessage::operator>>(std::istream &in) -> std::istream &
+{
+  utils::deserialize(in, m_messageType);
+
+  in >> m_playerDbId;
+  utils::deserialize(in, m_type);
+  in >> m_itemDbId;
+  utils::deserialize(in, m_state);
+
+  return in;
 }
 
 } // namespace bsgo
