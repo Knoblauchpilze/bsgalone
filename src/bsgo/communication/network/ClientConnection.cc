@@ -1,6 +1,6 @@
 
 #include "ClientConnection.hh"
-#include <osstream>
+#include <sstream>
 
 namespace bsgo {
 constexpr auto DEFAULT_SERVER_URL  = "127.0.0.1";
