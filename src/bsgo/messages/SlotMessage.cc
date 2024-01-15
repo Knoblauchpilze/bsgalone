@@ -36,7 +36,7 @@ auto SlotMessage::getSlotState() const -> SlotState
   return m_state;
 }
 
-auto SlotMessage::operator<<(std::ostream &out) const -> std::ostream &
+auto SlotMessage::serialize(std::ostream &out) const -> std::ostream &
 {
   utils::serialize(out, m_messageType);
 
@@ -48,7 +48,7 @@ auto SlotMessage::operator<<(std::ostream &out) const -> std::ostream &
   return out;
 }
 
-auto SlotMessage::operator>>(std::istream &in) -> std::istream &
+auto SlotMessage::deserialize(std::istream &in) -> std::istream &
 {
   utils::deserialize(in, m_messageType);
 

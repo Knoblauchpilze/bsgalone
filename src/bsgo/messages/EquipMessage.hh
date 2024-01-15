@@ -35,8 +35,8 @@ class EquipMessage : public AbstractMessage
   auto getItemDbId() const -> Uuid;
   auto getEquipState() const -> EquipState;
 
-  auto operator<<(std::ostream &out) const -> std::ostream & override;
-  auto operator>>(std::istream &in) -> std::istream & override;
+  auto serialize(std::ostream &out) const -> std::ostream & override;
+  auto deserialize(std::istream &in) -> std::istream & override;
 
   private:
   EquipType m_action{};

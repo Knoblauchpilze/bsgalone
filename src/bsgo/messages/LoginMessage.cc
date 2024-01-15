@@ -60,7 +60,7 @@ auto LoginMessage::getPlayerId() const -> std::optional<Uuid>
   return m_playerId;
 }
 
-auto LoginMessage::operator<<(std::ostream &out) const -> std::ostream &
+auto LoginMessage::serialize(std::ostream &out) const -> std::ostream &
 {
   utils::serialize(out, m_messageType);
 
@@ -75,7 +75,7 @@ auto LoginMessage::operator<<(std::ostream &out) const -> std::ostream &
   return out;
 }
 
-auto LoginMessage::operator>>(std::istream &in) -> std::istream &
+auto LoginMessage::deserialize(std::istream &in) -> std::istream &
 {
   utils::deserialize(in, m_messageType);
 

@@ -21,7 +21,7 @@ auto TargetMessage::getPosition() const -> Eigen::Vector3f
   return m_position;
 }
 
-auto TargetMessage::operator<<(std::ostream &out) const -> std::ostream &
+auto TargetMessage::serialize(std::ostream &out) const -> std::ostream &
 {
   utils::serialize(out, m_messageType);
 
@@ -31,7 +31,7 @@ auto TargetMessage::operator<<(std::ostream &out) const -> std::ostream &
   return out;
 }
 
-auto TargetMessage::operator>>(std::istream &in) -> std::istream &
+auto TargetMessage::deserialize(std::istream &in) -> std::istream &
 {
   utils::deserialize(in, m_messageType);
 

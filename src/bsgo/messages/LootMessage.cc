@@ -20,7 +20,7 @@ auto LootMessage::amount() const -> float
   return m_amount;
 }
 
-auto LootMessage::operator<<(std::ostream &out) const -> std::ostream &
+auto LootMessage::serialize(std::ostream &out) const -> std::ostream &
 {
   utils::serialize(out, m_messageType);
 
@@ -30,7 +30,7 @@ auto LootMessage::operator<<(std::ostream &out) const -> std::ostream &
   return out;
 }
 
-auto LootMessage::operator>>(std::istream &in) -> std::istream &
+auto LootMessage::deserialize(std::istream &in) -> std::istream &
 {
   utils::deserialize(in, m_messageType);
 

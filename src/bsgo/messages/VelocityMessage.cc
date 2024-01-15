@@ -21,7 +21,7 @@ auto VelocityMessage::getAcceleration() const -> Eigen::Vector3f
   return m_acceleration;
 }
 
-auto VelocityMessage::operator<<(std::ostream &out) const -> std::ostream &
+auto VelocityMessage::serialize(std::ostream &out) const -> std::ostream &
 {
   utils::serialize(out, m_messageType);
 
@@ -31,7 +31,7 @@ auto VelocityMessage::operator<<(std::ostream &out) const -> std::ostream &
   return out;
 }
 
-auto VelocityMessage::operator>>(std::istream &in) -> std::istream &
+auto VelocityMessage::deserialize(std::istream &in) -> std::istream &
 {
   utils::deserialize(in, m_messageType);
 
