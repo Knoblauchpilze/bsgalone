@@ -67,7 +67,8 @@ tar -xvjf asio-1.28.0.tar.bz2
 
 Asio is a header only library so we then just need to copy this to `usr/local/include`:
 ```bash
-sudo cp -r asio-1.28.0/include /usr/local/include
+sudo mkdir /usr/local/include/asio
+sudo cp -r asio-1.28.0/include/* /usr/local/include/asio
 ```
 
 You can remove the `Makefile.am` and `Makefile.in` files from this directory to not pollute the includes.
