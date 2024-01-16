@@ -18,7 +18,7 @@ auto ScannedMessage::serialize(std::ostream &out) const -> std::ostream &
 {
   utils::serialize(out, m_messageType);
 
-  out << m_asteroidEntityId;
+  utils::serialize(out, m_asteroidEntityId);
 
   return out;
 }
@@ -27,7 +27,7 @@ auto ScannedMessage::deserialize(std::istream &in) -> std::istream &
 {
   utils::deserialize(in, m_messageType);
 
-  in >> m_asteroidEntityId;
+  utils::deserialize(in, m_asteroidEntityId);
 
   return in;
 }

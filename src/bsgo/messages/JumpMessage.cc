@@ -43,8 +43,8 @@ auto JumpMessage::serialize(std::ostream &out) const -> std::ostream &
 {
   utils::serialize(out, m_messageType);
 
-  out << m_shipDbId;
-  out << m_shipEntityId;
+  utils::serialize(out, m_shipDbId);
+  utils::serialize(out, m_shipEntityId);
   utils::serialize(out, m_jumpState);
   utils::serialize(out, m_system);
 
@@ -55,8 +55,8 @@ auto JumpMessage::deserialize(std::istream &in) -> std::istream &
 {
   utils::deserialize(in, m_messageType);
 
-  in >> m_shipDbId;
-  in >> m_shipEntityId;
+  utils::deserialize(in, m_shipDbId);
+  utils::deserialize(in, m_shipEntityId);
   utils::deserialize(in, m_jumpState);
   utils::deserialize(in, m_system);
 

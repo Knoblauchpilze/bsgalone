@@ -24,8 +24,8 @@ auto LootMessage::serialize(std::ostream &out) const -> std::ostream &
 {
   utils::serialize(out, m_messageType);
 
-  out << m_resourceId;
-  out << m_amount;
+  utils::serialize(out, m_resourceId);
+  utils::serialize(out, m_amount);
 
   return out;
 }
@@ -34,8 +34,8 @@ auto LootMessage::deserialize(std::istream &in) -> std::istream &
 {
   utils::deserialize(in, m_messageType);
 
-  in >> m_resourceId;
-  in >> m_amount;
+  utils::deserialize(in, m_resourceId);
+  utils::deserialize(in, m_amount);
 
   return in;
 }
