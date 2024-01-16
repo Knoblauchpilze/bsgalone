@@ -26,7 +26,7 @@ auto VelocityMessage::serialize(std::ostream &out) const -> std::ostream &
 {
   utils::serialize(out, m_messageType);
 
-  out << m_shipEntityId;
+  utils::serialize(out, m_shipEntityId);
   bsgo::serialize(out, m_acceleration);
 
   return out;
@@ -36,7 +36,7 @@ auto VelocityMessage::deserialize(std::istream &in) -> std::istream &
 {
   utils::deserialize(in, m_messageType);
 
-  in >> m_shipEntityId;
+  utils::deserialize(in, m_shipEntityId);
   bsgo::deserialize(in, m_acceleration);
 
   return in;

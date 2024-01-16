@@ -40,8 +40,8 @@ auto SlotMessage::serialize(std::ostream &out) const -> std::ostream &
 {
   utils::serialize(out, m_messageType);
 
-  out << m_shipEntityId;
-  out << m_slotIndex;
+  utils::serialize(out, m_shipEntityId);
+  utils::serialize(out, m_slotIndex);
   utils::serialize(out, m_slotType);
   utils::serialize(out, m_state);
 
@@ -52,8 +52,8 @@ auto SlotMessage::deserialize(std::istream &in) -> std::istream &
 {
   utils::deserialize(in, m_messageType);
 
-  in >> m_shipEntityId;
-  in >> m_slotIndex;
+  utils::deserialize(in, m_shipEntityId);
+  utils::deserialize(in, m_slotIndex);
   utils::deserialize(in, m_slotType);
   utils::deserialize(in, m_state);
 

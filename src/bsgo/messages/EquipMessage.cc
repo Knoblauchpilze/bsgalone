@@ -47,9 +47,9 @@ auto EquipMessage::serialize(std::ostream &out) const -> std::ostream &
   utils::serialize(out, m_messageType);
 
   utils::serialize(out, m_action);
-  out << m_shipDbId;
+  utils::serialize(out, m_shipDbId);
   utils::serialize(out, m_type);
-  out << m_itemDbId;
+  utils::serialize(out, m_itemDbId);
   utils::serialize(out, m_state);
 
   return out;
@@ -60,9 +60,9 @@ auto EquipMessage::deserialize(std::istream &in) -> std::istream &
   utils::deserialize(in, m_messageType);
 
   utils::deserialize(in, m_action);
-  in >> m_shipDbId;
+  utils::deserialize(in, m_shipDbId);
   utils::deserialize(in, m_type);
-  in >> m_itemDbId;
+  utils::deserialize(in, m_itemDbId);
   utils::deserialize(in, m_state);
 
   return in;

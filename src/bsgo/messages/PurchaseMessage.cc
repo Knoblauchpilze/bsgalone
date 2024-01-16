@@ -39,9 +39,9 @@ auto PurchaseMessage::serialize(std::ostream &out) const -> std::ostream &
 {
   utils::serialize(out, m_messageType);
 
-  out << m_playerDbId;
+  utils::serialize(out, m_playerDbId);
   utils::serialize(out, m_type);
-  out << m_itemDbId;
+  utils::serialize(out, m_itemDbId);
   utils::serialize(out, m_state);
 
   return out;
@@ -51,9 +51,9 @@ auto PurchaseMessage::deserialize(std::istream &in) -> std::istream &
 {
   utils::deserialize(in, m_messageType);
 
-  in >> m_playerDbId;
+  utils::deserialize(in, m_playerDbId);
   utils::deserialize(in, m_type);
-  in >> m_itemDbId;
+  utils::deserialize(in, m_itemDbId);
   utils::deserialize(in, m_state);
 
   return in;
