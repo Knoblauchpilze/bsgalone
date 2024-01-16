@@ -2,7 +2,6 @@
 #pragma once
 
 #include "ConnectionType.hh"
-#include "Message.hh"
 #include <asio/asio.hpp>
 #include <core_utils/CoreObject.hh>
 #include <deque>
