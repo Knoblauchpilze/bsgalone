@@ -23,4 +23,12 @@ TEST(Unit_Bsgo_Serialization_String, WithValue)
   EXPECT_EQ(actual, expected);
 }
 
+TEST(Unit_Bsgo_Serialization_String, NumericalValue)
+{
+  const std::string expected{"1230"};
+  std::string actual{};
+  serializeAndDeserialize(expected, actual);
+  EXPECT_EQ(actual, expected);
+}
+
 } // namespace bsgo
