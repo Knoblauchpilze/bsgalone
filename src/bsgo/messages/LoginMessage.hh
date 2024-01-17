@@ -31,8 +31,8 @@ class LoginMessage : public AbstractMessage
   ~LoginMessage() override = default;
 
   auto getLoginType() const -> LoginType;
-  auto getName() const -> std::string;
-  auto getPassword() const -> std::string;
+  auto getUserName() const -> std::string;
+  auto getUserPassword() const -> std::string;
   auto getFaction() const -> std::optional<Faction>;
 
   auto getLoginState() const -> LoginState;
