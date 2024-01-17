@@ -35,12 +35,12 @@ auto LoginMessage::getLoginType() const -> LoginType
   return m_type;
 }
 
-auto LoginMessage::getName() const -> std::string
+auto LoginMessage::getUserName() const -> std::string
 {
   return m_name;
 }
 
-auto LoginMessage::getPassword() const -> std::string
+auto LoginMessage::getUserPassword() const -> std::string
 {
   return m_password;
 }

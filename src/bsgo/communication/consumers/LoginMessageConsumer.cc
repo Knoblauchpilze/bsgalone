@@ -34,11 +34,13 @@ void LoginMessageConsumer::onMessageReceived(const IMessage &message)
 
   if (LoginType::LOGIN == operation && LoginState::PENDING == status)
   {
-    handleLogin(loginMessage.getName(), loginMessage.getPassword());
+    handleLogin(loginMessage.getUserName(), loginMessage.getUserPassword());
   }
   if (LoginType::SIGNUP == operation && LoginState::PENDING == status)
   {
-    handleSignup(loginMessage.getName(), loginMessage.getPassword(), *loginMessage.getFaction());
+    handleSignup(loginMessage.getUserName(),
+                 loginMessage.getUserPassword(),
+                 *loginMessage.getFaction());
   }
 }
 
