@@ -56,17 +56,17 @@ void Connection::registerToAsio()
   switch (m_type)
   {
     case ConnectionType::SERVER:
-      registerServerConnectionToAsio();
+      registerReadingTaskToAsio();
       break;
     case ConnectionType::CLIENT:
-      registerClientConnectionToAsio();
+      registerConnectingTaskToAsio();
       break;
     default:
       throw std::invalid_argument("Unsupported connection type " + net::str(m_type));
   }
 }
 
-void Connection::registerServerConnectionToAsio()
+void Connection::registerReadingTaskToAsio()
 {
   asio::async_read(m_socket,
                    asio::buffer(m_incomingDataTempBuffer.data(), m_incomingDataTempBuffer.size()),
@@ -76,7 +76,7 @@ void Connection::registerServerConnectionToAsio()
                              std::placeholders::_2));
 }
 
-void Connection::registerClientConnectionToAsio()
+void Connection::registerConnectingTaskToAsio()
 {
   if (!m_endpoints)
   {
@@ -93,6 +93,33 @@ void Connection::registerClientConnectionToAsio()
                                 std::placeholders::_2));
 }
 
+void Connection::registerMessageSendingTaskToAsio()
+{
+  const std::lock_guard guard(m_dataLock);
+  if (m_messagesToSend.empty())
+  {
+    return;
+  }
+
+  const auto &message = m_messagesToSend.front();
+  asio::async_write(m_socket,
+                    asio::buffer(message->data.data(), message->data.size()),
+                    std::bind(&Connection::onDataSent,
+                              this,
+                              std::placeholders::_1,
+                              std::placeholders::_2));
+}
+
+void Connection::registerMessageToSend(MessageToSendPtr &&message)
+{
+  {
+    const std::lock_guard guard(m_dataLock);
+    m_messagesToSend.emplace_back(std::move(message));
+  }
+
+  registerMessageSendingTaskToAsio();
+}
+
 void Connection::onConnectionEstablished(const std::error_code &code,
                                          const asio::ip::tcp::endpoint &endpoint)
 {
@@ -106,6 +133,8 @@ void Connection::onConnectionEstablished(const std::error_code &code,
   }
 
   info("Successfully connected to " + net::str(endpoint));
+
+  registerReadingTaskToAsio();
 }
 
 void Connection::onDataReceived(const std::error_code &code, const std::size_t contentLength)
@@ -119,7 +148,8 @@ void Connection::onDataReceived(const std::error_code &code, const std::size_t c
 
   registerToAsio();
 
-  debug("Received " + std::to_string(contentLength) + " byte(s) on " + str());
+  debug("Received " + std::to_string(contentLength) + " byte(s) ("
+        + std::to_string(m_socket.available()) + " on " + str());
   if (!m_dataHandler)
   {
     warn("Discarding " + std::to_string(contentLength) + " byte(s) as there's no data handler");
@@ -134,6 +164,20 @@ void Connection::onDataReceived(const std::error_code &code, const std::size_t c
   m_partialMessageData.erase(m_partialMessageData.begin(), m_partialMessageData.begin() + processed);
   debug("Processed " + std::to_string(processed) + " byte(s), "
         + std::to_string(m_partialMessageData.size()) + " byte(s) remaining");
+}
+
+void Connection::onDataSent(const std::error_code &code, const std::size_t contentLength)
+{
+  if (code)
+  {
+    warn("Error detected when sending data on connection", code.message());
+    m_socket.close();
+    return;
+  }
+
+  verbose("Sent " + std::to_string(contentLength) + " byte(s) on " + str());
+
+  registerMessageSendingTaskToAsio();
 }
 
 } // namespace net
