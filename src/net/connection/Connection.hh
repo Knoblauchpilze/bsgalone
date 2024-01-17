@@ -27,27 +27,44 @@ class Connection : public utils::CoreObject
   void activate();
   void setDataHandler(const DataReceivedHandler &dataHandler);
 
+  template<typename T>
+  void send(const T &message);
+
   private:
   ConnectionType m_type;
   asio::ip::tcp::socket m_socket;
   std::optional<asio::ip::tcp::resolver::results_type> m_endpoints{};
 
-  Connection(asio::ip::tcp::socket &&socket, const ConnectionType type);
+  struct MessageToSend
+  {
+    std::vector<char> data{};
+  };
+  using MessageToSendPtr = std::unique_ptr<MessageToSend>;
 
-  void registerToAsio();
+  std::mutex m_dataLock{};
+  std::deque<MessageToSendPtr> m_messagesToSend{};
 
   static constexpr auto INCOMING_DATA_BUFFER_SIZE = 50 * 1'024;
   std::vector<char> m_incomingDataTempBuffer{};
   std::deque<char> m_partialMessageData{};
   std::optional<DataReceivedHandler> m_dataHandler{};
 
-  void registerServerConnectionToAsio();
-  void registerClientConnectionToAsio();
+  Connection(asio::ip::tcp::socket &&socket, const ConnectionType type);
+
+  void registerToAsio();
+  void registerReadingTaskToAsio();
+  void registerConnectingTaskToAsio();
+  void registerMessageSendingTaskToAsio();
+
+  void registerMessageToSend(MessageToSendPtr &&message);
 
   void onConnectionEstablished(const std::error_code &code, const asio::ip::tcp::endpoint &endpoint);
   void onDataReceived(const std::error_code &code, const std::size_t contentLength);
+  void onDataSent(const std::error_code &code, const std::size_t contentLength);
 };
 
 using ConnectionPtr = std::unique_ptr<Connection>;
 
 } // namespace net
+
+#include "Connection.hxx"
