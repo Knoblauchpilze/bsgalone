@@ -8,12 +8,6 @@
 #include <core_utils/log/StdLogger.hh>
 #include <functional>
 
-#include "JumpMessage.hh"
-#include "ScannedMessage.hh"
-#include "VectorUtils.hh"
-#include "VelocityMessage.hh"
-#include <core_utils/SerializationUtils.hh>
-
 namespace {
 // https://stackoverflow.com/questions/11468414/using-auto-and-lambda-to-handle-signal
 std::function<void(int)> sigIntProcessing;
