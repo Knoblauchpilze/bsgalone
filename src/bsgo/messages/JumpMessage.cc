@@ -51,16 +51,17 @@ auto JumpMessage::serialize(std::ostream &out) const -> std::ostream &
   return out;
 }
 
-auto JumpMessage::deserialize(std::istream &in) -> std::istream &
+bool JumpMessage::deserialize(std::istream &in)
 {
-  utils::deserialize(in, m_messageType);
+  bool ok{true};
+  ok &= utils::deserialize(in, m_messageType);
 
-  utils::deserialize(in, m_shipDbId);
-  utils::deserialize(in, m_shipEntityId);
-  utils::deserialize(in, m_jumpState);
-  utils::deserialize(in, m_system);
+  ok &= utils::deserialize(in, m_shipDbId);
+  ok &= utils::deserialize(in, m_shipEntityId);
+  ok &= utils::deserialize(in, m_jumpState);
+  ok &= utils::deserialize(in, m_system);
 
-  return in;
+  return ok;
 }
 
 } // namespace bsgo

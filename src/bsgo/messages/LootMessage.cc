@@ -30,14 +30,15 @@ auto LootMessage::serialize(std::ostream &out) const -> std::ostream &
   return out;
 }
 
-auto LootMessage::deserialize(std::istream &in) -> std::istream &
+bool LootMessage::deserialize(std::istream &in)
 {
-  utils::deserialize(in, m_messageType);
+  bool ok{true};
+  ok &= utils::deserialize(in, m_messageType);
 
-  utils::deserialize(in, m_resourceId);
-  utils::deserialize(in, m_amount);
+  ok &= utils::deserialize(in, m_resourceId);
+  ok &= utils::deserialize(in, m_amount);
 
-  return in;
+  return ok;
 }
 
 } // namespace bsgo

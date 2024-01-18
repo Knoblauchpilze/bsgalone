@@ -75,19 +75,20 @@ auto LoginMessage::serialize(std::ostream &out) const -> std::ostream &
   return out;
 }
 
-auto LoginMessage::deserialize(std::istream &in) -> std::istream &
+bool LoginMessage::deserialize(std::istream &in)
 {
-  utils::deserialize(in, m_messageType);
+  bool ok{true};
+  ok &= utils::deserialize(in, m_messageType);
 
-  utils::deserialize(in, m_type);
-  utils::deserialize(in, m_name);
-  utils::deserialize(in, m_password);
-  utils::deserialize(in, m_faction);
+  ok &= utils::deserialize(in, m_type);
+  ok &= utils::deserialize(in, m_name);
+  ok &= utils::deserialize(in, m_password);
+  ok &= utils::deserialize(in, m_faction);
 
-  utils::deserialize(in, m_state);
-  utils::deserialize(in, m_playerId);
+  ok &= utils::deserialize(in, m_state);
+  ok &= utils::deserialize(in, m_playerId);
 
-  return in;
+  return ok;
 }
 
 } // namespace bsgo

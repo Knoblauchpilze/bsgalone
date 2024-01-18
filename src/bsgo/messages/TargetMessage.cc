@@ -32,14 +32,15 @@ auto TargetMessage::serialize(std::ostream &out) const -> std::ostream &
   return out;
 }
 
-auto TargetMessage::deserialize(std::istream &in) -> std::istream &
+bool TargetMessage::deserialize(std::istream &in)
 {
-  utils::deserialize(in, m_messageType);
+  bool ok{true};
+  ok &= utils::deserialize(in, m_messageType);
 
-  utils::deserialize(in, m_shipEntityId);
-  bsgo::deserialize(in, m_position);
+  ok &= utils::deserialize(in, m_shipEntityId);
+  ok &= bsgo::deserialize(in, m_position);
 
-  return in;
+  return ok;
 }
 
 } // namespace bsgo

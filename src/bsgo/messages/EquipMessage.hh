@@ -36,7 +36,7 @@ class EquipMessage : public AbstractMessage
   auto getEquipState() const -> EquipState;
 
   auto serialize(std::ostream &out) const -> std::ostream & override;
-  auto deserialize(std::istream &in) -> std::istream & override;
+  bool deserialize(std::istream &in) override;
 
   private:
   EquipType m_action{};

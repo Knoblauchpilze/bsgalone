@@ -47,16 +47,17 @@ auto PurchaseMessage::serialize(std::ostream &out) const -> std::ostream &
   return out;
 }
 
-auto PurchaseMessage::deserialize(std::istream &in) -> std::istream &
+bool PurchaseMessage::deserialize(std::istream &in)
 {
-  utils::deserialize(in, m_messageType);
+  bool ok{true};
+  ok &= utils::deserialize(in, m_messageType);
 
-  utils::deserialize(in, m_playerDbId);
-  utils::deserialize(in, m_type);
-  utils::deserialize(in, m_itemDbId);
-  utils::deserialize(in, m_state);
+  ok &= utils::deserialize(in, m_playerDbId);
+  ok &= utils::deserialize(in, m_type);
+  ok &= utils::deserialize(in, m_itemDbId);
+  ok &= utils::deserialize(in, m_state);
 
-  return in;
+  return ok;
 }
 
 } // namespace bsgo

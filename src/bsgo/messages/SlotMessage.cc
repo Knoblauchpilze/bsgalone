@@ -48,16 +48,17 @@ auto SlotMessage::serialize(std::ostream &out) const -> std::ostream &
   return out;
 }
 
-auto SlotMessage::deserialize(std::istream &in) -> std::istream &
+bool SlotMessage::deserialize(std::istream &in)
 {
-  utils::deserialize(in, m_messageType);
+  bool ok{true};
+  ok &= utils::deserialize(in, m_messageType);
 
-  utils::deserialize(in, m_shipEntityId);
-  utils::deserialize(in, m_slotIndex);
-  utils::deserialize(in, m_slotType);
-  utils::deserialize(in, m_state);
+  ok &= utils::deserialize(in, m_shipEntityId);
+  ok &= utils::deserialize(in, m_slotIndex);
+  ok &= utils::deserialize(in, m_slotType);
+  ok &= utils::deserialize(in, m_state);
 
-  return in;
+  return ok;
 }
 
 } // namespace bsgo

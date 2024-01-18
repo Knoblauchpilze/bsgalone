@@ -15,7 +15,7 @@ class IMessage : public utils::CoreObject
 
   virtual auto type() const -> MessageType                          = 0;
   virtual auto serialize(std::ostream &out) const -> std::ostream & = 0;
-  virtual auto deserialize(std::istream &in) -> std::istream      & = 0;
+  virtual bool deserialize(std::istream &in)                        = 0;
 
   template<typename Message>
   auto as() const -> const Message &;
