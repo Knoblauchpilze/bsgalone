@@ -4,6 +4,10 @@
 
 namespace bsgo {
 
+LootMessage::LootMessage()
+  : AbstractMessage(MessageType::LOOT)
+{}
+
 LootMessage::LootMessage(const Uuid &resourceId, const float amount)
   : AbstractMessage(MessageType::LOOT)
   , m_resourceId(resourceId)

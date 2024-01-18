@@ -5,6 +5,10 @@
 
 namespace bsgo {
 
+HangarMessage::HangarMessage()
+  : AbstractMessage(MessageType::HANGAR)
+{}
+
 HangarMessage::HangarMessage(const Uuid &shipDbId, const ShipSwitchRequestState &state)
   : AbstractMessage(MessageType::HANGAR)
   , m_shipDbId(shipDbId)

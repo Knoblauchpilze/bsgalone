@@ -4,6 +4,10 @@
 
 namespace bsgo {
 
+DockMessage::DockMessage()
+  : AbstractMessage(MessageType::DOCK)
+{}
+
 DockMessage::DockMessage(const Uuid &shipDbId,
                          const Uuid &shipEntityId,
                          const bool docking,

@@ -11,6 +11,7 @@ namespace bsgo {
 class VelocityMessage : public AbstractMessage
 {
   public:
+  VelocityMessage();
   VelocityMessage(const Uuid &shipEntityId, const Eigen::Vector3f &acceleration);
   ~VelocityMessage() override = default;
 
@@ -22,7 +23,7 @@ class VelocityMessage : public AbstractMessage
 
   private:
   Uuid m_shipEntityId{};
-  Eigen::Vector3f m_acceleration{};
+  Eigen::Vector3f m_acceleration{Eigen::Vector3f::Zero()};
 };
 
 } // namespace bsgo

@@ -4,6 +4,10 @@
 
 namespace bsgo {
 
+JumpMessage::JumpMessage()
+  : AbstractMessage(MessageType::JUMP)
+{}
+
 JumpMessage::JumpMessage(const Uuid &shipDbId, const Uuid &shipEntityId, const JumpState &jumpState)
   : JumpMessage(shipDbId, shipEntityId, jumpState, {})
 {}

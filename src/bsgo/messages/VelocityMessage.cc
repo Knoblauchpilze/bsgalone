@@ -6,6 +6,10 @@
 
 namespace bsgo {
 
+VelocityMessage::VelocityMessage()
+  : AbstractMessage(MessageType::VELOCITY)
+{}
+
 VelocityMessage::VelocityMessage(const Uuid &shipEntityId, const Eigen::Vector3f &acceleration)
   : AbstractMessage(MessageType::VELOCITY)
   , m_shipEntityId(shipEntityId)

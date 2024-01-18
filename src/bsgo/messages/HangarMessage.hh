@@ -17,6 +17,7 @@ enum class ShipSwitchRequestState
 class HangarMessage : public AbstractMessage
 {
   public:
+  HangarMessage();
   HangarMessage(const Uuid &shipDbId, const ShipSwitchRequestState &state);
   ~HangarMessage() override = default;
 
@@ -28,7 +29,7 @@ class HangarMessage : public AbstractMessage
 
   private:
   Uuid m_shipDbId{};
-  ShipSwitchRequestState m_state{};
+  ShipSwitchRequestState m_state{ShipSwitchRequestState::REQUESTED};
 };
 
 } // namespace bsgo

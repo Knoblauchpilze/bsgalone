@@ -22,6 +22,7 @@ enum class EquipState
 class EquipMessage : public AbstractMessage
 {
   public:
+  EquipMessage();
   EquipMessage(const EquipType &action,
                const Uuid &shipDbId,
                const Item &type,
@@ -43,7 +44,7 @@ class EquipMessage : public AbstractMessage
   Uuid m_shipDbId{};
   Item m_type{};
   Uuid m_itemDbId{};
-  EquipState m_state{};
+  EquipState m_state{EquipState::REQUESTED};
 };
 
 } // namespace bsgo

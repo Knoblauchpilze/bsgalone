@@ -11,6 +11,7 @@ namespace bsgo {
 class TargetMessage : public AbstractMessage
 {
   public:
+  TargetMessage();
   TargetMessage(const Uuid &shipEntityId, const Eigen::Vector3f &position);
   ~TargetMessage() override = default;
 
@@ -22,7 +23,7 @@ class TargetMessage : public AbstractMessage
 
   private:
   Uuid m_shipEntityId{};
-  Eigen::Vector3f m_position{};
+  Eigen::Vector3f m_position{Eigen::Vector3f::Zero()};
 };
 
 } // namespace bsgo

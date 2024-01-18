@@ -17,6 +17,7 @@ enum class SlotState
 class SlotMessage : public AbstractMessage
 {
   public:
+  SlotMessage();
   SlotMessage(const Uuid &shipEntityId,
               const int slotIndex,
               const Slot &slotType,
@@ -35,7 +36,7 @@ class SlotMessage : public AbstractMessage
   Uuid m_shipEntityId{};
   int m_slotIndex{};
   Slot m_slotType{};
-  SlotState m_state{};
+  SlotState m_state{SlotState::ACTIVATED};
 };
 
 } // namespace bsgo

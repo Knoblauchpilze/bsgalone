@@ -18,6 +18,7 @@ enum class JumpState
 class JumpMessage : public AbstractMessage
 {
   public:
+  JumpMessage();
   JumpMessage(const Uuid &shipDbId, const Uuid &shipEntityId, const JumpState &jumpState);
   JumpMessage(const Uuid &shipDbId,
               const Uuid &shipEntityId,
@@ -36,7 +37,7 @@ class JumpMessage : public AbstractMessage
   private:
   Uuid m_shipDbId{};
   Uuid m_shipEntityId{};
-  JumpState m_jumpState{};
+  JumpState m_jumpState{JumpState::STARTED};
   std::optional<Uuid> m_system{};
 };
 

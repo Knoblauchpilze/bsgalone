@@ -4,6 +4,10 @@
 
 namespace bsgo {
 
+EquipMessage::EquipMessage()
+  : AbstractMessage(MessageType::EQUIP)
+{}
+
 EquipMessage::EquipMessage(const EquipType &action,
                            const Uuid &shipDbId,
                            const Item &type,

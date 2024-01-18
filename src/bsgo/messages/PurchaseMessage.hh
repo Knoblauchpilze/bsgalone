@@ -16,6 +16,7 @@ enum class PurchaseState
 class PurchaseMessage : public AbstractMessage
 {
   public:
+  PurchaseMessage();
   PurchaseMessage(const Uuid &playerDbId,
                   const Item &type,
                   const Uuid &itemDbId,
@@ -34,7 +35,7 @@ class PurchaseMessage : public AbstractMessage
   Uuid m_playerDbId{};
   Item m_type{};
   Uuid m_itemDbId{};
-  PurchaseState m_state{};
+  PurchaseState m_state{PurchaseState::REQUESTED};
 };
 
 } // namespace bsgo

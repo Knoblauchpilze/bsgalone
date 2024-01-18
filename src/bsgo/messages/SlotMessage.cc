@@ -5,6 +5,10 @@
 
 namespace bsgo {
 
+SlotMessage::SlotMessage()
+  : AbstractMessage(MessageType::SLOT)
+{}
+
 SlotMessage::SlotMessage(const Uuid &shipEntityId,
                          const int slotIndex,
                          const Slot &slotType,
