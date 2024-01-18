@@ -9,6 +9,7 @@ namespace bsgo {
 class ScannedMessage : public AbstractMessage
 {
   public:
+  ScannedMessage();
   ScannedMessage(const Uuid &asteroidEntityId);
   ~ScannedMessage() override = default;
 

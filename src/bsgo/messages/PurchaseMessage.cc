@@ -4,6 +4,10 @@
 
 namespace bsgo {
 
+PurchaseMessage::PurchaseMessage()
+  : AbstractMessage(MessageType::PURCHASE)
+{}
+
 PurchaseMessage::PurchaseMessage(const Uuid &playerDbId,
                                  const Item &type,
                                  const Uuid &itemDbId,

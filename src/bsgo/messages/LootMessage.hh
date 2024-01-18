@@ -9,6 +9,7 @@ namespace bsgo {
 class LootMessage : public AbstractMessage
 {
   public:
+  LootMessage();
   LootMessage(const Uuid &resourceId, const float amount);
   ~LootMessage() override = default;
 

@@ -6,6 +6,10 @@
 
 namespace bsgo {
 
+TargetMessage::TargetMessage()
+  : AbstractMessage(MessageType::TARGET)
+{}
+
 TargetMessage::TargetMessage(const Uuid &shipEntityId, const Eigen::Vector3f &position)
   : AbstractMessage(MessageType::TARGET)
   , m_shipEntityId(shipEntityId)

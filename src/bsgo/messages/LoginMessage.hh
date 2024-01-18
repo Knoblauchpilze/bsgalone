@@ -25,6 +25,7 @@ enum class LoginState
 class LoginMessage : public AbstractMessage
 {
   public:
+  LoginMessage();
   LoginMessage(const std::string &name, const std::string &password);
   LoginMessage(const std::string &name, const std::string &password, const Faction &faction);
   LoginMessage(const LoginType &type, const Uuid &playerId, const LoginState &state);
@@ -47,7 +48,7 @@ class LoginMessage : public AbstractMessage
   std::string m_password{};
   std::optional<Faction> m_faction{};
 
-  LoginState m_state{};
+  LoginState m_state{LoginState::PENDING};
   std::optional<Uuid> m_playerId{};
 };
 

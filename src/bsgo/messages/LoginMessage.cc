@@ -4,6 +4,10 @@
 
 namespace bsgo {
 
+LoginMessage::LoginMessage()
+  : AbstractMessage(MessageType::LOGIN)
+{}
+
 LoginMessage::LoginMessage(const std::string &name, const std::string &password)
   : AbstractMessage(MessageType::LOGIN)
   , m_type(LoginType::LOGIN)

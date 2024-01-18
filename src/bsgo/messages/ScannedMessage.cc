@@ -4,6 +4,10 @@
 
 namespace bsgo {
 
+ScannedMessage::ScannedMessage()
+  : AbstractMessage(MessageType::SCANNED)
+{}
+
 ScannedMessage::ScannedMessage(const Uuid &asteroidEntityId)
   : AbstractMessage(MessageType::SCANNED)
   , m_asteroidEntityId(asteroidEntityId)
