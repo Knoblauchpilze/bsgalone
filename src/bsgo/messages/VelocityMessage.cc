@@ -32,14 +32,15 @@ auto VelocityMessage::serialize(std::ostream &out) const -> std::ostream &
   return out;
 }
 
-auto VelocityMessage::deserialize(std::istream &in) -> std::istream &
+bool VelocityMessage::deserialize(std::istream &in)
 {
-  utils::deserialize(in, m_messageType);
+  bool ok{true};
+  ok &= utils::deserialize(in, m_messageType);
 
-  utils::deserialize(in, m_shipEntityId);
-  bsgo::deserialize(in, m_acceleration);
+  ok &= utils::deserialize(in, m_shipEntityId);
+  ok &= bsgo::deserialize(in, m_acceleration);
 
-  return in;
+  return ok;
 }
 
 } // namespace bsgo

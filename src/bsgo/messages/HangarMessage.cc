@@ -31,14 +31,15 @@ auto HangarMessage::serialize(std::ostream &out) const -> std::ostream &
   return out;
 }
 
-auto HangarMessage::deserialize(std::istream &in) -> std::istream &
+bool HangarMessage::deserialize(std::istream &in)
 {
-  utils::deserialize(in, m_messageType);
+  bool ok{true};
+  ok &= utils::deserialize(in, m_messageType);
 
-  utils::deserialize(in, m_shipDbId);
-  utils::deserialize(in, m_state);
+  ok &= utils::deserialize(in, m_shipDbId);
+  ok &= utils::deserialize(in, m_state);
 
-  return in;
+  return ok;
 }
 
 } // namespace bsgo

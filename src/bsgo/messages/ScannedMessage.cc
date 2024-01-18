@@ -23,13 +23,14 @@ auto ScannedMessage::serialize(std::ostream &out) const -> std::ostream &
   return out;
 }
 
-auto ScannedMessage::deserialize(std::istream &in) -> std::istream &
+bool ScannedMessage::deserialize(std::istream &in)
 {
-  utils::deserialize(in, m_messageType);
+  bool ok{true};
+  ok &= utils::deserialize(in, m_messageType);
 
-  utils::deserialize(in, m_asteroidEntityId);
+  ok &= utils::deserialize(in, m_asteroidEntityId);
 
-  return in;
+  return ok;
 }
 
 } // namespace bsgo

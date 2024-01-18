@@ -39,7 +39,7 @@ class LoginMessage : public AbstractMessage
   auto getPlayerId() const -> std::optional<Uuid>;
 
   auto serialize(std::ostream &out) const -> std::ostream & override;
-  auto deserialize(std::istream &in) -> std::istream & override;
+  bool deserialize(std::istream &in) override;
 
   private:
   LoginType m_type{};
