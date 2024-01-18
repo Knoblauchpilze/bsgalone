@@ -71,9 +71,12 @@ bool Server::onConnectionReceived(const net::Connection & /*connection*/) const
 
 auto Server::onDataReceived(const std::deque<char> &data) -> int
 {
-  /// TODO: Handle data processing.
-  warn("should handle " + std::to_string(data.size()) + " byte(s)");
-  return data.size();
+  const auto result = m_messageParser.tryParseMessage(data);
+  if (result.message)
+  {
+    info("Deserialized message " + str((*result.message)->type()));
+  }
+  return result.bytesProcessed;
 }
 
 } // namespace bsgo

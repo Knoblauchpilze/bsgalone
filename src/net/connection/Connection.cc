@@ -148,8 +148,7 @@ void Connection::onDataReceived(const std::error_code &code, const std::size_t c
 
   registerToAsio();
 
-  debug("Received " + std::to_string(contentLength) + " byte(s) ("
-        + std::to_string(m_socket.available()) + " on " + str());
+  debug("Received " + std::to_string(contentLength) + " byte(s) on " + str());
   if (!m_dataHandler)
   {
     warn("Discarding " + std::to_string(contentLength) + " byte(s) as there's no data handler");

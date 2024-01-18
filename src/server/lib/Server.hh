@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Context.hh"
+#include "MessageParser.hh"
 #include "TcpServer.hh"
 #include <atomic>
 #include <core_utils/CoreObject.hh>
@@ -21,6 +22,7 @@ class Server : public utils::CoreObject
   net::Context m_context{};
   std::atomic_bool m_running{false};
   net::TcpServerPtr m_tcpServer{};
+  MessageParser m_messageParser{};
 
   void setup(const int port);
   void activeRunLoop();
