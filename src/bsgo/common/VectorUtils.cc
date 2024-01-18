@@ -26,13 +26,14 @@ auto serialize(std::ostream &out, const Eigen::Vector3f &v) -> std::ostream &
   return out;
 }
 
-auto deserialize(std::istream &in, Eigen::Vector3f &v) -> std::istream &
+bool deserialize(std::istream &in, Eigen::Vector3f &v)
 {
-  utils::deserialize(in, v(0));
-  utils::deserialize(in, v(1));
-  utils::deserialize(in, v(2));
+  bool ok{true};
+  ok &= utils::deserialize(in, v(0));
+  ok &= utils::deserialize(in, v(1));
+  ok &= utils::deserialize(in, v(2));
 
-  return in;
+  return ok;
 }
 
 } // namespace bsgo
