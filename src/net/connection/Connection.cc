@@ -3,6 +3,7 @@
 #include "AsioUtils.hh"
 
 namespace net {
+constexpr auto INCOMING_DATA_BUFFER_SIZE_IN_BYTES = 100;
 
 Connection::Connection(const std::string &url, const int port, asio::io_context &context)
   : Connection(asio::ip::tcp::socket(context), ConnectionType::CLIENT)
@@ -19,7 +20,7 @@ Connection::Connection(asio::ip::tcp::socket &&socket, const ConnectionType type
   : utils::CoreObject("connection")
   , m_type(type)
   , m_socket(std::move(socket))
-  , m_incomingDataTempBuffer(INCOMING_DATA_BUFFER_SIZE, 0)
+  , m_incomingDataTempBuffer(INCOMING_DATA_BUFFER_SIZE_IN_BYTES, 0)
 {
   setService("net");
 }
@@ -146,9 +147,7 @@ void Connection::onDataReceived(const std::error_code &code, const std::size_t c
     return;
   }
 
-  registerToAsio();
-
-  debug("Received " + std::to_string(contentLength) + " byte(s) on " + str());
+  verbose("Received " + std::to_string(contentLength) + " byte(s) on " + str());
   if (!m_dataHandler)
   {
     warn("Discarding " + std::to_string(contentLength) + " byte(s) as there's no data handler");
@@ -163,6 +162,8 @@ void Connection::onDataReceived(const std::error_code &code, const std::size_t c
   m_partialMessageData.erase(m_partialMessageData.begin(), m_partialMessageData.begin() + processed);
   debug("Processed " + std::to_string(processed) + " byte(s), "
         + std::to_string(m_partialMessageData.size()) + " byte(s) remaining");
+
+  registerToAsio();
 }
 
 void Connection::onDataSent(const std::error_code &code, const std::size_t contentLength)
@@ -175,6 +176,11 @@ void Connection::onDataSent(const std::error_code &code, const std::size_t conte
   }
 
   verbose("Sent " + std::to_string(contentLength) + " byte(s) on " + str());
+
+  {
+    const std::lock_guard guard(m_dataLock);
+    m_messagesToSend.pop_front();
+  }
 
   registerMessageSendingTaskToAsio();
 }
