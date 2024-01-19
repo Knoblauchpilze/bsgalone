@@ -56,11 +56,13 @@ auto MessageParser::tryParseMessage(const std::deque<char> &data) -> ParsingResu
     return {};
   }
 
+  in.seekg(0, std::ios::beg);
+
   ParsingResult out{};
   out.message = tryReadMessage(*maybeMessageType, in);
   if (out.message)
   {
-    out.bytesProcessed = static_cast<int>(in.tellg()) - 1;
+    out.bytesProcessed = static_cast<int>(in.tellg());
   }
 
   return out;
