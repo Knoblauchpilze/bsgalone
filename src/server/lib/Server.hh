@@ -30,5 +30,7 @@ class Server : public utils::CoreObject
 
   bool onConnectionReceived(const net::Connection &connection) const;
   auto onDataReceived(const std::deque<char> &data) -> int;
+
+  void handleReceivedMessages(const std::vector<IMessagePtr> &messages);
 };
 } // namespace bsgo

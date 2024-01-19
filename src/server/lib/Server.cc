@@ -71,12 +71,37 @@ bool Server::onConnectionReceived(const net::Connection & /*connection*/) const
 
 auto Server::onDataReceived(const std::deque<char> &data) -> int
 {
-  const auto result = m_messageParser.tryParseMessage(data);
-  if (result.message)
+  bool processedSomeBytes{true};
+  auto processedBytes{0};
+  std::vector<IMessagePtr> messages{};
+
+  std::deque<char> workingData(data);
+
+  while (processedSomeBytes)
   {
-    info("Deserialized message " + str((*result.message)->type()));
+    auto result = m_messageParser.tryParseMessage(workingData);
+    if (result.message)
+    {
+      messages.emplace_back(std::move(*result.message));
+    }
+
+    processedSomeBytes = (result.bytesProcessed > 0);
+    processedBytes += result.bytesProcessed;
+
+    workingData.erase(workingData.begin(), workingData.begin() + result.bytesProcessed);
   }
-  return result.bytesProcessed;
+
+  if (!messages.empty())
+  {
+    handleReceivedMessages(messages);
+  }
+
+  return processedBytes;
+}
+
+void Server::handleReceivedMessages(const std::vector<IMessagePtr> &messages)
+{
+  warn("should process " + std::to_string(messages.size()) + " message(s)");
 }
 
 } // namespace bsgo
