@@ -93,15 +93,18 @@ auto Server::onDataReceived(const std::deque<char> &data) -> int
 
   if (!messages.empty())
   {
-    handleReceivedMessages(messages);
+    handleReceivedMessages(std::move(messages));
   }
 
   return processedBytes;
 }
 
-void Server::handleReceivedMessages(const std::vector<IMessagePtr> &messages)
+void Server::handleReceivedMessages(std::vector<IMessagePtr> &&messages)
 {
-  warn("should process " + std::to_string(messages.size()) + " message(s)");
+  for (auto &message : messages)
+  {
+    m_messageQueue.pushMessage(std::move(message));
+  }
 }
 
 } // namespace bsgo

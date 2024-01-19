@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "AsyncMessageQueue.hh"
 #include "Context.hh"
 #include "MessageParser.hh"
 #include "TcpServer.hh"
@@ -23,6 +24,7 @@ class Server : public utils::CoreObject
   std::atomic_bool m_running{false};
   net::TcpServerPtr m_tcpServer{};
   MessageParser m_messageParser{};
+  AsyncMessageQueue m_messageQueue{};
 
   void setup(const int port);
   void activeRunLoop();
@@ -31,6 +33,6 @@ class Server : public utils::CoreObject
   bool onConnectionReceived(const net::Connection &connection) const;
   auto onDataReceived(const std::deque<char> &data) -> int;
 
-  void handleReceivedMessages(const std::vector<IMessagePtr> &messages);
+  void handleReceivedMessages(std::vector<IMessagePtr> &&messages);
 };
 } // namespace bsgo

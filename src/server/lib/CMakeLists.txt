@@ -5,6 +5,8 @@ set (CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 target_sources (bsgalone_server_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/MessageParser.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/SynchronizedMessageQueue.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/AsyncMessageQueue.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/Server.cc
 	)
 
