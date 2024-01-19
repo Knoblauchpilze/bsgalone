@@ -44,7 +44,7 @@ class Connection : public utils::CoreObject
   std::mutex m_dataLock{};
   std::deque<MessageToSendPtr> m_messagesToSend{};
 
-  static constexpr auto INCOMING_DATA_BUFFER_SIZE = 2 * 1'024;
+  static constexpr auto INCOMING_DATA_BUFFER_SIZE = 1'024;
   std::vector<char> m_incomingDataTempBuffer{};
   std::deque<char> m_partialMessageData{};
   std::optional<DataReceivedHandler> m_dataHandler{};
