@@ -423,6 +423,37 @@ When developing new features, we will now ask ourselves the question whether it 
 
 It can also be that later on we realize that the `bsgo` library is too big, or that some separate features (for example networking or Data Transfer Objects) can be shared: this could be achieved by adding more top level folders in the [src](src) directory.
 
+# Networking
+
+## Research
+The content of this [video series](https://youtu.be/2hNdkYInj4g?si=Q-NOTJ__p-5a2jS8) of Javidx9 was very informative. The resulting code can be found on [github](https://github.com/OneLoneCoder/Javidx9/tree/master/PixelGameEngine/BiggerProjects/Networking) and it inspired the [Connection](src/net/connection/Connection.hh) class we created.
+
+## Generalities
+
+We use the [asio](#asio) library without boost to handle network communication in the project. We extracted all the logic to perform the calls, connect to the server and to the client in a dedicated [net](src/net) folder: similarly to what happens for the `PixelGameEngine` wrapping we want to be able to swap libraries or update relatively easily.
+
+⚠️ For now this is not entirely the case: even though none of the modules are using raw `asio` objects in their code, there are still some asio headers included in the `net` library. It is not too much of a problem for now but we could see to improve this later on.
+
+## Context
+
+The networking revolves around the idea of an `io_context`. This is wrapped by our own [Context](src/net/connection/Context.hh) class which is instantiated both on the client and the server. The idea is that this context runs from the whole lifetime of the application and is used in the background by `asio` to perform the network calls.
+
+## Connection
+
+A connection is the central object allowing to communicate. It has two modes: `SERVER` and `CLIENT`. This defines which operations it will perform. The difference is mainly on the order with which operations are performed as both connections will (during the game) be receiving and sending data.
+
+For the `CLIENT` mode we expect to try to connect to the server. Conversely in `SERVER` mode we get ready to accept connections.
+
+Sending data is made easy through the `send` method which takes a `IMessage` as input, serializes it and transmit it through the network.
+
+Receiving data is potentially more complex: depending on the type of data we might want to perform certain processes and relatively different depending whether we're on the client or the server. To this avail we provide a `setDataHandler` which allows to pass a callback which will receive the raw data from the network.
+
+## TcpServer
+
+A specific component of the server is the [TcpServer](src/net/server/TcpServer.hh) class. In order to make it easy to extend it and possibly reuse it and also to hide the dependency to the `asio` library we mainly work with callbacks.
+
+The [ServerConfig](src/net/server/ServerConfig.hh) defines several to handle a new connection (approval or denial), a disconnection from a client and some data received. This last part is to make it easy to automatically assign the same data handler (for now a method of the server class) to all incoming connections.
+
 # Server design
 
 ## General idea
