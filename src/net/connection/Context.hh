@@ -29,8 +29,6 @@ class Context : public utils::CoreObject
   std::mutex m_asioContextLocker{};
   std::atomic_bool m_running{false};
   std::thread m_contextThread{};
-
-  void waitForThreadToFinish();
 };
 
 using ContextPtr = std::unique_ptr<Context>;
