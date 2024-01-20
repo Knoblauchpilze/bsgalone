@@ -28,7 +28,7 @@ PGEApp::PGEApp(const AppDesc &desc)
 
 PGEApp::~PGEApp()
 {
-  // Intentionally empty.
+  m_renderer.reset();
 }
 
 void PGEApp::run()
@@ -193,7 +193,6 @@ bool PGEApp::onUpdate(const float elapsedSeconds)
 bool PGEApp::onDestroy()
 {
   cleanResources();
-  m_renderer.reset();
   return true;
 }
 
