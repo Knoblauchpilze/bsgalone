@@ -16,6 +16,7 @@ class NetworkMessageQueue : public IMessageQueue, public utils::CoreObject
 
   void pushMessage(IMessagePtr message) override;
   void addListener(IMessageListener *listener) override;
+  bool empty() override;
 
   void processMessages() override;
 
