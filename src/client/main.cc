@@ -3,7 +3,6 @@
 
 #include "App.hh"
 #include "AppDesc.hh"
-#include "IsometricViewFrame.hh"
 #include "TopViewFrame.hh"
 #include <core_utils/CoreException.hh>
 #include <core_utils/log/Locator.hh>
