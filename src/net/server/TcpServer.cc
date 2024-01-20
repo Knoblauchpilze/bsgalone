@@ -60,7 +60,7 @@ void TcpServer::onConnectionRequest(const std::error_code &code, asio::ip::tcp::
   {
     connection->setDataHandler(*m_connectionDataHandler);
   }
-  connection->activate();
+  connection->connect();
   m_connections.emplace_back(std::move(connection));
 }
 

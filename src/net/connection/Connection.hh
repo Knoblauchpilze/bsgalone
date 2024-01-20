@@ -24,7 +24,8 @@ class Connection : public utils::CoreObject
   auto type() const -> ConnectionType;
   bool isConnected() const;
 
-  void activate();
+  void connect();
+  void disconnect();
   void setDataHandler(const DataReceivedHandler &dataHandler);
 
   template<typename T>

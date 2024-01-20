@@ -10,7 +10,7 @@ ClientConnection::ClientConnection(net::Context &networkContext)
   , m_connection(networkContext.createConnection(DEFAULT_SERVER_URL, DEFAULT_SERVER_PORT))
 {
   setService("network");
-  m_connection->activate();
+  m_connection->connect();
 }
 
 void ClientConnection::sendMessage(const IMessage &message)

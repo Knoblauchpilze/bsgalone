@@ -42,9 +42,14 @@ bool Connection::isConnected() const
   return m_socket.is_open();
 }
 
-void Connection::activate()
+void Connection::connect()
 {
   registerToAsio();
+}
+
+void Connection::disconnect()
+{
+  /// TODO: Handle disconnect.
 }
 
 void Connection::setDataHandler(const DataReceivedHandler &dataHandler)
