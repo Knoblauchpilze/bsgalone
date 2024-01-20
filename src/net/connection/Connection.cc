@@ -155,20 +155,24 @@ void Connection::onDataReceived(const std::error_code &code, const std::size_t c
   }
 
   verbose("Received " + std::to_string(contentLength) + " byte(s) on " + str());
+
+  if (m_dataHandler)
+  {
+    std::move(std::begin(m_incomingDataTempBuffer),
+              std::begin(m_incomingDataTempBuffer) + contentLength,
+              std::back_inserter(m_partialMessageData));
+
+    const auto processed = (*m_dataHandler)(m_partialMessageData);
+    m_partialMessageData.erase(m_partialMessageData.begin(),
+                               m_partialMessageData.begin() + processed);
+    debug("Processed " + std::to_string(processed) + " byte(s), "
+          + std::to_string(m_partialMessageData.size()) + " byte(s) remaining");
+  }
+
   if (!m_dataHandler)
   {
     warn("Discarding " + std::to_string(contentLength) + " byte(s) as there's no data handler");
-    return;
   }
-
-  std::move(std::begin(m_incomingDataTempBuffer),
-            std::begin(m_incomingDataTempBuffer) + contentLength,
-            std::back_inserter(m_partialMessageData));
-
-  const auto processed = (*m_dataHandler)(m_partialMessageData);
-  m_partialMessageData.erase(m_partialMessageData.begin(), m_partialMessageData.begin() + processed);
-  debug("Processed " + std::to_string(processed) + " byte(s), "
-        + std::to_string(m_partialMessageData.size()) + " byte(s) remaining");
 
   registerToAsio();
 }
