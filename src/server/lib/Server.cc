@@ -2,6 +2,7 @@
 
 #include "Server.hh"
 #include "AsyncMessageQueue.hh"
+#include "MessageConsumerUtils.hh"
 #include "MessageQueue.hh"
 #include "SynchronizedMessageQueue.hh"
 #include <core_utils/TimeUtils.hh>
@@ -31,11 +32,26 @@ void Server::requestStop()
   m_running.store(false);
 }
 
+namespace {
+auto createSynchronizedMessageQueue() -> IMessageQueuePtr
+{
+  auto messageQueue = std::make_unique<MessageQueue>();
+  return std::make_unique<SynchronizedMessageQueue>(std::move(messageQueue));
+}
+} // namespace
+
 void Server::initialize()
 {
-  auto messageQueue      = std::make_unique<MessageQueue>();
-  auto synchronizedQueue = std::make_unique<SynchronizedMessageQueue>(std::move(messageQueue));
-  m_messageQueue         = std::make_unique<AsyncMessageQueue>(std::move(synchronizedQueue));
+  const auto repositories = m_dataSource.repositories();
+
+  m_inputMessagesQueue  = std::make_unique<AsyncMessageQueue>(createSynchronizedMessageQueue());
+  m_outputMessagesQueue = createSynchronizedMessageQueue();
+
+  m_coordinator      = std::make_shared<bsgo::Coordinator>(m_inputMessagesQueue.get());
+  m_services         = createServices(repositories, m_coordinator);
+  m_messageConsumers = registerAllConsumersToQueue(m_inputMessagesQueue.get(),
+                                                   m_outputMessagesQueue.get(),
+                                                   m_services);
 }
 
 void Server::setup(const int port)
@@ -114,7 +130,7 @@ void Server::handleReceivedMessages(std::vector<IMessagePtr> &&messages)
 {
   for (auto &message : messages)
   {
-    m_messageQueue->pushMessage(std::move(message));
+    m_inputMessagesQueue->pushMessage(std::move(message));
   }
 }
 
