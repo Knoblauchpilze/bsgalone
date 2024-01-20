@@ -106,6 +106,11 @@ void Connection::registerMessageSendingTaskToAsio()
   {
     return;
   }
+  if (m_messagesToSend.size() > 1)
+  {
+    // Already one message being sent, do not register another task.
+    return;
+  }
 
   const auto &message = m_messagesToSend.front();
   asio::async_write(m_socket,
