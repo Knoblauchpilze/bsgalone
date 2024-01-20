@@ -3,8 +3,11 @@
 #pragma once
 
 #include "Context.hh"
+#include "DataSource.hh"
 #include "IMessageQueue.hh"
 #include "MessageParser.hh"
+#include "NetworkSystem.hh"
+#include "Services.hh"
 #include "TcpServer.hh"
 #include <atomic>
 #include <core_utils/CoreObject.hh>
@@ -23,8 +26,15 @@ class Server : public utils::CoreObject
   net::Context m_context{};
   std::atomic_bool m_running{false};
   net::TcpServerPtr m_tcpServer{};
+
   MessageParser m_messageParser{};
-  IMessageQueuePtr m_messageQueue{};
+  IMessageQueuePtr m_inputMessagesQueue{};
+  IMessageQueuePtr m_outputMessagesQueue{};
+
+  DataSource m_dataSource{};
+  CoordinatorShPtr m_coordinator{};
+  Services m_services{};
+  std::vector<IMessageListenerPtr> m_messageConsumers{};
 
   void initialize();
 

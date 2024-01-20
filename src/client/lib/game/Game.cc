@@ -253,7 +253,9 @@ void Game::initialize()
 
   initializeViews();
 
-  m_messageConsumers = bsgo::registerAllConsumersToQueue(m_messageQueue.get(), m_services);
+  m_messageConsumers = bsgo::registerAllConsumersToQueue(m_messageQueue.get(),
+                                                         m_messageQueue.get(),
+                                                         m_services);
   m_messageQueue->addListener(&m_messageModule);
 
   m_networkContext->start();
