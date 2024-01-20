@@ -15,9 +15,9 @@ auto Context::get() -> asio::io_context &
   return m_asioContext;
 }
 
-auto Context::createConnection(const std::string &url, const int port) -> ConnectionPtr
+auto Context::createConnection(const std::string &url, const int port) -> ConnectionShPtr
 {
-  return std::make_unique<Connection>(url, port, m_asioContext);
+  return std::make_shared<Connection>(url, port, m_asioContext);
 }
 
 void Context::start()

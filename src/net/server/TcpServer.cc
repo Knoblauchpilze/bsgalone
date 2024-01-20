@@ -48,7 +48,7 @@ void TcpServer::onConnectionRequest(const std::error_code &code, asio::ip::tcp::
   const auto client = str(socket.remote_endpoint());
   debug("Processing new connection from " + client);
 
-  auto connection = std::make_unique<Connection>(std::move(socket));
+  auto connection = std::make_shared<Connection>(std::move(socket));
   if (m_acceptor && !(*m_acceptor)(*connection))
   {
     warn("Refused connection from " + connection->str());

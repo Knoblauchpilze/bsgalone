@@ -19,7 +19,7 @@ class Context : public utils::CoreObject
 
   auto get() -> asio::io_context &;
 
-  auto createConnection(const std::string &url, const int port) -> ConnectionPtr;
+  auto createConnection(const std::string &url, const int port) -> ConnectionShPtr;
 
   void start();
   void stop();

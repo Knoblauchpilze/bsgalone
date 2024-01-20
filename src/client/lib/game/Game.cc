@@ -38,6 +38,7 @@ Game::Game()
 
 Game::~Game()
 {
+  m_messageQueue.reset();
   m_networkContext->stop();
 }
 
