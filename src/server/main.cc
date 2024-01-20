@@ -29,6 +29,7 @@ int main(int /*argc*/, char ** /*argv*/)
   {
     bsgo::Server server;
     sigIntProcessing = [&server](const int /*signal*/) { server.requestStop(); };
+    // https://en.cppreference.com/w/cpp/utility/program/signal
     std::signal(SIGINT, sigIntInterceptor);
 
     constexpr auto DEFAULT_SERVER_PORT = 60000;
