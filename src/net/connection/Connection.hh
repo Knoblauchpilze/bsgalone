@@ -13,7 +13,7 @@ namespace net {
 
 using DataReceivedHandler = std::function<int(const std::deque<char> &)>;
 
-class Connection : public utils::CoreObject
+class Connection : public utils::CoreObject, public std::enable_shared_from_this<Connection>
 {
   public:
   Connection(const std::string &url, const int port, asio::io_context &context);
@@ -25,7 +25,6 @@ class Connection : public utils::CoreObject
   bool isConnected() const;
 
   void connect();
-  void disconnect();
   void setDataHandler(const DataReceivedHandler &dataHandler);
 
   template<typename T>
@@ -63,7 +62,8 @@ class Connection : public utils::CoreObject
   void onDataSent(const std::error_code &code, const std::size_t contentLength);
 };
 
-using ConnectionPtr = std::unique_ptr<Connection>;
+// This is needed to register shared_from_this in asio handlers.
+using ConnectionShPtr = std::shared_ptr<Connection>;
 
 } // namespace net
 

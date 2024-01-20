@@ -28,7 +28,7 @@ class TcpServer : public utils::CoreObject
   std::optional<ConnectionLostHandler> m_disconnectHandler{};
   std::optional<DataReceivedHandler> m_connectionDataHandler{};
 
-  std::vector<ConnectionPtr> m_connections{};
+  std::vector<ConnectionShPtr> m_connections{};
 
   void initializeFromConfig(const ServerConfig &config);
   void registerToAsio();

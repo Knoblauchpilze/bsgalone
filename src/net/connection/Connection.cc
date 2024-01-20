@@ -47,11 +47,6 @@ void Connection::connect()
   registerToAsio();
 }
 
-void Connection::disconnect()
-{
-  /// TODO: Handle disconnect.
-}
-
 void Connection::setDataHandler(const DataReceivedHandler &dataHandler)
 {
   m_dataHandler = dataHandler;
@@ -77,7 +72,7 @@ void Connection::registerReadingTaskToAsio()
   asio::async_read(m_socket,
                    asio::buffer(m_incomingDataTempBuffer.data(), m_incomingDataTempBuffer.size()),
                    std::bind(&Connection::onDataReceived,
-                             this,
+                             shared_from_this(),
                              std::placeholders::_1,
                              std::placeholders::_2));
 }
@@ -94,7 +89,7 @@ void Connection::registerConnectingTaskToAsio()
   asio::async_connect(m_socket,
                       *m_endpoints,
                       std::bind(&Connection::onConnectionEstablished,
-                                this,
+                                shared_from_this(),
                                 std::placeholders::_1,
                                 std::placeholders::_2));
 }
@@ -116,7 +111,7 @@ void Connection::registerMessageSendingTaskToAsio()
   asio::async_write(m_socket,
                     asio::buffer(message->data.data(), message->data.size()),
                     std::bind(&Connection::onDataSent,
-                              this,
+                              shared_from_this(),
                               std::placeholders::_1,
                               std::placeholders::_2));
 }

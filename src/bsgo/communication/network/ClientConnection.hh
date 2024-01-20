@@ -17,7 +17,7 @@ class ClientConnection : public utils::CoreObject
   void sendMessage(const IMessage &message);
 
   private:
-  net::ConnectionPtr m_connection{};
+  net::ConnectionShPtr m_connection{};
 };
 
 using ClientConnectionPtr = std::unique_ptr<ClientConnection>;
