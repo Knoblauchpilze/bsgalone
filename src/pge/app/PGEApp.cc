@@ -26,10 +26,9 @@ PGEApp::PGEApp(const AppDesc &desc)
   initialize(desc.name, desc.dims, desc.enginePixToScreenPixRatio);
 }
 
-PGEApp::~PGEApp()
-{
-  m_renderer.reset();
-}
+// Needed here because PixelGameEngine is an incomplete type in the
+// header and so the compiler complains if we move it there.
+PGEApp::~PGEApp() = default;
 
 void PGEApp::run()
 {
@@ -193,6 +192,7 @@ bool PGEApp::onUpdate(const float elapsedSeconds)
 bool PGEApp::onDestroy()
 {
   cleanResources();
+  m_renderer.reset();
   return true;
 }
 
