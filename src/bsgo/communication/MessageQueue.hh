@@ -3,8 +3,8 @@
 
 #include "IMessageQueue.hh"
 #include <core_utils/CoreObject.hh>
+#include <deque>
 #include <unordered_map>
-#include <vector>
 
 namespace bsgo {
 
@@ -18,10 +18,10 @@ class MessageQueue : public IMessageQueue, public utils::CoreObject
   void addListener(IMessageListener *listener) override;
   bool empty() override;
 
-  void processMessages() override;
+  void processMessages(const std::optional<int> &amount = {}) override;
 
   private:
-  std::vector<IMessagePtr> m_messages{};
+  std::deque<IMessagePtr> m_messages{};
   std::unordered_multimap<MessageType, IMessageListener *> m_listeners{};
 
   void processMessage(const IMessage &message) const;

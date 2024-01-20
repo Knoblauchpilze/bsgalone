@@ -29,9 +29,9 @@ bool NetworkMessageQueue::empty()
   return m_localQueue->empty();
 }
 
-void NetworkMessageQueue::processMessages()
+void NetworkMessageQueue::processMessages(const std::optional<int> &amount)
 {
-  m_localQueue->processMessages();
+  m_localQueue->processMessages(amount);
 }
 
 } // namespace bsgo

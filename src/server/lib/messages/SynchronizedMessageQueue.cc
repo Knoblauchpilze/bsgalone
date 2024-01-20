@@ -35,10 +35,10 @@ bool SynchronizedMessageQueue::empty()
   return m_messageQueue->empty();
 }
 
-void SynchronizedMessageQueue::processMessages()
+void SynchronizedMessageQueue::processMessages(const std::optional<int> &amount)
 {
   const std::lock_guard guard(m_locker);
-  m_messageQueue->processMessages();
+  m_messageQueue->processMessages(amount);
 }
 
 } // namespace bsgo

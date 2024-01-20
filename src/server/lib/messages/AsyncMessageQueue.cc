@@ -21,6 +21,7 @@ AsyncMessageQueue::AsyncMessageQueue(IMessageQueuePtr messageQueue)
 void AsyncMessageQueue::pushMessage(IMessagePtr message)
 {
   m_messageQueue->pushMessage(std::move(message));
+  std::unique_lock lock(m_messageLocker);
   m_messageNotifier.notify_one();
 }
 
@@ -34,9 +35,9 @@ bool AsyncMessageQueue::empty()
   return m_messageQueue->empty();
 }
 
-void AsyncMessageQueue::processMessages()
+void AsyncMessageQueue::processMessages(const std::optional<int> & /*amount*/)
 {
-  m_messageQueue->processMessages();
+  error("Unsupported operation", "Message processing is already asynchronous");
 }
 
 AsyncMessageQueue::~AsyncMessageQueue()
@@ -47,7 +48,10 @@ AsyncMessageQueue::~AsyncMessageQueue()
   }
 
   m_running.store(false);
-  m_messageNotifier.notify_one();
+  {
+    std::unique_lock lock(m_messageLocker);
+    m_messageNotifier.notify_one();
+  }
   if (m_queueThread.joinable())
   {
     m_queueThread.join();
@@ -73,7 +77,8 @@ void AsyncMessageQueue::asyncMessageProcessing()
     running = m_running.load();
     if (running)
     {
-      processMessages();
+      constexpr auto MESSAGES_BATCH_SIZE = 10;
+      m_messageQueue->processMessages(MESSAGES_BATCH_SIZE);
     }
   }
 

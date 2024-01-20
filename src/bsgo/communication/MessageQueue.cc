@@ -37,18 +37,17 @@ bool MessageQueue::empty()
 }
 
 namespace {
-auto messagesTypesToString(const std::vector<IMessagePtr> &messages) -> std::string
+auto messagesTypesToString(const std::deque<IMessagePtr> &messages, const int count) -> std::string
 {
   std::string out = "{";
 
-  auto id = 0;
-  for (const auto &message : messages)
+  for (auto id = 0; id < count; ++id)
   {
     if (id > 0)
     {
       out += ", ";
     }
-    out += str(message->type());
+    out += str(messages[id]->type());
     ++id;
   }
 
@@ -57,20 +56,34 @@ auto messagesTypesToString(const std::vector<IMessagePtr> &messages) -> std::str
 }
 } // namespace
 
-void MessageQueue::processMessages()
+void MessageQueue::processMessages(const std::optional<int> &amount)
 {
-  std::vector<IMessagePtr> messages;
+  std::deque<IMessagePtr> messages;
   std::swap(messages, m_messages);
+  const auto messagesCount = static_cast<int>(messages.size());
 
-  for (const auto &message : messages)
+  auto count = (amount ? *amount : messagesCount);
+  for (auto id = 0; id < count; ++id)
   {
+    const auto &message = messages[id];
     processMessage(*message);
   }
 
-  if (!messages.empty())
+  if (!messages.empty() && count > 0)
   {
-    const auto allTypes = messagesTypesToString(messages);
-    info("Processed " + std::to_string(messages.size()) + " message(s): " + allTypes);
+    const auto allTypes = messagesTypesToString(messages, count);
+    info("Processed " + std::to_string(count) + "/" + std::to_string(messages.size())
+         + " message(s): " + allTypes);
+  }
+
+  if (count < messagesCount)
+  {
+    for (auto id = count; id < messagesCount; ++id)
+    {
+      m_messages.emplace_front(std::move(messages[id]));
+    }
+
+    verbose("requeued " + std::to_string(messages.size() - count) + " message(s)");
   }
 }
 
