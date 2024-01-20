@@ -42,6 +42,7 @@ class Connection : public utils::CoreObject, public std::enable_shared_from_this
   using MessageToSendPtr = std::unique_ptr<MessageToSend>;
 
   std::mutex m_dataLock{};
+  bool m_sendingData{false};
   std::deque<MessageToSendPtr> m_messagesToSend{};
 
   std::vector<char> m_incomingDataTempBuffer{};

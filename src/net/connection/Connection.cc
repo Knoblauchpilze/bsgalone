@@ -101,7 +101,7 @@ void Connection::registerMessageSendingTaskToAsio()
   {
     return;
   }
-  if (m_messagesToSend.size() > 1)
+  if (m_sendingData)
   {
     // Already one message being sent, do not register another task.
     return;
@@ -114,6 +114,8 @@ void Connection::registerMessageSendingTaskToAsio()
                               shared_from_this(),
                               std::placeholders::_1,
                               std::placeholders::_2));
+
+  m_sendingData = true;
 }
 
 void Connection::registerMessageToSend(MessageToSendPtr &&message)
@@ -185,6 +187,7 @@ void Connection::onDataSent(const std::error_code &code, const std::size_t conte
   {
     const std::lock_guard guard(m_dataLock);
     m_messagesToSend.pop_front();
+    m_sendingData = false;
   }
 
   registerMessageSendingTaskToAsio();
