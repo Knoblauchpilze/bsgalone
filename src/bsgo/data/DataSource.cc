@@ -16,6 +16,11 @@ DataSource::DataSource()
   m_repositories = createRepositories(m_connection);
 }
 
+void DataSource::setSystemDbId(const Uuid &system)
+{
+  m_systemDbId = system;
+}
+
 void DataSource::setPlayerDbId(const Uuid &player)
 {
   m_playerDbId = player;
@@ -60,9 +65,14 @@ auto DataSource::playerShipEntityId() const -> Uuid
 
 void DataSource::initialize(Coordinator &coordinator) const
 {
-  if (!m_playerDbId)
+  if (!m_systemDbId)
   {
-    error("Failed to initialize the game", "No player id defined");
+    if (!m_playerDbId)
+    {
+      error("Failed to initialize the game", "No system not player id defined");
+    }
+
+    m_systemDbId = m_repositories.playerRepository->findSystemByPlayer(*m_playerDbId);
   }
 
   m_playerEntityId.reset();
@@ -71,7 +81,10 @@ void DataSource::initialize(Coordinator &coordinator) const
 
   coordinator.clear();
 
-  initializePlayer(coordinator);
+  if (m_playerDbId)
+  {
+    initializePlayer(coordinator);
+  }
   initializeShips(coordinator);
   initializeAsteroids(coordinator);
   initializeOutposts(coordinator);
@@ -85,13 +98,13 @@ void DataSource::initializePlayer(Coordinator &coordinator) const
 
 void DataSource::initializeAsteroids(Coordinator &coordinator) const
 {
-  AsteroidDataSource source(m_repositories, *m_playerDbId);
+  AsteroidDataSource source(m_repositories, *m_systemDbId);
   source.initialize(coordinator);
 }
 
 void DataSource::initializeShips(Coordinator &coordinator) const
 {
-  ShipDataSource source(m_repositories, *m_playerDbId, *m_playerEntityId);
+  ShipDataSource source(m_repositories, *m_systemDbId, *m_playerDbId, *m_playerEntityId);
   source.initialize(coordinator);
 
   m_playerShipDbId     = source.getPlayerShipDbId();
@@ -100,7 +113,7 @@ void DataSource::initializeShips(Coordinator &coordinator) const
 
 void DataSource::initializeOutposts(Coordinator &coordinator) const
 {
-  OutpostDataSource source(m_repositories, *m_playerDbId);
+  OutpostDataSource source(m_repositories, *m_systemDbId);
   source.initialize(coordinator);
 }
 

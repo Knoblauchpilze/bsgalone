@@ -16,6 +16,7 @@ class DataSource : public utils::CoreObject
   DataSource();
   ~DataSource() override = default;
 
+  void setSystemDbId(const Uuid &system);
   void setPlayerDbId(const Uuid &player);
 
   auto repositories() const -> Repositories;
@@ -27,6 +28,7 @@ class DataSource : public utils::CoreObject
   void initialize(Coordinator &coordinator) const;
 
   private:
+  mutable std::optional<Uuid> m_systemDbId{};
   std::optional<Uuid> m_playerDbId{};
   mutable std::optional<Uuid> m_playerEntityId{};
   mutable std::optional<Uuid> m_playerShipDbId{};

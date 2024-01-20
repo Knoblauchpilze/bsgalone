@@ -52,6 +52,10 @@ void Server::initialize()
   m_messageConsumers = registerAllConsumersToQueue(m_inputMessagesQueue.get(),
                                                    m_outputMessagesQueue.get(),
                                                    m_services);
+
+  /// TODO: Should not simulate a single system.
+  m_dataSource.setSystemDbId(Uuid{0});
+  m_dataSource.initialize(*m_coordinator);
 }
 
 void Server::setup(const int port)

@@ -16,9 +16,11 @@
 namespace bsgo {
 
 ShipDataSource::ShipDataSource(const Repositories &repositories,
-                               const Uuid &playerDbId,
+                               const Uuid &systemDbId,
+                               const std::optional<Uuid> &playerDbId,
                                const Uuid &playerEntityId)
   : utils::CoreObject("bsgo")
+  , m_systemDbId(systemDbId)
   , m_playerDbId(playerDbId)
   , m_playerEntityId(playerEntityId)
   , m_repositories(repositories)
@@ -39,9 +41,7 @@ auto ShipDataSource::getPlayerShipEntityId() const -> std::optional<Uuid>
 
 void ShipDataSource::initialize(Coordinator &coordinator) const
 {
-  const auto systemId = m_repositories.playerRepository->findSystemByPlayer(m_playerDbId);
-
-  const auto ships = m_repositories.systemRepository->findAllShipsBySystem(systemId);
+  const auto ships = m_repositories.systemRepository->findAllShipsBySystem(m_systemDbId);
   for (const auto &id : ships)
   {
     registerShip(coordinator, id);
@@ -71,7 +71,9 @@ void ShipDataSource::registerShip(Coordinator &coordinator, const Uuid &ship) co
   {
     coordinator.addAI(ent, generateBehaviorTree(ship, data.position));
   }
-  else if (*data.player == m_playerDbId)
+  /// TODO: We should get access to all the players and register the owner
+  /// accordingly.
+  else if (m_playerDbId && *data.player == *m_playerDbId)
   {
     if (m_playerShipDbId)
     {

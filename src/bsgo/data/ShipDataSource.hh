@@ -14,7 +14,8 @@ class ShipDataSource : public utils::CoreObject
 {
   public:
   ShipDataSource(const Repositories &repositories,
-                 const Uuid &playerDbId,
+                 const Uuid &systemDbId,
+                 const std::optional<Uuid> &playerDbId,
                  const Uuid &playerEntityId);
   ~ShipDataSource() override = default;
 
@@ -24,7 +25,8 @@ class ShipDataSource : public utils::CoreObject
   void initialize(Coordinator &coordinator) const;
 
   private:
-  Uuid m_playerDbId{};
+  Uuid m_systemDbId{};
+  std::optional<Uuid> m_playerDbId{};
   Uuid m_playerEntityId{};
   Repositories m_repositories{};
 
