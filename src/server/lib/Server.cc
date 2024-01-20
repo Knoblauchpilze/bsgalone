@@ -95,8 +95,6 @@ void Server::shutdown()
 
 bool Server::onConnectionReceived(const net::Connection & /*connection*/) const
 {
-  /// TODO: Handle connection approval/denial.
-  warn("should approve or veto connection");
   return true;
 }
 
