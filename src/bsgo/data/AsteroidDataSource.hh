@@ -11,13 +11,13 @@ class Coordinator;
 class AsteroidDataSource : public utils::CoreObject
 {
   public:
-  AsteroidDataSource(const Repositories &repositories, const Uuid &playerDbId);
+  AsteroidDataSource(const Repositories &repositories, const Uuid &systemDbId);
   ~AsteroidDataSource() override = default;
 
   void initialize(Coordinator &coordinator) const;
 
   private:
-  Uuid m_playerDbId{};
+  Uuid m_systemDbId{};
   Repositories m_repositories{};
 
   void registerAsteroid(Coordinator &coordinator, const Uuid &asteroid) const;
