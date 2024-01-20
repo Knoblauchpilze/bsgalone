@@ -18,7 +18,7 @@ class NetworkMessageQueue : public IMessageQueue, public utils::CoreObject
   void addListener(IMessageListener *listener) override;
   bool empty() override;
 
-  void processMessages() override;
+  void processMessages(const std::optional<int> &amount = {}) override;
 
   private:
   IMessageQueuePtr m_localQueue{};
