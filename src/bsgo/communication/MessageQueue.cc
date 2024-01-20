@@ -31,6 +31,11 @@ void MessageQueue::addListener(IMessageListener *listener)
   }
 }
 
+bool MessageQueue::empty()
+{
+  return m_messages.empty();
+}
+
 namespace {
 auto messagesTypesToString(const std::vector<IMessagePtr> &messages) -> std::string
 {

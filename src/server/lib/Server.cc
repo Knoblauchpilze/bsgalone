@@ -1,6 +1,9 @@
 
 
 #include "Server.hh"
+#include "AsyncMessageQueue.hh"
+#include "MessageQueue.hh"
+#include "SynchronizedMessageQueue.hh"
 #include <core_utils/TimeUtils.hh>
 
 namespace bsgo {
@@ -9,6 +12,7 @@ Server::Server()
   : utils::CoreObject("server")
 {
   setService("server");
+  initialize();
 }
 
 void Server::run(const int port)
@@ -25,6 +29,13 @@ void Server::run(const int port)
 void Server::requestStop()
 {
   m_running.store(false);
+}
+
+void Server::initialize()
+{
+  auto messageQueue      = std::make_unique<MessageQueue>();
+  auto synchronizedQueue = std::make_unique<SynchronizedMessageQueue>(std::move(messageQueue));
+  m_messageQueue         = std::make_unique<AsyncMessageQueue>(std::move(synchronizedQueue));
 }
 
 void Server::setup(const int port)
@@ -103,7 +114,7 @@ void Server::handleReceivedMessages(std::vector<IMessagePtr> &&messages)
 {
   for (auto &message : messages)
   {
-    m_messageQueue.pushMessage(std::move(message));
+    m_messageQueue->pushMessage(std::move(message));
   }
 }
 

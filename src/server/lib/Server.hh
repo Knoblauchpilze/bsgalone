@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "AsyncMessageQueue.hh"
 #include "Context.hh"
+#include "IMessageQueue.hh"
 #include "MessageParser.hh"
 #include "TcpServer.hh"
 #include <atomic>
@@ -24,7 +24,9 @@ class Server : public utils::CoreObject
   std::atomic_bool m_running{false};
   net::TcpServerPtr m_tcpServer{};
   MessageParser m_messageParser{};
-  AsyncMessageQueue m_messageQueue{};
+  IMessageQueuePtr m_messageQueue{};
+
+  void initialize();
 
   void setup(const int port);
   void activeRunLoop();

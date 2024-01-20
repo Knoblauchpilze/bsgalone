@@ -24,6 +24,11 @@ void NetworkMessageQueue::addListener(IMessageListener *listener)
   m_localQueue->addListener(listener);
 }
 
+bool NetworkMessageQueue::empty()
+{
+  return m_localQueue->empty();
+}
+
 void NetworkMessageQueue::processMessages()
 {
   m_localQueue->processMessages();

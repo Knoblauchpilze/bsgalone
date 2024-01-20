@@ -14,6 +14,7 @@ class IMessageQueue
 
   virtual void pushMessage(IMessagePtr message)        = 0;
   virtual void addListener(IMessageListener *listener) = 0;
+  virtual bool empty()                                 = 0;
 
   virtual void processMessages() = 0;
 };
