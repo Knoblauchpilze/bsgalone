@@ -47,20 +47,9 @@ void Context::stop()
   m_running.store(false);
   m_asioContext.stop();
 
-  waitForThreadToFinish();
+  m_contextThread.join();
 
   debug("Successfully stopped asio context");
-}
-
-void Context::waitForThreadToFinish()
-{
-  constexpr auto SLEEP_DURATION_WHILE_WAITING = utils::Milliseconds(100);
-  while (!m_contextThread.joinable())
-  {
-    std::this_thread::sleep_for(SLEEP_DURATION_WHILE_WAITING);
-  }
-
-  m_contextThread.join();
 }
 
 } // namespace net
