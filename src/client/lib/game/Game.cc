@@ -3,6 +3,7 @@
 #include "IInputHandler.hh"
 #include "IRenderer.hh"
 #include "IUiHandler.hh"
+#include "MessageConsumerUtils.hh"
 #include "NetworkMessageQueue.hh"
 #include "NetworkSystem.hh"
 
@@ -15,16 +16,6 @@
 #include "MapScreenUiHandler.hh"
 #include "OutpostScreenRenderer.hh"
 #include "OutpostScreenUiHandler.hh"
-
-#include "DockMessageConsumer.hh"
-#include "EquipMessageConsumer.hh"
-#include "HangarMessageConsumer.hh"
-#include "JumpMessageConsumer.hh"
-#include "LoginMessageConsumer.hh"
-#include "PurchaseMessageConsumer.hh"
-#include "SlotMessageConsumer.hh"
-#include "TargetMessageConsumer.hh"
-#include "VelocityMessageConsumer.hh"
 
 namespace pge {
 
@@ -261,7 +252,9 @@ void Game::initialize()
   m_services    = bsgo::createServices(repositories, m_coordinator);
 
   initializeViews();
-  initializeMessageSystem();
+
+  m_messageConsumers = bsgo::registerAllConsumersToQueue(m_messageQueue.get(), m_services);
+  m_messageQueue->addListener(&m_messageModule);
 
   m_networkContext->start();
 }
@@ -288,47 +281,6 @@ void Game::initializeViews()
   m_views.resourceView = std::make_shared<bsgo::ResourceView>(m_coordinator,
                                                               repositories,
                                                               m_messageQueue.get());
-}
-
-void Game::initializeMessageSystem()
-{
-  auto jump = std::make_unique<bsgo::JumpMessageConsumer>(m_services, m_messageQueue.get());
-  m_messageQueue->addListener(jump.get());
-  m_messageConsumers.emplace_back(std::move(jump));
-
-  auto dock = std::make_unique<bsgo::DockMessageConsumer>(m_services, m_messageQueue.get());
-  m_messageQueue->addListener(dock.get());
-  m_messageConsumers.emplace_back(std::move(dock));
-
-  auto slot = std::make_unique<bsgo::SlotMessageConsumer>(m_services, m_messageQueue.get());
-  m_messageQueue->addListener(slot.get());
-  m_messageConsumers.emplace_back(std::move(slot));
-
-  auto velocity = std::make_unique<bsgo::VelocityMessageConsumer>(m_services, m_messageQueue.get());
-  m_messageQueue->addListener(velocity.get());
-  m_messageConsumers.emplace_back(std::move(velocity));
-
-  auto hangar = std::make_unique<bsgo::HangarMessageConsumer>(m_services, m_messageQueue.get());
-  m_messageQueue->addListener(hangar.get());
-  m_messageConsumers.emplace_back(std::move(hangar));
-
-  auto login = std::make_unique<bsgo::LoginMessageConsumer>(m_services, m_messageQueue.get());
-  m_messageQueue->addListener(login.get());
-  m_messageConsumers.emplace_back(std::move(login));
-
-  auto target = std::make_unique<bsgo::TargetMessageConsumer>(m_services, m_messageQueue.get());
-  m_messageQueue->addListener(target.get());
-  m_messageConsumers.emplace_back(std::move(target));
-
-  auto purchase = std::make_unique<bsgo::PurchaseMessageConsumer>(m_services, m_messageQueue.get());
-  m_messageQueue->addListener(purchase.get());
-  m_messageConsumers.emplace_back(std::move(purchase));
-
-  auto equip = std::make_unique<bsgo::EquipMessageConsumer>(m_services, m_messageQueue.get());
-  m_messageQueue->addListener(equip.get());
-  m_messageConsumers.emplace_back(std::move(equip));
-
-  m_messageQueue->addListener(&m_messageModule);
 }
 
 void Game::resetViewsAndUi()

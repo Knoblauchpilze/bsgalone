@@ -103,7 +103,6 @@ class Game : public utils::CoreObject
 
   void initialize();
   void initializeViews();
-  void initializeMessageSystem();
 
   void resetViewsAndUi();
 };
