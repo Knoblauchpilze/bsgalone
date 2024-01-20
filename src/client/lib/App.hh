@@ -14,7 +14,7 @@ class App : public PGEApp
   /// by the app and set up base properties.
   App(const AppDesc &desc);
 
-  ~App() = default;
+  ~App() override = default;
 
   protected:
   bool onFrame(const float elapsedSeconds) override;
