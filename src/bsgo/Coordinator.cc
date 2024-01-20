@@ -59,6 +59,10 @@ auto getAllComponent(const Uuid &ent,
 }
 } // namespace
 
+Coordinator::Coordinator(IMessageQueue *messageQueue)
+  : Coordinator(nullptr, messageQueue)
+{}
+
 Coordinator::Coordinator(ISystemPtr networkSystem, IMessageQueue *messageQueue)
   : utils::CoreObject("coordinator")
 {
@@ -255,9 +259,14 @@ void Coordinator::removeEffect(const Uuid &ent, const EffectComponentShPtr &effe
 
 auto Coordinator::getEntity(const Uuid &ent) const -> Entity
 {
-  Entity out;
-  out.uuid = ent;
-  out.kind = *getComponent(ent, m_components.kinds);
+  Entity out{};
+  out.uuid             = ent;
+  const auto maybeKind = getComponent(ent, m_components.kinds);
+  if (!maybeKind)
+  {
+    error("Expected to have a kind for entity " + str(ent));
+  }
+  out.kind = *maybeKind;
 
   out.transform = getComponent(ent, m_components.transforms);
   out.velocity  = getComponent(ent, m_components.velocities);
@@ -444,7 +453,10 @@ void Coordinator::createSystems(ISystemPtr networkSystem, IMessageQueue *message
   auto owner = std::make_unique<OwnerSystem>();
   m_systems.push_back(std::move(owner));
 
-  m_systems.emplace_back(std::move(networkSystem));
+  if (networkSystem != nullptr)
+  {
+    m_systems.emplace_back(std::move(networkSystem));
+  }
 
   for (auto &system : m_systems)
   {
