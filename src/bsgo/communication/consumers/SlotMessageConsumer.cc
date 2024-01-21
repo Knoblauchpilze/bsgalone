@@ -23,13 +23,11 @@ void SlotMessageConsumer::onMessageReceived(const IMessage &message)
 {
   const auto &slotMessage = message.as<SlotMessage>();
 
-  const auto slotTriggered = SlotState::ACTIVATED == slotMessage.getSlotState();
-
-  if (Slot::WEAPON == slotMessage.getSlotType() && slotTriggered)
+  if (Slot::WEAPON == slotMessage.getSlotType() && !slotMessage.validated())
   {
     handleWeapon(slotMessage.getShipEntityId(), slotMessage.getSlotIndex());
   }
-  if (Slot::COMPUTER == slotMessage.getSlotType() && slotTriggered)
+  if (Slot::COMPUTER == slotMessage.getSlotType() && !slotMessage.validated())
   {
     handleComputer(slotMessage.getShipEntityId(), slotMessage.getSlotIndex());
   }
@@ -43,8 +41,9 @@ void SlotMessageConsumer::handleWeapon(const Uuid &shipEntityId, const int weapo
     return;
   }
 
-  m_messageQueue->pushMessage(
-    std::make_unique<SlotMessage>(shipEntityId, weaponId, Slot::WEAPON, SlotState::FIRED));
+  auto message = std::make_unique<SlotMessage>(shipEntityId, weaponId, Slot::WEAPON);
+  message->validate();
+  m_messageQueue->pushMessage(std::move(message));
 }
 
 void SlotMessageConsumer::handleComputer(const Uuid &shipEntityId, const int computerId) const
@@ -55,8 +54,9 @@ void SlotMessageConsumer::handleComputer(const Uuid &shipEntityId, const int com
     return;
   }
 
-  m_messageQueue->pushMessage(
-    std::make_unique<SlotMessage>(shipEntityId, computerId, Slot::COMPUTER, SlotState::FIRED));
+  auto message = std::make_unique<SlotMessage>(shipEntityId, computerId, Slot::COMPUTER);
+  message->validate();
+  m_messageQueue->pushMessage(std::move(message));
 }
 
 } // namespace bsgo

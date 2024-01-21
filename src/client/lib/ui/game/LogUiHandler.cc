@@ -110,8 +110,7 @@ bool shouldMessageBeFiltered(const bsgo::IMessage &message, const bsgo::Entity &
 
     const auto computerIsOffensive = playerShip.computers.at(slotMessage.getSlotIndex())
                                        ->isOffensive();
-    const auto computerIsFired = bsgo::SlotState::FIRED == slotMessage.getSlotState();
-    return computerIsOffensive || !computerIsFired;
+    return computerIsOffensive || !slotMessage.validated();
   }
 
   return false;

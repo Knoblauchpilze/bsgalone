@@ -151,7 +151,7 @@ void ShipView::tryActivateWeapon(const Uuid &ship, const int weaponId) const
           "Expected ship " + str(playerShip.uuid) + " but got " + str(ship));
   }
 
-  auto message = std::make_unique<SlotMessage>(ship, weaponId, Slot::WEAPON, SlotState::ACTIVATED);
+  auto message = std::make_unique<SlotMessage>(ship, weaponId, Slot::WEAPON);
   m_messageQueue->pushMessage(std::move(message));
 }
 
@@ -164,7 +164,7 @@ void ShipView::tryActivateSlot(const Uuid &ship, const int slotId) const
           "Expected ship " + str(playerShip.uuid) + " but got " + str(ship));
   }
 
-  auto message = std::make_unique<SlotMessage>(ship, slotId, Slot::COMPUTER, SlotState::ACTIVATED);
+  auto message = std::make_unique<SlotMessage>(ship, slotId, Slot::COMPUTER);
   m_messageQueue->pushMessage(std::move(message));
 }
 

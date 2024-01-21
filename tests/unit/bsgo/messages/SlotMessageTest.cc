@@ -13,38 +13,42 @@ auto assertMessagesAreEqual(const SlotMessage &actual, const SlotMessage &expect
   EXPECT_EQ(actual.getShipEntityId(), expected.getShipEntityId());
   EXPECT_EQ(actual.getSlotIndex(), expected.getSlotIndex());
   EXPECT_EQ(actual.getSlotType(), expected.getSlotType());
-  EXPECT_EQ(actual.getSlotState(), expected.getSlotState());
+  EXPECT_EQ(actual.validated(), expected.validated());
 }
 } // namespace
 
-TEST(Unit_Bsgo_Serialization_SlotMessage, Computer_Activated)
+TEST(Unit_Bsgo_Serialization_SlotMessage, Computer)
 {
-  const SlotMessage expected(Uuid{14}, 2, Slot::COMPUTER, SlotState::ACTIVATED);
-  SlotMessage actual(Uuid{36}, 1, Slot::WEAPON, SlotState::FIRED);
+  const SlotMessage expected(Uuid{14}, 2, Slot::COMPUTER);
+  SlotMessage actual(Uuid{36}, 1, Slot::WEAPON);
+  actual.validate();
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_SlotMessage, Computer_Fired)
+TEST(Unit_Bsgo_Serialization_SlotMessage, Computer_Validated)
 {
-  const SlotMessage expected(Uuid{17}, 0, Slot::COMPUTER, SlotState::FIRED);
-  SlotMessage actual(Uuid{6}, 3, Slot::WEAPON, SlotState::ACTIVATED);
+  SlotMessage expected(Uuid{17}, 0, Slot::COMPUTER);
+  expected.validate();
+  SlotMessage actual(Uuid{6}, 3, Slot::WEAPON);
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_SlotMessage, Weapon_Activated)
+TEST(Unit_Bsgo_Serialization_SlotMessage, Weapon)
 {
-  const SlotMessage expected(Uuid{1}, 49, Slot::WEAPON, SlotState::ACTIVATED);
-  SlotMessage actual(Uuid{57}, 48, Slot::COMPUTER, SlotState::FIRED);
+  const SlotMessage expected(Uuid{1}, 49, Slot::WEAPON);
+  SlotMessage actual(Uuid{57}, 48, Slot::COMPUTER);
+  actual.validate();
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_SlotMessage, Weapon_Fired)
+TEST(Unit_Bsgo_Serialization_SlotMessage, Weapon_Validated)
 {
-  const SlotMessage expected(Uuid{28}, 67, Slot::WEAPON, SlotState::FIRED);
-  SlotMessage actual(Uuid{51}, 180, Slot::COMPUTER, SlotState::ACTIVATED);
+  SlotMessage expected(Uuid{28}, 67, Slot::WEAPON);
+  expected.validate();
+  SlotMessage actual(Uuid{51}, 180, Slot::COMPUTER);
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
