@@ -61,7 +61,12 @@ void TcpServer::onConnectionRequest(const std::error_code &code, asio::ip::tcp::
     connection->setDataHandler(*m_connectionDataHandler);
   }
   connection->connect();
-  m_connections.emplace_back(std::move(connection));
+
+  {
+    const std::lock_guard guard(m_connectionsLocker);
+    const auto id = connection->id();
+    m_connections.emplace(id, std::move(connection));
+  }
 }
 
 } // namespace net
