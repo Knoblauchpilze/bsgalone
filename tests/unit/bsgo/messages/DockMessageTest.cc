@@ -7,9 +7,11 @@ using namespace ::testing;
 
 namespace bsgo {
 namespace {
-auto generateMessage(const bool docking, const DockState state) -> DockMessage
+auto generateMessage(const bool docking, const bool validated) -> DockMessage
 {
-  return DockMessage(Uuid{1}, Uuid{2}, docking, state);
+  DockMessage message(Uuid{1}, Uuid{2}, docking);
+  message.validate(validated);
+  return message;
 }
 
 auto assertMessagesAreEqual(const DockMessage &actual, const DockMessage &expected)
@@ -18,38 +20,38 @@ auto assertMessagesAreEqual(const DockMessage &actual, const DockMessage &expect
   EXPECT_EQ(actual.getShipDbId(), expected.getShipDbId());
   EXPECT_EQ(actual.getShipEntityId(), expected.getShipEntityId());
   EXPECT_EQ(actual.isDocking(), expected.isDocking());
-  EXPECT_EQ(actual.getDockState(), expected.getDockState());
+  EXPECT_EQ(actual.validated(), expected.validated());
 }
 } // namespace
 
-TEST(Unit_Bsgo_Serialization_DockMessage, Docking_Started)
+TEST(Unit_Bsgo_Serialization_DockMessage, Docking)
 {
-  const auto expected = generateMessage(true, DockState::STARTED);
-  DockMessage actual({}, {}, {}, {});
+  const auto expected = generateMessage(true, false);
+  DockMessage actual;
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_DockMessage, Docking_Completed)
+TEST(Unit_Bsgo_Serialization_DockMessage, Docking_Validated)
 {
-  const auto expected = generateMessage(true, DockState::STARTED);
-  DockMessage actual({}, {}, {}, {});
+  const auto expected = generateMessage(true, true);
+  DockMessage actual;
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_DockMessage, NotDocking_Started)
+TEST(Unit_Bsgo_Serialization_DockMessage, NotDocking)
 {
-  const auto expected = generateMessage(false, DockState::COMPLETED);
-  DockMessage actual({}, {}, {}, {});
+  const auto expected = generateMessage(false, false);
+  DockMessage actual;
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_DockMessage, NotDocking_Completed)
+TEST(Unit_Bsgo_Serialization_DockMessage, NotDocking_Validated)
 {
-  const auto expected = generateMessage(false, DockState::COMPLETED);
-  DockMessage actual({}, {}, {}, {});
+  const auto expected = generateMessage(false, true);
+  DockMessage actual;
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }

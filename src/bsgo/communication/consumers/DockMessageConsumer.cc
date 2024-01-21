@@ -23,13 +23,11 @@ void DockMessageConsumer::onMessageReceived(const IMessage &message)
 {
   const auto &dockMessage = message.as<DockMessage>();
 
-  const auto procedureStarted = DockState::STARTED == dockMessage.getDockState();
-
-  if (dockMessage.isDocking() && procedureStarted)
+  if (dockMessage.isDocking() && !dockMessage.validated())
   {
     handleDocking(dockMessage.getShipDbId(), dockMessage.getShipEntityId());
   }
-  if (!dockMessage.isDocking() && procedureStarted)
+  if (!dockMessage.isDocking() && !dockMessage.validated())
   {
     handleUndocking(dockMessage.getShipDbId(), dockMessage.getShipEntityId());
   }
@@ -43,8 +41,9 @@ void DockMessageConsumer::handleDocking(const Uuid &shipDbId, const Uuid &shipEn
     return;
   }
 
-  m_messageQueue->pushMessage(
-    std::make_unique<DockMessage>(shipDbId, shipEntityId, true, DockState::COMPLETED));
+  auto message = std::make_unique<DockMessage>(shipDbId, shipEntityId, true);
+  message->validate(true);
+  m_messageQueue->pushMessage(std::move(message));
 }
 
 void DockMessageConsumer::handleUndocking(const Uuid &shipDbId, const Uuid &shipEntityId) const
@@ -55,8 +54,9 @@ void DockMessageConsumer::handleUndocking(const Uuid &shipDbId, const Uuid &ship
     return;
   }
 
-  m_messageQueue->pushMessage(
-    std::make_unique<DockMessage>(shipDbId, shipEntityId, false, DockState::COMPLETED));
+  auto message = std::make_unique<DockMessage>(shipDbId, shipEntityId, false);
+  message->validate(true);
+  m_messageQueue->pushMessage(std::move(message));
 }
 
 } // namespace bsgo

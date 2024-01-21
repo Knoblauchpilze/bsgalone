@@ -60,7 +60,7 @@ void GameMessageModule::checkIfPlayerShipDbIdExists()
 
 void GameMessageModule::handleDockMessage(const bsgo::DockMessage &message)
 {
-  if (bsgo::DockState::COMPLETED != message.getDockState())
+  if (!message.validated())
   {
     return;
   }
