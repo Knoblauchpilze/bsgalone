@@ -21,7 +21,16 @@ constexpr auto FIND_ASTEROIDS_QUERY_NAME = "system_find_asteroids";
 constexpr auto FIND_ASTEROIDS_QUERY      = "SELECT id FROM asteroid WHERE system = $1";
 
 constexpr auto FIND_SHIPS_QUERY_NAME = "system_find_ships";
-constexpr auto FIND_SHIPS_QUERY      = "SELECT ship FROM ship_system WHERE system = $1";
+constexpr auto FIND_SHIPS_QUERY      = R"(
+SELECT
+  ss.ship
+FROM
+  ship_system ss
+  LEFT JOIN player_ship ps ON ss.ship = ps.id
+WHERE
+  ss.system = $1
+  AND ps.active = 'true'
+)";
 
 constexpr auto FIND_OUTPOSTS_QUERY_NAME = "system_find_outposts";
 constexpr auto FIND_OUTPOSTS_QUERY      = "SELECT id FROM system_outpost WHERE system = $1";
