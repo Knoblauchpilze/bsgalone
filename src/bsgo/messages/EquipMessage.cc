@@ -5,20 +5,18 @@
 namespace bsgo {
 
 EquipMessage::EquipMessage()
-  : AbstractMessage(MessageType::EQUIP)
+  : ValidatableMessage(MessageType::EQUIP)
 {}
 
 EquipMessage::EquipMessage(const EquipType &action,
                            const Uuid &shipDbId,
                            const Item &type,
-                           const Uuid &itemDbId,
-                           const EquipState &state)
-  : AbstractMessage(MessageType::EQUIP)
+                           const Uuid &itemDbId)
+  : ValidatableMessage(MessageType::EQUIP)
   , m_action(action)
   , m_shipDbId(shipDbId)
   , m_type(type)
   , m_itemDbId(itemDbId)
-  , m_state(state)
 {}
 
 auto EquipMessage::getAction() const -> EquipType
@@ -41,20 +39,15 @@ auto EquipMessage::getItemDbId() const -> Uuid
   return m_itemDbId;
 }
 
-auto EquipMessage::getEquipState() const -> EquipState
-{
-  return m_state;
-}
-
 auto EquipMessage::serialize(std::ostream &out) const -> std::ostream &
 {
   utils::serialize(out, m_messageType);
+  utils::serialize(out, m_validated);
 
   utils::serialize(out, m_action);
   utils::serialize(out, m_shipDbId);
   utils::serialize(out, m_type);
   utils::serialize(out, m_itemDbId);
-  utils::serialize(out, m_state);
 
   return out;
 }
@@ -63,12 +56,12 @@ bool EquipMessage::deserialize(std::istream &in)
 {
   bool ok{true};
   ok &= utils::deserialize(in, m_messageType);
+  ok &= utils::deserialize(in, m_validated);
 
   ok &= utils::deserialize(in, m_action);
   ok &= utils::deserialize(in, m_shipDbId);
   ok &= utils::deserialize(in, m_type);
   ok &= utils::deserialize(in, m_itemDbId);
-  ok &= utils::deserialize(in, m_state);
 
   return ok;
 }

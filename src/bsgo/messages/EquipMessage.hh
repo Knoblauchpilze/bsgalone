@@ -1,9 +1,9 @@
 
 #pragma once
 
-#include "AbstractMessage.hh"
 #include "Item.hh"
 #include "Uuid.hh"
+#include "ValidatableMessage.hh"
 
 namespace bsgo {
 
@@ -13,28 +13,20 @@ enum class EquipType
   UNEQUIP
 };
 
-enum class EquipState
-{
-  REQUESTED,
-  COMPLETED
-};
-
-class EquipMessage : public AbstractMessage
+class EquipMessage : public ValidatableMessage
 {
   public:
   EquipMessage();
   EquipMessage(const EquipType &action,
                const Uuid &shipDbId,
                const Item &type,
-               const Uuid &itemDbId,
-               const EquipState &state);
+               const Uuid &itemDbId);
   ~EquipMessage() override = default;
 
   auto getAction() const -> EquipType;
   auto getShipDbId() const -> Uuid;
   auto getItemType() const -> Item;
   auto getItemDbId() const -> Uuid;
-  auto getEquipState() const -> EquipState;
 
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
@@ -44,7 +36,6 @@ class EquipMessage : public AbstractMessage
   Uuid m_shipDbId{};
   Item m_type{};
   Uuid m_itemDbId{};
-  EquipState m_state{EquipState::REQUESTED};
 };
 
 } // namespace bsgo

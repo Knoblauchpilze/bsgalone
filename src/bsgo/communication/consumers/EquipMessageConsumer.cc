@@ -22,9 +22,8 @@ EquipMessageConsumer::EquipMessageConsumer(const Services &services,
 
 void EquipMessageConsumer::onMessageReceived(const IMessage &message)
 {
-  const auto &equip       = message.as<EquipMessage>();
-  const auto equipRequest = EquipState::REQUESTED == equip.getEquipState();
-  if (!equipRequest)
+  const auto &equip = message.as<EquipMessage>();
+  if (equip.validated())
   {
     return;
   }
@@ -59,11 +58,9 @@ void EquipMessageConsumer::handleEquipRequest(const Uuid &shipDbId,
     return;
   }
 
-  m_messageQueue->pushMessage(std::make_unique<EquipMessage>(EquipType::EQUIP,
-                                                             shipDbId,
-                                                             type,
-                                                             itemDbId,
-                                                             EquipState::COMPLETED));
+  auto message = std::make_unique<EquipMessage>(EquipType::EQUIP, shipDbId, type, itemDbId);
+  message->validate(true);
+  m_messageQueue->pushMessage(std::move(message));
 }
 
 void EquipMessageConsumer::handleUnequipRequest(const Uuid &shipDbId,
@@ -78,11 +75,9 @@ void EquipMessageConsumer::handleUnequipRequest(const Uuid &shipDbId,
     return;
   }
 
-  m_messageQueue->pushMessage(std::make_unique<EquipMessage>(EquipType::UNEQUIP,
-                                                             shipDbId,
-                                                             type,
-                                                             itemDbId,
-                                                             EquipState::COMPLETED));
+  auto message = std::make_unique<EquipMessage>(EquipType::UNEQUIP, shipDbId, type, itemDbId);
+  message->validate(true);
+  m_messageQueue->pushMessage(std::move(message));
 }
 
 } // namespace bsgo
