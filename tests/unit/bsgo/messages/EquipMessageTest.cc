@@ -14,54 +14,42 @@ auto assertMessagesAreEqual(const EquipMessage &actual, const EquipMessage &expe
   EXPECT_EQ(actual.getShipDbId(), expected.getShipDbId());
   EXPECT_EQ(actual.getItemType(), expected.getItemType());
   EXPECT_EQ(actual.getItemDbId(), expected.getItemDbId());
-  EXPECT_EQ(actual.getEquipState(), expected.getEquipState());
+  EXPECT_EQ(actual.validated(), expected.validated());
 }
 } // namespace
 
-TEST(Unit_Bsgo_Serialization_EquipMessage, EquipRequested)
+TEST(Unit_Bsgo_Serialization_EquipMessage, Equip)
 {
-  const EquipMessage expected(EquipType::EQUIP,
-                              Uuid{12},
-                              Item::COMPUTER,
-                              Uuid{27},
-                              EquipState::REQUESTED);
-  EquipMessage actual(EquipType::UNEQUIP, Uuid{22}, Item::RESOURCE, Uuid{18}, EquipState::COMPLETED);
+  const EquipMessage expected(EquipType::EQUIP, Uuid{12}, Item::COMPUTER, Uuid{27});
+  EquipMessage actual(EquipType::UNEQUIP, Uuid{22}, Item::RESOURCE, Uuid{18});
+  actual.validate(true);
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_EquipMessage, EquipCompleted)
+TEST(Unit_Bsgo_Serialization_EquipMessage, EquipValidated)
 {
-  const EquipMessage expected(EquipType::EQUIP,
-                              Uuid{6},
-                              Item::COMPUTER,
-                              Uuid{19},
-                              EquipState::COMPLETED);
-  EquipMessage actual(EquipType::UNEQUIP, Uuid{41}, Item::WEAPON, Uuid{46}, EquipState::REQUESTED);
+  EquipMessage expected(EquipType::EQUIP, Uuid{6}, Item::COMPUTER, Uuid{19});
+  expected.validate(true);
+  EquipMessage actual(EquipType::UNEQUIP, Uuid{41}, Item::WEAPON, Uuid{46});
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_EquipMessage, UnequipRequested)
+TEST(Unit_Bsgo_Serialization_EquipMessage, Unequip)
 {
-  const EquipMessage expected(EquipType::UNEQUIP,
-                              Uuid{12},
-                              Item::COMPUTER,
-                              Uuid{27},
-                              EquipState::REQUESTED);
-  EquipMessage actual(EquipType::EQUIP, Uuid{22}, Item::RESOURCE, Uuid{18}, EquipState::COMPLETED);
+  const EquipMessage expected(EquipType::UNEQUIP, Uuid{12}, Item::COMPUTER, Uuid{27});
+  EquipMessage actual(EquipType::EQUIP, Uuid{22}, Item::RESOURCE, Uuid{18});
+  actual.validate(true);
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_EquipMessage, UnequipCompleted)
+TEST(Unit_Bsgo_Serialization_EquipMessage, UnequipValidated)
 {
-  const EquipMessage expected(EquipType::UNEQUIP,
-                              Uuid{6},
-                              Item::COMPUTER,
-                              Uuid{19},
-                              EquipState::COMPLETED);
-  EquipMessage actual(EquipType::EQUIP, Uuid{41}, Item::WEAPON, Uuid{46}, EquipState::REQUESTED);
+  EquipMessage expected(EquipType::UNEQUIP, Uuid{6}, Item::COMPUTER, Uuid{19});
+  expected.validate(true);
+  EquipMessage actual(EquipType::EQUIP, Uuid{41}, Item::WEAPON, Uuid{46});
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }

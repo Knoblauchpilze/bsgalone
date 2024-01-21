@@ -149,11 +149,8 @@ void OutpostScreenUiHandler::onMessageReceived(const bsgo::IMessage &message)
   }
   if (bsgo::MessageType::EQUIP == message.type())
   {
-    const auto &equip = message.as<bsgo::EquipMessage>();
-    if (bsgo::EquipState::COMPLETED == equip.getEquipState())
-    {
-      m_refreshRequested = true;
-    }
+    const auto &equip  = message.as<bsgo::EquipMessage>();
+    m_refreshRequested = equip.validated();
   }
 }
 

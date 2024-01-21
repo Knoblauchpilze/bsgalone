@@ -244,21 +244,15 @@ void ShipView::tryAcquireTarget(const Uuid &ship, const Eigen::Vector3f &positio
 void ShipView::tryEquipItem(const Item &itemType, const bsgo::Uuid &itemDbId) const
 {
   checkPlayerShipDbIdExists();
-  m_messageQueue->pushMessage(std::make_unique<EquipMessage>(bsgo::EquipType::EQUIP,
-                                                             *m_playerShipDbId,
-                                                             itemType,
-                                                             itemDbId,
-                                                             bsgo::EquipState::REQUESTED));
+  m_messageQueue->pushMessage(
+    std::make_unique<EquipMessage>(bsgo::EquipType::EQUIP, *m_playerShipDbId, itemType, itemDbId));
 }
 
 void ShipView::tryUnequipItem(const Item &itemType, const bsgo::Uuid &itemDbId) const
 {
   checkPlayerShipDbIdExists();
-  m_messageQueue->pushMessage(std::make_unique<EquipMessage>(bsgo::EquipType::UNEQUIP,
-                                                             *m_playerShipDbId,
-                                                             itemType,
-                                                             itemDbId,
-                                                             bsgo::EquipState::REQUESTED));
+  m_messageQueue->pushMessage(
+    std::make_unique<EquipMessage>(bsgo::EquipType::UNEQUIP, *m_playerShipDbId, itemType, itemDbId));
 }
 
 auto ShipView::getPlayerShipWeapons() const -> std::vector<PlayerWeapon>
