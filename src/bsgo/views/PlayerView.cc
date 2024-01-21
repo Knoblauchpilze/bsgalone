@@ -120,8 +120,7 @@ auto PlayerView::getPlayerShips() const -> std::vector<PlayerShip>
 
 void PlayerView::trySelectShip(const Uuid &shipDbId) const
 {
-  m_messageQueue->pushMessage(
-    std::make_unique<HangarMessage>(shipDbId, ShipSwitchRequestState::REQUESTED));
+  m_messageQueue->pushMessage(std::make_unique<HangarMessage>(shipDbId));
 }
 
 void PlayerView::tryPurchase(const Item &type, const Uuid &itemDbId) const

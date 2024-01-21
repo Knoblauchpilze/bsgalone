@@ -77,7 +77,7 @@ void GameMessageModule::handleDockMessage(const bsgo::DockMessage &message)
 
 void GameMessageModule::handleHangarMessage(const bsgo::HangarMessage &message)
 {
-  if (bsgo::ShipSwitchRequestState::COMPLETED != message.getRequestState())
+  if (!message.validated())
   {
     return;
   }

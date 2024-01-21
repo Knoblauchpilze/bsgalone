@@ -24,8 +24,7 @@ void HangarMessageConsumer::onMessageReceived(const IMessage &message)
 {
   const auto &hangarMessage = message.as<HangarMessage>();
 
-  const auto switchRequested = ShipSwitchRequestState::REQUESTED == hangarMessage.getRequestState();
-  if (switchRequested)
+  if (!hangarMessage.validated())
   {
     handleShipSwitchRequest(hangarMessage.getShipDbId());
   }
@@ -39,8 +38,9 @@ void HangarMessageConsumer::handleShipSwitchRequest(const Uuid &shipDbId) const
     return;
   }
 
-  m_messageQueue->pushMessage(
-    std::make_unique<HangarMessage>(shipDbId, ShipSwitchRequestState::COMPLETED));
+  auto message = std::make_unique<HangarMessage>(shipDbId);
+  message->validate();
+  m_messageQueue->pushMessage(std::move(message));
 }
 
 } // namespace bsgo
