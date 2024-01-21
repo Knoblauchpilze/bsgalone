@@ -1,6 +1,5 @@
 
 #include "GameScreenInputHandler.hh"
-#include "SlotMessage.hh"
 
 namespace pge {
 

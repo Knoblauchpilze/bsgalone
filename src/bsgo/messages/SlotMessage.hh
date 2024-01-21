@@ -2,32 +2,22 @@
 
 #pragma once
 
-#include "AbstractMessage.hh"
 #include "Slot.hh"
 #include "Uuid.hh"
+#include "ValidatableMessage.hh"
 
 namespace bsgo {
 
-enum class SlotState
-{
-  ACTIVATED,
-  FIRED
-};
-
-class SlotMessage : public AbstractMessage
+class SlotMessage : public ValidatableMessage
 {
   public:
   SlotMessage();
-  SlotMessage(const Uuid &shipEntityId,
-              const int slotIndex,
-              const Slot &slotType,
-              const SlotState &state);
+  SlotMessage(const Uuid &shipEntityId, const int slotIndex, const Slot &slotType);
   ~SlotMessage() override = default;
 
   auto getShipEntityId() const -> Uuid;
   auto getSlotIndex() const -> int;
   auto getSlotType() const -> Slot;
-  auto getSlotState() const -> SlotState;
 
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
@@ -36,7 +26,6 @@ class SlotMessage : public AbstractMessage
   Uuid m_shipEntityId{};
   int m_slotIndex{};
   Slot m_slotType{};
-  SlotState m_state{SlotState::ACTIVATED};
 };
 
 } // namespace bsgo
