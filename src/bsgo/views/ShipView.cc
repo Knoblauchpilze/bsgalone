@@ -173,10 +173,7 @@ void ShipView::dockPlayerShip() const
   auto playerShip = getPlayerShip();
   checkPlayerShipDbIdExists();
 
-  auto message = std::make_unique<DockMessage>(*m_playerShipDbId,
-                                               playerShip.uuid,
-                                               true,
-                                               DockState::STARTED);
+  auto message = std::make_unique<DockMessage>(*m_playerShipDbId, playerShip.uuid, true);
   m_messageQueue->pushMessage(std::move(message));
 }
 
@@ -185,10 +182,7 @@ void ShipView::undockPlayerShip() const
   auto playerShip = getPlayerShip();
   checkPlayerShipDbIdExists();
 
-  auto message = std::make_unique<DockMessage>(*m_playerShipDbId,
-                                               playerShip.uuid,
-                                               false,
-                                               DockState::STARTED);
+  auto message = std::make_unique<DockMessage>(*m_playerShipDbId, playerShip.uuid, false);
   m_messageQueue->pushMessage(std::move(message));
 }
 

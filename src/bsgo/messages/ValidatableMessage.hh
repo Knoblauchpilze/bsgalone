@@ -13,8 +13,9 @@ class ValidatableMessage : public AbstractMessage
   ~ValidatableMessage() override = default;
 
   bool validated() const;
+  void validate(const bool validate);
 
-  private:
+  protected:
   bool m_validated{false};
 };
 

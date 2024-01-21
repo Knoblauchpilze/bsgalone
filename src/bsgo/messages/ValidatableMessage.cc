@@ -17,4 +17,9 @@ bool ValidatableMessage::validated() const
   return m_validated;
 }
 
+void ValidatableMessage::validate(const bool validate)
+{
+  m_validated = validate;
+}
+
 } // namespace bsgo

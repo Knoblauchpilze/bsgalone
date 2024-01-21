@@ -2,31 +2,21 @@
 
 #pragma once
 
-#include "AbstractMessage.hh"
 #include "Uuid.hh"
+#include "ValidatableMessage.hh"
 
 namespace bsgo {
 
-enum class DockState
-{
-  STARTED,
-  COMPLETED
-};
-
-class DockMessage : public AbstractMessage
+class DockMessage : public ValidatableMessage
 {
   public:
   DockMessage();
-  DockMessage(const Uuid &shipDbId,
-              const Uuid &shipEntityId,
-              const bool docking,
-              const DockState &state);
+  DockMessage(const Uuid &shipDbId, const Uuid &shipEntityId, const bool docking);
   ~DockMessage() override = default;
 
   auto getShipDbId() const -> Uuid;
   auto getShipEntityId() const -> Uuid;
   bool isDocking() const;
-  auto getDockState() const -> DockState;
 
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
@@ -35,7 +25,6 @@ class DockMessage : public AbstractMessage
   Uuid m_shipDbId{};
   Uuid m_shipEntityId{};
   bool m_docking{false};
-  DockState m_state{DockState::STARTED};
 };
 
 } // namespace bsgo
