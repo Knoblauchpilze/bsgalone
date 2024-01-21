@@ -22,7 +22,7 @@ TEST(Unit_Bsgo_Serialization_EquipMessage, Equip)
 {
   const EquipMessage expected(EquipType::EQUIP, Uuid{12}, Item::COMPUTER, Uuid{27});
   EquipMessage actual(EquipType::UNEQUIP, Uuid{22}, Item::RESOURCE, Uuid{18});
-  actual.validate(true);
+  actual.validate();
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
@@ -30,7 +30,7 @@ TEST(Unit_Bsgo_Serialization_EquipMessage, Equip)
 TEST(Unit_Bsgo_Serialization_EquipMessage, EquipValidated)
 {
   EquipMessage expected(EquipType::EQUIP, Uuid{6}, Item::COMPUTER, Uuid{19});
-  expected.validate(true);
+  expected.validate();
   EquipMessage actual(EquipType::UNEQUIP, Uuid{41}, Item::WEAPON, Uuid{46});
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
@@ -40,7 +40,7 @@ TEST(Unit_Bsgo_Serialization_EquipMessage, Unequip)
 {
   const EquipMessage expected(EquipType::UNEQUIP, Uuid{12}, Item::COMPUTER, Uuid{27});
   EquipMessage actual(EquipType::EQUIP, Uuid{22}, Item::RESOURCE, Uuid{18});
-  actual.validate(true);
+  actual.validate();
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
@@ -48,7 +48,7 @@ TEST(Unit_Bsgo_Serialization_EquipMessage, Unequip)
 TEST(Unit_Bsgo_Serialization_EquipMessage, UnequipValidated)
 {
   EquipMessage expected(EquipType::UNEQUIP, Uuid{6}, Item::COMPUTER, Uuid{19});
-  expected.validate(true);
+  expected.validate();
   EquipMessage actual(EquipType::EQUIP, Uuid{41}, Item::WEAPON, Uuid{46});
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
