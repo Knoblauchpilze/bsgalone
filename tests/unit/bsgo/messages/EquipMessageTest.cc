@@ -27,7 +27,7 @@ TEST(Unit_Bsgo_Serialization_EquipMessage, Equip)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_EquipMessage, EquipValidated)
+TEST(Unit_Bsgo_Serialization_EquipMessage, Equip_Validated)
 {
   EquipMessage expected(EquipType::EQUIP, Uuid{6}, Item::COMPUTER, Uuid{19});
   expected.validate();
@@ -45,7 +45,7 @@ TEST(Unit_Bsgo_Serialization_EquipMessage, Unequip)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_EquipMessage, UnequipValidated)
+TEST(Unit_Bsgo_Serialization_EquipMessage, Unequip_Validated)
 {
   EquipMessage expected(EquipType::UNEQUIP, Uuid{6}, Item::COMPUTER, Uuid{19});
   expected.validate();

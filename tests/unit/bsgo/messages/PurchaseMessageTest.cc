@@ -81,7 +81,7 @@ TEST(Unit_Bsgo_Serialization_PurchaseMessage, Ship)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_PurchaseMessage, Ship_Completed)
+TEST(Unit_Bsgo_Serialization_PurchaseMessage, Ship_Validated)
 {
   PurchaseMessage expected(Uuid{44}, Item::SHIP, Uuid{17});
   expected.validate();
