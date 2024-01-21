@@ -22,9 +22,8 @@ PurchaseMessageConsumer::PurchaseMessageConsumer(const Services &services,
 
 void PurchaseMessageConsumer::onMessageReceived(const IMessage &message)
 {
-  const auto &purchase  = message.as<PurchaseMessage>();
-  const auto buyRequest = PurchaseState::REQUESTED == purchase.getPurchaseState();
-  if (!buyRequest)
+  const auto &purchase = message.as<PurchaseMessage>();
+  if (purchase.validated())
   {
     return;
   }
@@ -60,10 +59,9 @@ void PurchaseMessageConsumer::handleComputerPurchase(const Uuid &playerDbId,
     return;
   }
 
-  m_messageQueue->pushMessage(std::make_unique<PurchaseMessage>(playerDbId,
-                                                                Item::COMPUTER,
-                                                                computerDbId,
-                                                                PurchaseState::COMPLETED));
+  auto message = std::make_unique<PurchaseMessage>(playerDbId, Item::COMPUTER, computerDbId);
+  message->validate();
+  m_messageQueue->pushMessage(std::move(message));
 }
 
 void PurchaseMessageConsumer::handleShipPurchase(const Uuid &playerDbId, const Uuid &shipDbId) const
@@ -75,8 +73,9 @@ void PurchaseMessageConsumer::handleShipPurchase(const Uuid &playerDbId, const U
     return;
   }
 
-  m_messageQueue->pushMessage(
-    std::make_unique<PurchaseMessage>(playerDbId, Item::SHIP, shipDbId, PurchaseState::COMPLETED));
+  auto message = std::make_unique<PurchaseMessage>(playerDbId, Item::SHIP, shipDbId);
+  message->validate();
+  m_messageQueue->pushMessage(std::move(message));
 }
 
 void PurchaseMessageConsumer::handleWeaponPurchase(const Uuid &playerDbId,
@@ -89,10 +88,9 @@ void PurchaseMessageConsumer::handleWeaponPurchase(const Uuid &playerDbId,
     return;
   }
 
-  m_messageQueue->pushMessage(std::make_unique<PurchaseMessage>(playerDbId,
-                                                                Item::WEAPON,
-                                                                weaponDbId,
-                                                                PurchaseState::COMPLETED));
+  auto message = std::make_unique<PurchaseMessage>(playerDbId, Item::WEAPON, weaponDbId);
+  message->validate();
+  m_messageQueue->pushMessage(std::move(message));
 }
 
 } // namespace bsgo

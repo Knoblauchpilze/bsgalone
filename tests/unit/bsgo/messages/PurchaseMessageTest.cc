@@ -13,70 +13,79 @@ auto assertMessagesAreEqual(const PurchaseMessage &actual, const PurchaseMessage
   EXPECT_EQ(actual.getPlayerDbId(), expected.getPlayerDbId());
   EXPECT_EQ(actual.getItemType(), expected.getItemType());
   EXPECT_EQ(actual.getItemDbId(), expected.getItemDbId());
-  EXPECT_EQ(actual.getPurchaseState(), expected.getPurchaseState());
+  EXPECT_EQ(actual.validated(), expected.validated());
 }
 } // namespace
 
-TEST(Unit_Bsgo_Serialization_PurchaseMessage, Resource_Requested)
+TEST(Unit_Bsgo_Serialization_PurchaseMessage, Resource)
 {
-  const PurchaseMessage expected(Uuid{14}, Item::RESOURCE, Uuid{26}, PurchaseState::REQUESTED);
-  PurchaseMessage actual(Uuid{6}, Item::COMPUTER, Uuid{4}, PurchaseState::COMPLETED);
+  const PurchaseMessage expected(Uuid{14}, Item::RESOURCE, Uuid{26});
+  PurchaseMessage actual(Uuid{6}, Item::COMPUTER, Uuid{4});
+  actual.validate();
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_PurchaseMessage, Resource_Completed)
+TEST(Unit_Bsgo_Serialization_PurchaseMessage, Resource_Validated)
 {
-  const PurchaseMessage expected(Uuid{44}, Item::RESOURCE, Uuid{17}, PurchaseState::COMPLETED);
-  PurchaseMessage actual(Uuid{3}, Item::SHIP, Uuid{21}, PurchaseState::REQUESTED);
+  PurchaseMessage expected(Uuid{44}, Item::RESOURCE, Uuid{17});
+  expected.validate();
+  PurchaseMessage actual(Uuid{3}, Item::SHIP, Uuid{21});
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_PurchaseMessage, Weapon_Requested)
+TEST(Unit_Bsgo_Serialization_PurchaseMessage, Weapon)
 {
-  const PurchaseMessage expected(Uuid{14}, Item::WEAPON, Uuid{26}, PurchaseState::REQUESTED);
-  PurchaseMessage actual(Uuid{6}, Item::RESOURCE, Uuid{4}, PurchaseState::COMPLETED);
+  const PurchaseMessage expected(Uuid{14}, Item::WEAPON, Uuid{26});
+  PurchaseMessage actual(Uuid{6}, Item::RESOURCE, Uuid{4});
+  actual.validate();
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_PurchaseMessage, Weapon_Completed)
+TEST(Unit_Bsgo_Serialization_PurchaseMessage, Weapon_Validated)
 {
-  const PurchaseMessage expected(Uuid{44}, Item::WEAPON, Uuid{17}, PurchaseState::COMPLETED);
-  PurchaseMessage actual(Uuid{3}, Item::SHIP, Uuid{21}, PurchaseState::REQUESTED);
+  PurchaseMessage expected(Uuid{44}, Item::WEAPON, Uuid{17});
+  expected.validate();
+  PurchaseMessage actual(Uuid{3}, Item::SHIP, Uuid{21});
+
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_PurchaseMessage, Computer_Requested)
+TEST(Unit_Bsgo_Serialization_PurchaseMessage, Computer)
 {
-  const PurchaseMessage expected(Uuid{14}, Item::COMPUTER, Uuid{26}, PurchaseState::REQUESTED);
-  PurchaseMessage actual(Uuid{6}, Item::RESOURCE, Uuid{4}, PurchaseState::COMPLETED);
+  const PurchaseMessage expected(Uuid{14}, Item::COMPUTER, Uuid{26});
+  PurchaseMessage actual(Uuid{6}, Item::RESOURCE, Uuid{4});
+  actual.validate();
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_PurchaseMessage, Computer_Completed)
+TEST(Unit_Bsgo_Serialization_PurchaseMessage, Computer_Validated)
 {
-  const PurchaseMessage expected(Uuid{44}, Item::COMPUTER, Uuid{17}, PurchaseState::COMPLETED);
-  PurchaseMessage actual(Uuid{3}, Item::WEAPON, Uuid{21}, PurchaseState::REQUESTED);
+  PurchaseMessage expected(Uuid{44}, Item::COMPUTER, Uuid{17});
+  expected.validate();
+  PurchaseMessage actual(Uuid{3}, Item::WEAPON, Uuid{21});
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_PurchaseMessage, Ship_Requested)
+TEST(Unit_Bsgo_Serialization_PurchaseMessage, Ship)
 {
-  const PurchaseMessage expected(Uuid{14}, Item::SHIP, Uuid{26}, PurchaseState::REQUESTED);
-  PurchaseMessage actual(Uuid{6}, Item::RESOURCE, Uuid{4}, PurchaseState::COMPLETED);
+  const PurchaseMessage expected(Uuid{14}, Item::SHIP, Uuid{26});
+  PurchaseMessage actual(Uuid{6}, Item::RESOURCE, Uuid{4});
+  actual.validate();
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
 
 TEST(Unit_Bsgo_Serialization_PurchaseMessage, Ship_Completed)
 {
-  const PurchaseMessage expected(Uuid{44}, Item::SHIP, Uuid{17}, PurchaseState::COMPLETED);
-  PurchaseMessage actual(Uuid{3}, Item::WEAPON, Uuid{21}, PurchaseState::REQUESTED);
+  PurchaseMessage expected(Uuid{44}, Item::SHIP, Uuid{17});
+  expected.validate();
+  PurchaseMessage actual(Uuid{3}, Item::WEAPON, Uuid{21});
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
