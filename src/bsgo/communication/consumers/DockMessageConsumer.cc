@@ -42,7 +42,7 @@ void DockMessageConsumer::handleDocking(const Uuid &shipDbId, const Uuid &shipEn
   }
 
   auto message = std::make_unique<DockMessage>(shipDbId, shipEntityId, true);
-  message->validate(true);
+  message->validate();
   m_messageQueue->pushMessage(std::move(message));
 }
 
@@ -55,7 +55,7 @@ void DockMessageConsumer::handleUndocking(const Uuid &shipDbId, const Uuid &ship
   }
 
   auto message = std::make_unique<DockMessage>(shipDbId, shipEntityId, false);
-  message->validate(true);
+  message->validate();
   m_messageQueue->pushMessage(std::move(message));
 }
 

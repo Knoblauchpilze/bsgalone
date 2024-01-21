@@ -59,7 +59,7 @@ void EquipMessageConsumer::handleEquipRequest(const Uuid &shipDbId,
   }
 
   auto message = std::make_unique<EquipMessage>(EquipType::EQUIP, shipDbId, type, itemDbId);
-  message->validate(true);
+  message->validate();
   m_messageQueue->pushMessage(std::move(message));
 }
 
@@ -76,7 +76,7 @@ void EquipMessageConsumer::handleUnequipRequest(const Uuid &shipDbId,
   }
 
   auto message = std::make_unique<EquipMessage>(EquipType::UNEQUIP, shipDbId, type, itemDbId);
-  message->validate(true);
+  message->validate();
   m_messageQueue->pushMessage(std::move(message));
 }
 
