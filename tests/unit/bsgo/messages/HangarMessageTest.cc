@@ -11,22 +11,24 @@ auto assertMessagesAreEqual(const HangarMessage &actual, const HangarMessage &ex
 {
   EXPECT_EQ(actual.type(), expected.type());
   EXPECT_EQ(actual.getShipDbId(), expected.getShipDbId());
-  EXPECT_EQ(actual.getRequestState(), expected.getRequestState());
+  EXPECT_EQ(actual.validated(), expected.validated());
 }
 } // namespace
 
-TEST(Unit_Bsgo_Serialization_HangarMessage, Requested)
+TEST(Unit_Bsgo_Serialization_HangarMessage, NotValidated)
 {
-  const HangarMessage expected(Uuid{14}, ShipSwitchRequestState::REQUESTED);
-  HangarMessage actual(Uuid{6}, ShipSwitchRequestState::COMPLETED);
+  const HangarMessage expected(Uuid{14});
+  HangarMessage actual(Uuid{6});
+  actual.validate();
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_HangarMessage, Completed)
+TEST(Unit_Bsgo_Serialization_HangarMessage, Validated)
 {
-  const HangarMessage expected(Uuid{14}, ShipSwitchRequestState::COMPLETED);
-  HangarMessage actual(Uuid{6}, ShipSwitchRequestState::REQUESTED);
+  HangarMessage expected(Uuid{14});
+  expected.validate();
+  HangarMessage actual(Uuid{6});
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
