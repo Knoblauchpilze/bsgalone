@@ -126,8 +126,7 @@ void PlayerView::trySelectShip(const Uuid &shipDbId) const
 void PlayerView::tryPurchase(const Item &type, const Uuid &itemDbId) const
 {
   checkPlayerDbIdExists();
-  m_messageQueue->pushMessage(
-    std::make_unique<PurchaseMessage>(*m_playerDbId, type, itemDbId, PurchaseState::REQUESTED));
+  m_messageQueue->pushMessage(std::make_unique<PurchaseMessage>(*m_playerDbId, type, itemDbId));
 }
 
 void PlayerView::tryLogin(const std::string &name, const std::string &password) const

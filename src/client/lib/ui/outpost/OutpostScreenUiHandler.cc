@@ -142,10 +142,7 @@ void OutpostScreenUiHandler::onMessageReceived(const bsgo::IMessage &message)
   if (bsgo::MessageType::PURCHASE == message.type())
   {
     const auto &purchase = message.as<bsgo::PurchaseMessage>();
-    if (bsgo::PurchaseState::COMPLETED == purchase.getPurchaseState())
-    {
-      m_refreshRequested = true;
-    }
+    m_refreshRequested   = purchase.validated();
   }
   if (bsgo::MessageType::EQUIP == message.type())
   {
