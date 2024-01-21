@@ -3,6 +3,7 @@
 #include "AsioUtils.hh"
 
 namespace net {
+std::atomic<ConnectionId> Connection::NEXT_ID{0};
 constexpr auto INCOMING_DATA_BUFFER_SIZE_IN_BYTES = 100;
 
 Connection::Connection(const std::string &url, const int port, asio::io_context &context)
@@ -18,6 +19,7 @@ Connection::Connection(asio::ip::tcp::socket &&socket)
 
 Connection::Connection(asio::ip::tcp::socket &&socket, const ConnectionType type)
   : utils::CoreObject("connection")
+  , m_id(NEXT_ID.fetch_add(1))
   , m_type(type)
   , m_socket(std::move(socket))
   , m_incomingDataTempBuffer(INCOMING_DATA_BUFFER_SIZE_IN_BYTES, 0)
@@ -29,7 +31,12 @@ auto Connection::str() const -> std::string
 {
   const auto client    = net::str(m_socket.remote_endpoint());
   const auto connected = isConnected() ? "ON" : "OFF";
-  return client + "-" + net::str(m_type) + "-" + connected;
+  return std::to_string(m_id) + "-" + client + "-" + net::str(m_type) + "-" + connected;
+}
+
+auto Connection::id() const -> ConnectionId
+{
+  return m_id;
 }
 
 auto Connection::type() const -> ConnectionType

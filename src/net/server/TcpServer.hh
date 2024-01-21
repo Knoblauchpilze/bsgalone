@@ -7,8 +7,9 @@
 #include <asio/asio.hpp>
 #include <core_utils/CoreObject.hh>
 #include <memory>
+#include <mutex>
 #include <optional>
-#include <vector>
+#include <unordered_map>
 
 namespace net {
 
@@ -28,7 +29,8 @@ class TcpServer : public utils::CoreObject
   std::optional<ConnectionLostHandler> m_disconnectHandler{};
   std::optional<DataReceivedHandler> m_connectionDataHandler{};
 
-  std::vector<ConnectionShPtr> m_connections{};
+  std::mutex m_connectionsLocker{};
+  std::unordered_map<ConnectionId, ConnectionShPtr> m_connections{};
 
   void initializeFromConfig(const ServerConfig &config);
   void registerToAsio();
