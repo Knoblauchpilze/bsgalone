@@ -16,6 +16,8 @@ auto str(const MessageType &type) -> std::string
       return "hangar";
     case MessageType::JUMP:
       return "jump";
+    case MessageType::JUMP_CANCELLED:
+      return "jump_cancelled";
     case MessageType::LOGIN:
       return "login";
     case MessageType::LOOT:
@@ -37,12 +39,13 @@ auto str(const MessageType &type) -> std::string
   }
 }
 
-auto allMessageTypes() -> std::array<MessageType, 12>
+auto allMessageTypes() -> std::array<MessageType, 13>
 {
   return {MessageType::DOCK,
           MessageType::EQUIP,
           MessageType::HANGAR,
           MessageType::JUMP,
+          MessageType::JUMP_CANCELLED,
           MessageType::LOOT,
           MessageType::PURCHASE,
           MessageType::LOGIN,

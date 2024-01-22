@@ -6,6 +6,7 @@
 #include "DockMessage.hh"
 #include "EquipMessage.hh"
 #include "HangarMessage.hh"
+#include "JumpCancelledMessage.hh"
 #include "JumpMessage.hh"
 #include "LoginMessage.hh"
 #include "LootMessage.hh"
@@ -106,6 +107,17 @@ auto readHangarMessage(std::istream &in) -> std::optional<IMessagePtr>
 auto readJumpMessage(std::istream &in) -> std::optional<IMessagePtr>
 {
   auto message = std::make_unique<JumpMessage>();
+  if (!message->deserialize(in))
+  {
+    return {};
+  }
+
+  return message;
+}
+
+auto readJumpCancelledMessage(std::istream &in) -> std::optional<IMessagePtr>
+{
+  auto message = std::make_unique<JumpCancelledMessage>();
   if (!message->deserialize(in))
   {
     return {};
@@ -216,6 +228,8 @@ auto MessageParser::tryReadMessage(const MessageType &type, std::istream &in)
       return readHangarMessage(in);
     case MessageType::JUMP:
       return readJumpMessage(in);
+    case MessageType::JUMP_CANCELLED:
+      return readJumpCancelledMessage(in);
     case MessageType::LOGIN:
       return readLoginMessage(in);
     case MessageType::LOOT:
