@@ -4,6 +4,7 @@
 #include "EquipMessage.hh"
 #include "JumpCancelledMessage.hh"
 #include "JumpMessage.hh"
+#include "JumpRequestedMessage.hh"
 #include "LockerUtils.hh"
 #include "SlotMessage.hh"
 #include "TargetMessage.hh"
@@ -210,10 +211,9 @@ void ShipView::startJump() const
 
   checkPlayerShipDbIdExists();
 
-  auto message = std::make_unique<JumpMessage>(*m_playerShipDbId,
-                                               *m_playerShipEntityId,
-                                               JumpState::STARTED,
-                                               m_systemToJumpTo);
+  auto message = std::make_unique<JumpRequestedMessage>(*m_playerShipDbId,
+                                                        *m_playerShipEntityId,
+                                                        *m_systemToJumpTo);
   m_messageQueue->pushMessage(std::move(message));
 }
 

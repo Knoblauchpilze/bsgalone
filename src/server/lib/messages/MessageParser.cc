@@ -8,6 +8,7 @@
 #include "HangarMessage.hh"
 #include "JumpCancelledMessage.hh"
 #include "JumpMessage.hh"
+#include "JumpRequestedMessage.hh"
 #include "LoginMessage.hh"
 #include "LootMessage.hh"
 #include "PurchaseMessage.hh"
@@ -104,6 +105,17 @@ auto readHangarMessage(std::istream &in) -> std::optional<IMessagePtr>
   return message;
 }
 
+auto readJumpCancelledMessage(std::istream &in) -> std::optional<IMessagePtr>
+{
+  auto message = std::make_unique<JumpCancelledMessage>();
+  if (!message->deserialize(in))
+  {
+    return {};
+  }
+
+  return message;
+}
+
 auto readJumpMessage(std::istream &in) -> std::optional<IMessagePtr>
 {
   auto message = std::make_unique<JumpMessage>();
@@ -115,9 +127,9 @@ auto readJumpMessage(std::istream &in) -> std::optional<IMessagePtr>
   return message;
 }
 
-auto readJumpCancelledMessage(std::istream &in) -> std::optional<IMessagePtr>
+auto readJumpRequestedMessage(std::istream &in) -> std::optional<IMessagePtr>
 {
-  auto message = std::make_unique<JumpCancelledMessage>();
+  auto message = std::make_unique<JumpRequestedMessage>();
   if (!message->deserialize(in))
   {
     return {};
@@ -230,6 +242,8 @@ auto MessageParser::tryReadMessage(const MessageType &type, std::istream &in)
       return readJumpMessage(in);
     case MessageType::JUMP_CANCELLED:
       return readJumpCancelledMessage(in);
+    case MessageType::JUMP_REQUESTED:
+      return readJumpRequestedMessage(in);
     case MessageType::LOGIN:
       return readLoginMessage(in);
     case MessageType::LOOT:
