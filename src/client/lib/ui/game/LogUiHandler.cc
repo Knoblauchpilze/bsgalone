@@ -4,6 +4,7 @@
 #include "StringUtils.hh"
 #include "UiTextMenu.hh"
 
+#include "JumpCancelledMessage.hh"
 #include "JumpMessage.hh"
 #include "LootMessage.hh"
 #include "ScannedMessage.hh"
@@ -13,6 +14,7 @@ namespace pge {
 
 const std::unordered_set<bsgo::MessageType> RELEVANT_MESSAGE_TYPES_TO_LOG
   = {bsgo::MessageType::JUMP,
+     bsgo::MessageType::JUMP_CANCELLED,
      bsgo::MessageType::LOOT,
      bsgo::MessageType::SCANNED,
      bsgo::MessageType::SLOT};
@@ -100,6 +102,12 @@ bool shouldMessageBeFiltered(const bsgo::IMessage &message, const bsgo::Entity &
     return JUMP_STATES_NOT_TRIGGERING_LOG.contains(jumpMessage.getJumpState());
   }
 
+  if (bsgo::MessageType::JUMP_CANCELLED == message.type())
+  {
+    const auto &jump = message.as<bsgo::JumpCancelledMessage>();
+    return !jump.validated();
+  }
+
   if (bsgo::MessageType::SLOT == message.type())
   {
     const auto &slotMessage = message.as<bsgo::SlotMessage>();
@@ -168,11 +176,14 @@ auto createJumpMessage(const bsgo::JumpMessage &message)
   {
     case bsgo::JumpState::STARTED:
       return textConfigFromColor(FTL_JUMP_STARTED_TEXT, colors::WHITE);
-    case bsgo::JumpState::CANCELLED:
-      return textConfigFromColor(FTL_JUMP_CANCELLED_TEXT, colors::WHITE);
     default:
       throw std::invalid_argument("Unsupported jump state to produce message");
   }
+}
+
+auto createJumpCancelledMessage(const bsgo::JumpCancelledMessage & /*message*/)
+{
+  return textConfigFromColor(FTL_JUMP_CANCELLED_TEXT, colors::WHITE);
 }
 
 auto createLootMessage(const bsgo::LootMessage &message, const bsgo::ResourceView &resourceView)
@@ -227,6 +238,8 @@ auto createTextConfigForMessage(const bsgo::IMessage &message,
   {
     case bsgo::MessageType::JUMP:
       return createJumpMessage(message.as<bsgo::JumpMessage>());
+    case bsgo::MessageType::JUMP_CANCELLED:
+      return createJumpCancelledMessage(message.as<bsgo::JumpCancelledMessage>());
     case bsgo::MessageType::LOOT:
       return createLootMessage(message.as<bsgo::LootMessage>(), resourceView);
     case bsgo::MessageType::SCANNED:

@@ -2,6 +2,7 @@
 #include "ShipView.hh"
 #include "DockMessage.hh"
 #include "EquipMessage.hh"
+#include "JumpCancelledMessage.hh"
 #include "JumpMessage.hh"
 #include "LockerUtils.hh"
 #include "SlotMessage.hh"
@@ -225,9 +226,7 @@ void ShipView::cancelJump() const
 
   checkPlayerShipDbIdExists();
 
-  auto message = std::make_unique<JumpMessage>(*m_playerShipDbId,
-                                               *m_playerShipEntityId,
-                                               JumpState::CANCELLED);
+  auto message = std::make_unique<JumpCancelledMessage>(*m_playerShipDbId, *m_playerShipEntityId);
   m_messageQueue->pushMessage(std::move(message));
 }
 

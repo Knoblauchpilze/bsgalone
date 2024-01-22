@@ -4,6 +4,7 @@
 #include "DockMessageConsumer.hh"
 #include "EquipMessageConsumer.hh"
 #include "HangarMessageConsumer.hh"
+#include "JumpCancelledMessageConsumer.hh"
 #include "JumpMessageConsumer.hh"
 #include "LoginMessageConsumer.hh"
 #include "PurchaseMessageConsumer.hh"
@@ -23,6 +24,10 @@ auto registerAllConsumersToQueue(IMessageQueue *const inputMessagesQueue,
   auto jump = std::make_unique<JumpMessageConsumer>(services, outputMessagesQueue);
   inputMessagesQueue->addListener(jump.get());
   out.emplace_back(std::move(jump));
+
+  auto jumpCancelled = std::make_unique<JumpCancelledMessageConsumer>(services, outputMessagesQueue);
+  inputMessagesQueue->addListener(jumpCancelled.get());
+  out.emplace_back(std::move(jumpCancelled));
 
   auto dock = std::make_unique<DockMessageConsumer>(services, outputMessagesQueue);
   inputMessagesQueue->addListener(dock.get());
