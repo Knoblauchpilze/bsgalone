@@ -24,11 +24,6 @@ GameMessageModule::GameMessageModule(Game *game)
   setService("game");
 }
 
-void GameMessageModule::setPlayerShipDbId(const bsgo::Uuid &shipDbId)
-{
-  m_playerShipDbId = shipDbId;
-}
-
 void GameMessageModule::onMessageReceived(const bsgo::IMessage &message)
 {
   switch (message.type())
@@ -51,14 +46,6 @@ void GameMessageModule::onMessageReceived(const bsgo::IMessage &message)
     default:
       error("Unsupported message type " + bsgo::str(message.type()));
       break;
-  }
-}
-
-void GameMessageModule::checkIfPlayerShipDbIdExists()
-{
-  if (!m_playerShipDbId)
-  {
-    error("Expected player ship id to be defined");
   }
 }
 
@@ -91,11 +78,7 @@ void GameMessageModule::handleHangarMessage(const bsgo::HangarMessage &message)
 
 void GameMessageModule::handleJumpMessage(const bsgo::JumpMessage &message)
 {
-  checkIfPlayerShipDbIdExists();
-
-  const auto ship  = message.getShipDbId();
-  const auto state = message.getJumpState();
-  if (bsgo::JumpState::COMPLETED != state || *m_playerShipDbId != ship)
+  if (!message.validated())
   {
     return;
   }

@@ -21,39 +21,25 @@ JumpMessageConsumer::JumpMessageConsumer(const Services &services, IMessageQueue
 
 void JumpMessageConsumer::onMessageReceived(const IMessage &message)
 {
-  const auto &jumpMessage = message.as<JumpMessage>();
-  const auto shipDbId     = jumpMessage.getShipDbId();
-  const auto shipEntityId = jumpMessage.getShipEntityId();
-  const auto jumpSystem   = jumpMessage.getJumpSystem();
-  const auto state        = jumpMessage.getJumpState();
+  const auto &jump = message.as<JumpMessage>();
 
-  bool success{false};
-
-  switch (state)
+  if (!jump.validated())
   {
-    case JumpState::STARTED:
-      success = m_jumpService->tryRegisterJump(shipDbId, shipEntityId, *jumpSystem);
-      break;
-    case JumpState::CANCELLED:
-      success = m_jumpService->tryCancelJump(shipDbId, shipEntityId);
-      break;
-    case JumpState::RUNNING:
-      success = m_jumpService->tryJump(shipDbId, shipEntityId);
-      break;
-    case JumpState::COMPLETED:
-      success = true;
-      break;
+    handleJump(jump.getShipDbId(), jump.getShipEntityId());
   }
+}
 
-  if (!success)
+void JumpMessageConsumer::handleJump(const Uuid &shipDbId, const Uuid &shipEntityId) const
+{
+  if (!m_jumpService->tryJump(shipDbId, shipEntityId))
   {
     warn("Failed to process jump message for ship " + str(shipDbId));
+    return;
   }
-  if (success && JumpState::RUNNING == state)
-  {
-    m_messageQueue->pushMessage(
-      std::make_unique<JumpMessage>(shipDbId, shipEntityId, JumpState::COMPLETED));
-  }
+
+  auto message = std::make_unique<JumpMessage>(shipDbId, shipEntityId);
+  message->validate();
+  m_messageQueue->pushMessage(std::move(message));
 }
 
 } // namespace bsgo

@@ -287,6 +287,7 @@ void Game::initializeViews()
 
 void Game::resetViewsAndUi()
 {
+  debug("reset");
   m_dataSource.initialize(*m_coordinator);
 
   const auto maybePlayerDbId = m_dataSource.playerDbId();
@@ -297,6 +298,7 @@ void Game::resetViewsAndUi()
 
   m_networkSystem->setPlayerDbId(*maybePlayerDbId);
 
+  debug("after initialization");
   const auto playerShipDbId     = m_dataSource.playerShipDbId();
   const auto playerShipEntityId = m_dataSource.playerShipEntityId();
 
@@ -306,8 +308,6 @@ void Game::resetViewsAndUi()
   m_views.shipView->setPlayerShipEntityId(playerShipEntityId);
   m_views.shopView->setPlayerDbId(*maybePlayerDbId);
   m_views.serverView->setPlayerDbId(*maybePlayerDbId);
-
-  m_messageModule.setPlayerShipDbId(playerShipDbId);
 
   for (const auto &[_, handler] : m_uiHandlers)
   {

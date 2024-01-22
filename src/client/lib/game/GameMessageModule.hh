@@ -22,15 +22,10 @@ class GameMessageModule : public bsgo::AbstractMessageListener, public utils::Co
   GameMessageModule(Game *game);
   ~GameMessageModule() override = default;
 
-  void setPlayerShipDbId(const bsgo::Uuid &shipDbId);
-
   void onMessageReceived(const bsgo::IMessage &message) override;
 
   private:
   Game *m_game{};
-  std::optional<bsgo::Uuid> m_playerShipDbId{};
-
-  void checkIfPlayerShipDbIdExists();
 
   void handleDockMessage(const bsgo::DockMessage &message);
   void handleHangarMessage(const bsgo::HangarMessage &message);

@@ -18,6 +18,8 @@ class JumpMessageConsumer : public AbstractMessageConsumer
   private:
   JumpServiceShPtr m_jumpService{};
   IMessageQueue *const m_messageQueue{};
+
+  void handleJump(const Uuid &shipDbId, const Uuid &shipEntityId) const;
 };
 
 } // namespace bsgo
