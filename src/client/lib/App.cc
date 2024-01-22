@@ -45,7 +45,7 @@ void App::loadResources(const Vec2i &screenDims, Renderer &engine)
   m_game->generateInputHandlers();
   m_game->generateUiHandlers(screenDims.x, screenDims.y);
 
-// #define START_AT_LOGIN
+#define START_AT_LOGIN
 #ifndef START_AT_LOGIN
   m_game->login(bsgo::Uuid{0});
   m_game->setScreen(Screen::GAME);

@@ -17,13 +17,9 @@ class LoginMessageConsumer : public AbstractMessageConsumer
 
   private:
   LoginServiceShPtr m_loginService{};
-  SignupServiceShPtr m_signupService{};
   IMessageQueue *const m_messageQueue{};
 
   void handleLogin(const std::string &name, const std::string &password) const;
-  void handleSignup(const std::string &name,
-                    const std::string &password,
-                    const Faction &faction) const;
 };
 
 } // namespace bsgo
