@@ -18,6 +18,7 @@ class DataSource : public utils::CoreObject
 
   void setSystemDbId(const Uuid &system);
   void setPlayerDbId(const Uuid &player);
+  void clearSystemDbId();
 
   auto repositories() const -> Repositories;
   auto playerDbId() const -> std::optional<Uuid>;

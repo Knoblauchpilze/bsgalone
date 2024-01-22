@@ -26,6 +26,11 @@ void DataSource::setPlayerDbId(const Uuid &player)
   m_playerDbId = player;
 }
 
+void DataSource::clearSystemDbId()
+{
+  m_systemDbId.reset();
+}
+
 auto DataSource::playerDbId() const -> std::optional<Uuid>
 {
   return m_playerDbId;
