@@ -130,7 +130,7 @@ void LoginScreenUiHandler::onMessageReceived(const bsgo::IMessage &message)
   if (bsgo::MessageType::LOGIN == message.type())
   {
     const auto &login = message.as<bsgo::LoginMessage>();
-    if (bsgo::LoginState::REJECTED == login.getLoginState())
+    if (login.validated() && !login.successfullyLoggedIn())
     {
       m_failureMenu->trigger();
     }

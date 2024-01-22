@@ -105,12 +105,12 @@ void GameMessageModule::handleJumpMessage(const bsgo::JumpMessage &message)
 
 void GameMessageModule::handleLoginMessage(const bsgo::LoginMessage &message)
 {
-  if (message.getLoginState() != bsgo::LoginState::VALIDATED)
+  if (!message.validated() || !message.successfullyLoggedIn())
   {
     return;
   }
 
-  m_game->login(*message.getPlayerId());
+  m_game->login(*message.getPlayerDbId());
 }
 
 void GameMessageModule::handleSignupMessage(const bsgo::SignupMessage &message)
