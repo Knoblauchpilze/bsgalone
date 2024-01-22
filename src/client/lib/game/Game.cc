@@ -233,6 +233,7 @@ void Game::activeShipChanged()
 void Game::activeSystemChanged()
 {
   m_views.shipView->clearJumpSystem();
+  m_dataSource.clearSystemDbId();
   resetViewsAndUi();
 }
 
@@ -287,7 +288,6 @@ void Game::initializeViews()
 
 void Game::resetViewsAndUi()
 {
-  debug("reset");
   m_dataSource.initialize(*m_coordinator);
 
   const auto maybePlayerDbId = m_dataSource.playerDbId();
@@ -298,7 +298,6 @@ void Game::resetViewsAndUi()
 
   m_networkSystem->setPlayerDbId(*maybePlayerDbId);
 
-  debug("after initialization");
   const auto playerShipDbId     = m_dataSource.playerShipDbId();
   const auto playerShipEntityId = m_dataSource.playerShipEntityId();
 
