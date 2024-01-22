@@ -35,7 +35,7 @@ void JumpCancelledMessageConsumer::handleJumpCancellation(const Uuid &shipDbId,
 {
   if (!m_jumpService->tryCancelJump(shipDbId, shipEntityId))
   {
-    warn("Failed to process jump message for ship " + str(shipDbId));
+    warn("Failed to process jump cancelled message for ship " + str(shipDbId));
     return;
   }
 

@@ -14,6 +14,7 @@ target_sources(bsgalone_tests PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/HangarMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/JumpCancelledMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/JumpMessageTest.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/JumpRequestedMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LoginMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LootMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/PurchaseMessageTest.cc

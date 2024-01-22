@@ -5,7 +5,7 @@
 #include "UiTextMenu.hh"
 
 #include "JumpCancelledMessage.hh"
-#include "JumpMessage.hh"
+#include "JumpRequestedMessage.hh"
 #include "LootMessage.hh"
 #include "ScannedMessage.hh"
 #include "SlotMessage.hh"
@@ -13,8 +13,8 @@
 namespace pge {
 
 const std::unordered_set<bsgo::MessageType> RELEVANT_MESSAGE_TYPES_TO_LOG
-  = {bsgo::MessageType::JUMP,
-     bsgo::MessageType::JUMP_CANCELLED,
+  = {bsgo::MessageType::JUMP_CANCELLED,
+     bsgo::MessageType::JUMP_REQUESTED,
      bsgo::MessageType::LOOT,
      bsgo::MessageType::SCANNED,
      bsgo::MessageType::SLOT};
@@ -91,20 +91,17 @@ constexpr std::size_t MAXIMUM_NUMBER_OF_LOGS_DISPLAYED = 5;
 const Vec2i LOG_MENU_DIMS{150, 20};
 constexpr auto LOG_FADE_OUT_DURATION_MS = 7000;
 
-const std::unordered_set<bsgo::JumpState> JUMP_STATES_NOT_TRIGGERING_LOG
-  = {bsgo::JumpState::RUNNING, bsgo::JumpState::COMPLETED};
-
 bool shouldMessageBeFiltered(const bsgo::IMessage &message, const bsgo::Entity &playerShip)
 {
-  if (bsgo::MessageType::JUMP == message.type())
-  {
-    const auto &jumpMessage = message.as<bsgo::JumpMessage>();
-    return JUMP_STATES_NOT_TRIGGERING_LOG.contains(jumpMessage.getJumpState());
-  }
-
   if (bsgo::MessageType::JUMP_CANCELLED == message.type())
   {
     const auto &jump = message.as<bsgo::JumpCancelledMessage>();
+    return !jump.validated();
+  }
+
+  if (bsgo::MessageType::JUMP_REQUESTED == message.type())
+  {
+    const auto &jump = message.as<bsgo::JumpRequestedMessage>();
     return !jump.validated();
   }
 
@@ -167,19 +164,14 @@ void LogUiHandler::onMessageReceived(const bsgo::IMessage &message)
 }
 
 namespace {
-constexpr auto FTL_JUMP_STARTED_TEXT   = "FTL jump sequence started";
-constexpr auto FTL_JUMP_CANCELLED_TEXT = "FTL jump sequence aborted";
+constexpr auto FTL_JUMP_STARTED_TEXT = "FTL jump sequence started";
 
-auto createJumpMessage(const bsgo::JumpMessage &message)
+auto createJumpRequestedMessage(const bsgo::JumpRequestedMessage & /*message*/)
 {
-  switch (message.getJumpState())
-  {
-    case bsgo::JumpState::STARTED:
-      return textConfigFromColor(FTL_JUMP_STARTED_TEXT, colors::WHITE);
-    default:
-      throw std::invalid_argument("Unsupported jump state to produce message");
-  }
+  return textConfigFromColor(FTL_JUMP_STARTED_TEXT, colors::WHITE);
 }
+
+constexpr auto FTL_JUMP_CANCELLED_TEXT = "FTL jump sequence aborted";
 
 auto createJumpCancelledMessage(const bsgo::JumpCancelledMessage & /*message*/)
 {
@@ -236,8 +228,8 @@ auto createTextConfigForMessage(const bsgo::IMessage &message,
 
   switch (message.type())
   {
-    case bsgo::MessageType::JUMP:
-      return createJumpMessage(message.as<bsgo::JumpMessage>());
+    case bsgo::MessageType::JUMP_REQUESTED:
+      return createJumpRequestedMessage(message.as<bsgo::JumpRequestedMessage>());
     case bsgo::MessageType::JUMP_CANCELLED:
       return createJumpCancelledMessage(message.as<bsgo::JumpCancelledMessage>());
     case bsgo::MessageType::LOOT:
