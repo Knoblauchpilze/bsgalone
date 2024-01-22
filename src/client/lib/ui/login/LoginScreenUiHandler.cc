@@ -2,12 +2,13 @@
 #include "LoginScreenUiHandler.hh"
 #include "LoginMessage.hh"
 #include "ScreenCommon.hh"
+#include "SignupMessage.hh"
 
 namespace pge {
 
 LoginScreenUiHandler::LoginScreenUiHandler(const bsgo::Views &views)
   : IUiHandler("login")
-  , AbstractMessageListener({bsgo::MessageType::LOGIN})
+  , AbstractMessageListener({bsgo::MessageType::LOGIN, bsgo::MessageType::SIGNUP})
   , m_playerView(views.playerView)
 {
   if (nullptr == m_playerView)
@@ -126,10 +127,22 @@ void LoginScreenUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQue
 
 void LoginScreenUiHandler::onMessageReceived(const bsgo::IMessage &message)
 {
-  const auto &loginMessage = message.as<bsgo::LoginMessage>();
-  if (bsgo::LoginState::REJECTED == loginMessage.getLoginState())
+  if (bsgo::MessageType::LOGIN == message.type())
   {
-    m_failureMenu->trigger();
+    const auto &login = message.as<bsgo::LoginMessage>();
+    if (bsgo::LoginState::REJECTED == login.getLoginState())
+    {
+      m_failureMenu->trigger();
+    }
+  }
+
+  if (bsgo::MessageType::SIGNUP == message.type())
+  {
+    const auto &signup = message.as<bsgo::SignupMessage>();
+    if (signup.validated() && !signup.successfullySignedup())
+    {
+      m_failureMenu->trigger();
+    }
   }
 }
 

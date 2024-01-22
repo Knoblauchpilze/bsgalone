@@ -3,6 +3,7 @@
 #include "HangarMessage.hh"
 #include "LoginMessage.hh"
 #include "PurchaseMessage.hh"
+#include "SignupMessage.hh"
 
 namespace bsgo {
 
@@ -138,7 +139,7 @@ void PlayerView::trySignup(const std::string &name,
                            const std::string &password,
                            const Faction &faction) const
 {
-  m_messageQueue->pushMessage(std::make_unique<bsgo::LoginMessage>(name, password, faction));
+  m_messageQueue->pushMessage(std::make_unique<bsgo::SignupMessage>(name, password, faction));
 }
 
 void PlayerView::checkPlayerDbIdExists() const

@@ -24,6 +24,8 @@ auto str(const MessageType &type) -> std::string
       return "purchase";
     case MessageType::SCANNED:
       return "scanned";
+    case MessageType::SIGNUP:
+      return "signup";
     case MessageType::SLOT:
       return "slot";
     case MessageType::VELOCITY:
@@ -35,7 +37,7 @@ auto str(const MessageType &type) -> std::string
   }
 }
 
-auto allMessageTypes() -> std::array<MessageType, 11>
+auto allMessageTypes() -> std::array<MessageType, 12>
 {
   return {MessageType::DOCK,
           MessageType::EQUIP,
@@ -45,16 +47,10 @@ auto allMessageTypes() -> std::array<MessageType, 11>
           MessageType::PURCHASE,
           MessageType::LOGIN,
           MessageType::SCANNED,
+          MessageType::SIGNUP,
           MessageType::SLOT,
           MessageType::VELOCITY,
           MessageType::TARGET};
 }
-
-namespace {
-inline constexpr auto messageTypeSize() -> std::size_t
-{
-  return sizeof(std::underlying_type<MessageType>::type);
-}
-} // namespace
 
 } // namespace bsgo

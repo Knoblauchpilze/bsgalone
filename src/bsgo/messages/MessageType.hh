@@ -16,12 +16,13 @@ enum class MessageType
   LOOT,
   PURCHASE,
   SCANNED,
+  SIGNUP,
   SLOT,
   VELOCITY,
   TARGET
 };
 
 auto str(const MessageType &type) -> std::string;
-auto allMessageTypes() -> std::array<MessageType, 11>;
+auto allMessageTypes() -> std::array<MessageType, 12>;
 
 } // namespace bsgo
