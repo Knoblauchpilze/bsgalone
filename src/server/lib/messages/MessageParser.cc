@@ -11,6 +11,7 @@
 #include "LootMessage.hh"
 #include "PurchaseMessage.hh"
 #include "ScannedMessage.hh"
+#include "SignupMessage.hh"
 #include "SlotMessage.hh"
 #include "TargetMessage.hh"
 #include "VelocityMessage.hh"
@@ -157,6 +158,17 @@ auto readScannedMessage(std::istream &in) -> std::optional<IMessagePtr>
   return message;
 }
 
+auto readSignupMessage(std::istream &in) -> std::optional<IMessagePtr>
+{
+  auto message = std::make_unique<SignupMessage>();
+  if (!message->deserialize(in))
+  {
+    return {};
+  }
+
+  return message;
+}
+
 auto readSlotMessage(std::istream &in) -> std::optional<IMessagePtr>
 {
   auto message = std::make_unique<SlotMessage>();
@@ -212,6 +224,8 @@ auto MessageParser::tryReadMessage(const MessageType &type, std::istream &in)
       return readPurchaseMessage(in);
     case MessageType::SCANNED:
       return readScannedMessage(in);
+    case MessageType::SIGNUP:
+      return readSignupMessage(in);
     case MessageType::SLOT:
       return readSlotMessage(in);
     case MessageType::VELOCITY:

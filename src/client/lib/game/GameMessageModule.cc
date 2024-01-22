@@ -8,7 +8,8 @@ using Messages                             = std::unordered_set<bsgo::MessageTyp
 const Messages GAME_CHANGING_MESSAGE_TYPES = {bsgo::MessageType::DOCK,
                                               bsgo::MessageType::HANGAR,
                                               bsgo::MessageType::JUMP,
-                                              bsgo::MessageType::LOGIN};
+                                              bsgo::MessageType::LOGIN,
+                                              bsgo::MessageType::SIGNUP};
 
 GameMessageModule::GameMessageModule(Game *game)
   : bsgo::AbstractMessageListener(GAME_CHANGING_MESSAGE_TYPES)
@@ -43,6 +44,9 @@ void GameMessageModule::onMessageReceived(const bsgo::IMessage &message)
       break;
     case bsgo::MessageType::LOGIN:
       handleLoginMessage(message.as<bsgo::LoginMessage>());
+      break;
+    case bsgo::MessageType::SIGNUP:
+      handleSignupMessage(message.as<bsgo::SignupMessage>());
       break;
     default:
       error("Unsupported message type " + bsgo::str(message.type()));
@@ -107,6 +111,16 @@ void GameMessageModule::handleLoginMessage(const bsgo::LoginMessage &message)
   }
 
   m_game->login(*message.getPlayerId());
+}
+
+void GameMessageModule::handleSignupMessage(const bsgo::SignupMessage &message)
+{
+  if (!message.validated() || !message.successfullySignedup())
+  {
+    return;
+  }
+
+  m_game->login(*message.getPlayerDbId());
 }
 
 } // namespace pge

@@ -7,6 +7,7 @@
 #include "JumpMessageConsumer.hh"
 #include "LoginMessageConsumer.hh"
 #include "PurchaseMessageConsumer.hh"
+#include "SignupMessageConsumer.hh"
 #include "SlotMessageConsumer.hh"
 #include "TargetMessageConsumer.hh"
 #include "VelocityMessageConsumer.hh"
@@ -42,6 +43,10 @@ auto registerAllConsumersToQueue(IMessageQueue *const inputMessagesQueue,
   auto login = std::make_unique<LoginMessageConsumer>(services, outputMessagesQueue);
   inputMessagesQueue->addListener(login.get());
   out.emplace_back(std::move(login));
+
+  auto signup = std::make_unique<SignupMessageConsumer>(services, outputMessagesQueue);
+  inputMessagesQueue->addListener(signup.get());
+  out.emplace_back(std::move(signup));
 
   auto target = std::make_unique<TargetMessageConsumer>(services, outputMessagesQueue);
   inputMessagesQueue->addListener(target.get());
