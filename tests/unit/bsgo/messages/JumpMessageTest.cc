@@ -12,31 +12,24 @@ auto assertMessagesAreEqual(const JumpMessage &actual, const JumpMessage &expect
   EXPECT_EQ(actual.type(), expected.type());
   EXPECT_EQ(actual.getShipDbId(), expected.getShipDbId());
   EXPECT_EQ(actual.getShipEntityId(), expected.getShipEntityId());
-  EXPECT_EQ(actual.getJumpState(), expected.getJumpState());
-  EXPECT_EQ(actual.getJumpSystem(), expected.getJumpSystem());
+  EXPECT_EQ(actual.validated(), expected.validated());
 }
 } // namespace
 
-TEST(Unit_Bsgo_Serialization_JumpMessage, NoSystem)
+TEST(Unit_Bsgo_Serialization_JumpMessage, Basic)
 {
-  const JumpMessage expected(Uuid{14}, Uuid{26}, JumpState::RUNNING);
-  JumpMessage actual(Uuid{6}, Uuid{4}, JumpState::COMPLETED);
+  const JumpMessage expected(Uuid{14}, Uuid{26});
+  JumpMessage actual(Uuid{6}, Uuid{4});
+  actual.validate();
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_JumpMessage, EmptySystem)
+TEST(Unit_Bsgo_Serialization_JumpMessage, Validated)
 {
-  const JumpMessage expected(Uuid{14}, Uuid{26}, JumpState::STARTED, {});
-  JumpMessage actual(Uuid{6}, Uuid{4}, JumpState::CANCELLED, {Uuid{37}});
-  serializeAndDeserializeMessage(expected, actual);
-  assertMessagesAreEqual(actual, expected);
-}
-
-TEST(Unit_Bsgo_Serialization_JumpMessage, WithSystem)
-{
-  const JumpMessage expected(Uuid{14}, Uuid{26}, JumpState::STARTED, Uuid{89});
-  JumpMessage actual(Uuid{6}, Uuid{4}, JumpState::RUNNING);
+  JumpMessage expected(Uuid{14}, Uuid{26});
+  expected.validate();
+  JumpMessage actual(Uuid{6}, Uuid{4});
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }

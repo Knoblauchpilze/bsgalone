@@ -3,7 +3,6 @@
 #include "DockMessage.hh"
 #include "EquipMessage.hh"
 #include "JumpCancelledMessage.hh"
-#include "JumpMessage.hh"
 #include "JumpRequestedMessage.hh"
 #include "LockerUtils.hh"
 #include "SlotMessage.hh"
