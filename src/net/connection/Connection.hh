@@ -13,7 +13,7 @@
 namespace net {
 
 using ConnectionId        = int;
-using DataReceivedHandler = std::function<int(const std::deque<char> &)>;
+using DataReceivedHandler = std::function<int(const ConnectionId, const std::deque<char> &)>;
 
 class Connection : public utils::CoreObject, public std::enable_shared_from_this<Connection>
 {

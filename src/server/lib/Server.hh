@@ -43,7 +43,7 @@ class Server : public utils::CoreObject
   void shutdown();
 
   bool onConnectionReceived(const net::Connection &connection) const;
-  auto onDataReceived(const std::deque<char> &data) -> int;
+  auto onDataReceived(const net::ConnectionId connectionId, const std::deque<char> &data) -> int;
 
   void handleReceivedMessages(std::vector<IMessagePtr> &&messages);
 };

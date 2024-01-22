@@ -65,8 +65,9 @@ void Server::setup(const int port)
                                      return onConnectionReceived(connection);
                                    },
                                  .connectionDataHandler =
-                                   [this](const std::deque<char> &data) {
-                                     return onDataReceived(data);
+                                   [this](const net::ConnectionId connectionId,
+                                          const std::deque<char> &data) {
+                                     return onDataReceived(connectionId, data);
                                    }};
 
   m_tcpServer = std::make_unique<net::TcpServer>(m_context, port, config);
@@ -98,7 +99,8 @@ bool Server::onConnectionReceived(const net::Connection & /*connection*/) const
   return true;
 }
 
-auto Server::onDataReceived(const std::deque<char> &data) -> int
+auto Server::onDataReceived(const net::ConnectionId /*connectionId*/, const std::deque<char> &data)
+  -> int
 {
   bool processedSomeBytes{true};
   auto processedBytes{0};
