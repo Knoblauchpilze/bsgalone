@@ -51,21 +51,6 @@ bool Connection::isConnected() const
 
 void Connection::connect()
 {
-  registerToAsio();
-}
-
-void Connection::setDataHandler(const DataReceivedHandler &dataHandler)
-{
-  m_dataHandler = dataHandler;
-}
-
-void Connection::setDisconnectHandler(const DisconnectHandler &disconnectHandler)
-{
-  m_disconnectHandler = disconnectHandler;
-}
-
-void Connection::registerToAsio()
-{
   switch (m_type)
   {
     case ConnectionType::SERVER:
@@ -77,6 +62,16 @@ void Connection::registerToAsio()
     default:
       throw std::invalid_argument("Unsupported connection type " + net::str(m_type));
   }
+}
+
+void Connection::setDataHandler(const DataReceivedHandler &dataHandler)
+{
+  m_dataHandler = dataHandler;
+}
+
+void Connection::setDisconnectHandler(const DisconnectHandler &disconnectHandler)
+{
+  m_disconnectHandler = disconnectHandler;
 }
 
 void Connection::registerReadingTaskToAsio()
@@ -189,7 +184,7 @@ void Connection::onDataReceived(const std::error_code &code, const std::size_t c
     warn("Discarding " + std::to_string(contentLength) + " byte(s) as there's no data handler");
   }
 
-  registerToAsio();
+  registerReadingTaskToAsio();
 }
 
 void Connection::onDataSent(const std::error_code &code, const std::size_t contentLength)
