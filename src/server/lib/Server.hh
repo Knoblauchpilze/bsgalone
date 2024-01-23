@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "ClientManager.hh"
 #include "Context.hh"
 #include "DataSource.hh"
 #include "IMessageQueue.hh"
@@ -27,6 +28,8 @@ class Server : public utils::CoreObject
   std::atomic_bool m_running{false};
   net::TcpServerPtr m_tcpServer{};
 
+  ClientManager m_clientManager{};
+
   MessageParser m_messageParser{};
   IMessageQueuePtr m_inputMessagesQueue{};
   IMessageQueuePtr m_outputMessagesQueue{};
@@ -43,8 +46,8 @@ class Server : public utils::CoreObject
   void shutdown();
 
   bool onConnectionReceived(const net::Connection &connection) const;
-  void onConnectionLost(const net::ConnectionId connectionId) const;
-  void onConnectionReady(const net::Connection &connection) const;
+  void onConnectionLost(const net::ConnectionId connectionId);
+  void onConnectionReady(const net::Connection &connection);
   auto onDataReceived(const net::ConnectionId connectionId, const std::deque<char> &data) -> int;
 
   void handleReceivedMessages(std::vector<IMessagePtr> &&messages);

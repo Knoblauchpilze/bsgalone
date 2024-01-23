@@ -101,11 +101,14 @@ bool Server::onConnectionReceived(const net::Connection & /*connection*/) const
   return true;
 }
 
-void Server::onConnectionLost(const net::ConnectionId /*connectionId*/) const {}
-
-void Server::onConnectionReady(const net::Connection &connection) const
+void Server::onConnectionLost(const net::ConnectionId connectionId)
 {
-  debug("connection " + connection.str() + " is ready");
+  m_clientManager.removeConnection(connectionId);
+}
+
+void Server::onConnectionReady(const net::Connection &connection)
+{
+  m_clientManager.registerConnection(connection.id());
 }
 
 auto Server::onDataReceived(const net::ConnectionId /*connectionId*/, const std::deque<char> &data)
