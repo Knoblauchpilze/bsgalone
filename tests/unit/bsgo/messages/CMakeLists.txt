@@ -9,6 +9,7 @@ target_sources(bsgalone_tests PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/UuidTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/StringTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/OptionalTest.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/ConnectionMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/DockMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/EquipMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/HangarMessageTest.cc

@@ -8,6 +8,8 @@ auto str(const MessageType &type) -> std::string
 {
   switch (type)
   {
+    case MessageType::CONNECTION:
+      return "connection";
     case MessageType::DOCK:
       return "dock";
     case MessageType::EQUIP:
@@ -41,9 +43,10 @@ auto str(const MessageType &type) -> std::string
   }
 }
 
-auto allMessageTypes() -> std::array<MessageType, 14>
+auto allMessageTypes() -> std::array<MessageType, 15>
 {
-  return {MessageType::DOCK,
+  return {MessageType::CONNECTION,
+          MessageType::DOCK,
           MessageType::EQUIP,
           MessageType::HANGAR,
           MessageType::JUMP,
