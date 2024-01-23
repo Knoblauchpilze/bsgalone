@@ -96,8 +96,6 @@ void Connection::registerConnectingTaskToAsio()
     error("Failed to register client connection", "No endpoints provided");
   }
 
-  debug("trying to connect to " + net::str(*m_endpoints->begin()) + ", "
-        + std::to_string(m_endpoints->size()));
   asio::async_connect(m_socket,
                       *m_endpoints,
                       std::bind(&Connection::onConnectionEstablished,
