@@ -4,7 +4,7 @@
 namespace bsgo {
 
 MessageQueue::MessageQueue()
-  : IMessageQueue()
+  : AbstractMessageQueue()
   , utils::CoreObject("queue")
 {
   setService("message");
@@ -13,22 +13,6 @@ MessageQueue::MessageQueue()
 void MessageQueue::pushMessage(IMessagePtr message)
 {
   m_messages.emplace_back(std::move(message));
-}
-
-void MessageQueue::addListener(IMessageListener *listener)
-{
-  if (nullptr == listener)
-  {
-    error("Failed to add listener", "Null listener");
-  }
-
-  for (const auto &messageType : allMessageTypes())
-  {
-    if (listener->isMessageRelevant(messageType))
-    {
-      m_listeners.emplace(messageType, listener);
-    }
-  }
 }
 
 bool MessageQueue::empty()
