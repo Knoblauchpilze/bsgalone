@@ -2,7 +2,8 @@
 
 #include "Server.hh"
 #include "AsyncMessageQueue.hh"
-#include "MessageConsumerUtils.hh"
+#include "ConnectionMessage.hh"
+#include "ConsumerUtils.hh"
 #include "MessageQueue.hh"
 #include "SynchronizedMessageQueue.hh"
 #include <core_utils/TimeUtils.hh>
@@ -66,7 +67,7 @@ void Server::setup(const int port)
            .disconnectHandler =
              [this](const net::ConnectionId connectionId) { return onConnectionLost(connectionId); },
            .connectionReadyHandler =
-             [this](const net::Connection &connection) { onConnectionReady(connection); },
+             [this](net::Connection &connection) { onConnectionReady(connection); },
            .connectionDataHandler =
              [this](const net::ConnectionId connectionId, const std::deque<char> &data) {
                return onDataReceived(connectionId, data);
@@ -106,9 +107,11 @@ void Server::onConnectionLost(const net::ConnectionId connectionId)
   m_clientManager.removeConnection(connectionId);
 }
 
-void Server::onConnectionReady(const net::Connection &connection)
+void Server::onConnectionReady(net::Connection &connection)
 {
-  m_clientManager.registerConnection(connection.id());
+  const auto clientId = m_clientManager.registerConnection(connection.id());
+  const ConnectionMessage message(clientId);
+  connection.send(message);
 }
 
 auto Server::onDataReceived(const net::ConnectionId /*connectionId*/, const std::deque<char> &data)
