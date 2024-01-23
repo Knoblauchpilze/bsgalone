@@ -56,6 +56,10 @@ void TcpServer::onConnectionRequest(const std::error_code &code, asio::ip::tcp::
   }
 
   info("Approved connection from " + connection->str());
+  if (m_disconnectHandler)
+  {
+    connection->setDisconnectHandler(*m_disconnectHandler);
+  }
   if (m_connectionDataHandler)
   {
     connection->setDataHandler(*m_connectionDataHandler);
