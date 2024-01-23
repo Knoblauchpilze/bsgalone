@@ -50,6 +50,10 @@ add_subdirectory (
 	)
 
 add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/consumers
+	)
+
+add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/data
 	)
 
