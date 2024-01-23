@@ -4,6 +4,7 @@ target_include_directories (bsgalone_core_lib PUBLIC
 	)
 
 target_sources (bsgalone_core_lib PRIVATE
+	${CMAKE_CURRENT_SOURCE_DIR}/ConsumerUtils.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/AbstractMessageConsumer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/DockMessageConsumer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/EquipMessageConsumer.cc
