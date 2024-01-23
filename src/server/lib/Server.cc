@@ -60,19 +60,17 @@ void Server::initialize()
 
 void Server::setup(const int port)
 {
-  const net::ServerConfig config{.acceptor =
-                                   [this](const net::Connection &connection) {
-                                     return onConnectionReceived(connection);
-                                   },
-                                 .disconnectHandler =
-                                   [this](const net::ConnectionId connectionId) {
-                                     return onConnectionLost(connectionId);
-                                   },
-                                 .connectionDataHandler =
-                                   [this](const net::ConnectionId connectionId,
-                                          const std::deque<char> &data) {
-                                     return onDataReceived(connectionId, data);
-                                   }};
+  const net::ServerConfig
+    config{.acceptor =
+             [this](const net::Connection &connection) { return onConnectionReceived(connection); },
+           .disconnectHandler =
+             [this](const net::ConnectionId connectionId) { return onConnectionLost(connectionId); },
+           .connectionReadyHandler =
+             [this](const net::Connection &connection) { onConnectionReady(connection); },
+           .connectionDataHandler =
+             [this](const net::ConnectionId connectionId, const std::deque<char> &data) {
+               return onDataReceived(connectionId, data);
+             }};
 
   m_tcpServer = std::make_unique<net::TcpServer>(m_context, port, config);
 
@@ -104,6 +102,11 @@ bool Server::onConnectionReceived(const net::Connection & /*connection*/) const
 }
 
 void Server::onConnectionLost(const net::ConnectionId /*connectionId*/) const {}
+
+void Server::onConnectionReady(const net::Connection &connection) const
+{
+  debug("connection " + connection.str() + " is ready");
+}
 
 auto Server::onDataReceived(const net::ConnectionId /*connectionId*/, const std::deque<char> &data)
   -> int
