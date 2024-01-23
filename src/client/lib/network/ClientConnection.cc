@@ -1,7 +1,7 @@
 
 #include "ClientConnection.hh"
 
-namespace bsgo {
+namespace pge {
 constexpr auto DEFAULT_SERVER_URL  = "127.0.0.1";
 constexpr auto DEFAULT_SERVER_PORT = 60000;
 
@@ -13,9 +13,9 @@ ClientConnection::ClientConnection(net::Context &networkContext)
   m_connection->connect();
 }
 
-void ClientConnection::sendMessage(const IMessage &message)
+void ClientConnection::sendMessage(const bsgo::IMessage &message)
 {
   m_connection->send(message);
 }
 
-} // namespace bsgo
+} // namespace pge

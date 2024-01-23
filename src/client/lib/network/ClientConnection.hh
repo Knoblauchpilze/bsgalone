@@ -6,7 +6,7 @@
 #include <core_utils/CoreObject.hh>
 #include <memory>
 
-namespace bsgo {
+namespace pge {
 
 class ClientConnection : public utils::CoreObject
 {
@@ -14,7 +14,7 @@ class ClientConnection : public utils::CoreObject
   ClientConnection(net::Context &networkContext);
   ~ClientConnection() override = default;
 
-  void sendMessage(const IMessage &message);
+  void sendMessage(const bsgo::IMessage &message);
 
   private:
   net::ConnectionShPtr m_connection{};
@@ -22,4 +22,4 @@ class ClientConnection : public utils::CoreObject
 
 using ClientConnectionPtr = std::unique_ptr<ClientConnection>;
 
-} // namespace bsgo
+} // namespace pge

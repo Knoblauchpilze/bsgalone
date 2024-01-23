@@ -244,9 +244,9 @@ void Game::initialize()
   auto networkSystem = std::make_unique<bsgo::NetworkSystem>(repositories);
   m_networkSystem    = networkSystem.get();
   auto localQueue    = std::make_unique<bsgo::MessageQueue>();
-  auto connection    = std::make_unique<bsgo::ClientConnection>(*m_networkContext);
-  m_messageQueue     = std::make_unique<bsgo::NetworkMessageQueue>(std::move(localQueue),
-                                                               std::move(connection));
+  auto connection    = std::make_unique<ClientConnection>(*m_networkContext);
+  m_messageQueue     = std::make_unique<NetworkMessageQueue>(std::move(localQueue),
+                                                         std::move(connection));
 
   m_coordinator = std::make_shared<bsgo::Coordinator>(std::move(networkSystem),
                                                       m_messageQueue.get());
