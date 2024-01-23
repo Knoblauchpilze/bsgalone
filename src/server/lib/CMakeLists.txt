@@ -7,6 +7,10 @@ add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/messages
 	)
 
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/clients
+	)
+
 target_sources (bsgalone_server_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/Server.cc
 	)
