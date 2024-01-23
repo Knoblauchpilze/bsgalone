@@ -44,6 +44,7 @@ class Server : public utils::CoreObject
 
   bool onConnectionReceived(const net::Connection &connection) const;
   void onConnectionLost(const net::ConnectionId connectionId) const;
+  void onConnectionReady(const net::Connection &connection) const;
   auto onDataReceived(const net::ConnectionId connectionId, const std::deque<char> &data) -> int;
 
   void handleReceivedMessages(std::vector<IMessagePtr> &&messages);

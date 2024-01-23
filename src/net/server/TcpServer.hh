@@ -27,6 +27,7 @@ class TcpServer : public utils::CoreObject
 
   std::optional<ConnectionAcceptor> m_acceptor{};
   std::optional<DisconnectHandler> m_disconnectHandler{};
+  std::optional<ConnectionReadyHandler> m_connectionReadyHandler{};
   std::optional<DataReceivedHandler> m_connectionDataHandler{};
 
   std::mutex m_connectionsLocker{};
@@ -36,6 +37,7 @@ class TcpServer : public utils::CoreObject
   void registerToAsio();
 
   void onConnectionRequest(const std::error_code &code, asio::ip::tcp::socket socket);
+  bool setupConnection(ConnectionShPtr connection);
 };
 
 using TcpServerPtr = std::unique_ptr<TcpServer>;

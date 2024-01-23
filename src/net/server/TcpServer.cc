@@ -23,9 +23,10 @@ auto TcpServer::port() const -> int
 
 void TcpServer::initializeFromConfig(const ServerConfig &config)
 {
-  m_acceptor              = config.acceptor;
-  m_disconnectHandler     = config.disconnectHandler;
-  m_connectionDataHandler = config.connectionDataHandler;
+  m_acceptor               = config.acceptor;
+  m_disconnectHandler      = config.disconnectHandler;
+  m_connectionReadyHandler = config.connectionReadyHandler;
+  m_connectionDataHandler  = config.connectionDataHandler;
 }
 
 void TcpServer::registerToAsio()
@@ -49,10 +50,18 @@ void TcpServer::onConnectionRequest(const std::error_code &code, asio::ip::tcp::
   debug("Processing new connection from " + client);
 
   auto connection = std::make_shared<Connection>(std::move(socket));
+  if (setupConnection(connection) && m_connectionReadyHandler)
+  {
+    (*m_connectionReadyHandler)(*connection);
+  }
+}
+
+bool TcpServer::setupConnection(ConnectionShPtr connection)
+{
   if (m_acceptor && !(*m_acceptor)(*connection))
   {
     warn("Refused connection from " + connection->str());
-    return;
+    return false;
   }
 
   info("Approved connection from " + connection->str());
@@ -71,6 +80,8 @@ void TcpServer::onConnectionRequest(const std::error_code &code, asio::ip::tcp::
     const auto id = connection->id();
     m_connections.emplace(id, std::move(connection));
   }
+
+  return true;
 }
 
 } // namespace net
