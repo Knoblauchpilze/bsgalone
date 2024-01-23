@@ -26,7 +26,7 @@ class TcpServer : public utils::CoreObject
   asio::ip::tcp::acceptor m_asioAcceptor;
 
   std::optional<ConnectionAcceptor> m_acceptor{};
-  std::optional<ConnectionLostHandler> m_disconnectHandler{};
+  std::optional<DisconnectHandler> m_disconnectHandler{};
   std::optional<DataReceivedHandler> m_connectionDataHandler{};
 
   std::mutex m_connectionsLocker{};

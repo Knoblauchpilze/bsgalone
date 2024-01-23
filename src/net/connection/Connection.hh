@@ -14,6 +14,7 @@ namespace net {
 
 using ConnectionId        = int;
 using DataReceivedHandler = std::function<int(const ConnectionId, const std::deque<char> &)>;
+using DisconnectHandler   = std::function<void(const ConnectionId)>;
 
 class Connection : public utils::CoreObject, public std::enable_shared_from_this<Connection>
 {
@@ -29,6 +30,7 @@ class Connection : public utils::CoreObject, public std::enable_shared_from_this
 
   void connect();
   void setDataHandler(const DataReceivedHandler &dataHandler);
+  void setDisconnectHandler(const DisconnectHandler &disconnectHandler);
 
   template<typename T>
   void send(const T &message);
@@ -54,6 +56,7 @@ class Connection : public utils::CoreObject, public std::enable_shared_from_this
   std::vector<char> m_incomingDataTempBuffer{};
   std::deque<char> m_partialMessageData{};
   std::optional<DataReceivedHandler> m_dataHandler{};
+  std::optional<DisconnectHandler> m_disconnectHandler{};
 
   Connection(asio::ip::tcp::socket &&socket, const ConnectionType type);
 

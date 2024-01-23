@@ -64,6 +64,10 @@ void Server::setup(const int port)
                                    [this](const net::Connection &connection) {
                                      return onConnectionReceived(connection);
                                    },
+                                 .disconnectHandler =
+                                   [this](const net::ConnectionId connectionId) {
+                                     return onConnectionLost(connectionId);
+                                   },
                                  .connectionDataHandler =
                                    [this](const net::ConnectionId connectionId,
                                           const std::deque<char> &data) {
@@ -98,6 +102,8 @@ bool Server::onConnectionReceived(const net::Connection & /*connection*/) const
 {
   return true;
 }
+
+void Server::onConnectionLost(const net::ConnectionId /*connectionId*/) const {}
 
 auto Server::onDataReceived(const net::ConnectionId /*connectionId*/, const std::deque<char> &data)
   -> int

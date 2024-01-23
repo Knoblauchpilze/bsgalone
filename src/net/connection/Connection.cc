@@ -59,6 +59,11 @@ void Connection::setDataHandler(const DataReceivedHandler &dataHandler)
   m_dataHandler = dataHandler;
 }
 
+void Connection::setDisconnectHandler(const DisconnectHandler &disconnectHandler)
+{
+  m_disconnectHandler = disconnectHandler;
+}
+
 void Connection::registerToAsio()
 {
   switch (m_type)
@@ -157,6 +162,11 @@ void Connection::onDataReceived(const std::error_code &code, const std::size_t c
   if (code)
   {
     warn("Error detected when receiving data for connection", code.message());
+    if (m_disconnectHandler)
+    {
+      (*m_disconnectHandler)(m_id);
+    }
+
     m_socket.close();
     return;
   }
@@ -189,6 +199,11 @@ void Connection::onDataSent(const std::error_code &code, const std::size_t conte
   if (code)
   {
     warn("Error detected when sending data on connection", code.message());
+    if (m_disconnectHandler)
+    {
+      (*m_disconnectHandler)(m_id);
+    }
+
     m_socket.close();
     return;
   }
