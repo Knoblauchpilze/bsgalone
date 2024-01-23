@@ -60,7 +60,6 @@ class Connection : public utils::CoreObject, public std::enable_shared_from_this
 
   Connection(asio::ip::tcp::socket &&socket, const ConnectionType type);
 
-  void registerToAsio();
   void registerReadingTaskToAsio();
   void registerConnectingTaskToAsio();
   void registerMessageSendingTaskToAsio();
