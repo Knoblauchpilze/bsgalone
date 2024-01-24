@@ -14,6 +14,11 @@ ClientMessageQueue::ClientMessageQueue(bsgo::IMessageQueuePtr localQueue,
   setService("network");
 }
 
+void ClientMessageQueue::setClientId(const bsgo::Uuid clientId)
+{
+  m_clientId = clientId;
+}
+
 void ClientMessageQueue::pushMessage(bsgo::IMessagePtr message)
 {
   m_connection->sendMessage(*message);
