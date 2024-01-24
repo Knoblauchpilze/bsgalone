@@ -1,11 +1,11 @@
 
 #pragma once
 
-#include "AbstractMessage.hh"
+#include "NetworkMessage.hh"
 
 namespace bsgo {
 
-class ValidatableMessage : public AbstractMessage
+class ValidatableMessage : public NetworkMessage
 {
   public:
   ValidatableMessage(const MessageType &type);

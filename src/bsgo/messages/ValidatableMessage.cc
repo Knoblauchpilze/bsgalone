@@ -8,7 +8,7 @@ ValidatableMessage::ValidatableMessage(const MessageType &type)
 {}
 
 ValidatableMessage::ValidatableMessage(const MessageType &type, const bool validated)
-  : AbstractMessage(type)
+  : NetworkMessage(type)
   , m_validated(validated)
 {}
 

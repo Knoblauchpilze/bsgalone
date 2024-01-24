@@ -14,13 +14,8 @@ class ConnectionMessage : public ValidatableMessage
   ConnectionMessage(const Uuid &clientId);
   ~ConnectionMessage() override = default;
 
-  auto getClientId() const -> Uuid;
-
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
-
-  private:
-  Uuid m_clientId{};
 };
 
 } // namespace bsgo
