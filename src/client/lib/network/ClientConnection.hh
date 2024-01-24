@@ -14,6 +14,8 @@ class ClientConnection : public utils::CoreObject
   ClientConnection(net::Context &networkContext);
   ~ClientConnection() override = default;
 
+  void setDataHandler(const net::DataReceivedHandler &handler);
+
   void sendMessage(const bsgo::IMessage &message);
 
   private:
