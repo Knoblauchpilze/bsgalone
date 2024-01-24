@@ -3,7 +3,6 @@
 
 #include "ClientConnection.hh"
 #include "IMessageQueue.hh"
-#include "MessageQueue.hh"
 #include <core_utils/CoreObject.hh>
 
 namespace pge {
