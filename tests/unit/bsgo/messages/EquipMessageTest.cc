@@ -14,6 +14,7 @@ auto assertMessagesAreEqual(const EquipMessage &actual, const EquipMessage &expe
   EXPECT_EQ(actual.getShipDbId(), expected.getShipDbId());
   EXPECT_EQ(actual.getItemType(), expected.getItemType());
   EXPECT_EQ(actual.getItemDbId(), expected.getItemDbId());
+  EXPECT_EQ(actual.tryGetClientId(), expected.tryGetClientId());
   EXPECT_EQ(actual.validated(), expected.validated());
 }
 } // namespace

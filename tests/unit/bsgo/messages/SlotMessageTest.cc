@@ -13,6 +13,7 @@ auto assertMessagesAreEqual(const SlotMessage &actual, const SlotMessage &expect
   EXPECT_EQ(actual.getShipEntityId(), expected.getShipEntityId());
   EXPECT_EQ(actual.getSlotIndex(), expected.getSlotIndex());
   EXPECT_EQ(actual.getSlotType(), expected.getSlotType());
+  EXPECT_EQ(actual.tryGetClientId(), expected.tryGetClientId());
   EXPECT_EQ(actual.validated(), expected.validated());
 }
 } // namespace
