@@ -4,11 +4,11 @@ add_library (bsgalone_server_lib SHARED "")
 set (CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 add_subdirectory (
-	${CMAKE_CURRENT_SOURCE_DIR}/messages
+	${CMAKE_CURRENT_SOURCE_DIR}/clients
 	)
 
 add_subdirectory (
-	${CMAKE_CURRENT_SOURCE_DIR}/clients
+	${CMAKE_CURRENT_SOURCE_DIR}/network
 	)
 
 target_sources (bsgalone_server_lib PRIVATE
