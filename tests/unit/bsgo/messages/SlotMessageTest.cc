@@ -54,4 +54,13 @@ TEST(Unit_Bsgo_Serialization_SlotMessage, Weapon_Validated)
   assertMessagesAreEqual(actual, expected);
 }
 
+TEST(Unit_Bsgo_Serialization_SlotMessage, WithClientId)
+{
+  SlotMessage expected(Uuid{28}, 67, Slot::WEAPON);
+  expected.setClientId(Uuid{119});
+  SlotMessage actual(Uuid{51}, 180, Slot::COMPUTER);
+  serializeAndDeserializeMessage(expected, actual);
+  assertMessagesAreEqual(actual, expected);
+}
+
 } // namespace bsgo

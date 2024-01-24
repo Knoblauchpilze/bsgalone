@@ -35,4 +35,13 @@ TEST(Unit_Bsgo_Serialization_JumpCancelledMessage, Validated)
   assertMessagesAreEqual(actual, expected);
 }
 
+TEST(Unit_Bsgo_Serialization_JumpCancelledMessage, WithClientId)
+{
+  JumpCancelledMessage expected(Uuid{14}, Uuid{26});
+  expected.setClientId(Uuid{119});
+  JumpCancelledMessage actual(Uuid{6}, Uuid{4});
+  serializeAndDeserializeMessage(expected, actual);
+  assertMessagesAreEqual(actual, expected);
+}
+
 } // namespace bsgo

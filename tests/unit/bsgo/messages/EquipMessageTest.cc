@@ -55,4 +55,13 @@ TEST(Unit_Bsgo_Serialization_EquipMessage, Unequip_Validated)
   assertMessagesAreEqual(actual, expected);
 }
 
+TEST(Unit_Bsgo_Serialization_EquipMessage, WithClientId)
+{
+  EquipMessage expected(EquipType::UNEQUIP, Uuid{6}, Item::COMPUTER, Uuid{19});
+  expected.setClientId(Uuid{119});
+  EquipMessage actual(EquipType::EQUIP, Uuid{41}, Item::WEAPON, Uuid{46});
+  serializeAndDeserializeMessage(expected, actual);
+  assertMessagesAreEqual(actual, expected);
+}
+
 } // namespace bsgo
