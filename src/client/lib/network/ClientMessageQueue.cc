@@ -1,10 +1,10 @@
 
-#include "NetworkMessageQueue.hh"
+#include "ClientMessageQueue.hh"
 
 namespace pge {
 
-NetworkMessageQueue::NetworkMessageQueue(bsgo::IMessageQueuePtr localQueue,
-                                         ClientConnectionPtr connection)
+ClientMessageQueue::ClientMessageQueue(bsgo::IMessageQueuePtr localQueue,
+                                       ClientConnectionPtr connection)
   : bsgo::IMessageQueue()
   , utils::CoreObject("message")
   , m_localQueue(std::move(localQueue))
@@ -14,23 +14,23 @@ NetworkMessageQueue::NetworkMessageQueue(bsgo::IMessageQueuePtr localQueue,
   setService("network");
 }
 
-void NetworkMessageQueue::pushMessage(bsgo::IMessagePtr message)
+void ClientMessageQueue::pushMessage(bsgo::IMessagePtr message)
 {
   m_connection->sendMessage(*message);
   m_localQueue->pushMessage(std::move(message));
 }
 
-void NetworkMessageQueue::addListener(bsgo::IMessageListener *listener)
+void ClientMessageQueue::addListener(bsgo::IMessageListener *listener)
 {
   m_localQueue->addListener(listener);
 }
 
-bool NetworkMessageQueue::empty()
+bool ClientMessageQueue::empty()
 {
   return m_localQueue->empty();
 }
 
-void NetworkMessageQueue::processMessages(const std::optional<int> &amount)
+void ClientMessageQueue::processMessages(const std::optional<int> &amount)
 {
   m_localQueue->processMessages(amount);
 }

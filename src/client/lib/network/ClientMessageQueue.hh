@@ -8,11 +8,11 @@
 
 namespace pge {
 
-class NetworkMessageQueue : public bsgo::IMessageQueue, public utils::CoreObject
+class ClientMessageQueue : public bsgo::IMessageQueue, public utils::CoreObject
 {
   public:
-  NetworkMessageQueue(bsgo::IMessageQueuePtr localQueue, ClientConnectionPtr connection);
-  ~NetworkMessageQueue() override = default;
+  ClientMessageQueue(bsgo::IMessageQueuePtr localQueue, ClientConnectionPtr connection);
+  ~ClientMessageQueue() override = default;
 
   void pushMessage(bsgo::IMessagePtr message) override;
   void addListener(bsgo::IMessageListener *listener) override;
