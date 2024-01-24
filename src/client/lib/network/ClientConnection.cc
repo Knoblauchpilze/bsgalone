@@ -13,6 +13,11 @@ ClientConnection::ClientConnection(net::Context &networkContext)
   m_connection->connect();
 }
 
+void ClientConnection::setDataHandler(const net::DataReceivedHandler &handler)
+{
+  m_connection->setDataHandler(handler);
+}
+
 void ClientConnection::sendMessage(const bsgo::IMessage &message)
 {
   m_connection->send(message);
