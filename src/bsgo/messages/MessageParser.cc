@@ -3,6 +3,7 @@
 #include <core_utils/SerializationUtils.hh>
 #include <sstream>
 
+#include "ConnectionMessage.hh"
 #include "DockMessage.hh"
 #include "EquipMessage.hh"
 #include "HangarMessage.hh"
@@ -72,152 +73,10 @@ auto MessageParser::tryParseMessage(const std::deque<char> &data) -> ParsingResu
 }
 
 namespace {
-auto readDockMessage(std::istream &in) -> std::optional<IMessagePtr>
+template<typename MessageType>
+auto readMessage(std::istream &in) -> std::optional<IMessagePtr>
 {
-  auto message = std::make_unique<DockMessage>();
-  if (!message->deserialize(in))
-  {
-    return {};
-  }
-
-  return message;
-}
-
-auto readEquipMessage(std::istream &in) -> std::optional<IMessagePtr>
-{
-  auto message = std::make_unique<EquipMessage>();
-  if (!message->deserialize(in))
-  {
-    return {};
-  }
-
-  return message;
-}
-
-auto readHangarMessage(std::istream &in) -> std::optional<IMessagePtr>
-{
-  auto message = std::make_unique<HangarMessage>();
-  if (!message->deserialize(in))
-  {
-    return {};
-  }
-
-  return message;
-}
-
-auto readJumpCancelledMessage(std::istream &in) -> std::optional<IMessagePtr>
-{
-  auto message = std::make_unique<JumpCancelledMessage>();
-  if (!message->deserialize(in))
-  {
-    return {};
-  }
-
-  return message;
-}
-
-auto readJumpMessage(std::istream &in) -> std::optional<IMessagePtr>
-{
-  auto message = std::make_unique<JumpMessage>();
-  if (!message->deserialize(in))
-  {
-    return {};
-  }
-
-  return message;
-}
-
-auto readJumpRequestedMessage(std::istream &in) -> std::optional<IMessagePtr>
-{
-  auto message = std::make_unique<JumpRequestedMessage>();
-  if (!message->deserialize(in))
-  {
-    return {};
-  }
-
-  return message;
-}
-
-auto readLoginMessage(std::istream &in) -> std::optional<IMessagePtr>
-{
-  auto message = std::make_unique<LoginMessage>();
-  if (!message->deserialize(in))
-  {
-    return {};
-  }
-
-  return message;
-}
-
-auto readLootMessage(std::istream &in) -> std::optional<IMessagePtr>
-{
-  auto message = std::make_unique<LootMessage>();
-  if (!message->deserialize(in))
-  {
-    return {};
-  }
-
-  return message;
-}
-
-auto readPurchaseMessage(std::istream &in) -> std::optional<IMessagePtr>
-{
-  auto message = std::make_unique<PurchaseMessage>();
-  if (!message->deserialize(in))
-  {
-    return {};
-  }
-
-  return message;
-}
-
-auto readScannedMessage(std::istream &in) -> std::optional<IMessagePtr>
-{
-  auto message = std::make_unique<ScannedMessage>();
-  if (!message->deserialize(in))
-  {
-    return {};
-  }
-
-  return message;
-}
-
-auto readSignupMessage(std::istream &in) -> std::optional<IMessagePtr>
-{
-  auto message = std::make_unique<SignupMessage>();
-  if (!message->deserialize(in))
-  {
-    return {};
-  }
-
-  return message;
-}
-
-auto readSlotMessage(std::istream &in) -> std::optional<IMessagePtr>
-{
-  auto message = std::make_unique<SlotMessage>();
-  if (!message->deserialize(in))
-  {
-    return {};
-  }
-
-  return message;
-}
-
-auto readTargetMessage(std::istream &in) -> std::optional<IMessagePtr>
-{
-  auto message = std::make_unique<TargetMessage>();
-  if (!message->deserialize(in))
-  {
-    return {};
-  }
-
-  return message;
-}
-
-auto readVelocityMessage(std::istream &in) -> std::optional<IMessagePtr>
-{
-  auto message = std::make_unique<VelocityMessage>();
+  auto message = std::make_unique<MessageType>();
   if (!message->deserialize(in))
   {
     return {};
@@ -232,34 +91,36 @@ auto MessageParser::tryReadMessage(const MessageType &type, std::istream &in)
 {
   switch (type)
   {
+    case MessageType::CONNECTION:
+      return readMessage<ConnectionMessage>(in);
     case MessageType::DOCK:
-      return readDockMessage(in);
+      return readMessage<DockMessage>(in);
     case MessageType::EQUIP:
-      return readEquipMessage(in);
+      return readMessage<EquipMessage>(in);
     case MessageType::HANGAR:
-      return readHangarMessage(in);
+      return readMessage<HangarMessage>(in);
     case MessageType::JUMP:
-      return readJumpMessage(in);
+      return readMessage<JumpMessage>(in);
     case MessageType::JUMP_CANCELLED:
-      return readJumpCancelledMessage(in);
+      return readMessage<JumpCancelledMessage>(in);
     case MessageType::JUMP_REQUESTED:
-      return readJumpRequestedMessage(in);
+      return readMessage<JumpRequestedMessage>(in);
     case MessageType::LOGIN:
-      return readLoginMessage(in);
+      return readMessage<LoginMessage>(in);
     case MessageType::LOOT:
-      return readLootMessage(in);
+      return readMessage<LootMessage>(in);
     case MessageType::PURCHASE:
-      return readPurchaseMessage(in);
+      return readMessage<PurchaseMessage>(in);
     case MessageType::SCANNED:
-      return readScannedMessage(in);
+      return readMessage<ScannedMessage>(in);
     case MessageType::SIGNUP:
-      return readSignupMessage(in);
+      return readMessage<SignupMessage>(in);
     case MessageType::SLOT:
-      return readSlotMessage(in);
+      return readMessage<SlotMessage>(in);
     case MessageType::VELOCITY:
-      return readVelocityMessage(in);
+      return readMessage<VelocityMessage>(in);
     case MessageType::TARGET:
-      return readTargetMessage(in);
+      return readMessage<TargetMessage>(in);
     default:
       error("Unsupported message type " + str(type));
       break;
