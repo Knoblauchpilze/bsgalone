@@ -54,4 +54,13 @@ TEST(Unit_Bsgo_Serialization_LoginMessage, NamePasswordPlayerDbId_Validated)
   assertMessagesAreEqual(actual, expected);
 }
 
+TEST(Unit_Bsgo_Serialization_LoginMessage, WithClientId)
+{
+  LoginMessage expected("some-name", "some-password", Uuid{14});
+  expected.setClientId(Uuid{119});
+  LoginMessage actual("other-name", "secure-password");
+  serializeAndDeserializeMessage(expected, actual);
+  assertMessagesAreEqual(actual, expected);
+}
+
 } // namespace bsgo

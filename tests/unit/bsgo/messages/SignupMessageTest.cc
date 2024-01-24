@@ -55,4 +55,13 @@ TEST(Unit_Bsgo_Serialization_SignupMessage, WithPlayerDbId_Validated)
   assertMessagesAreEqual(actual, expected);
 }
 
+TEST(Unit_Bsgo_Serialization_SignupMessage, WithClientId)
+{
+  SignupMessage expected("some-name", "some-password", Faction::COLONIAL, Uuid{44});
+  expected.setClientId(Uuid{119});
+  SignupMessage actual("some-other-name", "securepassword", Faction::CYLON);
+  serializeAndDeserializeMessage(expected, actual);
+  assertMessagesAreEqual(actual, expected);
+}
+
 } // namespace bsgo

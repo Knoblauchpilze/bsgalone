@@ -91,4 +91,13 @@ TEST(Unit_Bsgo_Serialization_PurchaseMessage, Ship_Validated)
   assertMessagesAreEqual(actual, expected);
 }
 
+TEST(Unit_Bsgo_Serialization_PurchaseMessage, WithClientId)
+{
+  PurchaseMessage expected(Uuid{44}, Item::SHIP, Uuid{17});
+  expected.setClientId(Uuid{119});
+  PurchaseMessage actual(Uuid{3}, Item::WEAPON, Uuid{21});
+  serializeAndDeserializeMessage(expected, actual);
+  assertMessagesAreEqual(actual, expected);
+}
+
 } // namespace bsgo

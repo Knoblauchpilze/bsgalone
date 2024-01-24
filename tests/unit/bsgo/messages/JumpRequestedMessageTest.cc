@@ -36,4 +36,13 @@ TEST(Unit_Bsgo_Serialization_JumpRequestedMessage, Validated)
   assertMessagesAreEqual(actual, expected);
 }
 
+TEST(Unit_Bsgo_Serialization_JumpRequestedMessage, WithClientId)
+{
+  JumpRequestedMessage expected(Uuid{14}, Uuid{26}, Uuid{44});
+  expected.setClientId(Uuid{119});
+  JumpRequestedMessage actual(Uuid{6}, Uuid{4}, Uuid{1});
+  serializeAndDeserializeMessage(expected, actual);
+  assertMessagesAreEqual(actual, expected);
+}
+
 } // namespace bsgo
