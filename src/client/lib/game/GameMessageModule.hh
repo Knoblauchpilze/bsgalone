@@ -6,6 +6,7 @@
 #include <core_utils/CoreObject.hh>
 #include <optional>
 
+#include "ConnectionMessage.hh"
 #include "DockMessage.hh"
 #include "HangarMessage.hh"
 #include "JumpMessage.hh"
@@ -27,6 +28,7 @@ class GameMessageModule : public bsgo::AbstractMessageListener, public utils::Co
   private:
   Game *m_game{};
 
+  void handleConnectionMessage(const bsgo::ConnectionMessage &message);
   void handleDockMessage(const bsgo::DockMessage &message);
   void handleHangarMessage(const bsgo::HangarMessage &message);
   void handleJumpMessage(const bsgo::JumpMessage &message);

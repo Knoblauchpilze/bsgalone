@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "ClientMessageQueue.hh"
 #include "Context.hh"
 #include "Controls.hh"
 #include "DataSource.hh"
@@ -9,7 +10,6 @@
 #include "IMessageListener.hh"
 #include "IRenderer.hh"
 #include "IUiHandler.hh"
-#include "MessageQueue.hh"
 #include "NetworkSystem.hh"
 #include "RenderState.hh"
 #include "Renderer.hh"
@@ -63,7 +63,8 @@ class Game : public utils::CoreObject
   /// the game is ended).
   bool step(float elapsedSeconds);
 
-  void login(const bsgo::Uuid &playerDbId);
+  void connectedToServer(const bsgo::Uuid clientId);
+  void login(const bsgo::Uuid playerDbId);
   void activeShipChanged();
   void activeSystemChanged();
 
@@ -91,7 +92,7 @@ class Game : public utils::CoreObject
   bsgo::DataSource m_dataSource{};
   bsgo::Services m_services{};
   bsgo::CoordinatorShPtr m_coordinator{};
-  bsgo::IMessageQueuePtr m_messageQueue{};
+  ClientMessageQueuePtr m_messageQueue{};
   net::ContextPtr m_networkContext{std::make_unique<net::Context>()};
   bsgo::NetworkSystem *m_networkSystem{};
   bsgo::Views m_views;

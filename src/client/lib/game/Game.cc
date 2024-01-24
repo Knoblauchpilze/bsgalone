@@ -1,10 +1,10 @@
 
 #include "Game.hh"
-#include "ClientMessageQueue.hh"
 #include "ConsumerUtils.hh"
 #include "IInputHandler.hh"
 #include "IRenderer.hh"
 #include "IUiHandler.hh"
+#include "MessageQueue.hh"
 #include "NetworkSystem.hh"
 
 #include "GameScreenInputHandler.hh"
@@ -218,7 +218,12 @@ bool Game::step(float elapsedSeconds)
   return true;
 }
 
-void Game::login(const bsgo::Uuid &playerDbId)
+void Game::connectedToServer(const bsgo::Uuid clientId)
+{
+  m_messageQueue->setClientId(clientId);
+}
+
+void Game::login(const bsgo::Uuid playerDbId)
 {
   m_dataSource.setPlayerDbId(playerDbId);
   resetViewsAndUi();

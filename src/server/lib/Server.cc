@@ -123,7 +123,8 @@ void Server::onConnectionReady(net::Connection &connection)
 
   m_inputMessagesQueue->registerToConnection(connection);
 
-  const ConnectionMessage message(clientId);
+  ConnectionMessage message(clientId);
+  message.validate();
   connection.send(message);
 }
 

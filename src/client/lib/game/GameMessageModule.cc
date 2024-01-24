@@ -5,7 +5,8 @@
 
 namespace pge {
 using Messages                             = std::unordered_set<bsgo::MessageType>;
-const Messages GAME_CHANGING_MESSAGE_TYPES = {bsgo::MessageType::DOCK,
+const Messages GAME_CHANGING_MESSAGE_TYPES = {bsgo::MessageType::CONNECTION,
+                                              bsgo::MessageType::DOCK,
                                               bsgo::MessageType::HANGAR,
                                               bsgo::MessageType::JUMP,
                                               bsgo::MessageType::LOGIN,
@@ -28,6 +29,9 @@ void GameMessageModule::onMessageReceived(const bsgo::IMessage &message)
 {
   switch (message.type())
   {
+    case bsgo::MessageType::CONNECTION:
+      handleConnectionMessage(message.as<bsgo::ConnectionMessage>());
+      break;
     case bsgo::MessageType::DOCK:
       handleDockMessage(message.as<bsgo::DockMessage>());
       break;
@@ -47,6 +51,16 @@ void GameMessageModule::onMessageReceived(const bsgo::IMessage &message)
       error("Unsupported message type " + bsgo::str(message.type()));
       break;
   }
+}
+
+void GameMessageModule::handleConnectionMessage(const bsgo::ConnectionMessage &message)
+{
+  if (!message.validated())
+  {
+    return;
+  }
+
+  m_game->connectedToServer(message.getClientId());
 }
 
 void GameMessageModule::handleDockMessage(const bsgo::DockMessage &message)
