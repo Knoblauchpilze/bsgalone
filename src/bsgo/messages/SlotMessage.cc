@@ -34,6 +34,7 @@ auto SlotMessage::getSlotType() const -> Slot
 auto SlotMessage::serialize(std::ostream &out) const -> std::ostream &
 {
   utils::serialize(out, m_messageType);
+  utils::serialize(out, m_clientId);
   utils::serialize(out, m_validated);
 
   utils::serialize(out, m_shipEntityId);
@@ -47,6 +48,7 @@ bool SlotMessage::deserialize(std::istream &in)
 {
   bool ok{true};
   ok &= utils::deserialize(in, m_messageType);
+  ok &= utils::deserialize(in, m_clientId);
   ok &= utils::deserialize(in, m_validated);
 
   ok &= utils::deserialize(in, m_shipEntityId);
