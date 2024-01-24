@@ -3,6 +3,7 @@
 
 #include "Context.hh"
 #include "IMessage.hh"
+#include "IMessageQueue.hh"
 #include <core_utils/CoreObject.hh>
 #include <memory>
 
@@ -17,6 +18,7 @@ class ClientConnection : public utils::CoreObject
   void setDataHandler(const net::DataReceivedHandler &handler);
 
   void sendMessage(const bsgo::IMessage &message);
+  auto connectMessageQueue(bsgo::IMessageQueuePtr messageQueue) -> bsgo::IMessageQueuePtr;
 
   private:
   net::ConnectionShPtr m_connection{};
