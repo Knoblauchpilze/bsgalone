@@ -13,6 +13,7 @@ auto assertMessagesAreEqual(const LoginMessage &actual, const LoginMessage &expe
   EXPECT_EQ(actual.getUserName(), expected.getUserName());
   EXPECT_EQ(actual.getUserPassword(), expected.getUserPassword());
   EXPECT_EQ(actual.getPlayerDbId(), expected.getPlayerDbId());
+  EXPECT_EQ(actual.tryGetClientId(), expected.tryGetClientId());
   EXPECT_EQ(actual.validated(), expected.validated());
 }
 } // namespace

@@ -20,6 +20,7 @@ auto assertMessagesAreEqual(const DockMessage &actual, const DockMessage &expect
   EXPECT_EQ(actual.getShipDbId(), expected.getShipDbId());
   EXPECT_EQ(actual.getShipEntityId(), expected.getShipEntityId());
   EXPECT_EQ(actual.isDocking(), expected.isDocking());
+  EXPECT_EQ(actual.tryGetClientId(), expected.tryGetClientId());
   EXPECT_EQ(actual.validated(), expected.validated());
 }
 } // namespace
@@ -51,6 +52,15 @@ TEST(Unit_Bsgo_Serialization_DockMessage, NotDocking)
 TEST(Unit_Bsgo_Serialization_DockMessage, NotDocking_Validated)
 {
   const auto expected = generateMessage(false, true);
+  DockMessage actual;
+  serializeAndDeserializeMessage(expected, actual);
+  assertMessagesAreEqual(actual, expected);
+}
+
+TEST(Unit_Bsgo_Serialization_DockMessage, WithClientId)
+{
+  auto expected = generateMessage(false, true);
+  expected.setClientId(Uuid{44});
   DockMessage actual;
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);

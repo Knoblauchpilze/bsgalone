@@ -12,6 +12,7 @@ auto assertMessagesAreEqual(const JumpCancelledMessage &actual, const JumpCancel
   EXPECT_EQ(actual.type(), expected.type());
   EXPECT_EQ(actual.getShipDbId(), expected.getShipDbId());
   EXPECT_EQ(actual.getShipEntityId(), expected.getShipEntityId());
+  EXPECT_EQ(actual.tryGetClientId(), expected.tryGetClientId());
   EXPECT_EQ(actual.validated(), expected.validated());
 }
 } // namespace

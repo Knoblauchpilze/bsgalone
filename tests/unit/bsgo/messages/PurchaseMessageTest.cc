@@ -13,6 +13,7 @@ auto assertMessagesAreEqual(const PurchaseMessage &actual, const PurchaseMessage
   EXPECT_EQ(actual.getPlayerDbId(), expected.getPlayerDbId());
   EXPECT_EQ(actual.getItemType(), expected.getItemType());
   EXPECT_EQ(actual.getItemDbId(), expected.getItemDbId());
+  EXPECT_EQ(actual.tryGetClientId(), expected.tryGetClientId());
   EXPECT_EQ(actual.validated(), expected.validated());
 }
 } // namespace
