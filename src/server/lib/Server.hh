@@ -6,7 +6,7 @@
 #include "Context.hh"
 #include "DataSource.hh"
 #include "IMessageQueue.hh"
-#include "MessageParser.hh"
+#include "NetworkMessageQueue.hh"
 #include "NetworkSystem.hh"
 #include "Services.hh"
 #include "TcpServer.hh"
@@ -30,8 +30,7 @@ class Server : public utils::CoreObject
 
   ClientManager m_clientManager{};
 
-  MessageParser m_messageParser{};
-  IMessageQueuePtr m_inputMessagesQueue{};
+  NetworkMessageQueuePtr m_inputMessagesQueue{};
   IMessageQueuePtr m_outputMessagesQueue{};
 
   DataSource m_dataSource{};
@@ -48,8 +47,5 @@ class Server : public utils::CoreObject
   bool onConnectionReceived(const net::Connection &connection) const;
   void onConnectionLost(const net::ConnectionId connectionId);
   void onConnectionReady(net::Connection &connection);
-  auto onDataReceived(const net::ConnectionId connectionId, const std::deque<char> &data) -> int;
-
-  void handleReceivedMessages(std::vector<IMessagePtr> &&messages);
 };
 } // namespace bsgo

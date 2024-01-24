@@ -6,7 +6,6 @@
 #include "IRenderer.hh"
 #include "IUiHandler.hh"
 #include "NetworkSystem.hh"
-#include "SynchronizedMessageQueue.hh"
 
 #include "GameScreenInputHandler.hh"
 #include "GameScreenRenderer.hh"
@@ -246,10 +245,10 @@ void Game::initialize()
   m_networkSystem    = networkSystem.get();
 
   auto queue      = std::make_unique<bsgo::MessageQueue>();
-  auto localQueue = std::make_unique<bsgo::SynchronizedMessageQueue>(std::move(queue));
-
   auto connection = std::make_unique<ClientConnection>(*m_networkContext);
-  m_messageQueue  = std::make_unique<ClientMessageQueue>(std::move(localQueue),
+  auto localQueue = connection->connectMessageQueue(std::move(queue));
+
+  m_messageQueue = std::make_unique<ClientMessageQueue>(std::move(localQueue),
                                                         std::move(connection));
 
   m_coordinator = std::make_shared<bsgo::Coordinator>(std::move(networkSystem),

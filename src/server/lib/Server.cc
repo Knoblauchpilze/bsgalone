@@ -5,6 +5,7 @@
 #include "ConnectionMessage.hh"
 #include "ConsumerUtils.hh"
 #include "MessageQueue.hh"
+#include "NetworkMessageQueue.hh"
 #include "SynchronizedMessageQueue.hh"
 #include <core_utils/TimeUtils.hh>
 
@@ -34,7 +35,15 @@ void Server::requestStop()
 }
 
 namespace {
-auto createSynchronizedMessageQueue() -> IMessageQueuePtr
+auto createInputMessageQueue() -> NetworkMessageQueuePtr
+{
+  auto messageQueue = std::make_unique<MessageQueue>();
+  auto asyncQueue   = std::make_unique<AsyncMessageQueue>(std::move(messageQueue));
+
+  return std::make_unique<NetworkMessageQueue>(std::move(asyncQueue));
+}
+
+auto createOutputMessageQueue() -> IMessageQueuePtr
 {
   auto messageQueue = std::make_unique<MessageQueue>();
   return std::make_unique<SynchronizedMessageQueue>(std::move(messageQueue));
@@ -45,8 +54,8 @@ void Server::initialize()
 {
   const auto repositories = m_dataSource.repositories();
 
-  m_inputMessagesQueue  = std::make_unique<AsyncMessageQueue>(createSynchronizedMessageQueue());
-  m_outputMessagesQueue = createSynchronizedMessageQueue();
+  m_inputMessagesQueue  = createInputMessageQueue();
+  m_outputMessagesQueue = createOutputMessageQueue();
 
   m_coordinator      = std::make_shared<bsgo::Coordinator>(m_inputMessagesQueue.get());
   m_services         = createServices(repositories, m_coordinator);
@@ -61,17 +70,18 @@ void Server::initialize()
 
 void Server::setup(const int port)
 {
-  const net::ServerConfig
-    config{.acceptor =
-             [this](const net::Connection &connection) { return onConnectionReceived(connection); },
-           .disconnectHandler =
-             [this](const net::ConnectionId connectionId) { return onConnectionLost(connectionId); },
-           .connectionReadyHandler =
-             [this](net::Connection &connection) { onConnectionReady(connection); },
-           .connectionDataHandler =
-             [this](const net::ConnectionId connectionId, const std::deque<char> &data) {
-               return onDataReceived(connectionId, data);
-             }};
+  const net::ServerConfig config{.acceptor =
+                                   [this](const net::Connection &connection) {
+                                     return onConnectionReceived(connection);
+                                   },
+                                 .disconnectHandler =
+                                   [this](const net::ConnectionId connectionId) {
+                                     return onConnectionLost(connectionId);
+                                   },
+                                 .connectionReadyHandler =
+                                   [this](net::Connection &connection) {
+                                     onConnectionReady(connection);
+                                   }};
 
   m_tcpServer = std::make_unique<net::TcpServer>(m_context, port, config);
 
@@ -110,47 +120,11 @@ void Server::onConnectionLost(const net::ConnectionId connectionId)
 void Server::onConnectionReady(net::Connection &connection)
 {
   const auto clientId = m_clientManager.registerConnection(connection.id());
+
+  m_inputMessagesQueue->registerToConnection(connection);
+
   const ConnectionMessage message(clientId);
   connection.send(message);
-}
-
-auto Server::onDataReceived(const net::ConnectionId /*connectionId*/, const std::deque<char> &data)
-  -> int
-{
-  bool processedSomeBytes{true};
-  auto processedBytes{0};
-  std::vector<IMessagePtr> messages{};
-
-  std::deque<char> workingData(data);
-
-  while (processedSomeBytes)
-  {
-    auto result = m_messageParser.tryParseMessage(workingData);
-    if (result.message)
-    {
-      messages.emplace_back(std::move(*result.message));
-    }
-
-    processedSomeBytes = (result.bytesProcessed > 0);
-    processedBytes += result.bytesProcessed;
-
-    workingData.erase(workingData.begin(), workingData.begin() + result.bytesProcessed);
-  }
-
-  if (!messages.empty())
-  {
-    handleReceivedMessages(std::move(messages));
-  }
-
-  return processedBytes;
-}
-
-void Server::handleReceivedMessages(std::vector<IMessagePtr> &&messages)
-{
-  for (auto &message : messages)
-  {
-    m_inputMessagesQueue->pushMessage(std::move(message));
-  }
 }
 
 } // namespace bsgo
