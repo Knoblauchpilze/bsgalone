@@ -5,11 +5,11 @@
 namespace bsgo {
 
 LootMessage::LootMessage()
-  : AbstractMessage(MessageType::LOOT)
+  : NetworkMessage(MessageType::LOOT)
 {}
 
 LootMessage::LootMessage(const Uuid &resourceId, const float amount)
-  : AbstractMessage(MessageType::LOOT)
+  : NetworkMessage(MessageType::LOOT)
   , m_resourceId(resourceId)
   , m_amount(amount)
 {}
@@ -27,6 +27,7 @@ auto LootMessage::amount() const -> float
 auto LootMessage::serialize(std::ostream &out) const -> std::ostream &
 {
   utils::serialize(out, m_messageType);
+  utils::serialize(out, m_clientId);
 
   utils::serialize(out, m_resourceId);
   utils::serialize(out, m_amount);
@@ -38,6 +39,7 @@ bool LootMessage::deserialize(std::istream &in)
 {
   bool ok{true};
   ok &= utils::deserialize(in, m_messageType);
+  ok &= utils::deserialize(in, m_clientId);
 
   ok &= utils::deserialize(in, m_resourceId);
   ok &= utils::deserialize(in, m_amount);
