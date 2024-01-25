@@ -1,5 +1,6 @@
 
 #include "MessageQueue.hh"
+#include "MessageProcessor.hh"
 
 namespace bsgo {
 
@@ -20,55 +21,12 @@ bool MessageQueue::empty()
   return m_messages.empty();
 }
 
-namespace {
-auto messagesTypesToString(const std::deque<IMessagePtr> &messages, const int count) -> std::string
-{
-  std::string out = "{";
-
-  for (auto id = 0; id < count; ++id)
-  {
-    if (id > 0)
-    {
-      out += ", ";
-    }
-    out += str(messages[id]->type());
-    ++id;
-  }
-
-  out += "}";
-  return out;
-}
-} // namespace
-
 void MessageQueue::processMessages(const std::optional<int> &amount)
 {
-  std::deque<IMessagePtr> messages;
-  std::swap(messages, m_messages);
-  const auto messagesCount = static_cast<int>(messages.size());
+  MessageProcessor processor(m_messages,
+                             [this](const IMessage &message) { processMessage(message); });
 
-  const auto count = (amount ? std::min(*amount, messagesCount) : messagesCount);
-  for (auto id = 0; id < count; ++id)
-  {
-    const auto &message = messages[id];
-    processMessage(*message);
-  }
-
-  if (!messages.empty() && count > 0)
-  {
-    const auto allTypes = messagesTypesToString(messages, count);
-    info("Processed " + std::to_string(count) + "/" + std::to_string(messages.size())
-         + " message(s): " + allTypes);
-  }
-
-  if (count < messagesCount)
-  {
-    for (auto id = count; id < messagesCount; ++id)
-    {
-      m_messages.emplace_front(std::move(messages[id]));
-    }
-
-    verbose("requeued " + std::to_string(messages.size() - count) + " message(s)");
-  }
+  processor.processMessages(amount);
 }
 
 void MessageQueue::processMessage(const IMessage &message) const
