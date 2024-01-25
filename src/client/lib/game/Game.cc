@@ -220,6 +220,7 @@ bool Game::step(float elapsedSeconds)
 
 void Game::connectedToServer(const bsgo::Uuid clientId)
 {
+  info("Received client id " + bsgo::str(clientId) + " from server");
   m_messageQueue->setClientId(clientId);
 }
 
