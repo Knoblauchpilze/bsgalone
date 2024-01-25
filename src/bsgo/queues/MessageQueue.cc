@@ -46,7 +46,7 @@ void MessageQueue::processMessages(const std::optional<int> &amount)
   std::swap(messages, m_messages);
   const auto messagesCount = static_cast<int>(messages.size());
 
-  auto count = (amount ? std::min(*amount, messagesCount) : messagesCount);
+  const auto count = (amount ? std::min(*amount, messagesCount) : messagesCount);
   for (auto id = 0; id < count; ++id)
   {
     const auto &message = messages[id];
