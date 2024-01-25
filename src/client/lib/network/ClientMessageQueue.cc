@@ -1,5 +1,6 @@
 
 #include "ClientMessageQueue.hh"
+#include "NetworkMessage.hh"
 
 namespace pge {
 
@@ -21,6 +22,10 @@ void ClientMessageQueue::setClientId(const bsgo::Uuid clientId)
 
 void ClientMessageQueue::pushMessage(bsgo::IMessagePtr message)
 {
+  if (m_clientId && message->isA<bsgo::NetworkMessage>())
+  {
+    message->as<bsgo::NetworkMessage>().setClientId(*m_clientId);
+  }
   m_connection->sendMessage(*message);
   m_localQueue->pushMessage(std::move(message));
 }
