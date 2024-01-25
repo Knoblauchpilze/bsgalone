@@ -52,7 +52,7 @@ void TcpServer::onConnectionRequest(const std::error_code &code, asio::ip::tcp::
   auto connection = std::make_shared<Connection>(std::move(socket));
   if (setupConnection(connection) && m_connectionReadyHandler)
   {
-    (*m_connectionReadyHandler)(*connection);
+    (*m_connectionReadyHandler)(connection);
   }
 }
 

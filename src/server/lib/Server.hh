@@ -46,6 +46,6 @@ class Server : public utils::CoreObject
 
   bool onConnectionReceived(const net::Connection &connection) const;
   void onConnectionLost(const net::ConnectionId connectionId);
-  void onConnectionReady(net::Connection &connection);
+  void onConnectionReady(net::ConnectionShPtr connection);
 };
 } // namespace bsgo

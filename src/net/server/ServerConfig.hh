@@ -8,7 +8,7 @@
 namespace net {
 
 using ConnectionAcceptor     = std::function<bool(const Connection &)>;
-using ConnectionReadyHandler = std::function<void(Connection &)>;
+using ConnectionReadyHandler = std::function<void(ConnectionShPtr)>;
 
 struct ServerConfig
 {
