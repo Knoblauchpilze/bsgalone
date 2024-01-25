@@ -79,7 +79,7 @@ void Server::setup(const int port)
                                      return onConnectionLost(connectionId);
                                    },
                                  .connectionReadyHandler =
-                                   [this](net::Connection &connection) {
+                                   [this](net::ConnectionShPtr connection) {
                                      onConnectionReady(connection);
                                    }};
 
@@ -117,15 +117,15 @@ void Server::onConnectionLost(const net::ConnectionId connectionId)
   m_clientManager.removeConnection(connectionId);
 }
 
-void Server::onConnectionReady(net::Connection &connection)
+void Server::onConnectionReady(net::ConnectionShPtr connection)
 {
-  const auto clientId = m_clientManager.registerConnection(connection.id());
+  const auto clientId = m_clientManager.registerConnection(connection->id());
 
-  m_inputMessagesQueue->registerToConnection(connection);
+  m_inputMessagesQueue->registerToConnection(*connection);
 
   ConnectionMessage message(clientId);
   message.validate();
-  connection.send(message);
+  connection->send(message);
 }
 
 } // namespace bsgo
