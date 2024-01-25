@@ -43,10 +43,9 @@ auto createInputMessageQueue() -> NetworkMessageQueuePtr
   return std::make_unique<NetworkMessageQueue>(std::move(asyncQueue));
 }
 
-auto createOutputMessageQueue() -> IMessageQueuePtr
+auto createOutputMessageQueue(IMessageQueuePtr queue) -> IMessageQueuePtr
 {
-  auto messageQueue = std::make_unique<MessageQueue>();
-  return std::make_unique<SynchronizedMessageQueue>(std::move(messageQueue));
+  return std::make_unique<AsyncMessageQueue>(std::move(queue));
 }
 } // namespace
 
@@ -54,13 +53,15 @@ void Server::initialize()
 {
   const auto repositories = m_dataSource.repositories();
 
-  m_inputMessagesQueue  = createInputMessageQueue();
-  m_outputMessagesQueue = createOutputMessageQueue();
+  m_inputMessageQueue  = createInputMessageQueue();
+  auto broadcastQueue  = std::make_unique<BroadcastMessageQueue>();
+  m_broadcastQueue     = broadcastQueue.get();
+  m_outputMessageQueue = createOutputMessageQueue(std::move(broadcastQueue));
 
-  m_coordinator      = std::make_shared<bsgo::Coordinator>(m_inputMessagesQueue.get());
+  m_coordinator      = std::make_shared<bsgo::Coordinator>(m_inputMessageQueue.get());
   m_services         = createServices(repositories, m_coordinator);
-  m_messageConsumers = registerAllConsumersToQueue(m_inputMessagesQueue.get(),
-                                                   m_outputMessagesQueue.get(),
+  m_messageConsumers = registerAllConsumersToQueue(m_inputMessageQueue.get(),
+                                                   m_outputMessageQueue.get(),
                                                    m_services);
 
   /// TODO: Should not simulate a single system.
@@ -121,11 +122,12 @@ void Server::onConnectionReady(net::ConnectionShPtr connection)
 {
   const auto clientId = m_clientManager.registerConnection(connection->id());
 
-  m_inputMessagesQueue->registerToConnection(*connection);
+  m_inputMessageQueue->registerToConnection(*connection);
+  m_broadcastQueue->registerClient(clientId, connection);
 
-  ConnectionMessage message(clientId);
-  message.validate();
-  connection->send(message);
+  auto message = std::make_unique<ConnectionMessage>(clientId);
+  message->validate();
+  m_outputMessageQueue->pushMessage(std::move(message));
 }
 
 } // namespace bsgo
