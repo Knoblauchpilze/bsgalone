@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "BroadcastMessageQueue.hh"
 #include "ClientManager.hh"
 #include "Context.hh"
 #include "DataSource.hh"
@@ -30,8 +31,9 @@ class Server : public utils::CoreObject
 
   ClientManager m_clientManager{};
 
-  NetworkMessageQueuePtr m_inputMessagesQueue{};
-  IMessageQueuePtr m_outputMessagesQueue{};
+  NetworkMessageQueuePtr m_inputMessageQueue{};
+  BroadcastMessageQueue *m_broadcastQueue{};
+  IMessageQueuePtr m_outputMessageQueue{};
 
   DataSource m_dataSource{};
   CoordinatorShPtr m_coordinator{};
