@@ -18,7 +18,13 @@ class IMessage : public utils::CoreObject
   virtual bool deserialize(std::istream &in)                        = 0;
 
   template<typename Message>
+  auto as() -> Message &;
+
+  template<typename Message>
   auto as() const -> const Message &;
+
+  template<typename Message>
+  bool isA() const;
 };
 
 using IMessagePtr = std::unique_ptr<IMessage>;
