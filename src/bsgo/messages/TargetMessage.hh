@@ -2,13 +2,13 @@
 
 #pragma once
 
-#include "AbstractMessage.hh"
+#include "NetworkMessage.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
 
 namespace bsgo {
 
-class TargetMessage : public AbstractMessage
+class TargetMessage : public NetworkMessage
 {
   public:
   TargetMessage();

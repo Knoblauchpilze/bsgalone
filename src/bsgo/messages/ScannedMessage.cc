@@ -5,11 +5,11 @@
 namespace bsgo {
 
 ScannedMessage::ScannedMessage()
-  : AbstractMessage(MessageType::SCANNED)
+  : NetworkMessage(MessageType::SCANNED)
 {}
 
 ScannedMessage::ScannedMessage(const Uuid &asteroidEntityId)
-  : AbstractMessage(MessageType::SCANNED)
+  : NetworkMessage(MessageType::SCANNED)
   , m_asteroidEntityId(asteroidEntityId)
 {}
 
@@ -21,6 +21,7 @@ auto ScannedMessage::asteroidEntityId() const -> Uuid
 auto ScannedMessage::serialize(std::ostream &out) const -> std::ostream &
 {
   utils::serialize(out, m_messageType);
+  utils::serialize(out, m_clientId);
 
   utils::serialize(out, m_asteroidEntityId);
 
@@ -31,6 +32,7 @@ bool ScannedMessage::deserialize(std::istream &in)
 {
   bool ok{true};
   ok &= utils::deserialize(in, m_messageType);
+  ok &= utils::deserialize(in, m_clientId);
 
   ok &= utils::deserialize(in, m_asteroidEntityId);
 

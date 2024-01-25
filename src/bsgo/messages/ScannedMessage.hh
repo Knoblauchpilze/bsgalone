@@ -1,12 +1,12 @@
 
 #pragma once
 
-#include "AbstractMessage.hh"
+#include "NetworkMessage.hh"
 #include "Uuid.hh"
 
 namespace bsgo {
 
-class ScannedMessage : public AbstractMessage
+class ScannedMessage : public NetworkMessage
 {
   public:
   ScannedMessage();
