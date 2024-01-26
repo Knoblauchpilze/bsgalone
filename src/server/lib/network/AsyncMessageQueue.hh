@@ -17,7 +17,7 @@ class AsyncMessageQueue : public IMessageQueue, public utils::CoreObject
   ~AsyncMessageQueue() override;
 
   void pushMessage(IMessagePtr message) override;
-  void addListener(IMessageListener *listener) override;
+  void addListener(IMessageListenerPtr listener) override;
   bool empty() override;
 
   void processMessages(const std::optional<int> &amount = {}) override;

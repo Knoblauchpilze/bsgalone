@@ -18,7 +18,7 @@ class NetworkMessageQueue : public IMessageQueue, public utils::CoreObject
   void registerToConnection(net::Connection &connection);
 
   void pushMessage(IMessagePtr message) override;
-  void addListener(IMessageListener *listener) override;
+  void addListener(IMessageListenerPtr listener) override;
   bool empty() override;
 
   void processMessages(const std::optional<int> &amount = {}) override;

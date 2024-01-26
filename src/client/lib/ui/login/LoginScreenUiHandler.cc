@@ -1,6 +1,7 @@
 
 #include "LoginScreenUiHandler.hh"
 #include "LoginMessage.hh"
+#include "MessageListenerWrapper.hh"
 #include "ScreenCommon.hh"
 #include "SignupMessage.hh"
 
@@ -122,7 +123,8 @@ void LoginScreenUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQue
 {
   m_credentialsUiHandler.connectToMessageQueue(messageQueue);
 
-  messageQueue.addListener(this);
+  auto listener = std::make_unique<MessageListenerWrapper>(this);
+  messageQueue.addListener(std::move(listener));
 }
 
 void LoginScreenUiHandler::onMessageReceived(const bsgo::IMessage &message)

@@ -30,9 +30,9 @@ void ClientMessageQueue::pushMessage(bsgo::IMessagePtr message)
   m_localQueue->pushMessage(std::move(message));
 }
 
-void ClientMessageQueue::addListener(bsgo::IMessageListener *listener)
+void ClientMessageQueue::addListener(bsgo::IMessageListenerPtr listener)
 {
-  m_localQueue->addListener(listener);
+  m_localQueue->addListener(std::move(listener));
 }
 
 bool ClientMessageQueue::empty()

@@ -12,10 +12,11 @@ class AbstractMessageQueue : public IMessageQueue
   AbstractMessageQueue();
   ~AbstractMessageQueue() override = default;
 
-  void addListener(IMessageListener *listener) override;
+  void addListener(IMessageListenerPtr listener) override;
 
   protected:
-  std::unordered_multimap<MessageType, IMessageListener *> m_listeners{};
+  std::vector<IMessageListenerPtr> m_listeners{};
+  std::unordered_multimap<MessageType, IMessageListener *> m_listenersTable{};
 };
 
 } // namespace bsgo

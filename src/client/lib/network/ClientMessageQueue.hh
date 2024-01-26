@@ -19,7 +19,7 @@ class ClientMessageQueue : public bsgo::IMessageQueue, public utils::CoreObject
   void setClientId(const bsgo::Uuid clientId);
 
   void pushMessage(bsgo::IMessagePtr message) override;
-  void addListener(bsgo::IMessageListener *listener) override;
+  void addListener(bsgo::IMessageListenerPtr listener) override;
   bool empty() override;
 
   void processMessages(const std::optional<int> &amount = {}) override;

@@ -32,7 +32,7 @@ void MessageQueue::processMessages(const std::optional<int> &amount)
 void MessageQueue::processMessage(const IMessage &message) const
 {
   // https://stackoverflow.com/questions/72841621/finding-all-the-values-with-given-key-for-multimap
-  auto [it, end] = m_listeners.equal_range(message.type());
+  auto [it, end] = m_listenersTable.equal_range(message.type());
   for (; it != end; ++it)
   {
     it->second->onMessageReceived(message);

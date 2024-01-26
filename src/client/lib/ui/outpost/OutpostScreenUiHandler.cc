@@ -2,6 +2,7 @@
 #include "OutpostScreenUiHandler.hh"
 #include "Constants.hh"
 #include "EquipMessage.hh"
+#include "MessageListenerWrapper.hh"
 #include "PurchaseMessage.hh"
 #include "ScreenCommon.hh"
 #include "UiTextMenu.hh"
@@ -134,7 +135,8 @@ void OutpostScreenUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQ
   m_shopUi->connectToMessageQueue(messageQueue);
   m_hangarUi->connectToMessageQueue(messageQueue);
 
-  messageQueue.addListener(this);
+  auto listener = std::make_unique<MessageListenerWrapper>(this);
+  messageQueue.addListener(std::move(listener));
 }
 
 void OutpostScreenUiHandler::onMessageReceived(const bsgo::IMessage &message)

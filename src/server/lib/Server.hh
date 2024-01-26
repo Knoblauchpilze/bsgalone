@@ -38,7 +38,6 @@ class Server : public utils::CoreObject
   DataSource m_dataSource{};
   CoordinatorShPtr m_coordinator{};
   Services m_services{};
-  std::vector<IMessageListenerPtr> m_messageConsumers{};
 
   void initialize();
 
