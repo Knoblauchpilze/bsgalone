@@ -5,10 +5,10 @@
 
 namespace bsgo {
 
-NetworkMessageQueue::NetworkMessageQueue(IMessageQueuePtr localQueue)
+NetworkMessageQueue::NetworkMessageQueue(IMessageQueuePtr synchronizedQueue)
   : IMessageQueue()
   , utils::CoreObject("message")
-  , m_localQueue(std::make_unique<SynchronizedMessageQueue>(std::move(localQueue)))
+  , m_synchronizedQueue(std::move(synchronizedQueue))
 {
   addModule("queue");
   setService("network");
@@ -24,22 +24,22 @@ void NetworkMessageQueue::registerToConnection(net::Connection &connection)
 
 void NetworkMessageQueue::pushMessage(IMessagePtr message)
 {
-  m_localQueue->pushMessage(std::move(message));
+  m_synchronizedQueue->pushMessage(std::move(message));
 }
 
 void NetworkMessageQueue::addListener(IMessageListenerPtr listener)
 {
-  m_localQueue->addListener(std::move(listener));
+  m_synchronizedQueue->addListener(std::move(listener));
 }
 
 bool NetworkMessageQueue::empty()
 {
-  return m_localQueue->empty();
+  return m_synchronizedQueue->empty();
 }
 
 void NetworkMessageQueue::processMessages(const std::optional<int> &amount)
 {
-  m_localQueue->processMessages(amount);
+  m_synchronizedQueue->processMessages(amount);
 }
 
 auto NetworkMessageQueue::onDataReceived(const net::ConnectionId /*connectionId*/,
@@ -66,12 +66,16 @@ auto NetworkMessageQueue::onDataReceived(const net::ConnectionId /*connectionId*
     workingData.erase(workingData.begin(), workingData.begin() + result.bytesProcessed);
   }
 
+  feedMessagesToQueue(std::move(messages));
+  return processedBytes;
+}
+
+void NetworkMessageQueue::feedMessagesToQueue(std::vector<IMessagePtr> &&messages)
+{
   for (auto &message : messages)
   {
-    m_localQueue->pushMessage(std::move(message));
+    m_synchronizedQueue->pushMessage(std::move(message));
   }
-
-  return processedBytes;
 }
 
 } // namespace bsgo

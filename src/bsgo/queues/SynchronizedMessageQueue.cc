@@ -1,44 +1,55 @@
 
 #include "SynchronizedMessageQueue.hh"
+#include "MessageProcessor.hh"
 
 namespace bsgo {
 
-SynchronizedMessageQueue::SynchronizedMessageQueue(IMessageQueuePtr messageQueue)
-  : IMessageQueue()
+SynchronizedMessageQueue::SynchronizedMessageQueue()
+  : AbstractMessageQueue()
   , utils::CoreObject("synchronized")
-  , m_messageQueue(std::move(messageQueue))
 {
   addModule("queue");
   setService("message");
-
-  if (nullptr == m_messageQueue)
-  {
-    throw std::invalid_argument("Expected non null message queue");
-  }
 }
 
 void SynchronizedMessageQueue::pushMessage(IMessagePtr message)
 {
   const std::lock_guard guard(m_locker);
-  m_messageQueue->pushMessage(std::move(message));
+  m_messages.emplace_back(std::move(message));
 }
 
 void SynchronizedMessageQueue::addListener(IMessageListenerPtr listener)
 {
   const std::lock_guard guard(m_locker);
-  m_messageQueue->addListener(std::move(listener));
+  this->AbstractMessageQueue::addListener(std::move(listener));
 }
 
 bool SynchronizedMessageQueue::empty()
 {
   const std::lock_guard guard(m_locker);
-  return m_messageQueue->empty();
+  return m_messages.empty();
 }
 
 void SynchronizedMessageQueue::processMessages(const std::optional<int> &amount)
 {
-  const std::lock_guard guard(m_locker);
-  m_messageQueue->processMessages(amount);
+  MessageProcessor processor(m_messages, &m_locker, [this](const IMessage &message) {
+    processMessage(message);
+  });
+
+  processor.processMessages(amount);
+}
+
+void SynchronizedMessageQueue::processMessage(const IMessage &message) const
+{
+  // https://stackoverflow.com/questions/72841621/finding-all-the-values-with-given-key-for-multimap
+  auto [it, end] = m_listenersTable.equal_range(message.type());
+  for (; it != end; ++it)
+  {
+    debug("some listener is receiving " + str(message.type()));
+    it->second->onMessageReceived(message);
+    debug("some listener received " + str(message.type()));
+  }
+  debug("message processing done for " + str(message.type()));
 }
 
 } // namespace bsgo
