@@ -8,8 +8,8 @@
 
 namespace bsgo {
 
-auto registerAllConsumersToQueue(IMessageQueue *const inputMessagesQueue,
+void registerAllConsumersToQueue(IMessageQueue &inputMessagesQueue,
                                  IMessageQueue *const outputMessagesQueue,
-                                 const Services &services) -> std::vector<IMessageListenerPtr>;
+                                 const Services &services);
 
 }

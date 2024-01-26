@@ -27,9 +27,9 @@ void NetworkMessageQueue::pushMessage(IMessagePtr message)
   m_localQueue->pushMessage(std::move(message));
 }
 
-void NetworkMessageQueue::addListener(IMessageListener *listener)
+void NetworkMessageQueue::addListener(IMessageListenerPtr listener)
 {
-  m_localQueue->addListener(listener);
+  m_localQueue->addListener(std::move(listener));
 }
 
 bool NetworkMessageQueue::empty()

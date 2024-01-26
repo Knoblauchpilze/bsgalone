@@ -29,7 +29,7 @@ void BroadcastMessageQueue::pushMessage(IMessagePtr message)
   m_messages.emplace_back(std::move(message));
 }
 
-void BroadcastMessageQueue::addListener(IMessageListener * /*listener*/)
+void BroadcastMessageQueue::addListener(IMessageListenerPtr /*listener*/)
 {
   error("Failed to add listener", "Broadcast message queue does not support listeners");
 }

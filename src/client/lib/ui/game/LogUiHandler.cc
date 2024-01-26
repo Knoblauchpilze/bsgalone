@@ -1,6 +1,7 @@
 
 #include "LogUiHandler.hh"
 #include "GameColorUtils.hh"
+#include "MessageListenerWrapper.hh"
 #include "StringUtils.hh"
 #include "UiTextMenu.hh"
 
@@ -83,7 +84,8 @@ void LogUiHandler::reset()
 
 void LogUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQueue)
 {
-  messageQueue.addListener(this);
+  auto listener = std::make_unique<MessageListenerWrapper>(this);
+  messageQueue.addListener(std::move(listener));
 }
 
 namespace {

@@ -43,9 +43,9 @@ void AsyncMessageQueue::pushMessage(IMessagePtr message)
   m_messageNotifier.notify_one();
 }
 
-void AsyncMessageQueue::addListener(IMessageListener *listener)
+void AsyncMessageQueue::addListener(IMessageListenerPtr listener)
 {
-  m_messageQueue->addListener(listener);
+  m_messageQueue->addListener(std::move(listener));
 }
 
 bool AsyncMessageQueue::empty()

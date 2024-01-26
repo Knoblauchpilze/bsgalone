@@ -1,6 +1,7 @@
 
 #include "Game.hh"
 #include "ConsumerUtils.hh"
+#include "GameMessageModule.hh"
 #include "IInputHandler.hh"
 #include "IRenderer.hh"
 #include "IUiHandler.hh"
@@ -21,7 +22,6 @@ namespace pge {
 
 Game::Game()
   : utils::CoreObject("game")
-  , m_messageModule(this)
 {
   setService("game");
   initialize();
@@ -263,10 +263,10 @@ void Game::initialize()
 
   initializeViews();
 
-  m_messageConsumers = bsgo::registerAllConsumersToQueue(m_messageQueue.get(),
-                                                         m_messageQueue.get(),
-                                                         m_services);
-  m_messageQueue->addListener(&m_messageModule);
+  bsgo::registerAllConsumersToQueue(*m_messageQueue, m_messageQueue.get(), m_services);
+
+  auto messageModule = std::make_unique<GameMessageModule>(this);
+  m_messageQueue->addListener(std::move(messageModule));
 
   m_networkContext->start();
 }

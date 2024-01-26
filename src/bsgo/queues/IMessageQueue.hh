@@ -12,9 +12,9 @@ class IMessageQueue
   public:
   virtual ~IMessageQueue() = default;
 
-  virtual void pushMessage(IMessagePtr message)        = 0;
-  virtual void addListener(IMessageListener *listener) = 0;
-  virtual bool empty()                                 = 0;
+  virtual void pushMessage(IMessagePtr message)          = 0;
+  virtual void addListener(IMessageListenerPtr listener) = 0;
+  virtual bool empty()                                   = 0;
 
   virtual void processMessages(const std::optional<int> &amount = {}) = 0;
 };

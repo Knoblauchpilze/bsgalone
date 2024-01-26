@@ -23,10 +23,10 @@ void SynchronizedMessageQueue::pushMessage(IMessagePtr message)
   m_messageQueue->pushMessage(std::move(message));
 }
 
-void SynchronizedMessageQueue::addListener(IMessageListener *listener)
+void SynchronizedMessageQueue::addListener(IMessageListenerPtr listener)
 {
   const std::lock_guard guard(m_locker);
-  m_messageQueue->addListener(listener);
+  m_messageQueue->addListener(std::move(listener));
 }
 
 bool SynchronizedMessageQueue::empty()

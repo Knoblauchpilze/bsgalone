@@ -58,11 +58,9 @@ void Server::initialize()
   m_broadcastQueue     = broadcastQueue.get();
   m_outputMessageQueue = createOutputMessageQueue(std::move(broadcastQueue));
 
-  m_coordinator      = std::make_shared<bsgo::Coordinator>(m_inputMessageQueue.get());
-  m_services         = createServices(repositories, m_coordinator);
-  m_messageConsumers = registerAllConsumersToQueue(m_inputMessageQueue.get(),
-                                                   m_outputMessageQueue.get(),
-                                                   m_services);
+  m_coordinator = std::make_shared<bsgo::Coordinator>(m_inputMessageQueue.get());
+  m_services    = createServices(repositories, m_coordinator);
+  registerAllConsumersToQueue(*m_inputMessageQueue, m_outputMessageQueue.get(), m_services);
 
   /// TODO: Should not simulate a single system.
   m_dataSource.setSystemDbId(Uuid{0});
