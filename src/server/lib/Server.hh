@@ -5,11 +5,10 @@
 #include "BroadcastMessageQueue.hh"
 #include "ClientManager.hh"
 #include "Context.hh"
-#include "DataSource.hh"
 #include "IMessageQueue.hh"
 #include "NetworkMessageQueue.hh"
 #include "NetworkSystem.hh"
-#include "Services.hh"
+#include "SystemProcessor.hh"
 #include "TcpServer.hh"
 #include <atomic>
 #include <core_utils/CoreObject.hh>
@@ -35,11 +34,10 @@ class Server : public utils::CoreObject
   BroadcastMessageQueue *m_broadcastQueue{};
   IMessageQueuePtr m_outputMessageQueue{};
 
-  DataSource m_dataSource{};
-  CoordinatorShPtr m_coordinator{};
-  Services m_services{};
+  std::vector<SystemProcessorPtr> m_systemProcessors{};
 
   void initialize();
+  void initializeSystems();
 
   void setup(const int port);
   void activeRunLoop();
