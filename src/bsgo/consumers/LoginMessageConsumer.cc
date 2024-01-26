@@ -1,6 +1,5 @@
 
 #include "LoginMessageConsumer.hh"
-#include "LoginMessage.hh"
 
 namespace bsgo {
 
@@ -26,12 +25,15 @@ void LoginMessageConsumer::onMessageReceived(const IMessage &message)
 
   if (!login.validated())
   {
-    handleLogin(login.getUserName(), login.getUserPassword());
+    handleLogin(login);
   }
 }
 
-void LoginMessageConsumer::handleLogin(const std::string &name, const std::string &password) const
+void LoginMessageConsumer::handleLogin(const LoginMessage &message) const
 {
+  const auto name     = message.getUserName();
+  const auto password = message.getUserPassword();
+
   const auto playerDbId = m_loginService->tryLogin(name, password);
 
   if (!playerDbId)
@@ -39,9 +41,10 @@ void LoginMessageConsumer::handleLogin(const std::string &name, const std::strin
     warn("Failed to process login message for player " + name);
   }
 
-  auto message = std::make_unique<LoginMessage>(name, password, playerDbId);
-  message->validate();
-  m_messageQueue->pushMessage(std::move(message));
+  auto out = std::make_unique<LoginMessage>(name, password, playerDbId);
+  out->validate();
+  out->copyClientIdIfDefined(message);
+  m_messageQueue->pushMessage(std::move(out));
 }
 
 } // namespace bsgo

@@ -3,6 +3,7 @@
 
 #include "AbstractMessageConsumer.hh"
 #include "IMessageQueue.hh"
+#include "LoginMessage.hh"
 #include "Services.hh"
 
 namespace bsgo {
@@ -19,7 +20,7 @@ class LoginMessageConsumer : public AbstractMessageConsumer
   LoginServiceShPtr m_loginService{};
   IMessageQueue *const m_messageQueue{};
 
-  void handleLogin(const std::string &name, const std::string &password) const;
+  void handleLogin(const LoginMessage &message) const;
 };
 
 } // namespace bsgo

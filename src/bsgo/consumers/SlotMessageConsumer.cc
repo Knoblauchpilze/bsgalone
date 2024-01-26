@@ -1,6 +1,5 @@
 
 #include "SlotMessageConsumer.hh"
-#include "SlotMessage.hh"
 
 namespace bsgo {
 
@@ -25,38 +24,46 @@ void SlotMessageConsumer::onMessageReceived(const IMessage &message)
 
   if (Slot::WEAPON == slotMessage.getSlotType() && !slotMessage.validated())
   {
-    handleWeapon(slotMessage.getShipEntityId(), slotMessage.getSlotIndex());
+    handleWeapon(slotMessage);
   }
   if (Slot::COMPUTER == slotMessage.getSlotType() && !slotMessage.validated())
   {
-    handleComputer(slotMessage.getShipEntityId(), slotMessage.getSlotIndex());
+    handleComputer(slotMessage);
   }
 }
 
-void SlotMessageConsumer::handleWeapon(const Uuid &shipEntityId, const int weaponId) const
+void SlotMessageConsumer::handleWeapon(const SlotMessage &message) const
 {
+  const auto shipEntityId = message.getShipEntityId();
+  const auto weaponId     = message.getSlotIndex();
+
   if (!m_slotService->tryToggleWeapon(shipEntityId, weaponId))
   {
     warn("Failed to process weapon slot message for ship " + str(shipEntityId));
     return;
   }
 
-  auto message = std::make_unique<SlotMessage>(shipEntityId, weaponId, Slot::WEAPON);
-  message->validate();
-  m_messageQueue->pushMessage(std::move(message));
+  auto out = std::make_unique<SlotMessage>(shipEntityId, weaponId, Slot::WEAPON);
+  out->validate();
+  out->copyClientIdIfDefined(message);
+  m_messageQueue->pushMessage(std::move(out));
 }
 
-void SlotMessageConsumer::handleComputer(const Uuid &shipEntityId, const int computerId) const
+void SlotMessageConsumer::handleComputer(const SlotMessage &message) const
 {
+  const auto shipEntityId = message.getShipEntityId();
+  const auto computerId   = message.getSlotIndex();
+
   if (!m_slotService->tryToggleComputer(shipEntityId, computerId))
   {
     warn("Failed to process computer slot message for ship " + str(shipEntityId));
     return;
   }
 
-  auto message = std::make_unique<SlotMessage>(shipEntityId, computerId, Slot::COMPUTER);
-  message->validate();
-  m_messageQueue->pushMessage(std::move(message));
+  auto out = std::make_unique<SlotMessage>(shipEntityId, computerId, Slot::COMPUTER);
+  out->validate();
+  out->copyClientIdIfDefined(message);
+  m_messageQueue->pushMessage(std::move(out));
 }
 
 } // namespace bsgo

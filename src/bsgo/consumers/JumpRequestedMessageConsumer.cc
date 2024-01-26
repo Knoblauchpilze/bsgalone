@@ -1,6 +1,5 @@
 
 #include "JumpRequestedMessageConsumer.hh"
-#include "JumpRequestedMessage.hh"
 
 namespace bsgo {
 
@@ -26,23 +25,26 @@ void JumpRequestedMessageConsumer::onMessageReceived(const IMessage &message)
 
   if (!jump.validated())
   {
-    handleJumpRequest(jump.getShipDbId(), jump.getShipEntityId(), jump.getJumpSystem());
+    handleJumpRequest(jump);
   }
 }
 
-void JumpRequestedMessageConsumer::handleJumpRequest(const Uuid &shipDbId,
-                                                     const Uuid &shipEntityId,
-                                                     const Uuid &jumpSystem) const
+void JumpRequestedMessageConsumer::handleJumpRequest(const JumpRequestedMessage &message) const
 {
+  const auto shipDbId     = message.getShipDbId();
+  const auto shipEntityId = message.getShipEntityId();
+  const auto jumpSystem   = message.getJumpSystem();
+
   if (!m_jumpService->tryRegisterJump(shipDbId, shipEntityId, jumpSystem))
   {
     warn("Failed to process jump requested message for ship " + str(shipDbId));
     return;
   }
 
-  auto message = std::make_unique<JumpRequestedMessage>(shipDbId, shipEntityId, jumpSystem);
-  message->validate();
-  m_messageQueue->pushMessage(std::move(message));
+  auto out = std::make_unique<JumpRequestedMessage>(shipDbId, shipEntityId, jumpSystem);
+  out->validate();
+  out->copyClientIdIfDefined(message);
+  m_messageQueue->pushMessage(std::move(out));
 }
 
 } // namespace bsgo

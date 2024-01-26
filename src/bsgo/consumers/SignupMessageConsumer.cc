@@ -1,6 +1,5 @@
 
 #include "SignupMessageConsumer.hh"
-#include "SignupMessage.hh"
 
 namespace bsgo {
 
@@ -26,14 +25,16 @@ void SignupMessageConsumer::onMessageReceived(const IMessage &message)
 
   if (!signup.validated())
   {
-    handleSignup(signup.getUserName(), signup.getUserPassword(), signup.getFaction());
+    handleSignup(signup);
   }
 }
 
-void SignupMessageConsumer::handleSignup(const std::string &name,
-                                         const std::string &password,
-                                         const Faction &faction) const
+void SignupMessageConsumer::handleSignup(const SignupMessage &message) const
 {
+  const auto name     = message.getUserName();
+  const auto password = message.getUserPassword();
+  const auto faction  = message.getFaction();
+
   const auto playerDbId = m_signupService->trySignup(name, password, faction);
 
   if (!playerDbId)
@@ -41,9 +42,10 @@ void SignupMessageConsumer::handleSignup(const std::string &name,
     warn("Failed to process signup message for player " + name);
   }
 
-  auto message = std::make_unique<SignupMessage>(name, password, faction, playerDbId);
-  message->validate();
-  m_messageQueue->pushMessage(std::move(message));
+  auto out = std::make_unique<SignupMessage>(name, password, faction, playerDbId);
+  out->validate();
+  out->copyClientIdIfDefined(message);
+  m_messageQueue->pushMessage(std::move(out));
 }
 
 } // namespace bsgo

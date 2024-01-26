@@ -2,6 +2,7 @@
 #pragma once
 
 #include "AbstractMessageConsumer.hh"
+#include "EquipMessage.hh"
 #include "IMessageQueue.hh"
 #include "Item.hh"
 #include "Services.hh"
@@ -20,8 +21,8 @@ class EquipMessageConsumer : public AbstractMessageConsumer
   LockerServiceShPtr m_lockerService{};
   IMessageQueue *const m_messageQueue{};
 
-  void handleEquipRequest(const Uuid &shipDbId, const Item &type, const Uuid &itemDbId) const;
-  void handleUnequipRequest(const Uuid &shipDbId, const Item &type, const Uuid &itemDbId) const;
+  void handleEquipRequest(const EquipMessage &message) const;
+  void handleUnequipRequest(const EquipMessage &message) const;
 };
 
 } // namespace bsgo

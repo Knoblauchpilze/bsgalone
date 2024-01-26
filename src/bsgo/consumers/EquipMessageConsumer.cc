@@ -1,6 +1,5 @@
 
 #include "EquipMessageConsumer.hh"
-#include "EquipMessage.hh"
 
 namespace bsgo {
 
@@ -28,28 +27,26 @@ void EquipMessageConsumer::onMessageReceived(const IMessage &message)
     return;
   }
 
-  const auto shipDbId = equip.getShipDbId();
-  const auto itemType = equip.getItemType();
-  const auto itemDbId = equip.getItemDbId();
-
   const auto action = equip.getAction();
   switch (action)
   {
     case EquipType::EQUIP:
-      handleEquipRequest(shipDbId, itemType, itemDbId);
+      handleEquipRequest(equip);
       break;
     case EquipType::UNEQUIP:
-      handleUnequipRequest(shipDbId, itemType, itemDbId);
+      handleUnequipRequest(equip);
       break;
     default:
       error("Unsupported action type for equip message");
   }
 }
 
-void EquipMessageConsumer::handleEquipRequest(const Uuid &shipDbId,
-                                              const Item &type,
-                                              const Uuid &itemDbId) const
+void EquipMessageConsumer::handleEquipRequest(const EquipMessage &message) const
 {
+  const auto shipDbId = message.getShipDbId();
+  const auto type     = message.getItemType();
+  const auto itemDbId = message.getItemDbId();
+
   const bsgo::LockerItemData data{.dbId = itemDbId, .type = type, .shipDbId = shipDbId};
   if (!m_lockerService->tryEquip(data))
   {
@@ -58,15 +55,18 @@ void EquipMessageConsumer::handleEquipRequest(const Uuid &shipDbId,
     return;
   }
 
-  auto message = std::make_unique<EquipMessage>(EquipType::EQUIP, shipDbId, type, itemDbId);
-  message->validate();
-  m_messageQueue->pushMessage(std::move(message));
+  auto out = std::make_unique<EquipMessage>(EquipType::EQUIP, shipDbId, type, itemDbId);
+  out->validate();
+  out->copyClientIdIfDefined(message);
+  m_messageQueue->pushMessage(std::move(out));
 }
 
-void EquipMessageConsumer::handleUnequipRequest(const Uuid &shipDbId,
-                                                const Item &type,
-                                                const Uuid &itemDbId) const
+void EquipMessageConsumer::handleUnequipRequest(const EquipMessage &message) const
 {
+  const auto shipDbId = message.getShipDbId();
+  const auto type     = message.getItemType();
+  const auto itemDbId = message.getItemDbId();
+
   const bsgo::LockerItemData data{.dbId = itemDbId, .type = type, .shipDbId = shipDbId};
   if (!m_lockerService->tryUnequip(data))
   {
@@ -75,9 +75,10 @@ void EquipMessageConsumer::handleUnequipRequest(const Uuid &shipDbId,
     return;
   }
 
-  auto message = std::make_unique<EquipMessage>(EquipType::UNEQUIP, shipDbId, type, itemDbId);
-  message->validate();
-  m_messageQueue->pushMessage(std::move(message));
+  auto out = std::make_unique<EquipMessage>(EquipType::UNEQUIP, shipDbId, type, itemDbId);
+  out->validate();
+  out->copyClientIdIfDefined(message);
+  m_messageQueue->pushMessage(std::move(out));
 }
 
 } // namespace bsgo

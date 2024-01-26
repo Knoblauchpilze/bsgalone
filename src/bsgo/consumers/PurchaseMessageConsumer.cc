@@ -1,6 +1,5 @@
 
 #include "PurchaseMessageConsumer.hh"
-#include "PurchaseMessage.hh"
 
 namespace bsgo {
 
@@ -28,20 +27,17 @@ void PurchaseMessageConsumer::onMessageReceived(const IMessage &message)
     return;
   }
 
-  const auto playerDbId = purchase.getPlayerDbId();
-  const auto itemDbId   = purchase.getItemDbId();
-
   const auto type = purchase.getItemType();
   switch (type)
   {
     case Item::COMPUTER:
-      handleComputerPurchase(playerDbId, itemDbId);
+      handleComputerPurchase(purchase);
       break;
     case Item::SHIP:
-      handleShipPurchase(playerDbId, itemDbId);
+      handleShipPurchase(purchase);
       break;
     case Item::WEAPON:
-      handleWeaponPurchase(playerDbId, itemDbId);
+      handleWeaponPurchase(purchase);
       break;
     default:
       error("Unsupported item type " + str(type) + " to purchase");
@@ -49,9 +45,11 @@ void PurchaseMessageConsumer::onMessageReceived(const IMessage &message)
   }
 }
 
-void PurchaseMessageConsumer::handleComputerPurchase(const Uuid &playerDbId,
-                                                     const Uuid &computerDbId) const
+void PurchaseMessageConsumer::handleComputerPurchase(const PurchaseMessage &message) const
 {
+  const auto playerDbId   = message.getPlayerDbId();
+  const auto computerDbId = message.getItemDbId();
+
   if (!m_purchaseService->tryPurchase(playerDbId, computerDbId, Item::COMPUTER))
   {
     warn("Failed to process purchase message for player " + str(playerDbId) + " for computer "
@@ -59,13 +57,17 @@ void PurchaseMessageConsumer::handleComputerPurchase(const Uuid &playerDbId,
     return;
   }
 
-  auto message = std::make_unique<PurchaseMessage>(playerDbId, Item::COMPUTER, computerDbId);
-  message->validate();
-  m_messageQueue->pushMessage(std::move(message));
+  auto out = std::make_unique<PurchaseMessage>(playerDbId, Item::COMPUTER, computerDbId);
+  out->validate();
+  out->copyClientIdIfDefined(message);
+  m_messageQueue->pushMessage(std::move(out));
 }
 
-void PurchaseMessageConsumer::handleShipPurchase(const Uuid &playerDbId, const Uuid &shipDbId) const
+void PurchaseMessageConsumer::handleShipPurchase(const PurchaseMessage &message) const
 {
+  const auto playerDbId = message.getPlayerDbId();
+  const auto shipDbId   = message.getItemDbId();
+
   if (!m_purchaseService->tryPurchase(playerDbId, shipDbId, Item::SHIP))
   {
     warn("Failed to process purchase message for player " + str(playerDbId) + " for ship "
@@ -73,14 +75,17 @@ void PurchaseMessageConsumer::handleShipPurchase(const Uuid &playerDbId, const U
     return;
   }
 
-  auto message = std::make_unique<PurchaseMessage>(playerDbId, Item::SHIP, shipDbId);
-  message->validate();
-  m_messageQueue->pushMessage(std::move(message));
+  auto out = std::make_unique<PurchaseMessage>(playerDbId, Item::SHIP, shipDbId);
+  out->validate();
+  out->copyClientIdIfDefined(message);
+  m_messageQueue->pushMessage(std::move(out));
 }
 
-void PurchaseMessageConsumer::handleWeaponPurchase(const Uuid &playerDbId,
-                                                   const Uuid &weaponDbId) const
+void PurchaseMessageConsumer::handleWeaponPurchase(const PurchaseMessage &message) const
 {
+  const auto playerDbId = message.getPlayerDbId();
+  const auto weaponDbId = message.getItemDbId();
+
   if (!m_purchaseService->tryPurchase(playerDbId, weaponDbId, Item::WEAPON))
   {
     warn("Failed to process purchase message for player " + str(playerDbId) + " for weapon "
@@ -88,9 +93,10 @@ void PurchaseMessageConsumer::handleWeaponPurchase(const Uuid &playerDbId,
     return;
   }
 
-  auto message = std::make_unique<PurchaseMessage>(playerDbId, Item::WEAPON, weaponDbId);
-  message->validate();
-  m_messageQueue->pushMessage(std::move(message));
+  auto out = std::make_unique<PurchaseMessage>(playerDbId, Item::WEAPON, weaponDbId);
+  out->validate();
+  out->copyClientIdIfDefined(message);
+  m_messageQueue->pushMessage(std::move(out));
 }
 
 } // namespace bsgo

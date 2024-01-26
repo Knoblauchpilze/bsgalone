@@ -4,6 +4,7 @@
 #include "AbstractMessageConsumer.hh"
 #include "IMessageQueue.hh"
 #include "Services.hh"
+#include "SlotMessage.hh"
 
 namespace bsgo {
 
@@ -19,8 +20,8 @@ class SlotMessageConsumer : public AbstractMessageConsumer
   SlotServiceShPtr m_slotService{};
   IMessageQueue *const m_messageQueue{};
 
-  void handleWeapon(const Uuid &shipEntityId, const int weaponId) const;
-  void handleComputer(const Uuid &shipEntityId, const int computerId) const;
+  void handleWeapon(const SlotMessage &message) const;
+  void handleComputer(const SlotMessage &message) const;
 };
 
 } // namespace bsgo

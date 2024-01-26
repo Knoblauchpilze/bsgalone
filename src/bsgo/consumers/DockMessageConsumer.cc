@@ -1,6 +1,5 @@
 
 #include "DockMessageConsumer.hh"
-#include "DockMessage.hh"
 
 namespace bsgo {
 
@@ -25,38 +24,46 @@ void DockMessageConsumer::onMessageReceived(const IMessage &message)
 
   if (dockMessage.isDocking() && !dockMessage.validated())
   {
-    handleDocking(dockMessage.getShipDbId(), dockMessage.getShipEntityId());
+    handleDocking(dockMessage);
   }
   if (!dockMessage.isDocking() && !dockMessage.validated())
   {
-    handleUndocking(dockMessage.getShipDbId(), dockMessage.getShipEntityId());
+    handleUndocking(dockMessage);
   }
 }
 
-void DockMessageConsumer::handleDocking(const Uuid &shipDbId, const Uuid &shipEntityId) const
+void DockMessageConsumer::handleDocking(const DockMessage &message) const
 {
+  const auto shipDbId     = message.getShipDbId();
+  const auto shipEntityId = message.getShipEntityId();
+
   if (!m_shipService->tryDock(shipDbId, shipEntityId))
   {
     warn("Failed to process dock message for ship " + str(shipDbId));
     return;
   }
 
-  auto message = std::make_unique<DockMessage>(shipDbId, shipEntityId, true);
-  message->validate();
-  m_messageQueue->pushMessage(std::move(message));
+  auto out = std::make_unique<DockMessage>(shipDbId, shipEntityId, true);
+  out->validate();
+  out->copyClientIdIfDefined(message);
+  m_messageQueue->pushMessage(std::move(out));
 }
 
-void DockMessageConsumer::handleUndocking(const Uuid &shipDbId, const Uuid &shipEntityId) const
+void DockMessageConsumer::handleUndocking(const DockMessage &message) const
 {
+  const auto shipDbId     = message.getShipDbId();
+  const auto shipEntityId = message.getShipEntityId();
+
   if (!m_shipService->tryUndock(shipDbId, shipEntityId))
   {
     warn("Failed to process undock message for ship " + str(shipDbId));
     return;
   }
 
-  auto message = std::make_unique<DockMessage>(shipDbId, shipEntityId, false);
-  message->validate();
-  m_messageQueue->pushMessage(std::move(message));
+  auto out = std::make_unique<DockMessage>(shipDbId, shipEntityId, false);
+  out->validate();
+  out->copyClientIdIfDefined(message);
+  m_messageQueue->pushMessage(std::move(out));
 }
 
 } // namespace bsgo
