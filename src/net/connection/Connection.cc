@@ -4,7 +4,8 @@
 
 namespace net {
 std::atomic<ConnectionId> Connection::NEXT_ID{0};
-constexpr auto INCOMING_DATA_BUFFER_SIZE_IN_BYTES = 100;
+constexpr auto INCOMING_SERVER_DATA_BUFFER_SIZE_IN_BYTES = 50;
+constexpr auto INCOMING_CLIENT_DATA_BUFFER_SIZE_IN_BYTES = 10;
 
 Connection::Connection(const std::string &url, const int port, asio::io_context &context)
   : Connection(asio::ip::tcp::socket(context), ConnectionType::CLIENT)
@@ -22,9 +23,14 @@ Connection::Connection(asio::ip::tcp::socket &&socket, const ConnectionType type
   , m_id(NEXT_ID.fetch_add(1))
   , m_type(type)
   , m_socket(std::move(socket))
-  , m_incomingDataTempBuffer(INCOMING_DATA_BUFFER_SIZE_IN_BYTES, 0)
+
 {
   setService("net");
+
+  const auto tempBufferSize = ConnectionType::SERVER == m_type
+                                ? INCOMING_SERVER_DATA_BUFFER_SIZE_IN_BYTES
+                                : INCOMING_CLIENT_DATA_BUFFER_SIZE_IN_BYTES;
+  m_incomingDataTempBuffer.resize(tempBufferSize, 0);
 }
 
 auto Connection::str() const -> std::string
