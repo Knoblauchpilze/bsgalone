@@ -28,9 +28,10 @@ class PlayerRepository : public AbstractRepository
   void initialize() override;
 
   auto findAll() const -> std::unordered_set<Uuid>;
-  auto findOneById(const Uuid &player) const -> Player;
+  auto findAllBySystem(const Uuid system) const -> std::unordered_set<Uuid>;
+  auto findOneById(const Uuid player) const -> Player;
   auto findOneByName(const std::string &name) const -> std::optional<Player>;
-  auto findSystemByPlayer(const Uuid &player) const -> Uuid;
+  auto findSystemByPlayer(const Uuid player) const -> Uuid;
 
   void save(const Player &player);
 };
