@@ -4,6 +4,7 @@
 #include "AbstractMessageConsumer.hh"
 #include "IMessageQueue.hh"
 #include "Services.hh"
+#include "SignupMessage.hh"
 
 namespace bsgo {
 
@@ -19,9 +20,7 @@ class SignupMessageConsumer : public AbstractMessageConsumer
   SignupServiceShPtr m_signupService{};
   IMessageQueue *const m_messageQueue{};
 
-  void handleSignup(const std::string &name,
-                    const std::string &password,
-                    const Faction &faction) const;
+  void handleSignup(const SignupMessage &message) const;
 };
 
 } // namespace bsgo

@@ -1,6 +1,5 @@
 
 #include "HangarMessageConsumer.hh"
-#include "HangarMessage.hh"
 
 namespace bsgo {
 
@@ -26,21 +25,24 @@ void HangarMessageConsumer::onMessageReceived(const IMessage &message)
 
   if (!hangarMessage.validated())
   {
-    handleShipSwitchRequest(hangarMessage.getShipDbId());
+    handleShipSwitchRequest(hangarMessage);
   }
 }
 
-void HangarMessageConsumer::handleShipSwitchRequest(const Uuid &shipDbId) const
+void HangarMessageConsumer::handleShipSwitchRequest(const HangarMessage &message) const
 {
+  const auto shipDbId = message.getShipDbId();
+
   if (!m_shipService->trySelectShip(shipDbId))
   {
     warn("Failed to process switch request message for ship " + str(shipDbId));
     return;
   }
 
-  auto message = std::make_unique<HangarMessage>(shipDbId);
-  message->validate();
-  m_messageQueue->pushMessage(std::move(message));
+  auto out = std::make_unique<HangarMessage>(shipDbId);
+  out->validate();
+  out->copyClientIdIfDefined(message);
+  m_messageQueue->pushMessage(std::move(out));
 }
 
 } // namespace bsgo

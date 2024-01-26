@@ -1,6 +1,5 @@
 
 #include "JumpMessageConsumer.hh"
-#include "JumpMessage.hh"
 
 namespace bsgo {
 
@@ -25,21 +24,25 @@ void JumpMessageConsumer::onMessageReceived(const IMessage &message)
 
   if (!jump.validated())
   {
-    handleJump(jump.getShipDbId(), jump.getShipEntityId());
+    handleJump(jump);
   }
 }
 
-void JumpMessageConsumer::handleJump(const Uuid &shipDbId, const Uuid &shipEntityId) const
+void JumpMessageConsumer::handleJump(const JumpMessage &message) const
 {
+  const auto shipDbId     = message.getShipDbId();
+  const auto shipEntityId = message.getShipEntityId();
+
   if (!m_jumpService->tryJump(shipDbId, shipEntityId))
   {
     warn("Failed to process jump message for ship " + str(shipDbId));
     return;
   }
 
-  auto message = std::make_unique<JumpMessage>(shipDbId, shipEntityId);
-  message->validate();
-  m_messageQueue->pushMessage(std::move(message));
+  auto out = std::make_unique<JumpMessage>(shipDbId, shipEntityId);
+  out->validate();
+  out->copyClientIdIfDefined(message);
+  m_messageQueue->pushMessage(std::move(out));
 }
 
 } // namespace bsgo

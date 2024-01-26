@@ -3,6 +3,7 @@
 
 #include "AbstractMessageConsumer.hh"
 #include "IMessageQueue.hh"
+#include "PurchaseMessage.hh"
 #include "Services.hh"
 
 namespace bsgo {
@@ -19,9 +20,9 @@ class PurchaseMessageConsumer : public AbstractMessageConsumer
   PurchaseServiceShPtr m_purchaseService{};
   IMessageQueue *const m_messageQueue{};
 
-  void handleComputerPurchase(const Uuid &playerDbId, const Uuid &computerDbId) const;
-  void handleShipPurchase(const Uuid &playerDbId, const Uuid &shipDbId) const;
-  void handleWeaponPurchase(const Uuid &playerDbId, const Uuid &weaponDbId) const;
+  void handleComputerPurchase(const PurchaseMessage &message) const;
+  void handleShipPurchase(const PurchaseMessage &message) const;
+  void handleWeaponPurchase(const PurchaseMessage &message) const;
 };
 
 } // namespace bsgo

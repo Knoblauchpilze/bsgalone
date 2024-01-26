@@ -3,6 +3,7 @@
 
 #include "AbstractMessageConsumer.hh"
 #include "IMessageQueue.hh"
+#include "JumpCancelledMessage.hh"
 #include "Services.hh"
 
 namespace bsgo {
@@ -19,7 +20,7 @@ class JumpCancelledMessageConsumer : public AbstractMessageConsumer
   JumpServiceShPtr m_jumpService{};
   IMessageQueue *const m_messageQueue{};
 
-  void handleJumpCancellation(const Uuid &shipDbId, const Uuid &shipEntityId) const;
+  void handleJumpCancellation(const JumpCancelledMessage &message) const;
 };
 
 } // namespace bsgo

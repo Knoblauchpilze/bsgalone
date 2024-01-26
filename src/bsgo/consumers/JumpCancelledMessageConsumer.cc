@@ -1,6 +1,5 @@
 
 #include "JumpCancelledMessageConsumer.hh"
-#include "JumpCancelledMessage.hh"
 
 namespace bsgo {
 
@@ -26,22 +25,25 @@ void JumpCancelledMessageConsumer::onMessageReceived(const IMessage &message)
 
   if (!jump.validated())
   {
-    handleJumpCancellation(jump.getShipDbId(), jump.getShipEntityId());
+    handleJumpCancellation(jump);
   }
 }
 
-void JumpCancelledMessageConsumer::handleJumpCancellation(const Uuid &shipDbId,
-                                                          const Uuid &shipEntityId) const
+void JumpCancelledMessageConsumer::handleJumpCancellation(const JumpCancelledMessage &message) const
 {
+  const auto shipDbId     = message.getShipDbId();
+  const auto shipEntityId = message.getShipEntityId();
+
   if (!m_jumpService->tryCancelJump(shipDbId, shipEntityId))
   {
     warn("Failed to process jump cancelled message for ship " + str(shipDbId));
     return;
   }
 
-  auto message = std::make_unique<JumpCancelledMessage>(shipDbId, shipEntityId);
-  message->validate();
-  m_messageQueue->pushMessage(std::move(message));
+  auto out = std::make_unique<JumpCancelledMessage>(shipDbId, shipEntityId);
+  out->validate();
+  out->copyClientIdIfDefined(message);
+  m_messageQueue->pushMessage(std::move(out));
 }
 
 } // namespace bsgo

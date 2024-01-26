@@ -2,6 +2,7 @@
 #pragma once
 
 #include "AbstractMessageConsumer.hh"
+#include "HangarMessage.hh"
 #include "IMessageQueue.hh"
 #include "Services.hh"
 
@@ -19,7 +20,7 @@ class HangarMessageConsumer : public AbstractMessageConsumer
   ShipServiceShPtr m_shipService{};
   IMessageQueue *const m_messageQueue{};
 
-  void handleShipSwitchRequest(const Uuid &shipDbId) const;
+  void handleShipSwitchRequest(const HangarMessage &message) const;
 };
 
 } // namespace bsgo
