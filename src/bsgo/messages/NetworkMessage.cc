@@ -16,7 +16,7 @@ auto NetworkMessage::getClientId() const -> Uuid
 {
   if (!m_clientId)
   {
-    throw std::invalid_argument("Expected non null client id");
+    throw std::invalid_argument("Expected non null client id for " + str(type()));
   }
   return *m_clientId;
 }
