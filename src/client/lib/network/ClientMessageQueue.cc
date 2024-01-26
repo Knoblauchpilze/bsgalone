@@ -6,8 +6,7 @@ namespace pge {
 
 ClientMessageQueue::ClientMessageQueue(bsgo::IMessageQueuePtr localQueue,
                                        ClientConnectionPtr connection)
-  : bsgo::IMessageQueue()
-  , utils::CoreObject("message")
+  : utils::CoreObject("message")
   , m_localQueue(std::move(localQueue))
   , m_connection(std::move(connection))
 {

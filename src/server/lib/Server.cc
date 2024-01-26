@@ -4,7 +4,6 @@
 #include "AsyncMessageQueue.hh"
 #include "ConnectionMessage.hh"
 #include "ConsumerUtils.hh"
-#include "MessageQueue.hh"
 #include "NetworkMessageQueue.hh"
 #include "SynchronizedMessageQueue.hh"
 #include <core_utils/TimeUtils.hh>
@@ -37,7 +36,7 @@ void Server::requestStop()
 namespace {
 auto createInputMessageQueue() -> NetworkMessageQueuePtr
 {
-  auto messageQueue = std::make_unique<MessageQueue>();
+  auto messageQueue = std::make_unique<SynchronizedMessageQueue>();
   auto asyncQueue   = std::make_unique<AsyncMessageQueue>(std::move(messageQueue));
 
   return std::make_unique<NetworkMessageQueue>(std::move(asyncQueue));
