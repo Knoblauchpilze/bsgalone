@@ -51,20 +51,23 @@ auto createOutputMessageQueue(IMessageQueuePtr queue) -> IMessageQueuePtr
 
 void Server::initialize()
 {
-  const auto repositories = m_dataSource.repositories();
-
   m_inputMessageQueue  = createInputMessageQueue();
   auto broadcastQueue  = std::make_unique<BroadcastMessageQueue>();
   m_broadcastQueue     = broadcastQueue.get();
   m_outputMessageQueue = createOutputMessageQueue(std::move(broadcastQueue));
 
-  m_coordinator = std::make_shared<bsgo::Coordinator>(m_inputMessageQueue.get());
-  m_services    = createServices(repositories, m_coordinator);
-  registerAllConsumersToQueue(*m_inputMessageQueue, m_outputMessageQueue.get(), m_services);
+  initializeSystems();
+}
 
+void Server::initializeSystems()
+{
   /// TODO: Should not simulate a single system.
-  m_dataSource.setSystemDbId(Uuid{0});
-  m_dataSource.initialize(*m_coordinator);
+  SystemProcessingConfig config{.systemDbId         = Uuid{0},
+                                .inputMessageQueue  = m_inputMessageQueue.get(),
+                                .outputMessageQueue = m_outputMessageQueue.get()};
+
+  auto processor = std::make_unique<SystemProcessor>(config);
+  m_systemProcessors.emplace_back(std::move(processor));
 }
 
 void Server::setup(const int port)
