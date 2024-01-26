@@ -17,6 +17,8 @@ class NetworkMessage : public AbstractMessage
   auto getClientId() const -> Uuid;
   auto tryGetClientId() const -> std::optional<Uuid>;
 
+  void copyClientIdIfDefined(const NetworkMessage &source);
+
   protected:
   std::optional<Uuid> m_clientId{};
 };
