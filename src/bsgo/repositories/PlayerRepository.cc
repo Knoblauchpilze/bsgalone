@@ -8,8 +8,22 @@ PlayerRepository::PlayerRepository(const DbConnectionShPtr &connection)
 {}
 
 namespace {
-constexpr auto FIND_ALL_QUERY_NAME = "system_find_all";
+constexpr auto FIND_ALL_QUERY_NAME = "player_find_all";
 constexpr auto FIND_ALL_QUERY      = "SELECT id FROM system";
+
+constexpr auto FIND_ALL_BY_SYSTEM_QUERY_NAME = "system_find_all_by_system";
+constexpr auto FIND_ALL_BY_SYSTEM_QUERY      = R"(
+SELECT
+  ps.player
+FROM
+  player_ship AS ps
+  LEFT JOIN ship_system AS ss ON ps.id = ss.ship
+  LEFT JOIN player AS p ON ps.player = p.id
+WHERE
+  ps.active = true
+  AND ps.player IS NOT NULL
+  AND ss.system = $1
+)";
 
 constexpr auto FIND_ONE_QUERY_NAME = "player_find_one";
 constexpr auto FIND_ONE_QUERY      = "SELECT name, password, faction FROM player WHERE id = $1";
@@ -31,6 +45,7 @@ INSERT INTO player (name, password, faction)
 void PlayerRepository::initialize()
 {
   m_connection->prepare(FIND_ALL_QUERY_NAME, FIND_ALL_QUERY);
+  m_connection->prepare(FIND_ALL_BY_SYSTEM_QUERY_NAME, FIND_ALL_BY_SYSTEM_QUERY);
   m_connection->prepare(FIND_ONE_QUERY_NAME, FIND_ONE_QUERY);
   m_connection->prepare(FIND_ONE_BY_NAME_QUERY_NAME, FIND_ONE_BY_NAME_QUERY);
   m_connection->prepare(FIND_SYSTEM_QUERY_NAME, FIND_SYSTEM_QUERY);
@@ -51,7 +66,21 @@ auto PlayerRepository::findAll() const -> std::unordered_set<Uuid>
   return out;
 }
 
-auto PlayerRepository::findOneById(const Uuid &player) const -> Player
+auto PlayerRepository::findAllBySystem(const Uuid system) const -> std::unordered_set<Uuid>
+{
+  auto work       = m_connection->nonTransaction();
+  const auto rows = work.exec_prepared(FIND_ALL_BY_SYSTEM_QUERY_NAME, toDbId(system));
+
+  std::unordered_set<Uuid> out;
+  for (const auto record : rows)
+  {
+    out.emplace(fromDbId(record[0].as<int>()));
+  }
+
+  return out;
+}
+
+auto PlayerRepository::findOneById(const Uuid player) const -> Player
 {
   auto work         = m_connection->nonTransaction();
   const auto record = work.exec_prepared1(FIND_ONE_QUERY_NAME, toDbId(player));
@@ -92,7 +121,7 @@ auto PlayerRepository::findOneByName(const std::string &name) const -> std::opti
   return out;
 }
 
-auto PlayerRepository::findSystemByPlayer(const Uuid &player) const -> Uuid
+auto PlayerRepository::findSystemByPlayer(const Uuid player) const -> Uuid
 {
   auto work         = m_connection->nonTransaction();
   const auto record = work.exec_prepared1(FIND_SYSTEM_QUERY_NAME, toDbId(player));
