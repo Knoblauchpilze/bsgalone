@@ -45,11 +45,8 @@ void SynchronizedMessageQueue::processMessage(const IMessage &message) const
   auto [it, end] = m_listenersTable.equal_range(message.type());
   for (; it != end; ++it)
   {
-    debug("some listener is receiving " + str(message.type()));
     it->second->onMessageReceived(message);
-    debug("some listener received " + str(message.type()));
   }
-  debug("message processing done for " + str(message.type()));
 }
 
 } // namespace bsgo
