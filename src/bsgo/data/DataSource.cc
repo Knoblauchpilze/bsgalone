@@ -86,10 +86,7 @@ void DataSource::initialize(Coordinator &coordinator) const
 
   coordinator.clear();
 
-  if (m_playerDbId)
-  {
-    initializePlayer(coordinator);
-  }
+  initializePlayer(coordinator);
   initializeShips(coordinator);
   initializeAsteroids(coordinator);
   initializeOutposts(coordinator);
@@ -97,8 +94,12 @@ void DataSource::initialize(Coordinator &coordinator) const
 
 void DataSource::initializePlayer(Coordinator &coordinator) const
 {
-  PlayerDataSource source(m_repositories, *m_playerDbId);
+  PlayerDataSource source(m_repositories, *m_systemDbId, m_playerDbId);
   m_playerEntityId = source.initialize(coordinator);
+  if (m_playerDbId.has_value() && !m_playerEntityId)
+  {
+    error("Failed to initialize player", "Could not find entity id for " + str(*m_playerDbId));
+  }
 }
 
 void DataSource::initializeAsteroids(Coordinator &coordinator) const
