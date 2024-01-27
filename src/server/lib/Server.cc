@@ -3,7 +3,6 @@
 #include "Server.hh"
 #include "AsyncMessageQueue.hh"
 #include "ConnectionMessage.hh"
-#include "ConsumerUtils.hh"
 #include "NetworkMessageQueue.hh"
 #include "SynchronizedMessageQueue.hh"
 #include <core_utils/TimeUtils.hh>

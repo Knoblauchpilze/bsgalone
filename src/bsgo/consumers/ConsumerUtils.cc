@@ -1,7 +1,6 @@
 
 #include "ConsumerUtils.hh"
 
-#include "DockMessageConsumer.hh"
 #include "EquipMessageConsumer.hh"
 #include "HangarMessageConsumer.hh"
 #include "JumpCancelledMessageConsumer.hh"
@@ -28,9 +27,6 @@ void registerAllConsumersToQueue(IMessageQueue &inputMessagesQueue,
 
   auto jumpRequested = std::make_unique<JumpRequestedMessageConsumer>(services, outputMessagesQueue);
   inputMessagesQueue.addListener(std::move(jumpRequested));
-
-  auto dock = std::make_unique<DockMessageConsumer>(services, outputMessagesQueue);
-  inputMessagesQueue.addListener(std::move(dock));
 
   auto slot = std::make_unique<SlotMessageConsumer>(services, outputMessagesQueue);
   inputMessagesQueue.addListener(std::move(slot));
