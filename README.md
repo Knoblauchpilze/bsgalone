@@ -367,7 +367,7 @@ This component registers itself to the message queue and indicates its interest 
 
 Most of the time, the consumers are just calling the corresponding service (for example the `DockMessageConsumer` relies on the [ShipService](src/bsgo/services/ShipService.hh)).
 
-This approach is flexible as it allows to easily keep messages which would fail to be processed for later analysis and also probably also make it easy to send those messages to the server from each client.
+This approach is flexible as it allows to easily keep messages which would fail to be processed for later analysis and also probably make it easy to send those messages to the server from each client.
 
 ### Updating the Game
 

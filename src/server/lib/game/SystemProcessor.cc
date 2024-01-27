@@ -1,7 +1,7 @@
 
 #include "SystemProcessor.hh"
-#include "ConsumerUtils.hh"
 #include "DataSource.hh"
+#include "MessageConsumerUtils.hh"
 
 namespace bsgo {
 
@@ -22,7 +22,7 @@ void SystemProcessor::initialize(const SystemProcessingConfig &config)
   m_coordinator = std::make_shared<Coordinator>(config.inputMessageQueue);
 
   m_services = createServices(repositories, m_coordinator);
-  registerAllConsumersToQueue(*config.inputMessageQueue, config.outputMessageQueue, m_services);
+  createMessageConsumers(*config.inputMessageQueue, config.outputMessageQueue, m_services);
 
   dataSource.setSystemDbId(config.systemDbId);
   dataSource.initialize(*m_coordinator);
