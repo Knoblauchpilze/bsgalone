@@ -12,7 +12,7 @@ add_subdirectory (
 	)
 
 add_subdirectory (
-	${CMAKE_CURRENT_SOURCE_DIR}/network
+	${CMAKE_CURRENT_SOURCE_DIR}/queues
 	)
 
 target_sources (bsgalone_server_lib PRIVATE
