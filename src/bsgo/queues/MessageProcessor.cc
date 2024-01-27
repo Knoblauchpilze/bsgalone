@@ -29,8 +29,8 @@ auto messagesTypesToString(const std::deque<IMessagePtr> &messages, const int co
     {
       out += ", ";
     }
+
     out += str(messages[id]->type());
-    ++id;
   }
 
   out += "}";
