@@ -1,6 +1,6 @@
 
 #include "Game.hh"
-#include "ConsumerUtils.hh"
+#include "ClientMessageConsumerUtils.hh"
 #include "GameMessageModule.hh"
 #include "IInputHandler.hh"
 #include "IRenderer.hh"
@@ -262,7 +262,7 @@ void Game::initialize()
 
   initializeViews();
 
-  bsgo::registerAllConsumersToQueue(*m_messageQueue, m_messageQueue.get(), m_services);
+  bsgo::createMessageConsumers(*m_messageQueue, m_messageQueue.get(), m_services);
 
   auto messageModule = std::make_unique<GameMessageModule>(this);
   m_messageQueue->addListener(std::move(messageModule));
