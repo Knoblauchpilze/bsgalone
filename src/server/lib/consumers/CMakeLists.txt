@@ -5,6 +5,8 @@ target_include_directories (bsgalone_server_lib PUBLIC
 
 target_sources (bsgalone_server_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/DockMessageConsumer.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/MessageConsumerUtils.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/LoginMessageConsumer.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/SignupMessageConsumer.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/ServerMessageConsumerUtils.cc
 	)
 

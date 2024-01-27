@@ -1,23 +1,21 @@
 
-#include "ConsumerUtils.hh"
+#include "ClientMessageConsumerUtils.hh"
 
 #include "EquipMessageConsumer.hh"
 #include "HangarMessageConsumer.hh"
 #include "JumpCancelledMessageConsumer.hh"
 #include "JumpMessageConsumer.hh"
 #include "JumpRequestedMessageConsumer.hh"
-#include "LoginMessageConsumer.hh"
 #include "PurchaseMessageConsumer.hh"
-#include "SignupMessageConsumer.hh"
 #include "SlotMessageConsumer.hh"
 #include "TargetMessageConsumer.hh"
 #include "VelocityMessageConsumer.hh"
 
 namespace bsgo {
 
-void registerAllConsumersToQueue(IMessageQueue &inputMessagesQueue,
-                                 IMessageQueue *const outputMessagesQueue,
-                                 const Services &services)
+void createMessageConsumers(IMessageQueue &inputMessagesQueue,
+                            IMessageQueue *const outputMessagesQueue,
+                            const Services &services)
 {
   auto jump = std::make_unique<JumpMessageConsumer>(services, outputMessagesQueue);
   inputMessagesQueue.addListener(std::move(jump));
@@ -36,12 +34,6 @@ void registerAllConsumersToQueue(IMessageQueue &inputMessagesQueue,
 
   auto hangar = std::make_unique<HangarMessageConsumer>(services, outputMessagesQueue);
   inputMessagesQueue.addListener(std::move(hangar));
-
-  auto login = std::make_unique<LoginMessageConsumer>(services, outputMessagesQueue);
-  inputMessagesQueue.addListener(std::move(login));
-
-  auto signup = std::make_unique<SignupMessageConsumer>(services, outputMessagesQueue);
-  inputMessagesQueue.addListener(std::move(signup));
 
   auto target = std::make_unique<TargetMessageConsumer>(services, outputMessagesQueue);
   inputMessagesQueue.addListener(std::move(target));
