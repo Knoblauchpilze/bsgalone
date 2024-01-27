@@ -32,7 +32,7 @@ bool SynchronizedMessageQueue::empty()
 
 void SynchronizedMessageQueue::processMessages(const std::optional<int> &amount)
 {
-  MessageProcessor processor(m_messages, &m_locker, [this](const IMessage &message) {
+  MessageProcessor processor(m_messages, m_locker, [this](const IMessage &message) {
     processMessage(message);
   });
 
