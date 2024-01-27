@@ -25,7 +25,10 @@ class PlayerDataSource : public utils::CoreObject
   mutable std::optional<Uuid> m_playerEntityId{};
   Repositories m_repositories{};
 
-  void registerPlayer(Coordinator &coordinator, const Uuid playerId) const;
+  void registerPlayer(Coordinator &coordinator, const Uuid playerDbId) const;
+  void registerResources(Coordinator &coordinator,
+                         const Uuid playerEntityId,
+                         const Uuid playerDbId) const;
 };
 
 } // namespace bsgo
