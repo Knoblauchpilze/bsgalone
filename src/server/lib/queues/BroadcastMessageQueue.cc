@@ -56,15 +56,36 @@ void BroadcastMessageQueue::processMessage(const IMessage &message)
     error("Unsupported message type " + str(message.type()), "Message is not a network message");
   }
 
-  const auto &network = message.as<NetworkMessage>();
-  auto maybeClient    = m_clients.find(network.getClientId());
+  const auto &network      = message.as<NetworkMessage>();
+  const auto maybeClientId = network.tryGetClientId();
+  if (maybeClientId)
+  {
+    sendMessageToClient(*maybeClientId, message);
+  }
+  else
+  {
+    broadcastMessage(message);
+  }
+}
+
+void BroadcastMessageQueue::sendMessageToClient(const Uuid clientId, const IMessage &message)
+{
+  auto maybeClient = m_clients.find(clientId);
   if (maybeClient == m_clients.end())
   {
-    error("Failed to send message " + str(message.type()),
-          "Unknown client " + str(network.getClientId()));
+    error("Failed to send message " + str(message.type()), "Unknown client " + str(clientId));
   }
 
   maybeClient->second->send(message);
+}
+
+void BroadcastMessageQueue::broadcastMessage(const IMessage &message)
+{
+  debug("Broadcasting message " + str(message.type()));
+  for (const auto &[_, connection] : m_clients)
+  {
+    connection->send(message);
+  }
 }
 
 } // namespace bsgo

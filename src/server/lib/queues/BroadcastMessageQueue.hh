@@ -32,6 +32,9 @@ class BroadcastMessageQueue : public IMessageQueue, public utils::CoreObject
   std::unordered_map<Uuid, net::ConnectionShPtr> m_clients{};
 
   void processMessage(const IMessage &message);
+
+  void sendMessageToClient(const Uuid clientId, const IMessage &message);
+  void broadcastMessage(const IMessage &message);
 };
 
 using BroadcastMessageQueuePtr = std::unique_ptr<BroadcastMessageQueue>;
