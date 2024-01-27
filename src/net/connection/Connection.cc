@@ -4,8 +4,10 @@
 
 namespace net {
 std::atomic<ConnectionId> Connection::NEXT_ID{0};
-constexpr auto INCOMING_SERVER_DATA_BUFFER_SIZE_IN_BYTES = 50;
-constexpr auto INCOMING_CLIENT_DATA_BUFFER_SIZE_IN_BYTES = 10;
+// Maximum amount of bytes that can be read at once.
+constexpr auto KILOBYTES                                     = 1'024;
+constexpr auto INCOMING_SERVER_DATA_MAX_BUFFER_SIZE_IN_BYTES = 10 * KILOBYTES;
+constexpr auto INCOMING_CLIENT_DATA_MAX_BUFFER_SIZE_IN_BYTES = 10 * KILOBYTES;
 
 Connection::Connection(const std::string &url, const int port, asio::io_context &context)
   : Connection(asio::ip::tcp::socket(context), ConnectionType::CLIENT)
@@ -28,8 +30,8 @@ Connection::Connection(asio::ip::tcp::socket &&socket, const ConnectionType type
   setService("net");
 
   const auto tempBufferSize = ConnectionType::SERVER == m_type
-                                ? INCOMING_SERVER_DATA_BUFFER_SIZE_IN_BYTES
-                                : INCOMING_CLIENT_DATA_BUFFER_SIZE_IN_BYTES;
+                                ? INCOMING_SERVER_DATA_MAX_BUFFER_SIZE_IN_BYTES
+                                : INCOMING_CLIENT_DATA_MAX_BUFFER_SIZE_IN_BYTES;
   m_incomingDataTempBuffer.resize(tempBufferSize, 0);
 }
 
@@ -82,12 +84,12 @@ void Connection::setDisconnectHandler(const DisconnectHandler &disconnectHandler
 
 void Connection::registerReadingTaskToAsio()
 {
-  asio::async_read(m_socket,
-                   asio::buffer(m_incomingDataTempBuffer.data(), m_incomingDataTempBuffer.size()),
-                   std::bind(&Connection::onDataReceived,
-                             shared_from_this(),
-                             std::placeholders::_1,
-                             std::placeholders::_2));
+  m_socket.async_read_some(asio::buffer(m_incomingDataTempBuffer.data(),
+                                        m_incomingDataTempBuffer.size()),
+                           std::bind(&Connection::onDataReceived,
+                                     shared_from_this(),
+                                     std::placeholders::_1,
+                                     std::placeholders::_2));
 }
 
 void Connection::registerConnectingTaskToAsio()
