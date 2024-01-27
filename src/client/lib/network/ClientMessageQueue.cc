@@ -1,6 +1,7 @@
 
 #include "ClientMessageQueue.hh"
 #include "NetworkMessage.hh"
+#include "ValidatableMessage.hh"
 
 namespace pge {
 
@@ -21,12 +22,9 @@ void ClientMessageQueue::setClientId(const bsgo::Uuid clientId)
 
 void ClientMessageQueue::pushMessage(bsgo::IMessagePtr message)
 {
-  if (m_clientId && message->isA<bsgo::NetworkMessage>())
-  {
-    message->as<bsgo::NetworkMessage>().setClientId(*m_clientId);
-  }
-  m_connection->sendMessage(*message);
-  m_localQueue->pushMessage(std::move(message));
+  assignClientIdIfPossible(*message);
+  sendMessageToConnectionIfNeeded(*message);
+  pushToLocalQueueIfNeeded(std::move(message));
 }
 
 void ClientMessageQueue::addListener(bsgo::IMessageListenerPtr listener)
@@ -42,6 +40,42 @@ bool ClientMessageQueue::empty()
 void ClientMessageQueue::processMessages(const std::optional<int> &amount)
 {
   m_localQueue->processMessages(amount);
+}
+
+void ClientMessageQueue::assignClientIdIfPossible(bsgo::IMessage &message) const
+{
+  if (m_clientId && message.isA<bsgo::NetworkMessage>())
+  {
+    message.as<bsgo::NetworkMessage>().setClientId(*m_clientId);
+  }
+}
+
+void ClientMessageQueue::sendMessageToConnectionIfNeeded(bsgo::IMessage &message) const
+{
+  if (message.isA<bsgo::ValidatableMessage>())
+  {
+    const auto &validatable = message.as<bsgo::ValidatableMessage>();
+    if (validatable.validated())
+    {
+      return;
+    }
+  }
+
+  m_connection->sendMessage(message);
+}
+
+void ClientMessageQueue::pushToLocalQueueIfNeeded(bsgo::IMessagePtr message)
+{
+  if (message->isA<bsgo::ValidatableMessage>())
+  {
+    const auto &validatable = message->as<bsgo::ValidatableMessage>();
+    if (!validatable.validated())
+    {
+      return;
+    }
+  }
+
+  m_localQueue->pushMessage(std::move(message));
 }
 
 } // namespace pge

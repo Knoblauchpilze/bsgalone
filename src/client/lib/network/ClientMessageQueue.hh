@@ -28,6 +28,10 @@ class ClientMessageQueue : public bsgo::IMessageQueue, public utils::CoreObject
   bsgo::IMessageQueuePtr m_localQueue{};
   ClientConnectionPtr m_connection{};
   std::optional<bsgo::Uuid> m_clientId{};
+
+  void assignClientIdIfPossible(bsgo::IMessage &message) const;
+  void sendMessageToConnectionIfNeeded(bsgo::IMessage &message) const;
+  void pushToLocalQueueIfNeeded(bsgo::IMessagePtr message);
 };
 
 using ClientMessageQueuePtr = std::unique_ptr<ClientMessageQueue>;
