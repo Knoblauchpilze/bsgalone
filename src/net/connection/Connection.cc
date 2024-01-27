@@ -183,8 +183,8 @@ void Connection::onDataReceived(const std::error_code &code, const std::size_t c
     const auto processed = (*m_dataHandler)(m_id, m_partialMessageData);
     m_partialMessageData.erase(m_partialMessageData.begin(),
                                m_partialMessageData.begin() + processed);
-    debug("Processed " + std::to_string(processed) + " byte(s), "
-          + std::to_string(m_partialMessageData.size()) + " byte(s) remaining");
+    verbose("Processed " + std::to_string(processed) + " byte(s), "
+            + std::to_string(m_partialMessageData.size()) + " byte(s) remaining");
   }
 
   if (!m_dataHandler)
