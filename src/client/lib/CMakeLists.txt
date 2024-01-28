@@ -4,6 +4,10 @@ add_library (bsgalone_client_lib SHARED "")
 set (CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/consumers
+	)
+
+add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/game
 	)
 
