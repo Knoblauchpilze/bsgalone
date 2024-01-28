@@ -15,27 +15,25 @@
 
 namespace bsgo {
 
-ShipDataSource::ShipDataSource(const Repositories &repositories)
+ShipDataSource::ShipDataSource(const Repositories &repositories,
+                               const Uuid systemDbId,
+                               const PlayerDbIdsToEntityIds &playerDbIdsToEntityIds)
   : utils::CoreObject("bsgo")
+  , m_systemDbId(systemDbId)
+  , m_playerDbIdsToEntityIds(playerDbIdsToEntityIds)
   , m_repositories(repositories)
 {
   setService("data");
   addModule("ship");
 }
 
-ShipDataSource::ShipDataSource(const Repositories &repositories, const Uuid systemDbId)
-  : ShipDataSource(repositories)
-{
-  m_systemDbId = systemDbId;
-}
-
 ShipDataSource::ShipDataSource(const Repositories &repositories,
-                               const Uuid playerDbId,
-                               const Uuid playerEntityId)
-  : ShipDataSource(repositories)
+                               const Uuid systemDbId,
+                               const PlayerDbIdsToEntityIds &playerDbIdsToEntityIds,
+                               const Uuid playerDbId)
+  : ShipDataSource(repositories, systemDbId, playerDbIdsToEntityIds)
 {
-  m_playerDbId     = playerDbId;
-  m_playerEntityId = playerEntityId;
+  m_playerDbId = playerDbId;
 }
 
 auto ShipDataSource::getPlayerShipDbId() const -> std::optional<Uuid>
@@ -76,32 +74,57 @@ void ShipDataSource::registerShip(Coordinator &coordinator, const Uuid &ship) co
   coordinator.addShipClass(ent, data.shipClass);
   coordinator.addName(ent, data.name);
   coordinator.addDbId(ent, data.id);
-  if (!data.player)
-  {
-    coordinator.addAI(ent, generateBehaviorTree(ship, data.position));
-  }
-  /// TODO: We should get access to all the players and register the owner
-  /// accordingly.
-  else if (m_playerDbId && *data.player == *m_playerDbId)
-  {
-    if (m_playerShipDbId)
-    {
-      error("Failed to create ship " + str(ship),
-            "Player ship id is already assigned entity " + str(*m_playerShipDbId));
-    }
-    if (m_playerShipEntityId)
-    {
-      error("Failed to create ship " + str(ship),
-            "Player ship entity id is already assigned entity " + str(*m_playerShipEntityId));
-    }
 
-    m_playerShipDbId     = ship;
-    m_playerShipEntityId = ent;
-    coordinator.addOwner(ent, *m_playerEntityId, OwnerType::PLAYER);
-  }
-
+  registerShipOwner(coordinator, ent, data);
   registerShipWeapons(coordinator, ship, ent);
   registerShipComputers(coordinator, ship, ent);
+}
+
+void ShipDataSource::registerShipOwner(Coordinator &coordinator,
+                                       const Uuid &shipEntity,
+                                       const PlayerShip &shipData) const
+{
+  if (!shipData.player)
+  {
+    coordinator.addAI(shipEntity, generateBehaviorTree(shipEntity, shipData.position));
+    return;
+  }
+
+  const auto maybePlayerShipEntityId = m_playerDbIdsToEntityIds.find(*shipData.player);
+  if (maybePlayerShipEntityId == m_playerDbIdsToEntityIds.cend())
+  {
+    error("Failed to register owner for ship " + str(shipData.id),
+          "Could not find entity id for player " + str(*shipData.player));
+  }
+
+  coordinator.addOwner(shipEntity, maybePlayerShipEntityId->second, OwnerType::PLAYER);
+
+  if (m_playerDbId && *shipData.player == *m_playerDbId)
+  {
+    registerPlayerDataIfNeeded(shipEntity, shipData);
+  }
+}
+
+void ShipDataSource::registerPlayerDataIfNeeded(const Uuid shipEntity,
+                                                const PlayerShip &shipData) const
+{
+  if (*shipData.player != *m_playerDbId)
+  {
+    return;
+  }
+
+  if (m_playerShipEntityId)
+  {
+    error("Player " + str(*m_playerDbId) + " is already attached to ship entity "
+          + str(*m_playerShipEntityId));
+  }
+  m_playerShipEntityId = shipEntity;
+
+  if (m_playerShipDbId)
+  {
+    error("Player " + str(*m_playerDbId) + " is already attached to ship " + str(*m_playerShipDbId));
+  }
+  m_playerShipDbId = shipData.id;
 }
 
 void ShipDataSource::registerShipWeapons(Coordinator &coordinator,

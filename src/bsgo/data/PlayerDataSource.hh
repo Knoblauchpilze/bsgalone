@@ -4,10 +4,13 @@
 #include "DbConnection.hh"
 #include "Repositories.hh"
 #include <core_utils/CoreObject.hh>
+#include <unordered_map>
 
 namespace bsgo {
 
 class Coordinator;
+
+using PlayerDbIdsToEntityIds = std::unordered_map<Uuid, Uuid>;
 
 class PlayerDataSource : public utils::CoreObject
 {
@@ -17,13 +20,16 @@ class PlayerDataSource : public utils::CoreObject
                    const std::optional<Uuid> &playerDbId);
   ~PlayerDataSource() override = default;
 
-  auto initialize(Coordinator &coordinator) const -> std::optional<Uuid>;
+  auto getPlayerEntityId() const -> std::optional<Uuid>;
+
+  auto initialize(Coordinator &coordinator) const -> PlayerDbIdsToEntityIds;
 
   private:
   Uuid m_systemDbId{};
   std::optional<Uuid> m_playerDbId{};
-  mutable std::optional<Uuid> m_playerEntityId{};
   Repositories m_repositories{};
+
+  mutable PlayerDbIdsToEntityIds m_playerDbIdsToEntityIds{};
 
   void registerPlayer(Coordinator &coordinator, const Uuid playerDbId) const;
   void registerResources(Coordinator &coordinator,

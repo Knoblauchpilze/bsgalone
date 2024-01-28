@@ -16,7 +16,21 @@ PlayerDataSource::PlayerDataSource(const Repositories &repositories,
   addModule("player");
 }
 
-auto PlayerDataSource::initialize(Coordinator &coordinator) const -> std::optional<Uuid>
+auto PlayerDataSource::getPlayerEntityId() const -> std::optional<Uuid>
+{
+  if (m_playerDbId)
+  {
+    const auto maybePlayerDbId = m_playerDbIdsToEntityIds.find(*m_playerDbId);
+    if (maybePlayerDbId != m_playerDbIdsToEntityIds.cend())
+    {
+      return maybePlayerDbId->second;
+    }
+  }
+
+  return {};
+}
+
+auto PlayerDataSource::initialize(Coordinator &coordinator) const -> PlayerDbIdsToEntityIds
 {
   const auto players = m_repositories.playerRepository->findAllBySystem(m_systemDbId);
   for (const auto &id : players)
@@ -24,7 +38,7 @@ auto PlayerDataSource::initialize(Coordinator &coordinator) const -> std::option
     registerPlayer(coordinator, id);
   }
 
-  return m_playerEntityId;
+  return m_playerDbIdsToEntityIds;
 }
 
 void PlayerDataSource::registerPlayer(Coordinator &coordinator, const Uuid playerDbId) const
@@ -38,9 +52,11 @@ void PlayerDataSource::registerPlayer(Coordinator &coordinator, const Uuid playe
   const std::unordered_set<ComponentType> toSync{ComponentType::RESOURCE};
   coordinator.addNetwork(playerEntityId, toSync);
 
-  if (m_playerDbId && playerDbId == *m_playerDbId)
+  const auto res = m_playerDbIdsToEntityIds.try_emplace(playerDbId, playerEntityId);
+  if (!res.second)
   {
-    m_playerEntityId = playerEntityId;
+    error("Unable to register player " + str(playerDbId),
+          "Player already is attached to entity " + str(res.first->second));
   }
 
   registerResources(coordinator, playerEntityId, playerDbId);
