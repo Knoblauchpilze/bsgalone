@@ -248,7 +248,6 @@ void Game::initialize()
   const auto repositories = m_dataSource.repositories();
 
   auto networkSystem = std::make_unique<bsgo::NetworkSystem>(repositories);
-  m_networkSystem    = networkSystem.get();
 
   auto connection        = std::make_unique<ClientConnection>(*m_networkContext);
   auto synchronizedQueue = std::make_unique<bsgo::SynchronizedMessageQueue>();
@@ -303,8 +302,6 @@ void Game::resetViewsAndUi()
   {
     error("Failed to reset views and UI", "Expected to have a player defined");
   }
-
-  m_networkSystem->setPlayerDbId(*maybePlayerDbId);
 
   const auto playerShipDbId     = m_dataSource.playerShipDbId();
   const auto playerShipEntityId = m_dataSource.playerShipEntityId();

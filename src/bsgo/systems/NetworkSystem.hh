@@ -13,14 +13,11 @@ class NetworkSystem : public AbstractSystem
   NetworkSystem(const Repositories &repositories);
   ~NetworkSystem() override = default;
 
-  void setPlayerDbId(const Uuid &playerDbId);
-
   void updateEntity(Entity &entity,
                     Coordinator &coordinator,
                     const float elapsedSeconds) const override;
 
   private:
-  std::optional<Uuid> m_playerDbId{};
   Repositories m_repositories{};
 
   void syncEntity(Entity &entity) const;

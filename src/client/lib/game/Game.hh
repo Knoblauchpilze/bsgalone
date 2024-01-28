@@ -9,7 +9,6 @@
 #include "IMessageListener.hh"
 #include "IRenderer.hh"
 #include "IUiHandler.hh"
-#include "NetworkSystem.hh"
 #include "RenderState.hh"
 #include "Renderer.hh"
 #include "RenderingPass.hh"
@@ -93,7 +92,6 @@ class Game : public utils::CoreObject
   bsgo::CoordinatorShPtr m_coordinator{};
   ClientMessageQueuePtr m_messageQueue{};
   net::ContextPtr m_networkContext{std::make_unique<net::Context>()};
-  bsgo::NetworkSystem *m_networkSystem{};
   bsgo::Views m_views;
   std::unordered_map<Screen, IRendererPtr> m_renderers{};
   std::unordered_map<Screen, IInputHandlerPtr> m_inputHandlers{};
