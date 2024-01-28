@@ -1,5 +1,6 @@
 
 #include "NetworkSystem.hh"
+#include "SlotComponentMessage.hh"
 
 namespace bsgo {
 namespace {
@@ -82,8 +83,12 @@ void NetworkSystem::syncResourceComponents(Entity &entity) const
 
 void NetworkSystem::syncComputerSlotComponents(Entity &entity) const
 {
-  /// TODO: Should create a message for the slot fired.
-  warn("should sync computer slot component for " + entity.str());
+  auto count = static_cast<int>(entity.computers.size());
+  for (auto id = 0; id < count; ++id)
+  {
+    auto message = std::make_unique<SlotComponentMessage>(entity.uuid, id, *entity.computers[id]);
+    pushMessage(std::move(message));
+  }
 }
 
 } // namespace bsgo
