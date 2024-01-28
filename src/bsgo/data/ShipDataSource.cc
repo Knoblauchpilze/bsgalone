@@ -15,18 +15,27 @@
 
 namespace bsgo {
 
-ShipDataSource::ShipDataSource(const Repositories &repositories,
-                               const Uuid &systemDbId,
-                               const std::optional<Uuid> &playerDbId,
-                               const Uuid &playerEntityId)
+ShipDataSource::ShipDataSource(const Repositories &repositories)
   : utils::CoreObject("bsgo")
-  , m_systemDbId(systemDbId)
-  , m_playerDbId(playerDbId)
-  , m_playerEntityId(playerEntityId)
   , m_repositories(repositories)
 {
   setService("data");
   addModule("ship");
+}
+
+ShipDataSource::ShipDataSource(const Repositories &repositories, const Uuid systemDbId)
+  : ShipDataSource(repositories)
+{
+  m_systemDbId = systemDbId;
+}
+
+ShipDataSource::ShipDataSource(const Repositories &repositories,
+                               const Uuid playerDbId,
+                               const Uuid playerEntityId)
+  : ShipDataSource(repositories)
+{
+  m_playerDbId     = playerDbId;
+  m_playerEntityId = playerEntityId;
 }
 
 auto ShipDataSource::getPlayerShipDbId() const -> std::optional<Uuid>
@@ -88,7 +97,7 @@ void ShipDataSource::registerShip(Coordinator &coordinator, const Uuid &ship) co
 
     m_playerShipDbId     = ship;
     m_playerShipEntityId = ent;
-    coordinator.addOwner(ent, m_playerEntityId, OwnerType::PLAYER);
+    coordinator.addOwner(ent, *m_playerEntityId, OwnerType::PLAYER);
   }
 
   registerShipWeapons(coordinator, ship, ent);

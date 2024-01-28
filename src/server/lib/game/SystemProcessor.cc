@@ -16,7 +16,7 @@ SystemProcessor::SystemProcessor(const SystemProcessingConfig &config)
 
 void SystemProcessor::initialize(const SystemProcessingConfig &config)
 {
-  DataSource dataSource{};
+  DataSource dataSource{DataLoadingMode::SERVER};
   const auto repositories = dataSource.repositories();
 
   m_coordinator = std::make_shared<Coordinator>(config.inputMessageQueue);
