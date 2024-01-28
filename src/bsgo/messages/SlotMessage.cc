@@ -6,11 +6,11 @@
 namespace bsgo {
 
 SlotMessage::SlotMessage()
-  : ValidatableMessage(MessageType::SLOT)
+  : NetworkMessage(MessageType::SLOT)
 {}
 
 SlotMessage::SlotMessage(const Uuid &shipEntityId, const int slotIndex, const Slot &slotType)
-  : ValidatableMessage(MessageType::SLOT)
+  : NetworkMessage(MessageType::SLOT)
   , m_shipEntityId(shipEntityId)
   , m_slotIndex(slotIndex)
   , m_slotType(slotType)
@@ -35,7 +35,6 @@ auto SlotMessage::serialize(std::ostream &out) const -> std::ostream &
 {
   utils::serialize(out, m_messageType);
   utils::serialize(out, m_clientId);
-  utils::serialize(out, m_validated);
 
   utils::serialize(out, m_shipEntityId);
   utils::serialize(out, m_slotIndex);
@@ -49,7 +48,6 @@ bool SlotMessage::deserialize(std::istream &in)
   bool ok{true};
   ok &= utils::deserialize(in, m_messageType);
   ok &= utils::deserialize(in, m_clientId);
-  ok &= utils::deserialize(in, m_validated);
 
   ok &= utils::deserialize(in, m_shipEntityId);
   ok &= utils::deserialize(in, m_slotIndex);

@@ -22,11 +22,11 @@ void SlotMessageConsumer::onMessageReceived(const IMessage &message)
 {
   const auto &slotMessage = message.as<SlotMessage>();
 
-  if (Slot::WEAPON == slotMessage.getSlotType() && !slotMessage.validated())
+  if (Slot::WEAPON == slotMessage.getSlotType())
   {
     handleWeapon(slotMessage);
   }
-  if (Slot::COMPUTER == slotMessage.getSlotType() && !slotMessage.validated())
+  if (Slot::COMPUTER == slotMessage.getSlotType())
   {
     handleComputer(slotMessage);
   }
@@ -42,11 +42,6 @@ void SlotMessageConsumer::handleWeapon(const SlotMessage &message) const
     warn("Failed to process weapon slot message for ship " + str(shipEntityId));
     return;
   }
-
-  auto out = std::make_unique<SlotMessage>(shipEntityId, weaponId, Slot::WEAPON);
-  out->validate();
-  out->copyClientIdIfDefined(message);
-  m_messageQueue->pushMessage(std::move(out));
 }
 
 void SlotMessageConsumer::handleComputer(const SlotMessage &message) const
@@ -59,11 +54,6 @@ void SlotMessageConsumer::handleComputer(const SlotMessage &message) const
     warn("Failed to process computer slot message for ship " + str(shipEntityId));
     return;
   }
-
-  auto out = std::make_unique<SlotMessage>(shipEntityId, computerId, Slot::COMPUTER);
-  out->validate();
-  out->copyClientIdIfDefined(message);
-  m_messageQueue->pushMessage(std::move(out));
 }
 
 } // namespace bsgo

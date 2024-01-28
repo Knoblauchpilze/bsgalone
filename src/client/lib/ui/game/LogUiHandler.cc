@@ -117,7 +117,8 @@ bool shouldMessageBeFiltered(const bsgo::IMessage &message, const bsgo::Entity &
 
     const auto computerIsOffensive = playerShip.computers.at(slotMessage.getSlotIndex())
                                        ->isOffensive();
-    return computerIsOffensive || !slotMessage.validated();
+    /// TODO: Change this to use the new SlotToggledMessage.
+    return computerIsOffensive;
   }
 
   return false;
