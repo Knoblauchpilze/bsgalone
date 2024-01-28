@@ -7,7 +7,7 @@ SlotService::SlotService(const Repositories &repositories, const CoordinatorShPt
   : AbstractService("slot", repositories, coordinator)
 {}
 
-bool SlotService::tryToggleWeapon(const Uuid &shipEntityId, const int weaponIndex) const
+bool SlotService::tryToggleWeapon(const Uuid shipEntityId, const int weaponIndex) const
 {
   const auto ship = m_coordinator->getEntity(shipEntityId);
   if (ship.weapons.size() < static_cast<std::size_t>(weaponIndex))
@@ -20,7 +20,7 @@ bool SlotService::tryToggleWeapon(const Uuid &shipEntityId, const int weaponInde
   return true;
 }
 
-bool SlotService::tryToggleComputer(const Uuid &shipEntityId, const int computerIndex) const
+bool SlotService::tryToggleComputer(const Uuid shipEntityId, const int computerIndex) const
 {
   auto ship = m_coordinator->getEntity(shipEntityId);
   if (ship.computers.size() < static_cast<std::size_t>(computerIndex))
@@ -29,10 +29,23 @@ bool SlotService::tryToggleComputer(const Uuid &shipEntityId, const int computer
   }
 
   ship.computers[computerIndex]->registerFireRequest();
-  if (ship.exists<NetworkComponent>())
+
+  return true;
+}
+
+bool SlotService::trySyncComputer(const Uuid shipEntityId,
+                                  const int computerIndex,
+                                  const SlotUpdateData &data) const
+{
+  auto ship = m_coordinator->getEntity(shipEntityId);
+  if (ship.computers.size() < static_cast<std::size_t>(computerIndex))
   {
-    ship.networkComp().markForSync();
+    return false;
   }
+
+  const auto &component = ship.computers[computerIndex];
+  component->overrideElapsedSinceLastFired(data.elapsedSinceLastFired);
+  debug("override");
 
   return true;
 }
