@@ -9,7 +9,7 @@
 #include "JumpRequestedMessage.hh"
 #include "LootMessage.hh"
 #include "ScannedMessage.hh"
-#include "SlotMessage.hh"
+#include "SlotComponentMessage.hh"
 
 namespace pge {
 
@@ -18,7 +18,7 @@ const std::unordered_set<bsgo::MessageType> RELEVANT_MESSAGE_TYPES_TO_LOG
      bsgo::MessageType::JUMP_REQUESTED,
      bsgo::MessageType::LOOT,
      bsgo::MessageType::SCANNED,
-     bsgo::MessageType::SLOT};
+     bsgo::MessageType::SLOT_COMPONENT_UPDATED};
 
 LogUiHandler::LogUiHandler(const bsgo::Views &views)
   : IUiHandler("log")
@@ -107,17 +107,16 @@ bool shouldMessageBeFiltered(const bsgo::IMessage &message, const bsgo::Entity &
     return !jump.validated();
   }
 
-  if (bsgo::MessageType::SLOT == message.type())
+  if (bsgo::MessageType::SLOT_COMPONENT_UPDATED == message.type())
   {
-    const auto &slotMessage = message.as<bsgo::SlotMessage>();
-    if (bsgo::Slot::WEAPON == slotMessage.getSlotType())
+    const auto &slotMessage = message.as<bsgo::SlotComponentMessage>();
+    if (bsgo::ComponentType::WEAPON_SLOT == slotMessage.getComponentType())
     {
       return true;
     }
 
     const auto computerIsOffensive = playerShip.computers.at(slotMessage.getSlotIndex())
                                        ->isOffensive();
-    /// TODO: Change this to use the new SlotToggledMessage.
     return computerIsOffensive;
   }
 
@@ -218,7 +217,7 @@ auto createScannedMessage(const bsgo::ScannedMessage &message,
 
 constexpr auto ELECTRONIC_SUPPORT_TEXT = "Your systems are being improved by electronic support";
 
-auto createSlotMessage(const bsgo::SlotMessage & /*message*/) -> TextConfig
+auto createSlotMessage(const bsgo::SlotComponentMessage & /*message*/) -> TextConfig
 {
   return textConfigFromColor(ELECTRONIC_SUPPORT_TEXT, colors::APPLE_GREEN);
 }
@@ -239,8 +238,8 @@ auto createTextConfigForMessage(const bsgo::IMessage &message,
       return createLootMessage(message.as<bsgo::LootMessage>(), resourceView);
     case bsgo::MessageType::SCANNED:
       return createScannedMessage(message.as<bsgo::ScannedMessage>(), systemView, resourceView);
-    case bsgo::MessageType::SLOT:
-      return createSlotMessage(message.as<bsgo::SlotMessage>());
+    case bsgo::MessageType::SLOT_COMPONENT_UPDATED:
+      return createSlotMessage(message.as<bsgo::SlotComponentMessage>());
     default:
       throw std::invalid_argument("Unsupported message type " + bsgo::str(message.type()));
   }
