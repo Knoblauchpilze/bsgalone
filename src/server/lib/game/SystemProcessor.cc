@@ -41,7 +41,7 @@ void SystemProcessor::initialize(const SystemProcessingConfig &config)
   const auto repositories = dataSource.repositories();
 
   auto networkSystem = std::make_unique<NetworkSystem>(repositories);
-  m_coordinator = std::make_shared<Coordinator>(std::move(networkSystem), config.inputMessageQueue);
+  m_coordinator = std::make_shared<Coordinator>(std::move(networkSystem), config.outputMessageQueue);
 
   m_services = createServices(repositories, m_coordinator);
   createMessageConsumers(*config.inputMessageQueue, config.outputMessageQueue, m_services);
