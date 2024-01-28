@@ -2,13 +2,13 @@
 
 #pragma once
 
+#include "NetworkMessage.hh"
 #include "Slot.hh"
 #include "Uuid.hh"
-#include "ValidatableMessage.hh"
 
 namespace bsgo {
 
-class SlotMessage : public ValidatableMessage
+class SlotMessage : public NetworkMessage
 {
   public:
   SlotMessage();
