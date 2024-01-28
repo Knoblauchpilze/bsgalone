@@ -14,11 +14,6 @@ NetworkSystem::NetworkSystem(const Repositories &repositories)
   , m_repositories(repositories)
 {}
 
-void NetworkSystem::setPlayerDbId(const Uuid &playerDbId)
-{
-  m_playerDbId = playerDbId;
-}
-
 void NetworkSystem::updateEntity(Entity &entity,
                                  Coordinator & /*coordinator*/,
                                  const float /*elapsedSeconds*/) const
@@ -73,14 +68,15 @@ void syncResource(const Uuid &playerDbId,
 
 void NetworkSystem::syncResourceComponents(Entity &entity) const
 {
-  if (!m_playerDbId)
+  if (!entity.exists<OwnerComponent>())
   {
-    error("Expected player db id to exist");
+    return;
   }
 
+  const auto playerDbId = entity.dbComp().dbId();
   for (const auto &resourceComp : entity.resources)
   {
-    syncResource(*m_playerDbId, *resourceComp, *m_repositories.playerResourceRepository);
+    syncResource(playerDbId, *resourceComp, *m_repositories.playerResourceRepository);
   }
 }
 

@@ -93,6 +93,12 @@ void Server::activeRunLoop()
 {
   m_running.store(true);
   bool running{true};
+
+  for (const auto &processor : m_systemProcessors)
+  {
+    processor->start();
+  }
+
   while (running)
   {
     constexpr auto SLEEP_DURATION_WHEN_POLLING_STATUS = utils::Milliseconds(100);
@@ -100,6 +106,8 @@ void Server::activeRunLoop()
 
     running = m_running.load();
   }
+
+  m_systemProcessors.clear();
 }
 
 void Server::shutdown()
