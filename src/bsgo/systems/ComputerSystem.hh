@@ -21,7 +21,7 @@ class ComputerSystem : public AbstractSystem
                       const std::optional<Entity> &target,
                       const float elapsedSeconds) const;
 
-  void processFireRequest(Entity &ent,
+  bool processFireRequest(Entity &ent,
                           const ComputerSlotComponentShPtr &computer,
                           std::optional<Entity> &target,
                           Coordinator &coordinator) const;
@@ -31,6 +31,11 @@ class ComputerSystem : public AbstractSystem
   void applyReceiverEffects(Entity &target,
                             const ComputerSlotComponentShPtr &computer,
                             Coordinator &coordinator) const;
+
+  void sendComponentUpdatedMessage(const Entity &entity,
+                                   const int slotIndex,
+                                   const SlotComponent &component,
+                                   const Coordinator &coordinator) const;
 };
 
 } // namespace bsgo

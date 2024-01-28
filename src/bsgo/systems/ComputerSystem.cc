@@ -1,6 +1,7 @@
 
 #include "ComputerSystem.hh"
 #include "ScannedMessage.hh"
+#include "SlotComponentMessage.hh"
 #include "SystemUtils.hh"
 
 namespace bsgo {
@@ -33,12 +34,17 @@ void ComputerSystem::updateEntity(Entity &entity,
     targetEnt = coordinator.getEntity(*target);
   }
 
-  for (const auto &computer : entity.computers)
+  const auto count = static_cast<int>(entity.computers.size());
+  for (auto id = 0; id < count; ++id)
   {
+    const auto &computer = entity.computers[id];
     updateComputer(entity, computer, targetEnt, elapsedSeconds);
     if (computer->hasFireRequest())
     {
-      processFireRequest(entity, computer, targetEnt, coordinator);
+      if (processFireRequest(entity, computer, targetEnt, coordinator))
+      {
+        sendComponentUpdatedMessage(entity, id, *computer, coordinator);
+      }
     }
   }
 }
@@ -72,7 +78,7 @@ void ComputerSystem::updateComputer(const Entity &ent,
   computer->setFiringState(state);
 }
 
-void ComputerSystem::processFireRequest(Entity &ent,
+bool ComputerSystem::processFireRequest(Entity &ent,
                                         const ComputerSlotComponentShPtr &computer,
                                         std::optional<Entity> &target,
                                         Coordinator &coordinator) const
@@ -81,7 +87,7 @@ void ComputerSystem::processFireRequest(Entity &ent,
 
   if (!computer->canFire())
   {
-    return;
+    return false;
   }
 
   computer->fire();
@@ -93,6 +99,8 @@ void ComputerSystem::processFireRequest(Entity &ent,
   {
     applyReceiverEffects(*target, computer, coordinator);
   }
+
+  return true;
 }
 
 void ComputerSystem::applyEmitterEffects(Entity &ent,
@@ -122,6 +130,27 @@ void ComputerSystem::applyReceiverEffects(Entity &target,
     target.scannedComp().scan();
     pushMessage(std::make_unique<ScannedMessage>(target.uuid));
   }
+}
+
+void ComputerSystem::sendComponentUpdatedMessage(const Entity &entity,
+                                                 const int slotIndex,
+                                                 const SlotComponent &component,
+                                                 const Coordinator & /*coordinator*/) const
+{
+  /// TODO: Use the player db id to find some sort of client id
+  // std::optional<Uuid> playerDbId{};
+  // if (entity.exists<OwnerComponent>())
+  // {
+  //   const auto ownerEntityId = entity.ownerComp().owner();
+  //   const auto player        = coordinator.getEntity(ownerEntityId);
+
+  //   if (player.exists<DbComponent>())
+  //   {
+  //     playerDbId = player.dbComp().dbId();
+  //   }
+  // }
+
+  pushMessage(std::make_unique<SlotComponentMessage>(entity.uuid, slotIndex, component));
 }
 
 } // namespace bsgo
