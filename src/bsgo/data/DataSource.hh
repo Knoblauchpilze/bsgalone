@@ -1,8 +1,8 @@
 
 #pragma once
 
+#include "DataLoadingMode.hh"
 #include "DbConnection.hh"
-#include "INode.hh"
 #include "Repositories.hh"
 #include <core_utils/CoreObject.hh>
 
@@ -13,7 +13,7 @@ class Coordinator;
 class DataSource : public utils::CoreObject
 {
   public:
-  DataSource();
+  DataSource(const DataLoadingMode dataLoadingMode);
   ~DataSource() override = default;
 
   void setSystemDbId(const Uuid &system);
@@ -29,6 +29,7 @@ class DataSource : public utils::CoreObject
   void initialize(Coordinator &coordinator) const;
 
   private:
+  DataLoadingMode m_dataLoadingMode{};
   mutable std::optional<Uuid> m_systemDbId{};
   std::optional<Uuid> m_playerDbId{};
   mutable std::optional<Uuid> m_playerEntityId{};

@@ -88,7 +88,7 @@ class Game : public utils::CoreObject
   /// @brief - The definition of the game state.
   State m_state{};
 
-  bsgo::DataSource m_dataSource{};
+  bsgo::DataSource m_dataSource{bsgo::DataLoadingMode::CLIENT};
   bsgo::Services m_services{};
   bsgo::CoordinatorShPtr m_coordinator{};
   ClientMessageQueuePtr m_messageQueue{};
