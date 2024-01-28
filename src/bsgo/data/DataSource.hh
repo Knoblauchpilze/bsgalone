@@ -3,6 +3,7 @@
 
 #include "DataLoadingMode.hh"
 #include "DbConnection.hh"
+#include "PlayerDataSource.hh"
 #include "Repositories.hh"
 #include <core_utils/CoreObject.hh>
 
@@ -32,6 +33,8 @@ class DataSource : public utils::CoreObject
   DataLoadingMode m_dataLoadingMode{};
   mutable std::optional<Uuid> m_systemDbId{};
   std::optional<Uuid> m_playerDbId{};
+
+  mutable PlayerDbIdsToEntityIds m_playerDbIdsToEntityIds{};
   mutable std::optional<Uuid> m_playerEntityId{};
   mutable std::optional<Uuid> m_playerShipDbId{};
   mutable std::optional<Uuid> m_playerShipEntityId{};

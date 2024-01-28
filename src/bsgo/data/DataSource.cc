@@ -89,6 +89,7 @@ void DataSource::initialize(Coordinator &coordinator) const
     m_systemDbId = m_repositories.playerRepository->findSystemByPlayer(*m_playerDbId);
   }
 
+  m_playerDbIdsToEntityIds.clear();
   m_playerEntityId.reset();
   m_playerShipDbId.reset();
   m_playerShipEntityId.reset();
@@ -104,7 +105,9 @@ void DataSource::initialize(Coordinator &coordinator) const
 void DataSource::initializePlayer(Coordinator &coordinator) const
 {
   PlayerDataSource source(m_repositories, *m_systemDbId, m_playerDbId);
-  m_playerEntityId = source.initialize(coordinator);
+  m_playerDbIdsToEntityIds = source.initialize(coordinator);
+
+  m_playerEntityId = source.getPlayerEntityId();
   if (DataLoadingMode::CLIENT == m_dataLoadingMode && !m_playerEntityId)
   {
     error("Failed to initialize player", "Could not find entity id for " + str(*m_playerDbId));
@@ -121,12 +124,12 @@ void DataSource::initializeShips(Coordinator &coordinator) const
 {
   if (DataLoadingMode::SERVER == m_dataLoadingMode)
   {
-    ShipDataSource source(m_repositories, *m_systemDbId);
+    ShipDataSource source(m_repositories, *m_systemDbId, m_playerDbIdsToEntityIds);
     source.initialize(coordinator);
     return;
   }
 
-  ShipDataSource source(m_repositories, *m_playerDbId, *m_playerEntityId);
+  ShipDataSource source(m_repositories, *m_systemDbId, m_playerDbIdsToEntityIds, *m_playerDbId);
   source.initialize(coordinator);
 
   m_playerShipDbId     = source.getPlayerShipDbId();
