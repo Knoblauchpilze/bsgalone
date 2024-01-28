@@ -10,6 +10,7 @@
 #include "LoginMessageConsumer.hh"
 #include "PurchaseMessageConsumer.hh"
 #include "SignupMessageConsumer.hh"
+#include "SlotMessageConsumer.hh"
 
 namespace bsgo {
 
@@ -34,6 +35,9 @@ void createMessageConsumers(IMessageQueue &inputMessagesQueue,
 
   inputMessagesQueue.addListener(
     std::make_unique<DockMessageConsumer>(services, outputMessagesQueue));
+
+  inputMessagesQueue.addListener(
+    std::make_unique<SlotMessageConsumer>(services, outputMessagesQueue));
 
   inputMessagesQueue.addListener(
     std::make_unique<JumpMessageConsumer>(services, outputMessagesQueue));
