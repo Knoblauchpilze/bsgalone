@@ -39,8 +39,6 @@ auto str(const ComponentType &type) -> std::string
       return "scanned";
     case ComponentType::SHIP_CLASS:
       return "ship_class";
-    case ComponentType::SLOT:
-      return "slot";
     case ComponentType::STATUS:
       return "status";
     case ComponentType::TARGET:

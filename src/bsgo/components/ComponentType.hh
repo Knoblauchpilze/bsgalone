@@ -23,7 +23,6 @@ enum class ComponentType
   RESOURCE,
   SCANNED,
   SHIP_CLASS,
-  SLOT,
   STATUS,
   TARGET,
   TRANSFORM,
