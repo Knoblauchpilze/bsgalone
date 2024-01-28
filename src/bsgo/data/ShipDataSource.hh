@@ -32,6 +32,7 @@ class ShipDataSource : public utils::CoreObject
   void initialize(Coordinator &coordinator) const;
 
   private:
+  DataLoadingMode m_dataLoadingMode{};
   Uuid m_systemDbId{};
   std::optional<Uuid> m_playerDbId{};
   PlayerDbIdsToEntityIds m_playerDbIdsToEntityIds{};

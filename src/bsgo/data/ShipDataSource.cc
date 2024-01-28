@@ -19,6 +19,7 @@ ShipDataSource::ShipDataSource(const Repositories &repositories,
                                const Uuid systemDbId,
                                const PlayerDbIdsToEntityIds &playerDbIdsToEntityIds)
   : utils::CoreObject("bsgo")
+  , m_dataLoadingMode(DataLoadingMode::SERVER)
   , m_systemDbId(systemDbId)
   , m_playerDbIdsToEntityIds(playerDbIdsToEntityIds)
   , m_repositories(repositories)
@@ -33,7 +34,8 @@ ShipDataSource::ShipDataSource(const Repositories &repositories,
                                const Uuid playerDbId)
   : ShipDataSource(repositories, systemDbId, playerDbIdsToEntityIds)
 {
-  m_playerDbId = playerDbId;
+  m_dataLoadingMode = DataLoadingMode::CLIENT;
+  m_playerDbId      = playerDbId;
 }
 
 auto ShipDataSource::getPlayerShipDbId() const -> std::optional<Uuid>
@@ -74,6 +76,11 @@ void ShipDataSource::registerShip(Coordinator &coordinator, const Uuid &ship) co
   coordinator.addShipClass(ent, data.shipClass);
   coordinator.addName(ent, data.name);
   coordinator.addDbId(ent, data.id);
+
+  if (DataLoadingMode::SERVER == m_dataLoadingMode)
+  {
+    coordinator.addNetwork(ent, {ComponentType::COMPUTER_SLOT});
+  }
 
   registerShipOwner(coordinator, ent, data);
   registerShipWeapons(coordinator, ship, ent);
