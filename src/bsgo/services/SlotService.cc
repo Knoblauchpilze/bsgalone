@@ -22,13 +22,17 @@ bool SlotService::tryToggleWeapon(const Uuid &shipEntityId, const int weaponInde
 
 bool SlotService::tryToggleComputer(const Uuid &shipEntityId, const int computerIndex) const
 {
-  const auto ship = m_coordinator->getEntity(shipEntityId);
+  auto ship = m_coordinator->getEntity(shipEntityId);
   if (ship.computers.size() < static_cast<std::size_t>(computerIndex))
   {
     return false;
   }
 
   ship.computers[computerIndex]->registerFireRequest();
+  if (ship.exists<NetworkComponent>())
+  {
+    ship.networkComp().markForSync();
+  }
 
   return true;
 }
