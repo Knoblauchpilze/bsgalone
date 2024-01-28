@@ -261,7 +261,7 @@ void Game::initialize()
 
   initializeViews();
 
-  bsgo::createMessageConsumers(*m_messageQueue, m_messageQueue.get(), m_services);
+  createMessageConsumers(*m_messageQueue, m_messageQueue.get(), m_services);
 
   auto messageModule = std::make_unique<GameMessageModule>(this);
   m_messageQueue->addListener(std::move(messageModule));

@@ -5,7 +5,7 @@
 #include "IMessageQueue.hh"
 #include "Services.hh"
 
-namespace bsgo {
+namespace pge {
 
 void createMessageConsumers(bsgo::IMessageQueue &inputMessagesQueue,
                             bsgo::IMessageQueue *const outputMessagesQueue,
