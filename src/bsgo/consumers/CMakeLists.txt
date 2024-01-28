@@ -7,5 +7,4 @@ target_sources (bsgalone_core_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/AbstractMessageConsumer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/VelocityMessageConsumer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/TargetMessageConsumer.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/ClientMessageConsumerUtils.cc
 	)
