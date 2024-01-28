@@ -69,6 +69,16 @@ auto SlotComponent::reloadPercentage() const -> float
   return *m_elapsedSinceLastFired / reloadAsFloat;
 }
 
+auto SlotComponent::elapsedSinceLastFired() const -> std::optional<utils::Duration>
+{
+  return m_elapsedSinceLastFired;
+}
+
+void SlotComponent::overrideElapsedSinceLastFired(const std::optional<utils::Duration> &elapsed)
+{
+  m_elapsedSinceLastFired = elapsed;
+}
+
 void SlotComponent::setFiringState(const FiringState &firingState)
 {
   m_firingState = firingState;

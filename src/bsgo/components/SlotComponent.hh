@@ -41,7 +41,9 @@ class SlotComponent : public AbstractComponent
   bool canFire() const noexcept;
   bool isReloading() const noexcept;
   auto reloadPercentage() const -> float;
+  auto elapsedSinceLastFired() const -> std::optional<utils::Duration>;
 
+  void overrideElapsedSinceLastFired(const std::optional<utils::Duration> &elapsed);
   void setFiringState(const FiringState &firingState);
   void registerFireRequest();
   bool hasFireRequest() const;
