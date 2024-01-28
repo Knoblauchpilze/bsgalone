@@ -34,6 +34,8 @@ auto str(const MessageType &type) -> std::string
       return "signup";
     case MessageType::SLOT:
       return "slot";
+    case MessageType::SLOT_COMPONENT_UPDATED:
+      return "slot_component_updated";
     case MessageType::VELOCITY:
       return "velocity";
     case MessageType::TARGET:
@@ -43,7 +45,7 @@ auto str(const MessageType &type) -> std::string
   }
 }
 
-auto allMessageTypes() -> std::array<MessageType, 15>
+auto allMessageTypes() -> std::array<MessageType, 16>
 {
   return {MessageType::CONNECTION,
           MessageType::DOCK,
@@ -58,6 +60,7 @@ auto allMessageTypes() -> std::array<MessageType, 15>
           MessageType::SCANNED,
           MessageType::SIGNUP,
           MessageType::SLOT,
+          MessageType::SLOT_COMPONENT_UPDATED,
           MessageType::VELOCITY,
           MessageType::TARGET};
 }
