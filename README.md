@@ -478,7 +478,7 @@ When testing this approach we are able to process (⚠️ without consumers) 100
 
 The server is responsible to simulate all the systems of the game and make the ships and elements there look lively. In the client, we ever simulate a single system: the one where the player currently is.
 
-We picked an approach where we group the elements needed to simulate a single system and put them in a processor class (TODO: add the link to the class when it is created). This regroups:
+We picked an approach where we group the elements needed to simulate a single system and put them in a [processor class](src/server/lib/game/SystemProcessor.hh). This regroups:
 * A [Coordinator](src/bsgo/Coordinator.hh)
 * A [DataSource](src/bsgo/data/DataSource.hh)
 * Some [services](src/bsgo/services/Services.hh)
