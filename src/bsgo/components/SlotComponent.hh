@@ -9,10 +9,10 @@ namespace bsgo {
 
 struct SlotComponentData
 {
-  bool offensive;
-  float powerCost;
-  std::optional<float> range;
-  utils::Duration reloadTime;
+  bool offensive{};
+  float powerCost{};
+  std::optional<float> range{};
+  utils::Duration reloadTime{};
 };
 
 enum class FiringState
