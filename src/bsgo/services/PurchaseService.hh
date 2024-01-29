@@ -9,7 +9,7 @@ namespace bsgo {
 class PurchaseService : public AbstractService
 {
   public:
-  PurchaseService(const Repositories &repositories, const CoordinatorShPtr &coordinator);
+  PurchaseService(const Repositories &repositories);
   ~PurchaseService() override = default;
 
   bool tryPurchase(const Uuid &playerId, const Uuid &itemId, const Item &type) const;

@@ -11,7 +11,7 @@ namespace bsgo {
 class SignupService : public AbstractService
 {
   public:
-  SignupService(const Repositories &repositories, const CoordinatorShPtr &coordinator);
+  SignupService(const Repositories &repositories);
   ~SignupService() override = default;
 
   auto trySignup(const std::string &name, const std::string &password, const Faction &faction) const
@@ -23,6 +23,7 @@ class SignupService : public AbstractService
   void registerShip(const Player &player) const;
 };
 
+using SignupServicePtr   = std::unique_ptr<SignupService>;
 using SignupServiceShPtr = std::shared_ptr<SignupService>;
 
 } // namespace bsgo

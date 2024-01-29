@@ -3,8 +3,9 @@
 
 namespace bsgo {
 
-JumpService::JumpService(const Repositories &repositories, const CoordinatorShPtr &coordinator)
-  : AbstractService("jump", repositories, coordinator)
+JumpService::JumpService(const Repositories &repositories, CoordinatorShPtr coordinator)
+  : AbstractService("jump", repositories)
+  , m_coordinator(std::move(coordinator))
 {}
 
 namespace {

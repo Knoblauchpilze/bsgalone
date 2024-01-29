@@ -4,9 +4,8 @@
 
 namespace bsgo {
 
-PurchaseService::PurchaseService(const Repositories &repositories,
-                                 const CoordinatorShPtr &coordinator)
-  : AbstractService("purchase", repositories, coordinator)
+PurchaseService::PurchaseService(const Repositories &repositories)
+  : AbstractService("purchase", repositories)
 {}
 
 bool PurchaseService::tryPurchase(const Uuid &playerId, const Uuid &itemId, const Item &type) const

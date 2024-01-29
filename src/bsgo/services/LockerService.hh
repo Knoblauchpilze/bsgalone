@@ -16,7 +16,7 @@ struct LockerItemData
 class LockerService : public AbstractService
 {
   public:
-  LockerService(const Repositories &repositories, const CoordinatorShPtr &coordinator);
+  LockerService(const Repositories &repositories);
   ~LockerService() override = default;
 
   bool tryEquip(const LockerItemData &item) const;

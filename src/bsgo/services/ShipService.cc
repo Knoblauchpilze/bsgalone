@@ -3,8 +3,9 @@
 
 namespace bsgo {
 
-ShipService::ShipService(const Repositories &repositories, const CoordinatorShPtr &coordinator)
-  : AbstractService("ship", repositories, coordinator)
+ShipService::ShipService(const Repositories &repositories, CoordinatorShPtr coordinator)
+  : AbstractService("ship", repositories)
+  , m_coordinator(std::move(coordinator))
 {}
 
 bool ShipService::trySelectShip(const Uuid &shipDbId) const

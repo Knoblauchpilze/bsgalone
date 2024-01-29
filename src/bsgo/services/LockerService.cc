@@ -4,8 +4,8 @@
 
 namespace bsgo {
 
-LockerService::LockerService(const Repositories &repositories, const CoordinatorShPtr &coordinator)
-  : AbstractService("locker", repositories, coordinator)
+LockerService::LockerService(const Repositories &repositories)
+  : AbstractService("locker", repositories)
 {}
 
 bool LockerService::tryEquip(const LockerItemData &item) const
