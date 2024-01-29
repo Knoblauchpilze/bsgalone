@@ -69,13 +69,21 @@ void Server::initializeSystems()
   m_systemProcessors.emplace_back(std::move(processor));
 }
 
+namespace {
+auto createSystemMessageQueue() -> IMessageQueuePtr
+{
+  auto systemQueue = std::make_unique<SynchronizedMessageQueue>();
+  return std::make_unique<AsyncMessageQueue>(std::move(systemQueue));
+}
+} // namespace
+
 void Server::initializeMessageSystem()
 {
   auto dbConnection = std::make_shared<DbConnection>();
   dbConnection->connect();
   const auto repositories = createRepositories(dbConnection);
 
-  auto systemQueue = std::make_unique<SynchronizedMessageQueue>();
+  auto systemQueue = createSystemMessageQueue();
 
   auto signupService = std::make_unique<SignupService>(repositories);
   systemQueue->addListener(std::make_unique<SignupMessageConsumer>(std::move(signupService),
