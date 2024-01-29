@@ -3,8 +3,8 @@
 
 namespace bsgo {
 
-LoginService::LoginService(const Repositories &repositories, const CoordinatorShPtr &coordinator)
-  : AbstractService("login", repositories, coordinator)
+LoginService::LoginService(const Repositories &repositories)
+  : AbstractService("login", repositories)
 {}
 
 auto LoginService::tryLogin(const std::string &name, const std::string &password) const

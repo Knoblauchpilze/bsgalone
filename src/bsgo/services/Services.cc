@@ -8,10 +8,10 @@ auto createServices(const Repositories &repositories, const CoordinatorShPtr &co
 {
   Services out{};
 
-  out.signup   = std::make_shared<SignupService>(repositories, coordinator);
-  out.login    = std::make_shared<LoginService>(repositories, coordinator);
-  out.purchase = std::make_shared<PurchaseService>(repositories, coordinator);
-  out.locker   = std::make_shared<LockerService>(repositories, coordinator);
+  out.signup   = std::make_shared<SignupService>(repositories);
+  out.login    = std::make_shared<LoginService>(repositories);
+  out.purchase = std::make_shared<PurchaseService>(repositories);
+  out.locker   = std::make_shared<LockerService>(repositories);
   out.ship     = std::make_shared<ShipService>(repositories, coordinator);
   out.jump     = std::make_shared<JumpService>(repositories, coordinator);
   out.slot     = std::make_shared<SlotService>(repositories, coordinator);

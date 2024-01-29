@@ -2,6 +2,7 @@
 #pragma once
 
 #include "AbstractService.hh"
+#include "Coordinator.hh"
 #include <memory>
 
 namespace bsgo {
@@ -9,7 +10,7 @@ namespace bsgo {
 class SlotService : public AbstractService
 {
   public:
-  SlotService(const Repositories &repositories, const CoordinatorShPtr &coordinator);
+  SlotService(const Repositories &repositories, CoordinatorShPtr coordinator);
   ~SlotService() override = default;
 
   bool tryToggleWeapon(const Uuid shipEntityId, const int weaponIndex) const;
@@ -22,6 +23,9 @@ class SlotService : public AbstractService
   bool trySyncComputer(const Uuid shipEntityId,
                        const int computerIndex,
                        const SlotUpdateData &data) const;
+
+  private:
+  CoordinatorShPtr m_coordinator{};
 };
 
 using SlotServiceShPtr = std::shared_ptr<SlotService>;

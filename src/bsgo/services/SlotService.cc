@@ -3,8 +3,9 @@
 
 namespace bsgo {
 
-SlotService::SlotService(const Repositories &repositories, const CoordinatorShPtr &coordinator)
-  : AbstractService("slot", repositories, coordinator)
+SlotService::SlotService(const Repositories &repositories, CoordinatorShPtr coordinator)
+  : AbstractService("slot", repositories)
+  , m_coordinator(std::move(coordinator))
 {}
 
 bool SlotService::tryToggleWeapon(const Uuid shipEntityId, const int weaponIndex) const
