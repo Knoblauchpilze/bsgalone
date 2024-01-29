@@ -3,7 +3,8 @@
 #include "Server.hh"
 #include "AsyncMessageQueue.hh"
 #include "ConnectionMessage.hh"
-#include "NetworkMessageQueue.hh"
+#include "LoginMessageConsumer.hh"
+#include "SignupMessageConsumer.hh"
 #include "SynchronizedMessageQueue.hh"
 #include "TriageMessageConsumer.hh"
 #include <core_utils/TimeUtils.hh>
@@ -55,6 +56,7 @@ void Server::initialize()
   m_outputMessageQueue = createOutputMessageQueue(m_clientManager);
 
   initializeSystems();
+  initializeMessageSystem();
 }
 
 void Server::initializeSystems()
@@ -65,6 +67,30 @@ void Server::initializeSystems()
 
   auto processor = std::make_shared<SystemProcessor>(config);
   m_systemProcessors.emplace_back(std::move(processor));
+}
+
+void Server::initializeMessageSystem()
+{
+  auto dbConnection = std::make_shared<DbConnection>();
+  dbConnection->connect();
+  const auto repositories = createRepositories(dbConnection);
+
+  auto systemQueue = std::make_unique<SynchronizedMessageQueue>();
+
+  auto signupService = std::make_unique<SignupService>(repositories);
+  systemQueue->addListener(std::make_unique<SignupMessageConsumer>(std::move(signupService),
+                                                                   m_clientManager,
+                                                                   m_outputMessageQueue.get()));
+
+  auto loginService = std::make_unique<LoginService>(repositories);
+  systemQueue->addListener(std::make_unique<LoginMessageConsumer>(std::move(loginService),
+                                                                  m_clientManager,
+                                                                  m_outputMessageQueue.get()));
+
+  auto triageConsumer = std::make_unique<TriageMessageConsumer>(m_systemProcessors,
+                                                                m_clientManager,
+                                                                std::move(systemQueue));
+  m_inputMessageQueue->addListener(std::move(triageConsumer));
 }
 
 void Server::setup(const int port)
