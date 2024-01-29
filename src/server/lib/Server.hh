@@ -31,10 +31,9 @@ class Server : public utils::CoreObject
   ClientManagerShPtr m_clientManager{std::make_shared<ClientManager>()};
 
   NetworkMessageQueuePtr m_inputMessageQueue{};
-  BroadcastMessageQueue *m_broadcastQueue{};
   IMessageQueuePtr m_outputMessageQueue{};
 
-  std::vector<SystemProcessorPtr> m_systemProcessors{};
+  std::vector<SystemProcessorShPtr> m_systemProcessors{};
 
   void initialize();
   void initializeSystems();

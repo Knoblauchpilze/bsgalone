@@ -41,6 +41,6 @@ class SystemProcessor : public utils::CoreObject
   void asyncSystemProcessing();
 };
 
-using SystemProcessorPtr = std::unique_ptr<SystemProcessor>;
+using SystemProcessorShPtr = std::shared_ptr<SystemProcessor>;
 
 } // namespace bsgo

@@ -5,6 +5,7 @@
 #include "ConnectionMessage.hh"
 #include "NetworkMessageQueue.hh"
 #include "SynchronizedMessageQueue.hh"
+#include "TriageMessageConsumer.hh"
 #include <core_utils/TimeUtils.hh>
 
 namespace bsgo {
@@ -41,18 +42,17 @@ auto createInputMessageQueue() -> NetworkMessageQueuePtr
   return std::make_unique<NetworkMessageQueue>(std::move(asyncQueue));
 }
 
-auto createOutputMessageQueue(IMessageQueuePtr queue) -> IMessageQueuePtr
+auto createOutputMessageQueue(ClientManagerShPtr clientManager) -> IMessageQueuePtr
 {
-  return std::make_unique<AsyncMessageQueue>(std::move(queue));
+  auto broadcastQueue = std::make_unique<BroadcastMessageQueue>(std::move(clientManager));
+  return std::make_unique<AsyncMessageQueue>(std::move(broadcastQueue));
 }
 } // namespace
 
 void Server::initialize()
 {
   m_inputMessageQueue  = createInputMessageQueue();
-  auto broadcastQueue  = std::make_unique<BroadcastMessageQueue>(m_clientManager);
-  m_broadcastQueue     = broadcastQueue.get();
-  m_outputMessageQueue = createOutputMessageQueue(std::move(broadcastQueue));
+  m_outputMessageQueue = createOutputMessageQueue(m_clientManager);
 
   initializeSystems();
 }
@@ -63,7 +63,7 @@ void Server::initializeSystems()
   SystemProcessingConfig config{.systemDbId         = Uuid{0},
                                 .outputMessageQueue = m_outputMessageQueue.get()};
 
-  auto processor = std::make_unique<SystemProcessor>(config);
+  auto processor = std::make_shared<SystemProcessor>(config);
   m_systemProcessors.emplace_back(std::move(processor));
 }
 
