@@ -43,7 +43,10 @@ void LoginMessageConsumer::handleLogin(const LoginMessage &message) const
     warn("Failed to process login message for player " + name);
   }
 
-  auto out = std::make_unique<LoginMessage>(name, password, playerDbId);
+  const auto systsemDbId = m_loginService->getPlayerSystemDbId(*playerDbId);
+  m_clientManager->registerPlayer(message.getClientId(), *playerDbId, systsemDbId);
+
+  auto out = std::make_unique<LoginMessage>(name, password, *playerDbId);
   out->validate();
   out->copyClientIdIfDefined(message);
   m_messageQueue->pushMessage(std::move(out));

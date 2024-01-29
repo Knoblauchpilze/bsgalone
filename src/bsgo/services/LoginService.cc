@@ -26,4 +26,9 @@ auto LoginService::tryLogin(const std::string &name, const std::string &password
   return maybePlayer->id;
 }
 
+auto LoginService::getPlayerSystemDbId(const Uuid playerDbId) const -> Uuid
+{
+  return m_repositories.playerRepository->findSystemByPlayer(playerDbId);
+}
+
 } // namespace bsgo
