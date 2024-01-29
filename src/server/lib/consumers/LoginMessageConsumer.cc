@@ -3,10 +3,12 @@
 
 namespace bsgo {
 
-LoginMessageConsumer::LoginMessageConsumer(const Services &services,
+LoginMessageConsumer::LoginMessageConsumer(LoginServicePtr loginService,
+                                           ClientManagerShPtr clientManager,
                                            IMessageQueue *const messageQueue)
   : AbstractMessageConsumer("login", {MessageType::LOGIN})
-  , m_loginService(services.login)
+  , m_loginService(std::move(loginService))
+  , m_clientManager(std::move(clientManager))
   , m_messageQueue(messageQueue)
 {
   if (nullptr == m_loginService)
