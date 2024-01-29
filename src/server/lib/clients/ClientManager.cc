@@ -25,7 +25,9 @@ auto ClientManager::registerConnection(const net::ConnectionShPtr connection) ->
   return data.clientId;
 }
 
-void ClientManager::registerPlayer(const Uuid clientId, const Uuid playerDbId)
+void ClientManager::registerPlayer(const Uuid clientId,
+                                   const Uuid playerDbId,
+                                   const Uuid playerSystemDbId)
 {
   const std::lock_guard guard(m_locker);
 
@@ -35,8 +37,9 @@ void ClientManager::registerPlayer(const Uuid clientId, const Uuid playerDbId)
     error("Failed to register player " + str(playerDbId), "Unknown client " + str(clientId));
   }
 
-  auto &clientData      = maybeClientData->second;
-  clientData.playerDbId = playerDbId;
+  auto &clientData            = maybeClientData->second;
+  clientData.playerDbId       = playerDbId;
+  clientData.playerSystemDbId = playerSystemDbId;
   m_playerToClient.emplace(playerDbId, clientData.clientId);
 
   info("Registered player " + str(playerDbId));
@@ -106,6 +109,19 @@ auto ClientManager::getAllConnections() const -> std::vector<net::ConnectionShPt
                  [](const std::pair<Uuid, ClientData> &v) { return v.second.connection; });
 
   return out;
+}
+
+auto ClientManager::tryGetSystemForClient(const Uuid clientId) const -> std::optional<Uuid>
+{
+  const std::lock_guard guard(m_locker);
+
+  const auto maybeClientData = m_clients.find(clientId);
+  if (maybeClientData == m_clients.cend())
+  {
+    error("Failed to get system for " + str(clientId), "No such client");
+  }
+
+  return maybeClientData->second.playerSystemDbId;
 }
 
 } // namespace bsgo
