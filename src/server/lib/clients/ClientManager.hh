@@ -3,9 +3,10 @@
 
 #include "Connection.hh"
 #include "Uuid.hh"
-#include <atomic>
 #include <core_utils/CoreObject.hh>
+#include <memory>
 #include <mutex>
+#include <optional>
 #include <unordered_map>
 
 namespace bsgo {
@@ -16,14 +17,27 @@ class ClientManager : public utils::CoreObject
   ClientManager();
   ~ClientManager() override = default;
 
-  auto registerConnection(const net::ConnectionId connectionId) -> Uuid;
+  auto registerConnection(const net::ConnectionShPtr connection) -> Uuid;
+  void registerPlayer(const Uuid clientId, const Uuid playerDbId);
+  void removePlayer(const Uuid playerDbId);
   void removeConnection(const net::ConnectionId connectionId);
 
   private:
   static Uuid NEXT_CLIENT_ID;
 
+  struct ClientData
+  {
+    Uuid clientId{};
+    std::optional<Uuid> playerDbId{};
+    net::ConnectionShPtr connection{};
+  };
+
   std::mutex m_locker{};
-  std::unordered_map<net::ConnectionId, Uuid> m_clients{};
+  std::unordered_map<Uuid, ClientData> m_clients{};
+  std::unordered_map<net::ConnectionId, Uuid> m_connectionToClient{};
+  std::unordered_map<Uuid, Uuid> m_playerToClient{};
 };
+
+using ClientManagerShPtr = std::shared_ptr<ClientManager>;
 
 } // namespace bsgo
