@@ -11,7 +11,6 @@
 #include <core_utils/TimeUtils.hh>
 #include <eigen3/Eigen/Eigen>
 #include <memory>
-#include <mutex>
 #include <optional>
 #include <unordered_set>
 
@@ -73,8 +72,6 @@ class Coordinator : public utils::CoreObject
   void update(float elapsedSeconds);
 
   private:
-  std::mutex m_locker{};
-
   Uuid m_nextEntity{Uuid(0)};
   std::unordered_set<Uuid> m_entities{};
   Components m_components{};
