@@ -5,7 +5,6 @@
 #include <atomic>
 #include <condition_variable>
 #include <core_utils/CoreObject.hh>
-#include <memory>
 #include <thread>
 
 namespace bsgo {
@@ -34,7 +33,5 @@ class AsyncMessageQueue : public IMessageQueue, public utils::CoreObject
   void initialize();
   void asyncMessageProcessing();
 };
-
-using AsyncMessageQueuePtr = std::unique_ptr<AsyncMessageQueue>;
 
 } // namespace bsgo
