@@ -11,15 +11,18 @@ class ComponentUpdatedMessage : public NetworkMessage
   public:
   ComponentUpdatedMessage(const MessageType &type);
   ComponentUpdatedMessage(const MessageType &type,
-                          const Uuid entityId,
+                          const Uuid playerDbId,
+                          const Uuid shipDbId,
                           const ComponentType component);
   ~ComponentUpdatedMessage() override = default;
 
-  auto getEntityId() const -> Uuid;
+  auto getPlayerDbId() const -> Uuid;
+  auto getShipDbId() const -> Uuid;
   auto getComponentType() const -> ComponentType;
 
   protected:
-  Uuid m_entityId{};
+  Uuid m_playerDbId{};
+  Uuid m_shipDbId{};
   ComponentType m_component{};
 };
 

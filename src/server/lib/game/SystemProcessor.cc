@@ -44,7 +44,12 @@ void SystemProcessor::initialize(const SystemProcessingConfig &config)
   m_coordinator = std::make_shared<Coordinator>(std::move(networkSystem), config.outputMessageQueue);
 
   m_services = createServices(repositories, m_coordinator);
-  createMessageConsumers(*config.inputMessageQueue, config.outputMessageQueue, m_services);
+
+  const ConsumersConfig consumersConfig{.inputMessagesQueue  = *config.inputMessageQueue,
+                                        .outputMessagesQueue = config.outputMessageQueue,
+                                        .services            = m_services,
+                                        .loginCallback       = config.playerLoginCallback};
+  createMessageConsumers(consumersConfig);
 
   dataSource.setSystemDbId(config.systemDbId);
   dataSource.initialize(*m_coordinator);

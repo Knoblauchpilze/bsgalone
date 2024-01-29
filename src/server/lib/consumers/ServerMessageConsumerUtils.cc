@@ -14,39 +14,39 @@
 
 namespace bsgo {
 
-void createMessageConsumers(IMessageQueue &inputMessagesQueue,
-                            IMessageQueue *const outputMessagesQueue,
-                            const Services &services)
+void createMessageConsumers(const ConsumersConfig &config)
 {
-  inputMessagesQueue.addListener(
-    std::make_unique<SignupMessageConsumer>(services, outputMessagesQueue));
+  config.inputMessagesQueue.addListener(
+    std::make_unique<SignupMessageConsumer>(config.services, config.outputMessagesQueue));
 
-  inputMessagesQueue.addListener(
-    std::make_unique<LoginMessageConsumer>(services, outputMessagesQueue));
+  config.inputMessagesQueue.addListener(
+    std::make_unique<LoginMessageConsumer>(config.services,
+                                           config.outputMessagesQueue,
+                                           config.loginCallback));
 
-  inputMessagesQueue.addListener(
-    std::make_unique<HangarMessageConsumer>(services, outputMessagesQueue));
+  config.inputMessagesQueue.addListener(
+    std::make_unique<HangarMessageConsumer>(config.services, config.outputMessagesQueue));
 
-  inputMessagesQueue.addListener(
-    std::make_unique<PurchaseMessageConsumer>(services, outputMessagesQueue));
+  config.inputMessagesQueue.addListener(
+    std::make_unique<PurchaseMessageConsumer>(config.services, config.outputMessagesQueue));
 
-  inputMessagesQueue.addListener(
-    std::make_unique<EquipMessageConsumer>(services, outputMessagesQueue));
+  config.inputMessagesQueue.addListener(
+    std::make_unique<EquipMessageConsumer>(config.services, config.outputMessagesQueue));
 
-  inputMessagesQueue.addListener(
-    std::make_unique<DockMessageConsumer>(services, outputMessagesQueue));
+  config.inputMessagesQueue.addListener(
+    std::make_unique<DockMessageConsumer>(config.services, config.outputMessagesQueue));
 
-  inputMessagesQueue.addListener(
-    std::make_unique<SlotMessageConsumer>(services, outputMessagesQueue));
+  config.inputMessagesQueue.addListener(
+    std::make_unique<SlotMessageConsumer>(config.services, config.outputMessagesQueue));
 
-  inputMessagesQueue.addListener(
-    std::make_unique<JumpMessageConsumer>(services, outputMessagesQueue));
+  config.inputMessagesQueue.addListener(
+    std::make_unique<JumpMessageConsumer>(config.services, config.outputMessagesQueue));
 
-  inputMessagesQueue.addListener(
-    std::make_unique<JumpCancelledMessageConsumer>(services, outputMessagesQueue));
+  config.inputMessagesQueue.addListener(
+    std::make_unique<JumpCancelledMessageConsumer>(config.services, config.outputMessagesQueue));
 
-  inputMessagesQueue.addListener(
-    std::make_unique<JumpRequestedMessageConsumer>(services, outputMessagesQueue));
+  config.inputMessagesQueue.addListener(
+    std::make_unique<JumpRequestedMessageConsumer>(config.services, config.outputMessagesQueue));
 }
 
 } // namespace bsgo

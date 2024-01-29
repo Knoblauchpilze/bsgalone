@@ -4,20 +4,27 @@
 namespace bsgo {
 
 ComponentUpdatedMessage::ComponentUpdatedMessage(const MessageType &type)
-  : ComponentUpdatedMessage(type, {}, {})
+  : ComponentUpdatedMessage(type, {}, {}, {})
 {}
 
 ComponentUpdatedMessage::ComponentUpdatedMessage(const MessageType &type,
-                                                 const Uuid entityId,
+                                                 const Uuid playerDbId,
+                                                 const Uuid shipDbId,
                                                  const ComponentType component)
   : NetworkMessage(type)
-  , m_entityId(entityId)
+  , m_playerDbId(playerDbId)
+  , m_shipDbId(shipDbId)
   , m_component(component)
 {}
 
-auto ComponentUpdatedMessage::getEntityId() const -> Uuid
+auto ComponentUpdatedMessage::getPlayerDbId() const -> Uuid
 {
-  return m_entityId;
+  return m_playerDbId;
+}
+
+auto ComponentUpdatedMessage::getShipDbId() const -> Uuid
+{
+  return m_shipDbId;
 }
 
 auto ComponentUpdatedMessage::getComponentType() const -> ComponentType

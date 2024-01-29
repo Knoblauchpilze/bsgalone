@@ -4,10 +4,12 @@
 namespace bsgo {
 
 LoginMessageConsumer::LoginMessageConsumer(const Services &services,
-                                           IMessageQueue *const messageQueue)
+                                           IMessageQueue *const messageQueue,
+                                           const PlayerLoginCallback &playerLoginCallback)
   : AbstractMessageConsumer("login", {MessageType::LOGIN})
   , m_loginService(services.login)
   , m_messageQueue(messageQueue)
+  , m_playerLoginCallback(playerLoginCallback)
 {
   if (nullptr == m_loginService)
   {
@@ -40,6 +42,8 @@ void LoginMessageConsumer::handleLogin(const LoginMessage &message) const
   {
     warn("Failed to process login message for player " + name);
   }
+
+  m_playerLoginCallback(message.getClientId(), *playerDbId);
 
   auto out = std::make_unique<LoginMessage>(name, password, playerDbId);
   out->validate();

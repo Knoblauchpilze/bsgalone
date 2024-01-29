@@ -36,16 +36,19 @@ void SlotComponentMessageConsumer::onMessageReceived(const bsgo::IMessage &messa
 void SlotComponentMessageConsumer::handleComputerSlotUpdated(
   const bsgo::SlotComponentMessage &message) const
 {
-  const auto entityId   = message.getEntityId();
-  const auto computerId = message.getSlotIndex();
+  /// TODO: Should find the entity associated to the player and handle the update.
+  warn("should handle computer updated for " + bsgo::str(message.getPlayerDbId()) + " on ship "
+       + bsgo::str(message.getShipDbId()) + " for slot " + bsgo::str(message.getSlotDbId()));
+  // const auto entityId   = message.getEntityId();
+  // const auto computerId = message.getSlotIndex();
 
-  const bsgo::SlotService::SlotUpdateData data{
-    .elapsedSinceLastFired = message.getElapsedSinceLastFired()};
+  // const bsgo::SlotService::SlotUpdateData data{
+  //   .elapsedSinceLastFired = message.getElapsedSinceLastFired()};
 
-  if (!m_slotService->trySyncComputer(entityId, computerId, data))
-  {
-    warn("Failed to process computer component updated message for entity " + bsgo::str(entityId));
-  }
+  // if (!m_slotService->trySyncComputer(entityId, computerId, data))
+  // {
+  //   warn("Failed to process computer component updated message for entity " + bsgo::str(entityId));
+  // }
 }
 
 } // namespace pge

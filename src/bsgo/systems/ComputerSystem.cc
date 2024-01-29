@@ -34,16 +34,14 @@ void ComputerSystem::updateEntity(Entity &entity,
     targetEnt = coordinator.getEntity(*target);
   }
 
-  const auto count = static_cast<int>(entity.computers.size());
-  for (auto id = 0; id < count; ++id)
+  for (const auto &computer : entity.computers)
   {
-    const auto &computer = entity.computers[id];
     updateComputer(entity, computer, targetEnt, elapsedSeconds);
     if (computer->hasFireRequest())
     {
       if (processFireRequest(entity, computer, targetEnt, coordinator))
       {
-        sendComponentUpdatedMessage(entity, id, *computer, coordinator);
+        sendComponentUpdatedMessage(entity, *computer, coordinator);
       }
     }
   }
@@ -133,24 +131,21 @@ void ComputerSystem::applyReceiverEffects(Entity &target,
 }
 
 void ComputerSystem::sendComponentUpdatedMessage(const Entity &entity,
-                                                 const int slotIndex,
                                                  const SlotComponent &component,
-                                                 const Coordinator & /*coordinator*/) const
+                                                 const Coordinator &coordinator) const
 {
-  /// TODO: Use the player db id to find some sort of client id
-  // std::optional<Uuid> playerDbId{};
-  // if (entity.exists<OwnerComponent>())
-  // {
-  //   const auto ownerEntityId = entity.ownerComp().owner();
-  //   const auto player        = coordinator.getEntity(ownerEntityId);
+  if (!entity.exists<OwnerComponent>())
+  {
+    return;
+  }
 
-  //   if (player.exists<DbComponent>())
-  //   {
-  //     playerDbId = player.dbComp().dbId();
-  //   }
-  // }
+  const auto ownerEntityId = entity.ownerComp().owner();
+  const auto player        = coordinator.getEntity(ownerEntityId);
 
-  pushMessage(std::make_unique<SlotComponentMessage>(entity.uuid, slotIndex, component));
+  const auto shipDbId   = entity.dbComp().dbId();
+  const auto playerDbId = player.dbComp().dbId();
+
+  pushMessage(std::make_unique<SlotComponentMessage>(playerDbId, shipDbId, component));
 }
 
 } // namespace bsgo

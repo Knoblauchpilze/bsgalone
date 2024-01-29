@@ -19,6 +19,7 @@ class BroadcastMessageQueue : public IMessageQueue, public utils::CoreObject
   ~BroadcastMessageQueue() override = default;
 
   void registerClient(const Uuid clientId, net::ConnectionShPtr connection);
+  void registerPlayer(const Uuid clientId, const Uuid playerDbId);
 
   void pushMessage(IMessagePtr message) override;
   void addListener(IMessageListenerPtr listener) override;
@@ -30,9 +31,11 @@ class BroadcastMessageQueue : public IMessageQueue, public utils::CoreObject
   std::mutex m_locker{};
   std::deque<IMessagePtr> m_messages{};
   std::unordered_map<Uuid, net::ConnectionShPtr> m_clients{};
+  std::unordered_map<Uuid, Uuid> m_playerDbIdToClientId{};
 
   void processMessage(const IMessage &message);
 
+  auto tryDetermineClientIdFromMessage(const IMessage &message) -> std::optional<Uuid>;
   void sendMessageToClient(const Uuid clientId, const IMessage &message);
   void broadcastMessage(const IMessage &message);
 };

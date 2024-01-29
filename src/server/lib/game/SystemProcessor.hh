@@ -3,6 +3,7 @@
 
 #include "Coordinator.hh"
 #include "IMessageQueue.hh"
+#include "LoginCallback.hh"
 #include "Services.hh"
 #include "Uuid.hh"
 #include <atomic>
@@ -17,6 +18,7 @@ struct SystemProcessingConfig
   Uuid systemDbId{};
   IMessageQueue *const inputMessageQueue{};
   IMessageQueue *const outputMessageQueue{};
+  PlayerLoginCallback playerLoginCallback{};
 };
 
 class SystemProcessor : public utils::CoreObject

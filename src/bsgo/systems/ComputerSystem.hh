@@ -33,7 +33,6 @@ class ComputerSystem : public AbstractSystem
                             Coordinator &coordinator) const;
 
   void sendComponentUpdatedMessage(const Entity &entity,
-                                   const int slotIndex,
                                    const SlotComponent &component,
                                    const Coordinator &coordinator) const;
 };

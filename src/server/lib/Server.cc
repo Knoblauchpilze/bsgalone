@@ -3,6 +3,7 @@
 #include "Server.hh"
 #include "AsyncMessageQueue.hh"
 #include "ConnectionMessage.hh"
+#include "DataSource.hh"
 #include "NetworkMessageQueue.hh"
 #include "SynchronizedMessageQueue.hh"
 #include <core_utils/TimeUtils.hh>
@@ -59,13 +60,22 @@ void Server::initialize()
 
 void Server::initializeSystems()
 {
-  /// TODO: Should not simulate a single system.
-  SystemProcessingConfig config{.systemDbId         = Uuid{0},
-                                .inputMessageQueue  = m_inputMessageQueue.get(),
-                                .outputMessageQueue = m_outputMessageQueue.get()};
+  DataSource source{DataLoadingMode::SERVER};
+  const auto allSystems = source.repositories().systemRepository->findAll();
 
-  auto processor = std::make_unique<SystemProcessor>(config);
-  m_systemProcessors.emplace_back(std::move(processor));
+  for (const auto &systemDbId : allSystems)
+  {
+    SystemProcessingConfig config{.systemDbId          = systemDbId,
+                                  .inputMessageQueue   = m_inputMessageQueue.get(),
+                                  .outputMessageQueue  = m_outputMessageQueue.get(),
+                                  .playerLoginCallback = [this](const Uuid clientId,
+                                                                const Uuid playerDbId) {
+                                    m_broadcastQueue->registerPlayer(clientId, playerDbId);
+                                  }};
+
+    auto processor = std::make_unique<SystemProcessor>(config);
+    m_systemProcessors.emplace_back(std::move(processor));
+  }
 }
 
 void Server::setup(const int port)

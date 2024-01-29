@@ -5,7 +5,8 @@ namespace bsgo {
 
 WeaponSlotComponent::WeaponSlotComponent(const PlayerWeapon &weapon, const Eigen::Vector3f &position)
   : SlotComponent(ComponentType::WEAPON_SLOT,
-                  SlotComponentData{.offensive  = true,
+                  SlotComponentData{.dbId       = weapon.id,
+                                    .offensive  = true,
                                     .powerCost  = weapon.powerCost,
                                     .range      = {weapon.range},
                                     .reloadTime = weapon.reloadTime})

@@ -93,6 +93,19 @@ constexpr std::size_t MAXIMUM_NUMBER_OF_LOGS_DISPLAYED = 5;
 const Vec2i LOG_MENU_DIMS{150, 20};
 constexpr auto LOG_FADE_OUT_DURATION_MS = 7000;
 
+bool checkComputerIsOffensive(const bsgo::Entity &playerShip, const bsgo::Uuid computerDbId)
+{
+  for (const auto &computer : playerShip.computers)
+  {
+    if (computer->dbId() == computerDbId)
+    {
+      return computer->isOffensive();
+    }
+  }
+
+  return false;
+}
+
 bool shouldMessageBeFiltered(const bsgo::IMessage &message, const bsgo::Entity &playerShip)
 {
   if (bsgo::MessageType::JUMP_CANCELLED == message.type())
@@ -115,9 +128,7 @@ bool shouldMessageBeFiltered(const bsgo::IMessage &message, const bsgo::Entity &
       return true;
     }
 
-    const auto computerIsOffensive = playerShip.computers.at(slotMessage.getSlotIndex())
-                                       ->isOffensive();
-    return computerIsOffensive;
+    return checkComputerIsOffensive(playerShip, slotMessage.getSlotDbId());
   }
 
   return false;
