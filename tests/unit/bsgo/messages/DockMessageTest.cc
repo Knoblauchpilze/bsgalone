@@ -66,4 +66,12 @@ TEST(Unit_Bsgo_Serialization_DockMessage, WithClientId)
   assertMessagesAreEqual(actual, expected);
 }
 
+TEST(Unit_Bsgo_Serialization_DockMessage, Clone)
+{
+  auto expected     = generateMessage(false, true);
+  const auto cloned = expected.clone();
+  ASSERT_EQ(cloned->type(), MessageType::DOCK);
+  assertMessagesAreEqual(cloned->as<DockMessage>(), expected);
+}
+
 } // namespace bsgo

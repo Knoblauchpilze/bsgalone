@@ -64,4 +64,12 @@ TEST(Unit_Bsgo_Serialization_EquipMessage, WithClientId)
   assertMessagesAreEqual(actual, expected);
 }
 
+TEST(Unit_Bsgo_Serialization_EquipMessage, Clone)
+{
+  const EquipMessage expected(EquipType::UNEQUIP, Uuid{6}, Item::COMPUTER, Uuid{19});
+  const auto cloned = expected.clone();
+  ASSERT_EQ(cloned->type(), MessageType::EQUIP);
+  assertMessagesAreEqual(cloned->as<EquipMessage>(), expected);
+}
+
 } // namespace bsgo

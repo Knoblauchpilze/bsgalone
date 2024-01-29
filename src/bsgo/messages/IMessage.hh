@@ -17,6 +17,8 @@ class IMessage : public utils::CoreObject
   virtual auto serialize(std::ostream &out) const -> std::ostream & = 0;
   virtual bool deserialize(std::istream &in)                        = 0;
 
+  virtual auto clone() const -> std::unique_ptr<IMessage> = 0;
+
   template<typename Message>
   auto as() -> Message &;
 

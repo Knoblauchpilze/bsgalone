@@ -81,4 +81,13 @@ bool SignupMessage::deserialize(std::istream &in)
   return ok;
 }
 
+auto SignupMessage::clone() const -> IMessagePtr
+{
+  auto clone = std::make_unique<SignupMessage>(m_name, m_password, m_faction, m_playerDbId);
+  clone->copyClientIdIfDefined(*this);
+  clone->validate(validated());
+
+  return clone;
+}
+
 } // namespace bsgo

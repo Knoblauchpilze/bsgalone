@@ -34,4 +34,12 @@ TEST(Unit_Bsgo_Serialization_TargetMessage, WithClientId)
   assertMessagesAreEqual(actual, expected);
 }
 
+TEST(Unit_Bsgo_Serialization_TargetMessage, Clone)
+{
+  const TargetMessage expected(Uuid{21}, Eigen::Vector3f(1.68f, -185.0f, 326.895f));
+  const auto cloned = expected.clone();
+  ASSERT_EQ(cloned->type(), MessageType::TARGET);
+  assertMessagesAreEqual(cloned->as<TargetMessage>(), expected);
+}
+
 } // namespace bsgo

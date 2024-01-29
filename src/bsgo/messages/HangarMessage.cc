@@ -9,7 +9,7 @@ HangarMessage::HangarMessage()
   : ValidatableMessage(MessageType::HANGAR)
 {}
 
-HangarMessage::HangarMessage(const Uuid &shipDbId)
+HangarMessage::HangarMessage(const Uuid shipDbId)
   : ValidatableMessage(MessageType::HANGAR)
   , m_shipDbId(shipDbId)
 {}
@@ -40,6 +40,15 @@ bool HangarMessage::deserialize(std::istream &in)
   ok &= utils::deserialize(in, m_shipDbId);
 
   return ok;
+}
+
+auto HangarMessage::clone() const -> IMessagePtr
+{
+  auto clone = std::make_unique<HangarMessage>(m_shipDbId);
+  clone->copyClientIdIfDefined(*this);
+  clone->validate(validated());
+
+  return clone;
 }
 
 } // namespace bsgo

@@ -10,7 +10,7 @@ VelocityMessage::VelocityMessage()
   : NetworkMessage(MessageType::VELOCITY)
 {}
 
-VelocityMessage::VelocityMessage(const Uuid &shipEntityId, const Eigen::Vector3f &acceleration)
+VelocityMessage::VelocityMessage(const Uuid shipEntityId, const Eigen::Vector3f &acceleration)
   : NetworkMessage(MessageType::VELOCITY)
   , m_shipEntityId(shipEntityId)
   , m_acceleration(acceleration)
@@ -47,6 +47,14 @@ bool VelocityMessage::deserialize(std::istream &in)
   ok &= bsgo::deserialize(in, m_acceleration);
 
   return ok;
+}
+
+auto VelocityMessage::clone() const -> IMessagePtr
+{
+  auto clone = std::make_unique<VelocityMessage>(m_shipEntityId, m_acceleration);
+  clone->copyClientIdIfDefined(*this);
+
+  return clone;
 }
 
 } // namespace bsgo

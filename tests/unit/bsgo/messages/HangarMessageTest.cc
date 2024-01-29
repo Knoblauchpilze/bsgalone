@@ -43,4 +43,12 @@ TEST(Unit_Bsgo_Serialization_HangarMessage, WithClientId)
   assertMessagesAreEqual(actual, expected);
 }
 
+TEST(Unit_Bsgo_Serialization_HangarMessage, Clone)
+{
+  const HangarMessage expected(Uuid{14});
+  const auto cloned = expected.clone();
+  ASSERT_EQ(cloned->type(), MessageType::HANGAR);
+  assertMessagesAreEqual(cloned->as<HangarMessage>(), expected);
+}
+
 } // namespace bsgo

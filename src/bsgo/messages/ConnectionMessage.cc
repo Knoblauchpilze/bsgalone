@@ -8,7 +8,7 @@ ConnectionMessage::ConnectionMessage()
   : ValidatableMessage(MessageType::CONNECTION)
 {}
 
-ConnectionMessage::ConnectionMessage(const Uuid &clientId)
+ConnectionMessage::ConnectionMessage(const Uuid clientId)
   : ValidatableMessage(MessageType::CONNECTION)
 {
   setClientId(clientId);
@@ -31,6 +31,14 @@ bool ConnectionMessage::deserialize(std::istream &in)
   ok &= utils::deserialize(in, m_validated);
 
   return ok;
+}
+
+auto ConnectionMessage::clone() const -> IMessagePtr
+{
+  auto clone = std::make_unique<ConnectionMessage>();
+  clone->copyClientIdIfDefined(*this);
+  clone->validate(validated());
+  return clone;
 }
 
 } // namespace bsgo

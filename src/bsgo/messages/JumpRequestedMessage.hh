@@ -11,7 +11,7 @@ class JumpRequestedMessage : public ValidatableMessage
 {
   public:
   JumpRequestedMessage();
-  JumpRequestedMessage(const Uuid &shipDbId, const Uuid &shipEntityId, const Uuid &system);
+  JumpRequestedMessage(const Uuid shipDbId, const Uuid shipEntityId, const Uuid systemDbId);
   ~JumpRequestedMessage() override = default;
 
   auto getShipDbId() const -> Uuid;
@@ -21,10 +21,12 @@ class JumpRequestedMessage : public ValidatableMessage
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
 
+  auto clone() const -> IMessagePtr override;
+
   private:
   Uuid m_shipDbId{};
   Uuid m_shipEntityId{};
-  Uuid m_system{};
+  Uuid m_systemDbId{};
 };
 
 } // namespace bsgo

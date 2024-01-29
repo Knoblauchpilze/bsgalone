@@ -11,7 +11,7 @@ class JumpCancelledMessage : public ValidatableMessage
 {
   public:
   JumpCancelledMessage();
-  JumpCancelledMessage(const Uuid &shipDbId, const Uuid &shipEntityId);
+  JumpCancelledMessage(const Uuid shipDbId, const Uuid shipEntityId);
   ~JumpCancelledMessage() override = default;
 
   auto getShipDbId() const -> Uuid;
@@ -19,6 +19,8 @@ class JumpCancelledMessage : public ValidatableMessage
 
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
+
+  auto clone() const -> IMessagePtr override;
 
   private:
   Uuid m_shipDbId{};

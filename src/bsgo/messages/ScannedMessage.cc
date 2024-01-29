@@ -8,7 +8,7 @@ ScannedMessage::ScannedMessage()
   : NetworkMessage(MessageType::SCANNED)
 {}
 
-ScannedMessage::ScannedMessage(const Uuid &asteroidEntityId)
+ScannedMessage::ScannedMessage(const Uuid asteroidEntityId)
   : NetworkMessage(MessageType::SCANNED)
   , m_asteroidEntityId(asteroidEntityId)
 {}
@@ -37,6 +37,14 @@ bool ScannedMessage::deserialize(std::istream &in)
   ok &= utils::deserialize(in, m_asteroidEntityId);
 
   return ok;
+}
+
+auto ScannedMessage::clone() const -> IMessagePtr
+{
+  auto clone = std::make_unique<ScannedMessage>(m_asteroidEntityId);
+  clone->copyClientIdIfDefined(*this);
+
+  return clone;
 }
 
 } // namespace bsgo

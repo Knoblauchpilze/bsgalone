@@ -34,4 +34,12 @@ TEST(Unit_Bsgo_Serialization_VelocityMessage, WithClientId)
   assertMessagesAreEqual(actual, expected);
 }
 
+TEST(Unit_Bsgo_Serialization_VelocityMessage, Clone)
+{
+  const VelocityMessage expected(Uuid{21}, Eigen::Vector3f(-3.45f, 37.26f, -0.145f));
+  const auto cloned = expected.clone();
+  ASSERT_EQ(cloned->type(), MessageType::VELOCITY);
+  assertMessagesAreEqual(cloned->as<VelocityMessage>(), expected);
+}
+
 } // namespace bsgo

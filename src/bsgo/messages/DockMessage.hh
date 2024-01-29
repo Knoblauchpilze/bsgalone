@@ -11,7 +11,7 @@ class DockMessage : public ValidatableMessage
 {
   public:
   DockMessage();
-  DockMessage(const Uuid &shipDbId, const Uuid &shipEntityId, const bool docking);
+  DockMessage(const Uuid shipDbId, const Uuid shipEntityId, const bool docking);
   ~DockMessage() override = default;
 
   auto getShipDbId() const -> Uuid;
@@ -20,6 +20,8 @@ class DockMessage : public ValidatableMessage
 
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
+
+  auto clone() const -> IMessagePtr override;
 
   private:
   Uuid m_shipDbId{};

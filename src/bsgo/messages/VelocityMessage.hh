@@ -12,7 +12,7 @@ class VelocityMessage : public NetworkMessage
 {
   public:
   VelocityMessage();
-  VelocityMessage(const Uuid &shipEntityId, const Eigen::Vector3f &acceleration);
+  VelocityMessage(const Uuid shipEntityId, const Eigen::Vector3f &acceleration);
   ~VelocityMessage() override = default;
 
   auto getShipEntityId() const -> Uuid;
@@ -20,6 +20,8 @@ class VelocityMessage : public NetworkMessage
 
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
+
+  auto clone() const -> IMessagePtr override;
 
   private:
   Uuid m_shipEntityId{};

@@ -18,9 +18,9 @@ class EquipMessage : public ValidatableMessage
   public:
   EquipMessage();
   EquipMessage(const EquipType &action,
-               const Uuid &shipDbId,
-               const Item &type,
-               const Uuid &itemDbId);
+               const Uuid shipDbId,
+               const Item &itemType,
+               const Uuid itemDbId);
   ~EquipMessage() override = default;
 
   auto getAction() const -> EquipType;
@@ -31,10 +31,12 @@ class EquipMessage : public ValidatableMessage
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
 
+  auto clone() const -> IMessagePtr override;
+
   private:
   EquipType m_action{};
   Uuid m_shipDbId{};
-  Item m_type{};
+  Item m_itemType{};
   Uuid m_itemDbId{};
 };
 

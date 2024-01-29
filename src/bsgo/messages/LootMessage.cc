@@ -8,7 +8,7 @@ LootMessage::LootMessage()
   : NetworkMessage(MessageType::LOOT)
 {}
 
-LootMessage::LootMessage(const Uuid &resourceId, const float amount)
+LootMessage::LootMessage(const Uuid resourceId, const float amount)
   : NetworkMessage(MessageType::LOOT)
   , m_resourceId(resourceId)
   , m_amount(amount)
@@ -45,6 +45,14 @@ bool LootMessage::deserialize(std::istream &in)
   ok &= utils::deserialize(in, m_amount);
 
   return ok;
+}
+
+auto LootMessage::clone() const -> IMessagePtr
+{
+  auto clone = std::make_unique<LootMessage>(m_resourceId, m_amount);
+  clone->copyClientIdIfDefined(*this);
+
+  return clone;
 }
 
 } // namespace bsgo

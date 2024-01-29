@@ -100,4 +100,12 @@ TEST(Unit_Bsgo_Serialization_PurchaseMessage, WithClientId)
   assertMessagesAreEqual(actual, expected);
 }
 
+TEST(Unit_Bsgo_Serialization_PurchaseMessage, Clone)
+{
+  const PurchaseMessage expected(Uuid{44}, Item::SHIP, Uuid{17});
+  const auto cloned = expected.clone();
+  ASSERT_EQ(cloned->type(), MessageType::PURCHASE);
+  assertMessagesAreEqual(cloned->as<PurchaseMessage>(), expected);
+}
+
 } // namespace bsgo

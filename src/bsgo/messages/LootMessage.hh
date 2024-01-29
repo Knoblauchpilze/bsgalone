@@ -10,7 +10,7 @@ class LootMessage : public NetworkMessage
 {
   public:
   LootMessage();
-  LootMessage(const Uuid &resourceId, const float amount);
+  LootMessage(const Uuid resourceId, const float amount);
   ~LootMessage() override = default;
 
   auto resourceId() const -> Uuid;
@@ -18,6 +18,8 @@ class LootMessage : public NetworkMessage
 
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
+
+  auto clone() const -> IMessagePtr override;
 
   private:
   Uuid m_resourceId{};

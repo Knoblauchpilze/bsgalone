@@ -9,13 +9,13 @@ EquipMessage::EquipMessage()
 {}
 
 EquipMessage::EquipMessage(const EquipType &action,
-                           const Uuid &shipDbId,
-                           const Item &type,
-                           const Uuid &itemDbId)
+                           const Uuid shipDbId,
+                           const Item &itemType,
+                           const Uuid itemDbId)
   : ValidatableMessage(MessageType::EQUIP)
   , m_action(action)
   , m_shipDbId(shipDbId)
-  , m_type(type)
+  , m_itemType(itemType)
   , m_itemDbId(itemDbId)
 {}
 
@@ -31,7 +31,7 @@ auto EquipMessage::getShipDbId() const -> Uuid
 
 auto EquipMessage::getItemType() const -> Item
 {
-  return m_type;
+  return m_itemType;
 }
 
 auto EquipMessage::getItemDbId() const -> Uuid
@@ -47,7 +47,7 @@ auto EquipMessage::serialize(std::ostream &out) const -> std::ostream &
 
   utils::serialize(out, m_action);
   utils::serialize(out, m_shipDbId);
-  utils::serialize(out, m_type);
+  utils::serialize(out, m_itemType);
   utils::serialize(out, m_itemDbId);
 
   return out;
@@ -62,10 +62,19 @@ bool EquipMessage::deserialize(std::istream &in)
 
   ok &= utils::deserialize(in, m_action);
   ok &= utils::deserialize(in, m_shipDbId);
-  ok &= utils::deserialize(in, m_type);
+  ok &= utils::deserialize(in, m_itemType);
   ok &= utils::deserialize(in, m_itemDbId);
 
   return ok;
+}
+
+auto EquipMessage::clone() const -> IMessagePtr
+{
+  auto clone = std::make_unique<EquipMessage>(m_action, m_shipDbId, m_itemType, m_itemDbId);
+  clone->copyClientIdIfDefined(*this);
+  clone->validate(validated());
+
+  return clone;
 }
 
 } // namespace bsgo

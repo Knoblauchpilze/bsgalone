@@ -33,4 +33,12 @@ TEST(Unit_Bsgo_Serialization_ConnectionMessage, Validated)
   assertMessagesAreEqual(actual, expected);
 }
 
+TEST(Unit_Bsgo_Serialization_ConnectionMessage, Clone)
+{
+  const ConnectionMessage expected(Uuid{12});
+  const auto cloned = expected.clone();
+  ASSERT_EQ(cloned->type(), MessageType::CONNECTION);
+  assertMessagesAreEqual(cloned->as<ConnectionMessage>(), expected);
+}
+
 } // namespace bsgo

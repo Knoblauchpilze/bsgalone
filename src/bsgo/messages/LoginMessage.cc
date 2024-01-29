@@ -70,4 +70,13 @@ bool LoginMessage::deserialize(std::istream &in)
   return ok;
 }
 
+auto LoginMessage::clone() const -> IMessagePtr
+{
+  auto clone = std::make_unique<LoginMessage>(m_name, m_password, m_playerDbId);
+  clone->copyClientIdIfDefined(*this);
+  clone->validate(validated());
+
+  return clone;
+}
+
 } // namespace bsgo

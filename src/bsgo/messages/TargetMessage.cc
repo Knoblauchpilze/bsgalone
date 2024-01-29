@@ -10,7 +10,7 @@ TargetMessage::TargetMessage()
   : NetworkMessage(MessageType::TARGET)
 {}
 
-TargetMessage::TargetMessage(const Uuid &shipEntityId, const Eigen::Vector3f &position)
+TargetMessage::TargetMessage(const Uuid shipEntityId, const Eigen::Vector3f &position)
   : NetworkMessage(MessageType::TARGET)
   , m_shipEntityId(shipEntityId)
   , m_position(position)
@@ -47,6 +47,14 @@ bool TargetMessage::deserialize(std::istream &in)
   ok &= bsgo::deserialize(in, m_position);
 
   return ok;
+}
+
+auto TargetMessage::clone() const -> IMessagePtr
+{
+  auto clone = std::make_unique<TargetMessage>(m_shipEntityId, m_position);
+  clone->copyClientIdIfDefined(*this);
+
+  return clone;
 }
 
 } // namespace bsgo

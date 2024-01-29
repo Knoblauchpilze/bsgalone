@@ -64,4 +64,12 @@ TEST(Unit_Bsgo_Serialization_SignupMessage, WithClientId)
   assertMessagesAreEqual(actual, expected);
 }
 
+TEST(Unit_Bsgo_Serialization_SignupMessage, Clone)
+{
+  const SignupMessage expected("some-name", "some-password", Faction::COLONIAL, Uuid{44});
+  const auto cloned = expected.clone();
+  ASSERT_EQ(cloned->type(), MessageType::SIGNUP);
+  assertMessagesAreEqual(cloned->as<SignupMessage>(), expected);
+}
+
 } // namespace bsgo
