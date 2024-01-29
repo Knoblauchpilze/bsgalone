@@ -8,6 +8,7 @@ namespace bsgo {
 
 SystemProcessor::SystemProcessor(const SystemProcessingConfig &config)
   : utils::CoreObject("processor")
+  , m_systemDbId(config.systemDbId)
 {
   setService("system");
   addModule(str(config.systemDbId));
@@ -27,6 +28,11 @@ SystemProcessor::~SystemProcessor()
   {
     m_processingThread.join();
   }
+}
+
+auto SystemProcessor::getSystemDbId() const -> Uuid
+{
+  return m_systemDbId;
 }
 
 void SystemProcessor::pushMessage(IMessagePtr message)
@@ -51,7 +57,7 @@ void SystemProcessor::initialize(const SystemProcessingConfig &config)
   m_services = createServices(repositories, m_coordinator);
   createMessageConsumers(*m_inputMessagesQueue, config.outputMessageQueue, m_services);
 
-  dataSource.setSystemDbId(config.systemDbId);
+  dataSource.setSystemDbId(m_systemDbId);
   dataSource.initialize(*m_coordinator);
 }
 

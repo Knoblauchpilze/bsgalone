@@ -4,17 +4,27 @@
 
 namespace bsgo {
 
-TriageMessageConsumer::TriageMessageConsumer(std::vector<SystemProcessorShPtr> systemProcessors,
-                                             ClientManagerShPtr clientManager,
-                                             IMessageQueuePtr systemMessageQueue)
+TriageMessageConsumer::TriageMessageConsumer(
+  const std::vector<SystemProcessorShPtr> &systemProcessors,
+  ClientManagerShPtr clientManager,
+  IMessageQueuePtr systemMessageQueue)
   : AbstractMessageConsumer("triage", allMessageTypesAsSet())
   , m_clientManager(std::move(clientManager))
-  , m_systemProcessors(std::move(systemProcessors))
   , m_systemQueue(std::move(systemMessageQueue))
 {
   if (nullptr == m_systemQueue)
   {
     throw std::invalid_argument("Expected non null system message queue");
+  }
+
+  for (const auto &system : systemProcessors)
+  {
+    const auto res = m_systemProcessors.try_emplace(system->getSystemDbId(), system);
+    if (!res.second)
+    {
+      throw std::invalid_argument("Failed to register duplicated system "
+                                  + str(system->getSystemDbId()));
+    }
   }
 }
 
@@ -65,8 +75,39 @@ void TriageMessageConsumer::handleSystemMessage(const IMessage &message) const
 
 void TriageMessageConsumer::triagePlayerMessage(const IMessage &message) const
 {
-  /// TODO: We need a clone to send the messages to the processor
-  warn("should triage player message " + str(message.type()));
+  if (!message.isA<NetworkMessage>())
+  {
+    broadcastMessage(message);
+    return;
+  }
+
+  const auto clientId    = message.as<NetworkMessage>().getClientId();
+  const auto maybeSystem = m_clientManager->tryGetSystemForClient(clientId);
+
+  if (!maybeSystem)
+  {
+    error("Failed to process message " + str(message.type()),
+          "Client " + str(clientId) + " does not have a registered system");
+  }
+
+  const auto maybeProcessor = m_systemProcessors.find(*maybeSystem);
+  if (maybeProcessor == m_systemProcessors.cend())
+  {
+    error("Failed to process message " + str(message.type()),
+          "Unsupported system " + str(*maybeSystem));
+  }
+
+  maybeProcessor->second->pushMessage(message.clone());
+}
+
+void TriageMessageConsumer::broadcastMessage(const IMessage &message) const
+{
+  debug("Brodcasting message " + str(message.type()));
+
+  for (const auto &[_, processor] : m_systemProcessors)
+  {
+    processor->pushMessage(message.clone());
+  }
 }
 
 } // namespace bsgo
