@@ -28,6 +28,8 @@ class LoginMessage : public ValidatableMessage
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
 
+  auto clone() const -> IMessagePtr override;
+
   private:
   std::string m_name{};
   std::string m_password{};

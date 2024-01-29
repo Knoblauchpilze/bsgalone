@@ -12,7 +12,7 @@ class SlotMessage : public NetworkMessage
 {
   public:
   SlotMessage();
-  SlotMessage(const Uuid &shipEntityId, const int slotIndex, const Slot &slotType);
+  SlotMessage(const Uuid shipEntityId, const int slotIndex, const Slot &slotType);
   ~SlotMessage() override = default;
 
   auto getShipEntityId() const -> Uuid;
@@ -21,6 +21,8 @@ class SlotMessage : public NetworkMessage
 
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
+
+  auto clone() const -> IMessagePtr override;
 
   private:
   Uuid m_shipEntityId{};

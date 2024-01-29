@@ -19,11 +19,10 @@ class SlotComponentMessage : public ComponentUpdatedMessage
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
 
+  auto clone() const -> IMessagePtr override;
+
   private:
   int m_slotIndex{};
-
-  bool m_fireRequest{false};
-  FiringState m_firingState{FiringState::READY};
   std::optional<utils::Duration> m_elapsedSinceLastFired{};
 };
 

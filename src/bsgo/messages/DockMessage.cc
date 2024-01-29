@@ -8,7 +8,7 @@ DockMessage::DockMessage()
   : ValidatableMessage(MessageType::DOCK)
 {}
 
-DockMessage::DockMessage(const Uuid &shipDbId, const Uuid &shipEntityId, const bool docking)
+DockMessage::DockMessage(const Uuid shipDbId, const Uuid shipEntityId, const bool docking)
   : ValidatableMessage(MessageType::DOCK)
   , m_shipDbId(shipDbId)
   , m_shipEntityId(shipEntityId)
@@ -55,6 +55,15 @@ bool DockMessage::deserialize(std::istream &in)
   ok &= utils::deserialize(in, m_docking);
 
   return ok;
+}
+
+auto DockMessage::clone() const -> IMessagePtr
+{
+  auto clone = std::make_unique<DockMessage>(m_shipDbId, m_shipEntityId, m_docking);
+  clone->copyClientIdIfDefined(*this);
+  clone->validate(validated());
+
+  return clone;
 }
 
 } // namespace bsgo

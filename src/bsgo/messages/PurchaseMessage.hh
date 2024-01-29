@@ -11,7 +11,7 @@ class PurchaseMessage : public ValidatableMessage
 {
   public:
   PurchaseMessage();
-  PurchaseMessage(const Uuid &playerDbId, const Item &type, const Uuid &itemDbId);
+  PurchaseMessage(const Uuid playerDbId, const Item &itemType, const Uuid itemDbId);
   ~PurchaseMessage() override = default;
 
   auto getPlayerDbId() const -> Uuid;
@@ -21,9 +21,11 @@ class PurchaseMessage : public ValidatableMessage
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
 
+  auto clone() const -> IMessagePtr override;
+
   private:
   Uuid m_playerDbId{};
-  Item m_type{};
+  Item m_itemType{};
   Uuid m_itemDbId{};
 };
 

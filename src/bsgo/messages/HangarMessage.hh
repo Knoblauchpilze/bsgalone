@@ -12,13 +12,15 @@ class HangarMessage : public ValidatableMessage
 {
   public:
   HangarMessage();
-  HangarMessage(const Uuid &shipDbId);
+  HangarMessage(const Uuid shipDbId);
   ~HangarMessage() override = default;
 
   auto getShipDbId() const -> Uuid;
 
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
+
+  auto clone() const -> IMessagePtr override;
 
   private:
   Uuid m_shipDbId{};

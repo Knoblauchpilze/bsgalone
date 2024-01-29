@@ -11,11 +11,13 @@ class ConnectionMessage : public ValidatableMessage
 {
   public:
   ConnectionMessage();
-  ConnectionMessage(const Uuid &clientId);
+  ConnectionMessage(const Uuid clientId);
   ~ConnectionMessage() override = default;
 
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
+
+  auto clone() const -> IMessagePtr override;
 };
 
 } // namespace bsgo

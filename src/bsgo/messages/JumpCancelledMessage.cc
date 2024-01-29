@@ -8,7 +8,7 @@ JumpCancelledMessage::JumpCancelledMessage()
   : ValidatableMessage(MessageType::JUMP_CANCELLED)
 {}
 
-JumpCancelledMessage::JumpCancelledMessage(const Uuid &shipDbId, const Uuid &shipEntityId)
+JumpCancelledMessage::JumpCancelledMessage(const Uuid shipDbId, const Uuid shipEntityId)
   : ValidatableMessage(MessageType::JUMP_CANCELLED)
   , m_shipDbId(shipDbId)
   , m_shipEntityId(shipEntityId)
@@ -47,6 +47,15 @@ bool JumpCancelledMessage::deserialize(std::istream &in)
   ok &= utils::deserialize(in, m_shipEntityId);
 
   return ok;
+}
+
+auto JumpCancelledMessage::clone() const -> IMessagePtr
+{
+  auto clone = std::make_unique<JumpCancelledMessage>(m_shipDbId, m_shipEntityId);
+  clone->copyClientIdIfDefined(*this);
+  clone->validate(validated());
+
+  return clone;
 }
 
 } // namespace bsgo

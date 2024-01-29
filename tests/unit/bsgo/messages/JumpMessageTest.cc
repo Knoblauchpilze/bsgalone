@@ -44,4 +44,12 @@ TEST(Unit_Bsgo_Serialization_JumpMessage, WithClientId)
   assertMessagesAreEqual(actual, expected);
 }
 
+TEST(Unit_Bsgo_Serialization_JumpMessage, Clone)
+{
+  const JumpMessage expected(Uuid{14}, Uuid{26});
+  const auto cloned = expected.clone();
+  ASSERT_EQ(cloned->type(), MessageType::JUMP);
+  assertMessagesAreEqual(cloned->as<JumpMessage>(), expected);
+}
+
 } // namespace bsgo

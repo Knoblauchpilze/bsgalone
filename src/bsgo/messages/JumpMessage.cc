@@ -8,7 +8,7 @@ JumpMessage::JumpMessage()
   : ValidatableMessage(MessageType::JUMP)
 {}
 
-JumpMessage::JumpMessage(const Uuid &shipDbId, const Uuid &shipEntityId)
+JumpMessage::JumpMessage(const Uuid shipDbId, const Uuid shipEntityId)
   : ValidatableMessage(MessageType::JUMP)
   , m_shipDbId(shipDbId)
   , m_shipEntityId(shipEntityId)
@@ -47,6 +47,15 @@ bool JumpMessage::deserialize(std::istream &in)
   ok &= utils::deserialize(in, m_shipEntityId);
 
   return ok;
+}
+
+auto JumpMessage::clone() const -> IMessagePtr
+{
+  auto clone = std::make_unique<JumpMessage>(m_shipDbId, m_shipEntityId);
+  clone->copyClientIdIfDefined(*this);
+  clone->validate(validated());
+
+  return clone;
 }
 
 } // namespace bsgo

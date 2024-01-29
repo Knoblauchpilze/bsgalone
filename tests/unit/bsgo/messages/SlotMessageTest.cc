@@ -44,4 +44,12 @@ TEST(Unit_Bsgo_Serialization_SlotMessage, WithClientId)
   assertMessagesAreEqual(actual, expected);
 }
 
+TEST(Unit_Bsgo_Serialization_SlotMessage, Clone)
+{
+  const SlotMessage expected(Uuid{28}, 67, Slot::WEAPON);
+  const auto cloned = expected.clone();
+  ASSERT_EQ(cloned->type(), MessageType::SLOT);
+  assertMessagesAreEqual(cloned->as<SlotMessage>(), expected);
+}
+
 } // namespace bsgo

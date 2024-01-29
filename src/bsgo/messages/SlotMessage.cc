@@ -9,7 +9,7 @@ SlotMessage::SlotMessage()
   : NetworkMessage(MessageType::SLOT)
 {}
 
-SlotMessage::SlotMessage(const Uuid &shipEntityId, const int slotIndex, const Slot &slotType)
+SlotMessage::SlotMessage(const Uuid shipEntityId, const int slotIndex, const Slot &slotType)
   : NetworkMessage(MessageType::SLOT)
   , m_shipEntityId(shipEntityId)
   , m_slotIndex(slotIndex)
@@ -54,6 +54,14 @@ bool SlotMessage::deserialize(std::istream &in)
   ok &= utils::deserialize(in, m_slotType);
 
   return ok;
+}
+
+auto SlotMessage::clone() const -> IMessagePtr
+{
+  auto clone = std::make_unique<SlotMessage>(m_shipEntityId, m_slotIndex, m_slotType);
+  clone->copyClientIdIfDefined(*this);
+
+  return clone;
 }
 
 } // namespace bsgo

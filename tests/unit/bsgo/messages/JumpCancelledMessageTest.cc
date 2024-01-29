@@ -44,4 +44,12 @@ TEST(Unit_Bsgo_Serialization_JumpCancelledMessage, WithClientId)
   assertMessagesAreEqual(actual, expected);
 }
 
+TEST(Unit_Bsgo_Serialization_JumpCancelledMessage, Clone)
+{
+  const JumpCancelledMessage expected(Uuid{14}, Uuid{26});
+  const auto cloned = expected.clone();
+  ASSERT_EQ(cloned->type(), MessageType::JUMP_CANCELLED);
+  assertMessagesAreEqual(cloned->as<JumpCancelledMessage>(), expected);
+}
+
 } // namespace bsgo
