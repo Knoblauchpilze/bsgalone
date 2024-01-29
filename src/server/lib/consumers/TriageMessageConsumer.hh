@@ -5,13 +5,14 @@
 #include "ClientManager.hh"
 #include "IMessageQueue.hh"
 #include "SystemProcessor.hh"
+#include <unordered_map>
 
 namespace bsgo {
 
 class TriageMessageConsumer : public AbstractMessageConsumer
 {
   public:
-  TriageMessageConsumer(std::vector<SystemProcessorShPtr> systemProcessors,
+  TriageMessageConsumer(const std::vector<SystemProcessorShPtr> &systemProcessors,
                         ClientManagerShPtr clientManager,
                         IMessageQueuePtr systemMessageQueue);
   ~TriageMessageConsumer() override = default;
@@ -20,12 +21,13 @@ class TriageMessageConsumer : public AbstractMessageConsumer
 
   private:
   ClientManagerShPtr m_clientManager{};
-  std::vector<SystemProcessorShPtr> m_systemProcessors{};
+  std::unordered_map<Uuid, SystemProcessorShPtr> m_systemProcessors{};
   IMessageQueuePtr m_systemQueue{};
 
   bool discardMessageWithNoClient(const IMessage &message) const;
   void handleSystemMessage(const IMessage &message) const;
   void triagePlayerMessage(const IMessage &message) const;
+  void broadcastMessage(const IMessage &message) const;
 };
 
 } // namespace bsgo

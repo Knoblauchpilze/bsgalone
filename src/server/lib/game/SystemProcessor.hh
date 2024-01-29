@@ -25,11 +25,13 @@ class SystemProcessor : public utils::CoreObject
   SystemProcessor(const SystemProcessingConfig &config);
   ~SystemProcessor() override;
 
+  auto getSystemDbId() const -> Uuid;
   void pushMessage(IMessagePtr message);
 
   void start();
 
   private:
+  Uuid m_systemDbId{};
   IMessageQueuePtr m_inputMessagesQueue{std::make_unique<SynchronizedMessageQueue>()};
   CoordinatorShPtr m_coordinator{};
   Services m_services{};
