@@ -10,25 +10,75 @@ ClientManager::ClientManager()
   setService("client");
 }
 
-auto ClientManager::registerConnection(const net::ConnectionId connectionId) -> Uuid
+auto ClientManager::registerConnection(const net::ConnectionShPtr connection) -> Uuid
 {
   const std::lock_guard guard(m_locker);
 
-  const auto clientId = NEXT_CLIENT_ID;
+  const ClientData data{.clientId = NEXT_CLIENT_ID, .connection = connection};
+  m_clients.emplace(connection->id(), data);
+  m_connectionToClient.emplace(data.clientId, connection->id());
+
   ++NEXT_CLIENT_ID;
 
-  m_clients.emplace(clientId, connectionId);
+  info("Registered connection " + data.connection->str());
 
-  return clientId;
+  return data.clientId;
+}
+
+void ClientManager::registerPlayer(const Uuid clientId, const Uuid playerDbId)
+{
+  const std::lock_guard guard(m_locker);
+
+  const auto maybeClientData = m_clients.find(clientId);
+  if (maybeClientData == m_clients.cend())
+  {
+    error("Failed to register player " + str(playerDbId), "Unknown client " + str(clientId));
+  }
+
+  auto &clientData      = maybeClientData->second;
+  clientData.playerDbId = playerDbId;
+  m_playerToClient.emplace(playerDbId, clientData.clientId);
+
+  info("Registered player " + str(playerDbId));
+}
+
+void ClientManager::removePlayer(const Uuid playerDbId)
+{
+  const std::lock_guard guard(m_locker);
+
+  const auto maybeClientId = m_playerToClient.find(playerDbId);
+  if (maybeClientId == m_playerToClient.cend())
+  {
+    error("Failed to unregister player " + str(playerDbId), "Unable to find client id");
+  }
+
+  auto &data = m_clients.at(maybeClientId->second);
+  data.playerDbId.reset();
+  m_playerToClient.erase(playerDbId);
+
+  info("Removed player " + str(playerDbId));
 }
 
 void ClientManager::removeConnection(const net::ConnectionId connectionId)
 {
   const std::lock_guard guard(m_locker);
-  if (m_clients.erase(connectionId) != 1u)
+
+  const auto maybeClientId = m_connectionToClient.find(connectionId);
+  if (maybeClientId == m_connectionToClient.cend())
   {
-    error("Failed to remove connection " + std::to_string(connectionId));
+    error("Failed to unregistered connection " + std::to_string(connectionId));
   }
+
+  const auto data = m_clients.at(maybeClientId->second);
+
+  if (data.playerDbId)
+  {
+    m_playerToClient.erase(*data.playerDbId);
+  }
+  m_connectionToClient.erase(connectionId);
+  m_clients.erase(data.clientId);
+
+  info("Removed connection " + data.connection->str());
 }
 
 } // namespace bsgo

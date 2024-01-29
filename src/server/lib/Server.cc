@@ -61,7 +61,6 @@ void Server::initializeSystems()
 {
   /// TODO: Should not simulate a single system.
   SystemProcessingConfig config{.systemDbId         = Uuid{0},
-                                .inputMessageQueue  = m_inputMessageQueue.get(),
                                 .outputMessageQueue = m_outputMessageQueue.get()};
 
   auto processor = std::make_unique<SystemProcessor>(config);
@@ -70,11 +69,7 @@ void Server::initializeSystems()
 
 void Server::setup(const int port)
 {
-  const net::ServerConfig config{.acceptor =
-                                   [this](const net::Connection &connection) {
-                                     return onConnectionReceived(connection);
-                                   },
-                                 .disconnectHandler =
+  const net::ServerConfig config{.disconnectHandler =
                                    [this](const net::ConnectionId connectionId) {
                                      return onConnectionLost(connectionId);
                                    },
@@ -122,12 +117,12 @@ bool Server::onConnectionReceived(const net::Connection & /*connection*/) const
 
 void Server::onConnectionLost(const net::ConnectionId connectionId)
 {
-  m_clientManager.removeConnection(connectionId);
+  m_clientManager->removeConnection(connectionId);
 }
 
 void Server::onConnectionReady(net::ConnectionShPtr connection)
 {
-  const auto clientId = m_clientManager.registerConnection(connection->id());
+  const auto clientId = m_clientManager->registerConnection(connection);
 
   m_inputMessageQueue->registerToConnection(*connection);
   m_broadcastQueue->registerClient(clientId, connection);

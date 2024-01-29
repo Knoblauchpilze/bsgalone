@@ -23,7 +23,6 @@ auto TcpServer::port() const -> int
 
 void TcpServer::initializeFromConfig(const ServerConfig &config)
 {
-  m_acceptor               = config.acceptor;
   m_disconnectHandler      = config.disconnectHandler;
   m_connectionReadyHandler = config.connectionReadyHandler;
   m_connectionDataHandler  = config.connectionDataHandler;
@@ -58,13 +57,8 @@ void TcpServer::onConnectionRequest(const std::error_code &code, asio::ip::tcp::
 
 bool TcpServer::setupConnection(ConnectionShPtr connection)
 {
-  if (m_acceptor && !(*m_acceptor)(*connection))
-  {
-    warn("Refused connection from " + connection->str());
-    return false;
-  }
-
   info("Approved connection from " + connection->str());
+
   if (m_disconnectHandler)
   {
     connection->setDisconnectHandler(*m_disconnectHandler);

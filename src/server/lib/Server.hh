@@ -28,7 +28,7 @@ class Server : public utils::CoreObject
   std::atomic_bool m_running{false};
   net::TcpServerPtr m_tcpServer{};
 
-  ClientManager m_clientManager{};
+  ClientManagerShPtr m_clientManager{std::make_shared<ClientManager>()};
 
   NetworkMessageQueuePtr m_inputMessageQueue{};
   BroadcastMessageQueue *m_broadcastQueue{};
@@ -47,4 +47,5 @@ class Server : public utils::CoreObject
   void onConnectionLost(const net::ConnectionId connectionId);
   void onConnectionReady(net::ConnectionShPtr connection);
 };
+
 } // namespace bsgo
