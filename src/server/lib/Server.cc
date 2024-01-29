@@ -136,11 +136,6 @@ void Server::shutdown()
   m_context.stop();
 }
 
-bool Server::onConnectionReceived(const net::Connection & /*connection*/) const
-{
-  return true;
-}
-
 void Server::onConnectionLost(const net::ConnectionId connectionId)
 {
   m_clientManager->removeConnection(connectionId);

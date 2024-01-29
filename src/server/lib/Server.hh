@@ -43,7 +43,6 @@ class Server : public utils::CoreObject
   void activeRunLoop();
   void shutdown();
 
-  bool onConnectionReceived(const net::Connection &connection) const;
   void onConnectionLost(const net::ConnectionId connectionId);
   void onConnectionReady(net::ConnectionShPtr connection);
 };
