@@ -23,6 +23,7 @@ class TriageMessageConsumer : public AbstractMessageConsumer
   std::vector<SystemProcessorShPtr> m_systemProcessors{};
   IMessageQueuePtr m_systemQueue{};
 
+  bool discardMessageWithNoClient(const IMessage &message) const;
   void handleSystemMessage(const IMessage &message) const;
   void triagePlayerMessage(const IMessage &message) const;
 };

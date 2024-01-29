@@ -1,5 +1,6 @@
 
 #include "TriageMessageConsumer.hh"
+#include "NetworkMessage.hh"
 
 namespace bsgo {
 
@@ -19,6 +20,12 @@ TriageMessageConsumer::TriageMessageConsumer(std::vector<SystemProcessorShPtr> s
 
 void TriageMessageConsumer::onMessageReceived(const IMessage &message)
 {
+  if (discardMessageWithNoClient(message))
+  {
+    warn("Discarding message " + str(message.type()) + " with no client id");
+    return;
+  }
+
   switch (message.type())
   {
     case MessageType::SIGNUP:
@@ -39,6 +46,16 @@ void TriageMessageConsumer::onMessageReceived(const IMessage &message)
       error("Unsupported message type to triage " + str(message.type()));
       break;
   }
+}
+
+bool TriageMessageConsumer::discardMessageWithNoClient(const IMessage &message) const
+{
+  if (!message.isA<NetworkMessage>())
+  {
+    return false;
+  }
+
+  return !message.as<NetworkMessage>().tryGetClientId().has_value();
 }
 
 void TriageMessageConsumer::handleSystemMessage(const IMessage &message) const
