@@ -2,6 +2,7 @@
 #pragma once
 
 #include "AbstractComponent.hh"
+#include "Uuid.hh"
 #include <core_utils/TimeUtils.hh>
 #include <optional>
 
@@ -9,6 +10,7 @@ namespace bsgo {
 
 struct SlotComponentData
 {
+  Uuid dbId{};
   bool offensive{};
   float powerCost{};
   std::optional<float> range{};
@@ -33,6 +35,7 @@ class SlotComponent : public AbstractComponent
 
   void update(const float elapsedSeconds) override;
 
+  auto dbId() const -> Uuid;
   bool isOffensive() const;
   auto powerCost() const -> float;
   auto maybeRange() const -> std::optional<float>;
@@ -51,6 +54,7 @@ class SlotComponent : public AbstractComponent
   void clearFireRequest();
 
   private:
+  Uuid m_dbId{};
   bool m_offensive;
   float m_powerCost;
   std::optional<float> m_range;

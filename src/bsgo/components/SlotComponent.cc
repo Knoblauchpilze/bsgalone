@@ -5,6 +5,7 @@ namespace bsgo {
 
 SlotComponent::SlotComponent(const ComponentType &type, const SlotComponentData &data)
   : AbstractComponent(type)
+  , m_dbId(data.dbId)
   , m_offensive(data.offensive)
   , m_powerCost(data.powerCost)
   , m_range(data.range)
@@ -16,6 +17,11 @@ SlotComponent::SlotComponent(const ComponentType &type, const SlotComponentData 
 void SlotComponent::update(const float elapsedSeconds)
 {
   handleReload(elapsedSeconds);
+}
+
+auto SlotComponent::dbId() const -> Uuid
+{
+  return m_dbId;
 }
 
 bool SlotComponent::isOffensive() const
