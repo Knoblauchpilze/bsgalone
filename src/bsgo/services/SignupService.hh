@@ -15,7 +15,9 @@ class SignupService : public AbstractService
   ~SignupService() override = default;
 
   auto trySignup(const std::string &name, const std::string &password, const Faction &faction) const
-    -> std::optional<Uuid>;
+    -> std::optional<Player>;
+
+  auto getPlayerSystemDbId(const Uuid playerDbId) const -> Uuid;
 
   private:
   auto registerPlayer(const Player &player) const -> Uuid;

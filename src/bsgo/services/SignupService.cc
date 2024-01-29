@@ -9,7 +9,7 @@ SignupService::SignupService(const Repositories &repositories)
 
 auto SignupService::trySignup(const std::string &name,
                               const std::string &password,
-                              const Faction &faction) const -> std::optional<Uuid>
+                              const Faction &faction) const -> std::optional<Player>
 {
   const auto maybePlayer = m_repositories.playerRepository->findOneByName(name);
   if (maybePlayer)
@@ -24,7 +24,12 @@ auto SignupService::trySignup(const std::string &name,
   registerResources(player);
   registerShip(player);
 
-  return player.id;
+  return player;
+}
+
+auto SignupService::getPlayerSystemDbId(const Uuid playerDbId) const -> Uuid
+{
+  return m_repositories.playerRepository->findSystemByPlayer(playerDbId);
 }
 
 auto SignupService::registerPlayer(const Player &player) const -> Uuid
