@@ -27,8 +27,8 @@ void ComputerSystem::updateEntity(Entity &entity,
                                   Coordinator &coordinator,
                                   const float elapsedSeconds) const
 {
-  const auto target = entity.targetComp().target();
   std::optional<Entity> targetEnt;
+  const auto target = entity.targetComp().target();
   if (target)
   {
     targetEnt = coordinator.getEntity(*target);
