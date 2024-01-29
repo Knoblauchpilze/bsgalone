@@ -3,6 +3,7 @@
 #include "Server.hh"
 #include "AsyncMessageQueue.hh"
 #include "ConnectionMessage.hh"
+#include "DataSource.hh"
 #include "LoginMessageConsumer.hh"
 #include "SignupMessageConsumer.hh"
 #include "SynchronizedMessageQueue.hh"
@@ -61,12 +62,19 @@ void Server::initialize()
 
 void Server::initializeSystems()
 {
-  /// TODO: Should not simulate a single system.
-  SystemProcessingConfig config{.systemDbId         = Uuid{0},
-                                .outputMessageQueue = m_outputMessageQueue.get()};
+  DataSource source{DataLoadingMode::SERVER};
+  const auto repositories = source.repositories();
 
-  auto processor = std::make_shared<SystemProcessor>(config);
-  m_systemProcessors.emplace_back(std::move(processor));
+  const auto allSystems = repositories.systemRepository->findAll();
+
+  for (const auto &systemDbId : allSystems)
+  {
+    SystemProcessingConfig config{.systemDbId         = systemDbId,
+                                  .outputMessageQueue = m_outputMessageQueue.get()};
+
+    auto processor = std::make_shared<SystemProcessor>(config);
+    m_systemProcessors.emplace_back(std::move(processor));
+  }
 }
 
 namespace {
@@ -79,9 +87,8 @@ auto createSystemMessageQueue() -> IMessageQueuePtr
 
 void Server::initializeMessageSystem()
 {
-  auto dbConnection = std::make_shared<DbConnection>();
-  dbConnection->connect();
-  const auto repositories = createRepositories(dbConnection);
+  DataSource source{DataLoadingMode::SERVER};
+  const auto repositories = source.repositories();
 
   auto systemQueue = createSystemMessageQueue();
 
