@@ -60,11 +60,12 @@ bool TriageMessageConsumer::discardMessageWithNoClient(const IMessage &message) 
 
 void TriageMessageConsumer::handleSystemMessage(const IMessage &message) const
 {
-  warn("should triage system message " + str(message.type()));
+  m_systemQueue->pushMessage(message.clone());
 }
 
 void TriageMessageConsumer::triagePlayerMessage(const IMessage &message) const
 {
+  /// TODO: We need a clone to send the messages to the processor
   warn("should triage player message " + str(message.type()));
 }
 
