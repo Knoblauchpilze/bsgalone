@@ -37,6 +37,7 @@ class Server : public utils::CoreObject
 
   void initialize();
   void initializeSystems();
+  void initializeMessageSystem();
 
   void setup(const int port);
   void activeRunLoop();
