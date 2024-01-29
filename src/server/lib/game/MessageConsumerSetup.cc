@@ -1,5 +1,5 @@
 
-#include "ServerMessageConsumerUtils.hh"
+#include "MessageConsumerSetup.hh"
 
 #include "DockMessageConsumer.hh"
 #include "EquipMessageConsumer.hh"
