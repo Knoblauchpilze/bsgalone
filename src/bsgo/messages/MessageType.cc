@@ -65,4 +65,10 @@ auto allMessageTypes() -> std::array<MessageType, 16>
           MessageType::TARGET};
 }
 
+auto allMessageTypesAsSet() -> std::unordered_set<MessageType>
+{
+  const auto all = allMessageTypes();
+  return std::unordered_set<MessageType>{all.cbegin(), all.cend()};
+}
+
 } // namespace bsgo
