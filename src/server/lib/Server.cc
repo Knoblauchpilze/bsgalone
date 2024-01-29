@@ -50,7 +50,7 @@ auto createOutputMessageQueue(IMessageQueuePtr queue) -> IMessageQueuePtr
 void Server::initialize()
 {
   m_inputMessageQueue  = createInputMessageQueue();
-  auto broadcastQueue  = std::make_unique<BroadcastMessageQueue>();
+  auto broadcastQueue  = std::make_unique<BroadcastMessageQueue>(m_clientManager);
   m_broadcastQueue     = broadcastQueue.get();
   m_outputMessageQueue = createOutputMessageQueue(std::move(broadcastQueue));
 
@@ -125,7 +125,6 @@ void Server::onConnectionReady(net::ConnectionShPtr connection)
   const auto clientId = m_clientManager->registerConnection(connection);
 
   m_inputMessageQueue->registerToConnection(*connection);
-  m_broadcastQueue->registerClient(clientId, connection);
 
   auto message = std::make_unique<ConnectionMessage>(clientId);
   message->validate();
