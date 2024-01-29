@@ -29,6 +29,11 @@ SystemProcessor::~SystemProcessor()
   }
 }
 
+void SystemProcessor::pushMessage(IMessagePtr message)
+{
+  m_inputMessagesQueue->pushMessage(std::move(message));
+}
+
 void SystemProcessor::start()
 {
   m_running.store(true);
@@ -44,7 +49,7 @@ void SystemProcessor::initialize(const SystemProcessingConfig &config)
   m_coordinator = std::make_shared<Coordinator>(std::move(networkSystem), config.outputMessageQueue);
 
   m_services = createServices(repositories, m_coordinator);
-  createMessageConsumers(*config.inputMessageQueue, config.outputMessageQueue, m_services);
+  createMessageConsumers(*m_inputMessagesQueue, config.outputMessageQueue, m_services);
 
   dataSource.setSystemDbId(config.systemDbId);
   dataSource.initialize(*m_coordinator);
@@ -66,6 +71,8 @@ void SystemProcessor::asyncSystemProcessing()
 
     constexpr auto MS_IN_A_SECOND = 1'000;
     m_coordinator->update(elapsedMs / MS_IN_A_SECOND);
+    m_inputMessagesQueue->processMessages();
+
     lastFrameTimestamp = thisFrameTimestamp;
 
     running = m_running.load();
