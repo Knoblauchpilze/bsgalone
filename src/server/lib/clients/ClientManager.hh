@@ -22,6 +22,9 @@ class ClientManager : public utils::CoreObject
   void removePlayer(const Uuid playerDbId);
   void removeConnection(const net::ConnectionId connectionId);
 
+  auto getConnectionForClient(const Uuid clientId) const -> net::ConnectionShPtr;
+  auto getAllConnections() const -> std::vector<net::ConnectionShPtr>;
+
   private:
   static Uuid NEXT_CLIENT_ID;
 
@@ -32,7 +35,7 @@ class ClientManager : public utils::CoreObject
     net::ConnectionShPtr connection{};
   };
 
-  std::mutex m_locker{};
+  mutable std::mutex m_locker{};
   std::unordered_map<Uuid, ClientData> m_clients{};
   std::unordered_map<net::ConnectionId, Uuid> m_connectionToClient{};
   std::unordered_map<Uuid, Uuid> m_playerToClient{};

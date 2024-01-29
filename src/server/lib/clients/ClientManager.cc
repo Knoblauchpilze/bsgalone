@@ -81,4 +81,31 @@ void ClientManager::removeConnection(const net::ConnectionId connectionId)
   info("Removed connection " + data.connection->str());
 }
 
+auto ClientManager::getConnectionForClient(const Uuid clientId) const -> net::ConnectionShPtr
+{
+  const std::lock_guard guard(m_locker);
+
+  const auto maybeClientData = m_clients.find(clientId);
+  if (maybeClientData == m_clients.cend())
+  {
+    error("Failed to get connection for " + str(clientId), "No such client");
+  }
+
+  return maybeClientData->second.connection;
+}
+
+auto ClientManager::getAllConnections() const -> std::vector<net::ConnectionShPtr>
+{
+  const std::lock_guard guard(m_locker);
+  std::vector<net::ConnectionShPtr> out;
+
+  // https://stackoverflow.com/questions/7879326/how-to-apply-transform-to-an-stl-map-in-c
+  std::transform(m_clients.cbegin(),
+                 m_clients.cend(),
+                 std::back_inserter(out),
+                 [](const std::pair<Uuid, ClientData> &v) { return v.second.connection; });
+
+  return out;
+}
+
 } // namespace bsgo

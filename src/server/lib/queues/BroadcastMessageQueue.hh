@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "Connection.hh"
+#include "ClientManager.hh"
 #include "IMessageQueue.hh"
 #include "Uuid.hh"
 #include <core_utils/CoreObject.hh>
@@ -15,10 +15,8 @@ namespace bsgo {
 class BroadcastMessageQueue : public IMessageQueue, public utils::CoreObject
 {
   public:
-  BroadcastMessageQueue();
+  BroadcastMessageQueue(ClientManagerShPtr clientManager);
   ~BroadcastMessageQueue() override = default;
-
-  void registerClient(const Uuid clientId, net::ConnectionShPtr connection);
 
   void pushMessage(IMessagePtr message) override;
   void addListener(IMessageListenerPtr listener) override;
@@ -29,7 +27,7 @@ class BroadcastMessageQueue : public IMessageQueue, public utils::CoreObject
   private:
   std::mutex m_locker{};
   std::deque<IMessagePtr> m_messages{};
-  std::unordered_map<Uuid, net::ConnectionShPtr> m_clients{};
+  ClientManagerShPtr m_clientManager{};
 
   void processMessage(const IMessage &message);
 

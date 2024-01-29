@@ -5,22 +5,12 @@
 
 namespace bsgo {
 
-BroadcastMessageQueue::BroadcastMessageQueue()
+BroadcastMessageQueue::BroadcastMessageQueue(ClientManagerShPtr clientManager)
   : utils::CoreObject("broadcast")
+  , m_clientManager(std::move(clientManager))
 {
   addModule("queue");
   setService("message");
-}
-
-void BroadcastMessageQueue::registerClient(const Uuid clientId, net::ConnectionShPtr connection)
-{
-  const std::lock_guard guard(m_locker);
-
-  const auto [_, inserted] = m_clients.try_emplace(clientId, connection);
-  if (!inserted)
-  {
-    error("Failed to register client " + str(clientId), "Such a client already exists");
-  }
 }
 
 void BroadcastMessageQueue::pushMessage(IMessagePtr message)
@@ -70,19 +60,14 @@ void BroadcastMessageQueue::processMessage(const IMessage &message)
 
 void BroadcastMessageQueue::sendMessageToClient(const Uuid clientId, const IMessage &message)
 {
-  auto maybeClient = m_clients.find(clientId);
-  if (maybeClient == m_clients.end())
-  {
-    error("Failed to send message " + str(message.type()), "Unknown client " + str(clientId));
-  }
-
-  maybeClient->second->send(message);
+  const auto connection = m_clientManager->getConnectionForClient(clientId);
+  connection->send(message);
 }
 
 void BroadcastMessageQueue::broadcastMessage(const IMessage &message)
 {
   debug("Broadcasting message " + str(message.type()));
-  for (const auto &[_, connection] : m_clients)
+  for (const auto &connection : m_clientManager->getAllConnections())
   {
     connection->send(message);
   }
