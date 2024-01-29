@@ -4,6 +4,7 @@
 #include "Coordinator.hh"
 #include "IMessageQueue.hh"
 #include "Services.hh"
+#include "SynchronizedMessageQueue.hh"
 #include "Uuid.hh"
 #include <atomic>
 #include <core_utils/CoreObject.hh>
@@ -15,7 +16,6 @@ namespace bsgo {
 struct SystemProcessingConfig
 {
   Uuid systemDbId{};
-  IMessageQueue *const inputMessageQueue{};
   IMessageQueue *const outputMessageQueue{};
 };
 
@@ -25,9 +25,12 @@ class SystemProcessor : public utils::CoreObject
   SystemProcessor(const SystemProcessingConfig &config);
   ~SystemProcessor() override;
 
+  void pushMessage(IMessagePtr message);
+
   void start();
 
   private:
+  IMessageQueuePtr m_inputMessagesQueue{std::make_unique<SynchronizedMessageQueue>()};
   CoordinatorShPtr m_coordinator{};
   Services m_services{};
 
