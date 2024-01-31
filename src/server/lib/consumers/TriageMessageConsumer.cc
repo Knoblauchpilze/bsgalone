@@ -50,6 +50,8 @@ void TriageMessageConsumer::onMessageReceived(const IMessage &message)
     case MessageType::JUMP_REQUESTED:
     case MessageType::PURCHASE:
     case MessageType::SLOT:
+    case MessageType::TARGET:
+    case MessageType::VELOCITY:
       triagePlayerMessage(message);
       break;
     default:
