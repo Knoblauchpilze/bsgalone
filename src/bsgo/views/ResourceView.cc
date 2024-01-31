@@ -9,7 +9,7 @@ ResourceView::ResourceView(const CoordinatorShPtr &coordinator,
   : AbstractView("resource", coordinator, repositories, messageQueue)
 {}
 
-auto ResourceView::getResourceName(const Uuid &resource) const -> std::string
+auto ResourceView::getResourceName(const Uuid resource) const -> std::string
 {
   return m_repositories.resourceRepository->findOneById(resource).name;
 }

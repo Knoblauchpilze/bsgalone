@@ -13,12 +13,12 @@ PlayerView::PlayerView(const CoordinatorShPtr &coordinator,
   : AbstractView("player", coordinator, repositories, messageQueue)
 {}
 
-void PlayerView::setPlayerDbId(const Uuid &player)
+void PlayerView::setPlayerDbId(const Uuid player)
 {
   m_playerDbId = player;
 }
 
-void PlayerView::setPlayerShipDbId(const Uuid &ship)
+void PlayerView::setPlayerShipDbId(const Uuid ship)
 {
   m_playerShipDbId = ship;
 }
@@ -119,12 +119,12 @@ auto PlayerView::getPlayerShips() const -> std::vector<PlayerShip>
   return out;
 }
 
-void PlayerView::trySelectShip(const Uuid &shipDbId) const
+void PlayerView::trySelectShip(const Uuid shipDbId) const
 {
   m_messageQueue->pushMessage(std::make_unique<HangarMessage>(shipDbId));
 }
 
-void PlayerView::tryPurchase(const Item &type, const Uuid &itemDbId) const
+void PlayerView::tryPurchase(const Item &type, const Uuid itemDbId) const
 {
   checkPlayerDbIdExists();
   m_messageQueue->pushMessage(std::make_unique<PurchaseMessage>(*m_playerDbId, type, itemDbId));

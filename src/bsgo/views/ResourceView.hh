@@ -14,7 +14,7 @@ class ResourceView : public AbstractView
                IMessageQueue *const messageQueue);
   ~ResourceView() override = default;
 
-  auto getResourceName(const Uuid &resource) const -> std::string;
+  auto getResourceName(const Uuid resource) const -> std::string;
 };
 
 using ResourceViewShPtr = std::shared_ptr<ResourceView>;

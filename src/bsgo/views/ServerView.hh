@@ -16,7 +16,7 @@ class ServerView : public AbstractView
              IMessageQueue *const messageQueue);
   ~ServerView() override = default;
 
-  void setPlayerDbId(const Uuid &player);
+  void setPlayerDbId(const Uuid player);
   bool isReady() const noexcept override;
 
   auto getPlayerSystem() const -> Uuid;
