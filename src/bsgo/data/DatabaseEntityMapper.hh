@@ -28,6 +28,7 @@ class DatabaseEntityMapper : public utils::CoreObject
   auto playerShipEntityId() const -> Uuid;
 
   auto tryGetPlayerEntityId(const Uuid playerDbId) const -> std::optional<Uuid>;
+  auto tryGetShipEntityId(const Uuid shipDbId) const -> std::optional<Uuid>;
 
   void clear();
 

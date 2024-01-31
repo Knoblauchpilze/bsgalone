@@ -112,6 +112,17 @@ auto DatabaseEntityMapper::tryGetPlayerEntityId(const Uuid playerDbId) const -> 
   return {};
 }
 
+auto DatabaseEntityMapper::tryGetShipEntityId(const Uuid shipDbId) const -> std::optional<Uuid>
+{
+  const auto maybeShip = m_shipDbIdsToEntityIds.find(shipDbId);
+  if (maybeShip != m_shipDbIdsToEntityIds.cend())
+  {
+    return maybeShip->second;
+  }
+
+  return {};
+}
+
 void DatabaseEntityMapper::clear()
 {
   m_playerDbIdsToEntityIds.clear();
