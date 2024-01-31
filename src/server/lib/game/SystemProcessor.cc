@@ -1,6 +1,7 @@
 
 #include "SystemProcessor.hh"
 #include "DataSource.hh"
+#include "DatabaseEntityMapper.hh"
 #include "MessageConsumerSetup.hh"
 #include "NetworkSystem.hh"
 
@@ -58,7 +59,8 @@ void SystemProcessor::initialize(const SystemProcessingConfig &config)
   createMessageConsumers(*m_inputMessagesQueue, config.outputMessageQueue, m_services);
 
   dataSource.setSystemDbId(m_systemDbId);
-  dataSource.initialize(*m_coordinator);
+  DatabaseEntityMapper mapper{};
+  dataSource.initialize(*m_coordinator, mapper);
 }
 
 void SystemProcessor::asyncSystemProcessing()

@@ -50,34 +50,7 @@ auto DataSource::repositories() const -> Repositories
   return m_repositories;
 }
 
-auto DataSource::playerEntityId() const -> Uuid
-{
-  if (!m_playerEntityId)
-  {
-    error("Expected to have a player entity id");
-  }
-  return *m_playerEntityId;
-}
-
-auto DataSource::playerShipDbId() const -> Uuid
-{
-  if (!m_playerShipDbId)
-  {
-    error("Expected to have a player ship id");
-  }
-  return *m_playerShipDbId;
-}
-
-auto DataSource::playerShipEntityId() const -> Uuid
-{
-  if (!m_playerShipEntityId)
-  {
-    error("Expected to have a player ship entity id");
-  }
-  return *m_playerShipEntityId;
-}
-
-void DataSource::initialize(Coordinator &coordinator) const
+void DataSource::initialize(Coordinator &coordinator, DatabaseEntityMapper &entityMapper) const
 {
   if (!m_systemDbId)
   {
@@ -89,26 +62,26 @@ void DataSource::initialize(Coordinator &coordinator) const
     m_systemDbId = m_repositories.playerRepository->findSystemByPlayer(*m_playerDbId);
   }
 
-  m_playerDbIdsToEntityIds.clear();
-  m_playerEntityId.reset();
-  m_playerShipDbId.reset();
-  m_playerShipEntityId.reset();
-
   coordinator.clear();
+  entityMapper.clear();
+  if (m_playerDbId)
+  {
+    entityMapper.setPlayerDbId(*m_playerDbId);
+  }
 
-  initializePlayer(coordinator);
-  initializeShips(coordinator);
+  initializePlayer(coordinator, entityMapper);
+  initializeShips(coordinator, entityMapper);
   initializeAsteroids(coordinator);
   initializeOutposts(coordinator);
 }
 
-void DataSource::initializePlayer(Coordinator &coordinator) const
+void DataSource::initializePlayer(Coordinator &coordinator, DatabaseEntityMapper &entityMapper) const
 {
-  PlayerDataSource source(m_repositories, *m_systemDbId, m_playerDbId);
-  m_playerDbIdsToEntityIds = source.initialize(coordinator);
+  PlayerDataSource source(m_repositories, *m_systemDbId);
+  source.initialize(coordinator, entityMapper);
 
-  m_playerEntityId = source.getPlayerEntityId();
-  if (DataLoadingMode::CLIENT == m_dataLoadingMode && !m_playerEntityId)
+  if (DataLoadingMode::CLIENT == m_dataLoadingMode
+      && !entityMapper.tryGetPlayerEntityId().has_value())
   {
     error("Failed to initialize player", "Could not find entity id for " + str(*m_playerDbId));
   }
@@ -120,20 +93,10 @@ void DataSource::initializeAsteroids(Coordinator &coordinator) const
   source.initialize(coordinator);
 }
 
-void DataSource::initializeShips(Coordinator &coordinator) const
+void DataSource::initializeShips(Coordinator &coordinator, DatabaseEntityMapper &entityMapper) const
 {
-  if (DataLoadingMode::SERVER == m_dataLoadingMode)
-  {
-    ShipDataSource source(m_repositories, *m_systemDbId, m_playerDbIdsToEntityIds);
-    source.initialize(coordinator);
-    return;
-  }
-
-  ShipDataSource source(m_repositories, *m_systemDbId, m_playerDbIdsToEntityIds, *m_playerDbId);
-  source.initialize(coordinator);
-
-  m_playerShipDbId     = source.getPlayerShipDbId();
-  m_playerShipEntityId = source.getPlayerShipEntityId();
+  ShipDataSource source(m_repositories, *m_systemDbId);
+  source.initialize(coordinator, entityMapper);
 }
 
 void DataSource::initializeOutposts(Coordinator &coordinator) const

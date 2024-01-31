@@ -50,7 +50,7 @@ void Game::setScreen(const Screen &screen)
   if (shouldUpdateCoordinatorAfterScreenTransition(m_state.screen, screen))
   {
     info("Resetting game data");
-    m_dataSource.initialize(*m_coordinator);
+    m_dataSource.initialize(*m_coordinator, m_entityMapper);
   }
 
   const auto ui = m_uiHandlers.find(screen);
@@ -295,7 +295,7 @@ void Game::initializeViews()
 
 void Game::resetViewsAndUi()
 {
-  m_dataSource.initialize(*m_coordinator);
+  m_dataSource.initialize(*m_coordinator, m_entityMapper);
 
   const auto maybePlayerDbId = m_dataSource.playerDbId();
   if (!maybePlayerDbId)
@@ -303,8 +303,8 @@ void Game::resetViewsAndUi()
     error("Failed to reset views and UI", "Expected to have a player defined");
   }
 
-  const auto playerShipDbId     = m_dataSource.playerShipDbId();
-  const auto playerShipEntityId = m_dataSource.playerShipEntityId();
+  const auto playerShipDbId     = m_entityMapper.playerShipDbId();
+  const auto playerShipEntityId = m_entityMapper.playerShipEntityId();
 
   m_views.playerView->setPlayerDbId(*maybePlayerDbId);
   m_views.playerView->setPlayerShipDbId(playerShipDbId);

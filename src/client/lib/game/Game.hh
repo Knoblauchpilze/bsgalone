@@ -5,8 +5,8 @@
 #include "Context.hh"
 #include "Controls.hh"
 #include "DataSource.hh"
+#include "DatabaseEntityMapper.hh"
 #include "IInputHandler.hh"
-#include "IMessageListener.hh"
 #include "IRenderer.hh"
 #include "IUiHandler.hh"
 #include "RenderState.hh"
@@ -16,7 +16,6 @@
 #include "Services.hh"
 #include "Views.hh"
 #include <core_utils/CoreObject.hh>
-#include <core_utils/TimeUtils.hh>
 #include <memory>
 #include <unordered_map>
 
@@ -88,11 +87,12 @@ class Game : public utils::CoreObject
   State m_state{};
 
   bsgo::DataSource m_dataSource{bsgo::DataLoadingMode::CLIENT};
+  bsgo::DatabaseEntityMapper m_entityMapper{};
   bsgo::Services m_services{};
   bsgo::CoordinatorShPtr m_coordinator{};
   ClientMessageQueuePtr m_messageQueue{};
   net::ContextPtr m_networkContext{std::make_unique<net::Context>()};
-  bsgo::Views m_views;
+  bsgo::Views m_views{};
   std::unordered_map<Screen, IRendererPtr> m_renderers{};
   std::unordered_map<Screen, IInputHandlerPtr> m_inputHandlers{};
   std::unordered_map<Screen, IUiHandlerPtr> m_uiHandlers{};

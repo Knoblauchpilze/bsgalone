@@ -4,44 +4,27 @@
 
 namespace bsgo {
 
-PlayerDataSource::PlayerDataSource(const Repositories &repositories,
-                                   const Uuid systemDbId,
-                                   const std::optional<Uuid> &playerDbId)
+PlayerDataSource::PlayerDataSource(const Repositories &repositories, const Uuid systemDbId)
   : utils::CoreObject("bsgo")
   , m_systemDbId(systemDbId)
-  , m_playerDbId(playerDbId)
   , m_repositories(repositories)
 {
   setService("data");
   addModule("player");
 }
 
-auto PlayerDataSource::getPlayerEntityId() const -> std::optional<Uuid>
-{
-  if (m_playerDbId)
-  {
-    const auto maybePlayerDbId = m_playerDbIdsToEntityIds.find(*m_playerDbId);
-    if (maybePlayerDbId != m_playerDbIdsToEntityIds.cend())
-    {
-      return maybePlayerDbId->second;
-    }
-  }
-
-  return {};
-}
-
-auto PlayerDataSource::initialize(Coordinator &coordinator) const -> PlayerDbIdsToEntityIds
+void PlayerDataSource::initialize(Coordinator &coordinator, DatabaseEntityMapper &entityMapper) const
 {
   const auto players = m_repositories.playerRepository->findAllBySystem(m_systemDbId);
   for (const auto &id : players)
   {
-    registerPlayer(coordinator, id);
+    registerPlayer(coordinator, id, entityMapper);
   }
-
-  return m_playerDbIdsToEntityIds;
 }
 
-void PlayerDataSource::registerPlayer(Coordinator &coordinator, const Uuid playerDbId) const
+void PlayerDataSource::registerPlayer(Coordinator &coordinator,
+                                      const Uuid playerDbId,
+                                      DatabaseEntityMapper &entityMapper) const
 {
   const auto playerEntityId = coordinator.createEntity(EntityKind::PLAYER);
 
@@ -52,12 +35,7 @@ void PlayerDataSource::registerPlayer(Coordinator &coordinator, const Uuid playe
   const std::unordered_set<ComponentType> toSync{ComponentType::RESOURCE};
   coordinator.addNetwork(playerEntityId, toSync);
 
-  const auto res = m_playerDbIdsToEntityIds.try_emplace(playerDbId, playerEntityId);
-  if (!res.second)
-  {
-    error("Unable to register player " + str(playerDbId),
-          "Player already is attached to entity " + str(res.first->second));
-  }
+  entityMapper.registerPlayer(playerDbId, playerEntityId);
 
   registerResources(coordinator, playerEntityId, playerDbId);
 }
