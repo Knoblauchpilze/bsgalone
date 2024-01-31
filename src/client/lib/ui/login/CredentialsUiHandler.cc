@@ -50,8 +50,8 @@ void CredentialsUiHandler::initializeMenus(const int width, const int /*height*/
 
   m_credentialsPanel = generateBlankVerticalMenu(loginPos, loginDimsPixels);
 
-  m_nameTextField     = addTextFieldSectionToMenu(*m_credentialsPanel, "Name:", "grouton");
-  m_passwordTextField = addTextFieldSectionToMenu(*m_credentialsPanel, "Password:");
+  m_nameTextField     = addTextFieldSectionToMenu(*m_credentialsPanel, "Name:", "colo");
+  m_passwordTextField = addTextFieldSectionToMenu(*m_credentialsPanel, "Password:", "aze");
 }
 
 bool CredentialsUiHandler::processUserInput(UserInputData &inputData)
