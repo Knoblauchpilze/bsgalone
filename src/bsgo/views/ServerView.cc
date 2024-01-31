@@ -9,7 +9,7 @@ ServerView::ServerView(const CoordinatorShPtr &coordinator,
   : AbstractView("server", coordinator, repositories, messageQueue)
 {}
 
-void ServerView::setPlayerDbId(const Uuid &player)
+void ServerView::setPlayerDbId(const Uuid player)
 {
   m_playerDbId = player;
 }

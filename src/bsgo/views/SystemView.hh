@@ -23,7 +23,7 @@ class SystemView : public AbstractView
   auto getOutpostsWithin(const IBoundingBox &bbox) const -> std::vector<Entity>;
   auto getBulletsWithin(const IBoundingBox &bbox) const -> std::vector<Entity>;
 
-  auto getAsteroid(const Uuid &asteroid) const -> Entity;
+  auto getAsteroid(const Uuid asteroid) const -> Entity;
 };
 
 using SystemViewShPtr = std::shared_ptr<SystemView>;

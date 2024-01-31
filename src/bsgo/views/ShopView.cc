@@ -38,7 +38,7 @@ ShopView::ShopView(const CoordinatorShPtr &coordinator,
   : AbstractView("shop", coordinator, repositories, messageQueue)
 {}
 
-void ShopView::setPlayerDbId(const Uuid &player)
+void ShopView::setPlayerDbId(const Uuid player)
 {
   m_playerDbId = player;
 }
@@ -67,14 +67,14 @@ auto ShopView::getShopItems() const -> std::vector<ShopItem>
   return out;
 }
 
-auto ShopView::canPlayerAfford(const Uuid &id, const Item &type) const -> Affordability
+auto ShopView::canPlayerAfford(const Uuid id, const Item &itemType) const -> Affordability
 {
   checkPlayerDbIdExists();
 
   AffordabilityData data{
     .playerId          = *m_playerDbId,
     .itemId            = id,
-    .itemType          = type,
+    .itemType          = itemType,
     .resourceRepo      = m_repositories.playerResourceRepository,
     .weaponPriceRepo   = m_repositories.weaponPriceRepository,
     .computerPriceRepo = m_repositories.computerPriceRepository,
@@ -96,7 +96,7 @@ void ShopView::checkPlayerDbIdExists() const
   }
 }
 
-auto ShopView::getWeaponAsShopItem(const Uuid &weaponId) const -> ShopItem
+auto ShopView::getWeaponAsShopItem(const Uuid weaponId) const -> ShopItem
 {
   ShopItem item{};
   item.weapon = m_repositories.weaponRepository->findOneById(weaponId);
@@ -111,7 +111,7 @@ auto ShopView::getWeaponAsShopItem(const Uuid &weaponId) const -> ShopItem
   return item;
 }
 
-auto ShopView::getComputerAsShopItem(const Uuid &computerId) const -> ShopItem
+auto ShopView::getComputerAsShopItem(const Uuid computerId) const -> ShopItem
 {
   ShopItem item{};
   item.computer = m_repositories.computerRepository->findOneById(computerId);

@@ -32,11 +32,11 @@ class ShopView : public AbstractView
            IMessageQueue *const messageQueue);
   ~ShopView() override = default;
 
-  void setPlayerDbId(const Uuid &player);
+  void setPlayerDbId(const Uuid player);
   bool isReady() const noexcept override;
 
   auto getShopItems() const -> std::vector<ShopItem>;
-  auto canPlayerAfford(const Uuid &id, const Item &type) const -> Affordability;
+  auto canPlayerAfford(const Uuid id, const Item &itemType) const -> Affordability;
 
   auto getAllShipsForFaction(const Faction &faction) const -> std::vector<Ship>;
 
@@ -45,8 +45,8 @@ class ShopView : public AbstractView
 
   void checkPlayerDbIdExists() const;
 
-  auto getWeaponAsShopItem(const Uuid &weaponId) const -> ShopItem;
-  auto getComputerAsShopItem(const Uuid &computerId) const -> ShopItem;
+  auto getWeaponAsShopItem(const Uuid weaponId) const -> ShopItem;
+  auto getComputerAsShopItem(const Uuid computerId) const -> ShopItem;
 };
 
 using ShopViewShPtr = std::shared_ptr<ShopView>;

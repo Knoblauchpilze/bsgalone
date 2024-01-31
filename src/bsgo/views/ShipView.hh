@@ -20,8 +20,8 @@ class ShipView : public AbstractView
            IMessageQueue *const messageQueue);
   ~ShipView() override = default;
 
-  void setPlayerShipDbId(const Uuid &ship);
-  void setPlayerShipEntityId(const Uuid &ship);
+  void setPlayerShipDbId(const Uuid ship);
+  void setPlayerShipEntityId(const Uuid ship);
 
   bool isReady() const noexcept override;
 
@@ -38,21 +38,21 @@ class ShipView : public AbstractView
   auto getWeaponsCount() const -> int;
   auto getAbilitiesCount() const -> int;
 
-  void tryActivateWeapon(const Uuid &ship, const int weaponId) const;
-  void tryActivateSlot(const Uuid &ship, const int slotId) const;
+  void tryActivateWeapon(const Uuid ship, const int weaponId) const;
+  void tryActivateSlot(const Uuid ship, const int slotId) const;
   void dockPlayerShip() const;
   void undockPlayerShip() const;
-  void setJumpSystem(const Uuid &system);
+  void setJumpSystem(const Uuid system);
   void clearJumpSystem();
   void startJump() const;
   void cancelJump() const;
 
-  void accelerateShip(const Uuid &ship, const Eigen::Vector3f &acceleration) const;
+  void accelerateShip(const Uuid ship, const Eigen::Vector3f &acceleration) const;
 
-  void tryAcquireTarget(const Uuid &ship, const Eigen::Vector3f &position) const;
+  void tryAcquireTarget(const Uuid ship, const Eigen::Vector3f &position) const;
 
-  void tryEquipItem(const Item &itemType, const bsgo::Uuid &itemDbId) const;
-  void tryUnequipItem(const Item &itemType, const bsgo::Uuid &itemDbId) const;
+  void tryEquipItem(const Item &itemType, const Uuid itemDbId) const;
+  void tryUnequipItem(const Item &itemType, const Uuid itemDbId) const;
 
   auto getPlayerShipWeapons() const -> std::vector<PlayerWeapon>;
   auto getPlayerShipComputers() const -> std::vector<PlayerComputer>;

@@ -15,8 +15,8 @@ class PlayerView : public AbstractView
              IMessageQueue *const messageQueue);
   ~PlayerView() override = default;
 
-  void setPlayerDbId(const Uuid &player);
-  void setPlayerShipDbId(const Uuid &ship);
+  void setPlayerDbId(const Uuid player);
+  void setPlayerShipDbId(const Uuid ship);
 
   bool isReady() const noexcept override;
 
@@ -27,8 +27,8 @@ class PlayerView : public AbstractView
   auto getPlayerComputers() const -> std::vector<PlayerComputer>;
   auto getPlayerShips() const -> std::vector<PlayerShip>;
 
-  void trySelectShip(const Uuid &shipDbId) const;
-  void tryPurchase(const Item &type, const Uuid &itemDbId) const;
+  void trySelectShip(const Uuid shipDbId) const;
+  void tryPurchase(const Item &type, const Uuid itemDbId) const;
 
   void tryLogin(const std::string &name, const std::string &password) const;
   void trySignup(const std::string &name, const std::string &password, const Faction &faction) const;
