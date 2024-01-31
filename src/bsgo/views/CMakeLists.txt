@@ -7,6 +7,7 @@ target_sources (bsgalone_core_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/ShopView.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SystemView.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ServerView.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/Views.cc
 	)
 
 target_include_directories (bsgalone_core_lib PUBLIC

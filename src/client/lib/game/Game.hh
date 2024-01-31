@@ -98,7 +98,6 @@ class Game : public utils::CoreObject
   std::unordered_map<Screen, IUiHandlerPtr> m_uiHandlers{};
 
   void initialize();
-  void initializeViews();
 
   void resetViewsAndUi();
 };

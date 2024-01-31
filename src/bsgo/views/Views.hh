@@ -8,6 +8,10 @@
 #include "ShopView.hh"
 #include "SystemView.hh"
 
+#include "Coordinator.hh"
+#include "IMessageQueue.hh"
+#include "Repositories.hh"
+
 namespace bsgo {
 
 struct Views
@@ -19,5 +23,9 @@ struct Views
   ServerViewShPtr serverView{};
   ResourceViewShPtr resourceView{};
 };
+
+auto createViews(const CoordinatorShPtr &coordinator,
+                 const Repositories &repositories,
+                 IMessageQueue *const messageQueue) -> Views;
 
 } // namespace bsgo
