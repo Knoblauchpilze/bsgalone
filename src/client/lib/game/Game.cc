@@ -258,8 +258,7 @@ void Game::initialize()
   m_coordinator = std::make_shared<bsgo::Coordinator>(std::move(networkSystem),
                                                       m_messageQueue.get());
   m_services    = bsgo::createServices(repositories, m_coordinator);
-
-  initializeViews();
+  m_views       = bsgo::createViews(m_coordinator, repositories, m_messageQueue.get());
 
   createMessageConsumers(*m_messageQueue, m_messageQueue.get(), m_services);
 
@@ -267,30 +266,6 @@ void Game::initialize()
   m_messageQueue->addListener(std::move(messageModule));
 
   m_networkContext->start();
-}
-
-void Game::initializeViews()
-{
-  const auto repositories = m_dataSource.repositories();
-
-  m_views.shipView     = std::make_shared<bsgo::ShipView>(m_coordinator,
-                                                      repositories,
-                                                      m_messageQueue.get());
-  m_views.systemView   = std::make_shared<bsgo::SystemView>(m_coordinator,
-                                                          repositories,
-                                                          m_messageQueue.get());
-  m_views.playerView   = std::make_shared<bsgo::PlayerView>(m_coordinator,
-                                                          repositories,
-                                                          m_messageQueue.get());
-  m_views.shopView     = std::make_shared<bsgo::ShopView>(m_coordinator,
-                                                      repositories,
-                                                      m_messageQueue.get());
-  m_views.serverView   = std::make_shared<bsgo::ServerView>(m_coordinator,
-                                                          repositories,
-                                                          m_messageQueue.get());
-  m_views.resourceView = std::make_shared<bsgo::ResourceView>(m_coordinator,
-                                                              repositories,
-                                                              m_messageQueue.get());
 }
 
 void Game::resetViewsAndUi()
