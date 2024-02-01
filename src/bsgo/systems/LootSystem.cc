@@ -45,7 +45,7 @@ void LootSystem::distributeLoot(const Entity &entity, Coordinator &coordinator) 
   }
 }
 
-void LootSystem::distributeLootTo(const Uuid &recipient,
+void LootSystem::distributeLootTo(const Uuid recipient,
                                   const Entity &deadTarget,
                                   Coordinator &coordinator) const
 {
@@ -68,7 +68,7 @@ void LootSystem::distributeLootTo(const Uuid &recipient,
 }
 
 namespace {
-auto findCorrespondingPlayerResource(const Entity &player, const Uuid &resource)
+auto findCorrespondingPlayerResource(const Entity &player, const Uuid resource)
   -> std::optional<ResourceComponentShPtr>
 {
   auto it = player.resources.begin();

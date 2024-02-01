@@ -57,7 +57,7 @@ void NetworkSystem::syncComponent(Entity &entity, const ComponentType &type) con
 }
 
 namespace {
-void syncResource(const Uuid &playerDbId,
+void syncResource(const Uuid playerDbId,
                   const ResourceComponent &comp,
                   PlayerResourceRepository &repository)
 {

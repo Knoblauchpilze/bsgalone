@@ -17,7 +17,7 @@ class LootSystem : public AbstractSystem
 
   private:
   void distributeLoot(const Entity &entity, Coordinator &coordinator) const;
-  void distributeLootTo(const Uuid &recipient,
+  void distributeLootTo(const Uuid recipient,
                         const Entity &deadTarget,
                         Coordinator &coordinator) const;
   void distributeResourcesTo(const Entity &player, const Entity &deadTarget) const;
