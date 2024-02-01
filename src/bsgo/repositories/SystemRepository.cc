@@ -83,7 +83,7 @@ auto SystemRepository::findAll() const -> std::unordered_set<Uuid>
   return out;
 }
 
-auto SystemRepository::findOneById(const Uuid &system) const -> System
+auto SystemRepository::findOneById(const Uuid system) const -> System
 {
   auto work         = m_connection->nonTransaction();
   const auto record = work.exec_prepared1(FIND_ONE_QUERY_NAME, toDbId(system));
@@ -109,8 +109,7 @@ auto SystemRepository::findOneByFactionAndStarting(const Faction &faction) const
   return fromDbId(record[0].as<int>());
 }
 
-auto SystemRepository::findAllAsteroidsBySystem(const Uuid &system) const
-  -> std::unordered_set<Uuid>
+auto SystemRepository::findAllAsteroidsBySystem(const Uuid system) const -> std::unordered_set<Uuid>
 {
   auto work       = m_connection->nonTransaction();
   const auto rows = work.exec_prepared(FIND_ASTEROIDS_QUERY_NAME, toDbId(system));
@@ -124,7 +123,7 @@ auto SystemRepository::findAllAsteroidsBySystem(const Uuid &system) const
   return out;
 }
 
-auto SystemRepository::findAllShipsBySystem(const Uuid &system) const -> std::unordered_set<Uuid>
+auto SystemRepository::findAllShipsBySystem(const Uuid system) const -> std::unordered_set<Uuid>
 {
   auto work       = m_connection->nonTransaction();
   const auto rows = work.exec_prepared(FIND_SHIPS_QUERY_NAME, toDbId(system));
@@ -138,7 +137,7 @@ auto SystemRepository::findAllShipsBySystem(const Uuid &system) const -> std::un
   return out;
 }
 
-auto SystemRepository::findAllOutpostsBySystem(const Uuid &system) const -> std::unordered_set<Uuid>
+auto SystemRepository::findAllOutpostsBySystem(const Uuid system) const -> std::unordered_set<Uuid>
 {
   auto work       = m_connection->nonTransaction();
   const auto rows = work.exec_prepared(FIND_OUTPOSTS_QUERY_NAME, toDbId(system));
@@ -152,7 +151,7 @@ auto SystemRepository::findAllOutpostsBySystem(const Uuid &system) const -> std:
   return out;
 }
 
-void SystemRepository::updateSystemForShip(const Uuid &ship, const Uuid &system, const bool docked)
+void SystemRepository::updateSystemForShip(const Uuid ship, const Uuid system, const bool docked)
 {
   auto query = [&ship, &system, docked](pqxx::work &transaction) {
     return transaction.exec_prepared0(UPDATE_SYSTEM_QUERY_NAME,
@@ -168,7 +167,7 @@ void SystemRepository::updateSystemForShip(const Uuid &ship, const Uuid &system,
   }
 }
 
-void SystemRepository::updateShipForSystem(const Uuid &currentShip, const Uuid &newShip)
+void SystemRepository::updateShipForSystem(const Uuid currentShip, const Uuid newShip)
 {
   auto query = [&currentShip, &newShip](pqxx::work &transaction) {
     return transaction.exec_prepared0(UPDATE_SHIP_QUERY_NAME, toDbId(newShip), toDbId(currentShip));

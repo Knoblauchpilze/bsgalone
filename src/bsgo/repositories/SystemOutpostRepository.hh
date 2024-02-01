@@ -33,7 +33,7 @@ class SystemOutpostRepository : public AbstractRepository
 
   void initialize() override;
 
-  auto findOneById(const Uuid &outpost) const -> SystemOutpost;
+  auto findOneById(const Uuid outpost) const -> SystemOutpost;
 };
 
 using SystemOutpostRepositoryShPtr = std::shared_ptr<SystemOutpostRepository>;

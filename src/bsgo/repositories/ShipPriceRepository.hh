@@ -16,7 +16,7 @@ class ShipPriceRepository : public AbstractRepository
 
   void initialize() override;
 
-  auto findAllByShip(const Uuid &ship) const -> std::unordered_map<Uuid, float>;
+  auto findAllByShip(const Uuid ship) const -> std::unordered_map<Uuid, float>;
 };
 
 using ShipPriceRepositoryShPtr = std::shared_ptr<ShipPriceRepository>;

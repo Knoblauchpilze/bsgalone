@@ -21,7 +21,7 @@ void AsteroidLootRepository::initialize()
 
 namespace {} // namespace
 
-auto AsteroidLootRepository::findOneById(const Uuid &asteroid) const -> AsteroidLoot
+auto AsteroidLootRepository::findOneById(const Uuid asteroid) const -> AsteroidLoot
 {
   auto work         = m_connection->nonTransaction();
   const auto record = work.exec_prepared1(FIND_ONE_QUERY_NAME, toDbId(asteroid));

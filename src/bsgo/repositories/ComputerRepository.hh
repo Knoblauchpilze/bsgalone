@@ -34,11 +34,11 @@ class ComputerRepository : public AbstractRepository
   void initialize() override;
 
   auto findAll() const -> std::unordered_set<Uuid>;
-  auto findOneById(const Uuid &computer) const -> Computer;
+  auto findOneById(const Uuid computer) const -> Computer;
 
   private:
-  auto fetchComputerBase(const Uuid &computer) const -> Computer;
-  void fetchAllowedTargets(const Uuid &computer, Computer &out) const;
+  auto fetchComputerBase(const Uuid computer) const -> Computer;
+  void fetchAllowedTargets(const Uuid computer, Computer &out) const;
 };
 
 using ComputerRepositoryShPtr = std::shared_ptr<ComputerRepository>;

@@ -129,7 +129,7 @@ void PlayerShipRepository::initialize()
   m_connection->prepare(CANCEL_SHIP_JUMP_QUERY_NAME, CANCEL_SHIP_JUMP_QUERY);
 }
 
-auto PlayerShipRepository::findOneById(const Uuid &ship) const -> PlayerShip
+auto PlayerShipRepository::findOneById(const Uuid ship) const -> PlayerShip
 {
   auto out = fetchShipBase(ship);
   fetchSlots(ship, out);
@@ -137,7 +137,7 @@ auto PlayerShipRepository::findOneById(const Uuid &ship) const -> PlayerShip
   return out;
 }
 
-auto PlayerShipRepository::findOneByPlayerAndActive(const Uuid &player) const -> PlayerShip
+auto PlayerShipRepository::findOneByPlayerAndActive(const Uuid player) const -> PlayerShip
 {
   Uuid shipId{};
 
@@ -154,7 +154,7 @@ auto PlayerShipRepository::findOneByPlayerAndActive(const Uuid &player) const ->
   return out;
 }
 
-auto PlayerShipRepository::findAllByPlayer(const Uuid &player) const -> std::unordered_set<Uuid>
+auto PlayerShipRepository::findAllByPlayer(const Uuid player) const -> std::unordered_set<Uuid>
 {
   auto work       = m_connection->nonTransaction();
   const auto rows = work.exec_prepared(FIND_ALL_QUERY_NAME, toDbId(player));
@@ -168,7 +168,7 @@ auto PlayerShipRepository::findAllByPlayer(const Uuid &player) const -> std::uno
   return out;
 }
 
-auto PlayerShipRepository::findAllAvailableWeaponSlotByShip(const Uuid &ship) -> std::set<Uuid>
+auto PlayerShipRepository::findAllAvailableWeaponSlotByShip(const Uuid ship) -> std::set<Uuid>
 {
   auto work       = m_connection->nonTransaction();
   const auto rows = work.exec_prepared(FIND_EMPTY_WEAPON_SLOTS_QUERY_NAME, toDbId(ship));
@@ -210,7 +210,7 @@ void PlayerShipRepository::save(const PlayerShip &ship)
   }
 }
 
-auto PlayerShipRepository::fetchShipBase(const Uuid &ship) const -> PlayerShip
+auto PlayerShipRepository::fetchShipBase(const Uuid ship) const -> PlayerShip
 {
   auto work         = m_connection->nonTransaction();
   const auto record = work.exec_prepared1(FIND_ONE_QUERY_NAME, toDbId(ship));
@@ -261,7 +261,7 @@ auto PlayerShipRepository::fetchShipBase(const Uuid &ship) const -> PlayerShip
   return out;
 }
 
-void PlayerShipRepository::fetchSlots(const Uuid &ship, PlayerShip &out) const
+void PlayerShipRepository::fetchSlots(const Uuid ship, PlayerShip &out) const
 {
   auto work       = m_connection->nonTransaction();
   const auto rows = work.exec_prepared(FIND_SLOTS_QUERY_NAME, toDbId(ship));
@@ -275,7 +275,7 @@ void PlayerShipRepository::fetchSlots(const Uuid &ship, PlayerShip &out) const
   }
 }
 
-void PlayerShipRepository::registerShipJump(const Uuid &ship, const Uuid &system) const
+void PlayerShipRepository::registerShipJump(const Uuid ship, const Uuid system) const
 {
   const auto query = [&ship, &system](pqxx::work &transaction) {
     return transaction.exec_prepared0(UPDATE_SHIP_JUMP_QUERY_NAME, toDbId(ship), toDbId(system));
@@ -288,7 +288,7 @@ void PlayerShipRepository::registerShipJump(const Uuid &ship, const Uuid &system
   }
 }
 
-void PlayerShipRepository::cancelShipJump(const Uuid &ship) const
+void PlayerShipRepository::cancelShipJump(const Uuid ship) const
 {
   const auto query = [&ship](pqxx::work &transaction) {
     return transaction.exec_prepared0(CANCEL_SHIP_JUMP_QUERY_NAME, toDbId(ship));

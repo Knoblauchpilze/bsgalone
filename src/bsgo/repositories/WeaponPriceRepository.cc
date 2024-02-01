@@ -21,7 +21,7 @@ void WeaponPriceRepository::initialize()
   m_connection->prepare(FIND_ALL_QUERY_NAME, FIND_ALL_QUERY);
 }
 
-auto WeaponPriceRepository::findAllByWeapon(const Uuid &weapon) const
+auto WeaponPriceRepository::findAllByWeapon(const Uuid weapon) const
   -> std::unordered_map<Uuid, float>
 {
   auto work       = m_connection->nonTransaction();

@@ -16,7 +16,7 @@ class ComputerPriceRepository : public AbstractRepository
 
   void initialize() override;
 
-  auto findAllByComputer(const Uuid &computer) const -> std::unordered_map<Uuid, float>;
+  auto findAllByComputer(const Uuid computer) const -> std::unordered_map<Uuid, float>;
 };
 
 using ComputerPriceRepositoryShPtr = std::shared_ptr<ComputerPriceRepository>;

@@ -34,7 +34,7 @@ void ShipRepository::initialize()
                         FIND_ONE_BY_STARTING_AND_FACTION_QUERY);
 }
 
-auto ShipRepository::findOneById(const Uuid &ship) const -> Ship
+auto ShipRepository::findOneById(const Uuid ship) const -> Ship
 {
   auto out = fetchShipBase(ship);
   fetchSlots(ship, out);
@@ -105,7 +105,7 @@ auto ShipRepository::findOneByFactionAndStarting(const Faction &faction,
   return findOneById(shipId);
 }
 
-auto ShipRepository::fetchShipBase(const Uuid &ship) const -> Ship
+auto ShipRepository::fetchShipBase(const Uuid ship) const -> Ship
 {
   auto work         = m_connection->nonTransaction();
   const auto record = work.exec_prepared1(FIND_ONE_QUERY_NAME, toDbId(ship));
@@ -113,7 +113,7 @@ auto ShipRepository::fetchShipBase(const Uuid &ship) const -> Ship
   return fetchShipFromSqlResult(record);
 }
 
-void ShipRepository::fetchSlots(const Uuid &ship, Ship &out) const
+void ShipRepository::fetchSlots(const Uuid ship, Ship &out) const
 {
   auto work       = m_connection->nonTransaction();
   const auto rows = work.exec_prepared(FIND_SLOTS_QUERY_NAME, toDbId(ship));

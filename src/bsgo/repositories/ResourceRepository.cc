@@ -22,7 +22,7 @@ void ResourceRepository::initialize()
   m_connection->prepare(FIND_ONE_BY_NAME_QUERY_NAME, FIND_ONE_BY_NAME_QUERY);
 }
 
-auto ResourceRepository::findOneById(const Uuid &resource) const -> Resource
+auto ResourceRepository::findOneById(const Uuid resource) const -> Resource
 {
   auto work         = m_connection->nonTransaction();
   const auto record = work.exec_prepared1(FIND_ONE_QUERY_NAME, toDbId(resource));
