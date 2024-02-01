@@ -11,11 +11,10 @@ class JumpRequestedMessage : public ValidatableMessage
 {
   public:
   JumpRequestedMessage();
-  JumpRequestedMessage(const Uuid shipDbId, const Uuid shipEntityId, const Uuid systemDbId);
+  JumpRequestedMessage(const Uuid shipDbId, const Uuid systemDbId);
   ~JumpRequestedMessage() override = default;
 
   auto getShipDbId() const -> Uuid;
-  auto getShipEntityId() const -> Uuid;
   auto getJumpSystem() const -> Uuid;
 
   auto serialize(std::ostream &out) const -> std::ostream & override;
@@ -25,7 +24,6 @@ class JumpRequestedMessage : public ValidatableMessage
 
   private:
   Uuid m_shipDbId{};
-  Uuid m_shipEntityId{};
   Uuid m_systemDbId{};
 };
 

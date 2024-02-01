@@ -3,9 +3,12 @@
 
 namespace bsgo {
 
-JumpService::JumpService(const Repositories &repositories, CoordinatorShPtr coordinator)
+JumpService::JumpService(const Repositories &repositories,
+                         CoordinatorShPtr coordinator,
+                         const DatabaseEntityMapper &entityMapper)
   : AbstractService("jump", repositories)
   , m_coordinator(std::move(coordinator))
+  , m_entityMapper(entityMapper)
 {}
 
 namespace {
@@ -42,10 +45,14 @@ bool canShipJump(const PlayerShip &ship, const Uuid newSystem)
 
 } // namespace
 
-bool JumpService::tryRegisterJump(const Uuid shipDbId,
-                                  const Uuid shipEntityId,
-                                  const Uuid system) const
+bool JumpService::tryRegisterJump(const Uuid shipDbId, const Uuid system) const
 {
+  const auto maybeShipEntity = m_entityMapper.tryGetShipEntityId(shipDbId);
+  if (!maybeShipEntity)
+  {
+    return false;
+  }
+
   auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
   if (!canShipJump(ship, system))
   {
@@ -57,7 +64,7 @@ bool JumpService::tryRegisterJump(const Uuid shipDbId,
 
   info("Registered jump to " + str(system) + " for ship " + str(shipDbId));
 
-  auto playerShip   = m_coordinator->getEntity(shipEntityId);
+  auto playerShip   = m_coordinator->getEntity(*maybeShipEntity);
   const auto status = playerShip.statusComp().status();
 
   const auto newStatus = updateStatusForJump(status);

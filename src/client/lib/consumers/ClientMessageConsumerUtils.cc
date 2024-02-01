@@ -1,6 +1,7 @@
 
 #include "ClientMessageConsumerUtils.hh"
 
+#include "JumpMessageConsumer.hh"
 #include "SlotComponentMessageConsumer.hh"
 #include "TargetMessageConsumer.hh"
 #include "VelocityMessageConsumer.hh"
@@ -15,6 +16,8 @@ void createMessageConsumers(bsgo::IMessageQueue &inputMessagesQueue,
 {
   inputMessagesQueue.addListener(
     std::make_unique<SlotComponentMessageConsumer>(entityMapper, coordinator));
+
+  inputMessagesQueue.addListener(std::make_unique<JumpMessageConsumer>(entityMapper, coordinator));
 
   auto velocity = std::make_unique<bsgo::VelocityMessageConsumer>(services, outputMessagesQueue);
   inputMessagesQueue.addListener(std::move(velocity));

@@ -197,9 +197,7 @@ void ShipView::startJump() const
 
   checkPlayerShipDbIdExists();
 
-  auto message = std::make_unique<JumpRequestedMessage>(*m_playerShipDbId,
-                                                        *m_playerShipEntityId,
-                                                        *m_systemToJumpTo);
+  auto message = std::make_unique<JumpRequestedMessage>(*m_playerShipDbId, *m_systemToJumpTo);
   m_messageQueue->pushMessage(std::move(message));
 }
 
