@@ -9,7 +9,7 @@ namespace bsgo {
 class ResourceComponent : public AbstractComponent
 {
   public:
-  ResourceComponent(const Uuid &resource, const float amount);
+  ResourceComponent(const Uuid resource, const float amount);
   ~ResourceComponent() override = default;
 
   auto resource() const -> Uuid;

@@ -7,7 +7,7 @@ TargetComponent::TargetComponent()
   : AbstractComponent(ComponentType::TARGET)
 {}
 
-TargetComponent::TargetComponent(const Uuid &target)
+TargetComponent::TargetComponent(const Uuid target)
   : AbstractComponent(ComponentType::TARGET)
   , m_target(target)
 {}
@@ -22,7 +22,7 @@ void TargetComponent::clearTarget()
   m_target.reset();
 }
 
-void TargetComponent::setTarget(const Uuid &target)
+void TargetComponent::setTarget(const Uuid target)
 {
   m_target = target;
 }
