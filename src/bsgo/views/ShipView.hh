@@ -38,8 +38,8 @@ class ShipView : public AbstractView
   auto getWeaponsCount() const -> int;
   auto getAbilitiesCount() const -> int;
 
-  void tryActivateWeapon(const Uuid ship, const int weaponId) const;
-  void tryActivateSlot(const Uuid ship, const int slotId) const;
+  void tryActivateWeapon(const int weaponId) const;
+  void tryActivateSlot(const int slotId) const;
   void dockPlayerShip() const;
   void undockPlayerShip() const;
   void setJumpSystem(const Uuid system);
@@ -47,9 +47,9 @@ class ShipView : public AbstractView
   void startJump() const;
   void cancelJump() const;
 
-  void accelerateShip(const Uuid ship, const Eigen::Vector3f &acceleration) const;
+  void accelerateShip(const Eigen::Vector3f &acceleration) const;
 
-  void tryAcquireTarget(const Uuid ship, const Eigen::Vector3f &position) const;
+  void tryAcquireTarget(const Eigen::Vector3f &position) const;
 
   void tryEquipItem(const Item &itemType, const Uuid itemDbId) const;
   void tryUnequipItem(const Item &itemType, const Uuid itemDbId) const;

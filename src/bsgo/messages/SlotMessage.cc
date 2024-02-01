@@ -9,21 +9,21 @@ SlotMessage::SlotMessage()
   : NetworkMessage(MessageType::SLOT)
 {}
 
-SlotMessage::SlotMessage(const Uuid shipEntityId, const int slotIndex, const Slot &slotType)
+SlotMessage::SlotMessage(const Uuid shipDbId, const Uuid slotDbId, const Slot &slotType)
   : NetworkMessage(MessageType::SLOT)
-  , m_shipEntityId(shipEntityId)
-  , m_slotIndex(slotIndex)
+  , m_shipDbId(shipDbId)
+  , m_slotDbId(slotDbId)
   , m_slotType(slotType)
 {}
 
-auto SlotMessage::getShipEntityId() const -> Uuid
+auto SlotMessage::getShipDbId() const -> Uuid
 {
-  return m_shipEntityId;
+  return m_shipDbId;
 }
 
-auto SlotMessage::getSlotIndex() const -> int
+auto SlotMessage::getSlotDbId() const -> Uuid
 {
-  return m_slotIndex;
+  return m_slotDbId;
 }
 
 auto SlotMessage::getSlotType() const -> Slot
@@ -36,8 +36,8 @@ auto SlotMessage::serialize(std::ostream &out) const -> std::ostream &
   utils::serialize(out, m_messageType);
   utils::serialize(out, m_clientId);
 
-  utils::serialize(out, m_shipEntityId);
-  utils::serialize(out, m_slotIndex);
+  utils::serialize(out, m_shipDbId);
+  utils::serialize(out, m_slotDbId);
   utils::serialize(out, m_slotType);
 
   return out;
@@ -49,8 +49,8 @@ bool SlotMessage::deserialize(std::istream &in)
   ok &= utils::deserialize(in, m_messageType);
   ok &= utils::deserialize(in, m_clientId);
 
-  ok &= utils::deserialize(in, m_shipEntityId);
-  ok &= utils::deserialize(in, m_slotIndex);
+  ok &= utils::deserialize(in, m_shipDbId);
+  ok &= utils::deserialize(in, m_slotDbId);
   ok &= utils::deserialize(in, m_slotType);
 
   return ok;
@@ -58,7 +58,7 @@ bool SlotMessage::deserialize(std::istream &in)
 
 auto SlotMessage::clone() const -> IMessagePtr
 {
-  auto clone = std::make_unique<SlotMessage>(m_shipEntityId, m_slotIndex, m_slotType);
+  auto clone = std::make_unique<SlotMessage>(m_shipDbId, m_slotDbId, m_slotType);
   clone->copyClientIdIfDefined(*this);
 
   return clone;

@@ -9,10 +9,12 @@ namespace pge {
 
 void createMessageConsumers(bsgo::IMessageQueue &inputMessagesQueue,
                             bsgo::IMessageQueue *const outputMessagesQueue,
-                            const bsgo::Services &services)
+                            const bsgo::Services &services,
+                            const bsgo::DatabaseEntityMapper &entityMapper,
+                            const bsgo::CoordinatorShPtr &coordinator)
 {
   inputMessagesQueue.addListener(
-    std::make_unique<SlotComponentMessageConsumer>(services, outputMessagesQueue));
+    std::make_unique<SlotComponentMessageConsumer>(entityMapper, coordinator));
 
   auto velocity = std::make_unique<bsgo::VelocityMessageConsumer>(services, outputMessagesQueue);
   inputMessagesQueue.addListener(std::move(velocity));

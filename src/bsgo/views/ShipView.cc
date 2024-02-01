@@ -143,29 +143,18 @@ auto ShipView::getAbilitiesCount() const -> int
   return getPlayerShip().computers.size();
 }
 
-void ShipView::tryActivateWeapon(const Uuid ship, const int weaponId) const
+void ShipView::tryActivateWeapon(const int weaponId) const
 {
-  const auto playerShip = getPlayerShip();
-  if (ship != playerShip.uuid)
-  {
-    error("Failed to activate weapon " + std::to_string(weaponId),
-          "Expected ship " + str(playerShip.uuid) + " but got " + str(ship));
-  }
-
-  auto message = std::make_unique<SlotMessage>(ship, weaponId, Slot::WEAPON);
+  auto message = std::make_unique<SlotMessage>(getPlayerShip().uuid, weaponId, Slot::WEAPON);
   m_messageQueue->pushMessage(std::move(message));
 }
 
-void ShipView::tryActivateSlot(const Uuid ship, const int slotId) const
+void ShipView::tryActivateSlot(const int slotId) const
 {
   const auto playerShip = getPlayerShip();
-  if (ship != playerShip.uuid)
-  {
-    error("Failed to activate slot " + std::to_string(slotId),
-          "Expected ship " + str(playerShip.uuid) + " but got " + str(ship));
-  }
+  const auto slotDbId   = playerShip.computers[slotId]->dbId();
 
-  auto message = std::make_unique<SlotMessage>(ship, slotId, Slot::COMPUTER);
+  auto message = std::make_unique<SlotMessage>(*m_playerShipDbId, slotDbId, Slot::COMPUTER);
   m_messageQueue->pushMessage(std::move(message));
 }
 
@@ -229,14 +218,14 @@ void ShipView::cancelJump() const
   m_messageQueue->pushMessage(std::move(message));
 }
 
-void ShipView::accelerateShip(const Uuid ship, const Eigen::Vector3f &acceleration) const
+void ShipView::accelerateShip(const Eigen::Vector3f &acceleration) const
 {
-  m_messageQueue->pushMessage(std::make_unique<VelocityMessage>(ship, acceleration));
+  m_messageQueue->pushMessage(std::make_unique<VelocityMessage>(getPlayerShip().uuid, acceleration));
 }
 
-void ShipView::tryAcquireTarget(const Uuid ship, const Eigen::Vector3f &position) const
+void ShipView::tryAcquireTarget(const Eigen::Vector3f &position) const
 {
-  m_messageQueue->pushMessage(std::make_unique<TargetMessage>(ship, position));
+  m_messageQueue->pushMessage(std::make_unique<TargetMessage>(getPlayerShip().uuid, position));
 }
 
 void ShipView::tryEquipItem(const Item &itemType, const Uuid itemDbId) const

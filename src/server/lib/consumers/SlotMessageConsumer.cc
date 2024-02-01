@@ -34,24 +34,24 @@ void SlotMessageConsumer::onMessageReceived(const IMessage &message)
 
 void SlotMessageConsumer::handleWeapon(const SlotMessage &message) const
 {
-  const auto shipEntityId = message.getShipEntityId();
-  const auto weaponId     = message.getSlotIndex();
+  const auto shipDbId   = message.getShipDbId();
+  const auto weaponDbId = message.getSlotDbId();
 
-  if (!m_slotService->tryToggleWeapon(shipEntityId, weaponId))
+  if (!m_slotService->tryToggleWeapon(shipDbId, weaponDbId))
   {
-    warn("Failed to process weapon slot message for ship " + str(shipEntityId));
+    warn("Failed to process weapon slot message for ship " + str(shipDbId));
     return;
   }
 }
 
 void SlotMessageConsumer::handleComputer(const SlotMessage &message) const
 {
-  const auto shipEntityId = message.getShipEntityId();
-  const auto computerId   = message.getSlotIndex();
+  const auto shipDbId     = message.getShipDbId();
+  const auto computerDbId = message.getSlotDbId();
 
-  if (!m_slotService->tryToggleComputer(shipEntityId, computerId))
+  if (!m_slotService->tryToggleComputer(shipDbId, computerDbId))
   {
-    warn("Failed to process computer slot message for ship " + str(shipEntityId));
+    warn("Failed to process computer slot message for ship " + str(shipDbId));
     return;
   }
 }

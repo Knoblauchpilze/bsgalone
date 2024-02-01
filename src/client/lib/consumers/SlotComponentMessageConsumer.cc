@@ -3,21 +3,13 @@
 
 namespace pge {
 
-SlotComponentMessageConsumer::SlotComponentMessageConsumer(const bsgo::Services &services,
-                                                           bsgo::IMessageQueue *const messageQueue)
+SlotComponentMessageConsumer::SlotComponentMessageConsumer(
+  const bsgo::DatabaseEntityMapper &entityMapper,
+  bsgo::CoordinatorShPtr coordinator)
   : bsgo::AbstractMessageConsumer("slot", {bsgo::MessageType::SLOT_COMPONENT_UPDATED})
-  , m_slotService(services.slot)
-  , m_messageQueue(messageQueue)
-{
-  if (nullptr == m_slotService)
-  {
-    throw std::invalid_argument("Expected non null slot service");
-  }
-  if (nullptr == m_messageQueue)
-  {
-    throw std::invalid_argument("Expected non null message queue");
-  }
-}
+  , m_entityMapper(entityMapper)
+  , m_coordinator(std::move(coordinator))
+{}
 
 void SlotComponentMessageConsumer::onMessageReceived(const bsgo::IMessage &message)
 {
@@ -36,16 +28,25 @@ void SlotComponentMessageConsumer::onMessageReceived(const bsgo::IMessage &messa
 void SlotComponentMessageConsumer::handleComputerSlotUpdated(
   const bsgo::SlotComponentMessage &message) const
 {
-  const auto entityId   = message.getEntityId();
-  const auto computerId = message.getSlotIndex();
+  const auto shipDbId     = message.getShipDbId();
+  const auto computerDbId = message.getSlotDbId();
 
-  const bsgo::SlotService::SlotUpdateData data{
-    .elapsedSinceLastFired = message.getElapsedSinceLastFired()};
-
-  if (!m_slotService->trySyncComputer(entityId, computerId, data))
+  const auto maybeShip = m_entityMapper.tryGetShipEntityId(shipDbId);
+  if (!maybeShip)
   {
-    warn("Failed to process computer component updated message for entity " + bsgo::str(entityId));
+    warn("Failed to process computer component updated message for ship " + bsgo::str(shipDbId));
+    return;
   }
+
+  const auto ship          = m_coordinator->getEntity(*maybeShip);
+  const auto maybeComputer = ship.tryGetComputer(computerDbId);
+  if (!maybeComputer)
+  {
+    warn("Failed to process computer component updated message for ship " + bsgo::str(shipDbId));
+    return;
+  }
+
+  (*maybeComputer)->overrideElapsedSinceLastFired(message.getElapsedSinceLastFired());
 }
 
 } // namespace pge

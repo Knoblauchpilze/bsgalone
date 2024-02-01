@@ -2,6 +2,7 @@
 #pragma once
 
 #include "Coordinator.hh"
+#include "DatabaseEntityMapper.hh"
 #include "JumpService.hh"
 #include "LockerService.hh"
 #include "LoginService.hh"
@@ -24,7 +25,8 @@ struct Services
   SlotServiceShPtr slot{};
 };
 
-auto createServices(const Repositories &repositories, const CoordinatorShPtr &coordinator)
-  -> Services;
+auto createServices(const Repositories &repositories,
+                    const CoordinatorShPtr &coordinator,
+                    const DatabaseEntityMapper &entityMapper) -> Services;
 
 } // namespace bsgo

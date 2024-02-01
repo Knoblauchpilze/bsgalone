@@ -24,10 +24,9 @@ void GameScreenInputHandler::processUserInput(const controls::State &controls,
   Motion motion{};
   motion.updateFromKeys(controls);
 
-  const auto ship = m_shipView->getPlayerShip();
-  moveShip(motion, ship.uuid);
-  handleWeapons(controls, ship.uuid);
-  handleAbilities(controls, ship.uuid);
+  moveShip(motion);
+  handleWeapons(controls);
+  handleAbilities(controls);
   handleJumpState(controls);
   keepShipCentered(frame);
 }
@@ -41,11 +40,10 @@ void GameScreenInputHandler::performAction(float x, float y, const controls::Sta
 
   const Eigen::Vector3f pos(x, y, 0.0f);
 
-  const auto ship = m_shipView->getPlayerShip();
-  m_shipView->tryAcquireTarget(ship.uuid, pos);
+  m_shipView->tryAcquireTarget(pos);
 }
 
-void GameScreenInputHandler::moveShip(const Motion &motion, const bsgo::Uuid &shipEntityId)
+void GameScreenInputHandler::moveShip(const Motion &motion)
 {
   if (!m_shipView->isReady())
   {
@@ -58,7 +56,7 @@ void GameScreenInputHandler::moveShip(const Motion &motion, const bsgo::Uuid &sh
   direction(2)              = motion.z;
   direction.normalize();
 
-  m_shipView->accelerateShip(shipEntityId, direction);
+  m_shipView->accelerateShip(direction);
 }
 
 void GameScreenInputHandler::keepShipCentered(CoordinateFrame &frame)
@@ -69,8 +67,7 @@ void GameScreenInputHandler::keepShipCentered(CoordinateFrame &frame)
   frame.moveTo(pos2d);
 }
 
-void GameScreenInputHandler::handleWeapons(const controls::State &controls,
-                                           const bsgo::Uuid &shipEntityId)
+void GameScreenInputHandler::handleWeapons(const controls::State &controls)
 {
   const auto weaponsCount = m_shipView->getWeaponsCount();
 
@@ -78,44 +75,43 @@ void GameScreenInputHandler::handleWeapons(const controls::State &controls,
   {
     for (auto id = 0; id < weaponsCount; ++id)
     {
-      m_shipView->tryActivateWeapon(shipEntityId, id);
+      m_shipView->tryActivateWeapon(id);
     }
     return;
   }
 
   if (controls.released(controls::keys::K1) && weaponsCount > 0)
   {
-    m_shipView->tryActivateWeapon(shipEntityId, 0);
+    m_shipView->tryActivateWeapon(0);
   }
   if (controls.released(controls::keys::K2) && weaponsCount > 1)
   {
-    m_shipView->tryActivateWeapon(shipEntityId, 1);
+    m_shipView->tryActivateWeapon(1);
   }
   if (controls.released(controls::keys::K3) && weaponsCount > 2)
   {
-    m_shipView->tryActivateWeapon(shipEntityId, 2);
+    m_shipView->tryActivateWeapon(2);
   }
 }
 
-void GameScreenInputHandler::handleAbilities(const controls::State &controls,
-                                             const bsgo::Uuid &shipEntityId)
+void GameScreenInputHandler::handleAbilities(const controls::State &controls)
 {
   const auto abilitiesCount = m_shipView->getAbilitiesCount();
   if (controls.released(controls::keys::W) && abilitiesCount > 0)
   {
-    m_shipView->tryActivateSlot(shipEntityId, 0);
+    m_shipView->tryActivateSlot(0);
   }
   if (controls.released(controls::keys::X) && abilitiesCount > 1)
   {
-    m_shipView->tryActivateSlot(shipEntityId, 1);
+    m_shipView->tryActivateSlot(1);
   }
   if (controls.released(controls::keys::C) && abilitiesCount > 2)
   {
-    m_shipView->tryActivateSlot(shipEntityId, 2);
+    m_shipView->tryActivateSlot(2);
   }
   if (controls.released(controls::keys::V) && abilitiesCount > 3)
   {
-    m_shipView->tryActivateSlot(shipEntityId, 3);
+    m_shipView->tryActivateSlot(3);
   }
 }
 

@@ -104,7 +104,6 @@ void AbilitiesUiHandler::generateComputersMenus(int width, int height)
 void AbilitiesUiHandler::initializeAbilities()
 {
   const auto ship           = m_shipView->getPlayerShip();
-  const auto shipId         = ship.uuid;
   const auto computersCount = ship.computers.size();
   if (computersCount > NUMBER_OF_ABILITIES)
   {
@@ -121,12 +120,12 @@ void AbilitiesUiHandler::initializeAbilities()
   {
     auto &menu = m_computers[id];
 
-    menu->setClickCallback([this, shipId, id]() {
+    menu->setClickCallback([this, id]() {
       if (!m_shipView->isReady())
       {
         return;
       }
-      m_shipView->tryActivateSlot(shipId, id);
+      m_shipView->tryActivateSlot(id);
     });
     menu->setEnabled(true);
 

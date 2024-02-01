@@ -1,7 +1,6 @@
 
 #include "SystemProcessor.hh"
 #include "DataSource.hh"
-#include "DatabaseEntityMapper.hh"
 #include "MessageConsumerSetup.hh"
 #include "NetworkSystem.hh"
 
@@ -55,12 +54,11 @@ void SystemProcessor::initialize(const SystemProcessingConfig &config)
   auto networkSystem = std::make_unique<NetworkSystem>(repositories);
   m_coordinator = std::make_shared<Coordinator>(std::move(networkSystem), config.outputMessageQueue);
 
-  m_services = createServices(repositories, m_coordinator);
-  createMessageConsumers(*m_inputMessagesQueue, config.outputMessageQueue, m_services);
-
   dataSource.setSystemDbId(m_systemDbId);
-  DatabaseEntityMapper mapper{};
-  dataSource.initialize(*m_coordinator, mapper);
+  dataSource.initialize(*m_coordinator, m_entityMapper);
+
+  m_services = createServices(repositories, m_coordinator, m_entityMapper);
+  createMessageConsumers(*m_inputMessagesQueue, config.outputMessageQueue, m_services);
 }
 
 void SystemProcessor::asyncSystemProcessing()
