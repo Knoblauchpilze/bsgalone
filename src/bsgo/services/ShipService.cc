@@ -8,7 +8,7 @@ ShipService::ShipService(const Repositories &repositories, CoordinatorShPtr coor
   , m_coordinator(std::move(coordinator))
 {}
 
-bool ShipService::trySelectShip(const Uuid &shipDbId) const
+bool ShipService::trySelectShip(const Uuid shipDbId) const
 {
   const auto newActiveShip = m_repositories.playerShipRepository->findOneById(shipDbId);
   if (!newActiveShip.player)
@@ -38,7 +38,7 @@ bool ShipService::trySelectShip(const Uuid &shipDbId) const
   return true;
 }
 
-bool ShipService::tryDock(const Uuid &shipDbId, const Uuid &shipEntityId) const
+bool ShipService::tryDock(const Uuid shipDbId, const Uuid shipEntityId) const
 {
   auto shipEntity  = m_coordinator->getEntity(shipEntityId);
   auto &statusComp = shipEntity.statusComp();
@@ -56,7 +56,7 @@ bool ShipService::tryDock(const Uuid &shipDbId, const Uuid &shipEntityId) const
   return true;
 }
 
-bool ShipService::tryUndock(const Uuid &shipDbId, const Uuid &shipEntityId) const
+bool ShipService::tryUndock(const Uuid shipDbId, const Uuid shipEntityId) const
 {
   auto shipEntity  = m_coordinator->getEntity(shipEntityId);
   auto &statusComp = shipEntity.statusComp();
@@ -75,7 +75,7 @@ bool ShipService::tryUndock(const Uuid &shipDbId, const Uuid &shipEntityId) cons
   return true;
 }
 
-bool ShipService::accelerateShip(const Uuid &shipEntityId, const Eigen::Vector3f &acceleration) const
+bool ShipService::accelerateShip(const Uuid shipEntityId, const Eigen::Vector3f &acceleration) const
 {
   auto shipEntity = m_coordinator->getEntity(shipEntityId);
 
@@ -90,7 +90,7 @@ bool ShipService::accelerateShip(const Uuid &shipEntityId, const Eigen::Vector3f
   return true;
 }
 
-void ShipService::tryAcquireTarget(const Uuid &shipEntityId, const Eigen::Vector3f &position) const
+void ShipService::tryAcquireTarget(const Uuid shipEntityId, const Eigen::Vector3f &position) const
 {
   auto ship          = m_coordinator->getEntity(shipEntityId);
   auto maybeTargetId = m_coordinator->getEntityAt(position);

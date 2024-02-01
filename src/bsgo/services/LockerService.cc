@@ -78,7 +78,7 @@ bool LockerService::tryUnequip(const LockerItemData &item) const
   return true;
 }
 
-bool LockerService::verifySlotAvailability(const Uuid &shipDbId, const Item &type) const
+bool LockerService::verifySlotAvailability(const Uuid shipDbId, const Item &type) const
 {
   EquipData data{.shipId           = shipDbId,
                  .shipWeaponRepo   = m_repositories.shipWeaponRepository,
@@ -99,8 +99,8 @@ bool LockerService::verifySlotAvailability(const Uuid &shipDbId, const Item &typ
   return false;
 }
 
-bool LockerService::verifyItemBelongsToPlayer(const Uuid &playerDbId,
-                                              const Uuid &itemId,
+bool LockerService::verifyItemBelongsToPlayer(const Uuid playerDbId,
+                                              const Uuid itemId,
                                               const Item &type) const
 {
   bool belong{false};
@@ -119,8 +119,8 @@ bool LockerService::verifyItemBelongsToPlayer(const Uuid &playerDbId,
   return belong;
 }
 
-bool LockerService::verifyItemIsEquiped(const Uuid &shipDbId,
-                                        const Uuid &itemId,
+bool LockerService::verifyItemIsEquiped(const Uuid shipDbId,
+                                        const Uuid itemId,
                                         const Item &type) const
 {
   bool equiped{false};
@@ -141,7 +141,7 @@ bool LockerService::verifyItemIsEquiped(const Uuid &shipDbId,
   return equiped;
 }
 
-bool LockerService::verifyItemIsNotEquiped(const Uuid &itemId, const Item &type) const
+bool LockerService::verifyItemIsNotEquiped(const Uuid itemId, const Item &type) const
 {
   bool equiped{true};
 
@@ -160,7 +160,7 @@ bool LockerService::verifyItemIsNotEquiped(const Uuid &itemId, const Item &type)
   return !equiped;
 }
 
-void LockerService::tryEquipWeapon(const Uuid &shipDbId, const Uuid &weaponId) const
+void LockerService::tryEquipWeapon(const Uuid shipDbId, const Uuid weaponId) const
 {
   const auto slots = m_repositories.playerShipRepository->findAllAvailableWeaponSlotByShip(shipDbId);
   if (slots.empty())
@@ -174,20 +174,20 @@ void LockerService::tryEquipWeapon(const Uuid &shipDbId, const Uuid &weaponId) c
   m_repositories.shipWeaponRepository->save(weapon);
 }
 
-void LockerService::tryEquipComputer(const Uuid &shipDbId, const Uuid &computerId) const
+void LockerService::tryEquipComputer(const Uuid shipDbId, const Uuid computerId) const
 {
   debug("Installing computer " + str(computerId) + " for ship " + str(shipDbId));
   m_repositories.shipComputerRepository->save(shipDbId, computerId);
 }
 
-void LockerService::tryUnequipWeapon(const Uuid &shipDbId, const Uuid &weaponId) const
+void LockerService::tryUnequipWeapon(const Uuid shipDbId, const Uuid weaponId) const
 {
   const auto data = m_repositories.shipWeaponRepository->findOneByShipAndWeapon(shipDbId, weaponId);
   debug("Uninstalling weapon " + str(data->weapon) + " from slot " + str(data->slot));
   m_repositories.shipWeaponRepository->deleteByShipAndSlot(*data);
 }
 
-void LockerService::tryUnequipComputer(const Uuid &shipDbId, const Uuid &computerId) const
+void LockerService::tryUnequipComputer(const Uuid shipDbId, const Uuid computerId) const
 {
   debug("Uninstalling computer " + str(computerId) + " from ship " + str(shipDbId));
   m_repositories.shipComputerRepository->deleteByShipAndId(shipDbId, computerId);

@@ -8,7 +8,7 @@ PurchaseService::PurchaseService(const Repositories &repositories)
   : AbstractService("purchase", repositories)
 {}
 
-bool PurchaseService::tryPurchase(const Uuid &playerId, const Uuid &itemId, const Item &type) const
+bool PurchaseService::tryPurchase(const Uuid playerId, const Uuid itemId, const Item &type) const
 {
   if (!verifyAffordability(playerId, itemId, type))
   {
@@ -38,8 +38,8 @@ bool PurchaseService::tryPurchase(const Uuid &playerId, const Uuid &itemId, cons
   return true;
 }
 
-bool PurchaseService::verifyAffordability(const Uuid &playerId,
-                                          const Uuid &itemId,
+bool PurchaseService::verifyAffordability(const Uuid playerId,
+                                          const Uuid itemId,
                                           const Item &type) const
 {
   AffordabilityData data{
@@ -56,8 +56,8 @@ bool PurchaseService::verifyAffordability(const Uuid &playerId,
   return affordability.canAfford;
 }
 
-bool PurchaseService::verifyPreconditions(const Uuid &playerId,
-                                          const Uuid &itemId,
+bool PurchaseService::verifyPreconditions(const Uuid playerId,
+                                          const Uuid itemId,
                                           const Item &type) const
 {
   if (Item::SHIP == type)
@@ -76,7 +76,7 @@ bool PurchaseService::verifyPreconditions(const Uuid &playerId,
   return true;
 }
 
-void PurchaseService::tryPurchaseWeapon(const Uuid &playerId, const Uuid &weaponId) const
+void PurchaseService::tryPurchaseWeapon(const Uuid playerId, const Uuid weaponId) const
 {
   const auto costs = m_repositories.weaponPriceRepository->findAllByWeapon(weaponId);
   debitResources(playerId, costs);
@@ -88,7 +88,7 @@ void PurchaseService::tryPurchaseWeapon(const Uuid &playerId, const Uuid &weapon
   m_repositories.playerWeaponRepository->save(weapon);
 }
 
-void PurchaseService::tryPurchaseComputer(const Uuid &playerId, const Uuid &computerId) const
+void PurchaseService::tryPurchaseComputer(const Uuid playerId, const Uuid computerId) const
 {
   const auto costs = m_repositories.computerPriceRepository->findAllByComputer(computerId);
   debitResources(playerId, costs);
@@ -100,7 +100,7 @@ void PurchaseService::tryPurchaseComputer(const Uuid &playerId, const Uuid &comp
   m_repositories.playerComputerRepository->save(computer);
 }
 
-void PurchaseService::tryPurchaseShip(const Uuid &playerId, const Uuid &shipId) const
+void PurchaseService::tryPurchaseShip(const Uuid playerId, const Uuid shipId) const
 {
   const auto costs = m_repositories.shipPriceRepository->findAllByShip(shipId);
   debitResources(playerId, costs);
@@ -122,7 +122,7 @@ void PurchaseService::tryPurchaseShip(const Uuid &playerId, const Uuid &shipId) 
 }
 
 namespace {
-auto findExistingAmount(const std::vector<PlayerResource> &resources, const Uuid &toFind)
+auto findExistingAmount(const std::vector<PlayerResource> &resources, const Uuid toFind)
   -> std::optional<float>
 {
   for (const auto &resource : resources)
@@ -137,7 +137,7 @@ auto findExistingAmount(const std::vector<PlayerResource> &resources, const Uuid
 }
 } // namespace
 
-void PurchaseService::debitResources(const Uuid &playerId,
+void PurchaseService::debitResources(const Uuid playerId,
                                      const std::unordered_map<Uuid, float> &costs) const
 {
   const auto funds = m_repositories.playerResourceRepository->findAllByPlayer(playerId);
