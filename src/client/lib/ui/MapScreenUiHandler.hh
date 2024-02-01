@@ -41,7 +41,7 @@ class MapScreenUiHandler : public IUiHandler
                              const Vec2i &mapOffset,
                              const Vec2i &mapDims);
 
-  void onSystemSelected(const bsgo::Uuid &systemId, const int labelId);
+  void onSystemSelected(const bsgo::Uuid systemId, const int labelId);
   void onJumpRequested();
 };
 

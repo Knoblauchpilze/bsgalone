@@ -186,7 +186,7 @@ namespace {
 constexpr auto BUY_SHIP_BUTTON_TEXT = "Purchase";
 constexpr auto USE_SHIP_BUTTON_TEXT = "Select";
 
-auto getPlayerShipWithId(const std::vector<bsgo::PlayerShip> &ships, const bsgo::Uuid &shipId)
+auto getPlayerShipWithId(const std::vector<bsgo::PlayerShip> &ships, const bsgo::Uuid shipId)
   -> std::optional<bsgo::PlayerShip>
 {
   for (const auto &ship : ships)

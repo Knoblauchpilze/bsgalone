@@ -205,7 +205,7 @@ void MapScreenUiHandler::generateSystemButtons(const bsgo::System &system,
   m_buttons.push_back(std::move(label));
 }
 
-void MapScreenUiHandler::onSystemSelected(const bsgo::Uuid &systemId, const int labelId)
+void MapScreenUiHandler::onSystemSelected(const bsgo::Uuid systemId, const int labelId)
 {
   if (!m_serverView->isReady())
   {
