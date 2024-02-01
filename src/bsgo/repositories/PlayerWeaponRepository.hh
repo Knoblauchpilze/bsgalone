@@ -37,8 +37,8 @@ class PlayerWeaponRepository : public AbstractRepository
 
   void initialize() override;
 
-  auto findOneById(const Uuid &weapon) const -> PlayerWeapon;
-  auto findAllByPlayer(const Uuid &player) const -> std::unordered_set<Uuid>;
+  auto findOneById(const Uuid weapon) const -> PlayerWeapon;
+  auto findAllByPlayer(const Uuid player) const -> std::unordered_set<Uuid>;
 
   void save(const PlayerWeapon &weapon);
 };

@@ -57,18 +57,18 @@ class PlayerShipRepository : public AbstractRepository
 
   void initialize() override;
 
-  auto findOneById(const Uuid &ship) const -> PlayerShip;
-  auto findOneByPlayerAndActive(const Uuid &player) const -> PlayerShip;
-  auto findAllByPlayer(const Uuid &player) const -> std::unordered_set<Uuid>;
-  auto findAllAvailableWeaponSlotByShip(const Uuid &ship) -> std::set<Uuid>;
+  auto findOneById(const Uuid ship) const -> PlayerShip;
+  auto findOneByPlayerAndActive(const Uuid player) const -> PlayerShip;
+  auto findAllByPlayer(const Uuid player) const -> std::unordered_set<Uuid>;
+  auto findAllAvailableWeaponSlotByShip(const Uuid ship) -> std::set<Uuid>;
 
   void save(const PlayerShip &ship);
 
   private:
-  auto fetchShipBase(const Uuid &ship) const -> PlayerShip;
-  void fetchSlots(const Uuid &ship, PlayerShip &out) const;
-  void registerShipJump(const Uuid &ship, const Uuid &system) const;
-  void cancelShipJump(const Uuid &ship) const;
+  auto fetchShipBase(const Uuid ship) const -> PlayerShip;
+  void fetchSlots(const Uuid ship, PlayerShip &out) const;
+  void registerShipJump(const Uuid ship, const Uuid system) const;
+  void cancelShipJump(const Uuid ship) const;
 };
 
 using PlayerShipRepositoryShPtr = std::shared_ptr<PlayerShipRepository>;

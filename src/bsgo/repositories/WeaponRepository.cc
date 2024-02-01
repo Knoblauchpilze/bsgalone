@@ -37,7 +37,7 @@ auto WeaponRepository::findAll() const -> std::unordered_set<Uuid>
   return out;
 }
 
-auto WeaponRepository::findOneById(const Uuid &weapon) const -> Weapon
+auto WeaponRepository::findOneById(const Uuid weapon) const -> Weapon
 {
   auto work         = m_connection->nonTransaction();
   const auto record = work.exec_prepared1(FIND_ONE_QUERY_NAME, toDbId(weapon));

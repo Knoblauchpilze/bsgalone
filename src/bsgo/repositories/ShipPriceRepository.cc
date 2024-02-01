@@ -19,7 +19,7 @@ void ShipPriceRepository::initialize()
   m_connection->prepare(FIND_ALL_QUERY_NAME, FIND_ALL_QUERY);
 }
 
-auto ShipPriceRepository::findAllByShip(const Uuid &ship) const -> std::unordered_map<Uuid, float>
+auto ShipPriceRepository::findAllByShip(const Uuid ship) const -> std::unordered_map<Uuid, float>
 {
   auto work       = m_connection->nonTransaction();
   const auto rows = work.exec_prepared(FIND_ALL_QUERY_NAME, toDbId(ship));

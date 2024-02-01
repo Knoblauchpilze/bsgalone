@@ -22,7 +22,7 @@ class ResourceRepository : public AbstractRepository
 
   void initialize() override;
 
-  auto findOneById(const Uuid &resource) const -> Resource;
+  auto findOneById(const Uuid resource) const -> Resource;
   auto findOneByName(const std::string &name) const -> std::optional<Resource>;
 };
 

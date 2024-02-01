@@ -34,7 +34,7 @@ void PlayerResourceRepository::initialize()
   m_connection->prepare(UPDATE_RESOURCE_QUERY_NAME, UPDATE_RESOURCE_QUERY);
 }
 
-auto PlayerResourceRepository::findAllByPlayer(const Uuid &player) const
+auto PlayerResourceRepository::findAllByPlayer(const Uuid player) const
   -> std::vector<PlayerResource>
 {
   auto work       = m_connection->nonTransaction();

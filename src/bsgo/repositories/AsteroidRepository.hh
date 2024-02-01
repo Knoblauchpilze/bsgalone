@@ -26,11 +26,11 @@ class AsteroidRepository : public AbstractRepository
 
   void initialize() override;
 
-  auto findOneById(const Uuid &asteroid) const -> Asteroid;
+  auto findOneById(const Uuid asteroid) const -> Asteroid;
 
   private:
-  auto fetchAsteroidBase(const Uuid &asteroid) const -> Asteroid;
-  void fetchLoot(const Uuid &asteroid, Asteroid &out) const;
+  auto fetchAsteroidBase(const Uuid asteroid) const -> Asteroid;
+  void fetchLoot(const Uuid asteroid, Asteroid &out) const;
 };
 
 using AsteroidRepositoryShPtr = std::shared_ptr<AsteroidRepository>;

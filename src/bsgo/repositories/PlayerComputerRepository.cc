@@ -36,7 +36,7 @@ void PlayerComputerRepository::initialize()
   m_connection->prepare(UPDATE_COMPUTER_QUERY_NAME, UPDATE_COMPUTER_QUERY);
 }
 
-auto PlayerComputerRepository::findOneById(const Uuid &computer) const -> PlayerComputer
+auto PlayerComputerRepository::findOneById(const Uuid computer) const -> PlayerComputer
 {
   auto out = fetchComputerBase(computer);
   fetchAllowedTargets(computer, out);
@@ -44,7 +44,7 @@ auto PlayerComputerRepository::findOneById(const Uuid &computer) const -> Player
   return out;
 }
 
-auto PlayerComputerRepository::findAllByPlayer(const Uuid &player) const -> std::unordered_set<Uuid>
+auto PlayerComputerRepository::findAllByPlayer(const Uuid player) const -> std::unordered_set<Uuid>
 {
   auto work       = m_connection->nonTransaction();
   const auto rows = work.exec_prepared(FIND_ALL_QUERY_NAME, toDbId(player));
@@ -73,7 +73,7 @@ void PlayerComputerRepository::save(const PlayerComputer &computer)
   }
 }
 
-auto PlayerComputerRepository::fetchComputerBase(const Uuid &computer) const -> PlayerComputer
+auto PlayerComputerRepository::fetchComputerBase(const Uuid computer) const -> PlayerComputer
 {
   auto work         = m_connection->nonTransaction();
   const auto record = work.exec_prepared1(FIND_ONE_QUERY_NAME, toDbId(computer));
@@ -104,7 +104,7 @@ auto PlayerComputerRepository::fetchComputerBase(const Uuid &computer) const -> 
   return out;
 }
 
-void PlayerComputerRepository::fetchAllowedTargets(const Uuid &computer, PlayerComputer &out) const
+void PlayerComputerRepository::fetchAllowedTargets(const Uuid computer, PlayerComputer &out) const
 {
   auto work       = m_connection->nonTransaction();
   const auto rows = work.exec_prepared(FIND_ALLOWED_TARGETS_QUERY_NAME, toDbId(computer));

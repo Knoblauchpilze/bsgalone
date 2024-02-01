@@ -33,7 +33,7 @@ class WeaponRepository : public AbstractRepository
   void initialize() override;
 
   auto findAll() const -> std::unordered_set<Uuid>;
-  auto findOneById(const Uuid &weapon) const -> Weapon;
+  auto findOneById(const Uuid weapon) const -> Weapon;
 };
 
 using WeaponRepositoryShPtr = std::shared_ptr<WeaponRepository>;

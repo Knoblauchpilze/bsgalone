@@ -16,12 +16,12 @@ class ShipComputerRepository : public AbstractRepository
 
   void initialize() override;
 
-  bool existByShipAndComputer(const Uuid &ship, const Uuid &computer) const;
-  bool existByComputer(const Uuid &computer) const;
-  auto findAllByShip(const Uuid &ship) const -> std::unordered_set<Uuid>;
+  bool existByShipAndComputer(const Uuid ship, const Uuid computer) const;
+  bool existByComputer(const Uuid computer) const;
+  auto findAllByShip(const Uuid ship) const -> std::unordered_set<Uuid>;
 
-  void save(const Uuid &ship, const Uuid &computer);
-  void deleteByShipAndId(const Uuid &ship, const Uuid &computer);
+  void save(const Uuid ship, const Uuid computer);
+  void deleteByShipAndId(const Uuid ship, const Uuid computer);
 };
 
 using ShipComputerRepositoryShPtr = std::shared_ptr<ShipComputerRepository>;

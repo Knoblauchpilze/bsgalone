@@ -24,7 +24,7 @@ class PlayerResourceRepository : public AbstractRepository
 
   void initialize() override;
 
-  auto findAllByPlayer(const Uuid &player) const -> std::vector<PlayerResource>;
+  auto findAllByPlayer(const Uuid player) const -> std::vector<PlayerResource>;
 
   void save(const PlayerResource &resource);
 };

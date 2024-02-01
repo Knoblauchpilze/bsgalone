@@ -26,15 +26,15 @@ class SystemRepository : public AbstractRepository
   void initialize() override;
 
   auto findAll() const -> std::unordered_set<Uuid>;
-  auto findOneById(const Uuid &system) const -> System;
+  auto findOneById(const Uuid system) const -> System;
   auto findOneByFactionAndStarting(const Faction &faction) const -> Uuid;
 
-  auto findAllAsteroidsBySystem(const Uuid &system) const -> std::unordered_set<Uuid>;
-  auto findAllShipsBySystem(const Uuid &system) const -> std::unordered_set<Uuid>;
-  auto findAllOutpostsBySystem(const Uuid &system) const -> std::unordered_set<Uuid>;
+  auto findAllAsteroidsBySystem(const Uuid system) const -> std::unordered_set<Uuid>;
+  auto findAllShipsBySystem(const Uuid system) const -> std::unordered_set<Uuid>;
+  auto findAllOutpostsBySystem(const Uuid system) const -> std::unordered_set<Uuid>;
 
-  void updateSystemForShip(const Uuid &ship, const Uuid &system, const bool docked);
-  void updateShipForSystem(const Uuid &currentShip, const Uuid &newShip);
+  void updateSystemForShip(const Uuid ship, const Uuid system, const bool docked);
+  void updateShipForSystem(const Uuid currentShip, const Uuid newShip);
 };
 
 using SystemRepositoryShPtr = std::shared_ptr<SystemRepository>;

@@ -43,13 +43,13 @@ class ShipRepository : public AbstractRepository
 
   void initialize() override;
 
-  auto findOneById(const Uuid &ship) const -> Ship;
+  auto findOneById(const Uuid ship) const -> Ship;
   auto findAllByFaction(const Faction &faction) -> std::vector<Ship>;
   auto findOneByFactionAndStarting(const Faction &faction, const bool startingShip) const -> Ship;
 
   private:
-  auto fetchShipBase(const Uuid &ship) const -> Ship;
-  void fetchSlots(const Uuid &ship, Ship &out) const;
+  auto fetchShipBase(const Uuid ship) const -> Ship;
+  void fetchSlots(const Uuid ship, Ship &out) const;
 };
 
 using ShipRepositoryShPtr = std::shared_ptr<ShipRepository>;

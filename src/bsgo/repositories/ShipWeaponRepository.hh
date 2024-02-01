@@ -26,10 +26,10 @@ class ShipWeaponRepository : public AbstractRepository
 
   void initialize() override;
 
-  auto findOneByShipAndWeapon(const Uuid &ship, const Uuid &weapon) const
+  auto findOneByShipAndWeapon(const Uuid ship, const Uuid weapon) const
     -> std::optional<ShipWeapon>;
-  auto findOneByWeapon(const Uuid &weapon) const -> std::optional<ShipWeapon>;
-  auto findAllByShip(const Uuid &ship) const -> std::vector<ShipWeapon>;
+  auto findOneByWeapon(const Uuid weapon) const -> std::optional<ShipWeapon>;
+  auto findAllByShip(const Uuid ship) const -> std::vector<ShipWeapon>;
 
   void save(const ShipWeapon &weapon);
   void deleteByShipAndSlot(const ShipWeapon &weapon);

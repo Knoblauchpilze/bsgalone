@@ -19,7 +19,7 @@ void ComputerPriceRepository::initialize()
   m_connection->prepare(FIND_ALL_QUERY_NAME, FIND_ALL_QUERY);
 }
 
-auto ComputerPriceRepository::findAllByComputer(const Uuid &computer) const
+auto ComputerPriceRepository::findAllByComputer(const Uuid computer) const
   -> std::unordered_map<Uuid, float>
 {
   auto work       = m_connection->nonTransaction();
