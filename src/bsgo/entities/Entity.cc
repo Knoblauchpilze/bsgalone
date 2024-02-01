@@ -316,4 +316,31 @@ auto Entity::networkComp() -> NetworkComponent &
   return details::safeAccess(network, *this, "Network");
 }
 
+namespace {
+template<typename T>
+auto tryLocate(const std::vector<T> &elements, const Uuid dbId) -> std::optional<T>
+{
+  for (const auto &element : elements)
+  {
+    if (element->dbId() == dbId)
+    {
+      return element;
+    }
+  }
+
+  return {};
+}
+} // namespace
+
+auto Entity::tryGetWeapon(const Uuid weaponDbId) const -> std::optional<WeaponSlotComponentShPtr>
+{
+  return tryLocate(weapons, weaponDbId);
+}
+
+auto Entity::tryGetComputer(const Uuid computerDbId) const
+  -> std::optional<ComputerSlotComponentShPtr>
+{
+  return tryLocate(computers, computerDbId);
+}
+
 } // namespace bsgo
