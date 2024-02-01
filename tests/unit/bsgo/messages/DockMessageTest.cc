@@ -9,7 +9,7 @@ namespace bsgo {
 namespace {
 auto generateMessage(const bool docking, const bool validated) -> DockMessage
 {
-  DockMessage message(Uuid{1}, Uuid{2}, docking);
+  DockMessage message(Uuid{1}, docking);
   message.validate(validated);
   return message;
 }
@@ -18,7 +18,6 @@ auto assertMessagesAreEqual(const DockMessage &actual, const DockMessage &expect
 {
   EXPECT_EQ(actual.type(), expected.type());
   EXPECT_EQ(actual.getShipDbId(), expected.getShipDbId());
-  EXPECT_EQ(actual.getShipEntityId(), expected.getShipEntityId());
   EXPECT_EQ(actual.isDocking(), expected.isDocking());
   EXPECT_EQ(actual.tryGetClientId(), expected.tryGetClientId());
   EXPECT_EQ(actual.validated(), expected.validated());

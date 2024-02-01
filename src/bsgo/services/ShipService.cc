@@ -3,9 +3,12 @@
 
 namespace bsgo {
 
-ShipService::ShipService(const Repositories &repositories, CoordinatorShPtr coordinator)
+ShipService::ShipService(const Repositories &repositories,
+                         CoordinatorShPtr coordinator,
+                         const DatabaseEntityMapper &entityMapper)
   : AbstractService("ship", repositories)
   , m_coordinator(std::move(coordinator))
+  , m_entityMapper(entityMapper)
 {}
 
 bool ShipService::trySelectShip(const Uuid shipDbId) const
@@ -38,9 +41,15 @@ bool ShipService::trySelectShip(const Uuid shipDbId) const
   return true;
 }
 
-bool ShipService::tryDock(const Uuid shipDbId, const Uuid shipEntityId) const
+bool ShipService::tryDock(const Uuid shipDbId) const
 {
-  auto shipEntity  = m_coordinator->getEntity(shipEntityId);
+  const auto maybeEntityId = m_entityMapper.tryGetShipEntityId(shipDbId);
+  if (!maybeEntityId)
+  {
+    return false;
+  }
+
+  auto shipEntity  = m_coordinator->getEntity(*maybeEntityId);
   auto &statusComp = shipEntity.statusComp();
 
   if (Status::DOCKED == statusComp.status())
@@ -56,9 +65,15 @@ bool ShipService::tryDock(const Uuid shipDbId, const Uuid shipEntityId) const
   return true;
 }
 
-bool ShipService::tryUndock(const Uuid shipDbId, const Uuid shipEntityId) const
+bool ShipService::tryUndock(const Uuid shipDbId) const
 {
-  auto shipEntity  = m_coordinator->getEntity(shipEntityId);
+  const auto maybeEntityId = m_entityMapper.tryGetShipEntityId(shipDbId);
+  if (!maybeEntityId)
+  {
+    return false;
+  }
+
+  auto shipEntity  = m_coordinator->getEntity(*maybeEntityId);
   auto &statusComp = shipEntity.statusComp();
 
   if (statusComp.status() != Status::DOCKED)
