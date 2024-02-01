@@ -96,6 +96,9 @@ struct Entity
   auto statusComp() -> StatusComponent &;
   auto aiComp() -> AIComponent &;
   auto networkComp() -> NetworkComponent &;
+
+  auto tryGetWeapon(const Uuid weaponDbId) const -> std::optional<WeaponSlotComponentShPtr>;
+  auto tryGetComputer(const Uuid computerDbId) const -> std::optional<ComputerSlotComponentShPtr>;
 };
 
 } // namespace bsgo
