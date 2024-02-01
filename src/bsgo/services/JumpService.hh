@@ -13,9 +13,9 @@ class JumpService : public AbstractService
   JumpService(const Repositories &repositories, CoordinatorShPtr coordinator);
   ~JumpService() override = default;
 
-  bool tryRegisterJump(const Uuid &shipDbId, const Uuid &shipEntityId, const Uuid &system) const;
-  bool tryCancelJump(const Uuid &shipDbId, const Uuid &shipEntityId) const;
-  bool tryJump(const Uuid &shipDbId, const Uuid &shipEntityId) const;
+  bool tryRegisterJump(const Uuid shipDbId, const Uuid shipEntityId, const Uuid system) const;
+  bool tryCancelJump(const Uuid shipDbId, const Uuid shipEntityId) const;
+  bool tryJump(const Uuid shipDbId, const Uuid shipEntityId) const;
 
   private:
   CoordinatorShPtr m_coordinator{};

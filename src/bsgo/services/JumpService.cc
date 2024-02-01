@@ -14,7 +14,7 @@ bool isShipActive(const PlayerShip &ship)
   return ship.player.has_value() && ship.active;
 }
 
-bool canShipJump(const PlayerShip &ship, const Uuid &newSystem)
+bool canShipJump(const PlayerShip &ship, const Uuid newSystem)
 {
   if (!isShipActive(ship))
   {
@@ -42,9 +42,9 @@ bool canShipJump(const PlayerShip &ship, const Uuid &newSystem)
 
 } // namespace
 
-bool JumpService::tryRegisterJump(const Uuid &shipDbId,
-                                  const Uuid &shipEntityId,
-                                  const Uuid &system) const
+bool JumpService::tryRegisterJump(const Uuid shipDbId,
+                                  const Uuid shipEntityId,
+                                  const Uuid system) const
 {
   auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
   if (!canShipJump(ship, system))
@@ -86,7 +86,7 @@ bool canShipCancelJump(const PlayerShip &ship)
 }
 } // namespace
 
-bool JumpService::tryCancelJump(const Uuid &shipDbId, const Uuid &shipEntityId) const
+bool JumpService::tryCancelJump(const Uuid shipDbId, const Uuid shipEntityId) const
 {
   auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
   if (!canShipCancelJump(ship))
@@ -136,7 +136,7 @@ bool canShipCompleteJump(const PlayerShip &ship)
 }
 } // namespace
 
-bool JumpService::tryJump(const Uuid &shipDbId, const Uuid &shipEntityId) const
+bool JumpService::tryJump(const Uuid shipDbId, const Uuid shipEntityId) const
 {
   auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
   if (!canShipCompleteJump(ship))

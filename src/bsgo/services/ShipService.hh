@@ -15,13 +15,13 @@ class ShipService : public AbstractService
   ShipService(const Repositories &repositories, CoordinatorShPtr coordinator);
   ~ShipService() override = default;
 
-  bool trySelectShip(const Uuid &shipDbId) const;
-  bool tryDock(const Uuid &shipDbId, const Uuid &shipEntityId) const;
-  bool tryUndock(const Uuid &shipDbId, const Uuid &shipEntityId) const;
+  bool trySelectShip(const Uuid shipDbId) const;
+  bool tryDock(const Uuid shipDbId, const Uuid shipEntityId) const;
+  bool tryUndock(const Uuid shipDbId, const Uuid shipEntityId) const;
 
-  bool accelerateShip(const Uuid &shipEntityId, const Eigen::Vector3f &acceleration) const;
+  bool accelerateShip(const Uuid shipEntityId, const Eigen::Vector3f &acceleration) const;
 
-  void tryAcquireTarget(const Uuid &shipEntityId, const Eigen::Vector3f &position) const;
+  void tryAcquireTarget(const Uuid shipEntityId, const Eigen::Vector3f &position) const;
 
   private:
   CoordinatorShPtr m_coordinator{};
