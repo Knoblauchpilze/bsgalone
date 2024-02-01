@@ -20,10 +20,10 @@ class GameScreenInputHandler : public IInputHandler
   private:
   bsgo::ShipViewShPtr m_shipView;
 
-  void moveShip(const Motion &motion, const bsgo::Uuid &shipEntityId);
+  void moveShip(const Motion &motion);
   void keepShipCentered(CoordinateFrame &frame);
-  void handleWeapons(const controls::State &controls, const bsgo::Uuid &shipEntityId);
-  void handleAbilities(const controls::State &controls, const bsgo::Uuid &shipEntityId);
+  void handleWeapons(const controls::State &controls);
+  void handleAbilities(const controls::State &controls);
   void handleJumpState(const controls::State &controls);
 };
 

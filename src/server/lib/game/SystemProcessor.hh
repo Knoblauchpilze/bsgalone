@@ -2,6 +2,7 @@
 #pragma once
 
 #include "Coordinator.hh"
+#include "DatabaseEntityMapper.hh"
 #include "IMessageQueue.hh"
 #include "Services.hh"
 #include "SynchronizedMessageQueue.hh"
@@ -33,6 +34,7 @@ class SystemProcessor : public utils::CoreObject
   private:
   Uuid m_systemDbId{};
   IMessageQueuePtr m_inputMessagesQueue{std::make_unique<SynchronizedMessageQueue>()};
+  DatabaseEntityMapper m_entityMapper{};
   CoordinatorShPtr m_coordinator{};
   Services m_services{};
 

@@ -104,7 +104,6 @@ void WeaponsUiHandler::generateWeaponsMenus(int width, int height)
 void WeaponsUiHandler::initializeWeapons()
 {
   const auto ship         = m_shipView->getPlayerShip();
-  const auto shipId       = ship.uuid;
   const auto weaponsCount = ship.weapons.size();
   if (weaponsCount > NUMBER_OF_WEAPONS)
   {
@@ -121,12 +120,12 @@ void WeaponsUiHandler::initializeWeapons()
   {
     auto &menu = m_weapons[id];
 
-    menu->setClickCallback([this, shipId, id]() {
+    menu->setClickCallback([this, id]() {
       if (!m_shipView->isReady())
       {
         return;
       }
-      m_shipView->tryActivateWeapon(shipId, id);
+      m_shipView->tryActivateWeapon(id);
     });
     menu->setEnabled(true);
 

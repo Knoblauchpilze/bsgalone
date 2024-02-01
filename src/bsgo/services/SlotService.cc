@@ -3,50 +3,56 @@
 
 namespace bsgo {
 
-SlotService::SlotService(const Repositories &repositories, CoordinatorShPtr coordinator)
+SlotService::SlotService(const Repositories &repositories,
+                         CoordinatorShPtr coordinator,
+                         const DatabaseEntityMapper &entityMapper)
   : AbstractService("slot", repositories)
   , m_coordinator(std::move(coordinator))
+  , m_entityMapper(entityMapper)
 {}
 
-bool SlotService::tryToggleWeapon(const Uuid shipEntityId, const int weaponIndex) const
+bool SlotService::tryToggleWeapon(const Uuid shipDbId, const Uuid weaponDbId) const
 {
-  const auto ship = m_coordinator->getEntity(shipEntityId);
-  if (ship.weapons.size() < static_cast<std::size_t>(weaponIndex))
+  const auto maybeEntityId = m_entityMapper.tryGetShipEntityId(shipDbId);
+  if (!maybeEntityId)
   {
+    debug("haha");
     return false;
   }
 
-  ship.weapons[weaponIndex]->toggle();
+  const auto ship        = m_coordinator->getEntity(*maybeEntityId);
+  const auto maybeWeapon = ship.tryGetWeapon(weaponDbId);
+  if (!maybeWeapon)
+  {
+    debug("hihi");
+    return false;
+  }
+
+  (*maybeWeapon)->toggle();
 
   return true;
 }
 
-bool SlotService::tryToggleComputer(const Uuid shipEntityId, const int computerIndex) const
+bool SlotService::tryToggleComputer(const Uuid shipDbId, const Uuid computerDbId) const
 {
-  auto ship = m_coordinator->getEntity(shipEntityId);
-  if (ship.computers.size() < static_cast<std::size_t>(computerIndex))
+  const auto maybeEntityId = m_entityMapper.tryGetShipEntityId(shipDbId);
+  if (!maybeEntityId)
   {
+    debug("haha");
     return false;
   }
 
-  ship.computers[computerIndex]->registerFireRequest();
-
-  return true;
-}
-
-bool SlotService::trySyncComputer(const Uuid shipEntityId,
-                                  const int computerIndex,
-                                  const SlotUpdateData &data) const
-{
-  auto ship = m_coordinator->getEntity(shipEntityId);
-  if (ship.computers.size() < static_cast<std::size_t>(computerIndex))
+  auto ship = m_coordinator->getEntity(*maybeEntityId);
+  debug("ship db id " + str(shipDbId) + ", entity is " + str(*maybeEntityId)
+        + ", str: " + ship.str());
+  const auto maybeComputer = ship.tryGetComputer(computerDbId);
+  if (!maybeComputer)
   {
+    debug("hihi");
     return false;
   }
 
-  const auto &component = ship.computers[computerIndex];
-  component->overrideElapsedSinceLastFired(data.elapsedSinceLastFired);
-  debug("override");
+  (*maybeComputer)->registerFireRequest();
 
   return true;
 }

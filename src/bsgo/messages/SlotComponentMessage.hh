@@ -10,10 +10,10 @@ class SlotComponentMessage : public ComponentUpdatedMessage
 {
   public:
   SlotComponentMessage();
-  SlotComponentMessage(const Uuid entityId, const int slotIndex, const SlotComponent &component);
+  SlotComponentMessage(const Uuid shipDbId, const int slotDbId, const SlotComponent &component);
   ~SlotComponentMessage() override = default;
 
-  auto getSlotIndex() const -> int;
+  auto getSlotDbId() const -> Uuid;
   auto getElapsedSinceLastFired() const -> std::optional<utils::Duration>;
 
   auto serialize(std::ostream &out) const -> std::ostream & override;
@@ -22,7 +22,7 @@ class SlotComponentMessage : public ComponentUpdatedMessage
   auto clone() const -> IMessagePtr override;
 
   private:
-  int m_slotIndex{};
+  Uuid m_slotDbId{};
   std::optional<utils::Duration> m_elapsedSinceLastFired{};
 };
 
