@@ -3,18 +3,13 @@
 
 namespace bsgo {
 
-SlotMessageConsumer::SlotMessageConsumer(const Services &services, IMessageQueue *const messageQueue)
+SlotMessageConsumer::SlotMessageConsumer(const Services &services)
   : AbstractMessageConsumer("slot", {MessageType::SLOT})
   , m_slotService(services.slot)
-  , m_messageQueue(messageQueue)
 {
   if (nullptr == m_slotService)
   {
     throw std::invalid_argument("Expected non null slot service");
-  }
-  if (nullptr == m_messageQueue)
-  {
-    throw std::invalid_argument("Expected non null message queue");
   }
 }
 
