@@ -34,16 +34,14 @@ void DockMessageConsumer::onMessageReceived(const IMessage &message)
 
 void DockMessageConsumer::handleDocking(const DockMessage &message) const
 {
-  const auto shipDbId     = message.getShipDbId();
-  const auto shipEntityId = message.getShipEntityId();
-
-  if (!m_shipService->tryDock(shipDbId, shipEntityId))
+  const auto shipDbId = message.getShipDbId();
+  if (!m_shipService->tryDock(shipDbId))
   {
     warn("Failed to process dock message for ship " + str(shipDbId));
     return;
   }
 
-  auto out = std::make_unique<DockMessage>(shipDbId, shipEntityId, true);
+  auto out = std::make_unique<DockMessage>(shipDbId, true);
   out->validate();
   out->copyClientIdIfDefined(message);
   m_messageQueue->pushMessage(std::move(out));
@@ -51,16 +49,14 @@ void DockMessageConsumer::handleDocking(const DockMessage &message) const
 
 void DockMessageConsumer::handleUndocking(const DockMessage &message) const
 {
-  const auto shipDbId     = message.getShipDbId();
-  const auto shipEntityId = message.getShipEntityId();
-
-  if (!m_shipService->tryUndock(shipDbId, shipEntityId))
+  const auto shipDbId = message.getShipDbId();
+  if (!m_shipService->tryUndock(shipDbId))
   {
     warn("Failed to process undock message for ship " + str(shipDbId));
     return;
   }
 
-  auto out = std::make_unique<DockMessage>(shipDbId, shipEntityId, false);
+  auto out = std::make_unique<DockMessage>(shipDbId, false);
   out->validate();
   out->copyClientIdIfDefined(message);
   m_messageQueue->pushMessage(std::move(out));

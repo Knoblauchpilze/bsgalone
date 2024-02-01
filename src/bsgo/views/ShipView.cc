@@ -160,19 +160,17 @@ void ShipView::tryActivateSlot(const int slotId) const
 
 void ShipView::dockPlayerShip() const
 {
-  auto playerShip = getPlayerShip();
   checkPlayerShipDbIdExists();
 
-  auto message = std::make_unique<DockMessage>(*m_playerShipDbId, playerShip.uuid, true);
+  auto message = std::make_unique<DockMessage>(*m_playerShipDbId, true);
   m_messageQueue->pushMessage(std::move(message));
 }
 
 void ShipView::undockPlayerShip() const
 {
-  auto playerShip = getPlayerShip();
   checkPlayerShipDbIdExists();
 
-  auto message = std::make_unique<DockMessage>(*m_playerShipDbId, playerShip.uuid, false);
+  auto message = std::make_unique<DockMessage>(*m_playerShipDbId, false);
   m_messageQueue->pushMessage(std::move(message));
 }
 
