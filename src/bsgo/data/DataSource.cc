@@ -17,7 +17,7 @@ DataSource::DataSource(const DataLoadingMode dataLoadingMode)
   m_repositories = createRepositories(m_connection);
 }
 
-void DataSource::setSystemDbId(const Uuid &system)
+void DataSource::setSystemDbId(const Uuid system)
 {
   if (DataLoadingMode::CLIENT == m_dataLoadingMode)
   {
@@ -26,7 +26,7 @@ void DataSource::setSystemDbId(const Uuid &system)
   m_systemDbId = system;
 }
 
-void DataSource::setPlayerDbId(const Uuid &player)
+void DataSource::setPlayerDbId(const Uuid player)
 {
   if (DataLoadingMode::SERVER == m_dataLoadingMode)
   {
