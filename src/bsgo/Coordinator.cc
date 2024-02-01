@@ -23,7 +23,7 @@
 namespace bsgo {
 namespace {
 template<typename ComponentType>
-auto getComponent(const Uuid &ent,
+auto getComponent(const Uuid ent,
                   const std::unordered_map<Uuid, std::shared_ptr<ComponentType>> &components)
   -> std::optional<std::shared_ptr<ComponentType>>
 {
@@ -37,7 +37,7 @@ auto getComponent(const Uuid &ent,
 }
 
 template<typename ComponentType>
-auto getAllComponent(const Uuid &ent,
+auto getAllComponent(const Uuid ent,
                      const std::unordered_multimap<Uuid, std::shared_ptr<ComponentType>> &components)
   -> std::vector<std::shared_ptr<ComponentType>>
 {
@@ -89,80 +89,80 @@ auto Coordinator::createEntity(const EntityKind &kind) -> Uuid
   return ent;
 }
 
-void Coordinator::addTransform(const Uuid &ent, IBoundingBoxPtr bbox)
+void Coordinator::addTransform(const Uuid ent, IBoundingBoxPtr bbox)
 {
   checkForOverrides(ent, "Transform", m_components.transforms);
   m_components.transforms[ent] = std::make_shared<TransformComponent>(std::move(bbox));
 }
 
-void Coordinator::addVelocity(const Uuid &ent, const VelocityData &data)
+void Coordinator::addVelocity(const Uuid ent, const VelocityData &data)
 {
   checkForOverrides(ent, "Velocity", m_components.velocities);
   m_components.velocities[ent] = std::make_shared<VelocityComponent>(data);
 }
 
-void Coordinator::addHealth(const Uuid &ent, const float hp, const float max, const float regen)
+void Coordinator::addHealth(const Uuid ent, const float hp, const float max, const float regen)
 {
   checkForOverrides(ent, "Health", m_components.healths);
   m_components.healths[ent] = std::make_shared<HealthComponent>(hp, max, regen);
 }
 
-void Coordinator::addPower(const Uuid &ent, const float power, const float max, const float regen)
+void Coordinator::addPower(const Uuid ent, const float power, const float max, const float regen)
 {
   checkForOverrides(ent, "Power", m_components.powers);
   m_components.powers[ent] = std::make_shared<PowerComponent>(power, max, regen);
 }
 
-void Coordinator::addTarget(const Uuid &ent)
+void Coordinator::addTarget(const Uuid ent)
 {
   checkForOverrides(ent, "Target", m_components.targets);
   m_components.targets[ent] = std::make_shared<TargetComponent>();
 }
 
-void Coordinator::addTarget(const Uuid &ent, const Uuid &target)
+void Coordinator::addTarget(const Uuid ent, const Uuid target)
 {
   checkForOverrides(ent, "Target", m_components.targets);
   checkEntityExist(target, "Target");
   m_components.targets[ent] = std::make_shared<TargetComponent>(target);
 }
 
-void Coordinator::addFaction(const Uuid &ent, const Faction &faction)
+void Coordinator::addFaction(const Uuid ent, const Faction &faction)
 {
   checkForOverrides(ent, "Faction", m_components.factions);
   m_components.factions[ent] = std::make_shared<FactionComponent>(faction);
 }
 
-void Coordinator::addLoot(const Uuid &ent)
+void Coordinator::addLoot(const Uuid ent)
 {
   checkForOverrides(ent, "Loot", m_components.loots);
   m_components.loots[ent] = std::make_shared<LootComponent>();
 }
 
-void Coordinator::addScanned(const Uuid &ent)
+void Coordinator::addScanned(const Uuid ent)
 {
   checkForOverrides(ent, "Scanned", m_components.scanned);
   m_components.scanned[ent] = std::make_shared<ScannedComponent>();
 }
 
-void Coordinator::addOwner(const Uuid &ent, const Uuid &owner, const OwnerType &ownerType)
+void Coordinator::addOwner(const Uuid ent, const Uuid owner, const OwnerType &ownerType)
 {
   checkForOverrides(ent, "Owner", m_components.owners);
   m_components.owners[ent] = std::make_shared<OwnerComponent>(owner, ownerType);
 }
 
-void Coordinator::addDamage(const Uuid &ent, const float damage)
+void Coordinator::addDamage(const Uuid ent, const float damage)
 {
   checkForOverrides(ent, "Damage", m_components.damages);
   m_components.damages[ent] = std::make_shared<DamageComponent>(damage);
 }
 
-void Coordinator::addRemoval(const Uuid &ent)
+void Coordinator::addRemoval(const Uuid ent)
 {
   checkForOverrides(ent, "Removal", m_components.removals);
   m_components.removals[ent] = std::make_shared<RemovalComponent>();
 }
 
-void Coordinator::addStatus(const Uuid &ent,
+void Coordinator::addStatus(const Uuid ent,
                             const Status &status,
                             const std::optional<utils::Duration> &jumpTime,
                             const std::optional<utils::Duration> &threatJumpTime)
@@ -171,37 +171,37 @@ void Coordinator::addStatus(const Uuid &ent,
   m_components.statuses[ent] = std::make_shared<StatusComponent>(status, jumpTime, threatJumpTime);
 }
 
-void Coordinator::addAI(const Uuid &ent, INodePtr behavior)
+void Coordinator::addAI(const Uuid ent, INodePtr behavior)
 {
   checkForOverrides(ent, "AI", m_components.ais);
   m_components.ais[ent] = std::make_shared<AIComponent>(std::move(behavior));
 }
 
-void Coordinator::addShipClass(const Uuid &ent, const ShipClass &shipClass)
+void Coordinator::addShipClass(const Uuid ent, const ShipClass &shipClass)
 {
   checkForOverrides(ent, "ShipClass", m_components.shipClasses);
   m_components.shipClasses[ent] = std::make_shared<ShipClassComponent>(shipClass);
 }
 
-void Coordinator::addName(const Uuid &ent, const std::string &name)
+void Coordinator::addName(const Uuid ent, const std::string &name)
 {
   checkForOverrides(ent, "Name", m_components.names);
   m_components.names[ent] = std::make_shared<NameComponent>(name);
 }
 
-void Coordinator::addNetwork(const Uuid &ent, const std::unordered_set<ComponentType> &toSync)
+void Coordinator::addNetwork(const Uuid ent, const std::unordered_set<ComponentType> &toSync)
 {
   checkForOverrides(ent, "Network", m_components.networks);
   m_components.networks[ent] = std::make_shared<NetworkComponent>(toSync);
 }
 
-void Coordinator::addDbId(const Uuid &ent, const Uuid &dbId)
+void Coordinator::addDbId(const Uuid ent, const Uuid dbId)
 {
   checkForOverrides(ent, "Db", m_components.dbs);
   m_components.dbs[ent] = std::make_shared<DbComponent>(dbId);
 }
 
-void Coordinator::addWeapon(const Uuid &ent,
+void Coordinator::addWeapon(const Uuid ent,
                             const PlayerWeapon &weapon,
                             const Eigen::Vector3f &position)
 {
@@ -209,19 +209,19 @@ void Coordinator::addWeapon(const Uuid &ent,
   m_components.weapons.emplace(ent, std::make_shared<WeaponSlotComponent>(weapon, position));
 }
 
-void Coordinator::addComputer(const Uuid &ent, const PlayerComputer &computer)
+void Coordinator::addComputer(const Uuid ent, const PlayerComputer &computer)
 {
   checkEntityExist(ent, "Computer");
   m_components.computers.emplace(ent, std::make_shared<ComputerSlotComponent>(computer));
 }
 
-void Coordinator::addResourceComponent(const Uuid &ent, const Uuid &resource, const float amount)
+void Coordinator::addResourceComponent(const Uuid ent, const Uuid resource, const float amount)
 {
   checkEntityExist(ent, "Resource");
   m_components.resources.emplace(ent, std::make_shared<ResourceComponent>(resource, amount));
 }
 
-void Coordinator::addWeaponEffect(const Uuid &ent,
+void Coordinator::addWeaponEffect(const Uuid ent,
                                   const utils::Duration &duration,
                                   const float damageModifier)
 {
@@ -230,7 +230,7 @@ void Coordinator::addWeaponEffect(const Uuid &ent,
                                std::make_shared<WeaponEffectComponent>(duration, damageModifier));
 }
 
-void Coordinator::removeEffect(const Uuid &ent, const EffectComponentShPtr &effect)
+void Coordinator::removeEffect(const Uuid ent, const EffectComponentShPtr &effect)
 {
   checkEntityExist(ent, "Effect");
   const auto range = m_components.effects.equal_range(ent);
@@ -259,7 +259,7 @@ void Coordinator::removeEffect(const Uuid &ent, const EffectComponentShPtr &effe
   debug("Removed 1 effect for entity " + entity.str());
 }
 
-auto Coordinator::getEntity(const Uuid &ent) const -> Entity
+auto Coordinator::getEntity(const Uuid ent) const -> Entity
 {
   Entity out{};
   out.uuid             = ent;
@@ -296,7 +296,7 @@ auto Coordinator::getEntity(const Uuid &ent) const -> Entity
   return out;
 }
 
-void Coordinator::deleteEntity(const Uuid &ent)
+void Coordinator::deleteEntity(const Uuid ent)
 {
   if (!m_entities.contains(ent))
   {
@@ -463,7 +463,7 @@ void Coordinator::createSystems(ISystemPtr networkSystem, IMessageQueue *message
   }
 }
 
-bool Coordinator::hasExpectedKind(const Uuid &ent, const std::optional<EntityKind> &kind) const
+bool Coordinator::hasExpectedKind(const Uuid ent, const std::optional<EntityKind> &kind) const
 {
   if (!kind)
   {
@@ -474,7 +474,7 @@ bool Coordinator::hasExpectedKind(const Uuid &ent, const std::optional<EntityKin
   return entKind->kind() == *kind;
 }
 
-void Coordinator::checkEntityExist(const Uuid &ent, const std::string &componentName) const
+void Coordinator::checkEntityExist(const Uuid ent, const std::string &componentName) const
 {
   if (!m_entities.contains(ent))
   {
@@ -483,7 +483,7 @@ void Coordinator::checkEntityExist(const Uuid &ent, const std::string &component
 }
 
 template<typename ContainerType>
-void Coordinator::checkForOverrides(const Uuid &ent,
+void Coordinator::checkForOverrides(const Uuid ent,
                                     const std::string &componentName,
                                     const ContainerType &components) const
 {

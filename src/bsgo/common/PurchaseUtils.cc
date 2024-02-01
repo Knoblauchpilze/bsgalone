@@ -25,7 +25,7 @@ bool playerHasEnoughResources(const std::vector<PlayerResource> &resources, cons
   return false;
 }
 
-auto getWeaponPrice(const Uuid &weaponId, const WeaponPriceRepository &repository)
+auto getWeaponPrice(const Uuid weaponId, const WeaponPriceRepository &repository)
   -> std::vector<Cost>
 {
   std::vector<Cost> out{};
@@ -39,7 +39,7 @@ auto getWeaponPrice(const Uuid &weaponId, const WeaponPriceRepository &repositor
   return out;
 }
 
-auto getComputerPrice(const Uuid &computerId, const ComputerPriceRepository &repository)
+auto getComputerPrice(const Uuid computerId, const ComputerPriceRepository &repository)
   -> std::vector<Cost>
 {
   std::vector<Cost> out{};
@@ -53,7 +53,7 @@ auto getComputerPrice(const Uuid &computerId, const ComputerPriceRepository &rep
   return out;
 }
 
-auto getShipPrice(const Uuid &shipId, const ShipPriceRepository &repository) -> std::vector<Cost>
+auto getShipPrice(const Uuid shipId, const ShipPriceRepository &repository) -> std::vector<Cost>
 {
   std::vector<Cost> out{};
 
