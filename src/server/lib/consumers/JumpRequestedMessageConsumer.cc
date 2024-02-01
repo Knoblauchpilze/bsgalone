@@ -31,17 +31,16 @@ void JumpRequestedMessageConsumer::onMessageReceived(const IMessage &message)
 
 void JumpRequestedMessageConsumer::handleJumpRequest(const JumpRequestedMessage &message) const
 {
-  const auto shipDbId     = message.getShipDbId();
-  const auto shipEntityId = message.getShipEntityId();
-  const auto jumpSystem   = message.getJumpSystem();
+  const auto shipDbId   = message.getShipDbId();
+  const auto jumpSystem = message.getJumpSystem();
 
-  if (!m_jumpService->tryRegisterJump(shipDbId, shipEntityId, jumpSystem))
+  if (!m_jumpService->tryRegisterJump(shipDbId, jumpSystem))
   {
     warn("Failed to process jump requested message for ship " + str(shipDbId));
     return;
   }
 
-  auto out = std::make_unique<JumpRequestedMessage>(shipDbId, shipEntityId, jumpSystem);
+  auto out = std::make_unique<JumpRequestedMessage>(shipDbId, jumpSystem);
   out->validate();
   out->copyClientIdIfDefined(message);
   m_messageQueue->pushMessage(std::move(out));
