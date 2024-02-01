@@ -26,20 +26,18 @@ class ShipDataSource : public utils::CoreObject
   Repositories m_repositories{};
 
   void registerShip(Coordinator &coordinator,
-                    const Uuid &ship,
+                    const Uuid ship,
                     DatabaseEntityMapper &entityMapper) const;
 
   void registerShipOwner(Coordinator &coordinator,
-                         const Uuid &shipEntity,
+                         const Uuid shipEntity,
                          const PlayerShip &shipData,
                          DatabaseEntityMapper &entityMapper) const;
 
-  void registerShipWeapons(Coordinator &coordinator, const Uuid &ship, const Uuid &shipEntity) const;
-  void registerShipComputers(Coordinator &coordinator,
-                             const Uuid &ship,
-                             const Uuid &shipEntity) const;
+  void registerShipWeapons(Coordinator &coordinator, const Uuid ship, const Uuid shipEntity) const;
+  void registerShipComputers(Coordinator &coordinator, const Uuid ship, const Uuid shipEntity) const;
 
-  auto generateBehaviorTree(const Uuid &entity, const Eigen::Vector3f &center) const -> INodePtr;
+  auto generateBehaviorTree(const Uuid entity, const Eigen::Vector3f &center) const -> INodePtr;
 };
 
 } // namespace bsgo

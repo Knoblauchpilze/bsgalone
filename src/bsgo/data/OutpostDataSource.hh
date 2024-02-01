@@ -11,7 +11,7 @@ class Coordinator;
 class OutpostDataSource : public utils::CoreObject
 {
   public:
-  OutpostDataSource(const Repositories &repositories, const Uuid &systemDbId);
+  OutpostDataSource(const Repositories &repositories, const Uuid systemDbId);
   ~OutpostDataSource() override = default;
 
   void initialize(Coordinator &coordinator) const;
@@ -20,7 +20,7 @@ class OutpostDataSource : public utils::CoreObject
   Uuid m_systemDbId{};
   Repositories m_repositories{};
 
-  void registerOutpost(Coordinator &coordinator, const Uuid &outpost) const;
+  void registerOutpost(Coordinator &coordinator, const Uuid outpost) const;
 };
 
 } // namespace bsgo

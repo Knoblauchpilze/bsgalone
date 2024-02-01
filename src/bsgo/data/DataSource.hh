@@ -17,8 +17,8 @@ class DataSource : public utils::CoreObject
   DataSource(const DataLoadingMode dataLoadingMode);
   ~DataSource() override = default;
 
-  void setSystemDbId(const Uuid &system);
-  void setPlayerDbId(const Uuid &player);
+  void setSystemDbId(const Uuid system);
+  void setPlayerDbId(const Uuid player);
   void clearSystemDbId();
 
   auto repositories() const -> Repositories;

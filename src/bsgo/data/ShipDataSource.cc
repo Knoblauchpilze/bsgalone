@@ -34,7 +34,7 @@ void ShipDataSource::initialize(Coordinator &coordinator, DatabaseEntityMapper &
 }
 
 void ShipDataSource::registerShip(Coordinator &coordinator,
-                                  const Uuid &ship,
+                                  const Uuid ship,
                                   DatabaseEntityMapper &entityMapper) const
 {
   const auto data = m_repositories.playerShipRepository->findOneById(ship);
@@ -61,7 +61,7 @@ void ShipDataSource::registerShip(Coordinator &coordinator,
 }
 
 void ShipDataSource::registerShipOwner(Coordinator &coordinator,
-                                       const Uuid &shipEntity,
+                                       const Uuid shipEntity,
                                        const PlayerShip &shipData,
                                        DatabaseEntityMapper &entityMapper) const
 {
@@ -84,8 +84,8 @@ void ShipDataSource::registerShipOwner(Coordinator &coordinator,
 }
 
 void ShipDataSource::registerShipWeapons(Coordinator &coordinator,
-                                         const Uuid &ship,
-                                         const Uuid &shipEntity) const
+                                         const Uuid ship,
+                                         const Uuid shipEntity) const
 {
   const auto weapons = m_repositories.shipWeaponRepository->findAllByShip(ship);
   for (const auto &weapon : weapons)
@@ -96,8 +96,8 @@ void ShipDataSource::registerShipWeapons(Coordinator &coordinator,
 }
 
 void ShipDataSource::registerShipComputers(Coordinator &coordinator,
-                                           const Uuid &ship,
-                                           const Uuid &shipEntity) const
+                                           const Uuid ship,
+                                           const Uuid shipEntity) const
 {
   const auto computers = m_repositories.shipComputerRepository->findAllByShip(ship);
   for (const auto &computer : computers)
@@ -107,7 +107,7 @@ void ShipDataSource::registerShipComputers(Coordinator &coordinator,
   }
 }
 
-auto ShipDataSource::generateBehaviorTree(const Uuid &entity, const Eigen::Vector3f &center) const
+auto ShipDataSource::generateBehaviorTree(const Uuid entity, const Eigen::Vector3f &center) const
   -> INodePtr
 {
   constexpr auto RADIUS_TO_PICK_A_TARGET = 5.0f;
