@@ -9,7 +9,7 @@ namespace bsgo {
 class DbComponent : public AbstractComponent
 {
   public:
-  DbComponent(const Uuid &dbId);
+  DbComponent(const Uuid dbId);
   ~DbComponent() override = default;
 
   auto dbId() const noexcept -> Uuid;

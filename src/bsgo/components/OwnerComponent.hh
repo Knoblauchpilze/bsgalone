@@ -16,7 +16,7 @@ enum class OwnerType
 class OwnerComponent : public AbstractComponent
 {
   public:
-  OwnerComponent(const Uuid &owner, const OwnerType &ownerType);
+  OwnerComponent(const Uuid owner, const OwnerType &ownerType);
   ~OwnerComponent() override = default;
 
   auto owner() const -> Uuid;

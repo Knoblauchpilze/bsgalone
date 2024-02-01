@@ -11,12 +11,12 @@ class TargetComponent : public AbstractComponent
 {
   public:
   TargetComponent();
-  TargetComponent(const Uuid &target);
+  TargetComponent(const Uuid target);
   ~TargetComponent() override = default;
 
   auto target() const -> std::optional<Uuid>;
   void clearTarget();
-  void setTarget(const Uuid &target);
+  void setTarget(const Uuid target);
 
   void update(const float elapsedSeconds) override;
 

@@ -7,7 +7,7 @@ LootComponent::LootComponent()
   : AbstractComponent(ComponentType::LOOT)
 {}
 
-void LootComponent::registerRecipient(const Uuid &entity)
+void LootComponent::registerRecipient(const Uuid entity)
 {
   m_recipients.insert(entity);
 }

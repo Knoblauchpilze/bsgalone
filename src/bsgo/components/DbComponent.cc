@@ -3,7 +3,7 @@
 
 namespace bsgo {
 
-DbComponent::DbComponent(const Uuid &dbId)
+DbComponent::DbComponent(const Uuid dbId)
   : AbstractComponent(ComponentType::DB)
   , m_dbId(dbId)
 {}
