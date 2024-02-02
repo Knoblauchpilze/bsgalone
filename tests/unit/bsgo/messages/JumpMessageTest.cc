@@ -11,7 +11,6 @@ auto assertMessagesAreEqual(const JumpMessage &actual, const JumpMessage &expect
 {
   EXPECT_EQ(actual.type(), expected.type());
   EXPECT_EQ(actual.getShipDbId(), expected.getShipDbId());
-  EXPECT_EQ(actual.getShipEntityId(), expected.getShipEntityId());
   EXPECT_EQ(actual.tryGetClientId(), expected.tryGetClientId());
   EXPECT_EQ(actual.validated(), expected.validated());
 }
@@ -19,8 +18,8 @@ auto assertMessagesAreEqual(const JumpMessage &actual, const JumpMessage &expect
 
 TEST(Unit_Bsgo_Serialization_JumpMessage, Basic)
 {
-  const JumpMessage expected(Uuid{14}, Uuid{26});
-  JumpMessage actual(Uuid{6}, Uuid{4});
+  const JumpMessage expected(Uuid{14});
+  JumpMessage actual(Uuid{6});
   actual.validate();
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
@@ -28,25 +27,25 @@ TEST(Unit_Bsgo_Serialization_JumpMessage, Basic)
 
 TEST(Unit_Bsgo_Serialization_JumpMessage, Validated)
 {
-  JumpMessage expected(Uuid{14}, Uuid{26});
+  JumpMessage expected(Uuid{14});
   expected.validate();
-  JumpMessage actual(Uuid{6}, Uuid{4});
+  JumpMessage actual(Uuid{6});
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
 
 TEST(Unit_Bsgo_Serialization_JumpMessage, WithClientId)
 {
-  JumpMessage expected(Uuid{14}, Uuid{26});
+  JumpMessage expected(Uuid{14});
   expected.setClientId(Uuid{119});
-  JumpMessage actual(Uuid{6}, Uuid{4});
+  JumpMessage actual(Uuid{6});
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
 
 TEST(Unit_Bsgo_Serialization_JumpMessage, Clone)
 {
-  const JumpMessage expected(Uuid{14}, Uuid{26});
+  const JumpMessage expected(Uuid{14});
   const auto cloned = expected.clone();
   ASSERT_EQ(cloned->type(), MessageType::JUMP);
   assertMessagesAreEqual(cloned->as<JumpMessage>(), expected);
