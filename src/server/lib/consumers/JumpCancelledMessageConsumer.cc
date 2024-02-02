@@ -31,16 +31,15 @@ void JumpCancelledMessageConsumer::onMessageReceived(const IMessage &message)
 
 void JumpCancelledMessageConsumer::handleJumpCancellation(const JumpCancelledMessage &message) const
 {
-  const auto shipDbId     = message.getShipDbId();
-  const auto shipEntityId = message.getShipEntityId();
+  const auto shipDbId = message.getShipDbId();
 
-  if (!m_jumpService->tryCancelJump(shipDbId, shipEntityId))
+  if (!m_jumpService->tryCancelJump(shipDbId))
   {
     warn("Failed to process jump cancelled message for ship " + str(shipDbId));
     return;
   }
 
-  auto out = std::make_unique<JumpCancelledMessage>(shipDbId, shipEntityId);
+  auto out = std::make_unique<JumpCancelledMessage>(shipDbId);
   out->validate();
   out->copyClientIdIfDefined(message);
   m_messageQueue->pushMessage(std::move(out));

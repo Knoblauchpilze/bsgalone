@@ -210,7 +210,7 @@ void ShipView::cancelJump() const
 
   checkPlayerShipDbIdExists();
 
-  auto message = std::make_unique<JumpCancelledMessage>(*m_playerShipDbId, *m_playerShipEntityId);
+  auto message = std::make_unique<JumpCancelledMessage>(*m_playerShipDbId);
   m_messageQueue->pushMessage(std::move(message));
 }
 
