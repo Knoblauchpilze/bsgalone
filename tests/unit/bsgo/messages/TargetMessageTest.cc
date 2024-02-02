@@ -10,15 +10,48 @@ namespace {
 auto assertMessagesAreEqual(const TargetMessage &actual, const TargetMessage &expected)
 {
   EXPECT_EQ(actual.type(), expected.type());
-  EXPECT_EQ(actual.getShipEntityId(), expected.getShipEntityId());
+  EXPECT_EQ(actual.getShipDbId(), expected.getShipDbId());
   EXPECT_EQ(actual.getPosition(), expected.getPosition());
+  EXPECT_EQ(actual.getTargetDbId(), expected.getTargetDbId());
   EXPECT_EQ(actual.tryGetClientId(), expected.tryGetClientId());
+  EXPECT_EQ(actual.validated(), expected.validated());
 }
 } // namespace
 
-TEST(Unit_Bsgo_Serialization_TargetMessage, Basic)
+TEST(Unit_Bsgo_Serialization_TargetMessage, IdAndPosition)
 {
   const TargetMessage expected(Uuid{21}, Eigen::Vector3f(1.68f, -185.0f, 326.895f));
+  TargetMessage actual(Uuid{36}, Eigen::Vector3f(0.0f, 26.37f, -0.111f), Uuid{14});
+  actual.validate();
+  actual.setClientId(Uuid{78});
+  serializeAndDeserializeMessage(expected, actual);
+  assertMessagesAreEqual(actual, expected);
+}
+
+TEST(Unit_Bsgo_Serialization_TargetMessage, IdAndPosition_Validated)
+{
+  TargetMessage expected(Uuid{21}, Eigen::Vector3f(1.68f, -185.0f, 326.895f));
+  expected.validate();
+  TargetMessage actual(Uuid{36}, Eigen::Vector3f(0.0f, 26.37f, -0.111f), Uuid{14});
+  actual.setClientId(Uuid{78});
+  serializeAndDeserializeMessage(expected, actual);
+  assertMessagesAreEqual(actual, expected);
+}
+
+TEST(Unit_Bsgo_Serialization_TargetMessage, IdPositionTargetId)
+{
+  const TargetMessage expected(Uuid{21}, Eigen::Vector3f(1.68f, -185.0f, 326.895f), Uuid{18});
+  TargetMessage actual(Uuid{36}, Eigen::Vector3f(0.0f, 26.37f, -0.111f));
+  actual.validate();
+  actual.setClientId(Uuid{78});
+  serializeAndDeserializeMessage(expected, actual);
+  assertMessagesAreEqual(actual, expected);
+}
+
+TEST(Unit_Bsgo_Serialization_TargetMessage, IdPositionTargetId_Validated)
+{
+  TargetMessage expected(Uuid{21}, Eigen::Vector3f(1.68f, -185.0f, 326.895f), Uuid{18});
+  expected.validate();
   TargetMessage actual(Uuid{36}, Eigen::Vector3f(0.0f, 26.37f, -0.111f));
   actual.setClientId(Uuid{78});
   serializeAndDeserializeMessage(expected, actual);
@@ -36,7 +69,7 @@ TEST(Unit_Bsgo_Serialization_TargetMessage, WithClientId)
 
 TEST(Unit_Bsgo_Serialization_TargetMessage, Clone)
 {
-  const TargetMessage expected(Uuid{21}, Eigen::Vector3f(1.68f, -185.0f, 326.895f));
+  const TargetMessage expected(Uuid{21}, Eigen::Vector3f(1.68f, -185.0f, 326.895f), Uuid{26});
   const auto cloned = expected.clone();
   ASSERT_EQ(cloned->type(), MessageType::TARGET);
   assertMessagesAreEqual(cloned->as<TargetMessage>(), expected);

@@ -6,6 +6,7 @@
 #include "DatabaseEntityMapper.hh"
 #include "JumpCancelledMessage.hh"
 #include "JumpRequestedMessage.hh"
+#include "TargetMessage.hh"
 
 namespace pge {
 
@@ -24,6 +25,7 @@ class ShipMessageConsumer : public bsgo::AbstractMessageConsumer
 
   void handleJumpRequested(const bsgo::JumpRequestedMessage &message) const;
   void handleJumpCancelled(const bsgo::JumpCancelledMessage &message) const;
+  void handleTargetAcquired(const bsgo::TargetMessage &message) const;
 };
 
 } // namespace pge

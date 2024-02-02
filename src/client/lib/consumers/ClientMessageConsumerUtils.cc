@@ -4,7 +4,6 @@
 #include "ShipMessageConsumer.hh"
 #include "SlotComponentMessageConsumer.hh"
 #include "SystemMessageConsumer.hh"
-#include "TargetMessageConsumer.hh"
 #include "VelocityMessageConsumer.hh"
 
 namespace pge {
@@ -24,9 +23,6 @@ void createMessageConsumers(bsgo::IMessageQueue &inputMessagesQueue,
 
   auto velocity = std::make_unique<bsgo::VelocityMessageConsumer>(services, outputMessagesQueue);
   inputMessagesQueue.addListener(std::move(velocity));
-
-  auto target = std::make_unique<bsgo::TargetMessageConsumer>(services, outputMessagesQueue);
-  inputMessagesQueue.addListener(std::move(target));
 }
 
 } // namespace pge

@@ -22,11 +22,21 @@ TargetMessageConsumer::TargetMessageConsumer(const Services &services,
 
 void TargetMessageConsumer::onMessageReceived(const IMessage &message)
 {
-  const auto &targetMessage = message.as<TargetMessage>();
-  const auto shipEntityId   = targetMessage.getShipEntityId();
-  const auto position       = targetMessage.getPosition();
+  const auto &target  = message.as<TargetMessage>();
+  const auto shipDbId = target.getShipDbId();
+  const auto position = target.getPosition();
 
-  m_shipService->tryAcquireTarget(shipEntityId, position);
+  const auto res = m_shipService->tryAcquireTarget(shipDbId, position);
+  if (!res.success)
+  {
+    warn("Failed to process computer slot message for ship " + str(shipDbId));
+    return;
+  }
+
+  auto out = std::make_unique<TargetMessage>(shipDbId, position, res.targetDbId);
+  out->validate();
+  out->copyClientIdIfDefined(target);
+  m_messageQueue->pushMessage(std::move(out));
 }
 
 } // namespace bsgo

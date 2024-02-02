@@ -24,7 +24,13 @@ class ShipService : public AbstractService
 
   bool accelerateShip(const Uuid shipEntityId, const Eigen::Vector3f &acceleration) const;
 
-  void tryAcquireTarget(const Uuid shipEntityId, const Eigen::Vector3f &position) const;
+  struct AcquiringResult
+  {
+    bool success{false};
+    std::optional<Uuid> targetDbId{};
+  };
+  auto tryAcquireTarget(const Uuid shipDbId, const Eigen::Vector3f &position) const
+    -> AcquiringResult;
 
   private:
   CoordinatorShPtr m_coordinator{};
