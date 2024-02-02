@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "DatabaseEntityMapper.hh"
 #include "Repositories.hh"
 #include <core_utils/CoreObject.hh>
 
@@ -14,13 +15,15 @@ class AsteroidDataSource : public utils::CoreObject
   AsteroidDataSource(const Repositories &repositories, const Uuid systemDbId);
   ~AsteroidDataSource() override = default;
 
-  void initialize(Coordinator &coordinator) const;
+  void initialize(Coordinator &coordinator, DatabaseEntityMapper &entityMapper) const;
 
   private:
   Uuid m_systemDbId{};
   Repositories m_repositories{};
 
-  void registerAsteroid(Coordinator &coordinator, const Uuid asteroid) const;
+  void registerAsteroid(Coordinator &coordinator,
+                        const Uuid asteroidDbId,
+                        DatabaseEntityMapper &entityMapper) const;
 };
 
 } // namespace bsgo

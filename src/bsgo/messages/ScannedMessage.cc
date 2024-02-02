@@ -5,25 +5,26 @@
 namespace bsgo {
 
 ScannedMessage::ScannedMessage()
-  : NetworkMessage(MessageType::SCANNED)
+  : ValidatableMessage(MessageType::SCANNED)
 {}
 
-ScannedMessage::ScannedMessage(const Uuid asteroidEntityId)
-  : NetworkMessage(MessageType::SCANNED)
-  , m_asteroidEntityId(asteroidEntityId)
+ScannedMessage::ScannedMessage(const Uuid asteroidDbId)
+  : ValidatableMessage(MessageType::SCANNED)
+  , m_asteroidDbId(asteroidDbId)
 {}
 
-auto ScannedMessage::asteroidEntityId() const -> Uuid
+auto ScannedMessage::getAsteroidDbId() const -> Uuid
 {
-  return m_asteroidEntityId;
+  return m_asteroidDbId;
 }
 
 auto ScannedMessage::serialize(std::ostream &out) const -> std::ostream &
 {
   utils::serialize(out, m_messageType);
   utils::serialize(out, m_clientId);
+  utils::serialize(out, m_validated);
 
-  utils::serialize(out, m_asteroidEntityId);
+  utils::serialize(out, m_asteroidDbId);
 
   return out;
 }
@@ -33,16 +34,18 @@ bool ScannedMessage::deserialize(std::istream &in)
   bool ok{true};
   ok &= utils::deserialize(in, m_messageType);
   ok &= utils::deserialize(in, m_clientId);
+  ok &= utils::deserialize(in, m_validated);
 
-  ok &= utils::deserialize(in, m_asteroidEntityId);
+  ok &= utils::deserialize(in, m_asteroidDbId);
 
   return ok;
 }
 
 auto ScannedMessage::clone() const -> IMessagePtr
 {
-  auto clone = std::make_unique<ScannedMessage>(m_asteroidEntityId);
+  auto clone = std::make_unique<ScannedMessage>(m_asteroidDbId);
   clone->copyClientIdIfDefined(*this);
+  clone->validate(validated());
 
   return clone;
 }

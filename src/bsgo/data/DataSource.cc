@@ -71,7 +71,7 @@ void DataSource::initialize(Coordinator &coordinator, DatabaseEntityMapper &enti
 
   initializePlayer(coordinator, entityMapper);
   initializeShips(coordinator, entityMapper);
-  initializeAsteroids(coordinator);
+  initializeAsteroids(coordinator, entityMapper);
   initializeOutposts(coordinator);
 }
 
@@ -87,10 +87,11 @@ void DataSource::initializePlayer(Coordinator &coordinator, DatabaseEntityMapper
   }
 }
 
-void DataSource::initializeAsteroids(Coordinator &coordinator) const
+void DataSource::initializeAsteroids(Coordinator &coordinator,
+                                     DatabaseEntityMapper &entityMapper) const
 {
   AsteroidDataSource source(m_repositories, *m_systemDbId);
-  source.initialize(coordinator);
+  source.initialize(coordinator, entityMapper);
 }
 
 void DataSource::initializeShips(Coordinator &coordinator, DatabaseEntityMapper &entityMapper) const

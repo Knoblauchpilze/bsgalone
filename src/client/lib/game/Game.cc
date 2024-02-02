@@ -258,7 +258,7 @@ void Game::initialize()
   m_coordinator = std::make_shared<bsgo::Coordinator>(std::move(networkSystem),
                                                       m_messageQueue.get());
   m_services    = bsgo::createServices(repositories, m_coordinator, m_entityMapper);
-  m_views       = bsgo::createViews(m_coordinator, repositories, m_messageQueue.get());
+  m_views = bsgo::createViews(m_coordinator, repositories, m_entityMapper, m_messageQueue.get());
 
   createMessageConsumers(*m_messageQueue,
                          m_messageQueue.get(),

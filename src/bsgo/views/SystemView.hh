@@ -3,6 +3,7 @@
 
 #include "AbstractView.hh"
 #include "Coordinator.hh"
+#include "DatabaseEntityMapper.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
 #include <memory>
@@ -15,6 +16,7 @@ class SystemView : public AbstractView
   public:
   SystemView(const CoordinatorShPtr &coordinator,
              const Repositories &repositories,
+             const DatabaseEntityMapper &entityMapper,
              IMessageQueue *const messageQueue);
   ~SystemView() override = default;
 
@@ -23,7 +25,10 @@ class SystemView : public AbstractView
   auto getOutpostsWithin(const IBoundingBox &bbox) const -> std::vector<Entity>;
   auto getBulletsWithin(const IBoundingBox &bbox) const -> std::vector<Entity>;
 
-  auto getAsteroid(const Uuid asteroid) const -> Entity;
+  auto getAsteroid(const Uuid asteroidDbId) const -> Entity;
+
+  private:
+  const DatabaseEntityMapper &m_entityMapper;
 };
 
 using SystemViewShPtr = std::shared_ptr<SystemView>;
