@@ -145,7 +145,10 @@ auto ShipView::getAbilitiesCount() const -> int
 
 void ShipView::tryActivateWeapon(const int weaponId) const
 {
-  auto message = std::make_unique<SlotMessage>(getPlayerShip().uuid, weaponId, Slot::WEAPON);
+  const auto playerShip = getPlayerShip();
+  const auto slotDbId   = playerShip.weapons[weaponId]->dbId();
+
+  auto message = std::make_unique<SlotMessage>(*m_playerShipDbId, slotDbId, Slot::WEAPON);
   m_messageQueue->pushMessage(std::move(message));
 }
 

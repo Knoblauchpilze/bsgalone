@@ -98,19 +98,7 @@ bool shouldValidatableMessageBeFiltered(const bsgo::ValidatableMessage &message)
   return !message.validated();
 }
 
-bool shouldSlotComponentUpdatedMessageBeFiltered(const bsgo::SlotComponentMessage &message,
-                                                 const bsgo::Entity &playerShip)
-{
-  switch (message.getComponentType())
-  {
-    case bsgo::ComponentType::COMPUTER_SLOT:
-      return (*playerShip.tryGetComputer(message.getSlotDbId()))->isOffensive();
-    default:
-      return true;
-  }
-}
-
-bool shouldMessageBeFiltered(const bsgo::IMessage &message, const bsgo::Entity &playerShip)
+bool shouldMessageBeFiltered(const bsgo::IMessage &message)
 {
   switch (message.type())
   {
@@ -118,9 +106,6 @@ bool shouldMessageBeFiltered(const bsgo::IMessage &message, const bsgo::Entity &
       return shouldValidatableMessageBeFiltered(message.as<bsgo::JumpCancelledMessage>());
     case bsgo::MessageType::JUMP_REQUESTED:
       return shouldValidatableMessageBeFiltered(message.as<bsgo::JumpRequestedMessage>());
-    case bsgo::MessageType::SLOT_COMPONENT_UPDATED:
-      return shouldSlotComponentUpdatedMessageBeFiltered(message.as<bsgo::SlotComponentMessage>(),
-                                                         playerShip);
     default:
       return false;
   }
@@ -139,8 +124,7 @@ void LogUiHandler::onMessageReceived(const bsgo::IMessage &message)
     m_logs.pop_back();
   }
 
-  const auto ship = m_shipView->getPlayerShip();
-  if (shouldMessageBeFiltered(message, ship))
+  if (shouldMessageBeFiltered(message))
   {
     return;
   }

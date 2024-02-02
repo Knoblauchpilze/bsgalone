@@ -40,12 +40,14 @@ auto str(const MessageType &type) -> std::string
       return "velocity";
     case MessageType::TARGET:
       return "target";
+    case MessageType::WEAPON_COMPONENT_UPDATED:
+      return "weapon_component_updated";
     default:
       return "unknown";
   }
 }
 
-auto allMessageTypes() -> std::array<MessageType, 16>
+auto allMessageTypes() -> std::array<MessageType, 17>
 {
   return {MessageType::CONNECTION,
           MessageType::DOCK,
@@ -62,7 +64,8 @@ auto allMessageTypes() -> std::array<MessageType, 16>
           MessageType::SLOT,
           MessageType::SLOT_COMPONENT_UPDATED,
           MessageType::VELOCITY,
-          MessageType::TARGET};
+          MessageType::TARGET,
+          MessageType::WEAPON_COMPONENT_UPDATED};
 }
 
 auto allMessageTypesAsSet() -> std::unordered_set<MessageType>

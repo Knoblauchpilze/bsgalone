@@ -16,7 +16,12 @@ class SlotService : public AbstractService
               const DatabaseEntityMapper &entityMapper);
   ~SlotService() override = default;
 
-  bool tryToggleWeapon(const Uuid shipDbId, const Uuid weaponDbId) const;
+  struct TogglingResult
+  {
+    bool success{false};
+    bool active{false};
+  };
+  auto tryToggleWeapon(const Uuid shipDbId, const Uuid weaponDbId) const -> TogglingResult;
   bool tryToggleComputer(const Uuid shipDbId, const Uuid computerDbId) const;
 
   private:

@@ -1,8 +1,8 @@
 
 #include "ClientMessageConsumerUtils.hh"
 
+#include "ComponentMessageConsumer.hh"
 #include "ShipMessageConsumer.hh"
-#include "SlotComponentMessageConsumer.hh"
 #include "SystemMessageConsumer.hh"
 #include "VelocityMessageConsumer.hh"
 
@@ -15,7 +15,7 @@ void createMessageConsumers(bsgo::IMessageQueue &inputMessagesQueue,
                             const bsgo::CoordinatorShPtr &coordinator)
 {
   inputMessagesQueue.addListener(
-    std::make_unique<SlotComponentMessageConsumer>(entityMapper, coordinator));
+    std::make_unique<ComponentMessageConsumer>(entityMapper, coordinator));
 
   inputMessagesQueue.addListener(std::make_unique<ShipMessageConsumer>(entityMapper, coordinator));
 

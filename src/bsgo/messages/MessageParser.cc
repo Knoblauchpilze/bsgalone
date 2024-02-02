@@ -19,6 +19,7 @@
 #include "SlotMessage.hh"
 #include "TargetMessage.hh"
 #include "VelocityMessage.hh"
+#include "WeaponComponentMessage.hh"
 
 namespace bsgo {
 
@@ -124,6 +125,8 @@ auto MessageParser::tryReadMessage(const MessageType &type, std::istream &in)
       return readMessage<VelocityMessage>(in);
     case MessageType::TARGET:
       return readMessage<TargetMessage>(in);
+    case MessageType::WEAPON_COMPONENT_UPDATED:
+      return readMessage<WeaponComponentMessage>(in);
     default:
       error("Unsupported message type " + str(type));
       break;

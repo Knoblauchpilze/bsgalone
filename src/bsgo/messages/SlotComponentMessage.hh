@@ -10,7 +10,9 @@ class SlotComponentMessage : public ComponentUpdatedMessage
 {
   public:
   SlotComponentMessage();
-  SlotComponentMessage(const Uuid shipDbId, const int slotDbId, const SlotComponent &component);
+  SlotComponentMessage(const Uuid shipDbId,
+                       const int slotDbId,
+                       const std::optional<utils::Duration> &elapsedSinceLastFired);
   ~SlotComponentMessage() override = default;
 
   auto getSlotDbId() const -> Uuid;

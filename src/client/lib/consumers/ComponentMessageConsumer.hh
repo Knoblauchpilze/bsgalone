@@ -5,15 +5,16 @@
 #include "Coordinator.hh"
 #include "DatabaseEntityMapper.hh"
 #include "SlotComponentMessage.hh"
+#include "WeaponComponentMessage.hh"
 
 namespace pge {
 
-class SlotComponentMessageConsumer : public bsgo::AbstractMessageConsumer
+class ComponentMessageConsumer : public bsgo::AbstractMessageConsumer
 {
   public:
-  SlotComponentMessageConsumer(const bsgo::DatabaseEntityMapper &entityMapper,
-                               bsgo::CoordinatorShPtr coordinator);
-  ~SlotComponentMessageConsumer() override = default;
+  ComponentMessageConsumer(const bsgo::DatabaseEntityMapper &entityMapper,
+                           bsgo::CoordinatorShPtr coordinator);
+  ~ComponentMessageConsumer() override = default;
 
   void onMessageReceived(const bsgo::IMessage &message) override;
 
@@ -22,6 +23,7 @@ class SlotComponentMessageConsumer : public bsgo::AbstractMessageConsumer
   bsgo::CoordinatorShPtr m_coordinator{};
 
   void handleComputerSlotUpdated(const bsgo::SlotComponentMessage &message) const;
+  void handleWeaponUpdated(const bsgo::WeaponComponentMessage &message) const;
 };
 
 } // namespace pge

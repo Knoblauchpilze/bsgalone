@@ -35,6 +35,11 @@ auto WeaponSlotComponent::position() const -> Eigen::Vector3f
   return m_position;
 }
 
+void WeaponSlotComponent::setActive(const bool active)
+{
+  m_active = active;
+}
+
 void WeaponSlotComponent::toggle()
 {
   m_active = !m_active;

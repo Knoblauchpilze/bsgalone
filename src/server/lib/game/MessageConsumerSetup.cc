@@ -30,7 +30,8 @@ void createMessageConsumers(IMessageQueue &inputMessagesQueue,
   inputMessagesQueue.addListener(
     std::make_unique<DockMessageConsumer>(services, outputMessagesQueue));
 
-  inputMessagesQueue.addListener(std::make_unique<SlotMessageConsumer>(services));
+  inputMessagesQueue.addListener(
+    std::make_unique<SlotMessageConsumer>(services, outputMessagesQueue));
 
   inputMessagesQueue.addListener(std::make_unique<ScannedMessageConsumer>(outputMessagesQueue));
 
