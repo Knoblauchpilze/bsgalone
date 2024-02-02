@@ -2,6 +2,7 @@
 #include "BroadcastMessageQueue.hh"
 #include "MessageProcessor.hh"
 #include "NetworkMessage.hh"
+#include "ScannedMessage.hh"
 
 namespace bsgo {
 
@@ -39,6 +40,13 @@ void BroadcastMessageQueue::processMessages(const std::optional<int> &amount)
   processor.processMessages(amount);
 }
 
+namespace {
+bool shouldTryToDetermineClientId(const IMessage &message)
+{
+  return MessageType::SCANNED == message.type();
+}
+} // namespace
+
 void BroadcastMessageQueue::processMessage(const IMessage &message)
 {
   if (!message.isA<NetworkMessage>())
@@ -46,8 +54,18 @@ void BroadcastMessageQueue::processMessage(const IMessage &message)
     error("Unsupported message type " + str(message.type()), "Message is not a network message");
   }
 
-  const auto &network      = message.as<NetworkMessage>();
-  const auto maybeClientId = network.tryGetClientId();
+  const auto &network = message.as<NetworkMessage>();
+  auto maybeClientId  = network.tryGetClientId();
+
+  if (!maybeClientId && shouldTryToDetermineClientId(message))
+  {
+    maybeClientId = tryDetermineClientId(message);
+    if (!maybeClientId)
+    {
+      error("Failed to determine client id for " + str(message.type()));
+    }
+  }
+
   if (maybeClientId)
   {
     sendMessageToClient(*maybeClientId, message);
@@ -58,6 +76,29 @@ void BroadcastMessageQueue::processMessage(const IMessage &message)
   }
 }
 
+namespace {
+auto determineClientFor(const ScannedMessage & /*message*/) -> std::optional<Uuid>
+{
+  return {};
+}
+} // namespace
+
+auto BroadcastMessageQueue::tryDetermineClientId(const IMessage &message) const
+  -> std::optional<Uuid>
+{
+  switch (message.type())
+  {
+    case MessageType::SCANNED:
+      return determineClientFor(message.as<ScannedMessage>());
+    default:
+      error("Failed to determine client id", "Unsupported message type " + str(message.type()));
+      break;
+  }
+
+  // Redundant because of the error above.
+  return {};
+}
+
 void BroadcastMessageQueue::sendMessageToClient(const Uuid clientId, const IMessage &message)
 {
   const auto connection = m_clientManager->getConnectionForClient(clientId);
@@ -66,7 +107,7 @@ void BroadcastMessageQueue::sendMessageToClient(const Uuid clientId, const IMess
 
 void BroadcastMessageQueue::broadcastMessage(const IMessage &message)
 {
-  debug("Broadcasting message " + str(message.type()));
+  warn("Broadcasting message " + str(message.type()));
   for (const auto &connection : m_clientManager->getAllConnections())
   {
     connection->send(message);
