@@ -11,7 +11,6 @@ auto assertMessagesAreEqual(const JumpCancelledMessage &actual, const JumpCancel
 {
   EXPECT_EQ(actual.type(), expected.type());
   EXPECT_EQ(actual.getShipDbId(), expected.getShipDbId());
-  EXPECT_EQ(actual.getShipEntityId(), expected.getShipEntityId());
   EXPECT_EQ(actual.tryGetClientId(), expected.tryGetClientId());
   EXPECT_EQ(actual.validated(), expected.validated());
 }
@@ -19,8 +18,8 @@ auto assertMessagesAreEqual(const JumpCancelledMessage &actual, const JumpCancel
 
 TEST(Unit_Bsgo_Serialization_JumpCancelledMessage, Basic)
 {
-  const JumpCancelledMessage expected(Uuid{14}, Uuid{26});
-  JumpCancelledMessage actual(Uuid{6}, Uuid{4});
+  const JumpCancelledMessage expected(Uuid{14});
+  JumpCancelledMessage actual(Uuid{6});
   actual.validate();
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
@@ -28,25 +27,25 @@ TEST(Unit_Bsgo_Serialization_JumpCancelledMessage, Basic)
 
 TEST(Unit_Bsgo_Serialization_JumpCancelledMessage, Validated)
 {
-  JumpCancelledMessage expected(Uuid{14}, Uuid{26});
+  JumpCancelledMessage expected(Uuid{14});
   expected.validate();
-  JumpCancelledMessage actual(Uuid{6}, Uuid{4});
+  JumpCancelledMessage actual(Uuid{6});
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
 
 TEST(Unit_Bsgo_Serialization_JumpCancelledMessage, WithClientId)
 {
-  JumpCancelledMessage expected(Uuid{14}, Uuid{26});
+  JumpCancelledMessage expected(Uuid{14});
   expected.setClientId(Uuid{119});
-  JumpCancelledMessage actual(Uuid{6}, Uuid{4});
+  JumpCancelledMessage actual(Uuid{6});
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
 
 TEST(Unit_Bsgo_Serialization_JumpCancelledMessage, Clone)
 {
-  const JumpCancelledMessage expected(Uuid{14}, Uuid{26});
+  const JumpCancelledMessage expected(Uuid{14});
   const auto cloned = expected.clone();
   ASSERT_EQ(cloned->type(), MessageType::JUMP_CANCELLED);
   assertMessagesAreEqual(cloned->as<JumpCancelledMessage>(), expected);

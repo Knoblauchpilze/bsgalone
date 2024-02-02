@@ -17,7 +17,7 @@ class JumpService : public AbstractService
   ~JumpService() override = default;
 
   bool tryRegisterJump(const Uuid shipDbId, const Uuid system) const;
-  bool tryCancelJump(const Uuid shipDbId, const Uuid shipEntityId) const;
+  bool tryCancelJump(const Uuid shipDbId) const;
   bool tryJump(const Uuid shipDbId, const Uuid shipEntityId) const;
 
   private:

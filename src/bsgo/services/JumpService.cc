@@ -93,8 +93,14 @@ bool canShipCancelJump(const PlayerShip &ship)
 }
 } // namespace
 
-bool JumpService::tryCancelJump(const Uuid shipDbId, const Uuid shipEntityId) const
+bool JumpService::tryCancelJump(const Uuid shipDbId) const
 {
+  const auto maybeShipEntity = m_entityMapper.tryGetShipEntityId(shipDbId);
+  if (!maybeShipEntity)
+  {
+    return false;
+  }
+
   auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
   if (!canShipCancelJump(ship))
   {
@@ -106,7 +112,7 @@ bool JumpService::tryCancelJump(const Uuid shipDbId, const Uuid shipEntityId) co
 
   info("Cancelled jump for ship " + str(shipDbId));
 
-  auto playerShip   = m_coordinator->getEntity(shipEntityId);
+  auto playerShip   = m_coordinator->getEntity(*maybeShipEntity);
   const auto status = playerShip.statusComp().status();
 
   const auto newStatus = updateStatusAfterJumpCancellation(status);

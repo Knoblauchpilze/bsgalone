@@ -11,11 +11,10 @@ class JumpCancelledMessage : public ValidatableMessage
 {
   public:
   JumpCancelledMessage();
-  JumpCancelledMessage(const Uuid shipDbId, const Uuid shipEntityId);
+  JumpCancelledMessage(const Uuid shipDbId);
   ~JumpCancelledMessage() override = default;
 
   auto getShipDbId() const -> Uuid;
-  auto getShipEntityId() const -> Uuid;
 
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
@@ -24,7 +23,6 @@ class JumpCancelledMessage : public ValidatableMessage
 
   private:
   Uuid m_shipDbId{};
-  Uuid m_shipEntityId{};
 };
 
 } // namespace bsgo
