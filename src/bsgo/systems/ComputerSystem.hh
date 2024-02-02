@@ -32,10 +32,7 @@ class ComputerSystem : public AbstractSystem
                             const ComputerSlotComponentShPtr &computer,
                             Coordinator &coordinator) const;
 
-  void sendComponentUpdatedMessage(const Entity &entity,
-                                   const int slotIndex,
-                                   const SlotComponent &component,
-                                   const Coordinator &coordinator) const;
+  void sendComponentUpdatedMessage(const Entity &entity, const SlotComponent &component) const;
 };
 
 } // namespace bsgo

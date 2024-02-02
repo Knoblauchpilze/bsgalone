@@ -38,17 +38,13 @@ bool SlotService::tryToggleComputer(const Uuid shipDbId, const Uuid computerDbId
   const auto maybeEntityId = m_entityMapper.tryGetShipEntityId(shipDbId);
   if (!maybeEntityId)
   {
-    debug("haha");
     return false;
   }
 
-  auto ship = m_coordinator->getEntity(*maybeEntityId);
-  debug("ship db id " + str(shipDbId) + ", entity is " + str(*maybeEntityId)
-        + ", str: " + ship.str());
+  auto ship                = m_coordinator->getEntity(*maybeEntityId);
   const auto maybeComputer = ship.tryGetComputer(computerDbId);
   if (!maybeComputer)
   {
-    debug("hihi");
     return false;
   }
 
