@@ -27,6 +27,7 @@ void ScannedMessageConsumer::handleScanOperation(const ScannedMessage &message) 
 {
   const auto asteroidDbId = message.getAsteroidDbId();
   /// TODO: Perform some sort of validation.
+  /// TODO: This is not used at all.
 
   auto out = std::make_unique<ScannedMessage>(asteroidDbId);
   out->validate();
