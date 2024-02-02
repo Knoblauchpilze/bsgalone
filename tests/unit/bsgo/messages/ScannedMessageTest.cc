@@ -25,7 +25,7 @@ TEST(Unit_Bsgo_Serialization_ScannedMessage, Basic)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_ScannedMessage, Basic_Validated)
+TEST(Unit_Bsgo_Serialization_ScannedMessage, Validated)
 {
   ScannedMessage expected(Uuid{21});
   expected.validate();

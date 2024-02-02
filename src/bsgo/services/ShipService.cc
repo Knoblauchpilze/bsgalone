@@ -104,9 +104,16 @@ bool ShipService::accelerateShip(const Uuid shipEntityId, const Eigen::Vector3f 
   return true;
 }
 
-void ShipService::tryAcquireTarget(const Uuid shipEntityId, const Eigen::Vector3f &position) const
+auto ShipService::tryAcquireTarget(const Uuid shipDbId, const Eigen::Vector3f &position) const
+  -> AcquiringResult
 {
-  auto ship          = m_coordinator->getEntity(shipEntityId);
+  const auto maybeEntityId = m_entityMapper.tryGetShipEntityId(shipDbId);
+  if (!maybeEntityId)
+  {
+    return {};
+  }
+
+  auto ship          = m_coordinator->getEntity(*maybeEntityId);
   auto maybeTargetId = m_coordinator->getEntityAt(position);
 
   if (maybeTargetId)
@@ -121,6 +128,8 @@ void ShipService::tryAcquireTarget(const Uuid shipEntityId, const Eigen::Vector3
   }
 
   updateEntityTarget(ship, maybeTargetId);
+
+  return AcquiringResult{.success = true, .targetDbId = maybeTargetId};
 }
 
 void ShipService::switchActiveShip(PlayerShip currentActiveShip, PlayerShip newActiveShip) const

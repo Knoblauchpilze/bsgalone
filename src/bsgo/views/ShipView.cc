@@ -221,7 +221,8 @@ void ShipView::accelerateShip(const Eigen::Vector3f &acceleration) const
 
 void ShipView::tryAcquireTarget(const Eigen::Vector3f &position) const
 {
-  m_messageQueue->pushMessage(std::make_unique<TargetMessage>(getPlayerShip().uuid, position));
+  checkPlayerShipDbIdExists();
+  m_messageQueue->pushMessage(std::make_unique<TargetMessage>(*m_playerShipDbId, position));
 }
 
 void ShipView::tryEquipItem(const Item &itemType, const Uuid itemDbId) const

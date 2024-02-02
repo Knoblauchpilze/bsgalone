@@ -7,18 +7,25 @@
 namespace bsgo {
 
 TargetMessage::TargetMessage()
-  : NetworkMessage(MessageType::TARGET)
+  : ValidatableMessage(MessageType::TARGET)
 {}
 
-TargetMessage::TargetMessage(const Uuid shipEntityId, const Eigen::Vector3f &position)
-  : NetworkMessage(MessageType::TARGET)
-  , m_shipEntityId(shipEntityId)
+TargetMessage::TargetMessage(const Uuid shipDbId, const Eigen::Vector3f &position)
+  : TargetMessage(shipDbId, position, {})
+{}
+
+TargetMessage::TargetMessage(const Uuid shipDbId,
+                             const Eigen::Vector3f &position,
+                             const std::optional<Uuid> &targetDbId)
+  : ValidatableMessage(MessageType::TARGET)
+  , m_shipDbId(shipDbId)
   , m_position(position)
+  , m_targetDbId(targetDbId)
 {}
 
-auto TargetMessage::getShipEntityId() const -> Uuid
+auto TargetMessage::getShipDbId() const -> Uuid
 {
-  return m_shipEntityId;
+  return m_shipDbId;
 }
 
 auto TargetMessage::getPosition() const -> Eigen::Vector3f
@@ -26,13 +33,20 @@ auto TargetMessage::getPosition() const -> Eigen::Vector3f
   return m_position;
 }
 
+auto TargetMessage::getTargetDbId() const -> std::optional<Uuid>
+{
+  return m_targetDbId;
+}
+
 auto TargetMessage::serialize(std::ostream &out) const -> std::ostream &
 {
   utils::serialize(out, m_messageType);
   utils::serialize(out, m_clientId);
+  utils::serialize(out, m_validated);
 
-  utils::serialize(out, m_shipEntityId);
+  utils::serialize(out, m_shipDbId);
   bsgo::serialize(out, m_position);
+  utils::serialize(out, m_targetDbId);
 
   return out;
 }
@@ -42,17 +56,20 @@ bool TargetMessage::deserialize(std::istream &in)
   bool ok{true};
   ok &= utils::deserialize(in, m_messageType);
   ok &= utils::deserialize(in, m_clientId);
+  ok &= utils::deserialize(in, m_validated);
 
-  ok &= utils::deserialize(in, m_shipEntityId);
+  ok &= utils::deserialize(in, m_shipDbId);
   ok &= bsgo::deserialize(in, m_position);
+  ok &= utils::deserialize(in, m_targetDbId);
 
   return ok;
 }
 
 auto TargetMessage::clone() const -> IMessagePtr
 {
-  auto clone = std::make_unique<TargetMessage>(m_shipEntityId, m_position);
+  auto clone = std::make_unique<TargetMessage>(m_shipDbId, m_position, m_targetDbId);
   clone->copyClientIdIfDefined(*this);
+  clone->validate(validated());
 
   return clone;
 }
