@@ -31,6 +31,7 @@ class BroadcastMessageQueue : public IMessageQueue, public utils::CoreObject
 
   void processMessage(const IMessage &message);
 
+  auto tryDetermineClientId(const IMessage &message) const -> std::optional<Uuid>;
   void sendMessageToClient(const Uuid clientId, const IMessage &message);
   void broadcastMessage(const IMessage &message);
 };
