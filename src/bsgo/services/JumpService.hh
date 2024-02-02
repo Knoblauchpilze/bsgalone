@@ -18,7 +18,7 @@ class JumpService : public AbstractService
 
   bool tryRegisterJump(const Uuid shipDbId, const Uuid system) const;
   bool tryCancelJump(const Uuid shipDbId) const;
-  bool tryJump(const Uuid shipDbId, const Uuid shipEntityId) const;
+  bool tryJump(const Uuid shipDbId) const;
 
   private:
   CoordinatorShPtr m_coordinator{};

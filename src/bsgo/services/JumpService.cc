@@ -149,8 +149,14 @@ bool canShipCompleteJump(const PlayerShip &ship)
 }
 } // namespace
 
-bool JumpService::tryJump(const Uuid shipDbId, const Uuid shipEntityId) const
+bool JumpService::tryJump(const Uuid shipDbId) const
 {
+  const auto maybeShipEntity = m_entityMapper.tryGetShipEntityId(shipDbId);
+  if (!maybeShipEntity)
+  {
+    return false;
+  }
+
   auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
   if (!canShipCompleteJump(ship))
   {
@@ -165,7 +171,7 @@ bool JumpService::tryJump(const Uuid shipDbId, const Uuid shipEntityId) const
 
   info("Completed jump to " + system.name + " for " + str(shipDbId));
 
-  auto playerShip = m_coordinator->getEntity(shipEntityId);
+  auto playerShip = m_coordinator->getEntity(*maybeShipEntity);
   playerShip.statusComp().setStatus(Status::APPEARING);
   playerShip.statusComp().resetAppearingTime();
 

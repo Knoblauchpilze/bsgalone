@@ -30,16 +30,15 @@ void JumpMessageConsumer::onMessageReceived(const IMessage &message)
 
 void JumpMessageConsumer::handleJump(const JumpMessage &message) const
 {
-  const auto shipDbId     = message.getShipDbId();
-  const auto shipEntityId = message.getShipEntityId();
+  const auto shipDbId = message.getShipDbId();
 
-  if (!m_jumpService->tryJump(shipDbId, shipEntityId))
+  if (!m_jumpService->tryJump(shipDbId))
   {
     warn("Failed to process jump message for ship " + str(shipDbId));
     return;
   }
 
-  auto out = std::make_unique<JumpMessage>(shipDbId, shipEntityId);
+  auto out = std::make_unique<JumpMessage>(shipDbId);
   out->validate();
   out->copyClientIdIfDefined(message);
   m_messageQueue->pushMessage(std::move(out));
