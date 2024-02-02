@@ -11,24 +11,25 @@ SlotService::SlotService(const Repositories &repositories,
   , m_entityMapper(entityMapper)
 {}
 
-bool SlotService::tryToggleWeapon(const Uuid shipDbId, const Uuid weaponDbId) const
+auto SlotService::tryToggleWeapon(const Uuid shipDbId, const Uuid weaponDbId) const
+  -> TogglingResult
 {
   const auto maybeEntityId = m_entityMapper.tryGetShipEntityId(shipDbId);
   if (!maybeEntityId)
   {
-    return false;
+    return {};
   }
 
   const auto ship        = m_coordinator->getEntity(*maybeEntityId);
   const auto maybeWeapon = ship.tryGetWeapon(weaponDbId);
   if (!maybeWeapon)
   {
-    return false;
+    return {};
   }
 
   (*maybeWeapon)->toggle();
 
-  return true;
+  return TogglingResult{.success = true, .active = (*maybeWeapon)->active()};
 }
 
 bool SlotService::tryToggleComputer(const Uuid shipDbId, const Uuid computerDbId) const

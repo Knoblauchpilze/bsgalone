@@ -24,11 +24,12 @@ enum class MessageType
   SLOT,
   SLOT_COMPONENT_UPDATED,
   VELOCITY,
-  TARGET
+  TARGET,
+  WEAPON_COMPONENT_UPDATED
 };
 
 auto str(const MessageType &type) -> std::string;
-auto allMessageTypes() -> std::array<MessageType, 16>;
+auto allMessageTypes() -> std::array<MessageType, 17>;
 
 auto allMessageTypesAsSet() -> std::unordered_set<MessageType>;
 

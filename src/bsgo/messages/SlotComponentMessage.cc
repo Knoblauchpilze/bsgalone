@@ -8,12 +8,15 @@ SlotComponentMessage::SlotComponentMessage()
   : ComponentUpdatedMessage(MessageType::SLOT_COMPONENT_UPDATED)
 {}
 
-SlotComponentMessage::SlotComponentMessage(const Uuid shipDbId,
-                                           const Uuid slotDbId,
-                                           const SlotComponent &component)
-  : ComponentUpdatedMessage(MessageType::SLOT_COMPONENT_UPDATED, shipDbId, component.type())
+SlotComponentMessage::SlotComponentMessage(
+  const Uuid shipDbId,
+  const Uuid slotDbId,
+  const std::optional<utils::Duration> &elapsedSinceLastFired)
+  : ComponentUpdatedMessage(MessageType::SLOT_COMPONENT_UPDATED,
+                            shipDbId,
+                            ComponentType::COMPUTER_SLOT)
   , m_slotDbId(slotDbId)
-  , m_elapsedSinceLastFired(component.elapsedSinceLastFired())
+  , m_elapsedSinceLastFired(elapsedSinceLastFired)
 {}
 
 auto SlotComponentMessage::getSlotDbId() const -> int

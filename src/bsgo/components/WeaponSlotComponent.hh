@@ -18,6 +18,7 @@ class WeaponSlotComponent : public SlotComponent
   bool active() const;
   auto position() const -> Eigen::Vector3f;
 
+  void setActive(const bool active);
   void toggle();
 
   auto generateDamage() const -> float;

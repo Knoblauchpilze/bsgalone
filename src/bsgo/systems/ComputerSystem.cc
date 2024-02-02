@@ -134,7 +134,8 @@ void ComputerSystem::sendComponentUpdatedMessage(const Entity &entity,
 {
   const auto entityDbId = entity.dbComp().dbId();
   const auto slotDbId   = component.dbId();
-  pushMessage(std::make_unique<SlotComponentMessage>(entityDbId, slotDbId, component));
+  pushMessage(
+    std::make_unique<SlotComponentMessage>(entityDbId, slotDbId, component.elapsedSinceLastFired()));
 }
 
 } // namespace bsgo
