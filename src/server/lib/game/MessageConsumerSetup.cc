@@ -8,7 +8,6 @@
 #include "JumpMessageConsumer.hh"
 #include "JumpRequestedMessageConsumer.hh"
 #include "PurchaseMessageConsumer.hh"
-#include "ScannedMessageConsumer.hh"
 #include "SlotMessageConsumer.hh"
 #include "TargetMessageConsumer.hh"
 
@@ -32,8 +31,6 @@ void createMessageConsumers(IMessageQueue &inputMessagesQueue,
 
   inputMessagesQueue.addListener(
     std::make_unique<SlotMessageConsumer>(services, outputMessagesQueue));
-
-  inputMessagesQueue.addListener(std::make_unique<ScannedMessageConsumer>(outputMessagesQueue));
 
   inputMessagesQueue.addListener(
     std::make_unique<TargetMessageConsumer>(services, outputMessagesQueue));
