@@ -1,18 +1,18 @@
 
-#include "JumpMessageConsumer.hh"
+#include "ShipMessageConsumer.hh"
 
 namespace pge {
 
-JumpMessageConsumer::JumpMessageConsumer(const bsgo::DatabaseEntityMapper &entityMapper,
+ShipMessageConsumer::ShipMessageConsumer(const bsgo::DatabaseEntityMapper &entityMapper,
                                          bsgo::CoordinatorShPtr coordinator)
-  : bsgo::AbstractMessageConsumer("jump",
+  : bsgo::AbstractMessageConsumer("ship",
                                   {bsgo::MessageType::JUMP_REQUESTED,
                                    bsgo::MessageType::JUMP_CANCELLED})
   , m_entityMapper(entityMapper)
   , m_coordinator(std::move(coordinator))
 {}
 
-void JumpMessageConsumer::onMessageReceived(const bsgo::IMessage &message)
+void ShipMessageConsumer::onMessageReceived(const bsgo::IMessage &message)
 {
   switch (message.type())
   {
@@ -27,7 +27,7 @@ void JumpMessageConsumer::onMessageReceived(const bsgo::IMessage &message)
   }
 }
 
-void JumpMessageConsumer::handleJumpRequested(const bsgo::JumpRequestedMessage &message) const
+void ShipMessageConsumer::handleJumpRequested(const bsgo::JumpRequestedMessage &message) const
 {
   const auto shipDbId = message.getShipDbId();
 
@@ -45,7 +45,7 @@ void JumpMessageConsumer::handleJumpRequested(const bsgo::JumpRequestedMessage &
   ship.statusComp().setStatus(newStatus);
 }
 
-void JumpMessageConsumer::handleJumpCancelled(const bsgo::JumpCancelledMessage &message) const
+void ShipMessageConsumer::handleJumpCancelled(const bsgo::JumpCancelledMessage &message) const
 {
   const auto shipDbId = message.getShipDbId();
 

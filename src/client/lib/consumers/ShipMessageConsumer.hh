@@ -9,12 +9,12 @@
 
 namespace pge {
 
-class JumpMessageConsumer : public bsgo::AbstractMessageConsumer
+class ShipMessageConsumer : public bsgo::AbstractMessageConsumer
 {
   public:
-  JumpMessageConsumer(const bsgo::DatabaseEntityMapper &entityMapper,
+  ShipMessageConsumer(const bsgo::DatabaseEntityMapper &entityMapper,
                       bsgo::CoordinatorShPtr coordinator);
-  ~JumpMessageConsumer() override = default;
+  ~ShipMessageConsumer() override = default;
 
   void onMessageReceived(const bsgo::IMessage &message) override;
 
