@@ -198,7 +198,7 @@ auto createScannedMessage(const bsgo::ScannedMessage &message,
                           const bsgo::SystemView &systemView,
                           const bsgo::ResourceView &resourceView) -> TextConfig
 {
-  const auto asteroid = systemView.getAsteroid(message.asteroidEntityId());
+  const auto asteroid = systemView.getAsteroid(message.getAsteroidDbId());
 
   if (!asteroid.exists<bsgo::LootComponent>())
   {

@@ -14,32 +14,37 @@ AsteroidDataSource::AsteroidDataSource(const Repositories &repositories, const U
   addModule("asteroid");
 }
 
-void AsteroidDataSource::initialize(Coordinator &coordinator) const
+void AsteroidDataSource::initialize(Coordinator &coordinator,
+                                    DatabaseEntityMapper &entityMapper) const
 {
   const auto asteroids = m_repositories.systemRepository->findAllAsteroidsBySystem(m_systemDbId);
   for (const auto &id : asteroids)
   {
-    registerAsteroid(coordinator, id);
+    registerAsteroid(coordinator, id, entityMapper);
   }
 }
 
-void AsteroidDataSource::registerAsteroid(Coordinator &coordinator, const Uuid asteroid) const
+void AsteroidDataSource::registerAsteroid(Coordinator &coordinator,
+                                          const Uuid asteroidDbId,
+                                          DatabaseEntityMapper &entityMapper) const
 {
-  const auto data = m_repositories.asteroidRepository->findOneById(asteroid);
+  const auto data = m_repositories.asteroidRepository->findOneById(asteroidDbId);
 
-  auto box       = std::make_unique<CircleBox>(data.position, data.radius);
-  const auto ent = coordinator.createEntity(EntityKind::ASTEROID);
-  coordinator.addDbId(ent, asteroid);
-  coordinator.addTransform(ent, std::move(box));
-  coordinator.addHealth(ent, data.health, data.health, 0.0f);
-  coordinator.addRemoval(ent);
-  coordinator.addScanned(ent);
+  auto box                    = std::make_unique<CircleBox>(data.position, data.radius);
+  const auto asteroidEntityId = coordinator.createEntity(EntityKind::ASTEROID);
+  coordinator.addDbId(asteroidEntityId, asteroidDbId);
+  coordinator.addTransform(asteroidEntityId, std::move(box));
+  coordinator.addHealth(asteroidEntityId, data.health, data.health, 0.0f);
+  coordinator.addRemoval(asteroidEntityId);
+  coordinator.addScanned(asteroidEntityId);
   if (data.loot)
   {
-    coordinator.addLoot(ent);
-    const auto loot = m_repositories.asteroidLootRepository->findOneById(asteroid);
-    coordinator.addResourceComponent(ent, loot.resource, loot.amount);
+    coordinator.addLoot(asteroidEntityId);
+    const auto loot = m_repositories.asteroidLootRepository->findOneById(asteroidDbId);
+    coordinator.addResourceComponent(asteroidEntityId, loot.resource, loot.amount);
   }
+
+  entityMapper.registerAsteroid(asteroidDbId, asteroidEntityId);
 }
 
 } // namespace bsgo

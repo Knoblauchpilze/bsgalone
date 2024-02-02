@@ -9,6 +9,7 @@
 #include "SystemView.hh"
 
 #include "Coordinator.hh"
+#include "DatabaseEntityMapper.hh"
 #include "IMessageQueue.hh"
 #include "Repositories.hh"
 
@@ -26,6 +27,7 @@ struct Views
 
 auto createViews(const CoordinatorShPtr &coordinator,
                  const Repositories &repositories,
+                 const DatabaseEntityMapper &entityMapper,
                  IMessageQueue *const messageQueue) -> Views;
 
 } // namespace bsgo

@@ -78,7 +78,6 @@ bool ShipService::tryUndock(const Uuid shipDbId) const
 
   if (statusComp.status() != Status::DOCKED)
   {
-    debug("state is " + str(statusComp.status()));
     return false;
   }
 

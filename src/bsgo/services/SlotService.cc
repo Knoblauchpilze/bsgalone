@@ -16,7 +16,6 @@ bool SlotService::tryToggleWeapon(const Uuid shipDbId, const Uuid weaponDbId) co
   const auto maybeEntityId = m_entityMapper.tryGetShipEntityId(shipDbId);
   if (!maybeEntityId)
   {
-    debug("haha");
     return false;
   }
 
@@ -24,7 +23,6 @@ bool SlotService::tryToggleWeapon(const Uuid shipDbId, const Uuid weaponDbId) co
   const auto maybeWeapon = ship.tryGetWeapon(weaponDbId);
   if (!maybeWeapon)
   {
-    debug("hihi");
     return false;
   }
 

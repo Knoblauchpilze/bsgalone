@@ -5,8 +5,10 @@ namespace bsgo {
 
 SystemView::SystemView(const CoordinatorShPtr &coordinator,
                        const Repositories &repositories,
+                       const DatabaseEntityMapper &entityMapper,
                        IMessageQueue *const messageQueue)
   : AbstractView("system", coordinator, repositories, messageQueue)
+  , m_entityMapper(entityMapper)
 {}
 
 auto SystemView::getEntityAt(const Eigen::Vector3f &pos) const -> std::optional<Entity>
@@ -58,9 +60,15 @@ auto SystemView::getBulletsWithin(const IBoundingBox &bbox) const -> std::vector
   return out;
 }
 
-auto SystemView::getAsteroid(const Uuid asteroid) const -> Entity
+auto SystemView::getAsteroid(const Uuid asteroidDbId) const -> Entity
 {
-  return m_coordinator->getEntity(asteroid);
+  const auto maybeAsteroid = m_entityMapper.tryGetAsteroidEntityId(asteroidDbId);
+  if (!maybeAsteroid)
+  {
+    error("Failed to get asteroid " + str(asteroidDbId));
+  }
+
+  return m_coordinator->getEntity(*maybeAsteroid);
 }
 
 } // namespace bsgo

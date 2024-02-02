@@ -49,8 +49,6 @@ void DatabaseEntityMapper::registerShipForPlayer(const Uuid playerDbId,
                                                  const Uuid entityId)
 {
   registerShip(shipDbId, entityId);
-  debug("registered ship " + str(shipDbId) + " for player " + str(playerDbId)
-        + ", (player: " + (m_playerDbId ? str(*m_playerDbId) : "haha") + ")");
   if (m_playerDbId && *m_playerDbId == playerDbId)
   {
     if (m_playerShipDbId)
@@ -66,6 +64,16 @@ void DatabaseEntityMapper::registerShipForPlayer(const Uuid playerDbId,
             "Player is already attached to entity " + str(*m_playerShipEntityId));
     }
     m_playerShipEntityId = entityId;
+  }
+}
+
+void DatabaseEntityMapper::registerAsteroid(const Uuid asteroidDbId, const Uuid entityId)
+{
+  const auto res = m_asteroidDbIdsToEntityIds.try_emplace(asteroidDbId, entityId);
+  if (!res.second)
+  {
+    error("Unable to register asteroid " + str(asteroidDbId),
+          "Asteroid already is attached to entity " + str(res.first->second));
   }
 }
 
@@ -123,10 +131,23 @@ auto DatabaseEntityMapper::tryGetShipEntityId(const Uuid shipDbId) const -> std:
   return {};
 }
 
+auto DatabaseEntityMapper::tryGetAsteroidEntityId(const Uuid asteroidDbId) const
+  -> std::optional<Uuid>
+{
+  const auto maybeAsteroid = m_asteroidDbIdsToEntityIds.find(asteroidDbId);
+  if (maybeAsteroid != m_asteroidDbIdsToEntityIds.cend())
+  {
+    return maybeAsteroid->second;
+  }
+
+  return {};
+}
+
 void DatabaseEntityMapper::clear()
 {
   m_playerDbIdsToEntityIds.clear();
   m_shipDbIdsToEntityIds.clear();
+  m_asteroidDbIdsToEntityIds.clear();
 
   m_playerDbId.reset();
   m_playerEntityId.reset();
