@@ -41,7 +41,7 @@ void ComputerSystem::updateEntity(Entity &entity,
     {
       if (processFireRequest(entity, computer, targetEnt, coordinator))
       {
-        sendComponentUpdatedMessage(entity, *computer);
+        sendComponentUpdatedMessage(entity, *computer, coordinator);
       }
     }
   }
@@ -137,12 +137,20 @@ void ComputerSystem::applyReceiverEffects(Entity &ent,
 }
 
 void ComputerSystem::sendComponentUpdatedMessage(const Entity &entity,
-                                                 const SlotComponent &component) const
+                                                 const SlotComponent &component,
+                                                 Coordinator &coordinator) const
 {
   const auto entityDbId = entity.dbComp().dbId();
   const auto slotDbId   = component.dbId();
-  pushMessage(
-    std::make_unique<SlotComponentMessage>(entityDbId, slotDbId, component.elapsedSinceLastFired()));
+
+  const auto ownerEntityId = entity.ownerComp().owner();
+  const auto owner         = coordinator.getEntity(ownerEntityId);
+  const auto ownerDbId     = owner.dbComp().dbId();
+
+  pushMessage(std::make_unique<SlotComponentMessage>(ownerDbId,
+                                                     entityDbId,
+                                                     slotDbId,
+                                                     component.elapsedSinceLastFired()));
 }
 
 } // namespace bsgo

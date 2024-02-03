@@ -3,6 +3,7 @@
 #include "MessageProcessor.hh"
 #include "NetworkMessage.hh"
 #include "ScannedMessage.hh"
+#include "SlotComponentMessage.hh"
 
 namespace bsgo {
 
@@ -43,7 +44,8 @@ void BroadcastMessageQueue::processMessages(const std::optional<int> &amount)
 namespace {
 bool shouldTryToDetermineClientId(const IMessage &message)
 {
-  return MessageType::SCANNED == message.type();
+  return MessageType::SCANNED == message.type()
+         || MessageType::SLOT_COMPONENT_UPDATED == message.type();
 }
 } // namespace
 
@@ -77,8 +79,8 @@ void BroadcastMessageQueue::processMessage(const IMessage &message)
 }
 
 namespace {
-auto determineClientFor(const ScannedMessage &message, const ClientManager &clientManager)
-  -> std::optional<Uuid>
+template<typename T>
+auto determineClientFor(const T &message, const ClientManager &clientManager) -> std::optional<Uuid>
 {
   return clientManager.getClientIdForPlayer(message.getPlayerDbId());
 }
@@ -91,6 +93,8 @@ auto BroadcastMessageQueue::tryDetermineClientId(const IMessage &message) const
   {
     case MessageType::SCANNED:
       return determineClientFor(message.as<ScannedMessage>(), *m_clientManager);
+    case MessageType::SLOT_COMPONENT_UPDATED:
+      return determineClientFor(message.as<SlotComponentMessage>(), *m_clientManager);
     default:
       error("Failed to determine client id", "Unsupported message type " + str(message.type()));
       break;
