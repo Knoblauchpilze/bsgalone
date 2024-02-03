@@ -47,9 +47,6 @@ void NetworkSystem::syncComponent(Entity &entity, const ComponentType &type) con
     case ComponentType::RESOURCE:
       syncResourceComponents(entity);
       break;
-    case ComponentType::COMPUTER_SLOT:
-      syncComputerSlotComponents(entity);
-      break;
     default:
       error("Failed to sync component " + str(type), "Unsupported component type");
       break;
@@ -78,12 +75,6 @@ void NetworkSystem::syncResourceComponents(Entity &entity) const
   {
     syncResource(playerDbId, *resourceComp, *m_repositories.playerResourceRepository);
   }
-}
-
-void NetworkSystem::syncComputerSlotComponents(Entity &entity) const
-{
-  /// TODO: Should create a message for the slot fired.
-  warn("should sync computer slot component for " + entity.str());
 }
 
 } // namespace bsgo
