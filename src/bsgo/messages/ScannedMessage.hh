@@ -10,9 +10,10 @@ class ScannedMessage : public ValidatableMessage
 {
   public:
   ScannedMessage();
-  ScannedMessage(const Uuid asteroidDbId);
+  ScannedMessage(const Uuid playerDbId, const Uuid asteroidDbId);
   ~ScannedMessage() override = default;
 
+  auto getPlayerDbId() const -> Uuid;
   auto getAsteroidDbId() const -> Uuid;
 
   auto serialize(std::ostream &out) const -> std::ostream & override;
@@ -21,6 +22,7 @@ class ScannedMessage : public ValidatableMessage
   auto clone() const -> IMessagePtr override;
 
   private:
+  Uuid m_playerDbId{};
   Uuid m_asteroidDbId{};
 };
 

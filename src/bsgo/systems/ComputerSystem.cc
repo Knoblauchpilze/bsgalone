@@ -95,7 +95,7 @@ bool ComputerSystem::processFireRequest(Entity &ent,
   applyEmitterEffects(ent, computer, coordinator);
   if (computer->isOffensive() && target)
   {
-    applyReceiverEffects(*target, computer, coordinator);
+    applyReceiverEffects(ent, *target, computer, coordinator);
   }
 
   return true;
@@ -119,13 +119,20 @@ void ComputerSystem::applyEmitterEffects(Entity &ent,
   }
 }
 
-void ComputerSystem::applyReceiverEffects(Entity &target,
+void ComputerSystem::applyReceiverEffects(Entity &ent,
+                                          Entity &target,
                                           const ComputerSlotComponentShPtr & /*computer*/,
-                                          Coordinator & /*coordinator*/) const
+                                          Coordinator &coordinator) const
 {
   if (target.exists<ScannedComponent>())
   {
-    pushMessage(std::make_unique<ScannedMessage>(target.dbComp().dbId()));
+    const auto ownerEntityId = ent.ownerComp().owner();
+    const auto owner         = coordinator.getEntity(ownerEntityId);
+
+    const auto ownerDbId  = owner.dbComp().dbId();
+    const auto targetDbId = target.dbComp().dbId();
+
+    pushMessage(std::make_unique<ScannedMessage>(ownerDbId, targetDbId));
   }
 }
 

@@ -77,9 +77,10 @@ void BroadcastMessageQueue::processMessage(const IMessage &message)
 }
 
 namespace {
-auto determineClientFor(const ScannedMessage & /*message*/) -> std::optional<Uuid>
+auto determineClientFor(const ScannedMessage &message, const ClientManager &clientManager)
+  -> std::optional<Uuid>
 {
-  return {};
+  return clientManager.getClientIdForPlayer(message.getPlayerDbId());
 }
 } // namespace
 
@@ -89,7 +90,7 @@ auto BroadcastMessageQueue::tryDetermineClientId(const IMessage &message) const
   switch (message.type())
   {
     case MessageType::SCANNED:
-      return determineClientFor(message.as<ScannedMessage>());
+      return determineClientFor(message.as<ScannedMessage>(), *m_clientManager);
     default:
       error("Failed to determine client id", "Unsupported message type " + str(message.type()));
       break;
