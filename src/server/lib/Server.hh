@@ -5,8 +5,7 @@
 #include "BroadcastMessageQueue.hh"
 #include "ClientManager.hh"
 #include "Context.hh"
-#include "IMessageQueue.hh"
-#include "NetworkMessageQueue.hh"
+#include "MessageExchanger.hh"
 #include "NetworkSystem.hh"
 #include "SystemProcessor.hh"
 #include "TcpServer.hh"
@@ -29,10 +28,7 @@ class Server : public utils::CoreObject
   net::TcpServerPtr m_tcpServer{};
 
   ClientManagerShPtr m_clientManager{std::make_shared<ClientManager>()};
-
-  NetworkMessageQueuePtr m_inputMessageQueue{};
-  IMessageQueuePtr m_outputMessageQueue{};
-
+  MessageExchangerPtr m_messageExchanger{};
   std::vector<SystemProcessorShPtr> m_systemProcessors{};
 
   void initialize();

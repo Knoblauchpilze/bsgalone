@@ -6,5 +6,6 @@ target_include_directories (bsgalone_server_lib PUBLIC
 target_sources (bsgalone_server_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/MessageConsumerSetup.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SystemProcessor.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/MessageExchanger.cc
 	)
 

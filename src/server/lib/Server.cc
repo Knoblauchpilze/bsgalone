@@ -1,13 +1,7 @@
 
 
 #include "Server.hh"
-#include "AsyncMessageQueue.hh"
-#include "ConnectionMessage.hh"
 #include "DataSource.hh"
-#include "LoginMessageConsumer.hh"
-#include "SignupMessageConsumer.hh"
-#include "SynchronizedMessageQueue.hh"
-#include "TriageMessageConsumer.hh"
 #include <core_utils/TimeUtils.hh>
 
 namespace bsgo {
@@ -35,27 +29,8 @@ void Server::requestStop()
   m_running.store(false);
 }
 
-namespace {
-auto createInputMessageQueue() -> NetworkMessageQueuePtr
-{
-  auto messageQueue = std::make_unique<SynchronizedMessageQueue>();
-  auto asyncQueue   = std::make_unique<AsyncMessageQueue>(std::move(messageQueue));
-
-  return std::make_unique<NetworkMessageQueue>(std::move(asyncQueue));
-}
-
-auto createOutputMessageQueue(ClientManagerShPtr clientManager) -> IMessageQueuePtr
-{
-  auto broadcastQueue = std::make_unique<BroadcastMessageQueue>(std::move(clientManager));
-  return std::make_unique<AsyncMessageQueue>(std::move(broadcastQueue));
-}
-} // namespace
-
 void Server::initialize()
 {
-  m_inputMessageQueue  = createInputMessageQueue();
-  m_outputMessageQueue = createOutputMessageQueue(m_clientManager);
-
   initializeSystems();
   initializeMessageSystem();
 }
@@ -69,43 +44,18 @@ void Server::initializeSystems()
 
   for (const auto &systemDbId : allSystems)
   {
-    SystemProcessingConfig config{.systemDbId         = systemDbId,
-                                  .outputMessageQueue = m_outputMessageQueue.get()};
-
-    auto processor = std::make_shared<SystemProcessor>(config);
+    auto processor = std::make_shared<SystemProcessor>(systemDbId);
     m_systemProcessors.emplace_back(std::move(processor));
   }
 }
 
-namespace {
-auto createSystemMessageQueue() -> IMessageQueuePtr
-{
-  auto systemQueue = std::make_unique<SynchronizedMessageQueue>();
-  return std::make_unique<AsyncMessageQueue>(std::move(systemQueue));
-}
-} // namespace
-
 void Server::initializeMessageSystem()
 {
-  DataSource source{DataLoadingMode::SERVER};
-  const auto repositories = source.repositories();
-
-  auto systemQueue = createSystemMessageQueue();
-
-  auto signupService = std::make_unique<SignupService>(repositories);
-  systemQueue->addListener(std::make_unique<SignupMessageConsumer>(std::move(signupService),
-                                                                   m_clientManager,
-                                                                   m_outputMessageQueue.get()));
-
-  auto loginService = std::make_unique<LoginService>(repositories);
-  systemQueue->addListener(std::make_unique<LoginMessageConsumer>(std::move(loginService),
-                                                                  m_clientManager,
-                                                                  m_outputMessageQueue.get()));
-
-  auto triageConsumer = std::make_unique<TriageMessageConsumer>(m_systemProcessors,
-                                                                m_clientManager,
-                                                                std::move(systemQueue));
-  m_inputMessageQueue->addListener(std::move(triageConsumer));
+  m_messageExchanger = std::make_unique<MessageExchanger>(m_clientManager, m_systemProcessors);
+  for (const auto &systemProcessor : m_systemProcessors)
+  {
+    systemProcessor->connectToQueue(m_messageExchanger->getOutputMessageQueue());
+  }
 }
 
 void Server::setup(const int port)
@@ -159,12 +109,7 @@ void Server::onConnectionLost(const net::ConnectionId connectionId)
 void Server::onConnectionReady(net::ConnectionShPtr connection)
 {
   const auto clientId = m_clientManager->registerConnection(connection);
-
-  m_inputMessageQueue->registerToConnection(*connection);
-
-  auto message = std::make_unique<ConnectionMessage>(clientId);
-  message->validate();
-  m_outputMessageQueue->pushMessage(std::move(message));
+  m_messageExchanger->registerConnection(clientId, connection);
 }
 
 } // namespace bsgo

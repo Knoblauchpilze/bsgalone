@@ -6,14 +6,12 @@
 
 namespace bsgo {
 
-SystemProcessor::SystemProcessor(const SystemProcessingConfig &config)
+SystemProcessor::SystemProcessor(const Uuid systemDbId)
   : utils::CoreObject("processor")
-  , m_systemDbId(config.systemDbId)
+  , m_systemDbId(systemDbId)
 {
   setService("system");
-  addModule(str(config.systemDbId));
-
-  initialize(config);
+  addModule(str(systemDbId));
 }
 
 SystemProcessor::~SystemProcessor()
@@ -40,25 +38,30 @@ void SystemProcessor::pushMessage(IMessagePtr message)
   m_inputMessagesQueue->pushMessage(std::move(message));
 }
 
-void SystemProcessor::start()
-{
-  m_running.store(true);
-  m_processingThread = std::thread(&SystemProcessor::asyncSystemProcessing, this);
-}
-
-void SystemProcessor::initialize(const SystemProcessingConfig &config)
+void SystemProcessor::connectToQueue(IMessageQueue *const outputMessageQueue)
 {
   DataSource dataSource{DataLoadingMode::SERVER};
   const auto repositories = dataSource.repositories();
 
   auto networkSystem = std::make_unique<NetworkSystem>(repositories);
-  m_coordinator = std::make_shared<Coordinator>(std::move(networkSystem), config.outputMessageQueue);
+  m_coordinator      = std::make_shared<Coordinator>(std::move(networkSystem), outputMessageQueue);
 
   dataSource.setSystemDbId(m_systemDbId);
   dataSource.initialize(*m_coordinator, m_entityMapper);
 
   m_services = createServices(repositories, m_coordinator, m_entityMapper);
-  createMessageConsumers(*m_inputMessagesQueue, config.outputMessageQueue, m_services);
+  createMessageConsumers(*m_inputMessagesQueue, outputMessageQueue, m_services);
+}
+
+void SystemProcessor::start()
+{
+  if (nullptr == m_coordinator)
+  {
+    error("Failed to start system processor", "Not yet connected to a message queue");
+  }
+
+  m_running.store(true);
+  m_processingThread = std::thread(&SystemProcessor::asyncSystemProcessing, this);
 }
 
 void SystemProcessor::asyncSystemProcessing()
