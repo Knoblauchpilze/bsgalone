@@ -8,10 +8,16 @@ ScannedMessage::ScannedMessage()
   : ValidatableMessage(MessageType::SCANNED)
 {}
 
-ScannedMessage::ScannedMessage(const Uuid asteroidDbId)
+ScannedMessage::ScannedMessage(const Uuid playerDbId, const Uuid asteroidDbId)
   : ValidatableMessage(MessageType::SCANNED)
+  , m_playerDbId(playerDbId)
   , m_asteroidDbId(asteroidDbId)
 {}
+
+auto ScannedMessage::getPlayerDbId() const -> Uuid
+{
+  return m_playerDbId;
+}
 
 auto ScannedMessage::getAsteroidDbId() const -> Uuid
 {
@@ -24,6 +30,7 @@ auto ScannedMessage::serialize(std::ostream &out) const -> std::ostream &
   utils::serialize(out, m_clientId);
   utils::serialize(out, m_validated);
 
+  utils::serialize(out, m_playerDbId);
   utils::serialize(out, m_asteroidDbId);
 
   return out;
@@ -36,6 +43,7 @@ bool ScannedMessage::deserialize(std::istream &in)
   ok &= utils::deserialize(in, m_clientId);
   ok &= utils::deserialize(in, m_validated);
 
+  ok &= utils::deserialize(in, m_playerDbId);
   ok &= utils::deserialize(in, m_asteroidDbId);
 
   return ok;
@@ -43,7 +51,7 @@ bool ScannedMessage::deserialize(std::istream &in)
 
 auto ScannedMessage::clone() const -> IMessagePtr
 {
-  auto clone = std::make_unique<ScannedMessage>(m_asteroidDbId);
+  auto clone = std::make_unique<ScannedMessage>(m_playerDbId, m_asteroidDbId);
   clone->copyClientIdIfDefined(*this);
   clone->validate(validated());
 

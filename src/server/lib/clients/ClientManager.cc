@@ -84,6 +84,19 @@ void ClientManager::removeConnection(const net::ConnectionId connectionId)
   info("Removed connection " + data.connection->str());
 }
 
+auto ClientManager::getClientIdForPlayer(const Uuid playerDbId) const -> Uuid
+{
+  const std::lock_guard guard(m_locker);
+
+  const auto maybeClientId = m_playerToClient.find(playerDbId);
+  if (maybeClientId == m_playerToClient.cend())
+  {
+    error("Failed to get client id for " + str(playerDbId), "No such player");
+  }
+
+  return maybeClientId->second;
+}
+
 auto ClientManager::getConnectionForClient(const Uuid clientId) const -> net::ConnectionShPtr
 {
   const std::lock_guard guard(m_locker);

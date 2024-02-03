@@ -28,7 +28,8 @@ class ComputerSystem : public AbstractSystem
   void applyEmitterEffects(Entity &ent,
                            const ComputerSlotComponentShPtr &computer,
                            Coordinator &coordinator) const;
-  void applyReceiverEffects(Entity &target,
+  void applyReceiverEffects(Entity &ent,
+                            Entity &target,
                             const ComputerSlotComponentShPtr &computer,
                             Coordinator &coordinator) const;
 
