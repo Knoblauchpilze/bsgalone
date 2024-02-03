@@ -14,21 +14,16 @@
 
 namespace bsgo {
 
-struct SystemProcessingConfig
-{
-  Uuid systemDbId{};
-  IMessageQueue *const outputMessageQueue{};
-};
-
 class SystemProcessor : public utils::CoreObject
 {
   public:
-  SystemProcessor(const SystemProcessingConfig &config);
+  SystemProcessor(const Uuid systemDbId);
   ~SystemProcessor() override;
 
   auto getSystemDbId() const -> Uuid;
   void pushMessage(IMessagePtr message);
 
+  void connectToQueue(IMessageQueue *const outputMessageQueue);
   void start();
 
   private:
@@ -41,7 +36,6 @@ class SystemProcessor : public utils::CoreObject
   std::atomic_bool m_running{false};
   std::thread m_processingThread{};
 
-  void initialize(const SystemProcessingConfig &config);
   void asyncSystemProcessing();
 };
 
