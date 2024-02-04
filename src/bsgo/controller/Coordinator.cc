@@ -46,19 +46,11 @@ auto getAllComponent(const Uuid ent,
 }
 } // namespace
 
-Coordinator::Coordinator(ISystemPtr networkSystem, IMessageQueue *messageQueue)
+Coordinator::Coordinator(SystemsConfig &&config)
   : utils::CoreObject("coordinator")
+  , m_systems(std::make_unique<Systems>(std::move(config)))
 {
   setService("bsgo");
-
-  if (nullptr == networkSystem)
-  {
-    throw std::invalid_argument("Expected non null network system");
-  }
-
-  SystemsConfig config{.networkSystem      = std::move(networkSystem),
-                       .outputMessageQueue = messageQueue};
-  m_systems = std::make_unique<Systems>(std::move(config));
 }
 
 void Coordinator::clear()

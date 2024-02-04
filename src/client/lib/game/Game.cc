@@ -247,16 +247,16 @@ void Game::initialize()
 {
   const auto repositories = m_dataSource.repositories();
 
-  auto networkSystem = std::make_unique<bsgo::NetworkSystem>(repositories);
-
   auto connection        = std::make_unique<ClientConnection>(*m_networkContext);
   auto synchronizedQueue = std::make_unique<bsgo::SynchronizedMessageQueue>();
   auto networkQueue      = connection->connectMessageQueue(std::move(synchronizedQueue));
   m_messageQueue         = std::make_unique<ClientMessageQueue>(std::move(networkQueue),
                                                         std::move(connection));
 
-  m_coordinator = std::make_shared<bsgo::Coordinator>(std::move(networkSystem),
-                                                      m_messageQueue.get());
+  bsgo::SystemsConfig config{.networkSystem = std::make_unique<bsgo::NetworkSystem>(repositories),
+                             .internalMessageQueue = m_messageQueue.get(),
+                             .outputMessageQueue   = m_messageQueue.get()};
+  m_coordinator = std::make_shared<bsgo::Coordinator>(std::move(config));
   m_services    = bsgo::createServices(repositories, m_coordinator, m_entityMapper);
   m_views = bsgo::createViews(m_coordinator, repositories, m_entityMapper, m_messageQueue.get());
 

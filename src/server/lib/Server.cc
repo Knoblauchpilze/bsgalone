@@ -54,7 +54,8 @@ void Server::initializeMessageSystem()
   m_messageExchanger = std::make_unique<MessageExchanger>(m_clientManager, m_systemProcessors);
   for (const auto &systemProcessor : m_systemProcessors)
   {
-    systemProcessor->connectToQueue(m_messageExchanger->getOutputMessageQueue());
+    systemProcessor->connectToQueues(m_messageExchanger->getInternalMessageQueue(),
+                                     m_messageExchanger->getOutputMessageQueue());
   }
 }
 

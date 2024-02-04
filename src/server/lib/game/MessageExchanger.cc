@@ -18,6 +18,11 @@ MessageExchanger::MessageExchanger(const ClientManagerShPtr &clientManager,
   initialize(clientManager, systemProcessors);
 }
 
+auto MessageExchanger::getInternalMessageQueue() const -> IMessageQueue *
+{
+  return m_internalMessageQueue;
+}
+
 auto MessageExchanger::getOutputMessageQueue() const -> IMessageQueue *
 {
   return m_outputMessageQueue.get();
@@ -94,7 +99,8 @@ void MessageExchanger::initializeConsumers(const ClientManagerShPtr &clientManag
                                                                   clientManager,
                                                                   m_outputMessageQueue.get()));
 
-  auto internalQueue = createInternalMessageQueue();
+  auto internalQueue     = createInternalMessageQueue();
+  m_internalMessageQueue = internalQueue.get();
 
   auto combatService = std::make_unique<CombatService>(repositories);
   internalQueue->addListener(

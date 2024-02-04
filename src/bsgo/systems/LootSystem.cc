@@ -105,7 +105,8 @@ void LootSystem::distributeResourcesTo(const Entity &player, const Entity &deadT
     const auto total = (*maybePlayerResource)->amount() + resource->amount();
     (*maybePlayerResource)->setAmount(total);
 
-    pushMessage(std::make_unique<LootMessage>(playerDbId, resource->resource(), resource->amount()));
+    pushInternalMessage(
+      std::make_unique<LootMessage>(playerDbId, resource->resource(), resource->amount()));
   }
 }
 
