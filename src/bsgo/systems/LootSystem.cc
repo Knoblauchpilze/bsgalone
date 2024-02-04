@@ -1,5 +1,6 @@
 
 #include "LootSystem.hh"
+#include "Coordinator.hh"
 #include "LootMessage.hh"
 
 namespace bsgo {

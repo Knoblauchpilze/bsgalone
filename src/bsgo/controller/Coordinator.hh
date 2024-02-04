@@ -5,7 +5,7 @@
 #include "Entity.hh"
 #include "IBoundingBox.hh"
 #include "IMessageQueue.hh"
-#include "ISystem.hh"
+#include "Systems.hh"
 #include "Uuid.hh"
 #include <core_utils/CoreObject.hh>
 #include <core_utils/TimeUtils.hh>
@@ -64,7 +64,6 @@ class Coordinator : public utils::CoreObject
   auto getEntitiesWithin(const IBoundingBox &bbox,
                          const std::optional<EntityKind> &filter = {}) const -> std::vector<Uuid>;
 
-  using EntityPredicate = std::function<bool(const Entity &entity)>;
   auto getEntitiesSatistying(const EntityPredicate &predicate) const -> std::vector<Entity>;
   auto getEntitiesWithinSatistying(const IBoundingBox &bbox, const EntityPredicate &predicate) const
     -> std::vector<Entity>;
@@ -76,9 +75,8 @@ class Coordinator : public utils::CoreObject
   std::unordered_set<Uuid> m_entities{};
   Components m_components{};
 
-  std::vector<ISystemPtr> m_systems{};
+  SystemsPtr m_systems{};
 
-  void createSystems(ISystemPtr networkSystem, IMessageQueue *messageQueue);
   bool hasExpectedKind(const Uuid ent, const std::optional<EntityKind> &kind) const;
 
   void checkEntityExist(const Uuid ent, const std::string &componentName) const;

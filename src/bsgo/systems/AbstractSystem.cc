@@ -1,10 +1,10 @@
 
 #include "AbstractSystem.hh"
+#include "Coordinator.hh"
 
 namespace bsgo {
 
-AbstractSystem::AbstractSystem(const SystemType &type,
-                               const Coordinator::EntityPredicate &entitiesFilter)
+AbstractSystem::AbstractSystem(const SystemType &type, const EntityPredicate &entitiesFilter)
   : ISystem(str(type))
   , m_systemType(type)
   , m_entitiesFilter(entitiesFilter)
@@ -15,9 +15,14 @@ auto AbstractSystem::type() const -> SystemType
   return m_systemType;
 }
 
-void AbstractSystem::installMessageQueue(IMessageQueue *messageQueue)
+void AbstractSystem::installInternalMessageQueue(IMessageQueue *messageQueue)
 {
-  m_messageQueue = messageQueue;
+  m_internalMessageQueue = messageQueue;
+}
+
+void AbstractSystem::installOutputMessageQueue(IMessageQueue *messageQueue)
+{
+  m_outputMessageQueue = messageQueue;
 }
 
 void AbstractSystem::update(Coordinator &coordinator, const float elapsedSeconds) const
@@ -30,14 +35,24 @@ void AbstractSystem::update(Coordinator &coordinator, const float elapsedSeconds
   }
 }
 
-void AbstractSystem::pushMessage(IMessagePtr message) const
+void AbstractSystem::pushInternalMessage(IMessagePtr message) const
 {
-  if (nullptr == m_messageQueue)
+  if (nullptr == m_internalMessageQueue)
   {
-    error("Failed to push message", "Message queue is not set");
+    error("Failed to push message", "Internal message queue is not set");
   }
 
-  m_messageQueue->pushMessage(std::move(message));
+  m_internalMessageQueue->pushMessage(std::move(message));
+}
+
+void AbstractSystem::pushMessage(IMessagePtr message) const
+{
+  if (nullptr == m_outputMessageQueue)
+  {
+    error("Failed to push message", "Output message queue is not set");
+  }
+
+  m_outputMessageQueue->pushMessage(std::move(message));
 }
 
 } // namespace bsgo

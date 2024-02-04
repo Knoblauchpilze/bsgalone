@@ -17,8 +17,9 @@ class ISystem : public utils::CoreObject
   ISystem(const std::string &name);
   ~ISystem() override = default;
 
-  virtual auto type() const -> SystemType                       = 0;
-  virtual void installMessageQueue(IMessageQueue *messageQueue) = 0;
+  virtual auto type() const -> SystemType                               = 0;
+  virtual void installInternalMessageQueue(IMessageQueue *messageQueue) = 0;
+  virtual void installOutputMessageQueue(IMessageQueue *messageQueue)   = 0;
 
   virtual void update(Coordinator &coordinator, const float elapsedSeconds) const = 0;
 };
