@@ -25,6 +25,7 @@
 #include "Uuid.hh"
 #include "VelocityComponent.hh"
 #include "WeaponSlotComponent.hh"
+#include <functional>
 #include <optional>
 #include <string>
 
@@ -100,5 +101,7 @@ struct Entity
   auto tryGetWeapon(const Uuid weaponDbId) const -> std::optional<WeaponSlotComponentShPtr>;
   auto tryGetComputer(const Uuid computerDbId) const -> std::optional<ComputerSlotComponentShPtr>;
 };
+
+using EntityPredicate = std::function<bool(const Entity &entity)>;
 
 } // namespace bsgo

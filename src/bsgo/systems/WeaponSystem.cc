@@ -1,10 +1,8 @@
 
 #include "WeaponSystem.hh"
 #include "CircleBox.hh"
+#include "Coordinator.hh"
 #include "SystemUtils.hh"
-
-#include "VectorUtils.hh"
-#include <iostream>
 
 namespace bsgo {
 namespace {

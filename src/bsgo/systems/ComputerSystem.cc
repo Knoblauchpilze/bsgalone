@@ -1,5 +1,6 @@
 
 #include "ComputerSystem.hh"
+#include "Coordinator.hh"
 #include "ScannedMessage.hh"
 #include "SlotComponentMessage.hh"
 #include "SystemUtils.hh"

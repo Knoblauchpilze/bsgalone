@@ -1,5 +1,6 @@
 
 #include "TargetSystem.hh"
+#include "Coordinator.hh"
 
 namespace bsgo {
 namespace {

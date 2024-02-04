@@ -1,5 +1,6 @@
 
 #include "EffectSystem.hh"
+#include "Coordinator.hh"
 
 namespace bsgo {
 namespace {

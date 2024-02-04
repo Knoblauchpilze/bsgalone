@@ -1,7 +1,6 @@
 
 #include "BulletSystem.hh"
-
-#include "VectorUtils.hh"
+#include "Coordinator.hh"
 
 namespace bsgo {
 namespace {

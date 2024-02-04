@@ -22,6 +22,10 @@ add_subdirectory (
 	)
 
 add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/controller
+	)
+
+add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/data
 	)
 
@@ -55,10 +59,6 @@ add_subdirectory (
 
 add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/views
-	)
-
-target_sources (bsgalone_core_lib PRIVATE
-	${CMAKE_CURRENT_SOURCE_DIR}/Coordinator.cc
 	)
 
 target_link_libraries (bsgalone_core_lib

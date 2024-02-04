@@ -1,20 +1,22 @@
 
 #pragma once
 
-#include "Coordinator.hh"
 #include "Entity.hh"
 #include "ISystem.hh"
 
 namespace bsgo {
 
+class Coordinator;
+
 class AbstractSystem : public ISystem
 {
   public:
-  AbstractSystem(const SystemType &type, const Coordinator::EntityPredicate &entitiesFilter);
+  AbstractSystem(const SystemType &type, const EntityPredicate &entitiesFilter);
   ~AbstractSystem() override = default;
 
   auto type() const -> SystemType override;
-  void installMessageQueue(IMessageQueue *messageQueue) override;
+  void installInternalMessageQueue(IMessageQueue *messageQueue) override;
+  void installOutputMessageQueue(IMessageQueue *messageQueue) override;
 
   void update(Coordinator &coordinator, const float elapsedSeconds) const override;
 
@@ -23,12 +25,14 @@ class AbstractSystem : public ISystem
                             const float elapsedSeconds) const = 0;
 
   protected:
+  void pushInternalMessage(IMessagePtr message) const;
   void pushMessage(IMessagePtr message) const;
 
   private:
   SystemType m_systemType{};
-  Coordinator::EntityPredicate m_entitiesFilter{};
-  IMessageQueue *m_messageQueue{};
+  EntityPredicate m_entitiesFilter{};
+  IMessageQueue *m_internalMessageQueue{};
+  IMessageQueue *m_outputMessageQueue{};
 };
 
 } // namespace bsgo
