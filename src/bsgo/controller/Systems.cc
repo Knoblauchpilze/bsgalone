@@ -81,8 +81,14 @@ void Systems::initialize(SystemsConfig &&config)
 
   for (auto &system : m_systems)
   {
-    system->installInternalMessageQueue(config.internalMessageQueue);
-    system->installOutputMessageQueue(config.outputMessageQueue);
+    if (config.internalMessageQueue != nullptr)
+    {
+      system->installInternalMessageQueue(config.internalMessageQueue);
+    }
+    if (config.outputMessageQueue != nullptr)
+    {
+      system->installOutputMessageQueue(config.outputMessageQueue);
+    }
   }
 }
 

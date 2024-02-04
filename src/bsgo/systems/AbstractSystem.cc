@@ -17,11 +17,21 @@ auto AbstractSystem::type() const -> SystemType
 
 void AbstractSystem::installInternalMessageQueue(IMessageQueue *messageQueue)
 {
+  if (nullptr == messageQueue)
+  {
+    error("Expected non null internal message queue");
+  }
+
   m_internalMessageQueue = messageQueue;
 }
 
 void AbstractSystem::installOutputMessageQueue(IMessageQueue *messageQueue)
 {
+  if (nullptr == messageQueue)
+  {
+    error("Expected non null output message queue");
+  }
+
   m_outputMessageQueue = messageQueue;
 }
 
@@ -37,22 +47,18 @@ void AbstractSystem::update(Coordinator &coordinator, const float elapsedSeconds
 
 void AbstractSystem::pushInternalMessage(IMessagePtr message) const
 {
-  if (nullptr == m_internalMessageQueue)
+  if (m_internalMessageQueue != nullptr)
   {
-    error("Failed to push message", "Internal message queue is not set");
+    m_internalMessageQueue->pushMessage(std::move(message));
   }
-
-  m_internalMessageQueue->pushMessage(std::move(message));
 }
 
 void AbstractSystem::pushMessage(IMessagePtr message) const
 {
-  if (nullptr == m_outputMessageQueue)
+  if (m_outputMessageQueue != nullptr)
   {
-    error("Failed to push message", "Output message queue is not set");
+    m_outputMessageQueue->pushMessage(std::move(message));
   }
-
-  m_outputMessageQueue->pushMessage(std::move(message));
 }
 
 } // namespace bsgo
