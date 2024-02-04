@@ -186,7 +186,7 @@ auto createJumpCancelledMessage(const bsgo::JumpCancelledMessage & /*message*/)
 auto createLootMessage(const bsgo::LootMessage &message, const bsgo::ResourceView &resourceView)
   -> TextConfig
 {
-  const auto resource = resourceView.getResourceName(message.resourceId());
+  const auto resource = resourceView.getResourceName(message.getResourceDbId());
   const auto text     = "+" + floatToStr(message.amount(), 0) + " " + resource;
   const auto color    = colorFromResourceName(resource);
   return textConfigFromColor(text, color);
