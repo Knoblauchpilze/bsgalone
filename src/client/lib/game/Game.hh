@@ -90,7 +90,8 @@ class Game : public utils::CoreObject
   bsgo::DatabaseEntityMapper m_entityMapper{};
   bsgo::Services m_services{};
   bsgo::CoordinatorShPtr m_coordinator{};
-  ClientMessageQueuePtr m_messageQueue{};
+  bsgo::IMessageQueuePtr m_inputMessageQueue{};
+  ClientMessageQueuePtr m_outputMessageQueue{};
   net::ContextPtr m_networkContext{std::make_unique<net::Context>()};
   bsgo::Views m_views{};
   std::unordered_map<Screen, IRendererPtr> m_renderers{};

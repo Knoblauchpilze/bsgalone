@@ -1,6 +1,7 @@
 
 #include "ClientConnection.hh"
 #include "NetworkMessageQueue.hh"
+#include "SynchronizedMessageQueue.hh"
 
 namespace pge {
 constexpr auto DEFAULT_SERVER_URL  = "127.0.0.1";
@@ -24,10 +25,10 @@ void ClientConnection::sendMessage(const bsgo::IMessage &message)
   m_connection->send(message);
 }
 
-auto ClientConnection::connectMessageQueue(bsgo::IMessageQueuePtr messageQueue)
-  -> bsgo::IMessageQueuePtr
+auto ClientConnection::createInputMessageQueue() -> bsgo::IMessageQueuePtr
 {
-  auto queue = std::make_unique<bsgo::NetworkMessageQueue>(std::move(messageQueue));
+  auto synchronizedQueue = std::make_unique<bsgo::SynchronizedMessageQueue>();
+  auto queue = std::make_unique<bsgo::NetworkMessageQueue>(std::move(synchronizedQueue));
   queue->registerToConnection(*m_connection);
   return queue;
 }
