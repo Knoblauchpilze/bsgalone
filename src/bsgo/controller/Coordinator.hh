@@ -21,7 +21,7 @@ class DataSource;
 class Coordinator : public utils::CoreObject
 {
   public:
-  Coordinator(ISystemPtr networkSystem, IMessageQueue *messageQueue);
+  Coordinator(SystemsConfig &&config);
   ~Coordinator() override = default;
 
   void clear();

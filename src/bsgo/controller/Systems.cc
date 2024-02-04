@@ -23,6 +23,11 @@ Systems::Systems(SystemsConfig &&config)
 {
   setService("bsgo");
 
+  if (nullptr == config.networkSystem)
+  {
+    throw std::invalid_argument("Expected non null network system");
+  }
+
   initialize(std::move(config));
 }
 

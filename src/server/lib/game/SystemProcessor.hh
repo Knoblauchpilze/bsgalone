@@ -23,7 +23,8 @@ class SystemProcessor : public utils::CoreObject
   auto getSystemDbId() const -> Uuid;
   void pushMessage(IMessagePtr message);
 
-  void connectToQueue(IMessageQueue *const outputMessageQueue);
+  void connectToQueues(IMessageQueue *const internalMessageQueue,
+                       IMessageQueue *const outputMessageQueue);
   void start();
 
   private:

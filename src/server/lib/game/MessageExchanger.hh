@@ -18,11 +18,13 @@ class MessageExchanger
   MessageExchanger(const ClientManagerShPtr &clientManager,
                    const std::vector<SystemProcessorShPtr> &systemProcessors);
 
+  auto getInternalMessageQueue() const -> IMessageQueue *;
   auto getOutputMessageQueue() const -> IMessageQueue *;
   void registerConnection(const Uuid clientId, net::ConnectionShPtr connection);
 
   private:
   NetworkMessageQueuePtr m_inputMessageQueue{};
+  IMessageQueue *m_internalMessageQueue{};
   IMessageQueuePtr m_outputMessageQueue{};
 
   void initialize(const ClientManagerShPtr &clientManager,
