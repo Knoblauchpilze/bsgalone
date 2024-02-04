@@ -11,6 +11,7 @@ target_sources (bsgalone_server_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/JumpMessageConsumer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/JumpRequestedMessageConsumer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LoginMessageConsumer.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/LootMessageConsumer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/PurchaseMessageConsumer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SignupMessageConsumer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SlotMessageConsumer.cc
