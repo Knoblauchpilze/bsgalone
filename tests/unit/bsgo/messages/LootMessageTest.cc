@@ -10,7 +10,8 @@ namespace {
 auto assertMessagesAreEqual(const LootMessage &actual, const LootMessage &expected)
 {
   EXPECT_EQ(actual.type(), expected.type());
-  EXPECT_EQ(actual.resourceId(), expected.resourceId());
+  EXPECT_EQ(actual.getPlayerDbId(), expected.getPlayerDbId());
+  EXPECT_EQ(actual.getResourceDbId(), expected.getResourceDbId());
   EXPECT_EQ(actual.amount(), expected.amount());
   EXPECT_EQ(actual.tryGetClientId(), expected.tryGetClientId());
 }
@@ -18,8 +19,8 @@ auto assertMessagesAreEqual(const LootMessage &actual, const LootMessage &expect
 
 TEST(Unit_Bsgo_Serialization_LootMessage, Basic)
 {
-  const LootMessage expected(Uuid{14}, 3.2f);
-  LootMessage actual(Uuid{6}, -1.7f);
+  const LootMessage expected(Uuid{3690}, Uuid{14}, 3.2f);
+  LootMessage actual(Uuid{1515}, Uuid{6}, -1.7f);
   actual.setClientId(Uuid{78});
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
@@ -27,16 +28,16 @@ TEST(Unit_Bsgo_Serialization_LootMessage, Basic)
 
 TEST(Unit_Bsgo_Serialization_LootMessage, WithClientId)
 {
-  LootMessage expected(Uuid{14}, 3.2f);
+  LootMessage expected(Uuid{3690}, Uuid{14}, 3.2f);
   expected.setClientId(Uuid{78});
-  LootMessage actual(Uuid{6}, -1.7f);
+  LootMessage actual(Uuid{1515}, Uuid{6}, -1.7f);
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
 
 TEST(Unit_Bsgo_Serialization_LootMessage, Clone)
 {
-  const LootMessage expected(Uuid{14}, 3.2f);
+  const LootMessage expected(Uuid{3690}, Uuid{14}, 3.2f);
   const auto cloned = expected.clone();
   ASSERT_EQ(cloned->type(), MessageType::LOOT);
   assertMessagesAreEqual(cloned->as<LootMessage>(), expected);

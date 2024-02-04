@@ -10,10 +10,11 @@ class LootMessage : public NetworkMessage
 {
   public:
   LootMessage();
-  LootMessage(const Uuid resourceId, const float amount);
+  LootMessage(const Uuid playerDbId, const Uuid resourceDbId, const float amount);
   ~LootMessage() override = default;
 
-  auto resourceId() const -> Uuid;
+  auto getPlayerDbId() const -> Uuid;
+  auto getResourceDbId() const -> Uuid;
   auto amount() const -> float;
 
   auto serialize(std::ostream &out) const -> std::ostream & override;
@@ -22,7 +23,8 @@ class LootMessage : public NetworkMessage
   auto clone() const -> IMessagePtr override;
 
   private:
-  Uuid m_resourceId{};
+  Uuid m_playerDbId{};
+  Uuid m_resourceDbId{};
   float m_amount{};
 };
 
