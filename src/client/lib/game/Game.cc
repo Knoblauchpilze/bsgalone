@@ -254,8 +254,7 @@ void Game::initialize()
                                                         std::move(connection));
 
   bsgo::SystemsConfig config{.networkSystem = std::make_unique<bsgo::NetworkSystem>(repositories),
-                             .internalMessageQueue = m_messageQueue.get(),
-                             .outputMessageQueue   = m_messageQueue.get()};
+                             .outputMessageQueue = m_messageQueue.get()};
   m_coordinator = std::make_shared<bsgo::Coordinator>(std::move(config));
   m_services    = bsgo::createServices(repositories, m_coordinator, m_entityMapper);
   m_views = bsgo::createViews(m_coordinator, repositories, m_entityMapper, m_messageQueue.get());
