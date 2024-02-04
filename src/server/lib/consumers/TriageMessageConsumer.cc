@@ -7,10 +7,12 @@ namespace bsgo {
 TriageMessageConsumer::TriageMessageConsumer(
   const std::vector<SystemProcessorShPtr> &systemProcessors,
   ClientManagerShPtr clientManager,
-  IMessageQueuePtr systemMessageQueue)
+  IMessageQueuePtr systemMessageQueue,
+  IMessageQueuePtr internalMessageQueue)
   : AbstractMessageConsumer("triage", allMessageTypesAsSet())
   , m_clientManager(std::move(clientManager))
   , m_systemQueue(std::move(systemMessageQueue))
+  , m_internalQueue(std::move(internalMessageQueue))
 {
   if (nullptr == m_systemQueue)
   {
@@ -41,6 +43,9 @@ void TriageMessageConsumer::onMessageReceived(const IMessage &message)
     case MessageType::SIGNUP:
     case MessageType::LOGIN:
       handleSystemMessage(message);
+      break;
+    case MessageType::LOOT:
+      handleInternalMessage(message);
       break;
     case MessageType::DOCK:
     case MessageType::EQUIP:
@@ -73,6 +78,11 @@ bool TriageMessageConsumer::discardMessageWithNoClient(const IMessage &message) 
 void TriageMessageConsumer::handleSystemMessage(const IMessage &message) const
 {
   m_systemQueue->pushMessage(message.clone());
+}
+
+void TriageMessageConsumer::handleInternalMessage(const IMessage &message) const
+{
+  m_internalQueue->pushMessage(message.clone());
 }
 
 void TriageMessageConsumer::triagePlayerMessage(const IMessage &message) const

@@ -5,6 +5,7 @@
 #include "ConnectionMessage.hh"
 #include "DataSource.hh"
 #include "LoginMessageConsumer.hh"
+#include "LootMessageConsumer.hh"
 #include "SignupMessageConsumer.hh"
 #include "SynchronizedMessageQueue.hh"
 #include "TriageMessageConsumer.hh"
@@ -66,6 +67,13 @@ auto createSystemMessageQueue() -> IMessageQueuePtr
   auto systemQueue = std::make_unique<SynchronizedMessageQueue>();
   return std::make_unique<AsyncMessageQueue>(std::move(systemQueue));
 }
+
+auto createInternalMessageQueue() -> IMessageQueuePtr
+{
+  auto messageQueue = std::make_unique<SynchronizedMessageQueue>();
+  return std::make_unique<AsyncMessageQueue>(std::move(messageQueue));
+}
+
 } // namespace
 
 void MessageExchanger::initializeConsumers(const ClientManagerShPtr &clientManager,
@@ -86,9 +94,16 @@ void MessageExchanger::initializeConsumers(const ClientManagerShPtr &clientManag
                                                                   clientManager,
                                                                   m_outputMessageQueue.get()));
 
+  auto internalQueue = createInternalMessageQueue();
+
+  auto combatService = std::make_unique<CombatService>(repositories);
+  internalQueue->addListener(
+    std::make_unique<LootMessageConsumer>(std::move(combatService), m_outputMessageQueue.get()));
+
   auto triageConsumer = std::make_unique<TriageMessageConsumer>(systemProcessors,
                                                                 clientManager,
-                                                                std::move(systemQueue));
+                                                                std::move(systemQueue),
+                                                                std::move(internalQueue));
   m_inputMessageQueue->addListener(std::move(triageConsumer));
 }
 
