@@ -14,7 +14,8 @@ class TriageMessageConsumer : public AbstractMessageConsumer
   public:
   TriageMessageConsumer(const std::vector<SystemProcessorShPtr> &systemProcessors,
                         ClientManagerShPtr clientManager,
-                        IMessageQueuePtr systemMessageQueue);
+                        IMessageQueuePtr systemMessageQueue,
+                        IMessageQueuePtr internalMessageQueue);
   ~TriageMessageConsumer() override = default;
 
   void onMessageReceived(const IMessage &message) override;
@@ -23,9 +24,11 @@ class TriageMessageConsumer : public AbstractMessageConsumer
   ClientManagerShPtr m_clientManager{};
   std::unordered_map<Uuid, SystemProcessorShPtr> m_systemProcessors{};
   IMessageQueuePtr m_systemQueue{};
+  IMessageQueuePtr m_internalQueue{};
 
   bool discardMessageWithNoClient(const IMessage &message) const;
   void handleSystemMessage(const IMessage &message) const;
+  void handleInternalMessage(const IMessage &message) const;
   void triagePlayerMessage(const IMessage &message) const;
   void broadcastMessage(const IMessage &message) const;
 };
