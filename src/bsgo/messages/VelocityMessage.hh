@@ -2,13 +2,13 @@
 
 #pragma once
 
-#include "NetworkMessage.hh"
 #include "Uuid.hh"
+#include "ValidatableMessage.hh"
 #include <eigen3/Eigen/Eigen>
 
 namespace bsgo {
 
-class VelocityMessage : public NetworkMessage
+class VelocityMessage : public ValidatableMessage
 {
   public:
   VelocityMessage();
