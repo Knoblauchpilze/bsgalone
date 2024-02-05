@@ -39,57 +39,57 @@ void Systems::update(Coordinator &coordinator, const float elapsedSeconds) const
   }
 }
 
+namespace {
+template<typename T>
+void installQueues(T &system, const SystemsConfig &config)
+{
+  if (config.internalMessageQueue != nullptr)
+  {
+    system.installInternalMessageQueue(config.internalMessageQueue);
+  }
+  if (config.outputMessageQueue != nullptr)
+  {
+    system.installOutputMessageQueue(config.outputMessageQueue);
+  }
+}
+
+template<typename T>
+void createSystem(std::vector<ISystemPtr> &systems, const SystemsConfig &config)
+{
+  auto toCreate = std::make_unique<T>();
+  if (config.ignoredSystems.contains(toCreate->type()))
+  {
+    return;
+  }
+
+  installQueues(*toCreate, config);
+
+  systems.emplace_back(std::move(toCreate));
+}
+} // namespace
+
 void Systems::initialize(SystemsConfig &&config)
 {
-  auto status = std::make_unique<StatusSystem>();
-  m_systems.push_back(std::move(status));
+  createSystem<StatusSystem>(m_systems, config);
+  createSystem<ComputerSystem>(m_systems, config);
+  createSystem<EffectSystem>(m_systems, config);
+  createSystem<MotionSystem>(m_systems, config);
+  createSystem<PowerSystem>(m_systems, config);
+  createSystem<WeaponSystem>(m_systems, config);
+  createSystem<BulletSystem>(m_systems, config);
+  createSystem<AISystem>(m_systems, config);
+  createSystem<TargetSystem>(m_systems, config);
+  createSystem<LootSystem>(m_systems, config);
+  createSystem<HealthSystem>(m_systems, config);
+  createSystem<OwnerSystem>(m_systems, config);
 
-  auto computer = std::make_unique<ComputerSystem>();
-  m_systems.push_back(std::move(computer));
-
-  auto effect = std::make_unique<EffectSystem>();
-  m_systems.push_back(std::move(effect));
-
-  auto motion = std::make_unique<MotionSystem>();
-  m_systems.push_back(std::move(motion));
-
-  auto power = std::make_unique<PowerSystem>();
-  m_systems.push_back(std::move(power));
-
-  auto weapon = std::make_unique<WeaponSystem>();
-  m_systems.push_back(std::move(weapon));
-
-  auto bullet = std::make_unique<BulletSystem>();
-  m_systems.push_back(std::move(bullet));
-
-  auto ai = std::make_unique<AISystem>();
-  m_systems.push_back(std::move(ai));
-
-  auto target = std::make_unique<TargetSystem>();
-  m_systems.push_back(std::move(target));
-
-  auto loot = std::make_unique<LootSystem>();
-  m_systems.push_back(std::move(loot));
-
-  auto health = std::make_unique<HealthSystem>();
-  m_systems.push_back(std::move(health));
-
-  auto owner = std::make_unique<OwnerSystem>();
-  m_systems.push_back(std::move(owner));
-
-  m_systems.emplace_back(std::move(config.networkSystem));
-
-  for (auto &system : m_systems)
+  if (config.ignoredSystems.contains(SystemType::NETWORK))
   {
-    if (config.internalMessageQueue != nullptr)
-    {
-      system->installInternalMessageQueue(config.internalMessageQueue);
-    }
-    if (config.outputMessageQueue != nullptr)
-    {
-      system->installOutputMessageQueue(config.outputMessageQueue);
-    }
+    return;
   }
+
+  installQueues(*config.networkSystem, config);
+  m_systems.emplace_back(std::move(config.networkSystem));
 }
 
 } // namespace bsgo
