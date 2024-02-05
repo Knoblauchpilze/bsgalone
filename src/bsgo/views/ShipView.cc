@@ -219,7 +219,8 @@ void ShipView::cancelJump() const
 
 void ShipView::accelerateShip(const Eigen::Vector3f &acceleration) const
 {
-  m_messageQueue->pushMessage(std::make_unique<VelocityMessage>(getPlayerShip().uuid, acceleration));
+  checkPlayerShipDbIdExists();
+  m_messageQueue->pushMessage(std::make_unique<VelocityMessage>(*m_playerShipDbId, acceleration));
 }
 
 void ShipView::tryAcquireTarget(const Eigen::Vector3f &position) const
