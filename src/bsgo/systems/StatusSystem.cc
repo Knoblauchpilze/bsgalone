@@ -49,6 +49,11 @@ void StatusSystem::handleThreatState(Entity &entity, StatusComponent &statusComp
   {
     debug(entity.str() + " is no more in threat");
     statusComp.setStatus(updateStatusAfterThreatEnded(status));
+
+    if (entity.exists<LootComponent>())
+    {
+      entity.lootComp().clearRecipients();
+    }
   }
 }
 

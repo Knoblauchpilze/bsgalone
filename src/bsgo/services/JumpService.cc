@@ -175,6 +175,11 @@ bool JumpService::tryJump(const Uuid shipDbId) const
   playerShip.statusComp().setStatus(Status::APPEARING);
   playerShip.statusComp().resetAppearingTime();
 
+  if (playerShip.exists<LootComponent>())
+  {
+    playerShip.lootComp().clearRecipients();
+  }
+
   return true;
 }
 
