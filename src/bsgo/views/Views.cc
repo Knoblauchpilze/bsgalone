@@ -9,6 +9,7 @@ auto createViews(const ViewsConfig &config, const DatabaseEntityMapper &entityMa
 
   out.shipView     = std::make_shared<bsgo::ShipView>(config.coordinator,
                                                   config.repositories,
+                                                  config.internalMessageQueue,
                                                   config.outputMessageQueue);
   out.systemView   = std::make_shared<bsgo::SystemView>(config.coordinator, entityMapper);
   out.playerView   = std::make_shared<bsgo::PlayerView>(config.repositories,

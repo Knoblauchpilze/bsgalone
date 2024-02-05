@@ -13,13 +13,27 @@ namespace bsgo {
 
 ShipView::ShipView(CoordinatorShPtr coordinator,
                    const Repositories &repositories,
+                   IMessageQueue *const internalMessageQueue,
                    IMessageQueue *const outputMessageQueue)
   : AbstractView("ship")
-
   , m_coordinator(std::move(coordinator))
   , m_repositories(repositories)
+  , m_internalMessageQueue(internalMessageQueue)
   , m_outputMessageQueue(outputMessageQueue)
-{}
+{
+  if (nullptr == m_coordinator)
+  {
+    throw std::invalid_argument("Expected non null coordinator");
+  }
+  if (nullptr == m_internalMessageQueue)
+  {
+    throw std::invalid_argument("Expected non null internal message queue");
+  }
+  if (nullptr == m_outputMessageQueue)
+  {
+    throw std::invalid_argument("Expected non null output message queue");
+  }
+}
 
 void ShipView::setPlayerShipDbId(const Uuid ship)
 {
@@ -224,8 +238,10 @@ void ShipView::cancelJump() const
 void ShipView::accelerateShip(const Eigen::Vector3f &acceleration) const
 {
   checkPlayerShipDbIdExists();
-  m_outputMessageQueue->pushMessage(
-    std::make_unique<VelocityMessage>(*m_playerShipDbId, acceleration));
+
+  auto message = std::make_unique<VelocityMessage>(*m_playerShipDbId, acceleration);
+  m_outputMessageQueue->pushMessage(message->clone());
+  m_internalMessageQueue->pushMessage(std::move(message));
 }
 
 void ShipView::tryAcquireTarget(const Eigen::Vector3f &position) const
