@@ -6,6 +6,7 @@
 #include "NetworkSystem.hh"
 #include <core_utils/CoreObject.hh>
 #include <memory>
+#include <unordered_set>
 #include <vector>
 
 namespace bsgo {
@@ -16,6 +17,8 @@ struct SystemsConfig
 
   IMessageQueue *const internalMessageQueue{};
   IMessageQueue *const outputMessageQueue{};
+
+  std::unordered_set<SystemType> ignoredSystems{};
 };
 
 class Systems : public utils::CoreObject
