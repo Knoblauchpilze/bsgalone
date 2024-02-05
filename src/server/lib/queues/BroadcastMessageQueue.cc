@@ -1,5 +1,6 @@
 
 #include "BroadcastMessageQueue.hh"
+#include "LootMessage.hh"
 #include "MessageProcessor.hh"
 #include "NetworkMessage.hh"
 #include "ScannedMessage.hh"
@@ -42,10 +43,12 @@ void BroadcastMessageQueue::processMessages(const std::optional<int> &amount)
 }
 
 namespace {
+const std::unordered_set<MessageType> NON_BROADCASTABLE_MESSAGES
+  = {MessageType::SCANNED, MessageType::SLOT_COMPONENT_UPDATED, MessageType::LOOT};
+
 bool shouldTryToDetermineClientId(const IMessage &message)
 {
-  return MessageType::SCANNED == message.type()
-         || MessageType::SLOT_COMPONENT_UPDATED == message.type();
+  return NON_BROADCASTABLE_MESSAGES.contains(message.type());
 }
 } // namespace
 
@@ -91,6 +94,8 @@ auto BroadcastMessageQueue::tryDetermineClientId(const IMessage &message) const
 {
   switch (message.type())
   {
+    case MessageType::LOOT:
+      return determineClientFor(message.as<LootMessage>(), *m_clientManager);
     case MessageType::SCANNED:
       return determineClientFor(message.as<ScannedMessage>(), *m_clientManager);
     case MessageType::SLOT_COMPONENT_UPDATED:
