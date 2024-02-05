@@ -54,12 +54,14 @@ bool BulletSystem::killIfTargetIsNotAccessible(Entity &entity, Entity &target) c
   }
 
   const auto accessible = statusAllowsInteratction(target.statusComp().status());
-  if (!accessible)
+  const auto damageable = statusAllowsDamage(target.statusComp().status());
+  if (!accessible || !damageable)
   {
     entity.removalComp().markForRemoval();
+    return true;
   }
 
-  return !accessible;
+  return false;
 }
 
 void BulletSystem::accelerateTowardsTarget(Entity &entity, const Entity &target) const
