@@ -101,6 +101,8 @@ bool ShipService::accelerateShip(const Uuid shipDbId, const Eigen::Vector3f &acc
 
   if (!ship.exists<OwnerComponent>())
   {
+    // Ship is an AI: we should not come through this route to change its
+    // acceleration but rather through the AI system directly.
     return false;
   }
 
