@@ -255,17 +255,12 @@ void Game::initialize()
                              .outputMessageQueue = m_outputMessageQueue.get(),
                              .ignoredSystems     = {bsgo::SystemType::LOOT}};
   m_coordinator = std::make_shared<bsgo::Coordinator>(std::move(config));
-  m_services    = bsgo::createServices(repositories, m_coordinator, m_entityMapper);
   m_views       = bsgo::createViews(m_coordinator,
                               repositories,
                               m_entityMapper,
                               m_outputMessageQueue.get());
 
-  createMessageConsumers(*m_inputMessageQueue,
-                         m_outputMessageQueue.get(),
-                         m_services,
-                         m_entityMapper,
-                         m_coordinator);
+  createMessageConsumers(*m_inputMessageQueue, m_entityMapper, m_coordinator);
 
   auto messageModule = std::make_unique<GameMessageModule>(this);
   m_inputMessageQueue->addListener(std::move(messageModule));
