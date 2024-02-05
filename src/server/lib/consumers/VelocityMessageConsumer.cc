@@ -22,15 +22,21 @@ VelocityMessageConsumer::VelocityMessageConsumer(const Services &services,
 
 void VelocityMessageConsumer::onMessageReceived(const IMessage &message)
 {
-  const auto &velocityMessage = message.as<VelocityMessage>();
+  const auto &velocity = message.as<VelocityMessage>();
 
-  const auto shipDbId     = velocityMessage.getShipDbId();
-  const auto acceleration = velocityMessage.getAcceleration();
+  const auto shipDbId     = velocity.getShipDbId();
+  const auto acceleration = velocity.getAcceleration();
 
   if (!m_shipService->accelerateShip(shipDbId, acceleration))
   {
     warn("Failed to process velocity message for ship " + str(shipDbId));
+    return;
   }
+
+  auto out = std::make_unique<VelocityMessage>(shipDbId, acceleration);
+  out->validate();
+  out->copyClientIdIfDefined(velocity);
+  m_messageQueue->pushMessage(std::move(out));
 }
 
 } // namespace bsgo
