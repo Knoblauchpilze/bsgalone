@@ -11,7 +11,12 @@ PlayerView::PlayerView(const Repositories &repositories, IMessageQueue *const ou
   : AbstractView("player")
   , m_repositories(repositories)
   , m_outputMessageQueue(outputMessageQueue)
-{}
+{
+  if (nullptr == m_outputMessageQueue)
+  {
+    throw std::invalid_argument("Expected non null output message queue");
+  }
+}
 
 void PlayerView::setPlayerDbId(const Uuid player)
 {

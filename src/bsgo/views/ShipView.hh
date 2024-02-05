@@ -19,6 +19,7 @@ class ShipView : public AbstractView
   public:
   ShipView(CoordinatorShPtr coordinator,
            const Repositories &repositories,
+           IMessageQueue *const internalMessageQueue,
            IMessageQueue *const outputMessageQueue);
   ~ShipView() override = default;
 
@@ -75,6 +76,7 @@ class ShipView : public AbstractView
   private:
   CoordinatorShPtr m_coordinator{};
   Repositories m_repositories{};
+  IMessageQueue *const m_internalMessageQueue{};
   IMessageQueue *const m_outputMessageQueue{};
   std::optional<Uuid> m_playerShipDbId{};
   std::optional<Uuid> m_playerShipEntityId{};

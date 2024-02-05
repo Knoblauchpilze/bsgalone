@@ -7,7 +7,12 @@ SystemView::SystemView(CoordinatorShPtr coordinator, const DatabaseEntityMapper 
   : AbstractView("system")
   , m_coordinator(std::move(coordinator))
   , m_entityMapper(entityMapper)
-{}
+{
+  if (nullptr == m_coordinator)
+  {
+    throw std::invalid_argument("Expected non null coordinator");
+  }
+}
 
 auto SystemView::getEntityAt(const Eigen::Vector3f &pos) const -> std::optional<Entity>
 {
