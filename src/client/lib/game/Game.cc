@@ -5,7 +5,9 @@
 #include "IInputHandler.hh"
 #include "IRenderer.hh"
 #include "IUiHandler.hh"
+#include "InternalMessageConsumer.hh"
 #include "NetworkSystem.hh"
+#include "SynchronizedMessageQueue.hh"
 
 #include "GameScreenInputHandler.hh"
 #include "GameScreenRenderer.hh"
@@ -208,6 +210,7 @@ bool Game::step(float elapsedSeconds)
 {
   m_coordinator->update(elapsedSeconds);
   m_inputMessageQueue->processMessages();
+  m_internalMessageQueue->processMessages();
 
   const auto it = m_uiHandlers.find(m_state.screen);
   if (it != m_uiHandlers.end())
@@ -245,27 +248,41 @@ void Game::activeSystemChanged()
 
 void Game::initialize()
 {
+  auto connection = std::make_unique<ClientConnection>(*m_networkContext);
+
+  m_inputMessageQueue = connection->createInputMessageQueue();
+  // Not strictly necessary as the internal messages should only be produced
+  // synchronously by the Coordinator but also does not hurt.
+  m_internalMessageQueue = std::make_unique<bsgo::SynchronizedMessageQueue>();
+  m_outputMessageQueue   = std::make_unique<ClientMessageQueue>(std::move(connection));
+
   const auto repositories = m_dataSource.repositories();
+  bsgo::SystemsConfig sConfig{.networkSystem = std::make_unique<bsgo::NetworkSystem>(repositories),
+                              .internalMessageQueue = m_internalMessageQueue.get(),
+                              .outputMessageQueue   = m_outputMessageQueue.get(),
+                              .ignoredSystems       = {bsgo::SystemType::LOOT}};
+  m_coordinator = std::make_shared<bsgo::Coordinator>(std::move(sConfig));
 
-  auto connection      = std::make_unique<ClientConnection>(*m_networkContext);
-  m_inputMessageQueue  = connection->createInputMessageQueue();
-  m_outputMessageQueue = std::make_unique<ClientMessageQueue>(std::move(connection));
+  bsgo::ViewsConfig vConfig{.repositories         = repositories,
+                            .coordinator          = m_coordinator,
+                            .internalMessageQueue = m_internalMessageQueue.get(),
+                            .outputMessageQueue   = m_outputMessageQueue.get()};
+  m_views = bsgo::createViews(vConfig, m_entityMapper);
 
-  bsgo::SystemsConfig config{.networkSystem = std::make_unique<bsgo::NetworkSystem>(repositories),
-                             .outputMessageQueue = m_outputMessageQueue.get(),
-                             .ignoredSystems     = {bsgo::SystemType::LOOT}};
-  m_coordinator = std::make_shared<bsgo::Coordinator>(std::move(config));
-  m_views       = bsgo::createViews(m_coordinator,
-                              repositories,
-                              m_entityMapper,
-                              m_outputMessageQueue.get());
+  initializeMessageSystem();
 
+  m_networkContext->start();
+}
+
+void Game::initializeMessageSystem()
+{
   createMessageConsumers(*m_inputMessageQueue, m_entityMapper, m_coordinator);
+
+  m_internalMessageQueue->addListener(
+    std::make_unique<InternalMessageConsumer>(m_entityMapper, m_coordinator));
 
   auto messageModule = std::make_unique<GameMessageModule>(this);
   m_inputMessageQueue->addListener(std::move(messageModule));
-
-  m_networkContext->start();
 }
 
 void Game::resetViewsAndUi()

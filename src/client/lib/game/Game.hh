@@ -89,6 +89,7 @@ class Game : public utils::CoreObject
   bsgo::DatabaseEntityMapper m_entityMapper{};
   bsgo::CoordinatorShPtr m_coordinator{};
   bsgo::IMessageQueuePtr m_inputMessageQueue{};
+  bsgo::IMessageQueuePtr m_internalMessageQueue{};
   ClientMessageQueuePtr m_outputMessageQueue{};
   net::ContextPtr m_networkContext{std::make_unique<net::Context>()};
   bsgo::Views m_views{};
@@ -97,6 +98,7 @@ class Game : public utils::CoreObject
   std::unordered_map<Screen, IUiHandlerPtr> m_uiHandlers{};
 
   void initialize();
+  void initializeMessageSystem();
 
   void resetViewsAndUi();
 };
