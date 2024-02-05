@@ -2,6 +2,8 @@
 #pragma once
 
 #include "AbstractView.hh"
+#include "Repositories.hh"
+#include "Uuid.hh"
 #include <memory>
 
 namespace bsgo {
@@ -9,12 +11,13 @@ namespace bsgo {
 class ResourceView : public AbstractView
 {
   public:
-  ResourceView(const CoordinatorShPtr &coordinator,
-               const Repositories &repositories,
-               IMessageQueue *const messageQueue);
+  ResourceView(const Repositories &repositories);
   ~ResourceView() override = default;
 
   auto getResourceName(const Uuid resource) const -> std::string;
+
+  private:
+  Repositories m_repositories{};
 };
 
 using ResourceViewShPtr = std::shared_ptr<ResourceView>;

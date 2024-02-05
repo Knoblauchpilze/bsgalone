@@ -2,9 +2,13 @@
 #pragma once
 
 #include "AbstractView.hh"
+#include "Faction.hh"
 #include "PurchaseUtils.hh"
+#include "Repositories.hh"
+#include "Uuid.hh"
 #include <memory>
 #include <unordered_map>
+#include <vector>
 
 namespace bsgo {
 
@@ -27,9 +31,7 @@ struct ShopItem
 class ShopView : public AbstractView
 {
   public:
-  ShopView(const CoordinatorShPtr &coordinator,
-           const Repositories &repositories,
-           IMessageQueue *const messageQueue);
+  ShopView(const Repositories &repositories);
   ~ShopView() override = default;
 
   void setPlayerDbId(const Uuid player);
@@ -41,6 +43,7 @@ class ShopView : public AbstractView
   auto getAllShipsForFaction(const Faction &faction) const -> std::vector<Ship>;
 
   private:
+  Repositories m_repositories{};
   std::optional<Uuid> m_playerDbId{};
 
   void checkPlayerDbIdExists() const;

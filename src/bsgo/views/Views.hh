@@ -25,9 +25,14 @@ struct Views
   ResourceViewShPtr resourceView{};
 };
 
-auto createViews(const CoordinatorShPtr &coordinator,
-                 const Repositories &repositories,
-                 const DatabaseEntityMapper &entityMapper,
-                 IMessageQueue *const messageQueue) -> Views;
+struct ViewsConfig
+{
+  Repositories repositories{};
+  CoordinatorShPtr coordinator{};
+  IMessageQueue *const internalMessageQueue{};
+  IMessageQueue *const outputMessageQueue{};
+};
+
+auto createViews(const ViewsConfig &config, const DatabaseEntityMapper &entityMapper) -> Views;
 
 } // namespace bsgo

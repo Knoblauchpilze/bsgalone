@@ -3,16 +3,18 @@
 
 #include "AbstractView.hh"
 #include "Faction.hh"
+#include "IMessageQueue.hh"
+#include "Repositories.hh"
+#include "Uuid.hh"
 #include <memory>
+#include <vector>
 
 namespace bsgo {
 
 class PlayerView : public AbstractView
 {
   public:
-  PlayerView(const CoordinatorShPtr &coordinator,
-             const Repositories &repositories,
-             IMessageQueue *const messageQueue);
+  PlayerView(const Repositories &repositories, IMessageQueue *const outputMessageQueue);
   ~PlayerView() override = default;
 
   void setPlayerDbId(const Uuid player);
@@ -34,6 +36,8 @@ class PlayerView : public AbstractView
   void trySignup(const std::string &name, const std::string &password, const Faction &faction) const;
 
   private:
+  Repositories m_repositories{};
+  IMessageQueue *const m_outputMessageQueue{};
   std::optional<Uuid> m_playerDbId{};
   std::optional<Uuid> m_playerShipDbId{};
 

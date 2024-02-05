@@ -14,10 +14,7 @@ namespace bsgo {
 class SystemView : public AbstractView
 {
   public:
-  SystemView(const CoordinatorShPtr &coordinator,
-             const Repositories &repositories,
-             const DatabaseEntityMapper &entityMapper,
-             IMessageQueue *const messageQueue);
+  SystemView(CoordinatorShPtr coordinator, const DatabaseEntityMapper &entityMapper);
   ~SystemView() override = default;
 
   auto getEntityAt(const Eigen::Vector3f &pos) const -> std::optional<Entity>;
@@ -28,6 +25,7 @@ class SystemView : public AbstractView
   auto getAsteroid(const Uuid asteroidDbId) const -> Entity;
 
   private:
+  CoordinatorShPtr m_coordinator{};
   const DatabaseEntityMapper &m_entityMapper;
 };
 
