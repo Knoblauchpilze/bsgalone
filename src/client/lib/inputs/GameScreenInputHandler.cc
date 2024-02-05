@@ -43,11 +43,43 @@ void GameScreenInputHandler::performAction(float x, float y, const controls::Sta
   m_shipView->tryAcquireTarget(pos);
 }
 
+namespace {
+bool motionStateChanged(const Motion &motion, const std::optional<Motion> &lastMotion)
+{
+  if (!motion.hasMotion())
+  {
+    // Case were we don't have motion anymore: it depends whether we did not have
+    // motion the last frame already.
+    return lastMotion.has_value();
+  }
+
+  // We do have motion.
+  if (!lastMotion.has_value())
+  {
+    // If the last frame did not have motion then it's different.
+    return true;
+  }
+
+  // We do have motion and it was already the case last frame: in this case we
+  // need to check which motion we had.
+  return motion.x != lastMotion->x || motion.y != lastMotion->y || motion.z != lastMotion->z;
+}
+} // namespace
+
 void GameScreenInputHandler::moveShip(const Motion &motion)
 {
-  if (!m_shipView->isReady())
+  if (!motionStateChanged(motion, m_lastMotion))
   {
     return;
+  }
+
+  if (motion.hasMotion())
+  {
+    m_lastMotion = motion;
+  }
+  else
+  {
+    m_lastMotion.reset();
   }
 
   Eigen::Vector3f direction = Eigen::Vector3f::Zero();

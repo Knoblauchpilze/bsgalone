@@ -23,4 +23,9 @@ void Motion::updateFromKeys(const controls::State &inputs)
   }
 }
 
+bool Motion::hasMotion() const
+{
+  return x != 0 || y != 0 || z != 0;
+}
+
 } // namespace pge

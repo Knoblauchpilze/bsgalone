@@ -5,6 +5,7 @@
 #include "IInputHandler.hh"
 #include "Motion.hh"
 #include "Views.hh"
+#include <optional>
 
 namespace pge {
 
@@ -18,7 +19,8 @@ class GameScreenInputHandler : public IInputHandler
   void performAction(float x, float y, const controls::State &controls) override;
 
   private:
-  bsgo::ShipViewShPtr m_shipView;
+  bsgo::ShipViewShPtr m_shipView{};
+  std::optional<Motion> m_lastMotion{};
 
   void moveShip(const Motion &motion);
   void keepShipCentered(CoordinateFrame &frame);
