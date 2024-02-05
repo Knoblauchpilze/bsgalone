@@ -60,12 +60,6 @@ void LootSystem::distributeLootTo(const Uuid recipient,
   auto player = coordinator.getEntity(ent.ownerComp().owner());
 
   distributeResourcesTo(player, deadTarget);
-
-  if (player.exists<NetworkComponent>())
-  {
-    auto &networkComp = player.networkComp();
-    networkComp.markForSync();
-  }
 }
 
 namespace {
