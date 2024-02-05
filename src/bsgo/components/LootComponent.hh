@@ -15,8 +15,8 @@ class LootComponent : public AbstractComponent
   ~LootComponent() override = default;
 
   void registerRecipient(const Uuid entity);
-
   auto recipients() const -> std::unordered_set<Uuid>;
+  void clearRecipients();
 
   void update(const float elapsedSeconds) override;
 

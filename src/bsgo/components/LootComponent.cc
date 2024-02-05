@@ -17,6 +17,11 @@ auto LootComponent::recipients() const -> std::unordered_set<Uuid>
   return m_recipients;
 }
 
+void LootComponent::clearRecipients()
+{
+  m_recipients.clear();
+}
+
 void LootComponent::update(const float /*elapsedSeconds*/) {}
 
 } // namespace bsgo
