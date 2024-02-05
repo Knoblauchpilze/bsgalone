@@ -2,18 +2,18 @@
 #pragma once
 
 #include "AbstractView.hh"
-#include "Coordinator.hh"
+#include "Repositories.hh"
+#include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
 #include <memory>
+#include <vector>
 
 namespace bsgo {
 
 class ServerView : public AbstractView
 {
   public:
-  ServerView(const CoordinatorShPtr &coordinator,
-             const Repositories &repositories,
-             IMessageQueue *const messageQueue);
+  ServerView(const Repositories &repositories);
   ~ServerView() override = default;
 
   void setPlayerDbId(const Uuid player);
@@ -31,6 +31,7 @@ class ServerView : public AbstractView
   auto getMapBounds() const -> Bounds;
 
   private:
+  Repositories m_repositories{};
   std::optional<Uuid> m_playerDbId{};
 
   void checkPlayerDbIdExists() const;

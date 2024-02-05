@@ -4,6 +4,8 @@
 #include "AbstractView.hh"
 #include "Coordinator.hh"
 #include "Entity.hh"
+#include "IMessageQueue.hh"
+#include "Repositories.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
 #include <memory>
@@ -15,9 +17,9 @@ namespace bsgo {
 class ShipView : public AbstractView
 {
   public:
-  ShipView(const CoordinatorShPtr &coordinator,
+  ShipView(CoordinatorShPtr coordinator,
            const Repositories &repositories,
-           IMessageQueue *const messageQueue);
+           IMessageQueue *const outputMessageQueue);
   ~ShipView() override = default;
 
   void setPlayerShipDbId(const Uuid ship);
@@ -71,6 +73,9 @@ class ShipView : public AbstractView
   bool isInThreat() const;
 
   private:
+  CoordinatorShPtr m_coordinator{};
+  Repositories m_repositories{};
+  IMessageQueue *const m_outputMessageQueue{};
   std::optional<Uuid> m_playerShipDbId{};
   std::optional<Uuid> m_playerShipEntityId{};
   std::optional<Uuid> m_systemToJumpTo{};

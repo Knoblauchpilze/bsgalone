@@ -3,11 +3,9 @@
 
 namespace bsgo {
 
-SystemView::SystemView(const CoordinatorShPtr &coordinator,
-                       const Repositories &repositories,
-                       const DatabaseEntityMapper &entityMapper,
-                       IMessageQueue *const messageQueue)
-  : AbstractView("system", coordinator, repositories, messageQueue)
+SystemView::SystemView(CoordinatorShPtr coordinator, const DatabaseEntityMapper &entityMapper)
+  : AbstractView("system")
+  , m_coordinator(std::move(coordinator))
   , m_entityMapper(entityMapper)
 {}
 
@@ -18,6 +16,7 @@ auto SystemView::getEntityAt(const Eigen::Vector3f &pos) const -> std::optional<
   {
     return {};
   }
+
   return m_coordinator->getEntity(*id);
 }
 

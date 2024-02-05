@@ -32,10 +32,9 @@ auto ShopItem::type() const -> Item
   throw std::invalid_argument("Expected shop item to be a weapon or a computer");
 }
 
-ShopView::ShopView(const CoordinatorShPtr &coordinator,
-                   const Repositories &repositories,
-                   IMessageQueue *const messageQueue)
-  : AbstractView("shop", coordinator, repositories, messageQueue)
+ShopView::ShopView(const Repositories &repositories)
+  : AbstractView("shop")
+  , m_repositories(repositories)
 {}
 
 void ShopView::setPlayerDbId(const Uuid player)

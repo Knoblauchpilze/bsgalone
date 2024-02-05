@@ -7,10 +7,10 @@
 
 namespace bsgo {
 
-PlayerView::PlayerView(const CoordinatorShPtr &coordinator,
-                       const Repositories &repositories,
-                       IMessageQueue *const messageQueue)
-  : AbstractView("player", coordinator, repositories, messageQueue)
+PlayerView::PlayerView(const Repositories &repositories, IMessageQueue *const outputMessageQueue)
+  : AbstractView("player")
+  , m_repositories(repositories)
+  , m_outputMessageQueue(outputMessageQueue)
 {}
 
 void PlayerView::setPlayerDbId(const Uuid player)
@@ -121,25 +121,26 @@ auto PlayerView::getPlayerShips() const -> std::vector<PlayerShip>
 
 void PlayerView::trySelectShip(const Uuid shipDbId) const
 {
-  m_messageQueue->pushMessage(std::make_unique<HangarMessage>(shipDbId));
+  m_outputMessageQueue->pushMessage(std::make_unique<HangarMessage>(shipDbId));
 }
 
 void PlayerView::tryPurchase(const Item &type, const Uuid itemDbId) const
 {
   checkPlayerDbIdExists();
-  m_messageQueue->pushMessage(std::make_unique<PurchaseMessage>(*m_playerDbId, type, itemDbId));
+  m_outputMessageQueue->pushMessage(
+    std::make_unique<PurchaseMessage>(*m_playerDbId, type, itemDbId));
 }
 
 void PlayerView::tryLogin(const std::string &name, const std::string &password) const
 {
-  m_messageQueue->pushMessage(std::make_unique<bsgo::LoginMessage>(name, password));
+  m_outputMessageQueue->pushMessage(std::make_unique<bsgo::LoginMessage>(name, password));
 }
 
 void PlayerView::trySignup(const std::string &name,
                            const std::string &password,
                            const Faction &faction) const
 {
-  m_messageQueue->pushMessage(std::make_unique<bsgo::SignupMessage>(name, password, faction));
+  m_outputMessageQueue->pushMessage(std::make_unique<bsgo::SignupMessage>(name, password, faction));
 }
 
 void PlayerView::checkPlayerDbIdExists() const

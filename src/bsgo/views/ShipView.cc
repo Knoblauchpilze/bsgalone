@@ -11,10 +11,14 @@
 
 namespace bsgo {
 
-ShipView::ShipView(const CoordinatorShPtr &coordinator,
+ShipView::ShipView(CoordinatorShPtr coordinator,
                    const Repositories &repositories,
-                   IMessageQueue *const messageQueue)
-  : AbstractView("ship", coordinator, repositories, messageQueue)
+                   IMessageQueue *const outputMessageQueue)
+  : AbstractView("ship")
+
+  , m_coordinator(std::move(coordinator))
+  , m_repositories(repositories)
+  , m_outputMessageQueue(outputMessageQueue)
 {}
 
 void ShipView::setPlayerShipDbId(const Uuid ship)
@@ -149,7 +153,7 @@ void ShipView::tryActivateWeapon(const int weaponId) const
   const auto slotDbId   = playerShip.weapons[weaponId]->dbId();
 
   auto message = std::make_unique<SlotMessage>(*m_playerShipDbId, slotDbId, Slot::WEAPON);
-  m_messageQueue->pushMessage(std::move(message));
+  m_outputMessageQueue->pushMessage(std::move(message));
 }
 
 void ShipView::tryActivateSlot(const int slotId) const
@@ -158,7 +162,7 @@ void ShipView::tryActivateSlot(const int slotId) const
   const auto slotDbId   = playerShip.computers[slotId]->dbId();
 
   auto message = std::make_unique<SlotMessage>(*m_playerShipDbId, slotDbId, Slot::COMPUTER);
-  m_messageQueue->pushMessage(std::move(message));
+  m_outputMessageQueue->pushMessage(std::move(message));
 }
 
 void ShipView::dockPlayerShip() const
@@ -166,7 +170,7 @@ void ShipView::dockPlayerShip() const
   checkPlayerShipDbIdExists();
 
   auto message = std::make_unique<DockMessage>(*m_playerShipDbId, true);
-  m_messageQueue->pushMessage(std::move(message));
+  m_outputMessageQueue->pushMessage(std::move(message));
 }
 
 void ShipView::undockPlayerShip() const
@@ -174,7 +178,7 @@ void ShipView::undockPlayerShip() const
   checkPlayerShipDbIdExists();
 
   auto message = std::make_unique<DockMessage>(*m_playerShipDbId, false);
-  m_messageQueue->pushMessage(std::move(message));
+  m_outputMessageQueue->pushMessage(std::move(message));
 }
 
 void ShipView::setJumpSystem(const Uuid system)
@@ -201,7 +205,7 @@ void ShipView::startJump() const
   checkPlayerShipDbIdExists();
 
   auto message = std::make_unique<JumpRequestedMessage>(*m_playerShipDbId, *m_systemToJumpTo);
-  m_messageQueue->pushMessage(std::move(message));
+  m_outputMessageQueue->pushMessage(std::move(message));
 }
 
 void ShipView::cancelJump() const
@@ -214,32 +218,33 @@ void ShipView::cancelJump() const
   checkPlayerShipDbIdExists();
 
   auto message = std::make_unique<JumpCancelledMessage>(*m_playerShipDbId);
-  m_messageQueue->pushMessage(std::move(message));
+  m_outputMessageQueue->pushMessage(std::move(message));
 }
 
 void ShipView::accelerateShip(const Eigen::Vector3f &acceleration) const
 {
   checkPlayerShipDbIdExists();
-  m_messageQueue->pushMessage(std::make_unique<VelocityMessage>(*m_playerShipDbId, acceleration));
+  m_outputMessageQueue->pushMessage(
+    std::make_unique<VelocityMessage>(*m_playerShipDbId, acceleration));
 }
 
 void ShipView::tryAcquireTarget(const Eigen::Vector3f &position) const
 {
   checkPlayerShipDbIdExists();
-  m_messageQueue->pushMessage(std::make_unique<TargetMessage>(*m_playerShipDbId, position));
+  m_outputMessageQueue->pushMessage(std::make_unique<TargetMessage>(*m_playerShipDbId, position));
 }
 
 void ShipView::tryEquipItem(const Item &itemType, const Uuid itemDbId) const
 {
   checkPlayerShipDbIdExists();
-  m_messageQueue->pushMessage(
+  m_outputMessageQueue->pushMessage(
     std::make_unique<EquipMessage>(bsgo::EquipType::EQUIP, *m_playerShipDbId, itemType, itemDbId));
 }
 
 void ShipView::tryUnequipItem(const Item &itemType, const Uuid itemDbId) const
 {
   checkPlayerShipDbIdExists();
-  m_messageQueue->pushMessage(
+  m_outputMessageQueue->pushMessage(
     std::make_unique<EquipMessage>(bsgo::EquipType::UNEQUIP, *m_playerShipDbId, itemType, itemDbId));
 }
 
