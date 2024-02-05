@@ -13,7 +13,6 @@
 #include "Renderer.hh"
 #include "RenderingPass.hh"
 #include "Screen.hh"
-#include "Services.hh"
 #include "Views.hh"
 #include <core_utils/CoreObject.hh>
 #include <memory>
@@ -88,7 +87,6 @@ class Game : public utils::CoreObject
 
   bsgo::DataSource m_dataSource{bsgo::DataLoadingMode::CLIENT};
   bsgo::DatabaseEntityMapper m_entityMapper{};
-  bsgo::Services m_services{};
   bsgo::CoordinatorShPtr m_coordinator{};
   bsgo::IMessageQueuePtr m_inputMessageQueue{};
   ClientMessageQueuePtr m_outputMessageQueue{};

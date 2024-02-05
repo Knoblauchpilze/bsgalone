@@ -24,12 +24,12 @@ void VelocityMessageConsumer::onMessageReceived(const IMessage &message)
 {
   const auto &velocityMessage = message.as<VelocityMessage>();
 
-  const auto shipEntityId = velocityMessage.getShipEntityId();
+  const auto shipDbId     = velocityMessage.getShipDbId();
   const auto acceleration = velocityMessage.getAcceleration();
 
-  if (!m_shipService->accelerateShip(shipEntityId, acceleration))
+  if (!m_shipService->accelerateShip(shipDbId, acceleration))
   {
-    warn("Failed to process velocity message for ship " + str(shipEntityId));
+    warn("Failed to process velocity message for ship " + str(shipDbId));
   }
 }
 
