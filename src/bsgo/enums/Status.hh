@@ -23,6 +23,7 @@ bool statusVisibleFromDradis(const Status &status);
 bool statusAllowsInteratction(const Status &status);
 bool statusAllowsHealthRegeneration(const Status &status);
 bool statusAllowsPowerRegeneration(const Status &status);
+bool statusAllowsDamage(const Status &status);
 bool statusRequiresImmobilization(const Status &status);
 bool statusRequiresThreatReset(const Status &status);
 bool statusRequiresPowerReset(const Status &status);

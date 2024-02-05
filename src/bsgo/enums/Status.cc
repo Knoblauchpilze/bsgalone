@@ -83,6 +83,19 @@ bool statusAllowsPowerRegeneration(const Status &status)
   }
 }
 
+bool statusAllowsDamage(const Status &status)
+{
+  switch (status)
+  {
+    case Status::DOCKED:
+    case Status::APPEARING:
+    case Status::DEAD:
+      return false;
+    default:
+      return true;
+  }
+}
+
 bool statusRequiresImmobilization(const Status &status)
 {
   switch (status)
