@@ -89,16 +89,22 @@ bool ShipService::tryUndock(const Uuid shipDbId) const
   return true;
 }
 
-bool ShipService::accelerateShip(const Uuid shipEntityId, const Eigen::Vector3f &acceleration) const
+bool ShipService::accelerateShip(const Uuid shipDbId, const Eigen::Vector3f &acceleration) const
 {
-  auto shipEntity = m_coordinator->getEntity(shipEntityId);
+  const auto maybeEntityId = m_entityMapper.tryGetShipEntityId(shipDbId);
+  if (!maybeEntityId)
+  {
+    return {};
+  }
 
-  if (!shipEntity.exists<OwnerComponent>())
+  auto ship = m_coordinator->getEntity(*maybeEntityId);
+
+  if (!ship.exists<OwnerComponent>())
   {
     return false;
   }
 
-  auto &velocity = shipEntity.velocityComp();
+  auto &velocity = ship.velocityComp();
   velocity.accelerate(acceleration);
 
   return true;
