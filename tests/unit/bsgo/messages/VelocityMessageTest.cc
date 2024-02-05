@@ -10,7 +10,7 @@ namespace {
 auto assertMessagesAreEqual(const VelocityMessage &actual, const VelocityMessage &expected)
 {
   EXPECT_EQ(actual.type(), expected.type());
-  EXPECT_EQ(actual.getShipEntityId(), expected.getShipEntityId());
+  EXPECT_EQ(actual.getShipDbId(), expected.getShipDbId());
   EXPECT_EQ(actual.getAcceleration(), expected.getAcceleration());
   EXPECT_EQ(actual.tryGetClientId(), expected.tryGetClientId());
 }
