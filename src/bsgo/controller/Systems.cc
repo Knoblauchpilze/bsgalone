@@ -71,6 +71,7 @@ void createSystem(std::vector<ISystemPtr> &systems, const SystemsConfig &config)
 void Systems::initialize(SystemsConfig &&config)
 {
   createSystem<StatusSystem>(m_systems, config);
+  createSystem<TargetSystem>(m_systems, config);
   createSystem<ComputerSystem>(m_systems, config);
   createSystem<EffectSystem>(m_systems, config);
   createSystem<MotionSystem>(m_systems, config);
@@ -78,7 +79,6 @@ void Systems::initialize(SystemsConfig &&config)
   createSystem<WeaponSystem>(m_systems, config);
   createSystem<BulletSystem>(m_systems, config);
   createSystem<AISystem>(m_systems, config);
-  createSystem<TargetSystem>(m_systems, config);
   createSystem<LootSystem>(m_systems, config);
   createSystem<HealthSystem>(m_systems, config);
   createSystem<OwnerSystem>(m_systems, config);
