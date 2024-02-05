@@ -32,11 +32,25 @@ void TargetSystem::updateEntity(Entity &entity,
 namespace {
 bool targetIsDead(const Entity &target)
 {
-  if (!target.exists<HealthComponent>())
+  auto isDeadFromStatus{false};
+  if (target.exists<StatusComponent>())
   {
-    return false;
+    isDeadFromStatus = Status::DEAD == target.statusComp().status();
   }
-  return !target.healthComp().isAlive();
+
+  auto isDeadFromHealth{false};
+  if (target.exists<HealthComponent>())
+  {
+    isDeadFromHealth = !target.healthComp().isAlive();
+  }
+
+  auto isDeadFromRemoval{false};
+  if (target.exists<RemovalComponent>())
+  {
+    isDeadFromRemoval = target.removalComp().toBeDeleted();
+  }
+
+  return isDeadFromStatus || isDeadFromHealth || isDeadFromRemoval;
 }
 
 bool targetHasDocked(const Entity &target)
