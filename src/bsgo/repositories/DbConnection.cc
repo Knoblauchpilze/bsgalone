@@ -89,7 +89,7 @@ auto DbConnection::tryExecuteQuery(const SqlQuery &query) -> SqlResult
   }
   catch (const pqxx::sql_error &e)
   {
-    warn("failed: " + e.query() + ", " + e.sqlstate());
+    warn("Failed: " + e.query() + ", " + e.sqlstate());
     out.error = e.sqlstate();
   }
 
@@ -108,7 +108,7 @@ auto DbConnection::tryExecuteTransaction(const SqlTransaction &query) -> SqlResu
   }
   catch (const pqxx::sql_error &e)
   {
-    warn("failed: " + e.query() + ", " + e.sqlstate());
+    warn("Failed: " + e.query() + ", " + e.sqlstate());
     out.error = e.sqlstate();
   }
 
