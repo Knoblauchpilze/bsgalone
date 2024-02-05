@@ -72,8 +72,6 @@ void ComponentMessageConsumer::handleWeaponUpdated(const bsgo::WeaponComponentMe
     return;
   }
 
-  debug("setting " + std::to_string(message.isActive()));
-
   (*maybeWeapon)->setActive(message.isActive());
 }
 
