@@ -299,7 +299,7 @@ void Game::resetViewsAndUi()
 {
   m_dataSource.initialize(*m_coordinator, m_entityMapper);
 
-  const auto maybePlayerDbId = m_dataSource.playerDbId();
+  const auto maybePlayerDbId = m_dataSource.tryGetPlayerDbId();
   if (!maybePlayerDbId)
   {
     error("Failed to reset views and UI", "Expected to have a player defined");
@@ -309,7 +309,11 @@ void Game::resetViewsAndUi()
   m_views.shopView->setPlayerDbId(maybePlayerDbId);
   m_views.serverView->setPlayerDbId(maybePlayerDbId);
 
-  const auto maybePlayerShipDbId = m_entityMapper.tryGetPlayerShipDbId();
+  auto maybePlayerShipDbId = m_entityMapper.tryGetPlayerShipDbId();
+  if (!maybePlayerShipDbId)
+  {
+    maybePlayerShipDbId = m_dataSource.tryGetPlayerShipDbId();
+  }
   m_views.shipDbView->setPlayerShipDbId(maybePlayerShipDbId);
 
   const auto maybePlayerShipEntityId = m_entityMapper.tryGetPlayerShipEntityId();
