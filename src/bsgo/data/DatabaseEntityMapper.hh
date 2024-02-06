@@ -3,6 +3,7 @@
 
 #include "Uuid.hh"
 #include <core_utils/CoreObject.hh>
+#include <mutex>
 #include <optional>
 #include <unordered_map>
 
@@ -35,6 +36,7 @@ class DatabaseEntityMapper : public utils::CoreObject
   void clear();
 
   private:
+  mutable std::mutex m_locker{};
   PlayerDbIdsToEntityIds m_playerDbIdsToEntityIds{};
   ShipDbIdsToEntityIds m_shipDbIdsToEntityIds{};
   AsteroidDbIdsToEntityIds m_asteroidDbIdsToEntityIds{};

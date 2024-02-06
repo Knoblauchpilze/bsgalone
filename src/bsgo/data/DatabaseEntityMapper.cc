@@ -16,6 +16,8 @@ void DatabaseEntityMapper::setPlayerDbId(const Uuid playerDbId)
 
 void DatabaseEntityMapper::registerPlayer(const Uuid playerDbId, const Uuid entityId)
 {
+  const std::lock_guard guard(m_locker);
+
   const auto res = m_playerDbIdsToEntityIds.try_emplace(playerDbId, entityId);
   if (!res.second)
   {
@@ -36,6 +38,8 @@ void DatabaseEntityMapper::registerPlayer(const Uuid playerDbId, const Uuid enti
 
 void DatabaseEntityMapper::registerShip(const Uuid shipDbId, const Uuid entityId)
 {
+  const std::lock_guard guard(m_locker);
+
   const auto res = m_shipDbIdsToEntityIds.try_emplace(shipDbId, entityId);
   if (!res.second)
   {
@@ -69,6 +73,8 @@ void DatabaseEntityMapper::registerShipForPlayer(const Uuid playerDbId,
 
 void DatabaseEntityMapper::registerAsteroid(const Uuid asteroidDbId, const Uuid entityId)
 {
+  const std::lock_guard guard(m_locker);
+
   const auto res = m_asteroidDbIdsToEntityIds.try_emplace(asteroidDbId, entityId);
   if (!res.second)
   {
@@ -94,6 +100,8 @@ auto DatabaseEntityMapper::tryGetPlayerShipEntityId() const -> std::optional<Uui
 
 auto DatabaseEntityMapper::tryGetPlayerEntityId(const Uuid playerDbId) const -> std::optional<Uuid>
 {
+  const std::lock_guard guard(m_locker);
+
   const auto maybePlayer = m_playerDbIdsToEntityIds.find(playerDbId);
   if (maybePlayer != m_playerDbIdsToEntityIds.cend())
   {
@@ -105,6 +113,8 @@ auto DatabaseEntityMapper::tryGetPlayerEntityId(const Uuid playerDbId) const -> 
 
 auto DatabaseEntityMapper::tryGetShipEntityId(const Uuid shipDbId) const -> std::optional<Uuid>
 {
+  const std::lock_guard guard(m_locker);
+
   const auto maybeShip = m_shipDbIdsToEntityIds.find(shipDbId);
   if (maybeShip != m_shipDbIdsToEntityIds.cend())
   {
@@ -117,6 +127,8 @@ auto DatabaseEntityMapper::tryGetShipEntityId(const Uuid shipDbId) const -> std:
 auto DatabaseEntityMapper::tryGetAsteroidEntityId(const Uuid asteroidDbId) const
   -> std::optional<Uuid>
 {
+  const std::lock_guard guard(m_locker);
+
   const auto maybeAsteroid = m_asteroidDbIdsToEntityIds.find(asteroidDbId);
   if (maybeAsteroid != m_asteroidDbIdsToEntityIds.cend())
   {
@@ -128,6 +140,8 @@ auto DatabaseEntityMapper::tryGetAsteroidEntityId(const Uuid asteroidDbId) const
 
 void DatabaseEntityMapper::clear()
 {
+  const std::lock_guard guard(m_locker);
+
   m_playerDbIdsToEntityIds.clear();
   m_shipDbIdsToEntityIds.clear();
   m_asteroidDbIdsToEntityIds.clear();
