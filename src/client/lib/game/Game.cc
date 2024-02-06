@@ -49,16 +49,19 @@ bool shouldUpdateCoordinatorAfterScreenTransition(const Screen &current, const S
 
 void Game::setScreen(const Screen &screen)
 {
-  if (shouldUpdateCoordinatorAfterScreenTransition(m_state.screen, screen))
+  const auto fullReset = shouldUpdateCoordinatorAfterScreenTransition(m_state.screen, screen);
+  if (fullReset)
   {
     info("Resetting game data");
-    m_dataSource.initialize(*m_coordinator, m_entityMapper);
+    resetViewsAndUi();
   }
-
-  const auto ui = m_uiHandlers.find(screen);
-  if (ui != m_uiHandlers.cend())
+  else
   {
-    ui->second->reset();
+    const auto ui = m_uiHandlers.find(screen);
+    if (ui != m_uiHandlers.cend())
+    {
+      ui->second->reset();
+    }
   }
 
   m_state.screen = screen;
