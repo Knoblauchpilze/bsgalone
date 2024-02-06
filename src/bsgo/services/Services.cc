@@ -5,7 +5,7 @@ namespace bsgo {
 
 auto createServices(const Repositories &repositories,
                     const CoordinatorShPtr &coordinator,
-                    const DatabaseEntityMapper &entityMapper) -> Services
+                    DatabaseEntityMapper &entityMapper) -> Services
 {
   Services out{};
 

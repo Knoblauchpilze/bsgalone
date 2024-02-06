@@ -15,7 +15,7 @@ class ShipService : public AbstractService
   public:
   ShipService(const Repositories &repositories,
               CoordinatorShPtr coordinator,
-              const DatabaseEntityMapper &entityMapper);
+              DatabaseEntityMapper &entityMapper);
   ~ShipService() override = default;
 
   bool trySelectShip(const Uuid shipDbId) const;
@@ -34,7 +34,7 @@ class ShipService : public AbstractService
 
   private:
   CoordinatorShPtr m_coordinator{};
-  const DatabaseEntityMapper &m_entityMapper;
+  DatabaseEntityMapper &m_entityMapper;
 
   void switchActiveShip(PlayerShip currentActiveShip, PlayerShip newActiveShip) const;
   void switchShipSystem(const PlayerShip &currentActiveShip, const PlayerShip &newActiveShip) const;
