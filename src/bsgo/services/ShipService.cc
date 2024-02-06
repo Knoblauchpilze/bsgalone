@@ -1,11 +1,12 @@
 
 #include "ShipService.hh"
+#include "ShipDataSource.hh"
 
 namespace bsgo {
 
 ShipService::ShipService(const Repositories &repositories,
                          CoordinatorShPtr coordinator,
-                         const DatabaseEntityMapper &entityMapper)
+                         DatabaseEntityMapper &entityMapper)
   : AbstractService("ship", repositories)
   , m_coordinator(std::move(coordinator))
   , m_entityMapper(entityMapper)
@@ -67,19 +68,17 @@ bool ShipService::tryDock(const Uuid shipDbId) const
 
 bool ShipService::tryUndock(const Uuid shipDbId) const
 {
+  ShipDataSource source{m_repositories};
+  source.registerShip(*m_coordinator, shipDbId, m_entityMapper);
+
   const auto maybeEntityId = m_entityMapper.tryGetShipEntityId(shipDbId);
   if (!maybeEntityId)
   {
-    return false;
+    error("Failed to undock ship " + str(shipDbId), "Registration did not create an entity for it");
   }
 
   auto shipEntity  = m_coordinator->getEntity(*maybeEntityId);
   auto &statusComp = shipEntity.statusComp();
-
-  if (statusComp.status() != Status::DOCKED)
-  {
-    return false;
-  }
 
   const auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
   m_repositories.systemRepository->updateSystemForShip(shipDbId, *ship.system, false);
