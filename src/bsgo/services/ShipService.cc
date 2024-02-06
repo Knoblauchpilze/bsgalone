@@ -123,6 +123,9 @@ auto ShipService::tryAcquireTarget(const Uuid shipDbId, const Eigen::Vector3f &p
   auto ship          = m_coordinator->getEntity(*maybeEntityId);
   auto maybeTargetId = m_coordinator->getEntityAt(position);
 
+  std::optional<Uuid> maybeTargetDbId{};
+  std::optional<EntityKind> maybeTargetKind{};
+
   if (maybeTargetId)
   {
     const auto target = m_coordinator->getEntity(*maybeTargetId);
@@ -134,13 +137,21 @@ auto ShipService::tryAcquireTarget(const Uuid shipDbId, const Eigen::Vector3f &p
     }
   }
 
+  if (maybeTargetId)
+  {
+    const auto target = m_coordinator->getEntity(*maybeTargetId);
+
+    debug("Determined target " + target.str());
+
+    maybeTargetKind = target.kind->kind();
+    maybeTargetDbId = target.dbComp().dbId();
+  }
+
   updateEntityTarget(ship, maybeTargetId);
 
-  const auto target = m_coordinator->getEntity(*maybeTargetId);
-
   return AcquiringResult{.success    = true,
-                         .targetKind = target.kind->kind(),
-                         .targetDbId = target.dbComp().dbId()};
+                         .targetKind = maybeTargetKind,
+                         .targetDbId = maybeTargetDbId};
 }
 
 void ShipService::switchActiveShip(PlayerShip currentActiveShip, PlayerShip newActiveShip) const
