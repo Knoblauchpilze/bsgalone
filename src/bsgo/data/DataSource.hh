@@ -22,7 +22,8 @@ class DataSource : public utils::CoreObject
   void clearSystemDbId();
 
   auto repositories() const -> Repositories;
-  auto playerDbId() const -> std::optional<Uuid>;
+  auto tryGetPlayerDbId() const -> std::optional<Uuid>;
+  auto tryGetPlayerShipDbId() const -> std::optional<Uuid>;
 
   void initialize(Coordinator &coordinator, DatabaseEntityMapper &entityMapper) const;
 

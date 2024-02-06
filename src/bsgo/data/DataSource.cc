@@ -40,9 +40,21 @@ void DataSource::clearSystemDbId()
   m_systemDbId.reset();
 }
 
-auto DataSource::playerDbId() const -> std::optional<Uuid>
+auto DataSource::tryGetPlayerDbId() const -> std::optional<Uuid>
 {
   return m_playerDbId;
+}
+
+auto DataSource::tryGetPlayerShipDbId() const -> std::optional<Uuid>
+{
+  if (!m_playerDbId)
+  {
+    return {};
+  }
+
+  const auto playerShip = m_repositories.playerShipRepository->findOneByPlayerAndActive(
+    *m_playerDbId);
+  return playerShip.id;
 }
 
 auto DataSource::repositories() const -> Repositories
