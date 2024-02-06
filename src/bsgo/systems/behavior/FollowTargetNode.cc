@@ -15,7 +15,7 @@ void FollowTargetNode::run(const TickData &data)
 {
   if (NodeState::IDLE == m_state)
   {
-    debug("Trying to reach target of " + data.ent.str());
+    verbose("Trying to reach target of " + data.ent.str());
     start();
   }
   if (NodeState::RUNNING != m_state)
