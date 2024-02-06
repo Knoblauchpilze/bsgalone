@@ -23,8 +23,8 @@ class ShipView : public AbstractView
            IMessageQueue *const outputMessageQueue);
   ~ShipView() override = default;
 
-  void setPlayerShipDbId(const Uuid ship);
-  void setPlayerShipEntityId(const Uuid ship);
+  void setPlayerShipDbId(const std::optional<Uuid> ship);
+  void setPlayerShipEntityId(const std::optional<Uuid> ship);
 
   bool isReady() const noexcept override;
 

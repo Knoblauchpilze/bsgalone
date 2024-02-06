@@ -17,8 +17,8 @@ class PlayerView : public AbstractView
   PlayerView(const Repositories &repositories, IMessageQueue *const outputMessageQueue);
   ~PlayerView() override = default;
 
-  void setPlayerDbId(const Uuid player);
-  void setPlayerShipDbId(const Uuid ship);
+  void setPlayerDbId(const std::optional<Uuid> player);
+  void setPlayerShipDbId(const std::optional<Uuid> ship);
 
   bool isReady() const noexcept override;
 

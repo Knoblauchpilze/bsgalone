@@ -37,7 +37,7 @@ ShopView::ShopView(const Repositories &repositories)
   , m_repositories(repositories)
 {}
 
-void ShopView::setPlayerDbId(const Uuid player)
+void ShopView::setPlayerDbId(const std::optional<Uuid> player)
 {
   m_playerDbId = player;
 }

@@ -35,12 +35,12 @@ ShipView::ShipView(CoordinatorShPtr coordinator,
   }
 }
 
-void ShipView::setPlayerShipDbId(const Uuid ship)
+void ShipView::setPlayerShipDbId(const std::optional<Uuid> ship)
 {
   m_playerShipDbId = ship;
 }
 
-void ShipView::setPlayerShipEntityId(const Uuid ship)
+void ShipView::setPlayerShipEntityId(const std::optional<Uuid> ship)
 {
   m_playerShipEntityId = ship;
 }
