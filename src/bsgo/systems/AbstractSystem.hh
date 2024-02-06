@@ -12,6 +12,9 @@ class AbstractSystem : public ISystem
 {
   public:
   AbstractSystem(const SystemType &type, const EntityPredicate &entitiesFilter);
+  AbstractSystem(const SystemType &type,
+                 const EntityPredicate &entitiesFilter,
+                 const bool filterDeadAndRemovedEntities);
   ~AbstractSystem() override = default;
 
   auto type() const -> SystemType override;
@@ -31,6 +34,7 @@ class AbstractSystem : public ISystem
   private:
   SystemType m_systemType{};
   EntityPredicate m_entitiesFilter{};
+  bool m_filterDeadAndRemovedEntities{true};
   IMessageQueue *m_internalMessageQueue{};
   IMessageQueue *m_outputMessageQueue{};
 };

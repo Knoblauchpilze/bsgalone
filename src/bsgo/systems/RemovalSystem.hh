@@ -5,11 +5,11 @@
 
 namespace bsgo {
 
-class OwnerSystem : public AbstractSystem
+class RemovalSystem : public AbstractSystem
 {
   public:
-  OwnerSystem();
-  ~OwnerSystem() override = default;
+  RemovalSystem();
+  ~RemovalSystem() override = default;
 
   void updateEntity(Entity &entity,
                     Coordinator &coordinator,

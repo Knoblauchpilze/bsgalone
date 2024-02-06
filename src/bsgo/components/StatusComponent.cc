@@ -20,6 +20,11 @@ auto StatusComponent::status() const -> Status
   return m_status;
 }
 
+bool StatusComponent::isDead() const
+{
+  return Status::DEAD == m_status;
+}
+
 auto StatusComponent::jumpTime() const -> utils::Duration
 {
   if (!m_jumpTime)

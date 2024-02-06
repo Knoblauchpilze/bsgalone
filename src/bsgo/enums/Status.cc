@@ -96,6 +96,19 @@ bool statusAllowsDamage(const Status &status)
   }
 }
 
+bool statusAllowsDocking(const Status &status)
+{
+  switch (status)
+  {
+    case Status::APPEARING:
+    case Status::VISIBLE:
+    case Status::THREAT:
+      return true;
+    default:
+      return false;
+  }
+}
+
 bool statusRequiresImmobilization(const Status &status)
 {
   switch (status)
@@ -126,6 +139,18 @@ bool statusRequiresPowerReset(const Status &status)
     case Status::JUMP:
     case Status::JUMP_APPEARING:
     case Status::JUMP_THREAT:
+      return true;
+    default:
+      return false;
+  }
+}
+
+bool statusRequiresDeletion(const Status &status)
+{
+  switch (status)
+  {
+    case Status::DEAD:
+    case Status::DOCKED:
       return true;
     default:
       return false;

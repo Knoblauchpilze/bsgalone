@@ -31,7 +31,7 @@ void HealthSystem::tryMarkForDelettion(Entity &entity) const
     return;
   }
 
-  entity.removalComp().markForRemoval();
+  entity.statusComp().setStatus(Status::DEAD);
 }
 
 bool HealthSystem::canRegenerateHealth(Entity &entity) const
