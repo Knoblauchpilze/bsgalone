@@ -9,9 +9,7 @@
 
 namespace bsgo {
 
-using PlayerDbIdsToEntityIds   = std::unordered_map<Uuid, Uuid>;
-using ShipDbIdsToEntityIds     = std::unordered_map<Uuid, Uuid>;
-using AsteroidDbIdsToEntityIds = std::unordered_map<Uuid, Uuid>;
+using DbIdsToEntityIds = std::unordered_map<Uuid, Uuid>;
 
 class DatabaseEntityMapper : public utils::CoreObject
 {
@@ -24,6 +22,7 @@ class DatabaseEntityMapper : public utils::CoreObject
   void registerShip(const Uuid shipDbId, const Uuid entityId);
   void registerShipForPlayer(const Uuid playerDbId, const Uuid shipDbId, const Uuid entityId);
   void registerAsteroid(const Uuid asteroidDbId, const Uuid entityId);
+  void registerOutpost(const Uuid outpostDbId, const Uuid entityId);
 
   auto tryGetPlayerEntityId() const -> std::optional<Uuid>;
   auto tryGetPlayerShipDbId() const -> std::optional<Uuid>;
@@ -32,14 +31,16 @@ class DatabaseEntityMapper : public utils::CoreObject
   auto tryGetPlayerEntityId(const Uuid playerDbId) const -> std::optional<Uuid>;
   auto tryGetShipEntityId(const Uuid shipDbId) const -> std::optional<Uuid>;
   auto tryGetAsteroidEntityId(const Uuid asteroidDbId) const -> std::optional<Uuid>;
+  auto tryGetOutpostEntityId(const Uuid outpostDbId) const -> std::optional<Uuid>;
 
   void clear();
 
   private:
   mutable std::mutex m_locker{};
-  PlayerDbIdsToEntityIds m_playerDbIdsToEntityIds{};
-  ShipDbIdsToEntityIds m_shipDbIdsToEntityIds{};
-  AsteroidDbIdsToEntityIds m_asteroidDbIdsToEntityIds{};
+  DbIdsToEntityIds m_playerDbIdsToEntityIds{};
+  DbIdsToEntityIds m_shipDbIdsToEntityIds{};
+  DbIdsToEntityIds m_asteroidDbIdsToEntityIds{};
+  DbIdsToEntityIds m_outpostDbIdsToEntityIds{};
 
   std::optional<Uuid> m_playerDbId{};
   std::optional<Uuid> m_playerEntityId{};

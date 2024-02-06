@@ -38,7 +38,7 @@ class DataSource : public utils::CoreObject
   void initializePlayer(Coordinator &coordinator, DatabaseEntityMapper &entityMapper) const;
   void initializeAsteroids(Coordinator &coordinator, DatabaseEntityMapper &entityMapper) const;
   void initializeShips(Coordinator &coordinator, DatabaseEntityMapper &entityMapper) const;
-  void initializeOutposts(Coordinator &coordinator) const;
+  void initializeOutposts(Coordinator &coordinator, DatabaseEntityMapper &entityMapper) const;
 };
 
 } // namespace bsgo
