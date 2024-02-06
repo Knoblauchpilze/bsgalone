@@ -26,12 +26,19 @@ void HealthSystem::updateEntity(Entity &entity,
 
 void HealthSystem::tryMarkForDelettion(Entity &entity) const
 {
-  if (entity.healthComp().isAlive() || !entity.exists<RemovalComponent>())
+  if (entity.healthComp().isAlive())
   {
     return;
   }
 
-  entity.statusComp().setStatus(Status::DEAD);
+  if (entity.exists<StatusComponent>())
+  {
+    entity.statusComp().setStatus(Status::DEAD);
+  }
+  if (entity.exists<RemovalComponent>())
+  {
+    entity.removalComp().markForRemoval();
+  }
 }
 
 bool HealthSystem::canRegenerateHealth(Entity &entity) const
