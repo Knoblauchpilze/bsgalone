@@ -153,6 +153,12 @@ INSERT INTO public.player_computer ("computer", "player", "level")
     (SELECT id FROM player WHERE name = 'colo'),
     6
   );
+INSERT INTO public.player_computer ("computer", "player", "level")
+  VALUES (
+    (SELECT id FROM computer WHERE name = 'Scan'),
+    (SELECT id FROM player WHERE name = 'colo2'),
+    5
+  );
 
 INSERT INTO public.ship_computer ("ship", "computer")
   VALUES (
@@ -163,4 +169,10 @@ INSERT INTO public.ship_computer ("ship", "computer")
   VALUES (
     (SELECT player_ship.id FROM player_ship LEFT JOIN player ON player.id = player_ship.player LEFT JOIN ship ON player_ship.ship = ship.id WHERE player.name = 'colo' AND ship.name = 'Viper Mark II'),
     (SELECT player_computer.id FROM player_computer LEFT JOIN player ON player.id = player_computer.player LEFT JOIN computer ON player_computer.computer = computer.id WHERE player.name = 'colo' AND computer.name = 'Scan')
+  );
+
+INSERT INTO public.ship_computer ("ship", "computer")
+  VALUES (
+    (SELECT player_ship.id FROM player_ship LEFT JOIN player ON player.id = player_ship.player LEFT JOIN ship ON player_ship.ship = ship.id WHERE player.name = 'colo2' AND ship.name = 'Viper Mark VII'),
+    (SELECT player_computer.id FROM player_computer LEFT JOIN player ON player.id = player_computer.player LEFT JOIN computer ON player_computer.computer = computer.id WHERE player.name = 'colo2' AND computer.name = 'Scan')
   );
