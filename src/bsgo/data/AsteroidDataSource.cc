@@ -5,19 +5,19 @@
 
 namespace bsgo {
 
-AsteroidDataSource::AsteroidDataSource(const Repositories &repositories, const Uuid systemDbId)
+AsteroidDataSource::AsteroidDataSource(const Repositories &repositories)
   : utils::CoreObject("bsgo")
-  , m_systemDbId(systemDbId)
   , m_repositories(repositories)
 {
   setService("data");
   addModule("asteroid");
 }
 
-void AsteroidDataSource::initialize(Coordinator &coordinator,
+void AsteroidDataSource::initialize(const Uuid systemDbId,
+                                    Coordinator &coordinator,
                                     DatabaseEntityMapper &entityMapper) const
 {
-  const auto asteroids = m_repositories.systemRepository->findAllAsteroidsBySystem(m_systemDbId);
+  const auto asteroids = m_repositories.systemRepository->findAllAsteroidsBySystem(systemDbId);
   for (const auto &id : asteroids)
   {
     registerAsteroid(coordinator, id, entityMapper);

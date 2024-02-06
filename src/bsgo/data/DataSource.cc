@@ -89,8 +89,8 @@ void DataSource::initialize(Coordinator &coordinator, DatabaseEntityMapper &enti
 
 void DataSource::initializePlayer(Coordinator &coordinator, DatabaseEntityMapper &entityMapper) const
 {
-  PlayerDataSource source(m_repositories, *m_systemDbId);
-  source.initialize(coordinator, entityMapper);
+  PlayerDataSource source{m_repositories};
+  source.initialize(*m_systemDbId, coordinator, entityMapper);
 
   if (DataLoadingMode::CLIENT == m_dataLoadingMode
       && !entityMapper.tryGetPlayerEntityId().has_value())
@@ -102,21 +102,21 @@ void DataSource::initializePlayer(Coordinator &coordinator, DatabaseEntityMapper
 void DataSource::initializeAsteroids(Coordinator &coordinator,
                                      DatabaseEntityMapper &entityMapper) const
 {
-  AsteroidDataSource source(m_repositories, *m_systemDbId);
-  source.initialize(coordinator, entityMapper);
+  AsteroidDataSource source{m_repositories};
+  source.initialize(*m_systemDbId, coordinator, entityMapper);
 }
 
 void DataSource::initializeShips(Coordinator &coordinator, DatabaseEntityMapper &entityMapper) const
 {
-  ShipDataSource source(m_repositories);
+  ShipDataSource source{m_repositories};
   source.initialize(*m_systemDbId, coordinator, entityMapper);
 }
 
 void DataSource::initializeOutposts(Coordinator &coordinator,
                                     DatabaseEntityMapper &entityMapper) const
 {
-  OutpostDataSource source(m_repositories, *m_systemDbId);
-  source.initialize(coordinator, entityMapper);
+  OutpostDataSource source{m_repositories};
+  source.initialize(*m_systemDbId, coordinator, entityMapper);
 }
 
 } // namespace bsgo

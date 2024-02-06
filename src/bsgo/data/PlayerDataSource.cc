@@ -4,18 +4,19 @@
 
 namespace bsgo {
 
-PlayerDataSource::PlayerDataSource(const Repositories &repositories, const Uuid systemDbId)
+PlayerDataSource::PlayerDataSource(const Repositories &repositories)
   : utils::CoreObject("bsgo")
-  , m_systemDbId(systemDbId)
   , m_repositories(repositories)
 {
   setService("data");
   addModule("player");
 }
 
-void PlayerDataSource::initialize(Coordinator &coordinator, DatabaseEntityMapper &entityMapper) const
+void PlayerDataSource::initialize(const Uuid systemDbId,
+                                  Coordinator &coordinator,
+                                  DatabaseEntityMapper &entityMapper) const
 {
-  const auto players = m_repositories.playerRepository->findAllBySystem(m_systemDbId);
+  const auto players = m_repositories.playerRepository->findAllBySystem(systemDbId);
   for (const auto &id : players)
   {
     registerPlayer(coordinator, id, entityMapper);
