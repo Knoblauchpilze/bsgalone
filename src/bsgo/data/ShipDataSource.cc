@@ -15,21 +15,22 @@
 
 namespace bsgo {
 
-ShipDataSource::ShipDataSource(const Repositories &repositories, const Uuid systemDbId)
+ShipDataSource::ShipDataSource(const Repositories &repositories)
   : utils::CoreObject("bsgo")
-  , m_systemDbId(systemDbId)
   , m_repositories(repositories)
 {
   setService("data");
   addModule("ship");
 }
 
-void ShipDataSource::initialize(Coordinator &coordinator, DatabaseEntityMapper &entityMapper) const
+void ShipDataSource::initialize(const Uuid systemDbId,
+                                Coordinator &coordinator,
+                                DatabaseEntityMapper &entityMapper) const
 {
-  const auto ships = m_repositories.systemRepository->findAllShipsBySystem(m_systemDbId);
+  const auto ships = m_repositories.systemRepository->findAllShipsBySystem(systemDbId);
   for (const auto &id : ships)
   {
-    registerShip(coordinator, id, entityMapper);
+    registerShip(coordinator, id, entityMapper, true);
   }
 }
 
@@ -37,10 +38,17 @@ void ShipDataSource::registerShip(Coordinator &coordinator,
                                   const Uuid ship,
                                   DatabaseEntityMapper &entityMapper) const
 {
+  registerShip(coordinator, ship, entityMapper, false);
+}
+
+void ShipDataSource::registerShip(Coordinator &coordinator,
+                                  const Uuid ship,
+                                  DatabaseEntityMapper &entityMapper,
+                                  const bool ignoreDocked) const
+{
   const auto data = m_repositories.playerShipRepository->findOneById(ship);
 
-  // Ignore docked ships.
-  if (data.docked)
+  if (ignoreDocked && data.docked)
   {
     return;
   }

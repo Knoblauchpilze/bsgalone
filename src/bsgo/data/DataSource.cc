@@ -108,8 +108,8 @@ void DataSource::initializeAsteroids(Coordinator &coordinator,
 
 void DataSource::initializeShips(Coordinator &coordinator, DatabaseEntityMapper &entityMapper) const
 {
-  ShipDataSource source(m_repositories, *m_systemDbId);
-  source.initialize(coordinator, entityMapper);
+  ShipDataSource source(m_repositories);
+  source.initialize(*m_systemDbId, coordinator, entityMapper);
 }
 
 void DataSource::initializeOutposts(Coordinator &coordinator) const
