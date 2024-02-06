@@ -17,6 +17,7 @@ class StatusComponent : public AbstractComponent
   ~StatusComponent() = default;
 
   auto status() const -> Status;
+  bool isDead() const;
   auto jumpTime() const -> utils::Duration;
   auto threatJumpTime() const -> utils::Duration;
   bool justChanged() const;

@@ -52,7 +52,7 @@ bool ShipService::tryDock(const Uuid shipDbId) const
   auto shipEntity  = m_coordinator->getEntity(*maybeEntityId);
   auto &statusComp = shipEntity.statusComp();
 
-  if (Status::DOCKED == statusComp.status())
+  if (!statusAllowsDocking(statusComp.status()))
   {
     return false;
   }

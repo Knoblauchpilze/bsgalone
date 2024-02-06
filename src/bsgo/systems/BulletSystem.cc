@@ -24,7 +24,7 @@ void BulletSystem::updateEntity(Entity &entity,
   }
 
   auto target = coordinator.getEntity(*entity.targetComp().target());
-  if (killIfTargetIsNotAccessible(entity, target))
+  if (killIfTargetIsInvalid(entity, target))
   {
     return;
   }
@@ -46,7 +46,7 @@ bool BulletSystem::killIfTargetIsDead(Entity &entity) const
   return true;
 }
 
-bool BulletSystem::killIfTargetIsNotAccessible(Entity &entity, Entity &target) const
+bool BulletSystem::killIfTargetIsInvalid(Entity &entity, Entity &target) const
 {
   if (!target.exists<StatusComponent>())
   {

@@ -17,7 +17,7 @@ class BulletSystem : public AbstractSystem
 
   private:
   bool killIfTargetIsDead(Entity &entity) const;
-  bool killIfTargetIsNotAccessible(Entity &entity, Entity &target) const;
+  bool killIfTargetIsInvalid(Entity &entity, Entity &target) const;
   void accelerateTowardsTarget(Entity &entity, const Entity &target) const;
   void damageOnImpact(Entity &entity, Entity &target) const;
 };

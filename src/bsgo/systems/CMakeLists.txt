@@ -24,8 +24,8 @@ target_sources (bsgalone_core_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/LootSystem.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/MotionSystem.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/NetworkSystem.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/OwnerSystem.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/PowerSystem.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/RemovalSystem.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/StatusSystem.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/TargetSystem.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/WeaponSystem.cc

@@ -9,8 +9,8 @@
 #include "LootSystem.hh"
 #include "MotionSystem.hh"
 #include "NetworkSystem.hh"
-#include "OwnerSystem.hh"
 #include "PowerSystem.hh"
+#include "RemovalSystem.hh"
 #include "StatusSystem.hh"
 #include "TargetSystem.hh"
 #include "WeaponEffectComponent.hh"
@@ -81,7 +81,7 @@ void Systems::initialize(SystemsConfig &&config)
   createSystem<AISystem>(m_systems, config);
   createSystem<LootSystem>(m_systems, config);
   createSystem<HealthSystem>(m_systems, config);
-  createSystem<OwnerSystem>(m_systems, config);
+  createSystem<RemovalSystem>(m_systems, config);
 
   if (config.ignoredSystems.contains(SystemType::NETWORK))
   {
