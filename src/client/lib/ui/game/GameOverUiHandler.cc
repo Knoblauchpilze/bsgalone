@@ -8,10 +8,15 @@ namespace pge {
 GameOverUiHandler::GameOverUiHandler(const bsgo::Views &views)
   : IUiHandler("gameover")
   , m_shipView(views.shipView)
+  , m_shipDbView(views.shipDbView)
 {
   if (nullptr == m_shipView)
   {
     throw std::invalid_argument("Expected non null ship view");
+  }
+  if (nullptr == m_shipDbView)
+  {
+    throw std::invalid_argument("Expected non null ship db view");
   }
 }
 
@@ -23,9 +28,9 @@ void GameOverUiHandler::initializeMenus(const int width, const int height)
   pos.y = (height - dims.y) / 2;
 
   const MenuConfig config{.pos = pos, .dims = dims, .visible = false, .clickCallback = [this]() {
-                            if (m_shipView->isReady())
+                            if (m_shipDbView->isReady())
                             {
-                              m_shipView->dockPlayerShip();
+                              m_shipDbView->dockPlayerShip();
                             }
                           }};
 
@@ -52,7 +57,7 @@ void GameOverUiHandler::updateUi()
   }
 
   const auto ship = m_shipView->getPlayerShip();
-  m_menu->setVisible(bsgo::Status::DEAD == ship.statusComp().status());
+  m_menu->setVisible(ship.statusComp().isDead());
 }
 
 } // namespace pge

@@ -13,15 +13,15 @@ constexpr auto SYSTEM_LABEL_CURRENT_BG_COLOR  = colors::DARK_CYAN;
 MapScreenUiHandler::MapScreenUiHandler(const bsgo::Views &views)
   : IUiHandler("map")
   , m_serverView(views.serverView)
-  , m_shipView(views.shipView)
+  , m_shipDbView(views.shipDbView)
 {
   if (nullptr == m_serverView)
   {
     throw std::invalid_argument("Expected non null server view");
   }
-  if (nullptr == m_shipView)
+  if (nullptr == m_shipDbView)
   {
-    throw std::invalid_argument("Expected non null ship view");
+    throw std::invalid_argument("Expected non null ship db view");
   }
 }
 
@@ -225,14 +225,14 @@ void MapScreenUiHandler::onJumpRequested()
   {
     error("Failed to start jump", "No selected system");
   }
-  if (!m_shipView->isReady())
+  if (!m_shipDbView->isReady())
   {
     return;
   }
 
   const auto systemId = m_selectedSystem->systemId;
-  m_shipView->setJumpSystem(systemId);
-  m_shipView->startJump();
+  m_shipDbView->setJumpSystem(systemId);
+  m_shipDbView->startJump();
 }
 
 } // namespace pge

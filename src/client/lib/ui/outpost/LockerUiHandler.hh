@@ -25,8 +25,8 @@ class LockerUiHandler : public IUiHandler
   void reset() override;
 
   private:
-  bsgo::PlayerViewShPtr m_playerView;
-  bsgo::ShipViewShPtr m_shipView;
+  bsgo::PlayerViewShPtr m_playerView{};
+  bsgo::ShipDbViewShPtr m_shipDbView{};
   bool m_initialized{false};
 
   UiMenuPtr m_menu{};

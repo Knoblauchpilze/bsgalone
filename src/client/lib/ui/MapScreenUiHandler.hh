@@ -21,7 +21,7 @@ class MapScreenUiHandler : public IUiHandler
 
   private:
   bsgo::ServerViewShPtr m_serverView{};
-  bsgo::ShipViewShPtr m_shipView{};
+  bsgo::ShipDbViewShPtr m_shipDbView{};
 
   std::vector<UiMenuPtr> m_buttons{};
   UiMenu *m_jumpButton{};

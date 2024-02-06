@@ -20,7 +20,8 @@ class GameOverUiHandler : public IUiHandler
   void updateUi() override;
 
   private:
-  bsgo::ShipViewShPtr m_shipView;
+  bsgo::ShipViewShPtr m_shipView{};
+  bsgo::ShipDbViewShPtr m_shipDbView{};
 
   UiTextMenuPtr m_menu{};
 };

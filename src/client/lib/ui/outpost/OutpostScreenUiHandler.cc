@@ -12,14 +12,14 @@ namespace pge {
 OutpostScreenUiHandler::OutpostScreenUiHandler(const bsgo::Views &views)
   : IUiHandler("outpost")
   , bsgo::AbstractMessageListener({bsgo::MessageType::PURCHASE, bsgo::MessageType::EQUIP})
-  , m_shipView(views.shipView)
+  , m_shipDbView(views.shipDbView)
   , m_lockerUi(std::make_unique<LockerUiHandler>(views))
   , m_shopUi(std::make_unique<ShopUiHandler>(views))
   , m_hangarUi(std::make_unique<HangarUiHandler>(views))
 {
-  if (nullptr == m_shipView)
+  if (nullptr == m_shipDbView)
   {
-    throw std::invalid_argument("Expected non null ship view");
+    throw std::invalid_argument("Expected non null ship db view");
   }
 }
 
@@ -32,9 +32,9 @@ void OutpostScreenUiHandler::initializeMenus(const int width, const int height)
   const Vec2i dims{UNDOCK_BUTTON_WIDTH, 50};
 
   const MenuConfig config{.pos = pos, .dims = dims, .clickCallback = [this]() {
-                            if (m_shipView->isReady())
+                            if (m_shipDbView->isReady())
                             {
-                              m_shipView->undockPlayerShip();
+                              m_shipDbView->undockPlayerShip();
                             }
                           }};
 

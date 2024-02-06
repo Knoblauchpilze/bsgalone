@@ -6,17 +6,22 @@ namespace pge {
 GameScreenInputHandler::GameScreenInputHandler(const bsgo::Views &views)
   : IInputHandler("game")
   , m_shipView(views.shipView)
+  , m_shipDbView(views.shipDbView)
 {
   if (nullptr == m_shipView)
   {
     throw std::invalid_argument("Expected non null ship view");
+  }
+  if (nullptr == m_shipDbView)
+  {
+    throw std::invalid_argument("Expected non null ship db view");
   }
 }
 
 void GameScreenInputHandler::processUserInput(const controls::State &controls,
                                               CoordinateFrame &frame)
 {
-  if (!m_shipView->isReady())
+  if (!m_shipView->isReady() || !m_shipDbView->isReady())
   {
     return;
   }
@@ -33,14 +38,14 @@ void GameScreenInputHandler::processUserInput(const controls::State &controls,
 
 void GameScreenInputHandler::performAction(float x, float y, const controls::State & /*state*/)
 {
-  if (!m_shipView->isReady())
+  if (!m_shipDbView->isReady())
   {
     return;
   }
 
   const Eigen::Vector3f pos(x, y, 0.0f);
 
-  m_shipView->tryAcquireTarget(pos);
+  m_shipDbView->tryAcquireTarget(pos);
 }
 
 namespace {
@@ -88,7 +93,7 @@ void GameScreenInputHandler::moveShip(const Motion &motion)
   direction(2)              = motion.z;
   direction.normalize();
 
-  m_shipView->accelerateShip(direction);
+  m_shipDbView->accelerateShip(direction);
 }
 
 void GameScreenInputHandler::keepShipCentered(CoordinateFrame &frame)
@@ -151,11 +156,11 @@ void GameScreenInputHandler::handleJumpState(const controls::State &controls)
 {
   if (controls.released(controls::keys::J))
   {
-    m_shipView->startJump();
+    m_shipDbView->startJump();
   }
   if (controls.released(controls::keys::K))
   {
-    m_shipView->cancelJump();
+    m_shipDbView->cancelJump();
   }
 }
 

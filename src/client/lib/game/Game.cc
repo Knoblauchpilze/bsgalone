@@ -251,7 +251,7 @@ void Game::activeShipChanged()
 
 void Game::activeSystemChanged()
 {
-  m_views.shipView->clearJumpSystem();
+  m_views.shipDbView->clearJumpSystem();
   m_dataSource.clearSystemDbId();
   resetViewsAndUi();
 }
@@ -310,8 +310,7 @@ void Game::resetViewsAndUi()
   m_views.serverView->setPlayerDbId(maybePlayerDbId);
 
   const auto maybePlayerShipDbId = m_entityMapper.tryGetPlayerShipDbId();
-  m_views.playerView->setPlayerShipDbId(maybePlayerShipDbId);
-  m_views.shipView->setPlayerShipDbId(maybePlayerShipDbId);
+  m_views.shipDbView->setPlayerShipDbId(maybePlayerShipDbId);
 
   const auto maybePlayerShipEntityId = m_entityMapper.tryGetPlayerShipEntityId();
   m_views.shipView->setPlayerShipEntityId(maybePlayerShipEntityId);

@@ -11,15 +11,15 @@ namespace pge {
 LockerUiHandler::LockerUiHandler(const bsgo::Views &views)
   : IUiHandler("locker")
   , m_playerView(views.playerView)
-  , m_shipView(views.shipView)
+  , m_shipDbView(views.shipDbView)
 {
   if (nullptr == m_playerView)
   {
     throw std::invalid_argument("Expected non null player view");
   }
-  if (nullptr == m_shipView)
+  if (nullptr == m_shipDbView)
   {
-    throw std::invalid_argument("Expected non null ship view");
+    throw std::invalid_argument("Expected non null ship db view");
   }
 }
 
@@ -71,7 +71,7 @@ void updateButtonState(UiMenu &button, const bool enable)
 
 void LockerUiHandler::updateUi()
 {
-  if (!m_playerView->isReady() || !m_shipView->isReady())
+  if (!m_playerView->isReady() || !m_shipDbView->isReady())
   {
     return;
   }
@@ -82,7 +82,7 @@ void LockerUiHandler::updateUi()
 
   for (const auto data : m_lockerItemsData)
   {
-    const auto equipable = m_shipView->canStillEquipItem(data.itemType);
+    const auto equipable = m_shipDbView->canStillEquipItem(data.itemType);
     updateButtonState(*data.button, equipable);
   }
 }
@@ -174,7 +174,7 @@ void LockerUiHandler::initializeShipLayout()
 
   config.highlightable = true;
 
-  const auto slots = m_shipView->getPlayerShipSlots();
+  const auto slots = m_shipDbView->getPlayerShipSlots();
   if (slots.contains(bsgo::Slot::WEAPON))
   {
     const auto weaponsCount = slots.at(bsgo::Slot::WEAPON);
@@ -346,7 +346,7 @@ void LockerUiHandler::generateShipWeaponsMenus()
 {
   auto id = 0;
 
-  const auto weapons = m_shipView->getPlayerShipWeapons();
+  const auto weapons = m_shipDbView->getPlayerShipWeapons();
   for (const auto &weapon : weapons)
   {
     auto details = generateWeaponMenu(weapon);
@@ -368,7 +368,7 @@ void LockerUiHandler::generateShipComputersMenus()
 {
   auto id = 0;
 
-  const auto computers = m_shipView->getPlayerShipComputers();
+  const auto computers = m_shipDbView->getPlayerShipComputers();
   for (const auto &computer : computers)
   {
     auto details = generateComputerMenu(computer);
@@ -388,24 +388,24 @@ void LockerUiHandler::generateShipComputersMenus()
 
 void LockerUiHandler::onInstallRequest(const int itemId)
 {
-  if (!m_shipView->isReady())
+  if (!m_shipDbView->isReady())
   {
     return;
   }
 
   const auto &equip = m_lockerItemsData.at(itemId);
-  m_shipView->tryEquipItem(equip.itemType, equip.itemId);
+  m_shipDbView->tryEquipItem(equip.itemType, equip.itemId);
 }
 
 void LockerUiHandler::onUninstallRequest(const int itemId)
 {
-  if (!m_shipView->isReady())
+  if (!m_shipDbView->isReady())
   {
     return;
   }
 
   const auto &equip = m_shipItemsData.at(itemId);
-  m_shipView->tryUnequipItem(equip.itemType, equip.itemId);
+  m_shipDbView->tryUnequipItem(equip.itemType, equip.itemId);
 }
 
 } // namespace pge

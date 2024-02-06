@@ -20,6 +20,7 @@ class GameScreenInputHandler : public IInputHandler
 
   private:
   bsgo::ShipViewShPtr m_shipView{};
+  bsgo::ShipDbViewShPtr m_shipDbView{};
   std::optional<Motion> m_lastMotion{};
 
   void moveShip(const Motion &motion);

@@ -4,6 +4,7 @@
 #include "PlayerView.hh"
 #include "ResourceView.hh"
 #include "ServerView.hh"
+#include "ShipDbView.hh"
 #include "ShipView.hh"
 #include "ShopView.hh"
 #include "SystemView.hh"
@@ -19,6 +20,7 @@ struct Views
 {
   PlayerViewShPtr playerView{};
   ShipViewShPtr shipView{};
+  ShipDbViewShPtr shipDbView{};
   ShopViewShPtr shopView{};
   SystemViewShPtr systemView{};
   ServerViewShPtr serverView{};
