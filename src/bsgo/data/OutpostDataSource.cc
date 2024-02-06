@@ -5,19 +5,19 @@
 
 namespace bsgo {
 
-OutpostDataSource::OutpostDataSource(const Repositories &repositories, const Uuid systemDbId)
+OutpostDataSource::OutpostDataSource(const Repositories &repositories)
   : utils::CoreObject("bsgo")
-  , m_systemDbId(systemDbId)
   , m_repositories(repositories)
 {
   setService("data");
   addModule("outpost");
 }
 
-void OutpostDataSource::initialize(Coordinator &coordinator,
+void OutpostDataSource::initialize(const Uuid systemDbId,
+                                   Coordinator &coordinator,
                                    DatabaseEntityMapper &entityMapper) const
 {
-  const auto outposts = m_repositories.systemRepository->findAllOutpostsBySystem(m_systemDbId);
+  const auto outposts = m_repositories.systemRepository->findAllOutpostsBySystem(systemDbId);
   for (const auto &id : outposts)
   {
     registerOutpost(coordinator, id, entityMapper);

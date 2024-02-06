@@ -12,13 +12,14 @@ class Coordinator;
 class PlayerDataSource : public utils::CoreObject
 {
   public:
-  PlayerDataSource(const Repositories &repositories, const Uuid systemDbId);
+  PlayerDataSource(const Repositories &repositories);
   ~PlayerDataSource() override = default;
 
-  void initialize(Coordinator &coordinator, DatabaseEntityMapper &entityMapper) const;
+  void initialize(const Uuid systemDbId,
+                  Coordinator &coordinator,
+                  DatabaseEntityMapper &entityMapper) const;
 
   private:
-  Uuid m_systemDbId{};
   Repositories m_repositories{};
 
   void registerPlayer(Coordinator &coordinator,
