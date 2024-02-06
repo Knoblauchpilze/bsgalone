@@ -23,14 +23,9 @@ void PlayerView::setPlayerDbId(const std::optional<Uuid> player)
   m_playerDbId = player;
 }
 
-void PlayerView::setPlayerShipDbId(const std::optional<Uuid> ship)
-{
-  m_playerShipDbId = ship;
-}
-
 bool PlayerView::isReady() const noexcept
 {
-  return m_playerDbId && m_playerShipDbId;
+  return m_playerDbId.has_value();
 }
 
 auto PlayerView::getPlayerDbId() const -> Uuid
@@ -55,7 +50,6 @@ auto PlayerView::getPlayerResources() const -> std::vector<PlayerResource>
 auto PlayerView::getPlayerWeapons() const -> std::vector<PlayerWeapon>
 {
   checkPlayerDbIdExists();
-  checkPlayerShipDbIdExists();
 
   std::vector<ShipWeapon> shipWeapons{};
   const auto ships = m_repositories.playerShipRepository->findAllByPlayer(*m_playerDbId);
@@ -83,7 +77,6 @@ auto PlayerView::getPlayerWeapons() const -> std::vector<PlayerWeapon>
 auto PlayerView::getPlayerComputers() const -> std::vector<PlayerComputer>
 {
   checkPlayerDbIdExists();
-  checkPlayerShipDbIdExists();
 
   std::vector<Uuid> shipComputers{};
   const auto ships = m_repositories.playerShipRepository->findAllByPlayer(*m_playerDbId);
@@ -153,14 +146,6 @@ void PlayerView::checkPlayerDbIdExists() const
   if (!m_playerDbId)
   {
     error("Expected player db id to exist but it does not");
-  }
-}
-
-void PlayerView::checkPlayerShipDbIdExists() const
-{
-  if (!m_playerShipDbId)
-  {
-    error("Expected player ship db id to exist but it does not");
   }
 }
 

@@ -8,10 +8,15 @@ EntityUiHandler::EntityUiHandler(const EntityUiConfig &config, const bsgo::Views
   : IUiHandler("ship")
   , m_config(config)
   , m_shipView(views.shipView)
+  , m_shipDbView(views.shipDbView)
 {
   if (nullptr == m_shipView)
   {
     throw std::invalid_argument("Expected non null ship view");
+  }
+  if (nullptr == m_shipDbView)
+  {
+    throw std::invalid_argument("Expected non null ship db view");
   }
 }
 
@@ -49,9 +54,9 @@ void EntityUiHandler::initializeMenus(const int /*width*/, const int /*height*/)
   config.highlightable = true;
   config.dims          = Vec2i{100, 25};
   config.clickCallback = [this]() {
-    if (m_shipView->isReady())
+    if (m_shipDbView->isReady())
     {
-      m_shipView->dockPlayerShip();
+      m_shipDbView->dockPlayerShip();
     }
   };
   bg            = bgConfigFromColor(colors::DARK_GREY);

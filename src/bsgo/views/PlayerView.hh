@@ -18,7 +18,6 @@ class PlayerView : public AbstractView
   ~PlayerView() override = default;
 
   void setPlayerDbId(const std::optional<Uuid> player);
-  void setPlayerShipDbId(const std::optional<Uuid> ship);
 
   bool isReady() const noexcept override;
 
@@ -39,10 +38,8 @@ class PlayerView : public AbstractView
   Repositories m_repositories{};
   IMessageQueue *const m_outputMessageQueue{};
   std::optional<Uuid> m_playerDbId{};
-  std::optional<Uuid> m_playerShipDbId{};
 
   void checkPlayerDbIdExists() const;
-  void checkPlayerShipDbIdExists() const;
 };
 
 using PlayerViewShPtr = std::shared_ptr<PlayerView>;

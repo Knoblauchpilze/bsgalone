@@ -39,6 +39,12 @@ void ShipDataSource::registerShip(Coordinator &coordinator,
 {
   const auto data = m_repositories.playerShipRepository->findOneById(ship);
 
+  // Ignore docked ships.
+  if (data.docked)
+  {
+    return;
+  }
+
   auto box       = std::make_unique<CircleBox>(data.position, data.radius);
   const auto ent = coordinator.createEntity(EntityKind::SHIP);
   coordinator.addTransform(ent, std::move(box));

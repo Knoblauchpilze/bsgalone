@@ -28,7 +28,7 @@ class OutpostScreenUiHandler : public IUiHandler, public bsgo::AbstractMessageLi
   void onMessageReceived(const bsgo::IMessage &message) override;
 
   private:
-  bsgo::ShipViewShPtr m_shipView;
+  bsgo::ShipDbViewShPtr m_shipDbView{};
 
   enum MenuItem
   {

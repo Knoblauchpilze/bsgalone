@@ -29,6 +29,7 @@ class EntityUiHandler : public IUiHandler
   private:
   EntityUiConfig m_config{};
   bsgo::ShipViewShPtr m_shipView{};
+  bsgo::ShipDbViewShPtr m_shipDbView{};
 
   enum MenuItem
   {

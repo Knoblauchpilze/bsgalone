@@ -13,47 +13,20 @@ namespace bsgo {
 
 ShipView::ShipView(CoordinatorShPtr coordinator,
                    const Repositories &repositories,
-                   IMessageQueue *const internalMessageQueue,
                    IMessageQueue *const outputMessageQueue)
   : AbstractView("ship")
   , m_coordinator(std::move(coordinator))
   , m_repositories(repositories)
-  , m_internalMessageQueue(internalMessageQueue)
   , m_outputMessageQueue(outputMessageQueue)
 {
   if (nullptr == m_coordinator)
   {
     throw std::invalid_argument("Expected non null coordinator");
   }
-  if (nullptr == m_internalMessageQueue)
-  {
-    throw std::invalid_argument("Expected non null internal message queue");
-  }
   if (nullptr == m_outputMessageQueue)
   {
     throw std::invalid_argument("Expected non null output message queue");
   }
-}
-
-void ShipView::setPlayerShipDbId(const std::optional<Uuid> ship)
-{
-  m_playerShipDbId = ship;
-}
-
-void ShipView::setPlayerShipEntityId(const std::optional<Uuid> ship)
-{
-  m_playerShipEntityId = ship;
-}
-
-bool ShipView::isReady() const noexcept
-{
-  return m_playerShipDbId && m_playerShipEntityId;
-}
-
-auto ShipView::getPlayerShipDbId() const -> Uuid
-{
-  checkPlayerShipDbIdExists();
-  return *m_playerShipDbId;
 }
 
 auto ShipView::getPlayerShip() const -> Entity
@@ -68,6 +41,16 @@ auto ShipView::getPlayerShip() const -> Entity
   return ent;
 }
 
+void ShipView::setPlayerShipEntityId(const std::optional<Uuid> ship)
+{
+  m_playerShipEntityId = ship;
+}
+
+bool ShipView::isReady() const noexcept
+{
+  return m_playerShipEntityId.has_value();
+}
+
 bool ShipView::hasTarget() const
 {
   return getPlayerTarget().has_value();
@@ -75,16 +58,14 @@ bool ShipView::hasTarget() const
 
 auto ShipView::getPlayerTarget() const -> std::optional<Entity>
 {
-  checkPlayerShipEntityIdExists();
-
-  const auto ent      = m_coordinator->getEntity(*m_playerShipEntityId);
-  const auto targetId = ent.targetComp().target();
+  const auto ship     = getPlayerShip();
+  const auto targetId = ship.targetComp().target();
   if (!targetId)
   {
     return {};
   }
 
-  return {m_coordinator->getEntity(*targetId)};
+  return m_coordinator->getEntity(*targetId);
 }
 
 namespace {
@@ -122,13 +103,9 @@ auto ShipView::getEntityName(const Entity &entity) const -> std::string
 auto ShipView::getShipsWithin(const IBoundingBox &bbox) const -> std::vector<Entity>
 {
   const auto predicate = [](const Entity &entity) {
-    if (entity.kind->kind() != EntityKind::SHIP)
+    if (entity.kind->kind() != EntityKind::SHIP || !entity.exists<StatusComponent>())
     {
       return false;
-    }
-    if (!entity.exists<StatusComponent>())
-    {
-      return true;
     }
     return statusAllowsInteratction(entity.statusComp().status());
   };
@@ -164,167 +141,21 @@ auto ShipView::getAbilitiesCount() const -> int
 void ShipView::tryActivateWeapon(const int weaponId) const
 {
   const auto playerShip = getPlayerShip();
+  const auto shipDbId   = playerShip.dbComp().dbId();
   const auto slotDbId   = playerShip.weapons[weaponId]->dbId();
 
-  auto message = std::make_unique<SlotMessage>(*m_playerShipDbId, slotDbId, Slot::WEAPON);
+  auto message = std::make_unique<SlotMessage>(shipDbId, slotDbId, Slot::WEAPON);
   m_outputMessageQueue->pushMessage(std::move(message));
 }
 
 void ShipView::tryActivateSlot(const int slotId) const
 {
   const auto playerShip = getPlayerShip();
+  const auto shipDbId   = playerShip.dbComp().dbId();
   const auto slotDbId   = playerShip.computers[slotId]->dbId();
 
-  auto message = std::make_unique<SlotMessage>(*m_playerShipDbId, slotDbId, Slot::COMPUTER);
+  auto message = std::make_unique<SlotMessage>(shipDbId, slotDbId, Slot::COMPUTER);
   m_outputMessageQueue->pushMessage(std::move(message));
-}
-
-void ShipView::dockPlayerShip() const
-{
-  checkPlayerShipDbIdExists();
-
-  auto message = std::make_unique<DockMessage>(*m_playerShipDbId, true);
-  m_outputMessageQueue->pushMessage(std::move(message));
-}
-
-void ShipView::undockPlayerShip() const
-{
-  checkPlayerShipDbIdExists();
-
-  auto message = std::make_unique<DockMessage>(*m_playerShipDbId, false);
-  m_outputMessageQueue->pushMessage(std::move(message));
-}
-
-void ShipView::setJumpSystem(const Uuid system)
-{
-  m_systemToJumpTo = system;
-}
-
-void ShipView::clearJumpSystem()
-{
-  m_systemToJumpTo.reset();
-}
-
-void ShipView::startJump() const
-{
-  if (isJumping())
-  {
-    return;
-  }
-  if (!m_systemToJumpTo)
-  {
-    return;
-  }
-
-  checkPlayerShipDbIdExists();
-
-  auto message = std::make_unique<JumpRequestedMessage>(*m_playerShipDbId, *m_systemToJumpTo);
-  m_outputMessageQueue->pushMessage(std::move(message));
-}
-
-void ShipView::cancelJump() const
-{
-  if (!isJumping())
-  {
-    return;
-  }
-
-  checkPlayerShipDbIdExists();
-
-  auto message = std::make_unique<JumpCancelledMessage>(*m_playerShipDbId);
-  m_outputMessageQueue->pushMessage(std::move(message));
-}
-
-void ShipView::accelerateShip(const Eigen::Vector3f &acceleration) const
-{
-  checkPlayerShipDbIdExists();
-
-  auto message = std::make_unique<VelocityMessage>(*m_playerShipDbId, acceleration);
-  m_outputMessageQueue->pushMessage(message->clone());
-  m_internalMessageQueue->pushMessage(std::move(message));
-}
-
-void ShipView::tryAcquireTarget(const Eigen::Vector3f &position) const
-{
-  checkPlayerShipDbIdExists();
-  m_outputMessageQueue->pushMessage(std::make_unique<TargetMessage>(*m_playerShipDbId, position));
-}
-
-void ShipView::tryEquipItem(const Item &itemType, const Uuid itemDbId) const
-{
-  checkPlayerShipDbIdExists();
-  m_outputMessageQueue->pushMessage(
-    std::make_unique<EquipMessage>(bsgo::EquipType::EQUIP, *m_playerShipDbId, itemType, itemDbId));
-}
-
-void ShipView::tryUnequipItem(const Item &itemType, const Uuid itemDbId) const
-{
-  checkPlayerShipDbIdExists();
-  m_outputMessageQueue->pushMessage(
-    std::make_unique<EquipMessage>(bsgo::EquipType::UNEQUIP, *m_playerShipDbId, itemType, itemDbId));
-}
-
-auto ShipView::getPlayerShipWeapons() const -> std::vector<PlayerWeapon>
-{
-  checkPlayerShipDbIdExists();
-
-  const auto weapons = m_repositories.shipWeaponRepository->findAllByShip(*m_playerShipDbId);
-
-  std::vector<PlayerWeapon> out;
-  for (const auto &weapon : weapons)
-  {
-    const auto data = m_repositories.playerWeaponRepository->findOneById(weapon.weapon);
-    out.push_back(data);
-  }
-  return out;
-}
-
-auto ShipView::getPlayerShipComputers() const -> std::vector<PlayerComputer>
-{
-  checkPlayerShipDbIdExists();
-
-  const auto ids = m_repositories.shipComputerRepository->findAllByShip(*m_playerShipDbId);
-
-  std::vector<PlayerComputer> out;
-  for (const auto &id : ids)
-  {
-    const auto computer = m_repositories.playerComputerRepository->findOneById(id);
-    out.push_back(computer);
-  }
-  return out;
-}
-
-auto ShipView::getPlayerShipSlots() const -> std::unordered_map<Slot, int>
-{
-  checkPlayerShipDbIdExists();
-
-  const auto ship = m_repositories.playerShipRepository->findOneById(*m_playerShipDbId);
-  return ship.slots;
-}
-
-bool ShipView::canStillEquipItem(const Item &type) const
-{
-  checkPlayerShipDbIdExists();
-
-  bool equipable{false};
-  if (Item::WEAPON == type)
-  {
-    EquipData data{.shipId           = *m_playerShipDbId,
-                   .shipWeaponRepo   = m_repositories.shipWeaponRepository,
-                   .shipComputerRepo = m_repositories.shipComputerRepository,
-                   .playerShipRepo   = m_repositories.playerShipRepository};
-    equipable = canStillEquipWeapon(data);
-  }
-  if (Item::COMPUTER == type)
-  {
-    EquipData data{.shipId           = *m_playerShipDbId,
-                   .shipWeaponRepo   = m_repositories.shipWeaponRepository,
-                   .shipComputerRepo = m_repositories.shipComputerRepository,
-                   .playerShipRepo   = m_repositories.playerShipRepository};
-    equipable = canStillEquipComputer(data);
-  }
-
-  return equipable;
 }
 
 bool ShipView::isJumping() const
@@ -359,14 +190,6 @@ bool ShipView::isInThreat() const
 {
   const auto ship = getPlayerShip();
   return bsgo::statusIndicatesThreat(ship.statusComp().status());
-}
-
-void ShipView::checkPlayerShipDbIdExists() const
-{
-  if (!m_playerShipDbId)
-  {
-    error("Expected player ship db id to exist but it does not");
-  }
 }
 
 void ShipView::checkPlayerShipEntityIdExists() const

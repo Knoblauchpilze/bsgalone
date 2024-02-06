@@ -19,17 +19,14 @@ class ShipView : public AbstractView
   public:
   ShipView(CoordinatorShPtr coordinator,
            const Repositories &repositories,
-           IMessageQueue *const internalMessageQueue,
            IMessageQueue *const outputMessageQueue);
   ~ShipView() override = default;
 
-  void setPlayerShipDbId(const std::optional<Uuid> ship);
+  auto getPlayerShip() const -> Entity;
   void setPlayerShipEntityId(const std::optional<Uuid> ship);
 
   bool isReady() const noexcept override;
 
-  auto getPlayerShipDbId() const -> Uuid;
-  auto getPlayerShip() const -> Entity;
   bool hasTarget() const;
   auto getPlayerTarget() const -> std::optional<Entity>;
 
@@ -43,25 +40,6 @@ class ShipView : public AbstractView
 
   void tryActivateWeapon(const int weaponId) const;
   void tryActivateSlot(const int slotId) const;
-  void dockPlayerShip() const;
-  void undockPlayerShip() const;
-  void setJumpSystem(const Uuid system);
-  void clearJumpSystem();
-  void startJump() const;
-  void cancelJump() const;
-
-  void accelerateShip(const Eigen::Vector3f &acceleration) const;
-
-  void tryAcquireTarget(const Eigen::Vector3f &position) const;
-
-  void tryEquipItem(const Item &itemType, const Uuid itemDbId) const;
-  void tryUnequipItem(const Item &itemType, const Uuid itemDbId) const;
-
-  auto getPlayerShipWeapons() const -> std::vector<PlayerWeapon>;
-  auto getPlayerShipComputers() const -> std::vector<PlayerComputer>;
-  auto getPlayerShipSlots() const -> std::unordered_map<Slot, int>;
-
-  bool canStillEquipItem(const Item &type) const;
 
   bool isJumping() const;
   struct JumpData
@@ -76,13 +54,10 @@ class ShipView : public AbstractView
   private:
   CoordinatorShPtr m_coordinator{};
   Repositories m_repositories{};
-  IMessageQueue *const m_internalMessageQueue{};
   IMessageQueue *const m_outputMessageQueue{};
-  std::optional<Uuid> m_playerShipDbId{};
   std::optional<Uuid> m_playerShipEntityId{};
   std::optional<Uuid> m_systemToJumpTo{};
 
-  void checkPlayerShipDbIdExists() const;
   void checkPlayerShipEntityIdExists() const;
 };
 
