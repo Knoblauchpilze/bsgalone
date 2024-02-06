@@ -1,6 +1,6 @@
 
 INSERT INTO public.ship_class ("name", "jump_time_ms", "jump_time_threat_ms")
-  VALUES ('strike', 15000, 60000);
+  VALUES ('strike', 5000, 60000);
 INSERT INTO public.ship_class ("name", "jump_time_ms", "jump_time_threat_ms")
   VALUES ('line', 25000, 100000);
 
