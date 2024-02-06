@@ -83,6 +83,18 @@ void DatabaseEntityMapper::registerAsteroid(const Uuid asteroidDbId, const Uuid 
   }
 }
 
+void DatabaseEntityMapper::registerOutpost(const Uuid outpostDbId, const Uuid entityId)
+{
+  const std::lock_guard guard(m_locker);
+
+  const auto res = m_outpostDbIdsToEntityIds.try_emplace(outpostDbId, entityId);
+  if (!res.second)
+  {
+    error("Unable to register outpost " + str(outpostDbId),
+          "Outpost already is attached to entity " + str(res.first->second));
+  }
+}
+
 auto DatabaseEntityMapper::tryGetPlayerEntityId() const -> std::optional<Uuid>
 {
   return m_playerEntityId;
@@ -138,6 +150,20 @@ auto DatabaseEntityMapper::tryGetAsteroidEntityId(const Uuid asteroidDbId) const
   return {};
 }
 
+auto DatabaseEntityMapper::tryGetOutpostEntityId(const Uuid outpostDbId) const
+  -> std::optional<Uuid>
+{
+  const std::lock_guard guard(m_locker);
+
+  const auto maybeOutpost = m_outpostDbIdsToEntityIds.find(outpostDbId);
+  if (maybeOutpost != m_outpostDbIdsToEntityIds.cend())
+  {
+    return maybeOutpost->second;
+  }
+
+  return {};
+}
+
 void DatabaseEntityMapper::clear()
 {
   const std::lock_guard guard(m_locker);
@@ -145,6 +171,7 @@ void DatabaseEntityMapper::clear()
   m_playerDbIdsToEntityIds.clear();
   m_shipDbIdsToEntityIds.clear();
   m_asteroidDbIdsToEntityIds.clear();
+  m_outpostDbIdsToEntityIds.clear();
 
   m_playerDbId.reset();
   m_playerEntityId.reset();

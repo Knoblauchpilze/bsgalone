@@ -84,7 +84,7 @@ void DataSource::initialize(Coordinator &coordinator, DatabaseEntityMapper &enti
   initializePlayer(coordinator, entityMapper);
   initializeShips(coordinator, entityMapper);
   initializeAsteroids(coordinator, entityMapper);
-  initializeOutposts(coordinator);
+  initializeOutposts(coordinator, entityMapper);
 }
 
 void DataSource::initializePlayer(Coordinator &coordinator, DatabaseEntityMapper &entityMapper) const
@@ -112,10 +112,11 @@ void DataSource::initializeShips(Coordinator &coordinator, DatabaseEntityMapper 
   source.initialize(*m_systemDbId, coordinator, entityMapper);
 }
 
-void DataSource::initializeOutposts(Coordinator &coordinator) const
+void DataSource::initializeOutposts(Coordinator &coordinator,
+                                    DatabaseEntityMapper &entityMapper) const
 {
   OutpostDataSource source(m_repositories, *m_systemDbId);
-  source.initialize(coordinator);
+  source.initialize(coordinator, entityMapper);
 }
 
 } // namespace bsgo

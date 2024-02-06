@@ -109,6 +109,9 @@ auto ShipMessageConsumer::determineTargetEntityId(const bsgo::Uuid targetDbId,
     case bsgo::EntityKind::SHIP:
       entityId = m_entityMapper.tryGetShipEntityId(targetDbId);
       break;
+    case bsgo::EntityKind::OUTPOST:
+      entityId = m_entityMapper.tryGetOutpostEntityId(targetDbId);
+      break;
     default:
       error("Failed to determine entity id for target " + bsgo::str(targetDbId),
             "Unsupported kind " + bsgo::str(kind));

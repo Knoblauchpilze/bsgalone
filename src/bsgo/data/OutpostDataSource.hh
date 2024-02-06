@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "DatabaseEntityMapper.hh"
 #include "Repositories.hh"
 #include <core_utils/CoreObject.hh>
 
@@ -14,13 +15,15 @@ class OutpostDataSource : public utils::CoreObject
   OutpostDataSource(const Repositories &repositories, const Uuid systemDbId);
   ~OutpostDataSource() override = default;
 
-  void initialize(Coordinator &coordinator) const;
+  void initialize(Coordinator &coordinator, DatabaseEntityMapper &entityMapper) const;
 
   private:
   Uuid m_systemDbId{};
   Repositories m_repositories{};
 
-  void registerOutpost(Coordinator &coordinator, const Uuid outpost) const;
+  void registerOutpost(Coordinator &coordinator,
+                       const Uuid outpostDbId,
+                       DatabaseEntityMapper &entityMapper) const;
 };
 
 } // namespace bsgo
