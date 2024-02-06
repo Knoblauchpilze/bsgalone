@@ -33,7 +33,7 @@ void TargetMessageConsumer::onMessageReceived(const IMessage &message)
     return;
   }
 
-  auto out = std::make_unique<TargetMessage>(shipDbId, position, res.targetDbId);
+  auto out = std::make_unique<TargetMessage>(shipDbId, position, res.targetKind, res.targetDbId);
   out->validate();
   out->copyClientIdIfDefined(target);
   m_messageQueue->pushMessage(std::move(out));

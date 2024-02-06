@@ -27,6 +27,7 @@ class ShipService : public AbstractService
   struct AcquiringResult
   {
     bool success{false};
+    std::optional<EntityKind> targetKind{};
     std::optional<Uuid> targetDbId{};
   };
   auto tryAcquireTarget(const Uuid shipDbId, const Eigen::Vector3f &position) const
