@@ -25,9 +25,17 @@ void InternalMessageConsumer::onMessageReceived(const bsgo::IMessage &message)
 void InternalMessageConsumer::handleVelocityChanged(const bsgo::VelocityMessage &message) const
 {
   const auto shipDbId = message.getShipDbId();
-  if (shipDbId != m_entityMapper.playerShipDbId())
+
+  const auto maybePlayerShipDbId = m_entityMapper.tryGetPlayerShipDbId();
+  if (!maybePlayerShipDbId)
   {
-    warn("Failed to process jump requested message for ship " + bsgo::str(shipDbId),
+    error("Failed to process velocity message for ship " + bsgo::str(shipDbId),
+          "Player ship is not defined");
+  }
+
+  if (shipDbId != *maybePlayerShipDbId)
+  {
+    warn("Failed to process velocity message for ship " + bsgo::str(shipDbId),
          "Ship is not controlled by the player");
     return;
   }
@@ -35,7 +43,7 @@ void InternalMessageConsumer::handleVelocityChanged(const bsgo::VelocityMessage 
   const auto maybeShip = m_entityMapper.tryGetShipEntityId(shipDbId);
   if (!maybeShip)
   {
-    warn("Failed to process jump requested message for ship " + bsgo::str(shipDbId),
+    warn("Failed to process velocity message for ship " + bsgo::str(shipDbId),
          "Can't find an entity with such an id");
     return;
   }

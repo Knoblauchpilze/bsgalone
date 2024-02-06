@@ -206,9 +206,19 @@ bool Game::terminated() const noexcept
   return m_state.terminated;
 }
 
+namespace {
+bool shouldUpdateCoordinatorInScreen(const Screen &screen)
+{
+  return Screen::GAME == screen || Screen::MAP == screen;
+}
+} // namespace
+
 bool Game::step(float elapsedSeconds)
 {
-  m_coordinator->update(elapsedSeconds);
+  if (shouldUpdateCoordinatorInScreen(m_state.screen))
+  {
+    m_coordinator->update(elapsedSeconds);
+  }
   m_inputMessageQueue->processMessages();
   m_internalMessageQueue->processMessages();
 
@@ -295,15 +305,16 @@ void Game::resetViewsAndUi()
     error("Failed to reset views and UI", "Expected to have a player defined");
   }
 
-  const auto playerShipDbId     = m_entityMapper.playerShipDbId();
-  const auto playerShipEntityId = m_entityMapper.playerShipEntityId();
+  m_views.playerView->setPlayerDbId(maybePlayerDbId);
+  m_views.shopView->setPlayerDbId(maybePlayerDbId);
+  m_views.serverView->setPlayerDbId(maybePlayerDbId);
 
-  m_views.playerView->setPlayerDbId(*maybePlayerDbId);
-  m_views.playerView->setPlayerShipDbId(playerShipDbId);
-  m_views.shipView->setPlayerShipDbId(playerShipDbId);
-  m_views.shipView->setPlayerShipEntityId(playerShipEntityId);
-  m_views.shopView->setPlayerDbId(*maybePlayerDbId);
-  m_views.serverView->setPlayerDbId(*maybePlayerDbId);
+  const auto maybePlayerShipDbId = m_entityMapper.tryGetPlayerShipDbId();
+  m_views.playerView->setPlayerShipDbId(maybePlayerShipDbId);
+  m_views.shipView->setPlayerShipDbId(maybePlayerShipDbId);
+
+  const auto maybePlayerShipEntityId = m_entityMapper.tryGetPlayerShipEntityId();
+  m_views.shipView->setPlayerShipEntityId(maybePlayerShipEntityId);
 
   for (const auto &[_, handler] : m_uiHandlers)
   {

@@ -82,31 +82,14 @@ auto DatabaseEntityMapper::tryGetPlayerEntityId() const -> std::optional<Uuid>
   return m_playerEntityId;
 }
 
-auto DatabaseEntityMapper::playerEntityId() const -> Uuid
+auto DatabaseEntityMapper::tryGetPlayerShipDbId() const -> std::optional<Uuid>
 {
-  if (!m_playerEntityId)
-  {
-    error("Expected to have a player entity id");
-  }
-  return *m_playerEntityId;
+  return m_playerShipDbId;
 }
 
-auto DatabaseEntityMapper::playerShipDbId() const -> Uuid
+auto DatabaseEntityMapper::tryGetPlayerShipEntityId() const -> std::optional<Uuid>
 {
-  if (!m_playerShipDbId)
-  {
-    error("Expected to have a player ship id");
-  }
-  return *m_playerShipDbId;
-}
-
-auto DatabaseEntityMapper::playerShipEntityId() const -> Uuid
-{
-  if (!m_playerShipEntityId)
-  {
-    error("Expected to have a player ship entity id");
-  }
-  return *m_playerShipEntityId;
+  return m_playerShipEntityId;
 }
 
 auto DatabaseEntityMapper::tryGetPlayerEntityId(const Uuid playerDbId) const -> std::optional<Uuid>

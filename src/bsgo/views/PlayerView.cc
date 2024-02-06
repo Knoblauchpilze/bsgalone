@@ -18,12 +18,12 @@ PlayerView::PlayerView(const Repositories &repositories, IMessageQueue *const ou
   }
 }
 
-void PlayerView::setPlayerDbId(const Uuid player)
+void PlayerView::setPlayerDbId(const std::optional<Uuid> player)
 {
   m_playerDbId = player;
 }
 
-void PlayerView::setPlayerShipDbId(const Uuid ship)
+void PlayerView::setPlayerShipDbId(const std::optional<Uuid> ship)
 {
   m_playerShipDbId = ship;
 }

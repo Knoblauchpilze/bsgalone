@@ -8,7 +8,7 @@ ServerView::ServerView(const Repositories &repositories)
   , m_repositories(repositories)
 {}
 
-void ServerView::setPlayerDbId(const Uuid player)
+void ServerView::setPlayerDbId(const std::optional<Uuid> player)
 {
   m_playerDbId = player;
 }
