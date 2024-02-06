@@ -136,7 +136,11 @@ auto ShipService::tryAcquireTarget(const Uuid shipDbId, const Eigen::Vector3f &p
 
   updateEntityTarget(ship, maybeTargetId);
 
-  return AcquiringResult{.success = true, .targetDbId = maybeTargetId};
+  const auto target = m_coordinator->getEntity(*maybeTargetId);
+
+  return AcquiringResult{.success    = true,
+                         .targetKind = target.kind->kind(),
+                         .targetDbId = target.dbComp().dbId()};
 }
 
 void ShipService::switchActiveShip(PlayerShip currentActiveShip, PlayerShip newActiveShip) const

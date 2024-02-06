@@ -70,7 +70,10 @@ void ShipMessageConsumer::handleJumpCancelled(const bsgo::JumpCancelledMessage &
 void ShipMessageConsumer::handleTargetAcquired(const bsgo::TargetMessage &message) const
 {
   const auto shipDbId   = message.getShipDbId();
+  const auto targetKind = message.getTargetKind();
   const auto targetDbId = message.getTargetDbId();
+
+  debug("handling target for " + bsgo::str(shipDbId) + ": " + bsgo::str(*targetDbId));
 
   const auto maybeShip = m_entityMapper.tryGetShipEntityId(shipDbId);
   if (!maybeShip)
@@ -84,12 +87,41 @@ void ShipMessageConsumer::handleTargetAcquired(const bsgo::TargetMessage &messag
 
   if (targetDbId)
   {
-    targetComp.setTarget(*targetDbId);
+    const auto targetEntityId = determineTargetEntityId(*targetDbId, *targetKind);
+    targetComp.setTarget(targetEntityId);
   }
   else
   {
     targetComp.clearTarget();
   }
+}
+
+auto ShipMessageConsumer::determineTargetEntityId(const bsgo::Uuid targetDbId,
+                                                  const bsgo::EntityKind &kind) const -> bsgo::Uuid
+{
+  std::optional<bsgo::Uuid> entityId{};
+
+  switch (kind)
+  {
+    case bsgo::EntityKind::ASTEROID:
+      entityId = m_entityMapper.tryGetAsteroidEntityId(targetDbId);
+      break;
+    case bsgo::EntityKind::SHIP:
+      entityId = m_entityMapper.tryGetShipEntityId(targetDbId);
+      break;
+    default:
+      error("Failed to determine entity id for target " + bsgo::str(targetDbId),
+            "Unsupported kind " + bsgo::str(kind));
+      break;
+  }
+
+  if (!entityId)
+  {
+    error("Failed to determine entity id for target " + bsgo::str(targetDbId),
+          "No entity attached to it");
+  }
+
+  return *entityId;
 }
 
 } // namespace pge

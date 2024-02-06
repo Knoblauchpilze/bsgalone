@@ -26,6 +26,9 @@ class ShipMessageConsumer : public bsgo::AbstractMessageConsumer
   void handleJumpRequested(const bsgo::JumpRequestedMessage &message) const;
   void handleJumpCancelled(const bsgo::JumpCancelledMessage &message) const;
   void handleTargetAcquired(const bsgo::TargetMessage &message) const;
+
+  auto determineTargetEntityId(const bsgo::Uuid targetDbId, const bsgo::EntityKind &kind) const
+    -> bsgo::Uuid;
 };
 
 } // namespace pge
