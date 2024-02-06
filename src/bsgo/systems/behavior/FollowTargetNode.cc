@@ -26,7 +26,7 @@ void FollowTargetNode::run(const TickData &data)
   const auto &targetComp = data.ent.targetComp();
   if (!targetComp.target())
   {
-    debug(data.ent.str() + " doesn't have target anymore");
+    verbose(data.ent.str() + " doesn't have target anymore");
     fail();
     return;
   }
@@ -37,7 +37,7 @@ void FollowTargetNode::run(const TickData &data)
   const auto reachedTarget = moveTowardsTarget(data.ent, targetPosition);
   if (reachedTarget)
   {
-    debug("Reached target " + target.str());
+    verbose("Reached target " + target.str());
     finish();
   }
 }
