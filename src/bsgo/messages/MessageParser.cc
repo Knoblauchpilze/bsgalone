@@ -14,6 +14,7 @@
 #include "LootMessage.hh"
 #include "PurchaseMessage.hh"
 #include "ScannedMessage.hh"
+#include "ShipDiedMessage.hh"
 #include "SignupMessage.hh"
 #include "SlotComponentMessage.hh"
 #include "SlotMessage.hh"
@@ -115,6 +116,8 @@ auto MessageParser::tryReadMessage(const MessageType &type, std::istream &in)
       return readMessage<PurchaseMessage>(in);
     case MessageType::SCANNED:
       return readMessage<ScannedMessage>(in);
+    case MessageType::SHIP_DIED:
+      return readMessage<ShipDiedMessage>(in);
     case MessageType::SIGNUP:
       return readMessage<SignupMessage>(in);
     case MessageType::SLOT:
