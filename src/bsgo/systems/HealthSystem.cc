@@ -17,28 +17,32 @@ void HealthSystem::updateEntity(Entity &entity,
                                 Coordinator & /*coordinator*/,
                                 const float elapsedSeconds) const
 {
-  tryMarkForDelettion(entity);
+  if (tryMarkForDelettion(entity))
+  {
+    // In case the target is marked for deletion we do not
+    // make it regenerate its health.
+    return;
+  }
+
   if (canRegenerateHealth(entity))
   {
     entity.healthComp().update(elapsedSeconds);
   }
 }
 
-void HealthSystem::tryMarkForDelettion(Entity &entity) const
+bool HealthSystem::tryMarkForDelettion(Entity &entity) const
 {
   if (entity.healthComp().isAlive())
   {
-    return;
+    return false;
   }
 
   if (entity.exists<StatusComponent>())
   {
     entity.statusComp().setStatus(Status::DEAD);
   }
-  if (entity.exists<RemovalComponent>())
-  {
-    entity.removalComp().markForRemoval();
-  }
+
+  return true;
 }
 
 bool HealthSystem::canRegenerateHealth(Entity &entity) const

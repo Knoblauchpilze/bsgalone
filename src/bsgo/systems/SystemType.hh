@@ -15,7 +15,7 @@ enum class SystemType
   LOOT,
   MOTION,
   NETWORK,
-  OWNER,
+  REMOVAL,
   POWER,
   STATUS,
   TARGET,
