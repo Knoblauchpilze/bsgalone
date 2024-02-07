@@ -19,10 +19,11 @@ target_sources(bsgalone_tests PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/LoginMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LootMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/PurchaseMessageTest.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/SlotMessageTest.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/ScannedMessageTest.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/ShipDiedMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SignupMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SlotComponentMessageTest.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/ScannedMessageTest.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/SlotMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/TargetMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/VelocityMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/WeaponComponentMessageTest.cc
