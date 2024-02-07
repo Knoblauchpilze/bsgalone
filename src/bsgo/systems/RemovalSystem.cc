@@ -1,31 +1,58 @@
 
 #include "RemovalSystem.hh"
+#include "Coordinator.hh"
+#include "ShipDiedMessage.hh"
 
 namespace bsgo {
 namespace {
 bool isEntityRelevant(const Entity &ent)
 {
-  return ent.exists<RemovalComponent>() && ent.exists<StatusComponent>();
+  return ent.exists<RemovalComponent>();
 }
 } // namespace
 
 RemovalSystem::RemovalSystem()
-  : AbstractSystem(SystemType::OWNER, isEntityRelevant, false)
+  : AbstractSystem(SystemType::REMOVAL, isEntityRelevant, false)
 {}
 
 void RemovalSystem::updateEntity(Entity &entity,
-                                 Coordinator & /*coordinator*/,
+                                 Coordinator &coordinator,
                                  const float elapsedSeconds) const
 {
   entity.removalComp().update(elapsedSeconds);
 
-  const auto status = entity.statusComp().status();
-  if (!statusRequiresDeletion(status))
+  auto removalFromStatus{false};
+  if (entity.exists<StatusComponent>())
   {
-    return;
+    removalFromStatus = statusRequiresDeletion(entity.statusComp().status());
   }
 
-  entity.removalComp().markForRemoval(true);
+  auto removalFromHealth{false};
+  if (entity.exists<HealthComponent>())
+  {
+    removalFromHealth = !entity.healthComp().isAlive();
+  }
+
+  if (removalFromStatus || removalFromHealth)
+  {
+    markEntityForRemoval(entity, coordinator);
+  }
+}
+
+void RemovalSystem::markEntityForRemoval(Entity &entity, Coordinator &coordinator) const
+{
+  entity.removalComp().markForRemoval();
+
+  if (EntityKind::SHIP == entity.kind->kind() && entity.exists<OwnerComponent>())
+  {
+    const auto owner       = entity.ownerComp().owner();
+    const auto ownerEntity = coordinator.getEntity(owner);
+
+    const auto shipDbId   = entity.dbComp().dbId();
+    const auto playerDbId = ownerEntity.dbComp().dbId();
+
+    pushMessage(std::make_unique<ShipDiedMessage>(playerDbId, shipDbId));
+  }
 }
 
 } // namespace bsgo

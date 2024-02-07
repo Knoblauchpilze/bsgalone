@@ -23,8 +23,8 @@ auto str(const SystemType &type) -> std::string
       return "motion";
     case SystemType::NETWORK:
       return "network";
-    case SystemType::OWNER:
-      return "owner";
+    case SystemType::REMOVAL:
+      return "removal";
     case SystemType::POWER:
       return "power";
     case SystemType::STATUS:

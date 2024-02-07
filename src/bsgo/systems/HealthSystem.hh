@@ -16,7 +16,7 @@ class HealthSystem : public AbstractSystem
                     const float elapsedSeconds) const override;
 
   private:
-  void tryMarkForDelettion(Entity &entity) const;
+  bool tryMarkForDelettion(Entity &entity) const;
   bool canRegenerateHealth(Entity &entity) const;
 };
 
