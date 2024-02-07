@@ -86,15 +86,15 @@ void ShipDataSource::registerShipOwner(Coordinator &coordinator,
     return;
   }
 
-  const auto maybeEntityId = entityMapper.tryGetPlayerEntityId(*shipData.player);
-  if (!maybeEntityId)
+  const auto maybePlayerEntityId = entityMapper.tryGetPlayerEntityId(*shipData.player);
+  if (!maybePlayerEntityId)
   {
     error("Failed to register owner for ship " + str(shipData.id),
           "Could not find entity id for player " + str(*shipData.player));
   }
 
   entityMapper.registerShipForPlayer(*shipData.player, shipData.id, shipEntity);
-  coordinator.addOwner(shipEntity, *maybeEntityId, OwnerType::PLAYER);
+  coordinator.addOwner(shipEntity, *maybePlayerEntityId, OwnerType::PLAYER);
 }
 
 void ShipDataSource::registerShipWeapons(Coordinator &coordinator,
