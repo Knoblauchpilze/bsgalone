@@ -243,11 +243,12 @@ void Coordinator::removeEffect(const Uuid ent, const EffectComponentShPtr &effec
 auto Coordinator::getEntity(const Uuid ent) const -> Entity
 {
   Entity out{};
-  out.uuid             = ent;
-  const auto maybeKind = getComponent(ent, m_components.kinds);
+  out.uuid       = ent;
+  auto maybeKind = getComponent(ent, m_components.kinds);
   if (!maybeKind)
   {
-    error("Expected to have a kind for entity " + str(ent));
+    // The entity is probably dead, create a default component.
+    maybeKind = std::make_shared<KindComponent>(EntityKind::NONE);
   }
   out.kind = *maybeKind;
 
