@@ -273,7 +273,7 @@ void Game::initialize()
   bsgo::SystemsConfig sConfig{.networkSystem = std::make_unique<bsgo::NetworkSystem>(repositories),
                               .internalMessageQueue = m_internalMessageQueue.get(),
                               .outputMessageQueue   = m_outputMessageQueue.get(),
-                              .ignoredSystems       = {bsgo::SystemType::LOOT}};
+                              .ignoredSystems = {bsgo::SystemType::LOOT, bsgo::SystemType::REMOVAL}};
   m_coordinator = std::make_shared<bsgo::Coordinator>(std::move(sConfig));
 
   bsgo::ViewsConfig vConfig{.repositories         = repositories,
