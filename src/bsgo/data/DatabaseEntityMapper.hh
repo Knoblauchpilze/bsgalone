@@ -25,6 +25,8 @@ class DatabaseEntityMapper : public utils::CoreObject
   void registerAsteroid(const Uuid asteroidDbId, const Uuid entityId);
   void registerOutpost(const Uuid outpostDbId, const Uuid entityId);
 
+  void removeEntityForShip(const Uuid shipDbId);
+
   auto tryGetPlayerEntityId() const -> std::optional<Uuid>;
   auto tryGetPlayerShipDbId() const -> std::optional<Uuid>;
   auto tryGetPlayerShipEntityId() const -> std::optional<Uuid>;

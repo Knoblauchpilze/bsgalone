@@ -62,6 +62,8 @@ bool ShipService::tryDock(const Uuid shipDbId) const
   m_repositories.systemRepository->updateSystemForShip(shipDbId, *ship.system, true);
 
   statusComp.setStatus(Status::DOCKED);
+  shipEntity.removalComp().markForRemoval();
+  m_entityMapper.removeEntityForShip(shipDbId);
 
   return true;
 }
