@@ -64,6 +64,7 @@ bool statusAllowsHealthRegeneration(const Status &status)
   switch (status)
   {
     case Status::THREAT:
+    case Status::DEAD:
       return false;
     default:
       return true;
