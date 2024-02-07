@@ -20,6 +20,7 @@ enum class MessageType
   LOOT,
   PURCHASE,
   SCANNED,
+  SHIP_DIED,
   SIGNUP,
   SLOT,
   SLOT_COMPONENT_UPDATED,
@@ -29,7 +30,7 @@ enum class MessageType
 };
 
 auto str(const MessageType &type) -> std::string;
-auto allMessageTypes() -> std::array<MessageType, 17>;
+auto allMessageTypes() -> std::array<MessageType, 18>;
 
 auto allMessageTypesAsSet() -> std::unordered_set<MessageType>;
 
