@@ -49,6 +49,7 @@ void EntityUiHandler::initializeMenus(const int /*width*/, const int /*height*/)
   bg                = bgConfigFromColor(colors::BLANK);
   text              = textConfigFromColor("N/A m", colors::WHITE);
   m_menus[DISTANCE] = std::make_unique<UiTextMenu>(config, bg, text);
+  m_menus[DISTANCE]->setVisible(false);
 
   config.pos.y += REASONABLE_PIXEL_GAP;
   config.highlightable = true;
@@ -62,6 +63,7 @@ void EntityUiHandler::initializeMenus(const int /*width*/, const int /*height*/)
   bg            = bgConfigFromColor(colors::DARK_GREY);
   text          = textConfigFromColor("Dock", colors::WHITE);
   m_menus[DOCK] = std::make_unique<UiTextMenu>(config, bg, text);
+  m_menus[DOCK]->setVisible(false);
 }
 
 bool EntityUiHandler::processUserInput(UserInputData &inputData)

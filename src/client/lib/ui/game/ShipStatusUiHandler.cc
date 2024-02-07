@@ -108,6 +108,8 @@ void ShipStatusUiHandler::initializeJumpPanel(const int width, const int height)
   m_jumpPanel->addMenu(std::move(menu));
 
   m_jumpPanel->addMenu(generateSpacer());
+
+  m_jumpPanel->setVisible(false);
 }
 
 void ShipStatusUiHandler::updateThreatPanel()
