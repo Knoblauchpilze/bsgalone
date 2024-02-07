@@ -73,8 +73,6 @@ void ShipMessageConsumer::handleTargetAcquired(const bsgo::TargetMessage &messag
   const auto targetKind = message.getTargetKind();
   const auto targetDbId = message.getTargetDbId();
 
-  debug("handling target for " + bsgo::str(shipDbId) + ": " + bsgo::str(*targetDbId));
-
   const auto maybeShip = m_entityMapper.tryGetShipEntityId(shipDbId);
   if (!maybeShip)
   {
