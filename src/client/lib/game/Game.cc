@@ -254,6 +254,7 @@ void Game::activeShipChanged()
 
 void Game::activeSystemChanged()
 {
+  m_views.shipView->clearJumpSystem();
   m_views.shipDbView->clearJumpSystem();
   m_dataSource.clearSystemDbId();
   resetViewsAndUi();

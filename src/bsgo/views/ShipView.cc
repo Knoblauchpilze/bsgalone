@@ -159,6 +159,16 @@ void ShipView::tryActivateSlot(const int slotId) const
   m_outputMessageQueue->pushMessage(std::move(message));
 }
 
+void ShipView::setJumpSystem(const Uuid system)
+{
+  m_systemToJumpTo = system;
+}
+
+void ShipView::clearJumpSystem()
+{
+  m_systemToJumpTo.reset();
+}
+
 bool ShipView::isJumping() const
 {
   const auto ship = getPlayerShip();
