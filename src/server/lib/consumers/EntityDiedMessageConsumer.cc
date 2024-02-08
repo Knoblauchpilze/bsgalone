@@ -34,21 +34,22 @@ void EntityDiedMessageConsumer::onMessageReceived(const IMessage &message)
 
 void EntityDiedMessageConsumer::handleShipEntityDied(const Uuid shipDbId) const
 {
-  if (!m_combatService->trySendPlayerShipBackToOutpost(shipDbId))
+  const auto systemDbId = m_combatService->tryGetSystemDbIdForShip(shipDbId);
+  if (!systemDbId || !m_combatService->trySendPlayerShipBackToOutpost(shipDbId))
   {
     warn("Failed to process ship died message for " + str(shipDbId));
     return;
   }
 
-  m_messageQueue->pushMessage(std::make_unique<EntityDiedMessage>(shipDbId, EntityKind::SHIP));
+  m_messageQueue->pushMessage(
+    std::make_unique<EntityDiedMessage>(shipDbId, EntityKind::SHIP, *systemDbId));
 }
 
 void EntityDiedMessageConsumer::handleAsteroidEntityDied(const Uuid asteroidDbId) const
 {
-  /// TODO: Activate this when we handle it correctly.
-  // m_messageQueue->pushMessage(
-  //   std::make_unique<EntityDiedMessage>(asteroidDbId, EntityKind::ASTEROID));
-  warn("Should handle asteroid " + str(asteroidDbId) + "'s death");
+  const auto systemDbId = m_combatService->getSystemDbIdForAsteroid(asteroidDbId);
+  m_messageQueue->pushMessage(
+    std::make_unique<EntityDiedMessage>(asteroidDbId, EntityKind::ASTEROID, systemDbId));
 }
 
 } // namespace bsgo

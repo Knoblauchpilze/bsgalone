@@ -3,6 +3,7 @@
 
 #include "AbstractService.hh"
 #include <memory>
+#include <optional>
 
 namespace bsgo {
 
@@ -17,6 +18,9 @@ class CombatService : public AbstractService
                              const float amount) const;
 
   bool trySendPlayerShipBackToOutpost(const Uuid shipDbId) const;
+
+  auto getSystemDbIdForAsteroid(const Uuid asteroidDbId) const -> Uuid;
+  auto tryGetSystemDbIdForShip(const Uuid shipDbId) const -> std::optional<Uuid>;
 
   private:
   auto findExistingResourceAmount(const Uuid playerDbId, const Uuid resourceDbId) const -> float;
