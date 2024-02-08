@@ -25,6 +25,7 @@ class ClientManager : public utils::CoreObject
   auto getClientIdForPlayer(const Uuid playerDbId) const -> Uuid;
   auto getConnectionForClient(const Uuid clientId) const -> net::ConnectionShPtr;
   auto getAllConnections() const -> std::vector<net::ConnectionShPtr>;
+  auto getAllConnectionsForSystem(const Uuid systemDbId) const -> std::vector<net::ConnectionShPtr>;
   auto tryGetSystemForClient(const Uuid clientId) const -> std::optional<Uuid>;
 
   private:
