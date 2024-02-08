@@ -95,13 +95,26 @@ void DatabaseEntityMapper::registerOutpost(const Uuid outpostDbId, const Uuid en
   }
 }
 
-void DatabaseEntityMapper::removeEntityForShip(const Uuid shipDbId) {
+void DatabaseEntityMapper::removeEntityForShip(const Uuid shipDbId)
+{
   const std::lock_guard guard(m_locker);
 
   const auto res = m_shipDbIdsToEntityIds.erase(shipDbId);
   if (res != 1)
   {
     error("Unable to remove entity for ship " + str(shipDbId),
+          "Removed " + std::to_string(res) + " entity(ies)");
+  }
+}
+
+void DatabaseEntityMapper::removeEntityForAsteroid(const Uuid asteroidDbId)
+{
+  const std::lock_guard guard(m_locker);
+
+  const auto res = m_asteroidDbIdsToEntityIds.erase(asteroidDbId);
+  if (res != 1)
+  {
+    error("Unable to remove entity for asteroid " + str(asteroidDbId),
           "Removed " + std::to_string(res) + " entity(ies)");
   }
 }
