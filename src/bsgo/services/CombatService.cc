@@ -51,6 +51,16 @@ bool CombatService::trySendPlayerShipBackToOutpost(const Uuid shipDbId) const
   return true;
 }
 
+auto CombatService::getSystemDbIdForAsteroid(const Uuid asteroidDbId) const -> Uuid
+{
+  return m_repositories.asteroidRepository->findOneById(asteroidDbId).system;
+}
+
+auto CombatService::tryGetSystemDbIdForShip(const Uuid shipDbId) const -> std::optional<Uuid>
+{
+  return m_repositories.playerShipRepository->findOneById(shipDbId).system;
+}
+
 auto CombatService::findExistingResourceAmount(const Uuid playerDbId, const Uuid resourceDbId) const
   -> float
 {
