@@ -42,7 +42,7 @@ void ClientManager::registerPlayer(const Uuid clientId,
   clientData.playerSystemDbId = playerSystemDbId;
   m_playerToClient.emplace(playerDbId, clientData.clientId);
 
-  info("Registered player " + str(playerDbId));
+  info("Registered player " + str(playerDbId) + " in system " + str(playerSystemDbId));
 }
 
 void ClientManager::removePlayer(const Uuid playerDbId)
@@ -120,6 +120,24 @@ auto ClientManager::getAllConnections() const -> std::vector<net::ConnectionShPt
                  m_clients.cend(),
                  std::back_inserter(out),
                  [](const std::pair<Uuid, ClientData> &v) { return v.second.connection; });
+
+  return out;
+}
+
+auto ClientManager::getAllConnectionsForSystem(const Uuid systemDbId) const
+  -> std::vector<net::ConnectionShPtr>
+{
+  const std::lock_guard guard(m_locker);
+  std::vector<net::ConnectionShPtr> out;
+
+  for (const auto &[_, client] : m_clients)
+  {
+    const auto &maybeSystemDbId = client.playerSystemDbId;
+    if (!maybeSystemDbId || *maybeSystemDbId == systemDbId)
+    {
+      out.push_back(client.connection);
+    }
+  }
 
   return out;
 }
