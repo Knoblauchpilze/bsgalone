@@ -115,9 +115,9 @@ auto MessageExchanger::initializeInternalMessageQueue(const Repositories &reposi
   auto internalQueue     = createInternalMessageQueue();
   m_internalMessageQueue = internalQueue.get();
 
-  auto combatService = std::make_unique<CombatService>(repositories);
+  auto combatService = std::make_shared<CombatService>(repositories);
   internalQueue->addListener(
-    std::make_unique<LootMessageConsumer>(std::move(combatService), m_outputMessageQueue.get()));
+    std::make_unique<LootMessageConsumer>(combatService, m_outputMessageQueue.get()));
 
   internalQueue->addListener(
     std::make_unique<EntityDiedMessageConsumer>(m_outputMessageQueue.get()));
