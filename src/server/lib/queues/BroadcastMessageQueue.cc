@@ -1,5 +1,6 @@
 
 #include "BroadcastMessageQueue.hh"
+#include "EntityDiedMessage.hh"
 #include "LootMessage.hh"
 #include "MessageProcessor.hh"
 #include "NetworkMessage.hh"
@@ -81,6 +82,47 @@ void BroadcastMessageQueue::processMessage(const IMessage &message)
   }
 }
 
+void BroadcastMessageQueue::sendMessageToClient(const Uuid clientId, const IMessage &message)
+{
+  const auto connection = m_clientManager->getConnectionForClient(clientId);
+  connection->send(message);
+}
+
+namespace {
+const std::unordered_set<MessageType> SYSTEM_DIRECTED_MESSAGES = {MessageType::ENTITY_DIED};
+
+bool shouldTryToDetermineSystemId(const IMessage &message)
+{
+  return SYSTEM_DIRECTED_MESSAGES.contains(message.type());
+}
+} // namespace
+
+void BroadcastMessageQueue::broadcastMessage(const IMessage &message)
+{
+  std::vector<net::ConnectionShPtr> connections{};
+
+  std::optional<Uuid> systemDbId{};
+  if (shouldTryToDetermineSystemId(message))
+  {
+    systemDbId = tryDetermineSystemId(message);
+  }
+
+  if (systemDbId)
+  {
+    connections = m_clientManager->getAllConnectionsForSystem(*systemDbId);
+  }
+  else
+  {
+    warn("Broadcasting message " + str(message.type()));
+    connections = m_clientManager->getAllConnections();
+  }
+
+  for (const auto &connection : connections)
+  {
+    connection->send(message);
+  }
+}
+
 namespace {
 template<typename T>
 auto determineClientFor(const T &message, const ClientManager &clientManager) -> std::optional<Uuid>
@@ -109,19 +151,28 @@ auto BroadcastMessageQueue::tryDetermineClientId(const IMessage &message) const
   return {};
 }
 
-void BroadcastMessageQueue::sendMessageToClient(const Uuid clientId, const IMessage &message)
+namespace {
+template<typename T>
+auto determineSystemFor(const T &message, const ClientManager &clientManager) -> std::optional<Uuid>
 {
-  const auto connection = m_clientManager->getConnectionForClient(clientId);
-  connection->send(message);
+  return clientManager.tryGetSystemForClient(message.getSystemDbId());
 }
+} // namespace
 
-void BroadcastMessageQueue::broadcastMessage(const IMessage &message)
+auto BroadcastMessageQueue::tryDetermineSystemId(const IMessage &message) const
+  -> std::optional<Uuid>
 {
-  warn("Broadcasting message " + str(message.type()));
-  for (const auto &connection : m_clientManager->getAllConnections())
+  switch (message.type())
   {
-    connection->send(message);
+    case MessageType::ENTITY_DIED:
+      return determineSystemFor(message.as<EntityDiedMessage>(), *m_clientManager);
+    default:
+      error("Failed to determine system id", "Unsupported message type " + str(message.type()));
+      break;
   }
+
+  // Redundant because of the error above.
+  return {};
 }
 
 } // namespace bsgo

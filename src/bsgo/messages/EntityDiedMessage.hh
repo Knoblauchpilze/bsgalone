@@ -19,6 +19,7 @@ class EntityDiedMessage : public NetworkMessage
 
   auto getEntityDbId() const -> Uuid;
   auto getEntityKind() const -> EntityKind;
+  auto getSystemDbId() const -> Uuid;
   auto tryGetSystemDbId() const -> std::optional<Uuid>;
 
   auto serialize(std::ostream &out) const -> std::ostream & override;

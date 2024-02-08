@@ -31,9 +31,11 @@ class BroadcastMessageQueue : public IMessageQueue, public utils::CoreObject
 
   void processMessage(const IMessage &message);
 
-  auto tryDetermineClientId(const IMessage &message) const -> std::optional<Uuid>;
   void sendMessageToClient(const Uuid clientId, const IMessage &message);
   void broadcastMessage(const IMessage &message);
+
+  auto tryDetermineClientId(const IMessage &message) const -> std::optional<Uuid>;
+  auto tryDetermineSystemId(const IMessage &message) const -> std::optional<Uuid>;
 };
 
 using BroadcastMessageQueuePtr = std::unique_ptr<BroadcastMessageQueue>;
