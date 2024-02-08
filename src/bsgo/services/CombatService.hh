@@ -16,6 +16,8 @@ class CombatService : public AbstractService
                              const Uuid resourceDbId,
                              const float amount) const;
 
+  bool trySendPlayerShipBackToOutpost(const Uuid shipDbId) const;
+
   private:
   auto findExistingResourceAmount(const Uuid playerDbId, const Uuid resourceDbId) const -> float;
 };

@@ -34,9 +34,13 @@ void EntityDiedMessageConsumer::onMessageReceived(const IMessage &message)
 
 void EntityDiedMessageConsumer::handleShipEntityDied(const Uuid shipDbId) const
 {
-  /// TODO: Activate this when we handle it correctly.
-  // m_messageQueue->pushMessage(std::make_unique<EntityDiedMessage>(shipDbId, EntityKind::SHIP));
-  warn("Should handle ship " + str(shipDbId) + "'s death");
+  if (!m_combatService->trySendPlayerShipBackToOutpost(shipDbId))
+  {
+    warn("Failed to process ship died message for " + str(shipDbId));
+    return;
+  }
+
+  m_messageQueue->pushMessage(std::make_unique<EntityDiedMessage>(shipDbId, EntityKind::SHIP));
 }
 
 void EntityDiedMessageConsumer::handleAsteroidEntityDied(const Uuid asteroidDbId) const
