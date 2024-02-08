@@ -60,6 +60,7 @@ auto ShipView::getPlayerTarget() const -> std::optional<Entity>
 {
   const auto ship     = getPlayerShip();
   const auto targetId = ship.targetComp().target();
+
   if (!targetId)
   {
     return {};

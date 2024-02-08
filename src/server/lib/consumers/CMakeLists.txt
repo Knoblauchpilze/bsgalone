@@ -5,6 +5,7 @@ target_include_directories (bsgalone_server_lib PUBLIC
 
 target_sources (bsgalone_server_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/DockMessageConsumer.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/EntityDiedMessageConsumer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/EquipMessageConsumer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/HangarMessageConsumer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/JumpCancelledMessageConsumer.cc
