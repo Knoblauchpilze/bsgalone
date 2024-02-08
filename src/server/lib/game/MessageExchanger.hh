@@ -34,7 +34,9 @@ class MessageExchanger
   void initializeConsumers(const ClientManagerShPtr &clientManager,
                            const std::vector<SystemProcessorShPtr> &systemProcessors);
 
-  auto initializeInternalMessageQueue(const Repositories &repositories) -> IMessageQueuePtr;
+  auto initializeInternalMessageQueue(const Repositories &repositories,
+                                      const std::vector<SystemProcessorShPtr> &systemProcessors)
+    -> IMessageQueuePtr;
 };
 
 using MessageExchangerPtr = std::unique_ptr<MessageExchanger>;
