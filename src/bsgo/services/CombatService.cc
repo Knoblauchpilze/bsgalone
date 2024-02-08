@@ -26,6 +26,31 @@ bool CombatService::tryDistributeResource(const Uuid playerDbId,
   return true;
 }
 
+namespace {
+bool canShipBeSentBackToOutpost(const PlayerShip &ship)
+{
+  return ship.active && !ship.docked;
+}
+} // namespace
+
+bool CombatService::trySendPlayerShipBackToOutpost(const Uuid shipDbId) const
+{
+  auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
+
+  if (!canShipBeSentBackToOutpost(ship))
+  {
+    return false;
+  }
+
+  ship.docked = true;
+  ship.jumpSystem.reset();
+
+  m_repositories.systemRepository->updateSystemForShip(ship.id, *ship.system, ship.docked);
+  m_repositories.playerShipRepository->save(ship);
+
+  return true;
+}
+
 auto CombatService::findExistingResourceAmount(const Uuid playerDbId, const Uuid resourceDbId) const
   -> float
 {
