@@ -23,6 +23,9 @@ class SystemProcessor : public utils::CoreObject
   auto getSystemDbId() const -> Uuid;
   void pushMessage(IMessagePtr message);
 
+  void onAsteroidDestroyed(const Uuid asteroidDbId);
+  void onShipDestroyed(const Uuid shipDbId);
+
   void connectToQueues(IMessageQueue *const internalMessageQueue,
                        IMessageQueue *const outputMessageQueue);
   void start();

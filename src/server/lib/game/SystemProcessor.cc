@@ -38,6 +38,16 @@ void SystemProcessor::pushMessage(IMessagePtr message)
   m_inputMessagesQueue->pushMessage(std::move(message));
 }
 
+void SystemProcessor::onAsteroidDestroyed(const Uuid asteroidDbId)
+{
+  m_entityMapper.removeEntityForAsteroid(asteroidDbId);
+}
+
+void SystemProcessor::onShipDestroyed(const Uuid shipDbId)
+{
+  m_entityMapper.removeEntityForShip(shipDbId);
+}
+
 void SystemProcessor::connectToQueues(IMessageQueue *const internalMessageQueue,
                                       IMessageQueue *const outputMessageQueue)
 {

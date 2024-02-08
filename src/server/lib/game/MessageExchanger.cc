@@ -100,7 +100,7 @@ void MessageExchanger::initializeConsumers(const ClientManagerShPtr &clientManag
                                                                   clientManager,
                                                                   m_outputMessageQueue.get()));
 
-  auto internalQueue = initializeInternalMessageQueue(repositories);
+  auto internalQueue = initializeInternalMessageQueue(repositories, systemProcessors);
 
   auto triageConsumer = std::make_unique<TriageMessageConsumer>(systemProcessors,
                                                                 clientManager,
@@ -109,8 +109,9 @@ void MessageExchanger::initializeConsumers(const ClientManagerShPtr &clientManag
   m_inputMessageQueue->addListener(std::move(triageConsumer));
 }
 
-auto MessageExchanger::initializeInternalMessageQueue(const Repositories &repositories)
-  -> IMessageQueuePtr
+auto MessageExchanger::initializeInternalMessageQueue(
+  const Repositories &repositories,
+  const std::vector<SystemProcessorShPtr> &systemProcessors) -> IMessageQueuePtr
 {
   auto internalQueue     = createInternalMessageQueue();
   m_internalMessageQueue = internalQueue.get();
@@ -120,7 +121,9 @@ auto MessageExchanger::initializeInternalMessageQueue(const Repositories &reposi
     std::make_unique<LootMessageConsumer>(combatService, m_outputMessageQueue.get()));
 
   internalQueue->addListener(
-    std::make_unique<EntityDiedMessageConsumer>(combatService, m_outputMessageQueue.get()));
+    std::make_unique<EntityDiedMessageConsumer>(combatService,
+                                                systemProcessors,
+                                                m_outputMessageQueue.get()));
 
   return internalQueue;
 }
