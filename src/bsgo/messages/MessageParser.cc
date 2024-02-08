@@ -5,6 +5,7 @@
 
 #include "ConnectionMessage.hh"
 #include "DockMessage.hh"
+#include "EntityDiedMessage.hh"
 #include "EquipMessage.hh"
 #include "HangarMessage.hh"
 #include "JumpCancelledMessage.hh"
@@ -14,7 +15,6 @@
 #include "LootMessage.hh"
 #include "PurchaseMessage.hh"
 #include "ScannedMessage.hh"
-#include "ShipDiedMessage.hh"
 #include "SignupMessage.hh"
 #include "SlotComponentMessage.hh"
 #include "SlotMessage.hh"
@@ -98,6 +98,8 @@ auto MessageParser::tryReadMessage(const MessageType &type, std::istream &in)
       return readMessage<ConnectionMessage>(in);
     case MessageType::DOCK:
       return readMessage<DockMessage>(in);
+    case MessageType::ENTITY_DIED:
+      return readMessage<EntityDiedMessage>(in);
     case MessageType::EQUIP:
       return readMessage<EquipMessage>(in);
     case MessageType::HANGAR:
@@ -116,8 +118,6 @@ auto MessageParser::tryReadMessage(const MessageType &type, std::istream &in)
       return readMessage<PurchaseMessage>(in);
     case MessageType::SCANNED:
       return readMessage<ScannedMessage>(in);
-    case MessageType::SHIP_DIED:
-      return readMessage<ShipDiedMessage>(in);
     case MessageType::SIGNUP:
       return readMessage<SignupMessage>(in);
     case MessageType::SLOT:

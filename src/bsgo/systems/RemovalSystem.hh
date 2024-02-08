@@ -16,7 +16,7 @@ class RemovalSystem : public AbstractSystem
                     const float elapsedSeconds) const override;
 
   private:
-  void markEntityForRemoval(Entity &entity, Coordinator &coordinator) const;
+  void markEntityForRemoval(Entity &entity) const;
 };
 
 } // namespace bsgo
