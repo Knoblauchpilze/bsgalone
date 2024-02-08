@@ -11,6 +11,7 @@ target_sources(bsgalone_tests PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/OptionalTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ConnectionMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/DockMessageTest.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/EntityDiedMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/EquipMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/HangarMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/JumpCancelledMessageTest.cc
@@ -20,7 +21,6 @@ target_sources(bsgalone_tests PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/LootMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/PurchaseMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ScannedMessageTest.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/ShipDiedMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SignupMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SlotComponentMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SlotMessageTest.cc

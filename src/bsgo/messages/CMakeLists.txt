@@ -11,6 +11,7 @@ target_sources (bsgalone_core_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/ComponentUpdatedMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ConnectionMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/DockMessage.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/EntityDiedMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/EquipMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/HangarMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/JumpCancelledMessage.cc
@@ -21,7 +22,6 @@ target_sources (bsgalone_core_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/NetworkMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/PurchaseMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ScannedMessage.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/ShipDiedMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SignupMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SlotComponentMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SlotMessage.cc

@@ -11,6 +11,7 @@ enum class MessageType
 {
   CONNECTION,
   DOCK,
+  ENTITY_DIED,
   EQUIP,
   HANGAR,
   JUMP,
@@ -20,7 +21,6 @@ enum class MessageType
   LOOT,
   PURCHASE,
   SCANNED,
-  SHIP_DIED,
   SIGNUP,
   SLOT,
   SLOT_COMPONENT_UPDATED,

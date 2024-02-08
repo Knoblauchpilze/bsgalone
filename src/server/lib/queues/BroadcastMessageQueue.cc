@@ -4,7 +4,6 @@
 #include "MessageProcessor.hh"
 #include "NetworkMessage.hh"
 #include "ScannedMessage.hh"
-#include "ShipDiedMessage.hh"
 #include "SlotComponentMessage.hh"
 
 namespace bsgo {
@@ -45,10 +44,7 @@ void BroadcastMessageQueue::processMessages(const std::optional<int> &amount)
 
 namespace {
 const std::unordered_set<MessageType> NON_BROADCASTABLE_MESSAGES
-  = {MessageType::LOOT,
-     MessageType::SCANNED,
-     MessageType::SHIP_DIED,
-     MessageType::SLOT_COMPONENT_UPDATED};
+  = {MessageType::LOOT, MessageType::SCANNED, MessageType::SLOT_COMPONENT_UPDATED};
 
 bool shouldTryToDetermineClientId(const IMessage &message)
 {
@@ -102,8 +98,6 @@ auto BroadcastMessageQueue::tryDetermineClientId(const IMessage &message) const
       return determineClientFor(message.as<LootMessage>(), *m_clientManager);
     case MessageType::SCANNED:
       return determineClientFor(message.as<ScannedMessage>(), *m_clientManager);
-    case MessageType::SHIP_DIED:
-      return determineClientFor(message.as<ShipDiedMessage>(), *m_clientManager);
     case MessageType::SLOT_COMPONENT_UPDATED:
       return determineClientFor(message.as<SlotComponentMessage>(), *m_clientManager);
     default:
