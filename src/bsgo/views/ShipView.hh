@@ -31,7 +31,6 @@ class ShipView : public AbstractView
   auto getPlayerTarget() const -> std::optional<Entity>;
 
   auto getEntityName(const Entity &entity) const -> std::string;
-
   auto getShipsWithin(const IBoundingBox &bbox) const -> std::vector<Entity>;
 
   auto distanceToTarget() const -> float;
@@ -41,6 +40,8 @@ class ShipView : public AbstractView
   void tryActivateWeapon(const int weaponId) const;
   void tryActivateSlot(const int slotId) const;
 
+  void setJumpSystem(const Uuid system);
+  void clearJumpSystem();
   bool isJumping() const;
   struct JumpData
   {
