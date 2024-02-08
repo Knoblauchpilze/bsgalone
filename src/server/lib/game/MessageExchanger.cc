@@ -4,6 +4,7 @@
 #include "BroadcastMessageQueue.hh"
 #include "ConnectionMessage.hh"
 #include "DataSource.hh"
+#include "EntityDiedMessageConsumer.hh"
 #include "LoginMessageConsumer.hh"
 #include "LootMessageConsumer.hh"
 #include "SignupMessageConsumer.hh"
@@ -99,6 +100,18 @@ void MessageExchanger::initializeConsumers(const ClientManagerShPtr &clientManag
                                                                   clientManager,
                                                                   m_outputMessageQueue.get()));
 
+  auto internalQueue = initializeInternalMessageQueue(repositories);
+
+  auto triageConsumer = std::make_unique<TriageMessageConsumer>(systemProcessors,
+                                                                clientManager,
+                                                                std::move(systemQueue),
+                                                                std::move(internalQueue));
+  m_inputMessageQueue->addListener(std::move(triageConsumer));
+}
+
+auto MessageExchanger::initializeInternalMessageQueue(const Repositories &repositories)
+  -> IMessageQueuePtr
+{
   auto internalQueue     = createInternalMessageQueue();
   m_internalMessageQueue = internalQueue.get();
 
@@ -106,11 +119,10 @@ void MessageExchanger::initializeConsumers(const ClientManagerShPtr &clientManag
   internalQueue->addListener(
     std::make_unique<LootMessageConsumer>(std::move(combatService), m_outputMessageQueue.get()));
 
-  auto triageConsumer = std::make_unique<TriageMessageConsumer>(systemProcessors,
-                                                                clientManager,
-                                                                std::move(systemQueue),
-                                                                std::move(internalQueue));
-  m_inputMessageQueue->addListener(std::move(triageConsumer));
+  internalQueue->addListener(
+    std::make_unique<EntityDiedMessageConsumer>(m_outputMessageQueue.get()));
+
+  return internalQueue;
 }
 
 } // namespace bsgo

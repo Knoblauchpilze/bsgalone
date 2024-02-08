@@ -5,6 +5,7 @@
 #include "Connection.hh"
 #include "IMessageQueue.hh"
 #include "NetworkMessageQueue.hh"
+#include "Repositories.hh"
 #include "SystemProcessor.hh"
 #include "Uuid.hh"
 #include <memory>
@@ -32,6 +33,8 @@ class MessageExchanger
   void initializeQueues(ClientManagerShPtr clientManager);
   void initializeConsumers(const ClientManagerShPtr &clientManager,
                            const std::vector<SystemProcessorShPtr> &systemProcessors);
+
+  auto initializeInternalMessageQueue(const Repositories &repositories) -> IMessageQueuePtr;
 };
 
 using MessageExchangerPtr = std::unique_ptr<MessageExchanger>;
