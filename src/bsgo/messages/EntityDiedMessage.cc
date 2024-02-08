@@ -33,6 +33,15 @@ auto EntityDiedMessage::getEntityKind() const -> EntityKind
   return m_entityKind;
 }
 
+auto EntityDiedMessage::getSystemDbId() const -> Uuid
+{
+  if (!m_systemDbId)
+  {
+    error("Expected system db id to be defined but it was not");
+  }
+  return *m_systemDbId;
+}
+
 auto EntityDiedMessage::tryGetSystemDbId() const -> std::optional<Uuid>
 {
   return m_systemDbId;
