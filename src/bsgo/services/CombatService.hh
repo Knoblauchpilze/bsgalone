@@ -20,6 +20,6 @@ class CombatService : public AbstractService
   auto findExistingResourceAmount(const Uuid playerDbId, const Uuid resourceDbId) const -> float;
 };
 
-using CombatServicePtr = std::unique_ptr<CombatService>;
+using CombatServiceShPtr = std::shared_ptr<CombatService>;
 
 } // namespace bsgo

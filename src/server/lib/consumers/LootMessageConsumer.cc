@@ -3,7 +3,7 @@
 
 namespace bsgo {
 
-LootMessageConsumer::LootMessageConsumer(CombatServicePtr combatService,
+LootMessageConsumer::LootMessageConsumer(CombatServiceShPtr combatService,
                                          IMessageQueue *const messageQueue)
   : AbstractMessageConsumer("loot", {MessageType::LOOT})
   , m_combatService(std::move(combatService))

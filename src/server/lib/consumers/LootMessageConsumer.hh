@@ -11,13 +11,13 @@ namespace bsgo {
 class LootMessageConsumer : public AbstractMessageConsumer
 {
   public:
-  LootMessageConsumer(CombatServicePtr combatService, IMessageQueue *const messageQueue);
+  LootMessageConsumer(CombatServiceShPtr combatService, IMessageQueue *const messageQueue);
   ~LootMessageConsumer() override = default;
 
   void onMessageReceived(const IMessage &message) override;
 
   private:
-  CombatServicePtr m_combatService{};
+  CombatServiceShPtr m_combatService{};
   IMessageQueue *const m_messageQueue{};
 };
 
