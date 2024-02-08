@@ -120,7 +120,7 @@ auto MessageExchanger::initializeInternalMessageQueue(const Repositories &reposi
     std::make_unique<LootMessageConsumer>(combatService, m_outputMessageQueue.get()));
 
   internalQueue->addListener(
-    std::make_unique<EntityDiedMessageConsumer>(m_outputMessageQueue.get()));
+    std::make_unique<EntityDiedMessageConsumer>(combatService, m_outputMessageQueue.get()));
 
   return internalQueue;
 }

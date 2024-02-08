@@ -3,8 +3,10 @@
 
 namespace bsgo {
 
-EntityDiedMessageConsumer::EntityDiedMessageConsumer(IMessageQueue *const messageQueue)
+EntityDiedMessageConsumer::EntityDiedMessageConsumer(CombatServiceShPtr combatService,
+                                                     IMessageQueue *const messageQueue)
   : AbstractMessageConsumer("entity", {MessageType::ENTITY_DIED})
+  , m_combatService(std::move(combatService))
   , m_messageQueue(messageQueue)
 {
   if (nullptr == m_messageQueue)
