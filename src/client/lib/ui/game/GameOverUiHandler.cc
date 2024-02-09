@@ -1,7 +1,7 @@
 
 #include "GameOverUiHandler.hh"
-#include "MessageListenerWrapper.hh"
 #include "EntityDiedMessage.hh"
+#include "MessageListenerWrapper.hh"
 
 namespace pge {
 
@@ -23,9 +23,10 @@ void GameOverUiHandler::initializeMenus(const int width, const int height)
   pos.x = (width - dims.x) / 2;
   pos.y = (height - dims.y) / 2;
 
-  const MenuConfig config{.pos = pos, .dims = dims, .visible = false, .gameClickCallback = [this](Game& g) {
-                            g.setScreen(Screen::OUTPOST);
-                          }};
+  const MenuConfig config{.pos               = pos,
+                          .dims              = dims,
+                          .visible           = false,
+                          .gameClickCallback = [this](Game &g) { g.setScreen(Screen::OUTPOST); }};
 
   auto bg   = bgConfigFromColor(colors::DARK_GREY);
   auto text = textConfigFromColor("Return to outpost", colors::BLACK);
@@ -47,7 +48,8 @@ void GameOverUiHandler::updateUi()
   // Intentionally empty.
 }
 
-void GameOverUiHandler::reset() {
+void GameOverUiHandler::reset()
+{
   m_menu->setVisible(false);
 }
 
@@ -64,14 +66,15 @@ void GameOverUiHandler::onMessageReceived(const bsgo::IMessage &message)
     return;
   }
 
-  const auto& entityMessage = message.as<bsgo::EntityDiedMessage>();
-  const auto notAShipMessage = bsgo::EntityKind::SHIP != entityMessage.getEntityKind();
-  const auto shipIsNotThePlayer =  entityMessage.getEntityDbId() != m_shipDbView->getPlayerShipDbId();
-  if (notAShipMessage || shipIsNotThePlayer) {
+  const auto &entityMessage     = message.as<bsgo::EntityDiedMessage>();
+  const auto notAShipMessage    = bsgo::EntityKind::SHIP != entityMessage.getEntityKind();
+  const auto shipIsNotThePlayer = entityMessage.getEntityDbId()
+                                  != m_shipDbView->getPlayerShipDbId();
+  if (notAShipMessage || shipIsNotThePlayer)
+  {
     return;
   }
 
-  info("Received bad news: player is dead");
   m_menu->setVisible(true);
 }
 
