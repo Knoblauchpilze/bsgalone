@@ -257,12 +257,16 @@ bool shouldUpdateCoordinatorInScreen(const Screen &screen)
 
 bool Game::step(float elapsedSeconds)
 {
+  // Process messages first and then update the coordinator so that
+  // the systems have a chance to react to messages before sending
+  // everything to the UI.
+  m_inputMessageQueue->processMessages();
+  m_internalMessageQueue->processMessages();
+
   if (shouldUpdateCoordinatorInScreen(m_state.screen))
   {
     m_coordinator->update(elapsedSeconds);
   }
-  m_inputMessageQueue->processMessages();
-  m_internalMessageQueue->processMessages();
 
   const auto it = m_uiHandlers.find(m_state.screen);
   if (it != m_uiHandlers.end())
