@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "AbstractMessageListener.hh"
 #include "IUiHandler.hh"
 #include "UiMenu.hh"
 #include "UiTextMenu.hh"
@@ -10,7 +11,7 @@
 
 namespace pge {
 
-class WeaponsUiHandler : public IUiHandler
+class WeaponsUiHandler : public IUiHandler, public bsgo::AbstractMessageListener
 {
   public:
   WeaponsUiHandler(const bsgo::Views &views);
@@ -21,10 +22,15 @@ class WeaponsUiHandler : public IUiHandler
   void render(Renderer &engine) const override;
   void updateUi() override;
   void reset() override;
+  void connectToMessageQueue(bsgo::IMessageQueue &messageQueue) override;
+
+  void onMessageReceived(const bsgo::IMessage &message) override;
 
   private:
-  bsgo::ShipViewShPtr m_shipView;
+  bsgo::ShipViewShPtr m_shipView{};
+  bsgo::ShipDbViewShPtr m_shipDbView{};
   bool m_initialized{false};
+  bool m_disabled{false};
 
   std::vector<UiMenuPtr> m_weapons{};
   std::vector<UiTextMenu *> m_ranges{};

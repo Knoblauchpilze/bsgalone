@@ -2,6 +2,7 @@
 #include "GameOverUiHandler.hh"
 #include "EntityDiedMessage.hh"
 #include "MessageListenerWrapper.hh"
+#include "MessageUtils.hh"
 
 namespace pge {
 
@@ -66,16 +67,7 @@ void GameOverUiHandler::onMessageReceived(const bsgo::IMessage &message)
     return;
   }
 
-  const auto &entityMessage     = message.as<bsgo::EntityDiedMessage>();
-  const auto notAShipMessage    = bsgo::EntityKind::SHIP != entityMessage.getEntityKind();
-  const auto shipIsNotThePlayer = entityMessage.getEntityDbId()
-                                  != m_shipDbView->getPlayerShipDbId();
-  if (notAShipMessage || shipIsNotThePlayer)
-  {
-    return;
-  }
-
-  m_menu->setVisible(true);
+  m_menu->setVisible(didPlayerShipDied(message.as<bsgo::EntityDiedMessage>(), *m_shipDbView));
 }
 
 } // namespace pge

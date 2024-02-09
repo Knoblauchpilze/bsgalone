@@ -1,6 +1,7 @@
 
 #include "GameMessageModule.hh"
 #include "Game.hh"
+#include "MessageUtils.hh"
 #include <unordered_set>
 
 namespace pge {
@@ -13,7 +14,7 @@ const Messages GAME_CHANGING_MESSAGE_TYPES = {bsgo::MessageType::CONNECTION,
                                               bsgo::MessageType::SIGNUP,
                                               bsgo::MessageType::ENTITY_DIED};
 
-GameMessageModule::GameMessageModule(Game &game, const bsgo::DatabaseEntityMapper& entityMapper)
+GameMessageModule::GameMessageModule(Game &game, const bsgo::DatabaseEntityMapper &entityMapper)
   : bsgo::AbstractMessageListener(GAME_CHANGING_MESSAGE_TYPES)
   , utils::CoreObject("message")
   , m_game(game)
@@ -120,20 +121,12 @@ void GameMessageModule::handleSignupMessage(const bsgo::SignupMessage &message)
   m_game.onLogin(*message.getPlayerDbId());
 }
 
-void GameMessageModule::handleEntityDiedMessage(const bsgo::EntityDiedMessage& message) {
-  if (message.getEntityKind() != bsgo::EntityKind::SHIP) {
-    return;
+void GameMessageModule::handleEntityDiedMessage(const bsgo::EntityDiedMessage &message)
+{
+  if (didPlayerShipDied(message, m_entityMapper))
+  {
+    m_game.onPlayerKilled();
   }
-
-  const auto deadShipDbId= message.getEntityDbId();
-  const auto maybePlayerShipDbId = m_entityMapper.tryGetPlayerShipDbId();
-
-  if (!maybePlayerShipDbId || deadShipDbId != *maybePlayerShipDbId) {
-    return;
-  }
-
-  debug("player is killed");
-  m_game.onPlayerKilled();
 }
 
 } // namespace pge

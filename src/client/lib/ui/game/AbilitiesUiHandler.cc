@@ -1,5 +1,7 @@
 
 #include "AbilitiesUiHandler.hh"
+#include "MessageListenerWrapper.hh"
+#include "MessageUtils.hh"
 #include "ScreenCommon.hh"
 #include "SlotComponentUtils.hh"
 #include "StringUtils.hh"
@@ -8,11 +10,17 @@ namespace pge {
 
 AbilitiesUiHandler::AbilitiesUiHandler(const bsgo::Views &views)
   : IUiHandler("abilities")
+  , AbstractMessageListener({bsgo::MessageType::ENTITY_DIED})
   , m_shipView(views.shipView)
+  , m_shipDbView(views.shipDbView)
 {
   if (nullptr == m_shipView)
   {
     throw std::invalid_argument("Expected non null ship view");
+  }
+  if (nullptr == m_shipDbView)
+  {
+    throw std::invalid_argument("Expected non null ship db view");
   }
 }
 
@@ -23,6 +31,11 @@ void AbilitiesUiHandler::initializeMenus(const int width, const int height)
 
 bool AbilitiesUiHandler::processUserInput(UserInputData &inputData)
 {
+  if (m_disabled)
+  {
+    return false;
+  }
+
   for (const auto &menu : m_computers)
   {
     if (menu->processUserInput(inputData))
@@ -80,6 +93,23 @@ void AbilitiesUiHandler::reset()
   }
 
   m_initialized = false;
+  m_disabled    = false;
+}
+
+void AbilitiesUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQueue)
+{
+  auto listener = std::make_unique<MessageListenerWrapper>(this);
+  messageQueue.addListener(std::move(listener));
+}
+
+void AbilitiesUiHandler::onMessageReceived(const bsgo::IMessage &message)
+{
+  if (!m_shipView->isReady())
+  {
+    return;
+  }
+
+  m_disabled = didPlayerShipDied(message.as<bsgo::EntityDiedMessage>(), *m_shipDbView);
 }
 
 void AbilitiesUiHandler::generateComputersMenus(int width, int height)
