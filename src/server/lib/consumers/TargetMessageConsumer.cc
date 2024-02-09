@@ -29,7 +29,7 @@ void TargetMessageConsumer::onMessageReceived(const IMessage &message)
   const auto res = m_shipService->tryAcquireTarget(shipDbId, position);
   if (!res.success)
   {
-    warn("Failed to process computer slot message for ship " + str(shipDbId));
+    warn("Failed to process target message for ship " + str(shipDbId));
     return;
   }
 
