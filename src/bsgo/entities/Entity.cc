@@ -50,7 +50,7 @@ auto safeAccess(const std::optional<std::shared_ptr<Component>> &comp,
 
 bool Entity::valid() const
 {
-  return EntityKind::NONE == kind->kind();
+  return EntityKind::NONE != kind->kind();
 }
 
 auto Entity::str() const noexcept -> std::string
