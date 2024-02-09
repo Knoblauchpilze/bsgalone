@@ -4,8 +4,9 @@ target_include_directories (bsgalone_client_lib PUBLIC
 	)
 
 target_sources (bsgalone_client_lib PRIVATE
+	${CMAKE_CURRENT_SOURCE_DIR}/GameColorUtils.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/MessageUtils.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/MessageListenerWrapper.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ScreenCommon.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SlotComponentUtils.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/MessageListenerWrapper.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/GameColorUtils.cc
 	)

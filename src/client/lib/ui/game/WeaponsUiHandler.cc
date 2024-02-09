@@ -1,5 +1,7 @@
 
 #include "WeaponsUiHandler.hh"
+#include "MessageListenerWrapper.hh"
+#include "MessageUtils.hh"
 #include "ScreenCommon.hh"
 #include "SlotComponentUtils.hh"
 #include "StringUtils.hh"
@@ -8,11 +10,17 @@ namespace pge {
 
 WeaponsUiHandler::WeaponsUiHandler(const bsgo::Views &views)
   : IUiHandler("weapons")
+  , AbstractMessageListener({bsgo::MessageType::ENTITY_DIED})
   , m_shipView(views.shipView)
+  , m_shipDbView(views.shipDbView)
 {
   if (nullptr == m_shipView)
   {
     throw std::invalid_argument("Expected non null ship view");
+  }
+  if (nullptr == m_shipDbView)
+  {
+    throw std::invalid_argument("Expected non null ship db view");
   }
 }
 
@@ -23,6 +31,11 @@ void WeaponsUiHandler::initializeMenus(const int width, const int height)
 
 bool WeaponsUiHandler::processUserInput(UserInputData &inputData)
 {
+  if (m_disabled)
+  {
+    return false;
+  }
+
   for (const auto &menu : m_weapons)
   {
     if (menu->processUserInput(inputData))
@@ -80,6 +93,23 @@ void WeaponsUiHandler::reset()
   }
 
   m_initialized = false;
+  m_disabled    = false;
+}
+
+void WeaponsUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQueue)
+{
+  auto listener = std::make_unique<MessageListenerWrapper>(this);
+  messageQueue.addListener(std::move(listener));
+}
+
+void WeaponsUiHandler::onMessageReceived(const bsgo::IMessage &message)
+{
+  if (!m_shipView->isReady())
+  {
+    return;
+  }
+
+  m_disabled = didPlayerShipDied(message.as<bsgo::EntityDiedMessage>(), *m_shipDbView);
 }
 
 void WeaponsUiHandler::generateWeaponsMenus(int width, int height)

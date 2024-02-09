@@ -301,6 +301,7 @@ void Game::onActiveSystemChanged()
 
 void Game::onPlayerKilled()
 {
+  info("Player got killed");
   m_state.dead = true;
 }
 
