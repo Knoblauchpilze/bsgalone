@@ -48,6 +48,11 @@ auto safeAccess(const std::optional<std::shared_ptr<Component>> &comp,
 }
 } // namespace details
 
+bool Entity::valid() const
+{
+  return EntityKind::NONE == kind->kind();
+}
+
 auto Entity::str() const noexcept -> std::string
 {
   std::string out("[");

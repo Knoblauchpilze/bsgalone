@@ -33,7 +33,7 @@ namespace bsgo {
 
 struct Entity
 {
-  Uuid uuid;
+  Uuid uuid{};
   KindComponentShPtr kind{};
   std::optional<TransformComponentShPtr> transform{};
   std::optional<VelocityComponentShPtr> velocity{};
@@ -58,6 +58,9 @@ struct Entity
   std::vector<ResourceComponentShPtr> resources{};
 
   auto str() const noexcept -> std::string;
+
+  /// @brief - Verfiy whether the entity is valid or not.
+  bool valid() const;
 
   /// @brief - Verify whether the component with the specified type exists in
   /// the entity.
