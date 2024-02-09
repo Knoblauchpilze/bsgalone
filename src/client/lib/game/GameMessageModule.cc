@@ -10,18 +10,15 @@ const Messages GAME_CHANGING_MESSAGE_TYPES = {bsgo::MessageType::CONNECTION,
                                               bsgo::MessageType::HANGAR,
                                               bsgo::MessageType::JUMP,
                                               bsgo::MessageType::LOGIN,
-                                              bsgo::MessageType::SIGNUP};
+                                              bsgo::MessageType::SIGNUP,
+                                              bsgo::MessageType::ENTITY_DIED};
 
-GameMessageModule::GameMessageModule(Game *game)
+GameMessageModule::GameMessageModule(Game &game, const bsgo::DatabaseEntityMapper& entityMapper)
   : bsgo::AbstractMessageListener(GAME_CHANGING_MESSAGE_TYPES)
   , utils::CoreObject("message")
   , m_game(game)
+  , m_entityMapper(entityMapper)
 {
-  if (nullptr == game)
-  {
-    throw std::invalid_argument("Expected non null game");
-  }
-
   setService("game");
 }
 
@@ -34,6 +31,9 @@ void GameMessageModule::onMessageReceived(const bsgo::IMessage &message)
       break;
     case bsgo::MessageType::DOCK:
       handleDockMessage(message.as<bsgo::DockMessage>());
+      break;
+    case bsgo::MessageType::ENTITY_DIED:
+      handleEntityDiedMessage(message.as<bsgo::EntityDiedMessage>());
       break;
     case bsgo::MessageType::HANGAR:
       handleHangarMessage(message.as<bsgo::HangarMessage>());
@@ -60,7 +60,7 @@ void GameMessageModule::handleConnectionMessage(const bsgo::ConnectionMessage &m
     return;
   }
 
-  m_game->connectedToServer(message.getClientId());
+  m_game.onConnectedToServer(message.getClientId());
 }
 
 void GameMessageModule::handleDockMessage(const bsgo::DockMessage &message)
@@ -72,11 +72,11 @@ void GameMessageModule::handleDockMessage(const bsgo::DockMessage &message)
 
   if (message.isDocking())
   {
-    m_game->setScreen(Screen::OUTPOST);
+    m_game.setScreen(Screen::OUTPOST);
   }
   else
   {
-    m_game->setScreen(Screen::GAME);
+    m_game.setScreen(Screen::GAME);
   }
 }
 
@@ -87,7 +87,7 @@ void GameMessageModule::handleHangarMessage(const bsgo::HangarMessage &message)
     return;
   }
 
-  m_game->activeShipChanged();
+  m_game.onActiveShipChanged();
 }
 
 void GameMessageModule::handleJumpMessage(const bsgo::JumpMessage &message)
@@ -97,7 +97,7 @@ void GameMessageModule::handleJumpMessage(const bsgo::JumpMessage &message)
     return;
   }
 
-  m_game->activeSystemChanged();
+  m_game.onActiveSystemChanged();
 }
 
 void GameMessageModule::handleLoginMessage(const bsgo::LoginMessage &message)
@@ -107,7 +107,7 @@ void GameMessageModule::handleLoginMessage(const bsgo::LoginMessage &message)
     return;
   }
 
-  m_game->login(*message.getPlayerDbId());
+  m_game.onLogin(*message.getPlayerDbId());
 }
 
 void GameMessageModule::handleSignupMessage(const bsgo::SignupMessage &message)
@@ -117,7 +117,23 @@ void GameMessageModule::handleSignupMessage(const bsgo::SignupMessage &message)
     return;
   }
 
-  m_game->login(*message.getPlayerDbId());
+  m_game.onLogin(*message.getPlayerDbId());
+}
+
+void GameMessageModule::handleEntityDiedMessage(const bsgo::EntityDiedMessage& message) {
+  if (message.getEntityKind() != bsgo::EntityKind::SHIP) {
+    return;
+  }
+
+  const auto deadShipDbId= message.getEntityDbId();
+  const auto maybePlayerShipDbId = m_entityMapper.tryGetPlayerShipDbId();
+
+  if (!maybePlayerShipDbId || deadShipDbId != *maybePlayerShipDbId) {
+    return;
+  }
+
+  debug("player is killed");
+  m_game.onPlayerKilled();
 }
 
 } // namespace pge

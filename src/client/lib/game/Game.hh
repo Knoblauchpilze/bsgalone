@@ -59,10 +59,11 @@ class Game : public utils::CoreObject
   /// the game is ended).
   bool step(float elapsedSeconds);
 
-  void connectedToServer(const bsgo::Uuid clientId);
-  void login(const bsgo::Uuid playerDbId);
-  void activeShipChanged();
-  void activeSystemChanged();
+  void onConnectedToServer(const bsgo::Uuid clientId);
+  void onLogin(const bsgo::Uuid playerDbId);
+  void onActiveShipChanged();
+  void onActiveSystemChanged();
+  void onPlayerKilled();
 
   private:
   /// @brief - Convenience information defining the state of the
@@ -75,11 +76,11 @@ class Game : public utils::CoreObject
     /// the user takes action to change it.
     Screen screen;
 
-    // Used to hold whether or not the game has been shut
-    // down. It usually indicates that no simulation will
-    // be performed anymore and usually indicates that a
-    // termination request has been received.
+    /// @brief - Whether the game was terminated (usually because the app was closed).
     bool terminated{false};
+
+    /// @brief - Whether the player is dead or not.
+    bool dead{false};
   };
 
   /// @brief - The definition of the game state.
