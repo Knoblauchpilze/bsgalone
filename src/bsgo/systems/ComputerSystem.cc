@@ -29,10 +29,15 @@ void ComputerSystem::updateEntity(Entity &entity,
                                   const float elapsedSeconds) const
 {
   std::optional<Entity> targetEnt;
-  const auto target = entity.targetComp().target();
+  auto target = entity.targetComp().target();
   if (target)
   {
-    targetEnt = coordinator.getEntity(*target);
+    const auto ent = coordinator.getEntity(*target);
+    if (ent.valid())
+    {
+      target.reset();
+      targetEnt = ent;
+    }
   }
 
   for (const auto &computer : entity.computers)

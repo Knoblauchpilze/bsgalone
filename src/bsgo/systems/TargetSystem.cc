@@ -71,8 +71,9 @@ void TargetSystem::clearTargetIfNotReachable(TargetComponent &targetComp,
   const auto dead   = targetIsDead(target);
   const auto docked = targetHasDocked(target);
 
-  if (dead || docked)
+  if (!target.valid() || dead || docked)
   {
+    debug("clearing target");
     targetComp.clearTarget();
   }
 }
