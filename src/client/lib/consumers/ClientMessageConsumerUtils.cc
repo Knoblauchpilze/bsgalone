@@ -8,7 +8,7 @@
 namespace pge {
 
 void createMessageConsumers(bsgo::IMessageQueue &inputMessagesQueue,
-                            const bsgo::DatabaseEntityMapper &entityMapper,
+                            bsgo::DatabaseEntityMapper &entityMapper,
                             const bsgo::CoordinatorShPtr &coordinator)
 {
   inputMessagesQueue.addListener(
