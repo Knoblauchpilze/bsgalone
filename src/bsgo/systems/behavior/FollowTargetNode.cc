@@ -31,7 +31,14 @@ void FollowTargetNode::run(const TickData &data)
     return;
   }
 
-  const auto target         = data.coordinator.getEntity(*targetComp.target());
+  const auto target = data.coordinator.getEntity(*targetComp.target());
+  if (!target.valid())
+  {
+    debug(data.ent.str() + " is not alive anymore");
+    fail();
+    return;
+  }
+
   const auto targetPosition = target.transformComp().position();
 
   const auto reachedTarget = moveTowardsTarget(data.ent, targetPosition);

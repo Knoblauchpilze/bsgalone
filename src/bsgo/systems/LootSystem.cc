@@ -51,9 +51,14 @@ void LootSystem::distributeLootTo(const Uuid recipient,
                                   Coordinator &coordinator) const
 {
   const auto ent = coordinator.getEntity(recipient);
+  if (!ent.valid())
+  {
+    debug("Skipping " + ent.str() + " as it is dead");
+    return;
+  }
   if (!ent.exists<OwnerComponent>())
   {
-    debug("Skipping " + ent.str() + " as it is not a player or it is dead");
+    debug("Skipping " + ent.str() + " as it is not a player");
     return;
   }
 

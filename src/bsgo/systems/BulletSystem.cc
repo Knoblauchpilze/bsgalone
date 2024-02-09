@@ -43,6 +43,10 @@ bool BulletSystem::isTargetNotExistent(const Entity &entity) const
 
 bool BulletSystem::isTargetInvalid(const Entity &target) const
 {
+  if (!target.valid())
+  {
+    return true;
+  }
   if (!target.exists<StatusComponent>())
   {
     return false;

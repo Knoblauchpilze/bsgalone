@@ -22,12 +22,14 @@ void WeaponSystem::updateEntity(Entity &entity,
                                 const float elapsedSeconds) const
 {
   const auto target = entity.targetComp().target();
-  std::optional<Entity> targetEnt;
+
+  std::optional<Entity> targetEnt{};
   if (target)
   {
     targetEnt = coordinator.getEntity(*target);
   }
-  if (!canTargetBeFiredOn(*targetEnt))
+
+  if (target && !canTargetBeFiredOn(*targetEnt))
   {
     return;
   }
@@ -45,6 +47,10 @@ void WeaponSystem::updateEntity(Entity &entity,
 
 bool WeaponSystem::canTargetBeFiredOn(const Entity &target) const
 {
+  if (!target.valid())
+  {
+    return false;
+  }
   if (!target.exists<StatusComponent>())
   {
     return true;
