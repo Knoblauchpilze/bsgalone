@@ -16,8 +16,8 @@ class BulletSystem : public AbstractSystem
                     const float elapsedSeconds) const override;
 
   private:
-  bool killIfTargetIsDead(Entity &entity) const;
-  bool killIfTargetIsInvalid(Entity &entity, Entity &target) const;
+  bool isTargetNotExistent(const Entity &entity) const;
+  bool isTargetInvalid(const Entity &target) const;
   void accelerateTowardsTarget(Entity &entity, const Entity &target) const;
   void damageOnImpact(Entity &entity, Entity &target) const;
 };

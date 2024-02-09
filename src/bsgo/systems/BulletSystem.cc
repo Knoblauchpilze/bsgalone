@@ -18,14 +18,16 @@ void BulletSystem::updateEntity(Entity &entity,
                                 Coordinator &coordinator,
                                 const float /*elapsedSeconds*/) const
 {
-  if (killIfTargetIsDead(entity))
+  if (isTargetNotExistent(entity))
   {
+    entity.removalComp().markForRemoval();
     return;
   }
 
   auto target = coordinator.getEntity(*entity.targetComp().target());
-  if (killIfTargetIsInvalid(entity, target))
+  if (isTargetInvalid(target))
   {
+    entity.removalComp().markForRemoval();
     return;
   }
 
@@ -33,20 +35,13 @@ void BulletSystem::updateEntity(Entity &entity,
   damageOnImpact(entity, target);
 }
 
-bool BulletSystem::killIfTargetIsDead(Entity &entity) const
+bool BulletSystem::isTargetNotExistent(const Entity &entity) const
 {
   const auto &target = entity.targetComp().target();
-  if (target)
-  {
-    return false;
-  }
-
-  entity.removalComp().markForRemoval();
-
-  return true;
+  return !target.has_value();
 }
 
-bool BulletSystem::killIfTargetIsInvalid(Entity &entity, Entity &target) const
+bool BulletSystem::isTargetInvalid(const Entity &target) const
 {
   if (!target.exists<StatusComponent>())
   {
@@ -55,13 +50,7 @@ bool BulletSystem::killIfTargetIsInvalid(Entity &entity, Entity &target) const
 
   const auto accessible = statusAllowsInteratction(target.statusComp().status());
   const auto damageable = statusAllowsDamage(target.statusComp().status());
-  if (!accessible || !damageable)
-  {
-    entity.removalComp().markForRemoval();
-    return true;
-  }
-
-  return false;
+  return !accessible || !damageable;
 }
 
 void BulletSystem::accelerateTowardsTarget(Entity &entity, const Entity &target) const
