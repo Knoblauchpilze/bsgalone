@@ -65,6 +65,10 @@ void Game::setScreen(const Screen &screen)
   }
 
   m_state.screen = screen;
+  if (m_state.dead && Screen::OUTPOST == m_state.screen)
+  {
+    m_state.dead = false;
+  }
 }
 
 void Game::generateRenderers(int width, int height, Renderer &engine)
@@ -115,53 +119,88 @@ void Game::generateUiHandlers(int width, int height)
   }
 }
 
-void Game::processUserInput(const controls::State &controls, CoordinateFrame &frame)
+namespace {
+auto applyInputToGame(const controls::State &controls,
+                      const Screen currentScreen,
+                      CoordinateFrame &frame,
+                      const std::unordered_map<Screen, IInputHandlerPtr> &inputHandlers)
+  -> std::optional<IInputHandler *>
 {
-  const auto inputHandler = m_inputHandlers.find(getScreen());
-  if (inputHandler != m_inputHandlers.end())
+  const auto maybeInputHandler = inputHandlers.find(currentScreen);
+  if (maybeInputHandler == inputHandlers.end())
   {
-    inputHandler->second->processUserInput(controls, frame);
+    return {};
   }
 
+  maybeInputHandler->second->processUserInput(controls, frame);
+
+  return maybeInputHandler->second.get();
+}
+
+bool applyInputToUi(const controls::State &controls,
+                    const Screen currentScreen,
+                    Game &g,
+                    const std::unordered_map<Screen, IUiHandlerPtr> &uiHandlers)
+{
   UserInputData uid{.controls = controls};
   bool userInputRelevant{false};
-  const auto uiHandler = m_uiHandlers.find(getScreen());
-  if (uiHandler != m_uiHandlers.end())
+  const auto uiHandler = uiHandlers.find(currentScreen);
+  if (uiHandler != uiHandlers.end())
   {
     userInputRelevant = uiHandler->second->processUserInput(uid);
 
     for (const auto &action : uid.actions)
     {
-      action(*this);
+      action(g);
     }
   }
 
-  if (controls.released(controls::mouse::LEFT) && inputHandler != m_inputHandlers.end()
-      && !userInputRelevant)
+  return userInputRelevant;
+}
+
+auto applyInputToScreen(const controls::State &controls, const Screen currentScreen)
+  -> std::optional<Screen>
+{
+  if (!controls.released(controls::keys::M))
+  {
+    return {};
+  }
+
+  switch (currentScreen)
+  {
+    case Screen::GAME:
+      return Screen::MAP;
+    case Screen::MAP:
+      return Screen::GAME;
+    default:
+      return {};
+  }
+}
+} // namespace
+
+void Game::processUserInput(const controls::State &controls, CoordinateFrame &frame)
+{
+  if (m_state.dead)
+  {
+    applyInputToUi(controls, getScreen(), *this, m_uiHandlers);
+    return;
+  }
+
+  const auto maybeInputHandler  = applyInputToGame(controls, getScreen(), frame, m_inputHandlers);
+  const auto inputRelevantForUi = applyInputToUi(controls, getScreen(), *this, m_uiHandlers);
+
+  if (controls.released(controls::mouse::LEFT) && maybeInputHandler.has_value()
+      && !inputRelevantForUi)
   {
     Vec2f it;
     const auto tp = frame.pixelsToTilesAndIntra(Vec2f(controls.mPosX, controls.mPosY), &it);
-    inputHandler->second->performAction(tp.x + it.x, tp.y + it.y, controls);
+    (*maybeInputHandler)->performAction(tp.x + it.x, tp.y + it.y, controls);
   }
 
-  if (controls.released(controls::keys::M))
+  const auto nextScreen = applyInputToScreen(controls, getScreen());
+  if (nextScreen)
   {
-    std::optional<Screen> nextScreen{};
-    switch (getScreen())
-    {
-      case Screen::GAME:
-        nextScreen = {Screen::MAP};
-        break;
-      case Screen::MAP:
-        nextScreen = {Screen::GAME};
-        break;
-      default:
-        break;
-    }
-    if (nextScreen)
-    {
-      setScreen(*nextScreen);
-    }
+    setScreen(*nextScreen);
   }
 }
 
@@ -234,30 +273,35 @@ bool Game::step(float elapsedSeconds)
   return true;
 }
 
-void Game::connectedToServer(const bsgo::Uuid clientId)
+void Game::onConnectedToServer(const bsgo::Uuid clientId)
 {
   info("Received client id " + bsgo::str(clientId) + " from server");
   m_outputMessageQueue->setClientId(clientId);
 }
 
-void Game::login(const bsgo::Uuid playerDbId)
+void Game::onLogin(const bsgo::Uuid playerDbId)
 {
   m_dataSource.setPlayerDbId(playerDbId);
   resetViewsAndUi();
   setScreen(Screen::OUTPOST);
 }
 
-void Game::activeShipChanged()
+void Game::onActiveShipChanged()
 {
   resetViewsAndUi();
 }
 
-void Game::activeSystemChanged()
+void Game::onActiveSystemChanged()
 {
   m_views.shipView->clearJumpSystem();
   m_views.shipDbView->clearJumpSystem();
   m_dataSource.clearSystemDbId();
   resetViewsAndUi();
+}
+
+void Game::onPlayerKilled()
+{
+  m_state.dead = true;
 }
 
 void Game::initialize()
@@ -295,7 +339,7 @@ void Game::initializeMessageSystem()
   m_internalMessageQueue->addListener(
     std::make_unique<InternalMessageConsumer>(m_entityMapper, m_coordinator));
 
-  auto messageModule = std::make_unique<GameMessageModule>(this);
+  auto messageModule = std::make_unique<GameMessageModule>(*this, m_entityMapper);
   m_inputMessageQueue->addListener(std::move(messageModule));
 }
 
