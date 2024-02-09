@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "AbstractMessageListener.hh"
 #include "IUiHandler.hh"
 #include "UiTextMenu.hh"
 #include "Views.hh"
@@ -8,7 +9,7 @@
 
 namespace pge {
 
-class GameOverUiHandler : public IUiHandler
+class GameOverUiHandler : public IUiHandler, public bsgo::AbstractMessageListener
 {
   public:
   GameOverUiHandler(const bsgo::Views &views);
@@ -18,9 +19,12 @@ class GameOverUiHandler : public IUiHandler
   bool processUserInput(UserInputData &inputData) override;
   void render(Renderer &engine) const override;
   void updateUi() override;
+  void reset() override;
+  void connectToMessageQueue(bsgo::IMessageQueue &messageQueue) override;
+
+  void onMessageReceived(const bsgo::IMessage &message) override;
 
   private:
-  bsgo::ShipViewShPtr m_shipView{};
   bsgo::ShipDbViewShPtr m_shipDbView{};
 
   UiTextMenuPtr m_menu{};

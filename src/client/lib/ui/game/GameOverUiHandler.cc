@@ -1,19 +1,15 @@
 
 #include "GameOverUiHandler.hh"
-#include "ScreenCommon.hh"
-#include "StringUtils.hh"
+#include "MessageListenerWrapper.hh"
+#include "EntityDiedMessage.hh"
 
 namespace pge {
 
 GameOverUiHandler::GameOverUiHandler(const bsgo::Views &views)
   : IUiHandler("gameover")
-  , m_shipView(views.shipView)
+  , AbstractMessageListener({bsgo::MessageType::ENTITY_DIED})
   , m_shipDbView(views.shipDbView)
 {
-  if (nullptr == m_shipView)
-  {
-    throw std::invalid_argument("Expected non null ship view");
-  }
   if (nullptr == m_shipDbView)
   {
     throw std::invalid_argument("Expected non null ship db view");
@@ -27,11 +23,8 @@ void GameOverUiHandler::initializeMenus(const int width, const int height)
   pos.x = (width - dims.x) / 2;
   pos.y = (height - dims.y) / 2;
 
-  const MenuConfig config{.pos = pos, .dims = dims, .visible = false, .clickCallback = [this]() {
-                            if (m_shipDbView->isReady())
-                            {
-                              m_shipDbView->dockPlayerShip();
-                            }
+  const MenuConfig config{.pos = pos, .dims = dims, .visible = false, .gameClickCallback = [this](Game& g) {
+                            g.setScreen(Screen::OUTPOST);
                           }};
 
   auto bg   = bgConfigFromColor(colors::DARK_GREY);
@@ -51,13 +44,35 @@ void GameOverUiHandler::render(Renderer &engine) const
 
 void GameOverUiHandler::updateUi()
 {
-  if (!m_shipView->isReady())
+  // Intentionally empty.
+}
+
+void GameOverUiHandler::reset() {
+  m_menu->setVisible(false);
+}
+
+void GameOverUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQueue)
+{
+  auto listener = std::make_unique<MessageListenerWrapper>(this);
+  messageQueue.addListener(std::move(listener));
+}
+
+void GameOverUiHandler::onMessageReceived(const bsgo::IMessage &message)
+{
+  if (!m_shipDbView->isReady())
   {
     return;
   }
 
-  const auto ship = m_shipView->getPlayerShip();
-  m_menu->setVisible(ship.statusComp().isDead());
+  const auto& entityMessage = message.as<bsgo::EntityDiedMessage>();
+  const auto notAShipMessage = bsgo::EntityKind::SHIP != entityMessage.getEntityKind();
+  const auto shipIsNotThePlayer =  entityMessage.getEntityDbId() != m_shipDbView->getPlayerShipDbId();
+  if (notAShipMessage || shipIsNotThePlayer) {
+    return;
+  }
+
+  info("Received bad news: player is dead");
+  m_menu->setVisible(true);
 }
 
 } // namespace pge
