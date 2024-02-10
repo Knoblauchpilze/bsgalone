@@ -33,9 +33,10 @@ class OutpostScreenUiHandler : public IUiHandler, public bsgo::AbstractMessageLi
   enum MenuItem
   {
     UNDOCK     = 0,
-    VIEWS_MENU = 1,
+    LOGOUT     = 1,
+    VIEWS_MENU = 2,
 
-    COUNT = 2,
+    COUNT = 3,
   };
   std::vector<UiMenuPtr> m_menus{};
 

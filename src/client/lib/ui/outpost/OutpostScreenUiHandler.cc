@@ -31,16 +31,28 @@ void OutpostScreenUiHandler::initializeMenus(const int width, const int height)
   const Vec2i pos{(width - UNDOCK_BUTTON_WIDTH) / 2, 10};
   const Vec2i dims{UNDOCK_BUTTON_WIDTH, 50};
 
-  const MenuConfig config{.pos = pos, .dims = dims, .clickCallback = [this]() {
-                            if (m_shipDbView->isReady())
-                            {
-                              m_shipDbView->undockPlayerShip();
-                            }
-                          }};
+  MenuConfig config{.pos = pos, .dims = dims, .clickCallback = [this]() {
+                      if (m_shipDbView->isReady())
+                      {
+                        m_shipDbView->undockPlayerShip();
+                      }
+                    }};
 
   auto bg         = bgConfigFromColor(colors::DARK_GREY);
   auto text       = textConfigFromColor("Undock", colors::WHITE);
   m_menus[UNDOCK] = std::make_unique<UiTextMenu>(config, bg, text);
+
+  constexpr auto REASONABLE_PIXELS_GAP = 40;
+  constexpr auto LOGOUT_BUTTON_HEIGHT  = 30;
+  config.pos.x += dims.x + REASONABLE_PIXELS_GAP;
+  config.pos.y += (dims.y - LOGOUT_BUTTON_HEIGHT) / 2;
+  config.dims = Vec2i{80, LOGOUT_BUTTON_HEIGHT};
+
+  config.clickCallback.reset();
+  config.gameClickCallback = [](Game &g) { g.onLogout(); };
+  bg                       = bgConfigFromColor(colors::DARK_RED);
+  text                     = textConfigFromColor("Logout", colors::VERY_DARK_RED);
+  m_menus[LOGOUT]          = std::make_unique<UiTextMenu>(config, bg, text);
 
   generateGeneralMenu(width, height);
 

@@ -61,6 +61,7 @@ class Game : public utils::CoreObject
 
   void onConnectedToServer(const bsgo::Uuid clientId);
   void onLogin(const bsgo::Uuid playerDbId);
+  void onLogout();
   void onActiveShipChanged();
   void onActiveSystemChanged();
   void onPlayerKilled();
