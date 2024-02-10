@@ -1,5 +1,6 @@
 
 #include "LogoutMessageConsumer.hh"
+#include "EntityRemovedMessage.hh"
 
 namespace bsgo {
 
@@ -61,13 +62,18 @@ void LogoutMessageConsumer::handleLogout(const LogoutMessage &message) const
           "Unknown system " + str(*maybeSystemDbId));
   }
 
+  m_combatService->trySendPlayerBackToOutpost(playerDbId);
+  m_clientManager->removePlayer(playerDbId);
+
+  auto removed = std::make_unique<EntityRemovedMessage>(m_combatService->getShipDbIdForPlayer(
+                                                          playerDbId),
+                                                        EntityKind::SHIP,
+                                                        false);
+  maybeProcessor->second->pushMessage(std::move(removed));
+
   auto out = std::make_unique<LogoutMessage>(playerDbId);
   out->validate();
   out->copyClientIdIfDefined(message);
-
-  m_combatService->trySendPlayerBackToOutpost(playerDbId);
-  m_clientManager->removePlayer(playerDbId);
-  maybeProcessor->second->pushMessage(out->clone());
   m_messageQueue->pushMessage(std::move(out));
 }
 

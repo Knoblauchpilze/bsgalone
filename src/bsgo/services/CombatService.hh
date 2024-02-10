@@ -22,6 +22,7 @@ class CombatService : public AbstractService
 
   auto getSystemDbIdForAsteroid(const Uuid asteroidDbId) const -> Uuid;
   auto tryGetSystemDbIdForShip(const Uuid shipDbId) const -> std::optional<Uuid>;
+  auto getShipDbIdForPlayer(const Uuid playerDbId) const -> Uuid;
 
   private:
   auto findExistingResourceAmount(const Uuid playerDbId, const Uuid resourceDbId) const -> float;
