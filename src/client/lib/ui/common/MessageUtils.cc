@@ -3,7 +3,7 @@
 
 namespace pge {
 
-bool didPlayerShipDied(const bsgo::EntityDiedMessage &message,
+bool didPlayerShipDied(const bsgo::EntityRemovedMessage &message,
                        const bsgo::DatabaseEntityMapper &mapper)
 {
   if (message.getEntityKind() != bsgo::EntityKind::SHIP)
@@ -17,7 +17,7 @@ bool didPlayerShipDied(const bsgo::EntityDiedMessage &message,
   return maybePlayerShipDbId && deadShipDbId == *maybePlayerShipDbId;
 }
 
-bool didPlayerShipDied(const bsgo::EntityDiedMessage &message, const bsgo::ShipDbView &shipDbView)
+bool didPlayerShipDied(const bsgo::EntityRemovedMessage &message, const bsgo::ShipDbView &shipDbView)
 {
   if (message.getEntityKind() != bsgo::EntityKind::SHIP)
   {

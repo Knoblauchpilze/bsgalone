@@ -9,13 +9,13 @@
 
 namespace bsgo {
 
-class EntityDiedMessage : public NetworkMessage
+class EntityRemovedMessage : public NetworkMessage
 {
   public:
-  EntityDiedMessage();
-  EntityDiedMessage(const Uuid entityDbId, const EntityKind entityKind);
-  EntityDiedMessage(const Uuid entityDbId, const EntityKind entityKind, const Uuid systemDbId);
-  ~EntityDiedMessage() override = default;
+  EntityRemovedMessage();
+  EntityRemovedMessage(const Uuid entityDbId, const EntityKind entityKind);
+  EntityRemovedMessage(const Uuid entityDbId, const EntityKind entityKind, const Uuid systemDbId);
+  ~EntityRemovedMessage() override = default;
 
   auto getEntityDbId() const -> Uuid;
   auto getEntityKind() const -> EntityKind;

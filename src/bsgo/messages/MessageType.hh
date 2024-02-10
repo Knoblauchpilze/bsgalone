@@ -11,7 +11,7 @@ enum class MessageType
 {
   CONNECTION,
   DOCK,
-  ENTITY_DIED,
+  ENTITY_REMOVED,
   EQUIP,
   HANGAR,
   JUMP,

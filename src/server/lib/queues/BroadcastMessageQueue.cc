@@ -1,6 +1,6 @@
 
 #include "BroadcastMessageQueue.hh"
-#include "EntityDiedMessage.hh"
+#include "EntityRemovedMessage.hh"
 #include "LootMessage.hh"
 #include "MessageProcessor.hh"
 #include "NetworkMessage.hh"
@@ -89,7 +89,7 @@ void BroadcastMessageQueue::sendMessageToClient(const Uuid clientId, const IMess
 }
 
 namespace {
-const std::unordered_set<MessageType> SYSTEM_DIRECTED_MESSAGES = {MessageType::ENTITY_DIED};
+const std::unordered_set<MessageType> SYSTEM_DIRECTED_MESSAGES = {MessageType::ENTITY_REMOVED};
 
 bool shouldTryToDetermineSystemId(const IMessage &message)
 {
@@ -164,8 +164,8 @@ auto BroadcastMessageQueue::tryDetermineSystemId(const IMessage &message) const
 {
   switch (message.type())
   {
-    case MessageType::ENTITY_DIED:
-      return determineSystemFor(message.as<EntityDiedMessage>(), *m_clientManager);
+    case MessageType::ENTITY_REMOVED:
+      return determineSystemFor(message.as<EntityRemovedMessage>(), *m_clientManager);
     default:
       error("Failed to determine system id", "Unsupported message type " + str(message.type()));
       break;

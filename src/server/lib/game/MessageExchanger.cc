@@ -4,7 +4,7 @@
 #include "BroadcastMessageQueue.hh"
 #include "ConnectionMessage.hh"
 #include "DataSource.hh"
-#include "EntityDiedMessageConsumer.hh"
+#include "EntityRemovedMessageConsumer.hh"
 #include "LoginMessageConsumer.hh"
 #include "LootMessageConsumer.hh"
 #include "SignupMessageConsumer.hh"
@@ -121,9 +121,9 @@ auto MessageExchanger::initializeInternalMessageQueue(
     std::make_unique<LootMessageConsumer>(combatService, m_outputMessageQueue.get()));
 
   internalQueue->addListener(
-    std::make_unique<EntityDiedMessageConsumer>(combatService,
-                                                systemProcessors,
-                                                m_outputMessageQueue.get()));
+    std::make_unique<EntityRemovedMessageConsumer>(combatService,
+                                                   systemProcessors,
+                                                   m_outputMessageQueue.get()));
 
   return internalQueue;
 }

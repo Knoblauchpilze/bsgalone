@@ -1,7 +1,7 @@
 
 #include "RemovalSystem.hh"
 #include "Coordinator.hh"
-#include "EntityDiedMessage.hh"
+#include "EntityRemovedMessage.hh"
 
 namespace bsgo {
 namespace {
@@ -44,7 +44,7 @@ void RemovalSystem::markEntityForRemoval(Entity &entity) const
   entity.removalComp().markForRemoval();
 
   const auto entityDbId = entity.dbComp().dbId();
-  pushInternalMessage(std::make_unique<EntityDiedMessage>(entityDbId, entity.kind->kind()));
+  pushInternalMessage(std::make_unique<EntityRemovedMessage>(entityDbId, entity.kind->kind()));
 }
 
 } // namespace bsgo

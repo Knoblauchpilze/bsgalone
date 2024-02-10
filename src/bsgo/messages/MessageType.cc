@@ -12,8 +12,8 @@ auto str(const MessageType &type) -> std::string
       return "connection";
     case MessageType::DOCK:
       return "dock";
-    case MessageType::ENTITY_DIED:
-      return "entity_died";
+    case MessageType::ENTITY_REMOVED:
+      return "entity_removed";
     case MessageType::EQUIP:
       return "equip";
     case MessageType::HANGAR:
@@ -53,7 +53,7 @@ auto allMessageTypes() -> std::array<MessageType, 18>
 {
   return {MessageType::CONNECTION,
           MessageType::DOCK,
-          MessageType::ENTITY_DIED,
+          MessageType::ENTITY_REMOVED,
           MessageType::EQUIP,
           MessageType::HANGAR,
           MessageType::JUMP,
