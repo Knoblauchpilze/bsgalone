@@ -26,6 +26,8 @@ auto str(const MessageType &type) -> std::string
       return "jump_requested";
     case MessageType::LOGIN:
       return "login";
+    case MessageType::LOGOUT:
+      return "logout";
     case MessageType::LOOT:
       return "loot";
     case MessageType::PURCHASE:
@@ -49,7 +51,7 @@ auto str(const MessageType &type) -> std::string
   }
 }
 
-auto allMessageTypes() -> std::array<MessageType, 18>
+auto allMessageTypes() -> std::array<MessageType, 19>
 {
   return {MessageType::CONNECTION,
           MessageType::DOCK,
@@ -62,6 +64,7 @@ auto allMessageTypes() -> std::array<MessageType, 18>
           MessageType::LOOT,
           MessageType::PURCHASE,
           MessageType::LOGIN,
+          MessageType::LOGOUT,
           MessageType::SCANNED,
           MessageType::SIGNUP,
           MessageType::SLOT,

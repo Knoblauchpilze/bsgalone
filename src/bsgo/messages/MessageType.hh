@@ -18,6 +18,7 @@ enum class MessageType
   JUMP_CANCELLED,
   JUMP_REQUESTED,
   LOGIN,
+  LOGOUT,
   LOOT,
   PURCHASE,
   SCANNED,
@@ -30,7 +31,7 @@ enum class MessageType
 };
 
 auto str(const MessageType &type) -> std::string;
-auto allMessageTypes() -> std::array<MessageType, 18>;
+auto allMessageTypes() -> std::array<MessageType, 19>;
 
 auto allMessageTypesAsSet() -> std::unordered_set<MessageType>;
 
