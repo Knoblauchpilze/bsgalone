@@ -13,12 +13,16 @@ class EntityRemovedMessage : public NetworkMessage
 {
   public:
   EntityRemovedMessage();
-  EntityRemovedMessage(const Uuid entityDbId, const EntityKind entityKind);
-  EntityRemovedMessage(const Uuid entityDbId, const EntityKind entityKind, const Uuid systemDbId);
+  EntityRemovedMessage(const Uuid entityDbId, const EntityKind entityKind, const bool dead);
+  EntityRemovedMessage(const Uuid entityDbId,
+                       const EntityKind entityKind,
+                       const bool dead,
+                       const Uuid systemDbId);
   ~EntityRemovedMessage() override = default;
 
   auto getEntityDbId() const -> Uuid;
   auto getEntityKind() const -> EntityKind;
+  bool isDead() const;
   auto getSystemDbId() const -> Uuid;
   auto tryGetSystemDbId() const -> std::optional<Uuid>;
 
@@ -30,6 +34,7 @@ class EntityRemovedMessage : public NetworkMessage
   private:
   Uuid m_entityDbId{};
   EntityKind m_entityKind{};
+  bool m_dead{false};
   std::optional<Uuid> m_systemDbId{};
 };
 
