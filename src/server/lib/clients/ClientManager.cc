@@ -55,8 +55,9 @@ void ClientManager::removePlayer(const Uuid playerDbId)
     error("Failed to unregister player " + str(playerDbId), "Unable to find client id");
   }
 
-  auto &data = m_clients.at(maybeClientId->second);
-  data.playerDbId.reset();
+  auto &clientData = m_clients.at(maybeClientId->second);
+  clientData.playerDbId.reset();
+  clientData.playerSystemDbId.reset();
   m_playerToClient.erase(playerDbId);
 
   info("Removed player " + str(playerDbId));
