@@ -5,11 +5,11 @@
 
 namespace bsgo {
 
-class EntityDeletedMessageConsumer : public AbstractMessageConsumer
+class ShipDeletedMessageConsumer : public AbstractMessageConsumer
 {
   public:
-  EntityDeletedMessageConsumer();
-  ~EntityDeletedMessageConsumer() override = default;
+  ShipDeletedMessageConsumer();
+  ~ShipDeletedMessageConsumer() override = default;
 
   void onMessageReceived(const IMessage &message) override;
 
