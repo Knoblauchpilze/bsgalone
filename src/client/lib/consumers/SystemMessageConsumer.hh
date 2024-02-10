@@ -4,7 +4,7 @@
 #include "AbstractMessageConsumer.hh"
 #include "Coordinator.hh"
 #include "DatabaseEntityMapper.hh"
-#include "EntityDiedMessage.hh"
+#include "EntityRemovedMessage.hh"
 #include "ScannedMessage.hh"
 
 namespace pge {
@@ -23,7 +23,7 @@ class SystemMessageConsumer : public bsgo::AbstractMessageConsumer
   bsgo::CoordinatorShPtr m_coordinator{};
 
   void handleScanOperation(const bsgo::ScannedMessage &message) const;
-  void handleEntityDeath(const bsgo::EntityDiedMessage &message) const;
+  void handleEntityRemoved(const bsgo::EntityRemovedMessage &message) const;
 };
 
 } // namespace pge

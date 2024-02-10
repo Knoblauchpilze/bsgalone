@@ -1,6 +1,6 @@
 
 #include "GameOverUiHandler.hh"
-#include "EntityDiedMessage.hh"
+#include "EntityRemovedMessage.hh"
 #include "MessageListenerWrapper.hh"
 #include "MessageUtils.hh"
 
@@ -8,7 +8,7 @@ namespace pge {
 
 GameOverUiHandler::GameOverUiHandler(const bsgo::Views &views)
   : IUiHandler("gameover")
-  , AbstractMessageListener({bsgo::MessageType::ENTITY_DIED})
+  , AbstractMessageListener({bsgo::MessageType::ENTITY_REMOVED})
   , m_shipDbView(views.shipDbView)
 {
   if (nullptr == m_shipDbView)
@@ -67,7 +67,7 @@ void GameOverUiHandler::onMessageReceived(const bsgo::IMessage &message)
     return;
   }
 
-  m_menu->setVisible(didPlayerShipDied(message.as<bsgo::EntityDiedMessage>(), *m_shipDbView));
+  m_menu->setVisible(didPlayerShipDied(message.as<bsgo::EntityRemovedMessage>(), *m_shipDbView));
 }
 
 } // namespace pge

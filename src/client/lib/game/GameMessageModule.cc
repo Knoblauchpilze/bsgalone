@@ -12,7 +12,7 @@ const Messages GAME_CHANGING_MESSAGE_TYPES = {bsgo::MessageType::CONNECTION,
                                               bsgo::MessageType::JUMP,
                                               bsgo::MessageType::LOGIN,
                                               bsgo::MessageType::SIGNUP,
-                                              bsgo::MessageType::ENTITY_DIED};
+                                              bsgo::MessageType::ENTITY_REMOVED};
 
 GameMessageModule::GameMessageModule(Game &game, const bsgo::DatabaseEntityMapper &entityMapper)
   : bsgo::AbstractMessageListener(GAME_CHANGING_MESSAGE_TYPES)
@@ -33,8 +33,8 @@ void GameMessageModule::onMessageReceived(const bsgo::IMessage &message)
     case bsgo::MessageType::DOCK:
       handleDockMessage(message.as<bsgo::DockMessage>());
       break;
-    case bsgo::MessageType::ENTITY_DIED:
-      handleEntityDiedMessage(message.as<bsgo::EntityDiedMessage>());
+    case bsgo::MessageType::ENTITY_REMOVED:
+      handleEntityRemovedMessage(message.as<bsgo::EntityRemovedMessage>());
       break;
     case bsgo::MessageType::HANGAR:
       handleHangarMessage(message.as<bsgo::HangarMessage>());
@@ -121,7 +121,7 @@ void GameMessageModule::handleSignupMessage(const bsgo::SignupMessage &message)
   m_game.onLogin(*message.getPlayerDbId());
 }
 
-void GameMessageModule::handleEntityDiedMessage(const bsgo::EntityDiedMessage &message)
+void GameMessageModule::handleEntityRemovedMessage(const bsgo::EntityRemovedMessage &message)
 {
   if (didPlayerShipDied(message, m_entityMapper))
   {

@@ -6,7 +6,7 @@ namespace pge {
 SystemMessageConsumer::SystemMessageConsumer(bsgo::DatabaseEntityMapper &entityMapper,
                                              bsgo::CoordinatorShPtr coordinator)
   : bsgo::AbstractMessageConsumer("system",
-                                  {bsgo::MessageType::SCANNED, bsgo::MessageType::ENTITY_DIED})
+                                  {bsgo::MessageType::SCANNED, bsgo::MessageType::ENTITY_REMOVED})
   , m_entityMapper(entityMapper)
   , m_coordinator(std::move(coordinator))
 {}
@@ -18,8 +18,8 @@ void SystemMessageConsumer::onMessageReceived(const bsgo::IMessage &message)
     case bsgo::MessageType::SCANNED:
       handleScanOperation(message.as<bsgo::ScannedMessage>());
       break;
-    case bsgo::MessageType::ENTITY_DIED:
-      handleEntityDeath(message.as<bsgo::EntityDiedMessage>());
+    case bsgo::MessageType::ENTITY_REMOVED:
+      handleEntityRemoved(message.as<bsgo::EntityRemovedMessage>());
       break;
     default:
       error("Unsupported message type " + bsgo::str(message.type()));
@@ -41,7 +41,7 @@ void SystemMessageConsumer::handleScanOperation(const bsgo::ScannedMessage &mess
   asteroid.scannedComp().scan();
 }
 
-void SystemMessageConsumer::handleEntityDeath(const bsgo::EntityDiedMessage &message) const
+void SystemMessageConsumer::handleEntityRemoved(const bsgo::EntityRemovedMessage &message) const
 {
   std::optional<bsgo::Uuid> entityId{};
 
@@ -64,7 +64,7 @@ void SystemMessageConsumer::handleEntityDeath(const bsgo::EntityDiedMessage &mes
 
   if (!entityId)
   {
-    error("Failed to handle death of entity " + bsgo::str(entityDbId),
+    error("Failed to handle removal of entity " + bsgo::str(entityDbId),
           "Unsupported kind " + bsgo::str(entityKind));
   }
 

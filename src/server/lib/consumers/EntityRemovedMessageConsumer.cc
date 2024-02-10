@@ -1,13 +1,13 @@
 
-#include "EntityDiedMessageConsumer.hh"
+#include "EntityRemovedMessageConsumer.hh"
 
 namespace bsgo {
 
-EntityDiedMessageConsumer::EntityDiedMessageConsumer(
+EntityRemovedMessageConsumer::EntityRemovedMessageConsumer(
   CombatServiceShPtr combatService,
   const std::vector<SystemProcessorShPtr> &systemProcessors,
   IMessageQueue *const messageQueue)
-  : AbstractMessageConsumer("entity", {MessageType::ENTITY_DIED})
+  : AbstractMessageConsumer("entity", {MessageType::ENTITY_REMOVED})
   , m_combatService(std::move(combatService))
   , m_messageQueue(messageQueue)
 {
@@ -27,17 +27,17 @@ EntityDiedMessageConsumer::EntityDiedMessageConsumer(
   }
 }
 
-void EntityDiedMessageConsumer::onMessageReceived(const IMessage &message)
+void EntityRemovedMessageConsumer::onMessageReceived(const IMessage &message)
 {
-  const auto &diedMessage = message.as<EntityDiedMessage>();
+  const auto &removed = message.as<EntityRemovedMessage>();
 
-  switch (diedMessage.getEntityKind())
+  switch (removed.getEntityKind())
   {
     case EntityKind::SHIP:
-      handleShipEntityDied(diedMessage.getEntityDbId());
+      handleShipEntityDied(removed.getEntityDbId());
       return;
     case EntityKind::ASTEROID:
-      handleAsteroidEntityDied(diedMessage.getEntityDbId());
+      handleAsteroidEntityDied(removed.getEntityDbId());
       return;
     default:
       break;
@@ -89,37 +89,37 @@ auto findSystemAndProcessorFromAsteroid(
 }
 } // namespace
 
-void EntityDiedMessageConsumer::handleShipEntityDied(const Uuid shipDbId) const
+void EntityRemovedMessageConsumer::handleShipEntityDied(const Uuid shipDbId) const
 {
   const auto [systemDbId, processor] = findSystemAndProcessorFromShip(shipDbId,
                                                                       *m_combatService,
                                                                       m_systemProcessors);
   if (!systemDbId || !processor)
   {
-    warn("Failed to process ship died message for " + str(shipDbId), "No system for ship");
+    warn("Failed to process ship removed message for " + str(shipDbId), "No system for ship");
     return;
   }
 
   if (!m_combatService->trySendPlayerShipBackToOutpost(shipDbId))
   {
-    warn("Failed to process ship died message for " + str(shipDbId));
+    warn("Failed to process ship removed message for " + str(shipDbId));
     return;
   }
 
   (*processor)->onShipDestroyed(shipDbId);
 
   m_messageQueue->pushMessage(
-    std::make_unique<EntityDiedMessage>(shipDbId, EntityKind::SHIP, *systemDbId));
+    std::make_unique<EntityRemovedMessage>(shipDbId, EntityKind::SHIP, *systemDbId));
 }
 
-void EntityDiedMessageConsumer::handleAsteroidEntityDied(const Uuid asteroidDbId) const
+void EntityRemovedMessageConsumer::handleAsteroidEntityDied(const Uuid asteroidDbId) const
 {
   const auto [systemDbId, processor] = findSystemAndProcessorFromAsteroid(asteroidDbId,
                                                                           *m_combatService,
                                                                           m_systemProcessors);
   if (!systemDbId || !processor)
   {
-    warn("Failed to process asteroid died message for " + str(asteroidDbId),
+    warn("Failed to process asteroid removed message for " + str(asteroidDbId),
          "No system for asteroid");
     return;
   }
@@ -127,7 +127,7 @@ void EntityDiedMessageConsumer::handleAsteroidEntityDied(const Uuid asteroidDbId
   (*processor)->onAsteroidDestroyed(asteroidDbId);
 
   m_messageQueue->pushMessage(
-    std::make_unique<EntityDiedMessage>(asteroidDbId, EntityKind::ASTEROID, *systemDbId));
+    std::make_unique<EntityRemovedMessage>(asteroidDbId, EntityKind::ASTEROID, *systemDbId));
 }
 
 } // namespace bsgo

@@ -7,13 +7,13 @@
 #include <optional>
 
 #include "ConnectionMessage.hh"
+#include "DatabaseEntityMapper.hh"
 #include "DockMessage.hh"
-#include "EntityDiedMessage.hh"
+#include "EntityRemovedMessage.hh"
 #include "HangarMessage.hh"
 #include "JumpMessage.hh"
 #include "LoginMessage.hh"
 #include "SignupMessage.hh"
-#include "DatabaseEntityMapper.hh"
 
 namespace pge {
 
@@ -22,14 +22,14 @@ class Game;
 class GameMessageModule : public bsgo::AbstractMessageListener, public utils::CoreObject
 {
   public:
-  GameMessageModule(Game &game, const bsgo::DatabaseEntityMapper& entityMapper);
+  GameMessageModule(Game &game, const bsgo::DatabaseEntityMapper &entityMapper);
   ~GameMessageModule() override = default;
 
   void onMessageReceived(const bsgo::IMessage &message) override;
 
   private:
   Game &m_game;
-  const bsgo::DatabaseEntityMapper& m_entityMapper;
+  const bsgo::DatabaseEntityMapper &m_entityMapper;
 
   void handleConnectionMessage(const bsgo::ConnectionMessage &message);
   void handleDockMessage(const bsgo::DockMessage &message);
@@ -37,7 +37,7 @@ class GameMessageModule : public bsgo::AbstractMessageListener, public utils::Co
   void handleJumpMessage(const bsgo::JumpMessage &message);
   void handleLoginMessage(const bsgo::LoginMessage &message);
   void handleSignupMessage(const bsgo::SignupMessage &message);
-  void handleEntityDiedMessage(const bsgo::EntityDiedMessage& message);
+  void handleEntityRemovedMessage(const bsgo::EntityRemovedMessage &message);
 };
 
 } // namespace pge

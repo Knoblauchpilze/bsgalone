@@ -10,7 +10,7 @@ namespace pge {
 
 AbilitiesUiHandler::AbilitiesUiHandler(const bsgo::Views &views)
   : IUiHandler("abilities")
-  , AbstractMessageListener({bsgo::MessageType::ENTITY_DIED})
+  , AbstractMessageListener({bsgo::MessageType::ENTITY_REMOVED})
   , m_shipView(views.shipView)
   , m_shipDbView(views.shipDbView)
 {
@@ -109,7 +109,7 @@ void AbilitiesUiHandler::onMessageReceived(const bsgo::IMessage &message)
     return;
   }
 
-  m_disabled = didPlayerShipDied(message.as<bsgo::EntityDiedMessage>(), *m_shipDbView);
+  m_disabled = didPlayerShipDied(message.as<bsgo::EntityRemovedMessage>(), *m_shipDbView);
 }
 
 void AbilitiesUiHandler::generateComputersMenus(int width, int height)

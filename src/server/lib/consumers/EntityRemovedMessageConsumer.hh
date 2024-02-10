@@ -3,20 +3,20 @@
 
 #include "AbstractMessageConsumer.hh"
 #include "CombatService.hh"
-#include "EntityDiedMessage.hh"
+#include "EntityRemovedMessage.hh"
 #include "IMessageQueue.hh"
 #include "SystemProcessor.hh"
 #include <unordered_map>
 
 namespace bsgo {
 
-class EntityDiedMessageConsumer : public AbstractMessageConsumer
+class EntityRemovedMessageConsumer : public AbstractMessageConsumer
 {
   public:
-  EntityDiedMessageConsumer(CombatServiceShPtr combatService,
-                            const std::vector<SystemProcessorShPtr> &systemProcessors,
-                            IMessageQueue *const messageQueue);
-  ~EntityDiedMessageConsumer() override = default;
+  EntityRemovedMessageConsumer(CombatServiceShPtr combatService,
+                               const std::vector<SystemProcessorShPtr> &systemProcessors,
+                               IMessageQueue *const messageQueue);
+  ~EntityRemovedMessageConsumer() override = default;
 
   void onMessageReceived(const IMessage &message) override;
 
