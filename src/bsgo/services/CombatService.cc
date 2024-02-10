@@ -72,6 +72,12 @@ auto CombatService::tryGetSystemDbIdForShip(const Uuid shipDbId) const -> std::o
   return m_repositories.playerShipRepository->findOneById(shipDbId).system;
 }
 
+auto CombatService::getShipDbIdForPlayer(const Uuid playerDbId) const -> Uuid
+{
+  const auto playerShip = m_repositories.playerShipRepository->findOneByPlayerAndActive(playerDbId);
+  return playerShip.id;
+}
+
 auto CombatService::findExistingResourceAmount(const Uuid playerDbId, const Uuid resourceDbId) const
   -> float
 {
