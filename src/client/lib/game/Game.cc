@@ -290,6 +290,18 @@ void Game::onLogin(const bsgo::Uuid playerDbId)
   setScreen(Screen::OUTPOST);
 }
 
+void Game::onLogout()
+{
+  const auto maybePlayerDbId = m_dataSource.tryGetPlayerDbId();
+  if (!maybePlayerDbId)
+  {
+    error("Failed to log out", "Not logged in");
+  }
+
+  info("Player " + bsgo::str(*maybePlayerDbId) + " logged out");
+  setScreen(Screen::LOGIN);
+}
+
 void Game::onActiveShipChanged()
 {
   resetViewsAndUi();

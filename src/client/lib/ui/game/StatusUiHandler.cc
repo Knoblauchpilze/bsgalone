@@ -140,7 +140,7 @@ void StatusUiHandler::requestLogout()
 
 void StatusUiHandler::confirmLogout(Game &g)
 {
-  g.setScreen(Screen::LOGIN);
+  g.onLogout();
 }
 
 void StatusUiHandler::cancelLogout()
