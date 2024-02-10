@@ -21,7 +21,7 @@ MessageExchanger::MessageExchanger(const ClientManagerShPtr &clientManager,
 
 auto MessageExchanger::getInternalMessageQueue() const -> IMessageQueue *
 {
-  return m_internalMessageQueue;
+  return m_internalMessageQueue.get();
 }
 
 auto MessageExchanger::getOutputMessageQueue() const -> IMessageQueue *
@@ -100,32 +100,28 @@ void MessageExchanger::initializeConsumers(const ClientManagerShPtr &clientManag
                                                                   clientManager,
                                                                   m_outputMessageQueue.get()));
 
-  auto internalQueue = initializeInternalMessageQueue(repositories, systemProcessors);
+  initializeInternalMessageQueue(repositories, systemProcessors);
 
   auto triageConsumer = std::make_unique<TriageMessageConsumer>(systemProcessors,
                                                                 clientManager,
-                                                                std::move(systemQueue),
-                                                                std::move(internalQueue));
+                                                                std::move(systemQueue));
   m_inputMessageQueue->addListener(std::move(triageConsumer));
 }
 
-auto MessageExchanger::initializeInternalMessageQueue(
+void MessageExchanger::initializeInternalMessageQueue(
   const Repositories &repositories,
-  const std::vector<SystemProcessorShPtr> &systemProcessors) -> IMessageQueuePtr
+  const std::vector<SystemProcessorShPtr> &systemProcessors)
 {
-  auto internalQueue     = createInternalMessageQueue();
-  m_internalMessageQueue = internalQueue.get();
+  m_internalMessageQueue = createInternalMessageQueue();
 
   auto combatService = std::make_shared<CombatService>(repositories);
-  internalQueue->addListener(
+  m_internalMessageQueue->addListener(
     std::make_unique<LootMessageConsumer>(combatService, m_outputMessageQueue.get()));
 
-  internalQueue->addListener(
+  m_internalMessageQueue->addListener(
     std::make_unique<EntityRemovedMessageConsumer>(combatService,
                                                    systemProcessors,
                                                    m_outputMessageQueue.get()));
-
-  return internalQueue;
 }
 
 } // namespace bsgo
