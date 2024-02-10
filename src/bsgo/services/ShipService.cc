@@ -63,7 +63,6 @@ bool ShipService::tryDock(const Uuid shipDbId) const
 
   statusComp.setStatus(Status::DOCKED);
   shipEntity.removalComp().markForRemoval();
-  m_entityMapper.removeEntityForShip(shipDbId);
 
   return true;
 }
