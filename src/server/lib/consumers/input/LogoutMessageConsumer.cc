@@ -3,15 +3,33 @@
 
 namespace bsgo {
 
-LogoutMessageConsumer::LogoutMessageConsumer(ClientManagerShPtr clientManager,
-                                             IMessageQueue *const messageQueue)
+LogoutMessageConsumer::LogoutMessageConsumer(
+  ClientManagerShPtr clientManager,
+  CombatServiceShPtr combatService,
+  const std::vector<SystemProcessorShPtr> &systemProcessors,
+  IMessageQueue *const messageQueue)
   : AbstractMessageConsumer("logout", {MessageType::LOGOUT})
   , m_clientManager(std::move(clientManager))
+  , m_combatService(std::move(combatService))
   , m_messageQueue(messageQueue)
 {
   if (nullptr == m_messageQueue)
   {
     throw std::invalid_argument("Expected non null message queue");
+  }
+  if (nullptr == m_combatService)
+  {
+    throw std::invalid_argument("Expected non null combat service");
+  }
+
+  for (const auto &processor : systemProcessors)
+  {
+    const auto res = m_systemProcessors.try_emplace(processor->getSystemDbId(), processor);
+    if (!res.second)
+    {
+      throw std::invalid_argument("Failed to register duplicated system "
+                                  + str(processor->getSystemDbId()));
+    }
   }
 }
 
@@ -27,14 +45,29 @@ void LogoutMessageConsumer::onMessageReceived(const IMessage &message)
 
 void LogoutMessageConsumer::handleLogout(const LogoutMessage &message) const
 {
+  const auto clientId   = message.getClientId();
   const auto playerDbId = message.getPlayerDbId();
 
-  warn("should handle logout");
-  // m_clientManager->registerPlayer(message.getClientId(), *playerDbId, systsemDbId);
+  const auto maybeSystemDbId = m_clientManager->tryGetSystemForClient(clientId);
+  if (!maybeSystemDbId)
+  {
+    error("Failed to process logout message for " + str(playerDbId), "No associated system");
+  }
+
+  const auto maybeProcessor = m_systemProcessors.find(*maybeSystemDbId);
+  if (maybeProcessor == m_systemProcessors.cend())
+  {
+    error("Failed to process logout message for " + str(playerDbId),
+          "Unknown system " + str(*maybeSystemDbId));
+  }
 
   auto out = std::make_unique<LogoutMessage>(playerDbId);
   out->validate();
   out->copyClientIdIfDefined(message);
+
+  m_combatService->trySendPlayerBackToOutpost(playerDbId);
+  m_clientManager->removePlayer(playerDbId);
+  maybeProcessor->second->pushMessage(out->clone());
   m_messageQueue->pushMessage(std::move(out));
 }
 
