@@ -18,6 +18,7 @@ class CombatService : public AbstractService
                              const float amount) const;
 
   bool trySendPlayerShipBackToOutpost(const Uuid shipDbId) const;
+  void trySendPlayerBackToOutpost(const Uuid &playerDbId) const;
 
   auto getSystemDbIdForAsteroid(const Uuid asteroidDbId) const -> Uuid;
   auto tryGetSystemDbIdForShip(const Uuid shipDbId) const -> std::optional<Uuid>;

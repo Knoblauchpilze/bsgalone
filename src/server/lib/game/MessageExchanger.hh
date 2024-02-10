@@ -2,10 +2,10 @@
 #pragma once
 
 #include "ClientManager.hh"
+#include "CombatService.hh"
 #include "Connection.hh"
 #include "IMessageQueue.hh"
 #include "NetworkMessageQueue.hh"
-#include "Repositories.hh"
 #include "SystemProcessor.hh"
 #include "Uuid.hh"
 #include <memory>
@@ -34,7 +34,7 @@ class MessageExchanger
   void initializeConsumers(const ClientManagerShPtr &clientManager,
                            const std::vector<SystemProcessorShPtr> &systemProcessors);
 
-  void initializeInternalMessageQueue(const Repositories &repositories,
+  void initializeInternalMessageQueue(const CombatServiceShPtr &combatService,
                                       const std::vector<SystemProcessorShPtr> &systemProcessors);
 };
 

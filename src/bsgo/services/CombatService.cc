@@ -51,6 +51,17 @@ bool CombatService::trySendPlayerShipBackToOutpost(const Uuid shipDbId) const
   return true;
 }
 
+void CombatService::trySendPlayerBackToOutpost(const Uuid &playerDbId) const
+{
+  auto ship = m_repositories.playerShipRepository->findOneByPlayerAndActive(playerDbId);
+
+  ship.docked = true;
+  ship.jumpSystem.reset();
+
+  m_repositories.systemRepository->updateSystemForShip(ship.id, *ship.system, ship.docked);
+  m_repositories.playerShipRepository->save(ship);
+}
+
 auto CombatService::getSystemDbIdForAsteroid(const Uuid asteroidDbId) const -> Uuid
 {
   return m_repositories.asteroidRepository->findOneById(asteroidDbId).system;

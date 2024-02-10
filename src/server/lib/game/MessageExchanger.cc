@@ -101,10 +101,13 @@ void MessageExchanger::initializeConsumers(const ClientManagerShPtr &clientManag
                                                                   clientManager,
                                                                   m_outputMessageQueue.get()));
 
-  systemQueue->addListener(
-    std::make_unique<LogoutMessageConsumer>(clientManager, m_outputMessageQueue.get()));
+  auto combatService = std::make_shared<CombatService>(repositories);
+  systemQueue->addListener(std::make_unique<LogoutMessageConsumer>(clientManager,
+                                                                   combatService,
+                                                                   systemProcessors,
+                                                                   m_outputMessageQueue.get()));
 
-  initializeInternalMessageQueue(repositories, systemProcessors);
+  initializeInternalMessageQueue(combatService, systemProcessors);
 
   auto triageConsumer = std::make_unique<TriageMessageConsumer>(systemProcessors,
                                                                 clientManager,
@@ -113,12 +116,11 @@ void MessageExchanger::initializeConsumers(const ClientManagerShPtr &clientManag
 }
 
 void MessageExchanger::initializeInternalMessageQueue(
-  const Repositories &repositories,
+  const CombatServiceShPtr &combatService,
   const std::vector<SystemProcessorShPtr> &systemProcessors)
 {
   m_internalMessageQueue = createInternalMessageQueue();
 
-  auto combatService = std::make_shared<CombatService>(repositories);
   m_internalMessageQueue->addListener(
     std::make_unique<LootMessageConsumer>(combatService, m_outputMessageQueue.get()));
 
