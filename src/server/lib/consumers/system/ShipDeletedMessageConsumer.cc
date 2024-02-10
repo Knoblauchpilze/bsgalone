@@ -27,10 +27,10 @@ void ShipDeletedMessageConsumer::onMessageReceived(const IMessage &message)
     error("Unsupported entity removed with type " + str(entityKind));
   }
 
-  if (!m_shipService->tryDeleteShipEntity(entityDbId))
-  {
-    warn("Failed to process ship entity removed " + str(entityDbId));
-  }
+  // Ignoring the return value on purpose. We just want to make sure that
+  // the entity is deleted if it exists but there are cases where it does
+  // not in which case this will return false.
+  m_shipService->tryDeleteShipEntity(entityDbId);
 }
 
 } // namespace bsgo
