@@ -1,5 +1,6 @@
 
 #include "SystemMessageConsumer.hh"
+#include "MessageUtils.hh"
 
 namespace pge {
 
@@ -66,6 +67,13 @@ void SystemMessageConsumer::handleEntityRemoved(const bsgo::EntityRemovedMessage
   {
     error("Failed to handle removal of entity " + bsgo::str(entityDbId),
           "Unsupported kind " + bsgo::str(entityKind));
+  }
+
+  if (didPlayerShipDied(message, m_entityMapper))
+  {
+    // Do not remove the player ship entity if it dies, we disable everything
+    // else anyway. This will be cleared when going back to the outpost.
+    return;
   }
 
   const auto ent = m_coordinator->getEntity(*entityId);
