@@ -23,6 +23,7 @@ class StatusUiHandler : public IUiHandler
   Vec2i m_offset{};
   bsgo::ShipViewShPtr m_shipView{};
   bsgo::ServerViewShPtr m_serverView{};
+  bsgo::PlayerViewShPtr m_playerView{};
 
   bool m_logoutRequested{false};
 
@@ -34,7 +35,7 @@ class StatusUiHandler : public IUiHandler
   void generateLogoutConfirmationPanel(const int width, const int height);
 
   void requestLogout();
-  void confirmLogout(Game &g);
+  void confirmLogout();
   void cancelLogout();
 };
 

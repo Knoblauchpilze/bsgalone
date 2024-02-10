@@ -29,6 +29,7 @@ class OutpostScreenUiHandler : public IUiHandler, public bsgo::AbstractMessageLi
 
   private:
   bsgo::ShipDbViewShPtr m_shipDbView{};
+  bsgo::PlayerViewShPtr m_playerView{};
 
   enum MenuItem
   {

@@ -13,6 +13,7 @@
 #include "HangarMessage.hh"
 #include "JumpMessage.hh"
 #include "LoginMessage.hh"
+#include "LogoutMessage.hh"
 #include "SignupMessage.hh"
 
 namespace pge {
@@ -36,6 +37,7 @@ class GameMessageModule : public bsgo::AbstractMessageListener, public utils::Co
   void handleHangarMessage(const bsgo::HangarMessage &message);
   void handleJumpMessage(const bsgo::JumpMessage &message);
   void handleLoginMessage(const bsgo::LoginMessage &message);
+  void handleLogoutMessage(const bsgo::LogoutMessage &message);
   void handleSignupMessage(const bsgo::SignupMessage &message);
   void handleEntityRemovedMessage(const bsgo::EntityRemovedMessage &message);
 };

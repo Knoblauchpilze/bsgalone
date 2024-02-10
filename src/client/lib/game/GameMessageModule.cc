@@ -11,6 +11,7 @@ const Messages GAME_CHANGING_MESSAGE_TYPES = {bsgo::MessageType::CONNECTION,
                                               bsgo::MessageType::HANGAR,
                                               bsgo::MessageType::JUMP,
                                               bsgo::MessageType::LOGIN,
+                                              bsgo::MessageType::LOGOUT,
                                               bsgo::MessageType::SIGNUP,
                                               bsgo::MessageType::ENTITY_REMOVED};
 
@@ -44,6 +45,9 @@ void GameMessageModule::onMessageReceived(const bsgo::IMessage &message)
       break;
     case bsgo::MessageType::LOGIN:
       handleLoginMessage(message.as<bsgo::LoginMessage>());
+      break;
+    case bsgo::MessageType::LOGOUT:
+      handleLogoutMessage(message.as<bsgo::LogoutMessage>());
       break;
     case bsgo::MessageType::SIGNUP:
       handleSignupMessage(message.as<bsgo::SignupMessage>());
@@ -109,6 +113,16 @@ void GameMessageModule::handleLoginMessage(const bsgo::LoginMessage &message)
   }
 
   m_game.onLogin(*message.getPlayerDbId());
+}
+
+void GameMessageModule::handleLogoutMessage(const bsgo::LogoutMessage &message)
+{
+  if (!message.validated())
+  {
+    return;
+  }
+
+  m_game.onLogout();
 }
 
 void GameMessageModule::handleSignupMessage(const bsgo::SignupMessage &message)

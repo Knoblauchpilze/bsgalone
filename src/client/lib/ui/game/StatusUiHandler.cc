@@ -10,6 +10,7 @@ StatusUiHandler::StatusUiHandler(const Vec2i &offset, const bsgo::Views &views)
   , m_offset(offset)
   , m_shipView(views.shipView)
   , m_serverView(views.serverView)
+  , m_playerView(views.playerView)
 {
   if (nullptr == m_shipView)
   {
@@ -18,6 +19,10 @@ StatusUiHandler::StatusUiHandler(const Vec2i &offset, const bsgo::Views &views)
   if (nullptr == m_serverView)
   {
     throw std::invalid_argument("Expected non null server view");
+  }
+  if (nullptr == m_playerView)
+  {
+    throw std::invalid_argument("Expected non null player view");
   }
 }
 
@@ -99,7 +104,7 @@ void StatusUiHandler::generateLogoutConfirmationPanel(const int width, const int
   innerPanel->addMenu(generateSpacer());
 
   auto bg = bgConfigFromColor(colors::VERY_DARK_RED);
-  MenuConfig config{.gameClickCallback = [this](Game &g) { confirmLogout(g); }};
+  MenuConfig config{.clickCallback = [this]() { confirmLogout(); }};
   auto text   = textConfigFromColor("Yes", colors::DARK_RED);
   auto button = std::make_unique<UiTextMenu>(config, bg, text);
   innerPanel->addMenu(std::move(button));
@@ -138,9 +143,14 @@ void StatusUiHandler::requestLogout()
   m_logoutRequested = true;
 }
 
-void StatusUiHandler::confirmLogout(Game &g)
+void StatusUiHandler::confirmLogout()
 {
-  g.onLogout();
+  if (!m_playerView->isReady())
+  {
+    return;
+  }
+
+  m_playerView->tryLogout();
 }
 
 void StatusUiHandler::cancelLogout()

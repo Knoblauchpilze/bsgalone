@@ -32,6 +32,7 @@ class PlayerView : public AbstractView
   void tryPurchase(const Item &type, const Uuid itemDbId) const;
 
   void tryLogin(const std::string &name, const std::string &password) const;
+  void tryLogout() const;
   void trySignup(const std::string &name, const std::string &password, const Faction &faction) const;
 
   private:
