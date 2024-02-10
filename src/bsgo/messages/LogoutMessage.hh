@@ -1,12 +1,12 @@
 
 #pragma once
 
-#include "NetworkMessage.hh"
 #include "Uuid.hh"
+#include "ValidatableMessage.hh"
 
 namespace bsgo {
 
-class LogoutMessage : public NetworkMessage
+class LogoutMessage : public ValidatableMessage
 {
   public:
   LogoutMessage();

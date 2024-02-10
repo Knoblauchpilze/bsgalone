@@ -20,6 +20,17 @@ TEST(Unit_Bsgo_Serialization_LogoutMessage, Basic)
   const LogoutMessage expected(Uuid{36});
   LogoutMessage actual(Uuid{77451});
   actual.setClientId(Uuid{26});
+  actual.validate();
+  serializeAndDeserializeMessage(expected, actual);
+  assertMessagesAreEqual(actual, expected);
+}
+
+TEST(Unit_Bsgo_Serialization_LogoutMessage, Validated)
+{
+  LogoutMessage expected(Uuid{36});
+  expected.validate();
+  LogoutMessage actual(Uuid{77451});
+  actual.setClientId(Uuid{26});
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
