@@ -505,3 +505,17 @@ https://github.com/silverqx/TinyORM
 # Current progress of the game
 
 ![state of the game](resources/state_of_the_game.png)
+
+# DB cheat sheet
+
+```sql
+select p.name, ss.ship, ss.system, ss.docked, sj.system as jump_system, ps.hull_points from ship_system ss left join player_ship ps on ss.ship = ps.id left join player p on ps.player = p.id left join ship_jump sj on sj.ship = ss.ship where p.name = 'colo';
+```
+
+```sql
+update player_ship set hull_points = 370 where ship = 1;
+```
+
+```sql
+update ship_system set docked=true where ship in ('1', '5', '4');
+```
