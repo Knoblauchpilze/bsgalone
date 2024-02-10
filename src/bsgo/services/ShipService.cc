@@ -95,7 +95,8 @@ bool ShipService::tryDeleteShipEntity(const Uuid shipDbId) const
   const auto maybeEntityId = m_entityMapper.tryGetShipEntityId(shipDbId);
   if (!maybeEntityId)
   {
-    warn("Failed to delete ship " + str(shipDbId), "Registration did not create an entity for it");
+    // Can be that the entity was not created for example if the user is
+    // already docked or didn't go out of the outpost at all.
     return false;
   }
 
