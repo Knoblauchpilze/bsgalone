@@ -88,7 +88,7 @@ auto ShipView::getEntityName(const Entity &entity) const -> std::string
     case EntityKind::SHIP:
       return determineShipName(entity, *m_coordinator);
     default:
-      error("Failed to return target name", "Unknown kind " + bsgo::str(entity.kind->kind()));
+      error("Failed to return target name", "Unknown kind " + str(entity.kind->kind()));
       // Not needed because of the error above.
       return {};
   }
@@ -165,7 +165,7 @@ void ShipView::clearJumpSystem()
 bool ShipView::isJumping() const
 {
   const auto ship = getPlayerShip();
-  return bsgo::statusIndicatesJump(ship.statusComp().status());
+  return statusIndicatesJump(ship.statusComp().status());
 }
 
 auto ShipView::getJumpData() const -> JumpData
@@ -193,7 +193,7 @@ auto ShipView::getJumpData() const -> JumpData
 bool ShipView::isInThreat() const
 {
   const auto ship = getPlayerShip();
-  return bsgo::statusIndicatesThreat(ship.statusComp().status());
+  return statusIndicatesThreat(ship.statusComp().status());
 }
 
 void ShipView::checkPlayerShipEntityIdExists() const

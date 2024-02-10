@@ -7,18 +7,17 @@ auto createViews(const ViewsConfig &config, const DatabaseEntityMapper &entityMa
 {
   Views out{};
 
-  out.shipView     = std::make_shared<bsgo::ShipView>(config.coordinator,
-                                                  config.repositories,
-                                                  config.outputMessageQueue);
-  out.shipDbView   = std::make_shared<bsgo::ShipDbView>(config.repositories,
-                                                      config.internalMessageQueue,
-                                                      config.outputMessageQueue);
-  out.systemView   = std::make_shared<bsgo::SystemView>(config.coordinator, entityMapper);
-  out.playerView   = std::make_shared<bsgo::PlayerView>(config.repositories,
-                                                      config.outputMessageQueue);
-  out.shopView     = std::make_shared<bsgo::ShopView>(config.repositories);
-  out.serverView   = std::make_shared<bsgo::ServerView>(config.repositories);
-  out.resourceView = std::make_shared<bsgo::ResourceView>(config.repositories);
+  out.shipView     = std::make_shared<ShipView>(config.coordinator,
+                                            config.repositories,
+                                            config.outputMessageQueue);
+  out.shipDbView   = std::make_shared<ShipDbView>(config.repositories,
+                                                config.internalMessageQueue,
+                                                config.outputMessageQueue);
+  out.systemView   = std::make_shared<SystemView>(config.coordinator, entityMapper);
+  out.playerView   = std::make_shared<PlayerView>(config.repositories, config.outputMessageQueue);
+  out.shopView     = std::make_shared<ShopView>(config.repositories);
+  out.serverView   = std::make_shared<ServerView>(config.repositories);
+  out.resourceView = std::make_shared<ResourceView>(config.repositories);
 
   return out;
 }

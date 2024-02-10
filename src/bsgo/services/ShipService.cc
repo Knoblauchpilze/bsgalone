@@ -131,8 +131,7 @@ auto ShipService::tryAcquireTarget(const Uuid shipDbId, const Eigen::Vector3f &p
   {
     const auto target = m_coordinator->getEntity(*maybeTargetId);
 
-    if (target.exists<bsgo::StatusComponent>()
-        && !bsgo::statusVisibleFromDradis(target.statusComp().status()))
+    if (target.exists<StatusComponent>() && !statusVisibleFromDradis(target.statusComp().status()))
     {
       maybeTargetId.reset();
     }
