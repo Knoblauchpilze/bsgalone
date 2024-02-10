@@ -13,6 +13,7 @@ OutpostScreenUiHandler::OutpostScreenUiHandler(const bsgo::Views &views)
   : IUiHandler("outpost")
   , bsgo::AbstractMessageListener({bsgo::MessageType::PURCHASE, bsgo::MessageType::EQUIP})
   , m_shipDbView(views.shipDbView)
+  , m_playerView(views.playerView)
   , m_lockerUi(std::make_unique<LockerUiHandler>(views))
   , m_shopUi(std::make_unique<ShopUiHandler>(views))
   , m_hangarUi(std::make_unique<HangarUiHandler>(views))
@@ -20,6 +21,10 @@ OutpostScreenUiHandler::OutpostScreenUiHandler(const bsgo::Views &views)
   if (nullptr == m_shipDbView)
   {
     throw std::invalid_argument("Expected non null ship db view");
+  }
+  if (nullptr == m_playerView)
+  {
+    throw std::invalid_argument("Expected non null player view");
   }
 }
 
@@ -48,11 +53,15 @@ void OutpostScreenUiHandler::initializeMenus(const int width, const int height)
   config.pos.y += (dims.y - LOGOUT_BUTTON_HEIGHT) / 2;
   config.dims = Vec2i{80, LOGOUT_BUTTON_HEIGHT};
 
-  config.clickCallback.reset();
-  config.gameClickCallback = [](Game &g) { g.onLogout(); };
-  bg                       = bgConfigFromColor(colors::DARK_RED);
-  text                     = textConfigFromColor("Logout", colors::VERY_DARK_RED);
-  m_menus[LOGOUT]          = std::make_unique<UiTextMenu>(config, bg, text);
+  config.clickCallback = [this]() {
+    if (m_playerView->isReady())
+    {
+      m_playerView->tryLogout();
+    }
+  };
+  bg              = bgConfigFromColor(colors::DARK_RED);
+  text            = textConfigFromColor("Logout", colors::VERY_DARK_RED);
+  m_menus[LOGOUT] = std::make_unique<UiTextMenu>(config, bg, text);
 
   generateGeneralMenu(width, height);
 

@@ -12,6 +12,7 @@
 #include "JumpMessage.hh"
 #include "JumpRequestedMessage.hh"
 #include "LoginMessage.hh"
+#include "LogoutMessage.hh"
 #include "LootMessage.hh"
 #include "PurchaseMessage.hh"
 #include "ScannedMessage.hh"
@@ -112,6 +113,8 @@ auto MessageParser::tryReadMessage(const MessageType &type, std::istream &in)
       return readMessage<JumpRequestedMessage>(in);
     case MessageType::LOGIN:
       return readMessage<LoginMessage>(in);
+    case MessageType::LOGOUT:
+      return readMessage<LogoutMessage>(in);
     case MessageType::LOOT:
       return readMessage<LootMessage>(in);
     case MessageType::PURCHASE:

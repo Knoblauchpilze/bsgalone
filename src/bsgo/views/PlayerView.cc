@@ -2,6 +2,7 @@
 #include "PlayerView.hh"
 #include "HangarMessage.hh"
 #include "LoginMessage.hh"
+#include "LogoutMessage.hh"
 #include "PurchaseMessage.hh"
 #include "SignupMessage.hh"
 
@@ -131,14 +132,20 @@ void PlayerView::tryPurchase(const Item &type, const Uuid itemDbId) const
 
 void PlayerView::tryLogin(const std::string &name, const std::string &password) const
 {
-  m_outputMessageQueue->pushMessage(std::make_unique<bsgo::LoginMessage>(name, password));
+  m_outputMessageQueue->pushMessage(std::make_unique<LoginMessage>(name, password));
+}
+
+void PlayerView::tryLogout() const
+{
+  checkPlayerDbIdExists();
+  m_outputMessageQueue->pushMessage(std::make_unique<LogoutMessage>(*m_playerDbId));
 }
 
 void PlayerView::trySignup(const std::string &name,
                            const std::string &password,
                            const Faction &faction) const
 {
-  m_outputMessageQueue->pushMessage(std::make_unique<bsgo::SignupMessage>(name, password, faction));
+  m_outputMessageQueue->pushMessage(std::make_unique<SignupMessage>(name, password, faction));
 }
 
 void PlayerView::checkPlayerDbIdExists() const

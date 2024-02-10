@@ -6,6 +6,7 @@
 #include "DataSource.hh"
 #include "EntityRemovedMessageConsumer.hh"
 #include "LoginMessageConsumer.hh"
+#include "LogoutMessageConsumer.hh"
 #include "LootMessageConsumer.hh"
 #include "SignupMessageConsumer.hh"
 #include "SynchronizedMessageQueue.hh"
@@ -99,6 +100,9 @@ void MessageExchanger::initializeConsumers(const ClientManagerShPtr &clientManag
   systemQueue->addListener(std::make_unique<LoginMessageConsumer>(std::move(loginService),
                                                                   clientManager,
                                                                   m_outputMessageQueue.get()));
+
+  systemQueue->addListener(
+    std::make_unique<LogoutMessageConsumer>(clientManager, m_outputMessageQueue.get()));
 
   initializeInternalMessageQueue(repositories, systemProcessors);
 
