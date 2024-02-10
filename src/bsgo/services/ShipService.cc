@@ -75,7 +75,8 @@ bool ShipService::tryUndock(const Uuid shipDbId) const
   const auto maybeEntityId = m_entityMapper.tryGetShipEntityId(shipDbId);
   if (!maybeEntityId)
   {
-    error("Failed to undock ship " + str(shipDbId), "Registration did not create an entity for it");
+    warn("Failed to undock ship " + str(shipDbId), "Registration did not create an entity for it");
+    return false;
   }
 
   auto shipEntity  = m_coordinator->getEntity(*maybeEntityId);
@@ -85,6 +86,22 @@ bool ShipService::tryUndock(const Uuid shipDbId) const
   m_repositories.systemRepository->updateSystemForShip(shipDbId, *ship.system, false);
 
   statusComp.setStatus(Status::APPEARING);
+
+  return true;
+}
+
+bool ShipService::tryDeleteShipEntity(const Uuid shipDbId) const
+{
+  const auto maybeEntityId = m_entityMapper.tryGetShipEntityId(shipDbId);
+  if (!maybeEntityId)
+  {
+    warn("Failed to delete ship " + str(shipDbId), "Registration did not create an entity for it");
+    return false;
+  }
+
+  auto shipEntity = m_coordinator->getEntity(*maybeEntityId);
+  shipEntity.removalComp().markForRemoval();
+  m_entityMapper.removeEntityForShip(shipDbId);
 
   return true;
 }
