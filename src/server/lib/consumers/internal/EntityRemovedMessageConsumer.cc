@@ -15,6 +15,10 @@ EntityRemovedMessageConsumer::EntityRemovedMessageConsumer(
   {
     throw std::invalid_argument("Expected non null message queue");
   }
+  if (nullptr == m_combatService)
+  {
+    throw std::invalid_argument("Expected non null combat service");
+  }
 
   for (const auto &processor : systemProcessors)
   {
