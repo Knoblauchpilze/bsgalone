@@ -43,8 +43,9 @@ void RemovalSystem::markEntityForRemoval(Entity &entity) const
 {
   entity.removalComp().markForRemoval();
 
+  const auto dead       = entity.exists<HealthComponent>() && !entity.healthComp().isAlive();
   const auto entityDbId = entity.dbComp().dbId();
-  pushInternalMessage(std::make_unique<EntityRemovedMessage>(entityDbId, entity.kind->kind()));
+  pushInternalMessage(std::make_unique<EntityRemovedMessage>(entityDbId, entity.kind->kind(), dead));
 }
 
 } // namespace bsgo

@@ -34,10 +34,10 @@ void EntityRemovedMessageConsumer::onMessageReceived(const IMessage &message)
   switch (removed.getEntityKind())
   {
     case EntityKind::SHIP:
-      handleShipEntityDied(removed.getEntityDbId());
+      handleShipEntityRemoved(removed.getEntityDbId(), removed.isDead());
       return;
     case EntityKind::ASTEROID:
-      handleAsteroidEntityDied(removed.getEntityDbId());
+      handleAsteroidEntityRemoved(removed.getEntityDbId(), removed.isDead());
       return;
     default:
       break;
@@ -89,7 +89,8 @@ auto findSystemAndProcessorFromAsteroid(
 }
 } // namespace
 
-void EntityRemovedMessageConsumer::handleShipEntityDied(const Uuid shipDbId) const
+void EntityRemovedMessageConsumer::handleShipEntityRemoved(const Uuid shipDbId,
+                                                           const bool dead) const
 {
   const auto [systemDbId, processor] = findSystemAndProcessorFromShip(shipDbId,
                                                                       *m_combatService,
@@ -109,10 +110,11 @@ void EntityRemovedMessageConsumer::handleShipEntityDied(const Uuid shipDbId) con
   (*processor)->onShipDestroyed(shipDbId);
 
   m_messageQueue->pushMessage(
-    std::make_unique<EntityRemovedMessage>(shipDbId, EntityKind::SHIP, *systemDbId));
+    std::make_unique<EntityRemovedMessage>(shipDbId, EntityKind::SHIP, dead, *systemDbId));
 }
 
-void EntityRemovedMessageConsumer::handleAsteroidEntityDied(const Uuid asteroidDbId) const
+void EntityRemovedMessageConsumer::handleAsteroidEntityRemoved(const Uuid asteroidDbId,
+                                                               const bool dead) const
 {
   const auto [systemDbId, processor] = findSystemAndProcessorFromAsteroid(asteroidDbId,
                                                                           *m_combatService,
@@ -127,7 +129,7 @@ void EntityRemovedMessageConsumer::handleAsteroidEntityDied(const Uuid asteroidD
   (*processor)->onAsteroidDestroyed(asteroidDbId);
 
   m_messageQueue->pushMessage(
-    std::make_unique<EntityRemovedMessage>(asteroidDbId, EntityKind::ASTEROID, *systemDbId));
+    std::make_unique<EntityRemovedMessage>(asteroidDbId, EntityKind::ASTEROID, dead, *systemDbId));
 }
 
 } // namespace bsgo

@@ -25,8 +25,8 @@ class EntityRemovedMessageConsumer : public AbstractMessageConsumer
   IMessageQueue *const m_messageQueue{};
   std::unordered_map<Uuid, SystemProcessorShPtr> m_systemProcessors{};
 
-  void handleShipEntityDied(const Uuid shipDbId) const;
-  void handleAsteroidEntityDied(const Uuid asteroidDbId) const;
+  void handleShipEntityRemoved(const Uuid shipDbId, const bool dead) const;
+  void handleAsteroidEntityRemoved(const Uuid asteroidDbId, const bool dead) const;
 };
 
 } // namespace bsgo

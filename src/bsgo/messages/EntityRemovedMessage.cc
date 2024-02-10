@@ -8,18 +8,23 @@ EntityRemovedMessage::EntityRemovedMessage()
   : NetworkMessage(MessageType::ENTITY_REMOVED)
 {}
 
-EntityRemovedMessage::EntityRemovedMessage(const Uuid entityDbId, const EntityKind entityKind)
+EntityRemovedMessage::EntityRemovedMessage(const Uuid entityDbId,
+                                           const EntityKind entityKind,
+                                           const bool dead)
   : NetworkMessage(MessageType::ENTITY_REMOVED)
   , m_entityDbId(entityDbId)
   , m_entityKind(entityKind)
+  , m_dead(dead)
 {}
 
 EntityRemovedMessage::EntityRemovedMessage(const Uuid entityDbId,
                                            const EntityKind entityKind,
+                                           const bool dead,
                                            const Uuid systemDbId)
   : NetworkMessage(MessageType::ENTITY_REMOVED)
   , m_entityDbId(entityDbId)
   , m_entityKind(entityKind)
+  , m_dead(dead)
   , m_systemDbId(systemDbId)
 {}
 
@@ -31,6 +36,11 @@ auto EntityRemovedMessage::getEntityDbId() const -> Uuid
 auto EntityRemovedMessage::getEntityKind() const -> EntityKind
 {
   return m_entityKind;
+}
+
+bool EntityRemovedMessage::isDead() const
+{
+  return m_dead;
 }
 
 auto EntityRemovedMessage::getSystemDbId() const -> Uuid
@@ -54,6 +64,7 @@ auto EntityRemovedMessage::serialize(std::ostream &out) const -> std::ostream &
 
   utils::serialize(out, m_entityDbId);
   utils::serialize(out, m_entityKind);
+  utils::serialize(out, m_dead);
   utils::serialize(out, m_systemDbId);
 
   return out;
@@ -67,6 +78,7 @@ bool EntityRemovedMessage::deserialize(std::istream &in)
 
   ok &= utils::deserialize(in, m_entityDbId);
   ok &= utils::deserialize(in, m_entityKind);
+  ok &= utils::deserialize(in, m_dead);
   ok &= utils::deserialize(in, m_systemDbId);
 
   return ok;
@@ -74,7 +86,7 @@ bool EntityRemovedMessage::deserialize(std::istream &in)
 
 auto EntityRemovedMessage::clone() const -> IMessagePtr
 {
-  auto clone          = std::make_unique<EntityRemovedMessage>(m_entityDbId, m_entityKind);
+  auto clone          = std::make_unique<EntityRemovedMessage>(m_entityDbId, m_entityKind, m_dead);
   clone->m_systemDbId = m_systemDbId;
   clone->copyClientIdIfDefined(*this);
 
