@@ -29,6 +29,8 @@ class LogoutMessageConsumer : public AbstractMessageConsumer
   IMessageQueue *const m_messageQueue{};
 
   void handleLogout(const LogoutMessage &message) const;
+  void notifyClientAndCloseConnectionIfNeeded(const Uuid playerDbId,
+                                              const LogoutMessage &message) const;
 };
 
 } // namespace bsgo

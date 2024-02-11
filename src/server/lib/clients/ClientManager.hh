@@ -20,6 +20,7 @@ class ClientManager : public utils::CoreObject
   auto registerConnection(const net::ConnectionShPtr connection) -> Uuid;
   void registerPlayer(const Uuid clientId, const Uuid playerDbId, const Uuid playerSystemDbId);
   void removePlayer(const Uuid playerDbId);
+  void removePlayerConnection(const Uuid playerDbId);
   void removeConnection(const net::ConnectionId connectionId);
 
   auto getClientIdForPlayer(const Uuid playerDbId) const -> Uuid;
