@@ -28,6 +28,8 @@ class ClientManager : public utils::CoreObject
   auto getAllConnectionsForSystem(const Uuid systemDbId) const -> std::vector<net::ConnectionShPtr>;
   auto tryGetSystemForClient(const Uuid clientId) const -> std::optional<Uuid>;
 
+  bool isStillConnected(const net::ConnectionId connectionId) const;
+
   private:
   static Uuid NEXT_CLIENT_ID;
 
