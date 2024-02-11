@@ -11,6 +11,7 @@ target_sources(bsgalone_tests PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/OptionalTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ConnectionMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/DockMessageTest.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/EntityAddedMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/EntityRemovedMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/EquipMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/HangarMessageTest.cc
