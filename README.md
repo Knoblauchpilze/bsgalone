@@ -344,7 +344,7 @@ The `Game` class holds an attribute of type message queue and takes care of call
 
 ### Listeners
 
-The [IMessageListener](src/bsgo/communication/IMessageListener.hh) allows anyone to register to the message queue and get notified of the messages. We expect such objects to provide indications about which messages they are interested about and to feed them a message. It is guaranteed that the messages receieved through the `onMessageReceived` method will be of the right type for the listener.
+The [IMessageListener](src/bsgo/queues/IMessageListener.hh) allows anyone to register to the message queue and get notified of the messages. We expect such objects to provide indications about which messages they are interested about and to feed them a message. It is guaranteed that the messages receieved through the `onMessageReceived` method will be of the right type for the listener.
 
 ### Messages
 
@@ -364,7 +364,7 @@ On the other hand, the systems are pushing messages to the queue not knowing (an
 
 ### Consumers
 
-We followed the [Publish-Subscribe](https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern) pattern when handling messages. For each type of message we have a corresponding consumer. For example for dock messages we have a [DockMessageConsumer](src/bsgo/communication/consumers/DockMessageConsumer.hh).
+We followed the [Publish-Subscribe](https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern) pattern when handling messages. For each type of message we have a corresponding consumer. For example for dock messages we have a [DockMessageConsumer](src/server/lib/consumers/system/DockMessageConsumer.hh).
 
 This component registers itself to the message queue and indicates its interest in receiving the dock messages. When one is received, we can intercept the message and perform the necessary verification before processing it: for example we might check that the ship concerned by the message is not already docked, or that it is close enough to the outpost or that it does not try to dock to an outpost in a different system etc.
 
