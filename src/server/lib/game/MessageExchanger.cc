@@ -39,6 +39,11 @@ void MessageExchanger::registerConnection(const Uuid clientId, net::ConnectionSh
   m_outputMessageQueue->pushMessage(std::move(message));
 }
 
+void MessageExchanger::pushMessage(IMessagePtr message)
+{
+  m_inputMessageQueue->pushMessage(std::move(message));
+}
+
 void MessageExchanger::initialize(const ClientManagerShPtr &clientManager,
                                   const std::vector<SystemProcessorShPtr> &systemProcessors)
 {
