@@ -156,14 +156,41 @@ auto ClientManager::tryGetSystemForClient(const Uuid clientId) const -> std::opt
   return maybeClientData->second.playerSystemDbId;
 }
 
+auto ClientManager::tryGetDataForConnection(const net::ConnectionId connectionId) -> ConnectionData
+{
+  ConnectionData out{};
+
+  const auto maybeClientData = tryGetClientDataForConnection(connectionId);
+  if (!maybeClientData)
+  {
+    return out;
+  }
+
+  out.clientId   = maybeClientData->clientId;
+  out.playerDbId = maybeClientData->playerDbId;
+  return out;
+}
+
 bool ClientManager::isStillConnected(const net::ConnectionId connectionId) const
+{
+  const auto maybeClientData = tryGetClientDataForConnection(connectionId);
+  if (!maybeClientData)
+  {
+    return {};
+  }
+
+  return maybeClientData->playerDbId.has_value() && maybeClientData->playerSystemDbId.has_value();
+}
+
+auto ClientManager::tryGetClientDataForConnection(const net::ConnectionId connectionId) const
+  -> std::optional<ClientData>
 {
   const std::lock_guard guard(m_locker);
 
   const auto maybeClientId = m_connectionToClient.find(connectionId);
   if (maybeClientId == m_connectionToClient.cend())
   {
-    return false;
+    return {};
   }
 
   const auto maybeClientData = m_clients.find(maybeClientId->second);
@@ -172,8 +199,7 @@ bool ClientManager::isStillConnected(const net::ConnectionId connectionId) const
     error("Failed to get client data for " + std::to_string(connectionId), "No such client");
   }
 
-  const auto &clientData = maybeClientData->second;
-  return clientData.playerDbId.has_value() && clientData.playerSystemDbId.has_value();
+  return maybeClientData->second;
 }
 
 } // namespace bsgo
