@@ -1,13 +1,13 @@
 
-#include "CombatService.hh"
+#include "SystemService.hh"
 
 namespace bsgo {
 
-CombatService::CombatService(const Repositories &repositories)
-  : AbstractService("combat", repositories)
+SystemService::SystemService(const Repositories &repositories)
+  : AbstractService("system", repositories)
 {}
 
-bool CombatService::tryDistributeResource(const Uuid playerDbId,
+bool SystemService::tryDistributeResource(const Uuid playerDbId,
                                           const Uuid resourceDbId,
                                           const float amount) const
 {
@@ -33,7 +33,7 @@ bool canShipBeSentBackToOutpost(const PlayerShip &ship)
 }
 } // namespace
 
-bool CombatService::trySendPlayerShipBackToOutpost(const Uuid shipDbId) const
+bool SystemService::trySendPlayerShipBackToOutpost(const Uuid shipDbId) const
 {
   auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
 
@@ -51,7 +51,7 @@ bool CombatService::trySendPlayerShipBackToOutpost(const Uuid shipDbId) const
   return true;
 }
 
-void CombatService::trySendPlayerBackToOutpost(const Uuid &playerDbId) const
+void SystemService::trySendPlayerBackToOutpost(const Uuid &playerDbId) const
 {
   auto ship = m_repositories.playerShipRepository->findOneByPlayerAndActive(playerDbId);
 
@@ -62,23 +62,23 @@ void CombatService::trySendPlayerBackToOutpost(const Uuid &playerDbId) const
   m_repositories.playerShipRepository->save(ship);
 }
 
-auto CombatService::getSystemDbIdForAsteroid(const Uuid asteroidDbId) const -> Uuid
+auto SystemService::getSystemDbIdForAsteroid(const Uuid asteroidDbId) const -> Uuid
 {
   return m_repositories.asteroidRepository->findOneById(asteroidDbId).system;
 }
 
-auto CombatService::tryGetSystemDbIdForShip(const Uuid shipDbId) const -> std::optional<Uuid>
+auto SystemService::tryGetSystemDbIdForShip(const Uuid shipDbId) const -> std::optional<Uuid>
 {
   return m_repositories.playerShipRepository->findOneById(shipDbId).system;
 }
 
-auto CombatService::getShipDbIdForPlayer(const Uuid playerDbId) const -> Uuid
+auto SystemService::getShipDbIdForPlayer(const Uuid playerDbId) const -> Uuid
 {
   const auto playerShip = m_repositories.playerShipRepository->findOneByPlayerAndActive(playerDbId);
   return playerShip.id;
 }
 
-auto CombatService::findExistingResourceAmount(const Uuid playerDbId, const Uuid resourceDbId) const
+auto SystemService::findExistingResourceAmount(const Uuid playerDbId, const Uuid resourceDbId) const
   -> float
 {
   const auto resources = m_repositories.playerResourceRepository->findAllByPlayer(playerDbId);

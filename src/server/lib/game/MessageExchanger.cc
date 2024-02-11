@@ -108,9 +108,9 @@ void MessageExchanger::initializeConsumers(const ClientManagerShPtr &clientManag
                                                                   clientManager,
                                                                   m_outputMessageQueue.get()));
 
-  auto combatService = std::make_shared<CombatService>(repositories);
+  auto systemService = std::make_shared<SystemService>(repositories);
   systemQueue->addListener(std::make_unique<LogoutMessageConsumer>(clientManager,
-                                                                   combatService,
+                                                                   systemService,
                                                                    systemProcessors,
                                                                    m_outputMessageQueue.get()));
 
@@ -121,23 +121,23 @@ void MessageExchanger::initializeConsumers(const ClientManagerShPtr &clientManag
   //                                         systemProcessors,
   //                                         m_outputMessageQueue.get()));
 
-  initializeInternalMessageQueue(combatService, systemProcessors);
+  initializeInternalMessageQueue(systemService, systemProcessors);
 
   m_inputMessageQueue->addListener(std::make_unique<TriageMessageConsumer>(clientManager,
                                                                            systemProcessors,
                                                                            std::move(systemQueue)));
 }
 
-void MessageExchanger::initializeInternalMessageQueue(const CombatServiceShPtr &combatService,
+void MessageExchanger::initializeInternalMessageQueue(const SystemServiceShPtr &systemService,
                                                       const SystemProcessorMap &systemProcessors)
 {
   m_internalMessageQueue = createInternalMessageQueue();
 
   m_internalMessageQueue->addListener(
-    std::make_unique<LootMessageConsumer>(combatService, m_outputMessageQueue.get()));
+    std::make_unique<LootMessageConsumer>(systemService, m_outputMessageQueue.get()));
 
   m_internalMessageQueue->addListener(
-    std::make_unique<EntityRemovedMessageConsumer>(combatService,
+    std::make_unique<EntityRemovedMessageConsumer>(systemService,
                                                    systemProcessors,
                                                    m_outputMessageQueue.get()));
 }
