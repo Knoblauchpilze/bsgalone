@@ -50,7 +50,7 @@ void DockMessageConsumer::handleDocking(const DockMessage &message) const
 void DockMessageConsumer::handleUndocking(const DockMessage &message) const
 {
   const auto shipDbId = message.getShipDbId();
-  if (!m_shipService->tryUndock(shipDbId))
+  if (!m_shipService->tryCreateShipEntity(shipDbId))
   {
     warn("Failed to process undock message for ship " + str(shipDbId));
     return;

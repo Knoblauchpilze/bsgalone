@@ -19,8 +19,26 @@ void EntityAddedMessageConsumer::onMessageReceived(const IMessage &message)
 {
   const auto &added = message.as<EntityAddedMessage>();
 
-  /// TODO: Handle entity added message.
-  warn("Should handle entity added " + str(added.getEntityDbId()));
+  const auto entityKind = added.getEntityKind();
+  const auto entityDbId = added.getEntityDbId();
+  const auto systemDbId = added.getSystemDbId();
+
+  switch (entityKind)
+  {
+    case EntityKind::SHIP:
+      handleShipAdded(entityDbId, systemDbId);
+      break;
+    default:
+      error("Unsupported type of entity added: " + str(entityKind));
+  }
+}
+
+void EntityAddedMessageConsumer::handleShipAdded(const Uuid shipDbId, const Uuid systemDbId) const
+{
+  if (!m_shipService->tryCreateShipEntity(shipDbId))
+  {
+    warn("Failed to process ship " + str(shipDbId) + " added in system " + str(systemDbId));
+  }
 }
 
 } // namespace bsgo

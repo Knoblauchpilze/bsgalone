@@ -67,7 +67,7 @@ bool ShipService::tryDock(const Uuid shipDbId) const
   return true;
 }
 
-bool ShipService::tryUndock(const Uuid shipDbId) const
+bool ShipService::tryCreateShipEntity(const Uuid shipDbId) const
 {
   ShipDataSource source{m_repositories};
   source.registerShip(*m_coordinator, shipDbId, m_entityMapper);
@@ -75,7 +75,8 @@ bool ShipService::tryUndock(const Uuid shipDbId) const
   const auto maybeEntityId = m_entityMapper.tryGetShipEntityId(shipDbId);
   if (!maybeEntityId)
   {
-    warn("Failed to undock ship " + str(shipDbId), "Registration did not create an entity for it");
+    warn("Failed to create entity for ship " + str(shipDbId),
+         "Registration did not create an entity for it");
     return false;
   }
 
@@ -86,6 +87,7 @@ bool ShipService::tryUndock(const Uuid shipDbId) const
   m_repositories.systemRepository->updateSystemForShip(shipDbId, *ship.system, false);
 
   statusComp.setStatus(Status::APPEARING);
+  statusComp.resetAppearingTime();
 
   return true;
 }

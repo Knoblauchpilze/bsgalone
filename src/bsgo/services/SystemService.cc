@@ -62,6 +62,58 @@ void SystemService::trySendPlayerBackToOutpost(const Uuid &playerDbId) const
   m_repositories.playerShipRepository->save(ship);
 }
 
+namespace {
+bool isShipActive(const PlayerShip &ship)
+{
+  return ship.player.has_value() && ship.active;
+}
+
+bool canShipCompleteJump(const PlayerShip &ship)
+{
+  if (!isShipActive(ship))
+  {
+    return false;
+  }
+  if (!ship.jumpSystem.has_value())
+  {
+    return false;
+  }
+  if (!ship.system.has_value())
+  {
+    return false;
+  }
+  if (*ship.jumpSystem == *ship.system)
+  {
+    return false;
+  }
+  if (ship.docked)
+  {
+    return false;
+  }
+
+  return true;
+}
+} // namespace
+
+bool SystemService::tryJump(const Uuid shipDbId) const
+{
+  auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
+  if (!canShipCompleteJump(ship))
+  {
+    return false;
+  }
+
+  const auto system = m_repositories.systemRepository->findOneById(*ship.jumpSystem);
+
+  m_repositories.systemRepository->updateSystemForShip(ship.id, *ship.jumpSystem, ship.docked);
+  ship.jumpSystem.reset();
+  m_repositories.playerShipRepository->save(ship);
+
+  info("Completed jump to " + system.name + " for " + str(shipDbId));
+
+  return true;
+}
+
 auto SystemService::getSystemDbIdForAsteroid(const Uuid asteroidDbId) const -> Uuid
 {
   return m_repositories.asteroidRepository->findOneById(asteroidDbId).system;

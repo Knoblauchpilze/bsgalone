@@ -19,6 +19,7 @@ class SystemService : public AbstractService
 
   bool trySendPlayerShipBackToOutpost(const Uuid shipDbId) const;
   void trySendPlayerBackToOutpost(const Uuid &playerDbId) const;
+  bool tryJump(const Uuid shipDbId) const;
 
   auto getSystemDbIdForAsteroid(const Uuid asteroidDbId) const -> Uuid;
   auto tryGetSystemDbIdForShip(const Uuid shipDbId) const -> std::optional<Uuid>;

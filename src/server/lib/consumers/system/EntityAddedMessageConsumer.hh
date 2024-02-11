@@ -17,6 +17,8 @@ class EntityAddedMessageConsumer : public AbstractMessageConsumer
 
   private:
   ShipServiceShPtr m_shipService{};
+
+  void handleShipAdded(const Uuid shipDbId, const Uuid systemDbId) const;
 };
 
 } // namespace bsgo

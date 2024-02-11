@@ -4,17 +4,17 @@
 
 namespace bsgo {
 
-JumpMessageConsumer::JumpMessageConsumer(JumpServicePtr jumpService,
+JumpMessageConsumer::JumpMessageConsumer(SystemServiceShPtr systemService,
                                          SystemProcessorMap systemProcessors,
                                          IMessageQueue *const messageQueue)
   : AbstractMessageConsumer("jump", {MessageType::JUMP})
-  , m_jumpService(std::move(jumpService))
+  , m_systemService(std::move(systemService))
   , m_systemProcessors(std::move(systemProcessors))
   , m_messageQueue(messageQueue)
 {
-  if (nullptr == m_jumpService)
+  if (nullptr == m_systemService)
   {
-    throw std::invalid_argument("Expected non null jump service");
+    throw std::invalid_argument("Expected non null system service");
   }
   if (nullptr == m_messageQueue)
   {
@@ -33,11 +33,13 @@ void JumpMessageConsumer::onMessageReceived(const IMessage &message)
 
   const auto shipDbId = jump.getShipDbId();
 
-  if (!m_jumpService->tryJump(shipDbId))
+  if (!m_systemService->tryJump(shipDbId))
   {
     warn("Failed to process jump message for ship " + str(shipDbId));
     return;
   }
+
+  /// TODO: Create entity removed message and entity added message.
 
   auto out = std::make_unique<JumpMessage>(shipDbId);
   out->validate();
