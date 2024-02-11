@@ -114,12 +114,10 @@ void MessageExchanger::initializeConsumers(const ClientManagerShPtr &clientManag
                                                                    systemProcessors,
                                                                    m_outputMessageQueue.get()));
 
-  /// TODO: Reactivate this once the JumpService is fixed.
-  // auto jumpService = std::make_unique<JumpService>(repositories);
-  // m_internalMessageQueue.addListener(
-  //   std::make_unique<JumpMessageConsumer>(std::move(jumpService),
-  //                                         systemProcessors,
-  //                                         m_outputMessageQueue.get()));
+  m_inputMessageQueue->addListener(
+    std::make_unique<JumpMessageConsumer>(systemService,
+                                          systemProcessors,
+                                          m_outputMessageQueue.get()));
 
   initializeInternalMessageQueue(systemService, systemProcessors);
 

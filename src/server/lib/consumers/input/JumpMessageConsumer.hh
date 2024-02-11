@@ -3,15 +3,15 @@
 
 #include "AbstractMessageConsumer.hh"
 #include "IMessageQueue.hh"
-#include "JumpService.hh"
 #include "SystemProcessor.hh"
+#include "SystemService.hh"
 
 namespace bsgo {
 
 class JumpMessageConsumer : public AbstractMessageConsumer
 {
   public:
-  JumpMessageConsumer(JumpServicePtr jumpService,
+  JumpMessageConsumer(SystemServiceShPtr systemService,
                       SystemProcessorMap systemProcessors,
                       IMessageQueue *const messageQueue);
   ~JumpMessageConsumer() override = default;
@@ -19,7 +19,7 @@ class JumpMessageConsumer : public AbstractMessageConsumer
   void onMessageReceived(const IMessage &message) override;
 
   private:
-  JumpServicePtr m_jumpService{};
+  SystemServiceShPtr m_systemService{};
   SystemProcessorMap m_systemProcessors{};
   IMessageQueue *const m_messageQueue{};
 };
