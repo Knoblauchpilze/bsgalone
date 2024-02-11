@@ -105,27 +105,26 @@ void Server::shutdown()
 
 void Server::onConnectionLost(const net::ConnectionId connectionId)
 {
-  if (m_clientManager->isStillConnected(connectionId))
+  if (!m_clientManager->isStillConnected(connectionId))
   {
-    const auto maybeData = m_clientManager->tryGetDataForConnection(connectionId);
-    if (!maybeData.playerDbId)
-    {
-      warn("Connection " + std::to_string(connectionId)
-           + " lost but could not find associated player");
-    }
-    else
-    {
-      info("Connection " + std::to_string(connectionId) + " lost but player "
-           + str(*maybeData.playerDbId) + " is still connected");
-
-      auto message = std::make_unique<LogoutMessage>(*maybeData.playerDbId);
-      message->setClientId(maybeData.clientId);
-
-      m_messageExchanger->pushMessage(std::move(message));
-    }
+    m_clientManager->removeConnection(connectionId);
+    return;
   }
 
-  m_clientManager->removeConnection(connectionId);
+  const auto maybeData = m_clientManager->tryGetDataForConnection(connectionId);
+  if (!maybeData.playerDbId)
+  {
+    error("Connection " + std::to_string(connectionId)
+          + " lost but could not find associated player");
+  }
+
+  info("Connection " + std::to_string(connectionId) + " lost but player "
+       + str(*maybeData.playerDbId) + " is still connected");
+
+  auto message = std::make_unique<LogoutMessage>(*maybeData.playerDbId, true);
+  message->setClientId(maybeData.clientId);
+
+  m_messageExchanger->pushMessage(std::move(message));
 }
 
 void Server::onConnectionReady(net::ConnectionShPtr connection)

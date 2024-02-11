@@ -63,6 +63,25 @@ void ClientManager::removePlayer(const Uuid playerDbId)
   info("Removed player " + str(playerDbId));
 }
 
+void ClientManager::removePlayerConnection(const Uuid playerDbId)
+{
+  const std::lock_guard guard(m_locker);
+
+  const auto maybeClientId = m_playerToClient.find(playerDbId);
+  if (maybeClientId == m_playerToClient.cend())
+  {
+    error("Failed to unregister connection for player " + str(playerDbId));
+  }
+
+  const auto clientData = m_clients.at(maybeClientId->second);
+
+  m_playerToClient.erase(maybeClientId);
+  m_connectionToClient.erase(clientData.connection->id());
+  m_clients.erase(clientData.clientId);
+
+  info("Removed connection " + clientData.connection->str() + " for player " + str(playerDbId));
+}
+
 void ClientManager::removeConnection(const net::ConnectionId connectionId)
 {
   const std::lock_guard guard(m_locker);
@@ -70,19 +89,19 @@ void ClientManager::removeConnection(const net::ConnectionId connectionId)
   const auto maybeClientId = m_connectionToClient.find(connectionId);
   if (maybeClientId == m_connectionToClient.cend())
   {
-    error("Failed to unregistered connection " + std::to_string(connectionId));
+    error("Failed to unregister connection " + std::to_string(connectionId));
   }
 
-  const auto data = m_clients.at(maybeClientId->second);
+  const auto clientData = m_clients.at(maybeClientId->second);
 
-  if (data.playerDbId)
+  if (clientData.playerDbId)
   {
-    m_playerToClient.erase(*data.playerDbId);
+    m_playerToClient.erase(*clientData.playerDbId);
   }
   m_connectionToClient.erase(connectionId);
-  m_clients.erase(data.clientId);
+  m_clients.erase(clientData.clientId);
 
-  info("Removed connection " + data.connection->str());
+  info("Removed connection " + clientData.connection->str());
 }
 
 auto ClientManager::getClientIdForPlayer(const Uuid playerDbId) const -> Uuid
