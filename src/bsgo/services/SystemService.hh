@@ -7,11 +7,11 @@
 
 namespace bsgo {
 
-class CombatService : public AbstractService
+class SystemService : public AbstractService
 {
   public:
-  CombatService(const Repositories &repositories);
-  ~CombatService() override = default;
+  SystemService(const Repositories &repositories);
+  ~SystemService() override = default;
 
   bool tryDistributeResource(const Uuid playerDbId,
                              const Uuid resourceDbId,
@@ -28,6 +28,6 @@ class CombatService : public AbstractService
   auto findExistingResourceAmount(const Uuid playerDbId, const Uuid resourceDbId) const -> float;
 };
 
-using CombatServiceShPtr = std::shared_ptr<CombatService>;
+using SystemServiceShPtr = std::shared_ptr<SystemService>;
 
 } // namespace bsgo

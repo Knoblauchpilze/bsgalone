@@ -3,15 +3,15 @@
 
 namespace bsgo {
 
-LootMessageConsumer::LootMessageConsumer(CombatServiceShPtr combatService,
+LootMessageConsumer::LootMessageConsumer(SystemServiceShPtr systemService,
                                          IMessageQueue *const messageQueue)
   : AbstractMessageConsumer("loot", {MessageType::LOOT})
-  , m_combatService(std::move(combatService))
+  , m_systemService(std::move(systemService))
   , m_messageQueue(messageQueue)
 {
-  if (nullptr == m_combatService)
+  if (nullptr == m_systemService)
   {
-    throw std::invalid_argument("Expected non null combat service");
+    throw std::invalid_argument("Expected non null system service");
   }
   if (nullptr == m_messageQueue)
   {
@@ -27,7 +27,7 @@ void LootMessageConsumer::onMessageReceived(const IMessage &message)
   const auto resourceDbId = loot.getResourceDbId();
   const auto amount       = loot.amount();
 
-  if (!m_combatService->tryDistributeResource(playerDbId, resourceDbId, amount))
+  if (!m_systemService->tryDistributeResource(playerDbId, resourceDbId, amount))
   {
     warn("Failed to process loot message for player " + str(playerDbId));
     return;

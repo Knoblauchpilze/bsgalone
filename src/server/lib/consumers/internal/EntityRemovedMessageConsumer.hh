@@ -2,10 +2,10 @@
 #pragma once
 
 #include "AbstractMessageConsumer.hh"
-#include "CombatService.hh"
 #include "EntityRemovedMessage.hh"
 #include "IMessageQueue.hh"
 #include "SystemProcessor.hh"
+#include "SystemService.hh"
 #include <unordered_map>
 
 namespace bsgo {
@@ -13,7 +13,7 @@ namespace bsgo {
 class EntityRemovedMessageConsumer : public AbstractMessageConsumer
 {
   public:
-  EntityRemovedMessageConsumer(CombatServiceShPtr combatService,
+  EntityRemovedMessageConsumer(SystemServiceShPtr systemService,
                                SystemProcessorMap systemProcessors,
                                IMessageQueue *const messageQueue);
   ~EntityRemovedMessageConsumer() override = default;
@@ -21,7 +21,7 @@ class EntityRemovedMessageConsumer : public AbstractMessageConsumer
   void onMessageReceived(const IMessage &message) override;
 
   private:
-  CombatServiceShPtr m_combatService{};
+  SystemServiceShPtr m_systemService{};
   SystemProcessorMap m_systemProcessors{};
   IMessageQueue *const m_messageQueue{};
 

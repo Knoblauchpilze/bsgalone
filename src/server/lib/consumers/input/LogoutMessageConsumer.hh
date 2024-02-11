@@ -3,10 +3,10 @@
 
 #include "AbstractMessageConsumer.hh"
 #include "ClientManager.hh"
-#include "CombatService.hh"
 #include "IMessageQueue.hh"
 #include "LogoutMessage.hh"
 #include "SystemProcessor.hh"
+#include "SystemService.hh"
 #include <unordered_map>
 
 namespace bsgo {
@@ -15,7 +15,7 @@ class LogoutMessageConsumer : public AbstractMessageConsumer
 {
   public:
   LogoutMessageConsumer(ClientManagerShPtr clientManager,
-                        CombatServiceShPtr combatService,
+                        SystemServiceShPtr systemService,
                         SystemProcessorMap systemProcessors,
                         IMessageQueue *const messageQueue);
   ~LogoutMessageConsumer() override = default;
@@ -25,7 +25,7 @@ class LogoutMessageConsumer : public AbstractMessageConsumer
   private:
   ClientManagerShPtr m_clientManager{};
   SystemProcessorMap m_systemProcessors{};
-  CombatServiceShPtr m_combatService{};
+  SystemServiceShPtr m_systemService{};
   IMessageQueue *const m_messageQueue{};
 
   void handleLogout(const LogoutMessage &message) const;

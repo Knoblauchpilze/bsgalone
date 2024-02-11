@@ -5,22 +5,22 @@
 namespace bsgo {
 
 LogoutMessageConsumer::LogoutMessageConsumer(ClientManagerShPtr clientManager,
-                                             CombatServiceShPtr combatService,
+                                             SystemServiceShPtr systemService,
                                              SystemProcessorMap systemProcessors,
                                              IMessageQueue *const messageQueue)
   : AbstractMessageConsumer("logout", {MessageType::LOGOUT})
   , m_clientManager(std::move(clientManager))
   , m_systemProcessors(std::move(systemProcessors))
-  , m_combatService(std::move(combatService))
+  , m_systemService(std::move(systemService))
   , m_messageQueue(messageQueue)
 {
   if (nullptr == m_messageQueue)
   {
     throw std::invalid_argument("Expected non null message queue");
   }
-  if (nullptr == m_combatService)
+  if (nullptr == m_systemService)
   {
-    throw std::invalid_argument("Expected non null combat service");
+    throw std::invalid_argument("Expected non null system service");
   }
 }
 
@@ -52,8 +52,8 @@ void LogoutMessageConsumer::handleLogout(const LogoutMessage &message) const
           "Unknown system " + str(*maybeSystemDbId));
   }
 
-  m_combatService->trySendPlayerBackToOutpost(playerDbId);
-  auto removed = std::make_unique<EntityRemovedMessage>(m_combatService->getShipDbIdForPlayer(
+  m_systemService->trySendPlayerBackToOutpost(playerDbId);
+  auto removed = std::make_unique<EntityRemovedMessage>(m_systemService->getShipDbIdForPlayer(
                                                           playerDbId),
                                                         EntityKind::SHIP,
                                                         false);

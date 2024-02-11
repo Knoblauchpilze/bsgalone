@@ -2,12 +2,12 @@
 #pragma once
 
 #include "ClientManager.hh"
-#include "CombatService.hh"
 #include "Connection.hh"
 #include "IMessageQueue.hh"
 #include "NetworkMessageQueue.hh"
 #include "Repositories.hh"
 #include "SystemProcessor.hh"
+#include "SystemService.hh"
 #include "Uuid.hh"
 #include <memory>
 
@@ -36,7 +36,7 @@ class MessageExchanger
   void initializeConsumers(const ClientManagerShPtr &clientManager,
                            const SystemProcessorMap &systemProcessors);
 
-  void initializeInternalMessageQueue(const CombatServiceShPtr &combatService,
+  void initializeInternalMessageQueue(const SystemServiceShPtr &systemService,
                                       const SystemProcessorMap &systemProcessors);
 };
 

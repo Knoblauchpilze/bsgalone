@@ -3,11 +3,11 @@
 
 namespace bsgo {
 
-EntityRemovedMessageConsumer::EntityRemovedMessageConsumer(CombatServiceShPtr combatService,
+EntityRemovedMessageConsumer::EntityRemovedMessageConsumer(SystemServiceShPtr systemService,
                                                            SystemProcessorMap systemProcessors,
                                                            IMessageQueue *const messageQueue)
   : AbstractMessageConsumer("entity", {MessageType::ENTITY_REMOVED})
-  , m_combatService(std::move(combatService))
+  , m_systemService(std::move(systemService))
   , m_systemProcessors(std::move(systemProcessors))
   , m_messageQueue(messageQueue)
 {
@@ -17,9 +17,9 @@ EntityRemovedMessageConsumer::EntityRemovedMessageConsumer(CombatServiceShPtr co
   {
     throw std::invalid_argument("Expected non null message queue");
   }
-  if (nullptr == m_combatService)
+  if (nullptr == m_systemService)
   {
-    throw std::invalid_argument("Expected non null combat service");
+    throw std::invalid_argument("Expected non null system service");
   }
 }
 
@@ -55,7 +55,7 @@ auto findSystemProcessorFromSystem(const Uuid systemDbId,
 }
 
 auto findSystemAndProcessorFromShip(const Uuid shipDbId,
-                                    const CombatService &service,
+                                    const SystemService &service,
                                     const std::unordered_map<Uuid, SystemProcessorShPtr> &processors)
   -> std::pair<std::optional<Uuid>, std::optional<SystemProcessorShPtr>>
 {
@@ -72,7 +72,7 @@ auto findSystemAndProcessorFromShip(const Uuid shipDbId,
 
 auto findSystemAndProcessorFromAsteroid(
   const Uuid asteroidDbId,
-  const CombatService &service,
+  const SystemService &service,
   const std::unordered_map<Uuid, SystemProcessorShPtr> &processors)
   -> std::pair<std::optional<Uuid>, std::optional<SystemProcessorShPtr>>
 {
@@ -89,7 +89,7 @@ void EntityRemovedMessageConsumer::handleShipEntityRemoved(const Uuid shipDbId,
                                                            const bool dead) const
 {
   const auto [systemDbId, processor] = findSystemAndProcessorFromShip(shipDbId,
-                                                                      *m_combatService,
+                                                                      *m_systemService,
                                                                       m_systemProcessors);
   if (!systemDbId || !processor)
   {
@@ -97,7 +97,7 @@ void EntityRemovedMessageConsumer::handleShipEntityRemoved(const Uuid shipDbId,
     return;
   }
 
-  if (dead && !m_combatService->trySendPlayerShipBackToOutpost(shipDbId))
+  if (dead && !m_systemService->trySendPlayerShipBackToOutpost(shipDbId))
   {
     warn("Failed to process ship removed message for " + str(shipDbId));
     return;
@@ -113,7 +113,7 @@ void EntityRemovedMessageConsumer::handleAsteroidEntityRemoved(const Uuid astero
                                                                const bool dead) const
 {
   const auto [systemDbId, processor] = findSystemAndProcessorFromAsteroid(asteroidDbId,
-                                                                          *m_combatService,
+                                                                          *m_systemService,
                                                                           m_systemProcessors);
   if (!systemDbId || !processor)
   {
