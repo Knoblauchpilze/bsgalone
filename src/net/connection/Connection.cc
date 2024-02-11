@@ -37,8 +37,8 @@ Connection::Connection(asio::ip::tcp::socket &&socket, const ConnectionType type
 
 auto Connection::str() const -> std::string
 {
-  const auto client    = net::str(m_socket.remote_endpoint());
   const auto connected = isConnected() ? "ON" : "OFF";
+  const auto client    = (connected ? "N/A" : net::str(m_socket.remote_endpoint()));
   return std::to_string(m_id) + "-" + client + "-" + net::str(m_type) + "-" + connected;
 }
 
