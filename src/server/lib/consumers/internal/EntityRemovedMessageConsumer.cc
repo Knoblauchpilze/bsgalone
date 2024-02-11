@@ -11,6 +11,8 @@ EntityRemovedMessageConsumer::EntityRemovedMessageConsumer(
   , m_combatService(std::move(combatService))
   , m_messageQueue(messageQueue)
 {
+  addModule("removed");
+
   if (nullptr == m_messageQueue)
   {
     throw std::invalid_argument("Expected non null message queue");
