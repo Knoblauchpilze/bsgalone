@@ -73,7 +73,6 @@ void TargetSystem::clearTargetIfNotReachable(TargetComponent &targetComp,
 
   if (!target.valid() || dead || docked)
   {
-    debug("clearing target");
     targetComp.clearTarget();
   }
 }
