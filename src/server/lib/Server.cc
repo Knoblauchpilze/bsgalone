@@ -107,7 +107,22 @@ void Server::onConnectionLost(const net::ConnectionId connectionId)
 {
   if (m_clientManager->isStillConnected(connectionId))
   {
-    warn("player still connected");
+    const auto maybeData = m_clientManager->tryGetDataForConnection(connectionId);
+    if (!maybeData.playerDbId)
+    {
+      warn("Connection " + std::to_string(connectionId)
+           + " lost but could not find associated player");
+    }
+    else
+    {
+      info("Connection " + std::to_string(connectionId) + " lost but player "
+           + str(*maybeData.playerDbId) + " is still connected");
+
+      auto message = std::make_unique<LogoutMessage>(*maybeData.playerDbId);
+      message->setClientId(maybeData.clientId);
+
+      m_messageExchanger->pushMessage(std::move(message));
+    }
   }
 
   m_clientManager->removeConnection(connectionId);

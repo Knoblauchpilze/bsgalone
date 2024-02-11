@@ -28,6 +28,12 @@ class ClientManager : public utils::CoreObject
   auto getAllConnectionsForSystem(const Uuid systemDbId) const -> std::vector<net::ConnectionShPtr>;
   auto tryGetSystemForClient(const Uuid clientId) const -> std::optional<Uuid>;
 
+  struct ConnectionData
+  {
+    Uuid clientId{};
+    std::optional<Uuid> playerDbId{};
+  };
+  auto tryGetDataForConnection(const net::ConnectionId connectionId) -> ConnectionData;
   bool isStillConnected(const net::ConnectionId connectionId) const;
 
   private:
@@ -45,6 +51,9 @@ class ClientManager : public utils::CoreObject
   std::unordered_map<Uuid, ClientData> m_clients{};
   std::unordered_map<net::ConnectionId, Uuid> m_connectionToClient{};
   std::unordered_map<Uuid, Uuid> m_playerToClient{};
+
+  auto tryGetClientDataForConnection(const net::ConnectionId connectionId) const
+    -> std::optional<ClientData>;
 };
 
 using ClientManagerShPtr = std::shared_ptr<ClientManager>;
