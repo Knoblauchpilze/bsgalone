@@ -153,9 +153,9 @@ auto BroadcastMessageQueue::tryDetermineClientId(const IMessage &message) const
 
 namespace {
 template<typename T>
-auto determineSystemFor(const T &message, const ClientManager &clientManager) -> std::optional<Uuid>
+auto determineSystemFor(const T &message) -> std::optional<Uuid>
 {
-  return clientManager.tryGetSystemForClient(message.getSystemDbId());
+  return message.getSystemDbId();
 }
 } // namespace
 
@@ -165,7 +165,7 @@ auto BroadcastMessageQueue::tryDetermineSystemId(const IMessage &message) const
   switch (message.type())
   {
     case MessageType::ENTITY_REMOVED:
-      return determineSystemFor(message.as<EntityRemovedMessage>(), *m_clientManager);
+      return determineSystemFor(message.as<EntityRemovedMessage>());
     default:
       error("Failed to determine system id", "Unsupported message type " + str(message.type()));
       break;
