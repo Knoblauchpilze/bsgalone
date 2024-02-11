@@ -2,6 +2,7 @@
 #include "MessageConsumerSetup.hh"
 
 #include "DockMessageConsumer.hh"
+#include "EntityAddedMessageConsumer.hh"
 #include "EquipMessageConsumer.hh"
 #include "HangarMessageConsumer.hh"
 #include "JumpCancelledMessageConsumer.hh"
@@ -50,6 +51,8 @@ void createMessageConsumers(IMessageQueue &inputMessagesQueue,
     std::make_unique<JumpRequestedMessageConsumer>(services, outputMessagesQueue));
 
   inputMessagesQueue.addListener(std::make_unique<ShipDeletedMessageConsumer>(services));
+
+  inputMessagesQueue.addListener(std::make_unique<EntityAddedMessageConsumer>(services));
 }
 
 } // namespace bsgo

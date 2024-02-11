@@ -5,6 +5,7 @@
 
 #include "ConnectionMessage.hh"
 #include "DockMessage.hh"
+#include "EntityAddedMessage.hh"
 #include "EntityRemovedMessage.hh"
 #include "EquipMessage.hh"
 #include "HangarMessage.hh"
@@ -99,6 +100,8 @@ auto MessageParser::tryReadMessage(const MessageType &type, std::istream &in)
       return readMessage<ConnectionMessage>(in);
     case MessageType::DOCK:
       return readMessage<DockMessage>(in);
+    case MessageType::ENTITY_ADDED:
+      return readMessage<EntityAddedMessage>(in);
     case MessageType::ENTITY_REMOVED:
       return readMessage<EntityRemovedMessage>(in);
     case MessageType::EQUIP:
