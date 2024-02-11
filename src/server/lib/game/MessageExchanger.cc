@@ -5,6 +5,8 @@
 #include "ConnectionMessage.hh"
 #include "DataSource.hh"
 #include "EntityRemovedMessageConsumer.hh"
+#include "JumpMessageConsumer.hh"
+#include "JumpService.hh"
 #include "LoginMessageConsumer.hh"
 #include "LogoutMessageConsumer.hh"
 #include "LootMessageConsumer.hh"
@@ -15,7 +17,7 @@
 namespace bsgo {
 
 MessageExchanger::MessageExchanger(const ClientManagerShPtr &clientManager,
-                                   const std::vector<SystemProcessorShPtr> &systemProcessors)
+                                   const SystemProcessorMap &systemProcessors)
 {
   initialize(clientManager, systemProcessors);
 }
@@ -45,7 +47,7 @@ void MessageExchanger::pushMessage(IMessagePtr message)
 }
 
 void MessageExchanger::initialize(const ClientManagerShPtr &clientManager,
-                                  const std::vector<SystemProcessorShPtr> &systemProcessors)
+                                  const SystemProcessorMap &systemProcessors)
 {
   initializeQueues(clientManager);
   initializeConsumers(clientManager, systemProcessors);
@@ -89,7 +91,7 @@ auto createInternalMessageQueue() -> IMessageQueuePtr
 } // namespace
 
 void MessageExchanger::initializeConsumers(const ClientManagerShPtr &clientManager,
-                                           const std::vector<SystemProcessorShPtr> &systemProcessors)
+                                           const SystemProcessorMap &systemProcessors)
 {
   DataSource source{DataLoadingMode::SERVER};
   const auto repositories = source.repositories();
@@ -112,17 +114,22 @@ void MessageExchanger::initializeConsumers(const ClientManagerShPtr &clientManag
                                                                    systemProcessors,
                                                                    m_outputMessageQueue.get()));
 
+  /// TODO: Reactivate this once the JumpService is fixed.
+  // auto jumpService = std::make_unique<JumpService>(repositories);
+  // m_internalMessageQueue.addListener(
+  //   std::make_unique<JumpMessageConsumer>(std::move(jumpService),
+  //                                         systemProcessors,
+  //                                         m_outputMessageQueue.get()));
+
   initializeInternalMessageQueue(combatService, systemProcessors);
 
-  auto triageConsumer = std::make_unique<TriageMessageConsumer>(systemProcessors,
-                                                                clientManager,
-                                                                std::move(systemQueue));
-  m_inputMessageQueue->addListener(std::move(triageConsumer));
+  m_inputMessageQueue->addListener(std::make_unique<TriageMessageConsumer>(clientManager,
+                                                                           systemProcessors,
+                                                                           std::move(systemQueue)));
 }
 
-void MessageExchanger::initializeInternalMessageQueue(
-  const CombatServiceShPtr &combatService,
-  const std::vector<SystemProcessorShPtr> &systemProcessors)
+void MessageExchanger::initializeInternalMessageQueue(const CombatServiceShPtr &combatService,
+                                                      const SystemProcessorMap &systemProcessors)
 {
   m_internalMessageQueue = createInternalMessageQueue();
 

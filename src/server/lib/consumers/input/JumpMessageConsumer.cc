@@ -1,11 +1,15 @@
 
 #include "JumpMessageConsumer.hh"
+#include "JumpMessage.hh"
 
 namespace bsgo {
 
-JumpMessageConsumer::JumpMessageConsumer(const Services &services, IMessageQueue *const messageQueue)
+JumpMessageConsumer::JumpMessageConsumer(JumpServicePtr jumpService,
+                                         SystemProcessorMap systemProcessors,
+                                         IMessageQueue *const messageQueue)
   : AbstractMessageConsumer("jump", {MessageType::JUMP})
-  , m_jumpService(services.jump)
+  , m_jumpService(std::move(jumpService))
+  , m_systemProcessors(std::move(systemProcessors))
   , m_messageQueue(messageQueue)
 {
   if (nullptr == m_jumpService)
@@ -22,15 +26,12 @@ void JumpMessageConsumer::onMessageReceived(const IMessage &message)
 {
   const auto &jump = message.as<JumpMessage>();
 
-  if (!jump.validated())
+  if (jump.validated())
   {
-    handleJump(jump);
+    return;
   }
-}
 
-void JumpMessageConsumer::handleJump(const JumpMessage &message) const
-{
-  const auto shipDbId = message.getShipDbId();
+  const auto shipDbId = jump.getShipDbId();
 
   if (!m_jumpService->tryJump(shipDbId))
   {
@@ -40,7 +41,7 @@ void JumpMessageConsumer::handleJump(const JumpMessage &message) const
 
   auto out = std::make_unique<JumpMessage>(shipDbId);
   out->validate();
-  out->copyClientIdIfDefined(message);
+  out->copyClientIdIfDefined(jump);
   m_messageQueue->pushMessage(std::move(out));
 }
 

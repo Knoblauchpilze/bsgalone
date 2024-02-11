@@ -6,7 +6,6 @@
 #include "EquipMessageConsumer.hh"
 #include "HangarMessageConsumer.hh"
 #include "JumpCancelledMessageConsumer.hh"
-#include "JumpMessageConsumer.hh"
 #include "JumpRequestedMessageConsumer.hh"
 #include "PurchaseMessageConsumer.hh"
 #include "ShipDeletedMessageConsumer.hh"
@@ -40,9 +39,6 @@ void createMessageConsumers(IMessageQueue &inputMessagesQueue,
 
   inputMessagesQueue.addListener(
     std::make_unique<TargetMessageConsumer>(services, outputMessagesQueue));
-
-  inputMessagesQueue.addListener(
-    std::make_unique<JumpMessageConsumer>(services, outputMessagesQueue));
 
   inputMessagesQueue.addListener(
     std::make_unique<JumpCancelledMessageConsumer>(services, outputMessagesQueue));

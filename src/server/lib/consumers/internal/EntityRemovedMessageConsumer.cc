@@ -3,12 +3,12 @@
 
 namespace bsgo {
 
-EntityRemovedMessageConsumer::EntityRemovedMessageConsumer(
-  CombatServiceShPtr combatService,
-  const std::vector<SystemProcessorShPtr> &systemProcessors,
-  IMessageQueue *const messageQueue)
+EntityRemovedMessageConsumer::EntityRemovedMessageConsumer(CombatServiceShPtr combatService,
+                                                           SystemProcessorMap systemProcessors,
+                                                           IMessageQueue *const messageQueue)
   : AbstractMessageConsumer("entity", {MessageType::ENTITY_REMOVED})
   , m_combatService(std::move(combatService))
+  , m_systemProcessors(std::move(systemProcessors))
   , m_messageQueue(messageQueue)
 {
   addModule("removed");
@@ -20,16 +20,6 @@ EntityRemovedMessageConsumer::EntityRemovedMessageConsumer(
   if (nullptr == m_combatService)
   {
     throw std::invalid_argument("Expected non null combat service");
-  }
-
-  for (const auto &processor : systemProcessors)
-  {
-    const auto res = m_systemProcessors.try_emplace(processor->getSystemDbId(), processor);
-    if (!res.second)
-    {
-      throw std::invalid_argument("Failed to register duplicated system "
-                                  + str(processor->getSystemDbId()));
-    }
   }
 }
 
