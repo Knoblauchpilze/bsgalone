@@ -21,4 +21,47 @@ auto convertToSystemProcessorMap(const std::vector<SystemProcessorShPtr> &system
   return out;
 }
 
+namespace {
+auto findSystemProcessorFromSystem(const Uuid systemDbId, const SystemProcessorMap &processors)
+  -> std::optional<SystemProcessorShPtr>
+{
+  const auto processor = processors.find(systemDbId);
+  if (processor != processors.cend())
+  {
+    return processor->second;
+  }
+
+  return {};
+}
+} // namespace
+
+auto findSystemAndProcessorFromShip(const Uuid shipDbId,
+                                    const SystemService &service,
+                                    const SystemProcessorMap &processors)
+  -> std::pair<std::optional<Uuid>, std::optional<SystemProcessorShPtr>>
+{
+  std::pair<std::optional<Uuid>, std::optional<SystemProcessorShPtr>> out{};
+
+  out.first = service.tryGetSystemDbIdForShip(shipDbId);
+  if (out.first)
+  {
+    out.second = findSystemProcessorFromSystem(*out.first, processors);
+  }
+
+  return out;
+}
+
+auto findSystemAndProcessorFromAsteroid(const Uuid asteroidDbId,
+                                        const SystemService &service,
+                                        const SystemProcessorMap &processors)
+  -> std::pair<std::optional<Uuid>, std::optional<SystemProcessorShPtr>>
+{
+  std::pair<std::optional<Uuid>, std::optional<SystemProcessorShPtr>> out{};
+
+  out.first  = service.getSystemDbIdForAsteroid(asteroidDbId);
+  out.second = findSystemProcessorFromSystem(*out.first, processors);
+
+  return out;
+}
+
 } // namespace bsgo
