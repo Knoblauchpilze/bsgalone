@@ -3,6 +3,7 @@
 #include "Server.hh"
 #include "DataSource.hh"
 #include "LogoutMessage.hh"
+#include "SystemProcessorUtils.hh"
 #include <core_utils/TimeUtils.hh>
 
 namespace bsgo {
@@ -52,7 +53,10 @@ void Server::initializeSystems()
 
 void Server::initializeMessageSystem()
 {
-  m_messageExchanger = std::make_unique<MessageExchanger>(m_clientManager, m_systemProcessors);
+  const auto systemProcessors = convertToSystemProcessorMap(m_systemProcessors);
+  m_messageExchanger          = std::make_unique<MessageExchanger>(m_clientManager,
+                                                          std::move(systemProcessors));
+
   for (const auto &systemProcessor : m_systemProcessors)
   {
     systemProcessor->connectToQueues(m_messageExchanger->getInternalMessageQueue(),

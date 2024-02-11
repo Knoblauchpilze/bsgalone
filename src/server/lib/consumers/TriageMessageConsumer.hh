@@ -12,8 +12,8 @@ namespace bsgo {
 class TriageMessageConsumer : public AbstractMessageConsumer
 {
   public:
-  TriageMessageConsumer(const std::vector<SystemProcessorShPtr> &systemProcessors,
-                        ClientManagerShPtr clientManager,
+  TriageMessageConsumer(ClientManagerShPtr clientManager,
+                        SystemProcessorMap systemProcessors,
                         IMessageQueuePtr systemMessageQueue);
   ~TriageMessageConsumer() override = default;
 
@@ -21,7 +21,7 @@ class TriageMessageConsumer : public AbstractMessageConsumer
 
   private:
   ClientManagerShPtr m_clientManager{};
-  std::unordered_map<Uuid, SystemProcessorShPtr> m_systemProcessors{};
+  SystemProcessorMap m_systemProcessors{};
   IMessageQueuePtr m_systemQueue{};
 
   bool discardMessageWithNoClient(const IMessage &message) const;

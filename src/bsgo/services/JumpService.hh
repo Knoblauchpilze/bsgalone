@@ -25,6 +25,7 @@ class JumpService : public AbstractService
   const DatabaseEntityMapper &m_entityMapper;
 };
 
+using JumpServicePtr   = std::unique_ptr<JumpService>;
 using JumpServiceShPtr = std::shared_ptr<JumpService>;
 
 } // namespace bsgo

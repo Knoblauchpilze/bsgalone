@@ -11,6 +11,7 @@
 #include <core_utils/CoreObject.hh>
 #include <memory>
 #include <thread>
+#include <unordered_map>
 
 namespace bsgo {
 
@@ -44,5 +45,6 @@ class SystemProcessor : public utils::CoreObject
 };
 
 using SystemProcessorShPtr = std::shared_ptr<SystemProcessor>;
+using SystemProcessorMap   = std::unordered_map<Uuid, SystemProcessorShPtr>;
 
 } // namespace bsgo

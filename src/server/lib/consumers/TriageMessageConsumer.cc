@@ -4,27 +4,17 @@
 
 namespace bsgo {
 
-TriageMessageConsumer::TriageMessageConsumer(
-  const std::vector<SystemProcessorShPtr> &systemProcessors,
-  ClientManagerShPtr clientManager,
-  IMessageQueuePtr systemMessageQueue)
+TriageMessageConsumer::TriageMessageConsumer(ClientManagerShPtr clientManager,
+                                             SystemProcessorMap systemProcessors,
+                                             IMessageQueuePtr systemMessageQueue)
   : AbstractMessageConsumer("triage", allMessageTypesAsSet())
   , m_clientManager(std::move(clientManager))
+  , m_systemProcessors(std::move(systemProcessors))
   , m_systemQueue(std::move(systemMessageQueue))
 {
   if (nullptr == m_systemQueue)
   {
     throw std::invalid_argument("Expected non null system message queue");
-  }
-
-  for (const auto &system : systemProcessors)
-  {
-    const auto res = m_systemProcessors.try_emplace(system->getSystemDbId(), system);
-    if (!res.second)
-    {
-      throw std::invalid_argument("Failed to register duplicated system "
-                                  + str(system->getSystemDbId()));
-    }
   }
 }
 
@@ -41,12 +31,12 @@ void TriageMessageConsumer::onMessageReceived(const IMessage &message)
     case MessageType::SIGNUP:
     case MessageType::LOGIN:
     case MessageType::LOGOUT:
+    case MessageType::JUMP:
       handleSystemMessage(message);
       break;
     case MessageType::DOCK:
     case MessageType::EQUIP:
     case MessageType::HANGAR:
-    case MessageType::JUMP:
     case MessageType::JUMP_CANCELLED:
     case MessageType::JUMP_REQUESTED:
     case MessageType::PURCHASE:

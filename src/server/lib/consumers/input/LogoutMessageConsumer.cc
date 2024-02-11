@@ -4,13 +4,13 @@
 
 namespace bsgo {
 
-LogoutMessageConsumer::LogoutMessageConsumer(
-  ClientManagerShPtr clientManager,
-  CombatServiceShPtr combatService,
-  const std::vector<SystemProcessorShPtr> &systemProcessors,
-  IMessageQueue *const messageQueue)
+LogoutMessageConsumer::LogoutMessageConsumer(ClientManagerShPtr clientManager,
+                                             CombatServiceShPtr combatService,
+                                             SystemProcessorMap systemProcessors,
+                                             IMessageQueue *const messageQueue)
   : AbstractMessageConsumer("logout", {MessageType::LOGOUT})
   , m_clientManager(std::move(clientManager))
+  , m_systemProcessors(std::move(systemProcessors))
   , m_combatService(std::move(combatService))
   , m_messageQueue(messageQueue)
 {
@@ -21,16 +21,6 @@ LogoutMessageConsumer::LogoutMessageConsumer(
   if (nullptr == m_combatService)
   {
     throw std::invalid_argument("Expected non null combat service");
-  }
-
-  for (const auto &processor : systemProcessors)
-  {
-    const auto res = m_systemProcessors.try_emplace(processor->getSystemDbId(), processor);
-    if (!res.second)
-    {
-      throw std::invalid_argument("Failed to register duplicated system "
-                                  + str(processor->getSystemDbId()));
-    }
   }
 }
 

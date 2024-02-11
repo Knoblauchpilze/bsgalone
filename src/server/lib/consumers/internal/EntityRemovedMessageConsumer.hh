@@ -14,7 +14,7 @@ class EntityRemovedMessageConsumer : public AbstractMessageConsumer
 {
   public:
   EntityRemovedMessageConsumer(CombatServiceShPtr combatService,
-                               const std::vector<SystemProcessorShPtr> &systemProcessors,
+                               SystemProcessorMap systemProcessors,
                                IMessageQueue *const messageQueue);
   ~EntityRemovedMessageConsumer() override = default;
 
@@ -22,8 +22,8 @@ class EntityRemovedMessageConsumer : public AbstractMessageConsumer
 
   private:
   CombatServiceShPtr m_combatService{};
+  SystemProcessorMap m_systemProcessors{};
   IMessageQueue *const m_messageQueue{};
-  std::unordered_map<Uuid, SystemProcessorShPtr> m_systemProcessors{};
 
   void handleShipEntityRemoved(const Uuid shipDbId, const bool dead) const;
   void handleAsteroidEntityRemoved(const Uuid asteroidDbId, const bool dead) const;

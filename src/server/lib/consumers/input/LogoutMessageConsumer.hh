@@ -16,7 +16,7 @@ class LogoutMessageConsumer : public AbstractMessageConsumer
   public:
   LogoutMessageConsumer(ClientManagerShPtr clientManager,
                         CombatServiceShPtr combatService,
-                        const std::vector<SystemProcessorShPtr> &systemProcessors,
+                        SystemProcessorMap systemProcessors,
                         IMessageQueue *const messageQueue);
   ~LogoutMessageConsumer() override = default;
 
@@ -24,7 +24,7 @@ class LogoutMessageConsumer : public AbstractMessageConsumer
 
   private:
   ClientManagerShPtr m_clientManager{};
-  std::unordered_map<Uuid, SystemProcessorShPtr> m_systemProcessors{};
+  SystemProcessorMap m_systemProcessors{};
   CombatServiceShPtr m_combatService{};
   IMessageQueue *const m_messageQueue{};
 
