@@ -2,6 +2,7 @@
 
 #include "Server.hh"
 #include "DataSource.hh"
+#include "LogoutMessage.hh"
 #include <core_utils/TimeUtils.hh>
 
 namespace bsgo {
@@ -104,6 +105,11 @@ void Server::shutdown()
 
 void Server::onConnectionLost(const net::ConnectionId connectionId)
 {
+  if (m_clientManager->isStillConnected(connectionId))
+  {
+    warn("player still connected");
+  }
+
   m_clientManager->removeConnection(connectionId);
 }
 
