@@ -11,6 +11,7 @@ enum class MessageType
 {
   CONNECTION,
   DOCK,
+  ENTITY_ADDED,
   ENTITY_REMOVED,
   EQUIP,
   HANGAR,
@@ -31,7 +32,7 @@ enum class MessageType
 };
 
 auto str(const MessageType &type) -> std::string;
-auto allMessageTypes() -> std::array<MessageType, 19>;
+auto allMessageTypes() -> std::array<MessageType, 20>;
 
 auto allMessageTypesAsSet() -> std::unordered_set<MessageType>;
 
