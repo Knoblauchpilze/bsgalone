@@ -40,12 +40,8 @@ void SystemProcessor::pushMessage(IMessagePtr message)
 
 void SystemProcessor::onAsteroidDestroyed(const Uuid asteroidDbId)
 {
+  /// TODO: To be removed.
   m_entityMapper.removeEntityForAsteroid(asteroidDbId);
-}
-
-void SystemProcessor::onShipDestroyed(const Uuid shipDbId)
-{
-  m_entityMapper.removeEntityForShip(shipDbId);
 }
 
 void SystemProcessor::connectToQueues(IMessageQueue *const internalMessageQueue,
