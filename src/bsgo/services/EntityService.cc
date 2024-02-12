@@ -1,5 +1,6 @@
 
 #include "EntityService.hh"
+#include "PlayerDataSource.hh"
 #include "ShipDataSource.hh"
 
 namespace bsgo {
@@ -14,6 +15,8 @@ EntityService::EntityService(const Repositories &repositories,
 
 bool EntityService::tryCreateShipEntity(const Uuid shipDbId) const
 {
+  handlePlayerCreationForShip(shipDbId);
+
   ShipDataSource source{m_repositories};
   source.registerShip(*m_coordinator, shipDbId, m_entityMapper);
 
@@ -53,6 +56,7 @@ void EntityService::tryDeleteShipEntity(const Uuid shipDbId) const
   }
 
   m_entityMapper.tryRemoveEntityForShip(shipDbId);
+  handlePlayerDeletionForShip(shipDbId);
 }
 
 void EntityService::tryDeleteAsteroidEntity(const Uuid asteroidDbId) const
@@ -70,6 +74,49 @@ void EntityService::tryDeleteAsteroidEntity(const Uuid asteroidDbId) const
   }
 
   m_entityMapper.removeEntityForAsteroid(asteroidDbId);
+}
+
+void EntityService::handlePlayerCreationForShip(const Uuid &shipDbId) const
+{
+  const auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
+  if (!ship.player)
+  {
+    return;
+  }
+
+  const auto maybePlayerEntityId = m_entityMapper.tryGetPlayerEntityId(*ship.player);
+  if (maybePlayerEntityId)
+  {
+    return;
+  }
+
+  PlayerDataSource source{m_repositories};
+  source.registerPlayer(*m_coordinator, *ship.player, m_entityMapper);
+
+  info("Registered player " + str(*ship.player) + " in system " + str(*ship.system));
+}
+
+void EntityService::handlePlayerDeletionForShip(const Uuid &shipDbId) const
+{
+  const auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
+  if (!ship.player)
+  {
+    return;
+  }
+
+  const auto maybePlayerEntityId = m_entityMapper.tryGetPlayerEntityId(*ship.player);
+  if (!maybePlayerEntityId)
+  {
+    return;
+  }
+
+  m_coordinator->deleteEntity(*maybePlayerEntityId);
+  m_entityMapper.removeEntityForPlayer(shipDbId);
+
+  PlayerDataSource source{m_repositories};
+  source.registerPlayer(*m_coordinator, *ship.player, m_entityMapper);
+
+  info("Removed player " + str(*ship.player) + " from system " + str(*ship.system));
 }
 
 } // namespace bsgo
