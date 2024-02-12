@@ -1,5 +1,7 @@
 
 #include "JumpMessageConsumer.hh"
+#include "EntityAddedMessage.hh"
+#include "EntityRemovedMessage.hh"
 #include "JumpMessage.hh"
 
 namespace bsgo {
@@ -33,18 +35,45 @@ void JumpMessageConsumer::onMessageReceived(const IMessage &message)
 
   const auto shipDbId = jump.getShipDbId();
 
-  if (!m_systemService->tryJump(shipDbId))
+  const auto res = m_systemService->tryJump(shipDbId);
+  if (!res.success)
   {
     warn("Failed to process jump message for ship " + str(shipDbId));
     return;
   }
 
-  /// TODO: Create entity removed message and entity added message.
+  handlePostJumpSystemMessages(shipDbId, res.sourceSystem, res.destinationSystem);
 
   auto out = std::make_unique<JumpMessage>(shipDbId);
   out->validate();
   out->copyClientIdIfDefined(jump);
   m_messageQueue->pushMessage(std::move(out));
+}
+
+void JumpMessageConsumer::handlePostJumpSystemMessages(const Uuid shipDbId,
+                                                       const Uuid sourceSystemDbId,
+                                                       const Uuid destinationSystemDbId)
+{
+  const auto maybeSourceProcessor      = m_systemProcessors.find(sourceSystemDbId);
+  const auto maybeDestinationProcessor = m_systemProcessors.find(destinationSystemDbId);
+
+  if (maybeSourceProcessor == m_systemProcessors.cend()
+      || maybeDestinationProcessor == m_systemProcessors.cend())
+  {
+    warn("Failed to process ship removed message for " + str(shipDbId), "No system for ship");
+    return;
+  }
+
+  const auto sourceProcessor      = maybeSourceProcessor->second;
+  const auto destinationProcessor = maybeDestinationProcessor->second;
+
+  auto removed = std::make_unique<EntityRemovedMessage>(shipDbId, EntityKind::SHIP, false);
+  sourceProcessor->pushMessage(std::move(removed));
+
+  auto added = std::make_unique<EntityAddedMessage>(shipDbId,
+                                                    EntityKind::SHIP,
+                                                    destinationSystemDbId);
+  destinationProcessor->pushMessage(std::move(added));
 }
 
 } // namespace bsgo
