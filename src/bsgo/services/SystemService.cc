@@ -95,13 +95,18 @@ bool canShipCompleteJump(const PlayerShip &ship)
 }
 } // namespace
 
-bool SystemService::tryJump(const Uuid shipDbId) const
+auto SystemService::tryJump(const Uuid shipDbId) const -> JumpResult
 {
+  JumpResult out{};
+
   auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
   if (!canShipCompleteJump(ship))
   {
-    return false;
+    return out;
   }
+
+  out.sourceSystem      = *ship.system;
+  out.destinationSystem = *ship.jumpSystem;
 
   const auto system = m_repositories.systemRepository->findOneById(*ship.jumpSystem);
 
@@ -110,8 +115,9 @@ bool SystemService::tryJump(const Uuid shipDbId) const
   m_repositories.playerShipRepository->save(ship);
 
   info("Completed jump to " + system.name + " for " + str(shipDbId));
+  out.success = true;
 
-  return true;
+  return out;
 }
 
 auto SystemService::getSystemDbIdForAsteroid(const Uuid asteroidDbId) const -> Uuid

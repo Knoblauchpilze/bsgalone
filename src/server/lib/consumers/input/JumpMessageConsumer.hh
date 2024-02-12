@@ -22,6 +22,10 @@ class JumpMessageConsumer : public AbstractMessageConsumer
   SystemServiceShPtr m_systemService{};
   SystemProcessorMap m_systemProcessors{};
   IMessageQueue *const m_messageQueue{};
+
+  void handlePostJumpSystemMessages(const Uuid shipDbId,
+                                    const Uuid sourceSystemDbId,
+                                    const Uuid destinationSystemDbId);
 };
 
 } // namespace bsgo
