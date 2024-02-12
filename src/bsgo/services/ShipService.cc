@@ -100,7 +100,10 @@ void ShipService::tryDeleteShipEntity(const Uuid shipDbId) const
   if (maybeEntityId)
   {
     auto shipEntity = m_coordinator->getEntity(*maybeEntityId);
-    shipEntity.removalComp().markForRemoval();
+    if (shipEntity.valid())
+    {
+      shipEntity.removalComp().markForRemoval();
+    }
   }
 
   m_entityMapper.removeEntityForShip(shipDbId);
