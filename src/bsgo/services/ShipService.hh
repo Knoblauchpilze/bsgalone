@@ -22,7 +22,7 @@ class ShipService : public AbstractService
   bool tryDock(const Uuid shipDbId) const;
 
   bool tryCreateShipEntity(const Uuid shipDbId) const;
-  bool tryDeleteShipEntity(const Uuid shipDbId) const;
+  void tryDeleteShipEntity(const Uuid shipDbId) const;
 
   bool accelerateShip(const Uuid shipDbId, const Eigen::Vector3f &acceleration) const;
 

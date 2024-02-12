@@ -62,7 +62,6 @@ bool ShipService::tryDock(const Uuid shipDbId) const
   m_repositories.systemRepository->updateSystemForShip(shipDbId, *ship.system, true);
 
   statusComp.setStatus(Status::DOCKED);
-  shipEntity.removalComp().markForRemoval();
 
   return true;
 }
@@ -92,21 +91,19 @@ bool ShipService::tryCreateShipEntity(const Uuid shipDbId) const
   return true;
 }
 
-bool ShipService::tryDeleteShipEntity(const Uuid shipDbId) const
+void ShipService::tryDeleteShipEntity(const Uuid shipDbId) const
 {
   const auto maybeEntityId = m_entityMapper.tryGetShipEntityId(shipDbId);
-  if (!maybeEntityId)
+
+  // Can be that the entity was not created for example if the user is
+  // already docked or didn't go out of the outpost at all.
+  if (maybeEntityId)
   {
-    // Can be that the entity was not created for example if the user is
-    // already docked or didn't go out of the outpost at all.
-    return false;
+    auto shipEntity = m_coordinator->getEntity(*maybeEntityId);
+    shipEntity.removalComp().markForRemoval();
   }
 
-  auto shipEntity = m_coordinator->getEntity(*maybeEntityId);
-  shipEntity.removalComp().markForRemoval();
   m_entityMapper.removeEntityForShip(shipDbId);
-
-  return true;
 }
 
 bool ShipService::accelerateShip(const Uuid shipDbId, const Eigen::Vector3f &acceleration) const
