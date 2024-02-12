@@ -95,6 +95,12 @@ void DatabaseEntityMapper::registerOutpost(const Uuid outpostDbId, const Uuid en
   }
 }
 
+bool DatabaseEntityMapper::tryRemoveEntityForShip(const Uuid shipDbId)
+{
+  const std::lock_guard guard(m_locker);
+  return m_shipDbIdsToEntityIds.erase(shipDbId);
+}
+
 void DatabaseEntityMapper::removeEntityForShip(const Uuid shipDbId)
 {
   const std::lock_guard guard(m_locker);

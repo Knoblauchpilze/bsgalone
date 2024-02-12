@@ -15,7 +15,7 @@ class EntityDeletedMessageConsumer : public AbstractMessageConsumer
   void onMessageReceived(const IMessage &message) override;
 
   private:
-  ShipServiceShPtr m_shipService{};
+  EntityServiceShPtr m_entityService{};
 
   void handleShipRemoved(const Uuid shipDbId) const;
   void handleAsteroidRemoved(const Uuid asteroidDbId) const;

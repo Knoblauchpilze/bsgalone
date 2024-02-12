@@ -81,11 +81,13 @@ void EntityRemovedMessageConsumer::handleAsteroidEntityRemoved(const Uuid astero
     return;
   }
 
-  /// TODO: Refactor this to also use the same strategy as above.
-  (*processor)->onAsteroidDestroyed(asteroidDbId);
+  auto message = std::make_unique<EntityRemovedMessage>(asteroidDbId,
+                                                        EntityKind::ASTEROID,
+                                                        dead,
+                                                        *systemDbId);
 
-  m_messageQueue->pushMessage(
-    std::make_unique<EntityRemovedMessage>(asteroidDbId, EntityKind::ASTEROID, dead, *systemDbId));
+  (*processor)->pushMessage(message->clone());
+  m_messageQueue->pushMessage(std::move(message));
 }
 
 } // namespace bsgo

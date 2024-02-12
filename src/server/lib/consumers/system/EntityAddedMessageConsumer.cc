@@ -5,13 +5,13 @@ namespace bsgo {
 
 EntityAddedMessageConsumer::EntityAddedMessageConsumer(const Services &services)
   : AbstractMessageConsumer("entity", {MessageType::ENTITY_ADDED})
-  , m_shipService(services.ship)
+  , m_entityService(services.entity)
 {
   addModule("added");
 
-  if (nullptr == m_shipService)
+  if (nullptr == m_entityService)
   {
-    throw std::invalid_argument("Expected non null ship service");
+    throw std::invalid_argument("Expected non null entity service");
   }
 }
 
@@ -35,7 +35,7 @@ void EntityAddedMessageConsumer::onMessageReceived(const IMessage &message)
 
 void EntityAddedMessageConsumer::handleShipAdded(const Uuid shipDbId, const Uuid systemDbId) const
 {
-  if (!m_shipService->tryCreateShipEntity(shipDbId))
+  if (!m_entityService->tryCreateShipEntity(shipDbId))
   {
     warn("Failed to process ship " + str(shipDbId) + " added in system " + str(systemDbId));
   }
