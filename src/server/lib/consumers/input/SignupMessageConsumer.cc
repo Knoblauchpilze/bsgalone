@@ -15,6 +15,10 @@ SignupMessageConsumer::SignupMessageConsumer(SignupServicePtr signupService,
   {
     throw std::invalid_argument("Expected non null signup service");
   }
+  if (nullptr == m_clientManager)
+  {
+    throw std::invalid_argument("Expected non null client manager");
+  }
   if (nullptr == m_messageQueue)
   {
     throw std::invalid_argument("Expected non null message queue");

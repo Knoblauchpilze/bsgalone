@@ -14,13 +14,17 @@ LogoutMessageConsumer::LogoutMessageConsumer(ClientManagerShPtr clientManager,
   , m_systemService(std::move(systemService))
   , m_messageQueue(messageQueue)
 {
-  if (nullptr == m_messageQueue)
+  if (nullptr == m_clientManager)
   {
-    throw std::invalid_argument("Expected non null message queue");
+    throw std::invalid_argument("Expected non null client manager");
   }
   if (nullptr == m_systemService)
   {
     throw std::invalid_argument("Expected non null system service");
+  }
+  if (nullptr == m_messageQueue)
+  {
+    throw std::invalid_argument("Expected non null message queue");
   }
 }
 

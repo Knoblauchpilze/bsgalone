@@ -15,6 +15,10 @@ LoginMessageConsumer::LoginMessageConsumer(LoginServicePtr loginService,
   {
     throw std::invalid_argument("Expected non null login service");
   }
+  if (nullptr == m_clientManager)
+  {
+    throw std::invalid_argument("Expected non null client manager");
+  }
   if (nullptr == m_messageQueue)
   {
     throw std::invalid_argument("Expected non null message queue");
