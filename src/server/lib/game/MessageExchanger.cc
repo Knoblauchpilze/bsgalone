@@ -116,6 +116,7 @@ void MessageExchanger::initializeConsumers(const ClientManagerShPtr &clientManag
 
   m_inputMessageQueue->addListener(
     std::make_unique<JumpMessageConsumer>(systemService,
+                                          clientManager,
                                           systemProcessors,
                                           m_outputMessageQueue.get()));
 
