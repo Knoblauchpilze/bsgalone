@@ -3,6 +3,7 @@
 
 #include "Coordinator.hh"
 #include "DatabaseEntityMapper.hh"
+#include "EntityService.hh"
 #include "JumpService.hh"
 #include "LockerService.hh"
 #include "PurchaseService.hh"
@@ -19,6 +20,7 @@ struct Services
   ShipServiceShPtr ship{};
   JumpServiceShPtr jump{};
   SlotServiceShPtr slot{};
+  EntityServiceShPtr entity{};
 };
 
 auto createServices(const Repositories &repositories,

@@ -16,7 +16,7 @@ class EntityAddedMessageConsumer : public AbstractMessageConsumer
   void onMessageReceived(const IMessage &message) override;
 
   private:
-  ShipServiceShPtr m_shipService{};
+  EntityServiceShPtr m_entityService{};
 
   void handleShipAdded(const Uuid shipDbId, const Uuid systemDbId) const;
 };

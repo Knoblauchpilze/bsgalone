@@ -18,6 +18,7 @@ class DockMessageConsumer : public AbstractMessageConsumer
 
   private:
   ShipServiceShPtr m_shipService{};
+  EntityServiceShPtr m_entityService{};
   IMessageQueue *const m_messageQueue{};
 
   void handleDocking(const DockMessage &message) const;

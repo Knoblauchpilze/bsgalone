@@ -6,13 +6,13 @@ namespace bsgo {
 
 EntityDeletedMessageConsumer::EntityDeletedMessageConsumer(const Services &services)
   : AbstractMessageConsumer("entity", {MessageType::ENTITY_REMOVED})
-  , m_shipService(services.ship)
+  , m_entityService(services.entity)
 {
   addModule("removed");
 
-  if (nullptr == m_shipService)
+  if (nullptr == m_entityService)
   {
-    throw std::invalid_argument("Expected non null ship service");
+    throw std::invalid_argument("Expected non null entity service");
   }
 }
 
@@ -37,18 +37,12 @@ void EntityDeletedMessageConsumer::onMessageReceived(const IMessage &message)
 
 void EntityDeletedMessageConsumer::handleShipRemoved(const Uuid shipDbId) const
 {
-  // Ignoring the return value on purpose. We just want to make sure that
-  // the entity is deleted if it exists but there are cases where it does
-  // not in which case this will return false.
-  m_shipService->tryDeleteShipEntity(shipDbId);
+  m_entityService->tryDeleteShipEntity(shipDbId);
 }
 
 void EntityDeletedMessageConsumer::handleAsteroidRemoved(const Uuid asteroidDbId) const
 {
-  /// TODO: Handle removal of asteroid similar to:
-  /// m_entityMapper.removeEntityForAsteroid(asteroidDbId);
-  /// but with additional steps like for the ship.
-  warn("Should handle asteroid deletion " + std::to_string(asteroidDbId));
+  m_entityService->tryDeleteAsteroidEntity(asteroidDbId);
 }
 
 } // namespace bsgo
