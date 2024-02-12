@@ -19,12 +19,13 @@ class PlayerDataSource : public utils::CoreObject
                   Coordinator &coordinator,
                   DatabaseEntityMapper &entityMapper) const;
 
-  private:
-  Repositories m_repositories{};
-
   void registerPlayer(Coordinator &coordinator,
                       const Uuid playerDbId,
                       DatabaseEntityMapper &entityMapper) const;
+
+  private:
+  Repositories m_repositories{};
+
   void registerResources(Coordinator &coordinator,
                          const Uuid playerEntityId,
                          const Uuid playerDbId) const;

@@ -26,6 +26,9 @@ class EntityService : public AbstractService
   private:
   CoordinatorShPtr m_coordinator{};
   DatabaseEntityMapper &m_entityMapper;
+
+  void handlePlayerCreationForShip(const Uuid &shipDbId) const;
+  void handlePlayerDeletionForShip(const Uuid &shipDbId) const;
 };
 
 using EntityServiceShPtr = std::shared_ptr<EntityService>;
