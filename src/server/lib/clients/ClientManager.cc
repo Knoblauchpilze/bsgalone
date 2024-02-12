@@ -15,8 +15,8 @@ auto ClientManager::registerConnection(const net::ConnectionShPtr connection) ->
   const std::lock_guard guard(m_locker);
 
   const ClientData data{.clientId = NEXT_CLIENT_ID, .connection = connection};
-  m_clients.emplace(connection->id(), data);
-  m_connectionToClient.emplace(data.clientId, connection->id());
+  m_clients.emplace(data.clientId, data);
+  m_connectionToClient.emplace(connection->id(), data.clientId);
 
   ++NEXT_CLIENT_ID;
 
@@ -173,6 +173,26 @@ auto ClientManager::tryGetSystemForClient(const Uuid clientId) const -> std::opt
   }
 
   return maybeClientData->second.playerSystemDbId;
+}
+
+void ClientManager::updateSystemForClient(const Uuid clientId, const Uuid systemDbId)
+{
+  const std::lock_guard guard(m_locker);
+
+  const auto maybeClientData = m_clients.find(clientId);
+  if (maybeClientData == m_clients.cend())
+  {
+    error("Failed to get system for " + str(clientId), "No such client");
+  }
+
+  auto &clientData = maybeClientData->second;
+  if (!clientData.playerDbId)
+  {
+    error("Failed to update system for " + str(clientId), "No associated player");
+  }
+
+  info("Moved player " + str(*clientData.playerDbId) + " to system " + str(systemDbId));
+  clientData.playerSystemDbId = systemDbId;
 }
 
 auto ClientManager::tryGetDataForConnection(const net::ConnectionId connectionId) -> ConnectionData
