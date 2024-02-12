@@ -25,7 +25,6 @@ class SystemProcessor : public utils::CoreObject
   void pushMessage(IMessagePtr message);
 
   void onAsteroidDestroyed(const Uuid asteroidDbId);
-  void onShipDestroyed(const Uuid shipDbId);
 
   void connectToQueues(IMessageQueue *const internalMessageQueue,
                        IMessageQueue *const outputMessageQueue);
