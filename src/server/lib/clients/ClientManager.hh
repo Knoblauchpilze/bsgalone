@@ -29,6 +29,8 @@ class ClientManager : public utils::CoreObject
   auto getAllConnectionsForSystem(const Uuid systemDbId) const -> std::vector<net::ConnectionShPtr>;
   auto tryGetSystemForClient(const Uuid clientId) const -> std::optional<Uuid>;
 
+  void updateSystemForClient(const Uuid clientId, const Uuid systemDbId);
+
   struct ConnectionData
   {
     Uuid clientId{};
