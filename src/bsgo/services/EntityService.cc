@@ -111,7 +111,7 @@ void EntityService::handlePlayerDeletionForShip(const Uuid &shipDbId) const
   }
 
   m_coordinator->deleteEntity(*maybePlayerEntityId);
-  m_entityMapper.removeEntityForPlayer(shipDbId);
+  m_entityMapper.removeEntityForPlayer(*ship.player);
 
   PlayerDataSource source{m_repositories};
   source.registerPlayer(*m_coordinator, *ship.player, m_entityMapper);
