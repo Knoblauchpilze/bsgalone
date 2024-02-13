@@ -3,7 +3,8 @@
 
 namespace bsgo {
 
-auto createServices(const Repositories &repositories,
+auto createServices(const ProcessingMode processingMode,
+                    const Repositories &repositories,
                     const CoordinatorShPtr &coordinator,
                     DatabaseEntityMapper &entityMapper) -> Services
 {
@@ -14,7 +15,10 @@ auto createServices(const Repositories &repositories,
   out.ship     = std::make_shared<ShipService>(repositories, coordinator, entityMapper);
   out.jump     = std::make_shared<JumpService>(repositories, coordinator, entityMapper);
   out.slot     = std::make_shared<SlotService>(repositories, coordinator, entityMapper);
-  out.entity   = std::make_shared<EntityService>(repositories, coordinator, entityMapper);
+  out.entity   = std::make_shared<EntityService>(processingMode,
+                                               repositories,
+                                               coordinator,
+                                               entityMapper);
 
   return out;
 }

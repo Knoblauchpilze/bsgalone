@@ -23,7 +23,8 @@ struct Services
   EntityServiceShPtr entity{};
 };
 
-auto createServices(const Repositories &repositories,
+auto createServices(const ProcessingMode processingMode,
+                    const Repositories &repositories,
                     const CoordinatorShPtr &coordinator,
                     DatabaseEntityMapper &entityMapper) -> Services;
 
