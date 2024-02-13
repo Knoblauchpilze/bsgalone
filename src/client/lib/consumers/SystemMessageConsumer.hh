@@ -6,6 +6,7 @@
 #include "DatabaseEntityMapper.hh"
 #include "EntityAddedMessage.hh"
 #include "EntityRemovedMessage.hh"
+#include "EntityService.hh"
 #include "ScannedMessage.hh"
 #include "Uuid.hh"
 
@@ -15,7 +16,8 @@ class SystemMessageConsumer : public bsgo::AbstractMessageConsumer
 {
   public:
   SystemMessageConsumer(bsgo::DatabaseEntityMapper &entityMapper,
-                        bsgo::CoordinatorShPtr coordinator);
+                        bsgo::CoordinatorShPtr coordinator,
+                        bsgo::EntityServicePtr entityService);
   ~SystemMessageConsumer() override = default;
 
   void onMessageReceived(const bsgo::IMessage &message) override;
@@ -23,6 +25,7 @@ class SystemMessageConsumer : public bsgo::AbstractMessageConsumer
   private:
   bsgo::DatabaseEntityMapper &m_entityMapper;
   bsgo::CoordinatorShPtr m_coordinator{};
+  bsgo::EntityServicePtr m_entityService{};
 
   void handleScanOperation(const bsgo::ScannedMessage &message) const;
   void handleEntityAdded(const bsgo::EntityAddedMessage &message) const;
