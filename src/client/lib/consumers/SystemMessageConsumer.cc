@@ -53,7 +53,7 @@ void SystemMessageConsumer::handleEntityRemoved(const bsgo::EntityRemovedMessage
   {
     case bsgo::EntityKind::SHIP:
       entityId = m_entityMapper.tryGetShipEntityId(entityDbId);
-      m_entityMapper.removeEntityForShip(entityDbId);
+      m_entityMapper.tryRemoveEntityForShip(entityDbId);
       break;
     case bsgo::EntityKind::ASTEROID:
       entityId = m_entityMapper.tryGetAsteroidEntityId(entityDbId);
