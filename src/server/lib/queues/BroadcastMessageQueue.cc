@@ -2,6 +2,7 @@
 #include "BroadcastMessageQueue.hh"
 #include "EntityAddedMessage.hh"
 #include "EntityRemovedMessage.hh"
+#include "JumpMessage.hh"
 #include "LootMessage.hh"
 #include "MessageProcessor.hh"
 #include "NetworkMessage.hh"
@@ -90,7 +91,8 @@ void BroadcastMessageQueue::sendMessageToClient(const Uuid clientId, const IMess
 }
 
 namespace {
-const std::unordered_set<MessageType> SYSTEM_DIRECTED_MESSAGES = {MessageType::ENTITY_ADDED,
+const std::unordered_set<MessageType> SYSTEM_DIRECTED_MESSAGES = {MessageType::JUMP,
+                                                                  MessageType::ENTITY_ADDED,
                                                                   MessageType::ENTITY_REMOVED};
 
 bool shouldTryToDetermineSystemId(const IMessage &message)
@@ -103,15 +105,19 @@ void BroadcastMessageQueue::broadcastMessage(const IMessage &message)
 {
   std::vector<net::ConnectionShPtr> connections{};
 
-  std::optional<Uuid> systemDbId{};
+  std::vector<Uuid> systemDbIds{};
   if (shouldTryToDetermineSystemId(message))
   {
-    systemDbId = tryDetermineSystemId(message);
+    systemDbIds = tryDetermineSystemIds(message);
   }
 
-  if (systemDbId)
+  if (!systemDbIds.empty())
   {
-    connections = m_clientManager->getAllConnectionsForSystem(*systemDbId);
+    for (const auto &systemDbId : systemDbIds)
+    {
+      const auto newConnections = m_clientManager->getAllConnectionsForSystem(systemDbId);
+      connections.insert(connections.end(), newConnections.begin(), newConnections.end());
+    }
   }
   else
   {
@@ -155,21 +161,29 @@ auto BroadcastMessageQueue::tryDetermineClientId(const IMessage &message) const
 
 namespace {
 template<typename T>
-auto determineSystemFor(const T &message) -> std::optional<Uuid>
+auto determineSystemsFor(const T &message) -> std::vector<Uuid>
 {
-  return message.getSystemDbId();
+  return {message.getSystemDbId()};
+}
+
+template<>
+auto determineSystemsFor(const JumpMessage &message) -> std::vector<Uuid>
+{
+  return {message.getSourceSystemDbId(), message.getDestinationSystemDbId()};
 }
 } // namespace
 
-auto BroadcastMessageQueue::tryDetermineSystemId(const IMessage &message) const
-  -> std::optional<Uuid>
+auto BroadcastMessageQueue::tryDetermineSystemIds(const IMessage &message) const
+  -> std::vector<Uuid>
 {
   switch (message.type())
   {
     case MessageType::ENTITY_ADDED:
-      return determineSystemFor(message.as<EntityAddedMessage>());
+      return determineSystemsFor(message.as<EntityAddedMessage>());
     case MessageType::ENTITY_REMOVED:
-      return determineSystemFor(message.as<EntityRemovedMessage>());
+      return determineSystemsFor(message.as<EntityRemovedMessage>());
+    case MessageType::JUMP:
+      return determineSystemsFor(message.as<JumpMessage>());
     default:
       error("Failed to determine system id", "Unsupported message type " + str(message.type()));
       break;
