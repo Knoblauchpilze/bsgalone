@@ -39,7 +39,8 @@ void JumpMessageConsumer::onMessageReceived(const IMessage &message)
     return;
   }
 
-  const auto shipDbId = jump.getShipDbId();
+  const auto shipDbId   = jump.getShipDbId();
+  const auto playerDbId = jump.getPlayerDbId();
 
   const auto res = m_systemService->tryJump(shipDbId);
   if (!res.success)
@@ -48,10 +49,10 @@ void JumpMessageConsumer::onMessageReceived(const IMessage &message)
     return;
   }
 
-  m_clientManager->updateSystemForClient(jump.getClientId(), res.destinationSystem);
+  m_clientManager->updateSystemForPlayer(jump.getPlayerDbId(), res.destinationSystem);
   handlePostJumpSystemMessages(shipDbId, res.sourceSystem, res.destinationSystem);
 
-  auto out = std::make_unique<JumpMessage>(shipDbId);
+  auto out = std::make_unique<JumpMessage>(shipDbId, playerDbId);
   out->validate();
   out->copyClientIdIfDefined(jump);
   m_messageQueue->pushMessage(std::move(out));
@@ -74,12 +75,17 @@ void JumpMessageConsumer::handlePostJumpSystemMessages(const Uuid shipDbId,
   const auto sourceProcessor      = maybeSourceProcessor->second;
   const auto destinationProcessor = maybeDestinationProcessor->second;
 
-  auto removed = std::make_unique<EntityRemovedMessage>(shipDbId, EntityKind::SHIP, false);
+  auto removed = std::make_unique<EntityRemovedMessage>(shipDbId,
+                                                        EntityKind::SHIP,
+                                                        false,
+                                                        sourceSystemDbId);
+  debug("Pushing removed message to " + str(sourceSystemDbId));
   sourceProcessor->pushMessage(std::move(removed));
 
   auto added = std::make_unique<EntityAddedMessage>(shipDbId,
                                                     EntityKind::SHIP,
                                                     destinationSystemDbId);
+  debug("Pushing added message to " + str(destinationSystemDbId));
   destinationProcessor->pushMessage(std::move(added));
 }
 

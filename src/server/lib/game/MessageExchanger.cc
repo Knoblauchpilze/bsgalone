@@ -114,13 +114,7 @@ void MessageExchanger::initializeConsumers(const ClientManagerShPtr &clientManag
                                                                    systemProcessors,
                                                                    m_outputMessageQueue.get()));
 
-  m_inputMessageQueue->addListener(
-    std::make_unique<JumpMessageConsumer>(systemService,
-                                          clientManager,
-                                          systemProcessors,
-                                          m_outputMessageQueue.get()));
-
-  initializeInternalMessageQueue(systemService, systemProcessors);
+  initializeInternalMessageQueue(systemService, clientManager, systemProcessors);
 
   m_inputMessageQueue->addListener(std::make_unique<TriageMessageConsumer>(clientManager,
                                                                            systemProcessors,
@@ -128,12 +122,19 @@ void MessageExchanger::initializeConsumers(const ClientManagerShPtr &clientManag
 }
 
 void MessageExchanger::initializeInternalMessageQueue(const SystemServiceShPtr &systemService,
+                                                      const ClientManagerShPtr &clientManager,
                                                       const SystemProcessorMap &systemProcessors)
 {
   m_internalMessageQueue = createInternalMessageQueue();
 
   m_internalMessageQueue->addListener(
     std::make_unique<LootMessageConsumer>(systemService, m_outputMessageQueue.get()));
+
+  m_internalMessageQueue->addListener(
+    std::make_unique<JumpMessageConsumer>(systemService,
+                                          clientManager,
+                                          systemProcessors,
+                                          m_outputMessageQueue.get()));
 
   m_internalMessageQueue->addListener(
     std::make_unique<EntityRemovedMessageConsumer>(systemService,
