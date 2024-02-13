@@ -9,6 +9,7 @@
 #include <memory>
 #include <mutex>
 #include <unordered_map>
+#include <vector>
 
 namespace bsgo {
 
@@ -35,7 +36,7 @@ class BroadcastMessageQueue : public IMessageQueue, public utils::CoreObject
   void broadcastMessage(const IMessage &message);
 
   auto tryDetermineClientId(const IMessage &message) const -> std::optional<Uuid>;
-  auto tryDetermineSystemId(const IMessage &message) const -> std::optional<Uuid>;
+  auto tryDetermineSystemIds(const IMessage &message) const -> std::vector<Uuid>;
 };
 
 using BroadcastMessageQueuePtr = std::unique_ptr<BroadcastMessageQueue>;
