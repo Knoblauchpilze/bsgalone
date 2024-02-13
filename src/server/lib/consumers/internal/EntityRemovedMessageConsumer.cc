@@ -44,10 +44,10 @@ void EntityRemovedMessageConsumer::onMessageReceived(const IMessage &message)
 void EntityRemovedMessageConsumer::handleShipEntityRemoved(const Uuid shipDbId,
                                                            const bool dead) const
 {
-  const auto [systemDbId, processor] = findSystemAndProcessorFromShip(shipDbId,
-                                                                      *m_systemService,
-                                                                      m_systemProcessors);
-  if (!systemDbId || !processor)
+  const auto [systemDbId, maybeProcessor] = findSystemAndProcessorFromShip(shipDbId,
+                                                                           *m_systemService,
+                                                                           m_systemProcessors);
+  if (!systemDbId || !maybeProcessor)
   {
     warn("Failed to process ship removed message for " + str(shipDbId), "No system for ship");
     return;
@@ -59,35 +59,27 @@ void EntityRemovedMessageConsumer::handleShipEntityRemoved(const Uuid shipDbId,
     return;
   }
 
-  auto message = std::make_unique<EntityRemovedMessage>(shipDbId,
-                                                        EntityKind::SHIP,
-                                                        dead,
-                                                        *systemDbId);
-
-  (*processor)->pushMessage(message->clone());
-  m_messageQueue->pushMessage(std::move(message));
+  const auto &processor = *maybeProcessor;
+  processor->pushMessage(
+    std::make_unique<EntityRemovedMessage>(shipDbId, EntityKind::SHIP, dead, *systemDbId));
 }
 
 void EntityRemovedMessageConsumer::handleAsteroidEntityRemoved(const Uuid asteroidDbId,
                                                                const bool dead) const
 {
-  const auto [systemDbId, processor] = findSystemAndProcessorFromAsteroid(asteroidDbId,
-                                                                          *m_systemService,
-                                                                          m_systemProcessors);
-  if (!systemDbId || !processor)
+  const auto [systemDbId, maybeProcessor] = findSystemAndProcessorFromAsteroid(asteroidDbId,
+                                                                               *m_systemService,
+                                                                               m_systemProcessors);
+  if (!systemDbId || !maybeProcessor)
   {
     warn("Failed to process asteroid removed message for " + str(asteroidDbId),
          "No system for asteroid");
     return;
   }
 
-  auto message = std::make_unique<EntityRemovedMessage>(asteroidDbId,
-                                                        EntityKind::ASTEROID,
-                                                        dead,
-                                                        *systemDbId);
-
-  (*processor)->pushMessage(message->clone());
-  m_messageQueue->pushMessage(std::move(message));
+  const auto &processor = *maybeProcessor;
+  processor->pushMessage(
+    std::make_unique<EntityRemovedMessage>(asteroidDbId, EntityKind::ASTEROID, dead, *systemDbId));
 }
 
 } // namespace bsgo

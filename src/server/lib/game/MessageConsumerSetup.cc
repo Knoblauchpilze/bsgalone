@@ -46,9 +46,11 @@ void createMessageConsumers(IMessageQueue &inputMessagesQueue,
   inputMessagesQueue.addListener(
     std::make_unique<JumpRequestedMessageConsumer>(services, outputMessagesQueue));
 
-  inputMessagesQueue.addListener(std::make_unique<EntityDeletedMessageConsumer>(services));
+  inputMessagesQueue.addListener(
+    std::make_unique<EntityDeletedMessageConsumer>(services, outputMessagesQueue));
 
-  inputMessagesQueue.addListener(std::make_unique<EntityAddedMessageConsumer>(services));
+  inputMessagesQueue.addListener(
+    std::make_unique<EntityAddedMessageConsumer>(services, outputMessagesQueue));
 }
 
 } // namespace bsgo
