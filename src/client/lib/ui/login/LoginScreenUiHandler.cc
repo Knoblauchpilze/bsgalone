@@ -228,7 +228,7 @@ void LoginScreenUiHandler::generateQuitButton(const int width, const int /*heigh
                             g.terminate();
                           }};
 
-  const auto bg   = bgConfigFromColor(colors::VERY_DARK_GREY);
+  const auto bg   = bgConfigFromColor(colors::DARK_GREY);
   const auto text = textConfigFromColor("Quit", colors::WHITE);
   m_quitButton    = std::make_unique<UiTextMenu>(config, bg, text);
 }
