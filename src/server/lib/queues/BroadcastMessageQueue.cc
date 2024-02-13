@@ -1,5 +1,6 @@
 
 #include "BroadcastMessageQueue.hh"
+#include "EntityAddedMessage.hh"
 #include "EntityRemovedMessage.hh"
 #include "LootMessage.hh"
 #include "MessageProcessor.hh"
@@ -89,7 +90,8 @@ void BroadcastMessageQueue::sendMessageToClient(const Uuid clientId, const IMess
 }
 
 namespace {
-const std::unordered_set<MessageType> SYSTEM_DIRECTED_MESSAGES = {MessageType::ENTITY_REMOVED};
+const std::unordered_set<MessageType> SYSTEM_DIRECTED_MESSAGES = {MessageType::ENTITY_ADDED,
+                                                                  MessageType::ENTITY_REMOVED};
 
 bool shouldTryToDetermineSystemId(const IMessage &message)
 {
@@ -164,6 +166,8 @@ auto BroadcastMessageQueue::tryDetermineSystemId(const IMessage &message) const
 {
   switch (message.type())
   {
+    case MessageType::ENTITY_ADDED:
+      return determineSystemFor(message.as<EntityAddedMessage>());
     case MessageType::ENTITY_REMOVED:
       return determineSystemFor(message.as<EntityRemovedMessage>());
     default:
