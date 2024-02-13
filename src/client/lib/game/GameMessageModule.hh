@@ -11,7 +11,6 @@
 #include "DockMessage.hh"
 #include "EntityRemovedMessage.hh"
 #include "HangarMessage.hh"
-#include "JumpMessage.hh"
 #include "LoginMessage.hh"
 #include "LogoutMessage.hh"
 #include "SignupMessage.hh"
@@ -35,7 +34,6 @@ class GameMessageModule : public bsgo::AbstractMessageListener, public utils::Co
   void handleConnectionMessage(const bsgo::ConnectionMessage &message);
   void handleDockMessage(const bsgo::DockMessage &message);
   void handleHangarMessage(const bsgo::HangarMessage &message);
-  void handleJumpMessage(const bsgo::JumpMessage &message);
   void handleLoginMessage(const bsgo::LoginMessage &message);
   void handleLogoutMessage(const bsgo::LogoutMessage &message);
   void handleSignupMessage(const bsgo::SignupMessage &message);

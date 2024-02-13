@@ -41,7 +41,7 @@ void GameMessageModule::onMessageReceived(const bsgo::IMessage &message)
       handleHangarMessage(message.as<bsgo::HangarMessage>());
       break;
     case bsgo::MessageType::JUMP:
-      handleJumpMessage(message.as<bsgo::JumpMessage>());
+      m_game.onActiveSystemChanged();
       break;
     case bsgo::MessageType::LOGIN:
       handleLoginMessage(message.as<bsgo::LoginMessage>());
@@ -93,16 +93,6 @@ void GameMessageModule::handleHangarMessage(const bsgo::HangarMessage &message)
   }
 
   m_game.onActiveShipChanged();
-}
-
-void GameMessageModule::handleJumpMessage(const bsgo::JumpMessage &message)
-{
-  if (!message.validated())
-  {
-    return;
-  }
-
-  m_game.onActiveSystemChanged();
 }
 
 void GameMessageModule::handleLoginMessage(const bsgo::LoginMessage &message)
