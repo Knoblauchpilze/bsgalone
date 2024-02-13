@@ -120,8 +120,9 @@ void SystemMessageConsumer::handleShipCreation(const bsgo::Uuid shipDbId) const
   const auto playerShipDbId = m_entityMapper.tryGetPlayerShipDbId();
   if (!playerShipDbId)
   {
-    error("Failed to process ship entity added for " + bsgo::str(shipDbId),
-          "Player ship is not defined");
+    // We will pick this up when the data for the player's system is instantiated.
+    debug("Ignoring creation of ship " + bsgo::str(shipDbId) + " as player did not undock yet");
+    return;
   }
   if (*playerShipDbId == shipDbId)
   {

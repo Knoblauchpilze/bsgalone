@@ -1,5 +1,6 @@
 
 #include "DockMessageConsumer.hh"
+#include "EntityAddedMessage.hh"
 
 namespace bsgo {
 
@@ -69,6 +70,9 @@ void DockMessageConsumer::handleUndocking(const DockMessage &message) const
   out->validate();
   out->copyClientIdIfDefined(message);
   m_messageQueue->pushMessage(std::move(out));
+
+  auto added = std::make_unique<EntityAddedMessage>(shipDbId, EntityKind::SHIP, systemDbId);
+  m_messageQueue->pushMessage(std::move(added));
 }
 
 } // namespace bsgo
