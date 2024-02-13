@@ -48,7 +48,9 @@ void ShipDbView::dockPlayerShip() const
 {
   checkPlayerShipDbIdExists();
 
-  auto message = std::make_unique<DockMessage>(*m_playerShipDbId, true);
+  const auto ship = m_repositories.playerShipRepository->findOneById(*m_playerShipDbId);
+
+  auto message = std::make_unique<DockMessage>(*m_playerShipDbId, true, *ship.system);
   m_outputMessageQueue->pushMessage(std::move(message));
 }
 
@@ -56,7 +58,9 @@ void ShipDbView::undockPlayerShip() const
 {
   checkPlayerShipDbIdExists();
 
-  auto message = std::make_unique<DockMessage>(*m_playerShipDbId, false);
+  const auto ship = m_repositories.playerShipRepository->findOneById(*m_playerShipDbId);
+
+  auto message = std::make_unique<DockMessage>(*m_playerShipDbId, false, *ship.system);
   m_outputMessageQueue->pushMessage(std::move(message));
 }
 
