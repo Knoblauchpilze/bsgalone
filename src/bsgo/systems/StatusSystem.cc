@@ -1,5 +1,6 @@
 
 #include "StatusSystem.hh"
+#include "Coordinator.hh"
 #include "JumpMessage.hh"
 
 namespace bsgo {
@@ -18,7 +19,7 @@ constexpr auto TIME_TO_STAY_IN_APPEARED_MODE = utils::Milliseconds{10'000};
 constexpr auto TIME_TO_STAY_IN_THREAT_MODE   = utils::Milliseconds{3'000};
 
 void StatusSystem::updateEntity(Entity &entity,
-                                Coordinator & /*coordinator*/,
+                                Coordinator &coordinator,
                                 const float elapsedSeconds) const
 {
   auto &statusComp = entity.statusComp();
@@ -27,7 +28,7 @@ void StatusSystem::updateEntity(Entity &entity,
   handleAppearingState(entity, statusComp);
   handleThreatState(entity, statusComp);
   handleJustChangedState(entity, statusComp);
-  handleJumpState(entity, statusComp);
+  handleJumpState(entity, statusComp, coordinator);
 }
 
 void StatusSystem::handleAppearingState(Entity &entity, StatusComponent &statusComp) const
@@ -83,7 +84,9 @@ void StatusSystem::handleJustChangedState(Entity &entity, StatusComponent &statu
   statusComp.resetChanged();
 }
 
-void StatusSystem::handleJumpState(Entity &entity, StatusComponent &statusComp) const
+void StatusSystem::handleJumpState(Entity &entity,
+                                   StatusComponent &statusComp,
+                                   Coordinator &coordinator) const
 {
   const auto status = statusComp.status();
   if (!statusIndicatesJump(status))
@@ -97,8 +100,13 @@ void StatusSystem::handleJumpState(Entity &entity, StatusComponent &statusComp) 
     return;
   }
 
-  auto message = std::make_unique<JumpMessage>(entity.dbComp().dbId());
-  pushMessage(std::move(message));
+  const auto owner       = entity.ownerComp().owner();
+  const auto ownerEntity = coordinator.getEntity(owner);
+
+  const auto shipDbId   = entity.dbComp().dbId();
+  const auto playerDbId = ownerEntity.dbComp().dbId();
+
+  pushInternalMessage(std::make_unique<JumpMessage>(shipDbId, playerDbId));
 }
 
 } // namespace bsgo

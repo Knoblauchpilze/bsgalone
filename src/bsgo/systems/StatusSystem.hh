@@ -19,7 +19,7 @@ class StatusSystem : public AbstractSystem
   void handleAppearingState(Entity &entity, StatusComponent &statusComp) const;
   void handleThreatState(Entity &entity, StatusComponent &statusComp) const;
   void handleJustChangedState(Entity &entity, StatusComponent &statusComp) const;
-  void handleJumpState(Entity &entity, StatusComponent &statusComp) const;
+  void handleJumpState(Entity &entity, StatusComponent &statusComp, Coordinator &coordinator) const;
 };
 
 } // namespace bsgo
