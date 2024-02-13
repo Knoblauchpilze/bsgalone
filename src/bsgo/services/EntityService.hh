@@ -35,6 +35,7 @@ class EntityService : public AbstractService
   void performEntityDeletion(Entity &entity) const;
 };
 
+using EntityServicePtr   = std::unique_ptr<EntityService>;
 using EntityServiceShPtr = std::shared_ptr<EntityService>;
 
 } // namespace bsgo

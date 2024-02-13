@@ -5,14 +5,21 @@
 namespace pge {
 
 SystemMessageConsumer::SystemMessageConsumer(bsgo::DatabaseEntityMapper &entityMapper,
-                                             bsgo::CoordinatorShPtr coordinator)
+                                             bsgo::CoordinatorShPtr coordinator,
+                                             bsgo::EntityServicePtr entityService)
   : bsgo::AbstractMessageConsumer("system",
                                   {bsgo::MessageType::SCANNED,
                                    bsgo::MessageType::ENTITY_ADDED,
                                    bsgo::MessageType::ENTITY_REMOVED})
   , m_entityMapper(entityMapper)
   , m_coordinator(std::move(coordinator))
-{}
+  , m_entityService(std::move(entityService))
+{
+  if (nullptr == m_entityService)
+  {
+    throw std::invalid_argument("Expected non null entity service");
+  }
+}
 
 void SystemMessageConsumer::onMessageReceived(const bsgo::IMessage &message)
 {

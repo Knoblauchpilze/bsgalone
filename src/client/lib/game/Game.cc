@@ -351,7 +351,10 @@ void Game::initialize()
 
 void Game::initializeMessageSystem()
 {
-  createMessageConsumers(*m_inputMessageQueue, m_entityMapper, m_coordinator);
+  createMessageConsumers(m_dataSource.repositories(),
+                         *m_inputMessageQueue,
+                         m_entityMapper,
+                         m_coordinator);
 
   m_internalMessageQueue->addListener(
     std::make_unique<InternalMessageConsumer>(m_entityMapper, m_coordinator));
