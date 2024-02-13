@@ -509,7 +509,7 @@ https://github.com/silverqx/TinyORM
 # DB cheat sheet
 
 ```sql
-select p.name, ss.ship, ss.system, ss.docked, sj.system as jump_system, ps.hull_points from ship_system ss left join player_ship ps on ss.ship = ps.id left join player p on ps.player = p.id left join ship_jump sj on sj.ship = ss.ship where p.name = 'colo';
+select ss.ship, p.id as player, ss.docked, ss.system, sj.system, ps.hull_points, p.name from ship_system ss left join ship_jump sj on sj.ship = ss.ship left join player_ship ps on ss.ship = ps.id left join player p on ps.player = p.id where p.name in ('colo', 'colo2');
 ```
 
 ```sql
