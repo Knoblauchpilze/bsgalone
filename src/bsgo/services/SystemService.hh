@@ -18,7 +18,12 @@ class SystemService : public AbstractService
                              const float amount) const;
 
   bool trySendPlayerShipBackToOutpost(const Uuid shipDbId) const;
-  void trySendPlayerBackToOutpost(const Uuid &playerDbId) const;
+
+  struct ForcedDockResult
+  {
+    bool alreadyDocked{false};
+  };
+  auto trySendPlayerBackToOutpost(const Uuid &playerDbId) const -> ForcedDockResult;
 
   struct JumpResult
   {

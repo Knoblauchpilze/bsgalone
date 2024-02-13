@@ -56,12 +56,16 @@ void LogoutMessageConsumer::handleLogout(const LogoutMessage &message) const
           "Unknown system " + str(*maybeSystemDbId));
   }
 
-  m_systemService->trySendPlayerBackToOutpost(playerDbId);
-  auto removed = std::make_unique<EntityRemovedMessage>(m_systemService->getShipDbIdForPlayer(
-                                                          playerDbId),
-                                                        EntityKind::SHIP,
-                                                        false);
-  maybeProcessor->second->pushMessage(std::move(removed));
+  const auto res = m_systemService->trySendPlayerBackToOutpost(playerDbId);
+  if (!res.alreadyDocked)
+  {
+    auto removed = std::make_unique<EntityRemovedMessage>(m_systemService->getShipDbIdForPlayer(
+                                                            playerDbId),
+                                                          EntityKind::SHIP,
+                                                          false,
+                                                          *maybeSystemDbId);
+    maybeProcessor->second->pushMessage(std::move(removed));
+  }
 
   notifyClientAndCloseConnectionIfNeeded(playerDbId, message);
 }

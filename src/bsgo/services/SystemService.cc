@@ -51,15 +51,19 @@ bool SystemService::trySendPlayerShipBackToOutpost(const Uuid shipDbId) const
   return true;
 }
 
-void SystemService::trySendPlayerBackToOutpost(const Uuid &playerDbId) const
+auto SystemService::trySendPlayerBackToOutpost(const Uuid &playerDbId) const -> ForcedDockResult
 {
   auto ship = m_repositories.playerShipRepository->findOneByPlayerAndActive(playerDbId);
+
+  ForcedDockResult out{.alreadyDocked = ship.docked};
 
   ship.docked = true;
   ship.jumpSystem.reset();
 
   m_repositories.systemRepository->updateSystemForShip(ship.id, *ship.system, ship.docked);
   m_repositories.playerShipRepository->save(ship);
+
+  return out;
 }
 
 namespace {
