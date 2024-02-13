@@ -31,7 +31,6 @@ void TriageMessageConsumer::onMessageReceived(const IMessage &message)
     case MessageType::SIGNUP:
     case MessageType::LOGIN:
     case MessageType::LOGOUT:
-    case MessageType::JUMP:
       handleSystemMessage(message);
       break;
     case MessageType::DOCK:

@@ -37,6 +37,7 @@ class MessageExchanger
                            const SystemProcessorMap &systemProcessors);
 
   void initializeInternalMessageQueue(const SystemServiceShPtr &systemService,
+                                      const ClientManagerShPtr &clientManager,
                                       const SystemProcessorMap &systemProcessors);
 };
 
