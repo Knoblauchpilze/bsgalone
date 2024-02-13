@@ -52,7 +52,10 @@ void JumpMessageConsumer::onMessageReceived(const IMessage &message)
   m_clientManager->updateSystemForPlayer(jump.getPlayerDbId(), res.destinationSystem);
   handlePostJumpSystemMessages(shipDbId, res.sourceSystem, res.destinationSystem);
 
-  auto out = std::make_unique<JumpMessage>(shipDbId, playerDbId);
+  auto out = std::make_unique<JumpMessage>(shipDbId,
+                                           playerDbId,
+                                           res.sourceSystem,
+                                           res.destinationSystem);
   out->validate();
   out->copyClientIdIfDefined(jump);
   m_messageQueue->pushMessage(std::move(out));
