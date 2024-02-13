@@ -24,6 +24,8 @@ auto str(const Status &status) -> std::string
       return "jumpThreat";
     case Status::DEAD:
       return "dead";
+    case Status::SPECTATOR:
+      return "spectator";
     default:
       return "unknown";
   }
@@ -65,6 +67,7 @@ bool statusAllowsHealthRegeneration(const Status &status)
   {
     case Status::THREAT:
     case Status::DEAD:
+    case Status::SPECTATOR:
       return false;
     default:
       return true;
@@ -78,6 +81,7 @@ bool statusAllowsPowerRegeneration(const Status &status)
     case Status::JUMP:
     case Status::JUMP_APPEARING:
     case Status::JUMP_THREAT:
+    case Status::SPECTATOR:
       return false;
     default:
       return true;
@@ -91,6 +95,7 @@ bool statusAllowsDamage(const Status &status)
     case Status::DOCKED:
     case Status::APPEARING:
     case Status::DEAD:
+    case Status::SPECTATOR:
       return false;
     default:
       return true;
@@ -116,6 +121,7 @@ bool statusRequiresImmobilization(const Status &status)
   {
     case Status::DOCKED:
     case Status::DEAD:
+    case Status::SPECTATOR:
       return true;
     default:
       return false;
