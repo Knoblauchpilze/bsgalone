@@ -4,8 +4,10 @@
 #include "AbstractMessageConsumer.hh"
 #include "Coordinator.hh"
 #include "DatabaseEntityMapper.hh"
+#include "EntityAddedMessage.hh"
 #include "EntityRemovedMessage.hh"
 #include "ScannedMessage.hh"
+#include "Uuid.hh"
 
 namespace pge {
 
@@ -23,7 +25,11 @@ class SystemMessageConsumer : public bsgo::AbstractMessageConsumer
   bsgo::CoordinatorShPtr m_coordinator{};
 
   void handleScanOperation(const bsgo::ScannedMessage &message) const;
+  void handleEntityAdded(const bsgo::EntityAddedMessage &message) const;
   void handleEntityRemoved(const bsgo::EntityRemovedMessage &message) const;
+
+  void handleShipCreation(const bsgo::Uuid shipDbId) const;
+  void handleAsteroidCreation(const bsgo::Uuid asteroidDbId) const;
 };
 
 } // namespace pge
