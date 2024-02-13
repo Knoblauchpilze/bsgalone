@@ -1,5 +1,6 @@
 
 #include "EntityService.hh"
+#include "AsteroidDataSource.hh"
 #include "PlayerDataSource.hh"
 #include "ShipDataSource.hh"
 
@@ -41,6 +42,22 @@ bool EntityService::tryCreateShipEntity(const Uuid shipDbId) const
 
   statusComp.setStatus(Status::APPEARING);
   statusComp.resetAppearingTime();
+
+  return true;
+}
+
+bool EntityService::tryCreateAsteroidEntity(const Uuid asteroidDbId) const
+{
+  AsteroidDataSource source{m_repositories};
+  source.registerAsteroid(*m_coordinator, asteroidDbId, m_entityMapper);
+
+  const auto maybeEntityId = m_entityMapper.tryGetAsteroidEntityId(asteroidDbId);
+  if (!maybeEntityId)
+  {
+    warn("Failed to create entity for asteroid " + str(asteroidDbId),
+         "Registration did not create an entity for it");
+    return false;
+  }
 
   return true;
 }

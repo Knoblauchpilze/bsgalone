@@ -19,12 +19,12 @@ class AsteroidDataSource : public utils::CoreObject
                   Coordinator &coordinator,
                   DatabaseEntityMapper &entityMapper) const;
 
-  private:
-  Repositories m_repositories{};
-
   void registerAsteroid(Coordinator &coordinator,
                         const Uuid asteroidDbId,
                         DatabaseEntityMapper &entityMapper) const;
+
+  private:
+  Repositories m_repositories{};
 };
 
 } // namespace bsgo
