@@ -5,10 +5,12 @@
 
 namespace bsgo {
 
-EntityService::EntityService(const Repositories &repositories,
+EntityService::EntityService(const ProcessingMode processingMode,
+                             const Repositories &repositories,
                              CoordinatorShPtr coordinator,
                              DatabaseEntityMapper &entityMapper)
   : AbstractService("entity", repositories)
+  , m_processingMode(processingMode)
   , m_coordinator(std::move(coordinator))
   , m_entityMapper(entityMapper)
 {}
@@ -31,8 +33,11 @@ bool EntityService::tryCreateShipEntity(const Uuid shipDbId) const
   auto shipEntity  = m_coordinator->getEntity(*maybeEntityId);
   auto &statusComp = shipEntity.statusComp();
 
-  const auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
-  m_repositories.systemRepository->updateSystemForShip(shipDbId, *ship.system, false);
+  if (ProcessingMode::SERVER == m_processingMode)
+  {
+    const auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
+    m_repositories.systemRepository->updateSystemForShip(shipDbId, *ship.system, false);
+  }
 
   statusComp.setStatus(Status::APPEARING);
   statusComp.resetAppearingTime();
@@ -51,7 +56,7 @@ void EntityService::tryDeleteShipEntity(const Uuid shipDbId) const
     auto shipEntity = m_coordinator->getEntity(*maybeEntityId);
     if (shipEntity.valid())
     {
-      shipEntity.removalComp().markForRemoval();
+      performEntityDeletion(shipEntity);
     }
   }
 
@@ -70,7 +75,7 @@ void EntityService::tryDeleteAsteroidEntity(const Uuid asteroidDbId) const
   auto asteroidEntity = m_coordinator->getEntity(*maybeEntityId);
   if (asteroidEntity.valid())
   {
-    asteroidEntity.removalComp().markForRemoval();
+    performEntityDeletion(asteroidEntity);
   }
 
   m_entityMapper.removeEntityForAsteroid(asteroidDbId);
@@ -113,10 +118,22 @@ void EntityService::handlePlayerDeletionForShip(const Uuid &shipDbId) const
   m_coordinator->deleteEntity(*maybePlayerEntityId);
   m_entityMapper.removeEntityForPlayer(*ship.player);
 
-  PlayerDataSource source{m_repositories};
-  source.registerPlayer(*m_coordinator, *ship.player, m_entityMapper);
-
   info("Removed player " + str(*ship.player) + " from system " + str(*ship.system));
+}
+
+void EntityService::performEntityDeletion(Entity &entity) const
+{
+  switch (m_processingMode)
+  {
+    case ProcessingMode::SERVER:
+      entity.removalComp().markForRemoval();
+      break;
+    case ProcessingMode::CLIENT:
+      m_coordinator->deleteEntity(entity.uuid);
+      break;
+    default:
+      error("Unsupported processing mode");
+  }
 }
 
 } // namespace bsgo
