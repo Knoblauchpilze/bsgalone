@@ -129,14 +129,24 @@ void SystemMessageConsumer::handleShipCreation(const bsgo::Uuid shipDbId) const
     return;
   }
 
-  /// TODO: Handle ship creation in the client
-  warn("Should handle ship " + bsgo::str(shipDbId) + " creation");
+  if (!m_entityService->tryCreateShipEntity(shipDbId))
+  {
+    warn("Failed to process ship added message for " + bsgo::str(shipDbId));
+    return;
+  }
+
+  info("Registered entity for ship " + bsgo::str(shipDbId));
 }
 
 void SystemMessageConsumer::handleAsteroidCreation(const bsgo::Uuid asteroidDbId) const
 {
-  /// TODO: Handle asteroid creation in the client
-  warn("Should handle asteroid " + bsgo::str(asteroidDbId) + " creation");
+  if (!m_entityService->tryCreateAsteroidEntity(asteroidDbId))
+  {
+    warn("Failed to process asteroid added message for " + bsgo::str(asteroidDbId));
+    return;
+  }
+
+  info("Registered entity for asteroid " + bsgo::str(asteroidDbId));
 }
 
 } // namespace pge
