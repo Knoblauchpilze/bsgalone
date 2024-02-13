@@ -175,20 +175,26 @@ auto ClientManager::tryGetSystemForClient(const Uuid clientId) const -> std::opt
   return maybeClientData->second.playerSystemDbId;
 }
 
-void ClientManager::updateSystemForClient(const Uuid clientId, const Uuid systemDbId)
+void ClientManager::updateSystemForPlayer(const Uuid playerDbId, const Uuid systemDbId)
 {
   const std::lock_guard guard(m_locker);
 
-  const auto maybeClientData = m_clients.find(clientId);
+  const auto maybeClientId = m_playerToClient.find(playerDbId);
+  if (maybeClientId == m_playerToClient.cend())
+  {
+    error("Failed to get system for " + str(playerDbId), "No such player");
+  }
+
+  const auto maybeClientData = m_clients.find(maybeClientId->second);
   if (maybeClientData == m_clients.cend())
   {
-    error("Failed to get system for " + str(clientId), "No such client");
+    error("Failed to get system for " + str(playerDbId), "No such client");
   }
 
   auto &clientData = maybeClientData->second;
   if (!clientData.playerDbId)
   {
-    error("Failed to update system for " + str(clientId), "No associated player");
+    error("Failed to update system for " + str(playerDbId), "No associated player");
   }
 
   info("Moved player " + str(*clientData.playerDbId) + " to system " + str(systemDbId));
