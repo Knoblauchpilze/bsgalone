@@ -14,7 +14,8 @@ enum class Status
   JUMP,
   JUMP_APPEARING,
   JUMP_THREAT,
-  DEAD
+  DEAD,
+  SPECTATOR
 };
 
 auto str(const Status &status) -> std::string;

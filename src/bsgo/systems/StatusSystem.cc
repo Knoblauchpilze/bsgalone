@@ -106,6 +106,9 @@ void StatusSystem::handleJumpState(Entity &entity,
   const auto shipDbId   = entity.dbComp().dbId();
   const auto playerDbId = ownerEntity.dbComp().dbId();
 
+  // Reset the status to not trigger more jump messages.
+  statusComp.setStatus(Status::SPECTATOR);
+
   pushInternalMessage(std::make_unique<JumpMessage>(shipDbId, playerDbId));
 }
 
