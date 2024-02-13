@@ -281,6 +281,13 @@ void Game::onConnectedToServer(const bsgo::Uuid clientId)
 {
   info("Received client id " + bsgo::str(clientId) + " from server");
   m_outputMessageQueue->setClientId(clientId);
+
+// #define START_AT_LOGIN
+#ifndef START_AT_LOGIN
+  auto login = std::make_unique<bsgo::LoginMessage>("colo", "aze");
+  login->setClientId(clientId);
+  m_outputMessageQueue->pushMessage(std::move(login));
+#endif
 }
 
 void Game::onLogin(const bsgo::Uuid playerDbId)
