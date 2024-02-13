@@ -15,7 +15,6 @@ auto assertMessagesAreEqual(const JumpMessage &actual, const JumpMessage &expect
   EXPECT_EQ(actual.tryGetSourceSystemDbId(), expected.tryGetSourceSystemDbId());
   EXPECT_EQ(actual.tryGetDestinationSystemDbId(), expected.tryGetDestinationSystemDbId());
   EXPECT_EQ(actual.tryGetClientId(), expected.tryGetClientId());
-  EXPECT_EQ(actual.validated(), expected.validated());
 }
 } // namespace
 
@@ -23,7 +22,7 @@ TEST(Unit_Bsgo_Serialization_JumpMessage, Basic)
 {
   const JumpMessage expected(Uuid{14}, Uuid{6545});
   JumpMessage actual(Uuid{6}, Uuid{17894}, Uuid{47}, Uuid{4521});
-  actual.validate();
+  actual.setClientId(Uuid{1});
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
@@ -32,16 +31,7 @@ TEST(Unit_Bsgo_Serialization_JumpMessage, WithSystemDbIds)
 {
   const JumpMessage expected(Uuid{14}, Uuid{6545}, Uuid{36}, Uuid{998877});
   JumpMessage actual(Uuid{6}, Uuid{17894});
-  actual.validate();
-  serializeAndDeserializeMessage(expected, actual);
-  assertMessagesAreEqual(actual, expected);
-}
-
-TEST(Unit_Bsgo_Serialization_JumpMessage, Validated)
-{
-  JumpMessage expected(Uuid{14}, Uuid{6545}, Uuid{36}, Uuid{998877});
-  expected.validate();
-  JumpMessage actual(Uuid{6}, Uuid{17894}, Uuid{47}, Uuid{4521});
+  actual.setClientId(Uuid{1});
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }

@@ -5,11 +5,11 @@
 namespace bsgo {
 
 JumpMessage::JumpMessage()
-  : ValidatableMessage(MessageType::JUMP)
+  : NetworkMessage(MessageType::JUMP)
 {}
 
 JumpMessage::JumpMessage(const Uuid shipDbId, const Uuid playerDbId)
-  : ValidatableMessage(MessageType::JUMP)
+  : NetworkMessage(MessageType::JUMP)
   , m_shipDbId(shipDbId)
   , m_playerDbId(playerDbId)
 {}
@@ -18,7 +18,7 @@ JumpMessage::JumpMessage(const Uuid shipDbId,
                          const Uuid playerDbId,
                          const Uuid sourceSystemDbId,
                          const Uuid destinationSystemDbId)
-  : ValidatableMessage(MessageType::JUMP)
+  : NetworkMessage(MessageType::JUMP)
   , m_shipDbId(shipDbId)
   , m_playerDbId(playerDbId)
   , m_sourceSystemDbId(sourceSystemDbId)
@@ -67,7 +67,6 @@ auto JumpMessage::serialize(std::ostream &out) const -> std::ostream &
 {
   utils::serialize(out, m_messageType);
   utils::serialize(out, m_clientId);
-  utils::serialize(out, m_validated);
 
   utils::serialize(out, m_shipDbId);
   utils::serialize(out, m_playerDbId);
@@ -82,7 +81,6 @@ bool JumpMessage::deserialize(std::istream &in)
   bool ok{true};
   ok &= utils::deserialize(in, m_messageType);
   ok &= utils::deserialize(in, m_clientId);
-  ok &= utils::deserialize(in, m_validated);
 
   ok &= utils::deserialize(in, m_shipDbId);
   ok &= utils::deserialize(in, m_playerDbId);
@@ -98,7 +96,6 @@ auto JumpMessage::clone() const -> IMessagePtr
   clone->m_sourceSystemDbId      = m_sourceSystemDbId;
   clone->m_destinationSystemDbId = m_destinationSystemDbId;
   clone->copyClientIdIfDefined(*this);
-  clone->validate(validated());
 
   return clone;
 }

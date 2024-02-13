@@ -34,11 +34,6 @@ void JumpMessageConsumer::onMessageReceived(const IMessage &message)
 {
   const auto &jump = message.as<JumpMessage>();
 
-  if (jump.validated())
-  {
-    return;
-  }
-
   const auto shipDbId   = jump.getShipDbId();
   const auto playerDbId = jump.getPlayerDbId();
 
@@ -56,7 +51,6 @@ void JumpMessageConsumer::onMessageReceived(const IMessage &message)
                                            playerDbId,
                                            res.sourceSystem,
                                            res.destinationSystem);
-  out->validate();
   out->copyClientIdIfDefined(jump);
   m_messageQueue->pushMessage(std::move(out));
 }
