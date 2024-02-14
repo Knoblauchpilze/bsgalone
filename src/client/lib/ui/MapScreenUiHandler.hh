@@ -18,6 +18,7 @@ class MapScreenUiHandler : public IUiHandler
   bool processUserInput(UserInputData &inputData) override;
   void render(Renderer &engine) const override;
   void updateUi() override;
+  void reset() override;
 
   private:
   bsgo::ServerViewShPtr m_serverView{};

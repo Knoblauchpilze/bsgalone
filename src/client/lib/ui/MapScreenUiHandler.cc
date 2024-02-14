@@ -90,6 +90,11 @@ void MapScreenUiHandler::updateUi()
   }
 }
 
+void MapScreenUiHandler::reset()
+{
+  m_selectedSystem.reset();
+}
+
 void MapScreenUiHandler::generateControlButtons(const int width, const int height)
 {
   constexpr auto REASONABLE_GAP_SIZE = 20;
