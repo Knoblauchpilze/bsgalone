@@ -67,42 +67,14 @@ void LootSystem::distributeLootTo(const Uuid recipient,
   distributeResourcesTo(player, deadTarget);
 }
 
-namespace {
-auto findCorrespondingPlayerResource(const Entity &player, const Uuid resource)
-  -> std::optional<ResourceComponentShPtr>
-{
-  auto it = player.resources.begin();
-  while (it != player.resources.end())
-  {
-    if ((*it)->resource() == resource)
-    {
-      return {*it};
-    }
-    ++it;
-  }
-
-  return {};
-}
-} // namespace
-
 void LootSystem::distributeResourcesTo(const Entity &player, const Entity &deadTarget) const
 {
   const auto playerDbId = player.dbComp().dbId();
 
   for (const auto &resource : deadTarget.resources)
   {
-    const auto maybePlayerResource = findCorrespondingPlayerResource(player, resource->resource());
-    if (!maybePlayerResource)
-    {
-      error("Failed to distribute loot of " + deadTarget.str(),
-            "Player " + player.str() + " doesn't define resource " + str(resource->resource()));
-    }
-
     info("Distributing " + std::to_string(resource->amount()) + " of " + str(resource->resource())
-         + " to " + player.str() + " (existing: " + std::to_string((*maybePlayerResource)->amount())
-         + ")");
-    const auto total = (*maybePlayerResource)->amount() + resource->amount();
-    (*maybePlayerResource)->setAmount(total);
+         + " to " + player.str());
 
     pushInternalMessage(
       std::make_unique<LootMessage>(playerDbId, resource->resource(), resource->amount()));
