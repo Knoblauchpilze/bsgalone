@@ -9,6 +9,7 @@ namespace bsgo {
 
 enum class MessageType
 {
+  COMPONENT_SYNC,
   CONNECTION,
   DOCK,
   ENTITY_ADDED,
@@ -32,7 +33,7 @@ enum class MessageType
 };
 
 auto str(const MessageType &type) -> std::string;
-auto allMessageTypes() -> std::array<MessageType, 20>;
+auto allMessageTypes() -> std::array<MessageType, 21>;
 
 auto allMessageTypesAsSet() -> std::unordered_set<MessageType>;
 

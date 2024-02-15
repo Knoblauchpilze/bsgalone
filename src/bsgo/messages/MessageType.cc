@@ -8,6 +8,8 @@ auto str(const MessageType &type) -> std::string
 {
   switch (type)
   {
+    case MessageType::COMPONENT_SYNC:
+      return "component_sync";
     case MessageType::CONNECTION:
       return "connection";
     case MessageType::DOCK:
@@ -53,9 +55,10 @@ auto str(const MessageType &type) -> std::string
   }
 }
 
-auto allMessageTypes() -> std::array<MessageType, 20>
+auto allMessageTypes() -> std::array<MessageType, 21>
 {
-  return {MessageType::CONNECTION,
+  return {MessageType::COMPONENT_SYNC,
+          MessageType::CONNECTION,
           MessageType::DOCK,
           MessageType::ENTITY_ADDED,
           MessageType::ENTITY_REMOVED,
