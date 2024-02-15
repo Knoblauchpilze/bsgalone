@@ -25,10 +25,6 @@ class PlayerDataSource : public utils::CoreObject
 
   private:
   Repositories m_repositories{};
-
-  void registerResources(Coordinator &coordinator,
-                         const Uuid playerEntityId,
-                         const Uuid playerDbId) const;
 };
 
 } // namespace bsgo

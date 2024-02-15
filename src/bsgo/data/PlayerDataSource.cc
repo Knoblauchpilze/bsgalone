@@ -33,23 +33,7 @@ void PlayerDataSource::registerPlayer(Coordinator &coordinator,
   coordinator.addName(playerEntityId, player.name);
   coordinator.addDbId(playerEntityId, playerDbId);
 
-  const std::unordered_set<ComponentType> toSync{ComponentType::RESOURCE};
-  coordinator.addNetwork(playerEntityId, toSync);
-
   entityMapper.registerPlayer(playerDbId, playerEntityId);
-
-  registerResources(coordinator, playerEntityId, playerDbId);
-}
-
-void PlayerDataSource::registerResources(Coordinator &coordinator,
-                                         const Uuid playerEntityId,
-                                         const Uuid playerDbId) const
-{
-  const auto resources = m_repositories.playerResourceRepository->findAllByPlayer(playerDbId);
-  for (const auto &resource : resources)
-  {
-    coordinator.addResourceComponent(playerEntityId, resource.resource, resource.amount);
-  }
 }
 
 } // namespace bsgo
