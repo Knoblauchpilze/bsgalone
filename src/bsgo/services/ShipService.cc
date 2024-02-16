@@ -83,8 +83,12 @@ bool ShipService::accelerateShip(const Uuid shipDbId, const Eigen::Vector3f &acc
     return false;
   }
 
-  auto &velocity = ship.velocityComp();
-  velocity.accelerate(acceleration);
+  ship.velocityComp().accelerate(acceleration);
+
+  if (ship.exists<NetworkComponent>())
+  {
+    ship.networkComp().markForSync();
+  }
 
   return true;
 }

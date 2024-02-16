@@ -68,7 +68,8 @@ void ShipDataSource::registerShip(Coordinator &coordinator,
   coordinator.addShipClass(ent, data.shipClass);
   coordinator.addName(ent, data.name);
   coordinator.addDbId(ent, data.id);
-  coordinator.addNetwork(ent, {ComponentType::STATUS});
+  coordinator.addNetwork(ent,
+                         {ComponentType::STATUS, ComponentType::TRANSFORM, ComponentType::VELOCITY});
 
   registerShipOwner(coordinator, ent, data, entityMapper);
   registerShipWeapons(coordinator, ship, ent);

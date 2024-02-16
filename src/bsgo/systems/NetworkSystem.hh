@@ -25,6 +25,8 @@ class NetworkSystem : public AbstractSystem
                      const ComponentType &type,
                      ComponentSyncMessage &message) const;
   bool syncStatusComponent(const Entity &entity, ComponentSyncMessage &message) const;
+  bool syncTransformComponent(const Entity &entity, ComponentSyncMessage &message) const;
+  bool syncVelocityComponent(const Entity &entity, ComponentSyncMessage &message) const;
 };
 
 } // namespace bsgo
