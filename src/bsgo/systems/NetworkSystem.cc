@@ -1,13 +1,12 @@
 
 #include "NetworkSystem.hh"
-#include "ComponentSyncMessage.hh"
 #include "Coordinator.hh"
 
 namespace bsgo {
 namespace {
 bool isEntityRelevant(const Entity &ent)
 {
-  return ent.exists<NetworkComponent>();
+  return ent.exists<NetworkComponent>() && ent.exists<OwnerComponent>();
 }
 } // namespace
 
@@ -29,49 +28,68 @@ void NetworkSystem::updateEntity(Entity &entity,
   syncEntity(entity, coordinator);
 }
 
-void NetworkSystem::syncEntity(Entity &entity, const Coordinator &coordinator) const
+namespace {
+auto generateOutboundMessage(const Entity &entity, const Coordinator &coordinator)
+  -> std::unique_ptr<ComponentSyncMessage>
 {
-  auto &networkComp  = entity.networkComp();
-  const auto &toSync = networkComp.componentsToSync();
-
-  for (const auto &comp : toSync)
-  {
-    syncComponent(entity, comp, coordinator);
-  }
-
-  networkComp.markForSync(false);
-}
-
-void NetworkSystem::syncComponent(const Entity &entity,
-                                  const ComponentType &type,
-                                  const Coordinator &coordinator) const
-{
-  switch (type)
-  {
-    case ComponentType::STATUS:
-      syncStatusComponent(entity, coordinator);
-      break;
-    default:
-      error("Failed to sync component " + str(type), "Unsupported component type");
-      break;
-  }
-}
-
-void NetworkSystem::syncStatusComponent(const Entity &entity, const Coordinator &coordinator) const
-{
-  if (!entity.exists<StatusComponent>() || !entity.exists<OwnerComponent>())
-  {
-    return;
-  }
-
   const auto entityDbId = entity.dbComp().dbId();
   const auto entityKind = entity.kind->kind();
 
   const auto owner     = coordinator.getEntity(entity.ownerComp().owner());
   const auto ownerDbId = owner.dbComp().dbId();
 
-  debug("pushing sync component message");
-  pushMessage(std::make_unique<ComponentSyncMessage>(entityDbId, entityKind, ownerDbId));
+  return std::make_unique<ComponentSyncMessage>(entityDbId, entityKind, ownerDbId);
+}
+} // namespace
+
+void NetworkSystem::syncEntity(Entity &entity, const Coordinator &coordinator) const
+{
+  auto &networkComp  = entity.networkComp();
+  const auto &toSync = networkComp.componentsToSync();
+
+  auto message = generateOutboundMessage(entity, coordinator);
+
+  bool somethingToSync{false};
+  for (const auto &comp : toSync)
+  {
+    somethingToSync |= syncComponent(entity, comp, *message);
+  }
+
+  networkComp.markForSync(false);
+
+  if (somethingToSync)
+  {
+    pushMessage(std::move(message));
+  }
+}
+
+bool NetworkSystem::syncComponent(const Entity &entity,
+                                  const ComponentType &type,
+                                  ComponentSyncMessage &message) const
+{
+  switch (type)
+  {
+    case ComponentType::STATUS:
+      return syncStatusComponent(entity, message);
+      break;
+    default:
+      error("Failed to sync component " + str(type), "Unsupported component type");
+      break;
+  }
+
+  // Useless because of the error above.
+  return false;
+}
+
+bool NetworkSystem::syncStatusComponent(const Entity &entity, ComponentSyncMessage &message) const
+{
+  if (!entity.exists<StatusComponent>())
+  {
+    return false;
+  }
+
+  message.setStatus(entity.statusComp().status());
+  return true;
 }
 
 } // namespace bsgo
