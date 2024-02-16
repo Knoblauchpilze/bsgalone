@@ -135,7 +135,7 @@ void StatusComponent::updateJumpState(const Status &newStatus, const bool forceU
     m_elapsedSinceJumpStarted = utils::Duration{0};
     m_currentJumpTime         = statusIndicatesThreat(m_status) ? *m_threatJumpTime : *m_jumpTime;
   }
-  else if (!isJumping)
+  if (wasJumping && !isJumping)
   {
     m_elapsedSinceJumpStarted.reset();
     m_currentJumpTime.reset();
