@@ -37,10 +37,20 @@ class VelocityComponent : public AbstractComponent
   /// @param direction - the direction to accelerate into.
   void accelerate(const Eigen::Vector3f &direction);
 
+  /// @brief - Override the existing acceleration with the provided value without
+  /// performing any checks.
+  /// @param acceleration - the acceleration to set.
+  void overrideAcceleration(const Eigen::Vector3f &acceleration);
+
   /// @brief - Set the speed to its maximum allowed value in a direction equal to
   /// the input argument.
   /// @param direction - the direction towards which the speed points to.
   void setSpeed(const Eigen::Vector3f &direction);
+
+  /// @brief - Override the existing speed with the provided value without
+  /// performing any checks.
+  /// @param speed - the speed to set.
+  void overrideSpeed(const Eigen::Vector3f &speed);
 
   void immobilize();
 
