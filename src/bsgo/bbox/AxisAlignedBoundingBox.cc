@@ -19,6 +19,11 @@ auto AxisAlignedBoundingBox::position() const -> Eigen::Vector3f
   return m_center;
 }
 
+void AxisAlignedBoundingBox::moveTo(const Eigen::Vector3f &position)
+{
+  m_center = position;
+}
+
 bool AxisAlignedBoundingBox::isInside(const Eigen::Vector3f &pos) const noexcept
 {
   Eigen::Vector3f frontBottomLeft = m_center - m_dims / 2.0f;

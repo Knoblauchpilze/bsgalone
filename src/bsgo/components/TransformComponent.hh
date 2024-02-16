@@ -18,6 +18,7 @@ class TransformComponent : public AbstractComponent
   bool contains(const Eigen::Vector3f &pos) const noexcept;
 
   void translate(const Eigen::Vector3f &delta);
+  void overridePosition(const Eigen::Vector3f &position);
   void setHeading(const float heading);
 
   void update(const float elapsedSeconds) override;

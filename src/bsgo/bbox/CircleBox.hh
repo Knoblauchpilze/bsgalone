@@ -15,6 +15,7 @@ class CircleBox : public IBoundingBox
   auto radius() const -> float;
 
   auto position() const -> Eigen::Vector3f override;
+  void moveTo(const Eigen::Vector3f &position) override;
   bool isInside(const Eigen::Vector3f &pos) const noexcept override;
 
   void translate(const Eigen::Vector3f &delta) override;
