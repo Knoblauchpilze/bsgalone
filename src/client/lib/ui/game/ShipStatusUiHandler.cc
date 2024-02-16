@@ -1,5 +1,8 @@
 
 #include "ShipStatusUiHandler.hh"
+#include "JumpCancelledMessage.hh"
+#include "JumpRequestedMessage.hh"
+#include "MessageListenerWrapper.hh"
 #include "ScreenCommon.hh"
 #include "StringUtils.hh"
 
@@ -7,6 +10,7 @@ namespace pge {
 
 ShipStatusUiHandler::ShipStatusUiHandler(const bsgo::Views &views)
   : IUiHandler("ship_status")
+  , AbstractMessageListener({bsgo::MessageType::JUMP_REQUESTED, bsgo::MessageType::JUMP_CANCELLED})
   , m_shipView(views.shipView)
 {
   if (nullptr == m_shipView)
@@ -41,6 +45,34 @@ void ShipStatusUiHandler::updateUi()
 
   updateThreatPanel();
   updateJumpPanel();
+}
+
+void ShipStatusUiHandler::reset()
+{
+  m_jumpStartTime.reset();
+}
+
+void ShipStatusUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQueue)
+{
+  auto listener = std::make_unique<MessageListenerWrapper>(this);
+  messageQueue.addListener(std::move(listener));
+}
+
+void ShipStatusUiHandler::onMessageReceived(const bsgo::IMessage &message)
+{
+  if (!m_shipView->isReady())
+  {
+    return;
+  }
+
+  if (bsgo::MessageType::JUMP_REQUESTED == message.type())
+  {
+    m_jumpStartTime = utils::now();
+  }
+  if (bsgo::MessageType::JUMP_CANCELLED == message.type())
+  {
+    m_jumpStartTime.reset();
+  }
 }
 
 namespace {
@@ -127,10 +159,18 @@ void ShipStatusUiHandler::updateJumpPanel()
   {
     return;
   }
+  if (!m_jumpStartTime)
+  {
+    error("Failed to process jump time with no registered jump");
+  }
 
   const auto data = m_shipView->getJumpData();
   m_jumpDestination->setText(data.systemName);
-  m_jumpTime->setText(utils::durationToPrettyString(data.jumpTime));
+
+  const auto elapsedSinceJumpStarted = utils::now() - *m_jumpStartTime;
+  const auto remainingJumpTime       = data.jumpTime - elapsedSinceJumpStarted;
+
+  m_jumpTime->setText(utils::durationToPrettyString(remainingJumpTime));
 }
 
 } // namespace pge

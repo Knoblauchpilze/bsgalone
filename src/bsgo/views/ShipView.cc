@@ -185,7 +185,7 @@ auto ShipView::getJumpData() const -> JumpData
   out.systemName    = system.name;
 
   const auto ship = getPlayerShip();
-  out.jumpTime    = ship.statusComp().tryGetRemainingJumpTime();
+  out.jumpTime    = ship.statusComp().tryGetCurrentJumpTime();
 
   return out;
 }

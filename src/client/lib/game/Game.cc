@@ -341,7 +341,9 @@ void Game::initialize()
   const auto repositories = m_dataSource.repositories();
   bsgo::SystemsConfig sConfig{.internalMessageQueue = m_internalMessageQueue.get(),
                               .outputMessageQueue   = m_outputMessageQueue.get(),
-                              .ignoredSystems = {bsgo::SystemType::LOOT, bsgo::SystemType::REMOVAL}};
+                              .ignoredSystems       = {bsgo::SystemType::LOOT,
+                                                       bsgo::SystemType::REMOVAL,
+                                                       bsgo::SystemType::STATUS}};
   m_coordinator = std::make_shared<bsgo::Coordinator>(std::move(sConfig));
 
   bsgo::ViewsConfig vConfig{.repositories         = repositories,
