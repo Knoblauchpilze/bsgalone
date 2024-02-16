@@ -54,15 +54,18 @@ void NetworkSystem::syncComponent(Entity &entity, const ComponentType &type) con
   }
 }
 
-void NetworkSystem::syncStatusComponent(Entity &entity) const
+void NetworkSystem::syncStatusComponent(const Entity &entity) const
 {
   if (!entity.exists<StatusComponent>())
   {
     return;
   }
 
-  /// TODO: Handle sync of status.
-  warn("Should sync status component");
+  const auto entityDbId = entity.dbComp().dbId();
+  const auto entityKind = entity.kind->kind();
+
+  debug("pushing sync component message");
+  pushInternalMessage(std::make_unique<ComponentSyncMessage>(entityDbId, entityKind));
 }
 
 } // namespace bsgo

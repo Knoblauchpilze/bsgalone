@@ -22,7 +22,7 @@ class NetworkSystem : public AbstractSystem
   void syncEntity(Entity &entity) const;
   void syncComponent(Entity &entity, const ComponentType &type) const;
 
-  void syncStatusComponent(Entity &entity) const;
+  void syncStatusComponent(const Entity &entity) const;
 };
 
 } // namespace bsgo
