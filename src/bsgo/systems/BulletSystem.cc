@@ -91,7 +91,12 @@ void BulletSystem::damageOnImpact(Entity &entity, Entity &target) const
   if (target.exists<StatusComponent>())
   {
     const auto currentStatus = target.statusComp().status();
-    target.statusComp().setStatus(updateStatusWithThreat(currentStatus));
+    const auto newStatus     = updateStatusWithThreat(currentStatus);
+    target.statusComp().setStatus(newStatus);
+    if (currentStatus != newStatus)
+    {
+      target.tryMarkForNetworkSync();
+    }
   }
 
   entity.removalComp().markForRemoval();

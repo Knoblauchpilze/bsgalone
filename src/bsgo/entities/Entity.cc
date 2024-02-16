@@ -348,4 +348,12 @@ auto Entity::tryGetComputer(const Uuid computerDbId) const
   return tryLocate(computers, computerDbId);
 }
 
+void Entity::tryMarkForNetworkSync()
+{
+  if (exists<NetworkComponent>())
+  {
+    networkComp().markForSync();
+  }
+}
+
 } // namespace bsgo
