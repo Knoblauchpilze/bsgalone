@@ -52,6 +52,16 @@ auto ComponentSyncMessage::tryGetPosition() const -> std::optional<Eigen::Vector
   return m_position;
 }
 
+void ComponentSyncMessage::setSpeed(const Eigen::Vector3f &speed)
+{
+  m_speed = speed;
+}
+
+auto ComponentSyncMessage::tryGetSpeed() const -> std::optional<Eigen::Vector3f>
+{
+  return m_speed;
+}
+
 void ComponentSyncMessage::setAcceleration(const Eigen::Vector3f &acceleration)
 {
   m_acceleration = acceleration;
@@ -72,6 +82,9 @@ auto ComponentSyncMessage::serialize(std::ostream &out) const -> std::ostream &
   utils::serialize(out, m_playerDbId);
 
   utils::serialize(out, m_status);
+  utils::serialize(out, m_position);
+  utils::serialize(out, m_speed);
+  utils::serialize(out, m_acceleration);
 
   return out;
 }
@@ -87,6 +100,9 @@ bool ComponentSyncMessage::deserialize(std::istream &in)
   ok &= utils::deserialize(in, m_playerDbId);
 
   ok &= utils::deserialize(in, m_status);
+  ok &= utils::deserialize(in, m_position);
+  ok &= utils::deserialize(in, m_speed);
+  ok &= utils::deserialize(in, m_acceleration);
 
   return ok;
 }
@@ -96,7 +112,10 @@ auto ComponentSyncMessage::clone() const -> IMessagePtr
   auto clone = std::make_unique<ComponentSyncMessage>(m_entityDbId, m_entityKind, m_playerDbId);
   clone->copyClientIdIfDefined(*this);
 
-  clone->m_status = m_status;
+  clone->m_status       = m_status;
+  clone->m_position     = m_position;
+  clone->m_speed        = m_speed;
+  clone->m_acceleration = m_acceleration;
 
   return clone;
 }
