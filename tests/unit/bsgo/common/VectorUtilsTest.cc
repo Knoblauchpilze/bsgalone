@@ -51,4 +51,40 @@ INSTANTIATE_TEST_CASE_P(Unit_Bsgo_Serialization_Vector3f,
                           return out;
                         });
 
+TEST(TestCaseVector3fSerialization, EmptyOptional)
+{
+  std::optional<Eigen::Vector3f> expected{};
+
+  std::ostringstream out{};
+  serialize(out, expected);
+  std::istringstream in(out.str());
+
+  std::optional<Eigen::Vector3f> actual{Eigen::Vector3f::Zero()};
+  deserialize(in, actual);
+  EXPECT_EQ(actual, expected);
+
+  in.str(out.str());
+  actual.reset();
+  deserialize(in, actual);
+  EXPECT_EQ(actual, expected);
+}
+
+TEST(TestCaseVector3fSerialization, OptionalWithValue)
+{
+  std::optional<Eigen::Vector3f> expected{Eigen::Vector3f(1.0f, 2.5f, -3.7f)};
+
+  std::ostringstream out{};
+  serialize(out, expected);
+  std::istringstream in(out.str());
+
+  std::optional<Eigen::Vector3f> actual{Eigen::Vector3f(-4.0f, 3.1f, -0.8f)};
+  deserialize(in, actual);
+  EXPECT_EQ(actual, expected);
+
+  in.str(out.str());
+  actual.reset();
+  deserialize(in, actual);
+  EXPECT_EQ(actual, expected);
+}
+
 } // namespace bsgo
