@@ -6,7 +6,8 @@ namespace pge {
 ShipMessageConsumer::ShipMessageConsumer(const bsgo::DatabaseEntityMapper &entityMapper,
                                          bsgo::CoordinatorShPtr coordinator)
   : bsgo::AbstractMessageConsumer("ship",
-                                  {bsgo::MessageType::JUMP_REQUESTED,
+                                  {bsgo::MessageType::COMPONENT_SYNC,
+                                   bsgo::MessageType::JUMP_REQUESTED,
                                    bsgo::MessageType::JUMP_CANCELLED,
                                    bsgo::MessageType::TARGET})
   , m_entityMapper(entityMapper)
@@ -17,6 +18,9 @@ void ShipMessageConsumer::onMessageReceived(const bsgo::IMessage &message)
 {
   switch (message.type())
   {
+    case bsgo::MessageType::COMPONENT_SYNC:
+      handleComponentSync(message.as<bsgo::ComponentSyncMessage>());
+      break;
     case bsgo::MessageType::JUMP_REQUESTED:
       handleJumpRequested(message.as<bsgo::JumpRequestedMessage>());
       break;
@@ -28,6 +32,20 @@ void ShipMessageConsumer::onMessageReceived(const bsgo::IMessage &message)
       break;
     default:
       error("Unsupported message type " + bsgo::str(message.type()));
+  }
+}
+
+void ShipMessageConsumer::handleComponentSync(const bsgo::ComponentSyncMessage &message) const
+{
+  const auto entityKind = message.getEntityKind();
+  switch (entityKind)
+  {
+    case bsgo::EntityKind::SHIP:
+      handleShipComponentsSync(message);
+      break;
+    default:
+      error("Unsupported entity kind " + bsgo::str(entityKind) + " in component sync message");
+      break;
   }
 }
 
@@ -91,6 +109,27 @@ void ShipMessageConsumer::handleTargetAcquired(const bsgo::TargetMessage &messag
   else
   {
     targetComp.clearTarget();
+  }
+}
+
+void ShipMessageConsumer::handleShipComponentsSync(const bsgo::ComponentSyncMessage &message) const
+{
+  const auto shipDbId = message.getEntityDbId();
+
+  const auto maybeShip = m_entityMapper.tryGetShipEntityId(shipDbId);
+  if (!maybeShip)
+  {
+    warn("Failed to process component sync message for ship " + bsgo::str(shipDbId));
+    return;
+  }
+
+  auto ship = m_coordinator->getEntity(*maybeShip);
+
+  const auto shipStatus = message.tryGetStatus();
+  if (shipStatus)
+  {
+    ship.statusComp().setStatus(*shipStatus);
+    info("Setting status of " + bsgo::str(shipDbId) + " to " + bsgo::str(*shipStatus));
   }
 }
 

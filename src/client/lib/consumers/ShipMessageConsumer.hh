@@ -2,6 +2,7 @@
 #pragma once
 
 #include "AbstractMessageConsumer.hh"
+#include "ComponentSyncMessage.hh"
 #include "Coordinator.hh"
 #include "DatabaseEntityMapper.hh"
 #include "JumpCancelledMessage.hh"
@@ -23,10 +24,12 @@ class ShipMessageConsumer : public bsgo::AbstractMessageConsumer
   const bsgo::DatabaseEntityMapper &m_entityMapper;
   bsgo::CoordinatorShPtr m_coordinator{};
 
+  void handleComponentSync(const bsgo::ComponentSyncMessage &message) const;
   void handleJumpRequested(const bsgo::JumpRequestedMessage &message) const;
   void handleJumpCancelled(const bsgo::JumpCancelledMessage &message) const;
   void handleTargetAcquired(const bsgo::TargetMessage &message) const;
 
+  void handleShipComponentsSync(const bsgo::ComponentSyncMessage &message) const;
   auto determineTargetEntityId(const bsgo::Uuid targetDbId, const bsgo::EntityKind &kind) const
     -> bsgo::Uuid;
 };
