@@ -93,11 +93,6 @@ constexpr std::size_t MAXIMUM_NUMBER_OF_LOGS_DISPLAYED = 5;
 const Vec2i LOG_MENU_DIMS{150, 20};
 constexpr auto LOG_FADE_OUT_DURATION_MS = 7000;
 
-bool shouldValidatableMessageBeFiltered(const bsgo::ValidatableMessage &message)
-{
-  return !message.validated();
-}
-
 bool shouldSlotComponentUpdatedMessageBeFiltered(const bsgo::SlotComponentMessage &message,
                                                  const bsgo::Entity &playerShip)
 {
@@ -114,10 +109,6 @@ bool shouldMessageBeFiltered(const bsgo::IMessage &message, const bsgo::Entity &
 {
   switch (message.type())
   {
-    case bsgo::MessageType::JUMP_CANCELLED:
-      return shouldValidatableMessageBeFiltered(message.as<bsgo::JumpCancelledMessage>());
-    case bsgo::MessageType::JUMP_REQUESTED:
-      return shouldValidatableMessageBeFiltered(message.as<bsgo::JumpRequestedMessage>());
     case bsgo::MessageType::SLOT_COMPONENT_UPDATED:
       return shouldSlotComponentUpdatedMessageBeFiltered(message.as<bsgo::SlotComponentMessage>(),
                                                          playerShip);
