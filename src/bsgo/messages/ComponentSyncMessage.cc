@@ -8,10 +8,13 @@ ComponentSyncMessage::ComponentSyncMessage()
   : NetworkMessage(MessageType::COMPONENT_SYNC)
 {}
 
-ComponentSyncMessage::ComponentSyncMessage(const Uuid entityDbId, const EntityKind entityKind)
+ComponentSyncMessage::ComponentSyncMessage(const Uuid entityDbId,
+                                           const EntityKind entityKind,
+                                           const Uuid playerDbId)
   : NetworkMessage(MessageType::COMPONENT_SYNC)
   , m_entityDbId(entityDbId)
   , m_entityKind(entityKind)
+  , m_playerDbId(playerDbId)
 {}
 
 auto ComponentSyncMessage::getEntityDbId() const -> Uuid
@@ -24,23 +27,9 @@ auto ComponentSyncMessage::getEntityKind() const -> EntityKind
   return m_entityKind;
 }
 
-auto ComponentSyncMessage::tryGetSystemDbId() const -> std::optional<Uuid>
+auto ComponentSyncMessage::getPlayerDbId() const -> Uuid
 {
-  return m_systemDbId;
-}
-
-auto ComponentSyncMessage::getSystemDbId() const -> Uuid
-{
-  if (!m_systemDbId)
-  {
-    error("Expected system db id to be defined but it was not");
-  }
-  return *m_systemDbId;
-}
-
-void ComponentSyncMessage::setSystemDbId(const Uuid systemDbId)
-{
-  m_systemDbId = systemDbId;
+  return m_playerDbId;
 }
 
 void ComponentSyncMessage::setStatus(const Status status)
@@ -60,8 +49,7 @@ auto ComponentSyncMessage::serialize(std::ostream &out) const -> std::ostream &
 
   utils::serialize(out, m_entityDbId);
   utils::serialize(out, m_entityKind);
-
-  utils::serialize(out, m_systemDbId);
+  utils::serialize(out, m_playerDbId);
 
   utils::serialize(out, m_status);
 
@@ -76,8 +64,7 @@ bool ComponentSyncMessage::deserialize(std::istream &in)
 
   ok &= utils::deserialize(in, m_entityDbId);
   ok &= utils::deserialize(in, m_entityKind);
-
-  ok &= utils::deserialize(in, m_systemDbId);
+  ok &= utils::deserialize(in, m_playerDbId);
 
   ok &= utils::deserialize(in, m_status);
 
@@ -86,10 +73,8 @@ bool ComponentSyncMessage::deserialize(std::istream &in)
 
 auto ComponentSyncMessage::clone() const -> IMessagePtr
 {
-  auto clone = std::make_unique<ComponentSyncMessage>(m_entityDbId, m_entityKind);
+  auto clone = std::make_unique<ComponentSyncMessage>(m_entityDbId, m_entityKind, m_playerDbId);
   clone->copyClientIdIfDefined(*this);
-
-  clone->m_systemDbId = m_systemDbId;
 
   clone->m_status = m_status;
 

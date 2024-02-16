@@ -1,5 +1,6 @@
 
 #include "BroadcastMessageQueue.hh"
+#include "ComponentSyncMessage.hh"
 #include "EntityAddedMessage.hh"
 #include "EntityRemovedMessage.hh"
 #include "JumpMessage.hh"
@@ -47,7 +48,10 @@ void BroadcastMessageQueue::processMessages(const std::optional<int> &amount)
 
 namespace {
 const std::unordered_set<MessageType> NON_BROADCASTABLE_MESSAGES
-  = {MessageType::LOOT, MessageType::SCANNED, MessageType::SLOT_COMPONENT_UPDATED};
+  = {MessageType::COMPONENT_SYNC,
+     MessageType::LOOT,
+     MessageType::SCANNED,
+     MessageType::SLOT_COMPONENT_UPDATED};
 
 bool shouldTryToDetermineClientId(const IMessage &message)
 {
@@ -144,6 +148,8 @@ auto BroadcastMessageQueue::tryDetermineClientId(const IMessage &message) const
 {
   switch (message.type())
   {
+    case MessageType::COMPONENT_SYNC:
+      return determineClientFor(message.as<ComponentSyncMessage>(), *m_clientManager);
     case MessageType::LOOT:
       return determineClientFor(message.as<LootMessage>(), *m_clientManager);
     case MessageType::SCANNED:

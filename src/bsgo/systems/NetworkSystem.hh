@@ -19,10 +19,12 @@ class NetworkSystem : public AbstractSystem
   private:
   Repositories m_repositories{};
 
-  void syncEntity(Entity &entity) const;
-  void syncComponent(Entity &entity, const ComponentType &type) const;
+  void syncEntity(Entity &entity, const Coordinator &coordinator) const;
+  void syncComponent(const Entity &entity,
+                     const ComponentType &type,
+                     const Coordinator &coordinator) const;
 
-  void syncStatusComponent(const Entity &entity) const;
+  void syncStatusComponent(const Entity &entity, const Coordinator &coordinator) const;
 };
 
 } // namespace bsgo
