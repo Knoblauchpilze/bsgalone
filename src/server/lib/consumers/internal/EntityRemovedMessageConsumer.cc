@@ -37,6 +37,7 @@ void EntityRemovedMessageConsumer::onMessageReceived(const IMessage &message)
       handleAsteroidEntityRemoved(removed.getEntityDbId(), removed.isDead());
       return;
     default:
+      error("Unsupported kind of entity to remove " + str(removed.getEntityKind()));
       break;
   }
 }
