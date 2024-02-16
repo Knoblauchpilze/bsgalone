@@ -42,6 +42,26 @@ auto ComponentSyncMessage::tryGetStatus() const -> std::optional<Status>
   return m_status;
 }
 
+void ComponentSyncMessage::setPosition(const Eigen::Vector3f &position)
+{
+  m_position = position;
+}
+
+auto ComponentSyncMessage::tryGetPosition() const -> std::optional<Eigen::Vector3f>
+{
+  return m_position;
+}
+
+void ComponentSyncMessage::setAcceleration(const Eigen::Vector3f &acceleration)
+{
+  m_acceleration = acceleration;
+}
+
+auto ComponentSyncMessage::tryGetAcceleration() const -> std::optional<Eigen::Vector3f>
+{
+  return m_acceleration;
+}
+
 auto ComponentSyncMessage::serialize(std::ostream &out) const -> std::ostream &
 {
   utils::serialize(out, m_messageType);
