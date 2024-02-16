@@ -98,25 +98,24 @@ bool NetworkSystem::syncStatusComponent(const Entity &entity, ComponentSyncMessa
   return true;
 }
 
-bool NetworkSystem::syncTransformComponent(const Entity & /*entity*/,
-                                           ComponentSyncMessage & /*message*/) const
+bool NetworkSystem::syncTransformComponent(const Entity &entity, ComponentSyncMessage &message) const
 {
-  /// TODO: Handle velocity syncing.
-  warn("Should handle transform syncing");
-  return false;
+  message.setPosition(entity.transformComp().position());
+  return true;
 }
 
-bool NetworkSystem::syncVelocityComponent(const Entity &entity,
-                                          ComponentSyncMessage & /*message*/) const
+bool NetworkSystem::syncVelocityComponent(const Entity &entity, ComponentSyncMessage &message) const
 {
   if (!entity.exists<VelocityComponent>())
   {
     return false;
   }
 
-  /// TODO: Handle velocity syncing.
-  warn("Should handle velocity syncing");
-  return false;
+  const auto &velocityComp = entity.velocityComp();
+  message.setSpeed(velocityComp.speed());
+  message.setAcceleration(velocityComp.acceleration());
+
+  return true;
 }
 
 } // namespace bsgo
