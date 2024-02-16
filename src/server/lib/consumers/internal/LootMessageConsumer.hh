@@ -3,7 +3,6 @@
 
 #include "AbstractMessageConsumer.hh"
 #include "IMessageQueue.hh"
-#include "LootMessage.hh"
 #include "SystemService.hh"
 
 namespace bsgo {

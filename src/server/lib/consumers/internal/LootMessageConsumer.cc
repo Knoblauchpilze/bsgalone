@@ -1,5 +1,6 @@
 
 #include "LootMessageConsumer.hh"
+#include "LootMessage.hh"
 
 namespace bsgo {
 
