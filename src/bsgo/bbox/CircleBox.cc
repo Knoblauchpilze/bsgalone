@@ -20,6 +20,11 @@ auto CircleBox::position() const -> Eigen::Vector3f
   return m_center;
 }
 
+void CircleBox::moveTo(const Eigen::Vector3f &position)
+{
+  m_center = position;
+}
+
 bool CircleBox::isInside(const Eigen::Vector3f &pos) const noexcept
 {
   return (pos - m_center).squaredNorm() < m_squaredRadius;

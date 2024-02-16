@@ -54,6 +54,11 @@ void TransformComponent::translate(const Eigen::Vector3f &delta)
   m_bbox->translate(delta);
 }
 
+void TransformComponent::overridePosition(const Eigen::Vector3f &position)
+{
+  m_bbox->moveTo(position);
+}
+
 void TransformComponent::setHeading(const float heading)
 {
   m_heading = heading;
