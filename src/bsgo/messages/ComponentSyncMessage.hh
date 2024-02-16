@@ -14,12 +14,15 @@ class ComponentSyncMessage : public NetworkMessage
 {
   public:
   ComponentSyncMessage();
-  ComponentSyncMessage(const Uuid entityDbId, const EntityKind entityKind, const Uuid systemDbId);
+  ComponentSyncMessage(const Uuid entityDbId, const EntityKind entityKind);
   ~ComponentSyncMessage() override = default;
 
   auto getEntityDbId() const -> Uuid;
   auto getEntityKind() const -> EntityKind;
+
+  auto tryGetSystemDbId() const -> std::optional<Uuid>;
   auto getSystemDbId() const -> Uuid;
+  void setSystemDbId(const Uuid systemDbId);
 
   void setStatus(const Status status);
   auto tryGetStatus() const -> std::optional<Status>;
@@ -32,7 +35,8 @@ class ComponentSyncMessage : public NetworkMessage
   private:
   Uuid m_entityDbId{};
   EntityKind m_entityKind{};
-  Uuid m_systemDbId{};
+
+  std::optional<Uuid> m_systemDbId{};
 
   std::optional<Status> m_status{};
 };
