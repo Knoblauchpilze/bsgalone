@@ -123,13 +123,32 @@ void ShipMessageConsumer::handleShipComponentsSync(const bsgo::ComponentSyncMess
     return;
   }
 
+  /// TODO: Probably ignore modification for the player's ship.
   auto ship = m_coordinator->getEntity(*maybeShip);
 
-  const auto shipStatus = message.tryGetStatus();
-  if (shipStatus)
+  const auto maybeShipStatus = message.tryGetStatus();
+  if (maybeShipStatus)
   {
-    ship.statusComp().setStatus(*shipStatus);
-    info("Setting status of " + bsgo::str(shipDbId) + " to " + bsgo::str(*shipStatus));
+    ship.statusComp().setStatus(*maybeShipStatus);
+    info("Setting status of " + bsgo::str(shipDbId) + " to " + bsgo::str(*maybeShipStatus));
+  }
+
+  const auto maybeShipPosition = message.tryGetPosition();
+  if (maybeShipPosition)
+  {
+    ship.transformComp().overridePosition(*maybeShipPosition);
+  }
+
+  const auto maybeShipSpeed = message.tryGetSpeed();
+  if (maybeShipSpeed)
+  {
+    ship.velocityComp().overrideSpeed(*maybeShipSpeed);
+  }
+
+  const auto maybeShipAcceleration = message.tryGetAcceleration();
+  if (maybeShipAcceleration)
+  {
+    ship.velocityComp().overrideAcceleration(*maybeShipAcceleration);
   }
 }
 
