@@ -23,11 +23,6 @@ Systems::Systems(SystemsConfig &&config)
 {
   setService("bsgo");
 
-  if (nullptr == config.networkSystem)
-  {
-    throw std::invalid_argument("Expected non null network system");
-  }
-
   initialize(std::move(config));
 }
 
@@ -83,7 +78,7 @@ void Systems::initialize(SystemsConfig &&config)
   createSystem<RemovalSystem>(m_systems, config);
   createSystem<TargetSystem>(m_systems, config);
 
-  if (config.ignoredSystems.contains(SystemType::NETWORK))
+  if (config.ignoredSystems.contains(SystemType::NETWORK) || nullptr == config.networkSystem)
   {
     return;
   }
