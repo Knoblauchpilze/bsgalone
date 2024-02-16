@@ -103,6 +103,8 @@ struct Entity
 
   auto tryGetWeapon(const Uuid weaponDbId) const -> std::optional<WeaponSlotComponentShPtr>;
   auto tryGetComputer(const Uuid computerDbId) const -> std::optional<ComputerSlotComponentShPtr>;
+
+  void tryMarkForNetworkSync();
 };
 
 using EntityPredicate = std::function<bool(const Entity &entity)>;

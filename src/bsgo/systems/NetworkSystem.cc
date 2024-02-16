@@ -1,5 +1,6 @@
 
 #include "NetworkSystem.hh"
+#include "ComponentSyncMessage.hh"
 
 namespace bsgo {
 namespace {
@@ -44,8 +45,8 @@ void NetworkSystem::syncComponent(Entity &entity, const ComponentType &type) con
 {
   switch (type)
   {
-    case ComponentType::RESOURCE:
-      syncResourceComponents(entity);
+    case ComponentType::STATUS:
+      syncStatusComponent(entity);
       break;
     default:
       error("Failed to sync component " + str(type), "Unsupported component type");
@@ -53,28 +54,15 @@ void NetworkSystem::syncComponent(Entity &entity, const ComponentType &type) con
   }
 }
 
-namespace {
-void syncResource(const Uuid playerDbId,
-                  const ResourceComponent &comp,
-                  PlayerResourceRepository &repository)
+void NetworkSystem::syncStatusComponent(Entity &entity) const
 {
-  PlayerResource data{.player = playerDbId, .resource = comp.resource(), .amount = comp.amount()};
-  repository.save(data);
-}
-} // namespace
-
-void NetworkSystem::syncResourceComponents(Entity &entity) const
-{
-  if (!entity.exists<OwnerComponent>())
+  if (!entity.exists<StatusComponent>())
   {
     return;
   }
 
-  const auto playerDbId = entity.dbComp().dbId();
-  for (const auto &resourceComp : entity.resources)
-  {
-    syncResource(playerDbId, *resourceComp, *m_repositories.playerResourceRepository);
-  }
+  /// TODO: Handle sync of status.
+  warn("Should sync status component");
 }
 
 } // namespace bsgo

@@ -39,6 +39,7 @@ void StatusSystem::handleAppearingState(Entity &entity, StatusComponent &statusC
   {
     debug("Switching " + entity.str() + " from appearing to visible");
     statusComp.setStatus(updateStatusAfterSpawn(status));
+    entity.tryMarkForNetworkSync();
   }
 }
 
@@ -50,6 +51,7 @@ void StatusSystem::handleThreatState(Entity &entity, StatusComponent &statusComp
   {
     debug(entity.str() + " is no more in threat");
     statusComp.setStatus(updateStatusAfterThreatEnded(status));
+    entity.tryMarkForNetworkSync();
 
     if (entity.exists<LootComponent>())
     {
@@ -74,6 +76,7 @@ void StatusSystem::handleJustChangedState(Entity &entity, StatusComponent &statu
   if (statusRequiresThreatReset(status))
   {
     statusComp.setStatus(updateStatusAfterThreatEnded(status));
+    entity.tryMarkForNetworkSync();
   }
   if (statusRequiresPowerReset(status) && entity.exists<PowerComponent>())
   {
@@ -110,6 +113,7 @@ void StatusSystem::handleJumpState(Entity &entity,
   statusComp.setStatus(Status::SPECTATOR);
 
   pushInternalMessage(std::make_unique<JumpMessage>(shipDbId, playerDbId));
+  entity.tryMarkForNetworkSync();
 }
 
 } // namespace bsgo

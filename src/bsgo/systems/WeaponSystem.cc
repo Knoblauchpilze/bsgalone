@@ -101,7 +101,12 @@ void WeaponSystem::fireWeaponForEntity(Entity &ent,
   weapon.fire();
 
   const auto currentStatus = ent.statusComp().status();
-  ent.statusComp().setStatus(updateStatusWithThreat(currentStatus));
+  const auto newStatus     = updateStatusWithThreat(currentStatus);
+  ent.statusComp().setStatus(newStatus);
+  if (currentStatus != newStatus)
+  {
+    ent.tryMarkForNetworkSync();
+  }
 
   const auto powerUsed = weapon.powerCost();
   ent.powerComp().usePower(powerUsed);
