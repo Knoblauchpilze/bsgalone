@@ -72,6 +72,12 @@ bool NetworkSystem::syncComponent(const Entity &entity,
     case ComponentType::STATUS:
       return syncStatusComponent(entity, message);
       break;
+    case ComponentType::TRANSFORM:
+      return syncTransformComponent(entity, message);
+      break;
+    case ComponentType::VELOCITY:
+      return syncVelocityComponent(entity, message);
+      break;
     default:
       error("Failed to sync component " + str(type), "Unsupported component type");
       break;
@@ -90,6 +96,27 @@ bool NetworkSystem::syncStatusComponent(const Entity &entity, ComponentSyncMessa
 
   message.setStatus(entity.statusComp().status());
   return true;
+}
+
+bool NetworkSystem::syncTransformComponent(const Entity & /*entity*/,
+                                           ComponentSyncMessage & /*message*/) const
+{
+  /// TODO: Handle velocity syncing.
+  warn("Should handle transform syncing");
+  return false;
+}
+
+bool NetworkSystem::syncVelocityComponent(const Entity &entity,
+                                          ComponentSyncMessage & /*message*/) const
+{
+  if (!entity.exists<VelocityComponent>())
+  {
+    return false;
+  }
+
+  /// TODO: Handle velocity syncing.
+  warn("Should handle velocity syncing");
+  return false;
 }
 
 } // namespace bsgo
