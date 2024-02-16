@@ -1,6 +1,7 @@
 
 #include "NetworkSystem.hh"
 #include "ComponentSyncMessage.hh"
+#include "Coordinator.hh"
 
 namespace bsgo {
 namespace {
@@ -16,7 +17,7 @@ NetworkSystem::NetworkSystem(const Repositories &repositories)
 {}
 
 void NetworkSystem::updateEntity(Entity &entity,
-                                 Coordinator & /*coordinator*/,
+                                 Coordinator &coordinator,
                                  const float /*elapsedSeconds*/) const
 {
   const auto networkComp = entity.networkComp();
@@ -25,28 +26,30 @@ void NetworkSystem::updateEntity(Entity &entity,
     return;
   }
 
-  syncEntity(entity);
+  syncEntity(entity, coordinator);
 }
 
-void NetworkSystem::syncEntity(Entity &entity) const
+void NetworkSystem::syncEntity(Entity &entity, const Coordinator &coordinator) const
 {
   auto &networkComp  = entity.networkComp();
   const auto &toSync = networkComp.componentsToSync();
 
   for (const auto &comp : toSync)
   {
-    syncComponent(entity, comp);
+    syncComponent(entity, comp, coordinator);
   }
 
   networkComp.markForSync(false);
 }
 
-void NetworkSystem::syncComponent(Entity &entity, const ComponentType &type) const
+void NetworkSystem::syncComponent(const Entity &entity,
+                                  const ComponentType &type,
+                                  const Coordinator &coordinator) const
 {
   switch (type)
   {
     case ComponentType::STATUS:
-      syncStatusComponent(entity);
+      syncStatusComponent(entity, coordinator);
       break;
     default:
       error("Failed to sync component " + str(type), "Unsupported component type");
@@ -54,9 +57,9 @@ void NetworkSystem::syncComponent(Entity &entity, const ComponentType &type) con
   }
 }
 
-void NetworkSystem::syncStatusComponent(const Entity &entity) const
+void NetworkSystem::syncStatusComponent(const Entity &entity, const Coordinator &coordinator) const
 {
-  if (!entity.exists<StatusComponent>())
+  if (!entity.exists<StatusComponent>() || !entity.exists<OwnerComponent>())
   {
     return;
   }
@@ -64,8 +67,11 @@ void NetworkSystem::syncStatusComponent(const Entity &entity) const
   const auto entityDbId = entity.dbComp().dbId();
   const auto entityKind = entity.kind->kind();
 
+  const auto owner     = coordinator.getEntity(entity.ownerComp().owner());
+  const auto ownerDbId = owner.dbComp().dbId();
+
   debug("pushing sync component message");
-  pushInternalMessage(std::make_unique<ComponentSyncMessage>(entityDbId, entityKind));
+  pushMessage(std::make_unique<ComponentSyncMessage>(entityDbId, entityKind, ownerDbId));
 }
 
 } // namespace bsgo
