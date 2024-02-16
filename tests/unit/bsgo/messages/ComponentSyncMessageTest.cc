@@ -44,13 +44,13 @@ TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, WithSystem)
   assertMessagesAreEqual(actual, expected);
 
   actual = ComponentSyncMessage(Uuid{44}, EntityKind::PLAYER);
-  actual.setStatus(Status::DEAD);
+  actual.setSystemDbId(Uuid{456});
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 
   expected = ComponentSyncMessage(Uuid{987654}, EntityKind::SHIP);
-  actual   = ComponentSyncMessage(Uuid{44}, EntityKind::PLAYER);
-  actual.setStatus(Status::DEAD);
+  expected.setSystemDbId(Uuid{456});
+  actual = ComponentSyncMessage(Uuid{44}, EntityKind::PLAYER);
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
