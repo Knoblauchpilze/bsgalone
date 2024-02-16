@@ -34,10 +34,20 @@ void VelocityComponent::accelerate(const Eigen::Vector3f &direction)
   m_acceleration             = nDir * m_maxAcceleration;
 }
 
+void VelocityComponent::overrideAcceleration(const Eigen::Vector3f &acceleration)
+{
+  m_acceleration = acceleration;
+}
+
 void VelocityComponent::setSpeed(const Eigen::Vector3f &direction)
 {
   const Eigen::Vector3f nDir = direction.normalized();
   m_speed                    = nDir * m_maxSpeed;
+}
+
+void VelocityComponent::overrideSpeed(const Eigen::Vector3f &speed)
+{
+  m_speed = speed;
 }
 
 void VelocityComponent::immobilize()
