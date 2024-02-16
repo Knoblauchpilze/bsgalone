@@ -3,6 +3,7 @@
 #include <core_utils/SerializationUtils.hh>
 #include <sstream>
 
+#include "ComponentSyncMessage.hh"
 #include "ConnectionMessage.hh"
 #include "DockMessage.hh"
 #include "EntityAddedMessage.hh"
@@ -96,6 +97,8 @@ auto MessageParser::tryReadMessage(const MessageType &type, std::istream &in)
 {
   switch (type)
   {
+    case MessageType::COMPONENT_SYNC:
+      return readMessage<ComponentSyncMessage>(in);
     case MessageType::CONNECTION:
       return readMessage<ConnectionMessage>(in);
     case MessageType::DOCK:
