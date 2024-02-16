@@ -2,6 +2,7 @@
 #pragma once
 
 #include "AbstractSystem.hh"
+#include "ComponentSyncMessage.hh"
 #include "Repositories.hh"
 
 namespace bsgo {
@@ -20,11 +21,10 @@ class NetworkSystem : public AbstractSystem
   Repositories m_repositories{};
 
   void syncEntity(Entity &entity, const Coordinator &coordinator) const;
-  void syncComponent(const Entity &entity,
+  bool syncComponent(const Entity &entity,
                      const ComponentType &type,
-                     const Coordinator &coordinator) const;
-
-  void syncStatusComponent(const Entity &entity, const Coordinator &coordinator) const;
+                     ComponentSyncMessage &message) const;
+  bool syncStatusComponent(const Entity &entity, ComponentSyncMessage &message) const;
 };
 
 } // namespace bsgo
