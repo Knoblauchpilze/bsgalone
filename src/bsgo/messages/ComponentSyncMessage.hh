@@ -28,6 +28,8 @@ class ComponentSyncMessage : public NetworkMessage
   void setPosition(const Eigen::Vector3f &position);
   auto tryGetPosition() const -> std::optional<Eigen::Vector3f>;
 
+  void setSpeed(const Eigen::Vector3f &speed);
+  auto tryGetSpeed() const -> std::optional<Eigen::Vector3f>;
   void setAcceleration(const Eigen::Vector3f &acceleration);
   auto tryGetAcceleration() const -> std::optional<Eigen::Vector3f>;
 
@@ -43,6 +45,7 @@ class ComponentSyncMessage : public NetworkMessage
 
   std::optional<Status> m_status{};
   std::optional<Eigen::Vector3f> m_position{};
+  std::optional<Eigen::Vector3f> m_speed{};
   std::optional<Eigen::Vector3f> m_acceleration{};
 };
 

@@ -13,6 +13,12 @@ auto assertMessagesAreEqual(const ComponentSyncMessage &actual, const ComponentS
   EXPECT_EQ(actual.getEntityDbId(), expected.getEntityDbId());
   EXPECT_EQ(actual.getEntityKind(), expected.getEntityKind());
   EXPECT_EQ(actual.getPlayerDbId(), expected.getPlayerDbId());
+
+  EXPECT_EQ(actual.tryGetStatus(), expected.tryGetStatus());
+  EXPECT_EQ(actual.tryGetPosition(), expected.tryGetPosition());
+  EXPECT_EQ(actual.tryGetSpeed(), expected.tryGetSpeed());
+  EXPECT_EQ(actual.tryGetAcceleration(), expected.tryGetAcceleration());
+
   EXPECT_EQ(actual.tryGetClientId(), expected.tryGetClientId());
 }
 } // namespace
@@ -71,6 +77,26 @@ TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, WithPosition)
   expected = ComponentSyncMessage(Uuid{987654}, EntityKind::SHIP, Uuid{81});
   actual   = ComponentSyncMessage(Uuid{44}, EntityKind::PLAYER, Uuid{271});
   expected.setPosition(Eigen::Vector3f(-27.189f, -0.45f, 127.63f));
+  serializeAndDeserializeMessage(expected, actual);
+  assertMessagesAreEqual(actual, expected);
+}
+
+TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, WithSpeed)
+{
+  ComponentSyncMessage expected(Uuid{987654}, EntityKind::SHIP, Uuid{81});
+  expected.setSpeed(Eigen::Vector3f(45.0f, 89.43f, -74.19f));
+  ComponentSyncMessage actual(Uuid{44}, EntityKind::PLAYER, Uuid{271});
+  serializeAndDeserializeMessage(expected, actual);
+  assertMessagesAreEqual(actual, expected);
+
+  actual = ComponentSyncMessage(Uuid{44}, EntityKind::PLAYER, Uuid{81});
+  expected.setSpeed(Eigen::Vector3f(-27.189f, -0.45f, 127.63f));
+  serializeAndDeserializeMessage(expected, actual);
+  assertMessagesAreEqual(actual, expected);
+
+  expected = ComponentSyncMessage(Uuid{987654}, EntityKind::SHIP, Uuid{81});
+  actual   = ComponentSyncMessage(Uuid{44}, EntityKind::PLAYER, Uuid{271});
+  expected.setSpeed(Eigen::Vector3f(-27.189f, -0.45f, 127.63f));
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
