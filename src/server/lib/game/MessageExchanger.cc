@@ -2,6 +2,7 @@
 #include "MessageExchanger.hh"
 #include "AsyncMessageQueue.hh"
 #include "BroadcastMessageQueue.hh"
+#include "ComponentSyncMessageConsumer.hh"
 #include "ConnectionMessage.hh"
 #include "DataSource.hh"
 #include "EntityRemovedMessageConsumer.hh"
@@ -138,6 +139,11 @@ void MessageExchanger::initializeInternalMessageQueue(const SystemServiceShPtr &
 
   m_internalMessageQueue->addListener(
     std::make_unique<EntityRemovedMessageConsumer>(systemService,
+                                                   systemProcessors,
+                                                   m_outputMessageQueue.get()));
+
+  m_internalMessageQueue->addListener(
+    std::make_unique<ComponentSyncMessageConsumer>(systemService,
                                                    systemProcessors,
                                                    m_outputMessageQueue.get()));
 }
