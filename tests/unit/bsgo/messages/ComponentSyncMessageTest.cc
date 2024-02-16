@@ -55,10 +55,51 @@ TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, WithStatus)
   assertMessagesAreEqual(actual, expected);
 }
 
+TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, WithPosition)
+{
+  ComponentSyncMessage expected(Uuid{987654}, EntityKind::SHIP, Uuid{81});
+  expected.setPosition(Eigen::Vector3f(45.0f, 89.43f, -74.19f));
+  ComponentSyncMessage actual(Uuid{44}, EntityKind::PLAYER, Uuid{271});
+  serializeAndDeserializeMessage(expected, actual);
+  assertMessagesAreEqual(actual, expected);
+
+  actual = ComponentSyncMessage(Uuid{44}, EntityKind::PLAYER, Uuid{81});
+  expected.setPosition(Eigen::Vector3f(-27.189f, -0.45f, 127.63f));
+  serializeAndDeserializeMessage(expected, actual);
+  assertMessagesAreEqual(actual, expected);
+
+  expected = ComponentSyncMessage(Uuid{987654}, EntityKind::SHIP, Uuid{81});
+  actual   = ComponentSyncMessage(Uuid{44}, EntityKind::PLAYER, Uuid{271});
+  expected.setPosition(Eigen::Vector3f(-27.189f, -0.45f, 127.63f));
+  serializeAndDeserializeMessage(expected, actual);
+  assertMessagesAreEqual(actual, expected);
+}
+
+TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, WithAcceleration)
+{
+  ComponentSyncMessage expected(Uuid{987654}, EntityKind::SHIP, Uuid{81});
+  expected.setAcceleration(Eigen::Vector3f(45.0f, 89.43f, -74.19f));
+  ComponentSyncMessage actual(Uuid{44}, EntityKind::PLAYER, Uuid{271});
+  serializeAndDeserializeMessage(expected, actual);
+  assertMessagesAreEqual(actual, expected);
+
+  actual = ComponentSyncMessage(Uuid{44}, EntityKind::PLAYER, Uuid{81});
+  expected.setAcceleration(Eigen::Vector3f(-27.189f, -0.45f, 127.63f));
+  serializeAndDeserializeMessage(expected, actual);
+  assertMessagesAreEqual(actual, expected);
+
+  expected = ComponentSyncMessage(Uuid{987654}, EntityKind::SHIP, Uuid{81});
+  actual   = ComponentSyncMessage(Uuid{44}, EntityKind::PLAYER, Uuid{271});
+  expected.setAcceleration(Eigen::Vector3f(-27.189f, -0.45f, 127.63f));
+  serializeAndDeserializeMessage(expected, actual);
+  assertMessagesAreEqual(actual, expected);
+}
+
 TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, Clone)
 {
   ComponentSyncMessage expected(Uuid{987654}, EntityKind::BULLET, Uuid{81});
   expected.setClientId(Uuid{56789});
+  expected.setAcceleration(Eigen::Vector3f(-27.189f, -0.45f, 127.63f));
   const auto cloned = expected.clone();
   ASSERT_EQ(cloned->type(), MessageType::COMPONENT_SYNC);
   assertMessagesAreEqual(cloned->as<ComponentSyncMessage>(), expected);
