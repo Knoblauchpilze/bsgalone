@@ -43,6 +43,7 @@ void AsteroidDataSource::registerAsteroid(Coordinator &coordinator,
     const auto loot = m_repositories.asteroidLootRepository->findOneById(asteroidDbId);
     coordinator.addResourceComponent(asteroidEntityId, loot.resource, loot.amount);
   }
+  coordinator.addNetwork(asteroidEntityId, {ComponentType::HEALTH});
 
   entityMapper.registerAsteroid(asteroidDbId, asteroidEntityId);
 }
