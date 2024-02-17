@@ -15,10 +15,6 @@ NetworkSystem::NetworkSystem(const Repositories &repositories)
   , m_repositories(repositories)
 {}
 
-namespace {
-constexpr auto SYNC_INTERVAL = utils::Milliseconds{1000};
-}
-
 void NetworkSystem::updateEntity(Entity &entity,
                                  Coordinator & /*coordinator*/,
                                  const float elapsedSeconds) const
@@ -26,10 +22,7 @@ void NetworkSystem::updateEntity(Entity &entity,
   auto &networkComp = entity.networkComp();
   networkComp.update(elapsedSeconds);
 
-  const auto markedForSync       = networkComp.needsSync();
-  const auto wasSyncedTooLongAgo = networkComp.getElapsedSinceLastSync() > SYNC_INTERVAL;
-
-  if (!markedForSync && !wasSyncedTooLongAgo)
+  if (!networkComp.needsSync())
   {
     return;
   }
