@@ -53,31 +53,31 @@ void ShipDataSource::registerShip(Coordinator &coordinator,
     return;
   }
 
-  auto box       = std::make_unique<CircleBox>(data.position, data.radius);
-  const auto ent = coordinator.createEntity(EntityKind::SHIP);
-  coordinator.addTransform(ent, std::move(box));
+  auto box                = std::make_unique<CircleBox>(data.position, data.radius);
+  const auto shipEntityId = coordinator.createEntity(EntityKind::SHIP);
+  coordinator.addTransform(shipEntityId, std::move(box));
   VelocityData vData{.maxAcceleration = data.acceleration, .maxSpeed = data.speed};
-  coordinator.addVelocity(ent, vData);
-  coordinator.addHealth(ent, data.hullPoints, data.maxHullPoints, data.hullPointsRegen);
-  coordinator.addRemoval(ent);
-  coordinator.addPower(ent, data.powerPoints, data.maxPowerPoints, data.powerRegen);
-  coordinator.addTarget(ent);
-  coordinator.addFaction(ent, data.faction);
+  coordinator.addVelocity(shipEntityId, vData);
+  coordinator.addHealth(shipEntityId, data.hullPoints, data.maxHullPoints, data.hullPointsRegen);
+  coordinator.addRemoval(shipEntityId);
+  coordinator.addPower(shipEntityId, data.powerPoints, data.maxPowerPoints, data.powerRegen);
+  coordinator.addTarget(shipEntityId);
+  coordinator.addFaction(shipEntityId, data.faction);
   const auto status = data.docked ? Status::DOCKED : Status::APPEARING;
-  coordinator.addStatus(ent, status, data.jumpTime, data.jumpTimeInThreat);
-  coordinator.addShipClass(ent, data.shipClass);
-  coordinator.addName(ent, data.name);
-  coordinator.addDbId(ent, data.id);
-  coordinator.addNetwork(ent,
+  coordinator.addStatus(shipEntityId, status, data.jumpTime, data.jumpTimeInThreat);
+  coordinator.addShipClass(shipEntityId, data.shipClass);
+  coordinator.addName(shipEntityId, data.name);
+  coordinator.addDbId(shipEntityId, data.id);
+  coordinator.addNetwork(shipEntityId,
                          {ComponentType::HEALTH,
                           ComponentType::POWER,
                           ComponentType::STATUS,
                           ComponentType::TRANSFORM,
                           ComponentType::VELOCITY});
 
-  registerShipOwner(coordinator, ent, data, entityMapper);
-  registerShipWeapons(coordinator, ship, ent);
-  registerShipComputers(coordinator, ship, ent);
+  registerShipOwner(coordinator, shipEntityId, data, entityMapper);
+  registerShipWeapons(coordinator, ship, shipEntityId);
+  registerShipComputers(coordinator, ship, shipEntityId);
 }
 
 void ShipDataSource::registerShipOwner(Coordinator &coordinator,
