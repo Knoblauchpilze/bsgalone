@@ -21,6 +21,8 @@ class RegenerativeComponent : public AbstractComponent
   auto value() const -> float;
   auto max() const -> float;
 
+  void overrideValue(const float value);
+
   protected:
   void updateValue(const float delta);
 
