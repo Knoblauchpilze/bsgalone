@@ -38,6 +38,11 @@ auto RegenerativeComponent::max() const -> float
   return m_max;
 }
 
+void RegenerativeComponent::overrideValue(const float value)
+{
+  m_value = value;
+}
+
 void RegenerativeComponent::updateValue(const float delta)
 {
   m_value += delta;
