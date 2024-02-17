@@ -12,8 +12,8 @@ auto assertMessagesAreEqual(const ComponentSyncMessage &actual, const ComponentS
   EXPECT_EQ(actual.type(), expected.type());
   EXPECT_EQ(actual.getEntityDbId(), expected.getEntityDbId());
   EXPECT_EQ(actual.getEntityKind(), expected.getEntityKind());
-  EXPECT_EQ(actual.getPlayerDbId(), expected.getPlayerDbId());
 
+  EXPECT_EQ(actual.tryGetSystemDbId(), expected.tryGetSystemDbId());
   EXPECT_EQ(actual.tryGetStatus(), expected.tryGetStatus());
   EXPECT_EQ(actual.tryGetPosition(), expected.tryGetPosition());
   EXPECT_EQ(actual.tryGetSpeed(), expected.tryGetSpeed());
@@ -25,8 +25,8 @@ auto assertMessagesAreEqual(const ComponentSyncMessage &actual, const ComponentS
 
 TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, Basic)
 {
-  const ComponentSyncMessage expected(Uuid{987654}, EntityKind::ASTEROID, Uuid{81});
-  ComponentSyncMessage actual(Uuid{44}, EntityKind::OUTPOST, Uuid{271});
+  const ComponentSyncMessage expected(Uuid{987654}, EntityKind::ASTEROID);
+  ComponentSyncMessage actual(Uuid{44}, EntityKind::OUTPOST);
   actual.setClientId(Uuid{89765});
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
@@ -34,28 +34,48 @@ TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, Basic)
 
 TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, WithClientId)
 {
-  ComponentSyncMessage expected(Uuid{987654}, EntityKind::SHIP, Uuid{81});
+  ComponentSyncMessage expected(Uuid{987654}, EntityKind::SHIP);
   expected.setClientId(Uuid{56789});
-  ComponentSyncMessage actual(Uuid{44}, EntityKind::PLAYER, Uuid{271});
+  ComponentSyncMessage actual(Uuid{44}, EntityKind::PLAYER);
+  serializeAndDeserializeMessage(expected, actual);
+  assertMessagesAreEqual(actual, expected);
+}
+
+TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, WithSystem)
+{
+  ComponentSyncMessage expected(Uuid{987654}, EntityKind::SHIP);
+  expected.setSystemDbId(Uuid{271});
+  ComponentSyncMessage actual(Uuid{44}, EntityKind::PLAYER);
+  serializeAndDeserializeMessage(expected, actual);
+  assertMessagesAreEqual(actual, expected);
+
+  actual = ComponentSyncMessage(Uuid{44}, EntityKind::PLAYER);
+  actual.setSystemDbId(Uuid{81});
+  serializeAndDeserializeMessage(expected, actual);
+  assertMessagesAreEqual(actual, expected);
+
+  expected = ComponentSyncMessage(Uuid{987654}, EntityKind::SHIP);
+  actual   = ComponentSyncMessage(Uuid{44}, EntityKind::PLAYER);
+  actual.setSystemDbId(Uuid{81});
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
 
 TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, WithStatus)
 {
-  ComponentSyncMessage expected(Uuid{987654}, EntityKind::SHIP, Uuid{81});
+  ComponentSyncMessage expected(Uuid{987654}, EntityKind::SHIP);
   expected.setStatus(Status::APPEARING);
-  ComponentSyncMessage actual(Uuid{44}, EntityKind::PLAYER, Uuid{271});
+  ComponentSyncMessage actual(Uuid{44}, EntityKind::PLAYER);
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 
-  actual = ComponentSyncMessage(Uuid{44}, EntityKind::PLAYER, Uuid{81});
+  actual = ComponentSyncMessage(Uuid{44}, EntityKind::PLAYER);
   actual.setStatus(Status::DEAD);
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 
-  expected = ComponentSyncMessage(Uuid{987654}, EntityKind::SHIP, Uuid{81});
-  actual   = ComponentSyncMessage(Uuid{44}, EntityKind::PLAYER, Uuid{271});
+  expected = ComponentSyncMessage(Uuid{987654}, EntityKind::SHIP);
+  actual   = ComponentSyncMessage(Uuid{44}, EntityKind::PLAYER);
   actual.setStatus(Status::JUMP_APPEARING);
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
@@ -63,19 +83,19 @@ TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, WithStatus)
 
 TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, WithPosition)
 {
-  ComponentSyncMessage expected(Uuid{987654}, EntityKind::SHIP, Uuid{81});
+  ComponentSyncMessage expected(Uuid{987654}, EntityKind::SHIP);
   expected.setPosition(Eigen::Vector3f(45.0f, 89.43f, -74.19f));
-  ComponentSyncMessage actual(Uuid{44}, EntityKind::PLAYER, Uuid{271});
+  ComponentSyncMessage actual(Uuid{44}, EntityKind::PLAYER);
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 
-  actual = ComponentSyncMessage(Uuid{44}, EntityKind::PLAYER, Uuid{81});
+  actual = ComponentSyncMessage(Uuid{44}, EntityKind::PLAYER);
   expected.setPosition(Eigen::Vector3f(-27.189f, -0.45f, 127.63f));
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 
-  expected = ComponentSyncMessage(Uuid{987654}, EntityKind::SHIP, Uuid{81});
-  actual   = ComponentSyncMessage(Uuid{44}, EntityKind::PLAYER, Uuid{271});
+  expected = ComponentSyncMessage(Uuid{987654}, EntityKind::SHIP);
+  actual   = ComponentSyncMessage(Uuid{44}, EntityKind::PLAYER);
   expected.setPosition(Eigen::Vector3f(-27.189f, -0.45f, 127.63f));
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
@@ -83,19 +103,19 @@ TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, WithPosition)
 
 TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, WithSpeed)
 {
-  ComponentSyncMessage expected(Uuid{987654}, EntityKind::SHIP, Uuid{81});
+  ComponentSyncMessage expected(Uuid{987654}, EntityKind::SHIP);
   expected.setSpeed(Eigen::Vector3f(45.0f, 89.43f, -74.19f));
-  ComponentSyncMessage actual(Uuid{44}, EntityKind::PLAYER, Uuid{271});
+  ComponentSyncMessage actual(Uuid{44}, EntityKind::PLAYER);
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 
-  actual = ComponentSyncMessage(Uuid{44}, EntityKind::PLAYER, Uuid{81});
+  actual = ComponentSyncMessage(Uuid{44}, EntityKind::PLAYER);
   expected.setSpeed(Eigen::Vector3f(-27.189f, -0.45f, 127.63f));
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 
-  expected = ComponentSyncMessage(Uuid{987654}, EntityKind::SHIP, Uuid{81});
-  actual   = ComponentSyncMessage(Uuid{44}, EntityKind::PLAYER, Uuid{271});
+  expected = ComponentSyncMessage(Uuid{987654}, EntityKind::SHIP);
+  actual   = ComponentSyncMessage(Uuid{44}, EntityKind::PLAYER);
   expected.setSpeed(Eigen::Vector3f(-27.189f, -0.45f, 127.63f));
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
@@ -103,19 +123,19 @@ TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, WithSpeed)
 
 TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, WithAcceleration)
 {
-  ComponentSyncMessage expected(Uuid{987654}, EntityKind::SHIP, Uuid{81});
+  ComponentSyncMessage expected(Uuid{987654}, EntityKind::SHIP);
   expected.setAcceleration(Eigen::Vector3f(45.0f, 89.43f, -74.19f));
-  ComponentSyncMessage actual(Uuid{44}, EntityKind::PLAYER, Uuid{271});
+  ComponentSyncMessage actual(Uuid{44}, EntityKind::PLAYER);
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 
-  actual = ComponentSyncMessage(Uuid{44}, EntityKind::PLAYER, Uuid{81});
+  actual = ComponentSyncMessage(Uuid{44}, EntityKind::PLAYER);
   expected.setAcceleration(Eigen::Vector3f(-27.189f, -0.45f, 127.63f));
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 
-  expected = ComponentSyncMessage(Uuid{987654}, EntityKind::SHIP, Uuid{81});
-  actual   = ComponentSyncMessage(Uuid{44}, EntityKind::PLAYER, Uuid{271});
+  expected = ComponentSyncMessage(Uuid{987654}, EntityKind::SHIP);
+  actual   = ComponentSyncMessage(Uuid{44}, EntityKind::PLAYER);
   expected.setAcceleration(Eigen::Vector3f(-27.189f, -0.45f, 127.63f));
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
@@ -123,7 +143,7 @@ TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, WithAcceleration)
 
 TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, Clone)
 {
-  ComponentSyncMessage expected(Uuid{987654}, EntityKind::BULLET, Uuid{81});
+  ComponentSyncMessage expected(Uuid{987654}, EntityKind::BULLET);
   expected.setClientId(Uuid{56789});
   expected.setAcceleration(Eigen::Vector3f(-27.189f, -0.45f, 127.63f));
   const auto cloned = expected.clone();

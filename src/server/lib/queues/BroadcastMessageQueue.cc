@@ -48,10 +48,7 @@ void BroadcastMessageQueue::processMessages(const std::optional<int> &amount)
 
 namespace {
 const std::unordered_set<MessageType> NON_BROADCASTABLE_MESSAGES
-  = {MessageType::COMPONENT_SYNC,
-     MessageType::LOOT,
-     MessageType::SCANNED,
-     MessageType::SLOT_COMPONENT_UPDATED};
+  = {MessageType::LOOT, MessageType::SCANNED, MessageType::SLOT_COMPONENT_UPDATED};
 
 bool shouldTryToDetermineClientId(const IMessage &message)
 {
@@ -95,7 +92,8 @@ void BroadcastMessageQueue::sendMessageToClient(const Uuid clientId, const IMess
 }
 
 namespace {
-const std::unordered_set<MessageType> SYSTEM_DIRECTED_MESSAGES = {MessageType::JUMP,
+const std::unordered_set<MessageType> SYSTEM_DIRECTED_MESSAGES = {MessageType::COMPONENT_SYNC,
+                                                                  MessageType::JUMP,
                                                                   MessageType::ENTITY_ADDED,
                                                                   MessageType::ENTITY_REMOVED};
 
@@ -148,8 +146,6 @@ auto BroadcastMessageQueue::tryDetermineClientId(const IMessage &message) const
 {
   switch (message.type())
   {
-    case MessageType::COMPONENT_SYNC:
-      return determineClientFor(message.as<ComponentSyncMessage>(), *m_clientManager);
     case MessageType::LOOT:
       return determineClientFor(message.as<LootMessage>(), *m_clientManager);
     case MessageType::SCANNED:
@@ -184,6 +180,8 @@ auto BroadcastMessageQueue::tryDetermineSystemIds(const IMessage &message) const
 {
   switch (message.type())
   {
+    case MessageType::COMPONENT_SYNC:
+      return determineSystemsFor(message.as<ComponentSyncMessage>());
     case MessageType::ENTITY_ADDED:
       return determineSystemsFor(message.as<EntityAddedMessage>());
     case MessageType::ENTITY_REMOVED:
