@@ -76,7 +76,6 @@ void StatusSystem::handleJustChangedState(Entity &entity, StatusComponent &statu
   if (statusRequiresThreatReset(status))
   {
     statusComp.setStatus(updateStatusAfterThreatEnded(status));
-    entity.tryMarkForNetworkSync();
   }
   if (statusRequiresPowerReset(status) && entity.exists<PowerComponent>())
   {
@@ -84,6 +83,7 @@ void StatusSystem::handleJustChangedState(Entity &entity, StatusComponent &statu
     power.useAll();
   }
 
+  entity.tryMarkForNetworkSync();
   statusComp.resetChanged();
 }
 
