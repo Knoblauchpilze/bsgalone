@@ -20,7 +20,7 @@ class NetworkSystem : public AbstractSystem
   private:
   Repositories m_repositories{};
 
-  void syncEntity(Entity &entity, const Coordinator &coordinator) const;
+  void syncEntity(Entity &entity) const;
   bool syncComponent(const Entity &entity,
                      const ComponentType &type,
                      ComponentSyncMessage &message) const;

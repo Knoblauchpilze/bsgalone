@@ -16,7 +16,7 @@ NetworkSystem::NetworkSystem(const Repositories &repositories)
 {}
 
 void NetworkSystem::updateEntity(Entity &entity,
-                                 Coordinator &coordinator,
+                                 Coordinator & /*coordinator*/,
                                  const float /*elapsedSeconds*/) const
 {
   const auto networkComp = entity.networkComp();
@@ -25,29 +25,25 @@ void NetworkSystem::updateEntity(Entity &entity,
     return;
   }
 
-  syncEntity(entity, coordinator);
+  syncEntity(entity);
 }
 
 namespace {
-auto generateOutboundMessage(const Entity &entity, const Coordinator &coordinator)
-  -> std::unique_ptr<ComponentSyncMessage>
+auto generateOutboundMessage(const Entity &entity) -> std::unique_ptr<ComponentSyncMessage>
 {
   const auto entityDbId = entity.dbComp().dbId();
   const auto entityKind = entity.kind->kind();
 
-  const auto owner     = coordinator.getEntity(entity.ownerComp().owner());
-  const auto ownerDbId = owner.dbComp().dbId();
-
-  return std::make_unique<ComponentSyncMessage>(entityDbId, entityKind, ownerDbId);
+  return std::make_unique<ComponentSyncMessage>(entityDbId, entityKind);
 }
 } // namespace
 
-void NetworkSystem::syncEntity(Entity &entity, const Coordinator &coordinator) const
+void NetworkSystem::syncEntity(Entity &entity) const
 {
   auto &networkComp  = entity.networkComp();
   const auto &toSync = networkComp.componentsToSync();
 
-  auto message = generateOutboundMessage(entity, coordinator);
+  auto message = generateOutboundMessage(entity);
 
   bool somethingToSync{false};
   for (const auto &comp : toSync)
