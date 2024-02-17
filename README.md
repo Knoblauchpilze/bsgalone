@@ -152,6 +152,42 @@ According to this [Stack Overflow](https://stackoverflow.com/questions/72144228/
 
 Another approach as we need to deserialize the data from the database is to use plain integers for identifiers. This is probably enough for now. To this end it seems like the way to go about it is to use `generated always as identity` (taken from this [Stack Overflow](https://stackoverflow.com/questions/55300370/postgresql-serial-vs-identity) post).
 
+## Allowing clients to connect to the database
+
+As of now each client will connect to the database and try to get information from it. This is mainly the case when processing messages and initializing the UI.
+
+By default postgres does not allow incoming connections from remote host to come through. In order to allow the host machine to accept those we need to modify the configuration of the postgres a bit.
+
+Once again we found a nice [Stack Overflow](https://stackoverflow.com/questions/17838613/open-port-in-ubuntu) post explaining what needs to be done. The steps are presented in the following sections.
+
+### Edit: postgresql.conf
+
+Edit the file:
+```bash
+sudo nano /etc/postgresql/<version>/main/postgresql.conf
+```
+
+And enable or add:
+```
+listen_addresses = '*'
+```
+
+### Edit pg_hba.conf
+
+Edit the file:
+```bash
+sudo nano /etc/postgresql/<version>/main/pg_hba.conf
+```
+
+Register the network mask you want to allow connections from. A `0` stands for a wildcard and we chose to restrict to local network for now by adding the following:
+```
+host    all             all             192.168.1.0/0          scram-sha-256
+```
+
+The connection method was changed from `md5` to `scram-sha-256` as recommended by this [DBA stackexchange](https://dba.stackexchange.com/questions/83984/connect-to-postgresql-server-fatal-no-pg-hba-conf-entry-for-host) post: it is supposed to be more secured than the old `md5` approach.
+
+With this we were able to connect from a remote computer to the database hosted on another machine.
+
 # Development log and findings
 
 ## Goal
