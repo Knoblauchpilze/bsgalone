@@ -1,6 +1,5 @@
 
 #include "MessageType.hh"
-#include <iostream>
 
 namespace bsgo {
 
