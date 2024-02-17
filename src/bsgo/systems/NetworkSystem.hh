@@ -24,6 +24,9 @@ class NetworkSystem : public AbstractSystem
   bool syncComponent(const Entity &entity,
                      const ComponentType &type,
                      ComponentSyncMessage &message) const;
+
+  bool syncHealthComponent(const Entity &entity, ComponentSyncMessage &message) const;
+  bool syncPowerComponent(const Entity &entity, ComponentSyncMessage &message) const;
   bool syncStatusComponent(const Entity &entity, ComponentSyncMessage &message) const;
   bool syncTransformComponent(const Entity &entity, ComponentSyncMessage &message) const;
   bool syncVelocityComponent(const Entity &entity, ComponentSyncMessage &message) const;
