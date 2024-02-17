@@ -150,6 +150,19 @@ void ShipMessageConsumer::handleShipComponentsSync(const bsgo::ComponentSyncMess
   {
     ship.velocityComp().overrideAcceleration(*maybeShipAcceleration);
   }
+
+  const auto maybeHealth = message.tryGetHealth();
+  if (maybeHealth)
+  {
+    ship.healthComp().overrideValue(*maybeHealth);
+  }
+
+  const auto maybePower = message.tryGetPower();
+  if (maybePower)
+  {
+    debug("Overriding power to " + std::to_string(*maybePower));
+    ship.powerComp().overrideValue(*maybePower);
+  }
 }
 
 auto ShipMessageConsumer::determineTargetEntityId(const bsgo::Uuid targetDbId,
