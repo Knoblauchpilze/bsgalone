@@ -6,7 +6,7 @@ namespace bsgo {
 namespace {
 bool isEntityRelevant(const Entity &ent)
 {
-  return ent.exists<NetworkComponent>() && ent.exists<OwnerComponent>();
+  return ent.exists<NetworkComponent>();
 }
 } // namespace
 
