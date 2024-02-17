@@ -28,35 +28,57 @@ void ComponentSyncMessageConsumer::onMessageReceived(const IMessage &message)
 {
   const auto &componentSync = message.as<ComponentSyncMessage>();
 
+  std::optional<Uuid> systemDbId{};
   switch (componentSync.getEntityKind())
   {
     case EntityKind::SHIP:
-      handleShipComponentSynced(componentSync);
-      return;
+      systemDbId = determineSystemForShip(componentSync.getEntityDbId());
+      break;
+    case EntityKind::ASTEROID:
+      systemDbId = determineSystemForAsteroid(componentSync.getEntityDbId());
+      break;
     default:
       error("Unsupported kind of entity to sync " + str(componentSync.getEntityKind()));
       break;
   }
+
+  if (!systemDbId)
+  {
+    error("Failed to determine system for entity " + str(componentSync.getEntityDbId())
+          + " with kind " + str(componentSync.getEntityKind()));
+  }
+
+  auto out = message.clone();
+  out->as<ComponentSyncMessage>().setSystemDbId(*systemDbId);
+  m_messageQueue->pushMessage(std::move(out));
 }
 
-void ComponentSyncMessageConsumer::handleShipComponentSynced(const ComponentSyncMessage &message) const
+auto ComponentSyncMessageConsumer::determineSystemForShip(const Uuid shipDbId) const -> Uuid
 {
-  const auto shipDbId        = message.getEntityDbId();
   const auto [systemDbId, _] = findSystemAndProcessorFromShip(shipDbId,
                                                               *m_systemService,
                                                               m_systemProcessors);
   if (!systemDbId)
   {
-    warn("Failed to process ship component synced message for " + str(shipDbId),
-         "No system for ship");
-    return;
+    error("Failed to process ship component synced message for " + str(shipDbId),
+          "No system for ship");
   }
 
-  debug("assigned system " + str(*systemDbId) + " to sync message");
+  return *systemDbId;
+}
 
-  auto out = message.clone();
-  out->as<ComponentSyncMessage>().setSystemDbId(*systemDbId);
-  m_messageQueue->pushMessage(std::move(out));
+auto ComponentSyncMessageConsumer::determineSystemForAsteroid(const Uuid asteroidDbId) const -> Uuid
+{
+  const auto [systemDbId, _] = findSystemAndProcessorFromAsteroid(asteroidDbId,
+                                                                  *m_systemService,
+                                                                  m_systemProcessors);
+  if (!systemDbId)
+  {
+    error("Failed to process asteroid component synced message for " + str(asteroidDbId),
+          "No system for asteroid");
+  }
+
+  return *systemDbId;
 }
 
 } // namespace bsgo
