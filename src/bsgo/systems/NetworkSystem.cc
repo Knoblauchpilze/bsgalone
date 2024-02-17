@@ -55,7 +55,7 @@ void NetworkSystem::syncEntity(Entity &entity) const
 
   if (somethingToSync)
   {
-    pushMessage(std::move(message));
+    pushInternalMessage(std::move(message));
   }
 }
 
