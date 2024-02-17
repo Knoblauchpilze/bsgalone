@@ -30,6 +30,7 @@ class ShipMessageConsumer : public bsgo::AbstractMessageConsumer
   void handleTargetAcquired(const bsgo::TargetMessage &message) const;
 
   void handleShipComponentsSync(const bsgo::ComponentSyncMessage &message) const;
+  void handleAsteroidComponentsSync(const bsgo::ComponentSyncMessage &message) const;
   auto determineTargetEntityId(const bsgo::Uuid targetDbId, const bsgo::EntityKind &kind) const
     -> bsgo::Uuid;
 };
