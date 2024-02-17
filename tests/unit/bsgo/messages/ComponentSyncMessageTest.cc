@@ -188,6 +188,7 @@ TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, Clone)
   ComponentSyncMessage expected(Uuid{987654}, EntityKind::BULLET);
   expected.setClientId(Uuid{56789});
   expected.setAcceleration(Eigen::Vector3f(-27.189f, -0.45f, 127.63f));
+  expected.setPower(-26.0f);
   const auto cloned = expected.clone();
   ASSERT_EQ(cloned->type(), MessageType::COMPONENT_SYNC);
   assertMessagesAreEqual(cloned->as<ComponentSyncMessage>(), expected);

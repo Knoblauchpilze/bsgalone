@@ -152,6 +152,8 @@ auto ComponentSyncMessage::clone() const -> IMessagePtr
   clone->m_position     = m_position;
   clone->m_speed        = m_speed;
   clone->m_acceleration = m_acceleration;
+  clone->m_health       = m_health;
+  clone->m_power        = m_power;
 
   return clone;
 }
