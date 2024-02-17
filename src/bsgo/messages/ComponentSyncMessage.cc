@@ -83,6 +83,26 @@ auto ComponentSyncMessage::tryGetAcceleration() const -> std::optional<Eigen::Ve
   return m_acceleration;
 }
 
+void ComponentSyncMessage::setHealth(const float health)
+{
+  m_health = health;
+}
+
+auto ComponentSyncMessage::tryGetHealth() const -> std::optional<float>
+{
+  return m_health;
+}
+
+void ComponentSyncMessage::setPower(const float power)
+{
+  m_power = power;
+}
+
+auto ComponentSyncMessage::tryGetPower() const -> std::optional<float>
+{
+  return m_power;
+}
+
 auto ComponentSyncMessage::serialize(std::ostream &out) const -> std::ostream &
 {
   utils::serialize(out, m_messageType);
@@ -96,6 +116,8 @@ auto ComponentSyncMessage::serialize(std::ostream &out) const -> std::ostream &
   utils::serialize(out, m_position);
   utils::serialize(out, m_speed);
   utils::serialize(out, m_acceleration);
+  utils::serialize(out, m_health);
+  utils::serialize(out, m_power);
 
   return out;
 }
@@ -114,6 +136,8 @@ bool ComponentSyncMessage::deserialize(std::istream &in)
   ok &= utils::deserialize(in, m_position);
   ok &= utils::deserialize(in, m_speed);
   ok &= utils::deserialize(in, m_acceleration);
+  ok &= utils::deserialize(in, m_health);
+  ok &= utils::deserialize(in, m_power);
 
   return ok;
 }

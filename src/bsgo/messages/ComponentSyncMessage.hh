@@ -36,6 +36,12 @@ class ComponentSyncMessage : public NetworkMessage
   void setAcceleration(const Eigen::Vector3f &acceleration);
   auto tryGetAcceleration() const -> std::optional<Eigen::Vector3f>;
 
+  void setHealth(const float health);
+  auto tryGetHealth() const -> std::optional<float>;
+
+  void setPower(const float power);
+  auto tryGetPower() const -> std::optional<float>;
+
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
 
@@ -50,6 +56,8 @@ class ComponentSyncMessage : public NetworkMessage
   std::optional<Eigen::Vector3f> m_position{};
   std::optional<Eigen::Vector3f> m_speed{};
   std::optional<Eigen::Vector3f> m_acceleration{};
+  std::optional<float> m_health{};
+  std::optional<float> m_power{};
 };
 
 } // namespace bsgo
