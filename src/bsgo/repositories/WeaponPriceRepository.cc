@@ -1,8 +1,6 @@
 
 #include "WeaponPriceRepository.hh"
 
-#include <iostream>
-
 namespace bsgo {
 
 WeaponPriceRepository::WeaponPriceRepository(const DbConnectionShPtr &connection)
