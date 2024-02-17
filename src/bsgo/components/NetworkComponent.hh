@@ -17,7 +17,6 @@ class NetworkComponent : public AbstractComponent
   bool needsSync() const;
   void markForSync(const bool needsSync = true);
   void markAsJustSynced();
-  auto getElapsedSinceLastSync() const -> utils::Duration;
 
   auto componentsToSync() const -> const std::unordered_set<ComponentType> &;
 
@@ -26,7 +25,7 @@ class NetworkComponent : public AbstractComponent
   private:
   bool m_needsSync{false};
   std::unordered_set<ComponentType> m_componentsToSync{};
-  utils::Duration m_elapsedSinceLastSync{};
+  utils::Duration m_remainingUntilNextSync{};
 };
 
 using NetworkComponentShPtr = std::shared_ptr<NetworkComponent>;
