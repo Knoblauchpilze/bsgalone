@@ -74,6 +74,12 @@ bool NetworkSystem::syncComponent(const Entity &entity,
 {
   switch (type)
   {
+    case ComponentType::HEALTH:
+      return syncHealthComponent(entity, message);
+      break;
+    case ComponentType::POWER:
+      return syncPowerComponent(entity, message);
+      break;
     case ComponentType::STATUS:
       return syncStatusComponent(entity, message);
       break;
@@ -90,6 +96,28 @@ bool NetworkSystem::syncComponent(const Entity &entity,
 
   // Useless because of the error above.
   return false;
+}
+
+bool NetworkSystem::syncHealthComponent(const Entity &entity, ComponentSyncMessage &message) const
+{
+  if (!entity.exists<HealthComponent>())
+  {
+    return false;
+  }
+
+  message.setHealth(entity.healthComp().value());
+  return true;
+}
+
+bool NetworkSystem::syncPowerComponent(const Entity &entity, ComponentSyncMessage &message) const
+{
+  if (!entity.exists<PowerComponent>())
+  {
+    return false;
+  }
+
+  message.setPower(entity.powerComp().value());
+  return true;
 }
 
 bool NetworkSystem::syncStatusComponent(const Entity &entity, ComponentSyncMessage &message) const
