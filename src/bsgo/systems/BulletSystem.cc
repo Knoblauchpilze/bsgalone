@@ -98,6 +98,10 @@ void BulletSystem::damageOnImpact(Entity &entity, Entity &target) const
       target.tryMarkForNetworkSync();
     }
   }
+  if (EntityKind::ASTEROID == target.kind->kind())
+  {
+    target.tryMarkForNetworkSync();
+  }
 
   entity.removalComp().markForRemoval();
 }
