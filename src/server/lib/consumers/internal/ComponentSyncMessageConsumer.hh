@@ -25,7 +25,8 @@ class ComponentSyncMessageConsumer : public AbstractMessageConsumer
   SystemProcessorMap m_systemProcessors{};
   IMessageQueue *const m_messageQueue{};
 
-  void handleShipComponentSynced(const ComponentSyncMessage &message) const;
+  auto determineSystemForShip(const Uuid shipDbId) const -> Uuid;
+  auto determineSystemForAsteroid(const Uuid asteroidDbId) const -> Uuid;
 };
 
 } // namespace bsgo
