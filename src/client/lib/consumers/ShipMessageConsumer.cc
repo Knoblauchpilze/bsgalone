@@ -43,6 +43,9 @@ void ShipMessageConsumer::handleComponentSync(const bsgo::ComponentSyncMessage &
     case bsgo::EntityKind::SHIP:
       handleShipComponentsSync(message);
       break;
+    case bsgo::EntityKind::ASTEROID:
+      handleAsteroidComponentsSync(message);
+      break;
     default:
       error("Unsupported entity kind " + bsgo::str(entityKind) + " in component sync message");
       break;
@@ -160,8 +163,27 @@ void ShipMessageConsumer::handleShipComponentsSync(const bsgo::ComponentSyncMess
   const auto maybePower = message.tryGetPower();
   if (maybePower)
   {
-    debug("Overriding power to " + std::to_string(*maybePower));
     ship.powerComp().overrideValue(*maybePower);
+  }
+}
+
+void ShipMessageConsumer::handleAsteroidComponentsSync(const bsgo::ComponentSyncMessage &message) const
+{
+  const auto asteroidDbId = message.getEntityDbId();
+
+  const auto maybeAsteroid = m_entityMapper.tryGetAsteroidEntityId(asteroidDbId);
+  if (!maybeAsteroid)
+  {
+    warn("Failed to process component sync message for asteroid " + bsgo::str(asteroidDbId));
+    return;
+  }
+
+  auto asteroid = m_coordinator->getEntity(*maybeAsteroid);
+
+  const auto maybeHealth = message.tryGetHealth();
+  if (maybeHealth)
+  {
+    asteroid.healthComp().overrideValue(*maybeHealth);
   }
 }
 
