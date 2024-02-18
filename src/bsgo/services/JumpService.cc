@@ -1,5 +1,6 @@
 
 #include "JumpService.hh"
+#include "JumpUtils.hh"
 
 namespace bsgo {
 
@@ -11,40 +12,6 @@ JumpService::JumpService(const Repositories &repositories,
   , m_entityMapper(entityMapper)
 {}
 
-namespace {
-bool isShipActive(const PlayerShip &ship)
-{
-  return ship.player.has_value() && ship.active;
-}
-
-bool canShipJump(const PlayerShip &ship, const Uuid newSystem)
-{
-  if (!isShipActive(ship))
-  {
-    return false;
-  }
-  if (!ship.system.has_value())
-  {
-    return false;
-  }
-  if (ship.jumpSystem.has_value())
-  {
-    return false;
-  }
-  if (*ship.system == newSystem)
-  {
-    return false;
-  }
-  if (ship.docked)
-  {
-    return false;
-  }
-
-  return true;
-}
-
-} // namespace
-
 bool JumpService::tryRegisterJump(const Uuid shipDbId, const Uuid system) const
 {
   const auto maybeShipEntity = m_entityMapper.tryGetShipEntityId(shipDbId);
@@ -53,9 +20,11 @@ bool JumpService::tryRegisterJump(const Uuid shipDbId, const Uuid system) const
     return false;
   }
 
-  auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
-  if (!canShipJump(ship, system))
+  auto ship         = m_repositories.playerShipRepository->findOneById(shipDbId);
+  const auto status = canShipJump(ship, system);
+  if (JumpCompletionStatus::OK != status)
   {
+    warn("Failed to process jump request for ship " + str(ship.id), str(status));
     return false;
   }
 
@@ -64,10 +33,10 @@ bool JumpService::tryRegisterJump(const Uuid shipDbId, const Uuid system) const
 
   info("Registered jump to " + str(system) + " for ship " + str(shipDbId));
 
-  auto playerShip   = m_coordinator->getEntity(*maybeShipEntity);
-  const auto status = playerShip.statusComp().status();
+  auto playerShip              = m_coordinator->getEntity(*maybeShipEntity);
+  const auto currentShipStatus = playerShip.statusComp().status();
 
-  const auto newStatus = updateStatusForJump(status);
+  const auto newStatus = updateStatusForJump(currentShipStatus);
   playerShip.statusComp().setStatus(newStatus);
 
   return true;
