@@ -92,6 +92,11 @@ auto DbConnection::tryExecuteQuery(const SqlQuery &query) -> SqlResult
     warn("Failed: " + e.query() + ", " + e.sqlstate());
     out.error = e.sqlstate();
   }
+  catch (const std::exception &e)
+  {
+    error("Unexpected failure when executing sql query", e.what());
+    // Error will rethrow.
+  }
 
   return out;
 }
@@ -110,6 +115,11 @@ auto DbConnection::tryExecuteTransaction(const SqlTransaction &query) -> SqlResu
   {
     warn("Failed: " + e.query() + ", " + e.sqlstate());
     out.error = e.sqlstate();
+  }
+  catch (const std::exception &e)
+  {
+    error("Unexpected failure when executing sql query", e.what());
+    // Error will rethrow.
   }
 
   return out;
