@@ -56,6 +56,12 @@ void SystemMessageConsumer::handleScanOperation(const bsgo::ScannedMessage &mess
 
 void SystemMessageConsumer::handleEntityAdded(const bsgo::EntityAddedMessage &message) const
 {
+  if (!m_entityMapper.doesPlayerHaveAnEntity())
+  {
+    // Most probably the player did not undock yet.
+    return;
+  }
+
   std::optional<bsgo::Uuid> entityId{};
 
   const auto entityKind = message.getEntityKind();
@@ -78,6 +84,12 @@ void SystemMessageConsumer::handleEntityAdded(const bsgo::EntityAddedMessage &me
 
 void SystemMessageConsumer::handleEntityRemoved(const bsgo::EntityRemovedMessage &message) const
 {
+  if (!m_entityMapper.doesPlayerHaveAnEntity())
+  {
+    // Most probably the player did not undock yet.
+    return;
+  }
+
   std::optional<bsgo::Uuid> entityId{};
 
   const auto entityKind = message.getEntityKind();
