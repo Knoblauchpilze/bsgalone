@@ -37,6 +37,12 @@ void ShipMessageConsumer::onMessageReceived(const bsgo::IMessage &message)
 
 void ShipMessageConsumer::handleComponentSync(const bsgo::ComponentSyncMessage &message) const
 {
+  if (!m_entityMapper.doesPlayerHaveAnEntity())
+  {
+    // Most probably the player did not undock yet.
+    return;
+  }
+
   const auto entityKind = message.getEntityKind();
   switch (entityKind)
   {
