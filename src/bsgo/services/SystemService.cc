@@ -1,5 +1,6 @@
 
 #include "SystemService.hh"
+#include "JumpUtils.hh"
 
 namespace bsgo {
 
@@ -17,6 +18,9 @@ bool SystemService::tryDistributeResource(const Uuid playerDbId,
   const auto updated  = existing + amount;
   if (updated < 0.0f)
   {
+    warn("Failed to distribute " + std::to_string(amount) + " of " + str(resourceDbId) + " to "
+           + str(playerDbId),
+         "Conflict with existing amount " + std::to_string(existing));
     return false;
   }
 
@@ -39,6 +43,9 @@ bool SystemService::trySendPlayerShipBackToOutpost(const Uuid shipDbId) const
 
   if (!canShipBeSentBackToOutpost(ship))
   {
+    warn("Failed to send ship " + str(shipDbId) + " back to outpost",
+         std::string("Ship ") + (ship.active ? "is" : "is not") + " active and "
+           + (ship.docked ? "is" : "is not") + "docked");
     return false;
   }
 
@@ -66,46 +73,15 @@ auto SystemService::trySendPlayerBackToOutpost(const Uuid &playerDbId) const -> 
   return out;
 }
 
-namespace {
-bool isShipActive(const PlayerShip &ship)
-{
-  return ship.player.has_value() && ship.active;
-}
-
-bool canShipCompleteJump(const PlayerShip &ship)
-{
-  if (!isShipActive(ship))
-  {
-    return false;
-  }
-  if (!ship.jumpSystem.has_value())
-  {
-    return false;
-  }
-  if (!ship.system.has_value())
-  {
-    return false;
-  }
-  if (*ship.jumpSystem == *ship.system)
-  {
-    return false;
-  }
-  if (ship.docked)
-  {
-    return false;
-  }
-
-  return true;
-}
-} // namespace
-
 auto SystemService::tryJump(const Uuid shipDbId) const -> JumpResult
 {
   JumpResult out{};
 
-  auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
-  if (!canShipCompleteJump(ship))
+  auto ship         = m_repositories.playerShipRepository->findOneById(shipDbId);
+  const auto status = canShipCompleteJump(ship);
+  if (JumpCompletionStatus::OK != status)
   {
+    warn("Failed to process jump request for ship " + str(ship.id), str(status));
     return out;
   }
 
