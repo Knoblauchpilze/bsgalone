@@ -14,6 +14,11 @@ void DatabaseEntityMapper::setPlayerDbId(const Uuid playerDbId)
   m_playerDbId = playerDbId;
 }
 
+bool DatabaseEntityMapper::doesPlayerHaveAnEntity() const
+{
+  return m_playerEntityId.has_value() && m_playerShipEntityId.has_value();
+}
+
 void DatabaseEntityMapper::registerPlayer(const Uuid playerDbId, const Uuid entityId)
 {
   const std::lock_guard guard(m_locker);
