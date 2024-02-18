@@ -18,6 +18,7 @@ class DatabaseEntityMapper : public utils::CoreObject
   ~DatabaseEntityMapper() override = default;
 
   void setPlayerDbId(const Uuid playerDbId);
+  bool doesPlayerHaveAnEntity() const;
 
   void registerPlayer(const Uuid playerDbId, const Uuid entityId);
   void registerShip(const Uuid shipDbId, const Uuid entityId);
