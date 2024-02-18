@@ -81,7 +81,7 @@ auto SystemService::tryJump(const Uuid shipDbId) const -> JumpResult
   const auto status = canShipCompleteJump(ship);
   if (JumpCompletionStatus::OK != status)
   {
-    warn("Failed to process jump request for ship " + str(ship.id), str(status));
+    warn("Failed to process jump for ship " + str(ship.id), str(status));
     return out;
   }
 
