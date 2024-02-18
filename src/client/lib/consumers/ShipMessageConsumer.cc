@@ -138,8 +138,13 @@ void ShipMessageConsumer::handleShipComponentsSync(const bsgo::ComponentSyncMess
   const auto maybeShipStatus = message.tryGetStatus();
   if (maybeShipStatus)
   {
+    const auto oldStatus = ship.statusComp().status();
     ship.statusComp().setStatus(*maybeShipStatus);
-    info("Setting status of " + bsgo::str(shipDbId) + " to " + bsgo::str(*maybeShipStatus));
+
+    if (oldStatus != *maybeShipStatus)
+    {
+      info("Setting status of " + bsgo::str(shipDbId) + " to " + bsgo::str(*maybeShipStatus));
+    }
   }
 
   const auto maybeShipPosition = message.tryGetPosition();
