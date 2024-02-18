@@ -17,6 +17,7 @@ bool ShipService::trySelectShip(const Uuid shipDbId) const
   const auto newActiveShip = m_repositories.playerShipRepository->findOneById(shipDbId);
   if (!newActiveShip.player)
   {
+    warn("Failed to select ship " + str(shipDbId), "Ship does not belong to any player");
     return false;
   }
 
@@ -25,14 +26,20 @@ bool ShipService::trySelectShip(const Uuid shipDbId) const
 
   if (!currentActiveShip.player)
   {
+    warn("Failed to select ship " + str(shipDbId),
+         "Current active ship " + str(currentActiveShip.id) + " does not belong to a player");
     return false;
   }
   if (newActiveShip.active)
   {
+    warn("Failed to select ship " + str(shipDbId), "Ship is already active");
     return false;
   }
   if (*currentActiveShip.player != *newActiveShip.player)
   {
+    warn("Failed to select ship " + str(shipDbId),
+         "Current ship belongs to " + str(*currentActiveShip.player) + " but new one belongs to "
+           + str(*newActiveShip.player));
     return false;
   }
 
@@ -47,6 +54,7 @@ bool ShipService::tryDock(const Uuid shipDbId) const
   const auto maybeEntityId = m_entityMapper.tryGetShipEntityId(shipDbId);
   if (!maybeEntityId)
   {
+    warn("Failed to dock ship " + str(shipDbId), "No entity attached to it");
     return false;
   }
 
@@ -55,6 +63,8 @@ bool ShipService::tryDock(const Uuid shipDbId) const
 
   if (!statusAllowsDocking(statusComp.status()))
   {
+    warn("Failed to dock ship " + str(shipDbId),
+         "Status " + str(statusComp.status()) + " does not allow docking");
     return false;
   }
 
@@ -71,6 +81,7 @@ bool ShipService::accelerateShip(const Uuid shipDbId, const Eigen::Vector3f &acc
   const auto maybeEntityId = m_entityMapper.tryGetShipEntityId(shipDbId);
   if (!maybeEntityId)
   {
+    warn("Failed to dock ship " + str(shipDbId), "No entity attached to it");
     return {};
   }
 
@@ -80,6 +91,7 @@ bool ShipService::accelerateShip(const Uuid shipDbId, const Eigen::Vector3f &acc
   {
     // Ship is an AI: we should not come through this route to change its
     // acceleration but rather through the AI system directly.
+    warn("Failed to accelerate ship " + str(shipDbId), "Ship does not belong to a player");
     return false;
   }
 
@@ -99,6 +111,7 @@ auto ShipService::tryAcquireTarget(const Uuid shipDbId, const Eigen::Vector3f &p
   const auto maybeEntityId = m_entityMapper.tryGetShipEntityId(shipDbId);
   if (!maybeEntityId)
   {
+    warn("Failed to acquire target for ship " + str(shipDbId), "No entity attached to it");
     return {};
   }
 
