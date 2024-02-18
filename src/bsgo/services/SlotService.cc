@@ -17,6 +17,8 @@ auto SlotService::tryToggleWeapon(const Uuid shipDbId, const Uuid weaponDbId) co
   const auto maybeEntityId = m_entityMapper.tryGetShipEntityId(shipDbId);
   if (!maybeEntityId)
   {
+    warn("Failed to toggle weapon " + str(weaponDbId) + " for ship " + str(shipDbId),
+         "Ship is not attached to any entity");
     return {};
   }
 
@@ -24,6 +26,8 @@ auto SlotService::tryToggleWeapon(const Uuid shipDbId, const Uuid weaponDbId) co
   const auto maybeWeapon = ship.tryGetWeapon(weaponDbId);
   if (!maybeWeapon)
   {
+    warn("Failed to toggle weapon " + str(weaponDbId) + " for ship " + str(shipDbId),
+         "No such weapon");
     return {};
   }
 
@@ -37,6 +41,8 @@ bool SlotService::tryToggleComputer(const Uuid shipDbId, const Uuid computerDbId
   const auto maybeEntityId = m_entityMapper.tryGetShipEntityId(shipDbId);
   if (!maybeEntityId)
   {
+    warn("Failed to toggle computer " + str(computerDbId) + " for ship " + str(shipDbId),
+         "Ship is not attached to any entity");
     return false;
   }
 
@@ -44,6 +50,8 @@ bool SlotService::tryToggleComputer(const Uuid shipDbId, const Uuid computerDbId
   const auto maybeComputer = ship.tryGetComputer(computerDbId);
   if (!maybeComputer)
   {
+    warn("Failed to toggle computer " + str(computerDbId) + " for ship " + str(shipDbId),
+         "No such computer");
     return false;
   }
 
