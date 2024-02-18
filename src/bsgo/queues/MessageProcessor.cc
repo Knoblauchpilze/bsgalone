@@ -15,21 +15,49 @@ MessageProcessor::MessageProcessor(std::deque<IMessagePtr> &messages,
 }
 
 namespace {
-auto messagesTypesToString(const std::deque<IMessagePtr> &messages, const int count) -> std::string
+const auto UNIMPORTANT_MESSAGE_TYPES = std::unordered_set<MessageType>{MessageType::COMPONENT_SYNC};
+
+struct MessagesInfo
 {
-  std::string out = "{";
+  int importantMessagesCount{0};
+  int unimportantMessagesCount{0};
+  std::string messagesTypes{};
+};
+
+auto messagesTypesToString(const std::deque<IMessagePtr> &messages, const int count) -> MessagesInfo
+{
+  MessagesInfo out{.messagesTypes = "{"};
 
   for (auto id = 0; id < count; ++id)
   {
-    if (id > 0)
+    const auto messageType = messages[id]->type();
+    if (UNIMPORTANT_MESSAGE_TYPES.contains(messageType))
     {
-      out += ", ";
+      ++out.unimportantMessagesCount;
+      continue;
     }
 
-    out += str(messages[id]->type());
+    ++out.importantMessagesCount;
+
+    if (id > 0)
+    {
+      out.messagesTypes += ", ";
+    }
+
+    out.messagesTypes += str(messages[id]->type());
   }
 
-  out += "}";
+  if (out.unimportantMessagesCount > 0)
+  {
+    // If at least one important message was processed.
+    if (out.messagesTypes.size() > 1)
+    {
+      out.messagesTypes += ", ";
+    }
+    out.messagesTypes += std::to_string(out.unimportantMessagesCount) + " unimportant message(s)";
+  }
+
+  out.messagesTypes += "}";
   return out;
 }
 } // namespace
@@ -48,9 +76,17 @@ void MessageProcessor::processMessages(const std::optional<int> &amount)
 
   if (!messages.empty() && count > 0)
   {
-    const auto allTypes = messagesTypesToString(messages, count);
-    info("Processed " + std::to_string(count) + "/" + std::to_string(messages.size())
-         + " message(s): " + allTypes);
+    const auto messagesInfo = messagesTypesToString(messages, count);
+    if (messagesInfo.importantMessagesCount > 0)
+    {
+      info("Processed " + std::to_string(count) + "/" + std::to_string(messages.size())
+           + " message(s): " + messagesInfo.messagesTypes);
+    }
+    else
+    {
+      verbose("Processed " + std::to_string(count) + "/" + std::to_string(messages.size())
+              + " message(s): " + messagesInfo.messagesTypes);
+    }
     messages.erase(messages.begin(), messages.begin() + count);
   }
 
