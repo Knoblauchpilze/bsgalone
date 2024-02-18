@@ -12,10 +12,16 @@ bool PurchaseService::tryPurchase(const Uuid playerId, const Uuid itemId, const 
 {
   if (!verifyAffordability(playerId, itemId, type))
   {
+    warn("Failed to purchase item " + str(itemId) + " with type " + str(type) + " for player "
+           + str(playerId),
+         "Player can not afford it");
     return false;
   }
   if (!verifyPreconditions(playerId, itemId, type))
   {
+    warn("Failed to purchase item " + str(itemId) + " with type " + str(type) + " for player "
+           + str(playerId),
+         "Preconditions are not met");
     return false;
   }
 
