@@ -2,6 +2,7 @@
 #include "DataSource.hh"
 #include "AsteroidDataSource.hh"
 #include "Coordinator.hh"
+#include "DbConnection.hh"
 #include "OutpostDataSource.hh"
 #include "PlayerDataSource.hh"
 #include "ShipDataSource.hh"
@@ -13,8 +14,10 @@ DataSource::DataSource(const DataLoadingMode dataLoadingMode)
   , m_dataLoadingMode(dataLoadingMode)
 {
   setService("data");
-  m_connection->connect();
-  m_repositories = createRepositories(m_connection);
+
+  auto connection = std::make_shared<DbConnection>();
+  connection->connect();
+  m_repositories = createRepositories(std::move(connection));
 }
 
 void DataSource::setSystemDbId(const Uuid system)

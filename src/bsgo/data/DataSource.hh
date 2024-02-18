@@ -3,7 +3,6 @@
 
 #include "DataLoadingMode.hh"
 #include "DatabaseEntityMapper.hh"
-#include "DbConnection.hh"
 #include "Repositories.hh"
 #include <core_utils/CoreObject.hh>
 
@@ -32,7 +31,6 @@ class DataSource : public utils::CoreObject
   mutable std::optional<Uuid> m_systemDbId{};
   std::optional<Uuid> m_playerDbId{};
 
-  DbConnectionShPtr m_connection{std::make_shared<DbConnection>()};
   Repositories m_repositories{};
 
   void initializePlayer(Coordinator &coordinator, DatabaseEntityMapper &entityMapper) const;
