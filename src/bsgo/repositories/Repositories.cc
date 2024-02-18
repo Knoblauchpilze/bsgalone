@@ -3,7 +3,7 @@
 
 namespace bsgo {
 
-auto createRepositories(const DbConnectionShPtr &dbConnection) -> Repositories
+auto createRepositories(DbConnectionShPtr dbConnection) -> Repositories
 {
   Repositories out{};
 

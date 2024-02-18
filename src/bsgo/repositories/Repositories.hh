@@ -47,6 +47,6 @@ struct Repositories
   SystemOutpostRepositoryShPtr systemOutpostRepository{};
 };
 
-auto createRepositories(const DbConnectionShPtr &dbConnection) -> Repositories;
+auto createRepositories(DbConnectionShPtr dbConnection) -> Repositories;
 
 } // namespace bsgo
