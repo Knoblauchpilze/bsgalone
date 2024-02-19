@@ -53,9 +53,9 @@ void Server::initializeSystems()
 
 void Server::initializeMessageSystem()
 {
-  const auto systemProcessors = convertToSystemProcessorMap(m_systemProcessors);
-  m_messageExchanger          = std::make_unique<MessageExchanger>(m_clientManager,
-                                                          std::move(systemProcessors));
+  const MessageSystemData data{.clientManager    = m_clientManager,
+                               .systemProcessors = convertToSystemProcessorMap(m_systemProcessors)};
+  m_messageExchanger = std::make_unique<MessageExchanger>(data);
 
   for (const auto &systemProcessor : m_systemProcessors)
   {
