@@ -13,11 +13,16 @@
 
 namespace bsgo {
 
+struct MessageSystemData
+{
+  ClientManagerShPtr clientManager{};
+  SystemProcessorMap systemProcessors{};
+};
+
 class MessageExchanger
 {
   public:
-  MessageExchanger(const ClientManagerShPtr &clientManager,
-                   const SystemProcessorMap &systemProcessors);
+  MessageExchanger(const MessageSystemData &messagesData);
 
   auto getInternalMessageQueue() const -> IMessageQueue *;
   auto getOutputMessageQueue() const -> IMessageQueue *;
@@ -30,15 +35,9 @@ class MessageExchanger
   IMessageQueuePtr m_internalMessageQueue{};
   IMessageQueuePtr m_outputMessageQueue{};
 
-  void initialize(const ClientManagerShPtr &clientManager,
-                  const SystemProcessorMap &systemProcessors);
-  void initializeQueues(ClientManagerShPtr clientManager);
-  void initializeConsumers(const ClientManagerShPtr &clientManager,
-                           const SystemProcessorMap &systemProcessors);
-
-  void initializeInternalMessageQueue(const SystemServiceShPtr &systemService,
-                                      const ClientManagerShPtr &clientManager,
-                                      const SystemProcessorMap &systemProcessors);
+  void initialize(const MessageSystemData &messagesData);
+  auto initializeSystemMessageQueue(const MessageSystemData &messagesData) -> IMessageQueuePtr;
+  void initializeInternalConsumers(const MessageSystemData &messagesData);
 };
 
 using MessageExchangerPtr = std::unique_ptr<MessageExchanger>;

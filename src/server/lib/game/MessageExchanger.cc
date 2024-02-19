@@ -17,10 +17,9 @@
 
 namespace bsgo {
 
-MessageExchanger::MessageExchanger(const ClientManagerShPtr &clientManager,
-                                   const SystemProcessorMap &systemProcessors)
+MessageExchanger::MessageExchanger(const MessageSystemData &messagesData)
 {
-  initialize(clientManager, systemProcessors);
+  initialize(messagesData);
 }
 
 auto MessageExchanger::getInternalMessageQueue() const -> IMessageQueue *
@@ -47,13 +46,6 @@ void MessageExchanger::pushMessage(IMessagePtr message)
   m_inputMessageQueue->pushMessage(std::move(message));
 }
 
-void MessageExchanger::initialize(const ClientManagerShPtr &clientManager,
-                                  const SystemProcessorMap &systemProcessors)
-{
-  initializeQueues(clientManager);
-  initializeConsumers(clientManager, systemProcessors);
-}
-
 namespace {
 auto createInputMessageQueue() -> NetworkMessageQueuePtr
 {
@@ -63,6 +55,12 @@ auto createInputMessageQueue() -> NetworkMessageQueuePtr
   return std::make_unique<NetworkMessageQueue>(std::move(asyncQueue));
 }
 
+auto createInternalMessageQueue() -> IMessageQueuePtr
+{
+  auto messageQueue = std::make_unique<SynchronizedMessageQueue>();
+  return std::make_unique<AsyncMessageQueue>(std::move(messageQueue));
+}
+
 auto createOutputMessageQueue(ClientManagerShPtr clientManager) -> IMessageQueuePtr
 {
   auto broadcastQueue = std::make_unique<BroadcastMessageQueue>(std::move(clientManager));
@@ -70,10 +68,18 @@ auto createOutputMessageQueue(ClientManagerShPtr clientManager) -> IMessageQueue
 }
 } // namespace
 
-void MessageExchanger::initializeQueues(ClientManagerShPtr clientManager)
+void MessageExchanger::initialize(const MessageSystemData &messagesData)
 {
-  m_inputMessageQueue  = createInputMessageQueue();
-  m_outputMessageQueue = createOutputMessageQueue(std::move(clientManager));
+  m_inputMessageQueue     = createInputMessageQueue();
+  m_outputMessageQueue    = createOutputMessageQueue(messagesData.clientManager);
+  auto systemMessageQueue = initializeSystemMessageQueue(messagesData);
+  m_internalMessageQueue  = createInternalMessageQueue();
+  initializeInternalConsumers(messagesData);
+
+  m_inputMessageQueue->addListener(
+    std::make_unique<TriageMessageConsumer>(messagesData.clientManager,
+                                            messagesData.systemProcessors,
+                                            std::move(systemMessageQueue)));
 }
 
 namespace {
@@ -82,17 +88,10 @@ auto createSystemMessageQueue() -> IMessageQueuePtr
   auto systemQueue = std::make_unique<SynchronizedMessageQueue>();
   return std::make_unique<AsyncMessageQueue>(std::move(systemQueue));
 }
-
-auto createInternalMessageQueue() -> IMessageQueuePtr
-{
-  auto messageQueue = std::make_unique<SynchronizedMessageQueue>();
-  return std::make_unique<AsyncMessageQueue>(std::move(messageQueue));
-}
-
 } // namespace
 
-void MessageExchanger::initializeConsumers(const ClientManagerShPtr &clientManager,
-                                           const SystemProcessorMap &systemProcessors)
+auto MessageExchanger::initializeSystemMessageQueue(const MessageSystemData &messagesData)
+  -> IMessageQueuePtr
 {
   DataSource source{DataLoadingMode::SERVER};
   const auto repositories = source.repositories();
@@ -101,50 +100,45 @@ void MessageExchanger::initializeConsumers(const ClientManagerShPtr &clientManag
 
   auto signupService = std::make_unique<SignupService>(repositories);
   systemQueue->addListener(std::make_unique<SignupMessageConsumer>(std::move(signupService),
-                                                                   clientManager,
+                                                                   messagesData.clientManager,
                                                                    m_outputMessageQueue.get()));
 
   auto loginService = std::make_unique<LoginService>(repositories);
   systemQueue->addListener(std::make_unique<LoginMessageConsumer>(std::move(loginService),
-                                                                  clientManager,
+                                                                  messagesData.clientManager,
                                                                   m_outputMessageQueue.get()));
 
   auto systemService = std::make_shared<SystemService>(repositories);
-  systemQueue->addListener(std::make_unique<LogoutMessageConsumer>(clientManager,
+  systemQueue->addListener(std::make_unique<LogoutMessageConsumer>(messagesData.clientManager,
                                                                    systemService,
-                                                                   systemProcessors,
+                                                                   messagesData.systemProcessors,
                                                                    m_outputMessageQueue.get()));
 
-  initializeInternalMessageQueue(systemService, clientManager, systemProcessors);
-
-  m_inputMessageQueue->addListener(std::make_unique<TriageMessageConsumer>(clientManager,
-                                                                           systemProcessors,
-                                                                           std::move(systemQueue)));
+  return systemQueue;
 }
 
-void MessageExchanger::initializeInternalMessageQueue(const SystemServiceShPtr &systemService,
-                                                      const ClientManagerShPtr &clientManager,
-                                                      const SystemProcessorMap &systemProcessors)
+void MessageExchanger::initializeInternalConsumers(const MessageSystemData &messagesData)
 {
-  m_internalMessageQueue = createInternalMessageQueue();
+  Repositories repositories{};
+  auto systemService = std::make_shared<SystemService>(std::move(repositories));
 
   m_internalMessageQueue->addListener(
     std::make_unique<LootMessageConsumer>(systemService, m_outputMessageQueue.get()));
 
   m_internalMessageQueue->addListener(
     std::make_unique<JumpMessageConsumer>(systemService,
-                                          clientManager,
-                                          systemProcessors,
+                                          messagesData.clientManager,
+                                          messagesData.systemProcessors,
                                           m_outputMessageQueue.get()));
 
   m_internalMessageQueue->addListener(
     std::make_unique<EntityRemovedMessageConsumer>(systemService,
-                                                   systemProcessors,
+                                                   messagesData.systemProcessors,
                                                    m_outputMessageQueue.get()));
 
   m_internalMessageQueue->addListener(
     std::make_unique<ComponentSyncMessageConsumer>(systemService,
-                                                   systemProcessors,
+                                                   messagesData.systemProcessors,
                                                    m_outputMessageQueue.get()));
 }
 
