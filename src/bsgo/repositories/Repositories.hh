@@ -26,6 +26,9 @@ namespace bsgo {
 
 struct Repositories
 {
+  Repositories();
+  ~Repositories() = default;
+
   AsteroidLootRepositoryShPtr asteroidLootRepository{};
   AsteroidRepositoryShPtr asteroidRepository{};
   ComputerPriceRepositoryShPtr computerPriceRepository{};
@@ -45,8 +48,8 @@ struct Repositories
   WeaponPriceRepositoryShPtr weaponPriceRepository{};
   WeaponRepositoryShPtr weaponRepository{};
   SystemOutpostRepositoryShPtr systemOutpostRepository{};
-};
 
-auto createRepositories(DbConnectionShPtr dbConnection) -> Repositories;
+  DbConnectionShPtr dbConnection{};
+};
 
 } // namespace bsgo
