@@ -32,8 +32,10 @@ auto AsteroidRepository::findOneById(const Uuid asteroid) const -> Asteroid
 
 auto AsteroidRepository::fetchAsteroidBase(const Uuid asteroid) const -> Asteroid
 {
-  auto work         = m_connection->nonTransaction();
-  const auto record = work.exec_prepared1(FIND_ONE_QUERY_NAME, toDbId(asteroid));
+  const auto query = [asteroid](pqxx::nontransaction &work) {
+    return work.exec_prepared1(FIND_ONE_QUERY_NAME, toDbId(asteroid));
+  };
+  const auto record = m_connection->executeQueryReturningSingleRow(query);
 
   Asteroid out;
 
@@ -51,8 +53,10 @@ auto AsteroidRepository::fetchAsteroidBase(const Uuid asteroid) const -> Asteroi
 
 void AsteroidRepository::fetchLoot(const Uuid asteroid, Asteroid &out) const
 {
-  auto work         = m_connection->nonTransaction();
-  const auto record = work.exec_prepared1(FIND_LOOT_QUERY_NAME, toDbId(asteroid));
+  const auto query = [asteroid](pqxx::nontransaction &work) {
+    return work.exec_prepared1(FIND_LOOT_QUERY_NAME, toDbId(asteroid));
+  };
+  const auto record = m_connection->executeQueryReturningSingleRow(query);
 
   out.loot = record[0].as<int>() > 0;
 }

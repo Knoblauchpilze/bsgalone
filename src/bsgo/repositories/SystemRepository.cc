@@ -71,8 +71,10 @@ void SystemRepository::initialize()
 
 auto SystemRepository::findAll() const -> std::unordered_set<Uuid>
 {
-  auto work       = m_connection->nonTransaction();
-  const auto rows = work.exec_prepared(FIND_ALL_QUERY_NAME);
+  const auto query = [](pqxx::nontransaction &work) {
+    return work.exec_prepared(FIND_ALL_QUERY_NAME);
+  };
+  const auto rows = m_connection->executeQuery(query);
 
   std::unordered_set<Uuid> out;
   for (const auto record : rows)
@@ -85,8 +87,10 @@ auto SystemRepository::findAll() const -> std::unordered_set<Uuid>
 
 auto SystemRepository::findOneById(const Uuid system) const -> System
 {
-  auto work         = m_connection->nonTransaction();
-  const auto record = work.exec_prepared1(FIND_ONE_QUERY_NAME, toDbId(system));
+  const auto query = [system](pqxx::nontransaction &work) {
+    return work.exec_prepared1(FIND_ONE_QUERY_NAME, toDbId(system));
+  };
+  const auto record = m_connection->executeQueryReturningSingleRow(query);
 
   System out{};
 
@@ -103,16 +107,20 @@ auto SystemRepository::findOneById(const Uuid system) const -> System
 
 auto SystemRepository::findOneByFactionAndStarting(const Faction &faction) const -> Uuid
 {
-  auto work         = m_connection->nonTransaction();
-  const auto record = work.exec_prepared1(FIND_ONE_BY_FACTION_QUERY_NAME, toDbFaction(faction));
+  const auto query = [faction](pqxx::nontransaction &work) {
+    return work.exec_prepared1(FIND_ONE_BY_FACTION_QUERY_NAME, toDbFaction(faction));
+  };
+  const auto record = m_connection->executeQueryReturningSingleRow(query);
 
   return fromDbId(record[0].as<int>());
 }
 
 auto SystemRepository::findAllAsteroidsBySystem(const Uuid system) const -> std::unordered_set<Uuid>
 {
-  auto work       = m_connection->nonTransaction();
-  const auto rows = work.exec_prepared(FIND_ASTEROIDS_QUERY_NAME, toDbId(system));
+  const auto query = [system](pqxx::nontransaction &work) {
+    return work.exec_prepared(FIND_ASTEROIDS_QUERY_NAME, toDbId(system));
+  };
+  const auto rows = m_connection->executeQuery(query);
 
   std::unordered_set<Uuid> out;
   for (const auto record : rows)
@@ -125,8 +133,10 @@ auto SystemRepository::findAllAsteroidsBySystem(const Uuid system) const -> std:
 
 auto SystemRepository::findAllShipsBySystem(const Uuid system) const -> std::unordered_set<Uuid>
 {
-  auto work       = m_connection->nonTransaction();
-  const auto rows = work.exec_prepared(FIND_SHIPS_QUERY_NAME, toDbId(system));
+  const auto query = [system](pqxx::nontransaction &work) {
+    return work.exec_prepared(FIND_SHIPS_QUERY_NAME, toDbId(system));
+  };
+  const auto rows = m_connection->executeQuery(query);
 
   std::unordered_set<Uuid> out;
   for (const auto record : rows)
@@ -139,8 +149,10 @@ auto SystemRepository::findAllShipsBySystem(const Uuid system) const -> std::uno
 
 auto SystemRepository::findAllOutpostsBySystem(const Uuid system) const -> std::unordered_set<Uuid>
 {
-  auto work       = m_connection->nonTransaction();
-  const auto rows = work.exec_prepared(FIND_OUTPOSTS_QUERY_NAME, toDbId(system));
+  const auto query = [system](pqxx::nontransaction &work) {
+    return work.exec_prepared(FIND_OUTPOSTS_QUERY_NAME, toDbId(system));
+  };
+  const auto rows = m_connection->executeQuery(query);
 
   std::unordered_set<Uuid> out;
   for (const auto record : rows)

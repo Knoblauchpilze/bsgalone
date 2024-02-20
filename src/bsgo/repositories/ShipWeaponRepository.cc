@@ -83,8 +83,10 @@ void ShipWeaponRepository::initialize()
 auto ShipWeaponRepository::findOneByShipAndWeapon(const Uuid ship, const Uuid weapon) const
   -> std::optional<ShipWeapon>
 {
-  auto work       = m_connection->nonTransaction();
-  const auto rows = work.exec_prepared(FIND_ONE_QUERY_NAME, toDbId(ship), toDbId(weapon));
+  const auto query = [ship, weapon](pqxx::nontransaction &work) {
+    return work.exec_prepared(FIND_ONE_QUERY_NAME, toDbId(ship), toDbId(weapon));
+  };
+  const auto rows = m_connection->executeQuery(query);
 
   if (rows.empty())
   {
@@ -114,8 +116,10 @@ auto ShipWeaponRepository::findOneByShipAndWeapon(const Uuid ship, const Uuid we
 
 auto ShipWeaponRepository::findOneByWeapon(const Uuid weapon) const -> std::optional<ShipWeapon>
 {
-  auto work       = m_connection->nonTransaction();
-  const auto rows = work.exec_prepared(FIND_ONE_BY_WEAPON_QUERY_NAME, toDbId(weapon));
+  const auto query = [weapon](pqxx::nontransaction &work) {
+    return work.exec_prepared(FIND_ONE_BY_WEAPON_QUERY_NAME, toDbId(weapon));
+  };
+  const auto rows = m_connection->executeQuery(query);
 
   if (rows.empty())
   {
@@ -145,8 +149,10 @@ auto ShipWeaponRepository::findOneByWeapon(const Uuid weapon) const -> std::opti
 
 auto ShipWeaponRepository::findAllByShip(const Uuid ship) const -> std::vector<ShipWeapon>
 {
-  auto work       = m_connection->nonTransaction();
-  const auto rows = work.exec_prepared(FIND_ALL_QUERY_NAME, toDbId(ship));
+  const auto query = [ship](pqxx::nontransaction &work) {
+    return work.exec_prepared(FIND_ALL_QUERY_NAME, toDbId(ship));
+  };
+  const auto rows = m_connection->executeQuery(query);
 
   std::vector<ShipWeapon> out;
   for (const auto record : rows)
