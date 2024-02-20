@@ -42,24 +42,30 @@ void ShipComputerRepository::initialize()
 
 bool ShipComputerRepository::existByShipAndComputer(const Uuid ship, const Uuid computer) const
 {
-  auto work         = m_connection->nonTransaction();
-  const auto record = work.exec_prepared1(FIND_ONE_QUERY_NAME, toDbId(ship), toDbId(computer));
+  const auto query = [ship, computer](pqxx::nontransaction &work) {
+    return work.exec_prepared1(FIND_ONE_QUERY_NAME, toDbId(ship), toDbId(computer));
+  };
+  const auto record = m_connection->executeQueryReturningSingleRow(query);
 
   return record[0].as<int>() > 0;
 }
 
 bool ShipComputerRepository::existByComputer(const Uuid computer) const
 {
-  auto work         = m_connection->nonTransaction();
-  const auto record = work.exec_prepared1(FIND_ONE_BY_COMPUTER_QUERY_NAME, toDbId(computer));
+  const auto query = [computer](pqxx::nontransaction &work) {
+    return work.exec_prepared1(FIND_ONE_BY_COMPUTER_QUERY_NAME, toDbId(computer));
+  };
+  const auto record = m_connection->executeQueryReturningSingleRow(query);
 
   return record[0].as<int>() > 0;
 }
 
 auto ShipComputerRepository::findAllByShip(const Uuid ship) const -> std::unordered_set<Uuid>
 {
-  auto work       = m_connection->nonTransaction();
-  const auto rows = work.exec_prepared(FIND_ALL_QUERY_NAME, toDbId(ship));
+  const auto query = [ship](pqxx::nontransaction &work) {
+    return work.exec_prepared(FIND_ALL_QUERY_NAME, toDbId(ship));
+  };
+  const auto rows = m_connection->executeQuery(query);
 
   std::unordered_set<Uuid> out;
   for (const auto record : rows)

@@ -37,8 +37,10 @@ void PlayerResourceRepository::initialize()
 auto PlayerResourceRepository::findAllByPlayer(const Uuid player) const
   -> std::vector<PlayerResource>
 {
-  auto work       = m_connection->nonTransaction();
-  const auto rows = work.exec_prepared(FIND_ALL_QUERY_NAME, toDbId(player));
+  const auto query = [player](pqxx::nontransaction &work) {
+    return work.exec_prepared(FIND_ALL_QUERY_NAME, toDbId(player));
+  };
+  const auto rows = m_connection->executeQuery(query);
 
   std::vector<PlayerResource> out;
   for (const auto record : rows)

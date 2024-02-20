@@ -58,24 +58,15 @@ void DbConnection::prepare(const std::string &queryName, const std::string &sql)
   m_connection->prepare(queryName, sql);
 }
 
-auto DbConnection::transaction() -> pqxx::work
+auto DbConnection::executeQuery(const SqlQuery &query) -> pqxx::result
 {
-  return pqxx::work(*m_connection);
-}
+  const auto res = tryExecuteQuery(query);
+  if (res.error)
+  {
+    error("Failed to execute query", *res.error);
+  }
 
-auto DbConnection::nonTransaction() -> pqxx::nontransaction
-{
-  return pqxx::nontransaction(*m_connection);
-}
-
-auto DbConnection::connection() -> pqxx::connection &
-{
-  return *m_connection;
-}
-
-auto DbConnection::tryExecuteQuery(const std::string &sql) -> SqlResult
-{
-  return tryExecuteQuery([&sql](pqxx::nontransaction &work) { return work.exec(sql); });
+  return *res.result;
 }
 
 auto DbConnection::tryExecuteQuery(const SqlQuery &query) -> SqlResult
@@ -89,13 +80,50 @@ auto DbConnection::tryExecuteQuery(const SqlQuery &query) -> SqlResult
   }
   catch (const pqxx::sql_error &e)
   {
-    warn("Failed: " + e.query() + ", " + e.sqlstate());
+    warn("Failed to execute sql query", "Query: " + e.query() + ", code: " + e.sqlstate());
     out.error = e.sqlstate();
   }
   catch (const std::exception &e)
   {
-    error("Unexpected failure when executing sql query", e.what());
-    // Error will rethrow.
+    warn("Failed to execute sql query", e.what());
+    out.error = e.what();
+  }
+
+  return out;
+}
+
+auto DbConnection::executeQueryReturningSingleRow(const SqlQueryReturningSingleRow &query)
+  -> pqxx::row
+{
+  const auto res = tryExecuteQueryReturningSingleRow(query);
+  if (res.error)
+  {
+    error("Failed to execute query returning single row", *res.error);
+  }
+
+  return *res.result;
+}
+
+auto DbConnection::tryExecuteQueryReturningSingleRow(const SqlQueryReturningSingleRow &query)
+  -> SingleSqlRowResult
+{
+  SingleSqlRowResult out{};
+
+  try
+  {
+    auto work  = nonTransaction();
+    out.result = query(work);
+  }
+  catch (const pqxx::sql_error &e)
+  {
+    warn("Failed to execute sql query returning single row",
+         "Query: " + e.query() + ", code: " + e.sqlstate());
+    out.error = e.sqlstate();
+  }
+  catch (const std::exception &e)
+  {
+    warn("Failed to execute sql query returning single row", e.what());
+    out.error = e.what();
   }
 
   return out;
@@ -113,13 +141,13 @@ auto DbConnection::tryExecuteTransaction(const SqlTransaction &query) -> SqlResu
   }
   catch (const pqxx::sql_error &e)
   {
-    warn("Failed: " + e.query() + ", " + e.sqlstate());
+    warn("Failed to execute transaction", "Query: " + e.query() + ", code: " + e.sqlstate());
     out.error = e.sqlstate();
   }
   catch (const std::exception &e)
   {
-    error("Unexpected failure when executing sql query", e.what());
-    // Error will rethrow.
+    warn("Failed to execute transaction", e.what());
+    out.error = e.what();
   }
 
   return out;
@@ -129,6 +157,16 @@ void DbConnection::setupDbConnection()
 {
   const auto connectionStr = generateConnectionString();
   m_connection             = std::make_unique<pqxx::connection>(connectionStr);
+}
+
+auto DbConnection::transaction() -> pqxx::work
+{
+  return pqxx::work(*m_connection);
+}
+
+auto DbConnection::nonTransaction() -> pqxx::nontransaction
+{
+  return pqxx::nontransaction(*m_connection);
 }
 
 } // namespace bsgo

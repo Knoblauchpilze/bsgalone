@@ -22,8 +22,10 @@ void SystemOutpostRepository::initialize()
 
 auto SystemOutpostRepository::findOneById(const Uuid outpost) const -> SystemOutpost
 {
-  auto work         = m_connection->nonTransaction();
-  const auto record = work.exec_prepared1(FIND_ONE_QUERY_NAME, toDbId(outpost));
+  const auto query = [outpost](pqxx::nontransaction &work) {
+    return work.exec_prepared1(FIND_ONE_QUERY_NAME, toDbId(outpost));
+  };
+  const auto record = m_connection->executeQueryReturningSingleRow(query);
 
   SystemOutpost out;
 

@@ -65,11 +65,12 @@ auto fetchShipFromSqlResult(const pqxx::const_result_iterator &record) -> Ship
 
 auto fetchAllShipsByFaction(const Faction &faction, DbConnection &connection) -> std::vector<Ship>
 {
+  const auto query = [faction](pqxx::nontransaction &work) {
+    return work.exec_prepared(FIND_ALL_BY_FACTION_QUERY_NAME, toDbFaction(faction));
+  };
+  const auto rows = connection.executeQuery(query);
+
   std::vector<Ship> out;
-
-  auto work       = connection.nonTransaction();
-  const auto rows = work.exec_prepared(FIND_ALL_BY_FACTION_QUERY_NAME, toDbFaction(faction));
-
   for (const auto record : rows)
   {
     out.emplace_back(fetchShipFromSqlResult(record));
@@ -93,30 +94,34 @@ auto ShipRepository::findAllByFaction(const Faction &faction) -> std::vector<Shi
 auto ShipRepository::findOneByFactionAndStarting(const Faction &faction,
                                                  const bool startingShip) const -> Ship
 {
-  Uuid shipId{};
-  {
-    auto work         = m_connection->nonTransaction();
-    const auto record = work.exec_prepared1(FIND_ONE_BY_STARTING_AND_FACTION_QUERY_NAME,
-                                            toDbFaction(faction),
-                                            startingShip);
-    shipId            = fromDbId(record[0].as<int>());
-  }
+  const auto query = [faction, startingShip](pqxx::nontransaction &work) {
+    return work.exec_prepared1(FIND_ONE_BY_STARTING_AND_FACTION_QUERY_NAME,
+                               toDbFaction(faction),
+                               startingShip);
+  };
+  const auto record = m_connection->executeQueryReturningSingleRow(query);
+
+  const auto shipId = fromDbId(record[0].as<int>());
 
   return findOneById(shipId);
 }
 
 auto ShipRepository::fetchShipBase(const Uuid ship) const -> Ship
 {
-  auto work         = m_connection->nonTransaction();
-  const auto record = work.exec_prepared1(FIND_ONE_QUERY_NAME, toDbId(ship));
+  const auto query = [ship](pqxx::nontransaction &work) {
+    return work.exec_prepared1(FIND_ONE_QUERY_NAME, toDbId(ship));
+  };
+  const auto record = m_connection->executeQueryReturningSingleRow(query);
 
   return fetchShipFromSqlResult(record);
 }
 
 void ShipRepository::fetchSlots(const Uuid ship, Ship &out) const
 {
-  auto work       = m_connection->nonTransaction();
-  const auto rows = work.exec_prepared(FIND_SLOTS_QUERY_NAME, toDbId(ship));
+  const auto query = [ship](pqxx::nontransaction &work) {
+    return work.exec_prepared(FIND_SLOTS_QUERY_NAME, toDbId(ship));
+  };
+  const auto rows = m_connection->executeQuery(query);
 
   for (const auto record : rows)
   {

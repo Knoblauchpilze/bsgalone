@@ -33,8 +33,10 @@ void PlayerWeaponRepository::initialize()
 
 auto PlayerWeaponRepository::findOneById(const Uuid weapon) const -> PlayerWeapon
 {
-  auto work         = m_connection->nonTransaction();
-  const auto record = work.exec_prepared1(FIND_ONE_QUERY_NAME, toDbId(weapon));
+  const auto query = [weapon](pqxx::nontransaction &work) {
+    return work.exec_prepared1(FIND_ONE_QUERY_NAME, toDbId(weapon));
+  };
+  const auto record = m_connection->executeQueryReturningSingleRow(query);
 
   PlayerWeapon out{};
 
@@ -57,8 +59,10 @@ auto PlayerWeaponRepository::findOneById(const Uuid weapon) const -> PlayerWeapo
 
 auto PlayerWeaponRepository::findAllByPlayer(const Uuid player) const -> std::unordered_set<Uuid>
 {
-  auto work       = m_connection->nonTransaction();
-  const auto rows = work.exec_prepared(FIND_ALL_QUERY_NAME, toDbId(player));
+  const auto query = [player](pqxx::nontransaction &work) {
+    return work.exec_prepared(FIND_ALL_QUERY_NAME, toDbId(player));
+  };
+  const auto rows = m_connection->executeQuery(query);
 
   std::unordered_set<Uuid> out;
   for (const auto record : rows)
