@@ -49,6 +49,12 @@ bool SystemService::trySendPlayerShipBackToOutpost(const Uuid shipDbId) const
     return false;
   }
 
+  // Do not dock an AI controlled ship.
+  if (!ship.player)
+  {
+    return true;
+  }
+
   ship.docked = true;
   ship.jumpSystem.reset();
 
