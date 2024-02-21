@@ -27,6 +27,7 @@ class ComponentSyncMessageConsumer : public AbstractMessageConsumer
 
   auto determineSystemForShip(const Uuid shipDbId) const -> Uuid;
   auto determineSystemForAsteroid(const Uuid asteroidDbId) const -> Uuid;
+  auto determineSystemForOutpost(const Uuid outpostDbId) const -> Uuid;
 };
 
 } // namespace bsgo
