@@ -10,6 +10,7 @@
 #include "SystemProcessor.hh"
 #include "TcpServer.hh"
 #include <atomic>
+#include <condition_variable>
 #include <core_utils/CoreObject.hh>
 
 namespace bsgo {
@@ -24,8 +25,12 @@ class Server : public utils::CoreObject
 
   private:
   net::Context m_context{};
+
   std::atomic_bool m_running{false};
-  net::TcpServerPtr m_tcpServer{};
+  std::mutex m_runningLocker{};
+  std::condition_variable m_runningNotifier{};
+
+  net::TcpServerShPtr m_tcpServer{};
 
   ClientManagerShPtr m_clientManager{std::make_shared<ClientManager>()};
   MessageExchangerPtr m_messageExchanger{};

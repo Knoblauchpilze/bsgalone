@@ -13,12 +13,16 @@ TcpServer::TcpServer(Context &context, const int port, const ServerConfig &confi
   addModule("server");
 
   initializeFromConfig(config);
-  registerToAsio();
 }
 
 auto TcpServer::port() const -> int
 {
   return m_port;
+}
+
+void TcpServer::start()
+{
+  registerToAsio();
 }
 
 void TcpServer::initializeFromConfig(const ServerConfig &config)
@@ -31,8 +35,10 @@ void TcpServer::initializeFromConfig(const ServerConfig &config)
 void TcpServer::registerToAsio()
 {
   // https://www.boost.org/doc/libs/1_66_0/doc/html/boost_asio/reference/ReadHandler.html
-  m_asioAcceptor.async_accept(
-    std::bind(&TcpServer::onConnectionRequest, this, std::placeholders::_1, std::placeholders::_2));
+  m_asioAcceptor.async_accept(std::bind(&TcpServer::onConnectionRequest,
+                                        shared_from_this(),
+                                        std::placeholders::_1,
+                                        std::placeholders::_2));
 }
 
 void TcpServer::onConnectionRequest(const std::error_code &code, asio::ip::tcp::socket socket)

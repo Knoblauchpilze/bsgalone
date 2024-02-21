@@ -29,6 +29,8 @@ void Server::run(const int port)
 void Server::requestStop()
 {
   m_running.store(false);
+  std::unique_lock lock(m_runningLocker);
+  m_runningNotifier.notify_one();
 }
 
 void Server::initialize()
@@ -75,7 +77,8 @@ void Server::setup(const int port)
                                      onConnectionReady(connection);
                                    }};
 
-  m_tcpServer = std::make_unique<net::TcpServer>(m_context, port, config);
+  m_tcpServer = std::make_shared<net::TcpServer>(m_context, port, config);
+  m_tcpServer->start();
 
   info("Starting listening on port " + std::to_string(m_tcpServer->port()));
   m_context.start();
@@ -93,8 +96,8 @@ void Server::activeRunLoop()
 
   while (running)
   {
-    constexpr auto SLEEP_DURATION_WHEN_POLLING_STATUS = utils::Milliseconds(100);
-    std::this_thread::sleep_for(SLEEP_DURATION_WHEN_POLLING_STATUS);
+    std::unique_lock lock(m_runningLocker);
+    m_runningNotifier.wait(lock, [this] { return !m_running.load(); });
 
     running = m_running.load();
   }
