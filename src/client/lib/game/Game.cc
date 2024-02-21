@@ -343,7 +343,9 @@ void Game::initialize()
                               .outputMessageQueue   = m_outputMessageQueue.get(),
                               .ignoredSystems       = {bsgo::SystemType::LOOT,
                                                        bsgo::SystemType::REMOVAL,
-                                                       bsgo::SystemType::STATUS}};
+                                                       bsgo::SystemType::STATUS,
+                                                       bsgo::SystemType::HEALTH,
+                                                       bsgo::SystemType::POWER}};
   m_coordinator = std::make_shared<bsgo::Coordinator>(std::move(sConfig));
 
   bsgo::ViewsConfig vConfig{.repositories         = repositories,
