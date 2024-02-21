@@ -12,7 +12,6 @@ namespace bsgo {
 struct Outpost
 {
   Faction faction{};
-  Uuid system{};
 
   float hullPoints{0.0f};
   float maxHullPoints{0.0f};

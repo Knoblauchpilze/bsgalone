@@ -112,7 +112,7 @@ auto SystemService::getSystemDbIdForAsteroid(const Uuid asteroidDbId) const -> U
 
 auto SystemService::getSystemDbIdForOutpost(const Uuid outpostDbId) const -> Uuid
 {
-  return m_repositories.outpostRepository->findOneById(outpostDbId).system;
+  return m_repositories.systemOutpostRepository->findOneById(outpostDbId).system;
 }
 
 auto SystemService::getShipDbIdForPlayer(const Uuid playerDbId) const -> Uuid
