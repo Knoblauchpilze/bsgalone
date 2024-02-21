@@ -52,6 +52,9 @@ void ShipMessageConsumer::handleComponentSync(const bsgo::ComponentSyncMessage &
     case bsgo::EntityKind::ASTEROID:
       handleAsteroidComponentsSync(message);
       break;
+    case bsgo::EntityKind::OUTPOST:
+      handleOutpostComponentsSync(message);
+      break;
     default:
       error("Unsupported entity kind " + bsgo::str(entityKind) + " in component sync message");
       break;
@@ -195,6 +198,32 @@ void ShipMessageConsumer::handleAsteroidComponentsSync(const bsgo::ComponentSync
   if (maybeHealth)
   {
     asteroid.healthComp().overrideValue(*maybeHealth);
+  }
+}
+
+void ShipMessageConsumer::handleOutpostComponentsSync(const bsgo::ComponentSyncMessage &message) const
+{
+  const auto outpostDbId = message.getEntityDbId();
+
+  const auto maybeOutpost = m_entityMapper.tryGetOutpostEntityId(outpostDbId);
+  if (!maybeOutpost)
+  {
+    warn("Failed to process component sync message for outpost " + bsgo::str(outpostDbId));
+    return;
+  }
+
+  auto outpost = m_coordinator->getEntity(*maybeOutpost);
+
+  const auto maybeHealth = message.tryGetHealth();
+  if (maybeHealth)
+  {
+    outpost.healthComp().overrideValue(*maybeHealth);
+  }
+
+  const auto maybePower = message.tryGetPower();
+  if (maybePower)
+  {
+    outpost.powerComp().overrideValue(*maybePower);
   }
 }
 
