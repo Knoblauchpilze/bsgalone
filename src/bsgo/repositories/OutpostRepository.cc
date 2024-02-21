@@ -10,7 +10,7 @@ OutpostRepository::OutpostRepository(const DbConnectionShPtr &connection)
 namespace {
 constexpr auto FIND_ONE_QUERY_NAME = "outpost_find_one";
 constexpr auto FIND_ONE_QUERY
-  = "SELECT faction, max_hull_points, hull_points_regen, max_power_points, power_points_regen, radius FROM outpost WHERE id = $1";
+  = "SELECT faction, system, max_hull_points, hull_points_regen, max_power_points, power_points_regen, radius FROM outpost WHERE id = $1";
 } // namespace
 
 void OutpostRepository::initialize()
@@ -28,11 +28,12 @@ auto OutpostRepository::findOneById(const Uuid outpost) const -> Outpost
   Outpost out;
 
   out.faction         = fromDbFaction(record[0].as<std::string>());
-  out.maxHullPoints   = record[1].as<float>();
-  out.hullPointsRegen = record[2].as<float>();
-  out.maxPowerPoints  = record[3].as<float>();
-  out.powerRegen      = record[4].as<float>();
-  out.radius          = record[5].as<float>();
+  out.system          = fromDbId(record[1].as<int>());
+  out.maxHullPoints   = record[2].as<float>();
+  out.hullPointsRegen = record[3].as<float>();
+  out.maxPowerPoints  = record[4].as<float>();
+  out.powerRegen      = record[5].as<float>();
+  out.radius          = record[6].as<float>();
 
   return out;
 }
