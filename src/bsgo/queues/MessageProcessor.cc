@@ -62,7 +62,7 @@ auto messagesTypesToString(const std::deque<IMessagePtr> &messages, const int co
 }
 } // namespace
 
-void MessageProcessor::processMessages(const std::optional<int> &amount)
+void MessageProcessor::processMessages(const std::string &name, const std::optional<int> &amount)
 {
   auto messages            = acquireAndClearMessages();
   const auto messagesCount = static_cast<int>(messages.size());
@@ -79,12 +79,12 @@ void MessageProcessor::processMessages(const std::optional<int> &amount)
     const auto messagesInfo = messagesTypesToString(messages, count);
     if (messagesInfo.importantMessagesCount > 0)
     {
-      info("Processed " + std::to_string(count) + "/" + std::to_string(messages.size())
+      info(name + " Processed " + std::to_string(count) + "/" + std::to_string(messages.size())
            + " message(s): " + messagesInfo.messagesTypes);
     }
     else
     {
-      verbose("Processed " + std::to_string(count) + "/" + std::to_string(messages.size())
+      verbose(name + " Processed " + std::to_string(count) + "/" + std::to_string(messages.size())
               + " message(s): " + messagesInfo.messagesTypes);
     }
     messages.erase(messages.begin(), messages.begin() + count);

@@ -23,6 +23,7 @@ class MessageExchanger
 {
   public:
   MessageExchanger(const MessageSystemData &messagesData);
+  ~MessageExchanger() = default;
 
   auto getInternalMessageQueue() const -> IMessageQueue *;
   auto getOutputMessageQueue() const -> IMessageQueue *;

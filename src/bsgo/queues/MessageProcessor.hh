@@ -17,7 +17,7 @@ class MessageProcessor : public utils::CoreObject
   public:
   MessageProcessor(std::deque<IMessagePtr> &messages, std::mutex &locker, MessageHandler handler);
 
-  void processMessages(const std::optional<int> &amount);
+  void processMessages(const std::string &name, const std::optional<int> &amount);
 
   private:
   std::mutex &m_locker;

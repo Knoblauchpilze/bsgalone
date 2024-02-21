@@ -6,6 +6,8 @@
 #include "SystemProcessorUtils.hh"
 #include <core_utils/TimeUtils.hh>
 
+#include <iostream>
+
 namespace bsgo {
 
 Server::Server()
@@ -13,6 +15,11 @@ Server::Server()
 {
   setService("server");
   initialize();
+}
+
+Server::~Server()
+{
+  std::cout << "Server::~Server" << std::endl;
 }
 
 void Server::run(const int port)
@@ -24,6 +31,7 @@ void Server::run(const int port)
 
   debug("Shutting down server...");
   shutdown();
+  std::cout << "Server::run is over" << std::endl;
 }
 
 void Server::requestStop()
@@ -78,7 +86,7 @@ void Server::setup(const int port)
                                    }};
 
   m_tcpServer = std::make_shared<net::TcpServer>(m_context, port, config);
-  m_tcpServer->start();
+  // m_tcpServer->start();
 
   info("Starting listening on port " + std::to_string(m_tcpServer->port()));
   m_context.start();
@@ -100,14 +108,24 @@ void Server::activeRunLoop()
     m_runningNotifier.wait(lock, [this] { return !m_running.load(); });
 
     running = m_running.load();
+
+    std::cout << "Woken up, running = " << running << std::endl;
   }
 
-  m_systemProcessors.clear();
+  std::cout << "Processing to clean up system processors" << std::endl;
+  for (const auto &systemProcessor : m_systemProcessors)
+  {
+    systemProcessor->stop();
+  }
 }
 
 void Server::shutdown()
 {
+  std::cout << "Stopping context" << std::endl;
   m_context.stop();
+  std::cout << "Reset on message exchanger" << std::endl;
+  m_messageExchanger.reset();
+  std::cout << "Finished shutdown" << std::endl;
 }
 
 void Server::onConnectionLost(const net::ConnectionId connectionId)

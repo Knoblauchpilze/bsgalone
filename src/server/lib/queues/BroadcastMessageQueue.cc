@@ -43,7 +43,7 @@ void BroadcastMessageQueue::processMessages(const std::optional<int> &amount)
     processMessage(message);
   });
 
-  processor.processMessages(amount);
+  processor.processMessages("broadcaste", amount);
 }
 
 namespace {

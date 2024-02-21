@@ -18,7 +18,7 @@ class Server : public utils::CoreObject
 {
   public:
   Server();
-  ~Server() override = default;
+  ~Server() override;
 
   void run(const int port);
   void requestStop();

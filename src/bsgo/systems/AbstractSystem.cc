@@ -66,6 +66,7 @@ void AbstractSystem::pushInternalMessage(IMessagePtr message) const
 {
   if (m_internalMessageQueue != nullptr)
   {
+    debug("pushing message " + str(message->type()));
     m_internalMessageQueue->pushMessage(std::move(message));
   }
 }

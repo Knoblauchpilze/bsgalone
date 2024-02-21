@@ -180,6 +180,7 @@ void Connection::onDataReceived(const std::error_code &code, const std::size_t c
               std::begin(m_incomingDataTempBuffer) + contentLength,
               std::back_inserter(m_partialMessageData));
 
+    debug("calling data");
     const auto processed = (*m_dataHandler)(m_id, m_partialMessageData);
     m_partialMessageData.erase(m_partialMessageData.begin(),
                                m_partialMessageData.begin() + processed);

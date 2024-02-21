@@ -2,14 +2,16 @@
 #include "SynchronizedMessageQueue.hh"
 #include "MessageProcessor.hh"
 
+#include <iostream>
+
 namespace bsgo {
 
-SynchronizedMessageQueue::SynchronizedMessageQueue()
+SynchronizedMessageQueue::SynchronizedMessageQueue(const std::string &name)
   : AbstractMessageQueue()
-  , utils::CoreObject("synchronized")
+  , utils::CoreObject(name)
 {
-  addModule("queue");
   setService("message");
+  addModule("queue");
 }
 
 void SynchronizedMessageQueue::pushMessage(IMessagePtr message)
@@ -32,11 +34,13 @@ bool SynchronizedMessageQueue::empty()
 
 void SynchronizedMessageQueue::processMessages(const std::optional<int> &amount)
 {
+  std::cout << getName() << " processing messages" << std::endl;
   MessageProcessor processor(m_messages, m_locker, [this](const IMessage &message) {
     processMessage(message);
   });
 
-  processor.processMessages(amount);
+  processor.processMessages(getName(), amount);
+  std::cout << getName() << " processed messages" << std::endl;
 }
 
 void SynchronizedMessageQueue::processMessage(const IMessage &message) const

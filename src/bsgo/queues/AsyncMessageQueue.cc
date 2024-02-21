@@ -75,10 +75,13 @@ void AsyncMessageQueue::asyncMessageProcessing()
     m_messageNotifier.wait(lock, [this] { return !m_running.load() || !m_messageQueue->empty(); });
 
     running = m_running.load();
+    debug("checking for message processing: " + std::to_string(running));
     if (running)
     {
       constexpr auto MESSAGES_BATCH_SIZE = 10;
+      debug("calling on internal message queue");
       m_messageQueue->processMessages(MESSAGES_BATCH_SIZE);
+      debug("processed messages on internal queue");
     }
   }
 

@@ -4,7 +4,7 @@
 namespace bsgo {
 
 namespace {
-constexpr auto BASE_SYNC_INTERVAL_MS = 1000;
+constexpr auto BASE_SYNC_INTERVAL_MS = 500;
 constexpr auto MAX_SYNC_JITTER_MS    = 100;
 
 auto generateJitteredSyncInterval() -> utils::Duration

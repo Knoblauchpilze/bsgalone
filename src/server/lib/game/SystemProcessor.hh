@@ -27,10 +27,12 @@ class SystemProcessor : public utils::CoreObject
   void connectToQueues(IMessageQueue *const internalMessageQueue,
                        IMessageQueue *const outputMessageQueue);
   void start();
+  void stop();
 
   private:
   Uuid m_systemDbId{};
-  IMessageQueuePtr m_inputMessagesQueue{std::make_unique<SynchronizedMessageQueue>()};
+  IMessageQueuePtr m_inputMessagesQueue{
+    std::make_unique<SynchronizedMessageQueue>("input-processor")};
   DatabaseEntityMapper m_entityMapper{};
   CoordinatorShPtr m_coordinator{};
   Services m_services{};

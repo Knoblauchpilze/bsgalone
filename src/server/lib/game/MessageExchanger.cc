@@ -15,12 +15,24 @@
 #include "SynchronizedMessageQueue.hh"
 #include "TriageMessageConsumer.hh"
 
+#include <iostream>
+
 namespace bsgo {
 
 MessageExchanger::MessageExchanger(const MessageSystemData &messagesData)
 {
   initialize(messagesData);
 }
+
+// MessageExchanger::~MessageExchanger()
+// {
+//   m_inputMessageQueue.reset();
+//   std::cout << "reset internal msg queue" << std::endl;
+//   m_internalMessageQueue.reset();
+//   std::cout << "reset output msg queue" << std::endl;
+//   m_outputMessageQueue.reset();
+//   std::cout << "reset all queues" << std::endl;
+// }
 
 auto MessageExchanger::getInternalMessageQueue() const -> IMessageQueue *
 {
@@ -49,7 +61,7 @@ void MessageExchanger::pushMessage(IMessagePtr message)
 namespace {
 auto createInputMessageQueue() -> NetworkMessageQueuePtr
 {
-  auto messageQueue = std::make_unique<SynchronizedMessageQueue>();
+  auto messageQueue = std::make_unique<SynchronizedMessageQueue>("input-msg");
   auto asyncQueue   = std::make_unique<AsyncMessageQueue>(std::move(messageQueue));
 
   return std::make_unique<NetworkMessageQueue>(std::move(asyncQueue));
@@ -57,7 +69,7 @@ auto createInputMessageQueue() -> NetworkMessageQueuePtr
 
 auto createInternalMessageQueue() -> IMessageQueuePtr
 {
-  auto messageQueue = std::make_unique<SynchronizedMessageQueue>();
+  auto messageQueue = std::make_unique<SynchronizedMessageQueue>("internal-msg");
   return std::make_unique<AsyncMessageQueue>(std::move(messageQueue));
 }
 
@@ -85,7 +97,7 @@ void MessageExchanger::initialize(const MessageSystemData &messagesData)
 namespace {
 auto createSystemMessageQueue() -> IMessageQueuePtr
 {
-  auto systemQueue = std::make_unique<SynchronizedMessageQueue>();
+  auto systemQueue = std::make_unique<SynchronizedMessageQueue>("system-msg");
   return std::make_unique<AsyncMessageQueue>(std::move(systemQueue));
 }
 } // namespace
@@ -122,8 +134,8 @@ void MessageExchanger::initializeInternalConsumers(const MessageSystemData &mess
   Repositories repositories{};
   auto systemService = std::make_shared<SystemService>(std::move(repositories));
 
-  m_internalMessageQueue->addListener(
-    std::make_unique<LootMessageConsumer>(systemService, m_outputMessageQueue.get()));
+  // m_internalMessageQueue->addListener(
+  //   std::make_unique<LootMessageConsumer>(systemService, m_outputMessageQueue.get()));
 
   m_internalMessageQueue->addListener(
     std::make_unique<JumpMessageConsumer>(systemService,
@@ -131,15 +143,15 @@ void MessageExchanger::initializeInternalConsumers(const MessageSystemData &mess
                                           messagesData.systemProcessors,
                                           m_outputMessageQueue.get()));
 
-  m_internalMessageQueue->addListener(
-    std::make_unique<EntityRemovedMessageConsumer>(systemService,
-                                                   messagesData.systemProcessors,
-                                                   m_outputMessageQueue.get()));
+  // m_internalMessageQueue->addListener(
+  //   std::make_unique<EntityRemovedMessageConsumer>(systemService,
+  //                                                  messagesData.systemProcessors,
+  //                                                  m_outputMessageQueue.get()));
 
-  m_internalMessageQueue->addListener(
-    std::make_unique<ComponentSyncMessageConsumer>(systemService,
-                                                   messagesData.systemProcessors,
-                                                   m_outputMessageQueue.get()));
+  // m_internalMessageQueue->addListener(
+  //   std::make_unique<ComponentSyncMessageConsumer>(systemService,
+  //                                                  messagesData.systemProcessors,
+  //                                                  m_outputMessageQueue.get()));
 }
 
 } // namespace bsgo

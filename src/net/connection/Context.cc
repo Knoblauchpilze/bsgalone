@@ -30,7 +30,10 @@ void Context::start()
   }
 
   m_running.store(true);
-  m_contextThread = std::thread([this]() { m_asioContext.run(); });
+  m_contextThread = std::thread([this]() {
+    m_asioContext.run();
+    debug("haha");
+  });
 
   debug("Successfully started asio context");
 }

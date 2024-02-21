@@ -434,6 +434,7 @@ void Coordinator::cleanUpDeadEntities()
     const auto ent = getEntity(id);
     if (ent.exists<RemovalComponent>() && ent.removalComp().toBeDeleted())
     {
+      debug("marking " + ent.str() + " for removal");
       deletedEntities.insert(id);
     }
   }

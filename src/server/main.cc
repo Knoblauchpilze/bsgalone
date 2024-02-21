@@ -8,6 +8,8 @@
 #include <core_utils/log/StdLogger.hh>
 #include <functional>
 
+#include <iostream>
+
 namespace {
 // https://stackoverflow.com/questions/11468414/using-auto-and-lambda-to-handle-signal
 std::function<void(int)> sigIntProcessing;
@@ -28,12 +30,16 @@ int main(int /*argc*/, char ** /*argv*/)
   try
   {
     bsgo::Server server;
-    sigIntProcessing = [&server](const int /*signal*/) { server.requestStop(); };
+    sigIntProcessing = [&server](const int /*signal*/) {
+      server.requestStop();
+      std::cout << "Successfully requested server to stop" << std::endl;
+    };
     // https://en.cppreference.com/w/cpp/utility/program/signal
     std::signal(SIGINT, sigIntInterceptor);
 
     constexpr auto DEFAULT_SERVER_PORT = 60000;
     server.run(DEFAULT_SERVER_PORT);
+    logger.debug("Server::run is over in main");
   }
   catch (const utils::CoreException &e)
   {
