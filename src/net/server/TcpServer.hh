@@ -13,13 +13,14 @@
 
 namespace net {
 
-class TcpServer : public utils::CoreObject
+class TcpServer : public utils::CoreObject, public std::enable_shared_from_this<TcpServer>
 {
   public:
   TcpServer(Context &context, const int port, const ServerConfig &config);
   ~TcpServer() override = default;
 
   auto port() const -> int;
+  void start();
 
   private:
   int m_port;
@@ -39,6 +40,6 @@ class TcpServer : public utils::CoreObject
   bool setupConnection(ConnectionShPtr connection);
 };
 
-using TcpServerPtr = std::unique_ptr<TcpServer>;
+using TcpServerShPtr = std::shared_ptr<TcpServer>;
 
 } // namespace net
