@@ -32,9 +32,9 @@ class MessageExchanger
   void pushMessage(IMessagePtr message);
 
   private:
-  NetworkMessageQueuePtr m_inputMessageQueue{};
-  IMessageQueuePtr m_internalMessageQueue{};
   IMessageQueuePtr m_outputMessageQueue{};
+  IMessageQueuePtr m_internalMessageQueue{};
+  NetworkMessageQueuePtr m_inputMessageQueue{};
 
   void initialize(const MessageSystemData &messagesData);
   auto initializeSystemMessageQueue(const MessageSystemData &messagesData) -> IMessageQueuePtr;

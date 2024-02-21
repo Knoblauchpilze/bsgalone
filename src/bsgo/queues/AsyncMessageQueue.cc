@@ -3,8 +3,8 @@
 
 namespace bsgo {
 
-AsyncMessageQueue::AsyncMessageQueue(IMessageQueuePtr messageQueue)
-  : utils::CoreObject("async")
+AsyncMessageQueue::AsyncMessageQueue(const std::string &name, IMessageQueuePtr messageQueue)
+  : utils::CoreObject(name)
   , m_messageQueue(std::move(messageQueue))
 {
   addModule("queue");
@@ -25,14 +25,17 @@ AsyncMessageQueue::~AsyncMessageQueue()
     return;
   }
 
-  m_running.store(false);
+  debug("requesting stop on async message queue");
   {
     std::unique_lock lock(m_messageLocker);
+    m_running.store(false);
     m_messageNotifier.notify_one();
   }
   if (m_queueThread.joinable())
   {
+    debug("waiting for thread");
     m_queueThread.join();
+    debug("finished waiting for thread");
   }
 }
 

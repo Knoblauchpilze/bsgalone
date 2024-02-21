@@ -12,7 +12,7 @@ namespace bsgo {
 class AsyncMessageQueue : public IMessageQueue, public utils::CoreObject
 {
   public:
-  AsyncMessageQueue(IMessageQueuePtr messageQueue);
+  AsyncMessageQueue(const std::string &name, IMessageQueuePtr messageQueue);
   ~AsyncMessageQueue() override;
 
   void pushMessage(IMessagePtr message) override;

@@ -1,7 +1,6 @@
 
 #include "NetworkMessageQueue.hh"
 #include "MessageParser.hh"
-#include "SynchronizedMessageQueue.hh"
 
 namespace bsgo {
 

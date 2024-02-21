@@ -84,8 +84,8 @@ void MessageProcessor::processMessages(const std::string &name, const std::optio
     }
     else
     {
-      verbose(name + " Processed " + std::to_string(count) + "/" + std::to_string(messages.size())
-              + " message(s): " + messagesInfo.messagesTypes);
+      debug(name + " Processed " + std::to_string(count) + "/" + std::to_string(messages.size())
+            + " message(s): " + messagesInfo.messagesTypes);
     }
     messages.erase(messages.begin(), messages.begin() + count);
   }
@@ -103,7 +103,7 @@ auto MessageProcessor::acquireAndClearMessages() -> std::deque<IMessagePtr>
 
 void MessageProcessor::requeueMessages(std::deque<IMessagePtr> &&messages)
 {
-  verbose("Requeuing " + std::to_string(messages.size()) + " message(s)");
+  debug("Requeuing " + std::to_string(messages.size()) + " message(s)");
 
   const std::lock_guard guard(m_locker);
   // https://stackoverflow.com/questions/35844999/move-stdvector-to-stddeque-in-c11

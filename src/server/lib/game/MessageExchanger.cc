@@ -61,22 +61,26 @@ void MessageExchanger::pushMessage(IMessagePtr message)
 namespace {
 auto createInputMessageQueue() -> NetworkMessageQueuePtr
 {
-  auto messageQueue = std::make_unique<SynchronizedMessageQueue>("input-msg");
-  auto asyncQueue   = std::make_unique<AsyncMessageQueue>(std::move(messageQueue));
+  auto messageQueue = std::make_unique<SynchronizedMessageQueue>("synchronized-for-input-msg-queue");
+  auto asyncQueue   = std::make_unique<AsyncMessageQueue>("async-for-input-msg-queue",
+                                                        std::move(messageQueue));
 
   return std::make_unique<NetworkMessageQueue>(std::move(asyncQueue));
 }
 
 auto createInternalMessageQueue() -> IMessageQueuePtr
 {
-  auto messageQueue = std::make_unique<SynchronizedMessageQueue>("internal-msg");
-  return std::make_unique<AsyncMessageQueue>(std::move(messageQueue));
+  auto messageQueue = std::make_unique<SynchronizedMessageQueue>(
+    "synchronized-for-internal-msg-queue");
+  return std::make_unique<AsyncMessageQueue>("async-for-internal-msg-queue",
+                                             std::move(messageQueue));
 }
 
 auto createOutputMessageQueue(ClientManagerShPtr clientManager) -> IMessageQueuePtr
 {
   auto broadcastQueue = std::make_unique<BroadcastMessageQueue>(std::move(clientManager));
-  return std::make_unique<AsyncMessageQueue>(std::move(broadcastQueue));
+  return std::make_unique<AsyncMessageQueue>("async-for-output-msg-queue",
+                                             std::move(broadcastQueue));
 }
 } // namespace
 
@@ -97,8 +101,8 @@ void MessageExchanger::initialize(const MessageSystemData &messagesData)
 namespace {
 auto createSystemMessageQueue() -> IMessageQueuePtr
 {
-  auto systemQueue = std::make_unique<SynchronizedMessageQueue>("system-msg");
-  return std::make_unique<AsyncMessageQueue>(std::move(systemQueue));
+  auto systemQueue = std::make_unique<SynchronizedMessageQueue>("synchronized-for-system-msg-queue");
+  return std::make_unique<AsyncMessageQueue>("async-for-system-msg-queue", std::move(systemQueue));
 }
 } // namespace
 
@@ -134,8 +138,8 @@ void MessageExchanger::initializeInternalConsumers(const MessageSystemData &mess
   Repositories repositories{};
   auto systemService = std::make_shared<SystemService>(std::move(repositories));
 
-  // m_internalMessageQueue->addListener(
-  //   std::make_unique<LootMessageConsumer>(systemService, m_outputMessageQueue.get()));
+  m_internalMessageQueue->addListener(
+    std::make_unique<LootMessageConsumer>(systemService, m_outputMessageQueue.get()));
 
   m_internalMessageQueue->addListener(
     std::make_unique<JumpMessageConsumer>(systemService,
@@ -143,15 +147,15 @@ void MessageExchanger::initializeInternalConsumers(const MessageSystemData &mess
                                           messagesData.systemProcessors,
                                           m_outputMessageQueue.get()));
 
-  // m_internalMessageQueue->addListener(
-  //   std::make_unique<EntityRemovedMessageConsumer>(systemService,
-  //                                                  messagesData.systemProcessors,
-  //                                                  m_outputMessageQueue.get()));
+  m_internalMessageQueue->addListener(
+    std::make_unique<EntityRemovedMessageConsumer>(systemService,
+                                                   messagesData.systemProcessors,
+                                                   m_outputMessageQueue.get()));
 
-  // m_internalMessageQueue->addListener(
-  //   std::make_unique<ComponentSyncMessageConsumer>(systemService,
-  //                                                  messagesData.systemProcessors,
-  //                                                  m_outputMessageQueue.get()));
+  m_internalMessageQueue->addListener(
+    std::make_unique<ComponentSyncMessageConsumer>(systemService,
+                                                   messagesData.systemProcessors,
+                                                   m_outputMessageQueue.get()));
 }
 
 } // namespace bsgo
