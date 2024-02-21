@@ -33,8 +33,9 @@ class SystemService : public AbstractService
   };
   auto tryJump(const Uuid shipDbId) const -> JumpResult;
 
-  auto getSystemDbIdForAsteroid(const Uuid asteroidDbId) const -> Uuid;
   auto tryGetSystemDbIdForShip(const Uuid shipDbId) const -> std::optional<Uuid>;
+  auto getSystemDbIdForAsteroid(const Uuid asteroidDbId) const -> Uuid;
+  auto getSystemDbIdForOutpost(const Uuid outpostDbId) const -> Uuid;
   auto getShipDbIdForPlayer(const Uuid playerDbId) const -> Uuid;
 
   private:

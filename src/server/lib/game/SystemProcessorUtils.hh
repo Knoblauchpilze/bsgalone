@@ -20,4 +20,9 @@ auto findSystemAndProcessorFromAsteroid(const Uuid asteroidDbId,
                                         const SystemProcessorMap &processors)
   -> std::pair<std::optional<Uuid>, std::optional<SystemProcessorShPtr>>;
 
+auto findSystemAndProcessorFromOutpost(const Uuid outpostDbId,
+                                       const SystemService &service,
+                                       const SystemProcessorMap &processors)
+  -> std::pair<std::optional<Uuid>, std::optional<SystemProcessorShPtr>>;
+
 } // namespace bsgo

@@ -64,4 +64,17 @@ auto findSystemAndProcessorFromAsteroid(const Uuid asteroidDbId,
   return out;
 }
 
+auto findSystemAndProcessorFromOutpost(const Uuid outpostDbId,
+                                       const SystemService &service,
+                                       const SystemProcessorMap &processors)
+  -> std::pair<std::optional<Uuid>, std::optional<SystemProcessorShPtr>>
+{
+  std::pair<std::optional<Uuid>, std::optional<SystemProcessorShPtr>> out{};
+
+  out.first  = service.getSystemDbIdForOutpost(outpostDbId);
+  out.second = findSystemProcessorFromSystem(*out.first, processors);
+
+  return out;
+}
+
 } // namespace bsgo

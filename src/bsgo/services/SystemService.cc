@@ -100,14 +100,19 @@ auto SystemService::tryJump(const Uuid shipDbId) const -> JumpResult
   return out;
 }
 
+auto SystemService::tryGetSystemDbIdForShip(const Uuid shipDbId) const -> std::optional<Uuid>
+{
+  return m_repositories.playerShipRepository->findOneById(shipDbId).system;
+}
+
 auto SystemService::getSystemDbIdForAsteroid(const Uuid asteroidDbId) const -> Uuid
 {
   return m_repositories.asteroidRepository->findOneById(asteroidDbId).system;
 }
 
-auto SystemService::tryGetSystemDbIdForShip(const Uuid shipDbId) const -> std::optional<Uuid>
+auto SystemService::getSystemDbIdForOutpost(const Uuid outpostDbId) const -> Uuid
 {
-  return m_repositories.playerShipRepository->findOneById(shipDbId).system;
+  return m_repositories.outpostRepository->findOneById(outpostDbId).system;
 }
 
 auto SystemService::getShipDbIdForPlayer(const Uuid playerDbId) const -> Uuid
