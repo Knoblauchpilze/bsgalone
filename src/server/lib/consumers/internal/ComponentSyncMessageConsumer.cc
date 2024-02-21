@@ -37,6 +37,9 @@ void ComponentSyncMessageConsumer::onMessageReceived(const IMessage &message)
     case EntityKind::ASTEROID:
       systemDbId = determineSystemForAsteroid(componentSync.getEntityDbId());
       break;
+    case EntityKind::OUTPOST:
+      systemDbId = determineSystemForOutpost(componentSync.getEntityDbId());
+      break;
     default:
       error("Unsupported kind of entity to sync " + str(componentSync.getEntityKind()));
       break;
@@ -76,6 +79,20 @@ auto ComponentSyncMessageConsumer::determineSystemForAsteroid(const Uuid asteroi
   {
     error("Failed to process asteroid component synced message for " + str(asteroidDbId),
           "No system for asteroid");
+  }
+
+  return *systemDbId;
+}
+
+auto ComponentSyncMessageConsumer::determineSystemForOutpost(const Uuid outpostDbId) const -> Uuid
+{
+  const auto [systemDbId, _] = findSystemAndProcessorFromOutpost(outpostDbId,
+                                                                 *m_systemService,
+                                                                 m_systemProcessors);
+  if (!systemDbId)
+  {
+    error("Failed to process outpost component synced message for " + str(outpostDbId),
+          "No system for outpost");
   }
 
   return *systemDbId;
