@@ -86,8 +86,11 @@ void BroadcastMessageQueue::processMessage(const IMessage &message)
 
 void BroadcastMessageQueue::sendMessageToClient(const Uuid clientId, const IMessage &message)
 {
-  const auto connection = m_clientManager->getConnectionForClient(clientId);
-  connection->send(message);
+  const auto maybeConnection = m_clientManager->tryGetConnectionForClient(clientId);
+  if (maybeConnection)
+  {
+    (*maybeConnection)->send(message);
+  }
 }
 
 namespace {
