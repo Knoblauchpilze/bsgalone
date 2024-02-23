@@ -21,6 +21,7 @@ class ClientManager : public utils::CoreObject
   void registerPlayer(const Uuid clientId, const Uuid playerDbId, const Uuid playerSystemDbId);
   void removePlayer(const Uuid playerDbId);
   void removePlayerConnection(const Uuid playerDbId);
+  void markConnectionAsStale(const net::ConnectionId connectionId);
   void removeConnection(const net::ConnectionId connectionId);
 
   auto getClientIdForPlayer(const Uuid playerDbId) const -> Uuid;
@@ -35,6 +36,7 @@ class ClientManager : public utils::CoreObject
   {
     Uuid clientId{};
     std::optional<Uuid> playerDbId{};
+    bool stale{false};
   };
   auto tryGetDataForConnection(const net::ConnectionId connectionId) -> ConnectionData;
   bool isStillConnected(const net::ConnectionId connectionId) const;
@@ -48,6 +50,7 @@ class ClientManager : public utils::CoreObject
     std::optional<Uuid> playerDbId{};
     std::optional<Uuid> playerSystemDbId{};
     net::ConnectionShPtr connection{};
+    bool connectionIsStale{false};
   };
 
   mutable std::mutex m_locker{};
