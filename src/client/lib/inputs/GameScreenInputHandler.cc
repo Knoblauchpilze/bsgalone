@@ -38,14 +38,14 @@ void GameScreenInputHandler::processUserInput(const controls::State &controls,
 
 void GameScreenInputHandler::performAction(float x, float y, const controls::State & /*state*/)
 {
-  if (!m_shipDbView->isReady())
+  if (!m_shipView->isReady())
   {
     return;
   }
 
   const Eigen::Vector3f pos(x, y, 0.0f);
 
-  m_shipDbView->tryAcquireTarget(pos);
+  m_shipView->tryAcquireTarget(pos);
 }
 
 namespace {

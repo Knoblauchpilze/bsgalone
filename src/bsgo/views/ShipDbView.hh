@@ -34,8 +34,6 @@ class ShipDbView : public AbstractView
 
   void accelerateShip(const Eigen::Vector3f &acceleration) const;
 
-  void tryAcquireTarget(const Eigen::Vector3f &position) const;
-
   void tryEquipItem(const Item &itemType, const Uuid itemDbId) const;
   void tryUnequipItem(const Item &itemType, const Uuid itemDbId) const;
 
