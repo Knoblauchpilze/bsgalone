@@ -25,7 +25,14 @@ class ClientManager : public utils::CoreObject
   void removeConnection(const net::ConnectionId connectionId);
 
   auto getClientIdForPlayer(const Uuid playerDbId) const -> Uuid;
-  auto getConnectionForClient(const Uuid clientId) const -> net::ConnectionShPtr;
+
+  /// @brief - Try to retrieve the connection linked to the input client. It can
+  /// fail to find one in case the connection is marked as stale in which case we
+  /// don't return it as sending data would fail anyway.
+  /// @param clientId - the client id for which the connection should be retrieved.
+  /// @return - the connection associated to the client if it is not stale.
+  auto tryGetConnectionForClient(const Uuid clientId) const -> std::optional<net::ConnectionShPtr>;
+
   auto getAllConnections() const -> std::vector<net::ConnectionShPtr>;
   auto getAllConnectionsForSystem(const Uuid systemDbId) const -> std::vector<net::ConnectionShPtr>;
   auto tryGetSystemForClient(const Uuid clientId) const -> std::optional<Uuid>;

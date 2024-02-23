@@ -137,7 +137,8 @@ auto ClientManager::getClientIdForPlayer(const Uuid playerDbId) const -> Uuid
   return maybeClientId->second;
 }
 
-auto ClientManager::getConnectionForClient(const Uuid clientId) const -> net::ConnectionShPtr
+auto ClientManager::tryGetConnectionForClient(const Uuid clientId) const
+  -> std::optional<net::ConnectionShPtr>
 {
   const std::lock_guard guard(m_locker);
 
@@ -145,6 +146,11 @@ auto ClientManager::getConnectionForClient(const Uuid clientId) const -> net::Co
   if (maybeClientData == m_clients.cend())
   {
     error("Failed to get connection for " + str(clientId), "No such client");
+  }
+
+  if (maybeClientData->second.connectionIsStale)
+  {
+    return {};
   }
 
   return maybeClientData->second.connection;
@@ -155,11 +161,13 @@ auto ClientManager::getAllConnections() const -> std::vector<net::ConnectionShPt
   const std::lock_guard guard(m_locker);
   std::vector<net::ConnectionShPtr> out;
 
-  // https://stackoverflow.com/questions/7879326/how-to-apply-transform-to-an-stl-map-in-c
-  std::transform(m_clients.cbegin(),
-                 m_clients.cend(),
-                 std::back_inserter(out),
-                 [](const std::pair<Uuid, ClientData> &v) { return v.second.connection; });
+  for (const auto &[_, clientData] : m_clients)
+  {
+    if (!clientData.connectionIsStale)
+    {
+      out.push_back(clientData.connection);
+    }
+  }
 
   return out;
 }
@@ -170,12 +178,13 @@ auto ClientManager::getAllConnectionsForSystem(const Uuid systemDbId) const
   const std::lock_guard guard(m_locker);
   std::vector<net::ConnectionShPtr> out;
 
-  for (const auto &[_, client] : m_clients)
+  for (const auto &[_, clientData] : m_clients)
   {
-    const auto &maybeSystemDbId = client.playerSystemDbId;
-    if (!maybeSystemDbId || *maybeSystemDbId == systemDbId)
+    const auto &maybeSystemDbId         = clientData.playerSystemDbId;
+    const auto noSystemOrExpectedSystem = !maybeSystemDbId || *maybeSystemDbId == systemDbId;
+    if (!clientData.connectionIsStale && noSystemOrExpectedSystem)
     {
-      out.push_back(client.connection);
+      out.push_back(clientData.connection);
     }
   }
 
