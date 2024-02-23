@@ -119,6 +119,11 @@ void SystemMessageConsumer::handleEntityRemoved(const bsgo::EntityRemovedMessage
   {
     // Do not remove the player ship entity if it dies, we disable everything
     // else anyway. This will be cleared when going back to the outpost.
+    // However we set its status to DEAD to disable among other things firing
+    // weapons or reloading of computers.
+    auto playerShip = m_coordinator->getEntity(*entityId);
+    playerShip.statusComp().setStatus(bsgo::Status::DEAD);
+
     return;
   }
 
