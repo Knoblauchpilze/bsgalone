@@ -16,16 +16,7 @@ SystemProcessor::SystemProcessor(const Uuid systemDbId)
 
 SystemProcessor::~SystemProcessor()
 {
-  if (!m_running.load())
-  {
-    return;
-  }
-
-  m_running.store(false);
-  if (m_processingThread.joinable())
-  {
-    m_processingThread.join();
-  }
+  stop();
 }
 
 auto SystemProcessor::getSystemDbId() const -> Uuid
@@ -65,6 +56,20 @@ void SystemProcessor::start()
 
   m_running.store(true);
   m_processingThread = std::thread(&SystemProcessor::asyncSystemProcessing, this);
+}
+
+void SystemProcessor::stop()
+{
+  if (!m_running.load())
+  {
+    return;
+  }
+
+  m_running.store(false);
+  if (m_processingThread.joinable())
+  {
+    m_processingThread.join();
+  }
 }
 
 void SystemProcessor::asyncSystemProcessing()

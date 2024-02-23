@@ -27,6 +27,7 @@ class SystemProcessor : public utils::CoreObject
   void connectToQueues(IMessageQueue *const internalMessageQueue,
                        IMessageQueue *const outputMessageQueue);
   void start();
+  void stop();
 
   private:
   Uuid m_systemDbId{};
