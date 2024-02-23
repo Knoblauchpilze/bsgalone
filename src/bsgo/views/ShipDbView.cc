@@ -5,7 +5,6 @@
 #include "JumpCancelledMessage.hh"
 #include "JumpRequestedMessage.hh"
 #include "LockerUtils.hh"
-#include "TargetMessage.hh"
 #include "VelocityMessage.hh"
 
 namespace bsgo {
@@ -124,12 +123,6 @@ void ShipDbView::accelerateShip(const Eigen::Vector3f &acceleration) const
   auto message = std::make_unique<VelocityMessage>(*m_playerShipDbId, acceleration);
   m_outputMessageQueue->pushMessage(message->clone());
   m_internalMessageQueue->pushMessage(std::move(message));
-}
-
-void ShipDbView::tryAcquireTarget(const Eigen::Vector3f &position) const
-{
-  checkPlayerShipDbIdExists();
-  m_outputMessageQueue->pushMessage(std::make_unique<TargetMessage>(*m_playerShipDbId, position));
 }
 
 void ShipDbView::tryEquipItem(const Item &itemType, const Uuid itemDbId) const

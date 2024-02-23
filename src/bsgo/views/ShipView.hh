@@ -40,6 +40,8 @@ class ShipView : public AbstractView
   void tryActivateWeapon(const int weaponId) const;
   void tryActivateSlot(const int slotId) const;
 
+  void tryAcquireTarget(const Eigen::Vector3f &position) const;
+
   void setJumpSystem(const Uuid system);
   void clearJumpSystem();
   bool isJumping() const;

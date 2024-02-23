@@ -1,6 +1,7 @@
 
 #include "ShipView.hh"
 #include "SlotMessage.hh"
+#include "TargetMessage.hh"
 
 namespace bsgo {
 
@@ -150,6 +151,14 @@ void ShipView::tryActivateSlot(const int slotId) const
 
   auto message = std::make_unique<SlotMessage>(shipDbId, slotDbId, Slot::COMPUTER);
   m_outputMessageQueue->pushMessage(std::move(message));
+}
+
+void ShipView::tryAcquireTarget(const Eigen::Vector3f &position) const
+{
+  const auto playerShip = getPlayerShip();
+  const auto shipDbId   = playerShip.dbComp().dbId();
+
+  m_outputMessageQueue->pushMessage(std::make_unique<TargetMessage>(shipDbId, position));
 }
 
 void ShipView::setJumpSystem(const Uuid system)
