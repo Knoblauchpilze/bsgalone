@@ -162,7 +162,8 @@ void Connection::onDataReceived(const std::error_code &code, const std::size_t c
 {
   if (code)
   {
-    warn("Error detected when receiving data for connection", code.message());
+    warn("Error detected when receiving data from connection",
+         code.message() + " (code: " + std::to_string(code.value()) + ")");
     if (m_disconnectHandler)
     {
       (*m_disconnectHandler)(m_id);
@@ -199,7 +200,8 @@ void Connection::onDataSent(const std::error_code &code, const std::size_t conte
 {
   if (code)
   {
-    warn("Error detected when sending data on connection", code.message());
+    warn("Error detected when sending data on connection",
+         code.message() + " (code: " + std::to_string(code.value()) + ")");
     if (m_disconnectHandler)
     {
       (*m_disconnectHandler)(m_id);

@@ -121,18 +121,25 @@ void Server::onConnectionLost(const net::ConnectionId connectionId)
     return;
   }
 
-  const auto maybeData = m_clientManager->tryGetDataForConnection(connectionId);
-  if (!maybeData.playerDbId)
+  const auto data = m_clientManager->tryGetDataForConnection(connectionId);
+  if (!data.playerDbId)
   {
     error("Connection " + std::to_string(connectionId)
           + " lost but could not find associated player");
   }
 
-  info("Connection " + std::to_string(connectionId) + " lost but player "
-       + str(*maybeData.playerDbId) + " is still connected");
+  if (data.stale)
+  {
+    debug("Connection " + std::to_string(connectionId) + " is already marked as stale");
+    return;
+  }
 
-  auto message = std::make_unique<LogoutMessage>(*maybeData.playerDbId, true);
-  message->setClientId(maybeData.clientId);
+  info("Connection " + std::to_string(connectionId) + " lost but player " + str(*data.playerDbId)
+       + " is still connected");
+
+  m_clientManager->markConnectionAsStale(connectionId);
+  auto message = std::make_unique<LogoutMessage>(*data.playerDbId, true);
+  message->setClientId(data.clientId);
 
   m_messageExchanger->pushMessage(std::move(message));
 }

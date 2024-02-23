@@ -82,6 +82,26 @@ void ClientManager::removePlayerConnection(const Uuid playerDbId)
   info("Removed connection " + clientData.connection->str() + " for player " + str(playerDbId));
 }
 
+void ClientManager::markConnectionAsStale(const Uuid connectionId)
+{
+  const std::lock_guard guard(m_locker);
+
+  const auto maybeClientId = m_connectionToClient.find(connectionId);
+  if (maybeClientId == m_connectionToClient.cend())
+  {
+    error("Failed to mark connection " + std::to_string(connectionId) + " as stale");
+  }
+
+  auto &clientData = m_clients.at(maybeClientId->second);
+  if (clientData.connectionIsStale)
+  {
+    error("Failed to mark connection " + str(connectionId) + " for disconnection",
+          "Client " + str(clientData.clientId) + " is already marked as stale");
+  }
+
+  clientData.connectionIsStale = true;
+}
+
 void ClientManager::removeConnection(const net::ConnectionId connectionId)
 {
   const std::lock_guard guard(m_locker);
@@ -169,7 +189,7 @@ auto ClientManager::tryGetSystemForClient(const Uuid clientId) const -> std::opt
   const auto maybeClientData = m_clients.find(clientId);
   if (maybeClientData == m_clients.cend())
   {
-    error("Failed to get system for " + str(clientId), "No such client");
+    return {};
   }
 
   return maybeClientData->second.playerSystemDbId;
@@ -213,6 +233,7 @@ auto ClientManager::tryGetDataForConnection(const net::ConnectionId connectionId
 
   out.clientId   = maybeClientData->clientId;
   out.playerDbId = maybeClientData->playerDbId;
+  out.stale      = maybeClientData->connectionIsStale;
   return out;
 }
 
