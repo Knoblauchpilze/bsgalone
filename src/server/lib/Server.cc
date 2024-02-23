@@ -102,7 +102,10 @@ void Server::activeRunLoop()
     running = m_running.load();
   }
 
-  m_systemProcessors.clear();
+  for (const auto &systemProcessor : m_systemProcessors)
+  {
+    systemProcessor->stop();
+  }
 }
 
 void Server::shutdown()
