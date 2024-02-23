@@ -13,7 +13,7 @@ namespace bsgo {
 class SynchronizedMessageQueue : public AbstractMessageQueue, public utils::CoreObject
 {
   public:
-  SynchronizedMessageQueue();
+  SynchronizedMessageQueue(const std::string &name);
   ~SynchronizedMessageQueue() override = default;
 
   void pushMessage(IMessagePtr message) override;

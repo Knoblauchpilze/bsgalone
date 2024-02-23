@@ -335,8 +335,9 @@ void Game::initialize()
   m_inputMessageQueue = connection->createInputMessageQueue();
   // Not strictly necessary as the internal messages should only be produced
   // synchronously by the Coordinator but also does not hurt.
-  m_internalMessageQueue = std::make_unique<bsgo::SynchronizedMessageQueue>();
-  m_outputMessageQueue   = std::make_unique<ClientMessageQueue>(std::move(connection));
+  m_internalMessageQueue = std::make_unique<bsgo::SynchronizedMessageQueue>(
+    "synchronized-message-queue-for-internal");
+  m_outputMessageQueue = std::make_unique<ClientMessageQueue>(std::move(connection));
 
   const auto repositories = m_dataSource.repositories();
   bsgo::SystemsConfig sConfig{.internalMessageQueue = m_internalMessageQueue.get(),

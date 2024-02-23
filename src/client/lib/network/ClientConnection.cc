@@ -27,7 +27,8 @@ void ClientConnection::sendMessage(const bsgo::IMessage &message)
 
 auto ClientConnection::createInputMessageQueue() -> bsgo::IMessageQueuePtr
 {
-  auto synchronizedQueue = std::make_unique<bsgo::SynchronizedMessageQueue>();
+  auto synchronizedQueue = std::make_unique<bsgo::SynchronizedMessageQueue>(
+    "synchronized-message-queue-for-network");
   auto queue = std::make_unique<bsgo::NetworkMessageQueue>(std::move(synchronizedQueue));
   queue->registerToConnection(*m_connection);
   return queue;

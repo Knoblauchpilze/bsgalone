@@ -9,6 +9,8 @@ namespace bsgo {
 SystemProcessor::SystemProcessor(const Uuid systemDbId)
   : utils::CoreObject("processor")
   , m_systemDbId(systemDbId)
+  , m_inputMessagesQueue(std::make_unique<SynchronizedMessageQueue>(
+      "synchronized-message-queue-for-" + std::to_string(m_systemDbId)))
 {
   setService("system");
   addModule(str(systemDbId));

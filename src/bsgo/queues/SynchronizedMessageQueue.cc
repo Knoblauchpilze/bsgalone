@@ -4,11 +4,10 @@
 
 namespace bsgo {
 
-SynchronizedMessageQueue::SynchronizedMessageQueue()
+SynchronizedMessageQueue::SynchronizedMessageQueue(const std::string &name)
   : AbstractMessageQueue()
-  , utils::CoreObject("synchronized")
+  , utils::CoreObject(name)
 {
-  addModule("queue");
   setService("message");
 }
 
@@ -32,7 +31,7 @@ bool SynchronizedMessageQueue::empty()
 
 void SynchronizedMessageQueue::processMessages(const std::optional<int> &amount)
 {
-  MessageProcessor processor(m_messages, m_locker, [this](const IMessage &message) {
+  MessageProcessor processor(getName(), m_messages, m_locker, [this](const IMessage &message) {
     processMessage(message);
   });
 
