@@ -1,5 +1,6 @@
 
 #include "ShipMessageConsumer.hh"
+#include "VectorUtils.hh"
 
 namespace pge {
 
@@ -124,6 +125,19 @@ void ShipMessageConsumer::handleTargetAcquired(const bsgo::TargetMessage &messag
   }
 }
 
+namespace {
+constexpr auto DISTANCE_THRESHOLD_FOR_FORCED_UPDATE = 1.0f;
+
+bool positionDifferenceIsBiggerThanThreshold(const bsgo::Entity &ship,
+                                             const Eigen::Vector3f &newPosition)
+{
+  const Eigen::Vector3f currentPosition = ship.transformComp().position();
+
+  const float delta = (newPosition - currentPosition).norm();
+  return delta >= DISTANCE_THRESHOLD_FOR_FORCED_UPDATE;
+}
+} // namespace
+
 void ShipMessageConsumer::handleShipComponentsSync(const bsgo::ComponentSyncMessage &message) const
 {
   const auto shipDbId = message.getEntityDbId();
@@ -135,7 +149,6 @@ void ShipMessageConsumer::handleShipComponentsSync(const bsgo::ComponentSyncMess
     return;
   }
 
-  /// TODO: Probably ignore modification for the player's ship.
   auto ship = m_coordinator->getEntity(*maybeShip);
 
   const auto maybeShipStatus = message.tryGetStatus();
@@ -153,7 +166,19 @@ void ShipMessageConsumer::handleShipComponentsSync(const bsgo::ComponentSyncMess
   const auto maybeShipPosition = message.tryGetPosition();
   if (maybeShipPosition)
   {
-    ship.transformComp().overridePosition(*maybeShipPosition);
+    const auto maybePlayerShipDbId = m_entityMapper.tryGetPlayerShipDbId();
+    const auto isPlayerShipUpdate  = maybePlayerShipDbId && *maybePlayerShipDbId == shipDbId;
+    if (!isPlayerShipUpdate || positionDifferenceIsBiggerThanThreshold(ship, *maybeShipPosition))
+    {
+      if (isPlayerShipUpdate)
+      {
+        warn("Overriding player ship position with " + bsgo::str(*maybeShipPosition)
+             + " as it's too different from local position "
+             + bsgo::str(ship.transformComp().position()));
+      }
+
+      ship.transformComp().overridePosition(*maybeShipPosition);
+    }
   }
 
   const auto maybeShipSpeed = message.tryGetSpeed();
