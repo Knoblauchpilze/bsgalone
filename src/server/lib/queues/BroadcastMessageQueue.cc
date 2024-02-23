@@ -13,10 +13,9 @@
 namespace bsgo {
 
 BroadcastMessageQueue::BroadcastMessageQueue(ClientManagerShPtr clientManager)
-  : utils::CoreObject("broadcast")
+  : utils::CoreObject("broadcast-message-queue")
   , m_clientManager(std::move(clientManager))
 {
-  addModule("queue");
   setService("message");
 }
 
@@ -39,7 +38,7 @@ bool BroadcastMessageQueue::empty()
 
 void BroadcastMessageQueue::processMessages(const std::optional<int> &amount)
 {
-  MessageProcessor processor(m_messages, m_locker, [this](const IMessage &message) {
+  MessageProcessor processor(getName(), m_messages, m_locker, [this](const IMessage &message) {
     processMessage(message);
   });
 

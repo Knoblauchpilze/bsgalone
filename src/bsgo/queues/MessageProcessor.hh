@@ -15,7 +15,10 @@ using MessageHandler = std::function<void(const IMessage &)>;
 class MessageProcessor : public utils::CoreObject
 {
   public:
-  MessageProcessor(std::deque<IMessagePtr> &messages, std::mutex &locker, MessageHandler handler);
+  MessageProcessor(const std::string &onBehalfOfName,
+                   std::deque<IMessagePtr> &messages,
+                   std::mutex &locker,
+                   MessageHandler handler);
 
   void processMessages(const std::optional<int> &amount);
 

@@ -3,15 +3,16 @@
 
 namespace bsgo {
 
-MessageProcessor::MessageProcessor(std::deque<IMessagePtr> &messages,
+MessageProcessor::MessageProcessor(const std::string &onBehalfOfName,
+                                   std::deque<IMessagePtr> &messages,
                                    std::mutex &locker,
                                    MessageHandler handler)
-  : CoreObject("processor")
+  : CoreObject(onBehalfOfName)
   , m_locker(locker)
   , m_messages(messages)
   , m_handler(handler)
 {
-  setService("messages");
+  setService("message");
 }
 
 namespace {

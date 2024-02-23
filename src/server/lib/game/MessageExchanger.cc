@@ -49,7 +49,7 @@ void MessageExchanger::pushMessage(IMessagePtr message)
 namespace {
 auto createInputMessageQueue() -> NetworkMessageQueuePtr
 {
-  auto messageQueue = std::make_unique<SynchronizedMessageQueue>();
+  auto messageQueue = std::make_unique<SynchronizedMessageQueue>("synchronized-queue-for-input");
   auto asyncQueue   = std::make_unique<AsyncMessageQueue>(std::move(messageQueue));
 
   return std::make_unique<NetworkMessageQueue>(std::move(asyncQueue));
@@ -57,7 +57,7 @@ auto createInputMessageQueue() -> NetworkMessageQueuePtr
 
 auto createInternalMessageQueue() -> IMessageQueuePtr
 {
-  auto messageQueue = std::make_unique<SynchronizedMessageQueue>();
+  auto messageQueue = std::make_unique<SynchronizedMessageQueue>("synchronized-queue-for-internal");
   return std::make_unique<AsyncMessageQueue>(std::move(messageQueue));
 }
 
@@ -85,7 +85,7 @@ void MessageExchanger::initialize(const MessageSystemData &messagesData)
 namespace {
 auto createSystemMessageQueue() -> IMessageQueuePtr
 {
-  auto systemQueue = std::make_unique<SynchronizedMessageQueue>();
+  auto systemQueue = std::make_unique<SynchronizedMessageQueue>("synchronized-queue-for-system");
   return std::make_unique<AsyncMessageQueue>(std::move(systemQueue));
 }
 } // namespace
