@@ -158,7 +158,19 @@ void ShipView::tryAcquireTarget(const Eigen::Vector3f &position) const
   const auto playerShip = getPlayerShip();
   const auto shipDbId   = playerShip.dbComp().dbId();
 
-  m_outputMessageQueue->pushMessage(std::make_unique<TargetMessage>(shipDbId, position));
+  std::optional<Uuid> maybeTargetDbId{};
+  std::optional<EntityKind> maybeTargetKind{};
+
+  const auto maybeTargetId = m_coordinator->getEntityAt(position);
+  if (maybeTargetId)
+  {
+    const auto target = m_coordinator->getEntity(*maybeTargetId);
+    maybeTargetDbId   = target.dbComp().dbId();
+    maybeTargetKind   = target.kind->kind();
+  }
+
+  m_outputMessageQueue->pushMessage(
+    std::make_unique<TargetMessage>(shipDbId, position, maybeTargetKind, maybeTargetDbId));
 }
 
 void ShipView::setJumpSystem(const Uuid system)
