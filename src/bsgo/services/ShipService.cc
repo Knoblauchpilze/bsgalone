@@ -105,6 +105,26 @@ bool ShipService::accelerateShip(const Uuid shipDbId, const Eigen::Vector3f &acc
   return true;
 }
 
+namespace {
+auto tryFindEntityAt(const Coordinator &coordinator, const Eigen::Vector3f &position)
+  -> std::optional<Entity>
+{
+  auto maybeEntityId = coordinator.getEntityAt(position);
+  if (!maybeEntityId)
+  {
+    return {};
+  }
+
+  const auto entity = coordinator.getEntity(*maybeEntityId);
+  if (entity.exists<StatusComponent>() && !statusVisibleFromDradis(entity.statusComp().status()))
+  {
+    return {};
+  }
+
+  return entity;
+}
+} // namespace
+
 auto ShipService::tryAcquireTarget(const TargetAcquiringData &data) const -> AcquiringResult
 {
   const auto maybeEntityId = m_entityMapper.tryGetShipEntityId(data.shipDbId);
@@ -114,33 +134,21 @@ auto ShipService::tryAcquireTarget(const TargetAcquiringData &data) const -> Acq
     return {};
   }
 
-  auto ship          = m_coordinator->getEntity(*maybeEntityId);
-  auto maybeTargetId = m_coordinator->getEntityAt(data.position);
+  const auto maybeTarget = tryFindEntityAt(*m_coordinator, data.position);
 
   std::optional<Uuid> maybeTargetDbId{};
   std::optional<EntityKind> maybeTargetKind{};
 
-  if (maybeTargetId)
+  if (maybeTarget)
   {
-    const auto target = m_coordinator->getEntity(*maybeTargetId);
+    debug("Determined target " + maybeTarget->str());
 
-    if (target.exists<StatusComponent>() && !statusVisibleFromDradis(target.statusComp().status()))
-    {
-      maybeTargetId.reset();
-    }
+    maybeTargetKind = maybeTarget->kind->kind();
+    maybeTargetDbId = maybeTarget->dbComp().dbId();
   }
 
-  if (maybeTargetId)
-  {
-    const auto target = m_coordinator->getEntity(*maybeTargetId);
-
-    debug("Determined target " + target.str());
-
-    maybeTargetKind = target.kind->kind();
-    maybeTargetDbId = target.dbComp().dbId();
-  }
-
-  updateEntityTarget(ship, maybeTargetId);
+  auto ship = m_coordinator->getEntity(*maybeEntityId);
+  updateEntityTarget(ship, maybeTarget->uuid);
 
   return AcquiringResult{.success    = true,
                          .targetKind = maybeTargetKind,
