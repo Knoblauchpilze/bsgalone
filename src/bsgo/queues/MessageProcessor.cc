@@ -38,12 +38,12 @@ auto messagesTypesToString(const std::deque<IMessagePtr> &messages, const int co
       continue;
     }
 
-    ++out.importantMessagesCount;
-
-    if (id > 0)
+    if (out.importantMessagesCount > 0)
     {
       out.messagesTypes += ", ";
     }
+
+    ++out.importantMessagesCount;
 
     out.messagesTypes += str(messages[id]->type());
   }
