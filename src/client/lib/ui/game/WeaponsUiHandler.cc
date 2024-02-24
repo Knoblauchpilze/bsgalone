@@ -36,15 +36,13 @@ bool WeaponsUiHandler::processUserInput(UserInputData &inputData)
     return false;
   }
 
+  auto out{false};
   for (const auto &menu : m_weapons)
   {
-    if (menu->processUserInput(inputData))
-    {
-      return true;
-    }
+    out |= menu->processUserInput(inputData);
   }
 
-  return false;
+  return out;
 }
 
 void WeaponsUiHandler::render(Renderer &engine) const

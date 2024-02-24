@@ -38,12 +38,11 @@ void MapScreenUiHandler::initializeMenus(const int width, const int height)
 
 bool MapScreenUiHandler::processUserInput(UserInputData &inputData)
 {
+  auto out{false};
+
   for (const auto &menu : m_buttons)
   {
-    if (menu->processUserInput(inputData))
-    {
-      return true;
-    }
+    out |= menu->processUserInput(inputData);
   }
 
   if (m_selectedSystem && inputData.controls.released(controls::mouse::LEFT))
@@ -51,7 +50,7 @@ bool MapScreenUiHandler::processUserInput(UserInputData &inputData)
     m_selectedSystem.reset();
   }
 
-  return false;
+  return out;
 }
 
 void MapScreenUiHandler::render(Renderer &engine) const
