@@ -17,7 +17,6 @@ class SystemView : public AbstractView
   SystemView(CoordinatorShPtr coordinator, const DatabaseEntityMapper &entityMapper);
   ~SystemView() override = default;
 
-  auto getEntityAt(const Eigen::Vector3f &pos) const -> std::optional<Entity>;
   auto getAsteroidsWithin(const IBoundingBox &bbox) const -> std::vector<Entity>;
   auto getOutpostsWithin(const IBoundingBox &bbox) const -> std::vector<Entity>;
   auto getBulletsWithin(const IBoundingBox &bbox) const -> std::vector<Entity>;

@@ -14,17 +14,6 @@ SystemView::SystemView(CoordinatorShPtr coordinator, const DatabaseEntityMapper 
   }
 }
 
-auto SystemView::getEntityAt(const Eigen::Vector3f &pos) const -> std::optional<Entity>
-{
-  const auto id = m_coordinator->getEntityAt(pos, {});
-  if (!id)
-  {
-    return {};
-  }
-
-  return m_coordinator->getEntity(*id);
-}
-
 auto SystemView::getAsteroidsWithin(const IBoundingBox &bbox) const -> std::vector<Entity>
 {
   const auto uuids = m_coordinator->getEntitiesWithin(bbox, {EntityKind::ASTEROID});
