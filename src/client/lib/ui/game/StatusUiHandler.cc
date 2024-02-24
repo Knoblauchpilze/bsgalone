@@ -59,11 +59,9 @@ void StatusUiHandler::initializeMenus(const int width, const int height)
 
 bool StatusUiHandler::processUserInput(UserInputData &inputData)
 {
-  if (m_statusBar->processUserInput(inputData))
-  {
-    return true;
-  }
-  return m_logoutConfirmation->processUserInput(inputData);
+  auto out = m_statusBar->processUserInput(inputData);
+  out |= m_logoutConfirmation->processUserInput(inputData);
+  return out;
 }
 
 void StatusUiHandler::render(Renderer &engine) const

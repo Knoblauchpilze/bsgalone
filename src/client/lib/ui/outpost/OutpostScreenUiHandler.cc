@@ -86,15 +86,9 @@ bool OutpostScreenUiHandler::processUserInput(UserInputData &inputData)
       break;
   }
 
-  if (!out)
+  for (const auto &menu : m_menus)
   {
-    for (const auto &menu : m_menus)
-    {
-      if (menu->processUserInput(inputData))
-      {
-        return true;
-      }
-    }
+    out |= menu->processUserInput(inputData);
   }
 
   return out;

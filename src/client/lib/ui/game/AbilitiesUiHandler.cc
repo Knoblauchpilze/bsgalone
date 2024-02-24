@@ -36,15 +36,13 @@ bool AbilitiesUiHandler::processUserInput(UserInputData &inputData)
     return false;
   }
 
+  auto out{false};
   for (const auto &menu : m_computers)
   {
-    if (menu->processUserInput(inputData))
-    {
-      return true;
-    }
+    out |= menu->processUserInput(inputData);
   }
 
-  return false;
+  return out;
 }
 
 void AbilitiesUiHandler::render(Renderer &engine) const

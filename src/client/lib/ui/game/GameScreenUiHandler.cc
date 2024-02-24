@@ -28,15 +28,13 @@ void GameScreenUiHandler::initializeMenus(const int width, const int height)
 
 bool GameScreenUiHandler::processUserInput(UserInputData &inputData)
 {
+  auto out{false};
   for (const auto &ui : m_uis)
   {
-    if (ui->processUserInput(inputData))
-    {
-      return true;
-    }
+    out |= ui->processUserInput(inputData);
   }
 
-  return false;
+  return out;
 }
 
 void GameScreenUiHandler::render(Renderer &engine) const

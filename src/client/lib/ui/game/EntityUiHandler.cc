@@ -68,15 +68,13 @@ void EntityUiHandler::initializeMenus(const int /*width*/, const int /*height*/)
 
 bool EntityUiHandler::processUserInput(UserInputData &inputData)
 {
+  auto out{false};
   for (const auto &menu : m_menus)
   {
-    if (menu->processUserInput(inputData))
-    {
-      return true;
-    }
+    out |= menu->processUserInput(inputData);
   }
 
-  return false;
+  return out;
 }
 
 void EntityUiHandler::render(Renderer &engine) const
