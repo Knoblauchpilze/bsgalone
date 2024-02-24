@@ -106,7 +106,7 @@ bool ShipService::accelerateShip(const Uuid shipDbId, const Eigen::Vector3f &acc
 }
 
 namespace {
-auto tryFindEntityAt(const Coordinator &coordinator, const Eigen::Vector3f &position)
+auto tryGetEntityAt(const Coordinator &coordinator, const Eigen::Vector3f &position)
   -> std::optional<Entity>
 {
   auto maybeEntityId = coordinator.getEntityAt(position);
@@ -123,6 +123,70 @@ auto tryFindEntityAt(const Coordinator &coordinator, const Eigen::Vector3f &posi
 
   return entity;
 }
+
+auto tryGetEntityFromHint(const Uuid entityDbId,
+                          const EntityKind entityKind,
+                          const DatabaseEntityMapper &entityMapper,
+                          const Coordinator &coordinator) -> std::optional<Entity>
+{
+  std::optional<Uuid> entityId{};
+
+  switch (entityKind)
+  {
+    case EntityKind::SHIP:
+      entityId = entityMapper.tryGetShipEntityId(entityDbId);
+      break;
+    case EntityKind::ASTEROID:
+      entityId = entityMapper.tryGetAsteroidEntityId(entityDbId);
+      break;
+    case EntityKind::OUTPOST:
+      entityId = entityMapper.tryGetOutpostEntityId(entityDbId);
+      break;
+    default:
+      break;
+  }
+
+  if (!entityId)
+  {
+    return {};
+  }
+
+  return coordinator.getEntity(*entityId);
+}
+
+constexpr auto MAXIMUM_TARGET_DISTANCE_TOLERANCE = 1.0f;
+
+auto overrideTargetWithHintIfNecessary(const std::optional<Entity> &maybeTarget,
+                                       const std::optional<Entity> &maybeHint,
+                                       const Eigen::Vector3f &referencePosition)
+  -> std::optional<Entity>
+{
+  auto dToTarget = std::numeric_limits<float>::max();
+  if (maybeTarget)
+  {
+    dToTarget = (maybeTarget->transformComp().position() - referencePosition).norm();
+  }
+
+  auto dToHint = std::numeric_limits<float>::max();
+  if (maybeHint)
+  {
+    dToHint = (maybeHint->transformComp().position() - referencePosition).norm();
+  }
+
+  if (dToTarget <= dToHint)
+  {
+    return maybeTarget;
+  }
+
+  // Only consider the hint if it is not too far from the reference position.
+  if (dToHint <= MAXIMUM_TARGET_DISTANCE_TOLERANCE)
+  {
+    return maybeHint;
+  }
+
+  return {};
+}
+
 } // namespace
 
 auto ShipService::tryAcquireTarget(const TargetAcquiringData &data) const -> AcquiringResult
@@ -134,7 +198,24 @@ auto ShipService::tryAcquireTarget(const TargetAcquiringData &data) const -> Acq
     return {};
   }
 
-  const auto maybeTarget = tryFindEntityAt(*m_coordinator, data.position);
+  auto ship = m_coordinator->getEntity(*maybeEntityId);
+
+  auto maybeTarget = tryGetEntityAt(*m_coordinator, data.position);
+  if (data.targetDbIdHint && data.targetKindHint)
+  {
+    const auto maybeHint = tryGetEntityFromHint(*data.targetDbIdHint,
+                                                *data.targetKindHint,
+                                                m_entityMapper,
+                                                *m_coordinator);
+
+    const Eigen::Vector3f shipPosition = ship.transformComp().position();
+
+    maybeTarget = overrideTargetWithHintIfNecessary(maybeTarget, maybeHint, shipPosition);
+    if (maybeTarget && maybeHint && maybeTarget->uuid == maybeHint->uuid)
+    {
+      warn("Picked hint target " + maybeHint->str() + " over actual target");
+    }
+  }
 
   std::optional<Uuid> maybeTargetDbId{};
   std::optional<EntityKind> maybeTargetKind{};
@@ -147,7 +228,6 @@ auto ShipService::tryAcquireTarget(const TargetAcquiringData &data) const -> Acq
     maybeTargetDbId = maybeTarget->dbComp().dbId();
   }
 
-  auto ship = m_coordinator->getEntity(*maybeEntityId);
   updateEntityTarget(ship, maybeTarget->uuid);
 
   return AcquiringResult{.success    = true,
