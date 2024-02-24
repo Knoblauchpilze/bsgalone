@@ -23,14 +23,21 @@ class ShipService : public AbstractService
 
   bool accelerateShip(const Uuid shipDbId, const Eigen::Vector3f &acceleration) const;
 
+  struct TargetAcquiringData
+  {
+    Uuid shipDbId{};
+    Eigen::Vector3f position{};
+
+    std::optional<Uuid> targetDbIdHint{};
+    std::optional<EntityKind> targetKindHint{};
+  };
   struct AcquiringResult
   {
     bool success{false};
     std::optional<EntityKind> targetKind{};
     std::optional<Uuid> targetDbId{};
   };
-  auto tryAcquireTarget(const Uuid shipDbId, const Eigen::Vector3f &position) const
-    -> AcquiringResult;
+  auto tryAcquireTarget(const TargetAcquiringData &data) const -> AcquiringResult;
 
   private:
   CoordinatorShPtr m_coordinator{};
