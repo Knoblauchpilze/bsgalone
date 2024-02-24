@@ -105,18 +105,17 @@ bool ShipService::accelerateShip(const Uuid shipDbId, const Eigen::Vector3f &acc
   return true;
 }
 
-auto ShipService::tryAcquireTarget(const Uuid shipDbId, const Eigen::Vector3f &position) const
-  -> AcquiringResult
+auto ShipService::tryAcquireTarget(const TargetAcquiringData &data) const -> AcquiringResult
 {
-  const auto maybeEntityId = m_entityMapper.tryGetShipEntityId(shipDbId);
+  const auto maybeEntityId = m_entityMapper.tryGetShipEntityId(data.shipDbId);
   if (!maybeEntityId)
   {
-    warn("Failed to acquire target for ship " + str(shipDbId), "No entity attached to it");
+    warn("Failed to acquire target for ship " + str(data.shipDbId), "No entity attached to it");
     return {};
   }
 
   auto ship          = m_coordinator->getEntity(*maybeEntityId);
-  auto maybeTargetId = m_coordinator->getEntityAt(position);
+  auto maybeTargetId = m_coordinator->getEntityAt(data.position);
 
   std::optional<Uuid> maybeTargetDbId{};
   std::optional<EntityKind> maybeTargetKind{};
