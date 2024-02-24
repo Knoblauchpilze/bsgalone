@@ -26,18 +26,10 @@ void TargetMessageConsumer::onMessageReceived(const IMessage &message)
   const auto shipDbId = target.getShipDbId();
   const auto position = target.getPosition();
 
-  const auto maybeTargetDbId = target.getTargetDbId();
-  const auto maybeTargetKind = target.getTargetKind();
-
-  if (maybeTargetDbId && maybeTargetKind)
-  {
-    info("Expected target is " + str(*maybeTargetDbId) + " with kind " + str(*maybeTargetKind));
-  }
-
-  const ShipService::TargetAcquiringData data{
-    .shipDbId = shipDbId,
-    .position = position,
-  };
+  const ShipService::TargetAcquiringData data{.shipDbId       = shipDbId,
+                                              .position       = position,
+                                              .targetDbIdHint = target.getTargetDbId(),
+                                              .targetKindHint = target.getTargetKind()};
   const auto res = m_shipService->tryAcquireTarget(data);
   if (!res.success)
   {
