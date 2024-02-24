@@ -41,6 +41,23 @@ void ShipDataSource::registerShip(Coordinator &coordinator,
   registerShip(coordinator, ship, entityMapper, false);
 }
 
+namespace {
+auto determineStartingStatusForShip(const PlayerShip &ship) -> Status
+{
+  if (ship.docked)
+  {
+    return Status::DOCKED;
+  }
+
+  if (!ship.player)
+  {
+    return Status::VISIBLE;
+  }
+
+  return Status::APPEARING;
+}
+} // namespace
+
 void ShipDataSource::registerShip(Coordinator &coordinator,
                                   const Uuid ship,
                                   DatabaseEntityMapper &entityMapper,
@@ -63,7 +80,7 @@ void ShipDataSource::registerShip(Coordinator &coordinator,
   coordinator.addPower(shipEntityId, data.powerPoints, data.maxPowerPoints, data.powerRegen);
   coordinator.addTarget(shipEntityId);
   coordinator.addFaction(shipEntityId, data.faction);
-  const auto status = data.docked ? Status::DOCKED : Status::APPEARING;
+  const auto status = determineStartingStatusForShip(data);
   coordinator.addStatus(shipEntityId, status, data.jumpTime, data.jumpTimeInThreat);
   coordinator.addShipClass(shipEntityId, data.shipClass);
   coordinator.addName(shipEntityId, data.name);
