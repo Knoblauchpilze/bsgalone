@@ -53,6 +53,7 @@ class ShipView : public AbstractView
   auto getJumpData() const -> JumpData;
 
   bool isInThreat() const;
+  bool isDead() const;
 
   private:
   CoordinatorShPtr m_coordinator{};

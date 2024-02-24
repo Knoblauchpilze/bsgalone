@@ -9,7 +9,7 @@
 
 namespace pge {
 
-class GameOverUiHandler : public IUiHandler, public bsgo::AbstractMessageListener
+class GameOverUiHandler : public IUiHandler
 {
   public:
   GameOverUiHandler(const bsgo::Views &views);
@@ -20,12 +20,10 @@ class GameOverUiHandler : public IUiHandler, public bsgo::AbstractMessageListene
   void render(Renderer &engine) const override;
   void updateUi() override;
   void reset() override;
-  void connectToMessageQueue(bsgo::IMessageQueue &messageQueue) override;
-
-  void onMessageReceived(const bsgo::IMessage &message) override;
 
   private:
   bsgo::ShipDbViewShPtr m_shipDbView{};
+  bsgo::ShipViewShPtr m_shipView{};
 
   UiTextMenuPtr m_menu{};
 };
