@@ -1,19 +1,22 @@
 
 #include "GameOverUiHandler.hh"
 #include "EntityRemovedMessage.hh"
-#include "MessageListenerWrapper.hh"
 #include "MessageUtils.hh"
 
 namespace pge {
 
 GameOverUiHandler::GameOverUiHandler(const bsgo::Views &views)
   : IUiHandler("gameover")
-  , AbstractMessageListener({bsgo::MessageType::ENTITY_REMOVED})
   , m_shipDbView(views.shipDbView)
+  , m_shipView(views.shipView)
 {
   if (nullptr == m_shipDbView)
   {
     throw std::invalid_argument("Expected non null ship db view");
+  }
+  if (nullptr == m_shipView)
+  {
+    throw std::invalid_argument("Expected non null ship view");
   }
 }
 
@@ -46,28 +49,17 @@ void GameOverUiHandler::render(Renderer &engine) const
 
 void GameOverUiHandler::updateUi()
 {
-  // Intentionally empty.
+  if (!m_shipView->isReady())
+  {
+    return;
+  }
+
+  m_menu->setVisible(m_shipView->isDead());
 }
 
 void GameOverUiHandler::reset()
 {
   m_menu->setVisible(false);
-}
-
-void GameOverUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQueue)
-{
-  auto listener = std::make_unique<MessageListenerWrapper>(this);
-  messageQueue.addListener(std::move(listener));
-}
-
-void GameOverUiHandler::onMessageReceived(const bsgo::IMessage &message)
-{
-  if (!m_shipDbView->isReady())
-  {
-    return;
-  }
-
-  m_menu->setVisible(didPlayerShipDied(message.as<bsgo::EntityRemovedMessage>(), *m_shipDbView));
 }
 
 } // namespace pge

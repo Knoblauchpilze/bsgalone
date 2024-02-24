@@ -217,6 +217,12 @@ bool ShipView::isInThreat() const
   return statusIndicatesThreat(ship.statusComp().status());
 }
 
+bool ShipView::isDead() const
+{
+  const auto ship = getPlayerShip();
+  return Status::DEAD == ship.statusComp().status();
+}
+
 void ShipView::checkPlayerShipEntityIdExists() const
 {
   if (!m_playerShipEntityId)

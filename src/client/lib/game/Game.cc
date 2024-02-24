@@ -326,6 +326,10 @@ void Game::onPlayerKilled()
 {
   info("Player got killed");
   m_state.dead = true;
+  if (m_state.screen != Screen::GAME)
+  {
+    setScreen(Screen::GAME);
+  }
 }
 
 void Game::initialize()
