@@ -180,9 +180,10 @@ auto ClientManager::getAllConnectionsForSystem(const Uuid systemDbId) const
 
   for (const auto &[_, clientData] : m_clients)
   {
-    const auto &maybeSystemDbId         = clientData.playerSystemDbId;
-    const auto noSystemOrExpectedSystem = !maybeSystemDbId || *maybeSystemDbId == systemDbId;
-    if (!clientData.connectionIsStale && noSystemOrExpectedSystem)
+    const auto &maybeSystemDbId       = clientData.playerSystemDbId;
+    const auto systemIsExpectedSystem = maybeSystemDbId.has_value()
+                                        && *maybeSystemDbId == systemDbId;
+    if (!clientData.connectionIsStale && systemIsExpectedSystem)
     {
       out.push_back(clientData.connection);
     }
