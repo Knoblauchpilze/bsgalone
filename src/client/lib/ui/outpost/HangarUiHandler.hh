@@ -23,8 +23,8 @@ class HangarUiHandler : public IUiHandler
   void reset() override;
 
   private:
-  bsgo::PlayerViewShPtr m_playerView;
-  bsgo::ShopViewShPtr m_shopView;
+  bsgo::PlayerViewShPtr m_playerView{};
+  bsgo::ShopViewShPtr m_shopView{};
   bool m_initialized{false};
 
   UiMenuPtr m_menu{};

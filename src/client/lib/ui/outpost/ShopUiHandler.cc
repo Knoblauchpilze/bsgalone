@@ -35,9 +35,6 @@ void ShopUiHandler::initializeMenus(const int width, const int height)
   const MenuConfig config{.pos = pos, .dims = dims, .highlightable = false};
   const auto bg = bgConfigFromColor(colors::DARK_MAGENTA);
   m_menu        = std::make_unique<UiMenu>(config, bg);
-
-  initializeLayout();
-  generateItemsMenus();
 }
 
 bool ShopUiHandler::processUserInput(UserInputData &inputData)
@@ -80,9 +77,13 @@ void updatePricesState(const std::unordered_map<bsgo::Uuid, UiTextMenu *> &price
 
 void ShopUiHandler::updateUi()
 {
-  if (!m_shopView->isReady())
+  if (!m_shopView->isReady() || !m_playerView->isReady())
   {
     return;
+  }
+  if (!m_initialized)
+  {
+    initializeShop();
   }
 
   for (const auto &itemData : m_itemsData)
@@ -91,6 +92,23 @@ void ShopUiHandler::updateUi()
     updateBuyButtonState(*itemData.menu, affordability.canAfford);
     updatePricesState(itemData.prices, affordability.resourceAvailibility);
   }
+}
+
+void ShopUiHandler::reset()
+{
+  m_items.clear();
+  m_itemsData.clear();
+  m_menu->clearChildren();
+
+  m_initialized = false;
+}
+
+void ShopUiHandler::initializeShop()
+{
+  initializeLayout();
+  generateItemsMenus();
+
+  m_initialized = true;
 }
 
 void ShopUiHandler::initializeLayout()
