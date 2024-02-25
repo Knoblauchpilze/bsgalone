@@ -20,7 +20,7 @@ auto colorFromResourceName(const std::string &name) -> Color
   throw std::invalid_argument("Unsupported resource name " + name);
 }
 
-auto colorFromFaction(const bsgo::Faction &faction) -> Color
+auto colorFromFaction(const bsgo::Faction faction) -> Color
 {
   switch (faction)
   {
@@ -33,6 +33,13 @@ auto colorFromFaction(const bsgo::Faction &faction) -> Color
     default:
       throw std::invalid_argument("Unsupported faction " + bsgo::str(faction));
   }
+}
+
+auto generatePaletteForFaction(const bsgo::Faction faction) -> ColorPalette
+{
+  const auto color = colorFromFaction(faction);
+  return ColorPalette{.defaultColor      = color,
+                      .almostOpaqueColor = makeTransparent(color, alpha::ALMOST_OPAQUE)};
 }
 
 } // namespace pge
