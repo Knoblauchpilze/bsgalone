@@ -2,6 +2,7 @@
 #include "OutpostScreenUiHandler.hh"
 #include "Constants.hh"
 #include "EquipMessage.hh"
+#include "GameColorUtils.hh"
 #include "MessageListenerWrapper.hh"
 #include "PurchaseMessage.hh"
 #include "ScreenCommon.hh"
@@ -194,12 +195,14 @@ void OutpostScreenUiHandler::generateGeneralMenu(const int width, const int heig
 
 void OutpostScreenUiHandler::initializeOutpostScreenOptions()
 {
+  const auto palette = generatePaletteForFaction(m_playerView->getPlayerFaction());
+
   MenuConfig config{};
 
   config.clickCallback = [this]() { setActiveScreen(ActiveScreen::SHOP); };
-  const auto bg = bgConfigFromColor(makeTransparent(colors::DARK_COBALT_BLUE, alpha::ALMOST_OPAQUE));
-  auto text     = textConfigFromColor("Shop", colors::WHITE);
-  auto menu     = std::make_unique<UiTextMenu>(config, bg, text);
+  const auto bg        = bgConfigFromColor(palette.almostOpaqueColor);
+  auto text            = textConfigFromColor("Shop", colors::WHITE);
+  auto menu            = std::make_unique<UiTextMenu>(config, bg, text);
   m_menus[VIEWS_MENU]->addMenu(std::move(menu));
 
   config.clickCallback = [this]() { setActiveScreen(ActiveScreen::LOCKER); };
