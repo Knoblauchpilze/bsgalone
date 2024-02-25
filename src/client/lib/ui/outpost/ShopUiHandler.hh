@@ -19,10 +19,12 @@ class ShopUiHandler : public IUiHandler
   bool processUserInput(UserInputData &inputData) override;
   void render(Renderer &engine) const override;
   void updateUi() override;
+  void reset() override;
 
   private:
-  bsgo::ShopViewShPtr m_shopView;
-  bsgo::PlayerViewShPtr m_playerView;
+  bsgo::ShopViewShPtr m_shopView{};
+  bsgo::PlayerViewShPtr m_playerView{};
+  bool m_initialized{false};
 
   UiMenuPtr m_menu{};
   std::vector<UiMenu *> m_items{};
@@ -36,6 +38,7 @@ class ShopUiHandler : public IUiHandler
   };
   std::vector<ItemData> m_itemsData{};
 
+  void initializeShop();
   void initializeLayout();
   void generateItemsMenus();
   auto generateItemMenus(const bsgo::ShopItem &item, const int itemId) -> UiMenuPtr;

@@ -62,6 +62,7 @@ void HangarUiHandler::reset()
 {
   m_shipsData.clear();
   m_menu->clearChildren();
+
   m_initialized = false;
 }
 
