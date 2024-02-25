@@ -30,6 +30,7 @@ class OutpostScreenUiHandler : public IUiHandler, public bsgo::AbstractMessageLi
   private:
   bsgo::ShipDbViewShPtr m_shipDbView{};
   bsgo::PlayerViewShPtr m_playerView{};
+  bool m_initialized{false};
 
   enum MenuItem
   {
@@ -55,6 +56,7 @@ class OutpostScreenUiHandler : public IUiHandler, public bsgo::AbstractMessageLi
   HangarUiHandlerPtr m_hangarUi{};
 
   void generateGeneralMenu(const int width, const int height);
+  void initializeOutpostScreenOptions();
   void setActiveScreen(const ActiveScreen &screen);
 };
 

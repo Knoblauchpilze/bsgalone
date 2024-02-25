@@ -122,6 +122,10 @@ void OutpostScreenUiHandler::updateUi()
     reset();
     m_refreshRequested = false;
   }
+  if (m_playerView->isReady() && !m_initialized)
+  {
+    initializeOutpostScreenOptions();
+  }
 
   switch (m_activeScreen)
   {
@@ -142,6 +146,8 @@ void OutpostScreenUiHandler::reset()
   m_lockerUi->reset();
   m_shopUi->reset();
   m_hangarUi->reset();
+
+  m_initialized = false;
 }
 
 void OutpostScreenUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQueue)
@@ -182,11 +188,16 @@ void OutpostScreenUiHandler::generateGeneralMenu(const int width, const int heig
   MenuConfig config{.pos = pos, .dims = dims};
   auto bg             = bgConfigFromColor(colors::BLANK);
   m_menus[VIEWS_MENU] = std::make_unique<UiMenu>(config, bg);
+}
+
+void OutpostScreenUiHandler::initializeOutpostScreenOptions()
+{
+  MenuConfig config{};
 
   config.clickCallback = [this]() { setActiveScreen(ActiveScreen::SHOP); };
-  bg        = bgConfigFromColor(makeTransparent(colors::DARK_COBALT_BLUE, alpha::ALMOST_OPAQUE));
-  auto text = textConfigFromColor("Shop", colors::WHITE);
-  auto menu = std::make_unique<UiTextMenu>(config, bg, text);
+  const auto bg = bgConfigFromColor(makeTransparent(colors::DARK_COBALT_BLUE, alpha::ALMOST_OPAQUE));
+  auto text     = textConfigFromColor("Shop", colors::WHITE);
+  auto menu     = std::make_unique<UiTextMenu>(config, bg, text);
   m_menus[VIEWS_MENU]->addMenu(std::move(menu));
 
   config.clickCallback = [this]() { setActiveScreen(ActiveScreen::LOCKER); };
@@ -198,6 +209,8 @@ void OutpostScreenUiHandler::generateGeneralMenu(const int width, const int heig
   text                 = textConfigFromColor("Hangar", colors::WHITE);
   menu                 = std::make_unique<UiTextMenu>(config, bg, text);
   m_menus[VIEWS_MENU]->addMenu(std::move(menu));
+
+  m_initialized = true;
 }
 
 void OutpostScreenUiHandler::setActiveScreen(const ActiveScreen &screen)
