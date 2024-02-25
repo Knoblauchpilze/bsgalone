@@ -12,6 +12,18 @@ auto textConfigFromColor(const std::string &text, const Color &color, const Text
 
 auto textConfigFromColor(const std::string &text,
                          const Color &color,
+                         const TextAlignment &align,
+                         const int margin) -> TextConfig
+{
+  return TextConfig{.text   = text,
+                    .color  = color,
+                    .hColor = findHighlightColor(color),
+                    .align  = align,
+                    .margin = margin};
+}
+
+auto textConfigFromColor(const std::string &text,
+                         const Color &color,
                          const Color &hColor,
                          const TextAlignment &align) -> TextConfig
 {

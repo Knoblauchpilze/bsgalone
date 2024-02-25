@@ -25,9 +25,11 @@ auto colorFromFaction(const bsgo::Faction &faction) -> Color
   switch (faction)
   {
     case bsgo::Faction::COLONIAL:
-      return Color{.rgb = RgbData{153, 193, 241}};
+      // https://color-register.org/color/marine-blue
+      return Color{.rgb = RgbData{1, 56, 106}};
     case bsgo::Faction::CYLON:
-      return Color{.rgb = RgbData{191, 64, 64}};
+      // https://www.color-hex.com/color-palette/60661
+      return Color{.rgb = RgbData{170, 0, 34}};
     default:
       throw std::invalid_argument("Unsupported faction " + bsgo::str(faction));
   }

@@ -184,9 +184,9 @@ void OutpostScreenUiHandler::generateGeneralMenu(const int width, const int heig
   m_menus[VIEWS_MENU] = std::make_unique<UiMenu>(config, bg);
 
   config.clickCallback = [this]() { setActiveScreen(ActiveScreen::SHOP); };
-  bg                   = bgConfigFromColor(colors::DARK_COBALT_BLUE);
-  auto text            = textConfigFromColor("Shop", colors::WHITE);
-  auto menu            = std::make_unique<UiTextMenu>(config, bg, text);
+  bg        = bgConfigFromColor(makeTransparent(colors::DARK_COBALT_BLUE, alpha::ALMOST_OPAQUE));
+  auto text = textConfigFromColor("Shop", colors::WHITE);
+  auto menu = std::make_unique<UiTextMenu>(config, bg, text);
   m_menus[VIEWS_MENU]->addMenu(std::move(menu));
 
   config.clickCallback = [this]() { setActiveScreen(ActiveScreen::LOCKER); };
