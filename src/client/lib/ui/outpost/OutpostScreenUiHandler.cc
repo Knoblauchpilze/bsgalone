@@ -147,6 +147,8 @@ void OutpostScreenUiHandler::reset()
   m_shopUi->reset();
   m_hangarUi->reset();
 
+  m_menus[VIEWS_MENU]->clearChildren();
+
   m_initialized = false;
 }
 
