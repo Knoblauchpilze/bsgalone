@@ -34,7 +34,8 @@ namespace {
 auto computeTextPositionFromAlignement(const Vec2i &offset,
                                        const Vec2i &dims,
                                        const Vec2i &textDims,
-                                       const TextAlignment &align) -> Vec2i
+                                       const TextAlignment &align,
+                                       const int margin) -> Vec2i
 {
   Vec2i textPos{};
   switch (align)
@@ -44,12 +45,12 @@ auto computeTextPositionFromAlignement(const Vec2i &offset,
       textPos.y = static_cast<int>(offset.y + (dims.y - textDims.y) / 2.0f);
       break;
     case TextAlignment::RIGHT:
-      textPos.x = offset.x + dims.x - textDims.x;
+      textPos.x = offset.x + dims.x - textDims.x - margin;
       textPos.y = static_cast<int>(offset.y + (dims.y - textDims.y) / 2.0f);
       break;
     case TextAlignment::LEFT:
     default:
-      textPos.x = offset.x;
+      textPos.x = offset.x + margin;
       textPos.y = static_cast<int>(offset.y + (dims.y - textDims.y) / 2.0f);
       break;
   }
@@ -62,7 +63,11 @@ void UiTextMenu::renderCustom(Renderer &engine) const
 {
   const auto absPos   = absolutePosition();
   const auto textDims = engine.getTextSize(m_text.text);
-  const auto textPos  = computeTextPositionFromAlignement(absPos, dims(), textDims, m_text.align);
+  const auto textPos  = computeTextPositionFromAlignement(absPos,
+                                                         dims(),
+                                                         textDims,
+                                                         m_text.align,
+                                                         m_text.margin);
   const auto color    = getTextColorFromState();
 
   engine.drawString(textPos, m_text.text, color);

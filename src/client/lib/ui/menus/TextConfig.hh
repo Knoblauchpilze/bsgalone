@@ -19,11 +19,17 @@ struct TextConfig
   Color color{colors::BLACK};
   Color hColor{colors::WHITE};
   TextAlignment align{TextAlignment::CENTER};
+  int margin{0};
 };
 
 auto textConfigFromColor(const std::string &text,
                          const Color &color,
                          const TextAlignment &align = TextAlignment::CENTER) -> TextConfig;
+
+auto textConfigFromColor(const std::string &text,
+                         const Color &color,
+                         const TextAlignment &align,
+                         const int margin) -> TextConfig;
 
 auto textConfigFromColor(const std::string &text,
                          const Color &color,

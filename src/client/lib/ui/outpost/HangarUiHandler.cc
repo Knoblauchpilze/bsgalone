@@ -6,6 +6,7 @@
 #include "SlotComponentUtils.hh"
 #include "StringUtils.hh"
 #include "UiTextMenu.hh"
+#include <algorithm>
 
 namespace pge {
 
@@ -72,6 +73,15 @@ void HangarUiHandler::initializeHangar()
 }
 
 namespace {
+constexpr auto DEFAULT_MARGIN = 30;
+
+auto generateTextConfig(const std::string &name,
+                        const Color &color = colors::WHITE,
+                        const int margin   = DEFAULT_MARGIN) -> TextConfig
+{
+  return textConfigFromColor(name, color, TextAlignment::LEFT, margin);
+}
+
 auto generateShipDescription(const bsgo::Ship &ship) -> UiMenuPtr
 {
   const MenuConfig config{.highlightable = false};
@@ -83,23 +93,26 @@ auto generateShipDescription(const bsgo::Ship &ship) -> UiMenuPtr
 
   bg         = bgConfigFromColor(colors::BLANK);
   auto label = ship.name + " (" + bsgo::str(ship.shipClass) + ")";
-  auto text  = textConfigFromColor(ship.name, colors::WHITE);
-  auto prop  = std::make_unique<UiTextMenu>(config, bg, text);
+  std::transform(label.begin(), label.end(), label.begin(), [](const char c) {
+    return std::toupper(c);
+  });
+  auto text = generateTextConfig(label, colors::GREY, 10);
+  auto prop = std::make_unique<UiTextMenu>(config, bg, text);
   desc->addMenu(std::move(prop));
 
   label = floatToStr(ship.maxHullPoints, 0) + " hull points (+"
           + floatToStr(ship.hullPointsRegen, 2) + "/s)";
-  text = textConfigFromColor(label, colors::WHITE);
+  text = generateTextConfig(label);
   prop = std::make_unique<UiTextMenu>(config, bg, text);
   desc->addMenu(std::move(prop));
 
   label = floatToStr(ship.maxPowerPoints, 0) + " power (+" + floatToStr(ship.powerRegen, 2) + "/s)";
-  text  = textConfigFromColor(label, colors::WHITE);
+  text  = generateTextConfig(label);
   prop  = std::make_unique<UiTextMenu>(config, bg, text);
   desc->addMenu(std::move(prop));
 
-  label = floatToStr(ship.speed, 2) + "m/s";
-  text  = textConfigFromColor(label, colors::WHITE);
+  label = floatToStr(ship.speed, 2) + "m/s (+" + floatToStr(ship.acceleration, 2) + "m/s2)";
+  text  = generateTextConfig(label);
   prop  = std::make_unique<UiTextMenu>(config, bg, text);
   desc->addMenu(std::move(prop));
 
@@ -116,7 +129,7 @@ auto generateShipDescription(const bsgo::Ship &ship) -> UiMenuPtr
       label += "s";
     }
   }
-  text = textConfigFromColor(label, colors::WHITE);
+  text = generateTextConfig(label);
   prop = std::make_unique<UiTextMenu>(config, bg, text);
   desc->addMenu(std::move(prop));
 
@@ -133,7 +146,8 @@ void HangarUiHandler::initializeLayout()
   const auto allShips = m_shopView->getAllShipsForFaction(faction);
 
   const MenuConfig config{.layout = MenuLayout::HORIZONTAL, .highlightable = false};
-  const auto bg = bgConfigFromColor(colorFromFaction(faction));
+  const auto bg = bgConfigFromColor(
+    makeTransparent(colorFromFaction(faction), alpha::ALMOST_OPAQUE));
 
   auto shipIndex = 0;
   for (const auto &ship : allShips)
