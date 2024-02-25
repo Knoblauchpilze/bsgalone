@@ -45,8 +45,9 @@ bool MapScreenUiHandler::processUserInput(UserInputData &inputData)
     out |= menu->processUserInput(inputData);
   }
 
-  if (m_selectedSystem && inputData.controls.released(controls::mouse::LEFT))
+  if (!out && m_selectedSystem && inputData.controls.released(controls::mouse::LEFT))
   {
+    debug("reset");
     m_selectedSystem.reset();
   }
 
