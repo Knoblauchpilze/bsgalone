@@ -1,6 +1,7 @@
 
 #include "ShopUiHandler.hh"
 #include "Constants.hh"
+#include "GameColorUtils.hh"
 #include "ScreenCommon.hh"
 #include "SlotComponentUtils.hh"
 #include "StringUtils.hh"
@@ -33,7 +34,7 @@ void ShopUiHandler::initializeMenus(const int width, const int height)
   const Vec2i dims{viewWidth, viewHeight};
 
   const MenuConfig config{.pos = pos, .dims = dims, .highlightable = false};
-  const auto bg = bgConfigFromColor(colors::DARK_MAGENTA);
+  const auto bg = bgConfigFromColor(colors::BLANK);
   m_menu        = std::make_unique<UiMenu>(config, bg);
 }
 
@@ -113,13 +114,13 @@ void ShopUiHandler::initializeShop()
 
 void ShopUiHandler::initializeLayout()
 {
+  const auto palette = generatePaletteForFaction(m_playerView->getPlayerFaction());
+
   const auto items = m_shopView->getShopItems();
   for (auto id = 0u; id < items.size(); ++id)
   {
-    auto bgColor = (items[id].computer ? colors::VERY_DARK_YELLOW : colors::VERY_DARK_RED);
-
     const MenuConfig config{.layout = MenuLayout::HORIZONTAL};
-    const auto bg = bgConfigFromColor(bgColor);
+    const auto bg = bgConfigFromColor(palette.almostOpaqueColor);
     auto itemMenu = std::make_unique<UiMenu>(config, bg);
     m_items.push_back(itemMenu.get());
     m_menu->addMenu(std::move(itemMenu));
