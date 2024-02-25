@@ -135,7 +135,7 @@ class PGEApp : public utils::CoreObject
   uint32_t m_uiLayer{};
 
   /// @brief - Used to determine whether debug display is needed for this app.
-  bool m_debugOn{true};
+  bool m_debugOn{false};
 
   /// @brief - Similar to the `m_debugOn` but controls whether the UI is active or
   /// not.
