@@ -46,12 +46,18 @@ void SignupMessageConsumer::handleSignup(const SignupMessage &message) const
   {
     warn("Failed to process signup message for player " + name);
   }
+  else
+  {
+    const auto playerDbId  = maybePlayer->id;
+    const auto systsemDbId = m_signupService->getPlayerSystemDbId(playerDbId);
+    m_clientManager->registerPlayer(message.getClientId(), playerDbId, systsemDbId);
+  }
 
-  const auto playerDbId  = maybePlayer->id;
-  const auto systsemDbId = m_signupService->getPlayerSystemDbId(playerDbId);
-  m_clientManager->registerPlayer(message.getClientId(), playerDbId, systsemDbId);
-
-  auto out = std::make_unique<SignupMessage>(name, password, faction, playerDbId);
+  auto out = std::make_unique<SignupMessage>(name,
+                                             password,
+                                             faction,
+                                             maybePlayer.has_value() ? maybePlayer->id
+                                                                     : std::optional<Uuid>{});
   out->validate();
   out->copyClientIdIfDefined(message);
   m_messageQueue->pushMessage(std::move(out));
