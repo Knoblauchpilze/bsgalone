@@ -144,11 +144,11 @@ auto generateShipDescription(const bsgo::Ship &ship) -> UiMenuPtr
 void HangarUiHandler::initializeLayout()
 {
   const auto faction  = m_playerView->getPlayerFaction();
+  const auto palette  = generatePaletteForFaction(faction);
   const auto allShips = m_shopView->getAllShipsForFaction(faction);
 
   const MenuConfig config{.layout = MenuLayout::HORIZONTAL, .highlightable = false};
-  const auto bg = bgConfigFromColor(
-    makeTransparent(colorFromFaction(faction), alpha::ALMOST_OPAQUE));
+  const auto bg = bgConfigFromColor(palette.almostOpaqueColor);
 
   auto shipIndex = 0;
   for (const auto &ship : allShips)
