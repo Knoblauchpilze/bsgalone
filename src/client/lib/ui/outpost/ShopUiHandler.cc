@@ -130,19 +130,33 @@ void ShopUiHandler::initializeLayout()
 }
 
 namespace {
-auto generatePriceMenus(const bsgo::ShopItem &item) -> std::vector<UiTextMenuPtr>
+struct PriceMenu
 {
-  std::vector<UiTextMenuPtr> out;
+  UiMenuPtr menu{};
+  std::vector<UiTextMenu *> costs{};
+};
+
+auto generatePriceMenus(const bsgo::ShopItem &item) -> PriceMenu
+{
+  PriceMenu out{};
+
+  out.menu = generateBlankVerticalMenu();
+
+  const MenuConfig config{.highlightable = false};
+  const auto bg = bgConfigFromColor(colors::BLANK);
+
+  auto label = std::string("Cost:");
+  auto text  = generateTextConfig(label, colors::GREY, 10);
+  auto prop  = std::make_unique<UiTextMenu>(config, bg, text);
+  out.menu->addMenu(std::move(prop));
 
   for (const auto &cost : item.price)
   {
-    auto text = cost.resource.name + ": " + bsgo::floatToStr(cost.amount, 0);
-
-    const MenuConfig config{.highlightable = false};
-    const auto bg       = bgConfigFromColor(colors::BLANK);
-    const auto textConf = textConfigFromColor(text, colors::DARK_RED);
-    auto menu           = std::make_unique<UiTextMenu>(config, bg, textConf);
-    out.push_back(std::move(menu));
+    label     = cost.resource.name + ": " + bsgo::floatToStr(cost.amount, 0);
+    text      = generateTextConfig(label);
+    auto menu = std::make_unique<UiTextMenu>(config, bg, text);
+    out.costs.push_back(menu.get());
+    out.menu->addMenu(std::move(menu));
   }
 
   return out;
@@ -159,8 +173,20 @@ void ShopUiHandler::generateItemsMenus()
     ItemData data{.itemId = item.id(), .itemType = item.type()};
     m_itemsData.push_back(data);
 
-    auto itemSection = generateItemMenus(item, itemId);
+    auto itemSection = generateItemMenus(item);
     m_items[itemId]->addMenu(std::move(itemSection));
+
+    auto costsSection = generatePriceMenus(item);
+    auto id           = 0;
+    for (const auto &costMenu : costsSection.costs)
+    {
+      const auto cost = item.price.at(id);
+
+      m_itemsData.at(itemId).prices[cost.resource.id] = costMenu;
+
+      ++id;
+    }
+    m_items[itemId]->addMenu(std::move(costsSection.menu));
 
     auto buySection = generateInteractiveSection("Buy",
                                                  [this, itemId]() { onPurchaseRequest(itemId); });
@@ -174,7 +200,7 @@ void ShopUiHandler::generateItemsMenus()
   }
 }
 
-auto ShopUiHandler::generateItemMenus(const bsgo::ShopItem &item, const int itemId) -> UiMenuPtr
+auto ShopUiHandler::generateItemMenus(const bsgo::ShopItem &item) -> UiMenuPtr
 {
   auto menu = generateBlankVerticalMenu();
   if (item.weapon)
@@ -186,17 +212,6 @@ auto ShopUiHandler::generateItemMenus(const bsgo::ShopItem &item, const int item
   {
     auto itemMenu = generateComputerMenu(*item.computer);
     menu->addMenu(std::move(itemMenu));
-  }
-
-  auto id = 0;
-  for (auto &costMenu : generatePriceMenus(item))
-  {
-    const auto cost = item.price.at(id);
-
-    m_itemsData.at(itemId).prices[cost.resource.id] = costMenu.get();
-    menu->addMenu(std::move(costMenu));
-
-    ++id;
   }
 
   return menu;

@@ -41,7 +41,7 @@ class ShopUiHandler : public IUiHandler
   void initializeShop();
   void initializeLayout();
   void generateItemsMenus();
-  auto generateItemMenus(const bsgo::ShopItem &item, const int itemId) -> UiMenuPtr;
+  auto generateItemMenus(const bsgo::ShopItem &item) -> UiMenuPtr;
 
   void onPurchaseRequest(const int itemId);
 };
