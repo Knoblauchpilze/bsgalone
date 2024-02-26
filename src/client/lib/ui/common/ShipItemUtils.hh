@@ -10,6 +10,11 @@
 
 namespace pge {
 
+constexpr auto DEFAULT_MARGIN = 30;
+auto generateTextConfig(const std::string &name,
+                        const Color &color = colors::WHITE,
+                        const int margin   = DEFAULT_MARGIN) -> TextConfig;
+
 auto generateWeaponMenu(const bsgo::Weapon &weapon) -> UiMenuPtr;
 auto generateWeaponMenu(const bsgo::PlayerWeapon &weapon) -> UiMenuPtr;
 auto generateComputerMenu(const bsgo::Computer &computer) -> UiMenuPtr;
