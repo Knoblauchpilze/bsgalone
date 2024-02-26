@@ -1,6 +1,7 @@
 
 #include "LockerUiHandler.hh"
 #include "Constants.hh"
+#include "GameColorUtils.hh"
 #include "ScreenCommon.hh"
 #include "SlotComponentUtils.hh"
 #include "StringUtils.hh"
@@ -28,10 +29,28 @@ void LockerUiHandler::initializeMenus(const int width, const int height)
   const auto viewWidth  = static_cast<int>(MAIN_VIEW_WIDTH_TO_SCREEN_WIDTH_RATIO * width);
   const auto viewHeight = static_cast<int>(MAIN_VIEW_HEIGHT_TO_SCREEN_HEIGHT_RATIO * height);
 
-  const Vec2i pos{width - viewWidth - VIEW_TO_RIGHT_OF_SCREEN_IN_PIXELS,
-                  height - viewHeight - VIEW_TO_RIGHT_OF_SCREEN_IN_PIXELS};
-  const Vec2i dims{viewWidth, viewHeight};
+  constexpr auto RESOURCES_MENU_HEIGHT = 30;
+  constexpr auto HEADER_MENU_HEIGHT    = 20;
 
+  if (height < (RESOURCES_MENU_HEIGHT + HEADER_MENU_HEIGHT))
+  {
+    error("Failed to generate locker ui",
+          "At least " + std::to_string(RESOURCES_MENU_HEIGHT + HEADER_MENU_HEIGHT)
+            + " vertical pixel(s) needed");
+  }
+
+  Vec2i pos{width - viewWidth - VIEW_TO_RIGHT_OF_SCREEN_IN_PIXELS,
+            height - viewHeight - VIEW_TO_BOTTOM_OF_SCREEN_IN_PIXELS};
+  Vec2i dims{viewWidth, RESOURCES_MENU_HEIGHT};
+
+  m_resourcesMenu = generateBlankHorizontalMenu(pos, dims);
+
+  pos.y += RESOURCES_MENU_HEIGHT;
+  dims.y       = HEADER_MENU_HEIGHT;
+  m_headerMenu = generateBlankHorizontalMenu(pos, dims);
+
+  pos.y += HEADER_MENU_HEIGHT;
+  dims.y = viewHeight - RESOURCES_MENU_HEIGHT - HEADER_MENU_HEIGHT;
   m_menu = generateBlankHorizontalMenu(pos, dims);
 
   auto locker = generateBlankVerticalMenu(pos, dims);
@@ -45,11 +64,14 @@ void LockerUiHandler::initializeMenus(const int width, const int height)
 
 bool LockerUiHandler::processUserInput(UserInputData &inputData)
 {
+  // The resources menu can't take input.
   return m_menu->processUserInput(inputData);
 }
 
 void LockerUiHandler::render(Renderer &engine) const
 {
+  m_resourcesMenu->render(engine);
+  m_headerMenu->render(engine);
   m_menu->render(engine);
 }
 
@@ -89,10 +111,10 @@ void LockerUiHandler::updateUi()
 
 void LockerUiHandler::reset()
 {
+  m_resourcesMenu->clearChildren();
+  m_headerMenu->clearChildren();
   m_locker->clearChildren();
   m_ship->clearChildren();
-
-  m_resources.clear();
 
   m_lockerWeapons.clear();
   m_lockerComputers.clear();
@@ -118,32 +140,35 @@ void LockerUiHandler::initializeLocker()
 
 void LockerUiHandler::initializeLayout()
 {
+  const auto faction = m_playerView->getPlayerFaction();
+  const auto palette = generatePaletteForFaction(faction);
+
+  m_headerMenu->updateBgColor(palette.almostOpaqueColor);
+
+  const MenuConfig config{.highlightable = false};
+  const auto bg = bgConfigFromColor(colors::BLANK);
+
+  auto text = textConfigFromColor("LOCKER", colors::WHITE);
+  m_headerMenu->addMenu(std::make_unique<UiTextMenu>(config, bg, text));
+
+  text = textConfigFromColor("SHIP", colors::WHITE);
+  m_headerMenu->addMenu(std::make_unique<UiTextMenu>(config, bg, text));
+
   initializeLockerLayout();
   initializeShipLayout();
 }
 
 void LockerUiHandler::initializeLockerLayout()
 {
-  MenuConfig config{.highlightable = false, .propagateEventsToChildren = false};
+  const auto faction = m_playerView->getPlayerFaction();
+  const auto palette = generatePaletteForFaction(faction);
 
-  const auto bg   = bgConfigFromColor(colors::DARK_GREY);
-  const auto text = textConfigFromColor("Locker", colors::BLACK);
-  auto title      = std::make_unique<UiTextMenu>(config, bg, text);
-  m_locker->addMenu(std::move(title));
+  m_locker->updateBgColor(palette.almostOpaqueColor);
 
-  config.highlightable = true;
-
-  const auto resources  = m_playerView->getPlayerResources();
-  const auto bgResource = bgConfigFromColor(colors::DARK_GREEN);
-  for (auto id = 0u; id < resources.size(); ++id)
-  {
-    auto menu = std::make_unique<UiMenu>(config, bgResource);
-    m_resources.push_back(menu.get());
-    m_locker->addMenu(std::move(menu));
-  }
+  const MenuConfig config{.propagateEventsToChildren = false};
 
   const auto weapons  = m_playerView->getPlayerWeapons();
-  const auto bgWeapon = bgConfigFromColor(colors::DARK_RED);
+  const auto bgWeapon = bgConfigFromColor(colors::BLANK);
   const MenuConfig configWeapon{.layout = MenuLayout::HORIZONTAL};
   for (auto id = 0u; id < weapons.size(); ++id)
   {
@@ -153,7 +178,7 @@ void LockerUiHandler::initializeLockerLayout()
   }
 
   const auto computers  = m_playerView->getPlayerComputers();
-  const auto bgComputer = bgConfigFromColor(colors::DARK_YELLOW);
+  const auto bgComputer = bgConfigFromColor(colors::BLANK);
   const MenuConfig configComputer{.layout = MenuLayout::HORIZONTAL};
   for (auto id = 0u; id < computers.size(); ++id)
   {
@@ -165,20 +190,18 @@ void LockerUiHandler::initializeLockerLayout()
 
 void LockerUiHandler::initializeShipLayout()
 {
-  MenuConfig config{.highlightable = false, .propagateEventsToChildren = false};
+  const auto faction = m_playerView->getPlayerFaction();
+  const auto palette = generatePaletteForFaction(faction);
 
-  const auto bg   = bgConfigFromColor(colors::DARK_GREY);
-  const auto text = textConfigFromColor("Ship", colors::BLACK);
-  auto title      = std::make_unique<UiTextMenu>(config, bg, text);
-  m_ship->addMenu(std::move(title));
+  m_ship->updateBgColor(palette.almostOpaqueColor);
 
-  config.highlightable = true;
+  const MenuConfig config{.propagateEventsToChildren = false};
 
   const auto slots = m_shipDbView->getPlayerShipSlots();
   if (slots.contains(bsgo::Slot::WEAPON))
   {
     const auto weaponsCount = slots.at(bsgo::Slot::WEAPON);
-    const auto bg           = bgConfigFromColor(colors::DARK_RED);
+    const auto bg           = bgConfigFromColor(colors::BLANK);
     const MenuConfig weaponConfig{.layout = MenuLayout::HORIZONTAL};
     for (auto id = 0; id < weaponsCount; ++id)
     {
@@ -191,7 +214,7 @@ void LockerUiHandler::initializeShipLayout()
   if (slots.contains(bsgo::Slot::COMPUTER))
   {
     const auto computersCount = slots.at(bsgo::Slot::COMPUTER);
-    const auto bg             = bgConfigFromColor(colors::DARK_YELLOW);
+    const auto bg             = bgConfigFromColor(colors::BLANK);
     const MenuConfig computerConfig{.layout = MenuLayout::HORIZONTAL};
     for (auto id = 0; id < computersCount; ++id)
     {
@@ -204,27 +227,48 @@ void LockerUiHandler::initializeShipLayout()
 
 void LockerUiHandler::generateResourcesMenus()
 {
+  const auto faction = m_playerView->getPlayerFaction();
+  const auto palette = generatePaletteForFaction(faction);
+
+  m_resourcesMenu->updateBgColor(palette.almostOpaqueColor);
+
   const auto resources = m_playerView->getPlayerResources();
 
   const MenuConfig config{.propagateEventsToChildren = false};
   const auto bg = bgConfigFromColor(colors::BLANK);
-  auto id       = 0;
 
-  for (const auto &resource : resources)
+  // Reverse iteration to get resources ordered according to their id.
+  for (auto it = resources.rbegin(); it != resources.rend(); ++it)
   {
-    auto textConf = textConfigFromColor(resource.name, colors::BLACK);
-    auto field    = std::make_unique<UiTextMenu>(config, bg, textConf);
-    m_resources[id]->addMenu(std::move(field));
+    auto label = textConfigFromColor(bsgo::capitalizeString(it->name, true) + ":",
+                                     colors::DARK_GREY,
+                                     TextAlignment::RIGHT);
+    auto field = std::make_unique<UiTextMenu>(config, bg, label);
+    m_resourcesMenu->addMenu(std::move(field));
 
-    textConf.text = "Amount: " + floatToStr(std::floor(resource.amount), 0);
-    field         = std::make_unique<UiTextMenu>(config, bg, textConf);
-    m_resources[id]->addMenu(std::move(field));
-
-    ++id;
+    const auto amount = bsgo::floatToStr(std::floor(it->amount), 0);
+    label = textConfigFromColor(amount, colorFromResourceName(it->name), TextAlignment::LEFT);
+    field = std::make_unique<UiTextMenu>(config, bg, label);
+    m_resourcesMenu->addMenu(std::move(field));
   }
 }
 
 namespace {
+constexpr auto DEFAULT_MARGIN           = 30;
+constexpr auto MILLISECONDS_IN_A_SECOND = 1000.0f;
+
+auto durationToSeconds(const utils::Duration &duration) -> float
+{
+  return utils::toMilliseconds(duration) / MILLISECONDS_IN_A_SECOND;
+}
+
+auto generateTextConfig(const std::string &name,
+                        const Color &color = colors::WHITE,
+                        const int margin   = DEFAULT_MARGIN) -> TextConfig
+{
+  return textConfigFromColor(name, color, TextAlignment::LEFT, margin);
+}
+
 auto generateWeaponMenu(const bsgo::PlayerWeapon &weapon) -> UiMenuPtr
 {
   auto menu = generateBlankVerticalMenu();
@@ -232,13 +276,27 @@ auto generateWeaponMenu(const bsgo::PlayerWeapon &weapon) -> UiMenuPtr
   const MenuConfig config{.highlightable = false};
   const auto bg = bgConfigFromColor(colors::BLANK);
 
-  auto textConf = textConfigFromColor(weapon.name, colors::BLACK);
-  auto field    = std::make_unique<UiTextMenu>(config, bg, textConf);
-  menu->addMenu(std::move(field));
+  auto label = weapon.name + " (weapon)";
+  auto text  = generateTextConfig(label, colors::GREY, 10);
+  auto prop  = std::make_unique<UiTextMenu>(config, bg, text);
+  menu->addMenu(std::move(prop));
 
-  textConf.text = "Level: " + std::to_string(weapon.level);
-  field         = std::make_unique<UiTextMenu>(config, bg, textConf);
-  menu->addMenu(std::move(field));
+  label = "Damage: " + bsgo::floatToStr(weapon.minDamage, 2) + "-"
+          + bsgo::floatToStr(weapon.maxDamage) + "dmg";
+  text = generateTextConfig(label);
+  prop = std::make_unique<UiTextMenu>(config, bg, text);
+  menu->addMenu(std::move(prop));
+
+  label = "Range: " + bsgo::floatToStr(weapon.range, 0) + "m";
+  text  = generateTextConfig(label);
+  prop  = std::make_unique<UiTextMenu>(config, bg, text);
+  menu->addMenu(std::move(prop));
+
+  const auto secondsToReload = durationToSeconds(weapon.reloadTime);
+  label                      = "Reload: " + bsgo::floatToStr(secondsToReload, 2) + "s";
+  text                       = generateTextConfig(label);
+  prop                       = std::make_unique<UiTextMenu>(config, bg, text);
+  menu->addMenu(std::move(prop));
 
   return menu;
 }
@@ -269,8 +327,8 @@ auto generateInteractiveSection(const std::string &buttonText, const ClickCallba
   middleSection->addMenu(generateSpacer());
 
   section.menu = generateBlankHorizontalMenu();
-  section.menu->addMenu(std::move(middleSection));
   section.menu->addMenu(generateSpacer());
+  section.menu->addMenu(std::move(middleSection));
 
   return section;
 }
@@ -306,13 +364,40 @@ auto generateComputerMenu(const bsgo::PlayerComputer &computer) -> UiMenuPtr
   const MenuConfig config{.highlightable = false};
   const auto bg = bgConfigFromColor(colors::BLANK);
 
-  auto textConf = textConfigFromColor(computer.name, colors::BLACK);
-  auto field    = std::make_unique<UiTextMenu>(config, bg, textConf);
-  menu->addMenu(std::move(field));
+  auto label = computer.name + " (computer)";
+  auto text  = generateTextConfig(label, colors::GREY, 10);
+  auto prop  = std::make_unique<UiTextMenu>(config, bg, text);
+  menu->addMenu(std::move(prop));
 
-  textConf.text = "Level: " + std::to_string(computer.level);
-  field         = std::make_unique<UiTextMenu>(config, bg, textConf);
-  menu->addMenu(std::move(field));
+  label = "Power cost: " + bsgo::floatToStr(computer.powerCost, 0);
+  text  = generateTextConfig(label);
+  prop  = std::make_unique<UiTextMenu>(config, bg, text);
+  menu->addMenu(std::move(prop));
+
+  if (computer.range)
+  {
+    label = "Range: " + bsgo::floatToStr(*computer.range, 0) + "m";
+    text  = generateTextConfig(label);
+    prop  = std::make_unique<UiTextMenu>(config, bg, text);
+    menu->addMenu(std::move(prop));
+  }
+
+  if (computer.duration)
+  {
+    const auto secondsToReload = durationToSeconds(*computer.duration);
+    label                      = "Duration: " + bsgo::floatToStr(secondsToReload, 2) + "s";
+    text                       = generateTextConfig(label);
+    prop                       = std::make_unique<UiTextMenu>(config, bg, text);
+    menu->addMenu(std::move(prop));
+  }
+
+  constexpr auto MILLISECONDS_IN_A_SECOND = 1000.0f;
+  const auto secondsToReload              = utils::toMilliseconds(computer.reloadTime)
+                               / MILLISECONDS_IN_A_SECOND;
+  label = "Reload: " + bsgo::floatToStr(secondsToReload, 2) + "s";
+  text  = generateTextConfig(label);
+  prop  = std::make_unique<UiTextMenu>(config, bg, text);
+  menu->addMenu(std::move(prop));
 
   return menu;
 }
@@ -362,6 +447,18 @@ void LockerUiHandler::generateShipWeaponsMenus()
 
     ++id;
   }
+
+  const auto weaponSlots = static_cast<int>(
+    m_shipDbView->getPlayerShipSlots().at(bsgo::Slot::WEAPON));
+  for (; id < weaponSlots; ++id)
+  {
+    const MenuConfig config{.highlightable = false};
+    const auto bg = bgConfigFromColor(colors::BLANK);
+
+    auto text = textConfigFromColor("Empty weapon slot", colors::BLACK);
+    auto prop = std::make_unique<UiTextMenu>(config, bg, text);
+    m_shipWeapons[id]->addMenu(std::move(prop));
+  }
 }
 
 void LockerUiHandler::generateShipComputersMenus()
@@ -383,6 +480,18 @@ void LockerUiHandler::generateShipComputersMenus()
     m_shipItemsData.emplace_back(std::move(data));
 
     ++id;
+  }
+
+  const auto computerSlots = static_cast<int>(
+    m_shipDbView->getPlayerShipSlots().at(bsgo::Slot::COMPUTER));
+  for (; id < computerSlots; ++id)
+  {
+    const MenuConfig config{.highlightable = false};
+    const auto bg = bgConfigFromColor(colors::BLANK);
+
+    auto text = textConfigFromColor("Empty computer slot", colors::BLACK);
+    auto prop = std::make_unique<UiTextMenu>(config, bg, text);
+    m_shipComputers[id]->addMenu(std::move(prop));
   }
 }
 

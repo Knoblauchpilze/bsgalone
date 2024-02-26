@@ -29,10 +29,11 @@ class LockerUiHandler : public IUiHandler
   bsgo::ShipDbViewShPtr m_shipDbView{};
   bool m_initialized{false};
 
+  UiMenuPtr m_resourcesMenu{};
+  UiMenuPtr m_headerMenu{};
   UiMenuPtr m_menu{};
   UiMenu *m_locker{};
   UiMenu *m_ship{};
-  std::vector<UiMenu *> m_resources{};
 
   struct LockerItem
   {
