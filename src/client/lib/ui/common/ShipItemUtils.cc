@@ -21,36 +21,57 @@ auto generateTextConfig(const std::string &name,
   return textConfigFromColor(name, color, TextAlignment::LEFT, margin);
 }
 
-auto generateWeaponMenu(const bsgo::PlayerWeapon &weapon) -> UiMenuPtr
+auto generateWeaponMenu(const std::string &name,
+                        const float minDamage,
+                        const float maxDamage,
+                        const float range,
+                        const utils::Duration reloadTime) -> UiMenuPtr
 {
   auto menu = generateBlankVerticalMenu();
 
   const MenuConfig config{.highlightable = false};
   const auto bg = bgConfigFromColor(colors::BLANK);
 
-  auto label = weapon.name + " (weapon)";
+  auto label = name + " (weapon)";
   auto text  = generateTextConfig(label, colors::GREY, 10);
   auto prop  = std::make_unique<UiTextMenu>(config, bg, text);
   menu->addMenu(std::move(prop));
 
-  label = "Damage: " + bsgo::floatToStr(weapon.minDamage, 2) + "-"
-          + bsgo::floatToStr(weapon.maxDamage) + "dmg";
-  text = generateTextConfig(label);
-  prop = std::make_unique<UiTextMenu>(config, bg, text);
-  menu->addMenu(std::move(prop));
-
-  label = "Range: " + bsgo::floatToStr(weapon.range, 0) + "m";
+  label = "Damage: " + bsgo::floatToStr(minDamage, 2) + "-" + bsgo::floatToStr(maxDamage) + "dmg";
   text  = generateTextConfig(label);
   prop  = std::make_unique<UiTextMenu>(config, bg, text);
   menu->addMenu(std::move(prop));
 
-  const auto secondsToReload = durationToSeconds(weapon.reloadTime);
+  label = "Range: " + bsgo::floatToStr(range, 0) + "m";
+  text  = generateTextConfig(label);
+  prop  = std::make_unique<UiTextMenu>(config, bg, text);
+  menu->addMenu(std::move(prop));
+
+  const auto secondsToReload = durationToSeconds(reloadTime);
   label                      = "Reload: " + bsgo::floatToStr(secondsToReload, 2) + "s";
   text                       = generateTextConfig(label);
   prop                       = std::make_unique<UiTextMenu>(config, bg, text);
   menu->addMenu(std::move(prop));
 
   return menu;
+}
+
+auto generateWeaponMenu(const bsgo::Weapon &weapon) -> UiMenuPtr
+{
+  return generateWeaponMenu(weapon.name,
+                            weapon.minDamage,
+                            weapon.maxDamage,
+                            weapon.range,
+                            weapon.reloadTime);
+}
+
+auto generateWeaponMenu(const bsgo::PlayerWeapon &weapon) -> UiMenuPtr
+{
+  return generateWeaponMenu(weapon.name,
+                            weapon.minDamage,
+                            weapon.maxDamage,
+                            weapon.range,
+                            weapon.reloadTime);
 }
 
 auto generateComputerMenu(const bsgo::PlayerComputer &computer) -> UiMenuPtr
