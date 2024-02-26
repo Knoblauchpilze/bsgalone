@@ -297,22 +297,22 @@ void GameScreenRenderer::renderShipDebug(const bsgo::Entity &ship,
 
   std::string text = "accel: ";
   const auto accel = ship.velocityComp().acceleration();
-  text += floatToStr(accel(0));
+  text += bsgo::floatToStr(accel(0));
   text += "x";
-  text += floatToStr(accel(1));
+  text += bsgo::floatToStr(accel(1));
   text += "x";
-  text += floatToStr(accel(2));
+  text += bsgo::floatToStr(accel(2));
   engine.drawString(pixelPos, text, colors::DARK_YELLOW);
 
   constexpr auto REASONABLE_GAP = 20;
   pixelPos.y += REASONABLE_GAP;
   text             = "speed: ";
   const auto speed = ship.velocityComp().speed();
-  text += floatToStr(speed(0));
+  text += bsgo::floatToStr(speed(0));
   text += "x";
-  text += floatToStr(speed(1));
+  text += bsgo::floatToStr(speed(1));
   text += "x";
-  text += floatToStr(speed(2));
+  text += bsgo::floatToStr(speed(2));
   engine.drawString(pixelPos, text, colors::DARK_GREEN);
 
   for (const auto &weapon : ship.weapons)
