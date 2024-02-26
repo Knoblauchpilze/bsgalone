@@ -74,34 +74,38 @@ auto generateWeaponMenu(const bsgo::PlayerWeapon &weapon) -> UiMenuPtr
                             weapon.reloadTime);
 }
 
-auto generateComputerMenu(const bsgo::PlayerComputer &computer) -> UiMenuPtr
+auto generateComputerMenu(const std::string &name,
+                          const float powerCost,
+                          const std::optional<float> &range,
+                          const std::optional<utils::Duration> &duration,
+                          const utils::Duration &reloadTime) -> UiMenuPtr
 {
   auto menu = generateBlankVerticalMenu();
 
   const MenuConfig config{.highlightable = false};
   const auto bg = bgConfigFromColor(colors::BLANK);
 
-  auto label = computer.name + " (computer)";
+  auto label = name + " (computer)";
   auto text  = generateTextConfig(label, colors::GREY, 10);
   auto prop  = std::make_unique<UiTextMenu>(config, bg, text);
   menu->addMenu(std::move(prop));
 
-  label = "Power cost: " + bsgo::floatToStr(computer.powerCost, 0);
+  label = "Power cost: " + bsgo::floatToStr(powerCost, 0);
   text  = generateTextConfig(label);
   prop  = std::make_unique<UiTextMenu>(config, bg, text);
   menu->addMenu(std::move(prop));
 
-  if (computer.range)
+  if (range)
   {
-    label = "Range: " + bsgo::floatToStr(*computer.range, 0) + "m";
+    label = "Range: " + bsgo::floatToStr(*range, 0) + "m";
     text  = generateTextConfig(label);
     prop  = std::make_unique<UiTextMenu>(config, bg, text);
     menu->addMenu(std::move(prop));
   }
 
-  if (computer.duration)
+  if (duration)
   {
-    const auto secondsToReload = durationToSeconds(*computer.duration);
+    const auto secondsToReload = durationToSeconds(*duration);
     label                      = "Duration: " + bsgo::floatToStr(secondsToReload, 2) + "s";
     text                       = generateTextConfig(label);
     prop                       = std::make_unique<UiTextMenu>(config, bg, text);
@@ -109,14 +113,31 @@ auto generateComputerMenu(const bsgo::PlayerComputer &computer) -> UiMenuPtr
   }
 
   constexpr auto MILLISECONDS_IN_A_SECOND = 1000.0f;
-  const auto secondsToReload              = utils::toMilliseconds(computer.reloadTime)
-                               / MILLISECONDS_IN_A_SECOND;
-  label = "Reload: " + bsgo::floatToStr(secondsToReload, 2) + "s";
-  text  = generateTextConfig(label);
-  prop  = std::make_unique<UiTextMenu>(config, bg, text);
+  const auto secondsToReload = utils::toMilliseconds(reloadTime) / MILLISECONDS_IN_A_SECOND;
+  label                      = "Reload: " + bsgo::floatToStr(secondsToReload, 2) + "s";
+  text                       = generateTextConfig(label);
+  prop                       = std::make_unique<UiTextMenu>(config, bg, text);
   menu->addMenu(std::move(prop));
 
   return menu;
+}
+
+auto generateComputerMenu(const bsgo::Computer &computer) -> UiMenuPtr
+{
+  return generateComputerMenu(computer.name,
+                              computer.powerCost,
+                              computer.range,
+                              computer.duration,
+                              computer.reloadTime);
+}
+
+auto generateComputerMenu(const bsgo::PlayerComputer &computer) -> UiMenuPtr
+{
+  return generateComputerMenu(computer.name,
+                              computer.powerCost,
+                              computer.range,
+                              computer.duration,
+                              computer.reloadTime);
 }
 
 auto generateInteractiveSection(const std::string &buttonText,
