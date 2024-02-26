@@ -185,12 +185,12 @@ void WeaponsUiHandler::updateWeaponMenu(const bsgo::WeaponSlotComponent &weapon,
   menu.updateBgColor(bgColor);
 
   auto &range = *m_ranges[id];
-  range.setText(floatToStr(weapon.range(), 0) + "m");
+  range.setText(bsgo::floatToStr(weapon.range(), 0) + "m");
 
   auto &minDamage = *m_damages[2 * id];
-  minDamage.setText(floatToStr(weapon.minDamage()));
+  minDamage.setText(bsgo::floatToStr(weapon.minDamage()));
   auto &maxDamage = *m_damages[2 * id + 1];
-  maxDamage.setText(floatToStr(weapon.maxDamage()));
+  maxDamage.setText(bsgo::floatToStr(weapon.maxDamage()));
 
   std::string statusText("ready");
   if (!weapon.active())
@@ -200,7 +200,7 @@ void WeaponsUiHandler::updateWeaponMenu(const bsgo::WeaponSlotComponent &weapon,
   if (!weapon.canFire())
   {
     constexpr auto PERCENTAGE_MULTIPLIER = 100.0f;
-    statusText = floatToStr(PERCENTAGE_MULTIPLIER * weapon.reloadPercentage()) + "%";
+    statusText = bsgo::floatToStr(PERCENTAGE_MULTIPLIER * weapon.reloadPercentage()) + "%";
   }
   m_statuses[id]->setText(statusText);
 }

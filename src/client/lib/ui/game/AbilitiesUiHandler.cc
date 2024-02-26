@@ -198,7 +198,7 @@ void AbilitiesUiHandler::updateComputerMenu(const bsgo::ComputerSlotComponent &c
   const auto range = computer.maybeRange();
   if (range)
   {
-    m_ranges[id]->setText(floatToStr(*range, 0) + "m");
+    m_ranges[id]->setText(bsgo::floatToStr(*range, 0) + "m");
   }
 
   const auto damage = computer.damageModifier();
@@ -206,14 +206,14 @@ void AbilitiesUiHandler::updateComputerMenu(const bsgo::ComputerSlotComponent &c
   {
     constexpr auto PERCENTAGE_MULTIPLIER = 100.0f;
     const auto multiplier                = PERCENTAGE_MULTIPLIER * (*damage - 1.0f);
-    m_damages[id]->setText("Dmg:" + floatToSignedStr(multiplier, 0) + "%");
+    m_damages[id]->setText("Dmg:" + bsgo::floatToSignedStr(multiplier, 0) + "%");
   }
 
   std::string statusText("ready");
   if (!computer.canFire())
   {
     constexpr auto PERCENTAGE_MULTIPLIER = 100.0f;
-    statusText = floatToStr(PERCENTAGE_MULTIPLIER * computer.reloadPercentage()) + "%";
+    statusText = bsgo::floatToStr(PERCENTAGE_MULTIPLIER * computer.reloadPercentage()) + "%";
   }
   m_statuses[id]->setText(statusText);
 }

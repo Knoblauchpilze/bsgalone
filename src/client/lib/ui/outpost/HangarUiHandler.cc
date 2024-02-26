@@ -6,7 +6,6 @@
 #include "SlotComponentUtils.hh"
 #include "StringUtils.hh"
 #include "UiTextMenu.hh"
-#include <algorithm>
 
 namespace pge {
 
@@ -31,7 +30,7 @@ void HangarUiHandler::initializeMenus(const int width, const int height)
   const auto viewHeight = static_cast<int>(MAIN_VIEW_HEIGHT_TO_SCREEN_HEIGHT_RATIO * height);
 
   const Vec2i pos{width - viewWidth - VIEW_TO_RIGHT_OF_SCREEN_IN_PIXELS,
-                  height - viewHeight - VIEW_TO_RIGHT_OF_SCREEN_IN_PIXELS};
+                  height - viewHeight - VIEW_TO_BOTTOM_OF_SCREEN_IN_PIXELS};
   const Vec2i dims{viewWidth, viewHeight};
   m_menu = generateBlankVerticalMenu(pos, dims);
 }
@@ -93,28 +92,27 @@ auto generateShipDescription(const bsgo::Ship &ship) -> UiMenuPtr
   desc->addMenu(generateSpacer());
 
   bg         = bgConfigFromColor(colors::BLANK);
-  auto label = ship.name + " (" + bsgo::str(ship.shipClass) + ")";
-  std::transform(label.begin(), label.end(), label.begin(), [](const char c) {
-    return std::toupper(c);
-  });
-  auto text = generateTextConfig(label, colors::GREY, 10);
-  auto prop = std::make_unique<UiTextMenu>(config, bg, text);
+  auto label = bsgo::capitalizeString(ship.name + " (" + bsgo::str(ship.shipClass) + ")");
+  auto text  = generateTextConfig(label, colors::GREY, 10);
+  auto prop  = std::make_unique<UiTextMenu>(config, bg, text);
   desc->addMenu(std::move(prop));
 
-  label = floatToStr(ship.maxHullPoints, 0) + " hull points (+"
-          + floatToStr(ship.hullPointsRegen, 2) + "/s)";
+  label = bsgo::floatToStr(ship.maxHullPoints, 0) + " hull points (+"
+          + bsgo::floatToStr(ship.hullPointsRegen, 2) + "/s)";
   text = generateTextConfig(label);
   prop = std::make_unique<UiTextMenu>(config, bg, text);
   desc->addMenu(std::move(prop));
 
-  label = floatToStr(ship.maxPowerPoints, 0) + " power (+" + floatToStr(ship.powerRegen, 2) + "/s)";
-  text  = generateTextConfig(label);
-  prop  = std::make_unique<UiTextMenu>(config, bg, text);
+  label = bsgo::floatToStr(ship.maxPowerPoints, 0) + " power (+"
+          + bsgo::floatToStr(ship.powerRegen, 2) + "/s)";
+  text = generateTextConfig(label);
+  prop = std::make_unique<UiTextMenu>(config, bg, text);
   desc->addMenu(std::move(prop));
 
-  label = floatToStr(ship.speed, 2) + "m/s (+" + floatToStr(ship.acceleration, 2) + "m/s2)";
-  text  = generateTextConfig(label);
-  prop  = std::make_unique<UiTextMenu>(config, bg, text);
+  label = bsgo::floatToStr(ship.speed, 2) + "m/s (+" + bsgo::floatToStr(ship.acceleration, 2)
+          + "m/s2)";
+  text = generateTextConfig(label);
+  prop = std::make_unique<UiTextMenu>(config, bg, text);
   desc->addMenu(std::move(prop));
 
   label = "";

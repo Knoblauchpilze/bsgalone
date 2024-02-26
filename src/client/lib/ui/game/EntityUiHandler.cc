@@ -130,9 +130,9 @@ void EntityUiHandler::updateHealthComponent(const bsgo::Entity &entity)
   }
 
   std::string text{"Health: "};
-  text += floatToStr(std::floor(entity.healthComp().value()), 0);
+  text += bsgo::floatToStr(std::floor(entity.healthComp().value()), 0);
   text += "/";
-  text += floatToStr(std::floor(entity.healthComp().max()), 0);
+  text += bsgo::floatToStr(std::floor(entity.healthComp().max()), 0);
   m_menus[HEALTH]->setText(text);
 }
 
@@ -145,16 +145,16 @@ void EntityUiHandler::updatePowerComponent(const bsgo::Entity &entity)
   }
 
   std::string text{"Power: "};
-  text += floatToStr(std::floor(entity.powerComp().value()), 0);
+  text += bsgo::floatToStr(std::floor(entity.powerComp().value()), 0);
   text += "/";
-  text += floatToStr(std::floor(entity.powerComp().max()), 0);
+  text += bsgo::floatToStr(std::floor(entity.powerComp().max()), 0);
   m_menus[POWER]->setText(text);
 }
 
 void EntityUiHandler::updateDistanceComponent()
 {
   const auto d = m_shipView->distanceToTarget();
-  m_menus[DISTANCE]->setText(floatToStr(d, 1) + "m");
+  m_menus[DISTANCE]->setText(bsgo::floatToStr(d, 1) + "m");
 }
 
 void EntityUiHandler::updateDockComponent(const bsgo::Entity &entity)
