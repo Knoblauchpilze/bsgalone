@@ -3,6 +3,7 @@
 #include "Constants.hh"
 #include "GameColorUtils.hh"
 #include "ScreenCommon.hh"
+#include "ShipItemUtils.hh"
 #include "SlotComponentUtils.hh"
 #include "StringUtils.hh"
 #include "UiTextMenu.hh"
@@ -176,8 +177,13 @@ void ShopUiHandler::generateItemsMenus()
     auto itemSection = generateItemMenus(item, itemId);
     m_items[itemId]->addMenu(std::move(itemSection));
 
-    auto buySection = generateBuySection(itemId);
-    m_items[itemId]->addMenu(std::move(buySection));
+    auto buySection = generateInteractiveSection("Buy",
+                                                 [this, itemId]() { onPurchaseRequest(itemId); });
+
+    m_itemsData.at(itemId).menu = buySection.button;
+    updateBuyButtonState(*buySection.button, false);
+
+    m_items[itemId]->addMenu(std::move(buySection.menu));
 
     ++itemId;
   }
@@ -207,32 +213,6 @@ auto ShopUiHandler::generateItemMenus(const bsgo::ShopItem &item, const int item
 
     ++id;
   }
-
-  return menu;
-}
-
-auto ShopUiHandler::generateBuySection(const int itemId) -> UiMenuPtr
-{
-  auto middleSection = generateBlankVerticalMenu();
-  middleSection->addMenu(generateSpacer());
-
-  MenuConfig config{.clickCallback = [this, itemId]() { onPurchaseRequest(itemId); }};
-
-  const auto bg       = bgConfigFromColor(colors::BLANK);
-  const auto textConf = textConfigFromColor("Buy", colors::WHITE);
-  auto buyButton      = std::make_unique<UiTextMenu>(config, bg, textConf);
-
-  m_itemsData.at(itemId).menu = buyButton.get();
-  updateBuyButtonState(*buyButton, false);
-
-  middleSection->addMenu(std::move(buyButton));
-
-  middleSection->addMenu(generateSpacer());
-
-  auto menu = generateBlankHorizontalMenu();
-  menu->addMenu(generateSpacer());
-  menu->addMenu(std::move(middleSection));
-  menu->addMenu(generateSpacer());
 
   return menu;
 }
