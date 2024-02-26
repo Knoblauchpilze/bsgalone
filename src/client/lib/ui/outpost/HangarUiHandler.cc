@@ -3,6 +3,7 @@
 #include "Constants.hh"
 #include "GameColorUtils.hh"
 #include "ScreenCommon.hh"
+#include "ShipItemUtils.hh"
 #include "SlotComponentUtils.hh"
 #include "StringUtils.hh"
 #include "UiTextMenu.hh"
@@ -159,40 +160,15 @@ void HangarUiHandler::initializeLayout()
     auto shipDesc = generateShipDescription(ship);
     shipMenu->addMenu(std::move(shipDesc));
 
-    auto section = generateShipInteractiveSection(shipIndex);
-    shipMenu->addMenu(std::move(section));
+    auto section = generateInteractiveSection("", [this, shipIndex]() { onShipRequest(shipIndex); });
+    m_shipsData.at(shipIndex).button = section.button;
+
+    shipMenu->addMenu(std::move(section.menu));
 
     m_menu->addMenu(std::move(shipMenu));
 
     ++shipIndex;
   }
-}
-
-auto HangarUiHandler::generateShipInteractiveSection(const int shipIndex) -> UiMenuPtr
-{
-  auto middleSection = generateBlankVerticalMenu();
-  middleSection->addMenu(generateSpacer());
-  middleSection->addMenu(generateSpacer());
-
-  MenuConfig config{.clickCallback = [this, shipIndex]() { onShipRequest(shipIndex); }};
-
-  const auto bg       = bgConfigFromColor(colors::DARK_GREY);
-  const auto textConf = textConfigFromColor("", colors::WHITE);
-  auto button         = std::make_unique<UiTextMenu>(config, bg, textConf);
-
-  m_shipsData.at(shipIndex).button = button.get();
-
-  middleSection->addMenu(std::move(button));
-
-  middleSection->addMenu(generateSpacer());
-  middleSection->addMenu(generateSpacer());
-
-  auto menu = generateBlankHorizontalMenu();
-  menu->addMenu(generateSpacer());
-  menu->addMenu(std::move(middleSection));
-  menu->addMenu(generateSpacer());
-
-  return menu;
 }
 
 namespace {

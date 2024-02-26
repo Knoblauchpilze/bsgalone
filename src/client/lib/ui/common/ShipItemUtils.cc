@@ -2,7 +2,6 @@
 #include "ShipItemUtils.hh"
 #include "ScreenCommon.hh"
 #include "StringUtils.hh"
-#include "UiTextMenu.hh"
 #include <core_utils/TimeUtils.hh>
 
 namespace pge {

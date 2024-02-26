@@ -51,7 +51,6 @@ class HangarUiHandler : public IUiHandler
 
   void initializeLayout();
 
-  auto generateShipInteractiveSection(const int shipIndex) -> UiMenuPtr;
   void updateShipMenus();
 
   void onShipRequest(const int shipIndex);
