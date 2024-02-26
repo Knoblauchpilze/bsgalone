@@ -116,12 +116,13 @@ void ShopUiHandler::initializeShop()
 void ShopUiHandler::initializeLayout()
 {
   const auto palette = generatePaletteForFaction(m_playerView->getPlayerFaction());
+  m_menu->updateBgColor(palette.almostOpaqueColor);
 
   const auto items = m_shopView->getShopItems();
   for (auto id = 0u; id < items.size(); ++id)
   {
     const MenuConfig config{.layout = MenuLayout::HORIZONTAL};
-    const auto bg = bgConfigFromColor(palette.almostOpaqueColor);
+    const auto bg = bgConfigFromColor(colors::BLANK);
     auto itemMenu = std::make_unique<UiMenu>(config, bg);
     m_items.push_back(itemMenu.get());
     m_menu->addMenu(std::move(itemMenu));
@@ -129,22 +130,6 @@ void ShopUiHandler::initializeLayout()
 }
 
 namespace {
-auto generateWeaponMenu(const bsgo::Weapon &weapon) -> UiTextMenuPtr
-{
-  const MenuConfig config{.highlightable = false};
-  const auto bg   = bgConfigFromColor(colors::BLANK);
-  const auto text = textConfigFromColor(weapon.name, colors::WHITE);
-  return std::make_unique<UiTextMenu>(config, bg, text);
-}
-
-auto generateComputerMenu(const bsgo::Computer &computer) -> UiTextMenuPtr
-{
-  const MenuConfig config{.highlightable = false};
-  const auto bg   = bgConfigFromColor(colors::BLANK);
-  const auto text = textConfigFromColor(computer.name, colors::WHITE);
-  return std::make_unique<UiTextMenu>(config, bg, text);
-}
-
 auto generatePriceMenus(const bsgo::ShopItem &item) -> std::vector<UiTextMenuPtr>
 {
   std::vector<UiTextMenuPtr> out;
