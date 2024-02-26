@@ -4,6 +4,7 @@
 #include "PlayerComputerRepository.hh"
 #include "PlayerWeaponRepository.hh"
 #include "UiMenu.hh"
+#include "UiTextMenu.hh"
 
 namespace pge {
 
@@ -13,7 +14,7 @@ auto generateComputerMenu(const bsgo::PlayerComputer &computer) -> UiMenuPtr;
 struct InteractiveSection
 {
   UiMenuPtr menu{};
-  UiMenu *button{};
+  UiTextMenu *button{};
 };
 
 enum class HorizontalMargin
