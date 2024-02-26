@@ -36,4 +36,10 @@ auto textConfigFromColor(const std::string &text,
                          const Color &hColor,
                          const TextAlignment &align = TextAlignment::CENTER) -> TextConfig;
 
+auto textConfigFromColor(const std::string &text,
+                         const Color &color,
+                         const Color &hColor,
+                         const TextAlignment &align,
+                         const int margin = 0) -> TextConfig;
+
 } // namespace pge
