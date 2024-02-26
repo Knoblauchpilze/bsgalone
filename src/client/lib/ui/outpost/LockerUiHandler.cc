@@ -3,6 +3,7 @@
 #include "Constants.hh"
 #include "GameColorUtils.hh"
 #include "ScreenCommon.hh"
+#include "ShipItemUtils.hh"
 #include "SlotComponentUtils.hh"
 #include "StringUtils.hh"
 #include "UiTextMenu.hh"
@@ -253,87 +254,6 @@ void LockerUiHandler::generateResourcesMenus()
   }
 }
 
-namespace {
-constexpr auto DEFAULT_MARGIN           = 30;
-constexpr auto MILLISECONDS_IN_A_SECOND = 1000.0f;
-
-auto durationToSeconds(const utils::Duration &duration) -> float
-{
-  return utils::toMilliseconds(duration) / MILLISECONDS_IN_A_SECOND;
-}
-
-auto generateTextConfig(const std::string &name,
-                        const Color &color = colors::WHITE,
-                        const int margin   = DEFAULT_MARGIN) -> TextConfig
-{
-  return textConfigFromColor(name, color, TextAlignment::LEFT, margin);
-}
-
-auto generateWeaponMenu(const bsgo::PlayerWeapon &weapon) -> UiMenuPtr
-{
-  auto menu = generateBlankVerticalMenu();
-
-  const MenuConfig config{.highlightable = false};
-  const auto bg = bgConfigFromColor(colors::BLANK);
-
-  auto label = weapon.name + " (weapon)";
-  auto text  = generateTextConfig(label, colors::GREY, 10);
-  auto prop  = std::make_unique<UiTextMenu>(config, bg, text);
-  menu->addMenu(std::move(prop));
-
-  label = "Damage: " + bsgo::floatToStr(weapon.minDamage, 2) + "-"
-          + bsgo::floatToStr(weapon.maxDamage) + "dmg";
-  text = generateTextConfig(label);
-  prop = std::make_unique<UiTextMenu>(config, bg, text);
-  menu->addMenu(std::move(prop));
-
-  label = "Range: " + bsgo::floatToStr(weapon.range, 0) + "m";
-  text  = generateTextConfig(label);
-  prop  = std::make_unique<UiTextMenu>(config, bg, text);
-  menu->addMenu(std::move(prop));
-
-  const auto secondsToReload = durationToSeconds(weapon.reloadTime);
-  label                      = "Reload: " + bsgo::floatToStr(secondsToReload, 2) + "s";
-  text                       = generateTextConfig(label);
-  prop                       = std::make_unique<UiTextMenu>(config, bg, text);
-  menu->addMenu(std::move(prop));
-
-  return menu;
-}
-
-struct InteractiveSection
-{
-  UiMenuPtr menu{};
-  UiMenu *button{};
-};
-
-auto generateInteractiveSection(const std::string &buttonText, const ClickCallback &callback)
-  -> InteractiveSection
-{
-  InteractiveSection section{};
-
-  auto middleSection = generateBlankVerticalMenu();
-  middleSection->addMenu(generateSpacer());
-
-  const MenuConfig config{.clickCallback = callback};
-
-  const auto bg       = bgConfigFromColor(colors::VERY_DARK_GREEN);
-  const auto textConf = textConfigFromColor(buttonText, colors::WHITE, colors::WHITE);
-  auto button         = std::make_unique<UiTextMenu>(config, bg, textConf);
-  section.button      = button.get();
-
-  middleSection->addMenu(std::move(button));
-
-  middleSection->addMenu(generateSpacer());
-
-  section.menu = generateBlankHorizontalMenu();
-  section.menu->addMenu(generateSpacer());
-  section.menu->addMenu(std::move(middleSection));
-
-  return section;
-}
-} // namespace
-
 void LockerUiHandler::generateLockerWeaponsMenus()
 {
   auto id = 0;
@@ -345,8 +265,8 @@ void LockerUiHandler::generateLockerWeaponsMenus()
     m_lockerWeapons[id]->addMenu(std::move(details));
 
     const auto itemId = static_cast<int>(m_lockerItemsData.size());
-    auto section      = generateInteractiveSection("Equip",
-                                              [this, itemId]() { onInstallRequest(itemId); });
+    auto section      = generateInteractiveSection(
+      "Equip", [this, itemId]() { onInstallRequest(itemId); }, HorizontalMargin::LEFT);
     m_lockerWeapons[id]->addMenu(std::move(section.menu));
 
     LockerItem data{.itemId = weapon.id, .itemType = bsgo::Item::WEAPON, .button = section.button};
@@ -355,53 +275,6 @@ void LockerUiHandler::generateLockerWeaponsMenus()
     ++id;
   }
 }
-
-namespace {
-auto generateComputerMenu(const bsgo::PlayerComputer &computer) -> UiMenuPtr
-{
-  auto menu = generateBlankVerticalMenu();
-
-  const MenuConfig config{.highlightable = false};
-  const auto bg = bgConfigFromColor(colors::BLANK);
-
-  auto label = computer.name + " (computer)";
-  auto text  = generateTextConfig(label, colors::GREY, 10);
-  auto prop  = std::make_unique<UiTextMenu>(config, bg, text);
-  menu->addMenu(std::move(prop));
-
-  label = "Power cost: " + bsgo::floatToStr(computer.powerCost, 0);
-  text  = generateTextConfig(label);
-  prop  = std::make_unique<UiTextMenu>(config, bg, text);
-  menu->addMenu(std::move(prop));
-
-  if (computer.range)
-  {
-    label = "Range: " + bsgo::floatToStr(*computer.range, 0) + "m";
-    text  = generateTextConfig(label);
-    prop  = std::make_unique<UiTextMenu>(config, bg, text);
-    menu->addMenu(std::move(prop));
-  }
-
-  if (computer.duration)
-  {
-    const auto secondsToReload = durationToSeconds(*computer.duration);
-    label                      = "Duration: " + bsgo::floatToStr(secondsToReload, 2) + "s";
-    text                       = generateTextConfig(label);
-    prop                       = std::make_unique<UiTextMenu>(config, bg, text);
-    menu->addMenu(std::move(prop));
-  }
-
-  constexpr auto MILLISECONDS_IN_A_SECOND = 1000.0f;
-  const auto secondsToReload              = utils::toMilliseconds(computer.reloadTime)
-                               / MILLISECONDS_IN_A_SECOND;
-  label = "Reload: " + bsgo::floatToStr(secondsToReload, 2) + "s";
-  text  = generateTextConfig(label);
-  prop  = std::make_unique<UiTextMenu>(config, bg, text);
-  menu->addMenu(std::move(prop));
-
-  return menu;
-}
-} // namespace
 
 void LockerUiHandler::generateLockerComputersMenus()
 {
@@ -414,8 +287,8 @@ void LockerUiHandler::generateLockerComputersMenus()
     m_lockerComputers[id]->addMenu(std::move(details));
 
     const auto itemId = static_cast<int>(m_lockerItemsData.size());
-    auto section      = generateInteractiveSection("Equip",
-                                              [this, itemId]() { onInstallRequest(itemId); });
+    auto section      = generateInteractiveSection(
+      "Equip", [this, itemId]() { onInstallRequest(itemId); }, HorizontalMargin::LEFT);
     m_lockerComputers[id]->addMenu(std::move(section.menu));
 
     LockerItem data{.itemId   = computer.id,
@@ -438,8 +311,8 @@ void LockerUiHandler::generateShipWeaponsMenus()
     m_shipWeapons[id]->addMenu(std::move(details));
 
     const auto itemId = static_cast<int>(m_shipItemsData.size());
-    auto section      = generateInteractiveSection("Remove",
-                                              [this, itemId]() { onUninstallRequest(itemId); });
+    auto section      = generateInteractiveSection(
+      "Remove", [this, itemId]() { onUninstallRequest(itemId); }, HorizontalMargin::LEFT);
     m_shipWeapons[id]->addMenu(std::move(section.menu));
 
     ShipItem data{.itemId = weapon.id, .itemType = bsgo::Item::WEAPON};
@@ -472,8 +345,8 @@ void LockerUiHandler::generateShipComputersMenus()
     m_shipComputers[id]->addMenu(std::move(details));
 
     const auto itemId = static_cast<int>(m_shipItemsData.size());
-    auto section      = generateInteractiveSection("Remove",
-                                              [this, itemId]() { onUninstallRequest(itemId); });
+    auto section      = generateInteractiveSection(
+      "Remove", [this, itemId]() { onUninstallRequest(itemId); }, HorizontalMargin::LEFT);
     m_shipComputers[id]->addMenu(std::move(section.menu));
 
     ShipItem data{.itemId = computer.id, .itemType = bsgo::Item::COMPUTER};
