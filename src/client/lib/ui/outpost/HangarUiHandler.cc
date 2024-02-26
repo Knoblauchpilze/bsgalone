@@ -74,15 +74,6 @@ void HangarUiHandler::initializeHangar()
 }
 
 namespace {
-constexpr auto DEFAULT_MARGIN = 30;
-
-auto generateTextConfig(const std::string &name,
-                        const Color &color = colors::WHITE,
-                        const int margin   = DEFAULT_MARGIN) -> TextConfig
-{
-  return textConfigFromColor(name, color, TextAlignment::LEFT, margin);
-}
-
 auto generateShipDescription(const bsgo::Ship &ship) -> UiMenuPtr
 {
   const MenuConfig config{.highlightable = false};

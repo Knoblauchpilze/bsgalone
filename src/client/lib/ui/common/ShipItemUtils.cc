@@ -6,7 +6,6 @@
 
 namespace pge {
 
-constexpr auto DEFAULT_MARGIN           = 30;
 constexpr auto MILLISECONDS_IN_A_SECOND = 1000.0f;
 
 auto durationToSeconds(const utils::Duration &duration) -> float
@@ -14,9 +13,7 @@ auto durationToSeconds(const utils::Duration &duration) -> float
   return utils::toMilliseconds(duration) / MILLISECONDS_IN_A_SECOND;
 }
 
-auto generateTextConfig(const std::string &name,
-                        const Color &color = colors::WHITE,
-                        const int margin   = DEFAULT_MARGIN) -> TextConfig
+auto generateTextConfig(const std::string &name, const Color &color, const int margin) -> TextConfig
 {
   return textConfigFromColor(name, color, TextAlignment::LEFT, margin);
 }
