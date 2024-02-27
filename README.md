@@ -540,7 +540,11 @@ https://github.com/silverqx/TinyORM
 
 # Current progress of the game
 
-![state of the game](resources/state_of_the_game.png)
+![state of the game 1](resources/state_of_the_game_1.png)
+
+![state of the game 2](resources/state_of_the_game_2.png)
+
+![state of the game 3](resources/state_of_the_game_3.png)
 
 # DB cheat sheet
 
