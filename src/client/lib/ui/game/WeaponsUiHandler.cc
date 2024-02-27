@@ -1,5 +1,6 @@
 
 #include "WeaponsUiHandler.hh"
+#include "GameColorUtils.hh"
 #include "MessageListenerWrapper.hh"
 #include "MessageUtils.hh"
 #include "ScreenCommon.hh"
@@ -13,6 +14,7 @@ WeaponsUiHandler::WeaponsUiHandler(const bsgo::Views &views)
   , AbstractMessageListener({bsgo::MessageType::ENTITY_REMOVED})
   , m_shipView(views.shipView)
   , m_shipDbView(views.shipDbView)
+  , m_playerView(views.playerView)
 {
   if (nullptr == m_shipView)
   {
@@ -21,6 +23,10 @@ WeaponsUiHandler::WeaponsUiHandler(const bsgo::Views &views)
   if (nullptr == m_shipDbView)
   {
     throw std::invalid_argument("Expected non null ship db view");
+  }
+  if (nullptr == m_playerView)
+  {
+    throw std::invalid_argument("Expected non null player view");
   }
 }
 
@@ -55,7 +61,7 @@ void WeaponsUiHandler::render(Renderer &engine) const
 
 void WeaponsUiHandler::updateUi()
 {
-  if (!m_shipView->isReady())
+  if (!m_shipView->isReady() || !m_playerView->isReady())
   {
     return;
   }
@@ -74,10 +80,6 @@ void WeaponsUiHandler::updateUi()
   }
 }
 
-namespace {
-constexpr auto NUMBER_OF_WEAPONS = 6;
-} // namespace
-
 void WeaponsUiHandler::reset()
 {
   m_ranges.clear();
@@ -87,7 +89,6 @@ void WeaponsUiHandler::reset()
   for (auto &weapon : m_weapons)
   {
     weapon->clearChildren();
-    weapon->updateBgColor(semiOpaque(colors::BLACK));
   }
 
   m_initialized = false;
@@ -110,6 +111,11 @@ void WeaponsUiHandler::onMessageReceived(const bsgo::IMessage &message)
   m_disabled = didPlayerShipDied(message.as<bsgo::EntityRemovedMessage>(), *m_shipDbView);
 }
 
+namespace {
+constexpr auto NUMBER_OF_WEAPONS           = 6;
+constexpr auto ABILITIES_PICTURE_FILE_PATH = "data/assets/slot.png";
+} // namespace
+
 void WeaponsUiHandler::generateWeaponsMenus(int width, int height)
 {
   constexpr auto WEAPON_MENU_PIXEL_DIMS = 50;
@@ -118,11 +124,11 @@ void WeaponsUiHandler::generateWeaponsMenus(int width, int height)
   const Vec2i pos{width - NUMBER_OF_WEAPONS * (weaponMenuDims.x + SPACING_IN_PIXELS), height / 2};
 
   MenuConfig config{.pos = pos, .dims = weaponMenuDims, .propagateEventsToChildren = false};
-  const auto bg = bgConfigFromColor(semiOpaque(colors::BLACK));
+  const PictureConfig bg{.path = ABILITIES_PICTURE_FILE_PATH};
 
   for (auto id = 0u; id < NUMBER_OF_WEAPONS; ++id)
   {
-    auto menu = std::make_unique<UiMenu>(config, bg);
+    auto menu = std::make_unique<UiPictureMenu>(config, bg);
     m_weapons.push_back(std::move(menu));
 
     config.pos.x += (weaponMenuDims.x + SPACING_IN_PIXELS);
@@ -140,9 +146,16 @@ void WeaponsUiHandler::initializeWeapons()
             + std::to_string(ship.weapons.size()));
   }
 
+  const auto palette = generatePaletteForFaction(m_playerView->getPlayerFaction());
+
   const MenuConfig config{};
   const auto bg = bgConfigFromColor(colors::BLANK);
   auto textConf = textConfigFromColor("", colors::WHITE);
+
+  for (const auto &weapon : m_weapons)
+  {
+    weapon->setPictureTint(palette.defaultColor);
+  }
 
   for (auto id = 0u; id < weaponsCount; ++id)
   {
