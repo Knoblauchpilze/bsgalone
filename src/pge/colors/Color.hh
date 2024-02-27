@@ -16,6 +16,7 @@ struct Color
 };
 
 auto toRgb(const Color &color) -> Color;
+auto str(const Color &color) -> std::string;
 
 } // namespace pge
 
