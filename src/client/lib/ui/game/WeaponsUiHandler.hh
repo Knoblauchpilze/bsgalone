@@ -4,6 +4,7 @@
 #include "AbstractMessageListener.hh"
 #include "IUiHandler.hh"
 #include "UiMenu.hh"
+#include "UiPictureMenu.hh"
 #include "UiTextMenu.hh"
 #include "Views.hh"
 #include "WeaponSlotComponent.hh"
@@ -29,10 +30,11 @@ class WeaponsUiHandler : public IUiHandler, public bsgo::AbstractMessageListener
   private:
   bsgo::ShipViewShPtr m_shipView{};
   bsgo::ShipDbViewShPtr m_shipDbView{};
+  bsgo::PlayerViewShPtr m_playerView{};
   bool m_initialized{false};
   bool m_disabled{false};
 
-  std::vector<UiMenuPtr> m_weapons{};
+  std::vector<UiPictureMenuPtr> m_weapons{};
   std::vector<UiTextMenu *> m_ranges{};
   std::vector<UiTextMenu *> m_damages{};
   std::vector<UiTextMenu *> m_statuses{};
