@@ -20,6 +20,17 @@ void DecalResource::DecalDeleter::operator()(olc::Decal *decal) const noexcept
   delete decal;
 }
 
+DecalResource::DecalResource(const std::string &fileName)
+{
+  auto sprite = new olc::Sprite(fileName);
+  if (nullptr == sprite)
+  {
+    throw std::invalid_argument("Failed to create decal from \"" + fileName + "\"");
+  }
+
+  m_decal = std::unique_ptr<olc::Decal, DecalDeleter>(new olc::Decal(sprite));
+}
+
 DecalResource::DecalResource(olc::Decal *decal)
 {
   if (nullptr == decal)
