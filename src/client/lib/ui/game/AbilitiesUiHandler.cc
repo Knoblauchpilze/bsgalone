@@ -80,10 +80,6 @@ void AbilitiesUiHandler::updateUi()
   }
 }
 
-namespace {
-constexpr auto NUMBER_OF_ABILITIES = 4;
-} // namespace
-
 void AbilitiesUiHandler::reset()
 {
   m_ranges.clear();
@@ -93,7 +89,6 @@ void AbilitiesUiHandler::reset()
   for (auto &computer : m_computers)
   {
     computer->clearChildren();
-    computer->updateBgColor(semiOpaque(colors::BLACK));
   }
 
   m_initialized = false;
@@ -117,8 +112,9 @@ void AbilitiesUiHandler::onMessageReceived(const bsgo::IMessage &message)
 }
 
 namespace {
+constexpr auto NUMBER_OF_ABILITIES         = 4;
 constexpr auto ABILITIES_PICTURE_FILE_PATH = "data/assets/slot.png";
-}
+} // namespace
 
 void AbilitiesUiHandler::generateComputersMenus(int width, int height)
 {
@@ -128,13 +124,11 @@ void AbilitiesUiHandler::generateComputersMenus(int width, int height)
                   height - SPACING_IN_PIXELS - abilityMenuDims.y};
 
   MenuConfig config{.pos = pos, .dims = abilityMenuDims, .propagateEventsToChildren = false};
-  // const auto bg = bgConfigFromColor(semiOpaque(colors::BLACK));
   const PictureConfig bg{.path = ABILITIES_PICTURE_FILE_PATH};
 
   for (auto id = 0u; id < NUMBER_OF_ABILITIES; ++id)
   {
     auto menu = std::make_unique<UiPictureMenu>(config, bg);
-    // auto menu = std::make_unique<UiMenu>(config, bg);
     m_computers.push_back(std::move(menu));
 
     config.pos.x += (abilityMenuDims.x + SPACING_IN_PIXELS);
@@ -158,11 +152,15 @@ void AbilitiesUiHandler::initializeAbilities()
   const auto bg = bgConfigFromColor(colors::BLANK);
   auto textConf = textConfigFromColor("", colors::WHITE);
 
+  for (const auto &computer : m_computers)
+  {
+    debug("int: " + str(palette.defaultColor));
+    computer->setPictureTint(palette.defaultColor);
+  }
+
   for (auto id = 0u; id < computersCount; ++id)
   {
     auto &menu = m_computers[id];
-
-    menu->setPictureTint(palette.defaultColor);
 
     menu->setClickCallback([this, id]() {
       if (!m_shipView->isReady())
