@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include <string>
+
 namespace pge::colors {
 
 enum class Name
@@ -65,5 +67,7 @@ enum class Name
   VERY_DARK_RED,
   VERY_DARK_YELLOW
 };
+
+auto str(const Name name) -> std::string;
 
 } // namespace pge::colors
