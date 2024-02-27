@@ -5,6 +5,7 @@
 #include "ComputerSlotComponent.hh"
 #include "IUiHandler.hh"
 #include "UiMenu.hh"
+#include "UiPictureMenu.hh"
 #include "UiTextMenu.hh"
 #include "Views.hh"
 #include <memory>
@@ -29,10 +30,11 @@ class AbilitiesUiHandler : public IUiHandler, public bsgo::AbstractMessageListen
   private:
   bsgo::ShipViewShPtr m_shipView{};
   bsgo::ShipDbViewShPtr m_shipDbView{};
+  bsgo::PlayerViewShPtr m_playerView{};
   bool m_initialized{false};
   bool m_disabled{false};
 
-  std::vector<UiMenuPtr> m_computers{};
+  std::vector<UiPictureMenuPtr> m_computers{};
   std::vector<UiTextMenu *> m_ranges{};
   std::vector<UiTextMenu *> m_damages{};
   std::vector<UiTextMenu *> m_statuses{};

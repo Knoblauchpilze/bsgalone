@@ -1,5 +1,6 @@
 
 #include "AbilitiesUiHandler.hh"
+#include "GameColorUtils.hh"
 #include "MessageListenerWrapper.hh"
 #include "MessageUtils.hh"
 #include "ScreenCommon.hh"
@@ -13,6 +14,7 @@ AbilitiesUiHandler::AbilitiesUiHandler(const bsgo::Views &views)
   , AbstractMessageListener({bsgo::MessageType::ENTITY_REMOVED})
   , m_shipView(views.shipView)
   , m_shipDbView(views.shipDbView)
+  , m_playerView(views.playerView)
 {
   if (nullptr == m_shipView)
   {
@@ -21,6 +23,10 @@ AbilitiesUiHandler::AbilitiesUiHandler(const bsgo::Views &views)
   if (nullptr == m_shipDbView)
   {
     throw std::invalid_argument("Expected non null ship db view");
+  }
+  if (nullptr == m_playerView)
+  {
+    throw std::invalid_argument("Expected non null player view");
   }
 }
 
@@ -55,7 +61,7 @@ void AbilitiesUiHandler::render(Renderer &engine) const
 
 void AbilitiesUiHandler::updateUi()
 {
-  if (!m_shipView->isReady())
+  if (!m_shipView->isReady() || !m_playerView->isReady())
   {
     return;
   }
@@ -110,6 +116,10 @@ void AbilitiesUiHandler::onMessageReceived(const bsgo::IMessage &message)
   m_disabled = didPlayerShipDied(message.as<bsgo::EntityRemovedMessage>(), *m_shipDbView);
 }
 
+namespace {
+constexpr auto ABILITIES_PICTURE_FILE_PATH = "data/assets/slot.png";
+}
+
 void AbilitiesUiHandler::generateComputersMenus(int width, int height)
 {
   const Vec2i abilityMenuDims{70, 50};
@@ -118,11 +128,13 @@ void AbilitiesUiHandler::generateComputersMenus(int width, int height)
                   height - SPACING_IN_PIXELS - abilityMenuDims.y};
 
   MenuConfig config{.pos = pos, .dims = abilityMenuDims, .propagateEventsToChildren = false};
-  const auto bg = bgConfigFromColor(semiOpaque(colors::BLACK));
+  // const auto bg = bgConfigFromColor(semiOpaque(colors::BLACK));
+  const PictureConfig bg{.path = ABILITIES_PICTURE_FILE_PATH};
 
   for (auto id = 0u; id < NUMBER_OF_ABILITIES; ++id)
   {
-    auto menu = std::make_unique<UiMenu>(config, bg);
+    auto menu = std::make_unique<UiPictureMenu>(config, bg);
+    // auto menu = std::make_unique<UiMenu>(config, bg);
     m_computers.push_back(std::move(menu));
 
     config.pos.x += (abilityMenuDims.x + SPACING_IN_PIXELS);
@@ -140,6 +152,8 @@ void AbilitiesUiHandler::initializeAbilities()
             + std::to_string(ship.computers.size()));
   }
 
+  const auto palette = generatePaletteForFaction(m_playerView->getPlayerFaction());
+
   const MenuConfig config{};
   const auto bg = bgConfigFromColor(colors::BLANK);
   auto textConf = textConfigFromColor("", colors::WHITE);
@@ -147,6 +161,8 @@ void AbilitiesUiHandler::initializeAbilities()
   for (auto id = 0u; id < computersCount; ++id)
   {
     auto &menu = m_computers[id];
+
+    menu->setPictureTint(palette.defaultColor);
 
     menu->setClickCallback([this, id]() {
       if (!m_shipView->isReady())
