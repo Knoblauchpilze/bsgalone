@@ -153,7 +153,7 @@ auto toOlcPixel(const Color &color) -> olc::Pixel
 auto toColor(const olc::Pixel &color) -> Color
 {
   const RgbData out{.r = color.r, .g = color.g, .b = color.b};
-  return Color{.rgb = out, .alpha = color.a};
+  return Color{.name = {}, .rgb = out, .alpha = color.a};
 }
 
 } // namespace pge::colors

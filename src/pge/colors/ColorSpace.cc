@@ -16,7 +16,7 @@ auto colorGradient(const Color &low, const Color &high, float ratio, const uint8
               .g = static_cast<uint8_t>((1.0f - ratio) * rgbLow.rgb->g + ratio * rgbHigh.rgb->g),
               .b = static_cast<uint8_t>((1.0f - ratio) * rgbLow.rgb->b + ratio * rgbHigh.rgb->b)};
 
-  return Color{.rgb = out, .alpha = alpha};
+  return Color{.name = {}, .rgb = out, .alpha = alpha};
 }
 
 auto RGBToHSL(const Color &color) noexcept -> Color
@@ -71,7 +71,7 @@ auto RGBToHSL(const Color &color) noexcept -> Color
   const auto l = static_cast<uint8_t>(std::clamp(static_cast<int>(255.0f * L), 0, 255));
 
   RgbData out{.r = h, .g = s, .b = l};
-  return Color{.rgb = out, .alpha = in.alpha};
+  return Color{.name = {}, .rgb = out, .alpha = in.alpha};
 }
 
 auto HSLToRGB(const Color &color) noexcept -> Color
@@ -131,7 +131,7 @@ auto HSLToRGB(const Color &color) noexcept -> Color
   const auto b = static_cast<uint8_t>(std::clamp(static_cast<int>((B + m) * 255.0f), 0, 255));
 
   RgbData out{.r = r, .g = g, .b = b};
-  return Color{.rgb = out, .alpha = in.alpha};
+  return Color{.name = {}, .rgb = out, .alpha = in.alpha};
 }
 
 auto modulate(const Color &in, float factor) noexcept -> Color
