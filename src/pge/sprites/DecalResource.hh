@@ -12,6 +12,7 @@ namespace pge {
 class DecalResource
 {
   public:
+  DecalResource(const std::string &fileName);
   DecalResource(olc::Decal *decal);
 
   auto get() const -> olc::Decal *;
