@@ -40,7 +40,7 @@ class Game : public utils::CoreObject
 
   void generateRenderers(int width, int height, Renderer &engine);
   void generateInputHandlers();
-  void generateUiHandlers(int width, int height);
+  void generateUiHandlers(int width, int height, Renderer &engine);
 
   void processUserInput(const controls::State &controls, CoordinateFrame &frame);
   void render(const RenderState &state, const RenderingPass pass) const;

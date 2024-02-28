@@ -30,7 +30,9 @@ namespace {
 constexpr auto STATUS_MENU_HEIGHT = 20;
 } // namespace
 
-void StatusUiHandler::initializeMenus(const int width, const int height)
+void StatusUiHandler::initializeMenus(const int width,
+                                      const int height,
+                                      sprites::TexturePack & /*texturesLoader*/)
 {
   const Vec2i statusMenuDims{width - 2 * m_offset.x, STATUS_MENU_HEIGHT};
 

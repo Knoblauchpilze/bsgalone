@@ -30,7 +30,9 @@ MapScreenUiHandler::MapScreenUiHandler(const bsgo::Views &views)
   }
 }
 
-void MapScreenUiHandler::initializeMenus(const int width, const int height)
+void MapScreenUiHandler::initializeMenus(const int width,
+                                         const int height,
+                                         sprites::TexturePack & /*texturesLoader*/)
 {
   generateControlButtons(width, height);
   generateMap(width, height);

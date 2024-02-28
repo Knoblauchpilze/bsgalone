@@ -15,7 +15,9 @@ class ShopUiHandler : public IUiHandler
   ShopUiHandler(const bsgo::Views &views);
   ~ShopUiHandler() override = default;
 
-  void initializeMenus(const int width, const int height) override;
+  void initializeMenus(const int width,
+                       const int height,
+                       sprites::TexturePack &texturesLoader) override;
   bool processUserInput(UserInputData &inputData) override;
   void render(Renderer &engine) const override;
   void updateUi() override;

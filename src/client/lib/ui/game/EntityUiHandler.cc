@@ -20,7 +20,9 @@ EntityUiHandler::EntityUiHandler(const EntityUiConfig &config, const bsgo::Views
   }
 }
 
-void EntityUiHandler::initializeMenus(const int /*width*/, const int /*height*/)
+void EntityUiHandler::initializeMenus(const int /*width*/,
+                                      const int /*height*/,
+                                      sprites::TexturePack & /*texturesLoader*/)
 {
   m_menus.resize(MenuItem::COUNT);
 

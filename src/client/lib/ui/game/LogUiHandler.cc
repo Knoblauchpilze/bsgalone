@@ -41,7 +41,9 @@ LogUiHandler::LogUiHandler(const bsgo::Views &views)
   }
 }
 
-void LogUiHandler::initializeMenus(const int width, const int height)
+void LogUiHandler::initializeMenus(const int width,
+                                   const int height,
+                                   sprites::TexturePack & /*texturesLoader*/)
 {
   m_offset = Vec2i{width / 2, height / 4};
 }

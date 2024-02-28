@@ -25,7 +25,9 @@ HangarUiHandler::HangarUiHandler(const bsgo::Views &views)
   }
 }
 
-void HangarUiHandler::initializeMenus(const int width, const int height)
+void HangarUiHandler::initializeMenus(const int width,
+                                      const int height,
+                                      sprites::TexturePack & /*texturesLoader*/)
 {
   const auto viewWidth  = static_cast<int>(MAIN_VIEW_WIDTH_TO_SCREEN_WIDTH_RATIO * width);
   const auto viewHeight = static_cast<int>(MAIN_VIEW_HEIGHT_TO_SCREEN_HEIGHT_RATIO * height);

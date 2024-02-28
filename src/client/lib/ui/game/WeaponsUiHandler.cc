@@ -30,7 +30,9 @@ WeaponsUiHandler::WeaponsUiHandler(const bsgo::Views &views)
   }
 }
 
-void WeaponsUiHandler::initializeMenus(const int width, const int height)
+void WeaponsUiHandler::initializeMenus(const int width,
+                                       const int height,
+                                       sprites::TexturePack & /*texturesLoader*/)
 {
   generateWeaponsMenus(width, height);
 }

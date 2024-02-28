@@ -19,7 +19,9 @@ ShipStatusUiHandler::ShipStatusUiHandler(const bsgo::Views &views)
   }
 }
 
-void ShipStatusUiHandler::initializeMenus(const int width, const int height)
+void ShipStatusUiHandler::initializeMenus(const int width,
+                                          const int height,
+                                          sprites::TexturePack & /*texturesLoader*/)
 {
   initializeThreatPanel(width, height);
   initializeJumpPanel(width, height);

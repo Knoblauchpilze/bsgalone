@@ -29,7 +29,9 @@ OutpostScreenUiHandler::OutpostScreenUiHandler(const bsgo::Views &views)
   }
 }
 
-void OutpostScreenUiHandler::initializeMenus(const int width, const int height)
+void OutpostScreenUiHandler::initializeMenus(const int width,
+                                             const int height,
+                                             sprites::TexturePack &texturesLoader)
 {
   m_menus.resize(MenuItem::COUNT);
 
@@ -66,9 +68,9 @@ void OutpostScreenUiHandler::initializeMenus(const int width, const int height)
 
   generateGeneralMenu(width, height);
 
-  m_lockerUi->initializeMenus(width, height);
-  m_shopUi->initializeMenus(width, height);
-  m_hangarUi->initializeMenus(width, height);
+  m_lockerUi->initializeMenus(width, height, texturesLoader);
+  m_shopUi->initializeMenus(width, height, texturesLoader);
+  m_hangarUi->initializeMenus(width, height, texturesLoader);
 }
 
 bool OutpostScreenUiHandler::processUserInput(UserInputData &inputData)

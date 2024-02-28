@@ -42,7 +42,9 @@ auto addTextFieldSectionToMenu(UiMenu &mainPanel,
 }
 } // namespace
 
-void CredentialsUiHandler::initializeMenus(const int width, const int /*height*/)
+void CredentialsUiHandler::initializeMenus(const int width,
+                                           const int /*height*/,
+                                           sprites::TexturePack & /*texturesLoader*/)
 {
   const Vec2i loginDimsPixels{400, 200};
   constexpr auto LOGIN_PANEL_Y_PIXELS = 200;
