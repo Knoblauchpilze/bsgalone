@@ -16,7 +16,9 @@ class CredentialsUiHandler : public IUiHandler
 
   auto getCredentials() const -> PlayerCredentials;
 
-  void initializeMenus(const int width, const int height) override;
+  void initializeMenus(const int width,
+                       const int height,
+                       sprites::TexturePack &texturesLoader) override;
   bool processUserInput(UserInputData &inputData) override;
   void render(Renderer &engine) const override;
   void updateUi() override;

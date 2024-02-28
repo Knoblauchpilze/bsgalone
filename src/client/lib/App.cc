@@ -43,7 +43,7 @@ void App::loadResources(const Vec2i &screenDims, Renderer &engine)
 
   m_game->generateRenderers(screenDims.x, screenDims.y, engine);
   m_game->generateInputHandlers();
-  m_game->generateUiHandlers(screenDims.x, screenDims.y);
+  m_game->generateUiHandlers(screenDims.x, screenDims.y, engine);
 }
 
 void App::cleanResources()

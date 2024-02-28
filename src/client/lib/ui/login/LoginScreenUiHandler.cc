@@ -18,7 +18,9 @@ LoginScreenUiHandler::LoginScreenUiHandler(const bsgo::Views &views)
   }
 }
 
-void LoginScreenUiHandler::initializeMenus(const int width, const int height)
+void LoginScreenUiHandler::initializeMenus(const int width,
+                                           const int height,
+                                           sprites::TexturePack &texturesLoader)
 {
   generateLoginModePanel(width, height);
   generateFactionPanel(width, height);
@@ -26,7 +28,7 @@ void LoginScreenUiHandler::initializeMenus(const int width, const int height)
   generateQuitButton(width, height);
   generateFailureMenu(width, height);
 
-  m_credentialsUiHandler.initializeMenus(width, height);
+  m_credentialsUiHandler.initializeMenus(width, height, texturesLoader);
 }
 
 bool LoginScreenUiHandler::processUserInput(UserInputData &inputData)

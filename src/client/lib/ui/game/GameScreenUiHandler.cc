@@ -18,11 +18,13 @@ GameScreenUiHandler::GameScreenUiHandler(const bsgo::Views &views)
   initializeUis(views);
 }
 
-void GameScreenUiHandler::initializeMenus(const int width, const int height)
+void GameScreenUiHandler::initializeMenus(const int width,
+                                          const int height,
+                                          sprites::TexturePack &texturesLoader)
 {
   for (const auto &ui : m_uis)
   {
-    ui->initializeMenus(width, height);
+    ui->initializeMenus(width, height, texturesLoader);
   }
 }
 

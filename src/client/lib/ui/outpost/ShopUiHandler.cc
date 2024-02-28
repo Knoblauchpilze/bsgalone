@@ -25,7 +25,9 @@ ShopUiHandler::ShopUiHandler(const bsgo::Views &views)
   }
 }
 
-void ShopUiHandler::initializeMenus(const int width, const int height)
+void ShopUiHandler::initializeMenus(const int width,
+                                    const int height,
+                                    sprites::TexturePack & /*texturesLoader*/)
 {
   const auto viewWidth  = static_cast<int>(MAIN_VIEW_WIDTH_TO_SCREEN_WIDTH_RATIO * width);
   const auto viewHeight = static_cast<int>(MAIN_VIEW_HEIGHT_TO_SCREEN_HEIGHT_RATIO * height);

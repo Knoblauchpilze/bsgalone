@@ -30,7 +30,9 @@ AbilitiesUiHandler::AbilitiesUiHandler(const bsgo::Views &views)
   }
 }
 
-void AbilitiesUiHandler::initializeMenus(const int width, const int height)
+void AbilitiesUiHandler::initializeMenus(const int width,
+                                         const int height,
+                                         sprites::TexturePack & /*texturesLoader*/)
 {
   generateComputersMenus(width, height);
 }
@@ -154,7 +156,6 @@ void AbilitiesUiHandler::initializeAbilities()
 
   for (const auto &computer : m_computers)
   {
-    debug("int: " + str(palette.defaultColor));
     computer->setPictureTint(palette.defaultColor);
   }
 

@@ -20,7 +20,9 @@ GameOverUiHandler::GameOverUiHandler(const bsgo::Views &views)
   }
 }
 
-void GameOverUiHandler::initializeMenus(const int width, const int height)
+void GameOverUiHandler::initializeMenus(const int width,
+                                        const int height,
+                                        sprites::TexturePack & /*texturesLoader*/)
 {
   Vec2i dims{200, 70};
   Vec2i pos;

@@ -95,26 +95,16 @@ void Game::generateInputHandlers()
   m_inputHandlers[Screen::GAME] = std::make_unique<GameScreenInputHandler>(m_views);
 }
 
-void Game::generateUiHandlers(int width, int height)
+void Game::generateUiHandlers(int width, int height, Renderer &engine)
 {
-  auto login = std::make_unique<LoginScreenUiHandler>(m_views);
-  login->initializeMenus(width, height);
-  m_uiHandlers[Screen::LOGIN] = std::move(login);
-
-  auto outpost = std::make_unique<OutpostScreenUiHandler>(m_views);
-  outpost->initializeMenus(width, height);
-  m_uiHandlers[Screen::OUTPOST] = std::move(outpost);
-
-  auto game = std::make_unique<GameScreenUiHandler>(m_views);
-  game->initializeMenus(width, height);
-  m_uiHandlers[Screen::GAME] = std::move(game);
-
-  auto map = std::make_unique<MapScreenUiHandler>(m_views);
-  map->initializeMenus(width, height);
-  m_uiHandlers[Screen::MAP] = std::move(map);
+  m_uiHandlers[Screen::LOGIN]   = std::make_unique<LoginScreenUiHandler>(m_views);
+  m_uiHandlers[Screen::OUTPOST] = std::make_unique<OutpostScreenUiHandler>(m_views);
+  m_uiHandlers[Screen::GAME]    = std::make_unique<GameScreenUiHandler>(m_views);
+  m_uiHandlers[Screen::MAP]     = std::make_unique<MapScreenUiHandler>(m_views);
 
   for (const auto &[_, handler] : m_uiHandlers)
   {
+    handler->initializeMenus(width, height, engine.getTextureHandler());
     handler->connectToMessageQueue(*m_inputMessageQueue);
   }
 }
@@ -284,6 +274,7 @@ void Game::onConnectedToServer(const bsgo::Uuid clientId)
 
 // #define START_AT_LOGIN
 #ifndef START_AT_LOGIN
+  // auto login = std::make_unique<bsgo::LoginMessage>("toast", "aze");
   auto login = std::make_unique<bsgo::LoginMessage>("colo", "aze");
   login->setClientId(clientId);
   m_outputMessageQueue->pushMessage(std::move(login));
