@@ -130,7 +130,10 @@ void WeaponsUiHandler::generateWeaponsMenus(int width, int height)
   constexpr auto SPACING_IN_PIXELS = 5;
   const Vec2i pos{width - NUMBER_OF_WEAPONS * (weaponMenuDims.x + SPACING_IN_PIXELS), height / 2};
 
-  MenuConfig config{.pos = pos, .dims = weaponMenuDims, .propagateEventsToChildren = false};
+  MenuConfig config{.pos                       = pos,
+                    .dims                      = weaponMenuDims,
+                    .propagateEventsToChildren = false,
+                    .customRenderMode          = CustomRenderMode::PRE_RENDER};
   const PictureConfig bg{.path = ABILITIES_PICTURE_FILE_PATH};
 
   for (auto id = 0u; id < NUMBER_OF_WEAPONS; ++id)
@@ -198,11 +201,7 @@ void WeaponsUiHandler::initializeWeapons()
 
   for (const auto &menu : m_weapons)
   {
-    menu->setPictureTint(palette.defaultColor);
-    menu->updateBgColor(semiOpaque(bgForMissingComponent()));
-    menu->setClickCallback({});
-    menu->clearSprite();
-    menu->setEnabled(false);
+    resetPictureMenuToDefault(*menu, palette.defaultColor);
   }
 
   auto id = 0;
