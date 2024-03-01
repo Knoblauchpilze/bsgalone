@@ -6,6 +6,7 @@
 #include "ScreenCommon.hh"
 #include "SlotComponentUtils.hh"
 #include "StringUtils.hh"
+#include "UiPictureMenu.hh"
 
 namespace pge {
 
@@ -32,8 +33,14 @@ WeaponsUiHandler::WeaponsUiHandler(const bsgo::Views &views)
 
 void WeaponsUiHandler::initializeMenus(const int width,
                                        const int height,
-                                       sprites::TexturePack & /*texturesLoader*/)
+                                       sprites::TexturePack &texturesLoader)
 {
+  constexpr auto WEAPONS_TEXTURE_PACK_FILE_PATH = "data/assets/weapons.png";
+  const sprites::PackDesc pack{.file   = WEAPONS_TEXTURE_PACK_FILE_PATH,
+                               .sSize  = Vec2i{44, 92},
+                               .layout = Vec2i{3, 1}};
+  m_weaponTexturesPackId = texturesLoader.registerPack(pack);
+
   generateWeaponsMenus(width, height);
 }
 
@@ -84,8 +91,6 @@ void WeaponsUiHandler::updateUi()
 
 void WeaponsUiHandler::reset()
 {
-  m_ranges.clear();
-  m_damages.clear();
   m_statuses.clear();
 
   for (auto &weapon : m_weapons)
@@ -137,9 +142,46 @@ void WeaponsUiHandler::generateWeaponsMenus(int width, int height)
   }
 }
 
+namespace {
+auto tryGetDbWeapon(const bsgo::Uuid weaponDbId, const std::vector<bsgo::PlayerWeapon> &weapons)
+  -> std::optional<bsgo::PlayerWeapon>
+{
+  for (const auto &weapon : weapons)
+  {
+    if (weapon.id == weaponDbId)
+    {
+      return weapon;
+    }
+  }
+
+  return {};
+}
+
+auto spriteIdFromWeapon(const bsgo::PlayerWeapon &weapon) -> Vec2i
+{
+  if (weapon.name == "Short range cannon")
+  {
+    return {0, 0};
+  }
+
+  if (weapon.name == "Medium range cannon")
+  {
+    return {1, 0};
+  }
+
+  if (weapon.name == "Long range cannon")
+  {
+    return {2, 0};
+  }
+
+  throw std::invalid_argument("Unsupported weapon " + weapon.name);
+}
+} // namespace
+
 void WeaponsUiHandler::initializeWeapons()
 {
   const auto ship         = m_shipView->getPlayerShip();
+  const auto dbWeapons    = m_shipDbView->getPlayerShipWeapons();
   const auto weaponsCount = ship.weapons.size();
   if (weaponsCount > NUMBER_OF_WEAPONS)
   {
@@ -159,9 +201,17 @@ void WeaponsUiHandler::initializeWeapons()
     weapon->setPictureTint(palette.defaultColor);
   }
 
-  for (auto id = 0u; id < weaponsCount; ++id)
+  auto id = 0;
+  for (const auto &weapon : ship.weapons)
   {
-    auto &menu = m_weapons[id];
+    auto &menu            = m_weapons[id];
+    const auto weaponDbId = weapon->dbId();
+    const auto dbWeapon   = tryGetDbWeapon(weaponDbId, dbWeapons);
+    if (!dbWeapon)
+    {
+      error("Failed to initialize weapons for ship " + bsgo::str(ship.dbComp().dbId()),
+            "Failed to find component for weapon " + bsgo::str(weaponDbId));
+    }
 
     menu->setClickCallback([this, id]() {
       if (!m_shipView->isReady())
@@ -172,21 +222,13 @@ void WeaponsUiHandler::initializeWeapons()
     });
     menu->setEnabled(true);
 
+    menu->setSprite(m_weaponTexturesPackId, spriteIdFromWeapon(*dbWeapon));
+
     auto prop = std::make_unique<UiTextMenu>(config, bg, textConf);
-    m_ranges.push_back(prop.get());
-    menu->addMenu(std::move(prop));
-
-    prop = std::make_unique<UiTextMenu>(config, bg, textConf);
-    m_damages.push_back(prop.get());
-    menu->addMenu(std::move(prop));
-
-    prop = std::make_unique<UiTextMenu>(config, bg, textConf);
-    m_damages.push_back(prop.get());
-    menu->addMenu(std::move(prop));
-
-    prop = std::make_unique<UiTextMenu>(config, bg, textConf);
     m_statuses.push_back(prop.get());
     menu->addMenu(std::move(prop));
+
+    ++id;
   }
 
   m_initialized = true;
@@ -199,20 +241,14 @@ void WeaponsUiHandler::updateWeaponMenu(const bsgo::WeaponSlotComponent &weapon,
   auto bgColor = semiOpaque(bgColorFromFiringState(weapon));
   menu.updateBgColor(bgColor);
 
-  auto &range = *m_ranges[id];
-  range.setText(bsgo::floatToStr(weapon.range(), 0) + "m");
-
-  auto &minDamage = *m_damages[2 * id];
-  minDamage.setText(bsgo::floatToStr(weapon.minDamage()));
-  auto &maxDamage = *m_damages[2 * id + 1];
-  maxDamage.setText(bsgo::floatToStr(weapon.maxDamage()));
-
   std::string statusText("ready");
+  const auto percentage = weapon.reloadPercentage();
+
   if (!weapon.active())
   {
     statusText = "off";
   }
-  if (!weapon.canFire())
+  else if (percentage < 1.0f)
   {
     constexpr auto PERCENTAGE_MULTIPLIER = 100.0f;
     statusText = bsgo::floatToStr(PERCENTAGE_MULTIPLIER * weapon.reloadPercentage()) + "%";
