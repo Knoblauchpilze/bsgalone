@@ -32,8 +32,14 @@ AbilitiesUiHandler::AbilitiesUiHandler(const bsgo::Views &views)
 
 void AbilitiesUiHandler::initializeMenus(const int width,
                                          const int height,
-                                         sprites::TexturePack & /*texturesLoader*/)
+                                         sprites::TexturePack &texturesLoader)
 {
+  constexpr auto SLOTS_TEXTURE_PACK_FILE_PATH = "data/assets/slots.png";
+  const sprites::PackDesc pack{.file   = SLOTS_TEXTURE_PACK_FILE_PATH,
+                               .sSize  = Vec2i{600, 600},
+                               .layout = Vec2i{2, 1}};
+  m_computerTexturesPackId = texturesLoader.registerPack(pack);
+
   generateComputersMenus(width, height);
 }
 
@@ -84,8 +90,6 @@ void AbilitiesUiHandler::updateUi()
 
 void AbilitiesUiHandler::reset()
 {
-  m_ranges.clear();
-  m_damages.clear();
   m_statuses.clear();
 
   for (auto &computer : m_computers)
@@ -125,7 +129,10 @@ void AbilitiesUiHandler::generateComputersMenus(int width, int height)
   const Vec2i pos{width - NUMBER_OF_ABILITIES * (abilityMenuDims.x + SPACING_IN_PIXELS),
                   height - SPACING_IN_PIXELS - abilityMenuDims.y};
 
-  MenuConfig config{.pos = pos, .dims = abilityMenuDims, .propagateEventsToChildren = false};
+  MenuConfig config{.pos                       = pos,
+                    .dims                      = abilityMenuDims,
+                    .propagateEventsToChildren = false,
+                    .customRenderMode          = CustomRenderMode::PRE_RENDER};
   const PictureConfig bg{.path = ABILITIES_PICTURE_FILE_PATH};
 
   for (auto id = 0u; id < NUMBER_OF_ABILITIES; ++id)
@@ -137,9 +144,43 @@ void AbilitiesUiHandler::generateComputersMenus(int width, int height)
   }
 }
 
+namespace {
+auto tryGetDbComputer(const bsgo::Uuid computerDbId,
+                      const std::vector<bsgo::PlayerComputer> &computers)
+  -> std::optional<bsgo::PlayerComputer>
+{
+  for (const auto &computer : computers)
+  {
+    if (computer.id == computerDbId)
+    {
+      return computer;
+    }
+  }
+
+  return {};
+}
+
+auto spriteIdFromComputer(const bsgo::PlayerComputer &computer) -> Vec2i
+{
+  if (computer.name == "Scan")
+  {
+    return {0, 0};
+  }
+
+  if (computer.name == "Weapon buff")
+  {
+    return {1, 0};
+  }
+
+  throw std::invalid_argument("Unsupported computer " + computer.name);
+}
+
+} // namespace
+
 void AbilitiesUiHandler::initializeAbilities()
 {
   const auto ship           = m_shipView->getPlayerShip();
+  const auto dbComputers    = m_shipDbView->getPlayerShipComputers();
   const auto computersCount = ship.computers.size();
   if (computersCount > NUMBER_OF_ABILITIES)
   {
@@ -152,16 +193,24 @@ void AbilitiesUiHandler::initializeAbilities()
 
   const MenuConfig config{};
   const auto bg = bgConfigFromColor(colors::BLANK);
-  auto textConf = textConfigFromColor("", colors::WHITE);
+  auto textConf = textConfigFromColor("", palette.defaultColor);
 
-  for (const auto &computer : m_computers)
+  for (const auto &menu : m_computers)
   {
-    computer->setPictureTint(palette.defaultColor);
+    resetPictureMenuToDefault(*menu, palette.defaultColor);
   }
 
-  for (auto id = 0u; id < computersCount; ++id)
+  auto id = 0;
+  for (const auto &computer : ship.computers)
   {
-    auto &menu = m_computers[id];
+    auto &menu              = m_computers[id];
+    const auto computerDbId = computer->dbId();
+    const auto dbComputer   = tryGetDbComputer(computerDbId, dbComputers);
+    if (!dbComputer)
+    {
+      error("Failed to initialize computers for ship " + bsgo::str(ship.dbComp().dbId()),
+            "Failed to find component for computer " + bsgo::str(computerDbId));
+    }
 
     menu->setClickCallback([this, id]() {
       if (!m_shipView->isReady())
@@ -172,31 +221,15 @@ void AbilitiesUiHandler::initializeAbilities()
     });
     menu->setEnabled(true);
 
-    if (!ship.computers[id]->maybeRange())
-    {
-      m_ranges.push_back(nullptr);
-    }
-    else
-    {
-      auto prop = std::make_unique<UiTextMenu>(config, bg, textConf);
-      m_ranges.push_back(prop.get());
-      menu->addMenu(std::move(prop));
-    }
+    debug("sprite for " + dbComputer->name + " is " + spriteIdFromComputer(*dbComputer).str());
 
-    if (!ship.computers[id]->damageModifier())
-    {
-      m_damages.push_back(nullptr);
-    }
-    else
-    {
-      auto prop = std::make_unique<UiTextMenu>(config, bg, textConf);
-      m_damages.push_back(prop.get());
-      menu->addMenu(std::move(prop));
-    }
+    menu->setSprite(m_computerTexturesPackId, spriteIdFromComputer(*dbComputer));
 
     auto prop = std::make_unique<UiTextMenu>(config, bg, textConf);
     m_statuses.push_back(prop.get());
     menu->addMenu(std::move(prop));
+
+    ++id;
   }
 
   m_initialized = true;
@@ -209,20 +242,6 @@ void AbilitiesUiHandler::updateComputerMenu(const bsgo::ComputerSlotComponent &c
 
   auto bgColor = semiOpaque(bgColorFromFiringState(computer));
   menu.updateBgColor(bgColor);
-
-  const auto range = computer.maybeRange();
-  if (range)
-  {
-    m_ranges[id]->setText(bsgo::floatToStr(*range, 0) + "m");
-  }
-
-  const auto damage = computer.damageModifier();
-  if (damage)
-  {
-    constexpr auto PERCENTAGE_MULTIPLIER = 100.0f;
-    const auto multiplier                = PERCENTAGE_MULTIPLIER * (*damage - 1.0f);
-    m_damages[id]->setText("Dmg:" + bsgo::floatToSignedStr(multiplier, 0) + "%");
-  }
 
   std::string statusText("ready");
   if (!computer.canFire())
