@@ -36,9 +36,8 @@ class AbilitiesUiHandler : public IUiHandler, public bsgo::AbstractMessageListen
   bool m_initialized{false};
   bool m_disabled{false};
 
+  sprites::PackId m_computerTexturesPackId{};
   std::vector<UiPictureMenuPtr> m_computers{};
-  std::vector<UiTextMenu *> m_ranges{};
-  std::vector<UiTextMenu *> m_damages{};
   std::vector<UiTextMenu *> m_statuses{};
 
   void generateComputersMenus(int width, int height);
