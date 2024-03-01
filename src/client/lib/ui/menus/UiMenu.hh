@@ -50,6 +50,8 @@ class UiMenu : public utils::CoreObject
     bool highlighted{false};
 
     bool propagateEventsToChildren{true};
+
+    CustomRenderMode customRenderMode{CustomRenderMode::POST_RENDER};
   };
 
   auto state() const noexcept -> const State &;

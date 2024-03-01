@@ -175,6 +175,8 @@ void UiMenu::initializeFromConfig(const MenuConfig &config)
   m_state.highlightable             = config.highlightable;
   m_state.propagateEventsToChildren = config.propagateEventsToChildren;
 
+  m_state.customRenderMode = config.customRenderMode;
+
   m_highlightCallback = config.highlightCallback;
   m_clickCallback     = config.clickCallback;
   m_gameClickCallback = config.gameClickCallback;
@@ -183,10 +185,18 @@ void UiMenu::initializeFromConfig(const MenuConfig &config)
 
 void UiMenu::renderSelf(Renderer &engine) const
 {
+  if (CustomRenderMode::PRE_RENDER == m_state.customRenderMode)
+  {
+    renderCustom(engine);
+  }
   const auto absPos = absolutePosition();
   const auto color  = getColorFromState();
   engine.fillRect(absPos, m_dims, color);
-  renderCustom(engine);
+
+  if (CustomRenderMode::POST_RENDER == m_state.customRenderMode)
+  {
+    renderCustom(engine);
+  }
 }
 
 auto UiMenu::getColorFromState() const -> Color
