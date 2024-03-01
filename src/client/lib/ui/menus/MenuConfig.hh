@@ -14,6 +14,12 @@ enum class MenuLayout
   VERTICAL
 };
 
+enum class CustomRenderMode
+{
+  PRE_RENDER,
+  POST_RENDER
+};
+
 using ClickCallback     = std::function<void()>;
 using HighlightCallback = std::function<void()>;
 using LostFocusCallback = std::function<void()>;
@@ -34,6 +40,12 @@ struct MenuConfig
   std::optional<ClickCallback> clickCallback{};
   std::optional<LostFocusCallback> lostFocusCallback{};
   std::optional<GameCallback> gameClickCallback{};
+
+  /// @brief - Define when the custom rendering method is called. The two values
+  /// correspond to either before or after the main menu rendering method. This
+  /// allows inheriting classes to configure how their own rendering logic is
+  /// interacting with the base rendering logic.
+  CustomRenderMode customRenderMode{CustomRenderMode::POST_RENDER};
 };
 
 } // namespace pge
