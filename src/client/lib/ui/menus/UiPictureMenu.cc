@@ -21,6 +21,11 @@ void UiPictureMenu::setSprite(const sprites::PackId texturePack, const Vec2i &sp
   m_sprite = SpriteData{.texturePack = texturePack, .texturePos = spritePos};
 }
 
+void UiPictureMenu::clearSprite()
+{
+  m_sprite.reset();
+}
+
 void UiPictureMenu::renderCustom(Renderer &engine) const
 {
   const auto iPos = absolutePosition();

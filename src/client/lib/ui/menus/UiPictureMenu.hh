@@ -25,6 +25,8 @@ class UiPictureMenu : public UiMenu
   void setPictureTint(Color tint);
   void setSprite(const sprites::PackId texturePack, const Vec2i &spritePos);
 
+  void clearSprite();
+
   protected:
   void renderCustom(Renderer &engine) const override;
 
