@@ -26,8 +26,8 @@ class UiMenu : public utils::CoreObject
   void setHighlightable(const bool highlightable) noexcept;
   void setPosition(const Vec2i &position);
 
-  void setClickCallback(const ClickCallback &callback);
-  void setGameClickCallback(const GameCallback &callback);
+  void setClickCallback(const std::optional<ClickCallback> &callback);
+  void setGameClickCallback(const std::optional<GameCallback> &callback);
 
   void addMenu(UiMenuPtr child);
   void clearChildren();

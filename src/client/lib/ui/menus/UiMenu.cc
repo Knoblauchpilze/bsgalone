@@ -41,12 +41,12 @@ void UiMenu::setPosition(const Vec2i &position)
   updateLayoutAfterChildChange();
 }
 
-void UiMenu::setClickCallback(const ClickCallback &callback)
+void UiMenu::setClickCallback(const std::optional<ClickCallback> &callback)
 {
   m_clickCallback = callback;
 }
 
-void UiMenu::setGameClickCallback(const GameCallback &callback)
+void UiMenu::setGameClickCallback(const std::optional<GameCallback> &callback)
 {
   m_gameClickCallback = callback;
 }
