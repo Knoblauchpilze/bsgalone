@@ -10,7 +10,7 @@ auto bgColorFromFiringState(const bsgo::SlotComponent &component) -> Color
     case bsgo::FiringState::READY:
       return colors::DARK_GREEN;
     case bsgo::FiringState::DISABLED:
-      return colors::DARK_GREY;
+      return bgForMissingComponent();
     case bsgo::FiringState::INVALID_TARGET:
     case bsgo::FiringState::OUT_OF_RANGE:
       return colors::DARK_RED;
