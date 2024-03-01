@@ -36,9 +36,8 @@ class WeaponsUiHandler : public IUiHandler, public bsgo::AbstractMessageListener
   bool m_initialized{false};
   bool m_disabled{false};
 
+  sprites::PackId m_weaponTexturesPackId{};
   std::vector<UiPictureMenuPtr> m_weapons{};
-  std::vector<UiTextMenu *> m_ranges{};
-  std::vector<UiTextMenu *> m_damages{};
   std::vector<UiTextMenu *> m_statuses{};
 
   void generateWeaponsMenus(int width, int height);
