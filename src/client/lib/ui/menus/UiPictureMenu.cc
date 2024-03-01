@@ -16,6 +16,11 @@ void UiPictureMenu::setPictureTint(Color tint)
   m_tint = tint;
 }
 
+void UiPictureMenu::setSprite(const sprites::PackId texturePack, const Vec2i &spritePos)
+{
+  m_sprite = SpriteData{.texturePack = texturePack, .texturePos = spritePos};
+}
+
 void UiPictureMenu::renderCustom(Renderer &engine) const
 {
   const auto iPos = absolutePosition();

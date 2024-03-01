@@ -23,6 +23,7 @@ class UiPictureMenu : public UiMenu
   ~UiPictureMenu() override = default;
 
   void setPictureTint(Color tint);
+  void setSprite(const sprites::PackId texturePack, const Vec2i &spritePos);
 
   protected:
   void renderCustom(Renderer &engine) const override;
