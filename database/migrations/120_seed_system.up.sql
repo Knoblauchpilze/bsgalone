@@ -127,6 +127,13 @@ INSERT INTO public.asteroid ("system", "health", "radius", "x_pos", "y_pos", "z_
     2.0,
     3.0, 5.0, 0.0
   );
+INSERT INTO public.asteroid ("system", "health", "radius", "x_pos", "y_pos", "z_pos")
+  VALUES (
+    (SELECT id FROM system WHERE name = '169 aretis'),
+    6001.0,
+    1.5,
+    4.0, -0.8, 0.0
+  );
 
 INSERT INTO public.asteroid_loot ("asteroid", "resource", "amount")
   VALUES (
