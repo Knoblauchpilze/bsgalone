@@ -137,7 +137,14 @@ void ShipView::tryActivateWeapon(const int weaponId) const
 {
   const auto playerShip = getPlayerShip();
   const auto shipDbId   = playerShip.dbComp().dbId();
-  const auto slotDbId   = playerShip.weapons[weaponId]->dbId();
+
+  if (weaponId >= static_cast<int>(playerShip.weapons.size()))
+  {
+    error("Failed to activate weapon " + std::to_string(weaponId),
+          "Ship only has " + std::to_string(playerShip.weapons.size()) + " weapon(s)");
+  }
+
+  const auto slotDbId = playerShip.weapons[weaponId]->dbId();
 
   auto message = std::make_unique<SlotMessage>(shipDbId, slotDbId, Slot::WEAPON);
   m_outputMessageQueue->pushMessage(std::move(message));
@@ -147,7 +154,14 @@ void ShipView::tryActivateSlot(const int slotId) const
 {
   const auto playerShip = getPlayerShip();
   const auto shipDbId   = playerShip.dbComp().dbId();
-  const auto slotDbId   = playerShip.computers[slotId]->dbId();
+
+  if (slotId >= static_cast<int>(playerShip.computers.size()))
+  {
+    error("Failed to activate slot " + std::to_string(slotId),
+          "Ship only has " + std::to_string(playerShip.computers.size()) + " slotweapon(s)");
+  }
+
+  const auto slotDbId = playerShip.computers[slotId]->dbId();
 
   auto message = std::make_unique<SlotMessage>(shipDbId, slotDbId, Slot::COMPUTER);
   m_outputMessageQueue->pushMessage(std::move(message));

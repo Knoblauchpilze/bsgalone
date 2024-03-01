@@ -196,9 +196,13 @@ void WeaponsUiHandler::initializeWeapons()
   const auto bg = bgConfigFromColor(colors::BLANK);
   auto textConf = textConfigFromColor("", colors::WHITE);
 
-  for (const auto &weapon : m_weapons)
+  for (const auto &menu : m_weapons)
   {
-    weapon->setPictureTint(palette.defaultColor);
+    menu->setPictureTint(palette.defaultColor);
+    menu->updateBgColor(semiOpaque(bgForMissingComponent()));
+    menu->setClickCallback({});
+    menu->clearSprite();
+    menu->setEnabled(false);
   }
 
   auto id = 0;
