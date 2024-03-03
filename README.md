@@ -400,8 +400,6 @@ We also allow system processors to send internal messages which need to be proce
 
 Finally the [BroadcastMessageQueue](src/server/lib/queues/BroadcastMessageQueue.hh) is responsible to route the messages produced by the server to the right clients: this can be done by directly checking the client id if available or by checking in which system the messages belong to and broadcasting them to all connected clients.
 
-## SYstemMessages
-
 # Entity Component System
 
 ## Generalities
