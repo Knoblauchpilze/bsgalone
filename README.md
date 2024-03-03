@@ -392,6 +392,111 @@ After several iterations we came up with the following design:
 
 TODO diagram.
 
+# Entity Component System
+
+## Generalities
+
+In order to represent the various elements of the game and their properties, we decided to implement an [entity component system](https://en.wikipedia.org/wiki/Entity_component_system).
+
+The goal of this mechanism is to avoid the deeply nested class hierarchy common when developing a game. We already tried this approach when dealing with the agents (see the [agents](https://github.com/KnoblauchPilze/agents) repository).
+
+While researching how to implement it we found this blog [codingwiththomas](https://www.codingwiththomas.com/blog/an-entity-component-system-from-scratch) which presents the implementation of such a system from scratch. It is well documented and explains the concept in quite some details.
+
+In comparison with the `agents` project we decide to follow the paradigm a bit better and actually created some systems and a way to iterate through the entities.
+
+### Entity
+
+The [Entity](src/bsgo/entities/Entity.hh) is the base class and is basically just an identifier with a list of components. We added some convenience methods to assess the existence of some component and access them in a secure way.
+
+### Component
+
+A [Component](src/bsgo/components/IComponent.hh) is the base class for all components. It just defines one basic method to update the component with some elapsed time. This might or might not be useful to the inheriting components but allows to have some quantity varying over time.
+
+The goal of the implementation is to keep away the processing from the components in favour of putting all of them in the systems.
+
+### System
+
+A [System](src/bsgo/systems/ISystem.hh) is iterating over the entities and only processing the ones that are interesting. Our implementation defines an `AbstractSystem` which aims at iterating over the entities.
+
+The constructor expects the inheriting classes to pass a callback which will be used to filter the entities and keep only the ones that are interesting for the system. This typically involves checking if an entity has some components which are handled by the system.
+
+Typically if an entity defines a [HealthComponent](src/bsgo/components/HealthComponent.hh) we expect it to be processed by the [HealthSystem](src/bsgo/systems/HealthSystem.hh).
+
+### Coordination
+
+In order to keep together all properties of the ECS, we created (as advised in the initial link we got inspired from) a [Coordinator](src/bsgo/controller/Coordinator.hh) class which is responsible to keep all the entities and their components along with systems.
+
+This class has a convenient `update` method which can be called to process all the systems in a consistent order and make the simulation advance one 'step' ahead in time.
+
+## How to interact with the ECS?
+
+### Why is it difficult?
+
+In its simplest form, an ECS is initialized when creating it and then updated regularly to make changes to the entities within it. This is done through the `Coordinator` and works pretty well.
+
+However, when the user is playing, there are some interactions which will influence how the entities evolve: for example if the user tries to move its ship, or attacks another one, we need to make some modifications to some components of some entities.
+
+Similarly, there are cases where the ECS, through its processing, will change the state of one of the component. For example when the countdown to jump to another reaches 0, the [StatusComponent](src/bsgo/components/StatusComponent.hh) will need to notify the outside worl that there's some action required to move the entity it belongs to to another system.
+
+### Research
+
+A straightforward solution is to make the UI aware of the ECS and just let them update whatever data they assume is meaningful to it. This has the benefit that it is simple to implement. This however does not work at all for a distributed system. We could find a bunch of relevant links on how to deal with this.
+
+In [How to sync entities in an ecs game](https://gamedev.stackexchange.com/questions/178469/how-to-sync-entities-in-an-ecs-game) and [Networking with entity component system](https://www.reddit.com/r/gamedev/comments/5oib5v/networking_with_entity_component_system/) the recommendation is to use a `NetworkComponent` or something similar. The idea in each case is to have some dedicated `NetworkSystem` which takes care of receiving data and updated the entities which have a network component. The network component can presumably be either very stupid (just flagging the entity as having some form of networking aspect) or a bit smarter and define for example the properties of other components needing to be synced.
+
+The topic in [How to network this entity system](https://gamedev.stackexchange.com/questions/21032/how-to-network-this-entity-system) does not recommend to go for a 'smart' network component as this is essentially mirroring what already exists in other components. Instead it seems like the approach would then be to have the `NetworkSystem` be able to deal with each component in a way similar to:
+* check if the entity has a network aspect
+* if yes iterates over all registered component
+* for each component call an internal method that indicates which properties need to be updated and how
+
+One drawback of this is that the `NetworkSystem` will grow quite a bit due to handling all the components we have in the game. The plus is that there's a single place which should deal with network communication. We could possibly also include the various reconciliation mechanisms here.
+
+Finally the [Documentation of Space Station 14](https://docs.spacestation14.com/en/robust-toolbox/ecs.html) indicates some sort of `dirty` property to attach to component which would make the job of the `NetworkSystem` easier: by checking this we know if it should send data to the network or not. This is quite interesting as it allows to not keep track internally in the system of the previous states of all components to detect modifications.
+
+In the end we dediced to go with a mixture of both suggestions: we have a `NetworkComponent` but it ultimately sends messages representing the changes to an entity's components.
+
+## Bring information into the ECS
+
+The processing to bring information into the ECS is similar whether we're in the client or server application: the idea is that some external process needs to update the components of an entity.
+
+This is done by using the [IService](src/bsgo/services/IService.hh) mechanism: we consider this layer as the business logic of our project and its goal is to get the entity from the `Coordinator` and then update manually its component to their desired value.
+
+A limitation of this is that as we don't have concurrency protection mechanism the processing has to be synchronous with the processing of entities: this is ensured by the `SystemProcessor` which processes first the messages (which in turn calls the consumers and then the services) and after this the `Coordinator::update` method.
+
+## Notify information outside of the ECS
+
+In the case of the jump example we have to somehow bring the information that the jump should happen outside of the ECS.
+
+At first glance it seems like the best place to try to act on this would be to have a hook in the `System`s: we know that they are responsible to make the components of each entity evolve and so any change that should trigger a notification will be detected at this point.
+
+To solve this problem we made the `System`s aware of a message queue: they can push messages to the queue if needed indicating what happened. These messages can't really have a client id or anything that attaches them to a client because they are generated internally by the ECS: we don't even know if there's any player attached to an entity.
+
+It seems then clear that these messages will need some additional processing before being sent to client applications. This is the purpose of the internal message queue with its consumers so we need to make the `System`s aware of the internal message queue.
+
+A final note is that this system is quite flexible: as the `System`s are called regularly for an update, it is quite easy to also have periodic updates sent to the queue so that client applications get a continuous stream of updates from the server and can be reasonably confident that they're in sync with the server. See the following [section](#a-note-on-networkcomponent) for more details.
+
+## A note on NetworkComponent
+
+Some changes in the ECS are one-off (e.g. a jump, an entity dying) and others which we want to trigger on a more regular schedule.
+
+One general principle is that as the client applications are running essentially the same simulation as the server, we want to keep them in sync as much as possible. This usually means publishing regular updates of some aspects of the ECS to the clients.
+
+Going a step further, we even have systems that are not present on the client applications such as the health system of the removal system: this is because such processes need to be validated by the server before any action is taken on the client's side.
+
+In order to solve this problem we created a [NetworkComponent](src/bsgo/components/NetworkComponent.hh): it defines a list of properties that need to be 'synced' and acts in the following way (with its companion [NetworkSystem](src/bsgo/systems/NetworkSystem.hh)):
+* each component defines an update interval
+* the network system detects when a component has not been synced since long enough
+* in this case it sends an update message with all the properties needing to be synced
+
+We rely on the rest of the server to route these update messages to the clients that are interested in them (so the clients which are in the same system as the entity).
+
+## How does it work with the database?
+
+An important thing to note is that the ECS never interacts directly with the database: it's only way to communicate with the outside world is either through direct synchronous modification of its internal state (which is not under its control) or by pushing some messages to a queue to notify of a change.
+
+# Client design
+
+TODO: Fill this section
 
 # Implementation details
 
@@ -581,77 +686,11 @@ The [nlohmann json](https://github.com/nlohmann/json) is a quite famous library 
 
 In Java there's a quite extensive framework to perform [ORM](https://en.wikipedia.org/wiki/Object%E2%80%93relational_mapping): [Hibernate](https://hibernate.org/). This allows to manipulate objects (entities) in an idiomatic way and have built-in persistence to a data source (for example a database). A similar library for cpp would be [TinyORM](https://github.com/silverqx/TinyORM). For now we didn't need spend some effort to include such a project (also considering that it seems to have a more limited feature set than what is available in Hibernate for example) and preferred to write our own queries in the [repositories](src/bsgo/repositories) folder.
 
+## Links
+
+During the research on how to implement an ECS, we stumbled upon [this link](https://austinmorlan.com/posts/entity_component_system/). It seems more advanced: it might be interesting to come back to it later if the current system does not bring satisfaction anymore.
+
 # TODO: after this needs rework
-
-## Entity Component System
-
-In order to represent the various elements of the game and their properties, we decided to implement an [entity component system](https://en.wikipedia.org/wiki/Entity_component_system).
-
-The goal of this mechanism is to avoid the deeply nested class hierarchy common when developing a game. We already tried this approach when dealing with the agents (see the [agents](https://github.com/KnoblauchPilze/agents) repository).
-
-While researching how to implement it we found this blog [codingwiththomas](https://www.codingwiththomas.com/blog/an-entity-component-system-from-scratch) which presents the implementation of such a system from scratch. It is well documented and explains the concept in quite some details.
-
-In comparison with the `agents` project we decide to follow the paradigm a bit better and actually created some systems and a way to iterate through the entities.
-
-TODO: Incorporate this sentence.
-We found [this link](https://austinmorlan.com/posts/entity_component_system/) as part of the ECS research which seems more advanced so we might come back to it later.
-
-### Entity
-
-The [Entity](src/bsgo/entities/Entity.hh) is the base class and is basically just an identifier with a list of components. We just added some convenience methods to assess the existence of some component and access them in a secure way.
-
-### Component
-
-A [Component](src/bsgo/components/IComponent.hh) is the base class for all components. It just defines one basic method to update the component with some elapsed time. This might or might not be useful to the inheriting components but allows to have some quantity varying over time.
-
-The goal of the implementation is to keep away the processing from the components in favour of putting all of them in the systems.
-
-### System
-
-A [System](src/bsgo/systems/ISystem.hh) is iterating over the entities and only processing the ones that are interesting. Our implementation defines an `AbstractSystem` which aims at iterating over the entities.
-
-The constructor expects the inheriting classes to pass a callback which will be used to filter the entities and keep only the ones that are interesting for the system. This typically involves checking if an entity has some components which are handled by the system.
-
-Typically if an entity defines a [HealthComponent](src/bsgo/components/HealthComponent.hh) we expect it to be processed by the [HealthSystem](src/bsgo/systems/HealthSystem.hh).
-
-## Interaction between the database and the ECS
-
-### The problem statement
-
-When the user is playing, there are some interactions which need to be persisted to the database. This will ultimately mean sending these commands through the network to the server which can then make the necessary verifications before allowing them.
-
-A typical example is the jump. When the user selects a destination and initiates a jump, we register this in one of the component of the ship and decrement the countdown until it reaches zero. We have to persist the information that the ship is jumping somehow to the database but this information is within a component of the ECS.
-
-Another example is when a player mines an asteroid and is supposed to gain some resources. This also relates to dealing damage in the first place and also killing an entity. These changes of state should be communicated to the database (and to the server) from within the ECS.
-
-### Research
-
-A straightforward solution is to make the systems aware of the database and just let them save whatever data they assume is meaningful to it. This has the benefit that it is simple to implement.
-
-However thinking a bit ahead, what is supposed to happen when we will split the application into client/server? It seems like essentially every system would have to handle the networking aspect of getting data from the server and potentially patching whathever discrepencies might be detected between local and remote data.
-
-We could find a bunch of relevant links on how to deal with this on the internet.
-
-In [How to sync entities in an ecs game](https://gamedev.stackexchange.com/questions/178469/how-to-sync-entities-in-an-ecs-game) and [Networking with entity component system](https://www.reddit.com/r/gamedev/comments/5oib5v/networking_with_entity_component_system/) the recommendation is to use a `NetworkSynComponent` or something similar. The idea in each case is to have some dedicated `NetworkSystem` which takes care of receiving data and updated the entities which have a network component. The network component can presumably be either very stupid (just flagging the entity as having some form of networking aspect) or a bit smarter and define for example the properties of other components needing to be synced.
-
-The topic in [How to network this entity system](https://gamedev.stackexchange.com/questions/21032/how-to-network-this-entity-system) does not recommend to go for a 'smart' network component as this is essentially mirroring what already exists in other components. Instead it seems like the approach would then be to have the `NetworkSystem` be able to deal with each component in a way similar to:
-* check if the entity has a network aspect
-* if yes iterates over all registered component
-* for each component call an internal method that indicates which properties need to be updated and how
-
-One drawback of this is that the `NetworkSystem` will grow quite a bit due to handling all the components we have in the game. The plus is that there's a single place which should deal with network communication. We could possibly also include the various reconciliation mechanisms here.
-
-Finally the [Documentation of Space Station 14](https://docs.spacestation14.com/en/robust-toolbox/ecs.html) indicates some sort of `dirty` property to attach to component which would make the job of the `NetworkSystem` easier: by checking this we know if it should send data to the network or not. This is quite interesting as it allows to not keep track internally in the system of the previous states of all components to detect modifications.
-
-### Possible solution
-
-To come back to our jump/mining examples, here's how we could do it:
-* create a network component which contains a `dirty` property.
-* this property is updated by the systems when an action requires it (typically a jump is started or the health is changed or the loot is distributed, etc.).
-* create a `NetworkSystem` which loops over entities having a network component.
-* this system loops over the components of the entities and perform the syncing (for now to the database) for each of them.
-
-For additional flexibility we could also create an enum which defines the type of component and register a list of enum values in the network component. This would allow to only sync some aspects of an entity rather than automatically syncing all its components.
 
 ### Communication between the UI and the ECS
 
