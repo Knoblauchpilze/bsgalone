@@ -10,11 +10,11 @@ Multiple players can connect to a ever-running server and compete or band togeth
 
 ## Some visuals
 
-![View of a system](resources/state_of_the_game_2.png)
+![View of a system](resources/view_of_a_system.png)
 
-![Jumping to another system](resources/state_of_the_game_3.png)
+![Jumping to another system](resources/jumping_to_another_system.png)
 
-![Outpost view and configuring the ship](resources/state_of_the_game_1.png)
+![Outpost view and configuring the ship](resources/outpost_view_and_configuring_the_ship.png)
 
 ## Why this project?
 
@@ -58,9 +58,9 @@ This projects uses:
 - postgresql which can be taken from the packages with `sudo apt-get install postgresql-14` for example.
 - [asio](https://think-async.com/Asio/) for networking. See installation instructions in the [dedicated section](#asio) of this README.
 
-## Instructions
+## Clone the repository
 
-- Clone the repo: `git clone git@github.com:Knoblauchpilze/pge-app.git`.
+- Clone the repo: `git clone git@github.com:Knoblauchpilze/bsgalone.git`.
 - Clone dependencies:
   - [core_utils](https://github.com/Knoblauchpilze/core_utils)
 - Go to the project's directory `cd ~/path/to/the/repo`.
@@ -287,6 +287,112 @@ The [client](src/client) folder regroups all the code that is used exclusively b
 
 ## Communication between client/server
 
+In a client/server architecture it is necessary to define ways for both applications to communicate with each other through the network. Some changes are just relevant for one client, some are relevant for all players registered in a given system and some elements are relevant for every connected players.
+
+Typically the clients will try to perform some actions which have an impact on the game. In an authoritative server we have to somehow validate these changes before they can be applied.
+
+### Transmitting data
+
+Throughout the project we rely on messages. Messages are atomic piece of information that can be interpreted by the server and the client alike. The typical scheme is that the client will send messages to the server and get in return and in an async way one or several messages responding to the initial request.
+
+The server on the other hand will produce messages on its own (based on what happens in the game loop for example) but also after it validated requests from the clients. Each message will then be sent to connections which might be interested in the change.
+
+For more details on how the messaging system works, please refer to the dedicated section in the [implementation details](#messaging-system).
+
+Below are presented a few base types for the communication.
+
+#### NetworkMessage
+
+A [NetworkMessage](src/bsgo/messages/NetworkMessage.hh) is a message associated to a client. A client is a unique identifier assigned by the server to a client application. This helps determining who sent a message and sending the response back to the right clients.
+
+These messages are typically sent by the client applications as they know which client identifier they received from the server. The server is usually either propagating the input client id or erasing it in case the response to a message might be interesting for more than one client.
+
+#### ValidatableMessage
+
+A [ValidatableMessage](src/bsgo/messages/ValidatableMessage.hh) is a message that can be either validated or not validated yet. This is typically used by clients to make request something from the server. They send an initially not validated message of a certain type to the server. The server will then process it and determine whether it can actually be processed as the client would hope for. If it succeeds the server sends back to the client the same message with a validated flag.
+
+Note that not all messages need validation: for example messages that are produced by the server are by definition considered valid and will not be validated.
+
+### Communication protocol
+
+When the server is started, it will start listening to incoming connections. When one is received, the first thing that the server does is to send a [ConnectionMessage](src/bsgo/messages/ConnectionMessage.hh): this message contains a client id assigned by the server.
+
+The client application is expected to save this client identifier and use it in any subsequent communication with the server.
+
+To start the game the client application will present the user with a login/sign up screen: in both cases the idea is to make the client select a username and password and try to log into the game. This will result in a message sent from the client to the server (either [LoginMessage](src/bsgo/messages/LoginMessage.hh) or [SignupMessage](src/bsgo/messages/SignupMessage.hh)) and which can be validated by the server.
+
+On top of the validation the server will also associate the connection (and the client id) with the player id and its current system. This will help determine when a message produced by the server should be transmitted to this client. For example if an entity dies in a system (be it a player or an AI), we need to transmit this information to all clients currently playing in this system. To achieve this, the server has to loop through all the active connections and pick the ones that are associated with a player in the relevant system.
+
+We provided a mechanism for a player to log out: in this case we send a [LogoutMessage](src/bsgo/messages/LogoutMessage.hh) which will indicate to the server that the corresponding client's connection is no longer associated with the player's id and system: this will help making sure that we stop sending updates for the system to this connection.
+
+In case the connection is lost without graceful termination, we automatically detect this in the server and simulate a logout process by sending a `LogoutMessage` before terminating the connection. This allows to make sure that the player's ship is still sent back to the outpost and that other clients are made aware of the disconnection.
+
+### Who's right?
+
+There's an asymmetry between how the server and the client applications process the messages. Regularly, the server will send updates to the clients about the current state of the entities. These updates are synchonization point for the clients which can then control their internal representation of the game and update it based on what the server reports.
+
+In such cases, the client will just takes what the server says at face value and make the necessary changes to be up-to-date with what the server indicates. This is not the case for the server: the server always questions what the client applications are sending before making any changes.
+
+Now even if the client should ultimately conform to what the server says, there are nice ways to do it so that it does not degrade too much the game experience of the players. There are a couple of nice resources that we found, the best of which being this article on Gabriel Gambetta's [website](https://www.gabrielgambetta.com/client-server-game-architecture.html). We did not implement any of this until now.
+
+# Server design
+
+## General idea
+
+Ideally the server should process the events generated by the clients and return an answer to them, in the forms of one or multiple messages. If we designed the data structures right, we should be able to essentially instantiate the same game loop as for the clients and plug in the messages coming from the network into the internal game loop. Those messages will be picked up by the ECS and generate some more messages. In turn, the output messages should be broadcast to the clients that are interested in them.
+
+## System processing
+
+In the context of this game, the server has to simulate multiple systems which are very similar: there are a bunch of ships (AIs and players) in them, and they can interact with one another.
+
+By its nature, each system is independent: no action taken in one system can have impact on another system. This seems like a very nice simplification as it essentially means that we can easily parallelize and decouple the simulation of each system.
+
+In order to achieve this, we created a [SystemProcessor](src/server/lib/game/SystemProcessor.hh) class: its role is to regroup all the structures needed to fully simulate what happens in a system and to make it run in its own thread.
+
+This class contains:
+* a [Coordinator](src/bsgo/Coordinator.hh) responsible to list all the entities for this system
+* some [services](src/bsgo/services/Services.hh) responsible to process the messages generated by the clients and the internal ECS in this system
+* an [EntityMapper](src/bsgo/data/DatabaseEntityMapper.hh) responsible to keep track of a mapping between the database and the entities
+
+This processor runs asynchronously in its own thread and handles the simulation in the following steps:
+* processing the messages related to this system
+* updating the entities
+
+The output of this simulation is a bunch of messages that need to be dispatched to the various clients interested in them.
+
+The messages are process through a [consumer](#a-note-on-consumers) mechanism: please refer to the following section to learn more.
+
+## A note on consumers
+
+Messages are usually meant to be processed by some objects responsible to validate them and knowing what effects they might have. A popular approach to handle it is to use a [Publish-Subscribe](https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern) pattern: for each type of message, we have a corresponding consumer which deals with them and handle their consequences. They are registered in the [consumers](src/server/lib/consumers) folder, segregated in their 'kind'.
+
+Each consumer registers itself to a message queue and indicates its interest in receiving a specific type of messages (or several). When one is received, we can intercept the message and perform the necessary verification before processing it.
+
+In the case of a [DockMessage](src/bsgo/messages/DockMessage.hh) for example we can check that the ship concerned by the message is not already docked and that it is close enough to the outpost and that it does not try to dock to an outpost in a different system etc.
+
+The consumers are usually using a dedicated service to process a message after doing some simple verification related to the messaging framework (for example that all fields are correctly populated). The services are where the business logic lives.
+
+To come back to the dock example, the [DockMessageConsumer](src/server/lib/consumers/system/DockMessageConsumer.hh) relies on the [ShipService](src/bsgo/services/ShipService.hh) to perform the docking.
+
+This approach is quite flexible as it allows to easily keep messages which would fail to be processed for later analysis and make it easy to separate messages and make them processed by the most relevant consumers.
+
+Consumers are separated in the server based on their kind:
+* [input](src/server/lib/consumers/input) consumers are responsible to handle user operation such as login or signup: anything that is not part of the game loop
+* [system](src/server/lib/consumers/system) consumers are responsible to handle messages specific to a system. We typically have multiple instances of each consumer in the server, one per system
+* [internal](src/server/lib/consumers/internal) consumers are responsible to handle messages that are generated by the server and need additional processing before being sent out to client applications. A typical example is a jump message: when a client jumps from one system to another we need to handle some changes in the source and the destination system which is handled through an internal message
+
+## Triaging messages
+
+The server is responsible to handle a lot of messages from various sources. This includes:
+* messages incoming from various client connections
+* messages produced by the `SystemProcessor`s
+* messages produced internally and needing to be processed before being sent to clients
+
+After several iterations we came up with the following design:
+
+TODO diagram.
+
+
 # Implementation details
 
 ## Networking
@@ -387,35 +493,43 @@ if (determineState() != m_currentState) {
 
 It keeps the reactions of the AI dynamic by codifying them into the structure of the tree.
 
-# TODO: after this needs rework
+## Messaging system
 
-## Entity Component System
+### Generalities
 
-In order to represent the various elements of the game and their properties, we decided to implement an [entity component system](https://en.wikipedia.org/wiki/Entity_component_system).
+Most of the changes in the game trigger something in the internal state of the clients and the server. Here are a few examples:
+* when an asteroid is scanned, we want to display a message indicating the result of the analysis
+* when an entity is killed or an asteroid destroyed, we need to notify clients that this is no longer a valid target
 
-The goal of this mechanism is to avoid the deeply nested class hierarchy common when developing a game. We already tried this approach when dealing with the agents (see the [agents](https://github.com/KnoblauchPilze/agents) repository).
+Similarly, when the user clicks on interactive parts of the UI, we might need to make some changes to the entities:
+* if the `DOCK` button is clicked, we need to remove the ship from the system and display the corresponding UI
+* when an item is purchased, we need to deduct some resources from the player's stash and add it to the list of items they possess
 
-While researching how to implement it we found this blog [codingwiththomas](https://www.codingwiththomas.com/blog/an-entity-component-system-from-scratch) which presents the implementation of such a system from scratch. It is well documented and explains the concept in quite some details.
+As we have a client/server architecture, these changes can't just be direct synchronous calls but have to be decoupled: we need some way to make the UI react asynchronously to changes that might have been triggered before.
 
-In comparison with the `agents` project we decide to follow the paradigm a bit better and actually created some systems and a way to iterate through the entities.
+These considerations made us realize that we needed some decoupling between what happens in the UI (respectively the ECS) and how is it applied to the ECS (respectively the UI).
 
-### Entity
+In order to achieve this, we chose to use a messaging system. This allows communicating from the systems operating on the entities to the UI in a decoupled and asynchronous way, and plays nicely when being extracted to a distant server.
 
-The [Entity](src/bsgo/entities/Entity.hh) is the base class and is basically just an identifier with a list of components. We just added some convenience methods to assess the existence of some component and access them in a secure way.
+### Message queue
 
-### Component
+The [IMessageQueue](src/bsgo/queues/IMessageQueue.hh) allows to keep track of all the messages needing to be processed. These messages can be registred through the interface method `pushMessage`.
 
-A [Component](src/bsgo/components/IComponent.hh) is the base class for all components. It just defines one basic method to update the component with some elapsed time. This might or might not be useful to the inheriting components but allows to have some quantity varying over time.
+We have several implementations for this interface: the most basic one is a [SynchronousMessageQueue](src/bsgo/queues/SynchronizedMessageQueue.hh) which guarantees that there's no collision between enqueuing messages and processing them, but we also have specialization for the client and the server.
 
-The goal of the implementation is to keep away the processing from the components in favour of putting all of them in the systems.
+A building block is the [NetworkMessageQueue](src/bsgo/queues/NetworkMessageQueue.hh) which allows to receive messages from the network. Another important one for the server is the [AsyncMessageQueue](src/bsgo/queues/AsyncMessageQueue.hh) which processes messages in a dedicated thread.
 
-### System
+### Listeners
 
-A [System](src/bsgo/systems/ISystem.hh) is iterating over the entities and only processing the ones that are interesting. Our implementation defines an `AbstractSystem` which aims at iterating over the entities.
+The [IMessageListener](src/bsgo/queues/IMessageListener.hh) allows anyone to register to the message queue and get notified of the messages. We expect such objects to provide indications about which messages they are interested in so that we can feed them messages. It is guaranteed that the messages receieved through the `onMessageReceived` method will be of the right type for the listener.
 
-The constructor expects the inheriting classes to pass a callback which will be used to filter the entities and keep only the ones that are interesting for the system. This typically involves checking if an entity has some components which are handled by the system.
+### Messages
 
-Typically if an entity defines a [HealthComponent](src/bsgo/components/HealthComponent.hh) we expect it to be processed by the [HealthSystem](src/bsgo/systems/HealthSystem.hh).
+The meat of the messaging process is the [IMessage](src/bsgo/messages/IMessage.hh) class. This interface defines a type of message and we can add more type as we see fit. Most of the time a message corresponds to a flow in the game, such as jumping or scanning a resource.
+
+You can find other examples of messages in the same [source folder](src/bsgo/messages).
+
+An important part of our approach is to provide de/serialization methods for the messages: this allows to easily send them through the network to the server and receive the response back. We added some [unit tests](tests/unit/bsgo/messages) for this behavior to make sure it does not break.
 
 ## Database interaction
 
@@ -437,9 +551,68 @@ This is probably why it's not popular to put all of this logic in a stored proce
 
 We chose to use a concept of services, all inheriting from a base [IService](src/bsgo/services/IService.hh) class: there's a service for each kind of action (for example signing up, purchasing an item, etc.). Each of them define the conditions to meet for an action to be allowed, and the logic to actually perform the action.
 
-Later on, it can also be relatively easily be extended to not do all the validations locally but rather by contacting a remote server.
+These services live in the server as they should not be tempered with: this is what guarantees the integrity of the actions in the game.
 
-**Note:** for now we don't use a single transaction to perform a complete action. This probably needs to be changed in the future to not leave the database in an inconsistent state.
+**Note:** for now in most systems we don't use a single transaction to perform a complete action (for example registering a player will spawn multiple transactions to create the player, register their ship, etc.). This probably needs to be changed in the future to not leave the database in an inconsistent state.
+
+# Notes
+
+## DB cheat sheet
+
+A collection of useful sql queries we used extensively during development process.
+
+```sql
+select ss.ship, p.id as player, ss.docked, ss.system, sj.system, ps.hull_points, p.name from ship_system ss left join ship_jump sj on sj.ship = ss.ship left join player_ship ps on ss.ship = ps.id left join player p on ps.player = p.id where p.name in ('colo', 'colo2');
+```
+
+```sql
+update player_ship set hull_points = 370 where ship = 1;
+```
+
+```sql
+update ship_system set docked=true where ship in ('1', '5', '4');
+```
+
+# Future work
+
+## Libraries
+
+The [nlohmann json](https://github.com/nlohmann/json) is a quite famous library to handle json for cpp. This might come in handy in the future if we need to introduce json in the project.
+
+In Java there's a quite extensive framework to perform [ORM](https://en.wikipedia.org/wiki/Object%E2%80%93relational_mapping): [Hibernate](https://hibernate.org/). This allows to manipulate objects (entities) in an idiomatic way and have built-in persistence to a data source (for example a database). A similar library for cpp would be [TinyORM](https://github.com/silverqx/TinyORM). For now we didn't need spend some effort to include such a project (also considering that it seems to have a more limited feature set than what is available in Hibernate for example) and preferred to write our own queries in the [repositories](src/bsgo/repositories) folder.
+
+# TODO: after this needs rework
+
+## Entity Component System
+
+In order to represent the various elements of the game and their properties, we decided to implement an [entity component system](https://en.wikipedia.org/wiki/Entity_component_system).
+
+The goal of this mechanism is to avoid the deeply nested class hierarchy common when developing a game. We already tried this approach when dealing with the agents (see the [agents](https://github.com/KnoblauchPilze/agents) repository).
+
+While researching how to implement it we found this blog [codingwiththomas](https://www.codingwiththomas.com/blog/an-entity-component-system-from-scratch) which presents the implementation of such a system from scratch. It is well documented and explains the concept in quite some details.
+
+In comparison with the `agents` project we decide to follow the paradigm a bit better and actually created some systems and a way to iterate through the entities.
+
+TODO: Incorporate this sentence.
+We found [this link](https://austinmorlan.com/posts/entity_component_system/) as part of the ECS research which seems more advanced so we might come back to it later.
+
+### Entity
+
+The [Entity](src/bsgo/entities/Entity.hh) is the base class and is basically just an identifier with a list of components. We just added some convenience methods to assess the existence of some component and access them in a secure way.
+
+### Component
+
+A [Component](src/bsgo/components/IComponent.hh) is the base class for all components. It just defines one basic method to update the component with some elapsed time. This might or might not be useful to the inheriting components but allows to have some quantity varying over time.
+
+The goal of the implementation is to keep away the processing from the components in favour of putting all of them in the systems.
+
+### System
+
+A [System](src/bsgo/systems/ISystem.hh) is iterating over the entities and only processing the ones that are interesting. Our implementation defines an `AbstractSystem` which aims at iterating over the entities.
+
+The constructor expects the inheriting classes to pass a callback which will be used to filter the entities and keep only the ones that are interesting for the system. This typically involves checking if an entity has some components which are handled by the system.
+
+Typically if an entity defines a [HealthComponent](src/bsgo/components/HealthComponent.hh) we expect it to be processed by the [HealthSystem](src/bsgo/systems/HealthSystem.hh).
 
 ## Interaction between the database and the ECS
 
@@ -480,36 +653,6 @@ To come back to our jump/mining examples, here's how we could do it:
 
 For additional flexibility we could also create an enum which defines the type of component and register a list of enum values in the network component. This would allow to only sync some aspects of an entity rather than automatically syncing all its components.
 
-## Messaging
-
-The application also needs to make some changes in the UI based on what is happening in the ECS. For example when an asteroid is scanned, we want to display a message indicating the result of the analysis. Or when an entity is killed or an asteroid destroyed, we might also want to display some message to represent it.
-
-Similarly, when the user clicks on interactive parts of the UI, we might need to make some changes to the entities: for example if the `DOCK` button is clicked, or an item is purchased, we need to reflect this in the ECS if it is relevant.
-
-Later on when the application will be split into a client/server architecture, some of the interactions we presented before will be either received from the server (an enemy died) or sent to the server for validation (request to purchase an item).
-
-These considerations made us realize that we needed some decoupling between what happens in the UI (respectively the ECS) and how is it applied to the ECS (respectively the UI).
-
-In order to achieve this, we created a messaging system. This allows communicating from the systems operating on the entities to the UI in a decoupled and asynchronous way.
-
-### Message queue
-
-The [IMessageQueue](src/bsgo/communication/IMessageQueue.hh) allows to keep track of all the messages needing to be processed. These messages can be registred through the interface method `pushMessage`.
-
-The `Game` class holds an attribute of type message queue and takes care of calling the `processMessages` once per frame. This could be refined in the future: for example when these events will be generated on the server side, we might want to have a processing thread sending the messages back to the clients.
-
-### Listeners
-
-The [IMessageListener](src/bsgo/queues/IMessageListener.hh) allows anyone to register to the message queue and get notified of the messages. We expect such objects to provide indications about which messages they are interested about and to feed them a message. It is guaranteed that the messages receieved through the `onMessageReceived` method will be of the right type for the listener.
-
-### Messages
-
-The meat of the messaging process is the [IMessage](src/bsgo/messages/IMessage.hh) class. This interface defines a type of message and we can add more type as we see fit. Most of the time a message corresponds to a flow in the game, such as jumping or scanning a resource.
-
-You can find other examples of messages in the same source folder.
-
-An important part of our approach is to provide de/serialization methods for the messages: this allows to easily send them through the network to the server and receive the response back. We added some [unit tests](tests/unit/bsgo/messages) for this behavior to make sure it does not break.
-
 ### Communication between the UI and the ECS
 
 In the application we gave the [UiHandlers](src/client/lib/ui) the possibility to register themselves (or some other components) to the message queue of the application.
@@ -517,16 +660,6 @@ In the application we gave the [UiHandlers](src/client/lib/ui) the possibility t
 A common pattern is to make the handler implement the message listener interface and handle some relevant messages.
 
 On the other hand, the systems are pushing messages to the queue not knowing (and not caring) if some component will read and process them or not. This seems quite interesting when considering the future client/server architecture. For example when the `DOCK` button is clicked, the UI will send a message indicating that such an event happened. If the event is successfully processed and considered valid, we consider that some other part of the application will most likely change the active screen.
-
-### Consumers
-
-We followed the [Publish-Subscribe](https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern) pattern when handling messages. For each type of message we have a corresponding consumer. For example for dock messages we have a [DockMessageConsumer](src/server/lib/consumers/system/DockMessageConsumer.hh).
-
-This component registers itself to the message queue and indicates its interest in receiving the dock messages. When one is received, we can intercept the message and perform the necessary verification before processing it: for example we might check that the ship concerned by the message is not already docked, or that it is close enough to the outpost or that it does not try to dock to an outpost in a different system etc.
-
-Most of the time, the consumers are just calling the corresponding service (for example the `DockMessageConsumer` relies on the [ShipService](src/bsgo/services/ShipService.hh)).
-
-This approach is flexible as it allows to easily keep messages which would fail to be processed for later analysis and also probably make it easy to send those messages to the server from each client.
 
 ### Updating the Game
 
@@ -536,62 +669,3 @@ We implemented a [GameMessageModule](src/client/lib/game/GameMessageModule.hh) c
 
 The strength of this system is that if the processing fails for whatever reason we will never receive the message indicating that the dock succeeded (because it did not) and so the UI will not make any changes that would have to be reverted.
 
-
-# Server design
-
-## General idea
-
-Ideally the server should process the events generated by the clients and return the answer to them. If we designed the data structures right, we should be able to essentially instantiate the same game loop as for the clients and plug in the messages coming from the network into the internal game loop. Those messages will be picked up by the ECS and generate some more messages. In turn, the output messages should be broadcast to the clients that are interested in them.
-
-## Messages
-
-In order to correctly receive messages from various sources, we added a new implementation of the [IMessageQueue](src/bsgo/communication/IMessageQueue.hh): the [SynchronizedMesageQueue](src/server/lib/messages/SynchronizedMessageQueue.hh).
-
-Its role is to gather the messages incoming from potentially multiple sources and to safely register them in the system. We use a mutex to protect concurrent access to the actual queue of messages.
-
-In addition to this, it would be relatively impractical for the server to also run say at fps and process the messages in this timeframe. It might be that there are times where no messages are emitted, or times where processing a message as fast as possible is critical.
-
-To achieve this we created a [AsyncMessageQueue](src/server/lib/messages/AsyncMessageQueue.hh) which spawns a thread to process the messages. It uses the `SynchronizedMessageQueue` and reacts whenever a new message is posted. We then wake up the processing thread with a condition variable and process the messages.
-
-When testing this approach we are able to process (⚠️ without consumers) 100x more messages than the client is producing. It seems robust enough for now. In the future we could also separate messages based on their type, their system or any other heuristic. This would allow to scale in a safer way if the amount of messages becomes a problem.
-
-## Game loop
-
-The server is responsible to simulate all the systems of the game and make the ships and elements there look lively. In the client, we ever simulate a single system: the one where the player currently is.
-
-We picked an approach where we group the elements needed to simulate a single system and put them in a [processor class](src/server/lib/game/SystemProcessor.hh). This regroups:
-* A [Coordinator](src/bsgo/Coordinator.hh)
-* A [DataSource](src/bsgo/data/DataSource.hh)
-* Some [services](src/bsgo/services/Services.hh)
-
-The output of this simulation is a bunch of messages that need to be dispatched to the various clients interested in them.
-
-# Future work
-
-## Useful links
-
-The art for spaceships comes from [imgur](https://imgur.com/im8ukHF) and [deviantart](https://www.deviantart.com/ariochiv/art/Stars-in-Shadow-Phidi-Ships-378251756).
-
-We found [this link](https://austinmorlan.com/posts/entity_component_system/) as part of the ECS research which seems more advanced so we might come back to it later.
-
-## Useful libraries
-
-Json nlohmann:
-https://github.com/nlohmann/json
-
-ORM in cpp:
-https://github.com/silverqx/TinyORM
-
-# DB cheat sheet
-
-```sql
-select ss.ship, p.id as player, ss.docked, ss.system, sj.system, ps.hull_points, p.name from ship_system ss left join ship_jump sj on sj.ship = ss.ship left join player_ship ps on ss.ship = ps.id left join player p on ps.player = p.id where p.name in ('colo', 'colo2');
-```
-
-```sql
-update player_ship set hull_points = 370 where ship = 1;
-```
-
-```sql
-update ship_system set docked=true where ship in ('1', '5', '4');
-```
