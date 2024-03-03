@@ -694,7 +694,7 @@ update ship_system set docked=true where ship in ('1', '5', '4');
 
 The [nlohmann json](https://github.com/nlohmann/json) is a quite famous library to handle json for C++. This might come in handy in the future if we need to introduce json in the project.
 
-In Java there's a quite extensive framework to perform [ORM](https://en.wikipedia.org/wiki/Object%E2%80%93relational_mapping): [Hibernate](https://hibernate.org/). This allows to manipulate objects (entities) in an idiomatic way and have built-in persistence to a data source (for example a database). A similar library for C++ would be [TinyORM](https://github.com/silverqx/TinyORM). For now we didn't need spend some effort to include such a project (also considering that it seems to have a more limited feature set than what is available in Hibernate for example) and preferred to write our own queries in the [repositories](src/bsgo/repositories) folder.
+In Java there's a quite extensive framework to perform [ORM](https://en.wikipedia.org/wiki/Object%E2%80%93relational_mapping): [Hibernate](https://hibernate.org/). This allows to manipulate objects (entities) in an idiomatic way and have built-in persistence to a data source (for example a database). A similar library for C++ would be [TinyORM](https://github.com/silverqx/TinyORM). Alternatively [ODB](https://www.codesynthesis.com/products/odb) could also be a good choice. For now we didn't need spend some effort to include such a project (also considering that it seems to have a more limited feature set than what is available in Hibernate for example) and preferred to write our own queries in the [repositories](src/bsgo/repositories) folder.
 
 ## Links
 
