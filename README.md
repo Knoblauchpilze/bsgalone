@@ -504,7 +504,52 @@ An important thing to note is that the ECS never interacts directly with the dat
 
 # Client design
 
-TODO: Fill this section
+## Generalities
+
+The goal of the client's application is to provide a view of what's happening in the server for a specific player. On top of aiming at replicating what is happening on the server, it should also allow the player to transmit commands to the server so that a specific entity is following what the player wants.
+
+The application has two main problems to solve:
+* how to send updates to the server from the UI?
+* how to apply the updates from the server to the local UI and ECS?
+
+## Splitting the tasks in the UI
+
+The client application splits the responsibilities to react to the user's input into several facets:
+* the [IRenderer](src/client/lib/renderers/IRenderer.hh) takes care of rendering the visual elements
+* the [IUIHandler](src/client/lib/ui/IUiHandler.hh) takes care of rendering the UI
+* the [IInputHandler](src/client/lib/inputs/IInputHandler.hh) takes care of interpreting the input of the user
+
+In addition the client also defines the notion of a [Screen](src/client/lib/game/Screen.hh): this is a way to represent which is the active view currently displayed in the application. Typically the panel of actions available to the user will not be the same whether they are in the outpost or not logged in or playing the game.
+
+Typically each screen will have a specific renderer, a UI handler and an input handler. Some screens might only get some of these elements.
+
+## Sending information to the server
+
+As described in the [communication protocol](#communication-protocol), the client and the server have a set of predefined message allowing to start and close the communication channel between both.
+
+When the client has successfully logged in to the server, the user will click on items in the UI and generally performed actions that should have an impact on the simulation.
+
+In order to send these commands to the server, we use the concept of a [IView](src/bsgo/views/IView.hh): a view is the equivalent of the business layer (so a [IService](src/bsgo/services/IService.hh)) but for the client: the idea is that each button of the UI (for example the dock button, or the button to purchase or equip an item) is binded to a method of a view. The view is then responsible to know which action should be triggered to accomplish this action.
+
+Accomplishing an action usually means sending a message to the server. The message is sent once again through a message queue: the [ClientMessageQueue](src/client/lib/network/ClientMessageQueue.hh): it is a bit of a special queue as it's only purpose is to send the messages it receives through the connection it is attached to.
+
+We follow a _send and forget_ approach when pushing messages: the idea being that if the event is valid the server will react in some way and send back some messages the client's way which will trigger a visual feedback for the player. If it is invalid no answer will be received and the UI will not change after the action (e.g. a button click).
+
+## Receiving information from the server
+
+The actions that the user takes in the UI usually have a goal to change some state of the player's account: for example buying an item, moving the ship somewhere else, etc. Assuming the server successfully processed a message sent by the client, it will send back an answer. Additionally, some messages will be generated and transmitted to the client because of the actions of other players.
+
+In order to process those incoming messages, the client receives them in a [NetworkMessageQueue](src/bsgo/queues/NetworkMessageQueue.hh) in a very similar way to the server.
+
+We then follow the same approach as in the server: the client defines some [consumers](src/client/lib/consumers) which are responsible to handle the messages received from the server and update the local ECS. As described in the [who's right](#whos-right) section, the difference is that the client applies without check what the server sends.
+
+A special consumer is the [GameMessageModule](src/client/lib/game/GameMessageModule.hh): its role is to interpret messages which are changing the state of the UI and react to them. This typically includes messages indicating that the player died, or that it changed system.
+
+## Adapting the ECS
+
+While the ECS in the server is responsible for the whole simulation, there are some aspects that the client does not need to simulate. To this end, the [Coordinator](src/bsgo/controller/Coordinator.hh) class (which is also used in the server) defines a way to deactivate some systems.
+
+The client uses this in order to not instantiate systems dealing with events that need to be confirmed by the server. This includes for example the removal system: we don't want to remove an entity from the client's simulation unless the server says to do so: in this case the [RemovalSystem](src/bsgo/systems/RemovalSystem.hh) is deactivated in all client's applications.
 
 # Implementation details
 
@@ -697,22 +742,3 @@ In Java there's a quite extensive framework to perform [ORM](https://en.wikipedi
 ## Links
 
 During the research on how to implement an ECS, we stumbled upon [this link](https://austinmorlan.com/posts/entity_component_system/). It seems more advanced: it might be interesting to come back to it later if the current system does not bring satisfaction anymore.
-
-# TODO: after this needs rework
-
-### Communication between the UI and the ECS
-
-In the application we gave the [UiHandlers](src/client/lib/ui) the possibility to register themselves (or some other components) to the message queue of the application.
-
-A common pattern is to make the handler implement the message listener interface and handle some relevant messages.
-
-On the other hand, the systems are pushing messages to the queue not knowing (and not caring) if some component will read and process them or not. This seems quite interesting when considering the future client/server architecture. For example when the `DOCK` button is clicked, the UI will send a message indicating that such an event happened. If the event is successfully processed and considered valid, we consider that some other part of the application will most likely change the active screen.
-
-### Updating the Game
-
-With the previous example of the dock button being clicked, we still have to explain how the UI is finally notified about the success or the failure of the operation.
-
-We implemented a [GameMessageModule](src/client/lib/game/GameMessageModule.hh) class. This class is a message listener and registers itself for certain messages which impact the UI. Typically the `DockMessage` will be receieved by this class and analyzed: if it succeeds we can notify the `Game` class by a direct method call to update the active screen.
-
-The strength of this system is that if the processing fails for whatever reason we will never receive the message indicating that the dock succeeded (because it did not) and so the UI will not make any changes that would have to be reverted.
-
