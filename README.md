@@ -390,7 +390,17 @@ The server is responsible to handle a lot of messages from various sources. This
 
 After several iterations we came up with the following design:
 
-TODO diagram.
+![diagram](resources/messaging-diagram.svg)
+
+The main entry point of the server is the `InputMessageQueue`: this sends messages to a triage consumer which only responsibility is to route messages to a consumer that can process them.
+
+We have some interconnection between the system message consumers and the system processors: some messages will lead to changes in the systems such as logging out of the game where we need to remove the player ship's entity from its system.
+
+We also allow system processors to send internal messages which need to be processed before they can either be sent to the clients or rerouted to be processed by a different system.
+
+Finally the [BroadcastMessageQueue](src/server/lib/queues/BroadcastMessageQueue.hh) is responsible to route the messages produced by the server to the right clients: this can be done by directly checking the client id if available or by checking in which system the messages belong to and broadcasting them to all connected clients.
+
+## SYstemMessages
 
 # Entity Component System
 
