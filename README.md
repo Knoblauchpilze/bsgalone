@@ -1,10 +1,48 @@
 # bsgalone
 
-Yet another copy of a famous game which will be probably not as polished and not as fun as the original. This time we try out: BSGO.
+Yet another copy of a famous game which will be probably not as polished and not as fun as the original. This time we try out: [Battlestar Galactica Online](https://www.mmorpg.com/battlestar-galactica-online).
 
 # What is the game about?
 
 The goal is to have a 2d top view space shooter where the user can travel from systems to systems and fight enemies while mining resources and upgrading their ship.
+
+Multiple players can connect to a ever-running server and compete or band together to play the game. Below are a few screenshots of the progress achieved during the development.
+
+## Some visuals
+
+![View of a system](resources/state_of_the_game_2.png)
+
+![Jumping to another system](resources/state_of_the_game_3.png)
+
+![Outpost view and configuring the ship](resources/state_of_the_game_1.png)
+
+## Why this project?
+
+The goal of this project is to take inspiration from BSGO and copy some of the patterns used in it and also incorporate some original elements when they make sense.
+
+It is also a very good opportunity to actually write a multi-player game which is something we never did before. There are many learnings that will come during the course of the development.
+
+## What works?
+
+As of the time of writing, the game offers:
+* a persistent registration/log in system
+* two factions which have similar capabilities but are able to fight each other in the game
+* a persistent server to which clients can connect to
+* a shop where the player can buy gear for their ships and equip them
+* multiple systems where the players can travel
+* some content in the systems in the form of outposts, asteroids and AIs
+* a working health/power system to make fighting the other players/AIs slightly challenging
+* a mining system where the player can accumulate resources to buy more gear for their ships
+
+## Limitations
+
+Some known limitations:
+* 2D game
+* no collisions
+* no dynamic evolution of systems (once AIs or asteroids are killed they don't respawn until a server restart)
+* limited content in the systems
+* various edge cases where the server will crash
+* client applications access the DB directly with the same user as the server
 
 # Installation
 
@@ -25,13 +63,12 @@ This projects uses:
 - Clone the repo: `git clone git@github.com:Knoblauchpilze/pge-app.git`.
 - Clone dependencies:
   - [core_utils](https://github.com/Knoblauchpilze/core_utils)
-  - [maths_utils](https://github.com/Knoblauchpilze/maths_utils)
 - Go to the project's directory `cd ~/path/to/the/repo`.
 - Compile: `make run`.
 
 Don't forget to add `/usr/local/lib` to your `LD_LIBRARY_PATH` to be able to load shared libraries at runtime. This is handled automatically when using the `make run` target (which internally uses the [run.sh](data/run.sh) script).
 
-### libpqxx
+## libpqxx
 
 The [README](https://github.com/jtv/libpqxx/blob/master/BUILDING-cmake.md) in the repo is not exactly working. You need to install `libpq-dev`: while not indicated it is clear from the build process.
 
@@ -48,9 +85,9 @@ Those were taken from [this](https://preshing.com/20170511/how-to-build-a-cmake-
 
 Then we can attach the library as a dependency of the project as described in the rest of the install [guide](https://github.com/jtv/libpqxx/blob/master/BUILDING-cmake.md#option-b-make-use-of-a-separately-installed-libpqxx).
 
-### asio
+## asio
 
-#### Install on the system
+### Install on the system
 
 This [Stack Overflow topic](https://stackoverflow.com/questions/70848366/unable-to-move-asiosslstream-to-handler) seems to indicate that there's a package for it under:
 ```bash
@@ -74,7 +111,7 @@ sudo cp -r asio-1.28.0/include/* /usr/local/include/asio
 
 You can remove the `Makefile.am` and `Makefile.in` files from this directory to not pollute the includes.
 
-#### Use the library in the project
+### Use the library in the project
 
 After this we need to instruct cmake to find the library. This shouldn't be an issue as it is now installed on the system directories. However we faced another problem. When looking at `asio.hpp` the includes look fine:
 
@@ -90,7 +127,16 @@ Looking at a few topics on the internet it seems like this is usually handled by
 
 We also used this approach in the [CMakeLists.txt](src/net/CMakeLists.txt) of the net library for example. This is sufficient to allow development, we might revisit this later on.
 
-### PixelGameEngine
+## postgresql
+
+To install postgresql we can simply rely on the packages and run the following:
+```bash
+sudo apt-get install postgresql-14
+```
+
+The version may vary. `14` is the one we used for development but it should not be an issue to pick another one.
+
+## PixelGameEngine
 
 The application is built around the [PixelGameEngine](https://github.com/OneLoneCoder/olcPixelGameEngine). We found it is a reliable engine to create 2D applications and display some graphics. However, there are a couple of compilation problems when we add the typical options we use (such as `-Wall` and `-Werror`) due to the `#ifdef` directives to support multiple platforms.
 
@@ -102,12 +148,9 @@ In case of a future update we can port those changes or adapt them.
 
 # Setting up the DB
 
-## Install postgresql
+## Generalities
 
-To do this, install postgresql through the packages with:
-```bash
-sudo apt-get install postgresql-14
-```
+The game uses data saved in a database to define elements of the gameplay. In order to do this we rely on a database being created and populated with data. The database is then accessed both by the client and the server through the same user.
 
 ## How to send commands to the postgres server
 
@@ -188,25 +231,98 @@ The connection method was changed from `md5` to `scram-sha-256` as recommended b
 
 With this we were able to connect from a remote computer to the database hosted on another machine.
 
-# Development log and findings
+# Client/Server architecture
 
-## Goal
+## Generalities
 
-The goal of the game is to try to mimic some aspects of [Battlestar Galactica Online](https://www.mmorpg.com/battlestar-galactica-online) until we decide to actually move away from it.
+The aim of the project is to provide a client server architecture where multiple players can connect to the game and play together. In order to achieve this we decided to go for an authoritative server and separate client.
 
-It is similar in having players fight with each other in space ships. It is different in the sense that it is a 2d game.
+From the code perspective there are elements and structures that will be used both by the client and the server.
 
-We aim at progressively transition from a single computer, local game to a multiplayer online game while learning in the meantime how to do it.
+It is not so clear cut whether writing the server and the client in the same language bring huge benefits. This [article](https://softwareengineering.stackexchange.com/questions/171343/how-important-is-using-the-same-language-for-client-and-server) summarizes the research we did on this topic. As a summary: it depends™.
+
+## Discussion on our approach
+
+For now the client is written in C++ thanks to the `PixelGameEngine` renderer. We also developed the rest of the game (the ECS and the interaction with the database) in C++ for this reason.
+
+As we only started to have a look at the server a bit later on, we had a choice to make between continuing the implementation of the server also in C++ or using a different language.
+
+Our initial idea was to use `Go` as the server's language: we are more familiar with it and it handles the threading and networking quite well.
+
+However the problem with it would be that we would have to essentially make some wrappers around the core game classes (the ECS system) as we don't want to rewrite it. Also the network part would probably involve some conversions between the data structure we receive in Go and the binding to communicate to the server in C++. This is a similar situation we faced in the past for other projects and it was usually a bit of a pain to handle. Moreover, the networking shouldn't be such an issue that we would consider writing the server in another language: as we anyway will have to handle some level of networking on the client, it seems a bit counterproductive to do it a second time in the server.
+
+## Structure of this repository
+
+We divided the [source](src) folder into several directories to make it easy to segregate code that belongs to one application from the rest.
+
+When adding new features it is important to think about whether they would benefit only to the client or to the server or both. This most of the times provides a strong hint as to where they should live.
+
+It can also be that later on we realize that the `bsgo` library is too big, or that some separate features (for example Data Transfer Objects) can be shared: this could be achieved by adding more top level folders in the [src](src) directory.
+
+### bsgo
+
+The [bsgo](src/bsgo) folder contains the core library defining the Entity Component System and the interaction with the database. This is used both in the server and the client application.
+
+### net
+
+The [net](src/net) folder contains the networking elements used to make the server and the client communicate with one another. This code is used in both applications and uses the `asio` library.
+
+Currently even though none of the internal of `asio` are exposed in the interface of the library, we still require the library headers to be installed on the system. This could be changed in the future.
+
+For an implementation overview of the network library please refer to the dedicated section over at [networking](#networking).
+
+### pge
+
+The [pge](src/pge) folder contains the code to interact with the `PixelGameEngine`. It is used in the client to handle the rendering of the graphic interface.
+
+By having it in a dedicated folder, we are able to minimize the surface we would have to replace if we want to use a different engine. This also allows to easily update it without having to change too much code: the rest of the modules (mainly the client) do not know that the underlying drawing routines are using the `PixelGameEngine`.
+
+### server
+
+The [server](src/server) folder defines all the server specific code. It defines all the structures needed to accept client connections and handle the persistent simulation of the game loop.
+
+### client
+
+The [client](src/client) folder regroups all the code that is used exclusively by the client. It links against the core library and enriches it to present a compelling application to the player. It also serves the purpose of connecting to the server and updating the local data with what the server transmits.
+
+## Communication between client/server
+
+# Implementation details
+
+## Networking
+
+### Generalities
+The content of this [video series](https://youtu.be/2hNdkYInj4g?si=Q-NOTJ__p-5a2jS8) of Javidx9 was very informative. The resulting code can be found on [github](https://github.com/OneLoneCoder/Javidx9/tree/master/PixelGameEngine/BiggerProjects/Networking) and it inspired the [Connection](src/net/connection/Connection.hh) class we created.
+
+We use the [asio](#asio) library without boost to handle network communication in the project. We extracted all the logic to perform the calls, connect to the server and to the client in a dedicated [net](src/net) folder: similarly to what happens for the `PixelGameEngine` wrapping, we want to be able to swap libraries or update relatively easily.
+
+### Context
+
+The networking revolves around the idea of an `io_context`. This is wrapped by our own [Context](src/net/connection/Context.hh) class which is instantiated both on the client and the server. The idea is that this context runs from the whole lifetime of the application and is used in the background by `asio` to perform the network calls.
+
+### Connection
+
+A connection is the central object allowing to communicate. It has two modes: `SERVER` and `CLIENT`. This defines which operations it will perform. The difference is mainly on the order with which operations are performed as both connections will (during the game) be receiving and sending data.
+
+For the `CLIENT` mode we expect to try to connect to the server. Conversely in `SERVER` mode we get ready to accept connections.
+
+Sending data is made easy through the `send` method which takes a `IMessage` as input, serializes it and transmit it through the network.
+
+Receiving data is potentially more complex: depending on the type of data we might want to perform certain processes and relatively different depending whether we're on the client or the server. To this avail we provide a `setDataHandler` which allows to pass a callback which will receive the raw data from the network.
+
+### TcpServer
+
+A specific component of the server is the [TcpServer](src/net/server/TcpServer.hh) class. In order to make it easy to extend it and possibly reuse it and also to hide the dependency to the `asio` library we mainly work with callbacks.
+
+The [ServerConfig](src/net/server/ServerConfig.hh) defines several to handle a new connection (when it's ready to receive data), a disconnection from a client and some data received. This last part is to make it easy to automatically assign the same data handler (for example a method of the server class) to all incoming connections.
 
 ## AI of bots
 
-It seems there are two main ways to handle AI for NPCs:
-* behavior trees
-* state machines
+While doing some research we found out that it seems there are two main ways to handle AI for NPCs: [behavior trees](#behavior-trees) and [state machines](#state-machines).
 
 ### Behavior trees
 
-While searching for some resources, we gathered the following collection of articles:
+During the research we gathered the following collection of articles:
 * one on [gamedeveloper](https://www.gamedeveloper.com/programming/behavior-trees-for-ai-how-they-work).
 * one on the root website of the approach (as it seems :D) at [behaviortree.dev](https://www.behaviortree.dev/).
 * and of course on [wikipedia](https://en.wikipedia.org/wiki/Behavior_tree_(artificial_intelligence,_robotics_and_control)).
@@ -230,11 +346,13 @@ After pondering a bit, we decided to go for behavior tree. The state machine see
 
 The idea behind the behavior tree is to have a list of nodes arranged in a graph. They are executed at each step which allows to easily react to new situations. Contraty to state machines, we don't have to think about switching from any state to any other state: at each frame we just start from the root again and see which state we end up with when the execution of the tree is finished.
 
+Each node has an execution [state](src/bsgo/systems/NodeState.hh) which can be for example `RUNNING`, `FAILED` or `FINISHED`. While a node is `RUNNING` the scheduler will try to execute it. If it reaches one of the terminal state (`FAILED` or `FINISHED`) then the scheduler will continue the execution with the next node in the graph. This can either mean returning to the parent node (in case of a failure) or to the next in chain (for a finished node).
+
 The following image shows an example of how the very simplistic AI works at the moment:
 
 ![Behavior tree](resources/behavior_tree_example.png)
 
-In this example the root node is a repeater: this is usually advised as then we have an infinite behavior. We then have two main mode: the attack mode and the idle mode. Both of them are composed of a succession of actions. These are composed together with a fallback node, meaning that if the first strategy fail we will go on with the second one.
+In this example the root node is a repeater: this is usually advised as then we have an infinite behavior. We then have two main modes: the attack mode and the idle mode. Both of them are composed of a succession of actions. These are composed together with a fallback node, meaning that if the first strategy fails we will go on with the second one.
 
 #### Attack mode
 
@@ -268,6 +386,8 @@ if (determineState() != m_currentState) {
 ```
 
 It keeps the reactions of the AI dynamic by codifying them into the structure of the tree.
+
+# TODO: after this needs rework
 
 ## Entity Component System
 
@@ -416,82 +536,6 @@ We implemented a [GameMessageModule](src/client/lib/game/GameMessageModule.hh) c
 
 The strength of this system is that if the processing fails for whatever reason we will never receive the message indicating that the dock succeeded (because it did not) and so the UI will not make any changes that would have to be reverted.
 
-# Client/Server architecture
-
-## Generalities
-
-The aim of the project is to provide a client server architecture where multiple players can connect to the game and play together. In order to achieve this we decided to go for an authoritative server and separate client.
-
-From the code perspective there are elements and structures that will be used both by the client and the server.
-
-It is not so clear cut whether writing the server and the client in the same language bring huge benefits. This [article](https://softwareengineering.stackexchange.com/questions/171343/how-important-is-using-the-same-language-for-client-and-server) summarizes the research we did on this topic. As a summary: it depends™.
-
-## Discussion on our approach
-
-For now the client is written in C++ thanks to the `PixelGameEngine` renderer. We also developed the rest of the game (the ECS and the interaction with the database) in C++ for this reason.
-
-As we only started to have a look at the server a bit later on, we had a choice to make between continuing the implementation of the server also in C++ or using a different language.
-
-Our initial idea was to use `Go` as the server's language: we are more familiar with it and it handles the threading and networking quite well.
-
-However the problem with it would be that we would have to essentially make some wrappers around the core game classes (the ECS system) as we don't want to rewrite it. Also the network part would probably involve some conversions between the data structure we receive in Go and the binding to communicate to the server in C++. This is a similar situation as we havd in the past for other projects and it was usually a bit of a pain to handle. Moreover, the networking shouldn't be such an issue that we would consider writing the server in another language: as we anyway will have to handle some level of networking on the client, it seems a bit counterproductive to do it a second time in the server.
-
-## Structure of this repository
-
-We divided the [source](src) folder into several directories to make it easy to segregate code that belong to one application from the rest.
-
-### bsgo
-
-Thie [bsgo](src/bsgo) folder contains the core library defining the Entity Component System and the interaction with the database. This will most likely be used both in the server and the client side.
-
-### pge
-
-The [pge](src/pge) folder contains the code to interact with the `PixelGameEngine`. By having it in its own folder we are able to minimize the surface we would have to replace if we want to use a different engine. This also allows to easily update it without having to change too much code: the rest of the modules (mainly the client) do not know that the underlying drawing routines are using the `PixelGameEngine`.
-
-### client
-
-The [client](src/client) folder regroups all the code that is used exclusively by the client. It links against the core library and enriches it to present a compelling application to the player.
-
-### server
-
-The [server](src/server) folder defines all the server specific code. It will most likely be a smart wrapper around the core library of the project to expose some networking capabilities.
-
-### Add elements to the project
-
-When developing new features, we will now ask ourselves the question whether it can potentially be used both by the client and the server or only one of them. Depending on the answer to this question we will put the code in the adequate folder.
-
-It can also be that later on we realize that the `bsgo` library is too big, or that some separate features (for example networking or Data Transfer Objects) can be shared: this could be achieved by adding more top level folders in the [src](src) directory.
-
-# Networking
-
-## Research
-The content of this [video series](https://youtu.be/2hNdkYInj4g?si=Q-NOTJ__p-5a2jS8) of Javidx9 was very informative. The resulting code can be found on [github](https://github.com/OneLoneCoder/Javidx9/tree/master/PixelGameEngine/BiggerProjects/Networking) and it inspired the [Connection](src/net/connection/Connection.hh) class we created.
-
-## Generalities
-
-We use the [asio](#asio) library without boost to handle network communication in the project. We extracted all the logic to perform the calls, connect to the server and to the client in a dedicated [net](src/net) folder: similarly to what happens for the `PixelGameEngine` wrapping we want to be able to swap libraries or update relatively easily.
-
-⚠️ For now this is not entirely the case: even though none of the modules are using raw `asio` objects in their code, there are still some asio headers included in the `net` library. It is not too much of a problem for now but we could see to improve this later on.
-
-## Context
-
-The networking revolves around the idea of an `io_context`. This is wrapped by our own [Context](src/net/connection/Context.hh) class which is instantiated both on the client and the server. The idea is that this context runs from the whole lifetime of the application and is used in the background by `asio` to perform the network calls.
-
-## Connection
-
-A connection is the central object allowing to communicate. It has two modes: `SERVER` and `CLIENT`. This defines which operations it will perform. The difference is mainly on the order with which operations are performed as both connections will (during the game) be receiving and sending data.
-
-For the `CLIENT` mode we expect to try to connect to the server. Conversely in `SERVER` mode we get ready to accept connections.
-
-Sending data is made easy through the `send` method which takes a `IMessage` as input, serializes it and transmit it through the network.
-
-Receiving data is potentially more complex: depending on the type of data we might want to perform certain processes and relatively different depending whether we're on the client or the server. To this avail we provide a `setDataHandler` which allows to pass a callback which will receive the raw data from the network.
-
-## TcpServer
-
-A specific component of the server is the [TcpServer](src/net/server/TcpServer.hh) class. In order to make it easy to extend it and possibly reuse it and also to hide the dependency to the `asio` library we mainly work with callbacks.
-
-The [ServerConfig](src/net/server/ServerConfig.hh) defines several to handle a new connection (approval or denial), a disconnection from a client and some data received. This last part is to make it easy to automatically assign the same data handler (for now a method of the server class) to all incoming connections.
 
 # Server design
 
@@ -537,14 +581,6 @@ https://github.com/nlohmann/json
 
 ORM in cpp:
 https://github.com/silverqx/TinyORM
-
-# Current progress of the game
-
-![state of the game 1](resources/state_of_the_game_1.png)
-
-![state of the game 2](resources/state_of_the_game_2.png)
-
-![state of the game 3](resources/state_of_the_game_3.png)
 
 # DB cheat sheet
 
