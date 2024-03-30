@@ -55,7 +55,7 @@ This projects uses:
 - [eigen](https://eigen.tuxfamily.org/index.php?title=Main_Page): installation instructions [here](https://www.cyberithub.com/how-to-install-eigen3-on-ubuntu-20-04-lts-focal-fossa/) for Ubuntu 20.04, a simple `sudo apt install libeigen3-dev` should be enough.
 - [libpqxx](https://github.com/jtv/libpqxx) for db connection. See installation instructions in the [dedicated section](#libpqxx) of this README.
 - [golang migrate](https://github.com/golang-migrate/migrate/blob/master/cmd/migrate/README.md): following the instructions there should be enough.
-- postgresql which can be taken from the packages with `sudo apt-get install postgresql-14` for example.
+- [postgresql](https://www.postgresql.org/) to define the database. See installation instructions in the [dedicated section](#postgresql) of this README.
 - [asio](https://think-async.com/Asio/) for networking. See installation instructions in the [dedicated section](#asio) of this README.
 
 ## Clone the repository
