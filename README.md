@@ -392,7 +392,7 @@ After several iterations we came up with the following design:
 
 ![diagram](resources/messaging-diagram.svg)
 
-The main entry point of the server is the `InputMessageQueue`: this sends messages to a triage consumer which only responsibility is to route messages to a consumer that can process them.
+The main entry point of the server is the `InputMessageQueue`: this sends messages to a triage consumer whose only responsibility is to route messages to a consumer that can process them.
 
 We have some interconnection between the system message consumers and the system processors: some messages will lead to changes in the systems such as logging out of the game where we need to remove the player ship's entity from its system.
 
