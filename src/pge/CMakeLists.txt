@@ -1,9 +1,9 @@
 
-add_library (pge_app_lib SHARED "")
+add_library (pge_lib SHARED "")
 
 set (CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-target_compile_options(pge_app_lib PRIVATE
+target_compile_options(pge_lib PRIVATE
 	-Wno-error=unknown-pragmas)
 
 add_subdirectory (
@@ -34,7 +34,7 @@ add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/coordinates
 	)
 
-target_link_libraries(pge_app_lib
+target_link_libraries(pge_lib
 	png
 	X11
 	GL
