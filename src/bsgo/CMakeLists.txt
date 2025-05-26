@@ -1,5 +1,5 @@
 
-add_library (bsgalone_core_lib SHARED "")
+add_library (bsgo_lib SHARED "")
 
 set (CMAKE_POSITION_INDEPENDENT_CODE ON)
 
@@ -61,12 +61,12 @@ add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/views
 	)
 
-target_link_libraries (bsgalone_core_lib
+target_link_libraries (bsgo_lib
 	pq
 	pqxx
 	bsgalone_net_lib
 	)
 
-target_include_directories (bsgalone_core_lib PUBLIC
+target_include_directories (bsgo_lib PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
 	)
