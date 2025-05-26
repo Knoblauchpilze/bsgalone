@@ -35,7 +35,7 @@ void WeaponsUiHandler::initializeMenus(const int width,
                                        const int height,
                                        sprites::TexturePack &texturesLoader)
 {
-  constexpr auto WEAPONS_TEXTURE_PACK_FILE_PATH = "data/assets/weapons.png";
+  constexpr auto WEAPONS_TEXTURE_PACK_FILE_PATH = "assets/weapons.png";
   const sprites::PackDesc pack{.file   = WEAPONS_TEXTURE_PACK_FILE_PATH,
                                .sSize  = Vec2i{44, 92},
                                .layout = Vec2i{3, 1}};
@@ -120,7 +120,7 @@ void WeaponsUiHandler::onMessageReceived(const bsgo::IMessage &message)
 
 namespace {
 constexpr auto NUMBER_OF_WEAPONS           = 6;
-constexpr auto ABILITIES_PICTURE_FILE_PATH = "data/assets/slot.png";
+constexpr auto ABILITIES_PICTURE_FILE_PATH = "assets/slot.png";
 } // namespace
 
 void WeaponsUiHandler::generateWeaponsMenus(int width, int height)

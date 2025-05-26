@@ -31,7 +31,7 @@ void GameScreenRenderer::loadResources(int /*width*/,
                                        int /*height*/,
                                        sprites::TexturePack &texturesLoader)
 {
-  constexpr auto ASTEROID_TEXTURE_PACK_FILE_PATH = "data/assets/asteroid.png";
+  constexpr auto ASTEROID_TEXTURE_PACK_FILE_PATH = "assets/asteroid.png";
   constexpr auto ASTEROID_TILE_WIDTH_PIXELS      = 450;
   constexpr auto ASTEROID_TILE_HEIGHT_PIXELS     = 404;
   auto pack = sprites::PackDesc{.file = ASTEROID_TEXTURE_PACK_FILE_PATH,
@@ -40,7 +40,7 @@ void GameScreenRenderer::loadResources(int /*width*/,
 
   m_asteroidTexturesPackId = texturesLoader.registerPack(pack);
 
-  constexpr auto CLASS_1_TEXTURE_PACK_FILE_PATH = "data/assets/class_1.png";
+  constexpr auto CLASS_1_TEXTURE_PACK_FILE_PATH = "assets/class_1.png";
   constexpr auto CLASS_1_TILE_WIDTH_PIXELS      = 168;
   constexpr auto CLASS_1_TILE_HEIGHT_PIXELS     = 188;
   pack = sprites::PackDesc{.file = CLASS_1_TEXTURE_PACK_FILE_PATH,
@@ -49,7 +49,7 @@ void GameScreenRenderer::loadResources(int /*width*/,
 
   m_class1TexturesPackId = texturesLoader.registerPack(pack);
 
-  constexpr auto CLASS_3_TEXTURE_PACK_FILE_PATH = "data/assets/class_3.png";
+  constexpr auto CLASS_3_TEXTURE_PACK_FILE_PATH = "assets/class_3.png";
   constexpr auto CLASS_3_TILE_WIDTH_PIXELS      = 388;
   constexpr auto CLASS_3_TILE_HEIGHT_PIXELS     = 504;
   pack = sprites::PackDesc{.file = CLASS_3_TEXTURE_PACK_FILE_PATH,
@@ -58,7 +58,7 @@ void GameScreenRenderer::loadResources(int /*width*/,
 
   m_class3TexturesPackId = texturesLoader.registerPack(pack);
 
-  constexpr auto OUTPOST_TEXTURE_PACK_FILE_PATH = "data/assets/outpost.png";
+  constexpr auto OUTPOST_TEXTURE_PACK_FILE_PATH = "assets/outpost.png";
   constexpr auto OUTPOST_TILE_WIDTH_PIXELS      = 535;
   constexpr auto OUTPOST_TILE_HEIGHT_PIXELS     = 575;
   pack = sprites::PackDesc{.file = OUTPOST_TEXTURE_PACK_FILE_PATH,
@@ -67,7 +67,7 @@ void GameScreenRenderer::loadResources(int /*width*/,
 
   m_outpostTexturesPackId = texturesLoader.registerPack(pack);
 
-  constexpr auto BULLET_TEXTURE_PACK_FILE_PATH = "data/assets/bullet.png";
+  constexpr auto BULLET_TEXTURE_PACK_FILE_PATH = "assets/bullet.png";
   constexpr auto BULLET_TILE_WIDTH_PIXELS      = 485;
   constexpr auto BULLET_TILE_HEIGHT_PIXELS     = 492;
   pack = sprites::PackDesc{.file = BULLET_TEXTURE_PACK_FILE_PATH,

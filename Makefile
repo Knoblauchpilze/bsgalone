@@ -37,7 +37,7 @@ cleanSandbox:
 
 copyData:
 	mkdir -p sandbox/
-	rsync -avH data sandbox/
+	rsync -avH assets sandbox/
 	rsync -avH scripts/ sandbox/
 
 copyDebug: debug copyData

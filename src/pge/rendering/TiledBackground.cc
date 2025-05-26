@@ -39,7 +39,7 @@ void TiledBackground::render(Renderer &engine, const RenderState &state)
 
 void TiledBackground::loadDecal(sprites::TexturePack &texturesLoader)
 {
-  constexpr auto BACKGROUND_TEXTURE_PACK_FILE_PATH = "data/assets/system_bg.png";
+  constexpr auto BACKGROUND_TEXTURE_PACK_FILE_PATH = "assets/system_bg.png";
   constexpr auto BACKGROUND_TILE_WIDTH_PIXELS      = 768;
   constexpr auto BACKGROUND_TILE_HEIGHT_PIXELS     = 768;
   auto pack = sprites::PackDesc{.file = BACKGROUND_TEXTURE_PACK_FILE_PATH,
