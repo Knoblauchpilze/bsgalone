@@ -1,56 +1,65 @@
+
+GIT_COMMIT_HASH=$(shell git rev-parse --short HEAD)
+
 debug:
-	mkdir -p build/Debug && cd build/Debug && cmake -DCMAKE_BUILD_TYPE=Debug ../.. && make -j 8
+	mkdir -p cmake-build/Debug && \
+	cd cmake-build/Debug && \
+	cmake \
+		-DCMAKE_BUILD_TYPE=Debug \
+		../.. \
+	&& \
+	make -j 8
+
+debugWithTests:
+	mkdir -p cmake-build/Debug && \
+	cd cmake-build/Debug && \
+	cmake \
+		-DCMAKE_BUILD_TYPE=Debug \
+		-DENABLE_TESTS=ON \
+		../.. \
+	&& \
+	make -j 8
 
 release:
-	mkdir -p build/Release && cd build/Release && cmake -DCMAKE_BUILD_TYPE=Release ../.. && make -j 8
+	mkdir -p cmake-build/Release && \
+	cd cmake-build/Release && \
+	cmake \
+		-DCMAKE_BUILD_TYPE=Release \
+		../.. \
+	&& \
+	make -j 8
 
 clean:
-	rm -rf build
+	rm -rf cmake-build
 
 cleanSandbox:
 	rm -rf sandbox
 
-copyRelease:
-	rsync -avH build/Release/lib build/Release/bin sandbox/
-
-copyDebug:
-	rsync -avH build/Debug/lib build/Debug/bin sandbox/
-
-copy:
+copyData:
 	mkdir -p sandbox/
 	rsync -avH data sandbox/
-	mv sandbox/data/*.sh sandbox/
+	rsync -avH scripts/ sandbox/
 
-sandbox: release copy copyRelease
+copyDebug: debug copyData
+	rsync -avH cmake-build/Debug/lib cmake-build/Debug/bin sandbox/
 
-sandboxDebug: debug copy copyDebug
+copyRelease: release copyData
+	rsync -avH cmake-build/Release/lib cmake-build/Release/bin sandbox/
 
-# Run client
-run: sandbox
+runclient: copyRelease
 	cd sandbox && ./run.sh bsgalone_client
 
-# Debug client
-drun: sandboxDebug
+drunclient: copyDebug
 	cd sandbox && ./debug.sh bsgalone_client
 
-# Run server
-runserver: sandbox
-	cd sandbox && ./run.sh bsgalone_server
+runserver: copyRelease
+	cd sandbox && ./run.sh bsgalone_server 2323
 
-# Debug server
-drunserver: sandboxDebug
-	cd sandbox && ./debug.sh bsgalone_server
+drunserver: copyDebug
+	cd sandbox && ./debug.sh bsgalone_server 2323
 
-v: sandboxDebug
-	cd sandbox && ./valgrind.sh bsgalone_server
-
-profile: sandboxDebug
-	cd sandbox && ./profile.sh local
-
-tests: sandboxDebug
-	cd sandbox && ./tests.sh local
-# See here: https://stackoverflow.com/questions/3931741/why-does-make-think-the-target-is-up-to-date
 PHONY: .tests
+tests: debugWithTests copyDebug
 
-dtests: sandboxDebug
-	cd sandbox && ./debug-tests.sh local
+runtests: tests
+	cd sandbox && ./tests.sh

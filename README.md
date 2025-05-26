@@ -48,7 +48,11 @@ Some known limitations:
 
 # Installation
 
-## Prerequisite
+⚠️ The following sections are tailored for an installation on Ubuntu: this is what was used during the development. If you want to try to install it on another OS it probably works but some of the command will need to be adapted.
+
+If you do so, please consider contributing the guide as an issue to help fellow developers!
+
+## Prerequisites
 
 This projects uses:
 
@@ -62,13 +66,13 @@ This projects uses:
 
 ## Clone the repository
 
-- Clone the repo: `git clone git@github.com:Knoblauchpilze/bsgalone.git`.
-- Clone dependencies:
-  - [core_utils](https://github.com/Knoblauchpilze/core_utils)
-- Go to the project's directory `cd ~/path/to/the/repo`.
-- Compile: `make run`.
+The first step (as is often the case) if you want to work on this project is to clone the repository with:
 
-Don't forget to add `/usr/local/lib` to your `LD_LIBRARY_PATH` to be able to load shared libraries at runtime. This is handled automatically when using the `make run` target (which internally uses the [run.sh](data/run.sh) script).
+```bash
+git clone git@github.com:Knoblauchpilze/bsgalone.git
+# Move to the project's folder
+cd bsgalone
+```
 
 ## libpqxx
 
@@ -88,7 +92,7 @@ Those were taken from [this](https://preshing.com/20170511/how-to-build-a-cmake-
 
 Then we can attach the library as a dependency of the project as described in the rest of the install [guide](https://github.com/jtv/libpqxx/blob/master/BUILDING-cmake.md#option-b-make-use-of-a-separately-installed-libpqxx).
 
-## Install the asio library (Ubuntu)
+## asio
 
 This project uses the `asio` library for networking. There are two ways to install it: either using the version available in the packages. At the time of writing with Ubuntu 20.04 the packaged version is `1.18.1` which is quite old (2020). If you choose to do so, you can run:
 
@@ -129,6 +133,151 @@ We isolated the `PixelGameEngine` into its own library in [src/pge](src/pge) and
 Additionally the application does not define a very nice icon nor tooltip. This was changed directly in the [PixelGameEngine](src/pge/olc/olcPixelGameEngine.h) file in [28590d1](https://github.com/Knoblauchpilze/bsgalone/commit/28590d182a35e3977f3221c7991a6be6b2169241).
 
 In case of a future update we can port those changes or adapt them.
+
+## VScode configurations
+
+### Extensions
+
+In order to make it easy to debug and work on the project directly into the IDE, the following two extensions are recommended:
+
+- [cmake-tools](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools)
+- [test-mate](https://marketplace.visualstudio.com/items?itemName=matepek.vscode-catch2-test-adapter)
+
+They will respectively help you build the project and debug/start it in your IDE and allow to run and debug tests.
+
+The following sections assume that you installed both.
+
+### Configuration for intellisense
+
+In case you use VScode as an IDE to work on this project, it is recommended to create a `.vscode` folder at the root of the directory. You can then copy past the following configuration in a `c_cpp_properties.json` file:
+
+```json
+{
+  "configurations": [
+    {
+      "name": "Linux",
+      "includePath": [
+        "${workspaceFolder}/**",
+        "${workspaceFolder}/src/bsgo",
+        "${workspaceFolder}/src/client",
+        "${workspaceFolder}/src/core",
+        "${workspaceFolder}/src/net",
+        "${workspaceFolder}/src/pge",
+        "${workspaceFolder}/src/server",
+        "/usr/local/include/",
+        "/usr/local/include/asio"
+      ],
+      "defines": [],
+      "compilerPath": "/usr/bin/g++",
+      "cppStandard": "c++20",
+      "intelliSenseMode": "linux-gcc-x64",
+      "configurationProvider": "ms-vscode.cmake-tools"
+    }
+  ],
+  "version": 4
+}
+```
+
+Note that this will require you to have a local `g++` version supporting at least `c++20`.
+
+### Configuration for CMake
+
+The `cmake` tool extension allows to configure a custom build folder and to set arguments for the configure step. In this project we use conditional targets to build the tests: this is activated (as defined in the [Makefile](Makefile)) by the `ENABLE_TESTS` flag.
+
+It is required to instruct the extension to use this flag when configuring the project so that it detects correctly all the target.
+
+You can use the following configuration and paste it in the `.vscode` folder created above under `settings.json`:
+
+```json
+{
+  "cmake.configureOnOpen": false,
+  "cmake.buildDirectory": "${workspaceFolder}/cmake-build",
+  "cmake.configureArgs": ["-DENABLE_TESTS=ON"],
+  "testMate.cpp.discovery.gracePeriodForMissing": 500,
+  "testMate.cpp.discovery.runtimeLimit": 500,
+  "testMate.cpp.test.advancedExecutables": [
+    {
+      "pattern": "cmake-build/**/*{test,Test,TEST}*"
+    }
+  ],
+  "C_Cpp.errorSquiggles": "enabled",
+  "C_Cpp.default.compilerPath": "/usr/bin/g++"
+}
+```
+
+### Launch/debug configuration
+
+In order to run and debug the executables created by the project you can use the following launch configurations: the two configurations will allow to launch either the server or the client application and allow to debug them directly in the IDE if needed. You can paste the following content in a file under `.vscode/launch.json`:
+
+```json
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Server",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/cmake-build/bin/bsgalone_server",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${fileDirname}",
+      "environment": [
+        {
+          "name": "PORT",
+          "value": "5000"
+        }
+      ],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        },
+        {
+          "description": "Set Disassembly Flavor to Intel",
+          "text": "-gdb-set disassembly-flavor intel",
+          "ignoreFailures": true
+        }
+      ]
+    },
+    {
+      "name": "Client",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/cmake-build/bin/bsgalone_client",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${fileDirname}",
+      "environment": [
+        {
+          "name": "PORT",
+          "value": "5000"
+        }
+      ],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        },
+        {
+          "description": "Set Disassembly Flavor to Intel",
+          "text": "-gdb-set disassembly-flavor intel",
+          "ignoreFailures": true
+        }
+      ]
+    }
+  ]
+}
+```
+
+This should allow you to pick the `Server` configuration win the `RUN AND DEBUG` tab:
+
+![Launch config](resources/launch-config.png)
 
 # Setting up the DB
 
@@ -219,6 +368,22 @@ host    all             all             192.168.1.0/0          scram-sha-256
 The connection method was changed from `md5` to `scram-sha-256` as recommended by this [DBA stackexchange](https://dba.stackexchange.com/questions/83984/connect-to-postgresql-server-fatal-no-pg-hba-conf-entry-for-host) post: it is supposed to be more secured than the old `md5` approach.
 
 With this we were able to connect from a remote computer to the database hosted on another machine.
+
+# Running the game locally
+
+When all the steps above have been successfully completed you can simply start the game locally. You will need two different terminals. The [Makefile](Makefile) defines useful commands to ease the process:
+
+```bash
+# in one terminal
+make runserver
+
+# in a second terminal
+make runclient
+```
+
+If everything goes well you should see some logs appearing in both terminals and a window looking like the one below appear:
+
+![Welcome screen](resources/welcome_screen.png)
 
 # Client/Server architecture
 
