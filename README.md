@@ -25,24 +25,26 @@ It is also a very good opportunity to actually write a multi-player game which i
 ## What works?
 
 As of the time of writing, the game offers:
-* a persistent registration/log in system
-* two factions which have similar capabilities but are able to fight each other in the game
-* a persistent server to which clients can connect to
-* a shop where the player can buy gear for their ships and equip them
-* multiple systems where the players can travel
-* some content in the systems in the form of outposts, asteroids and AIs
-* a working health/power system to make fighting the other players/AIs slightly challenging
-* a mining system where the player can accumulate resources to buy more gear for their ships
+
+- a persistent registration/log in system
+- two factions which have similar capabilities but are able to fight each other in the game
+- a persistent server to which clients can connect to
+- a shop where the player can buy gear for their ships and equip them
+- multiple systems where the players can travel
+- some content in the systems in the form of outposts, asteroids and AIs
+- a working health/power system to make fighting the other players/AIs slightly challenging
+- a mining system where the player can accumulate resources to buy more gear for their ships
 
 ## Limitations
 
 Some known limitations:
-* 2D game
-* no collisions
-* no dynamic evolution of systems (once AIs or asteroids are killed they don't respawn until a server restart)
-* limited content in the systems
-* various edge cases where the server will crash
-* client applications access the DB directly with the same user as the server
+
+- 2D game
+- no collisions
+- no dynamic evolution of systems (once AIs or asteroids are killed they don't respawn until a server restart)
+- limited content in the systems
+- various edge cases where the server will crash
+- client applications access the DB directly with the same user as the server
 
 # Installation
 
@@ -73,6 +75,7 @@ Don't forget to add `/usr/local/lib` to your `LD_LIBRARY_PATH` to be able to loa
 The [README](https://github.com/jtv/libpqxx/blob/master/BUILDING-cmake.md) in the repo is not exactly working. You need to install `libpq-dev`: while not indicated it is clear from the build process.
 
 Then the commands are not as described [here](https://github.com/jtv/libpqxx/blob/master/BUILDING-cmake.md#building-and-installing-libpqxx-yourself) but rather:
+
 ```bash
 mkdir build
 cd build
@@ -85,51 +88,32 @@ Those were taken from [this](https://preshing.com/20170511/how-to-build-a-cmake-
 
 Then we can attach the library as a dependency of the project as described in the rest of the install [guide](https://github.com/jtv/libpqxx/blob/master/BUILDING-cmake.md#option-b-make-use-of-a-separately-installed-libpqxx).
 
-## asio
+## Install the asio library (Ubuntu)
 
-### Install on the system
+This project uses the `asio` library for networking. There are two ways to install it: either using the version available in the packages. At the time of writing with Ubuntu 20.04 the packaged version is `1.18.1` which is quite old (2020). If you choose to do so, you can run:
 
-This [Stack Overflow topic](https://stackoverflow.com/questions/70848366/unable-to-move-asiosslstream-to-handler) seems to indicate that there's a package for it under:
 ```bash
 apt-get install libasio-dev
 ```
 
-However this seems to be a relatively old version (1.18, from August 2020). Instead, we decided to download the newest revision from the [official website](https://think-async.com/Asio/). Click on the download link from the [download page](https://think-async.com/Asio/Download.html).
-
-The download process gives a `tar.bz2` file which can be extracted with (change the version as needed):
-```bash
-tar -xvjf asio-1.28.0.tar.bz2
-```
+You can also download the sources directly from the [official website](https://think-async.com/Asio/) (click on `Downloads`). This gives version `1.30.2` (at the time of writing).
 
 **Note:** we used version `1.28` for the development.
 
-Asio is a header only library so we then just need to copy this to `usr/local/include`:
+The download process gives a `tar.bz2` file which can be extracted with (change the version as needed) and installed:
+
 ```bash
+tar -xvjf asio-1.28.0.tar.bz2
 sudo mkdir /usr/local/include/asio
 sudo cp -r asio-1.28.0/include/* /usr/local/include/asio
 ```
 
 You can remove the `Makefile.am` and `Makefile.in` files from this directory to not pollute the includes.
 
-### Use the library in the project
-
-After this we need to instruct cmake to find the library. This shouldn't be an issue as it is now installed on the system directories. However we faced another problem. When looking at `asio.hpp` the includes look fine:
-
-![Asio include ok](resources/asio_include_ok.png)
-
-But when going into for example `any_completion_executor.hpp` we see this:
-
-![Asio include ko](resources/asio_include_ko.png)
-
-This is a problem as relatively to the `any_completion_executor.hpp` the config file is in the same directory. So it seems the library expects to have the `/usr/local/include` directory as a `-I` directive to correctly be set up.
-
-Looking at a few topics on the internet it seems like this is usually handled by putting the library directly in the project's folder, or by adding some include pathes in the CMake files (see [1](https://stackoverflow.com/questions/60592615/how-would-i-include-asio-library-using-cmake) or [2](https://stackoverflow.com/questions/53945148/how-to-use-the-c-standalone-asio-library)). Another way is to write manually a `FindAsio.cmake` file to find the corresponding package and set the include path automatically.
-
-We also used this approach in the [CMakeLists.txt](src/net/CMakeLists.txt) of the net library for example. This is sufficient to allow development, we might revisit this later on.
-
 ## postgresql
 
 To install postgresql we can simply rely on the packages and run the following:
+
 ```bash
 sudo apt-get install postgresql-14
 ```
@@ -175,6 +159,7 @@ Once all of the above is done, we can successfully run the provided scripts to c
 ## Populating the database
 
 We use `migrate` to manage the database and perform the data migrations. Once the previous step is complete (so the user and the database both exist) one can simply go to the [migrations](database/migrations) folder and run:
+
 ```bash
 make migrate
 ```
@@ -206,11 +191,13 @@ Once again we found a nice [Stack Overflow](https://stackoverflow.com/questions/
 ### Edit: postgresql.conf
 
 Edit the file:
+
 ```bash
 sudo nano /etc/postgresql/<version>/main/postgresql.conf
 ```
 
 And enable or add:
+
 ```
 listen_addresses = '*'
 ```
@@ -218,11 +205,13 @@ listen_addresses = '*'
 ### Edit pg_hba.conf
 
 Edit the file:
+
 ```bash
 sudo nano /etc/postgresql/<version>/main/pg_hba.conf
 ```
 
 Register the network mask you want to allow connections from. A `0` stands for a wildcard and we chose to restrict to local network for now by adding the following:
+
 ```
 host    all             all             192.168.1.0/0          scram-sha-256
 ```
@@ -350,13 +339,15 @@ By its nature, each system is independent: no action taken in one system can hav
 In order to achieve this, we created a [SystemProcessor](src/server/lib/game/SystemProcessor.hh) class: its role is to regroup all the structures needed to fully simulate what happens in a system and to make it run in its own thread.
 
 This class contains:
-* a [Coordinator](src/bsgo/Coordinator.hh) responsible to list all the entities for this system
-* some [services](src/bsgo/services/Services.hh) responsible to process the messages generated by the clients and the internal ECS in this system
-* an [EntityMapper](src/bsgo/data/DatabaseEntityMapper.hh) responsible to keep track of a mapping between the database and the entities
+
+- a [Coordinator](src/bsgo/Coordinator.hh) responsible to list all the entities for this system
+- some [services](src/bsgo/services/Services.hh) responsible to process the messages generated by the clients and the internal ECS in this system
+- an [EntityMapper](src/bsgo/data/DatabaseEntityMapper.hh) responsible to keep track of a mapping between the database and the entities
 
 This processor runs asynchronously in its own thread and handles the simulation in the following steps:
-* processing the messages related to this system
-* updating the entities
+
+- processing the messages related to this system
+- updating the entities
 
 The output of this simulation is a bunch of messages that need to be dispatched to the various clients interested in them.
 
@@ -377,16 +368,18 @@ To come back to the dock example, the [DockMessageConsumer](src/server/lib/consu
 This approach is quite flexible as it allows to easily keep messages which would fail to be processed for later analysis and make it easy to separate messages and make them processed by the most relevant consumers.
 
 Consumers are separated in the server based on their kind:
-* [input](src/server/lib/consumers/input) consumers are responsible to handle user operation such as login or signup: anything that is not part of the game loop
-* [system](src/server/lib/consumers/system) consumers are responsible to handle messages specific to a system. We typically have multiple instances of each consumer in the server, one per system
-* [internal](src/server/lib/consumers/internal) consumers are responsible to handle messages that are generated by the server and need additional processing before being sent out to client applications. A typical example is a jump message: when a client jumps from one system to another we need to handle some changes in the source and the destination system which is handled through an internal message
+
+- [input](src/server/lib/consumers/input) consumers are responsible to handle user operation such as login or signup: anything that is not part of the game loop
+- [system](src/server/lib/consumers/system) consumers are responsible to handle messages specific to a system. We typically have multiple instances of each consumer in the server, one per system
+- [internal](src/server/lib/consumers/internal) consumers are responsible to handle messages that are generated by the server and need additional processing before being sent out to client applications. A typical example is a jump message: when a client jumps from one system to another we need to handle some changes in the source and the destination system which is handled through an internal message
 
 ## Triaging messages
 
 The server is responsible to handle a lot of messages from various sources. This includes:
-* messages incoming from various client connections
-* messages produced by the `SystemProcessor`s
-* messages produced internally and needing to be processed before being sent to clients
+
+- messages incoming from various client connections
+- messages produced by the `SystemProcessor`s
+- messages produced internally and needing to be processed before being sent to clients
 
 After several iterations we came up with the following design:
 
@@ -453,9 +446,10 @@ A straightforward solution is to make the UI aware of the ECS and just let them 
 In [How to sync entities in an ecs game](https://gamedev.stackexchange.com/questions/178469/how-to-sync-entities-in-an-ecs-game) and [Networking with entity component system](https://www.reddit.com/r/gamedev/comments/5oib5v/networking_with_entity_component_system/) the recommendation is to use a `NetworkComponent` or something similar. The idea in each case is to have some dedicated `NetworkSystem` which takes care of receiving data and updated the entities which have a network component. The network component can presumably be either very stupid (just flagging the entity as having some form of networking aspect) or a bit smarter and define for example the properties of other components needing to be synced.
 
 The topic in [How to network this entity system](https://gamedev.stackexchange.com/questions/21032/how-to-network-this-entity-system) does not recommend to go for a 'smart' network component as this is essentially mirroring what already exists in other components. Instead it seems like the approach would then be to have the `NetworkSystem` be able to deal with each component in a way similar to:
-* check if the entity has a network aspect
-* if yes iterates over all registered component
-* for each component call an internal method that indicates which properties need to be updated and how
+
+- check if the entity has a network aspect
+- if yes iterates over all registered component
+- for each component call an internal method that indicates which properties need to be updated and how
 
 One drawback of this is that the `NetworkSystem` will grow quite a bit due to handling all the components we have in the game. The plus is that there's a single place which should deal with network communication. We could possibly also include the various reconciliation mechanisms here.
 
@@ -492,9 +486,10 @@ One general principle is that as the client applications are running essentially
 Going a step further, we even have systems that are not present on the client applications such as the health system of the removal system: this is because such processes need to be validated by the server before any action is taken on the client's side.
 
 In order to solve this problem we created a [NetworkComponent](src/bsgo/components/NetworkComponent.hh): it defines a list of properties that need to be 'synced' and acts in the following way (with its companion [NetworkSystem](src/bsgo/systems/NetworkSystem.hh)):
-* each component defines an update interval
-* the network system detects when a component has not been synced since long enough
-* in this case it sends an update message with all the properties needing to be synced
+
+- each component defines an update interval
+- the network system detects when a component has not been synced since long enough
+- in this case it sends an update message with all the properties needing to be synced
 
 We rely on the rest of the server to route these update messages to the clients that are interested in them (so the clients which are in the same system as the entity).
 
@@ -509,15 +504,17 @@ An important thing to note is that the ECS never interacts directly with the dat
 The goal of the client's application is to provide a view of what's happening in the server for a specific player. On top of aiming at replicating what is happening on the server, it should also allow the player to transmit commands to the server so that a specific entity is following what the player wants.
 
 The application has two main problems to solve:
-* how to send updates to the server from the UI?
-* how to apply the updates from the server to the local UI and ECS?
+
+- how to send updates to the server from the UI?
+- how to apply the updates from the server to the local UI and ECS?
 
 ## Splitting the tasks in the UI
 
 The client application splits the responsibilities to react to the user's input into several facets:
-* the [IRenderer](src/client/lib/renderers/IRenderer.hh) takes care of rendering the visual elements
-* the [IUIHandler](src/client/lib/ui/IUiHandler.hh) takes care of rendering the UI
-* the [IInputHandler](src/client/lib/inputs/IInputHandler.hh) takes care of interpreting the input of the user
+
+- the [IRenderer](src/client/lib/renderers/IRenderer.hh) takes care of rendering the visual elements
+- the [IUIHandler](src/client/lib/ui/IUiHandler.hh) takes care of rendering the UI
+- the [IInputHandler](src/client/lib/inputs/IInputHandler.hh) takes care of interpreting the input of the user
 
 In addition the client also defines the notion of a [Screen](src/client/lib/game/Screen.hh): this is a way to represent which is the active view currently displayed in the application. Typically the panel of actions available to the user will not be the same whether they are in the outpost or not logged in or playing the game.
 
@@ -556,6 +553,7 @@ The client uses this in order to not instantiate systems dealing with events tha
 ## Networking
 
 ### Generalities
+
 The content of this [video series](https://youtu.be/2hNdkYInj4g?si=Q-NOTJ__p-5a2jS8) of Javidx9 was very informative. The resulting code can be found on [github](https://github.com/OneLoneCoder/Javidx9/tree/master/PixelGameEngine/BiggerProjects/Networking) and it inspired the [Connection](src/net/connection/Connection.hh) class we created.
 
 We use the [asio](#asio) library without boost to handle network communication in the project. We extracted all the logic to perform the calls, connect to the server and to the client in a dedicated [net](src/net) folder: similarly to what happens for the `PixelGameEngine` wrapping, we want to be able to swap libraries or update relatively easily.
@@ -587,22 +585,25 @@ While doing some research we found out that it seems there are two main ways to 
 ### Behavior trees
 
 During the research we gathered the following collection of articles:
-* one on [gamedeveloper](https://www.gamedeveloper.com/programming/behavior-trees-for-ai-how-they-work).
-* one on the root website of the approach (as it seems :D) at [behaviortree.dev](https://www.behaviortree.dev/).
-* and of course on [wikipedia](https://en.wikipedia.org/wiki/Behavior_tree_(artificial_intelligence,_robotics_and_control)).
+
+- one on [gamedeveloper](https://www.gamedeveloper.com/programming/behavior-trees-for-ai-how-they-work).
+- one on the root website of the approach (as it seems :D) at [behaviortree.dev](https://www.behaviortree.dev/).
+- and of course on [wikipedia](<https://en.wikipedia.org/wiki/Behavior_tree_(artificial_intelligence,_robotics_and_control)>).
 
 ### State machines
 
 State machines seem pretty linked to Unity which probably has an implementation of them. The collection of articles below present the concept:
-* one explaining how it works [in Unity](https://pavcreations.com/finite-state-machine-for-ai-enemy-controller-in-2d/2/#Activity-class).
-* this one without Unity over at [tutsplus](https://code.tutsplus.com/finite-state-machines-theory-and-implementation--gamedev-11867t).
-* this [one](https://www.gamedeveloper.com/programming/designing-a-simple-game-ai-using-finite-state-machines) is similar to the previous one but simpler.
+
+- one explaining how it works [in Unity](https://pavcreations.com/finite-state-machine-for-ai-enemy-controller-in-2d/2/#Activity-class).
+- this one without Unity over at [tutsplus](https://code.tutsplus.com/finite-state-machines-theory-and-implementation--gamedev-11867t).
+- this [one](https://www.gamedeveloper.com/programming/designing-a-simple-game-ai-using-finite-state-machines) is similar to the previous one but simpler.
 
 ### Decision
 
 For our purposes it seems like both things could work:
-* state machines might be easier if it's easy to come up with all the states beforehand: then it's clear what are the transitions and what can happen in any state.
-* decision trees might require a more careful definition of what can happen in which scenario. The fallback mechanisms are also not as clear as with the state machine where it's just transitioning to another state: here we would have to go up the hierarchy and see what to do.
+
+- state machines might be easier if it's easy to come up with all the states beforehand: then it's clear what are the transitions and what can happen in any state.
+- decision trees might require a more careful definition of what can happen in which scenario. The fallback mechanisms are also not as clear as with the state machine where it's just transitioning to another state: here we would have to go up the hierarchy and see what to do.
 
 After pondering a bit, we decided to go for behavior tree. The state machine seems similar to how we already approached AI in the past so maybe it's a good idea to try something new.
 
@@ -639,10 +640,12 @@ This mode can't fail: the AI will just loop indefinitely until something else ha
 At each loop of the game we just iterate over the whole tree again. Usually it is advised to keep the processing time of nodes small so that it's not an issue to iterate over them very often.
 
 Due to the dynamic nature of the tree and the fact that we iterate over it all the time, we can very easily react to a change:
-* we're in idle mode but a target arrives? The attack mode will trigger itself on its own because the `PickTarget` node will suddenly return a valid target.
-* we're shooting at the enemy but it dies? The next iteration will fail to find a target and we go back to idle mode.
+
+- we're in idle mode but a target arrives? The attack mode will trigger itself on its own because the `PickTarget` node will suddenly return a valid target.
+- we're shooting at the enemy but it dies? The next iteration will fail to find a target and we go back to idle mode.
 
 This is much easier than having the AI in a certain state and then having at the very beginning of each state to do something like:
+
 ```cpp
 if (determineState() != m_currentState) {
   return otherStateMethod();
@@ -656,12 +659,14 @@ It keeps the reactions of the AI dynamic by codifying them into the structure of
 ### Generalities
 
 Most of the changes in the game trigger something in the internal state of the clients and the server. Here are a few examples:
-* when an asteroid is scanned, we want to display a message indicating the result of the analysis
-* when an entity is killed or an asteroid destroyed, we need to notify clients that this is no longer a valid target
+
+- when an asteroid is scanned, we want to display a message indicating the result of the analysis
+- when an entity is killed or an asteroid destroyed, we need to notify clients that this is no longer a valid target
 
 Similarly, when the user clicks on interactive parts of the UI, we might need to make some changes to the entities:
-* if the `DOCK` button is clicked, we need to remove the ship from the system and display the corresponding UI
-* when an item is purchased, we need to deduct some resources from the player's stash and add it to the list of items they possess
+
+- if the `DOCK` button is clicked, we need to remove the ship from the system and display the corresponding UI
+- when an item is purchased, we need to deduct some resources from the player's stash and add it to the list of items they possess
 
 As we have a client/server architecture, these changes can't just be direct synchronous calls but have to be decoupled: we need some way to make the UI react asynchronously to changes that might have been triggered before.
 
@@ -694,16 +699,18 @@ An important part of our approach is to provide de/serialization methods for the
 In the [clone of ogame](https://github.com/KnoblauchPilze/sogserver) we put most of the logic to interact with the database in stored procedures. The problem was that it was quite cumbersome to make some validation on the input data and also to get back any error that might happen during the insertion.
 
 For this project we wanted to revisit this hypothesis and see if it was relatively widely used or not. The findings can be summarized in these two articles:
-* [Stored Procedures a bad practice at one of worlds largest IT software consulting firms?](https://softwareengineering.stackexchange.com/questions/65742/stored-procedures-a-bad-practice-at-one-of-worlds-largest-it-software-consulting)
-* [Business Layer in Database logic system](https://softwareengineering.stackexchange.com/questions/325488/business-layer-in-database-logic-system)
+
+- [Stored Procedures a bad practice at one of worlds largest IT software consulting firms?](https://softwareengineering.stackexchange.com/questions/65742/stored-procedures-a-bad-practice-at-one-of-worlds-largest-it-software-consulting)
+- [Business Layer in Database logic system](https://softwareengineering.stackexchange.com/questions/325488/business-layer-in-database-logic-system)
 
 It seems like this can be justified to sometimes have a bit of logic in the database but should (based on these two examples) be avoided.
 
 In this context, we implemented a business logic layer which aims at separating the concerns to update the database and how to do it. Typically each action that the user can take usually involves multiple operations in the database. For example signing up means:
-* registering the player
-* adding some starting resources/gear
-* register at least one ship
-* set the current system of the ship to the starting system
+
+- registering the player
+- adding some starting resources/gear
+- register at least one ship
+- set the current system of the ship to the starting system
 
 This is probably why it's not popular to put all of this logic in a stored procedure: it is quite complex and can get messy really fast when writing it in the language of the procedure. It is also not easy to debug or validate parameters within the procedures. On the other hand we can very easily do this if we keep a business logic layer in the application.
 

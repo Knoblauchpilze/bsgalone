@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <asio/asio.hpp>
+#include <asio.hpp>
 #include <string>
 
 namespace net {

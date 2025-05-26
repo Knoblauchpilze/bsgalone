@@ -2,7 +2,7 @@
 #pragma once
 
 #include "ConnectionType.hh"
-#include <asio/asio.hpp>
+#include <asio.hpp>
 #include <atomic>
 #include <core_utils/CoreObject.hh>
 #include <deque>
