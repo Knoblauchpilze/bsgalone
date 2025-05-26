@@ -11,8 +11,9 @@ class App : public PGEApp
   public:
   /// @brief - Create a new default pixel game engine app.
   /// @param desc - contains all the needed information to create the canvas needed
+  /// @param serverPort - the port to use to connect to the game server
   /// by the app and set up base properties.
-  App(const AppDesc &desc);
+  App(const AppDesc &desc, const int serverPort);
 
   ~App() override = default;
 
@@ -29,6 +30,7 @@ class App : public PGEApp
   void drawDebug(const RenderState &state, const Vec2f &mouseScreenPos) override;
 
   private:
+  int m_serverPort;
   GameShPtr m_game{nullptr};
 };
 

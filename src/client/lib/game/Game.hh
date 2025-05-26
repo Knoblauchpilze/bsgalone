@@ -32,7 +32,7 @@ using IInputHandlerPtr = std::unique_ptr<IInputHandler>;
 class Game : public utils::CoreObject
 {
   public:
-  Game();
+  Game(const int serverPort);
   ~Game() override;
 
   auto getScreen() const noexcept -> Screen;
@@ -99,7 +99,7 @@ class Game : public utils::CoreObject
   std::unordered_map<Screen, IInputHandlerPtr> m_inputHandlers{};
   std::unordered_map<Screen, IUiHandlerPtr> m_uiHandlers{};
 
-  void initialize();
+  void initialize(const int serverPort);
   void initializeMessageSystem();
 
   void resetViewsAndUi();

@@ -4,8 +4,9 @@
 
 namespace pge {
 
-App::App(const AppDesc &desc)
+App::App(const AppDesc &desc, const int serverPort)
   : PGEApp(desc)
+  , m_serverPort(serverPort)
 {}
 
 bool App::onFrame(const float elapsedSeconds)
@@ -39,7 +40,7 @@ void App::loadResources(const Vec2i &screenDims, Renderer &engine)
 {
   setLayerTint(Layer::DRAW, semiOpaque(colors::WHITE));
 
-  m_game = std::make_shared<Game>();
+  m_game = std::make_shared<Game>(m_serverPort);
 
   m_game->generateRenderers(screenDims.x, screenDims.y, engine);
   m_game->generateInputHandlers();

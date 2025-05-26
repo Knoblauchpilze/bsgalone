@@ -21,11 +21,11 @@
 
 namespace pge {
 
-Game::Game()
+Game::Game(const int serverPort)
   : utils::CoreObject("game")
 {
   setService("game");
-  initialize();
+  initialize(serverPort);
 }
 
 Game::~Game()
@@ -323,9 +323,9 @@ void Game::onPlayerKilled()
   }
 }
 
-void Game::initialize()
+void Game::initialize(const int serverPort)
 {
-  auto connection = std::make_unique<ClientConnection>(*m_networkContext);
+  auto connection = std::make_unique<ClientConnection>(serverPort, *m_networkContext);
 
   m_inputMessageQueue = connection->createInputMessageQueue();
   // Not strictly necessary as the internal messages should only be produced

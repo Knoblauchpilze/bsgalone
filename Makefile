@@ -47,10 +47,10 @@ copyRelease: release copyData
 	rsync -avH cmake-build/Release/lib cmake-build/Release/bin sandbox/
 
 runclient: copyRelease
-	cd sandbox && ./run.sh bsgalone_client
+	cd sandbox && ./run.sh bsgalone_client 2323
 
 drunclient: copyDebug
-	cd sandbox && ./debug.sh bsgalone_client
+	cd sandbox && ./debug.sh bsgalone_client 2323
 
 runserver: copyRelease
 	cd sandbox && ./run.sh bsgalone_server 2323

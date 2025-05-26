@@ -4,12 +4,11 @@
 #include "SynchronizedMessageQueue.hh"
 
 namespace pge {
-constexpr auto DEFAULT_SERVER_URL  = "127.0.0.1";
-constexpr auto DEFAULT_SERVER_PORT = 60000;
+constexpr auto DEFAULT_SERVER_URL = "127.0.0.1";
 
-ClientConnection::ClientConnection(net::Context &networkContext)
+ClientConnection::ClientConnection(const int port, net::Context &networkContext)
   : utils::CoreObject("connection")
-  , m_connection(networkContext.createConnection(DEFAULT_SERVER_URL, DEFAULT_SERVER_PORT))
+  , m_connection(networkContext.createConnection(DEFAULT_SERVER_URL, port))
 {
   setService("network");
   m_connection->connect();
