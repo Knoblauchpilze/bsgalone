@@ -305,6 +305,21 @@ The second problem that arised was that once we were able to communicate with TC
 
 Once all of the above is done, we can successfully run the provided scripts to create a user (see [create_user.sh](database/create_user.sh)) first and then use this user to create the database with [create_database.sh](database/create_database.sh).
 
+Both scripts expect a path to be given as argument: this should be the path to the folder containing the migrations and scripts. In this repository it is in [database/bsgo](database/bsgo).
+
+Additionally, creating the users for the database follows a similar procedure are described in the [galactic-sovereign](https://github.com/Knoblauchpilze/galactic-sovereign?tab=readme-ov-file#creating-the-database) project.
+
+In summary, you can prepare the database for the game with the following commands:
+
+```bash
+cd database
+export ADMIN_PASSWORD=admin_password
+export MANAGER_PASSWORD=manager_password
+export USER_PASSWORD=user_password
+./create_user.sh bsgo
+./create_database.sh bsgo
+```
+
 ## Populating the database
 
 We use `migrate` to manage the database and perform the data migrations. Once the previous step is complete (so the user and the database both exist) one can simply go to the [migrations](database/migrations) folder and run:
@@ -322,6 +337,8 @@ Once the database is created, it is easy to add migration files in the folder an
 ## Drop the database
 
 In case it is required to drop the database completely, a convenience script is available under [drop_database.sh](database/drop_database.sh). It is possible to recreate the database again by following the same procedure starting from the top [section](#creating-the-database).
+
+You can additionally use [drop_user.sh](database/drop_user.sh) to drop all three users created by the service. This is usually not necessary.
 
 ## Creating migrations and generating uuids
 
