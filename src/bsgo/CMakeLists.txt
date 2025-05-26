@@ -64,7 +64,7 @@ add_subdirectory (
 target_link_libraries (bsgo_lib
 	pq
 	pqxx
-	bsgalone_net_lib
+	net_lib
 	)
 
 target_include_directories (bsgo_lib PUBLIC
