@@ -20,7 +20,7 @@ target_include_directories (bsgalone_tests PUBLIC
 target_link_libraries(bsgalone_tests
 	core_utils
 	bsgalone_core_lib
-	bsgalone_client_lib
+	pge_lib
 	Eigen3::Eigen
 	${GTEST_LIBRARIES}
 	pq
