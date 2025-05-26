@@ -34,7 +34,7 @@ void AbilitiesUiHandler::initializeMenus(const int width,
                                          const int height,
                                          sprites::TexturePack &texturesLoader)
 {
-  constexpr auto SLOTS_TEXTURE_PACK_FILE_PATH = "data/assets/slots.png";
+  constexpr auto SLOTS_TEXTURE_PACK_FILE_PATH = "assets/slots.png";
   const sprites::PackDesc pack{.file   = SLOTS_TEXTURE_PACK_FILE_PATH,
                                .sSize  = Vec2i{600, 600},
                                .layout = Vec2i{2, 1}};
@@ -119,7 +119,7 @@ void AbilitiesUiHandler::onMessageReceived(const bsgo::IMessage &message)
 
 namespace {
 constexpr auto NUMBER_OF_ABILITIES         = 4;
-constexpr auto ABILITIES_PICTURE_FILE_PATH = "data/assets/slot.png";
+constexpr auto ABILITIES_PICTURE_FILE_PATH = "assets/slot.png";
 } // namespace
 
 void AbilitiesUiHandler::generateComputersMenus(int width, int height)
