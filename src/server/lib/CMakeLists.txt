@@ -1,5 +1,5 @@
 
-add_library (bsgalone_server_lib SHARED "")
+add_library (server_lib SHARED "")
 
 set (CMAKE_POSITION_INDEPENDENT_CODE ON)
 
@@ -19,16 +19,16 @@ add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/queues
 	)
 
-target_sources (bsgalone_server_lib PRIVATE
+target_sources (server_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/Server.cc
 	)
 
-target_link_libraries (bsgalone_server_lib
+target_link_libraries (server_lib
 	core_utils
 	net_lib
 	bsgo_lib
 	)
 
-target_include_directories (bsgalone_server_lib PUBLIC
+target_include_directories (server_lib PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
 	)
