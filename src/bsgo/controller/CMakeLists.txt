@@ -5,5 +5,5 @@ target_sources (bsgo_lib PRIVATE
 	)
 
 target_include_directories (bsgo_lib PUBLIC
-	"${CMAKE_CURRENT_SOURCE_DIR}"
+	${CMAKE_CURRENT_SOURCE_DIR}
 	)
