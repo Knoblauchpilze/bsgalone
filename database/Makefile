@@ -1,31 +1,28 @@
 # Default variables
-DB_NAME ?= bsgdb
+DB_PATH ?= bsgo
 DB_HOST ?= localhost
 DB_PORT ?= 5432
-DB_USER ?= bsgadmin
-DB_PASSWORD ?= Ww76hQWbbt7zi2ItM6cNo4YYT
+DB_NAME ?= db_bsgalone
+DB_USER ?= bsgalone_admin
+DB_PASSWORD ?= admin_password
+
 MIGRATION_STEPS ?= 1
 
+URL_ENCODED_PASSWORD=$(shell urlencode '${DB_PASSWORD}')
 
-# Target allowing to connect to the db in the image.
 # https://stackoverflow.com/questions/6405127/how-do-i-specify-a-password-to-psql-non-interactively
 connect:
-	psql postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
+	psql postgres://${DB_USER}:${URL_ENCODED_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
 
-# Target allowing to migrate the db to latest defined step.
 .PHONY: migrate
 migrate:
-	migrate -path ${PWD}/migrations -database postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME} up
-	# Target allowing to migrate the db to latest defined step.
+	migrate -path ${PWD}/${DB_PATH}/migrations -database postgres://${DB_USER}:${URL_ENCODED_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME} up
 
-# Target allowing to migrate the db one step further.
-migrateO:
-	migrate -path ${PWD}/migrations -database postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable up ${MIGRATION_STEPS}
+migrateOne:
+	migrate -path ${PWD}/${DB_PATH}/migrations -database postgres://${DB_USER}:${URL_ENCODED_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable up ${MIGRATION_STEPS}
 
-# Target allowing to migrate the db to initial state.
 demigrate:
-	migrate -path ${PWD}/migrations -database postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable down
+	migrate -path ${PWD}/${DB_PATH}/migrations -database postgres://${DB_USER}:${URL_ENCODED_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable down
 
-# Demigrate only the last step of the DB creation.
-demigrateO:
-	migrate -path ${PWD}/migrations -database postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable down ${MIGRATION_STEPS}
+demigrateOne:
+	migrate -path ${PWD}/${DB_PATH}/migrations -database postgres://${DB_USER}:${URL_ENCODED_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable down ${MIGRATION_STEPS}
