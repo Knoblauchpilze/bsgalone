@@ -33,7 +33,7 @@ target_sources (bsgalone_client_lib PRIVATE
 
 target_link_libraries (bsgalone_client_lib
 	core_utils
-	pge_app_lib
+	pge_lib
 	bsgalone_core_lib
 	)
 
