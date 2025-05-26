@@ -16,5 +16,5 @@ target_link_libraries(bsgalone_server
 	core_utils
 	net_lib
 	bsgo_lib
-	bsgalone_server_lib
+	server_lib
 	)
