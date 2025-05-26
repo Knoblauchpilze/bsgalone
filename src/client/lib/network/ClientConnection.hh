@@ -12,7 +12,7 @@ namespace pge {
 class ClientConnection : public utils::CoreObject
 {
   public:
-  ClientConnection(net::Context &networkContext);
+  ClientConnection(const int port, net::Context &networkContext);
   ~ClientConnection() override = default;
 
   void setDataHandler(const net::DataReceivedHandler &handler);

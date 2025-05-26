@@ -9,6 +9,46 @@
 #include <core_utils/log/PrefixedLogger.hh>
 #include <core_utils/log/StdLogger.hh>
 
+namespace {
+auto getPortFromEnvironmentVariable() -> int
+{
+  constexpr auto SERVER_PORT_ENV_VAR_NAME = "PORT";
+  const auto maybeEnvVar                  = std::getenv(SERVER_PORT_ENV_VAR_NAME);
+
+  if (maybeEnvVar == nullptr)
+  {
+    throw std::out_of_range("No port passed as environment variable to connect to the server");
+  }
+
+  int port = 0;
+  try
+  {
+    port = std::stoi(maybeEnvVar);
+  }
+  catch (const std::invalid_argument &e)
+  {
+    std::string message("Failed to convert provided port: ");
+    message += maybeEnvVar;
+    throw std::invalid_argument(message);
+  }
+  catch (const std::out_of_range &e)
+  {
+    std::string message("Provided port is not valid: ");
+    message += maybeEnvVar;
+    throw std::invalid_argument(message);
+  }
+
+  if (port < 1 || port > 65535)
+  {
+    std::string message("Port should be in range ]1; 65536[, provided value is not: ");
+    message += maybeEnvVar;
+    throw std::out_of_range(message);
+  }
+
+  return port;
+}
+} // namespace
+
 int main(int /*argc*/, char ** /*argv*/)
 {
   // Create the logger.
@@ -29,7 +69,7 @@ int main(int /*argc*/, char ** /*argv*/)
                     .name       = "bsgalone",
                     .fixedFrame = true,
                     .maxFps     = 20};
-    pge::App demo(ad);
+    pge::App demo(ad, getPortFromEnvironmentVariable());
 
     demo.run();
   }
