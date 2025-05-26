@@ -1,5 +1,5 @@
 
-add_library (bsgalone_client_lib SHARED "")
+add_library (client_lib SHARED "")
 
 set (CMAKE_POSITION_INDEPENDENT_CODE ON)
 
@@ -27,16 +27,16 @@ add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/ui
 	)
 
-target_sources (bsgalone_client_lib PRIVATE
+target_sources (client_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/App.cc
 	)
 
-target_link_libraries (bsgalone_client_lib
+target_link_libraries (client_lib
 	core_utils
 	pge_lib
 	bsgo_lib
 	)
 
-target_include_directories (bsgalone_client_lib PUBLIC
+target_include_directories (client_lib PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
 	)
