@@ -1,0 +1,64 @@
+name: Database migration tests
+
+on:
+  push:
+    paths:
+      - ".github/workflows/database-migration-tests.yml"
+      - "database/**"
+
+jobs:
+  validate-bsgo-db:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./database
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.23.2"
+      - name: Install migrate tool
+        run: go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+      - name: Create user
+        run: |
+          psql \
+            -v admin_password=$ADMIN_PASSWORD \
+            -v manager_password=$MANAGER_PASSWORD \
+            -v user_password=$USER_PASSWORD \
+            postgresql://postgres@localhost \
+            -f bsgo/db_user_create.sql
+        env:
+          PGPASSWORD: postgres
+          ADMIN_PASSWORD: admin_password
+          MANAGER_PASSWORD: manager_password
+          USER_PASSWORD: user_password
+      - name: Create database
+        run: |
+          psql postgresql://postgres@localhost -f bsgo/db_create.sql
+        env:
+          PGPASSWORD: postgres
+      - name: Migrate schema up
+        run: |
+          migrate -path bsgo/migrations -database postgresql://bsgalone_admin@localhost/db_bsgalone?sslmode=disable up
+        env:
+          PGPASSWORD: admin_password
+      - name: Migrate schema down
+        run: |
+          migrate -path bsgo/migrations -database postgresql://bsgalone_admin@localhost/db_bsgalone?sslmode=disable down -all
+        env:
+          PGPASSWORD: admin_password
