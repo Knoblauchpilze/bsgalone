@@ -3,11 +3,11 @@
 
 namespace bsgo {
 namespace {
-constexpr auto DATABASE_NAME     = "bsgdb";
-constexpr auto DATABASE_USER     = "bsgadmin";
+constexpr auto DATABASE_NAME     = "db_bsgalone";
+constexpr auto DATABASE_USER     = "bsgalone_manager";
 constexpr auto DATABASE_HOST     = "localhost";
 constexpr auto DATABASE_PORT     = "5432";
-constexpr auto DATABASE_PASSWORD = "Ww76hQWbbt7zi2ItM6cNo4YYT";
+constexpr auto DATABASE_PASSWORD = "manager_password";
 
 /// https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-PARAMKEYWORDS
 constexpr auto DATABASE_NAME_OPTION_STRING     = "dbname";
