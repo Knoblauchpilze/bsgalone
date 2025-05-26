@@ -16,5 +16,4 @@ target_link_libraries (net_lib
 
 target_include_directories (net_lib PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
-	/usr/local/include/asio
 	)
