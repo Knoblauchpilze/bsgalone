@@ -2,7 +2,7 @@
 -- Common properties of the DB
 SET client_encoding = 'UTF8';
 
-SET search_path = public, pg_catalog;
+SET search_path = bsgalone_schema, pg_catalog;
 SET default_tablespace = '';
 
 -- https://www.postgresql.org/docs/current/sql-createtrigger.html
