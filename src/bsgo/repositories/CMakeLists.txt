@@ -1,5 +1,5 @@
 
-target_sources (bsgalone_core_lib PRIVATE
+target_sources (bsgo_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/DbConnection.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/IRepository.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/AbstractRepository.cc
@@ -25,6 +25,6 @@ target_sources (bsgalone_core_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/Repositories.cc
 	)
 
-target_include_directories (bsgalone_core_lib PUBLIC
+target_include_directories (bsgo_lib PUBLIC
 	"${CMAKE_CURRENT_SOURCE_DIR}"
 	)

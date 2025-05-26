@@ -1,5 +1,5 @@
 
-target_sources (bsgalone_core_lib PRIVATE
+target_sources (bsgo_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/Uuid.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/EntityKind.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/Faction.cc
@@ -9,6 +9,6 @@ target_sources (bsgalone_core_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/ShipClass.cc
 	)
 
-target_include_directories (bsgalone_core_lib PUBLIC
+target_include_directories (bsgo_lib PUBLIC
 	"${CMAKE_CURRENT_SOURCE_DIR}"
 	)
