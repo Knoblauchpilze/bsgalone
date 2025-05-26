@@ -12,9 +12,16 @@ target_sources (bsgalone_server PRIVATE
 target_include_directories (bsgalone_server PUBLIC
 	)
 
-target_link_libraries(bsgalone_server
+target_link_libraries (bsgalone_server PUBLIC
+	bsgalone-interface-library
 	core_utils
 	net_lib
 	bsgo_lib
 	server_lib
 	)
+
+if (${ENABLE_TESTS})
+	target_link_libraries (bsgalone_server PUBLIC
+		bsgalone-interface-test-library
+		)
+endif ()

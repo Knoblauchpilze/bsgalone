@@ -61,12 +61,19 @@ add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/views
 	)
 
-target_link_libraries (bsgo_lib
+target_include_directories (bsgo_lib PUBLIC
+	${CMAKE_CURRENT_SOURCE_DIR}
+	)
+
+target_link_libraries (bsgo_lib PUBLIC
+	bsgalone-interface-library
 	pq
 	pqxx
 	net_lib
 	)
 
-target_include_directories (bsgo_lib PUBLIC
-	${CMAKE_CURRENT_SOURCE_DIR}
-	)
+if (${ENABLE_TESTS})
+	target_link_libraries (bsgo_lib PUBLIC
+		bsgalone-interface-test-library
+		)
+endif ()
