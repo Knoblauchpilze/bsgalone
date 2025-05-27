@@ -21,6 +21,7 @@ target_link_libraries (unitTests
 	GTest::gtest_main
 	bsgalone-interface-test-library
 	core_utils
+	core_lib
 	bsgo_lib
 	pge_lib
 	)
