@@ -63,3 +63,6 @@ tests: debugWithTests copyDebug
 
 rununittests: tests
 	cd sandbox && ./tests.sh unitTests
+
+runintegrationtests: tests
+	cd sandbox && ./tests.sh integrationTests
