@@ -61,5 +61,5 @@ drunserver: copyDebug
 PHONY: .tests
 tests: debugWithTests copyDebug
 
-runtests: tests
-	cd sandbox && ./tests.sh
+rununittests: tests
+	cd sandbox && ./tests.sh unitTests

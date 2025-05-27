@@ -1,5 +1,5 @@
 
-target_sources(bsgalone_tests PUBLIC
+target_sources(unitTests PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/CommonViewport.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/CommonCoordinateFrame.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/TopLeftViewportTest.cc
@@ -8,6 +8,6 @@ target_sources(bsgalone_tests PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/IsometricViewFrameTest.cc
 	)
 
-target_include_directories(bsgalone_tests PUBLIC
+target_include_directories(unitTests PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
 	)

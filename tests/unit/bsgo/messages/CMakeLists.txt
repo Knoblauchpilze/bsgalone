@@ -1,9 +1,9 @@
 
-target_include_directories(bsgalone_tests PUBLIC
+target_include_directories(unitTests PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
 	)
 
-target_sources(bsgalone_tests PUBLIC
+target_sources(unitTests PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/MessageTypeTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SerializationBehaviorTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/UuidTest.cc
