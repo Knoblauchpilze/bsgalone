@@ -10,7 +10,7 @@ int main(int argc, char **argv)
 {
   utils::log::StdLogger raw;
   raw.setLevel(utils::log::Severity::DEBUG);
-  utils::log::PrefixedLogger logger("pge", "main");
+  utils::log::PrefixedLogger logger("unit", "main");
   utils::log::Locator::provide(&raw);
 
   testing::InitGoogleTest(&argc, argv);
