@@ -17,6 +17,7 @@ target_include_directories (net_lib PUBLIC
 
 target_link_libraries (net_lib PUBLIC
 	bsgalone-interface-library
+	core_lib
 	)
 
 if (${ENABLE_TESTS})

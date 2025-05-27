@@ -2,16 +2,16 @@
 #pragma once
 
 #include "Connection.hh"
+#include "CoreObject.hh"
 #include <asio.hpp>
 #include <atomic>
-#include <core_utils/CoreObject.hh>
 #include <memory>
 #include <mutex>
 #include <thread>
 
 namespace net {
 
-class Context : public utils::CoreObject
+class Context : public core::CoreObject
 {
   public:
   Context();
