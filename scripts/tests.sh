@@ -1,5 +1,10 @@
 #!/bin/sh
 
-#export LD_LIBRARY_PATH=/usr/local/lib/:$LD_LIBRARY_PATH
+if [ $# -lt 1 ]; then
+  echo "Usage: $0 app_name"
+  exit 1
+fi
 
-./bin/bsgalone_tests
+APP_NAME=$1
+
+./bin/${APP_NAME}

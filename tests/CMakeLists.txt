@@ -1,28 +1,15 @@
 
-find_package (Eigen3 3.4 REQUIRED NO_MODULE)
-find_package (GTest REQUIRED)
-find_package (libpqxx REQUIRED)
+# http://google.github.io/googletest/quickstart-cmake.html
+# https://cmake.org/cmake/help/latest/module/FetchContent.html
+include (FetchContent)
+FetchContent_Declare (
+	googletest
+	GIT_REPOSITORY https://github.com/google/googletest.git
+	GIT_TAG        v1.15.2
+)
 
-add_executable (bsgalone_tests)
+FetchContent_MakeAvailable (googletest)
 
-add_subdirectory(
+add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/unit
-	)
-
-target_sources (bsgalone_tests PRIVATE
-	${CMAKE_CURRENT_SOURCE_DIR}/main.cc
-	)
-
-target_include_directories (bsgalone_tests PUBLIC
-	${GTEST_INCLUDE_DIRS}
-	)
-
-target_link_libraries(bsgalone_tests
-	core_utils
-	bsgo_lib
-	pge_lib
-	Eigen3::Eigen
-	${GTEST_LIBRARIES}
-	pq
-	pqxx
 	)
