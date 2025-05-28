@@ -118,6 +118,8 @@ The first step is to install `libpq`: it's automatically installed as part of `l
 sudo apt install -y libpq-dev
 ```
 
+**Note:** this is already handled in the CI runner and therefore we don't need to install it there.
+
 Loosely based on what is described in the [README](https://github.com/jtv/libpqxx/blob/master/BUILDING-cmake.md#building-and-installing-libpqxx-yourself) and in the [cheat sheet](https://github.com/jtv/libpqxx/blob/master/BUILDING-cmake.md#cheat-sheet) for the build options, you can run the following commands:
 
 ```bash
