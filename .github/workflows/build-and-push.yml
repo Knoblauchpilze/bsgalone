@@ -32,23 +32,29 @@ jobs:
     steps:
       - name: Install asio
         run: |
-          sudo apt-get install -y libasio-dev=1:1.28.1-0.2
-      - name: Install libpqxx
-        run: |
-          sudo apt install -y libpqxx-dev=7.8.1-2.1build1
+          sudo apt-get install -y --no-install-recommends libasio-dev=1:1.28.1-0.2
       - name: Install x11
         run: |
-          sudo apt install -y libx11-dev=2:1.8.7-1build1
+          sudo apt install -y --no-install-recommends libx11-dev=2:1.8.7-1build1
       - name: Install eigen
         run: |
-          sudo apt install -y libeigen3-dev=3.4.0-4build0.1
+          sudo apt install -y --no-install-recommends libeigen3-dev=3.4.0-4build0.1
       - name: Install GL
         # https://stackoverflow.com/questions/34773745/debconf-unable-to-initialize-frontend-dialog
         run: |
-          sudo DEBIAN_FRONTEND="noninteractive" apt install -y libgl-dev=1.7.0-1build1
+          sudo DEBIAN_FRONTEND="noninteractive" apt install -y --no-install-recommends libgl-dev=1.7.0-1build1
       - name: Install png
         run: |
-          sudo apt install -y libpng-dev=1.6.43-5build1
+          sudo apt install -y --no-install-recommends libpng-dev=1.6.43-5build1
+      - name: Install libpqxx
+        # See libpqxx section in the README
+        run: |
+          sudo apt install -y --no-install-recommends libpq-dev=16.9-0ubuntu0.24.04.1
+          cd /tmp
+          git clone https://github.com/jtv/libpqxx.git
+          cmake .
+          cmake --build . -j 8
+          cmake --install .
       - uses: actions/checkout@v4
       - name: Build server
         run: |
