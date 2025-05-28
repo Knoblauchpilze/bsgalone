@@ -39,7 +39,7 @@ jobs:
           cd /tmp
           git clone https://github.com/jtv/libpqxx.git
           cd libpqxx
-          git checkout 7.9.0
+          git checkout 7.10.1
           cmake .
           cmake --build . -j 8
           cmake --install .

@@ -122,7 +122,7 @@ Loosely based on what is described in the [README](https://github.com/jtv/libpqx
 cd /tmp
 git clone https://github.com/jtv/libpqxx.git
 cd libpqxx
-git checkout 7.9.0
+git checkout 7.10.1
 cmake \
   -DCMAKE_CXX_STANDARD=20 \
   -DCMAKE_BUILD_TYPE=Release \
@@ -132,7 +132,7 @@ cmake --build . -j 8
 cmake --install .
 ```
 
-This should have installed the version `7.9.0` of `libpqxx` under `/user/local/include/pqxx`.
+This should have installed the version `7.10.1` of `libpqxx` under `/user/local/include/pqxx`.
 
 ## asio
 
