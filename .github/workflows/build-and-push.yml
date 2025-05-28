@@ -42,7 +42,7 @@ jobs:
           git checkout 7.10.1
           cmake .
           cmake --build . -j 8
-          cmake --install .
+          sudo cmake --install .
       - uses: actions/checkout@v4
       - name: Build server
         run: |

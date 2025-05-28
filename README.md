@@ -110,6 +110,8 @@ This library is available in the package manager for Ubuntu. That being said, it
 
 Notably, this project uses c++20 which can cause problem. In case you're unlucky and the version shipped with your package manager does not work, you can try to compile the library from source.
 
+Additionally, the CI uses the `ubuntu:24.04` runner image which ships with [CMake 3.31.6](https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2404-Readme.md#tools): this generates some error with version `7.9.1` (see issue [#851](https://github.com/jtv/libpqxx/issues/851)). Therefore we bumped all the way to `7.10.1` (the most recent at the time of writing).
+
 The first step is to install `libpq`: it's automatically installed as part of `libpqxx` but not if you compile the library from source. You can run:
 
 ```bash
@@ -129,7 +131,7 @@ cmake \
   -DBUILD_SHARED_LIBS=1 \
   .
 cmake --build . -j 8
-cmake --install .
+sudo cmake --install .
 ```
 
 This should have installed the version `7.10.1` of `libpqxx` under `/user/local/include/pqxx`.
