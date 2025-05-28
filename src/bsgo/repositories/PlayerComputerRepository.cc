@@ -94,10 +94,10 @@ auto PlayerComputerRepository::fetchComputerBase(const Uuid computer) const -> P
   {
     out.range = {record[5].as<float>()};
   }
-  out.reloadTime = utils::Milliseconds(record[6].as<int>());
+  out.reloadTime = core::Milliseconds(record[6].as<int>());
   if (!record[7].is_null())
   {
-    out.duration = {utils::Milliseconds(record[7].as<int>())};
+    out.duration = {core::Milliseconds(record[7].as<int>())};
   }
   if (!record[8].is_null())
   {

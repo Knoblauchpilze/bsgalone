@@ -4,7 +4,7 @@
 namespace bsgo {
 
 AbstractView::AbstractView(const std::string &name)
-  : utils::CoreObject(name)
+  : core::CoreObject(name)
   , IView()
 {
   setService("view");

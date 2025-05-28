@@ -5,7 +5,7 @@
 namespace net {
 
 TcpServer::TcpServer(Context &context, const int port, const ServerConfig &config)
-  : utils::CoreObject("tcp")
+  : core::CoreObject("tcp")
   , m_port(port)
   , m_asioAcceptor(context.get(), asio::ip::tcp::endpoint(asio::ip::tcp::v4(), m_port))
 {

@@ -1,18 +1,18 @@
 
 #pragma once
 
+#include "CoreObject.hh"
 #include "DatabaseEntityMapper.hh"
 #include "INode.hh"
 #include "PlayerShipRepository.hh"
 #include "Repositories.hh"
-#include <core_utils/CoreObject.hh>
 #include <unordered_map>
 
 namespace bsgo {
 
 class Coordinator;
 
-class ShipDataSource : public utils::CoreObject
+class ShipDataSource : public core::CoreObject
 {
   public:
   ShipDataSource(const Repositories &repositories);

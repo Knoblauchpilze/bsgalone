@@ -1,6 +1,6 @@
 
 #include "EquipMessage.hh"
-#include <core_utils/SerializationUtils.hh>
+#include "SerializationUtils.hh"
 
 namespace bsgo {
 
@@ -41,14 +41,14 @@ auto EquipMessage::getItemDbId() const -> Uuid
 
 auto EquipMessage::serialize(std::ostream &out) const -> std::ostream &
 {
-  utils::serialize(out, m_messageType);
-  utils::serialize(out, m_clientId);
-  utils::serialize(out, m_validated);
+  core::serialize(out, m_messageType);
+  core::serialize(out, m_clientId);
+  core::serialize(out, m_validated);
 
-  utils::serialize(out, m_action);
-  utils::serialize(out, m_shipDbId);
-  utils::serialize(out, m_itemType);
-  utils::serialize(out, m_itemDbId);
+  core::serialize(out, m_action);
+  core::serialize(out, m_shipDbId);
+  core::serialize(out, m_itemType);
+  core::serialize(out, m_itemDbId);
 
   return out;
 }
@@ -56,14 +56,14 @@ auto EquipMessage::serialize(std::ostream &out) const -> std::ostream &
 bool EquipMessage::deserialize(std::istream &in)
 {
   bool ok{true};
-  ok &= utils::deserialize(in, m_messageType);
-  ok &= utils::deserialize(in, m_clientId);
-  ok &= utils::deserialize(in, m_validated);
+  ok &= core::deserialize(in, m_messageType);
+  ok &= core::deserialize(in, m_clientId);
+  ok &= core::deserialize(in, m_validated);
 
-  ok &= utils::deserialize(in, m_action);
-  ok &= utils::deserialize(in, m_shipDbId);
-  ok &= utils::deserialize(in, m_itemType);
-  ok &= utils::deserialize(in, m_itemDbId);
+  ok &= core::deserialize(in, m_action);
+  ok &= core::deserialize(in, m_shipDbId);
+  ok &= core::deserialize(in, m_itemType);
+  ok &= core::deserialize(in, m_itemDbId);
 
   return ok;
 }

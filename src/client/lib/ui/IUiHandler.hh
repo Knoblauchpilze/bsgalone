@@ -3,15 +3,15 @@
 
 #include "Controls.hh"
 #include "CoordinateFrame.hh"
+#include "CoreObject.hh"
 #include "Game.hh"
 #include "IMessageQueue.hh"
 #include "UserInputData.hh"
-#include <core_utils/CoreObject.hh>
 #include <memory>
 
 namespace pge {
 
-class IUiHandler : public utils::CoreObject
+class IUiHandler : public core::CoreObject
 {
   public:
   IUiHandler(const std::string &name);

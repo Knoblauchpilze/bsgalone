@@ -1,11 +1,11 @@
 
 #include "Context.hh"
-#include <core_utils/TimeUtils.hh>
+#include "TimeUtils.hh"
 
 namespace net {
 
 Context::Context()
-  : utils::CoreObject("context")
+  : core::CoreObject("context")
 {
   setService("net");
 }

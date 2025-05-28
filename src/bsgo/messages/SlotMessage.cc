@@ -1,7 +1,7 @@
 
 
 #include "SlotMessage.hh"
-#include <core_utils/SerializationUtils.hh>
+#include "SerializationUtils.hh"
 
 namespace bsgo {
 
@@ -33,12 +33,12 @@ auto SlotMessage::getSlotType() const -> Slot
 
 auto SlotMessage::serialize(std::ostream &out) const -> std::ostream &
 {
-  utils::serialize(out, m_messageType);
-  utils::serialize(out, m_clientId);
+  core::serialize(out, m_messageType);
+  core::serialize(out, m_clientId);
 
-  utils::serialize(out, m_shipDbId);
-  utils::serialize(out, m_slotDbId);
-  utils::serialize(out, m_slotType);
+  core::serialize(out, m_shipDbId);
+  core::serialize(out, m_slotDbId);
+  core::serialize(out, m_slotType);
 
   return out;
 }
@@ -46,12 +46,12 @@ auto SlotMessage::serialize(std::ostream &out) const -> std::ostream &
 bool SlotMessage::deserialize(std::istream &in)
 {
   bool ok{true};
-  ok &= utils::deserialize(in, m_messageType);
-  ok &= utils::deserialize(in, m_clientId);
+  ok &= core::deserialize(in, m_messageType);
+  ok &= core::deserialize(in, m_clientId);
 
-  ok &= utils::deserialize(in, m_shipDbId);
-  ok &= utils::deserialize(in, m_slotDbId);
-  ok &= utils::deserialize(in, m_slotType);
+  ok &= core::deserialize(in, m_shipDbId);
+  ok &= core::deserialize(in, m_slotDbId);
+  ok &= core::deserialize(in, m_slotType);
 
   return ok;
 }

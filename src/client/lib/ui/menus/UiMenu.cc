@@ -4,7 +4,7 @@
 namespace pge {
 
 UiMenu::UiMenu(const MenuConfig &config, const BackgroundConfig &bg)
-  : utils::CoreObject("menu")
+  : core::CoreObject("menu")
   , m_bg(bg)
 {
   initializeFromConfig(config);

@@ -7,7 +7,7 @@ namespace pge {
 constexpr auto DEFAULT_SERVER_URL = "127.0.0.1";
 
 ClientConnection::ClientConnection(const int port, net::Context &networkContext)
-  : utils::CoreObject("connection")
+  : core::CoreObject("connection")
   , m_connection(networkContext.createConnection(DEFAULT_SERVER_URL, port))
 {
   setService("network");

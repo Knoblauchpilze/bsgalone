@@ -142,9 +142,9 @@ void LogUiHandler::onMessageReceived(const bsgo::IMessage &message)
   LogMessage data{};
   data.rawMenu = logMenu.get();
 
-  TimedMenuConfig timedConfig{.duration          = utils::Milliseconds(LOG_FADE_OUT_DURATION_MS),
+  TimedMenuConfig timedConfig{.duration          = core::Milliseconds(LOG_FADE_OUT_DURATION_MS),
                               .fadeOut           = true,
-                              .fadeOutDuration   = utils::Milliseconds(LOG_FADE_OUT_DURATION_MS),
+                              .fadeOutDuration   = core::Milliseconds(LOG_FADE_OUT_DURATION_MS),
                               .applyToBackGround = false};
   data.menu = std::make_unique<UiTimedMenu>(timedConfig, std::move(logMenu));
 

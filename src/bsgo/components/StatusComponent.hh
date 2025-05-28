@@ -3,7 +3,7 @@
 
 #include "AbstractComponent.hh"
 #include "Status.hh"
-#include <core_utils/TimeUtils.hh>
+#include "TimeUtils.hh"
 #include <optional>
 
 namespace bsgo {
@@ -12,22 +12,22 @@ class StatusComponent : public AbstractComponent
 {
   public:
   StatusComponent(const Status &status,
-                  const std::optional<utils::Duration> &jumpTime,
-                  const std::optional<utils::Duration> &threatJumpTime);
+                  const std::optional<core::Duration> &jumpTime,
+                  const std::optional<core::Duration> &threatJumpTime);
   ~StatusComponent() = default;
 
   auto status() const -> Status;
   bool isDead() const;
-  auto jumpTime() const -> utils::Duration;
-  auto threatJumpTime() const -> utils::Duration;
+  auto jumpTime() const -> core::Duration;
+  auto threatJumpTime() const -> core::Duration;
   bool justChanged() const;
   void resetChanged();
   void resetAppearingTime();
-  auto getElapsedSinceLastChange() const -> utils::Duration;
-  auto tryGetElapsedSinceLastAppearing() const -> std::optional<utils::Duration>;
-  auto tryGetCurrentJumpTime() const -> utils::Duration;
-  auto tryGetElapsedSinceJumpStarted() const -> utils::Duration;
-  auto tryGetRemainingJumpTime() const -> utils::Duration;
+  auto getElapsedSinceLastChange() const -> core::Duration;
+  auto tryGetElapsedSinceLastAppearing() const -> std::optional<core::Duration>;
+  auto tryGetCurrentJumpTime() const -> core::Duration;
+  auto tryGetElapsedSinceJumpStarted() const -> core::Duration;
+  auto tryGetRemainingJumpTime() const -> core::Duration;
 
   void setStatus(const Status &status);
 
@@ -35,13 +35,13 @@ class StatusComponent : public AbstractComponent
 
   private:
   Status m_status;
-  std::optional<utils::Duration> m_jumpTime{};
-  std::optional<utils::Duration> m_threatJumpTime{};
+  std::optional<core::Duration> m_jumpTime{};
+  std::optional<core::Duration> m_threatJumpTime{};
   bool m_justChanged{false};
-  utils::Duration m_elapsedSinceLastChange{};
-  std::optional<utils::Duration> m_elapsedSinceAppearing{};
-  std::optional<utils::Duration> m_elapsedSinceJumpStarted{};
-  std::optional<utils::Duration> m_currentJumpTime{};
+  core::Duration m_elapsedSinceLastChange{};
+  std::optional<core::Duration> m_elapsedSinceAppearing{};
+  std::optional<core::Duration> m_elapsedSinceJumpStarted{};
+  std::optional<core::Duration> m_currentJumpTime{};
 
   void updateJumpState(const Status &newStatus, const bool forceUpdate);
   void updateAppearingState(const Status &newStatus);

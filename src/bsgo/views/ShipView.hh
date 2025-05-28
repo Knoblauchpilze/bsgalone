@@ -48,7 +48,7 @@ class ShipView : public AbstractView
   struct JumpData
   {
     std::string systemName{};
-    utils::Duration jumpTime{};
+    core::Duration jumpTime{};
   };
   auto getJumpData() const -> JumpData;
 

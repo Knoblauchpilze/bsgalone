@@ -4,7 +4,7 @@
 namespace bsgo {
 
 IComponent::IComponent(const std::string &name)
-  : utils::CoreObject(name)
+  : core::CoreObject(name)
 {
   setService("component");
 }

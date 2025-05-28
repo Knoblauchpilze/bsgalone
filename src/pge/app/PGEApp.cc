@@ -6,7 +6,7 @@
 namespace pge {
 
 PGEApp::PGEApp(const AppDesc &desc)
-  : utils::CoreObject(desc.name)
+  : core::CoreObject(desc.name)
   , m_fixedFrame(desc.fixedFrame)
   , m_frame(desc.frame)
 {

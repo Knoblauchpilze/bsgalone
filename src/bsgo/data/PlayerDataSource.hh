@@ -1,15 +1,15 @@
 
 #pragma once
 
+#include "CoreObject.hh"
 #include "DatabaseEntityMapper.hh"
 #include "Repositories.hh"
-#include <core_utils/CoreObject.hh>
 
 namespace bsgo {
 
 class Coordinator;
 
-class PlayerDataSource : public utils::CoreObject
+class PlayerDataSource : public core::CoreObject
 {
   public:
   PlayerDataSource(const Repositories &repositories);

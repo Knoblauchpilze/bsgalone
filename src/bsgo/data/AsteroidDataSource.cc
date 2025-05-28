@@ -6,7 +6,7 @@
 namespace bsgo {
 
 AsteroidDataSource::AsteroidDataSource(const Repositories &repositories)
-  : utils::CoreObject("bsgo")
+  : core::CoreObject("bsgo")
   , m_repositories(repositories)
 {
   setService("data");

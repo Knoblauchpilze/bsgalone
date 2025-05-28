@@ -24,7 +24,7 @@ target_sources (server_lib PRIVATE
 	)
 
 target_link_libraries (server_lib
-	core_utils
+	core_lib
 	net_lib
 	bsgo_lib
 	)

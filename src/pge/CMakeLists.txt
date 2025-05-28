@@ -41,6 +41,7 @@ target_link_libraries (pge_lib PUBLIC
 	X11
 	GL
 	pthread
+	core_lib
 	)
 
 if (${ENABLE_TESTS})

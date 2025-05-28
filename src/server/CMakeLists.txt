@@ -14,7 +14,7 @@ target_include_directories (bsgalone_server PUBLIC
 
 target_link_libraries (bsgalone_server PUBLIC
 	bsgalone-interface-library
-	core_utils
+	core_lib
 	net_lib
 	bsgo_lib
 	server_lib

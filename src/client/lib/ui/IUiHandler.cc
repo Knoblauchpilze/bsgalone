@@ -4,7 +4,7 @@
 namespace pge {
 
 IUiHandler::IUiHandler(const std::string &name)
-  : utils::CoreObject(name)
+  : core::CoreObject(name)
 {}
 
 void IUiHandler::reset()

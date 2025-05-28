@@ -3,9 +3,9 @@
 
 #include "BackgroundConfig.hh"
 #include "Controls.hh"
+#include "CoreObject.hh"
 #include "MenuConfig.hh"
 #include "Renderer.hh"
-#include <core_utils/CoreObject.hh>
 #include <memory>
 #include <optional>
 
@@ -14,7 +14,7 @@ namespace pge {
 class UiMenu;
 using UiMenuPtr = std::unique_ptr<UiMenu>;
 
-class UiMenu : public utils::CoreObject
+class UiMenu : public core::CoreObject
 {
   public:
   UiMenu(const MenuConfig &config, const BackgroundConfig &bg);

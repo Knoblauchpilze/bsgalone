@@ -9,7 +9,7 @@ UiTimedMenu::UiTimedMenu(UiMenuPtr menu)
 {}
 
 UiTimedMenu::UiTimedMenu(const TimedMenuConfig &config, UiMenuPtr menu)
-  : utils::CoreObject("timed")
+  : core::CoreObject("timed")
   , m_menu(std::move(menu))
 {
   setService("menu");
@@ -28,7 +28,7 @@ void UiTimedMenu::trigger()
   m_menu->setVisible(true);
   updateOpacity(1.0f);
 
-  m_lastTrigger = utils::now();
+  m_lastTrigger = core::now();
   if (m_fadeOutDuration)
   {
     m_fadeOutStartTime = *m_lastTrigger + m_duration - *m_fadeOutDuration;
@@ -42,7 +42,7 @@ void UiTimedMenu::update()
     return;
   }
 
-  const auto now     = utils::now();
+  const auto now     = core::now();
   const auto elapsed = now - *m_lastTrigger;
   handleFadeOut(now);
 
@@ -79,7 +79,7 @@ void UiTimedMenu::initializeFromConfig(const TimedMenuConfig &config)
   m_applyToBackGround = config.applyToBackGround;
 }
 
-void UiTimedMenu::handleFadeOut(const utils::TimeStamp &now)
+void UiTimedMenu::handleFadeOut(const core::TimeStamp &now)
 {
   if (!m_fadeOutStartTime || now < *m_fadeOutStartTime)
   {

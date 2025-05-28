@@ -2,13 +2,13 @@
 #pragma once
 
 #include "CenteredViewport.hh"
+#include "CoreObject.hh"
 #include "TopLeftViewport.hh"
-#include <core_utils/CoreObject.hh>
 #include <memory>
 
 namespace pge {
 
-class CoordinateFrame : public utils::CoreObject
+class CoordinateFrame : public core::CoreObject
 {
   public:
   /// @brief - Creates a new coordinate frame with the input pixel

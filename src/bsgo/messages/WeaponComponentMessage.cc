@@ -1,6 +1,6 @@
 
 #include "WeaponComponentMessage.hh"
-#include <core_utils/SerializationUtils.hh>
+#include "SerializationUtils.hh"
 
 namespace bsgo {
 
@@ -30,13 +30,13 @@ bool WeaponComponentMessage::isActive() const
 
 auto WeaponComponentMessage::serialize(std::ostream &out) const -> std::ostream &
 {
-  utils::serialize(out, m_messageType);
-  utils::serialize(out, m_clientId);
+  core::serialize(out, m_messageType);
+  core::serialize(out, m_clientId);
 
-  utils::serialize(out, m_shipDbId);
-  utils::serialize(out, m_component);
-  utils::serialize(out, m_weaponDbId);
-  utils::serialize(out, m_active);
+  core::serialize(out, m_shipDbId);
+  core::serialize(out, m_component);
+  core::serialize(out, m_weaponDbId);
+  core::serialize(out, m_active);
 
   return out;
 }
@@ -44,13 +44,13 @@ auto WeaponComponentMessage::serialize(std::ostream &out) const -> std::ostream 
 bool WeaponComponentMessage::deserialize(std::istream &in)
 {
   bool ok{true};
-  ok &= utils::deserialize(in, m_messageType);
-  ok &= utils::deserialize(in, m_clientId);
+  ok &= core::deserialize(in, m_messageType);
+  ok &= core::deserialize(in, m_clientId);
 
-  ok &= utils::deserialize(in, m_shipDbId);
-  ok &= utils::deserialize(in, m_component);
-  ok &= utils::deserialize(in, m_weaponDbId);
-  ok &= utils::deserialize(in, m_active);
+  ok &= core::deserialize(in, m_shipDbId);
+  ok &= core::deserialize(in, m_component);
+  ok &= core::deserialize(in, m_weaponDbId);
+  ok &= core::deserialize(in, m_active);
 
   return ok;
 }

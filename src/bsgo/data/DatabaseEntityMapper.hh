@@ -1,8 +1,8 @@
 
 #pragma once
 
+#include "CoreObject.hh"
 #include "Uuid.hh"
-#include <core_utils/CoreObject.hh>
 #include <mutex>
 #include <optional>
 #include <unordered_map>
@@ -11,7 +11,7 @@ namespace bsgo {
 
 using DbIdsToEntityIds = std::unordered_map<Uuid, Uuid>;
 
-class DatabaseEntityMapper : public utils::CoreObject
+class DatabaseEntityMapper : public core::CoreObject
 {
   public:
   DatabaseEntityMapper();

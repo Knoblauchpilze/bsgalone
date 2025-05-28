@@ -4,7 +4,7 @@
 #include "EntityKind.hh"
 #include "PlayerComputerRepository.hh"
 #include "SlotComponent.hh"
-#include <core_utils/TimeUtils.hh>
+#include "TimeUtils.hh"
 #include <optional>
 #include <unordered_set>
 
@@ -16,12 +16,12 @@ class ComputerSlotComponent : public SlotComponent
   ComputerSlotComponent(const PlayerComputer &computer);
   ~ComputerSlotComponent() override = default;
 
-  auto duration() const -> std::optional<utils::Duration>;
+  auto duration() const -> std::optional<core::Duration>;
   auto allowedTargets() const -> std::optional<std::unordered_set<EntityKind>>;
   auto damageModifier() const -> std::optional<float>;
 
   private:
-  std::optional<utils::Duration> m_duration;
+  std::optional<core::Duration> m_duration;
   std::optional<std::unordered_set<EntityKind>> m_allowedTargets;
   std::optional<float> m_damageModifier;
 };

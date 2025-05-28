@@ -2,7 +2,7 @@
 #pragma once
 
 #include "AbstractComponent.hh"
-#include <core_utils/TimeUtils.hh>
+#include "TimeUtils.hh"
 #include <optional>
 
 namespace bsgo {
@@ -10,7 +10,7 @@ namespace bsgo {
 class EffectComponent : public AbstractComponent
 {
   public:
-  EffectComponent(const ComponentType &type, const utils::Duration &duration);
+  EffectComponent(const ComponentType &type, const core::Duration &duration);
   ~EffectComponent() override = default;
 
   bool isFinished() const;
@@ -20,8 +20,8 @@ class EffectComponent : public AbstractComponent
   void update(const float elapsedSeconds) override;
 
   private:
-  utils::Duration m_duration;
-  utils::Duration m_elapsedSinceStart{};
+  core::Duration m_duration;
+  core::Duration m_elapsedSinceStart{};
 };
 
 using EffectComponentShPtr = std::shared_ptr<EffectComponent>;

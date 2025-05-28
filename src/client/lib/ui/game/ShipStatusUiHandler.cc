@@ -69,7 +69,7 @@ void ShipStatusUiHandler::onMessageReceived(const bsgo::IMessage &message)
 
   if (bsgo::MessageType::JUMP_REQUESTED == message.type())
   {
-    m_jumpStartTime = utils::now();
+    m_jumpStartTime = core::now();
   }
   if (bsgo::MessageType::JUMP_CANCELLED == message.type())
   {
@@ -169,10 +169,10 @@ void ShipStatusUiHandler::updateJumpPanel()
   const auto data = m_shipView->getJumpData();
   m_jumpDestination->setText(data.systemName);
 
-  const auto elapsedSinceJumpStarted = utils::now() - *m_jumpStartTime;
+  const auto elapsedSinceJumpStarted = core::now() - *m_jumpStartTime;
   const auto remainingJumpTime       = data.jumpTime - elapsedSinceJumpStarted;
 
-  m_jumpTime->setText(utils::durationToPrettyString(remainingJumpTime));
+  m_jumpTime->setText(core::durationToPrettyString(remainingJumpTime));
 }
 
 } // namespace pge

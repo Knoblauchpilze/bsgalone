@@ -1,16 +1,16 @@
 
 #pragma once
 
+#include "CoreObject.hh"
 #include "NodeState.hh"
 #include "TickData.hh"
-#include <core_utils/CoreObject.hh>
 #include <memory>
 
 namespace bsgo {
 
 /// https://www.gamedeveloper.com/programming/behavior-trees-for-ai-how-they-work
 /// https://en.wikipedia.org/wiki/Behavior_tree_(artificial_intelligence,_robotics_and_control)
-class INode : public utils::CoreObject
+class INode : public core::CoreObject
 {
   public:
   INode(const std::string &name);

@@ -1,6 +1,6 @@
 
 #include "EntityAddedMessage.hh"
-#include <core_utils/SerializationUtils.hh>
+#include "SerializationUtils.hh"
 
 namespace bsgo {
 
@@ -34,12 +34,12 @@ auto EntityAddedMessage::getSystemDbId() const -> Uuid
 
 auto EntityAddedMessage::serialize(std::ostream &out) const -> std::ostream &
 {
-  utils::serialize(out, m_messageType);
-  utils::serialize(out, m_clientId);
+  core::serialize(out, m_messageType);
+  core::serialize(out, m_clientId);
 
-  utils::serialize(out, m_entityDbId);
-  utils::serialize(out, m_entityKind);
-  utils::serialize(out, m_systemDbId);
+  core::serialize(out, m_entityDbId);
+  core::serialize(out, m_entityKind);
+  core::serialize(out, m_systemDbId);
 
   return out;
 }
@@ -47,12 +47,12 @@ auto EntityAddedMessage::serialize(std::ostream &out) const -> std::ostream &
 bool EntityAddedMessage::deserialize(std::istream &in)
 {
   bool ok{true};
-  ok &= utils::deserialize(in, m_messageType);
-  ok &= utils::deserialize(in, m_clientId);
+  ok &= core::deserialize(in, m_messageType);
+  ok &= core::deserialize(in, m_clientId);
 
-  ok &= utils::deserialize(in, m_entityDbId);
-  ok &= utils::deserialize(in, m_entityKind);
-  ok &= utils::deserialize(in, m_systemDbId);
+  ok &= core::deserialize(in, m_entityDbId);
+  ok &= core::deserialize(in, m_entityKind);
+  ok &= core::deserialize(in, m_systemDbId);
 
   return ok;
 }

@@ -2,8 +2,8 @@
 #pragma once
 
 #include "AbstractRepository.hh"
+#include "TimeUtils.hh"
 #include "Uuid.hh"
-#include <core_utils/TimeUtils.hh>
 #include <memory>
 
 namespace bsgo {

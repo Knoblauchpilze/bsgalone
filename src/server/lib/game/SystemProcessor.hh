@@ -2,20 +2,20 @@
 #pragma once
 
 #include "Coordinator.hh"
+#include "CoreObject.hh"
 #include "DatabaseEntityMapper.hh"
 #include "IMessageQueue.hh"
 #include "Services.hh"
 #include "SynchronizedMessageQueue.hh"
 #include "Uuid.hh"
 #include <atomic>
-#include <core_utils/CoreObject.hh>
 #include <memory>
 #include <thread>
 #include <unordered_map>
 
 namespace bsgo {
 
-class SystemProcessor : public utils::CoreObject
+class SystemProcessor : public core::CoreObject
 {
   public:
   SystemProcessor(const Uuid systemDbId);

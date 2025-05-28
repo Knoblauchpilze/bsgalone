@@ -21,14 +21,14 @@ TEST(Unit_Bsgo_Serialization_Uuid, MultipleValues)
   Uuid expected2{36};
 
   std::ostringstream out;
-  utils::serialize(out, expected1);
-  utils::serialize(out, expected2);
+  core::serialize(out, expected1);
+  core::serialize(out, expected2);
   std::istringstream in(out.str());
 
   Uuid actual1{3};
   Uuid actual2{27};
-  utils::deserialize(in, actual1);
-  utils::deserialize(in, actual2);
+  core::deserialize(in, actual1);
+  core::deserialize(in, actual2);
 
   EXPECT_EQ(actual1, expected1);
   EXPECT_EQ(actual2, expected2);

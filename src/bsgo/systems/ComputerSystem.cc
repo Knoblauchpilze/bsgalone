@@ -120,7 +120,7 @@ void ComputerSystem::applyEmitterEffects(Entity &ent,
       error("Failed to activate computer", "Expected slot to define a duration");
     }
     debug("Adding weapon effect for " + ent.str() + " with duration "
-          + utils::durationToPrettyString(*duration, true));
+          + core::durationToPrettyString(*duration, true));
     coordinator.addWeaponEffect(ent.uuid, *duration, *damage);
   }
 }

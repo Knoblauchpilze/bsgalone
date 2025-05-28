@@ -2,8 +2,8 @@
 #include "ShipDataSource.hh"
 #include "CircleBox.hh"
 #include "Coordinator.hh"
+#include "RNG.hh"
 #include "VectorUtils.hh"
-#include <core_utils/RNG.hh>
 
 #include "FallbackNode.hh"
 #include "FireNode.hh"
@@ -16,7 +16,7 @@
 namespace bsgo {
 
 ShipDataSource::ShipDataSource(const Repositories &repositories)
-  : utils::CoreObject("bsgo")
+  : core::CoreObject("bsgo")
   , m_repositories(repositories)
 {
   setService("data");
@@ -148,7 +148,7 @@ auto ShipDataSource::generateBehaviorTree(const Uuid entity, const Eigen::Vector
   -> INodePtr
 {
   constexpr auto RADIUS_TO_PICK_A_TARGET = 5.0f;
-  utils::RNG rng(entity);
+  core::RNG rng(entity);
 
   auto dx                       = rng.rndFloat(-RADIUS_TO_PICK_A_TARGET, RADIUS_TO_PICK_A_TARGET);
   auto dy                       = rng.rndFloat(-RADIUS_TO_PICK_A_TARGET, RADIUS_TO_PICK_A_TARGET);

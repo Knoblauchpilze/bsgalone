@@ -4,12 +4,12 @@
 #include "DataSource.hh"
 #include "LogoutMessage.hh"
 #include "SystemProcessorUtils.hh"
-#include <core_utils/TimeUtils.hh>
+#include "TimeUtils.hh"
 
 namespace bsgo {
 
 Server::Server()
-  : utils::CoreObject("server")
+  : core::CoreObject("server")
 {
   setService("server");
   initialize();

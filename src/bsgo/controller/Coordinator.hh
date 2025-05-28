@@ -2,13 +2,13 @@
 #pragma once
 
 #include "Components.hh"
+#include "CoreObject.hh"
 #include "Entity.hh"
 #include "IBoundingBox.hh"
 #include "IMessageQueue.hh"
 #include "Systems.hh"
+#include "TimeUtils.hh"
 #include "Uuid.hh"
-#include <core_utils/CoreObject.hh>
-#include <core_utils/TimeUtils.hh>
 #include <eigen3/Eigen/Eigen>
 #include <memory>
 #include <optional>
@@ -18,7 +18,7 @@ namespace bsgo {
 
 class DataSource;
 
-class Coordinator : public utils::CoreObject
+class Coordinator : public core::CoreObject
 {
   public:
   Coordinator(SystemsConfig &&config);
@@ -42,8 +42,8 @@ class Coordinator : public utils::CoreObject
   void addRemoval(const Uuid ent);
   void addStatus(const Uuid ent,
                  const Status &status,
-                 const std::optional<utils::Duration> &jumpTime,
-                 const std::optional<utils::Duration> &threatJumpTime);
+                 const std::optional<core::Duration> &jumpTime,
+                 const std::optional<core::Duration> &threatJumpTime);
   void addAI(const Uuid ent, INodePtr behavior);
   void addShipClass(const Uuid ent, const ShipClass &shipClass);
   void addName(const Uuid ent, const std::string &name);
@@ -53,7 +53,7 @@ class Coordinator : public utils::CoreObject
   void addComputer(const Uuid ent, const PlayerComputer &computer);
   void addResourceComponent(const Uuid ent, const Uuid resource, const float amount);
 
-  void addWeaponEffect(const Uuid ent, const utils::Duration &duration, const float damageModifier);
+  void addWeaponEffect(const Uuid ent, const core::Duration &duration, const float damageModifier);
   void removeEffect(const Uuid ent, const EffectComponentShPtr &effect);
 
   auto getEntity(const Uuid ent) const -> Entity;

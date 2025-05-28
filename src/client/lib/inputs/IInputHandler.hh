@@ -3,12 +3,12 @@
 
 #include "Controls.hh"
 #include "CoordinateFrame.hh"
-#include <core_utils/CoreObject.hh>
+#include "CoreObject.hh"
 #include <memory>
 
 namespace pge {
 
-class IInputHandler : public utils::CoreObject
+class IInputHandler : public core::CoreObject
 {
   public:
   IInputHandler(const std::string &name);

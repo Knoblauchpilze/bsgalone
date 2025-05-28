@@ -1,6 +1,6 @@
 
 #include "JumpMessage.hh"
-#include <core_utils/SerializationUtils.hh>
+#include "SerializationUtils.hh"
 
 namespace bsgo {
 
@@ -65,13 +65,13 @@ auto JumpMessage::getDestinationSystemDbId() const -> Uuid
 
 auto JumpMessage::serialize(std::ostream &out) const -> std::ostream &
 {
-  utils::serialize(out, m_messageType);
-  utils::serialize(out, m_clientId);
+  core::serialize(out, m_messageType);
+  core::serialize(out, m_clientId);
 
-  utils::serialize(out, m_shipDbId);
-  utils::serialize(out, m_playerDbId);
-  utils::serialize(out, m_sourceSystemDbId);
-  utils::serialize(out, m_destinationSystemDbId);
+  core::serialize(out, m_shipDbId);
+  core::serialize(out, m_playerDbId);
+  core::serialize(out, m_sourceSystemDbId);
+  core::serialize(out, m_destinationSystemDbId);
 
   return out;
 }
@@ -79,13 +79,13 @@ auto JumpMessage::serialize(std::ostream &out) const -> std::ostream &
 bool JumpMessage::deserialize(std::istream &in)
 {
   bool ok{true};
-  ok &= utils::deserialize(in, m_messageType);
-  ok &= utils::deserialize(in, m_clientId);
+  ok &= core::deserialize(in, m_messageType);
+  ok &= core::deserialize(in, m_clientId);
 
-  ok &= utils::deserialize(in, m_shipDbId);
-  ok &= utils::deserialize(in, m_playerDbId);
-  ok &= utils::deserialize(in, m_sourceSystemDbId);
-  ok &= utils::deserialize(in, m_destinationSystemDbId);
+  ok &= core::deserialize(in, m_shipDbId);
+  ok &= core::deserialize(in, m_playerDbId);
+  ok &= core::deserialize(in, m_sourceSystemDbId);
+  ok &= core::deserialize(in, m_destinationSystemDbId);
 
   return ok;
 }

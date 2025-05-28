@@ -5,16 +5,16 @@
 #include "BroadcastMessageQueue.hh"
 #include "ClientManager.hh"
 #include "Context.hh"
+#include "CoreObject.hh"
 #include "MessageExchanger.hh"
 #include "NetworkSystem.hh"
 #include "SystemProcessor.hh"
 #include "TcpServer.hh"
 #include <atomic>
 #include <condition_variable>
-#include <core_utils/CoreObject.hh>
 
 namespace bsgo {
-class Server : public utils::CoreObject
+class Server : public core::CoreObject
 {
   public:
   Server();
