@@ -83,7 +83,7 @@ apt install -y --no-install-recommends \
   rsync
 
 # Those are the dependencies to compile the client and server applications
-apt install -y --no-install-recommends \
+apt-get install -y --no-install-recommends \
   libeigen3-dev \
   libasio-dev \
   libpqxx-dev \
