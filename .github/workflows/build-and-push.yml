@@ -1,0 +1,126 @@
+name: Build services
+
+on:
+  push:
+    paths:
+      - "CMakeLists.txt"
+      - "codecov.yml"
+      - ".github/workflows/**"
+      - "build/**"
+      - "src/**"
+      - "tests/**"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  extract-service-tag:
+    runs-on: ubuntu-latest
+    # https://docs.github.com/en/actions/using-jobs/defining-outputs-for-jobs
+    outputs:
+      version: ${{ steps.service-version.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract git commit hash
+        id: service-version
+        # https://stackoverflow.com/questions/58886293/getting-current-branch-and-commit-hash-in-github-action
+        run: echo "tag=$(git rev-parse --short $GITHUB_SHA)" >> $GITHUB_OUTPUT
+
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Install asio
+        run: |
+          sudo apt-get install -y libasio-dev=1:1.28.1-0.2
+      - uses: actions/checkout@v4
+      - name: Build server
+        run: |
+          make tests
+      # https://github.com/actions/upload-artifact/issues/38
+      - name: Compress build folder
+        run: |
+          tar -cvf build-data.tar .
+      - name: Upload build result
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-data
+          path: build-data.tar
+
+  unit-tests:
+    runs-on: ubuntu-24.04
+    needs: [build]
+    steps:
+      - name: Install lcov
+        run: |
+          sudo apt-get install -y lcov=2.0-4ubuntu2
+      - name: Download build data
+        uses: actions/download-artifact@v4
+        with:
+          name: build-data
+      - name: Uncompress build data
+        run: |
+          tar -xvf build-data.tar
+      - name: Run tests
+        run: |
+          ./sandbox/bin/unitTests
+      - name: Aggregate code coverage
+        # https://github.com/linux-test-project/lcov/issues/296
+        # https://stackoverflow.com/questions/38438219/how-to-remove-certain-directories-from-lcov-code-coverage-report
+        run: |
+          lcov \
+            --directory cmake-build \
+            --exclude=*googletest* \
+            --exclude=\/usr\/include\/* \
+            --exclude=*tests\/* \
+            --capture \
+            --output-file coverage.info
+      - name: Display coverage
+        run: |
+          lcov --list coverage.info
+      - name: Upload coverage to Codecov
+        if: ${{ github.actor != 'dependabot[bot]' }}
+        uses: codecov/codecov-action@v5
+        with:
+          fail_ci_if_error: true
+          handle_no_reports_found: true
+          files: ./coverage.info
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  integration-tests:
+    runs-on: ubuntu-24.04
+    needs: [build]
+    steps:
+      - name: Install lcov
+        run: |
+          sudo apt-get install -y lcov=2.0-4ubuntu2
+      - name: Download build data
+        uses: actions/download-artifact@v4
+        with:
+          name: build-data
+      - name: Uncompress build data
+        run: |
+          tar -xvf build-data.tar
+      - name: Run tests
+        run: |
+          ./sandbox/bin/integrationTests
+      - name: Aggregate code coverage
+        run: |
+          lcov \
+            --directory cmake-build \
+            --exclude=*googletest* \
+            --exclude=\/usr\/include\/* \
+            --exclude=*tests\/* \
+            --capture \
+            --output-file coverage.info
+      - name: Display coverage
+        run: |
+          lcov --list coverage.info
+      - name: Upload coverage to Codecov
+        if: ${{ github.actor != 'dependabot[bot]' }}
+        uses: codecov/codecov-action@v5
+        with:
+          fail_ci_if_error: true
+          handle_no_reports_found: true
+          files: ./coverage.info
+          token: ${{ secrets.CODECOV_TOKEN }}
