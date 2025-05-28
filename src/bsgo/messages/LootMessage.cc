@@ -1,6 +1,6 @@
 
 #include "LootMessage.hh"
-#include <core_utils/SerializationUtils.hh>
+#include "SerializationUtils.hh"
 
 namespace bsgo {
 
@@ -32,12 +32,12 @@ auto LootMessage::amount() const -> float
 
 auto LootMessage::serialize(std::ostream &out) const -> std::ostream &
 {
-  utils::serialize(out, m_messageType);
-  utils::serialize(out, m_clientId);
+  core::serialize(out, m_messageType);
+  core::serialize(out, m_clientId);
 
-  utils::serialize(out, m_playerDbId);
-  utils::serialize(out, m_resourceDbId);
-  utils::serialize(out, m_amount);
+  core::serialize(out, m_playerDbId);
+  core::serialize(out, m_resourceDbId);
+  core::serialize(out, m_amount);
 
   return out;
 }
@@ -45,12 +45,12 @@ auto LootMessage::serialize(std::ostream &out) const -> std::ostream &
 bool LootMessage::deserialize(std::istream &in)
 {
   bool ok{true};
-  ok &= utils::deserialize(in, m_messageType);
-  ok &= utils::deserialize(in, m_clientId);
+  ok &= core::deserialize(in, m_messageType);
+  ok &= core::deserialize(in, m_clientId);
 
-  ok &= utils::deserialize(in, m_playerDbId);
-  ok &= utils::deserialize(in, m_resourceDbId);
-  ok &= utils::deserialize(in, m_amount);
+  ok &= core::deserialize(in, m_playerDbId);
+  ok &= core::deserialize(in, m_resourceDbId);
+  ok &= core::deserialize(in, m_amount);
 
   return ok;
 }

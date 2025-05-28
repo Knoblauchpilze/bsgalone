@@ -2,8 +2,8 @@
 #pragma once
 
 #include "Connection.hh"
+#include "CoreObject.hh"
 #include "Uuid.hh"
-#include <core_utils/CoreObject.hh>
 #include <memory>
 #include <mutex>
 #include <optional>
@@ -11,7 +11,7 @@
 
 namespace bsgo {
 
-class ClientManager : public utils::CoreObject
+class ClientManager : public core::CoreObject
 {
   public:
   ClientManager();

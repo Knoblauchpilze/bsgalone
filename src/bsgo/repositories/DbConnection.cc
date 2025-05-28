@@ -36,7 +36,7 @@ auto generateConnectionString() -> std::string
 } // namespace
 
 DbConnection::DbConnection()
-  : utils::CoreObject("connection")
+  : core::CoreObject("connection")
 {
   setService("db");
 }

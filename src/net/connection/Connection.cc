@@ -21,7 +21,7 @@ Connection::Connection(asio::ip::tcp::socket &&socket)
 {}
 
 Connection::Connection(asio::ip::tcp::socket &&socket, const ConnectionType type)
-  : utils::CoreObject("connection")
+  : core::CoreObject("connection")
   , m_id(NEXT_ID.fetch_add(1))
   , m_type(type)
   , m_socket(std::move(socket))

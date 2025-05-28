@@ -3,8 +3,8 @@
 
 #include "AbstractRepository.hh"
 #include "EntityKind.hh"
+#include "TimeUtils.hh"
 #include "Uuid.hh"
-#include <core_utils/TimeUtils.hh>
 #include <memory>
 #include <optional>
 #include <unordered_set>
@@ -23,9 +23,9 @@ struct PlayerComputer
   bool offensive{};
   float powerCost{};
   std::optional<float> range{};
-  utils::Duration reloadTime{};
+  core::Duration reloadTime{};
 
-  std::optional<utils::Duration> duration{};
+  std::optional<core::Duration> duration{};
   std::optional<std::unordered_set<EntityKind>> allowedTargets{};
   std::optional<float> damageModifier{};
 };

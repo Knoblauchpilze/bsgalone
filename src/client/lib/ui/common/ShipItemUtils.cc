@@ -2,15 +2,15 @@
 #include "ShipItemUtils.hh"
 #include "ScreenCommon.hh"
 #include "StringUtils.hh"
-#include <core_utils/TimeUtils.hh>
+#include "TimeUtils.hh"
 
 namespace pge {
 
 constexpr auto MILLISECONDS_IN_A_SECOND = 1000.0f;
 
-auto durationToSeconds(const utils::Duration &duration) -> float
+auto durationToSeconds(const core::Duration &duration) -> float
 {
-  return utils::toMilliseconds(duration) / MILLISECONDS_IN_A_SECOND;
+  return core::toMilliseconds(duration) / MILLISECONDS_IN_A_SECOND;
 }
 
 auto generateTextConfig(const std::string &name, const Color &color, const int margin) -> TextConfig
@@ -22,7 +22,7 @@ auto generateWeaponMenu(const std::string &name,
                         const float minDamage,
                         const float maxDamage,
                         const float range,
-                        const utils::Duration reloadTime) -> UiMenuPtr
+                        const core::Duration reloadTime) -> UiMenuPtr
 {
   auto menu = generateBlankVerticalMenu();
 
@@ -74,8 +74,8 @@ auto generateWeaponMenu(const bsgo::PlayerWeapon &weapon) -> UiMenuPtr
 auto generateComputerMenu(const std::string &name,
                           const float powerCost,
                           const std::optional<float> &range,
-                          const std::optional<utils::Duration> &duration,
-                          const utils::Duration &reloadTime) -> UiMenuPtr
+                          const std::optional<core::Duration> &duration,
+                          const core::Duration &reloadTime) -> UiMenuPtr
 {
   auto menu = generateBlankVerticalMenu();
 
@@ -110,7 +110,7 @@ auto generateComputerMenu(const std::string &name,
   }
 
   constexpr auto MILLISECONDS_IN_A_SECOND = 1000.0f;
-  const auto secondsToReload = utils::toMilliseconds(reloadTime) / MILLISECONDS_IN_A_SECOND;
+  const auto secondsToReload = core::toMilliseconds(reloadTime) / MILLISECONDS_IN_A_SECOND;
   label                      = "Reload: " + bsgo::floatToStr(secondsToReload, 2) + "s";
   text                       = generateTextConfig(label);
   prop                       = std::make_unique<UiTextMenu>(config, bg, text);

@@ -15,8 +15,8 @@ StatusSystem::StatusSystem()
   : AbstractSystem(SystemType::STATUS, isEntityRelevant)
 {}
 
-constexpr auto TIME_TO_STAY_IN_APPEARED_MODE = utils::Milliseconds{10'000};
-constexpr auto TIME_TO_STAY_IN_THREAT_MODE   = utils::Milliseconds{3'000};
+constexpr auto TIME_TO_STAY_IN_APPEARED_MODE = core::Milliseconds{10'000};
+constexpr auto TIME_TO_STAY_IN_THREAT_MODE   = core::Milliseconds{3'000};
 
 void StatusSystem::updateEntity(Entity &entity,
                                 Coordinator &coordinator,
@@ -98,7 +98,7 @@ void StatusSystem::handleJumpState(Entity &entity,
   }
 
   const auto remaining = statusComp.tryGetRemainingJumpTime();
-  if (remaining >= utils::Duration{0})
+  if (remaining >= core::Duration{0})
   {
     return;
   }

@@ -2,15 +2,15 @@
 #pragma once
 
 #include "Connection.hh"
+#include "CoreObject.hh"
 #include "IMessageQueue.hh"
-#include <core_utils/CoreObject.hh>
 #include <deque>
 #include <memory>
 #include <vector>
 
 namespace bsgo {
 
-class NetworkMessageQueue : public IMessageQueue, public utils::CoreObject
+class NetworkMessageQueue : public IMessageQueue, public core::CoreObject
 {
   public:
   NetworkMessageQueue(IMessageQueuePtr synchronizedQueue);

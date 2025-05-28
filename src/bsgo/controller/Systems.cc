@@ -19,7 +19,7 @@
 namespace bsgo {
 
 Systems::Systems(SystemsConfig &&config)
-  : utils::CoreObject("systems")
+  : core::CoreObject("systems")
 {
   setService("bsgo");
 

@@ -4,15 +4,15 @@
 
 namespace pge {
 
-constexpr auto MIN_SLEEP_TIME           = utils::Milliseconds(5);
+constexpr auto MIN_SLEEP_TIME           = core::Milliseconds(5);
 constexpr auto MILLISECONDS_IN_A_SECOND = 1'000;
 
 FramerateControl::FramerateControl(int maxFps)
-  : utils::CoreObject("control")
+  : core::CoreObject("control")
   , m_maxFps(maxFps)
 {
   setService("fps");
-  m_sleepTimeInMs    = utils::Milliseconds(MILLISECONDS_IN_A_SECOND / maxFps);
+  m_sleepTimeInMs    = core::Milliseconds(MILLISECONDS_IN_A_SECOND / maxFps);
   m_minSleepTimeInMs = MIN_SLEEP_TIME;
 }
 
@@ -20,17 +20,17 @@ void FramerateControl::throttle()
 {
   if (!m_lastThrottlingTime)
   {
-    m_lastThrottlingTime = utils::now();
+    m_lastThrottlingTime = core::now();
     return;
   }
 
-  const auto now     = utils::now();
+  const auto now     = core::now();
   const auto elapsed = now - *m_lastThrottlingTime;
 
   if (elapsed > m_sleepTimeInMs)
   {
     m_lastThrottlingTime = now;
-    m_sleepDriftInMs     = utils::Milliseconds(0);
+    m_sleepDriftInMs     = core::Milliseconds(0);
     return;
   }
 
@@ -49,7 +49,7 @@ void FramerateControl::throttle()
 
   std::this_thread::sleep_for(sleepTime);
 
-  m_lastThrottlingTime = utils::now();
+  m_lastThrottlingTime = core::now();
   m_sleepDriftInMs     = leftoverSleepTime;
 }
 

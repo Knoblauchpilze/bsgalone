@@ -7,10 +7,10 @@ namespace {
 constexpr auto BASE_SYNC_INTERVAL_MS = 1000;
 constexpr auto MAX_SYNC_JITTER_MS    = 100;
 
-auto generateJitteredSyncInterval() -> utils::Duration
+auto generateJitteredSyncInterval() -> core::Duration
 {
   const auto jitteredSync = BASE_SYNC_INTERVAL_MS + std::rand() % MAX_SYNC_JITTER_MS;
-  return utils::Milliseconds{jitteredSync};
+  return core::Milliseconds{jitteredSync};
 }
 } // namespace
 
@@ -44,7 +44,7 @@ auto NetworkComponent::componentsToSync() const -> const std::unordered_set<Comp
 void NetworkComponent::update(const float elapsedSeconds)
 {
   constexpr auto MILLISECONDS_IN_A_SECONDS = 1000;
-  const auto elapsedMillis                 = utils::Milliseconds(
+  const auto elapsedMillis                 = core::Milliseconds(
     static_cast<int>(elapsedSeconds * MILLISECONDS_IN_A_SECONDS));
 
   m_remainingUntilNextSync -= elapsedMillis;

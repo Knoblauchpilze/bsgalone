@@ -1,6 +1,6 @@
 
+#include "SerializationUtils.hh"
 #include "Uuid.hh"
-#include <core_utils/SerializationUtils.hh>
 #include <gtest/gtest.h>
 #include <sstream>
 
@@ -20,7 +20,7 @@ template<typename T>
 bool serializeAndDeserialize(const T &expected, const bool truncate)
 {
   std::ostringstream out{};
-  utils::serialize(out, expected);
+  core::serialize(out, expected);
 
   auto serialized = out.str();
   if (truncate)
@@ -30,7 +30,7 @@ bool serializeAndDeserialize(const T &expected, const bool truncate)
   std::istringstream in(serialized);
 
   T output{};
-  return utils::deserialize(in, output);
+  return core::deserialize(in, output);
 }
 
 template<>

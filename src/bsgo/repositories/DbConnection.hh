@@ -1,13 +1,13 @@
 
 #pragma once
 
-#include <core_utils/CoreObject.hh>
+#include "CoreObject.hh"
 #include <memory>
 #include <pqxx/pqxx>
 
 namespace bsgo {
 
-class DbConnection : public utils::CoreObject
+class DbConnection : public core::CoreObject
 {
   public:
   DbConnection();

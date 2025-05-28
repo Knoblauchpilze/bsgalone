@@ -2,12 +2,12 @@
 #pragma once
 
 #include "ComponentType.hh"
-#include <core_utils/CoreObject.hh>
+#include "CoreObject.hh"
 #include <memory>
 
 namespace bsgo {
 
-class IComponent : public utils::CoreObject
+class IComponent : public core::CoreObject
 {
   public:
   IComponent(const std::string &name);

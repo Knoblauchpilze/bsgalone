@@ -1,7 +1,7 @@
 
 #include "VectorUtils.hh"
+#include "SerializationUtils.hh"
 #include "StringUtils.hh"
-#include <core_utils/SerializationUtils.hh>
 
 namespace bsgo {
 
@@ -19,9 +19,9 @@ auto str(const Eigen::Vector3f &v) -> std::string
 
 void serialize(std::ostream &out, const Eigen::Vector3f &value)
 {
-  utils::serialize(out, value(0));
-  utils::serialize(out, value(1));
-  utils::serialize(out, value(2));
+  core::serialize(out, value(0));
+  core::serialize(out, value(1));
+  core::serialize(out, value(2));
 }
 
 void serialize(std::ostream &out, const std::optional<Eigen::Vector3f> &value)
@@ -37,9 +37,9 @@ void serialize(std::ostream &out, const std::optional<Eigen::Vector3f> &value)
 bool deserialize(std::istream &in, Eigen::Vector3f &value)
 {
   bool ok{true};
-  ok &= utils::deserialize(in, value(0));
-  ok &= utils::deserialize(in, value(1));
-  ok &= utils::deserialize(in, value(2));
+  ok &= core::deserialize(in, value(0));
+  ok &= core::deserialize(in, value(1));
+  ok &= core::deserialize(in, value(2));
 
   return ok;
 }

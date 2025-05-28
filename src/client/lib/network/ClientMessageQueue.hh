@@ -2,15 +2,15 @@
 #pragma once
 
 #include "ClientConnection.hh"
+#include "CoreObject.hh"
 #include "IMessageQueue.hh"
 #include "Uuid.hh"
-#include <core_utils/CoreObject.hh>
 #include <memory>
 #include <optional>
 
 namespace pge {
 
-class ClientMessageQueue : public bsgo::IMessageQueue, public utils::CoreObject
+class ClientMessageQueue : public bsgo::IMessageQueue, public core::CoreObject
 {
   public:
   ClientMessageQueue(ClientConnectionPtr connection);

@@ -4,7 +4,7 @@
 namespace bsgo {
 
 AsyncMessageQueue::AsyncMessageQueue(IMessageQueuePtr messageQueue)
-  : utils::CoreObject("async")
+  : core::CoreObject("async")
   , m_messageQueue(std::move(messageQueue))
 {
   addModule("queue");

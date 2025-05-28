@@ -1,15 +1,15 @@
 
 #pragma once
 
+#include "CoreObject.hh"
 #include "IMessage.hh"
-#include <core_utils/CoreObject.hh>
 #include <deque>
 #include <istream>
 #include <optional>
 
 namespace bsgo {
 
-class MessageParser : public utils::CoreObject
+class MessageParser : public core::CoreObject
 {
   public:
   MessageParser();

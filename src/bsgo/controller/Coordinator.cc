@@ -47,7 +47,7 @@ auto getAllComponent(const Uuid ent,
 } // namespace
 
 Coordinator::Coordinator(SystemsConfig &&config)
-  : utils::CoreObject("coordinator")
+  : core::CoreObject("coordinator")
   , m_systems(std::make_unique<Systems>(std::move(config)))
 {
   setService("bsgo");
@@ -145,8 +145,8 @@ void Coordinator::addRemoval(const Uuid ent)
 
 void Coordinator::addStatus(const Uuid ent,
                             const Status &status,
-                            const std::optional<utils::Duration> &jumpTime,
-                            const std::optional<utils::Duration> &threatJumpTime)
+                            const std::optional<core::Duration> &jumpTime,
+                            const std::optional<core::Duration> &threatJumpTime)
 {
   checkForOverrides(ent, "Status", m_components.statuses);
   m_components.statuses[ent] = std::make_shared<StatusComponent>(status, jumpTime, threatJumpTime);
@@ -203,7 +203,7 @@ void Coordinator::addResourceComponent(const Uuid ent, const Uuid resource, cons
 }
 
 void Coordinator::addWeaponEffect(const Uuid ent,
-                                  const utils::Duration &duration,
+                                  const core::Duration &duration,
                                   const float damageModifier)
 {
   checkEntityExist(ent, "WeaponEffect");

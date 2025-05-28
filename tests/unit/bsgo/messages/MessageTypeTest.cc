@@ -1,6 +1,6 @@
 
 #include "MessageType.hh"
-#include <core_utils/SerializationUtils.hh>
+#include "SerializationUtils.hh"
 #include <gtest/gtest.h>
 #include <sstream>
 
@@ -20,11 +20,11 @@ TEST_P(TestCaseSerialization, Serialization)
   const auto &param = GetParam();
 
   std::ostringstream out;
-  utils::serialize(out, param.type);
+  core::serialize(out, param.type);
   std::istringstream in(out.str());
 
   MessageType expected;
-  utils::deserialize(in, expected);
+  core::deserialize(in, expected);
 
   EXPECT_EQ(param.type, expected);
 }

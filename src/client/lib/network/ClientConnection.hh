@@ -2,14 +2,14 @@
 #pragma once
 
 #include "Context.hh"
+#include "CoreObject.hh"
 #include "IMessage.hh"
 #include "IMessageQueue.hh"
-#include <core_utils/CoreObject.hh>
 #include <memory>
 
 namespace pge {
 
-class ClientConnection : public utils::CoreObject
+class ClientConnection : public core::CoreObject
 {
   public:
   ClientConnection(const int port, net::Context &networkContext);

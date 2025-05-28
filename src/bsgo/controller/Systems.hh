@@ -1,10 +1,10 @@
 
 #pragma once
 
+#include "CoreObject.hh"
 #include "IMessageQueue.hh"
 #include "ISystem.hh"
 #include "NetworkSystem.hh"
-#include <core_utils/CoreObject.hh>
 #include <memory>
 #include <unordered_set>
 #include <vector>
@@ -21,7 +21,7 @@ struct SystemsConfig
   std::unordered_set<SystemType> ignoredSystems{};
 };
 
-class Systems : public utils::CoreObject
+class Systems : public core::CoreObject
 {
   public:
   Systems(SystemsConfig &&config);

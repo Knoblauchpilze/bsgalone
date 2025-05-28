@@ -1,15 +1,15 @@
 
 #pragma once
 
+#include "CoreObject.hh"
 #include "DatabaseEntityMapper.hh"
 #include "Repositories.hh"
-#include <core_utils/CoreObject.hh>
 
 namespace bsgo {
 
 class Coordinator;
 
-class AsteroidDataSource : public utils::CoreObject
+class AsteroidDataSource : public core::CoreObject
 {
   public:
   AsteroidDataSource(const Repositories &repositories);

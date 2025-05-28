@@ -9,7 +9,7 @@
 namespace bsgo {
 
 DataSource::DataSource(const DataLoadingMode dataLoadingMode)
-  : utils::CoreObject("bsgo")
+  : core::CoreObject("bsgo")
   , m_dataLoadingMode(dataLoadingMode)
 {
   setService("data");

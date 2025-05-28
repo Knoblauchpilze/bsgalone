@@ -1,8 +1,8 @@
 
 #pragma once
 
+#include "CoreObject.hh"
 #include "IMessage.hh"
-#include <core_utils/CoreObject.hh>
 #include <deque>
 #include <functional>
 #include <mutex>
@@ -12,7 +12,7 @@ namespace bsgo {
 
 using MessageHandler = std::function<void(const IMessage &)>;
 
-class MessageProcessor : public utils::CoreObject
+class MessageProcessor : public core::CoreObject
 {
   public:
   MessageProcessor(const std::string &onBehalfOfName,

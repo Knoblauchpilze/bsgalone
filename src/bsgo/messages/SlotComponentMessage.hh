@@ -13,12 +13,12 @@ class SlotComponentMessage : public ComponentUpdatedMessage
   SlotComponentMessage(const Uuid playerDbId,
                        const Uuid shipDbId,
                        const int slotDbId,
-                       const std::optional<utils::Duration> &elapsedSinceLastFired);
+                       const std::optional<core::Duration> &elapsedSinceLastFired);
   ~SlotComponentMessage() override = default;
 
   auto getPlayerDbId() const -> Uuid;
   auto getSlotDbId() const -> Uuid;
-  auto getElapsedSinceLastFired() const -> std::optional<utils::Duration>;
+  auto getElapsedSinceLastFired() const -> std::optional<core::Duration>;
 
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
@@ -28,7 +28,7 @@ class SlotComponentMessage : public ComponentUpdatedMessage
   private:
   Uuid m_playerDbId{};
   Uuid m_slotDbId{};
-  std::optional<utils::Duration> m_elapsedSinceLastFired{};
+  std::optional<core::Duration> m_elapsedSinceLastFired{};
 };
 
 } // namespace bsgo

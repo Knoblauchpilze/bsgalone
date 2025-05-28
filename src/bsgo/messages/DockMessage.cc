@@ -1,6 +1,6 @@
 
 #include "DockMessage.hh"
-#include <core_utils/SerializationUtils.hh>
+#include "SerializationUtils.hh"
 
 namespace bsgo {
 
@@ -32,13 +32,13 @@ auto DockMessage::getSystemDbId() const -> Uuid
 
 auto DockMessage::serialize(std::ostream &out) const -> std::ostream &
 {
-  utils::serialize(out, m_messageType);
-  utils::serialize(out, m_clientId);
-  utils::serialize(out, m_validated);
+  core::serialize(out, m_messageType);
+  core::serialize(out, m_clientId);
+  core::serialize(out, m_validated);
 
-  utils::serialize(out, m_shipDbId);
-  utils::serialize(out, m_docking);
-  utils::serialize(out, m_systemDbId);
+  core::serialize(out, m_shipDbId);
+  core::serialize(out, m_docking);
+  core::serialize(out, m_systemDbId);
 
   return out;
 }
@@ -46,13 +46,13 @@ auto DockMessage::serialize(std::ostream &out) const -> std::ostream &
 bool DockMessage::deserialize(std::istream &in)
 {
   bool ok{true};
-  ok &= utils::deserialize(in, m_messageType);
-  ok &= utils::deserialize(in, m_clientId);
-  ok &= utils::deserialize(in, m_validated);
+  ok &= core::deserialize(in, m_messageType);
+  ok &= core::deserialize(in, m_clientId);
+  ok &= core::deserialize(in, m_validated);
 
-  ok &= utils::deserialize(in, m_shipDbId);
-  ok &= utils::deserialize(in, m_docking);
-  ok &= utils::deserialize(in, m_systemDbId);
+  ok &= core::deserialize(in, m_shipDbId);
+  ok &= core::deserialize(in, m_docking);
+  ok &= core::deserialize(in, m_systemDbId);
 
   return ok;
 }

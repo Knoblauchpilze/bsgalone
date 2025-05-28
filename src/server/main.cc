@@ -1,12 +1,11 @@
 
 /// @brief - A minimalistic bsg server implementation
 
+#include "CoreException.hh"
 #include "Server.hh"
-#include <core_utils/CoreException.hh>
-#include <core_utils/log/Locator.hh>
-#include <core_utils/log/PrefixedLogger.hh>
-#include <core_utils/log/StdLogger.hh>
-#include <functional>
+#include "log/Locator.hh"
+#include "log/PrefixedLogger.hh"
+#include "log/StdLogger.hh"
 
 namespace {
 // https://stackoverflow.com/questions/11468414/using-auto-and-lambda-to-handle-signal
@@ -59,10 +58,10 @@ auto getPortFromEnvironmentVariable() -> int
 int main(int /*argc*/, char ** /*argv*/)
 {
   // Create the logger.
-  utils::log::StdLogger raw;
-  raw.setLevel(utils::log::Severity::DEBUG);
-  utils::log::PrefixedLogger logger("server", "main");
-  utils::log::Locator::provide(&raw);
+  core::log::StdLogger raw;
+  raw.setLevel(core::log::Severity::DEBUG);
+  core::log::PrefixedLogger logger("server", "main");
+  core::log::Locator::provide(&raw);
 
   try
   {
@@ -73,7 +72,7 @@ int main(int /*argc*/, char ** /*argv*/)
 
     server.run(getPortFromEnvironmentVariable());
   }
-  catch (const utils::CoreException &e)
+  catch (const core::CoreException &e)
   {
     logger.error("Caught internal exception while setting up application", e.what());
     return EXIT_FAILURE;

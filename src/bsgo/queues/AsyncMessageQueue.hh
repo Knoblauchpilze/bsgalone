@@ -1,15 +1,15 @@
 
 #pragma once
 
+#include "CoreObject.hh"
 #include "IMessageQueue.hh"
 #include <atomic>
 #include <condition_variable>
-#include <core_utils/CoreObject.hh>
 #include <thread>
 
 namespace bsgo {
 
-class AsyncMessageQueue : public IMessageQueue, public utils::CoreObject
+class AsyncMessageQueue : public IMessageQueue, public core::CoreObject
 {
   public:
   AsyncMessageQueue(IMessageQueuePtr messageQueue);

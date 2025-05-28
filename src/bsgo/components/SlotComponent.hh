@@ -2,8 +2,8 @@
 #pragma once
 
 #include "AbstractComponent.hh"
+#include "TimeUtils.hh"
 #include "Uuid.hh"
-#include <core_utils/TimeUtils.hh>
 #include <optional>
 
 namespace bsgo {
@@ -14,7 +14,7 @@ struct SlotComponentData
   bool offensive{};
   float powerCost{};
   std::optional<float> range{};
-  utils::Duration reloadTime{};
+  core::Duration reloadTime{};
 };
 
 enum class FiringState
@@ -44,9 +44,9 @@ class SlotComponent : public AbstractComponent
   bool canFire() const noexcept;
   bool isReloading() const noexcept;
   auto reloadPercentage() const -> float;
-  auto elapsedSinceLastFired() const -> std::optional<utils::Duration>;
+  auto elapsedSinceLastFired() const -> std::optional<core::Duration>;
 
-  void overrideElapsedSinceLastFired(const std::optional<utils::Duration> &elapsed);
+  void overrideElapsedSinceLastFired(const std::optional<core::Duration> &elapsed);
   void setFiringState(const FiringState &firingState);
   void registerFireRequest();
   bool hasFireRequest() const;
@@ -58,11 +58,11 @@ class SlotComponent : public AbstractComponent
   bool m_offensive;
   float m_powerCost;
   std::optional<float> m_range;
-  utils::Duration m_reloadTime;
+  core::Duration m_reloadTime;
 
   bool m_fireRequest{false};
   FiringState m_firingState{FiringState::READY};
-  std::optional<utils::Duration> m_elapsedSinceLastFired{};
+  std::optional<core::Duration> m_elapsedSinceLastFired{};
 
   void handleReload(const float elapsedSeconds);
 };

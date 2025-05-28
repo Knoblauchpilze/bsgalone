@@ -69,6 +69,7 @@ target_link_libraries (bsgo_lib PUBLIC
 	bsgalone-interface-library
 	pq
 	pqxx
+	core_lib
 	net_lib
 	)
 

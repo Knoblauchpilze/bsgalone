@@ -4,7 +4,7 @@
 namespace bsgo {
 
 DatabaseEntityMapper::DatabaseEntityMapper()
-  : utils::CoreObject("database")
+  : core::CoreObject("database")
 {
   setService("mapper");
 }

@@ -1,6 +1,6 @@
 
 #include "MessageParser.hh"
-#include <core_utils/SerializationUtils.hh>
+#include "SerializationUtils.hh"
 #include <sstream>
 
 #include "ComponentSyncMessage.hh"
@@ -28,7 +28,7 @@
 namespace bsgo {
 
 MessageParser::MessageParser()
-  : utils::CoreObject("message")
+  : core::CoreObject("message")
 {
   addModule("parser");
   setService("server");
@@ -40,7 +40,7 @@ constexpr auto MESSAGE_SIZE = sizeof(std::underlying_type_t<MessageType>);
 auto tryReadMessageType(std::istream &in) -> std::optional<MessageType>
 {
   MessageType type{};
-  if (!utils::deserialize(in, type))
+  if (!core::deserialize(in, type))
   {
     return {};
   }

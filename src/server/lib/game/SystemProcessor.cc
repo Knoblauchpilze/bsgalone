@@ -7,7 +7,7 @@
 namespace bsgo {
 
 SystemProcessor::SystemProcessor(const Uuid systemDbId)
-  : utils::CoreObject("processor")
+  : core::CoreObject("processor")
   , m_systemDbId(systemDbId)
   , m_inputMessagesQueue(std::make_unique<SynchronizedMessageQueue>(
       "synchronized-message-queue-for-" + std::to_string(m_systemDbId)))
@@ -77,16 +77,16 @@ void SystemProcessor::stop()
 void SystemProcessor::asyncSystemProcessing()
 {
   bool running{true};
-  auto lastFrameTimestamp = utils::now();
+  auto lastFrameTimestamp = core::now();
 
   debug("Started processing for system");
   while (running)
   {
-    constexpr auto SLEEP_DURATION_WHEN_PROCESSING = utils::Milliseconds(50);
+    constexpr auto SLEEP_DURATION_WHEN_PROCESSING = core::Milliseconds(50);
     std::this_thread::sleep_for(SLEEP_DURATION_WHEN_PROCESSING);
 
-    const auto thisFrameTimestamp = utils::now();
-    const auto elapsedMs          = utils::diffInMs(lastFrameTimestamp, thisFrameTimestamp);
+    const auto thisFrameTimestamp = core::now();
+    const auto elapsedMs          = core::diffInMs(lastFrameTimestamp, thisFrameTimestamp);
 
     constexpr auto MS_IN_A_SECOND = 1'000;
     m_coordinator->update(elapsedMs / MS_IN_A_SECOND);

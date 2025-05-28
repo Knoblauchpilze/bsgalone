@@ -2,8 +2,8 @@
 #pragma once
 
 #include "AbstractRepository.hh"
+#include "TimeUtils.hh"
 #include "Uuid.hh"
-#include <core_utils/TimeUtils.hh>
 #include <memory>
 #include <unordered_set>
 
@@ -21,7 +21,7 @@ struct Weapon
 
   float range{};
 
-  utils::Duration reloadTime{};
+  core::Duration reloadTime{};
 };
 
 class WeaponRepository : public AbstractRepository

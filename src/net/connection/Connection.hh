@@ -2,9 +2,9 @@
 #pragma once
 
 #include "ConnectionType.hh"
+#include "CoreObject.hh"
 #include <asio.hpp>
 #include <atomic>
-#include <core_utils/CoreObject.hh>
 #include <deque>
 #include <memory>
 #include <optional>
@@ -16,7 +16,7 @@ using ConnectionId        = int;
 using DataReceivedHandler = std::function<int(const ConnectionId, const std::deque<char> &)>;
 using DisconnectHandler   = std::function<void(const ConnectionId)>;
 
-class Connection : public utils::CoreObject, public std::enable_shared_from_this<Connection>
+class Connection : public core::CoreObject, public std::enable_shared_from_this<Connection>
 {
   public:
   Connection(const std::string &url, const int port, asio::io_context &context);

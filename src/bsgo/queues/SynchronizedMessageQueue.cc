@@ -6,7 +6,7 @@ namespace bsgo {
 
 SynchronizedMessageQueue::SynchronizedMessageQueue(const std::string &name)
   : AbstractMessageQueue()
-  , utils::CoreObject(name)
+  , core::CoreObject(name)
 {
   setService("message");
 }

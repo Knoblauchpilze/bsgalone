@@ -2,16 +2,16 @@
 #pragma once
 
 #include "Components.hh"
+#include "CoreObject.hh"
 #include "IMessageQueue.hh"
 #include "SystemType.hh"
-#include <core_utils/CoreObject.hh>
 #include <memory>
 
 namespace bsgo {
 
 class Coordinator;
 
-class ISystem : public utils::CoreObject
+class ISystem : public core::CoreObject
 {
   public:
   ISystem(const std::string &name);

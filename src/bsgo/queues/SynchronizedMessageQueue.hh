@@ -2,15 +2,15 @@
 #pragma once
 
 #include "AbstractMessageQueue.hh"
+#include "CoreObject.hh"
 #include "IMessage.hh"
-#include <core_utils/CoreObject.hh>
 #include <deque>
 #include <mutex>
 #include <vector>
 
 namespace bsgo {
 
-class SynchronizedMessageQueue : public AbstractMessageQueue, public utils::CoreObject
+class SynchronizedMessageQueue : public AbstractMessageQueue, public core::CoreObject
 {
   public:
   SynchronizedMessageQueue(const std::string &name);

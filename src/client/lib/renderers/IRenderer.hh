@@ -2,15 +2,15 @@
 #pragma once
 
 #include "CoordinateFrame.hh"
+#include "CoreObject.hh"
 #include "RenderState.hh"
 #include "Renderer.hh"
 #include "RenderingPass.hh"
-#include <core_utils/CoreObject.hh>
 #include <memory>
 
 namespace pge {
 
-class IRenderer : public utils::CoreObject
+class IRenderer : public core::CoreObject
 {
   public:
   IRenderer(const std::string &name);

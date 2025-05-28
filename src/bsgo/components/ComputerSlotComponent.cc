@@ -15,7 +15,7 @@ ComputerSlotComponent::ComputerSlotComponent(const PlayerComputer &computer)
   , m_damageModifier(computer.damageModifier)
 {}
 
-auto ComputerSlotComponent::duration() const -> std::optional<utils::Duration>
+auto ComputerSlotComponent::duration() const -> std::optional<core::Duration>
 {
   return m_duration;
 }

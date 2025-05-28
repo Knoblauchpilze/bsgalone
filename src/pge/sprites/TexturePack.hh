@@ -2,9 +2,9 @@
 #pragma once
 
 #include "Color.hh"
+#include "CoreObject.hh"
 #include "DecalResource.hh"
 #include "Vector2d.hh"
-#include <core_utils/CoreObject.hh>
 #include <memory>
 
 namespace olc {
@@ -56,7 +56,7 @@ struct Sprite
   Color tint{colors::WHITE};
 };
 
-class TexturePack : public utils::CoreObject
+class TexturePack : public core::CoreObject
 {
   public:
   TexturePack(olc::PixelGameEngine *const engine);

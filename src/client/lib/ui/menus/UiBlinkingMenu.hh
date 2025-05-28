@@ -1,22 +1,22 @@
 
 #pragma once
 
+#include "CoreObject.hh"
+#include "TimeUtils.hh"
 #include "UiMenu.hh"
-#include <core_utils/CoreObject.hh>
-#include <core_utils/TimeUtils.hh>
 #include <memory>
 
 namespace pge {
 
 struct BlinkingMenuConfig
 {
-  utils::Duration blinkingDuration{utils::Milliseconds(1500)};
+  core::Duration blinkingDuration{core::Milliseconds(1500)};
 
   bool applyToBackground{true};
   bool applyToText{true};
 };
 
-class UiBlinkingMenu : public utils::CoreObject
+class UiBlinkingMenu : public core::CoreObject
 {
   public:
   UiBlinkingMenu(UiMenuPtr menu);
@@ -30,7 +30,7 @@ class UiBlinkingMenu : public utils::CoreObject
 
   private:
   UiMenuPtr m_menu{};
-  utils::Duration m_blinkingDuration{};
+  core::Duration m_blinkingDuration{};
   bool m_applyToBackground{true};
   bool m_applyToText{true};
 
@@ -41,10 +41,10 @@ class UiBlinkingMenu : public utils::CoreObject
   };
 
   State m_blinkingState{State::FADE_OUT};
-  std::optional<utils::TimeStamp> m_lastTrigger{};
+  std::optional<core::TimeStamp> m_lastTrigger{};
 
   void initializeFromConfig(const BlinkingMenuConfig &config);
-  void handleBlinking(const utils::TimeStamp &now);
+  void handleBlinking(const core::TimeStamp &now);
   void updateOpacity(const float perc);
 };
 

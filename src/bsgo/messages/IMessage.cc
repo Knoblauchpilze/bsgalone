@@ -4,7 +4,7 @@
 namespace bsgo {
 
 IMessage::IMessage(const std::string &name)
-  : utils::CoreObject(name)
+  : core::CoreObject(name)
 {
   setService("message");
 }

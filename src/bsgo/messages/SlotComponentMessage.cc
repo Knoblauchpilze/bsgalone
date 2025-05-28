@@ -1,6 +1,6 @@
 
 #include "SlotComponentMessage.hh"
-#include <core_utils/SerializationUtils.hh>
+#include "SerializationUtils.hh"
 
 namespace bsgo {
 
@@ -8,12 +8,11 @@ SlotComponentMessage::SlotComponentMessage()
   : ComponentUpdatedMessage(MessageType::SLOT_COMPONENT_UPDATED)
 {}
 
-SlotComponentMessage::SlotComponentMessage(
-  const Uuid playerDbId,
+SlotComponentMessage::SlotComponentMessage(const Uuid playerDbId,
 
-  const Uuid shipDbId,
-  const Uuid slotDbId,
-  const std::optional<utils::Duration> &elapsedSinceLastFired)
+                                           const Uuid shipDbId,
+                                           const Uuid slotDbId,
+                                           const std::optional<core::Duration> &elapsedSinceLastFired)
   : ComponentUpdatedMessage(MessageType::SLOT_COMPONENT_UPDATED,
                             shipDbId,
                             ComponentType::COMPUTER_SLOT)
@@ -32,21 +31,21 @@ auto SlotComponentMessage::getSlotDbId() const -> int
   return m_slotDbId;
 }
 
-auto SlotComponentMessage::getElapsedSinceLastFired() const -> std::optional<utils::Duration>
+auto SlotComponentMessage::getElapsedSinceLastFired() const -> std::optional<core::Duration>
 {
   return m_elapsedSinceLastFired;
 }
 
 auto SlotComponentMessage::serialize(std::ostream &out) const -> std::ostream &
 {
-  utils::serialize(out, m_messageType);
-  utils::serialize(out, m_clientId);
+  core::serialize(out, m_messageType);
+  core::serialize(out, m_clientId);
 
-  utils::serialize(out, m_playerDbId);
-  utils::serialize(out, m_shipDbId);
-  utils::serialize(out, m_component);
-  utils::serialize(out, m_slotDbId);
-  utils::serialize(out, m_elapsedSinceLastFired);
+  core::serialize(out, m_playerDbId);
+  core::serialize(out, m_shipDbId);
+  core::serialize(out, m_component);
+  core::serialize(out, m_slotDbId);
+  core::serialize(out, m_elapsedSinceLastFired);
 
   return out;
 }
@@ -54,14 +53,14 @@ auto SlotComponentMessage::serialize(std::ostream &out) const -> std::ostream &
 bool SlotComponentMessage::deserialize(std::istream &in)
 {
   bool ok{true};
-  ok &= utils::deserialize(in, m_messageType);
-  ok &= utils::deserialize(in, m_clientId);
+  ok &= core::deserialize(in, m_messageType);
+  ok &= core::deserialize(in, m_clientId);
 
-  ok &= utils::deserialize(in, m_playerDbId);
-  ok &= utils::deserialize(in, m_shipDbId);
-  ok &= utils::deserialize(in, m_component);
-  ok &= utils::deserialize(in, m_slotDbId);
-  ok &= utils::deserialize(in, m_elapsedSinceLastFired);
+  ok &= core::deserialize(in, m_playerDbId);
+  ok &= core::deserialize(in, m_shipDbId);
+  ok &= core::deserialize(in, m_component);
+  ok &= core::deserialize(in, m_slotDbId);
+  ok &= core::deserialize(in, m_elapsedSinceLastFired);
 
   return ok;
 }

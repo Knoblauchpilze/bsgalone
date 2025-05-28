@@ -4,7 +4,7 @@
 namespace bsgo {
 
 INode::INode(const std::string &name)
-  : utils::CoreObject(name)
+  : core::CoreObject(name)
 {
   setService("node");
 }

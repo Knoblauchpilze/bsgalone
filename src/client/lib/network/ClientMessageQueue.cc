@@ -6,7 +6,7 @@
 namespace pge {
 
 ClientMessageQueue::ClientMessageQueue(ClientConnectionPtr connection)
-  : utils::CoreObject("message")
+  : core::CoreObject("message")
   , m_connection(std::move(connection))
 {
   addModule("queue");

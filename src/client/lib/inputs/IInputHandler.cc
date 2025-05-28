@@ -4,7 +4,7 @@
 namespace pge {
 
 IInputHandler::IInputHandler(const std::string &name)
-  : utils::CoreObject(name)
+  : core::CoreObject(name)
 {
   setService("inputs");
 }

@@ -255,8 +255,8 @@ auto PlayerShipRepository::fetchShipBase(const Uuid ship) const -> PlayerShip
     out.docked = record[19].as<bool>();
   }
 
-  out.jumpTime         = utils::Milliseconds(record[20].as<int>());
-  out.jumpTimeInThreat = utils::Milliseconds(record[21].as<int>());
+  out.jumpTime         = core::Milliseconds(record[20].as<int>());
+  out.jumpTimeInThreat = core::Milliseconds(record[21].as<int>());
   if (!record[22].is_null())
   {
     out.jumpSystem = fromDbId(record[22].as<int>());

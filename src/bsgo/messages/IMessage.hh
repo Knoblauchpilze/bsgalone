@@ -1,13 +1,13 @@
 
 #pragma once
 
+#include "CoreObject.hh"
 #include "MessageType.hh"
-#include <core_utils/CoreObject.hh>
 #include <memory>
 
 namespace bsgo {
 
-class IMessage : public utils::CoreObject
+class IMessage : public core::CoreObject
 {
   public:
   IMessage(const std::string &name);

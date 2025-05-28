@@ -9,7 +9,7 @@ UiBlinkingMenu::UiBlinkingMenu(UiMenuPtr menu)
 {}
 
 UiBlinkingMenu::UiBlinkingMenu(const BlinkingMenuConfig &config, UiMenuPtr menu)
-  : utils::CoreObject("blinking")
+  : core::CoreObject("blinking")
   , m_menu(std::move(menu))
 {
   setService("menu");
@@ -41,7 +41,7 @@ void UiBlinkingMenu::setVisible(const bool visible)
     return;
   }
 
-  m_lastTrigger   = utils::now();
+  m_lastTrigger   = core::now();
   m_blinkingState = State::FADE_OUT;
 }
 
@@ -52,7 +52,7 @@ void UiBlinkingMenu::update()
     return;
   }
 
-  const auto now     = utils::now();
+  const auto now     = core::now();
   const auto elapsed = now - *m_lastTrigger;
   handleBlinking(now);
 
@@ -76,7 +76,7 @@ void UiBlinkingMenu::initializeFromConfig(const BlinkingMenuConfig &config)
   m_applyToText       = config.applyToText;
 }
 
-void UiBlinkingMenu::handleBlinking(const utils::TimeStamp &now)
+void UiBlinkingMenu::handleBlinking(const core::TimeStamp &now)
 {
   const auto fadeElapsedTimeAsFloat = std::chrono::duration<float, std::milli>(now - *m_lastTrigger);
 

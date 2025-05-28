@@ -1,6 +1,6 @@
 
 #include "ComponentSyncMessage.hh"
-#include <core_utils/SerializationUtils.hh>
+#include "SerializationUtils.hh"
 
 namespace bsgo {
 
@@ -105,19 +105,19 @@ auto ComponentSyncMessage::tryGetPower() const -> std::optional<float>
 
 auto ComponentSyncMessage::serialize(std::ostream &out) const -> std::ostream &
 {
-  utils::serialize(out, m_messageType);
-  utils::serialize(out, m_clientId);
+  core::serialize(out, m_messageType);
+  core::serialize(out, m_clientId);
 
-  utils::serialize(out, m_entityDbId);
-  utils::serialize(out, m_entityKind);
+  core::serialize(out, m_entityDbId);
+  core::serialize(out, m_entityKind);
 
-  utils::serialize(out, m_systemDbId);
-  utils::serialize(out, m_status);
-  utils::serialize(out, m_position);
-  utils::serialize(out, m_speed);
-  utils::serialize(out, m_acceleration);
-  utils::serialize(out, m_health);
-  utils::serialize(out, m_power);
+  core::serialize(out, m_systemDbId);
+  core::serialize(out, m_status);
+  core::serialize(out, m_position);
+  core::serialize(out, m_speed);
+  core::serialize(out, m_acceleration);
+  core::serialize(out, m_health);
+  core::serialize(out, m_power);
 
   return out;
 }
@@ -125,19 +125,19 @@ auto ComponentSyncMessage::serialize(std::ostream &out) const -> std::ostream &
 bool ComponentSyncMessage::deserialize(std::istream &in)
 {
   bool ok{true};
-  ok &= utils::deserialize(in, m_messageType);
-  ok &= utils::deserialize(in, m_clientId);
+  ok &= core::deserialize(in, m_messageType);
+  ok &= core::deserialize(in, m_clientId);
 
-  ok &= utils::deserialize(in, m_entityDbId);
-  ok &= utils::deserialize(in, m_entityKind);
+  ok &= core::deserialize(in, m_entityDbId);
+  ok &= core::deserialize(in, m_entityKind);
 
-  ok &= utils::deserialize(in, m_systemDbId);
-  ok &= utils::deserialize(in, m_status);
-  ok &= utils::deserialize(in, m_position);
-  ok &= utils::deserialize(in, m_speed);
-  ok &= utils::deserialize(in, m_acceleration);
-  ok &= utils::deserialize(in, m_health);
-  ok &= utils::deserialize(in, m_power);
+  ok &= core::deserialize(in, m_systemDbId);
+  ok &= core::deserialize(in, m_status);
+  ok &= core::deserialize(in, m_position);
+  ok &= core::deserialize(in, m_speed);
+  ok &= core::deserialize(in, m_acceleration);
+  ok &= core::deserialize(in, m_health);
+  ok &= core::deserialize(in, m_power);
 
   return ok;
 }

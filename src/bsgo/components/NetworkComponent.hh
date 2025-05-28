@@ -3,7 +3,7 @@
 #pragma once
 
 #include "AbstractComponent.hh"
-#include <core_utils/TimeUtils.hh>
+#include "TimeUtils.hh"
 #include <unordered_set>
 
 namespace bsgo {
@@ -25,7 +25,7 @@ class NetworkComponent : public AbstractComponent
   private:
   bool m_needsSync{false};
   std::unordered_set<ComponentType> m_componentsToSync{};
-  utils::Duration m_remainingUntilNextSync{};
+  core::Duration m_remainingUntilNextSync{};
 };
 
 using NetworkComponentShPtr = std::shared_ptr<NetworkComponent>;

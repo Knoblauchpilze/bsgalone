@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <core_utils/CoreObject.hh>
+#include "CoreObject.hh"
 #include <memory>
 
 namespace bsgo {
@@ -14,7 +14,7 @@ enum class ProcessingMode
   CLIENT
 };
 
-class IService : public utils::CoreObject
+class IService : public core::CoreObject
 {
   public:
   IService(const std::string &name);
