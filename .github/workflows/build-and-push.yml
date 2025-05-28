@@ -34,6 +34,7 @@ jobs:
         # https://stackoverflow.com/questions/34773745/debconf-unable-to-initialize-frontend-dialog
         run: |
           sudo apt-get update
+          sudo apt list --installed
           sudo DEBIAN_FRONTEND="noninteractive" apt-get install \
             -y \
             --no-install-recommends \
@@ -49,6 +50,8 @@ jobs:
             libpq-dev
           cd /tmp
           git clone https://github.com/jtv/libpqxx.git
+          cd libpqxx
+          git checkout 7.9.0
           cmake .
           cmake --build . -j 8
           cmake --install .

@@ -121,6 +121,7 @@ Loosely based on what is described in the [README](https://github.com/jtv/libpqx
 ```bash
 cd /tmp
 git clone https://github.com/jtv/libpqxx.git
+cd libpqxx
 git checkout 7.9.0
 cmake \
   -DCMAKE_CXX_STANDARD=20 \
