@@ -35,7 +35,20 @@ jobs:
           sudo apt-get install -y libasio-dev=1:1.28.1-0.2
       - name: Install libpqxx
         run: |
-          sudo apt-get install -y libpqxx-dev=7.8.1-2.1build1
+          sudo apt install -y libpqxx-dev=7.8.1-2.1build1
+      - name: Install x11
+        run: |
+          sudo apt install -y libx11-dev=2:1.8.7-1build1
+      - name: Install eigen
+        run: |
+          sudo apt install -y libeigen3-dev=3.4.0-4build0.1
+      - name: Install GL
+        # https://stackoverflow.com/questions/34773745/debconf-unable-to-initialize-frontend-dialog
+        run: |
+          sudo DEBIAN_FRONTEND="noninteractive" apt install -y libgl-dev=1.7.0-1build1
+      - name: Install png
+        run: |
+          sudo apt install -y libpng-dev=1.6.43-5build1
       - uses: actions/checkout@v4
       - name: Build server
         run: |
