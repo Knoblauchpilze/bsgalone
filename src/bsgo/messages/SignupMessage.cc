@@ -1,6 +1,6 @@
 
 #include "SignupMessage.hh"
-#include <core_utils/SerializationUtils.hh>
+#include "SerializationUtils.hh"
 
 namespace bsgo {
 
@@ -52,15 +52,15 @@ auto SignupMessage::getPlayerDbId() const -> std::optional<Uuid>
 
 auto SignupMessage::serialize(std::ostream &out) const -> std::ostream &
 {
-  utils::serialize(out, m_messageType);
-  utils::serialize(out, m_clientId);
-  utils::serialize(out, m_validated);
+  core::serialize(out, m_messageType);
+  core::serialize(out, m_clientId);
+  core::serialize(out, m_validated);
 
-  utils::serialize(out, m_name);
-  utils::serialize(out, m_password);
-  utils::serialize(out, m_faction);
+  core::serialize(out, m_name);
+  core::serialize(out, m_password);
+  core::serialize(out, m_faction);
 
-  utils::serialize(out, m_playerDbId);
+  core::serialize(out, m_playerDbId);
 
   return out;
 }
@@ -68,15 +68,15 @@ auto SignupMessage::serialize(std::ostream &out) const -> std::ostream &
 bool SignupMessage::deserialize(std::istream &in)
 {
   bool ok{true};
-  ok &= utils::deserialize(in, m_messageType);
-  ok &= utils::deserialize(in, m_clientId);
-  ok &= utils::deserialize(in, m_validated);
+  ok &= core::deserialize(in, m_messageType);
+  ok &= core::deserialize(in, m_clientId);
+  ok &= core::deserialize(in, m_validated);
 
-  ok &= utils::deserialize(in, m_name);
-  ok &= utils::deserialize(in, m_password);
-  ok &= utils::deserialize(in, m_faction);
+  ok &= core::deserialize(in, m_name);
+  ok &= core::deserialize(in, m_password);
+  ok &= core::deserialize(in, m_faction);
 
-  ok &= utils::deserialize(in, m_playerDbId);
+  ok &= core::deserialize(in, m_playerDbId);
 
   return ok;
 }

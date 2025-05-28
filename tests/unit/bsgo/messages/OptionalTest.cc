@@ -31,14 +31,14 @@ TEST(Unit_Bsgo_Serialization_Optional_Uuid, EmptyAndSomeValueAfter)
   const auto expectedFloat{1.68f};
 
   std::ostringstream out;
-  utils::serialize(out, expectedOpt);
-  utils::serialize(out, expectedFloat);
+  core::serialize(out, expectedOpt);
+  core::serialize(out, expectedFloat);
   std::istringstream in(out.str());
 
   std::optional<Uuid> actualOpt{};
   float actualFloat{};
-  utils::deserialize(in, actualOpt);
-  utils::deserialize(in, actualFloat);
+  core::deserialize(in, actualOpt);
+  core::deserialize(in, actualFloat);
 
   EXPECT_EQ(actualOpt, expectedOpt);
   EXPECT_EQ(actualFloat, expectedFloat);
@@ -50,14 +50,14 @@ TEST(Unit_Bsgo_Serialization_Optional_Uuid, WithValueAndSomeValueAfter)
   const auto expectedSlot{Slot::COMPUTER};
 
   std::ostringstream out;
-  utils::serialize(out, expectedOpt);
-  utils::serialize(out, expectedSlot);
+  core::serialize(out, expectedOpt);
+  core::serialize(out, expectedSlot);
   std::istringstream in(out.str());
 
   std::optional<Uuid> actualOpt{};
   Slot actualSlot{};
-  utils::deserialize(in, actualOpt);
-  utils::deserialize(in, actualSlot);
+  core::deserialize(in, actualOpt);
+  core::deserialize(in, actualSlot);
 
   EXPECT_EQ(actualOpt, expectedOpt);
   EXPECT_EQ(actualSlot, expectedSlot);

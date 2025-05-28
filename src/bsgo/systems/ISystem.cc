@@ -4,7 +4,7 @@
 namespace bsgo {
 
 ISystem::ISystem(const std::string &name)
-  : utils::CoreObject(name)
+  : core::CoreObject(name)
 {
   setService("system");
 }

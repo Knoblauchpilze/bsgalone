@@ -5,10 +5,10 @@
 #include "Color.hh"
 #include "Controls.hh"
 #include "CoordinateFrame.hh"
+#include "CoreObject.hh"
 #include "FramerateControl.hh"
 #include "RenderState.hh"
 #include "Renderer.hh"
-#include <core_utils/CoreObject.hh>
 #include <memory>
 #include <optional>
 
@@ -18,7 +18,7 @@ class PixelGameEngine;
 
 namespace pge {
 
-class PGEApp : public utils::CoreObject
+class PGEApp : public core::CoreObject
 {
   public:
   /// @brief - Create a new default pixel game engine app.

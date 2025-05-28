@@ -13,7 +13,7 @@
 namespace bsgo {
 
 BroadcastMessageQueue::BroadcastMessageQueue(ClientManagerShPtr clientManager)
-  : utils::CoreObject("broadcast-message-queue")
+  : core::CoreObject("broadcast-message-queue")
   , m_clientManager(std::move(clientManager))
 {
   setService("message");

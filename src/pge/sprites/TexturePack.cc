@@ -14,7 +14,7 @@ auto TexturePack::Pack::spriteCoords(const Vec2i &coord, int id) const -> Vec2i
 }
 
 TexturePack::TexturePack(olc::PixelGameEngine *const engine)
-  : utils::CoreObject("pack")
+  : core::CoreObject("pack")
   , m_packs()
   , m_engine(engine)
 {

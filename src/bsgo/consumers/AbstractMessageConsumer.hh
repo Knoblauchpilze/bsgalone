@@ -2,11 +2,11 @@
 #pragma once
 
 #include "AbstractMessageListener.hh"
-#include <core_utils/CoreObject.hh>
+#include "CoreObject.hh"
 
 namespace bsgo {
 
-class AbstractMessageConsumer : public AbstractMessageListener, public utils::CoreObject
+class AbstractMessageConsumer : public AbstractMessageListener, public core::CoreObject
 {
   public:
   AbstractMessageConsumer(const std::string &name,

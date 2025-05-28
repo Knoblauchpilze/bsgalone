@@ -57,8 +57,8 @@ auto fetchShipFromSqlResult(const pqxx::const_result_iterator &record) -> Ship
   ship.acceleration     = record[8].as<float>();
   ship.speed            = record[9].as<float>();
   ship.radius           = record[10].as<float>();
-  ship.jumpTime         = utils::Milliseconds(record[11].as<int>());
-  ship.jumpTimeInThreat = utils::Milliseconds(record[12].as<int>());
+  ship.jumpTime         = core::Milliseconds(record[11].as<int>());
+  ship.jumpTimeInThreat = core::Milliseconds(record[12].as<int>());
 
   return ship;
 }

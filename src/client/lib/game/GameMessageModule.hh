@@ -2,8 +2,8 @@
 #pragma once
 
 #include "AbstractMessageListener.hh"
+#include "CoreObject.hh"
 #include "Uuid.hh"
-#include <core_utils/CoreObject.hh>
 #include <optional>
 
 #include "ConnectionMessage.hh"
@@ -20,7 +20,7 @@ namespace pge {
 
 class Game;
 
-class GameMessageModule : public bsgo::AbstractMessageListener, public utils::CoreObject
+class GameMessageModule : public bsgo::AbstractMessageListener, public core::CoreObject
 {
   public:
   GameMessageModule(Game &game, const bsgo::DatabaseEntityMapper &entityMapper);

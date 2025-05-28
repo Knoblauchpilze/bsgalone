@@ -2,9 +2,9 @@
 #pragma once
 
 #include "ClientManager.hh"
+#include "CoreObject.hh"
 #include "IMessageQueue.hh"
 #include "Uuid.hh"
-#include <core_utils/CoreObject.hh>
 #include <deque>
 #include <memory>
 #include <mutex>
@@ -13,7 +13,7 @@
 
 namespace bsgo {
 
-class BroadcastMessageQueue : public IMessageQueue, public utils::CoreObject
+class BroadcastMessageQueue : public IMessageQueue, public core::CoreObject
 {
   public:
   BroadcastMessageQueue(ClientManagerShPtr clientManager);

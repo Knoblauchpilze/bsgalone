@@ -1,11 +1,11 @@
 
 #pragma once
 
-#include <core_utils/CoreObject.hh>
+#include "CoreObject.hh"
 
 namespace bsgo {
 
-class IRepository : public utils::CoreObject
+class IRepository : public core::CoreObject
 {
   public:
   IRepository(const std::string &name);

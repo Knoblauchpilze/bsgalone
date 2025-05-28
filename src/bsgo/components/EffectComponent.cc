@@ -3,7 +3,7 @@
 
 namespace bsgo {
 
-EffectComponent::EffectComponent(const ComponentType &type, const utils::Duration &duration)
+EffectComponent::EffectComponent(const ComponentType &type, const core::Duration &duration)
   : AbstractComponent(type)
   , m_duration(duration)
 {
@@ -23,7 +23,7 @@ auto EffectComponent::damageModifier() const -> std::optional<float>
 void EffectComponent::update(const float elapsedSeconds)
 {
   constexpr auto MILLISECONDS_IN_A_SECONDS = 1000;
-  m_elapsedSinceStart += utils::Milliseconds(
+  m_elapsedSinceStart += core::Milliseconds(
     static_cast<int>(elapsedSeconds * MILLISECONDS_IN_A_SECONDS));
 }
 

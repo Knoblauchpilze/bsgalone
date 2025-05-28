@@ -6,7 +6,7 @@ namespace bsgo {
 
 NetworkMessageQueue::NetworkMessageQueue(IMessageQueuePtr synchronizedQueue)
   : IMessageQueue()
-  , utils::CoreObject("message")
+  , core::CoreObject("message")
   , m_synchronizedQueue(std::move(synchronizedQueue))
 {
   addModule("queue");

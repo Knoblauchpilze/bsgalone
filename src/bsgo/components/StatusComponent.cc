@@ -4,8 +4,8 @@
 namespace bsgo {
 
 StatusComponent::StatusComponent(const Status &status,
-                                 const std::optional<utils::Duration> &jumpTime,
-                                 const std::optional<utils::Duration> &threatJumpTime)
+                                 const std::optional<core::Duration> &jumpTime,
+                                 const std::optional<core::Duration> &threatJumpTime)
   : AbstractComponent(ComponentType::STATUS)
   , m_status(status)
   , m_jumpTime(jumpTime)
@@ -25,7 +25,7 @@ bool StatusComponent::isDead() const
   return Status::DEAD == m_status;
 }
 
-auto StatusComponent::jumpTime() const -> utils::Duration
+auto StatusComponent::jumpTime() const -> core::Duration
 {
   if (!m_jumpTime)
   {
@@ -34,7 +34,7 @@ auto StatusComponent::jumpTime() const -> utils::Duration
   return *m_jumpTime;
 }
 
-auto StatusComponent::threatJumpTime() const -> utils::Duration
+auto StatusComponent::threatJumpTime() const -> core::Duration
 {
   if (!m_threatJumpTime)
   {
@@ -55,20 +55,20 @@ void StatusComponent::resetChanged()
 
 void StatusComponent::resetAppearingTime()
 {
-  m_elapsedSinceAppearing = utils::Duration{0};
+  m_elapsedSinceAppearing = core::Duration{0};
 }
 
-auto StatusComponent::getElapsedSinceLastChange() const -> utils::Duration
+auto StatusComponent::getElapsedSinceLastChange() const -> core::Duration
 {
   return m_elapsedSinceLastChange;
 }
 
-auto StatusComponent::tryGetElapsedSinceLastAppearing() const -> std::optional<utils::Duration>
+auto StatusComponent::tryGetElapsedSinceLastAppearing() const -> std::optional<core::Duration>
 {
   return m_elapsedSinceAppearing;
 }
 
-auto StatusComponent::tryGetCurrentJumpTime() const -> utils::Duration
+auto StatusComponent::tryGetCurrentJumpTime() const -> core::Duration
 {
   if (!m_currentJumpTime)
   {
@@ -77,7 +77,7 @@ auto StatusComponent::tryGetCurrentJumpTime() const -> utils::Duration
   return *m_currentJumpTime;
 }
 
-auto StatusComponent::tryGetElapsedSinceJumpStarted() const -> utils::Duration
+auto StatusComponent::tryGetElapsedSinceJumpStarted() const -> core::Duration
 {
   if (!m_elapsedSinceJumpStarted)
   {
@@ -86,7 +86,7 @@ auto StatusComponent::tryGetElapsedSinceJumpStarted() const -> utils::Duration
   return *m_elapsedSinceJumpStarted;
 }
 
-auto StatusComponent::tryGetRemainingJumpTime() const -> utils::Duration
+auto StatusComponent::tryGetRemainingJumpTime() const -> core::Duration
 {
   const auto jumpTime = tryGetCurrentJumpTime();
   const auto elapsed  = tryGetElapsedSinceJumpStarted();
@@ -101,13 +101,13 @@ void StatusComponent::setStatus(const Status &status)
 
   m_status                 = status;
   m_justChanged            = true;
-  m_elapsedSinceLastChange = utils::Duration{0};
+  m_elapsedSinceLastChange = core::Duration{0};
 }
 
 void StatusComponent::update(const float elapsedSeconds)
 {
   constexpr auto MILLISECONDS_IN_A_SECONDS = 1000;
-  const auto elapsedMillis                 = utils::Milliseconds(
+  const auto elapsedMillis                 = core::Milliseconds(
     static_cast<int>(elapsedSeconds * MILLISECONDS_IN_A_SECONDS));
 
   m_elapsedSinceLastChange += elapsedMillis;
@@ -132,7 +132,7 @@ void StatusComponent::updateJumpState(const Status &newStatus, const bool forceU
   const auto isJumping  = statusIndicatesJump(newStatus);
   if (!wasJumping && isJumping)
   {
-    m_elapsedSinceJumpStarted = utils::Duration{0};
+    m_elapsedSinceJumpStarted = core::Duration{0};
     m_currentJumpTime         = statusIndicatesThreat(m_status) ? *m_threatJumpTime : *m_jumpTime;
   }
   if (wasJumping && !isJumping)
@@ -151,7 +151,7 @@ void StatusComponent::updateAppearingState(const Status &newStatus)
 
   if (statusIndicatesAppearing(newStatus))
   {
-    m_elapsedSinceAppearing = utils::Duration{0};
+    m_elapsedSinceAppearing = core::Duration{0};
   }
 }
 

@@ -22,7 +22,7 @@
 namespace pge {
 
 Game::Game(const int serverPort)
-  : utils::CoreObject("game")
+  : core::CoreObject("game")
 {
   setService("game");
   initialize(serverPort);

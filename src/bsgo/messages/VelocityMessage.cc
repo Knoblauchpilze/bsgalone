@@ -1,8 +1,8 @@
 
 
 #include "VelocityMessage.hh"
+#include "SerializationUtils.hh"
 #include "VectorUtils.hh"
-#include <core_utils/SerializationUtils.hh>
 
 namespace bsgo {
 
@@ -28,11 +28,11 @@ auto VelocityMessage::getAcceleration() const -> Eigen::Vector3f
 
 auto VelocityMessage::serialize(std::ostream &out) const -> std::ostream &
 {
-  utils::serialize(out, m_messageType);
-  utils::serialize(out, m_clientId);
-  utils::serialize(out, m_validated);
+  core::serialize(out, m_messageType);
+  core::serialize(out, m_clientId);
+  core::serialize(out, m_validated);
 
-  utils::serialize(out, m_shipDbId);
+  core::serialize(out, m_shipDbId);
   bsgo::serialize(out, m_acceleration);
 
   return out;
@@ -41,11 +41,11 @@ auto VelocityMessage::serialize(std::ostream &out) const -> std::ostream &
 bool VelocityMessage::deserialize(std::istream &in)
 {
   bool ok{true};
-  ok &= utils::deserialize(in, m_messageType);
-  ok &= utils::deserialize(in, m_clientId);
-  ok &= utils::deserialize(in, m_validated);
+  ok &= core::deserialize(in, m_messageType);
+  ok &= core::deserialize(in, m_clientId);
+  ok &= core::deserialize(in, m_validated);
 
-  ok &= utils::deserialize(in, m_shipDbId);
+  ok &= core::deserialize(in, m_shipDbId);
   ok &= bsgo::deserialize(in, m_acceleration);
 
   return ok;

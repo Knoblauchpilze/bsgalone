@@ -5,7 +5,7 @@ namespace bsgo {
 Uuid ClientManager::NEXT_CLIENT_ID{0};
 
 ClientManager::ClientManager()
-  : utils::CoreObject("manager")
+  : core::CoreObject("manager")
 {
   setService("client");
 }

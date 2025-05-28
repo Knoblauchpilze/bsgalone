@@ -32,7 +32,7 @@ target_sources (client_lib PRIVATE
 	)
 
 target_link_libraries (client_lib
-	core_utils
+	core_lib
 	pge_lib
 	bsgo_lib
 	)

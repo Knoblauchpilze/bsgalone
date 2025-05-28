@@ -4,7 +4,7 @@
 namespace bsgo {
 
 IRepository::IRepository(const std::string &name)
-  : utils::CoreObject(name)
+  : core::CoreObject(name)
 {
   setService("repository");
 }

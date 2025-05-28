@@ -75,12 +75,12 @@ auto SlotComponent::reloadPercentage() const -> float
   return *m_elapsedSinceLastFired / reloadAsFloat;
 }
 
-auto SlotComponent::elapsedSinceLastFired() const -> std::optional<utils::Duration>
+auto SlotComponent::elapsedSinceLastFired() const -> std::optional<core::Duration>
 {
   return m_elapsedSinceLastFired;
 }
 
-void SlotComponent::overrideElapsedSinceLastFired(const std::optional<utils::Duration> &elapsed)
+void SlotComponent::overrideElapsedSinceLastFired(const std::optional<core::Duration> &elapsed)
 {
   m_elapsedSinceLastFired = elapsed;
 }
@@ -108,7 +108,7 @@ void SlotComponent::fire()
     error("Failed to use slot", "Still reloading");
   }
 
-  m_elapsedSinceLastFired = utils::Duration(0);
+  m_elapsedSinceLastFired = core::Duration(0);
 }
 
 void SlotComponent::clearFireRequest()
@@ -124,7 +124,7 @@ void SlotComponent::handleReload(const float elapsedSeconds)
   }
 
   constexpr auto MILLISECONDS_IN_A_SECONDS = 1000;
-  (*m_elapsedSinceLastFired) += utils::Milliseconds(
+  (*m_elapsedSinceLastFired) += core::Milliseconds(
     static_cast<int>(elapsedSeconds * MILLISECONDS_IN_A_SECONDS));
 
   if (*m_elapsedSinceLastFired >= m_reloadTime)

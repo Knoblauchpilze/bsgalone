@@ -4,7 +4,7 @@
 namespace pge {
 
 CoordinateFrame::CoordinateFrame(const CenteredViewport &tiles, const TopLeftViewport &pixels)
-  : utils::CoreObject("frame")
+  : core::CoreObject("frame")
   , m_tilesViewport(tiles)
   , m_pixelsViewport(pixels)
 {

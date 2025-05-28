@@ -4,7 +4,7 @@
 namespace pge {
 
 IRenderer::IRenderer(const std::string &name)
-  : utils::CoreObject(name)
+  : core::CoreObject(name)
 {
   setService("renderer");
 }

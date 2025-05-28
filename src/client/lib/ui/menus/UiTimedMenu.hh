@@ -1,23 +1,23 @@
 
 #pragma once
 
+#include "CoreObject.hh"
+#include "TimeUtils.hh"
 #include "UiMenu.hh"
-#include <core_utils/CoreObject.hh>
-#include <core_utils/TimeUtils.hh>
 #include <memory>
 
 namespace pge {
 
 struct TimedMenuConfig
 {
-  utils::Duration duration{utils::Milliseconds(1500)};
+  core::Duration duration{core::Milliseconds(1500)};
 
   bool fadeOut{true};
-  utils::Duration fadeOutDuration{utils::Milliseconds(1000)};
+  core::Duration fadeOutDuration{core::Milliseconds(1000)};
   bool applyToBackGround{true};
 };
 
-class UiTimedMenu : public utils::CoreObject
+class UiTimedMenu : public core::CoreObject
 {
   public:
   UiTimedMenu(UiMenuPtr menu);
@@ -33,15 +33,15 @@ class UiTimedMenu : public utils::CoreObject
 
   private:
   UiMenuPtr m_menu{};
-  utils::Duration m_duration{};
-  std::optional<utils::Duration> m_fadeOutDuration{};
+  core::Duration m_duration{};
+  std::optional<core::Duration> m_fadeOutDuration{};
   bool m_applyToBackGround{true};
 
-  std::optional<utils::TimeStamp> m_lastTrigger{};
-  std::optional<utils::TimeStamp> m_fadeOutStartTime{};
+  std::optional<core::TimeStamp> m_lastTrigger{};
+  std::optional<core::TimeStamp> m_fadeOutStartTime{};
 
   void initializeFromConfig(const TimedMenuConfig &config);
-  void handleFadeOut(const utils::TimeStamp &now);
+  void handleFadeOut(const core::TimeStamp &now);
   void updateOpacity(const float perc);
 };
 

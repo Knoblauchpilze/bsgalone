@@ -1,16 +1,16 @@
 
 #pragma once
 
+#include "CoreObject.hh"
 #include "DataLoadingMode.hh"
 #include "DatabaseEntityMapper.hh"
 #include "Repositories.hh"
-#include <core_utils/CoreObject.hh>
 
 namespace bsgo {
 
 class Coordinator;
 
-class DataSource : public utils::CoreObject
+class DataSource : public core::CoreObject
 {
   public:
   DataSource(const DataLoadingMode dataLoadingMode);

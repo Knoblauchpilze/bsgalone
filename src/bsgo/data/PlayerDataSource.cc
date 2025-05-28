@@ -5,7 +5,7 @@
 namespace bsgo {
 
 PlayerDataSource::PlayerDataSource(const Repositories &repositories)
-  : utils::CoreObject("bsgo")
+  : core::CoreObject("bsgo")
   , m_repositories(repositories)
 {
   setService("data");
