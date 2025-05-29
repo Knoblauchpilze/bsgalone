@@ -46,6 +46,10 @@ Some known limitations:
 - various edge cases where the server will crash
 - client applications access the DB directly with the same user as the server
 
+# Badges
+
+[![Build CI docker image](https://github.com/Knoblauchpilze/bsgalone/actions/workflows/build-ci-docker-image.yml/badge.svg)](https://github.com/Knoblauchpilze/bsgalone/actions/workflows/build-ci-docker-image.yml)
+
 # Installation
 
 ⚠️ The following sections are tailored for an installation on Ubuntu: this is what was used during the development. If you want to try to install it on another OS it probably works but some of the command will need to be adapted.
