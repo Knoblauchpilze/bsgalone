@@ -38,6 +38,7 @@ jobs:
 
   unit-tests:
     runs-on: ubuntu-24.04
+    container: totocorpsoftwareinc/ci-cpp-build-image:907252e
     needs: [build]
     steps:
       - name: Install lcov
@@ -78,6 +79,7 @@ jobs:
 
   integration-tests:
     runs-on: ubuntu-24.04
+    container: totocorpsoftwareinc/ci-cpp-build-image:907252e
     needs: [build]
     steps:
       - name: Install lcov
