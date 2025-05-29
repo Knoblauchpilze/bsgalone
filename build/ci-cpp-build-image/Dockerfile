@@ -1,10 +1,11 @@
 
 FROM ubuntu:24.04 AS dev-tools
+# https://stackoverflow.com/questions/34773745/debconf-unable-to-initialize-frontend-dialog
+ENV DEBIAN_FRONTEND="noninteractive"
 # https://docs.docker.com/build/building/best-practices/#apt-get
 # https://docs.datadoghq.com/security/code_security/static_analysis/static_analysis_rules/docker-best-practices/apt-pin-version/
-# https://stackoverflow.com/questions/34773745/debconf-unable-to-initialize-frontend-dialog
 # https://stackoverflow.com/questions/37970990/ssl-certificate-verification-fails-inside-docker-container-on-specific-server
-RUN apt-get update && DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y --no-install-recommends \
   ca-certificates=20240203 \
   build-essential=12.10ubuntu1 \
   wget=1.21.4-1ubuntu4.1 \
