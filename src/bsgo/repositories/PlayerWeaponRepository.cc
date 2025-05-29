@@ -84,7 +84,8 @@ void PlayerWeaponRepository::save(const PlayerWeapon &weapon)
         .no_rows();
     }
 
-    return transaction.exec(UPDATE_WEAPON_QUERY_NAME, pqxx::params{toDbId(weapon.weapon), nullptr})
+    return transaction
+      .exec(pqxx::prepped{UPDATE_WEAPON_QUERY_NAME}, pqxx::params{toDbId(weapon.weapon), nullptr})
       .no_rows();
   };
 

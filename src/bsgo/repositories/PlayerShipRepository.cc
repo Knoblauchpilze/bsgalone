@@ -288,7 +288,8 @@ void PlayerShipRepository::fetchSlots(const Uuid ship, PlayerShip &out) const
 void PlayerShipRepository::registerShipJump(const Uuid ship, const Uuid system) const
 {
   const auto query = [&ship, &system](pqxx::work &transaction) {
-    return transaction.exec(UPDATE_SHIP_JUMP_QUERY_NAME, pqxx::params{toDbId(ship), toDbId(system)})
+    return transaction
+      .exec(pqxx::prepped{UPDATE_SHIP_JUMP_QUERY_NAME}, pqxx::params{toDbId(ship), toDbId(system)})
       .no_rows();
   };
 
@@ -302,7 +303,8 @@ void PlayerShipRepository::registerShipJump(const Uuid ship, const Uuid system) 
 void PlayerShipRepository::cancelShipJump(const Uuid ship) const
 {
   const auto query = [&ship](pqxx::work &transaction) {
-    return transaction.exec(CANCEL_SHIP_JUMP_QUERY_NAME, pqxx::params{toDbId(ship)}).no_rows();
+    return transaction.exec(pqxx::prepped{CANCEL_SHIP_JUMP_QUERY_NAME}, pqxx::params{toDbId(ship)})
+      .no_rows();
   };
 
   const auto res = m_connection->tryExecuteTransaction(query);

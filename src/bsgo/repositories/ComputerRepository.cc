@@ -30,8 +30,10 @@ void ComputerRepository::initialize()
 
 auto ComputerRepository::findAll() const -> std::unordered_set<Uuid>
 {
-  const auto query = [](pqxx::nontransaction &work) { return work.exec(FIND_ALL_QUERY_NAME); };
-  const auto rows  = m_connection->executeQuery(query);
+  const auto query = [](pqxx::nontransaction &work) {
+    return work.exec(pqxx::prepped{FIND_ALL_QUERY_NAME});
+  };
+  const auto rows = m_connection->executeQuery(query);
 
   std::unordered_set<Uuid> out;
   for (const auto record : rows)
