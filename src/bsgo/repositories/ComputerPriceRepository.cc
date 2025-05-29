@@ -23,7 +23,7 @@ auto ComputerPriceRepository::findAllByComputer(const Uuid computer) const
   -> std::unordered_map<Uuid, float>
 {
   const auto query = [computer](pqxx::nontransaction &work) {
-    return work.exec_prepared(FIND_ALL_QUERY_NAME, toDbId(computer));
+    return work.exec(pqxx::prepped{FIND_ALL_QUERY_NAME}, pqxx::params{toDbId(computer)});
   };
   const auto rows = m_connection->executeQuery(query);
 

@@ -80,7 +80,11 @@ auto DbConnection::tryExecuteQuery(const SqlQuery &query) -> SqlResult
   }
   catch (const pqxx::sql_error &e)
   {
-    warn("Failed to execute sql query", "Query: " + e.query() + ", code: " + e.sqlstate());
+    warn("Failed to execute sql query",
+         "Query: " + e.query() + ", code: " + e.sqlstate() + ", what: " + e.what()
+           + ", location[column: " + std::to_string(e.location.column()) + ", file_name:"
+           + e.location.file_name() + ", function_name: " + e.location.function_name()
+           + ", line: " + std::to_string(e.location.line()));
     out.error = e.sqlstate();
   }
   catch (const std::exception &e)

@@ -21,7 +21,7 @@ void OutpostRepository::initialize()
 auto OutpostRepository::findOneById(const Uuid outpost) const -> Outpost
 {
   const auto query = [outpost](pqxx::nontransaction &work) {
-    return work.exec_prepared1(FIND_ONE_QUERY_NAME, toDbId(outpost));
+    return work.exec(pqxx::prepped{FIND_ONE_QUERY_NAME}, pqxx::params{toDbId(outpost)}).one_row();
   };
   const auto record = m_connection->executeQueryReturningSingleRow(query);
 

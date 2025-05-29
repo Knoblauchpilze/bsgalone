@@ -140,7 +140,9 @@ auto PlayerShipRepository::findOneById(const Uuid ship) const -> PlayerShip
 auto PlayerShipRepository::findOneByPlayerAndActive(const Uuid player) const -> PlayerShip
 {
   const auto query = [player](pqxx::nontransaction &work) {
-    return work.exec_prepared1(FIND_ONE_BY_PLAYER_AND_ACTIVE_QUERY_NAME, toDbId(player));
+    return work
+      .exec(pqxx::prepped{FIND_ONE_BY_PLAYER_AND_ACTIVE_QUERY_NAME}, pqxx::params{toDbId(player)})
+      .one_row();
   };
   const auto record = m_connection->executeQueryReturningSingleRow(query);
 
@@ -155,7 +157,7 @@ auto PlayerShipRepository::findOneByPlayerAndActive(const Uuid player) const -> 
 auto PlayerShipRepository::findAllByPlayer(const Uuid player) const -> std::unordered_set<Uuid>
 {
   const auto query = [player](pqxx::nontransaction &work) {
-    return work.exec_prepared(FIND_ALL_QUERY_NAME, toDbId(player));
+    return work.exec(pqxx::prepped{FIND_ALL_QUERY_NAME}, pqxx::params{toDbId(player)});
   };
   const auto rows = m_connection->executeQuery(query);
 
@@ -171,7 +173,7 @@ auto PlayerShipRepository::findAllByPlayer(const Uuid player) const -> std::unor
 auto PlayerShipRepository::findAllAvailableWeaponSlotByShip(const Uuid ship) -> std::set<Uuid>
 {
   const auto query = [ship](pqxx::nontransaction &work) {
-    return work.exec_prepared(FIND_EMPTY_WEAPON_SLOTS_QUERY_NAME, toDbId(ship));
+    return work.exec(pqxx::prepped{FIND_EMPTY_WEAPON_SLOTS_QUERY_NAME}, pqxx::params{toDbId(ship)});
   };
   const auto rows = m_connection->executeQuery(query);
 
@@ -187,13 +189,15 @@ auto PlayerShipRepository::findAllAvailableWeaponSlotByShip(const Uuid ship) -> 
 void PlayerShipRepository::save(const PlayerShip &ship)
 {
   auto query = [&ship](pqxx::work &transaction) {
-    return transaction.exec_prepared0(UPDATE_SHIP_QUERY_NAME,
-                                      toDbId(ship.ship),
-                                      toDbId(*ship.player),
-                                      ship.name,
-                                      ship.active,
-                                      ship.hullPoints,
-                                      ship.powerPoints);
+    return transaction
+      .exec(pqxx::prepped{UPDATE_SHIP_QUERY_NAME},
+            pqxx::params{toDbId(ship.ship),
+                         toDbId(*ship.player),
+                         ship.name,
+                         ship.active,
+                         ship.hullPoints,
+                         ship.powerPoints})
+      .no_rows();
   };
 
   auto res = m_connection->tryExecuteTransaction(query);
@@ -215,7 +219,7 @@ void PlayerShipRepository::save(const PlayerShip &ship)
 auto PlayerShipRepository::fetchShipBase(const Uuid ship) const -> PlayerShip
 {
   const auto query = [ship](pqxx::nontransaction &work) {
-    return work.exec_prepared1(FIND_ONE_QUERY_NAME, toDbId(ship));
+    return work.exec(pqxx::prepped{FIND_ONE_QUERY_NAME}, pqxx::params{toDbId(ship)}).one_row();
   };
   const auto record = m_connection->executeQueryReturningSingleRow(query);
 
@@ -268,7 +272,7 @@ auto PlayerShipRepository::fetchShipBase(const Uuid ship) const -> PlayerShip
 void PlayerShipRepository::fetchSlots(const Uuid ship, PlayerShip &out) const
 {
   const auto query = [ship](pqxx::nontransaction &work) {
-    return work.exec_prepared(FIND_SLOTS_QUERY_NAME, toDbId(ship));
+    return work.exec(pqxx::prepped{FIND_SLOTS_QUERY_NAME}, pqxx::params{toDbId(ship)});
   };
   const auto rows = m_connection->executeQuery(query);
 
@@ -284,7 +288,9 @@ void PlayerShipRepository::fetchSlots(const Uuid ship, PlayerShip &out) const
 void PlayerShipRepository::registerShipJump(const Uuid ship, const Uuid system) const
 {
   const auto query = [&ship, &system](pqxx::work &transaction) {
-    return transaction.exec_prepared0(UPDATE_SHIP_JUMP_QUERY_NAME, toDbId(ship), toDbId(system));
+    return transaction
+      .exec(pqxx::prepped{UPDATE_SHIP_JUMP_QUERY_NAME}, pqxx::params{toDbId(ship), toDbId(system)})
+      .no_rows();
   };
 
   const auto res = m_connection->tryExecuteTransaction(query);
@@ -297,7 +303,8 @@ void PlayerShipRepository::registerShipJump(const Uuid ship, const Uuid system) 
 void PlayerShipRepository::cancelShipJump(const Uuid ship) const
 {
   const auto query = [&ship](pqxx::work &transaction) {
-    return transaction.exec_prepared0(CANCEL_SHIP_JUMP_QUERY_NAME, toDbId(ship));
+    return transaction.exec(pqxx::prepped{CANCEL_SHIP_JUMP_QUERY_NAME}, pqxx::params{toDbId(ship)})
+      .no_rows();
   };
 
   const auto res = m_connection->tryExecuteTransaction(query);

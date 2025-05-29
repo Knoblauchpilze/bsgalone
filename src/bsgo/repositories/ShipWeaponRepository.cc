@@ -84,7 +84,7 @@ auto ShipWeaponRepository::findOneByShipAndWeapon(const Uuid ship, const Uuid we
   -> std::optional<ShipWeapon>
 {
   const auto query = [ship, weapon](pqxx::nontransaction &work) {
-    return work.exec_prepared(FIND_ONE_QUERY_NAME, toDbId(ship), toDbId(weapon));
+    return work.exec(pqxx::prepped{FIND_ONE_QUERY_NAME}, pqxx::params{toDbId(ship), toDbId(weapon)});
   };
   const auto rows = m_connection->executeQuery(query);
 
@@ -117,7 +117,7 @@ auto ShipWeaponRepository::findOneByShipAndWeapon(const Uuid ship, const Uuid we
 auto ShipWeaponRepository::findOneByWeapon(const Uuid weapon) const -> std::optional<ShipWeapon>
 {
   const auto query = [weapon](pqxx::nontransaction &work) {
-    return work.exec_prepared(FIND_ONE_BY_WEAPON_QUERY_NAME, toDbId(weapon));
+    return work.exec(pqxx::prepped{FIND_ONE_BY_WEAPON_QUERY_NAME}, pqxx::params{toDbId(weapon)});
   };
   const auto rows = m_connection->executeQuery(query);
 
@@ -150,7 +150,7 @@ auto ShipWeaponRepository::findOneByWeapon(const Uuid weapon) const -> std::opti
 auto ShipWeaponRepository::findAllByShip(const Uuid ship) const -> std::vector<ShipWeapon>
 {
   const auto query = [ship](pqxx::nontransaction &work) {
-    return work.exec_prepared(FIND_ALL_QUERY_NAME, toDbId(ship));
+    return work.exec(pqxx::prepped{FIND_ALL_QUERY_NAME}, pqxx::params{toDbId(ship)});
   };
   const auto rows = m_connection->executeQuery(query);
 
@@ -176,10 +176,10 @@ auto ShipWeaponRepository::findAllByShip(const Uuid ship) const -> std::vector<S
 void ShipWeaponRepository::save(const ShipWeapon &weapon)
 {
   auto query = [&weapon](pqxx::work &transaction) {
-    return transaction.exec_prepared0(UPDATE_WEAPON_QUERY_NAME,
-                                      toDbId(weapon.ship),
-                                      toDbId(weapon.weapon),
-                                      toDbId(weapon.slot));
+    return transaction
+      .exec(pqxx::prepped{UPDATE_WEAPON_QUERY_NAME},
+            pqxx::params{toDbId(weapon.ship), toDbId(weapon.weapon), toDbId(weapon.slot)})
+      .no_rows();
   };
 
   const auto res = m_connection->tryExecuteTransaction(query);
@@ -192,9 +192,10 @@ void ShipWeaponRepository::save(const ShipWeapon &weapon)
 void ShipWeaponRepository::deleteByShipAndSlot(const ShipWeapon &weapon)
 {
   auto query = [&weapon](pqxx::work &transaction) {
-    return transaction.exec_prepared0(DELETE_WEAPON_QUERY_NAME,
-                                      toDbId(weapon.ship),
-                                      toDbId(weapon.slot));
+    return transaction
+      .exec(pqxx::prepped{DELETE_WEAPON_QUERY_NAME},
+            pqxx::params{toDbId(weapon.ship), toDbId(weapon.slot)})
+      .no_rows();
   };
 
   const auto res = m_connection->tryExecuteTransaction(query);
