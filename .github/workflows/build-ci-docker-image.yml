@@ -46,9 +46,9 @@ jobs:
         # https://stackoverflow.com/questions/58886293/getting-current-branch-and-commit-hash-in-github-action
         run: |
           GIT_COMMIT_SHA=$(git rev-parse --short $GITHUB_SHA)
-          TAG=${{ github.event.inputs.tag }}
-          if [ $TAG == "" ]; then
-            TAG=$GIT_COMMIT_SHA
+          TAG="${{ github.event.inputs.tag }}"
+          if [ "$TAG" == "" ]; then
+            TAG="$GIT_COMMIT_SHA"
           fi
           echo "tag=$TAG" >> $GITHUB_OUTPUT
       - name: Determine C++ version
