@@ -53,7 +53,7 @@ auto ComputerRepository::findOneById(const Uuid computer) const -> Computer
 auto ComputerRepository::fetchComputerBase(const Uuid computer) const -> Computer
 {
   const auto query = [computer](pqxx::nontransaction &work) {
-    return work.exec(FIND_ONE_QUERY_NAME, pqxx::params{toDbId(computer)}).one_row();
+    return work.exec(pqxx::prepped{FIND_ONE_QUERY_NAME}, pqxx::params{toDbId(computer)}).one_row();
   };
   const auto record = m_connection->executeQueryReturningSingleRow(query);
 
@@ -83,7 +83,7 @@ auto ComputerRepository::fetchComputerBase(const Uuid computer) const -> Compute
 void ComputerRepository::fetchAllowedTargets(const Uuid computer, Computer &out) const
 {
   const auto query = [computer](pqxx::nontransaction &work) {
-    return work.exec(FIND_ALLOWED_TARGETS_QUERY_NAME, pqxx::params{toDbId(computer)});
+    return work.exec(pqxx::prepped{FIND_ALLOWED_TARGETS_QUERY_NAME}, pqxx::params{toDbId(computer)});
   };
   const auto rows = m_connection->executeQuery(query);
 

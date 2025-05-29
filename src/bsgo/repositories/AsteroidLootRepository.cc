@@ -24,7 +24,7 @@ namespace {} // namespace
 auto AsteroidLootRepository::findOneById(const Uuid asteroid) const -> AsteroidLoot
 {
   const auto query = [asteroid](pqxx::nontransaction &work) {
-    return work.exec(FIND_ONE_QUERY_NAME, pqxx::params{toDbId(asteroid)}).one_row();
+    return work.exec(pqxx::prepped{FIND_ONE_QUERY_NAME}, pqxx::params{toDbId(asteroid)}).one_row();
   };
   const auto record = m_connection->executeQueryReturningSingleRow(query);
 

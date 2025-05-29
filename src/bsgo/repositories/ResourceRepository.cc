@@ -25,7 +25,7 @@ void ResourceRepository::initialize()
 auto ResourceRepository::findOneById(const Uuid resource) const -> Resource
 {
   const auto query = [resource](pqxx::nontransaction &work) {
-    return work.exec(FIND_ONE_QUERY_NAME, pqxx::params{toDbId(resource)}).one_row();
+    return work.exec(pqxx::prepped{FIND_ONE_QUERY_NAME}, pqxx::params{toDbId(resource)}).one_row();
   };
   const auto record = m_connection->executeQueryReturningSingleRow(query);
 
@@ -40,7 +40,7 @@ auto ResourceRepository::findOneById(const Uuid resource) const -> Resource
 auto ResourceRepository::findOneByName(const std::string &name) const -> std::optional<Resource>
 {
   const auto query = [name](pqxx::nontransaction &work) {
-    return work.exec(FIND_ONE_BY_NAME_QUERY_NAME, pqxx::params{name});
+    return work.exec(pqxx::prepped{FIND_ONE_BY_NAME_QUERY_NAME}, pqxx::params{name});
   };
   const auto rows = m_connection->executeQuery(query);
 

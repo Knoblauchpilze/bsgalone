@@ -66,7 +66,8 @@ auto fetchShipFromSqlResult(const pqxx::const_result_iterator &record) -> Ship
 auto fetchAllShipsByFaction(const Faction &faction, DbConnection &connection) -> std::vector<Ship>
 {
   const auto query = [faction](pqxx::nontransaction &work) {
-    return work.exec(FIND_ALL_BY_FACTION_QUERY_NAME, pqxx::params{toDbFaction(faction)});
+    return work.exec(pqxx::prepped{FIND_ALL_BY_FACTION_QUERY_NAME},
+                     pqxx::params{toDbFaction(faction)});
   };
   const auto rows = connection.executeQuery(query);
 
@@ -110,7 +111,7 @@ auto ShipRepository::findOneByFactionAndStarting(const Faction &faction,
 auto ShipRepository::fetchShipBase(const Uuid ship) const -> Ship
 {
   const auto query = [ship](pqxx::nontransaction &work) {
-    return work.exec(FIND_ONE_QUERY_NAME, pqxx::params{toDbId(ship)}).one_row();
+    return work.exec(pqxx::prepped{FIND_ONE_QUERY_NAME}, pqxx::params{toDbId(ship)}).one_row();
   };
   const auto record = m_connection->executeQueryReturningSingleRow(query);
 
@@ -120,7 +121,7 @@ auto ShipRepository::fetchShipBase(const Uuid ship) const -> Ship
 void ShipRepository::fetchSlots(const Uuid ship, Ship &out) const
 {
   const auto query = [ship](pqxx::nontransaction &work) {
-    return work.exec(FIND_SLOTS_QUERY_NAME, pqxx::params{toDbId(ship)});
+    return work.exec(pqxx::prepped{FIND_SLOTS_QUERY_NAME}, pqxx::params{toDbId(ship)});
   };
   const auto rows = m_connection->executeQuery(query);
 

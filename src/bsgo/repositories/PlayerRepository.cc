@@ -70,7 +70,7 @@ auto PlayerRepository::findAllBySystem(const Uuid system) const -> std::unordere
 {
   const auto query = [system](pqxx::nontransaction &work) {
     // https://libpqxx.readthedocs.io/stable/parameters.html
-    return work.exec(FIND_ALL_BY_SYSTEM_QUERY_NAME, pqxx::params{toDbId(system)});
+    return work.exec(pqxx::prepped{FIND_ALL_BY_SYSTEM_QUERY_NAME}, pqxx::params{toDbId(system)});
   };
   const auto rows = m_connection->executeQuery(query);
 
@@ -86,7 +86,7 @@ auto PlayerRepository::findAllBySystem(const Uuid system) const -> std::unordere
 auto PlayerRepository::findOneById(const Uuid player) const -> Player
 {
   const auto query = [player](pqxx::nontransaction &work) {
-    return work.exec(FIND_ONE_QUERY_NAME, pqxx::params{toDbId(player)}).one_row();
+    return work.exec(pqxx::prepped{FIND_ONE_QUERY_NAME}, pqxx::params{toDbId(player)}).one_row();
   };
   const auto record = m_connection->executeQueryReturningSingleRow(query);
 
@@ -103,7 +103,7 @@ auto PlayerRepository::findOneById(const Uuid player) const -> Player
 auto PlayerRepository::findOneByName(const std::string &name) const -> std::optional<Player>
 {
   const auto query = [name](pqxx::nontransaction &work) {
-    return work.exec(FIND_ONE_BY_NAME_QUERY_NAME, pqxx::params{name});
+    return work.exec(pqxx::prepped{FIND_ONE_BY_NAME_QUERY_NAME}, pqxx::params{name});
   };
   const auto rows = m_connection->executeQuery(query);
 
@@ -131,7 +131,7 @@ auto PlayerRepository::findOneByName(const std::string &name) const -> std::opti
 auto PlayerRepository::findSystemByPlayer(const Uuid player) const -> Uuid
 {
   const auto query = [player](pqxx::nontransaction &work) {
-    return work.exec(FIND_SYSTEM_QUERY_NAME, pqxx::params{toDbId(player)}).one_row();
+    return work.exec(pqxx::prepped{FIND_SYSTEM_QUERY_NAME}, pqxx::params{toDbId(player)}).one_row();
   };
   const auto record = m_connection->executeQueryReturningSingleRow(query);
 
