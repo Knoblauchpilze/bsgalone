@@ -73,5 +73,5 @@ runintegrationtests: tests
 ci-cpp-build-image:
 	docker build \
 		--tag totocorpsoftwareinc/ci-cpp-build-image:${DOCKER_IMAGE_TAG} \
-		-f build/ci/Dockerfile \
-		build/ci
+		-f build/ci-cpp-build-image/Dockerfile \
+		build/ci-cpp-build-image
