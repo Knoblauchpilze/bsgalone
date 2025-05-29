@@ -50,6 +50,8 @@ Some known limitations:
 
 [![Build CI docker image](https://github.com/Knoblauchpilze/bsgalone/actions/workflows/build-ci-docker-image.yml/badge.svg)](https://github.com/Knoblauchpilze/bsgalone/actions/workflows/build-ci-docker-image.yml)
 
+[![Database migration tests](https://github.com/Knoblauchpilze/bsgalone/actions/workflows/database-migration-tests.yml/badge.svg)](https://github.com/Knoblauchpilze/bsgalone/actions/workflows/database-migration-tests.yml)
+
 # Installation
 
 ⚠️ The following sections are tailored for an installation on Ubuntu: this is what was used during the development. If you want to try to install it on another OS it probably works but some of the command will need to be adapted.
@@ -221,14 +223,14 @@ In order to run and debug the executables created by the project you can use the
       "name": "Server",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/cmake-build/bin/bsgalone_server",
+      "program": "${workspaceFolder}/cmake-build/Debug/bin/bsgalone_server",
       "args": [],
       "stopAtEntry": false,
       "cwd": "${fileDirname}",
       "environment": [
         {
           "name": "PORT",
-          "value": "5000"
+          "value": "2323"
         }
       ],
       "externalConsole": false,
@@ -250,14 +252,14 @@ In order to run and debug the executables created by the project you can use the
       "name": "Client",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/cmake-build/bin/bsgalone_client",
+      "program": "${workspaceFolder}/cmake-build/Debug/bin/bsgalone_client",
       "args": [],
       "stopAtEntry": false,
       "cwd": "${fileDirname}",
       "environment": [
         {
           "name": "PORT",
-          "value": "5000"
+          "value": "2323"
         }
       ],
       "externalConsole": false,
