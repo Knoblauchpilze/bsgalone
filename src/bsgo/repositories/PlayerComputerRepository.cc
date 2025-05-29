@@ -64,7 +64,7 @@ void PlayerComputerRepository::save(const PlayerComputer &computer)
 {
   auto query = [&computer](pqxx::work &transaction) {
     return transaction
-      .exec(UPDATE_COMPUTER_QUERY_NAME,
+      .exec(pqxx::prepped{UPDATE_COMPUTER_QUERY_NAME},
             pqxx::params{toDbId(computer.computer), toDbId(computer.player)})
       .no_rows();
   };

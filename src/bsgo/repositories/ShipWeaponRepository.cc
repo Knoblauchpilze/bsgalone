@@ -177,7 +177,7 @@ void ShipWeaponRepository::save(const ShipWeapon &weapon)
 {
   auto query = [&weapon](pqxx::work &transaction) {
     return transaction
-      .exec(UPDATE_WEAPON_QUERY_NAME,
+      .exec(pqxx::prepped{UPDATE_WEAPON_QUERY_NAME},
             pqxx::params{toDbId(weapon.ship), toDbId(weapon.weapon), toDbId(weapon.slot)})
       .no_rows();
   };
@@ -193,7 +193,8 @@ void ShipWeaponRepository::deleteByShipAndSlot(const ShipWeapon &weapon)
 {
   auto query = [&weapon](pqxx::work &transaction) {
     return transaction
-      .exec(DELETE_WEAPON_QUERY_NAME, pqxx::params{toDbId(weapon.ship), toDbId(weapon.slot)})
+      .exec(pqxx::prepped{DELETE_WEAPON_QUERY_NAME},
+            pqxx::params{toDbId(weapon.ship), toDbId(weapon.slot)})
       .no_rows();
   };
 

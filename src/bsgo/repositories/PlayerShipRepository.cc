@@ -190,7 +190,7 @@ void PlayerShipRepository::save(const PlayerShip &ship)
 {
   auto query = [&ship](pqxx::work &transaction) {
     return transaction
-      .exec(UPDATE_SHIP_QUERY_NAME,
+      .exec(pqxx::prepped{UPDATE_SHIP_QUERY_NAME},
             pqxx::params{toDbId(ship.ship),
                          toDbId(*ship.player),
                          ship.name,

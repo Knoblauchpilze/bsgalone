@@ -142,7 +142,7 @@ void PlayerRepository::save(const Player &player)
 {
   auto query = [&player](pqxx::work &transaction) {
     return transaction
-      .exec(UPDATE_PLAYER_QUERY_NAME,
+      .exec(pqxx::prepped{UPDATE_PLAYER_QUERY_NAME},
             pqxx::params{player.name, player.password, toDbFaction(player.faction)})
       .no_rows();
   };

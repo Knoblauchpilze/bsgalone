@@ -83,7 +83,7 @@ void ShipComputerRepository::save(const Uuid ship, const Uuid computer)
 {
   auto query = [&ship, &computer](pqxx::work &transaction) {
     return transaction
-      .exec(UPDATE_COMPUTER_QUERY_NAME, pqxx::params{toDbId(ship), toDbId(computer)})
+      .exec(pqxx::prepped{UPDATE_COMPUTER_QUERY_NAME}, pqxx::params{toDbId(ship), toDbId(computer)})
       .no_rows();
   };
 
@@ -98,7 +98,7 @@ void ShipComputerRepository::deleteByShipAndId(const Uuid ship, const Uuid compu
 {
   auto query = [&ship, &computer](pqxx::work &transaction) {
     return transaction
-      .exec(DELETE_COMPUTER_QUERY_NAME, pqxx::params{toDbId(ship), toDbId(computer)})
+      .exec(pqxx::prepped{DELETE_COMPUTER_QUERY_NAME}, pqxx::params{toDbId(ship), toDbId(computer)})
       .no_rows();
   };
 

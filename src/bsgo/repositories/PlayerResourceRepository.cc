@@ -60,7 +60,7 @@ void PlayerResourceRepository::save(const PlayerResource &resource)
   // https://gist.github.com/fearofcode/7516c9b7b18922386148195be5660329#file-libpqxx_test-cpp-L24
   auto query = [&resource](pqxx::work &transaction) {
     return transaction
-      .exec(UPDATE_RESOURCE_QUERY_NAME,
+      .exec(pqxx::prepped{UPDATE_RESOURCE_QUERY_NAME},
             pqxx::params{toDbId(resource.player), toDbId(resource.resource), resource.amount})
       .no_rows();
   };

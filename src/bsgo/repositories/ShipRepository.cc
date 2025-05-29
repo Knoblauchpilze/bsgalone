@@ -97,7 +97,7 @@ auto ShipRepository::findOneByFactionAndStarting(const Faction &faction,
 {
   const auto query = [faction, startingShip](pqxx::nontransaction &work) {
     return work
-      .exec(FIND_ONE_BY_STARTING_AND_FACTION_QUERY_NAME,
+      .exec(pqxx::prepped{FIND_ONE_BY_STARTING_AND_FACTION_QUERY_NAME},
             pqxx::params{toDbFaction(faction), startingShip})
       .one_row();
   };

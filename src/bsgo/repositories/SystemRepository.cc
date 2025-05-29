@@ -170,7 +170,8 @@ void SystemRepository::updateSystemForShip(const Uuid ship, const Uuid system, c
 {
   auto query = [&ship, &system, docked](pqxx::work &transaction) {
     return transaction
-      .exec(UPDATE_SYSTEM_QUERY_NAME, pqxx::params{toDbId(ship), toDbId(system), docked})
+      .exec(pqxx::prepped{UPDATE_SYSTEM_QUERY_NAME},
+            pqxx::params{toDbId(ship), toDbId(system), docked})
       .no_rows();
   };
 
@@ -185,7 +186,8 @@ void SystemRepository::updateShipForSystem(const Uuid currentShip, const Uuid ne
 {
   auto query = [&currentShip, &newShip](pqxx::work &transaction) {
     return transaction
-      .exec(UPDATE_SHIP_QUERY_NAME, pqxx::params{toDbId(newShip), toDbId(currentShip)})
+      .exec(pqxx::prepped{UPDATE_SHIP_QUERY_NAME},
+            pqxx::params{toDbId(newShip), toDbId(currentShip)})
       .no_rows();
   };
 
