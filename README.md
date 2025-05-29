@@ -278,7 +278,7 @@ In order to run and debug the executables created by the project you can use the
       "environment": [
         {
           "name": "PORT",
-          "value": "5000"
+          "value": "2323"
         }
       ],
       "externalConsole": false,
@@ -307,7 +307,7 @@ In order to run and debug the executables created by the project you can use the
       "environment": [
         {
           "name": "PORT",
-          "value": "5000"
+          "value": "2323"
         }
       ],
       "externalConsole": false,
