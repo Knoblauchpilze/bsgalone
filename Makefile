@@ -1,5 +1,8 @@
 
-GIT_COMMIT_HASH=$(shell git rev-parse --short HEAD)
+# Keep in sync with the CI workflow
+LIBPQXX_VERSION=7.10.1
+CPP_VERSION=20
+DOCKER_IMAGE_TAG="${CPP_VERSION}-${LIBPQXX_VERSION}"
 
 debug:
 	mkdir -p cmake-build/Debug && \
@@ -66,3 +69,9 @@ rununittests: tests
 
 runintegrationtests: tests
 	cd sandbox && ./tests.sh integrationTests
+
+ci-cpp-build-image:
+	docker build \
+		--tag totocorpsoftwareinc/ci-cpp-build-image:${DOCKER_IMAGE_TAG} \
+		-f build/ci/Dockerfile \
+		build/ci
