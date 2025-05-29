@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - ".github/workflows/build-ci-docker-image.yml"
-      - "build/ci/**"
+      - "build/ci-cpp-build-image/**"
   workflow_dispatch:
     inputs:
       tag:
