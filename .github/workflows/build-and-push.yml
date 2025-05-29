@@ -15,39 +15,14 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  LIBPQXX_VERSION: 7.10.1
-  CPP_VERSION: 20
+  CI_BASE_IMAGE_TAG: 907252e
 
 jobs:
   build:
     runs-on: ubuntu-24.04
+    # https://docs.github.com/en/actions/writing-workflows/choosing-where-your-workflow-runs/running-jobs-in-a-container#example-running-a-job-within-a-container
+    container: totocorpsoftwareinc/ci-cpp-build-image:${CI_BASE_IMAGE_TAG}
     steps:
-      - name: Install dependencies
-        # https://stackoverflow.com/questions/34773745/debconf-unable-to-initialize-frontend-dialog
-        run: |
-          sudo apt-get update
-          sudo DEBIAN_FRONTEND="noninteractive" apt-get install \
-            -y \
-            --no-install-recommends \
-            libx11-dev=2:1.8.7-1build1 \
-            libgl-dev=1.7.0-1build1 \
-            libasio-dev=1:1.28.1-0.2 \
-            libeigen3-dev=3.4.0-4build0.1 \
-            libpng-dev=1.6.43-5build1 \
-      - name: Install libpqxx
-        # See libpqxx section in the README
-        run: |
-          cd /tmp
-          git clone https://github.com/jtv/libpqxx.git
-          cd libpqxx
-          git checkout ${LIBPQXX_VERSION}
-          cmake \
-            -DCMAKE_CXX_STANDARD=${CPP_VERSION} \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DBUILD_SHARED_LIBS=1 \
-            .
-          cmake --build . -j 8
-          sudo cmake --install .
       - uses: actions/checkout@v4
       - name: Build server
         run: |
