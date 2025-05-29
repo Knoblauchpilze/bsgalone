@@ -5,7 +5,7 @@
 
 namespace core {
 
-template<typename T, std::enable_if_t<std::is_enum<T>::value, bool> = true>
+template<typename T, std::enable_if_t<std::is_enum<T>::value, bool>>
 inline auto serialize(std::ostream &out, const T &e) -> std::ostream &
 {
   const auto eAsChar = reinterpret_cast<const char *>(&e);
@@ -15,7 +15,7 @@ inline auto serialize(std::ostream &out, const T &e) -> std::ostream &
   return out;
 }
 
-template<typename T, std::enable_if_t<!std::is_enum<T>::value, bool> = true>
+template<typename T, std::enable_if_t<!std::is_enum<T>::value, bool>>
 inline auto serialize(std::ostream &out, const T &value) -> std::ostream &
 {
   const auto valueAsChar = reinterpret_cast<const char *>(&value);
@@ -25,7 +25,7 @@ inline auto serialize(std::ostream &out, const T &value) -> std::ostream &
   return out;
 }
 
-template<typename T, std::enable_if_t<std::is_enum<T>::value, bool> = true>
+template<typename T, std::enable_if_t<std::is_enum<T>::value, bool>>
 inline bool deserialize(std::istream &in, T &e)
 {
   const auto eAsChar = reinterpret_cast<char *>(&e);
@@ -35,7 +35,7 @@ inline bool deserialize(std::istream &in, T &e)
   return in.good();
 }
 
-template<typename T, std::enable_if_t<!std::is_enum<T>::value, bool> = true>
+template<typename T, std::enable_if_t<!std::is_enum<T>::value, bool>>
 inline bool deserialize(std::istream &in, T &value)
 {
   const auto valueAsChar = reinterpret_cast<char *>(&value);
@@ -67,7 +67,7 @@ inline bool deserialize(std::istream &in, std::string &str)
   return in.good();
 }
 
-template<typename T, std::enable_if_t<std::is_enum<T>::value, bool> = true>
+template<typename T, std::enable_if_t<std::is_enum<T>::value, bool>>
 inline auto serialize(std::ostream &out, const std::optional<T> &value) -> std::ostream &
 {
   const auto hasValue = value.has_value();
@@ -80,7 +80,7 @@ inline auto serialize(std::ostream &out, const std::optional<T> &value) -> std::
   return out;
 }
 
-template<typename T, std::enable_if_t<!std::is_enum<T>::value, bool> = true>
+template<typename T, std::enable_if_t<!std::is_enum<T>::value, bool>>
 inline auto serialize(std::ostream &out, const std::optional<T> &value) -> std::ostream &
 {
   const auto hasValue = value.has_value();
@@ -93,7 +93,7 @@ inline auto serialize(std::ostream &out, const std::optional<T> &value) -> std::
   return out;
 }
 
-template<typename T, std::enable_if_t<std::is_enum<T>::value, bool> = true>
+template<typename T, std::enable_if_t<std::is_enum<T>::value, bool>>
 inline bool deserialize(std::istream &in, std::optional<T> &value)
 {
   bool hasValue{false};
@@ -112,7 +112,7 @@ inline bool deserialize(std::istream &in, std::optional<T> &value)
   return in.good();
 }
 
-template<typename T, std::enable_if_t<!std::is_enum<T>::value, bool> = true>
+template<typename T, std::enable_if_t<!std::is_enum<T>::value, bool>>
 inline bool deserialize(std::istream &in, std::optional<T> &value)
 {
   bool hasValue{false};
