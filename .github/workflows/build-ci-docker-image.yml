@@ -56,7 +56,7 @@ jobs:
         run: |
           echo "version=${{ github.event.inputs.cpp_version || env.CPP_VERSION }}" >> $GITHUB_OUTPUT
       - name: Determine libpqxx version
-        id: libpxx-version
+        id: libpqxx-version
         run: |
           echo "version=${{ github.event.inputs.libpqxx_version || env.LIBPQXX_VERSION }}" >> $GITHUB_OUTPUT
 
