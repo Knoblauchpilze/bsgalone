@@ -43,7 +43,9 @@ void ShipComputerRepository::initialize()
 bool ShipComputerRepository::existByShipAndComputer(const Uuid ship, const Uuid computer) const
 {
   const auto query = [ship, computer](pqxx::nontransaction &work) {
-    return work.exec_prepared1(FIND_ONE_QUERY_NAME, toDbId(ship), toDbId(computer));
+    return work
+      .exec(pqxx::prepped{FIND_ONE_QUERY_NAME}, pqxx::params{toDbId(ship), toDbId(computer)})
+      .one_row();
   };
   const auto record = m_connection->executeQueryReturningSingleRow(query);
 
@@ -53,7 +55,8 @@ bool ShipComputerRepository::existByShipAndComputer(const Uuid ship, const Uuid 
 bool ShipComputerRepository::existByComputer(const Uuid computer) const
 {
   const auto query = [computer](pqxx::nontransaction &work) {
-    return work.exec_prepared1(FIND_ONE_BY_COMPUTER_QUERY_NAME, toDbId(computer));
+    return work.exec(pqxx::prepped{FIND_ONE_BY_COMPUTER_QUERY_NAME}, pqxx::params{toDbId(computer)})
+      .one_row();
   };
   const auto record = m_connection->executeQueryReturningSingleRow(query);
 
@@ -63,7 +66,7 @@ bool ShipComputerRepository::existByComputer(const Uuid computer) const
 auto ShipComputerRepository::findAllByShip(const Uuid ship) const -> std::unordered_set<Uuid>
 {
   const auto query = [ship](pqxx::nontransaction &work) {
-    return work.exec_prepared(FIND_ALL_QUERY_NAME, toDbId(ship));
+    return work.exec(pqxx::prepped{FIND_ALL_QUERY_NAME}, pqxx::params{toDbId(ship)});
   };
   const auto rows = m_connection->executeQuery(query);
 
@@ -79,7 +82,9 @@ auto ShipComputerRepository::findAllByShip(const Uuid ship) const -> std::unorde
 void ShipComputerRepository::save(const Uuid ship, const Uuid computer)
 {
   auto query = [&ship, &computer](pqxx::work &transaction) {
-    return transaction.exec_prepared0(UPDATE_COMPUTER_QUERY_NAME, toDbId(ship), toDbId(computer));
+    return transaction
+      .exec(pqxx::prepped{UPDATE_COMPUTER_QUERY_NAME}, pqxx::params{toDbId(ship), toDbId(computer)})
+      .no_rows();
   };
 
   const auto res = m_connection->tryExecuteTransaction(query);
@@ -92,7 +97,9 @@ void ShipComputerRepository::save(const Uuid ship, const Uuid computer)
 void ShipComputerRepository::deleteByShipAndId(const Uuid ship, const Uuid computer)
 {
   auto query = [&ship, &computer](pqxx::work &transaction) {
-    return transaction.exec_prepared0(DELETE_COMPUTER_QUERY_NAME, toDbId(ship), toDbId(computer));
+    return transaction
+      .exec(pqxx::prepped{DELETE_COMPUTER_QUERY_NAME}, pqxx::params{toDbId(ship), toDbId(computer)})
+      .no_rows();
   };
 
   const auto res = m_connection->tryExecuteTransaction(query);

@@ -31,7 +31,7 @@ void ComputerRepository::initialize()
 auto ComputerRepository::findAll() const -> std::unordered_set<Uuid>
 {
   const auto query = [](pqxx::nontransaction &work) {
-    return work.exec_prepared(FIND_ALL_QUERY_NAME);
+    return work.exec(pqxx::prepped{FIND_ALL_QUERY_NAME});
   };
   const auto rows = m_connection->executeQuery(query);
 
@@ -55,7 +55,7 @@ auto ComputerRepository::findOneById(const Uuid computer) const -> Computer
 auto ComputerRepository::fetchComputerBase(const Uuid computer) const -> Computer
 {
   const auto query = [computer](pqxx::nontransaction &work) {
-    return work.exec_prepared1(FIND_ONE_QUERY_NAME, toDbId(computer));
+    return work.exec(pqxx::prepped{FIND_ONE_QUERY_NAME}, pqxx::params{toDbId(computer)}).one_row();
   };
   const auto record = m_connection->executeQueryReturningSingleRow(query);
 
@@ -85,7 +85,7 @@ auto ComputerRepository::fetchComputerBase(const Uuid computer) const -> Compute
 void ComputerRepository::fetchAllowedTargets(const Uuid computer, Computer &out) const
 {
   const auto query = [computer](pqxx::nontransaction &work) {
-    return work.exec_prepared(FIND_ALLOWED_TARGETS_QUERY_NAME, toDbId(computer));
+    return work.exec(pqxx::prepped{FIND_ALLOWED_TARGETS_QUERY_NAME}, pqxx::params{toDbId(computer)});
   };
   const auto rows = m_connection->executeQuery(query);
 
