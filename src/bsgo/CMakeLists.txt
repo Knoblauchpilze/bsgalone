@@ -3,8 +3,6 @@ add_library (bsgo_lib SHARED "")
 
 set (CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-find_package (libpqxx REQUIRED)
-
 add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/bbox
 	)
