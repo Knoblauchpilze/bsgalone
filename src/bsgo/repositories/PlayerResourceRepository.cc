@@ -38,7 +38,7 @@ auto PlayerResourceRepository::findAllByPlayer(const Uuid player) const
   -> std::vector<PlayerResource>
 {
   const auto query = [player](pqxx::nontransaction &work) {
-    return work.exec_prepared(FIND_ALL_QUERY_NAME, toDbId(player));
+    return work.exec(FIND_ALL_QUERY_NAME, pqxx::params{toDbId(player)});
   };
   const auto rows = m_connection->executeQuery(query);
 
@@ -59,10 +59,10 @@ void PlayerResourceRepository::save(const PlayerResource &resource)
 {
   // https://gist.github.com/fearofcode/7516c9b7b18922386148195be5660329#file-libpqxx_test-cpp-L24
   auto query = [&resource](pqxx::work &transaction) {
-    return transaction.exec_prepared0(UPDATE_RESOURCE_QUERY_NAME,
-                                      toDbId(resource.player),
-                                      toDbId(resource.resource),
-                                      resource.amount);
+    return transaction
+      .exec(UPDATE_RESOURCE_QUERY_NAME,
+            pqxx::params{toDbId(resource.player), toDbId(resource.resource), resource.amount})
+      .no_rows();
   };
 
   const auto res = m_connection->tryExecuteTransaction(query);

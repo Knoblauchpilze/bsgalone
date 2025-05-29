@@ -66,7 +66,7 @@ auto fetchShipFromSqlResult(const pqxx::const_result_iterator &record) -> Ship
 auto fetchAllShipsByFaction(const Faction &faction, DbConnection &connection) -> std::vector<Ship>
 {
   const auto query = [faction](pqxx::nontransaction &work) {
-    return work.exec_prepared(FIND_ALL_BY_FACTION_QUERY_NAME, toDbFaction(faction));
+    return work.exec(FIND_ALL_BY_FACTION_QUERY_NAME, pqxx::params{toDbFaction(faction)});
   };
   const auto rows = connection.executeQuery(query);
 
@@ -95,9 +95,10 @@ auto ShipRepository::findOneByFactionAndStarting(const Faction &faction,
                                                  const bool startingShip) const -> Ship
 {
   const auto query = [faction, startingShip](pqxx::nontransaction &work) {
-    return work.exec_prepared1(FIND_ONE_BY_STARTING_AND_FACTION_QUERY_NAME,
-                               toDbFaction(faction),
-                               startingShip);
+    return work
+      .exec(FIND_ONE_BY_STARTING_AND_FACTION_QUERY_NAME,
+            pqxx::params{toDbFaction(faction), startingShip})
+      .one_row();
   };
   const auto record = m_connection->executeQueryReturningSingleRow(query);
 
@@ -109,7 +110,7 @@ auto ShipRepository::findOneByFactionAndStarting(const Faction &faction,
 auto ShipRepository::fetchShipBase(const Uuid ship) const -> Ship
 {
   const auto query = [ship](pqxx::nontransaction &work) {
-    return work.exec_prepared1(FIND_ONE_QUERY_NAME, toDbId(ship));
+    return work.exec(FIND_ONE_QUERY_NAME, pqxx::params{toDbId(ship)}).one_row();
   };
   const auto record = m_connection->executeQueryReturningSingleRow(query);
 
@@ -119,7 +120,7 @@ auto ShipRepository::fetchShipBase(const Uuid ship) const -> Ship
 void ShipRepository::fetchSlots(const Uuid ship, Ship &out) const
 {
   const auto query = [ship](pqxx::nontransaction &work) {
-    return work.exec_prepared(FIND_SLOTS_QUERY_NAME, toDbId(ship));
+    return work.exec(FIND_SLOTS_QUERY_NAME, pqxx::params{toDbId(ship)});
   };
   const auto rows = m_connection->executeQuery(query);
 

@@ -34,7 +34,7 @@ void PlayerWeaponRepository::initialize()
 auto PlayerWeaponRepository::findOneById(const Uuid weapon) const -> PlayerWeapon
 {
   const auto query = [weapon](pqxx::nontransaction &work) {
-    return work.exec_prepared1(FIND_ONE_QUERY_NAME, toDbId(weapon));
+    return work.exec(FIND_ONE_QUERY_NAME, pqxx::params{toDbId(weapon)}).one_row();
   };
   const auto record = m_connection->executeQueryReturningSingleRow(query);
 
@@ -60,7 +60,7 @@ auto PlayerWeaponRepository::findOneById(const Uuid weapon) const -> PlayerWeapo
 auto PlayerWeaponRepository::findAllByPlayer(const Uuid player) const -> std::unordered_set<Uuid>
 {
   const auto query = [player](pqxx::nontransaction &work) {
-    return work.exec_prepared(FIND_ALL_QUERY_NAME, toDbId(player));
+    return work.exec(FIND_ALL_QUERY_NAME, pqxx::params{toDbId(player)});
   };
   const auto rows = m_connection->executeQuery(query);
 
@@ -78,12 +78,13 @@ void PlayerWeaponRepository::save(const PlayerWeapon &weapon)
   auto query = [&weapon](pqxx::work &transaction) {
     if (weapon.player)
     {
-      return transaction.exec_prepared0(UPDATE_WEAPON_QUERY_NAME,
-                                        toDbId(weapon.weapon),
-                                        toDbId(*weapon.player));
+      return transaction
+        .exec(UPDATE_WEAPON_QUERY_NAME, pqxx::params{toDbId(weapon.weapon), toDbId(*weapon.player)})
+        .no_rows();
     }
 
-    return transaction.exec_prepared0(UPDATE_WEAPON_QUERY_NAME, toDbId(weapon.weapon), nullptr);
+    return transaction.exec(UPDATE_WEAPON_QUERY_NAME, pqxx::params{toDbId(weapon.weapon), nullptr})
+      .no_rows();
   };
 
   const auto res = m_connection->tryExecuteTransaction(query);

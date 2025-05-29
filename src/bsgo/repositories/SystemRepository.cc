@@ -71,10 +71,8 @@ void SystemRepository::initialize()
 
 auto SystemRepository::findAll() const -> std::unordered_set<Uuid>
 {
-  const auto query = [](pqxx::nontransaction &work) {
-    return work.exec_prepared(FIND_ALL_QUERY_NAME);
-  };
-  const auto rows = m_connection->executeQuery(query);
+  const auto query = [](pqxx::nontransaction &work) { return work.exec(FIND_ALL_QUERY_NAME); };
+  const auto rows  = m_connection->executeQuery(query);
 
   std::unordered_set<Uuid> out;
   for (const auto record : rows)
@@ -88,7 +86,7 @@ auto SystemRepository::findAll() const -> std::unordered_set<Uuid>
 auto SystemRepository::findOneById(const Uuid system) const -> System
 {
   const auto query = [system](pqxx::nontransaction &work) {
-    return work.exec_prepared1(FIND_ONE_QUERY_NAME, toDbId(system));
+    return work.exec(FIND_ONE_QUERY_NAME, pqxx::params{toDbId(system)}).one_row();
   };
   const auto record = m_connection->executeQueryReturningSingleRow(query);
 
@@ -108,7 +106,7 @@ auto SystemRepository::findOneById(const Uuid system) const -> System
 auto SystemRepository::findOneByFactionAndStarting(const Faction &faction) const -> Uuid
 {
   const auto query = [faction](pqxx::nontransaction &work) {
-    return work.exec_prepared1(FIND_ONE_BY_FACTION_QUERY_NAME, toDbFaction(faction));
+    return work.exec(FIND_ONE_BY_FACTION_QUERY_NAME, pqxx::params{toDbFaction(faction)}).one_row();
   };
   const auto record = m_connection->executeQueryReturningSingleRow(query);
 
@@ -118,7 +116,7 @@ auto SystemRepository::findOneByFactionAndStarting(const Faction &faction) const
 auto SystemRepository::findAllAsteroidsBySystem(const Uuid system) const -> std::unordered_set<Uuid>
 {
   const auto query = [system](pqxx::nontransaction &work) {
-    return work.exec_prepared(FIND_ASTEROIDS_QUERY_NAME, toDbId(system));
+    return work.exec(FIND_ASTEROIDS_QUERY_NAME, pqxx::params{toDbId(system)});
   };
   const auto rows = m_connection->executeQuery(query);
 
@@ -134,7 +132,7 @@ auto SystemRepository::findAllAsteroidsBySystem(const Uuid system) const -> std:
 auto SystemRepository::findAllShipsBySystem(const Uuid system) const -> std::unordered_set<Uuid>
 {
   const auto query = [system](pqxx::nontransaction &work) {
-    return work.exec_prepared(FIND_SHIPS_QUERY_NAME, toDbId(system));
+    return work.exec(FIND_SHIPS_QUERY_NAME, pqxx::params{toDbId(system)});
   };
   const auto rows = m_connection->executeQuery(query);
 
@@ -150,7 +148,7 @@ auto SystemRepository::findAllShipsBySystem(const Uuid system) const -> std::uno
 auto SystemRepository::findAllOutpostsBySystem(const Uuid system) const -> std::unordered_set<Uuid>
 {
   const auto query = [system](pqxx::nontransaction &work) {
-    return work.exec_prepared(FIND_OUTPOSTS_QUERY_NAME, toDbId(system));
+    return work.exec(FIND_OUTPOSTS_QUERY_NAME, pqxx::params{toDbId(system)});
   };
   const auto rows = m_connection->executeQuery(query);
 
@@ -166,10 +164,9 @@ auto SystemRepository::findAllOutpostsBySystem(const Uuid system) const -> std::
 void SystemRepository::updateSystemForShip(const Uuid ship, const Uuid system, const bool docked)
 {
   auto query = [&ship, &system, docked](pqxx::work &transaction) {
-    return transaction.exec_prepared0(UPDATE_SYSTEM_QUERY_NAME,
-                                      toDbId(ship),
-                                      toDbId(system),
-                                      docked);
+    return transaction
+      .exec(UPDATE_SYSTEM_QUERY_NAME, pqxx::params{toDbId(ship), toDbId(system), docked})
+      .no_rows();
   };
 
   const auto res = m_connection->tryExecuteTransaction(query);
@@ -182,7 +179,9 @@ void SystemRepository::updateSystemForShip(const Uuid ship, const Uuid system, c
 void SystemRepository::updateShipForSystem(const Uuid currentShip, const Uuid newShip)
 {
   auto query = [&currentShip, &newShip](pqxx::work &transaction) {
-    return transaction.exec_prepared0(UPDATE_SHIP_QUERY_NAME, toDbId(newShip), toDbId(currentShip));
+    return transaction
+      .exec(UPDATE_SHIP_QUERY_NAME, pqxx::params{toDbId(newShip), toDbId(currentShip)})
+      .no_rows();
   };
 
   const auto res = m_connection->tryExecuteTransaction(query);
