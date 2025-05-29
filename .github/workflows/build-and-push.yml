@@ -14,14 +14,13 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
-env:
-  CI_BASE_IMAGE_TAG: 907252e
-
 jobs:
   build:
     runs-on: ubuntu-24.04
     # https://docs.github.com/en/actions/writing-workflows/choosing-where-your-workflow-runs/running-jobs-in-a-container#example-running-a-job-within-a-container
-    container: totocorpsoftwareinc/ci-cpp-build-image:${{ env.CI_BASE_IMAGE_TAG }}
+    # https://github.com/orgs/community/discussions/26324
+    # Need to be kept in sync with the relevant CI docker image
+    container: totocorpsoftwareinc/ci-cpp-build-image:907252e
     steps:
       - uses: actions/checkout@v4
       - name: Build server
