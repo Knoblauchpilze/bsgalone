@@ -19,6 +19,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   libpng-dev=1.6.43-5build1 \
   libgtest-dev=1.14.0-1 \
   rsync=3.2.7-1ubuntu1.2 \
+  lcov=2.0-4ubuntu2 \
   && rm -rf /var/lib/apt/lists/*
 
 ARG CPP_VERSION="20"
