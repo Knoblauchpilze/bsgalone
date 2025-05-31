@@ -45,3 +45,5 @@ ENV GIT_COMMIT_HASH=$GIT_COMMIT_HASH
 WORKDIR /
 COPY --from=ci-build-base /usr/local/lib /usr/local/lib/
 COPY --from=ci-build-base /usr/local/include/pqxx /usr/local/include/pqxx
+# https://stackoverflow.com/questions/17889799/libraries-in-usr-local-lib-not-found
+RUN ldconfig
