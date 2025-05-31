@@ -52,6 +52,8 @@ Some known limitations:
 
 [![Database migration tests](https://github.com/Knoblauchpilze/bsgalone/actions/workflows/database-migration-tests.yml/badge.svg)](https://github.com/Knoblauchpilze/bsgalone/actions/workflows/database-migration-tests.yml)
 
+[![Build services](https://github.com/Knoblauchpilze/bsgalone/actions/workflows/build-and-push.yml/badge.svg)](https://github.com/Knoblauchpilze/bsgalone/actions/workflows/build-and-push.yml)
+
 # Installation
 
 ⚠️ The following sections are tailored for an installation on Ubuntu: this is what was used during the development. If you want to try to install it on another OS it probably works but some of the command will need to be adapted.
