@@ -52,6 +52,8 @@ Some known limitations:
 
 [![Database migration tests](https://github.com/Knoblauchpilze/bsgalone/actions/workflows/database-migration-tests.yml/badge.svg)](https://github.com/Knoblauchpilze/bsgalone/actions/workflows/database-migration-tests.yml)
 
+[![Build services](https://github.com/Knoblauchpilze/bsgalone/actions/workflows/build-and-push.yml/badge.svg)](https://github.com/Knoblauchpilze/bsgalone/actions/workflows/build-and-push.yml)
+
 # Installation
 
 ⚠️ The following sections are tailored for an installation on Ubuntu: this is what was used during the development. If you want to try to install it on another OS it probably works but some of the command will need to be adapted.
@@ -60,15 +62,41 @@ If you do so, please consider contributing the guide as an issue to help fellow 
 
 ## Prerequisites
 
-This projects uses:
+This projects uses (among other things):
 
 - [google test](https://github.com/google/googletest): installation instructions [here](https://www.eriksmistad.no/getting-started-with-google-test-on-ubuntu/), a simple `sudo apt-get install libgtest-dev` should be enough.
-- [cmake](https://cmake.org/): installation instructions [here](https://askubuntu.com/questions/355565/how-do-i-install-the-latest-version-of-cmake-from-the-command-line), a simple `sudo apt-get cmake` should also be enough.
-- [eigen](https://eigen.tuxfamily.org/index.php?title=Main_Page): installation instructions [here](https://www.cyberithub.com/how-to-install-eigen3-on-ubuntu-20-04-lts-focal-fossa/) for Ubuntu 20.04, a simple `sudo apt install libeigen3-dev` should be enough.
-- [libpqxx](https://github.com/jtv/libpqxx) for db connection. See installation instructions in the [dedicated section](#libpqxx) of this README.
-- [golang migrate](https://github.com/golang-migrate/migrate/blob/master/cmd/migrate/README.md): following the instructions there should be enough.
-- [postgresql](https://www.postgresql.org/) to define the database. See installation instructions in the [dedicated section](#postgresql) of this README.
-- [asio](https://think-async.com/Asio/) for networking. See installation instructions in the [dedicated section](#asio) of this README.
+- [cmake](https://cmake.org/) to handle the build configuratio
+- [asio](https://think-async.com/Asio/) as a networking library
+- [postgresql](https://www.postgresql.org/) to create a database server
+- [libpqxx](https://github.com/jtv/libpqxx) to establish database connections in the applications
+- [golang migrate](https://github.com/golang-migrate/migrate/blob/master/cmd/migrate/README.md), to handle database migrations: following the instructions there should be enough
+- [eigen](https://eigen.tuxfamily.org/index.php?title=Main_Page) to handle matrix operations
+- graphic libraries such as `X11`, `GL` and `png` to handle the rendering
+
+## TL; DR
+
+For a quick setup, just run the following commands to install all needed dependencies:
+
+```bash
+apt update
+
+# Skip this if you already have the basics installed
+apt install -y --no-install-recommends \
+  cmake \
+  build-essential \
+  rsync
+
+# Those are the dependencies to compile the client and server applications
+apt-get install -y --no-install-recommends \
+  libeigen3-dev \
+  libasio-dev \
+  libpqxx-dev \
+  libx11-dev \
+  libgl-dev \
+  libpng-dev
+```
+
+**Note:** in case you're facing problem with installing one library or with compiling (see [section](#running-the-game-locally)), please refer to the following sections for library specific instructions. In case you face a unique problem, don't hesitate to open an [issue](https://github.com/Knoblauchpilze/bsgalone/issues).
 
 ## Clone the repository
 
@@ -82,21 +110,37 @@ cd bsgalone
 
 ## libpqxx
 
-The [README](https://github.com/jtv/libpqxx/blob/master/BUILDING-cmake.md) in the repo is not exactly working. You need to install `libpq-dev`: while not indicated it is clear from the build process.
+This library is available in the package manager for Ubuntu. That being said, it is a bit tricky to get it working. It boils down to an important fix in [7.9.0](https://github.com/jtv/libpqxx/releases/tag/7.9.0) which allows the library to be used also with projects that don't use the same cpp version (see also issue [#732](https://github.com/jtv/libpqxx/issues/732)).
 
-Then the commands are not as described [here](https://github.com/jtv/libpqxx/blob/master/BUILDING-cmake.md#building-and-installing-libpqxx-yourself) but rather:
+Notably, this project uses c++20 which can cause problem. In case you're unlucky and the version shipped with your package manager does not work, you can try to compile the library from source.
+
+Additionally, the CI uses the `ubuntu:24.04` runner image which ships with [CMake 3.31.6](https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2404-Readme.md#tools): this generates some error with version `7.9.1` (see issue [#851](https://github.com/jtv/libpqxx/issues/851)). Therefore we bumped all the way to `7.10.1` (the most recent at the time of writing).
+
+The first step is to install `libpq`: it's automatically installed as part of `libpqxx` but not if you compile the library from source. You can run:
 
 ```bash
-mkdir build
-cd build
-cmake -DCMAKE_CXX_STANDARD=20 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=1 ..
-make -j 8
+sudo apt install -y libpq-dev
+```
+
+**Note:** this is already handled in the CI runner and therefore we don't need to install it there.
+
+Loosely based on what is described in the [README](https://github.com/jtv/libpqxx/blob/master/BUILDING-cmake.md#building-and-installing-libpqxx-yourself) and in the [cheat sheet](https://github.com/jtv/libpqxx/blob/master/BUILDING-cmake.md#cheat-sheet) for the build options, you can run the following commands:
+
+```bash
+cd /tmp
+git clone https://github.com/jtv/libpqxx.git
+cd libpqxx
+git checkout 7.10.1
+cmake \
+  -DCMAKE_CXX_STANDARD=20 \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DBUILD_SHARED_LIBS=1 \
+  .
+cmake --build . -j 8
 sudo cmake --install .
 ```
 
-Those were taken from [this](https://preshing.com/20170511/how-to-build-a-cmake-based-project/#running-cmake-from-the-command-line) tutorial and [this](https://stackoverflow.com/questions/67425557/how-do-i-build-a-cmake-project) Stack Overflow post. By default libpqxx generates a static library which is not really suited for our purposes. The option `BUILD_SHARED_LIBS` forces to create them. This was indicated in the [README](https://github.com/jtv/libpqxx/blob/master/BUILDING-cmake.md#cheat-sheet). Also the c++20 standard comes from [this issue](https://github.com/jtv/libpqxx/issues/732) as we encountered the same problem when building with the debug version.
-
-Then we can attach the library as a dependency of the project as described in the rest of the install [guide](https://github.com/jtv/libpqxx/blob/master/BUILDING-cmake.md#option-b-make-use-of-a-separately-installed-libpqxx).
+This should have installed the version `7.10.1` of `libpqxx` under `/user/local/include/pqxx`.
 
 ## asio
 
@@ -139,6 +183,14 @@ We isolated the `PixelGameEngine` into its own library in [src/pge](src/pge) and
 Additionally the application does not define a very nice icon nor tooltip. This was changed directly in the [PixelGameEngine](src/pge/olc/olcPixelGameEngine.h) file in [28590d1](https://github.com/Knoblauchpilze/bsgalone/commit/28590d182a35e3977f3221c7991a6be6b2169241).
 
 In case of a future update we can port those changes or adapt them.
+
+Additionally, the engine requires a couple of graphic libraries to be installed on the system to properly function. Those are:
+
+- `x11` (Ubuntu package: `libx11-dev`)
+- `GL` (Ubuntu package: `libgl-dev`)
+- `png` (Ubuntu package: `libpng-dev`)
+
+They should be available in most package managers.
 
 ## VScode configurations
 
