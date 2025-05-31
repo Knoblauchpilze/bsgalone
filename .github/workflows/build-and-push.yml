@@ -21,7 +21,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     # https://docs.github.com/en/actions/writing-workflows/choosing-where-your-workflow-runs/running-jobs-in-a-container#example-running-a-job-within-a-container
     # https://github.com/orgs/community/discussions/26324
     # Need to be kept in sync with the relevant CI docker image
@@ -48,7 +48,7 @@ jobs:
           path: build-data.tar
 
   unit-tests:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     container: totocorpsoftwareinc/ci-cpp-build-image:77b186d
     needs: [build]
     steps:
@@ -71,21 +71,18 @@ jobs:
             --exclude=\/usr\/include\/* \
             --exclude=*tests\/* \
             --capture \
-            --output-file coverage.info
+            --output-file coverage-unit.info
       - name: Display coverage
         run: |
-          lcov --list coverage.info
-      - name: Upload coverage to Codecov
-        if: ${{ github.actor != 'dependabot[bot]' }}
-        uses: codecov/codecov-action@v5
+          lcov --list coverage-unit.info
+      - name: Upload coverage info
+        uses: actions/upload-artifact@v4
         with:
-          fail_ci_if_error: true
-          handle_no_reports_found: true
-          files: ./coverage.info
-          token: ${{ secrets.CODECOV_TOKEN }}
+          name: coverage-unit
+          path: coverage-unit.info
 
   integration-tests:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     container: totocorpsoftwareinc/ci-cpp-build-image:77b186d
     needs: [build]
     steps:
@@ -106,15 +103,33 @@ jobs:
             --exclude=\/usr\/include\/* \
             --exclude=*tests\/* \
             --capture \
-            --output-file coverage.info
+            --output-file coverage-integration.info
       - name: Display coverage
         run: |
-          lcov --list coverage.info
+          lcov --list coverage-integration.info
+      - name: Upload coverage info
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-integration
+          path: coverage-integration.info
+
+  upload-coverage:
+    runs-on: ubuntu-latest
+    needs: [unit-tests, integration-tests]
+    steps:
+      - name: Download unit test coverage data
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-unit
+      - name: Download integration test coverage data
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-integration
       - name: Upload coverage to Codecov
         if: ${{ github.actor != 'dependabot[bot]' }}
         uses: codecov/codecov-action@v5
         with:
           fail_ci_if_error: true
           handle_no_reports_found: true
-          files: ./coverage.info
+          files: ./coverage-unit.info,./coverage-integration.info
           token: ${{ secrets.CODECOV_TOKEN }}
