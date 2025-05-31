@@ -14,6 +14,11 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
+env:
+  # Keep in sync with the Dockerfile describing the CI build image
+  CPP_STANDARD: 20
+  LIBPQXX_VERSION: 7.10.1
+
 jobs:
   build:
     runs-on: ubuntu-24.04
@@ -23,7 +28,13 @@ jobs:
     container: totocorpsoftwareinc/ci-cpp-build-image:77b186d
     steps:
       - uses: actions/checkout@v4
-      - name: Build server
+      - name: Cache build result
+        # https://github.com/actions/cache?tab=readme-ov-file#restoring-and-saving-cache-using-a-single-action
+        uses: actions/cache@v4
+        with:
+          path: .
+          key: ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}
+      - name: Build project
         run: |
           make tests
       # https://github.com/actions/upload-artifact/issues/38
