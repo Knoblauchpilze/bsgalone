@@ -1,0 +1,4 @@
+# https://docs.codecov.com/docs/codecovyml-reference
+# https://docs.codecov.com/docs/ignoring-paths#ignoring-a-specific-folder
+ignore:
+  - "tests"

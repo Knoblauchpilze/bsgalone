@@ -2,7 +2,9 @@
 # Keep in sync with the CI workflow
 LIBPQXX_VERSION=7.10.1
 CPP_VERSION=20
-DOCKER_IMAGE_TAG="${CPP_VERSION}-${LIBPQXX_VERSION}"
+DOCKER_IMAGE_TAG=${CPP_VERSION}-${LIBPQXX_VERSION}
+
+NB_PROCS=8
 
 debug:
 	mkdir -p cmake-build/Debug && \
@@ -11,7 +13,7 @@ debug:
 		-DCMAKE_BUILD_TYPE=Debug \
 		../.. \
 	&& \
-	make -j 8
+	make -j ${NB_PROCS}
 
 debugWithTests:
 	mkdir -p cmake-build/Debug && \
@@ -21,7 +23,7 @@ debugWithTests:
 		-DENABLE_TESTS=ON \
 		../.. \
 	&& \
-	make -j 8
+	make -j ${NB_PROCS}
 
 release:
 	mkdir -p cmake-build/Release && \
@@ -30,7 +32,7 @@ release:
 		-DCMAKE_BUILD_TYPE=Release \
 		../.. \
 	&& \
-	make -j 8
+	make -j ${NB_PROCS}
 
 clean:
 	rm -rf cmake-build

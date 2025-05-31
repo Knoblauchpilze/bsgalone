@@ -1,0 +1,135 @@
+name: Build services
+
+on:
+  push:
+    paths:
+      - "CMakeLists.txt"
+      - "codecov.yml"
+      - ".github/workflows/**"
+      - "build/**"
+      - "src/**"
+      - "tests/**"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Keep in sync with the Dockerfile describing the CI build image
+  CPP_STANDARD: 20
+  LIBPQXX_VERSION: 7.10.1
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # https://docs.github.com/en/actions/writing-workflows/choosing-where-your-workflow-runs/running-jobs-in-a-container#example-running-a-job-within-a-container
+    # https://github.com/orgs/community/discussions/26324
+    # Need to be kept in sync with the relevant CI docker image
+    container: totocorpsoftwareinc/ci-cpp-build-image:b5849ab
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cache build result
+        # https://github.com/actions/cache?tab=readme-ov-file#restoring-and-saving-cache-using-a-single-action
+        uses: actions/cache@v4
+        with:
+          path: .
+          key: ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}
+      - name: Build project
+        run: |
+          make tests
+      # https://github.com/actions/upload-artifact/issues/38
+      - name: Compress build folder
+        run: |
+          tar -cvf build-data.tar .
+      - name: Upload build result
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-data
+          path: build-data.tar
+
+  unit-tests:
+    runs-on: ubuntu-latest
+    container: totocorpsoftwareinc/ci-cpp-build-image:b5849ab
+    needs: [build]
+    steps:
+      - name: Download build data
+        uses: actions/download-artifact@v4
+        with:
+          name: build-data
+      - name: Uncompress build data
+        run: |
+          tar -xvf build-data.tar
+      - name: Run tests
+        run: |
+          ./sandbox/bin/unitTests
+      - name: Aggregate code coverage
+        # https://github.com/linux-test-project/lcov/issues/296
+        # https://stackoverflow.com/questions/38438219/how-to-remove-certain-directories-from-lcov-code-coverage-report
+        run: |
+          lcov \
+            --directory cmake-build \
+            --exclude=\/usr\/include\/* \
+            --exclude=*tests\/* \
+            --capture \
+            --output-file coverage-unit.info
+      - name: Display coverage
+        run: |
+          lcov --list coverage-unit.info
+      - name: Upload coverage info
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-unit
+          path: coverage-unit.info
+
+  integration-tests:
+    runs-on: ubuntu-latest
+    container: totocorpsoftwareinc/ci-cpp-build-image:b5849ab
+    needs: [build]
+    steps:
+      - name: Download build data
+        uses: actions/download-artifact@v4
+        with:
+          name: build-data
+      - name: Uncompress build data
+        run: |
+          tar -xvf build-data.tar
+      - name: Run tests
+        run: |
+          ./sandbox/bin/integrationTests
+      - name: Aggregate code coverage
+        run: |
+          lcov \
+            --directory cmake-build \
+            --exclude=\/usr\/include\/* \
+            --exclude=*tests\/* \
+            --capture \
+            --output-file coverage-integration.info
+      - name: Display coverage
+        run: |
+          lcov --list coverage-integration.info
+      - name: Upload coverage info
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-integration
+          path: coverage-integration.info
+
+  upload-coverage:
+    runs-on: ubuntu-latest
+    needs: [unit-tests, integration-tests]
+    steps:
+      - name: Download unit test coverage data
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-unit
+      - name: Download integration test coverage data
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-integration
+      - name: Upload coverage to Codecov
+        if: ${{ github.actor != 'dependabot[bot]' }}
+        uses: codecov/codecov-action@v5
+        with:
+          fail_ci_if_error: true
+          handle_no_reports_found: true
+          files: ./coverage-unit.info,./coverage-integration.info
+          token: ${{ secrets.CODECOV_TOKEN }}

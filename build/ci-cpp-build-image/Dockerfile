@@ -20,6 +20,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   libgtest-dev=1.14.0-1 \
   rsync=3.2.7-1ubuntu1.2 \
   lcov=2.0-4ubuntu2 \
+  # https://github.com/linux-test-project/lcov/issues/193
+  libcpanel-json-xs-perl=4.37-1build3 \
   && rm -rf /var/lib/apt/lists/*
 
 ARG CPP_VERSION="20"
