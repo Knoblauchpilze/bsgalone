@@ -4,4 +4,4 @@ ignore:
   - "tests"
 # https://docs.codecov.com/docs/fixing-paths#how-to-provide-path-fixes-manually
 fixes:
-  - "/__w/bsgalone::"
+  - "/__w/::/home/runner/work/"
