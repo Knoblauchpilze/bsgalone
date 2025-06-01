@@ -494,9 +494,15 @@ When adding new features it is important to think about whether they would benef
 
 It can also be that later on we realize that the `bsgo` library is too big, or that some separate features (for example Data Transfer Objects) can be shared: this could be achieved by adding more top level folders in the [src](src) directory.
 
+### core
+
+The [core](src/core) folder contains some utilities that are used throughout the project. The code is inspired from parts from the [core_utils](https://github.com/Knoblauchpilze/core_utils) repository. Instead of having it as an external dependency it was simpler to copy parts of it and just have them locally.
+
+Based on future developments we might decide to externalzie this or to use a submodule instead.
+
 ### bsgo
 
-The [bsgo](src/bsgo) folder contains the core library defining the Entity Component System and the interaction with the database. This is used both in the server and the client application.
+The [bsgo](src/bsgo) folder contains the core game library defining the Entity Component System and the interaction with the database. This is used both in the server and the client application.
 
 ### net
 
