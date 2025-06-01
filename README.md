@@ -64,14 +64,16 @@ If you do so, please consider contributing the guide as an issue to help fellow 
 
 This projects uses (among other things):
 
-- [google test](https://github.com/google/googletest): installation instructions [here](https://www.eriksmistad.no/getting-started-with-google-test-on-ubuntu/), a simple `sudo apt-get install libgtest-dev` should be enough.
-- [cmake](https://cmake.org/) to handle the build configuratio
+- [cmake](https://cmake.org/) as a build management system
 - [asio](https://think-async.com/Asio/) as a networking library
 - [postgresql](https://www.postgresql.org/) to create a database server
 - [libpqxx](https://github.com/jtv/libpqxx) to establish database connections in the applications
 - [golang migrate](https://github.com/golang-migrate/migrate/blob/master/cmd/migrate/README.md), to handle database migrations: following the instructions there should be enough
-- [eigen](https://eigen.tuxfamily.org/index.php?title=Main_Page) to handle matrix operations
-- graphic libraries such as `X11`, `GL` and `png` to handle the rendering
+- a cpp compiler, typically [gcc](https://gcc.gnu.org/) to build the project
+- [eigen](https://eigen.tuxfamily.org/index.php?title=Main_Page) for matrix manipulation
+- [google test](https://github.com/google/googletest) as a testing library
+- graphical libraries such as `X11`, `GL` and `PNG` for rendering
+- [rsync](https://linux.die.net/man/1/rsync) for file management
 
 ## TL; DR
 
@@ -83,17 +85,21 @@ apt update
 # Skip this if you already have the basics installed
 apt install -y --no-install-recommends \
   cmake \
-  build-essential \
-  rsync
+  build-essential
+
+# To not request information when installing libgl-dev
+export DEBIAN_FRONTEND="interactive"
 
 # Those are the dependencies to compile the client and server applications
 apt-get install -y --no-install-recommends \
-  libeigen3-dev \
   libasio-dev \
   libpqxx-dev \
+  libeigen3-dev \
+  libgtest-dev \
   libx11-dev \
   libgl-dev \
-  libpng-dev
+  libpng-dev \
+  rsync
 ```
 
 **Note:** in case you're facing problem with installing one library or with compiling (see [section](#running-the-game-locally)), please refer to the following sections for library specific instructions. In case you face a unique problem, don't hesitate to open an [issue](https://github.com/Knoblauchpilze/bsgalone/issues).
@@ -249,7 +255,7 @@ You can use the following configuration and paste it in the `.vscode` folder cre
 ```json
 {
   "cmake.configureOnOpen": false,
-  "cmake.buildDirectory": "${workspaceFolder}/cmake-build",
+  "cmake.buildDirectory": "${workspaceFolder}/cmake-build/Debug",
   "cmake.configureArgs": ["-DENABLE_TESTS=ON"],
   "testMate.cpp.discovery.gracePeriodForMissing": 500,
   "testMate.cpp.discovery.runtimeLimit": 500,
@@ -278,7 +284,7 @@ In order to run and debug the executables created by the project you can use the
       "program": "${workspaceFolder}/cmake-build/Debug/bin/bsgalone_server",
       "args": [],
       "stopAtEntry": false,
-      "cwd": "${fileDirname}",
+      "cwd": "${workspaceFolder}",
       "environment": [
         {
           "name": "PORT",
