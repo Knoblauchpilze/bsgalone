@@ -313,7 +313,7 @@ In order to run and debug the executables created by the project you can use the
       "program": "${workspaceFolder}/cmake-build/Debug/bin/bsgalone_client",
       "args": [],
       "stopAtEntry": false,
-      "cwd": "${fileDirname}",
+      "cwd": "${workspaceFolder}",
       "environment": [
         {
           "name": "PORT",
