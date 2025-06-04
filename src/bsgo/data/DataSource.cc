@@ -80,7 +80,7 @@ void DataSource::initialize(Coordinator &coordinator, DatabaseEntityMapper &enti
     entityMapper.setPlayerDbId(*m_playerDbId);
   }
 
-  initializePlayer(coordinator, entityMapper);
+  initializePlayers(coordinator, entityMapper);
   initializeShips(coordinator, entityMapper);
   initializeAsteroids(coordinator, entityMapper);
   initializeOutposts(coordinator, entityMapper);

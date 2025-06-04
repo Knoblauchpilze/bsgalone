@@ -33,7 +33,7 @@ class DataSource : public core::CoreObject
 
   Repositories m_repositories{};
 
-  void initializePlayer(Coordinator &coordinator, DatabaseEntityMapper &entityMapper) const;
+  void initializePlayers(Coordinator &coordinator, DatabaseEntityMapper &entityMapper) const;
   void initializeAsteroids(Coordinator &coordinator, DatabaseEntityMapper &entityMapper) const;
   void initializeShips(Coordinator &coordinator, DatabaseEntityMapper &entityMapper) const;
   void initializeOutposts(Coordinator &coordinator, DatabaseEntityMapper &entityMapper) const;
