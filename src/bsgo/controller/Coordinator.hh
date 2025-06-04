@@ -16,8 +16,6 @@
 
 namespace bsgo {
 
-class DataSource;
-
 class Coordinator : public core::CoreObject
 {
   public:
