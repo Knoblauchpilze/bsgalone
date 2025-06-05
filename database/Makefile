@@ -16,7 +16,7 @@ connect:
 
 .PHONY: migrate
 migrate:
-	migrate -path ${PWD}/${DB_PATH}/migrations -database postgres://${DB_USER}:${URL_ENCODED_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME} up
+	migrate -path ${PWD}/${DB_PATH}/migrations -database postgres://${DB_USER}:${URL_ENCODED_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable up
 
 migrateOne:
 	migrate -path ${PWD}/${DB_PATH}/migrations -database postgres://${DB_USER}:${URL_ENCODED_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable up ${MIGRATION_STEPS}
