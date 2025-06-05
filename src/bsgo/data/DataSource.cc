@@ -86,7 +86,7 @@ void DataSource::initialize(Coordinator &coordinator, DatabaseEntityMapper &enti
   initializeOutposts(coordinator, entityMapper);
 }
 
-void DataSource::initializePlayer(Coordinator &coordinator, DatabaseEntityMapper &entityMapper) const
+void DataSource::initializePlayers(Coordinator &coordinator, DatabaseEntityMapper &entityMapper) const
 {
   PlayerDataSource source{m_repositories};
   source.initialize(*m_systemDbId, coordinator, entityMapper);
