@@ -76,6 +76,7 @@ This projects uses (among other things):
 - [google test](https://github.com/google/googletest) as a testing library
 - graphical libraries such as `X11`, `GL` and `PNG` for rendering
 - [rsync](https://linux.die.net/man/1/rsync) for file management
+- [urlencode](https://manpages.ubuntu.com/manpages/jammy/man1/urlencode.1.html) to handle escaping characters in passwords
 
 ## TL; DR
 
@@ -101,7 +102,12 @@ apt-get install -y --no-install-recommends \
   libx11-dev \
   libgl-dev \
   libpng-dev \
-  rsync
+  rsync \
+  gridsite-clients
+
+# Install migration tool, consider replacing the os and version
+curl -L https://github.com/golang-migrate/migrate/releases/download/v4.18.3/migrate.linux-386.tar.gz | tar xvz
+sudo cp migrate /usr/local/bin
 ```
 
 **Note:** in case you're facing problem with installing one library or with compiling (see [section](#running-the-game-locally)), please refer to the following sections for library specific instructions. In case you face a unique problem, don't hesitate to open an [issue](https://github.com/Knoblauchpilze/bsgalone/issues).
