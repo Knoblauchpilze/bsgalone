@@ -56,6 +56,11 @@ void LoginMessageConsumer::handleLogin(const LoginMessage &message) const
   out->validate();
   out->copyClientIdIfDefined(message);
   m_messageQueue->pushMessage(std::move(out));
+
+  // TODO: We could have a similar logic as in LogoutMessageConsumer. Using the client
+  // manager we could get the system id of the player and send a PlayerListMessage there
+  // We also have access to the client id so it can be used to send the players' list
+  // only to the relevant client
 }
 
 } // namespace bsgo

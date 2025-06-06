@@ -104,6 +104,8 @@ auto MessageExchanger::initializeSystemMessageQueue(const MessageSystemData &mes
                                                                    m_outputMessageQueue.get()));
 
   auto loginService = std::make_unique<LoginService>(repositories);
+  // TODO: We could modify the LoginMessageConsumer to also receive the system processors
+  // and send a message in the corresponding system
   systemQueue->addListener(std::make_unique<LoginMessageConsumer>(std::move(loginService),
                                                                   messagesData.clientManager,
                                                                   m_outputMessageQueue.get()));

@@ -46,6 +46,10 @@ void SystemProcessor::connectToQueues(IMessageQueue *const internalMessageQueue,
   dataSource.initialize(*m_coordinator, m_entityMapper);
 
   m_services = createServices(ProcessingMode::SERVER, repositories, m_coordinator, m_entityMapper);
+  // TODO: We could add a PlayerListMessageConsumer which would react on the message
+  // with that type and populate the list of players with the ones from the system
+  // This service would already have access to the broadcast queue so we can then send
+  // this message to the client.
   createMessageConsumers(*m_inputMessagesQueue, outputMessageQueue, m_services);
 }
 
