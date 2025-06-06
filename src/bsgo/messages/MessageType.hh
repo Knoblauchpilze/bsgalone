@@ -22,6 +22,7 @@ enum class MessageType
   LOGIN,
   LOGOUT,
   LOOT,
+  PLAYER_LIST,
   PURCHASE,
   SCANNED,
   SIGNUP,
@@ -33,7 +34,7 @@ enum class MessageType
 };
 
 auto str(const MessageType &type) -> std::string;
-auto allMessageTypes() -> std::array<MessageType, 21>;
+auto allMessageTypes() -> std::array<MessageType, 22>;
 
 auto allMessageTypesAsSet() -> std::unordered_set<MessageType>;
 
