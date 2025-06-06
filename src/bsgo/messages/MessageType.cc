@@ -33,6 +33,8 @@ auto str(const MessageType &type) -> std::string
       return "logout";
     case MessageType::LOOT:
       return "loot";
+    case MessageType::PLAYER_LIST:
+      return "player_list";
     case MessageType::PURCHASE:
       return "purchase";
     case MessageType::SCANNED:
@@ -54,7 +56,7 @@ auto str(const MessageType &type) -> std::string
   }
 }
 
-auto allMessageTypes() -> std::array<MessageType, 21>
+auto allMessageTypes() -> std::array<MessageType, 22>
 {
   return {MessageType::COMPONENT_SYNC,
           MessageType::CONNECTION,
@@ -67,6 +69,7 @@ auto allMessageTypes() -> std::array<MessageType, 21>
           MessageType::JUMP_CANCELLED,
           MessageType::JUMP_REQUESTED,
           MessageType::LOOT,
+          MessageType::PLAYER_LIST,
           MessageType::PURCHASE,
           MessageType::LOGIN,
           MessageType::LOGOUT,
