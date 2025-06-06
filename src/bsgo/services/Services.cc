@@ -19,6 +19,11 @@ auto createServices(const ProcessingMode processingMode,
                                                repositories,
                                                coordinator,
                                                entityMapper);
+  // TODO: We could add a loading/login service which would be responsible to handle
+  // the PlayerListMessage and other similar messages to send the loading data to
+  // each client
+  // This service would perform what is done in the PlayerDataSource::initialize and
+  // similar methods.
 
   return out;
 }
