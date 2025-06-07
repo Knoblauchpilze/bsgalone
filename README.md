@@ -229,15 +229,9 @@ In case you use VScode as an IDE to work on this project, it is recommended to c
     {
       "name": "Linux",
       "includePath": [
-        "${workspaceFolder}/**",
-        "${workspaceFolder}/src/bsgo",
-        "${workspaceFolder}/src/client",
-        "${workspaceFolder}/src/core",
-        "${workspaceFolder}/src/net",
-        "${workspaceFolder}/src/pge",
-        "${workspaceFolder}/src/server",
-        "/usr/local/include/",
-        "/usr/local/include/asio"
+        "${workspaceFolder}",
+        "/usr/local/include",
+        "/usr/include"
       ],
       "defines": [],
       "compilerPath": "/usr/bin/g++",
@@ -250,7 +244,7 @@ In case you use VScode as an IDE to work on this project, it is recommended to c
 }
 ```
 
-Note that this will require you to have a local `g++` version supporting at least `c++20`.
+Note that this will require you to have a local `g++` version supporting at least `c++20`. You can find more information about the syntax for this file in the [documentation](https://code.visualstudio.com/docs/cpp/customize-cpp-settings#_browse-properties).
 
 ### Configuration for CMake
 
