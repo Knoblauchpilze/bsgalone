@@ -23,7 +23,8 @@ auto createServices(const ProcessingMode processingMode,
   // the PlayerListMessage and other similar messages to send the loading data to
   // each client
   // This service would perform what is done in the PlayerDataSource::initialize and
-  // similar methods.
+  // similar methods by fetching the players, ships, etc. from the database and then
+  // sending them to the clients.
 
   return out;
 }

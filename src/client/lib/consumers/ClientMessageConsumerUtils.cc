@@ -24,6 +24,13 @@ void createMessageConsumers(const bsgo::Repositories &repositories,
                                                              entityMapper);
   inputMessagesQueue.addListener(
     std::make_unique<SystemMessageConsumer>(entityMapper, coordinator, std::move(entityService)));
+
+  // TODO: We could create a new LoadingMessageConsumer which would take the coordinator
+  // and the entity mapper and would add the players, ships, etc. in a similar way to
+  // how it's done in the PlayerDataSource::initialize method.
+  // It would be responsible to call the PlayerDataSource::registerPlayer with the data
+  // that is coming from the PlayerListMessage for example instead of fetching it from
+  // the database.
 }
 
 } // namespace pge
