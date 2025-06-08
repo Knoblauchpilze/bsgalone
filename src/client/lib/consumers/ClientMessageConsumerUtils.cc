@@ -18,6 +18,8 @@ void createMessageConsumers(const bsgo::Repositories &repositories,
 
   inputMessagesQueue.addListener(std::make_unique<ShipMessageConsumer>(entityMapper, coordinator));
 
+  // TODO: We should try to make the repositories a dummy value in the client
+  // and see if anything breaks.
   auto entityService = std::make_unique<bsgo::EntityService>(bsgo::ProcessingMode::CLIENT,
                                                              repositories,
                                                              coordinator,
