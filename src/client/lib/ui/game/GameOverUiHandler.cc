@@ -32,7 +32,7 @@ void GameOverUiHandler::initializeMenus(const int width,
   const MenuConfig config{.pos               = pos,
                           .dims              = dims,
                           .visible           = false,
-                          .gameClickCallback = [this](Game &g) { g.setScreen(Screen::LOADING); }};
+                          .gameClickCallback = [this](Game &g) { g.setScreen(Screen::OUTPOST); }};
 
   auto bg   = bgConfigFromColor(colors::DARK_GREY);
   auto text = textConfigFromColor("Return to outpost", colors::BLACK);

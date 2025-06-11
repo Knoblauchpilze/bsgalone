@@ -378,9 +378,6 @@ void Game::initializeMessageSystem()
 
 void Game::resetViewsAndUi()
 {
-  // TODO: We should switch to the loading screen here. Instead of calling the
-  // initialize method we wait to receive messages like the PlayerListMessage
-  // and similar to have access to the data.
   m_dataSource.initialize(*m_coordinator, m_entityMapper);
 
   const auto maybePlayerDbId = m_dataSource.tryGetPlayerDbId();

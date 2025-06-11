@@ -16,6 +16,7 @@
 #include "LoginMessage.hh"
 #include "LogoutMessage.hh"
 #include "LootMessage.hh"
+#include "PlayerListMessage.hh"
 #include "PurchaseMessage.hh"
 #include "ScannedMessage.hh"
 #include "SignupMessage.hh"
@@ -123,6 +124,8 @@ auto MessageParser::tryReadMessage(const MessageType &type, std::istream &in)
       return readMessage<LogoutMessage>(in);
     case MessageType::LOOT:
       return readMessage<LootMessage>(in);
+    case MessageType::PLAYER_LIST:
+      return readMessage<PlayerListMessage>(in);
     case MessageType::PURCHASE:
       return readMessage<PurchaseMessage>(in);
     case MessageType::SCANNED:
