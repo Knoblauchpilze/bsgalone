@@ -81,7 +81,7 @@ void GameMessageModule::handleDockMessage(const bsgo::DockMessage &message)
   }
   else
   {
-    m_game.setScreen(Screen::GAME);
+    m_game.setScreen(Screen::LOADING);
   }
 }
 

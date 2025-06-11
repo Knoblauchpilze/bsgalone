@@ -9,6 +9,8 @@ auto str(const Screen s) noexcept -> std::string
   {
     case Screen::LOGIN:
       return "login";
+    case Screen::LOADING:
+      return "loading";
     case Screen::GAME:
       return "game";
     case Screen::MAP:
