@@ -31,6 +31,9 @@ void PlayerListMessageConsumer::registerPlayer(const bsgo::Uuid playerDbId,
   m_coordinator->addDbId(playerEntityId, playerDbId);
 
   m_entityMapper.registerPlayer(playerDbId, playerEntityId);
+  // TODO: We need to somehow indicate to the game that we received
+  // the player. Once all the required data is received we can move
+  // on to the game.
 }
 
 } // namespace pge
