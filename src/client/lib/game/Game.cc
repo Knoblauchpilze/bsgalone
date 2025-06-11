@@ -317,6 +317,7 @@ void Game::onActiveSystemChanged()
   m_views.shipView->clearJumpSystem();
   m_views.shipDbView->clearJumpSystem();
   m_dataSource.clearSystemDbId();
+  // TODO: We should set the screen to loading
   resetViewsAndUi();
 }
 
