@@ -3,6 +3,7 @@
 
 #include "AbstractMessageConsumer.hh"
 #include "IMessageQueue.hh"
+#include "LoadingFinishedMessage.hh"
 #include "PlayerListMessage.hh"
 #include "Services.hh"
 
@@ -20,6 +21,7 @@ class LoadingMessagesConsumer : public AbstractMessageConsumer
   IMessageQueue *const m_messageQueue{};
 
   void handlePlayersLoading(const PlayerListMessage &message) const;
+  void forwardLoadingFinishedMessage(const LoadingFinishedMessage &message) const;
 };
 
 } // namespace bsgo
