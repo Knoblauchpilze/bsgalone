@@ -10,7 +10,7 @@ namespace {
 auto assertMessagesAreEqual(const DockMessage &actual, const DockMessage &expected)
 {
   EXPECT_EQ(actual.type(), expected.type());
-  EXPECT_NE(actual.getShipDbId(), expected.getShipDbId());
+  EXPECT_EQ(actual.getShipDbId(), expected.getShipDbId());
   EXPECT_EQ(actual.isDocking(), expected.isDocking());
   EXPECT_EQ(actual.getSystemDbId(), expected.getSystemDbId());
   EXPECT_EQ(actual.tryGetClientId(), expected.tryGetClientId());
