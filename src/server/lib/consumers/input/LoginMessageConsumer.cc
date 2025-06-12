@@ -1,6 +1,7 @@
 
 #include "LoginMessageConsumer.hh"
 #include "LoadingFinishedMessage.hh"
+#include "LoadingStartedMessage.hh"
 #include "PlayerListMessage.hh"
 
 namespace bsgo {
@@ -80,6 +81,10 @@ void LoginMessageConsumer::publishLoadingMessages(const bsgo::Uuid clientId,
     error("Failed to process login message for " + str(playerDbId),
           "Unknown system " + str(*maybeSystemDbId));
   }
+
+  auto started = std::make_unique<LoadingStartedMessage>();
+  started->setClientId(clientId);
+  maybeProcessor->second->pushMessage(std::move(started));
 
   auto players = std::make_unique<PlayerListMessage>(*maybeSystemDbId,
                                                      std::vector<PlayerListMessage::PlayerData>{});

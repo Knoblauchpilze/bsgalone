@@ -4,13 +4,19 @@
 
 namespace bsgo {
 
-LoadingMessagesConsumer::LoadingMessagesConsumer(const Services & /*services*/,
+LoadingMessagesConsumer::LoadingMessagesConsumer(const Services &services,
                                                  IMessageQueue *const messageQueue)
-  : AbstractMessageConsumer("loading", {MessageType::LOADING_FINISHED, MessageType::PLAYER_LIST})
+  : AbstractMessageConsumer("loading",
+                            {MessageType::LOADING_FINISHED,
+                             MessageType::LOADING_STARTED,
+                             MessageType::PLAYER_LIST})
+  , m_loadingService(services.loading)
   , m_messageQueue(messageQueue)
 {
-  addModule("loading");
-
+  if (nullptr == m_loadingService)
+  {
+    throw std::invalid_argument("Expected non null loading service");
+  }
   if (nullptr == m_messageQueue)
   {
     throw std::invalid_argument("Expected non null message queue");
@@ -21,6 +27,9 @@ void LoadingMessagesConsumer::onMessageReceived(const IMessage &message)
 {
   switch (message.type())
   {
+    case MessageType::LOADING_STARTED:
+      forwardLoadingStartedMessage(message.as<LoadingStartedMessage>());
+      return;
     case MessageType::PLAYER_LIST:
       handlePlayersLoading(message.as<PlayerListMessage>());
       return;
@@ -33,12 +42,30 @@ void LoadingMessagesConsumer::onMessageReceived(const IMessage &message)
   }
 }
 
+void LoadingMessagesConsumer::forwardLoadingStartedMessage(const LoadingStartedMessage &message) const
+{
+  auto out = std::make_unique<LoadingStartedMessage>(message.getSystemDbId(),
+                                                     message.getPlayerDbId());
+  out->copyClientIdIfDefined(message);
+
+  m_messageQueue->pushMessage(std::move(out));
+}
+
 void LoadingMessagesConsumer::handlePlayersLoading(const PlayerListMessage &message) const
 {
   const auto systemDbId = message.getSystemDbId();
 
-  // TODO: Populate this
-  const std::vector<PlayerListMessage::PlayerData> playersData{};
+  const auto players = m_loadingService->getPlayersInSystem(systemDbId);
+
+  std::vector<PlayerListMessage::PlayerData> playersData{};
+  std::transform(players.begin(),
+                 players.end(),
+                 std::back_inserter(playersData),
+                 [](const Player &player) {
+                   return PlayerListMessage::PlayerData{.playerDbId = player.id,
+                                                        .name       = player.name};
+                 });
+
   auto out = std::make_unique<PlayerListMessage>(systemDbId, playersData);
   out->copyClientIdIfDefined(message);
 
