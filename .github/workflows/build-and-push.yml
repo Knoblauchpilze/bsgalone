@@ -42,7 +42,7 @@ jobs:
         run: |
           ls -la
           ls -la cmake-build
-          cat cmake-build/CMakeCache.txt
+          cat cmake-build/Debug
           pwd
       - name: Build project
         run: |
