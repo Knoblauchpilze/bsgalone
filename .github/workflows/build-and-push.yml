@@ -41,9 +41,6 @@ jobs:
       - name: debug 2
         run: |
           ls -la
-          ls -la cmake-build
-          ls -la cmake-build/Debug
-          cat cmake-build/Debug/CMakeCache.txt
           pwd
       - name: Build project
         run: |
