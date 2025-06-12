@@ -41,6 +41,7 @@ jobs:
       - name: debug 2
         run: |
           ls -la
+          ls -la cmake-build
           pwd
       - name: Build project
         run: |
