@@ -16,7 +16,7 @@ class ServerView : public AbstractView
   ServerView(const Repositories &repositories);
   ~ServerView() override = default;
 
-  void setPlayerDbId(const std::optional<Uuid> player);
+  void setPlayerDbId(const Uuid player);
   bool isReady() const noexcept override;
 
   auto getPlayerSystem() const -> Uuid;

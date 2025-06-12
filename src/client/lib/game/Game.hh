@@ -16,6 +16,7 @@
 #include "Screen.hh"
 #include "Views.hh"
 #include <memory>
+#include <optional>
 #include <unordered_map>
 
 namespace pge {
@@ -84,8 +85,20 @@ class Game : public core::CoreObject
     bool dead{false};
   };
 
+  /// @brief - The data associated with the player. This is used to
+  /// store information about the player, such as the current system
+  /// and other properties about the state of the game for the player.
+  struct PlayerData
+  {
+    std::optional<bsgo::Uuid> systemDbId{};
+    std::optional<bsgo::Uuid> playerDbId{};
+  };
+
   /// @brief - The definition of the game state.
   State m_state{};
+
+  /// @brief - Represents the data attached to the current game session.
+  PlayerData m_playerData{};
 
   bsgo::DataSource m_dataSource{bsgo::DataLoadingMode::CLIENT};
   bsgo::DatabaseEntityMapper m_entityMapper{};

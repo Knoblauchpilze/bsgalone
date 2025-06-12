@@ -290,6 +290,8 @@ void Game::onConnectedToServer(const bsgo::Uuid clientId)
 
 void Game::onLogin(const bsgo::Uuid playerDbId)
 {
+  m_playerData.playerDbId = playerDbId;
+  // TODO: This needs to be removed.
   m_dataSource.setPlayerDbId(playerDbId);
   resetViewsAndUi();
   setScreen(Screen::LOADING);
@@ -297,13 +299,12 @@ void Game::onLogin(const bsgo::Uuid playerDbId)
 
 void Game::onLogout()
 {
-  const auto maybePlayerDbId = m_dataSource.tryGetPlayerDbId();
-  if (!maybePlayerDbId)
+  if (!m_playerData.playerDbId)
   {
     error("Failed to log out", "Not logged in");
   }
 
-  info("Player " + bsgo::str(*maybePlayerDbId) + " logged out");
+  info("Player " + bsgo::str(*m_playerData.playerDbId) + " logged out");
   setScreen(Screen::LOGIN);
 }
 
@@ -381,15 +382,14 @@ void Game::resetViewsAndUi()
 {
   m_dataSource.initialize(*m_coordinator, m_entityMapper);
 
-  const auto maybePlayerDbId = m_dataSource.tryGetPlayerDbId();
-  if (!maybePlayerDbId)
+  if (!m_playerData.playerDbId)
   {
     error("Failed to reset views and UI", "Expected to have a player defined");
   }
 
-  m_views.playerView->setPlayerDbId(maybePlayerDbId);
-  m_views.shopView->setPlayerDbId(maybePlayerDbId);
-  m_views.serverView->setPlayerDbId(maybePlayerDbId);
+  m_views.playerView->setPlayerDbId(*m_playerData.playerDbId);
+  m_views.shopView->setPlayerDbId(*m_playerData.playerDbId);
+  m_views.serverView->setPlayerDbId(*m_playerData.playerDbId);
 
   auto maybePlayerShipDbId = m_entityMapper.tryGetPlayerShipDbId();
   if (!maybePlayerShipDbId)
