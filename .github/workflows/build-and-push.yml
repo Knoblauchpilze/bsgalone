@@ -28,12 +28,20 @@ jobs:
     container: totocorpsoftwareinc/ci-cpp-build-image:b5849ab
     steps:
       - uses: actions/checkout@v4
+      - name: debug
+        run: |
+          ls -la
+          pwd
       - name: Cache build result
         # https://github.com/actions/cache?tab=readme-ov-file#restoring-and-saving-cache-using-a-single-action
         uses: actions/cache@v4
         with:
-          path: cmake-build
+          path: ./cmake-build
           key: ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}
+      - name: debug 2
+        run: |
+          ls -la
+          pwd
       - name: Build project
         run: |
           make tests
@@ -46,6 +54,10 @@ jobs:
         with:
           name: build-data
           path: build-data.tar
+      - name: debug 3
+        run: |
+          ls -la
+          pwd
 
   unit-tests:
     runs-on: ubuntu-latest
