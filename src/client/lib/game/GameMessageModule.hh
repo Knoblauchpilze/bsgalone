@@ -13,6 +13,7 @@
 #include "HangarMessage.hh"
 #include "JumpMessage.hh"
 #include "LoadingFinishedMessage.hh"
+#include "LoadingStartedMessage.hh"
 #include "LoginMessage.hh"
 #include "LogoutMessage.hh"
 #include "SignupMessage.hh"
@@ -33,10 +34,6 @@ class GameMessageModule : public bsgo::AbstractMessageListener, public core::Cor
   Game &m_game;
   const bsgo::DatabaseEntityMapper &m_entityMapper;
 
-  // TODO: We can include in the GameDataModule (see DataSource) the desired
-  // next screen. This consumer will call a new onDataLoaded method and in the
-  // Game we can interrogate this module and set the screen accordingly.
-
   void handleConnectionMessage(const bsgo::ConnectionMessage &message);
   void handleDockMessage(const bsgo::DockMessage &message);
   void handleHangarMessage(const bsgo::HangarMessage &message);
@@ -45,6 +42,7 @@ class GameMessageModule : public bsgo::AbstractMessageListener, public core::Cor
   void handleLogoutMessage(const bsgo::LogoutMessage &message);
   void handleSignupMessage(const bsgo::SignupMessage &message);
   void handleEntityRemovedMessage(const bsgo::EntityRemovedMessage &message);
+  void handleLoadingStartedMessage(const bsgo::LoadingStartedMessage &message) const;
   void handleLoadingFinishedMessage(const bsgo::LoadingFinishedMessage &message) const;
 };
 

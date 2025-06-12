@@ -66,6 +66,8 @@ class Game : public core::CoreObject
   void onActiveShipChanged();
   void onActiveSystemChanged();
   void onPlayerKilled();
+  void onLoadingStarted(const bsgo::Uuid systemDbId, const bsgo::Uuid playerDbId);
+  void onLoadingFinished();
 
   private:
   /// @brief - Convenience information defining the state of the
@@ -85,20 +87,22 @@ class Game : public core::CoreObject
     bool dead{false};
   };
 
-  /// @brief - The data associated with the player. This is used to
-  /// store information about the player, such as the current system
-  /// and other properties about the state of the game for the player.
-  struct PlayerData
+  /// @brief - The data associated with the current gaming session. This
+  /// include information about the player (such as the current system,
+  /// the ID of the player in the DB) but also about the game in general
+  /// such as the next screen to be displayed when waiting for loading
+  /// data to be communicated by the server.
+  struct GameSession
   {
     std::optional<bsgo::Uuid> systemDbId{};
     std::optional<bsgo::Uuid> playerDbId{};
+    std::optional<Screen> nextScreen{};
   };
 
   /// @brief - The definition of the game state.
   State m_state{};
 
-  /// @brief - Represents the data attached to the current game session.
-  PlayerData m_playerData{};
+  GameSession m_gameSession{};
 
   bsgo::DataSource m_dataSource{bsgo::DataLoadingMode::CLIENT};
   bsgo::DatabaseEntityMapper m_entityMapper{};

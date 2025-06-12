@@ -45,7 +45,7 @@ auto Game::getScreen() const noexcept -> Screen
 namespace {
 bool shouldUpdateCoordinatorAfterScreenTransition(const Screen &current, const Screen &next)
 {
-  return Screen::OUTPOST == current && Screen::GAME == next;
+  return Screen::LOADING == current && Screen::GAME == next;
 }
 } // namespace
 
@@ -290,22 +290,22 @@ void Game::onConnectedToServer(const bsgo::Uuid clientId)
 
 void Game::onLogin(const bsgo::Uuid playerDbId)
 {
-  m_playerData.playerDbId = playerDbId;
-  // TODO: This needs to be removed.
-  m_dataSource.setPlayerDbId(playerDbId);
-  resetViewsAndUi();
-  setScreen(Screen::LOADING);
+  info("processing login for " + bsgo::str(playerDbId));
+  m_gameSession.playerDbId = playerDbId;
+  m_gameSession.nextScreen = Screen::OUTPOST;
 }
 
 void Game::onLogout()
 {
-  if (!m_playerData.playerDbId)
+  if (!m_gameSession.playerDbId)
   {
     error("Failed to log out", "Not logged in");
   }
 
-  info("Player " + bsgo::str(*m_playerData.playerDbId) + " logged out");
+  info("Player " + bsgo::str(*m_gameSession.playerDbId) + " logged out");
   setScreen(Screen::LOGIN);
+  m_gameSession.playerDbId.reset();
+  m_gameSession.systemDbId.reset();
 }
 
 void Game::onActiveShipChanged()
@@ -330,6 +330,54 @@ void Game::onPlayerKilled()
   {
     setScreen(Screen::GAME);
   }
+}
+
+void Game::onLoadingStarted(const bsgo::Uuid systemDbId, const bsgo::Uuid playerDbId)
+{
+  if (m_state.screen == Screen::LOADING)
+  {
+    error("Unexpected start of loading process", "Already in loading screen");
+  }
+  if (!m_gameSession.nextScreen)
+  {
+    error("Unexpected start of loading process", "No next screen defined");
+  }
+  if (!m_gameSession.playerDbId || *m_gameSession.playerDbId != playerDbId)
+  {
+    error("Unexpected start of loading process", "Player ID mismatch");
+  }
+
+  info("starting loading process for system " + bsgo::str(systemDbId) + " and player "
+       + bsgo::str(playerDbId));
+
+  setScreen(Screen::LOADING);
+  m_gameSession.systemDbId = systemDbId;
+  m_dataSource.setPlayerDbId(playerDbId);
+
+  m_coordinator->clear();
+  m_entityMapper.clear();
+
+  m_entityMapper.setPlayerDbId(playerDbId);
+}
+
+void Game::onLoadingFinished()
+{
+  if (m_state.screen != Screen::LOADING)
+  {
+    error("Unexpected end of loading process", "Not in loading screen");
+  }
+  if (!m_gameSession.nextScreen)
+  {
+    error("Unexpected end of loading process", "No next screen defined");
+  }
+
+  const auto nextScreen = *m_gameSession.nextScreen;
+  m_gameSession.nextScreen.reset();
+  setScreen(nextScreen);
+
+  info("loading finished");
+  m_dataSource.initialize(*m_coordinator, m_entityMapper);
+  resetViewsAndUi();
 }
 
 void Game::initialize(const int serverPort)
@@ -380,16 +428,14 @@ void Game::initializeMessageSystem()
 
 void Game::resetViewsAndUi()
 {
-  m_dataSource.initialize(*m_coordinator, m_entityMapper);
-
-  if (!m_playerData.playerDbId)
+  if (!m_gameSession.playerDbId)
   {
     error("Failed to reset views and UI", "Expected to have a player defined");
   }
 
-  m_views.playerView->setPlayerDbId(*m_playerData.playerDbId);
-  m_views.shopView->setPlayerDbId(*m_playerData.playerDbId);
-  m_views.serverView->setPlayerDbId(*m_playerData.playerDbId);
+  m_views.playerView->setPlayerDbId(*m_gameSession.playerDbId);
+  m_views.shopView->setPlayerDbId(*m_gameSession.playerDbId);
+  m_views.serverView->setPlayerDbId(*m_gameSession.playerDbId);
 
   auto maybePlayerShipDbId = m_entityMapper.tryGetPlayerShipDbId();
   if (!maybePlayerShipDbId)
