@@ -14,6 +14,7 @@
 #include "JumpMessage.hh"
 #include "JumpRequestedMessage.hh"
 #include "LoadingFinishedMessage.hh"
+#include "LoadingStartedMessage.hh"
 #include "LoginMessage.hh"
 #include "LogoutMessage.hh"
 #include "LootMessage.hh"
@@ -121,6 +122,8 @@ auto MessageParser::tryReadMessage(const MessageType &type, std::istream &in)
       return readMessage<JumpRequestedMessage>(in);
     case MessageType::LOADING_FINISHED:
       return readMessage<LoadingFinishedMessage>(in);
+    case MessageType::LOADING_STARTED:
+      return readMessage<LoadingStartedMessage>(in);
     case MessageType::LOGIN:
       return readMessage<LoginMessage>(in);
     case MessageType::LOGOUT:

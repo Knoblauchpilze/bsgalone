@@ -11,6 +11,7 @@ auto assertMessagesAreEqual(const LoadingFinishedMessage &actual,
                             const LoadingFinishedMessage &expected)
 {
   EXPECT_EQ(actual.type(), expected.type());
+  EXPECT_EQ(actual.tryGetClientId(), expected.tryGetClientId());
 }
 } // namespace
 
