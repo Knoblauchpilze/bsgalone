@@ -11,7 +11,10 @@ debug:
 	cd cmake-build/Debug && \
 	cmake \
 		-DCMAKE_BUILD_TYPE=Debug \
-		../.. \
+		-DCMAKE_C_COMPILER_LAUNCHER=ccache \
+		-DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+		-S ../.. \
+		-B . \
 	&& \
 	make -j ${NB_PROCS}
 
@@ -21,7 +24,10 @@ debugWithTests:
 	cmake \
 		-DCMAKE_BUILD_TYPE=Debug \
 		-DENABLE_TESTS=ON \
-		../.. \
+		-DCMAKE_C_COMPILER_LAUNCHER=ccache \
+		-DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+		-S ../.. \
+		-B . \
 	&& \
 	make -j ${NB_PROCS}
 
@@ -30,7 +36,10 @@ release:
 	cd cmake-build/Release && \
 	cmake \
 		-DCMAKE_BUILD_TYPE=Release \
-		../.. \
+		-DCMAKE_C_COMPILER_LAUNCHER=ccache \
+		-DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+		-S ../.. \
+		-B . \
 	&& \
 	make -j ${NB_PROCS}
 

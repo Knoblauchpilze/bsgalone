@@ -67,6 +67,7 @@ If you do so, please consider contributing the guide as an issue to help fellow 
 This projects uses (among other things):
 
 - [cmake](https://cmake.org/) as a build management system
+- [ccache](https://ccache.dev/) as a wrapper to speed up the building process
 - [asio](https://think-async.com/Asio/) as a networking library
 - [postgresql](https://www.postgresql.org/) to create a database server
 - [libpqxx](https://github.com/jtv/libpqxx) to establish database connections in the applications
@@ -88,7 +89,8 @@ apt update
 # Skip this if you already have the basics installed
 apt install -y --no-install-recommends \
   cmake \
-  build-essential
+  build-essential \
+  ccache
 
 # To not request information when installing libgl-dev
 export DEBIAN_FRONTEND="interactive"

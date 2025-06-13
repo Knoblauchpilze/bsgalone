@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   build-essential=12.10ubuntu1 \
   wget=1.21.4-1ubuntu4.1 \
   cmake=3.28.3-1build7 \
+  ccache=4.9.1-1 \
   pkg-config=1.8.1-2build1 \
   libpq-dev=16.9-0ubuntu0.24.04.1 \
   libx11-dev=2:1.8.7-1build1 \
