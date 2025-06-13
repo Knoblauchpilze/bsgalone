@@ -7,6 +7,7 @@
 
 namespace bsgo {
 
+// Dummy
 enum class MessageType
 {
   COMPONENT_SYNC,
