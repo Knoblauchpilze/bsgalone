@@ -44,7 +44,12 @@ jobs:
       # https://github.com/actions/upload-artifact/issues/38
       - name: Compress build folder
         run: |
-          tar --exclude='ccache' -cvf build-data.tar .
+          tar \
+            --exclude='ccache' \
+            --exclude='cmake-build' \
+            -cvf \
+            build-data.tar \
+            .
       - name: Upload build result
         uses: actions/upload-artifact@v4
         with:
