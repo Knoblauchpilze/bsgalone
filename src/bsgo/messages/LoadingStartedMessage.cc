@@ -1,0 +1,58 @@
+
+#include "LoadingStartedMessage.hh"
+#include "SerializationUtils.hh"
+
+namespace bsgo {
+
+LoadingStartedMessage::LoadingStartedMessage()
+  : NetworkMessage(MessageType::LOADING_STARTED)
+{}
+
+LoadingStartedMessage::LoadingStartedMessage(const Uuid systemDbId, const Uuid playerDbId)
+  : NetworkMessage(MessageType::LOADING_STARTED)
+  , m_systemDbId(systemDbId)
+  , m_playerDbId(playerDbId)
+{}
+
+auto LoadingStartedMessage::getSystemDbId() const -> Uuid
+{
+  return m_systemDbId;
+}
+
+auto LoadingStartedMessage::getPlayerDbId() const -> Uuid
+{
+  return m_playerDbId;
+}
+
+auto LoadingStartedMessage::serialize(std::ostream &out) const -> std::ostream &
+{
+  core::serialize(out, m_messageType);
+  core::serialize(out, m_clientId);
+
+  core::serialize(out, m_systemDbId);
+  core::serialize(out, m_playerDbId);
+
+  return out;
+}
+
+bool LoadingStartedMessage::deserialize(std::istream &in)
+{
+  bool ok{true};
+  ok &= core::deserialize(in, m_messageType);
+  ok &= core::deserialize(in, m_clientId);
+
+  ok &= core::deserialize(in, m_systemDbId);
+  ok &= core::deserialize(in, m_playerDbId);
+
+  return ok;
+}
+
+auto LoadingStartedMessage::clone() const -> IMessagePtr
+{
+  auto clone = std::make_unique<LoadingStartedMessage>(m_systemDbId, m_playerDbId);
+  clone->copyClientIdIfDefined(*this);
+
+  return clone;
+}
+
+} // namespace bsgo

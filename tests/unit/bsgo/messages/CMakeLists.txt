@@ -19,6 +19,8 @@ target_sources(unitTests PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/JumpCancelledMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/JumpMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/JumpRequestedMessageTest.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/LoadingStartedMessageTest.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/LoadingFinishedMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LoginMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LogoutMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LootMessageTest.cc
