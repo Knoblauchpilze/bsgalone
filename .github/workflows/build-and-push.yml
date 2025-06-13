@@ -46,6 +46,7 @@ jobs:
           pwd
       - name: Build project
         run: make tests
+        # https://ccache.dev/manual/4.0.html#_location_of_the_primary_configuration_file
         env:
           CCACHE_DIR: /__w/bsgalone/bsgalone/ccache
       # https://github.com/actions/upload-artifact/issues/38
