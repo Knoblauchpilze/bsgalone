@@ -29,12 +29,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Restore ccache
-        # https://github.com/actions/cache?tab=readme-ov-file#restoring-and-saving-cache-using-a-single-action
-        uses: actions/cache@v4
+        # https://github.com/actions/cache?tab=readme-ov-file#using-a-combination-of-restore-and-save-actions
+        uses: actions/cache/restore@v4
         with:
-          path: |
-            /__w/bsgalone/bsgalone/ccache
-          key: ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}
+          path: /__w/bsgalone/bsgalone/ccache
+          key: ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}-${{ github.ref }}
+          restore-keys: ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}-master
       - name: Build project
         run: make tests
         # https://ccache.dev/manual/4.0.html#_location_of_the_primary_configuration_file
@@ -53,6 +53,12 @@ jobs:
         with:
           name: build-data
           path: build-data.tar
+      - name: Save ccache
+        # https://github.com/actions/cache/blob/main/caching-strategies.md#re-evaluate-cache-key-while-saving-cache
+        uses: actions/cache/save@v4
+        with:
+          path: /__w/bsgalone/bsgalone/ccache
+          key: ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}-${{ github.ref }}
 
   unit-tests:
     runs-on: ubuntu-latest
