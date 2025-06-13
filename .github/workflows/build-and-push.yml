@@ -46,7 +46,6 @@ jobs:
         run: |
           tar \
             --exclude='ccache' \
-            --exclude='cmake-build' \
             -cvf \
             build-data.tar \
             .
