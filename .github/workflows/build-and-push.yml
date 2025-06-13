@@ -36,15 +36,18 @@ jobs:
         # https://github.com/actions/cache?tab=readme-ov-file#restoring-and-saving-cache-using-a-single-action
         uses: actions/cache@v4
         with:
-          path: /__w/bsgalone/bsgalone/cmake-build
+          path: |
+            /__w/bsgalone/bsgalone/cmake-build
+            /__w/bsgalone/bsgalone/ccache
           key: ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}-ccache
       - name: debug 2
         run: |
           ls -la
           pwd
       - name: Build project
-        run: |
-          make tests
+        run: make tests
+        env:
+          CCACHE_DIR: /__w/bsgalone/bsgalone/ccache
       # https://github.com/actions/upload-artifact/issues/38
       - name: Compress build folder
         run: |
