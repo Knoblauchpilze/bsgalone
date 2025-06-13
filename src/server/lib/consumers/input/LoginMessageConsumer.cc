@@ -1,13 +1,17 @@
 
 #include "LoginMessageConsumer.hh"
+#include "LoadingFinishedMessage.hh"
+#include "LoadingStartedMessage.hh"
 
 namespace bsgo {
 
 LoginMessageConsumer::LoginMessageConsumer(LoginServicePtr loginService,
                                            ClientManagerShPtr clientManager,
+                                           SystemProcessorMap systemProcessors,
                                            IMessageQueue *const messageQueue)
   : AbstractMessageConsumer("login", {MessageType::LOGIN})
   , m_loginService(std::move(loginService))
+  , m_systemProcessors(std::move(systemProcessors))
   , m_clientManager(std::move(clientManager))
   , m_messageQueue(messageQueue)
 {
@@ -37,6 +41,7 @@ void LoginMessageConsumer::onMessageReceived(const IMessage &message)
 
 void LoginMessageConsumer::handleLogin(const LoginMessage &message) const
 {
+  const auto clientId = message.getClientId();
   const auto name     = message.getUserName();
   const auto password = message.getUserPassword();
 
@@ -55,12 +60,33 @@ void LoginMessageConsumer::handleLogin(const LoginMessage &message) const
   auto out = std::make_unique<LoginMessage>(name, password, playerDbId);
   out->validate();
   out->copyClientIdIfDefined(message);
-  m_messageQueue->pushMessage(std::move(out));
 
-  // TODO: We could have a similar logic as in LogoutMessageConsumer. Using the client
-  // manager we could get the system id of the player and send a PlayerListMessage there
-  // We also have access to the client id so it can be used to send the players' list
-  // only to the relevant client
+  m_messageQueue->pushMessage(std::move(out));
+  publishLoadingMessages(clientId, *playerDbId);
 }
 
+void LoginMessageConsumer::publishLoadingMessages(const bsgo::Uuid clientId,
+                                                  const bsgo::Uuid playerDbId) const
+{
+  const auto maybeSystemDbId = m_clientManager->tryGetSystemForClient(clientId);
+  if (!maybeSystemDbId)
+  {
+    error("Failed to process login message for " + str(playerDbId), "No associated system");
+  }
+
+  const auto maybeProcessor = m_systemProcessors.find(*maybeSystemDbId);
+  if (maybeProcessor == m_systemProcessors.cend())
+  {
+    error("Failed to process login message for " + str(playerDbId),
+          "Unknown system " + str(*maybeSystemDbId));
+  }
+
+  auto started = std::make_unique<LoadingStartedMessage>();
+  started->setClientId(clientId);
+  maybeProcessor->second->pushMessage(std::move(started));
+
+  auto finished = std::make_unique<LoadingFinishedMessage>();
+  finished->setClientId(clientId);
+  maybeProcessor->second->pushMessage(std::move(finished));
+}
 } // namespace bsgo

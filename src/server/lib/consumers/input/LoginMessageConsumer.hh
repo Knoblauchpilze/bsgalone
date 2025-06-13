@@ -6,6 +6,7 @@
 #include "IMessageQueue.hh"
 #include "LoginMessage.hh"
 #include "LoginService.hh"
+#include "SystemProcessor.hh"
 
 namespace bsgo {
 
@@ -14,6 +15,7 @@ class LoginMessageConsumer : public AbstractMessageConsumer
   public:
   LoginMessageConsumer(LoginServicePtr loginService,
                        ClientManagerShPtr clientManager,
+                       SystemProcessorMap systemProcessors,
                        IMessageQueue *const messageQueue);
   ~LoginMessageConsumer() override = default;
 
@@ -21,10 +23,12 @@ class LoginMessageConsumer : public AbstractMessageConsumer
 
   private:
   LoginServicePtr m_loginService{};
+  SystemProcessorMap m_systemProcessors{};
   ClientManagerShPtr m_clientManager{};
   IMessageQueue *const m_messageQueue{};
 
   void handleLogin(const LoginMessage &message) const;
+  void publishLoadingMessages(const bsgo::Uuid clientId, const bsgo::Uuid playerDbId) const;
 };
 
 } // namespace bsgo

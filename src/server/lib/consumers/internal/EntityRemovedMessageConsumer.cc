@@ -1,5 +1,6 @@
 
 #include "EntityRemovedMessageConsumer.hh"
+#include "EntityRemovedMessage.hh"
 #include "SystemProcessorUtils.hh"
 
 namespace bsgo {
@@ -14,13 +15,13 @@ EntityRemovedMessageConsumer::EntityRemovedMessageConsumer(SystemServiceShPtr sy
 {
   addModule("removed");
 
-  if (nullptr == m_messageQueue)
-  {
-    throw std::invalid_argument("Expected non null message queue");
-  }
   if (nullptr == m_systemService)
   {
     throw std::invalid_argument("Expected non null system service");
+  }
+  if (nullptr == m_messageQueue)
+  {
+    throw std::invalid_argument("Expected non null message queue");
   }
 }
 

@@ -2,7 +2,6 @@
 #pragma once
 
 #include "AbstractMessageConsumer.hh"
-#include "EntityRemovedMessage.hh"
 #include "IMessageQueue.hh"
 #include "SystemProcessor.hh"
 #include "SystemService.hh"

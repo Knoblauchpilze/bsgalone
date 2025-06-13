@@ -8,6 +8,7 @@
 #include "HangarMessageConsumer.hh"
 #include "JumpCancelledMessageConsumer.hh"
 #include "JumpRequestedMessageConsumer.hh"
+#include "LoadingMessagesConsumer.hh"
 #include "PurchaseMessageConsumer.hh"
 #include "SlotMessageConsumer.hh"
 #include "TargetMessageConsumer.hh"
@@ -51,6 +52,9 @@ void createMessageConsumers(IMessageQueue &inputMessagesQueue,
 
   inputMessagesQueue.addListener(
     std::make_unique<EntityAddedMessageConsumer>(services, outputMessagesQueue));
+
+  inputMessagesQueue.addListener(
+    std::make_unique<LoadingMessagesConsumer>(services, outputMessagesQueue));
 }
 
 } // namespace bsgo
