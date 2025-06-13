@@ -19,9 +19,11 @@ class LoadingMessagesConsumer : public AbstractMessageConsumer
   void onMessageReceived(const IMessage &message) override;
 
   private:
+  LoadingServiceShPtr m_loadingService{};
   IMessageQueue *const m_messageQueue{};
 
   void forwardLoadingStartedMessage(const LoadingStartedMessage &message) const;
+  void handlePlayersLoading(const PlayerListMessage &message) const;
   void forwardLoadingFinishedMessage(const LoadingFinishedMessage &message) const;
 };
 

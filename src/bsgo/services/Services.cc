@@ -19,12 +19,7 @@ auto createServices(const ProcessingMode processingMode,
                                                repositories,
                                                coordinator,
                                                entityMapper);
-  // TODO: We could add a loading/login service which would be responsible to handle
-  // the PlayerListMessage and other similar messages to send the loading data to
-  // each client
-  // This service would perform what is done in the PlayerDataSource::initialize and
-  // similar methods by fetching the players, ships, etc. from the database and then
-  // sending them to the clients.
+  out.loading  = std::make_shared<LoadingService>(repositories);
 
   return out;
 }

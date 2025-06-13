@@ -8,6 +8,7 @@ namespace pge {
 enum class Screen
 {
   LOGIN,
+  LOADING,
   GAME,
   MAP,
   OUTPOST,
