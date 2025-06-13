@@ -33,7 +33,6 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            /__w/bsgalone/bsgalone/cmake-build
             /__w/bsgalone/bsgalone/ccache
           key: ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}
       - name: Build project
