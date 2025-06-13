@@ -34,7 +34,7 @@ class ShopView : public AbstractView
   ShopView(const Repositories &repositories);
   ~ShopView() override = default;
 
-  void setPlayerDbId(const std::optional<Uuid> player);
+  void setPlayerDbId(const Uuid player);
   bool isReady() const noexcept override;
 
   auto getShopItems() const -> std::vector<ShopItem>;

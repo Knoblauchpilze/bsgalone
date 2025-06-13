@@ -382,9 +382,9 @@ void Game::resetViewsAndUi()
     error("Failed to reset views and UI", "Expected to have a player defined");
   }
 
-  m_views.playerView->setPlayerDbId(maybePlayerDbId);
-  m_views.shopView->setPlayerDbId(maybePlayerDbId);
-  m_views.serverView->setPlayerDbId(maybePlayerDbId);
+  m_views.playerView->setPlayerDbId(*maybePlayerDbId);
+  m_views.shopView->setPlayerDbId(*maybePlayerDbId);
+  m_views.serverView->setPlayerDbId(*maybePlayerDbId);
 
   auto maybePlayerShipDbId = m_entityMapper.tryGetPlayerShipDbId();
   if (!maybePlayerShipDbId)
