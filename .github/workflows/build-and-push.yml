@@ -25,31 +25,44 @@ jobs:
     # https://docs.github.com/en/actions/writing-workflows/choosing-where-your-workflow-runs/running-jobs-in-a-container#example-running-a-job-within-a-container
     # https://github.com/orgs/community/discussions/26324
     # Need to be kept in sync with the relevant CI docker image
-    container: totocorpsoftwareinc/ci-cpp-build-image:b5849ab
+    container: totocorpsoftwareinc/ci-cpp-build-image:504e327
     steps:
       - uses: actions/checkout@v4
-      - name: Cache build result
-        # https://github.com/actions/cache?tab=readme-ov-file#restoring-and-saving-cache-using-a-single-action
-        uses: actions/cache@v4
+      - name: Restore ccache
+        # https://github.com/actions/cache?tab=readme-ov-file#using-a-combination-of-restore-and-save-actions
+        uses: actions/cache/restore@v4
         with:
-          path: .
-          key: ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}
+          path: /__w/bsgalone/bsgalone/ccache
+          key: ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}-${{ github.ref_name }}
+          restore-keys: ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}-master
       - name: Build project
-        run: |
-          make tests
+        run: make tests
+        # https://ccache.dev/manual/4.0.html#_location_of_the_primary_configuration_file
+        env:
+          CCACHE_DIR: /__w/bsgalone/bsgalone/ccache
       # https://github.com/actions/upload-artifact/issues/38
       - name: Compress build folder
         run: |
-          tar -cvf build-data.tar .
+          tar \
+            --exclude='ccache' \
+            -cf \
+            build-data.tar \
+            .
       - name: Upload build result
         uses: actions/upload-artifact@v4
         with:
           name: build-data
           path: build-data.tar
+      - name: Save ccache
+        # https://github.com/actions/cache/blob/main/caching-strategies.md#re-evaluate-cache-key-while-saving-cache
+        uses: actions/cache/save@v4
+        with:
+          path: /__w/bsgalone/bsgalone/ccache
+          key: ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}-${{ github.ref_name }}
 
   unit-tests:
     runs-on: ubuntu-latest
-    container: totocorpsoftwareinc/ci-cpp-build-image:b5849ab
+    container: totocorpsoftwareinc/ci-cpp-build-image:504e327
     needs: [build]
     steps:
       - name: Download build data
@@ -58,7 +71,7 @@ jobs:
           name: build-data
       - name: Uncompress build data
         run: |
-          tar -xvf build-data.tar
+          tar -xf build-data.tar
       - name: Run tests
         run: |
           ./sandbox/bin/unitTests
@@ -83,7 +96,7 @@ jobs:
 
   integration-tests:
     runs-on: ubuntu-latest
-    container: totocorpsoftwareinc/ci-cpp-build-image:b5849ab
+    container: totocorpsoftwareinc/ci-cpp-build-image:504e327
     needs: [build]
     steps:
       - name: Download build data
@@ -92,7 +105,7 @@ jobs:
           name: build-data
       - name: Uncompress build data
         run: |
-          tar -xvf build-data.tar
+          tar -xf build-data.tar
       - name: Run tests
         run: |
           ./sandbox/bin/integrationTests

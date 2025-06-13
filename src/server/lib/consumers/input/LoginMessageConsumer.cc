@@ -96,4 +96,28 @@ void LoginMessageConsumer::publishLoadingMessages(const bsgo::Uuid clientId,
   maybeProcessor->second->pushMessage(std::move(finished));
 }
 
+void LoginMessageConsumer::publishLoadingMessages(const bsgo::Uuid clientId,
+                                                  const bsgo::Uuid playerDbId) const
+{
+  const auto maybeSystemDbId = m_clientManager->tryGetSystemForClient(clientId);
+  if (!maybeSystemDbId)
+  {
+    error("Failed to process login message for " + str(playerDbId), "No associated system");
+  }
+
+  const auto maybeProcessor = m_systemProcessors.find(*maybeSystemDbId);
+  if (maybeProcessor == m_systemProcessors.cend())
+  {
+    error("Failed to process login message for " + str(playerDbId),
+          "Unknown system " + str(*maybeSystemDbId));
+  }
+
+  auto started = std::make_unique<LoadingStartedMessage>();
+  started->setClientId(clientId);
+  maybeProcessor->second->pushMessage(std::move(started));
+
+  auto finished = std::make_unique<LoadingFinishedMessage>();
+  finished->setClientId(clientId);
+  maybeProcessor->second->pushMessage(std::move(finished));
+}
 } // namespace bsgo
