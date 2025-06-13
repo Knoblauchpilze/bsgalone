@@ -23,7 +23,7 @@ class PGEApp : public core::CoreObject
   public:
   /// @brief - Create a new default pixel game engine app.
   /// @param desc - contains all the needed information to create the canvas needed
-  /// by the app and set up base properties.
+  /// by the app and set up base properties.s
   PGEApp(const AppDesc &desc);
 
   ~PGEApp() override;

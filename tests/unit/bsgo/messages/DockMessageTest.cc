@@ -15,7 +15,7 @@ auto assertMessagesAreEqual(const DockMessage &actual, const DockMessage &expect
   EXPECT_EQ(actual.getSystemDbId(), expected.getSystemDbId());
   EXPECT_EQ(actual.tryGetClientId(), expected.tryGetClientId());
   EXPECT_EQ(actual.validated(), expected.validated());
-  EXPECT_EQ(actual.validated(), expected.validated());
+  EXPECT_NE(actual.validated(), expected.validated());
 }
 } // namespace
 
