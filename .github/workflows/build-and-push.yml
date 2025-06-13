@@ -45,7 +45,7 @@ jobs:
         run: |
           tar \
             --exclude='ccache' \
-            -cvf \
+            -cf \
             build-data.tar \
             .
       - name: Upload build result
@@ -65,7 +65,7 @@ jobs:
           name: build-data
       - name: Uncompress build data
         run: |
-          tar -xvf build-data.tar
+          tar -xf build-data.tar
       - name: Run tests
         run: |
           ./sandbox/bin/unitTests
@@ -99,7 +99,7 @@ jobs:
           name: build-data
       - name: Uncompress build data
         run: |
-          tar -xvf build-data.tar
+          tar -xf build-data.tar
       - name: Run tests
         run: |
           ./sandbox/bin/integrationTests
