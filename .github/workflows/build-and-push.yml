@@ -28,7 +28,7 @@ jobs:
     container: totocorpsoftwareinc/ci-cpp-build-image:504e327
     steps:
       - uses: actions/checkout@v4
-      - name: Cache build result
+      - name: Restore ccache
         # https://github.com/actions/cache?tab=readme-ov-file#restoring-and-saving-cache-using-a-single-action
         uses: actions/cache@v4
         with:
