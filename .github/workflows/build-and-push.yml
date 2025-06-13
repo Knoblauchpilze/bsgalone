@@ -33,7 +33,7 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: /__w/bsgalone/bsgalone/ccache
-          key: ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}-${{ github.ref }}
+          key: ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}-${{ github.ref_name }}-2
           restore-keys: ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}-master
       - name: Build project
         run: make tests
@@ -58,7 +58,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: /__w/bsgalone/bsgalone/ccache
-          key: ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}-${{ github.ref }}
+          key: ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}-${{ github.ref_name }}
 
   unit-tests:
     runs-on: ubuntu-latest
