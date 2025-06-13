@@ -28,12 +28,16 @@ jobs:
     container: totocorpsoftwareinc/ci-cpp-build-image:504e327
     steps:
       - uses: actions/checkout@v4
+      - name: Generate cache key
+        id: cache-key
+        run: |
+          echo "key=$(echo ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}-${{ github.ref_name }}-3 | sed 's#/#-#g')" >> $GITHUB_OUTPUT
       - name: Restore ccache
         # https://github.com/actions/cache?tab=readme-ov-file#using-a-combination-of-restore-and-save-actions
         uses: actions/cache/restore@v4
         with:
           path: /__w/bsgalone/bsgalone/ccache
-          key: ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}-${{ github.ref_name }}-2
+          key: ${{ steps.cache-key.outputs.key }}
           restore-keys: ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}-master
       - name: Build project
         run: make tests
@@ -58,7 +62,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: /__w/bsgalone/bsgalone/ccache
-          key: ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}-${{ github.ref_name }}-2
+          key: ${{ steps.cache-key.outputs.key }}
 
   unit-tests:
     runs-on: ubuntu-latest
