@@ -27,6 +27,10 @@ auto str(const MessageType &type) -> std::string
       return "jump_cancelled";
     case MessageType::JUMP_REQUESTED:
       return "jump_requested";
+    case MessageType::LOADING_STARTED:
+      return "loading_started";
+    case MessageType::LOADING_FINISHED:
+      return "loading_finished";
     case MessageType::LOGIN:
       return "login";
     case MessageType::LOGOUT:
@@ -56,7 +60,7 @@ auto str(const MessageType &type) -> std::string
   }
 }
 
-auto allMessageTypes() -> std::array<MessageType, 22>
+auto allMessageTypes() -> std::array<MessageType, 24>
 {
   return {MessageType::COMPONENT_SYNC,
           MessageType::CONNECTION,
@@ -68,11 +72,13 @@ auto allMessageTypes() -> std::array<MessageType, 22>
           MessageType::JUMP,
           MessageType::JUMP_CANCELLED,
           MessageType::JUMP_REQUESTED,
+          MessageType::LOADING_STARTED,
+          MessageType::LOADING_FINISHED,
           MessageType::LOOT,
-          MessageType::PLAYER_LIST,
-          MessageType::PURCHASE,
           MessageType::LOGIN,
           MessageType::LOGOUT,
+          MessageType::PLAYER_LIST,
+          MessageType::PURCHASE,
           MessageType::SCANNED,
           MessageType::SIGNUP,
           MessageType::SLOT,
