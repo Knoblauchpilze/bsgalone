@@ -94,6 +94,7 @@ auto readMessage(std::istream &in) -> std::optional<IMessagePtr>
 }
 } // namespace
 
+// Dummy change
 auto MessageParser::tryReadMessage(const MessageType &type, std::istream &in)
   -> std::optional<IMessagePtr>
 {
