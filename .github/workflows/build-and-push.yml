@@ -33,8 +33,10 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: /__w/bsgalone/bsgalone/ccache
-          key: ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}-${{ github.ref_name }}
-          restore-keys: ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}-master
+          key: ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}-${{ github.ref_name }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}-${{ github.ref_name }}
+            ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}-master-
       - name: Build project
         run: make tests
         # https://ccache.dev/manual/4.0.html#_location_of_the_primary_configuration_file
@@ -58,7 +60,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: /__w/bsgalone/bsgalone/ccache
-          key: ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}-${{ github.ref_name }}
+          key: ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}-${{ github.ref_name }}-${{ github.sha }}
 
   unit-tests:
     runs-on: ubuntu-latest
