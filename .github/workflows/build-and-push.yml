@@ -35,7 +35,7 @@ jobs:
           path: /__w/bsgalone/bsgalone/ccache
           key: ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}-${{ github.ref_name }}-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}-${{ github.ref_name }}
+            ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}-${{ github.ref_name }}-
             ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}-master-
       - name: Build project
         run: make tests
