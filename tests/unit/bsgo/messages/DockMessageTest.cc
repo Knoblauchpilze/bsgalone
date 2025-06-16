@@ -7,7 +7,6 @@ using namespace ::testing;
 
 namespace bsgo {
 namespace {
-// Dummy change
 auto assertMessagesAreEqual(const DockMessage &actual, const DockMessage &expected)
 {
   EXPECT_EQ(actual.type(), expected.type());
