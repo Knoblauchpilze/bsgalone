@@ -13,7 +13,7 @@ jobs:
       actions: write
     steps:
       - name: Debug
-      - run: |
+        run: |
           echo The PR was merged
           echo "base ref: ${{ github.base_ref }}"
           echo "head ref: ${{ github.head_ref }}"
