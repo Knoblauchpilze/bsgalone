@@ -332,7 +332,8 @@ void Game::onPlayerKilled()
   }
 }
 
-void Game::onLoadingStarted(const bsgo::Uuid systemDbId, const bsgo::Uuid playerDbId)
+void Game::onLoadingStarted(const bsgo::Uuid systemDbId,
+                            const std::optional<bsgo::Uuid> maybePlayerDbId)
 {
   if (m_state.screen == Screen::LOADING)
   {
@@ -342,22 +343,27 @@ void Game::onLoadingStarted(const bsgo::Uuid systemDbId, const bsgo::Uuid player
   {
     error("Unexpected start of loading process", "No next screen defined");
   }
-  if (!m_gameSession.playerDbId || *m_gameSession.playerDbId != playerDbId)
+  // TODO: Should not be necessary except for the login
+  if (!maybePlayerDbId)
+  {
+    error("Unexpected start of loading process", "No player ID provided");
+  }
+  if (!m_gameSession.playerDbId || *m_gameSession.playerDbId != *maybePlayerDbId)
   {
     error("Unexpected start of loading process", "Player ID mismatch");
   }
 
   info("starting loading process for system " + bsgo::str(systemDbId) + " and player "
-       + bsgo::str(playerDbId));
+       + bsgo::str(*maybePlayerDbId));
 
   setScreen(Screen::LOADING);
   m_gameSession.systemDbId = systemDbId;
-  m_dataSource.setPlayerDbId(playerDbId);
+  m_dataSource.setPlayerDbId(*maybePlayerDbId);
 
   m_coordinator->clear();
   m_entityMapper.clear();
 
-  m_entityMapper.setPlayerDbId(playerDbId);
+  m_entityMapper.setPlayerDbId(*maybePlayerDbId);
 }
 
 void Game::onLoadingFinished()
