@@ -3,6 +3,8 @@
 #include "EntityAddedMessage.hh"
 #include "EntityRemovedMessage.hh"
 #include "JumpMessage.hh"
+#include "LoadingFinishedMessage.hh"
+#include "LoadingStartedMessage.hh"
 
 namespace bsgo {
 
@@ -46,6 +48,7 @@ void JumpMessageConsumer::onMessageReceived(const IMessage &message)
 
   m_clientManager->updateSystemForPlayer(jump.getPlayerDbId(), res.destinationSystem);
   handlePostJumpSystemMessages(shipDbId, res.sourceSystem, res.destinationSystem);
+  handleLoadingMessages(playerDbId, res.destinationSystem);
 
   auto out = std::make_unique<JumpMessage>(shipDbId,
                                            playerDbId,
@@ -65,7 +68,7 @@ void JumpMessageConsumer::handlePostJumpSystemMessages(const Uuid shipDbId,
   if (maybeSourceProcessor == m_systemProcessors.cend()
       || maybeDestinationProcessor == m_systemProcessors.cend())
   {
-    warn("Failed to process ship removed message for " + str(shipDbId), "No system for ship");
+    warn("Failed to process jump message for " + str(shipDbId), "No system for ship");
     return;
   }
 
@@ -84,6 +87,25 @@ void JumpMessageConsumer::handlePostJumpSystemMessages(const Uuid shipDbId,
                                                     destinationSystemDbId);
   debug("Pushing added message to " + str(destinationSystemDbId));
   destinationProcessor->pushMessage(std::move(added));
+}
+
+void JumpMessageConsumer::handleLoadingMessages(const Uuid playerDbId,
+                                                const Uuid destinationSystemDbId)
+{
+  const auto maybeDestinationProcessor = m_systemProcessors.find(destinationSystemDbId);
+  if (maybeDestinationProcessor == m_systemProcessors.cend())
+  {
+    warn("Failed to process jump message for " + str(playerDbId), "No destination system for ship");
+    return;
+  }
+
+  debug("Pushing loading messages to " + str(destinationSystemDbId));
+
+  auto started = std::make_unique<LoadingStartedMessage>(destinationSystemDbId, playerDbId);
+  maybeDestinationProcessor->second->pushMessage(std::move(started));
+
+  auto finished = std::make_unique<LoadingFinishedMessage>(destinationSystemDbId, playerDbId);
+  maybeDestinationProcessor->second->pushMessage(std::move(finished));
 }
 
 } // namespace bsgo
