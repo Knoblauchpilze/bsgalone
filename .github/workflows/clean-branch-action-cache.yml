@@ -12,14 +12,11 @@ jobs:
     permissions:
       actions: write
     steps:
-      - name: Debug
+      - name: Print PR information
         run: |
-          echo The PR was merged
-          echo "base ref: ${{ github.base_ref }}"
-          echo "head ref: ${{ github.head_ref }}"
-          echo "ref: ${{ github.ref }}"
-          echo "ref name: ${{ github.ref_name }}"
-          echo "branch: refs/pull/${{ github.event.pull_request.number }}/merge"
+          echo "Base ref:: ${{ github.base_ref }}"
+          echo "Head ref: ${{ github.head_ref }}"
+          echo "Proceeding with ref: refs/heads/${{ github.head_ref }}:"
       - name: Clean cache
         # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/caching-dependencies-to-speed-up-workflows#force-deleting-cache-entries
         run: |
