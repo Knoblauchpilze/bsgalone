@@ -8,6 +8,11 @@ LoadingFinishedMessage::LoadingFinishedMessage()
   : NetworkMessage(MessageType::LOADING_FINISHED)
 {}
 
+LoadingFinishedMessage::LoadingFinishedMessage(const Uuid systemDbId)
+  : NetworkMessage(MessageType::LOADING_FINISHED)
+  , m_systemDbId(systemDbId)
+{}
+
 LoadingFinishedMessage::LoadingFinishedMessage(const Uuid systemDbId, const Uuid playerDbId)
   : NetworkMessage(MessageType::LOADING_FINISHED)
   , m_systemDbId(systemDbId)
@@ -19,7 +24,7 @@ auto LoadingFinishedMessage::getSystemDbId() const -> Uuid
   return m_systemDbId;
 }
 
-auto LoadingFinishedMessage::getPlayerDbId() const -> Uuid
+auto LoadingFinishedMessage::tryGetPlayerDbId() const -> std::optional<Uuid>
 {
   return m_playerDbId;
 }
@@ -49,7 +54,17 @@ bool LoadingFinishedMessage::deserialize(std::istream &in)
 
 auto LoadingFinishedMessage::clone() const -> IMessagePtr
 {
-  auto clone = std::make_unique<LoadingFinishedMessage>(m_systemDbId, m_playerDbId);
+  std::unique_ptr<LoadingFinishedMessage> clone{};
+
+  if (m_playerDbId)
+  {
+    clone = std::make_unique<LoadingFinishedMessage>(m_systemDbId, *m_playerDbId);
+  }
+  else
+  {
+    clone = std::make_unique<LoadingFinishedMessage>(m_systemDbId);
+  }
+
   clone->copyClientIdIfDefined(*this);
 
   return clone;

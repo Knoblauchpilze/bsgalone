@@ -4,6 +4,8 @@
 #include "EntityAddedMessage.hh"
 #include "EntityRemovedMessage.hh"
 #include "JumpMessage.hh"
+#include "LoadingFinishedMessage.hh"
+#include "LoadingStartedMessage.hh"
 #include "LootMessage.hh"
 #include "MessageProcessor.hh"
 #include "NetworkMessage.hh"
@@ -47,7 +49,11 @@ void BroadcastMessageQueue::processMessages(const std::optional<int> &amount)
 
 namespace {
 const std::unordered_set<MessageType> NON_BROADCASTABLE_MESSAGES
-  = {MessageType::LOOT, MessageType::SCANNED, MessageType::SLOT_COMPONENT_UPDATED};
+  = {MessageType::LOOT,
+     MessageType::SCANNED,
+     MessageType::SLOT_COMPONENT_UPDATED,
+     MessageType::LOADING_STARTED,
+     MessageType::LOADING_FINISHED};
 
 bool shouldTryToDetermineClientId(const IMessage &message)
 {
@@ -141,6 +147,19 @@ auto determineClientFor(const T &message, const ClientManager &clientManager) ->
 {
   return clientManager.getClientIdForPlayer(message.getPlayerDbId());
 }
+
+template<typename T>
+auto maybeDetermineClientFor(const T &message, const ClientManager &clientManager)
+  -> std::optional<Uuid>
+{
+  const std::optional<Uuid> maybePlayerDbId = message.tryGetPlayerDbId();
+  if (!maybePlayerDbId)
+  {
+    return {};
+  }
+
+  return clientManager.getClientIdForPlayer(*maybePlayerDbId);
+}
 } // namespace
 
 auto BroadcastMessageQueue::tryDetermineClientId(const IMessage &message) const
@@ -154,6 +173,10 @@ auto BroadcastMessageQueue::tryDetermineClientId(const IMessage &message) const
       return determineClientFor(message.as<ScannedMessage>(), *m_clientManager);
     case MessageType::SLOT_COMPONENT_UPDATED:
       return determineClientFor(message.as<SlotComponentMessage>(), *m_clientManager);
+    case MessageType::LOADING_STARTED:
+      return maybeDetermineClientFor(message.as<LoadingStartedMessage>(), *m_clientManager);
+    case MessageType::LOADING_FINISHED:
+      return maybeDetermineClientFor(message.as<LoadingFinishedMessage>(), *m_clientManager);
     default:
       error("Failed to determine client id", "Unsupported message type " + str(message.type()));
       break;

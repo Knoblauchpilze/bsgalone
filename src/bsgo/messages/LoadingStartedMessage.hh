@@ -10,11 +10,12 @@ class LoadingStartedMessage : public NetworkMessage
 {
   public:
   LoadingStartedMessage();
+  LoadingStartedMessage(const Uuid systemDbId);
   LoadingStartedMessage(const Uuid systemDbId, const Uuid playerDbId);
   ~LoadingStartedMessage() override = default;
 
   auto getSystemDbId() const -> Uuid;
-  auto getPlayerDbId() const -> Uuid;
+  auto tryGetPlayerDbId() const -> std::optional<Uuid>;
 
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
@@ -23,7 +24,7 @@ class LoadingStartedMessage : public NetworkMessage
 
   private:
   Uuid m_systemDbId{};
-  Uuid m_playerDbId{};
+  std::optional<Uuid> m_playerDbId{};
 };
 
 } // namespace bsgo
