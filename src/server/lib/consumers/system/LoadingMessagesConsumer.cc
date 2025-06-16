@@ -44,11 +44,7 @@ void LoadingMessagesConsumer::onMessageReceived(const IMessage &message)
 
 void LoadingMessagesConsumer::forwardLoadingStartedMessage(const LoadingStartedMessage &message) const
 {
-  auto out = std::make_unique<LoadingStartedMessage>(message.getSystemDbId(),
-                                                     message.getPlayerDbId());
-  out->copyClientIdIfDefined(message);
-
-  m_messageQueue->pushMessage(std::move(out));
+  m_messageQueue->pushMessage(message.clone());
 }
 
 void LoadingMessagesConsumer::handlePlayersLoading(const PlayerListMessage &message) const
@@ -75,10 +71,7 @@ void LoadingMessagesConsumer::handlePlayersLoading(const PlayerListMessage &mess
 void LoadingMessagesConsumer::forwardLoadingFinishedMessage(
   const LoadingFinishedMessage &message) const
 {
-  auto out = std::make_unique<LoadingFinishedMessage>();
-  out->copyClientIdIfDefined(message);
-
-  m_messageQueue->pushMessage(std::move(out));
+  m_messageQueue->pushMessage(message.clone());
 }
 
 } // namespace bsgo

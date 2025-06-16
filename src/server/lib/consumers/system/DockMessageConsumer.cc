@@ -1,6 +1,8 @@
 
 #include "DockMessageConsumer.hh"
 #include "EntityAddedMessage.hh"
+#include "LoadingFinishedMessage.hh"
+#include "LoadingStartedMessage.hh"
 
 namespace bsgo {
 
@@ -73,6 +75,14 @@ void DockMessageConsumer::handleUndocking(const DockMessage &message) const
 
   auto added = std::make_unique<EntityAddedMessage>(shipDbId, EntityKind::SHIP, systemDbId);
   m_messageQueue->pushMessage(std::move(added));
+
+  auto started = std::make_unique<LoadingStartedMessage>(systemDbId);
+  started->copyClientIdIfDefined(message);
+  m_messageQueue->pushMessage(std::move(started));
+
+  auto finished = std::make_unique<LoadingFinishedMessage>(systemDbId);
+  finished->copyClientIdIfDefined(message);
+  m_messageQueue->pushMessage(std::move(finished));
 }
 
 } // namespace bsgo
