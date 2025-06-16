@@ -13,7 +13,7 @@ auto assertMessagesAreEqual(const LoadingFinishedMessage &actual,
   EXPECT_EQ(actual.type(), expected.type());
   EXPECT_EQ(actual.tryGetClientId(), expected.tryGetClientId());
   EXPECT_EQ(actual.getSystemDbId(), expected.getSystemDbId());
-  EXPECT_EQ(actual.getPlayerDbId(), expected.getPlayerDbId());
+  EXPECT_EQ(actual.tryGetPlayerDbId(), expected.tryGetPlayerDbId());
 }
 } // namespace
 
@@ -21,8 +21,18 @@ TEST(Unit_Bsgo_Serialization_LoadingFinishedMessage, Basic)
 {
   const LoadingFinishedMessage expected(Uuid{1234}, Uuid{7845});
 
-  LoadingFinishedMessage actual(Uuid{4}, Uuid{54});
+  LoadingFinishedMessage actual(Uuid{4});
   actual.setClientId(Uuid{12});
+
+  serializeAndDeserializeMessage(expected, actual);
+  assertMessagesAreEqual(actual, expected);
+}
+
+TEST(Unit_Bsgo_Serialization_LoadingFinishedMessage, WithoutPlayerDbId)
+{
+  const LoadingFinishedMessage expected(Uuid{32});
+
+  LoadingFinishedMessage actual(Uuid{489}, Uuid{6578});
 
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
@@ -42,6 +52,15 @@ TEST(Unit_Bsgo_Serialization_LoadingFinishedMessage, WithClientId)
 TEST(Unit_Bsgo_Serialization_LoadingFinishedMessage, Clone)
 {
   const LoadingFinishedMessage expected(Uuid{98}, Uuid{57});
+  const auto cloned = expected.clone();
+
+  ASSERT_EQ(cloned->type(), MessageType::LOADING_FINISHED);
+  assertMessagesAreEqual(cloned->as<LoadingFinishedMessage>(), expected);
+}
+
+TEST(Unit_Bsgo_Serialization_LoadingFinishedMessage, CloneWithoutPlayerDbId)
+{
+  const LoadingFinishedMessage expected(Uuid{37});
   const auto cloned = expected.clone();
 
   ASSERT_EQ(cloned->type(), MessageType::LOADING_FINISHED);

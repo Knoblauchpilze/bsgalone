@@ -8,6 +8,11 @@ LoadingStartedMessage::LoadingStartedMessage()
   : NetworkMessage(MessageType::LOADING_STARTED)
 {}
 
+LoadingStartedMessage::LoadingStartedMessage(const Uuid systemDbId)
+  : NetworkMessage(MessageType::LOADING_STARTED)
+  , m_systemDbId(systemDbId)
+{}
+
 LoadingStartedMessage::LoadingStartedMessage(const Uuid systemDbId, const Uuid playerDbId)
   : NetworkMessage(MessageType::LOADING_STARTED)
   , m_systemDbId(systemDbId)
@@ -19,7 +24,7 @@ auto LoadingStartedMessage::getSystemDbId() const -> Uuid
   return m_systemDbId;
 }
 
-auto LoadingStartedMessage::getPlayerDbId() const -> Uuid
+auto LoadingStartedMessage::tryGetPlayerDbId() const -> std::optional<Uuid>
 {
   return m_playerDbId;
 }
@@ -49,7 +54,17 @@ bool LoadingStartedMessage::deserialize(std::istream &in)
 
 auto LoadingStartedMessage::clone() const -> IMessagePtr
 {
-  auto clone = std::make_unique<LoadingStartedMessage>(m_systemDbId, m_playerDbId);
+  std::unique_ptr<LoadingStartedMessage> clone{};
+
+  if (m_playerDbId)
+  {
+    clone = std::make_unique<LoadingStartedMessage>(m_systemDbId, *m_playerDbId);
+  }
+  else
+  {
+    clone = std::make_unique<LoadingStartedMessage>(m_systemDbId);
+  }
+
   clone->copyClientIdIfDefined(*this);
 
   return clone;
