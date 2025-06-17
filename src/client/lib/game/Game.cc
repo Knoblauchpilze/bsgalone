@@ -12,6 +12,8 @@
 #include "GameScreenInputHandler.hh"
 #include "GameScreenRenderer.hh"
 #include "GameScreenUiHandler.hh"
+#include "LoadingScreenRenderer.hh"
+#include "LoadingScreenUiHandler.hh"
 #include "LoginScreenRenderer.hh"
 #include "LoginScreenUiHandler.hh"
 #include "MapScreenRenderer.hh"
@@ -77,6 +79,10 @@ void Game::generateRenderers(int width, int height, Renderer &engine)
   login->loadResources(width, height, engine.getTextureHandler());
   m_renderers[Screen::LOGIN] = std::move(login);
 
+  auto loading = std::make_unique<LoadingScreenRenderer>();
+  loading->loadResources(width, height, engine.getTextureHandler());
+  m_renderers[Screen::LOADING] = std::move(loading);
+
   auto outpost = std::make_unique<OutpostScreenRenderer>();
   outpost->loadResources(width, height, engine.getTextureHandler());
   m_renderers[Screen::OUTPOST] = std::move(outpost);
@@ -98,6 +104,7 @@ void Game::generateInputHandlers()
 void Game::generateUiHandlers(int width, int height, Renderer &engine)
 {
   m_uiHandlers[Screen::LOGIN]   = std::make_unique<LoginScreenUiHandler>(m_views);
+  m_uiHandlers[Screen::LOADING] = std::make_unique<LoadingScreenUiHandler>(m_views);
   m_uiHandlers[Screen::OUTPOST] = std::make_unique<OutpostScreenUiHandler>(m_views);
   m_uiHandlers[Screen::GAME]    = std::make_unique<GameScreenUiHandler>(m_views);
   m_uiHandlers[Screen::MAP]     = std::make_unique<MapScreenUiHandler>(m_views);
