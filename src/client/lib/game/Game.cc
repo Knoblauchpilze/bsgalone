@@ -330,6 +330,41 @@ void Game::onPlayerKilled()
   }
 }
 
+auto Game::GameSession::checkState(const Screen currentScreen) const
+  -> std::optional<SessionStateError>
+{
+  if (currentScreen != Screen::LOADING)
+  {
+    return SessionStateError{.errorMessage = "Unexpected loading screen transition",
+                             .cause        = "Current screen is " + str(currentScreen)};
+  }
+  if (!previousScreen || !nextScreen)
+  {
+    return SessionStateError{.errorMessage = "Invalid loading screen state",
+                             .cause        = "Screen transitions are ill-defined"};
+  }
+
+  return {};
+}
+
+void Game::onLoadingStarted()
+{
+  const auto sessionStateError = m_gameSession.checkState(m_state.screen);
+  if (sessionStateError)
+  {
+    error(sessionStateError->errorMessage, sessionStateError->cause);
+  }
+}
+
+void Game::onLoadingFinished()
+{
+  const auto sessionStateError = m_gameSession.checkState(m_state.screen);
+  if (sessionStateError)
+  {
+    error(sessionStateError->errorMessage, sessionStateError->cause);
+  }
+}
+
 void Game::initialize(const int serverPort)
 {
   auto connection = std::make_unique<ClientConnection>(serverPort, *m_networkContext);
