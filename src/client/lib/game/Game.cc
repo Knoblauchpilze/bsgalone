@@ -349,6 +349,8 @@ auto Game::GameSession::checkState(const Screen currentScreen) const
 
 void Game::onLoadingStarted()
 {
+  // TODO: We should not expect to be in the loading screen here. We can just populate
+  // the next screen when needed and transition to the loading screen here.
   const auto sessionStateError = m_gameSession.checkState(m_state.screen);
   if (sessionStateError)
   {
