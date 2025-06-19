@@ -292,7 +292,8 @@ void Game::onLogin(const bsgo::Uuid playerDbId)
 {
   m_dataSource.setPlayerDbId(playerDbId);
   resetViewsAndUi();
-  setScreen(Screen::OUTPOST);
+
+  m_gameSession.nextScreen = Screen::OUTPOST;
 }
 
 void Game::onLogout()
@@ -318,6 +319,19 @@ void Game::onActiveSystemChanged()
   m_views.shipDbView->clearJumpSystem();
   m_dataSource.clearSystemDbId();
   resetViewsAndUi();
+
+  m_gameSession.nextScreen = Screen::GAME;
+}
+
+void Game::onShipDocked()
+{
+  // TODO: This messes with the logic because we receive an entity removed message
+  m_gameSession.nextScreen = Screen::OUTPOST;
+}
+
+void Game::onShipUndocked()
+{
+  m_gameSession.nextScreen = Screen::GAME;
 }
 
 void Game::onPlayerKilled()
@@ -330,41 +344,33 @@ void Game::onPlayerKilled()
   }
 }
 
-auto Game::GameSession::checkState(const Screen currentScreen) const
-  -> std::optional<SessionStateError>
-{
-  if (currentScreen != Screen::LOADING)
-  {
-    return SessionStateError{.errorMessage = "Unexpected loading screen transition",
-                             .cause        = "Current screen is " + str(currentScreen)};
-  }
-  if (!previousScreen || !nextScreen)
-  {
-    return SessionStateError{.errorMessage = "Invalid loading screen state",
-                             .cause        = "Screen transitions are ill-defined"};
-  }
-
-  return {};
-}
-
 void Game::onLoadingStarted()
 {
-  // TODO: We should not expect to be in the loading screen here. We can just populate
-  // the next screen when needed and transition to the loading screen here.
-  const auto sessionStateError = m_gameSession.checkState(m_state.screen);
-  if (sessionStateError)
-  {
-    error(sessionStateError->errorMessage, sessionStateError->cause);
-  }
+  setupLoadingScreen();
+  debug("Starting loading transition to " + str(*m_gameSession.nextScreen));
 }
 
 void Game::onLoadingFinished()
 {
-  const auto sessionStateError = m_gameSession.checkState(m_state.screen);
-  if (sessionStateError)
+  if (m_state.screen != Screen::LOADING)
   {
-    error(sessionStateError->errorMessage, sessionStateError->cause);
+    error("Unexpected loading finished event", "Not in loading screen");
   }
+  if (!m_gameSession.nextScreen || !m_gameSession.previousScreen)
+  {
+    error("Unexpected loading finished event", "No next or previous screen defined");
+  }
+
+  const auto previousScreen = *m_gameSession.previousScreen;
+  const auto nextScreen     = *m_gameSession.nextScreen;
+
+  debug("Ending loading transition from " + str(previousScreen) + " to " + str(nextScreen));
+
+  m_gameSession.previousScreen.reset();
+  m_gameSession.nextScreen.reset();
+
+  m_state.screen = previousScreen;
+  setScreen(nextScreen);
 }
 
 void Game::initialize(const int serverPort)
@@ -444,6 +450,21 @@ void Game::resetViewsAndUi()
   {
     handler->reset();
   }
+}
+
+void Game::setupLoadingScreen()
+{
+  if (m_state.screen == Screen::LOADING)
+  {
+    error("Unexpected loading screen transition", "Already in loading screen");
+  }
+  if (!m_gameSession.nextScreen)
+  {
+    error("Unexpected loading screen transition", "No next screen defined");
+  }
+
+  m_gameSession.previousScreen = m_state.screen;
+  setScreen(Screen::LOADING);
 }
 
 } // namespace pge

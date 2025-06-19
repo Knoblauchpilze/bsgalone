@@ -64,6 +64,8 @@ class Game : public core::CoreObject
   void onLogout();
   void onActiveShipChanged();
   void onActiveSystemChanged();
+  void onShipDocked();
+  void onShipUndocked();
   void onPlayerKilled();
   void onLoadingStarted();
   void onLoadingFinished();
@@ -103,14 +105,6 @@ class Game : public core::CoreObject
     /// @brief - holds the screen that should be displayed after the
     /// loading phase is finished.
     std::optional<Screen> nextScreen{};
-
-    struct SessionStateError
-    {
-      std::string errorMessage{};
-      std::string cause{};
-    };
-
-    auto checkState(const Screen currentScreen) const -> std::optional<SessionStateError>;
   };
 
   /// @brief - The definition of the game state.
@@ -134,6 +128,8 @@ class Game : public core::CoreObject
   void initializeMessageSystem();
 
   void resetViewsAndUi();
+
+  void setupLoadingScreen();
 };
 
 using GameShPtr = std::shared_ptr<Game>;
