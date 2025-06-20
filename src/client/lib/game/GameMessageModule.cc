@@ -154,10 +154,11 @@ void GameMessageModule::handleEntityRemovedMessage(const bsgo::EntityRemovedMess
   }
 }
 
-void GameMessageModule::handleLoadingStartedMessage(
-  const bsgo::LoadingStartedMessage & /*message*/) const
+void GameMessageModule::handleLoadingStartedMessage(const bsgo::LoadingStartedMessage &message) const
 {
-  m_game.onLoadingStarted();
+  const auto systemDbId      = message.getSystemDbId();
+  const auto maybePlayerDbId = message.tryGetPlayerDbId();
+  m_game.onLoadingStarted(systemDbId, maybePlayerDbId);
 }
 
 void GameMessageModule::handleLoadingFinishedMessage(
@@ -165,5 +166,4 @@ void GameMessageModule::handleLoadingFinishedMessage(
 {
   m_game.onLoadingFinished();
 }
-
 } // namespace pge

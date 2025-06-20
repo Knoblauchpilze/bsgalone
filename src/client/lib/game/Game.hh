@@ -16,6 +16,7 @@
 #include "Screen.hh"
 #include "Views.hh"
 #include <memory>
+#include <optional>
 #include <unordered_map>
 
 namespace pge {
@@ -67,7 +68,8 @@ class Game : public core::CoreObject
   void onShipDocked();
   void onShipUndocked();
   void onPlayerKilled();
-  void onLoadingStarted();
+  void onLoadingStarted(const bsgo::Uuid systemDbId,
+                        const std::optional<bsgo::Uuid> maybePlayerDbId);
   void onLoadingFinished();
 
   private:

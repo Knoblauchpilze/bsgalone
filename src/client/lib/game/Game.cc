@@ -45,7 +45,7 @@ auto Game::getScreen() const noexcept -> Screen
 namespace {
 bool shouldUpdateCoordinatorAfterScreenTransition(const Screen &current, const Screen &next)
 {
-  return Screen::OUTPOST == current && Screen::GAME == next;
+  return Screen::LOADING == current && Screen::GAME == next;
 }
 } // namespace
 
@@ -290,22 +290,22 @@ void Game::onConnectedToServer(const bsgo::Uuid clientId)
 
 void Game::onLogin(const bsgo::Uuid playerDbId)
 {
-  m_dataSource.setPlayerDbId(playerDbId);
-  resetViewsAndUi();
-
+  info("processing login for " + bsgo::str(playerDbId));
+  m_gameSession.playerDbId = playerDbId;
   setupLoadingScreen(Screen::OUTPOST);
 }
 
 void Game::onLogout()
 {
-  const auto maybePlayerDbId = m_dataSource.tryGetPlayerDbId();
-  if (!maybePlayerDbId)
+  if (!m_gameSession.playerDbId)
   {
     error("Failed to log out", "Not logged in");
   }
 
-  info("Player " + bsgo::str(*maybePlayerDbId) + " logged out");
+  info("Player " + bsgo::str(*m_gameSession.playerDbId) + " logged out");
   setScreen(Screen::LOGIN);
+  m_gameSession.playerDbId.reset();
+  m_gameSession.systemDbId.reset();
 }
 
 void Game::onActiveShipChanged()
@@ -318,6 +318,7 @@ void Game::onActiveSystemChanged()
   m_views.shipView->clearJumpSystem();
   m_views.shipDbView->clearJumpSystem();
   m_dataSource.clearSystemDbId();
+  // TODO: We should set the screen to loading
   resetViewsAndUi();
 
   setupLoadingScreen(Screen::GAME);
@@ -343,13 +344,36 @@ void Game::onPlayerKilled()
   }
 }
 
-void Game::onLoadingStarted()
+void Game::onLoadingStarted(const bsgo::Uuid systemDbId,
+                            const std::optional<bsgo::Uuid> maybePlayerDbId)
 {
   if (m_state.screen != Screen::LOADING)
   {
     error("Unexpected loading started event", "Not in loading screen");
   }
   debug("Starting loading transition to " + str(*m_gameSession.nextScreen));
+
+  // TODO: Should not be necessary except for the login
+
+  if (*m_gameSession.previousScreen == Screen::LOGIN && !maybePlayerDbId)
+  {
+    error("Unexpected start of loading process", "No player ID provided");
+  }
+  if (!m_gameSession.playerDbId || *m_gameSession.playerDbId != *maybePlayerDbId)
+  {
+    error("Unexpected start of loading process", "Player ID mismatch");
+  }
+
+  info("starting loading process for system " + bsgo::str(systemDbId) + " and player "
+       + bsgo::str(*maybePlayerDbId));
+
+  m_gameSession.systemDbId = systemDbId;
+  m_dataSource.setPlayerDbId(*maybePlayerDbId);
+
+  m_coordinator->clear();
+  m_entityMapper.clear();
+
+  m_entityMapper.setPlayerDbId(*maybePlayerDbId);
 }
 
 void Game::onLoadingFinished()
@@ -371,8 +395,10 @@ void Game::onLoadingFinished()
   m_gameSession.previousScreen.reset();
   m_gameSession.nextScreen.reset();
 
-  m_state.screen = previousScreen;
-  setScreen(nextScreen);
+  m_state.screen = nextScreen;
+
+  m_dataSource.initialize(*m_coordinator, m_entityMapper);
+  resetViewsAndUi();
 }
 
 void Game::initialize(const int serverPort)
@@ -423,20 +449,14 @@ void Game::initializeMessageSystem()
 
 void Game::resetViewsAndUi()
 {
-  // TODO: We should switch to the loading screen here. Instead of calling the
-  // initialize method we wait to receive messages like the PlayerListMessage
-  // and similar to have access to the data.
-  m_dataSource.initialize(*m_coordinator, m_entityMapper);
-
-  const auto maybePlayerDbId = m_dataSource.tryGetPlayerDbId();
-  if (!maybePlayerDbId)
+  if (!m_gameSession.playerDbId)
   {
     error("Failed to reset views and UI", "Expected to have a player defined");
   }
 
-  m_views.playerView->setPlayerDbId(*maybePlayerDbId);
-  m_views.shopView->setPlayerDbId(*maybePlayerDbId);
-  m_views.serverView->setPlayerDbId(*maybePlayerDbId);
+  m_views.playerView->setPlayerDbId(*m_gameSession.playerDbId);
+  m_views.shopView->setPlayerDbId(*m_gameSession.playerDbId);
+  m_views.serverView->setPlayerDbId(*m_gameSession.playerDbId);
 
   auto maybePlayerShipDbId = m_entityMapper.tryGetPlayerShipDbId();
   if (!maybePlayerShipDbId)
