@@ -293,7 +293,7 @@ void Game::onLogin(const bsgo::Uuid playerDbId)
   m_dataSource.setPlayerDbId(playerDbId);
   resetViewsAndUi();
 
-  m_gameSession.nextScreen = Screen::OUTPOST;
+  setupLoadingScreen(Screen::OUTPOST);
 }
 
 void Game::onLogout()
@@ -320,18 +320,17 @@ void Game::onActiveSystemChanged()
   m_dataSource.clearSystemDbId();
   resetViewsAndUi();
 
-  m_gameSession.nextScreen = Screen::GAME;
+  setupLoadingScreen(Screen::GAME);
 }
 
 void Game::onShipDocked()
 {
-  // TODO: This messes with the logic because we receive an entity removed message
-  m_gameSession.nextScreen = Screen::OUTPOST;
+  setScreen(Screen::OUTPOST);
 }
 
 void Game::onShipUndocked()
 {
-  m_gameSession.nextScreen = Screen::GAME;
+  setupLoadingScreen(Screen::GAME);
 }
 
 void Game::onPlayerKilled()
@@ -346,7 +345,10 @@ void Game::onPlayerKilled()
 
 void Game::onLoadingStarted()
 {
-  setupLoadingScreen();
+  if (m_state.screen != Screen::LOADING)
+  {
+    error("Unexpected loading started event", "Not in loading screen");
+  }
   debug("Starting loading transition to " + str(*m_gameSession.nextScreen));
 }
 
@@ -452,18 +454,19 @@ void Game::resetViewsAndUi()
   }
 }
 
-void Game::setupLoadingScreen()
+void Game::setupLoadingScreen(const Screen nextScreen)
 {
   if (m_state.screen == Screen::LOADING)
   {
     error("Unexpected loading screen transition", "Already in loading screen");
   }
-  if (!m_gameSession.nextScreen)
+  if (m_gameSession.nextScreen)
   {
     error("Unexpected loading screen transition", "No next screen defined");
   }
 
   m_gameSession.previousScreen = m_state.screen;
+  m_gameSession.nextScreen     = nextScreen;
   setScreen(Screen::LOADING);
 }
 

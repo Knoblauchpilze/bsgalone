@@ -129,7 +129,7 @@ class Game : public core::CoreObject
 
   void resetViewsAndUi();
 
-  void setupLoadingScreen();
+  void setupLoadingScreen(const Screen nextScreen);
 };
 
 using GameShPtr = std::shared_ptr<Game>;
