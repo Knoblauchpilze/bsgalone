@@ -64,7 +64,11 @@ class Game : public core::CoreObject
   void onLogout();
   void onActiveShipChanged();
   void onActiveSystemChanged();
+  void onShipDocked();
+  void onShipUndocked();
   void onPlayerKilled();
+  void onLoadingStarted();
+  void onLoadingFinished();
 
   private:
   /// @brief - Convenience information defining the state of the
@@ -84,8 +88,29 @@ class Game : public core::CoreObject
     bool dead{false};
   };
 
+  /// @brief - The data associated with the current gaming session. This
+  /// include information about the player (such as the current system,
+  /// the ID of the player in the DB) but also about the game in general
+  /// such as the next screen to be displayed when waiting for loading
+  /// data to be communicated by the server.
+  struct GameSession
+  {
+    std::optional<bsgo::Uuid> systemDbId{};
+    std::optional<bsgo::Uuid> playerDbId{};
+
+    /// @brief - holds the screen that was displayed before the current
+    /// loading phase.
+    std::optional<Screen> previousScreen{};
+
+    /// @brief - holds the screen that should be displayed after the
+    /// loading phase is finished.
+    std::optional<Screen> nextScreen{};
+  };
+
   /// @brief - The definition of the game state.
   State m_state{};
+
+  GameSession m_gameSession{};
 
   bsgo::DataSource m_dataSource{bsgo::DataLoadingMode::CLIENT};
   bsgo::DatabaseEntityMapper m_entityMapper{};
@@ -103,6 +128,8 @@ class Game : public core::CoreObject
   void initializeMessageSystem();
 
   void resetViewsAndUi();
+
+  void setupLoadingScreen(const Screen nextScreen);
 };
 
 using GameShPtr = std::shared_ptr<Game>;
