@@ -13,7 +13,9 @@ const Messages GAME_CHANGING_MESSAGE_TYPES = {bsgo::MessageType::CONNECTION,
                                               bsgo::MessageType::LOGIN,
                                               bsgo::MessageType::LOGOUT,
                                               bsgo::MessageType::SIGNUP,
-                                              bsgo::MessageType::ENTITY_REMOVED};
+                                              bsgo::MessageType::ENTITY_REMOVED,
+                                              bsgo::MessageType::LOADING_STARTED,
+                                              bsgo::MessageType::LOADING_FINISHED};
 
 GameMessageModule::GameMessageModule(Game &game, const bsgo::DatabaseEntityMapper &entityMapper)
   : bsgo::AbstractMessageListener(GAME_CHANGING_MESSAGE_TYPES)
@@ -52,6 +54,12 @@ void GameMessageModule::onMessageReceived(const bsgo::IMessage &message)
     case bsgo::MessageType::SIGNUP:
       handleSignupMessage(message.as<bsgo::SignupMessage>());
       break;
+    case bsgo::MessageType::LOADING_STARTED:
+      handleLoadingStartedMessage(message.as<bsgo::LoadingStartedMessage>());
+      break;
+    case bsgo::MessageType::LOADING_FINISHED:
+      handleLoadingFinishedMessage(message.as<bsgo::LoadingFinishedMessage>());
+      break;
     default:
       error("Unsupported message type " + bsgo::str(message.type()));
       break;
@@ -77,11 +85,11 @@ void GameMessageModule::handleDockMessage(const bsgo::DockMessage &message)
 
   if (message.isDocking())
   {
-    m_game.setScreen(Screen::OUTPOST);
+    m_game.onShipDocked();
   }
   else
   {
-    m_game.setScreen(Screen::GAME);
+    m_game.onShipUndocked();
   }
 }
 
@@ -144,6 +152,18 @@ void GameMessageModule::handleEntityRemovedMessage(const bsgo::EntityRemovedMess
   {
     m_game.onPlayerKilled();
   }
+}
+
+void GameMessageModule::handleLoadingStartedMessage(
+  const bsgo::LoadingStartedMessage & /*message*/) const
+{
+  m_game.onLoadingStarted();
+}
+
+void GameMessageModule::handleLoadingFinishedMessage(
+  const bsgo::LoadingFinishedMessage & /*message*/) const
+{
+  m_game.onLoadingFinished();
 }
 
 } // namespace pge
