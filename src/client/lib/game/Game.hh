@@ -65,6 +65,8 @@ class Game : public core::CoreObject
   void onLogout();
   void onActiveShipChanged();
   void onActiveSystemChanged();
+  void onShipDocked();
+  void onShipUndocked();
   void onPlayerKilled();
   void onLoadingStarted(const bsgo::Uuid systemDbId,
                         const std::optional<bsgo::Uuid> maybePlayerDbId);
@@ -97,6 +99,13 @@ class Game : public core::CoreObject
   {
     std::optional<bsgo::Uuid> systemDbId{};
     std::optional<bsgo::Uuid> playerDbId{};
+
+    /// @brief - holds the screen that was displayed before the current
+    /// loading phase.
+    std::optional<Screen> previousScreen{};
+
+    /// @brief - holds the screen that should be displayed after the
+    /// loading phase is finished.
     std::optional<Screen> nextScreen{};
   };
 
@@ -121,6 +130,8 @@ class Game : public core::CoreObject
   void initializeMessageSystem();
 
   void resetViewsAndUi();
+
+  void setupLoadingScreen(const Screen nextScreen);
 };
 
 using GameShPtr = std::shared_ptr<Game>;

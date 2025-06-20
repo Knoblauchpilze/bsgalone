@@ -85,11 +85,11 @@ void GameMessageModule::handleDockMessage(const bsgo::DockMessage &message)
 
   if (message.isDocking())
   {
-    m_game.setScreen(Screen::OUTPOST);
+    m_game.onShipDocked();
   }
   else
   {
-    m_game.setScreen(Screen::GAME);
+    m_game.onShipUndocked();
   }
 }
 
@@ -156,7 +156,9 @@ void GameMessageModule::handleEntityRemovedMessage(const bsgo::EntityRemovedMess
 
 void GameMessageModule::handleLoadingStartedMessage(const bsgo::LoadingStartedMessage &message) const
 {
-  m_game.onLoadingStarted(message.getSystemDbId(), message.tryGetPlayerDbId());
+  const auto systemDbId      = message.getSystemDbId();
+  const auto maybePlayerDbId = message.tryGetPlayerDbId();
+  m_game.onLoadingStarted(systemDbId, maybePlayerDbId);
 }
 
 void GameMessageModule::handleLoadingFinishedMessage(

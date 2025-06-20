@@ -292,7 +292,7 @@ void Game::onLogin(const bsgo::Uuid playerDbId)
 {
   info("processing login for " + bsgo::str(playerDbId));
   m_gameSession.playerDbId = playerDbId;
-  m_gameSession.nextScreen = Screen::OUTPOST;
+  setupLoadingScreen(Screen::OUTPOST);
 }
 
 void Game::onLogout()
@@ -320,6 +320,18 @@ void Game::onActiveSystemChanged()
   m_dataSource.clearSystemDbId();
   // TODO: We should set the screen to loading
   resetViewsAndUi();
+
+  setupLoadingScreen(Screen::GAME);
+}
+
+void Game::onShipDocked()
+{
+  setScreen(Screen::OUTPOST);
+}
+
+void Game::onShipUndocked()
+{
+  setupLoadingScreen(Screen::GAME);
 }
 
 void Game::onPlayerKilled()
@@ -335,16 +347,15 @@ void Game::onPlayerKilled()
 void Game::onLoadingStarted(const bsgo::Uuid systemDbId,
                             const std::optional<bsgo::Uuid> maybePlayerDbId)
 {
-  if (m_state.screen == Screen::LOADING)
+  if (m_state.screen != Screen::LOADING)
   {
-    error("Unexpected start of loading process", "Already in loading screen");
+    error("Unexpected loading started event", "Not in loading screen");
   }
-  if (!m_gameSession.nextScreen)
-  {
-    error("Unexpected start of loading process", "No next screen defined");
-  }
+  debug("Starting loading transition to " + str(*m_gameSession.nextScreen));
+
   // TODO: Should not be necessary except for the login
-  if (!maybePlayerDbId)
+
+  if (*m_gameSession.previousScreen == Screen::LOGIN && !maybePlayerDbId)
   {
     error("Unexpected start of loading process", "No player ID provided");
   }
@@ -356,7 +367,6 @@ void Game::onLoadingStarted(const bsgo::Uuid systemDbId,
   info("starting loading process for system " + bsgo::str(systemDbId) + " and player "
        + bsgo::str(*maybePlayerDbId));
 
-  setScreen(Screen::LOADING);
   m_gameSession.systemDbId = systemDbId;
   m_dataSource.setPlayerDbId(*maybePlayerDbId);
 
@@ -370,18 +380,23 @@ void Game::onLoadingFinished()
 {
   if (m_state.screen != Screen::LOADING)
   {
-    error("Unexpected end of loading process", "Not in loading screen");
+    error("Unexpected loading finished event", "Not in loading screen");
   }
-  if (!m_gameSession.nextScreen)
+  if (!m_gameSession.nextScreen || !m_gameSession.previousScreen)
   {
-    error("Unexpected end of loading process", "No next screen defined");
+    error("Unexpected loading finished event", "No next or previous screen defined");
   }
 
-  const auto nextScreen = *m_gameSession.nextScreen;
-  m_gameSession.nextScreen.reset();
-  setScreen(nextScreen);
+  const auto previousScreen = *m_gameSession.previousScreen;
+  const auto nextScreen     = *m_gameSession.nextScreen;
 
-  info("loading finished");
+  debug("Ending loading transition from " + str(previousScreen) + " to " + str(nextScreen));
+
+  m_gameSession.previousScreen.reset();
+  m_gameSession.nextScreen.reset();
+
+  m_state.screen = nextScreen;
+
   m_dataSource.initialize(*m_coordinator, m_entityMapper);
   resetViewsAndUi();
 }
@@ -457,6 +472,22 @@ void Game::resetViewsAndUi()
   {
     handler->reset();
   }
+}
+
+void Game::setupLoadingScreen(const Screen nextScreen)
+{
+  if (m_state.screen == Screen::LOADING)
+  {
+    error("Unexpected loading screen transition", "Already in loading screen");
+  }
+  if (m_gameSession.nextScreen)
+  {
+    error("Unexpected loading screen transition", "No next screen defined");
+  }
+
+  m_gameSession.previousScreen = m_state.screen;
+  m_gameSession.nextScreen     = nextScreen;
+  setScreen(Screen::LOADING);
 }
 
 } // namespace pge
