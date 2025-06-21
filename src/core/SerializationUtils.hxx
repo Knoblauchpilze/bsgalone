@@ -2,6 +2,7 @@
 #pragma once
 
 #include "SerializationUtils.hh"
+#include "TimeUtils.hh"
 
 namespace core {
 
@@ -126,6 +127,27 @@ inline bool deserialize(std::istream &in, std::optional<T> &value)
   else
   {
     value.reset();
+  }
+
+  return in.good();
+}
+
+inline auto serialize(std::ostream &out, const Duration &d) -> std::ostream &
+{
+  const auto ticks = d.count();
+  out.write(reinterpret_cast<const char *>(&ticks), sizeof(ticks));
+  return out;
+}
+
+inline bool deserialize(std::istream &in, Duration &d)
+{
+  std::chrono::system_clock::rep ticks;
+
+  d = core::toMilliseconds(0);
+  in.read(reinterpret_cast<char *>(&ticks), sizeof(ticks));
+  if (in)
+  {
+    d = core::Duration(ticks);
   }
 
   return in.good();

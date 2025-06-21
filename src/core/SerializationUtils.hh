@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "TimeUtils.hh"
 #include <istream>
 #include <optional>
 #include <ostream>
@@ -38,6 +39,10 @@ bool deserialize(std::istream &in, std::optional<T> &value);
 
 template<typename T, std::enable_if_t<!std::is_enum<T>::value, bool> = true>
 bool deserialize(std::istream &in, std::optional<T> &value);
+
+auto serialize(std::ostream &out, const core::Duration &d) -> std::ostream &;
+
+bool deserialize(std::istream &in, core::Duration &d);
 
 } // namespace core
 
