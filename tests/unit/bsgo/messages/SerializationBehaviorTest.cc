@@ -123,6 +123,26 @@ TEST(Unit_Bsgo_Serialization_Behavior, Nominal_Duration)
   EXPECT_EQ(actual, expected);
 }
 
+TEST(Unit_Bsgo_Serialization_Behavior, ZeroDuration)
+{
+  const core::Duration expected{};
+
+  const auto [success, actual] = serializeAndDeserialize(expected, false);
+
+  EXPECT_TRUE(success);
+  EXPECT_EQ(actual, expected);
+}
+
+TEST(Unit_Bsgo_Serialization_Behavior, SubMillisecondDuration)
+{
+  const core::Duration expected{15};
+
+  const auto [success, actual] = serializeAndDeserialize(expected, false);
+
+  EXPECT_TRUE(success);
+  EXPECT_EQ(actual, expected);
+}
+
 TEST(Unit_Bsgo_Serialization_Behavior, Failure_Uuid)
 {
   const Uuid value{2};
