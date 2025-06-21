@@ -5,6 +5,7 @@
 #include "ShipClass.hh"
 #include "Status.hh"
 #include "Uuid.hh"
+#include "WeaponData.hh"
 #include <eigen3/Eigen/Eigen>
 #include <optional>
 
@@ -30,6 +31,8 @@ struct ShipData
 
   std::optional<Uuid> targetDbId{};
   std::optional<Uuid> playerDbId{};
+
+  std::vector<WeaponData> weapons{};
 
   bool operator==(const ShipData &rhs) const;
 };

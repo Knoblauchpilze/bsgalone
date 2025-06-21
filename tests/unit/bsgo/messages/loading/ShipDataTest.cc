@@ -33,6 +33,29 @@ auto assertDataAreEqual(const ShipData &actual, const ShipData &expected)
   EXPECT_EQ(actual.name, expected.name);
   EXPECT_EQ(actual.targetDbId, expected.targetDbId);
   EXPECT_EQ(actual.playerDbId, expected.playerDbId);
+
+  EXPECT_EQ(actual.weapons.size(), expected.weapons.size());
+  for (std::size_t i = 0u; i < actual.weapons.size(); ++i)
+  {
+    const auto &actualWeapon   = actual.weapons[i];
+    const auto &expectedWeapon = expected.weapons[i];
+
+    EXPECT_EQ(actualWeapon.dbId, expectedWeapon.dbId) << "Mismatch for weapon " + std::to_string(i);
+    EXPECT_EQ(actualWeapon.weaponDbId, expectedWeapon.weaponDbId)
+      << "Mismatch for weapon " + std::to_string(i);
+    EXPECT_EQ(actualWeapon.level, expectedWeapon.level)
+      << "Mismatch for weapon " + std::to_string(i);
+    EXPECT_EQ(actualWeapon.minDamage, expectedWeapon.minDamage)
+      << "Mismatch for weapon " + std::to_string(i);
+    EXPECT_EQ(actualWeapon.maxDamage, expectedWeapon.maxDamage)
+      << "Mismatch for weapon " + std::to_string(i);
+    EXPECT_EQ(actualWeapon.powerCost, expectedWeapon.powerCost)
+      << "Mismatch for weapon " + std::to_string(i);
+    EXPECT_EQ(actualWeapon.range, expectedWeapon.range)
+      << "Mismatch for weapon " + std::to_string(i);
+    EXPECT_EQ(actualWeapon.reloadTime, expectedWeapon.reloadTime)
+      << "Mismatch for weapon " + std::to_string(i);
+  }
 }
 } // namespace
 
@@ -88,6 +111,73 @@ TEST(Unit_Bsgo_Serialization_ShipData, WithTarget)
                  .playerDbId     = Uuid{6547}};
 
   ShipData output{.dbId = Uuid{14}, .faction = Faction::CYLON, .status = Status::JUMP};
+
+  EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
+
+  assertDataAreEqual(output, input);
+}
+
+TEST(Unit_Bsgo_Serialization_ShipData, WithWeapons)
+{
+  ShipData input{.dbId           = Uuid{1234},
+                 .position       = Eigen::Vector3f{1.0f, 2.0f, 3.0f},
+                 .radius         = 5.0f,
+                 .maxPowerPoints = 100.0f,
+                 .targetDbId     = Uuid{8901},
+                 .playerDbId     = Uuid{6547}};
+  input.weapons.push_back({
+    .dbId       = Uuid{5001},
+    .weaponDbId = Uuid{5002},
+    .level      = 3,
+    .minDamage  = 10.0f,
+    .maxDamage  = 20.0f,
+    .powerCost  = 5.0f,
+    .range      = 100.0f,
+  });
+  input.weapons.push_back({.dbId = Uuid{6002}, .reloadTime = core::toMilliseconds(12)});
+
+  ShipData output{.dbId = Uuid{14}, .faction = Faction::CYLON, .status = Status::JUMP};
+  output.weapons.push_back({.dbId       = Uuid{1001},
+                            .weaponDbId = Uuid{2002},
+                            .level      = 3,
+                            .minDamage  = 10.0f,
+                            .maxDamage  = 20.0f,
+                            .powerCost  = 5.0f,
+                            .range      = 100.0f});
+  output.weapons.push_back({.dbId = Uuid{1002}, .weaponDbId = Uuid{2003}, .level = 2});
+
+  EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
+
+  assertDataAreEqual(output, input);
+}
+
+TEST(Unit_Bsgo_Serialization_ShipData, ClearsWeapons)
+{
+  ShipData input{.dbId           = Uuid{1234},
+                 .position       = Eigen::Vector3f{1.0f, 2.0f, 3.0f},
+                 .radius         = 5.0f,
+                 .maxPowerPoints = 100.0f,
+                 .targetDbId     = Uuid{8901},
+                 .playerDbId     = Uuid{6547}};
+  input.weapons.push_back({
+    .dbId       = Uuid{5001},
+    .weaponDbId = Uuid{5002},
+    .level      = 3,
+    .minDamage  = 10.0f,
+    .maxDamage  = 20.0f,
+    .powerCost  = 5.0f,
+    .range      = 100.0f,
+  });
+
+  ShipData output{.dbId = Uuid{14}, .faction = Faction::CYLON, .status = Status::JUMP};
+  output.weapons.push_back({.dbId       = Uuid{1001},
+                            .weaponDbId = Uuid{2002},
+                            .level      = 3,
+                            .minDamage  = 10.0f,
+                            .maxDamage  = 20.0f,
+                            .powerCost  = 5.0f,
+                            .range      = 100.0f,
+                            .reloadTime = core::toMilliseconds(1234)});
 
   EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
 
