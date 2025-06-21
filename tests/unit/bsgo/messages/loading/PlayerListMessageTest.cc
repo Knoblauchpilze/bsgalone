@@ -10,6 +10,7 @@ namespace {
 auto assertMessagesAreEqual(const PlayerListMessage &actual, const PlayerListMessage &expected)
 {
   EXPECT_EQ(actual.type(), expected.type());
+  EXPECT_EQ(actual.tryGetClientId(), expected.tryGetClientId());
   EXPECT_EQ(actual.getSystemDbId(), expected.getSystemDbId());
 
   const auto &actualPlayersData   = actual.getPlayersData();

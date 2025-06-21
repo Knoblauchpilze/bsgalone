@@ -7,6 +7,8 @@ auto str(const MessageType &type) -> std::string
 {
   switch (type)
   {
+    case MessageType::ASTEROID_LIST:
+      return "asteroid_list";
     case MessageType::COMPONENT_SYNC:
       return "component_sync";
     case MessageType::CONNECTION:
@@ -37,12 +39,16 @@ auto str(const MessageType &type) -> std::string
       return "logout";
     case MessageType::LOOT:
       return "loot";
+    case MessageType::OUTPOST_LIST:
+      return "outpost_list";
     case MessageType::PLAYER_LIST:
       return "player_list";
     case MessageType::PURCHASE:
       return "purchase";
     case MessageType::SCANNED:
       return "scanned";
+    case MessageType::SHIP_LIST:
+      return "ship_list";
     case MessageType::SIGNUP:
       return "signup";
     case MessageType::SLOT:
@@ -60,9 +66,10 @@ auto str(const MessageType &type) -> std::string
   }
 }
 
-auto allMessageTypes() -> std::array<MessageType, 24>
+auto allMessageTypes() -> std::array<MessageType, 27>
 {
-  return {MessageType::COMPONENT_SYNC,
+  return {MessageType::ASTEROID_LIST,
+          MessageType::COMPONENT_SYNC,
           MessageType::CONNECTION,
           MessageType::DOCK,
           MessageType::ENTITY_ADDED,
@@ -77,9 +84,11 @@ auto allMessageTypes() -> std::array<MessageType, 24>
           MessageType::LOOT,
           MessageType::LOGIN,
           MessageType::LOGOUT,
+          MessageType::OUTPOST_LIST,
           MessageType::PLAYER_LIST,
           MessageType::PURCHASE,
           MessageType::SCANNED,
+          MessageType::SHIP_LIST,
           MessageType::SIGNUP,
           MessageType::SLOT,
           MessageType::SLOT_COMPONENT_UPDATED,
