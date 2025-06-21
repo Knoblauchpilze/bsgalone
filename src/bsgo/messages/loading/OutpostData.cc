@@ -6,7 +6,6 @@ namespace bsgo {
 
 bool OutpostData::operator==(const OutpostData &rhs) const
 {
-  // Equality only depends on the database identifier.
   return dbId == rhs.dbId;
 }
 
