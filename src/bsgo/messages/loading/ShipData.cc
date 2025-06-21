@@ -29,6 +29,7 @@ auto serializeShipData(std::ostream &out, const ShipData &data) -> std::ostream 
   core::serialize(out, data.name);
 
   core::serialize(out, data.targetDbId);
+  core::serialize(out, data.playerDbId);
 
   return out;
 }
@@ -54,6 +55,7 @@ bool deserializeShipData(std::istream &in, ShipData &data)
   ok &= core::deserialize(in, data.name);
 
   ok &= core::deserialize(in, data.targetDbId);
+  ok &= core::deserialize(in, data.playerDbId);
 
   return ok;
 }

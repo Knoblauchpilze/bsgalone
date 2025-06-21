@@ -29,6 +29,7 @@ struct ShipData
   std::string name{};
 
   std::optional<Uuid> targetDbId{};
+  std::optional<Uuid> playerDbId{};
 
   bool operator==(const ShipData &rhs) const;
 };

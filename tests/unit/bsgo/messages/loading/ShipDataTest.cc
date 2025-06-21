@@ -32,6 +32,7 @@ auto assertDataAreEqual(const ShipData &actual, const ShipData &expected)
   EXPECT_EQ(actual.shipClass, expected.shipClass);
   EXPECT_EQ(actual.name, expected.name);
   EXPECT_EQ(actual.targetDbId, expected.targetDbId);
+  EXPECT_EQ(actual.playerDbId, expected.playerDbId);
 }
 } // namespace
 
@@ -67,7 +68,10 @@ TEST(Unit_Bsgo_Serialization_ShipData, Basic)
                  .radius   = 5.0f,
                  .name     = "my-ship"};
 
-  ShipData output{.dbId = Uuid{14}, .powerRegen = 1.2345f, .shipClass = ShipClass::LINE};
+  ShipData output{.dbId       = Uuid{14},
+                  .powerRegen = 1.2345f,
+                  .shipClass  = ShipClass::LINE,
+                  .playerDbId = Uuid{12}};
 
   EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
 
@@ -80,7 +84,8 @@ TEST(Unit_Bsgo_Serialization_ShipData, WithTarget)
                  .position       = Eigen::Vector3f{1.0f, 2.0f, 3.0f},
                  .radius         = 5.0f,
                  .maxPowerPoints = 100.0f,
-                 .targetDbId     = Uuid{8901}};
+                 .targetDbId     = Uuid{8901},
+                 .playerDbId     = Uuid{6547}};
 
   ShipData output{.dbId = Uuid{14}, .faction = Faction::CYLON, .status = Status::JUMP};
 

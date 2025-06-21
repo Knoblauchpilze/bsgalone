@@ -24,14 +24,14 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, Basic)
 {
   const ShipListMessage expected(Uuid{8712}, {});
 
-  const std::vector<ShipData> outpostsData{{.dbId        = Uuid{23},
-                                            .position    = Eigen::Vector3f(1.0f, 2.8f, 3.9f),
-                                            .powerPoints = 11.3f},
-                                           {.dbId       = Uuid{76},
-                                            .radius     = 26.9f,
-                                            .hullPoints = 100.0f,
-                                            .targetDbId = Uuid{4567}}};
-  ShipListMessage actual(Uuid{1515}, outpostsData);
+  const std::vector<ShipData> shipsData{{.dbId        = Uuid{23},
+                                         .position    = Eigen::Vector3f(1.0f, 2.8f, 3.9f),
+                                         .powerPoints = 11.3f},
+                                        {.dbId       = Uuid{76},
+                                         .radius     = 26.9f,
+                                         .hullPoints = 100.0f,
+                                         .targetDbId = Uuid{4567}}};
+  ShipListMessage actual(Uuid{1515}, shipsData);
   actual.setClientId(Uuid{2});
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
@@ -39,16 +39,16 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, Basic)
 
 TEST(Unit_Bsgo_Serialization_ShipListMessage, WithClientId)
 {
-  std::vector<ShipData> outpostsData{{.dbId       = Uuid{65},
-                                      .position   = Eigen::Vector3f(1.0f, 2.8f, 3.9f),
-                                      .radius     = 26.9f,
-                                      .hullPoints = 12.34f}};
+  std::vector<ShipData> shipsData{{.dbId       = Uuid{65},
+                                   .position   = Eigen::Vector3f(1.0f, 2.8f, 3.9f),
+                                   .radius     = 26.9f,
+                                   .hullPoints = 12.34f}};
 
-  ShipListMessage expected(Uuid{123}, outpostsData);
+  ShipListMessage expected(Uuid{123}, shipsData);
   expected.setClientId(Uuid{78});
 
-  outpostsData = {{.dbId = Uuid{17}, .powerPoints = 100.0f, .targetDbId = Uuid{923}},
-                  {.dbId = Uuid{17}, .radius = 26.1}};
+  shipsData = {{.dbId = Uuid{17}, .powerPoints = 100.0f, .targetDbId = Uuid{923}},
+               {.dbId = Uuid{18}, .radius = 26.1, .playerDbId = Uuid{456}}};
   ShipListMessage actual(Uuid{745}, {});
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
