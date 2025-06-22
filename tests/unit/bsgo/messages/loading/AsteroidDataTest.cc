@@ -16,6 +16,7 @@ inline bool serializeAndDeserializeMessage(const AsteroidData &value, AsteroidDa
 
 auto assertDataAreEqual(const AsteroidData &actual, const AsteroidData &expected)
 {
+  // Keep in sync with the AsteroidListMessage test code
   EXPECT_EQ(actual.dbId, expected.dbId);
   EXPECT_EQ(actual.position, expected.position);
   EXPECT_EQ(actual.radius, expected.radius);

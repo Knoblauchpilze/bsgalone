@@ -16,7 +16,20 @@ auto assertMessagesAreEqual(const AsteroidListMessage &actual, const AsteroidLis
   const auto &actualAsteroidsData   = actual.getAsteroidsData();
   const auto &expectedAsteroidsData = expected.getAsteroidsData();
 
-  EXPECT_EQ(actualAsteroidsData, expectedAsteroidsData);
+  EXPECT_EQ(actualAsteroidsData.size(), expectedAsteroidsData.size());
+  for (std::size_t id = 0; id < actualAsteroidsData.size(); ++id)
+  {
+    const auto &actualAsteroidData   = actualAsteroidsData[id];
+    const auto &expectedAsteroidData = expectedAsteroidsData[id];
+
+    // Keep in sync with the OutpostData test code
+    EXPECT_EQ(actualAsteroidData.dbId, expectedAsteroidData.dbId);
+    EXPECT_EQ(actualAsteroidData.position, expectedAsteroidData.position);
+    EXPECT_EQ(actualAsteroidData.radius, expectedAsteroidData.radius);
+    EXPECT_EQ(actualAsteroidData.health, expectedAsteroidData.health);
+    EXPECT_EQ(actualAsteroidData.resource, expectedAsteroidData.resource);
+    EXPECT_EQ(actualAsteroidData.amount, expectedAsteroidData.amount);
+  }
 }
 } // namespace
 

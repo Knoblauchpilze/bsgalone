@@ -16,6 +16,7 @@ inline bool serializeAndDeserializeMessage(const OutpostData &value, OutpostData
 
 auto assertDataAreEqual(const OutpostData &actual, const OutpostData &expected)
 {
+  // Keep in sync with the OutpostListMessage test code
   EXPECT_EQ(actual.dbId, expected.dbId);
   EXPECT_EQ(actual.position, expected.position);
   EXPECT_EQ(actual.radius, expected.radius);
