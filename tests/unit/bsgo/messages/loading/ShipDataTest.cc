@@ -16,6 +16,7 @@ inline bool serializeAndDeserializeMessage(const ShipData &value, ShipData &outp
 
 auto assertDataAreEqual(const ShipData &actual, const ShipData &expected)
 {
+  // Keep in sync with the ShipListMessage test code
   EXPECT_EQ(actual.dbId, expected.dbId);
   EXPECT_EQ(actual.position, expected.position);
   EXPECT_EQ(actual.radius, expected.radius);

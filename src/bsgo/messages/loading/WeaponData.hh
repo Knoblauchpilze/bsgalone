@@ -22,7 +22,6 @@ struct WeaponData
   float powerCost{};
   float range{};
 
-  // TODO: Handle this
   core::Duration reloadTime{};
 
   bool operator==(const WeaponData &rhs) const;
