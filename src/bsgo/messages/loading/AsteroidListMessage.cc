@@ -31,8 +31,8 @@ auto AsteroidListMessage::serialize(std::ostream &out) const -> std::ostream &
   core::serialize(out, m_clientId);
 
   core::serialize(out, m_systemDbId);
-  core::serialize(out, m_asteroidsData.size());
 
+  core::serialize(out, m_asteroidsData.size());
   for (const auto &asteroidData : m_asteroidsData)
   {
     serializeAsteroidData(out, asteroidData);

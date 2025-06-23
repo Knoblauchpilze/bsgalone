@@ -31,8 +31,8 @@ auto OutpostListMessage::serialize(std::ostream &out) const -> std::ostream &
   core::serialize(out, m_clientId);
 
   core::serialize(out, m_systemDbId);
-  core::serialize(out, m_outpostsData.size());
 
+  core::serialize(out, m_outpostsData.size());
   for (const auto &outpostData : m_outpostsData)
   {
     serializeOutpostData(out, outpostData);

@@ -30,8 +30,8 @@ auto ShipListMessage::serialize(std::ostream &out) const -> std::ostream &
   core::serialize(out, m_clientId);
 
   core::serialize(out, m_systemDbId);
-  core::serialize(out, m_shipsData.size());
 
+  core::serialize(out, m_shipsData.size());
   for (const auto &shipData : m_shipsData)
   {
     serializeShipData(out, shipData);
