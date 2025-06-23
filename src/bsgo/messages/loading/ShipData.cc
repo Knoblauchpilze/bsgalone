@@ -36,6 +36,12 @@ auto serializeShipData(std::ostream &out, const ShipData &data) -> std::ostream 
     serializeWeaponData(out, weapon);
   }
 
+  core::serialize(out, data.computers.size());
+  for (const auto &computer : data.computers)
+  {
+    serializeComputerData(out, computer);
+  }
+
   return out;
 }
 
@@ -64,9 +70,7 @@ bool deserializeShipData(std::istream &in, ShipData &data)
 
   std::size_t count;
   ok &= core::deserialize(in, count);
-
   data.weapons.clear();
-
   for (std::size_t id = 0u; id < count; ++id)
   {
     WeaponData weapon;
@@ -74,6 +78,17 @@ bool deserializeShipData(std::istream &in, ShipData &data)
     ok &= deserializeWeaponData(in, weapon);
 
     data.weapons.emplace_back(weapon);
+  }
+
+  ok &= core::deserialize(in, count);
+  data.computers.clear();
+  for (std::size_t id = 0u; id < count; ++id)
+  {
+    ComputerData computer;
+
+    ok &= deserializeComputerData(in, computer);
+
+    data.computers.emplace_back(computer);
   }
 
   return ok;

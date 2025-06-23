@@ -64,6 +64,34 @@ auto assertMessagesAreEqual(const ShipListMessage &actual, const ShipListMessage
       EXPECT_EQ(actualWeapon.reloadTime, expectedWeapon.reloadTime)
         << "Mismatch for weapon " + std::to_string(idWeapon);
     }
+
+    EXPECT_EQ(actualShipData.computers.size(), expectedShipData.computers.size());
+    for (std::size_t i = 0u; i < actualShipData.computers.size(); ++i)
+    {
+      const auto &actualComputer   = actualShipData.computers[i];
+      const auto &expectedComputer = expectedShipData.computers[i];
+
+      EXPECT_EQ(actualComputer.dbId, expectedComputer.dbId)
+        << "Mismatch for computer " + std::to_string(i);
+      EXPECT_EQ(actualComputer.computerDbId, expectedComputer.computerDbId)
+        << "Mismatch for computer " + std::to_string(i);
+      EXPECT_EQ(actualComputer.level, expectedComputer.level)
+        << "Mismatch for computer " + std::to_string(i);
+      EXPECT_EQ(actualComputer.offensive, expectedComputer.offensive)
+        << "Mismatch for computer " + std::to_string(i);
+      EXPECT_EQ(actualComputer.powerCost, expectedComputer.powerCost)
+        << "Mismatch for computer " + std::to_string(i);
+      EXPECT_EQ(actualComputer.range, expectedComputer.range)
+        << "Mismatch for computer " + std::to_string(i);
+      EXPECT_EQ(actualComputer.reloadTime, expectedComputer.reloadTime)
+        << "Mismatch for computer " + std::to_string(i);
+      EXPECT_EQ(actualComputer.duration, expectedComputer.duration)
+        << "Mismatch for computer " + std::to_string(i);
+      EXPECT_EQ(actualComputer.allowedTargets, expectedComputer.allowedTargets)
+        << "Mismatch for computer " + std::to_string(i);
+      EXPECT_EQ(actualComputer.damageModifier, expectedComputer.damageModifier)
+        << "Mismatch for computer " + std::to_string(i);
+    }
   }
 }
 } // namespace
@@ -104,11 +132,11 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, WithClientId)
 
 TEST(Unit_Bsgo_Serialization_ShipListMessage, Clone)
 {
-  const std::vector<ShipData> outpostsData{
+  const std::vector<ShipData> shipsData{
     {.dbId = Uuid{23}, .position = Eigen::Vector3f(1.0f, 2.8f, 3.9f), .targetDbId = Uuid{4567}},
   };
 
-  const ShipListMessage expected(Uuid{4572}, outpostsData);
+  const ShipListMessage expected(Uuid{4572}, shipsData);
   const auto cloned = expected.clone();
   ASSERT_EQ(cloned->type(), MessageType::SHIP_LIST);
   assertMessagesAreEqual(cloned->as<ShipListMessage>(), expected);
@@ -137,6 +165,89 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, WithWeapon)
   shipsData = {{.dbId = Uuid{17}, .powerPoints = 100.0f, .targetDbId = Uuid{923}},
                {.dbId = Uuid{18}, .radius = 26.1, .playerDbId = Uuid{456}}};
   ShipListMessage actual(Uuid{745}, {});
+  serializeAndDeserializeMessage(expected, actual);
+  assertMessagesAreEqual(actual, expected);
+}
+
+TEST(Unit_Bsgo_Serialization_ShipListMessage, WithComputer)
+{
+  std::vector<ComputerData> computers{
+    {.dbId = Uuid{1}, .computerDbId = Uuid{14}, .level = 10, .offensive = true, .range = 0.145f},
+    {.dbId           = Uuid{2},
+     .powerCost      = 14.2f,
+     .allowedTargets = std::unordered_set<EntityKind>{EntityKind::PLAYER},
+     .damageModifier = 1.4587f}};
+  std::vector<ShipData> shipsData{{.dbId       = Uuid{65},
+                                   .position   = Eigen::Vector3f(1.0f, 2.8f, 3.9f),
+                                   .radius     = 26.9f,
+                                   .hullPoints = 12.34f,
+                                   .computers  = computers}};
+
+  ShipListMessage expected(Uuid{123}, shipsData);
+  expected.setClientId(Uuid{78});
+
+  computers = {{.dbId = Uuid{45}, .level = 9, .reloadTime = core::toMilliseconds(17)}};
+  shipsData = {{.dbId = Uuid{17}, .powerPoints = 100.0f, .targetDbId = Uuid{923}},
+               {.dbId = Uuid{18}, .radius = 26.1, .playerDbId = Uuid{456}}};
+  ShipListMessage actual(Uuid{745}, {});
+  serializeAndDeserializeMessage(expected, actual);
+  assertMessagesAreEqual(actual, expected);
+}
+
+TEST(Unit_Bsgo_Serialization_ShipListMessage, MultipleComplexShips)
+{
+  std::vector<ShipData> shipsData{
+    {.dbId       = Uuid{65},
+     .position   = Eigen::Vector3f(1.0f, 2.8f, 3.9f),
+     .radius     = 26.9f,
+     .hullPoints = 12.34f,
+     .weapons    = {{.dbId = Uuid{1}, .weaponDbId = Uuid{14}, .level = 10, .range = 0.145f},
+                    {.dbId       = Uuid{2},
+                     .minDamage  = 14.2f,
+                     .maxDamage  = 100.0f,
+                     .reloadTime = core::toMilliseconds(23)}},
+     .computers
+     = {{.dbId = Uuid{1}, .computerDbId = Uuid{14}, .level = 10, .offensive = true, .range = 0.145f},
+        {.dbId           = Uuid{2},
+         .powerCost      = 14.2f,
+         .allowedTargets = std::unordered_set<EntityKind>{EntityKind::PLAYER},
+         .damageModifier = 1.4587f}}},
+    {.dbId       = Uuid{68},
+     .position   = Eigen::Vector3f(1.2f, 3.4f, 4.5f),
+     .radius     = 987.9f,
+     .hullPoints = 98.76f,
+     .weapons    = {{.dbId = Uuid{16}, .weaponDbId = Uuid{14}, .level = 9, .range = 6.897f},
+                    {.dbId = Uuid{3}, .minDamage = 29.53f, .maxDamage = 17.497f}},
+     .computers  = {
+        {.dbId           = Uuid{1},
+         .computerDbId   = Uuid{14},
+         .level          = 10,
+         .offensive      = false,
+         .range          = 3.987f,
+         .allowedTargets = std::unordered_set<EntityKind>{EntityKind::SHIP, EntityKind::OUTPOST}}}}};
+  ShipListMessage expected(Uuid{123}, shipsData);
+  expected.setClientId(Uuid{78});
+
+  shipsData
+    = {{
+         .dbId     = Uuid{7412},
+         .position = Eigen::Vector3f(1.0f, 2.8f, 3.9f),
+       },
+       {.dbId = Uuid{7413}, .position = Eigen::Vector3f(98.76f, 54.32f, 1.09f)},
+       {
+         .dbId      = Uuid{7414},
+         .computers = {{.dbId           = Uuid{123456},
+                        .allowedTargets = std::unordered_set<EntityKind>{EntityKind::SHIP,
+                                                                         EntityKind::BULLET}}},
+       },
+       {.dbId      = Uuid{7415},
+        .weapons   = {{.dbId = Uuid{753}, .level = 5}, {.dbId = Uuid{951}, .powerCost = 159.753f}},
+        .computers = {{.computerDbId = 56, .offensive = true},
+                      {.computerDbId = 58, .damageModifier = 963.147f}}},
+       {.dbId    = Uuid{7416},
+        .weapons = {{.weaponDbId = Uuid{852}, .reloadTime = core::toMilliseconds(963)}}}};
+  ShipListMessage actual(Uuid{745}, {});
+
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }

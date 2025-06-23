@@ -57,6 +57,34 @@ auto assertDataAreEqual(const ShipData &actual, const ShipData &expected)
     EXPECT_EQ(actualWeapon.reloadTime, expectedWeapon.reloadTime)
       << "Mismatch for weapon " + std::to_string(i);
   }
+
+  EXPECT_EQ(actual.computers.size(), expected.computers.size());
+  for (std::size_t i = 0u; i < actual.computers.size(); ++i)
+  {
+    const auto &actualComputer   = actual.computers[i];
+    const auto &expectedComputer = expected.computers[i];
+
+    EXPECT_EQ(actualComputer.dbId, expectedComputer.dbId)
+      << "Mismatch for computer " + std::to_string(i);
+    EXPECT_EQ(actualComputer.computerDbId, expectedComputer.computerDbId)
+      << "Mismatch for computer " + std::to_string(i);
+    EXPECT_EQ(actualComputer.level, expectedComputer.level)
+      << "Mismatch for computer " + std::to_string(i);
+    EXPECT_EQ(actualComputer.offensive, expectedComputer.offensive)
+      << "Mismatch for computer " + std::to_string(i);
+    EXPECT_EQ(actualComputer.powerCost, expectedComputer.powerCost)
+      << "Mismatch for computer " + std::to_string(i);
+    EXPECT_EQ(actualComputer.range, expectedComputer.range)
+      << "Mismatch for computer " + std::to_string(i);
+    EXPECT_EQ(actualComputer.reloadTime, expectedComputer.reloadTime)
+      << "Mismatch for computer " + std::to_string(i);
+    EXPECT_EQ(actualComputer.duration, expectedComputer.duration)
+      << "Mismatch for computer " + std::to_string(i);
+    EXPECT_EQ(actualComputer.allowedTargets, expectedComputer.allowedTargets)
+      << "Mismatch for computer " + std::to_string(i);
+    EXPECT_EQ(actualComputer.damageModifier, expectedComputer.damageModifier)
+      << "Mismatch for computer " + std::to_string(i);
+  }
 }
 } // namespace
 
@@ -160,15 +188,6 @@ TEST(Unit_Bsgo_Serialization_ShipData, ClearsWeapons)
                  .maxPowerPoints = 100.0f,
                  .targetDbId     = Uuid{8901},
                  .playerDbId     = Uuid{6547}};
-  input.weapons.push_back({
-    .dbId       = Uuid{5001},
-    .weaponDbId = Uuid{5002},
-    .level      = 3,
-    .minDamage  = 10.0f,
-    .maxDamage  = 20.0f,
-    .powerCost  = 5.0f,
-    .range      = 100.0f,
-  });
 
   ShipData output{.dbId = Uuid{14}, .faction = Faction::CYLON, .status = Status::JUMP};
   output.weapons.push_back({.dbId       = Uuid{1001},
@@ -179,6 +198,61 @@ TEST(Unit_Bsgo_Serialization_ShipData, ClearsWeapons)
                             .powerCost  = 5.0f,
                             .range      = 100.0f,
                             .reloadTime = core::toMilliseconds(1234)});
+
+  EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
+
+  assertDataAreEqual(output, input);
+}
+
+TEST(Unit_Bsgo_Serialization_ShipData, WithComputers)
+{
+  ShipData input{.dbId           = Uuid{1234},
+                 .position       = Eigen::Vector3f{1.0f, 2.0f, 3.0f},
+                 .radius         = 5.0f,
+                 .maxPowerPoints = 100.0f,
+                 .targetDbId     = Uuid{8901},
+                 .playerDbId     = Uuid{6547}};
+  input.computers.push_back({
+    .dbId           = Uuid{5001},
+    .computerDbId   = Uuid{5002},
+    .level          = 3,
+    .offensive      = false,
+    .range          = 10.0f,
+    .allowedTargets = std::unordered_set<EntityKind>{EntityKind::SHIP, EntityKind::BULLET},
+  });
+
+  ShipData output{.dbId = Uuid{14}, .faction = Faction::CYLON, .status = Status::JUMP};
+  output.weapons.push_back({.dbId       = Uuid{1001},
+                            .weaponDbId = Uuid{2002},
+                            .level      = 3,
+                            .minDamage  = 10.0f,
+                            .maxDamage  = 20.0f,
+                            .powerCost  = 5.0f,
+                            .range      = 100.0f});
+  output.computers.push_back({.dbId = Uuid{1002}, .computerDbId = Uuid{2003}, .level = 2});
+
+  EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
+
+  assertDataAreEqual(output, input);
+}
+
+TEST(Unit_Bsgo_Serialization_ShipData, ClearsComputers)
+{
+  ShipData input{.dbId           = Uuid{1234},
+                 .position       = Eigen::Vector3f{1.0f, 2.0f, 3.0f},
+                 .radius         = 5.0f,
+                 .maxPowerPoints = 100.0f,
+                 .targetDbId     = Uuid{8901},
+                 .playerDbId     = Uuid{6547}};
+
+  ShipData output{.dbId = Uuid{14}, .faction = Faction::CYLON, .status = Status::JUMP};
+  output.computers.push_back({.dbId           = Uuid{1001},
+                              .computerDbId   = Uuid{2002},
+                              .level          = 3,
+                              .offensive      = false,
+                              .powerCost      = 5.0f,
+                              .range          = 100.0f,
+                              .damageModifier = 36.0f});
 
   EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
 

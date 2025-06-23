@@ -96,7 +96,6 @@ void ShipDataSource::registerShip(Coordinator &coordinator,
                           ComponentType::TRANSFORM,
                           ComponentType::VELOCITY});
 
-  // TODO: This needs to be registered in the ShipData
   registerShipOwner(coordinator, shipEntityId, data, entityMapper);
   registerShipWeapons(coordinator, ship, shipEntityId);
   registerShipComputers(coordinator, ship, shipEntityId);
