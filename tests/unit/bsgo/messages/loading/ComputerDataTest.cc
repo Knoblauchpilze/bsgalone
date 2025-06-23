@@ -73,6 +73,45 @@ TEST(Unit_Bsgo_Serialization_ComputerData, Basic)
   assertDataAreEqual(output, input);
 }
 
-// TODO: Add tests for allowed targets and damage modifier
+TEST(Unit_Bsgo_Serialization_ComputerData, AllowedTargets)
+{
+  ComputerData input{.dbId           = Uuid{1234},
+                     .level          = 4,
+                     .range          = 98765.1234f,
+                     .damageModifier = 2.10987f};
+  input.allowedTargets = std::unordered_set<EntityKind>{EntityKind::SHIP, EntityKind::ASTEROID};
+
+  ComputerData output{.dbId = Uuid{14}, .level = 12, .reloadTime = core::toMilliseconds(1234)};
+
+  EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
+
+  assertDataAreEqual(output, input);
+}
+
+TEST(Unit_Bsgo_Serialization_ComputerData, NonEmptyAllowedTargetsInDestination)
+{
+  ComputerData input{.dbId           = Uuid{1234},
+                     .level          = 4,
+                     .range          = 98765.1234f,
+                     .damageModifier = 2.10987f};
+
+  ComputerData output{.dbId = Uuid{14}, .level = 12, .reloadTime = core::toMilliseconds(1234)};
+  output.allowedTargets = std::unordered_set<EntityKind>{EntityKind::OUTPOST};
+
+  EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
+
+  assertDataAreEqual(output, input);
+}
+
+TEST(Unit_Bsgo_Serialization_ComputerData, NonEmptyDamageModifierInDestination)
+{
+  ComputerData input{.dbId = Uuid{1234}};
+
+  ComputerData output{.dbId = Uuid{14}, .damageModifier = 2.10987f};
+
+  EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
+
+  assertDataAreEqual(output, input);
+}
 
 } // namespace bsgo
