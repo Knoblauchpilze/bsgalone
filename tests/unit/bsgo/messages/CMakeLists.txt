@@ -19,12 +19,9 @@ target_sources(unitTests PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/JumpCancelledMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/JumpMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/JumpRequestedMessageTest.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/LoadingFinishedMessageTest.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/LoadingStartedMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LoginMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LogoutMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LootMessageTest.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/PlayerListMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/PurchaseMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ScannedMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SignupMessageTest.cc
@@ -33,4 +30,8 @@ target_sources(unitTests PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/TargetMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/VelocityMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/WeaponComponentMessageTest.cc
+	)
+
+add_subdirectory(
+	${CMAKE_CURRENT_SOURCE_DIR}/loading
 	)

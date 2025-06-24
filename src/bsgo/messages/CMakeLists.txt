@@ -19,13 +19,10 @@ target_sources (bsgo_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/JumpCancelledMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/JumpMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/JumpRequestedMessage.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/LoadingFinishedMessage.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/LoadingStartedMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LoginMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LogoutMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LootMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/NetworkMessage.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/PlayerListMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/PurchaseMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ScannedMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SignupMessage.cc
@@ -37,3 +34,6 @@ target_sources (bsgo_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/MessageParser.cc
 	)
 
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/loading
+	)
