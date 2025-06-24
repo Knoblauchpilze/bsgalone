@@ -69,6 +69,10 @@ void ShipDataSource::registerShip(Coordinator &coordinator,
   {
     return;
   }
+  else if (!ignoreDocked && data.docked)
+  {
+    error("Cannot register docked ship " + str(data.id));
+  }
 
   auto box                = std::make_unique<CircleBox>(data.position, data.radius);
   const auto shipEntityId = coordinator.createEntity(EntityKind::SHIP);
