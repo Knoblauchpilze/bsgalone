@@ -3,6 +3,7 @@
 #include "SerializationUtils.hh"
 #include <sstream>
 
+#include "AsteroidListMessage.hh"
 #include "ComponentSyncMessage.hh"
 #include "ConnectionMessage.hh"
 #include "DockMessage.hh"
@@ -18,8 +19,11 @@
 #include "LoginMessage.hh"
 #include "LogoutMessage.hh"
 #include "LootMessage.hh"
+#include "OutpostListMessage.hh"
+#include "PlayerListMessage.hh"
 #include "PurchaseMessage.hh"
 #include "ScannedMessage.hh"
+#include "ShipListMessage.hh"
 #include "SignupMessage.hh"
 #include "SlotComponentMessage.hh"
 #include "SlotMessage.hh"
@@ -99,6 +103,8 @@ auto MessageParser::tryReadMessage(const MessageType &type, std::istream &in)
 {
   switch (type)
   {
+    case MessageType::ASTEROID_LIST:
+      return readMessage<AsteroidListMessage>(in);
     case MessageType::COMPONENT_SYNC:
       return readMessage<ComponentSyncMessage>(in);
     case MessageType::CONNECTION:
@@ -129,10 +135,16 @@ auto MessageParser::tryReadMessage(const MessageType &type, std::istream &in)
       return readMessage<LogoutMessage>(in);
     case MessageType::LOOT:
       return readMessage<LootMessage>(in);
+    case MessageType::OUTPOST_LIST:
+      return readMessage<OutpostListMessage>(in);
+    case MessageType::PLAYER_LIST:
+      return readMessage<PlayerListMessage>(in);
     case MessageType::PURCHASE:
       return readMessage<PurchaseMessage>(in);
     case MessageType::SCANNED:
       return readMessage<ScannedMessage>(in);
+    case MessageType::SHIP_LIST:
+      return readMessage<ShipListMessage>(in);
     case MessageType::SIGNUP:
       return readMessage<SignupMessage>(in);
     case MessageType::SLOT:
