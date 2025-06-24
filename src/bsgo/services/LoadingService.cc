@@ -22,4 +22,29 @@ auto LoadingService::getPlayersInSystem(const Uuid systemDbId) const -> std::vec
   return players;
 }
 
+auto LoadingService::getAsteroidsInSystem(const Uuid systemDbId) const -> std::vector<AsteroidProps>
+{
+  const auto asteroidIds = m_repositories.systemRepository->findAllAsteroidsBySystem(systemDbId);
+
+  std::vector<AsteroidProps> asteroids{};
+
+  for (const auto &asteroidId : asteroidIds)
+  {
+    const auto asteroid = m_repositories.asteroidRepository->findOneById(asteroidId);
+
+    std::optional<Uuid> resource{};
+    std::optional<float> amount{};
+    if (asteroid.loot)
+    {
+      const auto loot = m_repositories.asteroidLootRepository->findOneById(asteroidId);
+      resource        = loot.resource;
+      amount          = loot.amount;
+    }
+
+    asteroids.emplace_back(asteroidId, asteroid, resource, amount);
+  }
+
+  return asteroids;
+}
+
 } // namespace bsgo

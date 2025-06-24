@@ -33,6 +33,9 @@ void LoadingMessagesConsumer::onMessageReceived(const IMessage &message)
     case MessageType::LOADING_STARTED:
       forwardLoadingStartedMessage(message.as<LoadingStartedMessage>());
       return;
+    // TODO: Instead of expecting loading messages to be received, we should
+    // maybe add a type of loading and use this to determine which messages
+    // to send
     case MessageType::PLAYER_LIST:
       handlePlayersLoading(message.as<PlayerListMessage>());
       return;
@@ -59,10 +62,53 @@ void LoadingMessagesConsumer::forwardLoadingStartedMessage(const LoadingStartedM
   m_messageQueue->pushMessage(message.clone());
 }
 
-void LoadingMessagesConsumer::handlePlayersLoading(const PlayerListMessage & /*message*/) const {}
+void LoadingMessagesConsumer::handlePlayersLoading(const PlayerListMessage &message) const
+{
+  const auto systemDbId = message.getSystemDbId();
 
-void LoadingMessagesConsumer::handleAsteroidsLoading(const AsteroidListMessage & /*message*/) const
-{}
+  const auto players = m_loadingService->getPlayersInSystem(systemDbId);
+
+  std::vector<PlayerListMessage::PlayerData> playersData{};
+  std::transform(players.begin(),
+                 players.end(),
+                 std::back_inserter(playersData),
+                 [](const Player &player) {
+                   return PlayerListMessage::PlayerData{.playerDbId = player.id,
+                                                        .name       = player.name};
+                 });
+
+  auto out = std::make_unique<PlayerListMessage>(systemDbId, playersData);
+  out->copyClientIdIfDefined(message);
+
+  m_messageQueue->pushMessage(std::move(out));
+}
+
+void LoadingMessagesConsumer::handleAsteroidsLoading(const AsteroidListMessage &message) const
+{
+  const auto systemDbId = message.getSystemDbId();
+
+  const auto asteroids = m_loadingService->getAsteroidsInSystem(systemDbId);
+
+  std::vector<AsteroidData> asteroidsData{};
+  std::transform(asteroids.begin(),
+                 asteroids.end(),
+                 std::back_inserter(asteroidsData),
+                 [](const LoadingService::AsteroidProps &props) {
+                   return AsteroidData{
+                     .dbId     = props.dbId,
+                     .position = props.dbAsteroid.position,
+                     .radius   = props.dbAsteroid.radius,
+                     .health   = props.dbAsteroid.health,
+                     .resource = props.resource,
+                     .amount   = props.amount,
+                   };
+                 });
+
+  auto out = std::make_unique<AsteroidListMessage>(systemDbId, asteroidsData);
+  out->copyClientIdIfDefined(message);
+
+  m_messageQueue->pushMessage(std::move(out));
+}
 
 void LoadingMessagesConsumer::handleOutpostsLoading(const OutpostListMessage & /*message*/) const {}
 

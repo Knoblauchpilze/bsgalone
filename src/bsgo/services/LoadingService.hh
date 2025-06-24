@@ -1,6 +1,7 @@
 #pragma once
 
 #include "AbstractService.hh"
+#include "AsteroidRepository.hh"
 #include "PlayerRepository.hh"
 #include <memory>
 #include <vector>
@@ -14,6 +15,16 @@ class LoadingService : public AbstractService
   ~LoadingService() override = default;
 
   auto getPlayersInSystem(const Uuid systemDbId) const -> std::vector<Player>;
+
+  struct AsteroidProps
+  {
+    Uuid dbId{};
+    Asteroid dbAsteroid{};
+
+    std::optional<Uuid> resource{};
+    std::optional<float> amount{};
+  };
+  auto getAsteroidsInSystem(const Uuid systemDbId) const -> std::vector<AsteroidProps>;
 };
 
 using LoadingServicePtr   = std::unique_ptr<LoadingService>;
