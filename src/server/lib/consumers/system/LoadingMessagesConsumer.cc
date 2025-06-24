@@ -4,11 +4,22 @@
 
 namespace bsgo {
 
-LoadingMessagesConsumer::LoadingMessagesConsumer(const Services & /*services*/,
+LoadingMessagesConsumer::LoadingMessagesConsumer(const Services &services,
                                                  IMessageQueue *const messageQueue)
-  : AbstractMessageConsumer("loading", {MessageType::LOADING_FINISHED, MessageType::LOADING_STARTED})
+  : AbstractMessageConsumer("loading",
+                            {MessageType::LOADING_FINISHED,
+                             MessageType::PLAYER_LIST,
+                             MessageType::ASTEROID_LIST,
+                             MessageType::OUTPOST_LIST,
+                             MessageType::SHIP_LIST,
+                             MessageType::LOADING_STARTED})
+  , m_loadingService(services.loading)
   , m_messageQueue(messageQueue)
 {
+  if (nullptr == m_loadingService)
+  {
+    throw std::invalid_argument("Expected non null loading service");
+  }
   if (nullptr == m_messageQueue)
   {
     throw std::invalid_argument("Expected non null message queue");
@@ -21,6 +32,18 @@ void LoadingMessagesConsumer::onMessageReceived(const IMessage &message)
   {
     case MessageType::LOADING_STARTED:
       forwardLoadingStartedMessage(message.as<LoadingStartedMessage>());
+      return;
+    case MessageType::PLAYER_LIST:
+      handlePlayersLoading(message.as<PlayerListMessage>());
+      return;
+    case MessageType::ASTEROID_LIST:
+      handleAsteroidsLoading(message.as<AsteroidListMessage>());
+      return;
+    case MessageType::OUTPOST_LIST:
+      handleOutpostsLoading(message.as<OutpostListMessage>());
+      return;
+    case MessageType::SHIP_LIST:
+      handleShipsLoading(message.as<ShipListMessage>());
       return;
     case MessageType::LOADING_FINISHED:
       forwardLoadingFinishedMessage(message.as<LoadingFinishedMessage>());
@@ -35,6 +58,15 @@ void LoadingMessagesConsumer::forwardLoadingStartedMessage(const LoadingStartedM
 {
   m_messageQueue->pushMessage(message.clone());
 }
+
+void LoadingMessagesConsumer::handlePlayersLoading(const PlayerListMessage & /*message*/) const {}
+
+void LoadingMessagesConsumer::handleAsteroidsLoading(const AsteroidListMessage & /*message*/) const
+{}
+
+void LoadingMessagesConsumer::handleOutpostsLoading(const OutpostListMessage & /*message*/) const {}
+
+void LoadingMessagesConsumer::handleShipsLoading(const ShipListMessage & /*message*/) const {}
 
 void LoadingMessagesConsumer::forwardLoadingFinishedMessage(
   const LoadingFinishedMessage &message) const
