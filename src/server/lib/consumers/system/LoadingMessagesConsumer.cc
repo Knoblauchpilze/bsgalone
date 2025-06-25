@@ -110,7 +110,33 @@ void LoadingMessagesConsumer::handleAsteroidsLoading(const AsteroidListMessage &
   m_messageQueue->pushMessage(std::move(out));
 }
 
-void LoadingMessagesConsumer::handleOutpostsLoading(const OutpostListMessage & /*message*/) const {}
+void LoadingMessagesConsumer::handleOutpostsLoading(const OutpostListMessage &message) const
+{
+  const auto systemDbId = message.getSystemDbId();
+
+  const auto outposts = m_loadingService->getOutpostsInSystem(systemDbId);
+
+  std::vector<OutpostData> outpostsData{};
+  std::transform(outposts.begin(),
+                 outposts.end(),
+                 std::back_inserter(outpostsData),
+                 [](const LoadingService::OutpostProps &props) {
+                   return OutpostData{
+                     .dbId        = props.dbId,
+                     .position    = props.dbOutpost.position,
+                     .radius      = props.dbOutpost.radius,
+                     .hullPoints  = props.dbOutpost.hullPoints,
+                     .powerPoints = props.dbOutpost.powerPoints,
+                     .faction     = props.dbOutpost.faction,
+                     .targetDbId  = props.targetDbId,
+                   };
+                 });
+
+  auto out = std::make_unique<OutpostListMessage>(systemDbId, outpostsData);
+  out->copyClientIdIfDefined(message);
+
+  m_messageQueue->pushMessage(std::move(out));
+}
 
 void LoadingMessagesConsumer::handleShipsLoading(const ShipListMessage & /*message*/) const {}
 

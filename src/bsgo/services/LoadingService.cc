@@ -47,4 +47,23 @@ auto LoadingService::getAsteroidsInSystem(const Uuid systemDbId) const -> std::v
   return asteroids;
 }
 
+auto LoadingService::getOutpostsInSystem(const Uuid systemDbId) const -> std::vector<OutpostProps>
+{
+  const auto outpostIds = m_repositories.systemRepository->findAllOutpostsBySystem(systemDbId);
+
+  std::vector<OutpostProps> outposts{};
+
+  for (const auto &outpostId : outpostIds)
+  {
+    const auto outpost = m_repositories.systemOutpostRepository->findOneById(outpostId);
+
+    // TODO: the target id is left empty for now. We should give this service
+    // access to the coordinator and the entity mapper and try to fetch it
+    // from there. Probably in a dedicated method.
+    outposts.emplace_back(outpostId, outpost);
+  }
+
+  return outposts;
+}
+
 } // namespace bsgo

@@ -2,6 +2,7 @@
 
 #include "AbstractService.hh"
 #include "AsteroidRepository.hh"
+#include "OutpostRepository.hh"
 #include "PlayerRepository.hh"
 #include <memory>
 #include <vector>
@@ -25,6 +26,14 @@ class LoadingService : public AbstractService
     std::optional<float> amount{};
   };
   auto getAsteroidsInSystem(const Uuid systemDbId) const -> std::vector<AsteroidProps>;
+
+  struct OutpostProps
+  {
+    Uuid dbId{};
+    SystemOutpost dbOutpost{};
+    std::optional<Uuid> targetDbId{};
+  };
+  auto getOutpostsInSystem(const Uuid systemDbId) const -> std::vector<OutpostProps>;
 };
 
 using LoadingServicePtr   = std::unique_ptr<LoadingService>;
