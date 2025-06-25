@@ -138,7 +138,83 @@ void LoadingMessagesConsumer::handleOutpostsLoading(const OutpostListMessage &me
   m_messageQueue->pushMessage(std::move(out));
 }
 
-void LoadingMessagesConsumer::handleShipsLoading(const ShipListMessage & /*message*/) const {}
+namespace {
+auto generateShipData(const LoadingService::ShipProps props) -> ShipData
+{
+  ShipData data;
+
+  data.dbId            = props.dbShip.id;
+  data.position        = props.dbShip.position;
+  data.radius          = props.dbShip.radius;
+  data.acceleration    = props.dbShip.acceleration;
+  data.speed           = props.dbShip.speed;
+  data.hullPoints      = props.dbShip.hullPoints;
+  data.maxHullPoints   = props.dbShip.maxHullPoints;
+  data.hullPointsRegen = props.dbShip.hullPointsRegen;
+  data.powerPoints     = props.dbShip.powerPoints;
+  data.maxPowerPoints  = props.dbShip.maxPowerPoints;
+  data.powerRegen      = props.dbShip.powerRegen;
+  data.faction         = props.dbShip.faction;
+
+  data.status    = props.status;
+  data.shipClass = props.dbShip.shipClass;
+  data.name      = props.dbShip.name;
+
+  data.targetDbId = props.targetDbId;
+  data.playerDbId = props.dbShip.player;
+
+  for (const auto &weapon : props.weapons)
+  {
+    WeaponData weaponData{
+      .dbId       = weapon.id,
+      .weaponDbId = weapon.weapon,
+      .level      = weapon.level,
+      .minDamage  = weapon.minDamage,
+      .maxDamage  = weapon.maxDamage,
+      .powerCost  = weapon.powerCost,
+      .range      = weapon.range,
+      .reloadTime = weapon.reloadTime,
+    };
+
+    data.weapons.emplace_back(std::move(weaponData));
+  }
+
+  for (const auto &computer : props.computers)
+  {
+    ComputerData computerData{
+      .dbId           = computer.id,
+      .computerDbId   = computer.computer,
+      .level          = computer.level,
+      .offensive      = computer.offensive,
+      .powerCost      = computer.powerCost,
+      .range          = computer.range,
+      .reloadTime     = computer.reloadTime,
+      .duration       = computer.duration,
+      .allowedTargets = computer.allowedTargets,
+      .damageModifier = computer.damageModifier,
+    };
+
+    data.computers.emplace_back(std::move(computerData));
+  }
+
+  return data;
+}
+} // namespace
+
+void LoadingMessagesConsumer::handleShipsLoading(const ShipListMessage &message) const
+{
+  const auto systemDbId = message.getSystemDbId();
+
+  const auto ships = m_loadingService->getShipsInSystem(systemDbId);
+
+  std::vector<ShipData> shipsData{};
+  std::transform(ships.begin(), ships.end(), std::back_inserter(shipsData), generateShipData);
+
+  auto out = std::make_unique<ShipListMessage>(systemDbId, shipsData);
+  out->copyClientIdIfDefined(message);
+
+  m_messageQueue->pushMessage(std::move(out));
+}
 
 void LoadingMessagesConsumer::forwardLoadingFinishedMessage(
   const LoadingFinishedMessage &message) const

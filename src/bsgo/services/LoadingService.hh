@@ -2,8 +2,10 @@
 
 #include "AbstractService.hh"
 #include "AsteroidRepository.hh"
-#include "OutpostRepository.hh"
 #include "PlayerRepository.hh"
+#include "PlayerShipRepository.hh"
+#include "Status.hh"
+#include "SystemOutpostRepository.hh"
 #include <memory>
 #include <vector>
 
@@ -34,6 +36,16 @@ class LoadingService : public AbstractService
     std::optional<Uuid> targetDbId{};
   };
   auto getOutpostsInSystem(const Uuid systemDbId) const -> std::vector<OutpostProps>;
+
+  struct ShipProps
+  {
+    PlayerShip dbShip{};
+    Status status{};
+    std::optional<Uuid> targetDbId{};
+    std::vector<PlayerWeapon> weapons{};
+    std::vector<PlayerComputer> computers{};
+  };
+  auto getShipsInSystem(const Uuid systemDbId) const -> std::vector<ShipProps>;
 };
 
 using LoadingServicePtr   = std::unique_ptr<LoadingService>;
