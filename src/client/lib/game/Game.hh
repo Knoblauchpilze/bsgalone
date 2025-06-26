@@ -10,6 +10,7 @@
 #include "IInputHandler.hh"
 #include "IRenderer.hh"
 #include "IUiHandler.hh"
+#include "LoadingTransition.hh"
 #include "RenderState.hh"
 #include "Renderer.hh"
 #include "RenderingPass.hh"
@@ -68,9 +69,10 @@ class Game : public core::CoreObject
   void onShipDocked();
   void onShipUndocked();
   void onPlayerKilled();
-  void onLoadingStarted(const bsgo::Uuid systemDbId,
+  void onLoadingStarted(const bsgo::LoadingTransition transition,
+                        const bsgo::Uuid systemDbId,
                         const std::optional<bsgo::Uuid> maybePlayerDbId);
-  void onLoadingFinished();
+  void onLoadingFinished(const bsgo::LoadingTransition transition);
 
   private:
   /// @brief - Convenience information defining the state of the
@@ -99,6 +101,8 @@ class Game : public core::CoreObject
   {
     std::optional<bsgo::Uuid> systemDbId{};
     std::optional<bsgo::Uuid> playerDbId{};
+
+    std::optional<bsgo::LoadingTransition> transition{};
 
     /// @brief - holds the screen that was displayed before the current
     /// loading phase.

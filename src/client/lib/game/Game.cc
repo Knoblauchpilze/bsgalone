@@ -344,17 +344,44 @@ void Game::onPlayerKilled()
   }
 }
 
-void Game::onLoadingStarted(const bsgo::Uuid systemDbId,
+namespace {
+bool isTransitionValidForNextScreen(const bsgo::LoadingTransition transition,
+                                    const Screen nextScreen)
+{
+  switch (transition)
+  {
+    case bsgo::LoadingTransition::JUMP:
+      return nextScreen == Screen::GAME;
+    case bsgo::LoadingTransition::LOGIN:
+      return nextScreen == Screen::OUTPOST;
+    case bsgo::LoadingTransition::UNDOCK:
+      return nextScreen == Screen::GAME;
+    default:
+      return false;
+  }
+}
+} // namespace
+
+void Game::onLoadingStarted(const bsgo::LoadingTransition transition,
+                            const bsgo::Uuid systemDbId,
                             const std::optional<bsgo::Uuid> maybePlayerDbId)
 {
   if (m_state.screen != Screen::LOADING)
   {
     error("Unexpected loading started event", "Not in loading screen");
   }
+  if (!isTransitionValidForNextScreen(transition, *m_gameSession.nextScreen))
+  {
+    error("Unexpected loading started event",
+          "Transition " + bsgo::str(transition) + " does not match next screen "
+            + str(*m_gameSession.nextScreen));
+  }
+
   debug("Starting loading transition to " + str(*m_gameSession.nextScreen));
 
-  // TODO: Should not be necessary except for the login
+  m_gameSession.transition = transition;
 
+  // TODO: Should not be necessary except for the login
   if (*m_gameSession.previousScreen == Screen::LOGIN && !maybePlayerDbId)
   {
     error("Unexpected start of loading process", "No player ID provided");
@@ -376,11 +403,15 @@ void Game::onLoadingStarted(const bsgo::Uuid systemDbId,
   m_entityMapper.setPlayerDbId(*maybePlayerDbId);
 }
 
-void Game::onLoadingFinished()
+void Game::onLoadingFinished(const bsgo::LoadingTransition transition)
 {
   if (m_state.screen != Screen::LOADING)
   {
     error("Unexpected loading finished event", "Not in loading screen");
+  }
+  if (!m_gameSession.transition || *m_gameSession.transition != transition)
+  {
+    error("Unexpected loading finished event", "Transition does not match");
   }
   if (!m_gameSession.nextScreen || !m_gameSession.previousScreen)
   {

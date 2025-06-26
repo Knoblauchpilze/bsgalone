@@ -82,16 +82,15 @@ void LoginMessageConsumer::publishLoadingMessages(const bsgo::Uuid clientId,
           "Unknown system " + str(*maybeSystemDbId));
   }
 
-  auto started = std::make_unique<LoadingStartedMessage>(*maybeSystemDbId, playerDbId);
+  auto started = std::make_unique<LoadingStartedMessage>(LoadingTransition::LOGIN,
+                                                         *maybeSystemDbId,
+                                                         playerDbId);
   started->setClientId(clientId);
   maybeProcessor->second->pushMessage(std::move(started));
 
-  auto players = std::make_unique<PlayerListMessage>(*maybeSystemDbId,
-                                                     std::vector<PlayerListMessage::PlayerData>{});
-  players->setClientId(clientId);
-  maybeProcessor->second->pushMessage(std::move(players));
-
-  auto finished = std::make_unique<LoadingFinishedMessage>(*maybeSystemDbId, playerDbId);
+  auto finished = std::make_unique<LoadingFinishedMessage>(LoadingTransition::LOGIN,
+                                                           *maybeSystemDbId,
+                                                           playerDbId);
   finished->setClientId(clientId);
   maybeProcessor->second->pushMessage(std::move(finished));
 }

@@ -158,12 +158,11 @@ void GameMessageModule::handleLoadingStartedMessage(const bsgo::LoadingStartedMe
 {
   const auto systemDbId      = message.getSystemDbId();
   const auto maybePlayerDbId = message.tryGetPlayerDbId();
-  m_game.onLoadingStarted(systemDbId, maybePlayerDbId);
+  m_game.onLoadingStarted(message.getTransition(), systemDbId, maybePlayerDbId);
 }
 
-void GameMessageModule::handleLoadingFinishedMessage(
-  const bsgo::LoadingFinishedMessage & /*message*/) const
+void GameMessageModule::handleLoadingFinishedMessage(const bsgo::LoadingFinishedMessage &message) const
 {
-  m_game.onLoadingFinished();
+  m_game.onLoadingFinished(message.getTransition());
 }
 } // namespace pge
