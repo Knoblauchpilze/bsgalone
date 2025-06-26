@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "LoadingTransition.hh"
 #include "NetworkMessage.hh"
 #include "Uuid.hh"
 
@@ -10,10 +11,13 @@ class LoadingFinishedMessage : public NetworkMessage
 {
   public:
   LoadingFinishedMessage();
-  LoadingFinishedMessage(const Uuid systemDbId);
-  LoadingFinishedMessage(const Uuid systemDbId, const Uuid playerDbId);
+  LoadingFinishedMessage(const LoadingTransition transition, const Uuid systemDbId);
+  LoadingFinishedMessage(const LoadingTransition transition,
+                         const Uuid systemDbId,
+                         const Uuid playerDbId);
   ~LoadingFinishedMessage() override = default;
 
+  auto getTransition() const -> LoadingTransition;
   auto getSystemDbId() const -> Uuid;
   auto tryGetPlayerDbId() const -> std::optional<Uuid>;
 
@@ -23,6 +27,7 @@ class LoadingFinishedMessage : public NetworkMessage
   auto clone() const -> IMessagePtr override;
 
   private:
+  LoadingTransition m_transition{};
   Uuid m_systemDbId{};
   std::optional<Uuid> m_playerDbId{};
 };

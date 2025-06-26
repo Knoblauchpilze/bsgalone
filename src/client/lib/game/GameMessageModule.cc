@@ -154,16 +154,14 @@ void GameMessageModule::handleEntityRemovedMessage(const bsgo::EntityRemovedMess
   }
 }
 
-void GameMessageModule::handleLoadingStartedMessage(
-  const bsgo::LoadingStartedMessage & /*message*/) const
+void GameMessageModule::handleLoadingStartedMessage(const bsgo::LoadingStartedMessage &message) const
 {
-  m_game.onLoadingStarted();
+  m_game.onLoadingStarted(message.getTransition());
 }
 
-void GameMessageModule::handleLoadingFinishedMessage(
-  const bsgo::LoadingFinishedMessage & /*message*/) const
+void GameMessageModule::handleLoadingFinishedMessage(const bsgo::LoadingFinishedMessage &message) const
 {
-  m_game.onLoadingFinished();
+  m_game.onLoadingFinished(message.getTransition());
 }
 
 } // namespace pge

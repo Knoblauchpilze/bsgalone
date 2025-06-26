@@ -76,11 +76,11 @@ void DockMessageConsumer::handleUndocking(const DockMessage &message) const
   auto added = std::make_unique<EntityAddedMessage>(shipDbId, EntityKind::SHIP, systemDbId);
   m_messageQueue->pushMessage(std::move(added));
 
-  auto started = std::make_unique<LoadingStartedMessage>(systemDbId);
+  auto started = std::make_unique<LoadingStartedMessage>(LoadingTransition::UNDOCK, systemDbId);
   started->copyClientIdIfDefined(message);
   m_messageQueue->pushMessage(std::move(started));
 
-  auto finished = std::make_unique<LoadingFinishedMessage>(systemDbId);
+  auto finished = std::make_unique<LoadingFinishedMessage>(LoadingTransition::UNDOCK, systemDbId);
   finished->copyClientIdIfDefined(message);
   m_messageQueue->pushMessage(std::move(finished));
 }
