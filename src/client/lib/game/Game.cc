@@ -343,12 +343,37 @@ void Game::onPlayerKilled()
   }
 }
 
+namespace {
+bool isTransitionValidForNextScreen(const bsgo::LoadingTransition transition,
+                                    const Screen nextScreen)
+{
+  switch (transition)
+  {
+    case bsgo::LoadingTransition::JUMP:
+      return nextScreen == Screen::GAME;
+    case bsgo::LoadingTransition::LOGIN:
+      return nextScreen == Screen::OUTPOST;
+    case bsgo::LoadingTransition::UNDOCK:
+      return nextScreen == Screen::GAME;
+    default:
+      return false;
+  }
+}
+} // namespace
+
 void Game::onLoadingStarted(const bsgo::LoadingTransition transition)
 {
   if (m_state.screen != Screen::LOADING)
   {
     error("Unexpected loading started event", "Not in loading screen");
   }
+  if (!isTransitionValidForNextScreen(transition, *m_gameSession.nextScreen))
+  {
+    error("Unexpected loading started event",
+          "Transition " + bsgo::str(transition) + " does not match next screen "
+            + str(*m_gameSession.nextScreen));
+  }
+
   debug("Starting loading transition to " + str(*m_gameSession.nextScreen));
   m_gameSession.transition = transition;
 }
