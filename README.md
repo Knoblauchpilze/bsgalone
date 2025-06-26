@@ -639,7 +639,7 @@ The server is responsible to handle a lot of messages from various sources. This
 
 After several iterations we came up with the following design:
 
-![diagram](resources/messaging-diagram.svg)
+![diagram](resources/messaging-system.svg)
 
 The main entry point of the server is the `InputMessageQueue`: this sends messages to a triage consumer whose only responsibility is to route messages to a consumer that can process them.
 
