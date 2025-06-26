@@ -1,18 +1,16 @@
 
 #include "LoadingMessagesConsumer.hh"
+#include "AsteroidListMessage.hh"
+#include "OutpostListMessage.hh"
+#include "PlayerListMessage.hh"
+#include "ShipListMessage.hh"
 #include "SystemProcessorUtils.hh"
 
 namespace bsgo {
 
 LoadingMessagesConsumer::LoadingMessagesConsumer(const Services &services,
                                                  IMessageQueue *const messageQueue)
-  : AbstractMessageConsumer("loading",
-                            {MessageType::LOADING_FINISHED,
-                             MessageType::PLAYER_LIST,
-                             MessageType::ASTEROID_LIST,
-                             MessageType::OUTPOST_LIST,
-                             MessageType::SHIP_LIST,
-                             MessageType::LOADING_STARTED})
+  : AbstractMessageConsumer("loading", {MessageType::LOADING_FINISHED, MessageType::LOADING_STARTED})
   , m_loadingService(services.loading)
   , m_messageQueue(messageQueue)
 {
@@ -31,22 +29,7 @@ void LoadingMessagesConsumer::onMessageReceived(const IMessage &message)
   switch (message.type())
   {
     case MessageType::LOADING_STARTED:
-      forwardLoadingStartedMessage(message.as<LoadingStartedMessage>());
-      return;
-    // TODO: Instead of expecting loading messages to be received, we should
-    // maybe add a type of loading and use this to determine which messages
-    // to send
-    case MessageType::PLAYER_LIST:
-      handlePlayersLoading(message.as<PlayerListMessage>());
-      return;
-    case MessageType::ASTEROID_LIST:
-      handleAsteroidsLoading(message.as<AsteroidListMessage>());
-      return;
-    case MessageType::OUTPOST_LIST:
-      handleOutpostsLoading(message.as<OutpostListMessage>());
-      return;
-    case MessageType::SHIP_LIST:
-      handleShipsLoading(message.as<ShipListMessage>());
+      handleLoadingStartedMessage(message.as<LoadingStartedMessage>());
       return;
     case MessageType::LOADING_FINISHED:
       forwardLoadingFinishedMessage(message.as<LoadingFinishedMessage>());
@@ -57,12 +40,37 @@ void LoadingMessagesConsumer::onMessageReceived(const IMessage &message)
   }
 }
 
-void LoadingMessagesConsumer::forwardLoadingStartedMessage(const LoadingStartedMessage &message) const
+void LoadingMessagesConsumer::handleLoadingStartedMessage(const LoadingStartedMessage &message) const
+{
+  m_messageQueue->pushMessage(message.clone());
+
+  info("transition is " + str(message.getTransition()) + " for system "
+       + str(message.getSystemDbId()));
+
+  switch (message.getTransition())
+  {
+    case LoadingTransition::LOGIN:
+      break;
+    case LoadingTransition::UNDOCK:
+    case LoadingTransition::JUMP:
+      handlePlayersLoading(message);
+      handleAsteroidsLoading(message);
+      handleOutpostsLoading(message);
+      handleShipsLoading(message);
+      break;
+    default:
+      error("Unsupported loading transition " + str(message.getTransition()));
+      return;
+  }
+}
+
+void LoadingMessagesConsumer::forwardLoadingFinishedMessage(
+  const LoadingFinishedMessage &message) const
 {
   m_messageQueue->pushMessage(message.clone());
 }
 
-void LoadingMessagesConsumer::handlePlayersLoading(const PlayerListMessage &message) const
+void LoadingMessagesConsumer::handlePlayersLoading(const LoadingStartedMessage &message) const
 {
   const auto systemDbId = message.getSystemDbId();
 
@@ -83,7 +91,7 @@ void LoadingMessagesConsumer::handlePlayersLoading(const PlayerListMessage &mess
   m_messageQueue->pushMessage(std::move(out));
 }
 
-void LoadingMessagesConsumer::handleAsteroidsLoading(const AsteroidListMessage &message) const
+void LoadingMessagesConsumer::handleAsteroidsLoading(const LoadingStartedMessage &message) const
 {
   const auto systemDbId = message.getSystemDbId();
 
@@ -110,7 +118,7 @@ void LoadingMessagesConsumer::handleAsteroidsLoading(const AsteroidListMessage &
   m_messageQueue->pushMessage(std::move(out));
 }
 
-void LoadingMessagesConsumer::handleOutpostsLoading(const OutpostListMessage &message) const
+void LoadingMessagesConsumer::handleOutpostsLoading(const LoadingStartedMessage &message) const
 {
   const auto systemDbId = message.getSystemDbId();
 
@@ -201,7 +209,7 @@ auto generateShipData(const LoadingService::ShipProps props) -> ShipData
 }
 } // namespace
 
-void LoadingMessagesConsumer::handleShipsLoading(const ShipListMessage &message) const
+void LoadingMessagesConsumer::handleShipsLoading(const LoadingStartedMessage &message) const
 {
   const auto systemDbId = message.getSystemDbId();
 
@@ -214,12 +222,6 @@ void LoadingMessagesConsumer::handleShipsLoading(const ShipListMessage &message)
   out->copyClientIdIfDefined(message);
 
   m_messageQueue->pushMessage(std::move(out));
-}
-
-void LoadingMessagesConsumer::forwardLoadingFinishedMessage(
-  const LoadingFinishedMessage &message) const
-{
-  m_messageQueue->pushMessage(message.clone());
 }
 
 } // namespace bsgo
