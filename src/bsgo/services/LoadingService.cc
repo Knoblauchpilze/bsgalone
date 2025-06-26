@@ -113,10 +113,10 @@ auto LoadingService::getShipsInSystem(const Uuid systemDbId) const -> std::vecto
     const auto weapons   = getWeaponsForShip(m_repositories, shipId);
     const auto computers = getComputersForShip(m_repositories, shipId);
 
-    // TODO: the target id and the status are left empty for now. We should
-    // give this service access to the coordinator and the entity mapper and
-    // try to fetch it from there. Probably in a dedicated method.
-    Status status{};
+    // TODO: the target id is left empty for now. We should
+    // give this service access to the coordinator and the
+    // entity mapper and try to fetch it from there.
+    const auto status = determineStartingStatusForShip(ship);
     std::optional<Uuid> targetDbId{};
 
     ships.emplace_back(ship, status, targetDbId, weapons, computers);
