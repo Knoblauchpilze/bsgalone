@@ -19,7 +19,7 @@ auto createServices(const ProcessingMode processingMode,
                                                repositories,
                                                coordinator,
                                                entityMapper);
-  out.loading  = std::make_shared<LoadingService>(repositories);
+  out.loading  = std::make_shared<LoadingService>(repositories, coordinator, entityMapper);
 
   return out;
 }

@@ -3,8 +3,12 @@
 
 namespace bsgo {
 
-LoadingService::LoadingService(const Repositories &repositories)
+LoadingService::LoadingService(const Repositories &repositories,
+                               CoordinatorShPtr coordinator,
+                               const DatabaseEntityMapper &entityMapper)
   : AbstractService("loading", repositories)
+  , m_coordinator(std::move(coordinator))
+  , m_entityMapper(entityMapper)
 {}
 
 auto LoadingService::getPlayersInSystem(const Uuid systemDbId) const -> std::vector<Player>
