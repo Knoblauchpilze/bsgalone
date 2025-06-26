@@ -8,16 +8,26 @@ LoadingStartedMessage::LoadingStartedMessage()
   : NetworkMessage(MessageType::LOADING_STARTED)
 {}
 
-LoadingStartedMessage::LoadingStartedMessage(const Uuid systemDbId)
+LoadingStartedMessage::LoadingStartedMessage(const LoadingTransition transition,
+                                             const Uuid systemDbId)
   : NetworkMessage(MessageType::LOADING_STARTED)
+  , m_transition(transition)
   , m_systemDbId(systemDbId)
 {}
 
-LoadingStartedMessage::LoadingStartedMessage(const Uuid systemDbId, const Uuid playerDbId)
+LoadingStartedMessage::LoadingStartedMessage(const LoadingTransition transition,
+                                             const Uuid systemDbId,
+                                             const Uuid playerDbId)
   : NetworkMessage(MessageType::LOADING_STARTED)
+  , m_transition(transition)
   , m_systemDbId(systemDbId)
   , m_playerDbId(playerDbId)
 {}
+
+auto LoadingStartedMessage::getTransition() const -> LoadingTransition
+{
+  return m_transition;
+}
 
 auto LoadingStartedMessage::getSystemDbId() const -> Uuid
 {
@@ -34,6 +44,7 @@ auto LoadingStartedMessage::serialize(std::ostream &out) const -> std::ostream &
   core::serialize(out, m_messageType);
   core::serialize(out, m_clientId);
 
+  core::serialize(out, m_transition);
   core::serialize(out, m_systemDbId);
   core::serialize(out, m_playerDbId);
 
@@ -46,6 +57,7 @@ bool LoadingStartedMessage::deserialize(std::istream &in)
   ok &= core::deserialize(in, m_messageType);
   ok &= core::deserialize(in, m_clientId);
 
+  ok &= core::deserialize(in, m_transition);
   ok &= core::deserialize(in, m_systemDbId);
   ok &= core::deserialize(in, m_playerDbId);
 
@@ -58,11 +70,11 @@ auto LoadingStartedMessage::clone() const -> IMessagePtr
 
   if (m_playerDbId)
   {
-    clone = std::make_unique<LoadingStartedMessage>(m_systemDbId, *m_playerDbId);
+    clone = std::make_unique<LoadingStartedMessage>(m_transition, m_systemDbId, *m_playerDbId);
   }
   else
   {
-    clone = std::make_unique<LoadingStartedMessage>(m_systemDbId);
+    clone = std::make_unique<LoadingStartedMessage>(m_transition, m_systemDbId);
   }
 
   clone->copyClientIdIfDefined(*this);
