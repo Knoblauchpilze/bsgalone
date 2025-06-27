@@ -6,15 +6,15 @@ namespace bsgo {
 
 ComponentSyncMessageConsumer::ComponentSyncMessageConsumer(SystemServiceShPtr systemService,
                                                            SystemProcessorMap systemProcessors,
-                                                           IMessageQueue *const messageQueue)
+                                                           IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("component", {MessageType::COMPONENT_SYNC})
   , m_systemService(std::move(systemService))
   , m_systemProcessors(std::move(systemProcessors))
-  , m_messageQueue(messageQueue)
+  , m_outputMessageQueue(outputMessageQueue)
 {
   addModule("sync");
 
-  if (nullptr == m_messageQueue)
+  if (nullptr == m_outputMessageQueue)
   {
     throw std::invalid_argument("Expected non null message queue");
   }
@@ -53,7 +53,7 @@ void ComponentSyncMessageConsumer::onMessageReceived(const IMessage &message)
 
   auto out = message.clone();
   out->as<ComponentSyncMessage>().setSystemDbId(*systemDbId);
-  m_messageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushMessage(std::move(out));
 }
 
 auto ComponentSyncMessageConsumer::determineSystemForShip(const Uuid shipDbId) const -> Uuid

@@ -5,16 +5,16 @@
 namespace bsgo {
 
 TargetMessageConsumer::TargetMessageConsumer(const Services &services,
-                                             IMessageQueue *const messageQueue)
+                                             IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("target", {MessageType::TARGET})
   , m_shipService(services.ship)
-  , m_messageQueue(messageQueue)
+  , m_outputMessageQueue(outputMessageQueue)
 {
   if (nullptr == m_shipService)
   {
     throw std::invalid_argument("Expected non null ship service");
   }
-  if (nullptr == m_messageQueue)
+  if (nullptr == m_outputMessageQueue)
   {
     throw std::invalid_argument("Expected non null message queue");
   }
@@ -40,7 +40,7 @@ void TargetMessageConsumer::onMessageReceived(const IMessage &message)
   auto out = std::make_unique<TargetMessage>(shipDbId, position, res.targetKind, res.targetDbId);
   out->validate();
   out->copyClientIdIfDefined(target);
-  m_messageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushMessage(std::move(out));
 }
 
 } // namespace bsgo

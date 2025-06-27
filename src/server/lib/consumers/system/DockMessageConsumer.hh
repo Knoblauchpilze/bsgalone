@@ -13,7 +13,7 @@ class DockMessageConsumer : public AbstractMessageConsumer
   public:
   DockMessageConsumer(const Services &services,
                       IMessageQueue *const systemMessageQueue,
-                      IMessageQueue *const messageQueue);
+                      IMessageQueue *const outputMessageQueue);
   ~DockMessageConsumer() override = default;
 
   void onMessageReceived(const IMessage &message) override;
@@ -22,7 +22,7 @@ class DockMessageConsumer : public AbstractMessageConsumer
   ShipServiceShPtr m_shipService{};
   EntityServiceShPtr m_entityService{};
   IMessageQueue *const m_systemMessageQueue{};
-  IMessageQueue *const m_messageQueue{};
+  IMessageQueue *const m_outputMessageQueue{};
 
   void handleDocking(const DockMessage &message) const;
   void handleUndocking(const DockMessage &message) const;

@@ -4,16 +4,17 @@
 
 namespace bsgo {
 
-SlotMessageConsumer::SlotMessageConsumer(const Services &services, IMessageQueue *const messageQueue)
+SlotMessageConsumer::SlotMessageConsumer(const Services &services,
+                                         IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("slot", {MessageType::SLOT})
   , m_slotService(services.slot)
-  , m_messageQueue(messageQueue)
+  , m_outputMessageQueue(outputMessageQueue)
 {
   if (nullptr == m_slotService)
   {
     throw std::invalid_argument("Expected non null slot service");
   }
-  if (nullptr == m_messageQueue)
+  if (nullptr == m_outputMessageQueue)
   {
     throw std::invalid_argument("Expected non null message queue");
   }
@@ -47,7 +48,7 @@ void SlotMessageConsumer::handleWeapon(const SlotMessage &message) const
 
   auto out = std::make_unique<WeaponComponentMessage>(shipDbId, weaponDbId, res.active);
   out->copyClientIdIfDefined(message);
-  m_messageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushMessage(std::move(out));
 }
 
 void SlotMessageConsumer::handleComputer(const SlotMessage &message) const
