@@ -11,14 +11,14 @@ namespace bsgo {
 class PurchaseMessageConsumer : public AbstractMessageConsumer
 {
   public:
-  PurchaseMessageConsumer(const Services &services, IMessageQueue *const messageQueue);
+  PurchaseMessageConsumer(const Services &services, IMessageQueue *const outputMessageQueue);
   ~PurchaseMessageConsumer() override = default;
 
   void onMessageReceived(const IMessage &message) override;
 
   private:
   PurchaseServiceShPtr m_purchaseService{};
-  IMessageQueue *const m_messageQueue{};
+  IMessageQueue *const m_outputMessageQueue{};
 
   void handleComputerPurchase(const PurchaseMessage &message) const;
   void handleShipPurchase(const PurchaseMessage &message) const;

@@ -17,7 +17,7 @@ class LogoutMessageConsumer : public AbstractMessageConsumer
   LogoutMessageConsumer(ClientManagerShPtr clientManager,
                         SystemServiceShPtr systemService,
                         SystemProcessorMap systemProcessors,
-                        IMessageQueue *const messageQueue);
+                        IMessageQueue *const outputMessageQueue);
   ~LogoutMessageConsumer() override = default;
 
   void onMessageReceived(const IMessage &message) override;
@@ -26,7 +26,7 @@ class LogoutMessageConsumer : public AbstractMessageConsumer
   ClientManagerShPtr m_clientManager{};
   SystemProcessorMap m_systemProcessors{};
   SystemServiceShPtr m_systemService{};
-  IMessageQueue *const m_messageQueue{};
+  IMessageQueue *const m_outputMessageQueue{};
 
   void handleLogout(const LogoutMessage &message) const;
   void notifyClientAndCloseConnectionIfNeeded(const Uuid playerDbId,
