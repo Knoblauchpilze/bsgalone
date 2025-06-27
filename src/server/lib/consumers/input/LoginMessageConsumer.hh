@@ -16,7 +16,7 @@ class LoginMessageConsumer : public AbstractMessageConsumer
   LoginMessageConsumer(LoginServicePtr loginService,
                        ClientManagerShPtr clientManager,
                        SystemProcessorMap systemProcessors,
-                       IMessageQueue *const messageQueue);
+                       IMessageQueue *const outputMessageQueue);
   ~LoginMessageConsumer() override = default;
 
   void onMessageReceived(const IMessage &message) override;
@@ -25,7 +25,7 @@ class LoginMessageConsumer : public AbstractMessageConsumer
   LoginServicePtr m_loginService{};
   SystemProcessorMap m_systemProcessors{};
   ClientManagerShPtr m_clientManager{};
-  IMessageQueue *const m_messageQueue{};
+  IMessageQueue *const m_outputMessageQueue{};
 
   void handleLogin(const LoginMessage &message) const;
   void publishLoadingMessages(const bsgo::Uuid clientId, const bsgo::Uuid playerDbId) const;

@@ -5,11 +5,11 @@
 namespace bsgo {
 
 LoadingMessagesConsumer::LoadingMessagesConsumer(const Services & /*services*/,
-                                                 IMessageQueue *const messageQueue)
+                                                 IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("loading", {MessageType::LOADING_FINISHED, MessageType::LOADING_STARTED})
-  , m_messageQueue(messageQueue)
+  , m_outputMessageQueue(outputMessageQueue)
 {
-  if (nullptr == m_messageQueue)
+  if (nullptr == m_outputMessageQueue)
   {
     throw std::invalid_argument("Expected non null message queue");
   }
@@ -33,13 +33,13 @@ void LoadingMessagesConsumer::onMessageReceived(const IMessage &message)
 
 void LoadingMessagesConsumer::forwardLoadingStartedMessage(const LoadingStartedMessage &message) const
 {
-  m_messageQueue->pushMessage(message.clone());
+  m_outputMessageQueue->pushMessage(message.clone());
 }
 
 void LoadingMessagesConsumer::forwardLoadingFinishedMessage(
   const LoadingFinishedMessage &message) const
 {
-  m_messageQueue->pushMessage(message.clone());
+  m_outputMessageQueue->pushMessage(message.clone());
 }
 
 } // namespace bsgo

@@ -5,16 +5,16 @@
 namespace bsgo {
 
 LootMessageConsumer::LootMessageConsumer(SystemServiceShPtr systemService,
-                                         IMessageQueue *const messageQueue)
+                                         IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("loot", {MessageType::LOOT})
   , m_systemService(std::move(systemService))
-  , m_messageQueue(messageQueue)
+  , m_outputMessageQueue(outputMessageQueue)
 {
   if (nullptr == m_systemService)
   {
     throw std::invalid_argument("Expected non null system service");
   }
-  if (nullptr == m_messageQueue)
+  if (nullptr == m_outputMessageQueue)
   {
     throw std::invalid_argument("Expected non null message queue");
   }
@@ -36,7 +36,7 @@ void LootMessageConsumer::onMessageReceived(const IMessage &message)
 
   auto out = std::make_unique<LootMessage>(playerDbId, resourceDbId, amount);
   out->copyClientIdIfDefined(loot);
-  m_messageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushMessage(std::move(out));
 }
 
 } // namespace bsgo

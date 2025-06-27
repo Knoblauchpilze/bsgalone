@@ -7,12 +7,12 @@ namespace bsgo {
 LogoutMessageConsumer::LogoutMessageConsumer(ClientManagerShPtr clientManager,
                                              SystemServiceShPtr systemService,
                                              SystemProcessorMap systemProcessors,
-                                             IMessageQueue *const messageQueue)
+                                             IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("logout", {MessageType::LOGOUT})
   , m_clientManager(std::move(clientManager))
   , m_systemProcessors(std::move(systemProcessors))
   , m_systemService(std::move(systemService))
-  , m_messageQueue(messageQueue)
+  , m_outputMessageQueue(outputMessageQueue)
 {
   if (nullptr == m_clientManager)
   {
@@ -22,7 +22,7 @@ LogoutMessageConsumer::LogoutMessageConsumer(ClientManagerShPtr clientManager,
   {
     throw std::invalid_argument("Expected non null system service");
   }
-  if (nullptr == m_messageQueue)
+  if (nullptr == m_outputMessageQueue)
   {
     throw std::invalid_argument("Expected non null message queue");
   }
@@ -84,7 +84,7 @@ void LogoutMessageConsumer::notifyClientAndCloseConnectionIfNeeded(const Uuid pl
   auto out = std::make_unique<LogoutMessage>(playerDbId);
   out->validate();
   out->copyClientIdIfDefined(message);
-  m_messageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushMessage(std::move(out));
 }
 
 } // namespace bsgo

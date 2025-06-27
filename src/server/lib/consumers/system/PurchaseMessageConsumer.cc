@@ -4,16 +4,16 @@
 namespace bsgo {
 
 PurchaseMessageConsumer::PurchaseMessageConsumer(const Services &services,
-                                                 IMessageQueue *const messageQueue)
+                                                 IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("purchase", {MessageType::PURCHASE})
   , m_purchaseService(services.purchase)
-  , m_messageQueue(messageQueue)
+  , m_outputMessageQueue(outputMessageQueue)
 {
   if (nullptr == m_purchaseService)
   {
     throw std::invalid_argument("Expected non null purchase service");
   }
-  if (nullptr == m_messageQueue)
+  if (nullptr == m_outputMessageQueue)
   {
     throw std::invalid_argument("Expected non null message queue");
   }
@@ -60,7 +60,7 @@ void PurchaseMessageConsumer::handleComputerPurchase(const PurchaseMessage &mess
   auto out = std::make_unique<PurchaseMessage>(playerDbId, Item::COMPUTER, computerDbId);
   out->validate();
   out->copyClientIdIfDefined(message);
-  m_messageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushMessage(std::move(out));
 }
 
 void PurchaseMessageConsumer::handleShipPurchase(const PurchaseMessage &message) const
@@ -78,7 +78,7 @@ void PurchaseMessageConsumer::handleShipPurchase(const PurchaseMessage &message)
   auto out = std::make_unique<PurchaseMessage>(playerDbId, Item::SHIP, shipDbId);
   out->validate();
   out->copyClientIdIfDefined(message);
-  m_messageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushMessage(std::move(out));
 }
 
 void PurchaseMessageConsumer::handleWeaponPurchase(const PurchaseMessage &message) const
@@ -96,7 +96,7 @@ void PurchaseMessageConsumer::handleWeaponPurchase(const PurchaseMessage &messag
   auto out = std::make_unique<PurchaseMessage>(playerDbId, Item::WEAPON, weaponDbId);
   out->validate();
   out->copyClientIdIfDefined(message);
-  m_messageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushMessage(std::move(out));
 }
 
 } // namespace bsgo

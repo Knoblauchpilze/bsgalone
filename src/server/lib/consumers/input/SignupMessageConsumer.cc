@@ -5,11 +5,11 @@ namespace bsgo {
 
 SignupMessageConsumer::SignupMessageConsumer(SignupServicePtr signupService,
                                              ClientManagerShPtr clientManager,
-                                             IMessageQueue *const messageQueue)
+                                             IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("signup", {MessageType::SIGNUP})
   , m_signupService(std::move(signupService))
   , m_clientManager(std::move(clientManager))
-  , m_messageQueue(messageQueue)
+  , m_outputMessageQueue(outputMessageQueue)
 {
   if (nullptr == m_signupService)
   {
@@ -19,7 +19,7 @@ SignupMessageConsumer::SignupMessageConsumer(SignupServicePtr signupService,
   {
     throw std::invalid_argument("Expected non null client manager");
   }
-  if (nullptr == m_messageQueue)
+  if (nullptr == m_outputMessageQueue)
   {
     throw std::invalid_argument("Expected non null message queue");
   }
@@ -60,7 +60,7 @@ void SignupMessageConsumer::handleSignup(const SignupMessage &message) const
                                                                      : std::optional<Uuid>{});
   out->validate();
   out->copyClientIdIfDefined(message);
-  m_messageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushMessage(std::move(out));
 }
 
 } // namespace bsgo

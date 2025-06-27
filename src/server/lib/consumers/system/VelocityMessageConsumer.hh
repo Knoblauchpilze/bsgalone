@@ -10,14 +10,14 @@ namespace bsgo {
 class VelocityMessageConsumer : public AbstractMessageConsumer
 {
   public:
-  VelocityMessageConsumer(const Services &services, IMessageQueue *const messageQueue);
+  VelocityMessageConsumer(const Services &services, IMessageQueue *const outputMessageQueue);
   ~VelocityMessageConsumer() override = default;
 
   void onMessageReceived(const IMessage &message) override;
 
   private:
   ShipServiceShPtr m_shipService{};
-  IMessageQueue *const m_messageQueue{};
+  IMessageQueue *const m_outputMessageQueue{};
 };
 
 } // namespace bsgo

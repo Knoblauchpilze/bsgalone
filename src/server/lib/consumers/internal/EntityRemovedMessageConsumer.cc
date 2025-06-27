@@ -7,11 +7,11 @@ namespace bsgo {
 
 EntityRemovedMessageConsumer::EntityRemovedMessageConsumer(SystemServiceShPtr systemService,
                                                            SystemProcessorMap systemProcessors,
-                                                           IMessageQueue *const messageQueue)
+                                                           IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("entity", {MessageType::ENTITY_REMOVED})
   , m_systemService(std::move(systemService))
   , m_systemProcessors(std::move(systemProcessors))
-  , m_messageQueue(messageQueue)
+  , m_outputMessageQueue(outputMessageQueue)
 {
   addModule("removed");
 
@@ -19,7 +19,7 @@ EntityRemovedMessageConsumer::EntityRemovedMessageConsumer(SystemServiceShPtr sy
   {
     throw std::invalid_argument("Expected non null system service");
   }
-  if (nullptr == m_messageQueue)
+  if (nullptr == m_outputMessageQueue)
   {
     throw std::invalid_argument("Expected non null message queue");
   }

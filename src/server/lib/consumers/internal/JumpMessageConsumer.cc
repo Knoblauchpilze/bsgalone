@@ -11,12 +11,12 @@ namespace bsgo {
 JumpMessageConsumer::JumpMessageConsumer(SystemServiceShPtr systemService,
                                          ClientManagerShPtr clientManager,
                                          SystemProcessorMap systemProcessors,
-                                         IMessageQueue *const messageQueue)
+                                         IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("jump", {MessageType::JUMP})
   , m_systemService(std::move(systemService))
   , m_clientManager(std::move(clientManager))
   , m_systemProcessors(std::move(systemProcessors))
-  , m_messageQueue(messageQueue)
+  , m_outputMessageQueue(outputMessageQueue)
 {
   if (nullptr == m_systemService)
   {
@@ -26,7 +26,7 @@ JumpMessageConsumer::JumpMessageConsumer(SystemServiceShPtr systemService,
   {
     throw std::invalid_argument("Expected non null client manager");
   }
-  if (nullptr == m_messageQueue)
+  if (nullptr == m_outputMessageQueue)
   {
     throw std::invalid_argument("Expected non null message queue");
   }
@@ -55,7 +55,7 @@ void JumpMessageConsumer::onMessageReceived(const IMessage &message)
                                            res.sourceSystem,
                                            res.destinationSystem);
   out->copyClientIdIfDefined(jump);
-  m_messageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushMessage(std::move(out));
 }
 
 void JumpMessageConsumer::handlePostJumpSystemMessages(const Uuid shipDbId,
