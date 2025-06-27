@@ -11,7 +11,9 @@ namespace bsgo {
 class DockMessageConsumer : public AbstractMessageConsumer
 {
   public:
-  DockMessageConsumer(const Services &services, IMessageQueue *const messageQueue);
+  DockMessageConsumer(const Services &services,
+                      IMessageQueue *const systemMessageQueue,
+                      IMessageQueue *const messageQueue);
   ~DockMessageConsumer() override = default;
 
   void onMessageReceived(const IMessage &message) override;
@@ -19,6 +21,7 @@ class DockMessageConsumer : public AbstractMessageConsumer
   private:
   ShipServiceShPtr m_shipService{};
   EntityServiceShPtr m_entityService{};
+  IMessageQueue *const m_systemMessageQueue{};
   IMessageQueue *const m_messageQueue{};
 
   void handleDocking(const DockMessage &message) const;

@@ -7,7 +7,7 @@
 
 namespace bsgo {
 
-void createMessageConsumers(IMessageQueue &inputMessagesQueue,
+void createMessageConsumers(IMessageQueue *const inputMessagesQueue,
                             IMessageQueue *const outputMessagesQueue,
                             const Services &services);
 

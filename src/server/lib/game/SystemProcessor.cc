@@ -50,7 +50,7 @@ void SystemProcessor::connectToQueues(IMessageQueue *const internalMessageQueue,
   // with that type and populate the list of players with the ones from the system
   // This service would already have access to the broadcast queue so we can then send
   // this message to the client.
-  createMessageConsumers(*m_inputMessagesQueue, outputMessageQueue, m_services);
+  createMessageConsumers(m_inputMessagesQueue.get(), outputMessageQueue, m_services);
 }
 
 void SystemProcessor::start()
