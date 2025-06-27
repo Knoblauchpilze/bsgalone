@@ -5,10 +5,10 @@
 namespace bsgo {
 
 EntityAddedMessageConsumer::EntityAddedMessageConsumer(const Services &services,
-                                                       IMessageQueue *const messageQueue)
+                                                       IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("entity", {MessageType::ENTITY_ADDED})
   , m_entityService(services.entity)
-  , m_messageQueue(messageQueue)
+  , m_outputMessageQueue(outputMessageQueue)
 {
   addModule("added");
 
@@ -16,7 +16,7 @@ EntityAddedMessageConsumer::EntityAddedMessageConsumer(const Services &services,
   {
     throw std::invalid_argument("Expected non null entity service");
   }
-  if (nullptr == m_messageQueue)
+  if (nullptr == m_outputMessageQueue)
   {
     throw std::invalid_argument("Expected non null message queue");
   }
@@ -49,7 +49,7 @@ void EntityAddedMessageConsumer::handleShipAdded(const Uuid shipDbId, const Uuid
   }
 
   auto out = std::make_unique<EntityAddedMessage>(shipDbId, EntityKind::SHIP, systemDbId);
-  m_messageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushMessage(std::move(out));
 }
 
 } // namespace bsgo

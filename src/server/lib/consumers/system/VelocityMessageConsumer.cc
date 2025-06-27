@@ -5,16 +5,16 @@
 namespace bsgo {
 
 VelocityMessageConsumer::VelocityMessageConsumer(const Services &services,
-                                                 IMessageQueue *const messageQueue)
+                                                 IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("velocity", {MessageType::VELOCITY})
   , m_shipService(services.ship)
-  , m_messageQueue(messageQueue)
+  , m_outputMessageQueue(outputMessageQueue)
 {
   if (nullptr == m_shipService)
   {
     throw std::invalid_argument("Expected non null ship service");
   }
-  if (nullptr == m_messageQueue)
+  if (nullptr == m_outputMessageQueue)
   {
     throw std::invalid_argument("Expected non null message queue");
   }
@@ -36,7 +36,7 @@ void VelocityMessageConsumer::onMessageReceived(const IMessage &message)
   auto out = std::make_unique<VelocityMessage>(shipDbId, acceleration);
   out->validate();
   out->copyClientIdIfDefined(velocity);
-  m_messageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushMessage(std::move(out));
 }
 
 } // namespace bsgo

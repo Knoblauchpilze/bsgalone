@@ -5,10 +5,10 @@
 namespace bsgo {
 
 EntityDeletedMessageConsumer::EntityDeletedMessageConsumer(const Services &services,
-                                                           IMessageQueue *const messageQueue)
+                                                           IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("entity", {MessageType::ENTITY_REMOVED})
   , m_entityService(services.entity)
-  , m_messageQueue(messageQueue)
+  , m_outputMessageQueue(outputMessageQueue)
 {
   addModule("removed");
 
@@ -16,7 +16,7 @@ EntityDeletedMessageConsumer::EntityDeletedMessageConsumer(const Services &servi
   {
     throw std::invalid_argument("Expected non null entity service");
   }
-  if (nullptr == m_messageQueue)
+  if (nullptr == m_outputMessageQueue)
   {
     throw std::invalid_argument("Expected non null message queue");
   }
@@ -46,7 +46,7 @@ void EntityDeletedMessageConsumer::onMessageReceived(const IMessage &message)
                                                     entityKind,
                                                     removed.isDead(),
                                                     systemDbId);
-  m_messageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushMessage(std::move(out));
 }
 
 void EntityDeletedMessageConsumer::handleShipRemoved(const Uuid shipDbId) const

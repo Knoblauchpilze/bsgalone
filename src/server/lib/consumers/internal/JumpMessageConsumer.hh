@@ -15,7 +15,7 @@ class JumpMessageConsumer : public AbstractMessageConsumer
   JumpMessageConsumer(SystemServiceShPtr systemService,
                       ClientManagerShPtr clientManager,
                       SystemProcessorMap systemProcessors,
-                      IMessageQueue *const messageQueue);
+                      IMessageQueue *const outputMessageQueue);
   ~JumpMessageConsumer() override = default;
 
   void onMessageReceived(const IMessage &message) override;
@@ -24,7 +24,7 @@ class JumpMessageConsumer : public AbstractMessageConsumer
   SystemServiceShPtr m_systemService{};
   ClientManagerShPtr m_clientManager{};
   SystemProcessorMap m_systemProcessors{};
-  IMessageQueue *const m_messageQueue{};
+  IMessageQueue *const m_outputMessageQueue{};
 
   void handlePostJumpSystemMessages(const Uuid shipDbId,
                                     const Uuid sourceSystemDbId,

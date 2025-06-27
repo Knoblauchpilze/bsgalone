@@ -14,7 +14,7 @@ class SignupMessageConsumer : public AbstractMessageConsumer
   public:
   SignupMessageConsumer(SignupServicePtr signupService,
                         ClientManagerShPtr clientManager,
-                        IMessageQueue *const messageQueue);
+                        IMessageQueue *const outputMessageQueue);
   ~SignupMessageConsumer() override = default;
 
   void onMessageReceived(const IMessage &message) override;
@@ -22,7 +22,7 @@ class SignupMessageConsumer : public AbstractMessageConsumer
   private:
   SignupServicePtr m_signupService{};
   ClientManagerShPtr m_clientManager{};
-  IMessageQueue *const m_messageQueue{};
+  IMessageQueue *const m_outputMessageQueue{};
 
   void handleSignup(const SignupMessage &message) const;
 };

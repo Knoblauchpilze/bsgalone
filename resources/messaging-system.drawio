@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0" version="27.1.5">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0" version="27.1.6">
   <diagram name="Page-1" id="RS5jcFhz8Xbtk4Y77vzj">
     <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -8,7 +8,7 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="ibJAUMSW30bJaouOlocZ-1" value="&lt;div&gt;InputMessageQueue&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1ba1e2;fontColor=light-dark(#FFFFFF,#FFFFFF);strokeColor=#006EAF;strokeWidth=3;" vertex="1" parent="1">
-          <mxGeometry x="620" y="-100" width="260" height="40" as="geometry" />
+          <mxGeometry x="642" y="-100" width="260" height="40" as="geometry" />
         </mxCell>
         <mxCell id="ibJAUMSW30bJaouOlocZ-33" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="ibJAUMSW30bJaouOlocZ-3" target="ibJAUMSW30bJaouOlocZ-23">
           <mxGeometry relative="1" as="geometry" />
@@ -45,7 +45,7 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="ibJAUMSW30bJaouOlocZ-24" value="TriageMessageConsumer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#60a917;fontColor=light-dark(#FFFFFF,#FFFFFF);strokeColor=#2D7600;strokeWidth=3;" vertex="1" parent="1">
-          <mxGeometry x="620" width="260" height="40" as="geometry" />
+          <mxGeometry x="642" width="260" height="40" as="geometry" />
         </mxCell>
         <mxCell id="ibJAUMSW30bJaouOlocZ-25" value="SystemMessageConsumer1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#60a917;fontColor=light-dark(#FFFFFF,#FFFFFF);strokeColor=#2D7600;strokeWidth=3;verticalAlign=top;" vertex="1" parent="1">
           <mxGeometry x="203" y="410" width="270" height="200" as="geometry" />

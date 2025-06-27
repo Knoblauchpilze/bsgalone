@@ -16,44 +16,44 @@
 
 namespace bsgo {
 
-void createMessageConsumers(IMessageQueue &inputMessagesQueue,
+void createMessageConsumers(IMessageQueue *const inputMessagesQueue,
                             IMessageQueue *const outputMessagesQueue,
                             const Services &services)
 {
-  inputMessagesQueue.addListener(
+  inputMessagesQueue->addListener(
     std::make_unique<HangarMessageConsumer>(services, outputMessagesQueue));
 
-  inputMessagesQueue.addListener(
+  inputMessagesQueue->addListener(
     std::make_unique<PurchaseMessageConsumer>(services, outputMessagesQueue));
 
-  inputMessagesQueue.addListener(
+  inputMessagesQueue->addListener(
     std::make_unique<EquipMessageConsumer>(services, outputMessagesQueue));
 
-  inputMessagesQueue.addListener(
-    std::make_unique<DockMessageConsumer>(services, outputMessagesQueue));
+  inputMessagesQueue->addListener(
+    std::make_unique<DockMessageConsumer>(services, inputMessagesQueue, outputMessagesQueue));
 
-  inputMessagesQueue.addListener(
+  inputMessagesQueue->addListener(
     std::make_unique<SlotMessageConsumer>(services, outputMessagesQueue));
 
-  inputMessagesQueue.addListener(
+  inputMessagesQueue->addListener(
     std::make_unique<VelocityMessageConsumer>(services, outputMessagesQueue));
 
-  inputMessagesQueue.addListener(
+  inputMessagesQueue->addListener(
     std::make_unique<TargetMessageConsumer>(services, outputMessagesQueue));
 
-  inputMessagesQueue.addListener(
+  inputMessagesQueue->addListener(
     std::make_unique<JumpCancelledMessageConsumer>(services, outputMessagesQueue));
 
-  inputMessagesQueue.addListener(
+  inputMessagesQueue->addListener(
     std::make_unique<JumpRequestedMessageConsumer>(services, outputMessagesQueue));
 
-  inputMessagesQueue.addListener(
+  inputMessagesQueue->addListener(
     std::make_unique<EntityDeletedMessageConsumer>(services, outputMessagesQueue));
 
-  inputMessagesQueue.addListener(
+  inputMessagesQueue->addListener(
     std::make_unique<EntityAddedMessageConsumer>(services, outputMessagesQueue));
 
-  inputMessagesQueue.addListener(
+  inputMessagesQueue->addListener(
     std::make_unique<LoadingMessagesConsumer>(services, outputMessagesQueue));
 }
 

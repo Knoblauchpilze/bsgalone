@@ -9,16 +9,16 @@
 namespace bsgo {
 
 LoadingMessagesConsumer::LoadingMessagesConsumer(const Services &services,
-                                                 IMessageQueue *const messageQueue)
+                                                 IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("loading", {MessageType::LOADING_FINISHED, MessageType::LOADING_STARTED})
   , m_loadingService(services.loading)
-  , m_messageQueue(messageQueue)
+  , m_outputMessageQueue(outputMessageQueue)
 {
   if (nullptr == m_loadingService)
   {
     throw std::invalid_argument("Expected non null loading service");
   }
-  if (nullptr == m_messageQueue)
+  if (nullptr == m_outputMessageQueue)
   {
     throw std::invalid_argument("Expected non null message queue");
   }
@@ -42,7 +42,7 @@ void LoadingMessagesConsumer::onMessageReceived(const IMessage &message)
 
 void LoadingMessagesConsumer::handleLoadingStartedMessage(const LoadingStartedMessage &message) const
 {
-  m_messageQueue->pushMessage(message.clone());
+  m_outputMessageQueue->pushMessage(message.clone());
 
   info("transition is " + str(message.getTransition()) + " for system "
        + str(message.getSystemDbId()));
@@ -67,7 +67,7 @@ void LoadingMessagesConsumer::handleLoadingStartedMessage(const LoadingStartedMe
 void LoadingMessagesConsumer::forwardLoadingFinishedMessage(
   const LoadingFinishedMessage &message) const
 {
-  m_messageQueue->pushMessage(message.clone());
+  m_outputMessageQueue->pushMessage(message.clone());
 }
 
 void LoadingMessagesConsumer::handlePlayersLoading(const LoadingStartedMessage &message) const
@@ -88,7 +88,7 @@ void LoadingMessagesConsumer::handlePlayersLoading(const LoadingStartedMessage &
   auto out = std::make_unique<PlayerListMessage>(systemDbId, playersData);
   out->copyClientIdIfDefined(message);
 
-  m_messageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushMessage(std::move(out));
 }
 
 void LoadingMessagesConsumer::handleAsteroidsLoading(const LoadingStartedMessage &message) const
@@ -115,7 +115,7 @@ void LoadingMessagesConsumer::handleAsteroidsLoading(const LoadingStartedMessage
   auto out = std::make_unique<AsteroidListMessage>(systemDbId, asteroidsData);
   out->copyClientIdIfDefined(message);
 
-  m_messageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushMessage(std::move(out));
 }
 
 void LoadingMessagesConsumer::handleOutpostsLoading(const LoadingStartedMessage &message) const
@@ -143,7 +143,7 @@ void LoadingMessagesConsumer::handleOutpostsLoading(const LoadingStartedMessage 
   auto out = std::make_unique<OutpostListMessage>(systemDbId, outpostsData);
   out->copyClientIdIfDefined(message);
 
-  m_messageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushMessage(std::move(out));
 }
 
 namespace {
@@ -221,7 +221,7 @@ void LoadingMessagesConsumer::handleShipsLoading(const LoadingStartedMessage &me
   auto out = std::make_unique<ShipListMessage>(systemDbId, shipsData);
   out->copyClientIdIfDefined(message);
 
-  m_messageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushMessage(std::move(out));
 }
 
 } // namespace bsgo
