@@ -277,4 +277,19 @@ auto updateStatusAfterJumpCancellation(const Status &in) -> Status
   }
 }
 
+auto determineStartingStatusForShip(const PlayerShip &ship) -> Status
+{
+  if (ship.docked)
+  {
+    return Status::DOCKED;
+  }
+
+  if (!ship.player)
+  {
+    return Status::VISIBLE;
+  }
+
+  return Status::APPEARING;
+}
+
 } // namespace bsgo

@@ -48,7 +48,6 @@ bool deserializeComputerData(std::istream &in, ComputerData &data)
   ok &= core::deserialize(in, data.reloadTime);
   ok &= core::deserialize(in, data.duration);
 
-  // TODO: Handle allowed targets
   data.allowedTargets.reset();
   bool hasAllowedTargets{false};
   ok &= core::deserialize(in, hasAllowedTargets);
