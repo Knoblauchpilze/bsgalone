@@ -5,6 +5,7 @@
 #include "DatabaseEntityMapper.hh"
 #include "EntityService.hh"
 #include "JumpService.hh"
+#include "LoadingService.hh"
 #include "LockerService.hh"
 #include "PurchaseService.hh"
 #include "Repositories.hh"
@@ -21,6 +22,7 @@ struct Services
   JumpServiceShPtr jump{};
   SlotServiceShPtr slot{};
   EntityServiceShPtr entity{};
+  LoadingServiceShPtr loading{};
 };
 
 auto createServices(const ProcessingMode processingMode,

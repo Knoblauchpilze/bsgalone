@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "PlayerShipRepository.hh"
 #include <string>
 
 namespace bsgo {
@@ -39,5 +40,7 @@ auto updateStatusAfterSpawn(const Status &in) -> Status;
 auto updateStatusAfterThreatEnded(const Status &in) -> Status;
 auto updateStatusForJump(const Status &in) -> Status;
 auto updateStatusAfterJumpCancellation(const Status &in) -> Status;
+
+auto determineStartingStatusForShip(const PlayerShip &ship) -> Status;
 
 } // namespace bsgo
