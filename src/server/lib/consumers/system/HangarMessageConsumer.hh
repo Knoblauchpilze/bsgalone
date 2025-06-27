@@ -11,14 +11,14 @@ namespace bsgo {
 class HangarMessageConsumer : public AbstractMessageConsumer
 {
   public:
-  HangarMessageConsumer(const Services &services, IMessageQueue *const messageQueue);
+  HangarMessageConsumer(const Services &services, IMessageQueue *const outputMessageQueue);
   ~HangarMessageConsumer() override = default;
 
   void onMessageReceived(const IMessage &message) override;
 
   private:
   ShipServiceShPtr m_shipService{};
-  IMessageQueue *const m_messageQueue{};
+  IMessageQueue *const m_outputMessageQueue{};
 
   void handleShipSwitchRequest(const HangarMessage &message) const;
 };

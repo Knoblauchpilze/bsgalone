@@ -15,7 +15,7 @@ class ComponentSyncMessageConsumer : public AbstractMessageConsumer
   public:
   ComponentSyncMessageConsumer(SystemServiceShPtr systemService,
                                SystemProcessorMap systemProcessors,
-                               IMessageQueue *const messageQueue);
+                               IMessageQueue *const outputMessageQueue);
   ~ComponentSyncMessageConsumer() override = default;
 
   void onMessageReceived(const IMessage &message) override;
@@ -23,7 +23,7 @@ class ComponentSyncMessageConsumer : public AbstractMessageConsumer
   private:
   SystemServiceShPtr m_systemService{};
   SystemProcessorMap m_systemProcessors{};
-  IMessageQueue *const m_messageQueue{};
+  IMessageQueue *const m_outputMessageQueue{};
 
   auto determineSystemForShip(const Uuid shipDbId) const -> Uuid;
   auto determineSystemForAsteroid(const Uuid asteroidDbId) const -> Uuid;

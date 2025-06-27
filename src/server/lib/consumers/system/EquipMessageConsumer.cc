@@ -4,16 +4,16 @@
 namespace bsgo {
 
 EquipMessageConsumer::EquipMessageConsumer(const Services &services,
-                                           IMessageQueue *const messageQueue)
+                                           IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("equip", {MessageType::EQUIP})
   , m_lockerService(services.locker)
-  , m_messageQueue(messageQueue)
+  , m_outputMessageQueue(outputMessageQueue)
 {
   if (nullptr == m_lockerService)
   {
     throw std::invalid_argument("Expected non null locker service");
   }
-  if (nullptr == m_messageQueue)
+  if (nullptr == m_outputMessageQueue)
   {
     throw std::invalid_argument("Expected non null message queue");
   }
@@ -58,7 +58,7 @@ void EquipMessageConsumer::handleEquipRequest(const EquipMessage &message) const
   auto out = std::make_unique<EquipMessage>(EquipType::EQUIP, shipDbId, type, itemDbId);
   out->validate();
   out->copyClientIdIfDefined(message);
-  m_messageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushMessage(std::move(out));
 }
 
 void EquipMessageConsumer::handleUnequipRequest(const EquipMessage &message) const
@@ -78,7 +78,7 @@ void EquipMessageConsumer::handleUnequipRequest(const EquipMessage &message) con
   auto out = std::make_unique<EquipMessage>(EquipType::UNEQUIP, shipDbId, type, itemDbId);
   out->validate();
   out->copyClientIdIfDefined(message);
-  m_messageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushMessage(std::move(out));
 }
 
 } // namespace bsgo

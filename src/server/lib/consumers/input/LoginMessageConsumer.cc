@@ -2,19 +2,18 @@
 #include "LoginMessageConsumer.hh"
 #include "LoadingFinishedMessage.hh"
 #include "LoadingStartedMessage.hh"
-#include "PlayerListMessage.hh"
 
 namespace bsgo {
 
 LoginMessageConsumer::LoginMessageConsumer(LoginServicePtr loginService,
                                            ClientManagerShPtr clientManager,
                                            SystemProcessorMap systemProcessors,
-                                           IMessageQueue *const messageQueue)
+                                           IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("login", {MessageType::LOGIN})
   , m_loginService(std::move(loginService))
   , m_systemProcessors(std::move(systemProcessors))
   , m_clientManager(std::move(clientManager))
-  , m_messageQueue(messageQueue)
+  , m_outputMessageQueue(outputMessageQueue)
 {
   if (nullptr == m_loginService)
   {
@@ -24,7 +23,7 @@ LoginMessageConsumer::LoginMessageConsumer(LoginServicePtr loginService,
   {
     throw std::invalid_argument("Expected non null client manager");
   }
-  if (nullptr == m_messageQueue)
+  if (nullptr == m_outputMessageQueue)
   {
     throw std::invalid_argument("Expected non null message queue");
   }
@@ -62,7 +61,7 @@ void LoginMessageConsumer::handleLogin(const LoginMessage &message) const
   out->validate();
   out->copyClientIdIfDefined(message);
 
-  m_messageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushMessage(std::move(out));
   publishLoadingMessages(clientId, *playerDbId);
 }
 

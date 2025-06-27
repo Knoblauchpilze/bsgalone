@@ -41,23 +41,6 @@ void ShipDataSource::registerShip(Coordinator &coordinator,
   registerShip(coordinator, ship, entityMapper, false);
 }
 
-namespace {
-auto determineStartingStatusForShip(const PlayerShip &ship) -> Status
-{
-  if (ship.docked)
-  {
-    return Status::DOCKED;
-  }
-
-  if (!ship.player)
-  {
-    return Status::VISIBLE;
-  }
-
-  return Status::APPEARING;
-}
-} // namespace
-
 void ShipDataSource::registerShip(Coordinator &coordinator,
                                   const Uuid ship,
                                   DatabaseEntityMapper &entityMapper,

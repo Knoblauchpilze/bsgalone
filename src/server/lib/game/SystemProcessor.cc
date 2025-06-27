@@ -46,7 +46,7 @@ void SystemProcessor::connectToQueues(IMessageQueue *const internalMessageQueue,
   dataSource.initialize(*m_coordinator, m_entityMapper);
 
   m_services = createServices(ProcessingMode::SERVER, repositories, m_coordinator, m_entityMapper);
-  createMessageConsumers(*m_inputMessagesQueue, outputMessageQueue, m_services);
+  createMessageConsumers(m_inputMessagesQueue.get(), outputMessageQueue, m_services);
 }
 
 void SystemProcessor::start()
