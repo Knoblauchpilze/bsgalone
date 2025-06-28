@@ -45,7 +45,7 @@ auto Game::getScreen() const noexcept -> Screen
 namespace {
 bool shouldUpdateCoordinatorAfterScreenTransition(const Screen &current, const Screen &next)
 {
-  return Screen::LOADING == current && Screen::GAME == next;
+  return Screen::OUTPOST == current && Screen::GAME == next;
 }
 } // namespace
 
@@ -279,7 +279,7 @@ void Game::onConnectedToServer(const bsgo::Uuid clientId)
   info("Received client id " + bsgo::str(clientId) + " from server");
   m_outputMessageQueue->setClientId(clientId);
 
-// #define START_AT_LOGIN
+#define START_AT_LOGIN
 #ifndef START_AT_LOGIN
   // auto login = std::make_unique<bsgo::LoginMessage>("toast", "aze");
   auto login = std::make_unique<bsgo::LoginMessage>("colo", "aze");
@@ -291,26 +291,19 @@ void Game::onConnectedToServer(const bsgo::Uuid clientId)
 void Game::onLogin(const bsgo::Uuid playerDbId)
 {
   info("processing login for " + bsgo::str(playerDbId));
-  m_gameSession.playerDbId = playerDbId;
+  m_gameSession.onPlayerLoggedIn(playerDbId);
   setupLoadingScreen(Screen::OUTPOST);
 }
 
 void Game::onLogout()
 {
-  if (!m_gameSession.playerDbId)
-  {
-    error("Failed to log out", "Not logged in");
-  }
-
-  info("Player " + bsgo::str(*m_gameSession.playerDbId) + " logged out");
+  m_gameSession.onPlayerLoggedOut();
   setScreen(Screen::LOGIN);
-  m_gameSession.playerDbId.reset();
-  m_gameSession.systemDbId.reset();
 }
 
 void Game::onActiveShipChanged(const bsgo::Uuid shipDbId)
 {
-  m_gameSession.playerShipDbId = shipDbId;
+  m_gameSession.onActiveShipChanged(shipDbId);
   resetViewsAndUi();
 }
 
@@ -318,15 +311,12 @@ void Game::onActiveSystemChanged(const bsgo::Uuid systemDbId)
 {
   m_views.shipView->clearJumpSystem();
   m_views.shipDbView->clearJumpSystem();
-  m_gameSession.systemDbId = systemDbId;
-
-  info("Active system is now " + bsgo::str(systemDbId));
+  m_gameSession.onActiveSystemChanged(systemDbId);
+  setupLoadingScreen(Screen::GAME);
 
   m_dataSource.clearSystemDbId();
   // TODO: We should set the screen to loading
   resetViewsAndUi();
-
-  setupLoadingScreen(Screen::GAME);
 }
 
 void Game::onShipDocked()
@@ -349,65 +339,15 @@ void Game::onPlayerKilled()
   }
 }
 
-namespace {
-bool isTransitionValidForNextScreen(const bsgo::LoadingTransition transition,
-                                    const Screen nextScreen)
-{
-  switch (transition)
-  {
-    case bsgo::LoadingTransition::JUMP:
-      return nextScreen == Screen::GAME;
-    case bsgo::LoadingTransition::LOGIN:
-      return nextScreen == Screen::OUTPOST;
-    case bsgo::LoadingTransition::UNDOCK:
-      return nextScreen == Screen::GAME;
-    default:
-      return false;
-  }
-}
-} // namespace
-
 void Game::onLoadingStarted(const bsgo::LoadingTransition transition)
 {
-  if (m_state.screen != Screen::LOADING)
-  {
-    error("Unexpected loading started event", "Not in loading screen");
-  }
-  if (!isTransitionValidForNextScreen(transition, *m_gameSession.nextScreen))
-  {
-    error("Unexpected loading started event",
-          "Transition " + bsgo::str(transition) + " does not match next screen "
-            + str(*m_gameSession.nextScreen));
-  }
-
-  debug("Starting loading transition to " + str(*m_gameSession.nextScreen));
-  m_gameSession.transition = transition;
+  m_gameSession.startLoadingTransition(transition);
 }
 
 void Game::onLoadingFinished(const bsgo::LoadingTransition transition)
 {
-  if (m_state.screen != Screen::LOADING)
-  {
-    error("Unexpected loading finished event", "Not in loading screen");
-  }
-  if (!m_gameSession.transition || *m_gameSession.transition != transition)
-  {
-    error("Unexpected loading finished event", "Transition does not match");
-  }
-  if (!m_gameSession.nextScreen || !m_gameSession.previousScreen)
-  {
-    error("Unexpected loading finished event", "No next or previous screen defined");
-  }
-
-  const auto previousScreen = *m_gameSession.previousScreen;
-  const auto nextScreen     = *m_gameSession.nextScreen;
-
-  debug("Ending loading transition from " + str(previousScreen) + " to " + str(nextScreen));
-
-  m_gameSession.previousScreen.reset();
-  m_gameSession.nextScreen.reset();
-
-  m_state.screen = previousScreen;
+  const auto [previousScreen, nextScreen] = m_gameSession.finishLoadingTransition(transition);
+  m_state.screen                          = previousScreen;
   setScreen(nextScreen);
 }
 
@@ -459,14 +399,11 @@ void Game::initializeMessageSystem()
 
 void Game::resetViewsAndUi()
 {
-  if (!m_gameSession.playerDbId)
-  {
-    error("Failed to reset views and UI", "Expected to have a player defined");
-  }
+  const auto playerDbId = m_gameSession.getPlayerDbId();
 
-  m_views.playerView->setPlayerDbId(*m_gameSession.playerDbId);
-  m_views.shopView->setPlayerDbId(*m_gameSession.playerDbId);
-  m_views.serverView->setPlayerDbId(*m_gameSession.playerDbId);
+  m_views.playerView->setPlayerDbId(playerDbId);
+  m_views.shopView->setPlayerDbId(playerDbId);
+  m_views.serverView->setPlayerDbId(playerDbId);
 
   auto maybePlayerShipDbId = m_entityMapper.tryGetPlayerShipDbId();
   if (!maybePlayerShipDbId)
@@ -486,17 +423,7 @@ void Game::resetViewsAndUi()
 
 void Game::setupLoadingScreen(const Screen nextScreen)
 {
-  if (m_state.screen == Screen::LOADING)
-  {
-    error("Unexpected loading screen transition", "Already in loading screen");
-  }
-  if (m_gameSession.nextScreen)
-  {
-    error("Unexpected loading screen transition", "No next screen defined");
-  }
-
-  m_gameSession.previousScreen = m_state.screen;
-  m_gameSession.nextScreen     = nextScreen;
+  m_gameSession.setupLoadingScreen(m_state.screen, nextScreen);
   setScreen(Screen::LOADING);
 }
 
