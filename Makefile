@@ -75,11 +75,12 @@ drunserver: copyDebug
 PHONY: .tests
 tests: debugWithTests copyDebug
 
+# https://stackoverflow.com/questions/2826029/passing-additional-variables-from-command-line-to-make
 rununittests: tests
-	cd sandbox && ./tests.sh unitTests
+	cd sandbox && ./tests.sh unitTests $(test_filters)
 
 runintegrationtests: tests
-	cd sandbox && ./tests.sh integrationTests
+	cd sandbox && ./tests.sh integrationTests $(test_filters)
 
 ci-cpp-build-image:
 	docker build \
