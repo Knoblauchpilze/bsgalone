@@ -6,7 +6,7 @@ using namespace ::testing;
 
 namespace bsgo {
 namespace {
-inline bool serializeAndDeserializeMessage(const OutpostData &value, OutpostData &output)
+inline bool serializeAndDeserializeData(const OutpostData &value, OutpostData &output)
 {
   std::ostringstream out{};
   serializeOutpostData(out, value);
@@ -62,7 +62,7 @@ TEST(Unit_Bsgo_Serialization_OutpostData, Basic)
 
   OutpostData output{.dbId = Uuid{14}, .faction = Faction::CYLON, .targetDbId = Uuid{4567}};
 
-  EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
+  EXPECT_TRUE(serializeAndDeserializeData(input, output));
 
   assertDataAreEqual(output, input);
 }
@@ -77,7 +77,7 @@ TEST(Unit_Bsgo_Serialization_OutpostData, WithTarget)
 
   OutpostData output{.dbId = Uuid{14}};
 
-  EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
+  EXPECT_TRUE(serializeAndDeserializeData(input, output));
 
   assertDataAreEqual(output, input);
 }
