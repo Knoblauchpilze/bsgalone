@@ -6,7 +6,7 @@ using namespace ::testing;
 
 namespace bsgo {
 namespace {
-inline bool serializeAndDeserializeMessage(const ComputerData &value, ComputerData &output)
+inline bool serializeAndDeserializeData(const ComputerData &value, ComputerData &output)
 {
   std::ostringstream out{};
   serializeComputerData(out, value);
@@ -68,7 +68,7 @@ TEST(Unit_Bsgo_Serialization_ComputerData, Basic)
 
   ComputerData output{.dbId = Uuid{14}, .level = 12, .reloadTime = core::toMilliseconds(1234)};
 
-  EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
+  EXPECT_TRUE(serializeAndDeserializeData(input, output));
 
   assertDataAreEqual(output, input);
 }
@@ -83,7 +83,7 @@ TEST(Unit_Bsgo_Serialization_ComputerData, AllowedTargets)
 
   ComputerData output{.dbId = Uuid{14}, .level = 12, .reloadTime = core::toMilliseconds(1234)};
 
-  EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
+  EXPECT_TRUE(serializeAndDeserializeData(input, output));
 
   assertDataAreEqual(output, input);
 }
@@ -98,7 +98,7 @@ TEST(Unit_Bsgo_Serialization_ComputerData, NonEmptyAllowedTargetsInDestination)
   ComputerData output{.dbId = Uuid{14}, .level = 12, .reloadTime = core::toMilliseconds(1234)};
   output.allowedTargets = std::unordered_set<EntityKind>{EntityKind::OUTPOST};
 
-  EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
+  EXPECT_TRUE(serializeAndDeserializeData(input, output));
 
   assertDataAreEqual(output, input);
 }
@@ -109,7 +109,7 @@ TEST(Unit_Bsgo_Serialization_ComputerData, NonEmptyDamageModifierInDestination)
 
   ComputerData output{.dbId = Uuid{14}, .damageModifier = 2.10987f};
 
-  EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
+  EXPECT_TRUE(serializeAndDeserializeData(input, output));
 
   assertDataAreEqual(output, input);
 }
