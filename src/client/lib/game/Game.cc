@@ -308,8 +308,9 @@ void Game::onLogout()
   m_gameSession.systemDbId.reset();
 }
 
-void Game::onActiveShipChanged()
+void Game::onActiveShipChanged(const bsgo::Uuid shipDbId)
 {
+  m_gameSession.playerShipDbId = shipDbId;
   resetViewsAndUi();
 }
 

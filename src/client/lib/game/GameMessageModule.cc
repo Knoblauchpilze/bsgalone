@@ -100,7 +100,7 @@ void GameMessageModule::handleHangarMessage(const bsgo::HangarMessage &message)
     return;
   }
 
-  m_game.onActiveShipChanged();
+  m_game.onActiveShipChanged(message.getShipDbId());
 }
 
 void GameMessageModule::handleJumpMessage(const bsgo::JumpMessage &message)
