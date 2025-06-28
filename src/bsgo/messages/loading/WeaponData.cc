@@ -13,6 +13,7 @@ auto serializeWeaponData(std::ostream &out, const WeaponData &data) -> std::ostr
 {
   core::serialize(out, data.dbId);
   core::serialize(out, data.weaponDbId);
+  core::serialize(out, data.slotPosition);
   core::serialize(out, data.level);
   core::serialize(out, data.minDamage);
   core::serialize(out, data.maxDamage);
@@ -29,6 +30,7 @@ bool deserializeWeaponData(std::istream &in, WeaponData &data)
 
   ok &= core::deserialize(in, data.dbId);
   ok &= core::deserialize(in, data.weaponDbId);
+  ok &= core::deserialize(in, data.slotPosition);
   ok &= core::deserialize(in, data.level);
   ok &= core::deserialize(in, data.minDamage);
   ok &= core::deserialize(in, data.maxDamage);

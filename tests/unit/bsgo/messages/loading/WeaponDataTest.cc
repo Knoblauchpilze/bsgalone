@@ -6,7 +6,7 @@ using namespace ::testing;
 
 namespace bsgo {
 namespace {
-inline bool serializeAndDeserializeMessage(const WeaponData &value, WeaponData &output)
+inline bool serializeAndDeserializeData(const WeaponData &value, WeaponData &output)
 {
   std::ostringstream out{};
   serializeWeaponData(out, value);
@@ -18,6 +18,7 @@ auto assertDataAreEqual(const WeaponData &actual, const WeaponData &expected)
 {
   EXPECT_EQ(actual.dbId, expected.dbId);
   EXPECT_EQ(actual.weaponDbId, expected.weaponDbId);
+  EXPECT_EQ(actual.slotPosition, expected.slotPosition);
   EXPECT_EQ(actual.level, expected.level);
   EXPECT_EQ(actual.minDamage, expected.minDamage);
   EXPECT_EQ(actual.maxDamage, expected.maxDamage);
@@ -57,13 +58,17 @@ TEST(Unit_Bsgo_Serialization_WeaponData, DifferentWhenDbIdIsDifferent)
 
 TEST(Unit_Bsgo_Serialization_WeaponData, Basic)
 {
-  WeaponData input{.dbId = Uuid{1234}, .level = 4, .minDamage = 5.4321f, .range = 98765.1234f};
+  WeaponData input{.dbId         = Uuid{1234},
+                   .slotPosition = Eigen::Vector3f{1.2f, 4.3f, -5.7f},
+                   .level        = 4,
+                   .minDamage    = 5.4321f,
+                   .range        = 98765.1234f};
 
   WeaponData output{.dbId       = Uuid{14},
                     .maxDamage  = 12.987f,
                     .reloadTime = core::toMilliseconds(1234)};
 
-  EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
+  EXPECT_TRUE(serializeAndDeserializeData(input, output));
 
   assertDataAreEqual(output, input);
 }
