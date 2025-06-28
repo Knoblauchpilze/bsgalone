@@ -41,12 +41,18 @@ class LoadingService : public AbstractService
   };
   auto getOutpostsInSystem(const Uuid systemDbId) const -> std::vector<OutpostProps>;
 
+  struct WeaponProps
+  {
+    PlayerWeapon dbWeapon{};
+    Eigen::Vector3f slotPosition{Eigen::Vector3f::Zero()};
+  };
+
   struct ShipProps
   {
     PlayerShip dbShip{};
     Status status{};
     std::optional<Uuid> targetDbId{};
-    std::vector<PlayerWeapon> weapons{};
+    std::vector<WeaponProps> weapons{};
     std::vector<PlayerComputer> computers{};
   };
   auto getShipsInSystem(const Uuid systemDbId) const -> std::vector<ShipProps>;

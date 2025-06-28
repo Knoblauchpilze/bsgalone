@@ -174,14 +174,15 @@ auto generateShipData(const LoadingService::ShipProps props) -> ShipData
   for (const auto &weapon : props.weapons)
   {
     WeaponData weaponData{
-      .dbId       = weapon.id,
-      .weaponDbId = weapon.weapon,
-      .level      = weapon.level,
-      .minDamage  = weapon.minDamage,
-      .maxDamage  = weapon.maxDamage,
-      .powerCost  = weapon.powerCost,
-      .range      = weapon.range,
-      .reloadTime = weapon.reloadTime,
+      .dbId         = weapon.dbWeapon.id,
+      .weaponDbId   = weapon.dbWeapon.weapon,
+      .slotPosition = weapon.slotPosition,
+      .level        = weapon.dbWeapon.level,
+      .minDamage    = weapon.dbWeapon.minDamage,
+      .maxDamage    = weapon.dbWeapon.maxDamage,
+      .powerCost    = weapon.dbWeapon.powerCost,
+      .range        = weapon.dbWeapon.range,
+      .reloadTime   = weapon.dbWeapon.reloadTime,
     };
 
     data.weapons.emplace_back(std::move(weaponData));
