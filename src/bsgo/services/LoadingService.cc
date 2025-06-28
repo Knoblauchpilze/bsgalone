@@ -72,17 +72,16 @@ auto LoadingService::getOutpostsInSystem(const Uuid systemDbId) const -> std::ve
 
 namespace {
 auto getWeaponsForShip(const Repositories &repositories, const Uuid shipDbId)
-  -> std::vector<PlayerWeapon>
+  -> std::vector<LoadingService::WeaponProps>
 {
-  std::vector<PlayerWeapon> weapons{};
+  std::vector<LoadingService::WeaponProps> weapons{};
 
   const auto shipWeapons = repositories.shipWeaponRepository->findAllByShip(shipDbId);
   for (const auto &weapon : shipWeapons)
   {
     const auto data = repositories.playerWeaponRepository->findOneById(weapon.weapon);
 
-    // TODO: Handle slot position
-    weapons.push_back(data);
+    weapons.emplace_back(data, weapon.slotPosition);
   }
 
   return weapons;
