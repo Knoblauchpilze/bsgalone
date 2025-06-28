@@ -11,7 +11,7 @@ namespace bsgo {
 struct OutpostData
 {
   Uuid dbId{};
-  Eigen::Vector3f position{};
+  Eigen::Vector3f position{Eigen::Vector3f::Zero()};
   float radius{};
   float hullPoints{};
   float powerPoints{};
