@@ -279,7 +279,7 @@ void Game::onConnectedToServer(const bsgo::Uuid clientId)
   info("Received client id " + bsgo::str(clientId) + " from server");
   m_outputMessageQueue->setClientId(clientId);
 
-#define START_AT_LOGIN
+// #define START_AT_LOGIN
 #ifndef START_AT_LOGIN
   // auto login = std::make_unique<bsgo::LoginMessage>("toast", "aze");
   auto login = std::make_unique<bsgo::LoginMessage>("colo", "aze");
@@ -348,6 +348,7 @@ void Game::onLoadingFinished(const bsgo::LoadingTransition transition)
   const auto [previousScreen, nextScreen] = m_gameSession.finishLoadingTransition(transition);
   m_state.screen                          = previousScreen;
   setScreen(nextScreen);
+  resetViewsAndUi();
 }
 
 void Game::initialize(const int serverPort)
