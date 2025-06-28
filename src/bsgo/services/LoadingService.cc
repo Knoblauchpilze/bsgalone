@@ -28,43 +28,57 @@ auto LoadingService::getPlayersInSystem(const Uuid systemDbId) const -> std::vec
 
 auto LoadingService::getAsteroidsInSystem(const Uuid systemDbId) const -> std::vector<AsteroidProps>
 {
-  const auto asteroidIds = m_repositories.systemRepository->findAllAsteroidsBySystem(systemDbId);
+  const auto asteroidDbIds = m_repositories.systemRepository->findAllAsteroidsBySystem(systemDbId);
 
   std::vector<AsteroidProps> asteroids{};
 
-  for (const auto &asteroidId : asteroidIds)
+  for (const auto &asteroidDbId : asteroidDbIds)
   {
-    const auto asteroid = m_repositories.asteroidRepository->findOneById(asteroidId);
+    const auto asteroid = m_repositories.asteroidRepository->findOneById(asteroidDbId);
 
     std::optional<Uuid> resource{};
     std::optional<float> amount{};
     if (asteroid.loot)
     {
-      const auto loot = m_repositories.asteroidLootRepository->findOneById(asteroidId);
+      const auto loot = m_repositories.asteroidLootRepository->findOneById(asteroidDbId);
       resource        = loot.resource;
       amount          = loot.amount;
     }
 
-    asteroids.emplace_back(asteroidId, asteroid, resource, amount);
+    asteroids.emplace_back(asteroidDbId, asteroid, resource, amount);
   }
 
   return asteroids;
 }
 
+namespace {
+auto getOutpostTargetDbId(const Uuid outpostDbId,
+                          const DatabaseEntityMapper &entityMapper,
+                          const Coordinator &coordinator) -> std::optional<Uuid>
+{
+  const auto maybeEntityId = entityMapper.tryGetOutpostEntityId(outpostDbId);
+  if (!maybeEntityId)
+  {
+    return {};
+  }
+
+  const auto entity = coordinator.getEntity(*maybeEntityId);
+  return entity.targetComp().target();
+}
+} // namespace
+
 auto LoadingService::getOutpostsInSystem(const Uuid systemDbId) const -> std::vector<OutpostProps>
 {
-  const auto outpostIds = m_repositories.systemRepository->findAllOutpostsBySystem(systemDbId);
+  const auto outpostDbIds = m_repositories.systemRepository->findAllOutpostsBySystem(systemDbId);
 
   std::vector<OutpostProps> outposts{};
 
-  for (const auto &outpostId : outpostIds)
+  for (const auto &outpostDbId : outpostDbIds)
   {
-    const auto outpost = m_repositories.systemOutpostRepository->findOneById(outpostId);
+    const auto outpost = m_repositories.systemOutpostRepository->findOneById(outpostDbId);
 
-    // TODO: the target id is left empty for now. We should give this service
-    // access to the coordinator and the entity mapper and try to fetch it
-    // from there. Probably in a dedicated method.
-    outposts.emplace_back(outpostId, outpost);
+    const auto targetDbId = getOutpostTargetDbId(outpostDbId, m_entityMapper, *m_coordinator);
+    outposts.emplace_back(outpostDbId, outpost, targetDbId);
   }
 
   return outposts;
@@ -101,26 +115,37 @@ auto getComputersForShip(const Repositories &repositories, const Uuid shipDbId)
 
   return computers;
 }
+
+auto getShipTargetDbId(const Uuid shipDbId,
+                       const DatabaseEntityMapper &entityMapper,
+                       const Coordinator &coordinator) -> std::optional<Uuid>
+{
+  const auto maybeEntityId = entityMapper.tryGetShipEntityId(shipDbId);
+  if (!maybeEntityId)
+  {
+    return {};
+  }
+
+  const auto entity = coordinator.getEntity(*maybeEntityId);
+  return entity.targetComp().target();
+}
 } // namespace
 
 auto LoadingService::getShipsInSystem(const Uuid systemDbId) const -> std::vector<ShipProps>
 {
-  const auto shipIds = m_repositories.systemRepository->findAllShipsBySystem(systemDbId);
+  const auto shipDbIds = m_repositories.systemRepository->findAllShipsBySystem(systemDbId);
 
   std::vector<ShipProps> ships{};
 
-  for (const auto &shipId : shipIds)
+  for (const auto &shipDbId : shipDbIds)
   {
-    const auto ship = m_repositories.playerShipRepository->findOneById(shipId);
+    const auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
 
-    const auto weapons   = getWeaponsForShip(m_repositories, shipId);
-    const auto computers = getComputersForShip(m_repositories, shipId);
+    const auto weapons   = getWeaponsForShip(m_repositories, shipDbId);
+    const auto computers = getComputersForShip(m_repositories, shipDbId);
 
-    // TODO: the target id is left empty for now. We should
-    // give this service access to the coordinator and the
-    // entity mapper and try to fetch it from there.
-    const auto status = determineStartingStatusForShip(ship);
-    std::optional<Uuid> targetDbId{};
+    const auto status     = determineStartingStatusForShip(ship);
+    const auto targetDbId = getShipTargetDbId(shipDbId, m_entityMapper, *m_coordinator);
 
     ships.emplace_back(ship, status, targetDbId, weapons, computers);
   }
