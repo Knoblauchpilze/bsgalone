@@ -362,9 +362,7 @@ bool isTransitionValidForNextScreen(const bsgo::LoadingTransition transition,
 }
 } // namespace
 
-void Game::onLoadingStarted(const bsgo::LoadingTransition transition,
-                            const bsgo::Uuid systemDbId,
-                            const std::optional<bsgo::Uuid> maybePlayerDbId)
+void Game::onLoadingStarted(const bsgo::LoadingTransition transition)
 {
   if (m_state.screen != Screen::LOADING)
   {
@@ -378,29 +376,7 @@ void Game::onLoadingStarted(const bsgo::LoadingTransition transition,
   }
 
   debug("Starting loading transition to " + str(*m_gameSession.nextScreen));
-
   m_gameSession.transition = transition;
-
-  // TODO: Should not be necessary except for the login
-  if (*m_gameSession.previousScreen == Screen::LOGIN && !maybePlayerDbId)
-  {
-    error("Unexpected start of loading process", "No player ID provided");
-  }
-  if (!m_gameSession.playerDbId || *m_gameSession.playerDbId != *maybePlayerDbId)
-  {
-    error("Unexpected start of loading process", "Player ID mismatch");
-  }
-
-  info("starting loading process for system " + bsgo::str(systemDbId) + " and player "
-       + bsgo::str(*maybePlayerDbId));
-
-  m_gameSession.systemDbId = systemDbId;
-  m_dataSource.setPlayerDbId(*maybePlayerDbId);
-
-  m_coordinator->clear();
-  m_entityMapper.clear();
-
-  m_entityMapper.setPlayerDbId(*maybePlayerDbId);
 }
 
 void Game::onLoadingFinished(const bsgo::LoadingTransition transition)
@@ -426,10 +402,8 @@ void Game::onLoadingFinished(const bsgo::LoadingTransition transition)
   m_gameSession.previousScreen.reset();
   m_gameSession.nextScreen.reset();
 
-  m_state.screen = nextScreen;
-
-  m_dataSource.initialize(*m_coordinator, m_entityMapper);
-  resetViewsAndUi();
+  m_state.screen = previousScreen;
+  setScreen(nextScreen);
 }
 
 void Game::initialize(const int serverPort)

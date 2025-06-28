@@ -156,9 +156,7 @@ void GameMessageModule::handleEntityRemovedMessage(const bsgo::EntityRemovedMess
 
 void GameMessageModule::handleLoadingStartedMessage(const bsgo::LoadingStartedMessage &message) const
 {
-  const auto systemDbId      = message.getSystemDbId();
-  const auto maybePlayerDbId = message.tryGetPlayerDbId();
-  m_game.onLoadingStarted(message.getTransition(), systemDbId, maybePlayerDbId);
+  m_game.onLoadingStarted(message.getTransition());
 }
 
 void GameMessageModule::handleLoadingFinishedMessage(const bsgo::LoadingFinishedMessage &message) const

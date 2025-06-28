@@ -69,9 +69,7 @@ class Game : public core::CoreObject
   void onShipDocked();
   void onShipUndocked();
   void onPlayerKilled();
-  void onLoadingStarted(const bsgo::LoadingTransition transition,
-                        const bsgo::Uuid systemDbId,
-                        const std::optional<bsgo::Uuid> maybePlayerDbId);
+  void onLoadingStarted(const bsgo::LoadingTransition transition);
   void onLoadingFinished(const bsgo::LoadingTransition transition);
 
   private:
