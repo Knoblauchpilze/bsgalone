@@ -48,21 +48,23 @@ auto assertMessagesAreEqual(const ShipListMessage &actual, const ShipListMessage
       const auto &expectedWeapon = expectedShipData.weapons[idWeapon];
 
       EXPECT_EQ(actualWeapon.dbId, expectedWeapon.dbId)
-        << "Mismatch for weapon " + std::to_string(idWeapon);
+        << "Mismatch for weapon " << std::to_string(idWeapon) << " for ship " << std::to_string(id);
       EXPECT_EQ(actualWeapon.weaponDbId, expectedWeapon.weaponDbId)
-        << "Mismatch for weapon " + std::to_string(idWeapon);
+        << "Mismatch for weapon " << std::to_string(idWeapon) << " for ship " << std::to_string(id);
+      EXPECT_EQ(actualWeapon.slotPosition, expectedWeapon.slotPosition)
+        << "Mismatch for weapon " << std::to_string(idWeapon) << " for ship " << std::to_string(id);
       EXPECT_EQ(actualWeapon.level, expectedWeapon.level)
-        << "Mismatch for weapon " + std::to_string(idWeapon);
+        << "Mismatch for weapon " << std::to_string(idWeapon) << " for ship " << std::to_string(id);
       EXPECT_EQ(actualWeapon.minDamage, expectedWeapon.minDamage)
-        << "Mismatch for weapon " + std::to_string(idWeapon);
+        << "Mismatch for weapon " << std::to_string(idWeapon) << " for ship " << std::to_string(id);
       EXPECT_EQ(actualWeapon.maxDamage, expectedWeapon.maxDamage)
-        << "Mismatch for weapon " + std::to_string(idWeapon);
+        << "Mismatch for weapon " << std::to_string(idWeapon) << " for ship " << std::to_string(id);
       EXPECT_EQ(actualWeapon.powerCost, expectedWeapon.powerCost)
-        << "Mismatch for weapon " + std::to_string(idWeapon);
+        << "Mismatch for weapon " << std::to_string(idWeapon) << " for ship " << std::to_string(id);
       EXPECT_EQ(actualWeapon.range, expectedWeapon.range)
-        << "Mismatch for weapon " + std::to_string(idWeapon);
+        << "Mismatch for weapon " << std::to_string(idWeapon) << " for ship " << std::to_string(id);
       EXPECT_EQ(actualWeapon.reloadTime, expectedWeapon.reloadTime)
-        << "Mismatch for weapon " + std::to_string(idWeapon);
+        << "Mismatch for weapon " << std::to_string(idWeapon) << " for ship " << std::to_string(id);
     }
 
     EXPECT_EQ(actualShipData.computers.size(), expectedShipData.computers.size());
@@ -72,25 +74,25 @@ auto assertMessagesAreEqual(const ShipListMessage &actual, const ShipListMessage
       const auto &expectedComputer = expectedShipData.computers[i];
 
       EXPECT_EQ(actualComputer.dbId, expectedComputer.dbId)
-        << "Mismatch for computer " + std::to_string(i);
+        << "Mismatch for computer " << std::to_string(i) << " for ship " << std::to_string(id);
       EXPECT_EQ(actualComputer.computerDbId, expectedComputer.computerDbId)
-        << "Mismatch for computer " + std::to_string(i);
+        << "Mismatch for computer " << std::to_string(i) << " for ship " << std::to_string(id);
       EXPECT_EQ(actualComputer.level, expectedComputer.level)
-        << "Mismatch for computer " + std::to_string(i);
+        << "Mismatch for computer " << std::to_string(i) << " for ship " << std::to_string(id);
       EXPECT_EQ(actualComputer.offensive, expectedComputer.offensive)
-        << "Mismatch for computer " + std::to_string(i);
+        << "Mismatch for computer " << std::to_string(i) << " for ship " << std::to_string(id);
       EXPECT_EQ(actualComputer.powerCost, expectedComputer.powerCost)
-        << "Mismatch for computer " + std::to_string(i);
+        << "Mismatch for computer " << std::to_string(i) << " for ship " << std::to_string(id);
       EXPECT_EQ(actualComputer.range, expectedComputer.range)
-        << "Mismatch for computer " + std::to_string(i);
+        << "Mismatch for computer " << std::to_string(i) << " for ship " << std::to_string(id);
       EXPECT_EQ(actualComputer.reloadTime, expectedComputer.reloadTime)
-        << "Mismatch for computer " + std::to_string(i);
+        << "Mismatch for computer " << std::to_string(i) << " for ship " << std::to_string(id);
       EXPECT_EQ(actualComputer.duration, expectedComputer.duration)
-        << "Mismatch for computer " + std::to_string(i);
+        << "Mismatch for computer " << std::to_string(i) << " for ship " << std::to_string(id);
       EXPECT_EQ(actualComputer.allowedTargets, expectedComputer.allowedTargets)
-        << "Mismatch for computer " + std::to_string(i);
+        << "Mismatch for computer " << std::to_string(i) << " for ship " << std::to_string(id);
       EXPECT_EQ(actualComputer.damageModifier, expectedComputer.damageModifier)
-        << "Mismatch for computer " + std::to_string(i);
+        << "Mismatch for computer " << std::to_string(i) << " for ship " << std::to_string(id);
     }
   }
 }
@@ -202,10 +204,11 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, MultipleComplexShips)
      .radius     = 26.9f,
      .hullPoints = 12.34f,
      .weapons    = {{.dbId = Uuid{1}, .weaponDbId = Uuid{14}, .level = 10, .range = 0.145f},
-                    {.dbId       = Uuid{2},
-                     .minDamage  = 14.2f,
-                     .maxDamage  = 100.0f,
-                     .reloadTime = core::toMilliseconds(23)}},
+                    {.dbId         = Uuid{2},
+                     .slotPosition = Eigen::Vector3f{45.12f, -56.89f, 78.45f},
+                     .minDamage    = 14.2f,
+                     .maxDamage    = 100.0f,
+                     .reloadTime   = core::toMilliseconds(23)}},
      .computers
      = {{.dbId = Uuid{1}, .computerDbId = Uuid{14}, .level = 10, .offensive = true, .range = 0.145f},
         {.dbId           = Uuid{2},
@@ -241,7 +244,10 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, MultipleComplexShips)
                                                                          EntityKind::BULLET}}},
        },
        {.dbId      = Uuid{7415},
-        .weapons   = {{.dbId = Uuid{753}, .level = 5}, {.dbId = Uuid{951}, .powerCost = 159.753f}},
+        .weapons   = {{.dbId = Uuid{753}, .level = 5},
+                      {.dbId         = Uuid{951},
+                       .slotPosition = Eigen::Vector3f{-21.54f, 65.98f, -54.87f},
+                       .powerCost    = 159.753f}},
         .computers = {{.computerDbId = 56, .offensive = true},
                       {.computerDbId = 58, .damageModifier = 963.147f}}},
        {.dbId    = Uuid{7416},

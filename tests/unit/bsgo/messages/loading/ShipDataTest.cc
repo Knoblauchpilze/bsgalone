@@ -44,6 +44,8 @@ auto assertDataAreEqual(const ShipData &actual, const ShipData &expected)
     EXPECT_EQ(actualWeapon.dbId, expectedWeapon.dbId) << "Mismatch for weapon " + std::to_string(i);
     EXPECT_EQ(actualWeapon.weaponDbId, expectedWeapon.weaponDbId)
       << "Mismatch for weapon " + std::to_string(i);
+    EXPECT_EQ(actualWeapon.slotPosition, expectedWeapon.slotPosition)
+      << "Mismatch for weapon " + std::to_string(i);
     EXPECT_EQ(actualWeapon.level, expectedWeapon.level)
       << "Mismatch for weapon " + std::to_string(i);
     EXPECT_EQ(actualWeapon.minDamage, expectedWeapon.minDamage)
@@ -163,7 +165,9 @@ TEST(Unit_Bsgo_Serialization_ShipData, WithWeapons)
     .powerCost  = 5.0f,
     .range      = 100.0f,
   });
-  input.weapons.push_back({.dbId = Uuid{6002}, .reloadTime = core::toMilliseconds(12)});
+  input.weapons.push_back({.dbId         = Uuid{6002},
+                           .slotPosition = Eigen::Vector3f{-89.75f, -56.23f, 32.04f},
+                           .reloadTime   = core::toMilliseconds(12)});
 
   ShipData output{.dbId = Uuid{14}, .faction = Faction::CYLON, .status = Status::JUMP};
   output.weapons.push_back({.dbId       = Uuid{1001},
