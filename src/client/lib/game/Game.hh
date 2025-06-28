@@ -65,7 +65,7 @@ class Game : public core::CoreObject
   void onLogin(const bsgo::Uuid playerDbId);
   void onLogout();
   void onActiveShipChanged();
-  void onActiveSystemChanged();
+  void onActiveSystemChanged(const bsgo::Uuid systemDbId);
   void onShipDocked();
   void onShipUndocked();
   void onPlayerKilled();
@@ -99,6 +99,7 @@ class Game : public core::CoreObject
   {
     std::optional<bsgo::Uuid> systemDbId{};
     std::optional<bsgo::Uuid> playerDbId{};
+    std::optional<bsgo::Uuid> playerShipDbId{};
 
     std::optional<bsgo::LoadingTransition> transition{};
 

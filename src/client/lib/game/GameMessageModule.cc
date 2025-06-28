@@ -113,7 +113,9 @@ void GameMessageModule::handleJumpMessage(const bsgo::JumpMessage &message)
     return;
   }
 
-  m_game.onActiveSystemChanged();
+  const auto systemDbId = message.getDestinationSystemDbId();
+
+  m_game.onActiveSystemChanged(systemDbId);
 }
 
 void GameMessageModule::handleLoginMessage(const bsgo::LoginMessage &message)

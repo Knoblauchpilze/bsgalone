@@ -313,10 +313,14 @@ void Game::onActiveShipChanged()
   resetViewsAndUi();
 }
 
-void Game::onActiveSystemChanged()
+void Game::onActiveSystemChanged(const bsgo::Uuid systemDbId)
 {
   m_views.shipView->clearJumpSystem();
   m_views.shipDbView->clearJumpSystem();
+  m_gameSession.systemDbId = systemDbId;
+
+  info("Active system is now " + bsgo::str(systemDbId));
+
   m_dataSource.clearSystemDbId();
   // TODO: We should set the screen to loading
   resetViewsAndUi();
