@@ -31,7 +31,6 @@ void DataSource::setPlayerDbId(const Uuid player)
     error("Unable to set player id to " + str(player), "Unavailable in server mode");
   }
 
-  info("setting player db id to " + str(player));
   m_playerDbId = player;
   m_systemDbId.reset();
 }
@@ -73,20 +72,15 @@ void DataSource::initialize(Coordinator &coordinator, DatabaseEntityMapper &enti
     }
 
     m_systemDbId = m_repositories.playerRepository->findSystemByPlayer(*m_playerDbId);
-    info("found system " + str(*m_systemDbId) + " for player " + str(*m_playerDbId));
   }
 
-  if (DataLoadingMode::SERVER == m_dataLoadingMode)
+  coordinator.clear();
+  entityMapper.clear();
+  if (m_playerDbId)
   {
-    coordinator.clear();
-    entityMapper.clear();
-    if (m_playerDbId)
-    {
-      entityMapper.setPlayerDbId(*m_playerDbId);
-    }
+    entityMapper.setPlayerDbId(*m_playerDbId);
   }
 
-  info("loading data");
   initializePlayers(coordinator, entityMapper);
   initializeShips(coordinator, entityMapper);
   initializeAsteroids(coordinator, entityMapper);
@@ -96,11 +90,8 @@ void DataSource::initialize(Coordinator &coordinator, DatabaseEntityMapper &enti
 void DataSource::initializePlayers(Coordinator &coordinator,
                                    DatabaseEntityMapper &entityMapper) const
 {
-  if (DataLoadingMode::SERVER == m_dataLoadingMode)
-  {
-    PlayerDataSource source{m_repositories};
-    source.initialize(*m_systemDbId, coordinator, entityMapper);
-  }
+  PlayerDataSource source{m_repositories};
+  source.initialize(*m_systemDbId, coordinator, entityMapper);
 
   if (DataLoadingMode::CLIENT == m_dataLoadingMode
       && !entityMapper.tryGetPlayerEntityId().has_value())
