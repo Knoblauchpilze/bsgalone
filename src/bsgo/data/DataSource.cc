@@ -67,7 +67,7 @@ void DataSource::initialize(Coordinator &coordinator, DatabaseEntityMapper &enti
   {
     if (!m_playerDbId)
     {
-      error("Failed to initialize the game", "No system not player id defined");
+      error("Failed to initialize the game", "No system nor player id defined");
     }
 
     m_systemDbId = m_repositories.playerRepository->findSystemByPlayer(*m_playerDbId);
