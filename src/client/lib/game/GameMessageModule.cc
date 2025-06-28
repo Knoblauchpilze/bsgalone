@@ -165,4 +165,5 @@ void GameMessageModule::handleLoadingFinishedMessage(const bsgo::LoadingFinished
 {
   m_game.onLoadingFinished(message.getTransition());
 }
+
 } // namespace pge
