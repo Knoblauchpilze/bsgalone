@@ -30,7 +30,6 @@ void DataSource::setPlayerDbId(const Uuid player)
   {
     error("Unable to set player id to " + str(player), "Unavailable in server mode");
   }
-
   m_playerDbId = player;
   m_systemDbId.reset();
 }
