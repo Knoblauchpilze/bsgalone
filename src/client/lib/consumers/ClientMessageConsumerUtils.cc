@@ -2,8 +2,11 @@
 #include "ClientMessageConsumerUtils.hh"
 #include "EntityService.hh"
 
+#include "AsteroidListMessageConsumer.hh"
 #include "ComponentMessageConsumer.hh"
+#include "OutpostListMessageConsumer.hh"
 #include "PlayerListMessageConsumer.hh"
+#include "ShipListMessageConsumer.hh"
 #include "ShipMessageConsumer.hh"
 #include "SystemMessageConsumer.hh"
 
@@ -30,6 +33,12 @@ void createMessageConsumers(const bsgo::Repositories &repositories,
 
   inputMessagesQueue.addListener(
     std::make_unique<PlayerListMessageConsumer>(entityMapper, coordinator));
+  inputMessagesQueue.addListener(
+    std::make_unique<AsteroidListMessageConsumer>(entityMapper, coordinator));
+  inputMessagesQueue.addListener(
+    std::make_unique<OutpostListMessageConsumer>(entityMapper, coordinator));
+  inputMessagesQueue.addListener(
+    std::make_unique<ShipListMessageConsumer>(entityMapper, coordinator));
 }
 
 } // namespace pge
