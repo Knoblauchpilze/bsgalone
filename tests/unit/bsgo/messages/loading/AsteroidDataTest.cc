@@ -6,7 +6,7 @@ using namespace ::testing;
 
 namespace bsgo {
 namespace {
-inline bool serializeAndDeserializeMessage(const AsteroidData &value, AsteroidData &output)
+inline bool serializeAndDeserializeData(const AsteroidData &value, AsteroidData &output)
 {
   std::ostringstream out{};
   serializeAsteroidData(out, value);
@@ -60,7 +60,7 @@ TEST(Unit_Bsgo_Serialization_AsteroidData, Basic)
 
   AsteroidData output{.dbId = Uuid{14}, .resource = Uuid{4567}, .amount = 50.0f};
 
-  EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
+  EXPECT_TRUE(serializeAndDeserializeData(input, output));
 
   assertDataAreEqual(output, input);
 }
@@ -76,7 +76,7 @@ TEST(Unit_Bsgo_Serialization_AsteroidData, WithLoot)
 
   AsteroidData output{.dbId = Uuid{14}};
 
-  EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
+  EXPECT_TRUE(serializeAndDeserializeData(input, output));
 
   assertDataAreEqual(output, input);
 }
