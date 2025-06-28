@@ -315,7 +315,6 @@ void Game::onActiveSystemChanged(const bsgo::Uuid systemDbId)
   setupLoadingScreen(Screen::GAME);
 
   m_dataSource.clearSystemDbId();
-  // TODO: We should set the screen to loading
   resetViewsAndUi();
 }
 
