@@ -1,6 +1,5 @@
 
 #include "PlayerListMessageConsumer.hh"
-#include "MessageUtils.hh"
 #include "PlayerListMessage.hh"
 
 namespace pge {

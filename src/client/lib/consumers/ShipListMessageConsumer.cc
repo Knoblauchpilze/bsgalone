@@ -1,6 +1,5 @@
 
 #include "ShipListMessageConsumer.hh"
-#include "MessageUtils.hh"
 #include "ShipListMessage.hh"
 
 namespace pge {

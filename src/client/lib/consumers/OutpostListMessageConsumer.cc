@@ -1,6 +1,5 @@
 
 #include "OutpostListMessageConsumer.hh"
-#include "MessageUtils.hh"
 #include "OutpostListMessage.hh"
 
 namespace pge {
