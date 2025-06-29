@@ -116,6 +116,16 @@ auto GameSession::getPlayerDbId() const -> bsgo::Uuid
   return *m_playerDbId;
 }
 
+auto GameSession::getPlayerActiveShipDbId() const -> bsgo::Uuid
+{
+  if (!m_playerShipDbId)
+  {
+    error("Failed to get player ship DB ID", "No active ship");
+  }
+
+  return *m_playerShipDbId;
+}
+
 void GameSession::onActiveSystemChanged(const bsgo::Uuid systemDbId)
 {
   m_systemDbId = systemDbId;

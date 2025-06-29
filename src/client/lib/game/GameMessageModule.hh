@@ -16,6 +16,7 @@
 #include "LoadingStartedMessage.hh"
 #include "LoginMessage.hh"
 #include "LogoutMessage.hh"
+#include "PlayerLoginDataMessage.hh"
 #include "SignupMessage.hh"
 
 namespace pge {
@@ -44,6 +45,7 @@ class GameMessageModule : public bsgo::AbstractMessageListener, public core::Cor
   void handleEntityRemovedMessage(const bsgo::EntityRemovedMessage &message);
   void handleLoadingStartedMessage(const bsgo::LoadingStartedMessage &message) const;
   void handleLoadingFinishedMessage(const bsgo::LoadingFinishedMessage &message) const;
+  void handlePlayerLoginDataMessage(const bsgo::PlayerLoginDataMessage &message);
 };
 
 } // namespace pge

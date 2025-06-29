@@ -64,6 +64,7 @@ class Game : public core::CoreObject
 
   void onConnectedToServer(const bsgo::Uuid clientId);
   void onLogin(const bsgo::Uuid playerDbId);
+  void onLoginDataReceived(const bsgo::Uuid playerShipDbId);
   void onLogout();
   void onActiveShipChanged(const bsgo::Uuid shipDbId);
   void onActiveSystemChanged(const bsgo::Uuid systemDbId);

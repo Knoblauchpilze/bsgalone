@@ -290,9 +290,15 @@ void Game::onConnectedToServer(const bsgo::Uuid clientId)
 
 void Game::onLogin(const bsgo::Uuid playerDbId)
 {
-  info("processing login for " + bsgo::str(playerDbId));
+  info("Processing login for " + bsgo::str(playerDbId));
   m_gameSession.onPlayerLoggedIn(playerDbId);
   setupLoadingScreen(Screen::OUTPOST);
+}
+
+void Game::onLoginDataReceived(const bsgo::Uuid playerShipDbId)
+{
+  info("Received active ship " + bsgo::str(playerShipDbId));
+  m_gameSession.onActiveShipChanged(playerShipDbId);
 }
 
 void Game::onLogout()
@@ -399,18 +405,13 @@ void Game::initializeMessageSystem()
 
 void Game::resetViewsAndUi()
 {
-  const auto playerDbId = m_gameSession.getPlayerDbId();
+  const auto playerDbId     = m_gameSession.getPlayerDbId();
+  const auto playerShipDbId = m_gameSession.getPlayerActiveShipDbId();
 
   m_views.playerView->setPlayerDbId(playerDbId);
   m_views.shopView->setPlayerDbId(playerDbId);
   m_views.serverView->setPlayerDbId(playerDbId);
-
-  auto maybePlayerShipDbId = m_entityMapper.tryGetPlayerShipDbId();
-  if (!maybePlayerShipDbId)
-  {
-    maybePlayerShipDbId = m_dataSource.tryGetPlayerShipDbId();
-  }
-  m_views.shipDbView->setPlayerShipDbId(maybePlayerShipDbId);
+  m_views.shipDbView->setPlayerShipDbId(playerShipDbId);
 
   const auto maybePlayerShipEntityId = m_entityMapper.tryGetPlayerShipEntityId();
   m_views.shipView->setPlayerShipEntityId(maybePlayerShipEntityId);
