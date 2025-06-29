@@ -3,6 +3,7 @@
 #include "AsteroidListMessage.hh"
 #include "OutpostListMessage.hh"
 #include "PlayerListMessage.hh"
+#include "PlayerLoginDataMessage.hh"
 #include "ShipListMessage.hh"
 #include "SystemProcessorUtils.hh"
 
@@ -44,12 +45,13 @@ void LoadingMessagesConsumer::handleLoadingStartedMessage(const LoadingStartedMe
 {
   m_outputMessageQueue->pushMessage(message.clone());
 
-  info("transition is " + str(message.getTransition()) + " for system "
+  info("Transition is " + str(message.getTransition()) + " for system "
        + str(message.getSystemDbId()));
 
   switch (message.getTransition())
   {
     case LoadingTransition::LOGIN:
+      handleLoginDataLoading(message);
       break;
     case LoadingTransition::UNDOCK:
     case LoadingTransition::JUMP:
@@ -68,6 +70,23 @@ void LoadingMessagesConsumer::forwardLoadingFinishedMessage(
   const LoadingFinishedMessage &message) const
 {
   m_outputMessageQueue->pushMessage(message.clone());
+}
+
+void LoadingMessagesConsumer::handleLoginDataLoading(const LoadingStartedMessage &message) const
+{
+  const auto maybePlayerDbId = message.tryGetPlayerDbId();
+  if (!maybePlayerDbId)
+  {
+    warn("Failed to process loading started message", "No player defined");
+    return;
+  }
+
+  const auto props = m_loadingService->getDataForPlayer(*maybePlayerDbId);
+
+  auto out = std::make_unique<PlayerLoginDataMessage>(props.faction, props.shipDbId, props.docked);
+  out->copyClientIdIfDefined(message);
+
+  m_outputMessageQueue->pushMessage(std::move(out));
 }
 
 void LoadingMessagesConsumer::handlePlayersLoading(const LoadingStartedMessage &message) const
