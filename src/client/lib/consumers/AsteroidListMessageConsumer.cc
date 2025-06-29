@@ -1,7 +1,8 @@
 
 #include "AsteroidListMessageConsumer.hh"
 #include "AsteroidListMessage.hh"
-#include "MessageUtils.hh"
+
+#include "CircleBox.hh"
 
 namespace pge {
 
@@ -22,9 +23,26 @@ void AsteroidListMessageConsumer::onMessageReceived(const bsgo::IMessage &messag
   }
 }
 
-void AsteroidListMessageConsumer::registerAsteroid(const bsgo::AsteroidData & /*data*/) const
+void AsteroidListMessageConsumer::registerAsteroid(const bsgo::AsteroidData &data) const
 {
-  warn("should load asteroid");
+  // TODO: Should probably be put in a common place to avoid duplication
+  // with AsteroidDataSource::registerAsteroid
+  const auto asteroidEntityId = m_coordinator->createEntity(bsgo::EntityKind::ASTEROID);
+
+  m_coordinator->addDbId(asteroidEntityId, data.dbId);
+  auto box = std::make_unique<bsgo::CircleBox>(data.position, data.radius);
+  m_coordinator->addTransform(asteroidEntityId, std::move(box));
+  m_coordinator->addHealth(asteroidEntityId, data.health, data.health, 0.0f);
+  m_coordinator->addRemoval(asteroidEntityId);
+  m_coordinator->addScanned(asteroidEntityId);
+  if (data.resource && data.amount)
+  {
+    m_coordinator->addLoot(asteroidEntityId);
+    m_coordinator->addResourceComponent(asteroidEntityId, *data.resource, *data.amount);
+  }
+  m_coordinator->addNetwork(asteroidEntityId, {bsgo::ComponentType::HEALTH});
+
+  m_entityMapper.registerAsteroid(data.dbId, asteroidEntityId);
 }
 
 } // namespace pge
