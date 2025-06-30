@@ -43,8 +43,6 @@ class GameSession : public core::CoreObject
   void onActiveSystemChanged(const bsgo::Uuid systemDbId);
   void onActiveShipChanged(const bsgo::Uuid shipDbId);
 
-  void setScreen(const Screen screen);
-
   private:
   /// @brief - if defined, the DB identifier of the player currently logged in.
   std::optional<bsgo::Uuid> m_playerDbId{};
