@@ -29,7 +29,9 @@ class JumpMessageConsumer : public AbstractMessageConsumer
   void handlePostJumpSystemMessages(const Uuid shipDbId,
                                     const Uuid sourceSystemDbId,
                                     const Uuid destinationSystemDbId);
-  void handleLoadingMessages(const Uuid playerDbId, const Uuid destinationSystemDbId);
+  void handleLoadingMessages(const Uuid playerDbId,
+                             const Uuid destinationSystemDbId,
+                             const Uuid clientId);
 };
 
 } // namespace bsgo
