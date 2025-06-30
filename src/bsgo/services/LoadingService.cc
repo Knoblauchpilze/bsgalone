@@ -11,6 +11,18 @@ LoadingService::LoadingService(const Repositories &repositories,
   , m_entityMapper(entityMapper)
 {}
 
+auto LoadingService::getDataForPlayer(const Uuid playerDbId) const -> PlayerProps
+{
+  const auto player = m_repositories.playerRepository->findOneById(playerDbId);
+  const auto ship   = m_repositories.playerShipRepository->findOneByPlayerAndActive(playerDbId);
+
+  return {
+    .faction  = player.faction,
+    .shipDbId = ship.id,
+    .docked   = ship.docked,
+  };
+}
+
 auto LoadingService::getPlayersInSystem(const Uuid systemDbId) const -> std::vector<Player>
 {
   const auto playerIds = m_repositories.playerRepository->findAllBySystem(systemDbId);
