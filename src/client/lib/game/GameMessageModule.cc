@@ -118,7 +118,6 @@ void GameMessageModule::handleJumpMessage(const bsgo::JumpMessage &message)
   }
 
   const auto systemDbId = message.getDestinationSystemDbId();
-
   m_game.onActiveSystemChanged(systemDbId);
 }
 

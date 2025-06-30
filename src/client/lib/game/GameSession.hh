@@ -9,11 +9,6 @@
 
 namespace pge {
 
-/// @brief - The data associated with the current gaming session. This
-/// include information about the player (such as the current system,
-/// the ID of the player in the DB) but also about the game in general
-/// such as the next screen to be displayed when waiting for loading
-/// data to be communicated by the server.
 class GameSession : public core::CoreObject
 {
   public:
@@ -43,8 +38,6 @@ class GameSession : public core::CoreObject
 
   void onActiveSystemChanged(const bsgo::Uuid systemDbId);
   void onActiveShipChanged(const bsgo::Uuid shipDbId);
-
-  void setScreen(const Screen screen);
 
   private:
   /// @brief - if defined, the DB identifier of the player currently logged in.

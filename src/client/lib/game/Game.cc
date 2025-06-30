@@ -293,6 +293,8 @@ void Game::onLogin(const bsgo::Uuid playerDbId)
   info("Processing login for " + bsgo::str(playerDbId));
   m_gameSession.onPlayerLoggedIn(playerDbId);
   setupLoadingScreen(Screen::OUTPOST);
+
+  m_dataSource.setPlayerDbId(playerDbId);
 }
 
 void Game::onLoginDataReceived(const bsgo::Uuid playerShipDbId)
@@ -321,7 +323,6 @@ void Game::onActiveSystemChanged(const bsgo::Uuid systemDbId)
   setupLoadingScreen(Screen::GAME);
 
   m_dataSource.clearSystemDbId();
-  resetViewsAndUi();
 }
 
 void Game::onShipDocked()
@@ -407,7 +408,6 @@ void Game::resetViewsAndUi()
 {
   const auto playerDbId     = m_gameSession.getPlayerDbId();
   const auto playerShipDbId = m_gameSession.getPlayerActiveShipDbId();
-
   m_views.playerView->setPlayerDbId(playerDbId);
   m_views.shopView->setPlayerDbId(playerDbId);
   m_views.serverView->setPlayerDbId(playerDbId);

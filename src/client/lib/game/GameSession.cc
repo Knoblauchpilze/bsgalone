@@ -138,12 +138,4 @@ void GameSession::onActiveShipChanged(const bsgo::Uuid shipDbId)
   debug("Active ship changed to " + bsgo::str(*m_playerShipDbId));
 }
 
-void GameSession::setScreen(const Screen screen)
-{
-  if (!m_playerDbId)
-  {
-    error("Failed to set screen to " + str(screen), "Not logged in");
-  }
-}
-
 } // namespace pge
