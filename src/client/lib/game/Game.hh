@@ -7,6 +7,7 @@
 #include "CoreObject.hh"
 #include "DataSource.hh"
 #include "DatabaseEntityMapper.hh"
+#include "GameSession.hh"
 #include "IInputHandler.hh"
 #include "IRenderer.hh"
 #include "IUiHandler.hh"
@@ -62,9 +63,10 @@ class Game : public core::CoreObject
 
   void onConnectedToServer(const bsgo::Uuid clientId);
   void onLogin(const bsgo::Uuid playerDbId);
+  void onLoginDataReceived(const bsgo::Uuid playerShipDbId);
   void onLogout();
-  void onActiveShipChanged();
-  void onActiveSystemChanged();
+  void onActiveShipChanged(const bsgo::Uuid shipDbId);
+  void onActiveSystemChanged(const bsgo::Uuid systemDbId);
   void onShipDocked();
   void onShipUndocked();
   void onPlayerKilled();
@@ -80,7 +82,7 @@ class Game : public core::CoreObject
   {
     /// @brief - Defines the current screen selected in this game. Updated whenever
     /// the user takes action to change it.
-    Screen screen;
+    Screen screen{Screen::LOGIN};
 
     /// @brief - Whether the game was terminated (usually because the app was closed).
     bool terminated{false};
@@ -89,30 +91,11 @@ class Game : public core::CoreObject
     bool dead{false};
   };
 
-  /// @brief - The data associated with the current gaming session. This
-  /// include information about the player (such as the current system,
-  /// the ID of the player in the DB) but also about the game in general
-  /// such as the next screen to be displayed when waiting for loading
-  /// data to be communicated by the server.
-  struct GameSession
-  {
-    std::optional<bsgo::Uuid> systemDbId{};
-    std::optional<bsgo::Uuid> playerDbId{};
-
-    std::optional<bsgo::LoadingTransition> transition{};
-
-    /// @brief - holds the screen that was displayed before the current
-    /// loading phase.
-    std::optional<Screen> previousScreen{};
-
-    /// @brief - holds the screen that should be displayed after the
-    /// loading phase is finished.
-    std::optional<Screen> nextScreen{};
-  };
-
   /// @brief - The definition of the game state.
   State m_state{};
 
+  /// @brief - Holds information about the current game session. This includes
+  /// data about the current player, their ship, the system they are in, etc.
   GameSession m_gameSession{};
 
   bsgo::DataSource m_dataSource{bsgo::DataLoadingMode::CLIENT};

@@ -15,7 +15,8 @@ const Messages GAME_CHANGING_MESSAGE_TYPES = {bsgo::MessageType::CONNECTION,
                                               bsgo::MessageType::SIGNUP,
                                               bsgo::MessageType::ENTITY_REMOVED,
                                               bsgo::MessageType::LOADING_STARTED,
-                                              bsgo::MessageType::LOADING_FINISHED};
+                                              bsgo::MessageType::LOADING_FINISHED,
+                                              bsgo::MessageType::PLAYER_LOGIN_DATA};
 
 GameMessageModule::GameMessageModule(Game &game, const bsgo::DatabaseEntityMapper &entityMapper)
   : bsgo::AbstractMessageListener(GAME_CHANGING_MESSAGE_TYPES)
@@ -60,6 +61,9 @@ void GameMessageModule::onMessageReceived(const bsgo::IMessage &message)
     case bsgo::MessageType::LOADING_FINISHED:
       handleLoadingFinishedMessage(message.as<bsgo::LoadingFinishedMessage>());
       break;
+    case bsgo::MessageType::PLAYER_LOGIN_DATA:
+      handlePlayerLoginDataMessage(message.as<bsgo::PlayerLoginDataMessage>());
+      break;
     default:
       error("Unsupported message type " + bsgo::str(message.type()));
       break;
@@ -100,7 +104,7 @@ void GameMessageModule::handleHangarMessage(const bsgo::HangarMessage &message)
     return;
   }
 
-  m_game.onActiveShipChanged();
+  m_game.onActiveShipChanged(message.getShipDbId());
 }
 
 void GameMessageModule::handleJumpMessage(const bsgo::JumpMessage &message)
@@ -113,7 +117,8 @@ void GameMessageModule::handleJumpMessage(const bsgo::JumpMessage &message)
     return;
   }
 
-  m_game.onActiveSystemChanged();
+  const auto systemDbId = message.getDestinationSystemDbId();
+  m_game.onActiveSystemChanged(systemDbId);
 }
 
 void GameMessageModule::handleLoginMessage(const bsgo::LoginMessage &message)
@@ -162,6 +167,11 @@ void GameMessageModule::handleLoadingStartedMessage(const bsgo::LoadingStartedMe
 void GameMessageModule::handleLoadingFinishedMessage(const bsgo::LoadingFinishedMessage &message) const
 {
   m_game.onLoadingFinished(message.getTransition());
+}
+
+void GameMessageModule::handlePlayerLoginDataMessage(const bsgo::PlayerLoginDataMessage &message)
+{
+  m_game.onLoginDataReceived(message.getActiveShipDbId());
 }
 
 } // namespace pge
