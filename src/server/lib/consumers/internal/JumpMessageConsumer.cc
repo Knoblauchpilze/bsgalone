@@ -46,9 +46,11 @@ void JumpMessageConsumer::onMessageReceived(const IMessage &message)
     return;
   }
 
+  const auto clientId = m_clientManager->getClientIdForPlayer(playerDbId);
+
   m_clientManager->updateSystemForPlayer(jump.getPlayerDbId(), res.destinationSystem);
   handlePostJumpSystemMessages(shipDbId, res.sourceSystem, res.destinationSystem);
-  handleLoadingMessages(playerDbId, res.destinationSystem);
+  handleLoadingMessages(playerDbId, res.destinationSystem, clientId);
 
   auto out = std::make_unique<JumpMessage>(shipDbId,
                                            playerDbId,
@@ -90,7 +92,8 @@ void JumpMessageConsumer::handlePostJumpSystemMessages(const Uuid shipDbId,
 }
 
 void JumpMessageConsumer::handleLoadingMessages(const Uuid playerDbId,
-                                                const Uuid destinationSystemDbId)
+                                                const Uuid destinationSystemDbId,
+                                                const Uuid clientId)
 {
   const auto maybeDestinationProcessor = m_systemProcessors.find(destinationSystemDbId);
   if (maybeDestinationProcessor == m_systemProcessors.cend())
@@ -104,11 +107,13 @@ void JumpMessageConsumer::handleLoadingMessages(const Uuid playerDbId,
   auto started = std::make_unique<LoadingStartedMessage>(LoadingTransition::JUMP,
                                                          destinationSystemDbId,
                                                          playerDbId);
+  started->setClientId(clientId);
   maybeDestinationProcessor->second->pushMessage(std::move(started));
 
   auto finished = std::make_unique<LoadingFinishedMessage>(LoadingTransition::JUMP,
                                                            destinationSystemDbId,
                                                            playerDbId);
+  finished->setClientId(clientId);
   maybeDestinationProcessor->second->pushMessage(std::move(finished));
 }
 
