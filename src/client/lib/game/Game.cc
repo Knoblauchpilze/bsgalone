@@ -426,10 +426,6 @@ void Game::resetViewsAndUi()
   m_views.serverView->setPlayerDbId(playerDbId);
   m_views.shipDbView->setPlayerShipDbId(playerShipDbId);
 
-  m_views.playerView->setPlayerDbId(*maybePlayerDbId);
-  m_views.shopView->setPlayerDbId(*maybePlayerDbId);
-  m_views.serverView->setPlayerDbId(*maybePlayerDbId);
-
   const auto maybePlayerShipEntityId = m_entityMapper.tryGetPlayerShipEntityId();
   m_views.shipView->setPlayerShipEntityId(maybePlayerShipEntityId);
 
