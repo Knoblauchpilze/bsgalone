@@ -18,7 +18,6 @@
 #include "Screen.hh"
 #include "Views.hh"
 #include <memory>
-#include <optional>
 #include <unordered_map>
 
 namespace pge {
