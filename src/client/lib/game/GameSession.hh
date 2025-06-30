@@ -1,5 +1,4 @@
 
-
 #pragma once
 
 #include "CoreObject.hh"
@@ -11,7 +10,6 @@
 namespace pge {
 
 class GameSession : public core::CoreObject
-
 {
   public:
   GameSession();
@@ -21,12 +19,10 @@ class GameSession : public core::CoreObject
   void startLoadingTransition(const bsgo::LoadingTransition transition);
 
   struct ScreenTransition
-
   {
     Screen previous{};
     Screen next{};
   };
-
   auto finishLoadingTransition(const bsgo::LoadingTransition transition) -> ScreenTransition;
 
   void onPlayerLoggedIn(const bsgo::Uuid playerDbId);

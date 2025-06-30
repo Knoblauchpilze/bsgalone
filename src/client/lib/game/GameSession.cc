@@ -1,5 +1,4 @@
 
-
 #include "GameSession.hh"
 
 namespace pge {
@@ -25,11 +24,8 @@ void GameSession::setupLoadingScreen(const Screen currentScreen, const Screen ne
 }
 
 namespace {
-
 bool isTransitionValidForNextScreen(const bsgo::LoadingTransition transition,
-
                                     const Screen nextScreen)
-
 {
   switch (transition)
   {
@@ -43,7 +39,6 @@ bool isTransitionValidForNextScreen(const bsgo::LoadingTransition transition,
       return false;
   }
 }
-
 } // namespace
 
 void GameSession::startLoadingTransition(const bsgo::LoadingTransition transition)
