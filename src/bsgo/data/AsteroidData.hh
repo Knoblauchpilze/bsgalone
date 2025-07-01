@@ -20,7 +20,4 @@ struct AsteroidData
   bool operator==(const AsteroidData &rhs) const;
 };
 
-auto serializeAsteroidData(std::ostream &out, const AsteroidData &data) -> std::ostream &;
-bool deserializeAsteroidData(std::istream &in, AsteroidData &data);
-
 } // namespace bsgo
