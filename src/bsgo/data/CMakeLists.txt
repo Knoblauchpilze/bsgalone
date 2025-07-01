@@ -9,8 +9,10 @@ target_sources (bsgo_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/ComputerData.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/DatabaseEntityMapper.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/DataSource.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/OutpostData.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/OutpostDataSource.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/PlayerDataSource.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/ShipData.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ShipDataSource.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/WeaponData.cc
 	)
