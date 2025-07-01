@@ -1,5 +1,6 @@
 
 #include "AsteroidListMessage.hh"
+#include "DataSerialization.hh"
 #include "SerializationUtils.hh"
 
 namespace bsgo {
