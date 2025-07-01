@@ -27,7 +27,4 @@ struct ComputerData
   bool operator==(const ComputerData &rhs) const;
 };
 
-auto serializeComputerData(std::ostream &out, const ComputerData &data) -> std::ostream &;
-bool deserializeComputerData(std::istream &in, ComputerData &data);
-
 } // namespace bsgo

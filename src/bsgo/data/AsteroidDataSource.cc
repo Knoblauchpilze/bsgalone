@@ -17,7 +17,12 @@ void AsteroidDataSource::initialize(const Uuid systemDbId,
                                     Coordinator &coordinator,
                                     DatabaseEntityMapper &entityMapper) const
 {
-  const auto asteroids = m_repositories.systemRepository->findAllAsteroidsBySystem(systemDbId);
+  if (!m_repositories)
+  {
+    error("Failed to initialize asteroid", "Repositories are not set");
+  }
+
+  const auto asteroids = m_repositories->systemRepository->findAllAsteroidsBySystem(systemDbId);
   for (const auto &id : asteroids)
   {
     registerAsteroid(coordinator, id, entityMapper);
@@ -28,7 +33,14 @@ void AsteroidDataSource::registerAsteroid(Coordinator &coordinator,
                                           const Uuid asteroidDbId,
                                           DatabaseEntityMapper &entityMapper) const
 {
-  const auto data = m_repositories.asteroidRepository->findOneById(asteroidDbId);
+  // TODO: This will become private when the EntityAddedMessage is using the
+  // AsteroidData.
+  if (!m_repositories)
+  {
+    error("Failed to register asteroid", "Repositories are not set");
+  }
+
+  const auto data = m_repositories->asteroidRepository->findOneById(asteroidDbId);
 
   auto box                    = std::make_unique<CircleBox>(data.position, data.radius);
   const auto asteroidEntityId = coordinator.createEntity(EntityKind::ASTEROID);
@@ -40,7 +52,7 @@ void AsteroidDataSource::registerAsteroid(Coordinator &coordinator,
   if (data.loot)
   {
     coordinator.addLoot(asteroidEntityId);
-    const auto loot = m_repositories.asteroidLootRepository->findOneById(asteroidDbId);
+    const auto loot = m_repositories->asteroidLootRepository->findOneById(asteroidDbId);
     coordinator.addResourceComponent(asteroidEntityId, loot.resource, loot.amount);
   }
   coordinator.addNetwork(asteroidEntityId, {ComponentType::HEALTH});
