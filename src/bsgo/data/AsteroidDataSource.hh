@@ -1,9 +1,11 @@
 
 #pragma once
 
+#include "AsteroidData.hh"
 #include "CoreObject.hh"
 #include "DatabaseEntityMapper.hh"
 #include "Repositories.hh"
+#include <optional>
 
 namespace bsgo {
 
@@ -12,6 +14,7 @@ class Coordinator;
 class AsteroidDataSource : public core::CoreObject
 {
   public:
+  AsteroidDataSource() = default;
   AsteroidDataSource(const Repositories &repositories);
   ~AsteroidDataSource() override = default;
 
@@ -24,7 +27,7 @@ class AsteroidDataSource : public core::CoreObject
                         DatabaseEntityMapper &entityMapper) const;
 
   private:
-  Repositories m_repositories{};
+  std::optional<Repositories> m_repositories{};
 };
 
 } // namespace bsgo

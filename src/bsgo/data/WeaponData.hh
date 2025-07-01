@@ -26,7 +26,4 @@ struct WeaponData
   bool operator==(const WeaponData &rhs) const;
 };
 
-auto serializeWeaponData(std::ostream &out, const WeaponData &data) -> std::ostream &;
-bool deserializeWeaponData(std::istream &in, WeaponData &data);
-
 } // namespace bsgo

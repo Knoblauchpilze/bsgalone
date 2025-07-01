@@ -22,7 +22,4 @@ struct OutpostData
   bool operator==(const OutpostData &rhs) const;
 };
 
-auto serializeOutpostData(std::ostream &out, const OutpostData &data) -> std::ostream &;
-bool deserializeOutpostData(std::istream &in, OutpostData &data);
-
 } // namespace bsgo

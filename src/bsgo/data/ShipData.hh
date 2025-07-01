@@ -39,7 +39,4 @@ struct ShipData
   bool operator==(const ShipData &rhs) const;
 };
 
-auto serializeShipData(std::ostream &out, const ShipData &data) -> std::ostream &;
-bool deserializeShipData(std::istream &in, ShipData &data);
-
 } // namespace bsgo

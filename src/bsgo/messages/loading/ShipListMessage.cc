@@ -1,5 +1,6 @@
 
 #include "ShipListMessage.hh"
+#include "DataSerialization.hh"
 #include "SerializationUtils.hh"
 
 namespace bsgo {
