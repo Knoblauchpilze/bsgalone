@@ -15,6 +15,13 @@
 
 namespace bsgo {
 
+ShipDataSource::ShipDataSource()
+  : core::CoreObject("bsgo")
+{
+  setService("data");
+  addModule("ship");
+}
+
 ShipDataSource::ShipDataSource(const Repositories &repositories)
   : core::CoreObject("bsgo")
   , m_repositories(repositories)
@@ -27,7 +34,12 @@ void ShipDataSource::initialize(const Uuid systemDbId,
                                 Coordinator &coordinator,
                                 DatabaseEntityMapper &entityMapper) const
 {
-  const auto ships = m_repositories.systemRepository->findAllShipsBySystem(systemDbId);
+  if (!m_repositories)
+  {
+    error("Failed to initialize asteroid", "Repositories are not set");
+  }
+
+  const auto ships = m_repositories->systemRepository->findAllShipsBySystem(systemDbId);
   for (const auto &id : ships)
   {
     registerShip(coordinator, id, entityMapper, true);
@@ -38,6 +50,11 @@ void ShipDataSource::registerShip(Coordinator &coordinator,
                                   const Uuid ship,
                                   DatabaseEntityMapper &entityMapper) const
 {
+  if (!m_repositories)
+  {
+    error("Failed to initialize asteroid", "Repositories are not set");
+  }
+
   registerShip(coordinator, ship, entityMapper, false);
 }
 
@@ -46,7 +63,7 @@ void ShipDataSource::registerShip(Coordinator &coordinator,
                                   DatabaseEntityMapper &entityMapper,
                                   const bool ignoreDocked) const
 {
-  const auto data = m_repositories.playerShipRepository->findOneById(ship);
+  const auto data = m_repositories->playerShipRepository->findOneById(ship);
 
   if (ignoreDocked && data.docked)
   {
@@ -107,10 +124,10 @@ void ShipDataSource::registerShipWeapons(Coordinator &coordinator,
                                          const Uuid ship,
                                          const Uuid shipEntity) const
 {
-  const auto weapons = m_repositories.shipWeaponRepository->findAllByShip(ship);
+  const auto weapons = m_repositories->shipWeaponRepository->findAllByShip(ship);
   for (const auto &weapon : weapons)
   {
-    const auto data = m_repositories.playerWeaponRepository->findOneById(weapon.weapon);
+    const auto data = m_repositories->playerWeaponRepository->findOneById(weapon.weapon);
     coordinator.addWeapon(shipEntity, data, weapon.slotPosition);
   }
 }
@@ -119,10 +136,10 @@ void ShipDataSource::registerShipComputers(Coordinator &coordinator,
                                            const Uuid ship,
                                            const Uuid shipEntity) const
 {
-  const auto computers = m_repositories.shipComputerRepository->findAllByShip(ship);
+  const auto computers = m_repositories->shipComputerRepository->findAllByShip(ship);
   for (const auto &computer : computers)
   {
-    const auto data = m_repositories.playerComputerRepository->findOneById(computer);
+    const auto data = m_repositories->playerComputerRepository->findOneById(computer);
     coordinator.addComputer(shipEntity, data);
   }
 }

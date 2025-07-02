@@ -6,7 +6,8 @@
 #include "INode.hh"
 #include "PlayerShipRepository.hh"
 #include "Repositories.hh"
-#include <unordered_map>
+#include "ShipData.hh"
+#include <optional>
 
 namespace bsgo {
 
@@ -15,6 +16,7 @@ class Coordinator;
 class ShipDataSource : public core::CoreObject
 {
   public:
+  ShipDataSource();
   ShipDataSource(const Repositories &repositories);
   ~ShipDataSource() override = default;
 
@@ -28,7 +30,7 @@ class ShipDataSource : public core::CoreObject
 
   private:
   std::optional<Uuid> m_playerDbId{};
-  Repositories m_repositories{};
+  std::optional<Repositories> m_repositories{};
 
   void registerShip(Coordinator &coordinator,
                     const Uuid ship,
