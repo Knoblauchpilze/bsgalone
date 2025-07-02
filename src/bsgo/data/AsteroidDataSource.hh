@@ -23,7 +23,7 @@ class AsteroidDataSource : public core::CoreObject
                   DatabaseEntityMapper &entityMapper) const;
 
   void registerAsteroid(Coordinator &coordinator,
-                        const AsteroidData data,
+                        const AsteroidData &data,
                         DatabaseEntityMapper &entityMapper) const;
 
   void registerAsteroid(Coordinator &coordinator,

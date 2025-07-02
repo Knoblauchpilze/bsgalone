@@ -37,7 +37,7 @@ void AsteroidDataSource::initialize(const Uuid systemDbId,
 }
 
 void AsteroidDataSource::registerAsteroid(Coordinator &coordinator,
-                                          const AsteroidData data,
+                                          const AsteroidData &data,
                                           DatabaseEntityMapper &entityMapper) const
 
 {
