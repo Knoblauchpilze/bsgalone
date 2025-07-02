@@ -26,7 +26,7 @@ void OutpostDataSource::initialize(const Uuid systemDbId,
 {
   if (!m_repositories)
   {
-    error("Failed to initialize asteroid", "Repositories are not set");
+    error("Failed to initialize outpost", "Repositories are not set");
   }
 
   const auto outposts = m_repositories->systemRepository->findAllOutpostsBySystem(systemDbId);

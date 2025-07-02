@@ -36,7 +36,7 @@ void ShipDataSource::initialize(const Uuid systemDbId,
 {
   if (!m_repositories)
   {
-    error("Failed to initialize asteroid", "Repositories are not set");
+    error("Failed to initialize ship", "Repositories are not set");
   }
 
   const auto ships = m_repositories->systemRepository->findAllShipsBySystem(systemDbId);
@@ -52,7 +52,7 @@ void ShipDataSource::registerShip(Coordinator &coordinator,
 {
   if (!m_repositories)
   {
-    error("Failed to initialize asteroid", "Repositories are not set");
+    error("Failed to initialize ship", "Repositories are not set");
   }
 
   registerShip(coordinator, ship, entityMapper, false);
