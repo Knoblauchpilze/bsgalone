@@ -63,12 +63,16 @@ void OutpostDataSource::registerOutpost(Coordinator &coordinator,
   const auto data = m_repositories->systemOutpostRepository->findOneById(outpostDbId);
 
   OutpostData out{
-    .dbId        = outpostDbId,
-    .position    = data.position,
-    .radius      = data.radius,
-    .hullPoints  = data.hullPoints,
-    .powerPoints = data.powerPoints,
-    .faction     = data.faction,
+    .dbId            = outpostDbId,
+    .position        = data.position,
+    .radius          = data.radius,
+    .hullPoints      = data.hullPoints,
+    .maxHullPoints   = data.maxHullPoints,
+    .hullPointsRegen = data.hullPointsRegen,
+    .powerPoints     = data.powerPoints,
+    .maxPowerPoints  = data.maxPowerPoints,
+    .powerRegen      = data.powerRegen,
+    .faction         = data.faction,
   };
 
   registerOutpost(coordinator, out, entityMapper);
