@@ -59,7 +59,7 @@ bool PlayerListMessage::deserialize(std::istream &in)
   {
     PlayerData data;
 
-    ok &= core::deserialize(in, data);
+    ok &= deserializePlayerData(in, data);
 
     m_playersData.emplace_back(data);
   }
