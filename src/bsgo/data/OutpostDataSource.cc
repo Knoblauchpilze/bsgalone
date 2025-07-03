@@ -45,12 +45,9 @@ void OutpostDataSource::registerOutpost(Coordinator &coordinator,
   coordinator.addDbId(outpostEntityId, data.dbId);
   auto box = std::make_unique<CircleBox>(data.position, data.radius);
   coordinator.addTransform(outpostEntityId, std::move(box));
-  // TODO: We also need to add the max and regen values for hull and power
-  // coordinator.addHealth(outpostEntityId, data.hullPoints, data.maxHullPoints, data.hullPointsRegen);
-  coordinator.addHealth(outpostEntityId, data.hullPoints, data.hullPoints, data.hullPoints);
+  coordinator.addHealth(outpostEntityId, data.hullPoints, data.maxHullPoints, data.hullPointsRegen);
   coordinator.addRemoval(outpostEntityId);
-  // coordinator.addPower(outpostEntityId, data.powerPoints, data.maxPowerPoints, data.powerRegen);
-  coordinator.addPower(outpostEntityId, data.powerPoints, data.powerPoints, data.powerPoints);
+  coordinator.addPower(outpostEntityId, data.powerPoints, data.maxPowerPoints, data.powerRegen);
   coordinator.addTarget(outpostEntityId);
   coordinator.addFaction(outpostEntityId, data.faction);
   coordinator.addNetwork(outpostEntityId, {ComponentType::HEALTH, ComponentType::POWER});
