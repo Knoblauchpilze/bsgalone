@@ -4,6 +4,24 @@
 
 namespace bsgo {
 
+auto serializePlayerData(std::ostream &out, const PlayerData &data) -> std::ostream &
+{
+  core::serialize(out, data.dbId);
+  core::serialize(out, data.name);
+
+  return out;
+}
+
+bool deserializePlayerData(std::istream &in, PlayerData &data)
+{
+  bool ok{true};
+
+  ok &= core::deserialize(in, data.dbId);
+  ok &= core::deserialize(in, data.name);
+
+  return ok;
+}
+
 auto serializeAsteroidData(std::ostream &out, const AsteroidData &data) -> std::ostream &
 {
   core::serialize(out, data.dbId);

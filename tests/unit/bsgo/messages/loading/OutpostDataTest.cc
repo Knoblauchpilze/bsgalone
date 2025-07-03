@@ -31,7 +31,7 @@ auto assertDataAreEqual(const OutpostData &actual, const OutpostData &expected)
 }
 } // namespace
 
-TEST(Unit_Bsgo_Serialization_OutpostData, EqualWhenAsteroidDbIdIsEqual)
+TEST(Unit_Bsgo_Serialization_OutpostData, EqualWhenDbIdIsEqual)
 {
   OutpostData data1{.dbId        = Uuid{1234},
                     .position    = Eigen::Vector3f{1.0f, 2.0f, 3.0f},
@@ -43,7 +43,7 @@ TEST(Unit_Bsgo_Serialization_OutpostData, EqualWhenAsteroidDbIdIsEqual)
   EXPECT_TRUE(data1 == data2);
 }
 
-TEST(Unit_Bsgo_Serialization_OutpostData, DifferentWhenAsteroidDbIdIsDifferent)
+TEST(Unit_Bsgo_Serialization_OutpostData, DifferentWhenDbIdIsDifferent)
 {
   OutpostData data1{.dbId          = Uuid{1234},
                     .position      = Eigen::Vector3f{1.0f, 2.0f, 3.0f},

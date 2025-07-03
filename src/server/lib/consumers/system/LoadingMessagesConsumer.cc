@@ -95,13 +95,12 @@ void LoadingMessagesConsumer::handlePlayersLoading(const LoadingStartedMessage &
 
   const auto players = m_loadingService->getPlayersInSystem(systemDbId);
 
-  std::vector<PlayerListMessage::PlayerData> playersData{};
+  std::vector<PlayerData> playersData{};
   std::transform(players.begin(),
                  players.end(),
                  std::back_inserter(playersData),
                  [](const Player &player) {
-                   return PlayerListMessage::PlayerData{.playerDbId = player.id,
-                                                        .name       = player.name};
+                   return PlayerData{.dbId = player.id, .name = player.name};
                  });
 
   auto out = std::make_unique<PlayerListMessage>(systemDbId, playersData);
