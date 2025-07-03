@@ -149,13 +149,17 @@ void LoadingMessagesConsumer::handleOutpostsLoading(const LoadingStartedMessage 
                  std::back_inserter(outpostsData),
                  [](const LoadingService::OutpostProps &props) {
                    return OutpostData{
-                     .dbId        = props.dbId,
-                     .position    = props.dbOutpost.position,
-                     .radius      = props.dbOutpost.radius,
-                     .hullPoints  = props.dbOutpost.hullPoints,
-                     .powerPoints = props.dbOutpost.powerPoints,
-                     .faction     = props.dbOutpost.faction,
-                     .targetDbId  = props.targetDbId,
+                     .dbId            = props.dbId,
+                     .position        = props.dbOutpost.position,
+                     .radius          = props.dbOutpost.radius,
+                     .hullPoints      = props.dbOutpost.hullPoints,
+                     .maxHullPoints   = props.dbOutpost.maxHullPoints,
+                     .hullPointsRegen = props.dbOutpost.hullPointsRegen,
+                     .powerPoints     = props.dbOutpost.powerPoints,
+                     .maxPowerPoints  = props.dbOutpost.maxPowerPoints,
+                     .powerRegen      = props.dbOutpost.powerRegen,
+                     .faction         = props.dbOutpost.faction,
+                     .targetDbId      = props.targetDbId,
                    };
                  });
 

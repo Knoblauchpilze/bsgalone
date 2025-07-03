@@ -132,7 +132,11 @@ auto serializeOutpostData(std::ostream &out, const OutpostData &data) -> std::os
   core::serialize(out, data.position);
   core::serialize(out, data.radius);
   core::serialize(out, data.hullPoints);
+  core::serialize(out, data.maxHullPoints);
+  core::serialize(out, data.hullPointsRegen);
   core::serialize(out, data.powerPoints);
+  core::serialize(out, data.maxPowerPoints);
+  core::serialize(out, data.powerRegen);
   core::serialize(out, data.faction);
 
   core::serialize(out, data.targetDbId);
@@ -148,7 +152,11 @@ bool deserializeOutpostData(std::istream &in, OutpostData &data)
   ok &= core::deserialize(in, data.position);
   ok &= core::deserialize(in, data.radius);
   ok &= core::deserialize(in, data.hullPoints);
+  ok &= core::deserialize(in, data.maxHullPoints);
+  ok &= core::deserialize(in, data.hullPointsRegen);
   ok &= core::deserialize(in, data.powerPoints);
+  ok &= core::deserialize(in, data.maxPowerPoints);
+  ok &= core::deserialize(in, data.powerRegen);
   ok &= core::deserialize(in, data.faction);
   ok &= core::deserialize(in, data.targetDbId);
 

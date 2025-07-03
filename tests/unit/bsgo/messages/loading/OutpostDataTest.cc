@@ -21,7 +21,11 @@ auto assertDataAreEqual(const OutpostData &actual, const OutpostData &expected)
   EXPECT_EQ(actual.position, expected.position);
   EXPECT_EQ(actual.radius, expected.radius);
   EXPECT_EQ(actual.hullPoints, expected.hullPoints);
+  EXPECT_EQ(actual.maxHullPoints, expected.maxHullPoints);
+  EXPECT_EQ(actual.hullPointsRegen, expected.hullPointsRegen);
   EXPECT_EQ(actual.powerPoints, expected.powerPoints);
+  EXPECT_EQ(actual.maxPowerPoints, expected.maxPowerPoints);
+  EXPECT_EQ(actual.powerRegen, expected.powerRegen);
   EXPECT_EQ(actual.faction, expected.faction);
   EXPECT_EQ(actual.targetDbId, expected.targetDbId);
 }
@@ -41,10 +45,11 @@ TEST(Unit_Bsgo_Serialization_OutpostData, EqualWhenAsteroidDbIdIsEqual)
 
 TEST(Unit_Bsgo_Serialization_OutpostData, DifferentWhenAsteroidDbIdIsDifferent)
 {
-  OutpostData data1{.dbId       = Uuid{1234},
-                    .position   = Eigen::Vector3f{1.0f, 2.0f, 3.0f},
-                    .radius     = 5.0f,
-                    .hullPoints = 96.5f};
+  OutpostData data1{.dbId          = Uuid{1234},
+                    .position      = Eigen::Vector3f{1.0f, 2.0f, 3.0f},
+                    .radius        = 5.0f,
+                    .hullPoints    = 96.5f,
+                    .maxHullPoints = 117.42f};
 
   OutpostData data2 = data1;
   data2.dbId        = Uuid{5678};
@@ -58,9 +63,13 @@ TEST(Unit_Bsgo_Serialization_OutpostData, Basic)
                     .position   = Eigen::Vector3f{1.0f, 2.0f, 3.0f},
                     .radius     = 5.0f,
                     .hullPoints = 102.0f,
+                    .powerRegen = 0.5124f,
                     .faction    = Faction::COLONIAL};
 
-  OutpostData output{.dbId = Uuid{14}, .faction = Faction::CYLON, .targetDbId = Uuid{4567}};
+  OutpostData output{.dbId           = Uuid{14},
+                     .maxPowerPoints = 25.87f,
+                     .faction        = Faction::CYLON,
+                     .targetDbId     = Uuid{4567}};
 
   EXPECT_TRUE(serializeAndDeserializeData(input, output));
 
