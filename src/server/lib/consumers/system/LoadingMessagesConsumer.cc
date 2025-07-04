@@ -189,6 +189,7 @@ auto generateShipData(const LoadingService::ShipProps props) -> ShipData
   data.status           = props.status;
   data.shipClass        = props.dbShip.shipClass;
   data.name             = props.dbShip.name;
+  data.docked           = props.dbShip.docked;
   data.jumpTime         = props.dbShip.jumpTime;
   data.jumpTimeInThreat = props.dbShip.jumpTimeInThreat;
 
