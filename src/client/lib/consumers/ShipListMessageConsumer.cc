@@ -1,5 +1,6 @@
 
 #include "ShipListMessageConsumer.hh"
+#include "ShipDataSource.hh"
 #include "ShipListMessage.hh"
 
 namespace pge {
@@ -21,9 +22,10 @@ void ShipListMessageConsumer::onMessageReceived(const bsgo::IMessage &message)
   }
 }
 
-void ShipListMessageConsumer::registerShip(const bsgo::ShipData & /*data*/) const
+void ShipListMessageConsumer::registerShip(const bsgo::ShipData &data) const
 {
-  warn("should load ship");
+  bsgo::ShipDataSource source;
+  source.registerShip(*m_coordinator, data, m_entityMapper, false);
 }
 
 } // namespace pge

@@ -1,5 +1,6 @@
 
 #include "PlayerListMessageConsumer.hh"
+#include "PlayerDataSource.hh"
 #include "PlayerListMessage.hh"
 
 namespace pge {
@@ -17,19 +18,14 @@ void PlayerListMessageConsumer::onMessageReceived(const bsgo::IMessage &message)
 
   for (const auto &playerData : playerList.getPlayersData())
   {
-    registerPlayer(playerData.dbId, playerData.name);
+    registerPlayer(playerData);
   }
 }
 
-void PlayerListMessageConsumer::registerPlayer(const bsgo::Uuid playerDbId,
-                                               const std::string &name) const
+void PlayerListMessageConsumer::registerPlayer(const bsgo::PlayerData &data) const
 {
-  const auto playerEntityId = m_coordinator->createEntity(bsgo::EntityKind::PLAYER);
-
-  m_coordinator->addName(playerEntityId, name);
-  m_coordinator->addDbId(playerEntityId, playerDbId);
-
-  m_entityMapper.registerPlayer(playerDbId, playerEntityId);
+  bsgo::PlayerDataSource source;
+  source.registerPlayer(*m_coordinator, data, m_entityMapper);
 }
 
 } // namespace pge

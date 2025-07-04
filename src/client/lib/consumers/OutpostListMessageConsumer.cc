@@ -1,5 +1,6 @@
 
 #include "OutpostListMessageConsumer.hh"
+#include "OutpostDataSource.hh"
 #include "OutpostListMessage.hh"
 
 namespace pge {
@@ -21,9 +22,10 @@ void OutpostListMessageConsumer::onMessageReceived(const bsgo::IMessage &message
   }
 }
 
-void OutpostListMessageConsumer::registerOutpost(const bsgo::OutpostData & /*data*/) const
+void OutpostListMessageConsumer::registerOutpost(const bsgo::OutpostData &data) const
 {
-  warn("should load outpost");
+  bsgo::OutpostDataSource source;
+  source.registerOutpost(*m_coordinator, data, m_entityMapper);
 }
 
 } // namespace pge
