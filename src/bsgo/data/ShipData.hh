@@ -5,6 +5,7 @@
 #include "Faction.hh"
 #include "ShipClass.hh"
 #include "Status.hh"
+#include "TimeUtils.hh"
 #include "Uuid.hh"
 #include "WeaponData.hh"
 #include <eigen3/Eigen/Eigen>
@@ -30,6 +31,8 @@ struct ShipData
   ShipClass shipClass{};
   std::string name{};
   bool docked{};
+  core::Duration jumpTime{};
+  core::Duration jumpTimeInThreat{};
 
   std::optional<Uuid> targetDbId{};
   std::optional<Uuid> playerDbId{};

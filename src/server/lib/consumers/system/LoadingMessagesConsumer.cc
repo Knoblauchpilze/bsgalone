@@ -186,9 +186,11 @@ auto generateShipData(const LoadingService::ShipProps props) -> ShipData
   data.powerRegen      = props.dbShip.powerRegen;
   data.faction         = props.dbShip.faction;
 
-  data.status    = props.status;
-  data.shipClass = props.dbShip.shipClass;
-  data.name      = props.dbShip.name;
+  data.status           = props.status;
+  data.shipClass        = props.dbShip.shipClass;
+  data.name             = props.dbShip.name;
+  data.jumpTime         = props.dbShip.jumpTime;
+  data.jumpTimeInThreat = props.dbShip.jumpTimeInThreat;
 
   data.targetDbId = props.targetDbId;
   data.playerDbId = props.dbShip.player;

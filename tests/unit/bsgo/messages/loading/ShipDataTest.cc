@@ -33,6 +33,8 @@ auto assertDataAreEqual(const ShipData &actual, const ShipData &expected)
   EXPECT_EQ(actual.shipClass, expected.shipClass);
   EXPECT_EQ(actual.name, expected.name);
   EXPECT_EQ(actual.docked, expected.docked);
+  EXPECT_EQ(actual.jumpTime, expected.jumpTime);
+  EXPECT_EQ(actual.jumpTimeInThreat, expected.jumpTimeInThreat);
   EXPECT_EQ(actual.targetDbId, expected.targetDbId);
   EXPECT_EQ(actual.playerDbId, expected.playerDbId);
 
@@ -152,12 +154,14 @@ TEST(Unit_Bsgo_Serialization_ShipData, WithTarget)
 
 TEST(Unit_Bsgo_Serialization_ShipData, WithWeapons)
 {
-  ShipData input{.dbId           = Uuid{1234},
-                 .position       = Eigen::Vector3f{1.0f, 2.0f, 3.0f},
-                 .radius         = 5.0f,
-                 .maxPowerPoints = 100.0f,
-                 .targetDbId     = Uuid{8901},
-                 .playerDbId     = Uuid{6547}};
+  ShipData input{.dbId             = Uuid{1234},
+                 .position         = Eigen::Vector3f{1.0f, 2.0f, 3.0f},
+                 .radius           = 5.0f,
+                 .maxPowerPoints   = 100.0f,
+                 .jumpTime         = core::toMilliseconds(1234),
+                 .jumpTimeInThreat = core::toMilliseconds(5678),
+                 .targetDbId       = Uuid{8901},
+                 .playerDbId       = Uuid{6547}};
   input.weapons.push_back({
     .dbId       = Uuid{5001},
     .weaponDbId = Uuid{5002},
@@ -195,7 +199,13 @@ TEST(Unit_Bsgo_Serialization_ShipData, ClearsWeapons)
                  .targetDbId     = Uuid{8901},
                  .playerDbId     = Uuid{6547}};
 
-  ShipData output{.dbId = Uuid{14}, .faction = Faction::CYLON, .status = Status::JUMP};
+  ShipData output{
+    .dbId             = Uuid{14},
+    .faction          = Faction::CYLON,
+    .status           = Status::JUMP,
+    .jumpTime         = core::toMilliseconds(75),
+    .jumpTimeInThreat = core::toMilliseconds(5678),
+  };
   output.weapons.push_back({.dbId       = Uuid{1001},
                             .weaponDbId = Uuid{2002},
                             .level      = 3,
