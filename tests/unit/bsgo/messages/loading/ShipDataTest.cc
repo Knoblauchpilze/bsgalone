@@ -32,6 +32,7 @@ auto assertDataAreEqual(const ShipData &actual, const ShipData &expected)
   EXPECT_EQ(actual.status, expected.status);
   EXPECT_EQ(actual.shipClass, expected.shipClass);
   EXPECT_EQ(actual.name, expected.name);
+  EXPECT_EQ(actual.docked, expected.docked);
   EXPECT_EQ(actual.targetDbId, expected.targetDbId);
   EXPECT_EQ(actual.playerDbId, expected.playerDbId);
 
@@ -138,6 +139,7 @@ TEST(Unit_Bsgo_Serialization_ShipData, WithTarget)
                  .position       = Eigen::Vector3f{1.0f, 2.0f, 3.0f},
                  .radius         = 5.0f,
                  .maxPowerPoints = 100.0f,
+                 .docked         = true,
                  .targetDbId     = Uuid{8901},
                  .playerDbId     = Uuid{6547}};
 

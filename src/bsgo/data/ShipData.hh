@@ -29,6 +29,7 @@ struct ShipData
   Status status{};
   ShipClass shipClass{};
   std::string name{};
+  bool docked{};
 
   std::optional<Uuid> targetDbId{};
   std::optional<Uuid> playerDbId{};

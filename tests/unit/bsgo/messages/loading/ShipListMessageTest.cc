@@ -38,6 +38,7 @@ auto assertMessagesAreEqual(const ShipListMessage &actual, const ShipListMessage
     EXPECT_EQ(actualShipData.status, expectedShipData.status);
     EXPECT_EQ(actualShipData.shipClass, expectedShipData.shipClass);
     EXPECT_EQ(actualShipData.name, expectedShipData.name);
+    EXPECT_EQ(actualShipData.docked, expectedShipData.docked);
     EXPECT_EQ(actualShipData.targetDbId, expectedShipData.targetDbId);
     EXPECT_EQ(actualShipData.playerDbId, expectedShipData.playerDbId);
 
@@ -120,7 +121,8 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, WithClientId)
   std::vector<ShipData> shipsData{{.dbId       = Uuid{65},
                                    .position   = Eigen::Vector3f(1.0f, 2.8f, 3.9f),
                                    .radius     = 26.9f,
-                                   .hullPoints = 12.34f}};
+                                   .hullPoints = 12.34f,
+                                   .docked     = true}};
 
   ShipListMessage expected(Uuid{123}, shipsData);
   expected.setClientId(Uuid{78});
@@ -203,6 +205,7 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, MultipleComplexShips)
      .position   = Eigen::Vector3f(1.0f, 2.8f, 3.9f),
      .radius     = 26.9f,
      .hullPoints = 12.34f,
+     .docked     = true,
      .weapons    = {{.dbId = Uuid{1}, .weaponDbId = Uuid{14}, .level = 10, .range = 0.145f},
                     {.dbId         = Uuid{2},
                      .slotPosition = Eigen::Vector3f{45.12f, -56.89f, 78.45f},
@@ -251,6 +254,7 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, MultipleComplexShips)
         .computers = {{.computerDbId = 56, .offensive = true},
                       {.computerDbId = 58, .damageModifier = 963.147f}}},
        {.dbId    = Uuid{7416},
+        .docked  = true,
         .weapons = {{.weaponDbId = Uuid{852}, .reloadTime = core::toMilliseconds(963)}}}};
   ShipListMessage actual(Uuid{745}, {});
 
