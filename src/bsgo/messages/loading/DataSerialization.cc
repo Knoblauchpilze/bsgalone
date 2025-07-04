@@ -4,6 +4,24 @@
 
 namespace bsgo {
 
+auto serializePlayerData(std::ostream &out, const PlayerData &data) -> std::ostream &
+{
+  core::serialize(out, data.dbId);
+  core::serialize(out, data.name);
+
+  return out;
+}
+
+bool deserializePlayerData(std::istream &in, PlayerData &data)
+{
+  bool ok{true};
+
+  ok &= core::deserialize(in, data.dbId);
+  ok &= core::deserialize(in, data.name);
+
+  return ok;
+}
+
 auto serializeAsteroidData(std::ostream &out, const AsteroidData &data) -> std::ostream &
 {
   core::serialize(out, data.dbId);
@@ -132,7 +150,11 @@ auto serializeOutpostData(std::ostream &out, const OutpostData &data) -> std::os
   core::serialize(out, data.position);
   core::serialize(out, data.radius);
   core::serialize(out, data.hullPoints);
+  core::serialize(out, data.maxHullPoints);
+  core::serialize(out, data.hullPointsRegen);
   core::serialize(out, data.powerPoints);
+  core::serialize(out, data.maxPowerPoints);
+  core::serialize(out, data.powerRegen);
   core::serialize(out, data.faction);
 
   core::serialize(out, data.targetDbId);
@@ -148,7 +170,11 @@ bool deserializeOutpostData(std::istream &in, OutpostData &data)
   ok &= core::deserialize(in, data.position);
   ok &= core::deserialize(in, data.radius);
   ok &= core::deserialize(in, data.hullPoints);
+  ok &= core::deserialize(in, data.maxHullPoints);
+  ok &= core::deserialize(in, data.hullPointsRegen);
   ok &= core::deserialize(in, data.powerPoints);
+  ok &= core::deserialize(in, data.maxPowerPoints);
+  ok &= core::deserialize(in, data.powerRegen);
   ok &= core::deserialize(in, data.faction);
   ok &= core::deserialize(in, data.targetDbId);
 
@@ -172,6 +198,9 @@ auto serializeShipData(std::ostream &out, const ShipData &data) -> std::ostream 
   core::serialize(out, data.status);
   core::serialize(out, data.shipClass);
   core::serialize(out, data.name);
+  core::serialize(out, data.docked);
+  core::serialize(out, data.jumpTime);
+  core::serialize(out, data.jumpTimeInThreat);
 
   core::serialize(out, data.targetDbId);
   core::serialize(out, data.playerDbId);
@@ -210,6 +239,9 @@ bool deserializeShipData(std::istream &in, ShipData &data)
   ok &= core::deserialize(in, data.status);
   ok &= core::deserialize(in, data.shipClass);
   ok &= core::deserialize(in, data.name);
+  ok &= core::deserialize(in, data.docked);
+  ok &= core::deserialize(in, data.jumpTime);
+  ok &= core::deserialize(in, data.jumpTimeInThreat);
 
   ok &= core::deserialize(in, data.targetDbId);
   ok &= core::deserialize(in, data.playerDbId);

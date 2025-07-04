@@ -6,7 +6,8 @@
 #include "INode.hh"
 #include "PlayerShipRepository.hh"
 #include "Repositories.hh"
-#include <unordered_map>
+#include "ShipData.hh"
+#include <optional>
 
 namespace bsgo {
 
@@ -15,6 +16,7 @@ class Coordinator;
 class ShipDataSource : public core::CoreObject
 {
   public:
+  ShipDataSource();
   ShipDataSource(const Repositories &repositories);
   ~ShipDataSource() override = default;
 
@@ -23,24 +25,34 @@ class ShipDataSource : public core::CoreObject
                   DatabaseEntityMapper &entityMapper) const;
 
   void registerShip(Coordinator &coordinator,
+                    const ShipData &data,
+                    DatabaseEntityMapper &entityMapper,
+                    const bool ignoreIfDocked) const;
+
+  void registerShip(Coordinator &coordinator,
                     const Uuid ship,
                     DatabaseEntityMapper &entityMapper) const;
 
   private:
   std::optional<Uuid> m_playerDbId{};
-  Repositories m_repositories{};
+  std::optional<Repositories> m_repositories{};
 
+  // TODO: this is deprecated
   void registerShip(Coordinator &coordinator,
-                    const Uuid ship,
+                    const Uuid shipDbId,
                     DatabaseEntityMapper &entityMapper,
                     const bool ignoreDocked) const;
+
   void registerShipOwner(Coordinator &coordinator,
                          const Uuid shipEntity,
-                         const PlayerShip &shipData,
+                         const ShipData &data,
                          DatabaseEntityMapper &entityMapper) const;
-
-  void registerShipWeapons(Coordinator &coordinator, const Uuid ship, const Uuid shipEntity) const;
-  void registerShipComputers(Coordinator &coordinator, const Uuid ship, const Uuid shipEntity) const;
+  void registerShipWeapons(Coordinator &coordinator,
+                           const ShipData &data,
+                           const Uuid shipEntity) const;
+  void registerShipComputers(Coordinator &coordinator,
+                             const ShipData &data,
+                             const Uuid shipEntity) const;
 
   auto generateBehaviorTree(const Uuid entity, const Eigen::Vector3f &center) const -> INodePtr;
 };

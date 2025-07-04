@@ -14,7 +14,11 @@ struct OutpostData
   Eigen::Vector3f position{Eigen::Vector3f::Zero()};
   float radius{};
   float hullPoints{};
+  float maxHullPoints{};
+  float hullPointsRegen{};
   float powerPoints{};
+  float maxPowerPoints{};
+  float powerRegen{};
   Faction faction{};
 
   std::optional<Uuid> targetDbId{};

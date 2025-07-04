@@ -5,6 +5,13 @@
 
 namespace bsgo {
 
+AsteroidDataSource::AsteroidDataSource()
+  : core::CoreObject("bsgo")
+{
+  setService("data");
+  addModule("asteroid");
+}
+
 AsteroidDataSource::AsteroidDataSource(const Repositories &repositories)
   : core::CoreObject("bsgo")
   , m_repositories(repositories)
@@ -30,6 +37,29 @@ void AsteroidDataSource::initialize(const Uuid systemDbId,
 }
 
 void AsteroidDataSource::registerAsteroid(Coordinator &coordinator,
+                                          const AsteroidData &data,
+                                          DatabaseEntityMapper &entityMapper) const
+
+{
+  const auto asteroidEntityId = coordinator.createEntity(EntityKind::ASTEROID);
+
+  coordinator.addDbId(asteroidEntityId, data.dbId);
+  auto box = std::make_unique<CircleBox>(data.position, data.radius);
+  coordinator.addTransform(asteroidEntityId, std::move(box));
+  coordinator.addHealth(asteroidEntityId, data.health, data.health, 0.0f);
+  coordinator.addRemoval(asteroidEntityId);
+  coordinator.addScanned(asteroidEntityId);
+  if (data.resource && data.amount)
+  {
+    coordinator.addLoot(asteroidEntityId);
+    coordinator.addResourceComponent(asteroidEntityId, *data.resource, *data.amount);
+  }
+  coordinator.addNetwork(asteroidEntityId, {ComponentType::HEALTH});
+
+  entityMapper.registerAsteroid(data.dbId, asteroidEntityId);
+}
+
+void AsteroidDataSource::registerAsteroid(Coordinator &coordinator,
                                           const Uuid asteroidDbId,
                                           DatabaseEntityMapper &entityMapper) const
 {
@@ -42,22 +72,21 @@ void AsteroidDataSource::registerAsteroid(Coordinator &coordinator,
 
   const auto data = m_repositories->asteroidRepository->findOneById(asteroidDbId);
 
-  auto box                    = std::make_unique<CircleBox>(data.position, data.radius);
-  const auto asteroidEntityId = coordinator.createEntity(EntityKind::ASTEROID);
-  coordinator.addDbId(asteroidEntityId, asteroidDbId);
-  coordinator.addTransform(asteroidEntityId, std::move(box));
-  coordinator.addHealth(asteroidEntityId, data.health, data.health, 0.0f);
-  coordinator.addRemoval(asteroidEntityId);
-  coordinator.addScanned(asteroidEntityId);
+  AsteroidData out{
+    .dbId     = asteroidDbId,
+    .position = data.position,
+    .radius   = data.radius,
+    .health   = data.health,
+  };
+
   if (data.loot)
   {
-    coordinator.addLoot(asteroidEntityId);
     const auto loot = m_repositories->asteroidLootRepository->findOneById(asteroidDbId);
-    coordinator.addResourceComponent(asteroidEntityId, loot.resource, loot.amount);
+    out.resource    = loot.resource;
+    out.amount      = loot.amount;
   }
-  coordinator.addNetwork(asteroidEntityId, {ComponentType::HEALTH});
 
-  entityMapper.registerAsteroid(asteroidDbId, asteroidEntityId);
+  registerAsteroid(coordinator, out, entityMapper);
 }
 
 } // namespace bsgo

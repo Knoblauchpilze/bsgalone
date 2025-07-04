@@ -1,8 +1,8 @@
 
 #pragma once
 
-#include "PlayerWeaponRepository.hh"
 #include "SlotComponent.hh"
+#include "WeaponData.hh"
 #include <eigen3/Eigen/Eigen>
 
 namespace bsgo {
@@ -10,7 +10,7 @@ namespace bsgo {
 class WeaponSlotComponent : public SlotComponent
 {
   public:
-  WeaponSlotComponent(const PlayerWeapon &weapon, const Eigen::Vector3f &position);
+  WeaponSlotComponent(const WeaponData &weapon);
   ~WeaponSlotComponent() override = default;
 
   auto minDamage() const -> float;
