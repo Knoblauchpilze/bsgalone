@@ -295,7 +295,6 @@ void Game::onLogin(const bsgo::Uuid playerDbId)
   setupLoadingScreen(Screen::OUTPOST);
 
   m_dataSource.setPlayerDbId(playerDbId);
-  // resetViewsAndUi();
 }
 
 void Game::onLoginDataReceived(const bsgo::Uuid playerShipDbId)
@@ -409,18 +408,6 @@ void Game::resetViewsAndUi()
 {
   const auto playerDbId     = m_gameSession.getPlayerDbId();
   const auto playerShipDbId = m_gameSession.getPlayerActiveShipDbId();
-
-  // TODO: We should switch to the loading screen here. Instead of calling the
-  // initialize method we wait to receive messages like the PlayerListMessage
-  // and similar to have access to the data.
-  m_dataSource.initialize(*m_coordinator, m_entityMapper);
-
-  const auto maybePlayerDbId = m_dataSource.tryGetPlayerDbId();
-  if (!maybePlayerDbId)
-  {
-    error("Failed to reset views and UI", "Expected to have a player defined");
-  }
-
   m_views.playerView->setPlayerDbId(playerDbId);
   m_views.shopView->setPlayerDbId(playerDbId);
   m_views.serverView->setPlayerDbId(playerDbId);
