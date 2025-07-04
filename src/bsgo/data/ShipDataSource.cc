@@ -67,8 +67,7 @@ void ShipDataSource::registerShip(Coordinator &coordinator,
   coordinator.addHealth(shipEntityId, data.hullPoints, data.maxHullPoints, data.hullPointsRegen);
   coordinator.addPower(shipEntityId, data.powerPoints, data.maxPowerPoints, data.powerRegen);
   coordinator.addFaction(shipEntityId, data.faction);
-  // TODO: Should include jumpTime and jumpTimeInThreat
-  // coordinator.addStatus(shipEntityId, data.status, data.jumpTime, data.jumpTimeInThreat);
+  coordinator.addStatus(shipEntityId, data.status, data.jumpTime, data.jumpTimeInThreat);
   coordinator.addShipClass(shipEntityId, data.shipClass);
   coordinator.addName(shipEntityId, data.name);
   if (data.targetDbId)
