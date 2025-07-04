@@ -17,7 +17,7 @@ void PlayerListMessageConsumer::onMessageReceived(const bsgo::IMessage &message)
 
   for (const auto &playerData : playerList.getPlayersData())
   {
-    registerPlayer(playerData.playerDbId, playerData.name);
+    registerPlayer(playerData.dbId, playerData.name);
   }
 }
 

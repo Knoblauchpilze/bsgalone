@@ -37,12 +37,14 @@ void AsteroidDataSource::initialize(const Uuid systemDbId,
 }
 
 void AsteroidDataSource::registerAsteroid(Coordinator &coordinator,
-                                          const AsteroidData data,
+                                          const AsteroidData &data,
                                           DatabaseEntityMapper &entityMapper) const
+
 {
-  auto box                    = std::make_unique<CircleBox>(data.position, data.radius);
   const auto asteroidEntityId = coordinator.createEntity(EntityKind::ASTEROID);
+
   coordinator.addDbId(asteroidEntityId, data.dbId);
+  auto box = std::make_unique<CircleBox>(data.position, data.radius);
   coordinator.addTransform(asteroidEntityId, std::move(box));
   coordinator.addHealth(asteroidEntityId, data.health, data.health, 0.0f);
   coordinator.addRemoval(asteroidEntityId);

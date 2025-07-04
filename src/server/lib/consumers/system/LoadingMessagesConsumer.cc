@@ -95,13 +95,12 @@ void LoadingMessagesConsumer::handlePlayersLoading(const LoadingStartedMessage &
 
   const auto players = m_loadingService->getPlayersInSystem(systemDbId);
 
-  std::vector<PlayerListMessage::PlayerData> playersData{};
+  std::vector<PlayerData> playersData{};
   std::transform(players.begin(),
                  players.end(),
                  std::back_inserter(playersData),
                  [](const Player &player) {
-                   return PlayerListMessage::PlayerData{.playerDbId = player.id,
-                                                        .name       = player.name};
+                   return PlayerData{.dbId = player.id, .name = player.name};
                  });
 
   auto out = std::make_unique<PlayerListMessage>(systemDbId, playersData);
@@ -149,13 +148,17 @@ void LoadingMessagesConsumer::handleOutpostsLoading(const LoadingStartedMessage 
                  std::back_inserter(outpostsData),
                  [](const LoadingService::OutpostProps &props) {
                    return OutpostData{
-                     .dbId        = props.dbId,
-                     .position    = props.dbOutpost.position,
-                     .radius      = props.dbOutpost.radius,
-                     .hullPoints  = props.dbOutpost.hullPoints,
-                     .powerPoints = props.dbOutpost.powerPoints,
-                     .faction     = props.dbOutpost.faction,
-                     .targetDbId  = props.targetDbId,
+                     .dbId            = props.dbId,
+                     .position        = props.dbOutpost.position,
+                     .radius          = props.dbOutpost.radius,
+                     .hullPoints      = props.dbOutpost.hullPoints,
+                     .maxHullPoints   = props.dbOutpost.maxHullPoints,
+                     .hullPointsRegen = props.dbOutpost.hullPointsRegen,
+                     .powerPoints     = props.dbOutpost.powerPoints,
+                     .maxPowerPoints  = props.dbOutpost.maxPowerPoints,
+                     .powerRegen      = props.dbOutpost.powerRegen,
+                     .faction         = props.dbOutpost.faction,
+                     .targetDbId      = props.targetDbId,
                    };
                  });
 
@@ -183,9 +186,12 @@ auto generateShipData(const LoadingService::ShipProps props) -> ShipData
   data.powerRegen      = props.dbShip.powerRegen;
   data.faction         = props.dbShip.faction;
 
-  data.status    = props.status;
-  data.shipClass = props.dbShip.shipClass;
-  data.name      = props.dbShip.name;
+  data.status           = props.status;
+  data.shipClass        = props.dbShip.shipClass;
+  data.name             = props.dbShip.name;
+  data.docked           = props.dbShip.docked;
+  data.jumpTime         = props.dbShip.jumpTime;
+  data.jumpTimeInThreat = props.dbShip.jumpTimeInThreat;
 
   data.targetDbId = props.targetDbId;
   data.playerDbId = props.dbShip.player;

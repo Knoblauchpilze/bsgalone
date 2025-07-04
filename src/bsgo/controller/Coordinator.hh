@@ -2,6 +2,7 @@
 #pragma once
 
 #include "Components.hh"
+#include "ComputerData.hh"
 #include "CoreObject.hh"
 #include "Entity.hh"
 #include "IBoundingBox.hh"
@@ -9,6 +10,7 @@
 #include "Systems.hh"
 #include "TimeUtils.hh"
 #include "Uuid.hh"
+#include "WeaponData.hh"
 #include <eigen3/Eigen/Eigen>
 #include <memory>
 #include <optional>
@@ -47,8 +49,8 @@ class Coordinator : public core::CoreObject
   void addName(const Uuid ent, const std::string &name);
   void addNetwork(const Uuid ent, const std::unordered_set<ComponentType> &toSync);
   void addDbId(const Uuid ent, const Uuid dbId);
-  void addWeapon(const Uuid ent, const PlayerWeapon &weapon, const Eigen::Vector3f &position);
-  void addComputer(const Uuid ent, const PlayerComputer &computer);
+  void addWeapon(const Uuid ent, const WeaponData &weapon);
+  void addComputer(const Uuid ent, const ComputerData &computer);
   void addResourceComponent(const Uuid ent, const Uuid resource, const float amount);
 
   void addWeaponEffect(const Uuid ent, const core::Duration &duration, const float damageModifier);
