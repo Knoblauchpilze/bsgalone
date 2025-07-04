@@ -14,13 +14,17 @@ class Coordinator;
 class AsteroidDataSource : public core::CoreObject
 {
   public:
-  AsteroidDataSource() = default;
+  AsteroidDataSource();
   AsteroidDataSource(const Repositories &repositories);
   ~AsteroidDataSource() override = default;
 
   void initialize(const Uuid systemDbId,
                   Coordinator &coordinator,
                   DatabaseEntityMapper &entityMapper) const;
+
+  void registerAsteroid(Coordinator &coordinator,
+                        const AsteroidData &data,
+                        DatabaseEntityMapper &entityMapper) const;
 
   void registerAsteroid(Coordinator &coordinator,
                         const Uuid asteroidDbId,

@@ -2,6 +2,7 @@
 #pragma once
 
 #include "NetworkMessage.hh"
+#include "PlayerData.hh"
 #include "Uuid.hh"
 
 namespace bsgo {
@@ -9,14 +10,6 @@ namespace bsgo {
 class PlayerListMessage : public NetworkMessage
 {
   public:
-  struct PlayerData
-  {
-    Uuid playerDbId{};
-    std::string name{};
-
-    bool operator==(const PlayerData &rhs) const;
-  };
-
   PlayerListMessage();
   PlayerListMessage(const Uuid systemDbId, const std::vector<PlayerData> &playersData);
   ~PlayerListMessage() override = default;

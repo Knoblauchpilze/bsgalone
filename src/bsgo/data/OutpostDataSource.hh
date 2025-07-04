@@ -3,7 +3,9 @@
 
 #include "CoreObject.hh"
 #include "DatabaseEntityMapper.hh"
+#include "OutpostData.hh"
 #include "Repositories.hh"
+#include <optional>
 
 namespace bsgo {
 
@@ -12,6 +14,7 @@ class Coordinator;
 class OutpostDataSource : public core::CoreObject
 {
   public:
+  OutpostDataSource();
   OutpostDataSource(const Repositories &repositories);
   ~OutpostDataSource() override = default;
 
@@ -19,8 +22,12 @@ class OutpostDataSource : public core::CoreObject
                   Coordinator &coordinator,
                   DatabaseEntityMapper &entityMapper) const;
 
+  void registerOutpost(Coordinator &coordinator,
+                       const OutpostData &data,
+                       DatabaseEntityMapper &entityMapper) const;
+
   private:
-  Repositories m_repositories{};
+  std::optional<Repositories> m_repositories{};
 
   void registerOutpost(Coordinator &coordinator,
                        const Uuid outpostDbId,

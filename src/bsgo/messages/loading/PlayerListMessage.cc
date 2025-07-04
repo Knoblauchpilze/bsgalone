@@ -1,13 +1,9 @@
 
 #include "PlayerListMessage.hh"
+#include "DataSerialization.hh"
 #include "SerializationUtils.hh"
 
 namespace bsgo {
-
-bool PlayerListMessage::PlayerData::operator==(const PlayerData &rhs) const
-{
-  return playerDbId == rhs.playerDbId && name == rhs.name;
-}
 
 PlayerListMessage::PlayerListMessage()
   : NetworkMessage(MessageType::PLAYER_LIST)
@@ -40,8 +36,7 @@ auto PlayerListMessage::serialize(std::ostream &out) const -> std::ostream &
 
   for (const auto &playerData : m_playersData)
   {
-    core::serialize(out, playerData.playerDbId);
-    core::serialize(out, playerData.name);
+    serializePlayerData(out, playerData);
   }
 
   return out;
@@ -62,13 +57,11 @@ bool PlayerListMessage::deserialize(std::istream &in)
 
   for (std::size_t id = 0u; id < count; ++id)
   {
-    Uuid playerDbId;
-    std::string name;
+    PlayerData data;
 
-    ok &= core::deserialize(in, playerDbId);
-    ok &= core::deserialize(in, name);
+    ok &= deserializePlayerData(in, data);
 
-    m_playersData.emplace_back(playerDbId, name);
+    m_playersData.emplace_back(data);
   }
 
   return ok;

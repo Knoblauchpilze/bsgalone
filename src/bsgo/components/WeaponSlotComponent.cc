@@ -3,16 +3,16 @@
 
 namespace bsgo {
 
-WeaponSlotComponent::WeaponSlotComponent(const PlayerWeapon &weapon, const Eigen::Vector3f &position)
+WeaponSlotComponent::WeaponSlotComponent(const WeaponData &weapon)
   : SlotComponent(ComponentType::WEAPON_SLOT,
-                  SlotComponentData{.dbId       = weapon.id,
+                  SlotComponentData{.dbId       = weapon.dbId,
                                     .offensive  = true,
                                     .powerCost  = weapon.powerCost,
                                     .range      = {weapon.range},
                                     .reloadTime = weapon.reloadTime})
   , m_minDamage(weapon.minDamage)
   , m_maxDamage(weapon.maxDamage)
-  , m_position(position)
+  , m_position(weapon.slotPosition)
 {}
 
 auto WeaponSlotComponent::minDamage() const -> float

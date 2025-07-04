@@ -4,6 +4,13 @@
 
 namespace bsgo {
 
+PlayerDataSource::PlayerDataSource()
+  : core::CoreObject("bsgo")
+{
+  setService("data");
+  addModule("player");
+}
+
 PlayerDataSource::PlayerDataSource(const Repositories &repositories)
   : core::CoreObject("bsgo")
   , m_repositories(repositories)
@@ -16,7 +23,12 @@ void PlayerDataSource::initialize(const Uuid systemDbId,
                                   Coordinator &coordinator,
                                   DatabaseEntityMapper &entityMapper) const
 {
-  const auto players = m_repositories.playerRepository->findAllBySystem(systemDbId);
+  if (!m_repositories)
+  {
+    error("Failed to initialize outpost", "Repositories are not set");
+  }
+
+  const auto players = m_repositories->playerRepository->findAllBySystem(systemDbId);
   for (const auto &id : players)
   {
     registerPlayer(coordinator, id, entityMapper);
@@ -24,16 +36,34 @@ void PlayerDataSource::initialize(const Uuid systemDbId,
 }
 
 void PlayerDataSource::registerPlayer(Coordinator &coordinator,
-                                      const Uuid playerDbId,
+                                      const PlayerData &data,
                                       DatabaseEntityMapper &entityMapper) const
 {
   const auto playerEntityId = coordinator.createEntity(EntityKind::PLAYER);
 
-  const auto player = m_repositories.playerRepository->findOneById(playerDbId);
-  coordinator.addName(playerEntityId, player.name);
-  coordinator.addDbId(playerEntityId, playerDbId);
+  coordinator.addDbId(playerEntityId, data.dbId);
+  coordinator.addName(playerEntityId, data.name);
 
-  entityMapper.registerPlayer(playerDbId, playerEntityId);
+  entityMapper.registerPlayer(data.dbId, playerEntityId);
+}
+
+void PlayerDataSource::registerPlayer(Coordinator &coordinator,
+                                      const Uuid playerDbId,
+                                      DatabaseEntityMapper &entityMapper) const
+{
+  if (!m_repositories)
+  {
+    error("Failed to initialize outpost", "Repositories are not set");
+  }
+
+  const auto data = m_repositories->playerRepository->findOneById(playerDbId);
+
+  PlayerData out{
+    .dbId = data.id,
+    .name = data.name,
+  };
+
+  registerPlayer(coordinator, out, entityMapper);
 }
 
 } // namespace bsgo

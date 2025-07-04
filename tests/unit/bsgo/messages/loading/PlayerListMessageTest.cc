@@ -16,7 +16,16 @@ auto assertMessagesAreEqual(const PlayerListMessage &actual, const PlayerListMes
   const auto &actualPlayersData   = actual.getPlayersData();
   const auto &expectedPlayersData = expected.getPlayersData();
 
-  EXPECT_EQ(actualPlayersData, expectedPlayersData);
+  EXPECT_EQ(actualPlayersData.size(), expectedPlayersData.size());
+  for (std::size_t id = 0; id < actualPlayersData.size(); ++id)
+  {
+    const auto &actualPlayerData   = actualPlayersData[id];
+    const auto &expectedPlayerData = expectedPlayersData[id];
+
+    // Keep in sync with the PlayerData test code
+    EXPECT_EQ(actualPlayerData.dbId, expectedPlayerData.dbId);
+    EXPECT_EQ(actualPlayerData.name, expectedPlayerData.name);
+  }
 }
 } // namespace
 
@@ -24,10 +33,8 @@ TEST(Unit_Bsgo_Serialization_PlayerListMessage, Basic)
 {
   const PlayerListMessage expected(Uuid{8712}, {});
 
-  const std::vector<PlayerListMessage::PlayerData> playersData{{.playerDbId = 23,
-                                                                .name       = "player-1"},
-                                                               {.playerDbId = 76,
-                                                                .name       = "some name"}};
+  const std::vector<PlayerData> playersData{{.dbId = 23, .name = "player-1"},
+                                            {.dbId = 76, .name = "some name"}};
   PlayerListMessage actual(Uuid{1515}, playersData);
   actual.setClientId(Uuid{2});
   serializeAndDeserializeMessage(expected, actual);
@@ -36,13 +43,12 @@ TEST(Unit_Bsgo_Serialization_PlayerListMessage, Basic)
 
 TEST(Unit_Bsgo_Serialization_PlayerListMessage, WithClientId)
 {
-  std::vector<PlayerListMessage::PlayerData> playersData{{.playerDbId = 14, .name = "foo bar"}};
+  std::vector<PlayerData> playersData{{.dbId = 14, .name = "foo bar"}};
 
   PlayerListMessage expected(Uuid{123}, playersData);
   expected.setClientId(Uuid{78});
 
-  playersData = {{.playerDbId = 87, .name = "sensational"},
-                 {.playerDbId = 923, .name = "ground breaking"}};
+  playersData = {{.dbId = 87, .name = "sensational"}, {.dbId = 923, .name = "ground breaking"}};
   PlayerListMessage actual(Uuid{745}, {});
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
@@ -50,10 +56,8 @@ TEST(Unit_Bsgo_Serialization_PlayerListMessage, WithClientId)
 
 TEST(Unit_Bsgo_Serialization_PlayerListMessage, Clone)
 {
-  const std::vector<PlayerListMessage::PlayerData> playersData{{.playerDbId = 1908,
-                                                                .name       = "a name"},
-                                                               {.playerDbId = 3207,
-                                                                .name       = "pro gamer"}};
+  const std::vector<PlayerData> playersData{{.dbId = 1908, .name = "a name"},
+                                            {.dbId = 3207, .name = "pro gamer"}};
 
   const PlayerListMessage expected(Uuid{4572}, playersData);
   const auto cloned = expected.clone();

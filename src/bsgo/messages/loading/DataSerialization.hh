@@ -4,10 +4,14 @@
 #include "AsteroidData.hh"
 #include "ComputerData.hh"
 #include "OutpostData.hh"
+#include "PlayerData.hh"
 #include "ShipData.hh"
 #include "WeaponData.hh"
 
 namespace bsgo {
+
+auto serializePlayerData(std::ostream &out, const PlayerData &data) -> std::ostream &;
+bool deserializePlayerData(std::istream &in, PlayerData &data);
 
 auto serializeAsteroidData(std::ostream &out, const AsteroidData &data) -> std::ostream &;
 bool deserializeAsteroidData(std::istream &in, AsteroidData &data);

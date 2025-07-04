@@ -182,15 +182,13 @@ void Coordinator::addDbId(const Uuid ent, const Uuid dbId)
   m_components.dbs[ent] = std::make_shared<DbComponent>(dbId);
 }
 
-void Coordinator::addWeapon(const Uuid ent,
-                            const PlayerWeapon &weapon,
-                            const Eigen::Vector3f &position)
+void Coordinator::addWeapon(const Uuid ent, const WeaponData &weapon)
 {
   checkEntityExist(ent, "Weapon");
-  m_components.weapons.emplace(ent, std::make_shared<WeaponSlotComponent>(weapon, position));
+  m_components.weapons.emplace(ent, std::make_shared<WeaponSlotComponent>(weapon));
 }
 
-void Coordinator::addComputer(const Uuid ent, const PlayerComputer &computer)
+void Coordinator::addComputer(const Uuid ent, const ComputerData &computer)
 {
   checkEntityExist(ent, "Computer");
   m_components.computers.emplace(ent, std::make_shared<ComputerSlotComponent>(computer));
