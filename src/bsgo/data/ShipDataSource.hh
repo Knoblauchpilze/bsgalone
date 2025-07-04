@@ -37,17 +37,22 @@ class ShipDataSource : public core::CoreObject
   std::optional<Uuid> m_playerDbId{};
   std::optional<Repositories> m_repositories{};
 
+  // TODO: this is deprecated
   void registerShip(Coordinator &coordinator,
-                    const Uuid ship,
+                    const Uuid shipDbId,
                     DatabaseEntityMapper &entityMapper,
                     const bool ignoreDocked) const;
+
   void registerShipOwner(Coordinator &coordinator,
                          const Uuid shipEntity,
-                         const PlayerShip &shipData,
+                         const ShipData &data,
                          DatabaseEntityMapper &entityMapper) const;
-
-  void registerShipWeapons(Coordinator &coordinator, const Uuid ship, const Uuid shipEntity) const;
-  void registerShipComputers(Coordinator &coordinator, const Uuid ship, const Uuid shipEntity) const;
+  void registerShipWeapons(Coordinator &coordinator,
+                           const ShipData &data,
+                           const Uuid shipEntity) const;
+  void registerShipComputers(Coordinator &coordinator,
+                             const ShipData &data,
+                             const Uuid shipEntity) const;
 
   auto generateBehaviorTree(const Uuid entity, const Eigen::Vector3f &center) const -> INodePtr;
 };

@@ -48,7 +48,7 @@ void ShipDataSource::initialize(const Uuid systemDbId,
 
 void ShipDataSource::registerShip(Coordinator &coordinator,
                                   const ShipData &data,
-                                  DatabaseEntityMapper & /*entityMapper*/,
+                                  DatabaseEntityMapper &entityMapper,
                                   const bool ignoreIfDocked) const
 {
   if (ignoreIfDocked && data.docked)
@@ -85,15 +85,9 @@ void ShipDataSource::registerShip(Coordinator &coordinator,
                           ComponentType::TRANSFORM,
                           ComponentType::VELOCITY});
 
-  // TODO: Handle the rest of the properties
-  // std::optional<Uuid> playerDbId{};
-
-  // std::vector<WeaponData> weapons{};
-  // std::vector<ComputerData> computers{};
-
-  // registerShipOwner(coordinator, shipEntityId, data, entityMapper);
-  // registerShipWeapons(coordinator, ship, shipEntityId);
-  // registerShipComputers(coordinator, ship, shipEntityId);
+  registerShipOwner(coordinator, shipEntityId, data, entityMapper);
+  registerShipWeapons(coordinator, data, shipEntityId);
+  registerShipComputers(coordinator, data, shipEntityId);
 }
 
 void ShipDataSource::registerShip(Coordinator &coordinator,
@@ -109,88 +103,122 @@ void ShipDataSource::registerShip(Coordinator &coordinator,
 }
 
 void ShipDataSource::registerShip(Coordinator &coordinator,
-                                  const Uuid ship,
+                                  const Uuid shipDbId,
                                   DatabaseEntityMapper &entityMapper,
                                   const bool ignoreDocked) const
 {
-  const auto data = m_repositories->playerShipRepository->findOneById(ship);
+  const auto data = m_repositories->playerShipRepository->findOneById(shipDbId);
 
-  if (ignoreDocked && data.docked)
+  ShipData out{
+    .dbId             = shipDbId,
+    .position         = data.position,
+    .radius           = data.radius,
+    .acceleration     = data.acceleration,
+    .speed            = data.speed,
+    .hullPoints       = data.hullPoints,
+    .maxHullPoints    = data.maxHullPoints,
+    .hullPointsRegen  = data.hullPointsRegen,
+    .powerPoints      = data.powerPoints,
+    .maxPowerPoints   = data.maxPowerPoints,
+    .powerRegen       = data.powerRegen,
+    .faction          = data.faction,
+    .status           = determineStartingStatusForShip(data),
+    .shipClass        = data.shipClass,
+    .name             = data.name,
+    .docked           = data.docked,
+    .jumpTime         = data.jumpTime,
+    .jumpTimeInThreat = data.jumpTimeInThreat,
+
+    .targetDbId = {},
+    .playerDbId = data.player,
+  };
+
+  const auto weapons = m_repositories->shipWeaponRepository->findAllByShip(shipDbId);
+  for (const auto &weapon : weapons)
   {
-    return;
+    const auto weaponDbData = m_repositories->playerWeaponRepository->findOneById(weapon.weapon);
+
+    WeaponData weaponData{
+      .dbId         = weaponDbData.id,
+      .weaponDbId   = weaponDbData.weapon,
+      .slotPosition = weapon.slotPosition,
+      .level        = weaponDbData.level,
+      .minDamage    = weaponDbData.minDamage,
+      .maxDamage    = weaponDbData.maxDamage,
+      .powerCost    = weaponDbData.powerCost,
+      .range        = weaponDbData.range,
+      .reloadTime   = weaponDbData.reloadTime,
+    };
+
+    out.weapons.push_back(weaponData);
   }
 
-  auto box                = std::make_unique<CircleBox>(data.position, data.radius);
-  const auto shipEntityId = coordinator.createEntity(EntityKind::SHIP);
-  coordinator.addTransform(shipEntityId, std::move(box));
-  VelocityData vData{.maxAcceleration = data.acceleration, .maxSpeed = data.speed};
-  coordinator.addVelocity(shipEntityId, vData);
-  coordinator.addHealth(shipEntityId, data.hullPoints, data.maxHullPoints, data.hullPointsRegen);
-  coordinator.addRemoval(shipEntityId);
-  coordinator.addPower(shipEntityId, data.powerPoints, data.maxPowerPoints, data.powerRegen);
-  coordinator.addTarget(shipEntityId);
-  coordinator.addFaction(shipEntityId, data.faction);
-  const auto status = determineStartingStatusForShip(data);
-  coordinator.addStatus(shipEntityId, status, data.jumpTime, data.jumpTimeInThreat);
-  coordinator.addShipClass(shipEntityId, data.shipClass);
-  coordinator.addName(shipEntityId, data.name);
-  coordinator.addDbId(shipEntityId, data.id);
-  coordinator.addNetwork(shipEntityId,
-                         {ComponentType::HEALTH,
-                          ComponentType::POWER,
-                          ComponentType::STATUS,
-                          ComponentType::TRANSFORM,
-                          ComponentType::VELOCITY});
+  const auto computers = m_repositories->shipComputerRepository->findAllByShip(shipDbId);
+  for (const auto &computer : computers)
+  {
+    const auto computerDbData = m_repositories->playerComputerRepository->findOneById(computer);
 
-  registerShipOwner(coordinator, shipEntityId, data, entityMapper);
-  registerShipWeapons(coordinator, ship, shipEntityId);
-  registerShipComputers(coordinator, ship, shipEntityId);
+    ComputerData computerData{
+      .dbId         = computerDbData.id,
+      .computerDbId = computerDbData.computer,
+
+      .level      = computerDbData.level,
+      .offensive  = computerDbData.offensive,
+      .powerCost  = computerDbData.powerCost,
+      .range      = computerDbData.range,
+      .reloadTime = computerDbData.reloadTime,
+
+      .duration       = computerDbData.duration,
+      .allowedTargets = computerDbData.allowedTargets,
+      .damageModifier = computerDbData.damageModifier,
+    };
+
+    out.computers.push_back(computerData);
+  }
+
+  registerShip(coordinator, out, entityMapper, ignoreDocked);
 }
 
 void ShipDataSource::registerShipOwner(Coordinator &coordinator,
                                        const Uuid shipEntity,
-                                       const PlayerShip &shipData,
+                                       const ShipData &data,
                                        DatabaseEntityMapper &entityMapper) const
 {
-  if (!shipData.player)
+  if (!data.playerDbId)
   {
-    entityMapper.registerShip(shipData.id, shipEntity);
-    coordinator.addAI(shipEntity, generateBehaviorTree(shipEntity, shipData.position));
+    entityMapper.registerShip(data.dbId, shipEntity);
+    coordinator.addAI(shipEntity, generateBehaviorTree(shipEntity, data.position));
     return;
   }
 
-  const auto maybePlayerEntityId = entityMapper.tryGetPlayerEntityId(*shipData.player);
+  const auto maybePlayerEntityId = entityMapper.tryGetPlayerEntityId(*data.playerDbId);
   if (!maybePlayerEntityId)
   {
-    error("Failed to register owner for ship " + str(shipData.id),
-          "Could not find entity id for player " + str(*shipData.player));
+    error("Failed to register owner for ship " + str(data.dbId),
+          "Could not find entity id for player " + str(*data.playerDbId));
   }
 
-  entityMapper.registerShipForPlayer(*shipData.player, shipData.id, shipEntity);
+  entityMapper.registerShipForPlayer(*data.playerDbId, data.dbId, shipEntity);
   coordinator.addOwner(shipEntity, *maybePlayerEntityId, OwnerType::PLAYER);
 }
 
 void ShipDataSource::registerShipWeapons(Coordinator &coordinator,
-                                         const Uuid ship,
+                                         const ShipData &data,
                                          const Uuid shipEntity) const
 {
-  const auto weapons = m_repositories->shipWeaponRepository->findAllByShip(ship);
-  for (const auto &weapon : weapons)
+  for (const auto &weapon : data.weapons)
   {
-    const auto data = m_repositories->playerWeaponRepository->findOneById(weapon.weapon);
-    coordinator.addWeapon(shipEntity, data, weapon.slotPosition);
+    coordinator.addWeapon(shipEntity, weapon);
   }
 }
 
 void ShipDataSource::registerShipComputers(Coordinator &coordinator,
-                                           const Uuid ship,
+                                           const ShipData &data,
                                            const Uuid shipEntity) const
 {
-  const auto computers = m_repositories->shipComputerRepository->findAllByShip(ship);
-  for (const auto &computer : computers)
+  for (const auto &computer : data.computers)
   {
-    const auto data = m_repositories->playerComputerRepository->findOneById(computer);
-    coordinator.addComputer(shipEntity, data);
+    coordinator.addComputer(shipEntity, computer);
   }
 }
 
