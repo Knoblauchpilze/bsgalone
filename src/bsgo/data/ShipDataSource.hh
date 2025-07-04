@@ -25,6 +25,11 @@ class ShipDataSource : public core::CoreObject
                   DatabaseEntityMapper &entityMapper) const;
 
   void registerShip(Coordinator &coordinator,
+                    const ShipData &data,
+                    DatabaseEntityMapper &entityMapper,
+                    const bool ignoreIfDocked) const;
+
+  void registerShip(Coordinator &coordinator,
                     const Uuid ship,
                     DatabaseEntityMapper &entityMapper) const;
 

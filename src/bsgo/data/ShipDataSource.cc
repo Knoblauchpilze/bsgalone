@@ -47,6 +47,57 @@ void ShipDataSource::initialize(const Uuid systemDbId,
 }
 
 void ShipDataSource::registerShip(Coordinator &coordinator,
+                                  const ShipData &data,
+                                  DatabaseEntityMapper & /*entityMapper*/,
+                                  const bool ignoreIfDocked) const
+{
+  if (ignoreIfDocked && data.docked)
+  {
+    return;
+  }
+
+  const auto shipEntityId = coordinator.createEntity(EntityKind::SHIP);
+
+  coordinator.addDbId(shipEntityId, data.dbId);
+  auto box = std::make_unique<CircleBox>(data.position, data.radius);
+  coordinator.addTransform(shipEntityId, std::move(box));
+  coordinator.addRemoval(shipEntityId);
+  const VelocityData vData{.maxAcceleration = data.acceleration, .maxSpeed = data.speed};
+  coordinator.addVelocity(shipEntityId, vData);
+  coordinator.addHealth(shipEntityId, data.hullPoints, data.maxHullPoints, data.hullPointsRegen);
+  coordinator.addPower(shipEntityId, data.powerPoints, data.maxPowerPoints, data.powerRegen);
+  coordinator.addFaction(shipEntityId, data.faction);
+  // TODO: Should include jumpTime and jumpTimeInThreat
+  // coordinator.addStatus(shipEntityId, data.status, data.jumpTime, data.jumpTimeInThreat);
+  coordinator.addShipClass(shipEntityId, data.shipClass);
+  coordinator.addName(shipEntityId, data.name);
+  if (data.targetDbId)
+  {
+    coordinator.addTarget(shipEntityId, *data.targetDbId);
+  }
+  else
+  {
+    coordinator.addTarget(shipEntityId);
+  }
+  coordinator.addNetwork(shipEntityId,
+                         {ComponentType::HEALTH,
+                          ComponentType::POWER,
+                          ComponentType::STATUS,
+                          ComponentType::TRANSFORM,
+                          ComponentType::VELOCITY});
+
+  // TODO: Handle the rest of the properties
+  // std::optional<Uuid> playerDbId{};
+
+  // std::vector<WeaponData> weapons{};
+  // std::vector<ComputerData> computers{};
+
+  // registerShipOwner(coordinator, shipEntityId, data, entityMapper);
+  // registerShipWeapons(coordinator, ship, shipEntityId);
+  // registerShipComputers(coordinator, ship, shipEntityId);
+}
+
+void ShipDataSource::registerShip(Coordinator &coordinator,
                                   const Uuid ship,
                                   DatabaseEntityMapper &entityMapper) const
 {
