@@ -3,7 +3,9 @@
 
 #include "CoreObject.hh"
 #include "DatabaseEntityMapper.hh"
+#include "PlayerData.hh"
 #include "Repositories.hh"
+#include <optional>
 
 namespace bsgo {
 
@@ -12,6 +14,7 @@ class Coordinator;
 class PlayerDataSource : public core::CoreObject
 {
   public:
+  PlayerDataSource();
   PlayerDataSource(const Repositories &repositories);
   ~PlayerDataSource() override = default;
 
@@ -20,11 +23,15 @@ class PlayerDataSource : public core::CoreObject
                   DatabaseEntityMapper &entityMapper) const;
 
   void registerPlayer(Coordinator &coordinator,
+                      const PlayerData &data,
+                      DatabaseEntityMapper &entityMapper) const;
+
+  void registerPlayer(Coordinator &coordinator,
                       const Uuid playerDbId,
                       DatabaseEntityMapper &entityMapper) const;
 
   private:
-  Repositories m_repositories{};
+  std::optional<Repositories> m_repositories{};
 };
 
 } // namespace bsgo
