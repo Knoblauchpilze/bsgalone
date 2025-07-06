@@ -295,6 +295,7 @@ void Game::onLogin(const bsgo::Uuid playerDbId)
   setupLoadingScreen(Screen::OUTPOST);
 
   m_dataSource.setPlayerDbId(playerDbId);
+  m_entityMapper.setPlayerDbId(playerDbId);
 }
 
 void Game::onLoginDataReceived(const bsgo::Uuid playerShipDbId)
@@ -306,6 +307,7 @@ void Game::onLoginDataReceived(const bsgo::Uuid playerShipDbId)
 void Game::onLogout()
 {
   m_gameSession.onPlayerLoggedOut();
+  m_entityMapper.clear();
   setScreen(Screen::LOGIN);
 }
 
@@ -327,6 +329,7 @@ void Game::onActiveSystemChanged(const bsgo::Uuid systemDbId)
 
 void Game::onShipDocked()
 {
+  m_entityMapper.clear();
   setScreen(Screen::OUTPOST);
 }
 
