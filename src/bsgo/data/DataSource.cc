@@ -74,7 +74,7 @@ void DataSource::initialize(Coordinator &coordinator, DatabaseEntityMapper &enti
   }
 
   coordinator.clear();
-  entityMapper.clear();
+  entityMapper.clearAll();
   if (m_playerDbId)
   {
     entityMapper.setPlayerDbId(*m_playerDbId);

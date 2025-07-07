@@ -19,6 +19,7 @@ class DatabaseEntityMapper : public core::CoreObject
 
   void setPlayerDbId(const Uuid playerDbId);
   bool doesPlayerHaveAnEntity() const;
+  void setPlayerShipDbId(const Uuid playerShipDbId);
 
   void registerPlayer(const Uuid playerDbId, const Uuid entityId);
   void registerShip(const Uuid shipDbId, const Uuid entityId);
@@ -40,7 +41,8 @@ class DatabaseEntityMapper : public core::CoreObject
   auto tryGetAsteroidEntityId(const Uuid asteroidDbId) const -> std::optional<Uuid>;
   auto tryGetOutpostEntityId(const Uuid outpostDbId) const -> std::optional<Uuid>;
 
-  void clear();
+  void clearEntities();
+  void clearAll();
 
   private:
   mutable std::mutex m_locker{};

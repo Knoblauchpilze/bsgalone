@@ -19,6 +19,11 @@ bool DatabaseEntityMapper::doesPlayerHaveAnEntity() const
   return m_playerEntityId.has_value() && m_playerShipEntityId.has_value();
 }
 
+void DatabaseEntityMapper::setPlayerShipDbId(const Uuid playerShipDbId)
+{
+  m_playerShipDbId = playerShipDbId;
+}
+
 void DatabaseEntityMapper::registerPlayer(const Uuid playerDbId, const Uuid entityId)
 {
   const std::lock_guard guard(m_locker);
@@ -60,13 +65,6 @@ void DatabaseEntityMapper::registerShipForPlayer(const Uuid playerDbId,
   registerShip(shipDbId, entityId);
   if (m_playerDbId && *m_playerDbId == playerDbId)
   {
-    if (m_playerShipDbId)
-    {
-      error("Failed to attach " + str(*m_playerDbId) + " to ship " + str(shipDbId),
-            "Player is already attached to entity " + str(*m_playerShipDbId));
-    }
-    m_playerShipDbId = shipDbId;
-
     if (m_playerShipEntityId)
     {
       error("Failed to attach " + str(*m_playerDbId) + " to ship entity " + str(entityId),
@@ -147,11 +145,6 @@ auto DatabaseEntityMapper::tryGetPlayerEntityId() const -> std::optional<Uuid>
   return m_playerEntityId;
 }
 
-auto DatabaseEntityMapper::tryGetPlayerShipDbId() const -> std::optional<Uuid>
-{
-  return m_playerShipDbId;
-}
-
 auto DatabaseEntityMapper::tryGetPlayerShipEntityId() const -> std::optional<Uuid>
 {
   return m_playerShipEntityId;
@@ -168,6 +161,11 @@ auto DatabaseEntityMapper::tryGetPlayerEntityId(const Uuid playerDbId) const -> 
   }
 
   return {};
+}
+
+auto DatabaseEntityMapper::tryGetPlayerShipDbId() const -> std::optional<Uuid>
+{
+  return m_playerShipDbId;
 }
 
 auto DatabaseEntityMapper::tryGetShipEntityId(const Uuid shipDbId) const -> std::optional<Uuid>
@@ -211,7 +209,7 @@ auto DatabaseEntityMapper::tryGetOutpostEntityId(const Uuid outpostDbId) const
   return {};
 }
 
-void DatabaseEntityMapper::clear()
+void DatabaseEntityMapper::clearEntities()
 {
   const std::lock_guard guard(m_locker);
 
@@ -220,10 +218,19 @@ void DatabaseEntityMapper::clear()
   m_asteroidDbIdsToEntityIds.clear();
   m_outpostDbIdsToEntityIds.clear();
 
-  m_playerDbId.reset();
   m_playerEntityId.reset();
-  m_playerShipDbId.reset();
   m_playerShipEntityId.reset();
+}
+
+void DatabaseEntityMapper::clearAll()
+{
+  {
+    const std::lock_guard guard(m_locker);
+    m_playerDbId.reset();
+    m_playerShipDbId.reset();
+  }
+
+  clearEntities();
 }
 
 } // namespace bsgo
