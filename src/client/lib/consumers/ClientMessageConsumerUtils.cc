@@ -2,7 +2,11 @@
 #include "ClientMessageConsumerUtils.hh"
 #include "EntityService.hh"
 
+#include "AsteroidListMessageConsumer.hh"
 #include "ComponentMessageConsumer.hh"
+#include "OutpostListMessageConsumer.hh"
+#include "PlayerListMessageConsumer.hh"
+#include "ShipListMessageConsumer.hh"
 #include "ShipMessageConsumer.hh"
 #include "SystemMessageConsumer.hh"
 
@@ -27,12 +31,14 @@ void createMessageConsumers(const bsgo::Repositories &repositories,
   inputMessagesQueue.addListener(
     std::make_unique<SystemMessageConsumer>(entityMapper, coordinator, std::move(entityService)));
 
-  // TODO: We could create a new LoadingMessageConsumer which would take the coordinator
-  // and the entity mapper and would add the players, ships, etc. in a similar way to
-  // how it's done in the PlayerDataSource::initialize method.
-  // It would be responsible to call the PlayerDataSource::registerPlayer with the data
-  // that is coming from the PlayerListMessage for example instead of fetching it from
-  // the database.
+  inputMessagesQueue.addListener(
+    std::make_unique<PlayerListMessageConsumer>(entityMapper, coordinator));
+  inputMessagesQueue.addListener(
+    std::make_unique<AsteroidListMessageConsumer>(entityMapper, coordinator));
+  inputMessagesQueue.addListener(
+    std::make_unique<OutpostListMessageConsumer>(entityMapper, coordinator));
+  inputMessagesQueue.addListener(
+    std::make_unique<ShipListMessageConsumer>(entityMapper, coordinator));
 }
 
 } // namespace pge
