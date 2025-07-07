@@ -23,8 +23,6 @@ class DataSource : public core::CoreObject
   // TODO: In the client case, we want to not expose this method. This means checking
   // the data loading mode and throwing an exception if it's CLIENT.
   auto repositories() const -> Repositories;
-  auto tryGetPlayerDbId() const -> std::optional<Uuid>;
-  auto tryGetPlayerShipDbId() const -> std::optional<Uuid>;
 
   // TODO: What about the loading of weapons/computers? Two options:
   // 1. create a getAllWeapons/registerWeapons -> those would be called by the consumer
@@ -41,12 +39,13 @@ class DataSource : public core::CoreObject
   // TODO: When all of the previous comments are done, we can probably remove this
   // and not instantiate the DataSource in the client at all.
   DataLoadingMode m_dataLoadingMode{};
-  // TODO: This should be extracted in the case of the client. This would make it cleaner
-  // as they are not populated in the SERVER mode. We could create a GameDataModule or
-  // similar which would be responsible to handle those. We can hook this module in the
+  // TODO: This should be extracted in the case of the client.
+  // We could create a GameDataModule or similar which would be
+  // responsible to handle it. We can hook this module in the
   // Game in place of where the DataSource was used.
+  // For the server we could make it mandatory as we expect to
+  // have one data source per system.
   mutable std::optional<Uuid> m_systemDbId{};
-  std::optional<Uuid> m_playerDbId{};
 
   Repositories m_repositories{};
 
