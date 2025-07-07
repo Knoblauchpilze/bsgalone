@@ -292,27 +292,42 @@ void Game::onLogin(const bsgo::Uuid playerDbId)
 {
   info("Processing login for " + bsgo::str(playerDbId));
   m_gameSession.onPlayerLoggedIn(playerDbId);
-  setupLoadingScreen(Screen::OUTPOST);
 
-  m_dataSource.setPlayerDbId(playerDbId);
-  // resetViewsAndUi();
+  m_views.playerView->setPlayerDbId(playerDbId);
+  m_views.shopView->setPlayerDbId(playerDbId);
+  m_views.serverView->setPlayerDbId(playerDbId);
+
+  m_entityMapper.setPlayerDbId(playerDbId);
+
+  setupLoadingScreen(Screen::OUTPOST);
 }
 
 void Game::onLoginDataReceived(const bsgo::Uuid playerShipDbId)
 {
   info("Received active ship " + bsgo::str(playerShipDbId));
   m_gameSession.onActiveShipChanged(playerShipDbId);
+  m_views.shipDbView->setPlayerShipDbId(playerShipDbId);
+
+  m_entityMapper.setPlayerShipDbId(playerShipDbId);
 }
 
 void Game::onLogout()
 {
   m_gameSession.onPlayerLoggedOut();
+
+  m_coordinator->clear();
+  m_entityMapper.clearAll();
+
   setScreen(Screen::LOGIN);
 }
 
 void Game::onActiveShipChanged(const bsgo::Uuid shipDbId)
 {
   m_gameSession.onActiveShipChanged(shipDbId);
+  m_views.shipDbView->setPlayerShipDbId(shipDbId);
+
+  m_entityMapper.setPlayerShipDbId(shipDbId);
+
   resetViewsAndUi();
 }
 
@@ -321,18 +336,25 @@ void Game::onActiveSystemChanged(const bsgo::Uuid systemDbId)
   m_views.shipView->clearJumpSystem();
   m_views.shipDbView->clearJumpSystem();
   m_gameSession.onActiveSystemChanged(systemDbId);
-  setupLoadingScreen(Screen::GAME);
 
-  m_dataSource.clearSystemDbId();
+  info("clearing entity mapper");
+  m_coordinator->clear();
+  m_entityMapper.clearEntities();
+
+  setupLoadingScreen(Screen::GAME);
 }
 
 void Game::onShipDocked()
 {
+  m_entityMapper.clearEntities();
   setScreen(Screen::OUTPOST);
 }
 
 void Game::onShipUndocked()
 {
+  m_coordinator->clear();
+  m_entityMapper.clearEntities();
+
   setupLoadingScreen(Screen::GAME);
 }
 
@@ -407,25 +429,6 @@ void Game::initializeMessageSystem()
 
 void Game::resetViewsAndUi()
 {
-  const auto playerDbId     = m_gameSession.getPlayerDbId();
-  const auto playerShipDbId = m_gameSession.getPlayerActiveShipDbId();
-
-  // TODO: We should switch to the loading screen here. Instead of calling the
-  // initialize method we wait to receive messages like the PlayerListMessage
-  // and similar to have access to the data.
-  m_dataSource.initialize(*m_coordinator, m_entityMapper);
-
-  const auto maybePlayerDbId = m_dataSource.tryGetPlayerDbId();
-  if (!maybePlayerDbId)
-  {
-    error("Failed to reset views and UI", "Expected to have a player defined");
-  }
-
-  m_views.playerView->setPlayerDbId(playerDbId);
-  m_views.shopView->setPlayerDbId(playerDbId);
-  m_views.serverView->setPlayerDbId(playerDbId);
-  m_views.shipDbView->setPlayerShipDbId(playerShipDbId);
-
   const auto maybePlayerShipEntityId = m_entityMapper.tryGetPlayerShipEntityId();
   m_views.shipView->setPlayerShipEntityId(maybePlayerShipEntityId);
 

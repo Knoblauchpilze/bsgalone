@@ -30,30 +30,12 @@ void DataSource::setPlayerDbId(const Uuid player)
   {
     error("Unable to set player id to " + str(player), "Unavailable in server mode");
   }
-  m_playerDbId = player;
   m_systemDbId.reset();
 }
 
 void DataSource::clearSystemDbId()
 {
   m_systemDbId.reset();
-}
-
-auto DataSource::tryGetPlayerDbId() const -> std::optional<Uuid>
-{
-  return m_playerDbId;
-}
-
-auto DataSource::tryGetPlayerShipDbId() const -> std::optional<Uuid>
-{
-  if (!m_playerDbId)
-  {
-    return {};
-  }
-
-  const auto playerShip = m_repositories.playerShipRepository->findOneByPlayerAndActive(
-    *m_playerDbId);
-  return playerShip.id;
 }
 
 auto DataSource::repositories() const -> Repositories
@@ -63,22 +45,17 @@ auto DataSource::repositories() const -> Repositories
 
 void DataSource::initialize(Coordinator &coordinator, DatabaseEntityMapper &entityMapper) const
 {
+  if (m_dataLoadingMode == DataLoadingMode::CLIENT)
+  {
+    error("Initialization from the data source is not supported in client mode");
+  }
   if (!m_systemDbId)
   {
-    if (!m_playerDbId)
-    {
-      error("Failed to initialize the game", "No system nor player id defined");
-    }
-
-    m_systemDbId = m_repositories.playerRepository->findSystemByPlayer(*m_playerDbId);
+    error("Failed to initialize the game", "No system id defined");
   }
 
   coordinator.clear();
-  entityMapper.clear();
-  if (m_playerDbId)
-  {
-    entityMapper.setPlayerDbId(*m_playerDbId);
-  }
+  entityMapper.clearAll();
 
   initializePlayers(coordinator, entityMapper);
   initializeShips(coordinator, entityMapper);
@@ -91,12 +68,6 @@ void DataSource::initializePlayers(Coordinator &coordinator,
 {
   PlayerDataSource source{m_repositories};
   source.initialize(*m_systemDbId, coordinator, entityMapper);
-
-  if (DataLoadingMode::CLIENT == m_dataLoadingMode
-      && !entityMapper.tryGetPlayerEntityId().has_value())
-  {
-    error("Failed to initialize player", "Could not find entity id for " + str(*m_playerDbId));
-  }
 }
 
 void DataSource::initializeAsteroids(Coordinator &coordinator,
