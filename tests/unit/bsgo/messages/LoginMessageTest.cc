@@ -7,7 +7,7 @@ using namespace ::testing;
 
 namespace bsgo {
 namespace {
-auto assertMessagesAreEqual(const LoginMessage &actual, const LoginMessage &expected)
+void assertMessagesAreEqual(const LoginMessage &actual, const LoginMessage &expected)
 {
   EXPECT_EQ(actual.type(), expected.type());
   EXPECT_EQ(actual.getUserName(), expected.getUserName());
