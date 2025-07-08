@@ -1,4 +1,5 @@
 
+#include "Common.hh"
 #include "DataSerialization.hh"
 #include <gtest/gtest.h>
 
@@ -12,84 +13,6 @@ inline bool serializeAndDeserializeMessage(const ShipData &value, ShipData &outp
   serializeShipData(out, value);
   std::istringstream in(out.str());
   return deserializeShipData(in, output);
-}
-
-auto assertDataAreEqual(const ShipData &actual, const ShipData &expected)
-{
-  // Keep in sync with the ShipListMessage test code
-  EXPECT_EQ(actual.dbId, expected.dbId);
-  EXPECT_EQ(actual.position, expected.position);
-  EXPECT_EQ(actual.radius, expected.radius);
-  EXPECT_EQ(actual.acceleration, expected.acceleration);
-  EXPECT_EQ(actual.speed, expected.speed);
-  EXPECT_EQ(actual.hullPoints, expected.hullPoints);
-  EXPECT_EQ(actual.maxHullPoints, expected.maxHullPoints);
-  EXPECT_EQ(actual.hullPointsRegen, expected.hullPointsRegen);
-  EXPECT_EQ(actual.powerPoints, expected.powerPoints);
-  EXPECT_EQ(actual.maxPowerPoints, expected.maxPowerPoints);
-  EXPECT_EQ(actual.powerRegen, expected.powerRegen);
-  EXPECT_EQ(actual.faction, expected.faction);
-  EXPECT_EQ(actual.status, expected.status);
-  EXPECT_EQ(actual.shipClass, expected.shipClass);
-  EXPECT_EQ(actual.name, expected.name);
-  EXPECT_EQ(actual.docked, expected.docked);
-  EXPECT_EQ(actual.jumpTime, expected.jumpTime);
-  EXPECT_EQ(actual.jumpTimeInThreat, expected.jumpTimeInThreat);
-  EXPECT_EQ(actual.targetDbId, expected.targetDbId);
-  EXPECT_EQ(actual.playerDbId, expected.playerDbId);
-
-  EXPECT_EQ(actual.weapons.size(), expected.weapons.size());
-  for (std::size_t i = 0u; i < actual.weapons.size(); ++i)
-  {
-    const auto &actualWeapon   = actual.weapons[i];
-    const auto &expectedWeapon = expected.weapons[i];
-
-    EXPECT_EQ(actualWeapon.dbId, expectedWeapon.dbId) << "Mismatch for weapon " + std::to_string(i);
-    EXPECT_EQ(actualWeapon.weaponDbId, expectedWeapon.weaponDbId)
-      << "Mismatch for weapon " + std::to_string(i);
-    EXPECT_EQ(actualWeapon.slotPosition, expectedWeapon.slotPosition)
-      << "Mismatch for weapon " + std::to_string(i);
-    EXPECT_EQ(actualWeapon.level, expectedWeapon.level)
-      << "Mismatch for weapon " + std::to_string(i);
-    EXPECT_EQ(actualWeapon.minDamage, expectedWeapon.minDamage)
-      << "Mismatch for weapon " + std::to_string(i);
-    EXPECT_EQ(actualWeapon.maxDamage, expectedWeapon.maxDamage)
-      << "Mismatch for weapon " + std::to_string(i);
-    EXPECT_EQ(actualWeapon.powerCost, expectedWeapon.powerCost)
-      << "Mismatch for weapon " + std::to_string(i);
-    EXPECT_EQ(actualWeapon.range, expectedWeapon.range)
-      << "Mismatch for weapon " + std::to_string(i);
-    EXPECT_EQ(actualWeapon.reloadTime, expectedWeapon.reloadTime)
-      << "Mismatch for weapon " + std::to_string(i);
-  }
-
-  EXPECT_EQ(actual.computers.size(), expected.computers.size());
-  for (std::size_t i = 0u; i < actual.computers.size(); ++i)
-  {
-    const auto &actualComputer   = actual.computers[i];
-    const auto &expectedComputer = expected.computers[i];
-
-    EXPECT_EQ(actualComputer.dbId, expectedComputer.dbId)
-      << "Mismatch for computer " + std::to_string(i);
-    EXPECT_EQ(actualComputer.computerDbId, expectedComputer.computerDbId)
-      << "Mismatch for computer " + std::to_string(i);
-    EXPECT_EQ(actualComputer.level, expectedComputer.level)
-      << "Mismatch for computer " + std::to_string(i);
-    EXPECT_EQ(actualComputer.offensive, expectedComputer.offensive)
-      << "Mismatch for computer " + std::to_string(i);
-    EXPECT_EQ(actualComputer.powerCost, expectedComputer.powerCost)
-      << "Mismatch for computer " + std::to_string(i);
-    EXPECT_EQ(actualComputer.range, expectedComputer.range)
-      << "Mismatch for computer " + std::to_string(i);
-    EXPECT_EQ(actualComputer.reloadTime, expectedComputer.reloadTime)
-      << "Mismatch for computer " + std::to_string(i);
-    EXPECT_EQ(actualComputer.duration, expectedComputer.duration)
-      << "Mismatch for computer " + std::to_string(i);
-    EXPECT_EQ(actualComputer.allowedTargets, expectedComputer.allowedTargets)
-      << "Mismatch for computer " + std::to_string(i);
-    EXPECT_EQ(actualComputer.damageModifier, expectedComputer.damageModifier)
-      << "Mismatch for computer " + std::to_string(i);
-  }
 }
 } // namespace
 
@@ -132,7 +55,7 @@ TEST(Unit_Bsgo_Serialization_ShipData, Basic)
 
   EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
 
-  assertDataAreEqual(output, input);
+  assertShipDataAreEqual(output, input);
 }
 
 TEST(Unit_Bsgo_Serialization_ShipData, WithTarget)
@@ -149,7 +72,7 @@ TEST(Unit_Bsgo_Serialization_ShipData, WithTarget)
 
   EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
 
-  assertDataAreEqual(output, input);
+  assertShipDataAreEqual(output, input);
 }
 
 TEST(Unit_Bsgo_Serialization_ShipData, WithWeapons)
@@ -187,7 +110,7 @@ TEST(Unit_Bsgo_Serialization_ShipData, WithWeapons)
 
   EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
 
-  assertDataAreEqual(output, input);
+  assertShipDataAreEqual(output, input);
 }
 
 TEST(Unit_Bsgo_Serialization_ShipData, ClearsWeapons)
@@ -217,7 +140,7 @@ TEST(Unit_Bsgo_Serialization_ShipData, ClearsWeapons)
 
   EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
 
-  assertDataAreEqual(output, input);
+  assertShipDataAreEqual(output, input);
 }
 
 TEST(Unit_Bsgo_Serialization_ShipData, WithComputers)
@@ -249,7 +172,7 @@ TEST(Unit_Bsgo_Serialization_ShipData, WithComputers)
 
   EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
 
-  assertDataAreEqual(output, input);
+  assertShipDataAreEqual(output, input);
 }
 
 TEST(Unit_Bsgo_Serialization_ShipData, ClearsComputers)
@@ -272,7 +195,7 @@ TEST(Unit_Bsgo_Serialization_ShipData, ClearsComputers)
 
   EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
 
-  assertDataAreEqual(output, input);
+  assertShipDataAreEqual(output, input);
 }
 
 } // namespace bsgo

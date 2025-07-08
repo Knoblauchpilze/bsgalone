@@ -1,4 +1,5 @@
 
+#include "Common.hh"
 #include "DataSerialization.hh"
 #include <gtest/gtest.h>
 
@@ -12,22 +13,6 @@ inline bool serializeAndDeserializeData(const OutpostData &value, OutpostData &o
   serializeOutpostData(out, value);
   std::istringstream in(out.str());
   return deserializeOutpostData(in, output);
-}
-
-auto assertDataAreEqual(const OutpostData &actual, const OutpostData &expected)
-{
-  // Keep in sync with the OutpostListMessage test code
-  EXPECT_EQ(actual.dbId, expected.dbId);
-  EXPECT_EQ(actual.position, expected.position);
-  EXPECT_EQ(actual.radius, expected.radius);
-  EXPECT_EQ(actual.hullPoints, expected.hullPoints);
-  EXPECT_EQ(actual.maxHullPoints, expected.maxHullPoints);
-  EXPECT_EQ(actual.hullPointsRegen, expected.hullPointsRegen);
-  EXPECT_EQ(actual.powerPoints, expected.powerPoints);
-  EXPECT_EQ(actual.maxPowerPoints, expected.maxPowerPoints);
-  EXPECT_EQ(actual.powerRegen, expected.powerRegen);
-  EXPECT_EQ(actual.faction, expected.faction);
-  EXPECT_EQ(actual.targetDbId, expected.targetDbId);
 }
 } // namespace
 
@@ -73,7 +58,7 @@ TEST(Unit_Bsgo_Serialization_OutpostData, Basic)
 
   EXPECT_TRUE(serializeAndDeserializeData(input, output));
 
-  assertDataAreEqual(output, input);
+  assertOutpostDataAreEqual(output, input);
 }
 
 TEST(Unit_Bsgo_Serialization_OutpostData, WithTarget)
@@ -88,7 +73,7 @@ TEST(Unit_Bsgo_Serialization_OutpostData, WithTarget)
 
   EXPECT_TRUE(serializeAndDeserializeData(input, output));
 
-  assertDataAreEqual(output, input);
+  assertOutpostDataAreEqual(output, input);
 }
 
 } // namespace bsgo

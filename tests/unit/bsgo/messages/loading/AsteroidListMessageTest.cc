@@ -22,13 +22,7 @@ auto assertMessagesAreEqual(const AsteroidListMessage &actual, const AsteroidLis
     const auto &actualAsteroidData   = actualAsteroidsData[id];
     const auto &expectedAsteroidData = expectedAsteroidsData[id];
 
-    // Keep in sync with the OutpostData test code
-    EXPECT_EQ(actualAsteroidData.dbId, expectedAsteroidData.dbId);
-    EXPECT_EQ(actualAsteroidData.position, expectedAsteroidData.position);
-    EXPECT_EQ(actualAsteroidData.radius, expectedAsteroidData.radius);
-    EXPECT_EQ(actualAsteroidData.health, expectedAsteroidData.health);
-    EXPECT_EQ(actualAsteroidData.resource, expectedAsteroidData.resource);
-    EXPECT_EQ(actualAsteroidData.amount, expectedAsteroidData.amount);
+    assertAsteroidDataAreEqual(actualAsteroidData, expectedAsteroidData);
   }
 }
 } // namespace

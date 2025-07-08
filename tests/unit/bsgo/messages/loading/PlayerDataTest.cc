@@ -1,4 +1,5 @@
 
+#include "Common.hh"
 #include "DataSerialization.hh"
 #include <gtest/gtest.h>
 
@@ -12,13 +13,6 @@ inline bool serializeAndDeserializeData(const PlayerData &value, PlayerData &out
   serializePlayerData(out, value);
   std::istringstream in(out.str());
   return deserializePlayerData(in, output);
-}
-
-auto assertDataAreEqual(const PlayerData &actual, const PlayerData &expected)
-{
-  // Keep in sync with the PlayerListMessage test code
-  EXPECT_EQ(actual.dbId, expected.dbId);
-  EXPECT_EQ(actual.name, expected.name);
 }
 } // namespace
 
@@ -49,7 +43,7 @@ TEST(Unit_Bsgo_Serialization_PlayerData, Basic)
 
   EXPECT_TRUE(serializeAndDeserializeData(input, output));
 
-  assertDataAreEqual(output, input);
+  assertPlayerDataAreEqual(output, input);
 }
 
 TEST(Unit_Bsgo_Serialization_PlayerData, EmptyOutputName)
@@ -60,7 +54,7 @@ TEST(Unit_Bsgo_Serialization_PlayerData, EmptyOutputName)
 
   EXPECT_TRUE(serializeAndDeserializeData(input, output));
 
-  assertDataAreEqual(output, input);
+  assertPlayerDataAreEqual(output, input);
 }
 
 } // namespace bsgo

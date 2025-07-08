@@ -1,4 +1,5 @@
 
+#include "Common.hh"
 #include "DataSerialization.hh"
 #include <gtest/gtest.h>
 
@@ -12,19 +13,6 @@ inline bool serializeAndDeserializeData(const WeaponData &value, WeaponData &out
   serializeWeaponData(out, value);
   std::istringstream in(out.str());
   return deserializeWeaponData(in, output);
-}
-
-auto assertDataAreEqual(const WeaponData &actual, const WeaponData &expected)
-{
-  EXPECT_EQ(actual.dbId, expected.dbId);
-  EXPECT_EQ(actual.weaponDbId, expected.weaponDbId);
-  EXPECT_EQ(actual.slotPosition, expected.slotPosition);
-  EXPECT_EQ(actual.level, expected.level);
-  EXPECT_EQ(actual.minDamage, expected.minDamage);
-  EXPECT_EQ(actual.maxDamage, expected.maxDamage);
-  EXPECT_EQ(actual.powerCost, expected.powerCost);
-  EXPECT_EQ(actual.range, expected.range);
-  EXPECT_EQ(actual.reloadTime, expected.reloadTime);
 }
 } // namespace
 
@@ -70,7 +58,7 @@ TEST(Unit_Bsgo_Serialization_WeaponData, Basic)
 
   EXPECT_TRUE(serializeAndDeserializeData(input, output));
 
-  assertDataAreEqual(output, input);
+  assertWeaponDataAreEqual(output, input);
 }
 
 } // namespace bsgo

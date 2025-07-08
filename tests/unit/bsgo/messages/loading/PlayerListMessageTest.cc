@@ -22,9 +22,7 @@ auto assertMessagesAreEqual(const PlayerListMessage &actual, const PlayerListMes
     const auto &actualPlayerData   = actualPlayersData[id];
     const auto &expectedPlayerData = expectedPlayersData[id];
 
-    // Keep in sync with the PlayerData test code
-    EXPECT_EQ(actualPlayerData.dbId, expectedPlayerData.dbId);
-    EXPECT_EQ(actualPlayerData.name, expectedPlayerData.name);
+    assertPlayerDataAreEqual(actualPlayerData, expectedPlayerData);
   }
 }
 } // namespace
