@@ -23,6 +23,11 @@ auto LoadingService::getDataForPlayer(const Uuid playerDbId) const -> PlayerProp
   };
 }
 
+auto LoadingService::getPlayerById(const Uuid playerDbId) const -> Player
+{
+  return m_repositories.playerRepository->findOneById(playerDbId);
+}
+
 auto LoadingService::getPlayersInSystem(const Uuid systemDbId) const -> std::vector<Player>
 {
   const auto playerIds = m_repositories.playerRepository->findAllBySystem(systemDbId);
@@ -131,9 +136,9 @@ auto LoadingService::getOutpostsInSystem(const Uuid systemDbId) const -> std::ve
 
 namespace {
 auto getWeaponsForShip(const Repositories &repositories, const Uuid shipDbId)
-  -> std::vector<LoadingService::WeaponProps>
+  -> std::vector<WeaponProps>
 {
-  std::vector<LoadingService::WeaponProps> weapons{};
+  std::vector<WeaponProps> weapons{};
 
   const auto shipWeapons = repositories.shipWeaponRepository->findAllByShip(shipDbId);
   for (const auto &weapon : shipWeapons)
