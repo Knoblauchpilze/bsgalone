@@ -7,7 +7,7 @@ using namespace ::testing;
 
 namespace bsgo {
 namespace {
-auto assertMessagesAreEqual(const SlotComponentMessage &actual, const SlotComponentMessage &expected)
+void assertMessagesAreEqual(const SlotComponentMessage &actual, const SlotComponentMessage &expected)
 {
   EXPECT_EQ(actual.type(), expected.type());
   EXPECT_EQ(actual.getPlayerDbId(), expected.getPlayerDbId());
