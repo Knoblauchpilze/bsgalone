@@ -76,6 +76,8 @@ PHONY: .tests
 tests: debugWithTests copyDebug
 
 # https://stackoverflow.com/questions/2826029/passing-additional-variables-from-command-line-to-make
+# Use like this:
+# make rununittests test_filters="Unit_Bsgo_Serialization_EntityAddedMessage*"
 rununittests: tests
 	cd sandbox && ./tests.sh unitTests $(test_filters)
 
