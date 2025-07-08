@@ -39,6 +39,7 @@ class LoadingService : public AbstractService
     std::optional<Uuid> resource{};
     std::optional<float> amount{};
   };
+  auto getAsteroidById(const Uuid asteroidDbId) const -> AsteroidProps;
   auto getAsteroidsInSystem(const Uuid systemDbId) const -> std::vector<AsteroidProps>;
 
   struct OutpostProps
@@ -47,6 +48,7 @@ class LoadingService : public AbstractService
     SystemOutpost dbOutpost{};
     std::optional<Uuid> targetDbId{};
   };
+  auto getOutpostById(const Uuid outpostDbId) const -> OutpostProps;
   auto getOutpostsInSystem(const Uuid systemDbId) const -> std::vector<OutpostProps>;
 
   struct WeaponProps
@@ -63,6 +65,7 @@ class LoadingService : public AbstractService
     std::vector<WeaponProps> weapons{};
     std::vector<PlayerComputer> computers{};
   };
+  auto getShipById(const Uuid shipDbId) const -> ShipProps;
   auto getShipsInSystem(const Uuid systemDbId) const -> std::vector<ShipProps>;
 
   private:

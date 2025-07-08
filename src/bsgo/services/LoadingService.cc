@@ -38,6 +38,27 @@ auto LoadingService::getPlayersInSystem(const Uuid systemDbId) const -> std::vec
   return players;
 }
 
+auto LoadingService::getAsteroidById(const Uuid asteroidDbId) const -> AsteroidProps
+{
+  const auto asteroid = m_repositories.asteroidRepository->findOneById(asteroidDbId);
+
+  std::optional<Uuid> resource{};
+  std::optional<float> amount{};
+  if (asteroid.loot)
+  {
+    const auto loot = m_repositories.asteroidLootRepository->findOneById(asteroidDbId);
+    resource        = loot.resource;
+    amount          = loot.amount;
+  }
+
+  return AsteroidProps{
+    .dbId       = asteroidDbId,
+    .dbAsteroid = asteroid,
+    .resource   = resource,
+    .amount     = amount,
+  };
+}
+
 auto LoadingService::getAsteroidsInSystem(const Uuid systemDbId) const -> std::vector<AsteroidProps>
 {
   const auto asteroidDbIds = m_repositories.systemRepository->findAllAsteroidsBySystem(systemDbId);
@@ -78,6 +99,18 @@ auto getOutpostTargetDbId(const Uuid outpostDbId,
   return entity.targetComp().target();
 }
 } // namespace
+
+auto LoadingService::getOutpostById(const Uuid outpostDbId) const -> OutpostProps
+{
+  const auto outpost    = m_repositories.systemOutpostRepository->findOneById(outpostDbId);
+  const auto targetDbId = getOutpostTargetDbId(outpostDbId, m_entityMapper, *m_coordinator);
+
+  return OutpostProps{
+    .dbId       = outpostDbId,
+    .dbOutpost  = outpost,
+    .targetDbId = targetDbId,
+  };
+}
 
 auto LoadingService::getOutpostsInSystem(const Uuid systemDbId) const -> std::vector<OutpostProps>
 {
@@ -142,6 +175,23 @@ auto getShipTargetDbId(const Uuid shipDbId,
   return entity.targetComp().target();
 }
 } // namespace
+
+auto LoadingService::getShipById(const Uuid shipDbId) const -> ShipProps
+{
+  const auto ship       = m_repositories.playerShipRepository->findOneById(shipDbId);
+  const auto weapons    = getWeaponsForShip(m_repositories, shipDbId);
+  const auto computers  = getComputersForShip(m_repositories, shipDbId);
+  const auto status     = determineStartingStatusForShip(ship);
+  const auto targetDbId = getShipTargetDbId(shipDbId, m_entityMapper, *m_coordinator);
+
+  return ShipProps{
+    .dbShip     = ship,
+    .status     = status,
+    .targetDbId = targetDbId,
+    .weapons    = weapons,
+    .computers  = computers,
+  };
+}
 
 auto LoadingService::getShipsInSystem(const Uuid systemDbId) const -> std::vector<ShipProps>
 {

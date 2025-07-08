@@ -8,6 +8,7 @@ EntityAddedMessageConsumer::EntityAddedMessageConsumer(const Services &services,
                                                        IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("entity", {MessageType::ENTITY_ADDED})
   , m_entityService(services.entity)
+  , m_loadingService(services.loading)
   , m_outputMessageQueue(outputMessageQueue)
 {
   addModule("added");
@@ -15,6 +16,10 @@ EntityAddedMessageConsumer::EntityAddedMessageConsumer(const Services &services,
   if (nullptr == m_entityService)
   {
     throw std::invalid_argument("Expected non null entity service");
+  }
+  if (nullptr == m_loadingService)
+  {
+    throw std::invalid_argument("Expected non null loading service");
   }
   if (nullptr == m_outputMessageQueue)
   {

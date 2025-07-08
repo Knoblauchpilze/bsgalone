@@ -18,6 +18,7 @@ class EntityAddedMessageConsumer : public AbstractMessageConsumer
 
   private:
   EntityServiceShPtr m_entityService{};
+  LoadingServiceShPtr m_loadingService{};
   IMessageQueue *const m_outputMessageQueue{};
 
   void handleShipAdded(const Uuid systemDbId, const ShipData &data) const;
