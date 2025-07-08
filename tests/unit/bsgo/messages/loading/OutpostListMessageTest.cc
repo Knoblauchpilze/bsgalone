@@ -22,14 +22,7 @@ auto assertMessagesAreEqual(const OutpostListMessage &actual, const OutpostListM
     const auto &actualOutpostData   = actualOutpostsData[id];
     const auto &expectedOutpostData = expectedOutpostsData[id];
 
-    // Keep in sync with the OutpostData test code
-    EXPECT_EQ(actualOutpostData.dbId, expectedOutpostData.dbId);
-    EXPECT_EQ(actualOutpostData.position, expectedOutpostData.position);
-    EXPECT_EQ(actualOutpostData.radius, expectedOutpostData.radius);
-    EXPECT_EQ(actualOutpostData.hullPoints, expectedOutpostData.hullPoints);
-    EXPECT_EQ(actualOutpostData.powerPoints, expectedOutpostData.powerPoints);
-    EXPECT_EQ(actualOutpostData.faction, expectedOutpostData.faction);
-    EXPECT_EQ(actualOutpostData.targetDbId, expectedOutpostData.targetDbId);
+    assertOutpostDataAreEqual(actualOutpostData, expectedOutpostData);
   }
 }
 } // namespace

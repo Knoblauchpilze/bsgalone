@@ -1,4 +1,5 @@
 
+#include "Common.hh"
 #include "DataSerialization.hh"
 #include <gtest/gtest.h>
 
@@ -14,16 +15,6 @@ inline bool serializeAndDeserializeData(const AsteroidData &value, AsteroidData 
   return deserializeAsteroidData(in, output);
 }
 
-auto assertDataAreEqual(const AsteroidData &actual, const AsteroidData &expected)
-{
-  // Keep in sync with the AsteroidListMessage test code
-  EXPECT_EQ(actual.dbId, expected.dbId);
-  EXPECT_EQ(actual.position, expected.position);
-  EXPECT_EQ(actual.radius, expected.radius);
-  EXPECT_EQ(actual.health, expected.health);
-  EXPECT_EQ(actual.resource, expected.resource);
-  EXPECT_EQ(actual.amount, expected.amount);
-}
 } // namespace
 
 TEST(Unit_Bsgo_Serialization_AsteroidData, EqualWhenDbIdIsEqual)
@@ -62,7 +53,7 @@ TEST(Unit_Bsgo_Serialization_AsteroidData, Basic)
 
   EXPECT_TRUE(serializeAndDeserializeData(input, output));
 
-  assertDataAreEqual(output, input);
+  assertAsteroidDataAreEqual(output, input);
 }
 
 TEST(Unit_Bsgo_Serialization_AsteroidData, WithLoot)
@@ -78,7 +69,7 @@ TEST(Unit_Bsgo_Serialization_AsteroidData, WithLoot)
 
   EXPECT_TRUE(serializeAndDeserializeData(input, output));
 
-  assertDataAreEqual(output, input);
+  assertAsteroidDataAreEqual(output, input);
 }
 
 } // namespace bsgo

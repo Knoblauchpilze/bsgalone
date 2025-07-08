@@ -1,4 +1,5 @@
 
+#include "Common.hh"
 #include "DataSerialization.hh"
 #include <gtest/gtest.h>
 
@@ -12,20 +13,6 @@ inline bool serializeAndDeserializeData(const ComputerData &value, ComputerData 
   serializeComputerData(out, value);
   std::istringstream in(out.str());
   return deserializeComputerData(in, output);
-}
-
-auto assertDataAreEqual(const ComputerData &actual, const ComputerData &expected)
-{
-  EXPECT_EQ(actual.dbId, expected.dbId);
-  EXPECT_EQ(actual.computerDbId, expected.computerDbId);
-  EXPECT_EQ(actual.level, expected.level);
-  EXPECT_EQ(actual.offensive, expected.offensive);
-  EXPECT_EQ(actual.powerCost, expected.powerCost);
-  EXPECT_EQ(actual.range, expected.range);
-  EXPECT_EQ(actual.reloadTime, expected.reloadTime);
-  EXPECT_EQ(actual.duration, expected.duration);
-  EXPECT_EQ(actual.allowedTargets, expected.allowedTargets);
-  EXPECT_EQ(actual.damageModifier, expected.damageModifier);
 }
 } // namespace
 
@@ -70,7 +57,7 @@ TEST(Unit_Bsgo_Serialization_ComputerData, Basic)
 
   EXPECT_TRUE(serializeAndDeserializeData(input, output));
 
-  assertDataAreEqual(output, input);
+  assertComputerDataAreEqual(output, input);
 }
 
 TEST(Unit_Bsgo_Serialization_ComputerData, AllowedTargets)
@@ -85,7 +72,7 @@ TEST(Unit_Bsgo_Serialization_ComputerData, AllowedTargets)
 
   EXPECT_TRUE(serializeAndDeserializeData(input, output));
 
-  assertDataAreEqual(output, input);
+  assertComputerDataAreEqual(output, input);
 }
 
 TEST(Unit_Bsgo_Serialization_ComputerData, NonEmptyAllowedTargetsInDestination)
@@ -100,7 +87,7 @@ TEST(Unit_Bsgo_Serialization_ComputerData, NonEmptyAllowedTargetsInDestination)
 
   EXPECT_TRUE(serializeAndDeserializeData(input, output));
 
-  assertDataAreEqual(output, input);
+  assertComputerDataAreEqual(output, input);
 }
 
 TEST(Unit_Bsgo_Serialization_ComputerData, NonEmptyDamageModifierInDestination)
@@ -111,7 +98,7 @@ TEST(Unit_Bsgo_Serialization_ComputerData, NonEmptyDamageModifierInDestination)
 
   EXPECT_TRUE(serializeAndDeserializeData(input, output));
 
-  assertDataAreEqual(output, input);
+  assertComputerDataAreEqual(output, input);
 }
 
 } // namespace bsgo
