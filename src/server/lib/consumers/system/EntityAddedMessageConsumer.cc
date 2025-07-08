@@ -27,28 +27,29 @@ void EntityAddedMessageConsumer::onMessageReceived(const IMessage &message)
   const auto &added = message.as<EntityAddedMessage>();
 
   const auto entityKind = added.getEntityKind();
-  const auto entityDbId = added.getEntityDbId();
   const auto systemDbId = added.getSystemDbId();
 
   switch (entityKind)
   {
     case EntityKind::SHIP:
-      handleShipAdded(entityDbId, systemDbId);
+      handleShipAdded(systemDbId, *added.tryGetShipData());
       break;
     default:
       error("Unsupported type of entity added: " + str(entityKind));
   }
 }
 
-void EntityAddedMessageConsumer::handleShipAdded(const Uuid shipDbId, const Uuid systemDbId) const
+void EntityAddedMessageConsumer::handleShipAdded(const Uuid systemDbId, const ShipData &data) const
 {
-  if (!m_entityService->tryCreateShipEntity(shipDbId))
+  // TODO: Verify if we need to pass the rest of the data
+  if (!m_entityService->tryCreateShipEntity(data.dbId))
   {
-    warn("Failed to process ship " + str(shipDbId) + " added in system " + str(systemDbId));
+    warn("Failed to process ship " + str(data.dbId) + " added in system " + str(systemDbId));
     return;
   }
 
-  auto out = std::make_unique<EntityAddedMessage>(shipDbId, EntityKind::SHIP, systemDbId);
+  auto out = std::make_unique<EntityAddedMessage>(systemDbId);
+  out->setShipData(data);
   m_outputMessageQueue->pushMessage(std::move(out));
 }
 

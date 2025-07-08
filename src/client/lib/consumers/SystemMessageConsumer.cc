@@ -65,19 +65,17 @@ void SystemMessageConsumer::handleEntityAdded(const bsgo::EntityAddedMessage &me
   std::optional<bsgo::Uuid> entityId{};
 
   const auto entityKind = message.getEntityKind();
-  const auto entityDbId = message.getEntityDbId();
 
   switch (entityKind)
   {
     case bsgo::EntityKind::SHIP:
-      handleShipCreation(entityDbId);
+      handleShipCreation(*message.tryGetShipData());
       break;
     case bsgo::EntityKind::ASTEROID:
-      handleAsteroidCreation(entityDbId);
+      handleAsteroidCreation(*message.tryGetAsteroidData());
       break;
     default:
-      error("Failed to handle creation of entity " + bsgo::str(entityDbId),
-            "Unsupported kind " + bsgo::str(entityKind));
+      error("Failed to handle creation of entity", "Unsupported kind " + bsgo::str(entityKind));
       break;
   }
 }
@@ -132,39 +130,39 @@ void SystemMessageConsumer::handleEntityRemoved(const bsgo::EntityRemovedMessage
   m_coordinator->deleteEntity(*entityId);
 }
 
-void SystemMessageConsumer::handleShipCreation(const bsgo::Uuid shipDbId) const
+void SystemMessageConsumer::handleShipCreation(const bsgo::ShipData &data) const
 {
   const auto playerShipDbId = m_entityMapper.tryGetPlayerShipDbId();
   if (!playerShipDbId)
   {
     // We will pick this up when the data for the player's system is instantiated.
-    debug("Ignoring creation of ship " + bsgo::str(shipDbId) + " as player did not undock yet");
+    debug("Ignoring creation of ship " + bsgo::str(data.dbId) + " as player did not undock yet");
     return;
   }
-  if (*playerShipDbId == shipDbId)
+  if (*playerShipDbId == data.dbId)
   {
-    debug("Ignoring creation of ship " + bsgo::str(shipDbId) + " as it is the player's ship");
+    debug("Ignoring creation of ship " + bsgo::str(data.dbId) + " as it is the player's ship");
     return;
   }
 
-  if (!m_entityService->tryCreateShipEntity(shipDbId))
+  if (!m_entityService->tryCreateShipEntity(data.dbId))
   {
-    warn("Failed to process ship added message for " + bsgo::str(shipDbId));
+    warn("Failed to process ship added message for " + bsgo::str(data.dbId));
     return;
   }
 
-  info("Registered entity for ship " + bsgo::str(shipDbId));
+  info("Registered entity for ship " + bsgo::str(data.dbId));
 }
 
-void SystemMessageConsumer::handleAsteroidCreation(const bsgo::Uuid asteroidDbId) const
+void SystemMessageConsumer::handleAsteroidCreation(const bsgo::AsteroidData &data) const
 {
-  if (!m_entityService->tryCreateAsteroidEntity(asteroidDbId))
+  if (!m_entityService->tryCreateAsteroidEntity(data.dbId))
   {
-    warn("Failed to process asteroid added message for " + bsgo::str(asteroidDbId));
+    warn("Failed to process asteroid added message for " + bsgo::str(data.dbId));
     return;
   }
 
-  info("Registered entity for asteroid " + bsgo::str(asteroidDbId));
+  info("Registered entity for asteroid " + bsgo::str(data.dbId));
 }
 
 } // namespace pge

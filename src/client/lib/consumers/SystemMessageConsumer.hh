@@ -31,8 +31,8 @@ class SystemMessageConsumer : public bsgo::AbstractMessageConsumer
   void handleEntityAdded(const bsgo::EntityAddedMessage &message) const;
   void handleEntityRemoved(const bsgo::EntityRemovedMessage &message) const;
 
-  void handleShipCreation(const bsgo::Uuid shipDbId) const;
-  void handleAsteroidCreation(const bsgo::Uuid asteroidDbId) const;
+  void handleShipCreation(const bsgo::ShipData &data) const;
+  void handleAsteroidCreation(const bsgo::AsteroidData &data) const;
 };
 
 } // namespace pge

@@ -80,8 +80,11 @@ void DockMessageConsumer::handleUndocking(const DockMessage &message) const
   out->copyClientIdIfDefined(message);
   m_outputMessageQueue->pushMessage(std::move(out));
 
-  auto added = std::make_unique<EntityAddedMessage>(shipDbId, EntityKind::SHIP, systemDbId);
-  m_outputMessageQueue->pushMessage(std::move(added));
+  // TODO: We should get the ship data and send the entity added message
+  // Or we just send the id and in the EntityAddedMessageConsumer we get
+  // the rest of it.
+  // auto added = std::make_unique<EntityAddedMessage>(shipDbId, EntityKind::SHIP, systemDbId);
+  // m_outputMessageQueue->pushMessage(std::move(added));
 
   auto started = std::make_unique<LoadingStartedMessage>(LoadingTransition::UNDOCK, systemDbId);
   started->copyClientIdIfDefined(message);
