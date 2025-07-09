@@ -20,12 +20,14 @@ void assertMessagesAreEqual(const EntityAddedMessage &actual, const EntityAddedM
                                  expected.tryGetAsteroidData().value());
       EXPECT_FALSE(actual.tryGetShipData().has_value());
       EXPECT_FALSE(actual.tryGetOutpostData().has_value());
+      EXPECT_FALSE(actual.tryGetPlayerData().has_value());
       break;
 
     case EntityKind::SHIP:
       EXPECT_FALSE(actual.tryGetAsteroidData().has_value());
       assertShipDataAreEqual(actual.tryGetShipData().value(), expected.tryGetShipData().value());
       EXPECT_FALSE(actual.tryGetOutpostData().has_value());
+      EXPECT_FALSE(actual.tryGetPlayerData().has_value());
       break;
 
     case EntityKind::OUTPOST:
@@ -33,6 +35,15 @@ void assertMessagesAreEqual(const EntityAddedMessage &actual, const EntityAddedM
       EXPECT_FALSE(actual.tryGetShipData().has_value());
       assertOutpostDataAreEqual(actual.tryGetOutpostData().value(),
                                 expected.tryGetOutpostData().value());
+      EXPECT_FALSE(actual.tryGetPlayerData().has_value());
+      break;
+
+    case EntityKind::PLAYER:
+      EXPECT_FALSE(actual.tryGetAsteroidData().has_value());
+      EXPECT_FALSE(actual.tryGetShipData().has_value());
+      EXPECT_FALSE(actual.tryGetOutpostData().has_value());
+      assertPlayerDataAreEqual(actual.tryGetPlayerData().value(),
+                               expected.tryGetPlayerData().value());
       break;
 
     default:
@@ -78,6 +89,14 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, SetsEntityKindForOutpost)
     OutpostData{.dbId = Uuid{123}, .position = Eigen::Vector3f{1, 2, 3}, .radius = 4.5f});
 
   EXPECT_EQ(message.getEntityKind(), EntityKind::OUTPOST);
+}
+
+TEST(Unit_Bsgo_Serialization_EntityAddedMessage, SetsEntityKindForPlayer)
+{
+  EntityAddedMessage message(Uuid{789});
+  message.setPlayerData(PlayerData{.dbId = Uuid{123}, .name = "my-player"});
+
+  EXPECT_EQ(message.getEntityKind(), EntityKind::PLAYER);
 }
 
 TEST(Unit_Bsgo_Serialization_EntityAddedMessage, WhenAnotherKindOfDataIsSetExpectTypeToChange)
@@ -191,6 +210,8 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, OverrideOutpostData)
   assertMessagesAreEqual(actual, expected);
 }
 
+// TODO: Add tests for PlayerData
+
 TEST(Unit_Bsgo_Serialization_EntityAddedMessage, CloneWithAsteroidData)
 {
   EntityAddedMessage expected(Uuid{789});
@@ -221,5 +242,7 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, CloneWithOutpostData)
   ASSERT_EQ(cloned->type(), MessageType::ENTITY_ADDED);
   assertMessagesAreEqual(cloned->as<EntityAddedMessage>(), expected);
 }
+
+// TODO: Add clone test for PlayerData
 
 } // namespace bsgo

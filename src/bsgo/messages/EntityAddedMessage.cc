@@ -34,6 +34,7 @@ void EntityAddedMessage::setAsteroidData(const AsteroidData &data)
   m_asteroidData = data;
   m_shipData.reset();
   m_outpostData.reset();
+  m_playerData.reset();
 }
 
 auto EntityAddedMessage::tryGetAsteroidData() const -> std::optional<AsteroidData>
@@ -47,6 +48,7 @@ void EntityAddedMessage::setShipData(const ShipData &data)
   m_asteroidData.reset();
   m_shipData = data;
   m_outpostData.reset();
+  m_playerData.reset();
 }
 
 auto EntityAddedMessage::tryGetShipData() const -> std::optional<ShipData>
@@ -60,11 +62,26 @@ void EntityAddedMessage::setOutpostData(const OutpostData &data)
   m_asteroidData.reset();
   m_shipData.reset();
   m_outpostData = data;
+  m_playerData.reset();
 }
 
 auto EntityAddedMessage::tryGetOutpostData() const -> std::optional<OutpostData>
 {
   return m_outpostData;
+}
+
+void EntityAddedMessage::setPlayerData(const PlayerData &data)
+{
+  m_entityKind = EntityKind::PLAYER;
+  m_asteroidData.reset();
+  m_shipData.reset();
+  m_outpostData.reset();
+  m_playerData = data;
+}
+
+auto EntityAddedMessage::tryGetPlayerData() const -> std::optional<PlayerData>
+{
+  return m_playerData;
 }
 
 auto EntityAddedMessage::serialize(std::ostream &out) const -> std::ostream &
@@ -90,6 +107,9 @@ auto EntityAddedMessage::serialize(std::ostream &out) const -> std::ostream &
       break;
     case EntityKind::OUTPOST:
       serializeOutpostData(out, *m_outpostData);
+      break;
+    case EntityKind::PLAYER:
+      serializePlayerData(out, *m_playerData);
       break;
     default:
       error("Unsupported entity kind for serialization: " + str(*m_entityKind));
@@ -141,6 +161,20 @@ auto deserializeOutpostData(std::istream &in, std::optional<OutpostData> &outpos
 
   return ok;
 }
+
+auto deserializePlayerData(std::istream &in, std::optional<PlayerData> &player) -> bool
+{
+  PlayerData data{};
+  bool ok = deserializePlayerData(in, data);
+
+  player.reset();
+  if (ok)
+  {
+    player = data;
+  }
+
+  return ok;
+}
 } // namespace
 
 bool EntityAddedMessage::deserialize(std::istream &in)
@@ -169,6 +203,9 @@ bool EntityAddedMessage::deserialize(std::istream &in)
       break;
     case EntityKind::OUTPOST:
       ok &= deserializeOutpostData(in, m_outpostData);
+      break;
+    case EntityKind::PLAYER:
+      ok &= deserializePlayerData(in, m_playerData);
       break;
     default:
       error("Unsupported entity kind for deserialization: " + str(*m_entityKind));
