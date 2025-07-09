@@ -210,7 +210,33 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, OverrideOutpostData)
   assertMessagesAreEqual(actual, expected);
 }
 
-// TODO: Add tests for PlayerData
+TEST(Unit_Bsgo_Serialization_EntityAddedMessage, WithPlayerData)
+{
+  EntityAddedMessage expected(Uuid{789});
+  expected.setPlayerData(PlayerData{.dbId = Uuid{123}, .name = "player1"});
+  expected.setClientId(Uuid{23});
+
+  EntityAddedMessage actual(Uuid{8564});
+  actual.setShipData(ShipData{.dbId = Uuid{36}, .powerPoints = 36.5f});
+
+  serializeAndDeserializeMessage(expected, actual);
+
+  assertMessagesAreEqual(actual, expected);
+}
+
+TEST(Unit_Bsgo_Serialization_EntityAddedMessage, OverridePlayerData)
+{
+  EntityAddedMessage expected(Uuid{789});
+  expected.setPlayerData(PlayerData{.dbId = Uuid{123}, .name = "player1"});
+
+  EntityAddedMessage actual(Uuid{8564});
+  expected.setPlayerData(PlayerData{.dbId = Uuid{987}, .name = "player2"});
+  expected.setClientId(Uuid{47});
+
+  serializeAndDeserializeMessage(expected, actual);
+
+  assertMessagesAreEqual(actual, expected);
+}
 
 TEST(Unit_Bsgo_Serialization_EntityAddedMessage, CloneWithAsteroidData)
 {
@@ -243,6 +269,14 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, CloneWithOutpostData)
   assertMessagesAreEqual(cloned->as<EntityAddedMessage>(), expected);
 }
 
-// TODO: Add clone test for PlayerData
+TEST(Unit_Bsgo_Serialization_EntityAddedMessage, CloneWithPlayerData)
+{
+  EntityAddedMessage expected(Uuid{789});
+  expected.setPlayerData(PlayerData{.dbId = Uuid{36}, .name = "my-player"});
+  const auto cloned = expected.clone();
+
+  ASSERT_EQ(cloned->type(), MessageType::ENTITY_ADDED);
+  assertMessagesAreEqual(cloned->as<EntityAddedMessage>(), expected);
+}
 
 } // namespace bsgo

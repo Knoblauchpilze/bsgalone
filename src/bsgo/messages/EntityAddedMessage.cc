@@ -229,6 +229,9 @@ auto EntityAddedMessage::clone() const -> IMessagePtr
     case EntityKind::OUTPOST:
       clone->setOutpostData(*m_outpostData);
       break;
+    case EntityKind::PLAYER:
+      clone->setPlayerData(*m_playerData);
+      break;
     default:
       error("Unsupported entity kind for cloning: " + str(*m_entityKind));
       break;
