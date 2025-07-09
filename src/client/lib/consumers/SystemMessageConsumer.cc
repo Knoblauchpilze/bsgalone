@@ -1,5 +1,6 @@
 
 #include "SystemMessageConsumer.hh"
+#include "AsteroidDataSource.hh"
 #include "MessageUtils.hh"
 
 namespace pge {
@@ -156,11 +157,8 @@ void SystemMessageConsumer::handleShipCreation(const bsgo::ShipData &data) const
 
 void SystemMessageConsumer::handleAsteroidCreation(const bsgo::AsteroidData &data) const
 {
-  if (!m_entityService->tryCreateAsteroidEntity(data.dbId))
-  {
-    warn("Failed to process asteroid added message for " + bsgo::str(data.dbId));
-    return;
-  }
+  bsgo::AsteroidDataSource source;
+  source.registerAsteroid(*m_coordinator, data, m_entityMapper);
 
   info("Registered entity for asteroid " + bsgo::str(data.dbId));
 }
