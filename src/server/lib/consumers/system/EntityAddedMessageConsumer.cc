@@ -56,11 +56,21 @@ void EntityAddedMessageConsumer::handleShipAdded(const Uuid systemDbId, const Sh
   // loading service before sending the message to the client applications.
   const auto shipData = m_loadingService->getShipById(data.dbId);
 
-  // TODO: We should also send a EntityAddedMessage for the player
+  // In case the ship belongs to a player we also need to send a message to
+  // add this player to the system.
+  if (shipData.dbShip.player)
+  {
+    const auto playerData = m_loadingService->getPlayerById(*shipData.dbShip.player);
 
-  auto out = std::make_unique<EntityAddedMessage>(systemDbId);
-  out->setShipData(shipData.toShipData());
-  m_outputMessageQueue->pushMessage(std::move(out));
+    auto playerAdded = std::make_unique<EntityAddedMessage>(systemDbId);
+    PlayerData data{.dbId = playerData.id, .name = playerData.name};
+    playerAdded->setPlayerData(data);
+    m_outputMessageQueue->pushMessage(std::move(playerAdded));
+  }
+
+  auto shipAdded = std::make_unique<EntityAddedMessage>(systemDbId);
+  shipAdded->setShipData(shipData.toShipData());
+  m_outputMessageQueue->pushMessage(std::move(shipAdded));
 }
 
 } // namespace bsgo
