@@ -84,14 +84,12 @@ void JumpMessageConsumer::handlePostJumpSystemMessages(const Uuid shipDbId,
   debug("Pushing removed message to " + str(sourceSystemDbId));
   sourceProcessor->pushMessage(std::move(removed));
 
-  // TODO: We should get the ship data and send the entity added message
-  // Or we just send the id and in the EntityAddedMessageConsumer we get
-  // the rest of it.
-  // auto added = std::make_unique<EntityAddedMessage>(shipDbId,
-  //                                                   EntityKind::SHIP,
-  //                                                   destinationSystemDbId);
-  // debug("Pushing added message to " + str(destinationSystemDbId));
-  // destinationProcessor->pushMessage(std::move(added));
+  auto added = std::make_unique<EntityAddedMessage>(destinationSystemDbId);
+  ShipData data{.dbId = shipDbId};
+  added->setShipData(data);
+
+  debug("Pushing added message to " + str(destinationSystemDbId));
+  destinationProcessor->pushMessage(std::move(added));
 }
 
 void JumpMessageConsumer::handleLoadingMessages(const Uuid playerDbId,

@@ -46,15 +46,18 @@ void EntityAddedMessageConsumer::onMessageReceived(const IMessage &message)
 
 void EntityAddedMessageConsumer::handleShipAdded(const Uuid systemDbId, const ShipData &data) const
 {
-  // TODO: Verify if we need to pass the rest of the data
   if (!m_entityService->tryCreateShipEntity(data.dbId))
   {
     warn("Failed to process ship " + str(data.dbId) + " added in system " + str(systemDbId));
     return;
   }
 
+  // The input ship data is not complete. We need to get all of it from the
+  // loading service before sending the message to the client applications.
+  const auto shipData = m_loadingService->getShipById(data.dbId);
+
   auto out = std::make_unique<EntityAddedMessage>(systemDbId);
-  out->setShipData(data);
+  out->setShipData(shipData.toShipData());
   m_outputMessageQueue->pushMessage(std::move(out));
 }
 
