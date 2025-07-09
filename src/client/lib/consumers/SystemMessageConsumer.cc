@@ -2,6 +2,8 @@
 #include "SystemMessageConsumer.hh"
 #include "AsteroidDataSource.hh"
 #include "MessageUtils.hh"
+#include "PlayerDataSource.hh"
+#include "ShipDataSource.hh"
 
 namespace pge {
 
@@ -67,6 +69,9 @@ void SystemMessageConsumer::handleEntityAdded(const bsgo::EntityAddedMessage &me
 
   const auto entityKind = message.getEntityKind();
 
+  info("received entity added message for " + bsgo::str(entityKind)
+       + ", system: " + bsgo::str(message.getSystemDbId()));
+
   switch (entityKind)
   {
     case bsgo::EntityKind::SHIP:
@@ -74,6 +79,9 @@ void SystemMessageConsumer::handleEntityAdded(const bsgo::EntityAddedMessage &me
       break;
     case bsgo::EntityKind::ASTEROID:
       handleAsteroidCreation(*message.tryGetAsteroidData());
+      break;
+    case bsgo::EntityKind::PLAYER:
+      handlePlayerCreation(*message.tryGetPlayerData());
       break;
     default:
       error("Failed to handle creation of entity", "Unsupported kind " + bsgo::str(entityKind));
@@ -133,25 +141,8 @@ void SystemMessageConsumer::handleEntityRemoved(const bsgo::EntityRemovedMessage
 
 void SystemMessageConsumer::handleShipCreation(const bsgo::ShipData &data) const
 {
-  const auto playerShipDbId = m_entityMapper.tryGetPlayerShipDbId();
-  if (!playerShipDbId)
-  {
-    // We will pick this up when the data for the player's system is instantiated.
-    debug("Ignoring creation of ship " + bsgo::str(data.dbId) + " as player did not undock yet");
-    return;
-  }
-  if (*playerShipDbId == data.dbId)
-  {
-    debug("Ignoring creation of ship " + bsgo::str(data.dbId) + " as it is the player's ship");
-    return;
-  }
-
-  // TODO: This should be replaced by a call to the ShipDataSource
-  if (!m_entityService->tryCreateShipEntity(data.dbId))
-  {
-    warn("Failed to process ship added message for " + bsgo::str(data.dbId));
-    return;
-  }
+  bsgo::ShipDataSource source;
+  source.registerShip(*m_coordinator, data, m_entityMapper, false);
 
   info("Registered entity for ship " + bsgo::str(data.dbId));
 }
@@ -162,6 +153,14 @@ void SystemMessageConsumer::handleAsteroidCreation(const bsgo::AsteroidData &dat
   source.registerAsteroid(*m_coordinator, data, m_entityMapper);
 
   info("Registered entity for asteroid " + bsgo::str(data.dbId));
+}
+
+void SystemMessageConsumer::handlePlayerCreation(const bsgo::PlayerData &data) const
+{
+  bsgo::PlayerDataSource source;
+  source.registerPlayer(*m_coordinator, data, m_entityMapper);
+
+  info("Registered entity for player " + bsgo::str(data.dbId));
 }
 
 } // namespace pge
