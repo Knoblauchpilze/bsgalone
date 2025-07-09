@@ -146,6 +146,7 @@ void SystemMessageConsumer::handleShipCreation(const bsgo::ShipData &data) const
     return;
   }
 
+  // TODO: This should be replaced by a call to the ShipDataSource
   if (!m_entityService->tryCreateShipEntity(data.dbId))
   {
     warn("Failed to process ship added message for " + bsgo::str(data.dbId));

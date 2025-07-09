@@ -56,6 +56,8 @@ void EntityAddedMessageConsumer::handleShipAdded(const Uuid systemDbId, const Sh
   // loading service before sending the message to the client applications.
   const auto shipData = m_loadingService->getShipById(data.dbId);
 
+  // TODO: We should also send a EntityAddedMessage for the player
+
   auto out = std::make_unique<EntityAddedMessage>(systemDbId);
   out->setShipData(shipData.toShipData());
   m_outputMessageQueue->pushMessage(std::move(out));
