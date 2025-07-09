@@ -69,12 +69,6 @@ void DockMessageConsumer::handleUndocking(const DockMessage &message) const
   const auto shipDbId   = message.getShipDbId();
   const auto systemDbId = message.getSystemDbId();
 
-  if (!m_entityService->tryCreateShipEntity(shipDbId))
-  {
-    warn("Failed to process undock message for ship " + str(shipDbId));
-    return;
-  }
-
   auto out = std::make_unique<DockMessage>(shipDbId, false, systemDbId);
   out->validate();
   out->copyClientIdIfDefined(message);
@@ -83,8 +77,7 @@ void DockMessageConsumer::handleUndocking(const DockMessage &message) const
   auto added = std::make_unique<EntityAddedMessage>(systemDbId);
   ShipData data{.dbId = shipDbId};
   added->setShipData(data);
-
-  m_outputMessageQueue->pushMessage(std::move(added));
+  m_systemMessageQueue->pushMessage(std::move(added));
 
   auto started = std::make_unique<LoadingStartedMessage>(LoadingTransition::UNDOCK, systemDbId);
   started->copyClientIdIfDefined(message);
