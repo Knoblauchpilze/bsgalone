@@ -30,7 +30,7 @@ auto LoadingService::getPlayerById(const Uuid playerDbId) const -> Player
 
 auto LoadingService::getPlayersInSystem(const Uuid systemDbId) const -> std::vector<Player>
 {
-  const auto playerIds = m_repositories.playerRepository->findAllBySystem(systemDbId);
+  const auto playerIds = m_repositories.playerRepository->findAllUndockedBySystem(systemDbId);
 
   std::vector<Player> players{};
 
