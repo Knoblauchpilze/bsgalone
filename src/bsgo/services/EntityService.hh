@@ -20,7 +20,6 @@ class EntityService : public AbstractService
   ~EntityService() override = default;
 
   bool tryCreateShipEntity(const Uuid shipDbId) const;
-  bool tryCreateAsteroidEntity(const Uuid asteroidDbId) const;
   void tryDeleteShipEntity(const Uuid shipDbId) const;
   void tryDeleteAsteroidEntity(const Uuid asteroidDbId) const;
 
