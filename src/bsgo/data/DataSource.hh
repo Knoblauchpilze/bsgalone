@@ -29,10 +29,6 @@ class DataSource : public core::CoreObject
   //   when handling the PlayerListMessage and WeaponListMessage, etc.
   // 2. add the views to the consumer and directly fill in the data there
   // Solution 2 seems better.
-
-  // TODO: This method and the private ones will only be callable in SERVER mode.
-  // In CLIENT mode we will receive messages and directly populate the entity mapper
-  // and coordinator in the loading/logging service.
   void initialize(Coordinator &coordinator, DatabaseEntityMapper &entityMapper) const;
 
   private:
