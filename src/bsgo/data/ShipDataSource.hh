@@ -29,6 +29,11 @@ class ShipDataSource : public core::CoreObject
                     DatabaseEntityMapper &entityMapper,
                     const bool ignoreIfDocked) const;
 
+  // Thid variant is currently used by the server in two cases:
+  //   - when a player leaves the outpost and their ship is created
+  //   - when a player jumps to another system and their ship is created
+  // We could make it so that those two cases also use the overload above
+  // but it's not a priority.
   void registerShip(Coordinator &coordinator,
                     const Uuid ship,
                     DatabaseEntityMapper &entityMapper) const;
@@ -37,7 +42,6 @@ class ShipDataSource : public core::CoreObject
   std::optional<Uuid> m_playerDbId{};
   std::optional<Repositories> m_repositories{};
 
-  // TODO: this is deprecated
   void registerShip(Coordinator &coordinator,
                     const Uuid shipDbId,
                     DatabaseEntityMapper &entityMapper,
