@@ -4,6 +4,7 @@
 #include "AbstractMessageConsumer.hh"
 #include "IMessageQueue.hh"
 #include "Services.hh"
+#include "ShipData.hh"
 
 namespace bsgo {
 
@@ -17,9 +18,10 @@ class EntityAddedMessageConsumer : public AbstractMessageConsumer
 
   private:
   EntityServiceShPtr m_entityService{};
+  LoadingServiceShPtr m_loadingService{};
   IMessageQueue *const m_outputMessageQueue{};
 
-  void handleShipAdded(const Uuid shipDbId, const Uuid systemDbId) const;
+  void handleShipAdded(const Uuid systemDbId, const ShipData &data) const;
 };
 
 } // namespace bsgo

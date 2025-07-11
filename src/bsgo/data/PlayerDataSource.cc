@@ -28,7 +28,7 @@ void PlayerDataSource::initialize(const Uuid systemDbId,
     error("Failed to initialize outpost", "Repositories are not set");
   }
 
-  const auto players = m_repositories->playerRepository->findAllBySystem(systemDbId);
+  const auto players = m_repositories->playerRepository->findAllUndockedBySystem(systemDbId);
   for (const auto &id : players)
   {
     registerPlayer(coordinator, id, entityMapper);

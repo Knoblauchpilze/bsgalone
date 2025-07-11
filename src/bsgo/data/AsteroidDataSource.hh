@@ -26,12 +26,12 @@ class AsteroidDataSource : public core::CoreObject
                         const AsteroidData &data,
                         DatabaseEntityMapper &entityMapper) const;
 
+  private:
+  std::optional<Repositories> m_repositories{};
+
   void registerAsteroid(Coordinator &coordinator,
                         const Uuid asteroidDbId,
                         DatabaseEntityMapper &entityMapper) const;
-
-  private:
-  std::optional<Repositories> m_repositories{};
 };
 
 } // namespace bsgo

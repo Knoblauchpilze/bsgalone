@@ -8,6 +8,7 @@ EntityAddedMessageConsumer::EntityAddedMessageConsumer(const Services &services,
                                                        IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("entity", {MessageType::ENTITY_ADDED})
   , m_entityService(services.entity)
+  , m_loadingService(services.loading)
   , m_outputMessageQueue(outputMessageQueue)
 {
   addModule("added");
@@ -15,6 +16,10 @@ EntityAddedMessageConsumer::EntityAddedMessageConsumer(const Services &services,
   if (nullptr == m_entityService)
   {
     throw std::invalid_argument("Expected non null entity service");
+  }
+  if (nullptr == m_loadingService)
+  {
+    throw std::invalid_argument("Expected non null loading service");
   }
   if (nullptr == m_outputMessageQueue)
   {
@@ -27,29 +32,45 @@ void EntityAddedMessageConsumer::onMessageReceived(const IMessage &message)
   const auto &added = message.as<EntityAddedMessage>();
 
   const auto entityKind = added.getEntityKind();
-  const auto entityDbId = added.getEntityDbId();
   const auto systemDbId = added.getSystemDbId();
 
   switch (entityKind)
   {
     case EntityKind::SHIP:
-      handleShipAdded(entityDbId, systemDbId);
+      handleShipAdded(systemDbId, *added.tryGetShipData());
       break;
     default:
       error("Unsupported type of entity added: " + str(entityKind));
   }
 }
 
-void EntityAddedMessageConsumer::handleShipAdded(const Uuid shipDbId, const Uuid systemDbId) const
+void EntityAddedMessageConsumer::handleShipAdded(const Uuid systemDbId, const ShipData &data) const
 {
-  if (!m_entityService->tryCreateShipEntity(shipDbId))
+  if (!m_entityService->tryCreateShipEntity(data.dbId))
   {
-    warn("Failed to process ship " + str(shipDbId) + " added in system " + str(systemDbId));
+    warn("Failed to process ship " + str(data.dbId) + " added in system " + str(systemDbId));
     return;
   }
 
-  auto out = std::make_unique<EntityAddedMessage>(shipDbId, EntityKind::SHIP, systemDbId);
-  m_outputMessageQueue->pushMessage(std::move(out));
+  // The input ship data is not complete. We need to get all of it from the
+  // loading service before sending the message to the client applications.
+  const auto shipData = m_loadingService->getShipById(data.dbId);
+
+  // In case the ship belongs to a player we also need to send a message to
+  // add this player to the system.
+  if (shipData.dbShip.player)
+  {
+    const auto playerData = m_loadingService->getPlayerById(*shipData.dbShip.player);
+
+    auto playerAdded = std::make_unique<EntityAddedMessage>(systemDbId);
+    PlayerData data{.dbId = playerData.id, .name = playerData.name};
+    playerAdded->setPlayerData(data);
+    m_outputMessageQueue->pushMessage(std::move(playerAdded));
+  }
+
+  auto shipAdded = std::make_unique<EntityAddedMessage>(systemDbId);
+  shipAdded->setShipData(shipData.toShipData());
+  m_outputMessageQueue->pushMessage(std::move(shipAdded));
 }
 
 } // namespace bsgo

@@ -46,22 +46,6 @@ bool EntityService::tryCreateShipEntity(const Uuid shipDbId) const
   return true;
 }
 
-bool EntityService::tryCreateAsteroidEntity(const Uuid asteroidDbId) const
-{
-  AsteroidDataSource source{m_repositories};
-  source.registerAsteroid(*m_coordinator, asteroidDbId, m_entityMapper);
-
-  const auto maybeEntityId = m_entityMapper.tryGetAsteroidEntityId(asteroidDbId);
-  if (!maybeEntityId)
-  {
-    warn("Failed to create entity for asteroid " + str(asteroidDbId),
-         "Registration did not create an entity for it");
-    return false;
-  }
-
-  return true;
-}
-
 void EntityService::tryDeleteShipEntity(const Uuid shipDbId) const
 {
   const auto maybeEntityId = m_entityMapper.tryGetShipEntityId(shipDbId);
@@ -96,6 +80,17 @@ void EntityService::tryDeleteAsteroidEntity(const Uuid asteroidDbId) const
   }
 
   m_entityMapper.removeEntityForAsteroid(asteroidDbId);
+}
+
+auto EntityService::tryGetPlayerDbIdForShip(const Uuid shipDbId) const -> std::optional<Uuid>
+{
+  const auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
+  if (!ship.player)
+  {
+    return {};
+  }
+
+  return ship.player;
 }
 
 void EntityService::handlePlayerCreationForShip(const Uuid &shipDbId) const

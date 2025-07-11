@@ -84,9 +84,10 @@ void JumpMessageConsumer::handlePostJumpSystemMessages(const Uuid shipDbId,
   debug("Pushing removed message to " + str(sourceSystemDbId));
   sourceProcessor->pushMessage(std::move(removed));
 
-  auto added = std::make_unique<EntityAddedMessage>(shipDbId,
-                                                    EntityKind::SHIP,
-                                                    destinationSystemDbId);
+  auto added = std::make_unique<EntityAddedMessage>(destinationSystemDbId);
+  ShipData data{.dbId = shipDbId};
+  added->setShipData(data);
+
   debug("Pushing added message to " + str(destinationSystemDbId));
   destinationProcessor->pushMessage(std::move(added));
 }

@@ -63,13 +63,6 @@ void AsteroidDataSource::registerAsteroid(Coordinator &coordinator,
                                           const Uuid asteroidDbId,
                                           DatabaseEntityMapper &entityMapper) const
 {
-  // TODO: This will become private when the EntityAddedMessage is using the
-  // AsteroidData.
-  if (!m_repositories)
-  {
-    error("Failed to register asteroid", "Repositories are not set");
-  }
-
   const auto data = m_repositories->asteroidRepository->findOneById(asteroidDbId);
 
   AsteroidData out{

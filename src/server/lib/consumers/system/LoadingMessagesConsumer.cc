@@ -99,9 +99,7 @@ void LoadingMessagesConsumer::handlePlayersLoading(const LoadingStartedMessage &
   std::transform(players.begin(),
                  players.end(),
                  std::back_inserter(playersData),
-                 [](const Player &player) {
-                   return PlayerData{.dbId = player.id, .name = player.name};
-                 });
+                 [](const Player &player) { return toPlayerData(player); });
 
   auto out = std::make_unique<PlayerListMessage>(systemDbId, playersData);
   out->copyClientIdIfDefined(message);
@@ -119,16 +117,7 @@ void LoadingMessagesConsumer::handleAsteroidsLoading(const LoadingStartedMessage
   std::transform(asteroids.begin(),
                  asteroids.end(),
                  std::back_inserter(asteroidsData),
-                 [](const LoadingService::AsteroidProps &props) {
-                   return AsteroidData{
-                     .dbId     = props.dbId,
-                     .position = props.dbAsteroid.position,
-                     .radius   = props.dbAsteroid.radius,
-                     .health   = props.dbAsteroid.health,
-                     .resource = props.resource,
-                     .amount   = props.amount,
-                   };
-                 });
+                 [](const AsteroidProps &props) { return props.toAsteroidData(); });
 
   auto out = std::make_unique<AsteroidListMessage>(systemDbId, asteroidsData);
   out->copyClientIdIfDefined(message);
@@ -146,94 +135,13 @@ void LoadingMessagesConsumer::handleOutpostsLoading(const LoadingStartedMessage 
   std::transform(outposts.begin(),
                  outposts.end(),
                  std::back_inserter(outpostsData),
-                 [](const LoadingService::OutpostProps &props) {
-                   return OutpostData{
-                     .dbId            = props.dbId,
-                     .position        = props.dbOutpost.position,
-                     .radius          = props.dbOutpost.radius,
-                     .hullPoints      = props.dbOutpost.hullPoints,
-                     .maxHullPoints   = props.dbOutpost.maxHullPoints,
-                     .hullPointsRegen = props.dbOutpost.hullPointsRegen,
-                     .powerPoints     = props.dbOutpost.powerPoints,
-                     .maxPowerPoints  = props.dbOutpost.maxPowerPoints,
-                     .powerRegen      = props.dbOutpost.powerRegen,
-                     .faction         = props.dbOutpost.faction,
-                     .targetDbId      = props.targetDbId,
-                   };
-                 });
+                 [](const OutpostProps &props) { return props.toOutpostData(); });
 
   auto out = std::make_unique<OutpostListMessage>(systemDbId, outpostsData);
   out->copyClientIdIfDefined(message);
 
   m_outputMessageQueue->pushMessage(std::move(out));
 }
-
-namespace {
-auto generateShipData(const LoadingService::ShipProps props) -> ShipData
-{
-  ShipData data;
-
-  data.dbId            = props.dbShip.id;
-  data.position        = props.dbShip.position;
-  data.radius          = props.dbShip.radius;
-  data.acceleration    = props.dbShip.acceleration;
-  data.speed           = props.dbShip.speed;
-  data.hullPoints      = props.dbShip.hullPoints;
-  data.maxHullPoints   = props.dbShip.maxHullPoints;
-  data.hullPointsRegen = props.dbShip.hullPointsRegen;
-  data.powerPoints     = props.dbShip.powerPoints;
-  data.maxPowerPoints  = props.dbShip.maxPowerPoints;
-  data.powerRegen      = props.dbShip.powerRegen;
-  data.faction         = props.dbShip.faction;
-
-  data.status           = props.status;
-  data.shipClass        = props.dbShip.shipClass;
-  data.name             = props.dbShip.name;
-  data.docked           = props.dbShip.docked;
-  data.jumpTime         = props.dbShip.jumpTime;
-  data.jumpTimeInThreat = props.dbShip.jumpTimeInThreat;
-
-  data.targetDbId = props.targetDbId;
-  data.playerDbId = props.dbShip.player;
-
-  for (const auto &weapon : props.weapons)
-  {
-    WeaponData weaponData{
-      .dbId         = weapon.dbWeapon.id,
-      .weaponDbId   = weapon.dbWeapon.weapon,
-      .slotPosition = weapon.slotPosition,
-      .level        = weapon.dbWeapon.level,
-      .minDamage    = weapon.dbWeapon.minDamage,
-      .maxDamage    = weapon.dbWeapon.maxDamage,
-      .powerCost    = weapon.dbWeapon.powerCost,
-      .range        = weapon.dbWeapon.range,
-      .reloadTime   = weapon.dbWeapon.reloadTime,
-    };
-
-    data.weapons.emplace_back(std::move(weaponData));
-  }
-
-  for (const auto &computer : props.computers)
-  {
-    ComputerData computerData{
-      .dbId           = computer.id,
-      .computerDbId   = computer.computer,
-      .level          = computer.level,
-      .offensive      = computer.offensive,
-      .powerCost      = computer.powerCost,
-      .range          = computer.range,
-      .reloadTime     = computer.reloadTime,
-      .duration       = computer.duration,
-      .allowedTargets = computer.allowedTargets,
-      .damageModifier = computer.damageModifier,
-    };
-
-    data.computers.emplace_back(std::move(computerData));
-  }
-
-  return data;
-}
-} // namespace
 
 void LoadingMessagesConsumer::handleShipsLoading(const LoadingStartedMessage &message) const
 {
@@ -242,7 +150,10 @@ void LoadingMessagesConsumer::handleShipsLoading(const LoadingStartedMessage &me
   const auto ships = m_loadingService->getShipsInSystem(systemDbId);
 
   std::vector<ShipData> shipsData{};
-  std::transform(ships.begin(), ships.end(), std::back_inserter(shipsData), generateShipData);
+  std::transform(ships.begin(),
+                 ships.end(),
+                 std::back_inserter(shipsData),
+                 [](const ShipProps &props) { return props.toShipData(); });
 
   auto out = std::make_unique<ShipListMessage>(systemDbId, shipsData);
   out->copyClientIdIfDefined(message);
