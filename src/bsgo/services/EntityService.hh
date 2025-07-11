@@ -23,6 +23,8 @@ class EntityService : public AbstractService
   void tryDeleteShipEntity(const Uuid shipDbId) const;
   void tryDeleteAsteroidEntity(const Uuid asteroidDbId) const;
 
+  auto tryGetPlayerDbIdForShip(const Uuid shipDbId) const -> std::optional<Uuid>;
+
   private:
   ProcessingMode m_processingMode{ProcessingMode::CLIENT};
   CoordinatorShPtr m_coordinator{};

@@ -82,6 +82,17 @@ void EntityService::tryDeleteAsteroidEntity(const Uuid asteroidDbId) const
   m_entityMapper.removeEntityForAsteroid(asteroidDbId);
 }
 
+auto EntityService::tryGetPlayerDbIdForShip(const Uuid shipDbId) const -> std::optional<Uuid>
+{
+  const auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
+  if (!ship.player)
+  {
+    return {};
+  }
+
+  return ship.player;
+}
+
 void EntityService::handlePlayerCreationForShip(const Uuid &shipDbId) const
 {
   const auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);

@@ -112,6 +112,9 @@ void SystemMessageConsumer::handleEntityRemoved(const bsgo::EntityRemovedMessage
       entityId = m_entityMapper.tryGetAsteroidEntityId(entityDbId);
       m_entityMapper.removeEntityForAsteroid(entityDbId);
       break;
+    case bsgo::EntityKind::PLAYER:
+      entityId = m_entityMapper.tryGetPlayerEntityId(entityDbId);
+      m_entityMapper.removeEntityForPlayer(entityDbId);
     default:
       break;
   }

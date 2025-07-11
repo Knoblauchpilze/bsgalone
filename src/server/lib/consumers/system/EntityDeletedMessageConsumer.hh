@@ -2,6 +2,7 @@
 #pragma once
 
 #include "AbstractMessageConsumer.hh"
+#include "EntityRemovedMessage.hh"
 #include "IMessageQueue.hh"
 #include "Services.hh"
 
@@ -19,8 +20,8 @@ class EntityDeletedMessageConsumer : public AbstractMessageConsumer
   EntityServiceShPtr m_entityService{};
   IMessageQueue *const m_outputMessageQueue{};
 
-  void handleShipRemoved(const Uuid shipDbId) const;
-  void handleAsteroidRemoved(const Uuid asteroidDbId) const;
+  void handleShipRemoved(const EntityRemovedMessage &message) const;
+  void handleAsteroidRemoved(const EntityRemovedMessage &message) const;
 };
 
 } // namespace bsgo
