@@ -11,8 +11,8 @@ namespace {
 constexpr auto FIND_ALL_QUERY_NAME = "player_find_all";
 constexpr auto FIND_ALL_QUERY      = "SELECT id FROM system";
 
-constexpr auto FIND_ALL_BY_SYSTEM_QUERY_NAME = "system_find_all_by_system";
-constexpr auto FIND_ALL_BY_SYSTEM_QUERY      = R"(
+constexpr auto FIND_ALL_UNDOCKED_BY_SYSTEM_QUERY_NAME = "system_find_all_undocked_by_system";
+constexpr auto FIND_ALL_UNDOCKED_BY_SYSTEM_QUERY      = R"(
 SELECT
   ps.player
 FROM
@@ -21,6 +21,7 @@ FROM
   LEFT JOIN player AS p ON ps.player = p.id
 WHERE
   ps.active = true
+  AND ss.docked = false
   AND ps.player IS NOT NULL
   AND ss.system = $1
 )";
@@ -45,7 +46,7 @@ INSERT INTO player (name, password, faction)
 void PlayerRepository::initialize()
 {
   m_connection->prepare(FIND_ALL_QUERY_NAME, FIND_ALL_QUERY);
-  m_connection->prepare(FIND_ALL_BY_SYSTEM_QUERY_NAME, FIND_ALL_BY_SYSTEM_QUERY);
+  m_connection->prepare(FIND_ALL_UNDOCKED_BY_SYSTEM_QUERY_NAME, FIND_ALL_UNDOCKED_BY_SYSTEM_QUERY);
   m_connection->prepare(FIND_ONE_QUERY_NAME, FIND_ONE_QUERY);
   m_connection->prepare(FIND_ONE_BY_NAME_QUERY_NAME, FIND_ONE_BY_NAME_QUERY);
   m_connection->prepare(FIND_SYSTEM_QUERY_NAME, FIND_SYSTEM_QUERY);
@@ -68,11 +69,12 @@ auto PlayerRepository::findAll() const -> std::unordered_set<Uuid>
   return out;
 }
 
-auto PlayerRepository::findAllBySystem(const Uuid system) const -> std::unordered_set<Uuid>
+auto PlayerRepository::findAllUndockedBySystem(const Uuid system) const -> std::unordered_set<Uuid>
 {
   const auto query = [system](pqxx::nontransaction &work) {
     // https://libpqxx.readthedocs.io/stable/parameters.html
-    return work.exec(pqxx::prepped{FIND_ALL_BY_SYSTEM_QUERY_NAME}, pqxx::params{toDbId(system)});
+    return work.exec(pqxx::prepped{FIND_ALL_UNDOCKED_BY_SYSTEM_QUERY_NAME},
+                     pqxx::params{toDbId(system)});
   };
   const auto rows = m_connection->executeQuery(query);
 

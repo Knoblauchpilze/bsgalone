@@ -4,6 +4,7 @@
 #include "AsteroidRepository.hh"
 #include "Coordinator.hh"
 #include "DatabaseEntityMapper.hh"
+#include "LoadingServiceUtils.hh"
 #include "PlayerRepository.hh"
 #include "PlayerShipRepository.hh"
 #include "Status.hh"
@@ -29,40 +30,16 @@ class LoadingService : public AbstractService
   };
   auto getDataForPlayer(const Uuid playerDbId) const -> PlayerProps;
 
+  auto getPlayerById(const Uuid playerDbId) const -> Player;
   auto getPlayersInSystem(const Uuid systemDbId) const -> std::vector<Player>;
 
-  struct AsteroidProps
-  {
-    Uuid dbId{};
-    Asteroid dbAsteroid{};
-
-    std::optional<Uuid> resource{};
-    std::optional<float> amount{};
-  };
+  auto getAsteroidById(const Uuid asteroidDbId) const -> AsteroidProps;
   auto getAsteroidsInSystem(const Uuid systemDbId) const -> std::vector<AsteroidProps>;
 
-  struct OutpostProps
-  {
-    Uuid dbId{};
-    SystemOutpost dbOutpost{};
-    std::optional<Uuid> targetDbId{};
-  };
+  auto getOutpostById(const Uuid outpostDbId) const -> OutpostProps;
   auto getOutpostsInSystem(const Uuid systemDbId) const -> std::vector<OutpostProps>;
 
-  struct WeaponProps
-  {
-    PlayerWeapon dbWeapon{};
-    Eigen::Vector3f slotPosition{Eigen::Vector3f::Zero()};
-  };
-
-  struct ShipProps
-  {
-    PlayerShip dbShip{};
-    Status status{};
-    std::optional<Uuid> targetDbId{};
-    std::vector<WeaponProps> weapons{};
-    std::vector<PlayerComputer> computers{};
-  };
+  auto getShipById(const Uuid shipDbId) const -> ShipProps;
   auto getShipsInSystem(const Uuid systemDbId) const -> std::vector<ShipProps>;
 
   private:
