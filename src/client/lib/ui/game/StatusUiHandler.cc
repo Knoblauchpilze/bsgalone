@@ -5,7 +5,7 @@
 
 namespace pge {
 
-StatusUiHandler::StatusUiHandler(const Vec2i &offset, const bsgo::Views &views)
+StatusUiHandler::StatusUiHandler(const Vec2i &offset, const Views &views)
   : IUiHandler("status")
   , m_offset(offset)
   , m_shipView(views.shipView)

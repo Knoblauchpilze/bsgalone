@@ -15,7 +15,7 @@ namespace pge {
 class OutpostScreenUiHandler : public IUiHandler, public bsgo::AbstractMessageListener
 {
   public:
-  OutpostScreenUiHandler(const bsgo::Views &views);
+  OutpostScreenUiHandler(const Views &views);
   ~OutpostScreenUiHandler() override = default;
 
   void initializeMenus(const int width,
@@ -30,8 +30,8 @@ class OutpostScreenUiHandler : public IUiHandler, public bsgo::AbstractMessageLi
   void onMessageReceived(const bsgo::IMessage &message) override;
 
   private:
-  bsgo::ShipDbViewShPtr m_shipDbView{};
-  bsgo::PlayerViewShPtr m_playerView{};
+  ShipDbViewShPtr m_shipDbView{};
+  PlayerViewShPtr m_playerView{};
   bool m_initialized{false};
 
   enum MenuItem

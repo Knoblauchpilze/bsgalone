@@ -10,7 +10,7 @@
 
 namespace pge {
 
-WeaponsUiHandler::WeaponsUiHandler(const bsgo::Views &views)
+WeaponsUiHandler::WeaponsUiHandler(const Views &views)
   : IUiHandler("weapons")
   , AbstractMessageListener({bsgo::MessageType::ENTITY_REMOVED})
   , m_shipView(views.shipView)

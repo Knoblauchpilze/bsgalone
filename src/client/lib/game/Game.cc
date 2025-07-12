@@ -405,11 +405,11 @@ void Game::initialize(const int serverPort)
                                                        bsgo::SystemType::POWER}};
   m_coordinator = std::make_shared<bsgo::Coordinator>(std::move(sConfig));
 
-  bsgo::ViewsConfig vConfig{.repositories         = repositories,
-                            .coordinator          = m_coordinator,
-                            .internalMessageQueue = m_internalMessageQueue.get(),
-                            .outputMessageQueue   = m_outputMessageQueue.get()};
-  m_views = bsgo::createViews(vConfig, m_entityMapper);
+  ViewsConfig vConfig{.repositories         = repositories,
+                      .coordinator          = m_coordinator,
+                      .internalMessageQueue = m_internalMessageQueue.get(),
+                      .outputMessageQueue   = m_outputMessageQueue.get()};
+  m_views = createViews(vConfig, m_entityMapper);
 
   initializeMessageSystem();
 

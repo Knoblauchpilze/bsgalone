@@ -3,7 +3,7 @@
 
 namespace pge {
 
-GameScreenInputHandler::GameScreenInputHandler(const bsgo::Views &views)
+GameScreenInputHandler::GameScreenInputHandler(const Views &views)
   : IInputHandler("game")
   , m_shipView(views.shipView)
   , m_shipDbView(views.shipDbView)

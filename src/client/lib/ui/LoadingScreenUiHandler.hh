@@ -11,7 +11,7 @@ namespace pge {
 class LoadingScreenUiHandler : public IUiHandler
 {
   public:
-  LoadingScreenUiHandler(const bsgo::Views &views);
+  LoadingScreenUiHandler(const Views &views);
   ~LoadingScreenUiHandler() override = default;
 
   void initializeMenus(const int width,

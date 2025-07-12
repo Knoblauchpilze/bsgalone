@@ -11,7 +11,7 @@ namespace pge {
 class MapScreenUiHandler : public IUiHandler
 {
   public:
-  MapScreenUiHandler(const bsgo::Views &views);
+  MapScreenUiHandler(const Views &views);
   ~MapScreenUiHandler() override = default;
 
   void initializeMenus(const int width,
@@ -23,9 +23,9 @@ class MapScreenUiHandler : public IUiHandler
   void reset() override;
 
   private:
-  bsgo::ServerViewShPtr m_serverView{};
-  bsgo::ShipViewShPtr m_shipView{};
-  bsgo::ShipDbViewShPtr m_shipDbView{};
+  ServerViewShPtr m_serverView{};
+  ShipViewShPtr m_shipView{};
+  ShipDbViewShPtr m_shipDbView{};
 
   std::vector<UiMenuPtr> m_buttons{};
   UiMenu *m_jumpButton{};
@@ -41,7 +41,7 @@ class MapScreenUiHandler : public IUiHandler
   void generateControlButtons(const int width, const int height);
   void generateMap(const int width, const int height);
   void generateSystemButtons(const bsgo::System &system,
-                             const bsgo::ServerView::Bounds &bounds,
+                             const ServerView::Bounds &bounds,
                              const Vec2i &mapOffset,
                              const Vec2i &mapDims);
 

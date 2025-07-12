@@ -10,7 +10,7 @@
 
 namespace pge {
 
-LockerUiHandler::LockerUiHandler(const bsgo::Views &views)
+LockerUiHandler::LockerUiHandler(const Views &views)
   : IUiHandler("locker")
   , m_playerView(views.playerView)
   , m_shipDbView(views.shipDbView)

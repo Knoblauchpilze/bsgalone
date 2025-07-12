@@ -12,26 +12,26 @@
 #include <optional>
 #include <unordered_map>
 
-namespace bsgo {
+namespace pge {
 
 class ShipView : public AbstractView
 {
   public:
-  ShipView(CoordinatorShPtr coordinator,
-           const Repositories &repositories,
-           IMessageQueue *const outputMessageQueue);
+  ShipView(bsgo::CoordinatorShPtr coordinator,
+           const bsgo::Repositories &repositories,
+           bsgo::IMessageQueue *const outputMessageQueue);
   ~ShipView() override = default;
 
-  auto getPlayerShip() const -> Entity;
-  void setPlayerShipEntityId(const std::optional<Uuid> ship);
+  auto getPlayerShip() const -> bsgo::Entity;
+  void setPlayerShipEntityId(const std::optional<bsgo::Uuid> ship);
 
   bool isReady() const noexcept override;
 
   bool hasTarget() const;
-  auto getPlayerTarget() const -> std::optional<Entity>;
+  auto getPlayerTarget() const -> std::optional<bsgo::Entity>;
 
-  auto getEntityName(const Entity &entity) const -> std::string;
-  auto getShipsWithin(const IBoundingBox &bbox) const -> std::vector<Entity>;
+  auto getEntityName(const bsgo::Entity &entity) const -> std::string;
+  auto getShipsWithin(const bsgo::IBoundingBox &bbox) const -> std::vector<bsgo::Entity>;
 
   auto distanceToTarget() const -> float;
   auto getWeaponsCount() const -> int;
@@ -42,7 +42,7 @@ class ShipView : public AbstractView
 
   void tryAcquireTarget(const Eigen::Vector3f &position) const;
 
-  void setJumpSystem(const Uuid system);
+  void setJumpSystem(const bsgo::Uuid system);
   void clearJumpSystem();
   bool isJumping() const;
   struct JumpData
@@ -56,15 +56,15 @@ class ShipView : public AbstractView
   bool isDead() const;
 
   private:
-  CoordinatorShPtr m_coordinator{};
-  Repositories m_repositories{};
-  IMessageQueue *const m_outputMessageQueue{};
-  std::optional<Uuid> m_playerShipEntityId{};
-  std::optional<Uuid> m_systemToJumpTo{};
+  bsgo::CoordinatorShPtr m_coordinator{};
+  bsgo::Repositories m_repositories{};
+  bsgo::IMessageQueue *const m_outputMessageQueue{};
+  std::optional<bsgo::Uuid> m_playerShipEntityId{};
+  std::optional<bsgo::Uuid> m_systemToJumpTo{};
 
   void checkPlayerShipEntityIdExists() const;
 };
 
 using ShipViewShPtr = std::shared_ptr<ShipView>;
 
-} // namespace bsgo
+} // namespace pge

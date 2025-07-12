@@ -10,7 +10,7 @@
 
 namespace pge {
 
-HangarUiHandler::HangarUiHandler(const bsgo::Views &views)
+HangarUiHandler::HangarUiHandler(const Views &views)
   : IUiHandler("hangar")
   , m_playerView(views.playerView)
   , m_shopView(views.shopView)

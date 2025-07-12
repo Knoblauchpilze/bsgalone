@@ -10,7 +10,7 @@
 
 namespace pge {
 
-ShopUiHandler::ShopUiHandler(const bsgo::Views &views)
+ShopUiHandler::ShopUiHandler(const Views &views)
   : IUiHandler("shop")
   , m_shopView(views.shopView)
   , m_playerView(views.playerView)
@@ -138,7 +138,7 @@ struct PriceMenu
   std::vector<UiTextMenu *> costs{};
 };
 
-auto generatePriceMenus(const bsgo::ShopItem &item) -> PriceMenu
+auto generatePriceMenus(const ShopItem &item) -> PriceMenu
 {
   PriceMenu out{};
 
@@ -202,7 +202,7 @@ void ShopUiHandler::generateItemsMenus()
   }
 }
 
-auto ShopUiHandler::generateItemMenus(const bsgo::ShopItem &item) -> UiMenuPtr
+auto ShopUiHandler::generateItemMenus(const ShopItem &item) -> UiMenuPtr
 {
   auto menu = generateBlankVerticalMenu();
   if (item.weapon)

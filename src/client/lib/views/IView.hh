@@ -3,7 +3,7 @@
 
 #include <memory>
 
-namespace bsgo {
+namespace pge {
 
 class IView
 {
@@ -16,4 +16,4 @@ class IView
 
 using IViewShPtr = std::shared_ptr<IView>;
 
-} // namespace bsgo
+} // namespace pge

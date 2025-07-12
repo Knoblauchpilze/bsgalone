@@ -1,14 +1,14 @@
 
 #include "ServerView.hh"
 
-namespace bsgo {
+namespace pge {
 
-ServerView::ServerView(const Repositories &repositories)
+ServerView::ServerView(const bsgo::Repositories &repositories)
   : AbstractView("server")
   , m_repositories(repositories)
 {}
 
-void ServerView::setPlayerDbId(const Uuid player)
+void ServerView::setPlayerDbId(const bsgo::Uuid player)
 {
   m_playerDbId = player;
 }
@@ -18,7 +18,7 @@ bool ServerView::isReady() const noexcept
   return m_playerDbId.has_value();
 }
 
-auto ServerView::getPlayerSystem() const -> Uuid
+auto ServerView::getPlayerSystem() const -> bsgo::Uuid
 {
   checkPlayerDbIdExists();
   return m_repositories.playerRepository->findSystemByPlayer(*m_playerDbId);
@@ -31,9 +31,9 @@ auto ServerView::getPlayerSystemName() const -> std::string
   return system.name;
 }
 
-auto ServerView::getAllSystems() const -> std::vector<System>
+auto ServerView::getAllSystems() const -> std::vector<bsgo::System>
 {
-  std::vector<System> out;
+  std::vector<bsgo::System> out;
 
   const auto ids = m_repositories.systemRepository->findAll();
   for (const auto &id : ids)
@@ -97,4 +97,4 @@ void ServerView::checkPlayerDbIdExists() const
   }
 }
 
-} // namespace bsgo
+} // namespace pge

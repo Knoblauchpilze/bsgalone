@@ -14,7 +14,7 @@
 #include "IMessageQueue.hh"
 #include "Repositories.hh"
 
-namespace bsgo {
+namespace pge {
 
 struct Views
 {
@@ -29,12 +29,13 @@ struct Views
 
 struct ViewsConfig
 {
-  Repositories repositories{};
-  CoordinatorShPtr coordinator{};
-  IMessageQueue *const internalMessageQueue{};
-  IMessageQueue *const outputMessageQueue{};
+  bsgo::Repositories repositories{};
+  bsgo::CoordinatorShPtr coordinator{};
+  bsgo::IMessageQueue *const internalMessageQueue{};
+  bsgo::IMessageQueue *const outputMessageQueue{};
 };
 
-auto createViews(const ViewsConfig &config, const DatabaseEntityMapper &entityMapper) -> Views;
+auto createViews(const ViewsConfig &config, const bsgo::DatabaseEntityMapper &entityMapper)
+  -> Views;
 
-} // namespace bsgo
+} // namespace pge
