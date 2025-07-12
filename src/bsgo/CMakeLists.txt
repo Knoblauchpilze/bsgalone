@@ -55,10 +55,6 @@ add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/systems
 	)
 
-add_subdirectory (
-	${CMAKE_CURRENT_SOURCE_DIR}/views
-	)
-
 target_include_directories (bsgo_lib PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
 	)
