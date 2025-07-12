@@ -9,11 +9,25 @@ namespace pge {
 class App : public PGEApp
 {
   public:
-  /// @brief - Create a new default pixel game engine app.
+  /// @brief - Create a new client application for the game. The app will respect
+  /// the input properties and attempt to connect to the server listening on the
+  /// specified port.
   /// @param desc - contains all the needed information to create the canvas needed
   /// @param serverPort - the port to use to connect to the game server
   /// by the app and set up base properties.
   App(const AppDesc &desc, const int serverPort);
+
+  /// @brief - Create a new client application for the game and performs the login
+  /// for the specified user and password.
+  /// @param desc - contains all the needed information to create the canvas needed
+  /// @param serverPort - the port to use to connect to the game server
+  /// @param userName - the name of the user to login with
+  /// @param password - the password to use to login
+  /// by the app and set up base properties.
+  App(const AppDesc &desc,
+      const int serverPort,
+      const std::optional<std::string> &userName,
+      const std::optional<std::string> &password);
 
   ~App() override = default;
 
@@ -30,7 +44,9 @@ class App : public PGEApp
   void drawDebug(const RenderState &state, const Vec2f &mouseScreenPos) override;
 
   private:
-  int m_serverPort;
+  int m_serverPort{};
+  std::optional<std::string> m_userName{};
+  std::optional<std::string> m_password{};
   GameShPtr m_game{nullptr};
 };
 

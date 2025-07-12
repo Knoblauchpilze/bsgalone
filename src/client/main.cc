@@ -10,6 +10,8 @@
 #include "log/PrefixedLogger.hh"
 #include "log/StdLogger.hh"
 
+constexpr auto USERNAME_ENV_KEY = "USERNAME";
+constexpr auto PASSWORD_ENV_KEY = "PASSWORD";
 
 int main(int /*argc*/, char ** /*argv*/)
 {
@@ -31,7 +33,12 @@ int main(int /*argc*/, char ** /*argv*/)
                     .name       = "bsgalone",
                     .fixedFrame = true,
                     .maxFps     = 20};
-    pge::App demo(ad, core::getPortFromEnvironmentVariable());
+
+    const auto port          = core::getPortFromEnvironmentVariable();
+    const auto maybeUserName = core::tryGetEnvironmentVariable<std::string>(USERNAME_ENV_KEY);
+    const auto maybePassword = core::tryGetEnvironmentVariable<std::string>(PASSWORD_ENV_KEY);
+
+    pge::App demo(ad, port, maybeUserName, maybePassword);
 
     demo.run();
   }
