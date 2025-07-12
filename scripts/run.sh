@@ -17,7 +17,7 @@ fi
 
 export PORT=$PORT
 
-if [ $USERNAME != "" ] && [ $PASSWORD != "" ]; then
+if [ "$USERNAME" != "" ] && [ "$PASSWORD" != "" ]; then
   export USERNAME=$USERNAME
   export PASSWORD=$PASSWORD
 fi
