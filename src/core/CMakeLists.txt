@@ -5,9 +5,10 @@ set (CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 target_sources (core_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/CoreException.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/SafetyNet.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/CoreObject.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/Environment.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/RNG.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/SafetyNet.cc
 	)
 
 add_subdirectory (
