@@ -34,7 +34,9 @@ using IInputHandlerPtr = std::unique_ptr<IInputHandler>;
 class Game : public core::CoreObject
 {
   public:
-  Game(const int serverPort);
+  Game(const int serverPort,
+       const std::optional<std::string> &userName,
+       const std::optional<std::string> &password);
   ~Game() override;
 
   auto getScreen() const noexcept -> Screen;
@@ -93,6 +95,17 @@ class Game : public core::CoreObject
 
   /// @brief - The definition of the game state.
   State m_state{};
+
+  /// @brief - Holds the user name to use to login automatically upon connecting
+  /// to the server. If this vaule is empty the login/signup screen will stay
+  /// visible for the user to enter their credentials.
+  /// In case it is defined, the game will try to login automatically using the
+  /// provided user name and password.
+  std::optional<std::string> m_userName{};
+
+  /// @brief - Holds the password to use to login automatically upon connecting
+  /// to the server.
+  std::optional<std::string> m_password{};
 
   /// @brief - Holds information about the current game session. This includes
   /// data about the current player, their ship, the system they are in, etc.
