@@ -11,16 +11,16 @@ namespace pge {
 class GameScreenRenderer : public IRenderer
 {
   public:
-  GameScreenRenderer(const bsgo::Views &views);
+  GameScreenRenderer(const Views &views);
   ~GameScreenRenderer() override = default;
 
   void loadResources(int width, int height, sprites::TexturePack &texturesLoader) override;
   void render(Renderer &engine, const RenderState &state, const RenderingPass pass) const override;
 
   private:
-  bsgo::ShipViewShPtr m_shipView;
-  bsgo::SystemViewShPtr m_systemView;
-  bsgo::ResourceViewShPtr m_resourceView;
+  ShipViewShPtr m_shipView;
+  SystemViewShPtr m_systemView;
+  ResourceViewShPtr m_resourceView;
 
   TiledBackgroundPtr m_systemBackground{};
 

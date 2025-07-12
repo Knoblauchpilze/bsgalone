@@ -9,7 +9,7 @@
 
 namespace pge {
 
-AbilitiesUiHandler::AbilitiesUiHandler(const bsgo::Views &views)
+AbilitiesUiHandler::AbilitiesUiHandler(const Views &views)
   : IUiHandler("abilities")
   , AbstractMessageListener({bsgo::MessageType::ENTITY_REMOVED})
   , m_shipView(views.shipView)

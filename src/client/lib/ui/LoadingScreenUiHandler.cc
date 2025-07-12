@@ -5,7 +5,7 @@
 
 namespace pge {
 
-LoadingScreenUiHandler::LoadingScreenUiHandler(const bsgo::Views & /*views*/)
+LoadingScreenUiHandler::LoadingScreenUiHandler(const Views & /*views*/)
   : IUiHandler("loading")
 {}
 

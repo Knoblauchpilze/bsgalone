@@ -7,7 +7,7 @@
 
 namespace pge {
 
-using EntityFetcher = std::function<std::optional<bsgo::Entity>(const bsgo::ShipView &)>;
+using EntityFetcher = std::function<std::optional<bsgo::Entity>(const ShipView &)>;
 struct EntityUiConfig
 {
   Vec2i offset{};
@@ -18,7 +18,7 @@ struct EntityUiConfig
 class EntityUiHandler : public IUiHandler
 {
   public:
-  EntityUiHandler(const EntityUiConfig &config, const bsgo::Views &views);
+  EntityUiHandler(const EntityUiConfig &config, const Views &views);
   ~EntityUiHandler() override = default;
 
   void initializeMenus(const int width,
@@ -30,8 +30,8 @@ class EntityUiHandler : public IUiHandler
 
   private:
   EntityUiConfig m_config{};
-  bsgo::ShipViewShPtr m_shipView{};
-  bsgo::ShipDbViewShPtr m_shipDbView{};
+  ShipViewShPtr m_shipView{};
+  ShipDbViewShPtr m_shipDbView{};
 
   enum MenuItem
   {

@@ -1,9 +1,10 @@
 
 #include "SystemView.hh"
 
-namespace bsgo {
+namespace pge {
 
-SystemView::SystemView(CoordinatorShPtr coordinator, const DatabaseEntityMapper &entityMapper)
+SystemView::SystemView(bsgo::CoordinatorShPtr coordinator,
+                       const bsgo::DatabaseEntityMapper &entityMapper)
   : AbstractView("system")
   , m_coordinator(std::move(coordinator))
   , m_entityMapper(entityMapper)
@@ -14,11 +15,12 @@ SystemView::SystemView(CoordinatorShPtr coordinator, const DatabaseEntityMapper 
   }
 }
 
-auto SystemView::getAsteroidsWithin(const IBoundingBox &bbox) const -> std::vector<Entity>
+auto SystemView::getAsteroidsWithin(const bsgo::IBoundingBox &bbox) const
+  -> std::vector<bsgo::Entity>
 {
-  const auto uuids = m_coordinator->getEntitiesWithin(bbox, {EntityKind::ASTEROID});
+  const auto uuids = m_coordinator->getEntitiesWithin(bbox, {bsgo::EntityKind::ASTEROID});
 
-  std::vector<Entity> out;
+  std::vector<bsgo::Entity> out;
   for (const auto &uuid : uuids)
   {
     out.push_back(m_coordinator->getEntity(uuid));
@@ -27,11 +29,12 @@ auto SystemView::getAsteroidsWithin(const IBoundingBox &bbox) const -> std::vect
   return out;
 }
 
-auto SystemView::getOutpostsWithin(const IBoundingBox &bbox) const -> std::vector<Entity>
+auto SystemView::getOutpostsWithin(const bsgo::IBoundingBox &bbox) const
+  -> std::vector<bsgo::Entity>
 {
-  const auto uuids = m_coordinator->getEntitiesWithin(bbox, {EntityKind::OUTPOST});
+  const auto uuids = m_coordinator->getEntitiesWithin(bbox, {bsgo::EntityKind::OUTPOST});
 
-  std::vector<Entity> out;
+  std::vector<bsgo::Entity> out;
   for (const auto &uuid : uuids)
   {
     out.push_back(m_coordinator->getEntity(uuid));
@@ -40,11 +43,11 @@ auto SystemView::getOutpostsWithin(const IBoundingBox &bbox) const -> std::vecto
   return out;
 }
 
-auto SystemView::getBulletsWithin(const IBoundingBox &bbox) const -> std::vector<Entity>
+auto SystemView::getBulletsWithin(const bsgo::IBoundingBox &bbox) const -> std::vector<bsgo::Entity>
 {
-  const auto uuids = m_coordinator->getEntitiesWithin(bbox, {EntityKind::BULLET});
+  const auto uuids = m_coordinator->getEntitiesWithin(bbox, {bsgo::EntityKind::BULLET});
 
-  std::vector<Entity> out;
+  std::vector<bsgo::Entity> out;
   for (const auto &uuid : uuids)
   {
     out.push_back(m_coordinator->getEntity(uuid));
@@ -53,15 +56,15 @@ auto SystemView::getBulletsWithin(const IBoundingBox &bbox) const -> std::vector
   return out;
 }
 
-auto SystemView::getAsteroid(const Uuid asteroidDbId) const -> Entity
+auto SystemView::getAsteroid(const bsgo::Uuid asteroidDbId) const -> bsgo::Entity
 {
   const auto maybeAsteroid = m_entityMapper.tryGetAsteroidEntityId(asteroidDbId);
   if (!maybeAsteroid)
   {
-    error("Failed to get asteroid " + str(asteroidDbId));
+    error("Failed to get asteroid " + bsgo::str(asteroidDbId));
   }
 
   return m_coordinator->getEntity(*maybeAsteroid);
 }
 
-} // namespace bsgo
+} // namespace pge

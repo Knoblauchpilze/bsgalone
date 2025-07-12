@@ -10,7 +10,7 @@
 
 namespace pge {
 
-OutpostScreenUiHandler::OutpostScreenUiHandler(const bsgo::Views &views)
+OutpostScreenUiHandler::OutpostScreenUiHandler(const Views &views)
   : IUiHandler("outpost")
   , bsgo::AbstractMessageListener({bsgo::MessageType::PURCHASE, bsgo::MessageType::EQUIP})
   , m_shipDbView(views.shipDbView)

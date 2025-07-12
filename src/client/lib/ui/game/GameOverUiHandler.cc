@@ -5,7 +5,7 @@
 
 namespace pge {
 
-GameOverUiHandler::GameOverUiHandler(const bsgo::Views &views)
+GameOverUiHandler::GameOverUiHandler(const Views &views)
   : IUiHandler("gameover")
   , m_shipDbView(views.shipDbView)
   , m_shipView(views.shipView)

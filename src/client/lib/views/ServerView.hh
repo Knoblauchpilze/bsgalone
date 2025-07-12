@@ -8,20 +8,20 @@
 #include <memory>
 #include <vector>
 
-namespace bsgo {
+namespace pge {
 
 class ServerView : public AbstractView
 {
   public:
-  ServerView(const Repositories &repositories);
+  ServerView(const bsgo::Repositories &repositories);
   ~ServerView() override = default;
 
-  void setPlayerDbId(const Uuid player);
+  void setPlayerDbId(const bsgo::Uuid player);
   bool isReady() const noexcept override;
 
-  auto getPlayerSystem() const -> Uuid;
+  auto getPlayerSystem() const -> bsgo::Uuid;
   auto getPlayerSystemName() const -> std::string;
-  auto getAllSystems() const -> std::vector<System>;
+  auto getAllSystems() const -> std::vector<bsgo::System>;
 
   struct Bounds
   {
@@ -31,12 +31,12 @@ class ServerView : public AbstractView
   auto getMapBounds() const -> Bounds;
 
   private:
-  Repositories m_repositories{};
-  std::optional<Uuid> m_playerDbId{};
+  bsgo::Repositories m_repositories{};
+  std::optional<bsgo::Uuid> m_playerDbId{};
 
   void checkPlayerDbIdExists() const;
 };
 
 using ServerViewShPtr = std::shared_ptr<ServerView>;
 
-} // namespace bsgo
+} // namespace pge

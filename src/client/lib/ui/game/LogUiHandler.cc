@@ -20,7 +20,7 @@ const std::unordered_set<bsgo::MessageType> RELEVANT_MESSAGE_TYPES_TO_LOG
      bsgo::MessageType::SCANNED,
      bsgo::MessageType::SLOT_COMPONENT_UPDATED};
 
-LogUiHandler::LogUiHandler(const bsgo::Views &views)
+LogUiHandler::LogUiHandler(const Views &views)
   : IUiHandler("log")
   , AbstractMessageListener(RELEVANT_MESSAGE_TYPES_TO_LOG)
   , m_systemView(views.systemView)
@@ -176,7 +176,7 @@ auto createJumpCancelledMessage(const bsgo::JumpCancelledMessage & /*message*/)
   return textConfigFromColor(FTL_JUMP_CANCELLED_TEXT, colors::WHITE);
 }
 
-auto createLootMessage(const bsgo::LootMessage &message, const bsgo::ResourceView &resourceView)
+auto createLootMessage(const bsgo::LootMessage &message, const ResourceView &resourceView)
   -> TextConfig
 {
   const auto resource = resourceView.getResourceName(message.getResourceDbId());
@@ -188,8 +188,8 @@ auto createLootMessage(const bsgo::LootMessage &message, const bsgo::ResourceVie
 constexpr auto NO_USEFUL_RESOURCES_TEXT = "Mineral analysis: no useful resources";
 
 auto createScannedMessage(const bsgo::ScannedMessage &message,
-                          const bsgo::SystemView &systemView,
-                          const bsgo::ResourceView &resourceView) -> TextConfig
+                          const SystemView &systemView,
+                          const ResourceView &resourceView) -> TextConfig
 {
   const auto asteroid = systemView.getAsteroid(message.getAsteroidDbId());
 
@@ -219,8 +219,8 @@ auto createSlotMessage(const bsgo::SlotComponentMessage & /*message*/) -> TextCo
 }
 
 auto createTextConfigForMessage(const bsgo::IMessage &message,
-                                const bsgo::SystemView &systemView,
-                                const bsgo::ResourceView &resourceView) -> TextConfig
+                                const SystemView &systemView,
+                                const ResourceView &resourceView) -> TextConfig
 {
   TextConfig config{};
 

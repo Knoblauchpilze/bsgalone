@@ -12,7 +12,7 @@ namespace pge {
 class ShopUiHandler : public IUiHandler
 {
   public:
-  ShopUiHandler(const bsgo::Views &views);
+  ShopUiHandler(const Views &views);
   ~ShopUiHandler() override = default;
 
   void initializeMenus(const int width,
@@ -24,8 +24,8 @@ class ShopUiHandler : public IUiHandler
   void reset() override;
 
   private:
-  bsgo::ShopViewShPtr m_shopView{};
-  bsgo::PlayerViewShPtr m_playerView{};
+  ShopViewShPtr m_shopView{};
+  PlayerViewShPtr m_playerView{};
   bool m_initialized{false};
 
   UiMenuPtr m_menu{};
@@ -43,7 +43,7 @@ class ShopUiHandler : public IUiHandler
   void initializeShop();
   void initializeLayout();
   void generateItemsMenus();
-  auto generateItemMenus(const bsgo::ShopItem &item) -> UiMenuPtr;
+  auto generateItemMenus(const ShopItem &item) -> UiMenuPtr;
 
   void onPurchaseRequest(const int itemId);
 };

@@ -12,7 +12,7 @@ namespace pge {
 class GameOverUiHandler : public IUiHandler
 {
   public:
-  GameOverUiHandler(const bsgo::Views &views);
+  GameOverUiHandler(const Views &views);
   ~GameOverUiHandler() override = default;
 
   void initializeMenus(const int width,
@@ -24,8 +24,8 @@ class GameOverUiHandler : public IUiHandler
   void reset() override;
 
   private:
-  bsgo::ShipDbViewShPtr m_shipDbView{};
-  bsgo::ShipViewShPtr m_shipView{};
+  ShipDbViewShPtr m_shipDbView{};
+  ShipViewShPtr m_shipView{};
 
   UiTextMenuPtr m_menu{};
 };

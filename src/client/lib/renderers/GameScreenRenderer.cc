@@ -7,7 +7,7 @@
 
 namespace pge {
 
-GameScreenRenderer::GameScreenRenderer(const bsgo::Views &views)
+GameScreenRenderer::GameScreenRenderer(const Views &views)
   : IRenderer("game")
   , m_shipView(views.shipView)
   , m_systemView(views.systemView)

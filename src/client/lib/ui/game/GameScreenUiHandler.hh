@@ -10,7 +10,7 @@ namespace pge {
 class GameScreenUiHandler : public IUiHandler
 {
   public:
-  GameScreenUiHandler(const bsgo::Views &views);
+  GameScreenUiHandler(const Views &views);
   ~GameScreenUiHandler() override = default;
 
   void initializeMenus(const int width,
@@ -25,7 +25,7 @@ class GameScreenUiHandler : public IUiHandler
   private:
   std::vector<IUiHandlerPtr> m_uis{};
 
-  void initializeUis(const bsgo::Views &views);
+  void initializeUis(const Views &views);
 };
 
 } // namespace pge

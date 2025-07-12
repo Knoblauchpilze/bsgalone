@@ -13,7 +13,7 @@ namespace pge {
 class LogUiHandler : public IUiHandler, public bsgo::AbstractMessageListener
 {
   public:
-  LogUiHandler(const bsgo::Views &views);
+  LogUiHandler(const Views &views);
   ~LogUiHandler() override = default;
 
   void initializeMenus(const int width,
@@ -28,9 +28,9 @@ class LogUiHandler : public IUiHandler, public bsgo::AbstractMessageListener
   void onMessageReceived(const bsgo::IMessage &message) override;
 
   private:
-  bsgo::SystemViewShPtr m_systemView{};
-  bsgo::ResourceViewShPtr m_resourceView{};
-  bsgo::ShipViewShPtr m_shipView{};
+  SystemViewShPtr m_systemView{};
+  ResourceViewShPtr m_resourceView{};
+  ShipViewShPtr m_shipView{};
   Vec2i m_offset{};
 
   struct LogMessage

@@ -10,48 +10,49 @@
 #include <unordered_map>
 #include <vector>
 
-namespace bsgo {
+namespace pge {
 
 struct ResourceCost
 {
-  Resource resource{};
+  bsgo::Resource resource{};
   float amount{};
 };
 
 struct ShopItem
 {
   std::vector<ResourceCost> price;
-  std::optional<Weapon> weapon{};
-  std::optional<Computer> computer{};
+  std::optional<bsgo::Weapon> weapon{};
+  std::optional<bsgo::Computer> computer{};
 
-  auto id() const -> Uuid;
-  auto type() const -> Item;
+  auto id() const -> bsgo::Uuid;
+  auto type() const -> bsgo::Item;
 };
 
 class ShopView : public AbstractView
 {
   public:
-  ShopView(const Repositories &repositories);
+  ShopView(const bsgo::Repositories &repositories);
   ~ShopView() override = default;
 
-  void setPlayerDbId(const Uuid player);
+  void setPlayerDbId(const bsgo::Uuid player);
   bool isReady() const noexcept override;
 
   auto getShopItems() const -> std::vector<ShopItem>;
-  auto canPlayerAfford(const Uuid id, const Item &itemType) const -> Affordability;
+  auto canPlayerAfford(const bsgo::Uuid id, const bsgo::Item &itemType) const
+    -> bsgo::Affordability;
 
-  auto getAllShipsForFaction(const Faction &faction) const -> std::vector<Ship>;
+  auto getAllShipsForFaction(const bsgo::Faction &faction) const -> std::vector<bsgo::Ship>;
 
   private:
-  Repositories m_repositories{};
-  std::optional<Uuid> m_playerDbId{};
+  bsgo::Repositories m_repositories{};
+  std::optional<bsgo::Uuid> m_playerDbId{};
 
   void checkPlayerDbIdExists() const;
 
-  auto getWeaponAsShopItem(const Uuid weaponId) const -> ShopItem;
-  auto getComputerAsShopItem(const Uuid computerId) const -> ShopItem;
+  auto getWeaponAsShopItem(const bsgo::Uuid weaponId) const -> ShopItem;
+  auto getComputerAsShopItem(const bsgo::Uuid computerId) const -> ShopItem;
 };
 
 using ShopViewShPtr = std::shared_ptr<ShopView>;
 
-} // namespace bsgo
+} // namespace pge

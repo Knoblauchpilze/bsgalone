@@ -5,7 +5,7 @@
 #include "IView.hh"
 #include <string>
 
-namespace bsgo {
+namespace pge {
 
 class AbstractView : public core::CoreObject, public IView
 {
@@ -16,4 +16,4 @@ class AbstractView : public core::CoreObject, public IView
   bool isReady() const noexcept override;
 };
 
-} // namespace bsgo
+} // namespace pge

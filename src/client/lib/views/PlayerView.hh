@@ -9,40 +9,42 @@
 #include <memory>
 #include <vector>
 
-namespace bsgo {
+namespace pge {
 
 class PlayerView : public AbstractView
 {
   public:
-  PlayerView(const Repositories &repositories, IMessageQueue *const outputMessageQueue);
+  PlayerView(const bsgo::Repositories &repositories, bsgo::IMessageQueue *const outputMessageQueue);
   ~PlayerView() override = default;
 
-  void setPlayerDbId(const Uuid player);
+  void setPlayerDbId(const bsgo::Uuid player);
 
   bool isReady() const noexcept override;
 
-  auto getPlayerDbId() const -> Uuid;
-  auto getPlayerFaction() const -> Faction;
-  auto getPlayerResources() const -> std::vector<PlayerResource>;
-  auto getPlayerWeapons() const -> std::vector<PlayerWeapon>;
-  auto getPlayerComputers() const -> std::vector<PlayerComputer>;
-  auto getPlayerShips() const -> std::vector<PlayerShip>;
+  auto getPlayerDbId() const -> bsgo::Uuid;
+  auto getPlayerFaction() const -> bsgo::Faction;
+  auto getPlayerResources() const -> std::vector<bsgo::PlayerResource>;
+  auto getPlayerWeapons() const -> std::vector<bsgo::PlayerWeapon>;
+  auto getPlayerComputers() const -> std::vector<bsgo::PlayerComputer>;
+  auto getPlayerShips() const -> std::vector<bsgo::PlayerShip>;
 
-  void trySelectShip(const Uuid shipDbId) const;
-  void tryPurchase(const Item &type, const Uuid itemDbId) const;
+  void trySelectShip(const bsgo::Uuid shipDbId) const;
+  void tryPurchase(const bsgo::Item &type, const bsgo::Uuid itemDbId) const;
 
   void tryLogin(const std::string &name, const std::string &password) const;
   void tryLogout() const;
-  void trySignup(const std::string &name, const std::string &password, const Faction &faction) const;
+  void trySignup(const std::string &name,
+                 const std::string &password,
+                 const bsgo::Faction &faction) const;
 
   private:
-  Repositories m_repositories{};
-  IMessageQueue *const m_outputMessageQueue{};
-  std::optional<Uuid> m_playerDbId{};
+  bsgo::Repositories m_repositories{};
+  bsgo::IMessageQueue *const m_outputMessageQueue{};
+  std::optional<bsgo::Uuid> m_playerDbId{};
 
   void checkPlayerDbIdExists() const;
 };
 
 using PlayerViewShPtr = std::shared_ptr<PlayerView>;
 
-} // namespace bsgo
+} // namespace pge

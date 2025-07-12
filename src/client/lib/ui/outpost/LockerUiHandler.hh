@@ -15,7 +15,7 @@ namespace pge {
 class LockerUiHandler : public IUiHandler
 {
   public:
-  LockerUiHandler(const bsgo::Views &views);
+  LockerUiHandler(const Views &views);
   ~LockerUiHandler() override = default;
 
   void initializeMenus(const int width,
@@ -27,8 +27,8 @@ class LockerUiHandler : public IUiHandler
   void reset() override;
 
   private:
-  bsgo::PlayerViewShPtr m_playerView{};
-  bsgo::ShipDbViewShPtr m_shipDbView{};
+  PlayerViewShPtr m_playerView{};
+  ShipDbViewShPtr m_shipDbView{};
   bool m_initialized{false};
 
   UiMenuPtr m_resourcesMenu{};

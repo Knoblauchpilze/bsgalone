@@ -12,15 +12,15 @@ namespace pge {
 class GameScreenInputHandler : public IInputHandler
 {
   public:
-  GameScreenInputHandler(const bsgo::Views &views);
+  GameScreenInputHandler(const Views &views);
   ~GameScreenInputHandler() override = default;
 
   void processUserInput(const controls::State &controls, CoordinateFrame &frame) override;
   void performAction(float x, float y, const controls::State &controls) override;
 
   private:
-  bsgo::ShipViewShPtr m_shipView{};
-  bsgo::ShipDbViewShPtr m_shipDbView{};
+  ShipViewShPtr m_shipView{};
+  ShipDbViewShPtr m_shipDbView{};
   std::optional<Motion> m_lastMotion{};
 
   void moveShip(const Motion &motion);

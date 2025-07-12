@@ -2,9 +2,9 @@
 #include "ShopView.hh"
 #include <stdexcept>
 
-namespace bsgo {
+namespace pge {
 
-auto ShopItem::id() const -> Uuid
+auto ShopItem::id() const -> bsgo::Uuid
 {
   if (weapon)
   {
@@ -18,26 +18,26 @@ auto ShopItem::id() const -> Uuid
   throw std::invalid_argument("Expected shop item to be a weapon or a computer");
 }
 
-auto ShopItem::type() const -> Item
+auto ShopItem::type() const -> bsgo::Item
 {
   if (weapon)
   {
-    return Item::WEAPON;
+    return bsgo::Item::WEAPON;
   }
   else if (computer)
   {
-    return Item::COMPUTER;
+    return bsgo::Item::COMPUTER;
   }
 
   throw std::invalid_argument("Expected shop item to be a weapon or a computer");
 }
 
-ShopView::ShopView(const Repositories &repositories)
+ShopView::ShopView(const bsgo::Repositories &repositories)
   : AbstractView("shop")
   , m_repositories(repositories)
 {}
 
-void ShopView::setPlayerDbId(const Uuid player)
+void ShopView::setPlayerDbId(const bsgo::Uuid player)
 {
   m_playerDbId = player;
 }
@@ -66,11 +66,12 @@ auto ShopView::getShopItems() const -> std::vector<ShopItem>
   return out;
 }
 
-auto ShopView::canPlayerAfford(const Uuid id, const Item &itemType) const -> Affordability
+auto ShopView::canPlayerAfford(const bsgo::Uuid id, const bsgo::Item &itemType) const
+  -> bsgo::Affordability
 {
   checkPlayerDbIdExists();
 
-  AffordabilityData data{
+  bsgo::AffordabilityData data{
     .playerId          = *m_playerDbId,
     .itemId            = id,
     .itemType          = itemType,
@@ -82,7 +83,7 @@ auto ShopView::canPlayerAfford(const Uuid id, const Item &itemType) const -> Aff
   return computeAffordability(data);
 }
 
-auto ShopView::getAllShipsForFaction(const Faction &faction) const -> std::vector<Ship>
+auto ShopView::getAllShipsForFaction(const bsgo::Faction &faction) const -> std::vector<bsgo::Ship>
 {
   return m_repositories.shipRepository->findAllByFaction(faction);
 }
@@ -95,7 +96,7 @@ void ShopView::checkPlayerDbIdExists() const
   }
 }
 
-auto ShopView::getWeaponAsShopItem(const Uuid weaponId) const -> ShopItem
+auto ShopView::getWeaponAsShopItem(const bsgo::Uuid weaponId) const -> ShopItem
 {
   ShopItem item{};
   item.weapon = m_repositories.weaponRepository->findOneById(weaponId);
@@ -110,7 +111,7 @@ auto ShopView::getWeaponAsShopItem(const Uuid weaponId) const -> ShopItem
   return item;
 }
 
-auto ShopView::getComputerAsShopItem(const Uuid computerId) const -> ShopItem
+auto ShopView::getComputerAsShopItem(const bsgo::Uuid computerId) const -> ShopItem
 {
   ShopItem item{};
   item.computer = m_repositories.computerRepository->findOneById(computerId);
@@ -125,4 +126,4 @@ auto ShopView::getComputerAsShopItem(const Uuid computerId) const -> ShopItem
   return item;
 }
 
-} // namespace bsgo
+} // namespace pge

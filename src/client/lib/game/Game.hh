@@ -118,7 +118,7 @@ class Game : public core::CoreObject
   bsgo::IMessageQueuePtr m_internalMessageQueue{};
   ClientMessageQueuePtr m_outputMessageQueue{};
   net::ContextPtr m_networkContext{std::make_unique<net::Context>()};
-  bsgo::Views m_views{};
+  Views m_views{};
   std::unordered_map<Screen, IRendererPtr> m_renderers{};
   std::unordered_map<Screen, IInputHandlerPtr> m_inputHandlers{};
   std::unordered_map<Screen, IUiHandlerPtr> m_uiHandlers{};

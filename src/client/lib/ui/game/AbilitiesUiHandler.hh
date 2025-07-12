@@ -15,7 +15,7 @@ namespace pge {
 class AbilitiesUiHandler : public IUiHandler, public bsgo::AbstractMessageListener
 {
   public:
-  AbilitiesUiHandler(const bsgo::Views &views);
+  AbilitiesUiHandler(const Views &views);
   ~AbilitiesUiHandler() override = default;
 
   void initializeMenus(const int width,
@@ -30,9 +30,9 @@ class AbilitiesUiHandler : public IUiHandler, public bsgo::AbstractMessageListen
   void onMessageReceived(const bsgo::IMessage &message) override;
 
   private:
-  bsgo::ShipViewShPtr m_shipView{};
-  bsgo::ShipDbViewShPtr m_shipDbView{};
-  bsgo::PlayerViewShPtr m_playerView{};
+  ShipViewShPtr m_shipView{};
+  ShipDbViewShPtr m_shipDbView{};
+  PlayerViewShPtr m_playerView{};
   bool m_initialized{false};
   bool m_disabled{false};
 

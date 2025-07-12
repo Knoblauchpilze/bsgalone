@@ -6,20 +6,20 @@
 #include "Uuid.hh"
 #include <memory>
 
-namespace bsgo {
+namespace pge {
 
 class ResourceView : public AbstractView
 {
   public:
-  ResourceView(const Repositories &repositories);
+  ResourceView(const bsgo::Repositories &repositories);
   ~ResourceView() override = default;
 
-  auto getResourceName(const Uuid resource) const -> std::string;
+  auto getResourceName(const bsgo::Uuid resource) const -> std::string;
 
   private:
-  Repositories m_repositories{};
+  bsgo::Repositories m_repositories{};
 };
 
 using ResourceViewShPtr = std::shared_ptr<ResourceView>;
 
-} // namespace bsgo
+} // namespace pge

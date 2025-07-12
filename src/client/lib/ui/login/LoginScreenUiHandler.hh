@@ -14,7 +14,7 @@ namespace pge {
 class LoginScreenUiHandler : public IUiHandler, public bsgo::AbstractMessageListener
 {
   public:
-  LoginScreenUiHandler(const bsgo::Views &views);
+  LoginScreenUiHandler(const Views &views);
   ~LoginScreenUiHandler() override = default;
 
   void initializeMenus(const int width,
@@ -29,7 +29,7 @@ class LoginScreenUiHandler : public IUiHandler, public bsgo::AbstractMessageList
   void onMessageReceived(const bsgo::IMessage &message) override;
 
   private:
-  bsgo::PlayerViewShPtr m_playerView{};
+  PlayerViewShPtr m_playerView{};
 
   enum class Mode
   {

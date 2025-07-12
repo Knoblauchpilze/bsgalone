@@ -1,9 +1,9 @@
 
 #include "Views.hh"
 
-namespace bsgo {
+namespace pge {
 
-auto createViews(const ViewsConfig &config, const DatabaseEntityMapper &entityMapper) -> Views
+auto createViews(const ViewsConfig &config, const bsgo::DatabaseEntityMapper &entityMapper) -> Views
 {
   Views out{};
 
@@ -22,4 +22,4 @@ auto createViews(const ViewsConfig &config, const DatabaseEntityMapper &entityMa
   return out;
 }
 
-} // namespace bsgo
+} // namespace pge

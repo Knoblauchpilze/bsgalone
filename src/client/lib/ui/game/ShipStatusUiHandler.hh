@@ -13,7 +13,7 @@ namespace pge {
 class ShipStatusUiHandler : public IUiHandler, public bsgo::AbstractMessageListener
 {
   public:
-  ShipStatusUiHandler(const bsgo::Views &views);
+  ShipStatusUiHandler(const Views &views);
   ~ShipStatusUiHandler() override = default;
 
   void initializeMenus(const int width,
@@ -28,7 +28,7 @@ class ShipStatusUiHandler : public IUiHandler, public bsgo::AbstractMessageListe
   void onMessageReceived(const bsgo::IMessage &message) override;
 
   private:
-  bsgo::ShipViewShPtr m_shipView{};
+  ShipViewShPtr m_shipView{};
 
   UiBlinkingMenuPtr m_threatLabel{};
 

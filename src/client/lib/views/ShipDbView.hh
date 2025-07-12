@@ -10,49 +10,49 @@
 #include <optional>
 #include <unordered_map>
 
-namespace bsgo {
+namespace pge {
 
 class ShipDbView : public AbstractView
 {
   public:
-  ShipDbView(const Repositories &repositories,
-             IMessageQueue *const internalMessageQueue,
-             IMessageQueue *const outputMessageQueue);
+  ShipDbView(const bsgo::Repositories &repositories,
+             bsgo::IMessageQueue *const internalMessageQueue,
+             bsgo::IMessageQueue *const outputMessageQueue);
   ~ShipDbView() override = default;
 
-  auto getPlayerShipDbId() const -> Uuid;
-  void setPlayerShipDbId(const std::optional<Uuid> ship);
+  auto getPlayerShipDbId() const -> bsgo::Uuid;
+  void setPlayerShipDbId(const std::optional<bsgo::Uuid> ship);
 
   bool isReady() const noexcept override;
 
   void dockPlayerShip() const;
   void undockPlayerShip() const;
-  void setJumpSystem(const Uuid system);
+  void setJumpSystem(const bsgo::Uuid system);
   void clearJumpSystem();
   void startJump() const;
   void cancelJump() const;
 
   void accelerateShip(const Eigen::Vector3f &acceleration) const;
 
-  void tryEquipItem(const Item &itemType, const Uuid itemDbId) const;
-  void tryUnequipItem(const Item &itemType, const Uuid itemDbId) const;
+  void tryEquipItem(const bsgo::Item &itemType, const bsgo::Uuid itemDbId) const;
+  void tryUnequipItem(const bsgo::Item &itemType, const bsgo::Uuid itemDbId) const;
 
-  auto getPlayerShipWeapons() const -> std::vector<PlayerWeapon>;
-  auto getPlayerShipComputers() const -> std::vector<PlayerComputer>;
-  auto getPlayerShipSlots() const -> std::unordered_map<Slot, int>;
+  auto getPlayerShipWeapons() const -> std::vector<bsgo::PlayerWeapon>;
+  auto getPlayerShipComputers() const -> std::vector<bsgo::PlayerComputer>;
+  auto getPlayerShipSlots() const -> std::unordered_map<bsgo::Slot, int>;
 
-  bool canStillEquipItem(const Item &type) const;
+  bool canStillEquipItem(const bsgo::Item &type) const;
 
   private:
-  Repositories m_repositories{};
-  IMessageQueue *const m_internalMessageQueue{};
-  IMessageQueue *const m_outputMessageQueue{};
-  std::optional<Uuid> m_playerShipDbId{};
-  std::optional<Uuid> m_systemToJumpTo{};
+  bsgo::Repositories m_repositories{};
+  bsgo::IMessageQueue *const m_internalMessageQueue{};
+  bsgo::IMessageQueue *const m_outputMessageQueue{};
+  std::optional<bsgo::Uuid> m_playerShipDbId{};
+  std::optional<bsgo::Uuid> m_systemToJumpTo{};
 
   void checkPlayerShipDbIdExists() const;
 };
 
 using ShipDbViewShPtr = std::shared_ptr<ShipDbView>;
 
-} // namespace bsgo
+} // namespace pge

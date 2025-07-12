@@ -9,25 +9,25 @@
 #include <memory>
 #include <optional>
 
-namespace bsgo {
+namespace pge {
 
 class SystemView : public AbstractView
 {
   public:
-  SystemView(CoordinatorShPtr coordinator, const DatabaseEntityMapper &entityMapper);
+  SystemView(bsgo::CoordinatorShPtr coordinator, const bsgo::DatabaseEntityMapper &entityMapper);
   ~SystemView() override = default;
 
-  auto getAsteroidsWithin(const IBoundingBox &bbox) const -> std::vector<Entity>;
-  auto getOutpostsWithin(const IBoundingBox &bbox) const -> std::vector<Entity>;
-  auto getBulletsWithin(const IBoundingBox &bbox) const -> std::vector<Entity>;
+  auto getAsteroidsWithin(const bsgo::IBoundingBox &bbox) const -> std::vector<bsgo::Entity>;
+  auto getOutpostsWithin(const bsgo::IBoundingBox &bbox) const -> std::vector<bsgo::Entity>;
+  auto getBulletsWithin(const bsgo::IBoundingBox &bbox) const -> std::vector<bsgo::Entity>;
 
-  auto getAsteroid(const Uuid asteroidDbId) const -> Entity;
+  auto getAsteroid(const bsgo::Uuid asteroidDbId) const -> bsgo::Entity;
 
   private:
-  CoordinatorShPtr m_coordinator{};
-  const DatabaseEntityMapper &m_entityMapper;
+  bsgo::CoordinatorShPtr m_coordinator{};
+  const bsgo::DatabaseEntityMapper &m_entityMapper;
 };
 
 using SystemViewShPtr = std::shared_ptr<SystemView>;
 
-} // namespace bsgo
+} // namespace pge

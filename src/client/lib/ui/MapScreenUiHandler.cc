@@ -10,7 +10,7 @@ constexpr auto SYSTEM_LABEL_SELECTED_BG_COLOR = colors::DARK_GREEN;
 constexpr auto SYSTEM_LABEL_CURRENT_BG_COLOR  = colors::DARK_CYAN;
 } // namespace
 
-MapScreenUiHandler::MapScreenUiHandler(const bsgo::Views &views)
+MapScreenUiHandler::MapScreenUiHandler(const Views &views)
   : IUiHandler("map")
   , m_serverView(views.serverView)
   , m_shipView(views.shipView)
@@ -139,7 +139,7 @@ void MapScreenUiHandler::generateMap(const int width, const int height)
 }
 
 namespace {
-auto systemPosToRatio(const bsgo::ServerView::Bounds &bounds, const Eigen::Vector3f &pos)
+auto systemPosToRatio(const ServerView::Bounds &bounds, const Eigen::Vector3f &pos)
   -> Eigen::Vector3f
 {
   const auto range  = bounds.max - bounds.min;
@@ -176,7 +176,7 @@ auto posRatioToPixelPos(const Eigen::Vector3f &posRatio, const Vec2i &offset, co
 } // namespace
 
 void MapScreenUiHandler::generateSystemButtons(const bsgo::System &system,
-                                               const bsgo::ServerView::Bounds &bounds,
+                                               const ServerView::Bounds &bounds,
                                                const Vec2i &mapOffset,
                                                const Vec2i &mapDims)
 {
