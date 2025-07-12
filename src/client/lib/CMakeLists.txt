@@ -27,6 +27,10 @@ add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/ui
 	)
 
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/views
+	)
+
 target_sources (client_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/App.cc
 	)
