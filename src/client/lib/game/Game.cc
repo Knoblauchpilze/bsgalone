@@ -305,10 +305,11 @@ void Game::onLogin(const bsgo::Uuid playerDbId)
   setupLoadingScreen(Screen::OUTPOST);
 }
 
-void Game::onLoginDataReceived(const bsgo::Uuid playerShipDbId)
+void Game::onLoginDataReceived(const bsgo::Uuid playerShipDbId, const bsgo::Uuid systemDbId)
 {
-  info("Received active ship " + bsgo::str(playerShipDbId));
+  info("Received active ship " + bsgo::str(playerShipDbId) + " in system " + bsgo::str(systemDbId));
   m_gameSession.onActiveShipChanged(playerShipDbId);
+  m_gameSession.onActiveSystemChanged(systemDbId);
   m_views.shipDbView->setPlayerShipDbId(playerShipDbId);
 
   m_entityMapper.setPlayerShipDbId(playerShipDbId);

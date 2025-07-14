@@ -83,7 +83,11 @@ void LoadingMessagesConsumer::handleLoginDataLoading(const LoadingStartedMessage
 
   const auto props = m_loadingService->getDataForPlayer(*maybePlayerDbId);
 
-  auto out = std::make_unique<PlayerLoginDataMessage>(props.faction, props.shipDbId, props.docked);
+  auto out = std::make_unique<PlayerLoginDataMessage>();
+  out->setFaction(props.faction);
+  out->setActiveShipDbId(props.shipDbId);
+  out->setDocked(props.docked);
+  out->setSystemDbId(props.systemDbId);
   out->copyClientIdIfDefined(message);
 
   m_outputMessageQueue->pushMessage(std::move(out));

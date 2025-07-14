@@ -15,13 +15,22 @@ void assertMessagesAreEqual(const PlayerLoginDataMessage &actual,
   EXPECT_EQ(actual.getFaction(), expected.getFaction());
   EXPECT_EQ(actual.getActiveShipDbId(), expected.getActiveShipDbId());
   EXPECT_EQ(actual.isDocked(), expected.isDocked());
+  EXPECT_EQ(actual.getSystemDbId(), expected.getSystemDbId());
 }
 } // namespace
 
 TEST(Unit_Bsgo_Serialization_PlayerLoginDataMessage, Basic)
 {
-  const PlayerLoginDataMessage expected(Faction::CYLON, Uuid{8712}, true);
-  PlayerLoginDataMessage actual(Faction::COLONIAL, Uuid{1515}, false);
+  PlayerLoginDataMessage expected;
+  expected.setFaction(Faction::CYLON);
+  expected.setActiveShipDbId(Uuid{8712});
+  expected.setDocked(true);
+  expected.setSystemDbId(Uuid{1234});
+
+  PlayerLoginDataMessage actual;
+  actual.setFaction(Faction::COLONIAL);
+  actual.setActiveShipDbId(Uuid{1515});
+  actual.setDocked(false);
   actual.setClientId(Uuid{2});
 
   serializeAndDeserializeMessage(expected, actual);
@@ -31,9 +40,17 @@ TEST(Unit_Bsgo_Serialization_PlayerLoginDataMessage, Basic)
 
 TEST(Unit_Bsgo_Serialization_PlayerLoginDataMessage, WithClientId)
 {
-  PlayerLoginDataMessage expected(Faction::COLONIAL, Uuid{123}, false);
+  PlayerLoginDataMessage expected;
+  expected.setFaction(Faction::COLONIAL);
+  expected.setActiveShipDbId(Uuid{123});
+  expected.setDocked(false);
   expected.setClientId(Uuid{78});
-  PlayerLoginDataMessage actual(Faction::CYLON, Uuid{745}, true);
+
+  PlayerLoginDataMessage actual;
+  actual.setFaction(Faction::CYLON);
+  actual.setActiveShipDbId(Uuid{745});
+  actual.setDocked(true);
+  actual.setSystemDbId(Uuid{1234});
 
   serializeAndDeserializeMessage(expected, actual);
 
@@ -42,7 +59,12 @@ TEST(Unit_Bsgo_Serialization_PlayerLoginDataMessage, WithClientId)
 
 TEST(Unit_Bsgo_Serialization_PlayerLoginDataMessage, Clone)
 {
-  const PlayerLoginDataMessage expected(Faction::CYLON, Uuid{4572}, true);
+  PlayerLoginDataMessage expected;
+  expected.setFaction(Faction::CYLON);
+  expected.setActiveShipDbId(Uuid{4572});
+  expected.setDocked(true);
+  expected.setSystemDbId(Uuid{44});
+
   const auto cloned = expected.clone();
   ASSERT_EQ(cloned->type(), MessageType::PLAYER_LOGIN_DATA);
   assertMessagesAreEqual(cloned->as<PlayerLoginDataMessage>(), expected);
