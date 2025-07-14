@@ -27,6 +27,7 @@ class LoadingService : public AbstractService
     Faction faction{};
     Uuid shipDbId{};
     bool docked{};
+    Uuid systemDbId{};
   };
   auto getDataForPlayer(const Uuid playerDbId) const -> PlayerProps;
 

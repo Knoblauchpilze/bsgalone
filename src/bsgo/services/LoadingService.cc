@@ -16,10 +16,17 @@ auto LoadingService::getDataForPlayer(const Uuid playerDbId) const -> PlayerProp
   const auto player = m_repositories.playerRepository->findOneById(playerDbId);
   const auto ship   = m_repositories.playerShipRepository->findOneByPlayerAndActive(playerDbId);
 
+  if (!ship.system)
+  {
+    error("Failed to get data for player " + str(playerDbId),
+          "Active ship does not have a system assigned");
+  }
+
   return {
-    .faction  = player.faction,
-    .shipDbId = ship.id,
-    .docked   = ship.docked,
+    .faction    = player.faction,
+    .shipDbId   = ship.id,
+    .docked     = ship.docked,
+    .systemDbId = *ship.system,
   };
 }
 

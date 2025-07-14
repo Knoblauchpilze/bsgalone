@@ -8,15 +8,6 @@ PlayerLoginDataMessage::PlayerLoginDataMessage()
   : NetworkMessage(MessageType::PLAYER_LOGIN_DATA)
 {}
 
-PlayerLoginDataMessage::PlayerLoginDataMessage(const Faction faction,
-                                               const Uuid activeShipDbId,
-                                               const bool docked)
-  : NetworkMessage(MessageType::PLAYER_LOGIN_DATA)
-  , m_faction(faction)
-  , m_activeShipDbId(activeShipDbId)
-  , m_docked(docked)
-{}
-
 auto PlayerLoginDataMessage::getFaction() const -> Faction
 {
   return m_faction;
@@ -32,6 +23,31 @@ bool PlayerLoginDataMessage::isDocked() const
   return m_docked;
 }
 
+auto PlayerLoginDataMessage::getSystemDbId() const -> Uuid
+{
+  return m_systemDbId;
+}
+
+void PlayerLoginDataMessage::setFaction(const Faction faction)
+{
+  m_faction = faction;
+}
+
+void PlayerLoginDataMessage::setActiveShipDbId(const Uuid activeShipDbId)
+{
+  m_activeShipDbId = activeShipDbId;
+}
+
+void PlayerLoginDataMessage::setDocked(const bool docked)
+{
+  m_docked = docked;
+}
+
+void PlayerLoginDataMessage::setSystemDbId(const Uuid systemDbId)
+{
+  m_systemDbId = systemDbId;
+}
+
 auto PlayerLoginDataMessage::serialize(std::ostream &out) const -> std::ostream &
 {
   core::serialize(out, m_messageType);
@@ -40,6 +56,7 @@ auto PlayerLoginDataMessage::serialize(std::ostream &out) const -> std::ostream 
   core::serialize(out, m_faction);
   core::serialize(out, m_activeShipDbId);
   core::serialize(out, m_docked);
+  core::serialize(out, m_systemDbId);
 
   return out;
 }
@@ -53,13 +70,18 @@ bool PlayerLoginDataMessage::deserialize(std::istream &in)
   ok &= core::deserialize(in, m_faction);
   ok &= core::deserialize(in, m_activeShipDbId);
   ok &= core::deserialize(in, m_docked);
+  ok &= core::deserialize(in, m_systemDbId);
 
   return ok;
 }
 
 auto PlayerLoginDataMessage::clone() const -> IMessagePtr
 {
-  auto clone = std::make_unique<PlayerLoginDataMessage>(m_faction, m_activeShipDbId, m_docked);
+  auto clone = std::make_unique<PlayerLoginDataMessage>();
+  clone->setFaction(m_faction);
+  clone->setActiveShipDbId(m_activeShipDbId);
+  clone->setDocked(m_docked);
+  clone->setSystemDbId(m_systemDbId);
   clone->copyClientIdIfDefined(*this);
 
   return clone;
