@@ -340,7 +340,6 @@ void Game::onActiveSystemChanged(const bsgo::Uuid systemDbId)
   m_views.shipDbView->clearJumpSystem();
   m_gameSession.onActiveSystemChanged(systemDbId);
 
-  info("clearing entity mapper");
   m_coordinator->clear();
   m_entityMapper.clearEntities();
 
@@ -405,7 +404,8 @@ void Game::initialize(const int serverPort)
                                                        bsgo::SystemType::POWER}};
   m_coordinator = std::make_shared<bsgo::Coordinator>(std::move(sConfig));
 
-  ViewsConfig vConfig{.repositories         = repositories,
+  ViewsConfig vConfig{.gameSession          = m_gameSession,
+                      .repositories         = repositories,
                       .coordinator          = m_coordinator,
                       .internalMessageQueue = m_internalMessageQueue.get(),
                       .outputMessageQueue   = m_outputMessageQueue.get()};

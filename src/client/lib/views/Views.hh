@@ -11,6 +11,7 @@
 
 #include "Coordinator.hh"
 #include "DatabaseEntityMapper.hh"
+#include "GameSession.hh"
 #include "IMessageQueue.hh"
 #include "Repositories.hh"
 
@@ -29,6 +30,7 @@ struct Views
 
 struct ViewsConfig
 {
+  GameSession gameSession{};
   bsgo::Repositories repositories{};
   bsgo::CoordinatorShPtr coordinator{};
   bsgo::IMessageQueue *const internalMessageQueue{};
