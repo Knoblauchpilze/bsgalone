@@ -110,8 +110,6 @@ void ShipDbView::cancelJump() const
     return;
   }
 
-  checkPlayerShipDbIdExists();
-
   auto message = std::make_unique<bsgo::JumpCancelledMessage>(*m_playerShipDbId);
   m_outputMessageQueue->pushMessage(std::move(message));
 }
