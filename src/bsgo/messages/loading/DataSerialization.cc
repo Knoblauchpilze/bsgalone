@@ -272,4 +272,24 @@ bool deserializeShipData(std::istream &in, ShipData &data)
   return ok;
 }
 
+auto serializeSystemData(std::ostream &out, const SystemData &data) -> std::ostream &
+{
+  core::serialize(out, data.dbId);
+  core::serialize(out, data.name);
+  core::serialize(out, data.position);
+
+  return out;
+}
+
+bool deserializeSystemData(std::istream &in, SystemData &data)
+{
+  bool ok{true};
+
+  ok &= core::deserialize(in, data.dbId);
+  ok &= core::deserialize(in, data.name);
+  ok &= core::deserialize(in, data.position);
+
+  return ok;
+}
+
 } // namespace bsgo

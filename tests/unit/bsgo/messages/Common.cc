@@ -103,4 +103,11 @@ void assertShipDataAreEqual(const ShipData &actual, const ShipData &expected)
   }
 }
 
+void assertSystemDataAreEqual(const SystemData &actual, const SystemData &expected)
+{
+  EXPECT_EQ(actual.dbId, expected.dbId);
+  EXPECT_EQ(actual.name, expected.name);
+  EXPECT_EQ(actual.position, expected.position);
+}
+
 } // namespace bsgo
