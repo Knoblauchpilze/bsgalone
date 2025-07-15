@@ -46,7 +46,6 @@ TEST(Unit_Bsgo_Serialization_PlayerListMessage, WithClientId)
   PlayerListMessage expected(Uuid{123}, playersData);
   expected.setClientId(Uuid{78});
 
-  playersData = {{.dbId = 87, .name = "sensational"}, {.dbId = 923, .name = "ground breaking"}};
   PlayerListMessage actual(Uuid{745}, {});
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
