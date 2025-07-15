@@ -28,6 +28,7 @@
 #include "SignupMessage.hh"
 #include "SlotComponentMessage.hh"
 #include "SlotMessage.hh"
+#include "SystemListMessage.hh"
 #include "TargetMessage.hh"
 #include "VelocityMessage.hh"
 #include "WeaponComponentMessage.hh"
@@ -154,6 +155,8 @@ auto MessageParser::tryReadMessage(const MessageType &type, std::istream &in)
       return readMessage<SlotMessage>(in);
     case MessageType::SLOT_COMPONENT_UPDATED:
       return readMessage<SlotComponentMessage>(in);
+    case MessageType::SYSTEM_LIST:
+      return readMessage<SystemListMessage>(in);
     case MessageType::VELOCITY:
       return readMessage<VelocityMessage>(in);
     case MessageType::TARGET:
