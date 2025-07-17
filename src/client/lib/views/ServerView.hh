@@ -2,6 +2,7 @@
 #pragma once
 
 #include "AbstractView.hh"
+#include "GameSession.hh"
 #include "Repositories.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
@@ -13,10 +14,9 @@ namespace pge {
 class ServerView : public AbstractView
 {
   public:
-  ServerView(const bsgo::Repositories &repositories);
+  ServerView(GameSessionShPtr gameSession, const bsgo::Repositories &repositories);
   ~ServerView() override = default;
 
-  void setPlayerDbId(const bsgo::Uuid player);
   bool isReady() const noexcept override;
 
   auto getPlayerSystem() const -> bsgo::Uuid;
@@ -31,8 +31,8 @@ class ServerView : public AbstractView
   auto getMapBounds() const -> Bounds;
 
   private:
+  GameSessionShPtr m_gameSession{};
   bsgo::Repositories m_repositories{};
-  std::optional<bsgo::Uuid> m_playerDbId{};
 
   void checkPlayerDbIdExists() const;
 };

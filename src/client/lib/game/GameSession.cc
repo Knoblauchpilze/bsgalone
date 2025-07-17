@@ -106,6 +106,11 @@ void GameSession::onPlayerLoggedOut()
   m_playerShipDbId.reset();
 }
 
+bool GameSession::hasPlayerDbId() const
+{
+  return m_playerDbId.has_value();
+}
+
 auto GameSession::getPlayerDbId() const -> bsgo::Uuid
 {
   if (!m_playerDbId)

@@ -298,7 +298,6 @@ void Game::onLogin(const bsgo::Uuid playerDbId)
 
   m_views.playerView->setPlayerDbId(playerDbId);
   m_views.shopView->setPlayerDbId(playerDbId);
-  m_views.serverView->setPlayerDbId(playerDbId);
 
   m_entityMapper.setPlayerDbId(playerDbId);
 

@@ -3,25 +3,26 @@
 
 namespace pge {
 
-ServerView::ServerView(const bsgo::Repositories &repositories)
+ServerView::ServerView(GameSessionShPtr gameSession, const bsgo::Repositories &repositories)
   : AbstractView("server")
+  , m_gameSession(std::move(gameSession))
   , m_repositories(repositories)
-{}
-
-void ServerView::setPlayerDbId(const bsgo::Uuid player)
 {
-  m_playerDbId = player;
+  if (nullptr == m_gameSession)
+  {
+    error("Expected non null game session");
+  }
 }
 
 bool ServerView::isReady() const noexcept
 {
-  return m_playerDbId.has_value();
+  return m_gameSession->hasPlayerDbId();
 }
 
 auto ServerView::getPlayerSystem() const -> bsgo::Uuid
 {
   checkPlayerDbIdExists();
-  return m_repositories.playerRepository->findSystemByPlayer(*m_playerDbId);
+  return m_repositories.playerRepository->findSystemByPlayer(m_gameSession->getPlayerDbId());
 }
 
 auto ServerView::getPlayerSystemName() const -> std::string
@@ -91,7 +92,7 @@ auto ServerView::getMapBounds() const -> Bounds
 
 void ServerView::checkPlayerDbIdExists() const
 {
-  if (!m_playerDbId)
+  if (!m_gameSession->hasPlayerDbId())
   {
     error("Expected player db id to exist but it does not");
   }
