@@ -6,11 +6,11 @@
 namespace bsgo {
 
 SystemListMessage::SystemListMessage()
-  : NetworkMessage(MessageType::PLAYER_LIST)
+  : NetworkMessage(MessageType::SYSTEM_LIST)
 {}
 
 SystemListMessage::SystemListMessage(const std::vector<SystemData> &systemsData)
-  : NetworkMessage(MessageType::PLAYER_LIST)
+  : NetworkMessage(MessageType::SYSTEM_LIST)
   , m_systemsData(systemsData)
 {}
 

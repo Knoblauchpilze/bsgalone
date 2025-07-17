@@ -56,11 +56,11 @@ TEST(Unit_Bsgo_Serialization_SystemListMessage, WithClientId)
 
 TEST(Unit_Bsgo_Serialization_SystemListMessage, Clone)
 {
-  const std::vector<SystemData> playersData{
+  const std::vector<SystemData> systemsData{
     {.dbId = 1908, .name = "a name", .position = Eigen::Vector3f::Ones(3)},
     {.dbId = 3207, .name = "pro gamer", .position = Eigen::Vector3f(-7.41f, -56.897f, -15879.21f)}};
 
-  const SystemListMessage expected(playersData);
+  const SystemListMessage expected(systemsData);
   const auto cloned = expected.clone();
   ASSERT_EQ(cloned->type(), MessageType::SYSTEM_LIST);
   assertMessagesAreEqual(cloned->as<SystemListMessage>(), expected);
