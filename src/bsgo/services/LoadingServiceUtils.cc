@@ -108,4 +108,13 @@ auto ShipProps::toShipData() const -> ShipData
   return data;
 }
 
+auto toSystemData(const System &system) -> SystemData
+{
+  return SystemData{
+    .dbId     = system.id,
+    .name     = system.name,
+    .position = system.position,
+  };
+}
+
 } // namespace bsgo
