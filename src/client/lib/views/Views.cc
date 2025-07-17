@@ -16,7 +16,7 @@ auto createViews(const ViewsConfig &config, const bsgo::DatabaseEntityMapper &en
   out.systemView   = std::make_shared<SystemView>(config.coordinator, entityMapper);
   out.playerView   = std::make_shared<PlayerView>(config.repositories, config.outputMessageQueue);
   out.shopView     = std::make_shared<ShopView>(config.repositories);
-  out.serverView   = std::make_shared<ServerView>(config.repositories);
+  out.serverView   = std::make_shared<ServerView>(config.gameSession, config.repositories);
   out.resourceView = std::make_shared<ResourceView>(config.repositories);
 
   return out;

@@ -29,6 +29,11 @@ class GameSession : public core::CoreObject
   void onPlayerLoggedIn(const bsgo::Uuid playerDbId);
   void onPlayerLoggedOut();
 
+  /// @brief - Returns true whenever the player DB identifier is set. This allows
+  /// to safely call getPlayerDbId.
+  /// When this method returns false, calling getPlayerDbId will raise an error.
+  bool hasPlayerDbId() const;
+
   /// @brief - Returns the DB identifier of the player currently logged in.
   /// If no player is logged in, an error is raised.
   auto getPlayerDbId() const -> bsgo::Uuid;
