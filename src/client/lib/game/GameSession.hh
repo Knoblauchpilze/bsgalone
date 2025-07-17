@@ -38,6 +38,15 @@ class GameSession : public core::CoreObject
   /// If no player is logged in, an error is raised.
   auto getPlayerDbId() const -> bsgo::Uuid;
 
+  /// @brief - Returns true whenever the player's system DB identifier is set. This
+  /// allows to safely call getSystemDbId.
+  /// When this method returns false, calling getSystemDbId will raise an error.
+  bool hasSystemDbId() const;
+
+  /// @brief - Returns the DB identifier of the system the player is currently in.
+  /// If no player is logged in or if the system is not defined, an error is raised.
+  auto getSystemDbId() const -> bsgo::Uuid;
+
   /// @brief - Returns the DB identifier of the active ship for the player
   /// currently logged in. If no ship is active, an error is raised.
   auto getPlayerActiveShipDbId() const -> bsgo::Uuid;

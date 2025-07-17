@@ -121,6 +121,21 @@ auto GameSession::getPlayerDbId() const -> bsgo::Uuid
   return *m_playerDbId;
 }
 
+bool GameSession::hasSystemDbId() const
+{
+  return m_systemDbId.has_value();
+}
+
+auto GameSession::getSystemDbId() const -> bsgo::Uuid
+{
+  if (!m_systemDbId)
+  {
+    error("Failed to get system DB ID", "No system defined");
+  }
+
+  return *m_systemDbId;
+}
+
 auto GameSession::getPlayerActiveShipDbId() const -> bsgo::Uuid
 {
   if (!m_playerShipDbId)
