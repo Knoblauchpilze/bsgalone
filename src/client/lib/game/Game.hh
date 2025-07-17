@@ -109,7 +109,7 @@ class Game : public core::CoreObject
 
   /// @brief - Holds information about the current game session. This includes
   /// data about the current player, their ship, the system they are in, etc.
-  GameSession m_gameSession{};
+  GameSessionShPtr m_gameSession{std::make_shared<GameSession>()};
 
   bsgo::DataSource m_dataSource{bsgo::DataLoadingMode::CLIENT};
   bsgo::DatabaseEntityMapper m_entityMapper{};

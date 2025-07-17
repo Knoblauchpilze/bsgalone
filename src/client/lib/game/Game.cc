@@ -294,7 +294,7 @@ void Game::onConnectedToServer(const bsgo::Uuid clientId)
 void Game::onLogin(const bsgo::Uuid playerDbId)
 {
   info("Processing login for " + bsgo::str(playerDbId));
-  m_gameSession.onPlayerLoggedIn(playerDbId);
+  m_gameSession->onPlayerLoggedIn(playerDbId);
 
   m_views.playerView->setPlayerDbId(playerDbId);
   m_views.shopView->setPlayerDbId(playerDbId);
@@ -308,8 +308,8 @@ void Game::onLogin(const bsgo::Uuid playerDbId)
 void Game::onLoginDataReceived(const bsgo::Uuid playerShipDbId, const bsgo::Uuid systemDbId)
 {
   info("Received active ship " + bsgo::str(playerShipDbId) + " in system " + bsgo::str(systemDbId));
-  m_gameSession.onActiveShipChanged(playerShipDbId);
-  m_gameSession.onActiveSystemChanged(systemDbId);
+  m_gameSession->onActiveShipChanged(playerShipDbId);
+  m_gameSession->onActiveSystemChanged(systemDbId);
   m_views.shipDbView->setPlayerShipDbId(playerShipDbId);
 
   m_entityMapper.setPlayerShipDbId(playerShipDbId);
@@ -317,7 +317,7 @@ void Game::onLoginDataReceived(const bsgo::Uuid playerShipDbId, const bsgo::Uuid
 
 void Game::onLogout()
 {
-  m_gameSession.onPlayerLoggedOut();
+  m_gameSession->onPlayerLoggedOut();
 
   m_coordinator->clear();
   m_entityMapper.clearAll();
@@ -327,7 +327,7 @@ void Game::onLogout()
 
 void Game::onActiveShipChanged(const bsgo::Uuid shipDbId)
 {
-  m_gameSession.onActiveShipChanged(shipDbId);
+  m_gameSession->onActiveShipChanged(shipDbId);
   m_views.shipDbView->setPlayerShipDbId(shipDbId);
 
   m_entityMapper.setPlayerShipDbId(shipDbId);
@@ -339,7 +339,7 @@ void Game::onActiveSystemChanged(const bsgo::Uuid systemDbId)
 {
   m_views.shipView->clearJumpSystem();
   m_views.shipDbView->clearJumpSystem();
-  m_gameSession.onActiveSystemChanged(systemDbId);
+  m_gameSession->onActiveSystemChanged(systemDbId);
 
   m_coordinator->clear();
   m_entityMapper.clearEntities();
@@ -373,12 +373,12 @@ void Game::onPlayerKilled()
 
 void Game::onLoadingStarted(const bsgo::LoadingTransition transition)
 {
-  m_gameSession.startLoadingTransition(transition);
+  m_gameSession->startLoadingTransition(transition);
 }
 
 void Game::onLoadingFinished(const bsgo::LoadingTransition transition)
 {
-  const auto [previousScreen, nextScreen] = m_gameSession.finishLoadingTransition(transition);
+  const auto [previousScreen, nextScreen] = m_gameSession->finishLoadingTransition(transition);
   m_state.screen                          = previousScreen;
   setScreen(nextScreen);
   resetViewsAndUi();
@@ -441,7 +441,7 @@ void Game::resetViewsAndUi()
 
 void Game::setupLoadingScreen(const Screen nextScreen)
 {
-  m_gameSession.setupLoadingScreen(m_state.screen, nextScreen);
+  m_gameSession->setupLoadingScreen(m_state.screen, nextScreen);
   setScreen(Screen::LOADING);
 }
 
