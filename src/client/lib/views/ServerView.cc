@@ -16,13 +16,13 @@ ServerView::ServerView(GameSessionShPtr gameSession, const bsgo::Repositories &r
 
 bool ServerView::isReady() const noexcept
 {
-  return m_gameSession->hasPlayerDbId();
+  return m_gameSession->hasSystemDbId();
 }
 
 auto ServerView::getPlayerSystem() const -> bsgo::Uuid
 {
-  checkPlayerDbIdExists();
-  return m_repositories.playerRepository->findSystemByPlayer(m_gameSession->getPlayerDbId());
+  checkSystemDbIdExists();
+  return m_gameSession->getSystemDbId();
 }
 
 auto ServerView::getPlayerSystemName() const -> std::string
@@ -90,11 +90,11 @@ auto ServerView::getMapBounds() const -> Bounds
   return out;
 }
 
-void ServerView::checkPlayerDbIdExists() const
+void ServerView::checkSystemDbIdExists() const
 {
-  if (!m_gameSession->hasPlayerDbId())
+  if (!m_gameSession->hasSystemDbId())
   {
-    error("Expected player db id to exist but it does not");
+    error("Expected system db id to exist but it does not");
   }
 }
 

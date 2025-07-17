@@ -34,7 +34,7 @@ class ServerView : public AbstractView
   GameSessionShPtr m_gameSession{};
   bsgo::Repositories m_repositories{};
 
-  void checkPlayerDbIdExists() const;
+  void checkSystemDbIdExists() const;
 };
 
 using ServerViewShPtr = std::shared_ptr<ServerView>;
