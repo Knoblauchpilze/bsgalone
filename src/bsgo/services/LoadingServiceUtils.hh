@@ -11,7 +11,9 @@
 #include "PlayerWeaponRepository.hh"
 #include "ShipData.hh"
 #include "Status.hh"
+#include "SystemData.hh"
 #include "SystemOutpostRepository.hh"
+#include "SystemRepository.hh"
 #include "Uuid.hh"
 
 namespace bsgo {
@@ -58,5 +60,7 @@ struct ShipProps
 
   auto toShipData() const -> ShipData;
 };
+
+auto toSystemData(const System &system) -> SystemData;
 
 } // namespace bsgo

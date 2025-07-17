@@ -227,4 +227,18 @@ auto LoadingService::getShipsInSystem(const Uuid systemDbId) const -> std::vecto
   return ships;
 }
 
+auto LoadingService::getSystems() const -> std::vector<System>
+{
+  std::vector<System> out;
+
+  const auto ids = m_repositories.systemRepository->findAll();
+  for (const auto &id : ids)
+  {
+    auto system = m_repositories.systemRepository->findOneById(id);
+    out.push_back(std::move(system));
+  }
+
+  return out;
+}
+
 } // namespace bsgo

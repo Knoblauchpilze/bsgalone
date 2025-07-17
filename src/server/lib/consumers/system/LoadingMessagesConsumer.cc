@@ -5,7 +5,7 @@
 #include "PlayerListMessage.hh"
 #include "PlayerLoginDataMessage.hh"
 #include "ShipListMessage.hh"
-#include "SystemProcessorUtils.hh"
+#include "SystemListMessage.hh"
 
 namespace bsgo {
 
@@ -54,6 +54,8 @@ void LoadingMessagesConsumer::handleLoadingStartedMessage(const LoadingStartedMe
       handleLoginDataLoading(message);
       break;
     case LoadingTransition::UNDOCK:
+      handleSystemsLoading(message);
+      [[fallthrough]];
     case LoadingTransition::JUMP:
       handlePlayersLoading(message);
       handleAsteroidsLoading(message);
@@ -88,6 +90,22 @@ void LoadingMessagesConsumer::handleLoginDataLoading(const LoadingStartedMessage
   out->setActiveShipDbId(props.shipDbId);
   out->setDocked(props.docked);
   out->setSystemDbId(props.systemDbId);
+  out->copyClientIdIfDefined(message);
+
+  m_outputMessageQueue->pushMessage(std::move(out));
+}
+
+void LoadingMessagesConsumer::handleSystemsLoading(const LoadingStartedMessage &message) const
+{
+  const auto systems = m_loadingService->getSystems();
+
+  std::vector<SystemData> systemsData{};
+  std::transform(systems.begin(),
+                 systems.end(),
+                 std::back_inserter(systemsData),
+                 [](const System &system) { return toSystemData(system); });
+
+  auto out = std::make_unique<SystemListMessage>(systemsData);
   out->copyClientIdIfDefined(message);
 
   m_outputMessageQueue->pushMessage(std::move(out));
