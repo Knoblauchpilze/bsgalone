@@ -30,7 +30,7 @@ struct Views
 
 struct ViewsConfig
 {
-  GameSession gameSession{};
+  GameSessionShPtr gameSession{};
   bsgo::Repositories repositories{};
   bsgo::CoordinatorShPtr coordinator{};
   bsgo::IMessageQueue *const internalMessageQueue{};

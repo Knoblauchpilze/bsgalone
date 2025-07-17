@@ -5,6 +5,7 @@
 #include "LoadingTransition.hh"
 #include "Screen.hh"
 #include "Uuid.hh"
+#include <memory>
 #include <optional>
 
 namespace pge {
@@ -92,5 +93,7 @@ class GameSession : public core::CoreObject
   ///   transition
   std::optional<LoadingData> m_loading{};
 };
+
+using GameSessionShPtr = std::shared_ptr<GameSession>;
 
 } // namespace pge
