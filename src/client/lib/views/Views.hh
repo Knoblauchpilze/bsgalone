@@ -40,4 +40,6 @@ struct ViewsConfig
 auto createViews(const ViewsConfig &config, const bsgo::DatabaseEntityMapper &entityMapper)
   -> Views;
 
+void registerViews(const Views &views, bsgo::IMessageQueue *const queue);
+
 } // namespace pge

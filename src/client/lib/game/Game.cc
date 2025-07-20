@@ -425,6 +425,8 @@ void Game::initializeMessageSystem()
 
   auto messageModule = std::make_unique<GameMessageModule>(*this, m_entityMapper);
   m_inputMessageQueue->addListener(std::move(messageModule));
+
+  registerViews(m_views, m_inputMessageQueue.get());
 }
 
 void Game::resetViewsAndUi()

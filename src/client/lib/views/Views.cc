@@ -1,5 +1,6 @@
 
 #include "Views.hh"
+#include "ViewConsumerProxy.hh"
 
 namespace pge {
 
@@ -20,6 +21,27 @@ auto createViews(const ViewsConfig &config, const bsgo::DatabaseEntityMapper &en
   out.resourceView = std::make_shared<ResourceView>(config.repositories);
 
   return out;
+}
+
+namespace {
+void registerViewToQueue(AbstractView &view,
+                         const std::unordered_set<bsgo::MessageType> &relevantMessageTypes,
+                         bsgo::IMessageQueue *const queue)
+{
+  queue->addListener(std::make_unique<ViewConsumerProxy>(view, relevantMessageTypes));
+}
+} // namespace
+
+void registerViews(const Views &views, bsgo::IMessageQueue *const queue)
+{
+  // TODO: specify the right kind of messages
+  registerViewToQueue(*views.playerView, {}, queue);
+  registerViewToQueue(*views.shipView, {}, queue);
+  registerViewToQueue(*views.shipDbView, {}, queue);
+  registerViewToQueue(*views.shopView, {}, queue);
+  registerViewToQueue(*views.systemView, {}, queue);
+  registerViewToQueue(*views.serverView, {}, queue);
+  registerViewToQueue(*views.resourceView, {}, queue);
 }
 
 } // namespace pge
