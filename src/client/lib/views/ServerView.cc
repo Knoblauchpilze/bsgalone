@@ -1,12 +1,12 @@
 
 #include "ServerView.hh"
+#include "SystemListMessage.hh"
 
 namespace pge {
 
-ServerView::ServerView(GameSessionShPtr gameSession, const bsgo::Repositories &repositories)
+ServerView::ServerView(GameSessionShPtr gameSession)
   : AbstractView("server")
   , m_gameSession(std::move(gameSession))
-  , m_repositories(repositories)
 {
   if (nullptr == m_gameSession)
   {
@@ -16,7 +16,13 @@ ServerView::ServerView(GameSessionShPtr gameSession, const bsgo::Repositories &r
 
 bool ServerView::isReady() const noexcept
 {
-  return m_gameSession->hasSystemDbId();
+  return m_gameSession->hasSystemDbId() && !m_systems.empty();
+}
+
+void ServerView::onMessageReceived(const bsgo::IMessage &message)
+{
+  const auto systemList = message.as<bsgo::SystemListMessage>();
+  m_systems             = systemList.getSystemsData();
 }
 
 auto ServerView::getPlayerSystem() const -> bsgo::Uuid
@@ -27,23 +33,30 @@ auto ServerView::getPlayerSystem() const -> bsgo::Uuid
 
 auto ServerView::getPlayerSystemName() const -> std::string
 {
-  const auto id     = getPlayerSystem();
-  const auto system = m_repositories.systemRepository->findOneById(id);
-  return system.name;
-}
+  const auto playerSystemId = getPlayerSystem();
+  const auto maybeSystem    = std::find_if(m_systems.begin(),
+                                        m_systems.end(),
+                                        [&playerSystemId](const bsgo::SystemData &system) {
+                                          return system.dbId == playerSystemId;
+                                        });
 
-auto ServerView::getAllSystems() const -> std::vector<bsgo::System>
-{
-  std::vector<bsgo::System> out;
-
-  const auto ids = m_repositories.systemRepository->findAll();
-  for (const auto &id : ids)
+  if (maybeSystem == m_systems.end())
   {
-    auto system = m_repositories.systemRepository->findOneById(id);
-    out.push_back(std::move(system));
+    error("Failed to get system name",
+          "No data received from server for system " + bsgo::str(playerSystemId));
   }
 
-  return out;
+  return maybeSystem->name;
+}
+
+auto ServerView::getAllSystems() const -> std::vector<bsgo::SystemData>
+{
+  if (m_systems.empty())
+  {
+    error("No systems available");
+  }
+
+  return m_systems;
 }
 
 namespace {
