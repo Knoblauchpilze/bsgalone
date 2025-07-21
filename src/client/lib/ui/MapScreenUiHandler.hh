@@ -2,6 +2,7 @@
 #pragma once
 
 #include "IUiHandler.hh"
+#include "SystemData.hh"
 #include "UiMenu.hh"
 #include <optional>
 #include <unordered_map>
@@ -27,6 +28,8 @@ class MapScreenUiHandler : public IUiHandler
   ShipViewShPtr m_shipView{};
   ShipDbViewShPtr m_shipDbView{};
 
+  Vec2i m_mapDimensions{};
+  bool m_initialized{false};
   std::vector<UiMenuPtr> m_buttons{};
   UiMenu *m_jumpButton{};
   std::unordered_map<bsgo::Uuid, UiMenu *> m_systemMenus{};
@@ -39,11 +42,10 @@ class MapScreenUiHandler : public IUiHandler
   std::optional<SelectedSystem> m_selectedSystem{};
 
   void generateControlButtons(const int width, const int height);
-  void generateMap(const int width, const int height);
-  void generateSystemButtons(const bsgo::System &system,
+  void generateMap();
+  void generateSystemButtons(const bsgo::SystemData &system,
                              const ServerView::Bounds &bounds,
-                             const Vec2i &mapOffset,
-                             const Vec2i &mapDims);
+                             const Vec2i &mapOffset);
 
   void onSystemSelected(const bsgo::Uuid systemId, const int labelId);
   void onJumpRequested();

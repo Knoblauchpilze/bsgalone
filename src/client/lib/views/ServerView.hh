@@ -3,7 +3,7 @@
 
 #include "AbstractView.hh"
 #include "GameSession.hh"
-#include "Repositories.hh"
+#include "SystemData.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
 #include <memory>
@@ -14,14 +14,16 @@ namespace pge {
 class ServerView : public AbstractView
 {
   public:
-  ServerView(GameSessionShPtr gameSession, const bsgo::Repositories &repositories);
+  ServerView(GameSessionShPtr gameSession);
   ~ServerView() override = default;
 
   bool isReady() const noexcept override;
 
+  void onMessageReceived(const bsgo::IMessage &message) override;
+
   auto getPlayerSystem() const -> bsgo::Uuid;
   auto getPlayerSystemName() const -> std::string;
-  auto getAllSystems() const -> std::vector<bsgo::System>;
+  auto getAllSystems() const -> std::vector<bsgo::SystemData>;
 
   struct Bounds
   {
@@ -32,7 +34,7 @@ class ServerView : public AbstractView
 
   private:
   GameSessionShPtr m_gameSession{};
-  bsgo::Repositories m_repositories{};
+  std::vector<bsgo::SystemData> m_systems{};
 
   void checkSystemDbIdExists() const;
 };
