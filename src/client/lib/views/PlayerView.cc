@@ -9,44 +9,44 @@
 namespace pge {
 
 PlayerView::PlayerView(const bsgo::Repositories &repositories,
+                       GameSessionShPtr gameSession,
                        bsgo::IMessageQueue *const outputMessageQueue)
   : AbstractView("player")
   , m_repositories(repositories)
+  , m_gameSession(std::move(gameSession))
   , m_outputMessageQueue(outputMessageQueue)
 {
+  if (nullptr == m_gameSession)
+  {
+    throw std::invalid_argument("Expected non null game session");
+  }
   if (nullptr == m_outputMessageQueue)
   {
     throw std::invalid_argument("Expected non null output message queue");
   }
 }
 
-void PlayerView::setPlayerDbId(const bsgo::Uuid player)
-{
-  m_playerDbId = player;
-}
-
 bool PlayerView::isReady() const noexcept
 {
-  return m_playerDbId.has_value();
+  return m_gameSession->hasPlayerDbId();
 }
 
 auto PlayerView::getPlayerDbId() const -> bsgo::Uuid
 {
   checkPlayerDbIdExists();
-  return *m_playerDbId;
+  return m_gameSession->getPlayerDbId();
 }
 
 auto PlayerView::getPlayerFaction() const -> bsgo::Faction
 {
   checkPlayerDbIdExists();
-  const auto player = m_repositories.playerRepository->findOneById(*m_playerDbId);
-  return player.faction;
+  return m_gameSession->getFaction();
 }
 
 auto PlayerView::getPlayerResources() const -> std::vector<bsgo::PlayerResource>
 {
   checkPlayerDbIdExists();
-  return m_repositories.playerResourceRepository->findAllByPlayer(*m_playerDbId);
+  return m_repositories.playerResourceRepository->findAllByPlayer(m_gameSession->getPlayerDbId());
 }
 
 auto PlayerView::getPlayerWeapons() const -> std::vector<bsgo::PlayerWeapon>
@@ -54,14 +54,15 @@ auto PlayerView::getPlayerWeapons() const -> std::vector<bsgo::PlayerWeapon>
   checkPlayerDbIdExists();
 
   std::vector<bsgo::ShipWeapon> shipWeapons{};
-  const auto ships = m_repositories.playerShipRepository->findAllByPlayer(*m_playerDbId);
+  const auto ships = m_repositories.playerShipRepository->findAllByPlayer(
+    m_gameSession->getPlayerDbId());
   for (const auto &shipId : ships)
   {
     const auto weapons = m_repositories.shipWeaponRepository->findAllByShip(shipId);
     shipWeapons.insert(shipWeapons.end(), weapons.begin(), weapons.end());
   }
 
-  auto ids = m_repositories.playerWeaponRepository->findAllByPlayer(*m_playerDbId);
+  auto ids = m_repositories.playerWeaponRepository->findAllByPlayer(m_gameSession->getPlayerDbId());
   for (const auto &shipWeapon : shipWeapons)
   {
     ids.erase(shipWeapon.weapon);
@@ -81,14 +82,16 @@ auto PlayerView::getPlayerComputers() const -> std::vector<bsgo::PlayerComputer>
   checkPlayerDbIdExists();
 
   std::vector<bsgo::Uuid> shipComputers{};
-  const auto ships = m_repositories.playerShipRepository->findAllByPlayer(*m_playerDbId);
+  const auto ships = m_repositories.playerShipRepository->findAllByPlayer(
+    m_gameSession->getPlayerDbId());
   for (const auto &shipId : ships)
   {
     const auto computers = m_repositories.shipComputerRepository->findAllByShip(shipId);
     shipComputers.insert(shipComputers.end(), computers.begin(), computers.end());
   }
 
-  auto ids = m_repositories.playerComputerRepository->findAllByPlayer(*m_playerDbId);
+  auto ids = m_repositories.playerComputerRepository->findAllByPlayer(
+    m_gameSession->getPlayerDbId());
   for (const auto shipComputer : shipComputers)
   {
     ids.erase(shipComputer);
@@ -107,7 +110,8 @@ auto PlayerView::getPlayerShips() const -> std::vector<bsgo::PlayerShip>
 {
   checkPlayerDbIdExists();
 
-  const auto ids = m_repositories.playerShipRepository->findAllByPlayer(*m_playerDbId);
+  const auto ids = m_repositories.playerShipRepository->findAllByPlayer(
+    m_gameSession->getPlayerDbId());
 
   std::vector<bsgo::PlayerShip> out;
   for (const auto &id : ids)
@@ -128,7 +132,7 @@ void PlayerView::tryPurchase(const bsgo::Item &type, const bsgo::Uuid itemDbId) 
 {
   checkPlayerDbIdExists();
   m_outputMessageQueue->pushMessage(
-    std::make_unique<bsgo::PurchaseMessage>(*m_playerDbId, type, itemDbId));
+    std::make_unique<bsgo::PurchaseMessage>(m_gameSession->getPlayerDbId(), type, itemDbId));
 }
 
 void PlayerView::tryLogin(const std::string &name, const std::string &password) const
@@ -139,7 +143,8 @@ void PlayerView::tryLogin(const std::string &name, const std::string &password) 
 void PlayerView::tryLogout() const
 {
   checkPlayerDbIdExists();
-  m_outputMessageQueue->pushMessage(std::make_unique<bsgo::LogoutMessage>(*m_playerDbId));
+  m_outputMessageQueue->pushMessage(
+    std::make_unique<bsgo::LogoutMessage>(m_gameSession->getPlayerDbId()));
 }
 
 void PlayerView::trySignup(const std::string &name,
@@ -151,7 +156,7 @@ void PlayerView::trySignup(const std::string &name,
 
 void PlayerView::checkPlayerDbIdExists() const
 {
-  if (!m_playerDbId)
+  if (!m_gameSession->hasPlayerDbId())
   {
     error("Expected player db id to exist but it does not");
   }

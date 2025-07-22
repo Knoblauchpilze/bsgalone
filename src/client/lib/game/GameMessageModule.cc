@@ -171,7 +171,9 @@ void GameMessageModule::handleLoadingFinishedMessage(const bsgo::LoadingFinished
 
 void GameMessageModule::handlePlayerLoginDataMessage(const bsgo::PlayerLoginDataMessage &message)
 {
-  m_game.onLoginDataReceived(message.getActiveShipDbId(), message.getSystemDbId());
+  m_game.onLoginDataReceived(message.getActiveShipDbId(),
+                             message.getSystemDbId(),
+                             message.getFaction());
 }
 
 } // namespace pge

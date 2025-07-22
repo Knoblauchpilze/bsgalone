@@ -2,6 +2,7 @@
 #pragma once
 
 #include "CoreObject.hh"
+#include "Faction.hh"
 #include "LoadingTransition.hh"
 #include "Screen.hh"
 #include "Uuid.hh"
@@ -29,6 +30,8 @@ class GameSession : public core::CoreObject
   void onPlayerLoggedIn(const bsgo::Uuid playerDbId);
   void onPlayerLoggedOut();
 
+  void setPlayerFaction(const bsgo::Faction faction);
+
   /// @brief - Returns true whenever the player DB identifier is set. This allows
   /// to safely call getPlayerDbId.
   /// When this method returns false, calling getPlayerDbId will raise an error.
@@ -37,6 +40,10 @@ class GameSession : public core::CoreObject
   /// @brief - Returns the DB identifier of the player currently logged in.
   /// If no player is logged in, an error is raised.
   auto getPlayerDbId() const -> bsgo::Uuid;
+
+  /// @brief - Returns the faction of the player currently logged in. If no faction
+  /// is defined, an error is raised.
+  auto getFaction() const -> bsgo::Faction;
 
   /// @brief - Returns true whenever the player's system DB identifier is set. This
   /// allows to safely call getSystemDbId.
@@ -57,6 +64,9 @@ class GameSession : public core::CoreObject
   private:
   /// @brief - if defined, the DB identifier of the player currently logged in.
   std::optional<bsgo::Uuid> m_playerDbId{};
+
+  /// @brief - if defined, the faction of the player currently logged in.
+  std::optional<bsgo::Faction> m_faction{};
 
   /// @brief - if defined, the DB identifier of the system the player is currently
   /// in. It is populated when the player logs in and changed when the player jumps

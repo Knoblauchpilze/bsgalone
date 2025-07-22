@@ -98,12 +98,27 @@ void GameSession::onPlayerLoggedOut()
   {
     error("Unexpected player logout", "No player logged in");
   }
+  if (!m_faction)
+  {
+    error("Unexpected player logout", "No faction defined for player");
+  }
 
   debug("Logged out from " + bsgo::str(*m_playerDbId));
 
   m_playerDbId.reset();
+  m_faction.reset();
   m_systemDbId.reset();
   m_playerShipDbId.reset();
+}
+
+void GameSession::setPlayerFaction(const bsgo::Faction faction)
+{
+  if (!m_playerDbId)
+  {
+    error("Unable to set faction", "No player logged in");
+  }
+
+  m_faction = faction;
 }
 
 bool GameSession::hasPlayerDbId() const
@@ -119,6 +134,16 @@ auto GameSession::getPlayerDbId() const -> bsgo::Uuid
   }
 
   return *m_playerDbId;
+}
+
+auto GameSession::getFaction() const -> bsgo::Faction
+{
+  if (!m_faction)
+  {
+    error("Failed to get faction", "No faction defined for player");
+  }
+
+  return *m_faction;
 }
 
 bool GameSession::hasSystemDbId() const
