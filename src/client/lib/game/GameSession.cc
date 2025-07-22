@@ -161,6 +161,11 @@ auto GameSession::getSystemDbId() const -> bsgo::Uuid
   return *m_systemDbId;
 }
 
+bool GameSession::hasPlayerActiveShipDbId() const
+{
+  return m_playerShipDbId.has_value();
+}
+
 auto GameSession::getPlayerActiveShipDbId() const -> bsgo::Uuid
 {
   if (!m_playerShipDbId)
