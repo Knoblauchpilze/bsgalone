@@ -3,6 +3,7 @@
 
 #include "AbstractView.hh"
 #include "Faction.hh"
+#include "GameSession.hh"
 #include "IMessageQueue.hh"
 #include "Repositories.hh"
 #include "Uuid.hh"
@@ -14,10 +15,10 @@ namespace pge {
 class PlayerView : public AbstractView
 {
   public:
-  PlayerView(const bsgo::Repositories &repositories, bsgo::IMessageQueue *const outputMessageQueue);
+  PlayerView(const bsgo::Repositories &repositories,
+             GameSessionShPtr gameSession,
+             bsgo::IMessageQueue *const outputMessageQueue);
   ~PlayerView() override = default;
-
-  void setPlayerDbId(const bsgo::Uuid player);
 
   bool isReady() const noexcept override;
 
@@ -39,8 +40,8 @@ class PlayerView : public AbstractView
 
   private:
   bsgo::Repositories m_repositories{};
+  GameSessionShPtr m_gameSession{};
   bsgo::IMessageQueue *const m_outputMessageQueue{};
-  std::optional<bsgo::Uuid> m_playerDbId{};
 
   void checkPlayerDbIdExists() const;
 };

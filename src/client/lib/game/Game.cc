@@ -296,7 +296,6 @@ void Game::onLogin(const bsgo::Uuid playerDbId)
   info("Processing login for " + bsgo::str(playerDbId));
   m_gameSession->onPlayerLoggedIn(playerDbId);
 
-  m_views.playerView->setPlayerDbId(playerDbId);
   m_views.shopView->setPlayerDbId(playerDbId);
 
   m_entityMapper.setPlayerDbId(playerDbId);
@@ -304,9 +303,12 @@ void Game::onLogin(const bsgo::Uuid playerDbId)
   setupLoadingScreen(Screen::OUTPOST);
 }
 
-void Game::onLoginDataReceived(const bsgo::Uuid playerShipDbId, const bsgo::Uuid systemDbId)
+void Game::onLoginDataReceived(const bsgo::Uuid playerShipDbId,
+                               const bsgo::Uuid systemDbId,
+                               const bsgo::Faction faction)
 {
   info("Received active ship " + bsgo::str(playerShipDbId) + " in system " + bsgo::str(systemDbId));
+  m_gameSession->setPlayerFaction(faction);
   m_gameSession->onActiveShipChanged(playerShipDbId);
   m_gameSession->onActiveSystemChanged(systemDbId);
   m_views.shipDbView->setPlayerShipDbId(playerShipDbId);
