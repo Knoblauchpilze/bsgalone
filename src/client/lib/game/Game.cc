@@ -311,7 +311,6 @@ void Game::onLoginDataReceived(const bsgo::Uuid playerShipDbId,
   m_gameSession->setPlayerFaction(faction);
   m_gameSession->onActiveShipChanged(playerShipDbId);
   m_gameSession->onActiveSystemChanged(systemDbId);
-  m_views.shipDbView->setPlayerShipDbId(playerShipDbId);
 
   m_entityMapper.setPlayerShipDbId(playerShipDbId);
 }
@@ -329,7 +328,6 @@ void Game::onLogout()
 void Game::onActiveShipChanged(const bsgo::Uuid shipDbId)
 {
   m_gameSession->onActiveShipChanged(shipDbId);
-  m_views.shipDbView->setPlayerShipDbId(shipDbId);
 
   m_entityMapper.setPlayerShipDbId(shipDbId);
 

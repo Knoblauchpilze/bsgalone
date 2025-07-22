@@ -2,6 +2,7 @@
 #pragma once
 
 #include "AbstractView.hh"
+#include "GameSession.hh"
 #include "IMessageQueue.hh"
 #include "Repositories.hh"
 #include "Uuid.hh"
@@ -16,12 +17,12 @@ class ShipDbView : public AbstractView
 {
   public:
   ShipDbView(const bsgo::Repositories &repositories,
+             GameSessionShPtr gameSession,
              bsgo::IMessageQueue *const internalMessageQueue,
              bsgo::IMessageQueue *const outputMessageQueue);
   ~ShipDbView() override = default;
 
   auto getPlayerShipDbId() const -> bsgo::Uuid;
-  void setPlayerShipDbId(const std::optional<bsgo::Uuid> ship);
 
   bool isReady() const noexcept override;
 
@@ -45,9 +46,9 @@ class ShipDbView : public AbstractView
 
   private:
   bsgo::Repositories m_repositories{};
+  GameSessionShPtr m_gameSession{};
   bsgo::IMessageQueue *const m_internalMessageQueue{};
   bsgo::IMessageQueue *const m_outputMessageQueue{};
-  std::optional<bsgo::Uuid> m_playerShipDbId{};
   std::optional<bsgo::Uuid> m_systemToJumpTo{};
 
   void checkPlayerShipDbIdExists() const;
