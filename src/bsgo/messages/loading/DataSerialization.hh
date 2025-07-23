@@ -5,6 +5,7 @@
 #include "ComputerData.hh"
 #include "OutpostData.hh"
 #include "PlayerData.hh"
+#include "ResourceData.hh"
 #include "ShipData.hh"
 #include "SystemData.hh"
 #include "WeaponData.hh"
@@ -31,5 +32,8 @@ bool deserializeShipData(std::istream &in, ShipData &data);
 
 auto serializeSystemData(std::ostream &out, const SystemData &data) -> std::ostream &;
 bool deserializeSystemData(std::istream &in, SystemData &data);
+
+auto serializeResourceData(std::ostream &out, const ResourceData &data) -> std::ostream &;
+bool deserializeResourceData(std::istream &in, ResourceData &data);
 
 } // namespace bsgo

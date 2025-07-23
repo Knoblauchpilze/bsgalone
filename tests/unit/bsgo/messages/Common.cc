@@ -110,4 +110,10 @@ void assertSystemDataAreEqual(const SystemData &actual, const SystemData &expect
   EXPECT_EQ(actual.position, expected.position);
 }
 
+void assertResourceDataAreEqual(const ResourceData &actual, const ResourceData &expected)
+{
+  EXPECT_EQ(actual.dbId, expected.dbId);
+  EXPECT_EQ(actual.name, expected.name);
+}
+
 } // namespace bsgo
