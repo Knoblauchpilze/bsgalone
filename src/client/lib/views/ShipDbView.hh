@@ -50,8 +50,6 @@ class ShipDbView : public AbstractView
   bsgo::IMessageQueue *const m_internalMessageQueue{};
   bsgo::IMessageQueue *const m_outputMessageQueue{};
   std::optional<bsgo::Uuid> m_systemToJumpTo{};
-
-  void checkPlayerShipDbIdExists() const;
 };
 
 using ShipDbViewShPtr = std::shared_ptr<ShipDbView>;

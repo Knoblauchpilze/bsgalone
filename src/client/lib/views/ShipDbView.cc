@@ -35,38 +35,29 @@ ShipDbView::ShipDbView(const bsgo::Repositories &repositories,
 
 auto ShipDbView::getPlayerShipDbId() const -> bsgo::Uuid
 {
-  checkPlayerShipDbIdExists();
   return m_gameSession->getPlayerActiveShipDbId();
 }
 
 bool ShipDbView::isReady() const noexcept
 {
-  return m_gameSession->hasPlayerActiveShipDbId();
+  return m_gameSession->hasPlayerActiveShipDbId() && m_gameSession->hasSystemDbId();
 }
 
 void ShipDbView::dockPlayerShip() const
 {
-  checkPlayerShipDbIdExists();
+  const auto playerShipDbId = m_gameSession->getPlayerActiveShipDbId();
+  const auto systemDbId     = m_gameSession->getSystemDbId();
 
-  const auto ship = m_repositories.playerShipRepository->findOneById(
-    m_gameSession->getPlayerActiveShipDbId());
-
-  auto message = std::make_unique<bsgo::DockMessage>(m_gameSession->getPlayerActiveShipDbId(),
-                                                     true,
-                                                     *ship.system);
+  auto message = std::make_unique<bsgo::DockMessage>(playerShipDbId, true, systemDbId);
   m_outputMessageQueue->pushMessage(std::move(message));
 }
 
 void ShipDbView::undockPlayerShip() const
 {
-  checkPlayerShipDbIdExists();
+  const auto playerShipDbId = m_gameSession->getPlayerActiveShipDbId();
+  const auto systemDbId     = m_gameSession->getSystemDbId();
 
-  const auto ship = m_repositories.playerShipRepository->findOneById(
-    m_gameSession->getPlayerActiveShipDbId());
-
-  auto message = std::make_unique<bsgo::DockMessage>(m_gameSession->getPlayerActiveShipDbId(),
-                                                     false,
-                                                     *ship.system);
+  auto message = std::make_unique<bsgo::DockMessage>(playerShipDbId, false, systemDbId);
   m_outputMessageQueue->pushMessage(std::move(message));
 }
 
@@ -91,8 +82,6 @@ bool isJumping(const bsgo::Uuid shipDbId, const bsgo::PlayerShipRepository &repo
 
 void ShipDbView::startJump() const
 {
-  checkPlayerShipDbIdExists();
-
   if (isJumping(m_gameSession->getPlayerActiveShipDbId(), *m_repositories.playerShipRepository))
   {
     return;
@@ -102,8 +91,6 @@ void ShipDbView::startJump() const
     return;
   }
 
-  checkPlayerShipDbIdExists();
-
   auto message
     = std::make_unique<bsgo::JumpRequestedMessage>(m_gameSession->getPlayerActiveShipDbId(),
                                                    *m_systemToJumpTo);
@@ -112,8 +99,6 @@ void ShipDbView::startJump() const
 
 void ShipDbView::cancelJump() const
 {
-  checkPlayerShipDbIdExists();
-
   if (!isJumping(m_gameSession->getPlayerActiveShipDbId(), *m_repositories.playerShipRepository))
   {
     return;
@@ -126,8 +111,6 @@ void ShipDbView::cancelJump() const
 
 void ShipDbView::accelerateShip(const Eigen::Vector3f &acceleration) const
 {
-  checkPlayerShipDbIdExists();
-
   auto message = std::make_unique<bsgo::VelocityMessage>(m_gameSession->getPlayerActiveShipDbId(),
                                                          acceleration);
   m_outputMessageQueue->pushMessage(message->clone());
@@ -136,7 +119,6 @@ void ShipDbView::accelerateShip(const Eigen::Vector3f &acceleration) const
 
 void ShipDbView::tryEquipItem(const bsgo::Item &itemType, const bsgo::Uuid itemDbId) const
 {
-  checkPlayerShipDbIdExists();
   m_outputMessageQueue->pushMessage(
     std::make_unique<bsgo::EquipMessage>(bsgo::EquipType::EQUIP,
                                          m_gameSession->getPlayerActiveShipDbId(),
@@ -146,7 +128,6 @@ void ShipDbView::tryEquipItem(const bsgo::Item &itemType, const bsgo::Uuid itemD
 
 void ShipDbView::tryUnequipItem(const bsgo::Item &itemType, const bsgo::Uuid itemDbId) const
 {
-  checkPlayerShipDbIdExists();
   m_outputMessageQueue->pushMessage(
     std::make_unique<bsgo::EquipMessage>(bsgo::EquipType::UNEQUIP,
                                          m_gameSession->getPlayerActiveShipDbId(),
@@ -156,8 +137,6 @@ void ShipDbView::tryUnequipItem(const bsgo::Item &itemType, const bsgo::Uuid ite
 
 auto ShipDbView::getPlayerShipWeapons() const -> std::vector<bsgo::PlayerWeapon>
 {
-  checkPlayerShipDbIdExists();
-
   const auto weapons = m_repositories.shipWeaponRepository->findAllByShip(
     m_gameSession->getPlayerActiveShipDbId());
 
@@ -172,8 +151,6 @@ auto ShipDbView::getPlayerShipWeapons() const -> std::vector<bsgo::PlayerWeapon>
 
 auto ShipDbView::getPlayerShipComputers() const -> std::vector<bsgo::PlayerComputer>
 {
-  checkPlayerShipDbIdExists();
-
   const auto ids = m_repositories.shipComputerRepository->findAllByShip(
     m_gameSession->getPlayerActiveShipDbId());
 
@@ -188,8 +165,6 @@ auto ShipDbView::getPlayerShipComputers() const -> std::vector<bsgo::PlayerCompu
 
 auto ShipDbView::getPlayerShipSlots() const -> std::unordered_map<bsgo::Slot, int>
 {
-  checkPlayerShipDbIdExists();
-
   const auto ship = m_repositories.playerShipRepository->findOneById(
     m_gameSession->getPlayerActiveShipDbId());
   return ship.slots;
@@ -197,8 +172,6 @@ auto ShipDbView::getPlayerShipSlots() const -> std::unordered_map<bsgo::Slot, in
 
 bool ShipDbView::canStillEquipItem(const bsgo::Item &type) const
 {
-  checkPlayerShipDbIdExists();
-
   bool equipable{false};
   if (bsgo::Item::WEAPON == type)
   {
@@ -218,14 +191,6 @@ bool ShipDbView::canStillEquipItem(const bsgo::Item &type) const
   }
 
   return equipable;
-}
-
-void ShipDbView::checkPlayerShipDbIdExists() const
-{
-  if (!m_gameSession->hasPlayerActiveShipDbId())
-  {
-    error("Expected player ship db id to exist but it does not");
-  }
 }
 
 } // namespace pge
