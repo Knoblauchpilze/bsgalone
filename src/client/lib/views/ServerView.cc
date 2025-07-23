@@ -27,7 +27,6 @@ void ServerView::onMessageReceived(const bsgo::IMessage &message)
 
 auto ServerView::getPlayerSystem() const -> bsgo::Uuid
 {
-  checkSystemDbIdExists();
   return m_gameSession->getSystemDbId();
 }
 
@@ -101,14 +100,6 @@ auto ServerView::getMapBounds() const -> Bounds
   }
 
   return out;
-}
-
-void ServerView::checkSystemDbIdExists() const
-{
-  if (!m_gameSession->hasSystemDbId())
-  {
-    error("Expected system db id to exist but it does not");
-  }
 }
 
 } // namespace pge
