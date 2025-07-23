@@ -35,8 +35,6 @@ class ServerView : public AbstractView
   private:
   GameSessionShPtr m_gameSession{};
   std::vector<bsgo::SystemData> m_systems{};
-
-  void checkSystemDbIdExists() const;
 };
 
 using ServerViewShPtr = std::shared_ptr<ServerView>;
