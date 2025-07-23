@@ -42,8 +42,6 @@ class PlayerView : public AbstractView
   bsgo::Repositories m_repositories{};
   GameSessionShPtr m_gameSession{};
   bsgo::IMessageQueue *const m_outputMessageQueue{};
-
-  void checkPlayerDbIdExists() const;
 };
 
 using PlayerViewShPtr = std::shared_ptr<PlayerView>;
