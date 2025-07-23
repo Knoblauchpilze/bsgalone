@@ -5,6 +5,7 @@
 #include "ComputerData.hh"
 #include "OutpostData.hh"
 #include "PlayerData.hh"
+#include "ResourceData.hh"
 #include "ShipData.hh"
 #include "SystemData.hh"
 #include "WeaponData.hh"
@@ -22,6 +23,7 @@ void assertOutpostDataAreEqual(const OutpostData &actual, const OutpostData &exp
 void assertPlayerDataAreEqual(const PlayerData &actual, const PlayerData &expected);
 void assertShipDataAreEqual(const ShipData &actual, const ShipData &expected);
 void assertSystemDataAreEqual(const SystemData &actual, const SystemData &expected);
+void assertResourceDataAreEqual(const ResourceData &actual, const ResourceData &expected);
 
 } // namespace bsgo
 
