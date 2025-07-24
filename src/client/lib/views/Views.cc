@@ -21,7 +21,7 @@ auto createViews(const ViewsConfig &config, const bsgo::DatabaseEntityMapper &en
                                                 config.outputMessageQueue);
   out.shopView     = std::make_shared<ShopView>(config.repositories);
   out.serverView   = std::make_shared<ServerView>(config.gameSession);
-  out.resourceView = std::make_shared<ResourceView>(config.repositories);
+  out.resourceView = std::make_shared<ResourceView>();
 
   return out;
 }
@@ -31,7 +31,10 @@ void registerViewToQueue(AbstractView &view,
                          const std::unordered_set<bsgo::MessageType> &relevantMessageTypes,
                          bsgo::IMessageQueue *const queue)
 {
-  queue->addListener(std::make_unique<ViewConsumerProxy>(view, relevantMessageTypes));
+  if (!relevantMessageTypes.empty())
+  {
+    queue->addListener(std::make_unique<ViewConsumerProxy>(view, relevantMessageTypes));
+  }
 }
 } // namespace
 
@@ -49,7 +52,7 @@ void registerViews(const Views &views, bsgo::IMessageQueue *const queue)
   messageTypes = {bsgo::MessageType::SYSTEM_LIST};
   registerViewToQueue(*views.serverView, messageTypes, queue);
 
-  messageTypes = {};
+  messageTypes = {bsgo::MessageType::RESOURCE_LIST};
   registerViewToQueue(*views.resourceView, messageTypes, queue);
 }
 
