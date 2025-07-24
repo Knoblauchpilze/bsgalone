@@ -18,6 +18,8 @@ void ResourceView::onMessageReceived(const bsgo::IMessage &message)
   const auto resourceList = message.as<bsgo::ResourceListMessage>();
   const auto resources    = resourceList.getResourcesData();
 
+  m_resources.clear();
+
   for (const auto &resource : resources)
   {
     m_resources.insert({resource.dbId, resource});
