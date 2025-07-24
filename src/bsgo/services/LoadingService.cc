@@ -241,4 +241,18 @@ auto LoadingService::getSystems() const -> std::vector<System>
   return out;
 }
 
+auto LoadingService::getResources() const -> std::vector<Resource>
+{
+  std::vector<Resource> out;
+
+  const auto ids = m_repositories.resourceRepository->findAll();
+  for (const auto &id : ids)
+  {
+    auto resource = m_repositories.resourceRepository->findOneById(id);
+    out.push_back(std::move(resource));
+  }
+
+  return out;
+}
+
 } // namespace bsgo

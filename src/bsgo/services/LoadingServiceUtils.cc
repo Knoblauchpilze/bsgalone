@@ -117,4 +117,12 @@ auto toSystemData(const System &system) -> SystemData
   };
 }
 
+auto toResourceData(const Resource &resource) -> ResourceData
+{
+  return ResourceData{
+    .dbId = resource.id,
+    .name = resource.name,
+  };
+}
+
 } // namespace bsgo

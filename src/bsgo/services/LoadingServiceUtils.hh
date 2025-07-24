@@ -9,6 +9,8 @@
 #include "PlayerRepository.hh"
 #include "PlayerShipRepository.hh"
 #include "PlayerWeaponRepository.hh"
+#include "ResourceData.hh"
+#include "ResourceRepository.hh"
 #include "ShipData.hh"
 #include "Status.hh"
 #include "SystemData.hh"
@@ -62,5 +64,7 @@ struct ShipProps
 };
 
 auto toSystemData(const System &system) -> SystemData;
+
+auto toResourceData(const Resource &resource) -> ResourceData;
 
 } // namespace bsgo

@@ -4,6 +4,7 @@
 #include "OutpostListMessage.hh"
 #include "PlayerListMessage.hh"
 #include "PlayerLoginDataMessage.hh"
+#include "ResourceListMessage.hh"
 #include "ShipListMessage.hh"
 #include "SystemListMessage.hh"
 
@@ -52,6 +53,7 @@ void LoadingMessagesConsumer::handleLoadingStartedMessage(const LoadingStartedMe
   {
     case LoadingTransition::LOGIN:
       handleLoginDataLoading(message);
+      handleResourcesLoading(message);
       break;
     case LoadingTransition::UNDOCK:
       handleSystemsLoading(message);
@@ -90,6 +92,22 @@ void LoadingMessagesConsumer::handleLoginDataLoading(const LoadingStartedMessage
   out->setActiveShipDbId(props.shipDbId);
   out->setDocked(props.docked);
   out->setSystemDbId(props.systemDbId);
+  out->copyClientIdIfDefined(message);
+
+  m_outputMessageQueue->pushMessage(std::move(out));
+}
+
+void LoadingMessagesConsumer::handleResourcesLoading(const LoadingStartedMessage &message) const
+{
+  const auto resources = m_loadingService->getResources();
+
+  std::vector<ResourceData> resourcesData{};
+  std::transform(resources.begin(),
+                 resources.end(),
+                 std::back_inserter(resourcesData),
+                 [](const Resource &resource) { return toResourceData(resource); });
+
+  auto out = std::make_unique<ResourceListMessage>(resourcesData);
   out->copyClientIdIfDefined(message);
 
   m_outputMessageQueue->pushMessage(std::move(out));

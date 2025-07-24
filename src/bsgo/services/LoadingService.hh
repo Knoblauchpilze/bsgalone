@@ -7,6 +7,7 @@
 #include "LoadingServiceUtils.hh"
 #include "PlayerRepository.hh"
 #include "PlayerShipRepository.hh"
+#include "ResourceRepository.hh"
 #include "Status.hh"
 #include "SystemOutpostRepository.hh"
 #include "SystemRepository.hh"
@@ -45,6 +46,8 @@ class LoadingService : public AbstractService
   auto getShipsInSystem(const Uuid systemDbId) const -> std::vector<ShipProps>;
 
   auto getSystems() const -> std::vector<System>;
+
+  auto getResources() const -> std::vector<Resource>;
 
   private:
   CoordinatorShPtr m_coordinator{};
