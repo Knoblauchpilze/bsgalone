@@ -5,6 +5,7 @@
 #include "TimeUtils.hh"
 #include "Uuid.hh"
 #include <memory>
+#include <unordered_set>
 
 namespace bsgo {
 
@@ -22,6 +23,7 @@ class ResourceRepository : public AbstractRepository
 
   void initialize() override;
 
+  auto findAll() const -> std::unordered_set<Uuid>;
   auto findOneById(const Uuid resource) const -> Resource;
   auto findOneByName(const std::string &name) const -> std::optional<Resource>;
 };

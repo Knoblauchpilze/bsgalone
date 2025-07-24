@@ -8,6 +8,9 @@ ResourceRepository::ResourceRepository(const DbConnectionShPtr &connection)
 {}
 
 namespace {
+constexpr auto FIND_ALL_QUERY_NAME = "resource_find_all";
+constexpr auto FIND_ALL_QUERY      = "SELECT id FROM resource";
+
 constexpr auto FIND_ONE_QUERY_NAME = "resource_find_one";
 constexpr auto FIND_ONE_QUERY      = "SELECT name FROM resource WHERE id = $1";
 
@@ -18,8 +21,25 @@ constexpr auto FIND_ONE_BY_NAME_QUERY      = "SELECT id FROM resource WHERE name
 
 void ResourceRepository::initialize()
 {
+  m_connection->prepare(FIND_ALL_QUERY_NAME, FIND_ALL_QUERY);
   m_connection->prepare(FIND_ONE_QUERY_NAME, FIND_ONE_QUERY);
   m_connection->prepare(FIND_ONE_BY_NAME_QUERY_NAME, FIND_ONE_BY_NAME_QUERY);
+}
+
+auto ResourceRepository::findAll() const -> std::unordered_set<Uuid>
+{
+  const auto query = [](pqxx::nontransaction &work) {
+    return work.exec(pqxx::prepped{FIND_ALL_QUERY_NAME});
+  };
+  const auto rows = m_connection->executeQuery(query);
+
+  std::unordered_set<Uuid> out;
+  for (const auto record : rows)
+  {
+    out.emplace(fromDbId(record[0].as<int>()));
+  }
+
+  return out;
 }
 
 auto ResourceRepository::findOneById(const Uuid resource) const -> Resource
