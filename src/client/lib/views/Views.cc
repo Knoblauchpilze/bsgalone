@@ -8,9 +8,7 @@ auto createViews(const ViewsConfig &config, const bsgo::DatabaseEntityMapper &en
 {
   Views out{};
 
-  out.shipView     = std::make_shared<ShipView>(config.coordinator,
-                                            config.repositories,
-                                            config.outputMessageQueue);
+  out.shipView     = std::make_shared<ShipView>(config.coordinator, config.outputMessageQueue);
   out.shipDbView   = std::make_shared<ShipDbView>(config.repositories,
                                                 config.gameSession,
                                                 config.internalMessageQueue,
@@ -44,7 +42,11 @@ void registerViews(const Views &views, bsgo::IMessageQueue *const queue)
 
   // TODO: specify the right kind of messages
   registerViewToQueue(*views.playerView, messageTypes, queue);
+
+  messageTypes = {bsgo::MessageType::SYSTEM_LIST};
   registerViewToQueue(*views.shipView, messageTypes, queue);
+
+  messageTypes = {};
   registerViewToQueue(*views.shipDbView, messageTypes, queue);
   registerViewToQueue(*views.shopView, messageTypes, queue);
   registerViewToQueue(*views.systemView, messageTypes, queue);

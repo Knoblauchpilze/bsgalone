@@ -5,7 +5,7 @@
 #include "Coordinator.hh"
 #include "Entity.hh"
 #include "IMessageQueue.hh"
-#include "Repositories.hh"
+#include "SystemData.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
 #include <memory>
@@ -17,15 +17,15 @@ namespace pge {
 class ShipView : public AbstractView
 {
   public:
-  ShipView(bsgo::CoordinatorShPtr coordinator,
-           const bsgo::Repositories &repositories,
-           bsgo::IMessageQueue *const outputMessageQueue);
+  ShipView(bsgo::CoordinatorShPtr coordinator, bsgo::IMessageQueue *const outputMessageQueue);
   ~ShipView() override = default;
 
   auto getPlayerShip() const -> bsgo::Entity;
   void setPlayerShipEntityId(const std::optional<bsgo::Uuid> ship);
 
   bool isReady() const noexcept override;
+
+  void onMessageReceived(const bsgo::IMessage &message) override;
 
   bool hasTarget() const;
   auto getPlayerTarget() const -> std::optional<bsgo::Entity>;
@@ -57,7 +57,7 @@ class ShipView : public AbstractView
 
   private:
   bsgo::CoordinatorShPtr m_coordinator{};
-  bsgo::Repositories m_repositories{};
+  std::vector<bsgo::SystemData> m_systems{};
   bsgo::IMessageQueue *const m_outputMessageQueue{};
   std::optional<bsgo::Uuid> m_playerShipEntityId{};
   std::optional<bsgo::Uuid> m_systemToJumpTo{};
