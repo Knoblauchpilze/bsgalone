@@ -122,7 +122,7 @@ bool shouldMessageBeFiltered(const bsgo::IMessage &message, const bsgo::Entity &
 
 void LogUiHandler::onMessageReceived(const bsgo::IMessage &message)
 {
-  if (!m_shipView->isReady())
+  if (!m_shipView->isReady() || !m_resourceView->isReady())
   {
     return;
   }
