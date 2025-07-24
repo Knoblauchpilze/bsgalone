@@ -1,16 +1,14 @@
 
 #include "ShipView.hh"
 #include "SlotMessage.hh"
+#include "SystemListMessage.hh"
 #include "TargetMessage.hh"
 
 namespace pge {
 
-ShipView::ShipView(bsgo::CoordinatorShPtr coordinator,
-                   const bsgo::Repositories &repositories,
-                   bsgo::IMessageQueue *const outputMessageQueue)
+ShipView::ShipView(bsgo::CoordinatorShPtr coordinator, bsgo::IMessageQueue *const outputMessageQueue)
   : AbstractView("ship")
   , m_coordinator(std::move(coordinator))
-  , m_repositories(repositories)
   , m_outputMessageQueue(outputMessageQueue)
 {
   if (nullptr == m_coordinator)
@@ -43,7 +41,13 @@ void ShipView::setPlayerShipEntityId(const std::optional<bsgo::Uuid> ship)
 
 bool ShipView::isReady() const noexcept
 {
-  return m_playerShipEntityId.has_value();
+  return m_playerShipEntityId.has_value() && !m_systems.empty();
+}
+
+void ShipView::onMessageReceived(const bsgo::IMessage &message)
+{
+  const auto systemList = message.as<bsgo::SystemListMessage>();
+  m_systems             = systemList.getSystemsData();
 }
 
 bool ShipView::hasTarget() const
@@ -205,6 +209,25 @@ bool ShipView::isJumping() const
   return statusIndicatesJump(ship.statusComp().status());
 }
 
+namespace {
+auto findSystemName(const std::vector<bsgo::SystemData> &systems, const bsgo::Uuid &systemDbId)
+  -> std::optional<std::string>
+{
+  const auto maybeSystem = std::find_if(systems.begin(),
+                                        systems.end(),
+                                        [&systemDbId](const bsgo::SystemData &system) {
+                                          return system.dbId == systemDbId;
+                                        });
+
+  if (maybeSystem != systems.end())
+  {
+    return maybeSystem->name;
+  }
+
+  return {};
+}
+} // namespace
+
 auto ShipView::getJumpData() const -> JumpData
 {
   if (!isJumping())
@@ -218,8 +241,12 @@ auto ShipView::getJumpData() const -> JumpData
 
   JumpData out{};
 
-  const auto system = m_repositories.systemRepository->findOneById(*m_systemToJumpTo);
-  out.systemName    = system.name;
+  const auto maybeSystemName = findSystemName(m_systems, *m_systemToJumpTo);
+  if (!maybeSystemName)
+  {
+    error("Failed to find system name for " + bsgo::str(*m_systemToJumpTo));
+  }
+  out.systemName = *maybeSystemName;
 
   const auto ship = getPlayerShip();
   out.jumpTime    = ship.statusComp().tryGetCurrentJumpTime();
