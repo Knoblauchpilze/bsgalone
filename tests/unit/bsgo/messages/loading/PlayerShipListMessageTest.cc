@@ -1,5 +1,5 @@
 
-#include "ShipListMessage.hh"
+#include "PlayerShipListMessage.hh"
 #include "Common.hh"
 #include <gtest/gtest.h>
 
@@ -7,7 +7,8 @@ using namespace ::testing;
 
 namespace bsgo {
 namespace {
-void assertMessagesAreEqual(const ShipListMessage &actual, const ShipListMessage &expected)
+void assertMessagesAreEqual(const PlayerShipListMessage &actual,
+                            const PlayerShipListMessage &expected)
 {
   EXPECT_EQ(actual.type(), expected.type());
   EXPECT_EQ(actual.tryGetClientId(), expected.tryGetClientId());
@@ -27,9 +28,9 @@ void assertMessagesAreEqual(const ShipListMessage &actual, const ShipListMessage
 }
 } // namespace
 
-TEST(Unit_Bsgo_Serialization_ShipListMessage, Basic)
+TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, Basic)
 {
-  const ShipListMessage expected(Uuid{8712}, {});
+  const PlayerShipListMessage expected(Uuid{8712}, {});
 
   const std::vector<PlayerShipData> shipsData{{.dbId        = Uuid{23},
                                                .position    = Eigen::Vector3f(1.0f, 2.8f, 3.9f),
@@ -38,13 +39,13 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, Basic)
                                                .radius     = 26.9f,
                                                .hullPoints = 100.0f,
                                                .targetDbId = Uuid{4567}}};
-  ShipListMessage actual(Uuid{1515}, shipsData);
+  PlayerShipListMessage actual(Uuid{1515}, shipsData);
   actual.setClientId(Uuid{2});
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_ShipListMessage, WithClientId)
+TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, WithClientId)
 {
   std::vector<PlayerShipData> shipsData{{.dbId       = Uuid{65},
                                          .position   = Eigen::Vector3f(1.0f, 2.8f, 3.9f),
@@ -52,29 +53,29 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, WithClientId)
                                          .hullPoints = 12.34f,
                                          .docked     = true}};
 
-  ShipListMessage expected(Uuid{123}, shipsData);
+  PlayerShipListMessage expected(Uuid{123}, shipsData);
   expected.setClientId(Uuid{78});
 
   shipsData = {{.dbId = Uuid{17}, .powerPoints = 100.0f, .targetDbId = Uuid{923}},
                {.dbId = Uuid{18}, .radius = 26.1, .playerDbId = Uuid{456}}};
-  ShipListMessage actual(Uuid{745}, {});
+  PlayerShipListMessage actual(Uuid{745}, {});
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_ShipListMessage, Clone)
+TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, Clone)
 {
   const std::vector<PlayerShipData> shipsData{
     {.dbId = Uuid{23}, .position = Eigen::Vector3f(1.0f, 2.8f, 3.9f), .targetDbId = Uuid{4567}},
   };
 
-  const ShipListMessage expected(Uuid{4572}, shipsData);
+  const PlayerShipListMessage expected(Uuid{4572}, shipsData);
   const auto cloned = expected.clone();
-  ASSERT_EQ(cloned->type(), MessageType::SHIP_LIST);
-  assertMessagesAreEqual(cloned->as<ShipListMessage>(), expected);
+  ASSERT_EQ(cloned->type(), MessageType::PLAYER_SHIP_LIST);
+  assertMessagesAreEqual(cloned->as<PlayerShipListMessage>(), expected);
 }
 
-TEST(Unit_Bsgo_Serialization_ShipListMessage, WithWeapon)
+TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, WithWeapon)
 {
   std::vector<WeaponData> weapons{{.dbId       = Uuid{1},
                                    .weaponDbId = Uuid{14},
@@ -91,18 +92,18 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, WithWeapon)
                                          .jumpTimeInThreat = core::toMilliseconds(5678),
                                          .weapons          = weapons}};
 
-  ShipListMessage expected(Uuid{123}, shipsData);
+  PlayerShipListMessage expected(Uuid{123}, shipsData);
   expected.setClientId(Uuid{78});
 
   weapons   = {{.dbId = Uuid{45}, .minDamage = 38.57f, .reloadTime = core::toMilliseconds(17)}};
   shipsData = {{.dbId = Uuid{17}, .powerPoints = 100.0f, .targetDbId = Uuid{923}},
                {.dbId = Uuid{18}, .radius = 26.1, .playerDbId = Uuid{456}}};
-  ShipListMessage actual(Uuid{745}, {});
+  PlayerShipListMessage actual(Uuid{745}, {});
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_ShipListMessage, WithComputer)
+TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, WithComputer)
 {
   std::vector<ComputerData> computers{
     {.dbId = Uuid{1}, .computerDbId = Uuid{14}, .level = 10, .offensive = true, .range = 0.145f},
@@ -117,18 +118,18 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, WithComputer)
                                          .jumpTime   = core::toMilliseconds(75),
                                          .computers  = computers}};
 
-  ShipListMessage expected(Uuid{123}, shipsData);
+  PlayerShipListMessage expected(Uuid{123}, shipsData);
   expected.setClientId(Uuid{78});
 
   computers = {{.dbId = Uuid{45}, .level = 9, .reloadTime = core::toMilliseconds(17)}};
   shipsData = {{.dbId = Uuid{17}, .powerPoints = 100.0f, .targetDbId = Uuid{923}},
                {.dbId = Uuid{18}, .radius = 26.1, .playerDbId = Uuid{456}}};
-  ShipListMessage actual(Uuid{745}, {});
+  PlayerShipListMessage actual(Uuid{745}, {});
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_ShipListMessage, MultipleComplexShips)
+TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, MultipleComplexShips)
 {
   std::vector<PlayerShipData> shipsData{
     {.dbId       = Uuid{65},
@@ -163,7 +164,7 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, MultipleComplexShips)
                .offensive      = false,
                .range          = 3.987f,
                .allowedTargets = std::unordered_set<EntityKind>{EntityKind::SHIP, EntityKind::OUTPOST}}}}};
-  ShipListMessage expected(Uuid{123}, shipsData);
+  PlayerShipListMessage expected(Uuid{123}, shipsData);
   expected.setClientId(Uuid{78});
 
   shipsData
@@ -190,7 +191,7 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, MultipleComplexShips)
         .docked           = true,
         .jumpTimeInThreat = core::toMilliseconds(5678),
         .weapons          = {{.weaponDbId = Uuid{852}, .reloadTime = core::toMilliseconds(963)}}}};
-  ShipListMessage actual(Uuid{745}, {});
+  PlayerShipListMessage actual(Uuid{745}, {});
 
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);

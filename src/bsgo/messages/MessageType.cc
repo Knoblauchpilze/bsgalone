@@ -45,14 +45,14 @@ auto str(const MessageType &type) -> std::string
       return "player_list";
     case MessageType::PLAYER_LOGIN_DATA:
       return "player_login_data";
+    case MessageType::PLAYER_SHIP_LIST:
+      return "player_ship_list";
     case MessageType::PURCHASE:
       return "purchase";
     case MessageType::RESOURCE_LIST:
       return "resource_list";
     case MessageType::SCANNED:
       return "scanned";
-    case MessageType::SHIP_LIST:
-      return "ship_list";
     case MessageType::SIGNUP:
       return "signup";
     case MessageType::SLOT:
@@ -93,10 +93,10 @@ auto allMessageTypes() -> std::array<MessageType, 30>
           MessageType::OUTPOST_LIST,
           MessageType::PLAYER_LIST,
           MessageType::PLAYER_LOGIN_DATA,
+          MessageType::PLAYER_SHIP_LIST,
           MessageType::PURCHASE,
           MessageType::RESOURCE_LIST,
           MessageType::SCANNED,
-          MessageType::SHIP_LIST,
           MessageType::SIGNUP,
           MessageType::SLOT,
           MessageType::SLOT_COMPONENT_UPDATED,

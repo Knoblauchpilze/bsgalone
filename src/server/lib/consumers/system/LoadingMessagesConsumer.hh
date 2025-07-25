@@ -30,7 +30,7 @@ class LoadingMessagesConsumer : public AbstractMessageConsumer
   void handlePlayersLoading(const LoadingStartedMessage &message) const;
   void handleAsteroidsLoading(const LoadingStartedMessage &message) const;
   void handleOutpostsLoading(const LoadingStartedMessage &message) const;
-  void handleShipsLoading(const LoadingStartedMessage &message) const;
+  void handlePlayerShipsLoading(const LoadingStartedMessage &message) const;
 };
 
 } // namespace bsgo

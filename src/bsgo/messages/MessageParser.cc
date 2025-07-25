@@ -22,10 +22,10 @@
 #include "OutpostListMessage.hh"
 #include "PlayerListMessage.hh"
 #include "PlayerLoginDataMessage.hh"
+#include "PlayerShipListMessage.hh"
 #include "PurchaseMessage.hh"
 #include "ResourceListMessage.hh"
 #include "ScannedMessage.hh"
-#include "ShipListMessage.hh"
 #include "SignupMessage.hh"
 #include "SlotComponentMessage.hh"
 #include "SlotMessage.hh"
@@ -144,14 +144,14 @@ auto MessageParser::tryReadMessage(const MessageType &type, std::istream &in)
       return readMessage<PlayerListMessage>(in);
     case MessageType::PLAYER_LOGIN_DATA:
       return readMessage<PlayerLoginDataMessage>(in);
+    case MessageType::PLAYER_SHIP_LIST:
+      return readMessage<PlayerShipListMessage>(in);
     case MessageType::PURCHASE:
       return readMessage<PurchaseMessage>(in);
     case MessageType::RESOURCE_LIST:
       return readMessage<ResourceListMessage>(in);
     case MessageType::SCANNED:
       return readMessage<ScannedMessage>(in);
-    case MessageType::SHIP_LIST:
-      return readMessage<ShipListMessage>(in);
     case MessageType::SIGNUP:
       return readMessage<SignupMessage>(in);
     case MessageType::SLOT:

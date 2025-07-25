@@ -7,12 +7,12 @@
 
 namespace bsgo {
 
-class ShipListMessage : public NetworkMessage
+class PlayerShipListMessage : public NetworkMessage
 {
   public:
-  ShipListMessage();
-  ShipListMessage(const Uuid systemDbId, const std::vector<PlayerShipData> &shipsData);
-  ~ShipListMessage() override = default;
+  PlayerShipListMessage();
+  PlayerShipListMessage(const Uuid systemDbId, const std::vector<PlayerShipData> &shipsData);
+  ~PlayerShipListMessage() override = default;
 
   auto getSystemDbId() const -> Uuid;
   auto getShipsData() const -> const std::vector<PlayerShipData> &;

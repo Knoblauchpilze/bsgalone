@@ -9,12 +9,12 @@
 
 namespace pge {
 
-class ShipListMessageConsumer : public bsgo::AbstractMessageConsumer
+class PlayerShipListMessageConsumer : public bsgo::AbstractMessageConsumer
 {
   public:
-  ShipListMessageConsumer(bsgo::DatabaseEntityMapper &entityMapper,
-                          bsgo::CoordinatorShPtr coordinator);
-  ~ShipListMessageConsumer() override = default;
+  PlayerShipListMessageConsumer(bsgo::DatabaseEntityMapper &entityMapper,
+                                bsgo::CoordinatorShPtr coordinator);
+  ~PlayerShipListMessageConsumer() override = default;
 
   void onMessageReceived(const bsgo::IMessage &message) override;
 

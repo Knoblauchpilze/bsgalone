@@ -15,9 +15,9 @@ target_sources(unitTests PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/PlayerListMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/PlayerLoginDataMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/PlayerShipDataTest.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/PlayerShipListMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ResourceDataTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ResourceListMessageTest.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/ShipListMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SystemDataTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SystemListMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/WeaponDataTest.cc
