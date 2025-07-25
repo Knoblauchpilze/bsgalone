@@ -68,9 +68,9 @@ auto toComputerData(const PlayerComputer &computer) -> ComputerData
   };
 }
 
-auto ShipProps::toShipData() const -> ShipData
+auto ShipProps::toPlayerShipData() const -> PlayerShipData
 {
-  ShipData data{
+  PlayerShipData data{
     .dbId            = dbShip.id,
     .position        = dbShip.position,
     .radius          = dbShip.radius,

@@ -42,7 +42,7 @@ auto EntityAddedMessage::tryGetAsteroidData() const -> std::optional<AsteroidDat
   return m_asteroidData;
 }
 
-void EntityAddedMessage::setShipData(const ShipData &data)
+void EntityAddedMessage::setShipData(const PlayerShipData &data)
 {
   m_entityKind = EntityKind::SHIP;
   m_asteroidData.reset();
@@ -51,7 +51,7 @@ void EntityAddedMessage::setShipData(const ShipData &data)
   m_playerData.reset();
 }
 
-auto EntityAddedMessage::tryGetShipData() const -> std::optional<ShipData>
+auto EntityAddedMessage::tryGetShipData() const -> std::optional<PlayerShipData>
 {
   return m_shipData;
 }
@@ -103,7 +103,7 @@ auto EntityAddedMessage::serialize(std::ostream &out) const -> std::ostream &
       serializeAsteroidData(out, *m_asteroidData);
       break;
     case EntityKind::SHIP:
-      serializeShipData(out, *m_shipData);
+      serializePlayerShipData(out, *m_shipData);
       break;
     case EntityKind::OUTPOST:
       serializeOutpostData(out, *m_outpostData);
@@ -134,10 +134,10 @@ auto deserializeAsteroidData(std::istream &in, std::optional<AsteroidData> &aste
   return ok;
 }
 
-auto deserializeShipData(std::istream &in, std::optional<ShipData> &ship) -> bool
+auto deserializeShipData(std::istream &in, std::optional<PlayerShipData> &ship) -> bool
 {
-  ShipData data{};
-  bool ok = deserializeShipData(in, data);
+  PlayerShipData data{};
+  bool ok = deserializePlayerShipData(in, data);
 
   ship.reset();
   if (ok)

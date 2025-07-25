@@ -28,7 +28,7 @@ class SystemMessageConsumer : public bsgo::AbstractMessageConsumer
   void handleEntityAdded(const bsgo::EntityAddedMessage &message) const;
   void handleEntityRemoved(const bsgo::EntityRemovedMessage &message) const;
 
-  void handleShipCreation(const bsgo::ShipData &data) const;
+  void handleShipCreation(const bsgo::PlayerShipData &data) const;
   void handleAsteroidCreation(const bsgo::AsteroidData &data) const;
   void handlePlayerCreation(const bsgo::PlayerData &data) const;
 };

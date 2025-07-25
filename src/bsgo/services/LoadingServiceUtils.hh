@@ -7,11 +7,11 @@
 #include "PlayerComputerRepository.hh"
 #include "PlayerData.hh"
 #include "PlayerRepository.hh"
+#include "PlayerShipData.hh"
 #include "PlayerShipRepository.hh"
 #include "PlayerWeaponRepository.hh"
 #include "ResourceData.hh"
 #include "ResourceRepository.hh"
-#include "ShipData.hh"
 #include "Status.hh"
 #include "SystemData.hh"
 #include "SystemOutpostRepository.hh"
@@ -60,7 +60,7 @@ struct ShipProps
   std::vector<WeaponProps> weapons{};
   std::vector<PlayerComputer> computers{};
 
-  auto toShipData() const -> ShipData;
+  auto toPlayerShipData() const -> PlayerShipData;
 };
 
 auto toSystemData(const System &system) -> SystemData;

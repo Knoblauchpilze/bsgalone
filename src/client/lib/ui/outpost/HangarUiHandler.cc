@@ -147,7 +147,7 @@ void HangarUiHandler::initializeLayout()
   {
     auto shipMenu = std::make_unique<UiMenu>(config, bg);
 
-    ShipData data{.shipDbId = ship.id, .menu = shipMenu.get()};
+    PlayerShipData data{.shipDbId = ship.id, .menu = shipMenu.get()};
     m_shipsData.emplace_back(std::move(data));
 
     auto shipDesc = generateShipDescription(ship);

@@ -25,7 +25,8 @@ void assertMessagesAreEqual(const EntityAddedMessage &actual, const EntityAddedM
 
     case EntityKind::SHIP:
       EXPECT_FALSE(actual.tryGetAsteroidData().has_value());
-      assertShipDataAreEqual(actual.tryGetShipData().value(), expected.tryGetShipData().value());
+      assertPlayerShipDataAreEqual(actual.tryGetShipData().value(),
+                                   expected.tryGetShipData().value());
       EXPECT_FALSE(actual.tryGetOutpostData().has_value());
       EXPECT_FALSE(actual.tryGetPlayerData().has_value());
       break;
@@ -77,7 +78,7 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, SetsEntityKindForShip)
 {
   EntityAddedMessage message(Uuid{789});
   message.setShipData(
-    ShipData{.dbId = Uuid{123}, .position = Eigen::Vector3f{1, 2, 3}, .radius = 4.5f});
+    PlayerShipData{.dbId = Uuid{123}, .position = Eigen::Vector3f{1, 2, 3}, .radius = 4.5f});
 
   EXPECT_EQ(message.getEntityKind(), EntityKind::SHIP);
 }
@@ -108,7 +109,7 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, WhenAnotherKindOfDataIsSetExpec
   EXPECT_EQ(message.getEntityKind(), EntityKind::ASTEROID);
 
   message.setShipData(
-    ShipData{.dbId = Uuid{123}, .position = Eigen::Vector3f{3, 2, 1}, .radius = 4.5f});
+    PlayerShipData{.dbId = Uuid{123}, .position = Eigen::Vector3f{3, 2, 1}, .radius = 4.5f});
 
   EXPECT_EQ(message.getEntityKind(), EntityKind::SHIP);
   EXPECT_FALSE(message.tryGetAsteroidData().has_value());
@@ -147,10 +148,10 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, OverrideAsteroidData)
 TEST(Unit_Bsgo_Serialization_EntityAddedMessage, WithShipData)
 {
   EntityAddedMessage expected(Uuid{789});
-  expected.setShipData(ShipData{.dbId     = Uuid{123},
-                                .position = Eigen::Vector3f{1, 2, 3},
-                                .radius   = 4.5f,
-                                .faction  = Faction::CYLON});
+  expected.setShipData(PlayerShipData{.dbId     = Uuid{123},
+                                      .position = Eigen::Vector3f{1, 2, 3},
+                                      .radius   = 4.5f,
+                                      .faction  = Faction::CYLON});
   expected.setClientId(Uuid{23});
 
   EntityAddedMessage actual(Uuid{8564});
@@ -166,11 +167,11 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, OverrideShipData)
 {
   EntityAddedMessage expected(Uuid{789});
   expected.setShipData(
-    ShipData{.dbId = Uuid{123}, .position = Eigen::Vector3f{1, 2, 3}, .radius = 4.5f});
+    PlayerShipData{.dbId = Uuid{123}, .position = Eigen::Vector3f{1, 2, 3}, .radius = 4.5f});
 
   EntityAddedMessage actual(Uuid{8564});
   expected.setShipData(
-    ShipData{.dbId = Uuid{987}, .hullPointsRegen = 1.597f, .maxPowerPoints = 387.421f});
+    PlayerShipData{.dbId = Uuid{987}, .hullPointsRegen = 1.597f, .maxPowerPoints = 387.421f});
 
   serializeAndDeserializeMessage(expected, actual);
 
@@ -217,7 +218,7 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, WithPlayerData)
   expected.setClientId(Uuid{23});
 
   EntityAddedMessage actual(Uuid{8564});
-  actual.setShipData(ShipData{.dbId = Uuid{36}, .powerPoints = 36.5f});
+  actual.setShipData(PlayerShipData{.dbId = Uuid{36}, .powerPoints = 36.5f});
 
   serializeAndDeserializeMessage(expected, actual);
 
@@ -251,7 +252,7 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, CloneWithAsteroidData)
 TEST(Unit_Bsgo_Serialization_EntityAddedMessage, CloneWithShipData)
 {
   EntityAddedMessage expected(Uuid{789});
-  expected.setShipData(ShipData{.dbId = Uuid{36}, .name = "my-ship"});
+  expected.setShipData(PlayerShipData{.dbId = Uuid{36}, .name = "my-ship"});
   const auto cloned = expected.clone();
 
   ASSERT_EQ(cloned->type(), MessageType::ENTITY_ADDED);

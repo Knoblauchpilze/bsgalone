@@ -140,7 +140,7 @@ void SystemMessageConsumer::handleEntityRemoved(const bsgo::EntityRemovedMessage
   m_coordinator->deleteEntity(*entityId);
 }
 
-void SystemMessageConsumer::handleShipCreation(const bsgo::ShipData &data) const
+void SystemMessageConsumer::handleShipCreation(const bsgo::PlayerShipData &data) const
 {
   bsgo::ShipDataSource source;
   source.registerShip(*m_coordinator, data, m_entityMapper, false);

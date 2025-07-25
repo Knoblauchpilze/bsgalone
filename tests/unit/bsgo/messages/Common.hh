@@ -5,8 +5,8 @@
 #include "ComputerData.hh"
 #include "OutpostData.hh"
 #include "PlayerData.hh"
+#include "PlayerShipData.hh"
 #include "ResourceData.hh"
-#include "ShipData.hh"
 #include "SystemData.hh"
 #include "WeaponData.hh"
 #include <gtest/gtest.h>
@@ -21,7 +21,7 @@ void assertComputerDataAreEqual(const ComputerData &actual, const ComputerData &
 void assertWeaponDataAreEqual(const WeaponData &actual, const WeaponData &expected);
 void assertOutpostDataAreEqual(const OutpostData &actual, const OutpostData &expected);
 void assertPlayerDataAreEqual(const PlayerData &actual, const PlayerData &expected);
-void assertShipDataAreEqual(const ShipData &actual, const ShipData &expected);
+void assertPlayerShipDataAreEqual(const PlayerShipData &actual, const PlayerShipData &expected);
 void assertSystemDataAreEqual(const SystemData &actual, const SystemData &expected);
 void assertResourceDataAreEqual(const ResourceData &actual, const ResourceData &expected);
 

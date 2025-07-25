@@ -5,8 +5,8 @@
 #include "ComputerData.hh"
 #include "OutpostData.hh"
 #include "PlayerData.hh"
+#include "PlayerShipData.hh"
 #include "ResourceData.hh"
-#include "ShipData.hh"
 #include "SystemData.hh"
 #include "WeaponData.hh"
 
@@ -27,8 +27,8 @@ bool deserializeWeaponData(std::istream &in, WeaponData &data);
 auto serializeOutpostData(std::ostream &out, const OutpostData &data) -> std::ostream &;
 bool deserializeOutpostData(std::istream &in, OutpostData &data);
 
-auto serializeShipData(std::ostream &out, const ShipData &data) -> std::ostream &;
-bool deserializeShipData(std::istream &in, ShipData &data);
+auto serializePlayerShipData(std::ostream &out, const PlayerShipData &data) -> std::ostream &;
+bool deserializePlayerShipData(std::istream &in, PlayerShipData &data);
 
 auto serializeSystemData(std::ostream &out, const SystemData &data) -> std::ostream &;
 bool deserializeSystemData(std::istream &in, SystemData &data);

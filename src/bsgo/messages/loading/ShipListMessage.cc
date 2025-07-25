@@ -9,7 +9,8 @@ ShipListMessage::ShipListMessage()
   : NetworkMessage(MessageType::SHIP_LIST)
 {}
 
-ShipListMessage::ShipListMessage(const Uuid systemDbId, const std::vector<ShipData> &asteroidsData)
+ShipListMessage::ShipListMessage(const Uuid systemDbId,
+                                 const std::vector<PlayerShipData> &asteroidsData)
   : NetworkMessage(MessageType::SHIP_LIST)
   , m_systemDbId(systemDbId)
   , m_shipsData(asteroidsData)
@@ -20,7 +21,7 @@ auto ShipListMessage::getSystemDbId() const -> Uuid
   return m_systemDbId;
 }
 
-auto ShipListMessage::getShipsData() const -> const std::vector<ShipData> &
+auto ShipListMessage::getShipsData() const -> const std::vector<PlayerShipData> &
 {
   return m_shipsData;
 }
@@ -35,7 +36,7 @@ auto ShipListMessage::serialize(std::ostream &out) const -> std::ostream &
   core::serialize(out, m_shipsData.size());
   for (const auto &shipData : m_shipsData)
   {
-    serializeShipData(out, shipData);
+    serializePlayerShipData(out, shipData);
   }
 
   return out;
@@ -56,9 +57,9 @@ bool ShipListMessage::deserialize(std::istream &in)
 
   for (std::size_t id = 0u; id < count; ++id)
   {
-    ShipData data;
+    PlayerShipData data;
 
-    ok &= deserializeShipData(in, data);
+    ok &= deserializePlayerShipData(in, data);
 
     m_shipsData.emplace_back(data);
   }

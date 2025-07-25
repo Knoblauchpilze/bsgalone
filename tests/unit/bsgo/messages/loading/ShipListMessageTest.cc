@@ -22,7 +22,7 @@ void assertMessagesAreEqual(const ShipListMessage &actual, const ShipListMessage
     const auto &actualShipData   = actualShipsData[id];
     const auto &expectedShipData = expectedShipsData[id];
 
-    assertShipDataAreEqual(actualShipData, expectedShipData);
+    assertPlayerShipDataAreEqual(actualShipData, expectedShipData);
   }
 }
 } // namespace
@@ -31,13 +31,13 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, Basic)
 {
   const ShipListMessage expected(Uuid{8712}, {});
 
-  const std::vector<ShipData> shipsData{{.dbId        = Uuid{23},
-                                         .position    = Eigen::Vector3f(1.0f, 2.8f, 3.9f),
-                                         .powerPoints = 11.3f},
-                                        {.dbId       = Uuid{76},
-                                         .radius     = 26.9f,
-                                         .hullPoints = 100.0f,
-                                         .targetDbId = Uuid{4567}}};
+  const std::vector<PlayerShipData> shipsData{{.dbId        = Uuid{23},
+                                               .position    = Eigen::Vector3f(1.0f, 2.8f, 3.9f),
+                                               .powerPoints = 11.3f},
+                                              {.dbId       = Uuid{76},
+                                               .radius     = 26.9f,
+                                               .hullPoints = 100.0f,
+                                               .targetDbId = Uuid{4567}}};
   ShipListMessage actual(Uuid{1515}, shipsData);
   actual.setClientId(Uuid{2});
   serializeAndDeserializeMessage(expected, actual);
@@ -46,11 +46,11 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, Basic)
 
 TEST(Unit_Bsgo_Serialization_ShipListMessage, WithClientId)
 {
-  std::vector<ShipData> shipsData{{.dbId       = Uuid{65},
-                                   .position   = Eigen::Vector3f(1.0f, 2.8f, 3.9f),
-                                   .radius     = 26.9f,
-                                   .hullPoints = 12.34f,
-                                   .docked     = true}};
+  std::vector<PlayerShipData> shipsData{{.dbId       = Uuid{65},
+                                         .position   = Eigen::Vector3f(1.0f, 2.8f, 3.9f),
+                                         .radius     = 26.9f,
+                                         .hullPoints = 12.34f,
+                                         .docked     = true}};
 
   ShipListMessage expected(Uuid{123}, shipsData);
   expected.setClientId(Uuid{78});
@@ -64,7 +64,7 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, WithClientId)
 
 TEST(Unit_Bsgo_Serialization_ShipListMessage, Clone)
 {
-  const std::vector<ShipData> shipsData{
+  const std::vector<PlayerShipData> shipsData{
     {.dbId = Uuid{23}, .position = Eigen::Vector3f(1.0f, 2.8f, 3.9f), .targetDbId = Uuid{4567}},
   };
 
@@ -84,12 +84,12 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, WithWeapon)
                                    .minDamage  = 14.2f,
                                    .maxDamage  = 100.0f,
                                    .reloadTime = core::toMilliseconds(23)}};
-  std::vector<ShipData> shipsData{{.dbId             = Uuid{65},
-                                   .position         = Eigen::Vector3f(1.0f, 2.8f, 3.9f),
-                                   .radius           = 26.9f,
-                                   .hullPoints       = 12.34f,
-                                   .jumpTimeInThreat = core::toMilliseconds(5678),
-                                   .weapons          = weapons}};
+  std::vector<PlayerShipData> shipsData{{.dbId             = Uuid{65},
+                                         .position         = Eigen::Vector3f(1.0f, 2.8f, 3.9f),
+                                         .radius           = 26.9f,
+                                         .hullPoints       = 12.34f,
+                                         .jumpTimeInThreat = core::toMilliseconds(5678),
+                                         .weapons          = weapons}};
 
   ShipListMessage expected(Uuid{123}, shipsData);
   expected.setClientId(Uuid{78});
@@ -110,12 +110,12 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, WithComputer)
      .powerCost      = 14.2f,
      .allowedTargets = std::unordered_set<EntityKind>{EntityKind::PLAYER},
      .damageModifier = 1.4587f}};
-  std::vector<ShipData> shipsData{{.dbId       = Uuid{65},
-                                   .position   = Eigen::Vector3f(1.0f, 2.8f, 3.9f),
-                                   .radius     = 26.9f,
-                                   .hullPoints = 12.34f,
-                                   .jumpTime   = core::toMilliseconds(75),
-                                   .computers  = computers}};
+  std::vector<PlayerShipData> shipsData{{.dbId       = Uuid{65},
+                                         .position   = Eigen::Vector3f(1.0f, 2.8f, 3.9f),
+                                         .radius     = 26.9f,
+                                         .hullPoints = 12.34f,
+                                         .jumpTime   = core::toMilliseconds(75),
+                                         .computers  = computers}};
 
   ShipListMessage expected(Uuid{123}, shipsData);
   expected.setClientId(Uuid{78});
@@ -130,7 +130,7 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, WithComputer)
 
 TEST(Unit_Bsgo_Serialization_ShipListMessage, MultipleComplexShips)
 {
-  std::vector<ShipData> shipsData{
+  std::vector<PlayerShipData> shipsData{
     {.dbId       = Uuid{65},
      .position   = Eigen::Vector3f(1.0f, 2.8f, 3.9f),
      .radius     = 26.9f,

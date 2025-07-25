@@ -4,7 +4,7 @@
 #include "AbstractMessageConsumer.hh"
 #include "Coordinator.hh"
 #include "DatabaseEntityMapper.hh"
-#include "ShipData.hh"
+#include "PlayerShipData.hh"
 #include "Uuid.hh"
 
 namespace pge {
@@ -22,7 +22,7 @@ class ShipListMessageConsumer : public bsgo::AbstractMessageConsumer
   bsgo::DatabaseEntityMapper &m_entityMapper;
   bsgo::CoordinatorShPtr m_coordinator{};
 
-  void registerShip(const bsgo::ShipData &data) const;
+  void registerShip(const bsgo::PlayerShipData &data) const;
 };
 
 } // namespace pge
