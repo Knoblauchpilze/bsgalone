@@ -1,8 +1,8 @@
 
 #pragma once
 
-#include "ComputerData.hh"
 #include "Faction.hh"
+#include "PlayerComputerData.hh"
 #include "ShipClass.hh"
 #include "Status.hh"
 #include "TimeUtils.hh"
@@ -38,7 +38,7 @@ struct PlayerShipData
   std::optional<Uuid> playerDbId{};
 
   std::vector<WeaponData> weapons{};
-  std::vector<ComputerData> computers{};
+  std::vector<PlayerComputerData> computers{};
 
   bool operator==(const PlayerShipData &rhs) const;
 };

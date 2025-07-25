@@ -9,7 +9,7 @@
 
 namespace bsgo {
 
-struct ComputerData
+struct PlayerComputerData
 {
   Uuid dbId{};
   Uuid computerDbId{};
@@ -24,7 +24,7 @@ struct ComputerData
   std::optional<std::unordered_set<EntityKind>> allowedTargets{};
   std::optional<float> damageModifier{};
 
-  bool operator==(const ComputerData &rhs) const;
+  bool operator==(const PlayerComputerData &rhs) const;
 };
 
 } // namespace bsgo

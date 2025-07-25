@@ -48,7 +48,8 @@ bool deserializeAsteroidData(std::istream &in, AsteroidData &data)
   return ok;
 }
 
-auto serializeComputerData(std::ostream &out, const ComputerData &data) -> std::ostream &
+auto serializePlayerComputerData(std::ostream &out, const PlayerComputerData &data)
+  -> std::ostream &
 {
   core::serialize(out, data.dbId);
   core::serialize(out, data.computerDbId);
@@ -74,7 +75,7 @@ auto serializeComputerData(std::ostream &out, const ComputerData &data) -> std::
   return out;
 }
 
-bool deserializeComputerData(std::istream &in, ComputerData &data)
+bool deserializePlayerComputerData(std::istream &in, PlayerComputerData &data)
 {
   bool ok{true};
 
@@ -214,7 +215,7 @@ auto serializePlayerShipData(std::ostream &out, const PlayerShipData &data) -> s
   core::serialize(out, data.computers.size());
   for (const auto &computer : data.computers)
   {
-    serializeComputerData(out, computer);
+    serializePlayerComputerData(out, computer);
   }
 
   return out;
@@ -262,9 +263,9 @@ bool deserializePlayerShipData(std::istream &in, PlayerShipData &data)
   data.computers.clear();
   for (std::size_t id = 0u; id < count; ++id)
   {
-    ComputerData computer;
+    PlayerComputerData computer;
 
-    ok &= deserializeComputerData(in, computer);
+    ok &= deserializePlayerComputerData(in, computer);
 
     data.computers.emplace_back(computer);
   }

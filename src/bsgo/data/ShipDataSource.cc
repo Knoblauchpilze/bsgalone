@@ -158,7 +158,7 @@ void ShipDataSource::registerShip(Coordinator &coordinator,
   {
     const auto computerDbData = m_repositories->playerComputerRepository->findOneById(computer);
 
-    ComputerData computerData{
+    PlayerComputerData computerData{
       .dbId         = computerDbData.id,
       .computerDbId = computerDbData.computer,
 

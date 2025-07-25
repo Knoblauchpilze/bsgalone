@@ -52,9 +52,9 @@ auto WeaponProps::toWeaponData() const -> WeaponData
   };
 }
 
-auto toComputerData(const PlayerComputer &computer) -> ComputerData
+auto toPlayerComputerData(const PlayerComputer &computer) -> PlayerComputerData
 {
-  return ComputerData{
+  return PlayerComputerData{
     .dbId           = computer.id,
     .computerDbId   = computer.computer,
     .level          = computer.level,
@@ -103,7 +103,7 @@ auto ShipProps::toPlayerShipData() const -> PlayerShipData
   std::transform(computers.begin(),
                  computers.end(),
                  std::back_inserter(data.computers),
-                 [](const PlayerComputer &cp) { return toComputerData(cp); });
+                 [](const PlayerComputer &cp) { return toPlayerComputerData(cp); });
 
   return data;
 }

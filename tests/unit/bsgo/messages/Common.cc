@@ -13,7 +13,8 @@ void assertAsteroidDataAreEqual(const AsteroidData &actual, const AsteroidData &
   EXPECT_EQ(actual.amount, expected.amount);
 }
 
-void assertComputerDataAreEqual(const ComputerData &actual, const ComputerData &expected)
+void assertPlayerComputerDataAreEqual(const PlayerComputerData &actual,
+                                      const PlayerComputerData &expected)
 {
   EXPECT_EQ(actual.dbId, expected.dbId);
   EXPECT_EQ(actual.computerDbId, expected.computerDbId);
@@ -99,7 +100,7 @@ void assertPlayerShipDataAreEqual(const PlayerShipData &actual, const PlayerShip
     const auto &actualComputer   = actual.computers[i];
     const auto &expectedComputer = expected.computers[i];
 
-    assertComputerDataAreEqual(actualComputer, expectedComputer);
+    assertPlayerComputerDataAreEqual(actualComputer, expectedComputer);
   }
 }
 
