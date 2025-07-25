@@ -47,7 +47,7 @@ void ShipDataSource::initialize(const Uuid systemDbId,
 }
 
 void ShipDataSource::registerShip(Coordinator &coordinator,
-                                  const ShipData &data,
+                                  const PlayerShipData &data,
                                   DatabaseEntityMapper &entityMapper,
                                   const bool ignoreIfDocked) const
 {
@@ -109,7 +109,7 @@ void ShipDataSource::registerShip(Coordinator &coordinator,
 {
   const auto data = m_repositories->playerShipRepository->findOneById(shipDbId);
 
-  ShipData out{
+  PlayerShipData out{
     .dbId             = shipDbId,
     .position         = data.position,
     .radius           = data.radius,
@@ -181,7 +181,7 @@ void ShipDataSource::registerShip(Coordinator &coordinator,
 
 void ShipDataSource::registerShipOwner(Coordinator &coordinator,
                                        const Uuid shipEntity,
-                                       const ShipData &data,
+                                       const PlayerShipData &data,
                                        DatabaseEntityMapper &entityMapper) const
 {
   if (!data.playerDbId)
@@ -203,7 +203,7 @@ void ShipDataSource::registerShipOwner(Coordinator &coordinator,
 }
 
 void ShipDataSource::registerShipWeapons(Coordinator &coordinator,
-                                         const ShipData &data,
+                                         const PlayerShipData &data,
                                          const Uuid shipEntity) const
 {
   for (const auto &weapon : data.weapons)
@@ -213,7 +213,7 @@ void ShipDataSource::registerShipWeapons(Coordinator &coordinator,
 }
 
 void ShipDataSource::registerShipComputers(Coordinator &coordinator,
-                                           const ShipData &data,
+                                           const PlayerShipData &data,
                                            const Uuid shipEntity) const
 {
   for (const auto &computer : data.computers)

@@ -22,7 +22,7 @@ void ShipListMessageConsumer::onMessageReceived(const bsgo::IMessage &message)
   }
 }
 
-void ShipListMessageConsumer::registerShip(const bsgo::ShipData &data) const
+void ShipListMessageConsumer::registerShip(const bsgo::PlayerShipData &data) const
 {
   bsgo::ShipDataSource source;
   source.registerShip(*m_coordinator, data, m_entityMapper, true);

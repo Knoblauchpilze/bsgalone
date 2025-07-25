@@ -4,9 +4,9 @@
 #include "CoreObject.hh"
 #include "DatabaseEntityMapper.hh"
 #include "INode.hh"
+#include "PlayerShipData.hh"
 #include "PlayerShipRepository.hh"
 #include "Repositories.hh"
-#include "ShipData.hh"
 #include <optional>
 
 namespace bsgo {
@@ -25,7 +25,7 @@ class ShipDataSource : public core::CoreObject
                   DatabaseEntityMapper &entityMapper) const;
 
   void registerShip(Coordinator &coordinator,
-                    const ShipData &data,
+                    const PlayerShipData &data,
                     DatabaseEntityMapper &entityMapper,
                     const bool ignoreIfDocked) const;
 
@@ -49,13 +49,13 @@ class ShipDataSource : public core::CoreObject
 
   void registerShipOwner(Coordinator &coordinator,
                          const Uuid shipEntity,
-                         const ShipData &data,
+                         const PlayerShipData &data,
                          DatabaseEntityMapper &entityMapper) const;
   void registerShipWeapons(Coordinator &coordinator,
-                           const ShipData &data,
+                           const PlayerShipData &data,
                            const Uuid shipEntity) const;
   void registerShipComputers(Coordinator &coordinator,
-                             const ShipData &data,
+                             const PlayerShipData &data,
                              const Uuid shipEntity) const;
 
   auto generateBehaviorTree(const Uuid entity, const Eigen::Vector3f &center) const -> INodePtr;

@@ -44,7 +44,8 @@ void EntityAddedMessageConsumer::onMessageReceived(const IMessage &message)
   }
 }
 
-void EntityAddedMessageConsumer::handleShipAdded(const Uuid systemDbId, const ShipData &data) const
+void EntityAddedMessageConsumer::handleShipAdded(const Uuid systemDbId,
+                                                 const PlayerShipData &data) const
 {
   if (!m_entityService->tryCreateShipEntity(data.dbId))
   {
@@ -69,7 +70,7 @@ void EntityAddedMessageConsumer::handleShipAdded(const Uuid systemDbId, const Sh
   }
 
   auto shipAdded = std::make_unique<EntityAddedMessage>(systemDbId);
-  shipAdded->setShipData(shipData.toShipData());
+  shipAdded->setShipData(shipData.toPlayerShipData());
   m_outputMessageQueue->pushMessage(std::move(shipAdded));
 }
 

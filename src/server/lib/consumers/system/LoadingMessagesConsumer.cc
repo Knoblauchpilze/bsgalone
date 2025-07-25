@@ -189,11 +189,11 @@ void LoadingMessagesConsumer::handleShipsLoading(const LoadingStartedMessage &me
 
   const auto ships = m_loadingService->getShipsInSystem(systemDbId);
 
-  std::vector<ShipData> shipsData{};
+  std::vector<PlayerShipData> shipsData{};
   std::transform(ships.begin(),
                  ships.end(),
                  std::back_inserter(shipsData),
-                 [](const ShipProps &props) { return props.toShipData(); });
+                 [](const ShipProps &props) { return props.toPlayerShipData(); });
 
   auto out = std::make_unique<ShipListMessage>(systemDbId, shipsData);
   out->copyClientIdIfDefined(message);

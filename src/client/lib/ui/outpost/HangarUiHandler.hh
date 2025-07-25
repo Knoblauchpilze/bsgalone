@@ -39,7 +39,7 @@ class HangarUiHandler : public IUiHandler
     EQUIPED
   };
 
-  struct ShipData
+  struct PlayerShipData
   {
     bsgo::Uuid shipDbId{};
     std::optional<bsgo::Uuid> playerShipDbId{};
@@ -47,7 +47,7 @@ class HangarUiHandler : public IUiHandler
     UiTextMenu *button{};
     State state{State::UNAFFORDABLE};
   };
-  std::vector<ShipData> m_shipsData{};
+  std::vector<PlayerShipData> m_shipsData{};
 
   void initializeHangar();
 

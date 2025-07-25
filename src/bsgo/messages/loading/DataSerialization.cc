@@ -181,7 +181,7 @@ bool deserializeOutpostData(std::istream &in, OutpostData &data)
   return ok;
 }
 
-auto serializeShipData(std::ostream &out, const ShipData &data) -> std::ostream &
+auto serializePlayerShipData(std::ostream &out, const PlayerShipData &data) -> std::ostream &
 {
   core::serialize(out, data.dbId);
   core::serialize(out, data.position);
@@ -220,7 +220,7 @@ auto serializeShipData(std::ostream &out, const ShipData &data) -> std::ostream 
   return out;
 }
 
-bool deserializeShipData(std::istream &in, ShipData &data)
+bool deserializePlayerShipData(std::istream &in, PlayerShipData &data)
 {
   bool ok{true};
 

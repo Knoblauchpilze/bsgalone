@@ -75,7 +75,7 @@ void DockMessageConsumer::handleUndocking(const DockMessage &message) const
   m_outputMessageQueue->pushMessage(std::move(out));
 
   auto added = std::make_unique<EntityAddedMessage>(systemDbId);
-  ShipData data{.dbId = shipDbId};
+  PlayerShipData data{.dbId = shipDbId};
   added->setShipData(data);
   m_systemMessageQueue->pushMessage(std::move(added));
 

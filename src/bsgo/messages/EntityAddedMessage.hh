@@ -7,7 +7,7 @@
 #include "NetworkMessage.hh"
 #include "OutpostData.hh"
 #include "PlayerData.hh"
-#include "ShipData.hh"
+#include "PlayerShipData.hh"
 #include "Uuid.hh"
 #include <optional>
 
@@ -26,8 +26,8 @@ class EntityAddedMessage : public NetworkMessage
   void setAsteroidData(const AsteroidData &data);
   auto tryGetAsteroidData() const -> std::optional<AsteroidData>;
 
-  void setShipData(const ShipData &data);
-  auto tryGetShipData() const -> std::optional<ShipData>;
+  void setShipData(const PlayerShipData &data);
+  auto tryGetShipData() const -> std::optional<PlayerShipData>;
 
   void setOutpostData(const OutpostData &data);
   auto tryGetOutpostData() const -> std::optional<OutpostData>;
@@ -45,7 +45,7 @@ class EntityAddedMessage : public NetworkMessage
   std::optional<EntityKind> m_entityKind{};
 
   std::optional<AsteroidData> m_asteroidData{};
-  std::optional<ShipData> m_shipData{};
+  std::optional<PlayerShipData> m_shipData{};
   std::optional<OutpostData> m_outpostData{};
   std::optional<PlayerData> m_playerData{};
 };

@@ -13,7 +13,7 @@
 
 namespace bsgo {
 
-struct ShipData
+struct PlayerShipData
 {
   Uuid dbId{};
   Eigen::Vector3f position{Eigen::Vector3f::Zero()};
@@ -40,7 +40,7 @@ struct ShipData
   std::vector<WeaponData> weapons{};
   std::vector<ComputerData> computers{};
 
-  bool operator==(const ShipData &rhs) const;
+  bool operator==(const PlayerShipData &rhs) const;
 };
 
 } // namespace bsgo
