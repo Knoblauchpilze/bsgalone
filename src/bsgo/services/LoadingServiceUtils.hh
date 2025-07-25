@@ -47,7 +47,7 @@ struct WeaponProps
   PlayerWeapon dbWeapon{};
   Eigen::Vector3f slotPosition{Eigen::Vector3f::Zero()};
 
-  auto toWeaponData() const -> WeaponData;
+  auto toPlayerWeaponData() const -> PlayerWeaponData;
 };
 
 auto toPlayerComputerData(const PlayerComputer &computer) -> PlayerComputerData;

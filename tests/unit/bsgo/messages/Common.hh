@@ -6,9 +6,9 @@
 #include "PlayerComputerData.hh"
 #include "PlayerData.hh"
 #include "PlayerShipData.hh"
+#include "PlayerWeaponData.hh"
 #include "ResourceData.hh"
 #include "SystemData.hh"
-#include "WeaponData.hh"
 #include <gtest/gtest.h>
 
 namespace bsgo {
@@ -19,7 +19,8 @@ auto serializeAndDeserialize(const T &value) -> T;
 void assertAsteroidDataAreEqual(const AsteroidData &actual, const AsteroidData &expected);
 void assertPlayerComputerDataAreEqual(const PlayerComputerData &actual,
                                       const PlayerComputerData &expected);
-void assertWeaponDataAreEqual(const WeaponData &actual, const WeaponData &expected);
+void assertPlayerWeaponDataAreEqual(const PlayerWeaponData &actual,
+                                    const PlayerWeaponData &expected);
 void assertOutpostDataAreEqual(const OutpostData &actual, const OutpostData &expected);
 void assertPlayerDataAreEqual(const PlayerData &actual, const PlayerData &expected);
 void assertPlayerShipDataAreEqual(const PlayerShipData &actual, const PlayerShipData &expected);

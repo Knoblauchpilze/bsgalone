@@ -8,7 +8,7 @@
 
 namespace bsgo {
 
-struct WeaponData
+struct PlayerWeaponData
 {
   Uuid dbId{};
   Uuid weaponDbId{};
@@ -23,7 +23,7 @@ struct WeaponData
 
   core::Duration reloadTime{};
 
-  bool operator==(const WeaponData &rhs) const;
+  bool operator==(const PlayerWeaponData &rhs) const;
 };
 
 } // namespace bsgo

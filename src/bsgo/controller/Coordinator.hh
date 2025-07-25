@@ -7,10 +7,10 @@
 #include "IBoundingBox.hh"
 #include "IMessageQueue.hh"
 #include "PlayerComputerData.hh"
+#include "PlayerWeaponData.hh"
 #include "Systems.hh"
 #include "TimeUtils.hh"
 #include "Uuid.hh"
-#include "WeaponData.hh"
 #include <eigen3/Eigen/Eigen>
 #include <memory>
 #include <optional>
@@ -49,7 +49,7 @@ class Coordinator : public core::CoreObject
   void addName(const Uuid ent, const std::string &name);
   void addNetwork(const Uuid ent, const std::unordered_set<ComponentType> &toSync);
   void addDbId(const Uuid ent, const Uuid dbId);
-  void addWeapon(const Uuid ent, const WeaponData &weapon);
+  void addWeapon(const Uuid ent, const PlayerWeaponData &weapon);
   void addComputer(const Uuid ent, const PlayerComputerData &computer);
   void addResourceComponent(const Uuid ent, const Uuid resource, const float amount);
 

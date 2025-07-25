@@ -28,7 +28,7 @@ void assertPlayerComputerDataAreEqual(const PlayerComputerData &actual,
   EXPECT_EQ(actual.damageModifier, expected.damageModifier);
 }
 
-void assertWeaponDataAreEqual(const WeaponData &actual, const WeaponData &expected)
+void assertPlayerWeaponDataAreEqual(const PlayerWeaponData &actual, const PlayerWeaponData &expected)
 {
   EXPECT_EQ(actual.dbId, expected.dbId);
   EXPECT_EQ(actual.weaponDbId, expected.weaponDbId);
@@ -91,7 +91,7 @@ void assertPlayerShipDataAreEqual(const PlayerShipData &actual, const PlayerShip
     const auto &actualWeapon   = actual.weapons[i];
     const auto &expectedWeapon = expected.weapons[i];
 
-    assertWeaponDataAreEqual(actualWeapon, expectedWeapon);
+    assertPlayerWeaponDataAreEqual(actualWeapon, expectedWeapon);
   }
 
   EXPECT_EQ(actual.computers.size(), expected.computers.size());

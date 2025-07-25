@@ -6,9 +6,9 @@
 #include "PlayerComputerData.hh"
 #include "PlayerData.hh"
 #include "PlayerShipData.hh"
+#include "PlayerWeaponData.hh"
 #include "ResourceData.hh"
 #include "SystemData.hh"
-#include "WeaponData.hh"
 
 namespace bsgo {
 
@@ -22,8 +22,8 @@ auto serializePlayerComputerData(std::ostream &out, const PlayerComputerData &da
   -> std::ostream &;
 bool deserializePlayerComputerData(std::istream &in, PlayerComputerData &data);
 
-auto serializeWeaponData(std::ostream &out, const WeaponData &data) -> std::ostream &;
-bool deserializeWeaponData(std::istream &in, WeaponData &data);
+auto serializePlayerWeaponData(std::ostream &out, const PlayerWeaponData &data) -> std::ostream &;
+bool deserializePlayerWeaponData(std::istream &in, PlayerWeaponData &data);
 
 auto serializeOutpostData(std::ostream &out, const OutpostData &data) -> std::ostream &;
 bool deserializeOutpostData(std::istream &in, OutpostData &data);
