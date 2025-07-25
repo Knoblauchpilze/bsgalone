@@ -188,7 +188,7 @@ void Coordinator::addWeapon(const Uuid ent, const WeaponData &weapon)
   m_components.weapons.emplace(ent, std::make_shared<WeaponSlotComponent>(weapon));
 }
 
-void Coordinator::addComputer(const Uuid ent, const ComputerData &computer)
+void Coordinator::addComputer(const Uuid ent, const PlayerComputerData &computer)
 {
   checkEntityExist(ent, "Computer");
   m_components.computers.emplace(ent, std::make_shared<ComputerSlotComponent>(computer));

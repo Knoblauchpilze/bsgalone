@@ -105,7 +105,7 @@ TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, WithWeapon)
 
 TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, WithComputer)
 {
-  std::vector<ComputerData> computers{
+  std::vector<PlayerComputerData> computers{
     {.dbId = Uuid{1}, .computerDbId = Uuid{14}, .level = 10, .offensive = true, .range = 0.145f},
     {.dbId           = Uuid{2},
      .powerCost      = 14.2f,

@@ -50,7 +50,7 @@ struct WeaponProps
   auto toWeaponData() const -> WeaponData;
 };
 
-auto toComputerData(const PlayerComputer &computer) -> ComputerData;
+auto toPlayerComputerData(const PlayerComputer &computer) -> PlayerComputerData;
 
 struct ShipProps
 {
