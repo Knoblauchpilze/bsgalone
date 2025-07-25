@@ -113,7 +113,7 @@ bool deserializePlayerComputerData(std::istream &in, PlayerComputerData &data)
   return ok;
 }
 
-auto serializeWeaponData(std::ostream &out, const WeaponData &data) -> std::ostream &
+auto serializePlayerWeaponData(std::ostream &out, const PlayerWeaponData &data) -> std::ostream &
 {
   core::serialize(out, data.dbId);
   core::serialize(out, data.weaponDbId);
@@ -128,7 +128,7 @@ auto serializeWeaponData(std::ostream &out, const WeaponData &data) -> std::ostr
   return out;
 }
 
-bool deserializeWeaponData(std::istream &in, WeaponData &data)
+bool deserializePlayerWeaponData(std::istream &in, PlayerWeaponData &data)
 {
   bool ok{true};
 
@@ -209,7 +209,7 @@ auto serializePlayerShipData(std::ostream &out, const PlayerShipData &data) -> s
   core::serialize(out, data.weapons.size());
   for (const auto &weapon : data.weapons)
   {
-    serializeWeaponData(out, weapon);
+    serializePlayerWeaponData(out, weapon);
   }
 
   core::serialize(out, data.computers.size());
@@ -252,9 +252,9 @@ bool deserializePlayerShipData(std::istream &in, PlayerShipData &data)
   data.weapons.clear();
   for (std::size_t id = 0u; id < count; ++id)
   {
-    WeaponData weapon;
+    PlayerWeaponData weapon;
 
-    ok &= deserializeWeaponData(in, weapon);
+    ok &= deserializePlayerWeaponData(in, weapon);
 
     data.weapons.emplace_back(weapon);
   }

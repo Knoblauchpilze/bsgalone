@@ -3,11 +3,11 @@
 
 #include "Faction.hh"
 #include "PlayerComputerData.hh"
+#include "PlayerWeaponData.hh"
 #include "ShipClass.hh"
 #include "Status.hh"
 #include "TimeUtils.hh"
 #include "Uuid.hh"
-#include "WeaponData.hh"
 #include <eigen3/Eigen/Eigen>
 #include <optional>
 
@@ -37,7 +37,7 @@ struct PlayerShipData
   std::optional<Uuid> targetDbId{};
   std::optional<Uuid> playerDbId{};
 
-  std::vector<WeaponData> weapons{};
+  std::vector<PlayerWeaponData> weapons{};
   std::vector<PlayerComputerData> computers{};
 
   bool operator==(const PlayerShipData &rhs) const;

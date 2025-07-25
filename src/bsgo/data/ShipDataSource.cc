@@ -138,7 +138,7 @@ void ShipDataSource::registerShip(Coordinator &coordinator,
   {
     const auto weaponDbData = m_repositories->playerWeaponRepository->findOneById(weapon.weapon);
 
-    WeaponData weaponData{
+    PlayerWeaponData weaponData{
       .dbId         = weaponDbData.id,
       .weaponDbId   = weaponDbData.weapon,
       .slotPosition = weapon.slotPosition,

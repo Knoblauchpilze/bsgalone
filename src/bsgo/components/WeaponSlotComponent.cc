@@ -3,7 +3,7 @@
 
 namespace bsgo {
 
-WeaponSlotComponent::WeaponSlotComponent(const WeaponData &weapon)
+WeaponSlotComponent::WeaponSlotComponent(const PlayerWeaponData &weapon)
   : SlotComponent(ComponentType::WEAPON_SLOT,
                   SlotComponentData{.dbId       = weapon.dbId,
                                     .offensive  = true,

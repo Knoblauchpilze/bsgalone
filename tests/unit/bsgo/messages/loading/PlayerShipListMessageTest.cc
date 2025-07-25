@@ -77,14 +77,14 @@ TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, Clone)
 
 TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, WithWeapon)
 {
-  std::vector<WeaponData> weapons{{.dbId       = Uuid{1},
-                                   .weaponDbId = Uuid{14},
-                                   .level      = 10,
-                                   .range      = 0.145f},
-                                  {.dbId       = Uuid{2},
-                                   .minDamage  = 14.2f,
-                                   .maxDamage  = 100.0f,
-                                   .reloadTime = core::toMilliseconds(23)}};
+  std::vector<PlayerWeaponData> weapons{{.dbId       = Uuid{1},
+                                         .weaponDbId = Uuid{14},
+                                         .level      = 10,
+                                         .range      = 0.145f},
+                                        {.dbId       = Uuid{2},
+                                         .minDamage  = 14.2f,
+                                         .maxDamage  = 100.0f,
+                                         .reloadTime = core::toMilliseconds(23)}};
   std::vector<PlayerShipData> shipsData{{.dbId             = Uuid{65},
                                          .position         = Eigen::Vector3f(1.0f, 2.8f, 3.9f),
                                          .radius           = 26.9f,

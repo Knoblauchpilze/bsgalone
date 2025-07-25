@@ -37,9 +37,9 @@ auto OutpostProps::toOutpostData() const -> OutpostData
   };
 }
 
-auto WeaponProps::toWeaponData() const -> WeaponData
+auto WeaponProps::toPlayerWeaponData() const -> PlayerWeaponData
 {
-  return WeaponData{
+  return PlayerWeaponData{
     .dbId         = dbWeapon.id,
     .weaponDbId   = dbWeapon.weapon,
     .slotPosition = slotPosition,
@@ -98,7 +98,7 @@ auto ShipProps::toPlayerShipData() const -> PlayerShipData
   std::transform(weapons.begin(),
                  weapons.end(),
                  std::back_inserter(data.weapons),
-                 [](const WeaponProps &wp) { return wp.toWeaponData(); });
+                 [](const WeaponProps &wp) { return wp.toPlayerWeaponData(); });
 
   std::transform(computers.begin(),
                  computers.end(),
