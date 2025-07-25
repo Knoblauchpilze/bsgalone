@@ -4,8 +4,8 @@
 #include "OutpostListMessage.hh"
 #include "PlayerListMessage.hh"
 #include "PlayerLoginDataMessage.hh"
+#include "PlayerShipListMessage.hh"
 #include "ResourceListMessage.hh"
-#include "ShipListMessage.hh"
 #include "SystemListMessage.hh"
 
 namespace bsgo {
@@ -62,7 +62,7 @@ void LoadingMessagesConsumer::handleLoadingStartedMessage(const LoadingStartedMe
       handlePlayersLoading(message);
       handleAsteroidsLoading(message);
       handleOutpostsLoading(message);
-      handleShipsLoading(message);
+      handlePlayerShipsLoading(message);
       break;
     default:
       error("Unsupported loading transition " + str(message.getTransition()));
@@ -183,7 +183,7 @@ void LoadingMessagesConsumer::handleOutpostsLoading(const LoadingStartedMessage 
   m_outputMessageQueue->pushMessage(std::move(out));
 }
 
-void LoadingMessagesConsumer::handleShipsLoading(const LoadingStartedMessage &message) const
+void LoadingMessagesConsumer::handlePlayerShipsLoading(const LoadingStartedMessage &message) const
 {
   const auto systemDbId = message.getSystemDbId();
 
@@ -195,7 +195,7 @@ void LoadingMessagesConsumer::handleShipsLoading(const LoadingStartedMessage &me
                  std::back_inserter(shipsData),
                  [](const ShipProps &props) { return props.toPlayerShipData(); });
 
-  auto out = std::make_unique<ShipListMessage>(systemDbId, shipsData);
+  auto out = std::make_unique<PlayerShipListMessage>(systemDbId, shipsData);
   out->copyClientIdIfDefined(message);
 
   m_outputMessageQueue->pushMessage(std::move(out));

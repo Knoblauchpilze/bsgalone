@@ -6,7 +6,7 @@
 #include "ComponentMessageConsumer.hh"
 #include "OutpostListMessageConsumer.hh"
 #include "PlayerListMessageConsumer.hh"
-#include "ShipListMessageConsumer.hh"
+#include "PlayerShipListMessageConsumer.hh"
 #include "ShipMessageConsumer.hh"
 #include "SystemMessageConsumer.hh"
 
@@ -27,7 +27,7 @@ void createMessageConsumers(bsgo::IMessageQueue &inputMessagesQueue,
   inputMessagesQueue.addListener(
     std::make_unique<OutpostListMessageConsumer>(entityMapper, coordinator));
   inputMessagesQueue.addListener(
-    std::make_unique<ShipListMessageConsumer>(entityMapper, coordinator));
+    std::make_unique<PlayerShipListMessageConsumer>(entityMapper, coordinator));
 }
 
 } // namespace pge

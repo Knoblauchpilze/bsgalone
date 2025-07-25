@@ -1,32 +1,32 @@
 
-#include "ShipListMessage.hh"
+#include "PlayerShipListMessage.hh"
 #include "DataSerialization.hh"
 #include "SerializationUtils.hh"
 
 namespace bsgo {
 
-ShipListMessage::ShipListMessage()
-  : NetworkMessage(MessageType::SHIP_LIST)
+PlayerShipListMessage::PlayerShipListMessage()
+  : NetworkMessage(MessageType::PLAYER_SHIP_LIST)
 {}
 
-ShipListMessage::ShipListMessage(const Uuid systemDbId,
-                                 const std::vector<PlayerShipData> &asteroidsData)
-  : NetworkMessage(MessageType::SHIP_LIST)
+PlayerShipListMessage::PlayerShipListMessage(const Uuid systemDbId,
+                                             const std::vector<PlayerShipData> &asteroidsData)
+  : NetworkMessage(MessageType::PLAYER_SHIP_LIST)
   , m_systemDbId(systemDbId)
   , m_shipsData(asteroidsData)
 {}
 
-auto ShipListMessage::getSystemDbId() const -> Uuid
+auto PlayerShipListMessage::getSystemDbId() const -> Uuid
 {
   return m_systemDbId;
 }
 
-auto ShipListMessage::getShipsData() const -> const std::vector<PlayerShipData> &
+auto PlayerShipListMessage::getShipsData() const -> const std::vector<PlayerShipData> &
 {
   return m_shipsData;
 }
 
-auto ShipListMessage::serialize(std::ostream &out) const -> std::ostream &
+auto PlayerShipListMessage::serialize(std::ostream &out) const -> std::ostream &
 {
   core::serialize(out, m_messageType);
   core::serialize(out, m_clientId);
@@ -42,7 +42,7 @@ auto ShipListMessage::serialize(std::ostream &out) const -> std::ostream &
   return out;
 }
 
-bool ShipListMessage::deserialize(std::istream &in)
+bool PlayerShipListMessage::deserialize(std::istream &in)
 {
   bool ok{true};
   ok &= core::deserialize(in, m_messageType);
@@ -67,9 +67,9 @@ bool ShipListMessage::deserialize(std::istream &in)
   return ok;
 }
 
-auto ShipListMessage::clone() const -> IMessagePtr
+auto PlayerShipListMessage::clone() const -> IMessagePtr
 {
-  auto clone = std::make_unique<ShipListMessage>(m_systemDbId, m_shipsData);
+  auto clone = std::make_unique<PlayerShipListMessage>(m_systemDbId, m_shipsData);
   clone->copyClientIdIfDefined(*this);
 
   return clone;
