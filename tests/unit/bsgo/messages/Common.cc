@@ -117,4 +117,12 @@ void assertResourceDataAreEqual(const ResourceData &actual, const ResourceData &
   EXPECT_EQ(actual.name, expected.name);
 }
 
+void assertPlayerResourceDataAreEqual(const PlayerResourceData &actual,
+                                      const PlayerResourceData &expected)
+{
+  EXPECT_EQ(actual.dbId, expected.dbId);
+  EXPECT_EQ(actual.name, expected.name);
+  EXPECT_EQ(actual.amount, expected.amount);
+}
+
 } // namespace bsgo

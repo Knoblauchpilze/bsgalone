@@ -311,4 +311,25 @@ bool deserializeResourceData(std::istream &in, ResourceData &data)
   return ok;
 }
 
+auto serializePlayerResourceData(std::ostream &out, const PlayerResourceData &data)
+  -> std::ostream &
+{
+  core::serialize(out, data.dbId);
+  core::serialize(out, data.name);
+  core::serialize(out, data.amount);
+
+  return out;
+}
+
+bool deserializePlayerResourceData(std::istream &in, PlayerResourceData &data)
+{
+  bool ok{true};
+
+  ok &= core::deserialize(in, data.dbId);
+  ok &= core::deserialize(in, data.name);
+  ok &= core::deserialize(in, data.amount);
+
+  return ok;
+}
+
 } // namespace bsgo
