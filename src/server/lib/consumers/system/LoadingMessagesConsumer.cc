@@ -4,6 +4,7 @@
 #include "OutpostListMessage.hh"
 #include "PlayerListMessage.hh"
 #include "PlayerLoginDataMessage.hh"
+#include "PlayerResourceListMessage.hh"
 #include "PlayerShipListMessage.hh"
 #include "ResourceListMessage.hh"
 #include "SystemListMessage.hh"
@@ -54,6 +55,7 @@ void LoadingMessagesConsumer::handleLoadingStartedMessage(const LoadingStartedMe
     case LoadingTransition::LOGIN:
       handleLoginDataLoading(message);
       handleResourcesLoading(message);
+      handlePlayerResourcesLoading(message);
       break;
     case LoadingTransition::UNDOCK:
       handleSystemsLoading(message);
@@ -108,6 +110,31 @@ void LoadingMessagesConsumer::handleResourcesLoading(const LoadingStartedMessage
                  [](const Resource &resource) { return toResourceData(resource); });
 
   auto out = std::make_unique<ResourceListMessage>(resourcesData);
+  out->copyClientIdIfDefined(message);
+
+  m_outputMessageQueue->pushMessage(std::move(out));
+}
+
+void LoadingMessagesConsumer::handlePlayerResourcesLoading(const LoadingStartedMessage &message) const
+{
+  const auto maybePlayerDbId = message.tryGetPlayerDbId();
+  if (!maybePlayerDbId)
+  {
+    warn("Failed to process loading started message", "No player defined");
+    return;
+  }
+
+  const auto playerResources = m_loadingService->getPlayerResources(*maybePlayerDbId);
+
+  std::vector<PlayerResourceData> resourcesData{};
+  std::transform(playerResources.begin(),
+                 playerResources.end(),
+                 std::back_inserter(resourcesData),
+                 [](const PlayerResource &playerResource) {
+                   return toPlayerResourceData(playerResource);
+                 });
+
+  auto out = std::make_unique<PlayerResourceListMessage>(resourcesData);
   out->copyClientIdIfDefined(message);
 
   m_outputMessageQueue->pushMessage(std::move(out));

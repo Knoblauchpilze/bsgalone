@@ -255,4 +255,9 @@ auto LoadingService::getResources() const -> std::vector<Resource>
   return out;
 }
 
+auto LoadingService::getPlayerResources(const Uuid playerDbId) const -> std::vector<PlayerResource>
+{
+  return m_repositories.playerResourceRepository->findAllByPlayer(playerDbId);
+}
+
 } // namespace bsgo
