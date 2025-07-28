@@ -49,6 +49,8 @@ class LoadingService : public AbstractService
 
   auto getResources() const -> std::vector<Resource>;
 
+  auto getPlayerResources(const Uuid playerDbId) const -> std::vector<PlayerResource>;
+
   private:
   CoordinatorShPtr m_coordinator{};
   const DatabaseEntityMapper &m_entityMapper;

@@ -125,4 +125,13 @@ auto toResourceData(const Resource &resource) -> ResourceData
   };
 }
 
+auto toPlayerResourceData(const PlayerResource &playerResource) -> PlayerResourceData
+{
+  return PlayerResourceData{
+    .dbId   = playerResource.resource,
+    .name   = playerResource.name,
+    .amount = playerResource.amount,
+  };
+}
+
 } // namespace bsgo
