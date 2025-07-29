@@ -5,6 +5,7 @@
 #include "Faction.hh"
 #include "GameSession.hh"
 #include "IMessageQueue.hh"
+#include "PlayerResourceData.hh"
 #include "Repositories.hh"
 #include "Uuid.hh"
 #include <memory>
@@ -22,9 +23,11 @@ class PlayerView : public AbstractView
 
   bool isReady() const noexcept override;
 
+  void onMessageReceived(const bsgo::IMessage &message) override;
+
   auto getPlayerDbId() const -> bsgo::Uuid;
   auto getPlayerFaction() const -> bsgo::Faction;
-  auto getPlayerResources() const -> std::vector<bsgo::PlayerResource>;
+  auto getPlayerResources() const -> std::vector<bsgo::PlayerResourceData>;
   auto getPlayerWeapons() const -> std::vector<bsgo::PlayerWeapon>;
   auto getPlayerComputers() const -> std::vector<bsgo::PlayerComputer>;
   auto getPlayerShips() const -> std::vector<bsgo::PlayerShip>;
@@ -42,6 +45,8 @@ class PlayerView : public AbstractView
   bsgo::Repositories m_repositories{};
   GameSessionShPtr m_gameSession{};
   bsgo::IMessageQueue *const m_outputMessageQueue{};
+
+  std::vector<bsgo::PlayerResourceData> m_playerResources{};
 };
 
 using PlayerViewShPtr = std::shared_ptr<PlayerView>;
