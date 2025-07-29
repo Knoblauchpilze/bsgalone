@@ -3,6 +3,7 @@
 #include "HangarMessage.hh"
 #include "LoginMessage.hh"
 #include "LogoutMessage.hh"
+#include "PlayerResourceListMessage.hh"
 #include "PurchaseMessage.hh"
 #include "SignupMessage.hh"
 
@@ -28,7 +29,13 @@ PlayerView::PlayerView(const bsgo::Repositories &repositories,
 
 bool PlayerView::isReady() const noexcept
 {
-  return m_gameSession->hasPlayerDbId();
+  return m_gameSession->hasPlayerDbId() && !m_playerResources.empty();
+}
+
+void PlayerView::onMessageReceived(const bsgo::IMessage &message)
+{
+  const auto playerResourceList = message.as<bsgo::PlayerResourceListMessage>();
+  m_playerResources             = playerResourceList.getResourcesData();
 }
 
 auto PlayerView::getPlayerDbId() const -> bsgo::Uuid
@@ -41,9 +48,9 @@ auto PlayerView::getPlayerFaction() const -> bsgo::Faction
   return m_gameSession->getFaction();
 }
 
-auto PlayerView::getPlayerResources() const -> std::vector<bsgo::PlayerResource>
+auto PlayerView::getPlayerResources() const -> std::vector<bsgo::PlayerResourceData>
 {
-  return m_repositories.playerResourceRepository->findAllByPlayer(m_gameSession->getPlayerDbId());
+  return m_playerResources;
 }
 
 auto PlayerView::getPlayerWeapons() const -> std::vector<bsgo::PlayerWeapon>
