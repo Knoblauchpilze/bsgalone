@@ -10,6 +10,7 @@ enum class LoadingTransition
   JUMP,
   LOGIN,
   UNDOCK,
+  PURCHASE,
 };
 
 auto str(const LoadingTransition transition) -> std::string;

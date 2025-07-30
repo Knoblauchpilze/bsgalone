@@ -13,6 +13,8 @@ auto str(const LoadingTransition transition) -> std::string
       return "login";
     case LoadingTransition::UNDOCK:
       return "undock";
+    case LoadingTransition::PURCHASE:
+      return "purchase";
     default:
       return "unknown";
   }

@@ -1,17 +1,25 @@
 
 #include "PurchaseMessageConsumer.hh"
+#include "LoadingFinishedMessage.hh"
+#include "LoadingStartedMessage.hh"
 
 namespace bsgo {
 
 PurchaseMessageConsumer::PurchaseMessageConsumer(const Services &services,
+                                                 IMessageQueue *const systemMessageQueue,
                                                  IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("purchase", {MessageType::PURCHASE})
   , m_purchaseService(services.purchase)
+  , m_systemMessageQueue(systemMessageQueue)
   , m_outputMessageQueue(outputMessageQueue)
 {
   if (nullptr == m_purchaseService)
   {
     throw std::invalid_argument("Expected non null purchase service");
+  }
+  if (nullptr == m_systemMessageQueue)
+  {
+    throw std::invalid_argument("Expected non null system message queue");
   }
   if (nullptr == m_outputMessageQueue)
   {
@@ -61,6 +69,8 @@ void PurchaseMessageConsumer::handleComputerPurchase(const PurchaseMessage &mess
   out->validate();
   out->copyClientIdIfDefined(message);
   m_outputMessageQueue->pushMessage(std::move(out));
+
+  handleSuccessfulPurchase(message);
 }
 
 void PurchaseMessageConsumer::handleShipPurchase(const PurchaseMessage &message) const
@@ -79,6 +89,8 @@ void PurchaseMessageConsumer::handleShipPurchase(const PurchaseMessage &message)
   out->validate();
   out->copyClientIdIfDefined(message);
   m_outputMessageQueue->pushMessage(std::move(out));
+
+  handleSuccessfulPurchase(message);
 }
 
 void PurchaseMessageConsumer::handleWeaponPurchase(const PurchaseMessage &message) const
@@ -97,6 +109,23 @@ void PurchaseMessageConsumer::handleWeaponPurchase(const PurchaseMessage &messag
   out->validate();
   out->copyClientIdIfDefined(message);
   m_outputMessageQueue->pushMessage(std::move(out));
+
+  handleSuccessfulPurchase(message);
+}
+
+void PurchaseMessageConsumer::handleSuccessfulPurchase(const PurchaseMessage &message) const
+{
+  const auto playerDbId = message.getPlayerDbId();
+
+  auto started = std::make_unique<LoadingStartedMessage>(LoadingTransition::PURCHASE);
+  started->setPlayerDbId(playerDbId);
+  started->copyClientIdIfDefined(message);
+  m_systemMessageQueue->pushMessage(std::move(started));
+
+  auto finished = std::make_unique<LoadingFinishedMessage>(LoadingTransition::PURCHASE);
+  finished->setPlayerDbId(playerDbId);
+  finished->copyClientIdIfDefined(message);
+  m_systemMessageQueue->pushMessage(std::move(finished));
 }
 
 } // namespace bsgo

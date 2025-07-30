@@ -47,14 +47,16 @@ void LoadingMessagesConsumer::handleLoadingStartedMessage(const LoadingStartedMe
 {
   m_outputMessageQueue->pushMessage(message.clone());
 
-  info("Transition is " + str(message.getTransition()) + " for system "
-       + str(message.getSystemDbId()));
+  info("Handling loading transition " + str(message.getTransition()));
 
   switch (message.getTransition())
   {
     case LoadingTransition::LOGIN:
       handleLoginDataLoading(message);
       handleResourcesLoading(message);
+      handlePlayerResourcesLoading(message);
+      break;
+    case LoadingTransition::PURCHASE:
       handlePlayerResourcesLoading(message);
       break;
     case LoadingTransition::UNDOCK:

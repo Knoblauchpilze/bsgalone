@@ -45,11 +45,12 @@ void GameSession::startLoadingTransition(const bsgo::LoadingTransition transitio
 {
   if (!m_loading)
   {
-    error("Unexpected start of loading transition", "Not in loading screen");
+    error("Unexpected start of loading transition " + bsgo::str(transition),
+          "Not in loading screen");
   }
   if (!isTransitionValidForNextScreen(transition, m_loading->nextScreen))
   {
-    error("Unexpected start of loading transition",
+    error("Unexpected start of loading transition " + bsgo::str(transition),
           "Transition " + bsgo::str(transition) + " does not match next screen "
             + str(m_loading->nextScreen));
   }
