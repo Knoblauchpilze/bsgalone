@@ -87,9 +87,9 @@ void LoginMessageConsumer::publishLoadingMessages(const bsgo::Uuid clientId,
   started->setClientId(clientId);
   maybeProcessor->second->pushMessage(std::move(started));
 
-  auto finished = std::make_unique<LoadingFinishedMessage>(LoadingTransition::LOGIN,
-                                                           *maybeSystemDbId,
-                                                           playerDbId);
+  auto finished = std::make_unique<LoadingFinishedMessage>(LoadingTransition::LOGIN);
+  finished->setSystemDbId(*maybeSystemDbId);
+  finished->setPlayerDbId(playerDbId);
   finished->setClientId(clientId);
   maybeProcessor->second->pushMessage(std::move(finished));
 }

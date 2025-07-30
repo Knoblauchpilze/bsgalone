@@ -11,15 +11,15 @@ class LoadingFinishedMessage : public NetworkMessage
 {
   public:
   LoadingFinishedMessage();
-  LoadingFinishedMessage(const LoadingTransition transition, const Uuid systemDbId);
-  LoadingFinishedMessage(const LoadingTransition transition,
-                         const Uuid systemDbId,
-                         const Uuid playerDbId);
+  LoadingFinishedMessage(const LoadingTransition transition);
   ~LoadingFinishedMessage() override = default;
 
   auto getTransition() const -> LoadingTransition;
-  auto getSystemDbId() const -> Uuid;
+  auto tryGetSystemDbId() const -> std::optional<Uuid>;
   auto tryGetPlayerDbId() const -> std::optional<Uuid>;
+
+  void setSystemDbId(const Uuid systemDbId);
+  void setPlayerDbId(const Uuid playerDbId);
 
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
@@ -28,7 +28,7 @@ class LoadingFinishedMessage : public NetworkMessage
 
   private:
   LoadingTransition m_transition{};
-  Uuid m_systemDbId{};
+  std::optional<Uuid> m_systemDbId{};
   std::optional<Uuid> m_playerDbId{};
 };
 
