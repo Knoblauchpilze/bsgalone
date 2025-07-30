@@ -20,7 +20,6 @@ class LoadingScreenUiHandler : public IUiHandler
   bool processUserInput(UserInputData &inputData) override;
   void render(Renderer &engine) const override;
   void updateUi() override;
-  void reset() override;
 
   private:
   UiTextMenuPtr m_loadingText{};
