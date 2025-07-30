@@ -63,6 +63,4 @@ void LoadingScreenUiHandler::updateUi()
   m_loadingText->setText(text);
 }
 
-void LoadingScreenUiHandler::reset() {}
-
 } // namespace pge
