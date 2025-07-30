@@ -13,27 +13,44 @@ void assertMessagesAreEqual(const LoadingStartedMessage &actual,
   EXPECT_EQ(actual.type(), expected.type());
   EXPECT_EQ(actual.tryGetClientId(), expected.tryGetClientId());
   EXPECT_EQ(actual.getTransition(), expected.getTransition());
-  EXPECT_EQ(actual.getSystemDbId(), expected.getSystemDbId());
+  EXPECT_EQ(actual.tryGetSystemDbId(), expected.tryGetSystemDbId());
   EXPECT_EQ(actual.tryGetPlayerDbId(), expected.tryGetPlayerDbId());
 }
 } // namespace
 
-TEST(Unit_Bsgo_Serialization_LoadingStartedMessage, Basic)
+TEST(Unit_Bsgo_Serialization_LoadingStartedMessage, NoSystemNoPlayer)
 {
-  const LoadingStartedMessage expected(LoadingTransition::JUMP, Uuid{1234}, Uuid{7845});
+  const LoadingStartedMessage expected(LoadingTransition::JUMP);
 
-  LoadingStartedMessage actual(LoadingTransition::UNDOCK, Uuid{4});
+  LoadingStartedMessage actual(LoadingTransition::UNDOCK);
+  actual.setSystemDbId(Uuid{1234});
+  actual.setPlayerDbId(Uuid{7845});
   actual.setClientId(Uuid{12});
 
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_LoadingStartedMessage, WithoutPlayerDbId)
+TEST(Unit_Bsgo_Serialization_LoadingStartedMessage, WithSystem)
 {
-  const LoadingStartedMessage expected(LoadingTransition::LOGIN, Uuid{32});
+  LoadingStartedMessage expected(LoadingTransition::PURCHASE);
+  expected.setSystemDbId(Uuid{7845});
 
-  LoadingStartedMessage actual(LoadingTransition::JUMP, Uuid{489}, Uuid{6578});
+  LoadingStartedMessage actual(LoadingTransition::LOGIN);
+  actual.setPlayerDbId(Uuid{3456});
+
+  serializeAndDeserializeMessage(expected, actual);
+  assertMessagesAreEqual(actual, expected);
+}
+
+TEST(Unit_Bsgo_Serialization_LoadingStartedMessage, WithPlayer)
+{
+  LoadingStartedMessage expected(LoadingTransition::PURCHASE);
+  expected.setPlayerDbId(Uuid{1234});
+
+  LoadingStartedMessage actual(LoadingTransition::LOGIN);
+  actual.setSystemDbId(Uuid{8792});
+  actual.setPlayerDbId(Uuid{3025});
 
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
@@ -41,27 +58,32 @@ TEST(Unit_Bsgo_Serialization_LoadingStartedMessage, WithoutPlayerDbId)
 
 TEST(Unit_Bsgo_Serialization_LoadingStartedMessage, WithClientId)
 {
-  LoadingStartedMessage expected(LoadingTransition::UNDOCK, Uuid{92}, Uuid{156});
+  LoadingStartedMessage expected(LoadingTransition::UNDOCK);
+  expected.setPlayerDbId(Uuid{92});
+  expected.setSystemDbId(Uuid{156});
   expected.setClientId(Uuid{17});
 
-  LoadingStartedMessage actual(LoadingTransition::LOGIN, Uuid{10}, Uuid{7});
+  LoadingStartedMessage actual(LoadingTransition::LOGIN);
 
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_LoadingStartedMessage, Clone)
+TEST(Unit_Bsgo_Serialization_LoadingStartedMessage, CloneWithoutSystemWithoutPlayer)
 {
-  const LoadingStartedMessage expected(LoadingTransition::JUMP, Uuid{98}, Uuid{57});
+  const LoadingStartedMessage expected(LoadingTransition::LOGIN);
   const auto cloned = expected.clone();
 
   ASSERT_EQ(cloned->type(), MessageType::LOADING_STARTED);
   assertMessagesAreEqual(cloned->as<LoadingStartedMessage>(), expected);
 }
 
-TEST(Unit_Bsgo_Serialization_LoadingStartedMessage, CloneWithoutPlayerDbId)
+TEST(Unit_Bsgo_Serialization_LoadingStartedMessage, CloneWithSystemAndPlayer)
 {
-  const LoadingStartedMessage expected(LoadingTransition::LOGIN, Uuid{37});
+  LoadingStartedMessage expected(LoadingTransition::JUMP);
+  expected.setSystemDbId(Uuid{98});
+  expected.setPlayerDbId(Uuid{57});
+
   const auto cloned = expected.clone();
 
   ASSERT_EQ(cloned->type(), MessageType::LOADING_STARTED);
