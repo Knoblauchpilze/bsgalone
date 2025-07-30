@@ -83,7 +83,8 @@ void DockMessageConsumer::handleUndocking(const DockMessage &message) const
   started->copyClientIdIfDefined(message);
   m_systemMessageQueue->pushMessage(std::move(started));
 
-  auto finished = std::make_unique<LoadingFinishedMessage>(LoadingTransition::UNDOCK, systemDbId);
+  auto finished = std::make_unique<LoadingFinishedMessage>(LoadingTransition::UNDOCK);
+  finished->setSystemDbId(systemDbId);
   finished->copyClientIdIfDefined(message);
   m_systemMessageQueue->pushMessage(std::move(finished));
 }
