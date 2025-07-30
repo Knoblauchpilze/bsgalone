@@ -24,7 +24,7 @@ void createMessageConsumers(IMessageQueue *const inputMessagesQueue,
     std::make_unique<HangarMessageConsumer>(services, outputMessagesQueue));
 
   inputMessagesQueue->addListener(
-    std::make_unique<PurchaseMessageConsumer>(services, outputMessagesQueue));
+    std::make_unique<PurchaseMessageConsumer>(services, inputMessagesQueue, outputMessagesQueue));
 
   inputMessagesQueue->addListener(
     std::make_unique<EquipMessageConsumer>(services, outputMessagesQueue));
