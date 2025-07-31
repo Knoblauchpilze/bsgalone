@@ -29,6 +29,8 @@ bool isTransitionValidForNextScreen(const bsgo::LoadingTransition transition,
 {
   switch (transition)
   {
+    case bsgo::LoadingTransition::DOCK:
+      return nextScreen == Screen::OUTPOST;
     case bsgo::LoadingTransition::JUMP:
       return nextScreen == Screen::GAME;
     case bsgo::LoadingTransition::LOGIN:
