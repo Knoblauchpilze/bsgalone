@@ -45,28 +45,31 @@ void LoadingMessagesConsumer::onMessageReceived(const IMessage &message)
 
 void LoadingMessagesConsumer::handleLoadingStartedMessage(const LoadingStartedMessage &message) const
 {
-  m_outputMessageQueue->pushMessage(message.clone());
-
   info("Handling loading transition " + str(message.getTransition()));
+
+  // TODO: Ignore some transitions for now
+  if (message.getTransition() != LoadingTransition::PURCHASE
+      && message.getTransition() != LoadingTransition::DOCK)
+  {
+    m_outputMessageQueue->pushMessage(message.clone());
+  }
 
   switch (message.getTransition())
   {
-    case LoadingTransition::LOGIN:
-      handleLoginDataLoading(message);
-      handleResourcesLoading(message);
-      handlePlayerResourcesLoading(message);
+    case LoadingTransition::DOCK:
+      handleDockTransition(message);
       break;
-    case LoadingTransition::PURCHASE:
-      handlePlayerResourcesLoading(message);
+    case LoadingTransition::JUMP:
+      handleJumpTransition(message);
+      break;
+    case LoadingTransition::LOGIN:
+      handleLoginTransition(message);
       break;
     case LoadingTransition::UNDOCK:
-      handleSystemsLoading(message);
-      [[fallthrough]];
-    case LoadingTransition::JUMP:
-      handlePlayersLoading(message);
-      handleAsteroidsLoading(message);
-      handleOutpostsLoading(message);
-      handlePlayerShipsLoading(message);
+      handleUndockTransition(message);
+      break;
+    case LoadingTransition::PURCHASE:
+      handlePurchaseTransition(message);
       break;
     default:
       error("Unsupported loading transition " + str(message.getTransition()));
@@ -77,7 +80,44 @@ void LoadingMessagesConsumer::handleLoadingStartedMessage(const LoadingStartedMe
 void LoadingMessagesConsumer::forwardLoadingFinishedMessage(
   const LoadingFinishedMessage &message) const
 {
-  m_outputMessageQueue->pushMessage(message.clone());
+  // TODO: Ignore some transitions for now
+  if (message.getTransition() != LoadingTransition::PURCHASE
+      && message.getTransition() != LoadingTransition::DOCK)
+  {
+    m_outputMessageQueue->pushMessage(message.clone());
+  }
+}
+
+void LoadingMessagesConsumer::handleDockTransition(const LoadingStartedMessage & /*message*/) const
+{}
+
+void LoadingMessagesConsumer::handleJumpTransition(const LoadingStartedMessage &message) const
+{
+  handlePlayersLoading(message);
+  handleAsteroidsLoading(message);
+  handleOutpostsLoading(message);
+  handlePlayerShipsLoading(message);
+}
+
+void LoadingMessagesConsumer::handleLoginTransition(const LoadingStartedMessage &message) const
+{
+  handleLoginDataLoading(message);
+  handleResourcesLoading(message);
+  handlePlayerResourcesLoading(message);
+}
+
+void LoadingMessagesConsumer::handlePurchaseTransition(const LoadingStartedMessage & /*message*/) const
+{
+  // handlePlayerResourcesLoading(message);
+}
+
+void LoadingMessagesConsumer::handleUndockTransition(const LoadingStartedMessage &message) const
+{
+  handleSystemsLoading(message);
+  handlePlayersLoading(message);
+  handleAsteroidsLoading(message);
+  handleOutpostsLoading(message);
+  handlePlayerShipsLoading(message);
 }
 
 void LoadingMessagesConsumer::handleLoginDataLoading(const LoadingStartedMessage &message) const

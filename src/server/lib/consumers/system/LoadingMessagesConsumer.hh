@@ -24,6 +24,12 @@ class LoadingMessagesConsumer : public AbstractMessageConsumer
   void handleLoadingStartedMessage(const LoadingStartedMessage &message) const;
   void forwardLoadingFinishedMessage(const LoadingFinishedMessage &message) const;
 
+  void handleDockTransition(const LoadingStartedMessage &message) const;
+  void handleJumpTransition(const LoadingStartedMessage &message) const;
+  void handleLoginTransition(const LoadingStartedMessage &message) const;
+  void handlePurchaseTransition(const LoadingStartedMessage &message) const;
+  void handleUndockTransition(const LoadingStartedMessage &message) const;
+
   void handleLoginDataLoading(const LoadingStartedMessage &message) const;
   void handleResourcesLoading(const LoadingStartedMessage &message) const;
   void handlePlayerResourcesLoading(const LoadingStartedMessage &message) const;
