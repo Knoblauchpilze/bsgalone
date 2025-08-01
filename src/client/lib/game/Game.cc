@@ -348,6 +348,7 @@ void Game::onActiveSystemChanged(const bsgo::Uuid systemDbId)
 
 void Game::onShipDocked()
 {
+  m_coordinator->clear();
   m_entityMapper.clearEntities();
 
   setupLoadingScreen(Screen::OUTPOST);
