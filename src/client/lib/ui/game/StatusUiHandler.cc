@@ -83,7 +83,7 @@ void StatusUiHandler::updateUi()
   m_logoutConfirmation->setVisible(m_logoutRequested);
 }
 
-void StatusUiHandler::reset()
+void StatusUiHandler::onLoadingTransition(const bsgo::LoadingTransition /*transition*/)
 {
   m_logoutRequested = false;
 }

@@ -112,7 +112,7 @@ void LockerUiHandler::updateUi()
   }
 }
 
-void LockerUiHandler::reset()
+void LockerUiHandler::onLoadingTransition(const bsgo::LoadingTransition /*transition*/)
 {
   m_resourcesMenu->clearChildren();
   m_headerMenu->clearChildren();

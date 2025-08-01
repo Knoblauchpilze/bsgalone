@@ -89,7 +89,7 @@ void WeaponsUiHandler::updateUi()
   }
 }
 
-void WeaponsUiHandler::reset()
+void WeaponsUiHandler::onLoadingTransition(const bsgo::LoadingTransition /*transition*/)
 {
   m_statuses.clear();
 

@@ -1,12 +1,13 @@
 
 #pragma once
 
-#include "Controls.hh"
-#include "CoordinateFrame.hh"
 #include "CoreObject.hh"
-#include "Game.hh"
 #include "IMessageQueue.hh"
+#include "LoadingTransition.hh"
+#include "Renderer.hh"
+#include "TexturePack.hh"
 #include "UserInputData.hh"
+#include "Views.hh"
 #include <memory>
 
 namespace pge {
@@ -25,7 +26,7 @@ class IUiHandler : public core::CoreObject
   virtual void render(Renderer &engine) const             = 0;
   virtual void updateUi()                                 = 0;
 
-  virtual void reset();
+  virtual void onLoadingTransition(const bsgo::LoadingTransition transition);
   virtual void connectToMessageQueue(bsgo::IMessageQueue &messageQueue);
 };
 

@@ -49,7 +49,7 @@ void ShipStatusUiHandler::updateUi()
   updateJumpPanel();
 }
 
-void ShipStatusUiHandler::reset()
+void ShipStatusUiHandler::onLoadingTransition(const bsgo::LoadingTransition /*transition*/)
 {
   m_jumpStartTime.reset();
 }

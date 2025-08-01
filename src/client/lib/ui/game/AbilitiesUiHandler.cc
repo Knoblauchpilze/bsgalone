@@ -88,7 +88,7 @@ void AbilitiesUiHandler::updateUi()
   }
 }
 
-void AbilitiesUiHandler::reset()
+void AbilitiesUiHandler::onLoadingTransition(const bsgo::LoadingTransition /*transition*/)
 {
   m_statuses.clear();
 
