@@ -41,6 +41,8 @@ auto str(const MessageType &type) -> std::string
       return "loot";
     case MessageType::OUTPOST_LIST:
       return "outpost_list";
+    case MessageType::PLAYER_COMPUTER_LIST:
+      return "player_computer_list";
     case MessageType::PLAYER_LIST:
       return "player_list";
     case MessageType::PLAYER_LOGIN_DATA:
@@ -74,7 +76,7 @@ auto str(const MessageType &type) -> std::string
   }
 }
 
-auto allMessageTypes() -> std::array<MessageType, 31>
+auto allMessageTypes() -> std::array<MessageType, 32>
 {
   return {MessageType::ASTEROID_LIST,
           MessageType::COMPONENT_SYNC,
@@ -93,6 +95,7 @@ auto allMessageTypes() -> std::array<MessageType, 31>
           MessageType::LOGIN,
           MessageType::LOGOUT,
           MessageType::OUTPOST_LIST,
+          MessageType::PLAYER_COMPUTER_LIST,
           MessageType::PLAYER_LIST,
           MessageType::PLAYER_LOGIN_DATA,
           MessageType::PLAYER_RESOURCE_LIST,

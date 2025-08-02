@@ -1,0 +1,68 @@
+
+#include "PlayerComputerListMessage.hh"
+#include "DataSerialization.hh"
+#include "SerializationUtils.hh"
+
+namespace bsgo {
+
+PlayerComputerListMessage::PlayerComputerListMessage()
+  : NetworkMessage(MessageType::PLAYER_COMPUTER_LIST)
+{}
+
+PlayerComputerListMessage::PlayerComputerListMessage(
+  const std::vector<PlayerComputerData> &computersData)
+  : NetworkMessage(MessageType::PLAYER_COMPUTER_LIST)
+  , m_computersData(computersData)
+{}
+
+auto PlayerComputerListMessage::getComputersData() const -> const std::vector<PlayerComputerData> &
+{
+  return m_computersData;
+}
+
+auto PlayerComputerListMessage::serialize(std::ostream &out) const -> std::ostream &
+{
+  core::serialize(out, m_messageType);
+  core::serialize(out, m_clientId);
+
+  core::serialize(out, m_computersData.size());
+  for (const auto &computerData : m_computersData)
+  {
+    serializePlayerComputerData(out, computerData);
+  }
+
+  return out;
+}
+
+bool PlayerComputerListMessage::deserialize(std::istream &in)
+{
+  bool ok{true};
+  ok &= core::deserialize(in, m_messageType);
+  ok &= core::deserialize(in, m_clientId);
+
+  std::size_t count;
+  ok &= core::deserialize(in, count);
+
+  m_computersData.clear();
+
+  for (std::size_t id = 0u; id < count; ++id)
+  {
+    PlayerComputerData data;
+
+    ok &= deserializePlayerComputerData(in, data);
+
+    m_computersData.emplace_back(data);
+  }
+
+  return ok;
+}
+
+auto PlayerComputerListMessage::clone() const -> IMessagePtr
+{
+  auto clone = std::make_unique<PlayerComputerListMessage>(m_computersData);
+  clone->copyClientIdIfDefined(*this);
+
+  return clone;
+}
+
+} // namespace bsgo

@@ -9,9 +9,9 @@ PlayerShipListMessage::PlayerShipListMessage()
   : NetworkMessage(MessageType::PLAYER_SHIP_LIST)
 {}
 
-PlayerShipListMessage::PlayerShipListMessage(const std::vector<PlayerShipData> &asteroidsData)
+PlayerShipListMessage::PlayerShipListMessage(const std::vector<PlayerShipData> &shipsData)
   : NetworkMessage(MessageType::PLAYER_SHIP_LIST)
-  , m_shipsData(asteroidsData)
+  , m_shipsData(shipsData)
 {}
 
 auto PlayerShipListMessage::tryGetSystemDbId() const -> std::optional<Uuid>

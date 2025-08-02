@@ -20,6 +20,7 @@
 #include "LogoutMessage.hh"
 #include "LootMessage.hh"
 #include "OutpostListMessage.hh"
+#include "PlayerComputerListMessage.hh"
 #include "PlayerListMessage.hh"
 #include "PlayerLoginDataMessage.hh"
 #include "PlayerResourceListMessage.hh"
@@ -141,6 +142,8 @@ auto MessageParser::tryReadMessage(const MessageType &type, std::istream &in)
       return readMessage<LootMessage>(in);
     case MessageType::OUTPOST_LIST:
       return readMessage<OutpostListMessage>(in);
+    case MessageType::PLAYER_COMPUTER_LIST:
+      return readMessage<PlayerComputerListMessage>(in);
     case MessageType::PLAYER_LIST:
       return readMessage<PlayerListMessage>(in);
     case MessageType::PLAYER_LOGIN_DATA:
