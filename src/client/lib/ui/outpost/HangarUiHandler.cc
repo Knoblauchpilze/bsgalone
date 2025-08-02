@@ -168,12 +168,12 @@ namespace {
 constexpr auto BUY_SHIP_BUTTON_TEXT = "Purchase";
 constexpr auto USE_SHIP_BUTTON_TEXT = "Select";
 
-auto getPlayerShipWithId(const std::vector<bsgo::PlayerShip> &ships, const bsgo::Uuid shipId)
-  -> std::optional<bsgo::PlayerShip>
+auto getPlayerShipWithId(const std::vector<bsgo::PlayerShipData> &ships, const bsgo::Uuid shipId)
+  -> std::optional<bsgo::PlayerShipData>
 {
   for (const auto &ship : ships)
   {
-    if (shipId == ship.ship)
+    if (shipId == ship.dbId)
     {
       return ship;
     }
@@ -213,7 +213,7 @@ void HangarUiHandler::updateShipMenus()
     }
     else
     {
-      shipData.playerShipDbId = maybePlayerShip->id;
+      shipData.playerShipDbId = maybePlayerShip->dbId;
       shipData.button->setText(USE_SHIP_BUTTON_TEXT);
 
       shipData.button->setEnabled(!maybePlayerShip->active);
