@@ -91,12 +91,31 @@ auto PlayerView::getPlayerWeapons() const -> std::vector<bsgo::PlayerWeapon>
   return out;
 }
 
+namespace {
+auto getAllComputersOnShips(const bsgo::Repositories &repositories, const bsgo::Uuid playerDbId)
+  -> std::unordered_set<bsgo::Uuid>
+{
+  const auto shipIds = repositories.playerShipRepository->findAllByPlayer(playerDbId);
+
+  std::unordered_set<bsgo::Uuid> computersOnShips{};
+
+  for (const auto &shipDbId : shipIds)
+  {
+    const auto computerIds = repositories.shipComputerRepository->findAllByShip(shipDbId);
+    computersOnShips.insert(computerIds.begin(), computerIds.end());
+  }
+
+  return computersOnShips;
+}
+} // namespace
+
 auto PlayerView::getPlayerComputers() const -> std::vector<bsgo::PlayerComputerData>
 {
-  const auto computerInstalledOnShips = m_repositories.playerComputerRepository->findAllByPlayer(
-    m_gameSession->getPlayerDbId());
+  const auto computerInstalledOnShips = getAllComputersOnShips(m_repositories,
+                                                               m_gameSession->getPlayerDbId());
 
   std::vector<bsgo::PlayerComputerData> out(m_playerComputers);
+
   std::erase_if(out, [&computerInstalledOnShips](const bsgo::PlayerComputerData &computerData) {
     return computerInstalledOnShips.contains(computerData.dbId);
   });
