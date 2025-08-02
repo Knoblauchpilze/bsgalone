@@ -32,12 +32,15 @@ class LoadingMessagesConsumer : public AbstractMessageConsumer
 
   void handleLoginDataLoading(const LoadingStartedMessage &message) const;
   void handleResourcesLoading(const LoadingStartedMessage &message) const;
-  void handlePlayerResourcesLoading(const LoadingStartedMessage &message) const;
   void handleSystemsLoading(const LoadingStartedMessage &message) const;
-  void handlePlayersLoading(const LoadingStartedMessage &message) const;
-  void handleAsteroidsLoading(const LoadingStartedMessage &message) const;
-  void handleOutpostsLoading(const LoadingStartedMessage &message) const;
+
+  void handlePlayerResourcesLoading(const LoadingStartedMessage &message) const;
   void handlePlayerShipsLoading(const LoadingStartedMessage &message) const;
+
+  void handleSystemPlayersLoading(const LoadingStartedMessage &message) const;
+  void handleSystemAsteroidsLoading(const LoadingStartedMessage &message) const;
+  void handleSystemOutpostsLoading(const LoadingStartedMessage &message) const;
+  void handleSystemShipsLoading(const LoadingStartedMessage &message) const;
 };
 
 } // namespace bsgo

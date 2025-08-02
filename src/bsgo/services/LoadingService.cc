@@ -260,4 +260,26 @@ auto LoadingService::getPlayerResources(const Uuid playerDbId) const -> std::vec
   return m_repositories.playerResourceRepository->findAllByPlayer(playerDbId);
 }
 
+auto LoadingService::getPlayerShips(const Uuid playerDbId) const -> std::vector<ShipProps>
+{
+  const auto shipDbIds = m_repositories.playerShipRepository->findAllByPlayer(playerDbId);
+
+  std::vector<ShipProps> ships{};
+
+  for (const auto &shipDbId : shipDbIds)
+  {
+    const auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
+
+    const auto weapons   = getWeaponsForShip(m_repositories, shipDbId);
+    const auto computers = getComputersForShip(m_repositories, shipDbId);
+
+    const auto status     = determineStartingStatusForShip(ship);
+    const auto targetDbId = getShipTargetDbId(shipDbId, m_entityMapper, *m_coordinator);
+
+    ships.emplace_back(ship, status, targetDbId, weapons, computers);
+  }
+
+  return ships;
+}
+
 } // namespace bsgo
