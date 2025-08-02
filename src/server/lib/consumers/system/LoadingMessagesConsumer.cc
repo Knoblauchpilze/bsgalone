@@ -91,31 +91,33 @@ void LoadingMessagesConsumer::handleDockTransition(const LoadingStartedMessage &
 
 void LoadingMessagesConsumer::handleJumpTransition(const LoadingStartedMessage &message) const
 {
-  handlePlayersLoading(message);
-  handleAsteroidsLoading(message);
-  handleOutpostsLoading(message);
-  handlePlayerShipsLoading(message);
+  handleSystemPlayersLoading(message);
+  handleSystemAsteroidsLoading(message);
+  handleSystemOutpostsLoading(message);
+  handleSystemShipsLoading(message);
 }
 
 void LoadingMessagesConsumer::handleLoginTransition(const LoadingStartedMessage &message) const
 {
   handleLoginDataLoading(message);
   handleResourcesLoading(message);
+  handleSystemsLoading(message);
   handlePlayerResourcesLoading(message);
+  handlePlayerShipsLoading(message);
 }
 
 void LoadingMessagesConsumer::handlePurchaseTransition(const LoadingStartedMessage & /*message*/) const
 {
+  // TODO: Ignore some transitions for now
   // handlePlayerResourcesLoading(message);
 }
 
 void LoadingMessagesConsumer::handleUndockTransition(const LoadingStartedMessage &message) const
 {
-  handleSystemsLoading(message);
-  handlePlayersLoading(message);
-  handleAsteroidsLoading(message);
-  handleOutpostsLoading(message);
-  handlePlayerShipsLoading(message);
+  handleSystemPlayersLoading(message);
+  handleSystemAsteroidsLoading(message);
+  handleSystemOutpostsLoading(message);
+  handleSystemShipsLoading(message);
 }
 
 void LoadingMessagesConsumer::handleLoginDataLoading(const LoadingStartedMessage &message) const
@@ -155,6 +157,22 @@ void LoadingMessagesConsumer::handleResourcesLoading(const LoadingStartedMessage
   m_outputMessageQueue->pushMessage(std::move(out));
 }
 
+void LoadingMessagesConsumer::handleSystemsLoading(const LoadingStartedMessage &message) const
+{
+  const auto systems = m_loadingService->getSystems();
+
+  std::vector<SystemData> systemsData{};
+  std::transform(systems.begin(),
+                 systems.end(),
+                 std::back_inserter(systemsData),
+                 [](const System &system) { return toSystemData(system); });
+
+  auto out = std::make_unique<SystemListMessage>(systemsData);
+  out->copyClientIdIfDefined(message);
+
+  m_outputMessageQueue->pushMessage(std::move(out));
+}
+
 void LoadingMessagesConsumer::handlePlayerResourcesLoading(const LoadingStartedMessage &message) const
 {
   const auto maybePlayerDbId = message.tryGetPlayerDbId();
@@ -180,23 +198,31 @@ void LoadingMessagesConsumer::handlePlayerResourcesLoading(const LoadingStartedM
   m_outputMessageQueue->pushMessage(std::move(out));
 }
 
-void LoadingMessagesConsumer::handleSystemsLoading(const LoadingStartedMessage &message) const
+void LoadingMessagesConsumer::handlePlayerShipsLoading(const LoadingStartedMessage &message) const
 {
-  const auto systems = m_loadingService->getSystems();
+  const auto maybePlayerDbId = message.tryGetPlayerDbId();
+  if (!maybePlayerDbId)
+  {
+    warn("Failed to process loading started message", "No player defined");
+    return;
+  }
 
-  std::vector<SystemData> systemsData{};
-  std::transform(systems.begin(),
-                 systems.end(),
-                 std::back_inserter(systemsData),
-                 [](const System &system) { return toSystemData(system); });
+  const auto ships = m_loadingService->getPlayerShips(*maybePlayerDbId);
 
-  auto out = std::make_unique<SystemListMessage>(systemsData);
+  std::vector<PlayerShipData> shipsData{};
+  std::transform(ships.begin(),
+                 ships.end(),
+                 std::back_inserter(shipsData),
+                 [](const ShipProps &props) { return props.toPlayerShipData(); });
+
+  auto out = std::make_unique<PlayerShipListMessage>(shipsData);
+  out->setPlayerDbId(*maybePlayerDbId);
   out->copyClientIdIfDefined(message);
 
   m_outputMessageQueue->pushMessage(std::move(out));
 }
 
-void LoadingMessagesConsumer::handlePlayersLoading(const LoadingStartedMessage &message) const
+void LoadingMessagesConsumer::handleSystemPlayersLoading(const LoadingStartedMessage &message) const
 {
   const auto systemDbId = message.getSystemDbId();
 
@@ -214,7 +240,7 @@ void LoadingMessagesConsumer::handlePlayersLoading(const LoadingStartedMessage &
   m_outputMessageQueue->pushMessage(std::move(out));
 }
 
-void LoadingMessagesConsumer::handleAsteroidsLoading(const LoadingStartedMessage &message) const
+void LoadingMessagesConsumer::handleSystemAsteroidsLoading(const LoadingStartedMessage &message) const
 {
   const auto systemDbId = message.getSystemDbId();
 
@@ -232,7 +258,7 @@ void LoadingMessagesConsumer::handleAsteroidsLoading(const LoadingStartedMessage
   m_outputMessageQueue->pushMessage(std::move(out));
 }
 
-void LoadingMessagesConsumer::handleOutpostsLoading(const LoadingStartedMessage &message) const
+void LoadingMessagesConsumer::handleSystemOutpostsLoading(const LoadingStartedMessage &message) const
 {
   const auto systemDbId = message.getSystemDbId();
 
@@ -250,7 +276,7 @@ void LoadingMessagesConsumer::handleOutpostsLoading(const LoadingStartedMessage 
   m_outputMessageQueue->pushMessage(std::move(out));
 }
 
-void LoadingMessagesConsumer::handlePlayerShipsLoading(const LoadingStartedMessage &message) const
+void LoadingMessagesConsumer::handleSystemShipsLoading(const LoadingStartedMessage &message) const
 {
   const auto systemDbId = message.getSystemDbId();
 
