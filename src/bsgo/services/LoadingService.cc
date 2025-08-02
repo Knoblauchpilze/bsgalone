@@ -282,4 +282,20 @@ auto LoadingService::getPlayerShips(const Uuid playerDbId) const -> std::vector<
   return ships;
 }
 
+auto LoadingService::getPlayerComputers(const Uuid playerDbId) const -> std::vector<PlayerComputer>
+{
+  const auto computerDbIds = m_repositories.playerComputerRepository->findAllByPlayer(playerDbId);
+
+  std::vector<PlayerComputer> computers{};
+
+  for (const auto &computerDbId : computerDbIds)
+  {
+    const auto computer = m_repositories.playerComputerRepository->findOneById(computerDbId);
+
+    computers.emplace_back(computer);
+  }
+
+  return computers;
+}
+
 } // namespace bsgo

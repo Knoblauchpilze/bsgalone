@@ -2,6 +2,7 @@
 #include "LoadingMessagesConsumer.hh"
 #include "AsteroidListMessage.hh"
 #include "OutpostListMessage.hh"
+#include "PlayerComputerListMessage.hh"
 #include "PlayerListMessage.hh"
 #include "PlayerLoginDataMessage.hh"
 #include "PlayerResourceListMessage.hh"
@@ -104,6 +105,7 @@ void LoadingMessagesConsumer::handleLoginTransition(const LoadingStartedMessage 
   handleSystemsLoading(message);
   handlePlayerResourcesLoading(message);
   handlePlayerShipsLoading(message);
+  handlePlayerComputersLoading(message);
 }
 
 void LoadingMessagesConsumer::handlePurchaseTransition(const LoadingStartedMessage & /*message*/) const
@@ -217,6 +219,31 @@ void LoadingMessagesConsumer::handlePlayerShipsLoading(const LoadingStartedMessa
 
   auto out = std::make_unique<PlayerShipListMessage>(shipsData);
   out->setPlayerDbId(*maybePlayerDbId);
+  out->copyClientIdIfDefined(message);
+
+  m_outputMessageQueue->pushMessage(std::move(out));
+}
+
+void LoadingMessagesConsumer::handlePlayerComputersLoading(const LoadingStartedMessage &message) const
+{
+  const auto maybePlayerDbId = message.tryGetPlayerDbId();
+  if (!maybePlayerDbId)
+  {
+    warn("Failed to process loading started message", "No player defined");
+    return;
+  }
+
+  const auto playerComputers = m_loadingService->getPlayerComputers(*maybePlayerDbId);
+
+  std::vector<PlayerComputerData> computersData{};
+  std::transform(playerComputers.begin(),
+                 playerComputers.end(),
+                 std::back_inserter(computersData),
+                 [](const PlayerComputer &playerComputer) {
+                   return toPlayerComputerData(playerComputer);
+                 });
+
+  auto out = std::make_unique<PlayerComputerListMessage>(computersData);
   out->copyClientIdIfDefined(message);
 
   m_outputMessageQueue->pushMessage(std::move(out));

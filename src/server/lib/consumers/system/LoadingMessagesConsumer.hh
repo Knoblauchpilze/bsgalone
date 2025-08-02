@@ -36,6 +36,7 @@ class LoadingMessagesConsumer : public AbstractMessageConsumer
 
   void handlePlayerResourcesLoading(const LoadingStartedMessage &message) const;
   void handlePlayerShipsLoading(const LoadingStartedMessage &message) const;
+  void handlePlayerComputersLoading(const LoadingStartedMessage &message) const;
 
   void handleSystemPlayersLoading(const LoadingStartedMessage &message) const;
   void handleSystemAsteroidsLoading(const LoadingStartedMessage &message) const;

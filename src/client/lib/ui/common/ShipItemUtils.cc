@@ -137,6 +137,15 @@ auto generateComputerMenu(const bsgo::PlayerComputer &computer) -> UiMenuPtr
                               computer.reloadTime);
 }
 
+auto generateComputerMenu(const bsgo::PlayerComputerData &computer) -> UiMenuPtr
+{
+  return generateComputerMenu(computer.name,
+                              computer.powerCost,
+                              computer.range,
+                              computer.duration,
+                              computer.reloadTime);
+}
+
 auto generateInteractiveSection(const std::string &buttonText,
                                 const ClickCallback &callback,
                                 const HorizontalMargin horizontalMargin,
