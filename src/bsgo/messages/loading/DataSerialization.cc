@@ -53,6 +53,7 @@ auto serializePlayerComputerData(std::ostream &out, const PlayerComputerData &da
 {
   core::serialize(out, data.dbId);
   core::serialize(out, data.computerDbId);
+  core::serialize(out, data.name);
   core::serialize(out, data.level);
   core::serialize(out, data.offensive);
   core::serialize(out, data.powerCost);
@@ -81,6 +82,7 @@ bool deserializePlayerComputerData(std::istream &in, PlayerComputerData &data)
 
   ok &= core::deserialize(in, data.dbId);
   ok &= core::deserialize(in, data.computerDbId);
+  ok &= core::deserialize(in, data.name);
   ok &= core::deserialize(in, data.level);
   ok &= core::deserialize(in, data.offensive);
   ok &= core::deserialize(in, data.powerCost);

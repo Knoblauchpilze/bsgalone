@@ -14,6 +14,7 @@ struct PlayerComputerData
   Uuid dbId{};
   Uuid computerDbId{};
 
+  std::string name{};
   int level{};
   bool offensive{};
   float powerCost{};

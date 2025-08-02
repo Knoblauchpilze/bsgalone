@@ -247,6 +247,7 @@ TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, MultipleComplexShips)
      .computers        = {
               {.dbId           = Uuid{1},
                .computerDbId   = Uuid{14},
+               .name           = "computer 1",
                .level          = 10,
                .offensive      = false,
                .range          = 3.987f,
@@ -274,7 +275,7 @@ TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, MultipleComplexShips)
                       {.dbId         = Uuid{951},
                        .slotPosition = Eigen::Vector3f{-21.54f, 65.98f, -54.87f},
                        .powerCost    = 159.753f}},
-        .computers = {{.computerDbId = 56, .offensive = true},
+        .computers = {{.computerDbId = 56, .name = "computer 2", .offensive = true},
                       {.computerDbId = 58, .damageModifier = 963.147f}}},
        {.dbId             = Uuid{7416},
         .docked           = true,
