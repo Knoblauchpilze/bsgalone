@@ -5,7 +5,8 @@
 #include "Faction.hh"
 #include "GameSession.hh"
 #include "IMessageQueue.hh"
-#include "PlayerResourceData.hh"
+#include "PlayerResourceListMessage.hh"
+#include "PlayerShipListMessage.hh"
 #include "Repositories.hh"
 #include "Uuid.hh"
 #include <memory>
@@ -30,7 +31,7 @@ class PlayerView : public AbstractView
   auto getPlayerResources() const -> std::vector<bsgo::PlayerResourceData>;
   auto getPlayerWeapons() const -> std::vector<bsgo::PlayerWeapon>;
   auto getPlayerComputers() const -> std::vector<bsgo::PlayerComputer>;
-  auto getPlayerShips() const -> std::vector<bsgo::PlayerShip>;
+  auto getPlayerShips() const -> std::vector<bsgo::PlayerShipData>;
 
   void trySelectShip(const bsgo::Uuid shipDbId) const;
   void tryPurchase(const bsgo::Item &type, const bsgo::Uuid itemDbId) const;
@@ -47,6 +48,10 @@ class PlayerView : public AbstractView
   bsgo::IMessageQueue *const m_outputMessageQueue{};
 
   std::vector<bsgo::PlayerResourceData> m_playerResources{};
+  std::vector<bsgo::PlayerShipData> m_playerShips{};
+
+  void handlePlayerResourcesMessage(const bsgo::PlayerResourceListMessage &message);
+  void handlePlayerShipsMessage(const bsgo::PlayerShipListMessage &message);
 };
 
 using PlayerViewShPtr = std::shared_ptr<PlayerView>;

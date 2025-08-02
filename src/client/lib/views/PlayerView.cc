@@ -3,7 +3,6 @@
 #include "HangarMessage.hh"
 #include "LoginMessage.hh"
 #include "LogoutMessage.hh"
-#include "PlayerResourceListMessage.hh"
 #include "PurchaseMessage.hh"
 #include "SignupMessage.hh"
 
@@ -34,8 +33,18 @@ bool PlayerView::isReady() const noexcept
 
 void PlayerView::onMessageReceived(const bsgo::IMessage &message)
 {
-  const auto playerResourceList = message.as<bsgo::PlayerResourceListMessage>();
-  m_playerResources             = playerResourceList.getResourcesData();
+  switch (message.type())
+  {
+    case bsgo::MessageType::PLAYER_RESOURCE_LIST:
+      handlePlayerResourcesMessage(message.as<bsgo::PlayerResourceListMessage>());
+      break;
+    case bsgo::MessageType::PLAYER_SHIP_LIST:
+      handlePlayerShipsMessage(message.as<bsgo::PlayerShipListMessage>());
+      break;
+    default:
+      error("Unsupported message type " + bsgo::str(message.type()));
+      break;
+  }
 }
 
 auto PlayerView::getPlayerDbId() const -> bsgo::Uuid
@@ -106,19 +115,9 @@ auto PlayerView::getPlayerComputers() const -> std::vector<bsgo::PlayerComputer>
   return out;
 }
 
-auto PlayerView::getPlayerShips() const -> std::vector<bsgo::PlayerShip>
+auto PlayerView::getPlayerShips() const -> std::vector<bsgo::PlayerShipData>
 {
-  const auto ids = m_repositories.playerShipRepository->findAllByPlayer(
-    m_gameSession->getPlayerDbId());
-
-  std::vector<bsgo::PlayerShip> out;
-  for (const auto &id : ids)
-  {
-    const auto ship = m_repositories.playerShipRepository->findOneById(id);
-    out.push_back(ship);
-  }
-
-  return out;
+  return m_playerShips;
 }
 
 void PlayerView::trySelectShip(const bsgo::Uuid shipDbId) const
@@ -148,6 +147,31 @@ void PlayerView::trySignup(const std::string &name,
                            const bsgo::Faction &faction) const
 {
   m_outputMessageQueue->pushMessage(std::make_unique<bsgo::SignupMessage>(name, password, faction));
+}
+
+void PlayerView::handlePlayerResourcesMessage(const bsgo::PlayerResourceListMessage &message)
+{
+  m_playerResources = message.getResourcesData();
+}
+
+void PlayerView::handlePlayerShipsMessage(const bsgo::PlayerShipListMessage &message)
+{
+  const auto maybePlayerDbId = message.tryGetPlayerDbId();
+  if (!m_gameSession->hasPlayerDbId())
+  {
+    error("Game session has no player identifier yet");
+  }
+  if (!maybePlayerDbId)
+  {
+    error("Player identifier for ships message is undefined");
+  }
+  if (m_gameSession->getPlayerDbId() != *maybePlayerDbId)
+  {
+    error("Received ships message for wrong player " + bsgo::str(*maybePlayerDbId),
+          "Expected message for player " + bsgo::str(m_gameSession->getPlayerDbId()));
+  }
+
+  m_playerShips = message.getShipsData();
 }
 
 } // namespace pge
