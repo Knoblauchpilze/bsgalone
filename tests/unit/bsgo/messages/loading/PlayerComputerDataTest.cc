@@ -49,6 +49,7 @@ TEST(Unit_Bsgo_Serialization_PlayerComputerData, DifferentWhenDbIdIsDifferent)
 TEST(Unit_Bsgo_Serialization_PlayerComputerData, Basic)
 {
   PlayerComputerData input{.dbId           = Uuid{1234},
+                           .name           = "eniac",
                            .level          = 4,
                            .range          = 98765.1234f,
                            .damageModifier = 2.10987f};
@@ -68,7 +69,10 @@ TEST(Unit_Bsgo_Serialization_PlayerComputerData, AllowedTargets)
                            .damageModifier = 2.10987f};
   input.allowedTargets = std::unordered_set<EntityKind>{EntityKind::SHIP, EntityKind::ASTEROID};
 
-  PlayerComputerData output{.dbId = Uuid{14}, .level = 12, .reloadTime = core::toMilliseconds(1234)};
+  PlayerComputerData output{.dbId       = Uuid{14},
+                            .name       = "beefy computer",
+                            .level      = 12,
+                            .reloadTime = core::toMilliseconds(1234)};
 
   EXPECT_TRUE(serializeAndDeserializeData(input, output));
 
@@ -78,11 +82,15 @@ TEST(Unit_Bsgo_Serialization_PlayerComputerData, AllowedTargets)
 TEST(Unit_Bsgo_Serialization_PlayerComputerData, NonEmptyAllowedTargetsInDestination)
 {
   PlayerComputerData input{.dbId           = Uuid{1234},
+                           .name           = "a computer",
                            .level          = 4,
                            .range          = 98765.1234f,
                            .damageModifier = 2.10987f};
 
-  PlayerComputerData output{.dbId = Uuid{14}, .level = 12, .reloadTime = core::toMilliseconds(1234)};
+  PlayerComputerData output{.dbId       = Uuid{14},
+                            .name       = "another computer",
+                            .level      = 12,
+                            .reloadTime = core::toMilliseconds(1234)};
   output.allowedTargets = std::unordered_set<EntityKind>{EntityKind::OUTPOST};
 
   EXPECT_TRUE(serializeAndDeserializeData(input, output));

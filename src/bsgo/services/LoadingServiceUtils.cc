@@ -57,6 +57,7 @@ auto toPlayerComputerData(const PlayerComputer &computer) -> PlayerComputerData
   return PlayerComputerData{
     .dbId           = computer.id,
     .computerDbId   = computer.computer,
+    .name           = computer.name,
     .level          = computer.level,
     .offensive      = computer.offensive,
     .powerCost      = computer.powerCost,

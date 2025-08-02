@@ -18,6 +18,7 @@ void assertPlayerComputerDataAreEqual(const PlayerComputerData &actual,
 {
   EXPECT_EQ(actual.dbId, expected.dbId);
   EXPECT_EQ(actual.computerDbId, expected.computerDbId);
+  EXPECT_EQ(actual.name, expected.name);
   EXPECT_EQ(actual.level, expected.level);
   EXPECT_EQ(actual.offensive, expected.offensive);
   EXPECT_EQ(actual.powerCost, expected.powerCost);
