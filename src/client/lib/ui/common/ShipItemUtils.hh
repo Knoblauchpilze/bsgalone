@@ -2,6 +2,7 @@
 #pragma once
 
 #include "ComputerRepository.hh"
+#include "PlayerComputerData.hh"
 #include "PlayerComputerRepository.hh"
 #include "PlayerWeaponRepository.hh"
 #include "UiMenu.hh"
@@ -19,6 +20,7 @@ auto generateWeaponMenu(const bsgo::Weapon &weapon) -> UiMenuPtr;
 auto generateWeaponMenu(const bsgo::PlayerWeapon &weapon) -> UiMenuPtr;
 auto generateComputerMenu(const bsgo::Computer &computer) -> UiMenuPtr;
 auto generateComputerMenu(const bsgo::PlayerComputer &computer) -> UiMenuPtr;
+auto generateComputerMenu(const bsgo::PlayerComputerData &computer) -> UiMenuPtr;
 
 struct InteractiveSection
 {

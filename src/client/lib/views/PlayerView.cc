@@ -35,6 +35,9 @@ void PlayerView::onMessageReceived(const bsgo::IMessage &message)
 {
   switch (message.type())
   {
+    case bsgo::MessageType::PLAYER_COMPUTER_LIST:
+      handlePlayerComputersMessage(message.as<bsgo::PlayerComputerListMessage>());
+      break;
     case bsgo::MessageType::PLAYER_RESOURCE_LIST:
       handlePlayerResourcesMessage(message.as<bsgo::PlayerResourceListMessage>());
       break;
@@ -88,30 +91,16 @@ auto PlayerView::getPlayerWeapons() const -> std::vector<bsgo::PlayerWeapon>
   return out;
 }
 
-auto PlayerView::getPlayerComputers() const -> std::vector<bsgo::PlayerComputer>
+auto PlayerView::getPlayerComputers() const -> std::vector<bsgo::PlayerComputerData>
 {
-  std::vector<bsgo::Uuid> shipComputers{};
-  const auto ships = m_repositories.playerShipRepository->findAllByPlayer(
+  const auto computerInstalledOnShips = m_repositories.playerComputerRepository->findAllByPlayer(
     m_gameSession->getPlayerDbId());
-  for (const auto &shipId : ships)
-  {
-    const auto computers = m_repositories.shipComputerRepository->findAllByShip(shipId);
-    shipComputers.insert(shipComputers.end(), computers.begin(), computers.end());
-  }
 
-  auto ids = m_repositories.playerComputerRepository->findAllByPlayer(
-    m_gameSession->getPlayerDbId());
-  for (const auto shipComputer : shipComputers)
-  {
-    ids.erase(shipComputer);
-  }
+  std::vector<bsgo::PlayerComputerData> out(m_playerComputers);
+  std::erase_if(out, [&computerInstalledOnShips](const bsgo::PlayerComputerData &computerData) {
+    return computerInstalledOnShips.contains(computerData.dbId);
+  });
 
-  std::vector<bsgo::PlayerComputer> out;
-  for (const auto &id : ids)
-  {
-    const auto computer = m_repositories.playerComputerRepository->findOneById(id);
-    out.push_back(computer);
-  }
   return out;
 }
 
@@ -147,6 +136,11 @@ void PlayerView::trySignup(const std::string &name,
                            const bsgo::Faction &faction) const
 {
   m_outputMessageQueue->pushMessage(std::make_unique<bsgo::SignupMessage>(name, password, faction));
+}
+
+void PlayerView::handlePlayerComputersMessage(const bsgo::PlayerComputerListMessage &message)
+{
+  m_playerComputers = message.getComputersData();
 }
 
 void PlayerView::handlePlayerResourcesMessage(const bsgo::PlayerResourceListMessage &message)

@@ -293,7 +293,7 @@ void LockerUiHandler::generateLockerComputersMenus()
       "Equip", [this, itemId]() { onInstallRequest(itemId); }, HorizontalMargin::LEFT);
     m_lockerComputers[id]->addMenu(std::move(section.menu));
 
-    LockerItem data{.itemId   = computer.id,
+    LockerItem data{.itemId   = computer.dbId,
                     .itemType = bsgo::Item::COMPUTER,
                     .button   = section.button};
     m_lockerItemsData.emplace_back(std::move(data));
