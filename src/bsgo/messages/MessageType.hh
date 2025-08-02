@@ -26,6 +26,7 @@ enum class MessageType
   LOGOUT,
   LOOT,
   OUTPOST_LIST,
+  PLAYER_COMPUTER_LIST,
   PLAYER_LIST,
   PLAYER_LOGIN_DATA,
   PLAYER_RESOURCE_LIST,
@@ -43,7 +44,7 @@ enum class MessageType
 };
 
 auto str(const MessageType &type) -> std::string;
-auto allMessageTypes() -> std::array<MessageType, 31>;
+auto allMessageTypes() -> std::array<MessageType, 32>;
 
 auto allMessageTypesAsSet() -> std::unordered_set<MessageType>;
 

@@ -42,9 +42,9 @@ TEST(Unit_Bsgo_Serialization_PlayerResourceListMessage, Basic)
 
 TEST(Unit_Bsgo_Serialization_PlayerResourceListMessage, WithClientId)
 {
-  std::vector<PlayerResourceData> playersData{{.dbId = 14, .name = "foo bar", .amount = 14.56f}};
+  std::vector<PlayerResourceData> resourcesData{{.dbId = 14, .name = "foo bar", .amount = 14.56f}};
 
-  PlayerResourceListMessage expected(playersData);
+  PlayerResourceListMessage expected(resourcesData);
   expected.setClientId(Uuid{78});
 
   PlayerResourceListMessage actual(std::vector<PlayerResourceData>{});
