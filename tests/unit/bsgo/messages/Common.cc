@@ -80,6 +80,7 @@ void assertPlayerShipDataAreEqual(const PlayerShipData &actual, const PlayerShip
   EXPECT_EQ(actual.shipClass, expected.shipClass);
   EXPECT_EQ(actual.name, expected.name);
   EXPECT_EQ(actual.docked, expected.docked);
+  EXPECT_EQ(actual.active, expected.active);
   EXPECT_EQ(actual.jumpTime, expected.jumpTime);
   EXPECT_EQ(actual.jumpTimeInThreat, expected.jumpTimeInThreat);
   EXPECT_EQ(actual.targetDbId, expected.targetDbId);

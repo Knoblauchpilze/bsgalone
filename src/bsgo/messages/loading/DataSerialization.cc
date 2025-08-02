@@ -200,6 +200,7 @@ auto serializePlayerShipData(std::ostream &out, const PlayerShipData &data) -> s
   core::serialize(out, data.shipClass);
   core::serialize(out, data.name);
   core::serialize(out, data.docked);
+  core::serialize(out, data.active);
   core::serialize(out, data.jumpTime);
   core::serialize(out, data.jumpTimeInThreat);
 
@@ -241,6 +242,7 @@ bool deserializePlayerShipData(std::istream &in, PlayerShipData &data)
   ok &= core::deserialize(in, data.shipClass);
   ok &= core::deserialize(in, data.name);
   ok &= core::deserialize(in, data.docked);
+  ok &= core::deserialize(in, data.active);
   ok &= core::deserialize(in, data.jumpTime);
   ok &= core::deserialize(in, data.jumpTimeInThreat);
 

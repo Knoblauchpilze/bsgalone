@@ -31,6 +31,7 @@ struct PlayerShipData
   ShipClass shipClass{};
   std::string name{};
   bool docked{};
+  bool active{};
   core::Duration jumpTime{};
   core::Duration jumpTimeInThreat{};
 

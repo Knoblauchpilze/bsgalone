@@ -65,6 +65,7 @@ TEST(Unit_Bsgo_Serialization_PlayerShipData, WithTarget)
                        .radius         = 5.0f,
                        .maxPowerPoints = 100.0f,
                        .docked         = true,
+                       .active         = true,
                        .targetDbId     = Uuid{8901},
                        .playerDbId     = Uuid{6547}};
 
@@ -98,7 +99,10 @@ TEST(Unit_Bsgo_Serialization_PlayerShipData, WithWeapons)
                            .slotPosition = Eigen::Vector3f{-89.75f, -56.23f, 32.04f},
                            .reloadTime   = core::toMilliseconds(12)});
 
-  PlayerShipData output{.dbId = Uuid{14}, .faction = Faction::CYLON, .status = Status::JUMP};
+  PlayerShipData output{.dbId    = Uuid{14},
+                        .faction = Faction::CYLON,
+                        .status  = Status::JUMP,
+                        .active  = true};
   output.weapons.push_back({.dbId       = Uuid{1001},
                             .weaponDbId = Uuid{2002},
                             .level      = 3,

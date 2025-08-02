@@ -88,6 +88,7 @@ auto ShipProps::toPlayerShipData() const -> PlayerShipData
     .shipClass        = dbShip.shipClass,
     .name             = dbShip.name,
     .docked           = dbShip.docked,
+    .active           = dbShip.active,
     .jumpTime         = dbShip.jumpTime,
     .jumpTimeInThreat = dbShip.jumpTimeInThreat,
 

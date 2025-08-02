@@ -223,6 +223,7 @@ TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, MultipleComplexShips)
      .radius     = 26.9f,
      .hullPoints = 12.34f,
      .docked     = true,
+     .active     = true,
      .weapons    = {{.dbId = Uuid{1}, .weaponDbId = Uuid{14}, .level = 10, .range = 0.145f},
                     {.dbId         = Uuid{2},
                      .slotPosition = Eigen::Vector3f{45.12f, -56.89f, 78.45f},
@@ -263,6 +264,7 @@ TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, MultipleComplexShips)
        {.dbId = Uuid{7413}, .position = Eigen::Vector3f(98.76f, 54.32f, 1.09f)},
        {
          .dbId      = Uuid{7414},
+         .active    = true,
          .computers = {{.dbId           = Uuid{123456},
                         .allowedTargets = std::unordered_set<EntityKind>{EntityKind::SHIP,
                                                                          EntityKind::BULLET}}},
