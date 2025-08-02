@@ -12,7 +12,8 @@ void assertMessagesAreEqual(const PlayerShipListMessage &actual,
 {
   EXPECT_EQ(actual.type(), expected.type());
   EXPECT_EQ(actual.tryGetClientId(), expected.tryGetClientId());
-  EXPECT_EQ(actual.getSystemDbId(), expected.getSystemDbId());
+  EXPECT_EQ(actual.tryGetSystemDbId(), expected.tryGetSystemDbId());
+  EXPECT_EQ(actual.tryGetPlayerDbId(), expected.tryGetPlayerDbId());
 
   const auto &actualShipsData   = actual.getShipsData();
   const auto &expectedShipsData = expected.getShipsData();
@@ -28,9 +29,9 @@ void assertMessagesAreEqual(const PlayerShipListMessage &actual,
 }
 } // namespace
 
-TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, Basic)
+TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, NoSystemAndNoPlayer)
 {
-  const PlayerShipListMessage expected(Uuid{8712}, {});
+  const PlayerShipListMessage expected(std::vector<PlayerShipData>{});
 
   const std::vector<PlayerShipData> shipsData{{.dbId        = Uuid{23},
                                                .position    = Eigen::Vector3f(1.0f, 2.8f, 3.9f),
@@ -39,9 +40,64 @@ TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, Basic)
                                                .radius     = 26.9f,
                                                .hullPoints = 100.0f,
                                                .targetDbId = Uuid{4567}}};
-  PlayerShipListMessage actual(Uuid{1515}, shipsData);
+  PlayerShipListMessage actual(shipsData);
   actual.setClientId(Uuid{2});
+
   serializeAndDeserializeMessage(expected, actual);
+
+  assertMessagesAreEqual(actual, expected);
+}
+
+TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, OnlySystem)
+{
+  std::vector<PlayerShipData> shipsData{
+    {.dbId = Uuid{23}, .position = Eigen::Vector3f(1.0f, 2.8f, 3.9f), .powerPoints = 11.3f}};
+  PlayerShipListMessage expected(shipsData);
+  expected.setSystemDbId(Uuid{1515});
+
+  PlayerShipListMessage actual(shipsData);
+  actual.setClientId(Uuid{2});
+  actual.setPlayerDbId(Uuid{9874});
+
+  serializeAndDeserializeMessage(expected, actual);
+
+  assertMessagesAreEqual(actual, expected);
+}
+
+TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, OnlyPlayer)
+{
+  std::vector<PlayerShipData> shipsData{
+    {.dbId = Uuid{23}, .position = Eigen::Vector3f(1.0f, 2.8f, 3.9f), .powerPoints = 11.3f}};
+  PlayerShipListMessage expected(shipsData);
+  expected.setPlayerDbId(Uuid{1515});
+
+  shipsData = {
+    {.dbId = Uuid{32}, .position = Eigen::Vector3f(-2.8f, -3.9f, 1.0f), .powerPoints = 87.458f},
+    {.dbId = Uuid{26}, .position = Eigen::Vector3f(14.7f, -52.8f, 37.45f), .powerPoints = 1741.02f},
+  };
+  PlayerShipListMessage actual(shipsData);
+  actual.setSystemDbId(Uuid{2347});
+
+  serializeAndDeserializeMessage(expected, actual);
+
+  assertMessagesAreEqual(actual, expected);
+}
+
+TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, SystemAndPlayer)
+{
+  std::vector<PlayerShipData> shipsData{
+    {.dbId = Uuid{32}, .position = Eigen::Vector3f(-2.8f, -3.9f, 1.0f), .powerRegen = 87.458f},
+    {.dbId = Uuid{26}, .position = Eigen::Vector3f(14.7f, -52.8f, 37.45f), .acceleration = 1741.02f},
+  };
+  PlayerShipListMessage expected(shipsData);
+  expected.setSystemDbId(Uuid{17});
+  expected.setPlayerDbId(Uuid{1515});
+
+  PlayerShipListMessage actual(std::vector<PlayerShipData>{});
+  actual.setClientId(Uuid{2});
+
+  serializeAndDeserializeMessage(expected, actual);
+
   assertMessagesAreEqual(actual, expected);
 }
 
@@ -53,24 +109,46 @@ TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, WithClientId)
                                          .hullPoints = 12.34f,
                                          .docked     = true}};
 
-  PlayerShipListMessage expected(Uuid{123}, shipsData);
+  PlayerShipListMessage expected(shipsData);
+  expected.setSystemDbId(Uuid{123});
   expected.setClientId(Uuid{78});
 
   shipsData = {{.dbId = Uuid{17}, .powerPoints = 100.0f, .targetDbId = Uuid{923}},
                {.dbId = Uuid{18}, .radius = 26.1, .playerDbId = Uuid{456}}};
-  PlayerShipListMessage actual(Uuid{745}, {});
+  PlayerShipListMessage actual(shipsData);
+  actual.setPlayerDbId(Uuid{745});
+
   serializeAndDeserializeMessage(expected, actual);
+
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, Clone)
+TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, CloneWithSystem)
 {
   const std::vector<PlayerShipData> shipsData{
     {.dbId = Uuid{23}, .position = Eigen::Vector3f(1.0f, 2.8f, 3.9f), .targetDbId = Uuid{4567}},
   };
 
-  const PlayerShipListMessage expected(Uuid{4572}, shipsData);
+  PlayerShipListMessage expected(shipsData);
+  expected.setSystemDbId(Uuid{4572});
+
   const auto cloned = expected.clone();
+
+  ASSERT_EQ(cloned->type(), MessageType::PLAYER_SHIP_LIST);
+  assertMessagesAreEqual(cloned->as<PlayerShipListMessage>(), expected);
+}
+
+TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, CloneWithPlayer)
+{
+  const std::vector<PlayerShipData> shipsData{
+    {.dbId = Uuid{23}, .position = Eigen::Vector3f(1.0f, 2.8f, 3.9f), .targetDbId = Uuid{4567}},
+  };
+
+  PlayerShipListMessage expected(shipsData);
+  expected.setPlayerDbId(Uuid{4572});
+
+  const auto cloned = expected.clone();
+
   ASSERT_EQ(cloned->type(), MessageType::PLAYER_SHIP_LIST);
   assertMessagesAreEqual(cloned->as<PlayerShipListMessage>(), expected);
 }
@@ -92,14 +170,18 @@ TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, WithWeapon)
                                          .jumpTimeInThreat = core::toMilliseconds(5678),
                                          .weapons          = weapons}};
 
-  PlayerShipListMessage expected(Uuid{123}, shipsData);
+  PlayerShipListMessage expected(shipsData);
+  expected.setPlayerDbId(Uuid{123});
   expected.setClientId(Uuid{78});
 
   weapons   = {{.dbId = Uuid{45}, .minDamage = 38.57f, .reloadTime = core::toMilliseconds(17)}};
   shipsData = {{.dbId = Uuid{17}, .powerPoints = 100.0f, .targetDbId = Uuid{923}},
                {.dbId = Uuid{18}, .radius = 26.1, .playerDbId = Uuid{456}}};
-  PlayerShipListMessage actual(Uuid{745}, {});
+  PlayerShipListMessage actual(std::vector<PlayerShipData>{});
+  actual.setSystemDbId(Uuid{745});
+
   serializeAndDeserializeMessage(expected, actual);
+
   assertMessagesAreEqual(actual, expected);
 }
 
@@ -118,14 +200,18 @@ TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, WithComputer)
                                          .jumpTime   = core::toMilliseconds(75),
                                          .computers  = computers}};
 
-  PlayerShipListMessage expected(Uuid{123}, shipsData);
+  PlayerShipListMessage expected(shipsData);
+  expected.setPlayerDbId(Uuid{123});
   expected.setClientId(Uuid{78});
 
   computers = {{.dbId = Uuid{45}, .level = 9, .reloadTime = core::toMilliseconds(17)}};
   shipsData = {{.dbId = Uuid{17}, .powerPoints = 100.0f, .targetDbId = Uuid{923}},
                {.dbId = Uuid{18}, .radius = 26.1, .playerDbId = Uuid{456}}};
-  PlayerShipListMessage actual(Uuid{745}, {});
+  PlayerShipListMessage actual(std::vector<PlayerShipData>{});
+  actual.setPlayerDbId(Uuid{745});
+
   serializeAndDeserializeMessage(expected, actual);
+
   assertMessagesAreEqual(actual, expected);
 }
 
@@ -164,7 +250,8 @@ TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, MultipleComplexShips)
                .offensive      = false,
                .range          = 3.987f,
                .allowedTargets = std::unordered_set<EntityKind>{EntityKind::SHIP, EntityKind::OUTPOST}}}}};
-  PlayerShipListMessage expected(Uuid{123}, shipsData);
+  PlayerShipListMessage expected(shipsData);
+  expected.setSystemDbId(Uuid{123});
   expected.setClientId(Uuid{78});
 
   shipsData
@@ -191,9 +278,12 @@ TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, MultipleComplexShips)
         .docked           = true,
         .jumpTimeInThreat = core::toMilliseconds(5678),
         .weapons          = {{.weaponDbId = Uuid{852}, .reloadTime = core::toMilliseconds(963)}}}};
-  PlayerShipListMessage actual(Uuid{745}, {});
+  PlayerShipListMessage actual(shipsData);
+  actual.setSystemDbId(Uuid{3331});
+  actual.setPlayerDbId(Uuid{745});
 
   serializeAndDeserializeMessage(expected, actual);
+
   assertMessagesAreEqual(actual, expected);
 }
 } // namespace bsgo

@@ -262,7 +262,8 @@ void LoadingMessagesConsumer::handlePlayerShipsLoading(const LoadingStartedMessa
                  std::back_inserter(shipsData),
                  [](const ShipProps &props) { return props.toPlayerShipData(); });
 
-  auto out = std::make_unique<PlayerShipListMessage>(systemDbId, shipsData);
+  auto out = std::make_unique<PlayerShipListMessage>(shipsData);
+  out->setSystemDbId(systemDbId);
   out->copyClientIdIfDefined(message);
 
   m_outputMessageQueue->pushMessage(std::move(out));

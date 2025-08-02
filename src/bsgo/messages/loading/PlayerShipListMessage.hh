@@ -11,11 +11,15 @@ class PlayerShipListMessage : public NetworkMessage
 {
   public:
   PlayerShipListMessage();
-  PlayerShipListMessage(const Uuid systemDbId, const std::vector<PlayerShipData> &shipsData);
+  PlayerShipListMessage(const std::vector<PlayerShipData> &shipsData);
   ~PlayerShipListMessage() override = default;
 
-  auto getSystemDbId() const -> Uuid;
+  auto tryGetSystemDbId() const -> std::optional<Uuid>;
+  auto tryGetPlayerDbId() const -> std::optional<Uuid>;
   auto getShipsData() const -> const std::vector<PlayerShipData> &;
+
+  void setSystemDbId(const Uuid systemDbId);
+  void setPlayerDbId(const Uuid playerDbId);
 
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
@@ -23,7 +27,8 @@ class PlayerShipListMessage : public NetworkMessage
   auto clone() const -> IMessagePtr override;
 
   private:
-  Uuid m_systemDbId{};
+  std::optional<Uuid> m_systemDbId{};
+  std::optional<Uuid> m_playerDbId{};
   std::vector<PlayerShipData> m_shipsData{};
 };
 
