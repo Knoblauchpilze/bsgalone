@@ -13,7 +13,8 @@ namespace bsgo {
 namespace {
 auto truncateString(const std::string &in) -> std::string
 {
-  const auto truncatedSize = std::max(std::size_t{2u}, in.size()) - 2;
+  EXPECT_LE(1, in.size());
+  const auto truncatedSize = in.size() - 1;
   return in.substr(0, truncatedSize);
 }
 
@@ -143,6 +144,16 @@ TEST(Unit_Bsgo_Serialization_Behavior, SubMillisecondDuration)
   EXPECT_EQ(actual, expected);
 }
 
+TEST(Unit_Bsgo_Serialization_Behavior, Eigen_Vector3f)
+{
+  const Eigen::Vector3f expected(1.0f, -2.12f, 98.74f);
+
+  const auto [success, actual] = serializeAndDeserialize(expected, false);
+
+  EXPECT_TRUE(success);
+  EXPECT_EQ(actual, expected);
+}
+
 TEST(Unit_Bsgo_Serialization_Behavior, Failure_Uuid)
 {
   const Uuid value{2};
@@ -193,6 +204,15 @@ TEST(Unit_Bsgo_Serialization_Behavior, Failure_Duration)
   const core::Duration value = core::toMilliseconds(1234);
 
   const auto [success, _] = serializeAndDeserialize(value, true);
+
+  EXPECT_FALSE(success);
+}
+
+TEST(Unit_Bsgo_Serialization_Behavior, Failure_Eigen_Vector3f)
+{
+  const Eigen::Vector3f expected(1.0f, -2.12f, 98.74f);
+
+  const auto [success, _] = serializeAndDeserialize(expected, true);
 
   EXPECT_FALSE(success);
 }
