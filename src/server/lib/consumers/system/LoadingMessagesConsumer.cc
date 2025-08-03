@@ -7,6 +7,7 @@
 #include "PlayerLoginDataMessage.hh"
 #include "PlayerResourceListMessage.hh"
 #include "PlayerShipListMessage.hh"
+#include "PlayerWeaponListMessage.hh"
 #include "ResourceListMessage.hh"
 #include "SystemListMessage.hh"
 
@@ -106,6 +107,7 @@ void LoadingMessagesConsumer::handleLoginTransition(const LoadingStartedMessage 
   handlePlayerResourcesLoading(message);
   handlePlayerShipsLoading(message);
   handlePlayerComputersLoading(message);
+  handlePlayerWeaponsLoading(message);
 }
 
 void LoadingMessagesConsumer::handlePurchaseTransition(const LoadingStartedMessage & /*message*/) const
@@ -244,6 +246,29 @@ void LoadingMessagesConsumer::handlePlayerComputersLoading(const LoadingStartedM
                  });
 
   auto out = std::make_unique<PlayerComputerListMessage>(computersData);
+  out->copyClientIdIfDefined(message);
+
+  m_outputMessageQueue->pushMessage(std::move(out));
+}
+
+void LoadingMessagesConsumer::handlePlayerWeaponsLoading(const LoadingStartedMessage &message) const
+{
+  const auto maybePlayerDbId = message.tryGetPlayerDbId();
+  if (!maybePlayerDbId)
+  {
+    warn("Failed to process loading started message", "No player defined");
+    return;
+  }
+
+  const auto playerWeapons = m_loadingService->getPlayerWeapons(*maybePlayerDbId);
+
+  std::vector<PlayerWeaponData> weaopnsData{};
+  std::transform(playerWeapons.begin(),
+                 playerWeapons.end(),
+                 std::back_inserter(weaopnsData),
+                 [](const WeaponProps &playerWeapon) { return playerWeapon.toPlayerWeaponData(); });
+
+  auto out = std::make_unique<PlayerWeaponListMessage>(weaopnsData);
   out->copyClientIdIfDefined(message);
 
   m_outputMessageQueue->pushMessage(std::move(out));
