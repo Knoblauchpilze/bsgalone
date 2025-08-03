@@ -167,20 +167,31 @@ void PlayerView::handlePlayerResourcesMessage(const bsgo::PlayerResourceListMess
   m_playerResources = message.getResourcesData();
 }
 
+namespace {
+bool doesMessageContainsPlayerShips(const bsgo::PlayerShipListMessage &message)
+{
+  return message.tryGetPlayerDbId().has_value();
+}
+} // namespace
+
 void PlayerView::handlePlayerShipsMessage(const bsgo::PlayerShipListMessage &message)
 {
-  const auto maybePlayerDbId = message.tryGetPlayerDbId();
+  // Only consider messages that define ships for a player. This same message can
+  // also be used to communicate the ships of a system when the player leaves the
+  // outpost.
+  if (!doesMessageContainsPlayerShips(message))
+  {
+    return;
+  }
+
+  const auto playerDbId = message.tryGetPlayerDbId().value();
   if (!m_gameSession->hasPlayerDbId())
   {
     error("Game session has no player identifier yet");
   }
-  if (!maybePlayerDbId)
+  if (m_gameSession->getPlayerDbId() != playerDbId)
   {
-    error("Player identifier for ships message is undefined");
-  }
-  if (m_gameSession->getPlayerDbId() != *maybePlayerDbId)
-  {
-    error("Received ships message for wrong player " + bsgo::str(*maybePlayerDbId),
+    error("Received ships message for wrong player " + bsgo::str(playerDbId),
           "Expected message for player " + bsgo::str(m_gameSession->getPlayerDbId()));
   }
 
