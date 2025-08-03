@@ -47,7 +47,7 @@ struct OutpostProps
 struct WeaponProps
 {
   PlayerWeapon dbWeapon{};
-  Eigen::Vector3f slotPosition{Eigen::Vector3f::Zero()};
+  std::optional<Eigen::Vector3f> slotPosition{};
 
   auto toPlayerWeaponData() const -> PlayerWeaponData;
 };

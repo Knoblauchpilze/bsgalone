@@ -12,8 +12,14 @@ WeaponSlotComponent::WeaponSlotComponent(const PlayerWeaponData &weapon)
                                     .reloadTime = weapon.reloadTime})
   , m_minDamage(weapon.minDamage)
   , m_maxDamage(weapon.maxDamage)
-  , m_position(weapon.slotPosition)
-{}
+{
+  if (!weapon.slotPosition)
+  {
+    error("Expected slot position to be defined but it was not");
+  }
+
+  m_position = *weapon.slotPosition;
+}
 
 auto WeaponSlotComponent::minDamage() const -> float
 {

@@ -61,4 +61,36 @@ TEST(Unit_Bsgo_Serialization_PlayerWeaponData, Basic)
   assertPlayerWeaponDataAreEqual(output, input);
 }
 
+TEST(Unit_Bsgo_Serialization_PlayerWeaponData, ErasesDestinationSlotPosition)
+{
+  PlayerWeaponData input{.dbId = Uuid{1234}, .level = 4, .minDamage = 5.4321f, .range = 98765.1234f};
+
+  PlayerWeaponData output{.dbId         = Uuid{14},
+                          .slotPosition = Eigen::Vector3f{1.2f, 4.3f, -5.7f},
+                          .maxDamage    = 12.987f,
+                          .reloadTime   = core::toMilliseconds(1234)};
+
+  EXPECT_TRUE(serializeAndDeserializeData(input, output));
+
+  assertPlayerWeaponDataAreEqual(output, input);
+}
+
+TEST(Unit_Bsgo_Serialization_PlayerWeaponData, OverridesDestinationSlotPosition)
+{
+  PlayerWeaponData input{.dbId         = Uuid{1234},
+                         .slotPosition = Eigen::Vector3f{-7.8f, 97.54f, -478.52f},
+                         .level        = 4,
+                         .minDamage    = 5.4321f,
+                         .range        = 98765.1234f};
+
+  PlayerWeaponData output{.dbId         = Uuid{14},
+                          .slotPosition = Eigen::Vector3f{1.2f, 4.3f, -5.7f},
+                          .maxDamage    = 12.987f,
+                          .reloadTime   = core::toMilliseconds(1234)};
+
+  EXPECT_TRUE(serializeAndDeserializeData(input, output));
+
+  assertPlayerWeaponDataAreEqual(output, input);
+}
+
 } // namespace bsgo

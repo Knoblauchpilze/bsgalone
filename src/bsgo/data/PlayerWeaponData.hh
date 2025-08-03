@@ -12,8 +12,7 @@ struct PlayerWeaponData
 {
   Uuid dbId{};
   Uuid weaponDbId{};
-  // https://stackoverflow.com/questions/59839281/the-default-initial-state-of-eigen-matrices-with-dynamic-size
-  Eigen::Vector3f slotPosition{Eigen::Vector3f::Zero()};
+  std::optional<Eigen::Vector3f> slotPosition{};
 
   int level{};
   float minDamage{};
