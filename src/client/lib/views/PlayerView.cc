@@ -44,6 +44,9 @@ void PlayerView::onMessageReceived(const bsgo::IMessage &message)
     case bsgo::MessageType::PLAYER_SHIP_LIST:
       handlePlayerShipsMessage(message.as<bsgo::PlayerShipListMessage>());
       break;
+    case bsgo::MessageType::PLAYER_WEAPON_LIST:
+      handlePlayerWeaponsMessage(message.as<bsgo::PlayerWeaponListMessage>());
+      break;
     default:
       error("Unsupported message type " + bsgo::str(message.type()));
       break;
@@ -65,29 +68,38 @@ auto PlayerView::getPlayerResources() const -> std::vector<bsgo::PlayerResourceD
   return m_playerResources;
 }
 
-auto PlayerView::getPlayerWeapons() const -> std::vector<bsgo::PlayerWeapon>
+namespace {
+auto getAllWeaponsOnShips(const bsgo::Repositories &repositories, const bsgo::Uuid playerDbId)
+  -> std::unordered_set<bsgo::Uuid>
 {
-  std::vector<bsgo::ShipWeapon> shipWeapons{};
-  const auto ships = m_repositories.playerShipRepository->findAllByPlayer(
-    m_gameSession->getPlayerDbId());
-  for (const auto &shipId : ships)
+  const auto shipIds = repositories.playerShipRepository->findAllByPlayer(playerDbId);
+
+  std::unordered_set<bsgo::Uuid> weaponsOnShips{};
+
+  for (const auto &shipDbId : shipIds)
   {
-    const auto weapons = m_repositories.shipWeaponRepository->findAllByShip(shipId);
-    shipWeapons.insert(shipWeapons.end(), weapons.begin(), weapons.end());
+    const auto weaponsOnShip = repositories.shipWeaponRepository->findAllByShip(shipDbId);
+    std::transform(weaponsOnShip.begin(),
+                   weaponsOnShip.end(),
+                   std::inserter(weaponsOnShips, weaponsOnShips.end()),
+                   [](const bsgo::ShipWeapon &weapon) { return weapon.weapon; });
   }
 
-  auto ids = m_repositories.playerWeaponRepository->findAllByPlayer(m_gameSession->getPlayerDbId());
-  for (const auto &shipWeapon : shipWeapons)
-  {
-    ids.erase(shipWeapon.weapon);
-  }
+  return weaponsOnShips;
+}
+} // namespace
 
-  std::vector<bsgo::PlayerWeapon> out;
-  for (const auto &id : ids)
-  {
-    const auto weapon = m_repositories.playerWeaponRepository->findOneById(id);
-    out.push_back(weapon);
-  }
+auto PlayerView::getPlayerWeapons() const -> std::vector<bsgo::PlayerWeaponData>
+{
+  const auto weaponsInstalledOnShips = getAllWeaponsOnShips(m_repositories,
+                                                            m_gameSession->getPlayerDbId());
+
+  std::vector<bsgo::PlayerWeaponData> out(m_playerWeapons);
+
+  std::erase_if(out, [&weaponsInstalledOnShips](const bsgo::PlayerWeaponData &weaponData) {
+    return weaponsInstalledOnShips.contains(weaponData.dbId);
+  });
+
   return out;
 }
 
@@ -111,13 +123,13 @@ auto getAllComputersOnShips(const bsgo::Repositories &repositories, const bsgo::
 
 auto PlayerView::getPlayerComputers() const -> std::vector<bsgo::PlayerComputerData>
 {
-  const auto computerInstalledOnShips = getAllComputersOnShips(m_repositories,
-                                                               m_gameSession->getPlayerDbId());
+  const auto computersInstalledOnShips = getAllComputersOnShips(m_repositories,
+                                                                m_gameSession->getPlayerDbId());
 
   std::vector<bsgo::PlayerComputerData> out(m_playerComputers);
 
-  std::erase_if(out, [&computerInstalledOnShips](const bsgo::PlayerComputerData &computerData) {
-    return computerInstalledOnShips.contains(computerData.dbId);
+  std::erase_if(out, [&computersInstalledOnShips](const bsgo::PlayerComputerData &computerData) {
+    return computersInstalledOnShips.contains(computerData.dbId);
   });
 
   return out;
@@ -196,6 +208,11 @@ void PlayerView::handlePlayerShipsMessage(const bsgo::PlayerShipListMessage &mes
   }
 
   m_playerShips = message.getShipsData();
+}
+
+void PlayerView::handlePlayerWeaponsMessage(const bsgo::PlayerWeaponListMessage &message)
+{
+  m_playerWeapons = message.getWeaponsData();
 }
 
 } // namespace pge

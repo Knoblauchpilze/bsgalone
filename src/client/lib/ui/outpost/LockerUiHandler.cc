@@ -271,7 +271,7 @@ void LockerUiHandler::generateLockerWeaponsMenus()
       "Equip", [this, itemId]() { onInstallRequest(itemId); }, HorizontalMargin::LEFT);
     m_lockerWeapons[id]->addMenu(std::move(section.menu));
 
-    LockerItem data{.itemId = weapon.id, .itemType = bsgo::Item::WEAPON, .button = section.button};
+    LockerItem data{.itemId = weapon.dbId, .itemType = bsgo::Item::WEAPON, .button = section.button};
     m_lockerItemsData.emplace_back(std::move(data));
 
     ++id;
