@@ -298,4 +298,20 @@ auto LoadingService::getPlayerComputers(const Uuid playerDbId) const -> std::vec
   return computers;
 }
 
+auto LoadingService::getPlayerWeapons(const Uuid playerDbId) const -> std::vector<WeaponProps>
+{
+  const auto weaponDbIds = m_repositories.playerWeaponRepository->findAllByPlayer(playerDbId);
+
+  std::vector<WeaponProps> weapons{};
+
+  for (const auto &weaponDbId : weaponDbIds)
+  {
+    const auto weapon = m_repositories.playerWeaponRepository->findOneById(weaponDbId);
+
+    weapons.emplace_back(weapon, std::optional<Eigen::Vector3f>{});
+  }
+
+  return weapons;
+}
+
 } // namespace bsgo
