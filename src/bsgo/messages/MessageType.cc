@@ -47,10 +47,12 @@ auto str(const MessageType &type) -> std::string
       return "player_list";
     case MessageType::PLAYER_LOGIN_DATA:
       return "player_login_data";
-    case MessageType::PLAYER_SHIP_LIST:
-      return "player_ship_list";
     case MessageType::PLAYER_RESOURCE_LIST:
       return "player_resource_list";
+    case MessageType::PLAYER_SHIP_LIST:
+      return "player_ship_list";
+    case MessageType::PLAYER_WEAPON_LIST:
+      return "player_weapon_list";
     case MessageType::PURCHASE:
       return "purchase";
     case MessageType::RESOURCE_LIST:
@@ -76,7 +78,7 @@ auto str(const MessageType &type) -> std::string
   }
 }
 
-auto allMessageTypes() -> std::array<MessageType, 32>
+auto allMessageTypes() -> std::array<MessageType, 33>
 {
   return {MessageType::ASTEROID_LIST,
           MessageType::COMPONENT_SYNC,
@@ -100,6 +102,7 @@ auto allMessageTypes() -> std::array<MessageType, 32>
           MessageType::PLAYER_LOGIN_DATA,
           MessageType::PLAYER_RESOURCE_LIST,
           MessageType::PLAYER_SHIP_LIST,
+          MessageType::PLAYER_WEAPON_LIST,
           MessageType::PURCHASE,
           MessageType::RESOURCE_LIST,
           MessageType::SCANNED,
