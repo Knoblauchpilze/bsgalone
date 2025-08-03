@@ -2,6 +2,7 @@
 #pragma once
 
 #include "TimeUtils.hh"
+#include <eigen3/Eigen/Eigen>
 #include <istream>
 #include <optional>
 #include <ostream>
@@ -43,6 +44,10 @@ bool deserialize(std::istream &in, std::optional<T> &value);
 auto serialize(std::ostream &out, const core::Duration &d) -> std::ostream &;
 
 bool deserialize(std::istream &in, core::Duration &d);
+
+auto serialize(std::ostream &out, const Eigen::Vector3f &v) -> std::ostream &;
+
+bool deserialize(std::istream &in, Eigen::Vector3f &v);
 
 } // namespace core
 

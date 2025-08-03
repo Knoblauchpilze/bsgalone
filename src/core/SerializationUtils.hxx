@@ -153,4 +153,25 @@ inline bool deserialize(std::istream &in, Duration &d)
   return in.good();
 }
 
+inline auto serialize(std::ostream &out, const Eigen::Vector3f &v) -> std::ostream &
+{
+  const float values[3] = {v(0), v(1), v(2)};
+  out.write(reinterpret_cast<const char *>(values), 3 * sizeof(float));
+
+  return out;
+}
+
+inline bool deserialize(std::istream &in, Eigen::Vector3f &v)
+{
+  float values[3] = {0.0f, 0.0f, 0.0f};
+
+  in.read(reinterpret_cast<char *>(values), 3 * sizeof(float));
+  if (in)
+  {
+    v = Eigen::Vector3f(values[0], values[1], values[2]);
+  }
+
+  return in.good();
+}
+
 } // namespace core
