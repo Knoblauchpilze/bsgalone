@@ -31,6 +31,7 @@ enum class MessageType
   PLAYER_LOGIN_DATA,
   PLAYER_RESOURCE_LIST,
   PLAYER_SHIP_LIST,
+  PLAYER_WEAPON_LIST,
   PURCHASE,
   RESOURCE_LIST,
   SCANNED,
@@ -44,7 +45,7 @@ enum class MessageType
 };
 
 auto str(const MessageType &type) -> std::string;
-auto allMessageTypes() -> std::array<MessageType, 32>;
+auto allMessageTypes() -> std::array<MessageType, 33>;
 
 auto allMessageTypesAsSet() -> std::unordered_set<MessageType>;
 

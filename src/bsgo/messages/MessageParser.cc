@@ -25,6 +25,7 @@
 #include "PlayerLoginDataMessage.hh"
 #include "PlayerResourceListMessage.hh"
 #include "PlayerShipListMessage.hh"
+#include "PlayerWeaponListMessage.hh"
 #include "PurchaseMessage.hh"
 #include "ResourceListMessage.hh"
 #include "ScannedMessage.hh"
@@ -152,6 +153,8 @@ auto MessageParser::tryReadMessage(const MessageType &type, std::istream &in)
       return readMessage<PlayerResourceListMessage>(in);
     case MessageType::PLAYER_SHIP_LIST:
       return readMessage<PlayerShipListMessage>(in);
+    case MessageType::PLAYER_WEAPON_LIST:
+      return readMessage<PlayerWeaponListMessage>(in);
     case MessageType::PURCHASE:
       return readMessage<PurchaseMessage>(in);
     case MessageType::RESOURCE_LIST:
