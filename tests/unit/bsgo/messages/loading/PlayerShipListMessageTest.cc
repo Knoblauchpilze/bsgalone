@@ -224,12 +224,13 @@ TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, MultipleComplexShips)
      .hullPoints = 12.34f,
      .docked     = true,
      .active     = true,
-     .weapons    = {{.dbId = Uuid{1}, .weaponDbId = Uuid{14}, .level = 10, .range = 0.145f},
-                    {.dbId         = Uuid{2},
-                     .slotPosition = Eigen::Vector3f{45.12f, -56.89f, 78.45f},
-                     .minDamage    = 14.2f,
-                     .maxDamage    = 100.0f,
-                     .reloadTime   = core::toMilliseconds(23)}},
+     .weapons
+     = {{.dbId = Uuid{1}, .weaponDbId = Uuid{14}, .name = "the weapon", .level = 10, .range = 0.145f},
+        {.dbId         = Uuid{2},
+         .slotPosition = Eigen::Vector3f{45.12f, -56.89f, 78.45f},
+         .minDamage    = 14.2f,
+         .maxDamage    = 100.0f,
+         .reloadTime   = core::toMilliseconds(23)}},
      .computers
      = {{.dbId = Uuid{1}, .computerDbId = Uuid{14}, .level = 10, .offensive = true, .range = 0.145f},
         {.dbId           = Uuid{2},
@@ -242,16 +243,17 @@ TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, MultipleComplexShips)
      .hullPoints       = 98.76f,
      .jumpTime         = core::toMilliseconds(741),
      .jumpTimeInThreat = core::toMilliseconds(369),
-     .weapons          = {{.dbId = Uuid{16}, .weaponDbId = Uuid{14}, .level = 9, .range = 6.897f},
-                          {.dbId = Uuid{3}, .minDamage = 29.53f, .maxDamage = 17.497f}},
-     .computers        = {
-              {.dbId           = Uuid{1},
-               .computerDbId   = Uuid{14},
-               .name           = "computer 1",
-               .level          = 10,
-               .offensive      = false,
-               .range          = 3.987f,
-               .allowedTargets = std::unordered_set<EntityKind>{EntityKind::SHIP, EntityKind::OUTPOST}}}}};
+     .weapons
+     = {{.dbId = Uuid{16}, .weaponDbId = Uuid{14}, .level = 9, .range = 6.897f},
+        {.dbId = Uuid{3}, .name = "random weapon", .minDamage = 29.53f, .maxDamage = 17.497f}},
+     .computers = {
+       {.dbId           = Uuid{1},
+        .computerDbId   = Uuid{14},
+        .name           = "computer 1",
+        .level          = 10,
+        .offensive      = false,
+        .range          = 3.987f,
+        .allowedTargets = std::unordered_set<EntityKind>{EntityKind::SHIP, EntityKind::OUTPOST}}}}};
   PlayerShipListMessage expected(shipsData);
   expected.setSystemDbId(Uuid{123});
   expected.setClientId(Uuid{78});
@@ -280,7 +282,8 @@ TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, MultipleComplexShips)
        {.dbId             = Uuid{7416},
         .docked           = true,
         .jumpTimeInThreat = core::toMilliseconds(5678),
-        .weapons          = {{.weaponDbId = Uuid{852}, .reloadTime = core::toMilliseconds(963)}}}};
+        .weapons          = {
+                   {.weaponDbId = Uuid{852}, .name = "my weapon", .reloadTime = core::toMilliseconds(963)}}}};
   PlayerShipListMessage actual(shipsData);
   actual.setSystemDbId(Uuid{3331});
   actual.setPlayerDbId(Uuid{745});

@@ -34,6 +34,7 @@ void assertPlayerWeaponDataAreEqual(const PlayerWeaponData &actual, const Player
   EXPECT_EQ(actual.dbId, expected.dbId);
   EXPECT_EQ(actual.weaponDbId, expected.weaponDbId);
   EXPECT_EQ(actual.slotPosition, expected.slotPosition);
+  EXPECT_EQ(actual.name, expected.name);
   EXPECT_EQ(actual.level, expected.level);
   EXPECT_EQ(actual.minDamage, expected.minDamage);
   EXPECT_EQ(actual.maxDamage, expected.maxDamage);
