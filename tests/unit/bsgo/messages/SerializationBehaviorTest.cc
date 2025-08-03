@@ -144,9 +144,30 @@ TEST(Unit_Bsgo_Serialization_Behavior, SubMillisecondDuration)
   EXPECT_EQ(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Eigen_Vector3f)
+TEST(Unit_Bsgo_Serialization_Behavior, Nominal_Eigen_Vector3f)
 {
   const Eigen::Vector3f expected(1.0f, -2.12f, 98.74f);
+
+  const auto [success, actual] = serializeAndDeserialize(expected, false);
+
+  EXPECT_TRUE(success);
+  EXPECT_EQ(actual, expected);
+}
+
+TEST(Unit_Bsgo_Serialization_Behavior, Nominal_Eigen_Vector3f_Optional)
+{
+  const std::optional<Eigen::Vector3f> expected = Eigen::Vector3f(1.0f, -2.12f, 98.74f);
+
+  const auto [success, actual] = serializeAndDeserialize(expected, false);
+
+  EXPECT_TRUE(success);
+  EXPECT_EQ(actual, expected);
+}
+
+TEST(Unit_Bsgo_Serialization_Behavior, Nominal_Eigen_Vector3f_EmptyOptional)
+{
+  const std::optional<Eigen::Vector3f> expected = {};
+  ASSERT_FALSE(expected.has_value());
 
   const auto [success, actual] = serializeAndDeserialize(expected, false);
 
