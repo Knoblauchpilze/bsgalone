@@ -14,6 +14,7 @@ struct PlayerWeaponData
   Uuid weaponDbId{};
   std::optional<Eigen::Vector3f> slotPosition{};
 
+  std::string name{};
   int level{};
   float minDamage{};
   float maxDamage{};

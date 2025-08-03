@@ -43,6 +43,7 @@ auto WeaponProps::toPlayerWeaponData() const -> PlayerWeaponData
     .dbId         = dbWeapon.id,
     .weaponDbId   = dbWeapon.weapon,
     .slotPosition = slotPosition,
+    .name         = dbWeapon.name,
     .level        = dbWeapon.level,
     .minDamage    = dbWeapon.minDamage,
     .maxDamage    = dbWeapon.maxDamage,
