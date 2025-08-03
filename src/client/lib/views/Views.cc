@@ -43,7 +43,8 @@ void registerViews(const Views &views, bsgo::IMessageQueue *const queue)
   // TODO: specify the right kind of messages
   messageTypes = {bsgo::MessageType::PLAYER_COMPUTER_LIST,
                   bsgo::MessageType::PLAYER_RESOURCE_LIST,
-                  bsgo::MessageType::PLAYER_SHIP_LIST};
+                  bsgo::MessageType::PLAYER_SHIP_LIST,
+                  bsgo::MessageType::PLAYER_WEAPON_LIST};
   registerViewToQueue(*views.playerView, messageTypes, queue);
 
   messageTypes = {bsgo::MessageType::SYSTEM_LIST};
