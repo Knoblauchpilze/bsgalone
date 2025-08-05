@@ -19,9 +19,7 @@ namespace pge {
 class PlayerView : public AbstractView
 {
   public:
-  PlayerView(const bsgo::Repositories &repositories,
-             GameSessionShPtr gameSession,
-             bsgo::IMessageQueue *const outputMessageQueue);
+  PlayerView(GameSessionShPtr gameSession, bsgo::IMessageQueue *const outputMessageQueue);
   ~PlayerView() override = default;
 
   bool isReady() const noexcept override;
@@ -45,7 +43,6 @@ class PlayerView : public AbstractView
                  const bsgo::Faction &faction) const;
 
   private:
-  bsgo::Repositories m_repositories{};
   GameSessionShPtr m_gameSession{};
   bsgo::IMessageQueue *const m_outputMessageQueue{};
 

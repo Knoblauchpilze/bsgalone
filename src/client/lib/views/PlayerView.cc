@@ -8,11 +8,8 @@
 
 namespace pge {
 
-PlayerView::PlayerView(const bsgo::Repositories &repositories,
-                       GameSessionShPtr gameSession,
-                       bsgo::IMessageQueue *const outputMessageQueue)
+PlayerView::PlayerView(GameSessionShPtr gameSession, bsgo::IMessageQueue *const outputMessageQueue)
   : AbstractView("player")
-  , m_repositories(repositories)
   , m_gameSession(std::move(gameSession))
   , m_outputMessageQueue(outputMessageQueue)
 {
@@ -69,20 +66,20 @@ auto PlayerView::getPlayerResources() const -> std::vector<bsgo::PlayerResourceD
 }
 
 namespace {
-auto getAllWeaponsOnShips(const bsgo::Repositories &repositories, const bsgo::Uuid playerDbId)
+auto getAllWeaponsOnShips(const std::vector<bsgo::PlayerShipData> &playerShips)
   -> std::unordered_set<bsgo::Uuid>
 {
-  const auto shipIds = repositories.playerShipRepository->findAllByPlayer(playerDbId);
-
   std::unordered_set<bsgo::Uuid> weaponsOnShips{};
 
-  for (const auto &shipDbId : shipIds)
+  for (const auto &ship : playerShips)
   {
-    const auto weaponsOnShip = repositories.shipWeaponRepository->findAllByShip(shipDbId);
-    std::transform(weaponsOnShip.begin(),
-                   weaponsOnShip.end(),
-                   std::inserter(weaponsOnShips, weaponsOnShips.end()),
-                   [](const bsgo::ShipWeapon &weapon) { return weapon.weapon; });
+    std::vector<bsgo::Uuid> weaponIds;
+    std::transform(ship.weapons.begin(),
+                   ship.weapons.end(),
+                   std::back_inserter(weaponIds),
+                   [](const bsgo::PlayerWeaponData &weapon) { return weapon.dbId; });
+
+    weaponsOnShips.insert(weaponIds.begin(), weaponIds.end());
   }
 
   return weaponsOnShips;
@@ -91,8 +88,7 @@ auto getAllWeaponsOnShips(const bsgo::Repositories &repositories, const bsgo::Uu
 
 auto PlayerView::getPlayerWeapons() const -> std::vector<bsgo::PlayerWeaponData>
 {
-  const auto weaponsInstalledOnShips = getAllWeaponsOnShips(m_repositories,
-                                                            m_gameSession->getPlayerDbId());
+  const auto weaponsInstalledOnShips = getAllWeaponsOnShips(m_playerShips);
 
   std::vector<bsgo::PlayerWeaponData> out(m_playerWeapons);
 
@@ -104,16 +100,19 @@ auto PlayerView::getPlayerWeapons() const -> std::vector<bsgo::PlayerWeaponData>
 }
 
 namespace {
-auto getAllComputersOnShips(const bsgo::Repositories &repositories, const bsgo::Uuid playerDbId)
+auto getAllComputersOnShips(const std::vector<bsgo::PlayerShipData> &playerShips)
   -> std::unordered_set<bsgo::Uuid>
 {
-  const auto shipIds = repositories.playerShipRepository->findAllByPlayer(playerDbId);
-
   std::unordered_set<bsgo::Uuid> computersOnShips{};
 
-  for (const auto &shipDbId : shipIds)
+  for (const auto &ship : playerShips)
   {
-    const auto computerIds = repositories.shipComputerRepository->findAllByShip(shipDbId);
+    std::vector<bsgo::Uuid> computerIds;
+    std::transform(ship.computers.begin(),
+                   ship.computers.end(),
+                   std::back_inserter(computerIds),
+                   [](const bsgo::PlayerComputerData &computer) { return computer.dbId; });
+
     computersOnShips.insert(computerIds.begin(), computerIds.end());
   }
 
@@ -123,8 +122,7 @@ auto getAllComputersOnShips(const bsgo::Repositories &repositories, const bsgo::
 
 auto PlayerView::getPlayerComputers() const -> std::vector<bsgo::PlayerComputerData>
 {
-  const auto computersInstalledOnShips = getAllComputersOnShips(m_repositories,
-                                                                m_gameSession->getPlayerDbId());
+  const auto computersInstalledOnShips = getAllComputersOnShips(m_playerShips);
 
   std::vector<bsgo::PlayerComputerData> out(m_playerComputers);
 
