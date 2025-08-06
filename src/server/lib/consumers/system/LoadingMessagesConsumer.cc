@@ -1,6 +1,7 @@
 
 #include "LoadingMessagesConsumer.hh"
 #include "AsteroidListMessage.hh"
+#include "HangarMessage.hh"
 #include "OutpostListMessage.hh"
 #include "PlayerComputerListMessage.hh"
 #include "PlayerListMessage.hh"
@@ -108,6 +109,7 @@ void LoadingMessagesConsumer::handleLoginTransition(const LoadingStartedMessage 
   handlePlayerShipsLoading(message);
   handlePlayerComputersLoading(message);
   handlePlayerWeaponsLoading(message);
+  handleActiveShipLoading(message);
 }
 
 void LoadingMessagesConsumer::handlePurchaseTransition(const LoadingStartedMessage & /*message*/) const
@@ -270,6 +272,23 @@ void LoadingMessagesConsumer::handlePlayerWeaponsLoading(const LoadingStartedMes
 
   auto out = std::make_unique<PlayerWeaponListMessage>(weaopnsData);
   out->copyClientIdIfDefined(message);
+
+  m_outputMessageQueue->pushMessage(std::move(out));
+}
+
+void LoadingMessagesConsumer::handleActiveShipLoading(const LoadingStartedMessage &message) const
+{
+  const auto maybePlayerDbId = message.tryGetPlayerDbId();
+  if (!maybePlayerDbId)
+  {
+    warn("Failed to process loading started message", "No player defined");
+    return;
+  }
+
+  const auto ship = m_loadingService->getActivePlayerShip(*maybePlayerDbId);
+
+  // TODO: We should send the whole ship and not just the id
+  auto out = std::make_unique<HangarMessage>(ship.dbShip.id);
 
   m_outputMessageQueue->pushMessage(std::move(out));
 }

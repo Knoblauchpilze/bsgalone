@@ -53,6 +53,7 @@ class LoadingService : public AbstractService
   auto getPlayerShips(const Uuid playerDbId) const -> std::vector<ShipProps>;
   auto getPlayerComputers(const Uuid playerDbId) const -> std::vector<PlayerComputer>;
   auto getPlayerWeapons(const Uuid playerDbId) const -> std::vector<WeaponProps>;
+  auto getActivePlayerShip(const Uuid playerDbId) const -> ShipProps;
 
   private:
   CoordinatorShPtr m_coordinator{};
