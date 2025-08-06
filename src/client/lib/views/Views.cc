@@ -48,8 +48,10 @@ void registerViews(const Views &views, bsgo::IMessageQueue *const queue)
   messageTypes = {bsgo::MessageType::SYSTEM_LIST};
   registerViewToQueue(*views.shipView, messageTypes, queue);
 
-  messageTypes = {};
+  messageTypes = {bsgo::MessageType::HANGAR};
   registerViewToQueue(*views.shipDbView, messageTypes, queue);
+
+  messageTypes = {};
   registerViewToQueue(*views.shopView, messageTypes, queue);
   registerViewToQueue(*views.systemView, messageTypes, queue);
 
