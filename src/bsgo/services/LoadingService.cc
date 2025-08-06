@@ -314,4 +314,23 @@ auto LoadingService::getPlayerWeapons(const Uuid playerDbId) const -> std::vecto
   return weapons;
 }
 
+auto LoadingService::getActivePlayerShip(const Uuid playerDbId) const -> ShipProps
+{
+  const auto ship = m_repositories.playerShipRepository->findOneByPlayerAndActive(playerDbId);
+
+  const auto weapons   = getWeaponsForShip(m_repositories, ship.id);
+  const auto computers = getComputersForShip(m_repositories, ship.id);
+
+  const auto status     = determineStartingStatusForShip(ship);
+  const auto targetDbId = getShipTargetDbId(ship.id, m_entityMapper, *m_coordinator);
+
+  return ShipProps{
+    .dbShip     = ship,
+    .status     = status,
+    .targetDbId = targetDbId,
+    .weapons    = weapons,
+    .computers  = computers,
+  };
+}
+
 } // namespace bsgo
