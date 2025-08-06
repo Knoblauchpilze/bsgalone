@@ -25,7 +25,9 @@ PlayerView::PlayerView(GameSessionShPtr gameSession, bsgo::IMessageQueue *const 
 
 bool PlayerView::isReady() const noexcept
 {
-  return m_gameSession->hasPlayerDbId() && !m_playerResources.empty();
+  // Computers and weapons are allowed to be empty in case the player
+  // sells everything.
+  return m_gameSession->hasPlayerDbId() && !m_playerResources.empty() && !m_playerShips.empty();
 }
 
 void PlayerView::onMessageReceived(const bsgo::IMessage &message)
@@ -48,11 +50,6 @@ void PlayerView::onMessageReceived(const bsgo::IMessage &message)
       error("Unsupported message type " + bsgo::str(message.type()));
       break;
   }
-}
-
-auto PlayerView::getPlayerDbId() const -> bsgo::Uuid
-{
-  return m_gameSession->getPlayerDbId();
 }
 
 auto PlayerView::getPlayerFaction() const -> bsgo::Faction
