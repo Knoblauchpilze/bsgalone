@@ -78,7 +78,7 @@ void LogUiHandler::updateUi()
   std::erase_if(m_logs, [](const LogMessage &data) { return data.menu->finished(); });
 }
 
-void LogUiHandler::reset()
+void LogUiHandler::onLoadingTransition(const bsgo::LoadingTransition /*transition*/)
 {
   m_logs.clear();
   m_logsToTrigger.clear();

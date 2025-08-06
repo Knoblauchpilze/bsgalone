@@ -144,11 +144,11 @@ void OutpostScreenUiHandler::updateUi()
   }
 }
 
-void OutpostScreenUiHandler::reset()
+void OutpostScreenUiHandler::onLoadingTransition(const bsgo::LoadingTransition transition)
 {
-  m_lockerUi->reset();
-  m_shopUi->reset();
-  m_hangarUi->reset();
+  m_lockerUi->onLoadingTransition(transition);
+  m_shopUi->onLoadingTransition(transition);
+  m_hangarUi->onLoadingTransition(transition);
 
   m_menus[VIEWS_MENU]->clearChildren();
 

@@ -60,7 +60,7 @@ void HangarUiHandler::updateUi()
   }
 }
 
-void HangarUiHandler::reset()
+void HangarUiHandler::onLoadingTransition(const bsgo::LoadingTransition /*transition*/)
 {
   m_shipsData.clear();
   m_menu->clearChildren();

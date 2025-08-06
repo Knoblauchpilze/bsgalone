@@ -24,7 +24,7 @@ class AbilitiesUiHandler : public IUiHandler, public bsgo::AbstractMessageListen
   bool processUserInput(UserInputData &inputData) override;
   void render(Renderer &engine) const override;
   void updateUi() override;
-  void reset() override;
+  void onLoadingTransition(const bsgo::LoadingTransition transition) override;
   void connectToMessageQueue(bsgo::IMessageQueue &messageQueue) override;
 
   void onMessageReceived(const bsgo::IMessage &message) override;

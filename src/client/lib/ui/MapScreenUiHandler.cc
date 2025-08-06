@@ -1,5 +1,6 @@
 
 #include "MapScreenUiHandler.hh"
+#include "Game.hh"
 #include "ScreenCommon.hh"
 #include "UiTextMenu.hh"
 
@@ -100,7 +101,7 @@ void MapScreenUiHandler::updateUi()
   }
 }
 
-void MapScreenUiHandler::reset()
+void MapScreenUiHandler::onLoadingTransition(const bsgo::LoadingTransition /*transition*/)
 {
   m_selectedSystem.reset();
   m_initialized = false;

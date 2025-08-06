@@ -1,5 +1,6 @@
 
 #include "LoginScreenUiHandler.hh"
+#include "Game.hh"
 #include "LoginMessage.hh"
 #include "MessageListenerWrapper.hh"
 #include "ScreenCommon.hh"
@@ -116,9 +117,9 @@ void LoginScreenUiHandler::updateUi()
   m_failureMenu->update();
 }
 
-void LoginScreenUiHandler::reset()
+void LoginScreenUiHandler::onLoadingTransition(const bsgo::LoadingTransition transition)
 {
-  m_credentialsUiHandler.reset();
+  m_credentialsUiHandler.onLoadingTransition(transition);
 }
 
 void LoginScreenUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQueue)
