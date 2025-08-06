@@ -26,7 +26,6 @@ class PlayerView : public AbstractView
 
   void onMessageReceived(const bsgo::IMessage &message) override;
 
-  auto getPlayerDbId() const -> bsgo::Uuid;
   auto getPlayerFaction() const -> bsgo::Faction;
   auto getPlayerResources() const -> std::vector<bsgo::PlayerResourceData>;
   auto getPlayerWeapons() const -> std::vector<bsgo::PlayerWeaponData>;
