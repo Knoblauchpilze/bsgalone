@@ -2,6 +2,7 @@
 #include "ShipDbView.hh"
 #include "DockMessage.hh"
 #include "EquipMessage.hh"
+#include "HangarMessage.hh"
 #include "JumpCancelledMessage.hh"
 #include "JumpRequestedMessage.hh"
 #include "LockerUtils.hh"
@@ -33,14 +34,21 @@ ShipDbView::ShipDbView(const bsgo::Repositories &repositories,
   }
 }
 
-auto ShipDbView::getPlayerShipDbId() const -> bsgo::Uuid
-{
-  return m_gameSession->getPlayerActiveShipDbId();
-}
-
 bool ShipDbView::isReady() const noexcept
 {
   return m_gameSession->hasPlayerActiveShipDbId() && m_gameSession->hasSystemDbId();
+}
+
+void ShipDbView::onMessageReceived(const bsgo::IMessage &message)
+{
+  const auto hangarMessage = message.as<bsgo::HangarMessage>();
+  // TODO: Handle hangar message.
+  warn("should handle hangar for " + bsgo::str(hangarMessage.getShipDbId()));
+}
+
+auto ShipDbView::getPlayerShipDbId() const -> bsgo::Uuid
+{
+  return m_gameSession->getPlayerActiveShipDbId();
 }
 
 void ShipDbView::dockPlayerShip() const

@@ -22,9 +22,11 @@ class ShipDbView : public AbstractView
              bsgo::IMessageQueue *const outputMessageQueue);
   ~ShipDbView() override = default;
 
-  auto getPlayerShipDbId() const -> bsgo::Uuid;
-
   bool isReady() const noexcept override;
+
+  void onMessageReceived(const bsgo::IMessage &message) override;
+
+  auto getPlayerShipDbId() const -> bsgo::Uuid;
 
   void dockPlayerShip() const;
   void undockPlayerShip() const;
