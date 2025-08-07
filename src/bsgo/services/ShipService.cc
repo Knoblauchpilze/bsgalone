@@ -105,6 +105,12 @@ bool ShipService::accelerateShip(const Uuid shipDbId, const Eigen::Vector3f &acc
   return true;
 }
 
+auto ShipService::tryGetPlayerDbIdForShip(const Uuid shipDbId) -> std::optional<Uuid>
+{
+  const auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
+  return ship.player;
+}
+
 namespace {
 auto tryGetEntityAt(const Coordinator &coordinator, const Eigen::Vector3f &position)
   -> std::optional<Entity>

@@ -7,6 +7,8 @@ auto str(const LoadingTransition transition) -> std::string
 {
   switch (transition)
   {
+    case LoadingTransition::ACTIVE_SHIP_CHANGED:
+      return "active_ship_changed";
     case LoadingTransition::DOCK:
       return "dock";
     case LoadingTransition::JUMP:

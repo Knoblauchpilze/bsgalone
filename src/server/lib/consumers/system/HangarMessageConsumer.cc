@@ -1,5 +1,7 @@
 
 #include "HangarMessageConsumer.hh"
+#include "LoadingFinishedMessage.hh"
+#include "LoadingStartedMessage.hh"
 
 namespace bsgo {
 
@@ -49,6 +51,28 @@ void HangarMessageConsumer::handleShipSwitchRequest(const HangarMessage &message
   out->validate();
   out->copyClientIdIfDefined(message);
   m_outputMessageQueue->pushMessage(std::move(out));
+
+  handleSuccessfulSwitch(message);
+}
+
+void HangarMessageConsumer::handleSuccessfulSwitch(const HangarMessage &message) const
+{
+  const auto shipDbId        = message.getShipDbId();
+  const auto maybePlayerDbId = m_shipService->tryGetPlayerDbIdForShip(shipDbId);
+  if (!maybePlayerDbId)
+  {
+    error("Expected ship " + str(shipDbId) + " to belong to a player");
+  }
+
+  auto started = std::make_unique<LoadingStartedMessage>(LoadingTransition::ACTIVE_SHIP_CHANGED);
+  started->setPlayerDbId(*maybePlayerDbId);
+  started->copyClientIdIfDefined(message);
+  m_systemMessageQueue->pushMessage(std::move(started));
+
+  auto finished = std::make_unique<LoadingFinishedMessage>(LoadingTransition::ACTIVE_SHIP_CHANGED);
+  finished->setPlayerDbId(*maybePlayerDbId);
+  finished->copyClientIdIfDefined(message);
+  m_systemMessageQueue->pushMessage(std::move(finished));
 }
 
 } // namespace bsgo

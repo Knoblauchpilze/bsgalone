@@ -56,6 +56,7 @@ void LoadingMessagesConsumer::handleLoadingStartedMessage(const LoadingStartedMe
     m_outputMessageQueue->pushMessage(message.clone());
   }
 
+  // TODO: We need to add the active ship changed transition
   switch (message.getTransition())
   {
     case LoadingTransition::DOCK:
