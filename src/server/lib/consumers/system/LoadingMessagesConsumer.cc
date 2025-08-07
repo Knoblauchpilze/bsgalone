@@ -287,8 +287,7 @@ void LoadingMessagesConsumer::handleActiveShipLoading(const LoadingStartedMessag
 
   const auto ship = m_loadingService->getActivePlayerShip(*maybePlayerDbId);
 
-  // TODO: We should send the whole ship and not just the id
-  auto out = std::make_unique<HangarMessage>(ship.dbShip.id);
+  auto out = std::make_unique<HangarMessage>(ship.toPlayerShipData());
 
   m_outputMessageQueue->pushMessage(std::move(out));
 }
