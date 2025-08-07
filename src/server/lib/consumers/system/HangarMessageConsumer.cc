@@ -4,14 +4,20 @@
 namespace bsgo {
 
 HangarMessageConsumer::HangarMessageConsumer(const Services &services,
+                                             IMessageQueue *const systemMessageQueue,
                                              IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("hangar", {MessageType::HANGAR})
   , m_shipService(services.ship)
+  , m_systemMessageQueue(systemMessageQueue)
   , m_outputMessageQueue(outputMessageQueue)
 {
   if (nullptr == m_shipService)
   {
     throw std::invalid_argument("Expected non null ship service");
+  }
+  if (nullptr == m_systemMessageQueue)
+  {
+    throw std::invalid_argument("Expected non null system message queue");
   }
   if (nullptr == m_outputMessageQueue)
   {
