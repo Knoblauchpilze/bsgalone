@@ -1,6 +1,7 @@
 
 
 #include "HangarMessage.hh"
+#include "DataSerialization.hh"
 #include "SerializationUtils.hh"
 
 namespace bsgo {
@@ -11,12 +12,23 @@ HangarMessage::HangarMessage()
 
 HangarMessage::HangarMessage(const Uuid shipDbId)
   : ValidatableMessage(MessageType::HANGAR)
-  , m_shipDbId(shipDbId)
+{
+  m_ship.dbId = shipDbId;
+}
+
+HangarMessage::HangarMessage(const PlayerShipData ship)
+  : ValidatableMessage(MessageType::HANGAR)
+  , m_ship(ship)
 {}
 
 auto HangarMessage::getShipDbId() const -> Uuid
 {
-  return m_shipDbId;
+  return m_ship.dbId;
+}
+
+auto HangarMessage::getShip() const -> PlayerShipData
+{
+  return m_ship;
 }
 
 auto HangarMessage::serialize(std::ostream &out) const -> std::ostream &
@@ -25,7 +37,7 @@ auto HangarMessage::serialize(std::ostream &out) const -> std::ostream &
   core::serialize(out, m_clientId);
   core::serialize(out, m_validated);
 
-  core::serialize(out, m_shipDbId);
+  serializePlayerShipData(out, m_ship);
 
   return out;
 }
@@ -37,14 +49,14 @@ bool HangarMessage::deserialize(std::istream &in)
   ok &= core::deserialize(in, m_clientId);
   ok &= core::deserialize(in, m_validated);
 
-  ok &= core::deserialize(in, m_shipDbId);
+  ok &= deserializePlayerShipData(in, m_ship);
 
   return ok;
 }
 
 auto HangarMessage::clone() const -> IMessagePtr
 {
-  auto clone = std::make_unique<HangarMessage>(m_shipDbId);
+  auto clone = std::make_unique<HangarMessage>(m_ship);
   clone->copyClientIdIfDefined(*this);
   clone->validate(validated());
 
