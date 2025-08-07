@@ -7,6 +7,7 @@ namespace bsgo {
 
 enum class LoadingTransition
 {
+  ACTIVE_SHIP_CHANGED,
   DOCK,
   JUMP,
   LOGIN,

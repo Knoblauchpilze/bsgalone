@@ -24,6 +24,8 @@ class HangarMessageConsumer : public AbstractMessageConsumer
   IMessageQueue *const m_outputMessageQueue{};
 
   void handleShipSwitchRequest(const HangarMessage &message) const;
+
+  void handleSuccessfulSwitch(const HangarMessage &message) const;
 };
 
 } // namespace bsgo
