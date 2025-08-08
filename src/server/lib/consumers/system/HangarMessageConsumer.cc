@@ -47,11 +47,6 @@ void HangarMessageConsumer::handleShipSwitchRequest(const HangarMessage &message
     return;
   }
 
-  auto out = std::make_unique<HangarMessage>(shipDbId);
-  out->validate();
-  out->copyClientIdIfDefined(message);
-  m_outputMessageQueue->pushMessage(std::move(out));
-
   handleSuccessfulSwitch(message);
 }
 

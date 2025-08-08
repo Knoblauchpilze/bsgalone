@@ -56,9 +56,11 @@ void LoadingMessagesConsumer::handleLoadingStartedMessage(const LoadingStartedMe
     m_outputMessageQueue->pushMessage(message.clone());
   }
 
-  // TODO: We need to add the active ship changed transition
   switch (message.getTransition())
   {
+    case LoadingTransition::ACTIVE_SHIP_CHANGED:
+      handleActiveShipChangedTransition(message);
+      break;
     case LoadingTransition::DOCK:
       handleDockTransition(message);
       break;
@@ -88,6 +90,12 @@ void LoadingMessagesConsumer::forwardLoadingFinishedMessage(
   {
     m_outputMessageQueue->pushMessage(message.clone());
   }
+}
+
+void LoadingMessagesConsumer::handleActiveShipChangedTransition(
+  const LoadingStartedMessage &message) const
+{
+  handleActiveShipLoading(message);
 }
 
 void LoadingMessagesConsumer::handleDockTransition(const LoadingStartedMessage & /*message*/) const
@@ -289,6 +297,7 @@ void LoadingMessagesConsumer::handleActiveShipLoading(const LoadingStartedMessag
   const auto ship = m_loadingService->getActivePlayerShip(*maybePlayerDbId);
 
   auto out = std::make_unique<HangarMessage>(ship.toPlayerShipData());
+  out->validate();
 
   m_outputMessageQueue->pushMessage(std::move(out));
 }
