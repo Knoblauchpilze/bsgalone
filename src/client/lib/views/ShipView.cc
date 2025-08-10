@@ -46,8 +46,17 @@ bool ShipView::isReady() const noexcept
 
 void ShipView::onMessageReceived(const bsgo::IMessage &message)
 {
-  const auto systemList = message.as<bsgo::SystemListMessage>();
-  m_systems             = systemList.getSystemsData();
+  switch (message.type())
+  {
+    case bsgo::MessageType::SYSTEM_LIST:
+      m_systems = message.as<bsgo::SystemListMessage>().getSystemsData();
+      break;
+    case bsgo::MessageType::DOCK:
+      m_playerShipEntityId.reset();
+      break;
+    default:
+      error("Unsupported message type " + bsgo::str(message.type()));
+  }
 }
 
 bool ShipView::hasTarget() const
