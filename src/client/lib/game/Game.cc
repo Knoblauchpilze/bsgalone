@@ -299,8 +299,6 @@ void Game::onLogin(const bsgo::Uuid playerDbId)
   m_views.shopView->setPlayerDbId(playerDbId);
 
   m_entityMapper.setPlayerDbId(playerDbId);
-
-  setupLoadingScreen(Screen::OUTPOST);
 }
 
 void Game::onLoginDataReceived(const bsgo::Uuid playerShipDbId,
@@ -342,24 +340,18 @@ void Game::onActiveSystemChanged(const bsgo::Uuid systemDbId)
 
   m_coordinator->clear();
   m_entityMapper.clearEntities();
-
-  setupLoadingScreen(Screen::GAME);
 }
 
 void Game::onShipDocked()
 {
   m_coordinator->clear();
   m_entityMapper.clearEntities();
-
-  setupLoadingScreen(Screen::OUTPOST);
 }
 
 void Game::onShipUndocked()
 {
   m_coordinator->clear();
   m_entityMapper.clearEntities();
-
-  setupLoadingScreen(Screen::GAME);
 }
 
 void Game::onPlayerKilled()
@@ -372,8 +364,34 @@ void Game::onPlayerKilled()
   }
 }
 
+namespace {
+auto determineNextScreen(const bsgo::LoadingTransition transition)
+{
+  switch (transition)
+  {
+    case bsgo::LoadingTransition::ACTIVE_SHIP_CHANGED:
+      return Screen::OUTPOST;
+    case bsgo::LoadingTransition::DOCK:
+      return Screen::OUTPOST;
+    case bsgo::LoadingTransition::JUMP:
+      return Screen::GAME;
+    case bsgo::LoadingTransition::LOGIN:
+      return Screen::OUTPOST;
+    case bsgo::LoadingTransition::PURCHASE:
+      return Screen::OUTPOST;
+    case bsgo::LoadingTransition::UNDOCK:
+      return Screen::GAME;
+    default:
+      throw std::invalid_argument("Unsupported transition " + bsgo::str(transition));
+  }
+}
+} // namespace
+
 void Game::onLoadingStarted(const bsgo::LoadingTransition transition)
 {
+  const auto nextScreen = determineNextScreen(transition);
+  // TODO: We could probably merge those two functions
+  m_gameSession->setupLoadingScreen(m_state.screen, nextScreen);
   m_gameSession->startLoadingTransition(transition);
 }
 
@@ -440,12 +458,6 @@ void Game::resetViewsAndUi()
   {
     handler->reset();
   }
-}
-
-void Game::setupLoadingScreen(const Screen nextScreen)
-{
-  m_gameSession->setupLoadingScreen(m_state.screen, nextScreen);
-  setScreen(Screen::LOADING);
 }
 
 } // namespace pge

@@ -45,7 +45,7 @@ void registerViews(const Views &views, bsgo::IMessageQueue *const queue)
                   bsgo::MessageType::PLAYER_WEAPON_LIST};
   registerViewToQueue(*views.playerView, messageTypes, queue);
 
-  messageTypes = {bsgo::MessageType::SYSTEM_LIST};
+  messageTypes = {bsgo::MessageType::SYSTEM_LIST, bsgo::MessageType::DOCK};
   registerViewToQueue(*views.shipView, messageTypes, queue);
 
   messageTypes = {bsgo::MessageType::HANGAR};
@@ -60,6 +60,6 @@ void registerViews(const Views &views, bsgo::IMessageQueue *const queue)
 
   messageTypes = {bsgo::MessageType::RESOURCE_LIST};
   registerViewToQueue(*views.resourceView, messageTypes, queue);
-}
+} // namespace pge
 
 } // namespace pge
