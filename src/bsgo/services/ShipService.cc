@@ -216,8 +216,14 @@ auto ShipService::tryAcquireTarget(const TargetAcquiringData &data) const -> Acq
 
     const Eigen::Vector3f shipPosition = ship.transformComp().position();
 
+    std::optional<Uuid> oldTarget{};
+    if (maybeTarget)
+    {
+      oldTarget = maybeTarget->uuid;
+    }
+
     maybeTarget = overrideTargetWithHintIfNecessary(maybeTarget, maybeHint, shipPosition);
-    if (maybeTarget && maybeHint && maybeTarget->uuid == maybeHint->uuid)
+    if (maybeTarget && oldTarget && maybeTarget->uuid != *oldTarget)
     {
       warn("Picked hint target " + maybeHint->str() + " over actual target");
     }
