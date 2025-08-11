@@ -96,6 +96,7 @@ void LoadingMessagesConsumer::handleActiveShipChangedTransition(
   const LoadingStartedMessage &message) const
 {
   handleActiveShipLoading(message);
+  handlePlayerShipsLoading(message);
 }
 
 void LoadingMessagesConsumer::handleDockTransition(const LoadingStartedMessage & /*message*/) const
