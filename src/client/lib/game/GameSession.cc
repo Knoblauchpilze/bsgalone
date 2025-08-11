@@ -36,6 +36,8 @@ bool isTransitionValidForCurrentScreen(const Screen currentScreen,
 {
   switch (transition)
   {
+    case bsgo::LoadingTransition::ACTIVE_SHIP_CHANGED:
+      return currentScreen == Screen::OUTPOST;
     case bsgo::LoadingTransition::DOCK:
       return currentScreen == Screen::GAME;
     case bsgo::LoadingTransition::JUMP:
