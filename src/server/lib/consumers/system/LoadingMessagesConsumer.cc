@@ -297,6 +297,7 @@ void LoadingMessagesConsumer::handleActiveShipLoading(const LoadingStartedMessag
   const auto ship = m_loadingService->getActivePlayerShip(*maybePlayerDbId);
 
   auto out = std::make_unique<HangarMessage>(ship.toPlayerShipData());
+  out->copyClientIdIfDefined(message);
   out->validate();
 
   m_outputMessageQueue->pushMessage(std::move(out));
