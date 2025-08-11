@@ -52,6 +52,7 @@ void ShipView::onMessageReceived(const bsgo::IMessage &message)
       m_systems = message.as<bsgo::SystemListMessage>().getSystemsData();
       break;
     case bsgo::MessageType::DOCK:
+    case bsgo::MessageType::JUMP:
       m_playerShipEntityId.reset();
       break;
     default:

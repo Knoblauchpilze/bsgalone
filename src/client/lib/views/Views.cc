@@ -45,7 +45,7 @@ void registerViews(const Views &views, bsgo::IMessageQueue *const queue)
                   bsgo::MessageType::PLAYER_WEAPON_LIST};
   registerViewToQueue(*views.playerView, messageTypes, queue);
 
-  messageTypes = {bsgo::MessageType::SYSTEM_LIST, bsgo::MessageType::DOCK};
+  messageTypes = {bsgo::MessageType::DOCK, bsgo::MessageType::JUMP, bsgo::MessageType::SYSTEM_LIST};
   registerViewToQueue(*views.shipView, messageTypes, queue);
 
   messageTypes = {bsgo::MessageType::HANGAR};
