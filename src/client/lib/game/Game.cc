@@ -46,28 +46,12 @@ auto Game::getScreen() const noexcept -> Screen
   return m_state.screen;
 }
 
-namespace {
-bool shouldUpdateCoordinatorAfterScreenTransition(const Screen &current, const Screen &next)
-{
-  return Screen::OUTPOST == current && Screen::GAME == next;
-}
-} // namespace
-
 void Game::setScreen(const Screen &screen)
 {
-  const auto fullReset = shouldUpdateCoordinatorAfterScreenTransition(m_state.screen, screen);
-  if (fullReset)
+  const auto ui = m_uiHandlers.find(screen);
+  if (ui != m_uiHandlers.cend())
   {
-    info("Resetting game data");
-    resetViewsAndUi();
-  }
-  else
-  {
-    const auto ui = m_uiHandlers.find(screen);
-    if (ui != m_uiHandlers.cend())
-    {
-      ui->second->reset();
-    }
+    ui->second->reset();
   }
 
   m_state.screen = screen;
