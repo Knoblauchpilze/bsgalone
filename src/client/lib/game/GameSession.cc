@@ -9,56 +9,70 @@ GameSession::GameSession()
   addModule("session");
 }
 
-void GameSession::setupLoadingScreen(const Screen currentScreen, const Screen nextScreen)
+namespace {
+auto determineNextScreen(const bsgo::LoadingTransition transition)
 {
-  if (m_loading)
+  switch (transition)
   {
-    error("Unexpected loading screen transition", "Already in loading state");
+    case bsgo::LoadingTransition::ACTIVE_SHIP_CHANGED:
+      return Screen::OUTPOST;
+    case bsgo::LoadingTransition::DOCK:
+      return Screen::OUTPOST;
+    case bsgo::LoadingTransition::JUMP:
+      return Screen::GAME;
+    case bsgo::LoadingTransition::LOGIN:
+      return Screen::OUTPOST;
+    case bsgo::LoadingTransition::PURCHASE:
+      return Screen::OUTPOST;
+    case bsgo::LoadingTransition::UNDOCK:
+      return Screen::GAME;
+    default:
+      throw std::invalid_argument("Unsupported transition " + bsgo::str(transition));
   }
-
-  m_loading = LoadingData{.previousScreen = currentScreen,
-                          .nextScreen     = nextScreen,
-                          .transition     = {}};
-
-  debug("Successfully setup loading screen to " + str(nextScreen) + " from " + str(currentScreen));
 }
 
-namespace {
-bool isTransitionValidForNextScreen(const bsgo::LoadingTransition transition,
-                                    const Screen nextScreen)
+bool isTransitionValidForCurrentScreen(const Screen currentScreen,
+                                       const bsgo::LoadingTransition transition)
 {
   switch (transition)
   {
     case bsgo::LoadingTransition::DOCK:
-      return nextScreen == Screen::OUTPOST;
+      return currentScreen == Screen::GAME;
     case bsgo::LoadingTransition::JUMP:
-      return nextScreen == Screen::GAME;
+      return currentScreen == Screen::GAME;
     case bsgo::LoadingTransition::LOGIN:
-      return nextScreen == Screen::OUTPOST;
+      return currentScreen == Screen::LOGIN;
     case bsgo::LoadingTransition::UNDOCK:
-      return nextScreen == Screen::GAME;
+      return currentScreen == Screen::OUTPOST;
     default:
       return false;
   }
 }
 } // namespace
 
-void GameSession::startLoadingTransition(const bsgo::LoadingTransition transition)
+void GameSession::startLoadingTransition(const Screen currentScreen,
+                                         const bsgo::LoadingTransition transition)
 {
-  if (!m_loading)
+  if (m_loading)
   {
     error("Unexpected start of loading transition " + bsgo::str(transition),
-          "Not in loading screen");
+          "Already in loading screen");
   }
-  if (!isTransitionValidForNextScreen(transition, m_loading->nextScreen))
+
+  const auto nextScreen = determineNextScreen(transition);
+
+  if (!isTransitionValidForCurrentScreen(currentScreen, transition))
   {
     error("Unexpected start of loading transition " + bsgo::str(transition),
           "Transition " + bsgo::str(transition) + " does not match next screen "
             + str(m_loading->nextScreen));
   }
 
+  m_loading = LoadingData{.previousScreen = currentScreen,
+                          .nextScreen     = nextScreen,
+                          .transition     = transition};
+
   debug("Starting loading transition to " + str(m_loading->nextScreen));
-  m_loading->transition = transition;
 }
 
 auto GameSession::finishLoadingTransition(const bsgo::LoadingTransition transition)

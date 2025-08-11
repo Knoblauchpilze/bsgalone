@@ -17,8 +17,7 @@ class GameSession : public core::CoreObject
   GameSession();
   ~GameSession() override = default;
 
-  void setupLoadingScreen(const Screen currentScreen, const Screen nextScreen);
-  void startLoadingTransition(const bsgo::LoadingTransition transition);
+  void startLoadingTransition(const Screen currentScreen, const bsgo::LoadingTransition transition);
 
   struct ScreenTransition
   {
