@@ -146,12 +146,12 @@ void WeaponsUiHandler::generateWeaponsMenus(int width, int height)
 }
 
 namespace {
-auto tryGetDbWeapon(const bsgo::Uuid weaponDbId, const std::vector<bsgo::PlayerWeapon> &weapons)
-  -> std::optional<bsgo::PlayerWeapon>
+auto tryGetDbWeapon(const bsgo::Uuid weaponDbId, const std::vector<bsgo::PlayerWeaponData> &weapons)
+  -> std::optional<bsgo::PlayerWeaponData>
 {
   for (const auto &weapon : weapons)
   {
-    if (weapon.id == weaponDbId)
+    if (weapon.dbId == weaponDbId)
     {
       return weapon;
     }
@@ -160,7 +160,7 @@ auto tryGetDbWeapon(const bsgo::Uuid weaponDbId, const std::vector<bsgo::PlayerW
   return {};
 }
 
-auto spriteIdFromWeapon(const bsgo::PlayerWeapon &weapon) -> Vec2i
+auto spriteIdFromWeapon(const bsgo::PlayerWeaponData &weapon) -> Vec2i
 {
   if (weapon.name == "Short range cannon")
   {

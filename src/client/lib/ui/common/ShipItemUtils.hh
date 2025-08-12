@@ -18,10 +18,8 @@ auto generateTextConfig(const std::string &name,
                         const int margin   = DEFAULT_MARGIN) -> TextConfig;
 
 auto generateWeaponMenu(const bsgo::Weapon &weapon) -> UiMenuPtr;
-auto generateWeaponMenu(const bsgo::PlayerWeapon &weapon) -> UiMenuPtr;
 auto generateWeaponMenu(const bsgo::PlayerWeaponData &weapon) -> UiMenuPtr;
 auto generateComputerMenu(const bsgo::Computer &computer) -> UiMenuPtr;
-auto generateComputerMenu(const bsgo::PlayerComputer &computer) -> UiMenuPtr;
 auto generateComputerMenu(const bsgo::PlayerComputerData &computer) -> UiMenuPtr;
 
 struct InteractiveSection
