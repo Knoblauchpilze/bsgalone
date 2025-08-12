@@ -146,12 +146,12 @@ void AbilitiesUiHandler::generateComputersMenus(int width, int height)
 
 namespace {
 auto tryGetDbComputer(const bsgo::Uuid computerDbId,
-                      const std::vector<bsgo::PlayerComputer> &computers)
-  -> std::optional<bsgo::PlayerComputer>
+                      const std::vector<bsgo::PlayerComputerData> &computers)
+  -> std::optional<bsgo::PlayerComputerData>
 {
   for (const auto &computer : computers)
   {
-    if (computer.id == computerDbId)
+    if (computer.dbId == computerDbId)
     {
       return computer;
     }
@@ -160,7 +160,7 @@ auto tryGetDbComputer(const bsgo::Uuid computerDbId,
   return {};
 }
 
-auto spriteIdFromComputer(const bsgo::PlayerComputer &computer) -> Vec2i
+auto spriteIdFromComputer(const bsgo::PlayerComputerData &computer) -> Vec2i
 {
   if (computer.name == "Scan")
   {

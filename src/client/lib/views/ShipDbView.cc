@@ -36,14 +36,15 @@ ShipDbView::ShipDbView(const bsgo::Repositories &repositories,
 
 bool ShipDbView::isReady() const noexcept
 {
-  return m_gameSession->hasPlayerActiveShipDbId() && m_gameSession->hasSystemDbId();
+  return m_gameSession->hasPlayerActiveShipDbId() && m_gameSession->hasSystemDbId()
+         && m_playerShip.has_value();
 }
 
 void ShipDbView::onMessageReceived(const bsgo::IMessage &message)
 {
   const auto hangarMessage = message.as<bsgo::HangarMessage>();
-  // TODO: Handle hangar message.
-  warn("should handle hangar for " + bsgo::str(hangarMessage.getShipDbId()));
+  m_playerShip             = hangarMessage.getShip();
+  debug("Active ship is now " + bsgo::str(m_playerShip->dbId));
 }
 
 auto ShipDbView::getPlayerShipDbId() const -> bsgo::Uuid
@@ -143,32 +144,14 @@ void ShipDbView::tryUnequipItem(const bsgo::Item &itemType, const bsgo::Uuid ite
                                          itemDbId));
 }
 
-auto ShipDbView::getPlayerShipWeapons() const -> std::vector<bsgo::PlayerWeapon>
+auto ShipDbView::getPlayerShipWeapons() const -> std::vector<bsgo::PlayerWeaponData>
 {
-  const auto weapons = m_repositories.shipWeaponRepository->findAllByShip(
-    m_gameSession->getPlayerActiveShipDbId());
-
-  std::vector<bsgo::PlayerWeapon> out;
-  for (const auto &weapon : weapons)
-  {
-    const auto data = m_repositories.playerWeaponRepository->findOneById(weapon.weapon);
-    out.push_back(data);
-  }
-  return out;
+  return m_playerShip->weapons;
 }
 
-auto ShipDbView::getPlayerShipComputers() const -> std::vector<bsgo::PlayerComputer>
+auto ShipDbView::getPlayerShipComputers() const -> std::vector<bsgo::PlayerComputerData>
 {
-  const auto ids = m_repositories.shipComputerRepository->findAllByShip(
-    m_gameSession->getPlayerActiveShipDbId());
-
-  std::vector<bsgo::PlayerComputer> out;
-  for (const auto &id : ids)
-  {
-    const auto computer = m_repositories.playerComputerRepository->findOneById(id);
-    out.push_back(computer);
-  }
-  return out;
+  return m_playerShip->computers;
 }
 
 auto ShipDbView::getPlayerShipSlots() const -> std::unordered_map<bsgo::Slot, int>

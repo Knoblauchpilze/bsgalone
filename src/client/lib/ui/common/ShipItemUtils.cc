@@ -62,15 +62,6 @@ auto generateWeaponMenu(const bsgo::Weapon &weapon) -> UiMenuPtr
                             weapon.reloadTime);
 }
 
-auto generateWeaponMenu(const bsgo::PlayerWeapon &weapon) -> UiMenuPtr
-{
-  return generateWeaponMenu(weapon.name,
-                            weapon.minDamage,
-                            weapon.maxDamage,
-                            weapon.range,
-                            weapon.reloadTime);
-}
-
 auto generateWeaponMenu(const bsgo::PlayerWeaponData &weapon) -> UiMenuPtr
 {
   return generateWeaponMenu(weapon.name,
@@ -129,15 +120,6 @@ auto generateComputerMenu(const std::string &name,
 }
 
 auto generateComputerMenu(const bsgo::Computer &computer) -> UiMenuPtr
-{
-  return generateComputerMenu(computer.name,
-                              computer.powerCost,
-                              computer.range,
-                              computer.duration,
-                              computer.reloadTime);
-}
-
-auto generateComputerMenu(const bsgo::PlayerComputer &computer) -> UiMenuPtr
 {
   return generateComputerMenu(computer.name,
                               computer.powerCost,

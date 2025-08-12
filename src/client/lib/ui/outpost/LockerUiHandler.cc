@@ -317,7 +317,7 @@ void LockerUiHandler::generateShipWeaponsMenus()
       "Remove", [this, itemId]() { onUninstallRequest(itemId); }, HorizontalMargin::LEFT);
     m_shipWeapons[id]->addMenu(std::move(section.menu));
 
-    ShipItem data{.itemId = weapon.id, .itemType = bsgo::Item::WEAPON};
+    ShipItem data{.itemId = weapon.dbId, .itemType = bsgo::Item::WEAPON};
     m_shipItemsData.emplace_back(std::move(data));
 
     ++id;
@@ -351,7 +351,7 @@ void LockerUiHandler::generateShipComputersMenus()
       "Remove", [this, itemId]() { onUninstallRequest(itemId); }, HorizontalMargin::LEFT);
     m_shipComputers[id]->addMenu(std::move(section.menu));
 
-    ShipItem data{.itemId = computer.id, .itemType = bsgo::Item::COMPUTER};
+    ShipItem data{.itemId = computer.dbId, .itemType = bsgo::Item::COMPUTER};
     m_shipItemsData.emplace_back(std::move(data));
 
     ++id;

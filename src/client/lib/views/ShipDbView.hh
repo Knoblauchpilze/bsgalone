@@ -4,6 +4,7 @@
 #include "AbstractView.hh"
 #include "GameSession.hh"
 #include "IMessageQueue.hh"
+#include "PlayerShipData.hh"
 #include "Repositories.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
@@ -40,8 +41,8 @@ class ShipDbView : public AbstractView
   void tryEquipItem(const bsgo::Item &itemType, const bsgo::Uuid itemDbId) const;
   void tryUnequipItem(const bsgo::Item &itemType, const bsgo::Uuid itemDbId) const;
 
-  auto getPlayerShipWeapons() const -> std::vector<bsgo::PlayerWeapon>;
-  auto getPlayerShipComputers() const -> std::vector<bsgo::PlayerComputer>;
+  auto getPlayerShipWeapons() const -> std::vector<bsgo::PlayerWeaponData>;
+  auto getPlayerShipComputers() const -> std::vector<bsgo::PlayerComputerData>;
   auto getPlayerShipSlots() const -> std::unordered_map<bsgo::Slot, int>;
 
   bool canStillEquipItem(const bsgo::Item &type) const;
@@ -49,6 +50,7 @@ class ShipDbView : public AbstractView
   private:
   bsgo::Repositories m_repositories{};
   GameSessionShPtr m_gameSession{};
+  std::optional<bsgo::PlayerShipData> m_playerShip{};
   bsgo::IMessageQueue *const m_internalMessageQueue{};
   bsgo::IMessageQueue *const m_outputMessageQueue{};
   std::optional<bsgo::Uuid> m_systemToJumpTo{};
