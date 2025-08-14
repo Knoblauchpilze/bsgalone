@@ -81,11 +81,7 @@ void LoadingMessagesConsumer::handleLoadingStartedMessage(const LoadingStartedMe
 void LoadingMessagesConsumer::forwardLoadingFinishedMessage(
   const LoadingFinishedMessage &message) const
 {
-  // TODO: Ignore some transitions for now
-  if (message.getTransition() != LoadingTransition::PURCHASE)
-  {
-    m_outputMessageQueue->pushMessage(message.clone());
-  }
+  m_outputMessageQueue->pushMessage(message.clone());
 }
 
 void LoadingMessagesConsumer::handleActiveShipChangedTransition(
