@@ -27,7 +27,7 @@ jobs:
     # Need to be kept in sync with the relevant CI docker image
     container: totocorpsoftwareinc/ci-cpp-build-image:504e327
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Restore ccache
         # https://github.com/actions/cache?tab=readme-ov-file#using-a-combination-of-restore-and-save-actions
         uses: actions/cache/restore@v4
@@ -132,7 +132,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [unit-tests, integration-tests]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Download unit test coverage data
         uses: actions/download-artifact@v5
         with:
