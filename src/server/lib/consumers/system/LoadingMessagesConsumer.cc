@@ -121,6 +121,8 @@ void LoadingMessagesConsumer::handleLoginTransition(const LoadingStartedMessage 
 void LoadingMessagesConsumer::handlePurchaseTransition(const LoadingStartedMessage &message) const
 {
   handlePlayerResourcesLoading(message);
+  handlePlayerComputersLoading(message);
+  handlePlayerWeaponsLoading(message);
 }
 
 void LoadingMessagesConsumer::handleUndockTransition(const LoadingStartedMessage &message) const
