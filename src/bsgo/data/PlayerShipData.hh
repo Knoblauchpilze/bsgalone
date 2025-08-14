@@ -34,6 +34,7 @@ struct PlayerShipData
   bool active{};
   core::Duration jumpTime{};
   core::Duration jumpTimeInThreat{};
+  std::optional<Uuid> jumpSystem{};
 
   std::optional<Uuid> targetDbId{};
   std::optional<Uuid> playerDbId{};

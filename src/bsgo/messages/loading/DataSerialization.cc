@@ -207,6 +207,7 @@ auto serializePlayerShipData(std::ostream &out, const PlayerShipData &data) -> s
   core::serialize(out, data.active);
   core::serialize(out, data.jumpTime);
   core::serialize(out, data.jumpTimeInThreat);
+  core::serialize(out, data.jumpSystem);
 
   core::serialize(out, data.targetDbId);
   core::serialize(out, data.playerDbId);
@@ -249,6 +250,7 @@ bool deserializePlayerShipData(std::istream &in, PlayerShipData &data)
   ok &= core::deserialize(in, data.active);
   ok &= core::deserialize(in, data.jumpTime);
   ok &= core::deserialize(in, data.jumpTimeInThreat);
+  ok &= core::deserialize(in, data.jumpSystem);
 
   ok &= core::deserialize(in, data.targetDbId);
   ok &= core::deserialize(in, data.playerDbId);

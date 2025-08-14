@@ -93,6 +93,7 @@ auto ShipProps::toPlayerShipData() const -> PlayerShipData
     .active           = dbShip.active,
     .jumpTime         = dbShip.jumpTime,
     .jumpTimeInThreat = dbShip.jumpTimeInThreat,
+    .jumpSystem       = dbShip.jumpSystem,
 
     .targetDbId = targetDbId,
     .playerDbId = dbShip.player,
