@@ -351,6 +351,7 @@ void Game::onPlayerKilled()
 void Game::onLoadingStarted(const bsgo::LoadingTransition transition)
 {
   m_gameSession->startLoadingTransition(m_state.screen, transition);
+  setScreen(Screen::LOADING);
 }
 
 void Game::onLoadingFinished(const bsgo::LoadingTransition transition)
