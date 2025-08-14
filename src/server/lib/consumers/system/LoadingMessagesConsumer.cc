@@ -50,11 +50,7 @@ void LoadingMessagesConsumer::handleLoadingStartedMessage(const LoadingStartedMe
 {
   info("Handling loading transition " + str(message.getTransition()));
 
-  // TODO: Ignore some transitions for now
-  if (message.getTransition() != LoadingTransition::PURCHASE)
-  {
-    m_outputMessageQueue->pushMessage(message.clone());
-  }
+  m_outputMessageQueue->pushMessage(message.clone());
 
   switch (message.getTransition())
   {
@@ -122,10 +118,9 @@ void LoadingMessagesConsumer::handleLoginTransition(const LoadingStartedMessage 
   handleActiveShipLoading(message);
 }
 
-void LoadingMessagesConsumer::handlePurchaseTransition(const LoadingStartedMessage & /*message*/) const
+void LoadingMessagesConsumer::handlePurchaseTransition(const LoadingStartedMessage &message) const
 {
-  // TODO: Ignore some transitions for now
-  // handlePlayerResourcesLoading(message);
+  handlePlayerResourcesLoading(message);
 }
 
 void LoadingMessagesConsumer::handleUndockTransition(const LoadingStartedMessage &message) const
