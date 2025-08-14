@@ -44,6 +44,8 @@ bool isTransitionValidForCurrentScreen(const Screen currentScreen,
       return currentScreen == Screen::GAME;
     case bsgo::LoadingTransition::LOGIN:
       return currentScreen == Screen::LOGIN;
+    case bsgo::LoadingTransition::PURCHASE:
+      return currentScreen == Screen::OUTPOST;
     case bsgo::LoadingTransition::UNDOCK:
       return currentScreen == Screen::OUTPOST;
     default:
