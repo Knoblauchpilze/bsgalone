@@ -42,9 +42,23 @@ bool ShipDbView::isReady() const noexcept
 
 void ShipDbView::onMessageReceived(const bsgo::IMessage &message)
 {
-  const auto hangarMessage = message.as<bsgo::HangarMessage>();
-  m_playerShip             = hangarMessage.getShip();
-  debug("Active ship is now " + bsgo::str(m_playerShip->dbId));
+  switch (message.type())
+  {
+    case bsgo::MessageType::HANGAR:
+      m_playerShip = message.as<bsgo::HangarMessage>().getShip();
+      debug("Active ship is now " + bsgo::str(m_playerShip->dbId));
+      break;
+    case bsgo::MessageType::JUMP_REQUESTED:
+      m_playerShip->jumpSystem = message.as<bsgo::JumpRequestedMessage>().getJumpSystem();
+      break;
+    case bsgo::MessageType::JUMP_CANCELLED:
+    case bsgo::MessageType::JUMP:
+      m_playerShip->jumpSystem.reset();
+      break;
+    default:
+      error("Unsupported message type " + bsgo::str(message.type()));
+      return;
+  }
 }
 
 auto ShipDbView::getPlayerShipDbId() const -> bsgo::Uuid
@@ -81,17 +95,15 @@ void ShipDbView::clearJumpSystem()
 }
 
 namespace {
-
-bool isJumping(const bsgo::Uuid shipDbId, const bsgo::PlayerShipRepository &repository)
+bool isJumping(const bsgo::PlayerShipData &playerShip)
 {
-  const auto ship = repository.findOneById(shipDbId);
-  return ship.jumpSystem.has_value();
+  return playerShip.jumpSystem.has_value();
 }
 } // namespace
 
 void ShipDbView::startJump() const
 {
-  if (isJumping(m_gameSession->getPlayerActiveShipDbId(), *m_repositories.playerShipRepository))
+  if (isJumping(*m_playerShip))
   {
     return;
   }
@@ -108,7 +120,7 @@ void ShipDbView::startJump() const
 
 void ShipDbView::cancelJump() const
 {
-  if (!isJumping(m_gameSession->getPlayerActiveShipDbId(), *m_repositories.playerShipRepository))
+  if (!isJumping(*m_playerShip))
   {
     return;
   }
