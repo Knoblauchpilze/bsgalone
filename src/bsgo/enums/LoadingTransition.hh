@@ -9,6 +9,7 @@ enum class LoadingTransition
 {
   ACTIVE_SHIP_CHANGED,
   DOCK,
+  EQUIP,
   JUMP,
   LOGIN,
   PURCHASE,

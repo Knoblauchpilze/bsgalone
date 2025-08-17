@@ -207,6 +207,7 @@ void PlayerView::handlePlayerShipsMessage(const bsgo::PlayerShipListMessage &mes
 
 void PlayerView::handlePlayerWeaponsMessage(const bsgo::PlayerWeaponListMessage &message)
 {
+  info("received " + std::to_string(message.getWeaponsData().size()) + " weapons");
   m_playerWeapons = message.getWeaponsData();
 }
 

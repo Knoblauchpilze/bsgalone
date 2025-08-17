@@ -27,7 +27,7 @@ void createMessageConsumers(IMessageQueue *const inputMessagesQueue,
     std::make_unique<PurchaseMessageConsumer>(services, inputMessagesQueue, outputMessagesQueue));
 
   inputMessagesQueue->addListener(
-    std::make_unique<EquipMessageConsumer>(services, outputMessagesQueue));
+    std::make_unique<EquipMessageConsumer>(services, inputMessagesQueue, outputMessagesQueue));
 
   inputMessagesQueue->addListener(
     std::make_unique<DockMessageConsumer>(services, inputMessagesQueue, outputMessagesQueue));
