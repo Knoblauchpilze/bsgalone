@@ -34,6 +34,9 @@ void PlayerView::onMessageReceived(const bsgo::IMessage &message)
 {
   switch (message.type())
   {
+    case bsgo::MessageType::HANGAR:
+      handleHangarMessage(message.as<bsgo::HangarMessage>());
+      break;
     case bsgo::MessageType::PLAYER_COMPUTER_LIST:
       handlePlayerComputersMessage(message.as<bsgo::PlayerComputerListMessage>());
       break;
@@ -164,6 +167,23 @@ void PlayerView::trySignup(const std::string &name,
   m_outputMessageQueue->pushMessage(std::make_unique<bsgo::SignupMessage>(name, password, faction));
 }
 
+void PlayerView::handleHangarMessage(const bsgo::HangarMessage &message)
+{
+  // Replace the active ship with the one from the message in the list.
+  const auto maybeActiveShip = std::find_if(m_playerShips.begin(),
+                                            m_playerShips.end(),
+                                            [&message](const bsgo::PlayerShipData &ship) {
+                                              return ship.dbId == message.getShipDbId();
+                                            });
+  if (maybeActiveShip == m_playerShips.end())
+  {
+    error("Received hangar message for unknown ship " + bsgo::str(message.getShipDbId()));
+    return;
+  }
+
+  *maybeActiveShip = message.getShip();
+}
+
 void PlayerView::handlePlayerComputersMessage(const bsgo::PlayerComputerListMessage &message)
 {
   m_playerComputers = message.getComputersData();
@@ -207,7 +227,6 @@ void PlayerView::handlePlayerShipsMessage(const bsgo::PlayerShipListMessage &mes
 
 void PlayerView::handlePlayerWeaponsMessage(const bsgo::PlayerWeaponListMessage &message)
 {
-  info("received " + std::to_string(message.getWeaponsData().size()) + " weapons");
   m_playerWeapons = message.getWeaponsData();
 }
 
