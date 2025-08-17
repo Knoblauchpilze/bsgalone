@@ -4,8 +4,8 @@
 #include "AbstractView.hh"
 #include "GameSession.hh"
 #include "IMessageQueue.hh"
+#include "Item.hh"
 #include "PlayerShipData.hh"
-#include "Repositories.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
 #include <memory>
@@ -17,8 +17,7 @@ namespace pge {
 class ShipDbView : public AbstractView
 {
   public:
-  ShipDbView(const bsgo::Repositories &repositories,
-             GameSessionShPtr gameSession,
+  ShipDbView(GameSessionShPtr gameSession,
              bsgo::IMessageQueue *const internalMessageQueue,
              bsgo::IMessageQueue *const outputMessageQueue);
   ~ShipDbView() override = default;
@@ -48,7 +47,6 @@ class ShipDbView : public AbstractView
   bool canStillEquipItem(const bsgo::Item &type) const;
 
   private:
-  bsgo::Repositories m_repositories{};
   GameSessionShPtr m_gameSession{};
   std::optional<bsgo::PlayerShipData> m_playerShip{};
   bsgo::IMessageQueue *const m_internalMessageQueue{};

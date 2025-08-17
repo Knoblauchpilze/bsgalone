@@ -9,12 +9,10 @@
 
 namespace pge {
 
-ShipDbView::ShipDbView(const bsgo::Repositories &repositories,
-                       GameSessionShPtr gameSession,
+ShipDbView::ShipDbView(GameSessionShPtr gameSession,
                        bsgo::IMessageQueue *const internalMessageQueue,
                        bsgo::IMessageQueue *const outputMessageQueue)
   : AbstractView("ship")
-  , m_repositories(repositories)
   , m_gameSession(std::move(gameSession))
   , m_internalMessageQueue(internalMessageQueue)
   , m_outputMessageQueue(outputMessageQueue)
