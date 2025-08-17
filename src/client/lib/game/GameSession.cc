@@ -18,6 +18,8 @@ auto determineNextScreen(const bsgo::LoadingTransition transition)
       return Screen::OUTPOST;
     case bsgo::LoadingTransition::DOCK:
       return Screen::OUTPOST;
+    case bsgo::LoadingTransition::EQUIP:
+      return Screen::OUTPOST;
     case bsgo::LoadingTransition::JUMP:
       return Screen::GAME;
     case bsgo::LoadingTransition::LOGIN:
@@ -40,6 +42,8 @@ bool isTransitionValidForCurrentScreen(const Screen currentScreen,
       return currentScreen == Screen::OUTPOST;
     case bsgo::LoadingTransition::DOCK:
       return currentScreen == Screen::GAME;
+    case bsgo::LoadingTransition::EQUIP:
+      return currentScreen == Screen::OUTPOST;
     case bsgo::LoadingTransition::JUMP:
       return currentScreen == Screen::GAME;
     case bsgo::LoadingTransition::LOGIN:

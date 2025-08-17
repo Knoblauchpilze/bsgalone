@@ -60,6 +60,9 @@ void LoadingMessagesConsumer::handleLoadingStartedMessage(const LoadingStartedMe
     case LoadingTransition::DOCK:
       handleDockTransition(message);
       break;
+    case LoadingTransition::EQUIP:
+      handleEquipTransition(message);
+      break;
     case LoadingTransition::JUMP:
       handleJumpTransition(message);
       break;
@@ -93,6 +96,13 @@ void LoadingMessagesConsumer::handleActiveShipChangedTransition(
 
 void LoadingMessagesConsumer::handleDockTransition(const LoadingStartedMessage & /*message*/) const
 {}
+
+void LoadingMessagesConsumer::handleEquipTransition(const LoadingStartedMessage &message) const
+{
+  handleActiveShipLoading(message);
+  handlePlayerComputersLoading(message);
+  handlePlayerWeaponsLoading(message);
+}
 
 void LoadingMessagesConsumer::handleJumpTransition(const LoadingStartedMessage &message) const
 {

@@ -11,6 +11,8 @@ auto str(const LoadingTransition transition) -> std::string
       return "active_ship_changed";
     case LoadingTransition::DOCK:
       return "dock";
+    case LoadingTransition::EQUIP:
+      return "equip";
     case LoadingTransition::JUMP:
       return "jump";
     case LoadingTransition::LOGIN:

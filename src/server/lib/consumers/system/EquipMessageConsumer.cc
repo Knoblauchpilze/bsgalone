@@ -1,17 +1,30 @@
 
 #include "EquipMessageConsumer.hh"
+#include "LoadingFinishedMessage.hh"
+#include "LoadingStartedMessage.hh"
 
 namespace bsgo {
 
 EquipMessageConsumer::EquipMessageConsumer(const Services &services,
+                                           IMessageQueue *const systemMessageQueue,
                                            IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("equip", {MessageType::EQUIP})
   , m_lockerService(services.locker)
+  , m_shipService(services.ship)
+  , m_systemMessageQueue(systemMessageQueue)
   , m_outputMessageQueue(outputMessageQueue)
 {
   if (nullptr == m_lockerService)
   {
     throw std::invalid_argument("Expected non null locker service");
+  }
+  if (nullptr == m_shipService)
+  {
+    throw std::invalid_argument("Expected non null ship service");
+  }
+  if (nullptr == m_systemMessageQueue)
+  {
+    throw std::invalid_argument("Expected non null system message queue");
   }
   if (nullptr == m_outputMessageQueue)
   {
@@ -59,6 +72,8 @@ void EquipMessageConsumer::handleEquipRequest(const EquipMessage &message) const
   out->validate();
   out->copyClientIdIfDefined(message);
   m_outputMessageQueue->pushMessage(std::move(out));
+
+  handleSuccessfulRequest(message);
 }
 
 void EquipMessageConsumer::handleUnequipRequest(const EquipMessage &message) const
@@ -79,6 +94,28 @@ void EquipMessageConsumer::handleUnequipRequest(const EquipMessage &message) con
   out->validate();
   out->copyClientIdIfDefined(message);
   m_outputMessageQueue->pushMessage(std::move(out));
+
+  handleSuccessfulRequest(message);
+}
+
+void EquipMessageConsumer::handleSuccessfulRequest(const EquipMessage &message) const
+{
+  const auto shipDbId        = message.getShipDbId();
+  const auto maybePlayerDbId = m_shipService->tryGetPlayerDbIdForShip(shipDbId);
+  if (!maybePlayerDbId)
+  {
+    error("Expected ship " + str(shipDbId) + " to belong to a player");
+  }
+
+  auto started = std::make_unique<LoadingStartedMessage>(LoadingTransition::EQUIP);
+  started->setPlayerDbId(*maybePlayerDbId);
+  started->copyClientIdIfDefined(message);
+  m_systemMessageQueue->pushMessage(std::move(started));
+
+  auto finished = std::make_unique<LoadingFinishedMessage>(LoadingTransition::EQUIP);
+  finished->setPlayerDbId(*maybePlayerDbId);
+  finished->copyClientIdIfDefined(message);
+  m_systemMessageQueue->pushMessage(std::move(finished));
 }
 
 } // namespace bsgo
