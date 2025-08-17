@@ -212,6 +212,8 @@ auto serializePlayerShipData(std::ostream &out, const PlayerShipData &data) -> s
   core::serialize(out, data.targetDbId);
   core::serialize(out, data.playerDbId);
 
+  core::serialize(out, data.slots);
+
   core::serialize(out, data.weapons.size());
   for (const auto &weapon : data.weapons)
   {
@@ -254,6 +256,8 @@ bool deserializePlayerShipData(std::istream &in, PlayerShipData &data)
 
   ok &= core::deserialize(in, data.targetDbId);
   ok &= core::deserialize(in, data.playerDbId);
+
+  ok &= core::deserialize(in, data.slots);
 
   std::size_t count;
   ok &= core::deserialize(in, count);
