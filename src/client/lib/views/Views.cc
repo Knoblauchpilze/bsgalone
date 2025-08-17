@@ -37,10 +37,13 @@ void registerViews(const Views &views, bsgo::IMessageQueue *const queue)
 {
   std::unordered_set<bsgo::MessageType> messageTypes{};
 
-  messageTypes = {bsgo::MessageType::PLAYER_COMPUTER_LIST,
-                  bsgo::MessageType::PLAYER_RESOURCE_LIST,
-                  bsgo::MessageType::PLAYER_SHIP_LIST,
-                  bsgo::MessageType::PLAYER_WEAPON_LIST};
+  messageTypes = {
+    bsgo::MessageType::HANGAR,
+    bsgo::MessageType::PLAYER_COMPUTER_LIST,
+    bsgo::MessageType::PLAYER_RESOURCE_LIST,
+    bsgo::MessageType::PLAYER_SHIP_LIST,
+    bsgo::MessageType::PLAYER_WEAPON_LIST,
+  };
   registerViewToQueue(*views.playerView, messageTypes, queue);
 
   messageTypes = {bsgo::MessageType::DOCK, bsgo::MessageType::JUMP, bsgo::MessageType::SYSTEM_LIST};

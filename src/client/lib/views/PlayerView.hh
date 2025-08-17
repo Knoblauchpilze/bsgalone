@@ -4,6 +4,7 @@
 #include "AbstractView.hh"
 #include "Faction.hh"
 #include "GameSession.hh"
+#include "HangarMessage.hh"
 #include "IMessageQueue.hh"
 #include "PlayerComputerListMessage.hh"
 #include "PlayerResourceListMessage.hh"
@@ -50,6 +51,7 @@ class PlayerView : public AbstractView
   std::vector<bsgo::PlayerComputerData> m_playerComputers{};
   std::vector<bsgo::PlayerWeaponData> m_playerWeapons{};
 
+  void handleHangarMessage(const bsgo::HangarMessage &message);
   void handlePlayerComputersMessage(const bsgo::PlayerComputerListMessage &message);
   void handlePlayerResourcesMessage(const bsgo::PlayerResourceListMessage &message);
   void handlePlayerShipsMessage(const bsgo::PlayerShipListMessage &message);
