@@ -168,9 +168,7 @@ auto ShipDbView::getPlayerShipComputers() const -> std::vector<bsgo::PlayerCompu
 
 auto ShipDbView::getPlayerShipSlots() const -> std::unordered_map<bsgo::Slot, int>
 {
-  const auto ship = m_repositories.playerShipRepository->findOneById(
-    m_gameSession->getPlayerActiveShipDbId());
-  return ship.slots;
+  return m_playerShip->slots;
 }
 
 bool ShipDbView::canStillEquipItem(const bsgo::Item &type) const
