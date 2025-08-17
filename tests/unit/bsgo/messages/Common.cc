@@ -88,6 +88,7 @@ void assertPlayerShipDataAreEqual(const PlayerShipData &actual, const PlayerShip
   EXPECT_EQ(actual.jumpSystem, expected.jumpSystem);
   EXPECT_EQ(actual.targetDbId, expected.targetDbId);
   EXPECT_EQ(actual.playerDbId, expected.playerDbId);
+  EXPECT_EQ(actual.slots, expected.slots);
 
   EXPECT_EQ(actual.weapons.size(), expected.weapons.size());
   for (std::size_t i = 0u; i < actual.weapons.size(); ++i)
