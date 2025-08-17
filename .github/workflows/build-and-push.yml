@@ -68,7 +68,7 @@ jobs:
     needs: [build]
     steps:
       - name: Download build data
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: build-data
       - name: Uncompress build data
@@ -102,7 +102,7 @@ jobs:
     needs: [build]
     steps:
       - name: Download build data
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: build-data
       - name: Uncompress build data
@@ -134,11 +134,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Download unit test coverage data
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: coverage-unit
       - name: Download integration test coverage data
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: coverage-integration
       - name: Upload coverage to Codecov
