@@ -5,7 +5,6 @@
 #include "HangarMessage.hh"
 #include "JumpCancelledMessage.hh"
 #include "JumpRequestedMessage.hh"
-#include "LockerUtils.hh"
 #include "VelocityMessage.hh"
 
 namespace pge {
@@ -173,25 +172,25 @@ auto ShipDbView::getPlayerShipSlots() const -> std::unordered_map<bsgo::Slot, in
 
 bool ShipDbView::canStillEquipItem(const bsgo::Item &type) const
 {
-  bool equipable{false};
-  if (bsgo::Item::WEAPON == type)
+  int totalSlots = 0;
+  int usedSlots  = 0;
+
+  switch (type)
   {
-    bsgo::EquipData data{.shipId           = m_gameSession->getPlayerActiveShipDbId(),
-                         .shipWeaponRepo   = m_repositories.shipWeaponRepository,
-                         .shipComputerRepo = m_repositories.shipComputerRepository,
-                         .playerShipRepo   = m_repositories.playerShipRepository};
-    equipable = canStillEquipWeapon(data);
-  }
-  if (bsgo::Item::COMPUTER == type)
-  {
-    bsgo::EquipData data{.shipId           = m_gameSession->getPlayerActiveShipDbId(),
-                         .shipWeaponRepo   = m_repositories.shipWeaponRepository,
-                         .shipComputerRepo = m_repositories.shipComputerRepository,
-                         .playerShipRepo   = m_repositories.playerShipRepository};
-    equipable = canStillEquipComputer(data);
+    case bsgo::Item::COMPUTER:
+      totalSlots = m_playerShip->slots.at(bsgo::Slot::COMPUTER);
+      usedSlots  = static_cast<int>(m_playerShip->computers.size());
+      break;
+    case bsgo::Item::WEAPON:
+      totalSlots = m_playerShip->slots.at(bsgo::Slot::WEAPON);
+      usedSlots  = static_cast<int>(m_playerShip->weapons.size());
+      break;
+    default:
+      error("Unsupported item type " + bsgo::str(type));
   }
 
-  return equipable;
+  const auto canEquip = usedSlots < totalSlots;
+  return canEquip;
 }
 
 } // namespace pge
