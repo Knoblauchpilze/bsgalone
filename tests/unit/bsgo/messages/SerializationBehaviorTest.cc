@@ -1,5 +1,6 @@
 
 #include "SerializationUtils.hh"
+#include "Slot.hh"
 #include "TimeUtils.hh"
 #include "Uuid.hh"
 #include <gtest/gtest.h>
@@ -175,6 +176,26 @@ TEST(Unit_Bsgo_Serialization_Behavior, Nominal_Eigen_Vector3f_EmptyOptional)
   EXPECT_EQ(actual, expected);
 }
 
+TEST(Unit_Bsgo_Serialization_Behavior, Nominal_MapSlotInt_Empty)
+{
+  std::unordered_map<Slot, int> empty;
+
+  const auto [success, actual] = serializeAndDeserialize(empty, false);
+
+  EXPECT_TRUE(success);
+  EXPECT_EQ(actual, empty);
+}
+
+TEST(Unit_Bsgo_Serialization_Behavior, Nominal_MapSlotInt)
+{
+  std::unordered_map<Slot, int> expected{{Slot::WEAPON, 1}, {Slot::COMPUTER, 2}};
+
+  const auto [success, actual] = serializeAndDeserialize(expected, false);
+
+  EXPECT_TRUE(success);
+  EXPECT_EQ(actual, expected);
+}
+
 TEST(Unit_Bsgo_Serialization_Behavior, Failure_Uuid)
 {
   const Uuid value{2};
@@ -232,6 +253,15 @@ TEST(Unit_Bsgo_Serialization_Behavior, Failure_Duration)
 TEST(Unit_Bsgo_Serialization_Behavior, Failure_Eigen_Vector3f)
 {
   const Eigen::Vector3f expected(1.0f, -2.12f, 98.74f);
+
+  const auto [success, _] = serializeAndDeserialize(expected, true);
+
+  EXPECT_FALSE(success);
+}
+
+TEST(Unit_Bsgo_Serialization_Behavior, Failure_MapSlotInt)
+{
+  std::unordered_map<Slot, int> expected{{Slot::WEAPON, 1}, {Slot::COMPUTER, 2}};
 
   const auto [success, _] = serializeAndDeserialize(expected, true);
 
