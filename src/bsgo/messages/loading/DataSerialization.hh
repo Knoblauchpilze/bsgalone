@@ -10,6 +10,7 @@
 #include "PlayerWeaponData.hh"
 #include "ResourceData.hh"
 #include "SystemData.hh"
+#include "WeaponData.hh"
 
 namespace bsgo {
 
@@ -41,5 +42,8 @@ bool deserializeResourceData(std::istream &in, ResourceData &data);
 auto serializePlayerResourceData(std::ostream &out, const PlayerResourceData &data)
   -> std::ostream &;
 bool deserializePlayerResourceData(std::istream &in, PlayerResourceData &data);
+
+auto serializeWeaponData(std::ostream &out, const WeaponData &data) -> std::ostream &;
+bool deserializeWeaponData(std::istream &in, WeaponData &data);
 
 } // namespace bsgo

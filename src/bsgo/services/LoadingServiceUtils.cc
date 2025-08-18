@@ -141,4 +141,17 @@ auto toPlayerResourceData(const PlayerResource &playerResource) -> PlayerResourc
   };
 }
 
+auto toWeaponData(const Weapon &weapon) -> WeaponData
+{
+  return WeaponData{
+    .dbId       = weapon.id,
+    .name       = weapon.name,
+    .minDamage  = weapon.minDamage,
+    .maxDamage  = weapon.maxDamage,
+    .powerCost  = weapon.powerCost,
+    .range      = weapon.range,
+    .reloadTime = weapon.reloadTime,
+  };
+}
+
 } // namespace bsgo

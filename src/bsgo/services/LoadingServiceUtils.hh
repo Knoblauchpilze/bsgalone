@@ -19,6 +19,8 @@
 #include "SystemOutpostRepository.hh"
 #include "SystemRepository.hh"
 #include "Uuid.hh"
+#include "WeaponData.hh"
+#include "WeaponRepository.hh"
 
 namespace bsgo {
 
@@ -70,5 +72,7 @@ auto toSystemData(const System &system) -> SystemData;
 auto toResourceData(const Resource &resource) -> ResourceData;
 
 auto toPlayerResourceData(const PlayerResource &playerResource) -> PlayerResourceData;
+
+auto toWeaponData(const Weapon &weapon) -> WeaponData;
 
 } // namespace bsgo
