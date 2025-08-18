@@ -143,4 +143,17 @@ void assertWeaponDataAreEqual(const WeaponData &actual, const WeaponData &expect
   EXPECT_EQ(actual.reloadTime, expected.reloadTime);
 }
 
+void assertComputerDataAreEqual(const ComputerData &actual, const ComputerData &expected)
+{
+  EXPECT_EQ(actual.dbId, expected.dbId);
+  EXPECT_EQ(actual.name, expected.name);
+  EXPECT_EQ(actual.offensive, expected.offensive);
+  EXPECT_EQ(actual.powerCost, expected.powerCost);
+  EXPECT_EQ(actual.range, expected.range);
+  EXPECT_EQ(actual.reloadTime, expected.reloadTime);
+  EXPECT_EQ(actual.duration, expected.duration);
+  EXPECT_EQ(actual.allowedTargets, expected.allowedTargets);
+  EXPECT_EQ(actual.damageModifier, expected.damageModifier);
+}
+
 } // namespace bsgo

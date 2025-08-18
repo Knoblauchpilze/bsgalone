@@ -154,4 +154,19 @@ auto toWeaponData(const Weapon &weapon) -> WeaponData
   };
 }
 
+auto toComputerData(const Computer &computer) -> ComputerData
+{
+  return ComputerData{
+    .dbId           = computer.id,
+    .name           = computer.name,
+    .offensive      = computer.offensive,
+    .powerCost      = computer.powerCost,
+    .range          = computer.range,
+    .reloadTime     = computer.reloadTime,
+    .duration       = computer.duration,
+    .allowedTargets = computer.allowedTargets,
+    .damageModifier = computer.damageModifier,
+  };
+}
+
 } // namespace bsgo
