@@ -74,6 +74,7 @@ auto ShipProps::toPlayerShipData() const -> PlayerShipData
 {
   PlayerShipData data{
     .dbId            = dbShip.id,
+    .shipId          = dbShip.ship,
     .position        = dbShip.position,
     .radius          = dbShip.radius,
     .acceleration    = dbShip.acceleration,

@@ -16,6 +16,7 @@ namespace bsgo {
 struct PlayerShipData
 {
   Uuid dbId{};
+  Uuid shipId{};
   Eigen::Vector3f position{Eigen::Vector3f::Zero()};
   float radius{};
   float acceleration{};

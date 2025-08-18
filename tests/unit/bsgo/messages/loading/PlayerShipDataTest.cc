@@ -44,6 +44,7 @@ TEST(Unit_Bsgo_Serialization_PlayerShipData, DifferentWhenDbIdIsDifferent)
 TEST(Unit_Bsgo_Serialization_PlayerShipData, Basic)
 {
   PlayerShipData input{.dbId     = Uuid{1234},
+                       .shipId   = Uuid{1475},
                        .position = Eigen::Vector3f{1.0f, 2.0f, 3.0f},
                        .radius   = 5.0f,
                        .name     = "my-ship"};
@@ -69,7 +70,10 @@ TEST(Unit_Bsgo_Serialization_PlayerShipData, WithTarget)
                        .targetDbId     = Uuid{8901},
                        .playerDbId     = Uuid{6547}};
 
-  PlayerShipData output{.dbId = Uuid{14}, .faction = Faction::CYLON, .status = Status::JUMP};
+  PlayerShipData output{.dbId    = Uuid{14},
+                        .shipId  = Uuid{1754},
+                        .faction = Faction::CYLON,
+                        .status  = Status::JUMP};
 
   EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
 
@@ -79,6 +83,7 @@ TEST(Unit_Bsgo_Serialization_PlayerShipData, WithTarget)
 TEST(Unit_Bsgo_Serialization_PlayerShipData, WithJumpSystem)
 {
   PlayerShipData input{.dbId           = Uuid{1234},
+                       .shipId         = Uuid{325},
                        .position       = Eigen::Vector3f{1.0f, 2.0f, 3.0f},
                        .radius         = 5.0f,
                        .maxPowerPoints = 100.0f,
@@ -87,6 +92,7 @@ TEST(Unit_Bsgo_Serialization_PlayerShipData, WithJumpSystem)
                        .slots          = {{Slot::WEAPON, 2}, {Slot::COMPUTER, 14}}};
 
   PlayerShipData output{.dbId    = Uuid{14},
+                        .shipId  = Uuid{9421},
                         .faction = Faction::CYLON,
                         .status  = Status::JUMP,
                         .slots   = {{Slot::COMPUTER, 1}}};

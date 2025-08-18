@@ -173,7 +173,7 @@ auto getPlayerShipWithId(const std::vector<bsgo::PlayerShipData> &ships, const b
 {
   for (const auto &ship : ships)
   {
-    if (shipId == ship.dbId)
+    if (shipId == ship.shipId)
     {
       return ship;
     }
