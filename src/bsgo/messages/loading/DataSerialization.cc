@@ -189,6 +189,7 @@ bool deserializeOutpostData(std::istream &in, OutpostData &data)
 auto serializePlayerShipData(std::ostream &out, const PlayerShipData &data) -> std::ostream &
 {
   core::serialize(out, data.dbId);
+  core::serialize(out, data.shipId);
   core::serialize(out, data.position);
   core::serialize(out, data.radius);
   core::serialize(out, data.acceleration);
@@ -234,6 +235,7 @@ bool deserializePlayerShipData(std::istream &in, PlayerShipData &data)
   bool ok{true};
 
   ok &= core::deserialize(in, data.dbId);
+  ok &= core::deserialize(in, data.shipId);
   ok &= core::deserialize(in, data.position);
   ok &= core::deserialize(in, data.radius);
   ok &= core::deserialize(in, data.acceleration);

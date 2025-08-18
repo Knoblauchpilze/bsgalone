@@ -111,6 +111,7 @@ void ShipDataSource::registerShip(Coordinator &coordinator,
 
   PlayerShipData out{
     .dbId             = shipDbId,
+    .shipId           = data.ship,
     .position         = data.position,
     .radius           = data.radius,
     .acceleration     = data.acceleration,

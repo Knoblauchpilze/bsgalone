@@ -67,6 +67,7 @@ void assertPlayerDataAreEqual(const PlayerData &actual, const PlayerData &expect
 void assertPlayerShipDataAreEqual(const PlayerShipData &actual, const PlayerShipData &expected)
 {
   EXPECT_EQ(actual.dbId, expected.dbId);
+  EXPECT_EQ(actual.shipId, expected.shipId);
   EXPECT_EQ(actual.position, expected.position);
   EXPECT_EQ(actual.radius, expected.radius);
   EXPECT_EQ(actual.acceleration, expected.acceleration);
