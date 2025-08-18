@@ -2,6 +2,7 @@
 #pragma once
 
 #include "AsteroidData.hh"
+#include "ComputerData.hh"
 #include "OutpostData.hh"
 #include "PlayerComputerData.hh"
 #include "PlayerData.hh"
@@ -30,6 +31,7 @@ void assertResourceDataAreEqual(const ResourceData &actual, const ResourceData &
 void assertPlayerResourceDataAreEqual(const PlayerResourceData &actual,
                                       const PlayerResourceData &expected);
 void assertWeaponDataAreEqual(const WeaponData &actual, const WeaponData &expected);
+void assertComputerDataAreEqual(const ComputerData &actual, const ComputerData &expected);
 
 } // namespace bsgo
 

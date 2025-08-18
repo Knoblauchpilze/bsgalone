@@ -2,6 +2,8 @@
 
 #include "AsteroidData.hh"
 #include "AsteroidRepository.hh"
+#include "ComputerData.hh"
+#include "ComputerRepository.hh"
 #include "Faction.hh"
 #include "OutpostData.hh"
 #include "PlayerComputerRepository.hh"
@@ -74,5 +76,7 @@ auto toResourceData(const Resource &resource) -> ResourceData;
 auto toPlayerResourceData(const PlayerResource &playerResource) -> PlayerResourceData;
 
 auto toWeaponData(const Weapon &weapon) -> WeaponData;
+
+auto toComputerData(const Computer &computer) -> ComputerData;
 
 } // namespace bsgo
