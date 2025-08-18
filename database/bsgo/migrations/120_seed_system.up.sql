@@ -24,19 +24,19 @@ INSERT INTO ship_system ("ship", "system", "docked")
   VALUES (
     (SELECT player_ship.id FROM player_ship LEFT JOIN player ON player_ship.player = player.id WHERE player.name = 'colo' AND player_ship.active = true),
     (SELECT id FROM system WHERE name = 'Munnin'),
-    false
+    true
   );
 INSERT INTO ship_system ("ship", "system", "docked")
   VALUES (
     (SELECT player_ship.id FROM player_ship LEFT JOIN player ON player_ship.player = player.id WHERE player.name = 'colo2' AND player_ship.active = true),
     (SELECT id FROM system WHERE name = '169 aretis'),
-    false
+    true
   );
 INSERT INTO ship_system ("ship", "system", "docked")
   VALUES (
     (SELECT player_ship.id FROM player_ship LEFT JOIN player ON player_ship.player = player.id WHERE player.name = 'toast' AND player_ship.active = true),
     (SELECT id FROM system WHERE name = 'Munnin'),
-    false
+    true
   );
 INSERT INTO ship_system ("ship", "system", "docked")
   VALUES (
