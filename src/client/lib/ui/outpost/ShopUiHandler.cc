@@ -98,7 +98,7 @@ void ShopUiHandler::updateUi()
   }
 }
 
-void ShopUiHandler::reset()
+void ShopUiHandler::onLoadingTransition(const bsgo::LoadingTransition /*transition*/)
 {
   m_items.clear();
   m_itemsData.clear();

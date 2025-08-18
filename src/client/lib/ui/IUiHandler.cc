@@ -7,7 +7,7 @@ IUiHandler::IUiHandler(const std::string &name)
   : core::CoreObject(name)
 {}
 
-void IUiHandler::reset()
+void IUiHandler::onLoadingTransition(const bsgo::LoadingTransition /*transition*/)
 {
   // Intentionally empty.
 }

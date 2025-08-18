@@ -1,6 +1,7 @@
 
 #include "GameOverUiHandler.hh"
 #include "EntityRemovedMessage.hh"
+#include "Game.hh"
 #include "MessageUtils.hh"
 
 namespace pge {
@@ -59,7 +60,7 @@ void GameOverUiHandler::updateUi()
   m_menu->setVisible(m_shipView->isDead());
 }
 
-void GameOverUiHandler::reset()
+void GameOverUiHandler::onLoadingTransition(const bsgo::LoadingTransition /*transition*/)
 {
   m_menu->setVisible(false);
 }

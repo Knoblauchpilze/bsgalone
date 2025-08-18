@@ -55,11 +55,11 @@ void GameScreenUiHandler::updateUi()
   }
 }
 
-void GameScreenUiHandler::reset()
+void GameScreenUiHandler::onLoadingTransition(const bsgo::LoadingTransition transition)
 {
   for (const auto &ui : m_uis)
   {
-    ui->reset();
+    ui->onLoadingTransition(transition);
   }
 }
 
