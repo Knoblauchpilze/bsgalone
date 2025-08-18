@@ -19,4 +19,5 @@ target_sources (bsgo_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/ResourceData.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ShipDataSource.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SystemData.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/WeaponData.cc
 	)

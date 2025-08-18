@@ -1,5 +1,6 @@
 
 #include "Common.hh"
+#include <gtest/gtest.h>
 
 namespace bsgo {
 
@@ -129,6 +130,17 @@ void assertPlayerResourceDataAreEqual(const PlayerResourceData &actual,
   EXPECT_EQ(actual.dbId, expected.dbId);
   EXPECT_EQ(actual.name, expected.name);
   EXPECT_EQ(actual.amount, expected.amount);
+}
+
+void assertWeaponDataAreEqual(const WeaponData &actual, const WeaponData &expected)
+{
+  EXPECT_EQ(actual.dbId, expected.dbId);
+  EXPECT_EQ(actual.name, expected.name);
+  EXPECT_EQ(actual.minDamage, expected.minDamage);
+  EXPECT_EQ(actual.maxDamage, expected.maxDamage);
+  EXPECT_EQ(actual.powerCost, expected.powerCost);
+  EXPECT_EQ(actual.range, expected.range);
+  EXPECT_EQ(actual.reloadTime, expected.reloadTime);
 }
 
 } // namespace bsgo
