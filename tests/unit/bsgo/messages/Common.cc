@@ -156,4 +156,26 @@ void assertComputerDataAreEqual(const ComputerData &actual, const ComputerData &
   EXPECT_EQ(actual.damageModifier, expected.damageModifier);
 }
 
+void assertShipDataAreEqual(const ShipData &actual, const ShipData &expected)
+{
+  EXPECT_EQ(actual.dbId, expected.dbId);
+  EXPECT_EQ(actual.faction, expected.faction);
+  EXPECT_EQ(actual.shipClass, expected.shipClass);
+  EXPECT_EQ(actual.name, expected.name);
+
+  EXPECT_EQ(actual.maxHullPoints, expected.maxHullPoints);
+  EXPECT_EQ(actual.hullPointsRegen, expected.hullPointsRegen);
+  EXPECT_EQ(actual.maxPowerPoints, expected.maxPowerPoints);
+  EXPECT_EQ(actual.powerRegen, expected.powerRegen);
+
+  EXPECT_EQ(actual.acceleration, expected.acceleration);
+  EXPECT_EQ(actual.speed, expected.speed);
+  EXPECT_EQ(actual.radius, expected.radius);
+
+  EXPECT_EQ(actual.jumpTime, expected.jumpTime);
+  EXPECT_EQ(actual.jumpTimeInThreat, expected.jumpTimeInThreat);
+
+  EXPECT_EQ(actual.slots, expected.slots);
+}
+
 } // namespace bsgo

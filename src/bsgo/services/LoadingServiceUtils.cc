@@ -169,4 +169,24 @@ auto toComputerData(const Computer &computer) -> ComputerData
   };
 }
 
+auto toShipData(const Ship &ship) -> ShipData
+{
+  return ShipData{
+    .dbId             = ship.id,
+    .faction          = ship.faction,
+    .shipClass        = ship.shipClass,
+    .name             = ship.name,
+    .maxHullPoints    = ship.maxHullPoints,
+    .hullPointsRegen  = ship.hullPointsRegen,
+    .maxPowerPoints   = ship.maxPowerPoints,
+    .powerRegen       = ship.powerRegen,
+    .acceleration     = ship.acceleration,
+    .speed            = ship.speed,
+    .radius           = ship.radius,
+    .jumpTime         = ship.jumpTime,
+    .jumpTimeInThreat = ship.jumpTimeInThreat,
+    .slots            = ship.slots,
+  };
+}
+
 } // namespace bsgo
