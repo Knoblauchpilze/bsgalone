@@ -388,6 +388,12 @@ export USER_PASSWORD=user_password
 ./create_database.sh bsgo
 ```
 
+There's also a convenience script provided in [scripts/setup_database.sh](scripts/setup_database.sh) which will run all the commands for you. Just run:
+
+```bash
+./scripts/setup_database.sh
+```
+
 ## Populating the database
 
 We use `migrate` to manage the database and perform the data migrations. Once the previous step is complete (so the user and the database both exist) one can simply go to the [migrations](database/migrations) folder and run:
