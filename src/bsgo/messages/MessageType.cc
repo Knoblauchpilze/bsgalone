@@ -61,6 +61,8 @@ auto str(const MessageType &type) -> std::string
       return "resource_list";
     case MessageType::SCANNED:
       return "scanned";
+    case MessageType::SHIP_LIST:
+      return "ship_list";
     case MessageType::SIGNUP:
       return "signup";
     case MessageType::SLOT:
@@ -82,7 +84,7 @@ auto str(const MessageType &type) -> std::string
   }
 }
 
-auto allMessageTypes() -> std::array<MessageType, 35>
+auto allMessageTypes() -> std::array<MessageType, 36>
 {
   return {MessageType::ASTEROID_LIST,
           MessageType::COMPONENT_SYNC,
@@ -111,6 +113,7 @@ auto allMessageTypes() -> std::array<MessageType, 35>
           MessageType::PURCHASE,
           MessageType::RESOURCE_LIST,
           MessageType::SCANNED,
+          MessageType::SHIP_LIST,
           MessageType::SIGNUP,
           MessageType::SLOT,
           MessageType::SLOT_COMPONENT_UPDATED,
