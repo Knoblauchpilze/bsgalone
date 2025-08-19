@@ -17,5 +17,6 @@ target_sources (bsgo_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/PlayerWeaponListMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ResourceListMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SystemListMessage.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/WeaponListMessage.cc
 	)
 
