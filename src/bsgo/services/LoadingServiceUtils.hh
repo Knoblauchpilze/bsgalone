@@ -16,6 +16,8 @@
 #include "PlayerWeaponRepository.hh"
 #include "ResourceData.hh"
 #include "ResourceRepository.hh"
+#include "ShipData.hh"
+#include "ShipRepository.hh"
 #include "Status.hh"
 #include "SystemData.hh"
 #include "SystemOutpostRepository.hh"
@@ -78,5 +80,7 @@ auto toPlayerResourceData(const PlayerResource &playerResource) -> PlayerResourc
 auto toWeaponData(const Weapon &weapon) -> WeaponData;
 
 auto toComputerData(const Computer &computer) -> ComputerData;
+
+auto toShipData(const Ship &ship) -> ShipData;
 
 } // namespace bsgo
