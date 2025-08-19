@@ -11,6 +11,8 @@ auto str(const MessageType &type) -> std::string
       return "asteroid_list";
     case MessageType::COMPONENT_SYNC:
       return "component_sync";
+    case MessageType::COMPUTER_LIST:
+      return "computer_list";
     case MessageType::CONNECTION:
       return "connection";
     case MessageType::DOCK:
@@ -80,10 +82,11 @@ auto str(const MessageType &type) -> std::string
   }
 }
 
-auto allMessageTypes() -> std::array<MessageType, 34>
+auto allMessageTypes() -> std::array<MessageType, 35>
 {
   return {MessageType::ASTEROID_LIST,
           MessageType::COMPONENT_SYNC,
+          MessageType::COMPUTER_LIST,
           MessageType::CONNECTION,
           MessageType::DOCK,
           MessageType::ENTITY_ADDED,

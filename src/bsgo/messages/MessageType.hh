@@ -11,6 +11,7 @@ enum class MessageType
 {
   ASTEROID_LIST,
   COMPONENT_SYNC,
+  COMPUTER_LIST,
   CONNECTION,
   DOCK,
   ENTITY_ADDED,
@@ -46,7 +47,7 @@ enum class MessageType
 };
 
 auto str(const MessageType &type) -> std::string;
-auto allMessageTypes() -> std::array<MessageType, 34>;
+auto allMessageTypes() -> std::array<MessageType, 35>;
 
 auto allMessageTypesAsSet() -> std::unordered_set<MessageType>;
 
