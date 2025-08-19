@@ -5,6 +5,7 @@
 
 #include "AsteroidListMessage.hh"
 #include "ComponentSyncMessage.hh"
+#include "ComputerListMessage.hh"
 #include "ConnectionMessage.hh"
 #include "DockMessage.hh"
 #include "EntityAddedMessage.hh"
@@ -29,6 +30,7 @@
 #include "PurchaseMessage.hh"
 #include "ResourceListMessage.hh"
 #include "ScannedMessage.hh"
+#include "ShipListMessage.hh"
 #include "SignupMessage.hh"
 #include "SlotComponentMessage.hh"
 #include "SlotMessage.hh"
@@ -114,6 +116,8 @@ auto MessageParser::tryReadMessage(const MessageType &type, std::istream &in)
       return readMessage<AsteroidListMessage>(in);
     case MessageType::COMPONENT_SYNC:
       return readMessage<ComponentSyncMessage>(in);
+    case MessageType::COMPUTER_LIST:
+      return readMessage<ComputerListMessage>(in);
     case MessageType::CONNECTION:
       return readMessage<ConnectionMessage>(in);
     case MessageType::DOCK:
@@ -162,6 +166,8 @@ auto MessageParser::tryReadMessage(const MessageType &type, std::istream &in)
       return readMessage<ResourceListMessage>(in);
     case MessageType::SCANNED:
       return readMessage<ScannedMessage>(in);
+    case MessageType::SHIP_LIST:
+      return readMessage<ShipListMessage>(in);
     case MessageType::SIGNUP:
       return readMessage<SignupMessage>(in);
     case MessageType::SLOT:
