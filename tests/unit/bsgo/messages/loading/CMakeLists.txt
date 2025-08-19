@@ -7,6 +7,7 @@ target_sources(unitTests PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/AsteroidDataTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/AsteroidListMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ComputerDataTest.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/ComputerListMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LoadingFinishedMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LoadingStartedMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/OutpostDataTest.cc

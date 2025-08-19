@@ -5,6 +5,7 @@ target_include_directories (bsgo_lib PUBLIC
 
 target_sources (bsgo_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/AsteroidListMessage.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/ComputerListMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/DataSerialization.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LoadingFinishedMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LoadingStartedMessage.cc
