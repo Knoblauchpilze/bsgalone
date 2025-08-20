@@ -156,6 +156,8 @@ void assertComputerDataAreEqual(const ComputerData &actual, const ComputerData &
   EXPECT_EQ(actual.duration, expected.duration);
   EXPECT_EQ(actual.allowedTargets, expected.allowedTargets);
   EXPECT_EQ(actual.damageModifier, expected.damageModifier);
+
+  EXPECT_EQ(actual.price, expected.price);
 }
 
 void assertShipDataAreEqual(const ShipData &actual, const ShipData &expected)
