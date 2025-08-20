@@ -2,15 +2,18 @@
 
 #include "AbstractService.hh"
 #include "AsteroidRepository.hh"
+#include "ComputerRepository.hh"
 #include "Coordinator.hh"
 #include "DatabaseEntityMapper.hh"
 #include "LoadingServiceUtils.hh"
 #include "PlayerRepository.hh"
 #include "PlayerShipRepository.hh"
 #include "ResourceRepository.hh"
+#include "ShipRepository.hh"
 #include "Status.hh"
 #include "SystemOutpostRepository.hh"
 #include "SystemRepository.hh"
+#include "WeaponRepository.hh"
 #include <memory>
 #include <vector>
 
@@ -48,6 +51,9 @@ class LoadingService : public AbstractService
   auto getSystems() const -> std::vector<System>;
 
   auto getResources() const -> std::vector<Resource>;
+  auto getWeapons() const -> std::vector<Weapon>;
+  auto getComputers() const -> std::vector<Computer>;
+  auto getShipsForFaction(const Faction faction) const -> std::vector<Ship>;
 
   auto getPlayerResources(const Uuid playerDbId) const -> std::vector<PlayerResource>;
   auto getPlayerShips(const Uuid playerDbId) const -> std::vector<ShipProps>;

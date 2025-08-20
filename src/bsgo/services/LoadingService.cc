@@ -255,6 +255,39 @@ auto LoadingService::getResources() const -> std::vector<Resource>
   return out;
 }
 
+auto LoadingService::getWeapons() const -> std::vector<Weapon>
+{
+  std::vector<Weapon> out;
+
+  const auto ids = m_repositories.weaponRepository->findAll();
+  for (const auto &id : ids)
+  {
+    auto weapon = m_repositories.weaponRepository->findOneById(id);
+    out.push_back(std::move(weapon));
+  }
+
+  return out;
+}
+
+auto LoadingService::getComputers() const -> std::vector<Computer>
+{
+  std::vector<Computer> out;
+
+  const auto ids = m_repositories.computerRepository->findAll();
+  for (const auto &id : ids)
+  {
+    auto computer = m_repositories.computerRepository->findOneById(id);
+    out.push_back(std::move(computer));
+  }
+
+  return out;
+}
+
+auto LoadingService::getShipsForFaction(const Faction faction) const -> std::vector<Ship>
+{
+  return m_repositories.shipRepository->findAllByFaction(faction);
+}
+
 auto LoadingService::getPlayerResources(const Uuid playerDbId) const -> std::vector<PlayerResource>
 {
   return m_repositories.playerResourceRepository->findAllByPlayer(playerDbId);
