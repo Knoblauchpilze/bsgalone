@@ -1,6 +1,7 @@
 
 #include "LoadingMessagesConsumer.hh"
 #include "AsteroidListMessage.hh"
+#include "ComputerListMessage.hh"
 #include "HangarMessage.hh"
 #include "OutpostListMessage.hh"
 #include "PlayerComputerListMessage.hh"
@@ -11,6 +12,7 @@
 #include "PlayerWeaponListMessage.hh"
 #include "ResourceListMessage.hh"
 #include "SystemListMessage.hh"
+#include "WeaponListMessage.hh"
 
 namespace bsgo {
 
@@ -95,7 +97,9 @@ void LoadingMessagesConsumer::handleActiveShipChangedTransition(
 }
 
 void LoadingMessagesConsumer::handleDockTransition(const LoadingStartedMessage & /*message*/) const
-{}
+{
+  // TODO: Handle the dock transition
+}
 
 void LoadingMessagesConsumer::handleEquipTransition(const LoadingStartedMessage &message) const
 {
@@ -116,6 +120,8 @@ void LoadingMessagesConsumer::handleLoginTransition(const LoadingStartedMessage 
 {
   handleLoginDataLoading(message);
   handleResourcesLoading(message);
+  handleWeaponsLoading(message);
+  handleComputersLoading(message);
   handleSystemsLoading(message);
   handlePlayerResourcesLoading(message);
   handlePlayerShipsLoading(message);
@@ -171,6 +177,38 @@ void LoadingMessagesConsumer::handleResourcesLoading(const LoadingStartedMessage
                  [](const Resource &resource) { return toResourceData(resource); });
 
   auto out = std::make_unique<ResourceListMessage>(resourcesData);
+  out->copyClientIdIfDefined(message);
+
+  m_outputMessageQueue->pushMessage(std::move(out));
+}
+
+void LoadingMessagesConsumer::handleWeaponsLoading(const LoadingStartedMessage &message) const
+{
+  const auto weapons = m_loadingService->getWeapons();
+
+  std::vector<WeaponData> weaponsData{};
+  std::transform(weapons.begin(),
+                 weapons.end(),
+                 std::back_inserter(weaponsData),
+                 [](const WeaponProps &weapon) { return weapon.toWeaponData(); });
+
+  auto out = std::make_unique<WeaponListMessage>(weaponsData);
+  out->copyClientIdIfDefined(message);
+
+  m_outputMessageQueue->pushMessage(std::move(out));
+}
+
+void LoadingMessagesConsumer::handleComputersLoading(const LoadingStartedMessage &message) const
+{
+  const auto computers = m_loadingService->getComputers();
+
+  std::vector<ComputerData> computersData{};
+  std::transform(computers.begin(),
+                 computers.end(),
+                 std::back_inserter(computersData),
+                 [](const ComputerProps &computer) { return computer.toComputerData(); });
+
+  auto out = std::make_unique<ComputerListMessage>(computersData);
   out->copyClientIdIfDefined(message);
 
   m_outputMessageQueue->pushMessage(std::move(out));
