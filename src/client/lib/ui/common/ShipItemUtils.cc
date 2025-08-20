@@ -53,7 +53,7 @@ auto generateWeaponMenu(const std::string &name,
   return menu;
 }
 
-auto generateWeaponMenu(const bsgo::Weapon &weapon) -> UiMenuPtr
+auto generateWeaponMenu(const bsgo::WeaponData &weapon) -> UiMenuPtr
 {
   return generateWeaponMenu(weapon.name,
                             weapon.minDamage,
@@ -119,7 +119,7 @@ auto generateComputerMenu(const std::string &name,
   return menu;
 }
 
-auto generateComputerMenu(const bsgo::Computer &computer) -> UiMenuPtr
+auto generateComputerMenu(const bsgo::ComputerData &computer) -> UiMenuPtr
 {
   return generateComputerMenu(computer.name,
                               computer.powerCost,

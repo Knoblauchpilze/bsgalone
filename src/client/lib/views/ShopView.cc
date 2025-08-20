@@ -1,6 +1,8 @@
 
 #include "ShopView.hh"
-#include <stdexcept>
+#include "ComputerListMessage.hh"
+#include "ResourceListMessage.hh"
+#include "WeaponListMessage.hh"
 
 namespace pge {
 
@@ -8,11 +10,11 @@ auto ShopItem::id() const -> bsgo::Uuid
 {
   if (weapon)
   {
-    return weapon->id;
+    return weapon->dbId;
   }
   else if (computer)
   {
-    return computer->id;
+    return computer->dbId;
   }
 
   throw std::invalid_argument("Expected shop item to be a weapon or a computer");
@@ -44,23 +46,99 @@ void ShopView::setPlayerDbId(const bsgo::Uuid player)
 
 bool ShopView::isReady() const noexcept
 {
-  return m_playerDbId.has_value();
+  return m_playerDbId.has_value() && !m_resources.empty() && !m_computers.empty()
+         && !m_weapons.empty();
 }
+
+void ShopView::onMessageReceived(const bsgo::IMessage &message)
+{
+  switch (message.type())
+  {
+    case bsgo::MessageType::RESOURCE_LIST:
+      m_resources = message.as<bsgo::ResourceListMessage>().getResourcesData();
+      break;
+    case bsgo::MessageType::COMPUTER_LIST:
+      m_computers = message.as<bsgo::ComputerListMessage>().getComputersData();
+      break;
+    case bsgo::MessageType::WEAPON_LIST:
+      m_weapons = message.as<bsgo::WeaponListMessage>().getWeaponsData();
+      break;
+    default:
+      error("Unsupported message type " + bsgo::str(message.type()));
+  }
+}
+
+namespace {
+auto tryFindResource(const bsgo::Uuid resourceId, const std::vector<bsgo::ResourceData> &resources)
+  -> std::optional<bsgo::ResourceData>
+{
+  const auto maybeResource = std::find_if(resources.begin(),
+                                          resources.end(),
+                                          [&resourceId](const bsgo::ResourceData &resource) {
+                                            return resource.dbId == resourceId;
+                                          });
+
+  if (maybeResource == resources.end())
+  {
+    return {};
+  }
+
+  return *maybeResource;
+}
+
+auto getWeaponAsShopItem(const bsgo::WeaponData &weapon,
+                         const std::vector<bsgo::ResourceData> &resources) -> ShopItem
+{
+  ShopItem out;
+  out.weapon = weapon;
+
+  for (const auto &[resourceId, cost] : weapon.price)
+  {
+    const auto maybeResource = tryFindResource(resourceId, resources);
+    if (!maybeResource)
+    {
+      throw std::invalid_argument("Unsupported resource " + bsgo::str(resourceId));
+    }
+
+    out.price.emplace_back(*maybeResource, cost);
+  }
+
+  return out;
+}
+
+auto getComputerAsShopItem(const bsgo::ComputerData &computer,
+                           const std::vector<bsgo::ResourceData> &resources) -> ShopItem
+{
+  ShopItem out;
+  out.computer = computer;
+
+  for (const auto &[resourceId, cost] : computer.price)
+  {
+    const auto maybeResource = tryFindResource(resourceId, resources);
+    if (!maybeResource)
+    {
+      throw std::invalid_argument("Unsupported resource " + bsgo::str(resourceId));
+    }
+
+    out.price.emplace_back(*maybeResource, cost);
+  }
+
+  return out;
+}
+} // namespace
 
 auto ShopView::getShopItems() const -> std::vector<ShopItem>
 {
   std::vector<ShopItem> out;
 
-  const auto weapons = m_repositories.weaponRepository->findAll();
-  for (const auto &weaponId : weapons)
+  for (const auto &weapon : m_weapons)
   {
-    out.push_back(getWeaponAsShopItem(weaponId));
+    out.push_back(getWeaponAsShopItem(weapon, m_resources));
   }
 
-  const auto computers = m_repositories.computerRepository->findAll();
-  for (const auto &computerId : computers)
+  for (const auto &computer : m_computers)
   {
-    out.push_back(getComputerAsShopItem(computerId));
+    out.push_back(getComputerAsShopItem(computer, m_resources));
   }
 
   return out;
@@ -94,36 +172,6 @@ void ShopView::checkPlayerDbIdExists() const
   {
     error("Expected player db id to exist but it does not");
   }
-}
-
-auto ShopView::getWeaponAsShopItem(const bsgo::Uuid weaponId) const -> ShopItem
-{
-  ShopItem item{};
-  item.weapon = m_repositories.weaponRepository->findOneById(weaponId);
-
-  const auto price = m_repositories.weaponPriceRepository->findAllByWeapon(weaponId);
-  for (const auto &[resourceId, cost] : price)
-  {
-    const auto resource = m_repositories.resourceRepository->findOneById(resourceId);
-    item.price.push_back(ResourceCost{.resource = resource, .amount = cost});
-  }
-
-  return item;
-}
-
-auto ShopView::getComputerAsShopItem(const bsgo::Uuid computerId) const -> ShopItem
-{
-  ShopItem item{};
-  item.computer = m_repositories.computerRepository->findOneById(computerId);
-
-  const auto price = m_repositories.computerPriceRepository->findAllByComputer(computerId);
-  for (const auto &[resourceId, cost] : price)
-  {
-    const auto resource = m_repositories.resourceRepository->findOneById(resourceId);
-    item.price.push_back(ResourceCost{.resource = resource, .amount = cost});
-  }
-
-  return item;
 }
 
 } // namespace pge

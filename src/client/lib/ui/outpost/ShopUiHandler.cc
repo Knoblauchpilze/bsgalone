@@ -184,7 +184,7 @@ void ShopUiHandler::generateItemsMenus()
     {
       const auto cost = item.price.at(id);
 
-      m_itemsData.at(itemId).prices[cost.resource.id] = costMenu;
+      m_itemsData.at(itemId).prices[cost.resource.dbId] = costMenu;
 
       ++id;
     }
