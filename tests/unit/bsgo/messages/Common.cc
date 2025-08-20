@@ -141,6 +141,8 @@ void assertWeaponDataAreEqual(const WeaponData &actual, const WeaponData &expect
   EXPECT_EQ(actual.powerCost, expected.powerCost);
   EXPECT_EQ(actual.range, expected.range);
   EXPECT_EQ(actual.reloadTime, expected.reloadTime);
+
+  EXPECT_EQ(actual.price, expected.price);
 }
 
 void assertComputerDataAreEqual(const ComputerData &actual, const ComputerData &expected)
