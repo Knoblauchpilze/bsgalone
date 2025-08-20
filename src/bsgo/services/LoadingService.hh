@@ -51,8 +51,8 @@ class LoadingService : public AbstractService
   auto getSystems() const -> std::vector<System>;
 
   auto getResources() const -> std::vector<Resource>;
-  auto getWeapons() const -> std::vector<Weapon>;
-  auto getComputers() const -> std::vector<Computer>;
+  auto getWeapons() const -> std::vector<WeaponProps>;
+  auto getComputers() const -> std::vector<ComputerProps>;
   auto getShipsForFaction(const Faction faction) const -> std::vector<Ship>;
 
   auto getPlayerResources(const Uuid playerDbId) const -> std::vector<PlayerResource>;

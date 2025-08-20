@@ -255,29 +255,33 @@ auto LoadingService::getResources() const -> std::vector<Resource>
   return out;
 }
 
-auto LoadingService::getWeapons() const -> std::vector<Weapon>
+auto LoadingService::getWeapons() const -> std::vector<WeaponProps>
 {
-  std::vector<Weapon> out;
+  std::vector<WeaponProps> out;
 
   const auto ids = m_repositories.weaponRepository->findAll();
   for (const auto &id : ids)
   {
-    auto weapon = m_repositories.weaponRepository->findOneById(id);
-    out.push_back(std::move(weapon));
+    auto weapon      = m_repositories.weaponRepository->findOneById(id);
+    const auto price = m_repositories.weaponPriceRepository->findAllByWeapon(id);
+
+    out.emplace_back(std::move(weapon), price);
   }
 
   return out;
 }
 
-auto LoadingService::getComputers() const -> std::vector<Computer>
+auto LoadingService::getComputers() const -> std::vector<ComputerProps>
 {
-  std::vector<Computer> out;
+  std::vector<ComputerProps> out;
 
   const auto ids = m_repositories.computerRepository->findAll();
   for (const auto &id : ids)
   {
-    auto computer = m_repositories.computerRepository->findOneById(id);
-    out.push_back(std::move(computer));
+    auto computer    = m_repositories.computerRepository->findOneById(id);
+    const auto price = m_repositories.computerPriceRepository->findAllByComputer(id);
+
+    out.emplace_back(std::move(computer), price);
   }
 
   return out;

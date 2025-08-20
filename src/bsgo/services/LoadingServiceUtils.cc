@@ -141,31 +141,33 @@ auto toPlayerResourceData(const PlayerResource &playerResource) -> PlayerResourc
   };
 }
 
-auto toWeaponData(const Weapon &weapon) -> WeaponData
+auto WeaponProps::toWeaponData() const -> WeaponData
 {
   return WeaponData{
-    .dbId       = weapon.id,
-    .name       = weapon.name,
-    .minDamage  = weapon.minDamage,
-    .maxDamage  = weapon.maxDamage,
-    .powerCost  = weapon.powerCost,
-    .range      = weapon.range,
-    .reloadTime = weapon.reloadTime,
+    .dbId       = dbWeapon.id,
+    .name       = dbWeapon.name,
+    .minDamage  = dbWeapon.minDamage,
+    .maxDamage  = dbWeapon.maxDamage,
+    .powerCost  = dbWeapon.powerCost,
+    .range      = dbWeapon.range,
+    .reloadTime = dbWeapon.reloadTime,
+    .price      = price,
   };
 }
 
-auto toComputerData(const Computer &computer) -> ComputerData
+auto ComputerProps::toComputerData() const -> ComputerData
 {
   return ComputerData{
-    .dbId           = computer.id,
-    .name           = computer.name,
-    .offensive      = computer.offensive,
-    .powerCost      = computer.powerCost,
-    .range          = computer.range,
-    .reloadTime     = computer.reloadTime,
-    .duration       = computer.duration,
-    .allowedTargets = computer.allowedTargets,
-    .damageModifier = computer.damageModifier,
+    .dbId           = dbComputer.id,
+    .name           = dbComputer.name,
+    .offensive      = dbComputer.offensive,
+    .powerCost      = dbComputer.powerCost,
+    .range          = dbComputer.range,
+    .reloadTime     = dbComputer.reloadTime,
+    .duration       = dbComputer.duration,
+    .allowedTargets = dbComputer.allowedTargets,
+    .damageModifier = dbComputer.damageModifier,
+    .price          = price,
   };
 }
 
