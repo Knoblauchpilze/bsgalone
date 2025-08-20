@@ -281,7 +281,9 @@ void LoadingMessagesConsumer::handlePlayerWeaponsLoading(const LoadingStartedMes
   std::transform(playerWeapons.begin(),
                  playerWeapons.end(),
                  std::back_inserter(weaopnsData),
-                 [](const WeaponProps &playerWeapon) { return playerWeapon.toPlayerWeaponData(); });
+                 [](const PlayerWeaponProps &playerWeapon) {
+                   return playerWeapon.toPlayerWeaponData();
+                 });
 
   auto out = std::make_unique<PlayerWeaponListMessage>(weaopnsData);
   out->copyClientIdIfDefined(message);
