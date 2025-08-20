@@ -50,7 +50,7 @@ struct OutpostProps
   auto toOutpostData() const -> OutpostData;
 };
 
-struct WeaponProps
+struct PlayerWeaponProps
 {
   PlayerWeapon dbWeapon{};
   std::optional<Eigen::Vector3f> slotPosition{};
@@ -65,7 +65,7 @@ struct ShipProps
   PlayerShip dbShip{};
   Status status{};
   std::optional<Uuid> targetDbId{};
-  std::vector<WeaponProps> weapons{};
+  std::vector<PlayerWeaponProps> weapons{};
   std::vector<PlayerComputer> computers{};
 
   auto toPlayerShipData() const -> PlayerShipData;
