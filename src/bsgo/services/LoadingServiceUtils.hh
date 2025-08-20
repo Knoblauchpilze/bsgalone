@@ -77,9 +77,21 @@ auto toResourceData(const Resource &resource) -> ResourceData;
 
 auto toPlayerResourceData(const PlayerResource &playerResource) -> PlayerResourceData;
 
-auto toWeaponData(const Weapon &weapon) -> WeaponData;
+struct WeaponProps
+{
+  Weapon dbWeapon{};
+  std::unordered_map<Uuid, float> price{};
 
-auto toComputerData(const Computer &computer) -> ComputerData;
+  auto toWeaponData() const -> WeaponData;
+};
+
+struct ComputerProps
+{
+  Computer dbComputer{};
+  std::unordered_map<Uuid, float> price{};
+
+  auto toComputerData() const -> ComputerData;
+};
 
 auto toShipData(const Ship &ship) -> ShipData;
 
