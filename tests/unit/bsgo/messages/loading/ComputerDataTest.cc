@@ -31,7 +31,10 @@ TEST(Unit_Bsgo_Serialization_ComputerData, EqualWhenDbIdIsEqual)
 
 TEST(Unit_Bsgo_Serialization_ComputerData, DifferentWhenDbIdIsDifferent)
 {
-  ComputerData data1{.dbId = Uuid{1234}, .powerCost = 100.0f, .range = 1.025f};
+  ComputerData data1{.dbId      = Uuid{1234},
+                     .powerCost = 100.0f,
+                     .range     = 1.025f,
+                     .price     = {{Uuid{26}, 401.298f}}};
 
   ComputerData data2 = data1;
   data2.dbId         = Uuid{5678};
@@ -44,7 +47,8 @@ TEST(Unit_Bsgo_Serialization_ComputerData, Basic)
   ComputerData input{.dbId           = Uuid{1234},
                      .name           = "eniac",
                      .range          = 98765.1234f,
-                     .damageModifier = 2.10987f};
+                     .damageModifier = 2.10987f,
+                     .price          = {{Uuid{17}, 98.032f}, {Uuid{3274}, 41.097f}}};
 
   ComputerData output{.dbId       = Uuid{14},
                       .powerCost  = 26.57f,
@@ -78,7 +82,8 @@ TEST(Unit_Bsgo_Serialization_ComputerData, NonEmptyAllowedTargetsInDestination)
 
   ComputerData output{.dbId       = Uuid{14},
                       .name       = "another computer",
-                      .reloadTime = core::toMilliseconds(1234)};
+                      .reloadTime = core::toMilliseconds(1234),
+                      .price      = {{Uuid{17}, 98.032f}, {Uuid{3274}, 41.097f}}};
   output.allowedTargets = std::unordered_set<EntityKind>{EntityKind::OUTPOST};
 
   EXPECT_TRUE(serializeAndDeserializeData(input, output));
@@ -88,9 +93,9 @@ TEST(Unit_Bsgo_Serialization_ComputerData, NonEmptyAllowedTargetsInDestination)
 
 TEST(Unit_Bsgo_Serialization_ComputerData, NonEmptyDamageModifierInDestination)
 {
-  ComputerData input{.dbId = Uuid{1234}};
+  ComputerData input{.dbId = Uuid{1234}, .price = {{Uuid{17}, 98.032f}, {Uuid{3274}, 41.097f}}};
 
-  ComputerData output{.dbId = Uuid{14}, .damageModifier = 2.10987f};
+  ComputerData output{.dbId = Uuid{14}, .damageModifier = 2.10987f, .price = {{Uuid{89}, 32.7104f}}};
 
   EXPECT_TRUE(serializeAndDeserializeData(input, output));
 

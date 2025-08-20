@@ -400,6 +400,8 @@ auto serializeComputerData(std::ostream &out, const ComputerData &data) -> std::
 
   core::serialize(out, data.damageModifier);
 
+  core::serialize(out, data.price);
+
   return out;
 }
 
@@ -436,6 +438,8 @@ bool deserializeComputerData(std::istream &in, ComputerData &data)
   }
 
   ok &= core::deserialize(in, data.damageModifier);
+
+  ok &= core::deserialize(in, data.price);
 
   return ok;
 }
