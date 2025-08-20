@@ -1,14 +1,12 @@
 
 #pragma once
 
-#include "ComputerRepository.hh"
+#include "ComputerData.hh"
 #include "PlayerComputerData.hh"
-#include "PlayerComputerRepository.hh"
 #include "PlayerWeaponData.hh"
-#include "PlayerWeaponRepository.hh"
 #include "UiMenu.hh"
 #include "UiTextMenu.hh"
-#include "WeaponRepository.hh"
+#include "WeaponData.hh"
 
 namespace pge {
 
@@ -17,9 +15,9 @@ auto generateTextConfig(const std::string &name,
                         const Color &color = colors::WHITE,
                         const int margin   = DEFAULT_MARGIN) -> TextConfig;
 
-auto generateWeaponMenu(const bsgo::Weapon &weapon) -> UiMenuPtr;
+auto generateWeaponMenu(const bsgo::WeaponData &weapon) -> UiMenuPtr;
 auto generateWeaponMenu(const bsgo::PlayerWeaponData &weapon) -> UiMenuPtr;
-auto generateComputerMenu(const bsgo::Computer &computer) -> UiMenuPtr;
+auto generateComputerMenu(const bsgo::ComputerData &computer) -> UiMenuPtr;
 auto generateComputerMenu(const bsgo::PlayerComputerData &computer) -> UiMenuPtr;
 
 struct InteractiveSection

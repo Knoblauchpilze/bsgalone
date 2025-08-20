@@ -2,27 +2,29 @@
 #pragma once
 
 #include "AbstractView.hh"
+#include "ComputerData.hh"
 #include "Faction.hh"
 #include "PurchaseUtils.hh"
 #include "Repositories.hh"
+#include "ResourceData.hh"
 #include "Uuid.hh"
+#include "WeaponData.hh"
 #include <memory>
-#include <unordered_map>
 #include <vector>
 
 namespace pge {
 
 struct ResourceCost
 {
-  bsgo::Resource resource{};
+  bsgo::ResourceData resource{};
   float amount{};
 };
 
 struct ShopItem
 {
   std::vector<ResourceCost> price;
-  std::optional<bsgo::Weapon> weapon{};
-  std::optional<bsgo::Computer> computer{};
+  std::optional<bsgo::WeaponData> weapon{};
+  std::optional<bsgo::ComputerData> computer{};
 
   auto id() const -> bsgo::Uuid;
   auto type() const -> bsgo::Item;
@@ -34,8 +36,11 @@ class ShopView : public AbstractView
   ShopView(const bsgo::Repositories &repositories);
   ~ShopView() override = default;
 
+  // TODO: should be removed
   void setPlayerDbId(const bsgo::Uuid player);
   bool isReady() const noexcept override;
+
+  void onMessageReceived(const bsgo::IMessage &message) override;
 
   auto getShopItems() const -> std::vector<ShopItem>;
   auto canPlayerAfford(const bsgo::Uuid id, const bsgo::Item &itemType) const
@@ -45,12 +50,12 @@ class ShopView : public AbstractView
 
   private:
   bsgo::Repositories m_repositories{};
+  std::vector<bsgo::ResourceData> m_resources{};
+  std::vector<bsgo::ComputerData> m_computers{};
+  std::vector<bsgo::WeaponData> m_weapons{};
   std::optional<bsgo::Uuid> m_playerDbId{};
 
   void checkPlayerDbIdExists() const;
-
-  auto getWeaponAsShopItem(const bsgo::Uuid weaponId) const -> ShopItem;
-  auto getComputerAsShopItem(const bsgo::Uuid computerId) const -> ShopItem;
 };
 
 using ShopViewShPtr = std::shared_ptr<ShopView>;
