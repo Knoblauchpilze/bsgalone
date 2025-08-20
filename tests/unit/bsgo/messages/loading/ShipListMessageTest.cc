@@ -11,6 +11,7 @@ void assertMessagesAreEqual(const ShipListMessage &actual, const ShipListMessage
 {
   EXPECT_EQ(actual.type(), expected.type());
   EXPECT_EQ(actual.tryGetClientId(), expected.tryGetClientId());
+  EXPECT_EQ(actual.getFaction(), expected.getFaction());
 
   const auto &actualShipsData   = actual.getShipsData();
   const auto &expectedShipsData = expected.getShipsData();
@@ -28,7 +29,7 @@ void assertMessagesAreEqual(const ShipListMessage &actual, const ShipListMessage
 
 TEST(Unit_Bsgo_Serialization_ShipListMessage, Basic)
 {
-  const ShipListMessage expected(std::vector<ShipData>{});
+  const ShipListMessage expected(Faction::CYLON, std::vector<ShipData>{});
 
   const std::vector<ShipData> shipsData{{.dbId    = Uuid{23},
                                          .faction = Faction::CYLON,
@@ -37,7 +38,7 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, Basic)
                                          .maxHullPoints    = 100.0f,
                                          .hullPointsRegen  = 26.9f,
                                          .jumpTimeInThreat = core::toMilliseconds(1265)}};
-  ShipListMessage actual(shipsData);
+  ShipListMessage actual(Faction::COLONIAL, shipsData);
   actual.setClientId(Uuid{2});
 
   serializeAndDeserializeMessage(expected, actual);
@@ -54,7 +55,7 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, WithClientId)
                                    .jumpTime        = core::toMilliseconds(7456),
                                    .slots           = {{Slot::COMPUTER, 2}, {Slot::WEAPON, 3}}}};
 
-  ShipListMessage expected(shipsData);
+  ShipListMessage expected(Faction::COLONIAL, shipsData);
   expected.setClientId(Uuid{78});
 
   shipsData = {{
@@ -64,7 +65,7 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, WithClientId)
                  .radius         = 1.54f,
                },
                {.dbId = Uuid{18}, .radius = 26.1, .slots = {{Slot::COMPUTER, 2}}}};
-  ShipListMessage actual(shipsData);
+  ShipListMessage actual(Faction::COLONIAL, shipsData);
 
   serializeAndDeserializeMessage(expected, actual);
 
@@ -82,7 +83,7 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, Clone)
      .slots            = {{Slot::WEAPON, 14}}},
   };
 
-  ShipListMessage expected(shipsData);
+  ShipListMessage expected(Faction::CYLON, shipsData);
 
   const auto cloned = expected.clone();
 
@@ -111,7 +112,7 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, MultipleComplexShips)
       .slots            = {{Slot::COMPUTER, 5}},
     },
   };
-  ShipListMessage expected(shipsData);
+  ShipListMessage expected(Faction::CYLON, shipsData);
 
   shipsData = {
     {.dbId          = Uuid{37},
@@ -130,7 +131,7 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, MultipleComplexShips)
      .speed     = 14.32f,
      .slots     = {{Slot::WEAPON, 5}, {Slot::COMPUTER, 5}}},
   };
-  ShipListMessage actual(shipsData);
+  ShipListMessage actual(Faction::COLONIAL, shipsData);
 
   serializeAndDeserializeMessage(expected, actual);
 

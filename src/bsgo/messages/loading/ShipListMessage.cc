@@ -9,10 +9,16 @@ ShipListMessage::ShipListMessage()
   : NetworkMessage(MessageType::SHIP_LIST)
 {}
 
-ShipListMessage::ShipListMessage(const std::vector<ShipData> &shipsData)
+ShipListMessage::ShipListMessage(const Faction faction, const std::vector<ShipData> &shipsData)
   : NetworkMessage(MessageType::SHIP_LIST)
+  , m_faction(faction)
   , m_shipsData(shipsData)
 {}
+
+auto ShipListMessage::getFaction() const -> Faction
+{
+  return m_faction;
+}
 
 auto ShipListMessage::getShipsData() const -> const std::vector<ShipData> &
 {
@@ -23,6 +29,8 @@ auto ShipListMessage::serialize(std::ostream &out) const -> std::ostream &
 {
   core::serialize(out, m_messageType);
   core::serialize(out, m_clientId);
+
+  core::serialize(out, m_faction);
 
   core::serialize(out, m_shipsData.size());
   for (const auto &shipData : m_shipsData)
@@ -38,6 +46,8 @@ bool ShipListMessage::deserialize(std::istream &in)
   bool ok{true};
   ok &= core::deserialize(in, m_messageType);
   ok &= core::deserialize(in, m_clientId);
+
+  ok &= core::deserialize(in, m_faction);
 
   std::size_t count;
   ok &= core::deserialize(in, count);
@@ -58,7 +68,7 @@ bool ShipListMessage::deserialize(std::istream &in)
 
 auto ShipListMessage::clone() const -> IMessagePtr
 {
-  auto clone = std::make_unique<ShipListMessage>(m_shipsData);
+  auto clone = std::make_unique<ShipListMessage>(m_faction, m_shipsData);
   clone->copyClientIdIfDefined(*this);
 
   return clone;
