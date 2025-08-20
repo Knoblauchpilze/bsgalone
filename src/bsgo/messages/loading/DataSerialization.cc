@@ -356,6 +356,8 @@ auto serializeWeaponData(std::ostream &out, const WeaponData &data) -> std::ostr
   core::serialize(out, data.range);
   core::serialize(out, data.reloadTime);
 
+  core::serialize(out, data.price);
+
   return out;
 }
 
@@ -370,6 +372,8 @@ bool deserializeWeaponData(std::istream &in, WeaponData &data)
   ok &= core::deserialize(in, data.powerCost);
   ok &= core::deserialize(in, data.range);
   ok &= core::deserialize(in, data.reloadTime);
+
+  ok &= core::deserialize(in, data.price);
 
   return ok;
 }

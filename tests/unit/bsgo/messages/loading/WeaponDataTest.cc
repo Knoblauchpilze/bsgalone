@@ -18,7 +18,10 @@ inline bool serializeAndDeserializeData(const WeaponData &value, WeaponData &out
 
 TEST(Unit_Bsgo_Serialization_WeaponData, EqualWhenDbIdIsEqual)
 {
-  WeaponData data1{.dbId = Uuid{1234}, .minDamage = 36.7f, .range = 123.456f};
+  WeaponData data1{.dbId      = Uuid{1234},
+                   .minDamage = 36.7f,
+                   .range     = 123.456f,
+                   .price     = {{Uuid{21}, 26.5f}}};
 
   WeaponData data2{.dbId = Uuid{1234}, .maxDamage = 17.5f, .reloadTime = core::toMilliseconds(158)};
 
@@ -40,11 +43,13 @@ TEST(Unit_Bsgo_Serialization_WeaponData, Basic)
   WeaponData input{.dbId      = Uuid{1234},
                    .name      = "a weapon",
                    .minDamage = 5.4321f,
-                   .range     = 98765.1234f};
+                   .range     = 98765.1234f,
+                   .price     = {{Uuid{17}, 98.032f}, {Uuid{3274}, 41.097f}}};
 
   WeaponData output{.dbId       = Uuid{14},
                     .maxDamage  = 12.987f,
-                    .reloadTime = core::toMilliseconds(1234)};
+                    .reloadTime = core::toMilliseconds(1234),
+                    .price = {{Uuid{26}, 401.298f}, {Uuid{9874}, 130.27f}, {Uuid{13}, 12.45f}}};
 
   EXPECT_TRUE(serializeAndDeserializeData(input, output));
 
