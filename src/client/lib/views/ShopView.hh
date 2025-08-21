@@ -4,6 +4,7 @@
 #include "AbstractView.hh"
 #include "ComputerData.hh"
 #include "Faction.hh"
+#include "GameSession.hh"
 #include "PlayerResourceData.hh"
 #include "PurchaseUtils.hh"
 #include "Repositories.hh"
@@ -34,7 +35,7 @@ struct ShopItem
 class ShopView : public AbstractView
 {
   public:
-  ShopView(const bsgo::Repositories &repositories);
+  ShopView(GameSessionShPtr gameSession, const bsgo::Repositories &repositories);
   ~ShopView() override = default;
 
   // TODO: should be removed
@@ -50,6 +51,7 @@ class ShopView : public AbstractView
   auto getAllShipsForFaction(const bsgo::Faction &faction) const -> std::vector<bsgo::Ship>;
 
   private:
+  GameSessionShPtr m_gameSession{};
   bsgo::Repositories m_repositories{};
   std::vector<bsgo::ResourceData> m_resources{};
   std::vector<bsgo::ComputerData> m_computers{};

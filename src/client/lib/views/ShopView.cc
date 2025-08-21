@@ -35,10 +35,16 @@ auto ShopItem::type() const -> bsgo::Item
   throw std::invalid_argument("Expected shop item to be a weapon or a computer");
 }
 
-ShopView::ShopView(const bsgo::Repositories &repositories)
+ShopView::ShopView(GameSessionShPtr gameSession, const bsgo::Repositories &repositories)
   : AbstractView("shop")
+  , m_gameSession(std::move(gameSession))
   , m_repositories(repositories)
-{}
+{
+  if (nullptr == m_gameSession)
+  {
+    throw std::invalid_argument("Expected non null game session");
+  }
+}
 
 void ShopView::setPlayerDbId(const bsgo::Uuid player)
 {
