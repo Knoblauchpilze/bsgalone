@@ -1,6 +1,7 @@
 
 #include "ShopView.hh"
 #include "ComputerListMessage.hh"
+#include "PlayerResourceListMessage.hh"
 #include "ResourceListMessage.hh"
 #include "WeaponListMessage.hh"
 
@@ -47,7 +48,7 @@ void ShopView::setPlayerDbId(const bsgo::Uuid player)
 bool ShopView::isReady() const noexcept
 {
   return m_playerDbId.has_value() && !m_resources.empty() && !m_computers.empty()
-         && !m_weapons.empty();
+         && !m_weapons.empty() && !m_playerResources.empty();
 }
 
 void ShopView::onMessageReceived(const bsgo::IMessage &message)
@@ -62,6 +63,9 @@ void ShopView::onMessageReceived(const bsgo::IMessage &message)
       break;
     case bsgo::MessageType::WEAPON_LIST:
       m_weapons = message.as<bsgo::WeaponListMessage>().getWeaponsData();
+      break;
+    case bsgo::MessageType::PLAYER_RESOURCE_LIST:
+      m_playerResources = message.as<bsgo::PlayerResourceListMessage>().getResourcesData();
       break;
     default:
       error("Unsupported message type " + bsgo::str(message.type()));
@@ -150,9 +154,10 @@ auto ShopView::canPlayerAfford(const bsgo::Uuid id, const bsgo::Item &itemType) 
   checkPlayerDbIdExists();
 
   bsgo::AffordabilityData data{
-    .playerId          = *m_playerDbId,
-    .itemId            = id,
-    .itemType          = itemType,
+    .playerId = *m_playerDbId,
+    .itemId   = id,
+    .itemType = itemType,
+
     .resourceRepo      = m_repositories.playerResourceRepository,
     .weaponPriceRepo   = m_repositories.weaponPriceRepository,
     .computerPriceRepo = m_repositories.computerPriceRepository,

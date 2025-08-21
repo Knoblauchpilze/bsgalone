@@ -4,6 +4,7 @@
 #include "AbstractView.hh"
 #include "ComputerData.hh"
 #include "Faction.hh"
+#include "PlayerResourceData.hh"
 #include "PurchaseUtils.hh"
 #include "Repositories.hh"
 #include "ResourceData.hh"
@@ -53,6 +54,8 @@ class ShopView : public AbstractView
   std::vector<bsgo::ResourceData> m_resources{};
   std::vector<bsgo::ComputerData> m_computers{};
   std::vector<bsgo::WeaponData> m_weapons{};
+  std::vector<bsgo::PlayerResourceData> m_playerResources{};
+
   std::optional<bsgo::Uuid> m_playerDbId{};
 
   void checkPlayerDbIdExists() const;
