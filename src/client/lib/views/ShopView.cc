@@ -46,14 +46,9 @@ ShopView::ShopView(GameSessionShPtr gameSession, const bsgo::Repositories &repos
   }
 }
 
-void ShopView::setPlayerDbId(const bsgo::Uuid player)
-{
-  m_playerDbId = player;
-}
-
 bool ShopView::isReady() const noexcept
 {
-  return m_playerDbId.has_value() && !m_resources.empty() && !m_computers.empty()
+  return m_gameSession->hasPlayerDbId() && !m_resources.empty() && !m_computers.empty()
          && !m_weapons.empty() && !m_playerResources.empty();
 }
 
@@ -157,10 +152,8 @@ auto ShopView::getShopItems() const -> std::vector<ShopItem>
 auto ShopView::canPlayerAfford(const bsgo::Uuid id, const bsgo::Item &itemType) const
   -> bsgo::Affordability
 {
-  checkPlayerDbIdExists();
-
   bsgo::AffordabilityData data{
-    .playerId = *m_playerDbId,
+    .playerId = m_gameSession->getPlayerDbId(),
     .itemId   = id,
     .itemType = itemType,
 
@@ -175,14 +168,6 @@ auto ShopView::canPlayerAfford(const bsgo::Uuid id, const bsgo::Item &itemType) 
 auto ShopView::getAllShipsForFaction(const bsgo::Faction &faction) const -> std::vector<bsgo::Ship>
 {
   return m_repositories.shipRepository->findAllByFaction(faction);
-}
-
-void ShopView::checkPlayerDbIdExists() const
-{
-  if (!m_playerDbId)
-  {
-    error("Expected player db id to exist but it does not");
-  }
 }
 
 } // namespace pge

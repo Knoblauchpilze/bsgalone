@@ -38,8 +38,6 @@ class ShopView : public AbstractView
   ShopView(GameSessionShPtr gameSession, const bsgo::Repositories &repositories);
   ~ShopView() override = default;
 
-  // TODO: should be removed
-  void setPlayerDbId(const bsgo::Uuid player);
   bool isReady() const noexcept override;
 
   void onMessageReceived(const bsgo::IMessage &message) override;
@@ -57,10 +55,6 @@ class ShopView : public AbstractView
   std::vector<bsgo::ComputerData> m_computers{};
   std::vector<bsgo::WeaponData> m_weapons{};
   std::vector<bsgo::PlayerResourceData> m_playerResources{};
-
-  std::optional<bsgo::Uuid> m_playerDbId{};
-
-  void checkPlayerDbIdExists() const;
 };
 
 using ShopViewShPtr = std::shared_ptr<ShopView>;
