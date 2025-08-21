@@ -279,9 +279,6 @@ void Game::onLogin(const bsgo::Uuid playerDbId)
 {
   info("Processing login for " + bsgo::str(playerDbId));
   m_gameSession->onPlayerLoggedIn(playerDbId);
-
-  m_views.shopView->setPlayerDbId(playerDbId);
-
   m_entityMapper.setPlayerDbId(playerDbId);
 }
 
