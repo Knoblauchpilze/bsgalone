@@ -461,6 +461,7 @@ auto serializeShipData(std::ostream &out, const ShipData &data) -> std::ostream 
   core::serialize(out, data.jumpTimeInThreat);
 
   core::serialize(out, data.slots);
+  core::serialize(out, data.price);
 
   return out;
 }
@@ -484,6 +485,7 @@ bool deserializeShipData(std::istream &in, ShipData &data)
   ok &= core::deserialize(in, data.jumpTimeInThreat);
 
   ok &= core::deserialize(in, data.slots);
+  ok &= core::deserialize(in, data.price);
 
   return ok;
 }

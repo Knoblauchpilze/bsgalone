@@ -180,6 +180,7 @@ void assertShipDataAreEqual(const ShipData &actual, const ShipData &expected)
   EXPECT_EQ(actual.jumpTimeInThreat, expected.jumpTimeInThreat);
 
   EXPECT_EQ(actual.slots, expected.slots);
+  EXPECT_EQ(actual.price, expected.price);
 }
 
 } // namespace bsgo

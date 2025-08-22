@@ -65,18 +65,38 @@ TEST(Unit_Bsgo_Serialization_ShipData, Basic)
 
 TEST(Unit_Bsgo_Serialization_ShipData, WithSlots)
 {
-  ShipData input{
-    .dbId           = Uuid{1234},
-    .maxPowerPoints = 100.0f,
-    .acceleration   = 2.5f,
-    .speed          = 1.78f,
-    .radius         = 5.0f,
-  };
+  ShipData input{.dbId           = Uuid{1234},
+                 .maxPowerPoints = 100.0f,
+                 .acceleration   = 2.5f,
+                 .speed          = 1.78f,
+                 .radius         = 5.0f,
+                 .slots          = {{Slot::COMPUTER, 2}, {Slot::WEAPON, 4}}};
 
   ShipData output{.dbId      = Uuid{14},
                   .faction   = Faction::CYLON,
                   .shipClass = ShipClass::LINE,
-                  .name      = "the whale"};
+                  .name      = "the whale",
+                  .slots     = {{Slot::COMPUTER, 5}}};
+
+  EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
+
+  assertShipDataAreEqual(output, input);
+}
+
+TEST(Unit_Bsgo_Serialization_ShipData, WithPrice)
+{
+  ShipData input{.dbId           = Uuid{1234},
+                 .maxPowerPoints = 100.0f,
+                 .acceleration   = 2.5f,
+                 .speed          = 1.78f,
+                 .radius         = 5.0f,
+                 .price          = {{Uuid{1}, 100.0f}, {Uuid{2}, 200.0f}}};
+
+  ShipData output{.dbId      = Uuid{14},
+                  .faction   = Faction::CYLON,
+                  .shipClass = ShipClass::LINE,
+                  .name      = "the whale",
+                  .price     = {{Uuid{8}, 14.758f}, {Uuid{9}, 36.098f}, {Uuid{5}, 12.47f}}};
 
   EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
 
