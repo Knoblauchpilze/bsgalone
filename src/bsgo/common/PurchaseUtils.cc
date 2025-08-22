@@ -1,6 +1,5 @@
 
 #include "PurchaseUtils.hh"
-#include "PlayerResourceRepository.hh"
 #include <vector>
 
 namespace bsgo {
@@ -44,19 +43,6 @@ auto getItemPrice(const Uuid itemId, const std::vector<ItemType> &items) -> std:
 
   return out;
 }
-
-auto getShipPrice(const Uuid shipId, const ShipPriceRepository &repository) -> std::vector<Cost>
-{
-  std::vector<Cost> out{};
-
-  const auto price = repository.findAllByShip(shipId);
-  for (const auto &[resourceId, cost] : price)
-  {
-    out.emplace_back(resourceId, cost);
-  }
-
-  return out;
-}
 } // namespace
 
 auto computeAffordability(const AffordabilityData &data) -> Affordability
@@ -71,7 +57,7 @@ auto computeAffordability(const AffordabilityData &data) -> Affordability
       costs = getItemPrice(data.itemId, data.computers);
       break;
     case Item::SHIP:
-      costs = getShipPrice(data.itemId, *data.shipPriceRepo);
+      costs = getItemPrice(data.itemId, data.ships);
       break;
     default:
       throw std::invalid_argument("Failed to determine affordability of item with id "

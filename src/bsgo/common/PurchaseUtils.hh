@@ -4,7 +4,7 @@
 #include "ComputerData.hh"
 #include "Item.hh"
 #include "PlayerResourceData.hh"
-#include "ShipPriceRepository.hh"
+#include "ShipData.hh"
 #include "Uuid.hh"
 #include "WeaponData.hh"
 #include <memory>
@@ -22,8 +22,7 @@ struct AffordabilityData
   std::vector<PlayerResourceData> playerResources{};
   std::vector<WeaponData> weapons{};
   std::vector<ComputerData> computers{};
-
-  ShipPriceRepositoryShPtr shipPriceRepo{};
+  std::vector<ShipData> ships{};
 };
 
 struct Affordability

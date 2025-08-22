@@ -85,12 +85,28 @@ auto buildComputers(const ComputerRepository &repository,
 
   return out;
 }
+
+auto buildShips(const Faction faction,
+                const ShipRepository &repository,
+                const ShipPriceRepository &priceRepository) -> std::vector<ShipData>
+{
+  std::vector<ShipData> out;
+
+  for (const auto &ship : repository.findAllByFaction(faction))
+  {
+    out.push_back(fromDbShip(ship, priceRepository));
+  }
+
+  return out;
+}
 } // namespace
 
 bool PurchaseService::verifyAffordability(const Uuid playerId,
                                           const Uuid itemId,
                                           const Item &type) const
 {
+  const auto player = m_repositories.playerRepository->findOneById(playerId);
+
   AffordabilityData data{
     .playerId = playerId,
     .itemId   = itemId,
@@ -100,8 +116,9 @@ bool PurchaseService::verifyAffordability(const Uuid playerId,
     .weapons = buildWeapons(*m_repositories.weaponRepository, *m_repositories.weaponPriceRepository),
     .computers = buildComputers(*m_repositories.computerRepository,
                                 *m_repositories.computerPriceRepository),
-
-    .shipPriceRepo = m_repositories.shipPriceRepository,
+    .ships     = buildShips(player.faction,
+                        *m_repositories.shipRepository,
+                        *m_repositories.shipPriceRepository),
   };
 
   const auto affordability = computeAffordability(data);
