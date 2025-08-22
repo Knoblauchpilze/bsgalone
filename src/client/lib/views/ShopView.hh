@@ -3,12 +3,13 @@
 
 #include "AbstractView.hh"
 #include "ComputerData.hh"
-#include "Faction.hh"
 #include "GameSession.hh"
 #include "PlayerResourceData.hh"
 #include "PurchaseUtils.hh"
 #include "Repositories.hh"
 #include "ResourceData.hh"
+#include "ShipData.hh"
+#include "ShipListMessage.hh"
 #include "Uuid.hh"
 #include "WeaponData.hh"
 #include <memory>
@@ -46,7 +47,7 @@ class ShopView : public AbstractView
   auto canPlayerAfford(const bsgo::Uuid id, const bsgo::Item &itemType) const
     -> bsgo::Affordability;
 
-  auto getAllShipsForFaction(const bsgo::Faction &faction) const -> std::vector<bsgo::Ship>;
+  auto getAllShips() const -> std::vector<bsgo::ShipData>;
 
   private:
   GameSessionShPtr m_gameSession{};
@@ -54,7 +55,10 @@ class ShopView : public AbstractView
   std::vector<bsgo::ResourceData> m_resources{};
   std::vector<bsgo::ComputerData> m_computers{};
   std::vector<bsgo::WeaponData> m_weapons{};
+  std::vector<bsgo::ShipData> m_ships{};
   std::vector<bsgo::PlayerResourceData> m_playerResources{};
+
+  void handleShipsLoading(const bsgo::ShipListMessage &message);
 };
 
 using ShopViewShPtr = std::shared_ptr<ShopView>;

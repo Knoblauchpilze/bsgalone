@@ -65,6 +65,9 @@ void ShopView::onMessageReceived(const bsgo::IMessage &message)
     case bsgo::MessageType::WEAPON_LIST:
       m_weapons = message.as<bsgo::WeaponListMessage>().getWeaponsData();
       break;
+    case bsgo::MessageType::SHIP_LIST:
+      handleShipsLoading(message.as<bsgo::ShipListMessage>());
+      break;
     case bsgo::MessageType::PLAYER_RESOURCE_LIST:
       m_playerResources = message.as<bsgo::PlayerResourceListMessage>().getResourcesData();
       break;
@@ -166,9 +169,20 @@ auto ShopView::canPlayerAfford(const bsgo::Uuid id, const bsgo::Item &itemType) 
   return computeAffordability(data);
 }
 
-auto ShopView::getAllShipsForFaction(const bsgo::Faction &faction) const -> std::vector<bsgo::Ship>
+auto ShopView::getAllShips() const -> std::vector<bsgo::ShipData>
 {
-  return m_repositories.shipRepository->findAllByFaction(faction);
+  return m_ships;
+}
+
+void ShopView::handleShipsLoading(const bsgo::ShipListMessage &message)
+{
+  if (message.getFaction() != m_gameSession->getFaction())
+  {
+    error("Received ships for wrong faction, expected " + bsgo::str(m_gameSession->getFaction())
+          + ", got " + bsgo::str(message.getFaction()));
+  }
+
+  m_ships = message.getShipsData();
 }
 
 } // namespace pge

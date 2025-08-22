@@ -76,7 +76,7 @@ void HangarUiHandler::initializeHangar()
 }
 
 namespace {
-auto generateShipDescription(const bsgo::Ship &ship) -> UiMenuPtr
+auto generateShipDescription(const bsgo::ShipData &ship) -> UiMenuPtr
 {
   const MenuConfig config{.highlightable = false};
   auto bg = bgConfigFromColor(colors::BLANK);
@@ -137,7 +137,7 @@ void HangarUiHandler::initializeLayout()
 {
   const auto faction  = m_playerView->getPlayerFaction();
   const auto palette  = generatePaletteForFaction(faction);
-  const auto allShips = m_shopView->getAllShipsForFaction(faction);
+  const auto allShips = m_shopView->getAllShips();
 
   const MenuConfig config{.layout = MenuLayout::HORIZONTAL, .highlightable = false};
   const auto bg = bgConfigFromColor(palette.almostOpaqueColor);
@@ -147,7 +147,7 @@ void HangarUiHandler::initializeLayout()
   {
     auto shipMenu = std::make_unique<UiMenu>(config, bg);
 
-    PlayerShipData data{.shipDbId = ship.id, .menu = shipMenu.get()};
+    PlayerShipData data{.shipDbId = ship.dbId, .menu = shipMenu.get()};
     m_shipsData.emplace_back(std::move(data));
 
     auto shipDesc = generateShipDescription(ship);
