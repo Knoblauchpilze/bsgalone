@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include "ComputerPriceRepository.hh"
+#include "ComputerRepository.hh"
 #include "EntityKind.hh"
 #include "TimeUtils.hh"
 #include "Uuid.hh"
@@ -28,5 +30,8 @@ struct ComputerData
 
   bool operator==(const ComputerData &rhs) const;
 };
+
+auto fromDbComputer(const Computer &computer, const ComputerPriceRepository &repository)
+  -> ComputerData;
 
 } // namespace bsgo

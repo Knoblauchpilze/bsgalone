@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "PlayerResourceRepository.hh"
 #include "Uuid.hh"
 #include <string>
 
@@ -14,5 +15,7 @@ struct PlayerResourceData
 
   bool operator==(const PlayerResourceData &rhs) const;
 };
+
+auto fromDbPlayerResource(const PlayerResource &playerResource) -> PlayerResourceData;
 
 } // namespace bsgo

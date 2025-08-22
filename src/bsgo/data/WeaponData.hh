@@ -3,6 +3,8 @@
 
 #include "TimeUtils.hh"
 #include "Uuid.hh"
+#include "WeaponPriceRepository.hh"
+#include "WeaponRepository.hh"
 #include <unordered_map>
 
 namespace bsgo {
@@ -23,5 +25,7 @@ struct WeaponData
 
   bool operator==(const WeaponData &rhs) const;
 };
+
+auto fromDbWeapon(const Weapon &weapon, const WeaponPriceRepository &repository) -> WeaponData;
 
 } // namespace bsgo
