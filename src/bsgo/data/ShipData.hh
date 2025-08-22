@@ -2,10 +2,9 @@
 #pragma once
 
 #include "Faction.hh"
-#include "PlayerComputerData.hh"
-#include "PlayerWeaponData.hh"
 #include "ShipClass.hh"
-#include "Status.hh"
+#include "ShipPriceRepository.hh"
+#include "ShipRepository.hh"
 #include "TimeUtils.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
@@ -33,8 +32,11 @@ struct ShipData
   core::Duration jumpTimeInThreat{};
 
   std::unordered_map<Slot, int> slots{};
+  std::unordered_map<Uuid, float> price{};
 
   bool operator==(const ShipData &rhs) const;
 };
+
+auto fromDbShip(const Ship &ship, const ShipPriceRepository &repository) -> ShipData;
 
 } // namespace bsgo
