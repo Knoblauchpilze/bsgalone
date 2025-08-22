@@ -58,6 +58,7 @@ void registerViews(const Views &views, bsgo::IMessageQueue *const queue)
   messageTypes = {bsgo::MessageType::RESOURCE_LIST,
                   bsgo::MessageType::COMPUTER_LIST,
                   bsgo::MessageType::WEAPON_LIST,
+                  bsgo::MessageType::SHIP_LIST,
                   bsgo::MessageType::PLAYER_RESOURCE_LIST};
   registerViewToQueue(*views.shopView, messageTypes, queue);
 
