@@ -381,7 +381,6 @@ void Game::initialize(const int serverPort)
   m_coordinator = std::make_shared<bsgo::Coordinator>(std::move(sConfig));
 
   ViewsConfig vConfig{.gameSession          = m_gameSession,
-                      .repositories         = repositories,
                       .coordinator          = m_coordinator,
                       .internalMessageQueue = m_internalMessageQueue.get(),
                       .outputMessageQueue   = m_outputMessageQueue.get()};

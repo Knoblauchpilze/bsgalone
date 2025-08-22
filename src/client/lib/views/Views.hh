@@ -13,7 +13,6 @@
 #include "DatabaseEntityMapper.hh"
 #include "GameSession.hh"
 #include "IMessageQueue.hh"
-#include "Repositories.hh"
 
 namespace pge {
 
@@ -31,7 +30,6 @@ struct Views
 struct ViewsConfig
 {
   GameSessionShPtr gameSession{};
-  bsgo::Repositories repositories{};
   bsgo::CoordinatorShPtr coordinator{};
   bsgo::IMessageQueue *const internalMessageQueue{};
   bsgo::IMessageQueue *const outputMessageQueue{};
