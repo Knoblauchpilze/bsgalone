@@ -163,8 +163,7 @@ auto ShopView::canPlayerAfford(const bsgo::Uuid id, const bsgo::Item &itemType) 
     .playerResources = m_playerResources,
     .weapons         = m_weapons,
     .computers       = m_computers,
-
-    .shipPriceRepo = m_repositories.shipPriceRepository,
+    .ships           = m_ships,
   };
   return computeAffordability(data);
 }
