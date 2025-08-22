@@ -35,10 +35,9 @@ auto ShopItem::type() const -> bsgo::Item
   throw std::invalid_argument("Expected shop item to be a weapon or a computer");
 }
 
-ShopView::ShopView(GameSessionShPtr gameSession, const bsgo::Repositories &repositories)
+ShopView::ShopView(GameSessionShPtr gameSession)
   : AbstractView("shop")
   , m_gameSession(std::move(gameSession))
-  , m_repositories(repositories)
 {
   if (nullptr == m_gameSession)
   {
@@ -49,7 +48,7 @@ ShopView::ShopView(GameSessionShPtr gameSession, const bsgo::Repositories &repos
 bool ShopView::isReady() const noexcept
 {
   return m_gameSession->hasPlayerDbId() && !m_resources.empty() && !m_computers.empty()
-         && !m_weapons.empty() && !m_playerResources.empty();
+         && !m_weapons.empty() && !m_ships.empty() && !m_playerResources.empty();
 }
 
 void ShopView::onMessageReceived(const bsgo::IMessage &message)

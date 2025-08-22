@@ -6,7 +6,6 @@
 #include "GameSession.hh"
 #include "PlayerResourceData.hh"
 #include "PurchaseUtils.hh"
-#include "Repositories.hh"
 #include "ResourceData.hh"
 #include "ShipData.hh"
 #include "ShipListMessage.hh"
@@ -36,7 +35,7 @@ struct ShopItem
 class ShopView : public AbstractView
 {
   public:
-  ShopView(GameSessionShPtr gameSession, const bsgo::Repositories &repositories);
+  ShopView(GameSessionShPtr gameSession);
   ~ShopView() override = default;
 
   bool isReady() const noexcept override;
@@ -51,7 +50,6 @@ class ShopView : public AbstractView
 
   private:
   GameSessionShPtr m_gameSession{};
-  bsgo::Repositories m_repositories{};
   std::vector<bsgo::ResourceData> m_resources{};
   std::vector<bsgo::ComputerData> m_computers{};
   std::vector<bsgo::WeaponData> m_weapons{};
