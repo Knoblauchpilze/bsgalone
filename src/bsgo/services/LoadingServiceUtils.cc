@@ -70,7 +70,7 @@ auto toPlayerComputerData(const PlayerComputer &computer) -> PlayerComputerData
   };
 }
 
-auto ShipProps::toPlayerShipData() const -> PlayerShipData
+auto PlayerShipProps::toPlayerShipData() const -> PlayerShipData
 {
   PlayerShipData data{
     .dbId            = dbShip.id,
@@ -171,23 +171,24 @@ auto ComputerProps::toComputerData() const -> ComputerData
   };
 }
 
-auto toShipData(const Ship &ship) -> ShipData
+auto ShipProps::toShipData() const -> ShipData
 {
   return ShipData{
-    .dbId             = ship.id,
-    .faction          = ship.faction,
-    .shipClass        = ship.shipClass,
-    .name             = ship.name,
-    .maxHullPoints    = ship.maxHullPoints,
-    .hullPointsRegen  = ship.hullPointsRegen,
-    .maxPowerPoints   = ship.maxPowerPoints,
-    .powerRegen       = ship.powerRegen,
-    .acceleration     = ship.acceleration,
-    .speed            = ship.speed,
-    .radius           = ship.radius,
-    .jumpTime         = ship.jumpTime,
-    .jumpTimeInThreat = ship.jumpTimeInThreat,
-    .slots            = ship.slots,
+    .dbId             = dbShip.id,
+    .faction          = dbShip.faction,
+    .shipClass        = dbShip.shipClass,
+    .name             = dbShip.name,
+    .maxHullPoints    = dbShip.maxHullPoints,
+    .hullPointsRegen  = dbShip.hullPointsRegen,
+    .maxPowerPoints   = dbShip.maxPowerPoints,
+    .powerRegen       = dbShip.powerRegen,
+    .acceleration     = dbShip.acceleration,
+    .speed            = dbShip.speed,
+    .radius           = dbShip.radius,
+    .jumpTime         = dbShip.jumpTime,
+    .jumpTimeInThreat = dbShip.jumpTimeInThreat,
+    .slots            = dbShip.slots,
+    .price            = price,
   };
 }
 

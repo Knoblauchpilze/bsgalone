@@ -60,7 +60,7 @@ struct PlayerWeaponProps
 
 auto toPlayerComputerData(const PlayerComputer &computer) -> PlayerComputerData;
 
-struct ShipProps
+struct PlayerShipProps
 {
   PlayerShip dbShip{};
   Status status{};
@@ -93,6 +93,12 @@ struct ComputerProps
   auto toComputerData() const -> ComputerData;
 };
 
-auto toShipData(const Ship &ship) -> ShipData;
+struct ShipProps
+{
+  Ship dbShip{};
+  std::unordered_map<Uuid, float> price{};
+
+  auto toShipData() const -> ShipData;
+};
 
 } // namespace bsgo

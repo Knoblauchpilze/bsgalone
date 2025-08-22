@@ -11,6 +11,7 @@
 #include "PlayerShipListMessage.hh"
 #include "PlayerWeaponListMessage.hh"
 #include "ResourceListMessage.hh"
+#include "ShipListMessage.hh"
 #include "SystemListMessage.hh"
 #include "WeaponListMessage.hh"
 
@@ -122,6 +123,7 @@ void LoadingMessagesConsumer::handleLoginTransition(const LoadingStartedMessage 
   handleResourcesLoading(message);
   handleWeaponsLoading(message);
   handleComputersLoading(message);
+  handleShipsLoading(message);
   handleSystemsLoading(message);
   handlePlayerResourcesLoading(message);
   handlePlayerShipsLoading(message);
@@ -214,6 +216,31 @@ void LoadingMessagesConsumer::handleComputersLoading(const LoadingStartedMessage
   m_outputMessageQueue->pushMessage(std::move(out));
 }
 
+void LoadingMessagesConsumer::handleShipsLoading(const LoadingStartedMessage &message) const
+{
+  const auto maybePlayerDbId = message.tryGetPlayerDbId();
+  if (!maybePlayerDbId)
+  {
+    warn("Failed to process loading started message", "No player defined");
+    return;
+  }
+
+  const auto player = m_loadingService->getDataForPlayer(*maybePlayerDbId);
+
+  const auto ships = m_loadingService->getShipsForFaction(player.faction);
+
+  std::vector<ShipData> shipsData{};
+  std::transform(ships.begin(),
+                 ships.end(),
+                 std::back_inserter(shipsData),
+                 [](const ShipProps &ship) { return ship.toShipData(); });
+
+  auto out = std::make_unique<ShipListMessage>(player.faction, shipsData);
+  out->copyClientIdIfDefined(message);
+
+  m_outputMessageQueue->pushMessage(std::move(out));
+}
+
 void LoadingMessagesConsumer::handleSystemsLoading(const LoadingStartedMessage &message) const
 {
   const auto systems = m_loadingService->getSystems();
@@ -270,7 +297,7 @@ void LoadingMessagesConsumer::handlePlayerShipsLoading(const LoadingStartedMessa
   std::transform(ships.begin(),
                  ships.end(),
                  std::back_inserter(shipsData),
-                 [](const ShipProps &props) { return props.toPlayerShipData(); });
+                 [](const PlayerShipProps &props) { return props.toPlayerShipData(); });
 
   auto out = std::make_unique<PlayerShipListMessage>(shipsData);
   out->setPlayerDbId(*maybePlayerDbId);
@@ -411,7 +438,7 @@ void LoadingMessagesConsumer::handleSystemShipsLoading(const LoadingStartedMessa
   std::transform(ships.begin(),
                  ships.end(),
                  std::back_inserter(shipsData),
-                 [](const ShipProps &props) { return props.toPlayerShipData(); });
+                 [](const PlayerShipProps &props) { return props.toPlayerShipData(); });
 
   auto out = std::make_unique<PlayerShipListMessage>(shipsData);
   out->setSystemDbId(systemDbId);

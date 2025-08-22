@@ -188,7 +188,7 @@ auto getShipTargetDbId(const Uuid shipDbId,
 }
 } // namespace
 
-auto LoadingService::getShipById(const Uuid shipDbId) const -> ShipProps
+auto LoadingService::getShipById(const Uuid shipDbId) const -> PlayerShipProps
 {
   const auto ship       = m_repositories.playerShipRepository->findOneById(shipDbId);
   const auto weapons    = getWeaponsForShip(m_repositories, shipDbId);
@@ -196,7 +196,7 @@ auto LoadingService::getShipById(const Uuid shipDbId) const -> ShipProps
   const auto status     = determineStartingStatusForShip(ship);
   const auto targetDbId = getShipTargetDbId(shipDbId, m_entityMapper, *m_coordinator);
 
-  return ShipProps{
+  return PlayerShipProps{
     .dbShip     = ship,
     .status     = status,
     .targetDbId = targetDbId,
@@ -205,11 +205,11 @@ auto LoadingService::getShipById(const Uuid shipDbId) const -> ShipProps
   };
 }
 
-auto LoadingService::getShipsInSystem(const Uuid systemDbId) const -> std::vector<ShipProps>
+auto LoadingService::getShipsInSystem(const Uuid systemDbId) const -> std::vector<PlayerShipProps>
 {
   const auto shipDbIds = m_repositories.systemRepository->findAllShipsBySystem(systemDbId);
 
-  std::vector<ShipProps> ships{};
+  std::vector<PlayerShipProps> ships{};
 
   for (const auto &shipDbId : shipDbIds)
   {
@@ -259,8 +259,7 @@ auto LoadingService::getWeapons() const -> std::vector<WeaponProps>
 {
   std::vector<WeaponProps> out;
 
-  const auto ids = m_repositories.weaponRepository->findAll();
-  for (const auto &id : ids)
+  for (const auto &id : m_repositories.weaponRepository->findAll())
   {
     auto weapon      = m_repositories.weaponRepository->findOneById(id);
     const auto price = m_repositories.weaponPriceRepository->findAllByWeapon(id);
@@ -275,8 +274,7 @@ auto LoadingService::getComputers() const -> std::vector<ComputerProps>
 {
   std::vector<ComputerProps> out;
 
-  const auto ids = m_repositories.computerRepository->findAll();
-  for (const auto &id : ids)
+  for (const auto &id : m_repositories.computerRepository->findAll())
   {
     auto computer    = m_repositories.computerRepository->findOneById(id);
     const auto price = m_repositories.computerPriceRepository->findAllByComputer(id);
@@ -287,9 +285,18 @@ auto LoadingService::getComputers() const -> std::vector<ComputerProps>
   return out;
 }
 
-auto LoadingService::getShipsForFaction(const Faction faction) const -> std::vector<Ship>
+auto LoadingService::getShipsForFaction(const Faction faction) const -> std::vector<ShipProps>
 {
-  return m_repositories.shipRepository->findAllByFaction(faction);
+  std::vector<ShipProps> out;
+
+  for (const auto &ship : m_repositories.shipRepository->findAllByFaction(faction))
+  {
+    const auto price = m_repositories.shipPriceRepository->findAllByShip(ship.id);
+
+    out.emplace_back(ship, price);
+  }
+
+  return out;
 }
 
 auto LoadingService::getPlayerResources(const Uuid playerDbId) const -> std::vector<PlayerResource>
@@ -297,11 +304,11 @@ auto LoadingService::getPlayerResources(const Uuid playerDbId) const -> std::vec
   return m_repositories.playerResourceRepository->findAllByPlayer(playerDbId);
 }
 
-auto LoadingService::getPlayerShips(const Uuid playerDbId) const -> std::vector<ShipProps>
+auto LoadingService::getPlayerShips(const Uuid playerDbId) const -> std::vector<PlayerShipProps>
 {
   const auto shipDbIds = m_repositories.playerShipRepository->findAllByPlayer(playerDbId);
 
-  std::vector<ShipProps> ships{};
+  std::vector<PlayerShipProps> ships{};
 
   for (const auto &shipDbId : shipDbIds)
   {
@@ -351,7 +358,7 @@ auto LoadingService::getPlayerWeapons(const Uuid playerDbId) const -> std::vecto
   return weapons;
 }
 
-auto LoadingService::getActivePlayerShip(const Uuid playerDbId) const -> ShipProps
+auto LoadingService::getActivePlayerShip(const Uuid playerDbId) const -> PlayerShipProps
 {
   const auto ship = m_repositories.playerShipRepository->findOneByPlayerAndActive(playerDbId);
 
@@ -361,7 +368,7 @@ auto LoadingService::getActivePlayerShip(const Uuid playerDbId) const -> ShipPro
   const auto status     = determineStartingStatusForShip(ship);
   const auto targetDbId = getShipTargetDbId(ship.id, m_entityMapper, *m_coordinator);
 
-  return ShipProps{
+  return PlayerShipProps{
     .dbShip     = ship,
     .status     = status,
     .targetDbId = targetDbId,

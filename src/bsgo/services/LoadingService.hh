@@ -45,21 +45,21 @@ class LoadingService : public AbstractService
   auto getOutpostById(const Uuid outpostDbId) const -> OutpostProps;
   auto getOutpostsInSystem(const Uuid systemDbId) const -> std::vector<OutpostProps>;
 
-  auto getShipById(const Uuid shipDbId) const -> ShipProps;
-  auto getShipsInSystem(const Uuid systemDbId) const -> std::vector<ShipProps>;
+  auto getShipById(const Uuid shipDbId) const -> PlayerShipProps;
+  auto getShipsInSystem(const Uuid systemDbId) const -> std::vector<PlayerShipProps>;
 
   auto getSystems() const -> std::vector<System>;
 
   auto getResources() const -> std::vector<Resource>;
   auto getWeapons() const -> std::vector<WeaponProps>;
   auto getComputers() const -> std::vector<ComputerProps>;
-  auto getShipsForFaction(const Faction faction) const -> std::vector<Ship>;
+  auto getShipsForFaction(const Faction faction) const -> std::vector<ShipProps>;
 
   auto getPlayerResources(const Uuid playerDbId) const -> std::vector<PlayerResource>;
-  auto getPlayerShips(const Uuid playerDbId) const -> std::vector<ShipProps>;
+  auto getPlayerShips(const Uuid playerDbId) const -> std::vector<PlayerShipProps>;
   auto getPlayerComputers(const Uuid playerDbId) const -> std::vector<PlayerComputer>;
   auto getPlayerWeapons(const Uuid playerDbId) const -> std::vector<PlayerWeaponProps>;
-  auto getActivePlayerShip(const Uuid playerDbId) const -> ShipProps;
+  auto getActivePlayerShip(const Uuid playerDbId) const -> PlayerShipProps;
 
   private:
   CoordinatorShPtr m_coordinator{};
