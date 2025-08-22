@@ -81,7 +81,7 @@ auto fetchAllShipsByFaction(const Faction &faction, DbConnection &connection) ->
 }
 } // namespace
 
-auto ShipRepository::findAllByFaction(const Faction &faction) -> std::vector<Ship>
+auto ShipRepository::findAllByFaction(const Faction &faction) const -> std::vector<Ship>
 {
   auto out = fetchAllShipsByFaction(faction, *m_connection);
   for (auto &ship : out)
