@@ -44,18 +44,64 @@ bool PurchaseService::tryPurchase(const Uuid playerId, const Uuid itemId, const 
   return true;
 }
 
+namespace {
+auto buildPlayerResources(const Uuid playerDbId, const PlayerResourceRepository &repository)
+  -> std::vector<PlayerResourceData>
+{
+  std::vector<PlayerResourceData> out;
+
+  for (const auto &resource : repository.findAllByPlayer(playerDbId))
+  {
+    out.push_back(fromDbPlayerResource(resource));
+  }
+
+  return out;
+}
+
+auto buildWeapons(const WeaponRepository &repository, const WeaponPriceRepository &priceRepository)
+  -> std::vector<WeaponData>
+{
+  std::vector<WeaponData> out;
+
+  for (const auto &id : repository.findAll())
+  {
+    const auto weapon = repository.findOneById(id);
+    out.push_back(fromDbWeapon(weapon, priceRepository));
+  }
+
+  return out;
+}
+
+auto buildComputers(const ComputerRepository &repository,
+                    const ComputerPriceRepository &priceRepository) -> std::vector<ComputerData>
+{
+  std::vector<ComputerData> out;
+
+  for (const auto &id : repository.findAll())
+  {
+    const auto computer = repository.findOneById(id);
+    out.push_back(fromDbComputer(computer, priceRepository));
+  }
+
+  return out;
+}
+} // namespace
+
 bool PurchaseService::verifyAffordability(const Uuid playerId,
                                           const Uuid itemId,
                                           const Item &type) const
 {
   AffordabilityData data{
-    .playerId          = playerId,
-    .itemId            = itemId,
-    .itemType          = type,
-    .resourceRepo      = m_repositories.playerResourceRepository,
-    .weaponPriceRepo   = m_repositories.weaponPriceRepository,
-    .computerPriceRepo = m_repositories.computerPriceRepository,
-    .shipPriceRepo     = m_repositories.shipPriceRepository,
+    .playerId = playerId,
+    .itemId   = itemId,
+    .itemType = type,
+
+    .playerResources = buildPlayerResources(playerId, *m_repositories.playerResourceRepository),
+    .weapons = buildWeapons(*m_repositories.weaponRepository, *m_repositories.weaponPriceRepository),
+    .computers = buildComputers(*m_repositories.computerRepository,
+                                *m_repositories.computerPriceRepository),
+
+    .shipPriceRepo = m_repositories.shipPriceRepository,
   };
 
   const auto affordability = computeAffordability(data);

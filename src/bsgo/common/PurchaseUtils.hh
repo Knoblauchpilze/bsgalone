@@ -1,14 +1,15 @@
 
 #pragma once
 
-#include "ComputerPriceRepository.hh"
+#include "ComputerData.hh"
 #include "Item.hh"
-#include "PlayerResourceRepository.hh"
+#include "PlayerResourceData.hh"
 #include "ShipPriceRepository.hh"
 #include "Uuid.hh"
-#include "WeaponPriceRepository.hh"
+#include "WeaponData.hh"
 #include <memory>
 #include <unordered_map>
+#include <vector>
 
 namespace bsgo {
 
@@ -18,9 +19,10 @@ struct AffordabilityData
   Uuid itemId{};
   Item itemType{};
 
-  PlayerResourceRepositoryShPtr resourceRepo{};
-  WeaponPriceRepositoryShPtr weaponPriceRepo{};
-  ComputerPriceRepositoryShPtr computerPriceRepo{};
+  std::vector<PlayerResourceData> playerResources{};
+  std::vector<WeaponData> weapons{};
+  std::vector<ComputerData> computers{};
+
   ShipPriceRepositoryShPtr shipPriceRepo{};
 };
 

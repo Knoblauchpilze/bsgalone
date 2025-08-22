@@ -12,11 +12,11 @@ struct Cost
   int amount{};
 };
 
-bool playerHasEnoughResources(const std::vector<PlayerResource> &resources, const Cost &cost)
+bool playerHasEnoughResources(const std::vector<PlayerResourceData> &resources, const Cost &cost)
 {
   for (const auto &resource : resources)
   {
-    if (resource.resource == cost.resource)
+    if (resource.dbId == cost.resource)
     {
       return resource.amount >= cost.amount;
     }
@@ -25,29 +25,21 @@ bool playerHasEnoughResources(const std::vector<PlayerResource> &resources, cons
   return false;
 }
 
-auto getWeaponPrice(const Uuid weaponId, const WeaponPriceRepository &repository)
-  -> std::vector<Cost>
+template<typename ItemType>
+auto getItemPrice(const Uuid itemId, const std::vector<ItemType> &items) -> std::vector<Cost>
 {
   std::vector<Cost> out{};
 
-  const auto price = repository.findAllByWeapon(weaponId);
-  for (const auto &[resourceId, cost] : price)
+  const auto maybeItem = std::find_if(items.begin(), items.end(), [&itemId](const ItemType &item) {
+    return item.dbId == itemId;
+  });
+
+  if (maybeItem != items.end())
   {
-    out.emplace_back(resourceId, cost);
-  }
-
-  return out;
-}
-
-auto getComputerPrice(const Uuid computerId, const ComputerPriceRepository &repository)
-  -> std::vector<Cost>
-{
-  std::vector<Cost> out{};
-
-  const auto price = repository.findAllByComputer(computerId);
-  for (const auto &[resourceId, cost] : price)
-  {
-    out.emplace_back(resourceId, cost);
+    for (const auto &[resourceId, cost] : maybeItem->price)
+    {
+      out.emplace_back(resourceId, cost);
+    }
   }
 
   return out;
@@ -73,10 +65,10 @@ auto computeAffordability(const AffordabilityData &data) -> Affordability
   switch (data.itemType)
   {
     case Item::WEAPON:
-      costs = getWeaponPrice(data.itemId, *data.weaponPriceRepo);
+      costs = getItemPrice(data.itemId, data.weapons);
       break;
     case Item::COMPUTER:
-      costs = getComputerPrice(data.itemId, *data.computerPriceRepo);
+      costs = getItemPrice(data.itemId, data.computers);
       break;
     case Item::SHIP:
       costs = getShipPrice(data.itemId, *data.shipPriceRepo);
@@ -86,12 +78,11 @@ auto computeAffordability(const AffordabilityData &data) -> Affordability
                                   + str(data.itemId) + " neither a wepaon nor a computer");
   }
 
-  const auto playerResources = data.resourceRepo->findAllByPlayer(data.playerId);
   Affordability out{.canAfford = true};
 
   for (const auto &cost : costs)
   {
-    const auto enough                       = playerHasEnoughResources(playerResources, cost);
+    const auto enough                       = playerHasEnoughResources(data.playerResources, cost);
     out.resourceAvailibility[cost.resource] = enough;
     if (!enough)
     {
