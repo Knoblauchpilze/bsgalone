@@ -58,6 +58,8 @@ void DockMessageConsumer::handleDocking(const DockMessage &message) const
     return;
   }
 
+  const auto maybePlayerDbId = m_shipService->tryGetPlayerDbIdForShip(shipDbId);
+
   auto out = std::make_unique<DockMessage>(shipDbId, true, systemDbId);
   out->validate();
   out->copyClientIdIfDefined(message);
@@ -65,11 +67,19 @@ void DockMessageConsumer::handleDocking(const DockMessage &message) const
 
   auto started = std::make_unique<LoadingStartedMessage>(LoadingTransition::DOCK);
   started->setSystemDbId(systemDbId);
+  if (maybePlayerDbId)
+  {
+    started->setPlayerDbId(*maybePlayerDbId);
+  }
   started->copyClientIdIfDefined(message);
   m_systemMessageQueue->pushMessage(std::move(started));
 
   auto finished = std::make_unique<LoadingFinishedMessage>(LoadingTransition::DOCK);
   finished->setSystemDbId(systemDbId);
+  if (maybePlayerDbId)
+  {
+    finished->setPlayerDbId(*maybePlayerDbId);
+  }
   finished->copyClientIdIfDefined(message);
   m_systemMessageQueue->pushMessage(std::move(finished));
 }

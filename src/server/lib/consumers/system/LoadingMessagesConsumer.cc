@@ -97,9 +97,13 @@ void LoadingMessagesConsumer::handleActiveShipChangedTransition(
   handlePlayerShipsLoading(message);
 }
 
-void LoadingMessagesConsumer::handleDockTransition(const LoadingStartedMessage & /*message*/) const
+void LoadingMessagesConsumer::handleDockTransition(const LoadingStartedMessage &message) const
 {
-  // TODO: Handle the dock transition
+  handleResourcesLoading(message);
+  handleWeaponsLoading(message);
+  handleComputersLoading(message);
+  handleShipsLoading(message);
+  handlePlayerResourcesLoading(message);
 }
 
 void LoadingMessagesConsumer::handleEquipTransition(const LoadingStartedMessage &message) const
