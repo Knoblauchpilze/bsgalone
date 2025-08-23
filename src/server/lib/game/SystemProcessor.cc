@@ -34,15 +34,14 @@ void SystemProcessor::pushMessage(IMessagePtr message)
 void SystemProcessor::connectToQueues(IMessageQueue *const internalMessageQueue,
                                       IMessageQueue *const outputMessageQueue)
 {
-  DataSource dataSource{DataLoadingMode::SERVER};
-  const auto repositories = dataSource.repositories();
+  Repositories repositories{};
 
   SystemsConfig config{.networkSystem        = std::make_unique<NetworkSystem>(repositories),
                        .internalMessageQueue = internalMessageQueue,
                        .outputMessageQueue   = outputMessageQueue};
   m_coordinator = std::make_shared<Coordinator>(std::move(config));
 
-  dataSource.setSystemDbId(m_systemDbId);
+  DataSource dataSource(m_systemDbId);
   dataSource.initialize(*m_coordinator, m_entityMapper);
 
   m_services = createServices(ProcessingMode::SERVER, repositories, m_coordinator, m_entityMapper);

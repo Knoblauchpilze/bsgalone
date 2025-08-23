@@ -370,7 +370,6 @@ void Game::initialize(const int serverPort)
     "synchronized-message-queue-for-internal");
   m_outputMessageQueue = std::make_unique<ClientMessageQueue>(std::move(connection));
 
-  const auto repositories = m_dataSource.repositories();
   bsgo::SystemsConfig sConfig{.internalMessageQueue = m_internalMessageQueue.get(),
                               .outputMessageQueue   = m_outputMessageQueue.get(),
                               .ignoredSystems       = {bsgo::SystemType::LOOT,
