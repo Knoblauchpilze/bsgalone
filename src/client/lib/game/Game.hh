@@ -5,7 +5,6 @@
 #include "Context.hh"
 #include "Controls.hh"
 #include "CoreObject.hh"
-#include "DataSource.hh"
 #include "DatabaseEntityMapper.hh"
 #include "GameSession.hh"
 #include "IInputHandler.hh"
@@ -113,7 +112,6 @@ class Game : public core::CoreObject
   /// data about the current player, their ship, the system they are in, etc.
   GameSessionShPtr m_gameSession{std::make_shared<GameSession>()};
 
-  bsgo::DataSource m_dataSource{bsgo::DataLoadingMode::CLIENT};
   bsgo::DatabaseEntityMapper m_entityMapper{};
   bsgo::CoordinatorShPtr m_coordinator{};
   bsgo::IMessageQueuePtr m_inputMessageQueue{};

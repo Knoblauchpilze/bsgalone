@@ -1,7 +1,6 @@
 
 
 #include "Server.hh"
-#include "DataSource.hh"
 #include "LogoutMessage.hh"
 #include "SystemProcessorUtils.hh"
 #include "TimeUtils.hh"
@@ -41,8 +40,7 @@ void Server::initialize()
 
 void Server::initializeSystems()
 {
-  DataSource source{DataLoadingMode::SERVER};
-  const auto repositories = source.repositories();
+  const Repositories repositories;
 
   const auto allSystems = repositories.systemRepository->findAll();
 

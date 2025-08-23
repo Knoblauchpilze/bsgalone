@@ -4,7 +4,6 @@
 #include "BroadcastMessageQueue.hh"
 #include "ComponentSyncMessageConsumer.hh"
 #include "ConnectionMessage.hh"
-#include "DataSource.hh"
 #include "EntityRemovedMessageConsumer.hh"
 #include "JumpMessageConsumer.hh"
 #include "JumpService.hh"
@@ -93,8 +92,7 @@ auto createSystemMessageQueue() -> IMessageQueuePtr
 auto MessageExchanger::initializeSystemMessageQueue(const MessageSystemData &messagesData)
   -> IMessageQueuePtr
 {
-  DataSource source{DataLoadingMode::SERVER};
-  const auto repositories = source.repositories();
+  Repositories repositories{};
 
   auto systemQueue = createSystemMessageQueue();
 
