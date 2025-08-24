@@ -12,7 +12,7 @@
 
 namespace pge {
 
-class OutpostScreenUiHandler : public IUiHandler, public bsgo::AbstractMessageListener
+class OutpostScreenUiHandler : public IUiHandler
 {
   public:
   OutpostScreenUiHandler(const Views &views);
@@ -27,7 +27,6 @@ class OutpostScreenUiHandler : public IUiHandler, public bsgo::AbstractMessageLi
   void reset() override;
 
   void connectToMessageQueue(bsgo::IMessageQueue &messageQueue) override;
-  void onMessageReceived(const bsgo::IMessage &message) override;
 
   private:
   ShipDbViewShPtr m_shipDbView{};
@@ -52,7 +51,6 @@ class OutpostScreenUiHandler : public IUiHandler, public bsgo::AbstractMessageLi
   };
 
   ActiveScreen m_activeScreen{ActiveScreen::LOCKER};
-  bool m_refreshRequested{false};
   LockerUiHandlerPtr m_lockerUi{};
   ShopUiHandlerPtr m_shopUi{};
   HangarUiHandlerPtr m_hangarUi{};
