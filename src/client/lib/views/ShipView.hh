@@ -24,6 +24,7 @@ class ShipView : public AbstractView
   void setPlayerShipEntityId(const std::optional<bsgo::Uuid> ship);
 
   bool isReady() const noexcept override;
+  void reset() override;
 
   void onMessageReceived(const bsgo::IMessage &message) override;
 

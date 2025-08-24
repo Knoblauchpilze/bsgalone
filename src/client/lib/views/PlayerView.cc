@@ -30,6 +30,14 @@ bool PlayerView::isReady() const noexcept
   return m_gameSession->hasPlayerDbId() && !m_playerResources.empty() && !m_playerShips.empty();
 }
 
+void PlayerView::reset()
+{
+  m_playerResources.clear();
+  m_playerShips.clear();
+  m_playerComputers.clear();
+  m_playerWeapons.clear();
+}
+
 void PlayerView::onMessageReceived(const bsgo::IMessage &message)
 {
   switch (message.type())

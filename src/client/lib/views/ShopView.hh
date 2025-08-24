@@ -39,6 +39,7 @@ class ShopView : public AbstractView
   ~ShopView() override = default;
 
   bool isReady() const noexcept override;
+  void reset() override;
 
   void onMessageReceived(const bsgo::IMessage &message) override;
 

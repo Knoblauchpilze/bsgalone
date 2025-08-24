@@ -51,6 +51,15 @@ bool ShopView::isReady() const noexcept
          && !m_weapons.empty() && !m_ships.empty() && !m_playerResources.empty();
 }
 
+void ShopView::reset()
+{
+  m_resources.clear();
+  m_computers.clear();
+  m_weapons.clear();
+  m_ships.clear();
+  m_playerResources.clear();
+}
+
 void ShopView::onMessageReceived(const bsgo::IMessage &message)
 {
   switch (message.type())

@@ -24,6 +24,7 @@ class PlayerView : public AbstractView
   ~PlayerView() override = default;
 
   bool isReady() const noexcept override;
+  void reset() override;
 
   void onMessageReceived(const bsgo::IMessage &message) override;
 

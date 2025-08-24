@@ -18,6 +18,7 @@ class ServerView : public AbstractView
   ~ServerView() override = default;
 
   bool isReady() const noexcept override;
+  void reset() override;
 
   void onMessageReceived(const bsgo::IMessage &message) override;
 

@@ -12,6 +12,7 @@ class IView
   virtual ~IView() = default;
 
   virtual bool isReady() const noexcept = 0;
+  virtual void reset()                  = 0;
 };
 
 using IViewShPtr = std::shared_ptr<IView>;

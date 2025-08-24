@@ -17,6 +17,8 @@ class SystemView : public AbstractView
   SystemView(bsgo::CoordinatorShPtr coordinator, const bsgo::DatabaseEntityMapper &entityMapper);
   ~SystemView() override = default;
 
+  void reset() override;
+
   auto getAsteroidsWithin(const bsgo::IBoundingBox &bbox) const -> std::vector<bsgo::Entity>;
   auto getOutpostsWithin(const bsgo::IBoundingBox &bbox) const -> std::vector<bsgo::Entity>;
   auto getBulletsWithin(const bsgo::IBoundingBox &bbox) const -> std::vector<bsgo::Entity>;

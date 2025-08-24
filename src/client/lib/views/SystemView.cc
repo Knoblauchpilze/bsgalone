@@ -15,6 +15,11 @@ SystemView::SystemView(bsgo::CoordinatorShPtr coordinator,
   }
 }
 
+void SystemView::reset()
+{
+  // Voluntarily empty.
+}
+
 auto SystemView::getAsteroidsWithin(const bsgo::IBoundingBox &bbox) const
   -> std::vector<bsgo::Entity>
 {
