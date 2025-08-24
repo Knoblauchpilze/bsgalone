@@ -26,8 +26,6 @@ class PlayerView : public AbstractView
   bool isReady() const noexcept override;
   void reset() override;
 
-  void onMessageReceived(const bsgo::IMessage &message) override;
-
   auto getPlayerFaction() const -> bsgo::Faction;
   auto getPlayerResources() const -> std::vector<bsgo::PlayerResourceData>;
   auto getPlayerWeapons() const -> std::vector<bsgo::PlayerWeaponData>;
@@ -42,6 +40,9 @@ class PlayerView : public AbstractView
   void trySignup(const std::string &name,
                  const std::string &password,
                  const bsgo::Faction &faction) const;
+
+  protected:
+  void handleMessageInternal(const bsgo::IMessage &message) override;
 
   private:
   GameSessionShPtr m_gameSession{};

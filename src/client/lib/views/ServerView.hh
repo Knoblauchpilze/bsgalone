@@ -20,8 +20,6 @@ class ServerView : public AbstractView
   bool isReady() const noexcept override;
   void reset() override;
 
-  void onMessageReceived(const bsgo::IMessage &message) override;
-
   auto getPlayerSystem() const -> bsgo::Uuid;
   auto getPlayerSystemName() const -> std::string;
   auto getAllSystems() const -> std::vector<bsgo::SystemData>;
@@ -32,6 +30,9 @@ class ServerView : public AbstractView
     Eigen::Vector3f max{};
   };
   auto getMapBounds() const -> Bounds;
+
+  protected:
+  void handleMessageInternal(const bsgo::IMessage &message) override;
 
   private:
   GameSessionShPtr m_gameSession{};

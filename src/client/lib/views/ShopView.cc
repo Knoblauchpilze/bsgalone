@@ -60,30 +60,6 @@ void ShopView::reset()
   m_playerResources.clear();
 }
 
-void ShopView::onMessageReceived(const bsgo::IMessage &message)
-{
-  switch (message.type())
-  {
-    case bsgo::MessageType::RESOURCE_LIST:
-      m_resources = message.as<bsgo::ResourceListMessage>().getResourcesData();
-      break;
-    case bsgo::MessageType::COMPUTER_LIST:
-      m_computers = message.as<bsgo::ComputerListMessage>().getComputersData();
-      break;
-    case bsgo::MessageType::WEAPON_LIST:
-      m_weapons = message.as<bsgo::WeaponListMessage>().getWeaponsData();
-      break;
-    case bsgo::MessageType::SHIP_LIST:
-      handleShipsLoading(message.as<bsgo::ShipListMessage>());
-      break;
-    case bsgo::MessageType::PLAYER_RESOURCE_LIST:
-      m_playerResources = message.as<bsgo::PlayerResourceListMessage>().getResourcesData();
-      break;
-    default:
-      error("Unsupported message type " + bsgo::str(message.type()));
-  }
-}
-
 namespace {
 auto tryFindResource(const bsgo::Uuid resourceId, const std::vector<bsgo::ResourceData> &resources)
   -> std::optional<bsgo::ResourceData>
@@ -179,6 +155,30 @@ auto ShopView::canPlayerAfford(const bsgo::Uuid id, const bsgo::Item &itemType) 
 auto ShopView::getAllShips() const -> std::vector<bsgo::ShipData>
 {
   return m_ships;
+}
+
+void ShopView::handleMessageInternal(const bsgo::IMessage &message)
+{
+  switch (message.type())
+  {
+    case bsgo::MessageType::RESOURCE_LIST:
+      m_resources = message.as<bsgo::ResourceListMessage>().getResourcesData();
+      break;
+    case bsgo::MessageType::COMPUTER_LIST:
+      m_computers = message.as<bsgo::ComputerListMessage>().getComputersData();
+      break;
+    case bsgo::MessageType::WEAPON_LIST:
+      m_weapons = message.as<bsgo::WeaponListMessage>().getWeaponsData();
+      break;
+    case bsgo::MessageType::SHIP_LIST:
+      handleShipsLoading(message.as<bsgo::ShipListMessage>());
+      break;
+    case bsgo::MessageType::PLAYER_RESOURCE_LIST:
+      m_playerResources = message.as<bsgo::PlayerResourceListMessage>().getResourcesData();
+      break;
+    default:
+      error("Unsupported message type " + bsgo::str(message.type()));
+  }
 }
 
 void ShopView::handleShipsLoading(const bsgo::ShipListMessage &message)

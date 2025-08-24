@@ -50,22 +50,6 @@ void ShipView::reset()
   m_playerShipEntityId.reset();
 }
 
-void ShipView::onMessageReceived(const bsgo::IMessage &message)
-{
-  switch (message.type())
-  {
-    case bsgo::MessageType::SYSTEM_LIST:
-      m_systems = message.as<bsgo::SystemListMessage>().getSystemsData();
-      break;
-    case bsgo::MessageType::DOCK:
-    case bsgo::MessageType::JUMP:
-      m_playerShipEntityId.reset();
-      break;
-    default:
-      error("Unsupported message type " + bsgo::str(message.type()));
-  }
-}
-
 bool ShipView::hasTarget() const
 {
   return getPlayerTarget().has_value();
@@ -280,6 +264,22 @@ bool ShipView::isDead() const
 {
   const auto ship = getPlayerShip();
   return bsgo::Status::DEAD == ship.statusComp().status();
+}
+
+void ShipView::handleMessageInternal(const bsgo::IMessage &message)
+{
+  switch (message.type())
+  {
+    case bsgo::MessageType::SYSTEM_LIST:
+      m_systems = message.as<bsgo::SystemListMessage>().getSystemsData();
+      break;
+    case bsgo::MessageType::DOCK:
+    case bsgo::MessageType::JUMP:
+      m_playerShipEntityId.reset();
+      break;
+    default:
+      error("Unsupported message type " + bsgo::str(message.type()));
+  }
 }
 
 void ShipView::checkPlayerShipEntityIdExists() const
