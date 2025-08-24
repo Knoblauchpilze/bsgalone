@@ -125,8 +125,6 @@ class Game : public core::CoreObject
 
   void initialize(const int serverPort);
   void initializeMessageSystem();
-
-  void resetViewsAndUi();
 };
 
 using GameShPtr = std::shared_ptr<Game>;
