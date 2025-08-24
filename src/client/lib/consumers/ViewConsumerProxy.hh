@@ -12,7 +12,6 @@ class ViewConsumerProxy : public bsgo::AbstractMessageConsumer
   public:
   ViewConsumerProxy(AbstractView &view,
                     const std::unordered_set<bsgo::MessageType> &relevantMessageTypes);
-  ;
   ~ViewConsumerProxy() override = default;
 
   void onMessageReceived(const bsgo::IMessage &message) override;
