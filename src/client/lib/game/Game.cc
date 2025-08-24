@@ -300,6 +300,7 @@ void Game::onLogout()
 
   m_coordinator->clear();
   m_entityMapper.clearAll();
+  m_views.reset();
 
   setScreen(Screen::LOGIN);
 }
@@ -399,7 +400,7 @@ void Game::initializeMessageSystem()
   auto messageModule = std::make_unique<GameMessageModule>(*this, m_entityMapper);
   m_inputMessageQueue->addListener(std::move(messageModule));
 
-  registerViews(m_views, m_inputMessageQueue.get());
+  m_views.connectToQueue(m_inputMessageQueue.get());
 }
 
 } // namespace pge
