@@ -41,13 +41,14 @@ class ShopView : public AbstractView
   bool isReady() const noexcept override;
   void reset() override;
 
-  void onMessageReceived(const bsgo::IMessage &message) override;
-
   auto getShopItems() const -> std::vector<ShopItem>;
   auto canPlayerAfford(const bsgo::Uuid id, const bsgo::Item &itemType) const
     -> bsgo::Affordability;
 
   auto getAllShips() const -> std::vector<bsgo::ShipData>;
+
+  protected:
+  void handleMessageInternal(const bsgo::IMessage &message) override;
 
   private:
   GameSessionShPtr m_gameSession{};

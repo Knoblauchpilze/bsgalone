@@ -42,27 +42,6 @@ void ShipDbView::reset()
   m_playerShip.reset();
 }
 
-void ShipDbView::onMessageReceived(const bsgo::IMessage &message)
-{
-  switch (message.type())
-  {
-    case bsgo::MessageType::HANGAR:
-      m_playerShip = message.as<bsgo::HangarMessage>().getShip();
-      debug("Active ship is now " + bsgo::str(m_playerShip->dbId));
-      break;
-    case bsgo::MessageType::JUMP_REQUESTED:
-      m_playerShip->jumpSystem = message.as<bsgo::JumpRequestedMessage>().getJumpSystem();
-      break;
-    case bsgo::MessageType::JUMP_CANCELLED:
-    case bsgo::MessageType::JUMP:
-      m_playerShip->jumpSystem.reset();
-      break;
-    default:
-      error("Unsupported message type " + bsgo::str(message.type()));
-      return;
-  }
-}
-
 auto ShipDbView::getPlayerShipDbId() const -> bsgo::Uuid
 {
   return m_gameSession->getPlayerActiveShipDbId();
@@ -194,6 +173,27 @@ bool ShipDbView::canStillEquipItem(const bsgo::Item &type) const
 
   const auto canEquip = usedSlots < totalSlots;
   return canEquip;
+}
+
+void ShipDbView::handleMessageInternal(const bsgo::IMessage &message)
+{
+  switch (message.type())
+  {
+    case bsgo::MessageType::HANGAR:
+      m_playerShip = message.as<bsgo::HangarMessage>().getShip();
+      debug("Active ship is now " + bsgo::str(m_playerShip->dbId));
+      break;
+    case bsgo::MessageType::JUMP_REQUESTED:
+      m_playerShip->jumpSystem = message.as<bsgo::JumpRequestedMessage>().getJumpSystem();
+      break;
+    case bsgo::MessageType::JUMP_CANCELLED:
+    case bsgo::MessageType::JUMP:
+      m_playerShip->jumpSystem.reset();
+      break;
+    default:
+      error("Unsupported message type " + bsgo::str(message.type()));
+      return;
+  }
 }
 
 } // namespace pge

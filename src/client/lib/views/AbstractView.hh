@@ -26,6 +26,12 @@ class AbstractView : public bsgo::AbstractMessageConsumer, public IView
   /// view, using the interface method `onViewUpdated`.
   void notifyListeners();
 
+  /// @brief - Interface method to allow inheriting classes to specialize the
+  /// behavior when a message received. This is called by the `onMessageReceived`
+  /// method after the local processing is done.
+  /// @param message - the message to process.
+  virtual void handleMessageInternal(const bsgo::IMessage &message);
+
   private:
   std::vector<IViewListenerPtr> m_listeners{};
 };

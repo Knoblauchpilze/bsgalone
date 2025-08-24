@@ -24,12 +24,6 @@ void ServerView::reset()
   m_systems.clear();
 }
 
-void ServerView::onMessageReceived(const bsgo::IMessage &message)
-{
-  const auto systemList = message.as<bsgo::SystemListMessage>();
-  m_systems             = systemList.getSystemsData();
-}
-
 auto ServerView::getPlayerSystem() const -> bsgo::Uuid
 {
   return m_gameSession->getSystemDbId();
@@ -105,6 +99,12 @@ auto ServerView::getMapBounds() const -> Bounds
   }
 
   return out;
+}
+
+void ServerView::handleMessageInternal(const bsgo::IMessage &message)
+{
+  const auto systemList = message.as<bsgo::SystemListMessage>();
+  m_systems             = systemList.getSystemsData();
 }
 
 } // namespace pge

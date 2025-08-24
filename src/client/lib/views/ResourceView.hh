@@ -18,9 +18,10 @@ class ResourceView : public AbstractView
   bool isReady() const noexcept override;
   void reset() override;
 
-  void onMessageReceived(const bsgo::IMessage &message) override;
-
   auto getResourceName(const bsgo::Uuid resource) const -> std::string;
+
+  protected:
+  void handleMessageInternal(const bsgo::IMessage &message) override;
 
   private:
   std::unordered_map<bsgo::Uuid, bsgo::ResourceData> m_resources{};

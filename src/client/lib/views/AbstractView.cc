@@ -30,14 +30,10 @@ void AbstractView::addListener(IViewListenerPtr listener)
   m_listeners.emplace_back(std::move(listener));
 }
 
-void AbstractView::onMessageReceived(const bsgo::IMessage & /*message*/)
+void AbstractView::onMessageReceived(const bsgo::IMessage &message)
 {
-  // Default implementation should never be called. It is provided to conform
-  // to the AbstractMessageConsumer interface and allow views which are not
-  // listening to any messages to not have to reimplement this method.
-  // In case a derived class DOES receive message and DOES NOT override this
-  // method, an error will be raised, prompting to provide an override.
-  error("Please define an overload for this method if you want to receive messages");
+  withSafetyNet([this, &message]() { handleMessageInternal(message); }, "onMessageReceived");
+  notifyListeners();
 }
 
 void AbstractView::notifyListeners()
@@ -46,6 +42,16 @@ void AbstractView::notifyListeners()
   {
     withSafetyNet([&listener]() { listener->onViewUpdated(); }, "onViewUpdated");
   }
+}
+
+void AbstractView::handleMessageInternal(const bsgo::IMessage & /*message*/)
+{
+  // Default implementation should never be called. It is provided to conform
+  // to the AbstractMessageConsumer interface and allow views which are not
+  // listening to any messages to not have to reimplement this method.
+  // In case a derived class DOES receive message and DOES NOT override this
+  // method, an error will be raised, prompting to provide an override.
+  error("Please define an overload for this method if you want to receive messages");
 }
 
 } // namespace pge

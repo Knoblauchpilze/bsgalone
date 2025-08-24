@@ -38,31 +38,6 @@ void PlayerView::reset()
   m_playerWeapons.clear();
 }
 
-void PlayerView::onMessageReceived(const bsgo::IMessage &message)
-{
-  switch (message.type())
-  {
-    case bsgo::MessageType::HANGAR:
-      handleHangarMessage(message.as<bsgo::HangarMessage>());
-      break;
-    case bsgo::MessageType::PLAYER_COMPUTER_LIST:
-      handlePlayerComputersMessage(message.as<bsgo::PlayerComputerListMessage>());
-      break;
-    case bsgo::MessageType::PLAYER_RESOURCE_LIST:
-      handlePlayerResourcesMessage(message.as<bsgo::PlayerResourceListMessage>());
-      break;
-    case bsgo::MessageType::PLAYER_SHIP_LIST:
-      handlePlayerShipsMessage(message.as<bsgo::PlayerShipListMessage>());
-      break;
-    case bsgo::MessageType::PLAYER_WEAPON_LIST:
-      handlePlayerWeaponsMessage(message.as<bsgo::PlayerWeaponListMessage>());
-      break;
-    default:
-      error("Unsupported message type " + bsgo::str(message.type()));
-      break;
-  }
-}
-
 auto PlayerView::getPlayerFaction() const -> bsgo::Faction
 {
   return m_gameSession->getFaction();
@@ -173,6 +148,31 @@ void PlayerView::trySignup(const std::string &name,
                            const bsgo::Faction &faction) const
 {
   m_outputMessageQueue->pushMessage(std::make_unique<bsgo::SignupMessage>(name, password, faction));
+}
+
+void PlayerView::handleMessageInternal(const bsgo::IMessage &message)
+{
+  switch (message.type())
+  {
+    case bsgo::MessageType::HANGAR:
+      handleHangarMessage(message.as<bsgo::HangarMessage>());
+      break;
+    case bsgo::MessageType::PLAYER_COMPUTER_LIST:
+      handlePlayerComputersMessage(message.as<bsgo::PlayerComputerListMessage>());
+      break;
+    case bsgo::MessageType::PLAYER_RESOURCE_LIST:
+      handlePlayerResourcesMessage(message.as<bsgo::PlayerResourceListMessage>());
+      break;
+    case bsgo::MessageType::PLAYER_SHIP_LIST:
+      handlePlayerShipsMessage(message.as<bsgo::PlayerShipListMessage>());
+      break;
+    case bsgo::MessageType::PLAYER_WEAPON_LIST:
+      handlePlayerWeaponsMessage(message.as<bsgo::PlayerWeaponListMessage>());
+      break;
+    default:
+      error("Unsupported message type " + bsgo::str(message.type()));
+      break;
+  }
 }
 
 void PlayerView::handleHangarMessage(const bsgo::HangarMessage &message)

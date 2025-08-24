@@ -26,8 +26,6 @@ class ShipView : public AbstractView
   bool isReady() const noexcept override;
   void reset() override;
 
-  void onMessageReceived(const bsgo::IMessage &message) override;
-
   bool hasTarget() const;
   auto getPlayerTarget() const -> std::optional<bsgo::Entity>;
 
@@ -55,6 +53,9 @@ class ShipView : public AbstractView
 
   bool isInThreat() const;
   bool isDead() const;
+
+  protected:
+  void handleMessageInternal(const bsgo::IMessage &message) override;
 
   private:
   bsgo::CoordinatorShPtr m_coordinator{};

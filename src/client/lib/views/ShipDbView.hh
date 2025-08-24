@@ -25,8 +25,6 @@ class ShipDbView : public AbstractView
   bool isReady() const noexcept override;
   void reset() override;
 
-  void onMessageReceived(const bsgo::IMessage &message) override;
-
   auto getPlayerShipDbId() const -> bsgo::Uuid;
 
   void dockPlayerShip() const;
@@ -46,6 +44,9 @@ class ShipDbView : public AbstractView
   auto getPlayerShipSlots() const -> std::unordered_map<bsgo::Slot, int>;
 
   bool canStillEquipItem(const bsgo::Item &type) const;
+
+  protected:
+  void handleMessageInternal(const bsgo::IMessage &message) override;
 
   private:
   GameSessionShPtr m_gameSession{};
