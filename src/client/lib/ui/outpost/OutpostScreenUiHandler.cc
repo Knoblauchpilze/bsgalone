@@ -3,6 +3,7 @@
 #include "Constants.hh"
 #include "EquipMessage.hh"
 #include "GameColorUtils.hh"
+#include "IViewListenerProxy.hh"
 #include "MessageListenerWrapper.hh"
 #include "PurchaseMessage.hh"
 #include "ScreenCommon.hh"
@@ -27,6 +28,8 @@ OutpostScreenUiHandler::OutpostScreenUiHandler(const Views &views)
   {
     throw std::invalid_argument("Expected non null player view");
   }
+
+  subscribeToViews();
 }
 
 void OutpostScreenUiHandler::initializeMenus(const int width,
@@ -165,6 +168,7 @@ void OutpostScreenUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQ
   messageQueue.addListener(std::move(listener));
 }
 
+// TODO: Can probably be removed.
 void OutpostScreenUiHandler::onMessageReceived(const bsgo::IMessage &message)
 {
   if (bsgo::MessageType::PURCHASE == message.type())
@@ -177,6 +181,17 @@ void OutpostScreenUiHandler::onMessageReceived(const bsgo::IMessage &message)
     const auto &equip  = message.as<bsgo::EquipMessage>();
     m_refreshRequested = equip.validated();
   }
+}
+
+void OutpostScreenUiHandler::subscribeToViews()
+{
+  auto consumer = [this]() { reset(); };
+
+  auto listener = std::make_unique<IViewListenerProxy>(consumer);
+  m_shipDbView->addListener(std::move(listener));
+
+  listener = std::make_unique<IViewListenerProxy>(consumer);
+  m_playerView->addListener(std::move(listener));
 }
 
 constexpr auto VIEW_LIST_WIDTH_TO_SCREEN_WIDTH_RATIO   = 0.2f;

@@ -1,6 +1,7 @@
 
 #include "WeaponsUiHandler.hh"
 #include "GameColorUtils.hh"
+#include "IViewListenerProxy.hh"
 #include "MessageListenerWrapper.hh"
 #include "MessageUtils.hh"
 #include "ScreenCommon.hh"
@@ -29,6 +30,8 @@ WeaponsUiHandler::WeaponsUiHandler(const Views &views)
   {
     throw std::invalid_argument("Expected non null player view");
   }
+
+  subscribeToViews();
 }
 
 void WeaponsUiHandler::initializeMenus(const int width,
@@ -116,6 +119,20 @@ void WeaponsUiHandler::onMessageReceived(const bsgo::IMessage &message)
   }
 
   m_disabled = didPlayerShipDied(message.as<bsgo::EntityRemovedMessage>(), *m_shipDbView);
+}
+
+void WeaponsUiHandler::subscribeToViews()
+{
+  auto consumer = [this]() { reset(); };
+
+  auto listener = std::make_unique<IViewListenerProxy>(consumer);
+  m_shipView->addListener(std::move(listener));
+
+  listener = std::make_unique<IViewListenerProxy>(consumer);
+  m_shipDbView->addListener(std::move(listener));
+
+  listener = std::make_unique<IViewListenerProxy>(consumer);
+  m_playerView->addListener(std::move(listener));
 }
 
 namespace {

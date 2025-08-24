@@ -2,6 +2,7 @@
 #include "HangarUiHandler.hh"
 #include "Constants.hh"
 #include "GameColorUtils.hh"
+#include "IViewListenerProxy.hh"
 #include "ScreenCommon.hh"
 #include "ShipItemUtils.hh"
 #include "SlotComponentUtils.hh"
@@ -23,6 +24,8 @@ HangarUiHandler::HangarUiHandler(const Views &views)
   {
     throw std::invalid_argument("Expected non null shop view");
   }
+
+  subscribeToViews();
 }
 
 void HangarUiHandler::initializeMenus(const int width,
@@ -66,6 +69,17 @@ void HangarUiHandler::reset()
   m_menu->clearChildren();
 
   m_initialized = false;
+}
+
+void HangarUiHandler::subscribeToViews()
+{
+  auto consumer = [this]() { reset(); };
+
+  auto listener = std::make_unique<IViewListenerProxy>(consumer);
+  m_playerView->addListener(std::move(listener));
+
+  listener = std::make_unique<IViewListenerProxy>(consumer);
+  m_shopView->addListener(std::move(listener));
 }
 
 void HangarUiHandler::initializeHangar()

@@ -28,6 +28,8 @@ class GameOverUiHandler : public IUiHandler
   ShipViewShPtr m_shipView{};
 
   UiTextMenuPtr m_menu{};
+
+  void subscribeToViews();
 };
 
 using GameOverUiHandlerPtr = std::unique_ptr<GameOverUiHandler>;

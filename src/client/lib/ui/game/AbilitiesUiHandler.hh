@@ -40,6 +40,7 @@ class AbilitiesUiHandler : public IUiHandler, public bsgo::AbstractMessageListen
   std::vector<UiPictureMenuPtr> m_computers{};
   std::vector<UiTextMenu *> m_statuses{};
 
+  void subscribeToViews();
   void generateComputersMenus(int width, int height);
   void initializeAbilities();
   void updateComputerMenu(const bsgo::ComputerSlotComponent &computer, const int id);

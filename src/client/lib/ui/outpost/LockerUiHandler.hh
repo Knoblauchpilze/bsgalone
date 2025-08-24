@@ -58,6 +58,7 @@ class LockerUiHandler : public IUiHandler
   std::vector<UiMenu *> m_shipComputers{};
   std::vector<ShipItem> m_shipItemsData{};
 
+  void subscribeToViews();
   void initializeLocker();
   void initializeLayout();
   void initializeLockerLayout();

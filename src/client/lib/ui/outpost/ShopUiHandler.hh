@@ -40,6 +40,7 @@ class ShopUiHandler : public IUiHandler
   };
   std::vector<ItemData> m_itemsData{};
 
+  void subscribeToViews();
   void initializeShop();
   void initializeLayout();
   void generateItemsMenus();

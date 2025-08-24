@@ -1,5 +1,6 @@
 
 #include "MapScreenUiHandler.hh"
+#include "IViewListenerProxy.hh"
 #include "ScreenCommon.hh"
 #include "UiTextMenu.hh"
 
@@ -30,6 +31,8 @@ MapScreenUiHandler::MapScreenUiHandler(const Views &views)
   {
     throw std::invalid_argument("Expected non null ship db view");
   }
+
+  subscribeToViews();
 }
 
 void MapScreenUiHandler::initializeMenus(const int width,
@@ -104,6 +107,20 @@ void MapScreenUiHandler::reset()
 {
   m_selectedSystem.reset();
   m_initialized = false;
+}
+
+void MapScreenUiHandler::subscribeToViews()
+{
+  auto consumer = [this]() { reset(); };
+
+  auto listener = std::make_unique<IViewListenerProxy>(consumer);
+  m_serverView->addListener(std::move(listener));
+
+  listener = std::make_unique<IViewListenerProxy>(consumer);
+  m_shipView->addListener(std::move(listener));
+
+  listener = std::make_unique<IViewListenerProxy>(consumer);
+  m_shipDbView->addListener(std::move(listener));
 }
 
 void MapScreenUiHandler::generateControlButtons(const int width, const int height)

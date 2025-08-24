@@ -1,6 +1,7 @@
 
 #include "GameOverUiHandler.hh"
 #include "EntityRemovedMessage.hh"
+#include "IViewListenerProxy.hh"
 #include "MessageUtils.hh"
 
 namespace pge {
@@ -18,6 +19,8 @@ GameOverUiHandler::GameOverUiHandler(const Views &views)
   {
     throw std::invalid_argument("Expected non null ship view");
   }
+
+  subscribeToViews();
 }
 
 void GameOverUiHandler::initializeMenus(const int width,
@@ -62,6 +65,17 @@ void GameOverUiHandler::updateUi()
 void GameOverUiHandler::reset()
 {
   m_menu->setVisible(false);
+}
+
+void GameOverUiHandler::subscribeToViews()
+{
+  auto consumer = [this]() { reset(); };
+
+  auto listener = std::make_unique<IViewListenerProxy>(consumer);
+  m_shipDbView->addListener(std::move(listener));
+
+  listener = std::make_unique<IViewListenerProxy>(consumer);
+  m_shipView->addListener(std::move(listener));
 }
 
 } // namespace pge

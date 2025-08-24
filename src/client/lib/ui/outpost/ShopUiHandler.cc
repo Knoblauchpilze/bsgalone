@@ -2,6 +2,7 @@
 #include "ShopUiHandler.hh"
 #include "Constants.hh"
 #include "GameColorUtils.hh"
+#include "IViewListenerProxy.hh"
 #include "ScreenCommon.hh"
 #include "ShipItemUtils.hh"
 #include "SlotComponentUtils.hh"
@@ -23,6 +24,8 @@ ShopUiHandler::ShopUiHandler(const Views &views)
   {
     throw std::invalid_argument("Expected non null player view");
   }
+
+  subscribeToViews();
 }
 
 void ShopUiHandler::initializeMenus(const int width,
@@ -105,6 +108,17 @@ void ShopUiHandler::reset()
   m_menu->clearChildren();
 
   m_initialized = false;
+}
+
+void ShopUiHandler::subscribeToViews()
+{
+  auto consumer = [this]() { reset(); };
+
+  auto listener = std::make_unique<IViewListenerProxy>(consumer);
+  m_shopView->addListener(std::move(listener));
+
+  listener = std::make_unique<IViewListenerProxy>(consumer);
+  m_playerView->addListener(std::move(listener));
 }
 
 void ShopUiHandler::initializeShop()
