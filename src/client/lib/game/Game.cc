@@ -307,10 +307,7 @@ void Game::onLogout()
 void Game::onActiveShipChanged(const bsgo::Uuid shipDbId)
 {
   m_gameSession->onActiveShipChanged(shipDbId);
-
   m_entityMapper.setPlayerShipDbId(shipDbId);
-
-  resetViewsAndUi();
 }
 
 void Game::onActiveSystemChanged(const bsgo::Uuid systemDbId)
@@ -356,7 +353,9 @@ void Game::onLoadingFinished(const bsgo::LoadingTransition transition)
   const auto [previousScreen, nextScreen] = m_gameSession->finishLoadingTransition(transition);
   m_state.screen                          = previousScreen;
   setScreen(nextScreen);
-  resetViewsAndUi();
+
+  const auto maybePlayerShipEntityId = m_entityMapper.tryGetPlayerShipEntityId();
+  m_views.shipView->setPlayerShipEntityId(maybePlayerShipEntityId);
 }
 
 void Game::initialize(const int serverPort)
@@ -401,17 +400,6 @@ void Game::initializeMessageSystem()
   m_inputMessageQueue->addListener(std::move(messageModule));
 
   registerViews(m_views, m_inputMessageQueue.get());
-}
-
-void Game::resetViewsAndUi()
-{
-  const auto maybePlayerShipEntityId = m_entityMapper.tryGetPlayerShipEntityId();
-  m_views.shipView->setPlayerShipEntityId(maybePlayerShipEntityId);
-
-  for (const auto &[_, handler] : m_uiHandlers)
-  {
-    handler->reset();
-  }
 }
 
 } // namespace pge
