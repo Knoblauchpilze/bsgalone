@@ -116,11 +116,6 @@ void LoginScreenUiHandler::updateUi()
   m_failureMenu->update();
 }
 
-void LoginScreenUiHandler::reset()
-{
-  m_credentialsUiHandler.reset();
-}
-
 void LoginScreenUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQueue)
 {
   m_credentialsUiHandler.connectToMessageQueue(messageQueue);

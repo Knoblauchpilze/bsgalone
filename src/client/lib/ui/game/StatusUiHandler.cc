@@ -86,11 +86,6 @@ void StatusUiHandler::updateUi()
   m_logoutConfirmation->setVisible(m_logoutRequested);
 }
 
-void StatusUiHandler::reset()
-{
-  m_logoutRequested = false;
-}
-
 void StatusUiHandler::subscribeToViews()
 {
   auto consumer = [this]() { reset(); };
@@ -103,6 +98,11 @@ void StatusUiHandler::subscribeToViews()
 
   listener = std::make_unique<IViewListenerProxy>(consumer);
   m_playerView->addListener(std::move(listener));
+}
+
+void StatusUiHandler::reset()
+{
+  m_logoutRequested = false;
 }
 
 void StatusUiHandler::generateLogoutButton(const int /*width*/, const int /*height*/)

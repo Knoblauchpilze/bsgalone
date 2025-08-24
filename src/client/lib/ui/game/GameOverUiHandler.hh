@@ -21,7 +21,6 @@ class GameOverUiHandler : public IUiHandler
   bool processUserInput(UserInputData &inputData) override;
   void render(Renderer &engine) const override;
   void updateUi() override;
-  void reset() override;
 
   private:
   ShipDbViewShPtr m_shipDbView{};
@@ -30,6 +29,7 @@ class GameOverUiHandler : public IUiHandler
   UiTextMenuPtr m_menu{};
 
   void subscribeToViews();
+  void reset();
 };
 
 using GameOverUiHandlerPtr = std::unique_ptr<GameOverUiHandler>;

@@ -141,17 +141,6 @@ void OutpostScreenUiHandler::updateUi()
   }
 }
 
-void OutpostScreenUiHandler::reset()
-{
-  m_lockerUi->reset();
-  m_shopUi->reset();
-  m_hangarUi->reset();
-
-  m_menus[VIEWS_MENU]->clearChildren();
-
-  m_initialized = false;
-}
-
 void OutpostScreenUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQueue)
 {
   m_lockerUi->connectToMessageQueue(messageQueue);
@@ -168,6 +157,13 @@ void OutpostScreenUiHandler::subscribeToViews()
 
   listener = std::make_unique<IViewListenerProxy>(consumer);
   m_playerView->addListener(std::move(listener));
+}
+
+void OutpostScreenUiHandler::reset()
+{
+  m_menus[VIEWS_MENU]->clearChildren();
+
+  m_initialized = false;
 }
 
 constexpr auto VIEW_LIST_WIDTH_TO_SCREEN_WIDTH_RATIO   = 0.2f;

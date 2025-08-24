@@ -81,12 +81,6 @@ void LogUiHandler::updateUi()
   std::erase_if(m_logs, [](const LogMessage &data) { return data.menu->finished(); });
 }
 
-void LogUiHandler::reset()
-{
-  m_logs.clear();
-  m_logsToTrigger.clear();
-}
-
 void LogUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQueue)
 {
   auto listener = std::make_unique<MessageListenerWrapper>(this);
@@ -259,6 +253,12 @@ void LogUiHandler::subscribeToViews()
 
   listener = std::make_unique<IViewListenerProxy>(consumer);
   m_shipView->addListener(std::move(listener));
+}
+
+void LogUiHandler::reset()
+{
+  m_logs.clear();
+  m_logsToTrigger.clear();
 }
 
 auto LogUiHandler::createMenuFromMessage(const bsgo::IMessage &message) -> UiMenuPtr

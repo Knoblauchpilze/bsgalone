@@ -62,11 +62,6 @@ void GameOverUiHandler::updateUi()
   m_menu->setVisible(m_shipView->isDead());
 }
 
-void GameOverUiHandler::reset()
-{
-  m_menu->setVisible(false);
-}
-
 void GameOverUiHandler::subscribeToViews()
 {
   auto consumer = [this]() { reset(); };
@@ -76,6 +71,11 @@ void GameOverUiHandler::subscribeToViews()
 
   listener = std::make_unique<IViewListenerProxy>(consumer);
   m_shipView->addListener(std::move(listener));
+}
+
+void GameOverUiHandler::reset()
+{
+  m_menu->setVisible(false);
 }
 
 } // namespace pge

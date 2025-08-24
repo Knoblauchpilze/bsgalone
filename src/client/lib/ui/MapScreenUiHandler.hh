@@ -21,7 +21,6 @@ class MapScreenUiHandler : public IUiHandler
   bool processUserInput(UserInputData &inputData) override;
   void render(Renderer &engine) const override;
   void updateUi() override;
-  void reset() override;
 
   private:
   ServerViewShPtr m_serverView{};
@@ -42,6 +41,7 @@ class MapScreenUiHandler : public IUiHandler
   std::optional<SelectedSystem> m_selectedSystem{};
 
   void subscribeToViews();
+  void reset();
   void generateControlButtons(const int width, const int height);
   void generateMap();
   void generateSystemButtons(const bsgo::SystemData &system,

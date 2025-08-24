@@ -63,14 +63,6 @@ void HangarUiHandler::updateUi()
   }
 }
 
-void HangarUiHandler::reset()
-{
-  m_shipsData.clear();
-  m_menu->clearChildren();
-
-  m_initialized = false;
-}
-
 void HangarUiHandler::subscribeToViews()
 {
   auto consumer = [this]() { reset(); };
@@ -80,6 +72,14 @@ void HangarUiHandler::subscribeToViews()
 
   listener = std::make_unique<IViewListenerProxy>(consumer);
   m_shopView->addListener(std::move(listener));
+}
+
+void HangarUiHandler::reset()
+{
+  m_shipsData.clear();
+  m_menu->clearChildren();
+
+  m_initialized = false;
 }
 
 void HangarUiHandler::initializeHangar()

@@ -24,7 +24,6 @@ class WeaponsUiHandler : public IUiHandler, public bsgo::AbstractMessageListener
   bool processUserInput(UserInputData &inputData) override;
   void render(Renderer &engine) const override;
   void updateUi() override;
-  void reset() override;
   void connectToMessageQueue(bsgo::IMessageQueue &messageQueue) override;
 
   void onMessageReceived(const bsgo::IMessage &message) override;
@@ -41,6 +40,7 @@ class WeaponsUiHandler : public IUiHandler, public bsgo::AbstractMessageListener
   std::vector<UiTextMenu *> m_statuses{};
 
   void subscribeToViews();
+  void reset();
   void generateWeaponsMenus(int width, int height);
   void initializeWeapons();
   void updateWeaponMenu(const bsgo::WeaponSlotComponent &weapon, const int id);

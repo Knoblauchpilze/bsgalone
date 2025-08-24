@@ -19,7 +19,6 @@ class GameScreenUiHandler : public IUiHandler
   bool processUserInput(UserInputData &inputData) override;
   void render(Renderer &engine) const override;
   void updateUi() override;
-  void reset() override;
   void connectToMessageQueue(bsgo::IMessageQueue &messageQueue) override;
 
   private:

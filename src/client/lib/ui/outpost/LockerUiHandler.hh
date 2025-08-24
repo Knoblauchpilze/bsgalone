@@ -24,7 +24,6 @@ class LockerUiHandler : public IUiHandler
   bool processUserInput(UserInputData &inputData) override;
   void render(Renderer &engine) const override;
   void updateUi() override;
-  void reset() override;
 
   private:
   PlayerViewShPtr m_playerView{};
@@ -59,6 +58,7 @@ class LockerUiHandler : public IUiHandler
   std::vector<ShipItem> m_shipItemsData{};
 
   void subscribeToViews();
+  void reset();
   void initializeLocker();
   void initializeLayout();
   void initializeLockerLayout();

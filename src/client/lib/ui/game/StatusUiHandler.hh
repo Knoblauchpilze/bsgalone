@@ -19,7 +19,6 @@ class StatusUiHandler : public IUiHandler
   bool processUserInput(UserInputData &inputData) override;
   void render(Renderer &engine) const override;
   void updateUi() override;
-  void reset() override;
 
   private:
   Vec2i m_offset{};
@@ -34,6 +33,7 @@ class StatusUiHandler : public IUiHandler
   UiMenuPtr m_logoutConfirmation{};
 
   void subscribeToViews();
+  void reset();
   void generateLogoutButton(const int width, const int height);
   void generateLogoutConfirmationPanel(const int width, const int height);
 
