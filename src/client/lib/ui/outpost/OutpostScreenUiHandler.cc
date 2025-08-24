@@ -13,7 +13,6 @@ namespace pge {
 
 OutpostScreenUiHandler::OutpostScreenUiHandler(const Views &views)
   : IUiHandler("outpost")
-  , bsgo::AbstractMessageListener({bsgo::MessageType::PURCHASE, bsgo::MessageType::EQUIP})
   , m_shipDbView(views.shipDbView)
   , m_playerView(views.playerView)
   , m_lockerUi(std::make_unique<LockerUiHandler>(views))
@@ -123,11 +122,6 @@ void OutpostScreenUiHandler::render(Renderer &engine) const
 
 void OutpostScreenUiHandler::updateUi()
 {
-  if (m_refreshRequested)
-  {
-    reset();
-    m_refreshRequested = false;
-  }
   if (m_playerView->isReady() && !m_initialized)
   {
     initializeOutpostScreenOptions();
@@ -163,24 +157,6 @@ void OutpostScreenUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQ
   m_lockerUi->connectToMessageQueue(messageQueue);
   m_shopUi->connectToMessageQueue(messageQueue);
   m_hangarUi->connectToMessageQueue(messageQueue);
-
-  auto listener = std::make_unique<MessageListenerWrapper>(this);
-  messageQueue.addListener(std::move(listener));
-}
-
-// TODO: Can probably be removed.
-void OutpostScreenUiHandler::onMessageReceived(const bsgo::IMessage &message)
-{
-  if (bsgo::MessageType::PURCHASE == message.type())
-  {
-    const auto &purchase = message.as<bsgo::PurchaseMessage>();
-    m_refreshRequested   = purchase.validated();
-  }
-  if (bsgo::MessageType::EQUIP == message.type())
-  {
-    const auto &equip  = message.as<bsgo::EquipMessage>();
-    m_refreshRequested = equip.validated();
-  }
 }
 
 void OutpostScreenUiHandler::subscribeToViews()
