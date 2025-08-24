@@ -33,7 +33,7 @@ void registerViewToQueue(AbstractView &view,
 }
 } // namespace
 
-void registerViews(const Views &views, bsgo::IMessageQueue *const queue)
+void Views::connectToQueue(bsgo::IMessageQueue *const queue)
 {
   std::unordered_set<bsgo::MessageType> messageTypes{};
 
@@ -44,32 +44,43 @@ void registerViews(const Views &views, bsgo::IMessageQueue *const queue)
     bsgo::MessageType::PLAYER_SHIP_LIST,
     bsgo::MessageType::PLAYER_WEAPON_LIST,
   };
-  registerViewToQueue(*views.playerView, messageTypes, queue);
+  registerViewToQueue(*playerView, messageTypes, queue);
 
   messageTypes = {bsgo::MessageType::DOCK, bsgo::MessageType::JUMP, bsgo::MessageType::SYSTEM_LIST};
-  registerViewToQueue(*views.shipView, messageTypes, queue);
+  registerViewToQueue(*shipView, messageTypes, queue);
 
   messageTypes = {bsgo::MessageType::JUMP_REQUESTED,
                   bsgo::MessageType::JUMP_CANCELLED,
                   bsgo::MessageType::JUMP,
                   bsgo::MessageType::HANGAR};
-  registerViewToQueue(*views.shipDbView, messageTypes, queue);
+  registerViewToQueue(*shipDbView, messageTypes, queue);
 
   messageTypes = {bsgo::MessageType::RESOURCE_LIST,
                   bsgo::MessageType::COMPUTER_LIST,
                   bsgo::MessageType::WEAPON_LIST,
                   bsgo::MessageType::SHIP_LIST,
                   bsgo::MessageType::PLAYER_RESOURCE_LIST};
-  registerViewToQueue(*views.shopView, messageTypes, queue);
+  registerViewToQueue(*shopView, messageTypes, queue);
 
   messageTypes = {};
-  registerViewToQueue(*views.systemView, messageTypes, queue);
+  registerViewToQueue(*systemView, messageTypes, queue);
 
   messageTypes = {bsgo::MessageType::SYSTEM_LIST};
-  registerViewToQueue(*views.serverView, messageTypes, queue);
+  registerViewToQueue(*serverView, messageTypes, queue);
 
   messageTypes = {bsgo::MessageType::RESOURCE_LIST};
-  registerViewToQueue(*views.resourceView, messageTypes, queue);
+  registerViewToQueue(*resourceView, messageTypes, queue);
+}
+
+void Views::reset()
+{
+  playerView->reset();
+  shipView->reset();
+  shipDbView->reset();
+  shopView->reset();
+  systemView->reset();
+  serverView->reset();
+  resourceView->reset();
 }
 
 } // namespace pge
