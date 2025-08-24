@@ -37,6 +37,11 @@ bool ShipDbView::isReady() const noexcept
          && m_playerShip.has_value();
 }
 
+void ShipDbView::reset()
+{
+  m_playerShip.reset();
+}
+
 void ShipDbView::onMessageReceived(const bsgo::IMessage &message)
 {
   switch (message.type())

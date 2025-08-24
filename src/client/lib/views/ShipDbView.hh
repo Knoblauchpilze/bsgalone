@@ -23,6 +23,7 @@ class ShipDbView : public AbstractView
   ~ShipDbView() override = default;
 
   bool isReady() const noexcept override;
+  void reset() override;
 
   void onMessageReceived(const bsgo::IMessage &message) override;
 

@@ -19,6 +19,11 @@ bool ServerView::isReady() const noexcept
   return m_gameSession->hasSystemDbId() && !m_systems.empty();
 }
 
+void ServerView::reset()
+{
+  m_systems.clear();
+}
+
 void ServerView::onMessageReceived(const bsgo::IMessage &message)
 {
   const auto systemList = message.as<bsgo::SystemListMessage>();

@@ -13,6 +13,11 @@ bool ResourceView::isReady() const noexcept
   return !m_resources.empty();
 }
 
+void ResourceView::reset()
+{
+  m_resources.clear();
+}
+
 void ResourceView::onMessageReceived(const bsgo::IMessage &message)
 {
   const auto resourceList = message.as<bsgo::ResourceListMessage>();

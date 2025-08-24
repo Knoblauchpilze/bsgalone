@@ -44,6 +44,12 @@ bool ShipView::isReady() const noexcept
   return m_playerShipEntityId.has_value() && !m_systems.empty();
 }
 
+void ShipView::reset()
+{
+  m_systems.clear();
+  m_playerShipEntityId.reset();
+}
+
 void ShipView::onMessageReceived(const bsgo::IMessage &message)
 {
   switch (message.type())
