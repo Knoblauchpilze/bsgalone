@@ -57,6 +57,7 @@ class OutpostScreenUiHandler : public IUiHandler, public bsgo::AbstractMessageLi
   ShopUiHandlerPtr m_shopUi{};
   HangarUiHandlerPtr m_hangarUi{};
 
+  void subscribeToViews();
   void generateGeneralMenu(const int width, const int height);
   void initializeOutpostScreenOptions();
   void setActiveScreen(const ActiveScreen &screen);

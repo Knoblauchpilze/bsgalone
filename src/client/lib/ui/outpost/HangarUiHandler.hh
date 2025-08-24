@@ -49,6 +49,8 @@ class HangarUiHandler : public IUiHandler
   };
   std::vector<PlayerShipData> m_shipsData{};
 
+  void subscribeToViews();
+
   void initializeHangar();
 
   void initializeLayout();

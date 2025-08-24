@@ -40,6 +40,7 @@ class WeaponsUiHandler : public IUiHandler, public bsgo::AbstractMessageListener
   std::vector<UiPictureMenuPtr> m_weapons{};
   std::vector<UiTextMenu *> m_statuses{};
 
+  void subscribeToViews();
   void generateWeaponsMenus(int width, int height);
   void initializeWeapons();
   void updateWeaponMenu(const bsgo::WeaponSlotComponent &weapon, const int id);

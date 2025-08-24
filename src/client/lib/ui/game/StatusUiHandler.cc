@@ -1,5 +1,6 @@
 
 #include "StatusUiHandler.hh"
+#include "IViewListenerProxy.hh"
 #include "ScreenCommon.hh"
 #include "StringUtils.hh"
 
@@ -24,6 +25,8 @@ StatusUiHandler::StatusUiHandler(const Vec2i &offset, const Views &views)
   {
     throw std::invalid_argument("Expected non null player view");
   }
+
+  subscribeToViews();
 }
 
 namespace {
@@ -86,6 +89,20 @@ void StatusUiHandler::updateUi()
 void StatusUiHandler::reset()
 {
   m_logoutRequested = false;
+}
+
+void StatusUiHandler::subscribeToViews()
+{
+  auto consumer = [this]() { reset(); };
+
+  auto listener = std::make_unique<IViewListenerProxy>(consumer);
+  m_shipView->addListener(std::move(listener));
+
+  listener = std::make_unique<IViewListenerProxy>(consumer);
+  m_serverView->addListener(std::move(listener));
+
+  listener = std::make_unique<IViewListenerProxy>(consumer);
+  m_playerView->addListener(std::move(listener));
 }
 
 void StatusUiHandler::generateLogoutButton(const int /*width*/, const int /*height*/)

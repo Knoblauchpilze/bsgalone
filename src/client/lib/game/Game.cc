@@ -48,12 +48,6 @@ auto Game::getScreen() const noexcept -> Screen
 
 void Game::setScreen(const Screen &screen)
 {
-  const auto ui = m_uiHandlers.find(screen);
-  if (ui != m_uiHandlers.cend())
-  {
-    ui->second->reset();
-  }
-
   m_state.screen = screen;
   if (m_state.dead && Screen::OUTPOST == m_state.screen)
   {

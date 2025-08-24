@@ -1,6 +1,7 @@
 
 #include "LogUiHandler.hh"
 #include "GameColorUtils.hh"
+#include "IViewListenerProxy.hh"
 #include "MessageListenerWrapper.hh"
 #include "StringUtils.hh"
 #include "UiTextMenu.hh"
@@ -39,6 +40,8 @@ LogUiHandler::LogUiHandler(const Views &views)
   {
     throw std::invalid_argument("Expected non null ship view");
   }
+
+  subscribeToViews();
 }
 
 void LogUiHandler::initializeMenus(const int width,
@@ -243,6 +246,20 @@ auto createTextConfigForMessage(const bsgo::IMessage &message,
   return config;
 }
 } // namespace
+
+void LogUiHandler::subscribeToViews()
+{
+  auto consumer = [this]() { reset(); };
+
+  auto listener = std::make_unique<IViewListenerProxy>(consumer);
+  m_systemView->addListener(std::move(listener));
+
+  listener = std::make_unique<IViewListenerProxy>(consumer);
+  m_resourceView->addListener(std::move(listener));
+
+  listener = std::make_unique<IViewListenerProxy>(consumer);
+  m_shipView->addListener(std::move(listener));
+}
 
 auto LogUiHandler::createMenuFromMessage(const bsgo::IMessage &message) -> UiMenuPtr
 {

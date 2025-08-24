@@ -33,6 +33,7 @@ class StatusUiHandler : public IUiHandler
   UiTextMenu *m_system{};
   UiMenuPtr m_logoutConfirmation{};
 
+  void subscribeToViews();
   void generateLogoutButton(const int width, const int height);
   void generateLogoutConfirmationPanel(const int width, const int height);
 

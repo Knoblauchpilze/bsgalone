@@ -46,6 +46,7 @@ class EntityUiHandler : public IUiHandler
   };
   std::vector<UiTextMenuPtr> m_menus{};
 
+  void subscribeToViews();
   void updateNameComponent(const bsgo::Entity &entity);
   void updateHealthComponent(const bsgo::Entity &entity);
   void updatePowerComponent(const bsgo::Entity &entity);

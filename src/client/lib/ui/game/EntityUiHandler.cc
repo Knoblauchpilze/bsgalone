@@ -1,5 +1,6 @@
 
 #include "EntityUiHandler.hh"
+#include "IViewListenerProxy.hh"
 #include "StringUtils.hh"
 
 namespace pge {
@@ -18,6 +19,8 @@ EntityUiHandler::EntityUiHandler(const EntityUiConfig &config, const Views &view
   {
     throw std::invalid_argument("Expected non null ship db view");
   }
+
+  subscribeToViews();
 }
 
 void EntityUiHandler::initializeMenus(const int /*width*/,
@@ -116,6 +119,17 @@ void EntityUiHandler::updateUi()
     updateDistanceComponent();
   }
   updateDockComponent(ship);
+}
+
+void EntityUiHandler::subscribeToViews()
+{
+  auto consumer = [this]() { reset(); };
+
+  auto listener = std::make_unique<IViewListenerProxy>(consumer);
+  m_shipView->addListener(std::move(listener));
+
+  listener = std::make_unique<IViewListenerProxy>(consumer);
+  m_shipDbView->addListener(std::move(listener));
 }
 
 void EntityUiHandler::updateNameComponent(const bsgo::Entity &entity)

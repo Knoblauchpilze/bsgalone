@@ -41,6 +41,7 @@ class MapScreenUiHandler : public IUiHandler
   };
   std::optional<SelectedSystem> m_selectedSystem{};
 
+  void subscribeToViews();
   void generateControlButtons(const int width, const int height);
   void generateMap();
   void generateSystemButtons(const bsgo::SystemData &system,

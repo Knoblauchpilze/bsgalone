@@ -1,5 +1,6 @@
 
 #include "ShipStatusUiHandler.hh"
+#include "IViewListenerProxy.hh"
 #include "JumpCancelledMessage.hh"
 #include "JumpRequestedMessage.hh"
 #include "MessageListenerWrapper.hh"
@@ -17,6 +18,8 @@ ShipStatusUiHandler::ShipStatusUiHandler(const Views &views)
   {
     throw std::invalid_argument("Expected non null ship view");
   }
+
+  subscribeToViews();
 }
 
 void ShipStatusUiHandler::initializeMenus(const int width,
@@ -75,6 +78,14 @@ void ShipStatusUiHandler::onMessageReceived(const bsgo::IMessage &message)
   {
     m_jumpStartTime.reset();
   }
+}
+
+void ShipStatusUiHandler::subscribeToViews()
+{
+  auto consumer = [this]() { reset(); };
+
+  auto listener = std::make_unique<IViewListenerProxy>(consumer);
+  m_shipView->addListener(std::move(listener));
 }
 
 namespace {

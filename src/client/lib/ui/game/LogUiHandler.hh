@@ -42,6 +42,7 @@ class LogUiHandler : public IUiHandler, public bsgo::AbstractMessageListener
   std::deque<LogMessage> m_logs{};
   std::vector<UiTimedMenu *> m_logsToTrigger{};
 
+  void subscribeToViews();
   auto createMenuFromMessage(const bsgo::IMessage &message) -> UiMenuPtr;
 };
 

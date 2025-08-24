@@ -38,6 +38,7 @@ class ShipStatusUiHandler : public IUiHandler, public bsgo::AbstractMessageListe
 
   std::optional<core::TimeStamp> m_jumpStartTime{};
 
+  void subscribeToViews();
   void initializeThreatPanel(const int width, const int height);
   void initializeJumpPanel(const int width, const int height);
 

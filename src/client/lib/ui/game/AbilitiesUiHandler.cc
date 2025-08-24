@@ -1,6 +1,7 @@
 
 #include "AbilitiesUiHandler.hh"
 #include "GameColorUtils.hh"
+#include "IViewListenerProxy.hh"
 #include "MessageListenerWrapper.hh"
 #include "MessageUtils.hh"
 #include "ScreenCommon.hh"
@@ -28,6 +29,8 @@ AbilitiesUiHandler::AbilitiesUiHandler(const Views &views)
   {
     throw std::invalid_argument("Expected non null player view");
   }
+
+  subscribeToViews();
 }
 
 void AbilitiesUiHandler::initializeMenus(const int width,
@@ -115,6 +118,20 @@ void AbilitiesUiHandler::onMessageReceived(const bsgo::IMessage &message)
   }
 
   m_disabled = didPlayerShipDied(message.as<bsgo::EntityRemovedMessage>(), *m_shipDbView);
+}
+
+void AbilitiesUiHandler::subscribeToViews()
+{
+  auto consumer = [this]() { reset(); };
+
+  auto listener = std::make_unique<IViewListenerProxy>(consumer);
+  m_shipView->addListener(std::move(listener));
+
+  listener = std::make_unique<IViewListenerProxy>(consumer);
+  m_shipDbView->addListener(std::move(listener));
+
+  listener = std::make_unique<IViewListenerProxy>(consumer);
+  m_playerView->addListener(std::move(listener));
 }
 
 namespace {
