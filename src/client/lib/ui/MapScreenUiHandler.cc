@@ -103,12 +103,6 @@ void MapScreenUiHandler::updateUi()
   }
 }
 
-void MapScreenUiHandler::reset()
-{
-  m_selectedSystem.reset();
-  m_initialized = false;
-}
-
 void MapScreenUiHandler::subscribeToViews()
 {
   auto consumer = [this]() { reset(); };
@@ -121,6 +115,12 @@ void MapScreenUiHandler::subscribeToViews()
 
   listener = std::make_unique<IViewListenerProxy>(consumer);
   m_shipDbView->addListener(std::move(listener));
+}
+
+void MapScreenUiHandler::reset()
+{
+  m_selectedSystem.reset();
+  m_initialized = false;
 }
 
 void MapScreenUiHandler::generateControlButtons(const int width, const int height)

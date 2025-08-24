@@ -22,7 +22,6 @@ class HangarUiHandler : public IUiHandler
   bool processUserInput(UserInputData &inputData) override;
   void render(Renderer &engine) const override;
   void updateUi() override;
-  void reset() override;
 
   private:
   PlayerViewShPtr m_playerView{};
@@ -50,6 +49,7 @@ class HangarUiHandler : public IUiHandler
   std::vector<PlayerShipData> m_shipsData{};
 
   void subscribeToViews();
+  void reset();
 
   void initializeHangar();
 

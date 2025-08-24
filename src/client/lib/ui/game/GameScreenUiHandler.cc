@@ -55,14 +55,6 @@ void GameScreenUiHandler::updateUi()
   }
 }
 
-void GameScreenUiHandler::reset()
-{
-  for (const auto &ui : m_uis)
-  {
-    ui->reset();
-  }
-}
-
 void GameScreenUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQueue)
 {
   for (const auto &ui : m_uis)

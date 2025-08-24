@@ -115,6 +115,17 @@ void LockerUiHandler::updateUi()
   }
 }
 
+void LockerUiHandler::subscribeToViews()
+{
+  auto consumer = [this]() { reset(); };
+
+  auto listener = std::make_unique<IViewListenerProxy>(consumer);
+  m_playerView->addListener(std::move(listener));
+
+  listener = std::make_unique<IViewListenerProxy>(consumer);
+  m_shipDbView->addListener(std::move(listener));
+}
+
 void LockerUiHandler::reset()
 {
   m_resourcesMenu->clearChildren();
@@ -130,17 +141,6 @@ void LockerUiHandler::reset()
   m_shipComputers.clear();
 
   m_initialized = false;
-}
-
-void LockerUiHandler::subscribeToViews()
-{
-  auto consumer = [this]() { reset(); };
-
-  auto listener = std::make_unique<IViewListenerProxy>(consumer);
-  m_playerView->addListener(std::move(listener));
-
-  listener = std::make_unique<IViewListenerProxy>(consumer);
-  m_shipDbView->addListener(std::move(listener));
 }
 
 void LockerUiHandler::initializeLocker()

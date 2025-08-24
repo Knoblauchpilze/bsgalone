@@ -21,7 +21,6 @@ class ShopUiHandler : public IUiHandler
   bool processUserInput(UserInputData &inputData) override;
   void render(Renderer &engine) const override;
   void updateUi() override;
-  void reset() override;
 
   private:
   ShopViewShPtr m_shopView{};
@@ -41,6 +40,7 @@ class ShopUiHandler : public IUiHandler
   std::vector<ItemData> m_itemsData{};
 
   void subscribeToViews();
+  void reset();
   void initializeShop();
   void initializeLayout();
   void generateItemsMenus();

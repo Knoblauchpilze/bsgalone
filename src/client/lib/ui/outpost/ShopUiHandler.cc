@@ -101,15 +101,6 @@ void ShopUiHandler::updateUi()
   }
 }
 
-void ShopUiHandler::reset()
-{
-  m_items.clear();
-  m_itemsData.clear();
-  m_menu->clearChildren();
-
-  m_initialized = false;
-}
-
 void ShopUiHandler::subscribeToViews()
 {
   auto consumer = [this]() { reset(); };
@@ -119,6 +110,15 @@ void ShopUiHandler::subscribeToViews()
 
   listener = std::make_unique<IViewListenerProxy>(consumer);
   m_playerView->addListener(std::move(listener));
+}
+
+void ShopUiHandler::reset()
+{
+  m_items.clear();
+  m_itemsData.clear();
+  m_menu->clearChildren();
+
+  m_initialized = false;
 }
 
 void ShopUiHandler::initializeShop()

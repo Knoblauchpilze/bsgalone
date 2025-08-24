@@ -22,7 +22,6 @@ class LogUiHandler : public IUiHandler, public bsgo::AbstractMessageListener
   bool processUserInput(UserInputData &inputData) override;
   void render(Renderer &engine) const override;
   void updateUi() override;
-  void reset() override;
 
   void connectToMessageQueue(bsgo::IMessageQueue &messageQueue) override;
   void onMessageReceived(const bsgo::IMessage &message) override;
@@ -43,6 +42,7 @@ class LogUiHandler : public IUiHandler, public bsgo::AbstractMessageListener
   std::vector<UiTimedMenu *> m_logsToTrigger{};
 
   void subscribeToViews();
+  void reset();
   auto createMenuFromMessage(const bsgo::IMessage &message) -> UiMenuPtr;
 };
 

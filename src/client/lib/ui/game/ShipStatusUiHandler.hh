@@ -22,7 +22,6 @@ class ShipStatusUiHandler : public IUiHandler, public bsgo::AbstractMessageListe
   bool processUserInput(UserInputData &inputData) override;
   void render(Renderer &engine) const override;
   void updateUi() override;
-  void reset() override;
 
   void connectToMessageQueue(bsgo::IMessageQueue &messageQueue) override;
   void onMessageReceived(const bsgo::IMessage &message) override;
@@ -39,6 +38,7 @@ class ShipStatusUiHandler : public IUiHandler, public bsgo::AbstractMessageListe
   std::optional<core::TimeStamp> m_jumpStartTime{};
 
   void subscribeToViews();
+  void reset();
   void initializeThreatPanel(const int width, const int height);
   void initializeJumpPanel(const int width, const int height);
 

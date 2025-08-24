@@ -52,11 +52,6 @@ void ShipStatusUiHandler::updateUi()
   updateJumpPanel();
 }
 
-void ShipStatusUiHandler::reset()
-{
-  m_jumpStartTime.reset();
-}
-
 void ShipStatusUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQueue)
 {
   auto listener = std::make_unique<MessageListenerWrapper>(this);
@@ -86,6 +81,11 @@ void ShipStatusUiHandler::subscribeToViews()
 
   auto listener = std::make_unique<IViewListenerProxy>(consumer);
   m_shipView->addListener(std::move(listener));
+}
+
+void ShipStatusUiHandler::reset()
+{
+  m_jumpStartTime.reset();
 }
 
 namespace {

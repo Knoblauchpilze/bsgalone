@@ -24,7 +24,6 @@ class AbilitiesUiHandler : public IUiHandler, public bsgo::AbstractMessageListen
   bool processUserInput(UserInputData &inputData) override;
   void render(Renderer &engine) const override;
   void updateUi() override;
-  void reset() override;
   void connectToMessageQueue(bsgo::IMessageQueue &messageQueue) override;
 
   void onMessageReceived(const bsgo::IMessage &message) override;
@@ -41,6 +40,7 @@ class AbilitiesUiHandler : public IUiHandler, public bsgo::AbstractMessageListen
   std::vector<UiTextMenu *> m_statuses{};
 
   void subscribeToViews();
+  void reset();
   void generateComputersMenus(int width, int height);
   void initializeAbilities();
   void updateComputerMenu(const bsgo::ComputerSlotComponent &computer, const int id);

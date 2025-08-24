@@ -92,19 +92,6 @@ void WeaponsUiHandler::updateUi()
   }
 }
 
-void WeaponsUiHandler::reset()
-{
-  m_statuses.clear();
-
-  for (auto &weapon : m_weapons)
-  {
-    weapon->clearChildren();
-  }
-
-  m_initialized = false;
-  m_disabled    = false;
-}
-
 void WeaponsUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQueue)
 {
   auto listener = std::make_unique<MessageListenerWrapper>(this);
@@ -133,6 +120,19 @@ void WeaponsUiHandler::subscribeToViews()
 
   listener = std::make_unique<IViewListenerProxy>(consumer);
   m_playerView->addListener(std::move(listener));
+}
+
+void WeaponsUiHandler::reset()
+{
+  m_statuses.clear();
+
+  for (auto &weapon : m_weapons)
+  {
+    weapon->clearChildren();
+  }
+
+  m_initialized = false;
+  m_disabled    = false;
 }
 
 namespace {

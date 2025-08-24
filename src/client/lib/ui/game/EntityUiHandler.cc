@@ -123,13 +123,9 @@ void EntityUiHandler::updateUi()
 
 void EntityUiHandler::subscribeToViews()
 {
-  auto consumer = [this]() { reset(); };
-
-  auto listener = std::make_unique<IViewListenerProxy>(consumer);
-  m_shipView->addListener(std::move(listener));
-
-  listener = std::make_unique<IViewListenerProxy>(consumer);
-  m_shipDbView->addListener(std::move(listener));
+  // There's nothing dynamic in this component so there's no need
+  // to register this handler as a listener of the views.
+  // In case this changes, take inspiration from the other handlers.
 }
 
 void EntityUiHandler::updateNameComponent(const bsgo::Entity &entity)

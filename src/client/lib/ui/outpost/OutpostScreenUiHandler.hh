@@ -24,7 +24,6 @@ class OutpostScreenUiHandler : public IUiHandler
   bool processUserInput(UserInputData &inputData) override;
   void render(Renderer &engine) const override;
   void updateUi() override;
-  void reset() override;
 
   void connectToMessageQueue(bsgo::IMessageQueue &messageQueue) override;
 
@@ -56,6 +55,7 @@ class OutpostScreenUiHandler : public IUiHandler
   HangarUiHandlerPtr m_hangarUi{};
 
   void subscribeToViews();
+  void reset();
   void generateGeneralMenu(const int width, const int height);
   void initializeOutpostScreenOptions();
   void setActiveScreen(const ActiveScreen &screen);

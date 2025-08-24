@@ -91,19 +91,6 @@ void AbilitiesUiHandler::updateUi()
   }
 }
 
-void AbilitiesUiHandler::reset()
-{
-  m_statuses.clear();
-
-  for (auto &computer : m_computers)
-  {
-    computer->clearChildren();
-  }
-
-  m_initialized = false;
-  m_disabled    = false;
-}
-
 void AbilitiesUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQueue)
 {
   auto listener = std::make_unique<MessageListenerWrapper>(this);
@@ -132,6 +119,19 @@ void AbilitiesUiHandler::subscribeToViews()
 
   listener = std::make_unique<IViewListenerProxy>(consumer);
   m_playerView->addListener(std::move(listener));
+}
+
+void AbilitiesUiHandler::reset()
+{
+  m_statuses.clear();
+
+  for (auto &computer : m_computers)
+  {
+    computer->clearChildren();
+  }
+
+  m_initialized = false;
+  m_disabled    = false;
 }
 
 namespace {
