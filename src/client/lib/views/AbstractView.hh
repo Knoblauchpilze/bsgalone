@@ -17,7 +17,17 @@ class AbstractView : public bsgo::AbstractMessageConsumer, public IView
 
   bool isReady() const noexcept override;
 
+  void addListener(IViewListenerPtr listener) override;
+
   void onMessageReceived(const bsgo::IMessage &message) override;
+
+  protected:
+  /// @brief - Used to notify all currently registered listeners of an update of the
+  /// view, using the interface method `onViewUpdated`.
+  void notifyListeners();
+
+  private:
+  std::vector<IViewListenerPtr> m_listeners{};
 };
 
 } // namespace pge
