@@ -1,4 +1,5 @@
 
+-- TODO: Order this
 INSERT INTO bsgalone_schema.system ("name", "x_pos", "y_pos", "z_pos")
   VALUES ('Munnin', -2.5, 3.0, 0.0);
 INSERT INTO bsgalone_schema.system ("name", "x_pos", "y_pos", "z_pos")
