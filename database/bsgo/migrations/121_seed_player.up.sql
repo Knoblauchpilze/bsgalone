@@ -108,11 +108,3 @@ INSERT INTO player_weapon ("weapon", "player", "level")
     (SELECT id FROM player WHERE name = 'toast'),
     3
   );
-
---- player: AI
-INSERT INTO player_weapon ("weapon", "player", "level")
-  VALUES (
-    (SELECT id FROM weapon WHERE name = 'Medium range cannon'),
-    NULL,
-    20
-  );
