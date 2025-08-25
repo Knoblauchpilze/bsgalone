@@ -1,5 +1,5 @@
 
--- player: colo, ship: Viper Mark II
+-- player: colo, ship: Viper Mark II, system: Munnin
 INSERT INTO player_ship ("ship", "player", "name", "active", "hull_points", "power_points", "x_pos", "y_pos", "z_pos")
   VALUES (
       (SELECT id FROM ship WHERE name = 'Viper Mark II'),
@@ -11,6 +11,12 @@ INSERT INTO player_ship ("ship", "player", "name", "active", "hull_points", "pow
       0.0,
       0.0,
       0.0
+  );
+INSERT INTO ship_system ("ship", "system", "docked")
+  VALUES (
+    (SELECT player_ship.id FROM player_ship LEFT JOIN player ON player_ship.player = player.id WHERE player.name = 'colo' AND player_ship.active = true),
+    (SELECT id FROM system WHERE name = 'Munnin'),
+    true
   );
 
 INSERT INTO ship_weapon ("ship", "weapon", "slot")
@@ -51,7 +57,7 @@ INSERT INTO player_ship ("ship", "player", "name", "active", "hull_points", "pow
       0.0
   );
 
--- player: colo2, ship: Viper Mark VII
+-- player: colo2, ship: Viper Mark VII, system: 169 aretis
 INSERT INTO player_ship ("ship", "player", "name", "active", "hull_points", "power_points", "x_pos", "y_pos", "z_pos")
   VALUES (
       (SELECT id FROM ship WHERE name = 'Viper Mark VII'),
@@ -63,6 +69,12 @@ INSERT INTO player_ship ("ship", "player", "name", "active", "hull_points", "pow
       0.0,
       0.0,
       0.0
+  );
+INSERT INTO ship_system ("ship", "system", "docked")
+  VALUES (
+    (SELECT player_ship.id FROM player_ship LEFT JOIN player ON player_ship.player = player.id WHERE player.name = 'colo2' AND player_ship.active = true),
+    (SELECT id FROM system WHERE name = '169 aretis'),
+    true
   );
 
 INSERT INTO ship_weapon ("ship", "weapon", "slot")
@@ -78,7 +90,7 @@ INSERT INTO ship_computer ("ship", "computer")
     (SELECT player_computer.id FROM player_computer LEFT JOIN player ON player.id = player_computer.player LEFT JOIN computer ON player_computer.computer = computer.id WHERE player.name = 'colo2' AND computer.name = 'Scan')
   );
 
--- player: toast, ship: Cylon Raider
+-- player: toast, ship: Cylon Raider, system: Munnin
 INSERT INTO player_ship ("ship", "player", "name", "active", "hull_points", "power_points", "x_pos", "y_pos", "z_pos")
   VALUES (
       (SELECT id FROM ship WHERE name = 'Cylon Raider'),
@@ -91,31 +103,16 @@ INSERT INTO player_ship ("ship", "player", "name", "active", "hull_points", "pow
       0.0,
       0.0
   );
+INSERT INTO ship_system ("ship", "system", "docked")
+  VALUES (
+    (SELECT player_ship.id FROM player_ship LEFT JOIN player ON player_ship.player = player.id WHERE player.name = 'toast' AND player_ship.active = true),
+    (SELECT id FROM system WHERE name = 'Munnin'),
+    true
+  );
 
 INSERT INTO ship_weapon ("ship", "weapon", "slot")
   VALUES (
     (SELECT player_ship.id FROM player_ship LEFT JOIN player ON player.id = player_ship.player LEFT JOIN ship ON player_ship.ship = ship.id WHERE player.name = 'toast' AND ship.name = 'Cylon Raider'),
     (SELECT player_weapon.id FROM player_weapon LEFT JOIN player ON player.id = player_weapon.player LEFT JOIN weapon ON player_weapon.weapon = weapon.id WHERE player.name = 'toast' AND weapon.name = 'Medium range cannon'),
     (SELECT ship_slot.id FROM ship_slot LEFT JOIN ship ON ship_slot.ship = ship.id WHERE ship.name = 'Viper Mark II' AND ship_slot.type = 'weapon' AND ship_slot.x_pos = 0.0)
-  );
-
--- player: AI, ship: Cylon Raider
-INSERT INTO player_ship ("ship", "player", "name", "active", "hull_points", "power_points", "x_pos", "y_pos", "z_pos")
-  VALUES (
-      (SELECT id FROM ship WHERE name = 'Cylon Raider'),
-      NULL,
-      'AI Cylon Raider',
-      true,
-      280.0,
-      23.2,
-      0.0,
-      0.0,
-      0.0
-  );
-
-INSERT INTO ship_weapon ("ship", "weapon", "slot")
-  VALUES (
-    (SELECT id FROM player_ship WHERE player is NULL),
-    (SELECT player_weapon.id FROM player_weapon LEFT JOIN weapon ON player_weapon.weapon = weapon.id WHERE player_weapon.player is NULL AND weapon.name = 'Medium range cannon'),
-    (SELECT ship_slot.id FROM ship_slot LEFT JOIN ship ON ship_slot.ship = ship.id WHERE ship.name = 'Cylon Raider' AND ship_slot.type = 'weapon' AND ship_slot.x_pos = -0.5)
   );
