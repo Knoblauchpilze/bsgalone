@@ -32,6 +32,7 @@ class DatabaseEntityMapper : public core::CoreObject
   void removeEntityForShip(const Uuid shipDbId);
   void removeEntityForAsteroid(const Uuid asteroidDbId);
 
+  auto tryGetPlayerDbId() const -> std::optional<Uuid>;
   auto tryGetPlayerEntityId() const -> std::optional<Uuid>;
   auto tryGetPlayerShipDbId() const -> std::optional<Uuid>;
   auto tryGetPlayerShipEntityId() const -> std::optional<Uuid>;

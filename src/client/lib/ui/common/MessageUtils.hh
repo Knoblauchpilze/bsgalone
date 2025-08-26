@@ -12,4 +12,7 @@ bool didPlayerShipDied(const bsgo::EntityRemovedMessage &message,
 
 bool didPlayerShipDied(const bsgo::EntityRemovedMessage &message, const ShipDbView &shipDbView);
 
+bool didPlayerDied(const bsgo::EntityRemovedMessage &message,
+                   const bsgo::DatabaseEntityMapper &mapper);
+
 } // namespace pge

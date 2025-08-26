@@ -27,4 +27,18 @@ bool didPlayerShipDied(const bsgo::EntityRemovedMessage &message, const ShipDbVi
   return message.getEntityDbId() == shipDbView.getPlayerShipDbId();
 }
 
+bool didPlayerDied(const bsgo::EntityRemovedMessage &message,
+                   const bsgo::DatabaseEntityMapper &mapper)
+{
+  if (message.getEntityKind() != bsgo::EntityKind::PLAYER || !message.isDead())
+  {
+    return false;
+  }
+
+  const auto deadPlayerDbId  = message.getEntityDbId();
+  const auto maybePlayerDbId = mapper.tryGetPlayerDbId();
+
+  return maybePlayerDbId && deadPlayerDbId == *maybePlayerDbId;
+}
+
 } // namespace pge

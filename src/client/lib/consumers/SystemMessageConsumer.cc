@@ -134,6 +134,12 @@ void SystemMessageConsumer::handleEntityRemoved(const bsgo::EntityRemovedMessage
 
     return;
   }
+  if (didPlayerDied(message, m_entityMapper))
+  {
+    // Also do not remove the player's entity if it dies. As explained above
+    // everything is disabled but we need the player to display its name.
+    return;
+  }
 
   const auto ent = m_coordinator->getEntity(*entityId);
   info("Deleting entity " + ent.str());
