@@ -140,6 +140,11 @@ void DatabaseEntityMapper::removeEntityForAsteroid(const Uuid asteroidDbId)
   }
 }
 
+auto DatabaseEntityMapper::tryGetPlayerDbId() const -> std::optional<Uuid>
+{
+  return m_playerDbId;
+}
+
 auto DatabaseEntityMapper::tryGetPlayerEntityId() const -> std::optional<Uuid>
 {
   return m_playerEntityId;
