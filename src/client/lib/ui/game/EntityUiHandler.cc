@@ -142,7 +142,7 @@ void EntityUiHandler::updateHealthComponent(const bsgo::Entity &entity)
   }
 
   std::string text{"Health: "};
-  text += bsgo::floatToStr(std::floor(entity.healthComp().value()), 0);
+  text += bsgo::floatToStr(std::floor(std::max(entity.healthComp().value(), 0.0f)), 0);
   text += "/";
   text += bsgo::floatToStr(std::floor(entity.healthComp().max()), 0);
   m_menus[HEALTH]->setText(text);
