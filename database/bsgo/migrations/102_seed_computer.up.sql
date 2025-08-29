@@ -9,7 +9,7 @@ INSERT INTO computer_price ("computer", "resource", "cost")
   VALUES (
     (SELECT id FROM computer WHERE name = 'Weapon buff'),
     (SELECT id FROM resource WHERE name = 'tylium'),
-    6500.0
+    6500
   );
 
 -- Scan
@@ -22,7 +22,7 @@ INSERT INTO computer_price ("computer", "resource", "cost")
   VALUES (
     (SELECT id FROM computer WHERE name = 'Scan'),
     (SELECT id FROM resource WHERE name = 'tylium'),
-    5000.0
+    5000
   );
 
 INSERT INTO computer_allowed_target ("computer", "entity")

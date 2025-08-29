@@ -9,19 +9,19 @@ namespace bsgo {
 class ResourceComponent : public AbstractComponent
 {
   public:
-  ResourceComponent(const Uuid resource, const float amount);
+  ResourceComponent(const Uuid resource, const int amount);
   ~ResourceComponent() override = default;
 
   auto resource() const -> Uuid;
-  auto amount() const -> float;
+  auto amount() const -> int;
 
   void update(const float elapsedSeconds) override;
 
-  void setAmount(const float amount);
+  void setAmount(const int amount);
 
   private:
   Uuid m_resource;
-  float m_amount;
+  int m_amount;
 };
 
 using ResourceComponentShPtr = std::shared_ptr<ResourceComponent>;

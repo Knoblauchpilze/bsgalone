@@ -192,7 +192,7 @@ void PurchaseService::tryPurchaseShip(const Uuid playerId, const Uuid shipId) co
 
 namespace {
 auto findExistingAmount(const std::vector<PlayerResource> &resources, const Uuid toFind)
-  -> std::optional<float>
+  -> std::optional<int>
 {
   for (const auto &resource : resources)
   {
@@ -207,7 +207,7 @@ auto findExistingAmount(const std::vector<PlayerResource> &resources, const Uuid
 } // namespace
 
 void PurchaseService::debitResources(const Uuid playerId,
-                                     const std::unordered_map<Uuid, float> &costs) const
+                                     const std::unordered_map<Uuid, int> &costs) const
 {
   const auto funds = m_repositories.playerResourceRepository->findAllByPlayer(playerId);
 

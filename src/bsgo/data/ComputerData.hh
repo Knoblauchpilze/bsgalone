@@ -26,7 +26,7 @@ struct ComputerData
   std::optional<std::unordered_set<EntityKind>> allowedTargets{};
   std::optional<float> damageModifier{};
 
-  std::unordered_map<Uuid, float> price{};
+  std::unordered_map<Uuid, int> price{};
 
   bool operator==(const ComputerData &rhs) const;
 };

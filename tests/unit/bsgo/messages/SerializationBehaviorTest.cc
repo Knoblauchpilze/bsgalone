@@ -196,9 +196,74 @@ TEST(Unit_Bsgo_Serialization_Behavior, Nominal_MapSlotInt)
   EXPECT_EQ(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Nominal_MapUuidFloat_Empty)
+namespace test {
+
+// // template<typename Key, std::enable_if_t<!std::is_enum<Key>::value, bool> = true>
+// // auto serialize2(std::ostream &out, const std::unordered_map<Key, int> &m) -> std::ostream &;
+
+// // template<typename Key, std::enable_if_t<!std::is_enum<Key>::value, bool> = true>
+// // bool deserialize2(std::istream &in, std::unordered_map<Key, int> &m);
+
+// template<typename Key, std::enable_if_t<!std::is_enum<Key>::value, bool> = true>
+// inline auto serialize2(std::ostream &out, const std::unordered_map<Key, int> &m) -> std::ostream &
+// {
+//   core::serialize(out, m.size());
+
+//   for (const auto &[key, value] : m)
+//   {
+//     core::serialize(out, key);
+//     core::serialize(out, value);
+//   }
+
+//   return out;
+// }
+
+// template<typename Key, std::enable_if_t<!std::is_enum<Key>::value, bool> = true>
+// inline bool deserialize2(std::istream &in, std::unordered_map<Key, int> &m)
+// {
+//   bool ok{true};
+
+//   std::size_t count;
+//   ok &= core::deserialize(in, count);
+
+//   m.clear();
+
+//   for (std::size_t id = 0u; id < count; ++id)
+//   {
+//     Key key;
+//     int value;
+
+//     ok &= core::deserialize(in, key);
+//     ok &= core::deserialize(in, value);
+
+//     m[key] = value;
+//   }
+
+//   return ok;
+// }
+
+// template<typename T>
+// auto serializeAndDeserialize(const T &expected, const bool truncate) -> std::pair<bool, T>
+// {
+//   std::ostringstream out{};
+//   serialize2(out, expected);
+
+//   auto serialized = out.str();
+//   if (truncate)
+//   {
+//     serialized = truncateString(serialized);
+//   }
+//   std::istringstream in(serialized);
+
+//   T output{};
+//   const auto success = deserialize2(in, output);
+//   return std::make_pair(success, output);
+// }
+} // namespace test
+
+TEST(Unit_Bsgo_Serialization_Behavior, Nominal_MapUuidInt_Empty)
 {
-  std::unordered_map<Uuid, float> empty;
+  std::unordered_map<Uuid, int> empty;
 
   const auto [success, actual] = serializeAndDeserialize(empty, false);
 
@@ -206,9 +271,9 @@ TEST(Unit_Bsgo_Serialization_Behavior, Nominal_MapUuidFloat_Empty)
   EXPECT_EQ(actual, empty);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Nominal_MapUuidFloat)
+TEST(Unit_Bsgo_Serialization_Behavior, Nominal_MapUuidInt)
 {
-  std::unordered_map<Uuid, float> expected{{Uuid{14}, 1789.0987f}, {Uuid{7894}, -45.91f}};
+  std::unordered_map<Uuid, int> expected{{Uuid{14}, 1789}, {Uuid{7894}, -45}};
 
   const auto [success, actual] = serializeAndDeserialize(expected, false);
 
@@ -288,9 +353,9 @@ TEST(Unit_Bsgo_Serialization_Behavior, Failure_MapSlotInt)
   EXPECT_FALSE(success);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Failure_MapUuidFloat)
+TEST(Unit_Bsgo_Serialization_Behavior, Failure_MapUuid)
 {
-  std::unordered_map<Uuid, float> expected{{Uuid{5476}, 1.36f}, {Uuid{13}, -2.87f}};
+  std::unordered_map<Uuid, int> expected{{Uuid{5476}, 136}, {Uuid{13}, -287}};
 
   const auto [success, _] = serializeAndDeserialize(expected, true);
 

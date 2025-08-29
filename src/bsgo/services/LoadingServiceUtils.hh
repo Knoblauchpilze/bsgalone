@@ -36,7 +36,7 @@ struct AsteroidProps
   Asteroid dbAsteroid{};
 
   std::optional<Uuid> resource{};
-  std::optional<float> amount{};
+  std::optional<int> amount{};
 
   auto toAsteroidData() const -> AsteroidData;
 };
@@ -80,7 +80,7 @@ auto toPlayerResourceData(const PlayerResource &playerResource) -> PlayerResourc
 struct WeaponProps
 {
   Weapon dbWeapon{};
-  std::unordered_map<Uuid, float> price{};
+  std::unordered_map<Uuid, int> price{};
 
   auto toWeaponData() const -> WeaponData;
 };
@@ -88,7 +88,7 @@ struct WeaponProps
 struct ComputerProps
 {
   Computer dbComputer{};
-  std::unordered_map<Uuid, float> price{};
+  std::unordered_map<Uuid, int> price{};
 
   auto toComputerData() const -> ComputerData;
 };
@@ -96,7 +96,7 @@ struct ComputerProps
 struct ShipProps
 {
   Ship dbShip{};
-  std::unordered_map<Uuid, float> price{};
+  std::unordered_map<Uuid, int> price{};
 
   auto toShipData() const -> ShipData;
 };

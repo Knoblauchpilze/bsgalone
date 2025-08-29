@@ -7,7 +7,7 @@ INSERT INTO ship_price ("ship", "resource", "cost")
   VALUES (
     (SELECT id FROM ship WHERE name = 'Viper Mark II'),
     (SELECT id FROM resource WHERE name = 'tylium'),
-    10000.0
+    10000
   );
 
 INSERT INTO ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
@@ -93,7 +93,7 @@ INSERT INTO ship_price ("ship", "resource", "cost")
   VALUES (
     (SELECT id FROM ship WHERE name = 'Viper Mark VII'),
     (SELECT id FROM resource WHERE name = 'tylium'),
-    45000.0
+    45000
   );
 
 INSERT INTO ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
@@ -148,7 +148,7 @@ INSERT INTO ship_price ("ship", "resource", "cost")
   VALUES (
     (SELECT id FROM ship WHERE name = 'Cylon War Raider'),
     (SELECT id FROM resource WHERE name = 'tylium'),
-    45000.0
+    45000
   );
 
 INSERT INTO ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
@@ -203,13 +203,13 @@ INSERT INTO ship_price ("ship", "resource", "cost")
   VALUES (
     (SELECT id FROM ship WHERE name = 'Jotunn'),
     (SELECT id FROM resource WHERE name = 'tylium'),
-    200000.0
+    200000
   );
 INSERT INTO ship_price ("ship", "resource", "cost")
   VALUES (
     (SELECT id FROM ship WHERE name = 'Jotunn'),
     (SELECT id FROM resource WHERE name = 'titane'),
-    100.0
+    100
   );
 
 INSERT INTO ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
@@ -270,13 +270,13 @@ INSERT INTO ship_price ("ship", "resource", "cost")
   VALUES (
     (SELECT id FROM ship WHERE name = 'Jormung'),
     (SELECT id FROM resource WHERE name = 'tylium'),
-    200000.0
+    200000
   );
 INSERT INTO ship_price ("ship", "resource", "cost")
   VALUES (
     (SELECT id FROM ship WHERE name = 'Jormung'),
     (SELECT id FROM resource WHERE name = 'titane'),
-    100.0
+    100
   );
 
 INSERT INTO ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
@@ -337,7 +337,7 @@ INSERT INTO ship_price ("ship", "resource", "cost")
   VALUES (
     (SELECT id FROM ship WHERE name = 'Vanir'),
     (SELECT id FROM resource WHERE name = 'tylium'),
-    2000000.0
+    2000000
   );
 
 INSERT INTO ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
@@ -410,7 +410,7 @@ INSERT INTO ship_price ("ship", "resource", "cost")
   VALUES (
     (SELECT id FROM ship WHERE name = 'Hel'),
     (SELECT id FROM resource WHERE name = 'tylium'),
-    2000000.0
+    2000000
   );
 
 INSERT INTO ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")

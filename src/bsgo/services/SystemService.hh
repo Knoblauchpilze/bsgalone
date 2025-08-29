@@ -13,9 +13,7 @@ class SystemService : public AbstractService
   SystemService(const Repositories &repositories);
   ~SystemService() override = default;
 
-  bool tryDistributeResource(const Uuid playerDbId,
-                             const Uuid resourceDbId,
-                             const float amount) const;
+  bool tryDistributeResource(const Uuid playerDbId, const Uuid resourceDbId, const int amount) const;
 
   bool trySendPlayerShipBackToOutpost(const Uuid shipDbId) const;
 
@@ -39,7 +37,7 @@ class SystemService : public AbstractService
   auto getShipDbIdForPlayer(const Uuid playerDbId) const -> Uuid;
 
   private:
-  auto findExistingResourceAmount(const Uuid playerDbId, const Uuid resourceDbId) const -> float;
+  auto findExistingResourceAmount(const Uuid playerDbId, const Uuid resourceDbId) const -> int;
 };
 
 using SystemServiceShPtr = std::shared_ptr<SystemService>;

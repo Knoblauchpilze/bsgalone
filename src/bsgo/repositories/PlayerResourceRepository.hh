@@ -13,7 +13,7 @@ struct PlayerResource
   Uuid player{};
   Uuid resource{};
   std::string name{};
-  float amount{};
+  int amount{};
 };
 
 class PlayerResourceRepository : public AbstractRepository

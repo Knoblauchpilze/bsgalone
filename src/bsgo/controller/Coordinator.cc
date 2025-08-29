@@ -193,7 +193,7 @@ void Coordinator::addComputer(const Uuid ent, const PlayerComputerData &computer
   m_components.computers.emplace(ent, std::make_shared<ComputerSlotComponent>(computer));
 }
 
-void Coordinator::addResourceComponent(const Uuid ent, const Uuid resource, const float amount)
+void Coordinator::addResourceComponent(const Uuid ent, const Uuid resource, const int amount)
 {
   checkEntityExist(ent, "Resource");
   m_components.resources.emplace(ent, std::make_shared<ResourceComponent>(resource, amount));

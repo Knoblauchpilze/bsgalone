@@ -16,7 +16,7 @@ class WeaponPriceRepository : public AbstractRepository
 
   void initialize() override;
 
-  auto findAllByWeapon(const Uuid weapon) const -> std::unordered_map<Uuid, float>;
+  auto findAllByWeapon(const Uuid weapon) const -> std::unordered_map<Uuid, int>;
 };
 
 using WeaponPriceRepositoryShPtr = std::shared_ptr<WeaponPriceRepository>;

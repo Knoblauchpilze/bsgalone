@@ -31,7 +31,7 @@ CREATE TABLE ship (
 CREATE TABLE ship_price (
   ship INTEGER NOT NULL,
   resource INTEGER NOT NULL,
-  cost NUMERIC(10, 2) NOT NULL,
+  cost INTEGER NOT NULL,
   PRIMARY KEY (ship, resource),
   FOREIGN KEY (ship) REFERENCES ship(id),
   FOREIGN KEY (resource) REFERENCES resource(id)

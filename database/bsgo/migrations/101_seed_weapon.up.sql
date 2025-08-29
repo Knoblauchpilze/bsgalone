@@ -7,13 +7,13 @@ INSERT INTO weapon_price ("weapon", "resource", "cost")
   VALUES (
     (SELECT id FROM weapon WHERE name = 'Short range cannon'),
     (SELECT id FROM resource WHERE name = 'tylium'),
-    10000.0
+    10000
   );
 INSERT INTO weapon_price ("weapon", "resource", "cost")
   VALUES (
     (SELECT id FROM weapon WHERE name = 'Short range cannon'),
     (SELECT id FROM resource WHERE name = 'titane'),
-    1000.0
+    1000
   );
 
 -- Medium range cannon
@@ -24,7 +24,7 @@ INSERT INTO weapon_price ("weapon", "resource", "cost")
   VALUES (
     (SELECT id FROM weapon WHERE name = 'Medium range cannon'),
     (SELECT id FROM resource WHERE name = 'tylium'),
-    11000.0
+    11000
   );
 
 -- Long range cannon
@@ -35,5 +35,5 @@ INSERT INTO weapon_price ("weapon", "resource", "cost")
   VALUES (
     (SELECT id FROM weapon WHERE name = 'Long range cannon'),
     (SELECT id FROM resource WHERE name = 'tylium'),
-    12000.0
+    12000
   );

@@ -10,12 +10,12 @@ class LootMessage : public NetworkMessage
 {
   public:
   LootMessage();
-  LootMessage(const Uuid playerDbId, const Uuid resourceDbId, const float amount);
+  LootMessage(const Uuid playerDbId, const Uuid resourceDbId, const int amount);
   ~LootMessage() override = default;
 
   auto getPlayerDbId() const -> Uuid;
   auto getResourceDbId() const -> Uuid;
-  auto amount() const -> float;
+  auto amount() const -> int;
 
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
@@ -25,7 +25,7 @@ class LootMessage : public NetworkMessage
   private:
   Uuid m_playerDbId{};
   Uuid m_resourceDbId{};
-  float m_amount{};
+  int m_amount{};
 };
 
 } // namespace bsgo

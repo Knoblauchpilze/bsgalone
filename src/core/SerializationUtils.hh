@@ -44,14 +44,14 @@ bool deserialize(std::istream &in, std::optional<T> &value);
 template<typename Key, std::enable_if_t<std::is_enum<Key>::value, bool> = true>
 auto serialize(std::ostream &out, const std::unordered_map<Key, int> &m) -> std::ostream &;
 
+template<typename Key, std::enable_if_t<!std::is_enum<Key>::value, bool> = true>
+auto serialize(std::ostream &out, const std::unordered_map<Key, int> &m) -> std::ostream &;
+
 template<typename Key, std::enable_if_t<std::is_enum<Key>::value, bool> = true>
 bool deserialize(std::istream &in, std::unordered_map<Key, int> &m);
 
 template<typename Key, std::enable_if_t<!std::is_enum<Key>::value, bool> = true>
-auto serialize(std::ostream &out, const std::unordered_map<Key, float> &m) -> std::ostream &;
-
-template<typename Key, std::enable_if_t<!std::is_enum<Key>::value, bool> = true>
-bool deserialize(std::istream &in, std::unordered_map<Key, float> &m);
+bool deserialize(std::istream &in, std::unordered_map<Key, int> &m);
 
 auto serialize(std::ostream &out, const core::Duration &d) -> std::ostream &;
 

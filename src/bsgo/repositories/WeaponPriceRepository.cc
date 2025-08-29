@@ -20,18 +20,18 @@ void WeaponPriceRepository::initialize()
 }
 
 auto WeaponPriceRepository::findAllByWeapon(const Uuid weapon) const
-  -> std::unordered_map<Uuid, float>
+  -> std::unordered_map<Uuid, int>
 {
   const auto query = [weapon](pqxx::nontransaction &work) {
     return work.exec(pqxx::prepped{FIND_ALL_QUERY_NAME}, pqxx::params{toDbId(weapon)});
   };
   const auto rows = m_connection->executeQuery(query);
 
-  std::unordered_map<Uuid, float> out;
+  std::unordered_map<Uuid, int> out;
   for (const auto record : rows)
   {
-    const auto resource = fromDbId(record[0].as<float>());
-    const auto cost     = record[1].as<float>();
+    const auto resource = fromDbId(record[0].as<int>());
+    const auto cost     = record[1].as<int>();
 
     out[resource] = cost;
   }

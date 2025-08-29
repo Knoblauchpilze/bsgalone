@@ -37,7 +37,7 @@ TEST(Unit_Bsgo_Serialization_AsteroidListMessage, Basic)
                                                  .radius   = 26.9f,
                                                  .health   = 100.0f,
                                                  .resource = Uuid{4567},
-                                                 .amount   = 11.3f}};
+                                                 .amount   = 11}};
   AsteroidListMessage actual(Uuid{1515}, asteroidsData);
   actual.setClientId(Uuid{2});
   serializeAndDeserializeMessage(expected, actual);
@@ -54,7 +54,7 @@ TEST(Unit_Bsgo_Serialization_AsteroidListMessage, WithClientId)
   AsteroidListMessage expected(Uuid{123}, asteroidsData);
   expected.setClientId(Uuid{78});
 
-  asteroidsData = {{.dbId = Uuid{17}, .health = 100.0f, .resource = Uuid{923}, .amount = 14.2f},
+  asteroidsData = {{.dbId = Uuid{17}, .health = 100.0f, .resource = Uuid{923}, .amount = 142},
                    {.dbId = Uuid{17}, .radius = 26.1}};
   AsteroidListMessage actual(Uuid{745}, {});
   serializeAndDeserializeMessage(expected, actual);

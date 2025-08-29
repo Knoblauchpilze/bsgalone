@@ -20,7 +20,7 @@ class PurchaseService : public AbstractService
   void tryPurchaseWeapon(const Uuid playerId, const Uuid weaponId) const;
   void tryPurchaseComputer(const Uuid playerId, const Uuid computerId) const;
   void tryPurchaseShip(const Uuid playerId, const Uuid shipId) const;
-  void debitResources(const Uuid playerId, const std::unordered_map<Uuid, float> &costs) const;
+  void debitResources(const Uuid playerId, const std::unordered_map<Uuid, int> &costs) const;
 };
 
 using PurchaseServiceShPtr = std::shared_ptr<PurchaseService>;

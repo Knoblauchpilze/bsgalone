@@ -55,7 +55,7 @@ auto LoadingService::getAsteroidById(const Uuid asteroidDbId) const -> AsteroidP
   const auto asteroid = m_repositories.asteroidRepository->findOneById(asteroidDbId);
 
   std::optional<Uuid> resource{};
-  std::optional<float> amount{};
+  std::optional<int> amount{};
   if (asteroid.loot)
   {
     const auto loot = m_repositories.asteroidLootRepository->findOneById(asteroidDbId);
@@ -82,7 +82,7 @@ auto LoadingService::getAsteroidsInSystem(const Uuid systemDbId) const -> std::v
     const auto asteroid = m_repositories.asteroidRepository->findOneById(asteroidDbId);
 
     std::optional<Uuid> resource{};
-    std::optional<float> amount{};
+    std::optional<int> amount{};
     if (asteroid.loot)
     {
       const auto loot = m_repositories.asteroidLootRepository->findOneById(asteroidDbId);

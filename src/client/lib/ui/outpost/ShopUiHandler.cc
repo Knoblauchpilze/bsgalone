@@ -168,7 +168,7 @@ auto generatePriceMenus(const ShopItem &item) -> PriceMenu
 
   for (const auto &cost : item.price)
   {
-    label     = cost.resource.name + ": " + bsgo::floatToStr(cost.amount, 0);
+    label     = cost.resource.name + ": " + std::to_string(cost.amount);
     text      = generateTextConfig(label);
     auto menu = std::make_unique<UiTextMenu>(config, bg, text);
     out.costs.push_back(menu.get());

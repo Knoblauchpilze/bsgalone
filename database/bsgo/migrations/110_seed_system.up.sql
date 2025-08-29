@@ -20,7 +20,7 @@ INSERT INTO asteroid_loot ("asteroid", "resource", "amount")
   VALUES (
     (SELECT id FROM asteroid WHERE health = 85.0),
     (SELECT id FROM resource WHERE name = 'tylium'),
-    10.0
+    10
   );
 INSERT INTO asteroid ("system", "health", "radius", "x_pos", "y_pos", "z_pos")
   VALUES (
@@ -40,7 +40,7 @@ INSERT INTO asteroid_loot ("asteroid", "resource", "amount")
   VALUES (
     (SELECT id FROM asteroid WHERE health = 150.0),
     (SELECT id FROM resource WHERE name = 'titane'),
-    2.0
+    2
   );
 INSERT INTO asteroid ("system", "health", "radius", "x_pos", "y_pos", "z_pos")
   VALUES (
@@ -78,7 +78,7 @@ INSERT INTO asteroid_loot ("asteroid", "resource", "amount")
   VALUES (
     (SELECT id FROM asteroid WHERE health = 40.0),
     (SELECT id FROM resource WHERE name = 'tylium'),
-    1234.0
+    1234
   );
 INSERT INTO asteroid ("system", "health", "radius", "x_pos", "y_pos", "z_pos")
   VALUES (
