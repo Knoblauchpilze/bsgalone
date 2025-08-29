@@ -19,7 +19,7 @@ namespace pge {
 struct ResourceCost
 {
   bsgo::ResourceData resource{};
-  float amount{};
+  int amount{};
 };
 
 struct ShopItem

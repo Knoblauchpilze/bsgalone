@@ -49,7 +49,7 @@ TEST(Unit_Bsgo_Serialization_AsteroidData, Basic)
                      .radius   = 5.0f,
                      .health   = 100.0f};
 
-  AsteroidData output{.dbId = Uuid{14}, .resource = Uuid{4567}, .amount = 50.0f};
+  AsteroidData output{.dbId = Uuid{14}, .resource = Uuid{4567}, .amount = 50};
 
   EXPECT_TRUE(serializeAndDeserializeData(input, output));
 
@@ -63,7 +63,7 @@ TEST(Unit_Bsgo_Serialization_AsteroidData, WithLoot)
                      .radius   = 5.0f,
                      .health   = 100.0f,
                      .resource = Uuid{4567},
-                     .amount   = 31.0f};
+                     .amount   = 31};
 
   AsteroidData output{.dbId = Uuid{14}};
 

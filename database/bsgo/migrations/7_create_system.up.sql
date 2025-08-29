@@ -55,7 +55,7 @@ CREATE TABLE asteroid (
 CREATE TABLE asteroid_loot (
   asteroid INTEGER NOT NULL,
   resource INTEGER NOT NULL,
-  amount NUMERIC(12, 2) NOT NULL,
+  amount INTEGER NOT NULL,
   PRIMARY KEY (asteroid),
   FOREIGN KEY (asteroid) REFERENCES asteroid(id),
   FOREIGN KEY (resource) REFERENCES resource(id)

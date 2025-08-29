@@ -263,7 +263,7 @@ void LockerUiHandler::generateResourcesMenus()
     auto field = std::make_unique<UiTextMenu>(config, bg, label);
     m_resourcesMenu->addMenu(std::move(field));
 
-    const auto amount = bsgo::floatToStr(std::floor(it->amount), 0);
+    const auto amount = std::to_string(it->amount);
     label = textConfigFromColor(amount, colorFromResourceName(it->name), TextAlignment::LEFT);
     field = std::make_unique<UiTextMenu>(config, bg, label);
     m_resourcesMenu->addMenu(std::move(field));

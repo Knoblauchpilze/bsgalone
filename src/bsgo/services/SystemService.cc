@@ -10,7 +10,7 @@ SystemService::SystemService(const Repositories &repositories)
 
 bool SystemService::tryDistributeResource(const Uuid playerDbId,
                                           const Uuid resourceDbId,
-                                          const float amount) const
+                                          const int amount) const
 {
   const auto player = m_repositories.playerRepository->findOneById(playerDbId);
 
@@ -128,7 +128,7 @@ auto SystemService::getShipDbIdForPlayer(const Uuid playerDbId) const -> Uuid
 }
 
 auto SystemService::findExistingResourceAmount(const Uuid playerDbId, const Uuid resourceDbId) const
-  -> float
+  -> int
 {
   const auto resources = m_repositories.playerResourceRepository->findAllByPlayer(playerDbId);
   for (const auto &resource : resources)
@@ -139,7 +139,7 @@ auto SystemService::findExistingResourceAmount(const Uuid playerDbId, const Uuid
     }
   }
 
-  return 0.0f;
+  return 0;
 }
 
 } // namespace bsgo

@@ -32,7 +32,7 @@ struct ShipData
   core::Duration jumpTimeInThreat{};
 
   std::unordered_map<Slot, int> slots{};
-  std::unordered_map<Uuid, float> price{};
+  std::unordered_map<Uuid, int> price{};
 
   bool operator==(const ShipData &rhs) const;
 };

@@ -21,7 +21,7 @@ struct WeaponData
 
   core::Duration reloadTime{};
 
-  std::unordered_map<Uuid, float> price{};
+  std::unordered_map<Uuid, int> price{};
 
   bool operator==(const WeaponData &rhs) const;
 };

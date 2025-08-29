@@ -31,7 +31,7 @@ auto AsteroidLootRepository::findOneById(const Uuid asteroid) const -> AsteroidL
   AsteroidLoot out;
 
   out.resource = fromDbId(record[0].as<int>());
-  out.amount   = record[1].as<float>();
+  out.amount   = record[1].as<int>();
 
   return out;
 }

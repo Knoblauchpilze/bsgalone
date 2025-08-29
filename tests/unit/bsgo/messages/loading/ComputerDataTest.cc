@@ -34,7 +34,7 @@ TEST(Unit_Bsgo_Serialization_ComputerData, DifferentWhenDbIdIsDifferent)
   ComputerData data1{.dbId      = Uuid{1234},
                      .powerCost = 100.0f,
                      .range     = 1.025f,
-                     .price     = {{Uuid{26}, 401.298f}}};
+                     .price     = {{Uuid{26}, 401298}}};
 
   ComputerData data2 = data1;
   data2.dbId         = Uuid{5678};
@@ -48,7 +48,7 @@ TEST(Unit_Bsgo_Serialization_ComputerData, Basic)
                      .name           = "eniac",
                      .range          = 98765.1234f,
                      .damageModifier = 2.10987f,
-                     .price          = {{Uuid{17}, 98.032f}, {Uuid{3274}, 41.097f}}};
+                     .price          = {{Uuid{17}, 9803}, {Uuid{3274}, 41097}}};
 
   ComputerData output{.dbId       = Uuid{14},
                       .powerCost  = 26.57f,
@@ -83,7 +83,7 @@ TEST(Unit_Bsgo_Serialization_ComputerData, NonEmptyAllowedTargetsInDestination)
   ComputerData output{.dbId       = Uuid{14},
                       .name       = "another computer",
                       .reloadTime = core::toMilliseconds(1234),
-                      .price      = {{Uuid{17}, 98.032f}, {Uuid{3274}, 41.097f}}};
+                      .price      = {{Uuid{17}, 980}, {Uuid{3274}, 41}}};
   output.allowedTargets = std::unordered_set<EntityKind>{EntityKind::OUTPOST};
 
   EXPECT_TRUE(serializeAndDeserializeData(input, output));
@@ -93,9 +93,9 @@ TEST(Unit_Bsgo_Serialization_ComputerData, NonEmptyAllowedTargetsInDestination)
 
 TEST(Unit_Bsgo_Serialization_ComputerData, NonEmptyDamageModifierInDestination)
 {
-  ComputerData input{.dbId = Uuid{1234}, .price = {{Uuid{17}, 98.032f}, {Uuid{3274}, 41.097f}}};
+  ComputerData input{.dbId = Uuid{1234}, .price = {{Uuid{17}, 982}, {Uuid{3274}, 417}}};
 
-  ComputerData output{.dbId = Uuid{14}, .damageModifier = 2.10987f, .price = {{Uuid{89}, 32.7104f}}};
+  ComputerData output{.dbId = Uuid{14}, .damageModifier = 2.10987f, .price = {{Uuid{89}, 3271}}};
 
   EXPECT_TRUE(serializeAndDeserializeData(input, output));
 
