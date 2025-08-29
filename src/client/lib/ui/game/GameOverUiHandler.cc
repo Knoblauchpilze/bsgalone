@@ -1,6 +1,5 @@
 
 #include "GameOverUiHandler.hh"
-#include "EntityRemovedMessage.hh"
 #include "IViewListenerProxy.hh"
 #include "MessageUtils.hh"
 
