@@ -153,7 +153,7 @@ void GameMessageModule::handleSignupMessage(const bsgo::SignupMessage &message)
 
 void GameMessageModule::handleEntityRemovedMessage(const bsgo::EntityRemovedMessage &message)
 {
-  if (didPlayerShipDied(message, m_entityMapper))
+  if (didPlayerShipDie(message, m_entityMapper))
   {
     m_game.onPlayerKilled();
   }

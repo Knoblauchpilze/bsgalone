@@ -104,7 +104,7 @@ void AbilitiesUiHandler::onMessageReceived(const bsgo::IMessage &message)
     return;
   }
 
-  m_disabled = didPlayerShipDied(message.as<bsgo::EntityRemovedMessage>(), *m_shipDbView);
+  m_disabled = didPlayerShipDie(message.as<bsgo::EntityRemovedMessage>(), *m_shipDbView);
 }
 
 void AbilitiesUiHandler::subscribeToViews()

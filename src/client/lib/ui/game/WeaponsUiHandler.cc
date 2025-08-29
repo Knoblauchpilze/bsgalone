@@ -105,7 +105,7 @@ void WeaponsUiHandler::onMessageReceived(const bsgo::IMessage &message)
     return;
   }
 
-  m_disabled = didPlayerShipDied(message.as<bsgo::EntityRemovedMessage>(), *m_shipDbView);
+  m_disabled = didPlayerShipDie(message.as<bsgo::EntityRemovedMessage>(), *m_shipDbView);
 }
 
 void WeaponsUiHandler::subscribeToViews()
