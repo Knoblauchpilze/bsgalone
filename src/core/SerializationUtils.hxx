@@ -146,7 +146,45 @@ inline auto serialize(std::ostream &out, const std::unordered_map<Key, int> &m) 
   return out;
 }
 
+template<typename Key, std::enable_if_t<!std::is_enum<Key>::value, bool>>
+inline auto serialize(std::ostream &out, const std::unordered_map<Key, int> &m) -> std::ostream &
+{
+  core::serialize(out, m.size());
+
+  for (const auto &[key, value] : m)
+  {
+    core::serialize(out, key);
+    core::serialize(out, value);
+  }
+
+  return out;
+}
+
 template<typename Key, std::enable_if_t<std::is_enum<Key>::value, bool>>
+inline bool deserialize(std::istream &in, std::unordered_map<Key, int> &m)
+{
+  bool ok{true};
+
+  std::size_t count;
+  ok &= core::deserialize(in, count);
+
+  m.clear();
+
+  for (std::size_t id = 0u; id < count; ++id)
+  {
+    Key key;
+    int value;
+
+    ok &= core::deserialize(in, key);
+    ok &= core::deserialize(in, value);
+
+    m[key] = value;
+  }
+
+  return ok;
+}
+
+template<typename Key, std::enable_if_t<!std::is_enum<Key>::value, bool>>
 inline bool deserialize(std::istream &in, std::unordered_map<Key, int> &m)
 {
   bool ok{true};

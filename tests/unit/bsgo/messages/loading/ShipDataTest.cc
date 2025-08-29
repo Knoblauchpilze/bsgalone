@@ -90,13 +90,13 @@ TEST(Unit_Bsgo_Serialization_ShipData, WithPrice)
                  .acceleration   = 2.5f,
                  .speed          = 1.78f,
                  .radius         = 5.0f,
-                 .price          = {{Uuid{1}, 100.0f}, {Uuid{2}, 200.0f}}};
+                 .price          = {{Uuid{1}, 100}, {Uuid{2}, 200}}};
 
   ShipData output{.dbId      = Uuid{14},
                   .faction   = Faction::CYLON,
                   .shipClass = ShipClass::LINE,
                   .name      = "the whale",
-                  .price     = {{Uuid{8}, 14.758f}, {Uuid{9}, 36.098f}, {Uuid{5}, 12.47f}}};
+                  .price     = {{Uuid{8}, 14758}, {Uuid{9}, 36098}, {Uuid{5}, 1247}}};
 
   EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
 
