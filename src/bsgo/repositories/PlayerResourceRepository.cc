@@ -47,7 +47,7 @@ auto PlayerResourceRepository::findAllByPlayer(const Uuid player) const
   {
     const auto resource = fromDbId(record[0].as<int>());
     const auto name     = record[1].as<std::string>();
-    const auto amount   = record[2].as<float>();
+    const auto amount   = record[2].as<int>();
 
     out.emplace_back(player, resource, name, amount);
   }

@@ -8,7 +8,7 @@ LootMessage::LootMessage()
   : NetworkMessage(MessageType::LOOT)
 {}
 
-LootMessage::LootMessage(const Uuid playerDbId, const Uuid resourceDbId, const float amount)
+LootMessage::LootMessage(const Uuid playerDbId, const Uuid resourceDbId, const int amount)
   : NetworkMessage(MessageType::LOOT)
   , m_playerDbId(playerDbId)
   , m_resourceDbId(resourceDbId)
@@ -25,7 +25,7 @@ auto LootMessage::getResourceDbId() const -> Uuid
   return m_resourceDbId;
 }
 
-auto LootMessage::amount() const -> float
+auto LootMessage::amount() const -> int
 {
   return m_amount;
 }

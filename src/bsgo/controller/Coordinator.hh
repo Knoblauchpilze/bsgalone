@@ -51,7 +51,7 @@ class Coordinator : public core::CoreObject
   void addDbId(const Uuid ent, const Uuid dbId);
   void addWeapon(const Uuid ent, const PlayerWeaponData &weapon);
   void addComputer(const Uuid ent, const PlayerComputerData &computer);
-  void addResourceComponent(const Uuid ent, const Uuid resource, const float amount);
+  void addResourceComponent(const Uuid ent, const Uuid resource, const int amount);
 
   void addWeaponEffect(const Uuid ent, const core::Duration &duration, const float damageModifier);
   void removeEffect(const Uuid ent, const EffectComponentShPtr &effect);

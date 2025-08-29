@@ -177,7 +177,7 @@ auto createLootMessage(const bsgo::LootMessage &message, const ResourceView &res
   -> TextConfig
 {
   const auto resource = resourceView.getResourceName(message.getResourceDbId());
-  const auto text     = "+" + bsgo::floatToStr(message.amount(), 0) + " " + resource;
+  const auto text     = "+" + std::to_string(message.amount()) + " " + resource;
   const auto color    = colorFromResourceName(resource);
   return textConfigFromColor(text, color);
 }
@@ -203,7 +203,7 @@ auto createScannedMessage(const bsgo::ScannedMessage &message,
   const auto loot = asteroid.resources.at(0);
 
   const auto resource = resourceView.getResourceName(loot->resource());
-  const auto text     = "Mineral analysis: " + bsgo::floatToStr(loot->amount(), 0) + " " + resource;
+  const auto text     = "Mineral analysis: " + std::to_string(loot->amount()) + " " + resource;
   const auto color    = colorFromResourceName(resource);
   return textConfigFromColor(text, color);
 }

@@ -11,7 +11,7 @@ struct PlayerResourceData
 {
   Uuid dbId{};
   std::string name{};
-  float amount{};
+  int amount{};
 
   bool operator==(const PlayerResourceData &rhs) const;
 };

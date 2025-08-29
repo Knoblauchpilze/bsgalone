@@ -196,9 +196,9 @@ TEST(Unit_Bsgo_Serialization_Behavior, Nominal_MapSlotInt)
   EXPECT_EQ(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Nominal_MapUuidFloat_Empty)
+TEST(Unit_Bsgo_Serialization_Behavior, Nominal_MapUuidInt_Empty)
 {
-  std::unordered_map<Uuid, float> empty;
+  std::unordered_map<Uuid, int> empty;
 
   const auto [success, actual] = serializeAndDeserialize(empty, false);
 
@@ -206,9 +206,9 @@ TEST(Unit_Bsgo_Serialization_Behavior, Nominal_MapUuidFloat_Empty)
   EXPECT_EQ(actual, empty);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Nominal_MapUuidFloat)
+TEST(Unit_Bsgo_Serialization_Behavior, Nominal_MapUuidInt)
 {
-  std::unordered_map<Uuid, float> expected{{Uuid{14}, 1789.0987f}, {Uuid{7894}, -45.91f}};
+  std::unordered_map<Uuid, float> expected{{Uuid{14}, 1789}, {Uuid{7894}, -45}};
 
   const auto [success, actual] = serializeAndDeserialize(expected, false);
 
@@ -288,9 +288,9 @@ TEST(Unit_Bsgo_Serialization_Behavior, Failure_MapSlotInt)
   EXPECT_FALSE(success);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Failure_MapUuidFloat)
+TEST(Unit_Bsgo_Serialization_Behavior, Failure_MapUuid)
 {
-  std::unordered_map<Uuid, float> expected{{Uuid{5476}, 1.36f}, {Uuid{13}, -2.87f}};
+  std::unordered_map<Uuid, float> expected{{Uuid{5476}, 136}, {Uuid{13}, -287}};
 
   const auto [success, _] = serializeAndDeserialize(expected, true);
 

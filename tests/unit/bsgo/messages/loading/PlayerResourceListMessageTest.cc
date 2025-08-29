@@ -32,8 +32,8 @@ TEST(Unit_Bsgo_Serialization_PlayerResourceListMessage, Basic)
   const PlayerResourceListMessage expected(std::vector<PlayerResourceData>{});
 
   const std::vector<PlayerResourceData>
-    resourcesData{{.dbId = 23, .name = "resource-1", .amount = -47.89f},
-                  {.dbId = 76, .name = "some name", .amount = 1.45f}};
+    resourcesData{{.dbId = 23, .name = "resource-1", .amount = -4789},
+                  {.dbId = 76, .name = "some name", .amount = 1}};
   PlayerResourceListMessage actual(resourcesData);
   actual.setClientId(Uuid{2});
   serializeAndDeserializeMessage(expected, actual);
@@ -42,7 +42,7 @@ TEST(Unit_Bsgo_Serialization_PlayerResourceListMessage, Basic)
 
 TEST(Unit_Bsgo_Serialization_PlayerResourceListMessage, WithClientId)
 {
-  std::vector<PlayerResourceData> resourcesData{{.dbId = 14, .name = "foo bar", .amount = 14.56f}};
+  std::vector<PlayerResourceData> resourcesData{{.dbId = 14, .name = "foo bar", .amount = 145}};
 
   PlayerResourceListMessage expected(resourcesData);
   expected.setClientId(Uuid{78});
@@ -55,8 +55,8 @@ TEST(Unit_Bsgo_Serialization_PlayerResourceListMessage, WithClientId)
 TEST(Unit_Bsgo_Serialization_PlayerResourceListMessage, Clone)
 {
   const std::vector<PlayerResourceData>
-    resourcesData{{.dbId = 1908, .name = "a name", .amount = 0.14754f},
-                  {.dbId = 3207, .name = "valuable resource", .amount = -3.9878f}};
+    resourcesData{{.dbId = 1908, .name = "a name", .amount = 14754},
+                  {.dbId = 3207, .name = "valuable resource", .amount = -39878}};
 
   const PlayerResourceListMessage expected(resourcesData);
   const auto cloned = expected.clone();

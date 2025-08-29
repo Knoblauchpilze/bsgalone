@@ -16,7 +16,7 @@ struct AsteroidData
   float health{};
 
   std::optional<Uuid> resource{};
-  std::optional<float> amount{};
+  std::optional<int> amount{};
 
   bool operator==(const AsteroidData &rhs) const;
 };

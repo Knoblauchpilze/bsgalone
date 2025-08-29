@@ -7,13 +7,13 @@ INSERT INTO player_resource ("player", "resource", "amount")
   VALUES (
     (SELECT id FROM player WHERE name = 'colo'),
     (SELECT id FROM resource WHERE name = 'tylium'),
-    100501.2
+    100501
   );
 INSERT INTO player_resource ("player", "resource", "amount")
   VALUES (
     (SELECT id FROM player WHERE name = 'colo'),
     (SELECT id FROM resource WHERE name = 'titane'),
-    1017.2
+    1017
   );
 
 INSERT INTO player_weapon ("weapon", "player", "level")
@@ -68,7 +68,7 @@ INSERT INTO player_resource ("player", "resource", "amount")
   VALUES (
     (SELECT id FROM player WHERE name = 'colo2'),
     (SELECT id FROM resource WHERE name = 'tylium'),
-    4567.0
+    4567
   );
 
 INSERT INTO player_weapon ("weapon", "player", "level")
@@ -93,13 +93,13 @@ INSERT INTO player_resource ("player", "resource", "amount")
   VALUES (
     (SELECT id FROM player WHERE name = 'toast'),
     (SELECT id FROM resource WHERE name = 'tylium'),
-    1234.2
+    1234
   );
 INSERT INTO player_resource ("player", "resource", "amount")
   VALUES (
     (SELECT id FROM player WHERE name = 'toast'),
     (SELECT id FROM resource WHERE name = 'titane'),
-    56789.2
+    56789
   );
 
 INSERT INTO player_weapon ("weapon", "player", "level")

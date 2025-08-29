@@ -46,10 +46,10 @@ auto SignupService::registerPlayer(const Player &player) const -> Uuid
 
 namespace {
 constexpr auto TYLIUM_NAME         = "tylium";
-constexpr auto TYLIUM_START_AMOUNT = 10000.0f;
+constexpr auto TYLIUM_START_AMOUNT = 10000;
 
 constexpr auto TITANE_NAME         = "titane";
-constexpr auto TITANE_START_AMOUNT = 10000.0f;
+constexpr auto TITANE_START_AMOUNT = 10000;
 } // namespace
 
 void SignupService::registerResources(const Player &player) const
