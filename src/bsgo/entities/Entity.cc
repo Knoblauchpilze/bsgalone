@@ -17,14 +17,14 @@ void checkAccessIsSafe(const std::optional<std::shared_ptr<Component>> &comp,
 {
   if (!comp)
   {
-    throw std::invalid_argument("Expected entity " + bsgo::str(entity.uuid) + "/"
-                                + bsgo::str(entity.kind->kind()) + " to have a " + compName
+    throw std::invalid_argument("Expected entity " + str(entity.uuid) + "/"
+                                + str(entity.kind->kind()) + " to have a " + compName
                                 + " component");
   }
   if (nullptr == *comp)
   {
-    throw std::invalid_argument("Expected entity " + bsgo::str(entity.uuid) + "/"
-                                + bsgo::str(entity.kind->kind()) + " to have a valid " + compName
+    throw std::invalid_argument("Expected entity " + str(entity.uuid) + "/"
+                                + str(entity.kind->kind()) + " to have a valid " + compName
                                 + " component");
   }
 }

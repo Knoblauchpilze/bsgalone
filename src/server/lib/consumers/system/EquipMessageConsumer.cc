@@ -60,7 +60,7 @@ void EquipMessageConsumer::handleEquipRequest(const EquipMessage &message) const
   const auto type     = message.getItemType();
   const auto itemDbId = message.getItemDbId();
 
-  const bsgo::LockerItemData data{.dbId = itemDbId, .type = type, .shipDbId = shipDbId};
+  const LockerItemData data{.dbId = itemDbId, .type = type, .shipDbId = shipDbId};
   if (!m_lockerService->tryEquip(data))
   {
     warn("Failed to process equip message for ship " + str(shipDbId) + " for " + str(type) + " "
@@ -82,7 +82,7 @@ void EquipMessageConsumer::handleUnequipRequest(const EquipMessage &message) con
   const auto type     = message.getItemType();
   const auto itemDbId = message.getItemDbId();
 
-  const bsgo::LockerItemData data{.dbId = itemDbId, .type = type, .shipDbId = shipDbId};
+  const LockerItemData data{.dbId = itemDbId, .type = type, .shipDbId = shipDbId};
   if (!m_lockerService->tryUnequip(data))
   {
     warn("Failed to process unequip message for ship " + str(shipDbId) + " for " + str(type) + " "
