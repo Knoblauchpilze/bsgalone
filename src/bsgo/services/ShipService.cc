@@ -76,6 +76,18 @@ bool ShipService::tryDock(const Uuid shipDbId) const
   return true;
 }
 
+bool ShipService::tryReturnToOutpost(const Uuid shipDbId) const
+{
+  const auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
+  if (!ship.docked)
+  {
+    warn("Failed to send ship ship " + str(shipDbId) + " to outpost", "Ship is not already docked");
+    return false;
+  }
+
+  return true;
+}
+
 bool ShipService::accelerateShip(const Uuid shipDbId, const Eigen::Vector3f &acceleration) const
 {
   const auto maybeEntityId = m_entityMapper.tryGetShipEntityId(shipDbId);
