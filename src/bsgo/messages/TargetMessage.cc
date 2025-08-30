@@ -52,7 +52,7 @@ auto TargetMessage::serialize(std::ostream &out) const -> std::ostream &
   core::serialize(out, m_validated);
 
   core::serialize(out, m_shipDbId);
-  bsgo::serialize(out, m_position);
+  core::serialize(out, m_position);
   core::serialize(out, m_targetKind);
   core::serialize(out, m_targetDbId);
 
@@ -67,7 +67,7 @@ bool TargetMessage::deserialize(std::istream &in)
   ok &= core::deserialize(in, m_validated);
 
   ok &= core::deserialize(in, m_shipDbId);
-  ok &= bsgo::deserialize(in, m_position);
+  ok &= core::deserialize(in, m_position);
   ok &= core::deserialize(in, m_targetKind);
   ok &= core::deserialize(in, m_targetDbId);
 

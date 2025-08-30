@@ -3,6 +3,7 @@
 #include "Slot.hh"
 #include "TimeUtils.hh"
 #include "Uuid.hh"
+#include "VectorUtils.hh"
 #include <gtest/gtest.h>
 #include <sstream>
 
@@ -361,5 +362,47 @@ TEST(Unit_Bsgo_Serialization_Behavior, Failure_MapUuid)
 
   EXPECT_FALSE(success);
 }
+
+struct TestCaseVector
+{
+  Eigen::Vector3f expected{};
+};
+
+using Eigen_Vector3f = TestWithParam<TestCaseVector>;
+
+TEST_P(Eigen_Vector3f, Serialization_Nominal)
+{
+  const auto &param = GetParam();
+
+  const auto [success, actual] = serializeAndDeserialize(param.expected, false);
+  EXPECT_TRUE(success);
+  EXPECT_EQ(actual, param.expected);
+}
+
+TEST_P(Eigen_Vector3f, Serialization_Failure)
+{
+  const auto &param = GetParam();
+
+  const auto [success, _] = serializeAndDeserialize(param.expected, true);
+  EXPECT_FALSE(success);
+}
+
+INSTANTIATE_TEST_CASE_P(Unit_Bsgo_Serialization_Behavior,
+                        Eigen_Vector3f,
+                        Values(TestCaseVector{Eigen::Vector3f{0.0f, 0.0f, 0.0f}},
+                               TestCaseVector{Eigen::Vector3f{1.0f, 0.0f, 0.0f}},
+                               TestCaseVector{Eigen::Vector3f{0.0f, 1.0f, 0.0f}},
+                               TestCaseVector{Eigen::Vector3f{0.0f, 0.0f, 1.0f}},
+                               TestCaseVector{Eigen::Vector3f{0.1f, 5.0f, -5.0f}},
+                               TestCaseVector{Eigen::Vector3f{-2.0f, 2.0f, 1.0f}},
+                               TestCaseVector{Eigen::Vector3f{17.0f, 23.0f, 26.0f}},
+                               TestCaseVector{Eigen::Vector3f{-0.25f, -18.0f, -52.0f}},
+                               TestCaseVector{Eigen::Vector3f{0.01871f, -0.9817f, 0.987f}}),
+                        [](const TestParamInfo<TestCaseVector> &info) -> std::string {
+                          auto out = str(info.param.expected);
+                          std::replace(out.begin(), out.end(), '.', '_');
+                          std::replace(out.begin(), out.end(), '-', 'm');
+                          return out;
+                        });
 
 } // namespace bsgo

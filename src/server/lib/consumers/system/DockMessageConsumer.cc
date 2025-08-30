@@ -68,7 +68,7 @@ void DockMessageConsumer::handleDocking(const DockMessage &message) const
     return;
   }
 
-  auto out = std::make_unique<DockMessage>(shipDbId, bsgo::DockTransition::DOCK);
+  auto out = std::make_unique<DockMessage>(shipDbId, DockTransition::DOCK);
   out->validate();
   out->copyClientIdIfDefined(message);
   m_outputMessageQueue->pushMessage(std::move(out));
@@ -81,7 +81,7 @@ void DockMessageConsumer::handleUndocking(const DockMessage &message) const
   const auto shipDbId   = message.getShipDbId();
   const auto systemDbId = m_shipService->getSystemDbIdForShip(shipDbId);
 
-  auto out = std::make_unique<DockMessage>(shipDbId, bsgo::DockTransition::UNDOCK);
+  auto out = std::make_unique<DockMessage>(shipDbId, DockTransition::UNDOCK);
   out->validate();
   out->copyClientIdIfDefined(message);
   m_outputMessageQueue->pushMessage(std::move(out));
