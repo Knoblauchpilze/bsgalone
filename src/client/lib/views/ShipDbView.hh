@@ -29,6 +29,7 @@ class ShipDbView : public AbstractView
 
   void dockPlayerShip() const;
   void undockPlayerShip() const;
+  void returnToOutpost() const;
   void setJumpSystem(const bsgo::Uuid system);
   void clearJumpSystem();
   void startJump() const;

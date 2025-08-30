@@ -1,5 +1,6 @@
 
 target_sources (bsgo_lib PRIVATE
+	${CMAKE_CURRENT_SOURCE_DIR}/DockTransition.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/EntityKind.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/Faction.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/Item.cc

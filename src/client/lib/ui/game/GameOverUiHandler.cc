@@ -1,6 +1,5 @@
 
 #include "GameOverUiHandler.hh"
-#include "EntityRemovedMessage.hh"
 #include "IViewListenerProxy.hh"
 #include "MessageUtils.hh"
 
@@ -32,10 +31,18 @@ void GameOverUiHandler::initializeMenus(const int width,
   pos.x = (width - dims.x) / 2;
   pos.y = (height - dims.y) / 2;
 
-  const MenuConfig config{.pos               = pos,
-                          .dims              = dims,
-                          .visible           = false,
-                          .gameClickCallback = [this](Game &g) { g.setScreen(Screen::OUTPOST); }};
+  const MenuConfig config{
+    .pos     = pos,
+    .dims    = dims,
+    .visible = false,
+    .clickCallback =
+      [this]() {
+        if (m_shipDbView->isReady())
+        {
+          m_shipDbView->returnToOutpost();
+        }
+      },
+  };
 
   auto bg   = bgConfigFromColor(colors::DARK_GREY);
   auto text = textConfigFromColor("Return to outpost", colors::BLACK);

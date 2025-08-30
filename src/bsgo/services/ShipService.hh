@@ -20,10 +20,12 @@ class ShipService : public AbstractService
 
   bool trySelectShip(const Uuid shipDbId) const;
   bool tryDock(const Uuid shipDbId) const;
+  bool tryReturnToOutpost(const Uuid shipDbId) const;
 
   bool accelerateShip(const Uuid shipDbId, const Eigen::Vector3f &acceleration) const;
 
   auto tryGetPlayerDbIdForShip(const Uuid shipDbId) -> std::optional<Uuid>;
+  auto getSystemDbIdForShip(const Uuid shipDbId) const -> Uuid;
 
   struct TargetAcquiringData
   {

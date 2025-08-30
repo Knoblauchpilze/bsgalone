@@ -8,6 +8,10 @@
 
 namespace bsgo {
 
+/// @brief - This consumer is added to the system processors consumers and is
+/// responsible to handle the entity added/removed messages produced by the
+/// internal consumer. This means deleting the entity from the system processor
+/// and forwarding the messages to the client applications.
 class EntityDeletedMessageConsumer : public AbstractMessageConsumer
 {
   public:

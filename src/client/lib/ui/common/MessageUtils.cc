@@ -3,8 +3,8 @@
 
 namespace pge {
 
-bool didPlayerShipDied(const bsgo::EntityRemovedMessage &message,
-                       const bsgo::DatabaseEntityMapper &mapper)
+bool didPlayerShipDie(const bsgo::EntityRemovedMessage &message,
+                      const bsgo::DatabaseEntityMapper &mapper)
 {
   if (message.getEntityKind() != bsgo::EntityKind::SHIP || !message.isDead())
   {
@@ -17,7 +17,7 @@ bool didPlayerShipDied(const bsgo::EntityRemovedMessage &message,
   return maybePlayerShipDbId && deadShipDbId == *maybePlayerShipDbId;
 }
 
-bool didPlayerShipDied(const bsgo::EntityRemovedMessage &message, const ShipDbView &shipDbView)
+bool didPlayerShipDie(const bsgo::EntityRemovedMessage &message, const ShipDbView &shipDbView)
 {
   if (message.getEntityKind() != bsgo::EntityKind::SHIP || !message.isDead())
   {
@@ -27,8 +27,8 @@ bool didPlayerShipDied(const bsgo::EntityRemovedMessage &message, const ShipDbVi
   return message.getEntityDbId() == shipDbView.getPlayerShipDbId();
 }
 
-bool didPlayerDied(const bsgo::EntityRemovedMessage &message,
-                   const bsgo::DatabaseEntityMapper &mapper)
+bool didPlayerDie(const bsgo::EntityRemovedMessage &message,
+                  const bsgo::DatabaseEntityMapper &mapper)
 {
   if (message.getEntityKind() != bsgo::EntityKind::PLAYER || !message.isDead())
   {
