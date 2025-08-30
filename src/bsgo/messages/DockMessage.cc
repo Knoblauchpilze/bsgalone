@@ -8,21 +8,15 @@ DockMessage::DockMessage()
   : ValidatableMessage(MessageType::DOCK)
 {}
 
-DockMessage::DockMessage(const Uuid shipDbId, const Uuid systemDbId, const DockTransition transition)
+DockMessage::DockMessage(const Uuid shipDbId, const DockTransition transition)
   : ValidatableMessage(MessageType::DOCK)
   , m_shipDbId(shipDbId)
-  , m_systemDbId(systemDbId)
   , m_transition(transition)
 {}
 
 auto DockMessage::getShipDbId() const -> Uuid
 {
   return m_shipDbId;
-}
-
-auto DockMessage::getSystemDbId() const -> Uuid
-{
-  return m_systemDbId;
 }
 
 auto DockMessage::getTransition() const -> DockTransition
@@ -37,7 +31,6 @@ auto DockMessage::serialize(std::ostream &out) const -> std::ostream &
   core::serialize(out, m_validated);
 
   core::serialize(out, m_shipDbId);
-  core::serialize(out, m_systemDbId);
   core::serialize(out, m_transition);
 
   return out;
@@ -51,7 +44,6 @@ bool DockMessage::deserialize(std::istream &in)
   ok &= core::deserialize(in, m_validated);
 
   ok &= core::deserialize(in, m_shipDbId);
-  ok &= core::deserialize(in, m_systemDbId);
   ok &= core::deserialize(in, m_transition);
 
   return ok;
@@ -59,7 +51,7 @@ bool DockMessage::deserialize(std::istream &in)
 
 auto DockMessage::clone() const -> IMessagePtr
 {
-  auto clone = std::make_unique<DockMessage>(m_shipDbId, m_systemDbId, m_transition);
+  auto clone = std::make_unique<DockMessage>(m_shipDbId, m_transition);
   clone->copyClientIdIfDefined(*this);
   clone->validate(validated());
 

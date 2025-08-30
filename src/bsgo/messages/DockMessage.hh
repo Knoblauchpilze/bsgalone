@@ -12,11 +12,10 @@ class DockMessage : public ValidatableMessage
 {
   public:
   DockMessage();
-  DockMessage(const Uuid shipDbId, const Uuid systemDbId, const DockTransition transition);
+  DockMessage(const Uuid shipDbId, const DockTransition transition);
   ~DockMessage() override = default;
 
   auto getShipDbId() const -> Uuid;
-  auto getSystemDbId() const -> Uuid;
   auto getTransition() const -> DockTransition;
 
   auto serialize(std::ostream &out) const -> std::ostream & override;
@@ -26,7 +25,6 @@ class DockMessage : public ValidatableMessage
 
   private:
   Uuid m_shipDbId{};
-  Uuid m_systemDbId{};
   DockTransition m_transition{DockTransition::UNDOCK};
 };
 

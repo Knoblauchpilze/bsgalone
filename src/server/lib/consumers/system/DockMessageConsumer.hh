@@ -31,7 +31,6 @@ class DockMessageConsumer : public AbstractMessageConsumer
 
   void publishLoadingMessages(const LoadingTransition transition,
                               const Uuid shipDbId,
-                              const Uuid systemDbId,
                               const DockMessage &originalDockMessage) const;
 };
 

@@ -123,6 +123,17 @@ auto ShipService::tryGetPlayerDbIdForShip(const Uuid shipDbId) -> std::optional<
   return ship.player;
 }
 
+auto ShipService::getSystemDbIdForShip(const Uuid shipDbId) const -> Uuid
+{
+  const auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
+  if (!ship.system)
+  {
+    error("Expected ship " + str(shipDbId) + " to be present in a system");
+  }
+
+  return *ship.system;
+}
+
 namespace {
 auto tryGetEntityAt(const Coordinator &coordinator, const Eigen::Vector3f &position)
   -> std::optional<Entity>

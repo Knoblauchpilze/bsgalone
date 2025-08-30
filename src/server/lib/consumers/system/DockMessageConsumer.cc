@@ -60,8 +60,7 @@ void DockMessageConsumer::onMessageReceived(const IMessage &message)
 
 void DockMessageConsumer::handleDocking(const DockMessage &message) const
 {
-  const auto shipDbId   = message.getShipDbId();
-  const auto systemDbId = message.getSystemDbId();
+  const auto shipDbId = message.getShipDbId();
 
   if (!m_shipService->tryDock(shipDbId))
   {
@@ -69,20 +68,20 @@ void DockMessageConsumer::handleDocking(const DockMessage &message) const
     return;
   }
 
-  auto out = std::make_unique<DockMessage>(shipDbId, systemDbId, bsgo::DockTransition::DOCK);
+  auto out = std::make_unique<DockMessage>(shipDbId, bsgo::DockTransition::DOCK);
   out->validate();
   out->copyClientIdIfDefined(message);
   m_outputMessageQueue->pushMessage(std::move(out));
 
-  publishLoadingMessages(LoadingTransition::DOCK, shipDbId, systemDbId, message);
+  publishLoadingMessages(LoadingTransition::DOCK, shipDbId, message);
 }
 
 void DockMessageConsumer::handleUndocking(const DockMessage &message) const
 {
   const auto shipDbId   = message.getShipDbId();
-  const auto systemDbId = message.getSystemDbId();
+  const auto systemDbId = m_shipService->getSystemDbIdForShip(shipDbId);
 
-  auto out = std::make_unique<DockMessage>(shipDbId, systemDbId, bsgo::DockTransition::UNDOCK);
+  auto out = std::make_unique<DockMessage>(shipDbId, bsgo::DockTransition::UNDOCK);
   out->validate();
   out->copyClientIdIfDefined(message);
   m_outputMessageQueue->pushMessage(std::move(out));
@@ -92,13 +91,12 @@ void DockMessageConsumer::handleUndocking(const DockMessage &message) const
   added->setShipData(data);
   m_systemMessageQueue->pushMessage(std::move(added));
 
-  publishLoadingMessages(LoadingTransition::UNDOCK, shipDbId, systemDbId, message);
+  publishLoadingMessages(LoadingTransition::UNDOCK, shipDbId, message);
 }
 
 void DockMessageConsumer::handleReturnToOutpost(const DockMessage &message) const
 {
-  const auto shipDbId   = message.getShipDbId();
-  const auto systemDbId = message.getSystemDbId();
+  const auto shipDbId = message.getShipDbId();
 
   if (!m_shipService->tryReturnToOutpost(shipDbId))
   {
@@ -106,15 +104,15 @@ void DockMessageConsumer::handleReturnToOutpost(const DockMessage &message) cons
     return;
   }
 
-  publishLoadingMessages(LoadingTransition::DOCK, shipDbId, systemDbId, message);
+  publishLoadingMessages(LoadingTransition::DOCK, shipDbId, message);
 }
 
 void DockMessageConsumer::publishLoadingMessages(const LoadingTransition transition,
                                                  const Uuid shipDbId,
-                                                 const Uuid systemDbId,
                                                  const DockMessage &originalDockMessage) const
 {
   const auto maybePlayerDbId = m_shipService->tryGetPlayerDbIdForShip(shipDbId);
+  const auto systemDbId      = m_shipService->getSystemDbIdForShip(shipDbId);
 
   auto started = std::make_unique<LoadingStartedMessage>(transition);
   started->setSystemDbId(systemDbId);

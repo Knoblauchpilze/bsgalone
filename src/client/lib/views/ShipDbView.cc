@@ -50,32 +50,24 @@ auto ShipDbView::getPlayerShipDbId() const -> bsgo::Uuid
 void ShipDbView::dockPlayerShip() const
 {
   const auto playerShipDbId = m_gameSession->getPlayerActiveShipDbId();
-  const auto systemDbId     = m_gameSession->getSystemDbId();
 
-  auto message = std::make_unique<bsgo::DockMessage>(playerShipDbId,
-                                                     systemDbId,
-                                                     bsgo::DockTransition::DOCK);
+  auto message = std::make_unique<bsgo::DockMessage>(playerShipDbId, bsgo::DockTransition::DOCK);
   m_outputMessageQueue->pushMessage(std::move(message));
 }
 
 void ShipDbView::undockPlayerShip() const
 {
   const auto playerShipDbId = m_gameSession->getPlayerActiveShipDbId();
-  const auto systemDbId     = m_gameSession->getSystemDbId();
 
-  auto message = std::make_unique<bsgo::DockMessage>(playerShipDbId,
-                                                     systemDbId,
-                                                     bsgo::DockTransition::UNDOCK);
+  auto message = std::make_unique<bsgo::DockMessage>(playerShipDbId, bsgo::DockTransition::UNDOCK);
   m_outputMessageQueue->pushMessage(std::move(message));
 }
 
 void ShipDbView::returnToOutpost() const
 {
   const auto playerShipDbId = m_gameSession->getPlayerActiveShipDbId();
-  const auto systemDbId     = m_gameSession->getSystemDbId();
 
   auto message = std::make_unique<bsgo::DockMessage>(playerShipDbId,
-                                                     systemDbId,
                                                      bsgo::DockTransition::BACK_TO_OUTPOST);
   m_outputMessageQueue->pushMessage(std::move(message));
 }
