@@ -65,8 +65,7 @@ void LoginMessageConsumer::handleLogin(const LoginMessage &message) const
   publishLoadingMessages(clientId, *playerDbId);
 }
 
-void LoginMessageConsumer::publishLoadingMessages(const bsgo::Uuid clientId,
-                                                  const bsgo::Uuid playerDbId) const
+void LoginMessageConsumer::publishLoadingMessages(const Uuid clientId, const Uuid playerDbId) const
 {
   const auto maybeSystemDbId = m_clientManager->tryGetSystemForClient(clientId);
   if (!maybeSystemDbId)

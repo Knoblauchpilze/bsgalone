@@ -28,7 +28,7 @@ class LoginMessageConsumer : public AbstractMessageConsumer
   IMessageQueue *const m_outputMessageQueue{};
 
   void handleLogin(const LoginMessage &message) const;
-  void publishLoadingMessages(const bsgo::Uuid clientId, const bsgo::Uuid playerDbId) const;
+  void publishLoadingMessages(const Uuid clientId, const Uuid playerDbId) const;
 };
 
 } // namespace bsgo
