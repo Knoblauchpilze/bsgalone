@@ -4,6 +4,7 @@
 #include "AbstractMessageConsumer.hh"
 #include "DockMessage.hh"
 #include "IMessageQueue.hh"
+#include "LoadingTransition.hh"
 #include "Services.hh"
 
 namespace bsgo {
@@ -26,6 +27,11 @@ class DockMessageConsumer : public AbstractMessageConsumer
 
   void handleDocking(const DockMessage &message) const;
   void handleUndocking(const DockMessage &message) const;
+  void handleReturnToOutpost(const DockMessage &message) const;
+
+  void publishLoadingMessages(const LoadingTransition transition,
+                              const Uuid shipDbId,
+                              const DockMessage &originalDockMessage) const;
 };
 
 } // namespace bsgo

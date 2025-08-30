@@ -7,12 +7,12 @@
 
 namespace pge {
 
-bool didPlayerShipDied(const bsgo::EntityRemovedMessage &message,
-                       const bsgo::DatabaseEntityMapper &mapper);
+bool didPlayerShipDie(const bsgo::EntityRemovedMessage &message,
+                      const bsgo::DatabaseEntityMapper &mapper);
 
-bool didPlayerShipDied(const bsgo::EntityRemovedMessage &message, const ShipDbView &shipDbView);
+bool didPlayerShipDie(const bsgo::EntityRemovedMessage &message, const ShipDbView &shipDbView);
 
-bool didPlayerDied(const bsgo::EntityRemovedMessage &message,
-                   const bsgo::DatabaseEntityMapper &mapper);
+bool didPlayerDie(const bsgo::EntityRemovedMessage &message,
+                  const bsgo::DatabaseEntityMapper &mapper);
 
 } // namespace pge

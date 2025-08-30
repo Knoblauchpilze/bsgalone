@@ -123,7 +123,7 @@ void SystemMessageConsumer::handleEntityRemoved(const bsgo::EntityRemovedMessage
           "Unsupported kind " + bsgo::str(entityKind));
   }
 
-  if (didPlayerShipDied(message, m_entityMapper))
+  if (didPlayerShipDie(message, m_entityMapper))
   {
     // Do not remove the player ship entity if it dies, we disable everything
     // else anyway. This will be cleared when going back to the outpost.
@@ -134,7 +134,7 @@ void SystemMessageConsumer::handleEntityRemoved(const bsgo::EntityRemovedMessage
 
     return;
   }
-  if (didPlayerDied(message, m_entityMapper))
+  if (didPlayerDie(message, m_entityMapper))
   {
     // Also do not remove the player's entity if it dies. As explained above
     // everything is disabled but we need the player to display its name.
