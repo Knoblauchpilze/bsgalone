@@ -69,6 +69,17 @@ void ShipDbView::undockPlayerShip() const
   m_outputMessageQueue->pushMessage(std::move(message));
 }
 
+void ShipDbView::returnToOutpost() const
+{
+  const auto playerShipDbId = m_gameSession->getPlayerActiveShipDbId();
+  const auto systemDbId     = m_gameSession->getSystemDbId();
+
+  auto message = std::make_unique<bsgo::DockMessage>(playerShipDbId,
+                                                     systemDbId,
+                                                     bsgo::DockTransition::BACK_TO_OUTPOST);
+  m_outputMessageQueue->pushMessage(std::move(message));
+}
+
 void ShipDbView::setJumpSystem(const bsgo::Uuid system)
 {
   m_systemToJumpTo = system;
