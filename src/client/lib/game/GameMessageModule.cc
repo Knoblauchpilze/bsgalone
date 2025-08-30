@@ -87,13 +87,16 @@ void GameMessageModule::handleDockMessage(const bsgo::DockMessage &message)
     return;
   }
 
-  if (message.isDocking())
+  switch (message.getTransition())
   {
-    m_game.onShipDocked();
-  }
-  else
-  {
-    m_game.onShipUndocked();
+    case bsgo::DockTransition::DOCK:
+      m_game.onShipDocked();
+      break;
+    case bsgo::DockTransition::UNDOCK:
+      m_game.onShipUndocked();
+      break;
+    default:
+      error("Unsupported docking transition " + bsgo::str(message.getTransition()));
   }
 }
 

@@ -89,6 +89,9 @@ void SystemMessageConsumer::handleEntityAdded(const bsgo::EntityAddedMessage &me
 
 void SystemMessageConsumer::handleEntityRemoved(const bsgo::EntityRemovedMessage &message) const
 {
+  warn("RECEIVING ENTITY REMOVED FOR " + bsgo::str(message.getEntityKind()) + " / "
+       + bsgo::str(message.getEntityDbId()));
+
   if (!m_entityMapper.doesPlayerHaveAnEntity())
   {
     // Most probably the player did not undock yet.

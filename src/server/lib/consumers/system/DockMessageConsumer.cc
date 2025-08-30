@@ -33,15 +33,22 @@ DockMessageConsumer::DockMessageConsumer(const Services &services,
   }
 }
 
+namespace {
+bool isDocking(const DockMessage &message)
+{
+  return message.getTransition() == DockTransition::DOCK;
+}
+} // namespace
+
 void DockMessageConsumer::onMessageReceived(const IMessage &message)
 {
   const auto &dockMessage = message.as<DockMessage>();
 
-  if (dockMessage.isDocking() && !dockMessage.validated())
+  if (isDocking(dockMessage) && !dockMessage.validated())
   {
     handleDocking(dockMessage);
   }
-  if (!dockMessage.isDocking() && !dockMessage.validated())
+  if (!isDocking(dockMessage) && !dockMessage.validated())
   {
     handleUndocking(dockMessage);
   }
@@ -60,7 +67,7 @@ void DockMessageConsumer::handleDocking(const DockMessage &message) const
 
   const auto maybePlayerDbId = m_shipService->tryGetPlayerDbIdForShip(shipDbId);
 
-  auto out = std::make_unique<DockMessage>(shipDbId, true, systemDbId);
+  auto out = std::make_unique<DockMessage>(shipDbId, systemDbId, bsgo::DockTransition::DOCK);
   out->validate();
   out->copyClientIdIfDefined(message);
   m_outputMessageQueue->pushMessage(std::move(out));
@@ -89,7 +96,7 @@ void DockMessageConsumer::handleUndocking(const DockMessage &message) const
   const auto shipDbId   = message.getShipDbId();
   const auto systemDbId = message.getSystemDbId();
 
-  auto out = std::make_unique<DockMessage>(shipDbId, false, systemDbId);
+  auto out = std::make_unique<DockMessage>(shipDbId, systemDbId, bsgo::DockTransition::UNDOCK);
   out->validate();
   out->copyClientIdIfDefined(message);
   m_outputMessageQueue->pushMessage(std::move(out));
