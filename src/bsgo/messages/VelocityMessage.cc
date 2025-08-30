@@ -33,7 +33,7 @@ auto VelocityMessage::serialize(std::ostream &out) const -> std::ostream &
   core::serialize(out, m_validated);
 
   core::serialize(out, m_shipDbId);
-  bsgo::serialize(out, m_acceleration);
+  core::serialize(out, m_acceleration);
 
   return out;
 }
@@ -46,7 +46,7 @@ bool VelocityMessage::deserialize(std::istream &in)
   ok &= core::deserialize(in, m_validated);
 
   ok &= core::deserialize(in, m_shipDbId);
-  ok &= bsgo::deserialize(in, m_acceleration);
+  ok &= core::deserialize(in, m_acceleration);
 
   return ok;
 }
