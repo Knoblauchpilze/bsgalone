@@ -27,6 +27,7 @@ class ShopUiHandler : public IUiHandler
   PlayerViewShPtr m_playerView{};
   bool m_initialized{false};
 
+  UiMenuPtr m_resourcesMenu{};
   UiMenuPtr m_menu{};
   std::vector<UiMenu *> m_items{};
 
@@ -43,6 +44,7 @@ class ShopUiHandler : public IUiHandler
   void reset();
   void initializeShop();
   void initializeLayout();
+  void generateResourcesMenus();
   void generateItemsMenus();
   auto generateItemMenus(const ShopItem &item) -> UiMenuPtr;
 
