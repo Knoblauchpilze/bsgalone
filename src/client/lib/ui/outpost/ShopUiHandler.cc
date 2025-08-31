@@ -40,8 +40,6 @@ void ShopUiHandler::initializeMenus(const int width,
             height - viewHeight - VIEW_TO_BOTTOM_OF_SCREEN_IN_PIXELS};
   Vec2i dims{viewWidth, RESOURCES_MENU_HEIGHT};
 
-  MenuConfig config{.pos = pos, .dims = dims, .highlightable = false};
-
   m_resourcesMenu = generateBlankHorizontalMenu(pos, dims);
 
   pos.y += RESOURCES_MENU_HEIGHT;
@@ -51,6 +49,7 @@ void ShopUiHandler::initializeMenus(const int width,
 
 bool ShopUiHandler::processUserInput(UserInputData &inputData)
 {
+  // The resources menu can't take input.
   return m_menu->processUserInput(inputData);
 }
 
