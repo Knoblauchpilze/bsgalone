@@ -188,7 +188,7 @@ void ShipDataSource::registerShipOwner(Coordinator &coordinator,
   if (!data.playerDbId)
   {
     entityMapper.registerShip(data.dbId, shipEntity);
-    coordinator.addAI(shipEntity, generateBehaviorTree(shipEntity, data.position));
+    coordinator.addAI(shipEntity, generateBehaviorTree(shipEntity, data.dbId, data.position));
     return;
   }
 
@@ -223,11 +223,12 @@ void ShipDataSource::registerShipComputers(Coordinator &coordinator,
   }
 }
 
-auto ShipDataSource::generateBehaviorTree(const Uuid entity, const Eigen::Vector3f &center) const
-  -> INodePtr
+auto ShipDataSource::generateBehaviorTree(const Uuid entity,
+                                          const int seed,
+                                          const Eigen::Vector3f &center) const -> INodePtr
 {
   constexpr auto RADIUS_TO_PICK_A_TARGET = 5.0f;
-  core::RNG rng(entity);
+  core::RNG rng(seed);
 
   auto dx                       = rng.rndFloat(-RADIUS_TO_PICK_A_TARGET, RADIUS_TO_PICK_A_TARGET);
   auto dy                       = rng.rndFloat(-RADIUS_TO_PICK_A_TARGET, RADIUS_TO_PICK_A_TARGET);
