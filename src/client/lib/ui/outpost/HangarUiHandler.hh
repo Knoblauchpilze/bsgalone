@@ -28,6 +28,7 @@ class HangarUiHandler : public IUiHandler
   ShopViewShPtr m_shopView{};
   bool m_initialized{false};
 
+  UiMenuPtr m_resourcesMenu{};
   UiMenuPtr m_menu{};
 
   enum class State
@@ -52,7 +53,7 @@ class HangarUiHandler : public IUiHandler
   void reset();
 
   void initializeHangar();
-
+  void generateResourcesMenus();
   void initializeLayout();
 
   void updateShipMenus();
