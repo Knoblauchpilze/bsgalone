@@ -43,8 +43,8 @@ class ShopUiHandler : public IUiHandler
   void subscribeToViews();
   void reset();
   void initializeShop();
-  void initializeLayout();
   void generateResourcesMenus();
+  void initializeLayout();
   void generateItemsMenus();
   auto generateItemMenus(const ShopItem &item) -> UiMenuPtr;
 

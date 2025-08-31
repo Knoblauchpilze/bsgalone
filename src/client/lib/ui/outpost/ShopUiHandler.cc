@@ -137,22 +137,6 @@ void ShopUiHandler::initializeShop()
   m_initialized = true;
 }
 
-void ShopUiHandler::initializeLayout()
-{
-  const auto palette = generatePaletteForFaction(m_playerView->getPlayerFaction());
-  m_menu->updateBgColor(palette.almostOpaqueColor);
-
-  const auto items = m_shopView->getShopItems();
-  for (auto id = 0u; id < items.size(); ++id)
-  {
-    const MenuConfig config{.layout = MenuLayout::HORIZONTAL};
-    const auto bg = bgConfigFromColor(colors::BLANK);
-    auto itemMenu = std::make_unique<UiMenu>(config, bg);
-    m_items.push_back(itemMenu.get());
-    m_menu->addMenu(std::move(itemMenu));
-  }
-}
-
 void ShopUiHandler::generateResourcesMenus()
 {
   const auto faction = m_playerView->getPlayerFaction();
@@ -178,6 +162,22 @@ void ShopUiHandler::generateResourcesMenus()
     label = textConfigFromColor(amount, colorFromResourceName(it->name), TextAlignment::LEFT);
     field = std::make_unique<UiTextMenu>(config, bg, label);
     m_resourcesMenu->addMenu(std::move(field));
+  }
+}
+
+void ShopUiHandler::initializeLayout()
+{
+  const auto palette = generatePaletteForFaction(m_playerView->getPlayerFaction());
+  m_menu->updateBgColor(palette.almostOpaqueColor);
+
+  const auto items = m_shopView->getShopItems();
+  for (auto id = 0u; id < items.size(); ++id)
+  {
+    const MenuConfig config{.layout = MenuLayout::HORIZONTAL};
+    const auto bg = bgConfigFromColor(colors::BLANK);
+    auto itemMenu = std::make_unique<UiMenu>(config, bg);
+    m_items.push_back(itemMenu.get());
+    m_menu->addMenu(std::move(itemMenu));
   }
 }
 
