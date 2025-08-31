@@ -35,13 +35,18 @@ void ShopUiHandler::initializeMenus(const int width,
   const auto viewWidth  = static_cast<int>(MAIN_VIEW_WIDTH_TO_SCREEN_WIDTH_RATIO * width);
   const auto viewHeight = static_cast<int>(MAIN_VIEW_HEIGHT_TO_SCREEN_HEIGHT_RATIO * height);
 
-  const Vec2i pos{width - viewWidth - VIEW_TO_RIGHT_OF_SCREEN_IN_PIXELS,
-                  height - viewHeight - VIEW_TO_BOTTOM_OF_SCREEN_IN_PIXELS};
-  const Vec2i dims{viewWidth, viewHeight};
+  constexpr auto RESOURCES_MENU_HEIGHT = 30;
+  Vec2i pos{width - viewWidth - VIEW_TO_RIGHT_OF_SCREEN_IN_PIXELS,
+            height - viewHeight - VIEW_TO_BOTTOM_OF_SCREEN_IN_PIXELS};
+  Vec2i dims{viewWidth, RESOURCES_MENU_HEIGHT};
 
-  const MenuConfig config{.pos = pos, .dims = dims, .highlightable = false};
-  const auto bg = bgConfigFromColor(colors::BLANK);
-  m_menu        = std::make_unique<UiMenu>(config, bg);
+  MenuConfig config{.pos = pos, .dims = dims, .highlightable = false};
+
+  m_resourcesMenu = generateBlankHorizontalMenu(pos, dims);
+
+  pos.y += RESOURCES_MENU_HEIGHT;
+  dims.y = viewHeight - RESOURCES_MENU_HEIGHT;
+  m_menu = generateBlankVerticalMenu(pos, dims);
 }
 
 bool ShopUiHandler::processUserInput(UserInputData &inputData)
@@ -51,6 +56,7 @@ bool ShopUiHandler::processUserInput(UserInputData &inputData)
 
 void ShopUiHandler::render(Renderer &engine) const
 {
+  m_resourcesMenu->render(engine);
   m_menu->render(engine);
 }
 
@@ -114,6 +120,7 @@ void ShopUiHandler::subscribeToViews()
 
 void ShopUiHandler::reset()
 {
+  m_resourcesMenu->clearChildren();
   m_items.clear();
   m_itemsData.clear();
   m_menu->clearChildren();
@@ -123,6 +130,7 @@ void ShopUiHandler::reset()
 
 void ShopUiHandler::initializeShop()
 {
+  generateResourcesMenus();
   initializeLayout();
   generateItemsMenus();
 
@@ -142,6 +150,34 @@ void ShopUiHandler::initializeLayout()
     auto itemMenu = std::make_unique<UiMenu>(config, bg);
     m_items.push_back(itemMenu.get());
     m_menu->addMenu(std::move(itemMenu));
+  }
+}
+
+void ShopUiHandler::generateResourcesMenus()
+{
+  const auto faction = m_playerView->getPlayerFaction();
+  const auto palette = generatePaletteForFaction(faction);
+
+  m_resourcesMenu->updateBgColor(palette.almostOpaqueColor);
+
+  const auto resources = m_playerView->getPlayerResources();
+
+  const MenuConfig config{.propagateEventsToChildren = false};
+  const auto bg = bgConfigFromColor(colors::BLANK);
+
+  // Reverse iteration to get resources ordered according to their id.
+  for (auto it = resources.rbegin(); it != resources.rend(); ++it)
+  {
+    auto label = textConfigFromColor(bsgo::capitalizeString(it->name, true) + ":",
+                                     colors::DARK_GREY,
+                                     TextAlignment::RIGHT);
+    auto field = std::make_unique<UiTextMenu>(config, bg, label);
+    m_resourcesMenu->addMenu(std::move(field));
+
+    const auto amount = std::to_string(it->amount);
+    label = textConfigFromColor(amount, colorFromResourceName(it->name), TextAlignment::LEFT);
+    field = std::make_unique<UiTextMenu>(config, bg, label);
+    m_resourcesMenu->addMenu(std::move(field));
   }
 }
 
