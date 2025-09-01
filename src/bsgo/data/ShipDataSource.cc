@@ -188,7 +188,7 @@ void ShipDataSource::registerShipOwner(Coordinator &coordinator,
   if (!data.playerDbId)
   {
     entityMapper.registerShip(data.dbId, shipEntity);
-    coordinator.addAI(shipEntity, generateBehaviorTree(shipEntity, data.dbId, data.position));
+    coordinator.addAI(shipEntity, generateBehaviorTree(data.dbId, data.dbId, data.position));
     return;
   }
 
@@ -223,7 +223,7 @@ void ShipDataSource::registerShipComputers(Coordinator &coordinator,
   }
 }
 
-auto ShipDataSource::generateBehaviorTree(const Uuid entity,
+auto ShipDataSource::generateBehaviorTree(const Uuid dbId,
                                           const int seed,
                                           const Eigen::Vector3f &center) const -> INodePtr
 {
@@ -233,22 +233,22 @@ auto ShipDataSource::generateBehaviorTree(const Uuid entity,
   auto dx                       = rng.rndFloat(-RADIUS_TO_PICK_A_TARGET, RADIUS_TO_PICK_A_TARGET);
   auto dy                       = rng.rndFloat(-RADIUS_TO_PICK_A_TARGET, RADIUS_TO_PICK_A_TARGET);
   const Eigen::Vector3f target1 = center + Eigen::Vector3f(dx, dy, 0.0f);
-  verbose("Picked first target " + str(target1) + " for " + str(entity));
+  debug("Picked first target " + str(target1) + " for " + str(dbId));
 
   dx                            = rng.rndFloat(-RADIUS_TO_PICK_A_TARGET, RADIUS_TO_PICK_A_TARGET);
   dy                            = rng.rndFloat(-RADIUS_TO_PICK_A_TARGET, RADIUS_TO_PICK_A_TARGET);
   const Eigen::Vector3f target2 = center + Eigen::Vector3f(dx, dy, 0.0f);
-  verbose("Picked second target " + str(target2) + " for " + str(entity));
+  debug("Picked second target " + str(target2) + " for " + str(dbId));
 
   dx                            = rng.rndFloat(-RADIUS_TO_PICK_A_TARGET, RADIUS_TO_PICK_A_TARGET);
   dy                            = rng.rndFloat(-RADIUS_TO_PICK_A_TARGET, RADIUS_TO_PICK_A_TARGET);
   const Eigen::Vector3f target3 = center + Eigen::Vector3f(dx, dy, 0.0f);
-  verbose("Picked third target " + str(target3) + " for " + str(entity));
+  debug("Picked third target " + str(target3) + " for " + str(dbId));
 
   dx                            = rng.rndFloat(-RADIUS_TO_PICK_A_TARGET, RADIUS_TO_PICK_A_TARGET);
   dy                            = rng.rndFloat(-RADIUS_TO_PICK_A_TARGET, RADIUS_TO_PICK_A_TARGET);
   const Eigen::Vector3f target4 = center + Eigen::Vector3f(dx, dy, 0.0f);
-  verbose("Picked fourth target " + str(target4) + " for " + str(entity));
+  debug("Picked fourth target " + str(target4) + " for " + str(dbId));
 
   auto targetNode1  = std::make_unique<TargetNode>(target1);
   auto targetNode2  = std::make_unique<TargetNode>(target2);
