@@ -46,7 +46,7 @@ void AsteroidDataSource::registerAsteroid(Coordinator &coordinator,
   coordinator.addDbId(asteroidEntityId, data.dbId);
   auto box = std::make_unique<CircleBox>(data.position, data.radius);
   coordinator.addTransform(asteroidEntityId, std::move(box));
-  coordinator.addHealth(asteroidEntityId, data.health, data.health, 0.0f);
+  coordinator.addHealth(asteroidEntityId, data.health, data.maxHealth, 0.0f);
   coordinator.addRemoval(asteroidEntityId);
   coordinator.addScanned(asteroidEntityId);
   if (data.resource && data.amount)
@@ -66,10 +66,11 @@ void AsteroidDataSource::registerAsteroid(Coordinator &coordinator,
   const auto data = m_repositories->asteroidRepository->findOneById(asteroidDbId);
 
   AsteroidData out{
-    .dbId     = asteroidDbId,
-    .position = data.position,
-    .radius   = data.radius,
-    .health   = data.health,
+    .dbId      = asteroidDbId,
+    .position  = data.position,
+    .radius    = data.radius,
+    .health    = data.health,
+    .maxHealth = data.maxHealth,
   };
 
   if (data.loot)

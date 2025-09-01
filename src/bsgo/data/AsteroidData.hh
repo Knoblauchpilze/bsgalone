@@ -14,6 +14,7 @@ struct AsteroidData
   Eigen::Vector3f position{Eigen::Vector3f::Zero()};
   float radius{};
   float health{};
+  float maxHealth{};
 
   std::optional<Uuid> resource{};
   std::optional<int> amount{};

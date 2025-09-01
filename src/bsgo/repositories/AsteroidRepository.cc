@@ -10,7 +10,7 @@ AsteroidRepository::AsteroidRepository(const DbConnectionShPtr &connection)
 namespace {
 constexpr auto FIND_ONE_QUERY_NAME = "asteroid_find_one";
 constexpr auto FIND_ONE_QUERY
-  = "SELECT system, health, radius, x_pos, y_pos, z_pos FROM asteroid WHERE id = $1";
+  = "SELECT system, health, max_health, radius, x_pos, y_pos, z_pos FROM asteroid WHERE id = $1";
 
 constexpr auto FIND_LOOT_QUERY_NAME = "asteroid_find_loot";
 constexpr auto FIND_LOOT_QUERY = "SELECT count(resource) FROM asteroid_loot WHERE asteroid = $1";
@@ -39,13 +39,14 @@ auto AsteroidRepository::fetchAsteroidBase(const Uuid asteroid) const -> Asteroi
 
   Asteroid out;
 
-  out.system = fromDbId(record[0].as<int>());
-  out.health = record[1].as<float>();
-  out.radius = record[2].as<float>();
+  out.system    = fromDbId(record[0].as<int>());
+  out.health    = record[1].as<float>();
+  out.maxHealth = record[2].as<float>();
+  out.radius    = record[3].as<float>();
 
-  const auto x = record[3].as<float>();
-  const auto y = record[4].as<float>();
-  const auto z = record[5].as<float>();
+  const auto x = record[4].as<float>();
+  const auto y = record[5].as<float>();
+  const auto z = record[6].as<float>();
   out.position = Eigen::Vector3f(x, y, z);
 
   return out;

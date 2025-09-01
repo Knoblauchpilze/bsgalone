@@ -68,8 +68,10 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, SerializationFailsWhenNoEntityK
 TEST(Unit_Bsgo_Serialization_EntityAddedMessage, SetsEntityKindForAsteroid)
 {
   EntityAddedMessage message(Uuid{789});
-  message.setAsteroidData(
-    AsteroidData{.dbId = Uuid{123}, .position = Eigen::Vector3f{1, 2, 3}, .radius = 4.5f});
+  message.setAsteroidData(AsteroidData{.dbId      = Uuid{123},
+                                       .position  = Eigen::Vector3f{1, 2, 3},
+                                       .radius    = 4.5f,
+                                       .maxHealth = 14.78f});
 
   EXPECT_EQ(message.getEntityKind(), EntityKind::ASTEROID);
 }

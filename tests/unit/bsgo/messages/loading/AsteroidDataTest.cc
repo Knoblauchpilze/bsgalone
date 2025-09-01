@@ -24,7 +24,7 @@ TEST(Unit_Bsgo_Serialization_AsteroidData, EqualWhenDbIdIsEqual)
                      .radius   = 5.0f,
                      .health   = 100.0f};
 
-  AsteroidData data2{.dbId = Uuid{1234}, .radius = 17.5f};
+  AsteroidData data2{.dbId = Uuid{1234}, .radius = 17.5f, .maxHealth = 14.58f};
 
   EXPECT_TRUE(data1 == data2);
 }
@@ -49,7 +49,7 @@ TEST(Unit_Bsgo_Serialization_AsteroidData, Basic)
                      .radius   = 5.0f,
                      .health   = 100.0f};
 
-  AsteroidData output{.dbId = Uuid{14}, .resource = Uuid{4567}, .amount = 50};
+  AsteroidData output{.dbId = Uuid{14}, .maxHealth = 45.78f, .resource = Uuid{4567}, .amount = 50};
 
   EXPECT_TRUE(serializeAndDeserializeData(input, output));
 
@@ -58,12 +58,13 @@ TEST(Unit_Bsgo_Serialization_AsteroidData, Basic)
 
 TEST(Unit_Bsgo_Serialization_AsteroidData, WithLoot)
 {
-  AsteroidData input{.dbId     = Uuid{1234},
-                     .position = Eigen::Vector3f{1.0f, 2.0f, 3.0f},
-                     .radius   = 5.0f,
-                     .health   = 100.0f,
-                     .resource = Uuid{4567},
-                     .amount   = 31};
+  AsteroidData input{.dbId      = Uuid{1234},
+                     .position  = Eigen::Vector3f{1.0f, 2.0f, 3.0f},
+                     .radius    = 5.0f,
+                     .health    = 100.0f,
+                     .maxHealth = 1.0235f,
+                     .resource  = Uuid{4567},
+                     .amount    = 31};
 
   AsteroidData output{.dbId = Uuid{14}};
 
