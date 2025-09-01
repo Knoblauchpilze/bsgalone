@@ -31,13 +31,9 @@ TEST(Unit_Bsgo_Serialization_AsteroidListMessage, Basic)
 {
   const AsteroidListMessage expected(Uuid{8712}, {});
 
-  const std::vector<AsteroidData> asteroidsData{{.dbId     = Uuid{23},
-                                                 .position = Eigen::Vector3f(1.0f, 2.8f, 3.9f)},
-                                                {.dbId     = Uuid{76},
-                                                 .radius   = 26.9f,
-                                                 .health   = 100.0f,
-                                                 .resource = Uuid{4567},
-                                                 .amount   = 11}};
+  const std::vector<AsteroidData> asteroidsData{
+    {.dbId = Uuid{23}, .position = Eigen::Vector3f(1.0f, 2.8f, 3.9f), .maxHealth = 98.74f},
+    {.dbId = Uuid{76}, .radius = 26.9f, .health = 100.0f, .resource = Uuid{4567}, .amount = 11}};
   AsteroidListMessage actual(Uuid{1515}, asteroidsData);
   actual.setClientId(Uuid{2});
   serializeAndDeserializeMessage(expected, actual);
@@ -46,16 +42,17 @@ TEST(Unit_Bsgo_Serialization_AsteroidListMessage, Basic)
 
 TEST(Unit_Bsgo_Serialization_AsteroidListMessage, WithClientId)
 {
-  std::vector<AsteroidData> asteroidsData{{.dbId     = Uuid{65},
-                                           .position = Eigen::Vector3f(1.0f, 2.8f, 3.9f),
-                                           .radius   = 26.9f,
-                                           .health   = 100.0f}};
+  std::vector<AsteroidData> asteroidsData{{.dbId      = Uuid{65},
+                                           .position  = Eigen::Vector3f(1.0f, 2.8f, 3.9f),
+                                           .radius    = 26.9f,
+                                           .health    = 100.0f,
+                                           .maxHealth = 71.47f}};
 
   AsteroidListMessage expected(Uuid{123}, asteroidsData);
   expected.setClientId(Uuid{78});
 
   asteroidsData = {{.dbId = Uuid{17}, .health = 100.0f, .resource = Uuid{923}, .amount = 142},
-                   {.dbId = Uuid{17}, .radius = 26.1}};
+                   {.dbId = Uuid{17}, .radius = 26.1, .maxHealth = 32.17f}};
   AsteroidListMessage actual(Uuid{745}, {});
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);

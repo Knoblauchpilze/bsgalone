@@ -14,6 +14,7 @@ struct Asteroid
   Uuid system{};
   Eigen::Vector3f position{Eigen::Vector3f::Zero()};
   float health{0.0f};
+  float maxHealth{0.0f};
   float radius{0.5f};
 
   bool loot{false};

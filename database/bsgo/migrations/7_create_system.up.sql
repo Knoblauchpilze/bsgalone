@@ -41,6 +41,7 @@ CREATE TABLE ship_jump (
 CREATE TABLE asteroid (
   id INTEGER GENERATED ALWAYS AS IDENTITY,
   system INTEGER NOT NULL,
+  max_health NUMERIC(8, 2) NOT NULL,
   health NUMERIC(12, 2) NOT NULL,
   radius NUMERIC(12, 2) NOT NULL,
   x_pos NUMERIC(12, 2) NOT NULL,

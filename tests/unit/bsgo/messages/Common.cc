@@ -10,6 +10,7 @@ void assertAsteroidDataAreEqual(const AsteroidData &actual, const AsteroidData &
   EXPECT_EQ(actual.position, expected.position);
   EXPECT_EQ(actual.radius, expected.radius);
   EXPECT_EQ(actual.health, expected.health);
+  EXPECT_EQ(actual.maxHealth, expected.maxHealth);
   EXPECT_EQ(actual.resource, expected.resource);
   EXPECT_EQ(actual.amount, expected.amount);
 }
