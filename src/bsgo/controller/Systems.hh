@@ -4,7 +4,6 @@
 #include "CoreObject.hh"
 #include "IMessageQueue.hh"
 #include "ISystem.hh"
-#include "NetworkSystem.hh"
 #include <memory>
 #include <unordered_set>
 #include <vector>
@@ -13,8 +12,6 @@ namespace bsgo {
 
 struct SystemsConfig
 {
-  ISystemPtr networkSystem{};
-
   IMessageQueue *const internalMessageQueue{};
   IMessageQueue *const outputMessageQueue{};
 

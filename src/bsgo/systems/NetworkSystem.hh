@@ -3,14 +3,13 @@
 
 #include "AbstractSystem.hh"
 #include "ComponentSyncMessage.hh"
-#include "Repositories.hh"
 
 namespace bsgo {
 
 class NetworkSystem : public AbstractSystem
 {
   public:
-  NetworkSystem(const Repositories &repositories);
+  NetworkSystem();
   ~NetworkSystem() override = default;
 
   void updateEntity(Entity &entity,
@@ -18,8 +17,6 @@ class NetworkSystem : public AbstractSystem
                     const float elapsedSeconds) const override;
 
   private:
-  Repositories m_repositories{};
-
   void syncEntity(Entity &entity) const;
   bool syncComponent(const Entity &entity,
                      const ComponentType &type,
