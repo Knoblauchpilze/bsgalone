@@ -77,14 +77,7 @@ void Systems::initialize(SystemsConfig &&config)
   createSystem<HealthSystem>(m_systems, config);
   createSystem<RemovalSystem>(m_systems, config);
   createSystem<TargetSystem>(m_systems, config);
-
-  if (config.ignoredSystems.contains(SystemType::NETWORK) || nullptr == config.networkSystem)
-  {
-    return;
-  }
-
-  installQueues(*config.networkSystem, config);
-  m_systems.emplace_back(std::move(config.networkSystem));
+  createSystem<NetworkSystem>(m_systems, config);
 }
 
 } // namespace bsgo

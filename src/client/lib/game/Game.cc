@@ -6,7 +6,6 @@
 #include "IRenderer.hh"
 #include "IUiHandler.hh"
 #include "InternalMessageConsumer.hh"
-#include "NetworkSystem.hh"
 #include "SynchronizedMessageQueue.hh"
 
 #include "GameScreenInputHandler.hh"
@@ -370,7 +369,8 @@ void Game::initialize(const int serverPort)
                                                        bsgo::SystemType::REMOVAL,
                                                        bsgo::SystemType::STATUS,
                                                        bsgo::SystemType::HEALTH,
-                                                       bsgo::SystemType::POWER}};
+                                                       bsgo::SystemType::POWER,
+                                                       bsgo::SystemType::NETWORK}};
   m_coordinator = std::make_shared<bsgo::Coordinator>(std::move(sConfig));
 
   ViewsConfig vConfig{.gameSession          = m_gameSession,

@@ -10,9 +10,8 @@ bool isEntityRelevant(const Entity &ent)
 }
 } // namespace
 
-NetworkSystem::NetworkSystem(const Repositories &repositories)
+NetworkSystem::NetworkSystem()
   : AbstractSystem(SystemType::NETWORK, isEntityRelevant)
-  , m_repositories(repositories)
 {}
 
 void NetworkSystem::updateEntity(Entity &entity,

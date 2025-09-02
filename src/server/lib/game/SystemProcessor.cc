@@ -2,7 +2,6 @@
 #include "SystemProcessor.hh"
 #include "DataSource.hh"
 #include "MessageConsumerSetup.hh"
-#include "NetworkSystem.hh"
 
 namespace bsgo {
 
@@ -36,8 +35,7 @@ void SystemProcessor::connectToQueues(IMessageQueue *const internalMessageQueue,
 {
   Repositories repositories{};
 
-  SystemsConfig config{.networkSystem        = std::make_unique<NetworkSystem>(repositories),
-                       .internalMessageQueue = internalMessageQueue,
+  SystemsConfig config{.internalMessageQueue = internalMessageQueue,
                        .outputMessageQueue   = outputMessageQueue};
   m_coordinator = std::make_shared<Coordinator>(std::move(config));
 

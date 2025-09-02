@@ -7,7 +7,6 @@
 #include "Context.hh"
 #include "CoreObject.hh"
 #include "MessageExchanger.hh"
-#include "NetworkSystem.hh"
 #include "SystemProcessor.hh"
 #include "TcpServer.hh"
 #include <atomic>
