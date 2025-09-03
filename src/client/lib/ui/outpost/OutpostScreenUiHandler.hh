@@ -5,7 +5,6 @@
 #include "HangarUiHandler.hh"
 #include "IUiHandler.hh"
 #include "LockerUiHandler.hh"
-#include "Services.hh"
 #include "ShopUiHandler.hh"
 #include "UiMenu.hh"
 #include "Views.hh"

@@ -2,7 +2,6 @@
 #pragma once
 
 #include "IUiHandler.hh"
-#include "LockerService.hh"
 #include "PlayerView.hh"
 #include "ShipView.hh"
 #include "UiMenu.hh"
