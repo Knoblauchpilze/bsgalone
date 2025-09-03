@@ -5,6 +5,7 @@
 #include "CoreObject.hh"
 #include "DatabaseEntityMapper.hh"
 #include "IMessageQueue.hh"
+#include "Processes.hh"
 #include "Services.hh"
 #include "SynchronizedMessageQueue.hh"
 #include "Uuid.hh"
@@ -35,6 +36,7 @@ class SystemProcessor : public core::CoreObject
   DatabaseEntityMapper m_entityMapper{};
   CoordinatorShPtr m_coordinator{};
   Services m_services{};
+  Processes m_processes{};
 
   std::atomic_bool m_running{false};
   std::thread m_processingThread{};

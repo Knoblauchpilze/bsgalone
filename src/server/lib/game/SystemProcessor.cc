@@ -87,6 +87,7 @@ void SystemProcessor::asyncSystemProcessing()
 
     constexpr auto MS_IN_A_SECOND = 1'000;
     m_coordinator->update(elapsedMs / MS_IN_A_SECOND);
+    m_processes.update(*m_coordinator, elapsedMs / MS_IN_A_SECOND);
     m_inputMessagesQueue->processMessages();
 
     lastFrameTimestamp = thisFrameTimestamp;
