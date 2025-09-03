@@ -1,6 +1,5 @@
 
 #include "ClientMessageConsumerUtils.hh"
-#include "EntityService.hh"
 
 #include "AsteroidListMessageConsumer.hh"
 #include "ComponentMessageConsumer.hh"
