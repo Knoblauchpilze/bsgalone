@@ -21,8 +21,9 @@ void Components::clear()
   ais.clear();
   shipClasses.clear();
   names.clear();
-  networks.clear();
+  networkSyncs.clear();
   dbs.clear();
+  dbSyncs.clear();
   weapons.clear();
   computers.clear();
   effects.clear();

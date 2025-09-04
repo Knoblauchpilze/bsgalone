@@ -1,5 +1,5 @@
 
-#include "NetworkComponent.hh"
+#include "SyncComponent.hh"
 
 namespace bsgo {
 
@@ -14,34 +14,28 @@ auto generateJitteredSyncInterval() -> core::Duration
 }
 } // namespace
 
-NetworkComponent::NetworkComponent(const std::unordered_set<ComponentType> &toSync)
-  : AbstractComponent(ComponentType::NETWORK)
-  , m_componentsToSync(toSync)
+SyncComponent::SyncComponent(const ComponentType type)
+  : AbstractComponent(type)
   , m_remainingUntilNextSync(generateJitteredSyncInterval())
 {}
 
-bool NetworkComponent::needsSync() const
+bool SyncComponent::needsSync() const
 {
   return m_needsSync;
 }
 
-void NetworkComponent::markForSync(const bool needsSync)
+void SyncComponent::markForSync(const bool needsSync)
 {
   m_needsSync = needsSync;
 }
 
-void NetworkComponent::markAsJustSynced()
+void SyncComponent::markAsJustSynced()
 {
   markForSync(false);
   m_remainingUntilNextSync = generateJitteredSyncInterval();
 }
 
-auto NetworkComponent::componentsToSync() const -> const std::unordered_set<ComponentType> &
-{
-  return m_componentsToSync;
-}
-
-void NetworkComponent::update(const float elapsedSeconds)
+void SyncComponent::update(const float elapsedSeconds)
 {
   constexpr auto MILLISECONDS_IN_A_SECONDS = 1000;
   const auto elapsedMillis                 = core::Milliseconds(

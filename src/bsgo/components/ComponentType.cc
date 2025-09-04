@@ -15,6 +15,8 @@ auto str(const ComponentType &type) -> std::string
       return "damage";
     case ComponentType::DB:
       return "db";
+    case ComponentType::DB_SYNC:
+      return "db_sync";
     case ComponentType::FACTION:
       return "faction";
     case ComponentType::HEALTH:
@@ -25,8 +27,8 @@ auto str(const ComponentType &type) -> std::string
       return "loot";
     case ComponentType::NAME:
       return "name";
-    case ComponentType::NETWORK:
-      return "network";
+    case ComponentType::NETWORK_SYNC:
+      return "network_sync";
     case ComponentType::OWNER:
       return "owner";
     case ComponentType::POWER:

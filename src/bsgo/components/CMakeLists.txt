@@ -7,13 +7,14 @@ target_sources (bsgo_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/ComputerSlotComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/DamageComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/DbComponent.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/DbSyncComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/EffectComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/FactionComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/HealthComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/KindComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LootComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/NameComponent.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/NetworkComponent.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/NetworkSyncComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/OwnerComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/PowerComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/RegenerativeComponent.cc
@@ -23,6 +24,7 @@ target_sources (bsgo_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/ShipClassComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SlotComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/StatusComponent.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/SyncComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/TargetComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/TransformComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/VelocityComponent.cc
