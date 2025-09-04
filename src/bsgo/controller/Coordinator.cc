@@ -169,16 +169,19 @@ void Coordinator::addName(const Uuid ent, const std::string &name)
   m_components.names[ent] = std::make_shared<NameComponent>(name);
 }
 
-void Coordinator::addNetwork(const Uuid ent, const std::unordered_set<ComponentType> &toSync)
+void Coordinator::addNetworkSync(const Uuid ent, const std::unordered_set<ComponentType> &toSync)
 {
-  checkForOverrides(ent, "Network", m_components.networks);
-  m_components.networks[ent] = std::make_shared<NetworkComponent>(toSync);
+  checkForOverrides(ent, "NetworkSync", m_components.networkSyncs);
+  m_components.networkSyncs[ent] = std::make_shared<NetworkSyncComponent>(toSync);
 }
 
 void Coordinator::addDbId(const Uuid ent, const Uuid dbId)
 {
   checkForOverrides(ent, "Db", m_components.dbs);
   m_components.dbs[ent] = std::make_shared<DbComponent>(dbId);
+
+  checkForOverrides(ent, "DbSync", m_components.dbSyncs);
+  m_components.dbSyncs[ent] = std::make_shared<DbSyncComponent>();
 }
 
 void Coordinator::addWeapon(const Uuid ent, const PlayerWeaponData &weapon)
@@ -249,23 +252,24 @@ auto Coordinator::getEntity(const Uuid ent) const -> Entity
   }
   out.kind = *maybeKind;
 
-  out.transform = getComponent(ent, m_components.transforms);
-  out.velocity  = getComponent(ent, m_components.velocities);
-  out.health    = getComponent(ent, m_components.healths);
-  out.power     = getComponent(ent, m_components.powers);
-  out.target    = getComponent(ent, m_components.targets);
-  out.faction   = getComponent(ent, m_components.factions);
-  out.loot      = getComponent(ent, m_components.loots);
-  out.scanned   = getComponent(ent, m_components.scanned);
-  out.owner     = getComponent(ent, m_components.owners);
-  out.damage    = getComponent(ent, m_components.damages);
-  out.removal   = getComponent(ent, m_components.removals);
-  out.status    = getComponent(ent, m_components.statuses);
-  out.ai        = getComponent(ent, m_components.ais);
-  out.shipClass = getComponent(ent, m_components.shipClasses);
-  out.name      = getComponent(ent, m_components.names);
-  out.network   = getComponent(ent, m_components.networks);
-  out.db        = getComponent(ent, m_components.dbs);
+  out.transform   = getComponent(ent, m_components.transforms);
+  out.velocity    = getComponent(ent, m_components.velocities);
+  out.health      = getComponent(ent, m_components.healths);
+  out.power       = getComponent(ent, m_components.powers);
+  out.target      = getComponent(ent, m_components.targets);
+  out.faction     = getComponent(ent, m_components.factions);
+  out.loot        = getComponent(ent, m_components.loots);
+  out.scanned     = getComponent(ent, m_components.scanned);
+  out.owner       = getComponent(ent, m_components.owners);
+  out.damage      = getComponent(ent, m_components.damages);
+  out.removal     = getComponent(ent, m_components.removals);
+  out.status      = getComponent(ent, m_components.statuses);
+  out.ai          = getComponent(ent, m_components.ais);
+  out.shipClass   = getComponent(ent, m_components.shipClasses);
+  out.name        = getComponent(ent, m_components.names);
+  out.networkSync = getComponent(ent, m_components.networkSyncs);
+  out.db          = getComponent(ent, m_components.dbs);
+  out.dbSync      = getComponent(ent, m_components.dbSyncs);
 
   out.weapons   = getAllComponent(ent, m_components.weapons);
   out.computers = getAllComponent(ent, m_components.computers);
@@ -300,8 +304,9 @@ void Coordinator::deleteEntity(const Uuid ent)
   m_components.ais.erase(ent);
   m_components.shipClasses.erase(ent);
   m_components.names.erase(ent);
-  m_components.networks.erase(ent);
+  m_components.networkSyncs.erase(ent);
   m_components.dbs.erase(ent);
+  m_components.dbSyncs.erase(ent);
 
   m_components.weapons.erase(ent);
   m_components.computers.erase(ent);

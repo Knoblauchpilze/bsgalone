@@ -109,9 +109,9 @@ bool ShipService::accelerateShip(const Uuid shipDbId, const Eigen::Vector3f &acc
 
   ship.velocityComp().accelerate(acceleration);
 
-  if (ship.exists<NetworkComponent>())
+  if (ship.exists<NetworkSyncComponent>())
   {
-    ship.networkComp().markForSync();
+    ship.networkSyncComp().markForSync();
   }
 
   return true;

@@ -6,7 +6,7 @@ namespace bsgo {
 namespace {
 bool isEntityRelevant(const Entity &ent)
 {
-  return ent.exists<NetworkComponent>();
+  return ent.exists<NetworkSyncComponent>();
 }
 } // namespace
 
@@ -18,10 +18,10 @@ void NetworkSystem::updateEntity(Entity &entity,
                                  Coordinator & /*coordinator*/,
                                  const float elapsedSeconds) const
 {
-  auto &networkComp = entity.networkComp();
-  networkComp.update(elapsedSeconds);
+  auto &networkSyncComp = entity.networkSyncComp();
+  networkSyncComp.update(elapsedSeconds);
 
-  if (!networkComp.needsSync())
+  if (!networkSyncComp.needsSync())
   {
     return;
   }
@@ -41,8 +41,8 @@ auto generateOutboundMessage(const Entity &entity) -> std::unique_ptr<ComponentS
 
 void NetworkSystem::syncEntity(Entity &entity) const
 {
-  auto &networkComp  = entity.networkComp();
-  const auto &toSync = networkComp.componentsToSync();
+  auto &networkSyncComp = entity.networkSyncComp();
+  const auto &toSync    = networkSyncComp.componentsToSync();
 
   auto message = generateOutboundMessage(entity);
 
@@ -52,7 +52,7 @@ void NetworkSystem::syncEntity(Entity &entity) const
     somethingToSync |= syncComponent(entity, comp, *message);
   }
 
-  networkComp.markAsJustSynced();
+  networkSyncComp.markAsJustSynced();
 
   if (somethingToSync)
   {

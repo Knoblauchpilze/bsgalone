@@ -47,7 +47,7 @@ class Coordinator : public core::CoreObject
   void addAI(const Uuid ent, INodePtr behavior);
   void addShipClass(const Uuid ent, const ShipClass &shipClass);
   void addName(const Uuid ent, const std::string &name);
-  void addNetwork(const Uuid ent, const std::unordered_set<ComponentType> &toSync);
+  void addNetworkSync(const Uuid ent, const std::unordered_set<ComponentType> &toSync);
   void addDbId(const Uuid ent, const Uuid dbId);
   void addWeapon(const Uuid ent, const PlayerWeaponData &weapon);
   void addComputer(const Uuid ent, const PlayerComputerData &computer);

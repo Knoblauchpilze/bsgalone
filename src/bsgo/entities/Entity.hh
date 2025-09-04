@@ -5,6 +5,7 @@
 #include "ComputerSlotComponent.hh"
 #include "DamageComponent.hh"
 #include "DbComponent.hh"
+#include "DbSyncComponent.hh"
 #include "EffectComponent.hh"
 #include "EntityKind.hh"
 #include "FactionComponent.hh"
@@ -12,7 +13,7 @@
 #include "KindComponent.hh"
 #include "LootComponent.hh"
 #include "NameComponent.hh"
-#include "NetworkComponent.hh"
+#include "NetworkSyncComponent.hh"
 #include "OwnerComponent.hh"
 #include "PowerComponent.hh"
 #include "RemovalComponent.hh"
@@ -50,8 +51,9 @@ struct Entity
   std::optional<AIComponentShPtr> ai{};
   std::optional<ShipClassComponentShPtr> shipClass{};
   std::optional<NameComponentShPtr> name{};
-  std::optional<NetworkComponentShPtr> network{};
+  std::optional<NetworkSyncComponentShPtr> networkSync{};
   std::optional<DbComponentShPtr> db{};
+  std::optional<DbSyncComponentShPtr> dbSync{};
   std::vector<WeaponSlotComponentShPtr> weapons{};
   std::vector<ComputerSlotComponentShPtr> computers{};
   std::vector<EffectComponentShPtr> effects{};
@@ -86,7 +88,7 @@ struct Entity
   auto aiComp() const -> const AIComponent &;
   auto shipClassComp() const -> const ShipClassComponent &;
   auto nameComp() const -> const NameComponent &;
-  auto networkComp() const -> const NetworkComponent &;
+  auto networkSyncComp() const -> const NetworkSyncComponent &;
   auto dbComp() const -> const DbComponent &;
 
   auto transformComp() -> TransformComponent &;
@@ -99,7 +101,7 @@ struct Entity
   auto removalComp() -> RemovalComponent &;
   auto statusComp() -> StatusComponent &;
   auto aiComp() -> AIComponent &;
-  auto networkComp() -> NetworkComponent &;
+  auto networkSyncComp() -> NetworkSyncComponent &;
 
   auto tryGetWeapon(const Uuid weaponDbId) const -> std::optional<WeaponSlotComponentShPtr>;
   auto tryGetComputer(const Uuid computerDbId) const -> std::optional<ComputerSlotComponentShPtr>;

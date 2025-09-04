@@ -78,12 +78,12 @@ void ShipDataSource::registerShip(Coordinator &coordinator,
   {
     coordinator.addTarget(shipEntityId);
   }
-  coordinator.addNetwork(shipEntityId,
-                         {ComponentType::HEALTH,
-                          ComponentType::POWER,
-                          ComponentType::STATUS,
-                          ComponentType::TRANSFORM,
-                          ComponentType::VELOCITY});
+  coordinator.addNetworkSync(shipEntityId,
+                             {ComponentType::HEALTH,
+                              ComponentType::POWER,
+                              ComponentType::STATUS,
+                              ComponentType::TRANSFORM,
+                              ComponentType::VELOCITY});
 
   registerShipOwner(coordinator, shipEntityId, data, entityMapper);
   registerShipWeapons(coordinator, data, shipEntityId);

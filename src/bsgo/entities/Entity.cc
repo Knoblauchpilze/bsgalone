@@ -170,9 +170,9 @@ bool Entity::exists<NameComponent>() const
 }
 
 template<>
-bool Entity::exists<NetworkComponent>() const
+bool Entity::exists<NetworkSyncComponent>() const
 {
-  return details::checkComponentExists(network);
+  return details::checkComponentExists(networkSync);
 }
 
 template<>
@@ -256,9 +256,9 @@ auto Entity::nameComp() const -> const NameComponent &
   return details::safeConstAccess(name, *this, "Name");
 }
 
-auto Entity::networkComp() const -> const NetworkComponent &
+auto Entity::networkSyncComp() const -> const NetworkSyncComponent &
 {
-  return details::safeConstAccess(network, *this, "Network");
+  return details::safeConstAccess(networkSync, *this, "NetworkSync");
 }
 
 auto Entity::dbComp() const -> const DbComponent &
@@ -316,9 +316,9 @@ auto Entity::aiComp() -> AIComponent &
   return details::safeAccess(ai, *this, "AI");
 }
 
-auto Entity::networkComp() -> NetworkComponent &
+auto Entity::networkSyncComp() -> NetworkSyncComponent &
 {
-  return details::safeAccess(network, *this, "Network");
+  return details::safeAccess(networkSync, *this, "NetworkSync");
 }
 
 namespace {
@@ -350,9 +350,9 @@ auto Entity::tryGetComputer(const Uuid computerDbId) const
 
 void Entity::tryMarkForNetworkSync()
 {
-  if (exists<NetworkComponent>())
+  if (exists<NetworkSyncComponent>())
   {
-    networkComp().markForSync();
+    networkSyncComp().markForSync();
   }
 }
 
