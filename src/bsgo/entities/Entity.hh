@@ -102,6 +102,7 @@ struct Entity
   auto statusComp() -> StatusComponent &;
   auto aiComp() -> AIComponent &;
   auto networkSyncComp() -> NetworkSyncComponent &;
+  auto dbSyncComp() -> DbSyncComponent &;
 
   auto tryGetWeapon(const Uuid weaponDbId) const -> std::optional<WeaponSlotComponentShPtr>;
   auto tryGetComputer(const Uuid computerDbId) const -> std::optional<ComputerSlotComponentShPtr>;
