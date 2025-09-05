@@ -179,9 +179,12 @@ void Coordinator::addDbId(const Uuid ent, const Uuid dbId)
 {
   checkForOverrides(ent, "Db", m_components.dbs);
   m_components.dbs[ent] = std::make_shared<DbComponent>(dbId);
+}
 
+void Coordinator::addDbSync(const Uuid ent, const std::unordered_set<ComponentType> &toSync)
+{
   checkForOverrides(ent, "DbSync", m_components.dbSyncs);
-  m_components.dbSyncs[ent] = std::make_shared<DbSyncComponent>();
+  m_components.dbSyncs[ent] = std::make_shared<DbSyncComponent>(toSync);
 }
 
 void Coordinator::addWeapon(const Uuid ent, const PlayerWeaponData &weapon)

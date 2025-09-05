@@ -49,6 +49,7 @@ class Coordinator : public core::CoreObject
   void addName(const Uuid ent, const std::string &name);
   void addNetworkSync(const Uuid ent, const std::unordered_set<ComponentType> &toSync);
   void addDbId(const Uuid ent, const Uuid dbId);
+  void addDbSync(const Uuid ent, const std::unordered_set<ComponentType> &toSync);
   void addWeapon(const Uuid ent, const PlayerWeaponData &weapon);
   void addComputer(const Uuid ent, const PlayerComputerData &computer);
   void addResourceComponent(const Uuid ent, const Uuid resource, const int amount);

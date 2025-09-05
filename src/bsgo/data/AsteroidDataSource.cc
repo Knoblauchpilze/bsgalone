@@ -55,6 +55,7 @@ void AsteroidDataSource::registerAsteroid(Coordinator &coordinator,
     coordinator.addResourceComponent(asteroidEntityId, *data.resource, *data.amount);
   }
   coordinator.addNetworkSync(asteroidEntityId, {ComponentType::HEALTH});
+  coordinator.addDbSync(asteroidEntityId, {ComponentType::HEALTH});
 
   entityMapper.registerAsteroid(data.dbId, asteroidEntityId);
 }
