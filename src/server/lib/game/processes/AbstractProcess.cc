@@ -3,8 +3,9 @@
 
 namespace bsgo {
 
-AbstractProcess::AbstractProcess(const ProcessType &type)
+AbstractProcess::AbstractProcess(const ProcessType &type, const Repositories &repositories)
   : IProcess(str(type))
+  , m_repositories(repositories)
   , m_processType(type)
 {}
 

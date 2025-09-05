@@ -1,5 +1,6 @@
 
 #include "Processes.hh"
+#include "Repositories.hh"
 
 #include "DbSyncProcess.hh"
 #include "RespawnProcess.hh"
@@ -24,16 +25,18 @@ void Processes::update(Coordinator &coordinator, const float elapsedSeconds) con
 
 namespace {
 template<typename T>
-void createProcess(std::vector<IProcessPtr> &processes)
+void createProcess(std::vector<IProcessPtr> &processes, const Repositories &repositories)
 {
-  processes.emplace_back(std::make_unique<T>());
+  processes.emplace_back(std::make_unique<T>(repositories));
 }
 } // namespace
 
 void Processes::initialize()
 {
-  createProcess<DbSyncProcess>(m_processes);
-  createProcess<RespawnProcess>(m_processes);
+  Repositories repositories;
+
+  createProcess<DbSyncProcess>(m_processes, repositories);
+  createProcess<RespawnProcess>(m_processes, repositories);
 }
 
 } // namespace bsgo

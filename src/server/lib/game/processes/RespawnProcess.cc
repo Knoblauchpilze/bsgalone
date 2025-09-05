@@ -3,8 +3,8 @@
 
 namespace bsgo {
 
-RespawnProcess::RespawnProcess()
-  : AbstractProcess(ProcessType::RESPAWN)
+RespawnProcess::RespawnProcess(const Repositories &repositories)
+  : AbstractProcess(ProcessType::RESPAWN, repositories)
 {}
 
 void RespawnProcess::update(Coordinator & /*coordinator*/, const float /*elapsedSeconds*/) const
