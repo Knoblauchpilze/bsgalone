@@ -181,6 +181,12 @@ bool Entity::exists<DbComponent>() const
   return details::checkComponentExists(db);
 }
 
+template<>
+bool Entity::exists<DbSyncComponent>() const
+{
+  return details::checkComponentExists(dbSync);
+}
+
 auto Entity::transformComp() const -> const TransformComponent &
 {
   return details::safeConstAccess(transform, *this, "Transform");
@@ -319,6 +325,11 @@ auto Entity::aiComp() -> AIComponent &
 auto Entity::networkSyncComp() -> NetworkSyncComponent &
 {
   return details::safeAccess(networkSync, *this, "NetworkSync");
+}
+
+auto Entity::dbSyncComp() -> DbSyncComponent &
+{
+  return details::safeAccess(dbSync, *this, "DbSync");
 }
 
 namespace {
