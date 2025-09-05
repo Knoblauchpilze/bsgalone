@@ -4,8 +4,8 @@
 
 namespace bsgo {
 
-DbSyncProcess::DbSyncProcess()
-  : AbstractProcess(ProcessType::DB_SYNC)
+DbSyncProcess::DbSyncProcess(const Repositories &repositories)
+  : AbstractProcess(ProcessType::DB_SYNC, repositories)
 {}
 
 namespace {

@@ -9,7 +9,7 @@ namespace bsgo {
 class DbSyncProcess : public AbstractProcess
 {
   public:
-  DbSyncProcess();
+  DbSyncProcess(const Repositories &repositories);
   ~DbSyncProcess() override = default;
 
   void update(Coordinator &coordinator, const float elapsedSeconds) const override;
