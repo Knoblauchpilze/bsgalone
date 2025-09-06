@@ -11,6 +11,7 @@ namespace bsgo {
 
 struct SystemOutpost
 {
+  Uuid id{};
   Faction faction{};
   Uuid system{};
 
@@ -35,6 +36,8 @@ class SystemOutpostRepository : public AbstractRepository
   void initialize() override;
 
   auto findOneById(const Uuid outpost) const -> SystemOutpost;
+
+  void save(const SystemOutpost &outpost);
 };
 
 using SystemOutpostRepositoryShPtr = std::shared_ptr<SystemOutpostRepository>;

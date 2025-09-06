@@ -117,7 +117,6 @@ auto LoadingService::getOutpostById(const Uuid outpostDbId) const -> OutpostProp
   const auto targetDbId = getOutpostTargetDbId(outpostDbId, m_entityMapper, *m_coordinator);
 
   return OutpostProps{
-    .dbId       = outpostDbId,
     .dbOutpost  = outpost,
     .targetDbId = targetDbId,
   };
@@ -134,7 +133,7 @@ auto LoadingService::getOutpostsInSystem(const Uuid systemDbId) const -> std::ve
     const auto outpost = m_repositories.systemOutpostRepository->findOneById(outpostDbId);
 
     const auto targetDbId = getOutpostTargetDbId(outpostDbId, m_entityMapper, *m_coordinator);
-    outposts.emplace_back(outpostDbId, outpost, targetDbId);
+    outposts.emplace_back(outpost, targetDbId);
   }
 
   return outposts;
