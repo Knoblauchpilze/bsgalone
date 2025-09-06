@@ -32,7 +32,6 @@ auto toPlayerData(const Player &player) -> PlayerData;
 
 struct AsteroidProps
 {
-  Uuid dbId{};
   Asteroid dbAsteroid{};
 
   std::optional<Uuid> resource{};

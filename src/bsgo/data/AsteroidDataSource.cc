@@ -67,7 +67,7 @@ void AsteroidDataSource::registerAsteroid(Coordinator &coordinator,
   const auto data = m_repositories->asteroidRepository->findOneById(asteroidDbId);
 
   AsteroidData out{
-    .dbId      = asteroidDbId,
+    .dbId      = data.id,
     .position  = data.position,
     .radius    = data.radius,
     .health    = data.health,

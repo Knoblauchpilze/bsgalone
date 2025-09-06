@@ -11,7 +11,7 @@ auto toPlayerData(const Player &player) -> PlayerData
 auto AsteroidProps::toAsteroidData() const -> AsteroidData
 {
   return AsteroidData{
-    .dbId      = dbId,
+    .dbId      = dbAsteroid.id,
     .position  = dbAsteroid.position,
     .radius    = dbAsteroid.radius,
     .health    = dbAsteroid.health,
