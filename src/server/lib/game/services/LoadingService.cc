@@ -64,7 +64,6 @@ auto LoadingService::getAsteroidById(const Uuid asteroidDbId) const -> AsteroidP
   }
 
   return AsteroidProps{
-    .dbId       = asteroidDbId,
     .dbAsteroid = asteroid,
     .resource   = resource,
     .amount     = amount,
@@ -90,7 +89,7 @@ auto LoadingService::getAsteroidsInSystem(const Uuid systemDbId) const -> std::v
       amount          = loot.amount;
     }
 
-    asteroids.emplace_back(asteroidDbId, asteroid, resource, amount);
+    asteroids.emplace_back(asteroid, resource, amount);
   }
 
   return asteroids;
