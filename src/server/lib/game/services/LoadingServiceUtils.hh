@@ -42,7 +42,6 @@ struct AsteroidProps
 
 struct OutpostProps
 {
-  Uuid dbId{};
   SystemOutpost dbOutpost{};
   std::optional<Uuid> targetDbId{};
 

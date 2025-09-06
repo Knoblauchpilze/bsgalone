@@ -24,7 +24,7 @@ auto AsteroidProps::toAsteroidData() const -> AsteroidData
 auto OutpostProps::toOutpostData() const -> OutpostData
 {
   return OutpostData{
-    .dbId            = dbId,
+    .dbId            = dbOutpost.id,
     .position        = dbOutpost.position,
     .radius          = dbOutpost.radius,
     .hullPoints      = dbOutpost.hullPoints,
