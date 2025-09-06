@@ -11,6 +11,7 @@ namespace bsgo {
 
 struct Asteroid
 {
+  Uuid id{};
   Uuid system{};
   Eigen::Vector3f position{Eigen::Vector3f::Zero()};
   float health{0.0f};
@@ -29,6 +30,8 @@ class AsteroidRepository : public AbstractRepository
   void initialize() override;
 
   auto findOneById(const Uuid asteroid) const -> Asteroid;
+
+  void save(const Asteroid &asteroid);
 
   private:
   auto fetchAsteroidBase(const Uuid asteroid) const -> Asteroid;
