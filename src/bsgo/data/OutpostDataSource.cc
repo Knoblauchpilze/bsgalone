@@ -52,7 +52,7 @@ void OutpostDataSource::registerOutpost(Coordinator &coordinator,
   coordinator.addFaction(outpostEntityId, data.faction);
   coordinator.addStatus(outpostEntityId, Status::VISIBLE, {}, {});
   coordinator.addNetworkSync(outpostEntityId, {ComponentType::HEALTH, ComponentType::POWER});
-  coordinator.addDbSync(outpostEntityId, {ComponentType::HEALTH});
+  coordinator.addDbSync(outpostEntityId);
 
   entityMapper.registerOutpost(data.dbId, outpostEntityId);
 }
