@@ -28,8 +28,7 @@ bool JumpService::tryRegisterJump(const Uuid shipDbId, const Uuid system) const
     return false;
   }
 
-  ship.jumpSystem = system;
-  m_repositories.playerShipRepository->save(ship);
+  m_repositories.playerShipRepository->saveJump(shipDbId, system);
 
   info("Registered jump to " + str(system) + " for ship " + str(shipDbId));
 
@@ -58,8 +57,7 @@ bool JumpService::tryCancelJump(const Uuid shipDbId) const
     return false;
   }
 
-  ship.jumpSystem.reset();
-  m_repositories.playerShipRepository->save(ship);
+  m_repositories.playerShipRepository->saveJump(shipDbId, {});
 
   info("Cancelled jump for ship " + str(shipDbId));
 

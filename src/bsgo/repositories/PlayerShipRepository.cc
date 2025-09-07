@@ -222,14 +222,17 @@ void PlayerShipRepository::save(const PlayerShip &ship)
   {
     error("Failed to save player ship: " + *res.error);
   }
+}
 
-  if (ship.jumpSystem)
+void PlayerShipRepository::saveJump(const Uuid shipDbId, const std::optional<Uuid> jumpSystem)
+{
+  if (jumpSystem)
   {
-    registerShipJump(ship.id, *ship.jumpSystem);
+    registerShipJump(shipDbId, *jumpSystem);
   }
   else
   {
-    cancelShipJump(ship.id);
+    cancelShipJump(shipDbId);
   }
 }
 

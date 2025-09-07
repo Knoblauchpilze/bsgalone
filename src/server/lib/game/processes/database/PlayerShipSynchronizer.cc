@@ -13,7 +13,6 @@ void syncPlayerShip(const Entity &entity, const Repositories &repositories)
     .active      = true,
     .hullPoints  = entity.healthComp().value(),
     .powerPoints = entity.powerComp().value(),
-    // TODO: We need to fetch the jump system
   };
 
   repositories.playerShipRepository->save(ship);
