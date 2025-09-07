@@ -60,6 +60,8 @@ bool SystemService::trySendPlayerShipBackToOutpost(const Uuid shipDbId) const
 
   m_repositories.systemRepository->updateSystemForShip(ship.id, *ship.system, ship.docked);
   m_repositories.playerShipRepository->save(ship);
+  // Cancel jump to another system.
+  m_repositories.playerShipRepository->saveJump(ship.id, {});
 
   return true;
 }
@@ -75,6 +77,7 @@ auto SystemService::trySendPlayerBackToOutpost(const Uuid &playerDbId) const -> 
 
   m_repositories.systemRepository->updateSystemForShip(ship.id, *ship.system, ship.docked);
   m_repositories.playerShipRepository->save(ship);
+  m_repositories.playerShipRepository->saveJump(ship.id, {});
 
   return out;
 }
@@ -97,8 +100,8 @@ auto SystemService::tryJump(const Uuid shipDbId) const -> JumpResult
   const auto system = m_repositories.systemRepository->findOneById(*ship.jumpSystem);
 
   m_repositories.systemRepository->updateSystemForShip(ship.id, *ship.jumpSystem, ship.docked);
-  ship.jumpSystem.reset();
   m_repositories.playerShipRepository->save(ship);
+  m_repositories.playerShipRepository->saveJump(ship.id, {});
 
   info("Completed jump to " + system.name + " for " + str(shipDbId));
   out.success = true;

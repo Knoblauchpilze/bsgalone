@@ -64,6 +64,7 @@ class PlayerShipRepository : public AbstractRepository
 
   void create(const PlayerShip &ship);
   void save(const PlayerShip &ship);
+  void saveJump(const Uuid shipDbId, const std::optional<Uuid> jumpSystem);
 
   private:
   auto fetchShipBase(const Uuid ship) const -> PlayerShip;
