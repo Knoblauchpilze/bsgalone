@@ -1,6 +1,8 @@
 
 #include "DatabaseSynchronizer.hh"
-#include "HealthSynchronizer.hh"
+#include "AsteroidSynchronizer.hh"
+#include "PlayerShipSynchronizer.hh"
+#include "SystemOutpostSynchronizer.hh"
 
 namespace bsgo {
 
@@ -11,15 +13,23 @@ DatabaseSynchronizer::DatabaseSynchronizer(const Repositories &repositories)
   setService("database");
 }
 
-void DatabaseSynchronizer::syncComponent(const Entity &entity, const ComponentType type) const
+void DatabaseSynchronizer::syncEntity(const Entity &entity) const
 {
-  switch (type)
+  const auto kind = entity.kind->kind();
+
+  switch (kind)
   {
-    case ComponentType::HEALTH:
-      syncHealthComponent(entity, m_repositories);
+    case EntityKind::ASTEROID:
+      syncAsteroid(entity, m_repositories);
+      break;
+    case EntityKind::SHIP:
+      syncPlayerShip(entity, m_repositories);
+      break;
+    case EntityKind::OUTPOST:
+      syncSystemOutpost(entity, m_repositories);
       break;
     default:
-      error("Unsupported component " + str(type) + " to sync");
+      error("Unsupported entity kind " + str(kind) + " to sync");
       break;
   }
 }

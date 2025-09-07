@@ -12,7 +12,7 @@ INSERT INTO bsgalone_schema.starting_system ("system", "faction")
 INSERT INTO asteroid ("system", "max_health", "health", "radius", "x_pos", "y_pos", "z_pos")
   VALUES (
     (SELECT id FROM system WHERE name = 'Munnin'),
-    85.0,
+    85001.0,
     85.0,
     0.5,
     1.0, 2.0, 0.0

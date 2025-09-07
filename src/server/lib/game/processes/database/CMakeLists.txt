@@ -4,6 +4,8 @@ target_include_directories (server_lib PUBLIC
 	)
 
 target_sources (server_lib PRIVATE
+	${CMAKE_CURRENT_SOURCE_DIR}/AsteroidSynchronizer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/DatabaseSynchronizer.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/HealthSynchronizer.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/PlayerShipSynchronizer.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/SystemOutpostSynchronizer.cc
 	)

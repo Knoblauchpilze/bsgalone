@@ -1,6 +1,8 @@
 
 #include "PlayerShipRepository.hh"
 
+#include <iostream>
+
 namespace bsgo {
 
 PlayerShipRepository::PlayerShipRepository(const DbConnectionShPtr &connection)
@@ -188,6 +190,9 @@ auto PlayerShipRepository::findAllAvailableWeaponSlotByShip(const Uuid ship) -> 
 
 void PlayerShipRepository::save(const PlayerShip &ship)
 {
+  std::cout << "saving ship " << ship.id << " with hp = " << ship.hullPoints
+            << " and power = " << ship.powerPoints << std::endl;
+
   auto query = [&ship](pqxx::work &transaction) {
     return transaction
       .exec(pqxx::prepped{UPDATE_SHIP_QUERY_NAME},

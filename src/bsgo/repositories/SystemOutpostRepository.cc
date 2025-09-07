@@ -18,9 +18,10 @@ constexpr auto UPDATE_SYSTEM_OUTPOST_QUERY_NAME = "system_outpost_update";
 constexpr auto UPDATE_SYSTEM_OUTPOST_QUERY      = R"(
 UPDATE system_outpost
   SET
-    hull_points = $1
+    hull_points = $1,
+    power_points = $2
   WHERE
-    id = $2
+    id = $3
 )";
 } // namespace
 
@@ -63,7 +64,7 @@ void SystemOutpostRepository::save(const SystemOutpost &outpost)
   auto query = [&outpost](pqxx::work &transaction) {
     return transaction
       .exec(pqxx::prepped{UPDATE_SYSTEM_OUTPOST_QUERY_NAME},
-            pqxx::params{outpost.hullPoints, toDbId(outpost.id)})
+            pqxx::params{outpost.hullPoints, outpost.powerPoints, toDbId(outpost.id)})
       .no_rows();
   };
 
