@@ -47,7 +47,9 @@ void LoginMessageConsumer::handleLogin(const LoginMessage &message) const
 
   const auto playerDbId = m_loginService->tryLogin(name, password);
 
-  if (!playerDbId)
+  const auto successfulLogin = playerDbId.has_value();
+
+  if (!successfulLogin)
   {
     warn("Failed to process login message for player " + name);
   }
@@ -62,7 +64,11 @@ void LoginMessageConsumer::handleLogin(const LoginMessage &message) const
   out->copyClientIdIfDefined(message);
 
   m_outputMessageQueue->pushMessage(std::move(out));
-  publishLoadingMessages(clientId, *playerDbId);
+
+  if (successfulLogin)
+  {
+    publishLoadingMessages(clientId, *playerDbId);
+  }
 }
 
 void LoginMessageConsumer::publishLoadingMessages(const Uuid clientId, const Uuid playerDbId) const
