@@ -10,6 +10,7 @@ void syncPlayerShip(const Entity &entity, const Repositories &repositories)
   PlayerShip ship{
     .id = dbId,
     // TODO: Correctly fetch this information
+    // We also need the jump system
     .ship        = 0,
     .name        = entity.nameComp().name(),
     .player      = 0,

@@ -178,7 +178,6 @@ void PurchaseService::tryPurchaseShip(const Uuid playerId, const Uuid shipId) co
   const auto shipTemplate = m_repositories.shipRepository->findOneById(shipId);
 
   PlayerShip ship{
-    .faction     = shipTemplate.faction,
     .ship        = shipTemplate.id,
     .name        = shipTemplate.name,
     .player      = player.id,
@@ -187,7 +186,7 @@ void PurchaseService::tryPurchaseShip(const Uuid playerId, const Uuid shipId) co
     .powerPoints = shipTemplate.maxPowerPoints,
   };
 
-  m_repositories.playerShipRepository->save(ship);
+  m_repositories.playerShipRepository->create(ship);
 }
 
 namespace {

@@ -1,8 +1,6 @@
 
 #include "PlayerShipRepository.hh"
 
-#include <iostream>
-
 namespace bsgo {
 
 PlayerShipRepository::PlayerShipRepository(const DbConnectionShPtr &connection)
@@ -85,22 +83,22 @@ WHERE
   AND sw.weapon IS NULL
 )";
 
-constexpr auto UPDATE_SHIP_QUERY_NAME = "player_ship_update";
-constexpr auto UPDATE_SHIP_QUERY      = R"(
+constexpr auto CREATE_SHIP_QUERY_NAME = "player_ship_create";
+constexpr auto CREATE_SHIP_QUERY      = R"(
 INSERT INTO player_ship (ship, player, name, active, hull_points, power_points, x_pos, y_pos, z_pos)
   VALUES ($1, $2, $3, $4, $5, $6, 0, 0, 0)
-  ON CONFLICT (ship, player) DO UPDATE
+)";
+
+constexpr auto UPDATE_SHIP_QUERY_NAME = "player_ship_update";
+constexpr auto UPDATE_SHIP_QUERY      = R"(
+UPDATE player_ship
   SET
-    name = excluded.name,
-    active = excluded.active,
-    hull_points = excluded.hull_points,
-    power_points = excluded.power_points,
-    x_pos = excluded.x_pos,
-    y_pos = excluded.y_pos,
-    z_pos = excluded.z_pos
+    name = $1,
+    active = $2,
+    hull_points = $3,
+    power_points = $4
   WHERE
-    player_ship.ship = excluded.ship
-    AND player_ship.player = excluded.player
+    id = $5
 )";
 
 constexpr auto UPDATE_SHIP_JUMP_QUERY_NAME = "player_ship_update_jump";
@@ -126,6 +124,7 @@ void PlayerShipRepository::initialize()
                         FIND_ONE_BY_PLAYER_AND_ACTIVE_QUERY);
   m_connection->prepare(FIND_SLOTS_QUERY_NAME, FIND_SLOTS_QUERY);
   m_connection->prepare(FIND_EMPTY_WEAPON_SLOTS_QUERY_NAME, FIND_EMPTY_WEAPON_SLOTS_QUERY);
+  m_connection->prepare(CREATE_SHIP_QUERY_NAME, CREATE_SHIP_QUERY);
   m_connection->prepare(UPDATE_SHIP_QUERY_NAME, UPDATE_SHIP_QUERY);
   m_connection->prepare(UPDATE_SHIP_JUMP_QUERY_NAME, UPDATE_SHIP_JUMP_QUERY);
   m_connection->prepare(CANCEL_SHIP_JUMP_QUERY_NAME, CANCEL_SHIP_JUMP_QUERY);
@@ -188,20 +187,33 @@ auto PlayerShipRepository::findAllAvailableWeaponSlotByShip(const Uuid ship) -> 
   return out;
 }
 
-void PlayerShipRepository::save(const PlayerShip &ship)
+void PlayerShipRepository::create(const PlayerShip &ship)
 {
-  std::cout << "saving ship " << ship.id << " with hp = " << ship.hullPoints
-            << " and power = " << ship.powerPoints << std::endl;
-
   auto query = [&ship](pqxx::work &transaction) {
     return transaction
-      .exec(pqxx::prepped{UPDATE_SHIP_QUERY_NAME},
+      .exec(pqxx::prepped{CREATE_SHIP_QUERY_NAME},
             pqxx::params{toDbId(ship.ship),
                          toDbId(*ship.player),
                          ship.name,
                          ship.active,
                          ship.hullPoints,
                          ship.powerPoints})
+      .no_rows();
+  };
+
+  auto res = m_connection->tryExecuteTransaction(query);
+  if (res.error)
+  {
+    error("Failed to create player ship: " + *res.error);
+  }
+}
+
+void PlayerShipRepository::save(const PlayerShip &ship)
+{
+  auto query = [&ship](pqxx::work &transaction) {
+    return transaction
+      .exec(pqxx::prepped{UPDATE_SHIP_QUERY_NAME},
+            pqxx::params{ship.name, ship.active, ship.hullPoints, ship.powerPoints, toDbId(ship.id)})
       .no_rows();
   };
 
