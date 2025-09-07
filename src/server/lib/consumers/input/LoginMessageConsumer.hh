@@ -23,8 +23,8 @@ class LoginMessageConsumer : public AbstractMessageConsumer
 
   private:
   LoginServicePtr m_loginService{};
-  SystemProcessorMap m_systemProcessors{};
   ClientManagerShPtr m_clientManager{};
+  SystemProcessorMap m_systemProcessors{};
   IMessageQueue *const m_outputMessageQueue{};
 
   void handleLogin(const LoginMessage &message) const;

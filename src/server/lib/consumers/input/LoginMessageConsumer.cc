@@ -11,8 +11,8 @@ LoginMessageConsumer::LoginMessageConsumer(LoginServicePtr loginService,
                                            IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("login", {MessageType::LOGIN})
   , m_loginService(std::move(loginService))
-  , m_systemProcessors(std::move(systemProcessors))
   , m_clientManager(std::move(clientManager))
+  , m_systemProcessors(std::move(systemProcessors))
   , m_outputMessageQueue(outputMessageQueue)
 {
   if (nullptr == m_loginService)
