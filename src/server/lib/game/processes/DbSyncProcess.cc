@@ -37,19 +37,7 @@ void DbSyncProcess::updateEntity(Entity &entity,
     return;
   }
 
-  syncEntity(entity);
-}
-
-void DbSyncProcess::syncEntity(Entity &entity) const
-{
-  auto &dbSyncComp = entity.dbSyncComp();
-
-  for (const auto &comp : dbSyncComp.componentsToSync())
-  {
-    m_synchronizer.syncComponent(entity, comp);
-  }
-
-  dbSyncComp.markAsJustSynced();
+  m_synchronizer.syncEntity(entity);
 }
 
 } // namespace bsgo

@@ -19,7 +19,6 @@ class DbSyncProcess : public AbstractProcess
   DatabaseSynchronizer m_synchronizer;
 
   void updateEntity(Entity &entity, Coordinator &coordinator, const float elapsedSeconds) const;
-  void syncEntity(Entity &entity) const;
 };
 
 } // namespace bsgo

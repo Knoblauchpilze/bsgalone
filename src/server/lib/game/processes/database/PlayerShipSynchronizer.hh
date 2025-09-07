@@ -6,6 +6,6 @@
 
 namespace bsgo {
 
-void syncHealthComponent(const Entity &entity, const Repositories &repositories);
+void syncPlayerShip(const Entity &entity, const Repositories &repositories);
 
 } // namespace bsgo
