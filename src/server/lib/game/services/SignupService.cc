@@ -75,7 +75,6 @@ void SignupService::registerShip(const Player &player) const
                               ->findOneByFactionAndStarting(player.faction, true);
 
   PlayerShip ship{
-    .faction     = shipTemplate.faction,
     .ship        = shipTemplate.id,
     .name        = shipTemplate.name,
     .player      = player.id,
@@ -84,7 +83,7 @@ void SignupService::registerShip(const Player &player) const
     .powerPoints = shipTemplate.maxPowerPoints,
   };
 
-  m_repositories.playerShipRepository->save(ship);
+  m_repositories.playerShipRepository->create(ship);
 
   const auto ships = m_repositories.playerShipRepository->findAllByPlayer(player.id);
   if (1u != ships.size())
