@@ -4,6 +4,7 @@
 #include "AbstractMessageConsumer.hh"
 #include "ClientManager.hh"
 #include "IMessageQueue.hh"
+#include "LoadingHelper.hh"
 #include "LoginMessage.hh"
 #include "LoginService.hh"
 #include "SystemProcessor.hh"
@@ -24,11 +25,10 @@ class LoginMessageConsumer : public AbstractMessageConsumer
   private:
   LoginServicePtr m_loginService{};
   ClientManagerShPtr m_clientManager{};
-  SystemProcessorMap m_systemProcessors{};
   IMessageQueue *const m_outputMessageQueue{};
+  LoadingHelper m_helper;
 
   void handleLogin(const LoginMessage &message) const;
-  void publishLoadingMessages(const Uuid clientId, const Uuid playerDbId) const;
 };
 
 } // namespace bsgo

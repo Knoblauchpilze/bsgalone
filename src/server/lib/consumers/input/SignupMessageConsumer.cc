@@ -1,15 +1,19 @@
 
 #include "SignupMessageConsumer.hh"
+#include "LoadingFinishedMessage.hh"
+#include "LoadingStartedMessage.hh"
 
 namespace bsgo {
 
 SignupMessageConsumer::SignupMessageConsumer(SignupServicePtr signupService,
                                              ClientManagerShPtr clientManager,
+                                             SystemProcessorMap systemProcessors,
                                              IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("signup", {MessageType::SIGNUP})
   , m_signupService(std::move(signupService))
-  , m_clientManager(std::move(clientManager))
+  , m_clientManager(clientManager)
   , m_outputMessageQueue(outputMessageQueue)
+  , m_helper(clientManager, std::move(systemProcessors), outputMessageQueue)
 {
   if (nullptr == m_signupService)
   {
@@ -42,7 +46,10 @@ void SignupMessageConsumer::handleSignup(const SignupMessage &message) const
   const auto faction  = message.getFaction();
 
   const auto maybePlayer = m_signupService->trySignup(name, password, faction);
-  if (!maybePlayer)
+
+  const auto successfulSignup = maybePlayer.has_value();
+
+  if (!successfulSignup)
   {
     warn("Failed to process signup message for player " + name);
   }
@@ -61,6 +68,11 @@ void SignupMessageConsumer::handleSignup(const SignupMessage &message) const
   out->validate();
   out->copyClientIdIfDefined(message);
   m_outputMessageQueue->pushMessage(std::move(out));
+
+  if (successfulSignup)
+  {
+    m_helper.publishLoadingMessages(message.getClientId(), maybePlayer->id);
+  }
 }
 
 } // namespace bsgo
