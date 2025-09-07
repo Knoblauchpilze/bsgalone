@@ -84,6 +84,7 @@ void ShipDataSource::registerShip(Coordinator &coordinator,
                               ComponentType::STATUS,
                               ComponentType::TRANSFORM,
                               ComponentType::VELOCITY});
+  coordinator.addDbSync(shipEntityId);
 
   registerShipOwner(coordinator, shipEntityId, data, entityMapper);
   registerShipWeapons(coordinator, data, shipEntityId);
