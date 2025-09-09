@@ -97,6 +97,9 @@ auto SystemService::tryJump(const Uuid shipDbId) const -> JumpResult
   out.sourceSystem      = *ship.system;
   out.destinationSystem = *ship.jumpSystem;
 
+  // Override ship position to reset the position in the new system
+  ship.position = Eigen::Vector3f::Zero();
+
   const auto system = m_repositories.systemRepository->findOneById(*ship.jumpSystem);
 
   m_repositories.systemRepository->updateSystemForShip(ship.id, *ship.jumpSystem, ship.docked);

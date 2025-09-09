@@ -13,6 +13,7 @@ void syncPlayerShip(const Entity &entity, const Repositories &repositories)
     .active      = true,
     .hullPoints  = entity.healthComp().value(),
     .powerPoints = entity.powerComp().value(),
+    .position    = entity.transformComp().position(),
   };
 
   repositories.playerShipRepository->save(ship);
