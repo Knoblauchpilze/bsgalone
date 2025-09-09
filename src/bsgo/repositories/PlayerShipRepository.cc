@@ -96,9 +96,12 @@ UPDATE player_ship
     name = $1,
     active = $2,
     hull_points = $3,
-    power_points = $4
+    power_points = $4,
+    x_pos = $5,
+    y_pos = $6,
+    z_pos = $7
   WHERE
-    id = $5
+    id = $8
 )";
 
 constexpr auto UPDATE_SHIP_JUMP_QUERY_NAME = "player_ship_update_jump";
@@ -213,7 +216,14 @@ void PlayerShipRepository::save(const PlayerShip &ship)
   auto query = [&ship](pqxx::work &transaction) {
     return transaction
       .exec(pqxx::prepped{UPDATE_SHIP_QUERY_NAME},
-            pqxx::params{ship.name, ship.active, ship.hullPoints, ship.powerPoints, toDbId(ship.id)})
+            pqxx::params{ship.name,
+                         ship.active,
+                         ship.hullPoints,
+                         ship.powerPoints,
+                         ship.position(0),
+                         ship.position(1),
+                         ship.position(2),
+                         toDbId(ship.id)})
       .no_rows();
   };
 
