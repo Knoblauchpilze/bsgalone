@@ -115,6 +115,18 @@ bool statusAllowsDocking(const Status &status)
   }
 }
 
+bool statusAllowsDbSynchronization(const Status &status)
+{
+  switch (status)
+  {
+    case Status::DEAD:
+    case Status::SPECTATOR:
+      return false;
+    default:
+      return true;
+  }
+}
+
 bool statusRequiresImmobilization(const Status &status)
 {
   switch (status)
