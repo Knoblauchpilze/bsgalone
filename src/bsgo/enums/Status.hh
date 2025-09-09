@@ -27,6 +27,7 @@ bool statusAllowsHealthRegeneration(const Status &status);
 bool statusAllowsPowerRegeneration(const Status &status);
 bool statusAllowsDamage(const Status &status);
 bool statusAllowsDocking(const Status &status);
+bool statusAllowsDbSynchronization(const Status &status);
 bool statusRequiresImmobilization(const Status &status);
 bool statusRequiresThreatReset(const Status &status);
 bool statusRequiresPowerReset(const Status &status);

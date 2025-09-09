@@ -10,15 +10,20 @@ DbSyncProcess::DbSyncProcess(const Repositories &repositories)
 {}
 
 namespace {
-bool entityHasDbSyncComponent(const Entity &entity)
+bool entityShouldBeSynced(const Entity &entity)
 {
-  return entity.exists<DbSyncComponent>();
+  const auto hasDbSyncComponent = entity.exists<DbSyncComponent>();
+  const auto noStatus           = !entity.exists<StatusComponent>();
+  const auto notDeadOrLeaving   = entity.exists<StatusComponent>()
+                                && statusAllowsDbSynchronization(entity.statusComp().status());
+
+  return hasDbSyncComponent && (noStatus || notDeadOrLeaving);
 }
 } // namespace
 
 void DbSyncProcess::update(Coordinator &coordinator, const float elapsedSeconds) const
 {
-  auto entities = coordinator.getEntitiesSatistying(entityHasDbSyncComponent);
+  auto entities = coordinator.getEntitiesSatistying(entityShouldBeSynced);
   for (auto &entity : entities)
   {
     updateEntity(entity, coordinator, elapsedSeconds);
