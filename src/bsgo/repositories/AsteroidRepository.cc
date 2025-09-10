@@ -40,6 +40,13 @@ auto AsteroidRepository::findOneById(const Uuid asteroid) const -> Asteroid
   return out;
 }
 
+auto AsteroidRepository::findAllByRespawnTimeUntil(const core::TimeStamp /*until*/)
+  -> std::vector<Asteroid>
+{
+  // TODO: Filter asteroid based on the input time.
+  return {};
+}
+
 void AsteroidRepository::save(const Asteroid &asteroid)
 {
   auto query = [&asteroid](pqxx::work &transaction) {
@@ -54,6 +61,11 @@ void AsteroidRepository::save(const Asteroid &asteroid)
   {
     error("Failed to save asteroid: " + *res.error);
   }
+}
+
+void AsteroidRepository::saveRespawnDate(const Uuid /*asteroid*/, core::TimeStamp /*respawn*/)
+{
+  // TODO: the asteroid should be saved in the asteroid_respawn table.
 }
 
 auto AsteroidRepository::fetchAsteroidBase(const Uuid asteroid) const -> Asteroid
