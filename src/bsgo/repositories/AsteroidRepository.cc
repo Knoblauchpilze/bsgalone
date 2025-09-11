@@ -15,6 +15,16 @@ constexpr auto FIND_ONE_QUERY
 constexpr auto FIND_LOOT_QUERY_NAME = "asteroid_find_loot";
 constexpr auto FIND_LOOT_QUERY = "SELECT count(resource) FROM asteroid_loot WHERE asteroid = $1";
 
+constexpr auto FIND_ALL_BY_RESPAWN_TIME_QUERY_NAME = "asteroid_find_all_respawn";
+constexpr auto FIND_ALL_BY_RESPAWN_TIME_QUERY      = R"(
+SELECT
+  asteroid
+FROM
+  asteroid_respawn
+WHERE
+  respawn_at < $1
+)";
+
 constexpr auto UPDATE_ASTEROID_QUERY_NAME = "asteroid_update";
 constexpr auto UPDATE_ASTEROID_QUERY      = R"(
 UPDATE asteroid
@@ -29,6 +39,7 @@ void AsteroidRepository::initialize()
 {
   m_connection->prepare(FIND_ONE_QUERY_NAME, FIND_ONE_QUERY);
   m_connection->prepare(FIND_LOOT_QUERY_NAME, FIND_LOOT_QUERY);
+  m_connection->prepare(FIND_ALL_BY_RESPAWN_TIME_QUERY_NAME, FIND_ALL_BY_RESPAWN_TIME_QUERY);
   m_connection->prepare(UPDATE_ASTEROID_QUERY_NAME, UPDATE_ASTEROID_QUERY);
 }
 
@@ -40,11 +51,22 @@ auto AsteroidRepository::findOneById(const Uuid asteroid) const -> Asteroid
   return out;
 }
 
-auto AsteroidRepository::findAllByRespawnTimeUntil(const core::TimeStamp /*until*/)
+auto AsteroidRepository::findAllByRespawnTimeUntil(const core::TimeStamp until)
   -> std::vector<Asteroid>
 {
-  // TODO: Filter asteroid based on the input time.
-  return {};
+  // TODO: The timestamp needs to be adapted
+  const auto query = [until](pqxx::nontransaction &work) {
+    return work.exec(pqxx::prepped{FIND_ALL_BY_RESPAWN_TIME_QUERY_NAME}, pqxx::params{until});
+  };
+  const auto rows = m_connection->executeQuery(query);
+
+  std::vector<Asteroid> out;
+  for (const auto record : rows)
+  {
+    out.emplace_back(findOneById(fromDbId(record[0].as<int>())));
+  }
+
+  return out;
 }
 
 void AsteroidRepository::save(const Asteroid &asteroid)
@@ -75,13 +97,13 @@ auto AsteroidRepository::fetchAsteroidBase(const Uuid asteroid) const -> Asteroi
   };
   const auto record = m_connection->executeQueryReturningSingleRow(query);
 
-  Asteroid out;
-
-  out.id        = asteroid;
-  out.system    = fromDbId(record[0].as<int>());
-  out.health    = record[1].as<float>();
-  out.maxHealth = record[2].as<float>();
-  out.radius    = record[3].as<float>();
+  Asteroid out{
+    .id        = fromDbId(record[0].as<int>()),
+    .system    = fromDbId(record[1].as<int>()),
+    .health    = record[2].as<float>(),
+    .maxHealth = record[3].as<float>(),
+    .radius    = record[4].as<float>(),
+  };
 
   const auto x = record[4].as<float>();
   const auto y = record[5].as<float>();
