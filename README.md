@@ -114,6 +114,8 @@ sudo cp migrate /usr/local/bin
 
 **Note:** in case you're facing problem with installing one library or with compiling (see [section](#running-the-game-locally)), please refer to the following sections for library specific instructions. In case you face a unique problem, don't hesitate to open an [issue](https://github.com/Knoblauchpilze/bsgalone/issues).
 
+**Note:** this project uses cpp20 and relies on features such as `std::format` and `std::chrono::from_stream`. This is only supported with gcc 13 (partial) or 14 (see [source](https://en.cppreference.com/w/cpp/compiler_support/20)). In case your version of gcc is older than this, refer to [this guide](https://www.dedicatedcore.com/blog/install-gcc-compiler-ubuntu/) to get an idea on how to install a more recent version.
+
 ## Clone the repository
 
 The first step (as is often the case) if you want to work on this project is to clone the repository with:
