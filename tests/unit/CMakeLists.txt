@@ -13,6 +13,10 @@ add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/pge
 	)
 
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/core
+	)
+
 target_include_directories (unitTests PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
 	)

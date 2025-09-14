@@ -1,6 +1,4 @@
 
-#pragma once
-
 #include "TimeUtils.hh"
 #include <ctime>
 #include <iomanip>
@@ -8,24 +6,24 @@
 
 namespace core {
 
-inline auto now() noexcept -> TimeStamp
+auto now() noexcept -> TimeStamp
 {
   return std::chrono::system_clock::now();
 }
 
-inline auto toMilliseconds(const int ms) noexcept -> Duration
+auto toMilliseconds(const int ms) noexcept -> Duration
 {
   return Milliseconds(ms);
 }
 
-inline auto toMilliseconds(const Duration &d) noexcept -> float
+auto toMilliseconds(const Duration &d) noexcept -> float
 {
   const auto s  = std::chrono::duration_cast<Milliseconds>(d);
   const auto ms = s.count();
   return 1.0f * ms;
 }
 
-inline auto timeToString(const TimeStamp &t) noexcept -> std::string
+auto timeToString(const TimeStamp &t) noexcept -> std::string
 {
   // See here:
   // https://stackoverflow.com/questions/34857119/how-to-convert-stdchronotime-point-to-string/34858704
@@ -44,7 +42,7 @@ inline auto timeToString(const TimeStamp &t) noexcept -> std::string
   return ss.str();
 }
 
-inline auto durationToMsString(const Duration &d) noexcept -> std::string
+auto durationToMsString(const Duration &d) noexcept -> std::string
 {
   // https://stackoverflow.com/questions/22590821/convert-stdduration-to-human-readable-time
   const auto s  = std::chrono::duration_cast<Milliseconds>(d);
@@ -52,8 +50,7 @@ inline auto durationToMsString(const Duration &d) noexcept -> std::string
   return std::to_string(ms) + "ms";
 }
 
-inline auto durationToPrettyString(Duration d, const bool includeFractionalSeconds) noexcept
-  -> std::string
+auto durationToPrettyString(Duration d, const bool includeFractionalSeconds) noexcept -> std::string
 {
   // https://stackoverflow.com/questions/22590821/convert-stdduration-to-human-readable-time
   const auto h = std::chrono::duration_cast<std::chrono::hours>(d);
@@ -113,7 +110,7 @@ inline auto durationToPrettyString(Duration d, const bool includeFractionalSecon
   return ss.str();
 }
 
-inline auto diffInMs(const TimeStamp &start, const TimeStamp &end) noexcept -> float
+auto diffInMs(const TimeStamp &start, const TimeStamp &end) noexcept -> float
 {
   const auto elapsed = end - start;
   const auto ms      = std::chrono::duration_cast<Milliseconds>(elapsed);
@@ -122,7 +119,7 @@ inline auto diffInMs(const TimeStamp &start, const TimeStamp &end) noexcept -> f
 
 } // namespace core
 
-inline auto operator<<(std::ostream &out, const core::TimeStamp &t) noexcept -> std::ostream &
+auto operator<<(std::ostream &out, const core::TimeStamp &t) noexcept -> std::ostream &
 {
   // As per this link:
   // https://stackoverflow.com/questions/36963373/saving-and-loading-stdchronotime-point-to-file
@@ -132,7 +129,7 @@ inline auto operator<<(std::ostream &out, const core::TimeStamp &t) noexcept -> 
   return out;
 }
 
-inline auto operator>>(std::istream &in, core::TimeStamp &t) noexcept -> std::istream &
+auto operator>>(std::istream &in, core::TimeStamp &t) noexcept -> std::istream &
 {
   std::chrono::system_clock::rep et;
 

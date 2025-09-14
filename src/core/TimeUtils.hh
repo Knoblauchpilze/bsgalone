@@ -77,5 +77,3 @@ auto operator<<(std::ostream &out, const core::TimeStamp &t) noexcept -> std::os
 /// @param t - the timestamp object into which the deserialization is performed.
 /// @return - the modified stream.
 auto operator>>(std::istream &in, core::TimeStamp &t) noexcept -> std::istream &;
-
-#include "TimeUtils.hxx"
