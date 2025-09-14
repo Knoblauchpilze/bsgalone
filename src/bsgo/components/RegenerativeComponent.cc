@@ -1,5 +1,6 @@
 
 #include "RegenerativeComponent.hh"
+#include <algorithm>
 
 namespace bsgo {
 
