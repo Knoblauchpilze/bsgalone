@@ -7,12 +7,14 @@ ENV DEBIAN_FRONTEND="noninteractive"
 # https://stackoverflow.com/questions/37970990/ssl-certificate-verification-fails-inside-docker-container-on-specific-server
 RUN apt-get update && apt-get install -y --no-install-recommends \
   ca-certificates=20240203 \
-  build-essential=12.10ubuntu1 \
+  gcc-14=14.2.0-4ubuntu2~24.04 \
+  g++-14=14.2.0-4ubuntu2~24.04 \
   wget=1.21.4-1ubuntu4.1 \
+  make=4.3-4.1build2 \
   cmake=3.28.3-1build7 \
   ccache=4.9.1-1 \
   pkg-config=1.8.1-2build1 \
-  libpq-dev=16.9-0ubuntu0.24.04.1 \
+  libpq-dev=16.10-0ubuntu0.24.04.1 \
   libx11-dev=2:1.8.7-1build1 \
   libgl-dev=1.7.0-1build1 \
   libasio-dev=1:1.28.1-0.2 \
@@ -24,6 +26,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   # https://github.com/linux-test-project/lcov/issues/193
   libcpanel-json-xs-perl=4.37-1build3 \
   && rm -rf /var/lib/apt/lists/*
+# https://www.dedicatedcore.com/blog/install-gcc-compiler-ubuntu/
+RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 14 --slave /usr/bin/g++ g++ /usr/bin/g++-14
 
 ARG CPP_VERSION="20"
 ARG LIBPQXX_VERSION="7.10.1"
