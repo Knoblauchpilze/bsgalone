@@ -64,7 +64,7 @@ jobs:
 
   unit-tests:
     runs-on: ubuntu-latest
-    container: totocorpsoftwareinc/ci-cpp-build-image:504e327
+    container: totocorpsoftwareinc/ci-cpp-build-image:4e2636b
     needs: [build]
     steps:
       - name: Download build data
@@ -98,7 +98,7 @@ jobs:
 
   integration-tests:
     runs-on: ubuntu-latest
-    container: totocorpsoftwareinc/ci-cpp-build-image:504e327
+    container: totocorpsoftwareinc/ci-cpp-build-image:4e2636b
     needs: [build]
     steps:
       - name: Download build data
