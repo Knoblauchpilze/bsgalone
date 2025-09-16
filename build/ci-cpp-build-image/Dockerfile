@@ -7,8 +7,8 @@ ENV DEBIAN_FRONTEND="noninteractive"
 # https://stackoverflow.com/questions/37970990/ssl-certificate-verification-fails-inside-docker-container-on-specific-server
 RUN apt-get update && apt-get install -y --no-install-recommends \
   ca-certificates=20240203 \
-  gcc-14=14.2.0-4ubuntu2~24.04 \
-  g++-14=14.2.0-4ubuntu2~24.04 \
+  gcc-13=13.3.0-6ubuntu2~24.04 \
+  g++-13=13.3.0-6ubuntu2~24.04 \
   wget=1.21.4-1ubuntu4.1 \
   make=4.3-4.1build2 \
   cmake=3.28.3-1build7 \
@@ -27,7 +27,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   libcpanel-json-xs-perl=4.37-1build3 \
   && rm -rf /var/lib/apt/lists/*
 # https://www.dedicatedcore.com/blog/install-gcc-compiler-ubuntu/
-RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 14 --slave /usr/bin/g++ g++ /usr/bin/g++-14
+RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 13 --slave /usr/bin/g++ g++ /usr/bin/g++-13
 
 ARG CPP_VERSION="20"
 ARG LIBPQXX_VERSION="7.10.1"
