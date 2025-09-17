@@ -10,6 +10,9 @@ template<typename T>
 auto tryGetEnvironmentVariable(const std::string &key) -> std::optional<T>;
 
 template<typename T>
+auto getEnvironmentVariable(const std::string &key, const T &defaultValue) -> T;
+
+template<typename T>
 auto getEnvironmentVariable(const std::string &key) -> T;
 
 auto getPortFromEnvironmentVariable() -> int;

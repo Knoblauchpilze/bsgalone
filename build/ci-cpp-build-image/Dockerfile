@@ -21,6 +21,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   libeigen3-dev=3.4.0-4build0.1 \
   libpng-dev=1.6.43-5build1 \
   libgtest-dev=1.14.0-1 \
+  postgresql=16+257build1.1 \
   rsync=3.2.7-1ubuntu1.2 \
   lcov=2.0-4ubuntu2 \
   # https://github.com/linux-test-project/lcov/issues/193
