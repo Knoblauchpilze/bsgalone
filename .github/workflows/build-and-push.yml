@@ -157,6 +157,7 @@ jobs:
       - name: Run tests
         run: |
           ./sandbox/bin/integrationTests
+        env: DB_HOST=postgres
       - name: Aggregate code coverage
         run: |
           lcov \
