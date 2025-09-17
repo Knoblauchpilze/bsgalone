@@ -48,6 +48,18 @@ auto tryGetEnvironmentVariable(const std::string &key) -> std::optional<int>
 }
 
 template<typename T>
+auto getEnvironmentVariable(const std::string &key, const T &defaultValue) -> T
+{
+  const auto maybeEnvVar = tryGetEnvironmentVariable<T>(key);
+  if (!maybeEnvVar)
+  {
+    return defaultValue;
+  }
+
+  return *maybeEnvVar;
+}
+
+template<typename T>
 auto getEnvironmentVariable(const std::string &key) -> T
 {
   const auto maybeEnvVar = tryGetEnvironmentVariable<T>(key);
