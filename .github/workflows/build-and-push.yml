@@ -25,7 +25,7 @@ jobs:
     # https://docs.github.com/en/actions/writing-workflows/choosing-where-your-workflow-runs/running-jobs-in-a-container#example-running-a-job-within-a-container
     # https://github.com/orgs/community/discussions/26324
     # Need to be kept in sync with the relevant CI docker image
-    container: totocorpsoftwareinc/ci-cpp-build-image:4d6449c
+    container: totocorpsoftwareinc/ci-cpp-build-image:71a574b
     steps:
       - uses: actions/checkout@v5
       - name: Restore ccache
@@ -64,7 +64,7 @@ jobs:
 
   unit-tests:
     runs-on: ubuntu-latest
-    container: totocorpsoftwareinc/ci-cpp-build-image:4d6449c
+    container: totocorpsoftwareinc/ci-cpp-build-image:71a574b
     needs: [build]
     steps:
       - name: Download build data
@@ -98,8 +98,20 @@ jobs:
 
   integration-tests:
     runs-on: ubuntu-latest
-    container: totocorpsoftwareinc/ci-cpp-build-image:4d6449c
+    container: totocorpsoftwareinc/ci-cpp-build-image:71a574b
     needs: [build]
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - name: Download build data
         uses: actions/download-artifact@v5
@@ -108,9 +120,45 @@ jobs:
       - name: Uncompress build data
         run: |
           tar -xf build-data.tar
+      - name: Setup Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: "1.24.0"
+      - name: Install migrate tool
+        run: go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+      - name: Setup bsgo database
+        # https://stackoverflow.com/questions/68362490/github-actions-to-connect-postgres-service-with-custom-container-image
+        # https://github.com/orgs/community/discussions/25693
+        run: |
+          psql \
+            postgresql://postgres@postgres \
+            -v admin_password=$ADMIN_PASSWORD \
+            -v manager_password=$MANAGER_PASSWORD \
+            -v user_password=$USER_PASSWORD \
+            -f bsgo/db_user_create.sql
+          psql \
+            postgresql://postgres@postgres \
+            -f bsgo/db_create.sql
+        working-directory: ./database
+        env:
+          PGPASSWORD: postgres
+          ADMIN_PASSWORD: admin_password
+          MANAGER_PASSWORD: manager_password
+          USER_PASSWORD: user_password
+      - name: Migrate schema up
+        run: |
+          migrate \
+            -path bsgo/migrations \
+            -database postgresql://bsgalone_admin@postgres/db_bsgalone?sslmode=disable \
+            up
+        working-directory: ./database
+        env:
+          PGPASSWORD: admin_password
       - name: Run tests
         run: |
           ./sandbox/bin/integrationTests
+        env:
+          DB_HOST: postgres
       - name: Aggregate code coverage
         run: |
           lcov \

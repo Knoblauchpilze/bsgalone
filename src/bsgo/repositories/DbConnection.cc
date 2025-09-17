@@ -1,10 +1,12 @@
 
 #include "DbConnection.hh"
+#include "Environment.hh"
 
 namespace bsgo {
 namespace {
 constexpr auto DATABASE_NAME     = "db_bsgalone";
 constexpr auto DATABASE_USER     = "bsgalone_manager";
+constexpr auto ENV_DATABASE_HOST = "DB_HOST";
 constexpr auto DATABASE_HOST     = "localhost";
 constexpr auto DATABASE_PORT     = "5432";
 constexpr auto DATABASE_PASSWORD = "manager_password";
@@ -27,7 +29,10 @@ auto generateConnectionString() -> std::string
 
   out += addOption(DATABASE_NAME_OPTION_STRING, DATABASE_NAME);
   out += addOption(DATABASE_USER_OPTION_STRING, DATABASE_USER);
-  out += addOption(DATABASE_HOST_OPTION_STRING, DATABASE_HOST);
+
+  const auto host = core::getEnvironmentVariable<std::string>(ENV_DATABASE_HOST, DATABASE_HOST);
+  out += addOption(DATABASE_HOST_OPTION_STRING, host);
+
   out += addOption(DATABASE_PORT_OPTION_STRING, DATABASE_PORT);
   out += addOption(DATABASE_PASSWORD_OPTION_STRING, DATABASE_PASSWORD);
 
