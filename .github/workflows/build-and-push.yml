@@ -182,13 +182,13 @@ jobs:
       - name: Setup bsgo database
         run: |
           psql \
-            postgresql://postgres@localhost \
+            postgresql://postgres@postgres \
             -v admin_password=$ADMIN_PASSWORD \
             -v manager_password=$MANAGER_PASSWORD \
             -v user_password=$USER_PASSWORD \
             -f bsgo/db_user_create.sql
           psql \
-            postgresql://postgres@localhost \
+            postgresql://postgres@postgres \
             -f bsgo/db_create.sql
         working-directory: ./database
         env:
