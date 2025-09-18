@@ -4,5 +4,6 @@ target_include_directories(integrationTests PUBLIC
 	)
 
 target_sources(integrationTests PUBLIC
+	${CMAKE_CURRENT_SOURCE_DIR}/DatabaseTimeTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/DbConnectionTest.cc
 	)

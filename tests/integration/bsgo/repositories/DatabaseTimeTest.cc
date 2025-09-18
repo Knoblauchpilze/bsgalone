@@ -16,7 +16,7 @@ WHERE
   id = $1
 )";
 
-TEST(Unit_Bsgo_Repositories_DatabaseTime, ReadFromDatabase)
+TEST(Integration_Bsgo_DatabaseTime, ReadFromDatabase)
 {
   DbConnection conn;
   conn.connect();
@@ -29,14 +29,6 @@ TEST(Unit_Bsgo_Repositories_DatabaseTime, ReadFromDatabase)
 
   const auto actual = record[0].as<std::string>();
 
-  EXPECT_EQ("hehe", actual);
-}
-
-TEST(Unit_Bsgo_Repositories_DatabaseTime, ParseFromDatabase)
-{
-  constexpr auto utcTimeStr = "2025-09-12 15:22:54.057426+00";
-
-  const auto actual = std::chrono::utc_clock::from_stream(utcTimeStr);
   EXPECT_EQ("hehe", actual);
 }
 
