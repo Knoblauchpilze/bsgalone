@@ -1006,7 +1006,7 @@ A game usually relies on timestamps to trigger actions and behaviors in the game
 
 The database supports natively timestamps with timezones. This is not the case for the cpp language. The support for timezones and a proper way to parse them from a string (e.g. `2025-09-10 07:54:04.58163+02`) only comes with cpp20 (see [std::chrono::time_zone](https://en.cppreference.com/w/cpp/chrono/time_zone.html)).
 
-Support for the new features is available with gcc-14 (see [here](https://en.cppreference.com/w/cpp/compiler_support.html#C.2B.2B20_library_features) and look for `Calendar and Time zone  (FTM)*`). However the support for gcc-14 in gcov is still lacking at the time of writing.
+Support for the new features is available with gcc-14 (see [here](https://en.cppreference.com/w/cpp/compiler_support.html#C.2B.2B20_library_features) and look for `Calendar and Time zone  (FTM)*`). However the support for gcc-14 in `gcov` is still lacking at the time of writing.
 
 ### What to do about it?
 
@@ -1016,9 +1016,22 @@ This project makes use of the [date library](https://github.com/HowardHinnant/da
 
 Installation and configuration instructions were taken from the [linked documentation](https://howardhinnant.github.io/date/tz.html#Installation).
 
+### Integration with the libpqxx
+
+TODO
+
 ### Usage
 
 TODO
+
+### Perspective for the future
+
+As of now it's not possible to fully rely on the cpp20 standard to provide this implementation. This project will monitor both:
+
+- the integration of `gcov` with gcc-14 to potentially use directly the standard library
+- the support of timestamps as a native type in `libpqxx`: it seems there are attempts (see [#206](https://github.com/jtv/libpqxx/issues/206)), maybe the new interface will make it easier
+
+Both options would allow to remove the integration with the date library altogether.
 
 # Notes
 
