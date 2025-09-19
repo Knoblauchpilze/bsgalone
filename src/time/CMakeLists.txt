@@ -9,6 +9,7 @@ target_compile_definitions (time_lib PUBLIC
 	)
 
 target_sources (time_lib PRIVATE
+	${CMAKE_CURRENT_SOURCE_DIR}/TimeSerialization.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/tz.cpp
 	)
 

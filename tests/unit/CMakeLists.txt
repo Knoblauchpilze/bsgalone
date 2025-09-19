@@ -10,11 +10,15 @@ add_subdirectory (
 	)
 
 add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/core
+	)
+
+add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/pge
 	)
 
 add_subdirectory (
-	${CMAKE_CURRENT_SOURCE_DIR}/core
+	${CMAKE_CURRENT_SOURCE_DIR}/time
 	)
 
 target_include_directories (unitTests PUBLIC
@@ -25,6 +29,7 @@ target_link_libraries (unitTests
 	GTest::gtest_main
 	bsgalone-interface-test-library
 	core_lib
+	time_lib
 	bsgo_lib
 	pge_lib
 	)
