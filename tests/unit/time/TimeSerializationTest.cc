@@ -8,15 +8,15 @@ namespace date_time {
 
 TEST(Unit_Time_Serialization, fromString)
 {
-  const auto now = std::chrono::utc_clock::now();
+  const auto now = "2025-09-10 07:54:04.58163+02";
 
-  const auto str = std::format("{}", now);
+  const auto str = fromString(now);
   EXPECT_EQ("hehe", str);
 }
 
 TEST(Unit_Time_Serialization, toString)
 {
-  const auto now = std::chrono::utc_clock::now();
+  const auto now = core::now();
 
   const auto str = toString(now);
   EXPECT_EQ("hehe", str);

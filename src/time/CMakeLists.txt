@@ -6,6 +6,7 @@ set (CMAKE_POSITION_INDEPENDENT_CODE ON)
 # https://cmake.org/cmake/help/latest/command/target_compile_definitions.html#command:target_compile_definitions
 target_compile_definitions (time_lib PUBLIC
 	-DHAS_REMOTE_API=0
+	-DUSE_OS_TZDB=1
 	)
 
 target_sources (time_lib PRIVATE
