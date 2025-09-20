@@ -46,7 +46,7 @@ TEST(Unit_TopLeftViewport, Constructor)
   EXPECT_EQ(viewport->dims(), DIMS);
 }
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
   Unit_TopLeftViewport,
   RelativeCoordinates,
   Values(generateTopLeftTestCaseRelative("top_left", {-12.0f, 5.0f}, {0.0f, 0.0f}),
@@ -60,7 +60,7 @@ INSTANTIATE_TEST_CASE_P(
          generateTopLeftTestCaseRelative("y_too_large", {-10.0f, 26.0f}, {0.5f, 1.4f})),
   generateTestNameRelative);
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
   Unit_TopLeftViewport,
   AbsoluteCoordinates,
   Values(generateTopLeftTestCaseAbsolute("top_left", {0.0f, 0.0f}, {-12.0f, 5.0f}),
@@ -114,7 +114,7 @@ TEST(Unit_TopLeftViewport, Scale)
   EXPECT_EQ(viewport->dims(), DIMS * factor);
 }
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
   Unit_TopLeftViewport,
   Visibility,
   Values(generateTopLeftTestCaseVisibility("top_left", {-12.0f, 5.0f}, true),
