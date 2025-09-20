@@ -48,7 +48,7 @@ TEST(Unit_CenteredViewport, Constructor)
   EXPECT_EQ(viewport->dims(), DIMS);
 }
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
   Unit_CenteredViewport,
   RelativeCoordinates,
   Values(generateCenteredTestCaseRelative("top_left", {-14, 10}, {-1.0f, 1.0f}),
@@ -62,7 +62,7 @@ INSTANTIATE_TEST_CASE_P(
          generateCenteredTestCaseRelative("y_too_large", {-13, 36}, {-0.5f, 6.2f})),
   generateTestNameRelative);
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
   Unit_CenteredViewport,
   AbsoluteCoordinates,
   Values(generateCenteredTestCaseAbsolute("top_left", {-1.0f, 1.0f}, {-14, 10}),
@@ -125,16 +125,16 @@ TEST(Unit_CenteredViewport, Scale)
   EXPECT_EQ(viewport->dims(), DIMS * factor);
 }
 
-INSTANTIATE_TEST_CASE_P(Unit_CenteredViewport,
-                        Visibility,
-                        Values(generateCenteredTestCaseVisibility("top_left", {-14, 10}, true),
-                               generateCenteredTestCaseVisibility("top_right", {-10, 10}, true),
-                               generateCenteredTestCaseVisibility("bottom_right", {-10, 0}, true),
-                               generateCenteredTestCaseVisibility("bottom_left", {-14, 0}, true),
-                               generateCenteredTestCaseVisibility("inside", {-11, 7}, true),
-                               generateCenteredTestCaseVisibility("x_too_small", {-16, 7}, false),
-                               generateCenteredTestCaseVisibility("x_too_large", {-7, 7}, false),
-                               generateCenteredTestCaseVisibility("y_too_small", {-13, -7}, false),
-                               generateCenteredTestCaseVisibility("y_too_large", {-13, 36}, false)),
-                        generateTestNameVisibility);
+INSTANTIATE_TEST_SUITE_P(Unit_CenteredViewport,
+                         Visibility,
+                         Values(generateCenteredTestCaseVisibility("top_left", {-14, 10}, true),
+                                generateCenteredTestCaseVisibility("top_right", {-10, 10}, true),
+                                generateCenteredTestCaseVisibility("bottom_right", {-10, 0}, true),
+                                generateCenteredTestCaseVisibility("bottom_left", {-14, 0}, true),
+                                generateCenteredTestCaseVisibility("inside", {-11, 7}, true),
+                                generateCenteredTestCaseVisibility("x_too_small", {-16, 7}, false),
+                                generateCenteredTestCaseVisibility("x_too_large", {-7, 7}, false),
+                                generateCenteredTestCaseVisibility("y_too_small", {-13, -7}, false),
+                                generateCenteredTestCaseVisibility("y_too_large", {-13, 36}, false)),
+                         generateTestNameVisibility);
 } // namespace pge::tests

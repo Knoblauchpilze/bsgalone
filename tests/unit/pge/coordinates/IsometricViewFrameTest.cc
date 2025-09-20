@@ -34,7 +34,7 @@ auto generateIsometricTestCaseTilesToPixels(const std::string &name,
   return TestCaseTilesToPixels{name, generateIsometricViewFrame(), tiles, expected};
 }
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
   Unit_IsometricViewFrame,
   TilesToPixels,
   Values(generateIsometricTestCaseTilesToPixels(
@@ -75,7 +75,7 @@ auto generateIsometricTestCasePixelsToTiles(const std::string &name,
   return TestCasePixelsToTiles{name, generateIsometricViewFrame(), pixels, expected};
 }
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
   Unit_IsometricViewFrame,
   PixelsToTiles,
   Values(
@@ -121,7 +121,7 @@ auto generateIsometricTestCasePixelsToTilesIntra(const std::string &name,
                                     expectedIntra};
 }
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
   Unit_IsometricViewFrame,
   PixelsToTilesIntra,
   Values(generateIsometricTestCasePixelsToTilesIntra("top_left_quadrant",

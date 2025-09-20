@@ -37,7 +37,7 @@ auto generateTopTestCaseTilesToPixels(const std::string &name,
 // Useful IEEE calculators:
 // http://weitz.de/ieee/
 // https://www.h-schmidt.net/FloatConverter/IEEE754.html
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
   Unit_TopViewFrame,
   TilesToPixels,
   Values(generateTopTestCaseTilesToPixels("top_left",
@@ -66,7 +66,7 @@ auto generateTopTestCasePixelsToTiles(const std::string &name,
   return TestCasePixelsToTiles{name, generateTopViewFrame(), pixels, expected};
 }
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
   Unit_TopViewFrame,
   PixelsToTiles,
   Values(generateTopTestCasePixelsToTiles("top_left",
@@ -100,25 +100,26 @@ auto generateTopTestCasePixelsToTilesIntra(const std::string &name,
                                     expectedIntra};
 }
 
-INSTANTIATE_TEST_CASE_P(Unit_TopViewFrame,
-                        PixelsToTilesIntra,
-                        Values(generateTopTestCasePixelsToTilesIntra("top_left_quadrant",
-                                                                     Vec2f{12.0f, 35.0f},
-                                                                     Vec2i{-1, 6},
-                                                                     Vec2f{0.0625f, 0.482758522f}),
-                               generateTopTestCasePixelsToTilesIntra("top_right_quadrant",
-                                                                     Vec2f{134.0f, 40.0f},
-                                                                     Vec2i{2, 5},
-                                                                     Vec2f{0.875f, 0.620689392f}),
-                               generateTopTestCasePixelsToTilesIntra("bottom_right_quadrant",
-                                                                     Vec2f{86.0f, 87.0f},
-                                                                     Vec2i{1, -3},
-                                                                     Vec2f{0.375f, 0.517241478f}),
-                               generateTopTestCasePixelsToTilesIntra("bottom_left_quadrant",
-                                                                     Vec2f{27.0f, 67.0f},
-                                                                     Vec2i{-1, 0},
-                                                                     Vec2f{0.53125f, 0.965517282f})),
-                        generateTestNamePixelsToTilesIntra);
+INSTANTIATE_TEST_SUITE_P(Unit_TopViewFrame,
+                         PixelsToTilesIntra,
+                         Values(generateTopTestCasePixelsToTilesIntra("top_left_quadrant",
+                                                                      Vec2f{12.0f, 35.0f},
+                                                                      Vec2i{-1, 6},
+                                                                      Vec2f{0.0625f, 0.482758522f}),
+                                generateTopTestCasePixelsToTilesIntra("top_right_quadrant",
+                                                                      Vec2f{134.0f, 40.0f},
+                                                                      Vec2i{2, 5},
+                                                                      Vec2f{0.875f, 0.620689392f}),
+                                generateTopTestCasePixelsToTilesIntra("bottom_right_quadrant",
+                                                                      Vec2f{86.0f, 87.0f},
+                                                                      Vec2i{1, -3},
+                                                                      Vec2f{0.375f, 0.517241478f}),
+                                generateTopTestCasePixelsToTilesIntra("bottom_left_quadrant",
+                                                                      Vec2f{27.0f, 67.0f},
+                                                                      Vec2i{-1, 0},
+                                                                      Vec2f{0.53125f,
+                                                                            0.965517282f})),
+                         generateTestNamePixelsToTilesIntra);
 
 TEST(Unit_TopViewFrame, Translate)
 {
