@@ -13,6 +13,8 @@ SystemProcessor::SystemProcessor(const Uuid systemDbId)
 {
   setService("system");
   addModule(str(systemDbId));
+
+  initialize();
 }
 
 SystemProcessor::~SystemProcessor()
@@ -71,6 +73,12 @@ void SystemProcessor::stop()
   }
 }
 
+void SystemProcessor::initialize()
+{
+  const chrono::TimeStep timeStep(1, chrono::Duration(chrono::Unit::MILLISECONDS, 100));
+  m_timeManager = std::make_unique<chrono::TimeManager>(chrono::Tick(), timeStep);
+}
+
 void SystemProcessor::asyncSystemProcessing()
 {
   bool running{true};
@@ -83,11 +91,18 @@ void SystemProcessor::asyncSystemProcessing()
     std::this_thread::sleep_for(SLEEP_DURATION_WHEN_PROCESSING);
 
     const auto thisFrameTimestamp = core::now();
-    const auto elapsedMs          = core::diffInMs(lastFrameTimestamp, thisFrameTimestamp);
 
-    constexpr auto MS_IN_A_SECOND = 1'000;
-    m_coordinator->update(elapsedMs / MS_IN_A_SECOND);
-    m_processes.update(*m_coordinator, elapsedMs / MS_IN_A_SECOND);
+    const auto elapsed = chrono::Duration{
+      .unit    = chrono::Unit::MILLISECONDS,
+      .elapsed = core::diffInMs(lastFrameTimestamp, thisFrameTimestamp),
+    };
+
+    const auto tick = m_timeManager->tick(elapsed);
+
+    const auto elapsedSecond = elapsed.convert(chrono::Unit::SECONDS).elapsed;
+    m_coordinator->update(elapsedSecond);
+
+    m_processes.update(*m_coordinator, elapsedSecond);
     m_inputMessagesQueue->processMessages();
 
     lastFrameTimestamp = thisFrameTimestamp;

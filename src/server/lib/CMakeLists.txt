@@ -27,6 +27,7 @@ target_link_libraries (server_lib
 	core_lib
 	net_lib
 	bsgo_lib
+	time_lib
 	)
 
 target_include_directories (server_lib PUBLIC
