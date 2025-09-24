@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace chrono {
+namespace bsgo {
 
 class Tick
 {
@@ -20,6 +20,9 @@ class Tick
 
   auto operator+=(const Tick &rhs) -> Tick &;
 
+  auto serialize(std::ostream &out) const -> std::ostream &;
+  bool deserialize(std::istream &in);
+
   private:
   int m_count{0};
   float m_frac{0.0f};
@@ -27,4 +30,7 @@ class Tick
   void validate();
 };
 
-} // namespace chrono
+auto operator<<(std::ostream &out, const Tick &tick) -> std::ostream &;
+auto operator>>(std::istream &in, Tick &tick) -> std::istream &;
+
+} // namespace bsgo
