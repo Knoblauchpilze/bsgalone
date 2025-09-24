@@ -4,7 +4,7 @@
 
 using namespace ::testing;
 
-namespace chrono {
+namespace bsgo {
 namespace {
 constexpr auto TOLERANCE = 1e-4f;
 
@@ -15,12 +15,12 @@ void assertTickMatches(const Tick &tick, const int expectedInt, const float expe
 }
 } // namespace
 
-TEST(Unit_Chrono_Tick, CreatesValidDefaultTick)
+TEST(Unit_Bsgo_Tick, CreatesValidDefaultTick)
 {
   assertTickMatches(Tick(), 0, 0.0f);
 }
 
-TEST(Unit_Chrono_Tick, CreatesValidTickFromFloat)
+TEST(Unit_Bsgo_Tick, CreatesValidTickFromFloat)
 {
   assertTickMatches(Tick(0.147f), 0, 0.147f);
   assertTickMatches(Tick(1.0f), 1, 0.0f);
@@ -28,7 +28,7 @@ TEST(Unit_Chrono_Tick, CreatesValidTickFromFloat)
   assertTickMatches(Tick(2871.289f), 2871, 0.289f);
 }
 
-TEST(Unit_Chrono_Tick, CreatesValidTickFromIntAndFrac)
+TEST(Unit_Bsgo_Tick, CreatesValidTickFromIntAndFrac)
 {
   assertTickMatches(Tick(1, 0.0f), 1, 0.0f);
   assertTickMatches(Tick(0, 0.754f), 0, 0.754f);
@@ -36,17 +36,17 @@ TEST(Unit_Chrono_Tick, CreatesValidTickFromIntAndFrac)
   assertTickMatches(Tick(1971, 0.99f), 1971, 0.99f);
 }
 
-TEST(Unit_Chrono_Tick, ThrowsWhenIntIsNegative)
+TEST(Unit_Bsgo_Tick, ThrowsWhenIntIsNegative)
 {
   EXPECT_THROW([] { Tick(-1, 0.1f); }(), std::invalid_argument);
 }
 
-TEST(Unit_Chrono_Tick, ThrowsWhenFracIsNegative)
+TEST(Unit_Bsgo_Tick, ThrowsWhenFracIsNegative)
 {
   EXPECT_THROW([] { Tick(12, -0.1f); }(), std::invalid_argument);
 }
 
-TEST(Unit_Chrono_Tick, ThrowsWhenFracIsGreaterThanOne)
+TEST(Unit_Bsgo_Tick, ThrowsWhenFracIsGreaterThanOne)
 {
   EXPECT_THROW([] { Tick(12, 1.0f); }(), std::invalid_argument);
   EXPECT_THROW([] { Tick(12, 14.01f); }(), std::invalid_argument);
@@ -72,7 +72,7 @@ TEST_P(AdditionTest, AddsCorrectly)
   assertTickMatches(actual, param.expectedCount, param.expectedFrac);
 }
 
-INSTANTIATE_TEST_SUITE_P(Unit_Chrono_Tick,
+INSTANTIATE_TEST_SUITE_P(Unit_Bsgo_Tick,
                          AdditionTest,
                          Values(TestCaseTickAddition{.lhs           = Tick(0.0f),
                                                      .rhs           = Tick(0.0f),
@@ -118,4 +118,44 @@ INSTANTIATE_TEST_SUITE_P(Unit_Chrono_Tick,
                            return out;
                          });
 
-} // namespace chrono
+namespace {
+inline auto serializeAndDeserializeTick(const Tick &value, Tick &output)
+{
+  std::ostringstream out{};
+  out << value;
+  std::istringstream in(out.str());
+  in >> output;
+}
+} // namespace
+
+TEST(Unit_Bsgo_Tick, DefaultTick)
+{
+  const Tick expected;
+  Tick actual(1, 0.2f);
+
+  serializeAndDeserializeTick(expected, actual);
+
+  assertTickMatches(actual, expected.count(), expected.frac());
+}
+
+TEST(Unit_Bsgo_Tick, NonDefaultTick)
+{
+  const Tick expected(89, 0.579f);
+  Tick actual(17.3f);
+
+  serializeAndDeserializeTick(expected, actual);
+
+  assertTickMatches(actual, expected.count(), expected.frac());
+}
+
+TEST(Unit_Bsgo_Tick, FromFloat)
+{
+  const Tick expected(135.00235f);
+  Tick actual(31, 0.0042f);
+
+  serializeAndDeserializeTick(expected, actual);
+
+  assertTickMatches(actual, expected.count(), expected.frac());
+}
+
+} // namespace bsgo

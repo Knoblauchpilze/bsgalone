@@ -4,7 +4,7 @@
 
 namespace chrono {
 
-TimeManager::TimeManager(const Tick tick, const TimeStep step)
+TimeManager::TimeManager(const bsgo::Tick tick, const TimeStep step)
   : core::CoreObject("manager")
   , m_currentTick(tick)
   , m_step(step)
@@ -12,7 +12,7 @@ TimeManager::TimeManager(const Tick tick, const TimeStep step)
   setService("time");
 }
 
-auto TimeManager::tick(const Duration elapsed) -> Tick
+auto TimeManager::tick(const Duration elapsed) -> bsgo::Tick
 {
   const auto tick = m_step.count(elapsed);
   m_currentTick += tick;

@@ -1,9 +1,10 @@
 
 #include "Tick.hh"
+#include "SerializationUtils.hh"
 #include <cmath>
 #include <stdexcept>
 
-namespace chrono {
+namespace bsgo {
 namespace {
 auto cast(const float in) -> std::tuple<int, float>
 {
@@ -55,6 +56,23 @@ auto Tick::operator+=(const Tick &rhs) -> Tick &
   return *this;
 }
 
+auto Tick::serialize(std::ostream &out) const -> std::ostream &
+{
+  core::serialize(out, m_count);
+  core::serialize(out, m_frac);
+
+  return out;
+}
+
+bool Tick::deserialize(std::istream &in)
+{
+  bool ok{true};
+  ok &= core::deserialize(in, m_count);
+  ok &= core::deserialize(in, m_frac);
+
+  return ok;
+}
+
 void Tick::validate()
 {
   if (m_count < 0 || m_frac < 0.0f || m_frac >= 1.0f)
@@ -64,4 +82,16 @@ void Tick::validate()
   }
 }
 
-} // namespace chrono
+auto operator<<(std::ostream &out, const Tick &tick) -> std::ostream &
+{
+  tick.serialize(out);
+  return out;
+}
+
+auto operator>>(std::istream &in, Tick &tick) -> std::istream &
+{
+  tick.deserialize(in);
+  return in;
+}
+
+} // namespace bsgo

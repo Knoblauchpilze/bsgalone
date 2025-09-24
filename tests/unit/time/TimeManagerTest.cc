@@ -9,10 +9,10 @@ namespace chrono {
 struct TestCaseTick
 {
   int id{};
-  Tick startTick{};
+  bsgo::Tick startTick{};
   TimeStep step{};
   Duration elapsed{};
-  Tick expectedTick{};
+  bsgo::Tick expectedTick{};
 };
 
 using TickTest = TestWithParam<TestCaseTick>;
@@ -34,24 +34,24 @@ INSTANTIATE_TEST_SUITE_P(Unit_Chrono_TimeManager,
                          Values(
                            TestCaseTick{
                              .id           = 0,
-                             .startTick    = Tick(),
+                             .startTick    = bsgo::Tick(),
                              .step         = TimeStep{},
                              .elapsed      = Duration{.unit = Unit::SECONDS, .elapsed = 1.0f},
-                             .expectedTick = Tick(10, 0.0f),
+                             .expectedTick = bsgo::Tick(10, 0.0f),
                            },
                            TestCaseTick{
                              .id        = 1,
-                             .startTick = Tick(),
+                             .startTick = bsgo::Tick(),
                              .step      = TimeStep{},
                              .elapsed   = Duration{.unit = Unit::MILLISECONDS, .elapsed = 1000.0f},
-                             .expectedTick = Tick(10, 0.0f),
+                             .expectedTick = bsgo::Tick(10, 0.0f),
                            },
                            TestCaseTick{
                              .id        = 2,
-                             .startTick = Tick(),
+                             .startTick = bsgo::Tick(),
                              .step      = TimeStep{},
                              .elapsed   = Duration{.unit = Unit::MILLISECONDS, .elapsed = 128.0f},
-                             .expectedTick = Tick(1, 0.28f),
+                             .expectedTick = bsgo::Tick(1, 0.28f),
                            }),
                          [](const TestParamInfo<TestCaseTick> &info) -> std::string {
                            return std::to_string(info.param.id);
