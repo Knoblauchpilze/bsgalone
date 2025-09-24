@@ -8,6 +8,7 @@
 #include "Processes.hh"
 #include "Services.hh"
 #include "SynchronizedMessageQueue.hh"
+#include "TimeManager.hh"
 #include "Uuid.hh"
 #include <atomic>
 #include <memory>
@@ -34,6 +35,8 @@ class SystemProcessor : public core::CoreObject
   Uuid m_systemDbId{};
   IMessageQueuePtr m_inputMessagesQueue{};
   DatabaseEntityMapper m_entityMapper{};
+
+  chrono::TimeManagerPtr m_timeManager{};
   CoordinatorShPtr m_coordinator{};
   Services m_services{};
   Processes m_processes{};
@@ -41,6 +44,7 @@ class SystemProcessor : public core::CoreObject
   std::atomic_bool m_running{false};
   std::thread m_processingThread{};
 
+  void initialize();
   void asyncSystemProcessing();
 };
 

@@ -5,6 +5,7 @@
 #include "Duration.hh"
 #include "Tick.hh"
 #include "TimeStep.hh"
+#include <memory>
 
 namespace chrono {
 
@@ -20,5 +21,7 @@ class TimeManager : public core::CoreObject
   Tick m_currentTick{};
   TimeStep m_step{};
 };
+
+using TimeManagerPtr = std::unique_ptr<TimeManager>;
 
 } // namespace chrono
