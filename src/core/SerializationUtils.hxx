@@ -4,8 +4,6 @@
 #include "SerializationUtils.hh"
 #include "TimeUtils.hh"
 
-#include <iostream>
-
 namespace core {
 
 /// https://stackoverflow.com/questions/41868221/c-template-specialization-all-types-except-one
@@ -150,14 +148,12 @@ inline bool deserialize(std::istream &in, std::unordered_map<Key, Value> &m)
 template<serializable T>
 inline auto serialize(std::ostream &out, const T &e) -> std::ostream &
 {
-  std::cout << "hahaaaaaa" << std::endl;
   return e.serialize(out);
 }
 
 template<deserializable T>
 bool deserialize(std::istream &in, T &e)
 {
-  std::cout << "heheeeeeeee" << std::endl;
   return e.deserialize(in);
 }
 
