@@ -6,7 +6,7 @@
 #include "PlayerWeaponData.hh"
 #include "ShipClass.hh"
 #include "Status.hh"
-#include "TimeUtils.hh"
+#include "Tick.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
 #include <optional>
@@ -33,8 +33,8 @@ struct PlayerShipData
   std::string name{};
   bool docked{};
   bool active{};
-  core::Duration jumpTime{};
-  core::Duration jumpTimeInThreat{};
+  Tick jumpTime{};
+  Tick jumpTimeInThreat{};
   std::optional<Uuid> jumpSystem{};
 
   std::optional<Uuid> targetDbId{};

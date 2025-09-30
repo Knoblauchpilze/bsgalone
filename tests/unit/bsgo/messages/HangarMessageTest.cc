@@ -34,7 +34,7 @@ TEST(Unit_Bsgo_Serialization_HangarMessage, WithShip)
     data{.dbId             = Uuid{8},
          .radius           = 1.478f,
          .hullPoints       = 98.54f,
-         .jumpTimeInThreat = core::toMilliseconds(45001),
+         .jumpTimeInThreat = Tick(45001.0f),
          .weapons          = {{
                                 .dbId       = Uuid{2},
                                 .weaponDbId = Uuid{65},
@@ -67,9 +67,7 @@ TEST(Unit_Bsgo_Serialization_HangarMessage, WithShip)
 
 TEST(Unit_Bsgo_Serialization_HangarMessage, ShipIdIsEqualToShipData)
 {
-  const PlayerShipData data{.dbId     = Uuid{42},
-                            .docked   = true,
-                            .jumpTime = core::toMilliseconds(4587)};
+  const PlayerShipData data{.dbId = Uuid{42}, .docked = true, .jumpTime = Tick(4587.001f)};
   const HangarMessage message(data);
 
   EXPECT_EQ(message.getShipDbId(), data.dbId);
@@ -84,7 +82,7 @@ TEST(Unit_Bsgo_Serialization_HangarMessage, OverridesShipProperties)
     data{.dbId             = Uuid{8},
          .radius           = 1.478f,
          .hullPoints       = 98.54f,
-         .jumpTimeInThreat = core::toMilliseconds(45001),
+         .jumpTimeInThreat = Tick(45001, 0.7f),
          .weapons          = {{
                                 .dbId       = Uuid{2},
                                 .weaponDbId = Uuid{65},

@@ -36,8 +36,8 @@ SELECT
   ps.z_pos,
   ss.system,
   ss.docked,
-  sc.jump_time_ms,
-  sc.jump_time_threat_ms,
+  sc.jump_time,
+  sc.jump_time_threat,
   sj.system
 FROM
   player_ship AS ps
@@ -289,8 +289,8 @@ auto PlayerShipRepository::fetchShipBase(const Uuid ship) const -> PlayerShip
     out.docked = record[19].as<bool>();
   }
 
-  out.jumpTime         = core::Milliseconds(record[20].as<int>());
-  out.jumpTimeInThreat = core::Milliseconds(record[21].as<int>());
+  out.jumpTime         = Tick::fromInt(record[20].as<int>());
+  out.jumpTimeInThreat = Tick::fromInt(record[21].as<int>());
   if (!record[22].is_null())
   {
     out.jumpSystem = fromDbId(record[22].as<int>());

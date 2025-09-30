@@ -181,7 +181,7 @@ TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, WithWeapon)
                                          .position         = Eigen::Vector3f(1.0f, 2.8f, 3.9f),
                                          .radius           = 26.9f,
                                          .hullPoints       = 12.34f,
-                                         .jumpTimeInThreat = core::toMilliseconds(5678),
+                                         .jumpTimeInThreat = Tick(5678.01f),
                                          .slots   = {{Slot::WEAPON, 3}, {Slot::COMPUTER, 2}},
                                          .weapons = weapons}};
 
@@ -216,7 +216,7 @@ TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, WithComputer)
                                          .position   = Eigen::Vector3f(1.0f, 2.8f, 3.9f),
                                          .radius     = 26.9f,
                                          .hullPoints = 12.34f,
-                                         .jumpTime   = core::toMilliseconds(75),
+                                         .jumpTime   = Tick(75, 0.9804f),
                                          .computers  = computers}};
 
   PlayerShipListMessage expected(shipsData);
@@ -263,8 +263,8 @@ TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, MultipleComplexShips)
      .position         = Eigen::Vector3f(1.2f, 3.4f, 4.5f),
      .radius           = 987.9f,
      .hullPoints       = 98.76f,
-     .jumpTime         = core::toMilliseconds(741),
-     .jumpTimeInThreat = core::toMilliseconds(369),
+     .jumpTime         = Tick(741, 0.24f),
+     .jumpTimeInThreat = Tick(369.09f),
      .slots            = {{Slot::COMPUTER, 5}},
      .weapons
      = {{.dbId = Uuid{16}, .weaponDbId = Uuid{14}, .level = 9, .range = 6.897f},
@@ -285,7 +285,7 @@ TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, MultipleComplexShips)
     = {{
          .dbId     = Uuid{7412},
          .position = Eigen::Vector3f(1.0f, 2.8f, 3.9f),
-         .jumpTime = core::toMilliseconds(785),
+         .jumpTime = Tick(785, 0.174f),
        },
        {.dbId = Uuid{7413}, .position = Eigen::Vector3f(98.76f, 54.32f, 1.09f)},
        {
@@ -306,10 +306,10 @@ TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, MultipleComplexShips)
                       {.computerDbId = 58, .damageModifier = 963.147f}}},
        {.dbId             = Uuid{7416},
         .docked           = true,
-        .jumpTimeInThreat = core::toMilliseconds(5678),
+        .jumpTimeInThreat = Tick(5678.098f),
         .jumpSystem       = Uuid{7932},
         .weapons          = {
-          {.weaponDbId = Uuid{852}, .name = "my weapon", .reloadTime = core::toMilliseconds(963)}}}};
+                   {.weaponDbId = Uuid{852}, .name = "my weapon", .reloadTime = core::toMilliseconds(963)}}}};
   PlayerShipListMessage actual(shipsData);
   actual.setSystemDbId(Uuid{3331});
   actual.setPlayerDbId(Uuid{745});
