@@ -12,7 +12,7 @@ INSERT INTO resource ("name") VALUES ('titane');
 INSERT INTO slot ("type") VALUES ('weapon');
 INSERT INTO slot ("type") VALUES ('computer');
 
-INSERT INTO ship_class ("name", "jump_time_ms", "jump_time_threat_ms")
+INSERT INTO ship_class ("name", "jump_time", "jump_time_threat")
   VALUES ('strike', 5000, 60000);
-INSERT INTO ship_class ("name", "jump_time_ms", "jump_time_threat_ms")
+INSERT INTO ship_class ("name", "jump_time", "jump_time_threat")
   VALUES ('line', 25000, 100000);

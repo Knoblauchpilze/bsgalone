@@ -1,8 +1,8 @@
 
 CREATE TABLE ship_class (
   name TEXT NOT NULL,
-  jump_time_ms INTEGER NOT NULL,
-  jump_time_threat_ms INTEGER NOT NULL,
+  jump_time INTEGER NOT NULL,
+  jump_time_threat INTEGER NOT NULL,
   PRIMARY KEY (name)
 );
 

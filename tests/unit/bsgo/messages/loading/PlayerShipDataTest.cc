@@ -125,8 +125,8 @@ TEST(Unit_Bsgo_Serialization_PlayerShipData, WithWeapons)
                        .position         = Eigen::Vector3f{1.0f, 2.0f, 3.0f},
                        .radius           = 5.0f,
                        .maxPowerPoints   = 100.0f,
-                       .jumpTime         = core::toMilliseconds(1234),
-                       .jumpTimeInThreat = core::toMilliseconds(5678),
+                       .jumpTime         = Tick(1234.2f),
+                       .jumpTimeInThreat = Tick(5678, 0.4f),
                        .targetDbId       = Uuid{8901},
                        .playerDbId       = Uuid{6547}};
   input.weapons.push_back({
@@ -173,8 +173,8 @@ TEST(Unit_Bsgo_Serialization_PlayerShipData, ClearsWeapons)
     .dbId             = Uuid{14},
     .faction          = Faction::CYLON,
     .status           = Status::JUMP,
-    .jumpTime         = core::toMilliseconds(75),
-    .jumpTimeInThreat = core::toMilliseconds(5678),
+    .jumpTime         = Tick(75, 0.01f),
+    .jumpTimeInThreat = Tick(5678, 0.978f),
   };
   output.weapons.push_back({.dbId       = Uuid{1001},
                             .weaponDbId = Uuid{2002},

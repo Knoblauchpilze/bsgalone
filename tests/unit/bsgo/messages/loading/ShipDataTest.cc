@@ -33,7 +33,7 @@ TEST(Unit_Bsgo_Serialization_ShipData, DifferentWhenDbIdIsDifferent)
   ShipData data1{.dbId      = Uuid{1234},
                  .shipClass = ShipClass::STRIKE,
                  .radius    = 5.0f,
-                 .jumpTime  = core::toMilliseconds(529),
+                 .jumpTime  = Tick(529.0f),
                  .slots     = {{Slot::COMPUTER, 2}}};
 
   ShipData data2 = data1;
@@ -56,7 +56,7 @@ TEST(Unit_Bsgo_Serialization_ShipData, Basic)
                   .shipClass        = ShipClass::LINE,
                   .maxPowerPoints   = 78.954f,
                   .powerRegen       = 1.2345f,
-                  .jumpTimeInThreat = core::toMilliseconds(1234)};
+                  .jumpTimeInThreat = Tick(1234, 0.238f)};
 
   EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
 
