@@ -37,7 +37,7 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, Basic)
                                         {.dbId             = Uuid{76},
                                          .maxHullPoints    = 100.0f,
                                          .hullPointsRegen  = 26.9f,
-                                         .jumpTimeInThreat = core::toMilliseconds(1265)}};
+                                         .jumpTimeInThreat = Tick(1265.89f)}};
   ShipListMessage actual(Faction::COLONIAL, shipsData);
   actual.setClientId(Uuid{2});
 
@@ -52,7 +52,7 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, WithClientId)
                                    .shipClass       = ShipClass::LINE,
                                    .hullPointsRegen = 12.34f,
                                    .maxPowerPoints  = 56.78f,
-                                   .jumpTime        = core::toMilliseconds(7456),
+                                   .jumpTime        = Tick(7456.10f),
                                    .slots           = {{Slot::COMPUTER, 2}, {Slot::WEAPON, 3}}}};
 
   ShipListMessage expected(Faction::COLONIAL, shipsData);
@@ -79,7 +79,7 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, Clone)
      .shipClass        = ShipClass::STRIKE,
      .name             = "another ship",
      .acceleration     = 1.257f,
-     .jumpTimeInThreat = core::toMilliseconds(3224),
+     .jumpTimeInThreat = Tick(3224, 0.08f),
      .slots            = {{Slot::WEAPON, 14}}},
   };
 
@@ -103,12 +103,12 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, MultipleComplexShips)
      .acceleration   = 17.45f,
      .speed          = 23.65f,
      .radius         = 1.02f,
-     .jumpTime       = core::toMilliseconds(5412)},
+     .jumpTime       = Tick(5412, 0.9007f)},
     {
       .dbId             = Uuid{68},
       .hullPointsRegen  = 98.76f,
-      .jumpTime         = core::toMilliseconds(741),
-      .jumpTimeInThreat = core::toMilliseconds(369),
+      .jumpTime         = Tick(741.01f),
+      .jumpTimeInThreat = Tick(369, 0.502f),
       .slots            = {{Slot::COMPUTER, 5}},
     },
   };
@@ -119,12 +119,12 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, MultipleComplexShips)
      .shipClass     = ShipClass::STRIKE,
      .maxHullPoints = 14.47f,
      .radius        = 1.02f,
-     .jumpTime      = core::toMilliseconds(5412)},
+     .jumpTime      = Tick(5412.57f)},
     {.dbId             = Uuid{45},
      .shipClass        = ShipClass::LINE,
      .maxPowerPoints   = 21.74f,
      .acceleration     = 14.32f,
-     .jumpTimeInThreat = core::toMilliseconds(3789)},
+     .jumpTimeInThreat = Tick(3789, 0.14f)},
     {.dbId      = Uuid{41},
      .shipClass = ShipClass::STRIKE,
      .name      = "the mosquito",

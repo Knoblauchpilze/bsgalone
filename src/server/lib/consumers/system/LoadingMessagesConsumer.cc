@@ -401,10 +401,6 @@ void LoadingMessagesConsumer::handleSystemAsteroidsLoading(const LoadingStartedM
 {
   const auto systemDbId = message.getSystemDbId();
 
-  // TODO: Here and for ships, computers, etc.: as we fetch the data from the database
-  // this is not accurate. For example the status, health, power from individual entities
-  // might differ in the system processors than in the database.
-  // To fix it we would need to correctly propagate the changes to the database.
   const auto asteroids = m_loadingService->getAsteroidsInSystem(systemDbId);
 
   std::vector<AsteroidData> asteroidsData{};

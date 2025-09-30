@@ -158,4 +158,13 @@ TEST(Unit_Bsgo_Tick, FromFloat)
   assertTickMatches(actual, expected.count(), expected.frac());
 }
 
+TEST(Unit_Bsgo_Tick, FromInt)
+{
+  assertTickMatches(Tick::fromInt(31), 31, 0.0f);
+  assertTickMatches(Tick::fromInt(14), 14, 0.0f);
+  assertTickMatches(Tick::fromInt(0), 0, 0.0f);
+  assertTickMatches(Tick::fromInt(1), 1, 0.0f);
+  assertTickMatches(Tick::fromInt(17), 17, 0.0f);
+}
+
 } // namespace bsgo

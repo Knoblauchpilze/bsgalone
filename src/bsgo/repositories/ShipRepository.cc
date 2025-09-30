@@ -9,12 +9,50 @@ ShipRepository::ShipRepository(const DbConnectionShPtr &connection)
 
 namespace {
 constexpr auto FIND_ONE_QUERY_NAME = "ship_find_one";
-constexpr auto FIND_ONE_QUERY
-  = "SELECT s.id, s.faction, s.class, s.name, s.max_hull_points, s.hull_points_regen, s.max_power_points, s.power_points_regen, s.max_acceleration, s.max_speed, s.radius, sc.jump_time_ms, sc.jump_time_threat_ms FROM ship AS s LEFT JOIN ship_class AS sc ON s.class = sc.name WHERE s.id = $1";
+constexpr auto FIND_ONE_QUERY      = R"(
+SELECT
+  s.id,
+  s.faction,
+  s.class,
+  s.name,
+  s.max_hull_points,
+  s.hull_points_regen,
+  s.max_power_points,
+  s.power_points_regen,
+  s.max_acceleration,
+  s.max_speed,
+  s.radius,
+  sc.jump_time,
+  sc.jump_time_threat
+FROM
+  ship AS s
+  LEFT JOIN ship_class AS sc ON s.class = sc.name
+WHERE
+  s.id = $1
+)";
 
 constexpr auto FIND_ALL_BY_FACTION_QUERY_NAME = "ship_find_all_by_faction";
-constexpr auto FIND_ALL_BY_FACTION_QUERY
-  = "SELECT s.id, s.faction, s.class, s.name, s.max_hull_points, s.hull_points_regen, s.max_power_points, s.power_points_regen, s.max_acceleration, s.max_speed, s.radius, sc.jump_time_ms, sc.jump_time_threat_ms FROM ship AS s LEFT JOIN ship_class AS sc ON s.class = sc.name WHERE s.faction = $1";
+constexpr auto FIND_ALL_BY_FACTION_QUERY      = R"(
+SELECT
+  s.id,
+  s.faction,
+  s.class,
+  s.name,
+  s.max_hull_points,
+  s.hull_points_regen,
+  s.max_power_points,
+  s.power_points_regen,
+  s.max_acceleration,
+  s.max_speed,
+  s.radius,
+  sc.jump_time,
+  sc.jump_time_threat
+FROM
+  ship AS s
+  LEFT JOIN ship_class AS sc ON s.class = sc.name
+WHERE
+  s.faction = $1
+)";
 
 constexpr auto FIND_SLOTS_QUERY_NAME = "ship_find_slots";
 constexpr auto FIND_SLOTS_QUERY
@@ -57,8 +95,8 @@ auto fetchShipFromSqlResult(const pqxx::const_result_iterator &record) -> Ship
   ship.acceleration     = record[8].as<float>();
   ship.speed            = record[9].as<float>();
   ship.radius           = record[10].as<float>();
-  ship.jumpTime         = core::Milliseconds(record[11].as<int>());
-  ship.jumpTimeInThreat = core::Milliseconds(record[12].as<int>());
+  ship.jumpTime         = Tick::fromInt(record[11].as<int>());
+  ship.jumpTimeInThreat = Tick::fromInt(record[12].as<int>());
 
   return ship;
 }

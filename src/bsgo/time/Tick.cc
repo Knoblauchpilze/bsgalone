@@ -73,6 +73,11 @@ bool Tick::deserialize(std::istream &in)
   return ok;
 }
 
+auto Tick::fromInt(const int duration) -> Tick
+{
+  return Tick(duration, 0.0f);
+}
+
 void Tick::validate()
 {
   if (m_count < 0 || m_frac < 0.0f || m_frac >= 1.0f)

@@ -23,6 +23,8 @@ class Tick
   auto serialize(std::ostream &out) const -> std::ostream &;
   bool deserialize(std::istream &in);
 
+  static auto fromInt(const int duration) -> Tick;
+
   private:
   int m_count{0};
   float m_frac{0.0f};
