@@ -3,7 +3,7 @@
 
 #include "AbstractRepository.hh"
 #include "EntityKind.hh"
-#include "TimeUtils.hh"
+#include "Tick.hh"
 #include "Uuid.hh"
 #include <memory>
 #include <optional>
@@ -18,9 +18,9 @@ struct Computer
   bool offensive{};
   float powerCost{};
   std::optional<float> range{};
-  core::Duration reloadTime{};
+  Tick reloadTime{};
 
-  std::optional<core::Duration> duration{};
+  std::optional<Tick> duration{};
   std::optional<std::unordered_set<EntityKind>> allowedTargets{};
   std::optional<float> damageModifier{};
 };

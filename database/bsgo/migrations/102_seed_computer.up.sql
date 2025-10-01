@@ -1,6 +1,6 @@
 
 -- Weapon buff
-INSERT INTO computer ("name", "offensive", "power_cost", "reload_time_ms", "range", "duration_ms", "damage_modifier")
+INSERT INTO computer ("name", "offensive", "power_cost", "reload_time", "range", "duration", "damage_modifier")
   VALUES (
     'Weapon buff', false, 20.0, 10000.0, NULL, 3500.0, 1.5
   );
@@ -13,7 +13,7 @@ INSERT INTO computer_price ("computer", "resource", "cost")
   );
 
 -- Scan
-INSERT INTO computer ("name", "offensive", "power_cost", "reload_time_ms", "range", "duration_ms", "damage_modifier")
+INSERT INTO computer ("name", "offensive", "power_cost", "reload_time", "range", "duration", "damage_modifier")
   VALUES (
     'Scan', true, 5.0, 500.0, 6.0, NULL, NULL
   );

@@ -55,11 +55,13 @@ auto generateWeaponMenu(const std::string &name,
 
 auto generateWeaponMenu(const bsgo::WeaponData &weapon) -> UiMenuPtr
 {
+  // TODO: We should convert to seconds based on the tick duration
+  const auto reloadTime = core::toMilliseconds(weapon.reloadTime.count());
   return generateWeaponMenu(weapon.name,
                             weapon.minDamage,
                             weapon.maxDamage,
                             weapon.range,
-                            weapon.reloadTime);
+                            reloadTime);
 }
 
 auto generateWeaponMenu(const bsgo::PlayerWeaponData &weapon) -> UiMenuPtr
@@ -121,11 +123,19 @@ auto generateComputerMenu(const std::string &name,
 
 auto generateComputerMenu(const bsgo::ComputerData &computer) -> UiMenuPtr
 {
+  // TODO: We should convert to seconds based on the tick duration
+  const auto reloadTime = core::toMilliseconds(computer.reloadTime.count());
+  std::optional<core::Duration> duration{};
+  if (computer.duration)
+  {
+    duration = core::toMilliseconds(computer.duration->count());
+  }
+
   return generateComputerMenu(computer.name,
                               computer.powerCost,
                               computer.range,
-                              computer.duration,
-                              computer.reloadTime);
+                              duration,
+                              reloadTime);
 }
 
 auto generateComputerMenu(const bsgo::PlayerComputerData &computer) -> UiMenuPtr

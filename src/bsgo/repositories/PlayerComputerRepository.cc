@@ -14,12 +14,36 @@ constexpr auto FIND_ALL_QUERY_NAME = "player_computer_find_all";
 constexpr auto FIND_ALL_QUERY      = "SELECT id FROM player_computer WHERE player = $1";
 
 constexpr auto FIND_ONE_QUERY_NAME = "player_computer_find_one";
-constexpr auto FIND_ONE_QUERY
-  = "SELECT pc.computer, pc.player, c.name, c.offensive, c.power_cost, c.range, c.reload_time_ms, c.duration_ms, c.damage_modifier, pc.level FROM player_computer AS pc LEFT JOIN computer AS c ON pc.computer = c.id WHERE pc.id = $1";
+constexpr auto FIND_ONE_QUERY      = R"(
+SELECT
+  pc.computer,
+  pc.player,
+  c.name,
+  c.offensive,
+  c.power_cost,
+  c.range,
+  c.reload_time,
+  c.duration,
+  c.damage_modifier,
+  pc.level
+FROM
+  player_computer AS pc
+  LEFT JOIN computer AS c ON pc.computer = c.id
+WHERE
+  pc.id = $1
+)";
 
 constexpr auto FIND_ALLOWED_TARGETS_QUERY_NAME = "player_computer_find_targets";
-constexpr auto FIND_ALLOWED_TARGETS_QUERY
-  = "SELECT cat.entity FROM computer_allowed_target AS cat LEFT JOIN computer AS c ON cat.computer = c.id LEFT JOIN player_computer AS pc ON pc.computer = c.id WHERE pc.id = $1";
+constexpr auto FIND_ALLOWED_TARGETS_QUERY      = R"(
+SELECT
+  cat.entity
+FROM
+  computer_allowed_target AS cat
+  LEFT JOIN computer AS c ON cat.computer = c.id
+  LEFT JOIN player_computer AS pc ON pc.computer = c.id
+WHERE
+  pc.id = $1
+)";
 
 constexpr auto UPDATE_COMPUTER_QUERY_NAME = "player_computer_update";
 constexpr auto UPDATE_COMPUTER_QUERY      = R"(

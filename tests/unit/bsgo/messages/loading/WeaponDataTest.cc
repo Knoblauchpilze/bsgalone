@@ -23,7 +23,7 @@ TEST(Unit_Bsgo_Serialization_WeaponData, EqualWhenDbIdIsEqual)
                    .range     = 123.456f,
                    .price     = {{Uuid{21}, 265}}};
 
-  WeaponData data2{.dbId = Uuid{1234}, .maxDamage = 17.5f, .reloadTime = core::toMilliseconds(158)};
+  WeaponData data2{.dbId = Uuid{1234}, .maxDamage = 17.5f, .reloadTime = Tick::fromInt(158)};
 
   EXPECT_TRUE(data1 == data2);
 }
@@ -48,7 +48,7 @@ TEST(Unit_Bsgo_Serialization_WeaponData, Basic)
 
   WeaponData output{.dbId       = Uuid{14},
                     .maxDamage  = 12.987f,
-                    .reloadTime = core::toMilliseconds(1234),
+                    .reloadTime = Tick(1234, 0.147f),
                     .price      = {{Uuid{26}, 401}, {Uuid{9874}, 130}, {Uuid{13}, 1245}}};
 
   EXPECT_TRUE(serializeAndDeserializeData(input, output));
