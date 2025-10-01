@@ -25,8 +25,16 @@ void assertPlayerComputerDataAreEqual(const PlayerComputerData &actual,
   EXPECT_EQ(actual.offensive, expected.offensive);
   EXPECT_EQ(actual.powerCost, expected.powerCost);
   EXPECT_EQ(actual.range, expected.range);
-  EXPECT_EQ(actual.reloadTime, expected.reloadTime);
-  EXPECT_EQ(actual.duration, expected.duration);
+
+  EXPECT_EQ(actual.reloadTime.count(), expected.reloadTime.count());
+  EXPECT_EQ(actual.reloadTime.frac(), expected.reloadTime.frac());
+  EXPECT_EQ(actual.duration.has_value(), expected.duration.has_value());
+  if (expected.duration.has_value())
+  {
+    EXPECT_EQ(actual.duration->count(), expected.duration->count());
+    EXPECT_EQ(actual.duration->frac(), expected.duration->frac());
+  }
+
   EXPECT_EQ(actual.allowedTargets, expected.allowedTargets);
   EXPECT_EQ(actual.damageModifier, expected.damageModifier);
 }
@@ -42,7 +50,9 @@ void assertPlayerWeaponDataAreEqual(const PlayerWeaponData &actual, const Player
   EXPECT_EQ(actual.maxDamage, expected.maxDamage);
   EXPECT_EQ(actual.powerCost, expected.powerCost);
   EXPECT_EQ(actual.range, expected.range);
-  EXPECT_EQ(actual.reloadTime, expected.reloadTime);
+
+  EXPECT_EQ(actual.reloadTime.count(), expected.reloadTime.count());
+  EXPECT_EQ(actual.reloadTime.frac(), expected.reloadTime.frac());
 }
 
 void assertOutpostDataAreEqual(const OutpostData &actual, const OutpostData &expected)
