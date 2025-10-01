@@ -1,6 +1,6 @@
 
 -- Short range cannon
-INSERT INTO weapon ("name", "min_damage", "max_damage", "power_cost", "range", "reload_time_ms")
+INSERT INTO weapon ("name", "min_damage", "max_damage", "power_cost", "range", "reload_time")
   VALUES ('Short range cannon', 1.0, 10.0, 0.5, 4.0, 400);
 
 INSERT INTO weapon_price ("weapon", "resource", "cost")
@@ -17,7 +17,7 @@ INSERT INTO weapon_price ("weapon", "resource", "cost")
   );
 
 -- Medium range cannon
-INSERT INTO weapon ("name", "min_damage", "max_damage", "power_cost", "range", "reload_time_ms")
+INSERT INTO weapon ("name", "min_damage", "max_damage", "power_cost", "range", "reload_time")
   VALUES ('Medium range cannon', 1.0, 10.0, 0.5, 5.0, 500);
 
 INSERT INTO weapon_price ("weapon", "resource", "cost")
@@ -28,7 +28,7 @@ INSERT INTO weapon_price ("weapon", "resource", "cost")
   );
 
 -- Long range cannon
-INSERT INTO weapon ("name", "min_damage", "max_damage", "power_cost", "range", "reload_time_ms")
+INSERT INTO weapon ("name", "min_damage", "max_damage", "power_cost", "range", "reload_time")
   VALUES ('Long range cannon', 1.0, 10.0, 0.5, 6.0, 600);
 
 INSERT INTO weapon_price ("weapon", "resource", "cost")

@@ -14,8 +14,23 @@ constexpr auto FIND_ALL_QUERY_NAME = "player_weapon_find_all";
 constexpr auto FIND_ALL_QUERY      = "SELECT id FROM player_weapon WHERE player = $1";
 
 constexpr auto FIND_ONE_QUERY_NAME = "player_weapon_find_one";
-constexpr auto FIND_ONE_QUERY
-  = "SELECT pw.weapon, pw.player, w.name, w.min_damage, w.max_damage, w.power_cost, w.range, w.reload_time_ms, pw.level FROM player_weapon AS pw LEFT JOIN weapon AS w ON pw.weapon = w.id WHERE pw.id = $1";
+constexpr auto FIND_ONE_QUERY      = R"(
+SELECT
+  pw.weapon,
+  pw.player,
+  w.name,
+  w.min_damage,
+  w.max_damage,
+  w.power_cost,
+  w.range,
+  w.reload_time,
+  pw.level
+FROM
+  player_weapon AS pw
+  LEFT JOIN weapon AS w ON pw.weapon = w.id
+WHERE
+  pw.id = $1
+)";
 
 constexpr auto UPDATE_WEAPON_QUERY_NAME = "player_weapon_update";
 constexpr auto UPDATE_WEAPON_QUERY      = R"(
