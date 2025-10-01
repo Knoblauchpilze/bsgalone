@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "TimeUtils.hh"
+#include "Tick.hh"
 #include "Uuid.hh"
 #include "WeaponPriceRepository.hh"
 #include "WeaponRepository.hh"
@@ -19,7 +19,7 @@ struct WeaponData
   float powerCost{};
   float range{};
 
-  core::Duration reloadTime{};
+  Tick reloadTime{};
 
   std::unordered_map<Uuid, int> price{};
 

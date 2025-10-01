@@ -13,8 +13,19 @@ constexpr auto FIND_ALL_QUERY_NAME = "weapon_find_all";
 constexpr auto FIND_ALL_QUERY      = "SELECT id FROM weapon";
 
 constexpr auto FIND_ONE_QUERY_NAME = "weapon_find_one";
-constexpr auto FIND_ONE_QUERY
-  = "SELECT name, min_damage, max_damage, power_cost, range, reload_time_ms FROM weapon WHERE id = $1";
+constexpr auto FIND_ONE_QUERY      = R"(
+SELECT
+  name,
+  min_damage,
+  max_damage,
+  power_cost,
+  range,
+  reload_time
+FROM
+  weapon
+WHERE
+  id = $1
+)";
 } // namespace
 
 void WeaponRepository::initialize()
@@ -54,7 +65,7 @@ auto WeaponRepository::findOneById(const Uuid weapon) const -> Weapon
   out.maxDamage  = record[2].as<float>();
   out.powerCost  = record[3].as<float>();
   out.range      = record[4].as<float>();
-  out.reloadTime = core::Milliseconds(record[5].as<int>());
+  out.reloadTime = Tick::fromInt(record[5].as<int>());
 
   return out;
 }

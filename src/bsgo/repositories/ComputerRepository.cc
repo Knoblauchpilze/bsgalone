@@ -13,12 +13,31 @@ constexpr auto FIND_ALL_QUERY_NAME = "computer_find_all";
 constexpr auto FIND_ALL_QUERY      = "SELECT id FROM computer";
 
 constexpr auto FIND_ONE_QUERY_NAME = "computer_find_one";
-constexpr auto FIND_ONE_QUERY
-  = "SELECT name, offensive, power_cost, range, reload_time_ms, duration_ms, damage_modifier FROM computer WHERE id = $1";
+constexpr auto FIND_ONE_QUERY      = R"(
+SELECT
+  name,
+  offensive,
+  power_cost,
+  range,
+  reload_time,
+  duration,
+  damage_modifier
+FROM
+  computer
+WHERE
+  id = $1
+)";
 
 constexpr auto FIND_ALLOWED_TARGETS_QUERY_NAME = "computer_find_targets";
-constexpr auto FIND_ALLOWED_TARGETS_QUERY
-  = "SELECT cat.entity FROM computer_allowed_target AS cat LEFT JOIN computer AS c ON cat.computer = c.id WHERE c.id = $1";
+constexpr auto FIND_ALLOWED_TARGETS_QUERY      = R"(
+SELECT
+  cat.entity
+FROM
+  computer_allowed_target AS cat
+  LEFT JOIN computer AS c ON cat.computer = c.id
+WHERE
+  c.id = $1
+)";
 } // namespace
 
 void ComputerRepository::initialize()
@@ -69,10 +88,10 @@ auto ComputerRepository::fetchComputerBase(const Uuid computer) const -> Compute
   {
     out.range = {record[3].as<float>()};
   }
-  out.reloadTime = core::Milliseconds(record[4].as<int>());
+  out.reloadTime = Tick::fromInt(record[4].as<int>());
   if (!record[5].is_null())
   {
-    out.duration = {core::Milliseconds(record[5].as<int>())};
+    out.duration = Tick::fromInt(record[5].as<int>());
   }
   if (!record[6].is_null())
   {
