@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "TimeUtils.hh"
+#include "Tick.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
 #include <optional>
@@ -21,7 +21,7 @@ struct PlayerWeaponData
   float powerCost{};
   float range{};
 
-  core::Duration reloadTime{};
+  Tick reloadTime{};
 
   bool operator==(const PlayerWeaponData &rhs) const;
 };

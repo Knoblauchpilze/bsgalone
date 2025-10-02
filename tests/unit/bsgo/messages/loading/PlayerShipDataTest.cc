@@ -140,7 +140,7 @@ TEST(Unit_Bsgo_Serialization_PlayerShipData, WithWeapons)
   });
   input.weapons.push_back({.dbId         = Uuid{6002},
                            .slotPosition = Eigen::Vector3f{-89.75f, -56.23f, 32.04f},
-                           .reloadTime   = core::toMilliseconds(12)});
+                           .reloadTime   = Tick(12, 0.73004f)});
 
   PlayerShipData output{.dbId    = Uuid{14},
                         .faction = Faction::CYLON,
@@ -183,7 +183,7 @@ TEST(Unit_Bsgo_Serialization_PlayerShipData, ClearsWeapons)
                             .maxDamage  = 20.0f,
                             .powerCost  = 5.0f,
                             .range      = 100.0f,
-                            .reloadTime = core::toMilliseconds(1234)});
+                            .reloadTime = Tick::fromInt(1234)});
 
   EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
 

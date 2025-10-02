@@ -40,9 +40,7 @@ TEST(Unit_Bsgo_Serialization_HangarMessage, WithShip)
                                 .weaponDbId = Uuid{65},
                                 .minDamage  = 45.87f,
                      },
-                              {.weaponDbId = Uuid{98},
-                               .name       = "weapon 1",
-                               .reloadTime = core::toMilliseconds(45)}},
+                              {.weaponDbId = Uuid{98}, .name = "weapon 1", .reloadTime = Tick::fromInt(45)}},
          .computers        = {{.computerDbId   = Uuid{12},
                                .offensive      = true,
                                .powerCost      = 56.47f,
@@ -52,7 +50,7 @@ TEST(Unit_Bsgo_Serialization_HangarMessage, WithShip)
                               {
                                 .dbId           = Uuid{27},
                                 .name           = "beefy computer",
-                                .reloadTime     = core::toMilliseconds(457),
+                                .reloadTime     = Tick(457, 0.174f),
                                 .damageModifier = 45.1f,
                        }}};
   const HangarMessage expected(data);
@@ -88,9 +86,7 @@ TEST(Unit_Bsgo_Serialization_HangarMessage, OverridesShipProperties)
                                 .weaponDbId = Uuid{65},
                                 .minDamage  = 45.87f,
                      },
-                              {.weaponDbId = Uuid{98},
-                               .name       = "weapon 1",
-                               .reloadTime = core::toMilliseconds(45)}},
+                              {.weaponDbId = Uuid{98}, .name = "weapon 1", .reloadTime = Tick(45, 0.712f)}},
          .computers        = {{.computerDbId   = Uuid{12},
                                .offensive      = true,
                                .powerCost      = 56.47f,
@@ -100,7 +96,7 @@ TEST(Unit_Bsgo_Serialization_HangarMessage, OverridesShipProperties)
                               {
                                 .dbId           = Uuid{27},
                                 .name           = "beefy computer",
-                                .reloadTime     = core::toMilliseconds(457),
+                                .reloadTime     = Tick::fromInt(457),
                                 .damageModifier = 45.1f,
                        }}};
   HangarMessage actual(data);
