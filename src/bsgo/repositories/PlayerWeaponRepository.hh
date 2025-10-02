@@ -2,7 +2,7 @@
 #pragma once
 
 #include "AbstractRepository.hh"
-#include "TimeUtils.hh"
+#include "Tick.hh"
 #include "Uuid.hh"
 #include <memory>
 #include <optional>
@@ -26,7 +26,7 @@ struct PlayerWeapon
 
   float range{};
 
-  core::Duration reloadTime{};
+  Tick reloadTime{};
 };
 
 class PlayerWeaponRepository : public AbstractRepository
