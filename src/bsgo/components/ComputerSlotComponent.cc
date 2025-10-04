@@ -5,23 +5,17 @@ namespace bsgo {
 
 ComputerSlotComponent::ComputerSlotComponent(const PlayerComputerData &computer)
   : SlotComponent(ComponentType::COMPUTER_SLOT,
-                  SlotComponentData{.dbId      = computer.dbId,
-                                    .offensive = computer.offensive,
-                                    .powerCost = computer.powerCost,
-                                    .range     = computer.range,
-                                    // TODO: We should not convert to milliseconds here
-                                    .reloadTime = core::toMilliseconds(computer.reloadTime.count())})
+                  SlotComponentData{.dbId       = computer.dbId,
+                                    .offensive  = computer.offensive,
+                                    .powerCost  = computer.powerCost,
+                                    .range      = computer.range,
+                                    .reloadTime = computer.reloadTime})
+  , m_duration(computer.duration)
   , m_allowedTargets(computer.allowedTargets)
   , m_damageModifier(computer.damageModifier)
-{
-  // TODO: We should not convert to milliseconds here.
-  if (computer.duration)
-  {
-    m_duration = core::toMilliseconds(computer.duration->count());
-  }
-}
+{}
 
-auto ComputerSlotComponent::duration() const -> std::optional<core::Duration>
+auto ComputerSlotComponent::duration() const -> std::optional<Tick>
 {
   return m_duration;
 }

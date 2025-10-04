@@ -5,12 +5,11 @@ namespace bsgo {
 
 WeaponSlotComponent::WeaponSlotComponent(const PlayerWeaponData &weapon)
   : SlotComponent(ComponentType::WEAPON_SLOT,
-                  SlotComponentData{.dbId      = weapon.dbId,
-                                    .offensive = true,
-                                    .powerCost = weapon.powerCost,
-                                    .range     = {weapon.range},
-                                    // TODO: We should not convert to milliseconds here
-                                    .reloadTime = core::toMilliseconds(weapon.reloadTime.count())})
+                  SlotComponentData{.dbId       = weapon.dbId,
+                                    .offensive  = true,
+                                    .powerCost  = weapon.powerCost,
+                                    .range      = {weapon.range},
+                                    .reloadTime = weapon.reloadTime})
   , m_minDamage(weapon.minDamage)
   , m_maxDamage(weapon.maxDamage)
 {

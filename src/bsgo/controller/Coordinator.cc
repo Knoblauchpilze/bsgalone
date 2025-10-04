@@ -205,9 +205,7 @@ void Coordinator::addResourceComponent(const Uuid ent, const Uuid resource, cons
   m_components.resources.emplace(ent, std::make_shared<ResourceComponent>(resource, amount));
 }
 
-void Coordinator::addWeaponEffect(const Uuid ent,
-                                  const core::Duration &duration,
-                                  const float damageModifier)
+void Coordinator::addWeaponEffect(const Uuid ent, const Tick &duration, const float damageModifier)
 {
   checkEntityExist(ent, "WeaponEffect");
   m_components.effects.emplace(ent,
