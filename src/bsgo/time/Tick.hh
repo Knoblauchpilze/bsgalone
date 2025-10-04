@@ -15,6 +15,7 @@ class Tick
 
   auto count() const -> int;
   auto frac() const -> float;
+  auto elapsed() const -> float;
 
   auto str() const -> std::string;
 
