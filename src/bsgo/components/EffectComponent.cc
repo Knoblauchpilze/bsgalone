@@ -3,7 +3,7 @@
 
 namespace bsgo {
 
-EffectComponent::EffectComponent(const ComponentType &type, const core::Duration &duration)
+EffectComponent::EffectComponent(const ComponentType &type, const Tick &duration)
   : AbstractComponent(type)
   , m_duration(duration)
 {
@@ -12,7 +12,9 @@ EffectComponent::EffectComponent(const ComponentType &type, const core::Duration
 
 bool EffectComponent::isFinished() const
 {
-  return m_duration < m_elapsedSinceStart;
+  // TODO: We should not convert to milliseconds here.
+  const auto durationAsTime = core::toMilliseconds(m_duration.count());
+  return durationAsTime < m_elapsedSinceStart;
 }
 
 auto EffectComponent::damageModifier() const -> std::optional<float>

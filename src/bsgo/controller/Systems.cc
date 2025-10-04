@@ -13,7 +13,6 @@
 #include "RemovalSystem.hh"
 #include "StatusSystem.hh"
 #include "TargetSystem.hh"
-#include "WeaponEffectComponent.hh"
 #include "WeaponSystem.hh"
 
 namespace bsgo {

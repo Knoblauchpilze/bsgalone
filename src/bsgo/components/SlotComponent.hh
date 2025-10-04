@@ -2,6 +2,7 @@
 #pragma once
 
 #include "AbstractComponent.hh"
+#include "Tick.hh"
 #include "TimeUtils.hh"
 #include "Uuid.hh"
 #include <optional>
@@ -14,7 +15,7 @@ struct SlotComponentData
   bool offensive{};
   float powerCost{};
   std::optional<float> range{};
-  core::Duration reloadTime{};
+  Tick reloadTime{};
 };
 
 enum class FiringState
@@ -58,7 +59,7 @@ class SlotComponent : public AbstractComponent
   bool m_offensive;
   float m_powerCost;
   std::optional<float> m_range;
-  core::Duration m_reloadTime;
+  Tick m_reloadTime;
 
   bool m_fireRequest{false};
   FiringState m_firingState{FiringState::READY};
