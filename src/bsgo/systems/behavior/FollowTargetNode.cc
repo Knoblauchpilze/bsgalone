@@ -11,7 +11,7 @@ FollowTargetNode::FollowTargetNode()
   : LeafNode("follow")
 {}
 
-void FollowTargetNode::run(const TickData &data)
+void FollowTargetNode::run(const BehaviorData &data)
 {
   if (NodeState::IDLE == m_state)
   {

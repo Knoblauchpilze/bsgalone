@@ -7,7 +7,7 @@ SequenceNode::SequenceNode()
   : ControlNode("sequence")
 {}
 
-auto SequenceNode::tick(const TickData &data) -> NodeState
+auto SequenceNode::tick(const BehaviorData &data) -> NodeState
 {
   for (const auto &child : m_children)
   {

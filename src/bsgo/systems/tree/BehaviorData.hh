@@ -6,7 +6,7 @@ namespace bsgo {
 class Entity;
 class Coordinator;
 
-struct TickData
+struct BehaviorData
 {
   Entity &ent;
   Coordinator &coordinator;

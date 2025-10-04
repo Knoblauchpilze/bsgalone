@@ -11,7 +11,7 @@ class SequenceNode : public ControlNode
   SequenceNode();
   ~SequenceNode() override = default;
 
-  auto tick(const TickData &data) -> NodeState override;
+  auto tick(const BehaviorData &data) -> NodeState override;
 };
 
 } // namespace bsgo

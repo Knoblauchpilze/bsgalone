@@ -8,7 +8,7 @@ RepeaterNode::RepeaterNode(INodePtr node)
   , m_child(std::move(node))
 {}
 
-auto RepeaterNode::tick(const TickData &data) -> NodeState
+auto RepeaterNode::tick(const BehaviorData &data) -> NodeState
 {
   const auto state = m_child->tick(data);
   if (NodeState::SUCCESS == state)

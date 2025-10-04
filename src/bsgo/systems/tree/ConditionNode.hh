@@ -6,7 +6,7 @@
 
 namespace bsgo {
 
-using Condition = std::function<bool(const TickData &)>;
+using Condition = std::function<bool(const BehaviorData &)>;
 
 class ConditionNode : public INode
 {
@@ -14,7 +14,7 @@ class ConditionNode : public INode
   ConditionNode(const Condition &condition);
   ~ConditionNode() override = default;
 
-  auto tick(const TickData &data) -> NodeState override;
+  auto tick(const BehaviorData &data) -> NodeState override;
   void reset() override;
 
   private:

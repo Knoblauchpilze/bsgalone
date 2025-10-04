@@ -11,14 +11,14 @@ class LeafNode : public INode
   LeafNode(const std::string &name);
   ~LeafNode() override = default;
 
-  auto tick(const TickData &data) -> NodeState override;
+  auto tick(const BehaviorData &data) -> NodeState override;
   void reset() override;
 
   protected:
   NodeState m_state{NodeState::IDLE};
 
   void start();
-  virtual void run(const TickData &data) = 0;
+  virtual void run(const BehaviorData &data) = 0;
   void fail();
   void finish();
 };

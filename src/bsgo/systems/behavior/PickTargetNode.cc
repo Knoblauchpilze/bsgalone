@@ -9,7 +9,7 @@ PickTargetNode::PickTargetNode()
   : LeafNode("pick")
 {}
 
-void PickTargetNode::run(const TickData &data)
+void PickTargetNode::run(const BehaviorData &data)
 {
   constexpr auto ENEMY_DETECTION_RANGE = 15.0f;
 

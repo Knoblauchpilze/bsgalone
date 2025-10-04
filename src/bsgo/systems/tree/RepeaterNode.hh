@@ -11,7 +11,7 @@ class RepeaterNode : public INode
   RepeaterNode(INodePtr node);
   ~RepeaterNode() override = default;
 
-  auto tick(const TickData &data) -> NodeState override;
+  auto tick(const BehaviorData &data) -> NodeState override;
   void reset() override;
 
   private:
