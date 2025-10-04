@@ -38,6 +38,11 @@ auto Tick::frac() const -> float
   return m_frac;
 }
 
+auto Tick::elapsed() const -> float
+{
+  return static_cast<float>(count()) + frac();
+}
+
 auto Tick::str() const -> std::string
 {
   return std::to_string(m_count) + "[" + std::to_string(m_frac) + "]";

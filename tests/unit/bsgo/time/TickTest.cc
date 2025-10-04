@@ -167,4 +167,22 @@ TEST(Unit_Bsgo_Tick, FromInt)
   assertTickMatches(Tick::fromInt(17), 17, 0.0f);
 }
 
+TEST(Unit_Bsgo_Tick, Elapsed)
+{
+  auto tick = Tick::fromInt(14);
+  EXPECT_EQ(tick.elapsed(), 14.0f);
+
+  tick = Tick(17);
+  EXPECT_EQ(tick.elapsed(), 17.0f);
+
+  tick = Tick(17, 0.98f);
+  EXPECT_EQ(tick.elapsed(), 17.98f);
+
+  tick = Tick();
+  EXPECT_EQ(tick.elapsed(), 0.0f);
+
+  tick = Tick(1025.0089404f);
+  EXPECT_EQ(tick.elapsed(), 1025.0089404f);
+}
+
 } // namespace bsgo
