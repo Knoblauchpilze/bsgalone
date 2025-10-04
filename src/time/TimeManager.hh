@@ -4,6 +4,7 @@
 #include "CoreObject.hh"
 #include "Duration.hh"
 #include "Tick.hh"
+#include "TickData.hh"
 #include "TimeStep.hh"
 #include <memory>
 
@@ -15,7 +16,7 @@ class TimeManager : public core::CoreObject
   TimeManager(const bsgo::Tick tick, const TimeStep step);
   ~TimeManager() = default;
 
-  auto tick(const Duration elapsed) -> bsgo::Tick;
+  auto tick(const Duration elapsed) -> bsgo::TickData;
 
   private:
   bsgo::Tick m_currentTick{};

@@ -12,14 +12,17 @@ TimeManager::TimeManager(const bsgo::Tick tick, const TimeStep step)
   setService("time");
 }
 
-auto TimeManager::tick(const Duration elapsed) -> bsgo::Tick
+auto TimeManager::tick(const Duration elapsed) -> bsgo::TickData
 {
   const auto tick = m_step.count(elapsed);
   m_currentTick += tick;
 
   debug(elapsed.str() + " elapsed, tick: " + m_currentTick.str() + " (delta: " + tick.str() + ")");
 
-  return m_currentTick;
+  return bsgo::TickData{
+    .tick    = m_currentTick,
+    .elapsed = tick,
+  };
 }
 
 } // namespace chrono
