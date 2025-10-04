@@ -13,7 +13,7 @@ class TargetNode : public LeafNode
   ~TargetNode() override = default;
 
   protected:
-  void run(const TickData &data) override;
+  void run(const BehaviorData &data) override;
 
   private:
   Eigen::Vector3f m_target;

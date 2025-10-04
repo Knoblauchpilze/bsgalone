@@ -8,7 +8,7 @@ ConditionNode::ConditionNode(const Condition &condition)
   , m_condition(condition)
 {}
 
-auto ConditionNode::tick(const TickData &data) -> NodeState
+auto ConditionNode::tick(const BehaviorData &data) -> NodeState
 {
   if (m_condition(data))
   {

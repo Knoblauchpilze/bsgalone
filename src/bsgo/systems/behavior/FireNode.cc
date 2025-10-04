@@ -8,7 +8,7 @@ FireNode::FireNode()
   : LeafNode("fire")
 {}
 
-void FireNode::run(const TickData &data)
+void FireNode::run(const BehaviorData &data)
 {
   for (const auto &weapon : data.ent.weapons)
   {

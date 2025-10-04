@@ -7,7 +7,7 @@ FallbackNode::FallbackNode()
   : ControlNode("fallback")
 {}
 
-auto FallbackNode::tick(const TickData &data) -> NodeState
+auto FallbackNode::tick(const BehaviorData &data) -> NodeState
 {
   for (const auto &child : m_children)
   {

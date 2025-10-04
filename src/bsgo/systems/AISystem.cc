@@ -20,7 +20,7 @@ void AISystem::updateEntity(Entity &entity,
   auto &aiComp = entity.aiComp();
   aiComp.update(elapsedSeconds);
 
-  TickData data{.ent = entity, .coordinator = coordinator};
+  BehaviorData data{.ent = entity, .coordinator = coordinator};
   aiComp.behavior().tick(data);
 }
 

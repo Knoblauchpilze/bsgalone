@@ -12,7 +12,7 @@ class FollowTargetNode : public LeafNode
   ~FollowTargetNode() override = default;
 
   protected:
-  void run(const TickData &data) override;
+  void run(const BehaviorData &data) override;
 };
 
 } // namespace bsgo

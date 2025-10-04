@@ -9,7 +9,7 @@ LeafNode::LeafNode(const std::string &name)
   addModule("leaf");
 }
 
-auto LeafNode::tick(const TickData &data) -> NodeState
+auto LeafNode::tick(const BehaviorData &data) -> NodeState
 {
   run(data);
   return m_state;

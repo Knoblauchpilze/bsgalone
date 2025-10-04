@@ -11,7 +11,7 @@ TargetNode::TargetNode(const Eigen::Vector3f &target)
   , m_target(target)
 {}
 
-void TargetNode::run(const TickData &data)
+void TargetNode::run(const BehaviorData &data)
 {
   if (NodeState::IDLE == m_state)
   {

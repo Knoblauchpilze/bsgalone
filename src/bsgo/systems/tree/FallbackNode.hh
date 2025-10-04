@@ -11,7 +11,7 @@ class FallbackNode : public ControlNode
   FallbackNode();
   ~FallbackNode() override = default;
 
-  auto tick(const TickData &data) -> NodeState override;
+  auto tick(const BehaviorData &data) -> NodeState override;
 };
 
 } // namespace bsgo

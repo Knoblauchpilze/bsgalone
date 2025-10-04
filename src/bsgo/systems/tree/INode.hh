@@ -1,9 +1,9 @@
 
 #pragma once
 
+#include "BehaviorData.hh"
 #include "CoreObject.hh"
 #include "NodeState.hh"
-#include "TickData.hh"
 #include <memory>
 
 namespace bsgo {
@@ -19,7 +19,7 @@ class INode : public core::CoreObject
   /// @brief - Process the node and returns the computed state.
   /// @param data - data to help the processing.
   /// @return - the state of the node.
-  virtual auto tick(const TickData &data) -> NodeState = 0;
+  virtual auto tick(const BehaviorData &data) -> NodeState = 0;
 
   /// @brief - Reset the node to its initial state.
   virtual void reset() = 0;
