@@ -21,10 +21,23 @@ class Tick
 
   auto operator+=(const Tick &rhs) -> Tick &;
 
+  auto operator<(const Tick &rhs) const -> bool;
+  auto operator<=(const Tick &rhs) const -> bool;
+  auto operator>(const Tick &rhs) const -> bool;
+  auto operator>=(const Tick &rhs) const -> bool;
+
   auto serialize(std::ostream &out) const -> std::ostream &;
   bool deserialize(std::istream &in);
 
   static auto fromInt(const int duration) -> Tick;
+
+  /// @brief - Computes lhs - rhs and returns the result as a Tick. In
+  /// case `lhs < rhs`, the return value is equivalent to `Tick()`. This
+  /// means that there's no negative tick returned by this method.
+  /// @param lhs - the tick to subtract from
+  /// @param rhs - the tick to subtract
+  /// @return - the result of `lhs - rhs` or `Tick()` in case `lhs < rhs`
+  static auto safeSubtract(const Tick &lhs, const Tick &rhs) -> Tick;
 
   private:
   int m_count{0};

@@ -185,4 +185,166 @@ TEST(Unit_Bsgo_Tick, Elapsed)
   EXPECT_EQ(tick.elapsed(), 1025.0089404f);
 }
 
+TEST(Unit_Bsgo_Tick, LessThan)
+{
+  auto lhs = Tick::fromInt(14);
+  auto rhs = Tick::fromInt(15);
+  EXPECT_TRUE(lhs < rhs);
+
+  lhs = Tick(14.98f);
+  rhs = Tick::fromInt(15);
+  EXPECT_TRUE(lhs < rhs);
+
+  lhs = Tick(15.2f);
+  rhs = Tick::fromInt(15);
+  EXPECT_FALSE(lhs < rhs);
+
+  lhs = Tick(1508.2f);
+  rhs = Tick(98, 0.21f);
+  EXPECT_FALSE(lhs < rhs);
+
+  lhs = Tick(2.0f);
+  rhs = Tick::fromInt(2);
+  EXPECT_FALSE(lhs < rhs);
+}
+
+TEST(Unit_Bsgo_Tick, LessThanEqual)
+{
+  auto lhs = Tick::fromInt(14);
+  auto rhs = Tick::fromInt(15);
+  EXPECT_TRUE(lhs <= rhs);
+
+  lhs = Tick(14.98f);
+  rhs = Tick::fromInt(15);
+  EXPECT_TRUE(lhs <= rhs);
+
+  lhs = Tick(15.2f);
+  rhs = Tick::fromInt(15);
+  EXPECT_FALSE(lhs <= rhs);
+
+  lhs = Tick(1508.2f);
+  rhs = Tick(98, 0.21f);
+  EXPECT_FALSE(lhs <= rhs);
+
+  lhs = Tick(2.0f);
+  rhs = Tick::fromInt(2);
+
+  EXPECT_TRUE(lhs <= rhs);
+}
+
+TEST(Unit_Bsgo_Tick, GreaterThan)
+{
+  auto lhs = Tick::fromInt(14);
+  auto rhs = Tick::fromInt(15);
+  EXPECT_FALSE(lhs > rhs);
+
+  lhs = Tick(14.98f);
+  rhs = Tick::fromInt(15);
+  EXPECT_FALSE(lhs > rhs);
+
+  lhs = Tick(15.2f);
+  rhs = Tick::fromInt(15);
+  EXPECT_TRUE(lhs > rhs);
+
+  lhs = Tick(1508.2f);
+  rhs = Tick(98, 0.21f);
+  EXPECT_TRUE(lhs > rhs);
+
+  lhs = Tick(2.0f);
+  rhs = Tick::fromInt(2);
+  EXPECT_FALSE(lhs > rhs);
+}
+
+TEST(Unit_Bsgo_Tick, GreaterThanEqual)
+{
+  auto lhs = Tick::fromInt(14);
+  auto rhs = Tick::fromInt(15);
+  EXPECT_FALSE(lhs >= rhs);
+
+  lhs = Tick(14.98f);
+  rhs = Tick::fromInt(15);
+  EXPECT_FALSE(lhs >= rhs);
+
+  lhs = Tick(15.2f);
+  rhs = Tick::fromInt(15);
+  EXPECT_TRUE(lhs >= rhs);
+
+  lhs = Tick(1508.2f);
+  rhs = Tick(98, 0.21f);
+  EXPECT_TRUE(lhs >= rhs);
+
+  lhs = Tick(2.0f);
+  rhs = Tick::fromInt(2);
+  EXPECT_TRUE(lhs >= rhs);
+}
+
+struct TestCaseTickSubtraction
+{
+  Tick lhs{};
+  Tick rhs{};
+  int expectedCount{};
+  float expectedFrac{};
+};
+
+using SubtractionTest = TestWithParam<TestCaseTickSubtraction>;
+
+TEST_P(SubtractionTest, SubtractsCorrectly)
+{
+  const auto &param = GetParam();
+
+  const auto actual = Tick::safeSubtract(param.lhs, param.rhs);
+
+  assertTickMatches(actual, param.expectedCount, param.expectedFrac);
+}
+
+INSTANTIATE_TEST_SUITE_P(Unit_Bsgo_Tick,
+                         SubtractionTest,
+                         Values(TestCaseTickSubtraction{.lhs           = Tick(0.0f),
+                                                        .rhs           = Tick(0.0f),
+                                                        .expectedCount = 0,
+                                                        .expectedFrac  = 0.0f},
+                                TestCaseTickSubtraction{.lhs           = Tick(1.0f),
+                                                        .rhs           = Tick(0.0f),
+                                                        .expectedCount = 1,
+                                                        .expectedFrac  = 0.0f},
+                                TestCaseTickSubtraction{.lhs           = Tick(1.2f),
+                                                        .rhs           = Tick(0.0f),
+                                                        .expectedCount = 1,
+                                                        .expectedFrac  = 0.2f},
+                                TestCaseTickSubtraction{.lhs           = Tick(1.4f),
+                                                        .rhs           = Tick(0.2f),
+                                                        .expectedCount = 1,
+                                                        .expectedFrac  = 0.2f},
+                                TestCaseTickSubtraction{.lhs           = Tick(98.78f),
+                                                        .rhs           = Tick(1.0f),
+                                                        .expectedCount = 97,
+                                                        .expectedFrac  = 0.78f},
+                                TestCaseTickSubtraction{.lhs           = Tick(1507.0235f),
+                                                        .rhs           = Tick(14.5f),
+                                                        .expectedCount = 1492,
+                                                        .expectedFrac  = 0.5235f},
+                                TestCaseTickSubtraction{.lhs           = Tick(0.0f),
+                                                        .rhs           = Tick(0.1f),
+                                                        .expectedCount = 0,
+                                                        .expectedFrac  = 0.0f},
+                                TestCaseTickSubtraction{.lhs           = Tick(1.0f),
+                                                        .rhs           = Tick(1.0f),
+                                                        .expectedCount = 0,
+                                                        .expectedFrac  = 0.0f},
+                                TestCaseTickSubtraction{.lhs           = Tick(0.5f),
+                                                        .rhs           = Tick(14.7f),
+                                                        .expectedCount = 0,
+                                                        .expectedFrac  = 0.0f},
+                                TestCaseTickSubtraction{.lhs           = Tick(1.001f),
+                                                        .rhs           = Tick(1.0f),
+                                                        .expectedCount = 0,
+                                                        .expectedFrac  = 0.001f}),
+                         [](const TestParamInfo<TestCaseTickSubtraction> &info) -> std::string {
+                           auto out = info.param.lhs.str() + "_" + info.param.rhs.str();
+                           std::replace(out.begin(), out.end(), '.', '_');
+                           std::replace(out.begin(), out.end(), '[', '_');
+                           std::replace(out.begin(), out.end(), ']', '_');
+                           return out;
+                         });
+
 } // namespace bsgo
