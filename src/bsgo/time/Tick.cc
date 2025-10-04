@@ -61,6 +61,26 @@ auto Tick::operator+=(const Tick &rhs) -> Tick &
   return *this;
 }
 
+auto Tick::operator<(const Tick &rhs) const -> bool
+{
+  return elapsed() < rhs.elapsed();
+}
+
+auto Tick::operator<=(const Tick &rhs) const -> bool
+{
+  return elapsed() <= rhs.elapsed();
+}
+
+auto Tick::operator>(const Tick &rhs) const -> bool
+{
+  return elapsed() > rhs.elapsed();
+}
+
+auto Tick::operator>=(const Tick &rhs) const -> bool
+{
+  return elapsed() >= rhs.elapsed();
+}
+
 auto Tick::serialize(std::ostream &out) const -> std::ostream &
 {
   core::serialize(out, m_count);
@@ -81,6 +101,17 @@ bool Tick::deserialize(std::istream &in)
 auto Tick::fromInt(const int duration) -> Tick
 {
   return Tick(duration, 0.0f);
+}
+
+auto Tick::safeSubtract(const Tick &lhs, const Tick &rhs) -> Tick
+{
+  const auto res = lhs.elapsed() - rhs.elapsed();
+  if (res < 0.0f)
+  {
+    return Tick();
+  }
+
+  return Tick(res);
 }
 
 void Tick::validate()
