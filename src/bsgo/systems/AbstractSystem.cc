@@ -42,7 +42,7 @@ void AbstractSystem::installOutputMessageQueue(IMessageQueue *messageQueue)
   m_outputMessageQueue = messageQueue;
 }
 
-void AbstractSystem::update(Coordinator &coordinator, const float elapsedSeconds) const
+void AbstractSystem::update(Coordinator &coordinator, const TickData &data) const
 {
   /// https://gamedev.stackexchange.com/questions/71711/ecs-how-to-access-multiple-components-not-the-same-one-in-a-system
   auto entities = coordinator.getEntitiesSatistying(m_entitiesFilter);
@@ -57,6 +57,10 @@ void AbstractSystem::update(Coordinator &coordinator, const float elapsedSeconds
         continue;
       }
     }
+
+    // TODO: We should not convert to a real time here.
+    constexpr auto MILLISECONDS_IN_A_SECOND = 1000.0f;
+    const auto elapsedSeconds               = data.elapsed.elapsed() / MILLISECONDS_IN_A_SECOND;
 
     updateEntity(ent, coordinator, elapsedSeconds);
   }

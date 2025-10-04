@@ -97,11 +97,11 @@ void SystemProcessor::asyncSystemProcessing()
       .elapsed = core::diffInMs(lastFrameTimestamp, thisFrameTimestamp),
     };
 
-    const auto tick = m_timeManager->tick(elapsed);
+    const auto data = m_timeManager->tick(elapsed);
+
+    m_coordinator->update(data);
 
     const auto elapsedSecond = elapsed.convert(chrono::Unit::SECONDS).elapsed;
-    m_coordinator->update(elapsedSecond);
-
     m_processes.update(*m_coordinator, elapsedSecond);
     m_inputMessagesQueue->processMessages();
 
