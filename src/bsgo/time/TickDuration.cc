@@ -26,6 +26,26 @@ bool TickDuration::operator==(const TickDuration &rhs) const
   return diff < TickDuration::TOLERANCE;
 }
 
+bool TickDuration::operator<(const TickDuration &rhs) const
+{
+  return m_elapsed < rhs.m_elapsed;
+}
+
+bool TickDuration::operator<=(const TickDuration &rhs) const
+{
+  return m_elapsed <= rhs.m_elapsed;
+}
+
+bool TickDuration::operator>(const TickDuration &rhs) const
+{
+  return m_elapsed > rhs.m_elapsed;
+}
+
+bool TickDuration::operator>=(const TickDuration &rhs) const
+{
+  return m_elapsed >= rhs.m_elapsed;
+}
+
 auto TickDuration::toSeconds() const -> float
 {
   constexpr auto SECONDS_IN_TICK = 0.1f;

@@ -29,6 +29,11 @@ class TickDuration
   /// @return - true in case both durations are equal within the tolerance
   bool operator==(const TickDuration &rhs) const;
 
+  bool operator<(const TickDuration &rhs) const;
+  bool operator<=(const TickDuration &rhs) const;
+  bool operator>(const TickDuration &rhs) const;
+  bool operator>=(const TickDuration &rhs) const;
+
   /// TODO: This should be removed.
   /// @brief - Temporary method to convert this duration to real seconds. This
   /// is intended as a workaround while the core game logic is migrated to use
@@ -43,6 +48,11 @@ class TickDuration
 
   private:
   float m_elapsed{0.0f};
+
+  // This construction allows to keep the TickDuration as an opaque type (i.e. there's
+  // no way to access the inner `m_elapsed` duration) but still allow to convert in the
+  // `Tick` class.
+  friend class Tick;
 
   void validate();
 };

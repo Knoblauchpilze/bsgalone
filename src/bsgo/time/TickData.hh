@@ -2,13 +2,14 @@
 #pragma once
 
 #include "Tick.hh"
+#include "TickDuration.hh"
 
 namespace bsgo {
 
 struct TickData
 {
   Tick tick{};
-  Tick elapsed{};
+  TickDuration elapsed{};
 };
 
 } // namespace bsgo
