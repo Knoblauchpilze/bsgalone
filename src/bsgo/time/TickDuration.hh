@@ -34,6 +34,9 @@ class TickDuration
   bool operator>(const TickDuration &rhs) const;
   bool operator>=(const TickDuration &rhs) const;
 
+  auto serialize(std::ostream &out) const -> std::ostream &;
+  bool deserialize(std::istream &in);
+
   /// TODO: This should be removed.
   /// @brief - Temporary method to convert this duration to real seconds. This
   /// is intended as a workaround while the core game logic is migrated to use

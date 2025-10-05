@@ -1,5 +1,6 @@
 
 #include "TickDuration.hh"
+#include "SerializationUtils.hh"
 #include <cmath>
 #include <stdexcept>
 
@@ -44,6 +45,21 @@ bool TickDuration::operator>(const TickDuration &rhs) const
 bool TickDuration::operator>=(const TickDuration &rhs) const
 {
   return m_elapsed >= rhs.m_elapsed;
+}
+
+auto TickDuration::serialize(std::ostream &out) const -> std::ostream &
+{
+  core::serialize(out, m_elapsed);
+
+  return out;
+}
+
+bool TickDuration::deserialize(std::istream &in)
+{
+  bool ok{true};
+  ok &= core::deserialize(in, m_elapsed);
+
+  return ok;
 }
 
 auto TickDuration::toSeconds() const -> float
