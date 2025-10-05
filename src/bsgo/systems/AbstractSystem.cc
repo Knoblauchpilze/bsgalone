@@ -42,7 +42,7 @@ void AbstractSystem::installOutputMessageQueue(IMessageQueue *messageQueue)
   m_outputMessageQueue = messageQueue;
 }
 
-void AbstractSystem::update(Coordinator &coordinator, const float elapsedSeconds) const
+void AbstractSystem::update(Coordinator &coordinator, const TickData &data) const
 {
   /// https://gamedev.stackexchange.com/questions/71711/ecs-how-to-access-multiple-components-not-the-same-one-in-a-system
   auto entities = coordinator.getEntitiesSatistying(m_entitiesFilter);
@@ -57,6 +57,13 @@ void AbstractSystem::update(Coordinator &coordinator, const float elapsedSeconds
         continue;
       }
     }
+
+    // TODO: We should not convert to a real time here.
+    // The conversion is based on the fact that a tick is supposed to last
+    // 100 ms. Note that 0.1 can't be accurately represented in binary so
+    // this is losing precision.
+    constexpr auto SECONDS_IN_A_TICK = 0.1f;
+    const auto elapsedSeconds        = data.elapsed.elapsed() * SECONDS_IN_A_TICK;
 
     updateEntity(ent, coordinator, elapsedSeconds);
   }

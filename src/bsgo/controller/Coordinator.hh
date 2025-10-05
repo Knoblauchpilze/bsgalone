@@ -10,6 +10,7 @@
 #include "PlayerWeaponData.hh"
 #include "Systems.hh"
 #include "Tick.hh"
+#include "TickData.hh"
 #include "TimeUtils.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
@@ -70,7 +71,7 @@ class Coordinator : public core::CoreObject
   auto getEntitiesWithinSatistying(const IBoundingBox &bbox, const EntityPredicate &predicate) const
     -> std::vector<Entity>;
 
-  void update(float elapsedSeconds);
+  void update(const TickData &data);
 
   private:
   Uuid m_nextEntity{Uuid(0)};

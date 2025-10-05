@@ -243,7 +243,13 @@ bool Game::step(float elapsedSeconds)
 
   if (shouldUpdateCoordinatorInScreen(m_state.screen))
   {
-    m_coordinator->update(elapsedSeconds);
+    const auto elapsed = chrono::Duration{
+      .unit    = chrono::Unit::SECONDS,
+      .elapsed = elapsedSeconds,
+    };
+
+    const auto data = m_timeManager->tick(elapsed);
+    m_coordinator->update(data);
   }
 
   const auto it = m_uiHandlers.find(m_state.screen);
@@ -362,6 +368,10 @@ void Game::initialize(const int serverPort)
   m_internalMessageQueue = std::make_unique<bsgo::SynchronizedMessageQueue>(
     "synchronized-message-queue-for-internal");
   m_outputMessageQueue = std::make_unique<ClientMessageQueue>(std::move(connection));
+
+  // TODO: This should come from the server
+  const chrono::TimeStep timeStep(1, chrono::Duration(chrono::Unit::MILLISECONDS, 100));
+  m_timeManager = std::make_unique<chrono::TimeManager>(bsgo::Tick(), timeStep);
 
   bsgo::SystemsConfig sConfig{.internalMessageQueue = m_internalMessageQueue.get(),
                               .outputMessageQueue   = m_outputMessageQueue.get(),

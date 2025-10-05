@@ -21,7 +21,7 @@ class AbstractSystem : public ISystem
   void installInternalMessageQueue(IMessageQueue *messageQueue) override;
   void installOutputMessageQueue(IMessageQueue *messageQueue) override;
 
-  void update(Coordinator &coordinator, const float elapsedSeconds) const override;
+  void update(Coordinator &coordinator, const TickData &data) const override;
 
   virtual void updateEntity(Entity &entity,
                             Coordinator &coordinator,

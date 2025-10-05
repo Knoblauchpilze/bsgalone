@@ -25,11 +25,11 @@ Systems::Systems(SystemsConfig &&config)
   initialize(std::move(config));
 }
 
-void Systems::update(Coordinator &coordinator, const float elapsedSeconds) const
+void Systems::update(Coordinator &coordinator, const TickData &data) const
 {
   for (const auto &system : m_systems)
   {
-    system->update(coordinator, elapsedSeconds);
+    system->update(coordinator, data);
   }
 }
 
