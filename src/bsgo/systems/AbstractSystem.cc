@@ -59,11 +59,7 @@ void AbstractSystem::update(Coordinator &coordinator, const TickData &data) cons
     }
 
     // TODO: We should not convert to a real time here.
-    // The conversion is based on the fact that a tick is supposed to last
-    // 100 ms. Note that 0.1 can't be accurately represented in binary so
-    // this is losing precision.
-    constexpr auto SECONDS_IN_A_TICK = 0.1f;
-    const auto elapsedSeconds        = data.elapsed.elapsed() * SECONDS_IN_A_TICK;
+    const auto elapsedSeconds = data.elapsed.toSeconds();
 
     updateEntity(ent, coordinator, elapsedSeconds);
   }

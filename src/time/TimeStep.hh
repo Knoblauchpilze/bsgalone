@@ -2,7 +2,7 @@
 #pragma once
 
 #include "Duration.hh"
-#include "Tick.hh"
+#include "TickDuration.hh"
 
 namespace chrono {
 
@@ -13,7 +13,7 @@ class TimeStep
   TimeStep(const int ticks, const Duration &inDuration);
   ~TimeStep() = default;
 
-  auto count(const Duration &elapsed) const -> bsgo::Tick;
+  auto count(const Duration &elapsed) const -> bsgo::TickDuration;
 
   private:
   int m_ticks{1};
