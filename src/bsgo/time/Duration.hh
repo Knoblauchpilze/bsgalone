@@ -13,6 +13,9 @@ namespace bsgo {
 class Duration
 {
   public:
+  /// @brief - Creates a new zero duration.
+  explicit Duration() = default;
+
   /// @brief - Creates a new duration from the input floating point value. The value
   /// cannot be negative: if this is the case an exception will be raised.
   /// @param elapsed - the duration to represent.
