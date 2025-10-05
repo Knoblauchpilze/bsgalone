@@ -15,6 +15,12 @@ auto TickDuration::str() const -> std::string
   return std::to_string(m_elapsed);
 }
 
+auto TickDuration::toSeconds() const -> float
+{
+  constexpr auto SECONDS_IN_TICK = 0.1f;
+  return m_elapsed * SECONDS_IN_TICK;
+}
+
 void TickDuration::validate()
 {
   if (m_elapsed < 0.0f)

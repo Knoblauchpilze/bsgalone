@@ -23,6 +23,14 @@ class TickDuration
 
   auto str() const -> std::string;
 
+  /// TODO: This should be removed.
+  /// @brief - Temporary method to convert this duration to real seconds. This
+  /// is intended as a workaround while the core game logic is migrated to use
+  /// Ticks and TickDuration instead of core::Duration.
+  /// This method assumes that a `Tick` is equivalent to 100ms.
+  /// @return - the duration expressed in seconds.
+  auto toSeconds() const -> float;
+
   private:
   float m_elapsed{0.0f};
 

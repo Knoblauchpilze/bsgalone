@@ -21,4 +21,14 @@ TEST(Unit_Bsgo_TickDuration, ThrowsWhenIntIsNegative)
 {
   EXPECT_THROW([] { TickDuration(-0.47f); }(), std::invalid_argument);
 }
+
+/// TODO: This should be removed.
+TEST(Unit_Bsgo_TickDuration, ConvertsToSeconds)
+{
+  TickDuration d(1.45f);
+  EXPECT_FLOAT_EQ(d.toSeconds(), 0.145f);
+
+  d = TickDuration(18971.047405f);
+  EXPECT_FLOAT_EQ(d.toSeconds(), 1897.1047405f);
+}
 } // namespace bsgo
