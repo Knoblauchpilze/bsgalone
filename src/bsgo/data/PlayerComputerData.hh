@@ -2,7 +2,7 @@
 #pragma once
 
 #include "EntityKind.hh"
-#include "Tick.hh"
+#include "TickDuration.hh"
 #include "Uuid.hh"
 #include <optional>
 #include <unordered_set>
@@ -19,9 +19,9 @@ struct PlayerComputerData
   bool offensive{};
   float powerCost{};
   std::optional<float> range{};
-  Tick reloadTime{};
+  TickDuration reloadTime{};
 
-  std::optional<Tick> duration{};
+  std::optional<TickDuration> duration{};
   std::optional<std::unordered_set<EntityKind>> allowedTargets{};
   std::optional<float> damageModifier{};
 

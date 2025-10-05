@@ -37,6 +37,13 @@ class TickDuration
   auto serialize(std::ostream &out) const -> std::ostream &;
   bool deserialize(std::istream &in);
 
+  /// @brief - Creates a duration from an integer. This overload is to make it very
+  /// intentional when a duration should be created from an integer rather than rely
+  /// on the implicit conversion to floating point value.
+  /// @param duration - the duration as an integer
+  /// @return - the duration
+  static auto fromInt(const int duration) -> TickDuration;
+
   /// TODO: This should be removed.
   /// @brief - Temporary method to convert this duration to real seconds. This
   /// is intended as a workaround while the core game logic is migrated to use

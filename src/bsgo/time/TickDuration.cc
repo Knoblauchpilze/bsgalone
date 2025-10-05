@@ -62,6 +62,11 @@ bool TickDuration::deserialize(std::istream &in)
   return ok;
 }
 
+auto TickDuration::fromInt(const int duration) -> TickDuration
+{
+  return TickDuration(static_cast<float>(duration));
+}
+
 auto TickDuration::toSeconds() const -> float
 {
   constexpr auto SECONDS_IN_TICK = 0.1f;

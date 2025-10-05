@@ -5,7 +5,7 @@
 #include "Faction.hh"
 #include "ShipClass.hh"
 #include "Slot.hh"
-#include "Tick.hh"
+#include "TickDuration.hh"
 #include "Uuid.hh"
 #include <memory>
 
@@ -29,8 +29,8 @@ struct Ship
 
   float radius{0.5f};
 
-  Tick jumpTime{};
-  Tick jumpTimeInThreat{};
+  TickDuration jumpTime{};
+  TickDuration jumpTimeInThreat{};
 
   std::unordered_map<Slot, int> slots{};
 };

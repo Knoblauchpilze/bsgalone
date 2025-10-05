@@ -13,6 +13,6 @@ INSERT INTO slot ("type") VALUES ('weapon');
 INSERT INTO slot ("type") VALUES ('computer');
 
 INSERT INTO ship_class ("name", "jump_time", "jump_time_threat")
-  VALUES ('strike', 5000, 60000);
+  VALUES ('strike', 50, 600);
 INSERT INTO ship_class ("name", "jump_time", "jump_time_threat")
-  VALUES ('line', 25000, 100000);
+  VALUES ('line', 250, 1000);
