@@ -1,5 +1,6 @@
 
 target_sources (bsgo_lib PRIVATE
+	${CMAKE_CURRENT_SOURCE_DIR}/Duration.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/Tick.cc
 	)
 
