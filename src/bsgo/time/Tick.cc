@@ -48,8 +48,10 @@ auto Tick::str() const -> std::string
   return std::to_string(m_count) + "[" + std::to_string(m_frac) + "]";
 }
 
-auto Tick::operator+=(const Tick &rhs) -> Tick &
+auto Tick::operator+=(const TickDuration &duration) -> Tick &
 {
+  Tick rhs(duration.m_elapsed);
+
   m_count += rhs.m_count;
   const auto frac = m_frac + rhs.m_frac;
 
@@ -103,15 +105,15 @@ auto Tick::fromInt(const int duration) -> Tick
   return Tick(duration, 0.0f);
 }
 
-auto Tick::safeSubtract(const Tick &lhs, const Tick &rhs) -> Tick
+auto Tick::safeSubtract(const Tick &lhs, const Tick &rhs) -> TickDuration
 {
   const auto res = lhs.elapsed() - rhs.elapsed();
   if (res < 0.0f)
   {
-    return Tick();
+    return TickDuration();
   }
 
-  return Tick(res);
+  return TickDuration(res);
 }
 
 void Tick::validate()

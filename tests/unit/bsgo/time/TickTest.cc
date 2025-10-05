@@ -55,7 +55,7 @@ TEST(Unit_Bsgo_Tick, ThrowsWhenFracIsGreaterThanOne)
 struct TestCaseTickAddition
 {
   Tick lhs{};
-  Tick rhs{};
+  TickDuration rhs{};
   int expectedCount{};
   float expectedFrac{};
 };
@@ -75,39 +75,39 @@ TEST_P(AdditionTest, AddsCorrectly)
 INSTANTIATE_TEST_SUITE_P(Unit_Bsgo_Tick,
                          AdditionTest,
                          Values(TestCaseTickAddition{.lhs           = Tick(0.0f),
-                                                     .rhs           = Tick(0.0f),
+                                                     .rhs           = TickDuration(0.0f),
                                                      .expectedCount = 0,
                                                      .expectedFrac  = 0.0f},
                                 TestCaseTickAddition{.lhs           = Tick(1.0f),
-                                                     .rhs           = Tick(0.0f),
+                                                     .rhs           = TickDuration(0.0f),
                                                      .expectedCount = 1,
                                                      .expectedFrac  = 0.0f},
                                 TestCaseTickAddition{.lhs           = Tick(0.0f),
-                                                     .rhs           = Tick(1.0f),
+                                                     .rhs           = TickDuration(1.0f),
                                                      .expectedCount = 1,
                                                      .expectedFrac  = 0.0f},
                                 TestCaseTickAddition{.lhs           = Tick(0.1f),
-                                                     .rhs           = Tick(2.0f),
+                                                     .rhs           = TickDuration(2.0f),
                                                      .expectedCount = 2,
                                                      .expectedFrac  = 0.1f},
                                 TestCaseTickAddition{.lhs           = Tick(1.9f),
-                                                     .rhs           = Tick(0.1f),
+                                                     .rhs           = TickDuration(0.1f),
                                                      .expectedCount = 2,
                                                      .expectedFrac  = 0.0f},
                                 TestCaseTickAddition{.lhs           = Tick(48.57f),
-                                                     .rhs           = Tick(2.4301f),
+                                                     .rhs           = TickDuration(2.4301f),
                                                      .expectedCount = 51,
                                                      .expectedFrac  = 0.0001f},
                                 TestCaseTickAddition{.lhs           = Tick(48.57f),
-                                                     .rhs           = Tick(2.44f),
+                                                     .rhs           = TickDuration(2.44f),
                                                      .expectedCount = 51,
                                                      .expectedFrac  = 0.01f},
                                 TestCaseTickAddition{.lhs           = Tick(0.89f),
-                                                     .rhs           = Tick(32.09f),
+                                                     .rhs           = TickDuration(32.09f),
                                                      .expectedCount = 32,
                                                      .expectedFrac  = 0.98f},
                                 TestCaseTickAddition{.lhs           = Tick(0.987f),
-                                                     .rhs           = Tick(643.235f),
+                                                     .rhs           = TickDuration(643.235f),
                                                      .expectedCount = 644,
                                                      .expectedFrac  = 0.222f}),
                          [](const TestParamInfo<TestCaseTickAddition> &info) -> std::string {
@@ -282,8 +282,7 @@ struct TestCaseTickSubtraction
 {
   Tick lhs{};
   Tick rhs{};
-  int expectedCount{};
-  float expectedFrac{};
+  TickDuration expectedDuration{};
 };
 
 using SubtractionTest = TestWithParam<TestCaseTickSubtraction>;
@@ -294,51 +293,43 @@ TEST_P(SubtractionTest, SubtractsCorrectly)
 
   const auto actual = Tick::safeSubtract(param.lhs, param.rhs);
 
-  assertTickMatches(actual, param.expectedCount, param.expectedFrac);
+  EXPECT_EQ(actual, param.expectedDuration)
+    << "Mismatch between actual duration (" << actual.str() << ") and expected ("
+    << param.expectedDuration.str() << ")";
 }
 
 INSTANTIATE_TEST_SUITE_P(Unit_Bsgo_Tick,
                          SubtractionTest,
-                         Values(TestCaseTickSubtraction{.lhs           = Tick(0.0f),
-                                                        .rhs           = Tick(0.0f),
-                                                        .expectedCount = 0,
-                                                        .expectedFrac  = 0.0f},
-                                TestCaseTickSubtraction{.lhs           = Tick(1.0f),
-                                                        .rhs           = Tick(0.0f),
-                                                        .expectedCount = 1,
-                                                        .expectedFrac  = 0.0f},
-                                TestCaseTickSubtraction{.lhs           = Tick(1.2f),
-                                                        .rhs           = Tick(0.0f),
-                                                        .expectedCount = 1,
-                                                        .expectedFrac  = 0.2f},
-                                TestCaseTickSubtraction{.lhs           = Tick(1.4f),
-                                                        .rhs           = Tick(0.2f),
-                                                        .expectedCount = 1,
-                                                        .expectedFrac  = 0.2f},
-                                TestCaseTickSubtraction{.lhs           = Tick(98.78f),
-                                                        .rhs           = Tick(1.0f),
-                                                        .expectedCount = 97,
-                                                        .expectedFrac  = 0.78f},
-                                TestCaseTickSubtraction{.lhs           = Tick(1507.0235f),
-                                                        .rhs           = Tick(14.5f),
-                                                        .expectedCount = 1492,
-                                                        .expectedFrac  = 0.5235f},
-                                TestCaseTickSubtraction{.lhs           = Tick(0.0f),
-                                                        .rhs           = Tick(0.1f),
-                                                        .expectedCount = 0,
-                                                        .expectedFrac  = 0.0f},
-                                TestCaseTickSubtraction{.lhs           = Tick(1.0f),
-                                                        .rhs           = Tick(1.0f),
-                                                        .expectedCount = 0,
-                                                        .expectedFrac  = 0.0f},
-                                TestCaseTickSubtraction{.lhs           = Tick(0.5f),
-                                                        .rhs           = Tick(14.7f),
-                                                        .expectedCount = 0,
-                                                        .expectedFrac  = 0.0f},
-                                TestCaseTickSubtraction{.lhs           = Tick(1.001f),
-                                                        .rhs           = Tick(1.0f),
-                                                        .expectedCount = 0,
-                                                        .expectedFrac  = 0.001f}),
+                         Values(TestCaseTickSubtraction{.lhs              = Tick(0.0f),
+                                                        .rhs              = Tick(0.0f),
+                                                        .expectedDuration = TickDuration(0.0f)},
+                                TestCaseTickSubtraction{.lhs              = Tick(1.0f),
+                                                        .rhs              = Tick(0.0f),
+                                                        .expectedDuration = TickDuration(1.0f)},
+                                TestCaseTickSubtraction{.lhs              = Tick(1.2f),
+                                                        .rhs              = Tick(0.0f),
+                                                        .expectedDuration = TickDuration(1.2f)},
+                                TestCaseTickSubtraction{.lhs              = Tick(1.4f),
+                                                        .rhs              = Tick(0.2f),
+                                                        .expectedDuration = TickDuration(1.2f)},
+                                TestCaseTickSubtraction{.lhs              = Tick(98.78f),
+                                                        .rhs              = Tick(1.0f),
+                                                        .expectedDuration = TickDuration(97.78f)},
+                                TestCaseTickSubtraction{.lhs              = Tick(1507.0235f),
+                                                        .rhs              = Tick(14.5f),
+                                                        .expectedDuration = TickDuration(1492.5235f)},
+                                TestCaseTickSubtraction{.lhs              = Tick(0.0f),
+                                                        .rhs              = Tick(0.1f),
+                                                        .expectedDuration = TickDuration(0.0f)},
+                                TestCaseTickSubtraction{.lhs              = Tick(1.0f),
+                                                        .rhs              = Tick(1.0f),
+                                                        .expectedDuration = TickDuration(0.0f)},
+                                TestCaseTickSubtraction{.lhs              = Tick(0.5f),
+                                                        .rhs              = Tick(14.7f),
+                                                        .expectedDuration = TickDuration(0.0f)},
+                                TestCaseTickSubtraction{.lhs              = Tick(1.001f),
+                                                        .rhs              = Tick(1.0f),
+                                                        .expectedDuration = TickDuration(0.001f)}),
                          [](const TestParamInfo<TestCaseTickSubtraction> &info) -> std::string {
                            auto out = info.param.lhs.str() + "_" + info.param.rhs.str();
                            std::replace(out.begin(), out.end(), '.', '_');
