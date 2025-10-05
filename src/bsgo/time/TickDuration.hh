@@ -23,6 +23,12 @@ class TickDuration
 
   auto str() const -> std::string;
 
+  /// @brief - Compares two durations and returns true if they are equal. This class
+  /// defines a built-in tolerance that can be accessed through `TickDuration::TOLERANCE`.
+  /// @param rhs - the duration to compare
+  /// @return - true in case both durations are equal within the tolerance
+  bool operator==(const TickDuration &rhs) const;
+
   /// TODO: This should be removed.
   /// @brief - Temporary method to convert this duration to real seconds. This
   /// is intended as a workaround while the core game logic is migrated to use
@@ -30,6 +36,10 @@ class TickDuration
   /// This method assumes that a `Tick` is equivalent to 100ms.
   /// @return - the duration expressed in seconds.
   auto toSeconds() const -> float;
+
+  /// @brief - Tolerance used when comparing durations. Any difference smaller than this
+  /// threshold will not register as a meaningful difference.
+  static const float TOLERANCE;
 
   private:
   float m_elapsed{0.0f};
