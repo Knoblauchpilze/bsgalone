@@ -392,9 +392,9 @@ auto Coordinator::getEntitiesWithinSatistying(const IBoundingBox &bbox,
   return out;
 }
 
-void Coordinator::update(float elapsedSeconds)
+void Coordinator::update(const TickData &data)
 {
-  m_systems->update(*this, elapsedSeconds);
+  m_systems->update(*this, data);
   cleanUpDeadEntities();
 }
 

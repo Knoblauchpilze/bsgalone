@@ -15,6 +15,7 @@
 #include "Renderer.hh"
 #include "RenderingPass.hh"
 #include "Screen.hh"
+#include "TimeManager.hh"
 #include "Views.hh"
 #include <memory>
 #include <unordered_map>
@@ -113,6 +114,7 @@ class Game : public core::CoreObject
   GameSessionShPtr m_gameSession{std::make_shared<GameSession>()};
 
   bsgo::DatabaseEntityMapper m_entityMapper{};
+  chrono::TimeManagerPtr m_timeManager{};
   bsgo::CoordinatorShPtr m_coordinator{};
   bsgo::IMessageQueuePtr m_inputMessageQueue{};
   bsgo::IMessageQueuePtr m_internalMessageQueue{};
