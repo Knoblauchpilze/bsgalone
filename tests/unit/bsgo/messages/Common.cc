@@ -86,12 +86,8 @@ void assertPlayerShipDataAreEqual(const PlayerShipData &actual, const PlayerShip
   EXPECT_EQ(actual.name, expected.name);
   EXPECT_EQ(actual.docked, expected.docked);
   EXPECT_EQ(actual.active, expected.active);
-
-  EXPECT_EQ(actual.jumpTime.count(), expected.jumpTime.count());
-  EXPECT_EQ(actual.jumpTime.frac(), expected.jumpTime.frac());
-  EXPECT_EQ(actual.jumpTimeInThreat.count(), expected.jumpTimeInThreat.count());
-  EXPECT_EQ(actual.jumpTimeInThreat.frac(), expected.jumpTimeInThreat.frac());
-
+  EXPECT_EQ(actual.jumpTime, expected.jumpTime);
+  EXPECT_EQ(actual.jumpTimeInThreat, expected.jumpTimeInThreat);
   EXPECT_EQ(actual.jumpSystem, expected.jumpSystem);
   EXPECT_EQ(actual.targetDbId, expected.targetDbId);
   EXPECT_EQ(actual.playerDbId, expected.playerDbId);
@@ -180,10 +176,8 @@ void assertShipDataAreEqual(const ShipData &actual, const ShipData &expected)
   EXPECT_EQ(actual.speed, expected.speed);
   EXPECT_EQ(actual.radius, expected.radius);
 
-  EXPECT_EQ(actual.jumpTime.count(), expected.jumpTime.count());
-  EXPECT_EQ(actual.jumpTime.frac(), expected.jumpTime.frac());
-  EXPECT_EQ(actual.jumpTimeInThreat.count(), expected.jumpTimeInThreat.count());
-  EXPECT_EQ(actual.jumpTimeInThreat.frac(), expected.jumpTimeInThreat.frac());
+  EXPECT_EQ(actual.jumpTime, expected.jumpTime);
+  EXPECT_EQ(actual.jumpTimeInThreat, expected.jumpTimeInThreat);
 
   EXPECT_EQ(actual.slots, expected.slots);
   EXPECT_EQ(actual.price, expected.price);
