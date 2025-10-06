@@ -11,9 +11,8 @@ class HealthSystem : public AbstractSystem
   HealthSystem();
   ~HealthSystem() override = default;
 
-  void updateEntity(Entity &entity,
-                    Coordinator &coordinator,
-                    const float elapsedSeconds) const override;
+  protected:
+  void updateEntity(Entity &entity, Coordinator &coordinator, const TickData &data) const override;
 
   private:
   bool tryMarkForDelettion(Entity &entity) const;
