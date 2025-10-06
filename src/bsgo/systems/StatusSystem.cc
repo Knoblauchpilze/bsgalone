@@ -18,12 +18,10 @@ StatusSystem::StatusSystem()
 constexpr auto TIME_TO_STAY_IN_APPEARED_MODE = core::Milliseconds{10'000};
 constexpr auto TIME_TO_STAY_IN_THREAT_MODE   = core::Milliseconds{3'000};
 
-void StatusSystem::updateEntity(Entity &entity,
-                                Coordinator &coordinator,
-                                const float elapsedSeconds) const
+void StatusSystem::updateEntity(Entity &entity, Coordinator &coordinator, const TickData &data) const
 {
   auto &statusComp = entity.statusComp();
-  statusComp.update(elapsedSeconds);
+  statusComp.update(data);
 
   handleAppearingState(entity, statusComp);
   handleThreatState(entity, statusComp);
@@ -98,6 +96,8 @@ void StatusSystem::handleJumpState(Entity &entity,
   }
 
   const auto remaining = statusComp.tryGetRemainingJumpTime();
+
+  // TODO: Should probably be a > and not >=
   if (remaining >= core::Duration{0})
   {
     return;

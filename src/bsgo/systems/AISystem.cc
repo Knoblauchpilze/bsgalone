@@ -13,15 +13,13 @@ AISystem::AISystem()
   : AbstractSystem(SystemType::AI, isEntityRelevant)
 {}
 
-void AISystem::updateEntity(Entity &entity,
-                            Coordinator &coordinator,
-                            const float elapsedSeconds) const
+void AISystem::updateEntity(Entity &entity, Coordinator &coordinator, const TickData &data) const
 {
   auto &aiComp = entity.aiComp();
-  aiComp.update(elapsedSeconds);
+  aiComp.update(data);
 
-  BehaviorData data{.ent = entity, .coordinator = coordinator};
-  aiComp.behavior().tick(data);
+  BehaviorData aiData{.ent = entity, .coordinator = coordinator};
+  aiComp.behavior().tick(aiData);
 }
 
 } // namespace bsgo

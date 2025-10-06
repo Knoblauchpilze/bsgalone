@@ -11,9 +11,7 @@ class PowerSystem : public AbstractSystem
   PowerSystem();
   ~PowerSystem() override = default;
 
-  void updateEntity(Entity &entity,
-                    Coordinator &coordinator,
-                    const float elapsedSeconds) const override;
+  void updateEntity(Entity &entity, Coordinator &coordinator, const TickData &data) const override;
 
   private:
   bool canRegeneratePower(Entity &entity) const;

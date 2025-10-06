@@ -15,7 +15,7 @@ HealthSystem::HealthSystem()
 
 void HealthSystem::updateEntity(Entity &entity,
                                 Coordinator & /*coordinator*/,
-                                const float elapsedSeconds) const
+                                const TickData &data) const
 {
   if (tryMarkForDelettion(entity))
   {
@@ -26,7 +26,7 @@ void HealthSystem::updateEntity(Entity &entity,
 
   if (canRegenerateHealth(entity))
   {
-    entity.healthComp().update(elapsedSeconds);
+    entity.healthComp().update(data);
   }
 }
 

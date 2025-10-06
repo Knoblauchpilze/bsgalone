@@ -11,15 +11,13 @@ class ComputerSystem : public AbstractSystem
   ComputerSystem();
   ~ComputerSystem() override = default;
 
-  void updateEntity(Entity &entity,
-                    Coordinator &coordinator,
-                    const float elapsedSeconds) const override;
+  void updateEntity(Entity &entity, Coordinator &coordinator, const TickData &data) const override;
 
   private:
   void updateComputer(const Entity &ent,
                       const ComputerSlotComponentShPtr &computer,
                       const std::optional<Entity> &target,
-                      const float elapsedSeconds) const;
+                      const TickData &data) const;
 
   bool processFireRequest(Entity &ent,
                           const ComputerSlotComponentShPtr &computer,

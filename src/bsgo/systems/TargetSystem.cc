@@ -14,12 +14,10 @@ TargetSystem::TargetSystem()
   : AbstractSystem(SystemType::TARGET, isEntityRelevant)
 {}
 
-void TargetSystem::updateEntity(Entity &entity,
-                                Coordinator &coordinator,
-                                const float elapsedSeconds) const
+void TargetSystem::updateEntity(Entity &entity, Coordinator &coordinator, const TickData &data) const
 {
   auto &targetComp = entity.targetComp();
-  targetComp.update(elapsedSeconds);
+  targetComp.update(data);
 
   if (!targetComp.target())
   {

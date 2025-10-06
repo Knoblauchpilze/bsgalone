@@ -8,19 +8,20 @@ RegenerativeComponent::RegenerativeComponent(const ComponentType &type,
                                              const float min,
                                              const float value,
                                              const float max,
-                                             const float regenPerSecond)
+                                             const float regenPerTick)
   : AbstractComponent(type)
   , m_min(min)
   , m_value(value)
   , m_max(max)
-  , m_regenPerSecond(regenPerSecond)
+  , m_regenPerTick(regenPerTick)
 {
   validate();
 }
 
-void RegenerativeComponent::update(const float elapsedSeconds)
+void RegenerativeComponent::update(const TickData &data)
 {
-  const auto updated = m_value + m_regenPerSecond * elapsedSeconds;
+  // TODO: Verify if this works, we use ticks as regen per ticks.
+  const auto updated = m_value + m_regenPerTick * data.elapsed;
   m_value            = std::clamp(updated, m_min, m_max);
 }
 
@@ -66,9 +67,9 @@ void RegenerativeComponent::validate()
     throw std::invalid_argument("Expected value (" + std::to_string(m_value)
                                 + ") to be smaller than max (" + std::to_string(m_max) + ")");
   }
-  if (m_regenPerSecond < 0.0f)
+  if (m_regenPerTick < 0.0f)
   {
-    throw std::invalid_argument("Expected regeneration (" + std::to_string(m_regenPerSecond)
+    throw std::invalid_argument("Expected regeneration (" + std::to_string(m_regenPerTick)
                                 + ") to be greater than 0");
   }
 }

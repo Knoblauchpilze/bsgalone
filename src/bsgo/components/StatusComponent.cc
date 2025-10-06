@@ -104,7 +104,7 @@ void StatusComponent::setStatus(const Status &status)
   m_elapsedSinceLastChange = core::Duration{0};
 }
 
-void StatusComponent::update(const float elapsedSeconds)
+void StatusComponent::update(const TickData &data)
 {
   constexpr auto MILLISECONDS_IN_A_SECONDS = 1000;
   const auto elapsedMillis                 = core::Milliseconds(

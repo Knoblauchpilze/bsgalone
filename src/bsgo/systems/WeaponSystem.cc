@@ -17,9 +17,7 @@ WeaponSystem::WeaponSystem()
   : AbstractSystem(SystemType::WEAPON, isEntityRelevant)
 {}
 
-void WeaponSystem::updateEntity(Entity &entity,
-                                Coordinator &coordinator,
-                                const float elapsedSeconds) const
+void WeaponSystem::updateEntity(Entity &entity, Coordinator &coordinator, const TickData &data) const
 {
   const auto target = entity.targetComp().target();
 
@@ -36,7 +34,7 @@ void WeaponSystem::updateEntity(Entity &entity,
 
   for (const auto &weapon : entity.weapons)
   {
-    updateWeapon(entity, weapon, targetEnt, elapsedSeconds);
+    updateWeapon(entity, weapon, targetEnt, data);
     weapon->clearFireRequest();
     if (weapon->canFire())
     {
@@ -63,11 +61,11 @@ bool WeaponSystem::canTargetBeFiredOn(const Entity &target) const
 void WeaponSystem::updateWeapon(const Entity &ent,
                                 const WeaponSlotComponentShPtr &weapon,
                                 const std::optional<Entity> &target,
-                                const float elapsedSeconds) const
+                                const TickData &data) const
 {
   auto state{FiringState::READY};
 
-  weapon->update(elapsedSeconds);
+  weapon->update(data);
 
   if (!weapon->active())
   {

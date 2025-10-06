@@ -11,9 +11,7 @@ class StatusSystem : public AbstractSystem
   StatusSystem();
   ~StatusSystem() override = default;
 
-  void updateEntity(Entity &entity,
-                    Coordinator &coordinator,
-                    const float elapsedSeconds) const override;
+  void updateEntity(Entity &entity, Coordinator &coordinator, const TickData &data) const override;
 
   private:
   void handleAppearingState(Entity &entity, StatusComponent &statusComp) const;

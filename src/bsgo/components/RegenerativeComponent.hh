@@ -12,10 +12,10 @@ class RegenerativeComponent : public AbstractComponent
                         const float min,
                         const float value,
                         const float max,
-                        const float regenPerSecond);
+                        const float regenPerTick);
   ~RegenerativeComponent() override = default;
 
-  void update(const float elapsedSeconds) override;
+  void update(const TickData &data) override;
 
   auto min() const -> float;
   auto value() const -> float;
@@ -27,11 +27,11 @@ class RegenerativeComponent : public AbstractComponent
   void updateValue(const float delta);
 
   private:
-  float m_min;
-  float m_value;
-  float m_max;
+  float m_min{0.0f};
+  float m_value{0.0f};
+  float m_max{0.0f};
 
-  float m_regenPerSecond;
+  float m_regenPerTick{0.0f};
 
   void validate();
 };

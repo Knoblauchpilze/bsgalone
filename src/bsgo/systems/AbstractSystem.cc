@@ -58,10 +58,7 @@ void AbstractSystem::update(Coordinator &coordinator, const TickData &data) cons
       }
     }
 
-    // TODO: We should not convert to a real time here.
-    const auto elapsedSeconds = data.elapsed.toSeconds();
-
-    updateEntity(ent, coordinator, elapsedSeconds);
+    updateEntity(ent, coordinator, data);
   }
 }
 

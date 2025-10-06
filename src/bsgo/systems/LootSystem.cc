@@ -15,11 +15,9 @@ LootSystem::LootSystem()
   : AbstractSystem(SystemType::LOOT, isEntityRelevant)
 {}
 
-void LootSystem::updateEntity(Entity &entity,
-                              Coordinator &coordinator,
-                              const float elapsedSeconds) const
+void LootSystem::updateEntity(Entity &entity, Coordinator &coordinator, const TickData &data) const
 {
-  entity.lootComp().update(elapsedSeconds);
+  entity.lootComp().update(data);
 
   const auto &health = entity.healthComp();
   if (health.isAlive())

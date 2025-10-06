@@ -14,9 +14,9 @@ SlotComponent::SlotComponent(const ComponentType &type, const SlotComponentData 
   addModule("slot");
 }
 
-void SlotComponent::update(const float elapsedSeconds)
+void SlotComponent::update(const TickData &data)
 {
-  handleReload(elapsedSeconds);
+  handleReload(data);
 }
 
 auto SlotComponent::dbId() const -> Uuid
@@ -120,7 +120,7 @@ void SlotComponent::clearFireRequest()
   m_fireRequest = false;
 }
 
-void SlotComponent::handleReload(const float elapsedSeconds)
+void SlotComponent::handleReload(const TickData &data)
 {
   if (!m_elapsedSinceLastFired)
   {

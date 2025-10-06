@@ -54,7 +54,7 @@ class VelocityComponent : public AbstractComponent
 
   void immobilize();
 
-  void update(const float elapsedSeconds) override;
+  void update(const TickData &data) override;
 
   private:
   SpeedMode m_speedMode;
@@ -64,8 +64,8 @@ class VelocityComponent : public AbstractComponent
   Eigen::Vector3f m_acceleration{Eigen::Vector3f::Zero()};
   Eigen::Vector3f m_speed{Eigen::Vector3f::Zero()};
 
-  void updateFixedSpeed(const float elapsedSeconds);
-  void updateVariableSpeed(const float elapsedSeconds);
+  void updateFixedSpeed(const TickData &data);
+  void updateVariableSpeed(const TickData &data);
 };
 
 using VelocityComponentShPtr = std::shared_ptr<VelocityComponent>;

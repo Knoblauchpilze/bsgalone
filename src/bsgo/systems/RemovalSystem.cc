@@ -17,9 +17,9 @@ RemovalSystem::RemovalSystem()
 
 void RemovalSystem::updateEntity(Entity &entity,
                                  Coordinator & /*coordinator*/,
-                                 const float elapsedSeconds) const
+                                 const TickData &data) const
 {
-  entity.removalComp().update(elapsedSeconds);
+  entity.removalComp().update(data);
 
   auto removalFromStatus{false};
   if (entity.exists<StatusComponent>())
