@@ -26,7 +26,7 @@ ComputerSystem::ComputerSystem()
 
 void ComputerSystem::updateEntity(Entity &entity,
                                   Coordinator &coordinator,
-                                  const float elapsedSeconds) const
+                                  const TickData &data) const
 {
   std::optional<Entity> targetEnt;
   auto target = entity.targetComp().target();
@@ -42,7 +42,7 @@ void ComputerSystem::updateEntity(Entity &entity,
 
   for (const auto &computer : entity.computers)
   {
-    updateComputer(entity, computer, targetEnt, elapsedSeconds);
+    updateComputer(entity, computer, targetEnt, data);
     if (computer->hasFireRequest())
     {
       if (processFireRequest(entity, computer, targetEnt, coordinator))
@@ -56,11 +56,12 @@ void ComputerSystem::updateEntity(Entity &entity,
 void ComputerSystem::updateComputer(const Entity &ent,
                                     const ComputerSlotComponentShPtr &computer,
                                     const std::optional<Entity> &target,
-                                    const float elapsedSeconds) const
+                                    const TickData &data) const
 {
   auto state{FiringState::READY};
 
-  computer->update(elapsedSeconds);
+  // TODO: We should use the tick duration as is.
+  computer->update(data.elapsed.toSeconds());
 
   if (computer->isOffensive() && (!target.has_value() || !isValidTarget(ent, *target, *computer)))
   {

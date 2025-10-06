@@ -16,7 +16,7 @@ BulletSystem::BulletSystem()
 
 void BulletSystem::updateEntity(Entity &entity,
                                 Coordinator &coordinator,
-                                const float /*elapsedSeconds*/) const
+                                const TickData & /*data*/) const
 {
   if (isTargetNotExistent(entity))
   {

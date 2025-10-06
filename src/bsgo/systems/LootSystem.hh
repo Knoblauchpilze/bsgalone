@@ -11,9 +11,8 @@ class LootSystem : public AbstractSystem
   LootSystem();
   ~LootSystem() override = default;
 
-  void updateEntity(Entity &entity,
-                    Coordinator &coordinator,
-                    const float elapsedSeconds) const override;
+  protected:
+  void updateEntity(Entity &entity, Coordinator &coordinator, const TickData &data) const override;
 
   private:
   void distributeLoot(const Entity &entity, Coordinator &coordinator) const;

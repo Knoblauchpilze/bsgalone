@@ -15,15 +15,17 @@ MotionSystem::MotionSystem()
 
 void MotionSystem::updateEntity(Entity &entity,
                                 Coordinator & /*coordinator*/,
-                                const float elapsedSeconds) const
+                                const TickData &data) const
 {
   auto &velocity  = entity.velocityComp();
   auto &transform = entity.transformComp();
 
-  velocity.update(elapsedSeconds);
+  // TODO: We should use the tick duration as is.
+  velocity.update(data.elapsed.toSeconds());
 
   const Eigen::Vector3f speed = velocity.speed();
-  Eigen::Vector3f dv          = speed * elapsedSeconds;
+  // TODO: We should use the tick duration as is.
+  Eigen::Vector3f dv = speed * data.elapsed.toSeconds();
   transform.translate(dv);
   if (!speed.isZero())
   {
