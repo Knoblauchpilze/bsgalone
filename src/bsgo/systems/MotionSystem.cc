@@ -22,9 +22,6 @@ void MotionSystem::updateEntity(Entity &entity,
 
   velocity.update(data);
 
-  // TODO: We should not convert to a real time here.
-  const auto elapsedSeconds = data.elapsed.toSeconds();
-
   const Eigen::Vector3f speed = velocity.speed();
   // TODO: We should use the tick duration as is.
   Eigen::Vector3f dv = speed * data.elapsed.toSeconds();

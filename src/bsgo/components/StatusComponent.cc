@@ -106,9 +106,10 @@ void StatusComponent::setStatus(const Status &status)
 
 void StatusComponent::update(const TickData &data)
 {
+  // TODO: We should not convert to milliseconds here.
   constexpr auto MILLISECONDS_IN_A_SECONDS = 1000;
   const auto elapsedMillis                 = core::Milliseconds(
-    static_cast<int>(elapsedSeconds * MILLISECONDS_IN_A_SECONDS));
+    static_cast<int>(data.elapsed.toSeconds() * MILLISECONDS_IN_A_SECONDS));
 
   m_elapsedSinceLastChange += elapsedMillis;
   if (m_elapsedSinceAppearing)

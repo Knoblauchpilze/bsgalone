@@ -127,9 +127,10 @@ void SlotComponent::handleReload(const TickData &data)
     return;
   }
 
+  // TODO: We should not convert to milliseconds here.
   constexpr auto MILLISECONDS_IN_A_SECONDS = 1000;
   (*m_elapsedSinceLastFired) += core::Milliseconds(
-    static_cast<int>(elapsedSeconds * MILLISECONDS_IN_A_SECONDS));
+    static_cast<int>(data.elapsed.toSeconds() * MILLISECONDS_IN_A_SECONDS));
 
   // TODO: We should not convert to milliseconds here.
   constexpr auto MILLI_IN_ONE_SECOND = 1000.0f;
