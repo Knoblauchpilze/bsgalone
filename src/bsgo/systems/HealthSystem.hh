@@ -11,6 +11,7 @@ class HealthSystem : public AbstractSystem
   HealthSystem();
   ~HealthSystem() override = default;
 
+  protected:
   void updateEntity(Entity &entity, Coordinator &coordinator, const TickData &data) const override;
 
   private:

@@ -11,6 +11,7 @@ class PowerSystem : public AbstractSystem
   PowerSystem();
   ~PowerSystem() override = default;
 
+  protected:
   void updateEntity(Entity &entity, Coordinator &coordinator, const TickData &data) const override;
 
   private:

@@ -11,6 +11,7 @@ class MotionSystem : public AbstractSystem
   MotionSystem();
   ~MotionSystem() override = default;
 
+  protected:
   void updateEntity(Entity &entity, Coordinator &coordinator, const TickData &data) const override;
 };
 

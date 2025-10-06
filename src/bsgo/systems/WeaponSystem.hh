@@ -12,6 +12,7 @@ class WeaponSystem : public AbstractSystem
   WeaponSystem();
   ~WeaponSystem() override = default;
 
+  protected:
   void updateEntity(Entity &entity, Coordinator &coordinator, const TickData &data) const override;
 
   private:

@@ -24,12 +24,12 @@ class AbstractSystem : public ISystem
   void update(Coordinator &coordinator, const TickData &data) const override;
 
   protected:
+  void pushInternalMessage(IMessagePtr message) const;
+  void pushMessage(IMessagePtr message) const;
+
   virtual void updateEntity(Entity &entity,
                             Coordinator &coordinator,
                             const TickData &data) const = 0;
-
-  void pushInternalMessage(IMessagePtr message) const;
-  void pushMessage(IMessagePtr message) const;
 
   private:
   SystemType m_systemType{};
