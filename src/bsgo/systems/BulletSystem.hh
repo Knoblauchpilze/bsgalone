@@ -11,11 +11,7 @@ class BulletSystem : public AbstractSystem
   BulletSystem();
   ~BulletSystem() override = default;
 
-<<<<<<< HEAD
-=======
   protected:
-  protected:
->>>>>>> master
   void updateEntity(Entity &entity, Coordinator &coordinator, const TickData &data) const override;
 
   private:
