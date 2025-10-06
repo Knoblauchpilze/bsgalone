@@ -4,19 +4,19 @@
 namespace bsgo {
 
 namespace {
-constexpr auto BASE_SYNC_INTERVAL_MS = 1000;
-constexpr auto MAX_SYNC_JITTER_MS    = 100;
+constexpr auto BASE_SYNC_INTERVAL_TICK = 10;
+constexpr auto MAX_SYNC_JITTER_TICK    = 1;
 
-auto generateJitteredSyncInterval() -> core::Duration
+auto generateJitteredSyncInterval() -> TickDuration
 {
-  const auto jitteredSync = BASE_SYNC_INTERVAL_MS + std::rand() % MAX_SYNC_JITTER_MS;
-  return core::Milliseconds{jitteredSync};
+  const auto jitteredSync = BASE_SYNC_INTERVAL_TICK + std::rand() % MAX_SYNC_JITTER_TICK;
+  return TickDuration::fromInt(jitteredSync);
 }
 } // namespace
 
 SyncComponent::SyncComponent(const ComponentType type)
   : AbstractComponent(type)
-  , m_remainingUntilNextSync(generateJitteredSyncInterval())
+  , m_untilNextSync(generateJitteredSyncInterval())
 {}
 
 bool SyncComponent::needsSync() const
@@ -32,17 +32,14 @@ void SyncComponent::markForSync(const bool needsSync)
 void SyncComponent::markAsJustSynced()
 {
   markForSync(false);
-  m_remainingUntilNextSync = generateJitteredSyncInterval();
+  m_untilNextSync        = generateJitteredSyncInterval();
+  m_elapsedSinceLastSync = TickDuration();
 }
 
-void SyncComponent::update(const float elapsedSeconds)
+void SyncComponent::update(const TickData &data)
 {
-  constexpr auto MILLISECONDS_IN_A_SECONDS = 1000;
-  const auto elapsedMillis                 = core::Milliseconds(
-    static_cast<int>(elapsedSeconds * MILLISECONDS_IN_A_SECONDS));
-
-  m_remainingUntilNextSync -= elapsedMillis;
-  if (m_remainingUntilNextSync.count() < 0)
+  m_elapsedSinceLastSync += data.elapsed;
+  if (m_untilNextSync <= m_elapsedSinceLastSync)
   {
     m_needsSync = true;
   }

@@ -19,8 +19,7 @@ void PowerSystem::updateEntity(Entity &entity,
 {
   if (canRegeneratePower(entity))
   {
-    // TODO: We should use the tick duration as is.
-    entity.powerComp().update(data.elapsed.toSeconds());
+    entity.powerComp().update(data);
   }
 }
 

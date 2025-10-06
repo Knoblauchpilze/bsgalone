@@ -3,7 +3,7 @@
 #pragma once
 
 #include "AbstractComponent.hh"
-#include "TimeUtils.hh"
+#include "TickDuration.hh"
 
 namespace bsgo {
 
@@ -17,11 +17,12 @@ class SyncComponent : public AbstractComponent
   void markForSync(const bool needsSync = true);
   void markAsJustSynced();
 
-  void update(const float elapsedSeconds) override;
+  void update(const TickData &data) override;
 
   private:
   bool m_needsSync{false};
-  core::Duration m_remainingUntilNextSync{};
+  TickDuration m_untilNextSync{};
+  TickDuration m_elapsedSinceLastSync{};
 };
 
 } // namespace bsgo

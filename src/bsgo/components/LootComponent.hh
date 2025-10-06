@@ -18,7 +18,7 @@ class LootComponent : public AbstractComponent
   auto recipients() const -> std::unordered_set<Uuid>;
   void clearRecipients();
 
-  void update(const float elapsedSeconds) override;
+  void update(const TickData &data) override;
 
   private:
   std::unordered_set<Uuid> m_recipients{};

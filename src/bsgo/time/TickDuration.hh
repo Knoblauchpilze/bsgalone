@@ -34,6 +34,18 @@ class TickDuration
   bool operator>(const TickDuration &rhs) const;
   bool operator>=(const TickDuration &rhs) const;
 
+  // TODO: Should be tested and documented
+  auto operator+=(const TickDuration &duration) -> TickDuration &;
+
+  // TODO: Should be tested and documented
+  auto operator/(const TickDuration &duration) const -> float;
+
+  // TODO: Should be tested and documented
+  auto operator*(const float rhs) const -> float;
+
+  // TODO: Should be tested and documented
+  auto operator-(const TickDuration &rhs) const -> TickDuration;
+
   auto serialize(std::ostream &out) const -> std::ostream &;
   bool deserialize(std::istream &in);
 
@@ -66,5 +78,8 @@ class TickDuration
 
   void validate();
 };
+
+// TODO: Should be tested and documented
+auto operator*(const float lhs, const TickDuration &rhs) -> float;
 
 } // namespace bsgo

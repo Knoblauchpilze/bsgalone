@@ -35,7 +35,8 @@ void DbSyncProcess::updateEntity(Entity &entity,
                                  const float elapsedSeconds) const
 {
   auto &dbSyncComp = entity.dbSyncComp();
-  dbSyncComp.update(elapsedSeconds);
+  // TODO: This should be adpated.
+  // dbSyncComp.update(elapsedSeconds);
 
   if (!dbSyncComp.needsSync())
   {

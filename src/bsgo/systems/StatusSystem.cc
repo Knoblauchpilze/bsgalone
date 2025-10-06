@@ -21,8 +21,7 @@ constexpr auto TIME_TO_STAY_IN_THREAT_MODE   = core::Milliseconds{3'000};
 void StatusSystem::updateEntity(Entity &entity, Coordinator &coordinator, const TickData &data) const
 {
   auto &statusComp = entity.statusComp();
-  // TODO: We should use the tick duration as is.
-  statusComp.update(data.elapsed.toSeconds());
+  statusComp.update(data);
 
   handleAppearingState(entity, statusComp);
   handleThreatState(entity, statusComp);
@@ -96,8 +95,8 @@ void StatusSystem::handleJumpState(Entity &entity,
     return;
   }
 
-  const auto remaining = statusComp.tryGetRemainingJumpTime();
-  if (remaining >= core::Duration{0})
+  const auto remaining = statusComp.getRemainingJumpTime();
+  if (remaining > TickDuration())
   {
     return;
   }

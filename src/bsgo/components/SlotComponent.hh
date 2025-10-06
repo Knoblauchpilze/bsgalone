@@ -34,7 +34,7 @@ class SlotComponent : public AbstractComponent
   SlotComponent(const ComponentType &type, const SlotComponentData &data);
   ~SlotComponent() override = default;
 
-  void update(const float elapsedSeconds) override;
+  void update(const TickData &data) override;
 
   auto dbId() const -> Uuid;
   bool isOffensive() const;
@@ -47,7 +47,6 @@ class SlotComponent : public AbstractComponent
   auto reloadPercentage() const -> float;
   auto elapsedSinceLastFired() const -> std::optional<core::Duration>;
 
-  void overrideElapsedSinceLastFired(const std::optional<core::Duration> &elapsed);
   void setFiringState(const FiringState &firingState);
   void registerFireRequest();
   bool hasFireRequest() const;
@@ -63,9 +62,9 @@ class SlotComponent : public AbstractComponent
 
   bool m_fireRequest{false};
   FiringState m_firingState{FiringState::READY};
-  std::optional<core::Duration> m_elapsedSinceLastFired{};
+  std::optional<TickDuration> m_elapsedSinceLastFired{};
 
-  void handleReload(const float elapsedSeconds);
+  void handleReload(const TickData &data);
 };
 
 } // namespace bsgo

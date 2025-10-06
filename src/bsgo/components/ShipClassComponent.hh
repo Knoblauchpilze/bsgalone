@@ -14,7 +14,7 @@ class ShipClassComponent : public AbstractComponent
 
   auto shipClass() const noexcept -> ShipClass;
 
-  void update(const float elapsedSeconds) override;
+  void update(const TickData &data) override;
 
   private:
   ShipClass m_shipClass;

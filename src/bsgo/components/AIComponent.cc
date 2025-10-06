@@ -23,6 +23,6 @@ auto AIComponent::behavior() const -> const INode &
   return *m_behavior;
 }
 
-void AIComponent::update(const float /*elapsedSeconds*/) {}
+void AIComponent::update(const TickData & /*data*/) {}
 
 } // namespace bsgo

@@ -3,7 +3,6 @@
 
 #include "AbstractComponent.hh"
 #include "TickDuration.hh"
-#include "TimeUtils.hh"
 #include <optional>
 
 namespace bsgo {
@@ -18,11 +17,11 @@ class EffectComponent : public AbstractComponent
 
   virtual auto damageModifier() const -> std::optional<float>;
 
-  void update(const float elapsedSeconds) override;
+  void update(const TickData &data) override;
 
   private:
   TickDuration m_duration;
-  core::Duration m_elapsedSinceStart{};
+  TickDuration m_elapsedSinceStart{};
 };
 
 using EffectComponentShPtr = std::shared_ptr<EffectComponent>;

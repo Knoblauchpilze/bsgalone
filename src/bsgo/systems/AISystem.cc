@@ -16,8 +16,7 @@ AISystem::AISystem()
 void AISystem::updateEntity(Entity &entity, Coordinator &coordinator, const TickData &data) const
 {
   auto &aiComp = entity.aiComp();
-  // TODO: We should use the tick duration as is.
-  aiComp.update(data.elapsed.toSeconds());
+  aiComp.update(data);
 
   BehaviorData aiData{.ent = entity, .coordinator = coordinator};
   aiComp.behavior().tick(aiData);
