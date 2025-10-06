@@ -5,7 +5,7 @@
 #include "Faction.hh"
 #include "ShipClass.hh"
 #include "Slot.hh"
-#include "Tick.hh"
+#include "TickDuration.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
 #include <memory>
@@ -42,8 +42,8 @@ struct PlayerShip
   std::optional<Uuid> system{};
   bool docked{};
 
-  Tick jumpTime{};
-  Tick jumpTimeInThreat{};
+  TickDuration jumpTime{};
+  TickDuration jumpTimeInThreat{};
   std::optional<Uuid> jumpSystem{};
 
   std::unordered_map<Slot, int> slots{};

@@ -2,14 +2,14 @@
 #pragma once
 
 #include "EffectComponent.hh"
-#include "Tick.hh"
+#include "TickDuration.hh"
 
 namespace bsgo {
 
 class WeaponEffectComponent : public EffectComponent
 {
   public:
-  WeaponEffectComponent(const Tick &duration, const float damageModifier);
+  WeaponEffectComponent(const TickDuration &duration, const float damageModifier);
   ~WeaponEffectComponent() override = default;
 
   auto damageModifier() const -> std::optional<float> override;

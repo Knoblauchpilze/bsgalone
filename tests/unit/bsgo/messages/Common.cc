@@ -25,16 +25,8 @@ void assertPlayerComputerDataAreEqual(const PlayerComputerData &actual,
   EXPECT_EQ(actual.offensive, expected.offensive);
   EXPECT_EQ(actual.powerCost, expected.powerCost);
   EXPECT_EQ(actual.range, expected.range);
-
-  EXPECT_EQ(actual.reloadTime.count(), expected.reloadTime.count());
-  EXPECT_EQ(actual.reloadTime.frac(), expected.reloadTime.frac());
-  EXPECT_EQ(actual.duration.has_value(), expected.duration.has_value());
-  if (expected.duration.has_value())
-  {
-    EXPECT_EQ(actual.duration->count(), expected.duration->count());
-    EXPECT_EQ(actual.duration->frac(), expected.duration->frac());
-  }
-
+  EXPECT_EQ(actual.reloadTime, expected.reloadTime);
+  EXPECT_EQ(actual.duration, expected.duration);
   EXPECT_EQ(actual.allowedTargets, expected.allowedTargets);
   EXPECT_EQ(actual.damageModifier, expected.damageModifier);
 }
@@ -50,9 +42,7 @@ void assertPlayerWeaponDataAreEqual(const PlayerWeaponData &actual, const Player
   EXPECT_EQ(actual.maxDamage, expected.maxDamage);
   EXPECT_EQ(actual.powerCost, expected.powerCost);
   EXPECT_EQ(actual.range, expected.range);
-
-  EXPECT_EQ(actual.reloadTime.count(), expected.reloadTime.count());
-  EXPECT_EQ(actual.reloadTime.frac(), expected.reloadTime.frac());
+  EXPECT_EQ(actual.reloadTime, expected.reloadTime);
 }
 
 void assertOutpostDataAreEqual(const OutpostData &actual, const OutpostData &expected)
@@ -96,12 +86,8 @@ void assertPlayerShipDataAreEqual(const PlayerShipData &actual, const PlayerShip
   EXPECT_EQ(actual.name, expected.name);
   EXPECT_EQ(actual.docked, expected.docked);
   EXPECT_EQ(actual.active, expected.active);
-
-  EXPECT_EQ(actual.jumpTime.count(), expected.jumpTime.count());
-  EXPECT_EQ(actual.jumpTime.frac(), expected.jumpTime.frac());
-  EXPECT_EQ(actual.jumpTimeInThreat.count(), expected.jumpTimeInThreat.count());
-  EXPECT_EQ(actual.jumpTimeInThreat.frac(), expected.jumpTimeInThreat.frac());
-
+  EXPECT_EQ(actual.jumpTime, expected.jumpTime);
+  EXPECT_EQ(actual.jumpTimeInThreat, expected.jumpTimeInThreat);
   EXPECT_EQ(actual.jumpSystem, expected.jumpSystem);
   EXPECT_EQ(actual.targetDbId, expected.targetDbId);
   EXPECT_EQ(actual.playerDbId, expected.playerDbId);
@@ -155,10 +141,7 @@ void assertWeaponDataAreEqual(const WeaponData &actual, const WeaponData &expect
   EXPECT_EQ(actual.maxDamage, expected.maxDamage);
   EXPECT_EQ(actual.powerCost, expected.powerCost);
   EXPECT_EQ(actual.range, expected.range);
-
-  EXPECT_EQ(actual.reloadTime.count(), expected.reloadTime.count());
-  EXPECT_EQ(actual.reloadTime.frac(), expected.reloadTime.frac());
-
+  EXPECT_EQ(actual.reloadTime, expected.reloadTime);
   EXPECT_EQ(actual.price, expected.price);
 }
 
@@ -169,16 +152,8 @@ void assertComputerDataAreEqual(const ComputerData &actual, const ComputerData &
   EXPECT_EQ(actual.offensive, expected.offensive);
   EXPECT_EQ(actual.powerCost, expected.powerCost);
   EXPECT_EQ(actual.range, expected.range);
-
-  EXPECT_EQ(actual.reloadTime.count(), expected.reloadTime.count());
-  EXPECT_EQ(actual.reloadTime.frac(), expected.reloadTime.frac());
-  EXPECT_EQ(actual.duration.has_value(), expected.duration.has_value());
-  if (expected.duration.has_value())
-  {
-    EXPECT_EQ(actual.duration->count(), expected.duration->count());
-    EXPECT_EQ(actual.duration->frac(), expected.duration->frac());
-  }
-
+  EXPECT_EQ(actual.reloadTime, expected.reloadTime);
+  EXPECT_EQ(actual.duration, expected.duration);
   EXPECT_EQ(actual.allowedTargets, expected.allowedTargets);
   EXPECT_EQ(actual.damageModifier, expected.damageModifier);
 
@@ -201,10 +176,8 @@ void assertShipDataAreEqual(const ShipData &actual, const ShipData &expected)
   EXPECT_EQ(actual.speed, expected.speed);
   EXPECT_EQ(actual.radius, expected.radius);
 
-  EXPECT_EQ(actual.jumpTime.count(), expected.jumpTime.count());
-  EXPECT_EQ(actual.jumpTime.frac(), expected.jumpTime.frac());
-  EXPECT_EQ(actual.jumpTimeInThreat.count(), expected.jumpTimeInThreat.count());
-  EXPECT_EQ(actual.jumpTimeInThreat.frac(), expected.jumpTimeInThreat.frac());
+  EXPECT_EQ(actual.jumpTime, expected.jumpTime);
+  EXPECT_EQ(actual.jumpTimeInThreat, expected.jumpTimeInThreat);
 
   EXPECT_EQ(actual.slots, expected.slots);
   EXPECT_EQ(actual.price, expected.price);

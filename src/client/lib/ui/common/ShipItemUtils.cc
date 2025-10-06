@@ -56,7 +56,8 @@ auto generateWeaponMenu(const std::string &name,
 auto generateWeaponMenu(const bsgo::WeaponData &weapon) -> UiMenuPtr
 {
   // TODO: We should convert to seconds based on the tick duration
-  const auto reloadTime = core::toMilliseconds(weapon.reloadTime.count());
+  constexpr auto MILLIS_IN_ONE_SECOND = 1000.0f;
+  const auto reloadTime = core::toMilliseconds(MILLIS_IN_ONE_SECOND * weapon.reloadTime.toSeconds());
   return generateWeaponMenu(weapon.name,
                             weapon.minDamage,
                             weapon.maxDamage,
@@ -67,7 +68,8 @@ auto generateWeaponMenu(const bsgo::WeaponData &weapon) -> UiMenuPtr
 auto generateWeaponMenu(const bsgo::PlayerWeaponData &weapon) -> UiMenuPtr
 {
   // TODO: We should convert to seconds based on the tick duration
-  const auto reloadTime = core::toMilliseconds(weapon.reloadTime.count());
+  constexpr auto MILLIS_IN_ONE_SECOND = 1000.0f;
+  const auto reloadTime = core::toMilliseconds(MILLIS_IN_ONE_SECOND * weapon.reloadTime.toSeconds());
   return generateWeaponMenu(weapon.name,
                             weapon.minDamage,
                             weapon.maxDamage,
@@ -126,11 +128,13 @@ auto generateComputerMenu(const std::string &name,
 auto generateComputerMenu(const bsgo::ComputerData &computer) -> UiMenuPtr
 {
   // TODO: We should convert to seconds based on the tick duration
-  const auto reloadTime = core::toMilliseconds(computer.reloadTime.count());
+  constexpr auto MILLIS_IN_ONE_SECOND = 1000.0f;
+  const auto reloadTime               = core::toMilliseconds(MILLIS_IN_ONE_SECOND
+                                               * computer.reloadTime.toSeconds());
   std::optional<core::Duration> duration{};
   if (computer.duration)
   {
-    duration = core::toMilliseconds(computer.duration->count());
+    duration = core::toMilliseconds(MILLIS_IN_ONE_SECOND * computer.duration->toSeconds());
   }
 
   return generateComputerMenu(computer.name,
@@ -143,11 +147,13 @@ auto generateComputerMenu(const bsgo::ComputerData &computer) -> UiMenuPtr
 auto generateComputerMenu(const bsgo::PlayerComputerData &computer) -> UiMenuPtr
 {
   // TODO: We should convert to seconds based on the tick duration
-  const auto reloadTime = core::toMilliseconds(computer.reloadTime.count());
+  constexpr auto MILLIS_IN_ONE_SECOND = 1000.0f;
+  const auto reloadTime               = core::toMilliseconds(MILLIS_IN_ONE_SECOND
+                                               * computer.reloadTime.toSeconds());
   std::optional<core::Duration> duration{};
   if (computer.duration)
   {
-    duration = core::toMilliseconds(computer.duration->count());
+    duration = core::toMilliseconds(MILLIS_IN_ONE_SECOND * computer.duration->toSeconds());
   }
 
   return generateComputerMenu(computer.name,
