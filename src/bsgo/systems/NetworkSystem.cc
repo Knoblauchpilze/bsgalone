@@ -16,10 +16,11 @@ NetworkSystem::NetworkSystem()
 
 void NetworkSystem::updateEntity(Entity &entity,
                                  Coordinator & /*coordinator*/,
-                                 const float elapsedSeconds) const
+                                 const TickData &data) const
 {
   auto &networkSyncComp = entity.networkSyncComp();
-  networkSyncComp.update(elapsedSeconds);
+  // TODO: We should use the tick duration as is.
+  networkSyncComp.update(data.elapsed.toSeconds());
 
   if (!networkSyncComp.needsSync())
   {

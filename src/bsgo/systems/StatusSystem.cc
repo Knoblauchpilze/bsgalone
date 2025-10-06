@@ -18,12 +18,11 @@ StatusSystem::StatusSystem()
 constexpr auto TIME_TO_STAY_IN_APPEARED_MODE = core::Milliseconds{10'000};
 constexpr auto TIME_TO_STAY_IN_THREAT_MODE   = core::Milliseconds{3'000};
 
-void StatusSystem::updateEntity(Entity &entity,
-                                Coordinator &coordinator,
-                                const float elapsedSeconds) const
+void StatusSystem::updateEntity(Entity &entity, Coordinator &coordinator, const TickData &data) const
 {
   auto &statusComp = entity.statusComp();
-  statusComp.update(elapsedSeconds);
+  // TODO: We should use the tick duration as is.
+  statusComp.update(data.elapsed.toSeconds());
 
   handleAppearingState(entity, statusComp);
   handleThreatState(entity, statusComp);

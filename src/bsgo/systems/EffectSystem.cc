@@ -14,13 +14,12 @@ EffectSystem::EffectSystem()
   : AbstractSystem(SystemType::EFFECT, isEntityRelevant)
 {}
 
-void EffectSystem::updateEntity(Entity &entity,
-                                Coordinator &coordinator,
-                                const float elapsedSeconds) const
+void EffectSystem::updateEntity(Entity &entity, Coordinator &coordinator, const TickData &data) const
 {
   for (const auto &effect : entity.effects)
   {
-    effect->update(elapsedSeconds);
+    // TODO: We should use the tick duration as is.
+    effect->update(data.elapsed.toSeconds());
   }
 
   cleanUpFinishedEffects(entity, coordinator);

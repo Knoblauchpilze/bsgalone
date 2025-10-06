@@ -11,9 +11,8 @@ class EffectSystem : public AbstractSystem
   EffectSystem();
   ~EffectSystem() override = default;
 
-  void updateEntity(Entity &entity,
-                    Coordinator &coordinator,
-                    const float elapsedSeconds) const override;
+  protected:
+  void updateEntity(Entity &entity, Coordinator &coordinator, const TickData &data) const override;
 
   private:
   void cleanUpFinishedEffects(const Entity &entity, Coordinator &coordinator) const;

@@ -15,11 +15,12 @@ PowerSystem::PowerSystem()
 
 void PowerSystem::updateEntity(Entity &entity,
                                Coordinator & /*coordinator*/,
-                               const float elapsedSeconds) const
+                               const TickData &data) const
 {
   if (canRegeneratePower(entity))
   {
-    entity.powerComp().update(elapsedSeconds);
+    // TODO: We should use the tick duration as is.
+    entity.powerComp().update(data.elapsed.toSeconds());
   }
 }
 
