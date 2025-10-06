@@ -68,8 +68,10 @@ void ShipDataSource::registerShip(Coordinator &coordinator,
   coordinator.addPower(shipEntityId, data.powerPoints, data.maxPowerPoints, data.powerRegen);
   coordinator.addFaction(shipEntityId, data.faction);
   // TODO: Replace this to not convert back to a time.
-  const auto jumpTime         = core::toMilliseconds(data.jumpTime.count());
-  const auto jumpTimeInThreat = core::toMilliseconds(data.jumpTimeInThreat.count());
+  constexpr auto MILLIS_IN_ONE_SECOND = 1000.0f;
+  const auto jumpTime = core::toMilliseconds(MILLIS_IN_ONE_SECOND * data.jumpTime.toSeconds());
+  const auto jumpTimeInThreat = core::toMilliseconds(MILLIS_IN_ONE_SECOND
+                                                     * data.jumpTimeInThreat.toSeconds());
   coordinator.addStatus(shipEntityId, data.status, jumpTime, jumpTimeInThreat);
   coordinator.addShipClass(shipEntityId, data.shipClass);
   coordinator.addName(shipEntityId, data.name);

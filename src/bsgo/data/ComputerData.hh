@@ -4,7 +4,7 @@
 #include "ComputerPriceRepository.hh"
 #include "ComputerRepository.hh"
 #include "EntityKind.hh"
-#include "Tick.hh"
+#include "TickDuration.hh"
 #include "Uuid.hh"
 #include <optional>
 #include <unordered_map>
@@ -20,9 +20,9 @@ struct ComputerData
   bool offensive{};
   float powerCost{};
   std::optional<float> range{};
-  Tick reloadTime{};
+  TickDuration reloadTime{};
 
-  std::optional<Tick> duration{};
+  std::optional<TickDuration> duration{};
   std::optional<std::unordered_set<EntityKind>> allowedTargets{};
   std::optional<float> damageModifier{};
 

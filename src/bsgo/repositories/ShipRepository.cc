@@ -95,8 +95,8 @@ auto fetchShipFromSqlResult(const pqxx::const_result_iterator &record) -> Ship
   ship.acceleration     = record[8].as<float>();
   ship.speed            = record[9].as<float>();
   ship.radius           = record[10].as<float>();
-  ship.jumpTime         = Tick::fromInt(record[11].as<int>());
-  ship.jumpTimeInThreat = Tick::fromInt(record[12].as<int>());
+  ship.jumpTime         = TickDuration::fromInt(record[11].as<int>());
+  ship.jumpTimeInThreat = TickDuration::fromInt(record[12].as<int>());
 
   return ship;
 }

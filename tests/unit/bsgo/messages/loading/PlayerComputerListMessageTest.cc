@@ -33,7 +33,7 @@ TEST(Unit_Bsgo_Serialization_PlayerComputerListMessage, Basic)
 
   const std::vector<PlayerComputerData>
     computersData{{.dbId = 23, .offensive = true, .damageModifier = -47.89f},
-                  {.dbId = 76, .level = 14, .duration = Tick::fromInt(360)}};
+                  {.dbId = 76, .level = 14, .duration = TickDuration::fromInt(360)}};
   PlayerComputerListMessage actual(computersData);
   actual.setClientId(Uuid{2});
   serializeAndDeserializeMessage(expected, actual);
@@ -55,11 +55,11 @@ TEST(Unit_Bsgo_Serialization_PlayerComputerListMessage, WithClientId)
 
 TEST(Unit_Bsgo_Serialization_PlayerComputerListMessage, Clone)
 {
-  const std::vector<PlayerComputerData>
-    computersData{{.computerDbId   = 1908,
-                   .level          = 12,
-                   .allowedTargets = std::unordered_set<EntityKind>{EntityKind::ASTEROID}},
-                  {.offensive = true, .powerCost = -3.9878f, .reloadTime = Tick(15001, 0.2147f)}};
+  const std::vector<PlayerComputerData> computersData{
+    {.computerDbId   = 1908,
+     .level          = 12,
+     .allowedTargets = std::unordered_set<EntityKind>{EntityKind::ASTEROID}},
+    {.offensive = true, .powerCost = -3.9878f, .reloadTime = TickDuration(15001.2147f)}};
 
   const PlayerComputerListMessage expected(computersData);
 

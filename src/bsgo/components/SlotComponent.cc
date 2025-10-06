@@ -71,7 +71,8 @@ auto SlotComponent::reloadPercentage() const -> float
   }
 
   // TODO: We should not convert to milliseconds here.
-  const auto reloadTime = core::toMilliseconds(m_reloadTime.count());
+  constexpr auto MILLI_IN_ONE_SECOND = 1000.0f;
+  const auto reloadTime              = MILLI_IN_ONE_SECOND * m_reloadTime.toSeconds();
 
   // https://stackoverflow.com/questions/76522118/dividing-two-chronodurations-to-get-fraction
   const auto reloadAsFloat = std::chrono::duration<float, std::milli>(reloadTime);
@@ -131,7 +132,8 @@ void SlotComponent::handleReload(const float elapsedSeconds)
     static_cast<int>(elapsedSeconds * MILLISECONDS_IN_A_SECONDS));
 
   // TODO: We should not convert to milliseconds here.
-  const auto reloadTime = core::toMilliseconds(m_reloadTime.count());
+  constexpr auto MILLI_IN_ONE_SECOND = 1000.0f;
+  const auto reloadTime = core::toMilliseconds(MILLI_IN_ONE_SECOND * m_reloadTime.toSeconds());
 
   if (*m_elapsedSinceLastFired >= reloadTime)
   {

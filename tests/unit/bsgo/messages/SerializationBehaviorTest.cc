@@ -2,6 +2,7 @@
 #include "SerializationUtils.hh"
 #include "Slot.hh"
 #include "Tick.hh"
+#include "TickDuration.hh"
 #include "TimeUtils.hh"
 #include "Uuid.hh"
 #include "VectorUtils.hh"
@@ -254,6 +255,39 @@ TEST(Unit_Bsgo_Serialization_Behavior, Nominal_Tick_EmptyOptional)
   EXPECT_EQ(actual.has_value(), expected.has_value());
 }
 
+TEST(Unit_Bsgo_Serialization_Behavior, Nominal_TickDuration)
+{
+  const TickDuration expected(48.9705f);
+
+  const auto [success, actual] = serializeAndDeserialize(expected, false);
+
+  EXPECT_TRUE(success);
+  EXPECT_EQ(actual, expected);
+}
+
+TEST(Unit_Bsgo_Serialization_Behavior, Nominal_TickDuration_Optional)
+{
+  const std::optional<TickDuration> expected = TickDuration(1028.12f);
+
+  const auto [success, actual] = serializeAndDeserialize(expected, false);
+
+  EXPECT_TRUE(success);
+  EXPECT_TRUE(actual.has_value());
+  EXPECT_EQ(actual, expected);
+}
+
+TEST(Unit_Bsgo_Serialization_Behavior, Nominal_TickDuration_EmptyOptional)
+{
+  const std::optional<TickDuration> expected = {};
+  ASSERT_FALSE(expected.has_value());
+
+  const auto [success, actual] = serializeAndDeserialize(expected, false);
+
+  EXPECT_TRUE(success);
+  EXPECT_FALSE(actual.has_value());
+  EXPECT_EQ(actual.has_value(), expected.has_value());
+}
+
 TEST(Unit_Bsgo_Serialization_Behavior, Failure_Uuid)
 {
   const Uuid value{2};
@@ -320,6 +354,15 @@ TEST(Unit_Bsgo_Serialization_Behavior, Failure_Eigen_Vector3f)
 TEST(Unit_Bsgo_Serialization_Behavior, Failure_Tick)
 {
   const Tick expected(9874, 0.01f);
+
+  const auto [success, _] = serializeAndDeserialize(expected, true);
+
+  EXPECT_FALSE(success);
+}
+
+TEST(Unit_Bsgo_Serialization_Behavior, Failure_TickDuration)
+{
+  const TickDuration expected(9874.01f);
 
   const auto [success, _] = serializeAndDeserialize(expected, true);
 

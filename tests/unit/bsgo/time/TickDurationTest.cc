@@ -105,6 +105,17 @@ INSTANTIATE_TEST_SUITE_P(Unit_Bsgo_TickDuration,
                            return std::to_string(info.param.id);
                          });
 
+TEST(Unit_Bsgo_TickDuration, FromInt)
+{
+  TickDuration lhs(1.0f);
+  auto rhs = TickDuration::fromInt(1);
+  EXPECT_EQ(lhs, rhs);
+
+  lhs = TickDuration(18171.0f);
+  rhs = TickDuration::fromInt(18171);
+  EXPECT_EQ(lhs, rhs);
+}
+
 /// TODO: This should be removed.
 TEST(Unit_Bsgo_TickDuration, ConvertsToSeconds)
 {

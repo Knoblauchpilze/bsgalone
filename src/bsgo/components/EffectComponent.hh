@@ -2,7 +2,7 @@
 #pragma once
 
 #include "AbstractComponent.hh"
-#include "Tick.hh"
+#include "TickDuration.hh"
 #include "TimeUtils.hh"
 #include <optional>
 
@@ -11,7 +11,7 @@ namespace bsgo {
 class EffectComponent : public AbstractComponent
 {
   public:
-  EffectComponent(const ComponentType &type, const Tick &duration);
+  EffectComponent(const ComponentType &type, const TickDuration &duration);
   ~EffectComponent() override = default;
 
   bool isFinished() const;
@@ -21,7 +21,7 @@ class EffectComponent : public AbstractComponent
   void update(const float elapsedSeconds) override;
 
   private:
-  Tick m_duration;
+  TickDuration m_duration;
   core::Duration m_elapsedSinceStart{};
 };
 

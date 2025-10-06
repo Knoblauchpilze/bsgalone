@@ -5,7 +5,7 @@
 #include "ShipClass.hh"
 #include "ShipPriceRepository.hh"
 #include "ShipRepository.hh"
-#include "Tick.hh"
+#include "TickDuration.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
 #include <optional>
@@ -28,8 +28,8 @@ struct ShipData
   float speed{};
   float radius{};
 
-  Tick jumpTime{};
-  Tick jumpTimeInThreat{};
+  TickDuration jumpTime{};
+  TickDuration jumpTimeInThreat{};
 
   std::unordered_map<Slot, int> slots{};
   std::unordered_map<Uuid, int> price{};

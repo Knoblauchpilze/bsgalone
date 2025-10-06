@@ -9,8 +9,8 @@
 #include "PlayerComputerData.hh"
 #include "PlayerWeaponData.hh"
 #include "Systems.hh"
-#include "Tick.hh"
 #include "TickData.hh"
+#include "TickDuration.hh"
 #include "TimeUtils.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
@@ -56,7 +56,7 @@ class Coordinator : public core::CoreObject
   void addComputer(const Uuid ent, const PlayerComputerData &computer);
   void addResourceComponent(const Uuid ent, const Uuid resource, const int amount);
 
-  void addWeaponEffect(const Uuid ent, const Tick &duration, const float damageModifier);
+  void addWeaponEffect(const Uuid ent, const TickDuration &duration, const float damageModifier);
   void removeEffect(const Uuid ent, const EffectComponentShPtr &effect);
 
   auto getEntity(const Uuid ent) const -> Entity;

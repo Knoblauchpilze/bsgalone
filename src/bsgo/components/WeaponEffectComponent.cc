@@ -3,7 +3,8 @@
 
 namespace bsgo {
 
-WeaponEffectComponent::WeaponEffectComponent(const Tick &duration, const float damageModifier)
+WeaponEffectComponent::WeaponEffectComponent(const TickDuration &duration,
+                                             const float damageModifier)
   : EffectComponent(ComponentType::WEAPON_EFFECT, duration)
   , m_damageModifier(damageModifier)
 {

@@ -34,13 +34,15 @@ TEST(Unit_Bsgo_Serialization_HangarMessage, WithShip)
     data{.dbId             = Uuid{8},
          .radius           = 1.478f,
          .hullPoints       = 98.54f,
-         .jumpTimeInThreat = Tick(45001.0f),
+         .jumpTimeInThreat = TickDuration(45001.0f),
          .weapons          = {{
                                 .dbId       = Uuid{2},
                                 .weaponDbId = Uuid{65},
                                 .minDamage  = 45.87f,
                      },
-                              {.weaponDbId = Uuid{98}, .name = "weapon 1", .reloadTime = Tick::fromInt(45)}},
+                              {.weaponDbId = Uuid{98},
+                               .name       = "weapon 1",
+                               .reloadTime = TickDuration::fromInt(45)}},
          .computers        = {{.computerDbId   = Uuid{12},
                                .offensive      = true,
                                .powerCost      = 56.47f,
@@ -50,7 +52,7 @@ TEST(Unit_Bsgo_Serialization_HangarMessage, WithShip)
                               {
                                 .dbId           = Uuid{27},
                                 .name           = "beefy computer",
-                                .reloadTime     = Tick(457, 0.174f),
+                                .reloadTime     = TickDuration(457.174f),
                                 .damageModifier = 45.1f,
                        }}};
   const HangarMessage expected(data);
@@ -65,7 +67,7 @@ TEST(Unit_Bsgo_Serialization_HangarMessage, WithShip)
 
 TEST(Unit_Bsgo_Serialization_HangarMessage, ShipIdIsEqualToShipData)
 {
-  const PlayerShipData data{.dbId = Uuid{42}, .docked = true, .jumpTime = Tick(4587.001f)};
+  const PlayerShipData data{.dbId = Uuid{42}, .docked = true, .jumpTime = TickDuration(4587.001f)};
   const HangarMessage message(data);
 
   EXPECT_EQ(message.getShipDbId(), data.dbId);
@@ -76,29 +78,29 @@ TEST(Unit_Bsgo_Serialization_HangarMessage, OverridesShipProperties)
   HangarMessage expected(Uuid{14});
   expected.setClientId(Uuid{26});
 
-  const PlayerShipData
-    data{.dbId             = Uuid{8},
-         .radius           = 1.478f,
-         .hullPoints       = 98.54f,
-         .jumpTimeInThreat = Tick(45001, 0.7f),
-         .weapons          = {{
-                                .dbId       = Uuid{2},
-                                .weaponDbId = Uuid{65},
-                                .minDamage  = 45.87f,
-                     },
-                              {.weaponDbId = Uuid{98}, .name = "weapon 1", .reloadTime = Tick(45, 0.712f)}},
-         .computers        = {{.computerDbId   = Uuid{12},
-                               .offensive      = true,
-                               .powerCost      = 56.47f,
-                               .range          = 14.78f,
-                               .allowedTargets = std::unordered_set<EntityKind>{EntityKind::ASTEROID,
-                                                                                EntityKind::OUTPOST}},
-                              {
-                                .dbId           = Uuid{27},
-                                .name           = "beefy computer",
-                                .reloadTime     = Tick::fromInt(457),
-                                .damageModifier = 45.1f,
-                       }}};
+  const PlayerShipData data{
+    .dbId             = Uuid{8},
+    .radius           = 1.478f,
+    .hullPoints       = 98.54f,
+    .jumpTimeInThreat = TickDuration(45001.7f),
+    .weapons          = {{
+                           .dbId       = Uuid{2},
+                           .weaponDbId = Uuid{65},
+                           .minDamage  = 45.87f,
+                },
+                         {.weaponDbId = Uuid{98}, .name = "weapon 1", .reloadTime = TickDuration(45.712f)}},
+    .computers        = {{.computerDbId   = Uuid{12},
+                          .offensive      = true,
+                          .powerCost      = 56.47f,
+                          .range          = 14.78f,
+                          .allowedTargets = std::unordered_set<EntityKind>{EntityKind::ASTEROID,
+                                                                           EntityKind::OUTPOST}},
+                         {
+                           .dbId           = Uuid{27},
+                           .name           = "beefy computer",
+                           .reloadTime     = TickDuration::fromInt(457),
+                           .damageModifier = 45.1f,
+                  }}};
   HangarMessage actual(data);
   actual.validate();
 

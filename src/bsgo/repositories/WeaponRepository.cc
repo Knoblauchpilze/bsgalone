@@ -65,7 +65,7 @@ auto WeaponRepository::findOneById(const Uuid weapon) const -> Weapon
   out.maxDamage  = record[2].as<float>();
   out.powerCost  = record[3].as<float>();
   out.range      = record[4].as<float>();
-  out.reloadTime = Tick::fromInt(record[5].as<int>());
+  out.reloadTime = TickDuration::fromInt(record[5].as<int>());
 
   return out;
 }
