@@ -3,6 +3,7 @@
 
 #include "CoreObject.hh"
 #include "ProcessType.hh"
+#include "TickData.hh"
 #include <memory>
 
 namespace bsgo {
@@ -17,7 +18,7 @@ class IProcess : public core::CoreObject
 
   virtual auto type() const -> ProcessType = 0;
 
-  virtual void update(Coordinator &coordinator, const float elapsedSeconds) const = 0;
+  virtual void update(Coordinator &coordinator, const TickData &data) const = 0;
 };
 
 using IProcessPtr = std::unique_ptr<IProcess>;

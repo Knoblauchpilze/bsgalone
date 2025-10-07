@@ -7,7 +7,7 @@ RespawnProcess::RespawnProcess(const Repositories &repositories)
   : AbstractProcess(ProcessType::RESPAWN, repositories)
 {}
 
-void RespawnProcess::update(Coordinator &coordinator, const float /*elapsedSeconds*/) const
+void RespawnProcess::update(Coordinator &coordinator, const TickData & /*data*/) const
 {
   respawnAsteroids(coordinator);
 }
