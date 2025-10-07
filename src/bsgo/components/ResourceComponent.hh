@@ -15,7 +15,7 @@ class ResourceComponent : public AbstractComponent
   auto resource() const -> Uuid;
   auto amount() const -> int;
 
-  void update(const float elapsedSeconds) override;
+  void update(const TickData &data) override;
 
   void setAmount(const int amount);
 

@@ -14,7 +14,7 @@ class RemovalComponent : public AbstractComponent
   void markForRemoval(const bool toRemove = true);
   bool toBeDeleted() const;
 
-  void update(const float elapsedSeconds) override;
+  void update(const TickData &data) override;
 
   private:
   bool m_markedForRemoval{false};

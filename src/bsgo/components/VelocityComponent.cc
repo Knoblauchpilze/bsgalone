@@ -56,15 +56,15 @@ void VelocityComponent::immobilize()
   m_speed        = Eigen::Vector3f::Zero();
 }
 
-void VelocityComponent::update(const float elapsedSeconds)
+void VelocityComponent::update(const TickData &data)
 {
   switch (m_speedMode)
   {
     case SpeedMode::FIXED:
-      updateFixedSpeed(elapsedSeconds);
+      updateFixedSpeed(data);
       break;
     case SpeedMode::VARIABLE:
-      updateVariableSpeed(elapsedSeconds);
+      updateVariableSpeed(data);
       break;
     default:
       error("Failed to updated velocity",
@@ -73,17 +73,19 @@ void VelocityComponent::update(const float elapsedSeconds)
   }
 }
 
-void VelocityComponent::updateFixedSpeed(const float /*elapsedSeconds*/)
+void VelocityComponent::updateFixedSpeed(const TickData & /*data*/)
 {
-  // Intentionally empty.
+  // Intentionally empty: fixed speed means no changes to the speed.
 }
 
-void VelocityComponent::updateVariableSpeed(const float elapsedSeconds)
+void VelocityComponent::updateVariableSpeed(const TickData &data)
 {
-  /// https://gamedev.stackexchange.com/questions/69404/how-should-i-implement-basic-spaceship-physics
-  m_speed += m_acceleration * elapsedSeconds;
+  // https://gamedev.stackexchange.com/questions/69404/how-should-i-implement-basic-spaceship-physics
+  // TODO: We should not convert to real time.
+  m_speed += m_acceleration * data.elapsed.toSeconds();
 
-  Eigen::Vector3f friction = -FRICTION_ACCELERATION * elapsedSeconds * m_speed.normalized();
+  Eigen::Vector3f friction = -FRICTION_ACCELERATION * data.elapsed.toSeconds()
+                             * m_speed.normalized();
   m_speed += friction;
 
   const auto speedNorm = m_speed.norm();

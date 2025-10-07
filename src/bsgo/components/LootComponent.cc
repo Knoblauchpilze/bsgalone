@@ -22,6 +22,6 @@ void LootComponent::clearRecipients()
   m_recipients.clear();
 }
 
-void LootComponent::update(const float /*elapsedSeconds*/) {}
+void LootComponent::update(const TickData & /*data*/) {}
 
 } // namespace bsgo

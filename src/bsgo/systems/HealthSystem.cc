@@ -26,8 +26,7 @@ void HealthSystem::updateEntity(Entity &entity,
 
   if (canRegenerateHealth(entity))
   {
-    // TODO: We should use the tick duration as is.
-    entity.healthComp().update(data.elapsed.toSeconds());
+    entity.healthComp().update(data);
   }
 }
 

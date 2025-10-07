@@ -3,6 +3,7 @@
 
 #include "ComponentType.hh"
 #include "CoreObject.hh"
+#include "TickData.hh"
 #include <memory>
 
 namespace bsgo {
@@ -15,7 +16,7 @@ class IComponent : public core::CoreObject
 
   virtual auto type() const -> ComponentType = 0;
 
-  virtual void update(const float elapsedSeconds) = 0;
+  virtual void update(const TickData &data) = 0;
 };
 
 using IComponentShPtr = std::shared_ptr<IComponent>;

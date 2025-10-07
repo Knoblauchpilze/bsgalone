@@ -13,6 +13,6 @@ auto KindComponent::kind() const noexcept -> EntityKind
   return m_kind;
 }
 
-void KindComponent::update(const float /*elapsedSeconds*/) {}
+void KindComponent::update(const TickData & /*data*/) {}
 
 } // namespace bsgo

@@ -19,7 +19,7 @@ auto ResourceComponent::amount() const -> int
   return m_amount;
 }
 
-void ResourceComponent::update(const float /*elapsedSeconds*/) {}
+void ResourceComponent::update(const TickData & /*data*/) {}
 
 void ResourceComponent::setAmount(const int amount)
 {

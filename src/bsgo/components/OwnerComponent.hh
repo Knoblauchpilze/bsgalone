@@ -22,7 +22,7 @@ class OwnerComponent : public AbstractComponent
   auto owner() const -> Uuid;
   auto category() const -> OwnerType;
 
-  void update(const float elapsedSeconds) override;
+  void update(const TickData &data) override;
 
   private:
   Uuid m_owner;

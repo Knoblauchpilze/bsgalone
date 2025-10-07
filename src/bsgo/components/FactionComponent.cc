@@ -13,6 +13,6 @@ auto FactionComponent::faction() const noexcept -> Faction
   return m_faction;
 }
 
-void FactionComponent::update(const float /*elapsedSeconds*/) {}
+void FactionComponent::update(const TickData & /*data*/) {}
 
 } // namespace bsgo

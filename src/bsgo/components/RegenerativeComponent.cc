@@ -18,9 +18,10 @@ RegenerativeComponent::RegenerativeComponent(const ComponentType &type,
   validate();
 }
 
-void RegenerativeComponent::update(const float elapsedSeconds)
+void RegenerativeComponent::update(const TickData &data)
 {
-  const auto updated = m_value + m_regenPerSecond * elapsedSeconds;
+  // TODO: We should not convert to real time here
+  const auto updated = m_value + m_regenPerSecond * data.elapsed.toSeconds();
   m_value            = std::clamp(updated, m_min, m_max);
 }
 

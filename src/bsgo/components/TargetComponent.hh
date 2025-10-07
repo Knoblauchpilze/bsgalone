@@ -18,7 +18,7 @@ class TargetComponent : public AbstractComponent
   void clearTarget();
   void setTarget(const Uuid target);
 
-  void update(const float elapsedSeconds) override;
+  void update(const TickData &data) override;
 
   private:
   std::optional<Uuid> m_target{};

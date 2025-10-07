@@ -19,8 +19,7 @@ void NetworkSystem::updateEntity(Entity &entity,
                                  const TickData &data) const
 {
   auto &networkSyncComp = entity.networkSyncComp();
-  // TODO: We should use the tick duration as is.
-  networkSyncComp.update(data.elapsed.toSeconds());
+  networkSyncComp.update(data);
 
   if (!networkSyncComp.needsSync())
   {

@@ -22,6 +22,6 @@ void ScannedComponent::reset()
   m_scanned = false;
 }
 
-void ScannedComponent::update(const float /*elapsedSeconds*/) {}
+void ScannedComponent::update(const TickData & /*data*/) {}
 
 } // namespace bsgo

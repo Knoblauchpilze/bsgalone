@@ -65,8 +65,7 @@ void WeaponSystem::updateWeapon(const Entity &ent,
 {
   auto state{FiringState::READY};
 
-  // TODO: We should use the tick duration as is.
-  weapon->update(data.elapsed.toSeconds());
+  weapon->update(data);
 
   if (!weapon->active())
   {

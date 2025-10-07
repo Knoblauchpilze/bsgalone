@@ -2,7 +2,7 @@
 #pragma once
 
 #include "AbstractComponent.hh"
-#include "TickDuration.hh"
+#include "Tick.hh"
 #include "TimeUtils.hh"
 #include <optional>
 
@@ -18,7 +18,7 @@ class EffectComponent : public AbstractComponent
 
   virtual auto damageModifier() const -> std::optional<float>;
 
-  void update(const float elapsedSeconds) override;
+  void update(const TickData &data) override;
 
   private:
   TickDuration m_duration;

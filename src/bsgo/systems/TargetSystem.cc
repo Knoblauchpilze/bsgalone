@@ -17,8 +17,7 @@ TargetSystem::TargetSystem()
 void TargetSystem::updateEntity(Entity &entity, Coordinator &coordinator, const TickData &data) const
 {
   auto &targetComp = entity.targetComp();
-  // TODO: We should use the tick duration as is.
-  targetComp.update(data.elapsed.toSeconds());
+  targetComp.update(data);
 
   if (!targetComp.target())
   {

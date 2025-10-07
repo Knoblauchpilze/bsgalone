@@ -15,7 +15,7 @@ class AIComponent : public AbstractComponent
   auto behavior() -> INode &;
   auto behavior() const -> const INode &;
 
-  void update(const float elapsedSeconds) override;
+  void update(const TickData &data) override;
 
   private:
   INodePtr m_behavior;

@@ -13,6 +13,6 @@ auto DamageComponent::damage() const noexcept -> float
   return m_damage;
 }
 
-void DamageComponent::update(const float /*elapsedSeconds*/) {}
+void DamageComponent::update(const TickData & /*data*/) {}
 
 } // namespace bsgo

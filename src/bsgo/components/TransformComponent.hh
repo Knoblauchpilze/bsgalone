@@ -21,7 +21,7 @@ class TransformComponent : public AbstractComponent
   void overridePosition(const Eigen::Vector3f &position);
   void setHeading(const float heading);
 
-  void update(const float elapsedSeconds) override;
+  void update(const TickData &data) override;
 
   auto transformToGlobal(const Eigen::Vector3f &localPos) const -> Eigen::Vector3f;
 

@@ -20,8 +20,7 @@ void MotionSystem::updateEntity(Entity &entity,
   auto &velocity  = entity.velocityComp();
   auto &transform = entity.transformComp();
 
-  // TODO: We should use the tick duration as is.
-  velocity.update(data.elapsed.toSeconds());
+  velocity.update(data);
 
   const Eigen::Vector3f speed = velocity.speed();
   // TODO: We should use the tick duration as is.
