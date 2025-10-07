@@ -80,12 +80,12 @@ void VelocityComponent::updateFixedSpeed(const TickData & /*data*/)
 
 void VelocityComponent::updateVariableSpeed(const TickData &data)
 {
-  // TODO: Make this cleaner.
-  const auto elapsed = 1.0f * data.elapsed;
   // https://gamedev.stackexchange.com/questions/69404/how-should-i-implement-basic-spaceship-physics
-  m_speed += m_acceleration * elapsed;
+  // TODO: We should not convert to real time.
+  m_speed += m_acceleration * data.elapsed.toSeconds();
 
-  Eigen::Vector3f friction = -FRICTION_ACCELERATION * elapsed * m_speed.normalized();
+  Eigen::Vector3f friction = -FRICTION_ACCELERATION * data.elapsed.toSeconds()
+                             * m_speed.normalized();
   m_speed += friction;
 
   const auto speedNorm = m_speed.norm();
