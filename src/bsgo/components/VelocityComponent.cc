@@ -75,7 +75,7 @@ void VelocityComponent::update(const TickData &data)
 
 void VelocityComponent::updateFixedSpeed(const TickData & /*data*/)
 {
-  // Intentionally empty: fixed speed means no update to the speed.
+  // Intentionally empty: fixed speed means no changes to the speed.
 }
 
 void VelocityComponent::updateVariableSpeed(const TickData &data)

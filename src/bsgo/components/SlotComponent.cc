@@ -73,11 +73,14 @@ auto SlotComponent::reloadPercentage() const -> float
   return *m_elapsedSinceLastFired / m_reloadTime;
 }
 
-auto SlotComponent::elapsedSinceLastFired() const -> std::optional<core::Duration>
+auto SlotComponent::elapsedSinceLastFired() const -> std::optional<TickDuration>
 {
-  // TODO: We should not convert to real time here
-  constexpr auto MILLIS_IN_ONE_SECOND = 1000.0f;
-  return core::toMilliseconds(MILLIS_IN_ONE_SECOND * m_elapsedSinceLastFired->toSeconds());
+  return m_elapsedSinceLastFired;
+}
+
+void SlotComponent::overrideElapsedSinceLastFired(const std::optional<TickDuration> &elapsed)
+{
+  m_elapsedSinceLastFired = elapsed;
 }
 
 void SlotComponent::setFiringState(const FiringState &firingState)

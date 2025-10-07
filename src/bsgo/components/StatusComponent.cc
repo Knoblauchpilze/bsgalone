@@ -94,6 +94,24 @@ auto StatusComponent::tryGetElapsedSinceLastAppearing() const -> std::optional<c
   return {};
 }
 
+auto StatusComponent::getCurrentJumpTime() const -> TickDuration
+{
+  if (!m_currentJumpTime)
+  {
+    error("Failed to get current jump time", "No such value");
+  }
+  return *m_currentJumpTime;
+}
+
+auto StatusComponent::getElapsedSinceJumpStarted() const -> TickDuration
+{
+  if (!m_elapsedSinceJumpStarted)
+  {
+    error("Failed to get elapsed since jump", "No such value");
+  }
+  return *m_elapsedSinceJumpStarted;
+}
+
 auto StatusComponent::getRemainingJumpTime() const -> TickDuration
 {
   const auto jumpTime = getCurrentJumpTime();
@@ -157,24 +175,6 @@ void StatusComponent::updateAppearingState(const Status &newStatus)
   {
     m_elapsedSinceAppearing = TickDuration();
   }
-}
-
-auto StatusComponent::getCurrentJumpTime() const -> TickDuration
-{
-  if (!m_currentJumpTime)
-  {
-    error("Failed to get current jump time", "No such value");
-  }
-  return *m_currentJumpTime;
-}
-
-auto StatusComponent::getElapsedSinceJumpStarted() const -> TickDuration
-{
-  if (!m_elapsedSinceJumpStarted)
-  {
-    error("Failed to get elapsed since jump", "No such value");
-  }
-  return *m_elapsedSinceJumpStarted;
 }
 
 } // namespace bsgo

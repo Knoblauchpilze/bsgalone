@@ -3,7 +3,6 @@
 
 #include "AbstractComponent.hh"
 #include "TickDuration.hh"
-#include "TimeUtils.hh"
 #include "Uuid.hh"
 #include <optional>
 
@@ -45,8 +44,9 @@ class SlotComponent : public AbstractComponent
   bool canFire() const noexcept;
   bool isReloading() const noexcept;
   auto reloadPercentage() const -> float;
-  auto elapsedSinceLastFired() const -> std::optional<core::Duration>;
+  auto elapsedSinceLastFired() const -> std::optional<TickDuration>;
 
+  void overrideElapsedSinceLastFired(const std::optional<TickDuration> &elapsed);
   void setFiringState(const FiringState &firingState);
   void registerFireRequest();
   bool hasFireRequest() const;

@@ -25,6 +25,8 @@ class StatusComponent : public AbstractComponent
   void resetAppearingTime();
   auto getElapsedSinceLastChange() const -> core::Duration;
   auto tryGetElapsedSinceLastAppearing() const -> std::optional<core::Duration>;
+  auto getCurrentJumpTime() const -> TickDuration;
+  auto getElapsedSinceJumpStarted() const -> TickDuration;
   auto getRemainingJumpTime() const -> TickDuration;
 
   void setStatus(const Status &status);
@@ -43,9 +45,6 @@ class StatusComponent : public AbstractComponent
 
   void updateJumpState(const Status &newStatus, const bool forceUpdate);
   void updateAppearingState(const Status &newStatus);
-
-  auto getCurrentJumpTime() const -> TickDuration;
-  auto getElapsedSinceJumpStarted() const -> TickDuration;
 };
 
 using StatusComponentShPtr = std::shared_ptr<StatusComponent>;

@@ -27,11 +27,11 @@ class RegenerativeComponent : public AbstractComponent
   void updateValue(const float delta);
 
   private:
-  float m_min;
-  float m_value;
-  float m_max;
+  float m_min{0.0f};
+  float m_value{0.0f};
+  float m_max{0.0f};
 
-  float m_regenPerTick;
+  float m_regenPerTick{0.0f};
 
   void validate();
 };
