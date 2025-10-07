@@ -96,8 +96,7 @@ void StatusSystem::handleJumpState(Entity &entity,
   }
 
   const auto remaining = statusComp.tryGetRemainingJumpTime();
-
-  if (remaining > core::Duration{0})
+  if (remaining >= core::Duration{0})
   {
     return;
   }
