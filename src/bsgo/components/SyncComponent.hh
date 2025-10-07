@@ -3,7 +3,7 @@
 #pragma once
 
 #include "AbstractComponent.hh"
-#include "TickDuration.hh"
+#include "TimeUtils.hh"
 
 namespace bsgo {
 
@@ -21,8 +21,7 @@ class SyncComponent : public AbstractComponent
 
   private:
   bool m_needsSync{false};
-  TickDuration m_durationUntilNextSync{};
-  TickDuration m_elapsedSinceLastSync{};
+  core::Duration m_remainingUntilNextSync{};
 };
 
 } // namespace bsgo
