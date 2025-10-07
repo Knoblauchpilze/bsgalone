@@ -98,11 +98,8 @@ void SystemProcessor::asyncSystemProcessing()
     };
 
     const auto data = m_timeManager->tick(elapsed);
-
     m_coordinator->update(data);
-
-    const auto elapsedSecond = elapsed.convert(chrono::Unit::SECONDS).elapsed;
-    m_processes.update(*m_coordinator, elapsedSecond);
+    m_processes.update(*m_coordinator, data);
     m_inputMessagesQueue->processMessages();
 
     lastFrameTimestamp = thisFrameTimestamp;

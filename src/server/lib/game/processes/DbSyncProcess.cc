@@ -21,21 +21,22 @@ bool entityShouldBeSynced(const Entity &entity)
 }
 } // namespace
 
-void DbSyncProcess::update(Coordinator &coordinator, const float elapsedSeconds) const
+void DbSyncProcess::update(Coordinator &coordinator, const TickData &data) const
 {
   auto entities = coordinator.getEntitiesSatistying(entityShouldBeSynced);
   for (auto &entity : entities)
   {
-    updateEntity(entity, coordinator, elapsedSeconds);
+    updateEntity(entity, coordinator, data);
   }
 }
 
 void DbSyncProcess::updateEntity(Entity &entity,
                                  Coordinator & /*coordinator*/,
-                                 const float elapsedSeconds) const
+                                 const TickData &data) const
 {
   auto &dbSyncComp = entity.dbSyncComp();
-  dbSyncComp.update(elapsedSeconds);
+  // TODO: We should use the tick duration as is.
+  dbSyncComp.update(data.elapsed.toSeconds());
 
   if (!dbSyncComp.needsSync())
   {
