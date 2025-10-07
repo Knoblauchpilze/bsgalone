@@ -35,8 +35,7 @@ void DbSyncProcess::updateEntity(Entity &entity,
                                  const TickData &data) const
 {
   auto &dbSyncComp = entity.dbSyncComp();
-  // TODO: We should use the tick duration as is.
-  dbSyncComp.update(data.elapsed.toSeconds());
+  dbSyncComp.update(data);
 
   if (!dbSyncComp.needsSync())
   {
