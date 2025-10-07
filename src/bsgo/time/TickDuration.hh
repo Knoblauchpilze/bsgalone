@@ -29,10 +29,6 @@ class TickDuration
   /// @return - true in case both durations are equal within the tolerance
   bool operator==(const TickDuration &rhs) const;
 
-  auto operator+=(const TickDuration &duration) -> TickDuration &;
-
-  auto operator*(const float lhs) const -> float;
-
   bool operator<(const TickDuration &rhs) const;
   bool operator<=(const TickDuration &rhs) const;
   bool operator>(const TickDuration &rhs) const;
@@ -70,7 +66,5 @@ class TickDuration
 
   void validate();
 };
-
-auto operator*(const float lhs, const TickDuration &rhs) -> float;
 
 } // namespace bsgo

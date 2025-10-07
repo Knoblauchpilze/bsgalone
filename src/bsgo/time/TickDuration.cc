@@ -27,17 +27,6 @@ bool TickDuration::operator==(const TickDuration &rhs) const
   return diff < TickDuration::TOLERANCE;
 }
 
-auto TickDuration::operator+=(const TickDuration &duration) -> TickDuration &
-{
-  m_elapsed += duration.m_elapsed;
-  return *this;
-}
-
-auto TickDuration::operator*(const float lhs) const -> float
-{
-  return m_elapsed * lhs;
-}
-
 bool TickDuration::operator<(const TickDuration &rhs) const
 {
   return m_elapsed < rhs.m_elapsed;
@@ -91,11 +80,6 @@ void TickDuration::validate()
     throw std::invalid_argument("Tick duration cannot be negative, got: "
                                 + std::to_string(m_elapsed));
   }
-}
-
-auto operator*(const float lhs, const TickDuration &rhs) -> float
-{
-  return rhs * lhs;
 }
 
 } // namespace bsgo
