@@ -10,7 +10,7 @@ constexpr auto MAX_SYNC_JITTER_MS    = 100;
 auto generateJitteredSyncInterval() -> core::Duration
 {
   const auto jitteredSync = BASE_SYNC_INTERVAL_MS + std::rand() % MAX_SYNC_JITTER_MS;
-  return core::Milliseconds{jitteredSync};
+  return core::toMilliseconds(jitteredSync);
 }
 } // namespace
 
@@ -35,11 +35,12 @@ void SyncComponent::markAsJustSynced()
   m_remainingUntilNextSync = generateJitteredSyncInterval();
 }
 
-void SyncComponent::update(const float elapsedSeconds)
+void SyncComponent::update(const TickData &data)
 {
   constexpr auto MILLISECONDS_IN_A_SECONDS = 1000;
-  const auto elapsedMillis                 = core::Milliseconds(
-    static_cast<int>(elapsedSeconds * MILLISECONDS_IN_A_SECONDS));
+  // TODO: We should not convert to real time.
+  const auto elapsedMillis = core::Milliseconds(
+    static_cast<int>(data.elapsed.toSeconds() * MILLISECONDS_IN_A_SECONDS));
 
   m_remainingUntilNextSync -= elapsedMillis;
   if (m_remainingUntilNextSync.count() < 0)

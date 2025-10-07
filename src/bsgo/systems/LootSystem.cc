@@ -17,8 +17,7 @@ LootSystem::LootSystem()
 
 void LootSystem::updateEntity(Entity &entity, Coordinator &coordinator, const TickData &data) const
 {
-  // TODO: We should use the tick duration as is.
-  entity.lootComp().update(data.elapsed.toSeconds());
+  entity.lootComp().update(data);
 
   const auto &health = entity.healthComp();
   if (health.isAlive())

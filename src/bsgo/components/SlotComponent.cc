@@ -14,9 +14,9 @@ SlotComponent::SlotComponent(const ComponentType &type, const SlotComponentData 
   addModule("slot");
 }
 
-void SlotComponent::update(const float elapsedSeconds)
+void SlotComponent::update(const TickData &data)
 {
-  handleReload(elapsedSeconds);
+  handleReload(data);
 }
 
 auto SlotComponent::dbId() const -> Uuid
@@ -120,16 +120,17 @@ void SlotComponent::clearFireRequest()
   m_fireRequest = false;
 }
 
-void SlotComponent::handleReload(const float elapsedSeconds)
+void SlotComponent::handleReload(const TickData &data)
 {
   if (!m_elapsedSinceLastFired)
   {
     return;
   }
 
+  // TODO: We should not convert to milliseconds here.
   constexpr auto MILLISECONDS_IN_A_SECONDS = 1000;
   (*m_elapsedSinceLastFired) += core::Milliseconds(
-    static_cast<int>(elapsedSeconds * MILLISECONDS_IN_A_SECONDS));
+    static_cast<int>(data.elapsed.toSeconds() * MILLISECONDS_IN_A_SECONDS));
 
   // TODO: We should not convert to milliseconds here.
   constexpr auto MILLI_IN_ONE_SECOND = 1000.0f;

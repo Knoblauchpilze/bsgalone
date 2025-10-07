@@ -31,7 +31,7 @@ class StatusComponent : public AbstractComponent
 
   void setStatus(const Status &status);
 
-  void update(const float elapsedSeconds) override;
+  void update(const TickData &data) override;
 
   private:
   Status m_status;

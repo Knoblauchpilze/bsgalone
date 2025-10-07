@@ -17,7 +17,7 @@ class SyncComponent : public AbstractComponent
   void markForSync(const bool needsSync = true);
   void markAsJustSynced();
 
-  void update(const float elapsedSeconds) override;
+  void update(const TickData &data) override;
 
   private:
   bool m_needsSync{false};

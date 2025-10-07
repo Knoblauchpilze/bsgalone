@@ -13,7 +13,7 @@ class DamageComponent : public AbstractComponent
 
   auto damage() const noexcept -> float;
 
-  void update(const float elapsedSeconds) override;
+  void update(const TickData &data) override;
 
   private:
   float m_damage;

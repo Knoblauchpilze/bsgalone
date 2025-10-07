@@ -18,8 +18,7 @@ void EffectSystem::updateEntity(Entity &entity, Coordinator &coordinator, const 
 {
   for (const auto &effect : entity.effects)
   {
-    // TODO: We should use the tick duration as is.
-    effect->update(data.elapsed.toSeconds());
+    effect->update(data);
   }
 
   cleanUpFinishedEffects(entity, coordinator);

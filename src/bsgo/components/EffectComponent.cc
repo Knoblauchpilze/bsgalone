@@ -23,11 +23,12 @@ auto EffectComponent::damageModifier() const -> std::optional<float>
   return {};
 }
 
-void EffectComponent::update(const float elapsedSeconds)
+void EffectComponent::update(const TickData &data)
 {
-  constexpr auto MILLISECONDS_IN_A_SECONDS = 1000;
-  m_elapsedSinceStart += core::Milliseconds(
-    static_cast<int>(elapsedSeconds * MILLISECONDS_IN_A_SECONDS));
+  // TODO: We should not convert to real time.
+  constexpr auto MILLI_IN_ONE_SECOND = 1000.0f;
+  const auto elapsed = core::toMilliseconds(MILLI_IN_ONE_SECOND * data.elapsed.toSeconds());
+  m_elapsedSinceStart += elapsed;
 }
 
 } // namespace bsgo

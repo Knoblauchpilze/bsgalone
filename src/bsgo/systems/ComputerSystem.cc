@@ -60,8 +60,7 @@ void ComputerSystem::updateComputer(const Entity &ent,
 {
   auto state{FiringState::READY};
 
-  // TODO: We should use the tick duration as is.
-  computer->update(data.elapsed.toSeconds());
+  computer->update(data);
 
   if (computer->isOffensive() && (!target.has_value() || !isValidTarget(ent, *target, *computer)))
   {
