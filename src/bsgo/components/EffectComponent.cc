@@ -12,7 +12,10 @@ EffectComponent::EffectComponent(const ComponentType &type, const TickDuration &
 
 bool EffectComponent::isFinished() const
 {
-  return m_duration < m_elapsedSinceStart;
+  // TODO: We should not convert to milliseconds here.
+  constexpr auto MILLI_IN_ONE_SECOND = 1000.0f;
+  const auto durationAsTime = core::toMilliseconds(MILLI_IN_ONE_SECOND * m_duration.toSeconds());
+  return durationAsTime < m_elapsedSinceStart;
 }
 
 auto EffectComponent::damageModifier() const -> std::optional<float>
@@ -22,7 +25,10 @@ auto EffectComponent::damageModifier() const -> std::optional<float>
 
 void EffectComponent::update(const TickData &data)
 {
-  m_elapsedSinceStart += data.elapsed;
+  // TODO: We should not convert to real time.
+  constexpr auto MILLI_IN_ONE_SECOND = 1000.0f;
+  const auto elapsed = core::toMilliseconds(MILLI_IN_ONE_SECOND * data.elapsed.toSeconds());
+  m_elapsedSinceStart += elapsed;
 }
 
 } // namespace bsgo

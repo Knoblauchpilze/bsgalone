@@ -3,10 +3,11 @@
 
 #include "AbstractComponent.hh"
 #include "Tick.hh"
-#include "TickDuration.hh"
+#include "TimeUtils.hh"
 #include <optional>
 
 namespace bsgo {
+
 class EffectComponent : public AbstractComponent
 {
   public:
@@ -21,7 +22,7 @@ class EffectComponent : public AbstractComponent
 
   private:
   TickDuration m_duration;
-  TickDuration m_elapsedSinceStart{};
+  core::Duration m_elapsedSinceStart{};
 };
 
 using EffectComponentShPtr = std::shared_ptr<EffectComponent>;
