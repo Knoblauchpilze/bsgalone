@@ -13,12 +13,12 @@ class DbSyncProcess : public AbstractProcess
   DbSyncProcess(const Repositories &repositories);
   ~DbSyncProcess() override = default;
 
-  void update(Coordinator &coordinator, const float elapsedSeconds) const override;
+  void update(Coordinator &coordinator, const TickData &data) const override;
 
   private:
   DatabaseSynchronizer m_synchronizer;
 
-  void updateEntity(Entity &entity, Coordinator &coordinator, const float elapsedSeconds) const;
+  void updateEntity(Entity &entity, Coordinator &coordinator, const TickData &data) const;
 };
 
 } // namespace bsgo

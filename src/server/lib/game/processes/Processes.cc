@@ -15,11 +15,11 @@ Processes::Processes()
   initialize();
 }
 
-void Processes::update(Coordinator &coordinator, const float elapsedSeconds) const
+void Processes::update(Coordinator &coordinator, const TickData &data) const
 {
   for (const auto &process : m_processes)
   {
-    process->update(coordinator, elapsedSeconds);
+    process->update(coordinator, data);
   }
 }
 
