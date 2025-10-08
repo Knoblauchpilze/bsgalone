@@ -25,33 +25,24 @@ bool StatusComponent::isDead() const
   return Status::DEAD == m_status;
 }
 
-auto StatusComponent::jumpTime() const -> core::Duration
+auto StatusComponent::jumpTime() const -> TickDuration
 {
   if (!m_jumpTime)
   {
     error("Failed to get jump time", "No such value");
   }
 
-  // TODO: Should not convert back to real time.
-  constexpr auto MILLIS_IN_ONE_SECOND = 1000.0f;
-  const auto jumpTime = core::toMilliseconds(MILLIS_IN_ONE_SECOND * m_jumpTime->toSeconds());
-
-  return jumpTime;
+  return *m_jumpTime;
 }
 
-auto StatusComponent::threatJumpTime() const -> core::Duration
+auto StatusComponent::threatJumpTime() const -> TickDuration
 {
   if (!m_threatJumpTime)
   {
     error("Failed to get threat jump time", "No such value");
   }
 
-  // TODO: Should not convert back to real time.
-  constexpr auto MILLIS_IN_ONE_SECOND = 1000.0f;
-  const auto threatJumpTime           = core::toMilliseconds(MILLIS_IN_ONE_SECOND
-                                                   * m_threatJumpTime->toSeconds());
-
-  return threatJumpTime;
+  return *m_threatJumpTime;
 }
 
 bool StatusComponent::justChanged() const
@@ -69,29 +60,14 @@ void StatusComponent::resetAppearingTime()
   m_elapsedSinceAppearing = TickDuration();
 }
 
-auto StatusComponent::getElapsedSinceLastChange() const -> core::Duration
+auto StatusComponent::getElapsedSinceLastChange() const -> TickDuration
 {
-  // TODO: Should not convert back to real time.
-  constexpr auto MILLIS_IN_ONE_SECOND = 1000.0f;
-  const auto elapsed                  = core::toMilliseconds(MILLIS_IN_ONE_SECOND
-                                            * m_elapsedSinceLastChange.toSeconds());
-
-  return elapsed;
+  return m_elapsedSinceLastChange;
 }
 
-auto StatusComponent::tryGetElapsedSinceLastAppearing() const -> std::optional<core::Duration>
+auto StatusComponent::tryGetElapsedSinceLastAppearing() const -> std::optional<TickDuration>
 {
-  if (m_elapsedSinceAppearing)
-  {
-    // TODO: Should not convert back to real time.
-    constexpr auto MILLIS_IN_ONE_SECOND = 1000.0f;
-    const auto elapsed                  = core::toMilliseconds(MILLIS_IN_ONE_SECOND
-                                              * m_elapsedSinceAppearing->toSeconds());
-
-    return elapsed;
-  }
-
-  return {};
+  return m_elapsedSinceAppearing;
 }
 
 auto StatusComponent::getCurrentJumpTime() const -> TickDuration

@@ -3,7 +3,6 @@
 
 #include "AbstractComponent.hh"
 #include "Status.hh"
-#include "TimeUtils.hh"
 #include <optional>
 
 namespace bsgo {
@@ -18,13 +17,13 @@ class StatusComponent : public AbstractComponent
 
   auto status() const -> Status;
   bool isDead() const;
-  auto jumpTime() const -> core::Duration;
-  auto threatJumpTime() const -> core::Duration;
+  auto jumpTime() const -> TickDuration;
+  auto threatJumpTime() const -> TickDuration;
   bool justChanged() const;
   void resetChanged();
   void resetAppearingTime();
-  auto getElapsedSinceLastChange() const -> core::Duration;
-  auto tryGetElapsedSinceLastAppearing() const -> std::optional<core::Duration>;
+  auto getElapsedSinceLastChange() const -> TickDuration;
+  auto tryGetElapsedSinceLastAppearing() const -> std::optional<TickDuration>;
   auto getCurrentJumpTime() const -> TickDuration;
   auto getElapsedSinceJumpStarted() const -> TickDuration;
   auto getRemainingJumpTime() const -> TickDuration;

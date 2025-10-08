@@ -15,8 +15,8 @@ StatusSystem::StatusSystem()
   : AbstractSystem(SystemType::STATUS, isEntityRelevant)
 {}
 
-constexpr auto TIME_TO_STAY_IN_APPEARED_MODE = core::Milliseconds{10'000};
-constexpr auto TIME_TO_STAY_IN_THREAT_MODE   = core::Milliseconds{3'000};
+const auto TIME_TO_STAY_IN_APPEARED_MODE = TickDuration::fromInt(100);
+const auto TIME_TO_STAY_IN_THREAT_MODE   = TickDuration::fromInt(30);
 
 void StatusSystem::updateEntity(Entity &entity, Coordinator &coordinator, const TickData &data) const
 {
@@ -33,6 +33,7 @@ void StatusSystem::handleAppearingState(Entity &entity, StatusComponent &statusC
 {
   const auto status     = statusComp.status();
   const auto lastUpdate = statusComp.tryGetElapsedSinceLastAppearing();
+
   if (statusIndicatesAppearing(status) && lastUpdate && *lastUpdate >= TIME_TO_STAY_IN_APPEARED_MODE)
   {
     debug("Switching " + entity.str() + " from appearing to visible");
