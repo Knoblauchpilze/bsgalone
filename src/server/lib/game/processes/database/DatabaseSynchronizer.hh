@@ -12,7 +12,7 @@ class DatabaseSynchronizer : public core::CoreObject
   public:
   DatabaseSynchronizer(const Repositories &repositories);
 
-  void syncEntity(const Entity &entity) const;
+  void syncEntity(Entity &entity) const;
 
   private:
   Repositories m_repositories{};
