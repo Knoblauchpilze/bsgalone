@@ -13,7 +13,7 @@ DatabaseSynchronizer::DatabaseSynchronizer(const Repositories &repositories)
   setService("database");
 }
 
-void DatabaseSynchronizer::syncEntity(const Entity &entity) const
+void DatabaseSynchronizer::syncEntity(Entity &entity) const
 {
   const auto kind = entity.kind->kind();
 
@@ -32,6 +32,8 @@ void DatabaseSynchronizer::syncEntity(const Entity &entity) const
       error("Unsupported entity kind " + str(kind) + " to sync");
       break;
   }
+
+  entity.dbSyncComp().markAsJustSynced();
 }
 
 } // namespace bsgo
