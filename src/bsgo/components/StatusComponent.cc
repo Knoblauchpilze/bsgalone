@@ -31,7 +31,6 @@ auto StatusComponent::jumpTime() const -> TickDuration
   {
     error("Failed to get jump time", "No such value");
   }
-
   return *m_jumpTime;
 }
 
@@ -41,7 +40,6 @@ auto StatusComponent::threatJumpTime() const -> TickDuration
   {
     error("Failed to get threat jump time", "No such value");
   }
-
   return *m_threatJumpTime;
 }
 
