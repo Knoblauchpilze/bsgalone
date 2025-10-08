@@ -2,7 +2,6 @@
 #pragma once
 
 #include "AbstractComponent.hh"
-#include "TickDuration.hh"
 #include <optional>
 
 namespace bsgo {
