@@ -3,7 +3,6 @@
 #pragma once
 
 #include "AbstractComponent.hh"
-#include "TickDuration.hh"
 
 namespace bsgo {
 
