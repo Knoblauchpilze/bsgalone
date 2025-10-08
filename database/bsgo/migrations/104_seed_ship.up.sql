@@ -1,7 +1,7 @@
 
 -- Viper Mark II
 INSERT INTO ship ("name", "faction", "class", "starting_ship", "max_hull_points", "hull_points_regen", "max_power_points", "power_points_regen", "max_acceleration", "max_speed", "radius")
-  VALUES ('Viper Mark II', 'colonial', 'strike', true, 450.0, 0.03, 100.0, 0.02, 5.0, 4.0, 0.5);
+  VALUES ('Viper Mark II', 'colonial', 'strike', true, 450.0, 0.3, 100.0, 0.2, 5.0, 4.0, 0.5);
 
 INSERT INTO ship_price ("ship", "resource", "cost")
   VALUES (
@@ -44,7 +44,7 @@ INSERT INTO ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
 
 -- Cylon Raider
 INSERT INTO ship ("name", "faction", "class", "starting_ship", "max_hull_points", "hull_points_regen", "max_power_points", "power_points_regen", "max_acceleration", "max_speed", "radius")
-  VALUES ('Cylon Raider', 'cylon', 'strike', true, 450.0, 0.03, 100.0, 0.02, 5.0, 4.0, 0.5);
+  VALUES ('Cylon Raider', 'cylon', 'strike', true, 450.0, 0.3, 100.0, 0.2, 5.0, 4.0, 0.5);
 
 INSERT INTO ship_price ("ship", "resource", "cost")
   VALUES (
@@ -87,7 +87,7 @@ INSERT INTO ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
 
 -- Viper Mark VII
 INSERT INTO ship ("name", "faction", "class", "starting_ship", "max_hull_points", "hull_points_regen", "max_power_points", "power_points_regen", "max_acceleration", "max_speed", "radius")
-  VALUES ('Viper Mark VII', 'colonial', 'strike', false, 585.0, 0.04, 150.0, 0.05, 4.0, 4.0, 0.5);
+  VALUES ('Viper Mark VII', 'colonial', 'strike', false, 585.0, 0.4, 150.0, 0.5, 4.0, 4.0, 0.5);
 
 INSERT INTO ship_price ("ship", "resource", "cost")
   VALUES (
@@ -142,7 +142,7 @@ INSERT INTO ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
 
 -- Cylon War Raider
 INSERT INTO ship ("name", "faction", "class", "starting_ship", "max_hull_points", "hull_points_regen", "max_power_points", "power_points_regen", "max_acceleration", "max_speed", "radius")
-  VALUES ('Cylon War Raider', 'cylon', 'strike', false, 585.0, 0.04, 150.0, 0.05, 4.0, 4.0, 0.5);
+  VALUES ('Cylon War Raider', 'cylon', 'strike', false, 585.0, 0.4, 150.0, 0.5, 4.0, 4.0, 0.5);
 
 INSERT INTO ship_price ("ship", "resource", "cost")
   VALUES (
@@ -197,7 +197,7 @@ INSERT INTO ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
 
 -- Jotunn
 INSERT INTO ship ("name", "faction", "class", "starting_ship", "max_hull_points", "hull_points_regen", "max_power_points", "power_points_regen", "max_acceleration", "max_speed", "radius")
-  VALUES ('Jotunn', 'colonial', 'line', false, 3000.0, 0.5, 500.0, 0.05, 1.0, 2.0, 2.0);
+  VALUES ('Jotunn', 'colonial', 'line', false, 3000.0, 5.0, 500.0, 0.5, 1.0, 2.0, 2.0);
 
 INSERT INTO ship_price ("ship", "resource", "cost")
   VALUES (
@@ -264,7 +264,7 @@ INSERT INTO ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
 
 -- Jormung
 INSERT INTO ship ("name", "faction", "class", "starting_ship", "max_hull_points", "hull_points_regen", "max_power_points", "power_points_regen", "max_acceleration", "max_speed", "radius")
-  VALUES ('Jormung', 'cylon', 'line', false, 3000.0, 0.5, 500.0, 0.05, 1.0, 2.0, 2.0);
+  VALUES ('Jormung', 'cylon', 'line', false, 3000.0, 5.0, 500.0, 0.5, 1.0, 2.0, 2.0);
 
 INSERT INTO ship_price ("ship", "resource", "cost")
   VALUES (
@@ -331,7 +331,7 @@ INSERT INTO ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
 
 -- Vanir
 INSERT INTO ship ("name", "faction", "class", "starting_ship", "max_hull_points", "hull_points_regen", "max_power_points", "power_points_regen", "max_acceleration", "max_speed", "radius")
-  VALUES ('Vanir', 'colonial', 'line', false, 2500.0, 0.35, 600.0, 0.07, 1.0, 2.0, 2.0);
+  VALUES ('Vanir', 'colonial', 'line', false, 2500.0, 3.5, 600.0, 0.7, 1.0, 2.0, 2.0);
 
 INSERT INTO ship_price ("ship", "resource", "cost")
   VALUES (
@@ -404,7 +404,7 @@ INSERT INTO ship_slot ("ship", "type", "x_pos", "y_pos", "z_pos")
 
 -- Hel
 INSERT INTO ship ("name", "faction", "class", "starting_ship", "max_hull_points", "hull_points_regen", "max_power_points", "power_points_regen", "max_acceleration", "max_speed", "radius")
-  VALUES ('Hel', 'cylon', 'line', false, 2500.0, 0.35, 600.0, 0.07, 1.0, 2.0, 2.0);
+  VALUES ('Hel', 'cylon', 'line', false, 2500.0, 3.5, 600.0, 0.7, 1.0, 2.0, 2.0);
 
 INSERT INTO ship_price ("ship", "resource", "cost")
   VALUES (
