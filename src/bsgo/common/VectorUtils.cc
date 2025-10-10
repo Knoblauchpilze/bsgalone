@@ -17,4 +17,9 @@ auto str(const Eigen::Vector3f &v) -> std::string
   return out;
 }
 
+auto operator*(const Eigen::Vector3f &lhs, const TickDuration &rhs) -> Eigen::Vector3f
+{
+  return Eigen::Vector3f(lhs(0) * rhs, lhs(1) * rhs, lhs(2) * rhs);
+}
+
 } // namespace bsgo

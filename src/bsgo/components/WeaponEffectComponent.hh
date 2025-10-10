@@ -2,7 +2,6 @@
 #pragma once
 
 #include "EffectComponent.hh"
-#include "TickDuration.hh"
 
 namespace bsgo {
 

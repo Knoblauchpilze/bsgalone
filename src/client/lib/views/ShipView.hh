@@ -6,6 +6,7 @@
 #include "Entity.hh"
 #include "IMessageQueue.hh"
 #include "SystemData.hh"
+#include "TimeUtils.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
 #include <memory>

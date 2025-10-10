@@ -70,21 +70,15 @@ auto SlotComponent::reloadPercentage() const -> float
     return 1.0f;
   }
 
-  // TODO: We should not convert to milliseconds here.
-  constexpr auto MILLI_IN_ONE_SECOND = 1000.0f;
-  const auto reloadTime              = MILLI_IN_ONE_SECOND * m_reloadTime.toSeconds();
-
-  // https://stackoverflow.com/questions/76522118/dividing-two-chronodurations-to-get-fraction
-  const auto reloadAsFloat = std::chrono::duration<float, std::milli>(reloadTime);
-  return *m_elapsedSinceLastFired / reloadAsFloat;
+  return *m_elapsedSinceLastFired / m_reloadTime;
 }
 
-auto SlotComponent::elapsedSinceLastFired() const -> std::optional<core::Duration>
+auto SlotComponent::elapsedSinceLastFired() const -> std::optional<TickDuration>
 {
   return m_elapsedSinceLastFired;
 }
 
-void SlotComponent::overrideElapsedSinceLastFired(const std::optional<core::Duration> &elapsed)
+void SlotComponent::overrideElapsedSinceLastFired(const std::optional<TickDuration> &elapsed)
 {
   m_elapsedSinceLastFired = elapsed;
 }
@@ -112,7 +106,7 @@ void SlotComponent::fire()
     error("Failed to use slot", "Still reloading");
   }
 
-  m_elapsedSinceLastFired = core::Duration(0);
+  m_elapsedSinceLastFired = TickDuration();
 }
 
 void SlotComponent::clearFireRequest()
@@ -127,16 +121,9 @@ void SlotComponent::handleReload(const TickData &data)
     return;
   }
 
-  // TODO: We should not convert to milliseconds here.
-  constexpr auto MILLISECONDS_IN_A_SECONDS = 1000;
-  (*m_elapsedSinceLastFired) += core::Milliseconds(
-    static_cast<int>(data.elapsed.toSeconds() * MILLISECONDS_IN_A_SECONDS));
+  (*m_elapsedSinceLastFired) += data.elapsed;
 
-  // TODO: We should not convert to milliseconds here.
-  constexpr auto MILLI_IN_ONE_SECOND = 1000.0f;
-  const auto reloadTime = core::toMilliseconds(MILLI_IN_ONE_SECOND * m_reloadTime.toSeconds());
-
-  if (*m_elapsedSinceLastFired >= reloadTime)
+  if (*m_elapsedSinceLastFired >= m_reloadTime)
   {
     m_elapsedSinceLastFired.reset();
   }

@@ -2,8 +2,6 @@
 #pragma once
 
 #include "AbstractComponent.hh"
-#include "TickDuration.hh"
-#include "TimeUtils.hh"
 #include "Uuid.hh"
 #include <optional>
 
@@ -45,9 +43,9 @@ class SlotComponent : public AbstractComponent
   bool canFire() const noexcept;
   bool isReloading() const noexcept;
   auto reloadPercentage() const -> float;
-  auto elapsedSinceLastFired() const -> std::optional<core::Duration>;
+  auto elapsedSinceLastFired() const -> std::optional<TickDuration>;
 
-  void overrideElapsedSinceLastFired(const std::optional<core::Duration> &elapsed);
+  void overrideElapsedSinceLastFired(const std::optional<TickDuration> &elapsed);
   void setFiringState(const FiringState &firingState);
   void registerFireRequest();
   bool hasFireRequest() const;
@@ -63,7 +61,7 @@ class SlotComponent : public AbstractComponent
 
   bool m_fireRequest{false};
   FiringState m_firingState{FiringState::READY};
-  std::optional<core::Duration> m_elapsedSinceLastFired{};
+  std::optional<TickDuration> m_elapsedSinceLastFired{};
 
   void handleReload(const TickData &data);
 };

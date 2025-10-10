@@ -249,7 +249,11 @@ auto ShipView::getJumpData() const -> JumpData
   out.systemName = *maybeSystemName;
 
   const auto ship = getPlayerShip();
-  out.jumpTime    = ship.statusComp().tryGetCurrentJumpTime();
+  // TODO: We should not convert back to time.
+  constexpr auto MILLIS_IN_ONE_SECOND = 1000.0f;
+  const auto jumpTime                 = core::toMilliseconds(MILLIS_IN_ONE_SECOND
+                                             * ship.statusComp().getCurrentJumpTime().toSeconds());
+  out.jumpTime                        = jumpTime;
 
   return out;
 }
