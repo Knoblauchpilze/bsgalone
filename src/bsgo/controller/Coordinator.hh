@@ -11,7 +11,6 @@
 #include "Systems.hh"
 #include "TickData.hh"
 #include "TickDuration.hh"
-#include "TimeUtils.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
 #include <memory>
@@ -44,8 +43,8 @@ class Coordinator : public core::CoreObject
   void addRemoval(const Uuid ent);
   void addStatus(const Uuid ent,
                  const Status &status,
-                 const std::optional<core::Duration> &jumpTime,
-                 const std::optional<core::Duration> &threatJumpTime);
+                 const std::optional<TickDuration> &jumpTime,
+                 const std::optional<TickDuration> &threatJumpTime);
   void addAI(const Uuid ent, INodePtr behavior);
   void addShipClass(const Uuid ent, const ShipClass &shipClass);
   void addName(const Uuid ent, const std::string &name);

@@ -144,8 +144,8 @@ void Coordinator::addRemoval(const Uuid ent)
 
 void Coordinator::addStatus(const Uuid ent,
                             const Status &status,
-                            const std::optional<core::Duration> &jumpTime,
-                            const std::optional<core::Duration> &threatJumpTime)
+                            const std::optional<TickDuration> &jumpTime,
+                            const std::optional<TickDuration> &threatJumpTime)
 {
   checkForOverrides(ent, "Status", m_components.statuses);
   m_components.statuses[ent] = std::make_shared<StatusComponent>(status, jumpTime, threatJumpTime);

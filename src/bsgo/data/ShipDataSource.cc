@@ -67,12 +67,7 @@ void ShipDataSource::registerShip(Coordinator &coordinator,
   coordinator.addHealth(shipEntityId, data.hullPoints, data.maxHullPoints, data.hullPointsRegen);
   coordinator.addPower(shipEntityId, data.powerPoints, data.maxPowerPoints, data.powerRegen);
   coordinator.addFaction(shipEntityId, data.faction);
-  // TODO: Replace this to not convert back to a time.
-  constexpr auto MILLIS_IN_ONE_SECOND = 1000.0f;
-  const auto jumpTime = core::toMilliseconds(MILLIS_IN_ONE_SECOND * data.jumpTime.toSeconds());
-  const auto jumpTimeInThreat = core::toMilliseconds(MILLIS_IN_ONE_SECOND
-                                                     * data.jumpTimeInThreat.toSeconds());
-  coordinator.addStatus(shipEntityId, data.status, jumpTime, jumpTimeInThreat);
+  coordinator.addStatus(shipEntityId, data.status, data.jumpTime, data.jumpTimeInThreat);
   coordinator.addShipClass(shipEntityId, data.shipClass);
   coordinator.addName(shipEntityId, data.name);
   if (data.targetDbId)

@@ -4,8 +4,8 @@
 namespace bsgo {
 
 StatusComponent::StatusComponent(const Status &status,
-                                 const std::optional<core::Duration> &jumpTime,
-                                 const std::optional<core::Duration> &threatJumpTime)
+                                 const std::optional<TickDuration> &jumpTime,
+                                 const std::optional<TickDuration> &threatJumpTime)
   : AbstractComponent(ComponentType::STATUS)
   , m_status(status)
   , m_jumpTime(jumpTime)
@@ -25,7 +25,7 @@ bool StatusComponent::isDead() const
   return Status::DEAD == m_status;
 }
 
-auto StatusComponent::jumpTime() const -> core::Duration
+auto StatusComponent::jumpTime() const -> TickDuration
 {
   if (!m_jumpTime)
   {
@@ -34,7 +34,7 @@ auto StatusComponent::jumpTime() const -> core::Duration
   return *m_jumpTime;
 }
 
-auto StatusComponent::threatJumpTime() const -> core::Duration
+auto StatusComponent::threatJumpTime() const -> TickDuration
 {
   if (!m_threatJumpTime)
   {
@@ -55,20 +55,20 @@ void StatusComponent::resetChanged()
 
 void StatusComponent::resetAppearingTime()
 {
-  m_elapsedSinceAppearing = core::Duration{0};
+  m_elapsedSinceAppearing = TickDuration();
 }
 
-auto StatusComponent::getElapsedSinceLastChange() const -> core::Duration
+auto StatusComponent::getElapsedSinceLastChange() const -> TickDuration
 {
   return m_elapsedSinceLastChange;
 }
 
-auto StatusComponent::tryGetElapsedSinceLastAppearing() const -> std::optional<core::Duration>
+auto StatusComponent::tryGetElapsedSinceLastAppearing() const -> std::optional<TickDuration>
 {
   return m_elapsedSinceAppearing;
 }
 
-auto StatusComponent::tryGetCurrentJumpTime() const -> core::Duration
+auto StatusComponent::getCurrentJumpTime() const -> TickDuration
 {
   if (!m_currentJumpTime)
   {
@@ -77,7 +77,7 @@ auto StatusComponent::tryGetCurrentJumpTime() const -> core::Duration
   return *m_currentJumpTime;
 }
 
-auto StatusComponent::tryGetElapsedSinceJumpStarted() const -> core::Duration
+auto StatusComponent::getElapsedSinceJumpStarted() const -> TickDuration
 {
   if (!m_elapsedSinceJumpStarted)
   {
@@ -86,10 +86,10 @@ auto StatusComponent::tryGetElapsedSinceJumpStarted() const -> core::Duration
   return *m_elapsedSinceJumpStarted;
 }
 
-auto StatusComponent::tryGetRemainingJumpTime() const -> core::Duration
+auto StatusComponent::getRemainingJumpTime() const -> TickDuration
 {
-  const auto jumpTime = tryGetCurrentJumpTime();
-  const auto elapsed  = tryGetElapsedSinceJumpStarted();
+  const auto jumpTime = getCurrentJumpTime();
+  const auto elapsed  = getElapsedSinceJumpStarted();
 
   return jumpTime - elapsed;
 }
@@ -101,24 +101,19 @@ void StatusComponent::setStatus(const Status &status)
 
   m_status                 = status;
   m_justChanged            = true;
-  m_elapsedSinceLastChange = core::Duration{0};
+  m_elapsedSinceLastChange = TickDuration();
 }
 
 void StatusComponent::update(const TickData &data)
 {
-  // TODO: We should not convert to milliseconds here.
-  constexpr auto MILLISECONDS_IN_A_SECONDS = 1000;
-  const auto elapsedMillis                 = core::Milliseconds(
-    static_cast<int>(data.elapsed.toSeconds() * MILLISECONDS_IN_A_SECONDS));
-
-  m_elapsedSinceLastChange += elapsedMillis;
+  m_elapsedSinceLastChange += data.elapsed;
   if (m_elapsedSinceAppearing)
   {
-    *m_elapsedSinceAppearing += elapsedMillis;
+    *m_elapsedSinceAppearing += data.elapsed;
   }
   if (m_elapsedSinceJumpStarted)
   {
-    *m_elapsedSinceJumpStarted += elapsedMillis;
+    *m_elapsedSinceJumpStarted += data.elapsed;
   }
 }
 
@@ -133,7 +128,7 @@ void StatusComponent::updateJumpState(const Status &newStatus, const bool forceU
   const auto isJumping  = statusIndicatesJump(newStatus);
   if (!wasJumping && isJumping)
   {
-    m_elapsedSinceJumpStarted = core::Duration{0};
+    m_elapsedSinceJumpStarted = TickDuration();
     m_currentJumpTime         = statusIndicatesThreat(m_status) ? *m_threatJumpTime : *m_jumpTime;
   }
   if (wasJumping && !isJumping)
@@ -152,7 +147,7 @@ void StatusComponent::updateAppearingState(const Status &newStatus)
 
   if (statusIndicatesAppearing(newStatus))
   {
-    m_elapsedSinceAppearing = core::Duration{0};
+    m_elapsedSinceAppearing = TickDuration();
   }
 }
 

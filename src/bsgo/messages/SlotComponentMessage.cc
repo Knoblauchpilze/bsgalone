@@ -12,7 +12,7 @@ SlotComponentMessage::SlotComponentMessage(const Uuid playerDbId,
 
                                            const Uuid shipDbId,
                                            const Uuid slotDbId,
-                                           const std::optional<core::Duration> &elapsedSinceLastFired)
+                                           const std::optional<TickDuration> &elapsedSinceLastFired)
   : ComponentUpdatedMessage(MessageType::SLOT_COMPONENT_UPDATED,
                             shipDbId,
                             ComponentType::COMPUTER_SLOT)
@@ -31,7 +31,7 @@ auto SlotComponentMessage::getSlotDbId() const -> int
   return m_slotDbId;
 }
 
-auto SlotComponentMessage::getElapsedSinceLastFired() const -> std::optional<core::Duration>
+auto SlotComponentMessage::getElapsedSinceLastFired() const -> std::optional<TickDuration>
 {
   return m_elapsedSinceLastFired;
 }

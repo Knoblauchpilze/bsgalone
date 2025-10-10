@@ -1,10 +1,9 @@
 
 #include "VelocityComponent.hh"
-
 #include "VectorUtils.hh"
 
 namespace bsgo {
-constexpr auto FRICTION_ACCELERATION = 0.5f;
+constexpr auto FRICTION_ACCELERATION = 0.05f;
 
 VelocityComponent::VelocityComponent(const VelocityData &data)
   : AbstractComponent(ComponentType::VELOCITY)
@@ -81,11 +80,9 @@ void VelocityComponent::updateFixedSpeed(const TickData & /*data*/)
 void VelocityComponent::updateVariableSpeed(const TickData &data)
 {
   // https://gamedev.stackexchange.com/questions/69404/how-should-i-implement-basic-spaceship-physics
-  // TODO: We should not convert to real time.
-  m_speed += m_acceleration * data.elapsed.toSeconds();
+  m_speed += m_acceleration * data.elapsed;
 
-  Eigen::Vector3f friction = -FRICTION_ACCELERATION * data.elapsed.toSeconds()
-                             * m_speed.normalized();
+  Eigen::Vector3f friction = -FRICTION_ACCELERATION * data.elapsed * m_speed.normalized();
   m_speed += friction;
 
   const auto speedNorm = m_speed.norm();
