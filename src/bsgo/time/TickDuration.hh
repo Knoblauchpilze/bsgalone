@@ -34,6 +34,31 @@ class TickDuration
   bool operator>(const TickDuration &rhs) const;
   bool operator>=(const TickDuration &rhs) const;
 
+  /// @brief - Adds duration to this tick and returns a reference to this.
+  /// @param duration - the duration to add
+  /// @return - a reference to this
+  auto operator+=(const TickDuration &duration) -> TickDuration &;
+
+  /// @brief - Performs the division of this by duration and returns the result as
+  /// a floating point value. The return value can be understood as a ratio between
+  /// the two input duration: it is a dimensionless value.
+  /// @param duration - the duration to divide this by
+  /// @return - the result of this divided by duration as a dimensionless unit
+  auto operator/(const TickDuration &duration) const -> float;
+
+  /// @brief - Multiplies rhs with this and returns the result as a floating point value.
+  /// The result is a dimensionless expression: the implicit assumption is that rhs is a value
+  /// with a unit of Tick^-1, meaning its a quantity per Tick (e.g. m/Tick).
+  /// @param rhs - a floating point value
+  /// @return - the result of multiplying this with rhs
+  auto operator*(const float rhs) const -> float;
+
+  /// @brief - Subtracts rhs from this duration. In case rhs is greater than this duration
+  /// the return value is equivalent to calling TickDuration().
+  /// @param rhs - the duration to subtract
+  /// @return - the result of this - rhs or TickDuration in case rhs is greater than this
+  auto operator-(const TickDuration &rhs) const -> TickDuration;
+
   auto serialize(std::ostream &out) const -> std::ostream &;
   bool deserialize(std::istream &in);
 
@@ -66,5 +91,12 @@ class TickDuration
 
   void validate();
 };
+
+/// @brief - Multiplies lhs with rhs and returns the result as a floating point value.
+/// This function internally calls the operator* defined in the TickDuration class.
+/// @param lhs - a floating point value
+/// @param rhs - a tick duration
+/// @return - the result of lhs * rhs as a float
+auto operator*(const float lhs, const TickDuration &rhs) -> float;
 
 } // namespace bsgo
