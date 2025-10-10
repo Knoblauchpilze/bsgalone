@@ -1,6 +1,5 @@
 
 #include "VelocityComponent.hh"
-
 #include "VectorUtils.hh"
 
 namespace bsgo {
@@ -77,16 +76,6 @@ void VelocityComponent::updateFixedSpeed(const TickData & /*data*/)
 {
   // Intentionally empty: fixed speed means no changes to the speed.
 }
-
-namespace {
-// This is only needed here to multiply vectors with a tick duration.
-// If this needs to be used elsewhere, consider moving it to a common
-// place.
-auto operator*(const Eigen::Vector3f &lhs, const TickDuration &rhs) -> Eigen::Vector3f
-{
-  return Eigen::Vector3f(lhs(0) * rhs, lhs(1) * rhs, lhs(2) * rhs);
-}
-} // namespace
 
 void VelocityComponent::updateVariableSpeed(const TickData &data)
 {
