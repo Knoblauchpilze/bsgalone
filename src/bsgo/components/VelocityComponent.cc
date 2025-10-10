@@ -78,14 +78,22 @@ void VelocityComponent::updateFixedSpeed(const TickData & /*data*/)
   // Intentionally empty: fixed speed means no changes to the speed.
 }
 
+namespace {
+// This is only needed here to multiply vectors with a tick duration.
+// If this needs to be used elsewhere, consider moving it to a common
+// place.
+auto operator*(const Eigen::Vector3f &lhs, const TickDuration &rhs) -> Eigen::Vector3f
+{
+  return Eigen::Vector3f(lhs(0) * rhs, lhs(1) * rhs, lhs(2) * rhs);
+}
+} // namespace
+
 void VelocityComponent::updateVariableSpeed(const TickData &data)
 {
-  // TODO: This could be improved.
-  const auto elapsed = 1.0f * data.elapsed;
   // https://gamedev.stackexchange.com/questions/69404/how-should-i-implement-basic-spaceship-physics
-  m_speed += m_acceleration * elapsed;
+  m_speed += m_acceleration * data.elapsed;
 
-  Eigen::Vector3f friction = -FRICTION_ACCELERATION * elapsed * m_speed.normalized();
+  Eigen::Vector3f friction = -FRICTION_ACCELERATION * data.elapsed * m_speed.normalized();
   m_speed += friction;
 
   const auto speedNorm = m_speed.norm();
