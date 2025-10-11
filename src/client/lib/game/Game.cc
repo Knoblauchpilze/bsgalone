@@ -370,7 +370,7 @@ void Game::initialize(const int serverPort)
   m_outputMessageQueue = std::make_unique<ClientMessageQueue>(std::move(connection));
 
   // TODO: This should come from the server
-  const chrono::TimeStep timeStep(1, chrono::Duration(chrono::Unit::MILLISECONDS, 100));
+  const chrono::TimeStep timeStep(1, chrono::Duration(chrono::Unit::SECONDS, 1));
   m_timeManager = std::make_unique<chrono::TimeManager>(bsgo::Tick(), timeStep);
 
   bsgo::SystemsConfig sConfig{.internalMessageQueue = m_internalMessageQueue.get(),
