@@ -3,7 +3,7 @@
 #include "VectorUtils.hh"
 
 namespace bsgo {
-constexpr auto FRICTION_ACCELERATION = 0.05f;
+constexpr auto FRICTION_ACCELERATION = 0.5f;
 
 VelocityComponent::VelocityComponent(const VelocityData &data)
   : AbstractComponent(ComponentType::VELOCITY)

@@ -6,7 +6,7 @@ CREATE TABLE weapon (
   max_damage NUMERIC(8, 2) NOT NULL,
   power_cost NUMERIC(8, 2) NOT NULL,
   range NUMERIC(8, 2) NOT NULL,
-  reload_time INTEGER NOT NULL,
+  reload_time NUMERIC(8, 2) NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP WITH TIME ZONE,
   PRIMARY KEY (id),

@@ -88,10 +88,10 @@ auto ComputerRepository::fetchComputerBase(const Uuid computer) const -> Compute
   {
     out.range = {record[3].as<float>()};
   }
-  out.reloadTime = TickDuration::fromInt(record[4].as<int>());
+  out.reloadTime = TickDuration(record[4].as<float>());
   if (!record[5].is_null())
   {
-    out.duration = TickDuration::fromInt(record[5].as<int>());
+    out.duration = TickDuration(record[5].as<float>());
   }
   if (!record[6].is_null())
   {

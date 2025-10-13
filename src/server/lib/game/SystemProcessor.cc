@@ -75,7 +75,7 @@ void SystemProcessor::stop()
 
 void SystemProcessor::initialize()
 {
-  const chrono::TimeStep timeStep(1, chrono::Duration(chrono::Unit::MILLISECONDS, 100));
+  const chrono::TimeStep timeStep(1, chrono::Duration(chrono::Unit::SECONDS, 1));
   m_timeManager = std::make_unique<chrono::TimeManager>(Tick(), timeStep);
 }
 
