@@ -15,8 +15,8 @@ StatusSystem::StatusSystem()
   : AbstractSystem(SystemType::STATUS, isEntityRelevant)
 {}
 
-const auto TIME_TO_STAY_IN_APPEARED_MODE = TickDuration::fromInt(100);
-const auto TIME_TO_STAY_IN_THREAT_MODE   = TickDuration::fromInt(30);
+const auto TIME_TO_STAY_IN_APPEARED_MODE = TickDuration::fromInt(10);
+const auto TIME_TO_STAY_IN_THREAT_MODE   = TickDuration::fromInt(3);
 
 void StatusSystem::updateEntity(Entity &entity, Coordinator &coordinator, const TickData &data) const
 {
