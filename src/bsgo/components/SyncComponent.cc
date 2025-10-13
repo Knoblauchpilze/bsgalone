@@ -4,12 +4,14 @@
 namespace bsgo {
 
 namespace {
-constexpr auto BASE_SYNC_INTERVAL_TICK = 10;
-constexpr auto MAX_SYNC_JITTER_TICK    = 1;
+constexpr auto BASE_SYNC_INTERVAL_TICK    = 1.0f;
+constexpr auto MAX_SYNC_JITTER_CENTI_TICK = 100;
 
 auto generateJitteredSyncInterval() -> TickDuration
 {
-  const auto jitteredSync = BASE_SYNC_INTERVAL_TICK + std::rand() % MAX_SYNC_JITTER_TICK;
+  const auto jitterPercentage = static_cast<float>(std::rand() % MAX_SYNC_JITTER_CENTI_TICK);
+
+  const auto jitteredSync = BASE_SYNC_INTERVAL_TICK * (1.0f + jitterPercentage / 100.0f);
   return TickDuration::fromInt(jitteredSync);
 }
 } // namespace

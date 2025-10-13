@@ -97,7 +97,7 @@ auto TickDuration::fromInt(const int duration) -> TickDuration
 
 auto TickDuration::toSeconds() const -> float
 {
-  constexpr auto SECONDS_IN_TICK = 0.1f;
+  constexpr auto SECONDS_IN_TICK = 1.0f;
   return m_elapsed * SECONDS_IN_TICK;
 }
 

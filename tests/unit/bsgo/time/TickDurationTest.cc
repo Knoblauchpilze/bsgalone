@@ -318,9 +318,9 @@ TEST(Unit_Bsgo_TickDuration, FromInt)
 TEST(Unit_Bsgo_TickDuration, ConvertsToSeconds)
 {
   TickDuration d(1.45f);
-  EXPECT_FLOAT_EQ(d.toSeconds(), 0.145f);
+  EXPECT_FLOAT_EQ(d.toSeconds(), 1.45f);
 
   d = TickDuration(18971.047405f);
-  EXPECT_FLOAT_EQ(d.toSeconds(), 1897.1047405f);
+  EXPECT_FLOAT_EQ(d.toSeconds(), 18971.047405f);
 }
 } // namespace bsgo
