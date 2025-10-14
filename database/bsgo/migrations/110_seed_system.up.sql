@@ -3,7 +3,20 @@
 INSERT INTO bsgalone_schema.system ("name", "x_pos", "y_pos", "z_pos")
   VALUES ('Munnin', -2.5, 3.0, 0.0);
 
-INSERT INTO bsgalone_schema.starting_system ("system", "faction")
+INSERT INTO tick_config ("system", "unit", "ticks")
+  VALUES (
+    (SELECT id FROM system WHERE name = 'Munnin'),
+    'seconds',
+    1
+  );
+
+INSERT INTO tick ("system", "current_tick")
+  VALUES (
+    (SELECT id FROM system WHERE name = 'Munnin'),
+    0
+  );
+
+INSERT INTO starting_system ("system", "faction")
   VALUES (
     (SELECT id FROM system WHERE name = 'Munnin'),
     'cylon'
@@ -66,7 +79,20 @@ INSERT INTO asteroid ("system", "max_health", "health", "radius", "x_pos", "y_po
 INSERT INTO bsgalone_schema.system ("name", "x_pos", "y_pos", "z_pos")
   VALUES ('169 aretis', 3.0, -4.7, 0.0);
 
-INSERT INTO bsgalone_schema.starting_system ("system", "faction")
+INSERT INTO tick_config ("system", "unit", "ticks")
+  VALUES (
+    (SELECT id FROM system WHERE name = '169 aretis'),
+    'seconds',
+    1
+  );
+
+INSERT INTO tick ("system", "current_tick")
+  VALUES (
+    (SELECT id FROM system WHERE name = '169 aretis'),
+    0
+  );
+
+INSERT INTO starting_system ("system", "faction")
   VALUES (
     (SELECT id FROM system WHERE name = '169 aretis'),
     'colonial'
