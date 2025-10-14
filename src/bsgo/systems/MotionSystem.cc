@@ -1,5 +1,6 @@
 
 #include "MotionSystem.hh"
+#include "VectorUtils.hh"
 
 namespace bsgo {
 namespace {
@@ -23,8 +24,7 @@ void MotionSystem::updateEntity(Entity &entity,
   velocity.update(data);
 
   const Eigen::Vector3f speed = velocity.speed();
-  // TODO: We should use the tick duration as is.
-  Eigen::Vector3f dv = speed * data.elapsed.toSeconds();
+  Eigen::Vector3f dv          = speed * data.elapsed;
   transform.translate(dv);
   if (!speed.isZero())
   {
