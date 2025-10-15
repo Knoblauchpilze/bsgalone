@@ -144,8 +144,8 @@ void Coordinator::addRemoval(const Uuid ent)
 
 void Coordinator::addStatus(const Uuid ent,
                             const Status &status,
-                            const std::optional<TickDuration> &jumpTime,
-                            const std::optional<TickDuration> &threatJumpTime)
+                            const std::optional<chrono::TickDuration> &jumpTime,
+                            const std::optional<chrono::TickDuration> &threatJumpTime)
 {
   checkForOverrides(ent, "Status", m_components.statuses);
   m_components.statuses[ent] = std::make_shared<StatusComponent>(status, jumpTime, threatJumpTime);
@@ -206,7 +206,7 @@ void Coordinator::addResourceComponent(const Uuid ent, const Uuid resource, cons
 }
 
 void Coordinator::addWeaponEffect(const Uuid ent,
-                                  const TickDuration &duration,
+                                  const chrono::TickDuration &duration,
                                   const float damageModifier)
 {
   checkEntityExist(ent, "WeaponEffect");
@@ -394,7 +394,7 @@ auto Coordinator::getEntitiesWithinSatistying(const IBoundingBox &bbox,
   return out;
 }
 
-void Coordinator::update(const TickData &data)
+void Coordinator::update(const chrono::TickData &data)
 {
   m_systems->update(*this, data);
   cleanUpDeadEntities();

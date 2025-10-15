@@ -32,7 +32,7 @@ TEST(Unit_Bsgo_Serialization_PlayerWeaponListMessage, Basic)
   const PlayerWeaponListMessage expected(std::vector<PlayerWeaponData>{});
 
   const std::vector<PlayerWeaponData> weaponsData{
-    {.dbId = 23, .range = 1.456f, .reloadTime = TickDuration::fromInt(1546)},
+    {.dbId = 23, .range = 1.456f, .reloadTime = chrono::TickDuration::fromInt(1546)},
     {.dbId = 76, .slotPosition = Eigen::Vector3f(-7.8f, 45.12f, -0.458f), .minDamage = 14}};
   PlayerWeaponListMessage actual(weaponsData);
   actual.setClientId(Uuid{2});
@@ -51,7 +51,9 @@ TEST(Unit_Bsgo_Serialization_PlayerWeaponListMessage, WithClientId)
   expected.setClientId(Uuid{78});
 
   weaponsData = {{.weaponDbId = 2, .powerCost = 1.457f},
-                 {.maxDamage = 1.78f, .range = 5.64f, .reloadTime = TickDuration(7891.5413f)}};
+                 {.maxDamage  = 1.78f,
+                  .range      = 5.64f,
+                  .reloadTime = chrono::TickDuration(7891.5413f)}};
   PlayerWeaponListMessage actual(weaponsData);
 
   serializeAndDeserializeMessage(expected, actual);
@@ -61,9 +63,9 @@ TEST(Unit_Bsgo_Serialization_PlayerWeaponListMessage, WithClientId)
 
 TEST(Unit_Bsgo_Serialization_PlayerWeaponListMessage, Clone)
 {
-  const std::vector<PlayerWeaponData>
-    weaponsData{{.weaponDbId = 1908, .level = 12, .minDamage = 7.451f},
-                {.level = 3, .powerCost = -3.9878f, .reloadTime = TickDuration(15001.03874f)}};
+  const std::vector<PlayerWeaponData> weaponsData{
+    {.weaponDbId = 1908, .level = 12, .minDamage = 7.451f},
+    {.level = 3, .powerCost = -3.9878f, .reloadTime = chrono::TickDuration(15001.03874f)}};
 
   const PlayerWeaponListMessage expected(weaponsData);
 

@@ -15,7 +15,7 @@ class ResourceComponent : public AbstractComponent
   auto resource() const -> Uuid;
   auto amount() const -> int;
 
-  void update(const TickData &data) override;
+  void update(const chrono::TickData &data) override;
 
   void setAmount(const int amount);
 

@@ -15,7 +15,7 @@ class RegenerativeComponent : public AbstractComponent
                         const float regenPerTick);
   ~RegenerativeComponent() override = default;
 
-  void update(const TickData &data) override;
+  void update(const chrono::TickData &data) override;
 
   auto min() const -> float;
   auto value() const -> float;

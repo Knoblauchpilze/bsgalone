@@ -15,12 +15,12 @@ class ComputerSlotComponent : public SlotComponent
   ComputerSlotComponent(const PlayerComputerData &computer);
   ~ComputerSlotComponent() override = default;
 
-  auto duration() const -> std::optional<TickDuration>;
+  auto duration() const -> std::optional<chrono::TickDuration>;
   auto allowedTargets() const -> std::optional<std::unordered_set<EntityKind>>;
   auto damageModifier() const -> std::optional<float>;
 
   private:
-  std::optional<TickDuration> m_duration;
+  std::optional<chrono::TickDuration> m_duration;
   std::optional<std::unordered_set<EntityKind>> m_allowedTargets;
   std::optional<float> m_damageModifier;
 };

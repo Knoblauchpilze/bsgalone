@@ -14,7 +14,7 @@ class FactionComponent : public AbstractComponent
 
   auto faction() const noexcept -> Faction;
 
-  void update(const TickData &data) override;
+  void update(const chrono::TickData &data) override;
 
   private:
   Faction m_faction;

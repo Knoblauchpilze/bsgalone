@@ -16,7 +16,7 @@ MotionSystem::MotionSystem()
 
 void MotionSystem::updateEntity(Entity &entity,
                                 Coordinator & /*coordinator*/,
-                                const TickData &data) const
+                                const chrono::TickData &data) const
 {
   auto &velocity  = entity.velocityComp();
   auto &transform = entity.transformComp();

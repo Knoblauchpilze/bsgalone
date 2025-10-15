@@ -4,20 +4,20 @@
 
 using namespace ::testing;
 
-namespace bsgo {
-TEST(Unit_Bsgo_TickDuration, CreatesDefaultDuration)
+namespace chrono {
+TEST(Unit_Chrono_TickDuration, CreatesDefaultDuration)
 {
   TickDuration d;
   EXPECT_EQ(d.str(), std::string("0.000000"));
 }
 
-TEST(Unit_Bsgo_TickDuration, CreatesPositiveDuration)
+TEST(Unit_Chrono_TickDuration, CreatesPositiveDuration)
 {
   TickDuration d(1.45f);
   EXPECT_EQ(d.str(), std::string("1.450000"));
 }
 
-TEST(Unit_Bsgo_TickDuration, ThrowsWhenIntIsNegative)
+TEST(Unit_Chrono_TickDuration, ThrowsWhenIntIsNegative)
 {
   EXPECT_THROW([] { TickDuration(-0.47f); }(), std::invalid_argument);
 }
@@ -43,7 +43,7 @@ TEST_P(EqualTest, ComparesCorrectly)
     << param.rhs.str();
 }
 
-INSTANTIATE_TEST_SUITE_P(Unit_Bsgo_TickDuration,
+INSTANTIATE_TEST_SUITE_P(Unit_Chrono_TickDuration,
                          EqualTest,
                          Values(TestCaseEqual{.id          = 0,
                                               .lhs         = TickDuration(0.0f),
@@ -127,7 +127,7 @@ TEST_P(DurationAdditionTest, AddsCorrectly)
     << param.rhs.str();
 }
 
-INSTANTIATE_TEST_SUITE_P(Unit_Bsgo_TickDuration,
+INSTANTIATE_TEST_SUITE_P(Unit_Chrono_TickDuration,
                          DurationAdditionTest,
                          Values(TestCaseAddition{.id       = 0,
                                                  .lhs      = TickDuration(0.0f),
@@ -183,7 +183,7 @@ TEST_P(DivisionTest, DividesCorrectly)
 }
 
 INSTANTIATE_TEST_SUITE_P(
-  Unit_Bsgo_TickDuration,
+  Unit_Chrono_TickDuration,
   DivisionTest,
   Values(
     TestCaseDivision{.id = 0, .lhs = TickDuration(0.0f), .rhs = TickDuration(1.0f), .expected = 0.0f},
@@ -230,7 +230,7 @@ TEST_P(MultiplicationTest, MultipliesCorrectly)
 }
 
 INSTANTIATE_TEST_SUITE_P(
-  Unit_Bsgo_TickDuration,
+  Unit_Chrono_TickDuration,
   MultiplicationTest,
   Values(
     TestCaseMultiplication{.id = 0, .duration = TickDuration(0.0f), .value = 0.0f, .expected = 0.0f},
@@ -269,7 +269,7 @@ TEST_P(DurationSubtractionTest, SubtractsCorrectly)
     << " and " << param.rhs.str();
 }
 
-INSTANTIATE_TEST_SUITE_P(Unit_Bsgo_TickDuration,
+INSTANTIATE_TEST_SUITE_P(Unit_Chrono_TickDuration,
                          DurationSubtractionTest,
                          Values(TestCaseSubtraction{.id       = 0,
                                                     .lhs      = TickDuration(0.0f),
@@ -303,7 +303,7 @@ INSTANTIATE_TEST_SUITE_P(Unit_Bsgo_TickDuration,
                            return std::to_string(info.param.id);
                          });
 
-TEST(Unit_Bsgo_TickDuration, FromInt)
+TEST(Unit_Chrono_TickDuration, FromInt)
 {
   TickDuration lhs(1.0f);
   auto rhs = TickDuration::fromInt(1);
@@ -315,7 +315,7 @@ TEST(Unit_Bsgo_TickDuration, FromInt)
 }
 
 /// TODO: This should be removed.
-TEST(Unit_Bsgo_TickDuration, ConvertsToSeconds)
+TEST(Unit_Chrono_TickDuration, ConvertsToSeconds)
 {
   TickDuration d(1.45f);
   EXPECT_FLOAT_EQ(d.toSeconds(), 1.45f);
@@ -323,4 +323,4 @@ TEST(Unit_Bsgo_TickDuration, ConvertsToSeconds)
   d = TickDuration(18971.047405f);
   EXPECT_FLOAT_EQ(d.toSeconds(), 18971.047405f);
 }
-} // namespace bsgo
+} // namespace chrono

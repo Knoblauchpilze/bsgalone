@@ -26,7 +26,7 @@ TEST(Unit_Bsgo_Serialization_PlayerWeaponData, EqualWhenDbIdIsEqual)
   PlayerWeaponData data2{.dbId       = Uuid{1234},
                          .level      = 5,
                          .maxDamage  = 17.5f,
-                         .reloadTime = TickDuration::fromInt(158)};
+                         .reloadTime = chrono::TickDuration::fromInt(158)};
 
   EXPECT_TRUE(data1 == data2);
 }
@@ -55,7 +55,7 @@ TEST(Unit_Bsgo_Serialization_PlayerWeaponData, Basic)
 
   PlayerWeaponData output{.dbId       = Uuid{14},
                           .maxDamage  = 12.987f,
-                          .reloadTime = TickDuration(1234.456f)};
+                          .reloadTime = chrono::TickDuration(1234.456f)};
 
   EXPECT_TRUE(serializeAndDeserializeData(input, output));
 
@@ -69,7 +69,7 @@ TEST(Unit_Bsgo_Serialization_PlayerWeaponData, ErasesDestinationSlotPosition)
   PlayerWeaponData output{.dbId         = Uuid{14},
                           .slotPosition = Eigen::Vector3f{1.2f, 4.3f, -5.7f},
                           .maxDamage    = 12.987f,
-                          .reloadTime   = TickDuration(1234.657102f)};
+                          .reloadTime   = chrono::TickDuration(1234.657102f)};
 
   EXPECT_TRUE(serializeAndDeserializeData(input, output));
 
@@ -89,7 +89,7 @@ TEST(Unit_Bsgo_Serialization_PlayerWeaponData, OverridesDestinationSlotPosition)
                           .slotPosition = Eigen::Vector3f{1.2f, 4.3f, -5.7f},
                           .name         = "another weapon",
                           .maxDamage    = 12.987f,
-                          .reloadTime   = TickDuration::fromInt(1234)};
+                          .reloadTime   = chrono::TickDuration::fromInt(1234)};
 
   EXPECT_TRUE(serializeAndDeserializeData(input, output));
 

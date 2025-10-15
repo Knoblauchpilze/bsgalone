@@ -26,8 +26,8 @@ TEST(Unit_Bsgo_Serialization_PlayerComputerData, EqualWhenDbIdIsEqual)
   PlayerComputerData data2{
     .dbId       = Uuid{1234},
     .level      = 5,
-    .reloadTime = TickDuration::fromInt(158),
-    .duration   = TickDuration(789.2357f),
+    .reloadTime = chrono::TickDuration::fromInt(158),
+    .duration   = chrono::TickDuration(789.2357f),
   };
 
   EXPECT_TRUE(data1 == data2);
@@ -56,7 +56,7 @@ TEST(Unit_Bsgo_Serialization_PlayerComputerData, Basic)
 
   PlayerComputerData output{.dbId       = Uuid{14},
                             .level      = 12,
-                            .reloadTime = TickDuration::fromInt(1234)};
+                            .reloadTime = chrono::TickDuration::fromInt(1234)};
 
   EXPECT_TRUE(serializeAndDeserializeData(input, output));
 
@@ -74,7 +74,7 @@ TEST(Unit_Bsgo_Serialization_PlayerComputerData, AllowedTargets)
   PlayerComputerData output{.dbId       = Uuid{14},
                             .name       = "beefy computer",
                             .level      = 12,
-                            .reloadTime = TickDuration(1234.9541f)};
+                            .reloadTime = chrono::TickDuration(1234.9541f)};
 
   EXPECT_TRUE(serializeAndDeserializeData(input, output));
 
@@ -92,7 +92,7 @@ TEST(Unit_Bsgo_Serialization_PlayerComputerData, NonEmptyAllowedTargetsInDestina
   PlayerComputerData output{.dbId       = Uuid{14},
                             .name       = "another computer",
                             .level      = 12,
-                            .reloadTime = TickDuration(1234.3247f)};
+                            .reloadTime = chrono::TickDuration(1234.3247f)};
   output.allowedTargets = std::unordered_set<EntityKind>{EntityKind::OUTPOST};
 
   EXPECT_TRUE(serializeAndDeserializeData(input, output));

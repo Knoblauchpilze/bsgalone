@@ -25,7 +25,7 @@ Systems::Systems(SystemsConfig &&config)
   initialize(std::move(config));
 }
 
-void Systems::update(Coordinator &coordinator, const TickData &data) const
+void Systems::update(Coordinator &coordinator, const chrono::TickData &data) const
 {
   for (const auto &system : m_systems)
   {

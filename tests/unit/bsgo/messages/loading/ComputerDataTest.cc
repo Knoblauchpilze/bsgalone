@@ -22,8 +22,8 @@ TEST(Unit_Bsgo_Serialization_ComputerData, EqualWhenDbIdIsEqual)
 
   ComputerData data2{
     .dbId       = Uuid{1234},
-    .reloadTime = TickDuration::fromInt(158),
-    .duration   = TickDuration(789.357f),
+    .reloadTime = chrono::TickDuration::fromInt(158),
+    .duration   = chrono::TickDuration(789.357f),
   };
 
   EXPECT_TRUE(data1 == data2);
@@ -52,7 +52,7 @@ TEST(Unit_Bsgo_Serialization_ComputerData, Basic)
 
   ComputerData output{.dbId       = Uuid{14},
                       .powerCost  = 26.57f,
-                      .reloadTime = TickDuration::fromInt(1234)};
+                      .reloadTime = chrono::TickDuration::fromInt(1234)};
 
   EXPECT_TRUE(serializeAndDeserializeData(input, output));
 
@@ -66,7 +66,7 @@ TEST(Unit_Bsgo_Serialization_ComputerData, AllowedTargets)
 
   ComputerData output{.dbId       = Uuid{14},
                       .name       = "beefy computer",
-                      .reloadTime = TickDuration(1234.0f)};
+                      .reloadTime = chrono::TickDuration(1234.0f)};
 
   EXPECT_TRUE(serializeAndDeserializeData(input, output));
 
@@ -82,7 +82,7 @@ TEST(Unit_Bsgo_Serialization_ComputerData, NonEmptyAllowedTargetsInDestination)
 
   ComputerData output{.dbId       = Uuid{14},
                       .name       = "another computer",
-                      .reloadTime = TickDuration(1234.56008f),
+                      .reloadTime = chrono::TickDuration(1234.56008f),
                       .price      = {{Uuid{17}, 980}, {Uuid{3274}, 41}}};
   output.allowedTargets = std::unordered_set<EntityKind>{EntityKind::OUTPOST};
 

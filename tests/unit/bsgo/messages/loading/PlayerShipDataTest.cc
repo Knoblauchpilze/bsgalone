@@ -125,8 +125,8 @@ TEST(Unit_Bsgo_Serialization_PlayerShipData, WithWeapons)
                        .position         = Eigen::Vector3f{1.0f, 2.0f, 3.0f},
                        .radius           = 5.0f,
                        .maxPowerPoints   = 100.0f,
-                       .jumpTime         = TickDuration(1234.2f),
-                       .jumpTimeInThreat = TickDuration(5678.4f),
+                       .jumpTime         = chrono::TickDuration(1234.2f),
+                       .jumpTimeInThreat = chrono::TickDuration(5678.4f),
                        .targetDbId       = Uuid{8901},
                        .playerDbId       = Uuid{6547}};
   input.weapons.push_back({
@@ -140,7 +140,7 @@ TEST(Unit_Bsgo_Serialization_PlayerShipData, WithWeapons)
   });
   input.weapons.push_back({.dbId         = Uuid{6002},
                            .slotPosition = Eigen::Vector3f{-89.75f, -56.23f, 32.04f},
-                           .reloadTime   = TickDuration(12.73004f)});
+                           .reloadTime   = chrono::TickDuration(12.73004f)});
 
   PlayerShipData output{.dbId    = Uuid{14},
                         .faction = Faction::CYLON,
@@ -173,8 +173,8 @@ TEST(Unit_Bsgo_Serialization_PlayerShipData, ClearsWeapons)
     .dbId             = Uuid{14},
     .faction          = Faction::CYLON,
     .status           = Status::JUMP,
-    .jumpTime         = TickDuration(75.01f),
-    .jumpTimeInThreat = TickDuration(5678.978f),
+    .jumpTime         = chrono::TickDuration(75.01f),
+    .jumpTimeInThreat = chrono::TickDuration(5678.978f),
   };
   output.weapons.push_back({.dbId       = Uuid{1001},
                             .weaponDbId = Uuid{2002},

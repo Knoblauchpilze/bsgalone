@@ -18,7 +18,7 @@ RegenerativeComponent::RegenerativeComponent(const ComponentType &type,
   validate();
 }
 
-void RegenerativeComponent::update(const TickData &data)
+void RegenerativeComponent::update(const chrono::TickData &data)
 {
   const auto updated = m_value + m_regenPerTick * data.elapsed;
   m_value            = std::clamp(updated, m_min, m_max);

@@ -17,6 +17,6 @@ bool RemovalComponent::toBeDeleted() const
   return m_markedForRemoval;
 }
 
-void RemovalComponent::update(const TickData & /*data*/) {}
+void RemovalComponent::update(const chrono::TickData & /*data*/) {}
 
 } // namespace bsgo

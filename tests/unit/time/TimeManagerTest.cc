@@ -9,10 +9,10 @@ namespace chrono {
 struct TestCaseTick
 {
   int id{};
-  bsgo::Tick startTick{};
+  Tick startTick{};
   TimeStep step{};
   Duration elapsed{};
-  bsgo::Tick expectedTick{};
+  Tick expectedTick{};
 };
 
 using TickTest = TestWithParam<TestCaseTick>;
@@ -34,31 +34,31 @@ INSTANTIATE_TEST_SUITE_P(Unit_Chrono_TimeManager,
                          Values(
                            TestCaseTick{
                              .id           = 0,
-                             .startTick    = bsgo::Tick(),
+                             .startTick    = Tick(),
                              .step         = TimeStep{},
                              .elapsed      = Duration{.unit = Unit::SECONDS, .elapsed = 1.0f},
-                             .expectedTick = bsgo::Tick(10, 0.0f),
+                             .expectedTick = Tick(10, 0.0f),
                            },
                            TestCaseTick{
                              .id        = 1,
-                             .startTick = bsgo::Tick(),
+                             .startTick = Tick(),
                              .step      = TimeStep{},
                              .elapsed   = Duration{.unit = Unit::MILLISECONDS, .elapsed = 1000.0f},
-                             .expectedTick = bsgo::Tick(10, 0.0f),
+                             .expectedTick = Tick(10, 0.0f),
                            },
                            TestCaseTick{
                              .id        = 2,
-                             .startTick = bsgo::Tick(),
+                             .startTick = Tick(),
                              .step      = TimeStep{},
                              .elapsed   = Duration{.unit = Unit::MILLISECONDS, .elapsed = 128.0f},
-                             .expectedTick = bsgo::Tick(1, 0.28f),
+                             .expectedTick = Tick(1, 0.28f),
                            },
                            TestCaseTick{
                              .id        = 3,
-                             .startTick = bsgo::Tick(14.04f),
+                             .startTick = Tick(14.04f),
                              .step      = TimeStep{},
                              .elapsed   = Duration{.unit = Unit::MILLISECONDS, .elapsed = 128.0f},
-                             .expectedTick = bsgo::Tick(15, 0.32f),
+                             .expectedTick = Tick(15, 0.32f),
                            }),
                          [](const TestParamInfo<TestCaseTick> &info) -> std::string {
                            return std::to_string(info.param.id);
@@ -67,10 +67,10 @@ INSTANTIATE_TEST_SUITE_P(Unit_Chrono_TimeManager,
 struct TestCaseElapsed
 {
   int id{};
-  bsgo::Tick startTick{};
+  Tick startTick{};
   TimeStep step{};
   Duration elapsed{};
-  bsgo::TickDuration expectedElapsed{};
+  TickDuration expectedElapsed{};
 };
 
 using ElapsedTest = TestWithParam<TestCaseElapsed>;
@@ -92,31 +92,31 @@ INSTANTIATE_TEST_SUITE_P(Unit_Chrono_TimeManager,
                          Values(
                            TestCaseElapsed{
                              .id              = 0,
-                             .startTick       = bsgo::Tick(),
+                             .startTick       = Tick(),
                              .step            = TimeStep{},
                              .elapsed         = Duration{.unit = Unit::SECONDS, .elapsed = 1.0f},
-                             .expectedElapsed = bsgo::TickDuration(10.0f),
+                             .expectedElapsed = TickDuration(10.0f),
                            },
                            TestCaseElapsed{
                              .id        = 1,
-                             .startTick = bsgo::Tick(),
+                             .startTick = Tick(),
                              .step      = TimeStep{},
                              .elapsed   = Duration{.unit = Unit::MILLISECONDS, .elapsed = 1000.0f},
-                             .expectedElapsed = bsgo::TickDuration(10.0f),
+                             .expectedElapsed = TickDuration(10.0f),
                            },
                            TestCaseElapsed{
                              .id        = 2,
-                             .startTick = bsgo::Tick(),
+                             .startTick = Tick(),
                              .step      = TimeStep{},
                              .elapsed   = Duration{.unit = Unit::MILLISECONDS, .elapsed = 128.0f},
-                             .expectedElapsed = bsgo::TickDuration(1.28f),
+                             .expectedElapsed = TickDuration(1.28f),
                            },
                            TestCaseElapsed{
                              .id        = 3,
-                             .startTick = bsgo::Tick(14.04f),
+                             .startTick = Tick(14.04f),
                              .step      = TimeStep{},
                              .elapsed   = Duration{.unit = Unit::MILLISECONDS, .elapsed = 128.0f},
-                             .expectedElapsed = bsgo::TickDuration(1.28f),
+                             .expectedElapsed = TickDuration(1.28f),
                            }),
                          [](const TestParamInfo<TestCaseElapsed> &info) -> std::string {
                            return std::to_string(info.param.id);

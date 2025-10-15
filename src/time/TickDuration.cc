@@ -4,7 +4,7 @@
 #include <cmath>
 #include <stdexcept>
 
-namespace bsgo {
+namespace chrono {
 
 // Using this value based on powers of two to accurately represent the threshold.
 // This is equivalent to about 0.00000762939.
@@ -115,4 +115,4 @@ auto operator*(const float lhs, const TickDuration &rhs) -> float
   return rhs * lhs;
 }
 
-} // namespace bsgo
+} // namespace chrono

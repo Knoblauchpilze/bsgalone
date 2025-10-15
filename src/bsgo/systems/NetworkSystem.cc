@@ -16,7 +16,7 @@ NetworkSystem::NetworkSystem()
 
 void NetworkSystem::updateEntity(Entity &entity,
                                  Coordinator & /*coordinator*/,
-                                 const TickData &data) const
+                                 const chrono::TickData &data) const
 {
   auto &networkSyncComp = entity.networkSyncComp();
   networkSyncComp.update(data);

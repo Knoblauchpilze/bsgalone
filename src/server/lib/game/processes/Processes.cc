@@ -15,7 +15,7 @@ Processes::Processes()
   initialize();
 }
 
-void Processes::update(Coordinator &coordinator, const TickData &data) const
+void Processes::update(Coordinator &coordinator, const chrono::TickData &data) const
 {
   for (const auto &process : m_processes)
   {

@@ -11,7 +11,7 @@ class RespawnProcess : public AbstractProcess
   RespawnProcess(const Repositories &repositories);
   ~RespawnProcess() override = default;
 
-  void update(Coordinator &coordinator, const TickData &data) const override;
+  void update(Coordinator &coordinator, const chrono::TickData &data) const override;
 
   private:
   void respawnAsteroids(Coordinator &coordinator) const;

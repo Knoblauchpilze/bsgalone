@@ -14,7 +14,7 @@ class ShipClassComponent : public AbstractComponent
 
   auto shipClass() const noexcept -> ShipClass;
 
-  void update(const TickData &data) override;
+  void update(const chrono::TickData &data) override;
 
   private:
   ShipClass m_shipClass;

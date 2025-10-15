@@ -26,7 +26,7 @@ ComputerSystem::ComputerSystem()
 
 void ComputerSystem::updateEntity(Entity &entity,
                                   Coordinator &coordinator,
-                                  const TickData &data) const
+                                  const chrono::TickData &data) const
 {
   std::optional<Entity> targetEnt;
   auto target = entity.targetComp().target();
@@ -56,7 +56,7 @@ void ComputerSystem::updateEntity(Entity &entity,
 void ComputerSystem::updateComputer(const Entity &ent,
                                     const ComputerSlotComponentShPtr &computer,
                                     const std::optional<Entity> &target,
-                                    const TickData &data) const
+                                    const chrono::TickData &data) const
 {
   auto state{FiringState::READY};
 

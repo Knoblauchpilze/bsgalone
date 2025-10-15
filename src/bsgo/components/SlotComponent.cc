@@ -14,7 +14,7 @@ SlotComponent::SlotComponent(const ComponentType &type, const SlotComponentData 
   addModule("slot");
 }
 
-void SlotComponent::update(const TickData &data)
+void SlotComponent::update(const chrono::TickData &data)
 {
   handleReload(data);
 }
@@ -73,12 +73,12 @@ auto SlotComponent::reloadPercentage() const -> float
   return *m_elapsedSinceLastFired / m_reloadTime;
 }
 
-auto SlotComponent::elapsedSinceLastFired() const -> std::optional<TickDuration>
+auto SlotComponent::elapsedSinceLastFired() const -> std::optional<chrono::TickDuration>
 {
   return m_elapsedSinceLastFired;
 }
 
-void SlotComponent::overrideElapsedSinceLastFired(const std::optional<TickDuration> &elapsed)
+void SlotComponent::overrideElapsedSinceLastFired(const std::optional<chrono::TickDuration> &elapsed)
 {
   m_elapsedSinceLastFired = elapsed;
 }
@@ -106,7 +106,7 @@ void SlotComponent::fire()
     error("Failed to use slot", "Still reloading");
   }
 
-  m_elapsedSinceLastFired = TickDuration();
+  m_elapsedSinceLastFired = chrono::TickDuration();
 }
 
 void SlotComponent::clearFireRequest()
@@ -114,7 +114,7 @@ void SlotComponent::clearFireRequest()
   m_fireRequest = false;
 }
 
-void SlotComponent::handleReload(const TickData &data)
+void SlotComponent::handleReload(const chrono::TickData &data)
 {
   if (!m_elapsedSinceLastFired)
   {

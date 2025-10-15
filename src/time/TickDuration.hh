@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace bsgo {
+namespace chrono {
 
 /// @brief - Represents a duration in the game. Such a duration does not have a unit,
 /// it merely represents the time in the game. It is consistent with the `Tick` class
@@ -99,4 +99,4 @@ class TickDuration
 /// @return - the result of lhs * rhs as a float
 auto operator*(const float lhs, const TickDuration &rhs) -> float;
 
-} // namespace bsgo
+} // namespace chrono

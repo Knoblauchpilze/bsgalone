@@ -13,6 +13,6 @@ auto NameComponent::name() const noexcept -> std::string
   return m_name;
 }
 
-void NameComponent::update(const TickData & /*data*/) {}
+void NameComponent::update(const chrono::TickData & /*data*/) {}
 
 } // namespace bsgo

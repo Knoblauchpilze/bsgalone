@@ -23,6 +23,6 @@ auto AIComponent::behavior() const -> const INode &
   return *m_behavior;
 }
 
-void AIComponent::update(const TickData & /*data*/) {}
+void AIComponent::update(const chrono::TickData & /*data*/) {}
 
 } // namespace bsgo
