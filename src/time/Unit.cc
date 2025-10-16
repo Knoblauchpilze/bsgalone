@@ -1,5 +1,6 @@
 
 #include "Unit.hh"
+#include <stdexcept>
 
 namespace chrono {
 
@@ -27,6 +28,21 @@ auto asTimeString(const Unit unit) -> std::string
     default:
       return "N/A";
   }
+}
+
+auto fromString(const std::string_view unit) -> Unit
+{
+  if (unit == "milliseconds")
+  {
+    return Unit::MILLISECONDS;
+  }
+
+  if (unit == "seconds")
+  {
+    return Unit::SECONDS;
+  }
+
+  throw std::invalid_argument(std::string("Unsupported time unit ") + std::string(unit));
 }
 
 } // namespace chrono
