@@ -3,9 +3,10 @@
 INSERT INTO bsgalone_schema.system ("name", "x_pos", "y_pos", "z_pos")
   VALUES ('Munnin', -2.5, 3.0, 0.0);
 
-INSERT INTO tick_config ("system", "unit", "ticks")
+INSERT INTO tick_config ("system", "duration", "unit", "ticks")
   VALUES (
     (SELECT id FROM system WHERE name = 'Munnin'),
+    1,
     'seconds',
     1
   );
@@ -79,9 +80,10 @@ INSERT INTO asteroid ("system", "max_health", "health", "radius", "x_pos", "y_po
 INSERT INTO bsgalone_schema.system ("name", "x_pos", "y_pos", "z_pos")
   VALUES ('169 aretis', 3.0, -4.7, 0.0);
 
-INSERT INTO tick_config ("system", "unit", "ticks")
+INSERT INTO tick_config ("system", "duration", "unit", "ticks")
   VALUES (
     (SELECT id FROM system WHERE name = '169 aretis'),
+    1,
     'seconds',
     1
   );
