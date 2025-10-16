@@ -13,7 +13,9 @@ class WeaponSystem : public AbstractSystem
   ~WeaponSystem() override = default;
 
   protected:
-  void updateEntity(Entity &entity, Coordinator &coordinator, const TickData &data) const override;
+  void updateEntity(Entity &entity,
+                    Coordinator &coordinator,
+                    const chrono::TickData &data) const override;
 
   private:
   bool canTargetBeFiredOn(const Entity &target) const;
@@ -21,7 +23,7 @@ class WeaponSystem : public AbstractSystem
   void updateWeapon(const Entity &ent,
                     const WeaponSlotComponentShPtr &weapon,
                     const std::optional<Entity> &target,
-                    const TickData &data) const;
+                    const chrono::TickData &data) const;
 
   void fireWeaponForEntity(Entity &ent,
                            WeaponSlotComponent &weapon,

@@ -4,8 +4,8 @@
 namespace bsgo {
 
 StatusComponent::StatusComponent(const Status &status,
-                                 const std::optional<TickDuration> &jumpTime,
-                                 const std::optional<TickDuration> &threatJumpTime)
+                                 const std::optional<chrono::TickDuration> &jumpTime,
+                                 const std::optional<chrono::TickDuration> &threatJumpTime)
   : AbstractComponent(ComponentType::STATUS)
   , m_status(status)
   , m_jumpTime(jumpTime)
@@ -25,7 +25,7 @@ bool StatusComponent::isDead() const
   return Status::DEAD == m_status;
 }
 
-auto StatusComponent::jumpTime() const -> TickDuration
+auto StatusComponent::jumpTime() const -> chrono::TickDuration
 {
   if (!m_jumpTime)
   {
@@ -34,7 +34,7 @@ auto StatusComponent::jumpTime() const -> TickDuration
   return *m_jumpTime;
 }
 
-auto StatusComponent::threatJumpTime() const -> TickDuration
+auto StatusComponent::threatJumpTime() const -> chrono::TickDuration
 {
   if (!m_threatJumpTime)
   {
@@ -55,20 +55,20 @@ void StatusComponent::resetChanged()
 
 void StatusComponent::resetAppearingTime()
 {
-  m_elapsedSinceAppearing = TickDuration();
+  m_elapsedSinceAppearing = chrono::TickDuration();
 }
 
-auto StatusComponent::getElapsedSinceLastChange() const -> TickDuration
+auto StatusComponent::getElapsedSinceLastChange() const -> chrono::TickDuration
 {
   return m_elapsedSinceLastChange;
 }
 
-auto StatusComponent::tryGetElapsedSinceLastAppearing() const -> std::optional<TickDuration>
+auto StatusComponent::tryGetElapsedSinceLastAppearing() const -> std::optional<chrono::TickDuration>
 {
   return m_elapsedSinceAppearing;
 }
 
-auto StatusComponent::getCurrentJumpTime() const -> TickDuration
+auto StatusComponent::getCurrentJumpTime() const -> chrono::TickDuration
 {
   if (!m_currentJumpTime)
   {
@@ -77,7 +77,7 @@ auto StatusComponent::getCurrentJumpTime() const -> TickDuration
   return *m_currentJumpTime;
 }
 
-auto StatusComponent::getElapsedSinceJumpStarted() const -> TickDuration
+auto StatusComponent::getElapsedSinceJumpStarted() const -> chrono::TickDuration
 {
   if (!m_elapsedSinceJumpStarted)
   {
@@ -86,7 +86,7 @@ auto StatusComponent::getElapsedSinceJumpStarted() const -> TickDuration
   return *m_elapsedSinceJumpStarted;
 }
 
-auto StatusComponent::getRemainingJumpTime() const -> TickDuration
+auto StatusComponent::getRemainingJumpTime() const -> chrono::TickDuration
 {
   const auto jumpTime = getCurrentJumpTime();
   const auto elapsed  = getElapsedSinceJumpStarted();
@@ -101,10 +101,10 @@ void StatusComponent::setStatus(const Status &status)
 
   m_status                 = status;
   m_justChanged            = true;
-  m_elapsedSinceLastChange = TickDuration();
+  m_elapsedSinceLastChange = chrono::TickDuration();
 }
 
-void StatusComponent::update(const TickData &data)
+void StatusComponent::update(const chrono::TickData &data)
 {
   m_elapsedSinceLastChange += data.elapsed;
   if (m_elapsedSinceAppearing)
@@ -128,7 +128,7 @@ void StatusComponent::updateJumpState(const Status &newStatus, const bool forceU
   const auto isJumping  = statusIndicatesJump(newStatus);
   if (!wasJumping && isJumping)
   {
-    m_elapsedSinceJumpStarted = TickDuration();
+    m_elapsedSinceJumpStarted = chrono::TickDuration();
     m_currentJumpTime         = statusIndicatesThreat(m_status) ? *m_threatJumpTime : *m_jumpTime;
   }
   if (wasJumping && !isJumping)
@@ -147,7 +147,7 @@ void StatusComponent::updateAppearingState(const Status &newStatus)
 
   if (statusIndicatesAppearing(newStatus))
   {
-    m_elapsedSinceAppearing = TickDuration();
+    m_elapsedSinceAppearing = chrono::TickDuration();
   }
 }
 

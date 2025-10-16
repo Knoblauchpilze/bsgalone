@@ -13,7 +13,9 @@ AISystem::AISystem()
   : AbstractSystem(SystemType::AI, isEntityRelevant)
 {}
 
-void AISystem::updateEntity(Entity &entity, Coordinator &coordinator, const TickData &data) const
+void AISystem::updateEntity(Entity &entity,
+                            Coordinator &coordinator,
+                            const chrono::TickData &data) const
 {
   auto &aiComp = entity.aiComp();
   aiComp.update(data);

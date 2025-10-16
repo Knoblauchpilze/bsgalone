@@ -18,7 +18,7 @@ class TargetComponent : public AbstractComponent
   void clearTarget();
   void setTarget(const Uuid target);
 
-  void update(const TickData &data) override;
+  void update(const chrono::TickData &data) override;
 
   private:
   std::optional<Uuid> m_target{};

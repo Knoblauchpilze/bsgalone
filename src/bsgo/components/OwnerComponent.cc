@@ -19,6 +19,6 @@ auto OwnerComponent::category() const -> OwnerType
   return m_ownerType;
 }
 
-void OwnerComponent::update(const TickData & /*data*/) {}
+void OwnerComponent::update(const chrono::TickData & /*data*/) {}
 
 } // namespace bsgo

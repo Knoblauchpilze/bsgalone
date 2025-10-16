@@ -29,8 +29,8 @@ struct Ship
 
   float radius{0.5f};
 
-  TickDuration jumpTime{};
-  TickDuration jumpTimeInThreat{};
+  chrono::TickDuration jumpTime{};
+  chrono::TickDuration jumpTimeInThreat{};
 
   std::unordered_map<Slot, int> slots{};
 };

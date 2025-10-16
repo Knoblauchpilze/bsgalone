@@ -1,8 +1,17 @@
 
-#include "Common.hh"
+#include "Comparison.hh"
+#include "SerializationUtils.hh"
 #include <gtest/gtest.h>
 
 namespace bsgo {
+
+void serializeAndDeserializeMessage(const IMessage &value, IMessage &output)
+{
+  std::ostringstream out{};
+  out << value;
+  std::istringstream in(out.str());
+  in >> output;
+}
 
 void assertAsteroidDataAreEqual(const AsteroidData &actual, const AsteroidData &expected)
 {

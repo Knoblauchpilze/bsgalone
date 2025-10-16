@@ -20,9 +20,9 @@ struct ComputerData
   bool offensive{};
   float powerCost{};
   std::optional<float> range{};
-  TickDuration reloadTime{};
+  chrono::TickDuration reloadTime{};
 
-  std::optional<TickDuration> duration{};
+  std::optional<chrono::TickDuration> duration{};
   std::optional<std::unordered_set<EntityKind>> allowedTargets{};
   std::optional<float> damageModifier{};
 

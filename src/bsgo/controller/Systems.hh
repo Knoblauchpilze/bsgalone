@@ -24,7 +24,7 @@ class Systems : public core::CoreObject
   Systems(SystemsConfig &&config);
   ~Systems() override = default;
 
-  void update(Coordinator &coordinator, const TickData &data) const;
+  void update(Coordinator &coordinator, const chrono::TickData &data) const;
 
   private:
   std::vector<ISystemPtr> m_systems{};

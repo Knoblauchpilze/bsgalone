@@ -33,8 +33,8 @@ struct PlayerShipData
   std::string name{};
   bool docked{};
   bool active{};
-  TickDuration jumpTime{};
-  TickDuration jumpTimeInThreat{};
+  chrono::TickDuration jumpTime{};
+  chrono::TickDuration jumpTimeInThreat{};
   std::optional<Uuid> jumpSystem{};
 
   std::optional<Uuid> targetDbId{};

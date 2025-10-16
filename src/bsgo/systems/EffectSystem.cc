@@ -14,7 +14,9 @@ EffectSystem::EffectSystem()
   : AbstractSystem(SystemType::EFFECT, isEntityRelevant)
 {}
 
-void EffectSystem::updateEntity(Entity &entity, Coordinator &coordinator, const TickData &data) const
+void EffectSystem::updateEntity(Entity &entity,
+                                Coordinator &coordinator,
+                                const chrono::TickData &data) const
 {
   for (const auto &effect : entity.effects)
   {

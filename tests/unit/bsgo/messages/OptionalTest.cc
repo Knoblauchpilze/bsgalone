@@ -7,6 +7,7 @@
 #include <optional>
 
 using namespace ::testing;
+using namespace test;
 
 namespace bsgo {
 TEST(Unit_Bsgo_Serialization_Optional_Uuid, Empty)

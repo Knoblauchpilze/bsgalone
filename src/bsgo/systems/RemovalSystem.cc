@@ -17,7 +17,7 @@ RemovalSystem::RemovalSystem()
 
 void RemovalSystem::updateEntity(Entity &entity,
                                  Coordinator & /*coordinator*/,
-                                 const TickData &data) const
+                                 const chrono::TickData &data) const
 {
   entity.removalComp().update(data);
 

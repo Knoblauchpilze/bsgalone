@@ -51,10 +51,6 @@ add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/systems
 	)
 
-add_subdirectory (
-	${CMAKE_CURRENT_SOURCE_DIR}/time
-	)
-
 target_include_directories (bsgo_lib PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
 	)
@@ -65,6 +61,7 @@ target_link_libraries (bsgo_lib PUBLIC
 	pqxx
 	core_lib
 	net_lib
+	time_lib
 	)
 
 if (${ENABLE_TESTS})

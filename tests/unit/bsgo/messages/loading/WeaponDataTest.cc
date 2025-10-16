@@ -1,5 +1,5 @@
 
-#include "Common.hh"
+#include "Comparison.hh"
 #include "DataSerialization.hh"
 #include <gtest/gtest.h>
 
@@ -23,7 +23,9 @@ TEST(Unit_Bsgo_Serialization_WeaponData, EqualWhenDbIdIsEqual)
                    .range     = 123.456f,
                    .price     = {{Uuid{21}, 265}}};
 
-  WeaponData data2{.dbId = Uuid{1234}, .maxDamage = 17.5f, .reloadTime = TickDuration::fromInt(158)};
+  WeaponData data2{.dbId       = Uuid{1234},
+                   .maxDamage  = 17.5f,
+                   .reloadTime = chrono::TickDuration::fromInt(158)};
 
   EXPECT_TRUE(data1 == data2);
 }
@@ -48,7 +50,7 @@ TEST(Unit_Bsgo_Serialization_WeaponData, Basic)
 
   WeaponData output{.dbId       = Uuid{14},
                     .maxDamage  = 12.987f,
-                    .reloadTime = TickDuration(1234.147f),
+                    .reloadTime = chrono::TickDuration(1234.147f),
                     .price      = {{Uuid{26}, 401}, {Uuid{9874}, 130}, {Uuid{13}, 1245}}};
 
   EXPECT_TRUE(serializeAndDeserializeData(input, output));

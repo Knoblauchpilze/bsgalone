@@ -27,6 +27,6 @@ void TargetComponent::setTarget(const Uuid target)
   m_target = target;
 }
 
-void TargetComponent::update(const TickData & /*data*/) {}
+void TargetComponent::update(const chrono::TickData & /*data*/) {}
 
 } // namespace bsgo

@@ -1,6 +1,6 @@
 
 #include "ComputerListMessage.hh"
-#include "Common.hh"
+#include "Comparison.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
@@ -30,9 +30,12 @@ TEST(Unit_Bsgo_Serialization_ComputerListMessage, Basic)
 {
   const ComputerListMessage expected(std::vector<ComputerData>{});
 
-  const std::vector<ComputerData>
-    computersData{{.dbId = 23, .offensive = true, .damageModifier = -47.89f},
-                  {.dbId = 76, .duration = TickDuration(360.7324f), .damageModifier = 75.4f}};
+  const std::vector<ComputerData> computersData{{.dbId           = 23,
+                                                 .offensive      = true,
+                                                 .damageModifier = -47.89f},
+                                                {.dbId           = 76,
+                                                 .duration       = chrono::TickDuration(360.7324f),
+                                                 .damageModifier = 75.4f}};
   ComputerListMessage actual(computersData);
   actual.setClientId(Uuid{2});
   serializeAndDeserializeMessage(expected, actual);
@@ -44,7 +47,7 @@ TEST(Unit_Bsgo_Serialization_ComputerListMessage, WithClientId)
   std::vector<ComputerData> computersData{
     {.dbId           = 14,
      .powerCost      = 14.56f,
-     .reloadTime     = TickDuration::fromInt(26),
+     .reloadTime     = chrono::TickDuration::fromInt(26),
      .allowedTargets = std::unordered_set<EntityKind>{EntityKind::OUTPOST}}};
 
   ComputerListMessage expected(computersData);
@@ -57,11 +60,13 @@ TEST(Unit_Bsgo_Serialization_ComputerListMessage, WithClientId)
 
 TEST(Unit_Bsgo_Serialization_ComputerListMessage, Clone)
 {
-  const std::vector<ComputerData> computersData{
-    {.dbId           = 1908,
-     .offensive      = true,
-     .allowedTargets = std::unordered_set<EntityKind>{EntityKind::ASTEROID}},
-    {.name = "beefy computer", .powerCost = -3.9878f, .reloadTime = TickDuration::fromInt(15001)}};
+  const std::vector<ComputerData>
+    computersData{{.dbId           = 1908,
+                   .offensive      = true,
+                   .allowedTargets = std::unordered_set<EntityKind>{EntityKind::ASTEROID}},
+                  {.name       = "beefy computer",
+                   .powerCost  = -3.9878f,
+                   .reloadTime = chrono::TickDuration::fromInt(15001)}};
 
   const ComputerListMessage expected(computersData);
 

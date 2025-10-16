@@ -13,7 +13,7 @@ class NameComponent : public AbstractComponent
 
   auto name() const noexcept -> std::string;
 
-  void update(const TickData &data) override;
+  void update(const chrono::TickData &data) override;
 
   private:
   std::string m_name{};

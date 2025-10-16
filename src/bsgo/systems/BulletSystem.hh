@@ -12,7 +12,9 @@ class BulletSystem : public AbstractSystem
   ~BulletSystem() override = default;
 
   protected:
-  void updateEntity(Entity &entity, Coordinator &coordinator, const TickData &data) const override;
+  void updateEntity(Entity &entity,
+                    Coordinator &coordinator,
+                    const chrono::TickData &data) const override;
 
   private:
   bool isTargetNotExistent(const Entity &entity) const;

@@ -14,7 +14,7 @@ class Processes : public core::CoreObject
   Processes();
   ~Processes() override = default;
 
-  void update(Coordinator &coordinator, const TickData &data) const;
+  void update(Coordinator &coordinator, const chrono::TickData &data) const;
 
   private:
   std::vector<IProcessPtr> m_processes{};
