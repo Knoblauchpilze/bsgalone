@@ -27,7 +27,6 @@ Repositories::Repositories()
   weaponPriceRepository    = std::make_shared<WeaponPriceRepository>(dbConnection);
   weaponRepository         = std::make_shared<WeaponRepository>(dbConnection);
   systemOutpostRepository  = std::make_shared<SystemOutpostRepository>(dbConnection);
-  tickRepository           = std::make_shared<TickRepository>(dbConnection);
 
   asteroidLootRepository->initialize();
   asteroidRepository->initialize();
@@ -48,7 +47,6 @@ Repositories::Repositories()
   weaponPriceRepository->initialize();
   weaponRepository->initialize();
   systemOutpostRepository->initialize();
-  tickRepository->initialize();
 }
 
 } // namespace bsgo
