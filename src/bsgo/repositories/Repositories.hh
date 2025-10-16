@@ -19,6 +19,7 @@
 #include "ShipWeaponRepository.hh"
 #include "SystemOutpostRepository.hh"
 #include "SystemRepository.hh"
+#include "TickRepository.hh"
 #include "WeaponPriceRepository.hh"
 #include "WeaponRepository.hh"
 
@@ -48,6 +49,7 @@ struct Repositories
   WeaponPriceRepositoryShPtr weaponPriceRepository{};
   WeaponRepositoryShPtr weaponRepository{};
   SystemOutpostRepositoryShPtr systemOutpostRepository{};
+  TickRepositoryShPtr tickRepository{};
 
   DbConnectionShPtr dbConnection{};
 };
