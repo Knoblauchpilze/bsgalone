@@ -75,8 +75,9 @@ void SystemProcessor::stop()
 
 void SystemProcessor::initialize()
 {
-  const chrono::TimeStep timeStep(1, chrono::Duration(chrono::Unit::SECONDS, 1));
-  m_timeManager = std::make_unique<chrono::TimeManager>(chrono::Tick(), timeStep);
+  Repositories repositories{};
+  const auto tickConfig = repositories.tickRepository->findOneBySystem(m_systemDbId);
+  m_timeManager = std::make_unique<chrono::TimeManager>(tickConfig.currentTick, tickConfig.step);
 }
 
 void SystemProcessor::asyncSystemProcessing()
