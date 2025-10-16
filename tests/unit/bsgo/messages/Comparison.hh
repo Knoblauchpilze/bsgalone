@@ -3,6 +3,7 @@
 
 #include "AsteroidData.hh"
 #include "ComputerData.hh"
+#include "IMessage.hh"
 #include "OutpostData.hh"
 #include "PlayerComputerData.hh"
 #include "PlayerData.hh"
@@ -16,8 +17,7 @@
 
 namespace bsgo {
 
-template<typename T>
-auto serializeAndDeserialize(const T &value) -> T;
+void serializeAndDeserializeMessage(const IMessage &value, IMessage &output);
 
 void assertAsteroidDataAreEqual(const AsteroidData &actual, const AsteroidData &expected);
 void assertPlayerComputerDataAreEqual(const PlayerComputerData &actual,
@@ -36,5 +36,3 @@ void assertComputerDataAreEqual(const ComputerData &actual, const ComputerData &
 void assertShipDataAreEqual(const ShipData &actual, const ShipData &expected);
 
 } // namespace bsgo
-
-#include "Common.hxx"

@@ -1,5 +1,5 @@
 
-#include "Common.hh"
+#include "Comparison.hh"
 #include "DataSerialization.hh"
 #include <gtest/gtest.h>
 
@@ -183,7 +183,7 @@ TEST(Unit_Bsgo_Serialization_PlayerShipData, ClearsWeapons)
                             .maxDamage  = 20.0f,
                             .powerCost  = 5.0f,
                             .range      = 100.0f,
-                            .reloadTime = TickDuration::fromInt(1234)});
+                            .reloadTime = chrono::TickDuration::fromInt(1234)});
 
   EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
 

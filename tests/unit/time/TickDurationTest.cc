@@ -1,8 +1,10 @@
 
 #include "TickDuration.hh"
+#include "Common.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
+using namespace test;
 
 namespace chrono {
 TEST(Unit_Chrono_TickDuration, CreatesDefaultDuration)
@@ -323,4 +325,47 @@ TEST(Unit_Chrono_TickDuration, ConvertsToSeconds)
   d = TickDuration(18971.047405f);
   EXPECT_FLOAT_EQ(d.toSeconds(), 18971.047405f);
 }
+
+TEST(Unit_Chrono_TickDuration, Serialization_Nominal)
+{
+  const TickDuration expected(48.9705f);
+
+  const auto [success, actual] = serializeAndDeserialize(expected, false);
+
+  EXPECT_TRUE(success);
+  EXPECT_EQ(actual, expected);
+}
+
+TEST(Unit_Chrono_TickDuration, Serialization_Nominal_Optional)
+{
+  const std::optional<TickDuration> expected = TickDuration(1028.12f);
+
+  const auto [success, actual] = serializeAndDeserialize(expected, false);
+
+  EXPECT_TRUE(success);
+  EXPECT_TRUE(actual.has_value());
+  EXPECT_EQ(actual, expected);
+}
+
+TEST(Unit_Chrono_TickDuration, Serialization_Nominal_EmptyOptional)
+{
+  const std::optional<TickDuration> expected = {};
+  ASSERT_FALSE(expected.has_value());
+
+  const auto [success, actual] = serializeAndDeserialize(expected, false);
+
+  EXPECT_TRUE(success);
+  EXPECT_FALSE(actual.has_value());
+  EXPECT_EQ(actual.has_value(), expected.has_value());
+}
+
+TEST(Unit_Chrono_TickDuration, Serialization_Failure)
+{
+  const TickDuration expected(9874.01f);
+
+  const auto [success, _] = serializeAndDeserialize(expected, true);
+
+  EXPECT_FALSE(success);
+}
+
 } // namespace chrono

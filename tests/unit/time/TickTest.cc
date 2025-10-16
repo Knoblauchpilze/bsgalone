@@ -1,8 +1,10 @@
 
 #include "Tick.hh"
+#include "Common.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
+using namespace test;
 
 namespace chrono {
 namespace {
@@ -337,5 +339,50 @@ INSTANTIATE_TEST_SUITE_P(Unit_Chrono_Tick,
                            std::replace(out.begin(), out.end(), ']', '_');
                            return out;
                          });
+
+TEST(Unit_Chrono_Tick, Serialization_Nominal)
+{
+  const Tick expected(48, 0.9705f);
+
+  const auto [success, actual] = serializeAndDeserialize(expected, false);
+
+  EXPECT_TRUE(success);
+  EXPECT_EQ(actual.count(), expected.count());
+  EXPECT_EQ(actual.frac(), expected.frac());
+}
+
+TEST(Unit_Chrono_Tick, Serialization_Nominal_Optional)
+{
+  const std::optional<Tick> expected = Tick(1028, 0.12f);
+
+  const auto [success, actual] = serializeAndDeserialize(expected, false);
+
+  EXPECT_TRUE(success);
+  EXPECT_TRUE(actual.has_value());
+  EXPECT_EQ(actual.has_value(), expected.has_value());
+  EXPECT_EQ(actual->count(), expected->count());
+  EXPECT_EQ(actual->frac(), expected->frac());
+}
+
+TEST(Unit_Chrono_Tick, Serialization_Nominal_EmptyOptional)
+{
+  const std::optional<Tick> expected = {};
+  ASSERT_FALSE(expected.has_value());
+
+  const auto [success, actual] = serializeAndDeserialize(expected, false);
+
+  EXPECT_TRUE(success);
+  EXPECT_FALSE(actual.has_value());
+  EXPECT_EQ(actual.has_value(), expected.has_value());
+}
+
+TEST(Unit_Chrono_Tick, Serialization_Failure)
+{
+  const Tick expected(9874, 0.01f);
+
+  const auto [success, _] = serializeAndDeserialize(expected, true);
+
+  EXPECT_FALSE(success);
+}
 
 } // namespace chrono
