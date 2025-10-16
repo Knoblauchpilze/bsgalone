@@ -15,7 +15,9 @@ LootSystem::LootSystem()
   : AbstractSystem(SystemType::LOOT, isEntityRelevant)
 {}
 
-void LootSystem::updateEntity(Entity &entity, Coordinator &coordinator, const TickData &data) const
+void LootSystem::updateEntity(Entity &entity,
+                              Coordinator &coordinator,
+                              const chrono::TickData &data) const
 {
   entity.lootComp().update(data);
 

@@ -1,10 +1,12 @@
 
 #include "Tick.hh"
+#include "Common.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
+using namespace test;
 
-namespace bsgo {
+namespace chrono {
 namespace {
 constexpr auto TOLERANCE = 1e-4f;
 
@@ -15,12 +17,12 @@ void assertTickMatches(const Tick &tick, const int expectedInt, const float expe
 }
 } // namespace
 
-TEST(Unit_Bsgo_Tick, CreatesValidDefaultTick)
+TEST(Unit_Chrono_Tick, CreatesValidDefaultTick)
 {
   assertTickMatches(Tick(), 0, 0.0f);
 }
 
-TEST(Unit_Bsgo_Tick, CreatesValidTickFromFloat)
+TEST(Unit_Chrono_Tick, CreatesValidTickFromFloat)
 {
   assertTickMatches(Tick(0.147f), 0, 0.147f);
   assertTickMatches(Tick(1.0f), 1, 0.0f);
@@ -28,7 +30,7 @@ TEST(Unit_Bsgo_Tick, CreatesValidTickFromFloat)
   assertTickMatches(Tick(2871.289f), 2871, 0.289f);
 }
 
-TEST(Unit_Bsgo_Tick, CreatesValidTickFromIntAndFrac)
+TEST(Unit_Chrono_Tick, CreatesValidTickFromIntAndFrac)
 {
   assertTickMatches(Tick(1, 0.0f), 1, 0.0f);
   assertTickMatches(Tick(0, 0.754f), 0, 0.754f);
@@ -36,17 +38,17 @@ TEST(Unit_Bsgo_Tick, CreatesValidTickFromIntAndFrac)
   assertTickMatches(Tick(1971, 0.99f), 1971, 0.99f);
 }
 
-TEST(Unit_Bsgo_Tick, ThrowsWhenIntIsNegative)
+TEST(Unit_Chrono_Tick, ThrowsWhenIntIsNegative)
 {
   EXPECT_THROW([] { Tick(-1, 0.1f); }(), std::invalid_argument);
 }
 
-TEST(Unit_Bsgo_Tick, ThrowsWhenFracIsNegative)
+TEST(Unit_Chrono_Tick, ThrowsWhenFracIsNegative)
 {
   EXPECT_THROW([] { Tick(12, -0.1f); }(), std::invalid_argument);
 }
 
-TEST(Unit_Bsgo_Tick, ThrowsWhenFracIsGreaterThanOne)
+TEST(Unit_Chrono_Tick, ThrowsWhenFracIsGreaterThanOne)
 {
   EXPECT_THROW([] { Tick(12, 1.0f); }(), std::invalid_argument);
   EXPECT_THROW([] { Tick(12, 14.01f); }(), std::invalid_argument);
@@ -72,7 +74,7 @@ TEST_P(AdditionTest, AddsCorrectly)
   assertTickMatches(actual, param.expectedCount, param.expectedFrac);
 }
 
-INSTANTIATE_TEST_SUITE_P(Unit_Bsgo_Tick,
+INSTANTIATE_TEST_SUITE_P(Unit_Chrono_Tick,
                          AdditionTest,
                          Values(TestCaseTickAddition{.lhs           = Tick(0.0f),
                                                      .rhs           = TickDuration(0.0f),
@@ -128,7 +130,7 @@ inline auto serializeAndDeserializeTick(const Tick &value, Tick &output)
 }
 } // namespace
 
-TEST(Unit_Bsgo_Tick, DefaultTick)
+TEST(Unit_Chrono_Tick, DefaultTick)
 {
   const Tick expected;
   Tick actual(1, 0.2f);
@@ -138,7 +140,7 @@ TEST(Unit_Bsgo_Tick, DefaultTick)
   assertTickMatches(actual, expected.count(), expected.frac());
 }
 
-TEST(Unit_Bsgo_Tick, NonDefaultTick)
+TEST(Unit_Chrono_Tick, NonDefaultTick)
 {
   const Tick expected(89, 0.579f);
   Tick actual(17.3f);
@@ -148,7 +150,7 @@ TEST(Unit_Bsgo_Tick, NonDefaultTick)
   assertTickMatches(actual, expected.count(), expected.frac());
 }
 
-TEST(Unit_Bsgo_Tick, FromFloat)
+TEST(Unit_Chrono_Tick, FromFloat)
 {
   const Tick expected(135.00235f);
   Tick actual(31, 0.0042f);
@@ -158,7 +160,7 @@ TEST(Unit_Bsgo_Tick, FromFloat)
   assertTickMatches(actual, expected.count(), expected.frac());
 }
 
-TEST(Unit_Bsgo_Tick, FromInt)
+TEST(Unit_Chrono_Tick, FromInt)
 {
   assertTickMatches(Tick::fromInt(31), 31, 0.0f);
   assertTickMatches(Tick::fromInt(14), 14, 0.0f);
@@ -167,7 +169,7 @@ TEST(Unit_Bsgo_Tick, FromInt)
   assertTickMatches(Tick::fromInt(17), 17, 0.0f);
 }
 
-TEST(Unit_Bsgo_Tick, Elapsed)
+TEST(Unit_Chrono_Tick, Elapsed)
 {
   auto tick = Tick::fromInt(14);
   EXPECT_EQ(tick.elapsed(), 14.0f);
@@ -185,7 +187,7 @@ TEST(Unit_Bsgo_Tick, Elapsed)
   EXPECT_EQ(tick.elapsed(), 1025.0089404f);
 }
 
-TEST(Unit_Bsgo_Tick, LessThan)
+TEST(Unit_Chrono_Tick, LessThan)
 {
   auto lhs = Tick::fromInt(14);
   auto rhs = Tick::fromInt(15);
@@ -208,7 +210,7 @@ TEST(Unit_Bsgo_Tick, LessThan)
   EXPECT_FALSE(lhs < rhs);
 }
 
-TEST(Unit_Bsgo_Tick, LessThanEqual)
+TEST(Unit_Chrono_Tick, LessThanEqual)
 {
   auto lhs = Tick::fromInt(14);
   auto rhs = Tick::fromInt(15);
@@ -232,7 +234,7 @@ TEST(Unit_Bsgo_Tick, LessThanEqual)
   EXPECT_TRUE(lhs <= rhs);
 }
 
-TEST(Unit_Bsgo_Tick, GreaterThan)
+TEST(Unit_Chrono_Tick, GreaterThan)
 {
   auto lhs = Tick::fromInt(14);
   auto rhs = Tick::fromInt(15);
@@ -255,7 +257,7 @@ TEST(Unit_Bsgo_Tick, GreaterThan)
   EXPECT_FALSE(lhs > rhs);
 }
 
-TEST(Unit_Bsgo_Tick, GreaterThanEqual)
+TEST(Unit_Chrono_Tick, GreaterThanEqual)
 {
   auto lhs = Tick::fromInt(14);
   auto rhs = Tick::fromInt(15);
@@ -298,7 +300,7 @@ TEST_P(SubtractionTest, SubtractsCorrectly)
     << param.expectedDuration.str() << ")";
 }
 
-INSTANTIATE_TEST_SUITE_P(Unit_Bsgo_Tick,
+INSTANTIATE_TEST_SUITE_P(Unit_Chrono_Tick,
                          SubtractionTest,
                          Values(TestCaseTickSubtraction{.lhs              = Tick(0.0f),
                                                         .rhs              = Tick(0.0f),
@@ -338,4 +340,49 @@ INSTANTIATE_TEST_SUITE_P(Unit_Bsgo_Tick,
                            return out;
                          });
 
-} // namespace bsgo
+TEST(Unit_Chrono_Tick, Serialization_Nominal)
+{
+  const Tick expected(48, 0.9705f);
+
+  const auto [success, actual] = serializeAndDeserialize(expected, false);
+
+  EXPECT_TRUE(success);
+  EXPECT_EQ(actual.count(), expected.count());
+  EXPECT_EQ(actual.frac(), expected.frac());
+}
+
+TEST(Unit_Chrono_Tick, Serialization_Nominal_Optional)
+{
+  const std::optional<Tick> expected = Tick(1028, 0.12f);
+
+  const auto [success, actual] = serializeAndDeserialize(expected, false);
+
+  EXPECT_TRUE(success);
+  EXPECT_TRUE(actual.has_value());
+  EXPECT_EQ(actual.has_value(), expected.has_value());
+  EXPECT_EQ(actual->count(), expected->count());
+  EXPECT_EQ(actual->frac(), expected->frac());
+}
+
+TEST(Unit_Chrono_Tick, Serialization_Nominal_EmptyOptional)
+{
+  const std::optional<Tick> expected = {};
+  ASSERT_FALSE(expected.has_value());
+
+  const auto [success, actual] = serializeAndDeserialize(expected, false);
+
+  EXPECT_TRUE(success);
+  EXPECT_FALSE(actual.has_value());
+  EXPECT_EQ(actual.has_value(), expected.has_value());
+}
+
+TEST(Unit_Chrono_Tick, Serialization_Failure)
+{
+  const Tick expected(9874, 0.01f);
+
+  const auto [success, _] = serializeAndDeserialize(expected, true);
+
+  EXPECT_FALSE(success);
+}
+
+} // namespace chrono

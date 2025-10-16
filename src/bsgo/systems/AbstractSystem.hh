@@ -21,7 +21,7 @@ class AbstractSystem : public ISystem
   void installInternalMessageQueue(IMessageQueue *messageQueue) override;
   void installOutputMessageQueue(IMessageQueue *messageQueue) override;
 
-  void update(Coordinator &coordinator, const TickData &data) const override;
+  void update(Coordinator &coordinator, const chrono::TickData &data) const override;
 
   protected:
   void pushInternalMessage(IMessagePtr message) const;
@@ -29,7 +29,7 @@ class AbstractSystem : public ISystem
 
   virtual void updateEntity(Entity &entity,
                             Coordinator &coordinator,
-                            const TickData &data) const = 0;
+                            const chrono::TickData &data) const = 0;
 
   private:
   SystemType m_systemType{};

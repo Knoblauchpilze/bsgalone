@@ -15,7 +15,7 @@ HealthSystem::HealthSystem()
 
 void HealthSystem::updateEntity(Entity &entity,
                                 Coordinator & /*coordinator*/,
-                                const TickData &data) const
+                                const chrono::TickData &data) const
 {
   if (tryMarkForDelettion(entity))
   {

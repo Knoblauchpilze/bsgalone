@@ -43,8 +43,8 @@ class Coordinator : public core::CoreObject
   void addRemoval(const Uuid ent);
   void addStatus(const Uuid ent,
                  const Status &status,
-                 const std::optional<TickDuration> &jumpTime,
-                 const std::optional<TickDuration> &threatJumpTime);
+                 const std::optional<chrono::TickDuration> &jumpTime,
+                 const std::optional<chrono::TickDuration> &threatJumpTime);
   void addAI(const Uuid ent, INodePtr behavior);
   void addShipClass(const Uuid ent, const ShipClass &shipClass);
   void addName(const Uuid ent, const std::string &name);
@@ -55,7 +55,9 @@ class Coordinator : public core::CoreObject
   void addComputer(const Uuid ent, const PlayerComputerData &computer);
   void addResourceComponent(const Uuid ent, const Uuid resource, const int amount);
 
-  void addWeaponEffect(const Uuid ent, const TickDuration &duration, const float damageModifier);
+  void addWeaponEffect(const Uuid ent,
+                       const chrono::TickDuration &duration,
+                       const float damageModifier);
   void removeEffect(const Uuid ent, const EffectComponentShPtr &effect);
 
   auto getEntity(const Uuid ent) const -> Entity;
@@ -70,7 +72,7 @@ class Coordinator : public core::CoreObject
   auto getEntitiesWithinSatistying(const IBoundingBox &bbox, const EntityPredicate &predicate) const
     -> std::vector<Entity>;
 
-  void update(const TickData &data);
+  void update(const chrono::TickData &data);
 
   private:
   Uuid m_nextEntity{Uuid(0)};

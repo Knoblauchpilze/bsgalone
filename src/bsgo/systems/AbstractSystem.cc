@@ -42,7 +42,7 @@ void AbstractSystem::installOutputMessageQueue(IMessageQueue *messageQueue)
   m_outputMessageQueue = messageQueue;
 }
 
-void AbstractSystem::update(Coordinator &coordinator, const TickData &data) const
+void AbstractSystem::update(Coordinator &coordinator, const chrono::TickData &data) const
 {
   /// https://gamedev.stackexchange.com/questions/71711/ecs-how-to-access-multiple-components-not-the-same-one-in-a-system
   auto entities = coordinator.getEntitiesSatistying(m_entitiesFilter);

@@ -12,7 +12,9 @@ class TargetSystem : public AbstractSystem
   ~TargetSystem() override = default;
 
   protected:
-  void updateEntity(Entity &entity, Coordinator &coordinator, const TickData &data) const override;
+  void updateEntity(Entity &entity,
+                    Coordinator &coordinator,
+                    const chrono::TickData &data) const override;
 
   private:
   void clearTargetIfNotReachable(TargetComponent &targetComp, const Coordinator &coordinator) const;

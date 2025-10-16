@@ -4,6 +4,7 @@
 #include <string>
 
 using namespace ::testing;
+using namespace test;
 
 namespace bsgo {
 

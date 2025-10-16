@@ -14,7 +14,7 @@ class KindComponent : public AbstractComponent
 
   auto kind() const noexcept -> EntityKind;
 
-  void update(const TickData &data) override;
+  void update(const chrono::TickData &data) override;
 
   private:
   EntityKind m_kind;

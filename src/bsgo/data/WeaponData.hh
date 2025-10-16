@@ -19,7 +19,7 @@ struct WeaponData
   float powerCost{};
   float range{};
 
-  TickDuration reloadTime{};
+  chrono::TickDuration reloadTime{};
 
   std::unordered_map<Uuid, int> price{};
 

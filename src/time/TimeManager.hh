@@ -13,13 +13,13 @@ namespace chrono {
 class TimeManager : public core::CoreObject
 {
   public:
-  TimeManager(const bsgo::Tick tick, const TimeStep step);
+  TimeManager(const Tick tick, const TimeStep step);
   ~TimeManager() = default;
 
-  auto tick(const Duration elapsed) -> bsgo::TickData;
+  auto tick(const Duration elapsed) -> TickData;
 
   private:
-  bsgo::Tick m_currentTick{};
+  Tick m_currentTick{};
   TimeStep m_step{};
 };
 

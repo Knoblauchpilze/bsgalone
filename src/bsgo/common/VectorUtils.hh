@@ -18,6 +18,6 @@ auto str(const Eigen::Vector3f &v) -> std::string;
 /// @param lhs - the value to multiply
 /// @param rhs - the duration it is applied for
 /// @return - the result of lhs * rhs
-auto operator*(const Eigen::Vector3f &lhs, const TickDuration &rhs) -> Eigen::Vector3f;
+auto operator*(const Eigen::Vector3f &lhs, const chrono::TickDuration &rhs) -> Eigen::Vector3f;
 
 } // namespace bsgo

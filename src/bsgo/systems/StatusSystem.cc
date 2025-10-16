@@ -15,10 +15,12 @@ StatusSystem::StatusSystem()
   : AbstractSystem(SystemType::STATUS, isEntityRelevant)
 {}
 
-const auto TIME_TO_STAY_IN_APPEARED_MODE = TickDuration::fromInt(10);
-const auto TIME_TO_STAY_IN_THREAT_MODE   = TickDuration::fromInt(3);
+const auto TIME_TO_STAY_IN_APPEARED_MODE = chrono::TickDuration::fromInt(10);
+const auto TIME_TO_STAY_IN_THREAT_MODE   = chrono::TickDuration::fromInt(3);
 
-void StatusSystem::updateEntity(Entity &entity, Coordinator &coordinator, const TickData &data) const
+void StatusSystem::updateEntity(Entity &entity,
+                                Coordinator &coordinator,
+                                const chrono::TickData &data) const
 {
   auto &statusComp = entity.statusComp();
   statusComp.update(data);
@@ -97,7 +99,7 @@ void StatusSystem::handleJumpState(Entity &entity,
   }
 
   const auto remaining = statusComp.getRemainingJumpTime();
-  if (remaining > TickDuration())
+  if (remaining > chrono::TickDuration())
   {
     return;
   }

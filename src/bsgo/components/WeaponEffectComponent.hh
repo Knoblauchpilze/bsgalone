@@ -8,7 +8,7 @@ namespace bsgo {
 class WeaponEffectComponent : public EffectComponent
 {
   public:
-  WeaponEffectComponent(const TickDuration &duration, const float damageModifier);
+  WeaponEffectComponent(const chrono::TickDuration &duration, const float damageModifier);
   ~WeaponEffectComponent() override = default;
 
   auto damageModifier() const -> std::optional<float> override;

@@ -15,7 +15,7 @@ class ScannedComponent : public AbstractComponent
   void scan();
   void reset();
 
-  void update(const TickData &data) override;
+  void update(const chrono::TickData &data) override;
 
   private:
   bool m_scanned{false};

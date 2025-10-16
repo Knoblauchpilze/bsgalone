@@ -42,8 +42,8 @@ struct PlayerShip
   std::optional<Uuid> system{};
   bool docked{};
 
-  TickDuration jumpTime{};
-  TickDuration jumpTimeInThreat{};
+  chrono::TickDuration jumpTime{};
+  chrono::TickDuration jumpTimeInThreat{};
   std::optional<Uuid> jumpSystem{};
 
   std::unordered_map<Slot, int> slots{};

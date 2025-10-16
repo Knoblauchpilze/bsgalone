@@ -21,7 +21,7 @@ struct Weapon
 
   float range{};
 
-  TickDuration reloadTime{};
+  chrono::TickDuration reloadTime{};
 };
 
 class WeaponRepository : public AbstractRepository

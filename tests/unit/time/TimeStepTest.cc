@@ -12,7 +12,7 @@ struct TestCaseTimeStepCount
   int ticks{};
   Duration duration{};
   Duration input{};
-  bsgo::TickDuration expectedDuration{};
+  TickDuration expectedDuration{};
 };
 
 using CountTest = TestWithParam<TestCaseTimeStepCount>;
@@ -35,56 +35,56 @@ INSTANTIATE_TEST_SUITE_P(Unit_Chrono_TimeStep,
                              .ticks            = 1,
                              .duration         = Duration(Unit::MILLISECONDS, 100.0f),
                              .input            = Duration(Unit::MILLISECONDS, 100.0f),
-                             .expectedDuration = bsgo::TickDuration(1.0f),
+                             .expectedDuration = TickDuration(1.0f),
                            },
                            TestCaseTimeStepCount{
                              .id               = 1,
                              .ticks            = 2,
                              .duration         = Duration(Unit::MILLISECONDS, 100.0f),
                              .input            = Duration(Unit::MILLISECONDS, 100.0f),
-                             .expectedDuration = bsgo::TickDuration(2.0f),
+                             .expectedDuration = TickDuration(2.0f),
                            },
                            TestCaseTimeStepCount{
                              .id               = 2,
                              .ticks            = 1,
                              .duration         = Duration(Unit::MILLISECONDS, 200.0f),
                              .input            = Duration(Unit::MILLISECONDS, 100.0f),
-                             .expectedDuration = bsgo::TickDuration(0.5f),
+                             .expectedDuration = TickDuration(0.5f),
                            },
                            TestCaseTimeStepCount{
                              .id               = 3,
                              .ticks            = 2,
                              .duration         = Duration(Unit::SECONDS, 1.0f),
                              .input            = Duration(Unit::MILLISECONDS, 100.0f),
-                             .expectedDuration = bsgo::TickDuration(0.2f),
+                             .expectedDuration = TickDuration(0.2f),
                            },
                            TestCaseTimeStepCount{
                              .id               = 4,
                              .ticks            = 1,
                              .duration         = Duration(Unit::SECONDS, 2.0f),
                              .input            = Duration(Unit::MILLISECONDS, 100.0f),
-                             .expectedDuration = bsgo::TickDuration(0.05f),
+                             .expectedDuration = TickDuration(0.05f),
                            },
                            TestCaseTimeStepCount{
                              .id               = 5,
                              .ticks            = 2,
                              .duration         = Duration(Unit::SECONDS, 1.0f),
                              .input            = Duration(Unit::SECONDS, 25.0f),
-                             .expectedDuration = bsgo::TickDuration(50.0f),
+                             .expectedDuration = TickDuration(50.0f),
                            },
                            TestCaseTimeStepCount{
                              .id               = 6,
                              .ticks            = 1,
                              .duration         = Duration(Unit::MILLISECONDS, 100.0f),
                              .input            = Duration(Unit::MILLISECONDS, 250.0f),
-                             .expectedDuration = bsgo::TickDuration(2.5f),
+                             .expectedDuration = TickDuration(2.5f),
                            },
                            TestCaseTimeStepCount{
                              .id               = 7,
                              .ticks            = 1,
                              .duration         = Duration(Unit::SECONDS, 0.1f),
                              .input            = Duration(Unit::MILLISECONDS, 250.0f),
-                             .expectedDuration = bsgo::TickDuration(2.5f),
+                             .expectedDuration = TickDuration(2.5f),
                            }),
                          [](const TestParamInfo<TestCaseTimeStepCount> &info) -> std::string {
                            return std::to_string(info.param.id);

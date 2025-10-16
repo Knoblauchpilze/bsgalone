@@ -13,7 +13,7 @@ class TimeStep
   TimeStep(const int ticks, const Duration &inDuration);
   ~TimeStep() = default;
 
-  auto count(const Duration &elapsed) const -> bsgo::TickDuration;
+  auto count(const Duration &elapsed) const -> TickDuration;
 
   private:
   int m_ticks{1};

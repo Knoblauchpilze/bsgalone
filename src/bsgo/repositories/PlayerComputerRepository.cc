@@ -119,10 +119,10 @@ auto PlayerComputerRepository::fetchComputerBase(const Uuid computer) const -> P
   {
     out.range = {record[5].as<float>()};
   }
-  out.reloadTime = TickDuration(record[6].as<float>());
+  out.reloadTime = chrono::TickDuration(record[6].as<float>());
   if (!record[7].is_null())
   {
-    out.duration = TickDuration::fromInt(record[7].as<float>());
+    out.duration = chrono::TickDuration(record[7].as<float>());
   }
   if (!record[8].is_null())
   {

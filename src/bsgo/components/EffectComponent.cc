@@ -3,7 +3,7 @@
 
 namespace bsgo {
 
-EffectComponent::EffectComponent(const ComponentType &type, const TickDuration &duration)
+EffectComponent::EffectComponent(const ComponentType &type, const chrono::TickDuration &duration)
   : AbstractComponent(type)
   , m_duration(duration)
 {
@@ -20,7 +20,7 @@ auto EffectComponent::damageModifier() const -> std::optional<float>
   return {};
 }
 
-void EffectComponent::update(const TickData &data)
+void EffectComponent::update(const chrono::TickData &data)
 {
   m_elapsedSinceStart += data.elapsed;
 }

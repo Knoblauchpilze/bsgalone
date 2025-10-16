@@ -15,7 +15,7 @@ class AIComponent : public AbstractComponent
   auto behavior() -> INode &;
   auto behavior() const -> const INode &;
 
-  void update(const TickData &data) override;
+  void update(const chrono::TickData &data) override;
 
   private:
   INodePtr m_behavior;

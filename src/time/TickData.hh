@@ -4,7 +4,7 @@
 #include "Tick.hh"
 #include "TickDuration.hh"
 
-namespace bsgo {
+namespace chrono {
 
 struct TickData
 {
@@ -12,4 +12,4 @@ struct TickData
   TickDuration elapsed{};
 };
 
-} // namespace bsgo
+} // namespace chrono

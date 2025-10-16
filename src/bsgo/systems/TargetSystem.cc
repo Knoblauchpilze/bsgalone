@@ -14,7 +14,9 @@ TargetSystem::TargetSystem()
   : AbstractSystem(SystemType::TARGET, isEntityRelevant)
 {}
 
-void TargetSystem::updateEntity(Entity &entity, Coordinator &coordinator, const TickData &data) const
+void TargetSystem::updateEntity(Entity &entity,
+                                Coordinator &coordinator,
+                                const chrono::TickData &data) const
 {
   auto &targetComp = entity.targetComp();
   targetComp.update(data);

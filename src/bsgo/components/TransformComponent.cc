@@ -64,7 +64,7 @@ void TransformComponent::setHeading(const float heading)
   m_heading = heading;
 }
 
-void TransformComponent::update(const TickData & /*data*/) {}
+void TransformComponent::update(const chrono::TickData & /*data*/) {}
 
 namespace {
 const Eigen::Vector3f Z_AXIS = Eigen::Vector3f(0.0, 0.0, 1.0);

@@ -1,6 +1,6 @@
 
 #include "JumpCancelledMessage.hh"
-#include "Common.hh"
+#include "Comparison.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;

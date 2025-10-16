@@ -1,6 +1,6 @@
 
 #include "WeaponListMessage.hh"
-#include "Common.hh"
+#include "Comparison.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
@@ -30,9 +30,12 @@ TEST(Unit_Bsgo_Serialization_WeaponListMessage, Basic)
 {
   const WeaponListMessage expected(std::vector<WeaponData>{});
 
-  const std::vector<WeaponData>
-    weaponsData{{.dbId = Uuid{23}, .range = 1.456f, .reloadTime = TickDuration::fromInt(1546)},
-                {.dbId = Uuid{76}, .minDamage = 14, .powerCost = 3.547f}};
+  const std::vector<WeaponData> weaponsData{{.dbId       = Uuid{23},
+                                             .range      = 1.456f,
+                                             .reloadTime = chrono::TickDuration::fromInt(1546)},
+                                            {.dbId      = Uuid{76},
+                                             .minDamage = 14,
+                                             .powerCost = 3.547f}};
   WeaponListMessage actual(weaponsData);
   actual.setClientId(Uuid{2});
 
@@ -49,7 +52,7 @@ TEST(Unit_Bsgo_Serialization_WeaponListMessage, WithClientId)
   expected.setClientId(Uuid{78});
 
   weaponsData = {{.dbId = Uuid{2}, .powerCost = 1.457f},
-                 {.maxDamage = 1.78f, .range = 5.64f, .reloadTime = TickDuration(7891.24f)}};
+                 {.maxDamage = 1.78f, .range = 5.64f, .reloadTime = chrono::TickDuration(7891.24f)}};
   WeaponListMessage actual(weaponsData);
 
   serializeAndDeserializeMessage(expected, actual);
@@ -64,7 +67,7 @@ TEST(Unit_Bsgo_Serialization_WeaponListMessage, Clone)
                                              .minDamage = 7.451f},
                                             {.maxDamage  = 0.2357f,
                                              .powerCost  = -3.9878f,
-                                             .reloadTime = TickDuration(15001.00479805f)}};
+                                             .reloadTime = chrono::TickDuration(15001.00479805f)}};
 
   const WeaponListMessage expected(weaponsData);
 

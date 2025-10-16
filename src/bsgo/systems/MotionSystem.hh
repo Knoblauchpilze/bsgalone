@@ -12,7 +12,9 @@ class MotionSystem : public AbstractSystem
   ~MotionSystem() override = default;
 
   protected:
-  void updateEntity(Entity &entity, Coordinator &coordinator, const TickData &data) const override;
+  void updateEntity(Entity &entity,
+                    Coordinator &coordinator,
+                    const chrono::TickData &data) const override;
 };
 
 } // namespace bsgo

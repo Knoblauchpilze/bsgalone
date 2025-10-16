@@ -14,7 +14,7 @@ class DbComponent : public AbstractComponent
 
   auto dbId() const noexcept -> Uuid;
 
-  void update(const TickData &data) override;
+  void update(const chrono::TickData &data) override;
 
   private:
   Uuid m_dbId{};

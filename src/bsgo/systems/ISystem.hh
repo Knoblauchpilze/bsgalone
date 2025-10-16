@@ -22,7 +22,7 @@ class ISystem : public core::CoreObject
   virtual void installInternalMessageQueue(IMessageQueue *messageQueue) = 0;
   virtual void installOutputMessageQueue(IMessageQueue *messageQueue)   = 0;
 
-  virtual void update(Coordinator &coordinator, const TickData &data) const = 0;
+  virtual void update(Coordinator &coordinator, const chrono::TickData &data) const = 0;
 };
 
 using ISystemPtr = std::unique_ptr<ISystem>;

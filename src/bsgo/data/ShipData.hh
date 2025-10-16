@@ -28,8 +28,8 @@ struct ShipData
   float speed{};
   float radius{};
 
-  TickDuration jumpTime{};
-  TickDuration jumpTimeInThreat{};
+  chrono::TickDuration jumpTime{};
+  chrono::TickDuration jumpTimeInThreat{};
 
   std::unordered_map<Slot, int> slots{};
   std::unordered_map<Uuid, int> price{};

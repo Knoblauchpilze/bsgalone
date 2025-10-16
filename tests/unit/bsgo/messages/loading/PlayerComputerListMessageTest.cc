@@ -1,6 +1,6 @@
 
 #include "PlayerComputerListMessage.hh"
-#include "Common.hh"
+#include "Comparison.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
@@ -33,7 +33,7 @@ TEST(Unit_Bsgo_Serialization_PlayerComputerListMessage, Basic)
 
   const std::vector<PlayerComputerData>
     computersData{{.dbId = 23, .offensive = true, .damageModifier = -47.89f},
-                  {.dbId = 76, .level = 14, .duration = TickDuration::fromInt(360)}};
+                  {.dbId = 76, .level = 14, .duration = chrono::TickDuration::fromInt(360)}};
   PlayerComputerListMessage actual(computersData);
   actual.setClientId(Uuid{2});
   serializeAndDeserializeMessage(expected, actual);
@@ -59,7 +59,7 @@ TEST(Unit_Bsgo_Serialization_PlayerComputerListMessage, Clone)
     {.computerDbId   = 1908,
      .level          = 12,
      .allowedTargets = std::unordered_set<EntityKind>{EntityKind::ASTEROID}},
-    {.offensive = true, .powerCost = -3.9878f, .reloadTime = TickDuration(15001.2147f)}};
+    {.offensive = true, .powerCost = -3.9878f, .reloadTime = chrono::TickDuration(15001.2147f)}};
 
   const PlayerComputerListMessage expected(computersData);
 

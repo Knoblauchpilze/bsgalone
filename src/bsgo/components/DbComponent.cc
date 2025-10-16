@@ -13,6 +13,6 @@ auto DbComponent::dbId() const noexcept -> Uuid
   return m_dbId;
 }
 
-void DbComponent::update(const TickData & /*data*/) {}
+void DbComponent::update(const chrono::TickData & /*data*/) {}
 
 } // namespace bsgo

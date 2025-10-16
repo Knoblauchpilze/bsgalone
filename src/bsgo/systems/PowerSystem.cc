@@ -15,7 +15,7 @@ PowerSystem::PowerSystem()
 
 void PowerSystem::updateEntity(Entity &entity,
                                Coordinator & /*coordinator*/,
-                               const TickData &data) const
+                               const chrono::TickData &data) const
 {
   if (canRegeneratePower(entity))
   {

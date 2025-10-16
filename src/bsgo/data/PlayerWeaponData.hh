@@ -21,7 +21,7 @@ struct PlayerWeaponData
   float powerCost{};
   float range{};
 
-  TickDuration reloadTime{};
+  chrono::TickDuration reloadTime{};
 
   bool operator==(const PlayerWeaponData &rhs) const;
 };

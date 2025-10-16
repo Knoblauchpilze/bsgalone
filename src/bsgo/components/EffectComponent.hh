@@ -9,18 +9,18 @@ namespace bsgo {
 class EffectComponent : public AbstractComponent
 {
   public:
-  EffectComponent(const ComponentType &type, const TickDuration &duration);
+  EffectComponent(const ComponentType &type, const chrono::TickDuration &duration);
   ~EffectComponent() override = default;
 
   bool isFinished() const;
 
   virtual auto damageModifier() const -> std::optional<float>;
 
-  void update(const TickData &data) override;
+  void update(const chrono::TickData &data) override;
 
   private:
-  TickDuration m_duration;
-  TickDuration m_elapsedSinceStart{};
+  chrono::TickDuration m_duration;
+  chrono::TickDuration m_elapsedSinceStart{};
 };
 
 using EffectComponentShPtr = std::shared_ptr<EffectComponent>;

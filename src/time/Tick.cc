@@ -4,7 +4,7 @@
 #include <cmath>
 #include <stdexcept>
 
-namespace bsgo {
+namespace chrono {
 namespace {
 auto cast(const float in) -> std::tuple<int, float>
 {
@@ -137,4 +137,4 @@ auto operator>>(std::istream &in, Tick &tick) -> std::istream &
   return in;
 }
 
-} // namespace bsgo
+} // namespace chrono

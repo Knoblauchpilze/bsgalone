@@ -4,7 +4,7 @@
 #include "TickDuration.hh"
 #include <string>
 
-namespace bsgo {
+namespace chrono {
 
 class Tick
 {
@@ -50,4 +50,4 @@ class Tick
 auto operator<<(std::ostream &out, const Tick &tick) -> std::ostream &;
 auto operator>>(std::istream &in, Tick &tick) -> std::istream &;
 
-} // namespace bsgo
+} // namespace chrono

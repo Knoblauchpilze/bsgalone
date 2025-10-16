@@ -55,7 +55,7 @@ void VelocityComponent::immobilize()
   m_speed        = Eigen::Vector3f::Zero();
 }
 
-void VelocityComponent::update(const TickData &data)
+void VelocityComponent::update(const chrono::TickData &data)
 {
   switch (m_speedMode)
   {
@@ -72,12 +72,12 @@ void VelocityComponent::update(const TickData &data)
   }
 }
 
-void VelocityComponent::updateFixedSpeed(const TickData & /*data*/)
+void VelocityComponent::updateFixedSpeed(const chrono::TickData & /*data*/)
 {
   // Intentionally empty: fixed speed means no changes to the speed.
 }
 
-void VelocityComponent::updateVariableSpeed(const TickData &data)
+void VelocityComponent::updateVariableSpeed(const chrono::TickData &data)
 {
   // https://gamedev.stackexchange.com/questions/69404/how-should-i-implement-basic-spaceship-physics
   m_speed += m_acceleration * data.elapsed;

@@ -16,12 +16,12 @@ class SyncComponent : public AbstractComponent
   void markForSync(const bool needsSync = true);
   void markAsJustSynced();
 
-  void update(const TickData &data) override;
+  void update(const chrono::TickData &data) override;
 
   private:
   bool m_needsSync{false};
-  TickDuration m_untilNextSync{};
-  TickDuration m_elapsedSinceLastSync{};
+  chrono::TickDuration m_untilNextSync{};
+  chrono::TickDuration m_elapsedSinceLastSync{};
 };
 
 } // namespace bsgo

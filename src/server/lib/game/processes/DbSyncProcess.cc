@@ -21,7 +21,7 @@ bool entityShouldBeSynced(const Entity &entity)
 }
 } // namespace
 
-void DbSyncProcess::update(Coordinator &coordinator, const TickData &data) const
+void DbSyncProcess::update(Coordinator &coordinator, const chrono::TickData &data) const
 {
   auto entities = coordinator.getEntitiesSatistying(entityShouldBeSynced);
   for (auto &entity : entities)
@@ -32,7 +32,7 @@ void DbSyncProcess::update(Coordinator &coordinator, const TickData &data) const
 
 void DbSyncProcess::updateEntity(Entity &entity,
                                  Coordinator & /*coordinator*/,
-                                 const TickData &data) const
+                                 const chrono::TickData &data) const
 {
   auto &dbSyncComp = entity.dbSyncComp();
   dbSyncComp.update(data);

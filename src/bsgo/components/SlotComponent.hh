@@ -13,7 +13,7 @@ struct SlotComponentData
   bool offensive{};
   float powerCost{};
   std::optional<float> range{};
-  TickDuration reloadTime{};
+  chrono::TickDuration reloadTime{};
 };
 
 enum class FiringState
@@ -32,7 +32,7 @@ class SlotComponent : public AbstractComponent
   SlotComponent(const ComponentType &type, const SlotComponentData &data);
   ~SlotComponent() override = default;
 
-  void update(const TickData &data) override;
+  void update(const chrono::TickData &data) override;
 
   auto dbId() const -> Uuid;
   bool isOffensive() const;
@@ -43,9 +43,9 @@ class SlotComponent : public AbstractComponent
   bool canFire() const noexcept;
   bool isReloading() const noexcept;
   auto reloadPercentage() const -> float;
-  auto elapsedSinceLastFired() const -> std::optional<TickDuration>;
+  auto elapsedSinceLastFired() const -> std::optional<chrono::TickDuration>;
 
-  void overrideElapsedSinceLastFired(const std::optional<TickDuration> &elapsed);
+  void overrideElapsedSinceLastFired(const std::optional<chrono::TickDuration> &elapsed);
   void setFiringState(const FiringState &firingState);
   void registerFireRequest();
   bool hasFireRequest() const;
@@ -57,13 +57,13 @@ class SlotComponent : public AbstractComponent
   bool m_offensive;
   float m_powerCost;
   std::optional<float> m_range;
-  TickDuration m_reloadTime;
+  chrono::TickDuration m_reloadTime;
 
   bool m_fireRequest{false};
   FiringState m_firingState{FiringState::READY};
-  std::optional<TickDuration> m_elapsedSinceLastFired{};
+  std::optional<chrono::TickDuration> m_elapsedSinceLastFired{};
 
-  void handleReload(const TickData &data);
+  void handleReload(const chrono::TickData &data);
 };
 
 } // namespace bsgo
