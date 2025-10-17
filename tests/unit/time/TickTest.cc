@@ -121,7 +121,7 @@ INSTANTIATE_TEST_SUITE_P(Unit_Chrono_Tick,
                          });
 
 namespace {
-inline auto serializeAndDeserializeTick(const Tick &value, Tick &output)
+inline void serializeAndDeserializeTick(const Tick &value, Tick &output)
 {
   std::ostringstream out{};
   out << value;
@@ -185,6 +185,33 @@ TEST(Unit_Chrono_Tick, Elapsed)
 
   tick = Tick(1025.0089404f);
   EXPECT_EQ(tick.elapsed(), 1025.0089404f);
+}
+
+TEST(Unit_Chrono_Tick, Equality)
+{
+  auto lhs = Tick::fromInt(14);
+  auto rhs = Tick::fromInt(15);
+  EXPECT_FALSE(lhs == rhs);
+
+  lhs = Tick(14.98f);
+  rhs = Tick::fromInt(15);
+  EXPECT_FALSE(lhs == rhs);
+
+  lhs = Tick(15.2f);
+  rhs = Tick::fromInt(15);
+  EXPECT_FALSE(lhs == rhs);
+
+  lhs = Tick(1508.2f);
+  rhs = Tick(98, 0.21f);
+  EXPECT_FALSE(lhs == rhs);
+
+  lhs = Tick(2.0f);
+  rhs = Tick::fromInt(2);
+  EXPECT_TRUE(lhs == rhs);
+
+  lhs = Tick();
+  rhs = Tick::fromInt(0);
+  EXPECT_TRUE(lhs == rhs);
 }
 
 TEST(Unit_Chrono_Tick, LessThan)

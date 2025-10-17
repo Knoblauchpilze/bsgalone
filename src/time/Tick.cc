@@ -63,6 +63,11 @@ auto Tick::operator+=(const TickDuration &duration) -> Tick &
   return *this;
 }
 
+auto Tick::operator==(const Tick &rhs) const -> bool
+{
+  return m_count == rhs.m_count && m_frac == rhs.m_frac;
+}
+
 auto Tick::operator<(const Tick &rhs) const -> bool
 {
   return elapsed() < rhs.elapsed();
