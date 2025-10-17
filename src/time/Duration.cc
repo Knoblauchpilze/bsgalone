@@ -58,4 +58,14 @@ auto Duration::convert(const Unit out) const -> Duration
   return Duration{.unit = out, .elapsed = value};
 }
 
+auto Duration::fromSeconds(const float duration) -> Duration
+{
+  return Duration{.unit = Unit::SECONDS, .elapsed = duration};
+}
+
+auto Duration::fromMilliseconds(const float duration) -> Duration
+{
+  return Duration{.unit = Unit::MILLISECONDS, .elapsed = duration};
+}
+
 } // namespace chrono
