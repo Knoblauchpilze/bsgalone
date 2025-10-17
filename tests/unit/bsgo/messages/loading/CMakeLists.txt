@@ -29,6 +29,7 @@ target_sources(unitTests PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/ShipListMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SystemDataTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SystemListMessageTest.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/SystemTickDataTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/WeaponDataTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/WeaponListMessageTest.cc
 	)
