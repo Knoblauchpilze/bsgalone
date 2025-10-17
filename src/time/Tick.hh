@@ -22,6 +22,7 @@ class Tick
 
   auto operator+=(const TickDuration &duration) -> Tick &;
 
+  auto operator==(const Tick &rhs) const -> bool;
   auto operator<(const Tick &rhs) const -> bool;
   auto operator<=(const Tick &rhs) const -> bool;
   auto operator>(const Tick &rhs) const -> bool;
