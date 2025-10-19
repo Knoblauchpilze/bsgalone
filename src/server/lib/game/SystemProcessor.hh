@@ -39,7 +39,7 @@ class SystemProcessor : public core::CoreObject
   chrono::TimeManagerPtr m_timeManager{};
   CoordinatorShPtr m_coordinator{};
   Services m_services{};
-  Processes m_processes{};
+  ProcessesPtr m_processes{};
 
   std::atomic_bool m_running{false};
   std::thread m_processingThread{};

@@ -10,6 +10,7 @@ SystemProcessor::SystemProcessor(const Uuid systemDbId)
   , m_systemDbId(systemDbId)
   , m_inputMessagesQueue(std::make_unique<SynchronizedMessageQueue>(
       "synchronized-message-queue-for-" + std::to_string(m_systemDbId)))
+  , m_processes(std::make_unique<Processes>(systemDbId))
 {
   setService("system");
   addModule(str(systemDbId));
@@ -78,6 +79,7 @@ void SystemProcessor::initialize()
   Repositories repositories{};
   const auto tickConfig = repositories.tickRepository->findOneBySystem(m_systemDbId);
   m_timeManager = std::make_unique<chrono::TimeManager>(tickConfig.currentTick, tickConfig.step);
+  info("System will start at tick " + tickConfig.currentTick.str());
 }
 
 void SystemProcessor::asyncSystemProcessing()
@@ -100,7 +102,7 @@ void SystemProcessor::asyncSystemProcessing()
 
     const auto data = m_timeManager->tick(elapsed);
     m_coordinator->update(data);
-    m_processes.update(*m_coordinator, data);
+    m_processes->update(*m_coordinator, data);
     m_inputMessagesQueue->processMessages();
 
     lastFrameTimestamp = thisFrameTimestamp;

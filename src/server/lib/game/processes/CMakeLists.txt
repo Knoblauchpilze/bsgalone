@@ -14,4 +14,5 @@ target_sources (server_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/Processes.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ProcessType.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/RespawnProcess.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/TickSyncProcess.cc
 	)

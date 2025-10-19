@@ -13,7 +13,7 @@ class DbSyncProcess : public AbstractProcess
   DbSyncProcess(const Repositories &repositories);
   ~DbSyncProcess() override = default;
 
-  void update(Coordinator &coordinator, const chrono::TickData &data) const override;
+  void update(Coordinator &coordinator, const chrono::TickData &data) override;
 
   private:
   DatabaseSynchronizer m_synchronizer;

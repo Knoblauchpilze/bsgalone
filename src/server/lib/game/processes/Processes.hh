@@ -3,6 +3,7 @@
 
 #include "CoreObject.hh"
 #include "IProcess.hh"
+#include "Uuid.hh"
 #include <memory>
 #include <vector>
 
@@ -11,7 +12,7 @@ namespace bsgo {
 class Processes : public core::CoreObject
 {
   public:
-  Processes();
+  Processes(const Uuid systemDbId);
   ~Processes() override = default;
 
   void update(Coordinator &coordinator, const chrono::TickData &data) const;
@@ -19,7 +20,7 @@ class Processes : public core::CoreObject
   private:
   std::vector<IProcessPtr> m_processes{};
 
-  void initialize();
+  void initialize(const Uuid systemDbId);
 };
 
 using ProcessesPtr = std::unique_ptr<Processes>;

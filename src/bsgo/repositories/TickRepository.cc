@@ -21,11 +21,21 @@ FROM
 WHERE
   tc.system = $1
 )--";
+
+constexpr auto UPDATE_TICK_QUERY_NAME = "tick_update";
+constexpr auto UPDATE_TICK_QUERY      = R"(
+UPDATE tick
+  SET
+    current_tick = $1
+  WHERE
+    system = $2
+)";
 } // namespace
 
 void TickRepository::initialize()
 {
   m_connection->prepare(FIND_ONE_BY_SYSTEM_QUERY_NAME, FIND_ONE_BY_SYSTEM_QUERY);
+  m_connection->prepare(UPDATE_TICK_QUERY_NAME, UPDATE_TICK_QUERY);
 }
 
 auto TickRepository::findOneBySystem(const Uuid system) const -> SystemTick
@@ -51,6 +61,22 @@ auto TickRepository::findOneBySystem(const Uuid system) const -> SystemTick
   out.currentTick = chrono::Tick::fromInt(record[3].as<int>());
 
   return out;
+}
+
+void TickRepository::save(const SystemTick &tickData)
+{
+  auto query = [&tickData](pqxx::work &transaction) {
+    return transaction
+      .exec(pqxx::prepped{UPDATE_TICK_QUERY_NAME},
+            pqxx::params{tickData.currentTick.count(), toDbId(tickData.system)})
+      .no_rows();
+  };
+
+  const auto res = m_connection->tryExecuteTransaction(query);
+  if (res.error)
+  {
+    error("Failed to save system tick: " + *res.error);
+  }
 }
 
 } // namespace bsgo

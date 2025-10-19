@@ -18,7 +18,7 @@ class IProcess : public core::CoreObject
 
   virtual auto type() const -> ProcessType = 0;
 
-  virtual void update(Coordinator &coordinator, const chrono::TickData &data) const = 0;
+  virtual void update(Coordinator &coordinator, const chrono::TickData &data) = 0;
 };
 
 using IProcessPtr = std::unique_ptr<IProcess>;
