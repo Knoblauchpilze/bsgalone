@@ -26,6 +26,8 @@ class TickRepository : public AbstractRepository
   void initialize() override;
 
   auto findOneBySystem(const Uuid system) const -> SystemTick;
+
+  void save(const SystemTick &tickData);
 };
 
 using TickRepositoryShPtr = std::shared_ptr<TickRepository>;

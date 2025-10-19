@@ -4,15 +4,16 @@
 
 #include "DbSyncProcess.hh"
 #include "RespawnProcess.hh"
+#include "TickSyncProcess.hh"
 
 namespace bsgo {
 
-Processes::Processes()
+Processes::Processes(const Uuid systemDbId)
   : core::CoreObject("processes")
 {
   setService("bsgo");
 
-  initialize();
+  initialize(systemDbId);
 }
 
 void Processes::update(Coordinator &coordinator, const chrono::TickData &data) const
@@ -31,12 +32,13 @@ void createProcess(std::vector<IProcessPtr> &processes, const Repositories &repo
 }
 } // namespace
 
-void Processes::initialize()
+void Processes::initialize(const Uuid systemDbId)
 {
   Repositories repositories;
 
   createProcess<DbSyncProcess>(m_processes, repositories);
   createProcess<RespawnProcess>(m_processes, repositories);
+  m_processes.emplace_back(std::make_unique<TickSyncProcess>(systemDbId, repositories));
 }
 
 } // namespace bsgo
