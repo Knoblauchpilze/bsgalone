@@ -40,6 +40,7 @@ enum class MessageType
   SHIP_LIST,
   SLOT,
   SLOT_COMPONENT_UPDATED,
+  SYSTEM_DATA,
   SYSTEM_LIST,
   VELOCITY,
   TARGET,
@@ -48,7 +49,7 @@ enum class MessageType
 };
 
 auto str(const MessageType &type) -> std::string;
-auto allMessageTypes() -> std::array<MessageType, 36>;
+auto allMessageTypes() -> std::array<MessageType, 37>;
 
 auto allMessageTypesAsSet() -> std::unordered_set<MessageType>;
 
