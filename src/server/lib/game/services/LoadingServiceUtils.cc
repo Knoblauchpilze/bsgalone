@@ -193,4 +193,13 @@ auto ShipProps::toShipData() const -> ShipData
   };
 }
 
+auto toSystemTickData(const SystemTick &tickData) -> SystemTickData
+{
+  return SystemTickData{
+    .dbId        = tickData.system,
+    .currentTick = tickData.currentTick,
+    .step        = tickData.step,
+  };
+}
+
 } // namespace bsgo

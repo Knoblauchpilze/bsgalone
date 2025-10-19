@@ -22,6 +22,8 @@
 #include "SystemData.hh"
 #include "SystemOutpostRepository.hh"
 #include "SystemRepository.hh"
+#include "SystemTickData.hh"
+#include "TickRepository.hh"
 #include "Uuid.hh"
 #include "WeaponData.hh"
 #include "WeaponRepository.hh"
@@ -98,5 +100,7 @@ struct ShipProps
 
   auto toShipData() const -> ShipData;
 };
+
+auto toSystemTickData(const SystemTick &tickData) -> SystemTickData;
 
 } // namespace bsgo
