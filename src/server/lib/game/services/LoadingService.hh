@@ -13,6 +13,7 @@
 #include "Status.hh"
 #include "SystemOutpostRepository.hh"
 #include "SystemRepository.hh"
+#include "TickRepository.hh"
 #include "WeaponRepository.hh"
 #include <memory>
 #include <vector>
@@ -49,6 +50,7 @@ class LoadingService : public AbstractService
   auto getShipsInSystem(const Uuid systemDbId) const -> std::vector<PlayerShipProps>;
 
   auto getSystems() const -> std::vector<System>;
+  auto getSystemTickConfig(const Uuid systemDbId) const -> SystemTick;
 
   auto getResources() const -> std::vector<Resource>;
   auto getWeapons() const -> std::vector<WeaponProps>;

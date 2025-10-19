@@ -12,6 +12,7 @@
 #include "PlayerWeaponListMessage.hh"
 #include "ResourceListMessage.hh"
 #include "ShipListMessage.hh"
+#include "SystemDataMessage.hh"
 #include "SystemListMessage.hh"
 #include "WeaponListMessage.hh"
 
@@ -119,6 +120,7 @@ void LoadingMessagesConsumer::handleJumpTransition(const LoadingStartedMessage &
   handleSystemAsteroidsLoading(message);
   handleSystemOutpostsLoading(message);
   handleSystemShipsLoading(message);
+  handleSystemTickLoading(message);
 }
 
 void LoadingMessagesConsumer::handleLoginTransition(const LoadingStartedMessage &message) const
@@ -150,6 +152,7 @@ void LoadingMessagesConsumer::handleUndockTransition(const LoadingStartedMessage
   handleSystemAsteroidsLoading(message);
   handleSystemOutpostsLoading(message);
   handleSystemShipsLoading(message);
+  handleSystemTickLoading(message);
 }
 
 void LoadingMessagesConsumer::handleLoginDataLoading(const LoadingStartedMessage &message) const
@@ -447,6 +450,18 @@ void LoadingMessagesConsumer::handleSystemShipsLoading(const LoadingStartedMessa
 
   auto out = std::make_unique<PlayerShipListMessage>(shipsData);
   out->setSystemDbId(systemDbId);
+  out->copyClientIdIfDefined(message);
+
+  m_outputMessageQueue->pushMessage(std::move(out));
+}
+
+void LoadingMessagesConsumer::handleSystemTickLoading(const LoadingStartedMessage &message) const
+{
+  const auto systemDbId = message.getSystemDbId();
+
+  const auto tickConfig = m_loadingService->getSystemTickConfig(systemDbId);
+
+  auto out = std::make_unique<SystemDataMessage>(toSystemTickData(tickConfig));
   out->copyClientIdIfDefined(message);
 
   m_outputMessageQueue->pushMessage(std::move(out));

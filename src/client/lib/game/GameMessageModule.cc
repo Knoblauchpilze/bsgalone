@@ -16,7 +16,8 @@ const Messages GAME_CHANGING_MESSAGE_TYPES = {bsgo::MessageType::CONNECTION,
                                               bsgo::MessageType::ENTITY_REMOVED,
                                               bsgo::MessageType::LOADING_STARTED,
                                               bsgo::MessageType::LOADING_FINISHED,
-                                              bsgo::MessageType::PLAYER_LOGIN_DATA};
+                                              bsgo::MessageType::PLAYER_LOGIN_DATA,
+                                              bsgo::MessageType::SYSTEM_DATA};
 
 GameMessageModule::GameMessageModule(Game &game, const bsgo::DatabaseEntityMapper &entityMapper)
   : bsgo::AbstractMessageListener(GAME_CHANGING_MESSAGE_TYPES)
@@ -63,6 +64,9 @@ void GameMessageModule::onMessageReceived(const bsgo::IMessage &message)
       break;
     case bsgo::MessageType::PLAYER_LOGIN_DATA:
       handlePlayerLoginDataMessage(message.as<bsgo::PlayerLoginDataMessage>());
+      break;
+    case bsgo::MessageType::SYSTEM_DATA:
+      handleSystemDataMessage(message.as<bsgo::SystemDataMessage>());
       break;
     default:
       error("Unsupported message type " + bsgo::str(message.type()));
@@ -177,6 +181,12 @@ void GameMessageModule::handlePlayerLoginDataMessage(const bsgo::PlayerLoginData
   m_game.onLoginDataReceived(message.getActiveShipDbId(),
                              message.getSystemDbId(),
                              message.getFaction());
+}
+
+void GameMessageModule::handleSystemDataMessage(const bsgo::SystemDataMessage & /*message*/) const
+{
+  // TODO: Handle message
+  warn("Should handle system data message");
 }
 
 } // namespace pge

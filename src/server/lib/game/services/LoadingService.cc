@@ -239,6 +239,11 @@ auto LoadingService::getSystems() const -> std::vector<System>
   return out;
 }
 
+auto LoadingService::getSystemTickConfig(const Uuid systemDbId) const -> SystemTick
+{
+  return m_repositories.tickRepository->findOneBySystem(systemDbId);
+}
+
 auto LoadingService::getResources() const -> std::vector<Resource>
 {
   std::vector<Resource> out;
