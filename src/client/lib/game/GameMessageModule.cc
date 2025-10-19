@@ -183,10 +183,9 @@ void GameMessageModule::handlePlayerLoginDataMessage(const bsgo::PlayerLoginData
                              message.getFaction());
 }
 
-void GameMessageModule::handleSystemDataMessage(const bsgo::SystemDataMessage & /*message*/) const
+void GameMessageModule::handleSystemDataMessage(const bsgo::SystemDataMessage &message) const
 {
-  // TODO: Handle message
-  warn("Should handle system data message");
+  m_game.onSystemDataReceived(message.getTickData());
 }
 
 } // namespace pge

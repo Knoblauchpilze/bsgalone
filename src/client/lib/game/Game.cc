@@ -342,6 +342,12 @@ void Game::onPlayerKilled()
   }
 }
 
+void Game::onSystemDataReceived(const bsgo::SystemTickData &systemData)
+{
+  info("Received current tick " + systemData.currentTick.str());
+  m_timeManager = std::make_unique<chrono::TimeManager>(systemData.currentTick, systemData.step);
+}
+
 void Game::onLoadingStarted(const bsgo::LoadingTransition transition)
 {
   m_gameSession->startLoadingTransition(m_state.screen, transition);
