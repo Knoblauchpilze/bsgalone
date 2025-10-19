@@ -15,6 +15,7 @@
 #include "Renderer.hh"
 #include "RenderingPass.hh"
 #include "Screen.hh"
+#include "SystemTickData.hh"
 #include "TimeManager.hh"
 #include "Views.hh"
 #include <memory>
@@ -74,6 +75,7 @@ class Game : public core::CoreObject
   void onShipDocked();
   void onShipUndocked();
   void onPlayerKilled();
+  void onSystemDataReceived(const bsgo::SystemTickData &systemData);
   void onLoadingStarted(const bsgo::LoadingTransition transition);
   void onLoadingFinished(const bsgo::LoadingTransition transition);
 
