@@ -15,6 +15,16 @@ constexpr auto FIND_ONE_QUERY
 constexpr auto FIND_LOOT_QUERY_NAME = "asteroid_find_loot";
 constexpr auto FIND_LOOT_QUERY = "SELECT count(resource) FROM asteroid_loot WHERE asteroid = $1";
 
+constexpr auto FIND_ALL_BY_RESPAWN_TIME_QUERY_NAME = "asteroid_find_all_by_respawn";
+constexpr auto FIND_ALL_BY_RESPAWN_TIME_QUERY      = R"(
+SELECT
+  asteroid
+FROM
+  asteroid_respawn
+WHERE
+  respawn_at <= $1;
+)";
+
 constexpr auto UPDATE_ASTEROID_QUERY_NAME = "asteroid_update";
 constexpr auto UPDATE_ASTEROID_QUERY      = R"(
 UPDATE asteroid
@@ -23,13 +33,21 @@ UPDATE asteroid
   WHERE
     id = $2
 )";
+
+constexpr auto UPDATE_RESPAWN_TIME_QUERY_NAME = "asteroid_update_respawn";
+constexpr auto UPDATE_RESPAWN_TIME_QUERY      = R"(
+INSERT INTO asteroid_respawn ("asteroid", "died_at", "respawn_at")
+  VALUES($1, $2, $3)
+)";
 } // namespace
 
 void AsteroidRepository::initialize()
 {
   m_connection->prepare(FIND_ONE_QUERY_NAME, FIND_ONE_QUERY);
   m_connection->prepare(FIND_LOOT_QUERY_NAME, FIND_LOOT_QUERY);
+  m_connection->prepare(FIND_ALL_BY_RESPAWN_TIME_QUERY_NAME, FIND_ALL_BY_RESPAWN_TIME_QUERY);
   m_connection->prepare(UPDATE_ASTEROID_QUERY_NAME, UPDATE_ASTEROID_QUERY);
+  m_connection->prepare(UPDATE_RESPAWN_TIME_QUERY_NAME, UPDATE_RESPAWN_TIME_QUERY);
 }
 
 auto AsteroidRepository::findOneById(const Uuid asteroid) const -> Asteroid
@@ -40,11 +58,23 @@ auto AsteroidRepository::findOneById(const Uuid asteroid) const -> Asteroid
   return out;
 }
 
-auto AsteroidRepository::findAllByRespawnTimeUntil(const core::TimeStamp /*until*/)
+auto AsteroidRepository::findAllByRespawnTimeUntil(const chrono::Tick &until)
   -> std::vector<Asteroid>
 {
-  // TODO: Filter asteroid based on the input time.
-  return {};
+  const auto query = [&until](pqxx::nontransaction &work) {
+    return work.exec(pqxx::prepped{FIND_ALL_BY_RESPAWN_TIME_QUERY_NAME},
+                     pqxx::params{until.count()});
+  };
+  const auto rows = m_connection->executeQuery(query);
+
+  std::vector<Asteroid> out;
+  for (const auto record : rows)
+  {
+    const auto dbId = fromDbId(record[0].as<int>());
+    out.emplace_back(findOneById(dbId));
+  }
+
+  return out;
 }
 
 void AsteroidRepository::save(const Asteroid &asteroid)
@@ -63,9 +93,22 @@ void AsteroidRepository::save(const Asteroid &asteroid)
   }
 }
 
-void AsteroidRepository::saveRespawnDate(const Uuid /*asteroid*/, core::TimeStamp /*respawn*/)
+void AsteroidRepository::saveRespawn(const Uuid asteroid,
+                                     const chrono::Tick &death,
+                                     const chrono::Tick &respawn)
 {
-  // TODO: the asteroid should be saved in the asteroid_respawn table.
+  auto query = [&asteroid, &death, &respawn](pqxx::work &transaction) {
+    return transaction
+      .exec(pqxx::prepped{UPDATE_RESPAWN_TIME_QUERY_NAME},
+            pqxx::params{toDbId(asteroid), death.count(), respawn.count()})
+      .no_rows();
+  };
+
+  const auto res = m_connection->tryExecuteTransaction(query);
+  if (res.error)
+  {
+    error("Failed to save asteroid respawn: " + *res.error);
+  }
 }
 
 auto AsteroidRepository::fetchAsteroidBase(const Uuid asteroid) const -> Asteroid
