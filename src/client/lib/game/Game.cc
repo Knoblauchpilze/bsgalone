@@ -248,6 +248,11 @@ bool Game::step(float elapsedSeconds)
       .elapsed = elapsedSeconds,
     };
 
+    if (!m_timeManager)
+    {
+      error("Unable to simulate game tick", "Time manager is not set");
+    }
+
     const auto data = m_timeManager->tick(elapsed);
     m_coordinator->update(data);
   }
@@ -374,10 +379,6 @@ void Game::initialize(const int serverPort)
   m_internalMessageQueue = std::make_unique<bsgo::SynchronizedMessageQueue>(
     "synchronized-message-queue-for-internal");
   m_outputMessageQueue = std::make_unique<ClientMessageQueue>(std::move(connection));
-
-  // TODO: This should come from the server
-  const chrono::TimeStep timeStep(1, chrono::Duration(chrono::Unit::SECONDS, 1));
-  m_timeManager = std::make_unique<chrono::TimeManager>(chrono::Tick(), timeStep);
 
   bsgo::SystemsConfig sConfig{.internalMessageQueue = m_internalMessageQueue.get(),
                               .outputMessageQueue   = m_outputMessageQueue.get(),
