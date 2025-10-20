@@ -14,7 +14,7 @@ class RespawnProcess : public AbstractProcess
   void update(Coordinator &coordinator, const chrono::TickData &data) override;
 
   private:
-  void respawnAsteroids(Coordinator &coordinator) const;
+  void respawnAsteroids(Coordinator &coordinator, const chrono::TickData &data) const;
 };
 
 } // namespace bsgo

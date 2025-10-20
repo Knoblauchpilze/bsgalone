@@ -2,7 +2,7 @@
 #pragma once
 
 #include "AbstractRepository.hh"
-#include "TimeUtils.hh"
+#include "Tick.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
 #include <memory>
@@ -31,10 +31,10 @@ class AsteroidRepository : public AbstractRepository
   void initialize() override;
 
   auto findOneById(const Uuid asteroid) const -> Asteroid;
-  auto findAllByRespawnTimeUntil(const core::TimeStamp until) -> std::vector<Asteroid>;
+  auto findAllByRespawnTimeUntil(const chrono::Tick &until) -> std::vector<Asteroid>;
 
   void save(const Asteroid &asteroid);
-  void saveRespawnDate(const Uuid asteroid, core::TimeStamp respawn);
+  void saveRespawn(const Uuid asteroid, const chrono::Tick &death, const chrono::Tick &respawn);
 
   private:
   auto fetchAsteroidBase(const Uuid asteroid) const -> Asteroid;
