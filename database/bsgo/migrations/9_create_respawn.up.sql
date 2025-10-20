@@ -1,14 +1,16 @@
 
 CREATE TABLE asteroid_respawn (
-  asteroid INTEGER GENERATED ALWAYS AS IDENTITY,
-  died_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-  respawn_at TIMESTAMP WITH TIME ZONE,
-  PRIMARY KEY (asteroid)
+  asteroid INTEGER NOT NULL,
+  died_at INTEGER NOT NULL,
+  respawn_at INTEGER NOT NULL,
+  PRIMARY KEY (asteroid),
+  FOREIGN KEY (asteroid) REFERENCES asteroid(id)
 );
 
 CREATE TABLE system_outpost_respawn (
-  outpost INTEGER GENERATED ALWAYS AS IDENTITY,
-  died_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-  respawn_at TIMESTAMP WITH TIME ZONE,
-  PRIMARY KEY (outpost)
+  outpost INTEGER NOT NULL,
+  died_at INTEGER NOT NULL,
+  respawn_at INTEGER NOT NULL,
+  PRIMARY KEY (outpost),
+  FOREIGN KEY (outpost) REFERENCES system_outpost(id)
 );
