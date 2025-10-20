@@ -2,6 +2,7 @@
 #include "SystemProcessor.hh"
 #include "DataSource.hh"
 #include "MessageConsumerSetup.hh"
+#include "TimeUtils.hh"
 
 namespace bsgo {
 
