@@ -79,6 +79,12 @@ void EntityRemovedMessageConsumer::handleAsteroidEntityRemoved(const Uuid astero
     return;
   }
 
+  if (dead && !m_systemService->tryMarkAsteroidForRespawn(asteroidDbId))
+  {
+    warn("Failed to process asteroid removed message for " + str(asteroidDbId));
+    return;
+  }
+
   const auto &processor = *maybeProcessor;
   processor->pushMessage(
     std::make_unique<EntityRemovedMessage>(asteroidDbId, EntityKind::ASTEROID, dead, *systemDbId));

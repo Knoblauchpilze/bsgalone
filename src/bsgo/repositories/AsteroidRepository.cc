@@ -39,6 +39,14 @@ constexpr auto UPDATE_RESPAWN_TIME_QUERY      = R"(
 INSERT INTO asteroid_respawn ("asteroid", "died_at", "respawn_at")
   VALUES($1, $2, $3)
 )";
+
+constexpr auto DELETE_RESPAWN_QUERY_NAME = "asteroid_delete_respawn";
+constexpr auto DELETE_RESPAWN_QUERY      = R"(
+DELETE FROM
+  asteroid_respawn
+WHERE
+  asteroid = $1
+)";
 } // namespace
 
 void AsteroidRepository::initialize()
@@ -48,6 +56,7 @@ void AsteroidRepository::initialize()
   m_connection->prepare(FIND_ALL_BY_RESPAWN_TIME_QUERY_NAME, FIND_ALL_BY_RESPAWN_TIME_QUERY);
   m_connection->prepare(UPDATE_ASTEROID_QUERY_NAME, UPDATE_ASTEROID_QUERY);
   m_connection->prepare(UPDATE_RESPAWN_TIME_QUERY_NAME, UPDATE_RESPAWN_TIME_QUERY);
+  m_connection->prepare(DELETE_RESPAWN_QUERY_NAME, DELETE_RESPAWN_QUERY);
 }
 
 auto AsteroidRepository::findOneById(const Uuid asteroid) const -> Asteroid
@@ -108,6 +117,21 @@ void AsteroidRepository::saveRespawn(const Uuid asteroid,
   if (res.error)
   {
     error("Failed to save asteroid respawn: " + *res.error);
+  }
+}
+
+void AsteroidRepository::deleteRespawn(const Uuid asteroid)
+{
+  auto query = [&asteroid](pqxx::work &transaction) {
+    return transaction
+      .exec(pqxx::prepped{DELETE_RESPAWN_QUERY_NAME}, pqxx::params{toDbId(asteroid)})
+      .no_rows();
+  };
+
+  const auto res = m_connection->tryExecuteTransaction(query);
+  if (res.error)
+  {
+    error("Failed to delete asteroid respawn: " + *res.error);
   }
 }
 
