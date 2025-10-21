@@ -36,6 +36,8 @@ class SystemService : public AbstractService
   auto getSystemDbIdForOutpost(const Uuid outpostDbId) const -> Uuid;
   auto getShipDbIdForPlayer(const Uuid playerDbId) const -> Uuid;
 
+  bool tryMarkAsteroidForRespawn(const Uuid asteroidDbId) const;
+
   private:
   auto findExistingResourceAmount(const Uuid playerDbId, const Uuid resourceDbId) const -> int;
 };

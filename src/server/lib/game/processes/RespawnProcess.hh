@@ -2,6 +2,7 @@
 #pragma once
 
 #include "AbstractProcess.hh"
+#include "AsteroidRepository.hh"
 
 namespace bsgo {
 
@@ -15,6 +16,8 @@ class RespawnProcess : public AbstractProcess
 
   private:
   void respawnAsteroids(Coordinator &coordinator, const chrono::TickData &data) const;
+
+  void respawnAsteroid(Coordinator &coordinator, Asteroid asteroid) const;
 };
 
 } // namespace bsgo

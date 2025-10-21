@@ -34,7 +34,9 @@ class AsteroidRepository : public AbstractRepository
   auto findAllByRespawnTimeUntil(const chrono::Tick &until) -> std::vector<Asteroid>;
 
   void save(const Asteroid &asteroid);
+
   void saveRespawn(const Uuid asteroid, const chrono::Tick &death, const chrono::Tick &respawn);
+  void deleteRespawn(const Uuid asteroid);
 
   private:
   auto fetchAsteroidBase(const Uuid asteroid) const -> Asteroid;

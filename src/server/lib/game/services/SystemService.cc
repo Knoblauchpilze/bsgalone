@@ -133,6 +133,41 @@ auto SystemService::getShipDbIdForPlayer(const Uuid playerDbId) const -> Uuid
   return playerShip.id;
 }
 
+namespace {
+const auto ASTEROID_RESPAWN_TIME_IN_TICKS = chrono::TickDuration::fromInt(10);
+}
+
+bool SystemService::tryMarkAsteroidForRespawn(const Uuid asteroidDbId) const
+{
+  const auto asteroid = m_repositories.asteroidRepository->findOneById(asteroidDbId);
+  // TODO: This does not work because there's no sync with the db when the
+  // asteroid dies. So we get whatever value was saved at the last sync which
+  // has no reason to be 0.
+  // We should trigger an db sync update in the status/removal system, but
+  // the issue is that this ends up in the MessageExchanger in the internal
+  // message queue which is async. So we could arrive here without having
+  // processed the db sync: the db sync happens in the DbSyncProcess which
+  // is a sync process in respect to the systems' execution.
+  // Possible solution:
+  // - ignore it
+  // - change the message exchanger to not have an async queue
+  // - ??
+  if (asteroid.health > 0.0f)
+  {
+    warn("Cannot mark asteroid for respawn", "Health is not zero");
+    return false;
+  }
+
+  const auto tickData = m_repositories.tickRepository->findOneBySystem(asteroid.system);
+
+  const auto deathTick   = tickData.currentTick;
+  const auto respawnTick = deathTick + ASTEROID_RESPAWN_TIME_IN_TICKS;
+
+  m_repositories.asteroidRepository->saveRespawn(asteroidDbId, deathTick, respawnTick);
+
+  return true;
+}
+
 auto SystemService::findExistingResourceAmount(const Uuid playerDbId, const Uuid resourceDbId) const
   -> int
 {
