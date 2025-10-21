@@ -64,12 +64,21 @@ struct TestCaseTickAddition
 
 using AdditionTest = TestWithParam<TestCaseTickAddition>;
 
-TEST_P(AdditionTest, AddsCorrectly)
+TEST_P(AdditionTest, OperatorPlusEqual)
 {
   const auto &param = GetParam();
 
   auto actual = param.lhs;
   actual += param.rhs;
+
+  assertTickMatches(actual, param.expectedCount, param.expectedFrac);
+}
+
+TEST_P(AdditionTest, OperatorPlus)
+{
+  const auto &param = GetParam();
+
+  const auto actual = param.lhs + param.rhs;
 
   assertTickMatches(actual, param.expectedCount, param.expectedFrac);
 }

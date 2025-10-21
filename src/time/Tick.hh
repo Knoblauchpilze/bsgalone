@@ -51,4 +51,6 @@ class Tick
 auto operator<<(std::ostream &out, const Tick &tick) -> std::ostream &;
 auto operator>>(std::istream &in, Tick &tick) -> std::istream &;
 
+auto operator+(const Tick &lhs, const TickDuration &rhs) -> Tick;
+
 } // namespace chrono
