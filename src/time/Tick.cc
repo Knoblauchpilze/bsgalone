@@ -142,4 +142,11 @@ auto operator>>(std::istream &in, Tick &tick) -> std::istream &
   return in;
 }
 
+auto operator+(const Tick &lhs, const TickDuration &rhs) -> Tick
+{
+  Tick out(lhs);
+  out += rhs;
+  return out;
+}
+
 } // namespace chrono
