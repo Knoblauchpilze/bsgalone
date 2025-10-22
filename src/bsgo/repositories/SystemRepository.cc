@@ -12,13 +12,39 @@ constexpr auto FIND_ALL_QUERY_NAME = "system_find_all";
 constexpr auto FIND_ALL_QUERY      = "SELECT id FROM system";
 
 constexpr auto FIND_ONE_QUERY_NAME = "system_find_one";
-constexpr auto FIND_ONE_QUERY      = "SELECT name, x_pos, y_pos, z_pos FROM system WHERE id = $1";
+constexpr auto FIND_ONE_QUERY      = R"(
+SELECT
+  name,
+  x_pos,
+  y_pos,
+  z_pos
+FROM
+  system
+WHERE
+  id = $1
+)";
 
 constexpr auto FIND_ONE_BY_FACTION_QUERY_NAME = "system_find_one_by_faction";
-constexpr auto FIND_ONE_BY_FACTION_QUERY = "SELECT system FROM starting_system WHERE faction = $1";
+constexpr auto FIND_ONE_BY_FACTION_QUERY      = R"(
+SELECT
+  system
+FROM
+  starting_system
+WHERE
+  faction = $1
+)";
 
 constexpr auto FIND_ASTEROIDS_QUERY_NAME = "system_find_asteroids";
-constexpr auto FIND_ASTEROIDS_QUERY      = "SELECT id FROM asteroid WHERE system = $1";
+constexpr auto FIND_ASTEROIDS_QUERY      = R"(
+SELECT
+  id
+FROM
+  asteroid AS a
+  LEFT JOIN asteroid_respawn AS ar ON ar.asteroid = a.id
+WHERE
+  ar.died_at is null
+  AND a.system = $1
+)";
 
 constexpr auto FIND_SHIPS_QUERY_NAME = "system_find_ships";
 constexpr auto FIND_SHIPS_QUERY      = R"(
@@ -33,7 +59,14 @@ WHERE
 )";
 
 constexpr auto FIND_OUTPOSTS_QUERY_NAME = "system_find_outposts";
-constexpr auto FIND_OUTPOSTS_QUERY      = "SELECT id FROM system_outpost WHERE system = $1";
+constexpr auto FIND_OUTPOSTS_QUERY      = R"(
+SELECT
+  id
+FROM
+  system_outpost
+WHERE
+  system = $1
+)";
 
 constexpr auto UPDATE_SYSTEM_QUERY_NAME = "system_update_system_for_ship";
 constexpr auto UPDATE_SYSTEM_QUERY      = R"(
