@@ -44,7 +44,7 @@ class SystemProcessor : public core::CoreObject
   std::atomic_bool m_running{false};
   std::thread m_processingThread{};
 
-  void initialize();
+  void initialize(const Uuid systemDbId);
   void asyncSystemProcessing();
 };
 

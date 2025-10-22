@@ -8,12 +8,12 @@
 
 namespace bsgo {
 
-Processes::Processes(const Uuid systemDbId)
+Processes::Processes(const Uuid systemDbId, IMessageQueue *const systemMessageQueue)
   : core::CoreObject("processes")
 {
   setService("bsgo");
 
-  initialize(systemDbId);
+  initialize(systemDbId, systemMessageQueue);
 }
 
 void Processes::update(Coordinator &coordinator, const chrono::TickData &data) const
@@ -24,21 +24,16 @@ void Processes::update(Coordinator &coordinator, const chrono::TickData &data) c
   }
 }
 
-namespace {
-template<typename T>
-void createProcess(std::vector<IProcessPtr> &processes, const Repositories &repositories)
-{
-  processes.emplace_back(std::make_unique<T>(repositories));
-}
-} // namespace
-
-void Processes::initialize(const Uuid systemDbId)
+void Processes::initialize(const Uuid systemDbId, IMessageQueue *const systemMessageQueue)
 {
   Repositories repositories;
 
-  createProcess<DbSyncProcess>(m_processes, repositories);
-  createProcess<RespawnProcess>(m_processes, repositories);
-  m_processes.emplace_back(std::make_unique<TickSyncProcess>(systemDbId, repositories));
+  auto syncProcess = std::make_unique<DbSyncProcess>(repositories);
+  m_processes.emplace_back(std::move(syncProcess));
+  auto respawnProcess = std::make_unique<RespawnProcess>(repositories, systemMessageQueue);
+  m_processes.emplace_back(std::move(respawnProcess));
+  auto tickSyncProcess = std::make_unique<TickSyncProcess>(systemDbId, repositories);
+  m_processes.emplace_back(std::move(tickSyncProcess));
 }
 
 } // namespace bsgo

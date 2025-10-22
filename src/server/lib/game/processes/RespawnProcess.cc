@@ -3,8 +3,10 @@
 
 namespace bsgo {
 
-RespawnProcess::RespawnProcess(const Repositories &repositories)
+RespawnProcess::RespawnProcess(const Repositories &repositories,
+                               IMessageQueue *const systemMessageQueue)
   : AbstractProcess(ProcessType::RESPAWN, repositories)
+  , m_systemMessageQueue(systemMessageQueue)
 {}
 
 void RespawnProcess::update(Coordinator &coordinator, const chrono::TickData &data)
