@@ -255,13 +255,15 @@ auto ShipService::tryAcquireTarget(const TargetAcquiringData &data) const -> Acq
   std::optional<Uuid> maybeTargetDbId{};
   std::optional<EntityKind> maybeTargetKind{};
 
-  if (maybeTarget)
+  if (!maybeTarget)
   {
-    debug("Determined target " + maybeTarget->str());
-
-    maybeTargetKind = maybeTarget->kind->kind();
-    maybeTargetDbId = maybeTarget->dbComp().dbId();
+    return AcquiringResult{};
   }
+
+  debug("Determined target " + maybeTarget->str());
+
+  maybeTargetKind = maybeTarget->kind->kind();
+  maybeTargetDbId = maybeTarget->dbComp().dbId();
 
   updateEntityTarget(ship, maybeTarget->uuid);
 
