@@ -39,6 +39,9 @@ void EntityAddedMessageConsumer::onMessageReceived(const IMessage &message)
     case EntityKind::SHIP:
       handleShipAdded(systemDbId, *added.tryGetShipData());
       break;
+    case EntityKind::ASTEROID:
+      handleAsteroidAdded(systemDbId, *added.tryGetAsteroidData());
+      break;
     default:
       error("Unsupported type of entity added: " + str(entityKind));
   }
@@ -72,6 +75,24 @@ void EntityAddedMessageConsumer::handleShipAdded(const Uuid systemDbId,
   auto shipAdded = std::make_unique<EntityAddedMessage>(systemDbId);
   shipAdded->setShipData(shipData.toPlayerShipData());
   m_outputMessageQueue->pushMessage(std::move(shipAdded));
+}
+
+void EntityAddedMessageConsumer::handleAsteroidAdded(const Uuid systemDbId,
+                                                     const AsteroidData &data) const
+{
+  if (!m_entityService->tryCreateAsteroidEntity(data.dbId))
+  {
+    warn("Failed to process asteroid " + str(data.dbId) + " added in system " + str(systemDbId));
+    return;
+  }
+
+  // The input asteroid data is not complete. We need to get all of it from
+  // the loading service before sending the message to the client applications.
+  const auto asteroidData = m_loadingService->getAsteroidById(data.dbId);
+
+  auto asteroidAdded = std::make_unique<EntityAddedMessage>(systemDbId);
+  asteroidAdded->setAsteroidData(asteroidData.toAsteroidData());
+  m_outputMessageQueue->pushMessage(std::move(asteroidAdded));
 }
 
 } // namespace bsgo
