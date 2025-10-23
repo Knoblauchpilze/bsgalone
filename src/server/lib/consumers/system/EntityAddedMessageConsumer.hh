@@ -2,6 +2,7 @@
 #pragma once
 
 #include "AbstractMessageConsumer.hh"
+#include "AsteroidData.hh"
 #include "IMessageQueue.hh"
 #include "PlayerShipData.hh"
 #include "Services.hh"
@@ -22,6 +23,7 @@ class EntityAddedMessageConsumer : public AbstractMessageConsumer
   IMessageQueue *const m_outputMessageQueue{};
 
   void handleShipAdded(const Uuid systemDbId, const PlayerShipData &data) const;
+  void handleAsteroidAdded(const Uuid systemDbId, const AsteroidData &data) const;
 };
 
 } // namespace bsgo

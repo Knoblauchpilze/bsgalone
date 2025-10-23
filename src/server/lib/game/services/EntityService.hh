@@ -2,6 +2,7 @@
 #pragma once
 
 #include "AbstractService.hh"
+#include "AsteroidData.hh"
 #include "Coordinator.hh"
 #include "DatabaseEntityMapper.hh"
 #include "Repositories.hh"
@@ -21,6 +22,7 @@ class EntityService : public AbstractService
 
   bool tryCreateShipEntity(const Uuid shipDbId) const;
   void tryDeleteShipEntity(const Uuid shipDbId) const;
+  bool tryCreateAsteroidEntity(const Uuid asteroidDbId) const;
   void tryDeleteAsteroidEntity(const Uuid asteroidDbId) const;
 
   auto tryGetPlayerDbIdForShip(const Uuid shipDbId) const -> std::optional<Uuid>;
