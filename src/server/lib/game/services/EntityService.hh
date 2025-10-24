@@ -14,8 +14,7 @@ namespace bsgo {
 class EntityService : public AbstractService
 {
   public:
-  EntityService(const ProcessingMode processingMode,
-                const Repositories &repositories,
+  EntityService(const Repositories &repositories,
                 CoordinatorShPtr coordinator,
                 DatabaseEntityMapper &entityMapper);
   ~EntityService() override = default;
@@ -28,7 +27,6 @@ class EntityService : public AbstractService
   auto tryGetPlayerDbIdForShip(const Uuid shipDbId) const -> std::optional<Uuid>;
 
   private:
-  ProcessingMode m_processingMode{ProcessingMode::CLIENT};
   CoordinatorShPtr m_coordinator{};
   DatabaseEntityMapper &m_entityMapper;
 
