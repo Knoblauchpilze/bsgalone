@@ -66,7 +66,7 @@ bool SystemService::trySendPlayerShipBackToOutpost(const Uuid shipDbId) const
   return true;
 }
 
-auto SystemService::trySendPlayerBackToOutpost(const Uuid &playerDbId) const -> ForcedDockResult
+auto SystemService::sendPlayerBackToOutpost(const Uuid &playerDbId) const -> ForcedDockResult
 {
   auto ship = m_repositories.playerShipRepository->findOneByPlayerAndActive(playerDbId);
 
@@ -74,6 +74,9 @@ auto SystemService::trySendPlayerBackToOutpost(const Uuid &playerDbId) const -> 
 
   ship.docked = true;
   ship.jumpSystem.reset();
+  // Reset ship position as this is used in the logout flow: we want the player to
+  // respawn at the initial position.
+  ship.position = Eigen::Vector3f::Zero();
 
   m_repositories.systemRepository->updateSystemForShip(ship.id, *ship.system, ship.docked);
   m_repositories.playerShipRepository->save(ship);

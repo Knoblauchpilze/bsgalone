@@ -21,7 +21,7 @@ class SystemService : public AbstractService
   {
     bool alreadyDocked{false};
   };
-  auto trySendPlayerBackToOutpost(const Uuid &playerDbId) const -> ForcedDockResult;
+  auto sendPlayerBackToOutpost(const Uuid &playerDbId) const -> ForcedDockResult;
 
   struct JumpResult
   {
