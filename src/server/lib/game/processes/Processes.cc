@@ -30,7 +30,9 @@ void Processes::initialize(const Uuid systemDbId, IMessageQueue *const systemMes
 
   auto syncProcess = std::make_unique<DbSyncProcess>(repositories);
   m_processes.emplace_back(std::move(syncProcess));
-  auto respawnProcess = std::make_unique<RespawnProcess>(repositories, systemMessageQueue);
+  auto respawnProcess = std::make_unique<RespawnProcess>(systemDbId,
+                                                         repositories,
+                                                         systemMessageQueue);
   m_processes.emplace_back(std::move(respawnProcess));
   auto tickSyncProcess = std::make_unique<TickSyncProcess>(systemDbId, repositories);
   m_processes.emplace_back(std::move(tickSyncProcess));
