@@ -56,7 +56,7 @@ void LogoutMessageConsumer::handleLogout(const LogoutMessage &message) const
           "Unknown system " + str(*maybeSystemDbId));
   }
 
-  const auto res = m_systemService->trySendPlayerBackToOutpost(playerDbId);
+  const auto res = m_systemService->sendPlayerBackToOutpost(playerDbId);
   if (!res.alreadyDocked)
   {
     auto removed = std::make_unique<EntityRemovedMessage>(m_systemService->getShipDbIdForPlayer(
