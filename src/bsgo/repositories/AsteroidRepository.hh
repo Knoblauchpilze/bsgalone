@@ -31,7 +31,8 @@ class AsteroidRepository : public AbstractRepository
   void initialize() override;
 
   auto findOneById(const Uuid asteroid) const -> Asteroid;
-  auto findAllByRespawnTimeUntil(const chrono::Tick &until) -> std::vector<Asteroid>;
+  auto findAllBySystemAndRespawnTime(const Uuid systemDbId, const chrono::Tick &until)
+    -> std::vector<Asteroid>;
 
   void save(const Asteroid &asteroid);
 

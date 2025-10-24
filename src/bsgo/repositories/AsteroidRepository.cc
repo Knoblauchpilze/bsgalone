@@ -18,11 +18,13 @@ constexpr auto FIND_LOOT_QUERY = "SELECT count(resource) FROM asteroid_loot WHER
 constexpr auto FIND_ALL_BY_RESPAWN_TIME_QUERY_NAME = "asteroid_find_all_by_respawn";
 constexpr auto FIND_ALL_BY_RESPAWN_TIME_QUERY      = R"(
 SELECT
-  asteroid
+  ar.asteroid
 FROM
-  asteroid_respawn
+  asteroid_respawn AS ar
+  LEFT JOIN asteroid AS a ON a.id = ar.asteroid
 WHERE
-  respawn_at <= $1;
+  a.system = $1
+  AND ar.respawn_at <= $2;
 )";
 
 constexpr auto UPDATE_ASTEROID_QUERY_NAME = "asteroid_update";
@@ -67,12 +69,13 @@ auto AsteroidRepository::findOneById(const Uuid asteroid) const -> Asteroid
   return out;
 }
 
-auto AsteroidRepository::findAllByRespawnTimeUntil(const chrono::Tick &until)
+auto AsteroidRepository::findAllBySystemAndRespawnTime(const Uuid systemDbId,
+                                                       const chrono::Tick &until)
   -> std::vector<Asteroid>
 {
-  const auto query = [&until](pqxx::nontransaction &work) {
+  const auto query = [&systemDbId, &until](pqxx::nontransaction &work) {
     return work.exec(pqxx::prepped{FIND_ALL_BY_RESPAWN_TIME_QUERY_NAME},
-                     pqxx::params{until.count()});
+                     pqxx::params{toDbId(systemDbId), until.count()});
   };
   const auto rows = m_connection->executeQuery(query);
 
