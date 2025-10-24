@@ -16,7 +16,6 @@ void TickSyncProcess::update(Coordinator & /*coordinator*/, const chrono::TickDa
   }
 
   SystemTick tick{.system = m_systemDbId, .currentTick = data.tick};
-  info("saving tick " + tick.currentTick.str());
 
   m_repositories.tickRepository->save(tick);
   m_lastSaved = data.tick.count();
