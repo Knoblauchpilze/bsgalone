@@ -8,12 +8,6 @@ namespace bsgo {
 
 class Coordinator;
 
-enum class ProcessingMode
-{
-  SERVER,
-  CLIENT
-};
-
 class IService : public core::CoreObject
 {
   public:

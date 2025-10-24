@@ -6,12 +6,10 @@
 
 namespace bsgo {
 
-EntityService::EntityService(const ProcessingMode processingMode,
-                             const Repositories &repositories,
+EntityService::EntityService(const Repositories &repositories,
                              CoordinatorShPtr coordinator,
                              DatabaseEntityMapper &entityMapper)
   : AbstractService("entity", repositories)
-  , m_processingMode(processingMode)
   , m_coordinator(std::move(coordinator))
   , m_entityMapper(entityMapper)
 {}
@@ -34,11 +32,8 @@ bool EntityService::tryCreateShipEntity(const Uuid shipDbId) const
   auto shipEntity  = m_coordinator->getEntity(*maybeEntityId);
   auto &statusComp = shipEntity.statusComp();
 
-  if (ProcessingMode::SERVER == m_processingMode)
-  {
-    const auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
-    m_repositories.systemRepository->updateSystemForShip(shipDbId, *ship.system, false);
-  }
+  const auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
+  m_repositories.systemRepository->updateSystemForShip(shipDbId, *ship.system, false);
 
   statusComp.setStatus(Status::APPEARING);
   statusComp.resetAppearingTime();
@@ -151,17 +146,7 @@ void EntityService::handlePlayerDeletionForShip(const Uuid &shipDbId) const
 
 void EntityService::performEntityDeletion(Entity &entity) const
 {
-  switch (m_processingMode)
-  {
-    case ProcessingMode::SERVER:
-      entity.removalComp().markForRemoval();
-      break;
-    case ProcessingMode::CLIENT:
-      m_coordinator->deleteEntity(entity.uuid);
-      break;
-    default:
-      error("Unsupported processing mode");
-  }
+  entity.removalComp().markForRemoval();
 }
 
 } // namespace bsgo

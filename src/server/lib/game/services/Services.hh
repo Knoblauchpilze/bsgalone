@@ -25,8 +25,7 @@ struct Services
   LoadingServiceShPtr loading{};
 };
 
-auto createServices(const ProcessingMode processingMode,
-                    const Repositories &repositories,
+auto createServices(const Repositories &repositories,
                     const CoordinatorShPtr &coordinator,
                     DatabaseEntityMapper &entityMapper) -> Services;
 
