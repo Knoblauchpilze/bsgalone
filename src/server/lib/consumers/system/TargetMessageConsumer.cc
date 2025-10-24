@@ -26,14 +26,22 @@ void TargetMessageConsumer::onMessageReceived(const IMessage &message)
   const auto shipDbId = target.getShipDbId();
   const auto position = target.getPosition();
 
+  const auto targetDbIdHint = target.getTargetDbId();
+
   const ShipService::TargetAcquiringData data{.shipDbId       = shipDbId,
                                               .position       = position,
-                                              .targetDbIdHint = target.getTargetDbId(),
+                                              .targetDbIdHint = targetDbIdHint,
                                               .targetKindHint = target.getTargetKind()};
   const auto res = m_shipService->tryAcquireTarget(data);
   if (!res.success)
   {
-    warn("Failed to process target message for ship " + str(shipDbId));
+    // Only print a warning in case there was a hint in the message. In case a hint
+    // is provided and we can't find it, it means that there's a discrepency between
+    // what the client app knows and what the server knows.
+    if (targetDbIdHint)
+    {
+      warn("Failed to process target message for ship " + str(shipDbId));
+    }
     return;
   }
 
