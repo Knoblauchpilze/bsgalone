@@ -15,7 +15,7 @@ class SystemService : public AbstractService
 
   bool tryDistributeResource(const Uuid playerDbId, const Uuid resourceDbId, const int amount) const;
 
-  bool trySendPlayerShipBackToOutpost(const Uuid shipDbId) const;
+  bool disposeOfDeadShip(const Uuid shipDbId) const;
 
   struct ForcedDockResult
   {

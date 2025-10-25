@@ -55,7 +55,7 @@ void EntityRemovedMessageConsumer::handleShipEntityRemoved(const Uuid shipDbId,
     return;
   }
 
-  if (dead && !m_systemService->trySendPlayerShipBackToOutpost(shipDbId))
+  if (dead && !m_systemService->disposeOfDeadShip(shipDbId))
   {
     warn("Failed to process ship removed message for " + str(shipDbId));
     return;
