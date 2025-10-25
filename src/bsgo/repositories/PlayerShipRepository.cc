@@ -117,6 +117,20 @@ INSERT INTO ship_jump (ship, system)
 
 constexpr auto CANCEL_SHIP_JUMP_QUERY_NAME = "player_ship_cancel_jump";
 constexpr auto CANCEL_SHIP_JUMP_QUERY      = "DELETE FROM ship_jump WHERE ship = $1";
+
+constexpr auto UPDATE_RESPAWN_TIME_QUERY_NAME = "player_ship_update_respawn";
+constexpr auto UPDATE_RESPAWN_TIME_QUERY      = R"(
+INSERT INTO player_ship_respawn ("ship", "died_at", "respawn_at")
+  VALUES($1, $2, $3)
+)";
+
+constexpr auto DELETE_RESPAWN_QUERY_NAME = "player_ship_delete_respawn";
+constexpr auto DELETE_RESPAWN_QUERY      = R"(
+DELETE FROM
+  player_ship_respawn
+WHERE
+  ship = $1
+)";
 } // namespace
 
 void PlayerShipRepository::initialize()
@@ -131,6 +145,8 @@ void PlayerShipRepository::initialize()
   m_connection->prepare(UPDATE_SHIP_QUERY_NAME, UPDATE_SHIP_QUERY);
   m_connection->prepare(UPDATE_SHIP_JUMP_QUERY_NAME, UPDATE_SHIP_JUMP_QUERY);
   m_connection->prepare(CANCEL_SHIP_JUMP_QUERY_NAME, CANCEL_SHIP_JUMP_QUERY);
+  m_connection->prepare(UPDATE_RESPAWN_TIME_QUERY_NAME, UPDATE_RESPAWN_TIME_QUERY);
+  m_connection->prepare(DELETE_RESPAWN_QUERY_NAME, DELETE_RESPAWN_QUERY);
 }
 
 auto PlayerShipRepository::findOneById(const Uuid ship) const -> PlayerShip
@@ -243,6 +259,38 @@ void PlayerShipRepository::saveJump(const Uuid shipDbId, const std::optional<Uui
   else
   {
     cancelShipJump(shipDbId);
+  }
+}
+
+void PlayerShipRepository::saveRespawn(const Uuid ship,
+                                       const chrono::Tick &death,
+                                       const chrono::Tick &respawn)
+{
+  auto query = [&ship, &death, &respawn](pqxx::work &transaction) {
+    return transaction
+      .exec(pqxx::prepped{UPDATE_RESPAWN_TIME_QUERY_NAME},
+            pqxx::params{toDbId(ship), death.count(), respawn.count()})
+      .no_rows();
+  };
+
+  const auto res = m_connection->tryExecuteTransaction(query);
+  if (res.error)
+  {
+    error("Failed to save ship respawn: " + *res.error);
+  }
+}
+
+void PlayerShipRepository::deleteRespawn(const Uuid ship)
+{
+  auto query = [&ship](pqxx::work &transaction) {
+    return transaction.exec(pqxx::prepped{DELETE_RESPAWN_QUERY_NAME}, pqxx::params{toDbId(ship)})
+      .no_rows();
+  };
+
+  const auto res = m_connection->tryExecuteTransaction(query);
+  if (res.error)
+  {
+    error("Failed to delete ship respawn: " + *res.error);
   }
 }
 

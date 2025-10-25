@@ -40,6 +40,8 @@ class SystemService : public AbstractService
 
   private:
   auto findExistingResourceAmount(const Uuid playerDbId, const Uuid resourceDbId) const -> int;
+  bool disposeOfDeadAiShip(const PlayerShip &playerShip) const;
+  bool disposeOfDeadPlayerShip(PlayerShip playerShip) const;
 };
 
 using SystemServiceShPtr = std::shared_ptr<SystemService>;
