@@ -37,7 +37,7 @@ bool canShipBeSentBackToOutpost(const PlayerShip &ship)
 }
 } // namespace
 
-bool SystemService::trySendPlayerShipBackToOutpost(const Uuid shipDbId) const
+bool SystemService::disposeOfDeadShip(const Uuid shipDbId) const
 {
   auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
 
