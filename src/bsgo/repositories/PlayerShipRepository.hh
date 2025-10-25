@@ -5,6 +5,7 @@
 #include "Faction.hh"
 #include "ShipClass.hh"
 #include "Slot.hh"
+#include "Tick.hh"
 #include "TickDuration.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
@@ -65,6 +66,9 @@ class PlayerShipRepository : public AbstractRepository
   void create(const PlayerShip &ship);
   void save(const PlayerShip &ship);
   void saveJump(const Uuid shipDbId, const std::optional<Uuid> jumpSystem);
+
+  void saveRespawn(const Uuid ship, const chrono::Tick &death, const chrono::Tick &respawn);
+  void deleteRespawn(const Uuid ship);
 
   private:
   auto fetchShipBase(const Uuid ship) const -> PlayerShip;

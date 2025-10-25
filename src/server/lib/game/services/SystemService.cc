@@ -49,21 +49,14 @@ bool SystemService::disposeOfDeadShip(const Uuid shipDbId) const
     return false;
   }
 
-  // Do not dock an AI controlled ship.
-  if (!ship.player)
+  if (ship.player)
   {
-    return true;
+    return disposeOfDeadPlayerShip(ship);
   }
-
-  ship.docked = true;
-  ship.jumpSystem.reset();
-
-  m_repositories.systemRepository->updateSystemForShip(ship.id, *ship.system, ship.docked);
-  m_repositories.playerShipRepository->save(ship);
-  // Cancel jump to another system.
-  m_repositories.playerShipRepository->saveJump(ship.id, {});
-
-  return true;
+  else
+  {
+    return disposeOfDeadAiShip(ship);
+  }
 }
 
 auto SystemService::sendPlayerBackToOutpost(const Uuid &playerDbId) const -> ForcedDockResult
@@ -170,6 +163,42 @@ auto SystemService::findExistingResourceAmount(const Uuid playerDbId, const Uuid
   }
 
   return 0;
+}
+
+namespace {
+const auto AI_SHIP_RESPAWN_TIME_IN_TICKS = chrono::TickDuration::fromInt(10);
+}
+
+bool SystemService::disposeOfDeadAiShip(const PlayerShip &playerShip) const
+{
+  if (!playerShip.system)
+  {
+    error("AI ship " + str(playerShip.id) + " has no system");
+  }
+
+  const auto tickData = m_repositories.tickRepository->findOneBySystem(*playerShip.system);
+
+  const auto deathTick   = tickData.currentTick;
+  const auto respawnTick = deathTick + AI_SHIP_RESPAWN_TIME_IN_TICKS;
+
+  m_repositories.playerShipRepository->saveRespawn(playerShip.id, deathTick, respawnTick);
+
+  return true;
+}
+
+bool SystemService::disposeOfDeadPlayerShip(PlayerShip playerShip) const
+{
+  playerShip.docked = true;
+  playerShip.jumpSystem.reset();
+
+  m_repositories.systemRepository->updateSystemForShip(playerShip.id,
+                                                       *playerShip.system,
+                                                       playerShip.docked);
+  m_repositories.playerShipRepository->save(playerShip);
+  // Cancel jump to another system.
+  m_repositories.playerShipRepository->saveJump(playerShip.id, {});
+
+  return true;
 }
 
 } // namespace bsgo
