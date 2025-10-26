@@ -31,31 +31,31 @@ bool SystemService::tryDistributeResource(const Uuid playerDbId,
 }
 
 namespace {
-bool canShipBeSentBackToOutpost(const PlayerShip &ship)
+bool canShipBeDisposedOf(const PlayerShip &ship)
 {
-  return ship.active && !ship.docked;
+  return ship.active;
 }
 } // namespace
 
-bool SystemService::disposeOfDeadShip(const Uuid shipDbId) const
+bool SystemService::disposeOfPlayerShip(const Uuid shipDbId, const bool dead) const
 {
   auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
 
-  if (!canShipBeSentBackToOutpost(ship))
+  if (!canShipBeDisposedOf(ship))
   {
-    warn("Failed to send ship " + str(shipDbId) + " back to outpost",
+    warn("Failed to dispose of ship " + str(shipDbId),
          std::string("Ship ") + (ship.active ? "is" : "is not") + " active and "
-           + (ship.docked ? "is" : "is not") + "docked");
+           + (ship.docked ? "is" : "is not") + " docked");
     return false;
   }
 
   if (ship.player)
   {
-    return disposeOfDeadPlayerShip(ship);
+    return disposeOfPlayerShip(ship, dead);
   }
   else
   {
-    return disposeOfDeadAiShip(ship);
+    return disposeOfAiShip(ship, dead);
   }
 }
 
@@ -69,7 +69,8 @@ auto SystemService::sendPlayerBackToOutpost(const Uuid &playerDbId) const -> For
   ship.jumpSystem.reset();
   // Reset ship position as this is used in the logout flow: we want the player to
   // respawn at the initial position.
-  ship.position = Eigen::Vector3f::Zero();
+  ship.position    = Eigen::Vector3f::Zero();
+  ship.powerPoints = 0.0f;
 
   m_repositories.systemRepository->updateSystemForShip(ship.id, *ship.system, ship.docked);
   m_repositories.playerShipRepository->save(ship);
@@ -169,11 +170,15 @@ namespace {
 const auto AI_SHIP_RESPAWN_TIME_IN_TICKS = chrono::TickDuration::fromInt(10);
 }
 
-bool SystemService::disposeOfDeadAiShip(const PlayerShip &playerShip) const
+bool SystemService::disposeOfAiShip(const PlayerShip &playerShip, const bool dead) const
 {
   if (!playerShip.system)
   {
     error("AI ship " + str(playerShip.id) + " has no system");
+  }
+  if (!dead)
+  {
+    error("Cannot dispose of AI ship " + str(playerShip.id), "Ship is not dead");
   }
 
   const auto tickData = m_repositories.tickRepository->findOneBySystem(*playerShip.system);
@@ -186,10 +191,15 @@ bool SystemService::disposeOfDeadAiShip(const PlayerShip &playerShip) const
   return true;
 }
 
-bool SystemService::disposeOfDeadPlayerShip(PlayerShip playerShip) const
+bool SystemService::disposeOfPlayerShip(PlayerShip playerShip, const bool dead) const
 {
   playerShip.docked = true;
   playerShip.jumpSystem.reset();
+  if (dead)
+  {
+    playerShip.position = Eigen::Vector3f::Zero();
+  }
+  playerShip.powerPoints = 0.0f;
 
   m_repositories.systemRepository->updateSystemForShip(playerShip.id,
                                                        *playerShip.system,
