@@ -15,7 +15,7 @@ class SystemService : public AbstractService
 
   bool tryDistributeResource(const Uuid playerDbId, const Uuid resourceDbId, const int amount) const;
 
-  bool disposeOfDeadShip(const Uuid shipDbId) const;
+  bool disposeOfPlayerShip(const Uuid shipDbId, const bool dead) const;
 
   struct ForcedDockResult
   {
@@ -40,8 +40,8 @@ class SystemService : public AbstractService
 
   private:
   auto findExistingResourceAmount(const Uuid playerDbId, const Uuid resourceDbId) const -> int;
-  bool disposeOfDeadAiShip(const PlayerShip &playerShip) const;
-  bool disposeOfDeadPlayerShip(PlayerShip playerShip) const;
+  bool disposeOfAiShip(const PlayerShip &playerShip, const bool dead) const;
+  bool disposeOfPlayerShip(PlayerShip playerShip, const bool dead) const;
 };
 
 using SystemServiceShPtr = std::shared_ptr<SystemService>;
