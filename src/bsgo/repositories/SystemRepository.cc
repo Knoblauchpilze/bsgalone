@@ -52,7 +52,7 @@ SELECT
   ss.ship
 FROM
   ship_system AS ss
-  LEFT JOIN player_ship ps ON ss.ship = ps.id
+  LEFT JOIN player_ship AS ps ON ss.ship = ps.id
   LEFT JOIN player_ship_respawn AS psr ON psr.ship = ps.id
 WHERE
   ss.system = $1
