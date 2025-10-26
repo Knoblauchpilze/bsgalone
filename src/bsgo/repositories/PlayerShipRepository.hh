@@ -62,6 +62,8 @@ class PlayerShipRepository : public AbstractRepository
   auto findOneByPlayerAndActive(const Uuid player) const -> PlayerShip;
   auto findAllByPlayer(const Uuid player) const -> std::unordered_set<Uuid>;
   auto findAllAvailableWeaponSlotByShip(const Uuid ship) -> std::set<Uuid>;
+  auto findAllBySystemAndRespawnTime(const Uuid systemDbId, const chrono::Tick &until)
+    -> std::vector<PlayerShip>;
 
   void create(const PlayerShip &ship);
   void save(const PlayerShip &ship);
