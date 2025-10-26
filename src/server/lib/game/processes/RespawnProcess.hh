@@ -22,8 +22,10 @@ class RespawnProcess : public AbstractProcess
   IMessageQueue *const m_systemMessageQueue{};
 
   void respawnAsteroids(Coordinator &coordinator, const chrono::TickData &data) const;
+  void respawnPlayerShips(Coordinator &coordinator, const chrono::TickData &data) const;
 
   void respawnAsteroid(Coordinator &coordinator, Asteroid asteroid) const;
+  void respawnPlayerShip(Coordinator &coordinator, PlayerShip playerShip) const;
 };
 
 } // namespace bsgo

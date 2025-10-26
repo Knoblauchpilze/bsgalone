@@ -83,6 +83,18 @@ WHERE
   AND sw.weapon IS NULL
 )";
 
+constexpr auto FIND_ALL_BY_RESPAWN_TIME_QUERY_NAME = "player_ship_find_all_by_respawn";
+constexpr auto FIND_ALL_BY_RESPAWN_TIME_QUERY      = R"(
+SELECT
+  psr.ship
+FROM
+  player_ship_respawn AS psr
+  LEFT JOIN ship_system AS ss ON ss.ship = psr.ship
+WHERE
+  ss.system = $1
+  AND psr.respawn_at <= $2;
+)";
+
 constexpr auto CREATE_SHIP_QUERY_NAME = "player_ship_create";
 constexpr auto CREATE_SHIP_QUERY      = R"(
 INSERT INTO player_ship (ship, player, name, active, hull_points, power_points, x_pos, y_pos, z_pos)
@@ -141,6 +153,7 @@ void PlayerShipRepository::initialize()
                         FIND_ONE_BY_PLAYER_AND_ACTIVE_QUERY);
   m_connection->prepare(FIND_SLOTS_QUERY_NAME, FIND_SLOTS_QUERY);
   m_connection->prepare(FIND_EMPTY_WEAPON_SLOTS_QUERY_NAME, FIND_EMPTY_WEAPON_SLOTS_QUERY);
+  m_connection->prepare(FIND_ALL_BY_RESPAWN_TIME_QUERY_NAME, FIND_ALL_BY_RESPAWN_TIME_QUERY);
   m_connection->prepare(CREATE_SHIP_QUERY_NAME, CREATE_SHIP_QUERY);
   m_connection->prepare(UPDATE_SHIP_QUERY_NAME, UPDATE_SHIP_QUERY);
   m_connection->prepare(UPDATE_SHIP_JUMP_QUERY_NAME, UPDATE_SHIP_JUMP_QUERY);
@@ -201,6 +214,26 @@ auto PlayerShipRepository::findAllAvailableWeaponSlotByShip(const Uuid ship) -> 
   for (const auto record : rows)
   {
     out.emplace(fromDbId(record[0].as<int>()));
+  }
+
+  return out;
+}
+
+auto PlayerShipRepository::findAllBySystemAndRespawnTime(const Uuid systemDbId,
+                                                         const chrono::Tick &until)
+  -> std::vector<PlayerShip>
+{
+  const auto query = [&systemDbId, &until](pqxx::nontransaction &work) {
+    return work.exec(pqxx::prepped{FIND_ALL_BY_RESPAWN_TIME_QUERY_NAME},
+                     pqxx::params{toDbId(systemDbId), until.count()});
+  };
+  const auto rows = m_connection->executeQuery(query);
+
+  std::vector<PlayerShip> out;
+  for (const auto record : rows)
+  {
+    const auto dbId = fromDbId(record[0].as<int>());
+    out.emplace_back(findOneById(dbId));
   }
 
   return out;
