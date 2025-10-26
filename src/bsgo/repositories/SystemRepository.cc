@@ -51,11 +51,13 @@ constexpr auto FIND_SHIPS_QUERY      = R"(
 SELECT
   ss.ship
 FROM
-  ship_system ss
+  ship_system AS ss
   LEFT JOIN player_ship ps ON ss.ship = ps.id
+  LEFT JOIN player_ship_respawn AS psr ON psr.ship = ps.id
 WHERE
   ss.system = $1
   AND ps.active = 'true'
+  AND psr.died_at is null
 )";
 
 constexpr auto FIND_OUTPOSTS_QUERY_NAME = "system_find_outposts";
