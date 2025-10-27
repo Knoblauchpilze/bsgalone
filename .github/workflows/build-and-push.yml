@@ -51,7 +51,7 @@ jobs:
             build-data.tar \
             .
       - name: Upload build result
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: build-data
           path: build-data.tar
@@ -91,7 +91,7 @@ jobs:
         run: |
           lcov --list coverage-unit.info
       - name: Upload coverage info
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: coverage-unit
           path: coverage-unit.info
@@ -171,7 +171,7 @@ jobs:
         run: |
           lcov --list coverage-integration.info
       - name: Upload coverage info
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: coverage-integration
           path: coverage-integration.info
