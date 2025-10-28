@@ -49,31 +49,7 @@ CREATE TABLE ship_slot (
   FOREIGN KEY (type) REFERENCES slot(type)
 );
 
-CREATE TABLE player_ship (
-  id INTEGER GENERATED ALWAYS AS IDENTITY,
-  ship INTEGER NOT NULL,
-  player INTEGER DEFAULT NULL,
-  name TEXT NOT NULL,
-  active BOOLEAN NOT NULL,
-  hull_points NUMERIC(8, 2) NOT NULL,
-  power_points NUMERIC(8, 2) NOT NULL,
-  x_pos NUMERIC(12, 2) NOT NULL,
-  y_pos NUMERIC(12, 2) NOT NULL,
-  z_pos NUMERIC(12, 2) NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP WITH TIME ZONE,
-  PRIMARY KEY (id),
-  UNIQUE (ship, player),
-  FOREIGN KEY (ship) REFERENCES ship(id),
-  FOREIGN KEY (player) REFERENCES player(id)
-);
-
 CREATE TRIGGER trigger_ship_updated_at
   BEFORE UPDATE OR INSERT ON ship
-  FOR EACH ROW
-  EXECUTE FUNCTION update_updated_at();
-
-CREATE TRIGGER trigger_player_ship_updated_at
-  BEFORE UPDATE OR INSERT ON player_ship
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at();
