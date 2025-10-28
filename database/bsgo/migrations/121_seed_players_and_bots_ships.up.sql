@@ -116,3 +116,69 @@ INSERT INTO ship_weapon ("ship", "weapon", "slot")
     (SELECT player_weapon.id FROM player_weapon LEFT JOIN player ON player.id = player_weapon.player LEFT JOIN weapon ON player_weapon.weapon = weapon.id WHERE player.name = 'toast' AND weapon.name = 'Medium range cannon'),
     (SELECT ship_slot.id FROM ship_slot LEFT JOIN ship ON ship_slot.ship = ship.id WHERE ship.name = 'Viper Mark II' AND ship_slot.type = 'weapon' AND ship_slot.x_pos = 0.0)
   );
+
+-- player: munnin_cylon_war_raider, ship: Cylon Raider, system: Munnin
+INSERT INTO player_ship ("ship", "player", "name", "active", "hull_points", "power_points", "x_pos", "y_pos", "z_pos")
+  VALUES (
+      (SELECT id FROM ship WHERE name = 'Cylon Raider'),
+    -- TODO: Should be replaced with the actual player id
+      NULL,
+      'AI Cylon Raider',
+      true,
+      280.0,
+      23.2,
+      0.0,
+      0.0,
+      0.0
+  );
+INSERT INTO ship_system ("ship", "system", "docked")
+  VALUES (
+    -- TODO: Should be replaced with the actual player id
+    (SELECT player_ship.id FROM player_ship WHERE player_ship.player is NULL),
+    (SELECT id FROM system WHERE name = 'Munnin'),
+    false
+  );
+
+INSERT INTO ship_weapon ("ship", "weapon", "slot")
+  VALUES (
+    (SELECT id FROM player_ship WHERE player is NULL),
+    (SELECT player_weapon.id FROM player_weapon LEFT JOIN weapon ON player_weapon.weapon = weapon.id WHERE player_weapon.player is NULL AND weapon.name = 'Medium range cannon'),
+    (SELECT ship_slot.id FROM ship_slot LEFT JOIN ship ON ship_slot.ship = ship.id WHERE ship.name = 'Cylon Raider' AND ship_slot.type = 'weapon' AND ship_slot.x_pos = -0.5)
+  );
+
+INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
+  VALUES (
+    -- TODO: Should be replaced with the actual player id
+    (SELECT id FROM player_ship WHERE player is NULL),
+    0,
+    3.0,
+    10.0,
+    0.0
+  );
+INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
+  VALUES (
+    -- TODO: Should be replaced with the actual player id
+    (SELECT id FROM player_ship WHERE player is NULL),
+    1,
+    4.0,
+    -8.0,
+    0.0
+  );
+INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
+  VALUES (
+    -- TODO: Should be replaced with the actual player id
+    (SELECT id FROM player_ship WHERE player is NULL),
+    2,
+    -7.0,
+    -2.0,
+    0.0
+  );
+INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
+  VALUES (
+    -- TODO: Should be replaced with the actual player id
+    (SELECT id FROM player_ship WHERE player is NULL),
+    3,
+    -5.0,
+    6.0,
+    0.0
+  );
