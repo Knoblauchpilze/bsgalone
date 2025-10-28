@@ -1,5 +1,8 @@
 
--- player: color
+-------------
+-- PLAYERS --
+-------------
+-- player: colo
 INSERT INTO player ("name", "password", "faction")
   VALUES ('colo', 'aze', 'colonial');
 
@@ -107,4 +110,19 @@ INSERT INTO player_weapon ("weapon", "player", "level")
     (SELECT id FROM weapon WHERE name = 'Medium range cannon'),
     (SELECT id FROM player WHERE name = 'toast'),
     3
+  );
+
+-------------
+--  BOTS   --
+-------------
+-- system: Munnin, ship: Cylon Raider
+INSERT INTO player ("name", "password", "faction")
+  VALUES ('munnin_cylon_war_raider', 'dummy', 'cylon');
+
+INSERT INTO player_weapon ("weapon", "player", "level")
+  VALUES (
+    (SELECT id FROM weapon WHERE name = 'Medium range cannon'),
+    -- TODO: Should be replaced with the actual player id
+    NULL,
+    20
   );
