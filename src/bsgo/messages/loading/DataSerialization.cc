@@ -96,24 +96,6 @@ bool deserializeSystemData(std::istream &in, SystemData &data)
   return ok;
 }
 
-auto serializeResourceData(std::ostream &out, const ResourceData &data) -> std::ostream &
-{
-  core::serialize(out, data.dbId);
-  core::serialize(out, data.name);
-
-  return out;
-}
-
-bool deserializeResourceData(std::istream &in, ResourceData &data)
-{
-  bool ok{true};
-
-  ok &= core::deserialize(in, data.dbId);
-  ok &= core::deserialize(in, data.name);
-
-  return ok;
-}
-
 auto serializeWeaponData(std::ostream &out, const WeaponData &data) -> std::ostream &
 {
   core::serialize(out, data.dbId);
