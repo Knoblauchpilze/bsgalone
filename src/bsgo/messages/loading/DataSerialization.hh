@@ -1,7 +1,6 @@
 
 #pragma once
 
-#include "ComputerData.hh"
 #include "OutpostData.hh"
 #include "PlayerComputerData.hh"
 #include "PlayerResourceData.hh"
@@ -40,9 +39,6 @@ bool deserializePlayerResourceData(std::istream &in, PlayerResourceData &data);
 
 auto serializeWeaponData(std::ostream &out, const WeaponData &data) -> std::ostream &;
 bool deserializeWeaponData(std::istream &in, WeaponData &data);
-
-auto serializeComputerData(std::ostream &out, const ComputerData &data) -> std::ostream &;
-bool deserializeComputerData(std::istream &in, ComputerData &data);
 
 auto serializeShipData(std::ostream &out, const ShipData &data) -> std::ostream &;
 bool deserializeShipData(std::istream &in, ShipData &data);
