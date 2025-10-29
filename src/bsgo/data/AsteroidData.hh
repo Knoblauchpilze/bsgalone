@@ -20,6 +20,9 @@ struct AsteroidData
   std::optional<int> amount{};
 
   bool operator==(const AsteroidData &rhs) const;
+
+  auto serialize(std::ostream &out) const -> std::ostream &;
+  bool deserialize(std::istream &in);
 };
 
 } // namespace bsgo
