@@ -1,20 +1,12 @@
 
+#include "PlayerWeaponData.hh"
+#include "Common.hh"
 #include "Comparison.hh"
-#include "DataSerialization.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
 
 namespace bsgo {
-namespace {
-inline bool serializeAndDeserializeData(const PlayerWeaponData &value, PlayerWeaponData &output)
-{
-  std::ostringstream out{};
-  serializePlayerWeaponData(out, value);
-  std::istringstream in(out.str());
-  return deserializePlayerWeaponData(in, output);
-}
-} // namespace
 
 TEST(Unit_Bsgo_Serialization_PlayerWeaponData, EqualWhenDbIdIsEqual)
 {
@@ -57,7 +49,7 @@ TEST(Unit_Bsgo_Serialization_PlayerWeaponData, Basic)
                           .maxDamage  = 12.987f,
                           .reloadTime = chrono::TickDuration(1234.456f)};
 
-  EXPECT_TRUE(serializeAndDeserializeData(input, output));
+  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
   assertPlayerWeaponDataAreEqual(output, input);
 }
@@ -71,7 +63,7 @@ TEST(Unit_Bsgo_Serialization_PlayerWeaponData, ErasesDestinationSlotPosition)
                           .maxDamage    = 12.987f,
                           .reloadTime   = chrono::TickDuration(1234.657102f)};
 
-  EXPECT_TRUE(serializeAndDeserializeData(input, output));
+  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
   assertPlayerWeaponDataAreEqual(output, input);
 }
@@ -91,7 +83,7 @@ TEST(Unit_Bsgo_Serialization_PlayerWeaponData, OverridesDestinationSlotPosition)
                           .maxDamage    = 12.987f,
                           .reloadTime   = chrono::TickDuration::fromInt(1234)};
 
-  EXPECT_TRUE(serializeAndDeserializeData(input, output));
+  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
   assertPlayerWeaponDataAreEqual(output, input);
 }
