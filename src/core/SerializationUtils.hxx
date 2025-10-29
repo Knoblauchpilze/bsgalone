@@ -176,6 +176,40 @@ bool deserialize(std::istream &in, std::vector<T> &v)
   return ok;
 }
 
+template<typename T>
+auto serialize(std::ostream &out, const std::unordered_set<T> &s) -> std::ostream &
+{
+  serialize(out, s.size());
+  for (const auto &value : s)
+  {
+    serialize(out, value);
+  }
+
+  return out;
+}
+
+template<typename T>
+bool deserialize(std::istream &in, std::unordered_set<T> &s)
+{
+  bool ok{true};
+
+  s.clear();
+
+  typename std::unordered_set<T>::size_type count;
+  ok &= core::deserialize(in, count);
+
+  for (std::size_t id = 0u; id < count; ++id)
+  {
+    T data{};
+
+    ok &= deserialize(in, data);
+
+    s.insert(data);
+  }
+
+  return ok;
+}
+
 template<serializable T>
 inline auto serialize(std::ostream &out, const T &e) -> std::ostream &
 {

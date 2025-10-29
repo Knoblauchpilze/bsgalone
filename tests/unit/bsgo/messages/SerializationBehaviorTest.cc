@@ -307,6 +307,46 @@ TEST(Unit_Bsgo_Serialization_Behavior, Nominal_VectorStruct)
   EXPECT_EQ(actual, expected);
 }
 
+TEST(Unit_Bsgo_Serialization_Behavior, Nominal_SetInt_Empty)
+{
+  std::unordered_set<int> empty;
+
+  const auto [success, actual] = serializeAndDeserialize(empty, false);
+
+  EXPECT_TRUE(success);
+  EXPECT_EQ(actual, empty);
+}
+
+TEST(Unit_Bsgo_Serialization_Behavior, Nominal_SetInt)
+{
+  std::unordered_set<int> expected{1, 2, 3, -4, 6, -9871};
+
+  const auto [success, actual] = serializeAndDeserialize(expected, false);
+
+  EXPECT_TRUE(success);
+  EXPECT_EQ(actual, expected);
+}
+
+TEST(Unit_Bsgo_Serialization_Behavior, Nominal_SetFaction_Empty)
+{
+  std::unordered_set<Faction> empty;
+
+  const auto [success, actual] = serializeAndDeserialize(empty, false);
+
+  EXPECT_TRUE(success);
+  EXPECT_EQ(actual, empty);
+}
+
+TEST(Unit_Bsgo_Serialization_Behavior, Nominal_SetFaction)
+{
+  std::unordered_set<Faction> expected{Faction::COLONIAL, Faction::CYLON};
+
+  const auto [success, actual] = serializeAndDeserialize(expected, false);
+
+  EXPECT_TRUE(success);
+  EXPECT_EQ(actual, expected);
+}
+
 TEST(Unit_Bsgo_Serialization_Behavior, Failure_Uuid)
 {
   const Uuid value{2};
@@ -379,11 +419,59 @@ TEST(Unit_Bsgo_Serialization_Behavior, Failure_MapSlotInt)
   EXPECT_FALSE(success);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Failure_MapUuid)
+TEST(Unit_Bsgo_Serialization_Behavior, Failure_MapUuidInt)
 {
   std::unordered_map<Uuid, int> expected{{Uuid{5476}, 136}, {Uuid{13}, -287}};
 
   const auto [success, _] = serializeAndDeserialize(expected, true);
+
+  EXPECT_FALSE(success);
+}
+
+TEST(Unit_Bsgo_Serialization_Behavior, Failure_VectorInt)
+{
+  std::vector<int> expected{1, 2, 3, -4, 6, -9871};
+
+  const auto [success, actual] = serializeAndDeserialize(expected, true);
+
+  EXPECT_FALSE(success);
+}
+
+TEST(Unit_Bsgo_Serialization_Behavior, Failure_VectorStruct)
+{
+  std::vector<DummyStruct> expected{
+    DummyStruct{
+      .a = -74,
+      .b = 18.057f,
+      .f = Faction::COLONIAL,
+    },
+    DummyStruct{
+      .a = 910257,
+      .b = -74.14087f,
+      .f = Faction::CYLON,
+    },
+    DummyStruct{},
+  };
+
+  const auto [success, actual] = serializeAndDeserialize(expected, true);
+
+  EXPECT_FALSE(success);
+}
+
+TEST(Unit_Bsgo_Serialization_Behavior, Failure_SetInt)
+{
+  std::unordered_set<int> expected{1, 2, 3, -4, 6, -9871};
+
+  const auto [success, actual] = serializeAndDeserialize(expected, true);
+
+  EXPECT_FALSE(success);
+}
+
+TEST(Unit_Bsgo_Serialization_Behavior, Failure_SetFaction)
+{
+  std::unordered_set<Faction> expected{Faction::COLONIAL, Faction::CYLON};
+
+  const auto [success, actual] = serializeAndDeserialize(expected, true);
 
   EXPECT_FALSE(success);
 }

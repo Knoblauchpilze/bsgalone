@@ -7,6 +7,8 @@
 #include <optional>
 #include <ostream>
 #include <type_traits>
+#include <unordered_map>
+#include <unordered_set>
 
 namespace core {
 
@@ -33,6 +35,11 @@ template<typename T>
 auto serialize(std::ostream &out, const std::vector<T> &v) -> std::ostream &;
 template<typename T>
 bool deserialize(std::istream &in, std::vector<T> &v);
+
+template<typename T>
+auto serialize(std::ostream &out, const std::unordered_set<T> &s) -> std::ostream &;
+template<typename T>
+bool deserialize(std::istream &in, std::unordered_set<T> &s);
 
 /// https://cplusplus.com/forum/general/285613/
 /// https://en.cppreference.com/w/cpp/language/constraints.html
