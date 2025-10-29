@@ -1,20 +1,12 @@
 
+#include "PlayerResourceData.hh"
+#include "Common.hh"
 #include "Comparison.hh"
-#include "DataSerialization.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
 
 namespace bsgo {
-namespace {
-inline bool serializeAndDeserializeData(const PlayerResourceData &value, PlayerResourceData &output)
-{
-  std::ostringstream out{};
-  serializePlayerResourceData(out, value);
-  std::istringstream in(out.str());
-  return deserializePlayerResourceData(in, output);
-}
-} // namespace
 
 TEST(Unit_Bsgo_Serialization_PlayerResourceData, EqualWhenDbIdIsEqual)
 {
@@ -41,7 +33,7 @@ TEST(Unit_Bsgo_Serialization_PlayerResourceData, Basic)
 
   PlayerResourceData output{.dbId = Uuid{14}, .name = "resource2", .amount = -1475};
 
-  EXPECT_TRUE(serializeAndDeserializeData(input, output));
+  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
   assertPlayerResourceDataAreEqual(output, input);
 }
@@ -52,7 +44,7 @@ TEST(Unit_Bsgo_Serialization_PlayerResourceData, EmptyOutputName)
 
   PlayerResourceData output{.dbId = Uuid{35}, .amount = 5647};
 
-  EXPECT_TRUE(serializeAndDeserializeData(input, output));
+  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
   assertPlayerResourceDataAreEqual(output, input);
 }

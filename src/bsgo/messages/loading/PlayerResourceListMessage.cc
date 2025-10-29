@@ -1,6 +1,5 @@
 
 #include "PlayerResourceListMessage.hh"
-#include "DataSerialization.hh"
 #include "SerializationUtils.hh"
 
 namespace bsgo {
@@ -25,12 +24,7 @@ auto PlayerResourceListMessage::serialize(std::ostream &out) const -> std::ostre
   core::serialize(out, m_messageType);
   core::serialize(out, m_clientId);
 
-  core::serialize(out, m_resourcesData.size());
-
-  for (const auto &resourceData : m_resourcesData)
-  {
-    serializePlayerResourceData(out, resourceData);
-  }
+  core::serialize(out, m_resourcesData);
 
   return out;
 }
@@ -41,19 +35,7 @@ bool PlayerResourceListMessage::deserialize(std::istream &in)
   ok &= core::deserialize(in, m_messageType);
   ok &= core::deserialize(in, m_clientId);
 
-  std::size_t count;
-  ok &= core::deserialize(in, count);
-
-  m_resourcesData.clear();
-
-  for (std::size_t id = 0u; id < count; ++id)
-  {
-    PlayerResourceData data;
-
-    ok &= deserializePlayerResourceData(in, data);
-
-    m_resourcesData.emplace_back(data);
-  }
+  ok &= core::deserialize(in, m_resourcesData);
 
   return ok;
 }
