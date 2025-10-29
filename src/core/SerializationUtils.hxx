@@ -142,8 +142,39 @@ inline bool deserialize(std::istream &in, std::unordered_map<Key, Value> &m)
   return ok;
 }
 
-/// https://stackoverflow.com/questions/55647741/template-specialization-with-enable-if
-/// https://en.cppreference.com/w/cpp/types/enable_if
+template<typename T>
+auto serialize(std::ostream &out, const std::vector<T> &v) -> std::ostream &
+{
+  serialize(out, v.size());
+  for (const auto &value : v)
+  {
+    serialize(out, value);
+  }
+
+  return out;
+}
+
+template<typename T>
+bool deserialize(std::istream &in, std::vector<T> &v)
+{
+  bool ok{true};
+
+  v.clear();
+
+  typename std::vector<T>::size_type count;
+  ok &= core::deserialize(in, count);
+
+  for (std::size_t id = 0u; id < count; ++id)
+  {
+    T data{};
+
+    ok &= deserialize(in, data);
+
+    v.emplace_back(data);
+  }
+
+  return ok;
+}
 
 template<serializable T>
 inline auto serialize(std::ostream &out, const T &e) -> std::ostream &

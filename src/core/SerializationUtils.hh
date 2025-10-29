@@ -29,6 +29,11 @@ auto serialize(std::ostream &out, const std::unordered_map<Key, int> &m) -> std:
 template<typename Key, typename Value>
 bool deserialize(std::istream &in, std::unordered_map<Key, int> &m);
 
+template<typename T>
+auto serialize(std::ostream &out, const std::vector<T> &v) -> std::ostream &;
+template<typename T>
+bool deserialize(std::istream &in, std::vector<T> &v);
+
 /// https://cplusplus.com/forum/general/285613/
 /// https://en.cppreference.com/w/cpp/language/constraints.html
 template<typename T>
@@ -53,6 +58,8 @@ auto serialize(std::ostream &out, const T &e) -> std::ostream &;
 template<deserializable T>
 bool deserialize(std::istream &in, T &e);
 
+/// https://stackoverflow.com/questions/55647741/template-specialization-with-enable-if
+/// https://en.cppreference.com/w/cpp/types/enable_if
 template<typename T, std::enable_if_t<std::is_arithmetic<T>::value, bool> = true>
 auto serialize(std::ostream &out, const T &e) -> std::ostream &;
 template<typename T, std::enable_if_t<std::is_arithmetic<T>::value, bool> = true>

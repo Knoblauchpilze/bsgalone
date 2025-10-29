@@ -1,4 +1,5 @@
 
+#include "Faction.hh"
 #include "SerializationUtils.hh"
 #include "Slot.hh"
 #include "Tick.hh"
@@ -212,6 +213,93 @@ TEST(Unit_Bsgo_Serialization_Behavior, Nominal_MapUuidInt_Empty)
 TEST(Unit_Bsgo_Serialization_Behavior, Nominal_MapUuidInt)
 {
   std::unordered_map<Uuid, int> expected{{Uuid{14}, 1789}, {Uuid{7894}, -45}};
+
+  const auto [success, actual] = serializeAndDeserialize(expected, false);
+
+  EXPECT_TRUE(success);
+  EXPECT_EQ(actual, expected);
+}
+
+TEST(Unit_Bsgo_Serialization_Behavior, Nominal_VectorInt_Empty)
+{
+  std::vector<int> empty;
+
+  const auto [success, actual] = serializeAndDeserialize(empty, false);
+
+  EXPECT_TRUE(success);
+  EXPECT_EQ(actual, empty);
+}
+
+TEST(Unit_Bsgo_Serialization_Behavior, Nominal_VectorInt)
+{
+  std::vector<int> expected{1, 2, 3, -4, 6, -9871};
+
+  const auto [success, actual] = serializeAndDeserialize(expected, false);
+
+  EXPECT_TRUE(success);
+  EXPECT_EQ(actual, expected);
+}
+
+namespace {
+// Dummy type to verify serialization of a vector of structs
+struct DummyStruct
+{
+  int a{-1};
+  float b{5.0f};
+  Faction f{Faction::CYLON};
+
+  bool operator==(const DummyStruct &rhs) const
+  {
+    return a == rhs.a && b == rhs.b && f == rhs.f;
+  }
+
+  auto serialize(std::ostream &out) const -> std::ostream &
+  {
+    core::serialize(out, a);
+    core::serialize(out, b);
+    core::serialize(out, f);
+
+    return out;
+  }
+
+  bool deserialize(std::istream &in)
+  {
+    bool ok{true};
+
+    ok &= core::deserialize(in, a);
+    ok &= core::deserialize(in, b);
+    ok &= core::deserialize(in, f);
+
+    return ok;
+  }
+};
+} // namespace
+
+TEST(Unit_Bsgo_Serialization_Behavior, Nominal_VectorStruct_Empty)
+{
+  std::vector<DummyStruct> empty;
+
+  const auto [success, actual] = serializeAndDeserialize(empty, false);
+
+  EXPECT_TRUE(success);
+  EXPECT_EQ(actual, empty);
+}
+
+TEST(Unit_Bsgo_Serialization_Behavior, Nominal_VectorStruct)
+{
+  std::vector<DummyStruct> expected{
+    DummyStruct{
+      .a = -74,
+      .b = 18.057f,
+      .f = Faction::COLONIAL,
+    },
+    DummyStruct{
+      .a = 910257,
+      .b = -74.14087f,
+      .f = Faction::CYLON,
+    },
+    DummyStruct{},
+  };
 
   const auto [success, actual] = serializeAndDeserialize(expected, false);
 
