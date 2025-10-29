@@ -1,20 +1,12 @@
 
+#include "ShipData.hh"
+#include "Common.hh"
 #include "Comparison.hh"
-#include "DataSerialization.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
 
 namespace bsgo {
-namespace {
-inline bool serializeAndDeserializeMessage(const ShipData &value, ShipData &output)
-{
-  std::ostringstream out{};
-  serializeShipData(out, value);
-  std::istringstream in(out.str());
-  return deserializeShipData(in, output);
-}
-} // namespace
 
 TEST(Unit_Bsgo_Serialization_ShipData, EqualWhenDbIdIsEqual)
 {
@@ -58,7 +50,7 @@ TEST(Unit_Bsgo_Serialization_ShipData, Basic)
                   .powerRegen       = 1.2345f,
                   .jumpTimeInThreat = chrono::TickDuration(1234.238f)};
 
-  EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
+  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
   assertShipDataAreEqual(output, input);
 }
@@ -78,7 +70,7 @@ TEST(Unit_Bsgo_Serialization_ShipData, WithSlots)
                   .name      = "the whale",
                   .slots     = {{Slot::COMPUTER, 5}}};
 
-  EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
+  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
   assertShipDataAreEqual(output, input);
 }
@@ -98,7 +90,7 @@ TEST(Unit_Bsgo_Serialization_ShipData, WithPrice)
                   .name      = "the whale",
                   .price     = {{Uuid{8}, 14758}, {Uuid{9}, 36098}, {Uuid{5}, 1247}}};
 
-  EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
+  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
   assertShipDataAreEqual(output, input);
 }
