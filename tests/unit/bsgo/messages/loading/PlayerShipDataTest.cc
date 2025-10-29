@@ -1,20 +1,12 @@
 
+#include "PlayerShipData.hh"
+#include "Common.hh"
 #include "Comparison.hh"
-#include "DataSerialization.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
 
 namespace bsgo {
-namespace {
-inline bool serializeAndDeserializeMessage(const PlayerShipData &value, PlayerShipData &output)
-{
-  std::ostringstream out{};
-  serializePlayerShipData(out, value);
-  std::istringstream in(out.str());
-  return deserializePlayerShipData(in, output);
-}
-} // namespace
 
 TEST(Unit_Bsgo_Serialization_PlayerShipData, EqualWhenDbIdIsEqual)
 {
@@ -54,7 +46,7 @@ TEST(Unit_Bsgo_Serialization_PlayerShipData, Basic)
                         .shipClass  = ShipClass::LINE,
                         .playerDbId = Uuid{12}};
 
-  EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
+  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
   assertPlayerShipDataAreEqual(output, input);
 }
@@ -75,7 +67,7 @@ TEST(Unit_Bsgo_Serialization_PlayerShipData, WithTarget)
                         .faction = Faction::CYLON,
                         .status  = Status::JUMP};
 
-  EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
+  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
   assertPlayerShipDataAreEqual(output, input);
 }
@@ -97,7 +89,7 @@ TEST(Unit_Bsgo_Serialization_PlayerShipData, WithJumpSystem)
                         .status  = Status::JUMP,
                         .slots   = {{Slot::COMPUTER, 1}}};
 
-  EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
+  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
   assertPlayerShipDataAreEqual(output, input);
 }
@@ -114,7 +106,7 @@ TEST(Unit_Bsgo_Serialization_PlayerShipData, WithSlots)
 
   PlayerShipData output{.dbId = Uuid{14}, .faction = Faction::CYLON, .status = Status::JUMP};
 
-  EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
+  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
   assertPlayerShipDataAreEqual(output, input);
 }
@@ -155,7 +147,7 @@ TEST(Unit_Bsgo_Serialization_PlayerShipData, WithWeapons)
                             .range      = 100.0f});
   output.weapons.push_back({.dbId = Uuid{1002}, .weaponDbId = Uuid{2003}, .level = 2});
 
-  EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
+  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
   assertPlayerShipDataAreEqual(output, input);
 }
@@ -185,7 +177,7 @@ TEST(Unit_Bsgo_Serialization_PlayerShipData, ClearsWeapons)
                             .range      = 100.0f,
                             .reloadTime = chrono::TickDuration::fromInt(1234)});
 
-  EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
+  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
   assertPlayerShipDataAreEqual(output, input);
 }
@@ -217,7 +209,7 @@ TEST(Unit_Bsgo_Serialization_PlayerShipData, WithComputers)
                             .range      = 100.0f});
   output.computers.push_back({.dbId = Uuid{1002}, .computerDbId = Uuid{2003}, .level = 2});
 
-  EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
+  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
   assertPlayerShipDataAreEqual(output, input);
 }
@@ -240,7 +232,7 @@ TEST(Unit_Bsgo_Serialization_PlayerShipData, ClearsComputers)
                               .range          = 100.0f,
                               .damageModifier = 36.0f});
 
-  EXPECT_TRUE(serializeAndDeserializeMessage(input, output));
+  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
   assertPlayerShipDataAreEqual(output, input);
 }

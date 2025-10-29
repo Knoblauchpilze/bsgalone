@@ -1,6 +1,5 @@
 
 #include "EntityAddedMessage.hh"
-#include "DataSerialization.hh"
 #include "SerializationUtils.hh"
 
 namespace bsgo {
@@ -103,7 +102,7 @@ auto EntityAddedMessage::serialize(std::ostream &out) const -> std::ostream &
       core::serialize(out, *m_asteroidData);
       break;
     case EntityKind::SHIP:
-      serializePlayerShipData(out, *m_shipData);
+      core::serialize(out, *m_shipData);
       break;
     case EntityKind::OUTPOST:
       core::serialize(out, *m_outpostData);
@@ -120,57 +119,16 @@ auto EntityAddedMessage::serialize(std::ostream &out) const -> std::ostream &
 }
 
 namespace {
-auto deserializeAsteroidData(std::istream &in, std::optional<AsteroidData> &asteroid) -> bool
+template<typename T>
+auto deserializeData(std::istream &in, std::optional<T> &out) -> bool
 {
-  AsteroidData data{};
+  T data{};
   bool ok = core::deserialize(in, data);
 
-  asteroid.reset();
+  out.reset();
   if (ok)
   {
-    asteroid = data;
-  }
-
-  return ok;
-}
-
-auto deserializeShipData(std::istream &in, std::optional<PlayerShipData> &ship) -> bool
-{
-  PlayerShipData data{};
-  bool ok = deserializePlayerShipData(in, data);
-
-  ship.reset();
-  if (ok)
-  {
-    ship = data;
-  }
-
-  return ok;
-}
-
-auto deserializeOutpostData(std::istream &in, std::optional<OutpostData> &outpost) -> bool
-{
-  OutpostData data{};
-  bool ok = core::deserialize(in, data);
-
-  outpost.reset();
-  if (ok)
-  {
-    outpost = data;
-  }
-
-  return ok;
-}
-
-auto deserializePlayerData(std::istream &in, std::optional<PlayerData> &player) -> bool
-{
-  PlayerData data{};
-  bool ok = core::deserialize(in, data);
-
-  player.reset();
-  if (ok)
-  {
-    player = data;
+    out = data;
   }
 
   return ok;
@@ -196,16 +154,16 @@ bool EntityAddedMessage::deserialize(std::istream &in)
   switch (*m_entityKind)
   {
     case EntityKind::ASTEROID:
-      ok &= deserializeAsteroidData(in, m_asteroidData);
+      ok &= deserializeData(in, m_asteroidData);
       break;
     case EntityKind::SHIP:
-      ok &= deserializeShipData(in, m_shipData);
+      ok &= deserializeData(in, m_shipData);
       break;
     case EntityKind::OUTPOST:
-      ok &= deserializeOutpostData(in, m_outpostData);
+      ok &= deserializeData(in, m_outpostData);
       break;
     case EntityKind::PLAYER:
-      ok &= deserializePlayerData(in, m_playerData);
+      ok &= deserializeData(in, m_playerData);
       break;
     default:
       error("Unsupported entity kind for deserialization: " + str(*m_entityKind));
