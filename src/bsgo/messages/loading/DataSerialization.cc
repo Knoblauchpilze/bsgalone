@@ -76,26 +76,6 @@ bool deserializePlayerShipData(std::istream &in, PlayerShipData &data)
   return ok;
 }
 
-auto serializeSystemData(std::ostream &out, const SystemData &data) -> std::ostream &
-{
-  core::serialize(out, data.dbId);
-  core::serialize(out, data.name);
-  core::serialize(out, data.position);
-
-  return out;
-}
-
-bool deserializeSystemData(std::istream &in, SystemData &data)
-{
-  bool ok{true};
-
-  ok &= core::deserialize(in, data.dbId);
-  ok &= core::deserialize(in, data.name);
-  ok &= core::deserialize(in, data.position);
-
-  return ok;
-}
-
 auto serializeShipData(std::ostream &out, const ShipData &data) -> std::ostream &
 {
   core::serialize(out, data.dbId);
@@ -138,26 +118,6 @@ bool deserializeShipData(std::istream &in, ShipData &data)
 
   ok &= core::deserialize(in, data.slots);
   ok &= core::deserialize(in, data.price);
-
-  return ok;
-}
-
-auto serializeSystemTickData(std::ostream &out, const SystemTickData &data) -> std::ostream &
-{
-  core::serialize(out, data.dbId);
-  core::serialize(out, data.currentTick);
-  core::serialize(out, data.step);
-
-  return out;
-}
-
-bool deserializeSystemTickData(std::istream &in, SystemTickData &data)
-{
-  bool ok{true};
-
-  ok &= core::deserialize(in, data.dbId);
-  ok &= core::deserialize(in, data.currentTick);
-  ok &= core::deserialize(in, data.step);
 
   return ok;
 }

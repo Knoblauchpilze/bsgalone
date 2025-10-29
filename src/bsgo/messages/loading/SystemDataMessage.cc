@@ -1,6 +1,5 @@
 
 #include "SystemDataMessage.hh"
-#include "DataSerialization.hh"
 #include "SerializationUtils.hh"
 
 namespace bsgo {
@@ -24,7 +23,7 @@ auto SystemDataMessage::serialize(std::ostream &out) const -> std::ostream &
   core::serialize(out, m_messageType);
   core::serialize(out, m_clientId);
 
-  serializeSystemTickData(out, m_tickData);
+  core::serialize(out, m_tickData);
 
   return out;
 }
@@ -35,7 +34,7 @@ bool SystemDataMessage::deserialize(std::istream &in)
   ok &= core::deserialize(in, m_messageType);
   ok &= core::deserialize(in, m_clientId);
 
-  ok &= deserializeSystemTickData(in, m_tickData);
+  ok &= core::deserialize(in, m_tickData);
 
   return ok;
 }
