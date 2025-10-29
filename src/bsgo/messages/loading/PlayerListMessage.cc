@@ -1,6 +1,5 @@
 
 #include "PlayerListMessage.hh"
-#include "DataSerialization.hh"
 #include "SerializationUtils.hh"
 
 namespace bsgo {
