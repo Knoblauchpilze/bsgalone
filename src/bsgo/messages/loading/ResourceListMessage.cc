@@ -1,6 +1,5 @@
 
 #include "ResourceListMessage.hh"
-#include "DataSerialization.hh"
 #include "SerializationUtils.hh"
 
 namespace bsgo {
@@ -24,12 +23,7 @@ auto ResourceListMessage::serialize(std::ostream &out) const -> std::ostream &
   core::serialize(out, m_messageType);
   core::serialize(out, m_clientId);
 
-  core::serialize(out, m_resourcesData.size());
-
-  for (const auto &resourceData : m_resourcesData)
-  {
-    serializeResourceData(out, resourceData);
-  }
+  core::serialize(out, m_resourcesData);
 
   return out;
 }
@@ -40,19 +34,7 @@ bool ResourceListMessage::deserialize(std::istream &in)
   ok &= core::deserialize(in, m_messageType);
   ok &= core::deserialize(in, m_clientId);
 
-  std::size_t count;
-  ok &= core::deserialize(in, count);
-
-  m_resourcesData.clear();
-
-  for (std::size_t id = 0u; id < count; ++id)
-  {
-    ResourceData data;
-
-    ok &= deserializeResourceData(in, data);
-
-    m_resourcesData.emplace_back(data);
-  }
+  ok &= core::deserialize(in, m_resourcesData);
 
   return ok;
 }

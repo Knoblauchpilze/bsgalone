@@ -1,20 +1,12 @@
 
+#include "ResourceData.hh"
+#include "Common.hh"
 #include "Comparison.hh"
-#include "DataSerialization.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
 
 namespace bsgo {
-namespace {
-inline bool serializeAndDeserializeData(const ResourceData &value, ResourceData &output)
-{
-  std::ostringstream out{};
-  serializeResourceData(out, value);
-  std::istringstream in(out.str());
-  return deserializeResourceData(in, output);
-}
-} // namespace
 
 TEST(Unit_Bsgo_Serialization_ResourceData, EqualWhenDbIdIsEqual)
 {
@@ -41,7 +33,7 @@ TEST(Unit_Bsgo_Serialization_ResourceData, Basic)
 
   ResourceData output{.dbId = Uuid{14}, .name = "resource2"};
 
-  EXPECT_TRUE(serializeAndDeserializeData(input, output));
+  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
   assertResourceDataAreEqual(output, input);
 }
@@ -52,7 +44,7 @@ TEST(Unit_Bsgo_Serialization_ResourceData, EmptyOutputName)
 
   ResourceData output{.dbId = Uuid{35}};
 
-  EXPECT_TRUE(serializeAndDeserializeData(input, output));
+  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
   assertResourceDataAreEqual(output, input);
 }
