@@ -1,20 +1,12 @@
 
+#include "WeaponData.hh"
+#include "Common.hh"
 #include "Comparison.hh"
-#include "DataSerialization.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
 
 namespace bsgo {
-namespace {
-inline bool serializeAndDeserializeData(const WeaponData &value, WeaponData &output)
-{
-  std::ostringstream out{};
-  serializeWeaponData(out, value);
-  std::istringstream in(out.str());
-  return deserializeWeaponData(in, output);
-}
-} // namespace
 
 TEST(Unit_Bsgo_Serialization_WeaponData, EqualWhenDbIdIsEqual)
 {
@@ -53,7 +45,7 @@ TEST(Unit_Bsgo_Serialization_WeaponData, Basic)
                     .reloadTime = chrono::TickDuration(1234.147f),
                     .price      = {{Uuid{26}, 401}, {Uuid{9874}, 130}, {Uuid{13}, 1245}}};
 
-  EXPECT_TRUE(serializeAndDeserializeData(input, output));
+  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
   assertWeaponDataAreEqual(output, input);
 }
