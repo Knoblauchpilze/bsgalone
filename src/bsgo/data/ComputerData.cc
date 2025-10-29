@@ -19,16 +19,7 @@ auto ComputerData::serialize(std::ostream &out) const -> std::ostream &
   core::serialize(out, reloadTime);
   core::serialize(out, duration);
 
-  // TODO: Add an overload to serialize an unordered_set
-  core::serialize(out, allowedTargets.has_value());
-  if (allowedTargets)
-  {
-    core::serialize(out, allowedTargets->size());
-    for (const auto &allowedTarget : *allowedTargets)
-    {
-      core::serialize(out, allowedTarget);
-    }
-  }
+  core::serialize(out, allowedTargets);
 
   core::serialize(out, damageModifier);
 
@@ -49,25 +40,7 @@ bool ComputerData::deserialize(std::istream &in)
   ok &= core::deserialize(in, reloadTime);
   ok &= core::deserialize(in, duration);
 
-  allowedTargets.reset();
-  bool hasAllowedTargets{false};
-  ok &= core::deserialize(in, hasAllowedTargets);
-  if (hasAllowedTargets)
-  {
-    std::size_t count;
-    ok &= core::deserialize(in, count);
-
-    allowedTargets.emplace();
-
-    for (std::size_t id = 0u; id < count; ++id)
-    {
-      EntityKind target;
-
-      ok &= core::deserialize(in, target);
-
-      allowedTargets->insert(target);
-    }
-  }
+  ok &= core::deserialize(in, allowedTargets);
 
   ok &= core::deserialize(in, damageModifier);
 
