@@ -33,11 +33,7 @@ auto AsteroidListMessage::serialize(std::ostream &out) const -> std::ostream &
 
   core::serialize(out, m_systemDbId);
 
-  core::serialize(out, m_asteroidsData.size());
-  for (const auto &asteroidData : m_asteroidsData)
-  {
-    serializeAsteroidData(out, asteroidData);
-  }
+  core::serialize(out, m_asteroidsData);
 
   return out;
 }
@@ -50,19 +46,7 @@ bool AsteroidListMessage::deserialize(std::istream &in)
 
   ok &= core::deserialize(in, m_systemDbId);
 
-  std::size_t count;
-  ok &= core::deserialize(in, count);
-
-  m_asteroidsData.clear();
-
-  for (std::size_t id = 0u; id < count; ++id)
-  {
-    AsteroidData data;
-
-    ok &= deserializeAsteroidData(in, data);
-
-    m_asteroidsData.emplace_back(data);
-  }
+  ok &= core::deserialize(in, m_asteroidsData);
 
   return ok;
 }

@@ -1,21 +1,12 @@
 
+#include "AsteroidData.hh"
+#include "Common.hh"
 #include "Comparison.hh"
-#include "DataSerialization.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
 
 namespace bsgo {
-namespace {
-inline bool serializeAndDeserializeData(const AsteroidData &value, AsteroidData &output)
-{
-  std::ostringstream out{};
-  serializeAsteroidData(out, value);
-  std::istringstream in(out.str());
-  return deserializeAsteroidData(in, output);
-}
-
-} // namespace
 
 TEST(Unit_Bsgo_Serialization_AsteroidData, EqualWhenDbIdIsEqual)
 {
@@ -51,7 +42,7 @@ TEST(Unit_Bsgo_Serialization_AsteroidData, Basic)
 
   AsteroidData output{.dbId = Uuid{14}, .maxHealth = 45.78f, .resource = Uuid{4567}, .amount = 50};
 
-  EXPECT_TRUE(serializeAndDeserializeData(input, output));
+  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
   assertAsteroidDataAreEqual(output, input);
 }
@@ -68,7 +59,7 @@ TEST(Unit_Bsgo_Serialization_AsteroidData, WithLoot)
 
   AsteroidData output{.dbId = Uuid{14}};
 
-  EXPECT_TRUE(serializeAndDeserializeData(input, output));
+  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
   assertAsteroidDataAreEqual(output, input);
 }

@@ -100,7 +100,7 @@ auto EntityAddedMessage::serialize(std::ostream &out) const -> std::ostream &
   switch (*m_entityKind)
   {
     case EntityKind::ASTEROID:
-      serializeAsteroidData(out, *m_asteroidData);
+      core::serialize(out, *m_asteroidData);
       break;
     case EntityKind::SHIP:
       serializePlayerShipData(out, *m_shipData);
@@ -123,7 +123,7 @@ namespace {
 auto deserializeAsteroidData(std::istream &in, std::optional<AsteroidData> &asteroid) -> bool
 {
   AsteroidData data{};
-  bool ok = deserializeAsteroidData(in, data);
+  bool ok = core::deserialize(in, data);
 
   asteroid.reset();
   if (ok)

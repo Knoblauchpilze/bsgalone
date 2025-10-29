@@ -1,7 +1,6 @@
 
 #pragma once
 
-#include "AsteroidData.hh"
 #include "ComputerData.hh"
 #include "OutpostData.hh"
 #include "PlayerComputerData.hh"
@@ -15,9 +14,6 @@
 #include "WeaponData.hh"
 
 namespace bsgo {
-
-auto serializeAsteroidData(std::ostream &out, const AsteroidData &data) -> std::ostream &;
-bool deserializeAsteroidData(std::istream &in, AsteroidData &data);
 
 auto serializePlayerComputerData(std::ostream &out, const PlayerComputerData &data)
   -> std::ostream &;
