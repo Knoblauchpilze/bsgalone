@@ -1,20 +1,12 @@
 
+#include "PlayerComputerData.hh"
+#include "Common.hh"
 #include "Comparison.hh"
-#include "DataSerialization.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
 
 namespace bsgo {
-namespace {
-inline bool serializeAndDeserializeData(const PlayerComputerData &value, PlayerComputerData &output)
-{
-  std::ostringstream out{};
-  serializePlayerComputerData(out, value);
-  std::istringstream in(out.str());
-  return deserializePlayerComputerData(in, output);
-}
-} // namespace
 
 TEST(Unit_Bsgo_Serialization_PlayerComputerData, EqualWhenDbIdIsEqual)
 {
@@ -58,7 +50,7 @@ TEST(Unit_Bsgo_Serialization_PlayerComputerData, Basic)
                             .level      = 12,
                             .reloadTime = chrono::TickDuration::fromInt(1234)};
 
-  EXPECT_TRUE(serializeAndDeserializeData(input, output));
+  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
   assertPlayerComputerDataAreEqual(output, input);
 }
@@ -76,7 +68,7 @@ TEST(Unit_Bsgo_Serialization_PlayerComputerData, AllowedTargets)
                             .level      = 12,
                             .reloadTime = chrono::TickDuration(1234.9541f)};
 
-  EXPECT_TRUE(serializeAndDeserializeData(input, output));
+  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
   assertPlayerComputerDataAreEqual(output, input);
 }
@@ -95,7 +87,7 @@ TEST(Unit_Bsgo_Serialization_PlayerComputerData, NonEmptyAllowedTargetsInDestina
                             .reloadTime = chrono::TickDuration(1234.3247f)};
   output.allowedTargets = std::unordered_set<EntityKind>{EntityKind::OUTPOST};
 
-  EXPECT_TRUE(serializeAndDeserializeData(input, output));
+  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
   assertPlayerComputerDataAreEqual(output, input);
 }
@@ -106,7 +98,7 @@ TEST(Unit_Bsgo_Serialization_PlayerComputerData, NonEmptyDamageModifierInDestina
 
   PlayerComputerData output{.dbId = Uuid{14}, .damageModifier = 2.10987f};
 
-  EXPECT_TRUE(serializeAndDeserializeData(input, output));
+  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
   assertPlayerComputerDataAreEqual(output, input);
 }
