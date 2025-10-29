@@ -1,20 +1,12 @@
 
+#include "OutpostData.hh"
+#include "Common.hh"
 #include "Comparison.hh"
-#include "DataSerialization.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
 
 namespace bsgo {
-namespace {
-inline bool serializeAndDeserializeData(const OutpostData &value, OutpostData &output)
-{
-  std::ostringstream out{};
-  serializeOutpostData(out, value);
-  std::istringstream in(out.str());
-  return deserializeOutpostData(in, output);
-}
-} // namespace
 
 TEST(Unit_Bsgo_Serialization_OutpostData, EqualWhenDbIdIsEqual)
 {
@@ -56,7 +48,7 @@ TEST(Unit_Bsgo_Serialization_OutpostData, Basic)
                      .faction        = Faction::CYLON,
                      .targetDbId     = Uuid{4567}};
 
-  EXPECT_TRUE(serializeAndDeserializeData(input, output));
+  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
   assertOutpostDataAreEqual(output, input);
 }
@@ -71,7 +63,7 @@ TEST(Unit_Bsgo_Serialization_OutpostData, WithTarget)
 
   OutpostData output{.dbId = Uuid{14}};
 
-  EXPECT_TRUE(serializeAndDeserializeData(input, output));
+  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
   assertOutpostDataAreEqual(output, input);
 }
