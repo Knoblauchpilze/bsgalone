@@ -1,6 +1,5 @@
 
 #include "ComputerListMessage.hh"
-#include "DataSerialization.hh"
 #include "SerializationUtils.hh"
 
 namespace bsgo {
@@ -24,11 +23,7 @@ auto ComputerListMessage::serialize(std::ostream &out) const -> std::ostream &
   core::serialize(out, m_messageType);
   core::serialize(out, m_clientId);
 
-  core::serialize(out, m_computersData.size());
-  for (const auto &computerData : m_computersData)
-  {
-    serializeComputerData(out, computerData);
-  }
+  core::serialize(out, m_computersData);
 
   return out;
 }
@@ -39,19 +34,7 @@ bool ComputerListMessage::deserialize(std::istream &in)
   ok &= core::deserialize(in, m_messageType);
   ok &= core::deserialize(in, m_clientId);
 
-  std::size_t count;
-  ok &= core::deserialize(in, count);
-
-  m_computersData.clear();
-
-  for (std::size_t id = 0u; id < count; ++id)
-  {
-    ComputerData data;
-
-    ok &= deserializeComputerData(in, data);
-
-    m_computersData.emplace_back(data);
-  }
+  ok &= core::deserialize(in, m_computersData);
 
   return ok;
 }

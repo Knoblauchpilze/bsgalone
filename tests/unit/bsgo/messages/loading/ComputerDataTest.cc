@@ -1,20 +1,12 @@
 
+#include "ComputerData.hh"
+#include "Common.hh"
 #include "Comparison.hh"
-#include "DataSerialization.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
 
 namespace bsgo {
-namespace {
-inline bool serializeAndDeserializeData(const ComputerData &value, ComputerData &output)
-{
-  std::ostringstream out{};
-  serializeComputerData(out, value);
-  std::istringstream in(out.str());
-  return deserializeComputerData(in, output);
-}
-} // namespace
 
 TEST(Unit_Bsgo_Serialization_ComputerData, EqualWhenDbIdIsEqual)
 {
@@ -54,7 +46,7 @@ TEST(Unit_Bsgo_Serialization_ComputerData, Basic)
                       .powerCost  = 26.57f,
                       .reloadTime = chrono::TickDuration::fromInt(1234)};
 
-  EXPECT_TRUE(serializeAndDeserializeData(input, output));
+  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
   assertComputerDataAreEqual(output, input);
 }
@@ -68,7 +60,7 @@ TEST(Unit_Bsgo_Serialization_ComputerData, AllowedTargets)
                       .name       = "beefy computer",
                       .reloadTime = chrono::TickDuration(1234.0f)};
 
-  EXPECT_TRUE(serializeAndDeserializeData(input, output));
+  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
   assertComputerDataAreEqual(output, input);
 }
@@ -86,7 +78,7 @@ TEST(Unit_Bsgo_Serialization_ComputerData, NonEmptyAllowedTargetsInDestination)
                       .price      = {{Uuid{17}, 980}, {Uuid{3274}, 41}}};
   output.allowedTargets = std::unordered_set<EntityKind>{EntityKind::OUTPOST};
 
-  EXPECT_TRUE(serializeAndDeserializeData(input, output));
+  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
   assertComputerDataAreEqual(output, input);
 }
@@ -97,7 +89,7 @@ TEST(Unit_Bsgo_Serialization_ComputerData, NonEmptyDamageModifierInDestination)
 
   ComputerData output{.dbId = Uuid{14}, .damageModifier = 2.10987f, .price = {{Uuid{89}, 3271}}};
 
-  EXPECT_TRUE(serializeAndDeserializeData(input, output));
+  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
   assertComputerDataAreEqual(output, input);
 }
