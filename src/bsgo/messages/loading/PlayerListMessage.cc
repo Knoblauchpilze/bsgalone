@@ -32,12 +32,8 @@ auto PlayerListMessage::serialize(std::ostream &out) const -> std::ostream &
   core::serialize(out, m_clientId);
 
   core::serialize(out, m_systemDbId);
-  core::serialize(out, m_playersData.size());
 
-  for (const auto &playerData : m_playersData)
-  {
-    core::serialize(out, playerData);
-  }
+  core::serialize(out, m_playersData);
 
   return out;
 }
@@ -50,19 +46,7 @@ bool PlayerListMessage::deserialize(std::istream &in)
 
   ok &= core::deserialize(in, m_systemDbId);
 
-  std::size_t count;
-  ok &= core::deserialize(in, count);
-
-  m_playersData.clear();
-
-  for (std::size_t id = 0u; id < count; ++id)
-  {
-    PlayerData data;
-
-    ok &= core::deserialize(in, data);
-
-    m_playersData.emplace_back(data);
-  }
+  ok &= core::deserialize(in, m_playersData);
 
   return ok;
 }
