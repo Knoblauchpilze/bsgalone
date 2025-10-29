@@ -106,7 +106,7 @@ auto EntityAddedMessage::serialize(std::ostream &out) const -> std::ostream &
       serializePlayerShipData(out, *m_shipData);
       break;
     case EntityKind::OUTPOST:
-      serializeOutpostData(out, *m_outpostData);
+      core::serialize(out, *m_outpostData);
       break;
     case EntityKind::PLAYER:
       core::serialize(out, *m_playerData);
@@ -151,7 +151,7 @@ auto deserializeShipData(std::istream &in, std::optional<PlayerShipData> &ship) 
 auto deserializeOutpostData(std::istream &in, std::optional<OutpostData> &outpost) -> bool
 {
   OutpostData data{};
-  bool ok = deserializeOutpostData(in, data);
+  bool ok = core::deserialize(in, data);
 
   outpost.reset();
   if (ok)

@@ -24,6 +24,9 @@ struct OutpostData
   std::optional<Uuid> targetDbId{};
 
   bool operator==(const OutpostData &rhs) const;
+
+  auto serialize(std::ostream &out) const -> std::ostream &;
+  bool deserialize(std::istream &in);
 };
 
 } // namespace bsgo

@@ -1,6 +1,5 @@
 
 #include "OutpostListMessage.hh"
-#include "DataSerialization.hh"
 #include "SerializationUtils.hh"
 
 namespace bsgo {
@@ -33,11 +32,7 @@ auto OutpostListMessage::serialize(std::ostream &out) const -> std::ostream &
 
   core::serialize(out, m_systemDbId);
 
-  core::serialize(out, m_outpostsData.size());
-  for (const auto &outpostData : m_outpostsData)
-  {
-    serializeOutpostData(out, outpostData);
-  }
+  core::serialize(out, m_outpostsData);
 
   return out;
 }
@@ -50,19 +45,7 @@ bool OutpostListMessage::deserialize(std::istream &in)
 
   ok &= core::deserialize(in, m_systemDbId);
 
-  std::size_t count;
-  ok &= core::deserialize(in, count);
-
-  m_outpostsData.clear();
-
-  for (std::size_t id = 0u; id < count; ++id)
-  {
-    OutpostData data;
-
-    ok &= deserializeOutpostData(in, data);
-
-    m_outpostsData.emplace_back(data);
-  }
+  ok &= core::deserialize(in, m_outpostsData);
 
   return ok;
 }
