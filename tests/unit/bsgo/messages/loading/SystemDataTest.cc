@@ -1,20 +1,12 @@
 
+#include "SystemData.hh"
+#include "Common.hh"
 #include "Comparison.hh"
-#include "DataSerialization.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
 
 namespace bsgo {
-namespace {
-inline bool serializeAndDeserializeData(const SystemData &value, SystemData &output)
-{
-  std::ostringstream out{};
-  serializeSystemData(out, value);
-  std::istringstream in(out.str());
-  return deserializeSystemData(in, output);
-}
-} // namespace
 
 TEST(Unit_Bsgo_Serialization_SystemData, EqualWhenDbIdIsEqual)
 {
@@ -49,7 +41,7 @@ TEST(Unit_Bsgo_Serialization_SystemData, Basic)
                     .name     = "another-system",
                     .position = Eigen::Vector3f(-3.5f, -2.7f, 1678.654f)};
 
-  EXPECT_TRUE(serializeAndDeserializeData(input, output));
+  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
   assertSystemDataAreEqual(output, input);
 }

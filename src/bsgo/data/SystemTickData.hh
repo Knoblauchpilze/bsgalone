@@ -16,6 +16,9 @@ struct SystemTickData
   chrono::TimeStep step{};
 
   bool operator==(const SystemTickData &rhs) const;
+
+  auto serialize(std::ostream &out) const -> std::ostream &;
+  bool deserialize(std::istream &in);
 };
 
 } // namespace bsgo

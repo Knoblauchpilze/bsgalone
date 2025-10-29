@@ -1,20 +1,12 @@
 
+#include "SystemTickData.hh"
+#include "Common.hh"
 #include "Comparison.hh"
-#include "DataSerialization.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
 
 namespace bsgo {
-namespace {
-inline bool serializeAndDeserializeData(const SystemTickData &value, SystemTickData &output)
-{
-  std::ostringstream out{};
-  serializeSystemTickData(out, value);
-  std::istringstream in(out.str());
-  return deserializeSystemTickData(in, output);
-}
-} // namespace
 
 TEST(Unit_Bsgo_Serialization_SystemTickData, EqualWhenDbIdIsEqual)
 {
@@ -61,7 +53,7 @@ TEST(Unit_Bsgo_Serialization_SystemTickData, Basic)
                                                  chrono::Duration{.unit    = chrono::Unit::SECONDS,
                                                                          .elapsed = 0.1025f})};
 
-  EXPECT_TRUE(serializeAndDeserializeData(input, output));
+  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
   assertSystemTickDataAreEqual(output, input);
 }
