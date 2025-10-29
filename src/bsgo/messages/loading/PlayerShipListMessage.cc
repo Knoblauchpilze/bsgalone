@@ -1,6 +1,5 @@
 
 #include "PlayerShipListMessage.hh"
-#include "DataSerialization.hh"
 #include "SerializationUtils.hh"
 
 namespace bsgo {
@@ -47,11 +46,7 @@ auto PlayerShipListMessage::serialize(std::ostream &out) const -> std::ostream &
   core::serialize(out, m_systemDbId);
   core::serialize(out, m_playerDbId);
 
-  core::serialize(out, m_shipsData.size());
-  for (const auto &shipData : m_shipsData)
-  {
-    serializePlayerShipData(out, shipData);
-  }
+  core::serialize(out, m_shipsData);
 
   return out;
 }
@@ -65,19 +60,7 @@ bool PlayerShipListMessage::deserialize(std::istream &in)
   ok &= core::deserialize(in, m_systemDbId);
   ok &= core::deserialize(in, m_playerDbId);
 
-  std::size_t count;
-  ok &= core::deserialize(in, count);
-
-  m_shipsData.clear();
-
-  for (std::size_t id = 0u; id < count; ++id)
-  {
-    PlayerShipData data;
-
-    ok &= deserializePlayerShipData(in, data);
-
-    m_shipsData.emplace_back(data);
-  }
+  ok &= core::deserialize(in, m_shipsData);
 
   return ok;
 }

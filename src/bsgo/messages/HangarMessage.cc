@@ -1,7 +1,6 @@
 
 
 #include "HangarMessage.hh"
-#include "DataSerialization.hh"
 #include "SerializationUtils.hh"
 
 namespace bsgo {
@@ -37,7 +36,7 @@ auto HangarMessage::serialize(std::ostream &out) const -> std::ostream &
   core::serialize(out, m_clientId);
   core::serialize(out, m_validated);
 
-  serializePlayerShipData(out, m_ship);
+  core::serialize(out, m_ship);
 
   return out;
 }
@@ -49,7 +48,7 @@ bool HangarMessage::deserialize(std::istream &in)
   ok &= core::deserialize(in, m_clientId);
   ok &= core::deserialize(in, m_validated);
 
-  ok &= deserializePlayerShipData(in, m_ship);
+  ok &= core::deserialize(in, m_ship);
 
   return ok;
 }
