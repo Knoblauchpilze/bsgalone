@@ -1,6 +1,5 @@
 
 #include "WeaponListMessage.hh"
-#include "DataSerialization.hh"
 #include "SerializationUtils.hh"
 
 namespace bsgo {
@@ -24,11 +23,7 @@ auto WeaponListMessage::serialize(std::ostream &out) const -> std::ostream &
   core::serialize(out, m_messageType);
   core::serialize(out, m_clientId);
 
-  core::serialize(out, m_weaponsData.size());
-  for (const auto &weaponData : m_weaponsData)
-  {
-    serializeWeaponData(out, weaponData);
-  }
+  core::serialize(out, m_weaponsData);
 
   return out;
 }
@@ -39,19 +34,7 @@ bool WeaponListMessage::deserialize(std::istream &in)
   ok &= core::deserialize(in, m_messageType);
   ok &= core::deserialize(in, m_clientId);
 
-  std::size_t count;
-  ok &= core::deserialize(in, count);
-
-  m_weaponsData.clear();
-
-  for (std::size_t id = 0u; id < count; ++id)
-  {
-    WeaponData data;
-
-    ok &= deserializeWeaponData(in, data);
-
-    m_weaponsData.emplace_back(data);
-  }
+  ok &= core::deserialize(in, m_weaponsData);
 
   return ok;
 }
