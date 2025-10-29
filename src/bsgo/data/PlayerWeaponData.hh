@@ -24,6 +24,9 @@ struct PlayerWeaponData
   chrono::TickDuration reloadTime{};
 
   bool operator==(const PlayerWeaponData &rhs) const;
+
+  auto serialize(std::ostream &out) const -> std::ostream &;
+  bool deserialize(std::istream &in);
 };
 
 } // namespace bsgo
