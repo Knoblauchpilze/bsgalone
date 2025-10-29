@@ -9,13 +9,13 @@
 namespace test {
 
 template<typename T>
-inline auto serializeAndDeserialize(const T &value, T &output)
+inline bool serializeAndDeserialize(const T &value, T &output)
 {
   std::ostringstream out{};
   core::serialize(out, value);
   std::istringstream in(out.str());
 
-  core::deserialize(in, output);
+  return core::deserialize(in, output);
 }
 
 namespace details {

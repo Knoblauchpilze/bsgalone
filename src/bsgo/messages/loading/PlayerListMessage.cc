@@ -36,7 +36,7 @@ auto PlayerListMessage::serialize(std::ostream &out) const -> std::ostream &
 
   for (const auto &playerData : m_playersData)
   {
-    serializePlayerData(out, playerData);
+    core::serialize(out, playerData);
   }
 
   return out;
@@ -59,7 +59,7 @@ bool PlayerListMessage::deserialize(std::istream &in)
   {
     PlayerData data;
 
-    ok &= deserializePlayerData(in, data);
+    ok &= core::deserialize(in, data);
 
     m_playersData.emplace_back(data);
   }
