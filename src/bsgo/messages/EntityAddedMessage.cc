@@ -109,7 +109,7 @@ auto EntityAddedMessage::serialize(std::ostream &out) const -> std::ostream &
       serializeOutpostData(out, *m_outpostData);
       break;
     case EntityKind::PLAYER:
-      serializePlayerData(out, *m_playerData);
+      core::serialize(out, *m_playerData);
       break;
     default:
       error("Unsupported entity kind for serialization: " + str(*m_entityKind));
@@ -165,7 +165,7 @@ auto deserializeOutpostData(std::istream &in, std::optional<OutpostData> &outpos
 auto deserializePlayerData(std::istream &in, std::optional<PlayerData> &player) -> bool
 {
   PlayerData data{};
-  bool ok = deserializePlayerData(in, data);
+  bool ok = core::deserialize(in, data);
 
   player.reset();
   if (ok)

@@ -6,7 +6,7 @@
 namespace test {
 
 template<typename T>
-auto serializeAndDeserialize(const T &value) -> T;
+inline bool serializeAndDeserialize(const T &value, T &output);
 
 template<typename T>
 auto serializeAndDeserialize(const T &expected, const bool truncate) -> std::pair<bool, T>;
