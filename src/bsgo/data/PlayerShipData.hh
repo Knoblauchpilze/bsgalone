@@ -41,6 +41,7 @@ struct PlayerShipData
   std::optional<Uuid> playerDbId{};
 
   std::unordered_map<Slot, int> slots{};
+  std::vector<Eigen::Vector3f> aiTargets{};
 
   std::vector<PlayerWeaponData> weapons{};
   std::vector<PlayerComputerData> computers{};

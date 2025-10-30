@@ -37,6 +37,7 @@ auto PlayerShipData::serialize(std::ostream &out) const -> std::ostream &
   core::serialize(out, playerDbId);
 
   core::serialize(out, slots);
+  core::serialize(out, aiTargets);
 
   core::serialize(out, weapons);
   core::serialize(out, computers);
@@ -74,6 +75,7 @@ bool PlayerShipData::deserialize(std::istream &in)
   ok &= core::deserialize(in, playerDbId);
 
   ok &= core::deserialize(in, slots);
+  ok &= core::deserialize(in, aiTargets);
 
   ok &= core::deserialize(in, weapons);
   ok &= core::deserialize(in, computers);

@@ -266,6 +266,9 @@ TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, MultipleComplexShips)
      .jumpTime         = chrono::TickDuration(741.24f),
      .jumpTimeInThreat = chrono::TickDuration(369.09f),
      .slots            = {{Slot::COMPUTER, 5}},
+     .aiTargets        = {Eigen::Vector3f(1.0f, -87.2f, 0.6f),
+                          Eigen::Vector3f(-17.5f, -16.4f, -15.3f),
+                          Eigen::Vector3f(42.1f, 43.2f, 44.3f)},
      .weapons
      = {{.dbId = Uuid{16}, .weaponDbId = Uuid{14}, .level = 9, .range = 6.897f},
         {.dbId = Uuid{3}, .name = "random weapon", .minDamage = 29.53f, .maxDamage = 17.497f}},
@@ -308,6 +311,7 @@ TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, MultipleComplexShips)
         .docked           = true,
         .jumpTimeInThreat = chrono::TickDuration(5678.098f),
         .jumpSystem       = Uuid{7932},
+        .aiTargets        = {Eigen::Vector3f(-14.87f, 3628.72f, 19741.1f)},
         .weapons          = {{.weaponDbId = Uuid{852},
                               .name       = "my weapon",
                               .reloadTime = chrono::TickDuration(963.147f)}}}};

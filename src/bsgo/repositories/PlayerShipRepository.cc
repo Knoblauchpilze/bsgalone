@@ -68,6 +68,21 @@ GROUP BY
   ss.type
 )";
 
+constexpr auto FIND_AI_TARGETS_QUERY_NAME = "player_ship_find_ai_targets";
+constexpr auto FIND_AI_TARGETS_QUERY      = R"(
+SELECT
+  index,
+  x_pos,
+  y_pos,
+  z_pos
+FROM
+  ai_targets
+WHERE
+  ship = $1
+ORDER BY
+  index
+)";
+
 constexpr auto FIND_EMPTY_WEAPON_SLOTS_QUERY_NAME = "player_ship_find_empty_slots";
 constexpr auto FIND_EMPTY_WEAPON_SLOTS_QUERY      = R"(
 SELECT
@@ -152,6 +167,7 @@ void PlayerShipRepository::initialize()
   m_connection->prepare(FIND_ONE_BY_PLAYER_AND_ACTIVE_QUERY_NAME,
                         FIND_ONE_BY_PLAYER_AND_ACTIVE_QUERY);
   m_connection->prepare(FIND_SLOTS_QUERY_NAME, FIND_SLOTS_QUERY);
+  m_connection->prepare(FIND_AI_TARGETS_QUERY_NAME, FIND_AI_TARGETS_QUERY);
   m_connection->prepare(FIND_EMPTY_WEAPON_SLOTS_QUERY_NAME, FIND_EMPTY_WEAPON_SLOTS_QUERY);
   m_connection->prepare(FIND_ALL_BY_RESPAWN_TIME_QUERY_NAME, FIND_ALL_BY_RESPAWN_TIME_QUERY);
   m_connection->prepare(CREATE_SHIP_QUERY_NAME, CREATE_SHIP_QUERY);
@@ -166,6 +182,7 @@ auto PlayerShipRepository::findOneById(const Uuid ship) const -> PlayerShip
 {
   auto out = fetchShipBase(ship);
   fetchSlots(ship, out);
+  fetchAiTargets(ship, out);
 
   return out;
 }
@@ -183,6 +200,7 @@ auto PlayerShipRepository::findOneByPlayerAndActive(const Uuid player) const -> 
 
   auto out = fetchShipBase(shipId);
   fetchSlots(shipId, out);
+  fetchAiTargets(shipId, out);
 
   return out;
 }
@@ -393,6 +411,22 @@ void PlayerShipRepository::fetchSlots(const Uuid ship, PlayerShip &out) const
     const auto count = record[1].as<int>();
 
     out.slots[slot] = count;
+  }
+}
+
+void PlayerShipRepository::fetchAiTargets(const Uuid ship, PlayerShip &out) const
+{
+  const auto query = [ship](pqxx::nontransaction &work) {
+    return work.exec(pqxx::prepped{FIND_AI_TARGETS_QUERY_NAME}, pqxx::params{toDbId(ship)});
+  };
+  const auto rows = m_connection->executeQuery(query);
+
+  for (const auto record : rows)
+  {
+    const auto x = record[0].as<float>();
+    const auto y = record[1].as<float>();
+    const auto z = record[2].as<float>();
+    out.aiTargets.emplace_back(x, y, z);
   }
 }
 
