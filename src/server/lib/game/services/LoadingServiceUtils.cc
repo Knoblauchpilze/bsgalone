@@ -100,7 +100,8 @@ auto PlayerShipProps::toPlayerShipData() const -> PlayerShipData
     .targetDbId = targetDbId,
     .playerDbId = dbShip.player,
 
-    .slots = dbShip.slots,
+    .slots     = dbShip.slots,
+    .aiTargets = dbShip.aiTargets,
   };
 
   std::transform(weapons.begin(),

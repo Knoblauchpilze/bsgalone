@@ -133,6 +133,9 @@ void ShipDataSource::registerShip(Coordinator &coordinator,
 
     .targetDbId = {},
     .playerDbId = data.player,
+
+    .slots     = data.slots,
+    .aiTargets = data.aiTargets,
   };
 
   const auto weapons = m_repositories->shipWeaponRepository->findAllByShip(shipDbId);

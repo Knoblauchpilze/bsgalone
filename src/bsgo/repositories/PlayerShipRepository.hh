@@ -48,6 +48,7 @@ struct PlayerShip
   std::optional<Uuid> jumpSystem{};
 
   std::unordered_map<Slot, int> slots{};
+  std::vector<Eigen::Vector3f> aiTargets{};
 };
 
 class PlayerShipRepository : public AbstractRepository
@@ -75,6 +76,7 @@ class PlayerShipRepository : public AbstractRepository
   private:
   auto fetchShipBase(const Uuid ship) const -> PlayerShip;
   void fetchSlots(const Uuid ship, PlayerShip &out) const;
+  void fetchAiTargets(const Uuid ship, PlayerShip &out) const;
   void registerShipJump(const Uuid ship, const Uuid system) const;
   void cancelShipJump(const Uuid ship) const;
 };
