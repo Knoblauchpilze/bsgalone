@@ -71,7 +71,6 @@ GROUP BY
 constexpr auto FIND_AI_TARGETS_QUERY_NAME = "player_ship_find_ai_targets";
 constexpr auto FIND_AI_TARGETS_QUERY      = R"(
 SELECT
-  index,
   x_pos,
   y_pos,
   z_pos
