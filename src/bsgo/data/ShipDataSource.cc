@@ -2,7 +2,6 @@
 #include "ShipDataSource.hh"
 #include "CircleBox.hh"
 #include "Coordinator.hh"
-#include "RNG.hh"
 #include "VectorUtils.hh"
 
 #include "FallbackNode.hh"
@@ -192,7 +191,7 @@ void ShipDataSource::registerShipOwner(Coordinator &coordinator,
   if (!data.playerDbId)
   {
     entityMapper.registerShip(data.dbId, shipEntity);
-    coordinator.addAI(shipEntity, generateBehaviorTree(data.dbId, data.dbId, data.position));
+    coordinator.addAI(shipEntity, generateBehaviorTree(data));
     return;
   }
 
@@ -227,59 +226,40 @@ void ShipDataSource::registerShipComputers(Coordinator &coordinator,
   }
 }
 
-auto ShipDataSource::generateBehaviorTree(const Uuid dbId,
-                                          const int seed,
-                                          const Eigen::Vector3f &center) const -> INodePtr
+namespace {
+auto generateBehaviorNode(INodePtr &&idleSequence) -> INodePtr
 {
-  constexpr auto RADIUS_TO_PICK_A_TARGET = 5.0f;
-  core::RNG rng(seed);
-
-  auto dx                       = rng.rndFloat(-RADIUS_TO_PICK_A_TARGET, RADIUS_TO_PICK_A_TARGET);
-  auto dy                       = rng.rndFloat(-RADIUS_TO_PICK_A_TARGET, RADIUS_TO_PICK_A_TARGET);
-  const Eigen::Vector3f target1 = center + Eigen::Vector3f(dx, dy, 0.0f);
-  debug("Picked first target " + str(target1) + " for " + str(dbId));
-
-  dx                            = rng.rndFloat(-RADIUS_TO_PICK_A_TARGET, RADIUS_TO_PICK_A_TARGET);
-  dy                            = rng.rndFloat(-RADIUS_TO_PICK_A_TARGET, RADIUS_TO_PICK_A_TARGET);
-  const Eigen::Vector3f target2 = center + Eigen::Vector3f(dx, dy, 0.0f);
-  debug("Picked second target " + str(target2) + " for " + str(dbId));
-
-  dx                            = rng.rndFloat(-RADIUS_TO_PICK_A_TARGET, RADIUS_TO_PICK_A_TARGET);
-  dy                            = rng.rndFloat(-RADIUS_TO_PICK_A_TARGET, RADIUS_TO_PICK_A_TARGET);
-  const Eigen::Vector3f target3 = center + Eigen::Vector3f(dx, dy, 0.0f);
-  debug("Picked third target " + str(target3) + " for " + str(dbId));
-
-  dx                            = rng.rndFloat(-RADIUS_TO_PICK_A_TARGET, RADIUS_TO_PICK_A_TARGET);
-  dy                            = rng.rndFloat(-RADIUS_TO_PICK_A_TARGET, RADIUS_TO_PICK_A_TARGET);
-  const Eigen::Vector3f target4 = center + Eigen::Vector3f(dx, dy, 0.0f);
-  debug("Picked fourth target " + str(target4) + " for " + str(dbId));
-
-  auto targetNode1  = std::make_unique<TargetNode>(target1);
-  auto targetNode2  = std::make_unique<TargetNode>(target2);
-  auto targetNode3  = std::make_unique<TargetNode>(target3);
-  auto targetNode4  = std::make_unique<TargetNode>(target4);
-  auto sequenceIdle = std::make_unique<SequenceNode>();
-  sequenceIdle->addChild(std::move(targetNode1));
-  sequenceIdle->addChild(std::move(targetNode2));
-  sequenceIdle->addChild(std::move(targetNode3));
-  sequenceIdle->addChild(std::move(targetNode4));
-
   auto pickTarget = std::make_unique<PickTargetNode>();
   auto target     = std::make_unique<FollowTargetNode>();
   auto fire       = std::make_unique<FireNode>();
 
-  auto sequenceAttack = std::make_unique<SequenceNode>();
-  sequenceAttack->addChild(std::move(pickTarget));
-  sequenceAttack->addChild(std::move(target));
-  sequenceAttack->addChild(std::move(fire));
+  auto attackSequence = std::make_unique<SequenceNode>();
+  attackSequence->addChild(std::move(pickTarget));
+  attackSequence->addChild(std::move(target));
+  attackSequence->addChild(std::move(fire));
 
   auto fallbackNode = std::make_unique<FallbackNode>();
-  fallbackNode->addChild(std::move(sequenceAttack));
-  fallbackNode->addChild(std::move(sequenceIdle));
+  fallbackNode->addChild(std::move(attackSequence));
+  fallbackNode->addChild(std::move(idleSequence));
 
   auto repeater = std::make_unique<RepeaterNode>(std::move(fallbackNode));
 
   return repeater;
+}
+} // namespace
+
+auto ShipDataSource::generateBehaviorTree(const PlayerShipData &data) const -> INodePtr
+{
+  auto idleSequence = std::make_unique<SequenceNode>();
+
+  for (const auto &target : data.aiTargets)
+  {
+    auto targetNode = std::make_unique<TargetNode>(target);
+    debug("Picked target " + str(target) + " for " + str(data.dbId));
+    idleSequence->addChild(std::move(targetNode));
+  }
+
+  return generateBehaviorNode(std::move(idleSequence));
 }
 
 } // namespace bsgo

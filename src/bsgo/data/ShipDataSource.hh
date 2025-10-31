@@ -58,8 +58,7 @@ class ShipDataSource : public core::CoreObject
                              const PlayerShipData &data,
                              const Uuid shipEntity) const;
 
-  auto generateBehaviorTree(const Uuid dbId, const int seed, const Eigen::Vector3f &center) const
-    -> INodePtr;
+  auto generateBehaviorTree(const PlayerShipData &data) const -> INodePtr;
 };
 
 } // namespace bsgo
