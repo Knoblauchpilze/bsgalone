@@ -116,13 +116,9 @@ INSERT INTO player_weapon ("weapon", "player", "level")
 --  BOTS   --
 -------------
 -- system: Munnin, ship: Cylon Raider
-INSERT INTO player ("name", "password", "faction")
-  VALUES ('munnin_cylon_war_raider', 'dummy', 'cylon');
-
 INSERT INTO player_weapon ("weapon", "player", "level")
   VALUES (
     (SELECT id FROM weapon WHERE name = 'Medium range cannon'),
-    -- TODO: Should be replaced with the actual player id
     NULL,
     20
   );

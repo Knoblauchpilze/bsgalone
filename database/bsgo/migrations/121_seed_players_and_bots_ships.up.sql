@@ -121,7 +121,6 @@ INSERT INTO ship_weapon ("ship", "weapon", "slot")
 INSERT INTO player_ship ("ship", "player", "name", "active", "hull_points", "power_points", "x_pos", "y_pos", "z_pos")
   VALUES (
       (SELECT id FROM ship WHERE name = 'Cylon Raider'),
-    -- TODO: Should be replaced with the actual player id
       NULL,
       'AI Cylon Raider',
       true,
@@ -133,7 +132,6 @@ INSERT INTO player_ship ("ship", "player", "name", "active", "hull_points", "pow
   );
 INSERT INTO ship_system ("ship", "system", "docked")
   VALUES (
-    -- TODO: Should be replaced with the actual player id
     (SELECT id FROM player_ship WHERE player is NULL),
     (SELECT id FROM system WHERE name = 'Munnin'),
     false
@@ -148,7 +146,6 @@ INSERT INTO ship_weapon ("ship", "weapon", "slot")
 
 INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
   VALUES (
-    -- TODO: Should be replaced with the actual player id
     (SELECT id FROM player_ship WHERE player is NULL),
     0,
     3.0,
@@ -157,7 +154,6 @@ INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
   );
 INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
   VALUES (
-    -- TODO: Should be replaced with the actual player id
     (SELECT id FROM player_ship WHERE player is NULL),
     1,
     4.0,
@@ -166,7 +162,6 @@ INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
   );
 INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
   VALUES (
-    -- TODO: Should be replaced with the actual player id
     (SELECT id FROM player_ship WHERE player is NULL),
     2,
     -7.0,
@@ -175,7 +170,6 @@ INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
   );
 INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
   VALUES (
-    -- TODO: Should be replaced with the actual player id
     (SELECT id FROM player_ship WHERE player is NULL),
     3,
     -5.0,
@@ -185,7 +179,6 @@ INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
 
 INSERT INTO ai_behaviors ("ship", "index")
   VALUES (
-    -- TODO: Should be replaced with the actual player id
     (SELECT id FROM player_ship WHERE player is NULL),
     0
   );
