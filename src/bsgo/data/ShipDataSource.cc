@@ -133,8 +133,9 @@ void ShipDataSource::registerShip(Coordinator &coordinator,
     .targetDbId = {},
     .playerDbId = data.player,
 
-    .slots     = data.slots,
-    .aiTargets = data.aiTargets,
+    .slots         = data.slots,
+    .aiTargets     = data.aiTargets,
+    .reachedTarget = data.reachedTarget,
   };
 
   const auto weapons = m_repositories->shipWeaponRepository->findAllByShip(shipDbId);
@@ -252,6 +253,7 @@ auto ShipDataSource::generateBehaviorTree(const PlayerShipData &data) const -> I
 {
   auto idleSequence = std::make_unique<SequenceNode>();
 
+  // TODO: We should handle the reached target
   for (const auto &target : data.aiTargets)
   {
     auto targetNode = std::make_unique<TargetNode>(target);

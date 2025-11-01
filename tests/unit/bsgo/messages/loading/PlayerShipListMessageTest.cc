@@ -272,14 +272,22 @@ TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, MultipleComplexShips)
      .weapons
      = {{.dbId = Uuid{16}, .weaponDbId = Uuid{14}, .level = 9, .range = 6.897f},
         {.dbId = Uuid{3}, .name = "random weapon", .minDamage = 29.53f, .maxDamage = 17.497f}},
-     .computers = {
-       {.dbId           = Uuid{1},
-        .computerDbId   = Uuid{14},
-        .name           = "computer 1",
-        .level          = 10,
-        .offensive      = false,
-        .range          = 3.987f,
-        .allowedTargets = std::unordered_set<EntityKind>{EntityKind::SHIP, EntityKind::OUTPOST}}}}};
+     .computers = {{.dbId           = Uuid{1},
+                    .computerDbId   = Uuid{14},
+                    .name           = "computer 1",
+                    .level          = 10,
+                    .offensive      = false,
+                    .range          = 3.987f,
+                    .allowedTargets = std::unordered_set<EntityKind>{EntityKind::SHIP,
+                                                                     EntityKind::OUTPOST}}}},
+    {.dbId          = Uuid{14},
+     .position      = Eigen::Vector3f(-1.0f, -98631.8075f, -37.91f),
+     .slots         = {{Slot::COMPUTER, 4}},
+     .reachedTarget = {14},
+     .weapons       = {{.dbId = Uuid{1}, .name = "dangerous object"},
+                       {.slotPosition = Eigen::Vector3f{0.123f, -456.789f, 0.01f}}},
+     .computers     = {{.name = "electronic device"}}},
+  };
   PlayerShipListMessage expected(shipsData);
   expected.setSystemDbId(Uuid{123});
   expected.setClientId(Uuid{78});
