@@ -1,4 +1,5 @@
 
+DELETE FROM ai_behaviors;
 DELETE FROM ai_targets;
 DELETE FROM ship_computer;
 DELETE FROM ship_weapon;

@@ -182,3 +182,10 @@ INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
     6.0,
     0.0
   );
+
+INSERT INTO ai_behaviors ("ship", "index")
+  VALUES (
+    -- TODO: Should be replaced with the actual player id
+    (SELECT id FROM player_ship WHERE player is NULL),
+    0
+  );
