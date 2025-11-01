@@ -42,6 +42,7 @@ struct PlayerShipData
 
   std::unordered_map<Slot, int> slots{};
   std::vector<Eigen::Vector3f> aiTargets{};
+  std::optional<int> reachedTarget{};
 
   std::vector<PlayerWeaponData> weapons{};
   std::vector<PlayerComputerData> computers{};

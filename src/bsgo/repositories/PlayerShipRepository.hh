@@ -49,6 +49,7 @@ struct PlayerShip
 
   std::unordered_map<Slot, int> slots{};
   std::vector<Eigen::Vector3f> aiTargets{};
+  std::optional<int> reachedTarget{};
 };
 
 class PlayerShipRepository : public AbstractRepository

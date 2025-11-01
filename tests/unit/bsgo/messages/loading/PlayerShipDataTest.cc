@@ -136,6 +136,27 @@ TEST(Unit_Bsgo_Serialization_PlayerShipData, WithAiTargets)
   assertPlayerShipDataAreEqual(output, input);
 }
 
+TEST(Unit_Bsgo_Serialization_PlayerShipData, WithReachedTarget)
+{
+  PlayerShipData input{.dbId           = Uuid{1234},
+                       .shipId         = Uuid{325},
+                       .position       = Eigen::Vector3f{1.0f, 2.0f, 3.0f},
+                       .radius         = 5.0f,
+                       .maxPowerPoints = 100.0f,
+                       .docked         = true,
+                       .active         = true};
+
+  PlayerShipData output{.dbId          = Uuid{14},
+                        .shipId        = Uuid{9421},
+                        .faction       = Faction::CYLON,
+                        .status        = Status::JUMP,
+                        .reachedTarget = {1}};
+
+  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
+
+  assertPlayerShipDataAreEqual(output, input);
+}
+
 TEST(Unit_Bsgo_Serialization_PlayerShipData, WithWeapons)
 {
   PlayerShipData input{.dbId             = Uuid{1234},

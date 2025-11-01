@@ -38,13 +38,15 @@ SELECT
   ss.docked,
   sc.jump_time,
   sc.jump_time_threat,
-  sj.system
+  sj.system,
+  ab.index
 FROM
   player_ship AS ps
   LEFT JOIN ship AS s ON ps.ship = s.id
   LEFT JOIN ship_class AS sc ON s.class = sc.name
   LEFT JOIN ship_system AS ss ON ps.id = ss.ship
   LEFT JOIN ship_jump AS sj ON ps.id = sj.ship
+  LEFT JOIN ai_behaviors AS ab ON ab.ship = ps.id
 WHERE
   ps.id = $1;
 )";
@@ -392,6 +394,10 @@ auto PlayerShipRepository::fetchShipBase(const Uuid ship) const -> PlayerShip
   if (!record[22].is_null())
   {
     out.jumpSystem = fromDbId(record[22].as<int>());
+  }
+  if (!record[23].is_null())
+  {
+    out.reachedTarget = record[23].as<int>();
   }
 
   return out;
