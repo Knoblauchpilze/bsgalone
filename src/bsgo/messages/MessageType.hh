@@ -9,6 +9,7 @@ namespace bsgo {
 
 enum class MessageType
 {
+  AI_TARGET_REACHED,
   ASTEROID_LIST,
   COMPONENT_SYNC,
   COMPUTER_LIST,
@@ -49,7 +50,7 @@ enum class MessageType
 };
 
 auto str(const MessageType &type) -> std::string;
-auto allMessageTypes() -> std::array<MessageType, 37>;
+auto allMessageTypes() -> std::array<MessageType, 38>;
 
 auto allMessageTypesAsSet() -> std::unordered_set<MessageType>;
 

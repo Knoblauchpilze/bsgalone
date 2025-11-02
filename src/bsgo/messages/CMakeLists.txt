@@ -7,7 +7,7 @@ target_sources (bsgo_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/MessageType.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/IMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/AbstractMessage.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/ValidatableMessage.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/AiTargetReachedMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ComponentUpdatedMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ComponentSyncMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ConnectionMessage.cc
@@ -28,6 +28,7 @@ target_sources (bsgo_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/SignupMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SlotComponentMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SlotMessage.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/ValidatableMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/VelocityMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/TargetMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/WeaponComponentMessage.cc

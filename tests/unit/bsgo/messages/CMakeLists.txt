@@ -10,6 +10,7 @@ target_sources(unitTests PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/UuidTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/StringTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/OptionalTest.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/AiTargetReachedMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ComponentSyncMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ConnectionMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/DockMessageTest.cc
