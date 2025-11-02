@@ -152,7 +152,7 @@ bool Entity::exists<StatusComponent>() const
 }
 
 template<>
-bool Entity::exists<AIComponent>() const
+bool Entity::exists<AiComponent>() const
 {
   return details::checkComponentExists(ai);
 }
@@ -247,9 +247,9 @@ auto Entity::statusComp() const -> const StatusComponent &
   return details::safeConstAccess(status, *this, "Status");
 }
 
-auto Entity::aiComp() const -> const AIComponent &
+auto Entity::aiComp() const -> const AiComponent &
 {
-  return details::safeConstAccess(ai, *this, "AI");
+  return details::safeConstAccess(ai, *this, "Ai");
 }
 
 auto Entity::shipClassComp() const -> const ShipClassComponent &
@@ -317,9 +317,9 @@ auto Entity::statusComp() -> StatusComponent &
   return details::safeAccess(status, *this, "Status");
 }
 
-auto Entity::aiComp() -> AIComponent &
+auto Entity::aiComp() -> AiComponent &
 {
-  return details::safeAccess(ai, *this, "AI");
+  return details::safeAccess(ai, *this, "Ai");
 }
 
 auto Entity::networkSyncComp() -> NetworkSyncComponent &

@@ -1,19 +1,19 @@
 
-#include "AISystem.hh"
+#include "AiSystem.hh"
 
 namespace bsgo {
 namespace {
 bool isEntityRelevant(const Entity &ent)
 {
-  return ent.exists<AIComponent>();
+  return ent.exists<AiComponent>();
 }
 } // namespace
 
-AISystem::AISystem()
+AiSystem::AiSystem()
   : AbstractSystem(SystemType::AI, isEntityRelevant)
 {}
 
-void AISystem::updateEntity(Entity &entity,
+void AiSystem::updateEntity(Entity &entity,
                             Coordinator &coordinator,
                             const chrono::TickData &data) const
 {

@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "AIComponent.hh"
+#include "AiComponent.hh"
 #include "ComputerSlotComponent.hh"
 #include "DamageComponent.hh"
 #include "DbComponent.hh"
@@ -44,7 +44,7 @@ struct Components
   std::unordered_map<Uuid, DamageComponentShPtr> damages{};
   std::unordered_map<Uuid, RemovalComponentShPtr> removals{};
   std::unordered_map<Uuid, StatusComponentShPtr> statuses{};
-  std::unordered_map<Uuid, AIComponentShPtr> ais{};
+  std::unordered_map<Uuid, AiComponentShPtr> ais{};
   std::unordered_map<Uuid, ShipClassComponentShPtr> shipClasses{};
   std::unordered_map<Uuid, NameComponentShPtr> names{};
   std::unordered_map<Uuid, NetworkSyncComponentShPtr> networkSyncs{};

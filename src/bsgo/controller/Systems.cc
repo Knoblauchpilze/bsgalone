@@ -1,7 +1,7 @@
 
 #include "Systems.hh"
 
-#include "AISystem.hh"
+#include "AiSystem.hh"
 #include "BulletSystem.hh"
 #include "ComputerSystem.hh"
 #include "EffectSystem.hh"
@@ -71,7 +71,7 @@ void Systems::initialize(SystemsConfig &&config)
   createSystem<PowerSystem>(m_systems, config);
   createSystem<WeaponSystem>(m_systems, config);
   createSystem<BulletSystem>(m_systems, config);
-  createSystem<AISystem>(m_systems, config);
+  createSystem<AiSystem>(m_systems, config);
   createSystem<LootSystem>(m_systems, config);
   createSystem<HealthSystem>(m_systems, config);
   createSystem<RemovalSystem>(m_systems, config);

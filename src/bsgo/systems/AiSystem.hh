@@ -5,11 +5,11 @@
 
 namespace bsgo {
 
-class AISystem : public AbstractSystem
+class AiSystem : public AbstractSystem
 {
   public:
-  AISystem();
-  ~AISystem() override = default;
+  AiSystem();
+  ~AiSystem() override = default;
 
   protected:
   void updateEntity(Entity &entity,
