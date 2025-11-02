@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "AIComponent.hh"
+#include "AiComponent.hh"
 #include "ComputerSlotComponent.hh"
 #include "DamageComponent.hh"
 #include "DbComponent.hh"
@@ -48,7 +48,7 @@ struct Entity
   std::optional<DamageComponentShPtr> damage{};
   std::optional<RemovalComponentShPtr> removal{};
   std::optional<StatusComponentShPtr> status{};
-  std::optional<AIComponentShPtr> ai{};
+  std::optional<AiComponentShPtr> ai{};
   std::optional<ShipClassComponentShPtr> shipClass{};
   std::optional<NameComponentShPtr> name{};
   std::optional<NetworkSyncComponentShPtr> networkSync{};
@@ -85,7 +85,7 @@ struct Entity
   auto damageComp() const -> const DamageComponent &;
   auto removalComp() const -> const RemovalComponent &;
   auto statusComp() const -> const StatusComponent &;
-  auto aiComp() const -> const AIComponent &;
+  auto aiComp() const -> const AiComponent &;
   auto shipClassComp() const -> const ShipClassComponent &;
   auto nameComp() const -> const NameComponent &;
   auto networkSyncComp() const -> const NetworkSyncComponent &;
@@ -100,7 +100,7 @@ struct Entity
   auto scannedComp() -> ScannedComponent &;
   auto removalComp() -> RemovalComponent &;
   auto statusComp() -> StatusComponent &;
-  auto aiComp() -> AIComponent &;
+  auto aiComp() -> AiComponent &;
   auto networkSyncComp() -> NetworkSyncComponent &;
   auto dbSyncComp() -> DbSyncComponent &;
 

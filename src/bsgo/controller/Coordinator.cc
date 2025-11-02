@@ -151,10 +151,10 @@ void Coordinator::addStatus(const Uuid ent,
   m_components.statuses[ent] = std::make_shared<StatusComponent>(status, jumpTime, threatJumpTime);
 }
 
-void Coordinator::addAI(const Uuid ent, INodePtr behavior)
+void Coordinator::addAi(const Uuid ent, INodePtr behavior)
 {
-  checkForOverrides(ent, "AI", m_components.ais);
-  m_components.ais[ent] = std::make_shared<AIComponent>(std::move(behavior));
+  checkForOverrides(ent, "Ai", m_components.ais);
+  m_components.ais[ent] = std::make_shared<AiComponent>(std::move(behavior));
 }
 
 void Coordinator::addShipClass(const Uuid ent, const ShipClass &shipClass)

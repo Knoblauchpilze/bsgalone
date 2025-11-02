@@ -1,9 +1,9 @@
 
-#include "AIComponent.hh"
+#include "AiComponent.hh"
 
 namespace bsgo {
 
-AIComponent::AIComponent(INodePtr behavior)
+AiComponent::AiComponent(INodePtr behavior)
   : AbstractComponent(ComponentType::AI)
   , m_behavior(std::move(behavior))
 {
@@ -13,16 +13,16 @@ AIComponent::AIComponent(INodePtr behavior)
   }
 }
 
-auto AIComponent::behavior() -> INode &
+auto AiComponent::behavior() -> INode &
 {
   return *m_behavior;
 }
 
-auto AIComponent::behavior() const -> const INode &
+auto AiComponent::behavior() const -> const INode &
 {
   return *m_behavior;
 }
 
-void AIComponent::update(const chrono::TickData & /*data*/) {}
+void AiComponent::update(const chrono::TickData & /*data*/) {}
 
 } // namespace bsgo

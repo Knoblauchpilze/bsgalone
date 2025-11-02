@@ -192,7 +192,7 @@ void ShipDataSource::registerShipOwner(Coordinator &coordinator,
   if (!data.playerDbId)
   {
     entityMapper.registerShip(data.dbId, shipEntity);
-    coordinator.addAI(shipEntity, generateBehaviorTree(data));
+    coordinator.addAi(shipEntity, generateBehaviorTree(data));
     return;
   }
 

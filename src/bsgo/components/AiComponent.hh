@@ -6,11 +6,11 @@
 
 namespace bsgo {
 
-class AIComponent : public AbstractComponent
+class AiComponent : public AbstractComponent
 {
   public:
-  AIComponent(INodePtr behavior);
-  ~AIComponent() override = default;
+  AiComponent(INodePtr behavior);
+  ~AiComponent() override = default;
 
   auto behavior() -> INode &;
   auto behavior() const -> const INode &;
@@ -21,6 +21,6 @@ class AIComponent : public AbstractComponent
   INodePtr m_behavior;
 };
 
-using AIComponentShPtr = std::shared_ptr<AIComponent>;
+using AiComponentShPtr = std::shared_ptr<AiComponent>;
 
 } // namespace bsgo
