@@ -254,10 +254,10 @@ auto ShipDataSource::generateBehaviorTree(const PlayerShipData &data) const -> I
   auto idleSequence = std::make_unique<SequenceNode>();
 
   // TODO: We should handle the reached target
-  for (const auto &target : data.aiTargets)
+  for (std::size_t id = 0u; id < data.aiTargets.size(); ++id)
   {
-    auto targetNode = std::make_unique<TargetNode>(target);
-    debug("Picked target " + str(target) + " for " + str(data.dbId));
+    auto targetNode = std::make_unique<TargetNode>(data.aiTargets[id], static_cast<int>(id));
+    debug("Picked target " + str(data.aiTargets[id]) + " for " + str(data.dbId));
     idleSequence->addChild(std::move(targetNode));
   }
 
