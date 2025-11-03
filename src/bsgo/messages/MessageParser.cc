@@ -3,7 +3,7 @@
 #include "SerializationUtils.hh"
 #include <sstream>
 
-#include "AiTargetReachedMessage.hh"
+#include "AiBehaviorSyncMessage.hh"
 #include "AsteroidListMessage.hh"
 #include "ComponentSyncMessage.hh"
 #include "ComputerListMessage.hh"
@@ -114,8 +114,8 @@ auto MessageParser::tryReadMessage(const MessageType &type, std::istream &in)
 {
   switch (type)
   {
-    case MessageType::AI_TARGET_REACHED:
-      return readMessage<AiTargetReachedMessage>(in);
+    case MessageType::AI_BEHAVIOR_SYNC:
+      return readMessage<AiBehaviorSyncMessage>(in);
     case MessageType::ASTEROID_LIST:
       return readMessage<AsteroidListMessage>(in);
     case MessageType::COMPONENT_SYNC:

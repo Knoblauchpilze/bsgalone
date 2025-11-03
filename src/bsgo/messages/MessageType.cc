@@ -7,8 +7,8 @@ auto str(const MessageType &type) -> std::string
 {
   switch (type)
   {
-    case MessageType::AI_TARGET_REACHED:
-      return "ai_target_reached";
+    case MessageType::AI_BEHAVIOR_SYNC:
+      return "ai_behavior_sync";
     case MessageType::ASTEROID_LIST:
       return "asteroid_list";
     case MessageType::COMPONENT_SYNC:
@@ -90,7 +90,7 @@ auto str(const MessageType &type) -> std::string
 
 auto allMessageTypes() -> std::array<MessageType, 38>
 {
-  return {MessageType::AI_TARGET_REACHED,
+  return {MessageType::AI_BEHAVIOR_SYNC,
           MessageType::ASTEROID_LIST,
           MessageType::COMPONENT_SYNC,
           MessageType::COMPUTER_LIST,

@@ -7,7 +7,7 @@ target_sources (bsgo_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/MessageType.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/IMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/AbstractMessage.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/AiTargetReachedMessage.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/AiBehaviorSyncMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ComponentUpdatedMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ComponentSyncMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ConnectionMessage.cc

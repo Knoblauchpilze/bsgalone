@@ -9,7 +9,7 @@ namespace bsgo {
 
 enum class MessageType
 {
-  AI_TARGET_REACHED,
+  AI_BEHAVIOR_SYNC,
   ASTEROID_LIST,
   COMPONENT_SYNC,
   COMPUTER_LIST,
