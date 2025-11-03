@@ -6,12 +6,12 @@
 
 namespace bsgo {
 
-class AiTargetReachedMessage : public NetworkMessage
+class AiBehaviorSyncMessage : public NetworkMessage
 {
   public:
-  AiTargetReachedMessage();
-  AiTargetReachedMessage(const Uuid shipDbId, const int targetIndex);
-  ~AiTargetReachedMessage() override = default;
+  AiBehaviorSyncMessage();
+  AiBehaviorSyncMessage(const Uuid shipDbId, const int targetIndex);
+  ~AiBehaviorSyncMessage() override = default;
 
   auto getShipDbId() const -> Uuid;
   auto getTargetIndex() const -> int;
