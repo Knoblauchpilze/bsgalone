@@ -6,8 +6,9 @@
 
 namespace bsgo {
 
-TargetNode::TargetNode(const Eigen::Vector3f &target)
+TargetNode::TargetNode(const Eigen::Vector3f &target, const int index)
   : LeafNode("target")
+  , m_index(index)
   , m_target(target)
 {}
 
@@ -17,6 +18,11 @@ void TargetNode::run(const BehaviorData &data)
   {
     verbose("Trying to reach " + str(m_target));
     start();
+    // When we first execute the node we need to indicate that a new target
+    // is now active in the context. This allows external listeners to be
+    // aware that the target changed. It can be used for example to send the
+    // information to client applications.
+    data.context.setTargetIndex(m_index);
   }
   if (NodeState::RUNNING != m_state)
   {

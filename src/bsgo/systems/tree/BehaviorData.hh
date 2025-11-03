@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include "DataContext.hh"
+
 namespace bsgo {
 
 class Entity;
@@ -10,6 +12,7 @@ struct BehaviorData
 {
   Entity &ent;
   Coordinator &coordinator;
+  DataContext &context;
 };
 
 } // namespace bsgo
