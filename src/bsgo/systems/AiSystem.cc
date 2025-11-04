@@ -1,5 +1,6 @@
 
 #include "AiSystem.hh"
+#include "AiBehaviorSyncMessage.hh"
 
 namespace bsgo {
 namespace {
@@ -32,11 +33,26 @@ void AiSystem::updateEntity(Entity &entity,
 
   if (aiComp.dataContext().changed())
   {
-    // TODO: Should send a message
-    warn("should sync AI component for target "
-         + std::to_string(*aiComp.dataContext().tryGetTargetIndex()));
-    aiComp.dataContext().markAsSynced();
+    triggerAiBehaviorSync(entity);
   }
+}
+
+void AiSystem::triggerAiBehaviorSync(Entity &entity) const
+{
+  auto &aiComp = entity.aiComp();
+
+  aiComp.dataContext().markAsSynced();
+
+  const auto entityDbId = entity.dbComp().dbId();
+  auto out              = std::make_unique<AiBehaviorSyncMessage>(entityDbId);
+
+  const auto targetIndex = aiComp.dataContext().tryGetTargetIndex();
+  if (targetIndex)
+  {
+    out->setTargetIndex(*targetIndex);
+  }
+
+  pushInternalMessage(std::move(out));
 }
 
 } // namespace bsgo
