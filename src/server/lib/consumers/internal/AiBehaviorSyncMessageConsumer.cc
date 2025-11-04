@@ -26,6 +26,7 @@ void AiBehaviorSyncMessageConsumer::onMessageReceived(const IMessage &message)
 
   const auto shipDbId = aiSync.getShipDbId();
 
+  // TODO: Should handle DB update and forwarding to the output message queue
   warn("Should handle ai behavior sync for ship " + str(shipDbId));
 }
 
