@@ -8,10 +8,9 @@ AiBehaviorSyncMessage::AiBehaviorSyncMessage()
   : NetworkMessage(MessageType::AI_BEHAVIOR_SYNC)
 {}
 
-AiBehaviorSyncMessage::AiBehaviorSyncMessage(const Uuid shipDbId, const int targetIndex)
+AiBehaviorSyncMessage::AiBehaviorSyncMessage(const Uuid shipDbId)
   : NetworkMessage(MessageType::AI_BEHAVIOR_SYNC)
   , m_shipDbId(shipDbId)
-  , m_targetIndex(targetIndex)
 {}
 
 auto AiBehaviorSyncMessage::getShipDbId() const -> Uuid
@@ -19,9 +18,14 @@ auto AiBehaviorSyncMessage::getShipDbId() const -> Uuid
   return m_shipDbId;
 }
 
-auto AiBehaviorSyncMessage::getTargetIndex() const -> int
+auto AiBehaviorSyncMessage::tryGetTargetIndex() const -> std::optional<int>
 {
   return m_targetIndex;
+}
+
+void AiBehaviorSyncMessage::setTargetIndex(const int targetIndex)
+{
+  m_targetIndex = targetIndex;
 }
 
 auto AiBehaviorSyncMessage::serialize(std::ostream &out) const -> std::ostream &
@@ -49,8 +53,13 @@ bool AiBehaviorSyncMessage::deserialize(std::istream &in)
 
 auto AiBehaviorSyncMessage::clone() const -> IMessagePtr
 {
-  auto clone = std::make_unique<AiBehaviorSyncMessage>(m_shipDbId, m_targetIndex);
+  auto clone = std::make_unique<AiBehaviorSyncMessage>(m_shipDbId);
   clone->copyClientIdIfDefined(*this);
+
+  if (m_targetIndex)
+  {
+    clone->setTargetIndex(*m_targetIndex);
+  }
 
   return clone;
 }
