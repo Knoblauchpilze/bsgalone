@@ -1,5 +1,6 @@
 
 #include "MessageExchanger.hh"
+#include "AiBehaviorSyncMessageConsumer.hh"
 #include "AsyncMessageQueue.hh"
 #include "BroadcastMessageQueue.hh"
 #include "ComponentSyncMessageConsumer.hh"
@@ -140,6 +141,9 @@ void MessageExchanger::initializeInternalConsumers(const MessageSystemData &mess
     std::make_unique<ComponentSyncMessageConsumer>(systemService,
                                                    messagesData.systemProcessors,
                                                    m_outputMessageQueue.get()));
+
+  m_internalMessageQueue->addListener(
+    std::make_unique<AiBehaviorSyncMessageConsumer>(systemService, m_outputMessageQueue.get()));
 }
 
 } // namespace bsgo
