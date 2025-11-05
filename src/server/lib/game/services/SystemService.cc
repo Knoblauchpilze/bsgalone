@@ -109,6 +109,12 @@ auto SystemService::tryJump(const Uuid shipDbId) const -> JumpResult
   return out;
 }
 
+bool SystemService::registerAiBehaviorMilestone() const
+{
+  // TODO: This needs to be implemented
+  return true;
+}
+
 auto SystemService::tryGetSystemDbIdForShip(const Uuid shipDbId) const -> std::optional<Uuid>
 {
   return m_repositories.playerShipRepository->findOneById(shipDbId).system;

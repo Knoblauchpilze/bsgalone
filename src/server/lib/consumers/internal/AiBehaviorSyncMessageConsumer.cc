@@ -26,8 +26,14 @@ void AiBehaviorSyncMessageConsumer::onMessageReceived(const IMessage &message)
 
   const auto shipDbId = aiSync.getShipDbId();
 
-  // TODO: Should handle DB update and forwarding to the output message queue
-  warn("Should handle ai behavior sync for ship " + str(shipDbId));
+  if (!m_systemService->registerAiBehaviorMilestone())
+  {
+    warn("Failed to process AI behavior sync message for " + str(shipDbId));
+    return;
+  }
+
+  // TODO: We should probably include the system id in the output message.
+  m_outputMessageQueue->pushMessage(message.clone());
 }
 
 } // namespace bsgo
