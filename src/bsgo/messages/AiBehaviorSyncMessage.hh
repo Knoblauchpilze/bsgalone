@@ -14,8 +14,10 @@ class AiBehaviorSyncMessage : public NetworkMessage
   ~AiBehaviorSyncMessage() override = default;
 
   auto getShipDbId() const -> Uuid;
+  auto tryGetSystemDbId() const -> std::optional<Uuid>;
   auto tryGetTargetIndex() const -> std::optional<int>;
 
+  void setSystemDbId(const Uuid systemDbId);
   void setTargetIndex(const int targetIndex);
 
   auto serialize(std::ostream &out) const -> std::ostream & override;
@@ -25,6 +27,7 @@ class AiBehaviorSyncMessage : public NetworkMessage
 
   private:
   Uuid m_shipDbId{};
+  std::optional<Uuid> m_systemDbId{};
   std::optional<int> m_targetIndex{};
 };
 
