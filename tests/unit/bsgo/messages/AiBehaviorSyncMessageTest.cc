@@ -12,6 +12,7 @@ void assertMessagesAreEqual(const AiBehaviorSyncMessage &actual,
 {
   EXPECT_EQ(actual.type(), expected.type());
   EXPECT_EQ(actual.getShipDbId(), expected.getShipDbId());
+  EXPECT_EQ(actual.tryGetSystemDbId(), expected.tryGetSystemDbId());
   EXPECT_EQ(actual.tryGetTargetIndex(), expected.tryGetTargetIndex());
   EXPECT_EQ(actual.tryGetClientId(), expected.tryGetClientId());
 }
@@ -19,7 +20,8 @@ void assertMessagesAreEqual(const AiBehaviorSyncMessage &actual,
 
 TEST(Unit_Bsgo_Serialization_AiBehaviorSyncMessage, WithoutTargetIndex)
 {
-  const AiBehaviorSyncMessage expected(Uuid{14});
+  AiBehaviorSyncMessage expected(Uuid{14});
+  expected.setSystemDbId(28);
 
   AiBehaviorSyncMessage actual(Uuid{6});
   actual.setTargetIndex(Uuid{17});
@@ -37,6 +39,21 @@ TEST(Unit_Bsgo_Serialization_AiBehaviorSyncMessage, WithTargetIndex)
   expected.setClientId(Uuid{26});
 
   AiBehaviorSyncMessage actual(Uuid{6});
+  actual.setClientId(Uuid{1});
+  actual.setSystemDbId(28);
+
+  serializeAndDeserializeMessage(expected, actual);
+
+  assertMessagesAreEqual(actual, expected);
+}
+
+TEST(Unit_Bsgo_Serialization_AiBehaviorSyncMessage, WithSystemDbId)
+{
+  AiBehaviorSyncMessage expected(Uuid{14});
+  expected.setSystemDbId(8719);
+
+  AiBehaviorSyncMessage actual(Uuid{6});
+  actual.setSystemDbId(46);
   actual.setClientId(Uuid{1});
 
   serializeAndDeserializeMessage(expected, actual);
@@ -61,6 +78,7 @@ TEST(Unit_Bsgo_Serialization_AiBehaviorSyncMessage, WithClientId)
 TEST(Unit_Bsgo_Serialization_AiBehaviorSyncMessage, Clone)
 {
   AiBehaviorSyncMessage expected(Uuid{14});
+  expected.setSystemDbId(44);
   expected.setTargetIndex(17);
 
   const auto cloned = expected.clone();
