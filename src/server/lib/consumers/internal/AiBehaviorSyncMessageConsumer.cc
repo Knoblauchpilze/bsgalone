@@ -32,8 +32,17 @@ void AiBehaviorSyncMessageConsumer::onMessageReceived(const IMessage &message)
     return;
   }
 
-  // TODO: We should probably include the system id in the output message.
-  m_outputMessageQueue->pushMessage(message.clone());
+  const auto maybeSystemDbId = m_systemService->tryGetSystemDbIdForShip(shipDbId);
+  if (!maybeSystemDbId)
+  {
+    warn("Failed to process AI behavior sync message for " + str(shipDbId),
+         "Ship is not registered in any system");
+    return;
+  }
+
+  auto out = aiSync.clone();
+  out->as<AiBehaviorSyncMessage>().setSystemDbId(*maybeSystemDbId);
+  m_outputMessageQueue->pushMessage(std::move(out));
 }
 
 } // namespace bsgo

@@ -1,5 +1,6 @@
 
 #include "BroadcastMessageQueue.hh"
+#include "AiBehaviorSyncMessage.hh"
 #include "ComponentSyncMessage.hh"
 #include "EntityAddedMessage.hh"
 #include "EntityRemovedMessage.hh"
@@ -100,10 +101,11 @@ void BroadcastMessageQueue::sendMessageToClient(const Uuid clientId, const IMess
 }
 
 namespace {
-const std::unordered_set<MessageType> SYSTEM_DIRECTED_MESSAGES = {MessageType::COMPONENT_SYNC,
-                                                                  MessageType::JUMP,
+const std::unordered_set<MessageType> SYSTEM_DIRECTED_MESSAGES = {MessageType::AI_BEHAVIOR_SYNC,
+                                                                  MessageType::COMPONENT_SYNC,
                                                                   MessageType::ENTITY_ADDED,
-                                                                  MessageType::ENTITY_REMOVED};
+                                                                  MessageType::ENTITY_REMOVED,
+                                                                  MessageType::JUMP};
 
 bool shouldTryToDetermineSystemId(const IMessage &message)
 {
@@ -193,6 +195,17 @@ auto determineSystemsFor(const T &message) -> std::vector<Uuid>
   return {message.getSystemDbId()};
 }
 
+auto determineSystemsFor(const AiBehaviorSyncMessage &message) -> std::vector<Uuid>
+{
+  const auto maybeSystemDbId = message.tryGetSystemDbId();
+  if (!maybeSystemDbId)
+  {
+    return {};
+  }
+
+  return {*maybeSystemDbId};
+}
+
 template<>
 auto determineSystemsFor(const JumpMessage &message) -> std::vector<Uuid>
 {
@@ -205,6 +218,8 @@ auto BroadcastMessageQueue::tryDetermineSystemIds(const IMessage &message) const
 {
   switch (message.type())
   {
+    case MessageType::AI_BEHAVIOR_SYNC:
+      return determineSystemsFor(message.as<AiBehaviorSyncMessage>());
     case MessageType::COMPONENT_SYNC:
       return determineSystemsFor(message.as<ComponentSyncMessage>());
     case MessageType::ENTITY_ADDED:
