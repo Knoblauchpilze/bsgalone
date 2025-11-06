@@ -26,7 +26,8 @@ void AiBehaviorSyncMessageConsumer::onMessageReceived(const IMessage &message)
 
   const auto shipDbId = aiSync.getShipDbId();
 
-  if (!m_systemService->registerAiBehaviorMilestone())
+  const auto maybeTarget = aiSync.tryGetTargetIndex();
+  if (maybeTarget && !m_systemService->registerAiBehaviorMilestone(shipDbId, *maybeTarget))
   {
     warn("Failed to process AI behavior sync message for " + str(shipDbId));
     return;

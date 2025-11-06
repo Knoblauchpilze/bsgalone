@@ -31,7 +31,7 @@ class SystemService : public AbstractService
   };
   auto tryJump(const Uuid shipDbId) const -> JumpResult;
 
-  bool registerAiBehaviorMilestone() const;
+  bool registerAiBehaviorMilestone(const Uuid shipDbId, const int targetReached) const;
 
   auto tryGetSystemDbIdForShip(const Uuid shipDbId) const -> std::optional<Uuid>;
   auto getSystemDbIdForAsteroid(const Uuid asteroidDbId) const -> Uuid;

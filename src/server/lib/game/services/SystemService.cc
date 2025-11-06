@@ -109,9 +109,12 @@ auto SystemService::tryJump(const Uuid shipDbId) const -> JumpResult
   return out;
 }
 
-bool SystemService::registerAiBehaviorMilestone() const
+bool SystemService::registerAiBehaviorMilestone(const Uuid shipDbId, const int targetReached) const
 {
-  // TODO: This needs to be implemented
+  AiBehavior behavior{.ship = shipDbId, .targetIndex = targetReached};
+
+  m_repositories.aiBehaviorRepository->save(behavior);
+
   return true;
 }
 
