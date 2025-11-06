@@ -36,7 +36,7 @@ ORDER BY
 
 constexpr auto UPDATE_AI_BEHAVIOR_QUERY_NAME = "ai_behavior_update_target";
 constexpr auto UPDATE_AI_BEHAVIOR_QUERY      = R"(
-UPDATE ai_targets
+UPDATE ai_behaviors
   SET
     index = $1
   WHERE
