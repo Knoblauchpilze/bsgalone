@@ -419,6 +419,7 @@ void PlayerShipRepository::fetchSlots(const Uuid ship, PlayerShip &out) const
   }
 }
 
+// Note: this is the same as in AiBehaviorRepository::fetchAiTargets
 void PlayerShipRepository::fetchAiTargets(const Uuid ship, PlayerShip &out) const
 {
   const auto query = [ship](pqxx::nontransaction &work) {

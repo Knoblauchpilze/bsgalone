@@ -3,6 +3,7 @@ target_sources (bsgo_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/DbConnection.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/IRepository.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/AbstractRepository.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/AiBehaviorRepository.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/AsteroidRepository.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/AsteroidLootRepository.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ComputerPriceRepository.cc

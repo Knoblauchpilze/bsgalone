@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "AiBehaviorRepository.hh"
 #include "AsteroidLootRepository.hh"
 #include "AsteroidRepository.hh"
 #include "ComputerPriceRepository.hh"
@@ -30,6 +31,7 @@ struct Repositories
   Repositories();
   ~Repositories() = default;
 
+  AiBehaviorRepositoryShPtr aiBehaviorRepository{};
   AsteroidLootRepositoryShPtr asteroidLootRepository{};
   AsteroidRepositoryShPtr asteroidRepository{};
   ComputerPriceRepositoryShPtr computerPriceRepository{};
@@ -41,15 +43,15 @@ struct Repositories
   PlayerShipRepositoryShPtr playerShipRepository{};
   PlayerWeaponRepositoryShPtr playerWeaponRepository{};
   ResourceRepositoryShPtr resourceRepository{};
+  ShipComputerRepositoryShPtr shipComputerRepository{};
   ShipPriceRepositoryShPtr shipPriceRepository{};
   ShipRepositoryShPtr shipRepository{};
-  ShipComputerRepositoryShPtr shipComputerRepository{};
   ShipWeaponRepositoryShPtr shipWeaponRepository{};
+  SystemOutpostRepositoryShPtr systemOutpostRepository{};
   SystemRepositoryShPtr systemRepository{};
+  TickRepositoryShPtr tickRepository{};
   WeaponPriceRepositoryShPtr weaponPriceRepository{};
   WeaponRepositoryShPtr weaponRepository{};
-  SystemOutpostRepositoryShPtr systemOutpostRepository{};
-  TickRepositoryShPtr tickRepository{};
 
   DbConnectionShPtr dbConnection{};
 };

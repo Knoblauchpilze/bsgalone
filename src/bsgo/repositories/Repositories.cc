@@ -8,6 +8,7 @@ Repositories::Repositories()
   dbConnection = std::make_shared<DbConnection>();
   dbConnection->connect();
 
+  aiBehaviorRepository     = std::make_shared<AiBehaviorRepository>(dbConnection);
   asteroidLootRepository   = std::make_shared<AsteroidLootRepository>(dbConnection);
   asteroidRepository       = std::make_shared<AsteroidRepository>(dbConnection);
   computerPriceRepository  = std::make_shared<ComputerPriceRepository>(dbConnection);
@@ -19,16 +20,17 @@ Repositories::Repositories()
   playerShipRepository     = std::make_shared<PlayerShipRepository>(dbConnection);
   playerWeaponRepository   = std::make_shared<PlayerWeaponRepository>(dbConnection);
   resourceRepository       = std::make_shared<ResourceRepository>(dbConnection);
+  shipComputerRepository   = std::make_shared<ShipComputerRepository>(dbConnection);
   shipPriceRepository      = std::make_shared<ShipPriceRepository>(dbConnection);
   shipRepository           = std::make_shared<ShipRepository>(dbConnection);
-  shipComputerRepository   = std::make_shared<ShipComputerRepository>(dbConnection);
   shipWeaponRepository     = std::make_shared<ShipWeaponRepository>(dbConnection);
+  systemOutpostRepository  = std::make_shared<SystemOutpostRepository>(dbConnection);
   systemRepository         = std::make_shared<SystemRepository>(dbConnection);
   weaponPriceRepository    = std::make_shared<WeaponPriceRepository>(dbConnection);
   weaponRepository         = std::make_shared<WeaponRepository>(dbConnection);
-  systemOutpostRepository  = std::make_shared<SystemOutpostRepository>(dbConnection);
   tickRepository           = std::make_shared<TickRepository>(dbConnection);
 
+  aiBehaviorRepository->initialize();
   asteroidLootRepository->initialize();
   asteroidRepository->initialize();
   computerPriceRepository->initialize();
@@ -40,14 +42,14 @@ Repositories::Repositories()
   playerShipRepository->initialize();
   playerWeaponRepository->initialize();
   resourceRepository->initialize();
+  shipComputerRepository->initialize();
   shipPriceRepository->initialize();
   shipRepository->initialize();
-  shipComputerRepository->initialize();
   shipWeaponRepository->initialize();
+  systemOutpostRepository->initialize();
   systemRepository->initialize();
   weaponPriceRepository->initialize();
   weaponRepository->initialize();
-  systemOutpostRepository->initialize();
   tickRepository->initialize();
 }
 
