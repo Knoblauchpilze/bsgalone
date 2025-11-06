@@ -33,12 +33,22 @@ WHERE
 ORDER BY
   index
 )";
+
+constexpr auto UPDATE_AI_BEHAVIOR_QUERY_NAME = "ai_behavior_update_target";
+constexpr auto UPDATE_AI_BEHAVIOR_QUERY      = R"(
+UPDATE ai_targets
+  SET
+    index = $1
+  WHERE
+    ship = $2
+)";
 } // namespace
 
 void AiBehaviorRepository::initialize()
 {
   m_connection->prepare(FIND_ONE_BY_SHIP_QUERY_NAME, FIND_ONE_BY_SHIP_QUERY);
   m_connection->prepare(FIND_AI_TARGETS_QUERY_NAME, FIND_AI_TARGETS_QUERY);
+  m_connection->prepare(UPDATE_AI_BEHAVIOR_QUERY_NAME, UPDATE_AI_BEHAVIOR_QUERY);
 }
 
 namespace {} // namespace
@@ -51,11 +61,30 @@ auto AiBehaviorRepository::findOneByShip(const Uuid shipDbId) const -> AiBehavio
   };
   const auto record = m_connection->executeQueryReturningSingleRow(query);
 
-  AiBehavior out{.targetIndex = record[0].as<int>()};
+  AiBehavior out{
+    .ship        = shipDbId,
+    .targetIndex = record[0].as<int>(),
+  };
 
   fetchAiTargets(shipDbId, out);
 
   return out;
+}
+
+void AiBehaviorRepository::save(const AiBehavior &behavior)
+{
+  auto query = [&behavior](pqxx::work &transaction) {
+    return transaction
+      .exec(pqxx::prepped{UPDATE_AI_BEHAVIOR_QUERY_NAME},
+            pqxx::params{behavior.targetIndex, toDbId(behavior.ship)})
+      .no_rows();
+  };
+
+  auto res = m_connection->tryExecuteTransaction(query);
+  if (res.error)
+  {
+    error("Failed to save AI behavior ship: " + *res.error);
+  }
 }
 
 // Note: this is the same as in PlayerShipRepository::fetchAiTargets

@@ -10,6 +10,7 @@ namespace bsgo {
 
 struct AiBehavior
 {
+  Uuid ship{};
   int targetIndex{};
   std::vector<Eigen::Vector3f> targets{};
 };
@@ -23,6 +24,8 @@ class AiBehaviorRepository : public AbstractRepository
   void initialize() override;
 
   auto findOneByShip(const Uuid shipDbId) const -> AiBehavior;
+
+  void save(const AiBehavior &behavior);
 
   private:
   void fetchAiTargets(const Uuid shipDbId, AiBehavior &out) const;
