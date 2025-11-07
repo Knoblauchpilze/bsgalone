@@ -23,6 +23,12 @@ void DataContext::setTargetIndex(const int targetIndex)
   }
 }
 
+void DataContext::clearTargetIndex()
+{
+  m_targetIndex.reset();
+  m_changed = true;
+}
+
 bool DataContext::changed() const
 {
   return m_changed;
