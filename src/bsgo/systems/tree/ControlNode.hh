@@ -12,7 +12,7 @@ class ControlNode : public INode
   ~ControlNode() override = default;
 
   void addChild(INodePtr node);
-  void reset() override;
+  void reset(DataContext &data) override;
 
   protected:
   std::vector<INodePtr> m_children{};

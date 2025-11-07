@@ -15,7 +15,7 @@ class ConditionNode : public INode
   ~ConditionNode() override = default;
 
   auto tick(const BehaviorData &data) -> NodeState override;
-  void reset() override;
+  void reset(DataContext &data) override;
 
   private:
   Condition m_condition;

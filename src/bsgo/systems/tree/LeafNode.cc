@@ -15,7 +15,7 @@ auto LeafNode::tick(const BehaviorData &data) -> NodeState
   return m_state;
 }
 
-void LeafNode::reset()
+void LeafNode::reset(DataContext & /*data*/)
 {
   m_state = NodeState::IDLE;
 }

@@ -12,11 +12,11 @@ void ControlNode::addChild(INodePtr node)
   m_children.push_back(std::move(node));
 }
 
-void ControlNode::reset()
+void ControlNode::reset(DataContext &data)
 {
   for (const auto &child : m_children)
   {
-    child->reset();
+    child->reset(data);
   }
 }
 
