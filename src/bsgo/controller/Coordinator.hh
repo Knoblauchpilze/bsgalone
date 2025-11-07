@@ -45,7 +45,7 @@ class Coordinator : public core::CoreObject
                  const Status &status,
                  const std::optional<chrono::TickDuration> &jumpTime,
                  const std::optional<chrono::TickDuration> &threatJumpTime);
-  void addAi(const Uuid ent, INodePtr behavior);
+  void addAi(const Uuid ent, INodePtr behavior, DataContext context);
   void addShipClass(const Uuid ent, const ShipClass &shipClass);
   void addName(const Uuid ent, const std::string &name);
   void addNetworkSync(const Uuid ent, const std::unordered_set<ComponentType> &toSync);
