@@ -21,8 +21,12 @@ class INode : public core::CoreObject
   /// @return - the state of the node.
   virtual auto tick(const BehaviorData &data) -> NodeState = 0;
 
-  /// @brief - Reset the node to its initial state.
-  virtual void reset() = 0;
+  /// @brief - Reset the node to its initial state. The data context
+  /// is passed to allow nodes to:
+  ///   - clear/update information stored in the context
+  ///   - use the information to reset their internal state
+  /// @param data - the context used to tick the node
+  virtual void reset(DataContext &data) = 0;
 };
 
 using INodePtr = std::unique_ptr<INode>;

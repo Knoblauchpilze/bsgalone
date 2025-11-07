@@ -18,6 +18,6 @@ auto ConditionNode::tick(const BehaviorData &data) -> NodeState
   return NodeState::FAILED;
 }
 
-void ConditionNode::reset() {}
+void ConditionNode::reset(DataContext & /*data*/) {}
 
 } // namespace bsgo

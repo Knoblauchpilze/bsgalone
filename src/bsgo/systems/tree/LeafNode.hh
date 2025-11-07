@@ -12,7 +12,7 @@ class LeafNode : public INode
   ~LeafNode() override = default;
 
   auto tick(const BehaviorData &data) -> NodeState override;
-  void reset() override;
+  void reset(DataContext &data) override;
 
   protected:
   NodeState m_state{NodeState::IDLE};
