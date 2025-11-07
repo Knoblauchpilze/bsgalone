@@ -14,6 +14,7 @@ class DataContext
 
   auto tryGetTargetIndex() const -> std::optional<int>;
   void setTargetIndex(const int targetIndex);
+  void clearTargetIndex();
 
   bool changed() const;
   void markAsSynced();
