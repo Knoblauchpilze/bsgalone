@@ -9,6 +9,7 @@ class DataContext
 {
   public:
   DataContext();
+  DataContext(const int targetIndex);
   ~DataContext() = default;
 
   auto tryGetTargetIndex() const -> std::optional<int>;

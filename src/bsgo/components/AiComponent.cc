@@ -3,9 +3,10 @@
 
 namespace bsgo {
 
-AiComponent::AiComponent(INodePtr behavior)
+AiComponent::AiComponent(INodePtr behavior, DataContext context)
   : AbstractComponent(ComponentType::AI)
   , m_behavior(std::move(behavior))
+  , m_context(std::move(context))
 {
   if (nullptr == m_behavior)
   {

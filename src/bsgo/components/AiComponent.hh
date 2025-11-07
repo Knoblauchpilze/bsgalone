@@ -10,7 +10,7 @@ namespace bsgo {
 class AiComponent : public AbstractComponent
 {
   public:
-  AiComponent(INodePtr behavior);
+  AiComponent(INodePtr behavior, DataContext context);
   ~AiComponent() override = default;
 
   auto behavior() -> INode &;

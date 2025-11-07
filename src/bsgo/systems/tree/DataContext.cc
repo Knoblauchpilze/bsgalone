@@ -5,6 +5,10 @@ namespace bsgo {
 
 DataContext::DataContext() {}
 
+DataContext::DataContext(const int targetIndex)
+  : m_targetIndex(targetIndex)
+{}
+
 auto DataContext::tryGetTargetIndex() const -> std::optional<int>
 {
   return m_targetIndex;

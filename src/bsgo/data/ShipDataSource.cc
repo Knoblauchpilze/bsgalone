@@ -192,7 +192,15 @@ void ShipDataSource::registerShipOwner(Coordinator &coordinator,
   if (!data.playerDbId)
   {
     entityMapper.registerShip(data.dbId, shipEntity);
-    coordinator.addAi(shipEntity, generateBehaviorTree(data));
+
+    if (!data.reachedTarget)
+    {
+      error("Failed to set up AI for ship " + str(data.dbId), "No target set for behavior");
+    }
+
+    DataContext context(*data.reachedTarget);
+
+    coordinator.addAi(shipEntity, generateBehaviorTree(data), std::move(context));
     return;
   }
 
@@ -253,7 +261,6 @@ auto ShipDataSource::generateBehaviorTree(const PlayerShipData &data) const -> I
 {
   auto idleSequence = std::make_unique<SequenceNode>();
 
-  // TODO: We should handle the reached target
   for (std::size_t id = 0u; id < data.aiTargets.size(); ++id)
   {
     auto targetNode = std::make_unique<TargetNode>(data.aiTargets[id], static_cast<int>(id));
