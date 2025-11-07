@@ -22,6 +22,8 @@ class TargetNode : public LeafNode
   private:
   int m_index{};
   Eigen::Vector3f m_target{};
+
+  void determineCompletionState(DataContext &context);
 };
 
 } // namespace bsgo

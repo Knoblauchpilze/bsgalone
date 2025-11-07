@@ -14,16 +14,8 @@ TargetNode::TargetNode(const Eigen::Vector3f &target, const int index)
 
 void TargetNode::run(const BehaviorData &data)
 {
-  if (NodeState::IDLE == m_state)
-  {
-    verbose("Trying to reach " + str(m_target));
-    start();
-    // When we first execute the node we need to indicate that a new target
-    // is now active in the context. This allows external listeners to be
-    // aware that the target changed. It can be used for example to send the
-    // information to client applications.
-    data.context.setTargetIndex(m_index);
-  }
+  determineCompletionState(data.context);
+
   if (NodeState::RUNNING != m_state)
   {
     return;
@@ -35,6 +27,23 @@ void TargetNode::run(const BehaviorData &data)
     verbose("Reached target " + str(m_target));
     finish();
   }
+}
+
+void TargetNode::determineCompletionState(DataContext &context)
+{
+  if (NodeState::IDLE != m_state)
+  {
+    return;
+  }
+
+  verbose("Trying to reach " + str(m_target));
+  start();
+
+  // When we first execute the node we need to indicate that a new target
+  // is now active in the context. This allows external listeners to be
+  // aware that the target changed. It can be used for example to send the
+  // information to client applications.
+  context.setTargetIndex(m_index);
 }
 
 } // namespace bsgo
