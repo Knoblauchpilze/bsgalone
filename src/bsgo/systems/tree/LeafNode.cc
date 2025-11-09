@@ -15,9 +15,10 @@ auto LeafNode::tick(const BehaviorData &data) -> NodeState
   return m_state;
 }
 
-void LeafNode::reset(DataContext & /*data*/)
+void LeafNode::reset(DataContext &data)
 {
   m_state = NodeState::IDLE;
+  resetInternal(data);
 }
 
 void LeafNode::start()
@@ -33,6 +34,11 @@ void LeafNode::fail()
 void LeafNode::finish()
 {
   m_state = NodeState::SUCCESS;
+}
+
+void LeafNode::resetInternal(DataContext & /*data*/)
+{
+  // Intentionally empty.
 }
 
 } // namespace bsgo

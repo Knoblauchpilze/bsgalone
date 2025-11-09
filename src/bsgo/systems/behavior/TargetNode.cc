@@ -29,6 +29,17 @@ void TargetNode::run(const BehaviorData &data)
   }
 }
 
+void TargetNode::resetInternal(DataContext &data)
+{
+  // Clearing the data context guarantees that the next execution of the
+  // `determineCompletionState` method will not use the current target as
+  // a sign that this target was already reached.
+  // Note: this means that we also override the progress of any other node
+  // relying on this target. We could have some scoping/namespace mechanism
+  // if behavior trees become more complex.
+  data.clearTargetIndex();
+}
+
 void TargetNode::determineCompletionState(DataContext &context)
 {
   if (NodeState::IDLE != m_state)
@@ -36,7 +47,15 @@ void TargetNode::determineCompletionState(DataContext &context)
     return;
   }
 
-  verbose("Trying to reach " + str(m_target));
+  const auto maybeTargetIndex = context.tryGetTargetIndex();
+  if (maybeTargetIndex && *maybeTargetIndex > m_index)
+  {
+    verbose("Target was already reached, setting node to succesful");
+    finish();
+    return;
+  }
+
+  verbose("Trying to reach " + str(m_target) + ", with index " + std::to_string(m_index));
   start();
 
   // When we first execute the node we need to indicate that a new target

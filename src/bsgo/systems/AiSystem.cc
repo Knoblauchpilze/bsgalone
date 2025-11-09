@@ -46,10 +46,10 @@ void AiSystem::triggerAiBehaviorSync(Entity &entity) const
   const auto entityDbId = entity.dbComp().dbId();
   auto out              = std::make_unique<AiBehaviorSyncMessage>(entityDbId);
 
-  const auto targetIndex = aiComp.dataContext().tryGetTargetIndex();
-  if (targetIndex)
+  const auto maybeTargetIndex = aiComp.dataContext().tryGetTargetIndex();
+  if (maybeTargetIndex)
   {
-    out->setTargetIndex(*targetIndex);
+    out->setTargetIndex(*maybeTargetIndex);
   }
 
   pushInternalMessage(std::move(out));
