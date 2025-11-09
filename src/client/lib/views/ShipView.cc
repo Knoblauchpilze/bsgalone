@@ -6,11 +6,18 @@
 
 namespace pge {
 
-ShipView::ShipView(bsgo::CoordinatorShPtr coordinator, bsgo::IMessageQueue *const outputMessageQueue)
+ShipView::ShipView(GameSessionShPtr gameSession,
+                   bsgo::CoordinatorShPtr coordinator,
+                   bsgo::IMessageQueue *const outputMessageQueue)
   : AbstractView("ship")
+  , m_gameSession(std::move(gameSession))
   , m_coordinator(std::move(coordinator))
   , m_outputMessageQueue(outputMessageQueue)
 {
+  if (nullptr == m_gameSession)
+  {
+    throw std::invalid_argument("Expected non null game session");
+  }
   if (nullptr == m_coordinator)
   {
     throw std::invalid_argument("Expected non null coordinator");

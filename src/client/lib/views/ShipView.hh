@@ -4,6 +4,7 @@
 #include "AbstractView.hh"
 #include "Coordinator.hh"
 #include "Entity.hh"
+#include "GameSession.hh"
 #include "IMessageQueue.hh"
 #include "SystemData.hh"
 #include "TimeUtils.hh"
@@ -18,7 +19,9 @@ namespace pge {
 class ShipView : public AbstractView
 {
   public:
-  ShipView(bsgo::CoordinatorShPtr coordinator, bsgo::IMessageQueue *const outputMessageQueue);
+  ShipView(GameSessionShPtr gameSession,
+           bsgo::CoordinatorShPtr coordinator,
+           bsgo::IMessageQueue *const outputMessageQueue);
   ~ShipView() override = default;
 
   auto getPlayerShip() const -> bsgo::Entity;
@@ -59,6 +62,7 @@ class ShipView : public AbstractView
   void handleMessageInternal(const bsgo::IMessage &message) override;
 
   private:
+  GameSessionShPtr m_gameSession{};
   bsgo::CoordinatorShPtr m_coordinator{};
   std::vector<bsgo::SystemData> m_systems{};
   bsgo::IMessageQueue *const m_outputMessageQueue{};
