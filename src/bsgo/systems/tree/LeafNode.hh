@@ -21,6 +21,14 @@ class LeafNode : public INode
   virtual void run(const BehaviorData &data) = 0;
   void fail();
   void finish();
+
+  /// @brief - Allows inheriting classes to specialize the reset behavior and
+  /// perform additional changes on their internal state or on the behavior
+  /// data. This method is guaranteed to be call whenever `reset` is called,
+  /// after the `LeafNode` base class has performed its reset.
+  /// The default implementation is empty but can be overloaded as needed.
+  /// @param data - the data as passed to the `reset` method
+  virtual void resetInternal(DataContext &data);
 };
 
 } // namespace bsgo

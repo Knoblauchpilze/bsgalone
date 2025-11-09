@@ -19,6 +19,14 @@ class TargetNode : public LeafNode
   protected:
   void run(const BehaviorData &data) override;
 
+  /// @brief - Override allowing to clear the reached target from the data context.
+  /// This will make sure that the next execution of the node will get a chance to
+  /// check whether it should execute itself.
+  /// If a behavior tree contains several such nodes, the clearing of the reached
+  /// target will be triggered multiple times. This is ok.
+  /// @param data - the context containing the target
+  void resetInternal(DataContext &data) override;
+
   private:
   int m_index{};
   Eigen::Vector3f m_target{};
