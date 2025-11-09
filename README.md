@@ -35,6 +35,7 @@ As of the time of writing, the game offers:
 - a working health/power system to make fighting the other players/AIs slightly challenging
 - a mining system where the player can accumulate resources to buy more gear for their ships
 - clear separation of concerns where the client applications do not access the DB
+- dynamic evolution of systems with periodic respawns of dead entities
 
 ## Limitations
 
@@ -42,7 +43,6 @@ Some known limitations:
 
 - 2D game
 - no collisions
-- no dynamic evolution of systems (once AIs or asteroids are killed they don't respawn until a server restart)
 - limited content in the systems
 - various edge cases where the server will crash
 
