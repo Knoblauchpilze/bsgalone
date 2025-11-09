@@ -5,6 +5,7 @@
 #include "Faction.hh"
 #include "LoadingTransition.hh"
 #include "Screen.hh"
+#include "TimeStep.hh"
 #include "Uuid.hh"
 #include <memory>
 #include <optional>
@@ -28,6 +29,8 @@ class GameSession : public core::CoreObject
 
   void onPlayerLoggedIn(const bsgo::Uuid playerDbId);
   void onPlayerLoggedOut();
+
+  void onTimeStepReceived(const chrono::TimeStep &timeStep);
 
   void setPlayerFaction(const bsgo::Faction faction);
 
@@ -53,6 +56,14 @@ class GameSession : public core::CoreObject
   /// If no player is logged in or if the system is not defined, an error is raised.
   auto getSystemDbId() const -> bsgo::Uuid;
 
+  /// @brief - Returns true whenever the time step for the current system is set.
+  /// It allows to safely call getTimeStep.
+  bool hasTimeStep() const;
+
+  /// @brief - Returns the time step attached to the system the player is currently in.
+  /// If no time step is defined an error is raised.
+  auto getTimeStep() const -> chrono::TimeStep;
+
   /// @brief - Returns true whenever the DB identifier of the active ship for the
   /// player currently logged in is set. This allows to safely call getPlayerActiveShipDbId.
   /// When this method returns false, calling getPlayerActiveShipDbId will raise an
@@ -77,6 +88,11 @@ class GameSession : public core::CoreObject
   /// in. It is populated when the player logs in and changed when the player jumps
   /// to another system.
   std::optional<bsgo::Uuid> m_systemDbId{};
+
+  /// @brief - if defined, the time step of the system the player is currently in.
+  /// It is populated when the player undocks or jumps to another system.
+  /// It can be used to convert game duration in ticks to real world seconds.
+  std::optional<chrono::TimeStep> m_timeStep{};
 
   /// @brief - if defined, the DB identifier of the active ship for the player. It
   /// is not defined when the player initially logs in. It gets assigned when the
