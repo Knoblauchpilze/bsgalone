@@ -10,4 +10,5 @@ target_sources (client_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/ScreenCommon.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ShipItemUtils.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SlotComponentUtils.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/TimeStepUtils.cc
 	)
