@@ -1,16 +1,16 @@
 
 add_executable (unitTests)
 
-target_sources (unitTests PRIVATE
-	${CMAKE_CURRENT_SOURCE_DIR}/main.cc
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/bsgo
+	)
+
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/client
 	)
 
 add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/helpers
-	)
-
-add_subdirectory (
-	${CMAKE_CURRENT_SOURCE_DIR}/bsgo
 	)
 
 add_subdirectory (
@@ -19,6 +19,10 @@ add_subdirectory (
 
 add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/time
+	)
+
+target_sources (unitTests PRIVATE
+	${CMAKE_CURRENT_SOURCE_DIR}/main.cc
 	)
 
 target_include_directories (unitTests PUBLIC
@@ -32,4 +36,5 @@ target_link_libraries (unitTests
 	bsgo_lib
 	pge_lib
 	time_lib
+	client_lib
 	)
