@@ -350,6 +350,7 @@ void Game::onPlayerKilled()
 void Game::onSystemDataReceived(const bsgo::SystemTickData &systemData)
 {
   info("Received current tick " + systemData.currentTick.str());
+  m_gameSession->onTimeStepReceived(systemData.step);
   m_timeManager = std::make_unique<chrono::TimeManager>(systemData.currentTick, systemData.step);
 }
 

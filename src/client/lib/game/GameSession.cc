@@ -133,7 +133,17 @@ void GameSession::onPlayerLoggedOut()
   m_playerDbId.reset();
   m_faction.reset();
   m_systemDbId.reset();
+  m_timeStep.reset();
   m_playerShipDbId.reset();
+}
+
+void GameSession::onTimeStepReceived(const chrono::TimeStep &timeStep)
+{
+  const auto oneSecond = chrono::Duration::fromSeconds(1.0f);
+  const auto ticks     = timeStep.count(oneSecond);
+
+  debug("Received new time step, 1s = " + ticks.str() + " tick(s)");
+  m_timeStep = timeStep;
 }
 
 void GameSession::setPlayerFaction(const bsgo::Faction faction)
@@ -184,6 +194,21 @@ auto GameSession::getSystemDbId() const -> bsgo::Uuid
   }
 
   return *m_systemDbId;
+}
+
+bool GameSession::hasTimeStep() const
+{
+  return m_timeStep.has_value();
+}
+
+auto GameSession::getTimeStep() const -> chrono::TimeStep
+{
+  if (!m_timeStep)
+  {
+    error("Failed to get time step", "No time step defined");
+  }
+
+  return *m_timeStep;
 }
 
 bool GameSession::hasPlayerActiveShipDbId() const
