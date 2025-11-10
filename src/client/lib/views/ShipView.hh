@@ -7,7 +7,6 @@
 #include "GameSession.hh"
 #include "IMessageQueue.hh"
 #include "SystemData.hh"
-#include "TimeUtils.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
 #include <memory>
@@ -30,6 +29,8 @@ class ShipView : public AbstractView
   bool isReady() const noexcept override;
   void reset() override;
 
+  auto gameSession() const -> const GameSession &;
+
   bool hasTarget() const;
   auto getPlayerTarget() const -> std::optional<bsgo::Entity>;
 
@@ -51,7 +52,7 @@ class ShipView : public AbstractView
   struct JumpData
   {
     std::string systemName{};
-    core::Duration jumpTime{};
+    chrono::TickDuration jumpTime{};
   };
   auto getJumpData() const -> JumpData;
 

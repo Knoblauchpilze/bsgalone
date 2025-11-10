@@ -57,6 +57,11 @@ void ShipView::reset()
   m_playerShipEntityId.reset();
 }
 
+auto ShipView::gameSession() const -> const GameSession &
+{
+  return *m_gameSession;
+}
+
 bool ShipView::hasTarget() const
 {
   return getPlayerTarget().has_value();
@@ -246,23 +251,18 @@ auto ShipView::getJumpData() const -> JumpData
     error("Expected to have a system to jump to");
   }
 
-  JumpData out{};
-
   const auto maybeSystemName = findSystemName(m_systems, *m_systemToJumpTo);
   if (!maybeSystemName)
   {
     error("Failed to find system name for " + bsgo::str(*m_systemToJumpTo));
   }
-  out.systemName = *maybeSystemName;
 
   const auto ship = getPlayerShip();
-  // TODO: We should not convert back to time.
-  constexpr auto MILLIS_IN_ONE_SECOND = 1000.0f;
-  const auto jumpTime                 = core::toMilliseconds(MILLIS_IN_ONE_SECOND
-                                             * ship.statusComp().getCurrentJumpTime().toSeconds());
-  out.jumpTime                        = jumpTime;
 
-  return out;
+  return JumpData{
+    .systemName = *maybeSystemName,
+    .jumpTime   = ship.statusComp().getCurrentJumpTime(),
+  };
 }
 
 bool ShipView::isInThreat() const

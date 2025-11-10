@@ -6,6 +6,8 @@
 #include "MessageListenerWrapper.hh"
 #include "ScreenCommon.hh"
 #include "StringUtils.hh"
+#include "TimeStepUtils.hh"
+#include "TimeUtils.hh"
 
 namespace pge {
 
@@ -163,6 +165,17 @@ void ShipStatusUiHandler::updateThreatPanel()
   m_threatLabel->update();
 }
 
+namespace {
+auto convertJumpTimeToMilliseconds(const chrono::TickDuration &jumpTime,
+                                   const chrono::TimeStep &timeStep) -> core::Duration
+{
+  const float ms = convertTickToMilliseconds(jumpTime, timeStep);
+  // A bit of precision is lost here but it's below a millisecond which is
+  // fine for the UI purposes.
+  return core::toMilliseconds(static_cast<int>(std::floor(ms)));
+}
+} // namespace
+
 void ShipStatusUiHandler::updateJumpPanel()
 {
   const auto jumping = m_shipView->isJumping();
@@ -177,11 +190,14 @@ void ShipStatusUiHandler::updateJumpPanel()
     error("Failed to process jump time with no registered jump");
   }
 
-  const auto data = m_shipView->getJumpData();
+  const auto data     = m_shipView->getJumpData();
+  const auto jumpTime = convertJumpTimeToMilliseconds(data.jumpTime,
+                                                      m_shipView->gameSession().getTimeStep());
+
   m_jumpDestination->setText(data.systemName);
 
   const auto elapsedSinceJumpStarted = core::now() - *m_jumpStartTime;
-  const auto remainingJumpTime       = data.jumpTime - elapsedSinceJumpStarted;
+  const auto remainingJumpTime       = jumpTime - elapsedSinceJumpStarted;
 
   m_jumpTime->setText(core::durationToPrettyString(remainingJumpTime));
 }
