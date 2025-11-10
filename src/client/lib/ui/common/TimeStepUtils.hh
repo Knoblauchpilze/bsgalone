@@ -3,10 +3,11 @@
 
 #include "TickDuration.hh"
 #include "TimeStep.hh"
+#include "TimeUtils.hh"
 
 namespace pge {
 
-auto convertTickToMilliseconds(const chrono::TickDuration &elapsed,
-                               const chrono::TimeStep &timeStep) -> float;
+auto convertTickToDuration(const chrono::TickDuration &elapsed, const chrono::TimeStep &timeStep)
+  -> core::Duration;
 
 }
