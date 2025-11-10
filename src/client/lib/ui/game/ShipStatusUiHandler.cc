@@ -165,17 +165,6 @@ void ShipStatusUiHandler::updateThreatPanel()
   m_threatLabel->update();
 }
 
-namespace {
-auto convertJumpTimeToMilliseconds(const chrono::TickDuration &jumpTime,
-                                   const chrono::TimeStep &timeStep) -> core::Duration
-{
-  const float ms = convertTickToMilliseconds(jumpTime, timeStep);
-  // A bit of precision is lost here but it's below a millisecond which is
-  // fine for the UI purposes.
-  return core::toMilliseconds(static_cast<int>(std::floor(ms)));
-}
-} // namespace
-
 void ShipStatusUiHandler::updateJumpPanel()
 {
   const auto jumping = m_shipView->isJumping();
@@ -191,8 +180,8 @@ void ShipStatusUiHandler::updateJumpPanel()
   }
 
   const auto data     = m_shipView->getJumpData();
-  const auto jumpTime = convertJumpTimeToMilliseconds(data.jumpTime,
-                                                      m_shipView->gameSession().getTimeStep());
+  const auto jumpTime = convertTickToDuration(data.jumpTime,
+                                              m_shipView->gameSession().getTimeStep());
 
   m_jumpDestination->setText(data.systemName);
 
