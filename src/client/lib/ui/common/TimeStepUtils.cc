@@ -3,8 +3,8 @@
 
 namespace pge {
 
-auto convertTickToSeconds(const chrono::TickDuration &elapsed, const chrono::TimeStep &timeStep)
-  -> float
+auto convertTickToMilliseconds(const chrono::TickDuration &elapsed,
+                               const chrono::TimeStep &timeStep) -> float
 {
   const auto oneSecond        = chrono::Duration::fromSeconds(1.0f);
   const auto ticksInOneSecond = timeStep.count(oneSecond);
@@ -13,7 +13,9 @@ auto convertTickToSeconds(const chrono::TickDuration &elapsed, const chrono::Tim
   // - ticksInOnSecond as a dimension of: [Tick][Second]^-1
   // The result of the division has a dimension of:
   // [Tick] / ([Tick][Second]^-1) = [Second]
-  return elapsed / ticksInOneSecond;
+  // The dimensionless constant converts from seconds to milliseconds.
+  constexpr auto MILLIS_IN_ONE_SECOND = 1000.0f;
+  return MILLIS_IN_ONE_SECOND * (elapsed / ticksInOneSecond);
 }
 
 } // namespace pge

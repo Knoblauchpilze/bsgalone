@@ -6,7 +6,7 @@
 
 namespace pge {
 
-auto convertTickToSeconds(const chrono::TickDuration &elapsed, const chrono::TimeStep &timeStep)
-  -> float;
+auto convertTickToMilliseconds(const chrono::TickDuration &elapsed,
+                               const chrono::TimeStep &timeStep) -> float;
 
 }
