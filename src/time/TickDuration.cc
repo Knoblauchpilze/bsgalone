@@ -95,12 +95,6 @@ auto TickDuration::fromInt(const int duration) -> TickDuration
   return TickDuration(static_cast<float>(duration));
 }
 
-auto TickDuration::toSeconds() const -> float
-{
-  constexpr auto SECONDS_IN_TICK = 1.0f;
-  return m_elapsed * SECONDS_IN_TICK;
-}
-
 void TickDuration::validate()
 {
   if (m_elapsed < 0.0f)

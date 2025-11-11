@@ -4,6 +4,7 @@
 #include "ComputerData.hh"
 #include "PlayerComputerData.hh"
 #include "PlayerWeaponData.hh"
+#include "TimeStep.hh"
 #include "UiMenu.hh"
 #include "UiTextMenu.hh"
 #include "WeaponData.hh"
@@ -15,10 +16,13 @@ auto generateTextConfig(const std::string &name,
                         const Color &color = colors::WHITE,
                         const int margin   = DEFAULT_MARGIN) -> TextConfig;
 
-auto generateWeaponMenu(const bsgo::WeaponData &weapon) -> UiMenuPtr;
-auto generateWeaponMenu(const bsgo::PlayerWeaponData &weapon) -> UiMenuPtr;
-auto generateComputerMenu(const bsgo::ComputerData &computer) -> UiMenuPtr;
-auto generateComputerMenu(const bsgo::PlayerComputerData &computer) -> UiMenuPtr;
+auto generateWeaponMenu(const bsgo::WeaponData &weapon, const chrono::TimeStep &step) -> UiMenuPtr;
+auto generateWeaponMenu(const bsgo::PlayerWeaponData &weapon, const chrono::TimeStep &step)
+  -> UiMenuPtr;
+auto generateComputerMenu(const bsgo::ComputerData &computer, const chrono::TimeStep &step)
+  -> UiMenuPtr;
+auto generateComputerMenu(const bsgo::PlayerComputerData &computer, const chrono::TimeStep &step)
+  -> UiMenuPtr;
 
 struct InteractiveSection
 {

@@ -26,6 +26,8 @@ class PlayerView : public AbstractView
   bool isReady() const noexcept override;
   void reset() override;
 
+  auto gameSession() const -> const GameSession &;
+
   auto getPlayerFaction() const -> bsgo::Faction;
   auto getPlayerResources() const -> std::vector<bsgo::PlayerResourceData>;
   auto getPlayerWeapons() const -> std::vector<bsgo::PlayerWeaponData>;

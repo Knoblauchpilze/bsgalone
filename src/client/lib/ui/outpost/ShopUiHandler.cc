@@ -216,7 +216,8 @@ auto generatePriceMenus(const ShopItem &item) -> PriceMenu
 
 void ShopUiHandler::generateItemsMenus()
 {
-  const auto items = m_shopView->getShopItems();
+  const auto &gameSession = m_shopView->gameSession();
+  const auto items        = m_shopView->getShopItems();
 
   auto itemId = 0;
   for (const auto &item : items)
@@ -224,7 +225,7 @@ void ShopUiHandler::generateItemsMenus()
     ItemData data{.itemId = item.id(), .itemType = item.type()};
     m_itemsData.push_back(data);
 
-    auto itemSection = generateItemMenus(item);
+    auto itemSection = generateItemMenus(item, gameSession);
     m_items[itemId]->addMenu(std::move(itemSection));
 
     auto costsSection = generatePriceMenus(item);
@@ -251,17 +252,18 @@ void ShopUiHandler::generateItemsMenus()
   }
 }
 
-auto ShopUiHandler::generateItemMenus(const ShopItem &item) -> UiMenuPtr
+auto ShopUiHandler::generateItemMenus(const ShopItem &item, const GameSession &gameSession)
+  -> UiMenuPtr
 {
   auto menu = generateBlankVerticalMenu();
   if (item.weapon)
   {
-    auto itemMenu = generateWeaponMenu(*item.weapon);
+    auto itemMenu = generateWeaponMenu(*item.weapon, gameSession.getTimeStep());
     menu->addMenu(std::move(itemMenu));
   }
   else if (item.computer)
   {
-    auto itemMenu = generateComputerMenu(*item.computer);
+    auto itemMenu = generateComputerMenu(*item.computer, gameSession.getTimeStep());
     menu->addMenu(std::move(itemMenu));
   }
 
