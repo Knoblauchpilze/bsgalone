@@ -131,6 +131,7 @@ void LoadingMessagesConsumer::handleLoginTransition(const LoadingStartedMessage 
   handleComputersLoading(message);
   handleShipsLoading(message);
   handleSystemsLoading(message);
+  handleSystemTickLoading(message);
   handlePlayerResourcesLoading(message);
   handlePlayerShipsLoading(message);
   handlePlayerComputersLoading(message);
