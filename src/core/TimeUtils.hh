@@ -25,7 +25,7 @@ auto now() noexcept -> TimeStamp;
 /// milliseconds.
 /// @param ms - the number of milliseconds to convert.
 /// @return - a duration representing the input number of milliseconds.
-auto toMilliseconds(const int ms) noexcept -> Duration;
+auto fromMilliseconds(const int ms) noexcept -> Duration;
 
 /// @brief - Used to convert the input duration to the corresponding floating
 /// point number of milliseconds.

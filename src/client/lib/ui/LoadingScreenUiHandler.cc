@@ -48,7 +48,7 @@ void LoadingScreenUiHandler::updateUi()
   const auto now     = core::now();
   const auto elapsed = now - *m_lastTextUpdate;
 
-  const auto TEXT_UPDATE_INTERVAL = core::toMilliseconds(250);
+  const auto TEXT_UPDATE_INTERVAL = core::fromMilliseconds(250);
   if (elapsed < TEXT_UPDATE_INTERVAL)
   {
     return;

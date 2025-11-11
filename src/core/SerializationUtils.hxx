@@ -62,7 +62,7 @@ inline bool deserialize(std::istream &in, Duration &d)
 {
   std::chrono::system_clock::rep ticks;
 
-  d = core::toMilliseconds(0);
+  d = core::fromMilliseconds(0);
   in.read(reinterpret_cast<char *>(&ticks), sizeof(ticks));
   if (in)
   {
