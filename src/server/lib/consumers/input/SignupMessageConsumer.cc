@@ -1,7 +1,5 @@
 
 #include "SignupMessageConsumer.hh"
-#include "LoadingFinishedMessage.hh"
-#include "LoadingStartedMessage.hh"
 
 namespace bsgo {
 
