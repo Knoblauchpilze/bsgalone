@@ -20,9 +20,16 @@ inline auto toMilliseconds(const int ms) noexcept -> Duration
 
 inline auto toMilliseconds(const Duration &d) noexcept -> float
 {
-  const auto s  = std::chrono::duration_cast<Milliseconds>(d);
-  const auto ms = s.count();
+  const auto time = std::chrono::duration_cast<Milliseconds>(d);
+  const auto ms   = time.count();
   return 1.0f * ms;
+}
+
+inline auto toSeconds(const Duration &d) noexcept -> float
+{
+  const auto ms                       = toMilliseconds(d);
+  constexpr auto MILLIS_IN_ONE_SECOND = 1000.0f;
+  return 1.0f * ms / MILLIS_IN_ONE_SECOND;
 }
 
 inline auto timeToString(const TimeStamp &t) noexcept -> std::string

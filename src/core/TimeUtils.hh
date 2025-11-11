@@ -33,6 +33,12 @@ auto toMilliseconds(const int ms) noexcept -> Duration;
 /// @return - the number of milliseconds in the input duration.
 auto toMilliseconds(const Duration &d) noexcept -> float;
 
+/// @brief - Used to convert the input duration to the corresponding floating
+/// point number of seconds.
+/// @param d - the duration to convert.
+/// @return - the number of seconds in the input duration.
+auto toSeconds(const Duration &d) noexcept -> float;
+
 /// @brief - Converts a timestamp to a human readable string.
 /// @param t - the time to convert.
 /// @return - a string representing this time.
