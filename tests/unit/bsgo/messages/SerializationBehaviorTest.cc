@@ -121,7 +121,7 @@ TEST(Unit_Bsgo_Serialization_Behavior, Nominal_VelocityMessage)
 
 TEST(Unit_Bsgo_Serialization_Behavior, Nominal_Duration)
 {
-  const core::Duration expected = core::toMilliseconds(1234);
+  const core::Duration expected = core::fromMilliseconds(1234);
 
   const auto [success, actual] = serializeAndDeserialize(expected, false);
 
@@ -394,7 +394,7 @@ TEST(Unit_Bsgo_Serialization_Behavior, Failure_VelocityMessage)
 
 TEST(Unit_Bsgo_Serialization_Behavior, Failure_Duration)
 {
-  const core::Duration value = core::toMilliseconds(1234);
+  const core::Duration value = core::fromMilliseconds(1234);
 
   const auto [success, _] = serializeAndDeserialize(value, true);
 

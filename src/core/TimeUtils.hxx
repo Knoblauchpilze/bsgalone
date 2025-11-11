@@ -13,7 +13,7 @@ inline auto now() noexcept -> TimeStamp
   return std::chrono::system_clock::now();
 }
 
-inline auto toMilliseconds(const int ms) noexcept -> Duration
+inline auto fromMilliseconds(const int ms) noexcept -> Duration
 {
   return Milliseconds(ms);
 }

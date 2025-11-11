@@ -19,7 +19,7 @@ auto convertTickToDuration(const chrono::TickDuration &elapsed, const chrono::Ti
 
   // A bit of precision is lost here but it's below a millisecond. This is only
   // availale in the client and used for the UI so this is fine.
-  return core::toMilliseconds(ms);
+  return core::fromMilliseconds(ms);
 }
 
 } // namespace pge
