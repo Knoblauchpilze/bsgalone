@@ -47,8 +47,9 @@ ShopView::ShopView(GameSessionShPtr gameSession)
 
 bool ShopView::isReady() const noexcept
 {
-  return m_gameSession->hasPlayerDbId() && !m_resources.empty() && !m_computers.empty()
-         && !m_weapons.empty() && !m_ships.empty() && !m_playerResources.empty();
+  return m_gameSession->hasPlayerDbId() && m_gameSession->hasTimeStep() && !m_resources.empty()
+         && !m_computers.empty() && !m_weapons.empty() && !m_ships.empty()
+         && !m_playerResources.empty();
 }
 
 void ShopView::reset()
@@ -58,6 +59,11 @@ void ShopView::reset()
   m_weapons.clear();
   m_ships.clear();
   m_playerResources.clear();
+}
+
+auto ShopView::gameSession() const -> const GameSession &
+{
+  return *m_gameSession;
 }
 
 namespace {

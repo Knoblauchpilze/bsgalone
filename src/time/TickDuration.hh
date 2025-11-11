@@ -69,14 +69,6 @@ class TickDuration
   /// @return - the duration
   static auto fromInt(const int duration) -> TickDuration;
 
-  /// TODO: This should be removed.
-  /// @brief - Temporary method to convert this duration to real seconds. This
-  /// is intended as a workaround while the core game logic is migrated to use
-  /// Ticks and TickDuration instead of core::Duration.
-  /// This method assumes that a `Tick` is equivalent to 100ms.
-  /// @return - the duration expressed in seconds.
-  auto toSeconds() const -> float;
-
   /// @brief - Tolerance used when comparing durations. Any difference smaller than this
   /// threshold will not register as a meaningful difference.
   static const float TOLERANCE;

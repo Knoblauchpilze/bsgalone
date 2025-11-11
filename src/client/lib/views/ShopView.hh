@@ -41,6 +41,8 @@ class ShopView : public AbstractView
   bool isReady() const noexcept override;
   void reset() override;
 
+  auto gameSession() const -> const GameSession &;
+
   auto getShopItems() const -> std::vector<ShopItem>;
   auto canPlayerAfford(const bsgo::Uuid id, const bsgo::Item &itemType) const
     -> bsgo::Affordability;

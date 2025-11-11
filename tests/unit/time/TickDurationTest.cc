@@ -316,16 +316,6 @@ TEST(Unit_Chrono_TickDuration, FromInt)
   EXPECT_EQ(lhs, rhs);
 }
 
-/// TODO: This should be removed.
-TEST(Unit_Chrono_TickDuration, ConvertsToSeconds)
-{
-  TickDuration d(1.45f);
-  EXPECT_FLOAT_EQ(d.toSeconds(), 1.45f);
-
-  d = TickDuration(18971.047405f);
-  EXPECT_FLOAT_EQ(d.toSeconds(), 18971.047405f);
-}
-
 TEST(Unit_Chrono_TickDuration, Serialization_Nominal)
 {
   const TickDuration expected(48.9705f);

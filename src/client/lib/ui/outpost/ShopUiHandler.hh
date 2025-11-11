@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "GameSession.hh"
 #include "IUiHandler.hh"
 #include "UiMenu.hh"
 #include "UiTextMenu.hh"
@@ -46,7 +47,7 @@ class ShopUiHandler : public IUiHandler
   void generateResourcesMenus();
   void initializeLayout();
   void generateItemsMenus();
-  auto generateItemMenus(const ShopItem &item) -> UiMenuPtr;
+  auto generateItemMenus(const ShopItem &item, const GameSession &gameSession) -> UiMenuPtr;
 
   void onPurchaseRequest(const int itemId);
 };

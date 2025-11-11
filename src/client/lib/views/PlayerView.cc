@@ -27,7 +27,8 @@ bool PlayerView::isReady() const noexcept
 {
   // Computers and weapons are allowed to be empty in case the player
   // sells everything.
-  return m_gameSession->hasPlayerDbId() && !m_playerResources.empty() && !m_playerShips.empty();
+  return m_gameSession->hasPlayerDbId() && m_gameSession->hasTimeStep()
+         && !m_playerResources.empty() && !m_playerShips.empty();
 }
 
 void PlayerView::reset()
@@ -36,6 +37,11 @@ void PlayerView::reset()
   m_playerShips.clear();
   m_playerComputers.clear();
   m_playerWeapons.clear();
+}
+
+auto PlayerView::gameSession() const -> const GameSession &
+{
+  return *m_gameSession;
 }
 
 auto PlayerView::getPlayerFaction() const -> bsgo::Faction

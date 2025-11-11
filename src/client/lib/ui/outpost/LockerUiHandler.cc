@@ -272,12 +272,13 @@ void LockerUiHandler::generateResourcesMenus()
 
 void LockerUiHandler::generateLockerWeaponsMenus()
 {
-  auto id = 0;
+  const auto &gameSession = m_playerView->gameSession();
 
+  auto id            = 0;
   const auto weapons = m_playerView->getPlayerWeapons();
   for (const auto &weapon : weapons)
   {
-    auto details = generateWeaponMenu(weapon);
+    auto details = generateWeaponMenu(weapon, gameSession.getTimeStep());
     m_lockerWeapons[id]->addMenu(std::move(details));
 
     const auto itemId = static_cast<int>(m_lockerItemsData.size());
@@ -294,12 +295,13 @@ void LockerUiHandler::generateLockerWeaponsMenus()
 
 void LockerUiHandler::generateLockerComputersMenus()
 {
-  auto id = 0;
+  const auto &gameSession = m_playerView->gameSession();
 
+  auto id              = 0;
   const auto computers = m_playerView->getPlayerComputers();
   for (const auto &computer : computers)
   {
-    auto details = generateComputerMenu(computer);
+    auto details = generateComputerMenu(computer, gameSession.getTimeStep());
     m_lockerComputers[id]->addMenu(std::move(details));
 
     const auto itemId = static_cast<int>(m_lockerItemsData.size());
@@ -318,12 +320,13 @@ void LockerUiHandler::generateLockerComputersMenus()
 
 void LockerUiHandler::generateShipWeaponsMenus()
 {
-  auto id = 0;
+  const auto &gameSession = m_playerView->gameSession();
 
+  auto id            = 0;
   const auto weapons = m_shipDbView->getPlayerShipWeapons();
   for (const auto &weapon : weapons)
   {
-    auto details = generateWeaponMenu(weapon);
+    auto details = generateWeaponMenu(weapon, gameSession.getTimeStep());
     m_shipWeapons[id]->addMenu(std::move(details));
 
     const auto itemId = static_cast<int>(m_shipItemsData.size());
@@ -352,12 +355,13 @@ void LockerUiHandler::generateShipWeaponsMenus()
 
 void LockerUiHandler::generateShipComputersMenus()
 {
-  auto id = 0;
+  const auto &gameSession = m_playerView->gameSession();
 
+  auto id              = 0;
   const auto computers = m_shipDbView->getPlayerShipComputers();
   for (const auto &computer : computers)
   {
-    auto details = generateComputerMenu(computer);
+    auto details = generateComputerMenu(computer, gameSession.getTimeStep());
     m_shipComputers[id]->addMenu(std::move(details));
 
     const auto itemId = static_cast<int>(m_shipItemsData.size());
