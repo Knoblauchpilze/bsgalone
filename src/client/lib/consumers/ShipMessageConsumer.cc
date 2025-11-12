@@ -177,11 +177,8 @@ void ShipMessageConsumer::handleShipComponentsSync(const bsgo::ComponentSyncMess
              + bsgo::str(ship.transformComp().position()));
       }
 
-      if (!ship.owner.has_value())
-      {
-        info("override position from " + bsgo::str(ship.transformComp().position()) + " with "
-             + bsgo::str(*maybeShipPosition));
-      }
+      verbose("override position from " + bsgo::str(ship.transformComp().position()) + " with "
+              + bsgo::str(*maybeShipPosition));
 
       ship.transformComp().overridePosition(*maybeShipPosition);
     }
@@ -190,11 +187,8 @@ void ShipMessageConsumer::handleShipComponentsSync(const bsgo::ComponentSyncMess
   const auto maybeShipSpeed = message.tryGetSpeed();
   if (maybeShipSpeed)
   {
-    if (!ship.owner.has_value())
-    {
-      info("override speed from " + bsgo::str(ship.velocityComp().speed()) + " with "
-           + bsgo::str(*maybeShipSpeed));
-    }
+    verbose("override speed from " + bsgo::str(ship.velocityComp().speed()) + " with "
+            + bsgo::str(*maybeShipSpeed));
 
     ship.velocityComp().overrideSpeed(*maybeShipSpeed);
   }
@@ -202,11 +196,8 @@ void ShipMessageConsumer::handleShipComponentsSync(const bsgo::ComponentSyncMess
   const auto maybeShipAcceleration = message.tryGetAcceleration();
   if (maybeShipAcceleration)
   {
-    if (!ship.owner.has_value())
-    {
-      info("override acceleration from " + bsgo::str(ship.velocityComp().acceleration()) + " with "
-           + bsgo::str(*maybeShipAcceleration));
-    }
+    verbose("override acceleration from " + bsgo::str(ship.velocityComp().acceleration()) + " with "
+            + bsgo::str(*maybeShipAcceleration));
     ship.velocityComp().overrideAcceleration(*maybeShipAcceleration);
   }
 
