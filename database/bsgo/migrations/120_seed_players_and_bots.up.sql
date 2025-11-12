@@ -122,3 +122,11 @@ INSERT INTO player_weapon ("weapon", "player", "level")
     NULL,
     20
   );
+
+-- system: Munnin, ship: Jotunn
+INSERT INTO player_weapon ("weapon", "player", "level")
+  VALUES (
+    (SELECT id FROM weapon WHERE name = 'Medium range cannon'),
+    NULL,
+    20
+  );

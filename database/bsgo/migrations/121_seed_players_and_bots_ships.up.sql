@@ -117,7 +117,7 @@ INSERT INTO ship_weapon ("ship", "weapon", "slot")
     (SELECT ss.id FROM ship_slot AS ss LEFT JOIN ship AS s ON s.id = ss.ship WHERE s.name = 'Viper Mark II' AND ss.type = 'weapon' AND ss.x_pos = 0.0)
   );
 
--- player: munnin_cylon_war_raider, ship: Cylon Raider, system: Munnin
+-- player: cylon bot, ship: Cylon Raider, system: Munnin
 INSERT INTO player_ship ("ship", "player", "name", "active", "hull_points", "power_points", "x_pos", "y_pos", "z_pos")
   VALUES (
       (SELECT id FROM ship WHERE name = 'Cylon Raider'),
@@ -132,21 +132,21 @@ INSERT INTO player_ship ("ship", "player", "name", "active", "hull_points", "pow
   );
 INSERT INTO ship_system ("ship", "system", "docked")
   VALUES (
-    (SELECT id FROM player_ship WHERE player is NULL),
+    (SELECT id FROM player_ship WHERE name = 'AI Cylon Raider'),
     (SELECT id FROM system WHERE name = 'Munnin'),
     false
   );
 
 INSERT INTO ship_weapon ("ship", "weapon", "slot")
   VALUES (
-    (SELECT id FROM player_ship WHERE player is NULL),
+    (SELECT id FROM player_ship WHERE name = 'AI Cylon Raider'),
     (SELECT pw.id FROM player_weapon AS pw LEFT JOIN weapon AS w ON w.id = pw.weapon WHERE pw.player is NULL AND w.name = 'Medium range cannon'),
     (SELECT ss.id FROM ship_slot AS ss LEFT JOIN ship AS s ON s.id = ss.ship WHERE s.name = 'Cylon Raider' AND ss.type = 'weapon' AND ss.x_pos = -0.5)
   );
 
 INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
   VALUES (
-    (SELECT id FROM player_ship WHERE player is NULL),
+    (SELECT id FROM player_ship WHERE name = 'AI Cylon Raider'),
     0,
     3.0,
     10.0,
@@ -154,7 +154,7 @@ INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
   );
 INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
   VALUES (
-    (SELECT id FROM player_ship WHERE player is NULL),
+    (SELECT id FROM player_ship WHERE name = 'AI Cylon Raider'),
     1,
     4.0,
     -8.0,
@@ -162,7 +162,7 @@ INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
   );
 INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
   VALUES (
-    (SELECT id FROM player_ship WHERE player is NULL),
+    (SELECT id FROM player_ship WHERE name = 'AI Cylon Raider'),
     2,
     -7.0,
     -2.0,
@@ -170,7 +170,7 @@ INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
   );
 INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
   VALUES (
-    (SELECT id FROM player_ship WHERE player is NULL),
+    (SELECT id FROM player_ship WHERE name = 'AI Cylon Raider'),
     3,
     -5.0,
     6.0,
@@ -179,6 +179,56 @@ INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
 
 INSERT INTO ai_behaviors ("ship", "index")
   VALUES (
-    (SELECT id FROM player_ship WHERE player is NULL),
+    (SELECT id FROM player_ship WHERE name = 'Cylon Raider'),
+    0
+  );
+
+-- player: colonial bot, ship: Jotunn, system: Munnin
+INSERT INTO player_ship ("ship", "player", "name", "active", "hull_points", "power_points", "x_pos", "y_pos", "z_pos")
+  VALUES (
+      (SELECT id FROM ship WHERE name = 'Jotunn'),
+      NULL,
+      'AI Colonial Jotunn',
+      true,
+      1234.0,
+      98.7,
+      0.0,
+      0.0,
+      0.0
+  );
+INSERT INTO ship_system ("ship", "system", "docked")
+  VALUES (
+    (SELECT id FROM player_ship WHERE name = 'AI Colonial Jotunn'),
+    (SELECT id FROM system WHERE name = 'Munnin'),
+    false
+  );
+
+INSERT INTO ship_weapon ("ship", "weapon", "slot")
+  VALUES (
+    (SELECT id FROM player_ship WHERE name = 'AI Colonial Jotunn'),
+    (SELECT pw.id FROM player_weapon AS pw LEFT JOIN weapon AS w ON w.id = pw.weapon WHERE pw.player is NULL AND w.name = 'Medium range cannon'),
+    (SELECT ss.id FROM ship_slot AS ss LEFT JOIN ship AS s ON s.id = ss.ship WHERE s.name = 'Cylon Raider' AND ss.type = 'weapon' AND ss.x_pos = -0.5)
+  );
+
+INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
+  VALUES (
+    (SELECT id FROM player_ship WHERE name = 'AI Colonial Jotunn'),
+    0,
+    -7.0,
+    -6.0,
+    0.0
+  );
+INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
+  VALUES (
+    (SELECT id FROM player_ship WHERE name = 'AI Colonial Jotunn'),
+    1,
+    4.0,
+    8.0,
+    0.0
+  );
+
+INSERT INTO ai_behaviors ("ship", "index")
+  VALUES (
+    (SELECT id FROM player_ship WHERE name = 'AI Colonial Jotunn'),
     0
   );
