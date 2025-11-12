@@ -8,7 +8,8 @@ ComponentMessageConsumer::ComponentMessageConsumer(const bsgo::DatabaseEntityMap
                                                    bsgo::CoordinatorShPtr coordinator)
   : bsgo::AbstractMessageConsumer("component",
                                   {bsgo::MessageType::SLOT_COMPONENT_UPDATED,
-                                   bsgo::MessageType::WEAPON_COMPONENT_UPDATED})
+                                   bsgo::MessageType::WEAPON_COMPONENT_UPDATED,
+                                   bsgo::MessageType::AI_BEHAVIOR_SYNC})
   , m_entityMapper(entityMapper)
   , m_coordinator(std::move(coordinator))
 {}
@@ -22,6 +23,9 @@ void ComponentMessageConsumer::onMessageReceived(const bsgo::IMessage &message)
       break;
     case bsgo::MessageType::WEAPON_COMPONENT_UPDATED:
       handleWeaponUpdated(message.as<bsgo::WeaponComponentMessage>());
+      break;
+    case bsgo::MessageType::AI_BEHAVIOR_SYNC:
+      handleAiBehaviorUpdated(message.as<bsgo::AiBehaviorSyncMessage>());
       break;
     default:
       error("Unsupported message type " + bsgo::str(message.type()));
@@ -73,6 +77,43 @@ void ComponentMessageConsumer::handleWeaponUpdated(const bsgo::WeaponComponentMe
   }
 
   (*maybeWeapon)->setActive(message.isActive());
+}
+
+void ComponentMessageConsumer::handleAiBehaviorUpdated(
+  const bsgo::AiBehaviorSyncMessage &message) const
+{
+  const auto shipDbId = message.getShipDbId();
+
+  const auto maybeShip = m_entityMapper.tryGetShipEntityId(shipDbId);
+  if (!maybeShip)
+  {
+    warn("Failed to process AI behavior sync message for ship " + bsgo::str(shipDbId));
+    return;
+  }
+
+  auto ship = m_coordinator->getEntity(*maybeShip);
+  if (!ship.exists<bsgo::AiComponent>())
+  {
+    warn("Failed to process AI behavior sync for ship " + bsgo::str(shipDbId),
+         "Ship does not have an AI comp");
+    return;
+  }
+
+  auto &aiComp      = ship.aiComp();
+  auto &dataContext = aiComp.dataContext();
+
+  const auto maybeTargetIndex = message.tryGetTargetIndex();
+  if (maybeTargetIndex)
+  {
+    debug("ship " + bsgo::str(shipDbId) + " now has target index "
+          + std::to_string(*maybeTargetIndex));
+    dataContext.setTargetIndex(*maybeTargetIndex);
+  }
+  else
+  {
+    verbose("ship " + bsgo::str(shipDbId) + " does not have a target anymore");
+    dataContext.clearTargetIndex();
+  }
 }
 
 } // namespace pge
