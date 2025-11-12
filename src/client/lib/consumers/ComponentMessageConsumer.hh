@@ -2,6 +2,7 @@
 #pragma once
 
 #include "AbstractMessageConsumer.hh"
+#include "AiBehaviorSyncMessage.hh"
 #include "Coordinator.hh"
 #include "DatabaseEntityMapper.hh"
 #include "SlotComponentMessage.hh"
@@ -24,6 +25,7 @@ class ComponentMessageConsumer : public bsgo::AbstractMessageConsumer
 
   void handleComputerSlotUpdated(const bsgo::SlotComponentMessage &message) const;
   void handleWeaponUpdated(const bsgo::WeaponComponentMessage &message) const;
+  void handleAiBehaviorUpdated(const bsgo::AiBehaviorSyncMessage &message) const;
 };
 
 } // namespace pge
