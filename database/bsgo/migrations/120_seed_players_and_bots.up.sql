@@ -3,8 +3,15 @@
 -- PLAYERS --
 -------------
 -- player: colo
-INSERT INTO player ("name", "password", "faction")
-  VALUES ('colo', 'aze', 'colonial');
+INSERT INTO account ("name", "password")
+  VALUES ('colo', 'aze');
+
+INSERT INTO player ("account", "name", "faction")
+  VALUES (
+    (SELECT id FROM account WHERE name = 'colo')
+    'colo',
+    'colonial'
+  );
 
 INSERT INTO player_resource ("player", "resource", "amount")
   VALUES (
