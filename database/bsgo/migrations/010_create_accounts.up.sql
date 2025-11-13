@@ -1,0 +1,15 @@
+
+CREATE TABLE account (
+  id INTEGER GENERATED ALWAYS AS IDENTITY,
+  name TEXT NOT NULL,
+  password TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE,
+  PRIMARY KEY (id),
+  UNIQUE (name)
+);
+
+CREATE TRIGGER trigger_account_updated_at
+  BEFORE UPDATE OR INSERT ON account
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at();
