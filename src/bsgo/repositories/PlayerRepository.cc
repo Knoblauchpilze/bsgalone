@@ -38,16 +38,16 @@ WHERE
   id = $1
 )";
 
-constexpr auto FIND_ONE_BY_NAME_QUERY_NAME = "player_find_one_by_name";
-constexpr auto FIND_ONE_BY_NAME_QUERY      = R"(
+constexpr auto FIND_ONE_BY_ACCOUNT_QUERY_NAME = "player_find_one_by_account";
+constexpr auto FIND_ONE_BY_ACCOUNT_QUERY      = R"(
 SELECT
   id,
-  account,
+  name,
   faction
 FROM
   player
 WHERE
-  name = $1
+  account = $1
 )";
 
 constexpr auto FIND_SYSTEM_QUERY_NAME = "player_find_system";
@@ -76,7 +76,7 @@ void PlayerRepository::initialize()
   m_connection->prepare(FIND_ALL_QUERY_NAME, FIND_ALL_QUERY);
   m_connection->prepare(FIND_ALL_UNDOCKED_BY_SYSTEM_QUERY_NAME, FIND_ALL_UNDOCKED_BY_SYSTEM_QUERY);
   m_connection->prepare(FIND_ONE_QUERY_NAME, FIND_ONE_QUERY);
-  m_connection->prepare(FIND_ONE_BY_NAME_QUERY_NAME, FIND_ONE_BY_NAME_QUERY);
+  m_connection->prepare(FIND_ONE_BY_ACCOUNT_QUERY_NAME, FIND_ONE_BY_ACCOUNT_QUERY);
   m_connection->prepare(FIND_SYSTEM_QUERY_NAME, FIND_SYSTEM_QUERY);
   m_connection->prepare(UPDATE_PLAYER_QUERY_NAME, UPDATE_PLAYER_QUERY);
 }
@@ -135,32 +135,19 @@ auto PlayerRepository::findOneById(const Uuid player) const -> Player
   return out;
 }
 
-auto PlayerRepository::findOneByName(const std::string &name) const -> std::optional<Player>
+auto PlayerRepository::findOneByAccount(const Uuid account) const -> Player
 {
-  const auto query = [name](pqxx::nontransaction &work) {
-    return work.exec(pqxx::prepped{FIND_ONE_BY_NAME_QUERY_NAME}, pqxx::params{name});
+  const auto query = [account](pqxx::nontransaction &work) {
+    return work.exec(pqxx::prepped{FIND_ONE_BY_ACCOUNT_QUERY_NAME}, pqxx::params{toDbId(account)})
+      .one_row();
   };
-  const auto rows = m_connection->executeQuery(query);
-
-  if (rows.empty())
-  {
-    return {};
-  }
-
-  if (rows.size() != 1)
-  {
-    error("Expected to find only one player with name \"" + name + "\"");
-  }
+  const auto record = m_connection->executeQueryReturningSingleRow(query);
 
   Player out;
 
-  const auto &record = rows[0];
-  out.id             = fromDbId(record[0].as<int>());
-  if (!record[1].is_null())
-  {
-    out.account = fromDbId(record[1].as<int>());
-  }
-  out.name    = name;
+  out.id      = fromDbId(record[0].as<int>());
+  out.account = account;
+  out.name    = record[1].as<std::string>();
   out.faction = fromDbFaction(record[2].as<std::string>());
 
   return out;
