@@ -14,8 +14,8 @@ namespace bsgo {
 struct Player
 {
   Uuid id{};
+  std::optional<Uuid> account{};
   std::string name{};
-  std::string password{};
   Faction faction{};
 };
 
