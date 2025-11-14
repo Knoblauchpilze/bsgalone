@@ -29,7 +29,7 @@ WHERE
 constexpr auto FIND_ONE_QUERY_NAME = "player_find_one";
 constexpr auto FIND_ONE_QUERY      = "SELECT name, password, faction FROM player WHERE id = $1";
 
-constexpr auto FIND_ONE_BY_NAME_QUERY_NAME = "player_find_one_by_player";
+constexpr auto FIND_ONE_BY_NAME_QUERY_NAME = "player_find_one_by_name";
 constexpr auto FIND_ONE_BY_NAME_QUERY = "SELECT id, password, faction FROM player WHERE name = $1";
 
 constexpr auto FIND_SYSTEM_QUERY_NAME = "player_find_system";

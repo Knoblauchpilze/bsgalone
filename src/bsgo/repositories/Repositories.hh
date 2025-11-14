@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "AccountRepository.hh"
 #include "AiBehaviorRepository.hh"
 #include "AsteroidLootRepository.hh"
 #include "AsteroidRepository.hh"
@@ -31,6 +32,7 @@ struct Repositories
   Repositories();
   ~Repositories() = default;
 
+  AccountRepositoryShPtr accountRepository{};
   AiBehaviorRepositoryShPtr aiBehaviorRepository{};
   AsteroidLootRepositoryShPtr asteroidLootRepository{};
   AsteroidRepositoryShPtr asteroidRepository{};
