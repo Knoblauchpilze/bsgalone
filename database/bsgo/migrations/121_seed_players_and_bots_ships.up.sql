@@ -48,7 +48,7 @@ INSERT INTO player_ship ("ship", "player", "name", "active", "hull_points", "pow
   VALUES (
       (SELECT id FROM ship WHERE name = 'Jotunn'),
       (SELECT id FROM player WHERE name = 'colo'),
-      'Jotunn',
+      'The Big Jotunn',
       false,
       3000.0,
       500.0,
@@ -121,8 +121,8 @@ INSERT INTO ship_weapon ("ship", "weapon", "slot")
 INSERT INTO player_ship ("ship", "player", "name", "active", "hull_points", "power_points", "x_pos", "y_pos", "z_pos")
   VALUES (
       (SELECT id FROM ship WHERE name = 'Cylon Raider'),
-      NULL,
-      'AI Cylon Raider',
+      (SELECT id FROM player WHERE name = 'AI Cylon Raider'),
+      'Cylon Raider',
       true,
       280.0,
       23.2,
@@ -132,21 +132,21 @@ INSERT INTO player_ship ("ship", "player", "name", "active", "hull_points", "pow
   );
 INSERT INTO ship_system ("ship", "system", "docked")
   VALUES (
-    (SELECT id FROM player_ship WHERE name = 'AI Cylon Raider'),
+    (SELECT id FROM player_ship WHERE name = 'Cylon Raider'),
     (SELECT id FROM system WHERE name = 'Munnin'),
     false
   );
 
 INSERT INTO ship_weapon ("ship", "weapon", "slot")
   VALUES (
-    (SELECT id FROM player_ship WHERE name = 'AI Cylon Raider'),
-    (SELECT pw.id FROM player_weapon AS pw LEFT JOIN weapon AS w ON w.id = pw.weapon WHERE pw.player is NULL AND w.name = 'Medium range cannon'),
+    (SELECT id FROM player_ship WHERE name = 'Cylon Raider'),
+    (SELECT pw.id FROM player_weapon AS pw LEFT JOIN player AS p ON p.id = pw.player LEFT JOIN weapon AS w ON w.id = pw.weapon WHERE p.name = 'AI Cylon Raider' AND w.name = 'Medium range cannon'),
     (SELECT ss.id FROM ship_slot AS ss LEFT JOIN ship AS s ON s.id = ss.ship WHERE s.name = 'Cylon Raider' AND ss.type = 'weapon' AND ss.x_pos = -0.5)
   );
 
 INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
   VALUES (
-    (SELECT id FROM player_ship WHERE name = 'AI Cylon Raider'),
+    (SELECT id FROM player_ship WHERE name = 'Cylon Raider'),
     0,
     3.0,
     10.0,
@@ -154,7 +154,7 @@ INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
   );
 INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
   VALUES (
-    (SELECT id FROM player_ship WHERE name = 'AI Cylon Raider'),
+    (SELECT id FROM player_ship WHERE name = 'Cylon Raider'),
     1,
     4.0,
     -8.0,
@@ -162,7 +162,7 @@ INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
   );
 INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
   VALUES (
-    (SELECT id FROM player_ship WHERE name = 'AI Cylon Raider'),
+    (SELECT id FROM player_ship WHERE name = 'Cylon Raider'),
     2,
     -7.0,
     -2.0,
@@ -170,7 +170,7 @@ INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
   );
 INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
   VALUES (
-    (SELECT id FROM player_ship WHERE name = 'AI Cylon Raider'),
+    (SELECT id FROM player_ship WHERE name = 'Cylon Raider'),
     3,
     -5.0,
     6.0,
@@ -187,8 +187,8 @@ INSERT INTO ai_behaviors ("ship", "index")
 INSERT INTO player_ship ("ship", "player", "name", "active", "hull_points", "power_points", "x_pos", "y_pos", "z_pos")
   VALUES (
       (SELECT id FROM ship WHERE name = 'Jotunn'),
-      NULL,
-      'AI Colonial Jotunn',
+      (SELECT id FROM player WHERE name = 'AI Jotunn'),
+      'Jotunn',
       true,
       1234.0,
       98.7,
@@ -198,21 +198,21 @@ INSERT INTO player_ship ("ship", "player", "name", "active", "hull_points", "pow
   );
 INSERT INTO ship_system ("ship", "system", "docked")
   VALUES (
-    (SELECT id FROM player_ship WHERE name = 'AI Colonial Jotunn'),
+    (SELECT id FROM player_ship WHERE name = 'Jotunn'),
     (SELECT id FROM system WHERE name = 'Munnin'),
     false
   );
 
 INSERT INTO ship_weapon ("ship", "weapon", "slot")
   VALUES (
-    (SELECT id FROM player_ship WHERE name = 'AI Colonial Jotunn'),
-    (SELECT pw.id FROM player_weapon AS pw LEFT JOIN weapon AS w ON w.id = pw.weapon WHERE pw.player is NULL AND w.name = 'Medium range cannon'),
+    (SELECT id FROM player_ship WHERE name = 'Jotunn'),
+    (SELECT pw.id FROM player_weapon AS pw LEFT JOIN player AS p ON p.id = pw.player LEFT JOIN weapon AS w ON w.id = pw.weapon WHERE p.name = 'AI Jotunn' AND w.name = 'Short range cannon'),
     (SELECT ss.id FROM ship_slot AS ss LEFT JOIN ship AS s ON s.id = ss.ship WHERE s.name = 'Cylon Raider' AND ss.type = 'weapon' AND ss.x_pos = -0.5)
   );
 
 INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
   VALUES (
-    (SELECT id FROM player_ship WHERE name = 'AI Colonial Jotunn'),
+    (SELECT id FROM player_ship WHERE name = 'Jotunn'),
     0,
     -7.0,
     -6.0,
@@ -220,7 +220,7 @@ INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
   );
 INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
   VALUES (
-    (SELECT id FROM player_ship WHERE name = 'AI Colonial Jotunn'),
+    (SELECT id FROM player_ship WHERE name = 'Jotunn'),
     1,
     4.0,
     8.0,
@@ -229,6 +229,6 @@ INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
 
 INSERT INTO ai_behaviors ("ship", "index")
   VALUES (
-    (SELECT id FROM player_ship WHERE name = 'AI Colonial Jotunn'),
+    (SELECT id FROM player_ship WHERE name = 'Jotunn'),
     0
   );

@@ -3,15 +3,14 @@
 -- https://www.postgresql.org/docs/current/functions-datetime.html#FUNCTIONS-DATETIME-CURRENT
 CREATE TABLE player (
   id INTEGER GENERATED ALWAYS AS IDENTITY,
-  account INTEGER NOT NULL,
+  account INTEGER DEFAULT NULL,
   name TEXT NOT NULL,
   faction TEXT NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP WITH TIME ZONE,
   PRIMARY KEY (id),
   UNIQUE (name),
-  FOREIGN KEY (account) REFERENCES account(id)
-  FOREIGN KEY (name) REFERENCES account(name)
+  FOREIGN KEY (account) REFERENCES account(id),
   FOREIGN KEY (faction) REFERENCES faction(name)
 );
 
