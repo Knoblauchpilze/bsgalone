@@ -13,12 +13,19 @@ constexpr auto FIND_ONE_QUERY      = "SELECT name, password FROM account WHERE i
 
 constexpr auto FIND_ONE_BY_NAME_QUERY_NAME = "account_find_one_by_name";
 constexpr auto FIND_ONE_BY_NAME_QUERY      = "SELECT id, password FROM account WHERE name = $1";
+
+constexpr auto UPDATE_ACCOUNT_QUERY_NAME = "account_update";
+constexpr auto UPDATE_ACCOUNT_QUERY      = R"(
+INSERT INTO account (name, password)
+  VALUES ($1, $2)
+)";
 } // namespace
 
 void AccountRepository::initialize()
 {
   m_connection->prepare(FIND_ONE_QUERY_NAME, FIND_ONE_QUERY);
   m_connection->prepare(FIND_ONE_BY_NAME_QUERY_NAME, FIND_ONE_BY_NAME_QUERY);
+  m_connection->prepare(UPDATE_ACCOUNT_QUERY_NAME, UPDATE_ACCOUNT_QUERY);
 }
 
 auto AccountRepository::findOneById(const Uuid account) const -> Account
@@ -62,6 +69,21 @@ auto AccountRepository::findOneByName(const std::string &name) const -> std::opt
   out.password       = record[1].as<std::string>();
 
   return out;
+}
+
+void AccountRepository::save(const Account &account)
+{
+  auto query = [&account](pqxx::work &transaction) {
+    return transaction
+      .exec(pqxx::prepped{UPDATE_ACCOUNT_QUERY_NAME}, pqxx::params{account.name, account.password})
+      .no_rows();
+  };
+
+  const auto res = m_connection->tryExecuteTransaction(query);
+  if (res.error)
+  {
+    error("Failed to save account: " + *res.error);
+  }
 }
 
 } // namespace bsgo

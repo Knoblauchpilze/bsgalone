@@ -28,6 +28,8 @@ class AccountRepository : public AbstractRepository
 
   auto findOneById(const Uuid account) const -> Account;
   auto findOneByName(const std::string &name) const -> std::optional<Account>;
+
+  void save(const Account &account);
 };
 
 using AccountRepositoryShPtr = std::shared_ptr<AccountRepository>;
