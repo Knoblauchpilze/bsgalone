@@ -107,7 +107,8 @@ void ShipDataSource::registerShip(Coordinator &coordinator,
                                   DatabaseEntityMapper &entityMapper,
                                   const bool ignoreDocked) const
 {
-  const auto data = m_repositories->playerShipRepository->findOneById(shipDbId);
+  const auto data   = m_repositories->playerShipRepository->findOneById(shipDbId);
+  const auto player = m_repositories->playerRepository->findOneById(data.player);
 
   PlayerShipData out{
     .dbId             = shipDbId,
@@ -123,7 +124,7 @@ void ShipDataSource::registerShip(Coordinator &coordinator,
     .maxPowerPoints   = data.maxPowerPoints,
     .powerRegen       = data.powerRegen,
     .faction          = data.faction,
-    .status           = determineStartingStatusForShip(data),
+    .status           = determineStartingStatusForShip(data, player),
     .shipClass        = data.shipClass,
     .name             = data.name,
     .docked           = data.docked,

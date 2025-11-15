@@ -289,19 +289,16 @@ auto updateStatusAfterJumpCancellation(const Status &in) -> Status
   }
 }
 
-auto determineStartingStatusForShip(const PlayerShip &ship) -> Status
+auto determineStartingStatusForShip(const PlayerShip &ship, const Player &player) -> Status
 {
   if (ship.docked)
   {
     return Status::DOCKED;
   }
 
-  // TODO: This is obsolete and should be changed to either always make
-  // the bots appear visible or removing it so that they also use the
-  // `APPEARING` state.
-  // Currently it just means that player 0 will see their ships always
-  // appear visible.
-  if (!ship.player)
+  // If a player has no account it means that it is an AI. AIs don't get the chance
+  // to be invisible for some time when they appear, they can be targeted immediately.
+  if (!player.account)
   {
     return Status::VISIBLE;
   }
