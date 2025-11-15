@@ -20,6 +20,7 @@ class SignupService : public AbstractService
   auto getPlayerSystemDbId(const Uuid playerDbId) const -> Uuid;
 
   private:
+  auto registerAccount(const Account &account) const -> Uuid;
   auto registerPlayer(const Player &player) const -> Uuid;
   void registerResources(const Player &player) const;
   void registerShip(const Player &player) const;

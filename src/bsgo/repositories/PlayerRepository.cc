@@ -18,27 +18,52 @@ SELECT
 FROM
   player_ship AS ps
   LEFT JOIN ship_system AS ss ON ps.id = ss.ship
-  LEFT JOIN player AS p ON ps.player = p.id
 WHERE
   ps.active = true
   AND ss.docked = false
-  AND ps.player IS NOT NULL
   AND ss.system = $1
 )";
 
 constexpr auto FIND_ONE_QUERY_NAME = "player_find_one";
-constexpr auto FIND_ONE_QUERY      = "SELECT name, password, faction FROM player WHERE id = $1";
+constexpr auto FIND_ONE_QUERY      = R"(
+SELECT
+  account,
+  name,
+  faction
+FROM
+  player
+WHERE
+  id = $1
+)";
 
-constexpr auto FIND_ONE_BY_NAME_QUERY_NAME = "player_find_one_by_player";
-constexpr auto FIND_ONE_BY_NAME_QUERY = "SELECT id, password, faction FROM player WHERE name = $1";
+constexpr auto FIND_ONE_BY_ACCOUNT_QUERY_NAME = "player_find_one_by_account";
+constexpr auto FIND_ONE_BY_ACCOUNT_QUERY      = R"(
+SELECT
+  id,
+  name,
+  faction
+FROM
+  player
+WHERE
+  account = $1
+)";
 
 constexpr auto FIND_SYSTEM_QUERY_NAME = "player_find_system";
-constexpr auto FIND_SYSTEM_QUERY
-  = "SELECT ss.system FROM player_ship AS ps LEFT JOIN ship_system AS ss ON ps.id = ss.ship LEFT JOIN player AS p ON ps.player = p.id WHERE ps.active = true AND ps.player IS NOT NULL AND ps.player = $1";
+constexpr auto FIND_SYSTEM_QUERY      = R"(
+SELECT
+  ss.system
+FROM
+  player_ship AS ps
+  LEFT JOIN ship_system AS ss ON ps.id = ss.ship
+  LEFT JOIN player AS p ON ps.player = p.id
+WHERE
+  ps.active = true
+  AND ps.player = $1
+)";
 
 constexpr auto UPDATE_PLAYER_QUERY_NAME = "player_update";
 constexpr auto UPDATE_PLAYER_QUERY      = R"(
-INSERT INTO player (name, password, faction)
+INSERT INTO player (account, name, faction)
   VALUES ($1, $2, $3)
 )";
 } // namespace
@@ -48,7 +73,7 @@ void PlayerRepository::initialize()
   m_connection->prepare(FIND_ALL_QUERY_NAME, FIND_ALL_QUERY);
   m_connection->prepare(FIND_ALL_UNDOCKED_BY_SYSTEM_QUERY_NAME, FIND_ALL_UNDOCKED_BY_SYSTEM_QUERY);
   m_connection->prepare(FIND_ONE_QUERY_NAME, FIND_ONE_QUERY);
-  m_connection->prepare(FIND_ONE_BY_NAME_QUERY_NAME, FIND_ONE_BY_NAME_QUERY);
+  m_connection->prepare(FIND_ONE_BY_ACCOUNT_QUERY_NAME, FIND_ONE_BY_ACCOUNT_QUERY);
   m_connection->prepare(FIND_SYSTEM_QUERY_NAME, FIND_SYSTEM_QUERY);
   m_connection->prepare(UPDATE_PLAYER_QUERY_NAME, UPDATE_PLAYER_QUERY);
 }
@@ -96,38 +121,31 @@ auto PlayerRepository::findOneById(const Uuid player) const -> Player
 
   Player out;
 
-  out.id       = player;
-  out.name     = record[0].as<std::string>();
-  out.password = record[1].as<std::string>();
-  out.faction  = fromDbFaction(record[2].as<std::string>());
+  out.id = player;
+  if (!record[0].is_null())
+  {
+    out.account = fromDbId(record[0].as<int>());
+  }
+  out.name    = record[1].as<std::string>();
+  out.faction = fromDbFaction(record[2].as<std::string>());
 
   return out;
 }
 
-auto PlayerRepository::findOneByName(const std::string &name) const -> std::optional<Player>
+auto PlayerRepository::findOneByAccount(const Uuid account) const -> Player
 {
-  const auto query = [name](pqxx::nontransaction &work) {
-    return work.exec(pqxx::prepped{FIND_ONE_BY_NAME_QUERY_NAME}, pqxx::params{name});
+  const auto query = [account](pqxx::nontransaction &work) {
+    return work.exec(pqxx::prepped{FIND_ONE_BY_ACCOUNT_QUERY_NAME}, pqxx::params{toDbId(account)})
+      .one_row();
   };
-  const auto rows = m_connection->executeQuery(query);
-
-  if (rows.empty())
-  {
-    return {};
-  }
-
-  if (rows.size() != 1)
-  {
-    error("Expected to find only one player with name \"" + name + "\"");
-  }
+  const auto record = m_connection->executeQueryReturningSingleRow(query);
 
   Player out;
 
-  const auto &record = rows[0];
-  out.id             = fromDbId(record[0].as<int>());
-  out.name           = name;
-  out.password       = record[1].as<std::string>();
-  out.faction        = fromDbFaction(record[2].as<std::string>());
+  out.id      = fromDbId(record[0].as<int>());
+  out.account = account;
+  out.name    = record[1].as<std::string>();
+  out.faction = fromDbFaction(record[2].as<std::string>());
 
   return out;
 }
@@ -145,9 +163,15 @@ auto PlayerRepository::findSystemByPlayer(const Uuid player) const -> Uuid
 void PlayerRepository::save(const Player &player)
 {
   auto query = [&player](pqxx::work &transaction) {
+    std::optional<int> maybeAccount{};
+    if (player.account)
+    {
+      maybeAccount = toDbId(*player.account);
+    }
+
     return transaction
       .exec(pqxx::prepped{UPDATE_PLAYER_QUERY_NAME},
-            pqxx::params{player.name, player.password, toDbFaction(player.faction)})
+            pqxx::params{maybeAccount, player.name, toDbFaction(player.faction)})
       .no_rows();
   };
 

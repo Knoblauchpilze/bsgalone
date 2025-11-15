@@ -24,7 +24,7 @@ class ShipService : public AbstractService
 
   bool accelerateShip(const Uuid shipDbId, const Eigen::Vector3f &acceleration) const;
 
-  auto tryGetPlayerDbIdForShip(const Uuid shipDbId) -> std::optional<Uuid>;
+  auto getPlayerDbIdForShip(const Uuid shipDbId) -> Uuid;
   auto getSystemDbIdForShip(const Uuid shipDbId) const -> Uuid;
 
   struct TargetAcquiringData

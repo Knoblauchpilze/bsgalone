@@ -60,17 +60,14 @@ void EntityAddedMessageConsumer::handleShipAdded(const Uuid systemDbId,
   // loading service before sending the message to the client applications.
   const auto shipData = m_loadingService->getShipById(data.dbId);
 
-  // In case the ship belongs to a player we also need to send a message to
-  // add this player to the system.
-  if (shipData.dbShip.player)
-  {
-    const auto playerData = m_loadingService->getPlayerById(*shipData.dbShip.player);
+  // Send a message to add the player to which the ship belong so that it can
+  // be attached properly through the owner component.
+  const auto dbPlayer = m_loadingService->getPlayerById(shipData.dbShip.player);
 
-    auto playerAdded = std::make_unique<EntityAddedMessage>(systemDbId);
-    PlayerData data{.dbId = playerData.id, .name = playerData.name};
-    playerAdded->setPlayerData(data);
-    m_outputMessageQueue->pushMessage(std::move(playerAdded));
-  }
+  auto playerAdded = std::make_unique<EntityAddedMessage>(systemDbId);
+  PlayerData playerData{.dbId = dbPlayer.id, .name = dbPlayer.name};
+  playerAdded->setPlayerData(playerData);
+  m_outputMessageQueue->pushMessage(std::move(playerAdded));
 
   auto shipAdded = std::make_unique<EntityAddedMessage>(systemDbId);
   shipAdded->setShipData(shipData.toPlayerShipData());

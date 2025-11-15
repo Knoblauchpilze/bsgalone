@@ -39,6 +39,21 @@ TEST(Unit_Bsgo_Serialization_PlayerListMessage, Basic)
   assertMessagesAreEqual(actual, expected);
 }
 
+TEST(Unit_Bsgo_Serialization_PlayerListMessage, OverrideExistingValues)
+{
+  std::vector<PlayerData> playersData{{.dbId = 714, .name = "player-1"},
+                                      {.dbId = 1087, .isAi = true},
+                                      {.dbId = 17, .name = "hehe", .isAi = true}};
+  const PlayerListMessage expected(Uuid{8712}, playersData);
+
+  playersData = std::vector<PlayerData>{{.name = "ego-problem"},
+                                        {.dbId = 358, .name = "some name", .isAi = true}};
+  PlayerListMessage actual(Uuid{1515}, playersData);
+  actual.setClientId(Uuid{2});
+  serializeAndDeserializeMessage(expected, actual);
+  assertMessagesAreEqual(actual, expected);
+}
+
 TEST(Unit_Bsgo_Serialization_PlayerListMessage, WithClientId)
 {
   std::vector<PlayerData> playersData{{.dbId = 14, .name = "foo bar"}};

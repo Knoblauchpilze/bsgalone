@@ -12,12 +12,6 @@ bool LockerService::tryEquip(const LockerItemData &item) const
 {
   const auto ship = m_repositories.playerShipRepository->findOneById(item.shipDbId);
 
-  if (!ship.player)
-  {
-    warn("Failed to equip item " + str(item.dbId) + " on ship " + str(item.shipDbId),
-         "Ship is not controlled by a player");
-    return false;
-  }
   if (!verifySlotAvailability(item.shipDbId, item.type))
   {
     warn("Failed to equip item " + str(item.dbId) + " on ship " + str(item.shipDbId),
@@ -30,7 +24,7 @@ bool LockerService::tryEquip(const LockerItemData &item) const
          "Item is already equiped");
     return false;
   }
-  if (!verifyItemBelongsToPlayer(*ship.player, item.dbId, item.type))
+  if (!verifyItemBelongsToPlayer(ship.player, item.dbId, item.type))
   {
     warn("Failed to equip item " + str(item.dbId) + " on ship " + str(item.shipDbId),
          "Item does not belong to player");
@@ -57,19 +51,13 @@ bool LockerService::tryUnequip(const LockerItemData &item) const
 {
   const auto ship = m_repositories.playerShipRepository->findOneById(item.shipDbId);
 
-  if (!ship.player)
-  {
-    warn("Failed to unequip item " + str(item.dbId) + " on ship " + str(item.shipDbId),
-         "Ship is not controlled by a player");
-    return false;
-  }
   if (!verifyItemIsEquiped(item.shipDbId, item.dbId, item.type))
   {
     warn("Failed to unequip item " + str(item.dbId) + " on ship " + str(item.shipDbId),
          "Item is not equiped");
     return false;
   }
-  if (!verifyItemBelongsToPlayer(*ship.player, item.dbId, item.type))
+  if (!verifyItemBelongsToPlayer(ship.player, item.dbId, item.type))
   {
     warn("Failed to unequip item " + str(item.dbId) + " on ship " + str(item.shipDbId),
          "Item does not belong to player");

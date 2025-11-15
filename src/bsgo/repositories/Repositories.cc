@@ -8,6 +8,7 @@ Repositories::Repositories()
   dbConnection = std::make_shared<DbConnection>();
   dbConnection->connect();
 
+  accountRepository        = std::make_shared<AccountRepository>(dbConnection);
   aiBehaviorRepository     = std::make_shared<AiBehaviorRepository>(dbConnection);
   asteroidLootRepository   = std::make_shared<AsteroidLootRepository>(dbConnection);
   asteroidRepository       = std::make_shared<AsteroidRepository>(dbConnection);
@@ -30,6 +31,7 @@ Repositories::Repositories()
   weaponRepository         = std::make_shared<WeaponRepository>(dbConnection);
   tickRepository           = std::make_shared<TickRepository>(dbConnection);
 
+  accountRepository->initialize();
   aiBehaviorRepository->initialize();
   asteroidLootRepository->initialize();
   asteroidRepository->initialize();

@@ -11,16 +11,19 @@ auto SignupService::trySignup(const std::string &name,
                               const std::string &password,
                               const Faction &faction) const -> std::optional<Player>
 {
-  const auto maybePlayer = m_repositories.playerRepository->findOneByName(name);
-  if (maybePlayer)
+  const auto maybeAccount = m_repositories.accountRepository->findOneByName(name);
+  if (maybeAccount)
   {
-    warn("Player with name \"" + name + "\" already exists");
+    warn("Account with name \"" + name + "\" already exists");
     return {};
   }
 
-  Player player{.name = name, .password = password, .faction = faction};
+  Account account{.name = name, .password = password};
+  account.id = registerAccount(account);
 
+  Player player{.account = account.id, .name = name, .faction = faction};
   player.id = registerPlayer(player);
+
   registerResources(player);
   registerShip(player);
 
@@ -32,16 +35,23 @@ auto SignupService::getPlayerSystemDbId(const Uuid playerDbId) const -> Uuid
   return m_repositories.playerRepository->findSystemByPlayer(playerDbId);
 }
 
+auto SignupService::registerAccount(const Account &account) const -> Uuid
+{
+  m_repositories.accountRepository->save(account);
+  const auto dbAccount = m_repositories.accountRepository->findOneByName(account.name);
+
+  if (!dbAccount)
+  {
+    error("Failed to register account");
+  }
+  return dbAccount->id;
+}
+
 auto SignupService::registerPlayer(const Player &player) const -> Uuid
 {
   m_repositories.playerRepository->save(player);
-  const auto dbPlayer = m_repositories.playerRepository->findOneByName(player.name);
-
-  if (!dbPlayer)
-  {
-    error("Failed to register player");
-  }
-  return dbPlayer->id;
+  const auto dbPlayer = m_repositories.playerRepository->findOneByAccount(*player.account);
+  return dbPlayer.id;
 }
 
 namespace {
