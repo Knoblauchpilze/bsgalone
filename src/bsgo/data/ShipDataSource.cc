@@ -189,19 +189,19 @@ void ShipDataSource::registerShipOwner(Coordinator &coordinator,
                                        const PlayerShipData &data,
                                        DatabaseEntityMapper &entityMapper) const
 {
-  if (!data.playerDbId)
+  // This reachedTarget effectively allows to distinguish between AI ships
+  // and player ships. It is not used in this way though but only to attach
+  // an AI component. The AI component could be renamed to script or similar.
+  // Another possibility would be to add a isAi in the PlayerShipData but
+  // so far there does not seem to be a use case for it outside of making it
+  // more explicit. Alternatively the PlayerShipData could group the target
+  // and the list of targets under a std::optional<Patrol> struct.
+  if (data.reachedTarget)
   {
-    entityMapper.registerShip(data.dbId, shipEntity);
-
-    if (!data.reachedTarget)
-    {
-      error("Failed to set up AI for ship " + str(data.dbId), "No target set for behavior");
-    }
+    debug("Registering AI for ship " + str(data.dbId));
 
     DataContext context(*data.reachedTarget);
-
     coordinator.addAi(shipEntity, generateBehaviorTree(data), std::move(context));
-    return;
   }
 
   const auto maybePlayerEntityId = entityMapper.tryGetPlayerEntityId(*data.playerDbId);
