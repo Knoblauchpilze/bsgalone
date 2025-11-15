@@ -57,7 +57,9 @@ bool SystemService::disposeOfPlayerShip(const Uuid shipDbId, const bool dead) co
     return false;
   }
 
-  if (ship.player)
+  const auto player = m_repositories.playerRepository->findOneById(ship.player);
+
+  if (player.account)
   {
     return disposeOfPlayerShip(ship, dead);
   }
