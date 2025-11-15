@@ -58,7 +58,7 @@ void LootSystem::distributeLootTo(const Uuid recipient,
   }
   if (!ent.exists<OwnerComponent>())
   {
-    debug("Skipping " + ent.str() + " as it is not a player");
+    debug("Skipping " + ent.str() + " does not have an owner");
     return;
   }
 

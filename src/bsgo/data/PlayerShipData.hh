@@ -38,7 +38,7 @@ struct PlayerShipData
   std::optional<Uuid> jumpSystem{};
 
   std::optional<Uuid> targetDbId{};
-  std::optional<Uuid> playerDbId{};
+  Uuid playerDbId{};
 
   std::unordered_map<Slot, int> slots{};
   std::vector<Eigen::Vector3f> aiTargets{};

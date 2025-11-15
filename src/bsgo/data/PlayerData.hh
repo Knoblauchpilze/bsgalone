@@ -10,6 +10,7 @@ struct PlayerData
 {
   Uuid dbId{};
   std::string name{};
+  bool isAi{};
 
   bool operator==(const PlayerData &rhs) const;
 

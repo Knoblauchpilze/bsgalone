@@ -93,55 +93,42 @@ void EntityService::tryDeleteAsteroidEntity(const Uuid asteroidDbId) const
   m_entityMapper.removeEntityForAsteroid(asteroidDbId);
 }
 
-auto EntityService::tryGetPlayerDbIdForShip(const Uuid shipDbId) const -> std::optional<Uuid>
+auto EntityService::getPlayerDbIdForShip(const Uuid shipDbId) const -> Uuid
 {
   const auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
-  if (!ship.player)
-  {
-    return {};
-  }
-
   return ship.player;
 }
 
 void EntityService::handlePlayerCreationForShip(const Uuid &shipDbId) const
 {
   const auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
-  if (!ship.player)
-  {
-    return;
-  }
 
-  const auto maybePlayerEntityId = m_entityMapper.tryGetPlayerEntityId(*ship.player);
+  const auto maybePlayerEntityId = m_entityMapper.tryGetPlayerEntityId(ship.player);
   if (maybePlayerEntityId)
   {
     return;
   }
 
   PlayerDataSource source{m_repositories};
-  source.registerPlayer(*m_coordinator, *ship.player, m_entityMapper);
+  source.registerPlayer(*m_coordinator, ship.player, m_entityMapper);
 
-  info("Registered player " + str(*ship.player) + " in system " + str(*ship.system));
+  info("Registered player " + str(ship.player) + " in system " + str(*ship.system));
 }
 
 void EntityService::handlePlayerDeletionForShip(const Uuid &shipDbId) const
 {
   const auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
-  if (!ship.player)
-  {
-    return;
-  }
 
-  const auto maybePlayerEntityId = m_entityMapper.tryGetPlayerEntityId(*ship.player);
+  const auto maybePlayerEntityId = m_entityMapper.tryGetPlayerEntityId(ship.player);
   if (!maybePlayerEntityId)
   {
     return;
   }
 
   m_coordinator->deleteEntity(*maybePlayerEntityId);
-  m_entityMapper.removeEntityForPlayer(*ship.player);
+  m_entityMapper.removeEntityForPlayer(ship.player);
 
-  info("Removed player " + str(*ship.player) + " from system " + str(*ship.system));
+  info("Removed player " + str(ship.player) + " from system " + str(*ship.system));
 }
 
 void EntityService::performEntityDeletion(Entity &entity) const

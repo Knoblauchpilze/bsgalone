@@ -13,6 +13,7 @@ auto PlayerData::serialize(std::ostream &out) const -> std::ostream &
 {
   core::serialize(out, dbId);
   core::serialize(out, name);
+  core::serialize(out, isAi);
 
   return out;
 }
@@ -23,6 +24,7 @@ bool PlayerData::deserialize(std::istream &in)
 
   ok &= core::deserialize(in, dbId);
   ok &= core::deserialize(in, name);
+  ok &= core::deserialize(in, isAi);
 
   return ok;
 }

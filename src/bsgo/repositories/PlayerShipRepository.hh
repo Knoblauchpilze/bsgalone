@@ -23,7 +23,7 @@ struct PlayerShip
   ShipClass shipClass{};
   Uuid ship{};
   std::string name{};
-  std::optional<Uuid> player{};
+  Uuid player{};
   bool active{};
 
   float hullPoints{0.0f};

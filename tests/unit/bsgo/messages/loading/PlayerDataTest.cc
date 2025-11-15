@@ -29,9 +29,9 @@ TEST(Unit_Bsgo_Serialization_PlayerData, DifferentWhenDbIdIsDifferent)
 
 TEST(Unit_Bsgo_Serialization_PlayerData, Basic)
 {
-  PlayerData input{.dbId = Uuid{1234}, .name = "player1"};
+  PlayerData input{.dbId = Uuid{1234}, .name = "player1", .isAi = true};
 
-  PlayerData output{.dbId = Uuid{14}, .name = "player2"};
+  PlayerData output{.dbId = Uuid{14}, .name = "player2", .isAi = false};
 
   EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
@@ -40,9 +40,9 @@ TEST(Unit_Bsgo_Serialization_PlayerData, Basic)
 
 TEST(Unit_Bsgo_Serialization_PlayerData, EmptyOutputName)
 {
-  PlayerData input{.dbId = Uuid{9874}, .name = "player1"};
+  PlayerData input{.dbId = Uuid{9874}, .name = "player1", .isAi = false};
 
-  PlayerData output{.dbId = Uuid{35}};
+  PlayerData output{.dbId = Uuid{35}, .isAi = true};
 
   EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 

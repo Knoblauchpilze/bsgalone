@@ -3,8 +3,15 @@
 -- PLAYERS --
 -------------
 -- player: colo
-INSERT INTO player ("name", "password", "faction")
-  VALUES ('colo', 'aze', 'colonial');
+INSERT INTO account ("name", "password")
+  VALUES ('colo', 'aze');
+
+INSERT INTO player ("account", "name", "faction")
+  VALUES (
+    (SELECT id FROM account WHERE name = 'colo'),
+    'colo',
+    'colonial'
+  );
 
 INSERT INTO player_resource ("player", "resource", "amount")
   VALUES (
@@ -64,8 +71,15 @@ INSERT INTO player_computer ("computer", "player", "level")
   );
 
 -- player: colo2
-INSERT INTO player ("name", "password", "faction")
-  VALUES ('colo2', 'aze', 'colonial');
+INSERT INTO account ("name", "password")
+  VALUES ('colo2', 'aze');
+
+INSERT INTO player ("account", "name", "faction")
+  VALUES (
+    (SELECT id FROM account WHERE name = 'colo2'),
+    'colo2',
+    'colonial'
+  );
 
 INSERT INTO player_resource ("player", "resource", "amount")
   VALUES (
@@ -89,8 +103,15 @@ INSERT INTO player_computer ("computer", "player", "level")
   );
 
 -- player: toast
-INSERT INTO player ("name", "password", "faction")
-  VALUES ('toast', 'aze', 'cylon');
+INSERT INTO account ("name", "password")
+  VALUES ('toast', 'aze');
+
+INSERT INTO player ("account", "name", "faction")
+  VALUES (
+    (SELECT id FROM account WHERE name = 'toast'),
+    'toast',
+    'cylon'
+  );
 
 INSERT INTO player_resource ("player", "resource", "amount")
   VALUES (
@@ -116,9 +137,23 @@ INSERT INTO player_weapon ("weapon", "player", "level")
 --  BOTS   --
 -------------
 -- system: Munnin, ship: Cylon Raider
+INSERT INTO player ("account", "name", "faction")
+  VALUES (NULL, 'AI Cylon Raider', 'cylon');
+
 INSERT INTO player_weapon ("weapon", "player", "level")
   VALUES (
     (SELECT id FROM weapon WHERE name = 'Medium range cannon'),
-    NULL,
+    (SELECT id FROM player WHERE name = 'AI Cylon Raider'),
+    20
+  );
+
+-- system: Munnin, ship: Jotunn
+INSERT INTO player ("account", "name", "faction")
+  VALUES (NULL, 'AI Jotunn', 'colonial');
+
+INSERT INTO player_weapon ("weapon", "player", "level")
+  VALUES (
+    (SELECT id FROM weapon WHERE name = 'Short range cannon'),
+    (SELECT id FROM player WHERE name = 'AI Jotunn'),
     20
   );

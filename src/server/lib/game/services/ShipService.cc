@@ -14,32 +14,20 @@ ShipService::ShipService(const Repositories &repositories,
 
 bool ShipService::trySelectShip(const Uuid shipDbId) const
 {
-  const auto newActiveShip = m_repositories.playerShipRepository->findOneById(shipDbId);
-  if (!newActiveShip.player)
-  {
-    warn("Failed to select ship " + str(shipDbId), "Ship does not belong to any player");
-    return false;
-  }
-
+  const auto newActiveShip     = m_repositories.playerShipRepository->findOneById(shipDbId);
   const auto currentActiveShip = m_repositories.playerShipRepository->findOneByPlayerAndActive(
-    *newActiveShip.player);
+    newActiveShip.player);
 
-  if (!currentActiveShip.player)
-  {
-    warn("Failed to select ship " + str(shipDbId),
-         "Current active ship " + str(currentActiveShip.id) + " does not belong to a player");
-    return false;
-  }
   if (newActiveShip.active)
   {
     warn("Failed to select ship " + str(shipDbId), "Ship is already active");
     return false;
   }
-  if (*currentActiveShip.player != *newActiveShip.player)
+  if (currentActiveShip.player != newActiveShip.player)
   {
     warn("Failed to select ship " + str(shipDbId),
-         "Current ship belongs to " + str(*currentActiveShip.player) + " but new one belongs to "
-           + str(*newActiveShip.player));
+         "Current ship belongs to " + str(currentActiveShip.player) + " but new one belongs to "
+           + str(newActiveShip.player));
     return false;
   }
 
@@ -117,7 +105,7 @@ bool ShipService::accelerateShip(const Uuid shipDbId, const Eigen::Vector3f &acc
   return true;
 }
 
-auto ShipService::tryGetPlayerDbIdForShip(const Uuid shipDbId) -> std::optional<Uuid>
+auto ShipService::getPlayerDbIdForShip(const Uuid shipDbId) -> Uuid
 {
   const auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
   return ship.player;

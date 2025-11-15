@@ -14,8 +14,8 @@ namespace bsgo {
 struct Player
 {
   Uuid id{};
+  std::optional<Uuid> account{};
   std::string name{};
-  std::string password{};
   Faction faction{};
 };
 
@@ -30,7 +30,7 @@ class PlayerRepository : public AbstractRepository
   auto findAll() const -> std::unordered_set<Uuid>;
   auto findAllUndockedBySystem(const Uuid system) const -> std::unordered_set<Uuid>;
   auto findOneById(const Uuid player) const -> Player;
-  auto findOneByName(const std::string &name) const -> std::optional<Player>;
+  auto findOneByAccount(const Uuid account) const -> Player;
   auto findSystemByPlayer(const Uuid player) const -> Uuid;
 
   void save(const Player &player);

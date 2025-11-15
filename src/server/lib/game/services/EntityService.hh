@@ -24,7 +24,7 @@ class EntityService : public AbstractService
   bool tryCreateAsteroidEntity(const Uuid asteroidDbId) const;
   void tryDeleteAsteroidEntity(const Uuid asteroidDbId) const;
 
-  auto tryGetPlayerDbIdForShip(const Uuid shipDbId) const -> std::optional<Uuid>;
+  auto getPlayerDbIdForShip(const Uuid shipDbId) const -> Uuid;
 
   private:
   CoordinatorShPtr m_coordinator{};

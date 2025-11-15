@@ -46,18 +46,6 @@ void DatabaseEntityMapper::registerPlayer(const Uuid playerDbId, const Uuid enti
   }
 }
 
-void DatabaseEntityMapper::registerShip(const Uuid shipDbId, const Uuid entityId)
-{
-  const std::lock_guard guard(m_locker);
-
-  const auto res = m_shipDbIdsToEntityIds.try_emplace(shipDbId, entityId);
-  if (!res.second)
-  {
-    error("Unable to register ship " + str(shipDbId),
-          "Ship already is attached to entity " + str(res.first->second));
-  }
-}
-
 void DatabaseEntityMapper::registerShipForPlayer(const Uuid playerDbId,
                                                  const Uuid shipDbId,
                                                  const Uuid entityId)
@@ -236,6 +224,18 @@ void DatabaseEntityMapper::clearAll()
   }
 
   clearEntities();
+}
+
+void DatabaseEntityMapper::registerShip(const Uuid shipDbId, const Uuid entityId)
+{
+  const std::lock_guard guard(m_locker);
+
+  const auto res = m_shipDbIdsToEntityIds.try_emplace(shipDbId, entityId);
+  if (!res.second)
+  {
+    error("Unable to register ship " + str(shipDbId),
+          "Ship already is attached to entity " + str(res.first->second));
+  }
 }
 
 } // namespace bsgo

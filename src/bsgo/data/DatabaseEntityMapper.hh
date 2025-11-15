@@ -22,7 +22,6 @@ class DatabaseEntityMapper : public core::CoreObject
   void setPlayerShipDbId(const Uuid playerShipDbId);
 
   void registerPlayer(const Uuid playerDbId, const Uuid entityId);
-  void registerShip(const Uuid shipDbId, const Uuid entityId);
   void registerShipForPlayer(const Uuid playerDbId, const Uuid shipDbId, const Uuid entityId);
   void registerAsteroid(const Uuid asteroidDbId, const Uuid entityId);
   void registerOutpost(const Uuid outpostDbId, const Uuid entityId);
@@ -56,6 +55,8 @@ class DatabaseEntityMapper : public core::CoreObject
   std::optional<Uuid> m_playerEntityId{};
   std::optional<Uuid> m_playerShipDbId{};
   std::optional<Uuid> m_playerShipEntityId{};
+
+  void registerShip(const Uuid shipDbId, const Uuid entityId);
 };
 
 } // namespace bsgo

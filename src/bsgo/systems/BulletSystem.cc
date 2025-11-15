@@ -84,7 +84,7 @@ void BulletSystem::damageOnImpact(Entity &entity, Entity &target) const
 
   verbose(entity.str() + " deals " + std::to_string(damage) + " to " + target.str());
 
-  if (target.exists<LootComponent>())
+  if (target.exists<LootComponent>() && entity.exists<OwnerComponent>())
   {
     target.lootComp().registerRecipient(entity.ownerComp().owner());
   }
