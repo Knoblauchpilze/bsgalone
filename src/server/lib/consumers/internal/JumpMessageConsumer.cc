@@ -110,9 +110,8 @@ void JumpMessageConsumer::handleLoadingMessages(const Uuid playerDbId,
   started->setClientId(clientId);
   maybeDestinationProcessor->second->pushMessage(std::move(started));
 
-  auto finished = std::make_unique<LoadingFinishedMessage>(LoadingTransition::JUMP);
+  auto finished = std::make_unique<LoadingFinishedMessage>(LoadingTransition::JUMP, playerDbId);
   finished->setSystemDbId(destinationSystemDbId);
-  finished->setPlayerDbId(playerDbId);
   finished->setClientId(clientId);
   maybeDestinationProcessor->second->pushMessage(std::move(finished));
 }

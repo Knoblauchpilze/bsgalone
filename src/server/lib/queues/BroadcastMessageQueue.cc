@@ -149,19 +149,6 @@ auto determineClientFor(const T &message, const ClientManager &clientManager) ->
 {
   return clientManager.getClientIdForPlayer(message.getPlayerDbId());
 }
-
-template<typename T>
-auto maybeDetermineClientFor(const T &message, const ClientManager &clientManager)
-  -> std::optional<Uuid>
-{
-  const std::optional<Uuid> maybePlayerDbId = message.tryGetPlayerDbId();
-  if (!maybePlayerDbId)
-  {
-    return {};
-  }
-
-  return clientManager.getClientIdForPlayer(*maybePlayerDbId);
-}
 } // namespace
 
 auto BroadcastMessageQueue::tryDetermineClientId(const IMessage &message) const
@@ -178,7 +165,7 @@ auto BroadcastMessageQueue::tryDetermineClientId(const IMessage &message) const
     case MessageType::LOADING_STARTED:
       return determineClientFor(message.as<LoadingStartedMessage>(), *m_clientManager);
     case MessageType::LOADING_FINISHED:
-      return maybeDetermineClientFor(message.as<LoadingFinishedMessage>(), *m_clientManager);
+      return determineClientFor(message.as<LoadingFinishedMessage>(), *m_clientManager);
     default:
       error("Failed to determine client id", "Unsupported message type " + str(message.type()));
       break;
