@@ -8,9 +8,11 @@ LoadingFinishedMessage::LoadingFinishedMessage()
   : NetworkMessage(MessageType::LOADING_FINISHED)
 {}
 
-LoadingFinishedMessage::LoadingFinishedMessage(const LoadingTransition transition)
+LoadingFinishedMessage::LoadingFinishedMessage(const LoadingTransition transition,
+                                               const Uuid playerDbId)
   : NetworkMessage(MessageType::LOADING_FINISHED)
   , m_transition(transition)
+  , m_playerDbId(playerDbId)
 {}
 
 auto LoadingFinishedMessage::getTransition() const -> LoadingTransition
@@ -23,19 +25,18 @@ auto LoadingFinishedMessage::tryGetSystemDbId() const -> std::optional<Uuid>
   return m_systemDbId;
 }
 
-auto LoadingFinishedMessage::tryGetPlayerDbId() const -> std::optional<Uuid>
+auto LoadingFinishedMessage::getPlayerDbId() const -> Uuid
 {
-  return m_playerDbId;
+  if (!m_playerDbId)
+  {
+    error("Expected player db id to be defined but it was not");
+  }
+  return *m_playerDbId;
 }
 
 void LoadingFinishedMessage::setSystemDbId(const Uuid systemDbId)
 {
   m_systemDbId = systemDbId;
-}
-
-void LoadingFinishedMessage::setPlayerDbId(const Uuid playerDbId)
-{
-  m_playerDbId = playerDbId;
 }
 
 auto LoadingFinishedMessage::serialize(std::ostream &out) const -> std::ostream &
@@ -65,14 +66,10 @@ bool LoadingFinishedMessage::deserialize(std::istream &in)
 
 auto LoadingFinishedMessage::clone() const -> IMessagePtr
 {
-  auto clone = std::make_unique<LoadingFinishedMessage>(m_transition);
+  auto clone = std::make_unique<LoadingFinishedMessage>(m_transition, *m_playerDbId);
   if (m_systemDbId)
   {
     clone->setSystemDbId(*m_systemDbId);
-  }
-  if (m_playerDbId)
-  {
-    clone->setPlayerDbId(*m_playerDbId);
   }
 
   clone->copyClientIdIfDefined(*this);

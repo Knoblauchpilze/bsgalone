@@ -107,8 +107,7 @@ void EquipMessageConsumer::handleSuccessfulRequest(const EquipMessage &message) 
   started->copyClientIdIfDefined(message);
   m_systemMessageQueue->pushMessage(std::move(started));
 
-  auto finished = std::make_unique<LoadingFinishedMessage>(LoadingTransition::EQUIP);
-  finished->setPlayerDbId(playerDbId);
+  auto finished = std::make_unique<LoadingFinishedMessage>(LoadingTransition::EQUIP, playerDbId);
   finished->copyClientIdIfDefined(message);
   m_systemMessageQueue->pushMessage(std::move(finished));
 }

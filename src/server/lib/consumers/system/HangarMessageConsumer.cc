@@ -60,8 +60,8 @@ void HangarMessageConsumer::handleSuccessfulSwitch(const HangarMessage &message)
   started->copyClientIdIfDefined(message);
   m_systemMessageQueue->pushMessage(std::move(started));
 
-  auto finished = std::make_unique<LoadingFinishedMessage>(LoadingTransition::ACTIVE_SHIP_CHANGED);
-  finished->setPlayerDbId(playerDbId);
+  auto finished = std::make_unique<LoadingFinishedMessage>(LoadingTransition::ACTIVE_SHIP_CHANGED,
+                                                           playerDbId);
   finished->copyClientIdIfDefined(message);
   m_systemMessageQueue->pushMessage(std::move(finished));
 }

@@ -46,9 +46,8 @@ void LoadingHelper::publishLoadingMessages(const Uuid clientId, const Uuid playe
   started->setClientId(clientId);
   maybeProcessor->second->pushMessage(std::move(started));
 
-  auto finished = std::make_unique<LoadingFinishedMessage>(LoadingTransition::LOGIN);
+  auto finished = std::make_unique<LoadingFinishedMessage>(LoadingTransition::LOGIN, playerDbId);
   finished->setSystemDbId(*maybeSystemDbId);
-  finished->setPlayerDbId(playerDbId);
   finished->setClientId(clientId);
   maybeProcessor->second->pushMessage(std::move(finished));
 }

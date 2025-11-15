@@ -119,9 +119,8 @@ void DockMessageConsumer::publishLoadingMessages(const LoadingTransition transit
   started->copyClientIdIfDefined(originalDockMessage);
   m_systemMessageQueue->pushMessage(std::move(started));
 
-  auto finished = std::make_unique<LoadingFinishedMessage>(transition);
+  auto finished = std::make_unique<LoadingFinishedMessage>(transition, playerDbId);
   finished->setSystemDbId(systemDbId);
-  finished->setPlayerDbId(playerDbId);
   finished->copyClientIdIfDefined(originalDockMessage);
   m_systemMessageQueue->pushMessage(std::move(finished));
 }

@@ -121,8 +121,7 @@ void PurchaseMessageConsumer::handleSuccessfulPurchase(const PurchaseMessage &me
   started->copyClientIdIfDefined(message);
   m_systemMessageQueue->pushMessage(std::move(started));
 
-  auto finished = std::make_unique<LoadingFinishedMessage>(LoadingTransition::PURCHASE);
-  finished->setPlayerDbId(playerDbId);
+  auto finished = std::make_unique<LoadingFinishedMessage>(LoadingTransition::PURCHASE, playerDbId);
   finished->copyClientIdIfDefined(message);
   m_systemMessageQueue->pushMessage(std::move(finished));
 }
