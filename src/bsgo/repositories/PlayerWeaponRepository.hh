@@ -14,7 +14,7 @@ struct PlayerWeapon
 {
   Uuid id{};
   Uuid weapon{};
-  std::optional<Uuid> player{};
+  Uuid player{};
 
   std::string name{};
   int level{};
