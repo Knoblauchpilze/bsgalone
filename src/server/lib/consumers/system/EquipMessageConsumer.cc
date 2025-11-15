@@ -103,8 +103,7 @@ void EquipMessageConsumer::handleSuccessfulRequest(const EquipMessage &message) 
   const auto shipDbId   = message.getShipDbId();
   const auto playerDbId = m_shipService->getPlayerDbIdForShip(shipDbId);
 
-  auto started = std::make_unique<LoadingStartedMessage>(LoadingTransition::EQUIP);
-  started->setPlayerDbId(playerDbId);
+  auto started = std::make_unique<LoadingStartedMessage>(LoadingTransition::EQUIP, playerDbId);
   started->copyClientIdIfDefined(message);
   m_systemMessageQueue->pushMessage(std::move(started));
 

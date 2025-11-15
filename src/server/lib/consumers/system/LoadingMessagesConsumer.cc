@@ -158,14 +158,8 @@ void LoadingMessagesConsumer::handleUndockTransition(const LoadingStartedMessage
 
 void LoadingMessagesConsumer::handleLoginDataLoading(const LoadingStartedMessage &message) const
 {
-  const auto maybePlayerDbId = message.tryGetPlayerDbId();
-  if (!maybePlayerDbId)
-  {
-    warn("Failed to process loading started message", "No player defined");
-    return;
-  }
-
-  const auto props = m_loadingService->getDataForPlayer(*maybePlayerDbId);
+  const auto playerDbId = message.getPlayerDbId();
+  const auto props      = m_loadingService->getDataForPlayer(playerDbId);
 
   auto out = std::make_unique<PlayerLoginDataMessage>();
   out->setFaction(props.faction);
@@ -227,14 +221,8 @@ void LoadingMessagesConsumer::handleComputersLoading(const LoadingStartedMessage
 
 void LoadingMessagesConsumer::handleShipsLoading(const LoadingStartedMessage &message) const
 {
-  const auto maybePlayerDbId = message.tryGetPlayerDbId();
-  if (!maybePlayerDbId)
-  {
-    warn("Failed to process loading started message", "No player defined");
-    return;
-  }
-
-  const auto player = m_loadingService->getDataForPlayer(*maybePlayerDbId);
+  const auto playerDbId = message.getPlayerDbId();
+  const auto player     = m_loadingService->getDataForPlayer(playerDbId);
 
   const auto ships = m_loadingService->getShipsForFaction(player.faction);
 
@@ -268,14 +256,8 @@ void LoadingMessagesConsumer::handleSystemsLoading(const LoadingStartedMessage &
 
 void LoadingMessagesConsumer::handlePlayerResourcesLoading(const LoadingStartedMessage &message) const
 {
-  const auto maybePlayerDbId = message.tryGetPlayerDbId();
-  if (!maybePlayerDbId)
-  {
-    warn("Failed to process loading started message", "No player defined");
-    return;
-  }
-
-  const auto playerResources = m_loadingService->getPlayerResources(*maybePlayerDbId);
+  const auto playerDbId      = message.getPlayerDbId();
+  const auto playerResources = m_loadingService->getPlayerResources(playerDbId);
 
   std::vector<PlayerResourceData> resourcesData{};
   std::transform(playerResources.begin(),
@@ -293,14 +275,8 @@ void LoadingMessagesConsumer::handlePlayerResourcesLoading(const LoadingStartedM
 
 void LoadingMessagesConsumer::handlePlayerShipsLoading(const LoadingStartedMessage &message) const
 {
-  const auto maybePlayerDbId = message.tryGetPlayerDbId();
-  if (!maybePlayerDbId)
-  {
-    warn("Failed to process loading started message", "No player defined");
-    return;
-  }
-
-  const auto ships = m_loadingService->getPlayerShips(*maybePlayerDbId);
+  const auto playerDbId = message.getPlayerDbId();
+  const auto ships      = m_loadingService->getPlayerShips(playerDbId);
 
   std::vector<PlayerShipData> shipsData{};
   std::transform(ships.begin(),
@@ -309,7 +285,7 @@ void LoadingMessagesConsumer::handlePlayerShipsLoading(const LoadingStartedMessa
                  [](const PlayerShipProps &props) { return props.toPlayerShipData(); });
 
   auto out = std::make_unique<PlayerShipListMessage>(shipsData);
-  out->setPlayerDbId(*maybePlayerDbId);
+  out->setPlayerDbId(playerDbId);
   out->copyClientIdIfDefined(message);
 
   m_outputMessageQueue->pushMessage(std::move(out));
@@ -317,14 +293,8 @@ void LoadingMessagesConsumer::handlePlayerShipsLoading(const LoadingStartedMessa
 
 void LoadingMessagesConsumer::handlePlayerComputersLoading(const LoadingStartedMessage &message) const
 {
-  const auto maybePlayerDbId = message.tryGetPlayerDbId();
-  if (!maybePlayerDbId)
-  {
-    warn("Failed to process loading started message", "No player defined");
-    return;
-  }
-
-  const auto playerComputers = m_loadingService->getPlayerComputers(*maybePlayerDbId);
+  const auto playerDbId      = message.getPlayerDbId();
+  const auto playerComputers = m_loadingService->getPlayerComputers(playerDbId);
 
   std::vector<PlayerComputerData> computersData{};
   std::transform(playerComputers.begin(),
@@ -342,14 +312,8 @@ void LoadingMessagesConsumer::handlePlayerComputersLoading(const LoadingStartedM
 
 void LoadingMessagesConsumer::handlePlayerWeaponsLoading(const LoadingStartedMessage &message) const
 {
-  const auto maybePlayerDbId = message.tryGetPlayerDbId();
-  if (!maybePlayerDbId)
-  {
-    warn("Failed to process loading started message", "No player defined");
-    return;
-  }
-
-  const auto playerWeapons = m_loadingService->getPlayerWeapons(*maybePlayerDbId);
+  const auto playerDbId    = message.getPlayerDbId();
+  const auto playerWeapons = m_loadingService->getPlayerWeapons(playerDbId);
 
   std::vector<PlayerWeaponData> weaopnsData{};
   std::transform(playerWeapons.begin(),
@@ -367,14 +331,8 @@ void LoadingMessagesConsumer::handlePlayerWeaponsLoading(const LoadingStartedMes
 
 void LoadingMessagesConsumer::handleActiveShipLoading(const LoadingStartedMessage &message) const
 {
-  const auto maybePlayerDbId = message.tryGetPlayerDbId();
-  if (!maybePlayerDbId)
-  {
-    warn("Failed to process loading started message", "No player defined");
-    return;
-  }
-
-  const auto ship = m_loadingService->getActivePlayerShip(*maybePlayerDbId);
+  const auto playerDbId = message.getPlayerDbId();
+  const auto ship       = m_loadingService->getActivePlayerShip(playerDbId);
 
   auto out = std::make_unique<HangarMessage>(ship.toPlayerShipData());
   out->copyClientIdIfDefined(message);

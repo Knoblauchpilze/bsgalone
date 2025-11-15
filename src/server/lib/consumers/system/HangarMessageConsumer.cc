@@ -55,8 +55,8 @@ void HangarMessageConsumer::handleSuccessfulSwitch(const HangarMessage &message)
   const auto shipDbId   = message.getShipDbId();
   const auto playerDbId = m_shipService->getPlayerDbIdForShip(shipDbId);
 
-  auto started = std::make_unique<LoadingStartedMessage>(LoadingTransition::ACTIVE_SHIP_CHANGED);
-  started->setPlayerDbId(playerDbId);
+  auto started = std::make_unique<LoadingStartedMessage>(LoadingTransition::ACTIVE_SHIP_CHANGED,
+                                                         playerDbId);
   started->copyClientIdIfDefined(message);
   m_systemMessageQueue->pushMessage(std::move(started));
 
