@@ -58,7 +58,6 @@ FROM
   LEFT JOIN player AS p ON ps.player = p.id
 WHERE
   ps.active = true
-  AND ps.player IS NOT NULL
   AND ps.player = $1
 )";
 

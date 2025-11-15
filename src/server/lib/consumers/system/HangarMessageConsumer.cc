@@ -52,20 +52,16 @@ void HangarMessageConsumer::handleShipSwitchRequest(const HangarMessage &message
 
 void HangarMessageConsumer::handleSuccessfulSwitch(const HangarMessage &message) const
 {
-  const auto shipDbId        = message.getShipDbId();
-  const auto maybePlayerDbId = m_shipService->tryGetPlayerDbIdForShip(shipDbId);
-  if (!maybePlayerDbId)
-  {
-    error("Expected ship " + str(shipDbId) + " to belong to a player");
-  }
+  const auto shipDbId   = message.getShipDbId();
+  const auto playerDbId = m_shipService->getPlayerDbIdForShip(shipDbId);
 
   auto started = std::make_unique<LoadingStartedMessage>(LoadingTransition::ACTIVE_SHIP_CHANGED);
-  started->setPlayerDbId(*maybePlayerDbId);
+  started->setPlayerDbId(playerDbId);
   started->copyClientIdIfDefined(message);
   m_systemMessageQueue->pushMessage(std::move(started));
 
   auto finished = std::make_unique<LoadingFinishedMessage>(LoadingTransition::ACTIVE_SHIP_CHANGED);
-  finished->setPlayerDbId(*maybePlayerDbId);
+  finished->setPlayerDbId(playerDbId);
   finished->copyClientIdIfDefined(message);
   m_systemMessageQueue->pushMessage(std::move(finished));
 }

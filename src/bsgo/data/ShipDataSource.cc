@@ -204,14 +204,14 @@ void ShipDataSource::registerShipOwner(Coordinator &coordinator,
     coordinator.addAi(shipEntity, generateBehaviorTree(data), std::move(context));
   }
 
-  const auto maybePlayerEntityId = entityMapper.tryGetPlayerEntityId(*data.playerDbId);
+  const auto maybePlayerEntityId = entityMapper.tryGetPlayerEntityId(data.playerDbId);
   if (!maybePlayerEntityId)
   {
     error("Failed to register owner for ship " + str(data.dbId),
-          "Could not find entity id for player " + str(*data.playerDbId));
+          "Could not find entity id for player " + str(data.playerDbId));
   }
 
-  entityMapper.registerShipForPlayer(*data.playerDbId, data.dbId, shipEntity);
+  entityMapper.registerShipForPlayer(data.playerDbId, data.dbId, shipEntity);
   coordinator.addOwner(shipEntity, *maybePlayerEntityId, OwnerType::PLAYER);
 }
 

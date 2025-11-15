@@ -100,20 +100,16 @@ void EquipMessageConsumer::handleUnequipRequest(const EquipMessage &message) con
 
 void EquipMessageConsumer::handleSuccessfulRequest(const EquipMessage &message) const
 {
-  const auto shipDbId        = message.getShipDbId();
-  const auto maybePlayerDbId = m_shipService->tryGetPlayerDbIdForShip(shipDbId);
-  if (!maybePlayerDbId)
-  {
-    error("Expected ship " + str(shipDbId) + " to belong to a player");
-  }
+  const auto shipDbId   = message.getShipDbId();
+  const auto playerDbId = m_shipService->getPlayerDbIdForShip(shipDbId);
 
   auto started = std::make_unique<LoadingStartedMessage>(LoadingTransition::EQUIP);
-  started->setPlayerDbId(*maybePlayerDbId);
+  started->setPlayerDbId(playerDbId);
   started->copyClientIdIfDefined(message);
   m_systemMessageQueue->pushMessage(std::move(started));
 
   auto finished = std::make_unique<LoadingFinishedMessage>(LoadingTransition::EQUIP);
-  finished->setPlayerDbId(*maybePlayerDbId);
+  finished->setPlayerDbId(playerDbId);
   finished->copyClientIdIfDefined(message);
   m_systemMessageQueue->pushMessage(std::move(finished));
 }

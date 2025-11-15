@@ -5,7 +5,7 @@ namespace bsgo {
 
 bool isShipActive(const PlayerShip &ship)
 {
-  return ship.player.has_value() && ship.active;
+  return ship.active;
 }
 
 auto str(const JumpCompletionStatus status) -> std::string

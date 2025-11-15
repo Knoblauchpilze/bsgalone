@@ -264,7 +264,7 @@ void PlayerShipRepository::create(const PlayerShip &ship)
     return transaction
       .exec(pqxx::prepped{CREATE_SHIP_QUERY_NAME},
             pqxx::params{toDbId(ship.ship),
-                         toDbId(*ship.player),
+                         toDbId(ship.player),
                          ship.name,
                          ship.active,
                          ship.hullPoints,
@@ -355,15 +355,12 @@ auto PlayerShipRepository::fetchShipBase(const Uuid ship) const -> PlayerShip
 
   PlayerShip out;
 
-  out.id        = ship;
-  out.faction   = fromDbFaction(record[0].as<std::string>());
-  out.shipClass = fromDbShipClass(record[1].as<std::string>());
-  out.ship      = fromDbId(record[2].as<int>());
-  out.name      = record[3].as<std::string>();
-  if (!record[4].is_null())
-  {
-    out.player = fromDbId(record[4].as<int>());
-  }
+  out.id              = ship;
+  out.faction         = fromDbFaction(record[0].as<std::string>());
+  out.shipClass       = fromDbShipClass(record[1].as<std::string>());
+  out.ship            = fromDbId(record[2].as<int>());
+  out.name            = record[3].as<std::string>();
+  out.player          = fromDbId(record[4].as<int>());
   out.active          = record[5].as<bool>();
   out.hullPoints      = record[6].as<float>();
   out.maxHullPoints   = record[7].as<float>();

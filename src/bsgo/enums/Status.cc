@@ -296,6 +296,11 @@ auto determineStartingStatusForShip(const PlayerShip &ship) -> Status
     return Status::DOCKED;
   }
 
+  // TODO: This is obsolete and should be changed to either always make
+  // the bots appear visible or removing it so that they also use the
+  // `APPEARING` state.
+  // Currently it just means that player 0 will see their ships always
+  // appear visible.
   if (!ship.player)
   {
     return Status::VISIBLE;

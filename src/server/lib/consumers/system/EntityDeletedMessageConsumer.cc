@@ -41,21 +41,18 @@ void EntityDeletedMessageConsumer::onMessageReceived(const IMessage &message)
 
 void EntityDeletedMessageConsumer::handleShipRemoved(const EntityRemovedMessage &message) const
 {
-  const auto shipDbId        = message.getEntityDbId();
-  const auto maybePlayerDbId = m_entityService->tryGetPlayerDbIdForShip(shipDbId);
+  const auto shipDbId   = message.getEntityDbId();
+  const auto playerDbId = m_entityService->getPlayerDbIdForShip(shipDbId);
   m_entityService->tryDeleteShipEntity(shipDbId);
 
   auto ship = message.clone();
   m_outputMessageQueue->pushMessage(std::move(ship));
 
-  if (maybePlayerDbId)
-  {
-    auto player = std::make_unique<EntityRemovedMessage>(*maybePlayerDbId,
-                                                         EntityKind::PLAYER,
-                                                         message.isDead(),
-                                                         message.getSystemDbId());
-    m_outputMessageQueue->pushMessage(std::move(player));
-  }
+  auto player = std::make_unique<EntityRemovedMessage>(playerDbId,
+                                                       EntityKind::PLAYER,
+                                                       message.isDead(),
+                                                       message.getSystemDbId());
+  m_outputMessageQueue->pushMessage(std::move(player));
 }
 
 void EntityDeletedMessageConsumer::handleAsteroidRemoved(const EntityRemovedMessage &message) const
