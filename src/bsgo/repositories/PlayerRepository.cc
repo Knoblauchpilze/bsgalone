@@ -18,11 +18,9 @@ SELECT
 FROM
   player_ship AS ps
   LEFT JOIN ship_system AS ss ON ps.id = ss.ship
-  LEFT JOIN player AS p ON ps.player = p.id
 WHERE
   ps.active = true
   AND ss.docked = false
-  AND ps.player IS NOT NULL
   AND ss.system = $1
 )";
 
