@@ -55,12 +55,9 @@ auto PlayerWeaponRepository::findOneById(const Uuid weapon) const -> PlayerWeapo
 
   PlayerWeapon out{};
 
-  out.id     = weapon;
-  out.weapon = fromDbId(record[0].as<int>());
-  if (!record[1].is_null())
-  {
-    out.player = fromDbId(record[1].as<int>());
-  }
+  out.id         = weapon;
+  out.weapon     = fromDbId(record[0].as<int>());
+  out.player     = fromDbId(record[1].as<int>());
   out.name       = record[2].as<std::string>();
   out.minDamage  = record[3].as<float>();
   out.maxDamage  = record[4].as<float>();
@@ -91,16 +88,9 @@ auto PlayerWeaponRepository::findAllByPlayer(const Uuid player) const -> std::un
 void PlayerWeaponRepository::save(const PlayerWeapon &weapon)
 {
   auto query = [&weapon](pqxx::work &transaction) {
-    if (weapon.player)
-    {
-      return transaction
-        .exec(pqxx::prepped{UPDATE_WEAPON_QUERY_NAME},
-              pqxx::params{toDbId(weapon.weapon), toDbId(*weapon.player)})
-        .no_rows();
-    }
-
     return transaction
-      .exec(pqxx::prepped{UPDATE_WEAPON_QUERY_NAME}, pqxx::params{toDbId(weapon.weapon), nullptr})
+      .exec(pqxx::prepped{UPDATE_WEAPON_QUERY_NAME},
+            pqxx::params{toDbId(weapon.weapon), toDbId(weapon.player)})
       .no_rows();
   };
 
