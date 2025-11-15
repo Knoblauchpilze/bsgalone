@@ -5,7 +5,11 @@ namespace bsgo {
 
 auto toPlayerData(const Player &player) -> PlayerData
 {
-  return PlayerData{.dbId = player.id, .name = player.name};
+  return PlayerData{
+    .dbId = player.id,
+    .name = player.name,
+    .isAi = !player.account.has_value(),
+  };
 }
 
 auto AsteroidProps::toAsteroidData() const -> AsteroidData
