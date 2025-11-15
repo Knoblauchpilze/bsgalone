@@ -14,6 +14,14 @@ bool SystemService::tryDistributeResource(const Uuid playerDbId,
 {
   const auto player = m_repositories.playerRepository->findOneById(playerDbId);
 
+  // Do not distribute resources to players not having an account linked to them.
+  // Those players are used to represent bots and should not receive resources.
+  if (!player.account)
+  {
+    debug("Ignoring distributing resource to " + str(playerDbId) + " as it has no linked account");
+    return true;
+  }
+
   const auto existing = findExistingResourceAmount(playerDbId, resourceDbId);
   const auto updated  = existing + amount;
   if (updated < 0.0f)
