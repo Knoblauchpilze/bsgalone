@@ -176,7 +176,7 @@ auto BroadcastMessageQueue::tryDetermineClientId(const IMessage &message) const
     case MessageType::SLOT_COMPONENT_UPDATED:
       return determineClientFor(message.as<SlotComponentMessage>(), *m_clientManager);
     case MessageType::LOADING_STARTED:
-      return maybeDetermineClientFor(message.as<LoadingStartedMessage>(), *m_clientManager);
+      return determineClientFor(message.as<LoadingStartedMessage>(), *m_clientManager);
     case MessageType::LOADING_FINISHED:
       return maybeDetermineClientFor(message.as<LoadingFinishedMessage>(), *m_clientManager);
     default:

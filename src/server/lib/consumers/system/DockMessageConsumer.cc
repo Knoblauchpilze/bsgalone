@@ -114,9 +114,8 @@ void DockMessageConsumer::publishLoadingMessages(const LoadingTransition transit
   const auto playerDbId = m_shipService->getPlayerDbIdForShip(shipDbId);
   const auto systemDbId = m_shipService->getSystemDbIdForShip(shipDbId);
 
-  auto started = std::make_unique<LoadingStartedMessage>(transition);
+  auto started = std::make_unique<LoadingStartedMessage>(transition, playerDbId);
   started->setSystemDbId(systemDbId);
-  started->setPlayerDbId(playerDbId);
   started->copyClientIdIfDefined(originalDockMessage);
   m_systemMessageQueue->pushMessage(std::move(started));
 

@@ -8,9 +8,11 @@ LoadingStartedMessage::LoadingStartedMessage()
   : NetworkMessage(MessageType::LOADING_STARTED)
 {}
 
-LoadingStartedMessage::LoadingStartedMessage(const LoadingTransition transition)
+LoadingStartedMessage::LoadingStartedMessage(const LoadingTransition transition,
+                                             const Uuid playerDbId)
   : NetworkMessage(MessageType::LOADING_STARTED)
   , m_transition(transition)
+  , m_playerDbId(playerDbId)
 {}
 
 auto LoadingStartedMessage::getTransition() const -> LoadingTransition
@@ -32,19 +34,18 @@ auto LoadingStartedMessage::tryGetSystemDbId() const -> std::optional<Uuid>
   return m_systemDbId;
 }
 
-auto LoadingStartedMessage::tryGetPlayerDbId() const -> std::optional<Uuid>
+auto LoadingStartedMessage::getPlayerDbId() const -> Uuid
 {
-  return m_playerDbId;
+  if (!m_playerDbId)
+  {
+    error("Expected player db id to be defined but it was not");
+  }
+  return *m_playerDbId;
 }
 
 void LoadingStartedMessage::setSystemDbId(const Uuid systemDbId)
 {
   m_systemDbId = systemDbId;
-}
-
-void LoadingStartedMessage::setPlayerDbId(const Uuid playerDbId)
-{
-  m_playerDbId = playerDbId;
 }
 
 auto LoadingStartedMessage::serialize(std::ostream &out) const -> std::ostream &
@@ -74,14 +75,10 @@ bool LoadingStartedMessage::deserialize(std::istream &in)
 
 auto LoadingStartedMessage::clone() const -> IMessagePtr
 {
-  auto clone = std::make_unique<LoadingStartedMessage>(m_transition);
+  auto clone = std::make_unique<LoadingStartedMessage>(m_transition, *m_playerDbId);
   if (m_systemDbId)
   {
     clone->setSystemDbId(*m_systemDbId);
-  }
-  if (m_playerDbId)
-  {
-    clone->setPlayerDbId(*m_playerDbId);
   }
 
   clone->copyClientIdIfDefined(*this);

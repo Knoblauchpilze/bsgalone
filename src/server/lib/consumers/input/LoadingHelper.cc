@@ -41,9 +41,8 @@ void LoadingHelper::publishLoadingMessages(const Uuid clientId, const Uuid playe
           "Unknown system " + str(*maybeSystemDbId));
   }
 
-  auto started = std::make_unique<LoadingStartedMessage>(LoadingTransition::LOGIN);
+  auto started = std::make_unique<LoadingStartedMessage>(LoadingTransition::LOGIN, playerDbId);
   started->setSystemDbId(*maybeSystemDbId);
-  started->setPlayerDbId(playerDbId);
   started->setClientId(clientId);
   maybeProcessor->second->pushMessage(std::move(started));
 

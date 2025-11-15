@@ -105,9 +105,8 @@ void JumpMessageConsumer::handleLoadingMessages(const Uuid playerDbId,
 
   debug("Pushing loading messages to " + str(destinationSystemDbId));
 
-  auto started = std::make_unique<LoadingStartedMessage>(LoadingTransition::JUMP);
+  auto started = std::make_unique<LoadingStartedMessage>(LoadingTransition::JUMP, playerDbId);
   started->setSystemDbId(destinationSystemDbId);
-  started->setPlayerDbId(playerDbId);
   started->setClientId(clientId);
   maybeDestinationProcessor->second->pushMessage(std::move(started));
 
