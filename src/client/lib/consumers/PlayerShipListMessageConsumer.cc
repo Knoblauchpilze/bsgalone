@@ -13,9 +13,9 @@ PlayerShipListMessageConsumer::PlayerShipListMessageConsumer(bsgo::DatabaseEntit
 {}
 
 namespace {
-bool doesMessageContainsSystemShips(const bsgo::PlayerShipListMessage &message)
+bool doesMessageContainPlayerShips(const bsgo::PlayerShipListMessage &message)
 {
-  return message.tryGetSystemDbId().has_value();
+  return message.tryGetPlayerDbId().has_value();
 }
 } // namespace
 
@@ -26,7 +26,7 @@ void PlayerShipListMessageConsumer::onMessageReceived(const bsgo::IMessage &mess
   // Only consider messages that define ships for a system. This same message can
   // also be used to communicate the ships of a single player during the login
   // phase.
-  if (!doesMessageContainsSystemShips(shipsList))
+  if (doesMessageContainPlayerShips(shipsList))
   {
     return;
   }
