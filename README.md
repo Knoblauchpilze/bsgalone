@@ -893,7 +893,7 @@ Each node has an execution [state](src/bsgo/systems/NodeState.hh) which can be f
 
 The following image shows an example of how the very simplistic AI works at the moment:
 
-![Behavior tree](resources/behavior_tree_example.png)
+![Behavior tree](resources/ai-behavior-tree.svg)
 
 In this example the root node is a repeater: this is usually advised as then we have an infinite behavior. We then have two main modes: the attack mode and the idle mode. Both of them are composed of a succession of actions. These are composed together with a fallback node, meaning that if the first strategy fails we will go on with the second one.
 
@@ -901,9 +901,13 @@ In this example the root node is a repeater: this is usually advised as then we 
 
 In the attack mode, the first thing is to pick a target: to that purpose the AI will scan its surroundings for a valid target. Two main results: success or failure.
 
-In case it succeeds, we continue to the next: the AI will try to follow the target. This action just takes into consideration the target and tries to come closer to it: it succeeds immediately but also work iteratively. After this the Fire mode will be triggered which will check if the AI is close enough to the target and try to shoot at it.
+In case it succeeds, we continue to the next: the AI will try to fire at the target. This behavior itself is a composition of two nodes:
+* a `FireNode`, responsible to fire at the target when possible
+* a `FollowTargetNode` aiming at closing the distance to the target and bring it in firing range
 
-In case it fails, then the parent sequence node will also fail as one of its child couldn't succeed and the repreater will then go on to the next element.
+In case the bot can't fire at the target the fallback node will attempt to get closer to the target. This can currently only succeed.
+
+If the target gets too far or get killed, the `PickTargetNode` will fail and therefore the whole attack sequence will also fail (as one of its child couldn't succeed). In such cases, the parent repreater will then go on to the next element.
 
 #### Idle mode
 
@@ -911,7 +915,7 @@ At any point the attack mode can fail: for example if the target goes too far fr
 
 The idle mode is composed of a succession of node to go to a target. This defines a patrol for the AI to loop through while waiting for something to happen.
 
-This mode can't fail: the AI will just loop indefinitely until something else happens.
+This mode can't fail: the AI will just loop indefinitely until something else happens. When the last target is reached, the `SequenceNode` will succeed and the repeater will start again the sequence.
 
 #### Orchestration
 
@@ -919,7 +923,7 @@ At each loop of the game we just iterate over the whole tree again. Usually it i
 
 Due to the dynamic nature of the tree and the fact that we iterate over it all the time, we can very easily react to a change:
 
-- we're in idle mode but a target arrives? The attack mode will trigger itself on its own because the `PickTarget` node will suddenly return a valid target.
+- we're in idle mode but a target arrives? The attack mode will trigger itself on its own because the `PickTargetNode` will suddenly return a valid target.
 - we're shooting at the enemy but it dies? The next iteration will fail to find a target and we go back to idle mode.
 
 This is much easier than having the AI in a certain state and then having at the very beginning of each state to do something like:
@@ -931,6 +935,16 @@ if (determineState() != m_currentState) {
 ```
 
 It keeps the reactions of the AI dynamic by codifying them into the structure of the tree.
+
+#### Data context
+
+The nodes are also given a data context as part of their `tick` method. This concept is described in more details in this [page](https://www.gamedeveloper.com/programming/behavior-trees-for-ai-how-they-work): the gist is that a map of key value pairs is given to the nodes so that they can:
+* persist information to be reused between operations
+* communicate information to other nodes
+
+Additionally, this allows the caller (i.e. the `AiSystem`) to extract/inject information from/into the tree: by setting a key to a certain value, we can make nodes react to certain things.
+
+This is especially useful to persist the state of the tree to the database (currently only the idle target index reached is persisted) and initialize the trees in the client applications from the data received from the server.
 
 ## Messaging system
 
