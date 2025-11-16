@@ -1,6 +1,6 @@
 # bsgalone
 
-Yet another copy of a famous game which will be probably not as polished and not as fun as the original. This time we try out: [Battlestar Galactica Online](https://www.mmorpg.com/battlestar-galactica-online).
+This project aims at replicating the classic space shooter game [Battlestar Galactica Online](https://www.mmorpg.com/battlestar-galactica-online). It is not meant as a commercial project.
 
 # What is the game about?
 
