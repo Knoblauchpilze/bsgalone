@@ -48,6 +48,7 @@ void OutpostDataSource::registerOutpost(Coordinator &coordinator,
   coordinator.addHealth(outpostEntityId, data.hullPoints, data.maxHullPoints, data.hullPointsRegen);
   coordinator.addRemoval(outpostEntityId);
   coordinator.addPower(outpostEntityId, data.powerPoints, data.maxPowerPoints, data.powerRegen);
+  // TODO: This should use the data.targetDbId
   coordinator.addTarget(outpostEntityId);
   coordinator.addFaction(outpostEntityId, data.faction);
   coordinator.addStatus(outpostEntityId, Status::VISIBLE, {}, {});
