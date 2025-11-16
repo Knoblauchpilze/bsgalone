@@ -13,7 +13,7 @@ auto RepeaterNode::tick(const BehaviorData &data) -> NodeState
   const auto state = m_child->tick(data);
   if (NodeState::SUCCESS == state)
   {
-    debug("Child succeeded, reset and repeat");
+    verbose("Child succeeded, reset and repeat");
     m_child->reset(data.context);
     return NodeState::RUNNING;
   }
