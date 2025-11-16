@@ -239,14 +239,17 @@ void ShipDataSource::registerShipComputers(Coordinator &coordinator,
 namespace {
 auto generateBehaviorNode(INodePtr &&idleSequence) -> INodePtr
 {
-  auto pickTarget = std::make_unique<PickTargetNode>();
-  auto target     = std::make_unique<FollowTargetNode>();
-  auto fire       = std::make_unique<FireNode>();
+  auto fire         = std::make_unique<FireNode>();
+  auto followTarget = std::make_unique<FollowTargetNode>();
+  auto pickTarget   = std::make_unique<PickTargetNode>();
+
+  auto fireAndFollowFallback = std::make_unique<FallbackNode>();
+  fireAndFollowFallback->addChild(std::move(fire));
+  fireAndFollowFallback->addChild(std::move(followTarget));
 
   auto attackSequence = std::make_unique<SequenceNode>();
   attackSequence->addChild(std::move(pickTarget));
-  attackSequence->addChild(std::move(target));
-  attackSequence->addChild(std::move(fire));
+  attackSequence->addChild(std::move(fireAndFollowFallback));
 
   auto fallbackNode = std::make_unique<FallbackNode>();
   fallbackNode->addChild(std::move(attackSequence));
