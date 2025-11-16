@@ -16,6 +16,12 @@ ComponentMessageConsumer::ComponentMessageConsumer(const bsgo::DatabaseEntityMap
 
 void ComponentMessageConsumer::onMessageReceived(const bsgo::IMessage &message)
 {
+  if (!m_entityMapper.doesPlayerHaveAnEntity())
+  {
+    // Most probably the player did not undock yet.
+    return;
+  }
+
   switch (message.type())
   {
     case bsgo::MessageType::SLOT_COMPONENT_UPDATED:
