@@ -39,6 +39,13 @@ void PlayerDataSource::registerPlayer(Coordinator &coordinator,
                                       const PlayerData &data,
                                       DatabaseEntityMapper &entityMapper) const
 {
+  const auto maybeEntityId = entityMapper.tryGetPlayerEntityId(data.dbId);
+  if (maybeEntityId)
+  {
+    debug("Player " + str(data.dbId) + " is already attached to entity " + str(*maybeEntityId));
+    return;
+  }
+
   const auto playerEntityId = coordinator.createEntity(EntityKind::PLAYER);
 
   coordinator.addDbId(playerEntityId, data.dbId);
