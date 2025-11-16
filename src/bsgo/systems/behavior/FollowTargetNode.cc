@@ -44,7 +44,7 @@ void FollowTargetNode::run(const BehaviorData &data)
   const auto reachedTarget = moveTowardsTarget(data.ent, targetPosition);
   if (reachedTarget)
   {
-    verbose("Reached target " + target.str());
+    verbose("Reached target of " + data.ent.str() + ": " + target.str());
     finish();
   }
 }
