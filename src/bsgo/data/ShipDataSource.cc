@@ -71,6 +71,7 @@ void ShipDataSource::registerShip(Coordinator &coordinator,
   coordinator.addName(shipEntityId, data.name);
   if (data.targetDbId)
   {
+    // TODO: This is wrong as the coordinator expects the entity identifier
     coordinator.addTarget(shipEntityId, *data.targetDbId);
   }
   else
