@@ -48,15 +48,7 @@ void OutpostDataSource::registerOutpost(Coordinator &coordinator,
   coordinator.addHealth(outpostEntityId, data.hullPoints, data.maxHullPoints, data.hullPointsRegen);
   coordinator.addRemoval(outpostEntityId);
   coordinator.addPower(outpostEntityId, data.powerPoints, data.maxPowerPoints, data.powerRegen);
-  if (data.targetDbId)
-  {
-    // TODO: This is wrong as the coordinator expects the entity identifier
-    coordinator.addTarget(outpostEntityId, *data.targetDbId);
-  }
-  else
-  {
-    coordinator.addTarget(outpostEntityId);
-  }
+  coordinator.addTarget(outpostEntityId);
   coordinator.addFaction(outpostEntityId, data.faction);
   coordinator.addStatus(outpostEntityId, Status::VISIBLE, {}, {});
   coordinator.addNetworkSync(outpostEntityId, {ComponentType::HEALTH, ComponentType::POWER});

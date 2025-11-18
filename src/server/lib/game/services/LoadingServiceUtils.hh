@@ -45,7 +45,6 @@ struct AsteroidProps
 struct OutpostProps
 {
   SystemOutpost dbOutpost{};
-  std::optional<Uuid> targetDbId{};
 
   auto toOutpostData() const -> OutpostData;
 };
@@ -64,7 +63,6 @@ struct PlayerShipProps
 {
   PlayerShip dbShip{};
   Status status{};
-  std::optional<Uuid> targetDbId{};
   std::vector<PlayerWeaponProps> weapons{};
   std::vector<PlayerComputer> computers{};
 

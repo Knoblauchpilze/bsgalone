@@ -38,7 +38,6 @@ auto OutpostProps::toOutpostData() const -> OutpostData
     .maxPowerPoints  = dbOutpost.maxPowerPoints,
     .powerRegen      = dbOutpost.powerRegen,
     .faction         = dbOutpost.faction,
-    .targetDbId      = targetDbId,
   };
 }
 
@@ -101,7 +100,6 @@ auto PlayerShipProps::toPlayerShipData() const -> PlayerShipData
     .jumpTimeInThreat = dbShip.jumpTimeInThreat,
     .jumpSystem       = dbShip.jumpSystem,
 
-    .targetDbId = targetDbId,
     .playerDbId = dbShip.player,
 
     .slots         = dbShip.slots,

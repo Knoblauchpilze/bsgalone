@@ -95,30 +95,12 @@ auto LoadingService::getAsteroidsInSystem(const Uuid systemDbId) const -> std::v
   return asteroids;
 }
 
-namespace {
-auto getOutpostTargetDbId(const Uuid outpostDbId,
-                          const DatabaseEntityMapper &entityMapper,
-                          const Coordinator &coordinator) -> std::optional<Uuid>
-{
-  const auto maybeEntityId = entityMapper.tryGetOutpostEntityId(outpostDbId);
-  if (!maybeEntityId)
-  {
-    return {};
-  }
-
-  const auto entity = coordinator.getEntity(*maybeEntityId);
-  return entity.targetComp().target();
-}
-} // namespace
-
 auto LoadingService::getOutpostById(const Uuid outpostDbId) const -> OutpostProps
 {
-  const auto outpost    = m_repositories.systemOutpostRepository->findOneById(outpostDbId);
-  const auto targetDbId = getOutpostTargetDbId(outpostDbId, m_entityMapper, *m_coordinator);
+  const auto outpost = m_repositories.systemOutpostRepository->findOneById(outpostDbId);
 
   return OutpostProps{
-    .dbOutpost  = outpost,
-    .targetDbId = targetDbId,
+    .dbOutpost = outpost,
   };
 }
 
@@ -132,8 +114,7 @@ auto LoadingService::getOutpostsInSystem(const Uuid systemDbId) const -> std::ve
   {
     const auto outpost = m_repositories.systemOutpostRepository->findOneById(outpostDbId);
 
-    const auto targetDbId = getOutpostTargetDbId(outpostDbId, m_entityMapper, *m_coordinator);
-    outposts.emplace_back(outpost, targetDbId);
+    outposts.emplace_back(outpost);
   }
 
   return outposts;
@@ -170,37 +151,21 @@ auto getComputersForShip(const Repositories &repositories, const Uuid shipDbId)
 
   return computers;
 }
-
-auto getShipTargetDbId(const Uuid shipDbId,
-                       const DatabaseEntityMapper &entityMapper,
-                       const Coordinator &coordinator) -> std::optional<Uuid>
-{
-  const auto maybeEntityId = entityMapper.tryGetShipEntityId(shipDbId);
-  if (!maybeEntityId)
-  {
-    return {};
-  }
-
-  const auto entity = coordinator.getEntity(*maybeEntityId);
-  return entity.targetComp().target();
-}
 } // namespace
 
 auto LoadingService::getShipById(const Uuid shipDbId) const -> PlayerShipProps
 {
-  const auto ship       = m_repositories.playerShipRepository->findOneById(shipDbId);
-  const auto player     = m_repositories.playerRepository->findOneById(ship.player);
-  const auto weapons    = getWeaponsForShip(m_repositories, shipDbId);
-  const auto computers  = getComputersForShip(m_repositories, shipDbId);
-  const auto status     = determineStartingStatusForShip(ship, player);
-  const auto targetDbId = getShipTargetDbId(shipDbId, m_entityMapper, *m_coordinator);
+  const auto ship      = m_repositories.playerShipRepository->findOneById(shipDbId);
+  const auto player    = m_repositories.playerRepository->findOneById(ship.player);
+  const auto weapons   = getWeaponsForShip(m_repositories, shipDbId);
+  const auto computers = getComputersForShip(m_repositories, shipDbId);
+  const auto status    = determineStartingStatusForShip(ship, player);
 
   return PlayerShipProps{
-    .dbShip     = ship,
-    .status     = status,
-    .targetDbId = targetDbId,
-    .weapons    = weapons,
-    .computers  = computers,
+    .dbShip    = ship,
+    .status    = status,
+    .weapons   = weapons,
+    .computers = computers,
   };
 }
 
@@ -218,10 +183,9 @@ auto LoadingService::getShipsInSystem(const Uuid systemDbId) const -> std::vecto
     const auto weapons   = getWeaponsForShip(m_repositories, shipDbId);
     const auto computers = getComputersForShip(m_repositories, shipDbId);
 
-    const auto status     = determineStartingStatusForShip(ship, player);
-    const auto targetDbId = getShipTargetDbId(shipDbId, m_entityMapper, *m_coordinator);
+    const auto status = determineStartingStatusForShip(ship, player);
 
-    ships.emplace_back(ship, status, targetDbId, weapons, computers);
+    ships.emplace_back(ship, status, weapons, computers);
   }
 
   return ships;
@@ -323,10 +287,9 @@ auto LoadingService::getPlayerShips(const Uuid playerDbId) const -> std::vector<
     const auto weapons   = getWeaponsForShip(m_repositories, shipDbId);
     const auto computers = getComputersForShip(m_repositories, shipDbId);
 
-    const auto status     = determineStartingStatusForShip(ship, player);
-    const auto targetDbId = getShipTargetDbId(shipDbId, m_entityMapper, *m_coordinator);
+    const auto status = determineStartingStatusForShip(ship, player);
 
-    ships.emplace_back(ship, status, targetDbId, weapons, computers);
+    ships.emplace_back(ship, status, weapons, computers);
   }
 
   return ships;
@@ -372,15 +335,13 @@ auto LoadingService::getActivePlayerShip(const Uuid playerDbId) const -> PlayerS
   const auto weapons   = getWeaponsForShip(m_repositories, ship.id);
   const auto computers = getComputersForShip(m_repositories, ship.id);
 
-  const auto status     = determineStartingStatusForShip(ship, player);
-  const auto targetDbId = getShipTargetDbId(ship.id, m_entityMapper, *m_coordinator);
+  const auto status = determineStartingStatusForShip(ship, player);
 
   return PlayerShipProps{
-    .dbShip     = ship,
-    .status     = status,
-    .targetDbId = targetDbId,
-    .weapons    = weapons,
-    .computers  = computers,
+    .dbShip    = ship,
+    .status    = status,
+    .weapons   = weapons,
+    .computers = computers,
   };
 }
 

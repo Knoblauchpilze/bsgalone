@@ -22,8 +22,6 @@ auto OutpostData::serialize(std::ostream &out) const -> std::ostream &
   core::serialize(out, powerRegen);
   core::serialize(out, faction);
 
-  core::serialize(out, targetDbId);
-
   return out;
 }
 
@@ -41,7 +39,6 @@ bool OutpostData::deserialize(std::istream &in)
   ok &= core::deserialize(in, maxPowerPoints);
   ok &= core::deserialize(in, powerRegen);
   ok &= core::deserialize(in, faction);
-  ok &= core::deserialize(in, targetDbId);
 
   return ok;
 }
