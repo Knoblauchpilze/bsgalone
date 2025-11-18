@@ -36,8 +36,7 @@ TEST(Unit_Bsgo_Serialization_OutpostListMessage, Basic)
                                                .powerPoints = 11.3f},
                                               {.dbId       = Uuid{76},
                                                .radius     = 26.9f,
-                                               .hullPoints = 100.0f,
-                                               .targetDbId = Uuid{4567}}};
+                                               .hullPoints = 100.0f}};
   OutpostListMessage actual(Uuid{1515}, outpostsData);
   actual.setClientId(Uuid{2});
   serializeAndDeserializeMessage(expected, actual);
@@ -54,8 +53,7 @@ TEST(Unit_Bsgo_Serialization_OutpostListMessage, WithClientId)
   OutpostListMessage expected(Uuid{123}, outpostsData);
   expected.setClientId(Uuid{78});
 
-  outpostsData = {{.dbId = Uuid{17}, .powerPoints = 100.0f, .targetDbId = Uuid{923}},
-                  {.dbId = Uuid{17}, .radius = 26.1}};
+  outpostsData = {{.dbId = Uuid{17}, .powerPoints = 100.0f}, {.dbId = Uuid{17}, .radius = 26.1}};
   OutpostListMessage actual(Uuid{745}, {});
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
@@ -64,7 +62,7 @@ TEST(Unit_Bsgo_Serialization_OutpostListMessage, WithClientId)
 TEST(Unit_Bsgo_Serialization_OutpostListMessage, Clone)
 {
   const std::vector<OutpostData> outpostsData{
-    {.dbId = Uuid{23}, .position = Eigen::Vector3f(1.0f, 2.8f, 3.9f), .targetDbId = Uuid{4567}},
+    {.dbId = Uuid{23}, .position = Eigen::Vector3f(1.0f, 2.8f, 3.9f)},
   };
 
   const OutpostListMessage expected(Uuid{4572}, outpostsData);

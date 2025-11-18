@@ -66,7 +66,6 @@ void assertOutpostDataAreEqual(const OutpostData &actual, const OutpostData &exp
   EXPECT_EQ(actual.maxPowerPoints, expected.maxPowerPoints);
   EXPECT_EQ(actual.powerRegen, expected.powerRegen);
   EXPECT_EQ(actual.faction, expected.faction);
-  EXPECT_EQ(actual.targetDbId, expected.targetDbId);
 }
 
 void assertPlayerDataAreEqual(const PlayerData &actual, const PlayerData &expected)
@@ -99,7 +98,6 @@ void assertPlayerShipDataAreEqual(const PlayerShipData &actual, const PlayerShip
   EXPECT_EQ(actual.jumpTime, expected.jumpTime);
   EXPECT_EQ(actual.jumpTimeInThreat, expected.jumpTimeInThreat);
   EXPECT_EQ(actual.jumpSystem, expected.jumpSystem);
-  EXPECT_EQ(actual.targetDbId, expected.targetDbId);
   EXPECT_EQ(actual.playerDbId, expected.playerDbId);
   EXPECT_EQ(actual.slots, expected.slots);
   EXPECT_EQ(actual.aiTargets, expected.aiTargets);
