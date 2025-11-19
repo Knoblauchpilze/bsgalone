@@ -23,6 +23,7 @@
 #include "SystemOutpostRepository.hh"
 #include "SystemRepository.hh"
 #include "SystemTickData.hh"
+#include "TargetData.hh"
 #include "TickRepository.hh"
 #include "Uuid.hh"
 #include "WeaponData.hh"
@@ -100,5 +101,15 @@ struct ShipProps
 };
 
 auto toSystemTickData(const SystemTick &tickData) -> SystemTickData;
+
+struct TargetProps
+{
+  Uuid sourceDbId{};
+  EntityKind sourceKind{};
+  Uuid targetDbId{};
+  EntityKind targetKind{};
+
+  auto toTargetData() const -> TargetData;
+};
 
 } // namespace bsgo

@@ -206,4 +206,14 @@ auto toSystemTickData(const SystemTick &tickData) -> SystemTickData
   };
 }
 
+auto TargetProps::toTargetData() const -> TargetData
+{
+  return TargetData{
+    .sourceDbId = sourceDbId,
+    .sourceKind = sourceKind,
+    .targetDbId = targetDbId,
+    .targetKind = targetKind,
+  };
+}
+
 } // namespace bsgo

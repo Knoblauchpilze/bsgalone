@@ -210,6 +210,13 @@ auto LoadingService::getSystemTickConfig(const Uuid systemDbId) const -> SystemT
   return m_repositories.tickRepository->findOneBySystem(systemDbId);
 }
 
+auto LoadingService::getTargetsInSystem(const Uuid systemDbId) const -> std::vector<TargetProps>
+{
+  // TODO: Handle targets loading
+  warn("Should handle targets loading for " + str(systemDbId));
+  return {};
+}
+
 auto LoadingService::getResources() const -> std::vector<Resource>
 {
   std::vector<Resource> out;
