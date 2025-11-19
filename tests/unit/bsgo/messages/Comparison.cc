@@ -200,4 +200,12 @@ void assertSystemTickDataAreEqual(const SystemTickData &actual, const SystemTick
   EXPECT_EQ(actual.step, expected.step);
 }
 
+void assertTargetDataAreEqual(const TargetData &actual, const TargetData &expected)
+{
+  EXPECT_EQ(actual.sourceDbId, expected.sourceDbId);
+  EXPECT_EQ(actual.sourceKind, expected.sourceKind);
+  EXPECT_EQ(actual.targetDbId, expected.targetDbId);
+  EXPECT_EQ(actual.targetKind, expected.targetKind);
+}
+
 } // namespace bsgo
