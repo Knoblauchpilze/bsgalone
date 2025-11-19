@@ -54,7 +54,7 @@ TEST(Unit_Bsgo_Serialization_OutpostListMessage, WithClientId)
   expected.setClientId(Uuid{78});
 
   outpostsData = {{.dbId = Uuid{17}, .powerPoints = 100.0f}, {.dbId = Uuid{17}, .radius = 26.1}};
-  OutpostListMessage actual(Uuid{745}, {});
+  OutpostListMessage actual(Uuid{745}, outpostsData);
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
 }
