@@ -2,6 +2,7 @@
 #pragma once
 
 #include "CoreObject.hh"
+#include "EntityKind.hh"
 #include "Uuid.hh"
 #include <mutex>
 #include <optional>
@@ -40,6 +41,8 @@ class DatabaseEntityMapper : public core::CoreObject
   auto tryGetShipEntityId(const Uuid shipDbId) const -> std::optional<Uuid>;
   auto tryGetAsteroidEntityId(const Uuid asteroidDbId) const -> std::optional<Uuid>;
   auto tryGetOutpostEntityId(const Uuid outpostDbId) const -> std::optional<Uuid>;
+
+  auto tryGetEntityId(const Uuid dbId, const EntityKind kind) const -> std::optional<Uuid>;
 
   void clearEntities();
   void clearAll();

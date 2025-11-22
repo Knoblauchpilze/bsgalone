@@ -22,17 +22,19 @@ TargetMessageConsumer::TargetMessageConsumer(const Services &services,
 
 void TargetMessageConsumer::onMessageReceived(const IMessage &message)
 {
-  const auto &target  = message.as<TargetMessage>();
-  const auto shipDbId = target.getShipDbId();
-  const auto position = target.getPosition();
+  const auto &target = message.as<TargetMessage>();
 
-  const auto targetDbIdHint = target.getTargetDbId();
+  const auto position       = target.getPosition();
+  const auto targetDbIdHint = target.tryGetTargetDbId();
 
-  const ShipService::TargetAcquiringData data{.shipDbId       = shipDbId,
-                                              .position       = position,
-                                              .targetDbIdHint = targetDbIdHint,
-                                              .targetKindHint = target.getTargetKind()};
-  const auto res = m_shipService->tryAcquireTarget(data);
+  const ShipService::TargetAcquiringData acquiringData{
+    .sourceDbId     = target.getSourceDbId(),
+    .sourceKind     = target.getSourceKind(),
+    .position       = position,
+    .targetDbIdHint = targetDbIdHint,
+    .targetKindHint = target.tryGetTargetKind(),
+  };
+  const auto res = m_shipService->tryAcquireTarget(acquiringData);
   if (!res.success)
   {
     // Only print a warning in case there was a hint in the message. In case a hint
@@ -40,14 +42,23 @@ void TargetMessageConsumer::onMessageReceived(const IMessage &message)
     // what the client app knows and what the server knows.
     if (targetDbIdHint)
     {
-      warn("Failed to process target message for ship " + str(shipDbId));
+      warn("Failed to process target message for " + str(target.getSourceKind()) + " "
+           + str(target.getSourceDbId()));
     }
     return;
   }
 
-  auto out = std::make_unique<TargetMessage>(shipDbId, position, res.targetKind, res.targetDbId);
-  out->validate();
+  TargetData data{
+    .sourceDbId = target.getSourceDbId(),
+    .sourceKind = target.getSourceKind(),
+    .targetDbId = res.targetDbId,
+    .targetKind = res.targetKind,
+  };
+
+  auto out = std::make_unique<TargetMessage>(data, position);
   out->copyClientIdIfDefined(target);
+  out->validate();
+
   m_outputMessageQueue->pushMessage(std::move(out));
 }
 

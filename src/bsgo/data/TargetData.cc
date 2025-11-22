@@ -32,4 +32,32 @@ bool TargetData::deserialize(std::istream &in)
   return ok;
 }
 
+auto TargetData::str() const -> std::string
+{
+  std::string out = "[(" + bsgo::str(sourceKind) + "," + bsgo::str(sourceDbId) + "), (";
+
+  if (targetKind)
+  {
+    out += bsgo::str(*targetKind);
+  }
+  else
+  {
+    out += "none";
+  }
+
+  if (targetDbId)
+  {
+    out += ",";
+    out += bsgo::str(*targetDbId);
+  }
+  else
+  {
+    out += ",none";
+  }
+
+  out += ")]";
+
+  return out;
+}
+
 } // namespace bsgo

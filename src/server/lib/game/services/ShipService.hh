@@ -29,7 +29,9 @@ class ShipService : public AbstractService
 
   struct TargetAcquiringData
   {
-    Uuid shipDbId{};
+    Uuid sourceDbId{};
+    EntityKind sourceKind{};
+
     Eigen::Vector3f position{};
 
     std::optional<Uuid> targetDbIdHint{};

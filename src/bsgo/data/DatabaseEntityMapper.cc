@@ -202,6 +202,27 @@ auto DatabaseEntityMapper::tryGetOutpostEntityId(const Uuid outpostDbId) const
   return {};
 }
 
+auto DatabaseEntityMapper::tryGetEntityId(const Uuid dbId, const EntityKind kind) const
+  -> std::optional<Uuid>
+{
+  switch (kind)
+  {
+    case EntityKind::SHIP:
+      return tryGetShipEntityId(dbId);
+    case EntityKind::ASTEROID:
+      return tryGetAsteroidEntityId(dbId);
+    case EntityKind::OUTPOST:
+      return tryGetOutpostEntityId(dbId);
+    case EntityKind::PLAYER:
+      return tryGetPlayerEntityId(dbId);
+    default:
+      error("Unsupported entity kind " + str(kind));
+  }
+
+  // Not needed because of the error above
+  return {};
+}
+
 void DatabaseEntityMapper::clearEntities()
 {
   const std::lock_guard guard(m_locker);

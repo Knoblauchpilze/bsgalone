@@ -40,18 +40,23 @@ auto tryGetEntityId(const bsgo::DatabaseEntityMapper &entityMapper,
 
 void TargetListMessageConsumer::registerTarget(const bsgo::TargetData &data) const
 {
+  if (!data.targetDbId || !data.targetKind)
+  {
+    error("Received unexpected empty target when loading targets for " + data.str());
+  }
+
   const auto maybeSourceEntityId = tryGetEntityId(m_entityMapper, data.sourceDbId, data.sourceKind);
   if (!maybeSourceEntityId)
   {
-    error("Failed to register target, failed to find source entity: " + bsgo::str(data.sourceKind)
-          + " " + bsgo::str(data.sourceDbId));
+    error("Failed to register target, failed to find source entity for target " + data.str());
   }
 
-  const auto maybeTargetEntityId = tryGetEntityId(m_entityMapper, data.targetDbId, data.targetKind);
+  const auto maybeTargetEntityId = tryGetEntityId(m_entityMapper,
+                                                  *data.targetDbId,
+                                                  *data.targetKind);
   if (!maybeTargetEntityId)
   {
-    error("Failed to register target, failed to find target entity: " + bsgo::str(data.targetDbId)
-          + " " + bsgo::str(data.targetDbId));
+    error("Failed to register target, failed to find target entity for target " + data.str());
   }
 
   auto source = m_coordinator->getEntity(*maybeSourceEntityId);

@@ -95,23 +95,20 @@ void SystemMessageConsumer::handleEntityRemoved(const bsgo::EntityRemovedMessage
     return;
   }
 
-  std::optional<bsgo::Uuid> entityId{};
-
-  const auto entityKind = message.getEntityKind();
   const auto entityDbId = message.getEntityDbId();
+  const auto entityKind = message.getEntityKind();
+
+  const auto entityId = m_entityMapper.tryGetEntityId(entityDbId, entityKind);
 
   switch (entityKind)
   {
     case bsgo::EntityKind::SHIP:
-      entityId = m_entityMapper.tryGetShipEntityId(entityDbId);
       m_entityMapper.tryRemoveEntityForShip(entityDbId);
       break;
     case bsgo::EntityKind::ASTEROID:
-      entityId = m_entityMapper.tryGetAsteroidEntityId(entityDbId);
       m_entityMapper.removeEntityForAsteroid(entityDbId);
       break;
     case bsgo::EntityKind::PLAYER:
-      entityId = m_entityMapper.tryGetPlayerEntityId(entityDbId);
       m_entityMapper.removeEntityForPlayer(entityDbId);
     default:
       break;
