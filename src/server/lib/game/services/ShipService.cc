@@ -208,10 +208,16 @@ auto overrideTargetWithHintIfNecessary(const std::optional<Entity> &maybeTarget,
 
 auto ShipService::tryAcquireTarget(const TargetAcquiringData &data) const -> AcquiringResult
 {
-  const auto maybeEntityId = m_entityMapper.tryGetShipEntityId(data.shipDbId);
+  if (data.sourceKind != EntityKind::SHIP)
+  {
+    error("Unsupported entity acquiring target: " + str(data.sourceKind));
+  }
+
+  const auto maybeEntityId = m_entityMapper.tryGetShipEntityId(data.sourceDbId);
   if (!maybeEntityId)
   {
-    warn("Failed to acquire target for ship " + str(data.shipDbId), "No entity attached to it");
+    warn("Failed to acquire target for " + str(data.sourceKind) + " " + str(data.sourceDbId),
+         "No entity attached to it");
     return {};
   }
 

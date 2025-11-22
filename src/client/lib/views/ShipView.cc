@@ -188,21 +188,21 @@ void ShipView::tryActivateSlot(const int slotId) const
 void ShipView::tryAcquireTarget(const Eigen::Vector3f &position) const
 {
   const auto playerShip = getPlayerShip();
-  const auto shipDbId   = playerShip.dbComp().dbId();
 
-  std::optional<bsgo::Uuid> maybeTargetDbId{};
-  std::optional<bsgo::EntityKind> maybeTargetKind{};
+  bsgo::TargetData data{
+    .sourceDbId = playerShip.dbComp().dbId(),
+    .sourceKind = bsgo::EntityKind::SHIP,
+  };
 
   const auto maybeTargetId = m_coordinator->getEntityAt(position);
   if (maybeTargetId)
   {
     const auto target = m_coordinator->getEntity(*maybeTargetId);
-    maybeTargetDbId   = target.dbComp().dbId();
-    maybeTargetKind   = target.kind->kind();
+    data.targetDbId   = target.dbComp().dbId();
+    data.targetKind   = target.kind->kind();
   }
 
-  m_outputMessageQueue->pushMessage(
-    std::make_unique<bsgo::TargetMessage>(shipDbId, position, maybeTargetKind, maybeTargetDbId));
+  m_outputMessageQueue->pushMessage(std::make_unique<bsgo::TargetMessage>(data, position));
 }
 
 void ShipView::setJumpSystem(const bsgo::Uuid system)
