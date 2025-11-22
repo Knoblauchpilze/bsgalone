@@ -146,22 +146,7 @@ auto tryGetEntityFromHint(const Uuid entityDbId,
                           const DatabaseEntityMapper &entityMapper,
                           const Coordinator &coordinator) -> std::optional<Entity>
 {
-  std::optional<Uuid> entityId{};
-
-  switch (entityKind)
-  {
-    case EntityKind::SHIP:
-      entityId = entityMapper.tryGetShipEntityId(entityDbId);
-      break;
-    case EntityKind::ASTEROID:
-      entityId = entityMapper.tryGetAsteroidEntityId(entityDbId);
-      break;
-    case EntityKind::OUTPOST:
-      entityId = entityMapper.tryGetOutpostEntityId(entityDbId);
-      break;
-    default:
-      break;
-  }
+  const auto entityId = entityMapper.tryGetEntityId(entityDbId, entityKind);
 
   if (!entityId)
   {
@@ -208,10 +193,16 @@ auto overrideTargetWithHintIfNecessary(const std::optional<Entity> &maybeTarget,
 
 auto ShipService::tryAcquireTarget(const TargetAcquiringData &data) const -> AcquiringResult
 {
-  const auto maybeEntityId = m_entityMapper.tryGetShipEntityId(data.shipDbId);
+  if (data.sourceKind != EntityKind::SHIP)
+  {
+    error("Unsupported entity acquiring target: " + str(data.sourceKind));
+  }
+
+  const auto maybeEntityId = m_entityMapper.tryGetShipEntityId(data.sourceDbId);
   if (!maybeEntityId)
   {
-    warn("Failed to acquire target for ship " + str(data.shipDbId), "No entity attached to it");
+    warn("Failed to acquire target for " + str(data.sourceKind) + " " + str(data.sourceDbId),
+         "No entity attached to it");
     return {};
   }
 
