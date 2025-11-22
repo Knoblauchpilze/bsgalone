@@ -69,15 +69,7 @@ void ShipDataSource::registerShip(Coordinator &coordinator,
   coordinator.addStatus(shipEntityId, data.status, data.jumpTime, data.jumpTimeInThreat);
   coordinator.addShipClass(shipEntityId, data.shipClass);
   coordinator.addName(shipEntityId, data.name);
-  if (data.targetDbId)
-  {
-    // TODO: This is wrong as the coordinator expects the entity identifier
-    coordinator.addTarget(shipEntityId, *data.targetDbId);
-  }
-  else
-  {
-    coordinator.addTarget(shipEntityId);
-  }
+  coordinator.addTarget(shipEntityId);
   coordinator.addNetworkSync(shipEntityId,
                              {ComponentType::HEALTH,
                               ComponentType::POWER,
@@ -132,7 +124,6 @@ void ShipDataSource::registerShip(Coordinator &coordinator,
     .jumpTime         = data.jumpTime,
     .jumpTimeInThreat = data.jumpTimeInThreat,
 
-    .targetDbId = {},
     .playerDbId = data.player,
 
     .slots         = data.slots,

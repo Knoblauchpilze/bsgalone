@@ -37,7 +37,6 @@ struct PlayerShipData
   chrono::TickDuration jumpTimeInThreat{};
   std::optional<Uuid> jumpSystem{};
 
-  std::optional<Uuid> targetDbId{};
   Uuid playerDbId{};
 
   std::unordered_map<Slot, int> slots{};

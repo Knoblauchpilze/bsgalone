@@ -14,6 +14,7 @@
 #include "ShipListMessage.hh"
 #include "SystemDataMessage.hh"
 #include "SystemListMessage.hh"
+#include "TargetListMessage.hh"
 #include "WeaponListMessage.hh"
 
 namespace bsgo {
@@ -120,6 +121,7 @@ void LoadingMessagesConsumer::handleJumpTransition(const LoadingStartedMessage &
   handleSystemAsteroidsLoading(message);
   handleSystemOutpostsLoading(message);
   handleSystemShipsLoading(message);
+  handleSystemTargetsLoading(message);
   handleSystemTickLoading(message);
 }
 
@@ -153,6 +155,7 @@ void LoadingMessagesConsumer::handleUndockTransition(const LoadingStartedMessage
   handleSystemAsteroidsLoading(message);
   handleSystemOutpostsLoading(message);
   handleSystemShipsLoading(message);
+  handleSystemTargetsLoading(message);
   handleSystemTickLoading(message);
 }
 
@@ -409,6 +412,24 @@ void LoadingMessagesConsumer::handleSystemShipsLoading(const LoadingStartedMessa
 
   auto out = std::make_unique<PlayerShipListMessage>(shipsData);
   out->setSystemDbId(systemDbId);
+  out->copyClientIdIfDefined(message);
+
+  m_outputMessageQueue->pushMessage(std::move(out));
+}
+
+void LoadingMessagesConsumer::handleSystemTargetsLoading(const LoadingStartedMessage &message) const
+{
+  const auto systemDbId = message.getSystemDbId();
+
+  const auto targets = m_loadingService->getTargetsInSystem(systemDbId);
+
+  std::vector<TargetData> targetsData{};
+  std::transform(targets.begin(),
+                 targets.end(),
+                 std::back_inserter(targetsData),
+                 [](const TargetProps &props) { return props.toTargetData(); });
+
+  auto out = std::make_unique<TargetListMessage>(systemDbId, targetsData);
   out->copyClientIdIfDefined(message);
 
   m_outputMessageQueue->pushMessage(std::move(out));

@@ -52,6 +52,8 @@ class LoadingService : public AbstractService
   auto getSystems() const -> std::vector<System>;
   auto getSystemTickConfig(const Uuid systemDbId) const -> SystemTick;
 
+  auto getTargetsInSystem(const Uuid systemDbId) const -> std::vector<TargetProps>;
+
   auto getResources() const -> std::vector<Resource>;
   auto getWeapons() const -> std::vector<WeaponProps>;
   auto getComputers() const -> std::vector<ComputerProps>;

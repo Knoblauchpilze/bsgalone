@@ -14,6 +14,7 @@
 #include "ShipData.hh"
 #include "SystemData.hh"
 #include "SystemTickData.hh"
+#include "TargetData.hh"
 #include "WeaponData.hh"
 
 namespace bsgo {
@@ -36,5 +37,6 @@ void assertWeaponDataAreEqual(const WeaponData &actual, const WeaponData &expect
 void assertComputerDataAreEqual(const ComputerData &actual, const ComputerData &expected);
 void assertShipDataAreEqual(const ShipData &actual, const ShipData &expected);
 void assertSystemTickDataAreEqual(const SystemTickData &actual, const SystemTickData &expected);
+void assertTargetDataAreEqual(const TargetData &actual, const TargetData &expected);
 
 } // namespace bsgo

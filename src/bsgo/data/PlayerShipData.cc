@@ -33,7 +33,6 @@ auto PlayerShipData::serialize(std::ostream &out) const -> std::ostream &
   core::serialize(out, jumpTimeInThreat);
   core::serialize(out, jumpSystem);
 
-  core::serialize(out, targetDbId);
   core::serialize(out, playerDbId);
 
   core::serialize(out, slots);
@@ -72,7 +71,6 @@ bool PlayerShipData::deserialize(std::istream &in)
   ok &= core::deserialize(in, jumpTimeInThreat);
   ok &= core::deserialize(in, jumpSystem);
 
-  ok &= core::deserialize(in, targetDbId);
   ok &= core::deserialize(in, playerDbId);
 
   ok &= core::deserialize(in, slots);

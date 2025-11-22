@@ -21,8 +21,6 @@ struct OutpostData
   float powerRegen{};
   Faction faction{};
 
-  std::optional<Uuid> targetDbId{};
-
   bool operator==(const OutpostData &rhs) const;
 
   auto serialize(std::ostream &out) const -> std::ostream &;

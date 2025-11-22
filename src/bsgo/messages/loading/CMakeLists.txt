@@ -19,6 +19,7 @@ target_sources (bsgo_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/ShipListMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SystemDataMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SystemListMessage.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/TargetListMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/WeaponListMessage.cc
 	)
 

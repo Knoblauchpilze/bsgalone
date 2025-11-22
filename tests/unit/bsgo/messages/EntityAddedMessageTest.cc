@@ -264,8 +264,7 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, CloneWithShipData)
 TEST(Unit_Bsgo_Serialization_EntityAddedMessage, CloneWithOutpostData)
 {
   EntityAddedMessage expected(Uuid{789});
-  expected.setOutpostData(
-    OutpostData{.dbId = Uuid{36}, .powerRegen = 36.5f, .targetDbId = Uuid{987}});
+  expected.setOutpostData(OutpostData{.dbId = Uuid{36}, .powerRegen = 36.5f});
   const auto cloned = expected.clone();
 
   ASSERT_EQ(cloned->type(), MessageType::ENTITY_ADDED);

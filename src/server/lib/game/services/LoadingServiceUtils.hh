@@ -23,6 +23,7 @@
 #include "SystemOutpostRepository.hh"
 #include "SystemRepository.hh"
 #include "SystemTickData.hh"
+#include "TargetData.hh"
 #include "TickRepository.hh"
 #include "Uuid.hh"
 #include "WeaponData.hh"
@@ -45,7 +46,6 @@ struct AsteroidProps
 struct OutpostProps
 {
   SystemOutpost dbOutpost{};
-  std::optional<Uuid> targetDbId{};
 
   auto toOutpostData() const -> OutpostData;
 };
@@ -64,7 +64,6 @@ struct PlayerShipProps
 {
   PlayerShip dbShip{};
   Status status{};
-  std::optional<Uuid> targetDbId{};
   std::vector<PlayerWeaponProps> weapons{};
   std::vector<PlayerComputer> computers{};
 
@@ -102,5 +101,15 @@ struct ShipProps
 };
 
 auto toSystemTickData(const SystemTick &tickData) -> SystemTickData;
+
+struct TargetProps
+{
+  Uuid sourceDbId{};
+  EntityKind sourceKind{};
+  Uuid targetDbId{};
+  EntityKind targetKind{};
+
+  auto toTargetData() const -> TargetData;
+};
 
 } // namespace bsgo

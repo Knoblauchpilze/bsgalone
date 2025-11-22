@@ -43,25 +43,7 @@ TEST(Unit_Bsgo_Serialization_OutpostData, Basic)
                     .powerRegen = 0.5124f,
                     .faction    = Faction::COLONIAL};
 
-  OutpostData output{.dbId           = Uuid{14},
-                     .maxPowerPoints = 25.87f,
-                     .faction        = Faction::CYLON,
-                     .targetDbId     = Uuid{4567}};
-
-  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
-
-  assertOutpostDataAreEqual(output, input);
-}
-
-TEST(Unit_Bsgo_Serialization_OutpostData, WithTarget)
-{
-  OutpostData input{.dbId       = Uuid{1234},
-                    .position   = Eigen::Vector3f{1.0f, 2.0f, 3.0f},
-                    .radius     = 5.0f,
-                    .hullPoints = 100.0f,
-                    .targetDbId = Uuid{4567}};
-
-  OutpostData output{.dbId = Uuid{14}};
+  OutpostData output{.dbId = Uuid{14}, .maxPowerPoints = 25.87f, .faction = Faction::CYLON};
 
   EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 

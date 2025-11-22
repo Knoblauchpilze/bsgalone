@@ -51,27 +51,6 @@ TEST(Unit_Bsgo_Serialization_PlayerShipData, Basic)
   assertPlayerShipDataAreEqual(output, input);
 }
 
-TEST(Unit_Bsgo_Serialization_PlayerShipData, WithTarget)
-{
-  PlayerShipData input{.dbId           = Uuid{1234},
-                       .position       = Eigen::Vector3f{1.0f, 2.0f, 3.0f},
-                       .radius         = 5.0f,
-                       .maxPowerPoints = 100.0f,
-                       .docked         = true,
-                       .active         = true,
-                       .targetDbId     = Uuid{8901},
-                       .playerDbId     = Uuid{6547}};
-
-  PlayerShipData output{.dbId    = Uuid{14},
-                        .shipId  = Uuid{1754},
-                        .faction = Faction::CYLON,
-                        .status  = Status::JUMP};
-
-  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
-
-  assertPlayerShipDataAreEqual(output, input);
-}
-
 TEST(Unit_Bsgo_Serialization_PlayerShipData, WithJumpSystem)
 {
   PlayerShipData input{.dbId           = Uuid{1234},
@@ -165,7 +144,6 @@ TEST(Unit_Bsgo_Serialization_PlayerShipData, WithWeapons)
                        .maxPowerPoints   = 100.0f,
                        .jumpTime         = chrono::TickDuration(1234.2f),
                        .jumpTimeInThreat = chrono::TickDuration(5678.4f),
-                       .targetDbId       = Uuid{8901},
                        .playerDbId       = Uuid{6547}};
   input.weapons.push_back({
     .dbId       = Uuid{5001},
@@ -204,7 +182,6 @@ TEST(Unit_Bsgo_Serialization_PlayerShipData, ClearsWeapons)
                        .position       = Eigen::Vector3f{1.0f, 2.0f, 3.0f},
                        .radius         = 5.0f,
                        .maxPowerPoints = 100.0f,
-                       .targetDbId     = Uuid{8901},
                        .playerDbId     = Uuid{6547}};
 
   PlayerShipData output{
@@ -234,7 +211,6 @@ TEST(Unit_Bsgo_Serialization_PlayerShipData, WithComputers)
                        .position       = Eigen::Vector3f{1.0f, 2.0f, 3.0f},
                        .radius         = 5.0f,
                        .maxPowerPoints = 100.0f,
-                       .targetDbId     = Uuid{8901},
                        .playerDbId     = Uuid{6547}};
   input.computers.push_back({
     .dbId           = Uuid{5001},
@@ -266,7 +242,6 @@ TEST(Unit_Bsgo_Serialization_PlayerShipData, ClearsComputers)
                        .position       = Eigen::Vector3f{1.0f, 2.0f, 3.0f},
                        .radius         = 5.0f,
                        .maxPowerPoints = 100.0f,
-                       .targetDbId     = Uuid{8901},
                        .playerDbId     = Uuid{6547}};
 
   PlayerShipData output{.dbId = Uuid{14}, .faction = Faction::CYLON, .status = Status::JUMP};

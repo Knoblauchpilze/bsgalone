@@ -45,12 +45,13 @@ enum class MessageType
   SYSTEM_LIST,
   VELOCITY,
   TARGET,
+  TARGET_LIST,
   WEAPON_COMPONENT_UPDATED,
   WEAPON_LIST
 };
 
 auto str(const MessageType &type) -> std::string;
-auto allMessageTypes() -> std::array<MessageType, 38>;
+auto allMessageTypes() -> std::array<MessageType, 39>;
 
 auto allMessageTypesAsSet() -> std::unordered_set<MessageType>;
 
