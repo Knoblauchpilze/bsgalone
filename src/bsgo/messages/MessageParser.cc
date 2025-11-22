@@ -37,6 +37,7 @@
 #include "SlotMessage.hh"
 #include "SystemDataMessage.hh"
 #include "SystemListMessage.hh"
+#include "TargetListMessage.hh"
 #include "TargetMessage.hh"
 #include "VelocityMessage.hh"
 #include "WeaponComponentMessage.hh"
@@ -186,6 +187,8 @@ auto MessageParser::tryReadMessage(const MessageType &type, std::istream &in)
       return readMessage<VelocityMessage>(in);
     case MessageType::TARGET:
       return readMessage<TargetMessage>(in);
+    case MessageType::TARGET_LIST:
+      return readMessage<TargetListMessage>(in);
     case MessageType::WEAPON_COMPONENT_UPDATED:
       return readMessage<WeaponComponentMessage>(in);
     case MessageType::WEAPON_LIST:

@@ -5,7 +5,6 @@
 #include "Coordinator.hh"
 #include "DatabaseEntityMapper.hh"
 #include "OutpostData.hh"
-#include "Uuid.hh"
 
 namespace pge {
 

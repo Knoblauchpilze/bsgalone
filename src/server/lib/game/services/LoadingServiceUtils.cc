@@ -38,7 +38,6 @@ auto OutpostProps::toOutpostData() const -> OutpostData
     .maxPowerPoints  = dbOutpost.maxPowerPoints,
     .powerRegen      = dbOutpost.powerRegen,
     .faction         = dbOutpost.faction,
-    .targetDbId      = targetDbId,
   };
 }
 
@@ -101,7 +100,6 @@ auto PlayerShipProps::toPlayerShipData() const -> PlayerShipData
     .jumpTimeInThreat = dbShip.jumpTimeInThreat,
     .jumpSystem       = dbShip.jumpSystem,
 
-    .targetDbId = targetDbId,
     .playerDbId = dbShip.player,
 
     .slots         = dbShip.slots,
@@ -205,6 +203,16 @@ auto toSystemTickData(const SystemTick &tickData) -> SystemTickData
     .dbId        = tickData.system,
     .currentTick = tickData.currentTick,
     .step        = tickData.step,
+  };
+}
+
+auto TargetProps::toTargetData() const -> TargetData
+{
+  return TargetData{
+    .sourceDbId = sourceDbId,
+    .sourceKind = sourceKind,
+    .targetDbId = targetDbId,
+    .targetKind = targetKind,
   };
 }
 

@@ -49,6 +49,7 @@ class LoadingMessagesConsumer : public AbstractMessageConsumer
   void handleSystemAsteroidsLoading(const LoadingStartedMessage &message) const;
   void handleSystemOutpostsLoading(const LoadingStartedMessage &message) const;
   void handleSystemShipsLoading(const LoadingStartedMessage &message) const;
+  void handleSystemTargetsLoading(const LoadingStartedMessage &message) const;
   void handleSystemTickLoading(const LoadingStartedMessage &message) const;
 };
 
