@@ -146,22 +146,7 @@ auto tryGetEntityFromHint(const Uuid entityDbId,
                           const DatabaseEntityMapper &entityMapper,
                           const Coordinator &coordinator) -> std::optional<Entity>
 {
-  std::optional<Uuid> entityId{};
-
-  switch (entityKind)
-  {
-    case EntityKind::SHIP:
-      entityId = entityMapper.tryGetShipEntityId(entityDbId);
-      break;
-    case EntityKind::ASTEROID:
-      entityId = entityMapper.tryGetAsteroidEntityId(entityDbId);
-      break;
-    case EntityKind::OUTPOST:
-      entityId = entityMapper.tryGetOutpostEntityId(entityDbId);
-      break;
-    default:
-      break;
-  }
+  const auto entityId = entityMapper.tryGetEntityId(entityDbId, entityKind);
 
   if (!entityId)
   {

@@ -98,33 +98,10 @@ void ShipMessageConsumer::handleJumpCancelled(const bsgo::JumpCancelledMessage &
   ship.statusComp().setStatus(newStatus);
 }
 
-namespace {
-auto tryDetermineEntityId(const bsgo::DatabaseEntityMapper &entityMapper,
-                          const bsgo::Uuid targetDbId,
-                          const bsgo::EntityKind &kind) -> std::optional<bsgo::Uuid>
-{
-  std::optional<bsgo::Uuid> entityId{};
-
-  switch (kind)
-  {
-    case bsgo::EntityKind::ASTEROID:
-      return entityMapper.tryGetAsteroidEntityId(targetDbId);
-    case bsgo::EntityKind::SHIP:
-      return entityMapper.tryGetShipEntityId(targetDbId);
-    case bsgo::EntityKind::OUTPOST:
-      return entityMapper.tryGetOutpostEntityId(targetDbId);
-    default:
-      throw std::invalid_argument("Unsupported kind " + bsgo::str(kind) + " to determine entity");
-  }
-}
-
-} // namespace
-
 void ShipMessageConsumer::handleTargetAcquired(const bsgo::TargetMessage &message) const
 {
-  const auto maybeSourceEntityId = tryDetermineEntityId(m_entityMapper,
-                                                        message.getSourceDbId(),
-                                                        message.getSourceKind());
+  const auto maybeSourceEntityId = m_entityMapper.tryGetEntityId(message.getSourceDbId(),
+                                                                 message.getSourceKind());
   if (!maybeSourceEntityId)
   {
     error("Failed to process target updated for " + bsgo::str(message.getSourceDbId()),
@@ -138,9 +115,8 @@ void ShipMessageConsumer::handleTargetAcquired(const bsgo::TargetMessage &messag
   const auto maybeTargetKind = message.tryGetTargetKind();
   if (maybeTargetDbId && maybeTargetKind)
   {
-    const auto maybeTargetEntityId = tryDetermineEntityId(m_entityMapper,
-                                                          *maybeTargetDbId,
-                                                          *maybeTargetKind);
+    const auto maybeTargetEntityId = m_entityMapper.tryGetEntityId(*maybeTargetDbId,
+                                                                   *maybeTargetKind);
     if (!maybeTargetEntityId)
     {
       error("Failed to process target updated for " + bsgo::str(message.getSourceDbId()),
