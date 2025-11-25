@@ -14,6 +14,7 @@ void assertMessagesAreEqual(const TargetMessage &actual, const TargetMessage &ex
   EXPECT_EQ(actual.getSourceKind(), expected.getSourceKind());
   EXPECT_EQ(actual.tryGetTargetDbId(), expected.tryGetTargetDbId());
   EXPECT_EQ(actual.tryGetTargetKind(), expected.tryGetTargetKind());
+  EXPECT_EQ(actual.tryGetSystemDbId(), expected.tryGetSystemDbId());
   EXPECT_EQ(actual.getPosition(), expected.getPosition());
   EXPECT_EQ(actual.tryGetClientId(), expected.tryGetClientId());
   EXPECT_EQ(actual.validated(), expected.validated());
@@ -123,6 +124,21 @@ TEST(Unit_Bsgo_Serialization_TargetMessage, ClearsClientId)
   assertMessagesAreEqual(actual, expected);
 }
 
+TEST(Unit_Bsgo_Serialization_TargetMessage, OverridesSystemDbId)
+{
+  TargetData data{.sourceDbId = Uuid{21}, .sourceKind = EntityKind::SHIP};
+  TargetMessage expected(data, Eigen::Vector3f(1.68f, -185.0f, 326.895f));
+  expected.setSystemDbId(Uuid{61});
+
+  data = TargetData{.sourceDbId = Uuid{17}, .sourceKind = EntityKind::ASTEROID};
+  TargetMessage actual(data, Eigen::Vector3f(0.0f, 26.37f, -0.111f));
+  actual.setClientId(Uuid{41});
+
+  serializeAndDeserializeMessage(expected, actual);
+
+  assertMessagesAreEqual(actual, expected);
+}
+
 TEST(Unit_Bsgo_Serialization_TargetMessage, Clone)
 {
   const TargetData data{.sourceDbId = Uuid{17},
@@ -130,6 +146,21 @@ TEST(Unit_Bsgo_Serialization_TargetMessage, Clone)
                         .targetDbId = Uuid{14},
                         .targetKind = EntityKind::BULLET};
   const TargetMessage expected(data, Eigen::Vector3f(1.68f, -185.0f, 326.895f));
+
+  const auto cloned = expected.clone();
+
+  ASSERT_EQ(cloned->type(), MessageType::TARGET);
+  assertMessagesAreEqual(cloned->as<TargetMessage>(), expected);
+}
+
+TEST(Unit_Bsgo_Serialization_TargetMessage, CloneWithSystemDbId)
+{
+  const TargetData data{.sourceDbId = Uuid{17},
+                        .sourceKind = EntityKind::ASTEROID,
+                        .targetDbId = Uuid{14},
+                        .targetKind = EntityKind::BULLET};
+  TargetMessage expected(data, Eigen::Vector3f(1.68f, -185.0f, 326.895f));
+  expected.setSystemDbId(Uuid{16});
 
   const auto cloned = expected.clone();
 
