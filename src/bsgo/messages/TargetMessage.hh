@@ -22,6 +22,9 @@ class TargetMessage : public ValidatableMessage
   auto tryGetTargetDbId() const -> std::optional<Uuid>;
   auto tryGetTargetKind() const -> std::optional<EntityKind>;
 
+  auto tryGetSystemDbId() const -> std::optional<Uuid>;
+  void setSystemDbId(const Uuid systemDbId);
+
   auto getPosition() const -> Eigen::Vector3f;
 
   auto serialize(std::ostream &out) const -> std::ostream & override;
@@ -31,6 +34,7 @@ class TargetMessage : public ValidatableMessage
 
   private:
   TargetData m_data{};
+  std::optional<Uuid> m_systemDbId{};
   Eigen::Vector3f m_position{Eigen::Vector3f::Zero()};
 };
 

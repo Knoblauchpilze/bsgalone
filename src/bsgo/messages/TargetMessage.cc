@@ -36,6 +36,16 @@ auto TargetMessage::tryGetTargetKind() const -> std::optional<EntityKind>
   return m_data.targetKind;
 }
 
+auto TargetMessage::tryGetSystemDbId() const -> std::optional<Uuid>
+{
+  return m_systemDbId;
+}
+
+void TargetMessage::setSystemDbId(const Uuid systemDbId)
+{
+  m_systemDbId = systemDbId;
+}
+
 auto TargetMessage::getPosition() const -> Eigen::Vector3f
 {
   return m_position;
@@ -48,6 +58,7 @@ auto TargetMessage::serialize(std::ostream &out) const -> std::ostream &
   core::serialize(out, m_validated);
 
   core::serialize(out, m_data);
+  core::serialize(out, m_systemDbId);
   core::serialize(out, m_position);
 
   return out;
@@ -61,6 +72,7 @@ bool TargetMessage::deserialize(std::istream &in)
   ok &= core::deserialize(in, m_validated);
 
   ok &= core::deserialize(in, m_data);
+  ok &= core::deserialize(in, m_systemDbId);
   ok &= core::deserialize(in, m_position);
 
   return ok;
@@ -71,6 +83,10 @@ auto TargetMessage::clone() const -> IMessagePtr
   auto clone = std::make_unique<TargetMessage>(m_data, m_position);
   clone->copyClientIdIfDefined(*this);
   clone->validate(validated());
+  if (m_systemDbId)
+  {
+    clone->setSystemDbId(*m_systemDbId);
+  }
 
   return clone;
 }
