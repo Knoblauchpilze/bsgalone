@@ -52,7 +52,7 @@ bool BulletSystem::isTargetInvalid(const Entity &target) const
     return false;
   }
 
-  const auto accessible = statusAllowsInteratction(target.statusComp().status());
+  const auto accessible = statusAllowsInteraction(target.statusComp().status());
   const auto damageable = statusAllowsDamage(target.statusComp().status());
   return !accessible || !damageable;
 }

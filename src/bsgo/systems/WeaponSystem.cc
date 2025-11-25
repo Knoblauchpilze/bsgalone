@@ -57,7 +57,7 @@ bool WeaponSystem::canTargetBeFiredOn(const Entity &target) const
   }
 
   const auto status = target.statusComp().status();
-  return statusAllowsInteratction(status) && statusAllowsDamage(status);
+  return statusAllowsInteraction(status) && statusAllowsDamage(status);
 }
 
 void WeaponSystem::updateWeapon(const Entity &ent,

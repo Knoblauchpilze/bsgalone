@@ -45,7 +45,7 @@ bool statusVisibleFromDradis(const Status &status)
   }
 }
 
-bool statusAllowsInteratction(const Status &status)
+bool statusAllowsInteraction(const Status &status)
 {
   switch (status)
   {

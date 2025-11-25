@@ -120,7 +120,7 @@ auto ShipView::getShipsWithin(const bsgo::IBoundingBox &bbox) const -> std::vect
     {
       return false;
     }
-    return statusAllowsInteratction(entity.statusComp().status());
+    return statusAllowsInteraction(entity.statusComp().status());
   };
 
   return m_coordinator->getEntitiesWithinSatistying(bbox, predicate);
