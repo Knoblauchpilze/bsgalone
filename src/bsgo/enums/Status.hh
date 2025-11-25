@@ -23,7 +23,7 @@ enum class Status
 auto str(const Status &status) -> std::string;
 
 bool statusVisibleFromDradis(const Status &status);
-bool statusAllowsInteratction(const Status &status);
+bool statusAllowsInteraction(const Status &status);
 bool statusAllowsHealthRegeneration(const Status &status);
 bool statusAllowsPowerRegeneration(const Status &status);
 bool statusAllowsDamage(const Status &status);
