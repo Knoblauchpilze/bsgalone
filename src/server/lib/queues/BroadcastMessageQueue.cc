@@ -12,6 +12,7 @@
 #include "NetworkMessage.hh"
 #include "ScannedMessage.hh"
 #include "SlotComponentMessage.hh"
+#include "TargetMessage.hh"
 
 namespace bsgo {
 
@@ -50,11 +51,11 @@ void BroadcastMessageQueue::processMessages(const std::optional<int> &amount)
 
 namespace {
 const std::unordered_set<MessageType> NON_BROADCASTABLE_MESSAGES
-  = {MessageType::LOOT,
+  = {MessageType::LOADING_STARTED,
+     MessageType::LOADING_FINISHED,
+     MessageType::LOOT,
      MessageType::SCANNED,
-     MessageType::SLOT_COMPONENT_UPDATED,
-     MessageType::LOADING_STARTED,
-     MessageType::LOADING_FINISHED};
+     MessageType::SLOT_COMPONENT_UPDATED};
 
 bool shouldTryToDetermineClientId(const IMessage &message)
 {
@@ -105,7 +106,8 @@ const std::unordered_set<MessageType> SYSTEM_DIRECTED_MESSAGES = {MessageType::A
                                                                   MessageType::COMPONENT_SYNC,
                                                                   MessageType::ENTITY_ADDED,
                                                                   MessageType::ENTITY_REMOVED,
-                                                                  MessageType::JUMP};
+                                                                  MessageType::JUMP,
+                                                                  MessageType::TARGET};
 
 bool shouldTryToDetermineSystemId(const IMessage &message)
 {
@@ -176,13 +178,19 @@ auto BroadcastMessageQueue::tryDetermineClientId(const IMessage &message) const
 }
 
 namespace {
+auto determineSystemsFor(const JumpMessage &message) -> std::vector<Uuid>
+{
+  return {message.getSourceSystemDbId(), message.getDestinationSystemDbId()};
+}
+
 template<typename T>
 auto determineSystemsFor(const T &message) -> std::vector<Uuid>
 {
   return {message.getSystemDbId()};
 }
 
-auto determineSystemsFor(const AiBehaviorSyncMessage &message) -> std::vector<Uuid>
+template<typename T>
+auto maybeDetermineSystemsFor(const T &message) -> std::vector<Uuid>
 {
   const auto maybeSystemDbId = message.tryGetSystemDbId();
   if (!maybeSystemDbId)
@@ -192,12 +200,6 @@ auto determineSystemsFor(const AiBehaviorSyncMessage &message) -> std::vector<Uu
 
   return {*maybeSystemDbId};
 }
-
-template<>
-auto determineSystemsFor(const JumpMessage &message) -> std::vector<Uuid>
-{
-  return {message.getSourceSystemDbId(), message.getDestinationSystemDbId()};
-}
 } // namespace
 
 auto BroadcastMessageQueue::tryDetermineSystemIds(const IMessage &message) const
@@ -206,7 +208,7 @@ auto BroadcastMessageQueue::tryDetermineSystemIds(const IMessage &message) const
   switch (message.type())
   {
     case MessageType::AI_BEHAVIOR_SYNC:
-      return determineSystemsFor(message.as<AiBehaviorSyncMessage>());
+      return maybeDetermineSystemsFor(message.as<AiBehaviorSyncMessage>());
     case MessageType::COMPONENT_SYNC:
       return determineSystemsFor(message.as<ComponentSyncMessage>());
     case MessageType::ENTITY_ADDED:
@@ -215,6 +217,8 @@ auto BroadcastMessageQueue::tryDetermineSystemIds(const IMessage &message) const
       return determineSystemsFor(message.as<EntityRemovedMessage>());
     case MessageType::JUMP:
       return determineSystemsFor(message.as<JumpMessage>());
+    case MessageType::TARGET:
+      return maybeDetermineSystemsFor(message.as<TargetMessage>());
     default:
       error("Failed to determine system id", "Unsupported message type " + str(message.type()));
       break;

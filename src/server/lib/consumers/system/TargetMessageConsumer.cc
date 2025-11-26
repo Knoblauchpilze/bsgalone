@@ -56,10 +56,33 @@ void TargetMessageConsumer::onMessageReceived(const IMessage &message)
   };
 
   auto out = std::make_unique<TargetMessage>(data, position);
-  out->copyClientIdIfDefined(target);
   out->validate();
+  broadcastMessageToSystem(std::move(out));
+}
 
-  m_outputMessageQueue->pushMessage(std::move(out));
+namespace {
+auto getSystemDbIdForSource(const Uuid dbId, const EntityKind kind, const ShipService &shipService)
+  -> Uuid
+{
+  switch (kind)
+  {
+    case EntityKind::SHIP:
+      return shipService.getSystemDbIdForShip(dbId);
+    default:
+      throw std::invalid_argument("Unsupported entity kind " + str(kind)
+                                  + " to get system identifier");
+  }
+}
+} // namespace
+
+void TargetMessageConsumer::broadcastMessageToSystem(std::unique_ptr<TargetMessage> message)
+{
+  const auto systemDbId = getSystemDbIdForSource(message->getSourceDbId(),
+                                                 message->getSourceKind(),
+                                                 *m_shipService);
+  message->setSystemDbId(systemDbId);
+
+  m_outputMessageQueue->pushMessage(std::move(message));
 }
 
 } // namespace bsgo
