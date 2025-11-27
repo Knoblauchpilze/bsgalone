@@ -3,6 +3,7 @@
 #include "CircleBox.hh"
 #include "Coordinator.hh"
 #include "SystemUtils.hh"
+#include "TargetUtils.hh"
 
 namespace bsgo {
 namespace {
@@ -43,21 +44,6 @@ void WeaponSystem::updateEntity(Entity &entity,
       fireWeaponForEntity(entity, *weapon, *targetEnt, coordinator);
     }
   }
-}
-
-bool WeaponSystem::canTargetBeFiredOn(const Entity &target) const
-{
-  if (!target.valid())
-  {
-    return false;
-  }
-  if (!target.exists<StatusComponent>())
-  {
-    return true;
-  }
-
-  const auto status = target.statusComp().status();
-  return statusAllowsInteraction(status) && statusAllowsDamage(status);
 }
 
 void WeaponSystem::updateWeapon(const Entity &ent,
@@ -150,9 +136,7 @@ void WeaponSystem::createBulletDirectedTowards(const Entity &ent,
   coordinator.addTransform(bullet, std::move(box));
 
   coordinator.addDamage(bullet, damage);
-
   coordinator.addOwner(bullet, ent.uuid, OwnerType::SHIP);
-
   coordinator.addRemoval(bullet);
 
   constexpr auto BULLET_SPEED = 8.0f;
