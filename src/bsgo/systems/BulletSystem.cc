@@ -1,6 +1,7 @@
 
 #include "BulletSystem.hh"
 #include "Coordinator.hh"
+#include "TargetUtils.hh"
 
 namespace bsgo {
 namespace {
@@ -25,7 +26,7 @@ void BulletSystem::updateEntity(Entity &entity,
   }
 
   auto target = coordinator.getEntity(*entity.targetComp().target());
-  if (isTargetInvalid(target))
+  if (!canTargetBeFiredOn(target))
   {
     entity.removalComp().markForRemoval();
     return;
@@ -39,22 +40,6 @@ bool BulletSystem::isTargetNotExistent(const Entity &entity) const
 {
   const auto &target = entity.targetComp().target();
   return !target.has_value();
-}
-
-bool BulletSystem::isTargetInvalid(const Entity &target) const
-{
-  if (!target.valid())
-  {
-    return true;
-  }
-  if (!target.exists<StatusComponent>())
-  {
-    return false;
-  }
-
-  const auto accessible = statusAllowsInteraction(target.statusComp().status());
-  const auto damageable = statusAllowsDamage(target.statusComp().status());
-  return !accessible || !damageable;
 }
 
 void BulletSystem::accelerateTowardsTarget(Entity &entity, const Entity &target) const

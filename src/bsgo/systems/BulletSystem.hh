@@ -18,7 +18,6 @@ class BulletSystem : public AbstractSystem
 
   private:
   bool isTargetNotExistent(const Entity &entity) const;
-  bool isTargetInvalid(const Entity &target) const;
   void accelerateTowardsTarget(Entity &entity, const Entity &target) const;
   void damageOnImpact(Entity &entity, Entity &target) const;
 };

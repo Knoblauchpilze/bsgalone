@@ -11,8 +11,11 @@ add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/behavior
 	)
 
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/utils
+	)
+
 target_sources (bsgo_lib PRIVATE
-	${CMAKE_CURRENT_SOURCE_DIR}/SystemUtils.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SystemType.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ISystem.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/AbstractSystem.cc

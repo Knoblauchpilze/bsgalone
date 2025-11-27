@@ -18,8 +18,6 @@ class WeaponSystem : public AbstractSystem
                     const chrono::TickData &data) const override;
 
   private:
-  bool canTargetBeFiredOn(const Entity &target) const;
-
   void updateWeapon(const Entity &ent,
                     const WeaponSlotComponentShPtr &weapon,
                     const std::optional<Entity> &target,
