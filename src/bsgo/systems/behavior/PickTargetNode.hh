@@ -13,6 +13,9 @@ class PickTargetNode : public LeafNode
 
   protected:
   void run(const BehaviorData &data) override;
+
+  private:
+  void updateTargetIfNeeded(const BehaviorData &data, const Entity &maybeTarget) const;
 };
 
 } // namespace bsgo
