@@ -47,7 +47,7 @@ void TargetNode::determineCompletionState(DataContext &context)
     return;
   }
 
-  const auto maybeTargetIndex = context.tryGetKey<Uuid>(ContextKey::TARGET_REACHED);
+  const auto maybeTargetIndex = context.tryGetValue<Uuid>(ContextKey::TARGET_REACHED);
   if (maybeTargetIndex && *maybeTargetIndex > m_index)
   {
     verbose("Target was already reached, setting node to succesful");
