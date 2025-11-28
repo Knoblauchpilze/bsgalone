@@ -25,7 +25,7 @@ class DataKey
   static auto fromValue(const Value &value) -> DataKey;
 
   private:
-  bool m_changed{false};
+  bool m_changed{true};
   std::variant<Uuid> m_key;
 };
 
