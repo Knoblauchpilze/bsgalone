@@ -16,6 +16,7 @@ class AiComponent : public AbstractComponent
   auto behavior() -> INode &;
   auto behavior() const -> const INode &;
 
+  auto dataContext() const -> const DataContext &;
   auto dataContext() -> DataContext &;
 
   void update(const chrono::TickData &data) override;

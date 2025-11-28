@@ -24,6 +24,11 @@ auto AiComponent::behavior() const -> const INode &
   return *m_behavior;
 }
 
+auto AiComponent::dataContext() const -> const DataContext &
+{
+  return m_context;
+}
+
 auto AiComponent::dataContext() -> DataContext &
 {
   return m_context;
