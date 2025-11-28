@@ -111,14 +111,14 @@ void ComponentMessageConsumer::handleAiBehaviorUpdated(
   const auto maybeTargetIndex = message.tryGetTargetIndex();
   if (maybeTargetIndex)
   {
-    debug("ship " + bsgo::str(shipDbId) + " now has target index "
+    debug("Ship " + bsgo::str(shipDbId) + " now has target index "
           + std::to_string(*maybeTargetIndex));
-    dataContext.setTargetIndex(*maybeTargetIndex);
+    dataContext.setKey(bsgo::ContextKey::TARGET_REACHED, *maybeTargetIndex);
   }
   else
   {
-    verbose("ship " + bsgo::str(shipDbId) + " does not have a target anymore");
-    dataContext.clearTargetIndex();
+    verbose("Ship " + bsgo::str(shipDbId) + " does not have a target anymore");
+    dataContext.clear(bsgo::ContextKey::TARGET_REACHED);
   }
 }
 

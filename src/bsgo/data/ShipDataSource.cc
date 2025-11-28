@@ -191,9 +191,11 @@ void ShipDataSource::registerShipOwner(Coordinator &coordinator,
   // and the list of targets under a std::optional<Patrol> struct.
   if (data.reachedTarget)
   {
-    debug("Registering AI for ship " + str(data.dbId));
+    debug("Registering AI for ship " + str(data.dbId) + " with target " + str(*data.reachedTarget));
 
-    DataContext context(*data.reachedTarget);
+    DataContext context;
+    context.setKey(ContextKey::TARGET_REACHED, *data.reachedTarget);
+
     coordinator.addAi(shipEntity, generateBehaviorTree(data), std::move(context));
   }
 
