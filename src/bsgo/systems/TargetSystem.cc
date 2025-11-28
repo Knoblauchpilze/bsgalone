@@ -87,6 +87,13 @@ bool TargetSystem::clearTargetIfNotReachable(TargetComponent &targetComp,
 
 void TargetSystem::publishTargetMessage(const Entity &entity) const
 {
+  // Bullets don't have a DB component and therefore can't generate
+  // a target message.
+  if (!entity.exists<DbComponent>())
+  {
+    return;
+  }
+
   const auto dummyPosition = Eigen::Vector3f::Zero();
   TargetData data{
     .sourceDbId = entity.dbComp().dbId(),
