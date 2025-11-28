@@ -46,7 +46,7 @@ void AiSystem::triggerAiBehaviorSync(Entity &entity) const
   const auto entityDbId = entity.dbComp().dbId();
   auto out              = std::make_unique<AiBehaviorSyncMessage>(entityDbId);
 
-  const auto maybeTargetIndex = aiComp.dataContext().tryGetTargetIndex();
+  const auto maybeTargetIndex = aiComp.dataContext().tryGetKey<Uuid>(ContextKey::TARGET_REACHED);
   if (maybeTargetIndex)
   {
     out->setTargetIndex(*maybeTargetIndex);

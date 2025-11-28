@@ -37,7 +37,7 @@ void TargetNode::resetInternal(DataContext &data)
   // Note: this means that we also override the progress of any other node
   // relying on this target. We could have some scoping/namespace mechanism
   // if behavior trees become more complex.
-  data.clearTargetIndex();
+  data.clear(ContextKey::TARGET_REACHED);
 }
 
 void TargetNode::determineCompletionState(DataContext &context)
@@ -47,7 +47,7 @@ void TargetNode::determineCompletionState(DataContext &context)
     return;
   }
 
-  const auto maybeTargetIndex = context.tryGetTargetIndex();
+  const auto maybeTargetIndex = context.tryGetKey<Uuid>(ContextKey::TARGET_REACHED);
   if (maybeTargetIndex && *maybeTargetIndex > m_index)
   {
     verbose("Target was already reached, setting node to succesful");
@@ -62,7 +62,7 @@ void TargetNode::determineCompletionState(DataContext &context)
   // is now active in the context. This allows external listeners to be
   // aware that the target changed. It can be used for example to send the
   // information to client applications.
-  context.setTargetIndex(m_index);
+  context.setKey(ContextKey::TARGET_REACHED, m_index);
 }
 
 } // namespace bsgo
