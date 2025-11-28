@@ -81,6 +81,14 @@ void PickTargetNode::run(const BehaviorData &data)
 
 void PickTargetNode::updateTargetIfNeeded(const BehaviorData &data, const Entity &target) const
 {
+  auto &targetComp = data.ent.targetComp();
+
+  const auto newTarget = std::optional<Uuid>(target.uuid);
+  if (newTarget == targetComp.target())
+  {
+    return;
+  }
+
   verbose("Picked enemy target " + target.str());
   data.ent.targetComp().setTarget(target.uuid);
 
