@@ -17,8 +17,10 @@ class DataContext
   template<typename Value>
   void setKey(const ContextKey key, const Value &value);
 
+  auto tryGetKey(const ContextKey key) const -> std::optional<DataKey>;
+
   template<typename Value>
-  auto tryGetKey(const ContextKey key) const -> std::optional<Value>;
+  auto tryGetValue(const ContextKey key) const -> std::optional<Value>;
 
   void clear(const ContextKey key);
 

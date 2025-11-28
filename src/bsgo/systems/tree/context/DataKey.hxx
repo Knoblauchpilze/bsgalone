@@ -12,6 +12,13 @@ inline auto DataKey::as() const -> Value
 }
 
 template<typename Value>
+inline void DataKey::set(const Value &value)
+{
+  m_key     = value;
+  m_changed = true;
+}
+
+template<typename Value>
 inline auto DataKey::fromValue(const Value &value) -> DataKey
 {
   DataKey key;
