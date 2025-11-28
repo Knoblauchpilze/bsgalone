@@ -7,6 +7,7 @@ namespace bsgo {
 
 enum class ContextKey
 {
+  PICKED_TARGET,
   TARGET_REACHED
 };
 

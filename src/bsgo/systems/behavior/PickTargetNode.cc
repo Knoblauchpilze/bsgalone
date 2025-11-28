@@ -9,32 +9,29 @@ PickTargetNode::PickTargetNode()
   : LeafNode("pick")
 {}
 
-void PickTargetNode::run(const BehaviorData &data)
+namespace {
+constexpr auto ENEMY_DETECTION_RANGE = 15.0f;
+
+bool isEntityTargetable(const Entity &entity, const Faction sourceFaction)
 {
-  constexpr auto ENEMY_DETECTION_RANGE = 15.0f;
-
-  const auto box     = CircleBox(data.ent.transformComp().position(), ENEMY_DETECTION_RANGE);
-  const auto enemies = data.coordinator
-                         .getEntitiesWithinSatistying(box, [&data](const Entity &entity) {
-                           if (EntityKind::SHIP != entity.kind->kind())
-                           {
-                             return false;
-                           }
-                           if (data.ent.factionComp().faction() == entity.factionComp().faction())
-                           {
-                             return false;
-                           }
-                           return statusVisibleFromDradis(entity.statusComp().status());
-                         });
-
-  if (enemies.empty())
+  if (EntityKind::SHIP != entity.kind->kind())
   {
-    fail();
-    return;
+    return false;
+  }
+  if (sourceFaction == entity.factionComp().faction())
+  {
+    return false;
   }
 
-  auto best      = std::numeric_limits<float>::max();
-  const auto pos = data.ent.transformComp().position();
+  return statusVisibleFromDradis(entity.statusComp().status());
+}
+
+auto pickClosestTarget(const std::vector<bsgo::Entity> &enemies, const Eigen::Vector3f &pos)
+  -> Entity
+{
+  auto best = std::numeric_limits<float>::max();
+  std::optional<Entity> maybeTarget{};
+
   for (const auto &enemy : enemies)
   {
     const auto enemyPos = enemy.transformComp().position();
@@ -42,13 +39,52 @@ void PickTargetNode::run(const BehaviorData &data)
 
     if (d < best)
     {
-      data.ent.targetComp().setTarget(enemy.uuid);
-      best = d;
+      best        = d;
+      maybeTarget = enemy;
     }
   }
 
-  verbose("Picked enemy target " + str(*data.ent.targetComp().target()));
+  if (!maybeTarget)
+  {
+    throw std::invalid_argument("Failed to determine closest target among "
+                                + std::to_string(enemies.size()));
+  }
+
+  return *maybeTarget;
+}
+} // namespace
+
+void PickTargetNode::run(const BehaviorData &data)
+{
+  const auto box     = CircleBox(data.ent.transformComp().position(), ENEMY_DETECTION_RANGE);
+  const auto faction = data.ent.factionComp().faction();
+
+  const auto enemies = data.coordinator
+                         .getEntitiesWithinSatistying(box, [faction](const Entity &entity) {
+                           return isEntityTargetable(entity, faction);
+                         });
+
+  if (enemies.empty())
+  {
+    data.context.clear(ContextKey::PICKED_TARGET);
+    fail();
+    return;
+  }
+
+  const auto pos    = data.ent.transformComp().position();
+  const auto target = pickClosestTarget(enemies, pos);
+
+  updateTargetIfNeeded(data, target);
+
   finish();
+}
+
+void PickTargetNode::updateTargetIfNeeded(const BehaviorData &data, const Entity &target) const
+{
+  verbose("Picked enemy target " + target.str());
+  data.ent.targetComp().setTarget(target.uuid);
+
+  data.context.setKey(ContextKey::PICKED_TARGET, target.uuid);
 }
 
 } // namespace bsgo

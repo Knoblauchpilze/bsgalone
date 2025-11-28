@@ -37,22 +37,34 @@ void AiSystem::updateEntity(Entity &entity,
   }
 }
 
+namespace {
+bool needsToSendMessage(const DataContext &context)
+{
+  const auto maybeTargetIndex = context.tryGetKey(ContextKey::TARGET_REACHED);
+  return maybeTargetIndex && maybeTargetIndex->changed();
+}
+} // namespace
+
 void AiSystem::triggerAiBehaviorSync(Entity &entity) const
 {
   auto &aiComp = entity.aiComp();
 
-  aiComp.dataContext().markAsSynced();
-
   const auto entityDbId = entity.dbComp().dbId();
-  auto out              = std::make_unique<AiBehaviorSyncMessage>(entityDbId);
 
-  const auto maybeTargetIndex = aiComp.dataContext().tryGetKey<Uuid>(ContextKey::TARGET_REACHED);
-  if (maybeTargetIndex)
+  if (needsToSendMessage(aiComp.dataContext()))
   {
-    out->setTargetIndex(*maybeTargetIndex);
+    auto out = std::make_unique<AiBehaviorSyncMessage>(entityDbId);
+
+    const auto maybeTargetIndex = aiComp.dataContext().tryGetKey(ContextKey::TARGET_REACHED);
+    if (maybeTargetIndex && maybeTargetIndex->changed())
+    {
+      out->setTargetIndex(maybeTargetIndex->as<Uuid>());
+    }
+
+    pushInternalMessage(std::move(out));
   }
 
-  pushInternalMessage(std::move(out));
+  aiComp.dataContext().markAsSynced();
 }
 
 } // namespace bsgo
