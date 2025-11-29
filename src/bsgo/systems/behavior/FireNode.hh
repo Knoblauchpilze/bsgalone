@@ -22,6 +22,7 @@ class FireNode : public LeafNode
   /// succeeded.
   enum class FiringState
   {
+    NO_TARGET,
     TARGET_REACHABLE,
     TARGET_IS_DEAD,
     TARGET_DOES_NOT_EXIST,

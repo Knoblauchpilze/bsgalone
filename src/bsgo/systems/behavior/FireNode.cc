@@ -23,9 +23,13 @@ void FireNode::run(const BehaviorData &data)
       debug("Target of " + data.ent.str() + " is dead");
       finish();
       break;
+    case FiringState::NO_TARGET:
+      fail();
+      return;
     case FiringState::TARGET_DOES_NOT_EXIST:
       debug("Target of " + data.ent.str() + " does not exist anymore");
-      [[fallthrough]];
+      fail();
+      return;
     case FiringState::TARGET_IS_TOO_FAR:
       fail();
       return;
@@ -61,10 +65,15 @@ auto FireNode::determineFiringState(const BehaviorData &data) const -> FiringSta
   const auto &target = data.ent.targetComp().target();
   if (!target)
   {
-    return FiringState::TARGET_DOES_NOT_EXIST;
+    return FiringState::NO_TARGET;
   }
 
   const auto targetEntity = data.coordinator.getEntity(*target);
+
+  if (!targetEntity.valid())
+  {
+    return FiringState::TARGET_DOES_NOT_EXIST;
+  }
 
   if (!targetEntity.healthComp().isAlive())
   {
