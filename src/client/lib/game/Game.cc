@@ -381,14 +381,12 @@ void Game::initialize(const int serverPort)
     "synchronized-message-queue-for-internal");
   m_outputMessageQueue = std::make_unique<ClientMessageQueue>(std::move(connection));
 
-  bsgo::SystemsConfig sConfig{.internalMessageQueue = m_internalMessageQueue.get(),
-                              .outputMessageQueue   = m_outputMessageQueue.get(),
-                              .ignoredSystems       = {bsgo::SystemType::LOOT,
-                                                       bsgo::SystemType::REMOVAL,
-                                                       bsgo::SystemType::STATUS,
-                                                       bsgo::SystemType::HEALTH,
-                                                       bsgo::SystemType::POWER,
-                                                       bsgo::SystemType::NETWORK}};
+  bsgo::SystemsConfig sConfig{.ignoredSystems = {bsgo::SystemType::LOOT,
+                                                 bsgo::SystemType::REMOVAL,
+                                                 bsgo::SystemType::STATUS,
+                                                 bsgo::SystemType::HEALTH,
+                                                 bsgo::SystemType::POWER,
+                                                 bsgo::SystemType::NETWORK}};
   m_coordinator = std::make_shared<bsgo::Coordinator>(std::move(sConfig));
 
   ViewsConfig vConfig{.gameSession          = m_gameSession,
