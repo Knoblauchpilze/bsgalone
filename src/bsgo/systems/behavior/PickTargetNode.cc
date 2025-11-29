@@ -83,7 +83,7 @@ void PickTargetNode::updateTargetIfNeeded(const BehaviorData &data, const Entity
 {
   auto &targetComp = data.ent.targetComp();
 
-  const auto newTarget = std::optional<Uuid>(target.uuid);
+  const std::optional<Uuid> newTarget{target.uuid};
   if (newTarget == targetComp.target())
   {
     return;

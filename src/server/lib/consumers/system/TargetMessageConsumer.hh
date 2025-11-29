@@ -4,7 +4,6 @@
 #include "AbstractMessageConsumer.hh"
 #include "IMessageQueue.hh"
 #include "Services.hh"
-#include "TargetMessage.hh"
 
 namespace bsgo {
 
@@ -19,8 +18,6 @@ class TargetMessageConsumer : public AbstractMessageConsumer
   private:
   ShipServiceShPtr m_shipService{};
   IMessageQueue *const m_outputMessageQueue{};
-
-  void broadcastMessageToSystem(std::unique_ptr<TargetMessage> message);
 };
 
 } // namespace bsgo
