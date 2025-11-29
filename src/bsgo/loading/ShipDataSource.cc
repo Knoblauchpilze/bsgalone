@@ -1,16 +1,8 @@
 
 #include "ShipDataSource.hh"
+#include "BehaviorUtils.hh"
 #include "CircleBox.hh"
 #include "Coordinator.hh"
-#include "VectorUtils.hh"
-
-#include "FallbackNode.hh"
-#include "FireNode.hh"
-#include "FollowTargetNode.hh"
-#include "PickTargetNode.hh"
-#include "RepeaterNode.hh"
-#include "SequenceNode.hh"
-#include "TargetNode.hh"
 
 namespace bsgo {
 
@@ -196,7 +188,8 @@ void ShipDataSource::registerShipOwner(Coordinator &coordinator,
     DataContext context;
     context.setKey(ContextKey::TARGET_REACHED, *data.reachedTarget);
 
-    coordinator.addAi(shipEntity, generateBehaviorTree(data), std::move(context));
+    auto behaviorTree = generateAiBehaviorTree(data.aiTargets);
+    coordinator.addAi(shipEntity, std::move(behaviorTree), std::move(context));
   }
 
   const auto maybePlayerEntityId = entityMapper.tryGetPlayerEntityId(data.playerDbId);
@@ -228,45 +221,6 @@ void ShipDataSource::registerShipComputers(Coordinator &coordinator,
   {
     coordinator.addComputer(shipEntity, computer);
   }
-}
-
-namespace {
-auto generateBehaviorNode(INodePtr &&idleSequence) -> INodePtr
-{
-  auto fire         = std::make_unique<FireNode>();
-  auto followTarget = std::make_unique<FollowTargetNode>();
-  auto pickTarget   = std::make_unique<PickTargetNode>();
-
-  auto fireAndFollowFallback = std::make_unique<FallbackNode>();
-  fireAndFollowFallback->addChild(std::move(fire));
-  fireAndFollowFallback->addChild(std::move(followTarget));
-
-  auto attackSequence = std::make_unique<SequenceNode>();
-  attackSequence->addChild(std::move(pickTarget));
-  attackSequence->addChild(std::move(fireAndFollowFallback));
-
-  auto fallbackNode = std::make_unique<FallbackNode>();
-  fallbackNode->addChild(std::move(attackSequence));
-  fallbackNode->addChild(std::move(idleSequence));
-
-  auto repeater = std::make_unique<RepeaterNode>(std::move(fallbackNode));
-
-  return repeater;
-}
-} // namespace
-
-auto ShipDataSource::generateBehaviorTree(const PlayerShipData &data) const -> INodePtr
-{
-  auto idleSequence = std::make_unique<SequenceNode>();
-
-  for (std::size_t id = 0u; id < data.aiTargets.size(); ++id)
-  {
-    auto targetNode = std::make_unique<TargetNode>(data.aiTargets[id], static_cast<int>(id));
-    debug("Picked target " + str(data.aiTargets[id]) + " for " + str(data.dbId));
-    idleSequence->addChild(std::move(targetNode));
-  }
-
-  return generateBehaviorNode(std::move(idleSequence));
 }
 
 } // namespace bsgo

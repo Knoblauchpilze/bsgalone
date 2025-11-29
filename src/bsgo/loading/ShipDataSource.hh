@@ -3,7 +3,6 @@
 
 #include "CoreObject.hh"
 #include "DatabaseEntityMapper.hh"
-#include "INode.hh"
 #include "PlayerShipData.hh"
 #include "PlayerShipRepository.hh"
 #include "Repositories.hh"
@@ -56,8 +55,6 @@ class ShipDataSource : public core::CoreObject
   void registerShipComputers(Coordinator &coordinator,
                              const PlayerShipData &data,
                              const Uuid shipEntity) const;
-
-  auto generateBehaviorTree(const PlayerShipData &data) const -> INodePtr;
 };
 
 } // namespace bsgo
