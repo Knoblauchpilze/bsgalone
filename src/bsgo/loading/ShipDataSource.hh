@@ -39,7 +39,6 @@ class ShipDataSource : public core::CoreObject
                     DatabaseEntityMapper &entityMapper) const;
 
   private:
-  std::optional<Uuid> m_playerDbId{};
   std::optional<Repositories> m_repositories{};
 
   void registerShip(Coordinator &coordinator,
