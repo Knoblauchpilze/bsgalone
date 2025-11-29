@@ -53,6 +53,8 @@ class ShipService : public AbstractService
   void switchShipSystem(const PlayerShip &currentActiveShip, const PlayerShip &newActiveShip) const;
 
   void updateEntityTarget(Entity &entity, const std::optional<Uuid> &targetId) const;
+
+  bool isSelfSelection(const TargetAcquiringData &data, const Entity &target) const;
 };
 
 using ShipServiceShPtr = std::shared_ptr<ShipService>;

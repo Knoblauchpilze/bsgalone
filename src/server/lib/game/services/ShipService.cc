@@ -188,7 +188,6 @@ auto overrideTargetWithHintIfNecessary(const std::optional<Entity> &maybeTarget,
 
   return {};
 }
-
 } // namespace
 
 auto ShipService::tryAcquireTarget(const TargetAcquiringData &data) const -> AcquiringResult
@@ -239,6 +238,15 @@ auto ShipService::tryAcquireTarget(const TargetAcquiringData &data) const -> Acq
     return AcquiringResult{};
   }
 
+  // Self selection is not allowed, return an empty target if it appears that an entity
+  // is trying to target itself.
+  if (isSelfSelection(data, *maybeTarget))
+  {
+    // We return success with no target to indicate that the operation did not fail but
+    // was blocked by game logic.
+    return AcquiringResult{.success = true};
+  }
+
   debug("Determined target " + maybeTarget->str());
 
   maybeTargetKind = maybeTarget->kind->kind();
@@ -284,6 +292,34 @@ void ShipService::updateEntityTarget(Entity &entity, const std::optional<Uuid> &
   info("Found target " + target.str());
 
   targetComp.setTarget(*targetId);
+}
+
+bool ShipService::isSelfSelection(const TargetAcquiringData &data, const Entity &target) const
+{
+  if (data.sourceKind != EntityKind::SHIP)
+  {
+    error("Unsupported entity with kind " + str(data.sourceKind) + " for target selection");
+  }
+
+  // In case the target entity does not have a DB component, it means it can't be a ship
+  // belonging to the same player and therefore it's not a self selection.
+  if (!target.exists<DbComponent>())
+  {
+    return false;
+  }
+
+  // Currently only ships can select targets. If the target is not a ship it means that
+  // it can't possibly belong to the same player as only ships are attached to players
+  // and therefore it's not a self selection.
+  if (target.kind->kind() != EntityKind::SHIP)
+  {
+    return false;
+  }
+
+  const auto sourceShip = m_repositories.playerShipRepository->findOneById(data.sourceDbId);
+  const auto targetShip = m_repositories.playerShipRepository->findOneById(target.dbComp().dbId());
+
+  return sourceShip.player == targetShip.player;
 }
 
 } // namespace bsgo
