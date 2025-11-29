@@ -16,7 +16,9 @@ class AiSystem : public AbstractSystem
                     Coordinator &coordinator,
                     const chrono::TickData &data) const override;
 
+  private:
   void triggerAiBehaviorSync(Entity &entity) const;
+  void trySendAiBehaviorSyncMessage(const Entity &entity) const;
 };
 
 } // namespace bsgo

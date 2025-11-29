@@ -37,34 +37,40 @@ void AiSystem::updateEntity(Entity &entity,
   }
 }
 
+void AiSystem::triggerAiBehaviorSync(Entity &entity) const
+{
+  trySendAiBehaviorSyncMessage(entity);
+
+  auto &aiComp = entity.aiComp();
+  aiComp.dataContext().markAsSynced();
+}
+
 namespace {
-bool needsToSendMessage(const DataContext &context)
+bool needsToSendBehaviorSyncMessage(const DataContext &context)
 {
   const auto maybeTargetIndex = context.tryGetKey(ContextKey::TARGET_REACHED);
   return maybeTargetIndex && maybeTargetIndex->changed();
 }
 } // namespace
 
-void AiSystem::triggerAiBehaviorSync(Entity &entity) const
+void AiSystem::trySendAiBehaviorSyncMessage(const Entity &entity) const
 {
   auto &aiComp = entity.aiComp();
-
-  const auto entityDbId = entity.dbComp().dbId();
-
-  if (needsToSendMessage(aiComp.dataContext()))
+  if (!needsToSendBehaviorSyncMessage(aiComp.dataContext()))
   {
-    auto out = std::make_unique<AiBehaviorSyncMessage>(entityDbId);
-
-    const auto maybeTargetIndex = aiComp.dataContext().tryGetKey(ContextKey::TARGET_REACHED);
-    if (maybeTargetIndex && maybeTargetIndex->changed())
-    {
-      out->setTargetIndex(maybeTargetIndex->as<Uuid>());
-    }
-
-    pushInternalMessage(std::move(out));
+    return;
   }
 
-  aiComp.dataContext().markAsSynced();
+  const auto entityDbId = entity.dbComp().dbId();
+  auto out              = std::make_unique<AiBehaviorSyncMessage>(entityDbId);
+
+  const auto maybeTargetIndex = aiComp.dataContext().tryGetKey(ContextKey::TARGET_REACHED);
+  if (maybeTargetIndex && maybeTargetIndex->changed())
+  {
+    out->setTargetIndex(maybeTargetIndex->as<Uuid>());
+  }
+
+  pushInternalMessage(std::move(out));
 }
 
 } // namespace bsgo
