@@ -1,7 +1,6 @@
 
 #include "TargetSystem.hh"
 #include "Coordinator.hh"
-#include "TargetMessage.hh"
 
 namespace bsgo {
 namespace {
@@ -27,10 +26,7 @@ void TargetSystem::updateEntity(Entity &entity,
     return;
   }
 
-  if (clearTargetIfNotReachable(targetComp, coordinator))
-  {
-    publishTargetMessage(entity);
-  }
+  clearTargetIfNotReachable(targetComp, coordinator);
 }
 
 namespace {
@@ -67,7 +63,7 @@ bool targetHasDocked(const Entity &target)
 }
 } // namespace
 
-bool TargetSystem::clearTargetIfNotReachable(TargetComponent &targetComp,
+void TargetSystem::clearTargetIfNotReachable(TargetComponent &targetComp,
                                              const Coordinator &coordinator) const
 {
   const auto target = coordinator.getEntity(*targetComp.target());
@@ -75,34 +71,10 @@ bool TargetSystem::clearTargetIfNotReachable(TargetComponent &targetComp,
   const auto dead   = targetIsDead(target);
   const auto docked = targetHasDocked(target);
 
-  const auto shouldClear = !target.valid() || dead || docked;
-
-  if (shouldClear)
+  if (!target.valid() || dead || docked)
   {
     targetComp.clearTarget();
   }
-
-  return shouldClear;
-}
-
-void TargetSystem::publishTargetMessage(const Entity &entity) const
-{
-  // Bullets don't have a DB component and therefore can't generate
-  // a target message.
-  if (!entity.exists<DbComponent>())
-  {
-    return;
-  }
-
-  const auto dummyPosition = Eigen::Vector3f::Zero();
-  TargetData data{
-    .sourceDbId = entity.dbComp().dbId(),
-    .sourceKind = entity.kind->kind(),
-  };
-
-  auto out = std::make_unique<TargetMessage>(data, dummyPosition);
-
-  pushMessage(std::move(out));
 }
 
 } // namespace bsgo
