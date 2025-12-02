@@ -230,29 +230,24 @@ auto ShipService::tryAcquireTarget(const TargetAcquiringData &data) const -> Acq
     }
   }
 
-  std::optional<Uuid> maybeTargetDbId{};
-  std::optional<EntityKind> maybeTargetKind{};
-
-  if (!maybeTarget)
-  {
-    return AcquiringResult{};
-  }
-
   // Self selection is not allowed, return an empty target if it appears that an entity
   // is trying to target itself.
-  if (isSelfSelection(data, *maybeTarget))
+  if (maybeTarget && isSelfSelection(data, *maybeTarget))
   {
     // We return success with no target to indicate that the operation did not fail but
     // was blocked by game logic.
     return AcquiringResult{.success = true};
   }
 
-  debug("Determined target " + maybeTarget->str());
+  std::optional<Uuid> maybeTargetDbId{};
+  std::optional<EntityKind> maybeTargetKind{};
+  if (maybeTarget)
+  {
+    maybeTargetKind = maybeTarget->kind->kind();
+    maybeTargetDbId = maybeTarget->dbComp().dbId();
+  }
 
-  maybeTargetKind = maybeTarget->kind->kind();
-  maybeTargetDbId = maybeTarget->dbComp().dbId();
-
-  updateEntityTarget(ship, maybeTarget->uuid);
+  updateEntityTarget(ship, maybeTargetDbId);
 
   return AcquiringResult{.success    = true,
                          .targetKind = maybeTargetKind,
