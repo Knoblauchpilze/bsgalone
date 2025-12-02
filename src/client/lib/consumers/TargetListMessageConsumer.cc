@@ -32,6 +32,8 @@ auto tryGetEntityId(const bsgo::DatabaseEntityMapper &entityMapper,
       return entityMapper.tryGetShipEntityId(dbId);
     case bsgo::EntityKind::OUTPOST:
       return entityMapper.tryGetOutpostEntityId(dbId);
+    case bsgo::EntityKind::ASTEROID:
+      return entityMapper.tryGetAsteroidEntityId(dbId);
     default:
       throw std::invalid_argument("Failed to get entity with unsupported kind " + bsgo::str(kind));
   }
