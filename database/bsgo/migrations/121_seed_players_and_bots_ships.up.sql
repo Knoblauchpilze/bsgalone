@@ -232,3 +232,102 @@ INSERT INTO ai_behaviors ("ship", "index")
     (SELECT id FROM player_ship WHERE name = 'Jotunn'),
     0
   );
+
+
+-- player: colonial bot, ship: Viper Mark VII, system: 169 aretis
+INSERT INTO player_ship ("ship", "player", "name", "active", "hull_points", "power_points", "x_pos", "y_pos", "z_pos")
+  VALUES (
+      (SELECT id FROM ship WHERE name = 'Viper Mark VII'),
+      (SELECT id FROM player WHERE name = 'AI Viper Mark VII'),
+      'Viper Mark VII',
+      true,
+      48.0,
+      98.7,
+      0.0,
+      0.0,
+      0.0
+  );
+INSERT INTO ship_system ("ship", "system", "docked")
+  VALUES (
+    (SELECT id FROM player_ship WHERE name = 'Viper Mark VII'),
+    (SELECT id FROM system WHERE name = '169 aretis'),
+    false
+  );
+
+INSERT INTO ship_weapon ("ship", "weapon", "slot")
+  VALUES (
+    (SELECT id FROM player_ship WHERE name = 'Viper Mark VII'),
+    (SELECT pw.id FROM player_weapon AS pw LEFT JOIN player AS p ON p.id = pw.player LEFT JOIN weapon AS w ON w.id = pw.weapon WHERE p.name = 'AI Viper Mark VII' AND w.name = 'Medium range cannon'),
+    (SELECT ss.id FROM ship_slot AS ss LEFT JOIN ship AS s ON s.id = ss.ship WHERE s.name = 'Viper Mark VII' AND ss.type = 'weapon' AND ss.x_pos = -0.5)
+  );
+
+INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
+  VALUES (
+    (SELECT id FROM player_ship WHERE name = 'Viper Mark VII'),
+    0,
+    -10.0,
+    -11.0,
+    0.0
+  );
+INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
+  VALUES (
+    (SELECT id FROM player_ship WHERE name = 'Viper Mark VII'),
+    1,
+    -5.0,
+    0.0,
+    0.0
+  );
+INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
+  VALUES (
+    (SELECT id FROM player_ship WHERE name = 'Viper Mark VII'),
+    2,
+    -11.0,
+    10.0,
+    0.0
+  );
+INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
+  VALUES (
+    (SELECT id FROM player_ship WHERE name = 'Viper Mark VII'),
+    3,
+    0.0,
+    5.0,
+    0.0
+  );
+INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
+  VALUES (
+    (SELECT id FROM player_ship WHERE name = 'Viper Mark VII'),
+    4,
+    11.0,
+    10.0,
+    0.0
+  );
+INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
+  VALUES (
+    (SELECT id FROM player_ship WHERE name = 'Viper Mark VII'),
+    5,
+    5.0,
+    0.0,
+    0.0
+  );
+INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
+  VALUES (
+    (SELECT id FROM player_ship WHERE name = 'Viper Mark VII'),
+    6,
+    11.0,
+    -10.0,
+    0.0
+  );
+INSERT INTO ai_targets ("ship", "index", "x_pos", "y_pos", "z_pos")
+  VALUES (
+    (SELECT id FROM player_ship WHERE name = 'Viper Mark VII'),
+    7,
+    0.0,
+    -5.0,
+    0.0
+  );
+
+INSERT INTO ai_behaviors ("ship", "index")
+  VALUES (
+    (SELECT id FROM player_ship WHERE name = 'Viper Mark VII'),
+    0
+  );

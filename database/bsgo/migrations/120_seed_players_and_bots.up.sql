@@ -157,3 +157,14 @@ INSERT INTO player_weapon ("weapon", "player", "level")
     (SELECT id FROM player WHERE name = 'AI Jotunn'),
     20
   );
+
+-- system: 169 aretis, ship: Viper Mark VII
+INSERT INTO player ("account", "name", "faction")
+  VALUES (NULL, 'AI Viper Mark VII', 'colonial');
+
+INSERT INTO player_weapon ("weapon", "player", "level")
+  VALUES (
+    (SELECT id FROM weapon WHERE name = 'Medium range cannon'),
+    (SELECT id FROM player WHERE name = 'AI Viper Mark VII'),
+    5
+  );
