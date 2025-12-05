@@ -76,7 +76,7 @@ INSERT INTO asteroid ("system", "max_health", "health", "radius", "x_pos", "y_po
     15.0, 17.0, 0.0
   );
 
--- 169 Aretis
+-- 169 aretis
 INSERT INTO bsgalone_schema.system ("name", "x_pos", "y_pos", "z_pos")
   VALUES ('169 aretis', 3.0, -4.7, 0.0);
 
