@@ -46,10 +46,9 @@ void EntityRemovedMessageConsumer::onMessageReceived(const IMessage &message)
 void EntityRemovedMessageConsumer::handleShipEntityRemoved(const Uuid shipDbId,
                                                            const bool dead) const
 {
-  const auto [systemDbId, maybeProcessor] = findSystemAndProcessorFromShip(shipDbId,
-                                                                           *m_systemService,
-                                                                           m_systemProcessors);
-  if (!systemDbId || !maybeProcessor)
+  const auto [maybeSystemDbId, maybeProcessor]
+    = tryFindSystemAndProcessorFromShip(shipDbId, *m_systemService, m_systemProcessors);
+  if (!maybeSystemDbId || !maybeProcessor)
   {
     warn("Failed to process ship removed message for " + str(shipDbId), "No system for ship");
     return;
@@ -63,16 +62,15 @@ void EntityRemovedMessageConsumer::handleShipEntityRemoved(const Uuid shipDbId,
 
   const auto &processor = *maybeProcessor;
   processor->pushMessage(
-    std::make_unique<EntityRemovedMessage>(shipDbId, EntityKind::SHIP, dead, *systemDbId));
+    std::make_unique<EntityRemovedMessage>(shipDbId, EntityKind::SHIP, dead, *maybeSystemDbId));
 }
 
 void EntityRemovedMessageConsumer::handleAsteroidEntityRemoved(const Uuid asteroidDbId,
                                                                const bool dead) const
 {
-  const auto [systemDbId, maybeProcessor] = findSystemAndProcessorFromAsteroid(asteroidDbId,
-                                                                               *m_systemService,
-                                                                               m_systemProcessors);
-  if (!systemDbId || !maybeProcessor)
+  const auto [maybeSystemDbId, maybeProcessor]
+    = tryFindSystemAndProcessorFromAsteroid(asteroidDbId, *m_systemService, m_systemProcessors);
+  if (!maybeSystemDbId || !maybeProcessor)
   {
     warn("Failed to process asteroid removed message for " + str(asteroidDbId),
          "No system for asteroid");
@@ -86,8 +84,10 @@ void EntityRemovedMessageConsumer::handleAsteroidEntityRemoved(const Uuid astero
   }
 
   const auto &processor = *maybeProcessor;
-  processor->pushMessage(
-    std::make_unique<EntityRemovedMessage>(asteroidDbId, EntityKind::ASTEROID, dead, *systemDbId));
+  processor->pushMessage(std::make_unique<EntityRemovedMessage>(asteroidDbId,
+                                                                EntityKind::ASTEROID,
+                                                                dead,
+                                                                *maybeSystemDbId));
 }
 
 } // namespace bsgo

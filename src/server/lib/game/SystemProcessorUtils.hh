@@ -10,19 +10,18 @@ namespace bsgo {
 auto convertToSystemProcessorMap(const std::vector<SystemProcessorShPtr> &systemProcessors)
   -> SystemProcessorMap;
 
-auto findSystemAndProcessorFromShip(const Uuid shipDbId,
-                                    const SystemService &service,
-                                    const SystemProcessorMap &processors)
-  -> std::pair<std::optional<Uuid>, std::optional<SystemProcessorShPtr>>;
+auto tryFindSystemDbIdFromEntity(const Uuid dbId,
+                                 const EntityKind entityKind,
+                                 const SystemService &service) -> std::optional<Uuid>;
 
-auto findSystemAndProcessorFromAsteroid(const Uuid asteroidDbId,
-                                        const SystemService &service,
-                                        const SystemProcessorMap &processors)
-  -> std::pair<std::optional<Uuid>, std::optional<SystemProcessorShPtr>>;
-
-auto findSystemAndProcessorFromOutpost(const Uuid outpostDbId,
+auto tryFindSystemAndProcessorFromShip(const Uuid shipDbId,
                                        const SystemService &service,
                                        const SystemProcessorMap &processors)
+  -> std::pair<std::optional<Uuid>, std::optional<SystemProcessorShPtr>>;
+
+auto tryFindSystemAndProcessorFromAsteroid(const Uuid asteroidDbId,
+                                           const SystemService &service,
+                                           const SystemProcessorMap &processors)
   -> std::pair<std::optional<Uuid>, std::optional<SystemProcessorShPtr>>;
 
 } // namespace bsgo

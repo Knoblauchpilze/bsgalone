@@ -20,14 +20,14 @@ void FireNode::run(const BehaviorData &data)
       fireAllWeapons(data.ent);
       break;
     case FiringState::TARGET_IS_DEAD:
-      debug("Target of " + data.ent.str() + " is dead");
+      verbose("Target of " + data.ent.str() + " is dead");
       finish();
       break;
     case FiringState::NO_TARGET:
       fail();
       return;
     case FiringState::TARGET_DOES_NOT_EXIST:
-      debug("Target of " + data.ent.str() + " does not exist anymore");
+      verbose("Target of " + data.ent.str() + " does not exist anymore");
       fail();
       return;
     case FiringState::TARGET_IS_TOO_FAR:

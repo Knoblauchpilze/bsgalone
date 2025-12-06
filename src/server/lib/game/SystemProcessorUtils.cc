@@ -21,6 +21,24 @@ auto convertToSystemProcessorMap(const std::vector<SystemProcessorShPtr> &system
   return out;
 }
 
+auto tryFindSystemDbIdFromEntity(const Uuid dbId,
+                                 const EntityKind entityKind,
+                                 const SystemService &service) -> std::optional<Uuid>
+{
+  switch (entityKind)
+  {
+    case EntityKind::ASTEROID:
+      return service.getSystemDbIdForAsteroid(dbId);
+    case EntityKind::SHIP:
+      return service.tryGetSystemDbIdForShip(dbId);
+    case EntityKind::OUTPOST:
+      return service.getSystemDbIdForOutpost(dbId);
+    default:
+      throw std::invalid_argument("Unsupported entity kind for system lookup, got kind "
+                                  + str(entityKind));
+  }
+}
+
 namespace {
 auto findSystemProcessorFromSystem(const Uuid systemDbId, const SystemProcessorMap &processors)
   -> std::optional<SystemProcessorShPtr>
@@ -35,9 +53,9 @@ auto findSystemProcessorFromSystem(const Uuid systemDbId, const SystemProcessorM
 }
 } // namespace
 
-auto findSystemAndProcessorFromShip(const Uuid shipDbId,
-                                    const SystemService &service,
-                                    const SystemProcessorMap &processors)
+auto tryFindSystemAndProcessorFromShip(const Uuid shipDbId,
+                                       const SystemService &service,
+                                       const SystemProcessorMap &processors)
   -> std::pair<std::optional<Uuid>, std::optional<SystemProcessorShPtr>>
 {
   std::pair<std::optional<Uuid>, std::optional<SystemProcessorShPtr>> out{};
@@ -51,27 +69,14 @@ auto findSystemAndProcessorFromShip(const Uuid shipDbId,
   return out;
 }
 
-auto findSystemAndProcessorFromAsteroid(const Uuid asteroidDbId,
-                                        const SystemService &service,
-                                        const SystemProcessorMap &processors)
+auto tryFindSystemAndProcessorFromAsteroid(const Uuid asteroidDbId,
+                                           const SystemService &service,
+                                           const SystemProcessorMap &processors)
   -> std::pair<std::optional<Uuid>, std::optional<SystemProcessorShPtr>>
 {
   std::pair<std::optional<Uuid>, std::optional<SystemProcessorShPtr>> out{};
 
   out.first  = service.getSystemDbIdForAsteroid(asteroidDbId);
-  out.second = findSystemProcessorFromSystem(*out.first, processors);
-
-  return out;
-}
-
-auto findSystemAndProcessorFromOutpost(const Uuid outpostDbId,
-                                       const SystemService &service,
-                                       const SystemProcessorMap &processors)
-  -> std::pair<std::optional<Uuid>, std::optional<SystemProcessorShPtr>>
-{
-  std::pair<std::optional<Uuid>, std::optional<SystemProcessorShPtr>> out{};
-
-  out.first  = service.getSystemDbIdForOutpost(outpostDbId);
   out.second = findSystemProcessorFromSystem(*out.first, processors);
 
   return out;
