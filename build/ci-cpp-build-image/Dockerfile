@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   cmake=3.28.3-1build7 \
   ccache=4.9.1-1 \
   pkg-config=1.8.1-2build1 \
-  libpq-dev=16.10-0ubuntu0.24.04.1 \
+  libpq-dev=16.11-0ubuntu0.24.04.1 \
   libx11-dev=2:1.8.7-1build1 \
   libgl-dev=1.7.0-1build1 \
   libasio-dev=1:1.28.1-0.2 \
