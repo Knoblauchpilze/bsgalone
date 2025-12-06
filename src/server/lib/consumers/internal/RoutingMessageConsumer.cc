@@ -65,8 +65,6 @@ void RoutingMessageConsumer::handleTargetMessage(const TargetMessage &message) c
     error("Failed to determine system for entity " + str(dbId) + " with kind " + str(entityKind));
   }
 
-  info("routing target message to " + str(*maybeSystemDbId));
-
   auto out = message.clone();
   out->as<TargetMessage>().setSystemDbId(*maybeSystemDbId);
   m_outputMessageQueue->pushMessage(std::move(out));
