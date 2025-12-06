@@ -3,7 +3,6 @@
 #include "AiBehaviorSyncMessageConsumer.hh"
 #include "AsyncMessageQueue.hh"
 #include "BroadcastMessageQueue.hh"
-#include "ComponentSyncMessageConsumer.hh"
 #include "ConnectionMessage.hh"
 #include "EntityRemovedMessageConsumer.hh"
 #include "JumpMessageConsumer.hh"
@@ -11,6 +10,7 @@
 #include "LoginMessageConsumer.hh"
 #include "LogoutMessageConsumer.hh"
 #include "LootMessageConsumer.hh"
+#include "RoutingMessageConsumer.hh"
 #include "SignupMessageConsumer.hh"
 #include "SynchronizedMessageQueue.hh"
 #include "TriageMessageConsumer.hh"
@@ -138,9 +138,7 @@ void MessageExchanger::initializeInternalConsumers(const MessageSystemData &mess
                                                    m_outputMessageQueue.get()));
 
   m_internalMessageQueue->addListener(
-    std::make_unique<ComponentSyncMessageConsumer>(systemService,
-                                                   messagesData.systemProcessors,
-                                                   m_outputMessageQueue.get()));
+    std::make_unique<RoutingMessageConsumer>(systemService, m_outputMessageQueue.get()));
 
   m_internalMessageQueue->addListener(
     std::make_unique<AiBehaviorSyncMessageConsumer>(systemService, m_outputMessageQueue.get()));

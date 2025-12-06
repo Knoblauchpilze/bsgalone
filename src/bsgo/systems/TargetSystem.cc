@@ -99,11 +99,7 @@ void TargetSystem::publishTargetMessage(const Entity &entity) const
   auto out = std::make_unique<TargetMessage>(data, dummyPosition);
   out->validate();
 
-  info("sending target message for " + entity.str());
-
-  // TODO: We need to send it internally so that we can populate the system
-  // id in the message.
-  pushMessage(std::move(out));
+  pushInternalMessage(std::move(out));
 }
 
 } // namespace bsgo
