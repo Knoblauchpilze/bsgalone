@@ -17,7 +17,8 @@ class TargetSystem : public AbstractSystem
                     const chrono::TickData &data) const override;
 
   private:
-  void clearTargetIfNotReachable(TargetComponent &targetComp, const Coordinator &coordinator) const;
+  bool clearTargetIfNotReachable(TargetComponent &targetComp, const Coordinator &coordinator) const;
+  void publishTargetMessage(const Entity &entity) const;
 };
 
 } // namespace bsgo
