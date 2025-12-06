@@ -2,6 +2,8 @@ name: Database migration tests
 
 on:
   push:
+    branches:
+      - "**"
     paths:
       - ".github/workflows/database-migration-tests.yml"
       - "database/**"

@@ -2,6 +2,8 @@ name: Build services
 
 on:
   push:
+    branches:
+      - "**"
     paths:
       - "CMakeLists.txt"
       - "codecov.yml"
