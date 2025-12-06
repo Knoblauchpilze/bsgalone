@@ -2,6 +2,8 @@ name: Build CI docker image
 
 on:
   push:
+    branches:
+      - "**"
     paths:
       - ".github/workflows/build-ci-docker-image.yml"
       - "build/ci-cpp-build-image/**"
