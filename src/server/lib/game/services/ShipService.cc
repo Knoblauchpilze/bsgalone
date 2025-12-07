@@ -126,7 +126,7 @@ namespace {
 auto tryGetEntityAt(const Coordinator &coordinator, const Eigen::Vector3f &position)
   -> std::optional<Entity>
 {
-  auto maybeEntityId = coordinator.getEntityAt(position);
+  auto maybeEntityId = coordinator.getEntityAt(position, {}, EntityKind::BULLET);
   if (!maybeEntityId)
   {
     return {};
