@@ -318,20 +318,28 @@ void Coordinator::deleteEntity(const Uuid ent)
 }
 
 auto Coordinator::getEntityAt(const Eigen::Vector3f &pos,
-                              const std::optional<EntityKind> &filter) const -> std::optional<Uuid>
+                              const std::optional<EntityKind> &filter,
+                              const std::optional<EntityKind> &excluding) const
+  -> std::optional<Uuid>
 {
   std::optional<Uuid> out;
   float best = std::numeric_limits<float>::max();
 
   for (const auto &[uuid, transform] : m_components.transforms)
   {
-    if (hasExpectedKind(uuid, filter) && transform->contains(pos))
+    if (transform->contains(pos))
     {
-      const auto d = (pos - transform->position()).norm();
-      if (d < best)
+      const auto matchesRequiredKind  = hasExpectedKind(uuid, filter);
+      const auto matchesExcludingKind = excluding && hasExpectedKind(uuid, excluding);
+
+      if (matchesRequiredKind && !matchesExcludingKind)
       {
-        out  = uuid;
-        best = d;
+        const auto d = (pos - transform->position()).norm();
+        if (d < best)
+        {
+          out  = uuid;
+          best = d;
+        }
       }
     }
   }

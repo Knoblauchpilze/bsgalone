@@ -194,7 +194,7 @@ void ShipView::tryAcquireTarget(const Eigen::Vector3f &position) const
     .sourceKind = bsgo::EntityKind::SHIP,
   };
 
-  const auto maybeTargetId = m_coordinator->getEntityAt(position);
+  const auto maybeTargetId = m_coordinator->getEntityAt(position, {}, bsgo::EntityKind::BULLET);
   if (maybeTargetId)
   {
     const auto target = m_coordinator->getEntity(*maybeTargetId);

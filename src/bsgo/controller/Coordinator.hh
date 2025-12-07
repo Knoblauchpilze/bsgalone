@@ -63,8 +63,24 @@ class Coordinator : public core::CoreObject
   auto getEntity(const Uuid ent) const -> Entity;
   void deleteEntity(const Uuid ent);
 
-  auto getEntityAt(const Eigen::Vector3f &pos, const std::optional<EntityKind> &filter = {}) const
-    -> std::optional<Uuid>;
+  /// @brief - Returns the closest entity intersecting the position provided as input.
+  /// In case no entity intersects the position (computed from the bounding box of the
+  /// entity), an empty optional is returned.
+  /// @param pos - the position to look at
+  /// @param filter - if set, the entity returned has to have the kind of the filter
+  /// @param excluding - if set, the entity should not match the specified filter
+  /// @return - the identifier of the closest entity intersecting the position, matching
+  /// the filter and not in the exclusion list, an empty identifier otherwise.
+  auto getEntityAt(const Eigen::Vector3f &pos,
+                   const std::optional<EntityKind> &filter,
+                   const std::optional<EntityKind> &excluding) const -> std::optional<Uuid>;
+
+  /// @brief - Returns the list of entityes within the bounding box provided as input.
+  /// In case no entity fits within the bounding box, an empty list is returned.
+  /// @param bbox - the bounding box into which entities shoud lie
+  /// @param filter - if set, the entity returned has to have the kind of the filter
+  /// @return - a list of identifiers representing all entities within the bounding box
+  /// and filter.
   auto getEntitiesWithin(const IBoundingBox &bbox,
                          const std::optional<EntityKind> &filter = {}) const -> std::vector<Uuid>;
 
