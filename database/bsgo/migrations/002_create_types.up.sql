@@ -20,3 +20,8 @@ CREATE TABLE slot (
   type TEXT NOT NULL,
   PRIMARY KEY (type)
 );
+
+CREATE TABLE game_role (
+  name TEXT NOT NULL,
+  PRIMARY KEY (name)
+);
