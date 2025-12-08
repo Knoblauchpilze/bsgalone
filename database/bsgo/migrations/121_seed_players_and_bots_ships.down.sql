@@ -1,4 +1,6 @@
 
+DELETE FROM player_ship_respawn;
+DELETE FROM asteroid_respawn;
 DELETE FROM ai_behaviors;
 DELETE FROM ai_targets;
 DELETE FROM ship_computer;
