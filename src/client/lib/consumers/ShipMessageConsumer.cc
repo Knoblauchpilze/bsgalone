@@ -100,6 +100,14 @@ void ShipMessageConsumer::handleJumpCancelled(const bsgo::JumpCancelledMessage &
 
 void ShipMessageConsumer::handleTargetAcquired(const bsgo::TargetMessage &message) const
 {
+  if (!m_entityMapper.doesPlayerHaveAnEntity())
+  {
+    // Most probably the player did not undock yet: even if the update might not be
+    // related to the player ship, when there's no player ship the logic of the client
+    // is to not have any entity loaded so this update will fail.
+    return;
+  }
+
   const auto maybeSourceEntityId = m_entityMapper.tryGetEntityId(message.getSourceDbId(),
                                                                  message.getSourceKind());
   if (!maybeSourceEntityId)
