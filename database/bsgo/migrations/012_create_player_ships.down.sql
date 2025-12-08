@@ -4,6 +4,7 @@ DROP TRIGGER trigger_ship_computer_updated_at ON ship_computer;
 DROP TRIGGER trigger_ship_weapon_updated_at ON ship_weapon;
 DROP TRIGGER trigger_player_ship_updated_at ON player_ship;
 
+DROP TABLE player_role;
 DROP TABLE ship_jump;
 DROP TABLE ship_system;
 DROP TABLE ship_computer;

@@ -11,3 +11,6 @@ INSERT INTO resource ("name") VALUES ('titane');
 
 INSERT INTO slot ("type") VALUES ('weapon');
 INSERT INTO slot ("type") VALUES ('computer');
+
+INSERT INTO game_role ("name") VALUES ('pilot');
+INSERT INTO game_role ("name") VALUES ('gunner');

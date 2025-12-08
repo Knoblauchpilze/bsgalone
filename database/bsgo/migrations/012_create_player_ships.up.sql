@@ -60,6 +60,15 @@ CREATE TABLE ship_jump (
   FOREIGN KEY (system) REFERENCES system(id)
 );
 
+CREATE TABLE player_role (
+  player INTEGER NOT NULL,
+  role TEXT NOT NULL,
+  target_ship INTEGER DEFAULT NULL,
+  FOREIGN KEY (player) REFERENCES player(id),
+  FOREIGN KEY (role) REFERENCES game_role(name),
+  FOREIGN KEY (target_ship) REFERENCES player_ship
+);
+
 CREATE TRIGGER trigger_player_ship_updated_at
   BEFORE UPDATE OR INSERT ON player_ship
   FOR EACH ROW
