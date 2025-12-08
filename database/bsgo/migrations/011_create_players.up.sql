@@ -22,6 +22,7 @@ CREATE TABLE player_resource (
   FOREIGN KEY (player) REFERENCES player(id),
   FOREIGN KEY (resource) REFERENCES resource(id)
 );
+
 CREATE TABLE player_weapon (
   id INTEGER GENERATED ALWAYS AS IDENTITY,
   weapon INTEGER NOT NULL,
