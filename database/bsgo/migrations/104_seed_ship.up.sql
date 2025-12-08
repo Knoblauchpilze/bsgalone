@@ -1,4 +1,10 @@
 
+
+INSERT INTO ship_class ("name", "jump_time", "jump_time_threat")
+  VALUES ('strike', 5.0, 60.0);
+INSERT INTO ship_class ("name", "jump_time", "jump_time_threat")
+  VALUES ('line', 25.0, 100.0);
+
 -- Viper Mark II
 INSERT INTO ship ("name", "faction", "class", "starting_ship", "max_hull_points", "hull_points_regen", "max_power_points", "power_points_regen", "max_acceleration", "max_speed", "radius")
   VALUES ('Viper Mark II', 'colonial', 'strike', true, 450.0, 3.0, 100.0, 2.0, 5.0, 4.0, 0.5);
