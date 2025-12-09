@@ -8,10 +8,11 @@ LoginMessage::LoginMessage()
   : ValidatableMessage(MessageType::LOGIN)
 {}
 
-LoginMessage::LoginMessage(const std::string &name, const std::string &password)
+LoginMessage::LoginMessage(const std::string &name, const std::string &password, const GameRole role)
   : ValidatableMessage(MessageType::LOGIN)
   , m_name(name)
   , m_password(password)
+  , m_role(role)
 {}
 
 auto LoginMessage::getUserName() const -> std::string
@@ -22,6 +23,11 @@ auto LoginMessage::getUserName() const -> std::string
 auto LoginMessage::getUserPassword() const -> std::string
 {
   return m_password;
+}
+
+auto LoginMessage::getGameRole() const -> GameRole
+{
+  return m_role;
 }
 
 auto LoginMessage::getPlayerDbId() const -> std::optional<Uuid>
@@ -47,6 +53,7 @@ auto LoginMessage::serialize(std::ostream &out) const -> std::ostream &
 
   core::serialize(out, m_name);
   core::serialize(out, m_password);
+  core::serialize(out, m_role);
 
   core::serialize(out, m_playerDbId);
 
@@ -62,6 +69,7 @@ bool LoginMessage::deserialize(std::istream &in)
 
   ok &= core::deserialize(in, m_name);
   ok &= core::deserialize(in, m_password);
+  ok &= core::deserialize(in, m_role);
 
   ok &= core::deserialize(in, m_playerDbId);
 
@@ -70,7 +78,7 @@ bool LoginMessage::deserialize(std::istream &in)
 
 auto LoginMessage::clone() const -> IMessagePtr
 {
-  auto clone = std::make_unique<LoginMessage>(m_name, m_password);
+  auto clone = std::make_unique<LoginMessage>(m_name, m_password, m_role);
   if (m_playerDbId)
   {
     clone->setPlayerDbId(*m_playerDbId);
