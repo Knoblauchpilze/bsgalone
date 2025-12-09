@@ -24,6 +24,7 @@ void LoginScreenUiHandler::initializeMenus(const int width,
 {
   generateLoginModePanel(width, height);
   generateFactionPanel(width, height);
+  generateRolePanel(width, height);
   generateProceedButton(width, height);
   generateQuitButton(width, height);
   generateFailureMenu(width, height);
@@ -38,6 +39,10 @@ bool LoginScreenUiHandler::processUserInput(UserInputData &inputData)
     return true;
   }
   if (m_factionPanel->processUserInput(inputData))
+  {
+    return true;
+  }
+  if (m_rolePanel->processUserInput(inputData))
   {
     return true;
   }
@@ -56,6 +61,7 @@ void LoginScreenUiHandler::render(Renderer &engine) const
 {
   m_loginModePanel->render(engine);
   m_factionPanel->render(engine);
+  m_rolePanel->render(engine);
   m_proceedButton->render(engine);
   m_quitButton->render(engine);
   m_failureMenu->render(engine);
@@ -78,6 +84,9 @@ constexpr auto COLONIAL_BUTTON_INACTIVE_COLOR = almostOpaque(colors::DARK_BLUE);
 
 constexpr auto CYLON_BUTTON_ACTIVE_COLOR   = almostOpaque(colors::VERY_DARK_RED);
 constexpr auto CYLON_BUTTON_INACTIVE_COLOR = almostOpaque(colors::DARK_RED);
+
+constexpr auto GAME_ROLE_BUTTON_ACTIVE_COLOR   = almostOpaque(colors::VERY_DARK_GREY);
+constexpr auto GAME_ROLE_BUTTON_INACTIVE_COLOR = almostOpaque(colors::DARK_GREY);
 } // namespace
 
 void LoginScreenUiHandler::updateUi()
@@ -105,6 +114,21 @@ void LoginScreenUiHandler::updateUi()
     m_colonialButton->setHighlightable(bsgo::Faction::COLONIAL != m_faction);
     m_cylonButton->updateBgColor(cylonButtonColor);
     m_cylonButton->setHighlightable(bsgo::Faction::CYLON != m_faction);
+  }
+
+  m_rolePanel->setVisible(Mode::LOGIN == m_mode);
+  if (Mode::LOGIN == m_mode)
+  {
+    const auto pilotButtonColor  = bsgo::GameRole::PILOT == m_role ? GAME_ROLE_BUTTON_ACTIVE_COLOR
+                                                                   : GAME_ROLE_BUTTON_INACTIVE_COLOR;
+    const auto gunnerButtonColor = bsgo::GameRole::GUNNER == m_role
+                                     ? GAME_ROLE_BUTTON_ACTIVE_COLOR
+                                     : GAME_ROLE_BUTTON_INACTIVE_COLOR;
+
+    m_pilotButton->updateBgColor(pilotButtonColor);
+    m_pilotButton->setHighlightable(bsgo::GameRole::PILOT != m_role);
+    m_gunnerButton->updateBgColor(gunnerButtonColor);
+    m_gunnerButton->setHighlightable(bsgo::GameRole::GUNNER != m_role);
   }
 
   const auto text = Mode::LOGIN == m_mode ? LOGIN_TEXT : SIGNUP_TEXT;
@@ -194,6 +218,31 @@ void LoginScreenUiHandler::generateFactionPanel(const int width, const int /*hei
   m_factionPanel->addMenu(std::move(button));
 }
 
+void LoginScreenUiHandler::generateRolePanel(const int width, const int /*height*/)
+{
+  constexpr auto ROLE_Y_PIXELS = 110;
+  const Vec2i roleDimsPixels{200, 50};
+  const Vec2i rolePos{(width - roleDimsPixels.x) / 2, ROLE_Y_PIXELS};
+
+  m_rolePanel = generateBlankHorizontalMenu(rolePos, roleDimsPixels);
+
+  MenuConfig config{};
+
+  config.clickCallback = [this]() { setGameRole(bsgo::GameRole::PILOT); };
+  auto bg              = bgConfigFromColor(GAME_ROLE_BUTTON_ACTIVE_COLOR);
+  auto text            = textConfigFromColor("Pilot", colors::WHITE);
+  auto button          = std::make_unique<UiTextMenu>(config, bg, text);
+  m_pilotButton        = button.get();
+  m_rolePanel->addMenu(std::move(button));
+
+  config.clickCallback = [this]() { setGameRole(bsgo::GameRole::GUNNER); };
+  bg                   = bgConfigFromColor(GAME_ROLE_BUTTON_INACTIVE_COLOR);
+  text                 = textConfigFromColor("Gunner", colors::WHITE);
+  button               = std::make_unique<UiTextMenu>(config, bg, text);
+  m_gunnerButton       = button.get();
+  m_rolePanel->addMenu(std::move(button));
+}
+
 void LoginScreenUiHandler::generateProceedButton(const int width, const int height)
 {
   constexpr auto REASONABLE_GAP_SIZE = 20;
@@ -247,14 +296,19 @@ void LoginScreenUiHandler::generateFailureMenu(const int width, const int /*heig
   m_failureMenu     = std::make_unique<UiTimedMenu>(std::move(menu));
 }
 
-void LoginScreenUiHandler::setLoginMode(const Mode &mode)
+void LoginScreenUiHandler::setLoginMode(const Mode mode)
 {
   m_mode = mode;
 }
 
-void LoginScreenUiHandler::setFaction(const bsgo::Faction &faction)
+void LoginScreenUiHandler::setFaction(const bsgo::Faction faction)
 {
   m_faction = faction;
+}
+
+void LoginScreenUiHandler::setGameRole(const bsgo::GameRole role)
+{
+  m_role = role;
 }
 
 void LoginScreenUiHandler::tryLogin()

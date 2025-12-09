@@ -3,6 +3,7 @@
 
 #include "AbstractMessageListener.hh"
 #include "CredentialsUiHandler.hh"
+#include "GameRole.hh"
 #include "IUiHandler.hh"
 #include "UiMenu.hh"
 #include "UiTextMenu.hh"
@@ -37,6 +38,7 @@ class LoginScreenUiHandler : public IUiHandler, public bsgo::AbstractMessageList
   };
   Mode m_mode{Mode::LOGIN};
   bsgo::Faction m_faction{bsgo::Faction::COLONIAL};
+  bsgo::GameRole m_role{bsgo::GameRole::PILOT};
 
   UiMenuPtr m_loginModePanel{};
   UiTextMenu *m_loginButton{};
@@ -45,6 +47,10 @@ class LoginScreenUiHandler : public IUiHandler, public bsgo::AbstractMessageList
   UiMenuPtr m_factionPanel{};
   UiTextMenu *m_colonialButton{};
   UiTextMenu *m_cylonButton{};
+
+  UiMenuPtr m_rolePanel{};
+  UiTextMenu *m_pilotButton{};
+  UiTextMenu *m_gunnerButton{};
 
   CredentialsUiHandler m_credentialsUiHandler{};
   UiTextMenuPtr m_proceedButton{};
@@ -55,12 +61,14 @@ class LoginScreenUiHandler : public IUiHandler, public bsgo::AbstractMessageList
 
   void generateLoginModePanel(const int width, const int height);
   void generateFactionPanel(const int width, const int height);
+  void generateRolePanel(const int width, const int height);
   void generateProceedButton(const int width, const int height);
   void generateQuitButton(const int width, const int height);
   void generateFailureMenu(const int width, const int height);
 
-  void setLoginMode(const Mode &mode);
-  void setFaction(const bsgo::Faction &faction);
+  void setLoginMode(const Mode mode);
+  void setFaction(const bsgo::Faction faction);
+  void setGameRole(const bsgo::GameRole role);
   void tryLogin();
 };
 
