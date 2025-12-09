@@ -13,6 +13,7 @@ target_sources (bsgo_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/PlayerComputerRepository.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/PlayerRepository.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/PlayerResourceRepository.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/PlayerRoleRepository.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/PlayerShipRepository.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/PlayerWeaponRepository.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ResourceRepository.cc

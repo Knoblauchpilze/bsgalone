@@ -18,6 +18,7 @@ Repositories::Repositories()
   playerComputerRepository = std::make_shared<PlayerComputerRepository>(dbConnection);
   playerRepository         = std::make_shared<PlayerRepository>(dbConnection);
   playerResourceRepository = std::make_shared<PlayerResourceRepository>(dbConnection);
+  playerRoleRepository     = std::make_shared<PlayerRoleRepository>(dbConnection);
   playerShipRepository     = std::make_shared<PlayerShipRepository>(dbConnection);
   playerWeaponRepository   = std::make_shared<PlayerWeaponRepository>(dbConnection);
   resourceRepository       = std::make_shared<ResourceRepository>(dbConnection);
@@ -41,6 +42,7 @@ Repositories::Repositories()
   playerComputerRepository->initialize();
   playerRepository->initialize();
   playerResourceRepository->initialize();
+  playerRoleRepository->initialize();
   playerShipRepository->initialize();
   playerWeaponRepository->initialize();
   resourceRepository->initialize();
