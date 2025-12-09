@@ -28,6 +28,7 @@ void LoginScreenUiHandler::initializeMenus(const int width,
   generateProceedButton(width, height);
   generateQuitButton(width, height);
   generateFailureMenu(width, height);
+  generateSuccessfulSignupMenu(width, height);
 
   m_credentialsUiHandler.initializeMenus(width, height, texturesLoader);
 }
@@ -65,6 +66,7 @@ void LoginScreenUiHandler::render(Renderer &engine) const
   m_proceedButton->render(engine);
   m_quitButton->render(engine);
   m_failureMenu->render(engine);
+  m_successfulSignupMenu->render(engine);
 
   m_credentialsUiHandler.render(engine);
 }
@@ -78,6 +80,7 @@ constexpr auto SIGNUP_TEXT = "Sign up";
 
 constexpr auto LOGIN_FAILURE_TEXT  = "Login failed, check your credentials!";
 constexpr auto SIGNUP_FAILURE_TEXT = "Sign up failed, check your credentials!";
+constexpr auto SIGNUP_SUCCESS_TEXT = "Signup succeeded, login to start playing!";
 
 constexpr auto COLONIAL_BUTTON_ACTIVE_COLOR   = almostOpaque(colors::VERY_DARK_BLUE);
 constexpr auto COLONIAL_BUTTON_INACTIVE_COLOR = almostOpaque(colors::DARK_BLUE);
@@ -138,6 +141,7 @@ void LoginScreenUiHandler::updateUi()
   m_failureMenuText->setText(failureText);
 
   m_failureMenu->update();
+  m_successfulSignupMenu->update();
 }
 
 void LoginScreenUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQueue)
@@ -150,22 +154,16 @@ void LoginScreenUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQue
 
 void LoginScreenUiHandler::onMessageReceived(const bsgo::IMessage &message)
 {
-  if (bsgo::MessageType::LOGIN == message.type())
+  switch (message.type())
   {
-    const auto &login = message.as<bsgo::LoginMessage>();
-    if (login.validated() && !login.successfullyLoggedIn())
-    {
-      m_failureMenu->trigger();
-    }
-  }
-
-  if (bsgo::MessageType::SIGNUP == message.type())
-  {
-    const auto &signup = message.as<bsgo::SignupMessage>();
-    if (signup.validated() && !signup.successfullySignedup())
-    {
-      m_failureMenu->trigger();
-    }
+    case bsgo::MessageType::LOGIN:
+      handleLoginMessage(message.as<bsgo::LoginMessage>());
+      break;
+    case bsgo::MessageType::SIGNUP:
+      handleSignupMessage(message.as<bsgo::SignupMessage>());
+      break;
+    default:
+      error("Unsupported message type " + str(message.type()) + " in login UI");
   }
 }
 
@@ -296,6 +294,22 @@ void LoginScreenUiHandler::generateFailureMenu(const int width, const int /*heig
   m_failureMenu     = std::make_unique<UiTimedMenu>(std::move(menu));
 }
 
+void LoginScreenUiHandler::generateSuccessfulSignupMenu(const int width, const int /*height*/)
+{
+  const Vec2i signupSuccessMenuDimsPixels{350, 80};
+  const Vec2i signupSuccessMenuPos{(width - signupSuccessMenuDimsPixels.x) / 2, 430};
+
+  const MenuConfig config{.pos           = signupSuccessMenuPos,
+                          .dims          = signupSuccessMenuDimsPixels,
+                          .highlightable = false};
+
+  const auto bg   = bgConfigFromColor(colors::DARK_GREEN);
+  const auto text = textConfigFromColor(SIGNUP_SUCCESS_TEXT, colors::BLACK);
+
+  auto menu              = std::make_unique<UiTextMenu>(config, bg, text);
+  m_successfulSignupMenu = std::make_unique<UiTimedMenu>(std::move(menu));
+}
+
 void LoginScreenUiHandler::setLoginMode(const Mode mode)
 {
   m_mode = mode;
@@ -333,6 +347,37 @@ void LoginScreenUiHandler::tryLogin()
     default:
       error("Unknown mode");
       break;
+  }
+}
+
+void LoginScreenUiHandler::handleLoginMessage(const bsgo::LoginMessage &message)
+{
+  if (!message.validated())
+  {
+    return;
+  }
+
+  if (!message.successfullyLoggedIn())
+  {
+    m_failureMenu->trigger();
+  }
+}
+
+void LoginScreenUiHandler::handleSignupMessage(const bsgo::SignupMessage &message)
+{
+  if (!message.validated())
+  {
+    return;
+  }
+
+  if (message.successfullySignedup())
+  {
+    setLoginMode(Mode::LOGIN);
+    m_successfulSignupMenu->trigger();
+  }
+  else
+  {
+    m_failureMenu->trigger();
   }
 }
 

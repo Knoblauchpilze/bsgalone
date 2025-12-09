@@ -45,9 +45,7 @@ void SignupMessageConsumer::handleSignup(const SignupMessage &message) const
 
   const auto maybePlayer = m_signupService->trySignup(name, password, faction);
 
-  const auto successfulSignup = maybePlayer.has_value();
-
-  if (!successfulSignup)
+  if (!maybePlayer.has_value())
   {
     warn("Failed to process signup message for player " + name);
   }
@@ -66,11 +64,6 @@ void SignupMessageConsumer::handleSignup(const SignupMessage &message) const
   out->validate();
   out->copyClientIdIfDefined(message);
   m_outputMessageQueue->pushMessage(std::move(out));
-
-  if (successfulSignup)
-  {
-    m_helper.publishLoadingMessages(message.getClientId(), maybePlayer->id);
-  }
 }
 
 } // namespace bsgo

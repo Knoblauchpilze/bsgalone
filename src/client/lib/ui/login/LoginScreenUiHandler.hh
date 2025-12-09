@@ -5,6 +5,8 @@
 #include "CredentialsUiHandler.hh"
 #include "GameRole.hh"
 #include "IUiHandler.hh"
+#include "LoginMessage.hh"
+#include "SignupMessage.hh"
 #include "UiMenu.hh"
 #include "UiTextMenu.hh"
 #include "UiTimedMenu.hh"
@@ -59,17 +61,23 @@ class LoginScreenUiHandler : public IUiHandler, public bsgo::AbstractMessageList
   UiTimedMenuPtr m_failureMenu{};
   UiTextMenu *m_failureMenuText{};
 
+  UiTimedMenuPtr m_successfulSignupMenu{};
+
   void generateLoginModePanel(const int width, const int height);
   void generateFactionPanel(const int width, const int height);
   void generateRolePanel(const int width, const int height);
   void generateProceedButton(const int width, const int height);
   void generateQuitButton(const int width, const int height);
   void generateFailureMenu(const int width, const int height);
+  void generateSuccessfulSignupMenu(const int width, const int height);
 
   void setLoginMode(const Mode mode);
   void setFaction(const bsgo::Faction faction);
   void setGameRole(const bsgo::GameRole role);
   void tryLogin();
+
+  void handleLoginMessage(const bsgo::LoginMessage &message);
+  void handleSignupMessage(const bsgo::SignupMessage &message);
 };
 
 } // namespace pge

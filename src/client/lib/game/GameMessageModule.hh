@@ -17,7 +17,6 @@
 #include "LoginMessage.hh"
 #include "LogoutMessage.hh"
 #include "PlayerLoginDataMessage.hh"
-#include "SignupMessage.hh"
 #include "SystemDataMessage.hh"
 
 namespace pge {
@@ -42,7 +41,6 @@ class GameMessageModule : public bsgo::AbstractMessageListener, public core::Cor
   void handleJumpMessage(const bsgo::JumpMessage &message);
   void handleLoginMessage(const bsgo::LoginMessage &message);
   void handleLogoutMessage(const bsgo::LogoutMessage &message);
-  void handleSignupMessage(const bsgo::SignupMessage &message);
   void handleEntityRemovedMessage(const bsgo::EntityRemovedMessage &message);
   void handleLoadingStartedMessage(const bsgo::LoadingStartedMessage &message) const;
   void handleLoadingFinishedMessage(const bsgo::LoadingFinishedMessage &message) const;
