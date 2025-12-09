@@ -12,7 +12,13 @@ class LoginService : public AbstractService
   LoginService(const Repositories &repositories);
   ~LoginService() override = default;
 
-  auto tryLogin(const std::string &name, const std::string &password) const -> std::optional<Uuid>;
+  struct LoginData
+  {
+    std::string name{};
+    std::string password{};
+    GameRole role{};
+  };
+  auto tryLogin(const LoginData &data) const -> std::optional<Uuid>;
 
   auto getPlayerSystemDbId(const Uuid playerDbId) const -> Uuid;
 };

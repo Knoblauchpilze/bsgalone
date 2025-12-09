@@ -40,17 +40,20 @@ void LoginMessageConsumer::onMessageReceived(const IMessage &message)
 void LoginMessageConsumer::handleLogin(const LoginMessage &message) const
 {
   const auto clientId = message.getClientId();
-  const auto name     = message.getUserName();
-  const auto password = message.getUserPassword();
-  const auto gameRole = message.getGameRole();
 
-  const auto maybePlayerDbId = m_loginService->tryLogin(name, password);
+  LoginService::LoginData data{
+    .name     = message.getUserName(),
+    .password = message.getUserPassword(),
+    .role     = message.getGameRole(),
+  };
+
+  const auto maybePlayerDbId = m_loginService->tryLogin(data);
 
   const auto successfulLogin = maybePlayerDbId.has_value();
 
   if (!successfulLogin)
   {
-    warn("Failed to process login message for player " + name);
+    warn("Failed to process login message for player " + data.name);
   }
   else
   {
@@ -58,7 +61,7 @@ void LoginMessageConsumer::handleLogin(const LoginMessage &message) const
     m_clientManager->registerPlayer(message.getClientId(), *maybePlayerDbId, systsemDbId);
   }
 
-  auto out = std::make_unique<LoginMessage>(name, password, gameRole);
+  auto out = std::make_unique<LoginMessage>(data.name, data.password, data.role);
   if (maybePlayerDbId)
   {
     out->setPlayerDbId(*maybePlayerDbId);
