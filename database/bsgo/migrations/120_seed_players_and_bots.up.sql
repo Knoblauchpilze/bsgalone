@@ -13,6 +13,12 @@ INSERT INTO player ("account", "name", "faction")
     'colonial'
   );
 
+INSERT INTO player_role ("player", "role")
+  VALUES (
+    (SELECT id FROM player WHERE name = 'colo'),
+    'pilot'
+  );
+
 INSERT INTO player_resource ("player", "resource", "amount")
   VALUES (
     (SELECT id FROM player WHERE name = 'colo'),
@@ -81,6 +87,12 @@ INSERT INTO player ("account", "name", "faction")
     'colonial'
   );
 
+INSERT INTO player_role ("player", "role")
+  VALUES (
+    (SELECT id FROM player WHERE name = 'colo2'),
+    'pilot'
+  );
+
 INSERT INTO player_resource ("player", "resource", "amount")
   VALUES (
     (SELECT id FROM player WHERE name = 'colo2'),
@@ -113,6 +125,12 @@ INSERT INTO player ("account", "name", "faction")
     'cylon'
   );
 
+INSERT INTO player_role ("player", "role")
+  VALUES (
+    (SELECT id FROM player WHERE name = 'toast'),
+    'pilot'
+  );
+
 INSERT INTO player_resource ("player", "resource", "amount")
   VALUES (
     (SELECT id FROM player WHERE name = 'toast'),
@@ -140,6 +158,12 @@ INSERT INTO player_weapon ("weapon", "player", "level")
 INSERT INTO player ("account", "name", "faction")
   VALUES (NULL, 'AI Cylon Raider', 'cylon');
 
+INSERT INTO player_role ("player", "role")
+  VALUES (
+    (SELECT id FROM player WHERE name = 'AI Cylon Raider'),
+    'pilot'
+  );
+
 INSERT INTO player_weapon ("weapon", "player", "level")
   VALUES (
     (SELECT id FROM weapon WHERE name = 'Medium range cannon'),
@@ -151,6 +175,12 @@ INSERT INTO player_weapon ("weapon", "player", "level")
 INSERT INTO player ("account", "name", "faction")
   VALUES (NULL, 'AI Jotunn', 'colonial');
 
+INSERT INTO player_role ("player", "role")
+  VALUES (
+    (SELECT id FROM player WHERE name = 'AI Jotunn'),
+    'pilot'
+  );
+
 INSERT INTO player_weapon ("weapon", "player", "level")
   VALUES (
     (SELECT id FROM weapon WHERE name = 'Short range cannon'),
@@ -161,6 +191,12 @@ INSERT INTO player_weapon ("weapon", "player", "level")
 -- system: 169 aretis, ship: Viper Mark VII
 INSERT INTO player ("account", "name", "faction")
   VALUES (NULL, 'AI Viper Mark VII', 'colonial');
+
+INSERT INTO player_role ("player", "role")
+  VALUES (
+    (SELECT id FROM player WHERE name = 'AI Viper Mark VII'),
+    'pilot'
+  );
 
 INSERT INTO player_weapon ("weapon", "player", "level")
   VALUES (

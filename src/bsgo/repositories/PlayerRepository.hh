@@ -4,7 +4,6 @@
 #include "AbstractRepository.hh"
 #include "Faction.hh"
 #include "Uuid.hh"
-#include <eigen3/Eigen/Eigen>
 #include <memory>
 #include <optional>
 #include <unordered_set>
