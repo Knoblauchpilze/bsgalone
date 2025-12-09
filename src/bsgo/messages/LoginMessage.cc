@@ -9,16 +9,9 @@ LoginMessage::LoginMessage()
 {}
 
 LoginMessage::LoginMessage(const std::string &name, const std::string &password)
-  : LoginMessage(name, password, {})
-{}
-
-LoginMessage::LoginMessage(const std::string &name,
-                           const std::string &password,
-                           const std::optional<Uuid> &playerDbId)
   : ValidatableMessage(MessageType::LOGIN)
   , m_name(name)
   , m_password(password)
-  , m_playerDbId(playerDbId)
 {}
 
 auto LoginMessage::getUserName() const -> std::string
@@ -31,14 +24,19 @@ auto LoginMessage::getUserPassword() const -> std::string
   return m_password;
 }
 
-bool LoginMessage::successfullyLoggedIn() const
-{
-  return m_playerDbId.has_value();
-}
-
 auto LoginMessage::getPlayerDbId() const -> std::optional<Uuid>
 {
   return m_playerDbId;
+}
+
+void LoginMessage::setPlayerDbId(const Uuid playerDbId)
+{
+  m_playerDbId = playerDbId;
+}
+
+bool LoginMessage::successfullyLoggedIn() const
+{
+  return m_playerDbId.has_value();
 }
 
 auto LoginMessage::serialize(std::ostream &out) const -> std::ostream &
@@ -72,7 +70,11 @@ bool LoginMessage::deserialize(std::istream &in)
 
 auto LoginMessage::clone() const -> IMessagePtr
 {
-  auto clone = std::make_unique<LoginMessage>(m_name, m_password, m_playerDbId);
+  auto clone = std::make_unique<LoginMessage>(m_name, m_password);
+  if (m_playerDbId)
+  {
+    clone->setPlayerDbId(*m_playerDbId);
+  }
   clone->copyClientIdIfDefined(*this);
   clone->validate(validated());
 

@@ -43,9 +43,9 @@ void LoginMessageConsumer::handleLogin(const LoginMessage &message) const
   const auto name     = message.getUserName();
   const auto password = message.getUserPassword();
 
-  const auto playerDbId = m_loginService->tryLogin(name, password);
+  const auto maybePlayerDbId = m_loginService->tryLogin(name, password);
 
-  const auto successfulLogin = playerDbId.has_value();
+  const auto successfulLogin = maybePlayerDbId.has_value();
 
   if (!successfulLogin)
   {
@@ -53,11 +53,15 @@ void LoginMessageConsumer::handleLogin(const LoginMessage &message) const
   }
   else
   {
-    const auto systsemDbId = m_loginService->getPlayerSystemDbId(*playerDbId);
-    m_clientManager->registerPlayer(message.getClientId(), *playerDbId, systsemDbId);
+    const auto systsemDbId = m_loginService->getPlayerSystemDbId(*maybePlayerDbId);
+    m_clientManager->registerPlayer(message.getClientId(), *maybePlayerDbId, systsemDbId);
   }
 
-  auto out = std::make_unique<LoginMessage>(name, password, playerDbId);
+  auto out = std::make_unique<LoginMessage>(name, password);
+  if (maybePlayerDbId)
+  {
+    out->setPlayerDbId(*maybePlayerDbId);
+  }
   out->validate();
   out->copyClientIdIfDefined(message);
 
@@ -65,7 +69,7 @@ void LoginMessageConsumer::handleLogin(const LoginMessage &message) const
 
   if (successfulLogin)
   {
-    m_helper.publishLoadingMessages(clientId, *playerDbId);
+    m_helper.publishLoadingMessages(clientId, *maybePlayerDbId);
   }
 }
 
