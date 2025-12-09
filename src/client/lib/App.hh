@@ -23,11 +23,13 @@ class App : public PGEApp
   /// @param serverPort - the port to use to connect to the game server
   /// @param userName - the name of the user to login with
   /// @param password - the password to use to login
+  /// @param gameRole - the game role to use to login
   /// by the app and set up base properties.
   App(const AppDesc &desc,
       const int serverPort,
       const std::optional<std::string> &userName,
-      const std::optional<std::string> &password);
+      const std::optional<std::string> &password,
+      const std::optional<bsgo::GameRole> &gameRole);
 
   ~App() override = default;
 
@@ -47,6 +49,7 @@ class App : public PGEApp
   int m_serverPort{};
   std::optional<std::string> m_userName{};
   std::optional<std::string> m_password{};
+  std::optional<bsgo::GameRole> m_gameRole{};
   GameShPtr m_game{nullptr};
 };
 

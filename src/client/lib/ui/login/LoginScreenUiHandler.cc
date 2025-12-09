@@ -325,7 +325,7 @@ void LoginScreenUiHandler::tryLogin()
   switch (m_mode)
   {
     case Mode::LOGIN:
-      m_playerView->tryLogin(data.name, data.password);
+      m_playerView->tryLogin(data.name, data.password, m_role);
       break;
     case Mode::SIGNUP:
       m_playerView->trySignup(data.name, data.password, m_faction);

@@ -24,10 +24,12 @@ namespace pge {
 
 Game::Game(const int serverPort,
            const std::optional<std::string> &userName,
-           const std::optional<std::string> &password)
+           const std::optional<std::string> &password,
+           const std::optional<bsgo::GameRole> &role)
   : core::CoreObject("game")
   , m_userName(userName)
   , m_password(password)
+  , m_gameRole(role)
 {
   setService("game");
   initialize(serverPort);
@@ -271,9 +273,9 @@ void Game::onConnectedToServer(const bsgo::Uuid clientId)
   info("Received client id " + bsgo::str(clientId) + " from server");
   m_outputMessageQueue->setClientId(clientId);
 
-  if (m_userName && m_password)
+  if (m_userName && m_password && m_gameRole)
   {
-    auto login = std::make_unique<bsgo::LoginMessage>(*m_userName, *m_password);
+    auto login = std::make_unique<bsgo::LoginMessage>(*m_userName, *m_password, *m_gameRole);
     login->setClientId(clientId);
     m_outputMessageQueue->pushMessage(std::move(login));
   }

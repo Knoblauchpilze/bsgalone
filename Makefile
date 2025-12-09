@@ -61,12 +61,12 @@ copyRelease: release copyData
 	rsync -avH cmake-build/Release/lib cmake-build/Release/bin sandbox/
 
 rundefaultclient: copyRelease
-	cd sandbox && ./run.sh bsgalone_client 2323 colo aze
+	cd sandbox && ./run.sh bsgalone_client 2323 colo aze pilot
 
 # Use like this:
-# make runclient username="colo" password="aze"
+# make runclient username="colo" password="aze" gamerole="pilot"
 runclient: copyRelease
-	cd sandbox && ./run.sh bsgalone_client 2323 $(username) $(password)
+	cd sandbox && ./run.sh bsgalone_client 2323 $(username) $(password) $(gamerole)
 
 drunclient: copyDebug
 	cd sandbox && ./debug.sh bsgalone_client 2323

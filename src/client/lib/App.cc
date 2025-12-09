@@ -12,11 +12,13 @@ App::App(const AppDesc &desc, const int serverPort)
 App::App(const AppDesc &desc,
          const int serverPort,
          const std::optional<std::string> &userName,
-         const std::optional<std::string> &password)
+         const std::optional<std::string> &password,
+         const std::optional<bsgo::GameRole> &gameRole)
   : PGEApp(desc)
   , m_serverPort(serverPort)
   , m_userName(userName)
   , m_password(password)
+  , m_gameRole(gameRole)
 {}
 
 bool App::onFrame(const float elapsedSeconds)
@@ -50,7 +52,7 @@ void App::loadResources(const Vec2i &screenDims, Renderer &engine)
 {
   setLayerTint(Layer::DRAW, semiOpaque(colors::WHITE));
 
-  m_game = std::make_shared<Game>(m_serverPort, m_userName, m_password);
+  m_game = std::make_shared<Game>(m_serverPort, m_userName, m_password, m_gameRole);
 
   m_game->generateRenderers(screenDims.x, screenDims.y, engine);
   m_game->generateInputHandlers();

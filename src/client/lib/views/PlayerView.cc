@@ -138,9 +138,11 @@ void PlayerView::tryPurchase(const bsgo::Item &type, const bsgo::Uuid itemDbId) 
     std::make_unique<bsgo::PurchaseMessage>(m_gameSession->getPlayerDbId(), type, itemDbId));
 }
 
-void PlayerView::tryLogin(const std::string &name, const std::string &password) const
+void PlayerView::tryLogin(const std::string &name,
+                          const std::string &password,
+                          const bsgo::GameRole role) const
 {
-  m_outputMessageQueue->pushMessage(std::make_unique<bsgo::LoginMessage>(name, password));
+  m_outputMessageQueue->pushMessage(std::make_unique<bsgo::LoginMessage>(name, password, role));
 }
 
 void PlayerView::tryLogout() const

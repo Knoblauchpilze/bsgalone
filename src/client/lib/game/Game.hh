@@ -6,6 +6,7 @@
 #include "Controls.hh"
 #include "CoreObject.hh"
 #include "DatabaseEntityMapper.hh"
+#include "GameRole.hh"
 #include "GameSession.hh"
 #include "IInputHandler.hh"
 #include "IRenderer.hh"
@@ -37,7 +38,8 @@ class Game : public core::CoreObject
   public:
   Game(const int serverPort,
        const std::optional<std::string> &userName,
-       const std::optional<std::string> &password);
+       const std::optional<std::string> &password,
+       const std::optional<bsgo::GameRole> &role);
   ~Game() override;
 
   auto getScreen() const noexcept -> Screen;
@@ -110,6 +112,10 @@ class Game : public core::CoreObject
   /// @brief - Holds the password to use to login automatically upon connecting
   /// to the server.
   std::optional<std::string> m_password{};
+
+  /// @brief - Holds the game role to use to login automatically upon connecting
+  /// to the server.
+  std::optional<bsgo::GameRole> m_gameRole{};
 
   /// @brief - Holds information about the current game session. This includes
   /// data about the current player, their ship, the system they are in, etc.

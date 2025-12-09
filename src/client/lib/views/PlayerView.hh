@@ -3,6 +3,7 @@
 
 #include "AbstractView.hh"
 #include "Faction.hh"
+#include "GameRole.hh"
 #include "GameSession.hh"
 #include "HangarMessage.hh"
 #include "IMessageQueue.hh"
@@ -37,7 +38,9 @@ class PlayerView : public AbstractView
   void trySelectShip(const bsgo::Uuid shipDbId) const;
   void tryPurchase(const bsgo::Item &type, const bsgo::Uuid itemDbId) const;
 
-  void tryLogin(const std::string &name, const std::string &password) const;
+  void tryLogin(const std::string &name,
+                const std::string &password,
+                const bsgo::GameRole role) const;
   void tryLogout() const;
   void trySignup(const std::string &name,
                  const std::string &password,

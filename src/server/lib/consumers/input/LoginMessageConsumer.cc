@@ -42,6 +42,7 @@ void LoginMessageConsumer::handleLogin(const LoginMessage &message) const
   const auto clientId = message.getClientId();
   const auto name     = message.getUserName();
   const auto password = message.getUserPassword();
+  const auto gameRole = message.getGameRole();
 
   const auto maybePlayerDbId = m_loginService->tryLogin(name, password);
 
@@ -57,7 +58,7 @@ void LoginMessageConsumer::handleLogin(const LoginMessage &message) const
     m_clientManager->registerPlayer(message.getClientId(), *maybePlayerDbId, systsemDbId);
   }
 
-  auto out = std::make_unique<LoginMessage>(name, password);
+  auto out = std::make_unique<LoginMessage>(name, password, gameRole);
   if (maybePlayerDbId)
   {
     out->setPlayerDbId(*maybePlayerDbId);
