@@ -12,6 +12,7 @@
 #include "PlayerComputerRepository.hh"
 #include "PlayerRepository.hh"
 #include "PlayerResourceRepository.hh"
+#include "PlayerRoleRepository.hh"
 #include "PlayerShipRepository.hh"
 #include "PlayerWeaponRepository.hh"
 #include "ResourceRepository.hh"
@@ -42,6 +43,7 @@ struct Repositories
   PlayerComputerRepositoryShPtr playerComputerRepository{};
   PlayerRepositoryShPtr playerRepository{};
   PlayerResourceRepositoryShPtr playerResourceRepository{};
+  PlayerRoleRepositoryShPtr playerRoleRepository{};
   PlayerShipRepositoryShPtr playerShipRepository{};
   PlayerWeaponRepositoryShPtr playerWeaponRepository{};
   ResourceRepositoryShPtr resourceRepository{};
