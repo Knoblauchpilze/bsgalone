@@ -18,55 +18,61 @@ void assertMessagesAreEqual(const LoginMessage &actual, const LoginMessage &expe
 }
 } // namespace
 
-TEST(Unit_Bsgo_Serialization_LoginMessage, NameAndPassword)
+TEST(Unit_Bsgo_Serialization_LoginMessage, OverridesPlayerDbId)
 {
   const LoginMessage expected("some-name", "some-password");
-  LoginMessage actual("other-name", "secure-password", Uuid{4});
+  LoginMessage actual("other-name", "secure-password");
+  actual.setPlayerDbId(Uuid{4});
   actual.validate();
+
   serializeAndDeserializeMessage(expected, actual);
+
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_LoginMessage, NameAndPassword_Validated)
+TEST(Unit_Bsgo_Serialization_LoginMessage, ClearsPlayerDbId)
+{
+  LoginMessage expected("some-name", "some-password");
+  expected.setPlayerDbId(Uuid{4});
+  LoginMessage actual("other-name", "secure-password");
+  actual.validate();
+
+  serializeAndDeserializeMessage(expected, actual);
+
+  assertMessagesAreEqual(actual, expected);
+}
+
+TEST(Unit_Bsgo_Serialization_LoginMessage, PreservesValidatedStatus)
 {
   LoginMessage expected("some-name", "some-password");
   expected.validate();
-  LoginMessage actual("other-name", "secure-password", Uuid{4});
-  serializeAndDeserializeMessage(expected, actual);
-  assertMessagesAreEqual(actual, expected);
-}
-
-TEST(Unit_Bsgo_Serialization_LoginMessage, NamePasswordPlayerDbId)
-{
-  const LoginMessage expected("some-name", "some-password", Uuid{14});
   LoginMessage actual("other-name", "secure-password");
-  actual.validate();
-  serializeAndDeserializeMessage(expected, actual);
-  assertMessagesAreEqual(actual, expected);
-}
+  actual.setPlayerDbId(Uuid{4});
 
-TEST(Unit_Bsgo_Serialization_LoginMessage, NamePasswordPlayerDbId_Validated)
-{
-  LoginMessage expected("some-name", "some-password", Uuid{14});
-  expected.validate();
-  LoginMessage actual("other-name", "secure-password");
   serializeAndDeserializeMessage(expected, actual);
+
   assertMessagesAreEqual(actual, expected);
 }
 
 TEST(Unit_Bsgo_Serialization_LoginMessage, WithClientId)
 {
-  LoginMessage expected("some-name", "some-password", Uuid{14});
+  LoginMessage expected("some-name", "some-password");
+  expected.setPlayerDbId(Uuid{14});
   expected.setClientId(Uuid{119});
   LoginMessage actual("other-name", "secure-password");
+
   serializeAndDeserializeMessage(expected, actual);
+
   assertMessagesAreEqual(actual, expected);
 }
 
 TEST(Unit_Bsgo_Serialization_LoginMessage, Clone)
 {
-  const LoginMessage expected("some-name", "some-password", Uuid{14});
+  LoginMessage expected("some-name", "some-password");
+  expected.setPlayerDbId(Uuid{14});
+
   const auto cloned = expected.clone();
+
   ASSERT_EQ(cloned->type(), MessageType::LOGIN);
   assertMessagesAreEqual(cloned->as<LoginMessage>(), expected);
 }
