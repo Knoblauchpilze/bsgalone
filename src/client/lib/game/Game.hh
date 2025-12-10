@@ -67,7 +67,7 @@ class Game : public core::CoreObject
   bool step(float elapsedSeconds);
 
   void onConnectedToServer(const bsgo::Uuid clientId);
-  void onLogin(const bsgo::Uuid playerDbId);
+  void onLogin(const bsgo::Uuid playerDbId, const bsgo::GameRole role);
   void onLoginDataReceived(const bsgo::Uuid playerShipDbId,
                            const bsgo::Uuid systemDbId,
                            const bsgo::Faction faction);

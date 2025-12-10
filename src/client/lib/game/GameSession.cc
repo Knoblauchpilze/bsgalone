@@ -105,16 +105,21 @@ auto GameSession::finishLoadingTransition(const bsgo::LoadingTransition transiti
   return {.previous = previousScreen, .next = nextScreen};
 }
 
-void GameSession::onPlayerLoggedIn(const bsgo::Uuid playerDbId)
+void GameSession::onPlayerLoggedIn(const bsgo::Uuid playerDbId, const bsgo::GameRole role)
 {
   if (m_playerDbId)
   {
     error("Unexpected player login", "Already logged in as " + bsgo::str(*m_playerDbId));
   }
+  if (m_role)
+  {
+    error("Unexpected player login", "Already assigned to role " + bsgo::str(*m_role));
+  }
 
   m_playerDbId = playerDbId;
+  m_role       = role;
 
-  debug("Logged in as " + bsgo::str(playerDbId));
+  debug("Logged in as " + bsgo::str(playerDbId) + " with role " + bsgo::str(role));
 }
 
 void GameSession::onPlayerLoggedOut()
@@ -122,6 +127,10 @@ void GameSession::onPlayerLoggedOut()
   if (!m_playerDbId)
   {
     error("Unexpected player logout", "No player logged in");
+  }
+  if (!m_role)
+  {
+    error("Unexpected player logout", "No role defined for player");
   }
   if (!m_faction)
   {
@@ -132,6 +141,7 @@ void GameSession::onPlayerLoggedOut()
 
   m_playerDbId.reset();
   m_faction.reset();
+  m_role.reset();
   m_systemDbId.reset();
   m_timeStep.reset();
   m_playerShipDbId.reset();
@@ -179,6 +189,16 @@ auto GameSession::getFaction() const -> bsgo::Faction
   }
 
   return *m_faction;
+}
+
+auto GameSession::getRole() const -> bsgo::GameRole
+{
+  if (!m_role)
+  {
+    error("Failed to get role", "No role defined for player");
+  }
+
+  return *m_role;
 }
 
 bool GameSession::hasSystemDbId() const
