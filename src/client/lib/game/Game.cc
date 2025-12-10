@@ -281,10 +281,10 @@ void Game::onConnectedToServer(const bsgo::Uuid clientId)
   }
 }
 
-void Game::onLogin(const bsgo::Uuid playerDbId)
+void Game::onLogin(const bsgo::Uuid playerDbId, const bsgo::GameRole role)
 {
   info("Processing login for " + bsgo::str(playerDbId));
-  m_gameSession->onPlayerLoggedIn(playerDbId);
+  m_gameSession->onPlayerLoggedIn(playerDbId, role);
   m_entityMapper.setPlayerDbId(playerDbId);
 }
 

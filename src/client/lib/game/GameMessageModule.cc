@@ -131,7 +131,7 @@ void GameMessageModule::handleLoginMessage(const bsgo::LoginMessage &message)
     return;
   }
 
-  m_game.onLogin(*message.getPlayerDbId());
+  m_game.onLogin(*message.getPlayerDbId(), message.getGameRole());
 }
 
 void GameMessageModule::handleLogoutMessage(const bsgo::LogoutMessage &message)

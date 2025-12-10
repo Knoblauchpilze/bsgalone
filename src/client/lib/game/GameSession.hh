@@ -3,6 +3,7 @@
 
 #include "CoreObject.hh"
 #include "Faction.hh"
+#include "GameRole.hh"
 #include "LoadingTransition.hh"
 #include "Screen.hh"
 #include "TimeStep.hh"
@@ -27,7 +28,7 @@ class GameSession : public core::CoreObject
   };
   auto finishLoadingTransition(const bsgo::LoadingTransition transition) -> ScreenTransition;
 
-  void onPlayerLoggedIn(const bsgo::Uuid playerDbId);
+  void onPlayerLoggedIn(const bsgo::Uuid playerDbId, const bsgo::GameRole role);
   void onPlayerLoggedOut();
 
   void onTimeStepReceived(const chrono::TimeStep &timeStep);
@@ -46,6 +47,10 @@ class GameSession : public core::CoreObject
   /// @brief - Returns the faction of the player currently logged in. If no faction
   /// is defined, an error is raised.
   auto getFaction() const -> bsgo::Faction;
+
+  /// @brief - Returns the game role of the player currently logged in. If no role
+  /// is defined, an error is raised.
+  auto getRole() const -> bsgo::GameRole;
 
   /// @brief - Returns true whenever the player's system DB identifier is set. This
   /// allows to safely call getSystemDbId.
@@ -83,6 +88,9 @@ class GameSession : public core::CoreObject
 
   /// @brief - if defined, the faction of the player currently logged in.
   std::optional<bsgo::Faction> m_faction{};
+
+  /// @brief - if defined, the role of the player currently logged in.
+  std::optional<bsgo::GameRole> m_role{};
 
   /// @brief - if defined, the DB identifier of the system the player is currently
   /// in. It is populated when the player logs in and changed when the player jumps
