@@ -67,9 +67,6 @@ void SystemMessageConsumer::handleEntityAdded(const bsgo::EntityAddedMessage &me
 
   const auto entityKind = message.getEntityKind();
 
-  info("received entity added message for " + bsgo::str(entityKind)
-       + ", system: " + bsgo::str(message.getSystemDbId()));
-
   switch (entityKind)
   {
     case bsgo::EntityKind::SHIP:
