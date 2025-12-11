@@ -64,7 +64,7 @@ void Views::connectToQueue(bsgo::IMessageQueue *const queue)
                   bsgo::MessageType::PLAYER_RESOURCE_LIST};
   registerViewToQueue(*shopView, messageTypes, queue);
 
-  messageTypes = {};
+  messageTypes = {bsgo::MessageType::PLAYER_LIST};
   registerViewToQueue(*systemView, messageTypes, queue);
 
   messageTypes = {bsgo::MessageType::SYSTEM_LIST};

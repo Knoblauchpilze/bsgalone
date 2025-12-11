@@ -1,5 +1,6 @@
 
 #include "SystemView.hh"
+#include "PlayerListMessage.hh"
 
 namespace pge {
 
@@ -15,9 +16,14 @@ SystemView::SystemView(bsgo::CoordinatorShPtr coordinator,
   }
 }
 
+bool SystemView::isReady() const noexcept
+{
+  return !m_players.empty();
+}
+
 void SystemView::reset()
 {
-  // Voluntarily empty.
+  m_players.clear();
 }
 
 auto SystemView::getAsteroidsWithin(const bsgo::IBoundingBox &bbox) const
@@ -70,6 +76,20 @@ auto SystemView::getAsteroid(const bsgo::Uuid asteroidDbId) const -> bsgo::Entit
   }
 
   return m_coordinator->getEntity(*maybeAsteroid);
+}
+
+auto SystemView::getSystemPlayers() const -> std::vector<bsgo::PlayerData>
+{
+  return m_players;
+}
+
+void SystemView::handleMessageInternal(const bsgo::IMessage &message)
+{
+  const auto &playerMessage = message.as<bsgo::PlayerListMessage>();
+  m_players                 = playerMessage.getPlayersData();
+
+  debug("Received " + std::to_string(m_players.size()) + " player(s) for system "
+        + bsgo::str(playerMessage.getSystemDbId()));
 }
 
 } // namespace pge
