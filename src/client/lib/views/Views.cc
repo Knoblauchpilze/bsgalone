@@ -23,55 +23,15 @@ auto createViews(const ViewsConfig &config, const bsgo::DatabaseEntityMapper &en
   return out;
 }
 
-namespace {
-void registerViewToQueue(AbstractView &view,
-                         const std::unordered_set<bsgo::MessageType> &relevantMessageTypes,
-                         bsgo::IMessageQueue *const queue)
-{
-  if (!relevantMessageTypes.empty())
-  {
-    queue->addListener(std::make_unique<ViewConsumerProxy>(view, relevantMessageTypes));
-  }
-}
-} // namespace
-
 void Views::connectToQueue(bsgo::IMessageQueue *const queue)
 {
-  std::unordered_set<bsgo::MessageType> messageTypes{};
-
-  messageTypes = {
-    bsgo::MessageType::HANGAR,
-    bsgo::MessageType::PLAYER_COMPUTER_LIST,
-    bsgo::MessageType::PLAYER_RESOURCE_LIST,
-    bsgo::MessageType::PLAYER_SHIP_LIST,
-    bsgo::MessageType::PLAYER_WEAPON_LIST,
-  };
-  registerViewToQueue(*playerView, messageTypes, queue);
-
-  messageTypes = {bsgo::MessageType::DOCK, bsgo::MessageType::JUMP, bsgo::MessageType::SYSTEM_LIST};
-  registerViewToQueue(*shipView, messageTypes, queue);
-
-  messageTypes = {bsgo::MessageType::JUMP_REQUESTED,
-                  bsgo::MessageType::JUMP_CANCELLED,
-                  bsgo::MessageType::JUMP,
-                  bsgo::MessageType::HANGAR};
-  registerViewToQueue(*shipDbView, messageTypes, queue);
-
-  messageTypes = {bsgo::MessageType::RESOURCE_LIST,
-                  bsgo::MessageType::COMPUTER_LIST,
-                  bsgo::MessageType::WEAPON_LIST,
-                  bsgo::MessageType::SHIP_LIST,
-                  bsgo::MessageType::PLAYER_RESOURCE_LIST};
-  registerViewToQueue(*shopView, messageTypes, queue);
-
-  messageTypes = {bsgo::MessageType::PLAYER_LIST};
-  registerViewToQueue(*systemView, messageTypes, queue);
-
-  messageTypes = {bsgo::MessageType::SYSTEM_LIST};
-  registerViewToQueue(*serverView, messageTypes, queue);
-
-  messageTypes = {bsgo::MessageType::RESOURCE_LIST};
-  registerViewToQueue(*resourceView, messageTypes, queue);
+  queue->addListener(std::make_unique<ViewConsumerProxy>(*playerView));
+  queue->addListener(std::make_unique<ViewConsumerProxy>(*shipView));
+  queue->addListener(std::make_unique<ViewConsumerProxy>(*shipDbView));
+  queue->addListener(std::make_unique<ViewConsumerProxy>(*shopView));
+  queue->addListener(std::make_unique<ViewConsumerProxy>(*systemView));
+  queue->addListener(std::make_unique<ViewConsumerProxy>(*serverView));
+  queue->addListener(std::make_unique<ViewConsumerProxy>(*resourceView));
 }
 
 void Views::reset()

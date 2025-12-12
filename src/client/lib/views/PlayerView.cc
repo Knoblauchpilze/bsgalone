@@ -9,7 +9,14 @@
 namespace pge {
 
 PlayerView::PlayerView(GameSessionShPtr gameSession, bsgo::IMessageQueue *const outputMessageQueue)
-  : AbstractView("player")
+  : AbstractView("player",
+                 {
+                   bsgo::MessageType::HANGAR,
+                   bsgo::MessageType::PLAYER_COMPUTER_LIST,
+                   bsgo::MessageType::PLAYER_RESOURCE_LIST,
+                   bsgo::MessageType::PLAYER_SHIP_LIST,
+                   bsgo::MessageType::PLAYER_WEAPON_LIST,
+                 })
   , m_gameSession(std::move(gameSession))
   , m_outputMessageQueue(outputMessageQueue)
 {

@@ -5,7 +5,7 @@
 namespace pge {
 
 ServerView::ServerView(GameSessionShPtr gameSession)
-  : AbstractView("server")
+  : AbstractView("server", {bsgo::MessageType::SYSTEM_LIST})
   , m_gameSession(std::move(gameSession))
 {
   if (nullptr == m_gameSession)

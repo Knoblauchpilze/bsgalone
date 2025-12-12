@@ -3,10 +3,8 @@
 
 namespace pge {
 
-ViewConsumerProxy::ViewConsumerProxy(
-  AbstractView &view,
-  const std::unordered_set<bsgo::MessageType> &relevantMessageTypes)
-  : bsgo::AbstractMessageConsumer("proxy", relevantMessageTypes)
+ViewConsumerProxy::ViewConsumerProxy(AbstractView &view)
+  : bsgo::AbstractMessageConsumer("proxy", view.relevantMessageTypes())
   , m_view(view)
 {
   addModule(view.getName());
