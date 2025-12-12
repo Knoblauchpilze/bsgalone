@@ -1,16 +1,16 @@
 
-#include "GameMessagesConsumerProxy.hh"
+#include "GameMessageConsumerProxy.hh"
 
 namespace pge {
 
-GameMessagesConsumerProxy::GameMessagesConsumerProxy(AbstractMessageConsumer &consumer)
+GameMessageConsumerProxy::GameMessageConsumerProxy(AbstractMessageConsumer &consumer)
   : bsgo::AbstractMessageConsumer("proxy", consumer.relevantMessageTypes())
   , m_consumer(consumer)
 {
   addModule("game");
 }
 
-void GameMessagesConsumerProxy::onMessageReceived(const bsgo::IMessage &message)
+void GameMessageConsumerProxy::onMessageReceived(const bsgo::IMessage &message)
 {
   m_consumer.onMessageReceived(message);
 }

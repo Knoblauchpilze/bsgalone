@@ -8,7 +8,7 @@ target_sources (client_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/AbstractGameMessageConsumer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/AsteroidListMessageConsumer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ComponentMessageConsumer.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/GameMessagesConsumerProxy.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/GameMessageConsumerProxy.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/InternalMessageConsumer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/OutpostListMessageConsumer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/PlayerListMessageConsumer.cc
