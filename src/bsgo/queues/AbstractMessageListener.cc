@@ -14,4 +14,9 @@ bool AbstractMessageListener::isMessageRelevant(const MessageType &type) const
   return m_relevantMessageTypes.contains(type);
 }
 
+auto AbstractMessageListener::relevantMessageTypes() const -> std::unordered_set<MessageType>
+{
+  return m_relevantMessageTypes;
+}
+
 } // namespace bsgo

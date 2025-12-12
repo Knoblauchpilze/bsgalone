@@ -14,6 +14,8 @@ class AbstractMessageListener : public IMessageListener
 
   bool isMessageRelevant(const MessageType &type) const override;
 
+  auto relevantMessageTypes() const -> std::unordered_set<MessageType>;
+
   private:
   std::unordered_set<MessageType> m_relevantMessageTypes{};
 };
