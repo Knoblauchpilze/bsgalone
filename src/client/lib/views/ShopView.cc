@@ -36,7 +36,14 @@ auto ShopItem::type() const -> bsgo::Item
 }
 
 ShopView::ShopView(GameSessionShPtr gameSession)
-  : AbstractView("shop")
+  : AbstractView("shop",
+                 {
+                   bsgo::MessageType::COMPUTER_LIST,
+                   bsgo::MessageType::PLAYER_RESOURCE_LIST,
+                   bsgo::MessageType::RESOURCE_LIST,
+                   bsgo::MessageType::SHIP_LIST,
+                   bsgo::MessageType::WEAPON_LIST,
+                 })
   , m_gameSession(std::move(gameSession))
 {
   if (nullptr == m_gameSession)

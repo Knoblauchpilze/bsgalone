@@ -10,7 +10,6 @@ namespace pge {
 class AbstractView : public bsgo::AbstractMessageConsumer, public IView
 {
   public:
-  AbstractView(const std::string &name);
   AbstractView(const std::string &name,
                const std::unordered_set<bsgo::MessageType> &relevantMessageTypes);
   ~AbstractView() override = default;

@@ -6,7 +6,7 @@ namespace pge {
 
 SystemView::SystemView(bsgo::CoordinatorShPtr coordinator,
                        const bsgo::DatabaseEntityMapper &entityMapper)
-  : AbstractView("system")
+  : AbstractView("system", {bsgo::MessageType::PLAYER_LIST})
   , m_coordinator(std::move(coordinator))
   , m_entityMapper(entityMapper)
 {

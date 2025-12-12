@@ -12,7 +12,13 @@ namespace pge {
 ShipDbView::ShipDbView(GameSessionShPtr gameSession,
                        bsgo::IMessageQueue *const internalMessageQueue,
                        bsgo::IMessageQueue *const outputMessageQueue)
-  : AbstractView("ship")
+  : AbstractView("ship",
+                 {
+                   bsgo::MessageType::HANGAR,
+                   bsgo::MessageType::JUMP,
+                   bsgo::MessageType::JUMP_CANCELLED,
+                   bsgo::MessageType::JUMP_REQUESTED,
+                 })
   , m_gameSession(std::move(gameSession))
   , m_internalMessageQueue(internalMessageQueue)
   , m_outputMessageQueue(outputMessageQueue)

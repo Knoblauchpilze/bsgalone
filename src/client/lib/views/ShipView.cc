@@ -9,7 +9,12 @@ namespace pge {
 ShipView::ShipView(GameSessionShPtr gameSession,
                    bsgo::CoordinatorShPtr coordinator,
                    bsgo::IMessageQueue *const outputMessageQueue)
-  : AbstractView("ship")
+  : AbstractView("ship",
+                 {
+                   bsgo::MessageType::DOCK,
+                   bsgo::MessageType::JUMP,
+                   bsgo::MessageType::SYSTEM_LIST,
+                 })
   , m_gameSession(std::move(gameSession))
   , m_coordinator(std::move(coordinator))
   , m_outputMessageQueue(outputMessageQueue)
