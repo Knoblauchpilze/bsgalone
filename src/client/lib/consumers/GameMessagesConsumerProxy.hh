@@ -5,11 +5,11 @@
 
 namespace pge {
 
-class GameMessageConsumerProxy : public bsgo::AbstractMessageConsumer
+class GameMessagesConsumerProxy : public bsgo::AbstractMessageConsumer
 {
   public:
-  GameMessageConsumerProxy(AbstractMessageConsumer &consumer);
-  ~GameMessageConsumerProxy() override = default;
+  GameMessagesConsumerProxy(AbstractMessageConsumer &consumer);
+  ~GameMessagesConsumerProxy() override = default;
 
   void onMessageReceived(const bsgo::IMessage &message) override;
 
