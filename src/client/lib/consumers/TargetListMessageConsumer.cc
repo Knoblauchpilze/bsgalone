@@ -6,12 +6,12 @@ namespace pge {
 
 TargetListMessageConsumer::TargetListMessageConsumer(bsgo::DatabaseEntityMapper &entityMapper,
                                                      bsgo::CoordinatorShPtr coordinator)
-  : bsgo::AbstractMessageConsumer("target", {bsgo::MessageType::TARGET_LIST})
+  : AbstractGameMessageConsumer("target", bsgo::MessageType::TARGET_LIST)
   , m_entityMapper(entityMapper)
   , m_coordinator(std::move(coordinator))
 {}
 
-void TargetListMessageConsumer::onMessageReceived(const bsgo::IMessage &message)
+void TargetListMessageConsumer::onMessageReceivedInternal(const bsgo::IMessage &message)
 {
   const auto targetsList = message.as<bsgo::TargetListMessage>();
 

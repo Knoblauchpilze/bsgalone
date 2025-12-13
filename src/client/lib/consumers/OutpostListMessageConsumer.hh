@@ -1,21 +1,22 @@
 
 #pragma once
 
-#include "AbstractMessageConsumer.hh"
+#include "AbstractGameMessageConsumer.hh"
 #include "Coordinator.hh"
 #include "DatabaseEntityMapper.hh"
 #include "OutpostData.hh"
 
 namespace pge {
 
-class OutpostListMessageConsumer : public bsgo::AbstractMessageConsumer
+class OutpostListMessageConsumer : public AbstractGameMessageConsumer
 {
   public:
   OutpostListMessageConsumer(bsgo::DatabaseEntityMapper &entityMapper,
                              bsgo::CoordinatorShPtr coordinator);
   ~OutpostListMessageConsumer() override = default;
 
-  void onMessageReceived(const bsgo::IMessage &message) override;
+  protected:
+  void onMessageReceivedInternal(const bsgo::IMessage &message) override;
 
   private:
   bsgo::DatabaseEntityMapper &m_entityMapper;
