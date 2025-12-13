@@ -7,12 +7,12 @@ namespace pge {
 
 OutpostListMessageConsumer::OutpostListMessageConsumer(bsgo::DatabaseEntityMapper &entityMapper,
                                                        bsgo::CoordinatorShPtr coordinator)
-  : bsgo::AbstractMessageConsumer("outpost", {bsgo::MessageType::OUTPOST_LIST})
+  : AbstractGameMessageConsumer("outpost", bsgo::MessageType::OUTPOST_LIST)
   , m_entityMapper(entityMapper)
   , m_coordinator(std::move(coordinator))
 {}
 
-void OutpostListMessageConsumer::onMessageReceived(const bsgo::IMessage &message)
+void OutpostListMessageConsumer::onMessageReceivedInternal(const bsgo::IMessage &message)
 {
   const auto outpostsList = message.as<bsgo::OutpostListMessage>();
 

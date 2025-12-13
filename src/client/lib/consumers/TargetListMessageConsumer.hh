@@ -1,21 +1,22 @@
 
 #pragma once
 
-#include "AbstractMessageConsumer.hh"
+#include "AbstractGameMessageConsumer.hh"
 #include "Coordinator.hh"
 #include "DatabaseEntityMapper.hh"
 #include "TargetData.hh"
 
 namespace pge {
 
-class TargetListMessageConsumer : public bsgo::AbstractMessageConsumer
+class TargetListMessageConsumer : public AbstractGameMessageConsumer
 {
   public:
   TargetListMessageConsumer(bsgo::DatabaseEntityMapper &entityMapper,
                             bsgo::CoordinatorShPtr coordinator);
   ~TargetListMessageConsumer() override = default;
 
-  void onMessageReceived(const bsgo::IMessage &message) override;
+  protected:
+  void onMessageReceivedInternal(const bsgo::IMessage &message) override;
 
   private:
   bsgo::DatabaseEntityMapper &m_entityMapper;

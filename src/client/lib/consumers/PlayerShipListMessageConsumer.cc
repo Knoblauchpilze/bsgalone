@@ -7,7 +7,7 @@ namespace pge {
 
 PlayerShipListMessageConsumer::PlayerShipListMessageConsumer(bsgo::DatabaseEntityMapper &entityMapper,
                                                              bsgo::CoordinatorShPtr coordinator)
-  : bsgo::AbstractMessageConsumer("ship", {bsgo::MessageType::PLAYER_SHIP_LIST})
+  : AbstractGameMessageConsumer("ship", bsgo::MessageType::PLAYER_SHIP_LIST)
   , m_entityMapper(entityMapper)
   , m_coordinator(std::move(coordinator))
 {}
@@ -19,7 +19,7 @@ bool doesMessageContainPlayerShips(const bsgo::PlayerShipListMessage &message)
 }
 } // namespace
 
-void PlayerShipListMessageConsumer::onMessageReceived(const bsgo::IMessage &message)
+void PlayerShipListMessageConsumer::onMessageReceivedInternal(const bsgo::IMessage &message)
 {
   const auto shipsList = message.as<bsgo::PlayerShipListMessage>();
 

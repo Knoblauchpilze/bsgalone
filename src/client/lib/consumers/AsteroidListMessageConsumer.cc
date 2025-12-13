@@ -7,12 +7,12 @@ namespace pge {
 
 AsteroidListMessageConsumer::AsteroidListMessageConsumer(bsgo::DatabaseEntityMapper &entityMapper,
                                                          bsgo::CoordinatorShPtr coordinator)
-  : bsgo::AbstractMessageConsumer("asteroid", {bsgo::MessageType::ASTEROID_LIST})
+  : AbstractGameMessageConsumer("asteroid", bsgo::MessageType::ASTEROID_LIST)
   , m_entityMapper(entityMapper)
   , m_coordinator(std::move(coordinator))
 {}
 
-void AsteroidListMessageConsumer::onMessageReceived(const bsgo::IMessage &message)
+void AsteroidListMessageConsumer::onMessageReceivedInternal(const bsgo::IMessage &message)
 {
   const auto asteroidsList = message.as<bsgo::AsteroidListMessage>();
 

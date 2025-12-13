@@ -7,12 +7,12 @@ namespace pge {
 
 PlayerListMessageConsumer::PlayerListMessageConsumer(bsgo::DatabaseEntityMapper &entityMapper,
                                                      bsgo::CoordinatorShPtr coordinator)
-  : bsgo::AbstractMessageConsumer("player", {bsgo::MessageType::PLAYER_LIST})
+  : AbstractGameMessageConsumer("player", bsgo::MessageType::PLAYER_LIST)
   , m_entityMapper(entityMapper)
   , m_coordinator(std::move(coordinator))
 {}
 
-void PlayerListMessageConsumer::onMessageReceived(const bsgo::IMessage &message)
+void PlayerListMessageConsumer::onMessageReceivedInternal(const bsgo::IMessage &message)
 {
   const auto playerList = message.as<bsgo::PlayerListMessage>();
 
