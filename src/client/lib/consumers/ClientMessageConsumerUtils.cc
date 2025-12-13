@@ -1,10 +1,8 @@
 
 #include "ClientMessageConsumerUtils.hh"
 
-#include "AbstractGameMessageConsumer.hh"
 #include "AsteroidListMessageConsumer.hh"
 #include "ComponentMessageConsumer.hh"
-#include "GameMessageConsumerProxy.hh"
 #include "OutpostListMessageConsumer.hh"
 #include "PlayerListMessageConsumer.hh"
 #include "PlayerShipListMessageConsumer.hh"
@@ -13,17 +11,6 @@
 #include "TargetListMessageConsumer.hh"
 
 namespace pge {
-
-auto wrapAndRegisterToQueue(bsgo::AbstractMessageConsumerPtr consumer,
-                            bsgo::IMessageQueue &inputMessagesQueue)
-  -> bsgo::AbstractMessageConsumerPtr
-{
-  // All game consumers are deactivated at the start because the players
-  // start in the outpost.
-  auto gameConsumer = std::make_unique<AbstractGameMessageConsumer>(false, std::move(consumer));
-  inputMessagesQueue.addListener(std::make_unique<GameMessageConsumerProxy>(*gameConsumer));
-  return gameConsumer;
-}
 
 void createMessageConsumers(bsgo::IMessageQueue &inputMessagesQueue,
                             bsgo::DatabaseEntityMapper &entityMapper,
