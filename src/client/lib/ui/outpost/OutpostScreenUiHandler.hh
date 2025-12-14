@@ -49,8 +49,8 @@ class OutpostScreenUiHandler : public IUiHandler
   };
 
   ActiveScreen m_activeScreen{ActiveScreen::LOCKER};
-  LockerUiHandlerPtr m_lockerUi{};
   ShopUiHandlerPtr m_shopUi{};
+  LockerUiHandlerPtr m_lockerUi{};
   HangarUiHandlerPtr m_hangarUi{};
 
   void subscribeToViews();
