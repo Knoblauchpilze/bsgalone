@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "AbstractMessageListener.hh"
+#include "GameRoleUiHandler.hh"
 #include "HangarUiHandler.hh"
 #include "IUiHandler.hh"
 #include "LockerUiHandler.hh"
@@ -43,6 +43,7 @@ class OutpostScreenUiHandler : public IUiHandler
 
   enum class ActiveScreen
   {
+    GAME_ROLE,
     HANGAR,
     LOCKER,
     SHOP
@@ -52,6 +53,7 @@ class OutpostScreenUiHandler : public IUiHandler
   ShopUiHandlerPtr m_shopUi{};
   LockerUiHandlerPtr m_lockerUi{};
   HangarUiHandlerPtr m_hangarUi{};
+  GameRoleUiHandlerPtr m_gameRoleUi{};
 
   void subscribeToViews();
   void reset();
