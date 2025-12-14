@@ -1,13 +1,9 @@
 
 #include "OutpostScreenUiHandler.hh"
-#include "Constants.hh"
-#include "EquipMessage.hh"
 #include "GameColorUtils.hh"
 #include "IViewListenerProxy.hh"
+#include "LoginMessage.hh"
 #include "MessageListenerWrapper.hh"
-#include "PurchaseMessage.hh"
-#include "ScreenCommon.hh"
-#include "UiTextMenu.hh"
 
 namespace pge {
 
@@ -18,6 +14,7 @@ OutpostScreenUiHandler::OutpostScreenUiHandler(const Views &views)
   , m_shopUi(std::make_unique<ShopUiHandler>(views))
   , m_lockerUi(std::make_unique<LockerUiHandler>(views))
   , m_hangarUi(std::make_unique<HangarUiHandler>(views))
+  , m_gameRoleUi(std::make_unique<GameRoleUiHandler>(views))
 {
   if (nullptr == m_shipDbView)
   {
@@ -73,6 +70,7 @@ void OutpostScreenUiHandler::initializeMenus(const int width,
   m_shopUi->initializeMenus(width, height, texturesLoader);
   m_lockerUi->initializeMenus(width, height, texturesLoader);
   m_hangarUi->initializeMenus(width, height, texturesLoader);
+  m_gameRoleUi->initializeMenus(width, height, texturesLoader);
 }
 
 bool OutpostScreenUiHandler::processUserInput(UserInputData &inputData)
@@ -80,6 +78,9 @@ bool OutpostScreenUiHandler::processUserInput(UserInputData &inputData)
   bool out{false};
   switch (m_activeScreen)
   {
+    case ActiveScreen::GAME_ROLE:
+      out = m_gameRoleUi->processUserInput(inputData);
+      break;
     case ActiveScreen::HANGAR:
       out = m_hangarUi->processUserInput(inputData);
       break;
@@ -89,6 +90,8 @@ bool OutpostScreenUiHandler::processUserInput(UserInputData &inputData)
     case ActiveScreen::SHOP:
       out = m_shopUi->processUserInput(inputData);
       break;
+    default:
+      error("Unsupported active screen " + std::to_string(static_cast<int>(m_activeScreen)));
   }
 
   for (const auto &menu : m_menus)
@@ -108,6 +111,9 @@ void OutpostScreenUiHandler::render(Renderer &engine) const
 
   switch (m_activeScreen)
   {
+    case ActiveScreen::GAME_ROLE:
+      m_gameRoleUi->render(engine);
+      break;
     case ActiveScreen::HANGAR:
       m_hangarUi->render(engine);
       break;
@@ -117,6 +123,8 @@ void OutpostScreenUiHandler::render(Renderer &engine) const
     case ActiveScreen::SHOP:
       m_shopUi->render(engine);
       break;
+    default:
+      error("Unsupported active screen " + std::to_string(static_cast<int>(m_activeScreen)));
   }
 }
 
@@ -129,6 +137,9 @@ void OutpostScreenUiHandler::updateUi()
 
   switch (m_activeScreen)
   {
+    case ActiveScreen::GAME_ROLE:
+      m_gameRoleUi->updateUi();
+      break;
     case ActiveScreen::HANGAR:
       m_hangarUi->updateUi();
       break;
@@ -138,6 +149,8 @@ void OutpostScreenUiHandler::updateUi()
     case ActiveScreen::SHOP:
       m_shopUi->updateUi();
       break;
+    default:
+      error("Unsupported active screen " + std::to_string(static_cast<int>(m_activeScreen)));
   }
 }
 
@@ -146,6 +159,7 @@ void OutpostScreenUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQ
   m_shopUi->connectToMessageQueue(messageQueue);
   m_lockerUi->connectToMessageQueue(messageQueue);
   m_hangarUi->connectToMessageQueue(messageQueue);
+  m_gameRoleUi->connectToMessageQueue(messageQueue);
 }
 
 void OutpostScreenUiHandler::subscribeToViews()
@@ -163,7 +177,10 @@ void OutpostScreenUiHandler::reset()
 {
   m_menus[VIEWS_MENU]->clearChildren();
 
-  m_initialized = false;
+  // Reset the active screen: this makes sure that we don't get stuck
+  // on the Hangar screen when choosing gunner as the next role.
+  m_activeScreen = ActiveScreen::LOCKER;
+  m_initialized  = false;
 }
 
 constexpr auto VIEW_LIST_WIDTH_TO_SCREEN_WIDTH_RATIO   = 0.2f;
@@ -199,8 +216,25 @@ void OutpostScreenUiHandler::initializeOutpostScreenOptions()
   menu                 = std::make_unique<UiTextMenu>(config, bg, text);
   m_menus[VIEWS_MENU]->addMenu(std::move(menu));
 
-  config.clickCallback = [this]() { setActiveScreen(ActiveScreen::HANGAR); };
-  text                 = textConfigFromColor("Hangar", colors::WHITE);
+  ActiveScreen activeScreen{ActiveScreen::HANGAR};
+  std::string buttonText("Hangar");
+
+  const auto role = m_playerView->gameSession().getRole();
+  switch (role)
+  {
+    case bsgo::GameRole::GUNNER:
+      activeScreen = ActiveScreen::GAME_ROLE;
+      buttonText   = "Squadron";
+      break;
+    case bsgo::GameRole::PILOT:
+      // Voluntarily empty, this is already the default case.
+      break;
+    default:
+      error("Unsupported game role to initialize outpost UI", "Received " + str(role));
+  }
+
+  config.clickCallback = [this, activeScreen]() { setActiveScreen(activeScreen); };
+  text                 = textConfigFromColor(buttonText, colors::WHITE);
   menu                 = std::make_unique<UiTextMenu>(config, bg, text);
   m_menus[VIEWS_MENU]->addMenu(std::move(menu));
 
