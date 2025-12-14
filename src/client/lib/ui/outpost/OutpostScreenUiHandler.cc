@@ -15,8 +15,8 @@ OutpostScreenUiHandler::OutpostScreenUiHandler(const Views &views)
   : IUiHandler("outpost")
   , m_shipDbView(views.shipDbView)
   , m_playerView(views.playerView)
-  , m_lockerUi(std::make_unique<LockerUiHandler>(views))
   , m_shopUi(std::make_unique<ShopUiHandler>(views))
+  , m_lockerUi(std::make_unique<LockerUiHandler>(views))
   , m_hangarUi(std::make_unique<HangarUiHandler>(views))
 {
   if (nullptr == m_shipDbView)
@@ -70,8 +70,8 @@ void OutpostScreenUiHandler::initializeMenus(const int width,
 
   generateGeneralMenu(width, height);
 
-  m_lockerUi->initializeMenus(width, height, texturesLoader);
   m_shopUi->initializeMenus(width, height, texturesLoader);
+  m_lockerUi->initializeMenus(width, height, texturesLoader);
   m_hangarUi->initializeMenus(width, height, texturesLoader);
 }
 
@@ -83,11 +83,11 @@ bool OutpostScreenUiHandler::processUserInput(UserInputData &inputData)
     case ActiveScreen::HANGAR:
       out = m_hangarUi->processUserInput(inputData);
       break;
-    case ActiveScreen::SHOP:
-      out = m_shopUi->processUserInput(inputData);
-      break;
     case ActiveScreen::LOCKER:
       out = m_lockerUi->processUserInput(inputData);
+      break;
+    case ActiveScreen::SHOP:
+      out = m_shopUi->processUserInput(inputData);
       break;
   }
 
@@ -111,11 +111,11 @@ void OutpostScreenUiHandler::render(Renderer &engine) const
     case ActiveScreen::HANGAR:
       m_hangarUi->render(engine);
       break;
-    case ActiveScreen::SHOP:
-      m_shopUi->render(engine);
-      break;
     case ActiveScreen::LOCKER:
       m_lockerUi->render(engine);
+      break;
+    case ActiveScreen::SHOP:
+      m_shopUi->render(engine);
       break;
   }
 }
@@ -132,19 +132,19 @@ void OutpostScreenUiHandler::updateUi()
     case ActiveScreen::HANGAR:
       m_hangarUi->updateUi();
       break;
-    case ActiveScreen::SHOP:
-      m_shopUi->updateUi();
-      break;
     case ActiveScreen::LOCKER:
       m_lockerUi->updateUi();
+      break;
+    case ActiveScreen::SHOP:
+      m_shopUi->updateUi();
       break;
   }
 }
 
 void OutpostScreenUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQueue)
 {
-  m_lockerUi->connectToMessageQueue(messageQueue);
   m_shopUi->connectToMessageQueue(messageQueue);
+  m_lockerUi->connectToMessageQueue(messageQueue);
   m_hangarUi->connectToMessageQueue(messageQueue);
 }
 
