@@ -13,6 +13,7 @@
 #include "EntityRemovedMessage.hh"
 #include "EquipMessage.hh"
 #include "HangarMessage.hh"
+#include "JoinShipMessage.hh"
 #include "JumpCancelledMessage.hh"
 #include "JumpMessage.hh"
 #include "JumpRequestedMessage.hh"
@@ -135,6 +136,8 @@ auto MessageParser::tryReadMessage(const MessageType &type, std::istream &in)
       return readMessage<EquipMessage>(in);
     case MessageType::HANGAR:
       return readMessage<HangarMessage>(in);
+    case MessageType::JOIN_SHIP:
+      return readMessage<JoinShipMessage>(in);
     case MessageType::JUMP:
       return readMessage<JumpMessage>(in);
     case MessageType::JUMP_CANCELLED:

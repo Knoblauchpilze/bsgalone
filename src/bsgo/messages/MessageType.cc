@@ -27,6 +27,8 @@ auto str(const MessageType &type) -> std::string
       return "equip";
     case MessageType::HANGAR:
       return "hangar";
+    case MessageType::JOIN_SHIP:
+      return "join_ship";
     case MessageType::JUMP:
       return "jump";
     case MessageType::JUMP_CANCELLED:
@@ -90,7 +92,7 @@ auto str(const MessageType &type) -> std::string
   }
 }
 
-auto allMessageTypes() -> std::array<MessageType, 39>
+auto allMessageTypes() -> std::array<MessageType, 40>
 {
   return {MessageType::AI_BEHAVIOR_SYNC,
           MessageType::ASTEROID_LIST,
@@ -102,6 +104,7 @@ auto allMessageTypes() -> std::array<MessageType, 39>
           MessageType::ENTITY_REMOVED,
           MessageType::EQUIP,
           MessageType::HANGAR,
+          MessageType::JOIN_SHIP,
           MessageType::JUMP,
           MessageType::JUMP_CANCELLED,
           MessageType::JUMP_REQUESTED,
