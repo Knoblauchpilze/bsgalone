@@ -19,6 +19,7 @@ enum class MessageType
   ENTITY_REMOVED,
   EQUIP,
   HANGAR,
+  JOIN_SHIP,
   JUMP,
   JUMP_CANCELLED,
   JUMP_REQUESTED,
@@ -51,7 +52,7 @@ enum class MessageType
 };
 
 auto str(const MessageType &type) -> std::string;
-auto allMessageTypes() -> std::array<MessageType, 39>;
+auto allMessageTypes() -> std::array<MessageType, 40>;
 
 auto allMessageTypesAsSet() -> std::unordered_set<MessageType>;
 
