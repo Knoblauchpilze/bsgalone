@@ -70,7 +70,7 @@ jobs:
     needs: [build]
     steps:
       - name: Download build data
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build-data
       - name: Uncompress build data
@@ -116,7 +116,7 @@ jobs:
           --health-retries 5
     steps:
       - name: Download build data
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build-data
       - name: Uncompress build data
@@ -184,11 +184,11 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: Download unit test coverage data
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: coverage-unit
       - name: Download integration test coverage data
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: coverage-integration
       - name: Upload coverage to Codecov
