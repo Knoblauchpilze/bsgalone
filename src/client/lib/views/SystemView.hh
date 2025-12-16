@@ -5,6 +5,7 @@
 #include "Coordinator.hh"
 #include "DatabaseEntityMapper.hh"
 #include "PlayerData.hh"
+#include "PlayerShipData.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
 #include <memory>
@@ -28,6 +29,7 @@ class SystemView : public AbstractView
   auto getAsteroid(const bsgo::Uuid asteroidDbId) const -> bsgo::Entity;
 
   auto getSystemPlayers() const -> std::vector<bsgo::PlayerData>;
+  auto getSystemShips() const -> std::vector<bsgo::PlayerShipData>;
 
   protected:
   void handleMessageInternal(const bsgo::IMessage &message) override;
@@ -37,6 +39,7 @@ class SystemView : public AbstractView
   const bsgo::DatabaseEntityMapper &m_entityMapper;
 
   std::vector<bsgo::PlayerData> m_players{};
+  std::vector<bsgo::PlayerShipData> m_playerShips{};
 };
 
 using SystemViewShPtr = std::shared_ptr<SystemView>;
