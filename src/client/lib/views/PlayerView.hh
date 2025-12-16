@@ -46,6 +46,8 @@ class PlayerView : public AbstractView
                  const std::string &password,
                  const bsgo::Faction &faction) const;
 
+  void tryJoin(const bsgo::Uuid playerDbId, const bsgo::Uuid shipDbId) const;
+
   protected:
   void handleMessageInternal(const bsgo::IMessage &message) override;
 

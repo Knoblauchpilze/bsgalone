@@ -1,6 +1,7 @@
 
 #include "PlayerView.hh"
 #include "HangarMessage.hh"
+#include "JoinShipMessage.hh"
 #include "LoginMessage.hh"
 #include "LogoutMessage.hh"
 #include "PurchaseMessage.hh"
@@ -163,6 +164,11 @@ void PlayerView::trySignup(const std::string &name,
                            const bsgo::Faction &faction) const
 {
   m_outputMessageQueue->pushMessage(std::make_unique<bsgo::SignupMessage>(name, password, faction));
+}
+
+void PlayerView::tryJoin(const bsgo::Uuid playerDbId, const bsgo::Uuid shipDbId) const
+{
+  m_outputMessageQueue->pushMessage(std::make_unique<bsgo::JoinShipMessage>(playerDbId, shipDbId));
 }
 
 void PlayerView::handleMessageInternal(const bsgo::IMessage &message)
