@@ -183,8 +183,14 @@ void GameRoleUiHandler::onShipRequest(const int shipIndex)
 
 void GameRoleUiHandler::onJoinRequest(const int shipIndex)
 {
-  /// TODO: Should handle join request
-  warn("Attempt to join ship " + std::to_string(shipIndex));
+  if (!m_playerView->isReady())
+  {
+    return;
+  }
+
+  const auto &data = m_shipsData.at(shipIndex);
+  // TODO: Should use the ship db id
+  m_playerView->tryJoin(data.playerDbId, data.playerDbId);
 }
 
 } // namespace pge
