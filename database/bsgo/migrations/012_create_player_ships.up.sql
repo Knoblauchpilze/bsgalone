@@ -67,7 +67,8 @@ CREATE TABLE player_role (
   FOREIGN KEY (player) REFERENCES player(id),
   FOREIGN KEY (role) REFERENCES game_role(name),
   FOREIGN KEY (target_ship) REFERENCES player_ship,
-  UNIQUE (player)
+  UNIQUE (player),
+  UNIQUE (target_ship)
 );
 
 CREATE TRIGGER trigger_player_ship_updated_at
