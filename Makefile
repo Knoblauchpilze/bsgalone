@@ -63,6 +63,9 @@ copyRelease: release copyData
 rundefaultclient: copyRelease
 	cd sandbox && ./run.sh bsgalone_client 2323 colo aze pilot
 
+rungunner: copyRelease
+	cd sandbox && ./run.sh bsgalone_client 2323 colo aze gunner
+
 # Use like this:
 # make runclient username="colo" password="aze" gamerole="pilot"
 runclient: copyRelease
