@@ -122,7 +122,6 @@ void SystemView::handleMessageInternal(const bsgo::IMessage &message)
     case bsgo::MessageType::PLAYER_LIST:
       m_players = getPlayersList(message.as<bsgo::PlayerListMessage>());
       break;
-    // TODO: This message should be set on logging
     case bsgo::MessageType::PLAYER_SHIP_LIST:
       m_playerShips = getPlayerShipsList(message.as<bsgo::PlayerShipListMessage>());
       break;
