@@ -38,6 +38,7 @@ class GameRoleUiHandler : public IUiHandler
 
   struct PlayerShipData
   {
+    bsgo::Uuid shipDbId{};
     bsgo::Uuid playerDbId{};
     UiMenu *menu{};
     UiTextMenu *button{};
@@ -48,7 +49,7 @@ class GameRoleUiHandler : public IUiHandler
   void subscribeToViews();
   void reset();
 
-  void initializeHangar();
+  void initializeAvailableShips();
   void initializeLayout();
 
   void updateShipMenus();
