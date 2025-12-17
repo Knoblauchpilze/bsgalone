@@ -140,6 +140,7 @@ void LoadingMessagesConsumer::handleLoginTransition(const LoadingStartedMessage 
   handlePlayerWeaponsLoading(message);
   handleActiveShipLoading(message);
   handleSystemPlayersLoading(message);
+  handleSystemShipsLoading(message);
 }
 
 void LoadingMessagesConsumer::handlePurchaseTransition(const LoadingStartedMessage &message) const
