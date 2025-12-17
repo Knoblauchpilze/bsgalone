@@ -24,6 +24,18 @@ WHERE
   AND ss.system = $1
 )";
 
+constexpr auto FIND_ALL_BY_SYSTEM_QUERY_NAME = "system_find_all_by_system";
+constexpr auto FIND_ALL_BY_SYSTEM_QUERY      = R"(
+SELECT
+  ps.player
+FROM
+  player_ship AS ps
+  LEFT JOIN ship_system AS ss ON ps.id = ss.ship
+WHERE
+  ps.active = true
+  AND ss.system = $1
+)";
+
 constexpr auto FIND_ONE_QUERY_NAME = "player_find_one";
 constexpr auto FIND_ONE_QUERY      = R"(
 SELECT
@@ -71,6 +83,7 @@ INSERT INTO player (account, name, faction)
 void PlayerRepository::initialize()
 {
   m_connection->prepare(FIND_ALL_QUERY_NAME, FIND_ALL_QUERY);
+  m_connection->prepare(FIND_ALL_BY_SYSTEM_QUERY_NAME, FIND_ALL_BY_SYSTEM_QUERY);
   m_connection->prepare(FIND_ALL_UNDOCKED_BY_SYSTEM_QUERY_NAME, FIND_ALL_UNDOCKED_BY_SYSTEM_QUERY);
   m_connection->prepare(FIND_ONE_QUERY_NAME, FIND_ONE_QUERY);
   m_connection->prepare(FIND_ONE_BY_ACCOUNT_QUERY_NAME, FIND_ONE_BY_ACCOUNT_QUERY);
@@ -82,6 +95,22 @@ auto PlayerRepository::findAll() const -> std::unordered_set<Uuid>
 {
   const auto query = [](pqxx::nontransaction &work) {
     return work.exec(pqxx::prepped{FIND_ALL_QUERY_NAME});
+  };
+  const auto rows = m_connection->executeQuery(query);
+
+  std::unordered_set<Uuid> out;
+  for (const auto record : rows)
+  {
+    out.emplace(fromDbId(record[0].as<int>()));
+  }
+
+  return out;
+}
+
+auto PlayerRepository::findAllBySystem(const Uuid system) const -> std::unordered_set<Uuid>
+{
+  const auto query = [system](pqxx::nontransaction &work) {
+    return work.exec(pqxx::prepped{FIND_ALL_BY_SYSTEM_QUERY_NAME}, pqxx::params{toDbId(system)});
   };
   const auto rows = m_connection->executeQuery(query);
 
