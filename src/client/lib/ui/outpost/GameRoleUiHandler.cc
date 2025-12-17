@@ -58,7 +58,7 @@ void GameRoleUiHandler::updateUi()
   }
   if (!m_initialized)
   {
-    initializeHangar();
+    initializeAvailableShips();
   }
 }
 
@@ -81,7 +81,7 @@ void GameRoleUiHandler::reset()
   m_initialized = false;
 }
 
-void GameRoleUiHandler::initializeHangar()
+void GameRoleUiHandler::initializeAvailableShips()
 {
   initializeLayout();
   updateShipMenus();
@@ -89,6 +89,54 @@ void GameRoleUiHandler::initializeHangar()
 }
 
 namespace {
+auto findPlayerForShip(const bsgo::Uuid playerDbId, const std::vector<bsgo::PlayerData> &players)
+  -> std::optional<bsgo::PlayerData>
+{
+  const auto maybePlayer = std::find_if(players.begin(),
+                                        players.end(),
+                                        [playerDbId](const bsgo::PlayerData &playerData) {
+                                          return playerData.dbId == playerDbId;
+                                        });
+
+  if (maybePlayer == players.end())
+  {
+    return {};
+  }
+  return *maybePlayer;
+}
+
+auto generateShipDescription(const bsgo::PlayerShipData &ship) -> UiMenuPtr
+{
+  const MenuConfig config{.highlightable = false};
+  auto bg = bgConfigFromColor(colors::BLANK);
+
+  auto desc = std::make_unique<UiMenu>(config, bg);
+
+  desc->addMenu(generateSpacer());
+
+  bg         = bgConfigFromColor(colors::BLANK);
+  auto label = bsgo::capitalizeString(ship.name + " (" + bsgo::str(ship.shipClass) + ")");
+  auto text  = generateTextConfig(label, colors::GREY, 10);
+  auto prop  = std::make_unique<UiTextMenu>(config, bg, text);
+  desc->addMenu(std::move(prop));
+
+  label = bsgo::floatToStr(ship.maxHullPoints, 0) + " hull points (+"
+          + bsgo::floatToStr(ship.hullPointsRegen, 2) + "/s)";
+  text = generateTextConfig(label);
+  prop = std::make_unique<UiTextMenu>(config, bg, text);
+  desc->addMenu(std::move(prop));
+
+  label = bsgo::floatToStr(ship.maxPowerPoints, 0) + " power (+"
+          + bsgo::floatToStr(ship.powerRegen, 2) + "/s)";
+  text = generateTextConfig(label);
+  prop = std::make_unique<UiTextMenu>(config, bg, text);
+  desc->addMenu(std::move(prop));
+
+  desc->addMenu(generateSpacer());
+
+  return desc;
+}
+
 auto generatePlayerDescription(const bsgo::PlayerData &player) -> UiMenuPtr
 {
   const MenuConfig config{.highlightable = false};
@@ -117,19 +165,32 @@ void GameRoleUiHandler::initializeLayout()
   const auto faction    = m_playerView->getPlayerFaction();
   const auto palette    = generatePaletteForFaction(faction);
   const auto allPlayers = m_systemView->getSystemPlayers();
+  const auto allShips   = m_systemView->getSystemShips();
 
   const MenuConfig config{.layout = MenuLayout::HORIZONTAL, .highlightable = false};
   const auto bg = bgConfigFromColor(palette.almostOpaqueColor);
 
   auto shipIndex = 0;
-  for (const auto &player : allPlayers)
+  for (const auto &ship : allShips)
   {
-    auto shipMenu = std::make_unique<UiMenu>(config, bg);
+    auto shipMenu          = std::make_unique<UiMenu>(config, bg);
+    const auto maybePlayer = findPlayerForShip(ship.playerDbId, allPlayers);
+    if (!maybePlayer)
+    {
+      error("Failed to find player for ship " + bsgo::str(ship.dbId));
+    }
 
-    PlayerShipData data{.playerDbId = player.dbId, .menu = shipMenu.get()};
+    PlayerShipData data{
+      .shipDbId   = ship.dbId,
+      .playerDbId = maybePlayer->dbId,
+      .menu       = shipMenu.get(),
+    };
     m_shipsData.emplace_back(std::move(data));
 
-    auto playerDesc = generatePlayerDescription(player);
+    auto shipDesc   = generateShipDescription(ship);
+    auto playerDesc = generatePlayerDescription(*maybePlayer);
+    // TODO: The menus are stacked on top of one another
+    shipMenu->addMenu(std::move(shipDesc));
     shipMenu->addMenu(std::move(playerDesc));
 
     auto section = generateInteractiveSection("", [this, shipIndex]() { onShipRequest(shipIndex); });
@@ -150,6 +211,7 @@ constexpr auto JOIN_SHIP_BUTTON_TEXT = "Join";
 void GameRoleUiHandler::updateShipMenus()
 {
   const auto players = m_systemView->getSystemPlayers();
+  const auto ships   = m_systemView->getSystemShips();
 
   auto shipIndex = 0;
   for (auto &shipData : m_shipsData)
