@@ -70,9 +70,9 @@ void CoreObject::error(const std::string &message, const CoreException &cause) c
   throw CoreException(message, m_logger.getModule(), m_logger.getService(), cause);
 }
 
-void CoreObject::withSafetyNet(std::function<void(void)> func, const std::string &functionName) const
+bool CoreObject::withSafetyNet(std::function<void(void)> func, const std::string &functionName) const
 {
-  launchProtected(func, functionName, m_logger);
+  return launchProtected(func, functionName, m_logger);
 }
 
 } // namespace core
