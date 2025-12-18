@@ -12,6 +12,7 @@ target_sources (server_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/LoadingServiceUtils.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LoginService.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LockerService.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/PlayerService.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/PurchaseService.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ShipService.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SignupService.cc

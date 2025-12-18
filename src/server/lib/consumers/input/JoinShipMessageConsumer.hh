@@ -4,18 +4,20 @@
 #include "AbstractMessageConsumer.hh"
 #include "IMessageQueue.hh"
 #include "JoinShipMessage.hh"
+#include "PlayerService.hh"
 
 namespace bsgo {
 
 class JoinShipMessageConsumer : public AbstractMessageConsumer
 {
   public:
-  JoinShipMessageConsumer(IMessageQueue *const outputMessageQueue);
+  JoinShipMessageConsumer(PlayerServicePtr playerService, IMessageQueue *const outputMessageQueue);
   ~JoinShipMessageConsumer() override = default;
 
   void onMessageReceived(const IMessage &message) override;
 
   private:
+  PlayerServicePtr m_playerService{};
   IMessageQueue *const m_outputMessageQueue{};
 
   void handleJoinShip(const JoinShipMessage &message) const;

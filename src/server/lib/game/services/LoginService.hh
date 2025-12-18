@@ -23,7 +23,6 @@ class LoginService : public AbstractService
   auto getPlayerSystemDbId(const Uuid playerDbId) const -> Uuid;
 };
 
-using LoginServicePtr   = std::unique_ptr<LoginService>;
-using LoginServiceShPtr = std::shared_ptr<LoginService>;
+using LoginServicePtr = std::unique_ptr<LoginService>;
 
 } // namespace bsgo
