@@ -5,6 +5,7 @@
 #include "BroadcastMessageQueue.hh"
 #include "ConnectionMessage.hh"
 #include "EntityRemovedMessageConsumer.hh"
+#include "JoinShipMessageConsumer.hh"
 #include "JumpMessageConsumer.hh"
 #include "JumpService.hh"
 #include "LoginMessageConsumer.hh"
@@ -114,6 +115,8 @@ auto MessageExchanger::initializeSystemMessageQueue(const MessageSystemData &mes
                                                                    systemService,
                                                                    messagesData.systemProcessors,
                                                                    m_outputMessageQueue.get()));
+
+  systemQueue->addListener(std::make_unique<JoinShipMessageConsumer>(m_outputMessageQueue.get()));
 
   return systemQueue;
 }
