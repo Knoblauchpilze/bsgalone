@@ -37,7 +37,14 @@ class CoreObject
   void error(const std::string &message, const std::optional<std::string> &cause = {}) const;
   void error(const std::string &message, const CoreException &cause) const;
 
-  void withSafetyNet(std::function<void(void)> func, const std::string &functionName) const;
+  /// @brief - Runs `func` and catch exceptions that might be thrown by it.
+  /// In case an exception is caught, a message is logged with the function
+  /// name provided in argument.
+  /// @param func - the function to execute
+  /// @param functionName - the name of the function, used to log a message
+  /// in case an exception is caught
+  /// @return - true if the function ran successfully, false otherwise
+  bool withSafetyNet(std::function<void(void)> func, const std::string &functionName) const;
 
   private:
   std::string m_name{};
