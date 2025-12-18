@@ -116,7 +116,9 @@ auto MessageExchanger::initializeSystemMessageQueue(const MessageSystemData &mes
                                                                    messagesData.systemProcessors,
                                                                    m_outputMessageQueue.get()));
 
-  systemQueue->addListener(std::make_unique<JoinShipMessageConsumer>(m_outputMessageQueue.get()));
+  auto playerService = std::make_unique<PlayerService>(repositories);
+  systemQueue->addListener(std::make_unique<JoinShipMessageConsumer>(std::move(playerService),
+                                                                     m_outputMessageQueue.get()));
 
   return systemQueue;
 }

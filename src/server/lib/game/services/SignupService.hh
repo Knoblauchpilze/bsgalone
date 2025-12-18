@@ -26,7 +26,6 @@ class SignupService : public AbstractService
   void registerShip(const Player &player) const;
 };
 
-using SignupServicePtr   = std::unique_ptr<SignupService>;
-using SignupServiceShPtr = std::shared_ptr<SignupService>;
+using SignupServicePtr = std::unique_ptr<SignupService>;
 
 } // namespace bsgo
