@@ -105,7 +105,8 @@ auto findPlayerForShip(const bsgo::Uuid playerDbId, const std::vector<bsgo::Play
   return *maybePlayer;
 }
 
-auto generateShipDescription(const bsgo::PlayerShipData &ship) -> UiMenuPtr
+auto generateShipDescription(const bsgo::PlayerShipData &ship, const bsgo::PlayerData &player)
+  -> UiMenuPtr
 {
   const MenuConfig config{.highlightable = false};
   auto bg = bgConfigFromColor(colors::BLANK);
@@ -114,10 +115,17 @@ auto generateShipDescription(const bsgo::PlayerShipData &ship) -> UiMenuPtr
 
   desc->addMenu(generateSpacer());
 
-  bg         = bgConfigFromColor(colors::BLANK);
-  auto label = bsgo::capitalizeString(ship.name + " (" + bsgo::str(ship.shipClass) + ")");
-  auto text  = generateTextConfig(label, colors::GREY, 10);
-  auto prop  = std::make_unique<UiTextMenu>(config, bg, text);
+  bg              = bgConfigFromColor(colors::BLANK);
+  const auto isAi = player.isAi ? std::string("AI") : std::string("Player");
+  auto label      = bsgo::capitalizeString(player.name + " (" + isAi + ")");
+  auto text       = generateTextConfig(label, colors::GREY, 10);
+  auto prop       = std::make_unique<UiTextMenu>(config, bg, text);
+  desc->addMenu(std::move(prop));
+
+  bg    = bgConfigFromColor(colors::BLANK);
+  label = bsgo::capitalizeString(ship.name + " (" + bsgo::str(ship.shipClass) + ")");
+  text  = generateTextConfig(label, colors::GREY, 10);
+  prop  = std::make_unique<UiTextMenu>(config, bg, text);
   desc->addMenu(std::move(prop));
 
   label = bsgo::floatToStr(ship.maxHullPoints, 0) + " hull points (+"
@@ -136,28 +144,6 @@ auto generateShipDescription(const bsgo::PlayerShipData &ship) -> UiMenuPtr
 
   return desc;
 }
-
-auto generatePlayerDescription(const bsgo::PlayerData &player) -> UiMenuPtr
-{
-  const MenuConfig config{.highlightable = false};
-  auto bg = bgConfigFromColor(colors::BLANK);
-
-  auto desc = std::make_unique<UiMenu>(config, bg);
-
-  desc->addMenu(generateSpacer());
-
-  bg              = bgConfigFromColor(colors::BLANK);
-  const auto isAi = player.isAi ? std::string("AI") : std::string("Player");
-  auto label      = bsgo::capitalizeString(player.name + " (" + isAi + ")");
-  auto text       = generateTextConfig(label, colors::GREY, 10);
-  auto prop       = std::make_unique<UiTextMenu>(config, bg, text);
-  desc->addMenu(std::move(prop));
-
-  desc->addMenu(generateSpacer());
-
-  return desc;
-}
-
 } // namespace
 
 void GameRoleUiHandler::initializeLayout()
@@ -187,11 +173,8 @@ void GameRoleUiHandler::initializeLayout()
     };
     m_shipsData.emplace_back(std::move(data));
 
-    auto shipDesc   = generateShipDescription(ship);
-    auto playerDesc = generatePlayerDescription(*maybePlayer);
-    // TODO: The menus are stacked on top of one another
+    auto shipDesc = generateShipDescription(ship, *maybePlayer);
     shipMenu->addMenu(std::move(shipDesc));
-    shipMenu->addMenu(std::move(playerDesc));
 
     auto section = generateInteractiveSection("", [this, shipIndex]() { onShipRequest(shipIndex); });
     m_shipsData.at(shipIndex).button = section.button;
