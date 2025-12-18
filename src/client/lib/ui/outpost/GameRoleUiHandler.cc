@@ -235,7 +235,7 @@ void GameRoleUiHandler::onJoinRequest(const int shipIndex)
 
   const auto &data = m_shipsData.at(shipIndex);
   // TODO: Should use the ship db id
-  m_playerView->tryJoin(data.playerDbId, data.playerDbId);
+  m_playerView->tryJoin(data.playerDbId, data.shipDbId);
 }
 
 } // namespace pge
