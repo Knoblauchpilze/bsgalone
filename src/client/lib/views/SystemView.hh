@@ -28,6 +28,8 @@ class SystemView : public AbstractView
 
   auto getAsteroid(const bsgo::Uuid asteroidDbId) const -> bsgo::Entity;
 
+  auto getPlayer(const bsgo::Uuid playerDbId) const -> bsgo::PlayerData;
+
   auto getSystemPlayers() const -> std::vector<bsgo::PlayerData>;
   auto getSystemShips() const -> std::vector<bsgo::PlayerShipData>;
 
