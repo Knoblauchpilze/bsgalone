@@ -37,8 +37,8 @@ class LoadingService : public AbstractService
   };
   auto getDataForPlayer(const Uuid playerDbId) const -> PlayerDescription;
 
-  auto getPlayerById(const Uuid playerDbId) const -> Player;
-  auto getPlayersInSystem(const Uuid systemDbId) const -> std::vector<Player>;
+  auto getPlayerById(const Uuid playerDbId) const -> PlayerProps;
+  auto getPlayersInSystem(const Uuid systemDbId) const -> std::vector<PlayerProps>;
 
   auto getAsteroidById(const Uuid asteroidDbId) const -> AsteroidProps;
   auto getAsteroidsInSystem(const Uuid systemDbId) const -> std::vector<AsteroidProps>;

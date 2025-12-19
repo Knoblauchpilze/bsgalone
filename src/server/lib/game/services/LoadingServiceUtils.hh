@@ -31,7 +31,14 @@
 
 namespace bsgo {
 
-auto toPlayerData(const Player &player) -> PlayerData;
+struct PlayerProps
+{
+  Player dbPlayer{};
+
+  std::optional<Uuid> attachedShip{};
+
+  auto toPlayerData() const -> PlayerData;
+};
 
 struct AsteroidProps
 {
