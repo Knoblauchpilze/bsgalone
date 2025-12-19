@@ -28,14 +28,14 @@ class LoadingService : public AbstractService
                  const DatabaseEntityMapper &entityMapper);
   ~LoadingService() override = default;
 
-  struct PlayerProps
+  struct PlayerDescription
   {
     Faction faction{};
     Uuid shipDbId{};
     bool docked{};
     Uuid systemDbId{};
   };
-  auto getDataForPlayer(const Uuid playerDbId) const -> PlayerProps;
+  auto getDataForPlayer(const Uuid playerDbId) const -> PlayerDescription;
 
   auto getPlayerById(const Uuid playerDbId) const -> Player;
   auto getPlayersInSystem(const Uuid systemDbId) const -> std::vector<Player>;
