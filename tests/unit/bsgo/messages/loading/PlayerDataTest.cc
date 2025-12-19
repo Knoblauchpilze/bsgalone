@@ -49,4 +49,26 @@ TEST(Unit_Bsgo_Serialization_PlayerData, EmptyOutputName)
   assertPlayerDataAreEqual(output, input);
 }
 
+TEST(Unit_Bsgo_Serialization_PlayerData, WithAttachedShip)
+{
+  PlayerData input{.dbId = Uuid{9874}, .isAi = false, .attachedShip = Uuid{14}};
+
+  PlayerData output{.dbId = Uuid{35}, .isAi = true};
+
+  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
+
+  assertPlayerDataAreEqual(output, input);
+}
+
+TEST(Unit_Bsgo_Serialization_PlayerData, OverridesAttachedShip)
+{
+  PlayerData input{.dbId = Uuid{9874}};
+
+  PlayerData output{.dbId = Uuid{35}, .attachedShip = Uuid{14}};
+
+  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
+
+  assertPlayerDataAreEqual(output, input);
+}
+
 } // namespace bsgo
