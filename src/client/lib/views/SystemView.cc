@@ -84,6 +84,22 @@ auto SystemView::getAsteroid(const bsgo::Uuid asteroidDbId) const -> bsgo::Entit
   return m_coordinator->getEntity(*maybeAsteroid);
 }
 
+auto SystemView::getPlayer(const bsgo::Uuid playerDbId) const -> bsgo::PlayerData
+{
+  const auto maybePlayer = std::find_if(m_players.begin(),
+                                        m_players.end(),
+                                        [playerDbId](const bsgo::PlayerData &player) {
+                                          return player.dbId == playerDbId;
+                                        });
+
+  if (maybePlayer == m_players.end())
+  {
+    error("Failed to get player " + bsgo::str(playerDbId));
+  }
+
+  return *maybePlayer;
+}
+
 auto SystemView::getSystemPlayers() const -> std::vector<bsgo::PlayerData>
 {
   return m_players;
