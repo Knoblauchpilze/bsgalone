@@ -188,11 +188,15 @@ void GameRoleUiHandler::initializeLayout()
 }
 
 namespace {
-constexpr auto JOIN_SHIP_BUTTON_TEXT = "Join";
+constexpr auto JOIN_SHIP_BUTTON_TEXT   = "Join";
+constexpr auto JOINED_SHIP_BUTTON_TEXT = "Joined";
 } // namespace
 
 void GameRoleUiHandler::updateShipMenus()
 {
+  const auto playerDbId = m_playerView->gameSession().getPlayerDbId();
+  const auto player     = m_systemView->getPlayer(playerDbId);
+
   const auto players = m_systemView->getSystemPlayers();
   const auto ships   = m_systemView->getSystemShips();
 
@@ -201,11 +205,15 @@ void GameRoleUiHandler::updateShipMenus()
   {
     shipData.button->setText(JOIN_SHIP_BUTTON_TEXT);
 
-    /// TODO: Should be based on whether the player already joined
-    shipData.button->setEnabled(true);
-    shipData.button->setHighlightable(true);
-    shipData.state = State::TO_JOIN;
-    shipData.button->updateBgColor(colors::DARK_GREEN);
+    const auto joined = player.attachedShip && *player.attachedShip == shipData.shipDbId;
+
+    shipData.button->setEnabled(!joined);
+    shipData.button->setHighlightable(!joined);
+    shipData.state   = joined ? State::JOINED : State::TO_JOIN;
+    const auto color = joined ? colors::DARK_GREY : colors::DARK_GREEN;
+    const auto text  = joined ? JOINED_SHIP_BUTTON_TEXT : JOIN_SHIP_BUTTON_TEXT;
+    shipData.button->setText(text);
+    shipData.button->updateBgColor(color);
 
     ++shipIndex;
   }

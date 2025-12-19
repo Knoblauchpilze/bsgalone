@@ -1,15 +1,17 @@
 
 #include "SystemView.hh"
+#include "JoinShipMessage.hh"
 #include "PlayerListMessage.hh"
 #include "PlayerShipListMessage.hh"
-
-#include <iostream>
 
 namespace pge {
 
 SystemView::SystemView(bsgo::CoordinatorShPtr coordinator,
                        const bsgo::DatabaseEntityMapper &entityMapper)
-  : AbstractView("system", {bsgo::MessageType::PLAYER_LIST, bsgo::MessageType::PLAYER_SHIP_LIST})
+  : AbstractView("system",
+                 {bsgo::MessageType::PLAYER_LIST,
+                  bsgo::MessageType::PLAYER_SHIP_LIST,
+                  bsgo::MessageType::JOIN_SHIP})
   , m_coordinator(std::move(coordinator))
   , m_entityMapper(entityMapper)
 {
@@ -129,12 +131,34 @@ auto getPlayerShipsList(const bsgo::PlayerShipListMessage &message)
 
   return message.getShipsData();
 }
+
+void tryUpdatePlayer(const bsgo::JoinShipMessage &updatedData,
+                     std::vector<bsgo::PlayerData> &players)
+{
+  const auto playerDbId = updatedData.getPlayerDbId();
+
+  const auto maybePlayer = std::find_if(players.begin(),
+                                        players.end(),
+                                        [playerDbId](const bsgo::PlayerData &playerData) {
+                                          return playerData.dbId == playerDbId;
+                                        });
+
+  if (maybePlayer == players.end())
+  {
+    return;
+  }
+
+  maybePlayer->attachedShip = updatedData.getShipDbId();
+}
 } // namespace
 
 void SystemView::handleMessageInternal(const bsgo::IMessage &message)
 {
   switch (message.type())
   {
+    case bsgo::MessageType::JOIN_SHIP:
+      tryUpdatePlayer(message.as<bsgo::JoinShipMessage>(), m_players);
+      break;
     case bsgo::MessageType::PLAYER_LIST:
       m_players = getPlayersList(message.as<bsgo::PlayerListMessage>());
       break;
