@@ -3,13 +3,12 @@
 
 namespace bsgo {
 
-auto toPlayerData(const Player &player) -> PlayerData
+auto PlayerProps::toPlayerData() const -> PlayerData
 {
-  return PlayerData{
-    .dbId = player.id,
-    .name = player.name,
-    .isAi = !player.account.has_value(),
-  };
+  return PlayerData{.dbId         = dbPlayer.id,
+                    .name         = dbPlayer.name,
+                    .isAi         = !dbPlayer.account.has_value(),
+                    .attachedShip = attachedShip};
 }
 
 auto AsteroidProps::toAsteroidData() const -> AsteroidData

@@ -62,11 +62,10 @@ void EntityAddedMessageConsumer::handleShipAdded(const Uuid systemDbId,
 
   // Send a message to add the player to which the ship belong so that it can
   // be attached properly through the owner component.
-  const auto dbPlayer = m_loadingService->getPlayerById(shipData.dbShip.player);
+  const auto playerData = m_loadingService->getPlayerById(shipData.dbShip.player);
 
   auto playerAdded = std::make_unique<EntityAddedMessage>(systemDbId);
-  PlayerData playerData{.dbId = dbPlayer.id, .name = dbPlayer.name};
-  playerAdded->setPlayerData(playerData);
+  playerAdded->setPlayerData(playerData.toPlayerData());
   m_outputMessageQueue->pushMessage(std::move(playerAdded));
 
   auto shipAdded = std::make_unique<EntityAddedMessage>(systemDbId);

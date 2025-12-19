@@ -356,7 +356,7 @@ void LoadingMessagesConsumer::handleSystemPlayersLoading(const LoadingStartedMes
   std::transform(players.begin(),
                  players.end(),
                  std::back_inserter(playersData),
-                 [](const Player &player) { return toPlayerData(player); });
+                 [](const PlayerProps &props) { return props.toPlayerData(); });
 
   auto out = std::make_unique<PlayerListMessage>(systemDbId, playersData);
   out->copyClientIdIfDefined(message);

@@ -30,21 +30,28 @@ auto LoadingService::getDataForPlayer(const Uuid playerDbId) const -> PlayerDesc
   };
 }
 
-auto LoadingService::getPlayerById(const Uuid playerDbId) const -> Player
+auto LoadingService::getPlayerById(const Uuid playerDbId) const -> PlayerProps
 {
-  return m_repositories.playerRepository->findOneById(playerDbId);
+  const auto player = m_repositories.playerRepository->findOneById(playerDbId);
+  const auto role   = m_repositories.playerRoleRepository->findOneByPlayer(playerDbId);
+
+  return PlayerProps{
+    .dbPlayer     = player,
+    .attachedShip = role.targetShip,
+  };
 }
 
-auto LoadingService::getPlayersInSystem(const Uuid systemDbId) const -> std::vector<Player>
+auto LoadingService::getPlayersInSystem(const Uuid systemDbId) const -> std::vector<PlayerProps>
 {
   const auto playerIds = m_repositories.playerRepository->findAllBySystem(systemDbId);
 
-  std::vector<Player> players{};
+  std::vector<PlayerProps> players{};
 
   for (const auto &playerId : playerIds)
   {
     const auto player = m_repositories.playerRepository->findOneById(playerId);
-    players.emplace_back(player);
+    const auto role   = m_repositories.playerRoleRepository->findOneByPlayer(playerId);
+    players.emplace_back(player, role.targetShip);
   }
 
   return players;
