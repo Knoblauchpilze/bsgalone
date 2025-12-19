@@ -11,7 +11,7 @@ LoadingService::LoadingService(const Repositories &repositories,
   , m_entityMapper(entityMapper)
 {}
 
-auto LoadingService::getDataForPlayer(const Uuid playerDbId) const -> PlayerProps
+auto LoadingService::getDataForPlayer(const Uuid playerDbId) const -> PlayerDescription
 {
   const auto player = m_repositories.playerRepository->findOneById(playerDbId);
   const auto ship   = m_repositories.playerShipRepository->findOneByPlayerAndActive(playerDbId);
