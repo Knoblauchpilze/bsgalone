@@ -86,6 +86,12 @@ auto SystemService::sendPlayerBackToOutpost(const Uuid &playerDbId) const -> For
   m_repositories.playerShipRepository->save(ship);
   m_repositories.playerShipRepository->saveJump(ship.id, {});
 
+  // Reset the role so that the spot on a ship might be made available to other
+  // players.
+  auto playerRole = m_repositories.playerRoleRepository->findOneByPlayer(playerDbId);
+  playerRole.targetShip.reset();
+  m_repositories.playerRoleRepository->save(playerRole);
+
   return out;
 }
 
