@@ -188,8 +188,50 @@ void GameRoleUiHandler::initializeLayout()
 }
 
 namespace {
-constexpr auto JOIN_SHIP_BUTTON_TEXT   = "Join";
-constexpr auto JOINED_SHIP_BUTTON_TEXT = "Joined";
+constexpr auto JOIN_SHIP_BUTTON_TEXT        = "Join";
+constexpr auto JOINED_SHIP_BUTTON_TEXT      = "Joined";
+constexpr auto UNAVAILABLE_SHIP_BUTTON_TEXT = "Unavailable";
+
+/// @brief - Tries to find the player attached to a ship. This function will traverse
+/// the list of ship and try to find one that is attached to the provided ship.
+/// @param shipDbId - the identifier of the ship to find
+/// @param players - the list of players potentially attached to the ship
+/// @return - an optional value representing (when filled) the player attached to the
+/// ship.
+auto tryFindPlayerForShip(const bsgo::Uuid shipDbId, const std::vector<bsgo::PlayerData> &players)
+  -> std::optional<bsgo::PlayerData>
+{
+  const auto maybePlayer = std::find_if(players.begin(),
+                                        players.end(),
+                                        [shipDbId](const bsgo::PlayerData &playerData) {
+                                          return playerData.attachedShip
+                                                 && *playerData.attachedShip == shipDbId;
+                                        });
+
+  if (maybePlayer == players.end())
+  {
+    return {};
+  }
+
+  return *maybePlayer;
+}
+
+/// @brief - Used to determine the text to show on the join ship button.
+/// @param joined - whether or not somebody joined this ship
+/// @param playerJoined - whether or not the player currently logged in joined the ship
+/// @return - the text to display on the join ship button.
+auto determineButtonText(const bool joined, const bool playerJoined) -> std::string
+{
+  if (!joined)
+  {
+    return JOIN_SHIP_BUTTON_TEXT;
+  }
+  if (playerJoined)
+  {
+    return JOINED_SHIP_BUTTON_TEXT;
+  }
+  return UNAVAILABLE_SHIP_BUTTON_TEXT;
+}
 } // namespace
 
 void GameRoleUiHandler::updateShipMenus()
@@ -203,15 +245,16 @@ void GameRoleUiHandler::updateShipMenus()
   auto shipIndex = 0;
   for (auto &shipData : m_shipsData)
   {
-    shipData.button->setText(JOIN_SHIP_BUTTON_TEXT);
+    const auto maybeOwner = tryFindPlayerForShip(shipData.shipDbId, players);
 
-    const auto joined = player.attachedShip && *player.attachedShip == shipData.shipDbId;
+    const auto joined       = maybeOwner.has_value();
+    const auto playerJoined = maybeOwner && maybeOwner->dbId == player.dbId;
 
     shipData.button->setEnabled(!joined);
     shipData.button->setHighlightable(!joined);
     shipData.state   = joined ? State::JOINED : State::TO_JOIN;
     const auto color = joined ? colors::DARK_GREY : colors::DARK_GREEN;
-    const auto text  = joined ? JOINED_SHIP_BUTTON_TEXT : JOIN_SHIP_BUTTON_TEXT;
+    const auto text  = determineButtonText(joined, playerJoined);
     shipData.button->setText(text);
     shipData.button->updateBgColor(color);
 
