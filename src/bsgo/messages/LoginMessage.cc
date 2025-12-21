@@ -8,10 +8,8 @@ LoginMessage::LoginMessage()
   : ValidatableMessage(MessageType::LOGIN)
 {}
 
-LoginMessage::LoginMessage(const std::string &name, const std::string &password, const GameRole role)
+LoginMessage::LoginMessage(const GameRole role)
   : ValidatableMessage(MessageType::LOGIN)
-  , m_name(name)
-  , m_password(password)
   , m_role(role)
 {}
 
@@ -20,7 +18,7 @@ auto LoginMessage::getUserName() const -> std::string
   return m_name;
 }
 
-auto LoginMessage::getUserPassword() const -> std::string
+auto LoginMessage::getPassword() const -> std::string
 {
   return m_password;
 }
@@ -30,14 +28,34 @@ auto LoginMessage::getGameRole() const -> GameRole
   return m_role;
 }
 
-auto LoginMessage::getPlayerDbId() const -> std::optional<Uuid>
+auto LoginMessage::tryGetPlayerDbId() const -> std::optional<Uuid>
 {
   return m_playerDbId;
+}
+
+auto LoginMessage::tryGetSystemDbId() const -> std::optional<Uuid>
+{
+  return m_systemDbId;
+}
+
+void LoginMessage::setUserName(const std::string &userName)
+{
+  m_name = userName;
+}
+
+void LoginMessage::setPassword(const std::string &password)
+{
+  m_password = password;
 }
 
 void LoginMessage::setPlayerDbId(const Uuid playerDbId)
 {
   m_playerDbId = playerDbId;
+}
+
+void LoginMessage::setSystemDbId(const Uuid systemDbId)
+{
+  m_systemDbId = systemDbId;
 }
 
 bool LoginMessage::successfullyLoggedIn() const
@@ -56,6 +74,7 @@ auto LoginMessage::serialize(std::ostream &out) const -> std::ostream &
   core::serialize(out, m_role);
 
   core::serialize(out, m_playerDbId);
+  core::serialize(out, m_systemDbId);
 
   return out;
 }
@@ -72,16 +91,23 @@ bool LoginMessage::deserialize(std::istream &in)
   ok &= core::deserialize(in, m_role);
 
   ok &= core::deserialize(in, m_playerDbId);
+  ok &= core::deserialize(in, m_systemDbId);
 
   return ok;
 }
 
 auto LoginMessage::clone() const -> IMessagePtr
 {
-  auto clone = std::make_unique<LoginMessage>(m_name, m_password, m_role);
+  auto clone = std::make_unique<LoginMessage>(m_role);
+  clone->setUserName(m_name);
+  clone->setPassword(m_password);
   if (m_playerDbId)
   {
     clone->setPlayerDbId(*m_playerDbId);
+  }
+  if (m_systemDbId)
+  {
+    clone->setSystemDbId(*m_systemDbId);
   }
   clone->copyClientIdIfDefined(*this);
   clone->validate(validated());

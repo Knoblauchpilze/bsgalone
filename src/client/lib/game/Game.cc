@@ -275,7 +275,9 @@ void Game::onConnectedToServer(const bsgo::Uuid clientId)
 
   if (m_userName && m_password && m_gameRole)
   {
-    auto login = std::make_unique<bsgo::LoginMessage>(*m_userName, *m_password, *m_gameRole);
+    auto login = std::make_unique<bsgo::LoginMessage>(*m_gameRole);
+    login->setUserName(*m_userName);
+    login->setPassword(*m_password);
     login->setClientId(clientId);
     m_outputMessageQueue->pushMessage(std::move(login));
   }

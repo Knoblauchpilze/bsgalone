@@ -150,7 +150,10 @@ void PlayerView::tryLogin(const std::string &name,
                           const std::string &password,
                           const bsgo::GameRole role) const
 {
-  m_outputMessageQueue->pushMessage(std::make_unique<bsgo::LoginMessage>(name, password, role));
+  auto out = std::make_unique<bsgo::LoginMessage>(role);
+  out->setUserName(name);
+  out->setPassword(password);
+  m_outputMessageQueue->pushMessage(std::move(out));
 }
 
 void PlayerView::tryLogout() const

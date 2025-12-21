@@ -11,20 +11,22 @@ void assertMessagesAreEqual(const LoginMessage &actual, const LoginMessage &expe
 {
   EXPECT_EQ(actual.type(), expected.type());
   EXPECT_EQ(actual.getUserName(), expected.getUserName());
-  EXPECT_EQ(actual.getUserPassword(), expected.getUserPassword());
+  EXPECT_EQ(actual.getPassword(), expected.getPassword());
   EXPECT_EQ(actual.getGameRole(), expected.getGameRole());
-  EXPECT_EQ(actual.getPlayerDbId(), expected.getPlayerDbId());
+  EXPECT_EQ(actual.tryGetPlayerDbId(), expected.tryGetPlayerDbId());
+  EXPECT_EQ(actual.tryGetSystemDbId(), expected.tryGetSystemDbId());
   EXPECT_EQ(actual.tryGetClientId(), expected.tryGetClientId());
   EXPECT_EQ(actual.validated(), expected.validated());
 }
 } // namespace
 
-TEST(Unit_Bsgo_Serialization_LoginMessage, OverridesPlayerDbId)
+TEST(Unit_Bsgo_Serialization_LoginMessage, ClearsPlayerCredentials)
 {
-  const LoginMessage expected("some-name", "some-password", GameRole::GUNNER);
-  LoginMessage actual("other-name", "secure-password", GameRole::PILOT);
-  actual.setPlayerDbId(Uuid{4});
-  actual.validate();
+  LoginMessage expected(GameRole::GUNNER);
+
+  LoginMessage actual(GameRole::PILOT);
+  actual.setUserName("other-name");
+  actual.setPassword("secure-password");
 
   serializeAndDeserializeMessage(expected, actual);
 
@@ -33,10 +35,45 @@ TEST(Unit_Bsgo_Serialization_LoginMessage, OverridesPlayerDbId)
 
 TEST(Unit_Bsgo_Serialization_LoginMessage, ClearsPlayerDbId)
 {
-  LoginMessage expected("some-name", "some-password", GameRole::PILOT);
-  expected.setPlayerDbId(Uuid{4});
-  LoginMessage actual("other-name", "secure-password", GameRole::GUNNER);
+  LoginMessage expected(GameRole::GUNNER);
+  expected.setUserName("some-name");
+  expected.setPassword("some-password");
+
+  LoginMessage actual(GameRole::PILOT);
+  actual.setUserName("other-name");
+  actual.setPassword("secure-password");
+  actual.setPlayerDbId(Uuid{4});
   actual.validate();
+
+  serializeAndDeserializeMessage(expected, actual);
+
+  assertMessagesAreEqual(actual, expected);
+}
+
+TEST(Unit_Bsgo_Serialization_LoginMessage, OverridesPlayerDbId)
+{
+  LoginMessage expected(GameRole::PILOT);
+  expected.setUserName("some-name");
+  expected.setPassword("some-password");
+  expected.setPlayerDbId(Uuid{4});
+
+  LoginMessage actual(GameRole::GUNNER);
+  actual.setUserName("other-name");
+  actual.setPassword("secure-password");
+  actual.validate();
+
+  serializeAndDeserializeMessage(expected, actual);
+
+  assertMessagesAreEqual(actual, expected);
+}
+
+TEST(Unit_Bsgo_Serialization_LoginMessage, OverridesSystemDbId)
+{
+  LoginMessage expected(GameRole::GUNNER);
+  expected.setSystemDbId(Uuid{17});
+
+  LoginMessage actual(GameRole::PILOT);
+  actual.setSystemDbId(Uuid{31});
 
   serializeAndDeserializeMessage(expected, actual);
 
@@ -45,10 +82,14 @@ TEST(Unit_Bsgo_Serialization_LoginMessage, ClearsPlayerDbId)
 
 TEST(Unit_Bsgo_Serialization_LoginMessage, PreservesValidatedStatus)
 {
-  LoginMessage expected("some-name", "some-password", GameRole::GUNNER);
+  LoginMessage expected(GameRole::GUNNER);
+  expected.setUserName("some-name");
+  expected.setPassword("some-password");
   expected.validate();
-  LoginMessage actual("other-name", "secure-password", GameRole::GUNNER);
-  actual.setPlayerDbId(Uuid{4});
+
+  LoginMessage actual(GameRole::GUNNER);
+  actual.setUserName("other-name");
+  actual.setPassword("secure-password");
 
   serializeAndDeserializeMessage(expected, actual);
 
@@ -57,10 +98,14 @@ TEST(Unit_Bsgo_Serialization_LoginMessage, PreservesValidatedStatus)
 
 TEST(Unit_Bsgo_Serialization_LoginMessage, WithClientId)
 {
-  LoginMessage expected("some-name", "some-password", GameRole::PILOT);
-  expected.setPlayerDbId(Uuid{14});
+  LoginMessage expected(GameRole::PILOT);
+  expected.setUserName("some-name");
+  expected.setPassword("some-password");
   expected.setClientId(Uuid{119});
-  LoginMessage actual("other-name", "secure-password", GameRole::PILOT);
+
+  LoginMessage actual(GameRole::PILOT);
+  actual.setUserName("other-name");
+  actual.setPassword("secure-password");
 
   serializeAndDeserializeMessage(expected, actual);
 
@@ -69,7 +114,10 @@ TEST(Unit_Bsgo_Serialization_LoginMessage, WithClientId)
 
 TEST(Unit_Bsgo_Serialization_LoginMessage, Clone)
 {
-  LoginMessage expected("some-name", "some-password", GameRole::GUNNER);
+  LoginMessage expected(GameRole::GUNNER);
+  expected.setUserName("some-name");
+  expected.setPassword("some-password");
+  expected.setClientId(Uuid{119});
   expected.setPlayerDbId(Uuid{14});
 
   const auto cloned = expected.clone();
