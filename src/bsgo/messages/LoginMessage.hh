@@ -14,15 +14,19 @@ class LoginMessage : public ValidatableMessage
 {
   public:
   LoginMessage();
-  LoginMessage(const std::string &name, const std::string &password, const GameRole role);
+  LoginMessage(const GameRole role);
   ~LoginMessage() override = default;
 
   auto getUserName() const -> std::string;
-  auto getUserPassword() const -> std::string;
+  auto getPassword() const -> std::string;
   auto getGameRole() const -> GameRole;
-  auto getPlayerDbId() const -> std::optional<Uuid>;
+  auto tryGetPlayerDbId() const -> std::optional<Uuid>;
+  auto tryGetSystemDbId() const -> std::optional<Uuid>;
 
+  void setUserName(const std::string &userName);
+  void setPassword(const std::string &password);
   void setPlayerDbId(const Uuid playerDbId);
+  void setSystemDbId(const Uuid systemDbId);
 
   bool successfullyLoggedIn() const;
 
@@ -37,6 +41,7 @@ class LoginMessage : public ValidatableMessage
   GameRole m_role{};
 
   std::optional<Uuid> m_playerDbId{};
+  std::optional<Uuid> m_systemDbId{};
 };
 
 } // namespace bsgo
