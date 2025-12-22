@@ -16,6 +16,9 @@ class LogoutMessage : public ValidatableMessage
 
   auto getPlayerDbId() const -> Uuid;
   bool shouldCloseConnection() const;
+  auto tryGetSystemDbId() const -> std::optional<Uuid>;
+
+  void setSystemDbId(const Uuid systemDbId);
 
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
@@ -25,6 +28,8 @@ class LogoutMessage : public ValidatableMessage
   private:
   Uuid m_playerDbId{};
   bool m_closeConnection{};
+
+  std::optional<Uuid> m_systemDbId{};
 };
 
 } // namespace bsgo
