@@ -11,6 +11,6 @@ enum class ConnectionType
   CLIENT
 };
 
-auto str(const ConnectionType &type) -> std::string;
+auto str(const ConnectionType type) -> std::string;
 
 } // namespace net

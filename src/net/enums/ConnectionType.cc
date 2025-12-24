@@ -3,7 +3,7 @@
 
 namespace net {
 
-auto str(const ConnectionType &type) -> std::string
+auto str(const ConnectionType type) -> std::string
 {
   switch (type)
   {
