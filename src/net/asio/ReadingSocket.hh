@@ -15,6 +15,7 @@ class ReadingSocket : public core::CoreObject, public std::enable_shared_from_th
   ReadingSocket(SocketShPtr socket);
   ~ReadingSocket() override = default;
 
+  void connect();
   auto read() -> std::vector<char>;
 
   private:
@@ -30,5 +31,7 @@ class ReadingSocket : public core::CoreObject, public std::enable_shared_from_th
   void onDataReceived(const std::error_code code, const std::size_t contentLength);
   void copyTempDataToReceivedData(const std::size_t contentLength);
 };
+
+using ReadingSocketShPtr = std::shared_ptr<ReadingSocket>;
 
 } // namespace net::details

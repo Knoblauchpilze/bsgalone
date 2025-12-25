@@ -7,13 +7,15 @@ namespace net::details {
 AsioSocket::AsioSocket(SocketShPtr socket)
   : ISocket()
   , m_socket(socket)
-  , m_reader(socket)
-  , m_writer(socket)
+  , m_reader(std::make_shared<ReadingSocket>(socket))
+  , m_writer(std::make_shared<WritingSocket>(socket))
 {
   if (m_socket == nullptr)
   {
     throw std::invalid_argument("Expected non null asio socket");
   }
+
+  m_reader->connect();
 }
 
 auto AsioSocket::endpoint() const -> std::string
@@ -34,12 +36,12 @@ void AsioSocket::close()
 
 void AsioSocket::send(std::vector<char> bytes)
 {
-  m_writer.send(std::move(bytes));
+  m_writer->send(std::move(bytes));
 }
 
 auto AsioSocket::read() -> std::vector<char>
 {
-  return m_reader.read();
+  return m_reader->read();
 }
 
 } // namespace net::details
