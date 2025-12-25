@@ -23,8 +23,8 @@ class AsioSocket : public ISocket
 
   protected:
   SocketShPtr m_socket{};
-  ReadingSocket m_reader;
-  WritingSocket m_writer;
+  ReadingSocketShPtr m_reader{};
+  WritingSocketShPtr m_writer{};
 };
 
 } // namespace net::details

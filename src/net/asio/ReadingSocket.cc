@@ -2,6 +2,8 @@
 #include "ReadingSocket.hh"
 #include "AsioUtils.hh"
 
+#include <iostream>
+
 namespace net::details {
 // Maximum amount of bytes that can be read at once.
 constexpr auto KILOBYTES                              = 1'024;
@@ -12,17 +14,29 @@ ReadingSocket::ReadingSocket(SocketShPtr socket)
   , m_socket(std::move(socket))
   , m_incomingDataTempBuffer(INCOMING_DATA_MAX_BUFFER_SIZE_IN_BYTES, 0)
 {
+  std::cout << "[reading socket] reading socket constructor\n";
   setService("socket");
+}
+
+void ReadingSocket::connect()
+{
+  std::cout << "[reading socket] connecting reading socket in class\n";
+  registerReadingTaskToAsio();
+  std::cout << "[reading socket] connected reading socket\n";
 }
 
 auto ReadingSocket::read() -> std::vector<char>
 {
+  std::cout << "[reading socket] reading socket read\n";
   const std::lock_guard guard(m_inboxLock);
 
+  std::cout << "[reading socket] getting inbox data\n";
   std::vector<char> out{};
   out.reserve(m_inbox.size());
 
   std::copy(m_inbox.begin(), m_inbox.end(), std::back_inserter(out));
+
+  std::cout << "[reading socket] got " << out.size() << " byte(s)\n";
 
   return out;
 }
@@ -48,6 +62,7 @@ void ReadingSocket::onDataReceived(const std::error_code code, const std::size_t
     return;
   }
 
+  std::cout << "[reading socket] reading socket received " << contentLength << "byte(s)\n";
   verbose("Received " + std::to_string(contentLength) + " byte(s) on "
           + str(m_socket->remote_endpoint()));
 
