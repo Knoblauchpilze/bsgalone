@@ -62,12 +62,14 @@ void ReadingSocket::onDataReceived(const std::error_code code, const std::size_t
     return;
   }
 
-  std::cout << "[reading socket] reading socket received " << contentLength << "byte(s)\n";
+  std::cout << "[reading socket] reading socket received " << contentLength << " byte(s)\n";
   verbose("Received " + std::to_string(contentLength) + " byte(s) on "
           + str(m_socket->remote_endpoint()));
 
   copyTempDataToReceivedData(contentLength);
+  std::cout << "[reading socket] done copying data to local array\n";
   registerReadingTaskToAsio();
+  std::cout << "[reading socket] registered to asio again\n";
 }
 
 void ReadingSocket::copyTempDataToReceivedData(const std::size_t contentLength)
