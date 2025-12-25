@@ -6,7 +6,6 @@ using namespace ::testing;
 
 namespace net::details {
 namespace {
-
 class SocketConnector : public std::enable_shared_from_this<SocketConnector>
 {
   public:
@@ -16,7 +15,9 @@ class SocketConnector : public std::enable_shared_from_this<SocketConnector>
   auto connect(asio::io_context &context, const int port) -> SocketShPtr
   {
     std::cout << "[connector] creating socket\n";
-    auto socket = std::make_shared<asio::ip::tcp::socket>(context);
+    asio::ip::tcp::socket socket(context);
+    auto out = std::make_shared<asio::ip::tcp::socket>(std::move(socket));
+
     asio::ip::tcp::resolver resolver(context);
     auto endpoints = resolver.resolve("127.0.0.1", std::to_string(port));
 
@@ -24,7 +25,7 @@ class SocketConnector : public std::enable_shared_from_this<SocketConnector>
     auto result = m_connected.get_future();
 
     std::cout << "[connector] async connect\n";
-    asio::async_connect(*socket,
+    asio::async_connect(*out,
                         endpoints,
                         std::bind(&SocketConnector::onConnectionEstablished,
                                   shared_from_this(),
@@ -35,7 +36,7 @@ class SocketConnector : public std::enable_shared_from_this<SocketConnector>
     result.get();
     std::cout << "[connector] got future\n";
 
-    return socket;
+    return out;
   }
 
   private:
@@ -70,7 +71,7 @@ class TestTcpServer : public std::enable_shared_from_this<TestTcpServer>
     std::cout << "[tcp server] destroyed\n";
   }
 
-  void setup()
+  void registerAccept()
   {
     std::cout << "[tcp server] starting acceptor\n";
     m_acceptor.async_accept(std::bind(&TestTcpServer::onConnectionRequest,
@@ -91,7 +92,10 @@ class TestTcpServer : public std::enable_shared_from_this<TestTcpServer>
     }
 
     std::cout << "[tcp server] creating thread\n";
-    m_contextThread = std::thread([this]() { m_context.run(); });
+    m_contextThread = std::thread([this]() {
+      m_context.run();
+      std::cout << "[tcp server] Ran out of work!!\n";
+    });
     std::cout << "[tcp server] thread created\n";
   }
 
@@ -137,13 +141,14 @@ class TestTcpServer : public std::enable_shared_from_this<TestTcpServer>
 
     std::cout << "[tcp server] received connection\n";
     m_sockets.push_back(std::make_shared<asio::ip::tcp::socket>(std::move(socket)));
+    registerAccept();
   }
 };
 
 auto createTestTcpServer(const int port) -> std::shared_ptr<TestTcpServer>
 {
   auto server = std::make_shared<TestTcpServer>(port);
-  server->setup();
+  server->registerAccept();
   server->start();
   return server;
 }
@@ -204,6 +209,7 @@ class DataSender : public std::enable_shared_from_this<DataSender>
 
   void onDataSent(const std::error_code code, const std::size_t contentLength)
   {
+    std::cout << "[data sender] received some info for send\n";
     if (code)
     {
       FAIL() << "Received error when sending data to socket: " << code.message() << "/"
@@ -233,7 +239,7 @@ TEST(Unit_Net_Asio_ReadingSocket, ReturnsReceivedData)
   auto asioSocket = server->getSocket();
 
   std::cout << "[test] creating reading socket in test body\n";
-  auto socket = std::make_shared<ReadingSocket>(asioSocket);
+  auto socket = std::make_shared<ReadingSocket>(std::move(asioSocket));
   std::cout << "[test] connecting reading socket\n";
   socket->connect();
   std::cout << "[test] socket created\n";
@@ -242,6 +248,8 @@ TEST(Unit_Net_Asio_ReadingSocket, ReturnsReceivedData)
   auto sender = createDataSender(data);
   std::cout << "[test] sending data to socket out of " << server->m_sockets.size() << "\n";
   sender->handle(*server->m_sockets.front());
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
   std::cout << "[test] socket read\n";
   const auto actual = socket->read();
