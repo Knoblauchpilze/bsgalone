@@ -21,6 +21,8 @@ class AsioNetFixture : public ::testing::Test
   auto connect() -> net::SocketShPtr;
   auto socket(const std::size_t index) -> net::SocketShPtr;
 
+  void waitForABit();
+
   private:
   TestTcpServerShPtr m_server{};
 };
