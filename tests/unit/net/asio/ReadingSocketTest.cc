@@ -44,7 +44,7 @@ TEST_F(Unit_Net_Asio_ReadingSocket, ReturnsReceivedData)
   EXPECT_EQ(expected, actual);
 }
 
-TEST_F(Unit_Net_Asio_ReadingSocket, ThrowsErrorWhenSocketIsDisconnected)
+TEST_F(Unit_Net_Asio_ReadingSocket, ThrowsErrorWhenClientSocketIsClosed)
 {
   auto asioSocket = this->connect();
   asioSocket->close();
@@ -56,7 +56,7 @@ TEST_F(Unit_Net_Asio_ReadingSocket, ThrowsErrorWhenSocketIsDisconnected)
   EXPECT_THROW([&socket] { socket->read(); }(), core::CoreException);
 }
 
-TEST_F(Unit_Net_Asio_ReadingSocket, FailsToReconnectWhenSocketIsClosed)
+TEST_F(Unit_Net_Asio_ReadingSocket, FailsToReconnectWhenClientSocketIsClosed)
 {
   auto asioSocket = this->connect();
   asioSocket->close();
@@ -65,6 +65,16 @@ TEST_F(Unit_Net_Asio_ReadingSocket, FailsToReconnectWhenSocketIsClosed)
   this->waitForABit();
 
   EXPECT_THROW([&socket] { socket->connect(); }(), core::CoreException);
+}
+
+TEST_F(Unit_Net_Asio_ReadingSocket, ThrowsErrorWhenServerSocketIsClosed)
+{
+  auto socket = createReadingSocket(this->connect());
+  this->socket(0)->close();
+
+  this->waitForABit();
+
+  EXPECT_THROW([&socket] { socket->read(); }(), core::CoreException);
 }
 
 } // namespace net::details
