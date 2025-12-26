@@ -41,7 +41,7 @@ void DataSender::onDataSent(const std::error_code code, const std::size_t conten
   std::cout << "[data sender] received some info for send\n";
   if (code)
   {
-    throw std::runtime_error("Received code " + std::to_string(code.value()) + "(message: \""
+    throw std::runtime_error("Received code " + std::to_string(code.value()) + " (message: \""
                              + code.message() + "\") while sending data");
   }
   if (contentLength != m_bytes.size())

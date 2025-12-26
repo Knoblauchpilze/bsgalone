@@ -2,7 +2,6 @@
 #pragma once
 
 #include "SocketPtr.hh"
-#include <asio.hpp>
 #include <atomic>
 #include <memory>
 
@@ -20,6 +19,7 @@ class TestTcpServer : public std::enable_shared_from_this<TestTcpServer>
   void registerAccept();
 
   void start();
+  void stop();
   auto connect() -> net::SocketShPtr;
   auto socket(const std::size_t index) -> net::SocketShPtr;
 
@@ -37,7 +37,6 @@ class TestTcpServer : public std::enable_shared_from_this<TestTcpServer>
 
   std::vector<net::SocketShPtr> m_sockets{};
 
-  void stop();
   void onConnectionRequest(const std::error_code code, asio::ip::tcp::socket socket);
 };
 

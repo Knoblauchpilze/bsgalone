@@ -2,7 +2,6 @@
 #pragma once
 
 #include "SocketPtr.hh"
-#include <asio.hpp>
 #include <memory>
 
 namespace test {
