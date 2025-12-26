@@ -52,6 +52,23 @@ void TestTcpServer::start()
   std::cout << "[tcp server] thread created\n";
 }
 
+void TestTcpServer::stop()
+{
+  auto expected = true;
+  if (!m_running.compare_exchange_strong(expected, false))
+  {
+    std::cout << "[tcp server] not started\n";
+    throw std::runtime_error(
+      "Got unexpected state for TCP server, did you forget to call the start method?");
+  }
+
+  std::cout << "[tcp server] stopping\n";
+  m_context.stop();
+  std::cout << "[tcp server] joining\n";
+  m_contextThread.join();
+  std::cout << "[tcp server] done\n";
+}
+
 auto TestTcpServer::connect() -> net::SocketShPtr
 {
   auto connector = std::make_shared<SocketConnector>();
@@ -77,28 +94,11 @@ auto TestTcpServer::create() -> TestTcpServerShPtr
   return server;
 }
 
-void TestTcpServer::stop()
-{
-  auto expected = true;
-  if (!m_running.compare_exchange_strong(expected, false))
-  {
-    std::cout << "[tcp server] not started\n";
-    throw std::runtime_error(
-      "Got unexpected state for TCP server, did you forget to call the start method?");
-  }
-
-  std::cout << "[tcp server] stopping\n";
-  m_context.stop();
-  std::cout << "[tcp server] joining\n";
-  m_contextThread.join();
-  std::cout << "[tcp server] done\n";
-}
-
 void TestTcpServer::onConnectionRequest(const std::error_code code, asio::ip::tcp::socket socket)
 {
   if (code)
   {
-    throw std::runtime_error("Received code " + std::to_string(code.value()) + "(message: \""
+    throw std::runtime_error("Received code " + std::to_string(code.value()) + " (message: \""
                              + code.message() + "\") while processing incoming connection");
   }
 
