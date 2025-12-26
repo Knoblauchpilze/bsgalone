@@ -8,11 +8,13 @@
 
 namespace test {
 
-TestTcpServer::TestTcpServer(const int port)
-  : m_port(port)
-  , m_acceptor(m_context, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port))
+std::atomic_int TestTcpServer::NEXT_PORT{3000};
+
+TestTcpServer::TestTcpServer()
+  : m_port(NEXT_PORT.fetch_add(1))
+  , m_acceptor(m_context, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), m_port))
 {
-  std::cout << "[tcp server] constructor\n";
+  std::cout << "[tcp server] constructor with port " << m_port << "\n";
 }
 
 TestTcpServer::~TestTcpServer()
@@ -67,9 +69,9 @@ auto TestTcpServer::socket(const std::size_t index) -> net::SocketShPtr
   return m_sockets[index];
 }
 
-auto TestTcpServer::create(const int port) -> TestTcpServerShPtr
+auto TestTcpServer::create() -> TestTcpServerShPtr
 {
-  auto server = std::make_shared<TestTcpServer>(port);
+  auto server = std::make_shared<TestTcpServer>();
   server->registerAccept();
   server->start();
   return server;

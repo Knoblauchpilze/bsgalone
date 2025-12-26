@@ -3,6 +3,7 @@
 
 #include "SocketPtr.hh"
 #include <asio.hpp>
+#include <atomic>
 #include <memory>
 
 namespace test {
@@ -13,7 +14,7 @@ using TestTcpServerShPtr = std::shared_ptr<TestTcpServer>;
 class TestTcpServer : public std::enable_shared_from_this<TestTcpServer>
 {
   public:
-  TestTcpServer(const int port);
+  TestTcpServer();
   ~TestTcpServer();
 
   void registerAccept();
@@ -22,9 +23,11 @@ class TestTcpServer : public std::enable_shared_from_this<TestTcpServer>
   auto connect() -> net::SocketShPtr;
   auto socket(const std::size_t index) -> net::SocketShPtr;
 
-  static auto create(const int port) -> TestTcpServerShPtr;
+  static auto create() -> TestTcpServerShPtr;
 
   private:
+  static std::atomic_int NEXT_PORT;
+
   int m_port{};
   asio::io_context m_context{};
   asio::ip::tcp::acceptor m_acceptor;
