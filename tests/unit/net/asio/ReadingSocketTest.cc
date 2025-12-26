@@ -1,8 +1,6 @@
 
 #include "ReadingSocket.hh"
 #include "AsioNetFixture.hh"
-#include "DataSender.hh"
-#include "TestTcpServer.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
@@ -34,9 +32,7 @@ TEST_F(Unit_Net_Asio_ReadingSocket, ReturnsReceivedData)
   auto socket = createReadingSocket(this->connect());
 
   std::string data("test");
-  auto sender = DataSender::create(data);
-  sender->writeTo(*this->socket(0));
-  this->waitForABit();
+  this->writeTo(0, data);
 
   const auto actual = socket->read();
 
