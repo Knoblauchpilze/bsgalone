@@ -13,8 +13,18 @@ WritingSocket::WritingSocket(SocketShPtr socket)
 
 void WritingSocket::send(std::vector<char> bytes)
 {
+  if (!m_socketActive.load())
+  {
+    error("Cannot write to closed socket");
+  }
+
   pushMessageToOutbox(bytes);
   registerWritingTaskToAsio();
+}
+
+auto WritingSocket::fromSocket(SocketShPtr socket) -> WritingSocketShPtr
+{
+  return std::make_shared<WritingSocket>(std::move(socket));
 }
 
 void WritingSocket::pushMessageToOutbox(std::vector<char> bytes)
@@ -57,7 +67,8 @@ void WritingSocket::onDataSent(const std::error_code code, const std::size_t con
     warn("Error detected when sending data on connection",
          code.message() + " (code: " + std::to_string(code.value()) + ")");
 
-    m_socket->close();
+    m_socketActive.store(false);
+
     return;
   }
 
