@@ -8,7 +8,7 @@ AsioSocket::AsioSocket(SocketShPtr socket)
   : ISocket()
   , m_socket(socket)
   , m_reader(ReadingSocket::fromSocket(socket))
-  , m_writer(std::make_shared<WritingSocket>(socket))
+  , m_writer(WritingSocket::fromSocket(socket))
 {
   if (m_socket == nullptr)
   {
