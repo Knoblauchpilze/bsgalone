@@ -9,6 +9,9 @@
 
 namespace net::details {
 
+class ReadingSocket;
+using ReadingSocketShPtr = std::shared_ptr<ReadingSocket>;
+
 class ReadingSocket : public core::CoreObject, public std::enable_shared_from_this<ReadingSocket>
 {
   public:
@@ -18,8 +21,11 @@ class ReadingSocket : public core::CoreObject, public std::enable_shared_from_th
   void connect();
   auto read() -> std::vector<char>;
 
+  static auto fromSocket(SocketShPtr socket) -> ReadingSocketShPtr;
+
   private:
   SocketShPtr m_socket{};
+  std::atomic_bool m_socketActive{true};
 
   std::vector<char> m_incomingDataTempBuffer{};
 
@@ -31,7 +37,5 @@ class ReadingSocket : public core::CoreObject, public std::enable_shared_from_th
   void onDataReceived(const std::error_code code, const std::size_t contentLength);
   void copyTempDataToReceivedData(const std::size_t contentLength);
 };
-
-using ReadingSocketShPtr = std::shared_ptr<ReadingSocket>;
 
 } // namespace net::details

@@ -7,7 +7,7 @@ namespace net::details {
 AsioSocket::AsioSocket(SocketShPtr socket)
   : ISocket()
   , m_socket(socket)
-  , m_reader(std::make_shared<ReadingSocket>(socket))
+  , m_reader(ReadingSocket::fromSocket(socket))
   , m_writer(std::make_shared<WritingSocket>(socket))
 {
   if (m_socket == nullptr)

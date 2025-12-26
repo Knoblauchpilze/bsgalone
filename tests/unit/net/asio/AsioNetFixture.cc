@@ -1,5 +1,6 @@
 
 #include "AsioNetFixture.hh"
+#include <chrono>
 
 namespace test {
 
@@ -21,6 +22,11 @@ auto AsioNetFixture::connect() -> net::SocketShPtr
 auto AsioNetFixture::socket(const std::size_t index) -> net::SocketShPtr
 {
   return m_server->socket(index);
+}
+
+void AsioNetFixture::waitForABit()
+{
+  std::this_thread::sleep_for(std::chrono::milliseconds(50));
 }
 
 } // namespace test
