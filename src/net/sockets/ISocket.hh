@@ -44,7 +44,7 @@ class ISocket
   /// The send operation is asynchronous: this means that there's no way to know
   /// when the data was actually sent.
   /// @param bytes - the data to transmit
-  virtual void send(const std::vector<char> &bytes) = 0;
+  virtual void send(std::vector<char> bytes) = 0;
 
   /// @brief - Returns the data read from the remote host. This operation is not
   /// polling data directly from the host: instead, it returns any pending data
@@ -57,7 +57,7 @@ class ISocket
   /// The calling code should call `connect` before attempting to read data as
   /// data can only be received after connecting to the remote host.
   /// @return - the data received from the host since the last call to `read`
-  virtual auto read() const -> std::vector<char> = 0;
+  virtual auto read() -> std::vector<char> = 0;
 };
 
 } // namespace net
