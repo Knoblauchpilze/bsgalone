@@ -70,10 +70,14 @@ TEST_F(Unit_Net_Asio_AsioSocket, ReturnsConnectedWhenSocketIsHealthy)
 
 TEST_F(Unit_Net_Asio_AsioSocket, ReturnsDisconnectedWhenSocketIsClosed)
 {
+  std::cout << "[test] creating and connecting socket\n";
   auto socket = createAsioSocket(this->connect());
+  std::cout << "[test] closing server socket\n";
   this->socket(0)->close();
+  std::cout << "[test] waiting for a bit\n";
   this->waitForABit();
 
+  std::cout << "[test] check\n";
   EXPECT_FALSE(socket->isConnected());
 }
 

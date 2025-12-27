@@ -37,6 +37,7 @@ class WritingSocket : public core::CoreObject, public std::enable_shared_from_th
   std::deque<MessageToSendPtr> m_outbox{};
 
   void pushMessageToOutbox(std::vector<char> bytes);
+  bool checkConnectivity();
   void registerWritingTaskToAsio();
 
   void onDataSent(const std::error_code &code, const std::size_t contentLength);

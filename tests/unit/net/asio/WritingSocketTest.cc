@@ -48,4 +48,16 @@ TEST_F(Unit_Net_Asio_WritingSocket, ThrowsErrorOnSecondWriteWhenClientSocketIsCl
   EXPECT_THROW([&socket] { socket->send({}); }(), core::CoreException);
 }
 
+TEST_F(Unit_Net_Asio_WritingSocket, ThrowsErrorOnSecondWriteWhenServerSocketIsClosed)
+{
+  auto socket = WritingSocket::fromSocket(this->connect());
+  this->socket(0)->close();
+
+  std::string data("test");
+  sendData(*socket, data);
+  this->waitForABit();
+
+  EXPECT_THROW([&socket] { socket->send({}); }(), core::CoreException);
+}
+
 } // namespace net::details
