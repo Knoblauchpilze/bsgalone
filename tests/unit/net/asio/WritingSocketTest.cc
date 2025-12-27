@@ -27,9 +27,10 @@ TEST_F(Unit_Net_Asio_WritingSocket, SendsDataToSocket)
   sendData(*socket, data);
   this->waitForABit();
 
-  const auto expected = reader->read();
+  const auto actual = reader->read();
 
-  EXPECT_FALSE(expected.empty());
+  std::vector<char> expected(data.begin(), data.end());
+  EXPECT_EQ(expected, actual);
 }
 
 TEST_F(Unit_Net_Asio_WritingSocket, ThrowsErrorOnSecondWriteWhenClientSocketIsClosed)
