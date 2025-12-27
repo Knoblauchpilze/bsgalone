@@ -1,9 +1,6 @@
 
 #include "SocketConnector.hh"
 
-// TODO: Should be removed.
-#include <iostream>
-
 namespace test {
 
 auto SocketConnector::connect(asio::io_context &context, const int port) -> net::SocketShPtr
