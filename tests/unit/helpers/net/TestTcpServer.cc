@@ -3,9 +3,6 @@
 #include "SocketConnector.hh"
 #include <stdexcept>
 
-// TODO: Should be removed.
-#include <iostream>
-
 namespace test {
 
 std::atomic_int TestTcpServer::NEXT_PORT{3000};
@@ -13,25 +10,19 @@ std::atomic_int TestTcpServer::NEXT_PORT{3000};
 TestTcpServer::TestTcpServer()
   : m_port(NEXT_PORT.fetch_add(1))
   , m_acceptor(m_context, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), m_port))
-{
-  std::cout << "[tcp server] constructor with port " << m_port << "\n";
-}
+{}
 
 TestTcpServer::~TestTcpServer()
 {
-  std::cout << "[tcp server] destructor\n";
   stop();
-  std::cout << "[tcp server] destroyed\n";
 }
 
 void TestTcpServer::registerAccept()
 {
-  std::cout << "[tcp server] starting acceptor\n";
   m_acceptor.async_accept(std::bind(&TestTcpServer::onConnectionRequest,
                                     shared_from_this(),
                                     std::placeholders::_1,
                                     std::placeholders::_2));
-  std::cout << "[tcp server] accepting\n";
 }
 
 auto TestTcpServer::port() const -> int
@@ -44,17 +35,11 @@ void TestTcpServer::start()
   auto expected = false;
   if (!m_running.compare_exchange_strong(expected, true))
   {
-    std::cout << "[tcp server] already started\n";
     throw std::runtime_error(
       "Got unexpected state for TCP server, did you already call the start method?");
   }
 
-  std::cout << "[tcp server] creating thread\n";
-  m_contextThread = std::thread([this]() {
-    m_context.run();
-    std::cout << "[tcp server] Ran out of work!!\n";
-  });
-  std::cout << "[tcp server] thread created\n";
+  m_contextThread = std::thread([this]() { m_context.run(); });
 }
 
 void TestTcpServer::stop()
@@ -62,16 +47,12 @@ void TestTcpServer::stop()
   auto expected = true;
   if (!m_running.compare_exchange_strong(expected, false))
   {
-    std::cout << "[tcp server] not started\n";
     throw std::runtime_error(
       "Got unexpected state for TCP server, did you forget to call the start method?");
   }
 
-  std::cout << "[tcp server] stopping\n";
   m_context.stop();
-  std::cout << "[tcp server] joining\n";
   m_contextThread.join();
-  std::cout << "[tcp server] done\n";
 }
 
 auto TestTcpServer::connect() -> net::SocketShPtr
@@ -107,7 +88,6 @@ void TestTcpServer::onConnectionRequest(const std::error_code &code, asio::ip::t
                              + code.message() + "\") while processing incoming connection");
   }
 
-  std::cout << "[tcp server] received connection\n";
   m_sockets.push_back(std::make_shared<asio::ip::tcp::socket>(std::move(socket)));
   registerAccept();
 }
