@@ -25,6 +25,11 @@ void sendData(AsioSocket &socket, const std::string &data)
 }
 } // namespace
 
+TEST_F(Unit_Net_Asio_AsioSocket, ThrowsExceptionWhenSocketIsNull)
+{
+  EXPECT_THROW([]() { std::make_unique<AsioSocket>(nullptr); }(), std::invalid_argument);
+}
+
 TEST_F(Unit_Net_Asio_AsioSocket, ReturnsNothingWhenNoDataReceived)
 {
   auto socket = createAsioSocket(this->connect());
@@ -68,7 +73,17 @@ TEST_F(Unit_Net_Asio_AsioSocket, ReturnsConnectedWhenSocketIsHealthy)
   EXPECT_TRUE(socket->isConnected());
 }
 
-TEST_F(Unit_Net_Asio_AsioSocket, ReturnsDisconnectedWhenSocketIsClosed)
+TEST_F(Unit_Net_Asio_AsioSocket, ReturnsDisconnectedWhenClientSocketIsClosed)
+{
+  auto rawSocket = this->connect();
+  rawSocket->close();
+  auto socket = createAsioSocket(std::move(rawSocket));
+  this->waitForABit();
+
+  EXPECT_FALSE(socket->isConnected());
+}
+
+TEST_F(Unit_Net_Asio_AsioSocket, ReturnsDisconnectedWhenServerSocketIsClosed)
 {
   std::cout << "[test] creating and connecting socket\n";
   auto socket = createAsioSocket(this->connect());
@@ -93,13 +108,23 @@ TEST_F(Unit_Net_Asio_AsioSocket, ReturnsEndpointAsString)
   EXPECT_EQ("OFF-N/A", socket->endpoint());
 }
 
+TEST_F(Unit_Net_Asio_AsioSocket, ReturnsEndpointAlsoWhenClientSocketIsClosed)
+{
+  auto rawSocket = this->connect();
+  rawSocket->close();
+  auto socket = createAsioSocket(std::move(rawSocket));
+  this->waitForABit();
+
+  EXPECT_EQ("OFF-N/A", socket->endpoint());
+}
+
 TEST_F(Unit_Net_Asio_AsioSocket, ReturnsEndpointAlsoWhenServerSocketIsClosed)
 {
   auto socket = createAsioSocket(this->connect());
   this->socket(0)->close();
   this->waitForABit();
 
-  const auto expected = std::format("ON-127.0.0.1:{}", std::to_string(this->port()));
+  const auto expected = std::format("OFF-127.0.0.1:{}", std::to_string(this->port()));
   EXPECT_EQ(expected, socket->endpoint());
 }
 } // namespace net::details

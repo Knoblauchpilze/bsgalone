@@ -28,13 +28,22 @@ auto AsioSocket::endpoint() const -> std::string
 {
   const auto connected = isConnected();
   const auto status    = (connected ? "ON" : "OFF");
-  const auto client    = (connected ? net::str(m_socket->remote_endpoint()) : "N/A");
-  return std::format("{}-{}", status, client);
+
+  std::error_code code;
+  const auto endpoint = m_socket->remote_endpoint(code);
+  if (code)
+  {
+    return std::format("{}-N/A", status);
+  }
+  else
+  {
+    return std::format("{}-{}", status, net::str(endpoint));
+  }
 }
 
 bool AsioSocket::isConnected() const
 {
-  return m_socket->is_open();
+  return m_socket->is_open() && m_reader->isConnected() && m_writer->isConnected();
 }
 
 void AsioSocket::close()
