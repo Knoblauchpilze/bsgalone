@@ -1,13 +1,13 @@
 
 #include "ReadingSocket.hh"
-#include "AsioNetFixture.hh"
+#include "AsioServerFixture.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
 using namespace test;
 
 namespace net::details {
-using Unit_Net_Sockets_ReadingSocket = AsioNetFixture;
+using Unit_Net_Sockets_ReadingSocket = AsioServerFixture;
 
 namespace {
 auto createReadingSocket(net::SocketShPtr asioSocket) -> ReadingSocketShPtr

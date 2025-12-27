@@ -7,11 +7,11 @@
 
 namespace test {
 
-class AsioNetFixture : public ::testing::Test
+class AsioServerFixture : public ::testing::Test
 {
   public:
-  AsioNetFixture()           = default;
-  ~AsioNetFixture() override = default;
+  AsioServerFixture()           = default;
+  ~AsioServerFixture() override = default;
 
   // https://google.github.io/googletest/primer.html#same-data-multiple-tests
   protected:
