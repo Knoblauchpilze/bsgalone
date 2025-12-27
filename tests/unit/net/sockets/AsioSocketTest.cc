@@ -1,6 +1,6 @@
 
 #include "AsioSocket.hh"
-#include "AsioNetFixture.hh"
+#include "AsioServerFixture.hh"
 #include "DataReader.hh"
 #include <gtest/gtest.h>
 
@@ -8,7 +8,7 @@ using namespace ::testing;
 using namespace test;
 
 namespace net::details {
-using Unit_Net_Sockets_AsioSocket = AsioNetFixture;
+using Unit_Net_Sockets_AsioSocket = AsioServerFixture;
 
 namespace {
 auto createAsioSocket(net::SocketShPtr asioSocket) -> AsioSocketPtr
