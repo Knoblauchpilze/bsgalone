@@ -25,7 +25,7 @@ class DataReader : public std::enable_shared_from_this<DataReader>
   std::vector<char> m_incomingDataTempBuffer{};
   std::mutex m_inboxLock{};
 
-  void onDataReceived(const std::error_code code, const std::size_t contentLength);
+  void onDataReceived(const std::error_code &code, const std::size_t contentLength);
   void registerRead();
 };
 

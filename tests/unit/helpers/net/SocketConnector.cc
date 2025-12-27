@@ -38,7 +38,7 @@ auto SocketConnector::create() -> SocketConnectorShPtr
   return std::make_shared<SocketConnector>();
 }
 
-void SocketConnector::onConnectionEstablished(const std::error_code code,
+void SocketConnector::onConnectionEstablished(const std::error_code &code,
                                               const asio::ip::tcp::endpoint & /*endpoint*/)
 {
   if (code)

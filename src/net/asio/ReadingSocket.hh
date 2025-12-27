@@ -34,7 +34,7 @@ class ReadingSocket : public core::CoreObject, public std::enable_shared_from_th
 
   void registerReadingTaskToAsio();
 
-  void onDataReceived(const std::error_code code, const std::size_t contentLength);
+  void onDataReceived(const std::error_code &code, const std::size_t contentLength);
   void copyTempDataToReceivedData(const std::size_t contentLength);
 };
 

@@ -22,7 +22,7 @@ class SocketConnector : public std::enable_shared_from_this<SocketConnector>
   private:
   std::promise<bool> m_connected{};
 
-  void onConnectionEstablished(const std::error_code code,
+  void onConnectionEstablished(const std::error_code &code,
                                const asio::ip::tcp::endpoint & /*endpoint*/);
 };
 

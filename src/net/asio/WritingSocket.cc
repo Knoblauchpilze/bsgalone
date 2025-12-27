@@ -60,7 +60,7 @@ void WritingSocket::registerWritingTaskToAsio()
   m_writingTaskRegistered = true;
 }
 
-void WritingSocket::onDataSent(const std::error_code code, const std::size_t contentLength)
+void WritingSocket::onDataSent(const std::error_code &code, const std::size_t contentLength)
 {
   if (code)
   {
