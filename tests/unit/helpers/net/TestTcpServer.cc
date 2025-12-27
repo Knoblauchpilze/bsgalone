@@ -34,6 +34,11 @@ void TestTcpServer::registerAccept()
   std::cout << "[tcp server] accepting\n";
 }
 
+auto TestTcpServer::port() const -> int
+{
+  return m_port;
+}
+
 void TestTcpServer::start()
 {
   auto expected = false;

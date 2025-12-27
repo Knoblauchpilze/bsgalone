@@ -18,6 +18,7 @@ class TestTcpServer : public std::enable_shared_from_this<TestTcpServer>
 
   void registerAccept();
 
+  auto port() const -> int;
   void start();
   void stop();
   auto connect() -> net::SocketShPtr;

@@ -80,6 +80,22 @@ TEST_F(Unit_Net_Asio_AsioSocket, ReturnsDisconnectedWhenSocketIsClosed)
 TEST_F(Unit_Net_Asio_AsioSocket, ReturnsEndpointAsString)
 {
   auto socket = createAsioSocket(this->connect());
-  EXPECT_EQ("foo", socket->endpoint());
+
+  const auto expected = std::format("ON-127.0.0.1:{}", std::to_string(this->port()));
+  EXPECT_EQ(expected, socket->endpoint());
+
+  socket->close();
+
+  EXPECT_EQ("OFF-N/A", socket->endpoint());
+}
+
+TEST_F(Unit_Net_Asio_AsioSocket, ReturnsEndpointAlsoWhenServerSocketIsClosed)
+{
+  auto socket = createAsioSocket(this->connect());
+  this->socket(0)->close();
+  this->waitForABit();
+
+  const auto expected = std::format("ON-127.0.0.1:{}", std::to_string(this->port()));
+  EXPECT_EQ(expected, socket->endpoint());
 }
 } // namespace net::details

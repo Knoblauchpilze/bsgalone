@@ -26,8 +26,10 @@ auto AsioSocket::create(asio::ip::tcp::socket socket) -> AsioSocketPtr
 
 auto AsioSocket::endpoint() const -> std::string
 {
-  const auto connected = isConnected() ? "ON" : "OFF";
-  return (connected ? "N/A" : str(m_socket->remote_endpoint()));
+  const auto connected = isConnected();
+  const auto status    = (connected ? "ON" : "OFF");
+  const auto client    = (connected ? net::str(m_socket->remote_endpoint()) : "N/A");
+  return std::format("{}-{}", status, client);
 }
 
 bool AsioSocket::isConnected() const
