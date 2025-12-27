@@ -7,22 +7,17 @@ namespace test {
 
 void AsioNetFixture::SetUp()
 {
-  std::cout << "[fixture] creating tcp server\n";
   m_server = TestTcpServer::create();
-  std::cout << "[fixture] fixture initialized\n";
 }
 
 void AsioNetFixture::TearDown()
 {
-  std::cout << "[fixture] tearing down\n";
   m_server->stop();
   m_server.reset();
-  std::cout << "[fixture] fixture destroyed\n";
 }
 
 auto AsioNetFixture::connect() -> net::SocketShPtr
 {
-  std::cout << "[fixture] connecting to server\n";
   return m_server->connect();
 }
 

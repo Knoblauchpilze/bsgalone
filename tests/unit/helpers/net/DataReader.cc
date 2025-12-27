@@ -1,9 +1,6 @@
 
 #include "DataReader.hh"
 
-// TODO: Should be removed.
-#include <iostream>
-
 namespace test {
 
 constexpr auto TEMP_BUFFER_SIZE_IN_BYTES = 10;
@@ -15,10 +12,8 @@ DataReader::DataReader(net::SocketShPtr socket)
 
 auto DataReader::create(net::SocketShPtr socket) -> DataReaderShPtr
 {
-  std::cout << "[data reader] registering read on creation\n";
   auto reader = std::make_shared<DataReader>(socket);
   reader->registerRead();
-  std::cout << "[data reader] done registering read on creation\n";
   return reader;
 }
 
@@ -30,7 +25,6 @@ auto DataReader::read() -> std::vector<char>
 
 void DataReader::onDataReceived(const std::error_code &code, const std::size_t contentLength)
 {
-  std::cout << "[data reader] received " << contentLength << " byte(s)\n";
   if (code)
   {
     if (code != asio::error::eof)
@@ -45,14 +39,11 @@ void DataReader::onDataReceived(const std::error_code &code, const std::size_t c
             std::begin(m_incomingDataTempBuffer) + contentLength,
             std::back_inserter(m_inbox));
 
-  std::cout << "[data reader] total content is " << m_inbox.size() << " byte(s)\n";
-
   registerRead();
 }
 
 void DataReader::registerRead()
 {
-  std::cout << "[data reader] registering read\n";
   m_socket->async_read_some(asio::buffer(m_incomingDataTempBuffer.data(),
                                          m_incomingDataTempBuffer.size()),
                             std::bind(&DataReader::onDataReceived,
