@@ -18,6 +18,8 @@ class WritingSocket : public core::CoreObject, public std::enable_shared_from_th
   WritingSocket(SocketShPtr socket);
   ~WritingSocket() override = default;
 
+  bool isConnected() const;
+
   void send(std::vector<char> bytes);
 
   static auto fromSocket(SocketShPtr socket) -> WritingSocketShPtr;
