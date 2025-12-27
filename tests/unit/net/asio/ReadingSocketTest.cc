@@ -66,11 +66,39 @@ TEST_F(Unit_Net_Asio_ReadingSocket, FailsToReconnectWhenClientSocketIsClosed)
 TEST_F(Unit_Net_Asio_ReadingSocket, ThrowsErrorWhenServerSocketIsClosed)
 {
   auto socket = createReadingSocket(this->connect());
-  this->socket(0)->close();
 
+  this->socket(0)->close();
   this->waitForABit();
 
   EXPECT_THROW([&socket] { socket->read(); }(), core::CoreException);
+}
+
+TEST_F(Unit_Net_Asio_ReadingSocket, ReturnsConnectedWhenSocketIsHealthy)
+{
+  auto socket = createReadingSocket(this->connect());
+
+  EXPECT_TRUE(socket->isConnected());
+}
+
+TEST_F(Unit_Net_Asio_ReadingSocket, ReturnsDisconnectedWhenClientSocketIsClosed)
+{
+  auto asioSocket = this->connect();
+  asioSocket->close();
+  auto socket = createReadingSocket(std::move(asioSocket));
+
+  this->waitForABit();
+
+  EXPECT_FALSE(socket->isConnected());
+}
+
+TEST_F(Unit_Net_Asio_ReadingSocket, ReturnsDisconnectedWhenServerSocketIsClosed)
+{
+  auto socket = createReadingSocket(this->connect());
+
+  this->socket(0)->close();
+  this->waitForABit();
+
+  EXPECT_FALSE(socket->isConnected());
 }
 
 } // namespace net::details

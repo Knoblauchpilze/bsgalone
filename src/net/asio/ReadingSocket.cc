@@ -15,9 +15,14 @@ ReadingSocket::ReadingSocket(SocketShPtr socket)
   setService("socket");
 }
 
+bool ReadingSocket::isConnected() const
+{
+  return m_socketActive.load();
+}
+
 void ReadingSocket::connect()
 {
-  if (!m_socketActive.load())
+  if (!isConnected())
   {
     error("Cannot connect closed socket");
   }
@@ -27,7 +32,7 @@ void ReadingSocket::connect()
 
 auto ReadingSocket::read() -> std::vector<char>
 {
-  if (!m_socketActive.load())
+  if (!isConnected())
   {
     error("Cannot read from closed socket");
   }

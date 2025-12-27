@@ -18,6 +18,8 @@ class ReadingSocket : public core::CoreObject, public std::enable_shared_from_th
   ReadingSocket(SocketShPtr socket);
   ~ReadingSocket() override = default;
 
+  bool isConnected() const;
+
   void connect();
   auto read() -> std::vector<char>;
 

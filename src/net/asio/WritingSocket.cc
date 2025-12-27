@@ -13,9 +13,14 @@ WritingSocket::WritingSocket(SocketShPtr socket)
   setService("socket");
 }
 
+bool WritingSocket::isConnected() const
+{
+  return m_socketActive.load();
+}
+
 void WritingSocket::send(std::vector<char> bytes)
 {
-  if (!m_socketActive.load())
+  if (!isConnected())
   {
     error("Cannot write to closed socket");
   }
@@ -41,7 +46,7 @@ void WritingSocket::pushMessageToOutbox(std::vector<char> bytes)
 
 bool WritingSocket::checkConnectivity()
 {
-  if (!m_socketActive.load())
+  if (!isConnected())
   {
     return false;
   }

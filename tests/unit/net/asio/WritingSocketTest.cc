@@ -60,4 +60,34 @@ TEST_F(Unit_Net_Asio_WritingSocket, ThrowsErrorOnSecondWriteWhenServerSocketIsCl
   EXPECT_THROW([&socket] { socket->send({}); }(), core::CoreException);
 }
 
+TEST_F(Unit_Net_Asio_WritingSocket, ReturnsConnectedWhenSocketIsHealthy)
+{
+  auto socket = WritingSocket::fromSocket(this->connect());
+
+  EXPECT_TRUE(socket->isConnected());
+}
+
+TEST_F(Unit_Net_Asio_WritingSocket, ReturnsDisconnectedWhenClientSocketIsClosedAndAfterSendAttempt)
+{
+  auto asioSocket = this->connect();
+  asioSocket->close();
+  auto socket = WritingSocket::fromSocket(std::move(asioSocket));
+
+  sendData(*socket, "test");
+  this->waitForABit();
+
+  EXPECT_FALSE(socket->isConnected());
+}
+
+TEST_F(Unit_Net_Asio_WritingSocket, ReturnsDisconnectedWhenServerSocketIsClosedAndAfterSendAttempt)
+{
+  auto socket = WritingSocket::fromSocket(this->connect());
+  this->socket(0)->close();
+
+  sendData(*socket, "test");
+  this->waitForABit();
+
+  EXPECT_FALSE(socket->isConnected());
+}
+
 } // namespace net::details
