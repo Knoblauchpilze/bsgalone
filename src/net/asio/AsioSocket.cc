@@ -18,6 +18,12 @@ AsioSocket::AsioSocket(SocketShPtr socket)
   m_reader->connect();
 }
 
+auto AsioSocket::create(asio::ip::tcp::socket socket) -> AsioSocketPtr
+{
+  auto shSocket = std::make_shared<asio::ip::tcp::socket>(std::move(socket));
+  return std::make_unique<AsioSocket>(std::move(shSocket));
+}
+
 auto AsioSocket::endpoint() const -> std::string
 {
   const auto connected = isConnected() ? "ON" : "OFF";
@@ -32,6 +38,11 @@ bool AsioSocket::isConnected() const
 void AsioSocket::close()
 {
   m_socket->close();
+}
+
+void AsioSocket::connect()
+{
+  m_reader->connect();
 }
 
 void AsioSocket::send(std::vector<char> bytes)

@@ -1,0 +1,85 @@
+
+#include "AsioSocket.hh"
+#include "AsioNetFixture.hh"
+#include "DataReader.hh"
+#include <gtest/gtest.h>
+
+using namespace ::testing;
+using namespace test;
+
+namespace net::details {
+using Unit_Net_Asio_AsioSocket = AsioNetFixture;
+
+namespace {
+auto createAsioSocket(net::SocketShPtr asioSocket) -> AsioSocketPtr
+{
+  auto socket = std::make_unique<AsioSocket>(std::move(asioSocket));
+  socket->connect();
+  return socket;
+}
+
+void sendData(AsioSocket &socket, const std::string &data)
+{
+  std::vector<char> rawData{data.begin(), data.end()};
+  socket.send(rawData);
+}
+} // namespace
+
+TEST_F(Unit_Net_Asio_AsioSocket, ReturnsNothingWhenNoDataReceived)
+{
+  auto socket = createAsioSocket(this->connect());
+
+  const auto actual = socket->read();
+
+  EXPECT_TRUE(actual.empty());
+}
+
+TEST_F(Unit_Net_Asio_AsioSocket, ReturnsDataWhenReceivedSomething)
+{
+  auto socket = createAsioSocket(this->connect());
+
+  std::string data("test");
+  this->writeTo(0, data);
+
+  const auto actual = socket->read();
+
+  std::vector<char> expected(data.begin(), data.end());
+  EXPECT_EQ(expected, actual);
+}
+
+TEST_F(Unit_Net_Asio_AsioSocket, SendsDataToSocket)
+{
+  auto socket = createAsioSocket(this->connect());
+  auto reader = DataReader::create(this->socket(0));
+
+  std::string data("test");
+  sendData(*socket, data);
+  this->waitForABit();
+
+  const auto actual = reader->read();
+
+  std::vector<char> expected(data.begin(), data.end());
+  EXPECT_EQ(expected, actual);
+}
+
+TEST_F(Unit_Net_Asio_AsioSocket, ReturnsConnectedWhenSocketIsHealthy)
+{
+  auto socket = createAsioSocket(this->connect());
+  EXPECT_TRUE(socket->isConnected());
+}
+
+TEST_F(Unit_Net_Asio_AsioSocket, ReturnsDisconnectedWhenSocketIsClosed)
+{
+  auto socket = createAsioSocket(this->connect());
+  this->socket(0)->close();
+  this->waitForABit();
+
+  EXPECT_FALSE(socket->isConnected());
+}
+
+TEST_F(Unit_Net_Asio_AsioSocket, ReturnsEndpointAsString)
+{
+  auto socket = createAsioSocket(this->connect());
+  EXPECT_EQ("foo", socket->endpoint());
+}
+} // namespace net::details
