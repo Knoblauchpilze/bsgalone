@@ -1,6 +1,5 @@
 
 #include "AsioNetFixture.hh"
-#include "DataReader.hh"
 #include "DataSender.hh"
 #include <chrono>
 
