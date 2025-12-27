@@ -7,7 +7,7 @@ using namespace ::testing;
 using namespace test;
 
 namespace net::details {
-using Unit_Net_Asio_ReadingSocket = AsioNetFixture;
+using Unit_Net_Sockets_ReadingSocket = AsioNetFixture;
 
 namespace {
 auto createReadingSocket(net::SocketShPtr asioSocket) -> ReadingSocketShPtr
@@ -18,7 +18,7 @@ auto createReadingSocket(net::SocketShPtr asioSocket) -> ReadingSocketShPtr
 }
 } // namespace
 
-TEST_F(Unit_Net_Asio_ReadingSocket, ReturnsNothingWhenNoDataReceived)
+TEST_F(Unit_Net_Sockets_ReadingSocket, ReturnsNothingWhenNoDataReceived)
 {
   auto socket = createReadingSocket(this->connect());
 
@@ -27,7 +27,7 @@ TEST_F(Unit_Net_Asio_ReadingSocket, ReturnsNothingWhenNoDataReceived)
   EXPECT_TRUE(actual.empty());
 }
 
-TEST_F(Unit_Net_Asio_ReadingSocket, ReturnsReceivedData)
+TEST_F(Unit_Net_Sockets_ReadingSocket, ReturnsReceivedData)
 {
   auto socket = createReadingSocket(this->connect());
 
@@ -40,7 +40,7 @@ TEST_F(Unit_Net_Asio_ReadingSocket, ReturnsReceivedData)
   EXPECT_EQ(expected, actual);
 }
 
-TEST_F(Unit_Net_Asio_ReadingSocket, ThrowsErrorWhenClientSocketIsClosed)
+TEST_F(Unit_Net_Sockets_ReadingSocket, ThrowsErrorWhenClientSocketIsClosed)
 {
   auto asioSocket = this->connect();
   asioSocket->close();
@@ -52,7 +52,7 @@ TEST_F(Unit_Net_Asio_ReadingSocket, ThrowsErrorWhenClientSocketIsClosed)
   EXPECT_THROW([&socket] { socket->read(); }(), core::CoreException);
 }
 
-TEST_F(Unit_Net_Asio_ReadingSocket, FailsToReconnectWhenClientSocketIsClosed)
+TEST_F(Unit_Net_Sockets_ReadingSocket, FailsToReconnectWhenClientSocketIsClosed)
 {
   auto asioSocket = this->connect();
   asioSocket->close();
@@ -63,7 +63,7 @@ TEST_F(Unit_Net_Asio_ReadingSocket, FailsToReconnectWhenClientSocketIsClosed)
   EXPECT_THROW([&socket] { socket->connect(); }(), core::CoreException);
 }
 
-TEST_F(Unit_Net_Asio_ReadingSocket, ThrowsErrorWhenServerSocketIsClosed)
+TEST_F(Unit_Net_Sockets_ReadingSocket, ThrowsErrorWhenServerSocketIsClosed)
 {
   auto socket = createReadingSocket(this->connect());
 
@@ -73,14 +73,14 @@ TEST_F(Unit_Net_Asio_ReadingSocket, ThrowsErrorWhenServerSocketIsClosed)
   EXPECT_THROW([&socket] { socket->read(); }(), core::CoreException);
 }
 
-TEST_F(Unit_Net_Asio_ReadingSocket, ReturnsConnectedWhenSocketIsHealthy)
+TEST_F(Unit_Net_Sockets_ReadingSocket, ReturnsConnectedWhenSocketIsHealthy)
 {
   auto socket = createReadingSocket(this->connect());
 
   EXPECT_TRUE(socket->isConnected());
 }
 
-TEST_F(Unit_Net_Asio_ReadingSocket, ReturnsDisconnectedWhenClientSocketIsClosed)
+TEST_F(Unit_Net_Sockets_ReadingSocket, ReturnsDisconnectedWhenClientSocketIsClosed)
 {
   auto asioSocket = this->connect();
   asioSocket->close();
@@ -91,7 +91,7 @@ TEST_F(Unit_Net_Asio_ReadingSocket, ReturnsDisconnectedWhenClientSocketIsClosed)
   EXPECT_FALSE(socket->isConnected());
 }
 
-TEST_F(Unit_Net_Asio_ReadingSocket, ReturnsDisconnectedWhenServerSocketIsClosed)
+TEST_F(Unit_Net_Sockets_ReadingSocket, ReturnsDisconnectedWhenServerSocketIsClosed)
 {
   auto socket = createReadingSocket(this->connect());
 

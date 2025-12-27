@@ -8,7 +8,7 @@ using namespace ::testing;
 using namespace test;
 
 namespace net::details {
-using Unit_Net_Asio_WritingSocket = AsioNetFixture;
+using Unit_Net_Sockets_WritingSocket = AsioNetFixture;
 
 namespace {
 void sendData(WritingSocket &socket, const std::string &data)
@@ -18,7 +18,7 @@ void sendData(WritingSocket &socket, const std::string &data)
 }
 } // namespace
 
-TEST_F(Unit_Net_Asio_WritingSocket, SendsDataToSocket)
+TEST_F(Unit_Net_Sockets_WritingSocket, SendsDataToSocket)
 {
   auto socket = WritingSocket::fromSocket(this->connect());
   auto reader = DataReader::create(this->socket(0));
@@ -33,7 +33,7 @@ TEST_F(Unit_Net_Asio_WritingSocket, SendsDataToSocket)
   EXPECT_EQ(expected, actual);
 }
 
-TEST_F(Unit_Net_Asio_WritingSocket, ThrowsErrorOnSecondWriteWhenClientSocketIsClosed)
+TEST_F(Unit_Net_Sockets_WritingSocket, ThrowsErrorOnSecondWriteWhenClientSocketIsClosed)
 {
   auto asioSocket = this->connect();
   asioSocket->close();
@@ -48,7 +48,7 @@ TEST_F(Unit_Net_Asio_WritingSocket, ThrowsErrorOnSecondWriteWhenClientSocketIsCl
   EXPECT_THROW([&socket] { socket->send({}); }(), core::CoreException);
 }
 
-TEST_F(Unit_Net_Asio_WritingSocket, ThrowsErrorOnSecondWriteWhenServerSocketIsClosed)
+TEST_F(Unit_Net_Sockets_WritingSocket, ThrowsErrorOnSecondWriteWhenServerSocketIsClosed)
 {
   auto socket = WritingSocket::fromSocket(this->connect());
   this->socket(0)->close();
@@ -60,14 +60,15 @@ TEST_F(Unit_Net_Asio_WritingSocket, ThrowsErrorOnSecondWriteWhenServerSocketIsCl
   EXPECT_THROW([&socket] { socket->send({}); }(), core::CoreException);
 }
 
-TEST_F(Unit_Net_Asio_WritingSocket, ReturnsConnectedWhenSocketIsHealthy)
+TEST_F(Unit_Net_Sockets_WritingSocket, ReturnsConnectedWhenSocketIsHealthy)
 {
   auto socket = WritingSocket::fromSocket(this->connect());
 
   EXPECT_TRUE(socket->isConnected());
 }
 
-TEST_F(Unit_Net_Asio_WritingSocket, ReturnsDisconnectedWhenClientSocketIsClosedAndAfterSendAttempt)
+TEST_F(Unit_Net_Sockets_WritingSocket,
+       ReturnsDisconnectedWhenClientSocketIsClosedAndAfterSendAttempt)
 {
   auto asioSocket = this->connect();
   asioSocket->close();
@@ -79,7 +80,8 @@ TEST_F(Unit_Net_Asio_WritingSocket, ReturnsDisconnectedWhenClientSocketIsClosedA
   EXPECT_FALSE(socket->isConnected());
 }
 
-TEST_F(Unit_Net_Asio_WritingSocket, ReturnsDisconnectedWhenServerSocketIsClosedAndAfterSendAttempt)
+TEST_F(Unit_Net_Sockets_WritingSocket,
+       ReturnsDisconnectedWhenServerSocketIsClosedAndAfterSendAttempt)
 {
   auto socket = WritingSocket::fromSocket(this->connect());
   this->socket(0)->close();
