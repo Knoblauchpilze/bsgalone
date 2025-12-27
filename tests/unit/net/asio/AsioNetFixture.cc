@@ -31,6 +31,11 @@ auto AsioNetFixture::socket(const std::size_t index) -> net::SocketShPtr
   return m_server->socket(index);
 }
 
+auto AsioNetFixture::port() const -> int
+{
+  return m_server->port();
+}
+
 void AsioNetFixture::writeTo(const std::size_t index, const std::string &data)
 {
   auto sender = DataSender::create(data);
