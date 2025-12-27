@@ -56,7 +56,7 @@ void ReadingSocket::registerReadingTaskToAsio()
                                       std::placeholders::_2));
 }
 
-void ReadingSocket::onDataReceived(const std::error_code code, const std::size_t contentLength)
+void ReadingSocket::onDataReceived(const std::error_code &code, const std::size_t contentLength)
 {
   if (code)
   {

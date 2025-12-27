@@ -38,7 +38,7 @@ class TestTcpServer : public std::enable_shared_from_this<TestTcpServer>
 
   std::vector<net::SocketShPtr> m_sockets{};
 
-  void onConnectionRequest(const std::error_code code, asio::ip::tcp::socket socket);
+  void onConnectionRequest(const std::error_code &code, asio::ip::tcp::socket socket);
 };
 
 } // namespace test

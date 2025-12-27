@@ -27,7 +27,7 @@ class DataSender : public std::enable_shared_from_this<DataSender>
   std::vector<char> m_bytes{};
   std::promise<bool> m_sent{};
 
-  void onDataSent(const std::error_code code, const std::size_t contentLength);
+  void onDataSent(const std::error_code &code, const std::size_t contentLength);
 };
 
 } // namespace test

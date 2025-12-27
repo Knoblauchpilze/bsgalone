@@ -28,7 +28,7 @@ auto DataReader::read() -> std::vector<char>
   return m_inbox;
 }
 
-void DataReader::onDataReceived(const std::error_code code, const std::size_t contentLength)
+void DataReader::onDataReceived(const std::error_code &code, const std::size_t contentLength)
 {
   std::cout << "[data reader] received " << contentLength << " byte(s)\n";
   if (code)

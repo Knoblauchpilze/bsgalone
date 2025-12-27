@@ -36,7 +36,7 @@ auto DataSender::create(const std::string &data) -> DataSenderShPtr
   return std::make_shared<DataSender>(data);
 }
 
-void DataSender::onDataSent(const std::error_code code, const std::size_t contentLength)
+void DataSender::onDataSent(const std::error_code &code, const std::size_t contentLength)
 {
   std::cout << "[data sender] received some info for send\n";
   if (code)

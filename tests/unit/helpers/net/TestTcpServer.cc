@@ -99,7 +99,7 @@ auto TestTcpServer::create() -> TestTcpServerShPtr
   return server;
 }
 
-void TestTcpServer::onConnectionRequest(const std::error_code code, asio::ip::tcp::socket socket)
+void TestTcpServer::onConnectionRequest(const std::error_code &code, asio::ip::tcp::socket socket)
 {
   if (code)
   {
