@@ -8,6 +8,11 @@ ClientConnectedEvent::ClientConnectedEvent(const ClientId clientId)
   , m_clientId(clientId)
 {}
 
+auto ClientConnectedEvent::clientId() const -> ClientId
+{
+  return m_clientId;
+}
+
 auto ClientConnectedEvent::clone() const -> IEventPtr
 {
   return std::make_unique<ClientConnectedEvent>(m_clientId);

@@ -12,6 +12,8 @@ class ClientConnectedEvent : public IEvent
   ClientConnectedEvent(const ClientId clientId);
   ~ClientConnectedEvent() override = default;
 
+  auto clientId() const -> ClientId;
+
   auto clone() const -> IEventPtr override;
 
   private:
