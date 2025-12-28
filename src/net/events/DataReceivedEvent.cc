@@ -9,6 +9,16 @@ DataReceivedEvent::DataReceivedEvent(const ClientId clientId, std::vector<char> 
   , m_data(std::move(data))
 {}
 
+auto DataReceivedEvent::clientId() const -> ClientId
+{
+  return m_clientId;
+}
+
+auto DataReceivedEvent::data() const -> std::vector<char>
+{
+  return m_data;
+}
+
 auto DataReceivedEvent::clone() const -> IEventPtr
 {
   return std::make_unique<DataReceivedEvent>(m_clientId, m_data);

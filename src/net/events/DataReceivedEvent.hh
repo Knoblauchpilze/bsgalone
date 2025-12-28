@@ -13,6 +13,9 @@ class DataReceivedEvent : public IEvent
   DataReceivedEvent(const ClientId clientId, std::vector<char> data);
   ~DataReceivedEvent() override = default;
 
+  auto clientId() const -> ClientId;
+  auto data() const -> std::vector<char>;
+
   auto clone() const -> IEventPtr override;
 
   private:
