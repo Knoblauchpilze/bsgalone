@@ -29,7 +29,6 @@ class MessageProcessor : public core::CoreObject
 
   auto acquireAndClearMessages() -> std::deque<IMessagePtr>;
   void requeueMessages(std::deque<IMessagePtr> &&messages);
-  void processMessage(const IMessage &message);
 };
 
 } // namespace bsgo
