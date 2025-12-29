@@ -14,7 +14,7 @@ target_include_directories (integrationTests PUBLIC
 	)
 
 target_link_libraries (integrationTests
-	GTest::gtest_main
+	GTest::gtest
 	bsgalone-interface-test-library
 	core_lib
 	bsgo_lib
