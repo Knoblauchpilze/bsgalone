@@ -35,6 +35,7 @@ target_include_directories (unitTests PUBLIC
 
 target_link_libraries (unitTests
 	GTest::gtest_main
+	GTest::gmock_main
 	bsgalone-interface-test-library
 	core_lib
 	bsgo_lib
