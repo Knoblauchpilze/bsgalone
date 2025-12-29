@@ -101,6 +101,7 @@ apt-get install -y --no-install-recommends \
   libpqxx-dev \
   libeigen3-dev \
   libgtest-dev \
+  libgmock-dev \
   libx11-dev \
   libgl-dev \
   libpng-dev \
@@ -902,8 +903,9 @@ In this example the root node is a repeater: this is usually advised as then we 
 In the attack mode, the first thing is to pick a target: to that purpose the AI will scan its surroundings for a valid target. Two main results: success or failure.
 
 In case it succeeds, we continue to the next: the AI will try to fire at the target. This behavior itself is a composition of two nodes:
-* a `FireNode`, responsible to fire at the target when possible
-* a `FollowTargetNode` aiming at closing the distance to the target and bring it in firing range
+
+- a `FireNode`, responsible to fire at the target when possible
+- a `FollowTargetNode` aiming at closing the distance to the target and bring it in firing range
 
 In case the bot can't fire at the target the fallback node will attempt to get closer to the target. This can currently only succeed.
 
@@ -939,8 +941,9 @@ It keeps the reactions of the AI dynamic by codifying them into the structure of
 #### Data context
 
 The nodes are also given a data context as part of their `tick` method. This concept is described in more details in this [page](https://www.gamedeveloper.com/programming/behavior-trees-for-ai-how-they-work): the gist is that a map of key value pairs is given to the nodes so that they can:
-* persist information to be reused between operations
-* communicate information to other nodes
+
+- persist information to be reused between operations
+- communicate information to other nodes
 
 Additionally, this allows the caller (i.e. the `AiSystem`) to extract/inject information from/into the tree: by setting a key to a certain value, we can make nodes react to certain things.
 
