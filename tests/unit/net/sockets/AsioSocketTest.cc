@@ -8,7 +8,7 @@ using namespace ::testing;
 using namespace test;
 
 namespace net::details {
-using Unit_Net_Asio_AsioSocket = AsioNetFixture;
+using Unit_Net_Sockets_AsioSocket = AsioNetFixture;
 
 namespace {
 auto createAsioSocket(net::SocketShPtr asioSocket) -> AsioSocketPtr
@@ -25,12 +25,12 @@ void sendData(AsioSocket &socket, const std::string &data)
 }
 } // namespace
 
-TEST_F(Unit_Net_Asio_AsioSocket, ThrowsExceptionWhenSocketIsNull)
+TEST_F(Unit_Net_Sockets_AsioSocket, ThrowsExceptionWhenSocketIsNull)
 {
   EXPECT_THROW([]() { std::make_unique<AsioSocket>(nullptr); }(), std::invalid_argument);
 }
 
-TEST_F(Unit_Net_Asio_AsioSocket, ReturnsNothingWhenNoDataReceived)
+TEST_F(Unit_Net_Sockets_AsioSocket, ReturnsNothingWhenNoDataReceived)
 {
   auto socket = createAsioSocket(this->connect());
 
@@ -39,7 +39,7 @@ TEST_F(Unit_Net_Asio_AsioSocket, ReturnsNothingWhenNoDataReceived)
   EXPECT_TRUE(actual.empty());
 }
 
-TEST_F(Unit_Net_Asio_AsioSocket, ReturnsDataWhenReceivedSomething)
+TEST_F(Unit_Net_Sockets_AsioSocket, ReturnsDataWhenReceivedSomething)
 {
   auto socket = createAsioSocket(this->connect());
 
@@ -52,7 +52,7 @@ TEST_F(Unit_Net_Asio_AsioSocket, ReturnsDataWhenReceivedSomething)
   EXPECT_EQ(expected, actual);
 }
 
-TEST_F(Unit_Net_Asio_AsioSocket, SendsDataToSocket)
+TEST_F(Unit_Net_Sockets_AsioSocket, SendsDataToSocket)
 {
   auto socket = createAsioSocket(this->connect());
   auto reader = DataReader::create(this->socket(0));
@@ -67,13 +67,13 @@ TEST_F(Unit_Net_Asio_AsioSocket, SendsDataToSocket)
   EXPECT_EQ(expected, actual);
 }
 
-TEST_F(Unit_Net_Asio_AsioSocket, ReturnsConnectedWhenSocketIsHealthy)
+TEST_F(Unit_Net_Sockets_AsioSocket, ReturnsConnectedWhenSocketIsHealthy)
 {
   auto socket = createAsioSocket(this->connect());
   EXPECT_TRUE(socket->isConnected());
 }
 
-TEST_F(Unit_Net_Asio_AsioSocket, ReturnsDisconnectedWhenClientSocketIsClosed)
+TEST_F(Unit_Net_Sockets_AsioSocket, ReturnsDisconnectedWhenClientSocketIsClosed)
 {
   auto rawSocket = this->connect();
   rawSocket->close();
@@ -83,7 +83,7 @@ TEST_F(Unit_Net_Asio_AsioSocket, ReturnsDisconnectedWhenClientSocketIsClosed)
   EXPECT_FALSE(socket->isConnected());
 }
 
-TEST_F(Unit_Net_Asio_AsioSocket, ReturnsDisconnectedWhenServerSocketIsClosed)
+TEST_F(Unit_Net_Sockets_AsioSocket, ReturnsDisconnectedWhenServerSocketIsClosed)
 {
   auto socket = createAsioSocket(this->connect());
   this->socket(0)->close();
@@ -92,7 +92,7 @@ TEST_F(Unit_Net_Asio_AsioSocket, ReturnsDisconnectedWhenServerSocketIsClosed)
   EXPECT_FALSE(socket->isConnected());
 }
 
-TEST_F(Unit_Net_Asio_AsioSocket, ReturnsEndpointAsString)
+TEST_F(Unit_Net_Sockets_AsioSocket, ReturnsEndpointAsString)
 {
   auto socket = createAsioSocket(this->connect());
 
@@ -104,7 +104,7 @@ TEST_F(Unit_Net_Asio_AsioSocket, ReturnsEndpointAsString)
   EXPECT_EQ("OFF-N/A", socket->endpoint());
 }
 
-TEST_F(Unit_Net_Asio_AsioSocket, ReturnsEndpointAlsoWhenClientSocketIsClosed)
+TEST_F(Unit_Net_Sockets_AsioSocket, ReturnsEndpointAlsoWhenClientSocketIsClosed)
 {
   auto rawSocket = this->connect();
   rawSocket->close();
@@ -114,7 +114,7 @@ TEST_F(Unit_Net_Asio_AsioSocket, ReturnsEndpointAlsoWhenClientSocketIsClosed)
   EXPECT_EQ("OFF-N/A", socket->endpoint());
 }
 
-TEST_F(Unit_Net_Asio_AsioSocket, ReturnsEndpointAlsoWhenServerSocketIsClosed)
+TEST_F(Unit_Net_Sockets_AsioSocket, ReturnsEndpointAlsoWhenServerSocketIsClosed)
 {
   auto socket = createAsioSocket(this->connect());
   this->socket(0)->close();
