@@ -19,8 +19,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   libgl-dev=1.7.0-1build1 \
   libasio-dev=1:1.28.1-0.2 \
   libeigen3-dev=3.4.0-4build0.1 \
-  libpng-dev=1.6.43-5build1 \
+  libpng-dev=1.6.43-5ubuntu0.1 \
   libgtest-dev=1.14.0-1 \
+  libgmock-dev=1.14.0-1 \
   postgresql=16+257build1.1 \
   rsync=3.2.7-1ubuntu1.2 \
   lcov=2.0-4ubuntu2 \
