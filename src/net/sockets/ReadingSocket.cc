@@ -1,5 +1,6 @@
 
 #include "ReadingSocket.hh"
+#include "ClientDisconnectedEvent.hh"
 #include "DataReceivedEvent.hh"
 
 namespace net::details {
@@ -7,8 +8,9 @@ namespace net::details {
 constexpr auto KILOBYTES                              = 1'024;
 constexpr auto INCOMING_DATA_MAX_BUFFER_SIZE_IN_BYTES = 10 * KILOBYTES;
 
-ReadingSocket::ReadingSocket(SocketShPtr socket, IEventBus *eventBus)
+ReadingSocket::ReadingSocket(const ClientId clientId, SocketShPtr socket, IEventBus *eventBus)
   : core::CoreObject("reading")
+  , m_clientId(clientId)
   , m_socket(std::move(socket))
   , m_incomingDataTempBuffer(INCOMING_DATA_MAX_BUFFER_SIZE_IN_BYTES, 0)
   , m_eventBus(eventBus)
@@ -16,6 +18,10 @@ ReadingSocket::ReadingSocket(SocketShPtr socket, IEventBus *eventBus)
   setService("net");
   addModule("reading");
 
+  if (m_socket == nullptr)
+  {
+    throw std::invalid_argument("Expected non null socket");
+  }
   if (m_eventBus == nullptr)
   {
     throw std::invalid_argument("Expected non null event bus");
@@ -29,13 +35,13 @@ void ReadingSocket::connect()
     error("Cannot connect closed socket");
   }
 
-  // TODO: We should maybe prevent double registration
-  registerReadingTaskToAsio();
-}
+  bool expected{false};
+  if (!m_socketConnected.compare_exchange_strong(expected, true))
+  {
+    error("Cannot connect a socket twice");
+  }
 
-auto ReadingSocket::fromSocket(SocketShPtr socket, IEventBus *eventBus) -> ReadingSocketShPtr
-{
-  return std::make_shared<ReadingSocket>(std::move(socket), eventBus);
+  registerReadingTaskToAsio();
 }
 
 void ReadingSocket::registerReadingTaskToAsio()
@@ -56,6 +62,9 @@ void ReadingSocket::onDataReceived(const std::error_code &code, const std::size_
          code.message() + " (code: " + std::to_string(code.value()) + ")");
 
     m_socketActive.store(false);
+
+    auto event = std::make_unique<ClientDisconnectedEvent>(m_clientId);
+    m_eventBus->pushEvent(std::move(event));
 
     return;
   }
@@ -83,8 +92,7 @@ void ReadingSocket::publishDataReceivedEvent(const std::size_t contentLength)
             std::begin(m_incomingDataTempBuffer) + contentLength,
             std::back_inserter(data));
 
-  // TODO: Should include a client identifier
-  auto event = std::make_unique<DataReceivedEvent>(ClientId{0}, std::move(data));
+  auto event = std::make_unique<DataReceivedEvent>(m_clientId, std::move(data));
   m_eventBus->pushEvent(std::move(event));
 }
 
