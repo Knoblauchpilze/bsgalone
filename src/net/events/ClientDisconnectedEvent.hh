@@ -12,6 +12,8 @@ class ClientDisconnectedEvent : public IEvent
   ClientDisconnectedEvent(const ClientId clientId);
   ~ClientDisconnectedEvent() override = default;
 
+  auto clientId() const -> ClientId;
+
   auto clone() const -> IEventPtr override;
 
   private:
