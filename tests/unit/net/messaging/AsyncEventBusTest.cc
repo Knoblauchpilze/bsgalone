@@ -35,7 +35,9 @@ TEST(Unit_Net_Messaging_AsyncEventBus, RequiresNonNullWrappedEventBus)
 TEST(Unit_Net_Messaging_AsyncEventBus, DelegatesEmpty)
 {
   auto mock = std::make_unique<NiceMock<MockEventBus>>();
-  EXPECT_CALL(*mock, empty()).Times(1).WillOnce(Return(true));
+  // There can be more than one call as the async processing loop of the
+  // AsyncEventBus will also call `empty`.
+  EXPECT_CALL(*mock, empty()).Times(AtLeast(1)).WillOnce(Return(true));
 
   AsyncEventBus bus(std::move(mock));
 
