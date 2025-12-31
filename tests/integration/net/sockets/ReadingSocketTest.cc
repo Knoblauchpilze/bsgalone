@@ -4,70 +4,22 @@
 #include "DataReceivedEvent.hh"
 #include "IEventBus.hh"
 #include "TcpServerFixture.hh"
+#include "TestEventBus.hh"
 #include <deque>
 #include <gmock/gmock-matchers.h>
 #include <gtest/gtest.h>
 
+using namespace test;
 using namespace ::testing;
 
 namespace net::details {
-namespace {
-using Integration_Net_Sockets_ReadingSocket = test::TcpServerFixture;
-
-class DummyEventBus : public IEventBus
-{
-  public:
-  DummyEventBus()           = default;
-  ~DummyEventBus() override = default;
-
-  void pushEvent(IEventPtr event) override
-  {
-    m_events.push_back(std::move(event));
-    m_received.set_value(true);
-  }
-
-  void addListener(IEventListenerPtr /*listener*/) override
-  {
-    throw std::runtime_error("Unexpected call to addListener on DummyEventBus");
-  }
-
-  bool empty() override
-  {
-    throw std::runtime_error("Unexpected call to empty on DummyEventBus");
-  }
-
-  void processEvents() override
-  {
-    throw std::runtime_error("Unexpected call to processEvents on DummyEventBus");
-  }
-
-  /// @brief - Will block the calling thread until an event is received.
-  /// Calling this function multiple times before it returns will cause
-  /// undefined behavior.
-  /// @return - the received event
-  auto waitForEvent() -> IEventPtr
-  {
-    m_received         = std::promise<bool>();
-    auto eventReceived = m_received.get_future();
-
-    eventReceived.get();
-
-    auto event = std::move(m_events.at(0));
-    m_events.pop_front();
-    return event;
-  }
-
-  private:
-  std::promise<bool> m_received{};
-  std::deque<IEventPtr> m_events{};
-};
-} // namespace
+using Integration_Net_Sockets_ReadingSocket = TcpServerFixture;
 
 TEST_F(Integration_Net_Sockets_ReadingSocket, ThrowsWhenSocketIsNull)
 {
   EXPECT_THROW(
     [] {
-      DummyEventBus bus;
+      TestEventBus bus;
       ReadingSocket(ClientId{1}, nullptr, &bus);
     }(),
     std::invalid_argument);
@@ -83,7 +35,7 @@ TEST_F(Integration_Net_Sockets_ReadingSocket, ThrowsWhenEventBusIsNull)
 TEST_F(Integration_Net_Sockets_ReadingSocket, ThrowsWhenConnectingTwice)
 {
   auto tcpSocket = this->connect();
-  DummyEventBus bus;
+  TestEventBus bus;
   auto socket = std::make_shared<ReadingSocket>(ClientId{1}, tcpSocket, &bus);
   socket->connect();
 
@@ -93,7 +45,7 @@ TEST_F(Integration_Net_Sockets_ReadingSocket, ThrowsWhenConnectingTwice)
 TEST_F(Integration_Net_Sockets_ReadingSocket, PublishesDataReceivedEvent)
 {
   auto tcpSocket = this->connect();
-  DummyEventBus bus;
+  TestEventBus bus;
   auto socket = std::make_shared<ReadingSocket>(ClientId{1}, tcpSocket, &bus);
   socket->connect();
 
@@ -110,7 +62,7 @@ TEST_F(Integration_Net_Sockets_ReadingSocket, PublishesDataReceivedEvent)
 TEST_F(Integration_Net_Sockets_ReadingSocket, PublishesClientDisconnectedEventWhenSocketIsClosed)
 {
   auto tcpSocket = this->connect();
-  DummyEventBus bus;
+  TestEventBus bus;
   auto socket = std::make_shared<ReadingSocket>(ClientId{1}, tcpSocket, &bus);
   socket->connect();
 
@@ -130,7 +82,7 @@ TEST_F(Integration_Net_Sockets_ReadingSocket, PublishesClientDisconnectedEventWh
 TEST_F(Integration_Net_Sockets_ReadingSocket, FailsToReconnectWhenSocketIsDisconnected)
 {
   auto tcpSocket = this->connect();
-  DummyEventBus bus;
+  TestEventBus bus;
   auto socket = std::make_shared<ReadingSocket>(ClientId{1}, tcpSocket, &bus);
   socket->connect();
 
