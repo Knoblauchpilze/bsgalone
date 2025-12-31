@@ -29,7 +29,10 @@ auto TestEventBus::waitForEvent() -> net::IEventPtr
   m_received         = std::promise<bool>();
   auto eventReceived = m_received.get_future();
 
-  eventReceived.get();
+  // This timeout should be enough for most test scenario. If it becomes
+  // an issue it can be made configurable.
+  constexpr auto REASONABLE_TIMEOUT = std::chrono::seconds(5);
+  eventReceived.wait_for(REASONABLE_TIMEOUT);
 
   auto event = std::move(m_events.at(0));
   m_events.pop_front();
