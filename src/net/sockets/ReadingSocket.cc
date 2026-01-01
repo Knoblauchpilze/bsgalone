@@ -16,7 +16,7 @@ ReadingSocket::ReadingSocket(const ClientId clientId, SocketShPtr socket, IEvent
   , m_eventBus(eventBus)
 {
   setService("net");
-  addModule("reading");
+  addModule("socket");
 
   if (m_socket == nullptr)
   {
