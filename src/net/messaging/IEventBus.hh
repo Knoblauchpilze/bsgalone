@@ -24,6 +24,7 @@ class IEventBus
   std::unordered_multimap<EventType, IEventListener *> m_listenersTable{};
 };
 
-using IEventBusPtr = std::unique_ptr<IEventBus>;
+using IEventBusPtr   = std::unique_ptr<IEventBus>;
+using IEventBusShPtr = std::shared_ptr<IEventBus>;
 
 } // namespace net

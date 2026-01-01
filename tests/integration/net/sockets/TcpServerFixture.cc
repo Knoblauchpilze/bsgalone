@@ -32,8 +32,26 @@ void TcpServerFixture::write(const std::size_t socketIndex, const std::string &d
   const auto transferred = asio::write(*socket, asio::buffer(data.data(), data.size()));
   if (transferred != data.size())
   {
-    FAIL() << "Failed to transfer all bytes of " << data << ", only transferred " << transferred;
+    throw std::runtime_error("Failed to transfer all bytes of " + data + ", only transferred "
+                             + std::to_string(transferred));
   }
+}
+
+auto TcpServerFixture::read(const std::size_t socketIndex, const std::size_t contentLength)
+  -> std::string
+{
+  const auto socket = this->serverSocket(socketIndex);
+
+  std::vector<char> actual(contentLength, 0);
+  const auto received = asio::read(*socket, asio::buffer(actual.data(), actual.size()));
+
+  if (received != contentLength)
+  {
+    throw std::runtime_error("Failed to receive all bytes, expected " + std::to_string(contentLength)
+                             + ", only received " + std::to_string(received));
+  }
+
+  return std::string(actual.begin(), actual.end());
 }
 
 } // namespace test

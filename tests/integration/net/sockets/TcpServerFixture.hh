@@ -22,6 +22,7 @@ class TcpServerFixture : public ::testing::Test
   auto serverSocket(const std::size_t index) -> net::SocketShPtr;
 
   void write(const std::size_t socketIndex, const std::string &data);
+  auto read(const std::size_t socketIndex, const std::size_t contentLength) -> std::string;
 
   private:
   TestTcpServerShPtr m_server{};
