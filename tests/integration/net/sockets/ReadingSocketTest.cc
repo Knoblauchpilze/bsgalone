@@ -5,7 +5,6 @@
 #include "IEventBus.hh"
 #include "TcpServerFixture.hh"
 #include "TestEventBus.hh"
-#include <deque>
 #include <gmock/gmock-matchers.h>
 #include <gtest/gtest.h>
 
@@ -72,7 +71,7 @@ TEST_F(Integration_Net_Sockets_ReadingSocket, PublishesClientDisconnectedEventWh
   // Disconnect the server socket after some time.
   auto cleanup = std::async(std::launch::async, [this]() {
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
-    this->serverSocket(0)->close();
+    this->serverSocket(0)->shutdown(asio::ip::tcp::socket::shutdown_both);
   });
 
   auto actual = bus.waitForEvent();
@@ -89,7 +88,7 @@ TEST_F(Integration_Net_Sockets_ReadingSocket, FailsToReconnectWhenSocketIsDiscon
   auto socket = std::make_shared<ReadingSocket>(ClientId{1}, tcpSocket, &bus);
   socket->connect();
 
-  this->serverSocket(0)->close();
+  this->serverSocket(0)->shutdown(asio::ip::tcp::socket::shutdown_both);
 
   auto actual = bus.waitForEvent();
   EXPECT_EQ(EventType::CLIENT_DISCONNECTED, actual->type());
