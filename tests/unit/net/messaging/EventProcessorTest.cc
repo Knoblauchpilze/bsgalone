@@ -96,7 +96,7 @@ TEST(Unit_Net_Messaging_EventProcessor, AcquiresProvidedLockBeforeProcessing)
   // Release the mutex: this should allow event processing to happen
   locker.unlock();
 
-  // Waiting for the result
+  // We should have received a call to `processEvents`
   result.get();
   EXPECT_EQ(1, control.load());
 }
