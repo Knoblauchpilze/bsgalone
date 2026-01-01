@@ -70,18 +70,18 @@ void AsioServer::onConnectionRequest(const std::error_code &code, asio::ip::tcp:
 
 auto AsioServer::registerConnection(asio::ip::tcp::socket rawSocket) -> ClientId
 {
-  auto shSocket = std::make_shared<asio::ip::tcp::socket>(std::move(socket));
+  auto socket = std::make_shared<asio::ip::tcp::socket>(std::move(rawSocket));
 
   const auto clientId = NEXT_CLIENT_ID.fetch_add(1);
 
-  auto reader = std::make_unique<ReadingSocket>(clientId, rawSocket, m_eventBus);
-  auto writer = std::make_unique<WritingSocket>(clientId, rawSocket, m_eventBus);
+  auto reader = std::make_unique<ReadingSocket>(clientId, socket, m_eventBus);
+  auto writer = std::make_unique<WritingSocket>(clientId, socket, m_eventBus);
 
   const std::lock_guard guard(m_connectionsLocker);
   m_readers.emplace(clientId, std::move(reader));
   m_writers.emplace(clientId, std::move(writer));
 
-  publishClientConnectedEvent(clientId);
+  return clientId;
 }
 
 void AsioServer::publishClientConnectedEvent(const ClientId clientId)
