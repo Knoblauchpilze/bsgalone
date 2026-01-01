@@ -26,7 +26,7 @@ class DummyEventListener : public IEventListener
   {
     m_called.fetch_add(1);
 
-    std::lock_guard guard(m_lock);
+    const std::lock_guard guard(m_lock);
     m_capturedEvents.push_back(event.clone());
   }
 
@@ -167,7 +167,7 @@ class SlowEventListener : public IEventListener
     m_called.fetch_add(1);
     m_checkPoint.get();
 
-    std::lock_guard guard(m_lock);
+    const std::lock_guard guard(m_lock);
     m_capturedEvents.push_back(event.clone());
   }
 
