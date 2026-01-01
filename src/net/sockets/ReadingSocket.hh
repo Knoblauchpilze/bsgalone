@@ -13,7 +13,7 @@ namespace net::details {
 class ReadingSocket : public core::CoreObject, public std::enable_shared_from_this<ReadingSocket>
 {
   public:
-  ReadingSocket(const ClientId clientId, SocketShPtr socket, IEventBus *eventBus);
+  ReadingSocket(const ClientId clientId, SocketShPtr socket, IEventBusShPtr eventBus);
   ~ReadingSocket() override = default;
 
   void connect();
@@ -26,7 +26,7 @@ class ReadingSocket : public core::CoreObject, public std::enable_shared_from_th
 
   std::vector<char> m_incomingDataTempBuffer{};
 
-  IEventBus *m_eventBus{};
+  IEventBusShPtr m_eventBus{};
 
   void registerReadingTaskToAsio();
 
