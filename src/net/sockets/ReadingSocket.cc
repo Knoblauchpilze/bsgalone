@@ -8,7 +8,7 @@ namespace net::details {
 constexpr auto KILOBYTES                              = 1'024;
 constexpr auto INCOMING_DATA_MAX_BUFFER_SIZE_IN_BYTES = 10 * KILOBYTES;
 
-ReadingSocket::ReadingSocket(const ClientId clientId, SocketShPtr socket, IEventBus *eventBus)
+ReadingSocket::ReadingSocket(const ClientId clientId, SocketShPtr socket, IEventBusShPtr eventBus)
   : core::CoreObject("reading")
   , m_clientId(clientId)
   , m_socket(std::move(socket))
