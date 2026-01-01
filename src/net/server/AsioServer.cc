@@ -2,6 +2,8 @@
 #include "AsioServer.hh"
 #include "ClientConnectedEvent.hh"
 
+#include <iostream>
+
 namespace net::details {
 std::atomic<ClientId> AsioServer::NEXT_CLIENT_ID{0};
 
@@ -47,6 +49,7 @@ void AsioServer::stop()
 
 void AsioServer::registerToAsio()
 {
+  std::cout << "[server] register to asio\n";
   // https://www.boost.org/doc/libs/1_66_0/doc/html/boost_asio/reference/ReadHandler.html
   m_acceptor.async_accept(std::bind(&AsioServer::onConnectionRequest,
                                     shared_from_this(),
@@ -56,6 +59,7 @@ void AsioServer::registerToAsio()
 
 void AsioServer::onConnectionRequest(const std::error_code &code, asio::ip::tcp::socket socket)
 {
+  std::cout << "[server] got connection request\n";
   registerToAsio();
 
   if (code)
@@ -64,8 +68,11 @@ void AsioServer::onConnectionRequest(const std::error_code &code, asio::ip::tcp:
     return;
   }
 
+  std::cout << "[server] registering connection\n";
   const auto clientId = registerConnection(std::move(socket));
+  std::cout << "[server] publishing event\n";
   publishClientConnectedEvent(clientId);
+  std::cout << "[server] callback done\n";
 }
 
 auto AsioServer::registerConnection(asio::ip::tcp::socket rawSocket) -> ClientId
@@ -74,8 +81,10 @@ auto AsioServer::registerConnection(asio::ip::tcp::socket rawSocket) -> ClientId
 
   const auto clientId = NEXT_CLIENT_ID.fetch_add(1);
 
-  auto reader = std::make_unique<ReadingSocket>(clientId, socket, m_eventBus);
-  auto writer = std::make_unique<WritingSocket>(clientId, socket, m_eventBus);
+  auto reader = std::make_shared<ReadingSocket>(clientId, socket, m_eventBus);
+  auto writer = std::make_shared<WritingSocket>(clientId, socket, m_eventBus);
+
+  reader->connect();
 
   const std::lock_guard guard(m_connectionsLocker);
   m_readers.emplace(clientId, std::move(reader));

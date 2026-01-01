@@ -31,8 +31,8 @@ class AsioServer : public core::CoreObject, public std::enable_shared_from_this<
   std::thread m_contextThread{};
 
   std::mutex m_connectionsLocker{};
-  std::unordered_map<ClientId, ReadingSocketPtr> m_readers{};
-  std::unordered_map<ClientId, WritingSocketPtr> m_writers{};
+  std::unordered_map<ClientId, ReadingSocketShPtr> m_readers{};
+  std::unordered_map<ClientId, WritingSocketShPtr> m_writers{};
 
   IEventBusShPtr m_eventBus{};
 

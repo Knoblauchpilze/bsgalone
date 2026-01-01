@@ -51,6 +51,7 @@ void TestTcpServer::stop()
 
 auto TestTcpServer::connect() -> net::SocketShPtr
 {
+  // See also: TcpFixture::connect
   asio::ip::tcp::socket socket(m_context);
   auto out = std::make_shared<asio::ip::tcp::socket>(std::move(socket));
 
