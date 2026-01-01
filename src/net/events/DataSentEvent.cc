@@ -8,6 +8,11 @@ DataSentEvent::DataSentEvent(const ClientId clientId)
   , m_clientId(clientId)
 {}
 
+auto DataSentEvent::clientId() const -> ClientId
+{
+  return m_clientId;
+}
+
 auto DataSentEvent::clone() const -> IEventPtr
 {
   return std::make_unique<DataSentEvent>(m_clientId);

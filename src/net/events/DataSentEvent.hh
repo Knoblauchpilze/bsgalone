@@ -12,6 +12,8 @@ class DataSentEvent : public IEvent
   DataSentEvent(const ClientId clientId);
   ~DataSentEvent() override = default;
 
+  auto clientId() const -> ClientId;
+
   auto clone() const -> IEventPtr override;
 
   private:
