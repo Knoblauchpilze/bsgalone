@@ -63,7 +63,6 @@ TEST_F(Integration_Net_Sockets_WritingSocket,
   auto bus       = std::make_shared<TestEventBus>();
   auto socket    = std::make_shared<WritingSocket>(ClientId{1}, tcpSocket, bus);
 
-  // Disconnect the client socket and then send data
   tcpSocket->shutdown(asio::ip::tcp::socket::shutdown_both);
 
   std::string data{"test"};
