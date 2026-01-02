@@ -44,6 +44,6 @@ class WritingSocket : public core::CoreObject, public std::enable_shared_from_th
   void popFirstMessageInOutbox();
 };
 
-using WritingSocketPtr = std::unique_ptr<WritingSocket>;
+using WritingSocketShPtr = std::shared_ptr<WritingSocket>;
 
 } // namespace net::details

@@ -34,6 +34,6 @@ class ReadingSocket : public core::CoreObject, public std::enable_shared_from_th
   void publishDataReceivedEvent(const std::size_t contentLength);
 };
 
-using ReadingSocketPtr = std::unique_ptr<ReadingSocket>;
+using ReadingSocketShPtr = std::shared_ptr<ReadingSocket>;
 
 } // namespace net::details
