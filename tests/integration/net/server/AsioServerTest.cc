@@ -24,26 +24,14 @@ TEST_F(Integration_Net_Server_AsioServer, AcceptsConnectionAndPublishesClientCon
   auto server = std::make_shared<AsioServer>(this->port(), bus);
   server->start();
 
-  std::cout << "[test] started server\n";
-
-  // Async connect to the server to be sure to not miss the event.
-  // TODO: It would be better to have a wait or something similar using a
-  // condition variable.
-  auto cleanup = std::async(std::launch::async, [this]() { this->connect(); });
-
-  std::cout << "[test] got connection\n";
+  this->connect();
 
   const auto actual = bus->waitForEvent();
   EXPECT_EQ(EventType::CLIENT_CONNECTED, actual->type());
+  // The first client identifier should be 0 as the counter starts from 0
   EXPECT_EQ(ClientId{0}, actual->as<ClientConnectedEvent>().clientId());
 
-  std::cout << "[test] got event\n";
-
-  cleanup.get();
-  std::cout << "[test] async finished\n";
   server->stop();
-
-  std::cout << "[test] stopped server\n";
 }
 
 TEST_F(Integration_Net_Server_AsioServer, AcceptsMultipleConnections)
@@ -57,23 +45,15 @@ TEST_F(Integration_Net_Server_AsioServer, DetectsDisconnectionAndPublishesClient
   auto server = std::make_shared<AsioServer>(this->port(), bus);
   server->start();
 
-  // First connect to the server. The async is necessary to be sure that we
-  // don't miss the event.
-  // TODO: It would be better to have a wait or something similar using a
-  // condition variable.
-  SocketShPtr socket;
-  auto cleanup = std::async(std::launch::async, [&socket, this]() { socket = this->connect(); });
-  auto event   = bus->waitForEvent();
+  auto socket = this->connect();
+  auto event  = bus->waitForEvent();
   EXPECT_EQ(EventType::CLIENT_CONNECTED, event->type());
-  const auto clientId = event->as<ClientConnectedEvent>().clientId();
-  cleanup.get();
+  const auto expectedClientId = event->as<ClientConnectedEvent>().clientId();
 
-  cleanup = std::async(std::launch::async,
-                       [&socket]() { socket->shutdown(asio::ip::tcp::socket::shutdown_both); });
-  event   = bus->waitForEvent();
+  socket->shutdown(asio::ip::tcp::socket::shutdown_both);
+  event = bus->waitForEvent();
   EXPECT_EQ(EventType::CLIENT_DISCONNECTED, event->type());
-  EXPECT_EQ(clientId, event->as<ClientDisconnectedEvent>().clientId());
-  cleanup.get();
+  EXPECT_EQ(expectedClientId, event->as<ClientDisconnectedEvent>().clientId());
 
   server->stop();
 }
@@ -84,22 +64,17 @@ TEST_F(Integration_Net_Server_AsioServer, PublishesDataReceivedEventWhenDataIsRe
   auto server = std::make_shared<AsioServer>(this->port(), bus);
   server->start();
 
-  // First connect to the server. The async is necessary to be sure that we
-  // don't miss the event.
-  // TODO: It would be better to have a wait or something similar using a
-  // condition variable.
-  SocketShPtr socket;
-  auto cleanup = std::async(std::launch::async, [&socket, this]() { socket = this->connect(); });
-  auto event   = bus->waitForEvent();
+  auto socket = this->connect();
+  auto event  = bus->waitForEvent();
   EXPECT_EQ(EventType::CLIENT_CONNECTED, event->type());
-  const auto clientId = event->as<ClientConnectedEvent>().clientId();
-  cleanup.get();
+  const auto expectedClientId = event->as<ClientConnectedEvent>().clientId();
 
   std::string data("test");
   this->write(socket, data);
+
   event = bus->waitForEvent();
   EXPECT_EQ(EventType::DATA_RECEIVED, event->type());
-  EXPECT_EQ(clientId, event->as<DataReceivedEvent>().clientId());
+  EXPECT_EQ(expectedClientId, event->as<DataReceivedEvent>().clientId());
   const std::vector<char> expectedData(data.begin(), data.end());
   EXPECT_EQ(expectedData, event->as<DataReceivedEvent>().data());
 
