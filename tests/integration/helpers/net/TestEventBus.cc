@@ -5,8 +5,9 @@ namespace test {
 
 void TestEventBus::pushEvent(net::IEventPtr event)
 {
+  std::unique_lock guard(m_locker);
   m_events.push_back(std::move(event));
-  m_received.set_value(true);
+  m_notifier.notify_one();
 }
 
 void TestEventBus::addListener(net::IEventListenerPtr /*listener*/)
@@ -24,19 +25,32 @@ void TestEventBus::processEvents()
   throw std::runtime_error("Unexpected call to processEvents on DummyEventBus");
 }
 
-auto TestEventBus::waitForEvent() -> net::IEventPtr
+auto TestEventBus::waitForEvents() -> std::vector<net::IEventPtr>
 {
-  m_received         = std::promise<bool>();
-  auto eventReceived = m_received.get_future();
+  std::unique_lock guard(m_locker);
 
   // This timeout should be enough for most test scenario. If it becomes
   // an issue it can be made configurable.
   constexpr auto REASONABLE_TIMEOUT = std::chrono::seconds(5);
-  eventReceived.wait_for(REASONABLE_TIMEOUT);
+  m_notifier.wait_for(guard, REASONABLE_TIMEOUT, [this] { return !m_events.empty(); });
 
-  auto event = std::move(m_events.at(0));
-  m_events.pop_front();
-  return event;
+  std::vector<net::IEventPtr> events{};
+  std::swap(events, m_events);
+  return events;
+}
+
+auto TestEventBus::waitForEvent() -> net::IEventPtr
+{
+  auto events = waitForEvents();
+  if (events.size() != 1u)
+  {
+    throw std::runtime_error("Expected a single event to be returned but got "
+                             + std::to_string(events.size()));
+  }
+
+  net::IEventPtr out{};
+  std::swap(out, events.at(0));
+  return out;
 }
 
 } // namespace test
