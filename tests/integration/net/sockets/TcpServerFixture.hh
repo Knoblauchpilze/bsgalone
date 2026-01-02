@@ -2,12 +2,23 @@
 #pragma once
 
 #include "SocketShPtr.hh"
-#include "TestTcpServer.hh"
+#include "TcpFixture.hh"
 #include <gtest/gtest.h>
 
 namespace test {
 
-class TcpServerFixture : public ::testing::Test
+class Acceptor;
+
+struct ConnectedSocket
+{
+  net::SocketShPtr client{};
+  net::SocketShPtr server{};
+
+  auto readServer(const std::size_t length) -> std::string;
+  void writeServer(const std::string &data);
+};
+
+class TcpServerFixture : public TcpFixture
 {
   public:
   TcpServerFixture()           = default;
@@ -18,14 +29,11 @@ class TcpServerFixture : public ::testing::Test
   void SetUp() override;
   void TearDown() override;
 
-  auto connect() -> net::SocketShPtr;
-  auto serverSocket(const std::size_t index) -> net::SocketShPtr;
-
-  void write(const std::size_t socketIndex, const std::string &data);
-  auto read(const std::size_t socketIndex, const std::size_t contentLength) -> std::string;
+  auto connectBoth() -> ConnectedSocket;
 
   private:
-  TestTcpServerShPtr m_server{};
+  std::thread m_contextThread{};
+  std::shared_ptr<Acceptor> m_acceptor{};
 };
 
 } // namespace test

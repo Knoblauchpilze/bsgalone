@@ -22,16 +22,16 @@ TEST_F(Integration_Net_Sockets_WritingSocket, ThrowsWhenSocketIsNull)
 
 TEST_F(Integration_Net_Sockets_WritingSocket, ThrowsWhenEventBusIsNull)
 {
-  auto tcpSocket = this->connect();
-  EXPECT_THROW([&tcpSocket]() { WritingSocket(ClientId{1}, tcpSocket, nullptr); }(),
+  auto sockets = this->connectBoth();
+  EXPECT_THROW([&sockets]() { WritingSocket(ClientId{1}, sockets.client, nullptr); }(),
                std::invalid_argument);
 }
 
 TEST_F(Integration_Net_Sockets_WritingSocket, PublishesDataSentEvent)
 {
-  auto tcpSocket = this->connect();
-  auto bus       = std::make_shared<TestEventBus>();
-  auto socket    = std::make_shared<WritingSocket>(ClientId{1}, tcpSocket, bus);
+  auto sockets = this->connectBoth();
+  auto bus     = std::make_shared<TestEventBus>();
+  auto socket  = std::make_shared<WritingSocket>(ClientId{1}, sockets.client, bus);
 
   std::string data{"test"};
   std::vector<char> toSend(data.begin(), data.end());
@@ -44,26 +44,26 @@ TEST_F(Integration_Net_Sockets_WritingSocket, PublishesDataSentEvent)
 
 TEST_F(Integration_Net_Sockets_WritingSocket, SendsDataToSocket)
 {
-  auto tcpSocket = this->connect();
-  auto bus       = std::make_shared<TestEventBus>();
-  auto socket    = std::make_shared<WritingSocket>(ClientId{1}, tcpSocket, std::move(bus));
+  auto sockets = this->connectBoth();
+  auto bus     = std::make_shared<TestEventBus>();
+  auto socket  = std::make_shared<WritingSocket>(ClientId{1}, sockets.client, std::move(bus));
 
   std::string data{"test"};
   std::vector<char> toSend(data.begin(), data.end());
   socket->send(toSend);
 
-  const auto actual = this->read(0, data.size());
+  const auto actual = sockets.readServer(data.size());
   EXPECT_EQ("test", actual);
 }
 
 TEST_F(Integration_Net_Sockets_WritingSocket,
        PublishesClientDisconnectedEventWhenClientSocketIsClosed)
 {
-  auto tcpSocket = this->connect();
-  auto bus       = std::make_shared<TestEventBus>();
-  auto socket    = std::make_shared<WritingSocket>(ClientId{1}, tcpSocket, bus);
+  auto sockets = this->connectBoth();
+  auto bus     = std::make_shared<TestEventBus>();
+  auto socket  = std::make_shared<WritingSocket>(ClientId{1}, sockets.client, bus);
 
-  tcpSocket->shutdown(asio::ip::tcp::socket::shutdown_both);
+  sockets.client->shutdown(asio::ip::tcp::socket::shutdown_both);
 
   std::string data{"test"};
   std::vector<char> toSend(data.begin(), data.end());
@@ -83,11 +83,11 @@ TEST_F(Integration_Net_Sockets_WritingSocket,
 // However the service is deprecated: github.com/boostorg/asio/issues/110
 TEST_F(Integration_Net_Sockets_WritingSocket, SucceedsToSendDataEvenWhenServerSocketIsClosed)
 {
-  auto tcpSocket = this->connect();
-  auto bus       = std::make_shared<TestEventBus>();
-  auto socket    = std::make_shared<WritingSocket>(ClientId{1}, tcpSocket, bus);
+  auto sockets = this->connectBoth();
+  auto bus     = std::make_shared<TestEventBus>();
+  auto socket  = std::make_shared<WritingSocket>(ClientId{1}, sockets.client, bus);
 
-  this->serverSocket(0)->shutdown(asio::ip::tcp::socket::shutdown_both);
+  sockets.server->shutdown(asio::ip::tcp::socket::shutdown_both);
 
   std::string data{"test"};
   std::vector<char> toSend(data.begin(), data.end());

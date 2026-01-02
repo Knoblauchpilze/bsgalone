@@ -2,7 +2,6 @@
 #pragma once
 
 #include "SocketShPtr.hh"
-#include "TestTcpServer.hh"
 #include <asio.hpp>
 #include <gtest/gtest.h>
 #include <thread>
@@ -17,6 +16,7 @@ class TcpFixture : public ::testing::Test
 
   protected:
   int m_port{};
+  asio::io_context m_context{};
 
   void SetUp() override;
   void TearDown() override;
@@ -35,8 +35,6 @@ class TcpFixture : public ::testing::Test
 
   private:
   static std::atomic_int NEXT_PORT;
-
-  asio::io_context m_context{};
 };
 
 } // namespace test
