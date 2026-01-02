@@ -5,53 +5,28 @@ namespace test {
 
 void TcpServerFixture::SetUp()
 {
-  m_server = std::make_shared<TestTcpServer>();
-  m_server->start();
+  this->TcpFixture::SetUp();
+
+  m_acceptor = std::make_shared<TcpAcceptor>(m_context, m_port);
+  m_acceptor->registerAccept();
+
+  m_contextThread = std::thread([this]() { m_context.run(); });
 }
 
 void TcpServerFixture::TearDown()
 {
-  m_server->stop();
-  m_server.reset();
+  m_context.stop();
+  m_contextThread.join();
+
+  this->TcpFixture::TearDown();
 }
 
-auto TcpServerFixture::connect() -> net::SocketShPtr
+auto TcpServerFixture::getTestSockets() -> ConnectedSockets
 {
-  return m_server->connect();
-}
+  auto client = this->connectToRunningServer();
+  auto server = m_acceptor->waitForServerSocket();
 
-auto TcpServerFixture::serverSocket(const std::size_t index) -> net::SocketShPtr
-{
-  return m_server->socket(index);
-}
-
-void TcpServerFixture::write(const std::size_t socketIndex, const std::string &data)
-{
-  const auto socket = this->serverSocket(socketIndex);
-
-  const auto transferred = asio::write(*socket, asio::buffer(data.data(), data.size()));
-  if (transferred != data.size())
-  {
-    throw std::runtime_error("Failed to transfer all bytes of " + data + ", only transferred "
-                             + std::to_string(transferred));
-  }
-}
-
-auto TcpServerFixture::read(const std::size_t socketIndex, const std::size_t contentLength)
-  -> std::string
-{
-  const auto socket = this->serverSocket(socketIndex);
-
-  std::vector<char> actual(contentLength, 0);
-  const auto received = asio::read(*socket, asio::buffer(actual.data(), actual.size()));
-
-  if (received != contentLength)
-  {
-    throw std::runtime_error("Failed to receive all bytes, expected " + std::to_string(contentLength)
-                             + ", only received " + std::to_string(received));
-  }
-
-  return std::string(actual.begin(), actual.end());
+  return ConnectedSockets{.client = std::move(client), .server = std::move(server)};
 }
 
 } // namespace test

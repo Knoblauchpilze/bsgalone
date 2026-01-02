@@ -22,16 +22,16 @@ TEST_F(Integration_Net_Sockets_ReadingSocket, ThrowsWhenSocketIsNull)
 
 TEST_F(Integration_Net_Sockets_ReadingSocket, ThrowsWhenEventBusIsNull)
 {
-  auto tcpSocket = this->connect();
-  EXPECT_THROW([&tcpSocket]() { ReadingSocket(ClientId{1}, tcpSocket, nullptr); }(),
+  auto sockets = this->getTestSockets();
+  EXPECT_THROW([&sockets]() { ReadingSocket(ClientId{1}, sockets.client, nullptr); }(),
                std::invalid_argument);
 }
 
 TEST_F(Integration_Net_Sockets_ReadingSocket, ThrowsWhenConnectingTwice)
 {
-  auto tcpSocket = this->connect();
-  auto bus       = std::make_shared<TestEventBus>();
-  auto socket    = std::make_shared<ReadingSocket>(ClientId{1}, tcpSocket, std::move(bus));
+  auto sockets = this->getTestSockets();
+  auto bus     = std::make_shared<TestEventBus>();
+  auto socket  = std::make_shared<ReadingSocket>(ClientId{1}, sockets.client, std::move(bus));
   socket->connect();
 
   EXPECT_THROW([&socket]() { socket->connect(); }(), core::CoreException);
@@ -39,13 +39,13 @@ TEST_F(Integration_Net_Sockets_ReadingSocket, ThrowsWhenConnectingTwice)
 
 TEST_F(Integration_Net_Sockets_ReadingSocket, PublishesDataReceivedEvent)
 {
-  auto tcpSocket = this->connect();
-  auto bus       = std::make_shared<TestEventBus>();
-  auto socket    = std::make_shared<ReadingSocket>(ClientId{1}, tcpSocket, bus);
+  auto sockets = this->getTestSockets();
+  auto bus     = std::make_shared<TestEventBus>();
+  auto socket  = std::make_shared<ReadingSocket>(ClientId{1}, sockets.client, bus);
   socket->connect();
 
   std::string data{"test"};
-  this->write(0, data);
+  sockets.writeServer(data);
 
   const auto actual = bus->waitForEvent();
   EXPECT_EQ(EventType::DATA_RECEIVED, actual->type());
@@ -56,12 +56,12 @@ TEST_F(Integration_Net_Sockets_ReadingSocket, PublishesDataReceivedEvent)
 
 TEST_F(Integration_Net_Sockets_ReadingSocket, PublishesClientDisconnectedEventWhenSocketIsClosed)
 {
-  auto tcpSocket = this->connect();
-  auto bus       = std::make_shared<TestEventBus>();
-  auto socket    = std::make_shared<ReadingSocket>(ClientId{1}, tcpSocket, bus);
+  auto sockets = this->getTestSockets();
+  auto bus     = std::make_shared<TestEventBus>();
+  auto socket  = std::make_shared<ReadingSocket>(ClientId{1}, sockets.client, bus);
   socket->connect();
 
-  this->serverSocket(0)->shutdown(asio::ip::tcp::socket::shutdown_both);
+  sockets.server->shutdown(asio::ip::tcp::socket::shutdown_both);
 
   const auto actual = bus->waitForEvent();
   EXPECT_EQ(EventType::CLIENT_DISCONNECTED, actual->type());
@@ -70,12 +70,12 @@ TEST_F(Integration_Net_Sockets_ReadingSocket, PublishesClientDisconnectedEventWh
 
 TEST_F(Integration_Net_Sockets_ReadingSocket, FailsToReconnectWhenSocketIsDisconnected)
 {
-  auto tcpSocket = this->connect();
-  auto bus       = std::make_shared<TestEventBus>();
-  auto socket    = std::make_shared<ReadingSocket>(ClientId{1}, tcpSocket, bus);
+  auto sockets = this->getTestSockets();
+  auto bus     = std::make_shared<TestEventBus>();
+  auto socket  = std::make_shared<ReadingSocket>(ClientId{1}, sockets.client, bus);
   socket->connect();
 
-  this->serverSocket(0)->shutdown(asio::ip::tcp::socket::shutdown_both);
+  sockets.server->shutdown(asio::ip::tcp::socket::shutdown_both);
 
   const auto actual = bus->waitForEvent();
   EXPECT_EQ(EventType::CLIENT_DISCONNECTED, actual->type());
