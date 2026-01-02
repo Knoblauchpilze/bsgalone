@@ -27,9 +27,11 @@ class TcpFixture : public ::testing::Test
   /// the port defined in the fixture and returns the **client** socket when
   /// successful. The **server** socket is held by the TCP server and is not
   /// accessible.
+  /// Note: the server should **already be running**, otherwise this method
+  /// will hang.
   /// @return - the client socket connected to the server. The socket is in
   /// a healthy state when returned.
-  auto connect() -> net::SocketShPtr;
+  auto connectToRunningServer() -> net::SocketShPtr;
 
   void write(net::SocketShPtr socket, const std::string &data);
 

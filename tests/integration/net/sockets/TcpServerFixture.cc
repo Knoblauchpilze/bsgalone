@@ -21,9 +21,9 @@ void TcpServerFixture::TearDown()
   this->TcpFixture::TearDown();
 }
 
-auto TcpServerFixture::connectBoth() -> ConnectedSockets
+auto TcpServerFixture::getTestSockets() -> ConnectedSockets
 {
-  auto client = this->connect();
+  auto client = this->connectToRunningServer();
   auto server = m_acceptor->waitForServerSocket();
 
   return ConnectedSockets{.client = std::move(client), .server = std::move(server)};

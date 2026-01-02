@@ -26,7 +26,7 @@ TEST_F(Integration_Net_Server_AsioServer, AcceptsConnectionAndPublishesClientCon
 
   // The client socket needs to be kept so that the server socket does not
   // detect that it's gone and closes the connection
-  auto socket = this->connect();
+  auto socket = this->connectToRunningServer();
 
   const auto actual = bus->waitForEvent();
   EXPECT_EQ(EventType::CLIENT_CONNECTED, actual->type());
@@ -42,13 +42,13 @@ TEST_F(Integration_Net_Server_AsioServer, AcceptsMultipleConnections)
   auto server = std::make_shared<AsioServer>(this->port(), bus);
   server->start();
 
-  auto socket1 = this->connect();
+  auto socket1 = this->connectToRunningServer();
 
   auto actual = bus->waitForEvent();
   EXPECT_EQ(EventType::CLIENT_CONNECTED, actual->type());
   EXPECT_EQ(ClientId{0}, actual->as<ClientConnectedEvent>().clientId());
 
-  auto socket2 = this->connect();
+  auto socket2 = this->connectToRunningServer();
 
   actual = bus->waitForEvent();
   EXPECT_EQ(EventType::CLIENT_CONNECTED, actual->type());
@@ -63,7 +63,7 @@ TEST_F(Integration_Net_Server_AsioServer, DetectsDisconnectionAndPublishesClient
   auto server = std::make_shared<AsioServer>(this->port(), bus);
   server->start();
 
-  auto socket = this->connect();
+  auto socket = this->connectToRunningServer();
   auto event  = bus->waitForEvent();
   EXPECT_EQ(EventType::CLIENT_CONNECTED, event->type());
   const auto expectedClientId = event->as<ClientConnectedEvent>().clientId();
@@ -82,7 +82,7 @@ TEST_F(Integration_Net_Server_AsioServer, PublishesDataReceivedEventWhenDataIsRe
   auto server = std::make_shared<AsioServer>(this->port(), bus);
   server->start();
 
-  auto socket = this->connect();
+  auto socket = this->connectToRunningServer();
   auto event  = bus->waitForEvent();
   EXPECT_EQ(EventType::CLIENT_CONNECTED, event->type());
   const auto expectedClientId = event->as<ClientConnectedEvent>().clientId();

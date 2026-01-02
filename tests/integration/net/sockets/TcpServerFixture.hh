@@ -20,7 +20,7 @@ class TcpServerFixture : public TcpFixture
   void SetUp() override;
   void TearDown() override;
 
-  auto connectBoth() -> ConnectedSockets;
+  auto getTestSockets() -> ConnectedSockets;
 
   private:
   std::thread m_contextThread{};

@@ -22,16 +22,16 @@ TEST_F(Integration_Net_Sockets_ReadingSocket, ThrowsWhenSocketIsNull)
 
 TEST_F(Integration_Net_Sockets_ReadingSocket, ThrowsWhenEventBusIsNull)
 {
-  auto sockets = this->connectBoth();
+  auto sockets = this->getTestSockets();
   EXPECT_THROW([&sockets]() { ReadingSocket(ClientId{1}, sockets.client, nullptr); }(),
                std::invalid_argument);
 }
 
 TEST_F(Integration_Net_Sockets_ReadingSocket, ThrowsWhenConnectingTwice)
 {
-  auto tcpSocket = this->connect();
-  auto bus       = std::make_shared<TestEventBus>();
-  auto socket    = std::make_shared<ReadingSocket>(ClientId{1}, tcpSocket, std::move(bus));
+  auto sockets = this->getTestSockets();
+  auto bus     = std::make_shared<TestEventBus>();
+  auto socket  = std::make_shared<ReadingSocket>(ClientId{1}, sockets.client, std::move(bus));
   socket->connect();
 
   EXPECT_THROW([&socket]() { socket->connect(); }(), core::CoreException);
@@ -39,7 +39,7 @@ TEST_F(Integration_Net_Sockets_ReadingSocket, ThrowsWhenConnectingTwice)
 
 TEST_F(Integration_Net_Sockets_ReadingSocket, PublishesDataReceivedEvent)
 {
-  auto sockets = this->connectBoth();
+  auto sockets = this->getTestSockets();
   auto bus     = std::make_shared<TestEventBus>();
   auto socket  = std::make_shared<ReadingSocket>(ClientId{1}, sockets.client, bus);
   socket->connect();
@@ -56,7 +56,7 @@ TEST_F(Integration_Net_Sockets_ReadingSocket, PublishesDataReceivedEvent)
 
 TEST_F(Integration_Net_Sockets_ReadingSocket, PublishesClientDisconnectedEventWhenSocketIsClosed)
 {
-  auto sockets = this->connectBoth();
+  auto sockets = this->getTestSockets();
   auto bus     = std::make_shared<TestEventBus>();
   auto socket  = std::make_shared<ReadingSocket>(ClientId{1}, sockets.client, bus);
   socket->connect();
@@ -70,7 +70,7 @@ TEST_F(Integration_Net_Sockets_ReadingSocket, PublishesClientDisconnectedEventWh
 
 TEST_F(Integration_Net_Sockets_ReadingSocket, FailsToReconnectWhenSocketIsDisconnected)
 {
-  auto sockets = this->connectBoth();
+  auto sockets = this->getTestSockets();
   auto bus     = std::make_shared<TestEventBus>();
   auto socket  = std::make_shared<ReadingSocket>(ClientId{1}, sockets.client, bus);
   socket->connect();

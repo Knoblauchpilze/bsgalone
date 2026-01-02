@@ -18,7 +18,7 @@ auto TcpFixture::port() const -> int
   return m_port;
 }
 
-auto TcpFixture::connect() -> net::SocketShPtr
+auto TcpFixture::connectToRunningServer() -> net::SocketShPtr
 {
   // See also: TestTcpServer::connect
   asio::ip::tcp::socket socket(m_context);
