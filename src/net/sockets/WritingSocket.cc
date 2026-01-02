@@ -3,8 +3,6 @@
 #include "ClientDisconnectedEvent.hh"
 #include "DataSentEvent.hh"
 
-#include <iostream>
-
 namespace net::details {
 
 WritingSocket::WritingSocket(const ClientId clientId, SocketShPtr socket, IEventBusShPtr eventBus)
