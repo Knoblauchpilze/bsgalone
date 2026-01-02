@@ -1,4 +1,3 @@
-
 #include "TcpFixture.hh"
 
 namespace test {

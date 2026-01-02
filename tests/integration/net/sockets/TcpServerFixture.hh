@@ -5,7 +5,6 @@
 #include "SocketShPtr.hh"
 #include "TcpAcceptor.hh"
 #include "TcpFixture.hh"
-#include <gtest/gtest.h>
 
 namespace test {
 

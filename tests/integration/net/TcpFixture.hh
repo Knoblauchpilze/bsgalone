@@ -3,8 +3,8 @@
 
 #include "SocketShPtr.hh"
 #include <asio.hpp>
+#include <atomic>
 #include <gtest/gtest.h>
-#include <thread>
 
 namespace test {
 
