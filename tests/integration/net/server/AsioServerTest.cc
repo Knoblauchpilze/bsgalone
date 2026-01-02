@@ -24,7 +24,9 @@ TEST_F(Integration_Net_Server_AsioServer, AcceptsConnectionAndPublishesClientCon
   auto server = std::make_shared<AsioServer>(this->port(), bus);
   server->start();
 
-  this->connect();
+  // The client socket needs to be kept so that the server socket does not
+  // detect that it's gone and closes the connection
+  auto socket = this->connect();
 
   const auto actual = bus->waitForEvent();
   EXPECT_EQ(EventType::CLIENT_CONNECTED, actual->type());
@@ -36,7 +38,23 @@ TEST_F(Integration_Net_Server_AsioServer, AcceptsConnectionAndPublishesClientCon
 
 TEST_F(Integration_Net_Server_AsioServer, AcceptsMultipleConnections)
 {
-  // TODO: Implementation
+  auto bus    = std::make_shared<TestEventBus>();
+  auto server = std::make_shared<AsioServer>(this->port(), bus);
+  server->start();
+
+  auto socket1 = this->connect();
+
+  auto actual = bus->waitForEvent();
+  EXPECT_EQ(EventType::CLIENT_CONNECTED, actual->type());
+  EXPECT_EQ(ClientId{0}, actual->as<ClientConnectedEvent>().clientId());
+
+  auto socket2 = this->connect();
+
+  actual = bus->waitForEvent();
+  EXPECT_EQ(EventType::CLIENT_CONNECTED, actual->type());
+  EXPECT_EQ(ClientId{1}, actual->as<ClientConnectedEvent>().clientId());
+
+  server->stop();
 }
 
 TEST_F(Integration_Net_Server_AsioServer, DetectsDisconnectionAndPublishesClientDisconnectedEvent)
@@ -79,11 +97,6 @@ TEST_F(Integration_Net_Server_AsioServer, PublishesDataReceivedEventWhenDataIsRe
   EXPECT_EQ(expectedData, event->as<DataReceivedEvent>().data());
 
   server->stop();
-}
-
-TEST_F(Integration_Net_Server_AsioServer, TerminatesConnectionWhenShuttingDown)
-{
-  // TODO: Implementation
 }
 
 } // namespace net::details

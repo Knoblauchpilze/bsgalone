@@ -22,14 +22,13 @@ class AsioServer : public core::CoreObject, public std::enable_shared_from_this<
   void stop();
 
   private:
-  static std::atomic<ClientId> NEXT_CLIENT_ID;
-
   asio::io_context m_context{};
   asio::ip::tcp::acceptor m_acceptor;
 
   std::atomic_bool m_running{false};
   std::thread m_contextThread{};
 
+  std::atomic<ClientId> m_nextClientId{0};
   std::mutex m_connectionsLocker{};
   std::unordered_map<ClientId, ReadingSocketShPtr> m_readers{};
   std::unordered_map<ClientId, WritingSocketShPtr> m_writers{};

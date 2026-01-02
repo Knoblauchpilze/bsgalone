@@ -9,17 +9,9 @@ TcpFixture::TcpFixture()
   : m_port(NEXT_PORT.fetch_add(1))
 {}
 
-void TcpFixture::SetUp()
-{
-  std::cout << "[fixture] setup\n";
-  std::cout << "[fixture] setup done\n";
-}
+void TcpFixture::SetUp() {}
 
-void TcpFixture::TearDown()
-{
-  std::cout << "[fixture] tear down\n";
-  std::cout << "[fixture] tear down done\n";
-}
+void TcpFixture::TearDown() {}
 
 auto TcpFixture::port() const -> int
 {

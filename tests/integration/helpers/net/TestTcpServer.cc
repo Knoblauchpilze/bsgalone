@@ -1,6 +1,5 @@
 
 #include "TestTcpServer.hh"
-#include <iostream>
 #include <stdexcept>
 
 namespace test {
