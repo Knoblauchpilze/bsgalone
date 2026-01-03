@@ -366,7 +366,7 @@ struct TestCaseConcurrentProductionConsumption
 
 using ConcurrentProductionConsumption = TestWithParam<TestCaseConcurrentProductionConsumption>;
 
-TEST_P(ConcurrentProductionConsumption, DISABLED_run)
+TEST_P(ConcurrentProductionConsumption, run)
 {
   const auto &param = GetParam();
   // Due to the way we calculate the client identifier we need the number of messages to be
@@ -417,7 +417,7 @@ INSTANTIATE_TEST_SUITE_P(
   Unit_Net_Messaging_SynchronizedEventBus,
   ConcurrentProductionConsumption,
   Values(
-    TestCaseConcurrentProductionConsumption{.messages = 1, .producers = 1, .consumers = 1},
+    TestCaseConcurrentProductionConsumption{.messages = 1, .producers = 1, .consumers = 1}/*,
     TestCaseConcurrentProductionConsumption{.messages = 10, .producers = 1, .consumers = 1},
     TestCaseConcurrentProductionConsumption{.messages = 100, .producers = 1, .consumers = 1},
     TestCaseConcurrentProductionConsumption{.messages = 1000, .producers = 1, .consumers = 1},
@@ -429,7 +429,7 @@ INSTANTIATE_TEST_SUITE_P(
     TestCaseConcurrentProductionConsumption{.messages = 1000, .producers = 10, .consumers = 5},
     TestCaseConcurrentProductionConsumption{.messages = 1000, .producers = 10, .consumers = 20},
     TestCaseConcurrentProductionConsumption{.messages = 5000, .producers = 10, .consumers = 5},
-    TestCaseConcurrentProductionConsumption{.messages = 5000, .producers = 10, .consumers = 30}),
+    TestCaseConcurrentProductionConsumption{.messages = 5000, .producers = 10, .consumers = 30}*/),
   [](const TestParamInfo<TestCaseConcurrentProductionConsumption> &info) -> std::string {
     return std::to_string(info.param.messages) + "_" + std::to_string(info.param.producers) + "_"
            + std::to_string(info.param.consumers);
