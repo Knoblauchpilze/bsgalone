@@ -22,6 +22,8 @@ void EventProcessor::processEvents()
   {
     m_handler(*event);
   }
+
+  printEventsInfo(events);
 }
 
 auto EventProcessor::acquireAndClearEvents() const -> std::deque<IEventPtr>
