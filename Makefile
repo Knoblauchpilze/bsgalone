@@ -49,6 +49,10 @@ clean:
 cleanSandbox:
 	rm -rf sandbox
 
+# https://unix.stackexchange.com/questions/116389/recursively-delete-all-files-with-a-given-extension
+cleanCoverage:
+	find . -type f -name '*.gcda' -delete
+
 copyData:
 	mkdir -p sandbox/
 	rsync -avH assets sandbox/
@@ -86,10 +90,10 @@ tests: debugWithTests copyDebug
 # https://stackoverflow.com/questions/2826029/passing-additional-variables-from-command-line-to-make
 # Use like this:
 # make rununittests test_filters="Unit_Bsgo_Serialization_EntityAddedMessage*"
-rununittests: tests
+rununittests: tests cleanCoverage
 	cd sandbox && ./tests.sh unitTests $(test_filters)
 
-runintegrationtests: tests
+runintegrationtests: tests cleanCoverage
 	cd sandbox && ./tests.sh integrationTests $(test_filters)
 
 ci-cpp-build-image:
