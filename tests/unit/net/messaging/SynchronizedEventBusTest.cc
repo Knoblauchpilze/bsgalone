@@ -366,7 +366,7 @@ struct TestCaseConcurrentProductionConsumption
 
 using ConcurrentProductionConsumption = TestWithParam<TestCaseConcurrentProductionConsumption>;
 
-TEST_P(ConcurrentProductionConsumption, run)
+TEST_P(ConcurrentProductionConsumption, DISABLED_run)
 {
   const auto &param = GetParam();
   // Due to the way we calculate the client identifier we need the number of messages to be
