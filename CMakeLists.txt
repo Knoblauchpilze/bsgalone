@@ -34,6 +34,7 @@ add_library (bsgalone-interface-test-library INTERFACE)
 # https://gcc.gnu.org/onlinedocs/gcc/Invoking-Gcov.html
 target_compile_options (bsgalone-interface-test-library INTERFACE
 	--coverage
+	-fprofile-update=atomic
 	-O0
 	)
 # https://gcovr.com/en/stable/cookbook.html#out-of-source-builds-with-cmake
