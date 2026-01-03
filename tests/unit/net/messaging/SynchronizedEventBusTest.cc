@@ -147,99 +147,292 @@ TEST(Unit_Net_Messaging_SynchronizedEventBus, NotifiesMultipleListenersForTheSam
 }
 
 namespace {
-class SlowEventListener : public IEventListener
+class CounterListener : public IEventListener
 {
   public:
-  SlowEventListener(const EventType relevantEvent, std::future<bool> checkPoint)
-    : m_relevantEvent(relevantEvent)
-    , m_checkPoint(std::move(checkPoint))
-  {}
-
-  ~SlowEventListener() override = default;
+  CounterListener()           = default;
+  ~CounterListener() override = default;
 
   bool isEventRelevant(const EventType &type) const
   {
-    return type == m_relevantEvent;
+    return type == EventType::CLIENT_CONNECTED;
   }
 
-  void onEventReceived(const IEvent &event)
+  void onEventReceived(const IEvent & /*event*/)
   {
-    m_called.fetch_add(1);
-    m_checkPoint.get();
-
-    const std::lock_guard guard(m_lock);
-    m_capturedEvents.push_back(event.clone());
+    m_receivedCount.fetch_add(1);
   }
 
-  auto calledCount() const -> int
+  auto messagesCount() const -> int
   {
-    return m_called.load();
-  }
-
-  auto events() const -> const std::vector<IEventPtr> &
-  {
-    return m_capturedEvents;
+    return m_receivedCount.load();
   }
 
   private:
-  EventType m_relevantEvent{};
-  std::atomic_int m_called{};
-  std::future<bool> m_checkPoint;
-
-  std::mutex m_lock{};
-  std::vector<IEventPtr> m_capturedEvents{};
+  std::atomic_int m_receivedCount{};
 };
+
+struct Synchronization
+{
+  std::mutex lock{};
+  std::condition_variable notifier{};
+  bool ready{false};
+  std::atomic_bool productionFinished{false};
+
+  void notifyStart()
+  {
+    std::lock_guard guard(lock);
+    ready = true;
+    notifier.notify_all();
+  }
+};
+
+using SynchronizationShPtr = std::shared_ptr<Synchronization>;
+
+constexpr auto MULTIPLIER = 10000;
+
+auto generateClientId(const int threadId, const int messageId) -> int
+{
+  return MULTIPLIER * threadId + messageId;
+}
+
+class Producer
+{
+  public:
+  Producer(const int id,
+           const int messagesCount,
+           SynchronizationShPtr synchronization,
+           IEventBusShPtr bus)
+    : m_id(id)
+    , m_messagesCount(messagesCount)
+    , m_sync(std::move(synchronization))
+    , m_bus(std::move(bus))
+  {}
+
+  ~Producer() = default;
+
+  void start()
+  {
+    m_thread = std::thread([this]() {
+      waitForReadySignal();
+
+      for (int messageId = 0; messageId < m_messagesCount; ++messageId)
+      {
+        const auto clientId = generateClientId(m_id, messageId);
+        m_bus->pushEvent(std::make_unique<ClientConnectedEvent>(ClientId{clientId}));
+      }
+    });
+  }
+
+  void join()
+  {
+    m_thread.join();
+  }
+
+  private:
+  int m_id{};
+  int m_messagesCount{};
+  SynchronizationShPtr m_sync{};
+  IEventBusShPtr m_bus{};
+  std::thread m_thread{};
+
+  void waitForReadySignal()
+  {
+    std::unique_lock guard(m_sync->lock);
+    m_sync->notifier.wait(guard, [this] { return m_sync->ready; });
+  }
+};
+
+using ProducerPtr = std::unique_ptr<Producer>;
+
+class Consumer
+{
+  public:
+  Consumer(const int id, SynchronizationShPtr synchronization, IEventBusShPtr bus)
+    : m_id(id)
+    , m_sync(std::move(synchronization))
+    , m_bus(std::move(bus))
+  {}
+
+  ~Consumer() = default;
+
+  void start()
+  {
+    m_thread = std::thread([this]() {
+      waitForReadySignal();
+
+      while (!m_bus->empty() || !m_sync->productionFinished.load())
+      {
+        m_bus->processEvents();
+      }
+    });
+  }
+
+  void join()
+  {
+    m_thread.join();
+  }
+
+  private:
+  int m_id{};
+  SynchronizationShPtr m_sync{};
+  IEventBusShPtr m_bus{};
+  std::thread m_thread{};
+
+  void waitForReadySignal()
+  {
+    std::unique_lock guard(m_sync->lock);
+    m_sync->notifier.wait(guard, [this] { return m_sync->ready; });
+  }
+};
+
+using ConsumerPtr = std::unique_ptr<Consumer>;
+
 } // namespace
 
-TEST(Unit_Net_Messaging_SynchronizedEventBus, WaitsEndOfProcessingToAddNewEvent)
+struct TestCaseConcurrentProduction
 {
-  SynchronizedEventBus bus;
+  int messages{};
+  int producers{};
+};
 
-  std::promise<bool> blocker;
+using ConcurrentProduction = TestWithParam<TestCaseConcurrentProduction>;
 
-  auto listener    = std::make_unique<SlowEventListener>(EventType::CLIENT_CONNECTED,
-                                                      blocker.get_future());
+TEST_P(ConcurrentProduction, run)
+{
+  const auto &param = GetParam();
+  // Due to the way we calculate the client identifier we need the number of messages to be
+  // less than this value otherwise there will be collisions.
+  EXPECT_LE(param.messages, MULTIPLIER);
+
+  auto bus = std::make_shared<SynchronizedEventBus>();
+
+  auto listener    = std::make_unique<CounterListener>();
   auto rawListener = listener.get();
-  bus.addListener(std::move(listener));
+  bus->addListener(std::move(listener));
 
-  bus.pushEvent(std::make_unique<ClientConnectedEvent>(ClientId{3}));
+  auto sync = std::make_shared<Synchronization>();
 
-  // Start processing of events: this will block until the slow listener
-  // is released from waiting on the promise
-  std::promise<bool> processingLaunch;
-  auto processingLaunched = processingLaunch.get_future();
+  std::vector<ProducerPtr> producers{};
+  for (int id = 0; id < param.producers; ++id)
+  {
+    auto producer = std::make_unique<Producer>(id, param.messages, sync, bus);
+    producer->start();
 
-  auto processingFinished = std::async(std::launch::async, [&bus, &processingLaunch]() {
-    processingLaunch.set_value(true);
-    bus.processEvents();
+    producers.emplace_back(std::move(producer));
+  }
+
+  sync->notifyStart();
+
+  std::for_each(producers.begin(), producers.end(), [](const ProducerPtr &producer) {
+    producer->join();
   });
 
-  // Start the publishing of an event: it should conflict with the slow
-  // listener and wait
-  std::promise<bool> enqueuingLaunch;
-  auto enqueuingLaunched = enqueuingLaunch.get_future();
+  bus->processEvents();
 
-  auto enqueuingFinished = std::async(std::launch::async, [&bus, &enqueuingLaunch]() {
-    enqueuingLaunch.set_value(true);
-    bus.pushEvent(std::make_unique<ClientConnectedEvent>(ClientId{4}));
-  });
-
-  processingLaunched.get();
-  enqueuingLaunched.get();
-
-  // Release the processing
-  blocker.set_value(true);
-
-  processingFinished.get();
-  enqueuingFinished.get();
-
-  // The listener should have received only the first event
-  const auto &actualEvents = rawListener->events();
-
-  EXPECT_EQ(1u, actualEvents.size());
-  const auto &event = actualEvents.front();
-  EXPECT_EQ(EventType::CLIENT_CONNECTED, event->type());
-  EXPECT_EQ(ClientId{3}, event->as<ClientConnectedEvent>().clientId());
+  const auto expectedMessagesCount = param.messages * param.producers;
+  EXPECT_EQ(expectedMessagesCount, rawListener->messagesCount());
 }
+
+INSTANTIATE_TEST_SUITE_P(Unit_Net_Messaging_SynchronizedEventBus,
+                         ConcurrentProduction,
+                         Values(TestCaseConcurrentProduction{.messages = 1, .producers = 1},
+                                TestCaseConcurrentProduction{.messages = 10, .producers = 1},
+                                TestCaseConcurrentProduction{.messages = 100, .producers = 1},
+                                TestCaseConcurrentProduction{.messages = 1000, .producers = 1},
+                                TestCaseConcurrentProduction{.messages = 1, .producers = 5},
+                                TestCaseConcurrentProduction{.messages = 10, .producers = 5},
+                                TestCaseConcurrentProduction{.messages = 100, .producers = 5},
+                                TestCaseConcurrentProduction{.messages = 1000, .producers = 5},
+                                TestCaseConcurrentProduction{.messages = 1, .producers = 10},
+                                TestCaseConcurrentProduction{.messages = 10, .producers = 10},
+                                TestCaseConcurrentProduction{.messages = 100, .producers = 10},
+                                TestCaseConcurrentProduction{.messages = 1000, .producers = 10},
+                                TestCaseConcurrentProduction{.messages = 1, .producers = 50},
+                                TestCaseConcurrentProduction{.messages = 10, .producers = 50},
+                                TestCaseConcurrentProduction{.messages = 100, .producers = 50},
+                                TestCaseConcurrentProduction{.messages = 1000, .producers = 50}),
+                         [](const TestParamInfo<TestCaseConcurrentProduction> &info) -> std::string {
+                           return std::to_string(info.param.messages) + "_"
+                                  + std::to_string(info.param.producers);
+                         });
+
+struct TestCaseConcurrentProductionConsumption
+{
+  int messages{};
+  int producers{};
+  int consumers{};
+};
+
+using ConcurrentProductionConsumption = TestWithParam<TestCaseConcurrentProductionConsumption>;
+
+TEST_P(ConcurrentProductionConsumption, run)
+{
+  const auto &param = GetParam();
+  // Due to the way we calculate the client identifier we need the number of messages to be
+  // less than this value otherwise there will be collisions.
+  ASSERT_LE(param.messages, MULTIPLIER);
+
+  auto bus = std::make_shared<SynchronizedEventBus>();
+
+  auto listener    = std::make_unique<CounterListener>();
+  auto rawListener = listener.get();
+  bus->addListener(std::move(listener));
+
+  auto sync = std::make_shared<Synchronization>();
+
+  std::vector<ProducerPtr> producers{};
+  for (int id = 0; id < param.producers; ++id)
+  {
+    auto producer = std::make_unique<Producer>(id, param.messages, sync, bus);
+    producer->start();
+
+    producers.emplace_back(std::move(producer));
+  }
+
+  std::vector<ConsumerPtr> consumers{};
+  for (int id = 0; id < param.consumers; ++id)
+  {
+    auto consumer = std::make_unique<Consumer>(id, sync, bus);
+    consumer->start();
+
+    consumers.emplace_back(std::move(consumer));
+  }
+
+  sync->notifyStart();
+
+  std::for_each(producers.begin(), producers.end(), [](const ProducerPtr &producer) {
+    producer->join();
+  });
+  sync->productionFinished.store(true);
+  std::for_each(consumers.begin(), consumers.end(), [](const ConsumerPtr &consumer) {
+    consumer->join();
+  });
+
+  const auto expectedMessagesCount = param.messages * param.producers;
+  EXPECT_EQ(expectedMessagesCount, rawListener->messagesCount());
+}
+
+INSTANTIATE_TEST_SUITE_P(
+  Unit_Net_Messaging_SynchronizedEventBus,
+  ConcurrentProductionConsumption,
+  Values(
+    TestCaseConcurrentProductionConsumption{.messages = 1, .producers = 1, .consumers = 1},
+    TestCaseConcurrentProductionConsumption{.messages = 10, .producers = 1, .consumers = 1},
+    TestCaseConcurrentProductionConsumption{.messages = 100, .producers = 1, .consumers = 1},
+    TestCaseConcurrentProductionConsumption{.messages = 1000, .producers = 1, .consumers = 1},
+    TestCaseConcurrentProductionConsumption{.messages = 100, .producers = 5, .consumers = 10},
+    TestCaseConcurrentProductionConsumption{.messages = 1000, .producers = 5, .consumers = 5},
+    TestCaseConcurrentProductionConsumption{.messages = 5000, .producers = 5, .consumers = 2},
+    TestCaseConcurrentProductionConsumption{.messages = 100, .producers = 10, .consumers = 10},
+    TestCaseConcurrentProductionConsumption{.messages = 100, .producers = 10, .consumers = 20},
+    TestCaseConcurrentProductionConsumption{.messages = 1000, .producers = 10, .consumers = 5},
+    TestCaseConcurrentProductionConsumption{.messages = 1000, .producers = 10, .consumers = 20},
+    TestCaseConcurrentProductionConsumption{.messages = 5000, .producers = 10, .consumers = 5},
+    TestCaseConcurrentProductionConsumption{.messages = 5000, .producers = 10, .consumers = 30}),
+  [](const TestParamInfo<TestCaseConcurrentProductionConsumption> &info) -> std::string {
+    return std::to_string(info.param.messages) + "_" + std::to_string(info.param.producers) + "_"
+           + std::to_string(info.param.consumers);
+  });
 
 } // namespace net

@@ -20,7 +20,6 @@ void SynchronizedEventBus::pushEvent(IEventPtr event)
 
 void SynchronizedEventBus::addListener(IEventListenerPtr listener)
 {
-  const std::lock_guard guard(m_locker);
   this->AbstractEventBus::addListener(std::move(listener));
 }
 

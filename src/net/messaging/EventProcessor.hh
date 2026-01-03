@@ -28,7 +28,7 @@ class EventProcessor : public core::CoreObject
   EventHandler m_handler{};
 
   auto acquireAndClearEvents() const -> std::deque<IEventPtr>;
-  void printEventsInfo() const;
+  void printEventsInfo(const std::deque<IEventPtr> &events) const;
 };
 
 } // namespace net
