@@ -22,8 +22,6 @@ void EventProcessor::processEvents()
   {
     m_handler(*event);
   }
-
-  printEventsInfo();
 }
 
 auto EventProcessor::acquireAndClearEvents() const -> std::deque<IEventPtr>
@@ -82,22 +80,21 @@ auto eventsTypesToString(const std::deque<IEventPtr> &events) -> EventsInfo
 }
 } // namespace
 
-void EventProcessor::printEventsInfo() const
+void EventProcessor::printEventsInfo(const std::deque<IEventPtr> &events) const
 {
-  if (m_events.empty())
+  if (events.empty())
   {
     return;
   }
 
-  const auto eventsInfo = eventsTypesToString(m_events);
+  const auto eventsInfo = eventsTypesToString(events);
   if (eventsInfo.importantEventsCount > 0)
   {
-    info("Processed " + std::to_string(m_events.size()) + " message(s): " + eventsInfo.eventsTypes);
+    info("Processed " + std::to_string(events.size()) + " message(s): " + eventsInfo.eventsTypes);
   }
   else
   {
-    verbose("Processed " + std::to_string(m_events.size())
-            + " message(s): " + eventsInfo.eventsTypes);
+    verbose("Processed " + std::to_string(events.size()) + " message(s): " + eventsInfo.eventsTypes);
   }
 }
 
