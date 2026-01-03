@@ -298,7 +298,7 @@ struct TestCaseConcurrentProduction
 
 using ConcurrentProduction = TestWithParam<TestCaseConcurrentProduction>;
 
-TEST_P(ConcurrentProduction, DISABLED_run)
+TEST_P(ConcurrentProduction, run)
 {
   const auto &param = GetParam();
   // Due to the way we calculate the client identifier we need the number of messages to be
