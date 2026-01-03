@@ -1,7 +1,7 @@
 
 #include "SynchronizedEventBus.hh"
 #include "ClientConnectedEvent.hh"
-#include <future>
+#include <condition_variable>
 #include <gtest/gtest.h>
 
 using namespace ::testing;
@@ -394,7 +394,6 @@ TEST_P(ConcurrentProductionConsumption, run)
 
     producers.emplace_back(std::move(producer));
   }
-  std::cout << "[test] created producer threads\n";
 
   std::vector<ConsumerPtr> consumers{};
   for (int id = 0; id < param.consumers; ++id)
@@ -405,25 +404,18 @@ TEST_P(ConcurrentProductionConsumption, run)
     consumers.emplace_back(std::move(consumer));
   }
 
-  std::cout << "[test] created consumer threads\n";
-
   sync->notifyStart();
-
-  std::cout << "[test] notified start\n";
 
   std::for_each(producers.begin(), producers.end(), [](const ProducerPtr &producer) {
     producer->join();
   });
-  std::cout << "[test] joined all producer threads\n";
   sync->productionFinished.store(true);
   std::for_each(consumers.begin(), consumers.end(), [](const ConsumerPtr &consumer) {
     consumer->join();
   });
-  std::cout << "[test] joined all consumer threads\n";
 
   const auto expectedMessagesCount = param.messages * param.producers;
   EXPECT_EQ(expectedMessagesCount, rawListener->messagesCount());
-  std::cout << "[test] finished successfully\n";
 }
 
 INSTANTIATE_TEST_SUITE_P(
