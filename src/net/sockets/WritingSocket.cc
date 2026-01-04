@@ -1,7 +1,7 @@
 
 #include "WritingSocket.hh"
-#include "ClientDisconnectedEvent.hh"
 #include "DataSentEvent.hh"
+#include "DataWriteFailureEvent.hh"
 
 namespace net::details {
 
@@ -78,7 +78,7 @@ void WritingSocket::onDataSent(const std::error_code &code, const std::size_t co
 
     m_socketActive.store(false);
 
-    auto event = std::make_unique<ClientDisconnectedEvent>(m_clientId);
+    auto event = std::make_unique<DataWriteFailureEvent>(m_clientId);
     m_eventBus->pushEvent(std::move(event));
 
     return;

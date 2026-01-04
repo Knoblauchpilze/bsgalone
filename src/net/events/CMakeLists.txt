@@ -7,7 +7,9 @@ target_sources (net_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/IEvent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ClientConnectedEvent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ClientDisconnectedEvent.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/DataReadFailureEvent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/DataReceivedEvent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/DataSentEvent.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/DataWriteFailureEvent.cc
 	)
 

@@ -1,6 +1,6 @@
 
 #include "ReadingSocket.hh"
-#include "ClientDisconnectedEvent.hh"
+#include "DataReadFailureEvent.hh"
 #include "DataReceivedEvent.hh"
 
 namespace net::details {
@@ -63,7 +63,7 @@ void ReadingSocket::onDataReceived(const std::error_code &code, const std::size_
 
     m_socketActive.store(false);
 
-    auto event = std::make_unique<ClientDisconnectedEvent>(m_clientId);
+    auto event = std::make_unique<DataReadFailureEvent>(m_clientId);
     m_eventBus->pushEvent(std::move(event));
 
     return;

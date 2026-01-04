@@ -1,7 +1,7 @@
 
 #include "WritingSocket.hh"
-#include "ClientDisconnectedEvent.hh"
 #include "DataSentEvent.hh"
+#include "DataWriteFailureEvent.hh"
 #include "IEventBus.hh"
 #include "TcpServerFixture.hh"
 #include "TestEventBus.hh"
@@ -56,8 +56,7 @@ TEST_F(Integration_Net_Sockets_WritingSocket, SendsDataToSocket)
   EXPECT_EQ("test", actual);
 }
 
-TEST_F(Integration_Net_Sockets_WritingSocket,
-       PublishesClientDisconnectedEventWhenClientSocketIsClosed)
+TEST_F(Integration_Net_Sockets_WritingSocket, PublishesDataWriteFailureEventWhenClientSocketIsClosed)
 {
   auto sockets = this->getTestSockets();
   auto bus     = std::make_shared<TestEventBus>();
@@ -70,8 +69,8 @@ TEST_F(Integration_Net_Sockets_WritingSocket,
   socket->send(toSend);
 
   const auto actual = bus->waitForEvent();
-  EXPECT_EQ(EventType::CLIENT_DISCONNECTED, actual->type());
-  EXPECT_EQ(ClientId{1}, actual->as<ClientDisconnectedEvent>().clientId());
+  EXPECT_EQ(EventType::DATA_WRITE_FAILURE, actual->type());
+  EXPECT_EQ(ClientId{1}, actual->as<DataWriteFailureEvent>().clientId());
 }
 
 // Note: this test shows that we can't detect failures when writing. Fortunately

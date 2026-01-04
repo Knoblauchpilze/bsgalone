@@ -1,6 +1,6 @@
 
 #include "ReadingSocket.hh"
-#include "ClientDisconnectedEvent.hh"
+#include "DataReadFailureEvent.hh"
 #include "DataReceivedEvent.hh"
 #include "IEventBus.hh"
 #include "TcpServerFixture.hh"
@@ -54,7 +54,7 @@ TEST_F(Integration_Net_Sockets_ReadingSocket, PublishesDataReceivedEvent)
   EXPECT_EQ(expectedData, actual->as<DataReceivedEvent>().data());
 }
 
-TEST_F(Integration_Net_Sockets_ReadingSocket, PublishesClientDisconnectedEventWhenSocketIsClosed)
+TEST_F(Integration_Net_Sockets_ReadingSocket, PublishesDataReadFailureEventWhenSocketIsClosed)
 {
   auto sockets = this->getTestSockets();
   auto bus     = std::make_shared<TestEventBus>();
@@ -64,8 +64,8 @@ TEST_F(Integration_Net_Sockets_ReadingSocket, PublishesClientDisconnectedEventWh
   sockets.server->shutdown(asio::ip::tcp::socket::shutdown_both);
 
   const auto actual = bus->waitForEvent();
-  EXPECT_EQ(EventType::CLIENT_DISCONNECTED, actual->type());
-  EXPECT_EQ(ClientId{1}, actual->as<ClientDisconnectedEvent>().clientId());
+  EXPECT_EQ(EventType::DATA_READ_FAILURE, actual->type());
+  EXPECT_EQ(ClientId{1}, actual->as<DataReadFailureEvent>().clientId());
 }
 
 TEST_F(Integration_Net_Sockets_ReadingSocket, FailsToReconnectWhenSocketIsDisconnected)
@@ -78,7 +78,7 @@ TEST_F(Integration_Net_Sockets_ReadingSocket, FailsToReconnectWhenSocketIsDiscon
   sockets.server->shutdown(asio::ip::tcp::socket::shutdown_both);
 
   const auto actual = bus->waitForEvent();
-  EXPECT_EQ(EventType::CLIENT_DISCONNECTED, actual->type());
+  EXPECT_EQ(EventType::DATA_READ_FAILURE, actual->type());
 
   EXPECT_THAT([&socket]() { socket->connect(); },
               ThrowsMessage<core::CoreException>(HasSubstr("Cannot connect closed socket")));
