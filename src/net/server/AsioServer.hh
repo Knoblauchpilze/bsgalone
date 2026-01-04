@@ -14,13 +14,18 @@
 
 namespace net::details {
 
-class AsioServer : public core::CoreObject, public std::enable_shared_from_this<AsioServer>
+class AsioServer : public core::CoreObject,
+                   public std::enable_shared_from_this<AsioServer>,
+                   public IEventListener
 {
   public:
   AsioServer(AsioContext &context, const int port, IEventBusShPtr eventBus);
-  ~AsioServer() override = default;
+  ~AsioServer() override;
 
   void start();
+
+  bool isEventRelevant(const EventType &type) const override;
+  void onEventReceived(const IEvent &event) override;
 
   private:
   asio::ip::tcp::acceptor m_acceptor;
@@ -33,6 +38,8 @@ class AsioServer : public core::CoreObject, public std::enable_shared_from_this<
   std::unordered_map<ClientId, WritingSocketShPtr> m_writers{};
 
   IEventBusShPtr m_eventBus{};
+
+  IEventBusShPtr m_internalBus{};
 
   void registerToAsio();
 

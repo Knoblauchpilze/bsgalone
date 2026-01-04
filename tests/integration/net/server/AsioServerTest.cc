@@ -92,6 +92,7 @@ TEST_F(Integration_Net_Server_AsioServer, PublishesDataReceivedEventWhenDataIsRe
   EXPECT_EQ(expectedData, event->as<DataReceivedEvent>().data());
 }
 
+// TODO: This should be removed
 TEST_F(Integration_Net_Server_AsioServer, Deletion)
 {
   {

@@ -1,13 +1,45 @@
 
 #include "AsioServer.hh"
+#include "AsyncEventBus.hh"
 #include "ClientConnectedEvent.hh"
+#include "SynchronizedEventBus.hh"
+
+#include <iostream>
 
 namespace net::details {
+namespace {
+class ServerListenerProxy : public IEventListener
+{
+  public:
+  ServerListenerProxy(IEventListener *listener)
+    : m_listener(listener)
+  {}
+
+  ~ServerListenerProxy() override
+  {
+    std::cout << "[proxy] deleting ServerListenerProxy\n";
+  }
+
+  bool isEventRelevant(const EventType & /*type*/) const
+  {
+    return true;
+  }
+
+  void onEventReceived(const IEvent &event)
+  {
+    m_listener->onEventReceived(event);
+  }
+
+  private:
+  IEventListener *m_listener{};
+};
+} // namespace
 
 AsioServer::AsioServer(AsioContext &context, const int port, IEventBusShPtr eventBus)
   : core::CoreObject("server")
   , m_acceptor(context.get(), asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port))
   , m_eventBus(std::move(eventBus))
+  , m_internalBus(std::make_shared<AsyncEventBus>(std::make_unique<SynchronizedEventBus>()))
 {
   setService("net");
 
@@ -15,6 +47,13 @@ AsioServer::AsioServer(AsioContext &context, const int port, IEventBusShPtr even
   {
     throw std::invalid_argument("Expected non null event bus");
   }
+
+  m_internalBus->addListener(std::make_unique<ServerListenerProxy>(this));
+}
+
+AsioServer::~AsioServer()
+{
+  std::cout << "[server] deleting AsioServer\n";
 }
 
 void AsioServer::start()
@@ -27,6 +66,16 @@ void AsioServer::start()
   }
 
   registerToAsio();
+}
+
+bool AsioServer::isEventRelevant(const EventType &type) const
+{
+  return type == EventType::DATA_READ_FAILURE || type == EventType::DATA_WRITE_FAILURE;
+}
+
+void AsioServer::onEventReceived(const IEvent &event)
+{
+  std::cout << "[server] should handle " << str(event.type()) << "\n";
 }
 
 void AsioServer::registerToAsio()
@@ -58,8 +107,8 @@ auto AsioServer::registerConnection(asio::ip::tcp::socket rawSocket) -> ClientId
 
   const auto clientId = m_nextClientId.fetch_add(1);
 
-  auto reader = std::make_shared<ReadingSocket>(clientId, socket, m_eventBus);
-  auto writer = std::make_shared<WritingSocket>(clientId, socket, m_eventBus);
+  auto reader = std::make_shared<ReadingSocket>(clientId, socket, m_internalBus);
+  auto writer = std::make_shared<WritingSocket>(clientId, socket, m_internalBus);
 
   reader->connect();
 
