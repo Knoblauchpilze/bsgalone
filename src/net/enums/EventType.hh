@@ -10,8 +10,10 @@ enum class EventType
 {
   CLIENT_CONNECTED,
   CLIENT_DISCONNECTED,
+  DATA_READ_FAILURE,
   DATA_RECEIVED,
-  DATA_SENT
+  DATA_SENT,
+  DATA_WRITE_FAILURE
 };
 
 auto str(const EventType &type) -> std::string;

@@ -1,7 +1,7 @@
 
 #include "AsioServer.hh"
 #include "ClientConnectedEvent.hh"
-#include "ClientDisconnectedEvent.hh"
+#include "DataReadFailureEvent.hh"
 #include "DataReceivedEvent.hh"
 #include "TcpFixture.hh"
 #include "TestEventBus.hh"
@@ -57,7 +57,7 @@ TEST_F(Integration_Net_Server_AsioServer, AcceptsMultipleConnections)
   server->stop();
 }
 
-TEST_F(Integration_Net_Server_AsioServer, DetectsDisconnectionAndPublishesClientDisconnectedEvent)
+TEST_F(Integration_Net_Server_AsioServer, DetectsDisconnectionAndPublishesDataReadFailureEvent)
 {
   auto bus    = std::make_shared<TestEventBus>();
   auto server = std::make_shared<AsioServer>(this->port(), bus);
@@ -70,8 +70,8 @@ TEST_F(Integration_Net_Server_AsioServer, DetectsDisconnectionAndPublishesClient
 
   socket->shutdown(asio::ip::tcp::socket::shutdown_both);
   event = bus->waitForEvent();
-  EXPECT_EQ(EventType::CLIENT_DISCONNECTED, event->type());
-  EXPECT_EQ(expectedClientId, event->as<ClientDisconnectedEvent>().clientId());
+  EXPECT_EQ(EventType::DATA_READ_FAILURE, event->type());
+  EXPECT_EQ(expectedClientId, event->as<DataReadFailureEvent>().clientId());
 
   server->stop();
 }
