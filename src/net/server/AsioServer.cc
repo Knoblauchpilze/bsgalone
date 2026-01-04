@@ -37,7 +37,7 @@ void AsioServer::stop()
   if (!m_running.compare_exchange_strong(expected, false))
   {
     throw std::runtime_error(
-      "Got unexpected state for TCP server, did you forget to call the start method?d");
+      "Got unexpected state for TCP server, did you forget to call the start method?");
   }
 
   m_context.stop();
