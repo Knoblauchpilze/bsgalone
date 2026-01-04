@@ -64,6 +64,8 @@ jobs:
         with:
           path: /__w/bsgalone/bsgalone/ccache
           key: ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}-${{ env.CCACHE_VERSION }}-${{ github.ref_name }}-${{ github.sha }}
+      - name: Print ccache stats
+        run: ccache -sv
 
   unit-tests:
     runs-on: ubuntu-latest
