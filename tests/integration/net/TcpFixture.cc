@@ -8,21 +8,32 @@ TcpFixture::TcpFixture()
   : m_port(NEXT_PORT.fetch_add(1))
 {}
 
-void TcpFixture::SetUp() {}
+void TcpFixture::SetUp()
+{
+  m_context->start();
+}
 
-void TcpFixture::TearDown() {}
+void TcpFixture::TearDown()
+{
+  m_context->stop();
+}
 
 auto TcpFixture::port() const -> int
 {
   return m_port;
 }
 
+auto TcpFixture::asioContext() -> net::details::AsioContext &
+{
+  return *m_context;
+}
+
 auto TcpFixture::connectToRunningServer() -> net::SocketShPtr
 {
-  asio::ip::tcp::socket socket(m_context);
+  asio::ip::tcp::socket socket(m_context->get());
   auto out = std::make_shared<asio::ip::tcp::socket>(std::move(socket));
 
-  asio::ip::tcp::resolver resolver(m_context);
+  asio::ip::tcp::resolver resolver(m_context->get());
   auto endpoints = resolver.resolve("127.0.0.1", std::to_string(m_port));
 
   asio::connect(*out, endpoints.begin(), endpoints.end());
