@@ -66,6 +66,8 @@ jobs:
           key: ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}-${{ env.CCACHE_VERSION }}-${{ github.ref_name }}-${{ github.sha }}
       - name: Print ccache stats
         run: ccache -sv
+        env:
+          CCACHE_DIR: /__w/bsgalone/bsgalone/ccache
 
   unit-tests:
     runs-on: ubuntu-latest
