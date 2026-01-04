@@ -12,7 +12,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   wget=1.21.4-1ubuntu4.1 \
   make=4.3-4.1build2 \
   cmake=3.28.3-1build7 \
-  ccache=4.9.1-1 \
   pkg-config=1.8.1-2build1 \
   libpq-dev=16.11-0ubuntu0.24.04.1 \
   libx11-dev=2:1.8.7-1build1 \
@@ -27,14 +26,19 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   lcov=2.0-4ubuntu2 \
   # https://github.com/linux-test-project/lcov/issues/193
   libcpanel-json-xs-perl=4.37-1build3 \
+  python3=3.12.3-0ubuntu2.1 \
+  # https://superuser.com/questions/801159/cannot-decompress-tar-xz-file-getting-xz-cannot-exec-no-such-file-or-direct
+  xz-utils=5.6.1+really5.4.5-1ubuntu0.2 \
   && rm -rf /var/lib/apt/lists/*
 # https://www.dedicatedcore.com/blog/install-gcc-compiler-ubuntu/
 RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 13 --slave /usr/bin/g++ g++ /usr/bin/g++-13
 
 ARG CPP_VERSION="20"
 ARG LIBPQXX_VERSION="7.10.1"
+ARG CCACHE_VERSION="4.12.2"
 ENV CPP_VERSION=$CPP_VERSION
 ENV LIBPQXX_VERSION=$LIBPQXX_VERSION
+ENV CCACHE_VERSION=$CCACHE_VERSION
 FROM dev-tools AS ci-build-base
 WORKDIR /tmp
 RUN wget https://github.com/jtv/libpqxx/archive/refs/tags/${LIBPQXX_VERSION}.tar.gz -O libpqxx.tar.gz
@@ -47,6 +51,11 @@ RUN cmake \
       .
 RUN cmake --build . -j 8
 RUN cmake --install .
+WORKDIR /tmp
+RUN wget https://github.com/ccache/ccache/releases/download/v${CCACHE_VERSION}/ccache-${CCACHE_VERSION}-linux-x86_64.tar.xz -O ccache.tar.xz
+RUN tar -xf ccache.tar.xz
+WORKDIR ccache-${CCACHE_VERSION}-linux-x86_64
+RUN make install
 
 FROM dev-tools AS ci-cpp-build-image
 ARG GIT_COMMIT_HASH="undefined"
@@ -54,5 +63,6 @@ ENV GIT_COMMIT_HASH=$GIT_COMMIT_HASH
 WORKDIR /
 COPY --from=ci-build-base /usr/local/lib /usr/local/lib/
 COPY --from=ci-build-base /usr/local/include/pqxx /usr/local/include/pqxx
+COPY --from=ci-build-base /usr/local/bin/ccache /usr/bin/ccache
 # https://stackoverflow.com/questions/17889799/libraries-in-usr-local-lib-not-found
 RUN ldconfig

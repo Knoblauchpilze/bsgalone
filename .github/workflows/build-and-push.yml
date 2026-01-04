@@ -20,6 +20,7 @@ env:
   # Keep in sync with the Dockerfile describing the CI build image
   CPP_STANDARD: 20
   LIBPQXX_VERSION: 7.10.1
+  CCACHE_VERSION: 4.12.2
 
 jobs:
   build:
@@ -35,10 +36,10 @@ jobs:
         uses: actions/cache/restore@v5
         with:
           path: /__w/bsgalone/bsgalone/ccache
-          key: ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}-${{ github.ref_name }}-${{ github.sha }}
+          key: ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}-${{ env.CCACHE_VERSION }}-${{ github.ref_name }}-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}-${{ github.ref_name }}-
-            ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}-master-
+            ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}-${{ env.CCACHE_VERSION }}-${{ github.ref_name }}-
+            ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}-${{ env.CCACHE_VERSION }}-master-
       - name: Build project
         run: make tests
         # https://ccache.dev/manual/4.0.html#_location_of_the_primary_configuration_file
@@ -62,7 +63,7 @@ jobs:
         uses: actions/cache/save@v5
         with:
           path: /__w/bsgalone/bsgalone/ccache
-          key: ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}-${{ github.ref_name }}-${{ github.sha }}
+          key: ${{ runner.os }}-${{ env.CPP_STANDARD }}-${{ env.LIBPQXX_VERSION }}-${{ env.CCACHE_VERSION }}-${{ github.ref_name }}-${{ github.sha }}
 
   unit-tests:
     runs-on: ubuntu-latest

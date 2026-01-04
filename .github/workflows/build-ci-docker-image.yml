@@ -21,14 +21,20 @@ on:
         description: "Version of libpqxx to use"
         required: false
         default: "7.10.1"
+      ccache_version:
+        description: "Version of ccache to use"
+        required: false
+        default: "4.12.2"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 env:
+  # Keep in sync with the CI workflow, the Dockerfile describing the CI build image and the local Makefile
   CPP_VERSION: 20
   LIBPQXX_VERSION: 7.10.1
+  CCACHE_VERSION: 4.12.2
 
 jobs:
   docker-props:
@@ -61,6 +67,10 @@ jobs:
         id: libpqxx-version
         run: |
           echo "version=${{ github.event.inputs.libpqxx_version || env.LIBPQXX_VERSION }}" >> $GITHUB_OUTPUT
+      - name: Determine ccache version
+        id: ccache-version
+        run: |
+          echo "version=${{ github.event.inputs.ccache_version || env.CCACHE_VERSION }}" >> $GITHUB_OUTPUT
 
   build-and-push-docker-image:
     runs-on: ubuntu-latest
@@ -82,5 +92,6 @@ jobs:
           build-args: |
             CPP_VERSION=${{ needs.docker-props.outputs.cpp-version }}
             LIBPQXX_VERSION=${{ needs.docker-props.outputs.libpqxx-version }}
+            CCACHE_VERSION=${{ needs.docker-props.outputs.ccache-version }}
           push: true
           tags: totocorpsoftwareinc/ci-cpp-build-image:${{ needs.docker-props.outputs.tag }}
