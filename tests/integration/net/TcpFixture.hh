@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "AsioContext.hh"
 #include "SocketShPtr.hh"
 #include <asio.hpp>
 #include <atomic>
@@ -16,12 +17,13 @@ class TcpFixture : public ::testing::Test
 
   protected:
   int m_port{};
-  asio::io_context m_context{};
+  net::details::AsioContextPtr m_context{std::make_unique<net::details::AsioContext>()};
 
   void SetUp() override;
   void TearDown() override;
 
   auto port() const -> int;
+  auto asioContext() -> net::details::AsioContext &;
 
   /// @brief - Attempts to synchronously connect to the server available at
   /// the port defined in the fixture and returns the **client** socket when

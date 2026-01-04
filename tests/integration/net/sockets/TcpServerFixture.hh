@@ -22,7 +22,6 @@ class TcpServerFixture : public TcpFixture
   auto getTestSockets() -> ConnectedSockets;
 
   private:
-  std::thread m_contextThread{};
   TcpAcceptorShPtr m_acceptor{};
 };
 
