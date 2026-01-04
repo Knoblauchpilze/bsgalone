@@ -44,6 +44,7 @@ jobs:
       tag: ${{ steps.docker-tag.outputs.tag }}
       cpp-version: ${{ steps.cpp-version.outputs.version }}
       libpqxx-version: ${{ steps.libpqxx-version.outputs.version }}
+      ccache-version: ${{ steps.ccache-version.outputs.version }}
     steps:
       - uses: actions/checkout@v6
       - name: debug
