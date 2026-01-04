@@ -7,17 +7,12 @@ void TcpServerFixture::SetUp()
 {
   this->TcpFixture::SetUp();
 
-  m_acceptor = std::make_shared<TcpAcceptor>(m_context, m_port);
+  m_acceptor = std::make_shared<TcpAcceptor>(m_context->get(), m_port);
   m_acceptor->registerAccept();
-
-  m_contextThread = std::thread([this]() { m_context.run(); });
 }
 
 void TcpServerFixture::TearDown()
 {
-  m_context.stop();
-  m_contextThread.join();
-
   this->TcpFixture::TearDown();
 }
 

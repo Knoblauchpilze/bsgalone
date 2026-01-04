@@ -15,13 +15,14 @@ using Integration_Net_Server_AsioServer = TcpFixture;
 
 TEST_F(Integration_Net_Server_AsioServer, ThrowsWhenEventBusIsNull)
 {
-  EXPECT_THROW([this]() { AsioServer(this->port(), nullptr); }(), std::invalid_argument);
+  EXPECT_THROW([this]() { AsioServer(this->asioContext(), this->port(), nullptr); }(),
+               std::invalid_argument);
 }
 
 TEST_F(Integration_Net_Server_AsioServer, AcceptsConnectionAndPublishesClientConnectedEvent)
 {
   auto bus    = std::make_shared<TestEventBus>();
-  auto server = std::make_shared<AsioServer>(this->port(), bus);
+  auto server = std::make_shared<AsioServer>(this->asioContext(), this->port(), bus);
   server->start();
 
   // The client socket needs to be kept so that the server socket does not
@@ -32,14 +33,12 @@ TEST_F(Integration_Net_Server_AsioServer, AcceptsConnectionAndPublishesClientCon
   EXPECT_EQ(EventType::CLIENT_CONNECTED, actual->type());
   // The first client identifier should be 0 as the counter starts from 0
   EXPECT_EQ(ClientId{0}, actual->as<ClientConnectedEvent>().clientId());
-
-  server->stop();
 }
 
 TEST_F(Integration_Net_Server_AsioServer, AcceptsMultipleConnections)
 {
   auto bus    = std::make_shared<TestEventBus>();
-  auto server = std::make_shared<AsioServer>(this->port(), bus);
+  auto server = std::make_shared<AsioServer>(this->asioContext(), this->port(), bus);
   server->start();
 
   auto socket1 = this->connectToRunningServer();
@@ -53,14 +52,12 @@ TEST_F(Integration_Net_Server_AsioServer, AcceptsMultipleConnections)
   actual = bus->waitForEvent();
   EXPECT_EQ(EventType::CLIENT_CONNECTED, actual->type());
   EXPECT_EQ(ClientId{1}, actual->as<ClientConnectedEvent>().clientId());
-
-  server->stop();
 }
 
 TEST_F(Integration_Net_Server_AsioServer, DetectsDisconnectionAndPublishesDataReadFailureEvent)
 {
   auto bus    = std::make_shared<TestEventBus>();
-  auto server = std::make_shared<AsioServer>(this->port(), bus);
+  auto server = std::make_shared<AsioServer>(this->asioContext(), this->port(), bus);
   server->start();
 
   auto socket = this->connectToRunningServer();
@@ -72,14 +69,12 @@ TEST_F(Integration_Net_Server_AsioServer, DetectsDisconnectionAndPublishesDataRe
   event = bus->waitForEvent();
   EXPECT_EQ(EventType::DATA_READ_FAILURE, event->type());
   EXPECT_EQ(expectedClientId, event->as<DataReadFailureEvent>().clientId());
-
-  server->stop();
 }
 
 TEST_F(Integration_Net_Server_AsioServer, PublishesDataReceivedEventWhenDataIsReceived)
 {
   auto bus    = std::make_shared<TestEventBus>();
-  auto server = std::make_shared<AsioServer>(this->port(), bus);
+  auto server = std::make_shared<AsioServer>(this->asioContext(), this->port(), bus);
   server->start();
 
   auto socket = this->connectToRunningServer();
@@ -95,8 +90,28 @@ TEST_F(Integration_Net_Server_AsioServer, PublishesDataReceivedEventWhenDataIsRe
   EXPECT_EQ(expectedClientId, event->as<DataReceivedEvent>().clientId());
   const std::vector<char> expectedData(data.begin(), data.end());
   EXPECT_EQ(expectedData, event->as<DataReceivedEvent>().data());
+}
 
-  server->stop();
+TEST_F(Integration_Net_Server_AsioServer, Deletion)
+{
+  {
+    auto bus = std::make_shared<TestEventBus>();
+    {
+      auto server = std::make_shared<AsioServer>(this->asioContext(), this->port(), bus);
+      server->start();
+
+      // {
+      //   auto socket = this->connectToRunningServer();
+      //   std::cout << "connected to server\n";
+      // }
+      std::this_thread::sleep_for(std::chrono::milliseconds(50));
+      std::cout << "[test] stopping server\n";
+      // server->stop();
+      std::cout << "[test] after scope of socket\n";
+    }
+    std::cout << "[test] after scope of server\n";
+  }
+  std::cout << "[test] after scope of event bus\n";
 }
 
 } // namespace net::details

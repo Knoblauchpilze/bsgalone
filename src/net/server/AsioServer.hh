@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "AsioContext.hh"
 #include "ClientId.hh"
 #include "CoreObject.hh"
 #include "IEventBus.hh"
@@ -16,17 +17,15 @@ namespace net::details {
 class AsioServer : public core::CoreObject, public std::enable_shared_from_this<AsioServer>
 {
   public:
-  AsioServer(const int port, IEventBusShPtr eventBus);
+  AsioServer(AsioContext &context, const int port, IEventBusShPtr eventBus);
+  ~AsioServer() override = default;
 
   void start();
-  void stop();
 
   private:
-  asio::io_context m_context{};
   asio::ip::tcp::acceptor m_acceptor;
 
-  std::atomic_bool m_running{false};
-  std::thread m_contextThread{};
+  std::atomic_bool m_registered{false};
 
   std::atomic<ClientId> m_nextClientId{0};
   std::mutex m_connectionsLocker{};

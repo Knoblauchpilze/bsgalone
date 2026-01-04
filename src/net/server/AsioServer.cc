@@ -4,9 +4,9 @@
 
 namespace net::details {
 
-AsioServer::AsioServer(const int port, IEventBusShPtr eventBus)
+AsioServer::AsioServer(AsioContext &context, const int port, IEventBusShPtr eventBus)
   : core::CoreObject("server")
-  , m_acceptor(m_context, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port))
+  , m_acceptor(context.get(), asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port))
   , m_eventBus(std::move(eventBus))
 {
   setService("net");
@@ -20,28 +20,13 @@ AsioServer::AsioServer(const int port, IEventBusShPtr eventBus)
 void AsioServer::start()
 {
   auto expected = false;
-  if (!m_running.compare_exchange_strong(expected, true))
+  if (!m_registered.compare_exchange_strong(expected, true))
   {
     throw std::runtime_error(
-      "Got unexpected state for TCP server, did you already call the start method?");
+      "Got unexpected state for asio server, did you already call the start method?");
   }
 
   registerToAsio();
-
-  m_contextThread = std::thread([this]() { m_context.run(); });
-}
-
-void AsioServer::stop()
-{
-  auto expected = true;
-  if (!m_running.compare_exchange_strong(expected, false))
-  {
-    throw std::runtime_error(
-      "Got unexpected state for TCP server, did you forget to call the start method?");
-  }
-
-  m_context.stop();
-  m_contextThread.join();
 }
 
 void AsioServer::registerToAsio()
