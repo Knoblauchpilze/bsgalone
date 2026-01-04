@@ -18,7 +18,7 @@ class AsioServer : public core::CoreObject, public std::enable_shared_from_this<
 {
   public:
   AsioServer(AsioContext &context, const int port, IEventBusShPtr eventBus);
-  ~AsioServer() override;
+  ~AsioServer() override = default;
 
   void start();
 
