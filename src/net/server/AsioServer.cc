@@ -42,8 +42,8 @@ class ServerListenerProxy : public IEventListener
 AsioServer::AsioServer(AsioContext &context, const int port, IEventBusShPtr eventBus)
   : core::CoreObject("server")
   , m_acceptor(context.get(), asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port))
-  , m_internalBus(std::make_shared<AsyncEventBus>(std::make_unique<SynchronizedEventBus>()))
   , m_eventBus(std::move(eventBus))
+  , m_internalBus(std::make_shared<AsyncEventBus>(std::make_unique<SynchronizedEventBus>()))
 {
   setService("net");
 
@@ -57,6 +57,13 @@ AsioServer::AsioServer(AsioContext &context, const int port, IEventBusShPtr even
 
 AsioServer::~AsioServer()
 {
+  // TODO: This is necessary otherwise it can be that we get callbacks from asio
+  // indicating to remove a connection while the maps are being destroyed.
+  // It would be nice to think about a cleaner way to clean-up the event bus and
+  // the sockets.
+  const std::lock_guard guard(m_connectionsLocker);
+  m_readers.clear();
+  m_writers.clear();
   std::cout << "[server] deleting AsioServer\n";
 }
 
@@ -160,37 +167,16 @@ void AsioServer::handleConnectionFailure(const IEvent &event)
 
   {
     const std::lock_guard guard(m_connectionsLocker);
-    m_readers.erase(*maybeClientId);
-    m_writers.erase(*maybeClientId);
+    const auto rr = m_readers.erase(*maybeClientId);
+    const auto rw = m_writers.erase(*maybeClientId);
+
+    info("removed " + std::to_string(rr) + " and " + std::to_string(rw) + " socket(s)");
   }
 
   debug("Detected failure for client " + str(*maybeClientId) + ", removing connection");
 
   std::cout << "[server] publishing event " << str(event.type()) << "\n";
   auto out = std::make_unique<ClientDisconnectedEvent>(*maybeClientId);
-  // TODO: It crashes here with the following:
-  // [net] 05-01-2026 08:09:58 [debug] [context] Successfully started asio context
-  // [net] 05-01-2026 08:09:58 [warning] [reading] [socket] Error detected when receiving data from connection (cause: "End of file (code: 2)")
-  // [net] 05-01-2026 08:09:58 [debug] [context] Successfully stopped asio context
-  // [asio context] deleting context
-  // [server] deleting AsioServer <----------------------- 1 the server is being deleted
-  // [test bus] deleting TestEventBus <------------------- 2 the test event bus has already been deleted
-  // [writing] deleting WritingSocket
-  // [proxy] forwarding event data_read_failure
-  // [reading] deleting ReadingSocket
-  // [async] starting deletion of AsyncEventBus
-  // [net] 05-01-2026 08:09:58 [debug] [server] Detected failure for client 0, removing connection
-  // [server] publishing event data_read_failure
-  // pure virtual method called
-  // terminate called without an active exception
-  //
-  // Why is the TestEventBus being deleted? There's at least one reference
-  // It gets deleted because most likely the test is finished, it's just asio processing being
-  // deleted. The only references are probably in the AsioServer.
-  // This means that the proxy should already have been deleted as well
-  // And in the header the m_eventBus is before the m_internalBus.
-  // Two solutions: change order or unregister the listener/mark the deletion
-  // We need to add names to the event bus
   m_eventBus->pushEvent(std::move(out));
 }
 

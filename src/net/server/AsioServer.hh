@@ -32,18 +32,22 @@ class AsioServer : public core::CoreObject,
 
   std::atomic_bool m_registered{false};
 
-  std::atomic<ClientId> m_nextClientId{0};
-  std::mutex m_connectionsLocker{};
-  std::unordered_map<ClientId, ReadingSocketShPtr> m_readers{};
-  std::unordered_map<ClientId, WritingSocketShPtr> m_writers{};
-
   IEventBusShPtr m_eventBus{};
 
   /// @brief - Event bus used to receive messages published by the sockets held by the server.
   /// Those events can be interpreted by the server before being published to the external bus.
   /// This allows to for example remove the sockets from the local maps when an error is reported
   /// on one of the connection (e.g. read failure).
+  /// It is declared **after** the `m_eventBus` so that it gets destroyed **before**. This is
+  /// necessary so that the last internal events received can make it to the event bus when the
+  /// server is destroyed. Otherwise there is a segmentation fault as the event bus is deleted
+  /// before the last internal events are processed.
   IEventBusShPtr m_internalBus{};
+
+  std::atomic<ClientId> m_nextClientId{0};
+  std::mutex m_connectionsLocker{};
+  std::unordered_map<ClientId, ReadingSocketShPtr> m_readers{};
+  std::unordered_map<ClientId, WritingSocketShPtr> m_writers{};
 
   void registerToAsio();
 

@@ -40,19 +40,26 @@ TEST_F(Integration_Net_Server_AsioServer, AcceptsMultipleConnections)
 {
   auto bus    = std::make_shared<TestEventBus>();
   auto server = std::make_shared<AsioServer>(this->asioContext(), this->port(), bus);
+  std::cout << "[test] starting server\n";
   server->start();
 
+  std::cout << "[test] connecting first socket\n";
   auto socket1 = this->connectToRunningServer();
 
+  std::cout << "[test] waiting for event\n";
   auto actual = bus->waitForEvent();
   EXPECT_EQ(EventType::CLIENT_CONNECTED, actual->type());
   EXPECT_EQ(ClientId{0}, actual->as<ClientConnectedEvent>().clientId());
 
+  std::cout << "[test] connecting second socket\n";
   auto socket2 = this->connectToRunningServer();
 
+  std::cout << "[test] waiting for second event\n";
   actual = bus->waitForEvent();
   EXPECT_EQ(EventType::CLIENT_CONNECTED, actual->type());
   EXPECT_EQ(ClientId{1}, actual->as<ClientConnectedEvent>().clientId());
+
+  std::cout << "[test] end of test\n";
 }
 
 TEST_F(Integration_Net_Server_AsioServer, DetectsDisconnectionAndPublishesClientDisconnectedEvent)
@@ -91,29 +98,6 @@ TEST_F(Integration_Net_Server_AsioServer, PublishesDataReceivedEventWhenDataIsRe
   EXPECT_EQ(expectedClientId, event->as<DataReceivedEvent>().clientId());
   const std::vector<char> expectedData(data.begin(), data.end());
   EXPECT_EQ(expectedData, event->as<DataReceivedEvent>().data());
-}
-
-// TODO: This should be removed
-TEST_F(Integration_Net_Server_AsioServer, Deletion)
-{
-  {
-    auto bus = std::make_shared<TestEventBus>();
-    {
-      auto server = std::make_shared<AsioServer>(this->asioContext(), this->port(), bus);
-      server->start();
-
-      // {
-      //   auto socket = this->connectToRunningServer();
-      //   std::cout << "connected to server\n";
-      // }
-      std::this_thread::sleep_for(std::chrono::milliseconds(50));
-      std::cout << "[test] stopping server\n";
-      // server->stop();
-      std::cout << "[test] after scope of socket\n";
-    }
-    std::cout << "[test] after scope of server\n";
-  }
-  std::cout << "[test] after scope of event bus\n";
 }
 
 } // namespace net::details
