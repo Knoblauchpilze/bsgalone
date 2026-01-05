@@ -2,6 +2,9 @@
 #include "AsioServer.hh"
 #include "AsyncEventBus.hh"
 #include "ClientConnectedEvent.hh"
+#include "ClientDisconnectedEvent.hh"
+#include "DataReadFailureEvent.hh"
+#include "DataWriteFailureEvent.hh"
 #include "SynchronizedEventBus.hh"
 
 #include <iostream>
@@ -27,6 +30,7 @@ class ServerListenerProxy : public IEventListener
 
   void onEventReceived(const IEvent &event)
   {
+    std::cout << "[proxy] forwarding event " << str(event.type()) << "\n";
     m_listener->onEventReceived(event);
   }
 
@@ -38,8 +42,8 @@ class ServerListenerProxy : public IEventListener
 AsioServer::AsioServer(AsioContext &context, const int port, IEventBusShPtr eventBus)
   : core::CoreObject("server")
   , m_acceptor(context.get(), asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port))
-  , m_eventBus(std::move(eventBus))
   , m_internalBus(std::make_shared<AsyncEventBus>(std::make_unique<SynchronizedEventBus>()))
+  , m_eventBus(std::move(eventBus))
 {
   setService("net");
 
@@ -75,7 +79,17 @@ bool AsioServer::isEventRelevant(const EventType &type) const
 
 void AsioServer::onEventReceived(const IEvent &event)
 {
-  std::cout << "[server] should handle " << str(event.type()) << "\n";
+  switch (event.type())
+  {
+    case EventType::DATA_READ_FAILURE:
+    case EventType::DATA_WRITE_FAILURE:
+      handleConnectionFailure(event);
+      break;
+    default:
+      std::cout << "[server] forwarding event " << str(event.type()) << "\n";
+      m_eventBus->pushEvent(event.clone());
+      break;
+  }
 }
 
 void AsioServer::registerToAsio()
@@ -98,7 +112,9 @@ void AsioServer::onConnectionRequest(const std::error_code &code, asio::ip::tcp:
   }
 
   const auto clientId = registerConnection(std::move(socket));
-  publishClientConnectedEvent(clientId);
+
+  auto event = std::make_unique<ClientConnectedEvent>(clientId);
+  m_eventBus->pushEvent(std::move(event));
 }
 
 auto AsioServer::registerConnection(asio::ip::tcp::socket rawSocket) -> ClientId
@@ -119,10 +135,63 @@ auto AsioServer::registerConnection(asio::ip::tcp::socket rawSocket) -> ClientId
   return clientId;
 }
 
-void AsioServer::publishClientConnectedEvent(const ClientId clientId)
+namespace {
+auto tryGetClientId(const IEvent &event) -> std::optional<ClientId>
 {
-  auto event = std::make_unique<ClientConnectedEvent>(clientId);
-  m_eventBus->pushEvent(std::move(event));
+  switch (event.type())
+  {
+    case EventType::DATA_READ_FAILURE:
+      return event.as<DataReadFailureEvent>().clientId();
+    case EventType::DATA_WRITE_FAILURE:
+      return event.as<DataWriteFailureEvent>().clientId();
+    default:
+      return {};
+  }
+}
+} // namespace
+
+void AsioServer::handleConnectionFailure(const IEvent &event)
+{
+  const auto maybeClientId = tryGetClientId(event);
+  if (!maybeClientId)
+  {
+    error("Failed to handle connection failure", "Received unsupported event " + str(event.type()));
+  }
+
+  {
+    const std::lock_guard guard(m_connectionsLocker);
+    m_readers.erase(*maybeClientId);
+    m_writers.erase(*maybeClientId);
+  }
+
+  debug("Detected failure for client " + str(*maybeClientId) + ", removing connection");
+
+  std::cout << "[server] publishing event " << str(event.type()) << "\n";
+  auto out = std::make_unique<ClientDisconnectedEvent>(*maybeClientId);
+  // TODO: It crashes here with the following:
+  // [net] 05-01-2026 08:09:58 [debug] [context] Successfully started asio context
+  // [net] 05-01-2026 08:09:58 [warning] [reading] [socket] Error detected when receiving data from connection (cause: "End of file (code: 2)")
+  // [net] 05-01-2026 08:09:58 [debug] [context] Successfully stopped asio context
+  // [asio context] deleting context
+  // [server] deleting AsioServer <----------------------- 1 the server is being deleted
+  // [test bus] deleting TestEventBus <------------------- 2 the test event bus has already been deleted
+  // [writing] deleting WritingSocket
+  // [proxy] forwarding event data_read_failure
+  // [reading] deleting ReadingSocket
+  // [async] starting deletion of AsyncEventBus
+  // [net] 05-01-2026 08:09:58 [debug] [server] Detected failure for client 0, removing connection
+  // [server] publishing event data_read_failure
+  // pure virtual method called
+  // terminate called without an active exception
+  //
+  // Why is the TestEventBus being deleted? There's at least one reference
+  // It gets deleted because most likely the test is finished, it's just asio processing being
+  // deleted. The only references are probably in the AsioServer.
+  // This means that the proxy should already have been deleted as well
+  // And in the header the m_eventBus is before the m_internalBus.
+  // Two solutions: change order or unregister the listener/mark the deletion
+  // We need to add names to the event bus
+  m_eventBus->pushEvent(std::move(out));
 }
 
 } // namespace net::details

@@ -39,13 +39,17 @@ class AsioServer : public core::CoreObject,
 
   IEventBusShPtr m_eventBus{};
 
+  /// @brief - Event bus used to receive messages published by the sockets held by the server.
+  /// Those events can be interpreted by the server before being published to the external bus.
+  /// This allows to for example remove the sockets from the local maps when an error is reported
+  /// on one of the connection (e.g. read failure).
   IEventBusShPtr m_internalBus{};
 
   void registerToAsio();
 
   void onConnectionRequest(const std::error_code &code, asio::ip::tcp::socket socket);
   auto registerConnection(asio::ip::tcp::socket rawSocket) -> ClientId;
-  void publishClientConnectedEvent(const ClientId clientId);
+  void handleConnectionFailure(const IEvent &event);
 };
 
 using AsioServerPtr = std::unique_ptr<AsioServer>;
