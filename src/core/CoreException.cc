@@ -24,6 +24,9 @@ auto retrieveStackTrace() -> std::string
     stackTrace += "\n";
   }
 
+  // https://man7.org/linux/man-pages/man3/backtrace.3.html
+  free(funcs);
+
   return stackTrace;
 }
 } // namespace
