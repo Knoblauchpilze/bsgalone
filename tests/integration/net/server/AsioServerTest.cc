@@ -1,7 +1,7 @@
 
 #include "AsioServer.hh"
 #include "ClientConnectedEvent.hh"
-#include "DataReadFailureEvent.hh"
+#include "ClientDisconnectedEvent.hh"
 #include "DataReceivedEvent.hh"
 #include "TcpFixture.hh"
 #include "TestEventBus.hh"
@@ -42,19 +42,17 @@ TEST_F(Integration_Net_Server_AsioServer, AcceptsMultipleConnections)
   server->start();
 
   auto socket1 = this->connectToRunningServer();
-
-  auto actual = bus->waitForEvent();
+  auto actual  = bus->waitForEvent();
   EXPECT_EQ(EventType::CLIENT_CONNECTED, actual->type());
   EXPECT_EQ(ClientId{0}, actual->as<ClientConnectedEvent>().clientId());
 
   auto socket2 = this->connectToRunningServer();
-
-  actual = bus->waitForEvent();
+  actual       = bus->waitForEvent();
   EXPECT_EQ(EventType::CLIENT_CONNECTED, actual->type());
   EXPECT_EQ(ClientId{1}, actual->as<ClientConnectedEvent>().clientId());
 }
 
-TEST_F(Integration_Net_Server_AsioServer, DetectsDisconnectionAndPublishesDataReadFailureEvent)
+TEST_F(Integration_Net_Server_AsioServer, DetectsDisconnectionAndPublishesClientDisconnectedEvent)
 {
   auto bus    = std::make_shared<TestEventBus>();
   auto server = std::make_shared<AsioServer>(this->asioContext(), this->port(), bus);
@@ -67,8 +65,8 @@ TEST_F(Integration_Net_Server_AsioServer, DetectsDisconnectionAndPublishesDataRe
 
   socket->shutdown(asio::ip::tcp::socket::shutdown_both);
   event = bus->waitForEvent();
-  EXPECT_EQ(EventType::DATA_READ_FAILURE, event->type());
-  EXPECT_EQ(expectedClientId, event->as<DataReadFailureEvent>().clientId());
+  EXPECT_EQ(EventType::CLIENT_DISCONNECTED, event->type());
+  EXPECT_EQ(expectedClientId, event->as<ClientDisconnectedEvent>().clientId());
 }
 
 TEST_F(Integration_Net_Server_AsioServer, PublishesDataReceivedEventWhenDataIsReceived)
@@ -92,26 +90,36 @@ TEST_F(Integration_Net_Server_AsioServer, PublishesDataReceivedEventWhenDataIsRe
   EXPECT_EQ(expectedData, event->as<DataReceivedEvent>().data());
 }
 
-TEST_F(Integration_Net_Server_AsioServer, Deletion)
+TEST_F(Integration_Net_Server_AsioServer, PublishesClientDisconnectedEventWhenClientSocketAreDeleted)
 {
-  {
-    auto bus = std::make_shared<TestEventBus>();
-    {
-      auto server = std::make_shared<AsioServer>(this->asioContext(), this->port(), bus);
-      server->start();
+  auto bus = std::make_shared<TestEventBus>();
 
-      // {
-      //   auto socket = this->connectToRunningServer();
-      //   std::cout << "connected to server\n";
-      // }
-      std::this_thread::sleep_for(std::chrono::milliseconds(50));
-      std::cout << "[test] stopping server\n";
-      // server->stop();
-      std::cout << "[test] after scope of socket\n";
-    }
-    std::cout << "[test] after scope of server\n";
+  std::optional<ClientId> expectedClientId{};
+
+  // Note: although the server is within this scope, it stays alive until the
+  // asio context is really destroyed. This is a bit strange as one would expect
+  // that once the acceptor is finished. Resources online indicates that a call
+  // to `acceptor.cancel()` and/or `acceptor.close()` helps but it does not seem
+  // to be the case in my testing.
+  // See:
+  // https://stackoverflow.com/questions/33161640/how-to-safely-cancel-a-boost-asio-asynchronous-accept-operation
+  // https://github.com/chriskohlhoff/asio/issues/806
+  // This test is working because the sockets are going out of scope, not because
+  // the server is going out of scope.
+  {
+    auto server = std::make_shared<AsioServer>(this->asioContext(), this->port(), bus);
+    server->start();
+
+    auto socket = this->connectToRunningServer();
+    auto event  = bus->waitForEvent();
+    EXPECT_EQ(EventType::CLIENT_CONNECTED, event->type());
+    expectedClientId = event->as<ClientConnectedEvent>().clientId();
   }
-  std::cout << "[test] after scope of event bus\n";
+
+  auto event = bus->waitForEvent();
+  EXPECT_EQ(EventType::CLIENT_DISCONNECTED, event->type());
+  ASSERT_TRUE(expectedClientId.has_value());
+  EXPECT_EQ(expectedClientId, event->as<ClientDisconnectedEvent>().clientId());
 }
 
 } // namespace net::details
