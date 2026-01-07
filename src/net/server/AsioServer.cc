@@ -1,13 +1,43 @@
 
 #include "AsioServer.hh"
+#include "AsyncEventBus.hh"
 #include "ClientConnectedEvent.hh"
+#include "ClientDisconnectedEvent.hh"
+#include "DataReadFailureEvent.hh"
+#include "DataWriteFailureEvent.hh"
+#include "SynchronizedEventBus.hh"
 
 namespace net::details {
+namespace {
+class ServerListenerProxy : public IEventListener
+{
+  public:
+  ServerListenerProxy(IEventListener *listener)
+    : m_listener(listener)
+  {}
+
+  ~ServerListenerProxy() override = default;
+
+  bool isEventRelevant(const EventType & /*type*/) const
+  {
+    return true;
+  }
+
+  void onEventReceived(const IEvent &event)
+  {
+    m_listener->onEventReceived(event);
+  }
+
+  private:
+  IEventListener *m_listener{};
+};
+} // namespace
 
 AsioServer::AsioServer(AsioContext &context, const int port, IEventBusShPtr eventBus)
   : core::CoreObject("server")
   , m_acceptor(context.get(), asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port))
   , m_eventBus(std::move(eventBus))
+  , m_internalBus(std::make_shared<AsyncEventBus>(std::make_unique<SynchronizedEventBus>()))
 {
   setService("net");
 
@@ -15,6 +45,23 @@ AsioServer::AsioServer(AsioContext &context, const int port, IEventBusShPtr even
   {
     throw std::invalid_argument("Expected non null event bus");
   }
+
+  m_internalBus->addListener(std::make_unique<ServerListenerProxy>(this));
+}
+
+AsioServer::~AsioServer()
+{
+  // This is necessary otherwise the sockets get destroyed when the maps are being
+  // cleared which leads to asio triggering the callbacks for removing a socket and
+  // as the destruction of the maps in this destructor is not protected by a lock
+  // we get race conditions.
+  const std::lock_guard guard(m_connectionsLocker);
+  std::for_each(m_sockets.begin(), m_sockets.end(), [](const SocketShPtr &socket) {
+    socket->shutdown(asio::ip::tcp::socket::shutdown_both);
+  });
+
+  m_readers.clear();
+  m_writers.clear();
 }
 
 void AsioServer::start()
@@ -27,6 +74,25 @@ void AsioServer::start()
   }
 
   registerToAsio();
+}
+
+bool AsioServer::isEventRelevant(const EventType &type) const
+{
+  return type == EventType::DATA_READ_FAILURE || type == EventType::DATA_WRITE_FAILURE;
+}
+
+void AsioServer::onEventReceived(const IEvent &event)
+{
+  switch (event.type())
+  {
+    case EventType::DATA_READ_FAILURE:
+    case EventType::DATA_WRITE_FAILURE:
+      handleConnectionFailure(event);
+      break;
+    default:
+      m_eventBus->pushEvent(event.clone());
+      break;
+  }
 }
 
 void AsioServer::registerToAsio()
@@ -49,7 +115,9 @@ void AsioServer::onConnectionRequest(const std::error_code &code, asio::ip::tcp:
   }
 
   const auto clientId = registerConnection(std::move(socket));
-  publishClientConnectedEvent(clientId);
+
+  auto event = std::make_unique<ClientConnectedEvent>(clientId);
+  m_eventBus->pushEvent(std::move(event));
 }
 
 auto AsioServer::registerConnection(asio::ip::tcp::socket rawSocket) -> ClientId
@@ -58,22 +126,52 @@ auto AsioServer::registerConnection(asio::ip::tcp::socket rawSocket) -> ClientId
 
   const auto clientId = m_nextClientId.fetch_add(1);
 
-  auto reader = std::make_shared<ReadingSocket>(clientId, socket, m_eventBus);
-  auto writer = std::make_shared<WritingSocket>(clientId, socket, m_eventBus);
+  auto reader = std::make_shared<ReadingSocket>(clientId, socket, m_internalBus);
+  auto writer = std::make_shared<WritingSocket>(clientId, socket, m_internalBus);
 
   reader->connect();
 
   const std::lock_guard guard(m_connectionsLocker);
+  m_sockets.emplace_back(std::move(socket));
   m_readers.emplace(clientId, std::move(reader));
   m_writers.emplace(clientId, std::move(writer));
 
   return clientId;
 }
 
-void AsioServer::publishClientConnectedEvent(const ClientId clientId)
+namespace {
+auto tryGetClientId(const IEvent &event) -> std::optional<ClientId>
 {
-  auto event = std::make_unique<ClientConnectedEvent>(clientId);
-  m_eventBus->pushEvent(std::move(event));
+  switch (event.type())
+  {
+    case EventType::DATA_READ_FAILURE:
+      return event.as<DataReadFailureEvent>().clientId();
+    case EventType::DATA_WRITE_FAILURE:
+      return event.as<DataWriteFailureEvent>().clientId();
+    default:
+      return {};
+  }
+}
+} // namespace
+
+void AsioServer::handleConnectionFailure(const IEvent &event)
+{
+  const auto maybeClientId = tryGetClientId(event);
+  if (!maybeClientId)
+  {
+    error("Failed to handle connection failure", "Received unsupported event " + str(event.type()));
+  }
+
+  {
+    const std::lock_guard guard(m_connectionsLocker);
+    m_readers.erase(*maybeClientId);
+    m_writers.erase(*maybeClientId);
+  }
+
+  debug("Detected failure for client " + str(*maybeClientId) + ", removing connection");
+
+  auto out = std::make_unique<ClientDisconnectedEvent>(*maybeClientId);
+  m_eventBus->pushEvent(std::move(out));
 }
 
 } // namespace net::details
