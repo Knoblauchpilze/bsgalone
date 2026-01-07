@@ -8,15 +8,9 @@ TcpFixture::TcpFixture()
   : m_port(NEXT_PORT.fetch_add(1))
 {}
 
-void TcpFixture::SetUp()
-{
-  m_context->start();
-}
+void TcpFixture::SetUp() {}
 
-void TcpFixture::TearDown()
-{
-  m_context->stop();
-}
+void TcpFixture::TearDown() {}
 
 auto TcpFixture::port() const -> int
 {

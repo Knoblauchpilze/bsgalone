@@ -7,6 +7,12 @@ AsioContext::AsioContext()
   : core::CoreObject("context")
 {
   setService("net");
+  start();
+}
+
+AsioContext::~AsioContext()
+{
+  stop();
 }
 
 auto AsioContext::get() -> asio::io_context &
