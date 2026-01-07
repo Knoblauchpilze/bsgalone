@@ -15,7 +15,7 @@ void TcpAcceptor::registerAccept()
                                     std::placeholders::_2));
 }
 
-auto TcpAcceptor::waitForServerSocket() -> net::SocketShPtr
+auto TcpAcceptor::waitForServerSocket() -> net::details::SocketShPtr
 {
   std::unique_lock guard(m_locker);
 
@@ -24,7 +24,7 @@ auto TcpAcceptor::waitForServerSocket() -> net::SocketShPtr
   constexpr auto REASONABLE_TIMEOUT = std::chrono::seconds(5);
   m_notifier.wait_for(guard, REASONABLE_TIMEOUT, [this] { return m_socket != nullptr; });
 
-  net::SocketShPtr out{};
+  net::details::SocketShPtr out{};
   std::swap(out, m_socket);
 
   if (!out)

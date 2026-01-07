@@ -4,7 +4,7 @@
 #include <asio.hpp>
 #include <memory>
 
-namespace net {
+namespace net::details {
 
 using SocketShPtr = std::shared_ptr<asio::ip::tcp::socket>;
 

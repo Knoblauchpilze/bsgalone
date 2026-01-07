@@ -14,7 +14,7 @@ class TcpAcceptor : public std::enable_shared_from_this<TcpAcceptor>
   ~TcpAcceptor() = default;
 
   void registerAccept();
-  auto waitForServerSocket() -> net::SocketShPtr;
+  auto waitForServerSocket() -> net::details::SocketShPtr;
 
   private:
   asio::ip::tcp::acceptor m_acceptor;
@@ -22,7 +22,7 @@ class TcpAcceptor : public std::enable_shared_from_this<TcpAcceptor>
   std::mutex m_locker{};
   std::condition_variable m_notifier{};
 
-  net::SocketShPtr m_socket{};
+  net::details::SocketShPtr m_socket{};
 
   void onConnectionRequest(const std::error_code &code, asio::ip::tcp::socket socket);
 };
