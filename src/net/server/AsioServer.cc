@@ -7,8 +7,6 @@
 #include "DataWriteFailureEvent.hh"
 #include "SynchronizedEventBus.hh"
 
-#include <iostream>
-
 namespace net::details {
 namespace {
 class ServerListenerProxy : public IEventListener
@@ -18,10 +16,7 @@ class ServerListenerProxy : public IEventListener
     : m_listener(listener)
   {}
 
-  ~ServerListenerProxy() override
-  {
-    std::cout << "[proxy] deleting ServerListenerProxy\n";
-  }
+  ~ServerListenerProxy() override = default;
 
   bool isEventRelevant(const EventType & /*type*/) const
   {
@@ -30,7 +25,6 @@ class ServerListenerProxy : public IEventListener
 
   void onEventReceived(const IEvent &event)
   {
-    std::cout << "[proxy] forwarding event " << str(event.type()) << "\n";
     m_listener->onEventReceived(event);
   }
 
@@ -57,14 +51,17 @@ AsioServer::AsioServer(AsioContext &context, const int port, IEventBusShPtr even
 
 AsioServer::~AsioServer()
 {
-  // TODO: This is necessary otherwise it can be that we get callbacks from asio
-  // indicating to remove a connection while the maps are being destroyed.
-  // It would be nice to think about a cleaner way to clean-up the event bus and
-  // the sockets.
+  // This is necessary otherwise the sockets get destroyed when the maps are being
+  // cleared which leads to asio triggering the callbacks for removing a socket and
+  // as the destruction of the maps in this destructor is not protected by a lock
+  // we get race conditions.
   const std::lock_guard guard(m_connectionsLocker);
+  std::for_each(m_sockets.begin(), m_sockets.end(), [](const SocketShPtr &socket) {
+    socket->shutdown(asio::ip::tcp::socket::shutdown_both);
+  });
+
   m_readers.clear();
   m_writers.clear();
-  std::cout << "[server] deleting AsioServer\n";
 }
 
 void AsioServer::start()
@@ -93,7 +90,6 @@ void AsioServer::onEventReceived(const IEvent &event)
       handleConnectionFailure(event);
       break;
     default:
-      std::cout << "[server] forwarding event " << str(event.type()) << "\n";
       m_eventBus->pushEvent(event.clone());
       break;
   }
@@ -136,6 +132,7 @@ auto AsioServer::registerConnection(asio::ip::tcp::socket rawSocket) -> ClientId
   reader->connect();
 
   const std::lock_guard guard(m_connectionsLocker);
+  m_sockets.emplace_back(std::move(socket));
   m_readers.emplace(clientId, std::move(reader));
   m_writers.emplace(clientId, std::move(writer));
 
@@ -167,15 +164,12 @@ void AsioServer::handleConnectionFailure(const IEvent &event)
 
   {
     const std::lock_guard guard(m_connectionsLocker);
-    const auto rr = m_readers.erase(*maybeClientId);
-    const auto rw = m_writers.erase(*maybeClientId);
-
-    info("removed " + std::to_string(rr) + " and " + std::to_string(rw) + " socket(s)");
+    m_readers.erase(*maybeClientId);
+    m_writers.erase(*maybeClientId);
   }
 
   debug("Detected failure for client " + str(*maybeClientId) + ", removing connection");
 
-  std::cout << "[server] publishing event " << str(event.type()) << "\n";
   auto out = std::make_unique<ClientDisconnectedEvent>(*maybeClientId);
   m_eventBus->pushEvent(std::move(out));
 }
