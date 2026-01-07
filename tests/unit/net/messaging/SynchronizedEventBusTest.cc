@@ -259,23 +259,18 @@ class Consumer
   void start()
   {
     m_thread = std::thread([this]() {
-      std::cout << "[consumer][" << m_id << "] starting thread\n";
       waitForReadySignal();
-      std::cout << "[consumer][" << m_id << "] received ready signal\n";
 
       while (!m_bus->empty() || !m_sync->productionFinished.load())
       {
         m_bus->processEvents();
       }
-      std::cout << "[consumer][" << m_id << "] exiting thread\n";
     });
   }
 
   void join()
   {
-    std::cout << "[consumer][" << m_id << "] waiting to join thread\n";
     m_thread.join();
-    std::cout << "[consumer][" << m_id << "] thread joined\n";
   }
 
   private:
