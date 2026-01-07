@@ -9,6 +9,8 @@ namespace pge {
 class Viewport
 {
   public:
+  virtual ~Viewport() = default;
+
   /// @brief - Returns the center of this viewport.
   /// @return - the center of the viewport.
   virtual auto center() const noexcept -> Vec2f = 0;
