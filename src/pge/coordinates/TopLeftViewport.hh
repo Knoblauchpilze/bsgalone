@@ -12,6 +12,7 @@ class TopLeftViewport : public Viewport
   /// @brief - Create a viewport with the specified size and top
   /// left corner.
   TopLeftViewport(const Vec2f &tl, const Vec2f &dims) noexcept;
+  ~TopLeftViewport() override = default;
 
   auto center() const noexcept -> Vec2f override;
   auto topLeft() const noexcept -> Vec2f override;
