@@ -13,12 +13,9 @@ class AsioContext : public core::CoreObject
 {
   public:
   AsioContext();
-  ~AsioContext() override = default;
+  ~AsioContext() override;
 
   auto get() -> asio::io_context &;
-
-  void start();
-  void stop();
 
   private:
   asio::io_context m_context{};
@@ -26,6 +23,8 @@ class AsioContext : public core::CoreObject
   std::atomic_bool m_running{false};
   std::thread m_contextThread{};
 
+  void start();
+  void stop();
   void asyncRunningLoop();
 };
 
