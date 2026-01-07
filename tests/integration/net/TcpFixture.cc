@@ -22,7 +22,7 @@ auto TcpFixture::asioContext() -> net::details::AsioContext &
   return *m_context;
 }
 
-auto TcpFixture::connectToRunningServer() -> net::SocketShPtr
+auto TcpFixture::connectToRunningServer() -> net::details::SocketShPtr
 {
   asio::ip::tcp::socket socket(m_context->get());
   auto out = std::make_shared<asio::ip::tcp::socket>(std::move(socket));
@@ -35,7 +35,7 @@ auto TcpFixture::connectToRunningServer() -> net::SocketShPtr
   return out;
 }
 
-void TcpFixture::write(net::SocketShPtr socket, const std::string &data)
+void TcpFixture::write(net::details::SocketShPtr socket, const std::string &data)
 {
   const auto transferred = asio::write(*socket, asio::buffer(data.data(), data.size()));
   if (transferred != data.size())

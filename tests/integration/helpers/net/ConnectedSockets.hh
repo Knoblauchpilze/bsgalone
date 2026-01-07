@@ -8,8 +8,8 @@ namespace test {
 
 struct ConnectedSockets
 {
-  net::SocketShPtr client{};
-  net::SocketShPtr server{};
+  net::details::SocketShPtr client{};
+  net::details::SocketShPtr server{};
 
   auto readServer(const std::size_t length) -> std::string;
   void writeServer(const std::string &data);

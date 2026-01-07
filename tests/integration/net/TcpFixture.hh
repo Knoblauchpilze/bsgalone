@@ -33,9 +33,9 @@ class TcpFixture : public ::testing::Test
   /// will hang.
   /// @return - the client socket connected to the server. The socket is in
   /// a healthy state when returned.
-  auto connectToRunningServer() -> net::SocketShPtr;
+  auto connectToRunningServer() -> net::details::SocketShPtr;
 
-  void write(net::SocketShPtr socket, const std::string &data);
+  void write(net::details::SocketShPtr socket, const std::string &data);
 
   private:
   static std::atomic_int NEXT_PORT;

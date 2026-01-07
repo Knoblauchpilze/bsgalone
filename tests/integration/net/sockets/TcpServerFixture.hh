@@ -2,7 +2,6 @@
 #pragma once
 
 #include "ConnectedSockets.hh"
-#include "SocketShPtr.hh"
 #include "TcpAcceptor.hh"
 #include "TcpFixture.hh"
 
