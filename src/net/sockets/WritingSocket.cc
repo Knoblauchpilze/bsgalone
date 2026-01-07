@@ -9,7 +9,7 @@ WritingSocket::WritingSocket(const ClientId clientId, SocketShPtr socket, IEvent
   : core::CoreObject("writing")
   , m_clientId(clientId)
   , m_socket(std::move(socket))
-  , m_eventBus(eventBus)
+  , m_eventBus(std::move(eventBus))
 {
   setService("net");
   addModule("socket");

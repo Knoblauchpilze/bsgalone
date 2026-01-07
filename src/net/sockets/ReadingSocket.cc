@@ -13,7 +13,7 @@ ReadingSocket::ReadingSocket(const ClientId clientId, SocketShPtr socket, IEvent
   , m_clientId(clientId)
   , m_socket(std::move(socket))
   , m_incomingDataTempBuffer(INCOMING_DATA_MAX_BUFFER_SIZE_IN_BYTES, 0)
-  , m_eventBus(eventBus)
+  , m_eventBus(std::move(eventBus))
 {
   setService("net");
   addModule("socket");
