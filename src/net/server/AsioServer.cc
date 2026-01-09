@@ -95,6 +95,30 @@ void AsioServer::onEventReceived(const IEvent &event)
   }
 }
 
+auto AsioServer::trySend(const ClientId clientId, std::vector<char> bytes)
+  -> std::optional<MessageId>
+{
+  if (bytes.empty())
+  {
+    warn("Discarding empty message to " + str(clientId));
+    return {};
+  }
+
+  const std::lock_guard guard(m_connectionsLocker);
+
+  const auto maybeWriter = m_writers.find(clientId);
+  if (maybeWriter == m_writers.end())
+  {
+    warn("Discarding message to " + str(clientId) + ", no such client");
+    return {};
+  }
+
+  auto messageId = m_nextMessageId.fetch_add(1);
+  maybeWriter->second->send(messageId, std::move(bytes));
+
+  return messageId;
+}
+
 void AsioServer::registerToAsio()
 {
   // https://www.boost.org/doc/libs/1_66_0/doc/html/boost_asio/reference/ReadHandler.html
