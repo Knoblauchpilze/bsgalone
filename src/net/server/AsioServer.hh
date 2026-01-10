@@ -102,6 +102,8 @@ class AsioServer : public core::CoreObject,
   void onConnectionRequest(const std::error_code &code, asio::ip::tcp::socket socket);
   auto registerConnection(asio::ip::tcp::socket rawSocket) -> ClientId;
   void handleConnectionFailure(const IEvent &event);
+
+  void closeSockets();
 };
 
 using AsioServerPtr = std::unique_ptr<AsioServer>;
