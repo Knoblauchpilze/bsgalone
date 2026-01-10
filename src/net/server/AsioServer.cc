@@ -18,9 +18,9 @@ class ServerListenerProxy : public IEventListener
 
   ~ServerListenerProxy() override = default;
 
-  bool isEventRelevant(const EventType & /*type*/) const
+  bool isEventRelevant(const EventType &type) const
   {
-    return true;
+    return m_listener->isEventRelevant(type);
   }
 
   void onEventReceived(const IEvent &event)
@@ -74,9 +74,10 @@ void AsioServer::start()
   registerToAsio();
 }
 
-bool AsioServer::isEventRelevant(const EventType &type) const
+bool AsioServer::isEventRelevant(const EventType & /*type*/) const
 {
-  return type == EventType::DATA_READ_FAILURE || type == EventType::DATA_WRITE_FAILURE;
+  // All events are relevant: they are either forwarded or handled locally.
+  return true;
 }
 
 void AsioServer::onEventReceived(const IEvent &event)

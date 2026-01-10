@@ -17,6 +17,8 @@ class AsioContext : public core::CoreObject
 
   auto get() -> asio::io_context &;
 
+  auto resolve(const std::string &url, const int port) -> asio::ip::tcp::resolver::results_type;
+
   private:
   asio::io_context m_context{};
 
