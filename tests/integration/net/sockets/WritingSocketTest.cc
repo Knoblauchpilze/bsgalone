@@ -35,11 +35,12 @@ TEST_F(Integration_Net_Sockets_WritingSocket, PublishesDataSentEvent)
 
   std::string data{"test"};
   std::vector<char> toSend(data.begin(), data.end());
-  socket->send(toSend);
+  socket->send(MessageId{4}, toSend);
 
   const auto actual = bus->waitForEvent();
   EXPECT_EQ(EventType::DATA_SENT, actual->type());
   EXPECT_EQ(ClientId{1}, actual->as<DataSentEvent>().clientId());
+  EXPECT_EQ(MessageId{4}, actual->as<DataSentEvent>().messageId());
 }
 
 TEST_F(Integration_Net_Sockets_WritingSocket, SendsDataToSocket)
@@ -50,7 +51,7 @@ TEST_F(Integration_Net_Sockets_WritingSocket, SendsDataToSocket)
 
   std::string data{"test"};
   std::vector<char> toSend(data.begin(), data.end());
-  socket->send(toSend);
+  socket->send(MessageId{4}, toSend);
 
   const auto actual = sockets.readServer(data.size());
   EXPECT_EQ("test", actual);
@@ -66,7 +67,7 @@ TEST_F(Integration_Net_Sockets_WritingSocket, PublishesDataWriteFailureEventWhen
 
   std::string data{"test"};
   std::vector<char> toSend(data.begin(), data.end());
-  socket->send(toSend);
+  socket->send(MessageId{3}, toSend);
 
   const auto actual = bus->waitForEvent();
   EXPECT_EQ(EventType::DATA_WRITE_FAILURE, actual->type());
@@ -90,11 +91,12 @@ TEST_F(Integration_Net_Sockets_WritingSocket, SucceedsToSendDataEvenWhenServerSo
 
   std::string data{"test"};
   std::vector<char> toSend(data.begin(), data.end());
-  socket->send(toSend);
+  socket->send(MessageId{2}, toSend);
 
   const auto actual = bus->waitForEvent();
   EXPECT_EQ(EventType::DATA_SENT, actual->type());
   EXPECT_EQ(ClientId{1}, actual->as<DataSentEvent>().clientId());
+  EXPECT_EQ(MessageId{2}, actual->as<DataSentEvent>().messageId());
 }
 
 } // namespace net::details

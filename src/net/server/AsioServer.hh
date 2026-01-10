@@ -31,6 +31,20 @@ class AsioServer : public core::CoreObject,
   bool isEventRelevant(const EventType &type) const override;
   void onEventReceived(const IEvent &event) override;
 
+  /// @brief - Used to send a message to the client identified by the input identifier.
+  /// Sending the data is queued for processing and will be send asynchronously.
+  /// Some notes:
+  ///   - in case the client identifier cannot be matched to an active connection, it will
+  ///     be discarded and an empty message identifier will be returned.
+  ///   - in case the `bytes` to send are empty, the function will return early and an
+  ///     empty message identifier will be returned.
+  /// It is possible to receive information about the data being sent by listening for
+  /// `DataSentEvent` with the corresponding message identifier.
+  /// @param clientId - the identifier of the client to send the message to
+  /// @param bytes - the content of the message
+  /// @return - an identifier for the message or empty if the client does not exist
+  auto trySend(const ClientId clientId, std::vector<char> bytes) -> std::optional<MessageId>;
+
   private:
   /// @brief - The raw acceptor managed by the asio library. This handles the low level
   /// connection and socket management for the server.
@@ -61,6 +75,10 @@ class AsioServer : public core::CoreObject,
   /// is incremented each time a new connection is received.
   std::atomic<ClientId> m_nextClientId{0};
 
+  /// @brief - Holds the next message identifier to assign to an outgoing message. This value
+  /// is incremented each time a new message is sent.
+  std::atomic<MessageId> m_nextMessageId{0};
+
   /// @brief - This locker is used to protect access to the three attributes below: `m_sockets`,
   /// `m_readers` and `m_writers`.
   std::mutex m_connectionsLocker{};
@@ -84,6 +102,8 @@ class AsioServer : public core::CoreObject,
   void onConnectionRequest(const std::error_code &code, asio::ip::tcp::socket socket);
   auto registerConnection(asio::ip::tcp::socket rawSocket) -> ClientId;
   void handleConnectionFailure(const IEvent &event);
+
+  void closeSockets();
 };
 
 using AsioServerPtr = std::unique_ptr<AsioServer>;

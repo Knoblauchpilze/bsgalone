@@ -56,9 +56,7 @@ AsioServer::~AsioServer()
   // as the destruction of the maps in this destructor is not protected by a lock
   // we get race conditions.
   const std::lock_guard guard(m_connectionsLocker);
-  std::for_each(m_sockets.begin(), m_sockets.end(), [](const SocketShPtr &socket) {
-    socket->shutdown(asio::ip::tcp::socket::shutdown_both);
-  });
+  closeSockets();
 
   m_readers.clear();
   m_writers.clear();
@@ -93,6 +91,30 @@ void AsioServer::onEventReceived(const IEvent &event)
       m_eventBus->pushEvent(event.clone());
       break;
   }
+}
+
+auto AsioServer::trySend(const ClientId clientId, std::vector<char> bytes)
+  -> std::optional<MessageId>
+{
+  if (bytes.empty())
+  {
+    warn("Discarding empty message to " + str(clientId));
+    return {};
+  }
+
+  const std::lock_guard guard(m_connectionsLocker);
+
+  const auto maybeWriter = m_writers.find(clientId);
+  if (maybeWriter == m_writers.end())
+  {
+    warn("Discarding message to " + str(clientId) + ", no such client");
+    return {};
+  }
+
+  auto messageId = m_nextMessageId.fetch_add(1);
+  maybeWriter->second->send(messageId, std::move(bytes));
+
+  return messageId;
 }
 
 void AsioServer::registerToAsio()
@@ -172,6 +194,34 @@ void AsioServer::handleConnectionFailure(const IEvent &event)
 
   auto out = std::make_unique<ClientDisconnectedEvent>(*maybeClientId);
   m_eventBus->pushEvent(std::move(out));
+}
+
+namespace {
+auto shutdownSocket(asio::ip::tcp::socket &socket) -> std::error_code
+{
+  std::error_code code;
+  socket.shutdown(asio::ip::tcp::socket::shutdown_both, code);
+  return code;
+}
+} // namespace
+
+void AsioServer::closeSockets()
+{
+  std::vector<std::error_code> codes;
+
+  std::transform(m_sockets.begin(),
+                 m_sockets.end(),
+                 std::back_inserter(codes),
+                 [](const SocketShPtr &socket) { return shutdownSocket(*socket); });
+
+  for (const auto &code : codes)
+  {
+    if (code)
+    {
+      warn("Got error while closing socket: " + code.message() + " (" + std::to_string(code.value())
+           + ")");
+    }
+  }
 }
 
 } // namespace net::details
