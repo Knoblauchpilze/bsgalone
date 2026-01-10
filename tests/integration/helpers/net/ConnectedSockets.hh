@@ -12,6 +12,7 @@ struct ConnectedSockets
   net::details::SocketShPtr server{};
 
   auto readServer(const std::size_t length) -> std::string;
+  auto readClient(const std::size_t length) -> std::string;
   void writeServer(const std::string &data);
 };
 

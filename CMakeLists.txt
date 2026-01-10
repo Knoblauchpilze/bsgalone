@@ -36,10 +36,12 @@ target_compile_options (bsgalone-interface-test-library INTERFACE
 	--coverage
 	-fprofile-update=atomic
 	-O0
+	-fsanitize=address
 	)
 # https://gcovr.com/en/stable/cookbook.html#out-of-source-builds-with-cmake
 target_link_options (bsgalone-interface-test-library INTERFACE
 	--coverage
+	-fsanitize=address
 	)
 
 add_subdirectory (

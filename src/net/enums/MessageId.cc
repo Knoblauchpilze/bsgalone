@@ -1,9 +1,9 @@
 
-#include "ClientId.hh"
+#include "MessageId.hh"
 
 namespace net {
 
-auto str(const ClientId id) -> std::string
+auto str(const MessageId id) -> std::string
 {
   return std::to_string(id);
 }

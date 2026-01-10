@@ -24,21 +24,21 @@ WritingSocket::WritingSocket(const ClientId clientId, SocketShPtr socket, IEvent
   }
 }
 
-void WritingSocket::send(std::vector<char> bytes)
+void WritingSocket::send(const MessageId messageId, std::vector<char> bytes)
 {
   if (!m_socketActive.load())
   {
     error("Cannot write to closed socket");
   }
 
-  pushMessageToOutbox(bytes);
+  pushMessageToOutbox(messageId, bytes);
   registerWritingTaskToAsio();
 }
 
-void WritingSocket::pushMessageToOutbox(std::vector<char> bytes)
+void WritingSocket::pushMessageToOutbox(const MessageId messageId, std::vector<char> bytes)
 {
   const std::lock_guard guard(m_outboxLock);
-  auto message = std::make_unique<MessageToSend>(std::move(bytes));
+  auto message = std::make_unique<MessageToSend>(messageId, std::move(bytes));
   m_outbox.emplace_back(std::move(message));
 }
 
@@ -94,7 +94,13 @@ void WritingSocket::onDataSent(const std::error_code &code, const std::size_t co
 
 void WritingSocket::publishDataSentEvent()
 {
-  auto event = std::make_unique<DataSentEvent>(m_clientId);
+  MessageId message{};
+  {
+    const std::lock_guard guard(m_outboxLock);
+    message = m_outbox.at(0)->id;
+  }
+
+  auto event = std::make_unique<DataSentEvent>(m_clientId, message);
   m_eventBus->pushEvent(std::move(event));
 }
 

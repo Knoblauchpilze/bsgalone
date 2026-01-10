@@ -2,11 +2,11 @@
 #include "ConnectedSockets.hh"
 
 namespace test {
-
-auto ConnectedSockets::readServer(const std::size_t length) -> std::string
+namespace {
+auto readFrom(asio::ip::tcp::socket &socket, const std::size_t length) -> std::string
 {
   std::vector<char> actual(length, 0);
-  const auto received = asio::read(*server, asio::buffer(actual.data(), actual.size()));
+  const auto received = asio::read(socket, asio::buffer(actual.data(), actual.size()));
 
   if (received != length)
   {
@@ -15,6 +15,17 @@ auto ConnectedSockets::readServer(const std::size_t length) -> std::string
   }
 
   return std::string(actual.begin(), actual.end());
+}
+} // namespace
+
+auto ConnectedSockets::readServer(const std::size_t length) -> std::string
+{
+  return readFrom(*server, length);
+}
+
+auto ConnectedSockets::readClient(const std::size_t length) -> std::string
+{
+  return readFrom(*client, length);
 }
 
 void ConnectedSockets::writeServer(const std::string &data)
