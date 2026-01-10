@@ -108,6 +108,7 @@ TEST_F(Integration_Net_Server_AsioServer, PublishesClientDisconnectedEventWhenCl
   // https://github.com/chriskohlhoff/asio/issues/806
   // This test is working because the sockets are going out of scope, not because
   // the server is going out of scope.
+  // Note: see also the same test in Integration_Net_Server_AsioClient
   {
     auto server = std::make_shared<AsioServer>(this->asioContext(), this->port(), bus);
     server->start();

@@ -20,6 +20,13 @@ auto AsioContext::get() -> asio::io_context &
   return m_context;
 }
 
+auto AsioContext::resolve(const std::string &url, const int port)
+  -> asio::ip::tcp::resolver::results_type
+{
+  asio::ip::tcp::resolver resolver(m_context);
+  return resolver.resolve(url, std::to_string(port));
+}
+
 void AsioContext::start()
 {
   auto expected = false;

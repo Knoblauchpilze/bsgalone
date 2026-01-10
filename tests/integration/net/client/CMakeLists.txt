@@ -4,6 +4,5 @@ target_include_directories(integrationTests PUBLIC
 	)
 
 target_sources(integrationTests PUBLIC
-	${CMAKE_CURRENT_SOURCE_DIR}/ReadingSocketTest.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/WritingSocketTest.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/AsioClientTest.cc
 	)
