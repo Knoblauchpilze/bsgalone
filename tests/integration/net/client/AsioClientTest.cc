@@ -25,9 +25,11 @@ TEST_F(Integration_Net_Server_AsioClient, ConnectsToServerAndPublishesClientConn
 {
   auto bus    = std::make_shared<TestEventBus>();
   auto client = std::make_shared<AsioClient>(bus);
+  // TODO: This will hang because the connection waits for the line 31/32 to finish.
   client->connect(this->asioContext(), LOCALHOST_URL, this->port());
 
   auto sockets = this->waitForServerSocket();
+  sockets.writeServer("10000");
 
   const auto actual = bus->waitForEvent();
   EXPECT_EQ(EventType::CLIENT_CONNECTED, actual->type());

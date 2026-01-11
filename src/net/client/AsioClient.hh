@@ -19,10 +19,13 @@ class AsioClient : public core::CoreObject,
   AsioClient(IEventBusShPtr eventBus);
   ~AsioClient() override;
 
-  /// @brief - Starts the server, instructing to begin listening for incoming connections
-  /// on the port provided at construction time. This effectively opens the server to be
-  /// contacted by external clients and start managing TCP connections.
-  /// Calling this method twice will raise an exception.
+  /// @brief - Starts the client, instructing to synchronously attempt to connect to
+  /// the server. The function call will block until the connection either succeeds
+  /// or fails.
+  /// In case the connection is successful, the function returns and a client connected
+  /// event will be published to the event bus.
+  /// In case the connection fails, the function will return but no event will be
+  /// published to the event bus.
   /// @param context - the context to use to register the connection task
   /// @param url - the URL of the server to connect to
   /// @param port - the port on which the server is listening on
@@ -80,7 +83,27 @@ class AsioClient : public core::CoreObject,
   /// the `connect` method has been called.
   WritingSocketShPtr m_writer{};
 
-  void onConnectionEstablished(const std::error_code &code, const asio::ip::tcp::endpoint &endpoint);
+  /// @brief - Attempts to synchronously connect to the server listening at the specified URL
+  /// and port. The function blocks until the connection either succeeds or fails.
+  /// @param context - the asio context to use to create the socket to connect
+  /// @param url - the URL to connect to
+  /// @param port - the port to connect to
+  /// @return - true if the connection could be established, false otherwise
+  bool tryConnect(AsioContext &context, const std::string &url, const int port);
+
+  /// @brief - Synchronously waits to receive a client identifier from the available socket.
+  /// This function will block until enough data to represent a client identifier has been
+  /// received.
+  /// @return - the client identifier received from the remote server.
+  auto tryWaitForClientIdentifier() const -> std::optional<ClientId>;
+
+  /// @brief - Once the connection has been setup, this method can be used to setup the reading
+  /// and writing socket to wrap the interaction with it. After calling this, the socket will
+  /// be instrumented and the internal event bus will start receiving events representing what
+  /// happens on the socket (such as data received or sent).
+  /// The client identifier will be associated with all events produced.
+  /// @param clientId - the identifier received from the remote server
+  void setupConnection(const ClientId clientId);
 };
 
 using AsioClientShPtr = std::shared_ptr<AsioClient>;

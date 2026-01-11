@@ -5,6 +5,8 @@
 #include "ClientConnectedEvent.hh"
 #include "SynchronizedEventBus.hh"
 
+#include <iostream>
+
 namespace net::details {
 namespace {
 class ClientListenerProxy : public IEventListener
@@ -48,7 +50,10 @@ AsioClient::AsioClient(IEventBusShPtr eventBus)
 
 AsioClient::~AsioClient()
 {
-  m_socket->cancel();
+  if (m_connected.load())
+  {
+    m_socket->cancel();
+  }
 }
 
 void AsioClient::connect(AsioContext &context, const std::string &url, const int port)
@@ -60,23 +65,31 @@ void AsioClient::connect(AsioContext &context, const std::string &url, const int
       "Got unexpected state for asio client, did you already call the connect method?");
   }
 
-  m_socket = std::make_shared<asio::ip::tcp::socket>(context.get());
-  // TODO: The client ID should be updated
-  m_reader = std::make_shared<ReadingSocket>(ClientId{0}, m_socket, m_internalBus);
-  m_writer = std::make_shared<WritingSocket>(ClientId{0}, m_socket, m_internalBus);
+  std::cout << "[client] trying to connect\n";
+  if (!tryConnect(context, url, port))
+  {
+    warn("Failed to connect to " + url + ":" + std::to_string(port));
+    return;
+  }
 
-  auto endpoints = context.resolve(url, port);
-  asio::async_connect(*m_socket,
-                      endpoints,
-                      std::bind(&AsioClient::onConnectionEstablished,
-                                shared_from_this(),
-                                std::placeholders::_1,
-                                std::placeholders::_2));
+  std::cout << "[client] wait for client id\n";
+  const auto maybeClientId = tryWaitForClientIdentifier();
+  if (!maybeClientId)
+  {
+    warn("Failed to retrieve client identifier");
+  }
+
+  std::cout << "[client] setting up connection\n";
+  setupConnection(*maybeClientId);
+
+  info("Successfully connected to " + url + ":" + std::to_string(port) + " as client "
+       + str(*maybeClientId));
 }
 
 bool AsioClient::isEventRelevant(const EventType & /*type*/) const
 {
-  // Either the events are forwarded as is or they are handled locally.
+  // Either the events are forwarded as is or they are handled locally
+  // so all of them are interesting.
   return true;
 }
 
@@ -100,20 +113,39 @@ auto AsioClient::trySend(std::vector<char> bytes) -> std::optional<MessageId>
   return messageId;
 }
 
-void AsioClient::onConnectionEstablished(const std::error_code &code,
-                                         const asio::ip::tcp::endpoint &endpoint)
+bool AsioClient::tryConnect(AsioContext &context, const std::string &url, const int port)
 {
-  if (code)
+  m_socket = std::make_shared<asio::ip::tcp::socket>(context.get());
+
+  auto endpoints = context.resolve(url, port);
+  const auto success
+    = withSafetyNet([this,
+                     &endpoints]() { asio::connect(*m_socket, endpoints.begin(), endpoints.end()); },
+                    "AsioClient::tryConnect");
+
+  return success;
+}
+
+auto AsioClient::tryWaitForClientIdentifier() const -> std::optional<ClientId>
+{
+  ClientId clientId{};
+  const auto expectedBytes = sizeof(ClientId);
+
+  const auto received = asio::read(*m_socket, asio::buffer(&clientId, expectedBytes));
+  if (received != expectedBytes)
   {
-    /// TODO: Maybe this is a bigger failure but for now we allow failing to
-    /// contact the server for development purposes.
-    warn("Error detected when connecting to " + str(endpoint), code.message());
-    return;
+    warn("Received only " + std::to_string(received) + " byte(s) for client identifier, expected "
+         + std::to_string(expectedBytes));
+    return {};
   }
 
-  info("Successfully connected to " + net::str(endpoint));
+  return clientId;
+}
 
-  // TODO: It should wait for the data read event and update the client identifier
+void AsioClient::setupConnection(const ClientId clientId)
+{
+  m_reader = std::make_shared<ReadingSocket>(clientId, m_socket, m_internalBus);
+  m_writer = std::make_shared<WritingSocket>(clientId, m_socket, m_internalBus);
   m_reader->connect();
 }
 
