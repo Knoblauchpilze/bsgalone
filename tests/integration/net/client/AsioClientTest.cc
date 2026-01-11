@@ -27,7 +27,7 @@ TEST_F(Integration_Net_Server_AsioClient, ConnectsToServerAndPublishesClientConn
   auto client = std::make_shared<AsioClient>(bus);
   client->connect(this->asioContext(), LOCALHOST_URL, this->port());
 
-  auto socket = this->waitForServerSocket();
+  auto sockets = this->waitForServerSocket();
 
   const auto actual = bus->waitForEvent();
   EXPECT_EQ(EventType::CLIENT_CONNECTED, actual->type());
@@ -41,12 +41,12 @@ TEST_F(Integration_Net_Server_AsioClient, DetectsDisconnectionAndPublishesClient
   auto client = std::make_shared<AsioClient>(bus);
   client->connect(this->asioContext(), LOCALHOST_URL, this->port());
 
-  auto socket = this->waitForServerSocket();
-  auto event  = bus->waitForEvent();
+  auto sockets = this->waitForServerSocket();
+  auto event   = bus->waitForEvent();
   EXPECT_EQ(EventType::CLIENT_CONNECTED, event->type());
   const auto expectedClientId = event->as<ClientConnectedEvent>().clientId();
 
-  socket->shutdown(asio::ip::tcp::socket::shutdown_both);
+  sockets.server->shutdown(asio::ip::tcp::socket::shutdown_both);
   event = bus->waitForEvent();
   EXPECT_EQ(EventType::CLIENT_DISCONNECTED, event->type());
   EXPECT_EQ(expectedClientId, event->as<ClientDisconnectedEvent>().clientId());
@@ -58,13 +58,13 @@ TEST_F(Integration_Net_Server_AsioClient, PublishesDataReceivedEventWhenDataIsRe
   auto client = std::make_shared<AsioClient>(bus);
   client->connect(this->asioContext(), LOCALHOST_URL, this->port());
 
-  auto socket = this->waitForServerSocket();
-  auto event  = bus->waitForEvent();
+  auto sockets = this->waitForServerSocket();
+  auto event   = bus->waitForEvent();
   EXPECT_EQ(EventType::CLIENT_CONNECTED, event->type());
   const auto expectedClientId = event->as<ClientConnectedEvent>().clientId();
 
   std::string data("test");
-  this->write(socket, data);
+  sockets.writeServer(data);
 
   event = bus->waitForEvent();
   EXPECT_EQ(EventType::DATA_RECEIVED, event->type());
@@ -129,8 +129,8 @@ TEST_F(Integration_Net_Server_AsioClient, WritesDataToClientSocket)
   auto client = std::make_shared<AsioClient>(bus);
   client->connect(this->asioContext(), LOCALHOST_URL, this->port());
 
-  ConnectedSockets sockets{.client = this->waitForServerSocket()};
-  auto event = bus->waitForEvent();
+  auto sockets = this->waitForServerSocket();
+  auto event   = bus->waitForEvent();
   EXPECT_EQ(EventType::CLIENT_CONNECTED, event->type());
 
   std::string data("test");
@@ -146,8 +146,8 @@ TEST_F(Integration_Net_Server_AsioClient, PublishesDataSentEvent)
   auto client = std::make_shared<AsioClient>(bus);
   client->connect(this->asioContext(), LOCALHOST_URL, this->port());
 
-  auto socket = this->waitForServerSocket();
-  auto event  = bus->waitForEvent();
+  auto sockets = this->waitForServerSocket();
+  auto event   = bus->waitForEvent();
   EXPECT_EQ(EventType::CLIENT_CONNECTED, event->type());
   const auto expectedClientId = event->as<ClientConnectedEvent>().clientId();
 

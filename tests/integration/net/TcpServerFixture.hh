@@ -22,8 +22,8 @@ class TcpServerFixture : public TcpFixture
   /// a socket. This function can be called after an asynchronous connect request has
   /// been made against the acceptor.
   /// If no connection request is pending, the method will throw.
-  /// @return - the server socket received while waiting
-  auto waitForServerSocket() -> net::details::SocketShPtr;
+  /// @return - a connected sockets struct with only the server socket populated
+  auto waitForServerSocket() -> ConnectedSockets;
 
   /// @brief - Returns a couple of connected sockets identified as client and server:
   ///   - the client socket is triggered as part of this method

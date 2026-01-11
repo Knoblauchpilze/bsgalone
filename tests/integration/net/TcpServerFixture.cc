@@ -16,17 +16,17 @@ void TcpServerFixture::TearDown()
   this->TcpFixture::TearDown();
 }
 
-auto TcpServerFixture::waitForServerSocket() -> net::details::SocketShPtr
+auto TcpServerFixture::waitForServerSocket() -> ConnectedSockets
 {
-  return m_acceptor->waitForServerSocket();
+  return ConnectedSockets{.server = m_acceptor->waitForServerSocket()};
 }
 
 auto TcpServerFixture::getTestSockets() -> ConnectedSockets
 {
-  auto client = this->connectToRunningServer();
-  auto server = this->waitForServerSocket();
-
-  return ConnectedSockets{.client = std::move(client), .server = std::move(server)};
+  auto client    = this->connectToRunningServer();
+  auto sockets   = this->waitForServerSocket();
+  sockets.client = std::move(client);
+  return sockets;
 }
 
 } // namespace test
