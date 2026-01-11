@@ -2,6 +2,7 @@
 #pragma once
 
 #include "AsioContext.hh"
+#include "ConnectionStatus.hh"
 #include "CoreObject.hh"
 #include "IEventBus.hh"
 #include "IEventListener.hh"
@@ -49,9 +50,10 @@ class AsioClient : public core::CoreObject,
   auto trySend(std::vector<char> bytes) -> std::optional<MessageId>;
 
   private:
-  /// @brief - Controls whether the `connect` method was already called and prevents it to
-  /// be called again.
-  std::atomic_bool m_connected{false};
+  /// @brief - Defines the status of the connection. This reflects the progress of the
+  /// connection to the remote server. Depending on its value calls to certain methods
+  /// might fail due to an invalid state.
+  std::atomic<ConnectionStatus> m_status{ConnectionStatus::DISCONNECTED};
 
   /// @brief - Event bus used to communicate events to the outside world. This includes the
   /// information when the client successfully connects to a remote server or when the
@@ -75,6 +77,13 @@ class AsioClient : public core::CoreObject,
   /// This socket is used by the reader and writer objects.
   SocketShPtr m_socket{};
 
+  /// @brief - Holds the client identifier received from the remote server. This value is set
+  /// when the `connect` method reaches it conclusion without error. Its value is meaningless
+  /// otherwise.
+  /// There's currently no good way to know if it is set with a correct value or not. This
+  /// is not needed at the moment but could be improved in the future.
+  ClientId m_clientId{};
+
   /// @brief - Holds the reader to interact with the socket attached to the client. It is always
   /// waiting on new data as soon as the `connect` method has been called.
   ReadingSocketShPtr m_reader{};
@@ -83,27 +92,17 @@ class AsioClient : public core::CoreObject,
   /// the `connect` method has been called.
   WritingSocketShPtr m_writer{};
 
-  /// @brief - Attempts to synchronously connect to the server listening at the specified URL
-  /// and port. The function blocks until the connection either succeeds or fails.
-  /// @param context - the asio context to use to create the socket to connect
-  /// @param url - the URL to connect to
-  /// @param port - the port to connect to
-  /// @return - true if the connection could be established, false otherwise
-  bool tryConnect(AsioContext &context, const std::string &url, const int port);
-
-  /// @brief - Synchronously waits to receive a client identifier from the available socket.
-  /// This function will block until enough data to represent a client identifier has been
-  /// received.
-  /// @return - the client identifier received from the remote server.
-  auto tryWaitForClientIdentifier() const -> std::optional<ClientId>;
+  void onConnectionEstablished(const std::error_code &code, const asio::ip::tcp::endpoint &endpoint);
+  void onDataReceived(const std::error_code &code, const std::size_t contentLength);
 
   /// @brief - Once the connection has been setup, this method can be used to setup the reading
   /// and writing socket to wrap the interaction with it. After calling this, the socket will
   /// be instrumented and the internal event bus will start receiving events representing what
   /// happens on the socket (such as data received or sent).
-  /// The client identifier will be associated with all events produced.
-  /// @param clientId - the identifier received from the remote server
-  void setupConnection(const ClientId clientId);
+  /// The client identifier owned by this object will be associated with all events produced.
+  void setupConnection();
+
+  void handleConnectionFailure(const IEvent &event);
 };
 
 using AsioClientShPtr = std::shared_ptr<AsioClient>;

@@ -13,7 +13,11 @@ struct ConnectedSockets
 
   auto readServer(const std::size_t length) -> std::string;
   auto readClient(const std::size_t length) -> std::string;
-  void writeServer(const std::string &data);
+
+  template<typename T>
+  void writeServer(const T &data);
 };
 
 } // namespace test
+
+#include "ConnectedSockets.hxx"

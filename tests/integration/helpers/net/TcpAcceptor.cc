@@ -1,6 +1,8 @@
 
 #include "TcpAcceptor.hh"
 
+#include <iostream>
+
 namespace test {
 
 TcpAcceptor::TcpAcceptor(asio::io_context &context, const int port)
@@ -37,14 +39,19 @@ auto TcpAcceptor::waitForServerSocket() -> net::details::SocketShPtr
 
 void TcpAcceptor::onConnectionRequest(const std::error_code &code, asio::ip::tcp::socket socket)
 {
+  std::cout << "[acceptor] received request, code = " << code.value()
+            << ", msg = " << code.message() << "\n";
+
   if (code)
   {
     throw std::runtime_error("Received code " + std::to_string(code.value()) + " (message: \""
                              + code.message() + "\") while processing incoming connection");
   }
 
+  std::cout << "[acceptor] accepting again\n";
   registerAccept();
 
+  std::cout << "[acceptor] notifying people\n";
   std::unique_lock guard(m_locker);
   m_socket = std::make_shared<asio::ip::tcp::socket>(std::move(socket));
   m_notifier.notify_one();
