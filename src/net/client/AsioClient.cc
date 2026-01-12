@@ -13,24 +13,41 @@ namespace {
 class ClientListenerProxy : public IEventListener
 {
   public:
-  ClientListenerProxy(IEventListener *listener)
-    : m_listener(listener)
+  ClientListenerProxy(std::weak_ptr<IEventListener> listener)
+    : m_listener(std::move(listener))
   {}
 
-  ~ClientListenerProxy() override = default;
+  ~ClientListenerProxy() override
+  {
+    std::cout << "[client proxy] deleting proxy\n";
+  }
 
   bool isEventRelevant(const EventType &type) const
   {
-    return m_listener->isEventRelevant(type);
+    auto listener = m_listener.lock();
+    if (listener)
+    {
+      std::cout << "[proxy] acquiring lock, event " << str(type) << " is forwarded\n";
+      return listener->isEventRelevant(type);
+    }
+
+    std::cout << "[proxy] could not acquire lock, event " << str(type) << " is not relevant\n";
+    return false;
   }
 
   void onEventReceived(const IEvent &event)
   {
-    m_listener->onEventReceived(event);
+    std::cout << "[proxy] receieved " << str(event.type()) << "\n";
+    auto listener = m_listener.lock();
+    if (listener)
+    {
+      std::cout << "[proxy] forwarding " << str(event.type()) << "\n";
+      listener->onEventReceived(event);
+    }
   }
 
   private:
-  IEventListener *m_listener{};
+  std::weak_ptr<IEventListener> m_listener{};
 };
 } // namespace
 
@@ -45,16 +62,40 @@ AsioClient::AsioClient(IEventBusShPtr eventBus)
   {
     throw std::invalid_argument("Expected non null event bus");
   }
-
-  m_internalBus->addListener(std::make_unique<ClientListenerProxy>(this));
 }
+namespace {
+auto shutdownSocket(asio::ip::tcp::socket &socket) -> std::error_code
+{
+  std::error_code code;
+  socket.shutdown(asio::ip::tcp::socket::shutdown_both, code);
+  return code;
+}
+} // namespace
 
 AsioClient::~AsioClient()
 {
-  if (m_status.load() != ConnectionStatus::DISCONNECTED)
+  std::cout << "[client] starting deletion of client\n";
+  if (m_socket)
   {
-    m_socket->cancel();
+    const auto code = shutdownSocket(*m_socket);
+    if (code)
+    {
+      warn("Got error while closing socket: " + code.message() + " (" + std::to_string(code.value())
+           + ")");
+    }
   }
+  // TODO: This is not enough, the socket still exist in the context. Maybe what would be
+  // needed would be a condition variable to wait for the last event received (i.e. the
+  // data read failure) to finish the destructor so that we have a chance to process it.
+  // Not sure what happens when the context is stopped before though. Maybe asio handles
+  // it gracefully.
+  // Something to double check when the implementation is replaced probably.
+  // We could also have a promise and set it to true if EOF (code 2) is detected or if
+  // the shutting down state is there (to be added to the connection status)
+  m_reader.reset();
+  m_writer.reset();
+  m_socket.reset();
+  std::cout << "[client] deleted all pointers\n";
 }
 
 void AsioClient::connect(AsioContext &context, const std::string &url, const int port)
@@ -64,6 +105,11 @@ void AsioClient::connect(AsioContext &context, const std::string &url, const int
   {
     throw std::runtime_error("Got unexpected state for asio client (" + str(expected) + ")");
   }
+
+  // https://stackoverflow.com/questions/50557861/weak-from-this-within-constructor
+  // TODO: Should be registered only once
+  // Maybe we could have a `reconnecting` and a `connection_failed` as statuses
+  m_internalBus->addListener(std::make_unique<ClientListenerProxy>(this->weak_from_this()));
 
   std::cout << "[client] trying to connect\n";
 
@@ -80,15 +126,20 @@ void AsioClient::connect(AsioContext &context, const std::string &url, const int
   std::cout << "[client] registered async connect\n";
 }
 
-bool AsioClient::isEventRelevant(const EventType & /*type*/) const
+bool AsioClient::isEventRelevant(const EventType &type) const
 {
   // Either the events are forwarded as is or they are handled locally
   // so all of them are interesting.
+  if (type == EventType::DATA_READ_FAILURE || type == EventType::DATA_WRITE_FAILURE)
+  {
+    return true;
+  }
   return true;
 }
 
 void AsioClient::onEventReceived(const IEvent &event)
 {
+  std::cout << "[client] handling " << str(event.type()) << "\n";
   switch (event.type())
   {
     case EventType::DATA_READ_FAILURE:
@@ -170,9 +221,11 @@ void AsioClient::onDataReceived(const std::error_code &code, const std::size_t c
 
 void AsioClient::setupConnection()
 {
+  std::cout << "[client] setup reader and writer\n";
   m_reader = std::make_shared<ReadingSocket>(m_clientId, m_socket, m_internalBus);
   m_writer = std::make_shared<WritingSocket>(m_clientId, m_socket, m_internalBus);
   m_reader->connect();
+  std::cout << "[client] both sockets set\n";
 }
 
 void AsioClient::handleConnectionFailure(const IEvent & /*event*/)
