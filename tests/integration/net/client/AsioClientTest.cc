@@ -75,41 +75,35 @@ TEST_F(Integration_Net_Server_AsioClient, PublishesDataReceivedEventWhenDataIsRe
   EXPECT_EQ(expectedData, event->as<DataReceivedEvent>().data());
 }
 
-// TODO: This one hangs because although the client is deleted (see below) the sockets
-// are still there and do not send the message.
-// To solve the issue we could probably shutdown the sockets in the destructor of the
-// client. Although the sockets are now sending the event nobody relays it to the event
-// bus and it's still hanging
-// Maybe what could work would be to have the proxy directly forward messages by having
-// a pointer to the external event bus
-// The client can then only be interested in the data read/write failure
-// This would still not solve the problem of the disconnection because those are handled
-// by the socket.
-// Two ways to go about it:
-//  - either the client does not own the socket but the proxy does
-//  - the client should somehow live as long as the sockets
-TEST_F(Integration_Net_Server_AsioClient, PublishesClientDisconnectedEventWhenClientSocketAreDeleted)
+TEST_F(Integration_Net_Server_AsioClient, PublishesClientDisconnectedEventWhenDisconnectIsCalled)
 {
   auto bus = std::make_shared<TestEventBus>();
 
   std::optional<ClientId> expectedClientId{};
 
-  // Note: see also the same test in Integration_Net_Server_AsioServer
-  {
-    auto client = std::make_shared<AsioClient>(bus);
-    client->connect(this->asioContext(), LOCALHOST_URL, this->port());
+  auto client = std::make_shared<AsioClient>(bus);
+  client->connect(this->asioContext(), LOCALHOST_URL, this->port());
 
-    auto sockets = this->waitForServerSocket();
-    sockets.writeServer(ClientId{32});
-    auto event = bus->waitForEvent();
-    EXPECT_EQ(EventType::CLIENT_CONNECTED, event->type());
-    expectedClientId = event->as<ClientConnectedEvent>().clientId();
-  }
-
+  auto sockets = this->waitForServerSocket();
+  sockets.writeServer(ClientId{32});
   auto event = bus->waitForEvent();
+  EXPECT_EQ(EventType::CLIENT_CONNECTED, event->type());
+  expectedClientId = event->as<ClientConnectedEvent>().clientId();
+
+  client->disconnect();
+
+  event = bus->waitForEvent();
   EXPECT_EQ(EventType::CLIENT_DISCONNECTED, event->type());
   ASSERT_TRUE(expectedClientId.has_value());
   EXPECT_EQ(expectedClientId, event->as<ClientDisconnectedEvent>().clientId());
+}
+
+TEST_F(Integration_Net_Server_AsioClient, ThrowsWhenDisconnectingAndNotConnected)
+{
+  auto bus    = std::make_shared<TestEventBus>();
+  auto client = std::make_shared<AsioClient>(bus);
+
+  EXPECT_THROW([&client]() { client->disconnect(); }(), core::CoreException);
 }
 
 TEST_F(Integration_Net_Server_AsioClient, ThrowsWhenWritingAMessageAndNotConnected)
@@ -160,26 +154,21 @@ TEST_F(Integration_Net_Server_AsioClient, PublishesDataSentEvent)
   auto client = std::make_shared<AsioClient>(bus);
   client->connect(this->asioContext(), LOCALHOST_URL, this->port());
 
-  std::cout << "[test] waiting for server socket\n";
   auto sockets = this->waitForServerSocket();
   sockets.writeServer(ClientId{32});
-  std::cout << "[test] waiting for client connected\n";
   auto event = bus->waitForEvent();
   EXPECT_EQ(EventType::CLIENT_CONNECTED, event->type());
   const auto expectedClientId = event->as<ClientConnectedEvent>().clientId();
 
-  std::cout << "[test] sending message\n";
   std::string data("test");
   const auto expectedMessageId = client->trySend(std::vector<char>(data.begin(), data.end()));
   EXPECT_TRUE(expectedMessageId.has_value());
 
-  std::cout << "[test] waiting for data sent\n";
   event = bus->waitForEvent();
   EXPECT_EQ(EventType::DATA_SENT, event->type());
   EXPECT_EQ(expectedClientId, event->as<DataSentEvent>().clientId());
   const std::vector<char> expectedData(data.begin(), data.end());
   EXPECT_EQ(expectedMessageId.value(), event->as<DataSentEvent>().messageId());
-  std::cout << "[test] end of test\n";
 }
 
 } // namespace net::details

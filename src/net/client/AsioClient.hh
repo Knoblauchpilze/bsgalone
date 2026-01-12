@@ -18,7 +18,7 @@ class AsioClient : public core::CoreObject,
 {
   public:
   AsioClient(IEventBusShPtr eventBus);
-  ~AsioClient() override;
+  ~AsioClient() override = default;
 
   /// @brief - Starts the client, instructing to synchronously attempt to connect to
   /// the server. The function call will block until the connection either succeeds
@@ -31,6 +31,11 @@ class AsioClient : public core::CoreObject,
   /// @param url - the URL of the server to connect to
   /// @param port - the port on which the server is listening on
   void connect(AsioContext &context, const std::string &url, const int port);
+
+  /// @brief - Synchronously disconnect the client by closing the underlying socket.
+  /// This method will block until the socket is really disconnected.
+  /// Calling this method before calling `connect` will fail.
+  void disconnect();
 
   bool isEventRelevant(const EventType &type) const override;
   void onEventReceived(const IEvent &event) override;
@@ -68,9 +73,19 @@ class AsioClient : public core::CoreObject,
   /// In the future it could also be used as a first gate to attempt to reconnect for example.
   IEventBusShPtr m_internalBus{};
 
+  std::atomic_bool m_registeredToInternalBus{};
+
   /// @brief - Holds the next message identifier to assign to an outgoing message. This value
   /// is incremented each time a new message is sent.
   std::atomic<MessageId> m_nextMessageId{0};
+
+  /// @brief - Used to protect the access to the socket, the reading and writing socket and
+  // to the condition variable.
+  std::mutex m_locker{};
+
+  /// @brief - Used to communicate that a disconnection has been detected. This is mainly
+  /// used to make the `disconnect` method blocking until the socket is effectively disconnected.
+  std::condition_variable m_notifier{};
 
   /// @brief - Holds the raw socket established by this client. This points to a connection to a
   /// remote server.
