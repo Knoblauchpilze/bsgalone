@@ -87,7 +87,7 @@ class AsioServer : public core::CoreObject,
   /// those socket is also attached to exactly one reader and one writer.
   /// This is used to keep track of the sockets and be able to close them easily when the server
   /// is being destroyed.
-  std::vector<SocketShPtr> m_sockets{};
+  std::unordered_map<ClientId, SocketShPtr> m_sockets{};
 
   /// @brief - Holds the list of readers that are currently waiting on data for an open socket.
   /// This map always contains exactly as many entries as the `m_sockets` array.

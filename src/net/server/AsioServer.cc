@@ -58,8 +58,9 @@ AsioServer::~AsioServer()
   const std::lock_guard guard(m_connectionsLocker);
   closeSockets();
 
-  m_readers.clear();
   m_writers.clear();
+  m_readers.clear();
+  m_sockets.clear();
 }
 
 void AsioServer::start()
@@ -155,7 +156,7 @@ auto AsioServer::registerConnection(asio::ip::tcp::socket rawSocket) -> ClientId
   reader->connect();
 
   const std::lock_guard guard(m_connectionsLocker);
-  m_sockets.emplace_back(std::move(socket));
+  m_sockets.emplace(clientId, std::move(socket));
   m_readers.emplace(clientId, std::move(reader));
   m_writers.emplace(clientId, std::move(writer));
 
@@ -175,6 +176,13 @@ auto tryGetClientId(const IEvent &event) -> std::optional<ClientId>
       return {};
   }
 }
+
+auto shutdownSocket(asio::ip::tcp::socket &socket) -> std::error_code
+{
+  std::error_code code;
+  socket.shutdown(asio::ip::tcp::socket::shutdown_both, code);
+  return code;
+}
 } // namespace
 
 void AsioServer::handleConnectionFailure(const IEvent &event)
@@ -187,8 +195,19 @@ void AsioServer::handleConnectionFailure(const IEvent &event)
 
   {
     const std::lock_guard guard(m_connectionsLocker);
-    m_readers.erase(*maybeClientId);
     m_writers.erase(*maybeClientId);
+    m_readers.erase(*maybeClientId);
+
+    // Note: the socket is shutdown to cancel any pending operations. However if it is
+    // removed from the `m_sockets` array it seems we get sometimes a `heap-use-after-free`
+    // error from a random integration test.
+    // This means that the `m_sockets` is growing the more clients are connecting to the
+    // server. If it becomes an issue the random crash should be addressed.
+    const auto maybeSocket = m_sockets.find(*maybeClientId);
+    if (maybeSocket != m_sockets.end())
+    {
+      shutdownSocket(*maybeSocket->second);
+    }
   }
 
   debug("Detected failure for client " + str(*maybeClientId) + ", removing connection");
@@ -197,26 +216,11 @@ void AsioServer::handleConnectionFailure(const IEvent &event)
   m_eventBus->pushEvent(std::move(out));
 }
 
-namespace {
-auto shutdownSocket(asio::ip::tcp::socket &socket) -> std::error_code
-{
-  std::error_code code;
-  socket.shutdown(asio::ip::tcp::socket::shutdown_both, code);
-  return code;
-}
-} // namespace
-
 void AsioServer::closeSockets()
 {
-  std::vector<std::error_code> codes;
-
-  std::transform(m_sockets.begin(),
-                 m_sockets.end(),
-                 std::back_inserter(codes),
-                 [](const SocketShPtr &socket) { return shutdownSocket(*socket); });
-
-  for (const auto &code : codes)
+  for (const auto &[_, socket] : m_sockets)
   {
+    const auto code = shutdownSocket(*socket);
     if (code)
     {
       warn("Got error while closing socket: " + code.message() + " (" + std::to_string(code.value())
