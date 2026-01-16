@@ -84,8 +84,7 @@ void WritingSocket::onDataSent(const std::error_code &code, const std::size_t co
     return;
   }
 
-  info("received code " + std::to_string(code.value()) + ", msg: " + code.message()
-       + ", length: " + std::to_string(contentLength));
+  verbose("Sent " + std::to_string(contentLength) + " byte(s) on connection ");
 
   publishDataSentEvent();
   popFirstMessageInOutbox();

@@ -89,6 +89,9 @@ void AsioServer::onEventReceived(const IEvent &event)
     case EventType::DATA_WRITE_FAILURE:
       handleConnectionFailure(event);
       break;
+    case EventType::DATA_SENT:
+      handleHandshakeSuccessOrForward(event.as<DataSentEvent>());
+      break;
     default:
       m_eventBus->pushEvent(event.clone());
       break;
@@ -138,29 +141,41 @@ void AsioServer::onConnectionRequest(const std::error_code &code, asio::ip::tcp:
     return;
   }
 
-  const auto clientId = registerConnection(std::move(socket));
-
-  auto event = std::make_unique<ClientConnectedEvent>(clientId);
-  m_eventBus->pushEvent(std::move(event));
+  const auto clientId = m_nextClientId.fetch_add(1);
+  auto socketData     = createSocketData(clientId, std::move(socket));
+  initiateHandshake(clientId, std::move(socketData));
 }
 
-auto AsioServer::registerConnection(asio::ip::tcp::socket rawSocket) -> ClientId
+auto AsioServer::createSocketData(const ClientId clientId, asio::ip::tcp::socket rawSocket) const
+  -> SocketData
 {
   auto socket = std::make_shared<asio::ip::tcp::socket>(std::move(rawSocket));
 
-  const auto clientId = m_nextClientId.fetch_add(1);
+  SocketData data{
+    .socket = socket,
+    .reader = std::make_shared<ReadingSocket>(clientId, socket, m_internalBus),
+    .writer = std::make_shared<WritingSocket>(clientId, socket, m_internalBus),
+  };
 
-  auto reader = std::make_shared<ReadingSocket>(clientId, socket, m_internalBus);
-  auto writer = std::make_shared<WritingSocket>(clientId, socket, m_internalBus);
+  return data;
+}
 
-  reader->connect();
+void AsioServer::initiateHandshake(const ClientId clientId, SocketData data)
+{
+  std::vector<char> handshake(sizeof(ClientId), 0);
+  const auto clientIdBuf = reinterpret_cast<const char *>(&clientId);
+  std::copy(clientIdBuf, clientIdBuf + sizeof(ClientId), handshake.data());
+
+  const auto maybeMessageId = trySend(clientId, handshake);
+  if (!maybeMessageId)
+  {
+    error("Failed to initiate handshake for client " + str(clientId));
+  }
+
+  data.handshakeMessageId = maybeMessageId;
 
   const std::lock_guard guard(m_connectionsLocker);
-  m_sockets.emplace(clientId, std::move(socket));
-  m_readers.emplace(clientId, std::move(reader));
-  m_writers.emplace(clientId, std::move(writer));
-
-  return clientId;
+  m_pendingSockets.emplace(clientId, std::move(data));
 }
 
 namespace {
@@ -214,6 +229,58 @@ void AsioServer::handleConnectionFailure(const IEvent &event)
 
   auto out = std::make_unique<ClientDisconnectedEvent>(*maybeClientId);
   m_eventBus->pushEvent(std::move(out));
+}
+
+void AsioServer::handleHandshakeSuccessOrForward(const DataSentEvent &event)
+{
+  auto maybeSocketData = takePendingSocketData(event.clientId(), event.messageId());
+
+  if (!maybeSocketData)
+  {
+    // The message does not correspond to a pending handshake, forward it.
+    m_eventBus->pushEvent(event.clone());
+    return;
+  }
+
+  registerConnection(event.clientId(), *maybeSocketData);
+
+  auto out = std::make_unique<ClientConnectedEvent>(event.clientId());
+  m_eventBus->pushEvent(std::move(out));
+}
+
+auto AsioServer::takePendingSocketData(const ClientId clientId, const MessageId expectedMessageId)
+  -> std::optional<SocketData>
+{
+  const std::lock_guard guard(m_connectionsLocker);
+  const auto maybeHandshake = m_pendingSockets.find(clientId);
+
+  if (maybeHandshake == m_pendingSockets.end())
+  {
+    return {};
+  }
+
+  if (maybeHandshake->second.handshakeMessageId.value() != expectedMessageId)
+  {
+    error("Mismatch between the expected handshake message ("
+          + str(maybeHandshake->second.handshakeMessageId.value()) + ") and actual message ("
+          + str(expectedMessageId) + ")");
+  }
+
+  SocketData toRegister;
+  std::swap(toRegister, maybeHandshake->second);
+  m_pendingSockets.erase(clientId);
+
+  return toRegister;
+}
+
+void AsioServer::registerConnection(const ClientId clientId, SocketData data)
+{
+  data.reader->connect();
+
+  const std::lock_guard guard(m_connectionsLocker);
+  m_sockets.emplace(clientId, data.socket);
+  m_readers.emplace(clientId, data.reader);
+  m_writers.emplace(clientId, data.writer);
 }
 
 void AsioServer::closeSockets()
