@@ -37,6 +37,22 @@ TEST_F(Integration_Net_Server_AsioServer, AcceptsConnectionAndPublishesClientCon
   EXPECT_EQ(ClientId{0}, actual->as<ClientConnectedEvent>().clientId());
 }
 
+TEST_F(Integration_Net_Server_AsioServer, SendsClientIdToConnection)
+{
+  auto bus    = std::make_shared<TestEventBus>();
+  auto server = std::make_shared<AsioServer>(this->asioContext(), this->port(), bus);
+  server->start();
+
+  ConnectedSockets sockets{.client = this->connectToRunningServer()};
+  auto event = bus->waitForEvent();
+  EXPECT_EQ(EventType::CLIENT_CONNECTED, event->type());
+  const auto expectedClientId = event->as<ClientConnectedEvent>().clientId();
+
+  const auto actual              = sockets.readClient(sizeof(ClientId));
+  const auto actualAsClientIdPtr = reinterpret_cast<const ClientId *>(actual.data());
+  EXPECT_EQ(expectedClientId, *actualAsClientIdPtr);
+}
+
 TEST_F(Integration_Net_Server_AsioServer, AcceptsMultipleConnections)
 {
   auto bus    = std::make_shared<TestEventBus>();
@@ -166,7 +182,12 @@ TEST_F(Integration_Net_Server_AsioServer, WritesDataToClientSocket)
   std::string data("test");
   server->trySend(expectedClientId, std::vector<char>(data.begin(), data.end()));
 
-  const auto actual = sockets.readClient(data.size());
+  const auto expectedSize = data.size() + sizeof(ClientId);
+  const auto allData      = sockets.readClient(expectedSize);
+
+  // Offset to not consider the client id
+  const auto startOfData = allData.data() + sizeof(ClientId);
+  const std::string actual(startOfData, allData[allData.size() - 1]);
   EXPECT_EQ("test", actual);
 }
 

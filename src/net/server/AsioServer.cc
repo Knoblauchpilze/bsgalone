@@ -166,13 +166,8 @@ void AsioServer::initiateHandshake(const ClientId clientId, SocketData data)
   const auto clientIdBuf = reinterpret_cast<const char *>(&clientId);
   std::copy(clientIdBuf, clientIdBuf + sizeof(ClientId), handshake.data());
 
-  const auto maybeMessageId = trySend(clientId, handshake);
-  if (!maybeMessageId)
-  {
-    error("Failed to initiate handshake for client " + str(clientId));
-  }
-
-  data.handshakeMessageId = maybeMessageId;
+  data.handshakeMessageId = m_nextMessageId.fetch_add(1);
+  data.writer->send(*data.handshakeMessageId, handshake);
 
   const std::lock_guard guard(m_connectionsLocker);
   m_pendingSockets.emplace(clientId, std::move(data));
