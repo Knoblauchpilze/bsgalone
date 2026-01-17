@@ -154,6 +154,6 @@ class AsioServer : public core::CoreObject,
   void closeSockets();
 };
 
-using AsioServerPtr = std::unique_ptr<AsioServer>;
+using AsioServerShPtr = std::shared_ptr<AsioServer>;
 
 } // namespace net::details
