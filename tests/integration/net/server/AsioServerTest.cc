@@ -182,12 +182,10 @@ TEST_F(Integration_Net_Server_AsioServer, WritesDataToClientSocket)
   std::string data("test");
   server->trySend(expectedClientId, std::vector<char>(data.begin(), data.end()));
 
-  const auto expectedSize = data.size() + sizeof(ClientId);
-  const auto allData      = sockets.readClient(expectedSize);
+  // Drain the client id to get the written data.
+  sockets.drainClient(sizeof(ClientId));
 
-  // Offset to not consider the client id
-  const auto startOfData = allData.data() + sizeof(ClientId);
-  const std::string actual(startOfData, allData[allData.size() - 1]);
+  const auto actual = sockets.readClient(data.size());
   EXPECT_EQ("test", actual);
 }
 
