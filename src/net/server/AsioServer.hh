@@ -5,6 +5,7 @@
 #include "ClientId.hh"
 #include "CoreObject.hh"
 #include "DataSentEvent.hh"
+#include "DataWriteFailureEvent.hh"
 #include "IEventBus.hh"
 #include "ReadingSocket.hh"
 #include "WritingSocket.hh"
@@ -137,6 +138,7 @@ class AsioServer : public core::CoreObject,
   void initiateHandshake(const ClientId clientId, SocketData data);
 
   void handleConnectionFailure(const IEvent &event);
+  bool tryHandleHandshakeFailure(const DataWriteFailureEvent &event);
 
   /// @brief - This is the second half of the handshake initiated in `initiateHandshake`.
   /// This function is called when a `DataSentEvent` is received. In case the message

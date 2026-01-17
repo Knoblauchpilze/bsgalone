@@ -78,7 +78,7 @@ void WritingSocket::onDataSent(const std::error_code &code, const std::size_t co
 
     m_socketActive.store(false);
 
-    auto event = std::make_unique<DataWriteFailureEvent>(m_clientId);
+    auto event = std::make_unique<DataWriteFailureEvent>(m_clientId, getFirstMessageId());
     m_eventBus->pushEvent(std::move(event));
 
     return;
@@ -108,6 +108,12 @@ void WritingSocket::popFirstMessageInOutbox()
   const std::lock_guard guard(m_outboxLock);
   m_outbox.pop_front();
   m_writingTaskRegistered = false;
+}
+
+auto WritingSocket::getFirstMessageId() -> MessageId
+{
+  const std::lock_guard guard(m_outboxLock);
+  return m_outbox.at(0)->id;
 }
 
 } // namespace net::details

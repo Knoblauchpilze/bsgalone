@@ -72,6 +72,7 @@ TEST_F(Integration_Net_Sockets_WritingSocket, PublishesDataWriteFailureEventWhen
   const auto actual = bus->waitForEvent();
   EXPECT_EQ(EventType::DATA_WRITE_FAILURE, actual->type());
   EXPECT_EQ(ClientId{1}, actual->as<DataWriteFailureEvent>().clientId());
+  EXPECT_EQ(MessageId{3}, actual->as<DataWriteFailureEvent>().messageId());
 }
 
 // Note: this test shows that we can't detect failures when writing. Fortunately

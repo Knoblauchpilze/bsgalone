@@ -203,6 +203,12 @@ void AsioServer::handleConnectionFailure(const IEvent &event)
     error("Failed to handle connection failure", "Received unsupported event " + str(event.type()));
   }
 
+  if (event.type() == EventType::DATA_WRITE_FAILURE
+      && tryHandleHandshakeFailure(event.as<DataWriteFailureEvent>()))
+  {
+    return;
+  }
+
   {
     const std::lock_guard guard(m_connectionsLocker);
     m_writers.erase(*maybeClientId);
@@ -224,6 +230,21 @@ void AsioServer::handleConnectionFailure(const IEvent &event)
 
   auto out = std::make_unique<ClientDisconnectedEvent>(*maybeClientId);
   m_eventBus->pushEvent(std::move(out));
+}
+
+bool AsioServer::tryHandleHandshakeFailure(const DataWriteFailureEvent &event)
+{
+  auto maybeSocketData = takePendingSocketData(event.clientId(), event.messageId());
+  if (!maybeSocketData)
+  {
+    return false;
+  }
+
+  warn("Detected failure when performing handshake, closing connection");
+
+  shutdownSocket(*maybeSocketData->socket);
+
+  return true;
 }
 
 void AsioServer::handleHandshakeSuccessOrForward(const DataSentEvent &event)
