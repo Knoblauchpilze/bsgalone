@@ -169,8 +169,8 @@ void AsioClient::onConnectionEstablished(const std::error_code &code,
   {
     /// TODO: Maybe this is a bigger failure but for now we allow failing to
     /// contact the server for development purposes.
-    warn("Error detected when connecting to " + net::str(endpoint) + " ("
-           + std::to_string(code.value()) + ")",
+    warn("Error detected when connecting to " + str(endpoint) + " (" + std::to_string(code.value())
+           + ")",
          code.message());
     m_status.store(ConnectionStatus::DISCONNECTED);
     return;

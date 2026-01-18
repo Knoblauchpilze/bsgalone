@@ -51,7 +51,7 @@ void TcpServer::onConnectionRequest(const std::error_code &code, asio::ip::tcp::
     return;
   }
 
-  const auto client = str(socket.remote_endpoint());
+  const auto client = details::str(socket.remote_endpoint());
   debug("Processing new connection from " + client);
 
   auto connection = std::make_shared<Connection>(std::move(socket));

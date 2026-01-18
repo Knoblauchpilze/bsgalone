@@ -2,7 +2,7 @@
 #include "AsioUtils.hh"
 #include <sstream>
 
-namespace net {
+namespace net::details {
 
 auto str(const asio::ip::tcp::endpoint &endpoint) -> std::string
 {
@@ -11,4 +11,4 @@ auto str(const asio::ip::tcp::endpoint &endpoint) -> std::string
   return out.str();
 }
 
-} // namespace net
+} // namespace net::details
