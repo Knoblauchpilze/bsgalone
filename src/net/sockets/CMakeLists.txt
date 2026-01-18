@@ -8,4 +8,3 @@ target_sources (net_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/ReadingSocket.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/WritingSocket.cc
 	)
-
