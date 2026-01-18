@@ -21,12 +21,12 @@ class AsioClient : public core::CoreObject,
   ~AsioClient() override = default;
 
   /// @brief - Starts the client, instructing to synchronously attempt to connect to
-  /// the server. The function call will block until the connection either succeeds
-  /// or fails.
-  /// In case the connection is successful, the function returns and a client connected
-  /// event will be published to the event bus.
-  /// In case the connection fails, the function will return but no event will be
-  /// published to the event bus.
+  /// the server.
+  /// In case the connection is successful, a client connected event will be published
+  /// to the event bus. In case the connection fails, no event will be published to the
+  /// event bus.
+  /// Currently it is not possible to know when a connection attempt failed. If it is
+  /// needed in the future it could be added.
   /// @param context - the context to use to register the connection task
   /// @param url - the URL of the server to connect to
   /// @param port - the port on which the server is listening on
