@@ -39,7 +39,7 @@ auto Connection::str() const -> std::string
 {
   const auto connected = isConnected();
   const auto status    = (connected ? "ON" : "OFF");
-  const auto client    = (connected ? net::str(m_socket.remote_endpoint()) : "N/A");
+  const auto client    = (connected ? net::details::str(m_socket.remote_endpoint()) : "N/A");
   return std::format("{}-{}-{}-{}", std::to_string(m_id), client, net::str(m_type), status);
 }
 
@@ -149,12 +149,12 @@ void Connection::onConnectionEstablished(const std::error_code &code,
   {
     /// TODO: Maybe this is a bigger failure but for now we allow failing to
     /// contact the server for development purposes.
-    warn("Error detected when connecting to " + net::str(endpoint), code.message());
+    warn("Error detected when connecting to " + net::details::str(endpoint), code.message());
     m_socket.close();
     return;
   }
 
-  info("Successfully connected to " + net::str(endpoint));
+  info("Successfully connected to " + net::details::str(endpoint));
 
   registerReadingTaskToAsio();
 }
