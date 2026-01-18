@@ -102,3 +102,10 @@ ci-cpp-build-image:
 		--tag totocorpsoftwareinc/ci-cpp-build-image:${DOCKER_IMAGE_TAG} \
 		-f build/ci-cpp-build-image/Dockerfile \
 		build/ci-cpp-build-image
+
+# Test applications
+runtestserver: copyRelease
+	cd sandbox && ./run.sh bsgalone_server_new 2323
+
+runtestclient: copyRelease
+	cd sandbox && ./run.sh bsgalone_client_new 2323 colo aze pilot
