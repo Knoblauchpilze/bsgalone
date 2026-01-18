@@ -22,4 +22,3 @@ target_sources (bsgo_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/TargetListMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/WeaponListMessage.cc
 	)
-

@@ -10,4 +10,3 @@ target_sources (server_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/LogoutMessageConsumer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SignupMessageConsumer.cc
 	)
-

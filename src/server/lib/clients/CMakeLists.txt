@@ -6,4 +6,3 @@ target_include_directories (server_lib PUBLIC
 target_sources (server_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/ClientManager.cc
 	)
-
