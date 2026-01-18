@@ -116,9 +116,9 @@ TEST_F(Integration_Net_Server_AsioServer, PublishesClientDisconnectedEventWhenCl
 
   // Note: although the server is within this scope, it stays alive until the
   // asio context is really destroyed. This is a bit strange as one would expect
-  // that once the acceptor is finished. Resources online indicates that a call
-  // to `acceptor.cancel()` and/or `acceptor.close()` helps but it does not seem
-  // to be the case in my testing.
+  // that once the acceptor is finished the server also gets terminated and then
+  // destroyed. Resources online indicates that a call to `acceptor.cancel()` and/or
+  // `acceptor.close()` helps but it does not seem to be the case in my testing.
   // See:
   // https://stackoverflow.com/questions/33161640/how-to-safely-cancel-a-boost-asio-asynchronous-accept-operation
   // https://github.com/chriskohlhoff/asio/issues/806
