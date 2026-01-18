@@ -140,6 +140,19 @@ TEST_F(Integration_Net_Server_AsioServer, PublishesClientDisconnectedEventWhenCl
   EXPECT_EQ(expectedClientId, event->as<ClientDisconnectedEvent>().clientId());
 }
 
+TEST_F(Integration_Net_Server_AsioServer, ThrowsWhenSendingMessageWithoutStarting)
+{
+  auto bus    = std::make_shared<TestEventBus>();
+  auto server = std::make_shared<AsioServer>(this->asioContext(), this->port(), bus);
+
+  EXPECT_THROW(
+    [&server]() {
+      std::string data{"test"};
+      server->trySend(ClientId{0}, std::vector<char>{data.begin(), data.end()});
+    }(),
+    core::CoreException);
+}
+
 TEST_F(Integration_Net_Server_AsioServer, ReturnsEmptyMessageIdentifierWhenClientDoesNotExist)
 {
   auto bus    = std::make_shared<TestEventBus>();

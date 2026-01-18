@@ -101,6 +101,11 @@ void AsioServer::onEventReceived(const IEvent &event)
 auto AsioServer::trySend(const ClientId clientId, std::vector<char> bytes)
   -> std::optional<MessageId>
 {
+  if (!m_registered.load())
+  {
+    error("Cannot send message to " + str(clientId), "Server is not started");
+  }
+
   if (bytes.empty())
   {
     warn("Discarding empty message to " + str(clientId));
