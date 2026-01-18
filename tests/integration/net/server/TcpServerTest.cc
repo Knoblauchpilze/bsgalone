@@ -53,4 +53,22 @@ TEST_F(Integration_Net_Server_TcpServer, DetectsDisconnectionAndPublishesClientD
   EXPECT_EQ(expectedClientId, event->as<ClientDisconnectedEvent>().clientId());
 }
 
+TEST_F(Integration_Net_Server_TcpServer, PublishesClientDisconnectedEventWhenServerIsStopped)
+{
+  auto bus    = std::make_shared<TestEventBus>();
+  auto server = std::make_shared<TcpServer>(bus);
+  server->start(this->port());
+
+  auto socket = this->connectToRunningServer();
+  auto event  = bus->waitForEvent();
+  EXPECT_EQ(EventType::CLIENT_CONNECTED, event->type());
+  const auto expectedClientId = event->as<ClientConnectedEvent>().clientId();
+
+  server->stop();
+
+  event = bus->waitForEvent();
+  EXPECT_EQ(EventType::CLIENT_DISCONNECTED, event->type());
+  EXPECT_EQ(expectedClientId, event->as<ClientDisconnectedEvent>().clientId());
+}
+
 } // namespace net::details

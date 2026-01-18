@@ -1,6 +1,8 @@
 
 #include "TcpServer.hh"
 
+#include <iostream>
+
 namespace net {
 
 TcpServer::TcpServer(IEventBusShPtr eventBus)
@@ -41,8 +43,13 @@ void TcpServer::stop()
     error("Unexpected state for server, did you already call stop?");
   }
 
+  std::cout << "[tcp server] closing sockets\n";
+  m_server->closeSockets();
+  std::cout << "[tcp server] reset server\n";
   m_server.reset();
+  std::cout << "[tcp server] reset context\n";
   m_context.reset();
+  std::cout << "[tcp server] stopped\n";
 }
 
 auto TcpServer::trySend(const ClientId clientId, std::vector<char> bytes)

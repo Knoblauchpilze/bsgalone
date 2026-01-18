@@ -152,6 +152,7 @@ class AsioServer : public core::CoreObject,
     -> std::optional<SocketData>;
   void registerConnection(const ClientId clientId, SocketData data);
 
+  public:
   void closeSockets();
 };
 
