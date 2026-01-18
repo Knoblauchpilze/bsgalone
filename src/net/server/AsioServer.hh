@@ -40,6 +40,7 @@ class AsioServer : public core::CoreObject,
   ///     be discarded and an empty message identifier will be returned.
   ///   - in case the `bytes` to send are empty, the function will return early and an
   ///     empty message identifier will be returned.
+  ///   - in case the `start` method has not been called before, an error will be raised
   /// It is possible to receive information about the data being sent by listening for
   /// `DataSentEvent` with the corresponding message identifier.
   /// @param clientId - the identifier of the client to send the message to
