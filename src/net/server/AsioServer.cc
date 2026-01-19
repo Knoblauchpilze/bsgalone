@@ -7,6 +7,8 @@
 #include "DataWriteFailureEvent.hh"
 #include "SynchronizedEventBus.hh"
 
+#include <iostream>
+
 namespace net::details {
 namespace {
 class ServerListenerProxy : public IEventListener
@@ -51,28 +53,30 @@ AsioServer::AsioServer(AsioContext &context, const int port, IEventBusShPtr even
 
 AsioServer::~AsioServer()
 {
-  // This is necessary otherwise the sockets get destroyed when the maps are being
-  // cleared which leads to asio triggering the callbacks for removing a socket and
-  // as the destruction of the maps in this destructor is not protected by a lock
-  // we get race conditions.
-  const std::lock_guard guard(m_connectionsLocker);
-  closeSockets();
-
-  m_writers.clear();
-  m_readers.clear();
-  m_sockets.clear();
+  std::cout << "[asio server] destroying server\n";
 }
 
 void AsioServer::start()
 {
-  auto expected = false;
-  if (!m_registered.compare_exchange_strong(expected, true))
+  if (!m_state.markAsRegistered())
   {
     throw std::runtime_error(
       "Got unexpected state for asio server, did you already call the start method?");
   }
 
   registerToAsio();
+}
+
+void AsioServer::shutdown()
+{
+  if (!m_state.markAsTerminating())
+  {
+    throw std::runtime_error(
+      "Got unexpected state for asio server, did you forget to call the start method?");
+  }
+
+  closeSockets();
+  std::this_thread::sleep_for(std::chrono::milliseconds(500));
 }
 
 bool AsioServer::isEventRelevant(const EventType & /*type*/) const
@@ -101,7 +105,7 @@ void AsioServer::onEventReceived(const IEvent &event)
 auto AsioServer::trySend(const ClientId clientId, std::vector<char> bytes)
   -> std::optional<MessageId>
 {
-  if (!m_registered.load())
+  if (!m_state.isRegistered())
   {
     error("Cannot send message to " + str(clientId), "Server is not started");
   }
@@ -148,6 +152,7 @@ void AsioServer::onConnectionRequest(const std::error_code &code, asio::ip::tcp:
 
   const auto clientId = m_nextClientId.fetch_add(1);
   auto socketData     = createSocketData(clientId, std::move(socket));
+  std::cout << "[asio server] initiating handshake\n";
   initiateHandshake(clientId, std::move(socketData));
 }
 
@@ -191,13 +196,6 @@ auto tryGetClientId(const IEvent &event) -> std::optional<ClientId>
       return {};
   }
 }
-
-auto shutdownSocket(asio::ip::tcp::socket &socket) -> std::error_code
-{
-  std::error_code code;
-  socket.shutdown(asio::ip::tcp::socket::shutdown_both, code);
-  return code;
-}
 } // namespace
 
 void AsioServer::handleConnectionFailure(const IEvent &event)
@@ -218,17 +216,7 @@ void AsioServer::handleConnectionFailure(const IEvent &event)
     const std::lock_guard guard(m_connectionsLocker);
     m_writers.erase(*maybeClientId);
     m_readers.erase(*maybeClientId);
-
-    // Note: the socket is shutdown to cancel any pending operations. However if it is
-    // removed from the `m_sockets` array it seems we get sometimes a `heap-use-after-free`
-    // error from a random integration test.
-    // This means that the `m_sockets` is growing the more clients are connecting to the
-    // server. If it becomes an issue the random crash should be addressed.
-    const auto maybeSocket = m_sockets.find(*maybeClientId);
-    if (maybeSocket != m_sockets.end())
-    {
-      shutdownSocket(*maybeSocket->second);
-    }
+    m_sockets.erase(*maybeClientId);
   }
 
   debug("Detected failure for client " + str(*maybeClientId) + ", removing connection");
@@ -236,6 +224,15 @@ void AsioServer::handleConnectionFailure(const IEvent &event)
   auto out = std::make_unique<ClientDisconnectedEvent>(*maybeClientId);
   m_eventBus->pushEvent(std::move(out));
 }
+
+namespace {
+auto shutdownSocket(asio::ip::tcp::socket &socket) -> std::error_code
+{
+  std::error_code code;
+  socket.shutdown(asio::ip::tcp::socket::shutdown_both, code);
+  return code;
+}
+} // namespace
 
 bool AsioServer::tryHandleHandshakeFailure(const DataWriteFailureEvent &event)
 {
@@ -259,9 +256,13 @@ void AsioServer::handleHandshakeSuccessOrForward(const DataSentEvent &event)
   if (!maybeSocketData)
   {
     // The message does not correspond to a pending handshake, forward it.
+    std::cout << "[asio server] no handshake detected, forwarding event " << event.clientId() << "/"
+              << event.messageId() << "\n ";
     m_eventBus->pushEvent(event.clone());
     return;
   }
+
+  std::cout << "[asio server] success of handshake for " << str(event.clientId()) << "\n";
 
   registerConnection(event.clientId(), *maybeSocketData);
 
@@ -296,12 +297,15 @@ auto AsioServer::takePendingSocketData(const ClientId clientId, const MessageId 
 
 void AsioServer::registerConnection(const ClientId clientId, SocketData data)
 {
+  std::cout << "[asio server] connecting reader\n";
   data.reader->connect();
 
   const std::lock_guard guard(m_connectionsLocker);
   m_sockets.emplace(clientId, data.socket);
   m_readers.emplace(clientId, data.reader);
   m_writers.emplace(clientId, data.writer);
+
+  std::cout << "[asio server] successfully registered\n";
 }
 
 void AsioServer::closeSockets()

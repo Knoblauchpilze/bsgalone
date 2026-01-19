@@ -43,8 +43,8 @@ void TcpServer::stop()
     error("Unexpected state for server, did you already call stop?");
   }
 
-  std::cout << "[tcp server] closing sockets\n";
-  m_server->closeSockets();
+  std::cout << "[tcp server] shutting down server\n";
+  m_server->shutdown();
   std::cout << "[tcp server] reset server\n";
   m_server.reset();
   std::cout << "[tcp server] reset context\n";

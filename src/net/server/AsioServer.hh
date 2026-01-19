@@ -8,6 +8,7 @@
 #include "DataWriteFailureEvent.hh"
 #include "IEventBus.hh"
 #include "ReadingSocket.hh"
+#include "ServerState.hh"
 #include "WritingSocket.hh"
 #include <asio.hpp>
 #include <memory>
@@ -29,6 +30,13 @@ class AsioServer : public core::CoreObject,
   /// contacted by external clients and start managing TCP connections.
   /// Calling this method twice will raise an exception.
   void start();
+
+  /// @brief - Requests the server to shutdown all opened sockets and stop accepting new
+  /// connections. Calling this method before calling `start` will raise an eror.
+  /// This function blocks until all sockets have been successfully closed.
+  /// For sockets that are still in the handshake process, they will only be terminated
+  /// without waiting for a confirmation (which is not possible to obrain).
+  void shutdown();
 
   bool isEventRelevant(const EventType &type) const override;
   void onEventReceived(const IEvent &event) override;
@@ -53,9 +61,8 @@ class AsioServer : public core::CoreObject,
   /// connection and socket management for the server.
   asio::ip::tcp::acceptor m_acceptor;
 
-  /// @brief - Controls whether the `start` method was already called and prevents it to
-  /// be called again.
-  std::atomic_bool m_registered{false};
+  /// @brief - Describes the current state of the server.
+  ServerState m_state{};
 
   /// @brief - Event bus used to communicate events to the outside world. This includes the
   /// information about clients connected or disconnected, but also in general about data
@@ -152,7 +159,10 @@ class AsioServer : public core::CoreObject,
     -> std::optional<SocketData>;
   void registerConnection(const ClientId clientId, SocketData data);
 
-  public:
+  /// @brief - Requests all existing sockets to be shutdown and mark the expected count
+  /// of disconnection events needed.
+  /// Sockets which were in the handshake process will be shutdown without expecting any
+  /// termination confirmation.
   void closeSockets();
 };
 
