@@ -13,6 +13,8 @@ namespace net {
 class TcpClient : public INetworkClient, public core::CoreObject
 {
   public:
+  // TODO: Maybe this could be returned from a `getEventBus` method
+  // or provided as an API similar to `addListener`
   TcpClient(IEventBusShPtr eventBus);
   ~TcpClient() override = default;
 

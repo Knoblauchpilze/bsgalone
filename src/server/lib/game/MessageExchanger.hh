@@ -3,6 +3,7 @@
 
 #include "ClientManager.hh"
 #include "Connection.hh"
+#include "IEventBus.hh"
 #include "IMessageQueue.hh"
 #include "NetworkMessageQueue.hh"
 #include "Repositories.hh"
@@ -26,7 +27,7 @@ class MessageExchanger
 
   auto getInternalMessageQueue() const -> IMessageQueue *;
   auto getOutputMessageQueue() const -> IMessageQueue *;
-  void registerConnection(const Uuid clientId, net::ConnectionShPtr connection);
+  void registerToEventBus(net::IEventBus &eventBus);
 
   void pushMessage(IMessagePtr message);
 

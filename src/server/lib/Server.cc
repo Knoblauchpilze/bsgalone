@@ -1,8 +1,11 @@
 
 
 #include "Server.hh"
+#include "AsyncEventBus.hh"
 #include "LogoutMessage.hh"
+#include "SynchronizedEventBus.hh"
 #include "SystemProcessorUtils.hh"
+#include "TcpServer.hh"
 
 namespace bsgo {
 
@@ -55,6 +58,8 @@ void Server::initializeMessageSystem()
   const MessageSystemData data{.clientManager    = m_clientManager,
                                .systemProcessors = convertToSystemProcessorMap(m_systemProcessors)};
   m_messageExchanger = std::make_unique<MessageExchanger>(data);
+  m_messageExchanger->registerToEventBus(*m_eventBus);
+  m_clientManager->registerToEventBus(*m_eventBus);
 
   for (const auto &systemProcessor : m_systemProcessors)
   {
@@ -65,20 +70,11 @@ void Server::initializeMessageSystem()
 
 void Server::setup(const int port)
 {
-  const net::ServerConfig config{.disconnectHandler =
-                                   [this](const net::ConnectionId connectionId) {
-                                     return onConnectionLost(connectionId);
-                                   },
-                                 .connectionReadyHandler =
-                                   [this](net::ConnectionShPtr connection) {
-                                     onConnectionReady(connection);
-                                   }};
+  m_eventBus  = std::make_shared<net::AsyncEventBus>(std::make_unique<net::SynchronizedEventBus>());
+  m_tcpServer = std::make_unique<net::TcpServer>(m_eventBus);
 
-  m_tcpServer = std::make_shared<net::LegacyTcpServer>(m_context, port, config);
-  m_tcpServer->start();
-
-  info("Starting listening on port " + std::to_string(m_tcpServer->port()));
-  m_context.start();
+  info("Starting listening on port " + std::to_string(port));
+  m_tcpServer->start(port);
 }
 
 void Server::activeRunLoop()
@@ -107,9 +103,10 @@ void Server::activeRunLoop()
 
 void Server::shutdown()
 {
-  m_context.stop();
+  m_tcpServer->stop();
 }
 
+// TODO: This should be connected to the event bus
 void Server::onConnectionLost(const net::ConnectionId connectionId)
 {
   if (!m_clientManager->isStillConnected(connectionId))
@@ -139,12 +136,6 @@ void Server::onConnectionLost(const net::ConnectionId connectionId)
   message->setClientId(data.clientId);
 
   m_messageExchanger->pushMessage(std::move(message));
-}
-
-void Server::onConnectionReady(net::ConnectionShPtr connection)
-{
-  const auto clientId = m_clientManager->registerConnection(connection);
-  m_messageExchanger->registerConnection(clientId, connection);
 }
 
 } // namespace bsgo

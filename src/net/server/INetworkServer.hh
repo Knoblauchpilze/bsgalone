@@ -3,6 +3,7 @@
 
 #include "ClientId.hh"
 #include "MessageId.hh"
+#include <memory>
 #include <optional>
 #include <vector>
 
@@ -38,5 +39,7 @@ class INetworkServer
   virtual auto trySend(const ClientId clientId, std::vector<char> bytes)
     -> std::optional<MessageId> = 0;
 };
+
+using INetworkServerPtr = std::unique_ptr<INetworkServer>;
 
 } // namespace net

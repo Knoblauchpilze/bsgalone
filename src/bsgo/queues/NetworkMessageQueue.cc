@@ -13,12 +13,13 @@ NetworkMessageQueue::NetworkMessageQueue(IMessageQueuePtr synchronizedQueue)
   setService("network");
 }
 
-void NetworkMessageQueue::registerToConnection(net::Connection &connection)
+void NetworkMessageQueue::registerToEventBus(net::IEventBus & /*eventBus*/)
 {
-  connection.setDataHandler(
-    [this](const net::ConnectionId connectionId, const std::deque<char> &data) {
-      return onDataReceived(connectionId, data);
-    });
+  // TODO: Restore this.
+  // connection.setDataHandler(
+  //   [this](const net::ConnectionId connectionId, const std::deque<char> &data) {
+  //     return onDataReceived(connectionId, data);
+  //   });
 }
 
 void NetworkMessageQueue::pushMessage(IMessagePtr message)

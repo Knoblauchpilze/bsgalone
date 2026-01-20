@@ -2,13 +2,14 @@
 #pragma once
 
 #include "ClientMessageQueue.hh"
-#include "Context.hh"
 #include "Controls.hh"
 #include "CoreObject.hh"
 #include "DatabaseEntityMapper.hh"
 #include "GameRole.hh"
 #include "GameSession.hh"
+#include "IEventBus.hh"
 #include "IInputHandler.hh"
+#include "INetworkClient.hh"
 #include "IRenderer.hh"
 #include "IUiHandler.hh"
 #include "LoadingTransition.hh"
@@ -117,6 +118,9 @@ class Game : public core::CoreObject
   /// to the server.
   std::optional<bsgo::GameRole> m_gameRole{};
 
+  net::IEventBusShPtr m_eventBus{};
+  net::INetworkClientShPtr m_tcpClient{};
+
   /// @brief - Holds information about the current game session. This includes
   /// data about the current player, their ship, the system they are in, etc.
   GameSessionShPtr m_gameSession{std::make_shared<GameSession>()};
@@ -127,7 +131,6 @@ class Game : public core::CoreObject
   bsgo::IMessageQueuePtr m_inputMessageQueue{};
   bsgo::IMessageQueuePtr m_internalMessageQueue{};
   ClientMessageQueuePtr m_outputMessageQueue{};
-  net::ContextPtr m_networkContext{std::make_unique<net::Context>()};
   Views m_views{};
   std::unordered_map<Screen, IRendererPtr> m_renderers{};
   std::unordered_map<Screen, IInputHandlerPtr> m_inputHandlers{};

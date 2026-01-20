@@ -4,6 +4,7 @@
 #include "ClientConnection.hh"
 #include "CoreObject.hh"
 #include "IMessageQueue.hh"
+#include "INetworkClient.hh"
 #include "Uuid.hh"
 #include <memory>
 #include <optional>
@@ -13,7 +14,7 @@ namespace pge {
 class ClientMessageQueue : public bsgo::IMessageQueue, public core::CoreObject
 {
   public:
-  ClientMessageQueue(ClientConnectionPtr connection);
+  ClientMessageQueue(net::INetworkClientShPtr client);
   ~ClientMessageQueue() override = default;
 
   void setClientId(const bsgo::Uuid clientId);
@@ -25,7 +26,7 @@ class ClientMessageQueue : public bsgo::IMessageQueue, public core::CoreObject
   void processMessages(const std::optional<int> &amount = {}) override;
 
   private:
-  ClientConnectionPtr m_connection{};
+  net::INetworkClientShPtr m_client{};
   std::optional<bsgo::Uuid> m_clientId{};
 
   void assignClientIdIfPossible(bsgo::IMessage &message) const;

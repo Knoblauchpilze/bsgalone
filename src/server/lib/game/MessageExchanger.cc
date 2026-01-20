@@ -33,13 +33,14 @@ auto MessageExchanger::getOutputMessageQueue() const -> IMessageQueue *
   return m_outputMessageQueue.get();
 }
 
-void MessageExchanger::registerConnection(const Uuid clientId, net::ConnectionShPtr connection)
+void MessageExchanger::registerToEventBus(net::IEventBus &eventBus)
 {
-  m_inputMessageQueue->registerToConnection(*connection);
+  m_inputMessageQueue->registerToEventBus(eventBus);
 
-  auto message = std::make_unique<ConnectionMessage>(clientId);
-  message->validate();
-  m_outputMessageQueue->pushMessage(std::move(message));
+  // TODO: This should be handled by the client manager
+  // auto message = std::make_unique<ConnectionMessage>(clientId);
+  // message->validate();
+  // m_outputMessageQueue->pushMessage(std::move(message));
 }
 
 void MessageExchanger::pushMessage(IMessagePtr message)

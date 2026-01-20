@@ -3,6 +3,7 @@
 
 #include "Connection.hh"
 #include "CoreObject.hh"
+#include "IEventBus.hh"
 #include "Uuid.hh"
 #include <memory>
 #include <mutex>
@@ -17,7 +18,7 @@ class ClientManager : public core::CoreObject
   ClientManager();
   ~ClientManager() override = default;
 
-  auto registerConnection(const net::ConnectionShPtr connection) -> Uuid;
+  void registerToEventBus(net::IEventBus &eventBus);
   void registerPlayer(const Uuid clientId, const Uuid playerDbId, const Uuid playerSystemDbId);
   void removePlayer(const Uuid playerDbId);
   void removePlayerConnection(const Uuid playerDbId);

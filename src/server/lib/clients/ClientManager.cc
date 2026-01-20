@@ -10,19 +10,21 @@ ClientManager::ClientManager()
   setService("client");
 }
 
-auto ClientManager::registerConnection(const net::ConnectionShPtr connection) -> Uuid
+void ClientManager::registerToEventBus(net::IEventBus & /*eventBus*/)
 {
-  const std::lock_guard guard(m_locker);
+  // TODO: Should implement the IEventListener and react to the client
+  // connected and disconnected events
+  // const std::lock_guard guard(m_locker);
 
-  const ClientData data{.clientId = NEXT_CLIENT_ID, .connection = connection};
-  m_clients.emplace(data.clientId, data);
-  m_connectionToClient.emplace(connection->id(), data.clientId);
+  // const ClientData data{.clientId = NEXT_CLIENT_ID, .connection = connection};
+  // m_clients.emplace(data.clientId, data);
+  // m_connectionToClient.emplace(connection->id(), data.clientId);
 
-  ++NEXT_CLIENT_ID;
+  // ++NEXT_CLIENT_ID;
 
-  info("Registered connection " + data.connection->str());
+  // info("Registered connection " + data.connection->str());
 
-  return data.clientId;
+  // return data.clientId;
 }
 
 void ClientManager::registerPlayer(const Uuid clientId,

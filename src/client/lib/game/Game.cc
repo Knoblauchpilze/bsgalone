@@ -1,12 +1,16 @@
 
 #include "Game.hh"
+#include "AsyncEventBus.hh"
 #include "ClientMessageConsumerUtils.hh"
 #include "GameMessageModule.hh"
 #include "IInputHandler.hh"
 #include "IRenderer.hh"
 #include "IUiHandler.hh"
 #include "InternalMessageConsumer.hh"
+#include "NetworkMessageQueue.hh"
+#include "SynchronizedEventBus.hh"
 #include "SynchronizedMessageQueue.hh"
+#include "TcpClient.hh"
 
 #include "GameScreenInputHandler.hh"
 #include "GameScreenRenderer.hh"
@@ -39,7 +43,7 @@ Game::~Game()
 {
   m_inputMessageQueue.reset();
   m_outputMessageQueue.reset();
-  m_networkContext->stop();
+  m_tcpClient->disconnect();
 }
 
 auto Game::getScreen() const noexcept -> Screen
@@ -376,14 +380,22 @@ void Game::onLoadingFinished(const bsgo::LoadingTransition transition)
 
 void Game::initialize(const int serverPort)
 {
-  auto connection = std::make_unique<ClientConnection>(serverPort, *m_networkContext);
+  m_eventBus  = std::make_shared<net::AsyncEventBus>(std::make_unique<net::SynchronizedEventBus>());
+  m_tcpClient = std::make_shared<net::TcpClient>(m_eventBus);
+  // TODO: Extract this to a well named constant
+  m_tcpClient->connect("127.0.0.1", serverPort);
 
-  m_inputMessageQueue = connection->createInputMessageQueue();
+  auto synchronizedQueue = std::make_unique<bsgo::SynchronizedMessageQueue>(
+    "synchronized-message-queue-for-network");
+  auto queue = std::make_unique<bsgo::NetworkMessageQueue>(std::move(synchronizedQueue));
+  queue->registerToEventBus(*m_eventBus);
+  m_inputMessageQueue = std::move(queue);
+
   // Not strictly necessary as the internal messages should only be produced
   // synchronously by the Coordinator but also does not hurt.
   m_internalMessageQueue = std::make_unique<bsgo::SynchronizedMessageQueue>(
     "synchronized-message-queue-for-internal");
-  m_outputMessageQueue = std::make_unique<ClientMessageQueue>(std::move(connection));
+  m_outputMessageQueue = std::make_unique<ClientMessageQueue>(m_tcpClient);
 
   bsgo::SystemsConfig sConfig{.ignoredSystems = {bsgo::SystemType::LOOT,
                                                  bsgo::SystemType::REMOVAL,
@@ -400,8 +412,6 @@ void Game::initialize(const int serverPort)
   m_views = createViews(vConfig, m_entityMapper);
 
   initializeMessageSystem();
-
-  m_networkContext->start();
 }
 
 void Game::initializeMessageSystem()

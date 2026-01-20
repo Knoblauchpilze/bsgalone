@@ -5,9 +5,9 @@
 
 namespace pge {
 
-ClientMessageQueue::ClientMessageQueue(ClientConnectionPtr connection)
+ClientMessageQueue::ClientMessageQueue(net::INetworkClientShPtr client)
   : core::CoreObject("message")
-  , m_connection(std::move(connection))
+  , m_client(std::move(client))
 {
   addModule("queue");
   setService("network");
@@ -63,7 +63,13 @@ void ClientMessageQueue::sendMessageToConnectionIfNeeded(bsgo::IMessage &message
     }
   }
 
-  m_connection->sendMessage(message);
+  std::ostringstream out{};
+  out << message;
+
+  const auto &rawMessage = out.str();
+  std::vector<char> data(rawMessage.begin(), rawMessage.end());
+
+  m_client->trySend(data);
 }
 
 } // namespace pge

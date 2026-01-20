@@ -3,6 +3,7 @@
 
 #include "Connection.hh"
 #include "CoreObject.hh"
+#include "IEventBus.hh"
 #include "IMessageQueue.hh"
 #include <deque>
 #include <memory>
@@ -16,7 +17,7 @@ class NetworkMessageQueue : public IMessageQueue, public core::CoreObject
   NetworkMessageQueue(IMessageQueuePtr synchronizedQueue);
   ~NetworkMessageQueue() override = default;
 
-  void registerToConnection(net::Connection &connection);
+  void registerToEventBus(net::IEventBus &eventBus);
 
   void pushMessage(IMessagePtr message) override;
   void addListener(IMessageListenerPtr listener) override;

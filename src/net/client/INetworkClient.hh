@@ -2,6 +2,7 @@
 #pragma once
 
 #include "MessageId.hh"
+#include <memory>
 #include <optional>
 #include <string>
 #include <vector>
@@ -32,5 +33,7 @@ class INetworkClient
   /// @return - a message identifier to use to track the sending process
   virtual auto trySend(std::vector<char> bytes) -> std::optional<MessageId> = 0;
 };
+
+using INetworkClientShPtr = std::shared_ptr<INetworkClient>;
 
 } // namespace net
