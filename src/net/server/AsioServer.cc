@@ -7,8 +7,6 @@
 #include "DataWriteFailureEvent.hh"
 #include "SynchronizedEventBus.hh"
 
-#include <iostream>
-
 namespace net::details {
 namespace {
 class ServerListenerProxy : public IEventListener
@@ -51,11 +49,6 @@ AsioServer::AsioServer(AsioContext &context, const int port, IEventBusShPtr even
   m_internalBus->addListener(std::make_unique<ServerListenerProxy>(this));
 }
 
-AsioServer::~AsioServer()
-{
-  std::cout << "[asio server] destroying server\n";
-}
-
 void AsioServer::start()
 {
   if (!m_state.markAsRegistered())
@@ -76,7 +69,12 @@ void AsioServer::shutdown()
   }
 
   closeSockets();
-  std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+  std::unique_lock guard(m_connectionsLocker);
+  if (!m_sockets.empty())
+  {
+    m_notifier.wait(guard, [this] { return m_sockets.empty(); });
+  }
 }
 
 bool AsioServer::isEventRelevant(const EventType & /*type*/) const
@@ -152,7 +150,6 @@ void AsioServer::onConnectionRequest(const std::error_code &code, asio::ip::tcp:
 
   const auto clientId = m_nextClientId.fetch_add(1);
   auto socketData     = createSocketData(clientId, std::move(socket));
-  std::cout << "[asio server] initiating handshake\n";
   initiateHandshake(clientId, std::move(socketData));
 }
 
@@ -217,6 +214,8 @@ void AsioServer::handleConnectionFailure(const IEvent &event)
     m_writers.erase(*maybeClientId);
     m_readers.erase(*maybeClientId);
     m_sockets.erase(*maybeClientId);
+
+    m_notifier.notify_one();
   }
 
   debug("Detected failure for client " + str(*maybeClientId) + ", removing connection");
@@ -256,13 +255,9 @@ void AsioServer::handleHandshakeSuccessOrForward(const DataSentEvent &event)
   if (!maybeSocketData)
   {
     // The message does not correspond to a pending handshake, forward it.
-    std::cout << "[asio server] no handshake detected, forwarding event " << event.clientId() << "/"
-              << event.messageId() << "\n ";
     m_eventBus->pushEvent(event.clone());
     return;
   }
-
-  std::cout << "[asio server] success of handshake for " << str(event.clientId()) << "\n";
 
   registerConnection(event.clientId(), *maybeSocketData);
 
@@ -297,19 +292,18 @@ auto AsioServer::takePendingSocketData(const ClientId clientId, const MessageId 
 
 void AsioServer::registerConnection(const ClientId clientId, SocketData data)
 {
-  std::cout << "[asio server] connecting reader\n";
   data.reader->connect();
 
   const std::lock_guard guard(m_connectionsLocker);
   m_sockets.emplace(clientId, data.socket);
   m_readers.emplace(clientId, data.reader);
   m_writers.emplace(clientId, data.writer);
-
-  std::cout << "[asio server] successfully registered\n";
 }
 
 void AsioServer::closeSockets()
 {
+  const std::lock_guard guard(m_connectionsLocker);
+
   for (const auto &[_, socket] : m_sockets)
   {
     const auto code = shutdownSocket(*socket);
@@ -317,6 +311,16 @@ void AsioServer::closeSockets()
     {
       warn("Got error while closing socket: " + code.message() + " (" + std::to_string(code.value())
            + ")");
+    }
+  }
+
+  for (const auto &[_, data] : m_pendingSockets)
+  {
+    const auto code = shutdownSocket(*data.socket);
+    if (code)
+    {
+      warn("Got error while closing pending socket: " + code.message() + " ("
+           + std::to_string(code.value()) + ")");
     }
   }
 }
