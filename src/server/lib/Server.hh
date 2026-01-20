@@ -6,9 +6,9 @@
 #include "ClientManager.hh"
 #include "Context.hh"
 #include "CoreObject.hh"
+#include "LegacyTcpServer.hh"
 #include "MessageExchanger.hh"
 #include "SystemProcessor.hh"
-#include "TcpServer.hh"
 #include <atomic>
 #include <condition_variable>
 
@@ -29,7 +29,7 @@ class Server : public core::CoreObject
   std::mutex m_runningLocker{};
   std::condition_variable m_runningNotifier{};
 
-  net::TcpServerShPtr m_tcpServer{};
+  net::LegacyTcpServerShPtr m_tcpServer{};
 
   ClientManagerShPtr m_clientManager{std::make_shared<ClientManager>()};
   MessageExchangerPtr m_messageExchanger{};

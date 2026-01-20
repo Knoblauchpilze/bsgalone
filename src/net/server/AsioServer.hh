@@ -8,6 +8,7 @@
 #include "DataWriteFailureEvent.hh"
 #include "IEventBus.hh"
 #include "ReadingSocket.hh"
+#include "ServerState.hh"
 #include "WritingSocket.hh"
 #include <asio.hpp>
 #include <memory>
@@ -22,13 +23,26 @@ class AsioServer : public core::CoreObject,
 {
   public:
   AsioServer(AsioContext &context, const int port, IEventBusShPtr eventBus);
-  ~AsioServer() override;
+  ~AsioServer() override = default;
 
   /// @brief - Starts the server, instructing to begin listening for incoming connections
   /// on the port provided at construction time. This effectively opens the server to be
   /// contacted by external clients and start managing TCP connections.
   /// Calling this method twice will raise an exception.
   void start();
+
+  /// @brief - Requests the server to shutdown all opened sockets and stop accepting new
+  /// connections. Calling this method before calling `start` will raise an eror.
+  /// This function blocks until all sockets have been successfully closed.
+  /// For sockets that are still in the handshake process, they will only be terminated
+  /// without waiting for a confirmation (which is not possible to obrain).
+  ///
+  /// This method cannot be moved to the destructor of the server because as the server
+  /// is registered to asio, deleting a shared_ptr on it would not trigger the destruction.
+  /// Instead what would happen is that the deletion would be deferred to when the asio
+  /// context is deleted. This would not allow the sockets to be closed because the context
+  /// would not be running anymore at that point.
+  void shutdown();
 
   bool isEventRelevant(const EventType &type) const override;
   void onEventReceived(const IEvent &event) override;
@@ -51,11 +65,21 @@ class AsioServer : public core::CoreObject,
   private:
   /// @brief - The raw acceptor managed by the asio library. This handles the low level
   /// connection and socket management for the server.
+  ///
+  // Note: it does not seem like there's a good way to cancel the accept operation for
+  // the acceptor. This means that unlike the sockets which can be shutdown, there's no
+  // way to cancel the operation started in `start`. This is an issue for the deletion
+  // of the server because unless the context where the work is registered is stopped
+  // and deleted, the server will not be destroyed. This leads to using the `shutdown`
+  // function as a way to perform the cleanup.
+  // Resources online indicates that a call to `acceptor.cancel()` and/or `acceptor.close()`
+  // helps but it does not seem to be the case in my testing. See:
+  // https://stackoverflow.com/questions/33161640/how-to-safely-cancel-a-boost-asio-asynchronous-accept-operation
+  // https://github.com/chriskohlhoff/asio/issues/806
   asio::ip::tcp::acceptor m_acceptor;
 
-  /// @brief - Controls whether the `start` method was already called and prevents it to
-  /// be called again.
-  std::atomic_bool m_registered{false};
+  /// @brief - Describes the current state of the server.
+  ServerState m_state{};
 
   /// @brief - Event bus used to communicate events to the outside world. This includes the
   /// information about clients connected or disconnected, but also in general about data
@@ -116,6 +140,11 @@ class AsioServer : public core::CoreObject,
   /// contains exactly as many entries as the `m_sockets` array.
   std::unordered_map<ClientId, WritingSocketShPtr> m_writers{};
 
+  /// @brief - Used to notify when a connection has been detected as terminated. This is helpful
+  /// during the shutdown process to allow the `shutdown` method to only return when all sockets
+  /// have been successfully disconnected.
+  std::condition_variable m_notifier{};
+
   void registerToAsio();
 
   void onConnectionRequest(const std::error_code &code, asio::ip::tcp::socket socket);
@@ -152,6 +181,10 @@ class AsioServer : public core::CoreObject,
     -> std::optional<SocketData>;
   void registerConnection(const ClientId clientId, SocketData data);
 
+  /// @brief - Requests all existing sockets to be shutdown and mark the expected count
+  /// of disconnection events needed.
+  /// Sockets which were in the handshake process will be shutdown without expecting any
+  /// termination confirmation.
   void closeSockets();
 };
 

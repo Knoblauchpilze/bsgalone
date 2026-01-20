@@ -54,7 +54,7 @@ TEST_F(Integration_Net_Sockets_ReadingSocket, PublishesDataReceivedEvent)
   EXPECT_EQ(expectedData, actual->as<DataReceivedEvent>().data());
 }
 
-TEST_F(Integration_Net_Sockets_ReadingSocket, PublishesDataReadFailureEventWhenSocketIsClosed)
+TEST_F(Integration_Net_Sockets_ReadingSocket, PublishesDataReadFailureEventWhenServerSocketIsClosed)
 {
   auto sockets = this->getTestSockets();
   auto bus     = std::make_shared<TestEventBus>();
@@ -62,6 +62,20 @@ TEST_F(Integration_Net_Sockets_ReadingSocket, PublishesDataReadFailureEventWhenS
   socket->connect();
 
   sockets.server->shutdown(asio::ip::tcp::socket::shutdown_both);
+
+  const auto actual = bus->waitForEvent();
+  EXPECT_EQ(EventType::DATA_READ_FAILURE, actual->type());
+  EXPECT_EQ(ClientId{1}, actual->as<DataReadFailureEvent>().clientId());
+}
+
+TEST_F(Integration_Net_Sockets_ReadingSocket, PublishesDataReadFailureEventWhenClientSocketIsClosed)
+{
+  auto sockets = this->getTestSockets();
+  auto bus     = std::make_shared<TestEventBus>();
+  auto socket  = std::make_shared<ReadingSocket>(ClientId{1}, sockets.client, bus);
+  socket->connect();
+
+  sockets.client->shutdown(asio::ip::tcp::socket::shutdown_both);
 
   const auto actual = bus->waitForEvent();
   EXPECT_EQ(EventType::DATA_READ_FAILURE, actual->type());
