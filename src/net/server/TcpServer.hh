@@ -1,45 +1,47 @@
 
 #pragma once
 
-#include "Connection.hh"
-#include "Context.hh"
+#include "AsioContext.hh"
+#include "AsioServer.hh"
 #include "CoreObject.hh"
-#include "ServerConfig.hh"
-#include <asio.hpp>
-#include <memory>
+#include "IEventBus.hh"
+#include "INetworkServer.hh"
 #include <mutex>
-#include <optional>
-#include <unordered_map>
 
 namespace net {
 
-class TcpServer : public core::CoreObject, public std::enable_shared_from_this<TcpServer>
+class TcpServer : public INetworkServer, public core::CoreObject
 {
   public:
-  TcpServer(Context &context, const int port, const ServerConfig &config);
+  TcpServer(IEventBusShPtr eventBus);
   ~TcpServer() override = default;
 
-  auto port() const -> int;
-  void start();
+  void start(const int port) override;
+  void stop() override;
+
+  /// @brief - Implements the interface method to send a message to a client. Note that this
+  /// function is **not thread safe**: it is assumed that the `start` method has been called
+  /// prior to sending a message but it is not verified. Failing to call `start` will result
+  /// in undefined behavior.
+  /// @param clientId - the identifier of the client to send a message to
+  /// @param bytes - the raw data to send to the client
+  /// @return - an identifier for the message to allow tracking of the progress
+  auto trySend(const ClientId clientId, std::vector<char> bytes)
+    -> std::optional<MessageId> override;
 
   private:
-  int m_port;
-  asio::ip::tcp::acceptor m_asioAcceptor;
+  IEventBusShPtr m_eventBus{};
 
-  std::optional<DisconnectHandler> m_disconnectHandler{};
-  std::optional<ConnectionReadyHandler> m_connectionReadyHandler{};
-  std::optional<DataReceivedHandler> m_connectionDataHandler{};
+  /// @brief - Protects concurrent access to the context and server.
+  std::mutex m_locker{};
 
-  std::mutex m_connectionsLocker{};
-  std::unordered_map<ConnectionId, ConnectionShPtr> m_connections{};
+  /// @brief - Whether or not the `start` method was already called. If yes, calling it
+  /// again will raise an error. If a call to `stop` is made in between this value will
+  /// be reset to false.
+  std::atomic_bool m_started{false};
 
-  void initializeFromConfig(const ServerConfig &config);
-  void registerToAsio();
-
-  void onConnectionRequest(const std::error_code &code, asio::ip::tcp::socket socket);
-  bool setupConnection(ConnectionShPtr connection);
+  details::AsioContextPtr m_context{};
+  details::AsioServerShPtr m_server{};
 };
-
-using TcpServerShPtr = std::shared_ptr<TcpServer>;
 
 } // namespace net

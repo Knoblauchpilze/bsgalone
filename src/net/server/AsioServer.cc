@@ -49,30 +49,32 @@ AsioServer::AsioServer(AsioContext &context, const int port, IEventBusShPtr even
   m_internalBus->addListener(std::make_unique<ServerListenerProxy>(this));
 }
 
-AsioServer::~AsioServer()
-{
-  // This is necessary otherwise the sockets get destroyed when the maps are being
-  // cleared which leads to asio triggering the callbacks for removing a socket and
-  // as the destruction of the maps in this destructor is not protected by a lock
-  // we get race conditions.
-  const std::lock_guard guard(m_connectionsLocker);
-  closeSockets();
-
-  m_writers.clear();
-  m_readers.clear();
-  m_sockets.clear();
-}
-
 void AsioServer::start()
 {
-  auto expected = false;
-  if (!m_registered.compare_exchange_strong(expected, true))
+  if (!m_state.markAsRegistered())
   {
     throw std::runtime_error(
       "Got unexpected state for asio server, did you already call the start method?");
   }
 
   registerToAsio();
+}
+
+void AsioServer::shutdown()
+{
+  if (!m_state.markAsTerminating())
+  {
+    throw std::runtime_error(
+      "Got unexpected state for asio server, did you forget to call the start method?");
+  }
+
+  closeSockets();
+
+  std::unique_lock guard(m_connectionsLocker);
+  if (!m_sockets.empty())
+  {
+    m_notifier.wait(guard, [this] { return m_sockets.empty(); });
+  }
 }
 
 bool AsioServer::isEventRelevant(const EventType & /*type*/) const
@@ -101,7 +103,7 @@ void AsioServer::onEventReceived(const IEvent &event)
 auto AsioServer::trySend(const ClientId clientId, std::vector<char> bytes)
   -> std::optional<MessageId>
 {
-  if (!m_registered.load())
+  if (!m_state.isRegistered())
   {
     error("Cannot send message to " + str(clientId), "Server is not started");
   }
@@ -191,13 +193,6 @@ auto tryGetClientId(const IEvent &event) -> std::optional<ClientId>
       return {};
   }
 }
-
-auto shutdownSocket(asio::ip::tcp::socket &socket) -> std::error_code
-{
-  std::error_code code;
-  socket.shutdown(asio::ip::tcp::socket::shutdown_both, code);
-  return code;
-}
 } // namespace
 
 void AsioServer::handleConnectionFailure(const IEvent &event)
@@ -218,17 +213,9 @@ void AsioServer::handleConnectionFailure(const IEvent &event)
     const std::lock_guard guard(m_connectionsLocker);
     m_writers.erase(*maybeClientId);
     m_readers.erase(*maybeClientId);
+    m_sockets.erase(*maybeClientId);
 
-    // Note: the socket is shutdown to cancel any pending operations. However if it is
-    // removed from the `m_sockets` array it seems we get sometimes a `heap-use-after-free`
-    // error from a random integration test.
-    // This means that the `m_sockets` is growing the more clients are connecting to the
-    // server. If it becomes an issue the random crash should be addressed.
-    const auto maybeSocket = m_sockets.find(*maybeClientId);
-    if (maybeSocket != m_sockets.end())
-    {
-      shutdownSocket(*maybeSocket->second);
-    }
+    m_notifier.notify_one();
   }
 
   debug("Detected failure for client " + str(*maybeClientId) + ", removing connection");
@@ -236,6 +223,15 @@ void AsioServer::handleConnectionFailure(const IEvent &event)
   auto out = std::make_unique<ClientDisconnectedEvent>(*maybeClientId);
   m_eventBus->pushEvent(std::move(out));
 }
+
+namespace {
+auto shutdownSocket(asio::ip::tcp::socket &socket) -> std::error_code
+{
+  std::error_code code;
+  socket.shutdown(asio::ip::tcp::socket::shutdown_both, code);
+  return code;
+}
+} // namespace
 
 bool AsioServer::tryHandleHandshakeFailure(const DataWriteFailureEvent &event)
 {
@@ -306,6 +302,8 @@ void AsioServer::registerConnection(const ClientId clientId, SocketData data)
 
 void AsioServer::closeSockets()
 {
+  const std::lock_guard guard(m_connectionsLocker);
+
   for (const auto &[_, socket] : m_sockets)
   {
     const auto code = shutdownSocket(*socket);
@@ -313,6 +311,16 @@ void AsioServer::closeSockets()
     {
       warn("Got error while closing socket: " + code.message() + " (" + std::to_string(code.value())
            + ")");
+    }
+  }
+
+  for (const auto &[_, data] : m_pendingSockets)
+  {
+    const auto code = shutdownSocket(*data.socket);
+    if (code)
+    {
+      warn("Got error while closing pending socket: " + code.message() + " ("
+           + std::to_string(code.value()) + ")");
     }
   }
 }

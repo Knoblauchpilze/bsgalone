@@ -74,7 +74,7 @@ void Server::setup(const int port)
                                      onConnectionReady(connection);
                                    }};
 
-  m_tcpServer = std::make_shared<net::TcpServer>(m_context, port, config);
+  m_tcpServer = std::make_shared<net::LegacyTcpServer>(m_context, port, config);
   m_tcpServer->start();
 
   info("Starting listening on port " + std::to_string(m_tcpServer->port()));
