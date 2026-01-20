@@ -20,7 +20,7 @@ class AsioClient : public core::CoreObject,
   AsioClient(IEventBusShPtr eventBus);
   ~AsioClient() override = default;
 
-  /// @brief - Starts the client, instructing to synchronously attempt to connect to
+  /// @brief - Starts the client, instructing to asynchronously attempt to connect to
   /// the server.
   /// In case the connection is successful, a client connected event will be published
   /// to the event bus. In case the connection fails, no event will be published to the
