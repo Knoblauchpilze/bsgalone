@@ -2,7 +2,12 @@
 
 #include "Server.hh"
 #include "AsyncEventBus.hh"
+#include "ClientConnectedEvent.hh"
+#include "ClientDisconnectedEvent.hh"
+#include "ConnectionMessage.hh"
+#include "IEventListener.hh"
 #include "LogoutMessage.hh"
+#include "NetworkAdapter.hh"
 #include "SynchronizedEventBus.hh"
 #include "SystemProcessorUtils.hh"
 #include "TcpServer.hh"
@@ -12,6 +17,7 @@ namespace bsgo {
 Server::Server()
   : core::CoreObject("server")
   , m_eventBus(std::make_shared<net::AsyncEventBus>(std::make_unique<net::SynchronizedEventBus>()))
+  , m_tcpServer(std::make_shared<net::TcpServer>(m_eventBus))
 {
   setService("server");
   initialize();
@@ -54,20 +60,85 @@ void Server::initializeSystems()
   }
 }
 
+namespace {
+class ClientManagerProxy : public net::IEventListener
+{
+  public:
+  ClientManagerProxy(ClientManagerShPtr manager,
+                     IMessageQueueShPtr inputQueue,
+                     IMessageQueue *outputQueue)
+    : m_manager(std::move(manager))
+    , m_inputQueue(std::move(inputQueue))
+    , m_outputQueue(outputQueue)
+  {}
+
+  ~ClientManagerProxy() override = default;
+
+  bool isEventRelevant(const net::EventType &type) const override
+  {
+    return type == net::EventType::CLIENT_CONNECTED || type == net::EventType::CLIENT_DISCONNECTED;
+  }
+
+  void onEventReceived(const net::IEvent &event) override
+  {
+    switch (event.type())
+    {
+      case net::EventType::CLIENT_CONNECTED:
+        handleClientConnected(event.as<net::ClientConnectedEvent>());
+        break;
+      case net::EventType::CLIENT_DISCONNECTED:
+        handleClientDisconnected(event.as<net::ClientDisconnectedEvent>());
+        break;
+      default:
+        throw std::invalid_argument("Unsupported event type " + net::str(event.type()));
+    }
+  }
+
+  private:
+  ClientManagerShPtr m_manager{};
+  IMessageQueueShPtr m_inputQueue{};
+  IMessageQueue *m_outputQueue{};
+
+  void handleClientConnected(const net::ClientConnectedEvent &event)
+  {
+    m_manager->registerClient(event.clientId());
+
+    auto message = std::make_unique<ConnectionMessage>(event.clientId());
+    message->validate();
+    m_outputQueue->pushMessage(std::move(message));
+  }
+
+  void handleClientDisconnected(const net::ClientDisconnectedEvent &event)
+  {
+    const auto maybePlayerId = m_manager->tryGetPlayerForClient(event.clientId());
+
+    m_manager->removeClient(event.clientId());
+
+    if (!maybePlayerId)
+    {
+      return;
+    }
+
+    auto message = std::make_unique<LogoutMessage>(*maybePlayerId, true);
+    message->setClientId(event.clientId());
+    m_inputQueue->pushMessage(std::move(message));
+  }
+};
+} // namespace
+
 void Server::initializeMessageSystem()
 {
-  const MessageSystemData data{.eventBus         = *m_eventBus,
-                               .clientManager    = m_clientManager,
+  const MessageSystemData data{.clientManager    = m_clientManager,
+                               .server           = m_tcpServer,
                                .systemProcessors = convertToSystemProcessorMap(m_systemProcessors)};
   m_messageExchanger = std::make_unique<MessageExchanger>(data);
 
-  // TODO: This should be added to the processing of the client connected event?
-  // Or at any rate it should be double checked because the AsioServer already sends the client
-  // id so maybe this is useless
-  // auto message = std::make_unique<ConnectionMessage>(clientId);
-  // message->validate();
-  // m_outputMessageQueue->pushMessage(std::move(message));
-  m_clientManager->registerToEventBus(*m_eventBus);
+  auto adapter = std::make_unique<NetworkAdapter>(m_messageExchanger->getInputMessageQueue());
+  m_eventBus->addListener(std::move(adapter));
+  m_eventBus->addListener(
+    std::make_unique<ClientManagerProxy>(m_clientManager,
+                                         m_messageExchanger->getInputMessageQueue(),
+                                         m_messageExchanger->getOutputMessageQueue()));
 
   for (const auto &systemProcessor : m_systemProcessors)
   {
@@ -78,8 +149,6 @@ void Server::initializeMessageSystem()
 
 void Server::setup(const int port)
 {
-  m_tcpServer = std::make_unique<net::TcpServer>(m_eventBus);
-
   info("Starting listening on port " + std::to_string(port));
   m_tcpServer->start(port);
 }
@@ -111,39 +180,6 @@ void Server::activeRunLoop()
 void Server::shutdown()
 {
   m_tcpServer->stop();
-}
-
-// TODO: This should be connected to the event bus
-void Server::onConnectionLost(const net::ConnectionId connectionId)
-{
-  if (!m_clientManager->isStillConnected(connectionId))
-  {
-    m_clientManager->removeConnection(connectionId);
-    return;
-  }
-
-  const auto data = m_clientManager->tryGetDataForConnection(connectionId);
-  if (!data.playerDbId)
-  {
-    error("Connection " + std::to_string(connectionId)
-          + " lost but could not find associated player");
-  }
-
-  if (data.stale)
-  {
-    debug("Connection " + std::to_string(connectionId) + " is already marked as stale");
-    return;
-  }
-
-  info("Connection " + std::to_string(connectionId) + " lost but player " + str(*data.playerDbId)
-       + " is still connected");
-
-  // TODO: This should be moved to the onEventReceived in the ClientManager
-  // m_clientManager->markConnectionAsStale(connectionId);
-  // auto message = std::make_unique<LogoutMessage>(*data.playerDbId, true);
-  // message->setClientId(data.clientId);
-
-  // m_messageExchanger->pushMessage(std::move(message));
 }
 
 } // namespace bsgo

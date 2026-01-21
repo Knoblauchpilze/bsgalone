@@ -28,7 +28,7 @@ class Server : public core::CoreObject
   std::condition_variable m_runningNotifier{};
 
   net::IEventBusShPtr m_eventBus{};
-  net::INetworkServerPtr m_tcpServer{};
+  net::INetworkServerShPtr m_tcpServer{};
 
   ClientManagerShPtr m_clientManager{std::make_shared<ClientManager>()};
   MessageExchangerPtr m_messageExchanger{};
@@ -41,9 +41,6 @@ class Server : public core::CoreObject
   void setup(const int port);
   void activeRunLoop();
   void shutdown();
-
-  void onConnectionLost(const net::ConnectionId connectionId);
-  void onConnectionReady(net::ConnectionShPtr connection);
 };
 
 } // namespace bsgo

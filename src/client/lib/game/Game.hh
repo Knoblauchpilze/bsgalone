@@ -128,7 +128,7 @@ class Game : public core::CoreObject
   bsgo::DatabaseEntityMapper m_entityMapper{};
   chrono::TimeManagerPtr m_timeManager{};
   bsgo::CoordinatorShPtr m_coordinator{};
-  bsgo::IMessageQueuePtr m_inputMessageQueue{};
+  bsgo::IMessageQueueShPtr m_inputMessageQueue{};
   bsgo::IMessageQueuePtr m_internalMessageQueue{};
   ClientMessageQueuePtr m_outputMessageQueue{};
   Views m_views{};

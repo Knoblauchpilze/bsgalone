@@ -40,6 +40,6 @@ class INetworkServer
     -> std::optional<MessageId> = 0;
 };
 
-using INetworkServerPtr = std::unique_ptr<INetworkServer>;
+using INetworkServerShPtr = std::shared_ptr<INetworkServer>;
 
 } // namespace net

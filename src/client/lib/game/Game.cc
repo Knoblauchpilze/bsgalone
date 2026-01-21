@@ -7,7 +7,7 @@
 #include "IRenderer.hh"
 #include "IUiHandler.hh"
 #include "InternalMessageConsumer.hh"
-#include "NetworkMessageQueue.hh"
+#include "NetworkAdapter.hh"
 #include "SynchronizedEventBus.hh"
 #include "SynchronizedMessageQueue.hh"
 #include "TcpClient.hh"
@@ -378,35 +378,6 @@ void Game::onLoadingFinished(const bsgo::LoadingTransition transition)
   m_views.shipView->setPlayerShipEntityId(maybePlayerShipEntityId);
 }
 
-namespace {
-class ListenerProxy : public net::IEventListener
-{
-  public:
-  ListenerProxy(bsgo::NetworkMessageQueue &queue)
-    : m_queue(queue)
-  {}
-
-  ~ListenerProxy() override = default;
-
-  bool isEventRelevant(const net::EventType &type) const override
-  {
-    return m_queue.isEventRelevant(type);
-  }
-  void onEventReceived(const net::IEvent &event) override
-  {
-    return m_queue.onEventReceived(event);
-  }
-
-  private:
-  bsgo::NetworkMessageQueue &m_queue;
-};
-
-auto createMessageQueueWrapper(bsgo::NetworkMessageQueue &queue) -> net::IEventListenerPtr
-{
-  return std::make_unique<ListenerProxy>(queue);
-}
-} // namespace
-
 void Game::initialize(const int serverPort)
 {
   m_eventBus  = std::make_shared<net::AsyncEventBus>(std::make_unique<net::SynchronizedEventBus>());
@@ -414,12 +385,11 @@ void Game::initialize(const int serverPort)
   // TODO: Extract this to a well named constant
   m_tcpClient->connect("127.0.0.1", serverPort);
 
-  auto synchronizedQueue = std::make_unique<bsgo::SynchronizedMessageQueue>(
-    "synchronized-message-queue-for-network");
-  // TODO: The input message queue should be a real unique_ptr
-  auto queue = std::make_unique<bsgo::NetworkMessageQueue>(std::move(synchronizedQueue));
-  m_eventBus->addListener(createMessageQueueWrapper(*queue));
-  m_inputMessageQueue = std::move(queue);
+  m_inputMessageQueue = std::make_shared<bsgo::SynchronizedMessageQueue>(
+    "synchronized-message-queue-for-input");
+
+  auto adapter = std::make_unique<bsgo::NetworkAdapter>(m_inputMessageQueue);
+  m_eventBus->addListener(std::move(adapter));
 
   // Not strictly necessary as the internal messages should only be produced
   // synchronously by the Coordinator but also does not hurt.

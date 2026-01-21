@@ -19,6 +19,7 @@ class IMessageQueue
   virtual void processMessages(const std::optional<int> &amount = {}) = 0;
 };
 
-using IMessageQueuePtr = std::unique_ptr<IMessageQueue>;
+using IMessageQueuePtr   = std::unique_ptr<IMessageQueue>;
+using IMessageQueueShPtr = std::shared_ptr<IMessageQueue>;
 
 } // namespace bsgo

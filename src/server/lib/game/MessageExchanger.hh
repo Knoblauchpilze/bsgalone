@@ -5,7 +5,7 @@
 #include "Connection.hh"
 #include "IEventBus.hh"
 #include "IMessageQueue.hh"
-#include "NetworkMessageQueue.hh"
+#include "INetworkServer.hh"
 #include "Repositories.hh"
 #include "SystemProcessor.hh"
 #include "SystemService.hh"
@@ -16,8 +16,8 @@ namespace bsgo {
 
 struct MessageSystemData
 {
-  net::IEventBus &eventBus;
   ClientManagerShPtr clientManager{};
+  net::INetworkServerShPtr server{};
   SystemProcessorMap systemProcessors{};
 };
 
@@ -26,10 +26,12 @@ class MessageExchanger
   public:
   MessageExchanger(const MessageSystemData &messagesData);
 
+  auto getInputMessageQueue() const -> IMessageQueueShPtr;
   auto getInternalMessageQueue() const -> IMessageQueue *;
   auto getOutputMessageQueue() const -> IMessageQueue *;
 
   private:
+  IMessageQueueShPtr m_inputMessageQueue{};
   IMessageQueuePtr m_outputMessageQueue{};
   IMessageQueuePtr m_internalMessageQueue{};
 

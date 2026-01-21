@@ -1,59 +1,36 @@
 
-#include "NetworkMessageQueue.hh"
-#include "DataReceivedEvent.hh"
+#include "NetworkAdapter.hh"
 #include "MessageParser.hh"
 
 namespace bsgo {
 
-NetworkMessageQueue::NetworkMessageQueue(IMessageQueuePtr synchronizedQueue)
-  : IMessageQueue()
-  , core::CoreObject("message")
-  , m_synchronizedQueue(std::move(synchronizedQueue))
+NetworkAdapter::NetworkAdapter(IMessageQueueShPtr queue)
+  : core::CoreObject("adapter")
+  , m_queue(std::move(queue))
 {
-  addModule("queue");
   setService("network");
+
+  if (m_queue == nullptr)
+  {
+    throw std::invalid_argument("Expected non null message queue");
+  }
 }
 
-bool NetworkMessageQueue::isEventRelevant(const net::EventType &type) const
+bool NetworkAdapter::isEventRelevant(const net::EventType &type) const
 {
   return type == net::EventType::DATA_RECEIVED;
 }
 
-void NetworkMessageQueue::onEventReceived(const net::IEvent &event)
+void NetworkAdapter::onEventReceived(const net::IEvent &event)
 {
   const auto &dataReceived = event.as<net::DataReceivedEvent>();
+
   registerPendingData(dataReceived);
   const auto processed = onDataReceived(dataReceived.clientId());
   removePendingData(dataReceived.clientId(), processed);
-
-  //   // TODO: Restore this.
-  //   // connection.setDataHandler(
-  //   //   [this](const net::ConnectionId connectionId, const std::deque<char> &data) {
-  //   //     return onDataReceived(connectionId, data);
-  //   //   });
 }
 
-void NetworkMessageQueue::pushMessage(IMessagePtr message)
-{
-  m_synchronizedQueue->pushMessage(std::move(message));
-}
-
-void NetworkMessageQueue::addListener(IMessageListenerPtr listener)
-{
-  m_synchronizedQueue->addListener(std::move(listener));
-}
-
-bool NetworkMessageQueue::empty()
-{
-  return m_synchronizedQueue->empty();
-}
-
-void NetworkMessageQueue::processMessages(const std::optional<int> &amount)
-{
-  m_synchronizedQueue->processMessages(amount);
-}
-
-void NetworkMessageQueue::registerPendingData(const net::DataReceivedEvent &event)
+void NetworkAdapter::registerPendingData(const net::DataReceivedEvent &event)
 {
   const std::lock_guard guard(m_locker);
 
@@ -63,7 +40,7 @@ void NetworkMessageQueue::registerPendingData(const net::DataReceivedEvent &even
         + std::to_string(pendingData.bytes.size()));
 }
 
-auto NetworkMessageQueue::onDataReceived(const net::ClientId clientId) -> int
+auto NetworkAdapter::onDataReceived(const net::ClientId clientId) -> int
 {
   bool processedSomeBytes{true};
   auto processedBytes{0};
@@ -96,15 +73,15 @@ auto NetworkMessageQueue::onDataReceived(const net::ClientId clientId) -> int
   return processedBytes;
 }
 
-void NetworkMessageQueue::feedMessagesToQueue(std::vector<IMessagePtr> &&messages)
+void NetworkAdapter::feedMessagesToQueue(std::vector<IMessagePtr> &&messages)
 {
   for (auto &message : messages)
   {
-    m_synchronizedQueue->pushMessage(std::move(message));
+    m_queue->pushMessage(std::move(message));
   }
 }
 
-void NetworkMessageQueue::removePendingData(const net::ClientId clientId, const int processed)
+void NetworkAdapter::removePendingData(const net::ClientId clientId, const int processed)
 {
   if (processed == 0)
   {
