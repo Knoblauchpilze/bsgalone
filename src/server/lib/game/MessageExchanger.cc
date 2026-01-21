@@ -33,21 +33,6 @@ auto MessageExchanger::getOutputMessageQueue() const -> IMessageQueue *
   return m_outputMessageQueue.get();
 }
 
-void MessageExchanger::registerToEventBus(net::IEventBus &eventBus)
-{
-  m_inputMessageQueue->registerToEventBus(eventBus);
-
-  // TODO: This should be handled by the client manager
-  // auto message = std::make_unique<ConnectionMessage>(clientId);
-  // message->validate();
-  // m_outputMessageQueue->pushMessage(std::move(message));
-}
-
-void MessageExchanger::pushMessage(IMessagePtr message)
-{
-  m_inputMessageQueue->pushMessage(std::move(message));
-}
-
 namespace {
 auto createInputMessageQueue() -> NetworkMessageQueuePtr
 {
@@ -72,16 +57,18 @@ auto createOutputMessageQueue(ClientManagerShPtr clientManager) -> IMessageQueue
 
 void MessageExchanger::initialize(const MessageSystemData &messagesData)
 {
-  m_inputMessageQueue     = createInputMessageQueue();
+  auto inputMessageQueue = createInputMessageQueue();
+
   m_outputMessageQueue    = createOutputMessageQueue(messagesData.clientManager);
   auto systemMessageQueue = initializeSystemMessageQueue(messagesData);
   m_internalMessageQueue  = createInternalMessageQueue();
   initializeInternalConsumers(messagesData);
 
-  m_inputMessageQueue->addListener(
+  inputMessageQueue->addListener(
     std::make_unique<TriageMessageConsumer>(messagesData.clientManager,
                                             messagesData.systemProcessors,
                                             std::move(systemMessageQueue)));
+  messagesData.eventBus.addListener(std::move(inputMessageQueue));
 }
 
 namespace {

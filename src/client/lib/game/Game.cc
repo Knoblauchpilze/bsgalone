@@ -378,6 +378,35 @@ void Game::onLoadingFinished(const bsgo::LoadingTransition transition)
   m_views.shipView->setPlayerShipEntityId(maybePlayerShipEntityId);
 }
 
+namespace {
+class ListenerProxy : public net::IEventListener
+{
+  public:
+  ListenerProxy(bsgo::NetworkMessageQueue &queue)
+    : m_queue(queue)
+  {}
+
+  ~ListenerProxy() override = default;
+
+  bool isEventRelevant(const net::EventType &type) const override
+  {
+    return m_queue.isEventRelevant(type);
+  }
+  void onEventReceived(const net::IEvent &event) override
+  {
+    return m_queue.onEventReceived(event);
+  }
+
+  private:
+  bsgo::NetworkMessageQueue &m_queue;
+};
+
+auto createMessageQueueWrapper(bsgo::NetworkMessageQueue &queue) -> net::IEventListenerPtr
+{
+  return std::make_unique<ListenerProxy>(queue);
+}
+} // namespace
+
 void Game::initialize(const int serverPort)
 {
   m_eventBus  = std::make_shared<net::AsyncEventBus>(std::make_unique<net::SynchronizedEventBus>());
@@ -387,8 +416,9 @@ void Game::initialize(const int serverPort)
 
   auto synchronizedQueue = std::make_unique<bsgo::SynchronizedMessageQueue>(
     "synchronized-message-queue-for-network");
+  // TODO: The input message queue should be a real unique_ptr
   auto queue = std::make_unique<bsgo::NetworkMessageQueue>(std::move(synchronizedQueue));
-  queue->registerToEventBus(*m_eventBus);
+  m_eventBus->addListener(createMessageQueueWrapper(*queue));
   m_inputMessageQueue = std::move(queue);
 
   // Not strictly necessary as the internal messages should only be produced

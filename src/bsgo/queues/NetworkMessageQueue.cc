@@ -1,5 +1,6 @@
 
 #include "NetworkMessageQueue.hh"
+#include "DataReceivedEvent.hh"
 #include "MessageParser.hh"
 
 namespace bsgo {
@@ -13,13 +14,23 @@ NetworkMessageQueue::NetworkMessageQueue(IMessageQueuePtr synchronizedQueue)
   setService("network");
 }
 
-void NetworkMessageQueue::registerToEventBus(net::IEventBus & /*eventBus*/)
+bool NetworkMessageQueue::isEventRelevant(const net::EventType &type) const
 {
-  // TODO: Restore this.
-  // connection.setDataHandler(
-  //   [this](const net::ConnectionId connectionId, const std::deque<char> &data) {
-  //     return onDataReceived(connectionId, data);
-  //   });
+  return type == net::EventType::DATA_RECEIVED;
+}
+
+void NetworkMessageQueue::onEventReceived(const net::IEvent &event)
+{
+  const auto &dataReceived = event.as<net::DataReceivedEvent>();
+  registerPendingData(dataReceived);
+  const auto processed = onDataReceived(dataReceived.clientId());
+  removePendingData(dataReceived.clientId(), processed);
+
+  //   // TODO: Restore this.
+  //   // connection.setDataHandler(
+  //   //   [this](const net::ConnectionId connectionId, const std::deque<char> &data) {
+  //   //     return onDataReceived(connectionId, data);
+  //   //   });
 }
 
 void NetworkMessageQueue::pushMessage(IMessagePtr message)
@@ -42,14 +53,29 @@ void NetworkMessageQueue::processMessages(const std::optional<int> &amount)
   m_synchronizedQueue->processMessages(amount);
 }
 
-auto NetworkMessageQueue::onDataReceived(const net::ConnectionId /*connectionId*/,
-                                         const std::deque<char> &data) -> int
+void NetworkMessageQueue::registerPendingData(const net::DataReceivedEvent &event)
+{
+  const std::lock_guard guard(m_locker);
+
+  auto &pendingData = m_pendingData[event.clientId()];
+  pendingData.bytes.insert(pendingData.bytes.end(), event.data().begin(), event.data().end());
+  debug("pending bytes for " + net::str(event.clientId()) + " = "
+        + std::to_string(pendingData.bytes.size()));
+}
+
+auto NetworkMessageQueue::onDataReceived(const net::ClientId clientId) -> int
 {
   bool processedSomeBytes{true};
   auto processedBytes{0};
   std::vector<IMessagePtr> messages{};
 
-  std::deque<char> workingData(data);
+  std::deque<char> workingData;
+  {
+    const std::lock_guard guard(m_locker);
+    const auto &pendingData = m_pendingData[clientId];
+    workingData.insert(workingData.end(), pendingData.bytes.begin(), pendingData.bytes.end());
+  }
+
   MessageParser parser{};
 
   while (processedSomeBytes)
@@ -76,6 +102,21 @@ void NetworkMessageQueue::feedMessagesToQueue(std::vector<IMessagePtr> &&message
   {
     m_synchronizedQueue->pushMessage(std::move(message));
   }
+}
+
+void NetworkMessageQueue::removePendingData(const net::ClientId clientId, const int processed)
+{
+  if (processed == 0)
+  {
+    debug("processed 0 bytes for client " + net::str(clientId));
+    return;
+  }
+
+  debug("processed " + std::to_string(processed) + " bytes for " + net::str(clientId));
+
+  const std::lock_guard guard(m_locker);
+  auto &pendingData = m_pendingData[clientId];
+  pendingData.bytes.erase(pendingData.bytes.begin(), pendingData.bytes.begin() + processed);
 }
 
 } // namespace bsgo

@@ -16,6 +16,7 @@ namespace bsgo {
 
 struct MessageSystemData
 {
+  net::IEventBus &eventBus;
   ClientManagerShPtr clientManager{};
   SystemProcessorMap systemProcessors{};
 };
@@ -27,14 +28,10 @@ class MessageExchanger
 
   auto getInternalMessageQueue() const -> IMessageQueue *;
   auto getOutputMessageQueue() const -> IMessageQueue *;
-  void registerToEventBus(net::IEventBus &eventBus);
-
-  void pushMessage(IMessagePtr message);
 
   private:
   IMessageQueuePtr m_outputMessageQueue{};
   IMessageQueuePtr m_internalMessageQueue{};
-  NetworkMessageQueuePtr m_inputMessageQueue{};
 
   void initialize(const MessageSystemData &messagesData);
   auto initializeSystemMessageQueue(const MessageSystemData &messagesData) -> IMessageQueuePtr;

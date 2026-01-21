@@ -11,6 +11,7 @@ namespace bsgo {
 
 Server::Server()
   : core::CoreObject("server")
+  , m_eventBus(std::make_shared<net::AsyncEventBus>(std::make_unique<net::SynchronizedEventBus>()))
 {
   setService("server");
   initialize();
@@ -55,10 +56,17 @@ void Server::initializeSystems()
 
 void Server::initializeMessageSystem()
 {
-  const MessageSystemData data{.clientManager    = m_clientManager,
+  const MessageSystemData data{.eventBus         = *m_eventBus,
+                               .clientManager    = m_clientManager,
                                .systemProcessors = convertToSystemProcessorMap(m_systemProcessors)};
   m_messageExchanger = std::make_unique<MessageExchanger>(data);
-  m_messageExchanger->registerToEventBus(*m_eventBus);
+
+  // TODO: This should be added to the processing of the client connected event?
+  // Or at any rate it should be double checked because the AsioServer already sends the client
+  // id so maybe this is useless
+  // auto message = std::make_unique<ConnectionMessage>(clientId);
+  // message->validate();
+  // m_outputMessageQueue->pushMessage(std::move(message));
   m_clientManager->registerToEventBus(*m_eventBus);
 
   for (const auto &systemProcessor : m_systemProcessors)
@@ -70,7 +78,6 @@ void Server::initializeMessageSystem()
 
 void Server::setup(const int port)
 {
-  m_eventBus  = std::make_shared<net::AsyncEventBus>(std::make_unique<net::SynchronizedEventBus>());
   m_tcpServer = std::make_unique<net::TcpServer>(m_eventBus);
 
   info("Starting listening on port " + std::to_string(port));
@@ -131,11 +138,12 @@ void Server::onConnectionLost(const net::ConnectionId connectionId)
   info("Connection " + std::to_string(connectionId) + " lost but player " + str(*data.playerDbId)
        + " is still connected");
 
-  m_clientManager->markConnectionAsStale(connectionId);
-  auto message = std::make_unique<LogoutMessage>(*data.playerDbId, true);
-  message->setClientId(data.clientId);
+  // TODO: This should be moved to the onEventReceived in the ClientManager
+  // m_clientManager->markConnectionAsStale(connectionId);
+  // auto message = std::make_unique<LogoutMessage>(*data.playerDbId, true);
+  // message->setClientId(data.clientId);
 
-  m_messageExchanger->pushMessage(std::move(message));
+  // m_messageExchanger->pushMessage(std::move(message));
 }
 
 } // namespace bsgo
