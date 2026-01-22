@@ -24,7 +24,6 @@ bool NetworkAdapter::isEventRelevant(const net::EventType &type) const
 void NetworkAdapter::onEventReceived(const net::IEvent &event)
 {
   const auto &dataReceived = event.as<net::DataReceivedEvent>();
-
   registerPendingData(dataReceived);
   const auto processed = onDataReceived(dataReceived.clientId());
   removePendingData(dataReceived.clientId(), processed);
@@ -35,9 +34,8 @@ void NetworkAdapter::registerPendingData(const net::DataReceivedEvent &event)
   const std::lock_guard guard(m_locker);
 
   auto &pendingData = m_pendingData[event.clientId()];
-  pendingData.bytes.insert(pendingData.bytes.end(), event.data().begin(), event.data().end());
-  debug("pending bytes for " + net::str(event.clientId()) + " = "
-        + std::to_string(pendingData.bytes.size()));
+  std::vector<char> toAdd(event.data());
+  pendingData.bytes.insert(pendingData.bytes.end(), toAdd.begin(), toAdd.end());
 }
 
 auto NetworkAdapter::onDataReceived(const net::ClientId clientId) -> int
@@ -85,11 +83,8 @@ void NetworkAdapter::removePendingData(const net::ClientId clientId, const int p
 {
   if (processed == 0)
   {
-    debug("processed 0 bytes for client " + net::str(clientId));
     return;
   }
-
-  debug("processed " + std::to_string(processed) + " bytes for " + net::str(clientId));
 
   const std::lock_guard guard(m_locker);
   auto &pendingData = m_pendingData[clientId];
