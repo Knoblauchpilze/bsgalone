@@ -2,7 +2,6 @@
 #pragma once
 
 #include "ClientManager.hh"
-#include "Connection.hh"
 #include "IEventBus.hh"
 #include "IMessageQueue.hh"
 #include "INetworkServer.hh"

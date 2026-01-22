@@ -2,7 +2,6 @@
 #pragma once
 
 #include "ClientId.hh"
-#include "Connection.hh"
 #include "CoreObject.hh"
 #include "IEventBus.hh"
 #include "Uuid.hh"

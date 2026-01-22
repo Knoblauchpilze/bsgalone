@@ -833,6 +833,8 @@ The client uses this in order to not instantiate systems dealing with events tha
 
 ## Networking
 
+TODO: This section sould be revamped
+
 ### Generalities
 
 The content of this [video series](https://youtu.be/2hNdkYInj4g?si=Q-NOTJ__p-5a2jS8) of Javidx9 was very informative. The resulting code can be found on [github](https://github.com/OneLoneCoder/Javidx9/tree/master/PixelGameEngine/BiggerProjects/Networking) and it inspired the [Connection](src/net/connection/Connection.hh) class we created.

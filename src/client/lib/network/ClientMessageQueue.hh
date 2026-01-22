@@ -1,7 +1,6 @@
 
 #pragma once
 
-#include "ClientConnection.hh"
 #include "CoreObject.hh"
 #include "IMessageQueue.hh"
 #include "INetworkClient.hh"

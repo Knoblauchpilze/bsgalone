@@ -2,6 +2,7 @@
 #include "ClientMessageQueue.hh"
 #include "NetworkMessage.hh"
 #include "ValidatableMessage.hh"
+#include <sstream>
 
 namespace pge {
 

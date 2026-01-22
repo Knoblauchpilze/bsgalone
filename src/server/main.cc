@@ -7,6 +7,7 @@
 #include "log/Locator.hh"
 #include "log/PrefixedLogger.hh"
 #include "log/StdLogger.hh"
+#include <csignal>
 
 namespace {
 // https://stackoverflow.com/questions/11468414/using-auto-and-lambda-to-handle-signal
