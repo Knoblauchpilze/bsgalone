@@ -22,6 +22,10 @@ add_subdirectory (
 	)
 
 add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/server
+	)
+
+add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/time
 	)
 
@@ -42,4 +46,5 @@ target_link_libraries (unitTests
 	pge_lib
 	time_lib
 	client_lib
+	server_lib
 	)
