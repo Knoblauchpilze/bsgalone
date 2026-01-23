@@ -34,6 +34,8 @@ TEST_F(Integration_Net_Server_TcpServer, AcceptsConnectionAndPublishesClientConn
   EXPECT_EQ(EventType::CLIENT_CONNECTED, actual->type());
   // The first client identifier should be 0 as the counter starts from 0
   EXPECT_EQ(ClientId{0}, actual->as<ClientConnectedEvent>().clientId());
+
+  server->stop();
 }
 
 TEST_F(Integration_Net_Server_TcpServer, DetectsDisconnectionAndPublishesClientDisconnectedEvent)
