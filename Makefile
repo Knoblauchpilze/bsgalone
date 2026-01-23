@@ -85,6 +85,19 @@ runserver: copyRelease
 drunserver: copyDebug
 	cd sandbox && ./debug.sh bsgalone_server 2323
 
+# Similar targets as above but for the v2 client and server
+runbsgoclient: copyRelease
+	cd sandbox && ./run.sh game_client 2323 $(username) $(password) $(gamerole)
+
+drunbsgoclient: copyDebug
+	cd sandbox && ./debug.sh game_client 2323
+
+runbsgoserver: copyRelease
+	cd sandbox && ./run.sh game_server 2323
+
+drunbsgoserver: copyDebug
+	cd sandbox && ./debug.sh game_server 2323
+
 PHONY: .tests
 tests: debugWithTests copyDebug
 
