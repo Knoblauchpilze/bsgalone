@@ -36,6 +36,19 @@ class TestEventBus : public net::IEventBus
   /// @return - the single event that was received
   auto waitForEvent() -> net::IEventPtr;
 
+  /// @brief - Used to wait until an event with the specified type is received.
+  /// In case other events are received they will be ignored. This method will
+  /// retry until `maxTries` tries have been performed.
+  /// As a general rule, if it is expected that X events can be produced and
+  /// the desired event is among those, the `maxTries` should be equal to the
+  /// total number of possible events.
+  /// In case the event is not received in time, an error will be raised.
+  /// @param type - the type of event to wait for
+  /// @param maxTries - the maximum number of tries to perform when waiting
+  /// for an event
+  /// @return - the event with the desired type
+  auto waitForEvent(const net::EventType type, const int maxTries = 2) -> net::IEventPtr;
+
   private:
   std::mutex m_locker{};
   std::condition_variable m_notifier{};
