@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreObject.hh"
+#include "IEventBus.hh"
+#include "INetworkServer.hh"
 #include <atomic>
 #include <condition_variable>
 #include <mutex>
@@ -11,7 +13,7 @@ namespace bsgalone::server {
 class GameServer : public core::CoreObject
 {
   public:
-  GameServer();
+  GameServer(net::IEventBusShPtr eventBus);
   ~GameServer() override = default;
 
   /// @brief - Starts the game server on the specified port. This function will synchronously start
@@ -32,6 +34,13 @@ class GameServer : public core::CoreObject
   std::mutex m_locker{};
   bool m_running{false};
   std::condition_variable m_notifier{};
+
+  net::INetworkServerPtr m_tcpServer{};
+
+  void updateRunningStatus(const bool status);
+  void startSubSystems(const int port);
+  void stopSubSystems();
+  void waitForStopCommand();
 };
 
 } // namespace bsgalone::server
