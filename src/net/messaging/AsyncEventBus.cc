@@ -68,6 +68,8 @@ void AsyncEventBus::asyncEventProcessing()
 {
   bool running{true};
 
+  debug("Starting event processing");
+
   while (running)
   {
     // https://en.cppreference.com/w/cpp/thread/condition_variable
