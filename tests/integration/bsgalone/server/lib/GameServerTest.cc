@@ -1,6 +1,7 @@
 
 #include "GameServer.hh"
 #include "ClientConnectedEvent.hh"
+#include "ClientDisconnectedEvent.hh"
 #include "TcpFixture.hh"
 #include "TestEventBus.hh"
 #include <future>
@@ -38,6 +39,29 @@ TEST_F(Integration_Bsgalone_Server_GameServerTest, AcceptsConnectionAndPublishes
   const auto event  = bus->waitForEvent();
   EXPECT_EQ(net::EventType::CLIENT_CONNECTED, event->type());
   EXPECT_EQ(net::ClientId{0}, event->as<net::ClientConnectedEvent>().clientId());
+
+  server.requestStop();
+  result.get();
+}
+
+TEST_F(Integration_Bsgalone_Server_GameServerTest, DetectsDisconnectionAndPublishesEvent)
+{
+  auto bus = std::make_shared<TestEventBus>();
+  GameServer server(bus);
+
+  auto result = std::async(std::launch::async, [this, &server]() { server.run(this->port()); });
+  bus->waitForEvent(net::EventType::SERVER_STARTED);
+
+  {
+    const auto socket = this->connectToRunningServer();
+    const auto event  = bus->waitForEvent();
+    EXPECT_EQ(net::EventType::CLIENT_CONNECTED, event->type());
+    EXPECT_EQ(net::ClientId{0}, event->as<net::ClientConnectedEvent>().clientId());
+  }
+
+  const auto event = bus->waitForEvent();
+  EXPECT_EQ(net::EventType::CLIENT_DISCONNECTED, event->type());
+  EXPECT_EQ(net::ClientId{0}, event->as<net::ClientDisconnectedEvent>().clientId());
 
   server.requestStop();
   result.get();
