@@ -12,7 +12,7 @@
 using namespace test;
 using namespace ::testing;
 
-namespace net::details {
+namespace net {
 using Integration_Net_Client_TcpClient = TcpServerFixture;
 
 constexpr auto LOCALHOST_URL = "127.0.0.1";
@@ -138,4 +138,4 @@ TEST_F(Integration_Net_Client_TcpClient, PublishesDataSentEvent)
   EXPECT_EQ(expectedMessageId.value(), event->as<DataSentEvent>().messageId());
 }
 
-} // namespace net::details
+} // namespace net
