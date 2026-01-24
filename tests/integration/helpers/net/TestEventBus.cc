@@ -53,4 +53,33 @@ auto TestEventBus::waitForEvent() -> net::IEventPtr
   return out;
 }
 
+auto TestEventBus::waitForEvent(const net::EventType type, const int maxTries) -> net::IEventPtr
+{
+  int tryCount = 0;
+  net::IEventPtr out;
+
+  while (out == nullptr && tryCount < maxTries)
+  {
+    auto events           = waitForEvents();
+    const auto maybeEvent = std::find_if(events.begin(),
+                                         events.end(),
+                                         [type](const net::IEventPtr &event) {
+                                           return event->type() == type;
+                                         });
+    if (maybeEvent != events.end())
+    {
+      std::swap(out, *maybeEvent);
+    }
+
+    ++tryCount;
+  }
+
+  if (!out)
+  {
+    throw std::runtime_error("No " + net::str(type) + " received, tried " + std::to_string(tryCount)
+                             + " time(s)");
+  }
+  return out;
+}
+
 } // namespace test
