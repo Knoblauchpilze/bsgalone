@@ -29,6 +29,13 @@ auto TestEventBus::waitForEvents() -> std::vector<net::IEventPtr>
 {
   std::unique_lock guard(m_locker);
 
+  if (!m_events.empty())
+  {
+    std::vector<net::IEventPtr> events{};
+    std::swap(events, m_events);
+    return events;
+  }
+
   // This timeout should be enough for most test scenario. If it becomes
   // an issue it can be made configurable.
   constexpr auto REASONABLE_TIMEOUT = std::chrono::seconds(5);
@@ -50,6 +57,7 @@ auto TestEventBus::waitForEvent() -> net::IEventPtr
 
   net::IEventPtr out{};
   std::swap(out, events.at(0));
+
   return out;
 }
 
