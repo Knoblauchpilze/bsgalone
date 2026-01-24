@@ -19,6 +19,10 @@ auto str(const EventType &type) -> std::string
       return "data_sent";
     case EventType::DATA_WRITE_FAILURE:
       return "data_write_failure";
+    case EventType::SERVER_STARTED:
+      return "server_started";
+    case EventType::SERVER_STOPPED:
+      return "server_stopped";
     default:
       return "unknown";
   }
@@ -33,6 +37,8 @@ auto allEventTypesAsSet() -> std::unordered_set<EventType>
     EventType::DATA_RECEIVED,
     EventType::DATA_SENT,
     EventType::DATA_WRITE_FAILURE,
+    EventType::SERVER_STARTED,
+    EventType::SERVER_STOPPED,
   };
 }
 

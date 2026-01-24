@@ -11,4 +11,6 @@ target_sources (net_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/DataReceivedEvent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/DataSentEvent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/DataWriteFailureEvent.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/ServerStartedEvent.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/ServerStoppedEvent.cc
 	)
