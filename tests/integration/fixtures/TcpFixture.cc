@@ -3,10 +3,6 @@
 
 namespace test {
 
-TcpFixture::TcpFixture()
-  : PortFixture()
-{}
-
 void TcpFixture::SetUp()
 {
   this->PortFixture::SetUp();

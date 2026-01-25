@@ -11,7 +11,7 @@ namespace test {
 class TcpFixture : public PortFixture
 {
   public:
-  TcpFixture();
+  TcpFixture()           = default;
   ~TcpFixture() override = default;
 
   protected:
