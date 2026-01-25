@@ -95,12 +95,6 @@ auto shutdownSocket(asio::ip::tcp::socket &socket) -> std::error_code
 
 void AsioClient::disconnect()
 {
-  const auto status = m_status.load();
-  if (status != ConnectionStatus::CONNECTED)
-  {
-    error("Got unexpected state for asio client (" + str(status) + ")");
-  }
-
   std::unique_lock guard(m_locker);
   if (m_socket)
   {
@@ -192,6 +186,9 @@ void AsioClient::onDataReceived(const std::error_code &code, const std::size_t c
     warn("Failed to receive client identifier (" + std::to_string(code.value()) + ")",
          code.message());
     m_status.store(ConnectionStatus::DISCONNECTED);
+
+    std::unique_lock guard(m_locker);
+    m_notifier.notify_one();
     return;
   }
   if (contentLength != sizeof(ClientId))
@@ -200,6 +197,9 @@ void AsioClient::onDataReceived(const std::error_code &code, const std::size_t c
            + std::to_string(sizeof(ClientId)),
          "Received " + std::to_string(contentLength) + " byte(s)");
     m_status.store(ConnectionStatus::DISCONNECTED);
+
+    std::unique_lock guard(m_locker);
+    m_notifier.notify_one();
     return;
   }
 

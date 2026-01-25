@@ -79,8 +79,6 @@ TEST_F(Integration_Net_Client_AsioClient, PublishesClientDisconnectedEventWhenDi
 {
   auto bus = std::make_shared<TestEventBus>();
 
-  std::optional<ClientId> expectedClientId{};
-
   auto client = std::make_shared<AsioClient>(bus);
   client->connect(this->asioContext(), LOCALHOST_URL, this->port());
 
@@ -88,22 +86,32 @@ TEST_F(Integration_Net_Client_AsioClient, PublishesClientDisconnectedEventWhenDi
   sockets.writeServer(ClientId{32});
   auto event = bus->waitForEvent();
   EXPECT_EQ(EventType::CLIENT_CONNECTED, event->type());
-  expectedClientId = event->as<ClientConnectedEvent>().clientId();
+  const auto expectedClientId = event->as<ClientConnectedEvent>().clientId();
 
   client->disconnect();
 
   event = bus->waitForEvent();
   EXPECT_EQ(EventType::CLIENT_DISCONNECTED, event->type());
-  ASSERT_TRUE(expectedClientId.has_value());
   EXPECT_EQ(expectedClientId, event->as<ClientDisconnectedEvent>().clientId());
 }
 
-TEST_F(Integration_Net_Client_AsioClient, ThrowsWhenDisconnectingAndNotConnected)
+TEST_F(Integration_Net_Client_AsioClient, SuccessfullyDisconnectsWhenConnectionIsPending)
+{
+  auto bus    = std::make_shared<TestEventBus>();
+  auto client = std::make_shared<AsioClient>(bus);
+  client->connect(this->asioContext(), LOCALHOST_URL, this->port());
+
+  auto sockets = this->waitForServerSocket();
+
+  client->disconnect();
+}
+
+TEST_F(Integration_Net_Client_AsioClient, SucceedsWhenDisconnectingAndNotConnected)
 {
   auto bus    = std::make_shared<TestEventBus>();
   auto client = std::make_shared<AsioClient>(bus);
 
-  EXPECT_THROW([&client]() { client->disconnect(); }(), core::CoreException);
+  client->disconnect();
 }
 
 TEST_F(Integration_Net_Client_AsioClient, ThrowsWhenWritingAMessageAndNotConnected)
