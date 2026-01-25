@@ -4,9 +4,5 @@ target_include_directories(integrationTests PUBLIC
 	)
 
 add_subdirectory(
-	${CMAKE_CURRENT_SOURCE_DIR}/client
-	)
-
-add_subdirectory(
-	${CMAKE_CURRENT_SOURCE_DIR}/server
+	${CMAKE_CURRENT_SOURCE_DIR}/lib
 	)

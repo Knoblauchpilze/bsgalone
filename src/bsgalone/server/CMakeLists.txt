@@ -14,6 +14,7 @@ target_include_directories (game_server PUBLIC
 
 target_link_libraries (game_server PUBLIC
 	bsgalone-interface-library
+	core_lib
 	game_server_lib
 	)
 

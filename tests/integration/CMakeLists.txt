@@ -35,5 +35,6 @@ target_link_libraries (integrationTests
 	core_lib
 	bsgo_lib
 	net_lib
+	game_client_lib
 	game_server_lib
 	)
