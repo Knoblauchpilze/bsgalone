@@ -1,5 +1,7 @@
 
 #include "TcpClient.hh"
+#include "ServerStartedEvent.hh"
+#include "ServerStoppedEvent.hh"
 
 namespace net {
 
@@ -29,6 +31,8 @@ void TcpClient::connect(const std::string &url, const int port)
   m_context = std::make_unique<details::AsioContext>();
   m_client  = std::make_shared<details::AsioClient>(m_eventBus);
   m_client->connect(*m_context, url, port);
+
+  m_eventBus->pushEvent(std::make_unique<ServerStartedEvent>());
 }
 
 void TcpClient::disconnect()
@@ -44,6 +48,8 @@ void TcpClient::disconnect()
   m_client->disconnect();
   m_client.reset();
   m_context.reset();
+
+  m_eventBus->pushEvent(std::make_unique<ServerStoppedEvent>());
 }
 
 auto TcpClient::trySend(std::vector<char> bytes) -> std::optional<MessageId>

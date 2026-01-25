@@ -17,6 +17,18 @@ using Integration_Net_Client_TcpClient = TcpServerFixture;
 
 constexpr auto LOCALHOST_URL = "127.0.0.1";
 
+namespace {
+void startClient(std::shared_ptr<TcpClient> &client,
+                 const int port,
+                 std::shared_ptr<TestEventBus> &bus)
+{
+  client->connect(LOCALHOST_URL, port);
+
+  const auto actual = bus->waitForEvent();
+  EXPECT_EQ(EventType::SERVER_STARTED, actual->type());
+}
+} // namespace
+
 TEST_F(Integration_Net_Client_TcpClient, ThrowsWhenEventBusIsNull)
 {
   EXPECT_THROW([this]() { TcpClient(nullptr); }(), std::invalid_argument);
@@ -41,11 +53,39 @@ TEST_F(Integration_Net_Client_TcpClient, ThrowsWhenDisconnectingWithoutConnectin
   EXPECT_THROW([&client]() { client->disconnect(); }(), core::CoreException);
 }
 
-TEST_F(Integration_Net_Client_TcpClient, EstablishesConnectionAndPublishesClientConnectedEvent)
+TEST_F(Integration_Net_Client_TcpClient, PublishesServerStartedEvent)
 {
   auto bus    = std::make_shared<TestEventBus>();
   auto client = std::make_shared<TcpClient>(bus);
   client->connect(LOCALHOST_URL, this->port());
+
+  const auto actual = bus->waitForEvent();
+  EXPECT_EQ(EventType::SERVER_STARTED, actual->type());
+}
+
+TEST_F(Integration_Net_Client_TcpClient, PublishesServerStoppedEvent)
+{
+  auto bus    = std::make_shared<TestEventBus>();
+  auto client = std::make_shared<TcpClient>(bus);
+  startClient(client, this->port(), bus);
+
+  auto sockets = this->waitForServerSocket();
+  sockets.writeServer(ClientId{34});
+  bus->waitForEvent(EventType::CLIENT_CONNECTED);
+
+  client->disconnect();
+
+  // The event bus will receive both a client disconnected event and the
+  // server stopped event. This test only cares about the server stopped
+  // one.
+  bus->waitForEvent(EventType::SERVER_STOPPED);
+}
+
+TEST_F(Integration_Net_Client_TcpClient, EstablishesConnectionAndPublishesClientConnectedEvent)
+{
+  auto bus    = std::make_shared<TestEventBus>();
+  auto client = std::make_shared<TcpClient>(bus);
+  startClient(client, this->port(), bus);
 
   auto sockets = this->waitForServerSocket();
   sockets.writeServer(ClientId{34});
@@ -59,7 +99,7 @@ TEST_F(Integration_Net_Client_TcpClient, DetectsDisconnectionAndPublishesClientD
 {
   auto bus    = std::make_shared<TestEventBus>();
   auto client = std::make_shared<TcpClient>(bus);
-  client->connect(LOCALHOST_URL, this->port());
+  startClient(client, this->port(), bus);
 
   auto sockets = this->waitForServerSocket();
   sockets.writeServer(ClientId{34});
@@ -78,7 +118,7 @@ TEST_F(Integration_Net_Client_TcpClient, PublishesClientDisconnectedEventWhenCli
 {
   auto bus    = std::make_shared<TestEventBus>();
   auto client = std::make_shared<TcpClient>(bus);
-  client->connect(LOCALHOST_URL, this->port());
+  startClient(client, this->port(), bus);
 
   auto sockets = this->waitForServerSocket();
   sockets.writeServer(ClientId{34});
@@ -89,7 +129,7 @@ TEST_F(Integration_Net_Client_TcpClient, PublishesClientDisconnectedEventWhenCli
 
   client->disconnect();
 
-  event = bus->waitForEvent();
+  event = bus->waitForEvent(EventType::CLIENT_DISCONNECTED);
   EXPECT_EQ(EventType::CLIENT_DISCONNECTED, event->type());
   EXPECT_EQ(ClientId{34}, event->as<ClientDisconnectedEvent>().clientId());
 }
@@ -98,7 +138,7 @@ TEST_F(Integration_Net_Client_TcpClient, SendsDataToServerSocket)
 {
   auto bus    = std::make_shared<TestEventBus>();
   auto client = std::make_shared<TcpClient>(bus);
-  client->connect(LOCALHOST_URL, this->port());
+  startClient(client, this->port(), bus);
 
   auto sockets = this->waitForServerSocket();
   sockets.writeServer(ClientId{34});
@@ -118,7 +158,7 @@ TEST_F(Integration_Net_Client_TcpClient, PublishesDataSentEvent)
 {
   auto bus    = std::make_shared<TestEventBus>();
   auto client = std::make_shared<TcpClient>(bus);
-  client->connect(LOCALHOST_URL, this->port());
+  startClient(client, this->port(), bus);
 
   auto sockets = this->waitForServerSocket();
   sockets.writeServer(ClientId{34});

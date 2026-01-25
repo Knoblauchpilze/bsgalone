@@ -46,13 +46,36 @@ auto TestEventBus::waitForEvents() -> std::vector<net::IEventPtr>
   return events;
 }
 
+namespace {
+auto nameAllEvents(const std::vector<net::IEventPtr> &events) -> std::string
+{
+  std::string out;
+  if (events.empty())
+  {
+    return "";
+  }
+
+  for (std::size_t id = 0u; id < events.size(); ++id)
+  {
+    {
+      out += net::str(events[id]->type());
+      if (id < events.size() - 1u)
+      {
+        out += " ";
+      }
+    }
+  }
+  return out;
+}
+} // namespace
+
 auto TestEventBus::waitForEvent() -> net::IEventPtr
 {
   auto events = waitForEvents();
   if (events.size() != 1u)
   {
     throw std::runtime_error("Expected a single event to be returned but got "
-                             + std::to_string(events.size()));
+                             + std::to_string(events.size()) + ": " + nameAllEvents(events));
   }
 
   net::IEventPtr out{};

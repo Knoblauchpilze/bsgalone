@@ -7,7 +7,7 @@
 namespace test {
 
 template<typename T>
-inline void ConnectedSockets::writeServer(const T &data)
+inline void ConnectedSockets::writeServer(const T &data) const
 {
   const char *begin = reinterpret_cast<const char *>(&data);
   std::vector<char> rawData(begin, begin + sizeof(T));
@@ -16,7 +16,7 @@ inline void ConnectedSockets::writeServer(const T &data)
 }
 
 template<>
-inline void ConnectedSockets::writeServer(const std::string &data)
+inline void ConnectedSockets::writeServer(const std::string &data) const
 {
   writeTo(*server, std::vector<char>(data.begin(), data.end()));
 }
