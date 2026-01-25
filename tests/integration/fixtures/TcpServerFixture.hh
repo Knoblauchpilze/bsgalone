@@ -1,9 +1,11 @@
 
 #pragma once
 
+#include "ClientId.hh"
 #include "ConnectedSockets.hh"
 #include "TcpAcceptor.hh"
 #include "TcpFixture.hh"
+#include "TestEventBus.hh"
 
 namespace test {
 
@@ -33,6 +35,19 @@ class TcpServerFixture : public TcpFixture
   /// an operation is performed on one end of the connection.
   /// @return - two connected sockets
   auto getTestSockets() -> ConnectedSockets;
+
+  /// @brief - This method awaits a server socket and performs a handshake for it. This
+  /// means:
+  ///   - waiting for a server socket
+  ///   - picking a random client identifier
+  ///   - writing it to the server socket
+  ///   - waiting for a client connected event on the test event bus
+  ///   - controlling that the client identifier is the one sent in the server socket
+  /// The output describes the client identifier used during the handshake and the sockets
+  /// received. Only the server socket holds valid data.
+  /// @return - the client identifier sent to the server socket and the sockets received
+  /// during the handshake. Only the server socket will hold a valid socket
+  auto performHandshake(TestEventBusShPtr &eventBus) -> std::pair<net::ClientId, ConnectedSockets>;
 
   private:
   TcpAcceptorShPtr m_acceptor{};

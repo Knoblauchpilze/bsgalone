@@ -16,9 +16,7 @@ namespace net {
 using Integration_Net_Server_TcpServer = TcpFixture;
 
 namespace {
-void startServer(std::shared_ptr<TcpServer> &server,
-                 const int port,
-                 std::shared_ptr<TestEventBus> &bus)
+void startServer(std::shared_ptr<TcpServer> &server, const int port, TestEventBusShPtr &bus)
 {
   server->start(port);
 
