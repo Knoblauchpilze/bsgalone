@@ -3,6 +3,7 @@
 
 #include "IEventBus.hh"
 #include <condition_variable>
+#include <memory>
 #include <mutex>
 #include <vector>
 
@@ -55,5 +56,7 @@ class TestEventBus : public net::IEventBus
 
   std::vector<net::IEventPtr> m_events{};
 };
+
+using TestEventBusShPtr = std::shared_ptr<TestEventBus>;
 
 } // namespace test
