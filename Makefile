@@ -104,7 +104,7 @@ tests: debugWithTests copyDebug
 # https://stackoverflow.com/questions/2826029/passing-additional-variables-from-command-line-to-make
 # Use like this:
 # make rununittests test_filters="Unit_Bsgo_Serialization_EntityAddedMessage*"
-# make rununittests test_filters="Unit_Bsgo_Serialization_EntityAddedMessage*" teat_repeat=10
+# make rununittests test_filters="Unit_Bsgo_Serialization_EntityAddedMessage*" test_repeat=10
 rununittests: tests cleanCoverage
 	cd sandbox && ./tests.sh unitTests $(test_filters) $(test_repeat)
 
