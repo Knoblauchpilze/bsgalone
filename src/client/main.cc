@@ -16,7 +16,6 @@ constexpr auto GAME_ROLE_ENV_KEY = "GAMEROLE";
 
 int main(int /*argc*/, char ** /*argv*/)
 {
-  // Create the logger.
   core::log::StdLogger raw;
   raw.setLevel(core::log::Severity::DEBUG);
   core::log::PrefixedLogger logger("client", "main");

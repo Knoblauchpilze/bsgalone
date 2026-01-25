@@ -19,7 +19,6 @@ void sigIntInterceptor(const int signal)
 
 int main(int /*argc*/, char ** /*argv*/)
 {
-  // Create the logger.
   core::log::StdLogger raw;
   raw.setLevel(core::log::Severity::DEBUG);
   core::log::PrefixedLogger logger("server", "main");
