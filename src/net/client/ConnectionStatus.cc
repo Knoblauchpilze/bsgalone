@@ -9,6 +9,8 @@ auto str(const ConnectionStatus status) -> std::string
   {
     case ConnectionStatus::DISCONNECTED:
       return "disconnected";
+    case ConnectionStatus::DISCONNECTING:
+      return "disconnecting";
     case ConnectionStatus::CONNECTING:
       return "connecting";
     case ConnectionStatus::CONNECTED:

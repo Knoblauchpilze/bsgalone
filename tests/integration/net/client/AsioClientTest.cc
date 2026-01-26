@@ -90,6 +90,8 @@ TEST_F(Integration_Net_Client_AsioClient, SuccessfullyDisconnectsWhenConnectionI
   client->connect(this->asioContext(), LOCALHOST_URL, this->port());
 
   const auto sockets = this->waitForServerSocket();
+  // Do not send the handshake, meaning that the client will be
+  // waiting for it and will not have connected.
 
   client->disconnect();
 }
