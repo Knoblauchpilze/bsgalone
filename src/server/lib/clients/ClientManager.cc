@@ -2,30 +2,23 @@
 #include "ClientManager.hh"
 
 namespace bsgo {
-Uuid ClientManager::NEXT_CLIENT_ID{0};
-
 ClientManager::ClientManager()
   : core::CoreObject("manager")
 {
   setService("client");
 }
 
-auto ClientManager::registerConnection(const net::ConnectionShPtr connection) -> Uuid
+void ClientManager::registerConnection(const net::ConnectionShPtr connection)
 {
   const std::lock_guard guard(m_locker);
 
-  const ClientData data{.clientId = NEXT_CLIENT_ID, .connection = connection};
-  m_clients.emplace(data.clientId, data);
-  m_connectionToClient.emplace(connection->id(), data.clientId);
-
-  ++NEXT_CLIENT_ID;
+  const ClientData data{.connection = connection};
+  m_clients.emplace(connection->id(), data);
 
   info("Registered connection " + data.connection->str());
-
-  return data.clientId;
 }
 
-void ClientManager::registerPlayer(const Uuid clientId,
+void ClientManager::registerPlayer(const net::ClientId clientId,
                                    const Uuid playerDbId,
                                    const Uuid playerSystemDbId)
 {
@@ -40,7 +33,7 @@ void ClientManager::registerPlayer(const Uuid clientId,
   auto &clientData            = maybeClientData->second;
   clientData.playerDbId       = playerDbId;
   clientData.playerSystemDbId = playerSystemDbId;
-  m_playerToClient.emplace(playerDbId, clientData.clientId);
+  m_playerToClient.emplace(playerDbId, clientId);
 
   info("Registered player " + str(playerDbId) + " in system " + str(playerSystemDbId));
 }
@@ -75,56 +68,54 @@ void ClientManager::removePlayerConnection(const Uuid playerDbId)
 
   const auto clientData = m_clients.at(maybeClientId->second);
 
+  m_clients.erase(maybeClientId->second);
   m_playerToClient.erase(maybeClientId);
-  m_connectionToClient.erase(clientData.connection->id());
-  m_clients.erase(clientData.clientId);
 
   info("Removed connection " + clientData.connection->str() + " for player " + str(playerDbId));
 }
 
-void ClientManager::markConnectionAsStale(const Uuid connectionId)
+void ClientManager::markConnectionAsStale(const net::ClientId clientId)
 {
   const std::lock_guard guard(m_locker);
 
-  const auto maybeClientId = m_connectionToClient.find(connectionId);
-  if (maybeClientId == m_connectionToClient.cend())
+  const auto maybeClientData = m_clients.find(clientId);
+  if (maybeClientData == m_clients.cend())
   {
-    error("Failed to mark connection " + std::to_string(connectionId) + " as stale");
+    error("Failed to mark connection " + net::str(clientId) + " as stale");
   }
 
-  auto &clientData = m_clients.at(maybeClientId->second);
+  auto &clientData = maybeClientData->second;
   if (clientData.connectionIsStale)
   {
-    error("Failed to mark connection " + str(connectionId) + " for disconnection",
-          "Client " + str(clientData.clientId) + " is already marked as stale");
+    error("Failed to mark connection " + net::str(clientId) + " for disconnection",
+          "Client is already marked as stale");
   }
 
   clientData.connectionIsStale = true;
 }
 
-void ClientManager::removeConnection(const net::ConnectionId connectionId)
+void ClientManager::removeConnection(const net::ClientId clientId)
 {
   const std::lock_guard guard(m_locker);
 
-  const auto maybeClientId = m_connectionToClient.find(connectionId);
-  if (maybeClientId == m_connectionToClient.cend())
+  const auto maybeClientData = m_clients.find(clientId);
+  if (maybeClientData == m_clients.cend())
   {
-    error("Failed to unregister connection " + std::to_string(connectionId));
+    error("Failed to unregister connection " + net::str(clientId));
   }
 
-  const auto clientData = m_clients.at(maybeClientId->second);
+  const auto clientData = maybeClientData->second;
 
   if (clientData.playerDbId)
   {
     m_playerToClient.erase(*clientData.playerDbId);
   }
-  m_connectionToClient.erase(connectionId);
-  m_clients.erase(clientData.clientId);
+  m_clients.erase(clientId);
 
   info("Removed connection " + clientData.connection->str());
 }
 
-auto ClientManager::getClientIdForPlayer(const Uuid playerDbId) const -> Uuid
+auto ClientManager::getClientIdForPlayer(const Uuid playerDbId) const -> net::ClientId
 {
   const std::lock_guard guard(m_locker);
 
@@ -137,7 +128,7 @@ auto ClientManager::getClientIdForPlayer(const Uuid playerDbId) const -> Uuid
   return maybeClientId->second;
 }
 
-auto ClientManager::tryGetConnectionForClient(const Uuid clientId) const
+auto ClientManager::tryGetConnectionForClient(const net::ClientId clientId) const
   -> std::optional<net::ConnectionShPtr>
 {
   const std::lock_guard guard(m_locker);
@@ -192,7 +183,7 @@ auto ClientManager::getAllConnectionsForSystem(const Uuid systemDbId) const
   return out;
 }
 
-auto ClientManager::tryGetSystemForClient(const Uuid clientId) const -> std::optional<Uuid>
+auto ClientManager::tryGetSystemForClient(const net::ClientId clientId) const -> std::optional<Uuid>
 {
   const std::lock_guard guard(m_locker);
 
@@ -231,23 +222,22 @@ void ClientManager::updateSystemForPlayer(const Uuid playerDbId, const Uuid syst
   clientData.playerSystemDbId = systemDbId;
 }
 
-auto ClientManager::tryGetDataForConnection(const net::ConnectionId connectionId) -> ConnectionData
+auto ClientManager::tryGetDataForConnection(const net::ClientId clientId) -> ConnectionData
 {
   ConnectionData out{};
 
-  const auto maybeClientData = tryGetClientDataForConnection(connectionId);
+  const auto maybeClientData = tryGetClientDataForConnection(clientId);
   if (!maybeClientData)
   {
     return out;
   }
 
-  out.clientId   = maybeClientData->clientId;
   out.playerDbId = maybeClientData->playerDbId;
   out.stale      = maybeClientData->connectionIsStale;
   return out;
 }
 
-bool ClientManager::isStillConnected(const net::ConnectionId connectionId) const
+bool ClientManager::isStillConnected(const net::ClientId connectionId) const
 {
   const auto maybeClientData = tryGetClientDataForConnection(connectionId);
   if (!maybeClientData)
@@ -258,21 +248,15 @@ bool ClientManager::isStillConnected(const net::ConnectionId connectionId) const
   return maybeClientData->playerDbId.has_value() && maybeClientData->playerSystemDbId.has_value();
 }
 
-auto ClientManager::tryGetClientDataForConnection(const net::ConnectionId connectionId) const
+auto ClientManager::tryGetClientDataForConnection(const net::ClientId clientId) const
   -> std::optional<ClientData>
 {
   const std::lock_guard guard(m_locker);
 
-  const auto maybeClientId = m_connectionToClient.find(connectionId);
-  if (maybeClientId == m_connectionToClient.cend())
-  {
-    return {};
-  }
-
-  const auto maybeClientData = m_clients.find(maybeClientId->second);
+  const auto maybeClientData = m_clients.find(clientId);
   if (maybeClientData == m_clients.cend())
   {
-    error("Failed to get client data for " + std::to_string(connectionId), "No such client");
+    error("Failed to get client data for " + net::str(clientId), "No such client");
   }
 
   return maybeClientData->second;

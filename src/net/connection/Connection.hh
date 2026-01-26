@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "ClientId.hh"
 #include "ConnectionType.hh"
 #include "CoreObject.hh"
 #include <asio.hpp>
@@ -12,9 +13,8 @@
 
 namespace net {
 
-using ConnectionId        = int;
-using DataReceivedHandler = std::function<int(const ConnectionId, const std::deque<char> &)>;
-using DisconnectHandler   = std::function<void(const ConnectionId)>;
+using DataReceivedHandler = std::function<int(const ClientId, const std::deque<char> &)>;
+using DisconnectHandler   = std::function<void(const ClientId)>;
 
 class Connection : public core::CoreObject, public std::enable_shared_from_this<Connection>
 {
@@ -24,7 +24,7 @@ class Connection : public core::CoreObject, public std::enable_shared_from_this<
   ~Connection() override = default;
 
   auto str() const -> std::string;
-  auto id() const -> ConnectionId;
+  auto id() const -> ClientId;
   auto type() const -> ConnectionType;
   bool isConnected() const;
 
@@ -36,9 +36,9 @@ class Connection : public core::CoreObject, public std::enable_shared_from_this<
   void send(const T &message);
 
   private:
-  static std::atomic<ConnectionId> NEXT_ID;
+  static std::atomic<ClientId> NEXT_ID;
 
-  ConnectionId m_id;
+  ClientId m_id;
   ConnectionType m_type{};
   asio::ip::tcp::socket m_socket;
   std::optional<asio::ip::tcp::resolver::results_type> m_endpoints{};

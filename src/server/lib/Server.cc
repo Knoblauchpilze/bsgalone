@@ -69,8 +69,8 @@ void Server::initializeMessageSystem()
 void Server::setup(const int port)
 {
   const net::ServerConfig config{.disconnectHandler =
-                                   [this](const net::ConnectionId connectionId) {
-                                     return onConnectionLost(connectionId);
+                                   [this](const net::ClientId clientId) {
+                                     return onConnectionLost(clientId);
                                    },
                                  .connectionReadyHandler =
                                    [this](net::ConnectionShPtr connection) {
@@ -113,41 +113,40 @@ void Server::shutdown()
   m_context.stop();
 }
 
-void Server::onConnectionLost(const net::ConnectionId connectionId)
+void Server::onConnectionLost(const net::ClientId clientId)
 {
-  if (!m_clientManager->isStillConnected(connectionId))
+  if (!m_clientManager->isStillConnected(clientId))
   {
-    m_clientManager->removeConnection(connectionId);
+    m_clientManager->removeConnection(clientId);
     return;
   }
 
-  const auto data = m_clientManager->tryGetDataForConnection(connectionId);
+  const auto data = m_clientManager->tryGetDataForConnection(clientId);
   if (!data.playerDbId)
   {
-    error("Connection " + std::to_string(connectionId)
-          + " lost but could not find associated player");
+    error("Connection " + net::str(clientId) + " lost but could not find associated player");
   }
 
   if (data.stale)
   {
-    debug("Connection " + std::to_string(connectionId) + " is already marked as stale");
+    debug("Connection " + net::str(clientId) + " is already marked as stale");
     return;
   }
 
-  info("Connection " + std::to_string(connectionId) + " lost but player " + str(*data.playerDbId)
+  info("Connection " + net::str(clientId) + " lost but player " + str(*data.playerDbId)
        + " is still connected");
 
-  m_clientManager->markConnectionAsStale(connectionId);
+  m_clientManager->markConnectionAsStale(clientId);
   auto message = std::make_unique<LogoutMessage>(*data.playerDbId, true);
-  message->setClientId(data.clientId);
+  message->setClientId(clientId);
 
   m_messageExchanger->pushMessage(std::move(message));
 }
 
 void Server::onConnectionReady(net::ConnectionShPtr connection)
 {
-  const auto clientId = m_clientManager->registerConnection(connection);
-  m_messageExchanger->registerConnection(clientId, connection);
+  m_clientManager->registerConnection(connection);
+  m_messageExchanger->registerConnection(connection);
 }
 
 } // namespace bsgo
