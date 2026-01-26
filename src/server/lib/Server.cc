@@ -45,15 +45,18 @@ void Server::initializeSystems()
 
   for (const auto &systemDbId : allSystems)
   {
-    auto processor = std::make_shared<SystemProcessor>(systemDbId);
+    auto inputQueue = std::make_shared<SynchronizedMessageQueue>("synchronized-message-queue-for-"
+                                                                 + std::to_string(systemDbId));
+
+    auto processor            = std::make_shared<SystemProcessor>(systemDbId, inputQueue);
+    m_inputQueues[systemDbId] = inputQueue;
     m_systemProcessors.emplace_back(std::move(processor));
   }
 }
 
 void Server::initializeMessageSystem()
 {
-  const MessageSystemData data{.clientManager    = m_clientManager,
-                               .systemProcessors = convertToSystemProcessorMap(m_systemProcessors)};
+  const MessageSystemData data{.clientManager = m_clientManager, .systemQueues = m_inputQueues};
   m_messageExchanger = std::make_unique<MessageExchanger>(data);
 
   for (const auto &systemProcessor : m_systemProcessors)

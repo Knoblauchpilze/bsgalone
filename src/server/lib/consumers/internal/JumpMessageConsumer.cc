@@ -10,12 +10,12 @@ namespace bsgo {
 
 JumpMessageConsumer::JumpMessageConsumer(SystemServiceShPtr systemService,
                                          ClientManagerShPtr clientManager,
-                                         SystemProcessorMap systemProcessors,
+                                         SystemQueueMap systemQueues,
                                          IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("jump", {MessageType::JUMP})
   , m_systemService(std::move(systemService))
   , m_clientManager(std::move(clientManager))
-  , m_systemProcessors(std::move(systemProcessors))
+  , m_systemQueues(std::move(systemQueues))
   , m_outputMessageQueue(outputMessageQueue)
 {
   if (nullptr == m_systemService)
@@ -64,40 +64,39 @@ void JumpMessageConsumer::handlePostJumpSystemMessages(const Uuid shipDbId,
                                                        const Uuid sourceSystemDbId,
                                                        const Uuid destinationSystemDbId)
 {
-  const auto maybeSourceProcessor      = m_systemProcessors.find(sourceSystemDbId);
-  const auto maybeDestinationProcessor = m_systemProcessors.find(destinationSystemDbId);
+  const auto maybeSourceQueue      = m_systemQueues.find(sourceSystemDbId);
+  const auto maybeDestinationQueue = m_systemQueues.find(destinationSystemDbId);
 
-  if (maybeSourceProcessor == m_systemProcessors.cend()
-      || maybeDestinationProcessor == m_systemProcessors.cend())
+  if (maybeSourceQueue == m_systemQueues.cend() || maybeDestinationQueue == m_systemQueues.cend())
   {
     warn("Failed to process jump message for " + str(shipDbId), "No system for ship");
     return;
   }
 
-  const auto sourceProcessor      = maybeSourceProcessor->second;
-  const auto destinationProcessor = maybeDestinationProcessor->second;
+  const auto sourceQueue      = maybeSourceQueue->second;
+  const auto destinationQueue = maybeDestinationQueue->second;
 
   auto removed = std::make_unique<EntityRemovedMessage>(shipDbId,
                                                         EntityKind::SHIP,
                                                         false,
                                                         sourceSystemDbId);
   debug("Pushing removed message to " + str(sourceSystemDbId));
-  sourceProcessor->pushMessage(std::move(removed));
+  sourceQueue->pushMessage(std::move(removed));
 
   auto added = std::make_unique<EntityAddedMessage>(destinationSystemDbId);
   PlayerShipData data{.dbId = shipDbId};
   added->setShipData(data);
 
   debug("Pushing added message to " + str(destinationSystemDbId));
-  destinationProcessor->pushMessage(std::move(added));
+  destinationQueue->pushMessage(std::move(added));
 }
 
 void JumpMessageConsumer::handleLoadingMessages(const Uuid playerDbId,
                                                 const Uuid destinationSystemDbId,
                                                 const Uuid clientId)
 {
-  const auto maybeDestinationProcessor = m_systemProcessors.find(destinationSystemDbId);
-  if (maybeDestinationProcessor == m_systemProcessors.cend())
+  const auto maybeDestinationQueue = m_systemQueues.find(destinationSystemDbId);
+  if (maybeDestinationQueue == m_systemQueues.cend())
   {
     warn("Failed to process jump message for " + str(playerDbId), "No destination system for ship");
     return;
@@ -108,12 +107,12 @@ void JumpMessageConsumer::handleLoadingMessages(const Uuid playerDbId,
   auto started = std::make_unique<LoadingStartedMessage>(LoadingTransition::JUMP, playerDbId);
   started->setSystemDbId(destinationSystemDbId);
   started->setClientId(clientId);
-  maybeDestinationProcessor->second->pushMessage(std::move(started));
+  maybeDestinationQueue->second->pushMessage(std::move(started));
 
   auto finished = std::make_unique<LoadingFinishedMessage>(LoadingTransition::JUMP, playerDbId);
   finished->setSystemDbId(destinationSystemDbId);
   finished->setClientId(clientId);
-  maybeDestinationProcessor->second->pushMessage(std::move(finished));
+  maybeDestinationQueue->second->pushMessage(std::move(finished));
 }
 
 } // namespace bsgo

@@ -79,7 +79,7 @@ void MessageExchanger::initialize(const MessageSystemData &messagesData)
 
   m_inputMessageQueue->addListener(
     std::make_unique<TriageMessageConsumer>(messagesData.clientManager,
-                                            messagesData.systemProcessors,
+                                            messagesData.systemQueues,
                                             std::move(systemMessageQueue)));
 }
 
@@ -101,19 +101,19 @@ auto MessageExchanger::initializeSystemMessageQueue(const MessageSystemData &mes
   auto signupService = std::make_unique<SignupService>(repositories);
   systemQueue->addListener(std::make_unique<SignupMessageConsumer>(std::move(signupService),
                                                                    messagesData.clientManager,
-                                                                   messagesData.systemProcessors,
+                                                                   messagesData.systemQueues,
                                                                    m_outputMessageQueue.get()));
 
   auto loginService = std::make_unique<LoginService>(repositories);
   systemQueue->addListener(std::make_unique<LoginMessageConsumer>(std::move(loginService),
                                                                   messagesData.clientManager,
-                                                                  messagesData.systemProcessors,
+                                                                  messagesData.systemQueues,
                                                                   m_outputMessageQueue.get()));
 
   auto systemService = std::make_shared<SystemService>(repositories);
   systemQueue->addListener(std::make_unique<LogoutMessageConsumer>(messagesData.clientManager,
                                                                    systemService,
-                                                                   messagesData.systemProcessors,
+                                                                   messagesData.systemQueues,
                                                                    m_outputMessageQueue.get()));
 
   auto playerService = std::make_unique<PlayerService>(repositories);
@@ -134,12 +134,12 @@ void MessageExchanger::initializeInternalConsumers(const MessageSystemData &mess
   m_internalMessageQueue->addListener(
     std::make_unique<JumpMessageConsumer>(systemService,
                                           messagesData.clientManager,
-                                          messagesData.systemProcessors,
+                                          messagesData.systemQueues,
                                           m_outputMessageQueue.get()));
 
   m_internalMessageQueue->addListener(
     std::make_unique<EntityRemovedMessageConsumer>(systemService,
-                                                   messagesData.systemProcessors,
+                                                   messagesData.systemQueues,
                                                    m_outputMessageQueue.get()));
 
   m_internalMessageQueue->addListener(

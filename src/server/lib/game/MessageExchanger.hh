@@ -6,7 +6,7 @@
 #include "IMessageQueue.hh"
 #include "NetworkMessageQueue.hh"
 #include "Repositories.hh"
-#include "SystemProcessor.hh"
+#include "SystemQueues.hh"
 #include "SystemService.hh"
 #include "Uuid.hh"
 #include <memory>
@@ -16,7 +16,7 @@ namespace bsgo {
 struct MessageSystemData
 {
   ClientManagerShPtr clientManager{};
-  SystemProcessorMap systemProcessors{};
+  SystemQueueMap systemQueues{};
 };
 
 class MessageExchanger
