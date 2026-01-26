@@ -56,7 +56,7 @@ void Server::initializeSystems()
 
 void Server::initializeMessageSystem()
 {
-  const MessageSystemData data{.clientManager = m_clientManager, .systemProcessors = m_inputQueues};
+  const MessageSystemData data{.clientManager = m_clientManager, .systemQueues = m_inputQueues};
   m_messageExchanger = std::make_unique<MessageExchanger>(data);
 
   for (const auto &systemProcessor : m_systemProcessors)

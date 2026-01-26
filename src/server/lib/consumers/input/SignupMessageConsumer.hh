@@ -16,7 +16,7 @@ class SignupMessageConsumer : public AbstractMessageConsumer
   public:
   SignupMessageConsumer(SignupServicePtr signupService,
                         ClientManagerShPtr clientManager,
-                        SystemProcessorMap systemProcessors,
+                        SystemQueueMap systemQueues,
                         IMessageQueue *const outputMessageQueue);
   ~SignupMessageConsumer() override = default;
 

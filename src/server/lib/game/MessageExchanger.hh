@@ -16,7 +16,7 @@ namespace bsgo {
 struct MessageSystemData
 {
   ClientManagerShPtr clientManager{};
-  SystemProcessorMap systemProcessors{};
+  SystemQueueMap systemQueues{};
 };
 
 class MessageExchanger

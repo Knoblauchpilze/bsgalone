@@ -16,7 +16,7 @@ class LoginMessageConsumer : public AbstractMessageConsumer
   public:
   LoginMessageConsumer(LoginServicePtr loginService,
                        ClientManagerShPtr clientManager,
-                       SystemProcessorMap systemProcessors,
+                       SystemQueueMap systemQueues,
                        IMessageQueue *const outputMessageQueue);
   ~LoginMessageConsumer() override = default;
 

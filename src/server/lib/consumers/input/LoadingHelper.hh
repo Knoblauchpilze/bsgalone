@@ -12,7 +12,7 @@ class LoadingHelper : public core::CoreObject
 {
   public:
   LoadingHelper(ClientManagerShPtr clientManager,
-                SystemProcessorMap systemProcessors,
+                SystemQueueMap systemQueues,
                 IMessageQueue *const outputMessageQueue);
   ~LoadingHelper() override = default;
 
@@ -20,7 +20,7 @@ class LoadingHelper : public core::CoreObject
 
   private:
   ClientManagerShPtr m_clientManager{};
-  SystemProcessorMap m_systemProcessors{};
+  SystemQueueMap m_systemQueues{};
   IMessageQueue *const m_outputMessageQueue{};
 };
 
