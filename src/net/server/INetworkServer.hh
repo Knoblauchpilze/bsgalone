@@ -41,5 +41,6 @@ class INetworkServer
 };
 
 using INetworkServerShPtr = std::shared_ptr<INetworkServer>;
+using INetworkServerPtr   = std::unique_ptr<INetworkServer>;
 
 } // namespace net

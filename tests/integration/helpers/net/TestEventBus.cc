@@ -29,6 +29,13 @@ auto TestEventBus::waitForEvents() -> std::vector<net::IEventPtr>
 {
   std::unique_lock guard(m_locker);
 
+  if (!m_events.empty())
+  {
+    std::vector<net::IEventPtr> events{};
+    std::swap(events, m_events);
+    return events;
+  }
+
   // This timeout should be enough for most test scenario. If it becomes
   // an issue it can be made configurable.
   constexpr auto REASONABLE_TIMEOUT = std::chrono::seconds(5);
@@ -39,17 +46,70 @@ auto TestEventBus::waitForEvents() -> std::vector<net::IEventPtr>
   return events;
 }
 
+namespace {
+auto nameAllEvents(const std::vector<net::IEventPtr> &events) -> std::string
+{
+  std::string out;
+  if (events.empty())
+  {
+    return "";
+  }
+
+  for (std::size_t id = 0u; id < events.size(); ++id)
+  {
+    {
+      out += net::str(events[id]->type());
+      if (id < events.size() - 1u)
+      {
+        out += " ";
+      }
+    }
+  }
+  return out;
+}
+} // namespace
+
 auto TestEventBus::waitForEvent() -> net::IEventPtr
 {
   auto events = waitForEvents();
   if (events.size() != 1u)
   {
     throw std::runtime_error("Expected a single event to be returned but got "
-                             + std::to_string(events.size()));
+                             + std::to_string(events.size()) + ": " + nameAllEvents(events));
   }
 
   net::IEventPtr out{};
   std::swap(out, events.at(0));
+
+  return out;
+}
+
+auto TestEventBus::waitForEvent(const net::EventType type, const int maxTries) -> net::IEventPtr
+{
+  int tryCount = 0;
+  net::IEventPtr out;
+
+  while (out == nullptr && tryCount < maxTries)
+  {
+    auto events           = waitForEvents();
+    const auto maybeEvent = std::find_if(events.begin(),
+                                         events.end(),
+                                         [type](const net::IEventPtr &event) {
+                                           return event->type() == type;
+                                         });
+    if (maybeEvent != events.end())
+    {
+      std::swap(out, *maybeEvent);
+    }
+
+    ++tryCount;
+  }
+
+  if (!out)
+  {
+    throw std::runtime_error("No " + net::str(type) + " received, tried " + std::to_string(tryCount)
+                             + " time(s)");
+  }
   return out;
 }
 

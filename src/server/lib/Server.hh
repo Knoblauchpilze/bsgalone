@@ -9,8 +9,10 @@
 #include "INetworkServer.hh"
 #include "MessageExchanger.hh"
 #include "SystemProcessor.hh"
+#include "SystemQueues.hh"
 #include <atomic>
 #include <condition_variable>
+#include <unordered_map>
 
 namespace bsgo {
 class Server : public core::CoreObject
@@ -32,6 +34,8 @@ class Server : public core::CoreObject
 
   ClientManagerShPtr m_clientManager{std::make_shared<ClientManager>()};
   MessageExchangerPtr m_messageExchanger{};
+
+  std::unordered_map<Uuid, IMessageQueueShPtr> m_inputQueues{};
   std::vector<SystemProcessorShPtr> m_systemProcessors{};
 
   void initialize();

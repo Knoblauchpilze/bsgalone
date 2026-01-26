@@ -5,11 +5,11 @@
 namespace bsgo {
 
 TriageMessageConsumer::TriageMessageConsumer(ClientManagerShPtr clientManager,
-                                             SystemProcessorMap systemProcessors,
+                                             SystemQueueMap systemQueues,
                                              IMessageQueuePtr systemMessageQueue)
   : AbstractMessageConsumer("triage", allMessageTypesAsSet())
   , m_clientManager(std::move(clientManager))
-  , m_systemProcessors(std::move(systemProcessors))
+  , m_systemQueues(std::move(systemQueues))
   , m_systemQueue(std::move(systemMessageQueue))
 {
   if (nullptr == m_systemQueue)
@@ -83,23 +83,23 @@ void TriageMessageConsumer::triagePlayerMessage(const IMessage &message) const
           "Client " + str(clientId) + " does not have a registered system");
   }
 
-  const auto maybeProcessor = m_systemProcessors.find(*maybeSystem);
-  if (maybeProcessor == m_systemProcessors.cend())
+  const auto maybeQueue = m_systemQueues.find(*maybeSystem);
+  if (maybeQueue == m_systemQueues.cend())
   {
     error("Failed to process message " + str(message.type()),
           "Unsupported system " + str(*maybeSystem));
   }
 
-  maybeProcessor->second->pushMessage(message.clone());
+  maybeQueue->second->pushMessage(message.clone());
 }
 
 void TriageMessageConsumer::broadcastMessage(const IMessage &message) const
 {
   debug("Brodcasting message " + str(message.type()));
 
-  for (const auto &[_, processor] : m_systemProcessors)
+  for (const auto &[_, queue] : m_systemQueues)
   {
-    processor->pushMessage(message.clone());
+    queue->pushMessage(message.clone());
   }
 }
 

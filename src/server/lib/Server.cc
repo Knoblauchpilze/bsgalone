@@ -55,7 +55,11 @@ void Server::initializeSystems()
 
   for (const auto &systemDbId : allSystems)
   {
-    auto processor = std::make_shared<SystemProcessor>(systemDbId);
+    auto inputQueue = std::make_shared<SynchronizedMessageQueue>("synchronized-message-queue-for-"
+                                                                 + std::to_string(systemDbId));
+
+    auto processor            = std::make_shared<SystemProcessor>(systemDbId, inputQueue);
+    m_inputQueues[systemDbId] = inputQueue;
     m_systemProcessors.emplace_back(std::move(processor));
   }
 }
@@ -128,9 +132,9 @@ class ClientManagerProxy : public net::IEventListener
 
 void Server::initializeMessageSystem()
 {
-  const MessageSystemData data{.clientManager    = m_clientManager,
-                               .server           = m_tcpServer,
-                               .systemProcessors = convertToSystemProcessorMap(m_systemProcessors)};
+  const MessageSystemData data{.clientManager = m_clientManager,
+                               .server        = m_tcpServer,
+                               .systemQueues  = m_inputQueues};
   m_messageExchanger = std::make_unique<MessageExchanger>(data);
 
   auto adapter = std::make_unique<NetworkAdapter>(m_messageExchanger->getInputMessageQueue());

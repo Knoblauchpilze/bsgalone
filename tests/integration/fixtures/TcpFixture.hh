@@ -2,27 +2,24 @@
 #pragma once
 
 #include "AsioContext.hh"
+#include "PortFixture.hh"
 #include "SocketShPtr.hh"
 #include <asio.hpp>
-#include <atomic>
-#include <gtest/gtest.h>
 
 namespace test {
 
-class TcpFixture : public ::testing::Test
+class TcpFixture : public PortFixture
 {
   public:
-  TcpFixture();
+  TcpFixture()           = default;
   ~TcpFixture() override = default;
 
   protected:
-  int m_port{};
   net::details::AsioContextPtr m_context{std::make_unique<net::details::AsioContext>()};
 
   void SetUp() override;
   void TearDown() override;
 
-  auto port() const -> int;
   auto asioContext() -> net::details::AsioContext &;
 
   /// @brief - Attempts to synchronously connect to the server available at
@@ -36,9 +33,6 @@ class TcpFixture : public ::testing::Test
   auto connectToRunningServer() -> net::details::SocketShPtr;
 
   void write(net::details::SocketShPtr socket, const std::string &data);
-
-  private:
-  static std::atomic_int NEXT_PORT;
 };
 
 } // namespace test

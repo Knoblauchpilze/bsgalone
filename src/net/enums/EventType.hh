@@ -13,7 +13,9 @@ enum class EventType
   DATA_READ_FAILURE,
   DATA_RECEIVED,
   DATA_SENT,
-  DATA_WRITE_FAILURE
+  DATA_WRITE_FAILURE,
+  SERVER_STARTED,
+  SERVER_STOPPED
 };
 
 auto str(const EventType &type) -> std::string;

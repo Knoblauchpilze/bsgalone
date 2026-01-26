@@ -5,13 +5,13 @@ namespace bsgo {
 
 SignupMessageConsumer::SignupMessageConsumer(SignupServicePtr signupService,
                                              ClientManagerShPtr clientManager,
-                                             SystemProcessorMap systemProcessors,
+                                             SystemQueueMap systemQueues,
                                              IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("signup", {MessageType::SIGNUP})
   , m_signupService(std::move(signupService))
   , m_clientManager(clientManager)
   , m_outputMessageQueue(outputMessageQueue)
-  , m_helper(clientManager, std::move(systemProcessors), outputMessageQueue)
+  , m_helper(clientManager, std::move(systemQueues), outputMessageQueue)
 {
   if (nullptr == m_signupService)
   {

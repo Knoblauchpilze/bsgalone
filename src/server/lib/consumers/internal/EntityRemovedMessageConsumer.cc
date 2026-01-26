@@ -6,11 +6,11 @@
 namespace bsgo {
 
 EntityRemovedMessageConsumer::EntityRemovedMessageConsumer(SystemServiceShPtr systemService,
-                                                           SystemProcessorMap systemProcessors,
+                                                           SystemQueueMap systemQueues,
                                                            IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("entity", {MessageType::ENTITY_REMOVED})
   , m_systemService(std::move(systemService))
-  , m_systemProcessors(std::move(systemProcessors))
+  , m_systemQueues(std::move(systemQueues))
   , m_outputMessageQueue(outputMessageQueue)
 {
   addModule("removed");
@@ -46,9 +46,10 @@ void EntityRemovedMessageConsumer::onMessageReceived(const IMessage &message)
 void EntityRemovedMessageConsumer::handleShipEntityRemoved(const Uuid shipDbId,
                                                            const bool dead) const
 {
-  const auto [maybeSystemDbId, maybeProcessor]
-    = tryFindSystemAndProcessorFromShip(shipDbId, *m_systemService, m_systemProcessors);
-  if (!maybeSystemDbId || !maybeProcessor)
+  const auto [maybeSystemDbId, maybeQueue] = tryFindSystemAndQueueFromShip(shipDbId,
+                                                                           *m_systemService,
+                                                                           m_systemQueues);
+  if (!maybeSystemDbId || !maybeQueue)
   {
     warn("Failed to process ship removed message for " + str(shipDbId), "No system for ship");
     return;
@@ -60,16 +61,17 @@ void EntityRemovedMessageConsumer::handleShipEntityRemoved(const Uuid shipDbId,
     return;
   }
 
-  const auto &processor = *maybeProcessor;
-  processor->pushMessage(
+  const auto &queue = *maybeQueue;
+  queue->pushMessage(
     std::make_unique<EntityRemovedMessage>(shipDbId, EntityKind::SHIP, dead, *maybeSystemDbId));
 }
 
 void EntityRemovedMessageConsumer::handleAsteroidEntityRemoved(const Uuid asteroidDbId,
                                                                const bool dead) const
 {
-  const auto [maybeSystemDbId, maybeProcessor]
-    = tryFindSystemAndProcessorFromAsteroid(asteroidDbId, *m_systemService, m_systemProcessors);
+  const auto [maybeSystemDbId, maybeProcessor] = tryFindSystemAndQueueFromAsteroid(asteroidDbId,
+                                                                                   *m_systemService,
+                                                                                   m_systemQueues);
   if (!maybeSystemDbId || !maybeProcessor)
   {
     warn("Failed to process asteroid removed message for " + str(asteroidDbId),

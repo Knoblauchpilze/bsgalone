@@ -55,11 +55,6 @@ class AsioClient : public core::CoreObject,
   auto trySend(std::vector<char> bytes) -> std::optional<MessageId>;
 
   private:
-  /// @brief - Defines the status of the connection. This reflects the progress of the
-  /// connection to the remote server. Depending on its value calls to certain methods
-  /// might fail due to an invalid state.
-  std::atomic<ConnectionStatus> m_status{ConnectionStatus::DISCONNECTED};
-
   /// @brief - Event bus used to communicate events to the outside world. This includes the
   /// information when the client successfully connects to a remote server or when the
   /// connection is lost.
@@ -80,12 +75,18 @@ class AsioClient : public core::CoreObject,
   std::atomic<MessageId> m_nextMessageId{0};
 
   /// @brief - Used to protect the access to the socket, the reading and writing socket and
-  // to the condition variable.
+  // to the connection status.
+  /// It is also used to wait on the condition variable.
   std::mutex m_locker{};
 
   /// @brief - Used to communicate that a disconnection has been detected. This is mainly
   /// used to make the `disconnect` method blocking until the socket is effectively disconnected.
   std::condition_variable m_notifier{};
+
+  /// @brief - Defines the status of the connection. This reflects the progress of the
+  /// connection to the remote server. Depending on its value calls to certain methods
+  /// might fail due to an invalid state.
+  ConnectionStatus m_status{ConnectionStatus::DISCONNECTED};
 
   /// @brief - Holds the raw socket established by this client. This points to a connection to a
   /// remote server.
@@ -118,6 +119,11 @@ class AsioClient : public core::CoreObject,
   void setupConnection();
 
   void handleConnectionFailure(const IEvent &event);
+
+  /// @brief - Used to acquire the lock, set the connection status to the desired status and
+  /// notify one waiting thread on the condition variable.
+  /// @param status - the desired connection status
+  void setConnectionStatusAndNotify(const ConnectionStatus status);
 };
 
 using AsioClientShPtr = std::shared_ptr<AsioClient>;

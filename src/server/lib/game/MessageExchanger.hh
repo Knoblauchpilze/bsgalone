@@ -6,7 +6,7 @@
 #include "IMessageQueue.hh"
 #include "INetworkServer.hh"
 #include "Repositories.hh"
-#include "SystemProcessor.hh"
+#include "SystemQueues.hh"
 #include "SystemService.hh"
 #include "Uuid.hh"
 #include <memory>
@@ -17,7 +17,7 @@ struct MessageSystemData
 {
   ClientManagerShPtr clientManager{};
   net::INetworkServerShPtr server{};
-  SystemProcessorMap systemProcessors{};
+  SystemQueueMap systemQueues{};
 };
 
 class MessageExchanger

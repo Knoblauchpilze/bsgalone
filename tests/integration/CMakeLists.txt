@@ -10,6 +10,14 @@ add_subdirectory (
 	)
 
 add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/fixtures
+	)
+
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/bsgalone
+	)
+
+add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/bsgo
 	)
 
@@ -27,4 +35,6 @@ target_link_libraries (integrationTests
 	core_lib
 	bsgo_lib
 	net_lib
+	game_client_lib
+	game_server_lib
 	)

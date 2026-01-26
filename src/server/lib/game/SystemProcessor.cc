@@ -6,11 +6,10 @@
 
 namespace bsgo {
 
-SystemProcessor::SystemProcessor(const Uuid systemDbId)
+SystemProcessor::SystemProcessor(const Uuid systemDbId, IMessageQueueShPtr inputQueue)
   : core::CoreObject("processor")
   , m_systemDbId(systemDbId)
-  , m_inputMessagesQueue(std::make_unique<SynchronizedMessageQueue>(
-      "synchronized-message-queue-for-" + std::to_string(m_systemDbId)))
+  , m_inputMessagesQueue(std::move(inputQueue))
 {
   setService("system");
   addModule(str(systemDbId));
@@ -26,11 +25,6 @@ SystemProcessor::~SystemProcessor()
 auto SystemProcessor::getSystemDbId() const -> Uuid
 {
   return m_systemDbId;
-}
-
-void SystemProcessor::pushMessage(IMessagePtr message)
-{
-  m_inputMessagesQueue->pushMessage(std::move(message));
 }
 
 void SystemProcessor::connectToQueues(IMessageQueue *const internalMessageQueue,

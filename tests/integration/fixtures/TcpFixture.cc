@@ -1,20 +1,16 @@
+
 #include "TcpFixture.hh"
 
 namespace test {
 
-std::atomic_int TcpFixture::NEXT_PORT{2000};
-
-TcpFixture::TcpFixture()
-  : m_port(NEXT_PORT.fetch_add(1))
-{}
-
-void TcpFixture::SetUp() {}
-
-void TcpFixture::TearDown() {}
-
-auto TcpFixture::port() const -> int
+void TcpFixture::SetUp()
 {
-  return m_port;
+  this->PortFixture::SetUp();
+}
+
+void TcpFixture::TearDown()
+{
+  this->PortFixture::TearDown();
 }
 
 auto TcpFixture::asioContext() -> net::details::AsioContext &
@@ -28,7 +24,7 @@ auto TcpFixture::connectToRunningServer() -> net::details::SocketShPtr
   auto out = std::make_shared<asio::ip::tcp::socket>(std::move(socket));
 
   asio::ip::tcp::resolver resolver(m_context->get());
-  auto endpoints = resolver.resolve("127.0.0.1", std::to_string(m_port));
+  auto endpoints = resolver.resolve("127.0.0.1", std::to_string(this->port()));
 
   asio::connect(*out, endpoints.begin(), endpoints.end());
 

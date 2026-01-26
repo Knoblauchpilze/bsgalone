@@ -11,13 +11,13 @@ struct ConnectedSockets
   net::details::SocketShPtr client{};
   net::details::SocketShPtr server{};
 
-  auto readServer(const std::size_t length) -> std::string;
+  auto readServer(const std::size_t length) const -> std::string;
 
-  auto readClient(const std::size_t length) -> std::string;
-  void drainClient(const std::size_t length);
+  auto readClient(const std::size_t length) const -> std::string;
+  void drainClient(const std::size_t length) const;
 
   template<typename T>
-  void writeServer(const T &data);
+  void writeServer(const T &data) const;
 };
 
 } // namespace test

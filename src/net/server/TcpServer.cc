@@ -1,5 +1,7 @@
 
 #include "TcpServer.hh"
+#include "ServerStartedEvent.hh"
+#include "ServerStoppedEvent.hh"
 
 namespace net {
 
@@ -26,9 +28,13 @@ void TcpServer::start(const int port)
     error("Unexpected state for server, did you already call start?");
   }
 
+  info("Starting listening on port " + std::to_string(port));
+
   m_context = std::make_unique<details::AsioContext>();
   m_server  = std::make_shared<details::AsioServer>(*m_context, port, m_eventBus);
   m_server->start();
+
+  m_eventBus->pushEvent(std::make_unique<ServerStartedEvent>());
 }
 
 void TcpServer::stop()
@@ -44,6 +50,8 @@ void TcpServer::stop()
   m_server->shutdown();
   m_server.reset();
   m_context.reset();
+
+  m_eventBus->pushEvent(std::make_unique<ServerStoppedEvent>());
 }
 
 auto TcpServer::trySend(const ClientId clientId, std::vector<char> bytes)

@@ -85,17 +85,31 @@ runserver: copyRelease
 drunserver: copyDebug
 	cd sandbox && ./debug.sh bsgalone_server 2323
 
+# Similar targets as above but for the v2 client and server
+runbsgoclient: copyRelease
+	cd sandbox && ./run.sh game_client 2323 $(username) $(password) $(gamerole)
+
+drunbsgoclient: copyDebug
+	cd sandbox && ./debug.sh game_client 2323
+
+runbsgoserver: copyRelease
+	cd sandbox && ./run.sh game_server 2323
+
+drunbsgoserver: copyDebug
+	cd sandbox && ./debug.sh game_server 2323
+
 PHONY: .tests
 tests: debugWithTests copyDebug
 
 # https://stackoverflow.com/questions/2826029/passing-additional-variables-from-command-line-to-make
 # Use like this:
 # make rununittests test_filters="Unit_Bsgo_Serialization_EntityAddedMessage*"
+# make rununittests test_filters="Unit_Bsgo_Serialization_EntityAddedMessage*" test_repeat=10
 rununittests: tests cleanCoverage
-	cd sandbox && ./tests.sh unitTests $(test_filters)
+	cd sandbox && ./tests.sh unitTests $(test_filters) $(test_repeat)
 
 runintegrationtests: tests cleanCoverage
-	cd sandbox && ./tests.sh integrationTests $(test_filters)
+	cd sandbox && ./tests.sh integrationTests $(test_filters) $(test_repeat)
 
 ci-cpp-build-image:
 	docker build \
