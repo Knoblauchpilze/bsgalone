@@ -8,6 +8,7 @@ namespace net::details {
 enum class ConnectionStatus
 {
   DISCONNECTED,
+  DISCONNECTING,
   CONNECTING,
   CONNECTED
 };

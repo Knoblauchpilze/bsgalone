@@ -96,6 +96,16 @@ auto shutdownSocket(asio::ip::tcp::socket &socket) -> std::error_code
 void AsioClient::disconnect()
 {
   std::unique_lock guard(m_locker);
+  if (m_status == ConnectionStatus::DISCONNECTED)
+  {
+    return;
+  }
+  if (m_status == ConnectionStatus::DISCONNECTING)
+  {
+    error("Got unexpected state to disconnect asio client (" + str(m_status) + ")");
+  }
+  m_status = ConnectionStatus::DISCONNECTING;
+
   if (m_socket)
   {
     const auto code = shutdownSocket(*m_socket);
@@ -106,13 +116,19 @@ void AsioClient::disconnect()
     }
   }
 
-  m_reader.reset();
-  m_writer.reset();
-  m_socket.reset();
-
   // This makes sure that we correctly wait until the socket is disconnected before
   // returning from this method.
   m_notifier.wait(guard, [this] { return m_status == ConnectionStatus::DISCONNECTED; });
+
+  // Destroy the asio objects after we are sure that the socket is closed. This is
+  // required by asio to guarantee that the lifetime of the objects is sufficient
+  // for all callbacks to be executed.
+  // In this case the socket needs to be at least alive until `onConnectionEstablished`
+  // has been called. It is therefore needed to wait until the disconnected state
+  // is reached.
+  m_reader.reset();
+  m_writer.reset();
+  m_socket.reset();
 }
 
 bool AsioClient::isEventRelevant(const EventType & /*type*/) const
@@ -176,8 +192,8 @@ void AsioClient::onConnectionEstablished(const std::error_code &code,
   // This test is necessary because it can happen that the `disconnect` method is called while the
   // client is establishing the connection to the server. In this case, the client will receive an
   // error in the `onConnectionEstablished` callback and before registering the reading task it is
-  // needed to verify that the socket is still a valid object as it's being destroyed in `disconnect`.
-  if (!m_socket)
+  // needed to verify that it still makes sense to do so.
+  if (m_status == ConnectionStatus::DISCONNECTING)
   {
     m_status = ConnectionStatus::DISCONNECTED;
     m_notifier.notify_one();
