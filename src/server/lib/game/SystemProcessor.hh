@@ -48,6 +48,5 @@ class SystemProcessor : public core::CoreObject
 };
 
 using SystemProcessorShPtr = std::shared_ptr<SystemProcessor>;
-using SystemQueueMap       = std::unordered_map<Uuid, IMessageQueueShPtr>;
 
 } // namespace bsgo

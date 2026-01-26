@@ -3,7 +3,7 @@
 
 #include "AbstractMessageConsumer.hh"
 #include "IMessageQueue.hh"
-#include "SystemProcessor.hh"
+#include "SystemQueues.hh"
 #include "SystemService.hh"
 #include <unordered_map>
 

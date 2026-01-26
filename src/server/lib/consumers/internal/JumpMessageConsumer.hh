@@ -4,7 +4,7 @@
 #include "AbstractMessageConsumer.hh"
 #include "ClientManager.hh"
 #include "IMessageQueue.hh"
-#include "SystemProcessor.hh"
+#include "SystemQueues.hh"
 #include "SystemService.hh"
 
 namespace bsgo {

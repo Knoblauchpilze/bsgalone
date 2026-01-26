@@ -9,6 +9,7 @@
 #include "LegacyTcpServer.hh"
 #include "MessageExchanger.hh"
 #include "SystemProcessor.hh"
+#include "SystemQueues.hh"
 #include <atomic>
 #include <condition_variable>
 #include <unordered_map>

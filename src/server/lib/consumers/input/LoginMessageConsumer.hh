@@ -7,7 +7,7 @@
 #include "LoadingHelper.hh"
 #include "LoginMessage.hh"
 #include "LoginService.hh"
-#include "SystemProcessor.hh"
+#include "SystemQueues.hh"
 
 namespace bsgo {
 
