@@ -47,7 +47,7 @@ class Server : public core::CoreObject
   void activeRunLoop();
   void shutdown();
 
-  void onConnectionLost(const net::ConnectionId connectionId);
+  void onConnectionLost(const net::ClientId clientId);
   void onConnectionReady(net::ConnectionShPtr connection);
 };
 

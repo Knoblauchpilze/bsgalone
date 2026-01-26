@@ -32,7 +32,7 @@ class LegacyTcpServer : public core::CoreObject,
   std::optional<DataReceivedHandler> m_connectionDataHandler{};
 
   std::mutex m_connectionsLocker{};
-  std::unordered_map<ConnectionId, ConnectionShPtr> m_connections{};
+  std::unordered_map<ClientId, ConnectionShPtr> m_connections{};
 
   void initializeFromConfig(const ServerConfig &config);
   void registerToAsio();
