@@ -26,7 +26,7 @@ class MessageExchanger
 
   auto getInternalMessageQueue() const -> IMessageQueue *;
   auto getOutputMessageQueue() const -> IMessageQueue *;
-  void registerConnection(const Uuid clientId, net::ConnectionShPtr connection);
+  void registerConnection(net::ConnectionShPtr connection);
 
   void pushMessage(IMessagePtr message);
 

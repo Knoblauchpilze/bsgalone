@@ -15,10 +15,9 @@ NetworkMessageQueue::NetworkMessageQueue(IMessageQueuePtr synchronizedQueue)
 
 void NetworkMessageQueue::registerToConnection(net::Connection &connection)
 {
-  connection.setDataHandler(
-    [this](const net::ConnectionId connectionId, const std::deque<char> &data) {
-      return onDataReceived(connectionId, data);
-    });
+  connection.setDataHandler([this](const net::ClientId clientId, const std::deque<char> &data) {
+    return onDataReceived(clientId, data);
+  });
 }
 
 void NetworkMessageQueue::pushMessage(IMessagePtr message)
@@ -41,7 +40,7 @@ void NetworkMessageQueue::processMessages(const std::optional<int> &amount)
   m_synchronizedQueue->processMessages(amount);
 }
 
-auto NetworkMessageQueue::onDataReceived(const net::ConnectionId /*connectionId*/,
+auto NetworkMessageQueue::onDataReceived(const net::ClientId /*clientId*/,
                                          const std::deque<char> &data) -> int
 {
   bool processedSomeBytes{true};

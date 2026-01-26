@@ -3,7 +3,7 @@
 #include "AsioUtils.hh"
 
 namespace net {
-std::atomic<ConnectionId> Connection::NEXT_ID{0};
+std::atomic<ClientId> Connection::NEXT_ID{0};
 // Maximum amount of bytes that can be read at once.
 constexpr auto KILOBYTES                                     = 1'024;
 constexpr auto INCOMING_SERVER_DATA_MAX_BUFFER_SIZE_IN_BYTES = 10 * KILOBYTES;
@@ -43,7 +43,7 @@ auto Connection::str() const -> std::string
   return std::format("{}-{}-{}-{}", std::to_string(m_id), client, net::str(m_type), status);
 }
 
-auto Connection::id() const -> ConnectionId
+auto Connection::id() const -> ClientId
 {
   return m_id;
 }

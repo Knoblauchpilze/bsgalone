@@ -27,7 +27,7 @@ class NetworkMessageQueue : public IMessageQueue, public core::CoreObject
   private:
   IMessageQueuePtr m_synchronizedQueue{};
 
-  auto onDataReceived(const net::ConnectionId connectionId, const std::deque<char> &data) -> int;
+  auto onDataReceived(const net::ClientId clientId, const std::deque<char> &data) -> int;
   void feedMessagesToQueue(std::vector<IMessagePtr> &&messages);
 };
 
