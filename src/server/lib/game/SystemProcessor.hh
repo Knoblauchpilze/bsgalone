@@ -20,11 +20,10 @@ namespace bsgo {
 class SystemProcessor : public core::CoreObject
 {
   public:
-  SystemProcessor(const Uuid systemDbId);
+  SystemProcessor(const Uuid systemDbId, IMessageQueueShPtr inputQueue);
   ~SystemProcessor() override;
 
   auto getSystemDbId() const -> Uuid;
-  void pushMessage(IMessagePtr message);
 
   void connectToQueues(IMessageQueue *const internalMessageQueue,
                        IMessageQueue *const outputMessageQueue);
@@ -33,7 +32,7 @@ class SystemProcessor : public core::CoreObject
 
   private:
   Uuid m_systemDbId{};
-  IMessageQueuePtr m_inputMessagesQueue{};
+  IMessageQueueShPtr m_inputMessagesQueue{};
   DatabaseEntityMapper m_entityMapper{};
 
   chrono::TimeManagerPtr m_timeManager{};
@@ -49,6 +48,6 @@ class SystemProcessor : public core::CoreObject
 };
 
 using SystemProcessorShPtr = std::shared_ptr<SystemProcessor>;
-using SystemProcessorMap   = std::unordered_map<Uuid, SystemProcessorShPtr>;
+using SystemQueueMap       = std::unordered_map<Uuid, IMessageQueueShPtr>;
 
 } // namespace bsgo

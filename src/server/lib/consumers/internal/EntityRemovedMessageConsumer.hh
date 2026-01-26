@@ -21,7 +21,7 @@ class EntityRemovedMessageConsumer : public AbstractMessageConsumer
 {
   public:
   EntityRemovedMessageConsumer(SystemServiceShPtr systemService,
-                               SystemProcessorMap systemProcessors,
+                               SystemQueueMap systemQueues,
                                IMessageQueue *const outputMessageQueue);
   ~EntityRemovedMessageConsumer() override = default;
 
@@ -29,7 +29,7 @@ class EntityRemovedMessageConsumer : public AbstractMessageConsumer
 
   private:
   SystemServiceShPtr m_systemService{};
-  SystemProcessorMap m_systemProcessors{};
+  SystemQueueMap m_systemQueues{};
   IMessageQueue *const m_outputMessageQueue{};
 
   void handleShipEntityRemoved(const Uuid shipDbId, const bool dead) const;
