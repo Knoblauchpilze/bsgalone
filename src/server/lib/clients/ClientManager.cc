@@ -13,13 +13,13 @@ void ClientManager::registerClient(const net::ClientId clientId)
 {
   const std::lock_guard guard(m_locker);
 
-  const ClientData data{.clientId = clientId};
-  m_clients.emplace(data.clientId, data);
+  const ClientData data{};
+  m_clients.emplace(clientId, data);
 
   info("Registered client " + net::str(clientId));
 }
 
-void ClientManager::registerPlayer(const Uuid clientId,
+void ClientManager::registerPlayer(const net::ClientId clientId,
                                    const Uuid playerDbId,
                                    const Uuid playerSystemDbId)
 {
@@ -34,7 +34,7 @@ void ClientManager::registerPlayer(const Uuid clientId,
   auto &clientData            = maybeClientData->second;
   clientData.playerDbId       = playerDbId;
   clientData.playerSystemDbId = playerSystemDbId;
-  m_playerToClient.emplace(playerDbId, clientData.clientId);
+  m_playerToClient.emplace(playerDbId, clientId);
 
   info("Registered player " + str(playerDbId) + " in system " + str(playerSystemDbId));
 }
@@ -67,12 +67,10 @@ void ClientManager::removePlayerConnection(const Uuid playerDbId)
     error("Failed to unregister connection for player " + str(playerDbId));
   }
 
-  const auto clientData = m_clients.at(maybeClientId->second);
-
+  m_clients.erase(maybeClientId->second);
   m_playerToClient.erase(maybeClientId);
-  m_clients.erase(clientData.clientId);
 
-  info("Removed client " + net::str(clientData.clientId) + " for player " + str(playerDbId));
+  info("Removed client " + net::str(maybeClientId->second) + " for player " + str(playerDbId));
 }
 
 void ClientManager::removeClient(const net::ClientId clientId)

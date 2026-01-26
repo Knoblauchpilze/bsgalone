@@ -20,7 +20,9 @@ class ClientManager : public core::CoreObject
 
   // TODO: Maybe we should still return a client identifier as a Uuid to hide the net::ClientId?
   void registerClient(const net::ClientId clientId);
-  void registerPlayer(const Uuid clientId, const Uuid playerDbId, const Uuid playerSystemDbId);
+  void registerPlayer(const net::ClientId clientId,
+                      const Uuid playerDbId,
+                      const Uuid playerSystemDbId);
   void removePlayer(const Uuid playerDbId);
   void removePlayerConnection(const Uuid playerDbId);
   void removeClient(const net::ClientId clientId);
@@ -37,7 +39,6 @@ class ClientManager : public core::CoreObject
   private:
   struct ClientData
   {
-    net::ClientId clientId{};
     std::optional<Uuid> playerDbId{};
     std::optional<Uuid> playerSystemDbId{};
   };

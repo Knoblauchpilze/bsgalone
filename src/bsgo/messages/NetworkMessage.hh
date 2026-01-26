@@ -12,6 +12,7 @@ class NetworkMessage : public AbstractMessage
   NetworkMessage(const MessageType &type);
   ~NetworkMessage() override = default;
 
+  // TODO: This should be changed to a net::ClientId
   void setClientId(const Uuid clientId);
 
   auto getClientId() const -> Uuid;

@@ -112,6 +112,8 @@ TEST_F(Integration_Net_Server_AsioServer, PublishesDataReceivedEventWhenDataIsRe
   EXPECT_EQ(expectedClientId, event->as<DataReceivedEvent>().clientId());
   const std::vector<char> expectedData(data.begin(), data.end());
   EXPECT_EQ(expectedData, event->as<DataReceivedEvent>().data());
+
+  server->shutdown();
 }
 
 TEST_F(Integration_Net_Server_AsioServer, PublishesClientDisconnectedEventWhenClientSocketAreDeleted)
