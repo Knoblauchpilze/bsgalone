@@ -3,24 +3,6 @@
 
 namespace bsgo {
 
-auto convertToSystemProcessorMap(const std::vector<SystemProcessorShPtr> &systemProcessors)
-  -> SystemProcessorMap
-{
-  SystemProcessorMap out{};
-
-  for (const auto &system : systemProcessors)
-  {
-    const auto res = out.try_emplace(system->getSystemDbId(), system);
-    if (!res.second)
-    {
-      throw std::invalid_argument("Failed to register duplicated system "
-                                  + str(system->getSystemDbId()));
-    }
-  }
-
-  return out;
-}
-
 auto tryFindSystemDbIdFromEntity(const Uuid dbId,
                                  const EntityKind entityKind,
                                  const SystemService &service) -> std::optional<Uuid>
@@ -40,44 +22,44 @@ auto tryFindSystemDbIdFromEntity(const Uuid dbId,
 }
 
 namespace {
-auto findSystemProcessorFromSystem(const Uuid systemDbId, const SystemProcessorMap &processors)
-  -> std::optional<SystemProcessorShPtr>
+auto findSystemQueueFromSystem(const Uuid systemDbId, const SystemQueueMap &queues)
+  -> std::optional<IMessageQueueShPtr>
 {
-  const auto processor = processors.find(systemDbId);
-  if (processor != processors.cend())
+  const auto queue = queues.find(systemDbId);
+  if (queue != queues.cend())
   {
-    return processor->second;
+    return queue->second;
   }
 
   return {};
 }
 } // namespace
 
-auto tryFindSystemAndProcessorFromShip(const Uuid shipDbId,
-                                       const SystemService &service,
-                                       const SystemProcessorMap &processors)
-  -> std::pair<std::optional<Uuid>, std::optional<SystemProcessorShPtr>>
+auto tryFindSystemAndQueueFromShip(const Uuid shipDbId,
+                                   const SystemService &service,
+                                   const SystemQueueMap &queues)
+  -> std::pair<std::optional<Uuid>, std::optional<IMessageQueueShPtr>>
 {
-  std::pair<std::optional<Uuid>, std::optional<SystemProcessorShPtr>> out{};
+  std::pair<std::optional<Uuid>, std::optional<IMessageQueueShPtr>> out{};
 
   out.first = service.tryGetSystemDbIdForShip(shipDbId);
   if (out.first)
   {
-    out.second = findSystemProcessorFromSystem(*out.first, processors);
+    out.second = findSystemQueueFromSystem(*out.first, queues);
   }
 
   return out;
 }
 
-auto tryFindSystemAndProcessorFromAsteroid(const Uuid asteroidDbId,
-                                           const SystemService &service,
-                                           const SystemProcessorMap &processors)
-  -> std::pair<std::optional<Uuid>, std::optional<SystemProcessorShPtr>>
+auto tryFindSystemAndQueueFromAsteroid(const Uuid asteroidDbId,
+                                       const SystemService &service,
+                                       const SystemQueueMap &queues)
+  -> std::pair<std::optional<Uuid>, std::optional<IMessageQueueShPtr>>
 {
-  std::pair<std::optional<Uuid>, std::optional<SystemProcessorShPtr>> out{};
+  std::pair<std::optional<Uuid>, std::optional<IMessageQueueShPtr>> out{};
 
   out.first  = service.getSystemDbIdForAsteroid(asteroidDbId);
-  out.second = findSystemProcessorFromSystem(*out.first, processors);
+  out.second = findSystemQueueFromSystem(*out.first, queues);
 
   return out;
 }

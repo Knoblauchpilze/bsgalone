@@ -4,7 +4,7 @@
 #include "AbstractMessageConsumer.hh"
 #include "ClientManager.hh"
 #include "IMessageQueue.hh"
-#include "SystemProcessor.hh"
+#include "SystemQueues.hh"
 #include <unordered_map>
 
 namespace bsgo {
@@ -13,7 +13,7 @@ class TriageMessageConsumer : public AbstractMessageConsumer
 {
   public:
   TriageMessageConsumer(ClientManagerShPtr clientManager,
-                        SystemProcessorMap systemProcessors,
+                        SystemQueueMap systemQueues,
                         IMessageQueuePtr systemMessageQueue);
   ~TriageMessageConsumer() override = default;
 
@@ -21,7 +21,7 @@ class TriageMessageConsumer : public AbstractMessageConsumer
 
   private:
   ClientManagerShPtr m_clientManager{};
-  SystemProcessorMap m_systemProcessors{};
+  SystemQueueMap m_systemQueues{};
   IMessageQueuePtr m_systemQueue{};
 
   bool discardMessageWithNoClient(const IMessage &message) const;

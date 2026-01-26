@@ -7,7 +7,7 @@
 #include "LoadingHelper.hh"
 #include "LoginMessage.hh"
 #include "LoginService.hh"
-#include "SystemProcessor.hh"
+#include "SystemQueues.hh"
 
 namespace bsgo {
 
@@ -16,7 +16,7 @@ class LoginMessageConsumer : public AbstractMessageConsumer
   public:
   LoginMessageConsumer(LoginServicePtr loginService,
                        ClientManagerShPtr clientManager,
-                       SystemProcessorMap systemProcessors,
+                       SystemQueueMap systemQueues,
                        IMessageQueue *const outputMessageQueue);
   ~LoginMessageConsumer() override = default;
 

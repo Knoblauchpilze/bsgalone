@@ -4,7 +4,7 @@
 #include "AbstractMessageConsumer.hh"
 #include "ClientManager.hh"
 #include "IMessageQueue.hh"
-#include "SystemProcessor.hh"
+#include "SystemQueues.hh"
 #include "SystemService.hh"
 
 namespace bsgo {
@@ -14,7 +14,7 @@ class JumpMessageConsumer : public AbstractMessageConsumer
   public:
   JumpMessageConsumer(SystemServiceShPtr systemService,
                       ClientManagerShPtr clientManager,
-                      SystemProcessorMap systemProcessors,
+                      SystemQueueMap systemQueues,
                       IMessageQueue *const outputMessageQueue);
   ~JumpMessageConsumer() override = default;
 
@@ -23,7 +23,7 @@ class JumpMessageConsumer : public AbstractMessageConsumer
   private:
   SystemServiceShPtr m_systemService{};
   ClientManagerShPtr m_clientManager{};
-  SystemProcessorMap m_systemProcessors{};
+  SystemQueueMap m_systemQueues{};
   IMessageQueue *const m_outputMessageQueue{};
 
   void handlePostJumpSystemMessages(const Uuid shipDbId,

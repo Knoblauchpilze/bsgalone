@@ -6,11 +6,11 @@ namespace bsgo {
 
 LogoutMessageConsumer::LogoutMessageConsumer(ClientManagerShPtr clientManager,
                                              SystemServiceShPtr systemService,
-                                             SystemProcessorMap systemProcessors,
+                                             SystemQueueMap systemQueues,
                                              IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("logout", {MessageType::LOGOUT})
   , m_clientManager(std::move(clientManager))
-  , m_systemProcessors(std::move(systemProcessors))
+  , m_systemQueues(std::move(systemQueues))
   , m_systemService(std::move(systemService))
   , m_outputMessageQueue(outputMessageQueue)
 {
@@ -49,8 +49,8 @@ void LogoutMessageConsumer::handleLogout(const LogoutMessage &message) const
     error("Failed to process logout message for " + str(playerDbId), "No associated system");
   }
 
-  const auto maybeProcessor = m_systemProcessors.find(*maybeSystemDbId);
-  if (maybeProcessor == m_systemProcessors.cend())
+  const auto maybeQueue = m_systemQueues.find(*maybeSystemDbId);
+  if (maybeQueue == m_systemQueues.cend())
   {
     error("Failed to process logout message for " + str(playerDbId),
           "Unknown system " + str(*maybeSystemDbId));
@@ -64,7 +64,7 @@ void LogoutMessageConsumer::handleLogout(const LogoutMessage &message) const
                                                           EntityKind::SHIP,
                                                           false,
                                                           *maybeSystemDbId);
-    maybeProcessor->second->pushMessage(std::move(removed));
+    maybeQueue->second->pushMessage(std::move(removed));
   }
 
   notifyClientAndCloseConnectionIfNeeded(playerDbId, message);

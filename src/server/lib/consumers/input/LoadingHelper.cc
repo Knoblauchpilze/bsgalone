@@ -6,12 +6,12 @@
 namespace bsgo {
 
 LoadingHelper::LoadingHelper(ClientManagerShPtr clientManager,
-                             SystemProcessorMap systemProcessors,
+                             SystemQueueMap systemQueues,
                              IMessageQueue *const outputMessageQueue)
   : core::CoreObject("helper")
 
   , m_clientManager(std::move(clientManager))
-  , m_systemProcessors(std::move(systemProcessors))
+  , m_systemQueues(std::move(systemQueues))
   , m_outputMessageQueue(outputMessageQueue)
 {
   setService("loading");
@@ -34,8 +34,8 @@ void LoadingHelper::publishLoadingMessages(const Uuid clientId, const Uuid playe
     error("Failed to process login message for " + str(playerDbId), "No associated system");
   }
 
-  const auto maybeProcessor = m_systemProcessors.find(*maybeSystemDbId);
-  if (maybeProcessor == m_systemProcessors.cend())
+  const auto maybeQueue = m_systemQueues.find(*maybeSystemDbId);
+  if (maybeQueue == m_systemQueues.cend())
   {
     error("Failed to process login message for " + str(playerDbId),
           "Unknown system " + str(*maybeSystemDbId));
@@ -44,12 +44,12 @@ void LoadingHelper::publishLoadingMessages(const Uuid clientId, const Uuid playe
   auto started = std::make_unique<LoadingStartedMessage>(LoadingTransition::LOGIN, playerDbId);
   started->setSystemDbId(*maybeSystemDbId);
   started->setClientId(clientId);
-  maybeProcessor->second->pushMessage(std::move(started));
+  maybeQueue->second->pushMessage(std::move(started));
 
   auto finished = std::make_unique<LoadingFinishedMessage>(LoadingTransition::LOGIN, playerDbId);
   finished->setSystemDbId(*maybeSystemDbId);
   finished->setClientId(clientId);
-  maybeProcessor->second->pushMessage(std::move(finished));
+  maybeQueue->second->pushMessage(std::move(finished));
 }
 
 } // namespace bsgo
