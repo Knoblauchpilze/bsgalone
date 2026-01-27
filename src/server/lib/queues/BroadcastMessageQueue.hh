@@ -4,6 +4,7 @@
 #include "ClientManager.hh"
 #include "CoreObject.hh"
 #include "IMessageQueue.hh"
+#include "INetworkServer.hh"
 #include "Uuid.hh"
 #include <deque>
 #include <memory>
@@ -16,7 +17,9 @@ namespace bsgo {
 class BroadcastMessageQueue : public IMessageQueue, public core::CoreObject
 {
   public:
-  BroadcastMessageQueue(ClientManagerShPtr clientManager);
+  // TODO: The server could probably be some sort of wrapper. Maybe it could even be directly
+  // in the client manager.
+  BroadcastMessageQueue(ClientManagerShPtr clientManager, net::INetworkServerShPtr server);
   ~BroadcastMessageQueue() override = default;
 
   void pushMessage(IMessagePtr message) override;
@@ -29,10 +32,11 @@ class BroadcastMessageQueue : public IMessageQueue, public core::CoreObject
   std::mutex m_locker{};
   std::deque<IMessagePtr> m_messages{};
   ClientManagerShPtr m_clientManager{};
+  net::INetworkServerShPtr m_server{};
 
   void processMessage(const IMessage &message);
 
-  void sendMessageToClient(const Uuid clientId, const IMessage &message);
+  void sendMessageToClient(const net::ClientId clientId, const IMessage &message);
   void broadcastMessage(const IMessage &message);
 
   auto tryDetermineClientId(const IMessage &message) const -> std::optional<Uuid>;

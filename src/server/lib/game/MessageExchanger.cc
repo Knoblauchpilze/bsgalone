@@ -3,7 +3,6 @@
 #include "AiBehaviorSyncMessageConsumer.hh"
 #include "AsyncMessageQueue.hh"
 #include "BroadcastMessageQueue.hh"
-#include "ConnectionMessage.hh"
 #include "EntityRemovedMessageConsumer.hh"
 #include "JoinShipMessageConsumer.hh"
 #include "JumpMessageConsumer.hh"
@@ -23,6 +22,11 @@ MessageExchanger::MessageExchanger(const MessageSystemData &messagesData)
   initialize(messagesData);
 }
 
+auto MessageExchanger::getInputMessageQueue() const -> IMessageQueueShPtr
+{
+  return m_inputMessageQueue;
+}
+
 auto MessageExchanger::getInternalMessageQueue() const -> IMessageQueue *
 {
   return m_internalMessageQueue.get();
@@ -33,27 +37,11 @@ auto MessageExchanger::getOutputMessageQueue() const -> IMessageQueue *
   return m_outputMessageQueue.get();
 }
 
-void MessageExchanger::registerConnection(net::ConnectionShPtr connection)
-{
-  m_inputMessageQueue->registerToConnection(*connection);
-
-  auto message = std::make_unique<ConnectionMessage>(connection->id());
-  message->validate();
-  m_outputMessageQueue->pushMessage(std::move(message));
-}
-
-void MessageExchanger::pushMessage(IMessagePtr message)
-{
-  m_inputMessageQueue->pushMessage(std::move(message));
-}
-
 namespace {
-auto createInputMessageQueue() -> NetworkMessageQueuePtr
+auto createInputMessageQueue() -> IMessageQueueShPtr
 {
   auto messageQueue = std::make_unique<SynchronizedMessageQueue>("synchronized-queue-for-input");
-  auto asyncQueue   = std::make_unique<AsyncMessageQueue>(std::move(messageQueue));
-
-  return std::make_unique<NetworkMessageQueue>(std::move(asyncQueue));
+  return std::make_shared<AsyncMessageQueue>(std::move(messageQueue));
 }
 
 auto createInternalMessageQueue() -> IMessageQueuePtr
@@ -62,17 +50,19 @@ auto createInternalMessageQueue() -> IMessageQueuePtr
   return std::make_unique<AsyncMessageQueue>(std::move(messageQueue));
 }
 
-auto createOutputMessageQueue(ClientManagerShPtr clientManager) -> IMessageQueuePtr
+auto createOutputMessageQueue(ClientManagerShPtr clientManager, net::INetworkServerShPtr server)
+  -> IMessageQueuePtr
 {
-  auto broadcastQueue = std::make_unique<BroadcastMessageQueue>(std::move(clientManager));
+  auto broadcastQueue = std::make_unique<BroadcastMessageQueue>(std::move(clientManager),
+                                                                std::move(server));
   return std::make_unique<AsyncMessageQueue>(std::move(broadcastQueue));
 }
 } // namespace
 
 void MessageExchanger::initialize(const MessageSystemData &messagesData)
 {
-  m_inputMessageQueue     = createInputMessageQueue();
-  m_outputMessageQueue    = createOutputMessageQueue(messagesData.clientManager);
+  m_inputMessageQueue  = createInputMessageQueue();
+  m_outputMessageQueue = createOutputMessageQueue(messagesData.clientManager, messagesData.server);
   auto systemMessageQueue = initializeSystemMessageQueue(messagesData);
   m_internalMessageQueue  = createInternalMessageQueue();
   initializeInternalConsumers(messagesData);
