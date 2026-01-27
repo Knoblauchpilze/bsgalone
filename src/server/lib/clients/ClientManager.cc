@@ -2,6 +2,7 @@
 #include "ClientManager.hh"
 
 namespace bsgo {
+
 ClientManager::ClientManager()
   : core::CoreObject("manager")
 {
