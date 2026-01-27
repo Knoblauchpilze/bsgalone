@@ -137,7 +137,8 @@ void Server::initializeMessageSystem()
                                .systemQueues  = m_inputQueues};
   m_messageExchanger = std::make_unique<MessageExchanger>(data);
 
-  auto adapter = std::make_unique<NetworkAdapter>(m_messageExchanger->getInputMessageQueue());
+  auto adapter = std::make_unique<bsgalone::core::NetworkAdapter>(
+    m_messageExchanger->getInputMessageQueue());
   m_eventBus->addListener(std::move(adapter));
   m_eventBus->addListener(
     std::make_unique<ClientManagerProxy>(m_clientManager,

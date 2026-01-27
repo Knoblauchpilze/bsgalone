@@ -388,7 +388,7 @@ void Game::initialize(const int serverPort)
   m_inputMessageQueue = std::make_shared<bsgo::SynchronizedMessageQueue>(
     "synchronized-message-queue-for-input");
 
-  auto adapter = std::make_unique<bsgo::NetworkAdapter>(m_inputMessageQueue);
+  auto adapter = std::make_unique<bsgalone::core::NetworkAdapter>(m_inputMessageQueue);
   m_eventBus->addListener(std::move(adapter));
 
   // Not strictly necessary as the internal messages should only be produced
