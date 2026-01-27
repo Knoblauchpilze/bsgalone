@@ -2,6 +2,10 @@
 add_executable (unitTests)
 
 add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/bsgalone
+	)
+
+add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/bsgo
 	)
 
@@ -47,4 +51,5 @@ target_link_libraries (unitTests
 	time_lib
 	client_lib
 	server_lib
+	game_core_lib
 	)
