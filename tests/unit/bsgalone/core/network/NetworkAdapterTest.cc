@@ -1,5 +1,6 @@
 
 #include "NetworkAdapter.hh"
+
 #include "DataReceivedEvent.hh"
 #include "ScannedMessage.hh"
 #include <gtest/gtest.h>
@@ -157,7 +158,8 @@ TEST(Unit_Bsgalone_Core_Network_ClientManager, DoesNotPublishMessageWhenDataRece
   adapter.onEventReceived(event);
   EXPECT_TRUE(queue->empty());
 
-  event = net::DataReceivedEvent(net::ClientId{1}, std::vector<char>(data.begin() + 5, data.end()));
+  event = net::DataReceivedEvent(net::ClientId{1},
+                                 std::vector<char>(data.begin(), data.begin() + 5));
   adapter.onEventReceived(event);
 
   EXPECT_TRUE(queue->empty());
@@ -188,6 +190,19 @@ TEST(Unit_Bsgalone_Core_Network_ClientManager, OnlyPublishMessageForReceivedData
   EXPECT_EQ(bsgo::MessageType::SCANNED, message->type());
   EXPECT_EQ(bsgo::Uuid{2}, message->as<bsgo::ScannedMessage>().getPlayerDbId());
   EXPECT_EQ(bsgo::Uuid{4}, message->as<bsgo::ScannedMessage>().getAsteroidDbId());
+}
+
+TEST(Unit_Bsgalone_Core_Network_ClientManager, ThrowsWhenReceivingInvalidData)
+{
+  auto queue = std::make_shared<TestMessageQueue>();
+  NetworkAdapter adapter(queue);
+
+  const auto data = generateCompleteScannedMessage();
+  ASSERT_LE(6, data.size());
+  net::DataReceivedEvent event(net::ClientId{0}, std::vector<char>(data.begin() + 5, data.end()));
+
+  auto body = [&adapter, &event]() { adapter.onEventReceived(event); };
+  EXPECT_THROW(body(), ::core::CoreException);
 }
 
 } // namespace bsgalone::core
