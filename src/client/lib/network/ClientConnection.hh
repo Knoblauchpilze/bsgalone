@@ -18,7 +18,7 @@ class ClientConnection : public core::CoreObject
   void setDataHandler(const net::DataReceivedHandler &handler);
 
   void sendMessage(const bsgo::IMessage &message);
-  auto createInputMessageQueue() -> bsgo::IMessageQueuePtr;
+  auto createInputMessageQueue() -> bsgo::IMessageQueueShPtr;
 
   private:
   net::ConnectionShPtr m_connection{};
