@@ -145,4 +145,49 @@ TEST(Unit_Bsgalone_Core_Network_ClientManager, DoesNotPublishMessageTwice)
   EXPECT_TRUE(queue->empty());
 }
 
+TEST(Unit_Bsgalone_Core_Network_ClientManager, DoesNotPublishMessageWhenDataReceivedForAnotherClient)
+{
+  auto queue = std::make_shared<TestMessageQueue>();
+  NetworkAdapter adapter(queue);
+
+  const auto data = generateCompleteScannedMessage();
+  ASSERT_LE(6, data.size());
+  net::DataReceivedEvent event(net::ClientId{0}, std::vector<char>(data.begin(), data.begin() + 5));
+
+  adapter.onEventReceived(event);
+  EXPECT_TRUE(queue->empty());
+
+  event = net::DataReceivedEvent(net::ClientId{1}, std::vector<char>(data.begin() + 5, data.end()));
+  adapter.onEventReceived(event);
+
+  EXPECT_TRUE(queue->empty());
+}
+
+TEST(Unit_Bsgalone_Core_Network_ClientManager, OnlyPublishMessageForReceivedData)
+{
+  auto queue = std::make_shared<TestMessageQueue>();
+  NetworkAdapter adapter(queue);
+
+  const auto data = generateCompleteScannedMessage();
+  ASSERT_LE(6, data.size());
+
+  net::DataReceivedEvent event(net::ClientId{0}, std::vector<char>(data.begin(), data.begin() + 5));
+  adapter.onEventReceived(event);
+  EXPECT_TRUE(queue->empty());
+
+  event = net::DataReceivedEvent(net::ClientId{1},
+                                 std::vector<char>(data.begin(), data.begin() + 5));
+  adapter.onEventReceived(event);
+  EXPECT_TRUE(queue->empty());
+
+  event = net::DataReceivedEvent(net::ClientId{0}, std::vector<char>(data.begin() + 5, data.end()));
+  adapter.onEventReceived(event);
+
+  EXPECT_EQ(1u, queue->messages().size());
+  const auto &message = queue->messages().at(0);
+  EXPECT_EQ(bsgo::MessageType::SCANNED, message->type());
+  EXPECT_EQ(bsgo::Uuid{2}, message->as<bsgo::ScannedMessage>().getPlayerDbId());
+  EXPECT_EQ(bsgo::Uuid{4}, message->as<bsgo::ScannedMessage>().getAsteroidDbId());
+}
+
 } // namespace bsgalone::core
