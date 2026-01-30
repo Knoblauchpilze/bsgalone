@@ -1,23 +1,13 @@
 
 
 #include "Server.hh"
-#include "AsyncEventBus.hh"
-#include "ClientConnectedEvent.hh"
-#include "ClientDisconnectedEvent.hh"
-#include "ConnectionMessage.hh"
-#include "IEventListener.hh"
-#include "LogoutMessage.hh"
-#include "NetworkAdapter.hh"
-#include "SynchronizedEventBus.hh"
 #include "SystemProcessorUtils.hh"
-#include "TcpServer.hh"
 
 namespace bsgo {
 
 Server::Server()
   : core::CoreObject("server")
-  , m_eventBus(std::make_shared<net::AsyncEventBus>(std::make_unique<net::SynchronizedEventBus>()))
-  , m_tcpServer(std::make_shared<net::TcpServer>(m_eventBus))
+  , m_networkClient(std::make_shared<ServerNetworkClient>())
 {
   setService("server");
   initialize();
@@ -64,98 +54,24 @@ void Server::initializeSystems()
   }
 }
 
-namespace {
-class ClientManagerProxy : public net::IEventListener
-{
-  public:
-  ClientManagerProxy(ClientManagerShPtr manager,
-                     IMessageQueueShPtr inputQueue,
-                     IMessageQueue *outputQueue)
-    : m_manager(std::move(manager))
-    , m_inputQueue(std::move(inputQueue))
-    , m_outputQueue(outputQueue)
-  {}
-
-  ~ClientManagerProxy() override = default;
-
-  bool isEventRelevant(const net::EventType &type) const override
-  {
-    return type == net::EventType::CLIENT_CONNECTED || type == net::EventType::CLIENT_DISCONNECTED;
-  }
-
-  void onEventReceived(const net::IEvent &event) override
-  {
-    switch (event.type())
-    {
-      case net::EventType::CLIENT_CONNECTED:
-        handleClientConnected(event.as<net::ClientConnectedEvent>());
-        break;
-      case net::EventType::CLIENT_DISCONNECTED:
-        handleClientDisconnected(event.as<net::ClientDisconnectedEvent>());
-        break;
-      default:
-        throw std::invalid_argument("Unsupported event type " + net::str(event.type()));
-    }
-  }
-
-  private:
-  ClientManagerShPtr m_manager{};
-  IMessageQueueShPtr m_inputQueue{};
-  IMessageQueue *m_outputQueue{};
-
-  void handleClientConnected(const net::ClientConnectedEvent &event)
-  {
-    m_manager->registerClient(event.clientId());
-
-    auto message = std::make_unique<ConnectionMessage>(event.clientId());
-    message->validate();
-    m_outputQueue->pushMessage(std::move(message));
-  }
-
-  void handleClientDisconnected(const net::ClientDisconnectedEvent &event)
-  {
-    const auto maybePlayerId = m_manager->tryGetPlayerForClient(event.clientId());
-
-    m_manager->removeClient(event.clientId());
-
-    if (!maybePlayerId)
-    {
-      return;
-    }
-
-    auto message = std::make_unique<LogoutMessage>(*maybePlayerId, true);
-    message->setClientId(event.clientId());
-    m_inputQueue->pushMessage(std::move(message));
-  }
-};
-} // namespace
-
 void Server::initializeMessageSystem()
 {
   const MessageSystemData data{.clientManager = m_clientManager,
-                               .server        = m_tcpServer,
+                               .networkClient = m_networkClient,
                                .systemQueues  = m_inputQueues};
   m_messageExchanger = std::make_unique<MessageExchanger>(data);
-
-  auto adapter = std::make_unique<bsgalone::core::NetworkAdapter>(
-    m_messageExchanger->getInputMessageQueue());
-  m_eventBus->addListener(std::move(adapter));
-  m_eventBus->addListener(
-    std::make_unique<ClientManagerProxy>(m_clientManager,
-                                         m_messageExchanger->getInputMessageQueue(),
-                                         m_messageExchanger->getOutputMessageQueue()));
 
   for (const auto &systemProcessor : m_systemProcessors)
   {
     systemProcessor->connectToQueues(m_messageExchanger->getInternalMessageQueue(),
-                                     m_messageExchanger->getOutputMessageQueue());
+                                     m_networkClient.get());
   }
 }
 
 void Server::setup(const int port)
 {
   info("Starting listening on port " + std::to_string(port));
-  m_tcpServer->start(port);
+  m_networkClient->start(port);
 }
 
 void Server::activeRunLoop()
@@ -184,7 +100,7 @@ void Server::activeRunLoop()
 
 void Server::shutdown()
 {
-  m_tcpServer->stop();
+  m_networkClient->stop();
 }
 
 } // namespace bsgo

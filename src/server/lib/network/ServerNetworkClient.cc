@@ -15,10 +15,10 @@
 #include "SynchronizedMessageQueue.hh"
 #include "TcpServer.hh"
 
-namespace pge {
+namespace bsgo {
 
 ServerNetworkClient::ServerNetworkClient()
-  : m_clientManager(std::make_shared<bsgo::ClientManager>())
+  : m_clientManager(std::make_shared<ClientManager>())
 {}
 
 void ServerNetworkClient::start(const int port)
@@ -40,7 +40,7 @@ void ServerNetworkClient::stop()
   m_outputQueue.reset();
 }
 
-void ServerNetworkClient::pushMessage(bsgo::IMessagePtr message)
+void ServerNetworkClient::pushMessage(IMessagePtr message)
 {
   if (!m_started.load())
   {
@@ -50,7 +50,7 @@ void ServerNetworkClient::pushMessage(bsgo::IMessagePtr message)
   m_outputQueue->pushMessage(std::move(message));
 }
 
-void ServerNetworkClient::addListener(bsgo::IMessageListenerPtr listener)
+void ServerNetworkClient::addListener(IMessageListenerPtr listener)
 {
   m_inputQueue->addListener(std::move(listener));
 }
@@ -112,9 +112,9 @@ class ServerEventListener : public net::IEventListener
 class ClientEventListener : public net::IEventListener
 {
   public:
-  ClientEventListener(bsgo::ClientManagerShPtr clientManager,
-                      bsgo::IMessageQueueShPtr inputQueue,
-                      bsgo::IMessageQueueShPtr outputQueue)
+  ClientEventListener(ClientManagerShPtr clientManager,
+                      IMessageQueueShPtr inputQueue,
+                      IMessageQueueShPtr outputQueue)
     : m_manager(std::move(clientManager))
     , m_inputQueue(std::move(inputQueue))
     , m_outputQueue(std::move(outputQueue))
@@ -143,15 +143,15 @@ class ClientEventListener : public net::IEventListener
   }
 
   private:
-  bsgo::ClientManagerShPtr m_manager{};
-  bsgo::IMessageQueueShPtr m_inputQueue{};
-  bsgo::IMessageQueueShPtr m_outputQueue{};
+  ClientManagerShPtr m_manager{};
+  IMessageQueueShPtr m_inputQueue{};
+  IMessageQueueShPtr m_outputQueue{};
 
   void handleClientConnected(const net::ClientConnectedEvent &event)
   {
     m_manager->registerClient(event.clientId());
 
-    auto message = std::make_unique<bsgo::ConnectionMessage>(event.clientId());
+    auto message = std::make_unique<ConnectionMessage>(event.clientId());
     message->validate();
     m_outputQueue->pushMessage(std::move(message));
   }
@@ -167,7 +167,7 @@ class ClientEventListener : public net::IEventListener
       return;
     }
 
-    auto message = std::make_unique<bsgo::LogoutMessage>(*maybePlayerId, true);
+    auto message = std::make_unique<LogoutMessage>(*maybePlayerId, true);
     message->setClientId(event.clientId());
     m_inputQueue->pushMessage(std::move(message));
   }
@@ -179,14 +179,14 @@ void ServerNetworkClient::initialize()
   auto eventListener = std::make_unique<ServerEventListener>(m_started);
   m_eventBus->addListener(std::move(eventListener));
 
-  auto syncQueue = std::make_unique<bsgo::SynchronizedMessageQueue>("synchronized-queue-for-input");
-  m_inputQueue   = std::make_shared<bsgo::AsyncMessageQueue>(std::move(syncQueue));
+  auto syncQueue = std::make_unique<SynchronizedMessageQueue>("synchronized-queue-for-input");
+  m_inputQueue   = std::make_shared<AsyncMessageQueue>(std::move(syncQueue));
 
   auto networkAdapter = std::make_unique<bsgalone::core::NetworkAdapter>(m_inputQueue);
   m_eventBus->addListener(std::move(networkAdapter));
 
-  auto broadcastQueue = std::make_unique<bsgo::BroadcastMessageQueue>(m_clientManager, m_tcpServer);
-  m_outputQueue       = std::make_shared<bsgo::AsyncMessageQueue>(std::move(broadcastQueue));
+  auto broadcastQueue = std::make_unique<BroadcastMessageQueue>(m_clientManager, m_tcpServer);
+  m_outputQueue       = std::make_shared<AsyncMessageQueue>(std::move(broadcastQueue));
 
   auto clientListener = std::make_unique<ClientEventListener>(m_clientManager,
                                                               m_inputQueue,
@@ -194,4 +194,4 @@ void ServerNetworkClient::initialize()
   m_eventBus->addListener(std::move(clientListener));
 }
 
-} // namespace pge
+} // namespace bsgo

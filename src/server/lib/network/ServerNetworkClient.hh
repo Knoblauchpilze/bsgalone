@@ -10,9 +10,9 @@
 #include <atomic>
 #include <memory>
 
-namespace pge {
+namespace bsgo {
 
-class ServerNetworkClient : public bsgo::IMessageQueue
+class ServerNetworkClient : public IMessageQueue
 {
   public:
   ServerNetworkClient();
@@ -21,8 +21,8 @@ class ServerNetworkClient : public bsgo::IMessageQueue
   void start(const int port);
   void stop();
 
-  void pushMessage(bsgo::IMessagePtr message) override;
-  void addListener(bsgo::IMessageListenerPtr listener) override;
+  void pushMessage(IMessagePtr message) override;
+  void addListener(IMessageListenerPtr listener) override;
   bool empty() override;
 
   void processMessages(const std::optional<int> &amount = {}) override;
@@ -33,13 +33,13 @@ class ServerNetworkClient : public bsgo::IMessageQueue
 
   std::atomic_bool m_started{};
 
-  bsgo::ClientManagerShPtr m_clientManager{};
-  bsgo::IMessageQueueShPtr m_inputQueue{};
-  bsgo::IMessageQueueShPtr m_outputQueue{};
+  ClientManagerShPtr m_clientManager{};
+  IMessageQueueShPtr m_inputQueue{};
+  IMessageQueueShPtr m_outputQueue{};
 
   void initialize();
 };
 
 using ServerNetworkClientShPtr = std::shared_ptr<ServerNetworkClient>;
 
-} // namespace pge
+} // namespace bsgo

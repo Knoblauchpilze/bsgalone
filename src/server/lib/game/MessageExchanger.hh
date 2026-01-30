@@ -6,6 +6,7 @@
 #include "IMessageQueue.hh"
 #include "INetworkServer.hh"
 #include "Repositories.hh"
+#include "ServerNetworkClient.hh"
 #include "SystemQueues.hh"
 #include "SystemService.hh"
 #include "Uuid.hh"
@@ -16,7 +17,7 @@ namespace bsgo {
 struct MessageSystemData
 {
   ClientManagerShPtr clientManager{};
-  net::INetworkServerShPtr server{};
+  ServerNetworkClientShPtr networkClient{};
   SystemQueueMap systemQueues{};
 };
 
@@ -25,13 +26,9 @@ class MessageExchanger
   public:
   MessageExchanger(const MessageSystemData &messagesData);
 
-  auto getInputMessageQueue() const -> IMessageQueueShPtr;
   auto getInternalMessageQueue() const -> IMessageQueue *;
-  auto getOutputMessageQueue() const -> IMessageQueue *;
 
   private:
-  IMessageQueueShPtr m_inputMessageQueue{};
-  IMessageQueuePtr m_outputMessageQueue{};
   IMessageQueuePtr m_internalMessageQueue{};
 
   void initialize(const MessageSystemData &messagesData);

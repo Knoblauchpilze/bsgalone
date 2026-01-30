@@ -2,12 +2,10 @@
 
 #pragma once
 
-#include "BroadcastMessageQueue.hh"
 #include "ClientManager.hh"
 #include "CoreObject.hh"
-#include "IEventBus.hh"
-#include "INetworkServer.hh"
 #include "MessageExchanger.hh"
+#include "ServerNetworkClient.hh"
 #include "SystemProcessor.hh"
 #include "SystemQueues.hh"
 #include <atomic>
@@ -29,8 +27,7 @@ class Server : public core::CoreObject
   std::mutex m_runningLocker{};
   std::condition_variable m_runningNotifier{};
 
-  net::IEventBusShPtr m_eventBus{};
-  net::INetworkServerShPtr m_tcpServer{};
+  ServerNetworkClientShPtr m_networkClient{};
 
   ClientManagerShPtr m_clientManager{std::make_shared<ClientManager>()};
   MessageExchangerPtr m_messageExchanger{};
