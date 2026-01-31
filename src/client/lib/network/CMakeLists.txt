@@ -1,7 +1,6 @@
 
 target_sources (client_lib PRIVATE
-	${CMAKE_CURRENT_SOURCE_DIR}/ClientConnection.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/ClientMessageQueue.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/GameNetworkClient.cc
 	)
 
 target_include_directories (client_lib PUBLIC

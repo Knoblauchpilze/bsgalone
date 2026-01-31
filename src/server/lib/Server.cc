@@ -1,13 +1,13 @@
 
 
 #include "Server.hh"
-#include "LogoutMessage.hh"
 #include "SystemProcessorUtils.hh"
 
 namespace bsgo {
 
 Server::Server()
   : core::CoreObject("server")
+  , m_networkClient(std::make_shared<ServerNetworkClient>(m_clientManager))
 {
   setService("server");
   initialize();
@@ -56,32 +56,22 @@ void Server::initializeSystems()
 
 void Server::initializeMessageSystem()
 {
-  const MessageSystemData data{.clientManager = m_clientManager, .systemQueues = m_inputQueues};
+  const MessageSystemData data{.clientManager = m_clientManager,
+                               .networkClient = m_networkClient,
+                               .systemQueues  = m_inputQueues};
   m_messageExchanger = std::make_unique<MessageExchanger>(data);
 
   for (const auto &systemProcessor : m_systemProcessors)
   {
     systemProcessor->connectToQueues(m_messageExchanger->getInternalMessageQueue(),
-                                     m_messageExchanger->getOutputMessageQueue());
+                                     m_networkClient.get());
   }
 }
 
 void Server::setup(const int port)
 {
-  const net::ServerConfig config{.disconnectHandler =
-                                   [this](const net::ClientId clientId) {
-                                     return onConnectionLost(clientId);
-                                   },
-                                 .connectionReadyHandler =
-                                   [this](net::ConnectionShPtr connection) {
-                                     onConnectionReady(connection);
-                                   }};
-
-  m_tcpServer = std::make_shared<net::LegacyTcpServer>(m_context, port, config);
-  m_tcpServer->start();
-
-  info("Starting listening on port " + std::to_string(m_tcpServer->port()));
-  m_context.start();
+  info("Starting listening on port " + std::to_string(port));
+  m_networkClient->start(port);
 }
 
 void Server::activeRunLoop()
@@ -110,43 +100,7 @@ void Server::activeRunLoop()
 
 void Server::shutdown()
 {
-  m_context.stop();
-}
-
-void Server::onConnectionLost(const net::ClientId clientId)
-{
-  if (!m_clientManager->isStillConnected(clientId))
-  {
-    m_clientManager->removeConnection(clientId);
-    return;
-  }
-
-  const auto data = m_clientManager->tryGetDataForConnection(clientId);
-  if (!data.playerDbId)
-  {
-    error("Connection " + net::str(clientId) + " lost but could not find associated player");
-  }
-
-  if (data.stale)
-  {
-    debug("Connection " + net::str(clientId) + " is already marked as stale");
-    return;
-  }
-
-  info("Connection " + net::str(clientId) + " lost but player " + str(*data.playerDbId)
-       + " is still connected");
-
-  m_clientManager->markConnectionAsStale(clientId);
-  auto message = std::make_unique<LogoutMessage>(*data.playerDbId, true);
-  message->setClientId(clientId);
-
-  m_messageExchanger->pushMessage(std::move(message));
-}
-
-void Server::onConnectionReady(net::ConnectionShPtr connection)
-{
-  m_clientManager->registerConnection(connection);
-  m_messageExchanger->registerConnection(connection);
+  m_networkClient->stop();
 }
 
 } // namespace bsgo
