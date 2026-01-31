@@ -19,6 +19,8 @@ namespace bsgo {
 
 ServerNetworkClient::ServerNetworkClient()
   : m_clientManager(std::make_shared<ClientManager>())
+  , m_inputQueue(std::make_shared<AsyncMessageQueue>(
+      std::make_unique<SynchronizedMessageQueue>("synchronized-queue-for-input")))
 {}
 
 void ServerNetworkClient::start(const int port)
@@ -36,7 +38,6 @@ void ServerNetworkClient::stop()
   m_tcpServer.reset();
   m_eventBus.reset();
 
-  m_inputQueue.reset();
   m_outputQueue.reset();
 }
 
@@ -178,9 +179,6 @@ void ServerNetworkClient::initialize()
 {
   auto eventListener = std::make_unique<ServerEventListener>(m_started);
   m_eventBus->addListener(std::move(eventListener));
-
-  auto syncQueue = std::make_unique<SynchronizedMessageQueue>("synchronized-queue-for-input");
-  m_inputQueue   = std::make_shared<AsyncMessageQueue>(std::move(syncQueue));
 
   auto networkAdapter = std::make_unique<bsgalone::core::NetworkAdapter>(m_inputQueue);
   m_eventBus->addListener(std::move(networkAdapter));
