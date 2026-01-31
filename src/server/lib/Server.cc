@@ -7,7 +7,7 @@ namespace bsgo {
 
 Server::Server()
   : core::CoreObject("server")
-  , m_networkClient(std::make_shared<ServerNetworkClient>())
+  , m_networkClient(std::make_shared<ServerNetworkClient>(m_clientManager))
 {
   setService("server");
   initialize();

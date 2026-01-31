@@ -15,7 +15,7 @@ namespace bsgo {
 class ServerNetworkClient : public IMessageQueue
 {
   public:
-  ServerNetworkClient();
+  ServerNetworkClient(ClientManagerShPtr clientManager);
   ~ServerNetworkClient() = default;
 
   void start(const int port);

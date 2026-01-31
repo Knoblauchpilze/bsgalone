@@ -27,9 +27,8 @@ class Server : public core::CoreObject
   std::mutex m_runningLocker{};
   std::condition_variable m_runningNotifier{};
 
-  ServerNetworkClientShPtr m_networkClient{};
-
   ClientManagerShPtr m_clientManager{std::make_shared<ClientManager>()};
+  ServerNetworkClientShPtr m_networkClient{};
   MessageExchangerPtr m_messageExchanger{};
 
   std::unordered_map<Uuid, IMessageQueueShPtr> m_inputQueues{};
