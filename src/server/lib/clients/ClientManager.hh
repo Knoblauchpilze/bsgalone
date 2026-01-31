@@ -18,7 +18,6 @@ class ClientManager : public core::CoreObject
   ClientManager();
   ~ClientManager() override = default;
 
-  // TODO: Maybe we should still return a client identifier as a Uuid to hide the net::ClientId?
   void registerClient(const net::ClientId clientId);
   void registerPlayer(const net::ClientId clientId,
                       const Uuid playerDbId,
