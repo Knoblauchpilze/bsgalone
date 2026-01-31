@@ -17,8 +17,6 @@ namespace bsgo {
 class BroadcastMessageQueue : public IMessageQueue, public core::CoreObject
 {
   public:
-  // TODO: The server could probably be some sort of wrapper. Maybe it could even be directly
-  // in the client manager.
   BroadcastMessageQueue(ClientManagerShPtr clientManager, net::INetworkServerShPtr server);
   ~BroadcastMessageQueue() override = default;
 
