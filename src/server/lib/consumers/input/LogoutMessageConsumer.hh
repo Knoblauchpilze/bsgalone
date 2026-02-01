@@ -2,7 +2,6 @@
 #pragma once
 
 #include "AbstractMessageConsumer.hh"
-#include "ClientManager.hh"
 #include "IMessageQueue.hh"
 #include "LogoutMessage.hh"
 #include "SystemQueues.hh"
@@ -14,8 +13,7 @@ namespace bsgo {
 class LogoutMessageConsumer : public AbstractMessageConsumer
 {
   public:
-  LogoutMessageConsumer(ClientManagerShPtr clientManager,
-                        SystemServiceShPtr systemService,
+  LogoutMessageConsumer(SystemServiceShPtr systemService,
                         SystemQueueMap systemQueues,
                         IMessageQueue *const outputMessageQueue);
   ~LogoutMessageConsumer() override = default;
@@ -23,7 +21,6 @@ class LogoutMessageConsumer : public AbstractMessageConsumer
   void onMessageReceived(const IMessage &message) override;
 
   private:
-  ClientManagerShPtr m_clientManager{};
   SystemQueueMap m_systemQueues{};
   SystemServiceShPtr m_systemService{};
   IMessageQueue *const m_outputMessageQueue{};

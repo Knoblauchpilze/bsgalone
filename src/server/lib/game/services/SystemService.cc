@@ -139,6 +139,11 @@ auto SystemService::tryGetSystemDbIdForShip(const Uuid shipDbId) const -> std::o
   return m_repositories.playerShipRepository->findOneById(shipDbId).system;
 }
 
+auto SystemService::getSystemDbIdForPlayer(const Uuid playerDbId) const -> Uuid
+{
+  return m_repositories.playerRepository->findSystemByPlayer(playerDbId);
+}
+
 auto SystemService::getSystemDbIdForAsteroid(const Uuid asteroidDbId) const -> Uuid
 {
   return m_repositories.asteroidRepository->findOneById(asteroidDbId).system;
