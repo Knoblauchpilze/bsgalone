@@ -24,7 +24,7 @@ class BroadcastMessageQueue : public IMessageQueue, public core::CoreObject
   void addListener(IMessageListenerPtr listener) override;
   bool empty() override;
 
-  void processMessages(const std::optional<int> &amount = {}) override;
+  void processMessages() override;
 
   private:
   std::mutex m_locker{};

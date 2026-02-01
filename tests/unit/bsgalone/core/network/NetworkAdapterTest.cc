@@ -32,7 +32,7 @@ class TestMessageQueue : public bsgo::IMessageQueue
     return m_messages.empty();
   }
 
-  void processMessages(const std::optional<int> & /*amount*/) override
+  void processMessages() override
   {
     throw std::runtime_error("Unsupported operation processMessages in TestMessageQueue");
   }

@@ -29,13 +29,13 @@ bool SynchronizedMessageQueue::empty()
   return m_messages.empty();
 }
 
-void SynchronizedMessageQueue::processMessages(const std::optional<int> &amount)
+void SynchronizedMessageQueue::processMessages()
 {
   MessageProcessor processor(getName(), m_messages, m_locker, [this](const IMessage &message) {
     processMessage(message);
   });
 
-  processor.processMessages(amount);
+  processor.processMessages();
 }
 
 void SynchronizedMessageQueue::processMessage(const IMessage &message) const

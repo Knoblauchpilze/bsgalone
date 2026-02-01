@@ -20,7 +20,7 @@ class SynchronizedMessageQueue : public AbstractMessageQueue, public core::CoreO
   void addListener(IMessageListenerPtr listener) override;
   bool empty() override;
 
-  void processMessages(const std::optional<int> &amount = {}) override;
+  void processMessages() override;
 
   private:
   std::mutex m_locker{};

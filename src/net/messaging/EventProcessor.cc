@@ -93,11 +93,11 @@ void EventProcessor::printEventsInfo(const std::deque<IEventPtr> &events) const
   const auto eventsInfo = eventsTypesToString(events);
   if (eventsInfo.importantEventsCount > 0)
   {
-    info("Processed " + std::to_string(events.size()) + " message(s): " + eventsInfo.eventsTypes);
+    info("Processed " + std::to_string(events.size()) + " event(s): " + eventsInfo.eventsTypes);
   }
   else
   {
-    verbose("Processed " + std::to_string(events.size()) + " message(s): " + eventsInfo.eventsTypes);
+    verbose("Processed " + std::to_string(events.size()) + " event(s): " + eventsInfo.eventsTypes);
   }
 }
 
