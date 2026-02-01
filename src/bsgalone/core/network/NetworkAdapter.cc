@@ -1,6 +1,7 @@
 
 #include "NetworkAdapter.hh"
 #include "MessageParser.hh"
+#include "NetworkMessage.hh"
 
 namespace bsgalone::core {
 
@@ -64,14 +65,19 @@ auto NetworkAdapter::onDataReceived(const net::ClientId clientId) -> int
     workingData.erase(workingData.begin(), workingData.begin() + result.bytesProcessed);
   }
 
-  feedMessagesToQueue(std::move(messages));
+  feedMessagesToQueue(clientId, std::move(messages));
   return processedBytes;
 }
 
-void NetworkAdapter::feedMessagesToQueue(std::vector<bsgo::IMessagePtr> &&messages)
+void NetworkAdapter::feedMessagesToQueue(const net::ClientId clientId,
+                                         std::vector<bsgo::IMessagePtr> &&messages)
 {
   for (auto &message : messages)
   {
+    if (message->isA<bsgo::NetworkMessage>())
+    {
+      message->as<bsgo::NetworkMessage>().setClientId(clientId);
+    }
     m_queue->pushMessage(std::move(message));
   }
 }
