@@ -809,8 +809,11 @@ When the client has successfully logged in to the server, the user will click on
 
 In order to send these commands to the server, we use the concept of a [IView](src/bsgo/views/IView.hh): a view is the equivalent of the business layer (so a [IService](src/bsgo/services/IService.hh)) but for the client: the idea is that each button of the UI (for example the dock button, or the button to purchase or equip an item) is binded to a method of a view. The view is then responsible to know which action should be triggered to accomplish this action.
 
-TODO: This section needs to be rewritten, the `ClientMessageQueue` does not exist anymore.
-Accomplishing an action usually means sending a message to the server. The message is sent once again through a message queue: the [ClientMessageQueue](src/client/lib/network/ClientMessageQueue.hh): it is a bit of a special queue as it's only purpose is to send the messages it receives through the connection it is attached to.
+Accomplishing an action usually means sending a message to the server. The message is sent once again through a message queue: the [GameNetworkClient](src/client/lib/network/GameNetworkClient.hh). This client is used for:
+
+- connecting to the server
+- receiving data
+- sending data
 
 We follow a _send and forget_ approach when pushing messages: the idea being that if the event is valid the server will react in some way and send back some messages the client's way which will trigger a visual feedback for the player. If it is invalid no answer will be received and the UI will not change after the action (e.g. a button click).
 
@@ -818,7 +821,7 @@ We follow a _send and forget_ approach when pushing messages: the idea being tha
 
 The actions that the user takes in the UI usually have a goal to change some state of the player's account: for example buying an item, moving the ship somewhere else, etc. Assuming the server successfully processed a message sent by the client, it will send back an answer. Additionally, some messages will be generated and transmitted to the client because of the actions of other players.
 
-In order to process those incoming messages, the client receives them in a [NetworkMessageQueue](src/bsgo/queues/NetworkMessageQueue.hh) in a very similar way to the server.
+In order to process those incoming messages, the client receives them in a [NetworkAdapter](src/bsgalone/core/network/NetworkAdapter.hh) in a very similar way to the server.
 
 We then follow the same approach as in the server: the client defines some [consumers](src/client/lib/consumers) which are responsible to handle the messages received from the server and update the local ECS. As described in the [who's right](#whos-right) section, the difference is that the client applies without check what the server sends.
 
@@ -834,33 +837,54 @@ The client uses this in order to not instantiate systems dealing with events tha
 
 ## Networking
 
-TODO: This section sould be revamped
-
 ### Generalities
 
-The content of this [video series](https://youtu.be/2hNdkYInj4g?si=Q-NOTJ__p-5a2jS8) of Javidx9 was very informative. The resulting code can be found on [github](https://github.com/OneLoneCoder/Javidx9/tree/master/PixelGameEngine/BiggerProjects/Networking) and it inspired the [Connection](src/net/connection/Connection.hh) class we created.
+The content of this [video series](https://youtu.be/2hNdkYInj4g?si=Q-NOTJ__p-5a2jS8) of Javidx9 was very informative. The resulting code can be found on [github](https://github.com/OneLoneCoder/Javidx9/tree/master/PixelGameEngine/BiggerProjects/Networking). This inspired the initial network design before being heavily rewritten to make it event driven (see [#81](https://github.com/Knoblauchpilze/bsgalone/pull/81)).
 
 We use the [asio](#asio) library without boost to handle network communication in the project. We extracted all the logic to perform the calls, connect to the server and to the client in a dedicated [net](src/net) folder: similarly to what happens for the `PixelGameEngine` wrapping, we want to be able to swap libraries or update relatively easily.
 
+This module is designed using the event driven approach. Instead of using callbacks or direct method calls, the network activity is represented by various events which can be received by external components. The available events are defined in the [EventType](src/net/enums/EventType.hh) enum class and covers connection/disconnection but also data operation (send or receive).
+
+The general architecture is presented in the following diagram:
+
+![network-connect](resources/network-server-connect.svg.svg)
+
+![network-disconnect](resources/network-server-disconnect.svg)
+
 ### Context
 
-The networking revolves around the idea of an `io_context`. This is wrapped by our own [Context](src/net/connection/Context.hh) class which is instantiated both on the client and the server. The idea is that this context runs from the whole lifetime of the application and is used in the background by `asio` to perform the network calls.
+The networking revolves around the idea of an `io_context`. This is wrapped by our own [AsioContext](src/net/server/AsioContext.hh) class which is instantiated both on the client and the server. The idea is that this context runs from the whole lifetime of the application and is used in the background by `asio` to perform the network calls.
 
-### Connection
+### Sockets
 
-A connection is the central object allowing to communicate. It has two modes: `SERVER` and `CLIENT`. This defines which operations it will perform. The difference is mainly on the order with which operations are performed as both connections will (during the game) be receiving and sending data.
+A socket is the central object allowing to communicate. No matter whether the socket is handled in the client or the server, there are two main operations that can be performed: read and write. To handle both processes, the `net` module defines both a [ReadingSocket](src/net/sockets/ReadingSocket.hh) and [WritingSocket](src/net/sockets/WritingSocket.hh).
 
-For the `CLIENT` mode we expect to try to connect to the server. Conversely in `SERVER` mode we get ready to accept connections.
+### AsioServer
 
-Sending data is made easy through the `send` method which takes a `IMessage` as input, serializes it and transmit it through the network.
+A specific component of the server is the [AsioServer](src/net/server/AsioServer.hh) class. This class wraps the low level socket management by:
 
-Receiving data is potentially more complex: depending on the type of data we might want to perform certain processes and relatively different depending whether we're on the client or the server. To this avail we provide a `setDataHandler` which allows to pass a callback which will receive the raw data from the network.
+- providing a simple interface to start/stop the server
+- exposing only the relevant information to configure it (e.g. the port)
+- allows dependency injection by accepting an `AsioContext` as input
+- accepting connections and creating the sockets
+- allows to be notified about network events through an event bus
 
-### TcpServer
+Importantly, it does **not expose** the sockets: instead, it pulishes the changes through an event bus. For example a `ClientConnectedEvent` is produced when a connection is received, a `DataReadEvent` is produced when data is received on one connection.
 
-A specific component of the server is the [TcpServer](src/net/server/TcpServer.hh) class. In order to make it easy to extend it and possibly reuse it and also to hide the dependency to the `asio` library we mainly work with callbacks.
+### AsioClient
 
-The [ServerConfig](src/net/server/ServerConfig.hh) defines several to handle a new connection (when it's ready to receive data), a disconnection from a client and some data received. This last part is to make it easy to automatically assign the same data handler (for example a method of the server class) to all incoming connections.
+Similarly to what is done in the `AsioServer`, the [AsioClient](src/net/client/AsioClient.hh) class allows to publish network events in an externally provided event bus. This class abstracts the connection to the server by exposing:
+
+- a simple connect/disconnect interface
+- allows to provide the URL and port to connect to
+- allows dependency injection by expecting an `AsioContext` and an event bus
+- events to be notified about network activity (e.g. data received)
+
+This component can be used to decouple the handling of the network logic from the game and the UI logic in the client applications.
+
+### Additional abstractions
+
+The low level `AsioServer` and `AsioClient` are used in higher order components: `TcpServer` and `TcpClient`. This second layer of abstraction allows to hide the logic related to `asio` completely. The only external need is the event bus which will be used to push the network related events. Those classes implement respectively the `INetworkServer` and `INetworkClient` interfaces: those interfaces allow to make the network library used an implementation detail of the module.
 
 ## AI of bots
 
@@ -980,7 +1004,7 @@ The [IMessageQueue](src/bsgo/queues/IMessageQueue.hh) allows to keep track of al
 
 We have several implementations for this interface: the most basic one is a [SynchronousMessageQueue](src/bsgo/queues/SynchronizedMessageQueue.hh) which guarantees that there's no collision between enqueuing messages and processing them, but we also have specialization for the client and the server.
 
-A building block is the [NetworkMessageQueue](src/bsgo/queues/NetworkMessageQueue.hh) which allows to receive messages from the network. Another important one for the server is the [AsyncMessageQueue](src/bsgo/queues/AsyncMessageQueue.hh) which processes messages in a dedicated thread.
+A building block is the [AsyncMessageQueue](src/bsgo/queues/AsyncMessageQueue.hh) which processes messages in a dedicated thread. Another important is the [NetworkAdapter](src/bsgalone/core/network/NetworkAdapter.hh) which allows to convert events produced by the network subdomain into game messages that can be processed by consumers.
 
 ### Listeners
 
