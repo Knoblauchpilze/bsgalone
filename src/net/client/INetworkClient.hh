@@ -34,6 +34,7 @@ class INetworkClient
   virtual auto trySend(std::vector<char> bytes) -> std::optional<MessageId> = 0;
 };
 
-using INetworkClientPtr = std::unique_ptr<INetworkClient>;
+using INetworkClientShPtr = std::shared_ptr<INetworkClient>;
+using INetworkClientPtr   = std::unique_ptr<INetworkClient>;
 
 } // namespace net

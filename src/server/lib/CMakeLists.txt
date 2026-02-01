@@ -16,6 +16,10 @@ add_subdirectory (
 	)
 
 add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/network
+	)
+
+add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/queues
 	)
 
@@ -28,6 +32,7 @@ target_link_libraries (server_lib
 	net_lib
 	bsgo_lib
 	time_lib
+	game_core_lib
 	)
 
 target_include_directories (server_lib PUBLIC

@@ -809,6 +809,7 @@ When the client has successfully logged in to the server, the user will click on
 
 In order to send these commands to the server, we use the concept of a [IView](src/bsgo/views/IView.hh): a view is the equivalent of the business layer (so a [IService](src/bsgo/services/IService.hh)) but for the client: the idea is that each button of the UI (for example the dock button, or the button to purchase or equip an item) is binded to a method of a view. The view is then responsible to know which action should be triggered to accomplish this action.
 
+TODO: This section needs to be rewritten, the `ClientMessageQueue` does not exist anymore.
 Accomplishing an action usually means sending a message to the server. The message is sent once again through a message queue: the [ClientMessageQueue](src/client/lib/network/ClientMessageQueue.hh): it is a bit of a special queue as it's only purpose is to send the messages it receives through the connection it is attached to.
 
 We follow a _send and forget_ approach when pushing messages: the idea being that if the event is valid the server will react in some way and send back some messages the client's way which will trigger a visual feedback for the player. If it is invalid no answer will be received and the UI will not change after the action (e.g. a button click).
@@ -832,6 +833,8 @@ The client uses this in order to not instantiate systems dealing with events tha
 # Implementation details
 
 ## Networking
+
+TODO: This section sould be revamped
 
 ### Generalities
 

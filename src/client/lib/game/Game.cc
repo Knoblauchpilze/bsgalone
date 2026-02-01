@@ -37,9 +37,8 @@ Game::Game(const int serverPort,
 
 Game::~Game()
 {
-  m_inputMessageQueue.reset();
-  m_outputMessageQueue.reset();
-  m_networkContext->stop();
+  m_networkClient->stop();
+  m_networkClient.reset();
 }
 
 auto Game::getScreen() const noexcept -> Screen
@@ -95,7 +94,7 @@ void Game::generateUiHandlers(int width, int height, Renderer &engine)
   for (const auto &[_, handler] : m_uiHandlers)
   {
     handler->initializeMenus(width, height, engine.getTextureHandler());
-    handler->connectToMessageQueue(*m_inputMessageQueue);
+    handler->connectToMessageQueue(*m_networkClient);
   }
 }
 
@@ -240,7 +239,7 @@ bool Game::step(float elapsedSeconds)
   // Process messages first and then update the coordinator so that
   // the systems have a chance to react to messages before sending
   // everything to the UI.
-  m_inputMessageQueue->processMessages();
+  m_networkClient->processMessages();
   m_internalMessageQueue->processMessages();
 
   if (shouldUpdateCoordinatorInScreen(m_state.screen))
@@ -271,7 +270,6 @@ bool Game::step(float elapsedSeconds)
 void Game::onConnectedToServer(const bsgo::Uuid clientId)
 {
   info("Received client id " + bsgo::str(clientId) + " from server");
-  m_outputMessageQueue->setClientId(clientId);
 
   if (m_userName && m_password && m_gameRole)
   {
@@ -279,7 +277,7 @@ void Game::onConnectedToServer(const bsgo::Uuid clientId)
     login->setUserName(*m_userName);
     login->setPassword(*m_password);
     login->setClientId(clientId);
-    m_outputMessageQueue->pushMessage(std::move(login));
+    m_networkClient->pushMessage(std::move(login));
   }
 }
 
@@ -376,14 +374,13 @@ void Game::onLoadingFinished(const bsgo::LoadingTransition transition)
 
 void Game::initialize(const int serverPort)
 {
-  auto connection = std::make_unique<ClientConnection>(serverPort, *m_networkContext);
+  m_networkClient = std::make_shared<GameNetworkClient>();
+  m_networkClient->start(serverPort);
 
-  m_inputMessageQueue = connection->createInputMessageQueue();
   // Not strictly necessary as the internal messages should only be produced
   // synchronously by the Coordinator but also does not hurt.
   m_internalMessageQueue = std::make_unique<bsgo::SynchronizedMessageQueue>(
     "synchronized-message-queue-for-internal");
-  m_outputMessageQueue = std::make_unique<ClientMessageQueue>(std::move(connection));
 
   bsgo::SystemsConfig sConfig{.ignoredSystems = {bsgo::SystemType::LOOT,
                                                  bsgo::SystemType::REMOVAL,
@@ -396,25 +393,23 @@ void Game::initialize(const int serverPort)
   ViewsConfig vConfig{.gameSession          = m_gameSession,
                       .coordinator          = m_coordinator,
                       .internalMessageQueue = m_internalMessageQueue.get(),
-                      .outputMessageQueue   = m_outputMessageQueue.get()};
+                      .outputMessageQueue   = m_networkClient.get()};
   m_views = createViews(vConfig, m_entityMapper);
 
   initializeMessageSystem();
-
-  m_networkContext->start();
 }
 
 void Game::initializeMessageSystem()
 {
-  createMessageConsumers(*m_inputMessageQueue, m_entityMapper, m_coordinator);
+  createMessageConsumers(*m_networkClient, m_entityMapper, m_coordinator);
 
   m_internalMessageQueue->addListener(
     std::make_unique<InternalMessageConsumer>(m_entityMapper, m_coordinator));
 
   auto messageModule = std::make_unique<GameMessageModule>(*this, m_entityMapper);
-  m_inputMessageQueue->addListener(std::move(messageModule));
+  m_networkClient->addListener(std::move(messageModule));
 
-  m_views.connectToQueue(m_inputMessageQueue.get());
+  m_views.connectToQueue(m_networkClient.get());
 }
 
 } // namespace pge

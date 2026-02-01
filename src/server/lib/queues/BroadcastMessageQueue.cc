@@ -16,9 +16,11 @@
 
 namespace bsgo {
 
-BroadcastMessageQueue::BroadcastMessageQueue(ClientManagerShPtr clientManager)
+BroadcastMessageQueue::BroadcastMessageQueue(ClientManagerShPtr clientManager,
+                                             net::INetworkServerShPtr server)
   : core::CoreObject("broadcast-message-queue")
   , m_clientManager(std::move(clientManager))
+  , m_server(std::move(server))
 {
   setService("message");
 }
@@ -92,13 +94,21 @@ void BroadcastMessageQueue::processMessage(const IMessage &message)
   }
 }
 
-void BroadcastMessageQueue::sendMessageToClient(const Uuid clientId, const IMessage &message)
+namespace {
+auto convertMessage(const IMessage &message) -> std::vector<char>
 {
-  const auto maybeConnection = m_clientManager->tryGetConnectionForClient(clientId);
-  if (maybeConnection)
-  {
-    (*maybeConnection)->send(message);
-  }
+  std::ostringstream out{};
+  out << message;
+
+  const auto &rawMessage = out.str();
+  return std::vector<char>(rawMessage.begin(), rawMessage.end());
+}
+} // namespace
+
+void BroadcastMessageQueue::sendMessageToClient(const net::ClientId clientId,
+                                                const IMessage &message)
+{
+  m_server->trySend(clientId, convertMessage(message));
 }
 
 namespace {
@@ -117,7 +127,7 @@ bool shouldTryToDetermineSystemId(const IMessage &message)
 
 void BroadcastMessageQueue::broadcastMessage(const IMessage &message)
 {
-  std::vector<net::ConnectionShPtr> connections{};
+  std::vector<net::ClientId> clients{};
 
   std::vector<Uuid> systemDbIds{};
   if (shouldTryToDetermineSystemId(message))
@@ -129,19 +139,19 @@ void BroadcastMessageQueue::broadcastMessage(const IMessage &message)
   {
     for (const auto &systemDbId : systemDbIds)
     {
-      const auto newConnections = m_clientManager->getAllConnectionsForSystem(systemDbId);
-      connections.insert(connections.end(), newConnections.begin(), newConnections.end());
+      const auto newClients = m_clientManager->getAllClientsForSystem(systemDbId);
+      clients.insert(clients.end(), newClients.begin(), newClients.end());
     }
   }
   else
   {
     warn("Broadcasting message " + str(message.type()));
-    connections = m_clientManager->getAllConnections();
+    clients = m_clientManager->getAllClients();
   }
 
-  for (const auto &connection : connections)
+  for (const auto &clientId : clients)
   {
-    connection->send(message);
+    m_server->trySend(clientId, convertMessage(message));
   }
 }
 

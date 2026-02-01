@@ -40,6 +40,7 @@ target_link_libraries (client_lib
 	pge_lib
 	bsgo_lib
 	time_lib
+	game_core_lib
 	)
 
 target_include_directories (client_lib PUBLIC

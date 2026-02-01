@@ -2,10 +2,11 @@
 #pragma once
 
 #include "ClientManager.hh"
-#include "Connection.hh"
+#include "IEventBus.hh"
 #include "IMessageQueue.hh"
-#include "NetworkMessageQueue.hh"
+#include "INetworkServer.hh"
 #include "Repositories.hh"
+#include "ServerNetworkClient.hh"
 #include "SystemQueues.hh"
 #include "SystemService.hh"
 #include "Uuid.hh"
@@ -16,6 +17,7 @@ namespace bsgo {
 struct MessageSystemData
 {
   ClientManagerShPtr clientManager{};
+  ServerNetworkClientShPtr networkClient{};
   SystemQueueMap systemQueues{};
 };
 
@@ -25,15 +27,9 @@ class MessageExchanger
   MessageExchanger(const MessageSystemData &messagesData);
 
   auto getInternalMessageQueue() const -> IMessageQueue *;
-  auto getOutputMessageQueue() const -> IMessageQueue *;
-  void registerConnection(net::ConnectionShPtr connection);
-
-  void pushMessage(IMessagePtr message);
 
   private:
-  IMessageQueuePtr m_outputMessageQueue{};
   IMessageQueuePtr m_internalMessageQueue{};
-  NetworkMessageQueuePtr m_inputMessageQueue{};
 
   void initialize(const MessageSystemData &messagesData);
   auto initializeSystemMessageQueue(const MessageSystemData &messagesData) -> IMessageQueuePtr;

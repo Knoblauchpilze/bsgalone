@@ -9,14 +9,14 @@ ClientManager::ClientManager()
   setService("client");
 }
 
-void ClientManager::registerConnection(const net::ConnectionShPtr connection)
+void ClientManager::registerClient(const net::ClientId clientId)
 {
   const std::lock_guard guard(m_locker);
 
-  const ClientData data{.connection = connection};
-  m_clients.emplace(connection->id(), data);
+  const ClientData data{};
+  m_clients.emplace(clientId, data);
 
-  info("Registered connection " + data.connection->str());
+  info("Registered client " + net::str(clientId));
 }
 
 void ClientManager::registerPlayer(const net::ClientId clientId,
@@ -67,53 +67,42 @@ void ClientManager::removePlayerConnection(const Uuid playerDbId)
     error("Failed to unregister connection for player " + str(playerDbId));
   }
 
-  const auto clientData = m_clients.at(maybeClientId->second);
-
   m_clients.erase(maybeClientId->second);
   m_playerToClient.erase(maybeClientId);
 
-  info("Removed connection " + clientData.connection->str() + " for player " + str(playerDbId));
+  info("Removed client " + net::str(maybeClientId->second) + " for player " + str(playerDbId));
 }
 
-void ClientManager::markConnectionAsStale(const net::ClientId clientId)
+void ClientManager::removeClient(const net::ClientId clientId)
 {
   const std::lock_guard guard(m_locker);
 
-  const auto maybeClientData = m_clients.find(clientId);
-  if (maybeClientData == m_clients.cend())
+  const auto maybeClient = m_clients.find(clientId);
+  if (maybeClient == m_clients.cend())
   {
-    error("Failed to mark connection " + net::str(clientId) + " as stale");
+    error("Failed to unregister client " + net::str(clientId));
   }
 
-  auto &clientData = maybeClientData->second;
-  if (clientData.connectionIsStale)
+  if (maybeClient->second.playerDbId)
   {
-    error("Failed to mark connection " + net::str(clientId) + " for disconnection",
-          "Client is already marked as stale");
+    m_playerToClient.erase(*maybeClient->second.playerDbId);
   }
+  m_clients.erase(maybeClient);
 
-  clientData.connectionIsStale = true;
+  info("Removed client " + net::str(clientId));
 }
 
-void ClientManager::removeConnection(const net::ClientId clientId)
+auto ClientManager::tryGetPlayerForClient(const net::ClientId clientId) -> std::optional<Uuid>
 {
   const std::lock_guard guard(m_locker);
 
-  const auto maybeClientData = m_clients.find(clientId);
-  if (maybeClientData == m_clients.cend())
+  const auto maybeClient = m_clients.find(clientId);
+  if (maybeClient == m_clients.cend())
   {
-    error("Failed to unregister connection " + net::str(clientId));
+    return {};
   }
 
-  const auto clientData = maybeClientData->second;
-
-  if (clientData.playerDbId)
-  {
-    m_playerToClient.erase(*clientData.playerDbId);
-  }
-  m_clients.erase(clientId);
-
-  info("Removed connection " + clientData.connection->str());
+  return maybeClient->second.playerDbId;
 }
 
 auto ClientManager::getClientIdForPlayer(const Uuid playerDbId) const -> net::ClientId
@@ -129,55 +118,33 @@ auto ClientManager::getClientIdForPlayer(const Uuid playerDbId) const -> net::Cl
   return maybeClientId->second;
 }
 
-auto ClientManager::tryGetConnectionForClient(const net::ClientId clientId) const
-  -> std::optional<net::ConnectionShPtr>
+auto ClientManager::getAllClients() const -> std::vector<net::ClientId>
 {
   const std::lock_guard guard(m_locker);
+  std::vector<net::ClientId> out;
 
-  const auto maybeClientData = m_clients.find(clientId);
-  if (maybeClientData == m_clients.cend())
+  for (const auto &[clientId, _] : m_clients)
   {
-    error("Failed to get connection for " + str(clientId), "No such client");
-  }
-
-  if (maybeClientData->second.connectionIsStale)
-  {
-    return {};
-  }
-
-  return maybeClientData->second.connection;
-}
-
-auto ClientManager::getAllConnections() const -> std::vector<net::ConnectionShPtr>
-{
-  const std::lock_guard guard(m_locker);
-  std::vector<net::ConnectionShPtr> out;
-
-  for (const auto &[_, clientData] : m_clients)
-  {
-    if (!clientData.connectionIsStale)
-    {
-      out.push_back(clientData.connection);
-    }
+    out.push_back(clientId);
   }
 
   return out;
 }
 
-auto ClientManager::getAllConnectionsForSystem(const Uuid systemDbId) const
-  -> std::vector<net::ConnectionShPtr>
+auto ClientManager::getAllClientsForSystem(const Uuid systemDbId) const
+  -> std::vector<net::ClientId>
 {
   const std::lock_guard guard(m_locker);
-  std::vector<net::ConnectionShPtr> out;
+  std::vector<net::ClientId> out;
 
-  for (const auto &[_, clientData] : m_clients)
+  for (const auto &[clientId, clientData] : m_clients)
   {
     const auto &maybeSystemDbId       = clientData.playerSystemDbId;
     const auto systemIsExpectedSystem = maybeSystemDbId.has_value()
                                         && *maybeSystemDbId == systemDbId;
-    if (!clientData.connectionIsStale && systemIsExpectedSystem)
+    if (systemIsExpectedSystem)
     {
-      out.push_back(clientData.connection);
+      out.push_back(clientId);
     }
   }
 
@@ -221,46 +188,6 @@ void ClientManager::updateSystemForPlayer(const Uuid playerDbId, const Uuid syst
 
   info("Moved player " + str(*clientData.playerDbId) + " to system " + str(systemDbId));
   clientData.playerSystemDbId = systemDbId;
-}
-
-auto ClientManager::tryGetDataForConnection(const net::ClientId clientId) -> ConnectionData
-{
-  ConnectionData out{};
-
-  const auto maybeClientData = tryGetClientDataForConnection(clientId);
-  if (!maybeClientData)
-  {
-    return out;
-  }
-
-  out.playerDbId = maybeClientData->playerDbId;
-  out.stale      = maybeClientData->connectionIsStale;
-  return out;
-}
-
-bool ClientManager::isStillConnected(const net::ClientId connectionId) const
-{
-  const auto maybeClientData = tryGetClientDataForConnection(connectionId);
-  if (!maybeClientData)
-  {
-    return {};
-  }
-
-  return maybeClientData->playerDbId.has_value() && maybeClientData->playerSystemDbId.has_value();
-}
-
-auto ClientManager::tryGetClientDataForConnection(const net::ClientId clientId) const
-  -> std::optional<ClientData>
-{
-  const std::lock_guard guard(m_locker);
-
-  const auto maybeClientData = m_clients.find(clientId);
-  if (maybeClientData == m_clients.cend())
-  {
-    error("Failed to get client data for " + net::str(clientId), "No such client");
-  }
-
-  return maybeClientData->second;
 }
 
 } // namespace bsgo
