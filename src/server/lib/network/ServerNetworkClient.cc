@@ -9,6 +9,7 @@
 #include "LogoutMessage.hh"
 #include "NetworkAdapter.hh"
 #include "NetworkMessage.hh"
+#include "ServerEventListener.hh"
 #include "ServerStartedEvent.hh"
 #include "ServerStoppedEvent.hh"
 #include "SynchronizedEventBus.hh"
@@ -67,48 +68,6 @@ void ServerNetworkClient::processMessages(const std::optional<int> &amount)
 }
 
 namespace {
-class ServerEventListener : public net::IEventListener
-{
-  public:
-  ServerEventListener(std::atomic_bool &started)
-    : m_started(started)
-  {}
-
-  ~ServerEventListener() = default;
-
-  bool isEventRelevant(const net::EventType &type) const override
-  {
-    return type == net::EventType::SERVER_STARTED || type == net::EventType::SERVER_STOPPED;
-  }
-
-  void onEventReceived(const net::IEvent &event) override
-  {
-    switch (event.type())
-    {
-      case net::EventType::SERVER_STARTED:
-        handleServerStarted(event.as<net::ServerStartedEvent>());
-        break;
-      case net::EventType::SERVER_STOPPED:
-        handleServerStopped(event.as<net::ServerStoppedEvent>());
-        break;
-      default:
-        throw std::invalid_argument("Unsupported event type " + net::str(event.type()));
-    }
-  }
-
-  private:
-  std::atomic_bool &m_started;
-
-  void handleServerStarted(const net::ServerStartedEvent & /*event*/)
-  {
-    m_started.store(true);
-  }
-
-  void handleServerStopped(const net::ServerStoppedEvent & /*event*/)
-  {
-    m_started.store(false);
-  }
-};
 
 class ClientEventListener : public net::IEventListener
 {
@@ -177,7 +136,7 @@ class ClientEventListener : public net::IEventListener
 
 void ServerNetworkClient::initialize()
 {
-  auto eventListener = std::make_unique<ServerEventListener>(m_started);
+  auto eventListener = std::make_unique<bsgalone::server::ServerEventListener>(m_started);
   m_eventBus->addListener(std::move(eventListener));
 
   auto networkAdapter = std::make_unique<bsgalone::core::NetworkAdapter>(m_inputQueue);

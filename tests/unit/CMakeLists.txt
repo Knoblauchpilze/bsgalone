@@ -52,4 +52,5 @@ target_link_libraries (unitTests
 	client_lib
 	server_lib
 	game_core_lib
+	game_server_lib
 	)
