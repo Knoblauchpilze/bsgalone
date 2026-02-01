@@ -34,6 +34,7 @@ class SystemService : public AbstractService
   bool registerAiBehaviorMilestone(const Uuid shipDbId, const int targetReached) const;
 
   auto tryGetSystemDbIdForShip(const Uuid shipDbId) const -> std::optional<Uuid>;
+  auto getSystemDbIdForPlayer(const Uuid playerDbId) const -> Uuid;
   auto getSystemDbIdForAsteroid(const Uuid asteroidDbId) const -> Uuid;
   auto getSystemDbIdForOutpost(const Uuid outpostDbId) const -> Uuid;
   auto getShipDbIdForPlayer(const Uuid playerDbId) const -> Uuid;
