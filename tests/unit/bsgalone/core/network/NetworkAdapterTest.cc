@@ -1,7 +1,7 @@
 
 #include "NetworkAdapter.hh"
-
 #include "DataReceivedEvent.hh"
+#include "LootMessage.hh"
 #include "ScannedMessage.hh"
 #include <gtest/gtest.h>
 
@@ -203,6 +203,47 @@ TEST(Unit_Bsgalone_Core_Network_ClientManager, ThrowsWhenReceivingInvalidData)
 
   auto body = [&adapter, &event]() { adapter.onEventReceived(event); };
   EXPECT_THROW(body(), ::core::CoreException);
+}
+
+TEST(Unit_Bsgalone_Core_Network_ClientManager, SetsClientIdForNetworkMessageWhenNotDefined)
+{
+  auto queue = std::make_shared<TestMessageQueue>();
+  NetworkAdapter adapter(queue);
+
+  bsgo::LootMessage message(bsgo::Uuid{2}, bsgo::Uuid{4}, 12);
+  std::stringstream out;
+  message.serialize(out);
+  const auto serialized = out.str();
+  std::vector<char> data(serialized.begin(), serialized.end());
+
+  net::DataReceivedEvent event(net::ClientId{17}, std::vector<char>(data.begin(), data.end()));
+  adapter.onEventReceived(event);
+
+  EXPECT_EQ(1u, queue->messages().size());
+  const auto &actual = queue->messages().at(0);
+  EXPECT_EQ(bsgo::MessageType::LOOT, actual->type());
+  EXPECT_EQ(net::ClientId{17}, actual->as<bsgo::LootMessage>().getClientId());
+}
+
+TEST(Unit_Bsgalone_Core_Network_ClientManager, OverridesExistingClientIdWithConnectionData)
+{
+  auto queue = std::make_shared<TestMessageQueue>();
+  NetworkAdapter adapter(queue);
+
+  bsgo::LootMessage message(bsgo::Uuid{2}, bsgo::Uuid{4}, 12);
+  message.setClientId(net::ClientId{118});
+  std::stringstream out;
+  message.serialize(out);
+  const auto serialized = out.str();
+  std::vector<char> data(serialized.begin(), serialized.end());
+
+  net::DataReceivedEvent event(net::ClientId{17}, std::vector<char>(data.begin(), data.end()));
+  adapter.onEventReceived(event);
+
+  EXPECT_EQ(1u, queue->messages().size());
+  const auto &actual = queue->messages().at(0);
+  EXPECT_EQ(bsgo::MessageType::LOOT, actual->type());
+  EXPECT_EQ(net::ClientId{17}, actual->as<bsgo::LootMessage>().getClientId());
 }
 
 } // namespace bsgalone::core

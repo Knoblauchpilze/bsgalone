@@ -32,7 +32,7 @@ class NetworkAdapter : public net::IEventListener
 
   void registerPendingData(const net::DataReceivedEvent &event);
   auto onDataReceived(const net::ClientId clientId) -> int;
-  void feedMessagesToQueue(std::vector<bsgo::IMessagePtr> &&messages);
+  void feedMessagesToQueue(const net::ClientId clientId, std::vector<bsgo::IMessagePtr> &&messages);
   void removePendingData(const net::ClientId clientId, const int processed);
 };
 
