@@ -35,7 +35,8 @@ auto EventProcessor::acquireAndClearEvents() const -> std::deque<IEventPtr>
 }
 
 namespace {
-const auto UNIMPORTANT_EVENT_TYPES = std::unordered_set<EventType>{};
+const auto UNIMPORTANT_EVENT_TYPES = std::unordered_set<EventType>{EventType::DATA_RECEIVED,
+                                                                   EventType::DATA_SENT};
 
 struct EventsInfo
 {
