@@ -42,13 +42,13 @@ bool BroadcastMessageQueue::empty()
   return m_messages.empty();
 }
 
-void BroadcastMessageQueue::processMessages(const std::optional<int> &amount)
+void BroadcastMessageQueue::processMessages()
 {
   MessageProcessor processor(getName(), m_messages, m_locker, [this](const IMessage &message) {
     processMessage(message);
   });
 
-  processor.processMessages(amount);
+  processor.processMessages();
 }
 
 namespace {

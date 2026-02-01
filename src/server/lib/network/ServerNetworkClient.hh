@@ -25,7 +25,7 @@ class ServerNetworkClient : public IMessageQueue
   void addListener(IMessageListenerPtr listener) override;
   bool empty() override;
 
-  void processMessages(const std::optional<int> &amount = {}) override;
+  void processMessages() override;
 
   private:
   net::IEventBusShPtr m_eventBus{};

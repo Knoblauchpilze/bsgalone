@@ -20,7 +20,7 @@ class MessageProcessor : public core::CoreObject
                    std::mutex &locker,
                    MessageHandler handler);
 
-  void processMessages(const std::optional<int> &amount);
+  void processMessages();
 
   private:
   std::mutex &m_locker;
@@ -28,7 +28,7 @@ class MessageProcessor : public core::CoreObject
   MessageHandler m_handler{};
 
   auto acquireAndClearMessages() -> std::deque<IMessagePtr>;
-  void requeueMessages(std::deque<IMessagePtr> &&messages);
+  void printMessagesInfo(const std::deque<IMessagePtr> &messages) const;
 };
 
 } // namespace bsgo

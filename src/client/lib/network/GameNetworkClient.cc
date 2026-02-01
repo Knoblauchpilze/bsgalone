@@ -55,9 +55,9 @@ bool GameNetworkClient::empty()
   return m_inputQueue->empty();
 }
 
-void GameNetworkClient::processMessages(const std::optional<int> &amount)
+void GameNetworkClient::processMessages()
 {
-  m_inputQueue->processMessages(amount);
+  m_inputQueue->processMessages();
 }
 
 namespace {

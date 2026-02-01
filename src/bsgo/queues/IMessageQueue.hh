@@ -16,7 +16,7 @@ class IMessageQueue
   virtual void addListener(IMessageListenerPtr listener) = 0;
   virtual bool empty()                                   = 0;
 
-  virtual void processMessages(const std::optional<int> &amount = {}) = 0;
+  virtual void processMessages() = 0;
 };
 
 using IMessageQueuePtr   = std::unique_ptr<IMessageQueue>;

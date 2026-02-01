@@ -8,21 +8,21 @@ using namespace ::testing;
 
 namespace bsgalone::server {
 
-TEST(Unit_Bsgalone_Server_ServerEventListenerTest, ConsidersServerStartedEventAsRelevant)
+TEST(Unit_Bsgalone_Server_ServerEventListener, ConsidersServerStartedEventAsRelevant)
 {
   std::atomic_bool started;
   ServerEventListener listener(started);
   EXPECT_TRUE(listener.isEventRelevant(net::EventType::SERVER_STARTED));
 }
 
-TEST(Unit_Bsgalone_Server_ServerEventListenerTest, ConsidersServerStoppedEventAsRelevant)
+TEST(Unit_Bsgalone_Server_ServerEventListener, ConsidersServerStoppedEventAsRelevant)
 {
   std::atomic_bool started;
   ServerEventListener listener(started);
   EXPECT_TRUE(listener.isEventRelevant(net::EventType::SERVER_STOPPED));
 }
 
-TEST(Unit_Bsgalone_Server_ServerEventListenerTest, SetsStartedToTrueWhenServerStartedEventReceived)
+TEST(Unit_Bsgalone_Server_ServerEventListener, SetsStartedToTrueWhenServerStartedEventReceived)
 {
   std::atomic_bool started(false);
   ServerEventListener listener(started);
@@ -33,7 +33,7 @@ TEST(Unit_Bsgalone_Server_ServerEventListenerTest, SetsStartedToTrueWhenServerSt
   EXPECT_TRUE(started.load());
 }
 
-TEST(Unit_Bsgalone_Server_ServerEventListenerTest, SetsStartedToFalseWhenServerStoppedEventReceived)
+TEST(Unit_Bsgalone_Server_ServerEventListener, SetsStartedToFalseWhenServerStoppedEventReceived)
 {
   std::atomic_bool started(true);
   ServerEventListener listener(started);

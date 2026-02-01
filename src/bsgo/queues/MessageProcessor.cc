@@ -15,6 +15,25 @@ MessageProcessor::MessageProcessor(const std::string &onBehalfOfName,
   setService("message");
 }
 
+void MessageProcessor::processMessages()
+{
+  const auto messages = acquireAndClearMessages();
+  for (const auto &message : messages)
+  {
+    m_handler(*message);
+  }
+
+  printMessagesInfo(messages);
+}
+
+auto MessageProcessor::acquireAndClearMessages() -> std::deque<IMessagePtr>
+{
+  const std::lock_guard guard(m_locker);
+  std::deque<IMessagePtr> messages;
+  std::swap(messages, m_messages);
+  return messages;
+}
+
 namespace {
 const auto UNIMPORTANT_MESSAGE_TYPES = std::unordered_set<MessageType>{MessageType::COMPONENT_SYNC};
 
@@ -25,13 +44,13 @@ struct MessagesInfo
   std::string messagesTypes{};
 };
 
-auto messagesTypesToString(const std::deque<IMessagePtr> &messages, const int count) -> MessagesInfo
+auto messagesTypesToString(const std::deque<IMessagePtr> &messages) -> MessagesInfo
 {
   MessagesInfo out{.messagesTypes = "{"};
 
-  for (auto id = 0; id < count; ++id)
+  for (const auto &message : messages)
   {
-    const auto messageType = messages[id]->type();
+    const auto messageType = message->type();
     if (UNIMPORTANT_MESSAGE_TYPES.contains(messageType))
     {
       ++out.unimportantMessagesCount;
@@ -45,7 +64,7 @@ auto messagesTypesToString(const std::deque<IMessagePtr> &messages, const int co
 
     ++out.importantMessagesCount;
 
-    out.messagesTypes += str(messages[id]->type());
+    out.messagesTypes += str(messageType);
   }
 
   if (out.unimportantMessagesCount > 0)
@@ -63,52 +82,24 @@ auto messagesTypesToString(const std::deque<IMessagePtr> &messages, const int co
 }
 } // namespace
 
-void MessageProcessor::processMessages(const std::optional<int> &amount)
+void MessageProcessor::printMessagesInfo(const std::deque<IMessagePtr> &messages) const
 {
-  auto messages            = acquireAndClearMessages();
-  const auto messagesCount = static_cast<int>(messages.size());
-
-  const auto count = (amount ? std::min(*amount, messagesCount) : messagesCount);
-  for (auto id = 0; id < count; ++id)
+  if (messages.empty())
   {
-    const auto &message = messages[id];
-    m_handler(*message);
+    return;
   }
 
-  if (!messages.empty() && count > 0)
+  const auto messagesInfo = messagesTypesToString(messages);
+  if (messagesInfo.importantMessagesCount > 0)
   {
-    const auto messagesInfo = messagesTypesToString(messages, count);
-    if (messagesInfo.importantMessagesCount > 0)
-    {
-      info("Processed " + std::to_string(count) + "/" + std::to_string(messages.size())
-           + " message(s): " + messagesInfo.messagesTypes);
-    }
-    else
-    {
-      verbose("Processed " + std::to_string(count) + "/" + std::to_string(messages.size())
-              + " message(s): " + messagesInfo.messagesTypes);
-    }
-    messages.erase(messages.begin(), messages.begin() + count);
+    info("Processed " + std::to_string(messages.size())
+         + " message(s): " + messagesInfo.messagesTypes);
   }
-
-  requeueMessages(std::move(messages));
-}
-
-auto MessageProcessor::acquireAndClearMessages() -> std::deque<IMessagePtr>
-{
-  const std::lock_guard guard(m_locker);
-  std::deque<IMessagePtr> messages;
-  std::swap(messages, m_messages);
-  return messages;
-}
-
-void MessageProcessor::requeueMessages(std::deque<IMessagePtr> &&messages)
-{
-  verbose("Requeuing " + std::to_string(messages.size()) + " message(s)");
-
-  const std::lock_guard guard(m_locker);
-  // https://stackoverflow.com/questions/35844999/move-stdvector-to-stddeque-in-c11
-  std::move(std::rbegin(messages), std::rend(messages), std::front_inserter(m_messages));
+  else
+  {
+    verbose("Processed " + std::to_string(messages.size())
+            + " message(s): " + messagesInfo.messagesTypes);
+  }
 }
 
 } // namespace bsgo

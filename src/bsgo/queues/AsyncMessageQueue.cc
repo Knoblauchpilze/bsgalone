@@ -53,7 +53,7 @@ bool AsyncMessageQueue::empty()
   return m_messageQueue->empty();
 }
 
-void AsyncMessageQueue::processMessages(const std::optional<int> & /*amount*/)
+void AsyncMessageQueue::processMessages()
 {
   error("Unsupported operation", "Message processing is already asynchronous");
 }
@@ -77,8 +77,7 @@ void AsyncMessageQueue::asyncMessageProcessing()
     running = m_running.load();
     if (running)
     {
-      constexpr auto MESSAGES_BATCH_SIZE = 10;
-      m_messageQueue->processMessages(MESSAGES_BATCH_SIZE);
+      m_messageQueue->processMessages();
     }
   }
 

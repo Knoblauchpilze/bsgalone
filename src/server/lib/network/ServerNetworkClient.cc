@@ -62,9 +62,9 @@ bool ServerNetworkClient::empty()
   return m_inputQueue->empty();
 }
 
-void ServerNetworkClient::processMessages(const std::optional<int> &amount)
+void ServerNetworkClient::processMessages()
 {
-  m_inputQueue->processMessages(amount);
+  m_inputQueue->processMessages();
 }
 
 namespace {

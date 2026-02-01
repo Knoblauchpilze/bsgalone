@@ -24,7 +24,7 @@ class GameNetworkClient : public bsgo::IMessageQueue
   void addListener(bsgo::IMessageListenerPtr listener) override;
   bool empty() override;
 
-  void processMessages(const std::optional<int> &amount = {}) override;
+  void processMessages() override;
 
   private:
   net::IEventBusShPtr m_eventBus{};
