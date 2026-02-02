@@ -28,11 +28,11 @@ TEST_F(Integration_Net_Client_AsioClient, ConnectsToServerAndPublishesClientConn
   client->connect(this->asioContext(), LOCALHOST_URL, this->port());
 
   const auto sockets = this->waitForServerSocket();
-  sockets.writeServer(net::ClientId{32});
 
   const auto actual = bus->waitForEvent();
   EXPECT_EQ(EventType::CLIENT_CONNECTED, actual->type());
-  EXPECT_EQ(net::ClientId{32}, actual->as<ClientConnectedEvent>().clientId());
+  // TODO: This should not contain any client id.
+  EXPECT_EQ(net::ClientId{0}, actual->as<ClientConnectedEvent>().clientId());
 }
 
 TEST_F(Integration_Net_Client_AsioClient, DetectsDisconnectionAndPublishesClientDisconnectedEvent)

@@ -98,6 +98,8 @@ class AsioClient : public core::CoreObject,
   /// otherwise.
   /// There's currently no good way to know if it is set with a correct value or not. This
   /// is not needed at the moment but could be improved in the future.
+  /// TODO: this value is not provided by the server anymore, maybe a bigger change is needed
+  /// to also not required a client id in the reader and writer
   ClientId m_clientId{};
 
   /// @brief - Holds the reader to interact with the socket attached to the client. It is always
@@ -109,7 +111,12 @@ class AsioClient : public core::CoreObject,
   WritingSocketShPtr m_writer{};
 
   void onConnectionEstablished(const std::error_code &code, const asio::ip::tcp::endpoint &endpoint);
-  void onDataReceived(const std::error_code &code, const std::size_t contentLength);
+
+  /// @brief - Handles cases where the client has been terminated before the connection could
+  /// be successfully established with the server. This allows to not publish a connected event
+  /// and generally shortcut the connection process.
+  /// @return - true if the client has been disconnected and there's no need to publish an event.
+  bool handlePrematureDisconnection();
 
   /// @brief - Once the connection has been setup, this method can be used to setup the reading
   /// and writing socket to wrap the interaction with it. After calling this, the socket will

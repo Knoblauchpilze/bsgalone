@@ -39,24 +39,6 @@ TEST_F(Integration_Net_Server_AsioServer, AcceptsConnectionAndPublishesClientCon
   server->shutdown();
 }
 
-TEST_F(Integration_Net_Server_AsioServer, SendsClientIdToConnection)
-{
-  auto bus    = std::make_shared<TestEventBus>();
-  auto server = std::make_shared<AsioServer>(this->asioContext(), this->port(), bus);
-  server->start();
-
-  ConnectedSockets sockets{.client = this->connectToRunningServer()};
-  auto event = bus->waitForEvent();
-  EXPECT_EQ(EventType::CLIENT_CONNECTED, event->type());
-  const auto expectedClientId = event->as<ClientConnectedEvent>().clientId();
-
-  const auto actual              = sockets.readClient(sizeof(ClientId));
-  const auto actualAsClientIdPtr = reinterpret_cast<const ClientId *>(actual.data());
-  EXPECT_EQ(expectedClientId, *actualAsClientIdPtr);
-
-  server->shutdown();
-}
-
 TEST_F(Integration_Net_Server_AsioServer, AcceptsMultipleConnections)
 {
   auto bus    = std::make_shared<TestEventBus>();
@@ -210,9 +192,6 @@ TEST_F(Integration_Net_Server_AsioServer, WritesDataToClientSocket)
 
   std::string data("test");
   server->trySend(expectedClientId, std::vector<char>(data.begin(), data.end()));
-
-  // Drain the client id to get the written data.
-  sockets.drainClient(sizeof(ClientId));
 
   const auto actual = sockets.readClient(data.size());
   EXPECT_EQ("test", actual);
