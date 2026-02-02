@@ -66,7 +66,7 @@ TEST_F(Integration_Net_Client_TcpClient, PublishesServerStoppedEvent)
   auto bus    = std::make_shared<TestEventBus>();
   auto client = std::make_shared<TcpClient>(bus);
   startClient(client, this->port(), bus);
-  this->performHandshake(bus);
+  this->waitForClientConnectedEvent(bus);
 
   client->disconnect();
 
@@ -83,11 +83,11 @@ TEST_F(Integration_Net_Client_TcpClient, EstablishesConnectionAndPublishesClient
   startClient(client, this->port(), bus);
 
   const auto sockets = this->waitForServerSocket();
-  sockets.writeServer(net::ClientId{32});
 
   const auto actual = bus->waitForEvent();
   EXPECT_EQ(EventType::CLIENT_CONNECTED, actual->type());
-  EXPECT_EQ(net::ClientId{32}, actual->as<ClientConnectedEvent>().clientId());
+  // TODO: Should not expect a specific client id
+  EXPECT_EQ(net::ClientId{0}, actual->as<ClientConnectedEvent>().clientId());
 }
 
 TEST_F(Integration_Net_Client_TcpClient, DetectsDisconnectionAndPublishesClientDisconnectedEvent)
@@ -96,7 +96,7 @@ TEST_F(Integration_Net_Client_TcpClient, DetectsDisconnectionAndPublishesClientD
   auto client = std::make_shared<TcpClient>(bus);
   startClient(client, this->port(), bus);
 
-  const auto [expectedClientId, sockets] = this->performHandshake(bus);
+  const auto [expectedClientId, sockets] = this->waitForClientConnectedEvent(bus);
 
   sockets.server->shutdown(asio::ip::tcp::socket::shutdown_both);
   const auto event = bus->waitForEvent();
@@ -110,7 +110,7 @@ TEST_F(Integration_Net_Client_TcpClient, PublishesClientDisconnectedEventWhenCli
   auto client = std::make_shared<TcpClient>(bus);
   startClient(client, this->port(), bus);
 
-  const auto [expectedClientId, _] = this->performHandshake(bus);
+  const auto [expectedClientId, _] = this->waitForClientConnectedEvent(bus);
 
   client->disconnect();
 
@@ -125,7 +125,7 @@ TEST_F(Integration_Net_Client_TcpClient, SendsDataToServerSocket)
   auto client = std::make_shared<TcpClient>(bus);
   startClient(client, this->port(), bus);
 
-  const auto [expectedClientId, sockets] = this->performHandshake(bus);
+  const auto [expectedClientId, sockets] = this->waitForClientConnectedEvent(bus);
 
   std::string data("test");
   client->trySend(std::vector<char>(data.begin(), data.end()));
@@ -140,7 +140,7 @@ TEST_F(Integration_Net_Client_TcpClient, PublishesDataSentEvent)
   auto client = std::make_shared<TcpClient>(bus);
   startClient(client, this->port(), bus);
 
-  const auto [expectedClientId, _] = this->performHandshake(bus);
+  const auto [expectedClientId, _] = this->waitForClientConnectedEvent(bus);
 
   std::string data("test");
   const auto expectedMessageId = client->trySend(std::vector<char>(data.begin(), data.end()));

@@ -30,12 +30,10 @@ auto TcpServerFixture::getTestSockets() -> ConnectedSockets
   return sockets;
 }
 
-auto TcpServerFixture::performHandshake(TestEventBusShPtr &eventBus)
+auto TcpServerFixture::waitForClientConnectedEvent(TestEventBusShPtr &eventBus)
   -> std::pair<net::ClientId, ConnectedSockets>
 {
   const auto sockets = this->waitForServerSocket();
-  net::ClientId clientId{32};
-  sockets.writeServer(clientId);
 
   const auto event = eventBus->waitForEvent();
   if (event->type() != net::EventType::CLIENT_CONNECTED)
@@ -45,13 +43,7 @@ auto TcpServerFixture::performHandshake(TestEventBusShPtr &eventBus)
   }
 
   const auto actualClientId = event->as<net::ClientConnectedEvent>().clientId();
-  if (actualClientId != clientId)
-  {
-    throw std::runtime_error("Received unexpected client " + net::str(actualClientId)
-                             + " but expected " + net::str(clientId));
-  }
-
-  return {clientId, sockets};
+  return {actualClientId, sockets};
 }
 
 } // namespace test
