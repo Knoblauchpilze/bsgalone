@@ -35,8 +35,9 @@ TEST_F(Integration_Bsgalone_Client_GameClientTest, StopsWhenRequested)
   bus->waitForEvent(net::EventType::SERVER_STARTED);
 
   client.requestStop();
-  const auto event = bus->waitForEvent();
-  EXPECT_EQ(net::EventType::SERVER_STOPPED, event->type());
+  // It is expected to receive a client connected event, a client disconnected event
+  // and finally the server stopped event.
+  bus->waitForEvent(net::EventType::SERVER_STOPPED, 3);
 
   result.get();
 }
