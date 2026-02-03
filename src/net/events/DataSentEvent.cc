@@ -3,13 +3,13 @@
 
 namespace net {
 
-DataSentEvent::DataSentEvent(const ClientId clientId, const MessageId messageId)
+DataSentEvent::DataSentEvent(const std::optional<ClientId> &clientId, const MessageId messageId)
   : IEvent(EventType::DATA_SENT)
   , m_clientId(clientId)
   , m_messageId(messageId)
 {}
 
-auto DataSentEvent::clientId() const -> ClientId
+auto DataSentEvent::tryGetClientId() const -> std::optional<ClientId>
 {
   return m_clientId;
 }

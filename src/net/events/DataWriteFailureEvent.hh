@@ -4,22 +4,23 @@
 #include "ClientId.hh"
 #include "IEvent.hh"
 #include "MessageId.hh"
+#include <optional>
 
 namespace net {
 
 class DataWriteFailureEvent : public IEvent
 {
   public:
-  DataWriteFailureEvent(const ClientId clientId, const MessageId messageId);
+  DataWriteFailureEvent(const std::optional<ClientId> &clientId, const MessageId messageId);
   ~DataWriteFailureEvent() override = default;
 
-  auto clientId() const -> ClientId;
+  auto tryGetClientId() const -> std::optional<ClientId>;
   auto messageId() const -> MessageId;
 
   auto clone() const -> IEventPtr override;
 
   private:
-  ClientId m_clientId{};
+  std::optional<ClientId> m_clientId{};
   MessageId m_messageId{};
 };
 
