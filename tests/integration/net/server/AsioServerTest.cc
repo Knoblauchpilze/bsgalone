@@ -91,7 +91,7 @@ TEST_F(Integration_Net_Server_AsioServer, PublishesDataReceivedEventWhenDataIsRe
 
   event = bus->waitForEvent();
   EXPECT_EQ(EventType::DATA_RECEIVED, event->type());
-  EXPECT_EQ(expectedClientId, event->as<DataReceivedEvent>().clientId());
+  EXPECT_EQ(expectedClientId, event->as<DataReceivedEvent>().tryGetClientId().value());
   const std::vector<char> expectedData(data.begin(), data.end());
   EXPECT_EQ(expectedData, event->as<DataReceivedEvent>().data());
 
@@ -215,7 +215,7 @@ TEST_F(Integration_Net_Server_AsioServer, PublishesDataSentEvent)
 
   event = bus->waitForEvent();
   EXPECT_EQ(EventType::DATA_SENT, event->type());
-  EXPECT_EQ(expectedClientId, event->as<DataSentEvent>().clientId());
+  EXPECT_EQ(expectedClientId, event->as<DataSentEvent>().tryGetClientId().value());
   const std::vector<char> expectedData(data.begin(), data.end());
   EXPECT_EQ(expectedMessageId.value(), event->as<DataSentEvent>().messageId());
 }

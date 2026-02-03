@@ -157,9 +157,9 @@ auto tryGetClientId(const IEvent &event) -> std::optional<ClientId>
   switch (event.type())
   {
     case EventType::DATA_READ_FAILURE:
-      return event.as<DataReadFailureEvent>().clientId();
+      return event.as<DataReadFailureEvent>().tryGetClientId();
     case EventType::DATA_WRITE_FAILURE:
-      return event.as<DataWriteFailureEvent>().clientId();
+      return event.as<DataWriteFailureEvent>().tryGetClientId();
     default:
       return {};
   }
