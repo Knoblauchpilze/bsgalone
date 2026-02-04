@@ -87,7 +87,7 @@ TEST_F(Integration_Net_Sockets_ReadingSocket, PublishesDataReadFailureEventWhenS
 }
 
 TEST_F(Integration_Net_Sockets_ReadingSocket,
-       PublishesDataReadFailureWithNoClientIdentifierEventWhenServerSocketIsClosed)
+       PublishesDataReadFailureEventWithNoClientIdentifierWhenServerSocketIsClosed)
 {
   auto sockets = this->getTestSockets();
   auto bus     = std::make_shared<TestEventBus>();

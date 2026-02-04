@@ -15,7 +15,21 @@ namespace net::details {
 class WritingSocket : public core::CoreObject, public std::enable_shared_from_this<WritingSocket>
 {
   public:
+  /// @brief - Creates a writing socket to instrument the input raw socket and publish
+  /// network events to the input event bus.
+  /// With this constructor the events will not be attached to any client identifier.
+  /// @param socket - the raw socket to send data to
+  /// @param eventBus - the event bus to use to publish network related events
+  WritingSocket(SocketShPtr socket, IEventBusShPtr eventBus);
+
+  /// @brief - Creates a writing socket to instrument the input raw socket and publish
+  /// network events to the input event bus.
+  /// With this constructor the events will be attached to the input  client identifier.
+  /// @param clientId - the identifier of the client to assign to network events
+  /// @param socket - the raw socket to send data to
+  /// @param eventBus - the event bus to use to publish network related events
   WritingSocket(const ClientId clientId, SocketShPtr socket, IEventBusShPtr eventBus);
+
   ~WritingSocket() override = default;
 
   void send(const MessageId messageId, std::vector<char> bytes);
@@ -28,7 +42,7 @@ class WritingSocket : public core::CoreObject, public std::enable_shared_from_th
   };
   using MessageToSendPtr = std::unique_ptr<MessageToSend>;
 
-  ClientId m_clientId{};
+  std::optional<ClientId> m_clientId{};
   SocketShPtr m_socket{};
   std::atomic_bool m_socketActive{true};
 
