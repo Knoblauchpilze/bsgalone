@@ -23,15 +23,17 @@ void NetworkAdapter::onEventReceived(const net::IEvent &event)
 {
   const auto &dataReceived = event.as<net::DataReceivedEvent>();
   registerPendingData(dataReceived);
-  const auto processed = onDataReceived(dataReceived.clientId());
-  removePendingData(dataReceived.clientId(), processed);
+  // TODO: Do not expect this as it might not be provided
+  const auto processed = onDataReceived(dataReceived.tryGetClientId().value());
+  removePendingData(dataReceived.tryGetClientId().value(), processed);
 }
 
 void NetworkAdapter::registerPendingData(const net::DataReceivedEvent &event)
 {
   const std::lock_guard guard(m_locker);
 
-  auto &pendingData = m_pendingData[event.clientId()];
+  // TODO: Do not expect this as it might not be provided
+  auto &pendingData = m_pendingData[event.tryGetClientId().value()];
   std::vector<char> toAdd(event.data());
   pendingData.bytes.insert(pendingData.bytes.end(), toAdd.begin(), toAdd.end());
 }
