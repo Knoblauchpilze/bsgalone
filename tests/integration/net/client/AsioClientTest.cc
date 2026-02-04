@@ -55,14 +55,14 @@ TEST_F(Integration_Net_Client_AsioClient, PublishesDataReceivedEventWhenDataIsRe
   auto client = std::make_shared<AsioClient>(bus);
   client->connect(this->asioContext(), LOCALHOST_URL, this->port());
 
-  const auto [expectedClientId, sockets] = this->waitForClientConnectedEvent(bus);
+  const auto [_, sockets] = this->waitForClientConnectedEvent(bus);
 
   std::string data("test");
   sockets.writeServer(data);
 
   const auto event = bus->waitForEvent();
   EXPECT_EQ(EventType::DATA_RECEIVED, event->type());
-  EXPECT_EQ(expectedClientId, event->as<DataReceivedEvent>().clientId());
+  EXPECT_FALSE(event->as<DataReceivedEvent>().tryGetClientId().has_value());
   const std::vector<char> expectedData(data.begin(), data.end());
   EXPECT_EQ(expectedData, event->as<DataReceivedEvent>().data());
 }
@@ -133,7 +133,7 @@ TEST_F(Integration_Net_Client_AsioClient, PublishesDataSentEvent)
   auto client = std::make_shared<AsioClient>(bus);
   client->connect(this->asioContext(), LOCALHOST_URL, this->port());
 
-  const auto [expectedClientId, _] = this->waitForClientConnectedEvent(bus);
+  this->waitForClientConnectedEvent(bus);
 
   std::string data("test");
   const auto expectedMessageId = client->trySend(std::vector<char>(data.begin(), data.end()));
@@ -141,7 +141,7 @@ TEST_F(Integration_Net_Client_AsioClient, PublishesDataSentEvent)
 
   const auto event = bus->waitForEvent();
   EXPECT_EQ(EventType::DATA_SENT, event->type());
-  EXPECT_EQ(expectedClientId, event->as<DataSentEvent>().clientId());
+  EXPECT_FALSE(event->as<DataSentEvent>().tryGetClientId().has_value());
   const std::vector<char> expectedData(data.begin(), data.end());
   EXPECT_EQ(expectedMessageId.value(), event->as<DataSentEvent>().messageId());
 }

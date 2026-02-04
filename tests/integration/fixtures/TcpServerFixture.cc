@@ -42,6 +42,8 @@ auto TcpServerFixture::waitForClientConnectedEvent(TestEventBusShPtr &eventBus)
                              + " while waiting for client connected event");
   }
 
+  // TODO: The client id can probably not be provided anymore when the connection
+  // established event is sent
   const auto actualClientId = event->as<net::ClientConnectedEvent>().clientId();
   return {actualClientId, sockets};
 }

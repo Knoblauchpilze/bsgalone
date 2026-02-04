@@ -140,7 +140,7 @@ TEST_F(Integration_Net_Client_TcpClient, PublishesDataSentEvent)
   auto client = std::make_shared<TcpClient>(bus);
   startClient(client, this->port(), bus);
 
-  const auto [expectedClientId, _] = this->waitForClientConnectedEvent(bus);
+  this->waitForClientConnectedEvent(bus);
 
   std::string data("test");
   const auto expectedMessageId = client->trySend(std::vector<char>(data.begin(), data.end()));
@@ -148,7 +148,7 @@ TEST_F(Integration_Net_Client_TcpClient, PublishesDataSentEvent)
 
   const auto event = bus->waitForEvent();
   EXPECT_EQ(EventType::DATA_SENT, event->type());
-  EXPECT_EQ(expectedClientId, event->as<DataSentEvent>().clientId());
+  EXPECT_FALSE(event->as<DataSentEvent>().tryGetClientId().has_value());
   const std::vector<char> expectedData(data.begin(), data.end());
   EXPECT_EQ(expectedMessageId.value(), event->as<DataSentEvent>().messageId());
 }
