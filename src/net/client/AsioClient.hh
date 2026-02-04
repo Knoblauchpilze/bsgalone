@@ -40,18 +40,15 @@ class AsioClient : public core::CoreObject,
   bool isEventRelevant(const EventType &type) const override;
   void onEventReceived(const IEvent &event) override;
 
-  /// @brief - Used to send a message to the client identified by the input identifier.
-  /// Sending the data is queued for processing and will be send asynchronously.
-  /// Some notes:
-  ///   - in case the client identifier cannot be matched to an active connection, it will
-  ///     be discarded and an empty message identifier will be returned.
+  /// @brief - Used to send a message to the server. Sending the data is queued for processing
+  /// and will be send asynchronously. Some notes:
   ///   - in case the `bytes` to send are empty, the function will return early and an
   ///     empty message identifier will be returned.
+  ///   - in case the client is not connected, the function will raise an error
   /// It is possible to receive information about the data being sent by listening for
   /// `DataSentEvent` with the corresponding message identifier.
-  /// @param clientId - the identifier of the client to send the message to
   /// @param bytes - the content of the message
-  /// @return - an identifier for the message or empty if the client does not exist
+  /// @return - an identifier for the message or empty if the data is empty
   auto trySend(std::vector<char> bytes) -> std::optional<MessageId>;
 
   private:
@@ -93,15 +90,6 @@ class AsioClient : public core::CoreObject,
   /// This socket is used by the reader and writer objects.
   SocketShPtr m_socket{};
 
-  /// @brief - Holds the client identifier received from the remote server. This value is set
-  /// when the `connect` method reaches it conclusion without error. Its value is meaningless
-  /// otherwise.
-  /// There's currently no good way to know if it is set with a correct value or not. This
-  /// is not needed at the moment but could be improved in the future.
-  /// TODO: this value is not provided by the server anymore, maybe a bigger change is needed
-  /// to also not required a client id in the reader and writer
-  ClientId m_clientId{};
-
   /// @brief - Holds the reader to interact with the socket attached to the client. It is always
   /// waiting on new data as soon as the `connect` method has been called.
   ReadingSocketShPtr m_reader{};
@@ -122,7 +110,8 @@ class AsioClient : public core::CoreObject,
   /// and writing socket to wrap the interaction with it. After calling this, the socket will
   /// be instrumented and the internal event bus will start receiving events representing what
   /// happens on the socket (such as data received or sent).
-  /// The client identifier owned by this object will be associated with all events produced.
+  /// The events produced by this object will not be attached to any client identifier as this
+  /// information is not available to the client.
   void setupConnection();
 
   void handleConnectionFailure(const IEvent &event);

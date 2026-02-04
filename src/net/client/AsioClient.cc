@@ -2,8 +2,8 @@
 #include "AsioClient.hh"
 #include "AsioUtils.hh"
 #include "AsyncEventBus.hh"
-#include "ClientConnectedEvent.hh"
-#include "ClientDisconnectedEvent.hh"
+#include "ConnectionEstablishedEvent.hh"
+#include "ConnectionLostEvent.hh"
 #include "SynchronizedEventBus.hh"
 
 namespace net::details {
@@ -196,11 +196,11 @@ void AsioClient::onConnectionEstablished(const std::error_code &code,
     return;
   }
 
-  info("Successfully connected as client " + net::str(m_clientId));
+  info("Successfully connected to server");
 
   setupConnection();
 
-  m_eventBus->pushEvent(std::make_unique<ClientConnectedEvent>(m_clientId));
+  m_eventBus->pushEvent(std::make_unique<ConnectionEstablishedEvent>());
 }
 
 bool AsioClient::handlePrematureDisconnection()
@@ -220,8 +220,8 @@ bool AsioClient::handlePrematureDisconnection()
 void AsioClient::setupConnection()
 {
   std::unique_lock guard(m_locker);
-  m_reader = std::make_shared<ReadingSocket>(m_clientId, m_socket, m_internalBus);
-  m_writer = std::make_shared<WritingSocket>(m_clientId, m_socket, m_internalBus);
+  m_reader = std::make_shared<ReadingSocket>(m_socket, m_internalBus);
+  m_writer = std::make_shared<WritingSocket>(m_socket, m_internalBus);
   m_reader->connect();
   m_status = ConnectionStatus::CONNECTED;
 }
@@ -229,7 +229,7 @@ void AsioClient::setupConnection()
 void AsioClient::handleConnectionFailure(const IEvent & /*event*/)
 {
   debug("Detected network failure");
-  m_eventBus->pushEvent(std::make_unique<ClientDisconnectedEvent>(m_clientId));
+  m_eventBus->pushEvent(std::make_unique<ConnectionLostEvent>());
   setConnectionStatusAndNotify(ConnectionStatus::DISCONNECTED);
 }
 

@@ -50,7 +50,7 @@ TEST_F(Integration_Bsgalone_Client_GameClientTest, PublishesEventWhenServerSends
   auto result = std::async(std::launch::async, [this, &client]() { client.run(this->port()); });
   bus->waitForEvent(net::EventType::SERVER_STARTED);
 
-  const auto [_, sockets] = this->waitForClientConnectedEvent(bus);
+  const auto sockets = this->waitForConnectionEstablishedEvent(bus);
 
   std::string data("test");
   sockets.writeServer(data);

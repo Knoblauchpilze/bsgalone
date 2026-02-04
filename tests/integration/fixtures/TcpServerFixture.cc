@@ -30,22 +30,19 @@ auto TcpServerFixture::getTestSockets() -> ConnectedSockets
   return sockets;
 }
 
-auto TcpServerFixture::waitForClientConnectedEvent(TestEventBusShPtr &eventBus)
-  -> std::pair<net::ClientId, ConnectedSockets>
+auto TcpServerFixture::waitForConnectionEstablishedEvent(TestEventBusShPtr &eventBus)
+  -> ConnectedSockets
 {
   const auto sockets = this->waitForServerSocket();
 
   const auto event = eventBus->waitForEvent();
-  if (event->type() != net::EventType::CLIENT_CONNECTED)
+  if (event->type() != net::EventType::CONNECTION_ESTABLISHED)
   {
     throw std::runtime_error("Received unexpected event " + net::str(event->type())
-                             + " while waiting for client connected event");
+                             + " while waiting for connection established event");
   }
 
-  // TODO: The client id can probably not be provided anymore when the connection
-  // established event is sent
-  const auto actualClientId = event->as<net::ClientConnectedEvent>().clientId();
-  return {actualClientId, sockets};
+  return sockets;
 }
 
 } // namespace test

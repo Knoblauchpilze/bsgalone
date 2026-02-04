@@ -36,17 +36,14 @@ class TcpServerFixture : public TcpFixture
   /// @return - two connected sockets
   auto getTestSockets() -> ConnectedSockets;
 
-  /// @brief - This method awaits a server socket and verifies that a client connected
+  /// @brief - This method awaits a server socket and verifies that a connection established
   /// event is received on the event bus. This means:
   ///   - waiting for a server socket
-  ///   - waiting for a client connected event on the test event bus
-  ///   - controlling that the client identifier is the one sent in the server socket
-  /// The output describes the client identifier received when connecting to the server
-  /// and the sockets received. Only the server socket holds valid data.
-  /// @return - the client identifier sent to the server socket and the sockets received
-  /// during the connection. Only the server socket will hold a valid socket
-  auto waitForClientConnectedEvent(TestEventBusShPtr &eventBus)
-    -> std::pair<net::ClientId, ConnectedSockets>;
+  ///   - waiting for a client established event on the test event bus
+  /// The output describes the sockets received. Only the server socket holds valid data.
+  /// @return - sockets received during the connection. Only the server socket will hold a
+  /// valid socket
+  auto waitForConnectionEstablishedEvent(TestEventBusShPtr &eventBus) -> ConnectedSockets;
 
   private:
   TcpAcceptorShPtr m_acceptor{};
