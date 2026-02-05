@@ -99,9 +99,7 @@ class NetworkEventListener : public net::IEventListener
   {
     m_connected.store(true);
 
-    // TODO: The client identifier does not matter
-    auto message = std::make_unique<bsgo::ConnectionMessage>(net::ClientId{0});
-    message->validate();
+    auto message = std::make_unique<bsgo::ConnectionMessage>();
     m_inputQueue->pushMessage(std::move(message));
   }
 
