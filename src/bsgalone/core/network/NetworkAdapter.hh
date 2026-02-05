@@ -27,13 +27,26 @@ class NetworkAdapter : public net::IEventListener
     std::deque<char> bytes{};
   };
 
+  /// @brief - Protects access to the pending data.
   std::mutex m_locker{};
+
+  /// @brief - Holds the pending data received without any client identifier
+  /// attached to it. This is used in the client applications where the data
+  /// comes without an identifier as the server does not communicate it.
+  ClientData m_noClientData{};
+
+  /// @brief - Holds the pending data for each client. Each time new data is
+  /// received, the adapter adds it to the corresponding client data and tries
+  /// to build messages out of it.
+  /// When a message is built, the corresponding data is removed from the
+  /// pending list.
   std::unordered_map<net::ClientId, ClientData> m_pendingData{};
 
   void registerPendingData(const net::DataReceivedEvent &event);
-  auto onDataReceived(const net::ClientId clientId) -> int;
-  void feedMessagesToQueue(const net::ClientId clientId, std::vector<bsgo::IMessagePtr> &&messages);
-  void removePendingData(const net::ClientId clientId, const int processed);
+  auto onDataReceived(const std::optional<net::ClientId> &maybeClientId) -> int;
+  void feedMessagesToQueue(const std::optional<net::ClientId> &maybeClientId,
+                           std::vector<bsgo::IMessagePtr> &&messages);
+  void removePendingData(const std::optional<net::ClientId> &maybeClientId, const int processed);
 };
 
 } // namespace bsgalone::core
