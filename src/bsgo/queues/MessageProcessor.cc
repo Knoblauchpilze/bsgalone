@@ -35,7 +35,9 @@ auto MessageProcessor::acquireAndClearMessages() -> std::deque<IMessagePtr>
 }
 
 namespace {
-const auto UNIMPORTANT_MESSAGE_TYPES = std::unordered_set<MessageType>{MessageType::COMPONENT_SYNC};
+const auto UNIMPORTANT_MESSAGE_TYPES = std::unordered_set<MessageType>{MessageType::COMPONENT_SYNC,
+                                                                       MessageType::AI_BEHAVIOR_SYNC,
+                                                                       MessageType::VELOCITY};
 
 struct MessagesInfo
 {
