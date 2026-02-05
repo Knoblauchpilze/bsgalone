@@ -8,6 +8,25 @@ namespace net::details {
 constexpr auto KILOBYTES                              = 1'024;
 constexpr auto INCOMING_DATA_MAX_BUFFER_SIZE_IN_BYTES = 10 * KILOBYTES;
 
+ReadingSocket::ReadingSocket(SocketShPtr socket, IEventBusShPtr eventBus)
+  : core::CoreObject("reading")
+  , m_socket(std::move(socket))
+  , m_incomingDataTempBuffer(INCOMING_DATA_MAX_BUFFER_SIZE_IN_BYTES, 0)
+  , m_eventBus(std::move(eventBus))
+{
+  setService("net");
+  addModule("socket");
+
+  if (m_socket == nullptr)
+  {
+    throw std::invalid_argument("Expected non null socket");
+  }
+  if (m_eventBus == nullptr)
+  {
+    throw std::invalid_argument("Expected non null event bus");
+  }
+}
+
 ReadingSocket::ReadingSocket(const ClientId clientId, SocketShPtr socket, IEventBusShPtr eventBus)
   : core::CoreObject("reading")
   , m_clientId(clientId)

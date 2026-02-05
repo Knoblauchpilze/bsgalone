@@ -7,6 +7,10 @@ auto str(const EventType &type) -> std::string
 {
   switch (type)
   {
+    case EventType::CONNECTION_ESTABLISHED:
+      return "connection_established";
+    case EventType::CONNECTION_LOST:
+      return "connection_lost";
     case EventType::CLIENT_CONNECTED:
       return "client_connected";
     case EventType::CLIENT_DISCONNECTED:
@@ -31,6 +35,8 @@ auto str(const EventType &type) -> std::string
 auto allEventTypesAsSet() -> std::unordered_set<EventType>
 {
   return std::unordered_set<EventType>{
+    EventType::CONNECTION_ESTABLISHED,
+    EventType::CONNECTION_LOST,
     EventType::CLIENT_CONNECTED,
     EventType::CLIENT_DISCONNECTED,
     EventType::DATA_READ_FAILURE,

@@ -3,13 +3,13 @@
 
 namespace net {
 
-DataReceivedEvent::DataReceivedEvent(const ClientId clientId, std::vector<char> data)
+DataReceivedEvent::DataReceivedEvent(const std::optional<ClientId> &clientId, std::vector<char> data)
   : IEvent(EventType::DATA_RECEIVED)
   , m_clientId(clientId)
   , m_data(std::move(data))
 {}
 
-auto DataReceivedEvent::clientId() const -> ClientId
+auto DataReceivedEvent::tryGetClientId() const -> std::optional<ClientId>
 {
   return m_clientId;
 }

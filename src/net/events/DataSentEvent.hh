@@ -4,22 +4,23 @@
 #include "ClientId.hh"
 #include "IEvent.hh"
 #include "MessageId.hh"
+#include <optional>
 
 namespace net {
 
 class DataSentEvent : public IEvent
 {
   public:
-  DataSentEvent(const ClientId clientId, const MessageId messageId);
+  DataSentEvent(const std::optional<ClientId> &clientId, const MessageId messageId);
   ~DataSentEvent() override = default;
 
-  auto clientId() const -> ClientId;
+  auto tryGetClientId() const -> std::optional<ClientId>;
   auto messageId() const -> MessageId;
 
   auto clone() const -> IEventPtr override;
 
   private:
-  ClientId m_clientId{};
+  std::optional<ClientId> m_clientId{};
   MessageId m_messageId{};
 };
 

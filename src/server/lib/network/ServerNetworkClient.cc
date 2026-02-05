@@ -5,7 +5,6 @@
 #include "BroadcastMessageQueue.hh"
 #include "ClientConnectedEvent.hh"
 #include "ClientDisconnectedEvent.hh"
-#include "ConnectionMessage.hh"
 #include "LogoutMessage.hh"
 #include "NetworkAdapter.hh"
 #include "NetworkMessage.hh"
@@ -110,10 +109,6 @@ class ClientEventListener : public net::IEventListener
   void handleClientConnected(const net::ClientConnectedEvent &event)
   {
     m_manager->registerClient(event.clientId());
-
-    auto message = std::make_unique<ConnectionMessage>(event.clientId());
-    message->validate();
-    m_outputQueue->pushMessage(std::move(message));
   }
 
   void handleClientDisconnected(const net::ClientDisconnectedEvent &event)

@@ -39,7 +39,23 @@ TEST_F(Integration_Net_Sockets_WritingSocket, PublishesDataSentEvent)
 
   const auto actual = bus->waitForEvent();
   EXPECT_EQ(EventType::DATA_SENT, actual->type());
-  EXPECT_EQ(ClientId{1}, actual->as<DataSentEvent>().clientId());
+  EXPECT_EQ(ClientId{1}, actual->as<DataSentEvent>().tryGetClientId().value());
+  EXPECT_EQ(MessageId{4}, actual->as<DataSentEvent>().messageId());
+}
+
+TEST_F(Integration_Net_Sockets_WritingSocket, PublishesDataSentEventWithNoClientIdWhenNotSpecified)
+{
+  auto sockets = this->getTestSockets();
+  auto bus     = std::make_shared<TestEventBus>();
+  auto socket  = std::make_shared<WritingSocket>(sockets.client, bus);
+
+  std::string data{"test"};
+  std::vector<char> toSend(data.begin(), data.end());
+  socket->send(MessageId{4}, toSend);
+
+  const auto actual = bus->waitForEvent();
+  EXPECT_EQ(EventType::DATA_SENT, actual->type());
+  EXPECT_FALSE(actual->as<DataSentEvent>().tryGetClientId().has_value());
   EXPECT_EQ(MessageId{4}, actual->as<DataSentEvent>().messageId());
 }
 
@@ -71,7 +87,26 @@ TEST_F(Integration_Net_Sockets_WritingSocket, PublishesDataWriteFailureEventWhen
 
   const auto actual = bus->waitForEvent();
   EXPECT_EQ(EventType::DATA_WRITE_FAILURE, actual->type());
-  EXPECT_EQ(ClientId{1}, actual->as<DataWriteFailureEvent>().clientId());
+  EXPECT_EQ(ClientId{1}, actual->as<DataWriteFailureEvent>().tryGetClientId().value());
+  EXPECT_EQ(MessageId{3}, actual->as<DataWriteFailureEvent>().messageId());
+}
+
+TEST_F(Integration_Net_Sockets_WritingSocket,
+       PublishesDataWriteFailureEventWithNoClientIdentifierWhenServerSocketIsClosed)
+{
+  auto sockets = this->getTestSockets();
+  auto bus     = std::make_shared<TestEventBus>();
+  auto socket  = std::make_shared<WritingSocket>(sockets.client, bus);
+
+  sockets.client->shutdown(asio::ip::tcp::socket::shutdown_both);
+
+  std::string data{"test"};
+  std::vector<char> toSend(data.begin(), data.end());
+  socket->send(MessageId{3}, toSend);
+
+  const auto actual = bus->waitForEvent();
+  EXPECT_EQ(EventType::DATA_WRITE_FAILURE, actual->type());
+  EXPECT_FALSE(actual->as<DataWriteFailureEvent>().tryGetClientId().has_value());
   EXPECT_EQ(MessageId{3}, actual->as<DataWriteFailureEvent>().messageId());
 }
 
@@ -96,7 +131,7 @@ TEST_F(Integration_Net_Sockets_WritingSocket, SucceedsToSendDataEvenWhenServerSo
 
   const auto actual = bus->waitForEvent();
   EXPECT_EQ(EventType::DATA_SENT, actual->type());
-  EXPECT_EQ(ClientId{1}, actual->as<DataSentEvent>().clientId());
+  EXPECT_EQ(ClientId{1}, actual->as<DataSentEvent>().tryGetClientId().value());
   EXPECT_EQ(MessageId{2}, actual->as<DataSentEvent>().messageId());
 }
 
