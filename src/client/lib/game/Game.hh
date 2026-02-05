@@ -65,7 +65,7 @@ class Game : public core::CoreObject
   /// the game is ended).
   bool step(float elapsedSeconds);
 
-  void onConnectedToServer(const bsgo::Uuid clientId);
+  void onConnectedToServer();
   void onLogin(const bsgo::Uuid playerDbId, const bsgo::GameRole role);
   void onLoginDataReceived(const bsgo::Uuid playerShipDbId,
                            const bsgo::Uuid systemDbId,

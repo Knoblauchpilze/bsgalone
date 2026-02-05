@@ -267,16 +267,15 @@ bool Game::step(float elapsedSeconds)
   return true;
 }
 
-void Game::onConnectedToServer(const bsgo::Uuid clientId)
+void Game::onConnectedToServer()
 {
-  info("Received client id " + bsgo::str(clientId) + " from server");
+  info("Connected to server");
 
   if (m_userName && m_password && m_gameRole)
   {
     auto login = std::make_unique<bsgo::LoginMessage>(*m_gameRole);
     login->setUserName(*m_userName);
     login->setPassword(*m_password);
-    login->setClientId(clientId);
     m_networkClient->pushMessage(std::move(login));
   }
 }

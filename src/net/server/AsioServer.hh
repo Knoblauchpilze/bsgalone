@@ -34,8 +34,6 @@ class AsioServer : public core::CoreObject,
   /// @brief - Requests the server to shutdown all opened sockets and stop accepting new
   /// connections. Calling this method before calling `start` will raise an eror.
   /// This function blocks until all sockets have been successfully closed.
-  /// For sockets that are still in the handshake process, they will only be terminated
-  /// without waiting for a confirmation (which is not possible to obrain).
   ///
   /// This method cannot be moved to the destructor of the server because as the server
   /// is registered to asio, deleting a shared_ptr on it would not trigger the destruction.
@@ -110,22 +108,6 @@ class AsioServer : public core::CoreObject,
   /// `m_readers` and `m_writers`.
   std::mutex m_connectionsLocker{};
 
-  /// @brief - Represents the data for a pending socket. This means a socket that has been accepted
-  /// by the server but is pending confirmation that it performed the handshake successfully.
-  struct SocketData
-  {
-    SocketShPtr socket{};
-    ReadingSocketShPtr reader{};
-    WritingSocketShPtr writer{};
-    std::optional<MessageId> handshakeMessageId{};
-  };
-
-  /// @brief - The list of pending sockets. Upon being accepted, the socket's data is saved here
-  /// until the handshake has been performed.
-  /// Once this is done, the data is registered in the other maps: this is what marks the socket
-  /// as active.
-  std::unordered_map<ClientId, SocketData> m_pendingSockets{};
-
   /// @brief - Holds the list of all active sockets currently connected to the server. Each of
   /// those socket is also attached to exactly one reader and one writer.
   /// This is used to keep track of the sockets and be able to close them easily when the server
@@ -149,42 +131,12 @@ class AsioServer : public core::CoreObject,
 
   void onConnectionRequest(const std::error_code &code, asio::ip::tcp::socket socket);
 
-  auto createSocketData(const ClientId clientId, asio::ip::tcp::socket rawSocket) const
-    -> SocketData;
-
-  /// @brief - Performs the handshake for the specified client identifier and socket. The
-  /// handshake consists of the following operations:
-  ///   - picking a new message identifier
-  ///   - sending the client identifier, unwrapped, to the writing socket
-  ///   - register the socket's data (along with the message identifier) in `m_pendingSockets`
-  ///   - wait for the `DataSentEvent` for this message
-  /// The data read event will be received as a regular message in the `onEventReceived` and
-  /// will trigger moving the socket's data from the pending sockets to the active sockets.
-  /// Currently there's no timeout for the handshake: this could be improved if needed in
-  /// the future.
-  /// @param clientId - the identifier of the client attached to the socket
-  /// @param data - the socket's data: this will be moved to `m_pendingSockets` after this
-  /// function is done.
-  void initiateHandshake(const ClientId clientId, SocketData data);
-
   void handleConnectionFailure(const IEvent &event);
-  bool tryHandleHandshakeFailure(const DataWriteFailureEvent &event);
 
-  /// @brief - This is the second half of the handshake initiated in `initiateHandshake`.
-  /// This function is called when a `DataSentEvent` is received. In case the message
-  /// corresponds to a handshake, this will trigger the publishing of a client connected
-  /// event. Otherwise, the message will be forwarded to the external event bus.
-  /// @param event - the event that might represent a handshake success
-  void handleHandshakeSuccessOrForward(const DataSentEvent &event);
-
-  auto takePendingSocketData(const ClientId clientId, const MessageId expectedMessageId)
-    -> std::optional<SocketData>;
-  void registerConnection(const ClientId clientId, SocketData data);
+  auto registerConnection(asio::ip::tcp::socket rawSocket) -> net::ClientId;
 
   /// @brief - Requests all existing sockets to be shutdown and mark the expected count
   /// of disconnection events needed.
-  /// Sockets which were in the handshake process will be shutdown without expecting any
-  /// termination confirmation.
   void closeSockets();
 };
 

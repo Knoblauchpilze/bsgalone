@@ -3,6 +3,7 @@
 
 #include "ClientId.hh"
 #include "IEvent.hh"
+#include <optional>
 #include <vector>
 
 namespace net {
@@ -10,16 +11,16 @@ namespace net {
 class DataReceivedEvent : public IEvent
 {
   public:
-  DataReceivedEvent(const ClientId clientId, std::vector<char> data);
+  DataReceivedEvent(const std::optional<ClientId> &clientId, std::vector<char> data);
   ~DataReceivedEvent() override = default;
 
-  auto clientId() const -> ClientId;
+  auto tryGetClientId() const -> std::optional<ClientId>;
   auto data() const -> std::vector<char>;
 
   auto clone() const -> IEventPtr override;
 
   private:
-  ClientId m_clientId{};
+  std::optional<ClientId> m_clientId{};
   std::vector<char> m_data{};
 };
 

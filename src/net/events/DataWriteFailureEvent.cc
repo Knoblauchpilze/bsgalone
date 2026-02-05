@@ -3,13 +3,14 @@
 
 namespace net {
 
-DataWriteFailureEvent::DataWriteFailureEvent(const ClientId clientId, const MessageId messageId)
+DataWriteFailureEvent::DataWriteFailureEvent(const std::optional<ClientId> &clientId,
+                                             const MessageId messageId)
   : IEvent(EventType::DATA_WRITE_FAILURE)
   , m_clientId(clientId)
   , m_messageId(messageId)
 {}
 
-auto DataWriteFailureEvent::clientId() const -> ClientId
+auto DataWriteFailureEvent::tryGetClientId() const -> std::optional<ClientId>
 {
   return m_clientId;
 }

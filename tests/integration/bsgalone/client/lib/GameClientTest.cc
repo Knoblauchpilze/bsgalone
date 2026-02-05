@@ -35,8 +35,9 @@ TEST_F(Integration_Bsgalone_Client_GameClientTest, StopsWhenRequested)
   bus->waitForEvent(net::EventType::SERVER_STARTED);
 
   client.requestStop();
-  const auto event = bus->waitForEvent();
-  EXPECT_EQ(net::EventType::SERVER_STOPPED, event->type());
+  // It is expected to receive a client connected event, a client disconnected event
+  // and finally the server stopped event.
+  bus->waitForEvent(net::EventType::SERVER_STOPPED, 3);
 
   result.get();
 }
@@ -49,14 +50,14 @@ TEST_F(Integration_Bsgalone_Client_GameClientTest, PublishesEventWhenServerSends
   auto result = std::async(std::launch::async, [this, &client]() { client.run(this->port()); });
   bus->waitForEvent(net::EventType::SERVER_STARTED);
 
-  const auto [expectedClientId, sockets] = this->performHandshake(bus);
+  const auto sockets = this->waitForConnectionEstablishedEvent(bus);
 
   std::string data("test");
   sockets.writeServer(data);
 
   const auto event = bus->waitForEvent();
   EXPECT_EQ(net::EventType::DATA_RECEIVED, event->type());
-  EXPECT_EQ(expectedClientId, event->as<net::DataReceivedEvent>().clientId());
+  EXPECT_FALSE(event->as<net::DataReceivedEvent>().tryGetClientId().has_value());
   const std::vector<char> expected(data.begin(), data.end());
   EXPECT_EQ(expected, event->as<net::DataReceivedEvent>().data());
 

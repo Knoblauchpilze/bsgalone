@@ -3,21 +3,22 @@
 
 #include "ClientId.hh"
 #include "IEvent.hh"
+#include <optional>
 
 namespace net {
 
 class DataReadFailureEvent : public IEvent
 {
   public:
-  DataReadFailureEvent(const ClientId clientId);
+  DataReadFailureEvent(const std::optional<ClientId> &clientId);
   ~DataReadFailureEvent() override = default;
 
-  auto clientId() const -> ClientId;
+  auto tryGetClientId() const -> std::optional<ClientId>;
 
   auto clone() const -> IEventPtr override;
 
   private:
-  ClientId m_clientId{};
+  std::optional<ClientId> m_clientId{};
 };
 
 } // namespace net

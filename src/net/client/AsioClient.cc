@@ -2,8 +2,8 @@
 #include "AsioClient.hh"
 #include "AsioUtils.hh"
 #include "AsyncEventBus.hh"
-#include "ClientConnectedEvent.hh"
-#include "ClientDisconnectedEvent.hh"
+#include "ConnectionEstablishedEvent.hh"
+#include "ConnectionLostEvent.hh"
 #include "SynchronizedEventBus.hh"
 
 namespace net::details {
@@ -187,57 +187,41 @@ void AsioClient::onConnectionEstablished(const std::error_code &code,
     return;
   }
 
-  std::unique_lock guard(m_locker);
-
   // This test is necessary because it can happen that the `disconnect` method is called while the
   // client is establishing the connection to the server. In this case, the client will receive an
-  // error in the `onConnectionEstablished` callback and before registering the reading task it is
-  // needed to verify that it still makes sense to do so.
+  // error in the `onConnectionEstablished` callback and before registering the socket and sending
+  // the connected event is needed to verify that it still makes sense to do so.
+  if (handlePrematureDisconnection())
+  {
+    return;
+  }
+
+  info("Successfully connected to server");
+
+  setupConnection();
+
+  m_eventBus->pushEvent(std::make_unique<ConnectionEstablishedEvent>());
+}
+
+bool AsioClient::handlePrematureDisconnection()
+{
+  std::unique_lock guard(m_locker);
+
   if (m_status == ConnectionStatus::DISCONNECTING)
   {
     m_status = ConnectionStatus::DISCONNECTED;
     m_notifier.notify_one();
-    return;
+    return true;
   }
 
-  asio::async_read(*m_socket,
-                   asio::buffer(&m_clientId, sizeof(ClientId)),
-                   std::bind(&AsioClient::onDataReceived,
-                             shared_from_this(),
-                             std::placeholders::_1,
-                             std::placeholders::_2));
-}
-
-void AsioClient::onDataReceived(const std::error_code &code, const std::size_t contentLength)
-{
-  if (code)
-  {
-    warn("Failed to receive client identifier (" + std::to_string(code.value()) + ")",
-         code.message());
-    setConnectionStatusAndNotify(ConnectionStatus::DISCONNECTED);
-    return;
-  }
-  if (contentLength != sizeof(ClientId))
-  {
-    warn("Received incorrect amount of bytes for client identifier, expected "
-           + std::to_string(sizeof(ClientId)),
-         "Received " + std::to_string(contentLength) + " byte(s)");
-    setConnectionStatusAndNotify(ConnectionStatus::DISCONNECTED);
-    return;
-  }
-
-  setupConnection();
-
-  info("Successfully connected as client " + net::str(m_clientId));
-
-  m_eventBus->pushEvent(std::make_unique<ClientConnectedEvent>(m_clientId));
+  return false;
 }
 
 void AsioClient::setupConnection()
 {
   std::unique_lock guard(m_locker);
-  m_reader = std::make_shared<ReadingSocket>(m_clientId, m_socket, m_internalBus);
-  m_writer = std::make_shared<WritingSocket>(m_clientId, m_socket, m_internalBus);
+  m_reader = std::make_shared<ReadingSocket>(m_socket, m_internalBus);
+  m_writer = std::make_shared<WritingSocket>(m_socket, m_internalBus);
   m_reader->connect();
   m_status = ConnectionStatus::CONNECTED;
 }
@@ -245,7 +229,7 @@ void AsioClient::setupConnection()
 void AsioClient::handleConnectionFailure(const IEvent & /*event*/)
 {
   debug("Detected network failure");
-  m_eventBus->pushEvent(std::make_unique<ClientDisconnectedEvent>(m_clientId));
+  m_eventBus->pushEvent(std::make_unique<ConnectionLostEvent>());
   setConnectionStatusAndNotify(ConnectionStatus::DISCONNECTED);
 }
 

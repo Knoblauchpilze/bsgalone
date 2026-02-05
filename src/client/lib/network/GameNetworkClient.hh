@@ -31,13 +31,11 @@ class GameNetworkClient : public bsgo::IMessageQueue
   net::INetworkClientShPtr m_tcpClient{};
 
   std::atomic_bool m_connected{};
-  std::atomic<net::ClientId> m_clientId{};
 
   bsgo::IMessageQueueShPtr m_inputQueue{};
 
   void initialize();
 
-  void assignClientIdIfPossible(bsgo::IMessage &message) const;
   void sendMessage(bsgo::IMessage &message) const;
 };
 

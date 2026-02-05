@@ -5,6 +5,24 @@
 
 namespace net::details {
 
+WritingSocket::WritingSocket(SocketShPtr socket, IEventBusShPtr eventBus)
+  : core::CoreObject("writing")
+  , m_socket(std::move(socket))
+  , m_eventBus(std::move(eventBus))
+{
+  setService("net");
+  addModule("socket");
+
+  if (m_socket == nullptr)
+  {
+    throw std::invalid_argument("Expected non null socket");
+  }
+  if (m_eventBus == nullptr)
+  {
+    throw std::invalid_argument("Expected non null event bus");
+  }
+}
+
 WritingSocket::WritingSocket(const ClientId clientId, SocketShPtr socket, IEventBusShPtr eventBus)
   : core::CoreObject("writing")
   , m_clientId(clientId)

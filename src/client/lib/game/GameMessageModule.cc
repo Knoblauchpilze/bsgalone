@@ -70,14 +70,9 @@ void GameMessageModule::onMessageReceived(const bsgo::IMessage &message)
   }
 }
 
-void GameMessageModule::handleConnectionMessage(const bsgo::ConnectionMessage &message)
+void GameMessageModule::handleConnectionMessage(const bsgo::ConnectionMessage & /*message*/)
 {
-  if (!message.validated())
-  {
-    return;
-  }
-
-  m_game.onConnectedToServer(message.getClientId());
+  m_game.onConnectedToServer();
 }
 
 void GameMessageModule::handleDockMessage(const bsgo::DockMessage &message)

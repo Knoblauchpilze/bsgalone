@@ -2,16 +2,14 @@
 
 #pragma once
 
-#include "Uuid.hh"
-#include "ValidatableMessage.hh"
+#include "AbstractMessage.hh"
 
 namespace bsgo {
 
-class ConnectionMessage : public ValidatableMessage
+class ConnectionMessage : public AbstractMessage
 {
   public:
   ConnectionMessage();
-  ConnectionMessage(const Uuid clientId);
   ~ConnectionMessage() override = default;
 
   auto serialize(std::ostream &out) const -> std::ostream & override;

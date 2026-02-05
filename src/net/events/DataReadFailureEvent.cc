@@ -3,12 +3,12 @@
 
 namespace net {
 
-DataReadFailureEvent::DataReadFailureEvent(const ClientId clientId)
+DataReadFailureEvent::DataReadFailureEvent(const std::optional<ClientId> &clientId)
   : IEvent(EventType::DATA_READ_FAILURE)
   , m_clientId(clientId)
 {}
 
-auto DataReadFailureEvent::clientId() const -> ClientId
+auto DataReadFailureEvent::tryGetClientId() const -> std::optional<ClientId>
 {
   return m_clientId;
 }

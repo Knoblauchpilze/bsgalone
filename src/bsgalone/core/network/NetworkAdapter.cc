@@ -23,20 +23,29 @@ void NetworkAdapter::onEventReceived(const net::IEvent &event)
 {
   const auto &dataReceived = event.as<net::DataReceivedEvent>();
   registerPendingData(dataReceived);
-  const auto processed = onDataReceived(dataReceived.clientId());
-  removePendingData(dataReceived.clientId(), processed);
+  const auto processed = onDataReceived(dataReceived.tryGetClientId());
+  removePendingData(dataReceived.tryGetClientId(), processed);
 }
 
 void NetworkAdapter::registerPendingData(const net::DataReceivedEvent &event)
 {
   const std::lock_guard guard(m_locker);
 
-  auto &pendingData = m_pendingData[event.clientId()];
   std::vector<char> toAdd(event.data());
-  pendingData.bytes.insert(pendingData.bytes.end(), toAdd.begin(), toAdd.end());
+
+  const auto maybeClientId = event.tryGetClientId();
+  if (!maybeClientId)
+  {
+    m_noClientData.bytes.insert(m_noClientData.bytes.end(), toAdd.begin(), toAdd.end());
+  }
+  else
+  {
+    auto &pendingData = m_pendingData[*maybeClientId];
+    pendingData.bytes.insert(pendingData.bytes.end(), toAdd.begin(), toAdd.end());
+  }
 }
 
-auto NetworkAdapter::onDataReceived(const net::ClientId clientId) -> int
+auto NetworkAdapter::onDataReceived(const std::optional<net::ClientId> &maybeClientId) -> int
 {
   bool processedSomeBytes{true};
   auto processedBytes{0};
@@ -45,8 +54,17 @@ auto NetworkAdapter::onDataReceived(const net::ClientId clientId) -> int
   std::deque<char> workingData;
   {
     const std::lock_guard guard(m_locker);
-    const auto &pendingData = m_pendingData[clientId];
-    workingData.insert(workingData.end(), pendingData.bytes.begin(), pendingData.bytes.end());
+    if (!maybeClientId)
+    {
+      workingData.insert(workingData.end(),
+                         m_noClientData.bytes.begin(),
+                         m_noClientData.bytes.end());
+    }
+    else
+    {
+      const auto &pendingData = m_pendingData[*maybeClientId];
+      workingData.insert(workingData.end(), pendingData.bytes.begin(), pendingData.bytes.end());
+    }
   }
 
   bsgo::MessageParser parser{};
@@ -65,24 +83,25 @@ auto NetworkAdapter::onDataReceived(const net::ClientId clientId) -> int
     workingData.erase(workingData.begin(), workingData.begin() + result.bytesProcessed);
   }
 
-  feedMessagesToQueue(clientId, std::move(messages));
+  feedMessagesToQueue(maybeClientId, std::move(messages));
   return processedBytes;
 }
 
-void NetworkAdapter::feedMessagesToQueue(const net::ClientId clientId,
+void NetworkAdapter::feedMessagesToQueue(const std::optional<net::ClientId> &maybeClientId,
                                          std::vector<bsgo::IMessagePtr> &&messages)
 {
   for (auto &message : messages)
   {
-    if (message->isA<bsgo::NetworkMessage>())
+    if (maybeClientId && message->isA<bsgo::NetworkMessage>())
     {
-      message->as<bsgo::NetworkMessage>().setClientId(clientId);
+      message->as<bsgo::NetworkMessage>().setClientId(*maybeClientId);
     }
     m_queue->pushMessage(std::move(message));
   }
 }
 
-void NetworkAdapter::removePendingData(const net::ClientId clientId, const int processed)
+void NetworkAdapter::removePendingData(const std::optional<net::ClientId> &maybeClientId,
+                                       const int processed)
 {
   if (processed == 0)
   {
@@ -90,8 +109,16 @@ void NetworkAdapter::removePendingData(const net::ClientId clientId, const int p
   }
 
   const std::lock_guard guard(m_locker);
-  auto &pendingData = m_pendingData[clientId];
-  pendingData.bytes.erase(pendingData.bytes.begin(), pendingData.bytes.begin() + processed);
+  if (!maybeClientId)
+  {
+    m_noClientData.bytes.erase(m_noClientData.bytes.begin(),
+                               m_noClientData.bytes.begin() + processed);
+  }
+  else
+  {
+    auto &pendingData = m_pendingData[*maybeClientId];
+    pendingData.bytes.erase(pendingData.bytes.begin(), pendingData.bytes.begin() + processed);
+  }
 }
 
 } // namespace bsgalone::core

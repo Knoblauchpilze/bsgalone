@@ -55,7 +55,7 @@ TEST(Unit_Net_Messaging_EventProcessor, ForwardsAvailableMessageToHandler)
     EXPECT_EQ(EventType::DATA_RECEIVED, event.type());
 
     const auto &actual = event.as<DataReceivedEvent>();
-    EXPECT_EQ(ClientId{3}, actual.clientId());
+    EXPECT_EQ(ClientId{3}, actual.tryGetClientId().value());
     EXPECT_EQ(sampleData, actual.data());
   };
 
