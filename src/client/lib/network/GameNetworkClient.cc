@@ -1,11 +1,11 @@
 
 #include "GameNetworkClient.hh"
 #include "AsyncEventBus.hh"
-#include "ClientConnectedEvent.hh"
+#include "ConnectionEstablishedEvent.hh"
+#include "ConnectionLostEvent.hh"
+#include "ConnectionMessage.hh"
 #include "NetworkAdapter.hh"
 #include "NetworkMessage.hh"
-#include "ServerStartedEvent.hh"
-#include "ServerStoppedEvent.hh"
 #include "SynchronizedEventBus.hh"
 #include "SynchronizedMessageQueue.hh"
 #include "TcpClient.hh"
@@ -41,7 +41,6 @@ void GameNetworkClient::pushMessage(bsgo::IMessagePtr message)
     throw std::invalid_argument("Failed to send message, not connected to server");
   }
 
-  assignClientIdIfPossible(*message);
   sendMessage(*message);
 }
 
@@ -64,31 +63,28 @@ namespace {
 class NetworkEventListener : public net::IEventListener
 {
   public:
-  NetworkEventListener(std::atomic_bool &connected, std::atomic<net::ClientId> &clientId)
+  NetworkEventListener(std::atomic_bool &connected, bsgo::IMessageQueueShPtr inputQueue)
     : m_connected(connected)
-    , m_clientId(clientId)
+    , m_inputQueue(std::move(inputQueue))
   {}
 
   ~NetworkEventListener() = default;
 
   bool isEventRelevant(const net::EventType &type) const override
   {
-    return type == net::EventType::CLIENT_CONNECTED || type == net::EventType::SERVER_STARTED
-           || type == net::EventType::SERVER_STOPPED;
+    return type == net::EventType::CONNECTION_ESTABLISHED
+           || type == net::EventType::CONNECTION_LOST;
   }
 
   void onEventReceived(const net::IEvent &event) override
   {
     switch (event.type())
     {
-      case net::EventType::CLIENT_CONNECTED:
-        handleClientConnected(event.as<net::ClientConnectedEvent>());
+      case net::EventType::CONNECTION_ESTABLISHED:
+        handleConnectionEstablished(event.as<net::ConnectionEstablishedEvent>());
         break;
-      case net::EventType::SERVER_STARTED:
-        handleServerStarted(event.as<net::ServerStartedEvent>());
-        break;
-      case net::EventType::SERVER_STOPPED:
-        handleServerStopped(event.as<net::ServerStoppedEvent>());
+      case net::EventType::CONNECTION_LOST:
+        handleConnectionLost(event.as<net::ConnectionLostEvent>());
         break;
       default:
         throw std::invalid_argument("Unsupported event type " + net::str(event.type()));
@@ -97,19 +93,19 @@ class NetworkEventListener : public net::IEventListener
 
   private:
   std::atomic_bool &m_connected;
-  std::atomic<net::ClientId> &m_clientId;
+  bsgo::IMessageQueueShPtr m_inputQueue{};
 
-  void handleClientConnected(const net::ClientConnectedEvent &event)
-  {
-    m_clientId.store(event.clientId());
-  }
-
-  void handleServerStarted(const net::ServerStartedEvent & /*event*/)
+  void handleConnectionEstablished(const net::ConnectionEstablishedEvent & /*event*/)
   {
     m_connected.store(true);
+
+    // TODO: The client identifier does not matter
+    auto message = std::make_unique<bsgo::ConnectionMessage>(net::ClientId{0});
+    message->validate();
+    m_inputQueue->pushMessage(std::move(message));
   }
 
-  void handleServerStopped(const net::ServerStoppedEvent & /*event*/)
+  void handleConnectionLost(const net::ConnectionLostEvent & /*event*/)
   {
     m_connected.store(false);
   }
@@ -121,18 +117,8 @@ void GameNetworkClient::initialize()
   auto networkAdapter = std::make_unique<bsgalone::core::NetworkAdapter>(m_inputQueue);
   m_eventBus->addListener(std::move(networkAdapter));
 
-  auto eventListener = std::make_unique<NetworkEventListener>(m_connected, m_clientId);
+  auto eventListener = std::make_unique<NetworkEventListener>(m_connected, m_inputQueue);
   m_eventBus->addListener(std::move(eventListener));
-}
-
-void GameNetworkClient::assignClientIdIfPossible(bsgo::IMessage &message) const
-{
-  if (!message.isA<bsgo::NetworkMessage>())
-  {
-    throw std::invalid_argument("Unsupported message type " + bsgo::str(message.type()));
-  }
-
-  message.as<bsgo::NetworkMessage>().setClientId(m_clientId.load());
 }
 
 void GameNetworkClient::sendMessage(bsgo::IMessage &message) const
