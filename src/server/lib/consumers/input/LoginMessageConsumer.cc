@@ -53,8 +53,8 @@ void LoginMessageConsumer::handleLogin(const LoginMessage &message) const
   }
   else
   {
-    const auto systsemDbId = m_loginService->getPlayerSystemDbId(*maybePlayerDbId);
-    m_clientManager->registerPlayer(message.getClientId(), *maybePlayerDbId, systsemDbId);
+    const auto systemDbId = m_loginService->getPlayerSystemDbId(*maybePlayerDbId);
+    m_clientManager->registerPlayer(message.getClientId(), *maybePlayerDbId, systemDbId);
   }
 
   auto out = std::make_unique<LoginMessage>(data.role);
