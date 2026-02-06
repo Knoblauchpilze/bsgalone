@@ -2,8 +2,8 @@
 #pragma once
 
 #include "Item.hh"
+#include "NetworkMessage.hh"
 #include "Uuid.hh"
-#include "ValidatableMessage.hh"
 
 namespace bsgo {
 
@@ -13,7 +13,7 @@ enum class EquipType
   UNEQUIP
 };
 
-class EquipMessage : public ValidatableMessage
+class EquipMessage : public NetworkMessage
 {
   public:
   EquipMessage();

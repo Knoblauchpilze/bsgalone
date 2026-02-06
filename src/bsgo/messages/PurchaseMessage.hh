@@ -2,12 +2,12 @@
 #pragma once
 
 #include "Item.hh"
+#include "NetworkMessage.hh"
 #include "Uuid.hh"
-#include "ValidatableMessage.hh"
 
 namespace bsgo {
 
-class PurchaseMessage : public ValidatableMessage
+class PurchaseMessage : public NetworkMessage
 {
   public:
   PurchaseMessage();

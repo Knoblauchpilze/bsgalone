@@ -11,7 +11,6 @@ void assertMessagesAreEqual(const HangarMessage &actual, const HangarMessage &ex
 {
   EXPECT_EQ(actual.type(), expected.type());
   EXPECT_EQ(actual.tryGetClientId(), expected.tryGetClientId());
-  EXPECT_EQ(actual.validated(), expected.validated());
   assertPlayerShipDataAreEqual(actual.getShip(), expected.getShip());
 }
 } // namespace
@@ -19,9 +18,7 @@ void assertMessagesAreEqual(const HangarMessage &actual, const HangarMessage &ex
 TEST(Unit_Bsgo_Serialization_HangarMessage, WithShipDbId)
 {
   const HangarMessage expected(Uuid{14});
-
   HangarMessage actual(Uuid{6});
-  actual.validate();
 
   serializeAndDeserializeMessage(expected, actual);
 
@@ -58,7 +55,6 @@ TEST(Unit_Bsgo_Serialization_HangarMessage, WithShip)
   const HangarMessage expected(data);
 
   HangarMessage actual(Uuid{6});
-  actual.validate();
 
   serializeAndDeserializeMessage(expected, actual);
 
@@ -105,20 +101,6 @@ TEST(Unit_Bsgo_Serialization_HangarMessage, OverridesShipProperties)
                                 .reloadTime     = chrono::TickDuration::fromInt(457),
                                 .damageModifier = 45.1f,
                        }}};
-  HangarMessage actual(data);
-  actual.validate();
-
-  serializeAndDeserializeMessage(expected, actual);
-
-  assertMessagesAreEqual(actual, expected);
-}
-
-TEST(Unit_Bsgo_Serialization_HangarMessage, Validated)
-{
-  HangarMessage expected(Uuid{14});
-  expected.validate();
-
-  const PlayerShipData data{};
   HangarMessage actual(data);
 
   serializeAndDeserializeMessage(expected, actual);

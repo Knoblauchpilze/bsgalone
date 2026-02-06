@@ -37,11 +37,6 @@ void DockMessageConsumer::onMessageReceived(const IMessage &message)
 {
   const auto &dockMessage = message.as<DockMessage>();
 
-  if (dockMessage.validated())
-  {
-    error("Unexpected validated dock message for ship " + str(dockMessage.getShipDbId()));
-  }
-
   switch (dockMessage.getTransition())
   {
     case DockTransition::DOCK:
@@ -69,7 +64,6 @@ void DockMessageConsumer::handleDocking(const DockMessage &message) const
   }
 
   auto out = std::make_unique<DockMessage>(shipDbId, DockTransition::DOCK);
-  out->validate();
   out->copyClientIdIfDefined(message);
   m_outputMessageQueue->pushMessage(std::move(out));
 
@@ -82,7 +76,6 @@ void DockMessageConsumer::handleUndocking(const DockMessage &message) const
   const auto systemDbId = m_shipService->getSystemDbIdForShip(shipDbId);
 
   auto out = std::make_unique<DockMessage>(shipDbId, DockTransition::UNDOCK);
-  out->validate();
   out->copyClientIdIfDefined(message);
   m_outputMessageQueue->pushMessage(std::move(out));
 

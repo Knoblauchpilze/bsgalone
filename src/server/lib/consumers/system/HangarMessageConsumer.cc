@@ -30,11 +30,7 @@ HangarMessageConsumer::HangarMessageConsumer(const Services &services,
 void HangarMessageConsumer::onMessageReceived(const IMessage &message)
 {
   const auto &hangarMessage = message.as<HangarMessage>();
-
-  if (!hangarMessage.validated())
-  {
-    handleShipSwitchRequest(hangarMessage);
-  }
+  handleShipSwitchRequest(hangarMessage);
 }
 
 void HangarMessageConsumer::handleShipSwitchRequest(const HangarMessage &message) const

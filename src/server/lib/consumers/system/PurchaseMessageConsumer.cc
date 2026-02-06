@@ -30,12 +30,8 @@ PurchaseMessageConsumer::PurchaseMessageConsumer(const Services &services,
 void PurchaseMessageConsumer::onMessageReceived(const IMessage &message)
 {
   const auto &purchase = message.as<PurchaseMessage>();
-  if (purchase.validated())
-  {
-    return;
-  }
+  const auto type      = purchase.getItemType();
 
-  const auto type = purchase.getItemType();
   switch (type)
   {
     case Item::COMPUTER:
@@ -66,7 +62,6 @@ void PurchaseMessageConsumer::handleComputerPurchase(const PurchaseMessage &mess
   }
 
   auto out = std::make_unique<PurchaseMessage>(playerDbId, Item::COMPUTER, computerDbId);
-  out->validate();
   out->copyClientIdIfDefined(message);
   m_outputMessageQueue->pushMessage(std::move(out));
 
@@ -86,7 +81,6 @@ void PurchaseMessageConsumer::handleShipPurchase(const PurchaseMessage &message)
   }
 
   auto out = std::make_unique<PurchaseMessage>(playerDbId, Item::SHIP, shipDbId);
-  out->validate();
   out->copyClientIdIfDefined(message);
   m_outputMessageQueue->pushMessage(std::move(out));
 
@@ -106,7 +100,6 @@ void PurchaseMessageConsumer::handleWeaponPurchase(const PurchaseMessage &messag
   }
 
   auto out = std::make_unique<PurchaseMessage>(playerDbId, Item::WEAPON, weaponDbId);
-  out->validate();
   out->copyClientIdIfDefined(message);
   m_outputMessageQueue->pushMessage(std::move(out));
 

@@ -112,7 +112,6 @@ TEST(Unit_Bsgo_Serialization_Behavior, Nominal_VelocityMessage)
   EXPECT_TRUE(success);
 
   EXPECT_EQ(actual.type(), expected.type());
-  EXPECT_EQ(actual.validated(), expected.validated());
   EXPECT_EQ(actual.tryGetClientId(), expected.tryGetClientId());
 
   EXPECT_EQ(actual.getShipDbId(), expected.getShipDbId());
