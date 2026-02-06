@@ -3,14 +3,14 @@
 #pragma once
 
 #include "EntityKind.hh"
+#include "NetworkMessage.hh"
 #include "TargetData.hh"
 #include "Uuid.hh"
-#include "ValidatableMessage.hh"
 #include <eigen3/Eigen/Eigen>
 
 namespace bsgo {
 
-class TargetMessage : public ValidatableMessage
+class TargetMessage : public NetworkMessage
 {
   public:
   TargetMessage();

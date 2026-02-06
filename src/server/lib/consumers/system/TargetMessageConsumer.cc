@@ -56,8 +56,6 @@ void TargetMessageConsumer::onMessageReceived(const IMessage &message)
   };
 
   auto out = std::make_unique<TargetMessage>(data, position);
-  out->validate();
-
   broadcastMessageToSystem(std::move(out));
 }
 

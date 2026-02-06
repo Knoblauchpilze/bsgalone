@@ -17,7 +17,6 @@ void assertMessagesAreEqual(const TargetMessage &actual, const TargetMessage &ex
   EXPECT_EQ(actual.tryGetSystemDbId(), expected.tryGetSystemDbId());
   EXPECT_EQ(actual.getPosition(), expected.getPosition());
   EXPECT_EQ(actual.tryGetClientId(), expected.tryGetClientId());
-  EXPECT_EQ(actual.validated(), expected.validated());
 }
 } // namespace
 
@@ -34,7 +33,6 @@ TEST(Unit_Bsgo_Serialization_TargetMessage, OverridesTarget)
                     .targetDbId = Uuid{14},
                     .targetKind = EntityKind::BULLET};
   TargetMessage actual(data, Eigen::Vector3f(0.0f, 26.37f, -0.111f));
-  actual.validate();
   actual.setClientId(Uuid{78});
 
   serializeAndDeserializeMessage(expected, actual);
@@ -52,7 +50,6 @@ TEST(Unit_Bsgo_Serialization_TargetMessage, RegistersTarget)
 
   data = TargetData{.sourceDbId = Uuid{17}, .sourceKind = EntityKind::ASTEROID};
   TargetMessage actual(data, Eigen::Vector3f(0.0f, 26.37f, -0.111f));
-  actual.validate();
   actual.setClientId(Uuid{78});
 
   serializeAndDeserializeMessage(expected, actual);
@@ -70,25 +67,7 @@ TEST(Unit_Bsgo_Serialization_TargetMessage, ClearsTarget)
                     .targetDbId = Uuid{14},
                     .targetKind = EntityKind::BULLET};
   TargetMessage actual(data, Eigen::Vector3f(0.0f, 26.37f, -0.111f));
-  actual.validate();
   actual.setClientId(Uuid{78});
-
-  serializeAndDeserializeMessage(expected, actual);
-
-  assertMessagesAreEqual(actual, expected);
-}
-
-TEST(Unit_Bsgo_Serialization_TargetMessage, OverrideValidatedStatus)
-{
-  TargetData data{.sourceDbId = Uuid{21}, .sourceKind = EntityKind::SHIP};
-  TargetMessage expected(data, Eigen::Vector3f(1.68f, -185.0f, 326.895f));
-  expected.validate();
-
-  data = TargetData{.sourceDbId = Uuid{17},
-                    .sourceKind = EntityKind::ASTEROID,
-                    .targetDbId = Uuid{14},
-                    .targetKind = EntityKind::BULLET};
-  TargetMessage actual(data, Eigen::Vector3f(0.0f, 26.37f, -0.111f));
 
   serializeAndDeserializeMessage(expected, actual);
 

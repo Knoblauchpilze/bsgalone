@@ -1,13 +1,13 @@
 
 #pragma once
 
+#include "NetworkMessage.hh"
 #include "Uuid.hh"
-#include "ValidatableMessage.hh"
 #include <optional>
 
 namespace bsgo {
 
-class JumpCancelledMessage : public ValidatableMessage
+class JumpCancelledMessage : public NetworkMessage
 {
   public:
   JumpCancelledMessage();

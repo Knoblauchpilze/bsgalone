@@ -13,7 +13,6 @@ void assertMessagesAreEqual(const JoinShipMessage &actual, const JoinShipMessage
   EXPECT_EQ(actual.getPlayerDbId(), expected.getPlayerDbId());
   EXPECT_EQ(actual.getShipDbId(), expected.getShipDbId());
   EXPECT_EQ(actual.tryGetClientId(), expected.tryGetClientId());
-  EXPECT_EQ(actual.validated(), expected.validated());
 }
 } // namespace
 
@@ -22,7 +21,6 @@ TEST(Unit_Bsgo_Serialization_JoinShipMessage, Basic)
   const JoinShipMessage expected(Uuid{14}, Uuid{17});
   JoinShipMessage actual(Uuid{37}, Uuid{879871});
   actual.setClientId(Uuid{5});
-  actual.validate();
 
   serializeAndDeserializeMessage(expected, actual);
 
@@ -44,7 +42,6 @@ TEST(Unit_Bsgo_Serialization_JoinShipMessage, Clone)
 {
   JoinShipMessage expected(Uuid{14}, Uuid{17});
   expected.setClientId(Uuid{21});
-  expected.validated();
 
   const auto cloned = expected.clone();
 

@@ -7,11 +7,11 @@
 namespace bsgo {
 
 TargetMessage::TargetMessage()
-  : ValidatableMessage(MessageType::TARGET)
+  : NetworkMessage(MessageType::TARGET)
 {}
 
 TargetMessage::TargetMessage(TargetData data, const Eigen::Vector3f &position)
-  : ValidatableMessage(MessageType::TARGET)
+  : NetworkMessage(MessageType::TARGET)
   , m_data(std::move(data))
   , m_position(position)
 {}
@@ -55,7 +55,6 @@ auto TargetMessage::serialize(std::ostream &out) const -> std::ostream &
 {
   core::serialize(out, m_messageType);
   core::serialize(out, m_clientId);
-  core::serialize(out, m_validated);
 
   core::serialize(out, m_data);
   core::serialize(out, m_systemDbId);
@@ -69,7 +68,6 @@ bool TargetMessage::deserialize(std::istream &in)
   bool ok{true};
   ok &= core::deserialize(in, m_messageType);
   ok &= core::deserialize(in, m_clientId);
-  ok &= core::deserialize(in, m_validated);
 
   ok &= core::deserialize(in, m_data);
   ok &= core::deserialize(in, m_systemDbId);
@@ -82,7 +80,6 @@ auto TargetMessage::clone() const -> IMessagePtr
 {
   auto clone = std::make_unique<TargetMessage>(m_data, m_position);
   clone->copyClientIdIfDefined(*this);
-  clone->validate(validated());
   if (m_systemDbId)
   {
     clone->setSystemDbId(*m_systemDbId);

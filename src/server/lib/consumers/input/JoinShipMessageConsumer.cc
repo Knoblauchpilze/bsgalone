@@ -22,11 +22,7 @@ JoinShipMessageConsumer::JoinShipMessageConsumer(PlayerServicePtr playerService,
 void JoinShipMessageConsumer::onMessageReceived(const IMessage &message)
 {
   const auto &joinShip = message.as<JoinShipMessage>();
-
-  if (!joinShip.validated())
-  {
-    handleJoinShip(joinShip);
-  }
+  handleJoinShip(joinShip);
 }
 
 void JoinShipMessageConsumer::handleJoinShip(const JoinShipMessage &message) const
@@ -39,10 +35,7 @@ void JoinShipMessageConsumer::handleJoinShip(const JoinShipMessage &message) con
     return;
   }
 
-  auto out = message.clone();
-  out->as<JoinShipMessage>().validate();
-
-  m_outputMessageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushMessage(message.clone());
 }
 
 } // namespace bsgo

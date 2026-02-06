@@ -77,11 +77,6 @@ void GameMessageModule::handleConnectionMessage(const bsgo::ConnectionMessage & 
 
 void GameMessageModule::handleDockMessage(const bsgo::DockMessage &message)
 {
-  if (!message.validated())
-  {
-    return;
-  }
-
   switch (message.getTransition())
   {
     case bsgo::DockTransition::DOCK:
@@ -97,11 +92,6 @@ void GameMessageModule::handleDockMessage(const bsgo::DockMessage &message)
 
 void GameMessageModule::handleHangarMessage(const bsgo::HangarMessage &message)
 {
-  if (!message.validated())
-  {
-    return;
-  }
-
   m_game.onActiveShipChanged(message.getShipDbId());
 }
 
@@ -121,7 +111,7 @@ void GameMessageModule::handleJumpMessage(const bsgo::JumpMessage &message)
 
 void GameMessageModule::handleLoginMessage(const bsgo::LoginMessage &message)
 {
-  if (!message.validated() || !message.successfullyLoggedIn())
+  if (!message.successfullyLoggedIn())
   {
     return;
   }
@@ -129,13 +119,8 @@ void GameMessageModule::handleLoginMessage(const bsgo::LoginMessage &message)
   m_game.onLogin(*message.tryGetPlayerDbId(), message.getGameRole());
 }
 
-void GameMessageModule::handleLogoutMessage(const bsgo::LogoutMessage &message)
+void GameMessageModule::handleLogoutMessage(const bsgo::LogoutMessage & /*message*/)
 {
-  if (!message.validated())
-  {
-    return;
-  }
-
   m_game.onLogout();
 }
 

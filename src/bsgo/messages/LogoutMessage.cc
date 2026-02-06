@@ -5,7 +5,7 @@
 namespace bsgo {
 
 LogoutMessage::LogoutMessage()
-  : ValidatableMessage(MessageType::LOGOUT)
+  : NetworkMessage(MessageType::LOGOUT)
 {}
 
 LogoutMessage::LogoutMessage(const Uuid playerDbId)
@@ -13,7 +13,7 @@ LogoutMessage::LogoutMessage(const Uuid playerDbId)
 {}
 
 LogoutMessage::LogoutMessage(const Uuid playerDbId, const bool closeConnection)
-  : ValidatableMessage(MessageType::LOGOUT)
+  : NetworkMessage(MessageType::LOGOUT)
   , m_playerDbId(playerDbId)
   , m_closeConnection(closeConnection)
 {}
@@ -42,7 +42,6 @@ auto LogoutMessage::serialize(std::ostream &out) const -> std::ostream &
 {
   core::serialize(out, m_messageType);
   core::serialize(out, m_clientId);
-  core::serialize(out, m_validated);
 
   core::serialize(out, m_playerDbId);
   core::serialize(out, m_closeConnection);
@@ -57,7 +56,6 @@ bool LogoutMessage::deserialize(std::istream &in)
   bool ok{true};
   ok &= core::deserialize(in, m_messageType);
   ok &= core::deserialize(in, m_clientId);
-  ok &= core::deserialize(in, m_validated);
 
   ok &= core::deserialize(in, m_playerDbId);
   ok &= core::deserialize(in, m_closeConnection);
@@ -75,7 +73,6 @@ auto LogoutMessage::clone() const -> IMessagePtr
     clone->setSystemDbId(*m_systemDbId);
   }
   clone->copyClientIdIfDefined(*this);
-  clone->validate(validated());
 
   return clone;
 }

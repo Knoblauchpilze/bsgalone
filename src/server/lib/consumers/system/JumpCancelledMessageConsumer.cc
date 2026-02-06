@@ -22,11 +22,7 @@ JumpCancelledMessageConsumer::JumpCancelledMessageConsumer(const Services &servi
 void JumpCancelledMessageConsumer::onMessageReceived(const IMessage &message)
 {
   const auto &jump = message.as<JumpCancelledMessage>();
-
-  if (!jump.validated())
-  {
-    handleJumpCancellation(jump);
-  }
+  handleJumpCancellation(jump);
 }
 
 void JumpCancelledMessageConsumer::handleJumpCancellation(const JumpCancelledMessage &message) const
@@ -40,7 +36,6 @@ void JumpCancelledMessageConsumer::handleJumpCancellation(const JumpCancelledMes
   }
 
   auto out = std::make_unique<JumpCancelledMessage>(shipDbId);
-  out->validate();
   out->copyClientIdIfDefined(message);
   m_outputMessageQueue->pushMessage(std::move(out));
 }

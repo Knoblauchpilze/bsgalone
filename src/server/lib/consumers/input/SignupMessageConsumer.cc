@@ -30,11 +30,7 @@ SignupMessageConsumer::SignupMessageConsumer(SignupServicePtr signupService,
 void SignupMessageConsumer::onMessageReceived(const IMessage &message)
 {
   const auto &signup = message.as<SignupMessage>();
-
-  if (!signup.validated())
-  {
-    handleSignup(signup);
-  }
+  handleSignup(signup);
 }
 
 void SignupMessageConsumer::handleSignup(const SignupMessage &message) const
@@ -61,7 +57,6 @@ void SignupMessageConsumer::handleSignup(const SignupMessage &message) const
                                              faction,
                                              maybePlayer.has_value() ? maybePlayer->id
                                                                      : std::optional<Uuid>{});
-  out->validate();
   out->copyClientIdIfDefined(message);
   m_outputMessageQueue->pushMessage(std::move(out));
 }

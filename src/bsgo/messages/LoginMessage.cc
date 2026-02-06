@@ -5,11 +5,11 @@
 namespace bsgo {
 
 LoginMessage::LoginMessage()
-  : ValidatableMessage(MessageType::LOGIN)
+  : NetworkMessage(MessageType::LOGIN)
 {}
 
 LoginMessage::LoginMessage(const GameRole role)
-  : ValidatableMessage(MessageType::LOGIN)
+  : NetworkMessage(MessageType::LOGIN)
   , m_role(role)
 {}
 
@@ -67,7 +67,6 @@ auto LoginMessage::serialize(std::ostream &out) const -> std::ostream &
 {
   core::serialize(out, m_messageType);
   core::serialize(out, m_clientId);
-  core::serialize(out, m_validated);
 
   core::serialize(out, m_name);
   core::serialize(out, m_password);
@@ -84,7 +83,6 @@ bool LoginMessage::deserialize(std::istream &in)
   bool ok{true};
   ok &= core::deserialize(in, m_messageType);
   ok &= core::deserialize(in, m_clientId);
-  ok &= core::deserialize(in, m_validated);
 
   ok &= core::deserialize(in, m_name);
   ok &= core::deserialize(in, m_password);
@@ -110,7 +108,6 @@ auto LoginMessage::clone() const -> IMessagePtr
     clone->setSystemDbId(*m_systemDbId);
   }
   clone->copyClientIdIfDefined(*this);
-  clone->validate(validated());
 
   return clone;
 }

@@ -29,7 +29,6 @@ target_sources (bsgo_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/SignupMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SlotComponentMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SlotMessage.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/ValidatableMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/VelocityMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/TargetMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/WeaponComponentMessage.cc

@@ -25,11 +25,7 @@ LogoutMessageConsumer::LogoutMessageConsumer(SystemServiceShPtr systemService,
 void LogoutMessageConsumer::onMessageReceived(const IMessage &message)
 {
   const auto &logout = message.as<LogoutMessage>();
-
-  if (!logout.validated())
-  {
-    handleLogout(logout);
-  }
+  handleLogout(logout);
 }
 
 void LogoutMessageConsumer::handleLogout(const LogoutMessage &message) const
@@ -62,7 +58,6 @@ void LogoutMessageConsumer::notifyClientAndCloseConnectionIfNeeded(const Uuid pl
                                                                    const LogoutMessage &message) const
 {
   auto out = std::make_unique<LogoutMessage>(playerDbId);
-  out->validate();
   out->copyClientIdIfDefined(message);
   m_outputMessageQueue->pushMessage(std::move(out));
 }

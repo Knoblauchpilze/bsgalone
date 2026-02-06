@@ -2,14 +2,14 @@
 #pragma once
 
 #include "Faction.hh"
+#include "NetworkMessage.hh"
 #include "Uuid.hh"
-#include "ValidatableMessage.hh"
 #include <optional>
 #include <string>
 
 namespace bsgo {
 
-class SignupMessage : public ValidatableMessage
+class SignupMessage : public NetworkMessage
 {
   public:
   SignupMessage();

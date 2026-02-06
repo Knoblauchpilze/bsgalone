@@ -5,11 +5,11 @@
 namespace bsgo {
 
 PurchaseMessage::PurchaseMessage()
-  : ValidatableMessage(MessageType::PURCHASE)
+  : NetworkMessage(MessageType::PURCHASE)
 {}
 
 PurchaseMessage::PurchaseMessage(const Uuid playerDbId, const Item &itemType, const Uuid itemDbId)
-  : ValidatableMessage(MessageType::PURCHASE)
+  : NetworkMessage(MessageType::PURCHASE)
   , m_playerDbId(playerDbId)
   , m_itemType(itemType)
   , m_itemDbId(itemDbId)
@@ -34,7 +34,6 @@ auto PurchaseMessage::serialize(std::ostream &out) const -> std::ostream &
 {
   core::serialize(out, m_messageType);
   core::serialize(out, m_clientId);
-  core::serialize(out, m_validated);
 
   core::serialize(out, m_playerDbId);
   core::serialize(out, m_itemType);
@@ -48,7 +47,6 @@ bool PurchaseMessage::deserialize(std::istream &in)
   bool ok{true};
   ok &= core::deserialize(in, m_messageType);
   ok &= core::deserialize(in, m_clientId);
-  ok &= core::deserialize(in, m_validated);
 
   ok &= core::deserialize(in, m_playerDbId);
   ok &= core::deserialize(in, m_itemType);
@@ -61,7 +59,6 @@ auto PurchaseMessage::clone() const -> IMessagePtr
 {
   auto clone = std::make_unique<PurchaseMessage>(m_playerDbId, m_itemType, m_itemDbId);
   clone->copyClientIdIfDefined(*this);
-  clone->validate(validated());
 
   return clone;
 }
