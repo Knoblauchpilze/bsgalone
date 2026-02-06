@@ -29,7 +29,7 @@ class MessageExchanger
   auto getInternalMessageQueue() const -> IMessageQueue *;
 
   private:
-  IMessageQueuePtr m_internalMessageQueue{};
+  IMessageQueueShPtr m_internalMessageQueue{};
 
   void initialize(const MessageSystemData &messagesData);
   auto initializeSystemMessageQueue(const MessageSystemData &messagesData) -> IMessageQueuePtr;
