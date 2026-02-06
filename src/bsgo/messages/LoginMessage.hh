@@ -3,14 +3,14 @@
 
 #include "Faction.hh"
 #include "GameRole.hh"
+#include "NetworkMessage.hh"
 #include "Uuid.hh"
-#include "ValidatableMessage.hh"
 #include <optional>
 #include <string>
 
 namespace bsgo {
 
-class LoginMessage : public ValidatableMessage
+class LoginMessage : public NetworkMessage
 {
   public:
   LoginMessage();

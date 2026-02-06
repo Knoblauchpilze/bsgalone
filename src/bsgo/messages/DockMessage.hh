@@ -3,12 +3,12 @@
 #pragma once
 
 #include "DockTransition.hh"
+#include "NetworkMessage.hh"
 #include "Uuid.hh"
-#include "ValidatableMessage.hh"
 
 namespace bsgo {
 
-class DockMessage : public ValidatableMessage
+class DockMessage : public NetworkMessage
 {
   public:
   DockMessage();

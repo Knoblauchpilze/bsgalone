@@ -2,13 +2,13 @@
 
 #pragma once
 
+#include "NetworkMessage.hh"
 #include "PlayerShipData.hh"
 #include "Uuid.hh"
-#include "ValidatableMessage.hh"
 
 namespace bsgo {
 
-class HangarMessage : public ValidatableMessage
+class HangarMessage : public NetworkMessage
 {
   public:
   HangarMessage();

@@ -34,7 +34,6 @@ void VelocityMessageConsumer::onMessageReceived(const IMessage &message)
   }
 
   auto out = std::make_unique<VelocityMessage>(shipDbId, acceleration);
-  out->validate();
   out->copyClientIdIfDefined(velocity);
   m_outputMessageQueue->pushMessage(std::move(out));
 }

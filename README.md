@@ -563,17 +563,9 @@ A [NetworkMessage](src/bsgo/messages/NetworkMessage.hh) is a message associated 
 
 These messages are typically sent by the client applications as they know which client identifier they received from the server. The server is usually either propagating the input client id or erasing it in case the response to a message might be interesting for more than one client.
 
-#### ValidatableMessage
-
-A [ValidatableMessage](src/bsgo/messages/ValidatableMessage.hh) is a message that can be either validated or not validated yet. This is typically used by clients to make request something from the server. They send an initially not validated message of a certain type to the server. The server will then process it and determine whether it can actually be processed as the client would hope for. If it succeeds the server sends back to the client the same message with a validated flag.
-
-Note that not all messages need validation: for example messages that are produced by the server are by definition considered valid and will not be validated.
-
 ### Communication protocol
 
-When the server is started, it will start listening to incoming connections. When one is received, the first thing that the server does is to send a [ConnectionMessage](src/bsgo/messages/ConnectionMessage.hh): this message contains a client id assigned by the server.
-
-The client application is expected to save this client identifier and use it in any subsequent communication with the server.
+When the server is started, it will start listening to incoming connections. When one is received, the first thing that the server does is to assign it a client identifier (this is done by the `net` subdomain) to be able to publish events for this client. This identifier is **not sent to the client**: this is because the client does not need to know it as any communication will happen through the connection which the server can associate to the identifier it holds.
 
 To start the game the client application will present the user with a login/sign up screen: in both cases the idea is to make the client select a username and password and try to log into the game. This will result in a message sent from the client to the server (either [LoginMessage](src/bsgo/messages/LoginMessage.hh) or [SignupMessage](src/bsgo/messages/SignupMessage.hh)) and which can be validated by the server.
 

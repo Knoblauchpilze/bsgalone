@@ -7,11 +7,11 @@
 namespace bsgo {
 
 VelocityMessage::VelocityMessage()
-  : ValidatableMessage(MessageType::VELOCITY)
+  : NetworkMessage(MessageType::VELOCITY)
 {}
 
 VelocityMessage::VelocityMessage(const Uuid shipDbId, const Eigen::Vector3f &acceleration)
-  : ValidatableMessage(MessageType::VELOCITY)
+  : NetworkMessage(MessageType::VELOCITY)
   , m_shipDbId(shipDbId)
   , m_acceleration(acceleration)
 {}
@@ -30,7 +30,6 @@ auto VelocityMessage::serialize(std::ostream &out) const -> std::ostream &
 {
   core::serialize(out, m_messageType);
   core::serialize(out, m_clientId);
-  core::serialize(out, m_validated);
 
   core::serialize(out, m_shipDbId);
   core::serialize(out, m_acceleration);
@@ -43,7 +42,6 @@ bool VelocityMessage::deserialize(std::istream &in)
   bool ok{true};
   ok &= core::deserialize(in, m_messageType);
   ok &= core::deserialize(in, m_clientId);
-  ok &= core::deserialize(in, m_validated);
 
   ok &= core::deserialize(in, m_shipDbId);
   ok &= core::deserialize(in, m_acceleration);
@@ -55,7 +53,6 @@ auto VelocityMessage::clone() const -> IMessagePtr
 {
   auto clone = std::make_unique<VelocityMessage>(m_shipDbId, m_acceleration);
   clone->copyClientIdIfDefined(*this);
-  clone->validate(validated());
 
   return clone;
 }

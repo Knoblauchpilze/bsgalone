@@ -22,11 +22,7 @@ JumpRequestedMessageConsumer::JumpRequestedMessageConsumer(const Services &servi
 void JumpRequestedMessageConsumer::onMessageReceived(const IMessage &message)
 {
   const auto &jump = message.as<JumpRequestedMessage>();
-
-  if (!jump.validated())
-  {
-    handleJumpRequest(jump);
-  }
+  handleJumpRequest(jump);
 }
 
 void JumpRequestedMessageConsumer::handleJumpRequest(const JumpRequestedMessage &message) const
@@ -41,7 +37,6 @@ void JumpRequestedMessageConsumer::handleJumpRequest(const JumpRequestedMessage 
   }
 
   auto out = std::make_unique<JumpRequestedMessage>(shipDbId, jumpSystem);
-  out->validate();
   out->copyClientIdIfDefined(message);
   m_outputMessageQueue->pushMessage(std::move(out));
 }

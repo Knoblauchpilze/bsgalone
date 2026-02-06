@@ -23,7 +23,6 @@ TEST(Unit_Bsgo_Serialization_LogoutMessage, CorrectlyUpdatesCloseConnection)
 
   LogoutMessage actual(Uuid{77451}, false);
   actual.setClientId(Uuid{26});
-  actual.validate();
 
   serializeAndDeserializeMessage(expected, actual);
 
@@ -36,7 +35,6 @@ TEST(Unit_Bsgo_Serialization_LogoutMessage, ClearsSystemDbId)
 
   LogoutMessage actual(Uuid{77451});
   actual.setClientId(Uuid{26});
-  actual.validate();
   actual.setSystemDbId(Uuid{71});
 
   serializeAndDeserializeMessage(expected, actual);
@@ -47,26 +45,11 @@ TEST(Unit_Bsgo_Serialization_LogoutMessage, ClearsSystemDbId)
 TEST(Unit_Bsgo_Serialization_LogoutMessage, OverridesSystemDbId)
 {
   LogoutMessage expected(Uuid{36}, true);
-  expected.validate();
   expected.setSystemDbId(Uuid{71});
 
   LogoutMessage actual(Uuid{77451});
   actual.setClientId(Uuid{26});
-  actual.validate();
   actual.setSystemDbId(Uuid{98});
-
-  serializeAndDeserializeMessage(expected, actual);
-
-  assertMessagesAreEqual(actual, expected);
-}
-
-TEST(Unit_Bsgo_Serialization_LogoutMessage, Validated)
-{
-  LogoutMessage expected(Uuid{36});
-  expected.validate();
-
-  LogoutMessage actual(Uuid{77451});
-  actual.setClientId(Uuid{26});
 
   serializeAndDeserializeMessage(expected, actual);
 

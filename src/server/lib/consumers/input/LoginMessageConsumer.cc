@@ -30,11 +30,7 @@ LoginMessageConsumer::LoginMessageConsumer(LoginServicePtr loginService,
 void LoginMessageConsumer::onMessageReceived(const IMessage &message)
 {
   const auto &login = message.as<LoginMessage>();
-
-  if (!login.validated())
-  {
-    handleLogin(login);
-  }
+  handleLogin(login);
 }
 
 void LoginMessageConsumer::handleLogin(const LoginMessage &message) const
@@ -68,7 +64,6 @@ void LoginMessageConsumer::handleLogin(const LoginMessage &message) const
   {
     out->setPlayerDbId(*maybePlayerDbId);
   }
-  out->validate();
   out->copyClientIdIfDefined(message);
 
   m_outputMessageQueue->pushMessage(std::move(out));

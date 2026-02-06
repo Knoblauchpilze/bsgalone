@@ -96,9 +96,8 @@ void TargetSystem::publishTargetMessage(const Entity &entity) const
 
   const auto dummyPosition = Eigen::Vector3f::Zero();
   TargetData data{.sourceDbId = entity.dbComp().dbId(), .sourceKind = entity.kind->kind()};
-  auto out = std::make_unique<TargetMessage>(data, dummyPosition);
-  out->validate();
 
+  auto out = std::make_unique<TargetMessage>(data, dummyPosition);
   pushInternalMessage(std::move(out));
 }
 

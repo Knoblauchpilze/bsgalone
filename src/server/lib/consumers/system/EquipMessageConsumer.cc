@@ -35,12 +35,8 @@ EquipMessageConsumer::EquipMessageConsumer(const Services &services,
 void EquipMessageConsumer::onMessageReceived(const IMessage &message)
 {
   const auto &equip = message.as<EquipMessage>();
-  if (equip.validated())
-  {
-    return;
-  }
-
   const auto action = equip.getAction();
+
   switch (action)
   {
     case EquipType::EQUIP:
@@ -69,7 +65,6 @@ void EquipMessageConsumer::handleEquipRequest(const EquipMessage &message) const
   }
 
   auto out = std::make_unique<EquipMessage>(EquipType::EQUIP, shipDbId, type, itemDbId);
-  out->validate();
   out->copyClientIdIfDefined(message);
   m_outputMessageQueue->pushMessage(std::move(out));
 
@@ -91,7 +86,6 @@ void EquipMessageConsumer::handleUnequipRequest(const EquipMessage &message) con
   }
 
   auto out = std::make_unique<EquipMessage>(EquipType::UNEQUIP, shipDbId, type, itemDbId);
-  out->validate();
   out->copyClientIdIfDefined(message);
   m_outputMessageQueue->pushMessage(std::move(out));
 

@@ -352,11 +352,6 @@ void LoginScreenUiHandler::tryLogin()
 
 void LoginScreenUiHandler::handleLoginMessage(const bsgo::LoginMessage &message)
 {
-  if (!message.validated())
-  {
-    return;
-  }
-
   if (!message.successfullyLoggedIn())
   {
     m_failureMenu->trigger();
@@ -365,11 +360,6 @@ void LoginScreenUiHandler::handleLoginMessage(const bsgo::LoginMessage &message)
 
 void LoginScreenUiHandler::handleSignupMessage(const bsgo::SignupMessage &message)
 {
-  if (!message.validated())
-  {
-    return;
-  }
-
   if (message.successfullySignedup())
   {
     setLoginMode(Mode::LOGIN);
