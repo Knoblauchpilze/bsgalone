@@ -144,6 +144,8 @@ TEST_F(Integration_Net_Client_TcpClient, PublishesDataSentEvent)
   EXPECT_FALSE(event->as<DataSentEvent>().tryGetClientId().has_value());
   const std::vector<char> expectedData(data.begin(), data.end());
   EXPECT_EQ(expectedMessageId.value(), event->as<DataSentEvent>().messageId());
+
+  client->disconnect();
 }
 
 } // namespace net
