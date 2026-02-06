@@ -27,10 +27,10 @@ auto MessageExchanger::getInternalMessageQueue() const -> IMessageQueue *
 }
 
 namespace {
-auto createInternalMessageQueue() -> IMessageQueuePtr
+auto createInternalMessageQueue() -> IMessageQueueShPtr
 {
   auto messageQueue = std::make_unique<SynchronizedMessageQueue>("synchronized-queue-for-internal");
-  return std::make_unique<AsyncMessageQueue>(std::move(messageQueue));
+  return std::make_shared<AsyncMessageQueue>(std::move(messageQueue));
 }
 } // namespace
 
