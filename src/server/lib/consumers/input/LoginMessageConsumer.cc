@@ -4,7 +4,7 @@
 namespace bsgo {
 
 LoginMessageConsumer::LoginMessageConsumer(LoginServicePtr loginService,
-                                           ClientManagerShPtr clientManager,
+                                           bsgalone::server::ClientManagerShPtr clientManager,
                                            SystemQueueMap systemQueues,
                                            IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("login", {MessageType::LOGIN})

@@ -15,7 +15,7 @@ class LoginMessageConsumer : public AbstractMessageConsumer
 {
   public:
   LoginMessageConsumer(LoginServicePtr loginService,
-                       ClientManagerShPtr clientManager,
+                       bsgalone::server::ClientManagerShPtr clientManager,
                        SystemQueueMap systemQueues,
                        IMessageQueue *const outputMessageQueue);
   ~LoginMessageConsumer() override = default;
@@ -24,7 +24,7 @@ class LoginMessageConsumer : public AbstractMessageConsumer
 
   private:
   LoginServicePtr m_loginService{};
-  ClientManagerShPtr m_clientManager{};
+  bsgalone::server::ClientManagerShPtr m_clientManager{};
   IMessageQueue *const m_outputMessageQueue{};
   LoadingHelper m_helper;
 

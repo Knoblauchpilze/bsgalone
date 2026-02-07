@@ -8,6 +8,10 @@ target_include_directories (game_server_lib PUBLIC
 	)
 
 add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/clients
+	)
+
+add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/listeners
 	)
 
@@ -18,4 +22,5 @@ target_sources (game_server_lib PRIVATE
 target_link_libraries (game_server_lib
 	core_lib
 	net_lib
+	bsgo_lib
 	)

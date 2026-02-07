@@ -5,7 +5,7 @@
 
 namespace bsgo {
 
-LoadingHelper::LoadingHelper(ClientManagerShPtr clientManager,
+LoadingHelper::LoadingHelper(bsgalone::server::ClientManagerShPtr clientManager,
                              SystemQueueMap systemQueues,
                              IMessageQueue *const outputMessageQueue)
   : core::CoreObject("helper")

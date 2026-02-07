@@ -17,7 +17,7 @@
 
 namespace bsgo {
 
-ServerNetworkClient::ServerNetworkClient(ClientManagerShPtr clientManager)
+ServerNetworkClient::ServerNetworkClient(bsgalone::server::ClientManagerShPtr clientManager)
   : m_clientManager(std::move(clientManager))
   , m_inputQueue(std::make_shared<AsyncMessageQueue>(
       std::make_unique<SynchronizedMessageQueue>("synchronized-queue-for-input")))
@@ -71,7 +71,7 @@ namespace {
 class ClientEventListener : public net::IEventListener
 {
   public:
-  ClientEventListener(ClientManagerShPtr clientManager,
+  ClientEventListener(bsgalone::server::ClientManagerShPtr clientManager,
                       IMessageQueueShPtr inputQueue,
                       IMessageQueueShPtr outputQueue)
     : m_manager(std::move(clientManager))
@@ -102,7 +102,7 @@ class ClientEventListener : public net::IEventListener
   }
 
   private:
-  ClientManagerShPtr m_manager{};
+  bsgalone::server::ClientManagerShPtr m_manager{};
   IMessageQueueShPtr m_inputQueue{};
   IMessageQueueShPtr m_outputQueue{};
 

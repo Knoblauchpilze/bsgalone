@@ -27,7 +27,8 @@ class Server : public core::CoreObject
   std::mutex m_runningLocker{};
   std::condition_variable m_runningNotifier{};
 
-  ClientManagerShPtr m_clientManager{std::make_shared<ClientManager>()};
+  bsgalone::server::ClientManagerShPtr m_clientManager{
+    std::make_shared<bsgalone::server::ClientManager>()};
   ServerNetworkClientShPtr m_networkClient{};
   MessageExchangerPtr m_messageExchanger{};
 
