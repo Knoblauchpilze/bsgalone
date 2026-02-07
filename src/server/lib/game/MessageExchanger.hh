@@ -16,7 +16,7 @@ namespace bsgo {
 
 struct MessageSystemData
 {
-  ClientManagerShPtr clientManager{};
+  bsgalone::server::ClientManagerShPtr clientManager{};
   ServerNetworkClientShPtr networkClient{};
   SystemQueueMap systemQueues{};
 };

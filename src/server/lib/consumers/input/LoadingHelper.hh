@@ -11,7 +11,7 @@ namespace bsgo {
 class LoadingHelper : public core::CoreObject
 {
   public:
-  LoadingHelper(ClientManagerShPtr clientManager,
+  LoadingHelper(bsgalone::server::ClientManagerShPtr clientManager,
                 SystemQueueMap systemQueues,
                 IMessageQueue *const outputMessageQueue);
   ~LoadingHelper() override = default;
@@ -19,7 +19,7 @@ class LoadingHelper : public core::CoreObject
   void publishLoadingMessages(const Uuid clientId, const Uuid playerDbId) const;
 
   private:
-  ClientManagerShPtr m_clientManager{};
+  bsgalone::server::ClientManagerShPtr m_clientManager{};
   SystemQueueMap m_systemQueues{};
   IMessageQueue *const m_outputMessageQueue{};
 };

@@ -16,7 +16,8 @@ namespace bsgo {
 class BroadcastMessageQueue : public IMessageQueue, public core::CoreObject
 {
   public:
-  BroadcastMessageQueue(ClientManagerShPtr clientManager, net::INetworkServerShPtr server);
+  BroadcastMessageQueue(bsgalone::server::ClientManagerShPtr clientManager,
+                        net::INetworkServerShPtr server);
   ~BroadcastMessageQueue() override = default;
 
   void pushMessage(IMessagePtr message) override;
@@ -28,7 +29,7 @@ class BroadcastMessageQueue : public IMessageQueue, public core::CoreObject
   private:
   std::mutex m_locker{};
   std::deque<IMessagePtr> m_messages{};
-  ClientManagerShPtr m_clientManager{};
+  bsgalone::server::ClientManagerShPtr m_clientManager{};
   net::INetworkServerShPtr m_server{};
 
   void processMessage(const IMessage &message);

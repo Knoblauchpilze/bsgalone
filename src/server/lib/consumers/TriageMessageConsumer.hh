@@ -12,7 +12,7 @@ namespace bsgo {
 class TriageMessageConsumer : public AbstractMessageConsumer
 {
   public:
-  TriageMessageConsumer(ClientManagerShPtr clientManager,
+  TriageMessageConsumer(bsgalone::server::ClientManagerShPtr clientManager,
                         SystemQueueMap systemQueues,
                         IMessageQueuePtr systemMessageQueue);
   ~TriageMessageConsumer() override = default;
@@ -20,7 +20,7 @@ class TriageMessageConsumer : public AbstractMessageConsumer
   void onMessageReceived(const IMessage &message) override;
 
   private:
-  ClientManagerShPtr m_clientManager{};
+  bsgalone::server::ClientManagerShPtr m_clientManager{};
   SystemQueueMap m_systemQueues{};
   IMessageQueuePtr m_systemQueue{};
 

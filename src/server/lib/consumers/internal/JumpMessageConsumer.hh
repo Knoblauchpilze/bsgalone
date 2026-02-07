@@ -13,7 +13,7 @@ class JumpMessageConsumer : public AbstractMessageConsumer
 {
   public:
   JumpMessageConsumer(SystemServiceShPtr systemService,
-                      ClientManagerShPtr clientManager,
+                      bsgalone::server::ClientManagerShPtr clientManager,
                       SystemQueueMap systemQueues,
                       IMessageQueue *const outputMessageQueue);
   ~JumpMessageConsumer() override = default;
@@ -22,7 +22,7 @@ class JumpMessageConsumer : public AbstractMessageConsumer
 
   private:
   SystemServiceShPtr m_systemService{};
-  ClientManagerShPtr m_clientManager{};
+  bsgalone::server::ClientManagerShPtr m_clientManager{};
   SystemQueueMap m_systemQueues{};
   IMessageQueue *const m_outputMessageQueue{};
 

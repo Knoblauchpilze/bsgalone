@@ -15,7 +15,7 @@ namespace bsgo {
 class ServerNetworkClient : public IMessageQueue
 {
   public:
-  ServerNetworkClient(ClientManagerShPtr clientManager);
+  ServerNetworkClient(bsgalone::server::ClientManagerShPtr clientManager);
   ~ServerNetworkClient() = default;
 
   void start(const int port);
@@ -33,7 +33,7 @@ class ServerNetworkClient : public IMessageQueue
 
   std::atomic_bool m_started{};
 
-  ClientManagerShPtr m_clientManager{};
+  bsgalone::server::ClientManagerShPtr m_clientManager{};
   IMessageQueueShPtr m_inputQueue{};
   IMessageQueueShPtr m_outputQueue{};
 

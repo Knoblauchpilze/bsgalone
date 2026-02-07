@@ -16,7 +16,7 @@
 
 namespace bsgo {
 
-BroadcastMessageQueue::BroadcastMessageQueue(ClientManagerShPtr clientManager,
+BroadcastMessageQueue::BroadcastMessageQueue(bsgalone::server::ClientManagerShPtr clientManager,
                                              net::INetworkServerShPtr server)
   : core::CoreObject("broadcast-message-queue")
   , m_clientManager(std::move(clientManager))
@@ -157,7 +157,8 @@ void BroadcastMessageQueue::broadcastMessage(const IMessage &message)
 
 namespace {
 template<typename T>
-auto determineClientFor(const T &message, const ClientManager &clientManager) -> std::optional<Uuid>
+auto determineClientFor(const T &message, const bsgalone::server::ClientManager &clientManager)
+  -> std::optional<Uuid>
 {
   return clientManager.getClientIdForPlayer(message.getPlayerDbId());
 }

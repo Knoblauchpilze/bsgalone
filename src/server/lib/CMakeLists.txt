@@ -4,10 +4,6 @@ add_library (server_lib SHARED "")
 set (CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 add_subdirectory (
-	${CMAKE_CURRENT_SOURCE_DIR}/clients
-	)
-
-add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/consumers
 	)
 

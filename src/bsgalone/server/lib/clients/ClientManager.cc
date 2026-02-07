@@ -1,7 +1,7 @@
 
 #include "ClientManager.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
 ClientManager::ClientManager()
   : core::CoreObject("manager")
@@ -20,33 +20,38 @@ void ClientManager::registerClient(const net::ClientId clientId)
 }
 
 void ClientManager::registerPlayer(const net::ClientId clientId,
-                                   const Uuid playerDbId,
-                                   const Uuid playerSystemDbId)
+                                   const bsgo::Uuid playerDbId,
+                                   const bsgo::Uuid playerSystemDbId)
 {
   const std::lock_guard guard(m_locker);
 
   const auto maybeClientData = m_clients.find(clientId);
   if (maybeClientData == m_clients.cend())
   {
-    error("Failed to register player " + str(playerDbId), "Unknown client " + str(clientId));
+    error("Failed to register player " + bsgo::str(playerDbId),
+          "Unknown client " + bsgo::str(clientId));
   }
 
   auto &clientData            = maybeClientData->second;
   clientData.playerDbId       = playerDbId;
   clientData.playerSystemDbId = playerSystemDbId;
-  m_playerToClient.emplace(playerDbId, clientId);
+  const auto [_, inserted]    = m_playerToClient.emplace(playerDbId, clientId);
+  if (!inserted)
+  {
+    warn("Not really INSERTED");
+  }
 
-  info("Registered player " + str(playerDbId) + " in system " + str(playerSystemDbId));
+  info("Registered player " + bsgo::str(playerDbId) + " in system " + bsgo::str(playerSystemDbId));
 }
 
-void ClientManager::removePlayer(const Uuid playerDbId)
+void ClientManager::removePlayer(const bsgo::Uuid playerDbId)
 {
   const std::lock_guard guard(m_locker);
 
   const auto maybeClientId = m_playerToClient.find(playerDbId);
   if (maybeClientId == m_playerToClient.cend())
   {
-    error("Failed to unregister player " + str(playerDbId), "Unable to find client id");
+    error("Failed to unregister player " + bsgo::str(playerDbId), "Unable to find client id");
   }
 
   auto &clientData = m_clients.at(maybeClientId->second);
@@ -54,23 +59,23 @@ void ClientManager::removePlayer(const Uuid playerDbId)
   clientData.playerSystemDbId.reset();
   m_playerToClient.erase(playerDbId);
 
-  info("Removed player " + str(playerDbId));
+  info("Removed player " + bsgo::str(playerDbId));
 }
 
-void ClientManager::removePlayerConnection(const Uuid playerDbId)
+void ClientManager::removePlayerConnection(const bsgo::Uuid playerDbId)
 {
   const std::lock_guard guard(m_locker);
 
   const auto maybeClientId = m_playerToClient.find(playerDbId);
   if (maybeClientId == m_playerToClient.cend())
   {
-    error("Failed to unregister connection for player " + str(playerDbId));
+    error("Failed to unregister connection for player " + bsgo::str(playerDbId));
   }
 
   m_clients.erase(maybeClientId->second);
   m_playerToClient.erase(maybeClientId);
 
-  info("Removed client " + net::str(maybeClientId->second) + " for player " + str(playerDbId));
+  info("Removed client " + net::str(maybeClientId->second) + " for player " + bsgo::str(playerDbId));
 }
 
 void ClientManager::removeClient(const net::ClientId clientId)
@@ -92,7 +97,7 @@ void ClientManager::removeClient(const net::ClientId clientId)
   info("Removed client " + net::str(clientId));
 }
 
-auto ClientManager::tryGetPlayerForClient(const net::ClientId clientId) -> std::optional<Uuid>
+auto ClientManager::tryGetPlayerForClient(const net::ClientId clientId) -> std::optional<bsgo::Uuid>
 {
   const std::lock_guard guard(m_locker);
 
@@ -105,14 +110,14 @@ auto ClientManager::tryGetPlayerForClient(const net::ClientId clientId) -> std::
   return maybeClient->second.playerDbId;
 }
 
-auto ClientManager::getClientIdForPlayer(const Uuid playerDbId) const -> net::ClientId
+auto ClientManager::getClientIdForPlayer(const bsgo::Uuid playerDbId) const -> net::ClientId
 {
   const std::lock_guard guard(m_locker);
 
   const auto maybeClientId = m_playerToClient.find(playerDbId);
   if (maybeClientId == m_playerToClient.cend())
   {
-    error("Failed to get client id for " + str(playerDbId), "No such player");
+    error("Failed to get client id for " + bsgo::str(playerDbId), "No such player");
   }
 
   return maybeClientId->second;
@@ -131,7 +136,7 @@ auto ClientManager::getAllClients() const -> std::vector<net::ClientId>
   return out;
 }
 
-auto ClientManager::getAllClientsForSystem(const Uuid systemDbId) const
+auto ClientManager::getAllClientsForSystem(const bsgo::Uuid systemDbId) const
   -> std::vector<net::ClientId>
 {
   const std::lock_guard guard(m_locker);
@@ -151,7 +156,8 @@ auto ClientManager::getAllClientsForSystem(const Uuid systemDbId) const
   return out;
 }
 
-auto ClientManager::tryGetSystemForClient(const net::ClientId clientId) const -> std::optional<Uuid>
+auto ClientManager::tryGetSystemForClient(const net::ClientId clientId) const
+  -> std::optional<bsgo::Uuid>
 {
   const std::lock_guard guard(m_locker);
 
@@ -164,30 +170,30 @@ auto ClientManager::tryGetSystemForClient(const net::ClientId clientId) const ->
   return maybeClientData->second.playerSystemDbId;
 }
 
-void ClientManager::updateSystemForPlayer(const Uuid playerDbId, const Uuid systemDbId)
+void ClientManager::updateSystemForPlayer(const bsgo::Uuid playerDbId, const bsgo::Uuid systemDbId)
 {
   const std::lock_guard guard(m_locker);
 
   const auto maybeClientId = m_playerToClient.find(playerDbId);
   if (maybeClientId == m_playerToClient.cend())
   {
-    error("Failed to get system for " + str(playerDbId), "No such player");
+    error("Failed to get system for " + bsgo::str(playerDbId), "No such player");
   }
 
   const auto maybeClientData = m_clients.find(maybeClientId->second);
   if (maybeClientData == m_clients.cend())
   {
-    error("Failed to get system for " + str(playerDbId), "No such client");
+    error("Failed to get system for " + bsgo::str(playerDbId), "No such client");
   }
 
   auto &clientData = maybeClientData->second;
   if (!clientData.playerDbId)
   {
-    error("Failed to update system for " + str(playerDbId), "No associated player");
+    error("Failed to update system for " + bsgo::str(playerDbId), "No associated player");
   }
 
-  info("Moved player " + str(*clientData.playerDbId) + " to system " + str(systemDbId));
+  info("Moved player " + bsgo::str(*clientData.playerDbId) + " to system " + bsgo::str(systemDbId));
   clientData.playerSystemDbId = systemDbId;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server
