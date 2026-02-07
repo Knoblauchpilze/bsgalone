@@ -3,61 +3,14 @@
 #include "DataReceivedEvent.hh"
 #include "LootMessage.hh"
 #include "ScannedMessage.hh"
+#include "TestMessageQueue.hh"
 #include <gtest/gtest.h>
 
+using namespace test;
 using namespace ::testing;
 
 namespace bsgalone::core {
 namespace {
-class TestMessageQueue : public bsgo::IMessageQueue
-{
-  public:
-  TestMessageQueue()           = default;
-  ~TestMessageQueue() override = default;
-
-  void pushMessage(bsgo::IMessagePtr message) override
-  {
-    const std::lock_guard guard(m_locker);
-    m_messages.push_back(std::move(message));
-  }
-
-  void addListener(bsgo::IMessageListenerPtr /*listener*/) override
-  {
-    throw std::runtime_error("Unsupported operation addListener in TestMessageQueue");
-  }
-
-  bool empty() override
-  {
-    const std::lock_guard guard(m_locker);
-    return m_messages.empty();
-  }
-
-  void processMessages() override
-  {
-    throw std::runtime_error("Unsupported operation processMessages in TestMessageQueue");
-  }
-
-  /// @brief - Returns the accumulated messages so far. Note that this method
-  /// is **not thread-safe**.
-  /// It is intended to be used after all events have been successfully added
-  /// to the queue.
-  /// @return - the list of accumulated messages
-  auto messages() const -> const std::vector<bsgo::IMessagePtr> &
-  {
-    return m_messages;
-  }
-
-  void clearMessages()
-  {
-    const std::lock_guard guard(m_locker);
-    return m_messages.clear();
-  }
-
-  private:
-  std::mutex m_locker{};
-  std::vector<bsgo::IMessagePtr> m_messages{};
-};
-
 auto generateCompleteScannedMessage() -> std::vector<char>
 {
   bsgo::ScannedMessage message(bsgo::Uuid{2}, bsgo::Uuid{4});
