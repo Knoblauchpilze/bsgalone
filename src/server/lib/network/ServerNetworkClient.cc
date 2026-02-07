@@ -3,14 +3,9 @@
 #include "AsyncEventBus.hh"
 #include "AsyncMessageQueue.hh"
 #include "BroadcastMessageQueue.hh"
-#include "ClientConnectedEvent.hh"
-#include "ClientDisconnectedEvent.hh"
-#include "LogoutMessage.hh"
+#include "ClientEventListener.hh"
 #include "NetworkAdapter.hh"
-#include "NetworkMessage.hh"
 #include "ServerEventListener.hh"
-#include "ServerStartedEvent.hh"
-#include "ServerStoppedEvent.hh"
 #include "SynchronizedEventBus.hh"
 #include "SynchronizedMessageQueue.hh"
 #include "TcpServer.hh"
@@ -66,69 +61,6 @@ void ServerNetworkClient::processMessages()
   m_inputQueue->processMessages();
 }
 
-namespace {
-
-class ClientEventListener : public net::IEventListener
-{
-  public:
-  ClientEventListener(bsgalone::server::ClientManagerShPtr clientManager,
-                      IMessageQueueShPtr inputQueue,
-                      IMessageQueueShPtr outputQueue)
-    : m_manager(std::move(clientManager))
-    , m_inputQueue(std::move(inputQueue))
-    , m_outputQueue(std::move(outputQueue))
-  {}
-
-  ~ClientEventListener() = default;
-
-  bool isEventRelevant(const net::EventType &type) const override
-  {
-    return type == net::EventType::CLIENT_CONNECTED || type == net::EventType::CLIENT_DISCONNECTED;
-  }
-
-  void onEventReceived(const net::IEvent &event) override
-  {
-    switch (event.type())
-    {
-      case net::EventType::CLIENT_CONNECTED:
-        handleClientConnected(event.as<net::ClientConnectedEvent>());
-        break;
-      case net::EventType::CLIENT_DISCONNECTED:
-        handleClientDisconnected(event.as<net::ClientDisconnectedEvent>());
-        break;
-      default:
-        throw std::invalid_argument("Unsupported event type " + net::str(event.type()));
-    }
-  }
-
-  private:
-  bsgalone::server::ClientManagerShPtr m_manager{};
-  IMessageQueueShPtr m_inputQueue{};
-  IMessageQueueShPtr m_outputQueue{};
-
-  void handleClientConnected(const net::ClientConnectedEvent &event)
-  {
-    m_manager->registerClient(event.clientId());
-  }
-
-  void handleClientDisconnected(const net::ClientDisconnectedEvent &event)
-  {
-    const auto maybePlayerId = m_manager->tryGetPlayerForClient(event.clientId());
-
-    m_manager->removeClient(event.clientId());
-
-    if (!maybePlayerId)
-    {
-      return;
-    }
-
-    auto message = std::make_unique<LogoutMessage>(*maybePlayerId, true);
-    message->setClientId(event.clientId());
-    m_inputQueue->pushMessage(std::move(message));
-  }
-};
-} // namespace
-
 void ServerNetworkClient::initialize()
 {
   auto eventListener = std::make_unique<bsgalone::server::ServerEventListener>(m_started);
@@ -140,9 +72,8 @@ void ServerNetworkClient::initialize()
   auto broadcastQueue = std::make_unique<BroadcastMessageQueue>(m_clientManager, m_tcpServer);
   m_outputQueue       = std::make_shared<AsyncMessageQueue>(std::move(broadcastQueue));
 
-  auto clientListener = std::make_unique<ClientEventListener>(m_clientManager,
-                                                              m_inputQueue,
-                                                              m_outputQueue);
+  auto clientListener = std::make_unique<bsgalone::server::ClientEventListener>(m_clientManager,
+                                                                                m_inputQueue);
   m_eventBus->addListener(std::move(clientListener));
 }
 
