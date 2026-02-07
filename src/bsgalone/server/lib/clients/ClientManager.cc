@@ -35,11 +35,7 @@ void ClientManager::registerPlayer(const net::ClientId clientId,
   auto &clientData            = maybeClientData->second;
   clientData.playerDbId       = playerDbId;
   clientData.playerSystemDbId = playerSystemDbId;
-  const auto [_, inserted]    = m_playerToClient.emplace(playerDbId, clientId);
-  if (!inserted)
-  {
-    warn("Not really INSERTED");
-  }
+  m_playerToClient.emplace(playerDbId, clientId);
 
   info("Registered player " + bsgo::str(playerDbId) + " in system " + bsgo::str(playerSystemDbId));
 }
