@@ -15,6 +15,9 @@ class LogoutMessage : public NetworkMessage
   ~LogoutMessage() override = default;
 
   auto getPlayerDbId() const -> Uuid;
+  // TODO: This is not used anymore but should be somehow restored to make sure that
+  // the player data attached to a client in the ClientManager is removed when a player
+  // logs out without disconnecting from the server.
   bool shouldCloseConnection() const;
   auto tryGetSystemDbId() const -> std::optional<Uuid>;
 
