@@ -56,7 +56,6 @@ void JumpMessageConsumer::onMessageReceived(const IMessage &message)
                                            playerDbId,
                                            res.sourceSystem,
                                            res.destinationSystem);
-  out->copyClientIdIfDefined(jump);
   m_outputMessageQueue->pushMessage(std::move(out));
 }
 
