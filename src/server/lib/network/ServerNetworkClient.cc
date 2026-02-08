@@ -69,7 +69,8 @@ void ServerNetworkClient::initialize()
   auto networkAdapter = std::make_unique<bsgalone::core::NetworkAdapter>(m_inputQueue);
   m_eventBus->addListener(std::move(networkAdapter));
 
-  auto broadcastQueue = std::make_unique<BroadcastMessageQueue>(m_clientManager, m_tcpServer);
+  auto broadcastQueue = std::make_unique<bsgalone::server::BroadcastMessageQueue>(m_clientManager,
+                                                                                  m_tcpServer);
   m_outputQueue       = std::make_shared<AsyncMessageQueue>(std::move(broadcastQueue));
 
   auto clientListener = std::make_unique<bsgalone::server::ClientEventListener>(m_clientManager,

@@ -15,10 +15,6 @@ add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/network
 	)
 
-add_subdirectory (
-	${CMAKE_CURRENT_SOURCE_DIR}/queues
-	)
-
 target_sources (server_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/Server.cc
 	)

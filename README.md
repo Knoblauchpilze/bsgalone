@@ -642,7 +642,7 @@ The server is responsible to handle a lot of messages from various sources. This
 - messages produced by the `SystemProcessor`s
 - messages produced internally and needing to be processed before being sent to clients
 
-After several iterations we came up with the following design:
+After several iterations the following design was chosen:
 
 ![diagram](resources/messaging-system.svg)
 
@@ -652,7 +652,7 @@ We have some interconnection between the system message consumers and the system
 
 We also allow system processors to send internal messages which need to be processed before they can either be sent to the clients or rerouted to be processed by a different system.
 
-Finally the [BroadcastMessageQueue](src/server/lib/queues/BroadcastMessageQueue.hh) is responsible to route the messages produced by the server to the right clients: this can be done by directly checking the client id if available or by checking in which system the messages belong to and broadcasting them to all connected clients.
+Finally the [BroadcastMessageQueue](src/bsgalone/server/lib/messages/BroadcastMessageQueue.hh) is responsible to route the messages produced by the server to the right clients: this can be done by directly checking the client id if available or by checking in which system the messages belong to and broadcasting them to all connected clients.
 
 # Entity Component System
 
