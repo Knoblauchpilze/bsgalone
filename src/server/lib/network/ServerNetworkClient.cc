@@ -2,7 +2,7 @@
 #include "ServerNetworkClient.hh"
 #include "AsyncEventBus.hh"
 #include "AsyncMessageQueue.hh"
-#include "BroadcastMessageQueue.hh"
+#include "BroadcastMessageListener.hh"
 #include "ClientEventListener.hh"
 #include "NetworkAdapter.hh"
 #include "ServerEventListener.hh"
@@ -69,8 +69,12 @@ void ServerNetworkClient::initialize()
   auto networkAdapter = std::make_unique<bsgalone::core::NetworkAdapter>(m_inputQueue);
   m_eventBus->addListener(std::move(networkAdapter));
 
-  auto broadcastQueue = std::make_unique<BroadcastMessageQueue>(m_clientManager, m_tcpServer);
-  m_outputQueue       = std::make_shared<AsyncMessageQueue>(std::move(broadcastQueue));
+  auto syncQueue = std::make_unique<bsgo::SynchronizedMessageQueue>("synchronized-queue-for-output");
+  m_outputQueue  = std::make_shared<AsyncMessageQueue>(std::move(syncQueue));
+
+  auto broadcastListener
+    = std::make_unique<bsgalone::server::BroadcastMessageListener>(m_clientManager, m_tcpServer);
+  m_outputQueue->addListener(std::move(broadcastListener));
 
   auto clientListener = std::make_unique<bsgalone::server::ClientEventListener>(m_clientManager,
                                                                                 m_inputQueue);

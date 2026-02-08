@@ -8,5 +8,5 @@ add_subdirectory(
 	)
 
 add_subdirectory(
-	${CMAKE_CURRENT_SOURCE_DIR}/listeners
+	${CMAKE_CURRENT_SOURCE_DIR}/events
 	)
