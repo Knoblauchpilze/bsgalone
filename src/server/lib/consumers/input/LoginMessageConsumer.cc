@@ -47,14 +47,15 @@ void LoginMessageConsumer::handleLogin(const LoginMessage &message) const
 
   const auto successfulLogin = maybePlayerDbId.has_value();
 
+  std::optional<Uuid> maybeSystemDbId{};
+
   if (!successfulLogin)
   {
     warn("Failed to process login message for player " + data.name);
   }
   else
   {
-    const auto systemDbId = m_loginService->getPlayerSystemDbId(*maybePlayerDbId);
-    m_clientManager->registerPlayer(message.getClientId(), *maybePlayerDbId, systemDbId);
+    maybeSystemDbId = m_loginService->getPlayerSystemDbId(*maybePlayerDbId);
   }
 
   auto out = std::make_unique<LoginMessage>(data.role);
@@ -64,13 +65,17 @@ void LoginMessageConsumer::handleLogin(const LoginMessage &message) const
   {
     out->setPlayerDbId(*maybePlayerDbId);
   }
+  if (maybeSystemDbId)
+  {
+    out->setSystemDbId(*maybeSystemDbId);
+  }
   out->copyClientIdIfDefined(message);
 
   m_outputMessageQueue->pushMessage(std::move(out));
 
   if (successfulLogin)
   {
-    m_helper.publishLoadingMessages(clientId, *maybePlayerDbId);
+    m_helper.publishLoadingMessages(clientId, maybePlayerDbId.value(), maybeSystemDbId.value());
   }
 }
 

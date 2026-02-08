@@ -48,7 +48,6 @@ void JumpMessageConsumer::onMessageReceived(const IMessage &message)
 
   const auto clientId = m_clientManager->getClientIdForPlayer(playerDbId);
 
-  m_clientManager->updateSystemForPlayer(jump.getPlayerDbId(), res.destinationSystem);
   handlePostJumpSystemMessages(shipDbId, res.sourceSystem, res.destinationSystem);
   handleLoadingMessages(playerDbId, res.destinationSystem, clientId);
 

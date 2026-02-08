@@ -16,7 +16,9 @@ class LoadingHelper : public core::CoreObject
                 IMessageQueue *const outputMessageQueue);
   ~LoadingHelper() override = default;
 
-  void publishLoadingMessages(const Uuid clientId, const Uuid playerDbId) const;
+  void publishLoadingMessages(const Uuid clientId,
+                              const Uuid playerDbId,
+                              const Uuid systemDbId) const;
 
   private:
   bsgalone::server::ClientManagerShPtr m_clientManager{};
