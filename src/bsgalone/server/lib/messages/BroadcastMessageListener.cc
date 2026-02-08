@@ -1,5 +1,5 @@
 
-#include "BroadcastMessageQueue.hh"
+#include "BroadcastMessageListener.hh"
 #include "AiBehaviorSyncMessage.hh"
 #include "ComponentSyncMessage.hh"
 #include "EntityAddedMessage.hh"
@@ -16,8 +16,8 @@
 
 namespace bsgalone::server {
 
-BroadcastMessageQueue::BroadcastMessageQueue(ClientManagerShPtr clientManager,
-                                             net::INetworkServerShPtr server)
+BroadcastMessageListener::BroadcastMessageListener(ClientManagerShPtr clientManager,
+                                                   net::INetworkServerShPtr server)
   : core::CoreObject("broadcast-message-queue")
   , m_clientManager(std::move(clientManager))
   , m_server(std::move(server))
@@ -25,33 +25,9 @@ BroadcastMessageQueue::BroadcastMessageQueue(ClientManagerShPtr clientManager,
   setService("message");
 }
 
-void BroadcastMessageQueue::pushMessage(bsgo::IMessagePtr message)
+bool BroadcastMessageListener::isMessageRelevant(const bsgo::MessageType & /*type*/) const
 {
-  const std::lock_guard guard(m_locker);
-  m_messages.emplace_back(std::move(message));
-}
-
-void BroadcastMessageQueue::addListener(bsgo::IMessageListenerPtr /*listener*/)
-{
-  error("Failed to add listener", "Broadcast message queue does not support listeners");
-}
-
-bool BroadcastMessageQueue::empty()
-{
-  const std::lock_guard guard(m_locker);
-  return m_messages.empty();
-}
-
-void BroadcastMessageQueue::processMessages()
-{
-  bsgo::MessageProcessor processor(getName(),
-                                   m_messages,
-                                   m_locker,
-                                   [this](const bsgo::IMessage &message) {
-                                     processMessage(message);
-                                   });
-
-  processor.processMessages();
+  return true;
 }
 
 namespace {
@@ -68,7 +44,7 @@ bool shouldTryToDetermineClientId(const bsgo::IMessage &message)
 }
 } // namespace
 
-void BroadcastMessageQueue::processMessage(const bsgo::IMessage &message)
+void BroadcastMessageListener::onMessageReceived(const bsgo::IMessage &message)
 {
   if (!message.isA<bsgo::NetworkMessage>())
   {
@@ -109,8 +85,8 @@ auto convertMessage(const bsgo::IMessage &message) -> std::vector<char>
 }
 } // namespace
 
-void BroadcastMessageQueue::sendMessageToClient(const net::ClientId clientId,
-                                                const bsgo::IMessage &message)
+void BroadcastMessageListener::sendMessageToClient(const net::ClientId clientId,
+                                                   const bsgo::IMessage &message)
 {
   m_server->trySend(clientId, convertMessage(message));
 }
@@ -130,7 +106,7 @@ bool shouldTryToDetermineSystemId(const bsgo::IMessage &message)
 }
 } // namespace
 
-void BroadcastMessageQueue::broadcastMessage(const bsgo::IMessage &message)
+void BroadcastMessageListener::broadcastMessage(const bsgo::IMessage &message)
 {
   std::vector<net::ClientId> clients{};
 
@@ -169,7 +145,7 @@ auto determineClientFor(const T &message, const ClientManager &clientManager)
 }
 } // namespace
 
-auto BroadcastMessageQueue::tryDetermineClientId(const bsgo::IMessage &message) const
+auto BroadcastMessageListener::tryDetermineClientId(const bsgo::IMessage &message) const
   -> std::optional<bsgo::Uuid>
 {
   switch (message.type())
@@ -219,7 +195,7 @@ auto determineSystemsFor(const bsgo::JumpMessage &message) -> std::vector<bsgo::
 }
 } // namespace
 
-auto BroadcastMessageQueue::tryDetermineSystemIds(const bsgo::IMessage &message) const
+auto BroadcastMessageListener::tryDetermineSystemIds(const bsgo::IMessage &message) const
   -> std::vector<bsgo::Uuid>
 {
   switch (message.type())

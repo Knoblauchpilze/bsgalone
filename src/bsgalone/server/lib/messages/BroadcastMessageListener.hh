@@ -3,31 +3,24 @@
 
 #include "ClientManager.hh"
 #include "CoreObject.hh"
-#include "IMessageQueue.hh"
+#include "IMessageListener.hh"
 #include "INetworkServer.hh"
 #include "Uuid.hh"
-#include <deque>
 #include <memory>
-#include <mutex>
 #include <vector>
 
 namespace bsgalone::server {
 
-class BroadcastMessageQueue : public bsgo::IMessageQueue, public core::CoreObject
+class BroadcastMessageListener : public bsgo::IMessageListener, public core::CoreObject
 {
   public:
-  BroadcastMessageQueue(ClientManagerShPtr clientManager, net::INetworkServerShPtr server);
-  ~BroadcastMessageQueue() override = default;
+  BroadcastMessageListener(ClientManagerShPtr clientManager, net::INetworkServerShPtr server);
+  ~BroadcastMessageListener() override = default;
 
-  void pushMessage(bsgo::IMessagePtr message) override;
-  void addListener(bsgo::IMessageListenerPtr listener) override;
-  bool empty() override;
-
-  void processMessages() override;
+  bool isMessageRelevant(const bsgo::MessageType &type) const override;
+  void onMessageReceived(const bsgo::IMessage &message) override;
 
   private:
-  std::mutex m_locker{};
-  std::deque<bsgo::IMessagePtr> m_messages{};
   ClientManagerShPtr m_clientManager{};
   net::INetworkServerShPtr m_server{};
 
@@ -40,6 +33,6 @@ class BroadcastMessageQueue : public bsgo::IMessageQueue, public core::CoreObjec
   auto tryDetermineSystemIds(const bsgo::IMessage &message) const -> std::vector<bsgo::Uuid>;
 };
 
-using BroadcastMessageQueuePtr = std::unique_ptr<BroadcastMessageQueue>;
+using BroadcastMessageListenerPtr = std::unique_ptr<BroadcastMessageListener>;
 
 } // namespace bsgalone::server
