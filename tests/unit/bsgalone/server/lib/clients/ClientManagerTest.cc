@@ -112,4 +112,16 @@ TEST(Unit_Bsgalone_Server_Clients_ClientManager, RemovedClientCannotBeQueriedAny
   EXPECT_EQ(std::vector<net::ClientId>{}, allClients);
 }
 
+TEST(Unit_Bsgalone_Server_Clients_ClientManager, ThrowsWhenUpdatingSystemForUnknownPlayer)
+{
+  /// TODO: Implement this
+  EXPECT_TRUE(false);
+}
+
+TEST(Unit_Bsgalone_Server_Clients_ClientManager, SuccessfullyUpdatesPlayerSystem)
+{
+  /// TODO: Implement this
+  EXPECT_TRUE(false);
+}
+
 } // namespace bsgalone::server
