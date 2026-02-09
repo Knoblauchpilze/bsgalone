@@ -9,22 +9,16 @@
 namespace bsgo {
 
 JumpMessageConsumer::JumpMessageConsumer(SystemServiceShPtr systemService,
-                                         bsgalone::server::ClientManagerShPtr clientManager,
                                          SystemQueueMap systemQueues,
                                          IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("jump", {MessageType::JUMP})
   , m_systemService(std::move(systemService))
-  , m_clientManager(std::move(clientManager))
   , m_systemQueues(std::move(systemQueues))
   , m_outputMessageQueue(outputMessageQueue)
 {
   if (nullptr == m_systemService)
   {
     throw std::invalid_argument("Expected non null system service");
-  }
-  if (nullptr == m_clientManager)
-  {
-    throw std::invalid_argument("Expected non null client manager");
   }
   if (nullptr == m_outputMessageQueue)
   {
@@ -46,10 +40,8 @@ void JumpMessageConsumer::onMessageReceived(const IMessage &message)
     return;
   }
 
-  const auto clientId = m_clientManager->getClientIdForPlayer(playerDbId);
-
   handlePostJumpSystemMessages(shipDbId, res.sourceSystem, res.destinationSystem);
-  handleLoadingMessages(playerDbId, res.destinationSystem, clientId);
+  handleLoadingMessages(playerDbId, res.destinationSystem);
 
   auto out = std::make_unique<JumpMessage>(shipDbId,
                                            playerDbId,
@@ -90,8 +82,7 @@ void JumpMessageConsumer::handlePostJumpSystemMessages(const Uuid shipDbId,
 }
 
 void JumpMessageConsumer::handleLoadingMessages(const Uuid playerDbId,
-                                                const Uuid destinationSystemDbId,
-                                                const Uuid clientId)
+                                                const Uuid destinationSystemDbId)
 {
   const auto maybeDestinationQueue = m_systemQueues.find(destinationSystemDbId);
   if (maybeDestinationQueue == m_systemQueues.cend())
@@ -104,12 +95,10 @@ void JumpMessageConsumer::handleLoadingMessages(const Uuid playerDbId,
 
   auto started = std::make_unique<LoadingStartedMessage>(LoadingTransition::JUMP, playerDbId);
   started->setSystemDbId(destinationSystemDbId);
-  started->setClientId(clientId);
   maybeDestinationQueue->second->pushMessage(std::move(started));
 
   auto finished = std::make_unique<LoadingFinishedMessage>(LoadingTransition::JUMP, playerDbId);
   finished->setSystemDbId(destinationSystemDbId);
-  finished->setClientId(clientId);
   maybeDestinationQueue->second->pushMessage(std::move(finished));
 }
 

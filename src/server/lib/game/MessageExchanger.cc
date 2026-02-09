@@ -95,7 +95,6 @@ void MessageExchanger::initializeInternalConsumers(const MessageSystemData &mess
 
   m_internalMessageQueue->addListener(
     std::make_unique<JumpMessageConsumer>(systemService,
-                                          messagesData.clientManager,
                                           messagesData.systemQueues,
                                           messagesData.networkClient.get()));
 
