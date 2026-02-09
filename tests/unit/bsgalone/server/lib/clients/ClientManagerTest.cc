@@ -112,4 +112,31 @@ TEST(Unit_Bsgalone_Server_Clients_ClientManager, RemovedClientCannotBeQueriedAny
   EXPECT_EQ(std::vector<net::ClientId>{}, allClients);
 }
 
+TEST(Unit_Bsgalone_Server_Clients_ClientManager, ThrowsWhenUpdatingSystemForUnknownPlayer)
+{
+  ClientManager manager;
+
+  EXPECT_THROW([&manager]() { manager.updateSystemForPlayer(bsgo::Uuid{18}, bsgo::Uuid{20}); }(),
+               core::CoreException);
+}
+
+TEST(Unit_Bsgalone_Server_Clients_ClientManager, SuccessfullyUpdatesPlayerSystem)
+{
+  ClientManager manager;
+  manager.registerClient(net::ClientId{12});
+  manager.registerPlayer(net::ClientId{12}, bsgo::Uuid{18}, bsgo::Uuid{19});
+
+  auto clients = manager.getAllClientsForSystem(bsgo::Uuid{19});
+  EXPECT_EQ(std::vector<net::ClientId>{net::ClientId{12}}, clients);
+  clients = manager.getAllClientsForSystem(bsgo::Uuid{20});
+  EXPECT_EQ(std::vector<net::ClientId>(), clients);
+
+  manager.updateSystemForPlayer(bsgo::Uuid{18}, bsgo::Uuid{20});
+
+  clients = manager.getAllClientsForSystem(bsgo::Uuid{19});
+  EXPECT_EQ(std::vector<net::ClientId>(), clients);
+  clients = manager.getAllClientsForSystem(bsgo::Uuid{20});
+  EXPECT_EQ(std::vector<net::ClientId>{net::ClientId{12}}, clients);
+}
+
 } // namespace bsgalone::server

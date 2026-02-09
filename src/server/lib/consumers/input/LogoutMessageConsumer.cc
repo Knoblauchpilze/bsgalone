@@ -57,7 +57,7 @@ void LogoutMessageConsumer::handleLogout(const LogoutMessage &message) const
 void LogoutMessageConsumer::notifyClientAndCloseConnectionIfNeeded(const Uuid playerDbId,
                                                                    const LogoutMessage &message) const
 {
-  auto out = std::make_unique<LogoutMessage>(playerDbId);
+  auto out = std::make_unique<LogoutMessage>(playerDbId, message.shouldCloseConnection());
   out->copyClientIdIfDefined(message);
   m_outputMessageQueue->pushMessage(std::move(out));
 }

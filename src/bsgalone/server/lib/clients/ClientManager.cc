@@ -68,10 +68,11 @@ void ClientManager::removePlayerConnection(const bsgo::Uuid playerDbId)
     error("Failed to unregister connection for player " + bsgo::str(playerDbId));
   }
 
-  m_clients.erase(maybeClientId->second);
+  const auto clientId = maybeClientId->second;
+  m_clients.erase(clientId);
   m_playerToClient.erase(maybeClientId);
 
-  info("Removed client " + net::str(maybeClientId->second) + " for player " + bsgo::str(playerDbId));
+  info("Removed client " + net::str(clientId) + " for player " + bsgo::str(playerDbId));
 }
 
 void ClientManager::removeClient(const net::ClientId clientId)
