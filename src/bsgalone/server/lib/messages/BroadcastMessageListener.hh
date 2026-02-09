@@ -1,13 +1,15 @@
 
 #pragma once
 
+#include "BroadcastMessageModule.hh"
 #include "ClientManager.hh"
 #include "CoreObject.hh"
 #include "IMessageListener.hh"
 #include "INetworkServer.hh"
-#include "Uuid.hh"
+#include "JumpMessage.hh"
+#include "LoginMessage.hh"
+#include "LogoutMessage.hh"
 #include <memory>
-#include <vector>
 
 namespace bsgalone::server {
 
@@ -22,15 +24,13 @@ class BroadcastMessageListener : public bsgo::IMessageListener, public core::Cor
 
   private:
   ClientManagerShPtr m_clientManager{};
-  net::INetworkServerShPtr m_server{};
+  BroadcastMessageModule m_broadcastModule;
 
-  void processMessage(const bsgo::IMessage &message);
+  void forwardMessageToClientManager(const bsgo::IMessage &message);
 
-  void sendMessageToClient(const net::ClientId clientId, const bsgo::IMessage &message);
-  void broadcastMessage(const bsgo::IMessage &message);
-
-  auto tryDetermineClientId(const bsgo::IMessage &message) const -> std::optional<bsgo::Uuid>;
-  auto tryDetermineSystemIds(const bsgo::IMessage &message) const -> std::vector<bsgo::Uuid>;
+  void registerPlayer(const bsgo::LoginMessage &message);
+  void unregisterPlayer(const bsgo::LogoutMessage &message);
+  void updatePlayerSystem(const bsgo::JumpMessage &message);
 };
 
 using BroadcastMessageListenerPtr = std::unique_ptr<BroadcastMessageListener>;

@@ -4,22 +4,16 @@
 namespace bsgo {
 
 LoginMessageConsumer::LoginMessageConsumer(LoginServicePtr loginService,
-                                           bsgalone::server::ClientManagerShPtr clientManager,
                                            SystemQueueMap systemQueues,
                                            IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("login", {MessageType::LOGIN})
   , m_loginService(std::move(loginService))
-  , m_clientManager(clientManager)
   , m_outputMessageQueue(outputMessageQueue)
-  , m_helper(clientManager, std::move(systemQueues), outputMessageQueue)
+  , m_helper(std::move(systemQueues), outputMessageQueue)
 {
   if (nullptr == m_loginService)
   {
     throw std::invalid_argument("Expected non null login service");
-  }
-  if (nullptr == m_clientManager)
-  {
-    throw std::invalid_argument("Expected non null client manager");
   }
   if (nullptr == m_outputMessageQueue)
   {
@@ -47,14 +41,15 @@ void LoginMessageConsumer::handleLogin(const LoginMessage &message) const
 
   const auto successfulLogin = maybePlayerDbId.has_value();
 
+  std::optional<Uuid> maybeSystemDbId{};
+
   if (!successfulLogin)
   {
     warn("Failed to process login message for player " + data.name);
   }
   else
   {
-    const auto systemDbId = m_loginService->getPlayerSystemDbId(*maybePlayerDbId);
-    m_clientManager->registerPlayer(message.getClientId(), *maybePlayerDbId, systemDbId);
+    maybeSystemDbId = m_loginService->getPlayerSystemDbId(*maybePlayerDbId);
   }
 
   auto out = std::make_unique<LoginMessage>(data.role);
@@ -64,13 +59,17 @@ void LoginMessageConsumer::handleLogin(const LoginMessage &message) const
   {
     out->setPlayerDbId(*maybePlayerDbId);
   }
+  if (maybeSystemDbId)
+  {
+    out->setSystemDbId(*maybeSystemDbId);
+  }
   out->copyClientIdIfDefined(message);
 
   m_outputMessageQueue->pushMessage(std::move(out));
 
   if (successfulLogin)
   {
-    m_helper.publishLoadingMessages(clientId, *maybePlayerDbId);
+    m_helper.publishLoadingMessages(clientId, maybePlayerDbId.value(), maybeSystemDbId.value());
   }
 }
 
