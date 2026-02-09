@@ -8,6 +8,7 @@
 #include "INetworkServer.hh"
 #include "JumpMessage.hh"
 #include "LoginMessage.hh"
+#include "LogoutMessage.hh"
 #include <memory>
 
 namespace bsgalone::server {
@@ -28,6 +29,7 @@ class BroadcastMessageListener : public bsgo::IMessageListener, public core::Cor
   void forwardMessageToClientManager(const bsgo::IMessage &message);
 
   void registerPlayer(const bsgo::LoginMessage &message);
+  void unregisterPlayer(const bsgo::LogoutMessage &message);
   void updatePlayerSystem(const bsgo::JumpMessage &message);
 };
 

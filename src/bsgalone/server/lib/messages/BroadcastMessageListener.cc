@@ -1,18 +1,5 @@
 
 #include "BroadcastMessageListener.hh"
-#include "AiBehaviorSyncMessage.hh"
-#include "ComponentSyncMessage.hh"
-#include "EntityAddedMessage.hh"
-#include "EntityRemovedMessage.hh"
-#include "JumpMessage.hh"
-#include "LoadingFinishedMessage.hh"
-#include "LoadingStartedMessage.hh"
-#include "LootMessage.hh"
-#include "MessageProcessor.hh"
-#include "NetworkMessage.hh"
-#include "ScannedMessage.hh"
-#include "SlotComponentMessage.hh"
-#include "TargetMessage.hh"
 
 namespace bsgalone::server {
 
@@ -32,8 +19,9 @@ bool BroadcastMessageListener::isMessageRelevant(const bsgo::MessageType & /*typ
 
 namespace {
 const std::unordered_set<bsgo::MessageType> CLIENT_MANAGER_RELEVANT_MESSAGES = {
-  bsgo::MessageType::LOGIN,
   bsgo::MessageType::JUMP,
+  bsgo::MessageType::LOGIN,
+  bsgo::MessageType::LOGOUT,
 };
 
 bool triggersClientManagerUpdate(const bsgo::IMessage &message)
@@ -59,6 +47,9 @@ void BroadcastMessageListener::forwardMessageToClientManager(const bsgo::IMessag
     case bsgo::MessageType::LOGIN:
       registerPlayer(message.as<bsgo::LoginMessage>());
       break;
+    case bsgo::MessageType::LOGOUT:
+      unregisterPlayer(message.as<bsgo::LogoutMessage>());
+      break;
     case bsgo::MessageType::JUMP:
       updatePlayerSystem(message.as<bsgo::JumpMessage>());
       break;
@@ -75,18 +66,31 @@ void BroadcastMessageListener::registerPlayer(const bsgo::LoginMessage &message)
 
   if (!maybeClientId)
   {
-    error("Failed to process login message", "Message does not define a client identifier");
+    error("Failed to process login message without client identifier");
   }
   if (!maybePlayerDbId)
   {
-    error("Failed to process login message", "Message does not define a player identifier");
+    error("Failed to process login message without player identifier");
   }
   if (!maybeSystemDbId)
   {
-    error("Failed to process login message", "Message does not define a system identifier");
+    error("Failed to process login message without system identifier");
   }
 
   m_clientManager->registerPlayer(*maybeClientId, *maybePlayerDbId, *maybeSystemDbId);
+}
+
+void BroadcastMessageListener::unregisterPlayer(const bsgo::LogoutMessage &message)
+{
+  const auto playerDbId = message.getPlayerDbId();
+
+  // The `shouldCloseConnection` indicates whether the logout was due to a lost connection
+  // or a voluntary logout. If the connection was lost, there's no need to remove the
+  // player/connection as this will be handled by the ClientEventListener.
+  if (!message.shouldCloseConnection())
+  {
+    m_clientManager->removePlayer(playerDbId);
+  }
 }
 
 void BroadcastMessageListener::updatePlayerSystem(const bsgo::JumpMessage &message)
