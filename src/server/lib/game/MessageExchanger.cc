@@ -68,7 +68,6 @@ auto MessageExchanger::initializeSystemMessageQueue(const MessageSystemData &mes
 
   auto loginService = std::make_unique<LoginService>(repositories);
   systemQueue->addListener(std::make_unique<LoginMessageConsumer>(std::move(loginService),
-                                                                  messagesData.clientManager,
                                                                   messagesData.systemQueues,
                                                                   messagesData.networkClient.get()));
 

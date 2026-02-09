@@ -1,7 +1,6 @@
 
 #pragma once
 
-#include "ClientManager.hh"
 #include "CoreObject.hh"
 #include "IMessageQueue.hh"
 #include "SystemQueues.hh"
@@ -11,9 +10,7 @@ namespace bsgo {
 class LoadingHelper : public core::CoreObject
 {
   public:
-  LoadingHelper(bsgalone::server::ClientManagerShPtr clientManager,
-                SystemQueueMap systemQueues,
-                IMessageQueue *const outputMessageQueue);
+  LoadingHelper(SystemQueueMap systemQueues, IMessageQueue *const outputMessageQueue);
   ~LoadingHelper() override = default;
 
   void publishLoadingMessages(const Uuid clientId,
@@ -21,7 +18,6 @@ class LoadingHelper : public core::CoreObject
                               const Uuid systemDbId) const;
 
   private:
-  bsgalone::server::ClientManagerShPtr m_clientManager{};
   SystemQueueMap m_systemQueues{};
   IMessageQueue *const m_outputMessageQueue{};
 };

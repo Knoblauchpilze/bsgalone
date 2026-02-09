@@ -5,21 +5,13 @@
 
 namespace bsgo {
 
-LoadingHelper::LoadingHelper(bsgalone::server::ClientManagerShPtr clientManager,
-                             SystemQueueMap systemQueues,
-                             IMessageQueue *const outputMessageQueue)
+LoadingHelper::LoadingHelper(SystemQueueMap systemQueues, IMessageQueue *const outputMessageQueue)
   : core::CoreObject("helper")
-
-  , m_clientManager(std::move(clientManager))
   , m_systemQueues(std::move(systemQueues))
   , m_outputMessageQueue(outputMessageQueue)
 {
   setService("loading");
 
-  if (nullptr == m_clientManager)
-  {
-    throw std::invalid_argument("Expected non null client manager");
-  }
   if (nullptr == m_outputMessageQueue)
   {
     throw std::invalid_argument("Expected non null message queue");

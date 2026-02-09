@@ -4,22 +4,16 @@
 namespace bsgo {
 
 LoginMessageConsumer::LoginMessageConsumer(LoginServicePtr loginService,
-                                           bsgalone::server::ClientManagerShPtr clientManager,
                                            SystemQueueMap systemQueues,
                                            IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("login", {MessageType::LOGIN})
   , m_loginService(std::move(loginService))
-  , m_clientManager(clientManager)
   , m_outputMessageQueue(outputMessageQueue)
-  , m_helper(clientManager, std::move(systemQueues), outputMessageQueue)
+  , m_helper(std::move(systemQueues), outputMessageQueue)
 {
   if (nullptr == m_loginService)
   {
     throw std::invalid_argument("Expected non null login service");
-  }
-  if (nullptr == m_clientManager)
-  {
-    throw std::invalid_argument("Expected non null client manager");
   }
   if (nullptr == m_outputMessageQueue)
   {
