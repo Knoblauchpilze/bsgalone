@@ -1,8 +1,6 @@
 
 #include "ShipStatusUiHandler.hh"
 #include "IViewListenerProxy.hh"
-#include "JumpCancelledMessage.hh"
-#include "JumpRequestedMessage.hh"
 #include "MessageListenerWrapper.hh"
 #include "ScreenCommon.hh"
 #include "StringUtils.hh"
