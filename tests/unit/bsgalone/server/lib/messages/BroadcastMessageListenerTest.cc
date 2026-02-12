@@ -1,32 +1,31 @@
 
 #include "BroadcastMessageListener.hh"
+#include "AbstractPlayerMessage.hh"
+#include "AbstractSystemMessage.hh"
 #include "JumpMessage.hh"
 #include "LoginMessage.hh"
 #include "LogoutMessage.hh"
+#include "SerializationUtils.hh"
+#include "TestNetworkServer.hh"
 #include <gmock/gmock-matchers.h>
 #include <gtest/gtest.h>
 
+using namespace test;
 using namespace ::testing;
 
 namespace bsgalone::server {
-namespace {
-class TestNetworkServer : public net::INetworkServer
+
+TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener, ThrowsWhenClientManagerIsNull)
 {
-  public:
-  TestNetworkServer()           = default;
-  ~TestNetworkServer() override = default;
+  EXPECT_THROW([]() { BroadcastMessageListener(nullptr, std::make_shared<TestNetworkServer>()); }(),
+               std::invalid_argument);
+}
 
-  void start(const int /*port*/) override {}
-
-  void stop() override {}
-
-  auto trySend(const net::ClientId /*clientId*/, std::vector<char> /*bytes*/)
-    -> std::optional<net::MessageId> override
-  {
-    return {};
-  };
-};
-} // namespace
+TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener, ThrowsWhenServerIsNull)
+{
+  EXPECT_THROW([]() { BroadcastMessageListener(std::make_shared<ClientManager>(), nullptr); }(),
+               std::invalid_argument);
+}
 
 TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
      RegistersPlayerWhenLoginMessageIsReceived)
@@ -145,6 +144,133 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
   listener.onMessageReceived(message);
 
   EXPECT_EQ(bsgo::Uuid{19}, manager->tryGetSystemForClient(net::ClientId{12}).value());
+}
+
+namespace {
+class TestPlayerMessage : public bsgo::AbstractPlayerMessage
+{
+  public:
+  // The type of message does not matter, it is just defined because it is
+  // required to pick one to instantiate an `AbstractPlayerMessage`.
+  TestPlayerMessage(const bsgo::Uuid playerDbId)
+    : bsgo::AbstractPlayerMessage(bsgo::MessageType::DOCK, playerDbId)
+  {}
+
+  ~TestPlayerMessage() override = default;
+
+  auto serialize(std::ostream &out) const -> std::ostream & override
+  {
+    core::serialize(out, m_messageType);
+    core::serialize(out, m_playerDbId);
+
+    return out;
+  }
+
+  bool deserialize(std::istream &in) override
+  {
+    bool ok{true};
+    ok &= core::deserialize(in, m_messageType);
+    ok &= core::deserialize(in, m_playerDbId);
+
+    return ok;
+  }
+
+  auto clone() const -> std::unique_ptr<IMessage> override
+  {
+    return std::make_unique<TestPlayerMessage>(m_playerDbId);
+  }
+};
+} // namespace
+
+TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
+     RoutesPlayerMessageToClientWhenPlayerIsRegistered)
+{
+  auto manager = std::make_shared<ClientManager>();
+  manager->registerClient(net::ClientId{12});
+  manager->registerPlayer(net::ClientId{12}, bsgo::Uuid{18}, bsgo::Uuid{19});
+  manager->registerClient(net::ClientId{13});
+  manager->registerPlayer(net::ClientId{13}, bsgo::Uuid{17}, bsgo::Uuid{19});
+  auto server = std::make_shared<TestNetworkServer>();
+  BroadcastMessageListener listener(manager, server);
+
+  auto message = std::make_unique<TestPlayerMessage>(bsgo::Uuid{18});
+  std::stringstream out;
+  message->serialize(out);
+  const auto outputStr = out.str();
+  std::vector<char> expected(outputStr.begin(), outputStr.end());
+
+  listener.onMessageReceived(*message);
+
+  EXPECT_EQ(1u, server->messages().size());
+  const auto &actual = server->messages().at(0);
+  EXPECT_EQ(net::ClientId{12}, actual.clientId);
+  EXPECT_EQ(expected, actual.data);
+}
+
+namespace {
+class TestSystemMessage : public bsgo::AbstractSystemMessage
+{
+  public:
+  // The type of message does not matter, it is just defined because it is
+  // required to pick one to instantiate an `AbstractSystemMessage`.
+  TestSystemMessage(const bsgo::Uuid systemDbId)
+    : bsgo::AbstractSystemMessage(bsgo::MessageType::DOCK, systemDbId)
+  {}
+
+  ~TestSystemMessage() override = default;
+
+  auto serialize(std::ostream &out) const -> std::ostream & override
+  {
+    core::serialize(out, m_messageType);
+    core::serialize(out, m_systemDbId);
+
+    return out;
+  }
+
+  bool deserialize(std::istream &in) override
+  {
+    bool ok{true};
+    ok &= core::deserialize(in, m_messageType);
+    ok &= core::deserialize(in, m_systemDbId);
+
+    return ok;
+  }
+
+  auto clone() const -> std::unique_ptr<IMessage> override
+  {
+    return std::make_unique<TestSystemMessage>(m_systemDbId);
+  }
+};
+} // namespace
+
+TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
+     RoutesSystemMessageToAllRegisteredPlayersInTheSystem)
+{
+  auto manager = std::make_shared<ClientManager>();
+  manager->registerClient(net::ClientId{12});
+  manager->registerPlayer(net::ClientId{12}, bsgo::Uuid{18}, bsgo::Uuid{19});
+  manager->registerClient(net::ClientId{13});
+  manager->registerPlayer(net::ClientId{13}, bsgo::Uuid{17}, bsgo::Uuid{19});
+  manager->registerClient(net::ClientId{14});
+  manager->registerPlayer(net::ClientId{14}, bsgo::Uuid{16}, bsgo::Uuid{20});
+  auto server = std::make_shared<TestNetworkServer>();
+  BroadcastMessageListener listener(manager, server);
+
+  auto message = std::make_unique<TestSystemMessage>(bsgo::Uuid{19});
+  std::stringstream out;
+  message->serialize(out);
+  const auto outputStr = out.str();
+  std::vector<char> expected(outputStr.begin(), outputStr.end());
+
+  listener.onMessageReceived(*message);
+
+  EXPECT_EQ(2u, server->messages().size());
+  EXPECT_THAT(server->messages(),
+              Contains(
+                TestNetworkServer::MessageData{.clientId = net::ClientId{12}, .data = expected}));
+  EXPECT_THAT(server->messages(),
+              Contains(
+                TestNetworkServer::MessageData{.clientId = net::ClientId{13}, .data = expected}));
 }
 
 } // namespace bsgalone::server
