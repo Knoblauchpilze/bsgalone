@@ -22,6 +22,8 @@ class TestNetworkServer : public net::INetworkServer
   {
     net::ClientId clientId{};
     std::vector<char> data{};
+
+    bool operator==(const MessageData &rhs) const;
   };
 
   /// @brief - Returns the accumulated messages so far. Note that this method

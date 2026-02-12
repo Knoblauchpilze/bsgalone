@@ -3,6 +3,11 @@
 
 namespace test {
 
+bool TestNetworkServer::MessageData::operator==(const MessageData &rhs) const
+{
+  return clientId == rhs.clientId && data == rhs.data;
+}
+
 void TestNetworkServer::start(const int /*port*/) {}
 
 void TestNetworkServer::stop() {}
