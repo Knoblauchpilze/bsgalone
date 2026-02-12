@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include "AbstractPlayerMessage.hh"
+#include "AbstractSystemMessage.hh"
 #include "BroadcastMessageModule.hh"
 #include "ClientManager.hh"
 #include "CoreObject.hh"
@@ -24,9 +26,13 @@ class BroadcastMessageListener : public bsgo::IMessageListener, public core::Cor
 
   private:
   ClientManagerShPtr m_clientManager{};
+  net::INetworkServerShPtr m_server{};
   BroadcastMessageModule m_broadcastModule;
 
   void forwardMessageToClientManager(const bsgo::IMessage &message);
+  void triageOutboundMessage(const bsgo::IMessage &message);
+  void routePlayerMessage(const bsgo::AbstractPlayerMessage &message);
+  void routeSystemMessage(const bsgo::AbstractSystemMessage &message);
 
   void registerPlayer(const bsgo::LoginMessage &message);
   void unregisterPlayer(const bsgo::LogoutMessage &message);

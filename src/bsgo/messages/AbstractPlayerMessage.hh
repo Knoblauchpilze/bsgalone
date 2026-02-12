@@ -16,7 +16,6 @@ class AbstractPlayerMessage : public AbstractMessage
   protected:
   AbstractPlayerMessage(const MessageType &type, const Uuid playerDbId);
 
-  private:
   Uuid m_playerDbId{};
 };
 

@@ -1,5 +1,6 @@
 
 #include "BroadcastMessageListener.hh"
+#include <sstream>
 
 namespace bsgalone::server {
 
@@ -7,8 +8,18 @@ BroadcastMessageListener::BroadcastMessageListener(ClientManagerShPtr clientMana
                                                    net::INetworkServerShPtr server)
   : core::CoreObject("broadcast-message-queue")
   , m_clientManager(clientManager)
-  , m_broadcastModule(clientManager, std::move(server))
+  , m_server(server)
+  , m_broadcastModule(clientManager, server)
 {
+  if (m_clientManager == nullptr)
+  {
+    throw std::invalid_argument("Expected non null client manager");
+  }
+  if (m_server == nullptr)
+  {
+    throw std::invalid_argument("Expected non null server");
+  }
+
   setService("message");
 }
 
@@ -37,7 +48,7 @@ void BroadcastMessageListener::onMessageReceived(const bsgo::IMessage &message)
     forwardMessageToClientManager(message);
   }
 
-  m_broadcastModule.processMessage(message);
+  triageOutboundMessage(message);
 }
 
 void BroadcastMessageListener::forwardMessageToClientManager(const bsgo::IMessage &message)
@@ -55,6 +66,52 @@ void BroadcastMessageListener::forwardMessageToClientManager(const bsgo::IMessag
       break;
     default:
       error("Unsupported message type " + bsgo::str(message.type()));
+  }
+}
+
+namespace {
+auto serializeMessage(const bsgo::IMessage &message) -> std::vector<char>
+{
+  std::ostringstream out{};
+  out << message;
+
+  const auto &rawMessage = out.str();
+  return std::vector<char>(rawMessage.begin(), rawMessage.end());
+}
+} // namespace
+
+void BroadcastMessageListener::triageOutboundMessage(const bsgo::IMessage &message)
+{
+  if (message.isA<bsgo::AbstractPlayerMessage>())
+  {
+    routePlayerMessage(message.as<bsgo::AbstractPlayerMessage>());
+    return;
+  }
+
+  if (message.isA<bsgo::AbstractSystemMessage>())
+  {
+    routeSystemMessage(message.as<bsgo::AbstractSystemMessage>());
+    return;
+  }
+
+  m_broadcastModule.processMessage(message);
+}
+
+void BroadcastMessageListener::routePlayerMessage(const bsgo::AbstractPlayerMessage &message)
+{
+  const auto bytes    = serializeMessage(message);
+  const auto clientId = m_clientManager->getClientIdForPlayer(message.getPlayerDbId());
+  m_server->trySend(clientId, bytes);
+}
+
+void BroadcastMessageListener::routeSystemMessage(const bsgo::AbstractSystemMessage &message)
+{
+  const auto bytes   = serializeMessage(message);
+  const auto clients = m_clientManager->getAllClientsForSystem(message.getSystemDbId());
+
+  for (const auto &clientId : clients)
+  {
+    m_server->trySend(clientId, bytes);
   }
 }
 

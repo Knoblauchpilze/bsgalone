@@ -16,7 +16,6 @@ class AbstractSystemMessage : public AbstractMessage
   protected:
   AbstractSystemMessage(const MessageType &type, const Uuid systemDbId);
 
-  private:
   Uuid m_systemDbId{};
 };
 
