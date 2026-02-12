@@ -3,30 +3,14 @@
 #include "JumpMessage.hh"
 #include "LoginMessage.hh"
 #include "LogoutMessage.hh"
+#include "TestNetworkServer.hh"
 #include <gmock/gmock-matchers.h>
 #include <gtest/gtest.h>
 
+using namespace test;
 using namespace ::testing;
 
 namespace bsgalone::server {
-namespace {
-class TestNetworkServer : public net::INetworkServer
-{
-  public:
-  TestNetworkServer()           = default;
-  ~TestNetworkServer() override = default;
-
-  void start(const int /*port*/) override {}
-
-  void stop() override {}
-
-  auto trySend(const net::ClientId /*clientId*/, std::vector<char> /*bytes*/)
-    -> std::optional<net::MessageId> override
-  {
-    return {};
-  };
-};
-} // namespace
 
 TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
      RegistersPlayerWhenLoginMessageIsReceived)
