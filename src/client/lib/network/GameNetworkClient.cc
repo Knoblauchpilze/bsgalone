@@ -4,8 +4,8 @@
 #include "ConnectionEstablishedEvent.hh"
 #include "ConnectionLostEvent.hh"
 #include "ConnectionMessage.hh"
+#include "MessageParser.hh"
 #include "NetworkAdapter.hh"
-#include "NetworkMessage.hh"
 #include "SynchronizedEventBus.hh"
 #include "SynchronizedMessageQueue.hh"
 #include "TcpClient.hh"
@@ -112,7 +112,9 @@ class NetworkEventListener : public net::IEventListener
 
 void GameNetworkClient::initialize()
 {
-  auto networkAdapter = std::make_unique<bsgalone::core::NetworkAdapter>(m_inputQueue);
+  auto networkAdapter
+    = std::make_unique<bsgalone::core::NetworkAdapter>(m_inputQueue,
+                                                       std::make_unique<bsgo::MessageParser>());
   m_eventBus->addListener(std::move(networkAdapter));
 
   auto eventListener = std::make_unique<NetworkEventListener>(m_connected, m_inputQueue);

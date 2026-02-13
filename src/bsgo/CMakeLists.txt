@@ -66,6 +66,7 @@ target_link_libraries (bsgo_lib PUBLIC
 	core_lib
 	net_lib
 	time_lib
+	game_core_lib
 	)
 
 if (${ENABLE_TESTS})

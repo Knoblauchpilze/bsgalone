@@ -5,6 +5,7 @@
 #include "DataReceivedEvent.hh"
 #include "IEventListener.hh"
 #include "IMessage.hh"
+#include "IMessageParser.hh"
 #include "IMessageQueue.hh"
 #include <deque>
 
@@ -13,7 +14,7 @@ namespace bsgalone::core {
 class NetworkAdapter : public net::IEventListener
 {
   public:
-  NetworkAdapter(bsgo::IMessageQueueShPtr queue);
+  NetworkAdapter(bsgo::IMessageQueueShPtr queue, IMessageParserPtr parser);
   ~NetworkAdapter() override = default;
 
   bool isEventRelevant(const net::EventType &type) const override;
@@ -21,6 +22,7 @@ class NetworkAdapter : public net::IEventListener
 
   private:
   bsgo::IMessageQueueShPtr m_queue{};
+  IMessageParserPtr m_parser{};
 
   struct ClientData
   {

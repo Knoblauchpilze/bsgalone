@@ -1,16 +1,20 @@
 
 #include "NetworkAdapter.hh"
-#include "MessageParser.hh"
 #include "NetworkMessage.hh"
 
 namespace bsgalone::core {
 
-NetworkAdapter::NetworkAdapter(bsgo::IMessageQueueShPtr queue)
+NetworkAdapter::NetworkAdapter(bsgo::IMessageQueueShPtr queue, IMessageParserPtr parser)
   : m_queue(std::move(queue))
+  , m_parser(std::move(parser))
 {
   if (m_queue == nullptr)
   {
     throw std::invalid_argument("Expected non null message queue");
+  }
+  if (m_parser == nullptr)
+  {
+    throw std::invalid_argument("Expected non null message parser");
   }
 }
 
@@ -67,11 +71,9 @@ auto NetworkAdapter::onDataReceived(const std::optional<net::ClientId> &maybeCli
     }
   }
 
-  bsgo::MessageParser parser{};
-
   while (processedSomeBytes)
   {
-    auto result = parser.tryParseMessage(workingData);
+    auto result = m_parser->tryParseMessage(workingData);
     if (result.message)
     {
       messages.emplace_back(std::move(*result.message));

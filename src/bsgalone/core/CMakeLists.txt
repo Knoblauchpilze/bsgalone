@@ -8,12 +8,23 @@ target_include_directories (game_core_lib PUBLIC
 	)
 
 add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/enums
+	)
+
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/messages
+	)
+
+add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/network
+	)
+
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/queues
 	)
 
 target_link_libraries (game_core_lib PUBLIC
 	bsgalone-interface-library
-	bsgo_lib
 	net_lib
 	)
 
