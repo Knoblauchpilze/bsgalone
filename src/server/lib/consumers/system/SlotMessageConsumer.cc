@@ -20,7 +20,7 @@ SlotMessageConsumer::SlotMessageConsumer(const Services &services,
   }
 }
 
-void SlotMessageConsumer::onMessageReceived(const IMessage &message)
+void SlotMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
 {
   const auto &slotMessage = message.as<SlotMessage>();
 

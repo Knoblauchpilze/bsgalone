@@ -19,7 +19,7 @@ JumpRequestedMessageConsumer::JumpRequestedMessageConsumer(const Services &servi
   }
 }
 
-void JumpRequestedMessageConsumer::onMessageReceived(const IMessage &message)
+void JumpRequestedMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
 {
   const auto &jump = message.as<JumpRequestedMessage>();
   handleJumpRequest(jump);

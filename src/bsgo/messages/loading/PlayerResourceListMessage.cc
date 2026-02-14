@@ -40,7 +40,7 @@ bool PlayerResourceListMessage::deserialize(std::istream &in)
   return ok;
 }
 
-auto PlayerResourceListMessage::clone() const -> IMessagePtr
+auto PlayerResourceListMessage::clone() const -> bsgalone::core::IMessagePtr
 {
   auto clone = std::make_unique<PlayerResourceListMessage>(m_resourcesData);
   clone->copyClientIdIfDefined(*this);

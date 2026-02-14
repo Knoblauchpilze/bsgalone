@@ -18,7 +18,7 @@ class LoginMessageConsumer : public AbstractMessageConsumer
                        IMessageQueue *const outputMessageQueue);
   ~LoginMessageConsumer() override = default;
 
-  void onMessageReceived(const IMessage &message) override;
+  void onMessageReceived(const bsgalone::core::IMessage &message) override;
 
   private:
   LoginServicePtr m_loginService{};

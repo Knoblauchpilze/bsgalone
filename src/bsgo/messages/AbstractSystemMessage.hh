@@ -4,19 +4,19 @@
 #include "AbstractMessage.hh"
 #include "Uuid.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class AbstractSystemMessage : public AbstractMessage
 {
   public:
   ~AbstractSystemMessage() override = default;
 
-  auto getSystemDbId() const -> Uuid;
+  auto getSystemDbId() const -> bsgo::Uuid;
 
   protected:
-  AbstractSystemMessage(const MessageType &type, const Uuid systemDbId);
+  AbstractSystemMessage(const bsgo::MessageType &type, const bsgo::Uuid systemDbId);
 
-  Uuid m_systemDbId{};
+  bsgo::Uuid m_systemDbId{};
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

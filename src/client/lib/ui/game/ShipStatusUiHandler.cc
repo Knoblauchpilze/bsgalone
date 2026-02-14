@@ -58,7 +58,7 @@ void ShipStatusUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQueu
   messageQueue.addListener(std::move(listener));
 }
 
-void ShipStatusUiHandler::onMessageReceived(const bsgo::IMessage &message)
+void ShipStatusUiHandler::onMessageReceived(const bsgalone::core::IMessage &message)
 {
   if (!m_shipView->isReady())
   {

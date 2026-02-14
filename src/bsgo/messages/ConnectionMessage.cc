@@ -5,7 +5,7 @@
 namespace bsgo {
 
 ConnectionMessage::ConnectionMessage()
-  : AbstractMessage(MessageType::CONNECTION)
+  : bsgalone::core::AbstractMessage(MessageType::CONNECTION)
 {}
 
 auto ConnectionMessage::serialize(std::ostream &out) const -> std::ostream &
@@ -23,7 +23,7 @@ bool ConnectionMessage::deserialize(std::istream &in)
   return ok;
 }
 
-auto ConnectionMessage::clone() const -> IMessagePtr
+auto ConnectionMessage::clone() const -> bsgalone::core::IMessagePtr
 {
   return std::make_unique<ConnectionMessage>();
 }

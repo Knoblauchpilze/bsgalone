@@ -90,7 +90,7 @@ bool JumpMessage::deserialize(std::istream &in)
   return ok;
 }
 
-auto JumpMessage::clone() const -> IMessagePtr
+auto JumpMessage::clone() const -> bsgalone::core::IMessagePtr
 {
   auto clone                     = std::make_unique<JumpMessage>(m_shipDbId, m_playerDbId);
   clone->m_sourceSystemDbId      = m_sourceSystemDbId;

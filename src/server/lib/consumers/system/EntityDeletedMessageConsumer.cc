@@ -21,7 +21,7 @@ EntityDeletedMessageConsumer::EntityDeletedMessageConsumer(const Services &servi
   }
 }
 
-void EntityDeletedMessageConsumer::onMessageReceived(const IMessage &message)
+void EntityDeletedMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
 {
   const auto &removed   = message.as<EntityRemovedMessage>();
   const auto entityKind = removed.getEntityKind();

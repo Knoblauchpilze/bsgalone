@@ -24,7 +24,7 @@ class LogUiHandler : public IUiHandler, public bsgo::AbstractMessageListener
   void updateUi() override;
 
   void connectToMessageQueue(bsgo::IMessageQueue &messageQueue) override;
-  void onMessageReceived(const bsgo::IMessage &message) override;
+  void onMessageReceived(const bsgalone::core::IMessage &message) override;
 
   private:
   SystemViewShPtr m_systemView{};
@@ -43,7 +43,7 @@ class LogUiHandler : public IUiHandler, public bsgo::AbstractMessageListener
 
   void subscribeToViews();
   void reset();
-  auto createMenuFromMessage(const bsgo::IMessage &message) -> UiMenuPtr;
+  auto createMenuFromMessage(const bsgalone::core::IMessage &message) -> UiMenuPtr;
 };
 
 using LogUiHandlerPtr = std::unique_ptr<LogUiHandler>;

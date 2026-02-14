@@ -188,7 +188,7 @@ bool ShipDbView::canStillEquipItem(const bsgo::Item &type) const
   return canEquip;
 }
 
-void ShipDbView::handleMessageInternal(const bsgo::IMessage &message)
+void ShipDbView::handleMessageInternal(const bsgalone::core::IMessage &message)
 {
   switch (message.type())
   {

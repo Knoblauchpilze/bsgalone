@@ -11,7 +11,7 @@ TargetListMessageConsumer::TargetListMessageConsumer(bsgo::DatabaseEntityMapper 
   , m_coordinator(std::move(coordinator))
 {}
 
-void TargetListMessageConsumer::onMessageReceivedInternal(const bsgo::IMessage &message)
+void TargetListMessageConsumer::onMessageReceivedInternal(const bsgalone::core::IMessage &message)
 {
   const auto targetsList = message.as<bsgo::TargetListMessage>();
 

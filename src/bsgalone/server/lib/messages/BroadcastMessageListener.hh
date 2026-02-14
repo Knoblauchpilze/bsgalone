@@ -15,24 +15,24 @@
 
 namespace bsgalone::server {
 
-class BroadcastMessageListener : public bsgo::IMessageListener, public core::CoreObject
+class BroadcastMessageListener : public bsgo::IMessageListener, public ::core::CoreObject
 {
   public:
   BroadcastMessageListener(ClientManagerShPtr clientManager, net::INetworkServerShPtr server);
   ~BroadcastMessageListener() override = default;
 
   bool isMessageRelevant(const bsgo::MessageType &type) const override;
-  void onMessageReceived(const bsgo::IMessage &message) override;
+  void onMessageReceived(const core::IMessage &message) override;
 
   private:
   ClientManagerShPtr m_clientManager{};
   net::INetworkServerShPtr m_server{};
   BroadcastMessageModule m_broadcastModule;
 
-  void forwardMessageToClientManager(const bsgo::IMessage &message);
-  void triageOutboundMessage(const bsgo::IMessage &message);
-  void routePlayerMessage(const bsgo::AbstractPlayerMessage &message);
-  void routeSystemMessage(const bsgo::AbstractSystemMessage &message);
+  void forwardMessageToClientManager(const core::IMessage &message);
+  void triageOutboundMessage(const core::IMessage &message);
+  void routePlayerMessage(const core::AbstractPlayerMessage &message);
+  void routeSystemMessage(const core::AbstractSystemMessage &message);
 
   void registerPlayer(const bsgo::LoginMessage &message);
   void unregisterPlayer(const bsgo::LogoutMessage &message);

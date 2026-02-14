@@ -15,7 +15,7 @@ AbstractGameMessageConsumer::AbstractGameMessageConsumer(const std::string &name
   addModule("consumer");
 }
 
-void AbstractGameMessageConsumer::onMessageReceived(const bsgo::IMessage &message)
+void AbstractGameMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
 {
   switch (message.type())
   {
@@ -50,7 +50,7 @@ void AbstractGameMessageConsumer::handleLoadingFinished(
   m_relevantLoadingTransitionDetected = false;
 }
 
-void AbstractGameMessageConsumer::handleRelevantMessage(const bsgo::IMessage &message)
+void AbstractGameMessageConsumer::handleRelevantMessage(const bsgalone::core::IMessage &message)
 {
   if (m_relevantLoadingTransitionDetected)
   {

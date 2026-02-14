@@ -35,7 +35,7 @@ LoadingMessagesConsumer::LoadingMessagesConsumer(const Services &services,
   }
 }
 
-void LoadingMessagesConsumer::onMessageReceived(const IMessage &message)
+void LoadingMessagesConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
 {
   switch (message.type())
   {

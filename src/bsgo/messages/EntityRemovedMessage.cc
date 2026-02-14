@@ -84,7 +84,7 @@ bool EntityRemovedMessage::deserialize(std::istream &in)
   return ok;
 }
 
-auto EntityRemovedMessage::clone() const -> IMessagePtr
+auto EntityRemovedMessage::clone() const -> bsgalone::core::IMessagePtr
 {
   auto clone          = std::make_unique<EntityRemovedMessage>(m_entityDbId, m_entityKind, m_dead);
   clone->m_systemDbId = m_systemDbId;

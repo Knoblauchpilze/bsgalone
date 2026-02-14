@@ -40,7 +40,7 @@ bool PlayerComputerListMessage::deserialize(std::istream &in)
   return ok;
 }
 
-auto PlayerComputerListMessage::clone() const -> IMessagePtr
+auto PlayerComputerListMessage::clone() const -> bsgalone::core::IMessagePtr
 {
   auto clone = std::make_unique<PlayerComputerListMessage>(m_computersData);
   clone->copyClientIdIfDefined(*this);

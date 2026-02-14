@@ -1,16 +1,16 @@
 
 #include "AbstractMessage.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
-AbstractMessage::AbstractMessage(const MessageType &type)
+AbstractMessage::AbstractMessage(const bsgo::MessageType &type)
   : IMessage(str(type))
   , m_messageType(type)
 {}
 
-auto AbstractMessage::type() const -> MessageType
+auto AbstractMessage::type() const -> bsgo::MessageType
 {
   return m_messageType;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

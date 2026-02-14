@@ -19,7 +19,7 @@ JumpCancelledMessageConsumer::JumpCancelledMessageConsumer(const Services &servi
   }
 }
 
-void JumpCancelledMessageConsumer::onMessageReceived(const IMessage &message)
+void JumpCancelledMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
 {
   const auto &jump = message.as<JumpCancelledMessage>();
   handleJumpCancellation(jump);

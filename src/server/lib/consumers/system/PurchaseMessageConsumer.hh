@@ -16,7 +16,7 @@ class PurchaseMessageConsumer : public AbstractMessageConsumer
                           IMessageQueue *const outputMessageQueue);
   ~PurchaseMessageConsumer() override = default;
 
-  void onMessageReceived(const IMessage &message) override;
+  void onMessageReceived(const bsgalone::core::IMessage &message) override;
 
   private:
   PurchaseServiceShPtr m_purchaseService{};

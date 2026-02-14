@@ -75,7 +75,7 @@ bool PlayerLoginDataMessage::deserialize(std::istream &in)
   return ok;
 }
 
-auto PlayerLoginDataMessage::clone() const -> IMessagePtr
+auto PlayerLoginDataMessage::clone() const -> bsgalone::core::IMessagePtr
 {
   auto clone = std::make_unique<PlayerLoginDataMessage>();
   clone->setFaction(m_faction);

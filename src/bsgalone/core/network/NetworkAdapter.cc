@@ -53,7 +53,7 @@ auto NetworkAdapter::onDataReceived(const std::optional<net::ClientId> &maybeCli
 {
   bool processedSomeBytes{true};
   auto processedBytes{0};
-  std::vector<bsgo::IMessagePtr> messages{};
+  std::vector<IMessagePtr> messages{};
 
   std::deque<char> workingData;
   {
@@ -90,13 +90,13 @@ auto NetworkAdapter::onDataReceived(const std::optional<net::ClientId> &maybeCli
 }
 
 void NetworkAdapter::feedMessagesToQueue(const std::optional<net::ClientId> &maybeClientId,
-                                         std::vector<bsgo::IMessagePtr> &&messages)
+                                         std::vector<IMessagePtr> &&messages)
 {
   for (auto &message : messages)
   {
-    if (maybeClientId && message->isA<bsgo::NetworkMessage>())
+    if (maybeClientId && message->isA<NetworkMessage>())
     {
-      message->as<bsgo::NetworkMessage>().setClientId(*maybeClientId);
+      message->as<NetworkMessage>().setClientId(*maybeClientId);
     }
     m_queue->pushMessage(std::move(message));
   }

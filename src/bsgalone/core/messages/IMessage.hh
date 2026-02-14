@@ -5,15 +5,15 @@
 #include "MessageType.hh"
 #include <memory>
 
-namespace bsgo {
+namespace bsgalone::core {
 
-class IMessage : public core::CoreObject
+class IMessage : public ::core::CoreObject
 {
   public:
   IMessage(const std::string &name);
   ~IMessage() override = default;
 
-  virtual auto type() const -> MessageType                          = 0;
+  virtual auto type() const -> bsgo::MessageType                    = 0;
   virtual auto serialize(std::ostream &out) const -> std::ostream & = 0;
   virtual bool deserialize(std::istream &in)                        = 0;
 
@@ -34,6 +34,6 @@ using IMessagePtr = std::unique_ptr<IMessage>;
 auto operator<<(std::ostream &out, const IMessage &message) -> std::ostream &;
 auto operator>>(std::istream &in, IMessage &message) -> std::istream &;
 
-} // namespace bsgo
+} // namespace bsgalone::core
 
 #include "IMessage.hxx"

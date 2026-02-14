@@ -1,18 +1,18 @@
 
 #include "NetworkMessage.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
-NetworkMessage::NetworkMessage(const MessageType &type)
+NetworkMessage::NetworkMessage(const bsgo::MessageType &type)
   : AbstractMessage(type)
 {}
 
-void NetworkMessage::setClientId(const Uuid clientId)
+void NetworkMessage::setClientId(const bsgo::Uuid clientId)
 {
   m_clientId = clientId;
 }
 
-auto NetworkMessage::getClientId() const -> Uuid
+auto NetworkMessage::getClientId() const -> bsgo::Uuid
 {
   if (!m_clientId)
   {
@@ -21,7 +21,7 @@ auto NetworkMessage::getClientId() const -> Uuid
   return *m_clientId;
 }
 
-auto NetworkMessage::tryGetClientId() const -> std::optional<Uuid>
+auto NetworkMessage::tryGetClientId() const -> std::optional<bsgo::Uuid>
 {
   return m_clientId;
 }
@@ -35,4 +35,4 @@ void NetworkMessage::copyClientIdIfDefined(const NetworkMessage &source)
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

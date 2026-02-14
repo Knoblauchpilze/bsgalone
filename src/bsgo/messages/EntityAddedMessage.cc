@@ -173,7 +173,7 @@ bool EntityAddedMessage::deserialize(std::istream &in)
   return ok;
 }
 
-auto EntityAddedMessage::clone() const -> IMessagePtr
+auto EntityAddedMessage::clone() const -> bsgalone::core::IMessagePtr
 {
   auto clone = std::make_unique<EntityAddedMessage>(m_systemDbId);
   switch (*m_entityKind)

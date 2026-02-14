@@ -14,7 +14,7 @@ class AiBehaviorSyncMessageConsumer : public AbstractMessageConsumer
                                 IMessageQueue *const outputMessageQueue);
   ~AiBehaviorSyncMessageConsumer() override = default;
 
-  void onMessageReceived(const IMessage &message) override;
+  void onMessageReceived(const bsgalone::core::IMessage &message) override;
 
   private:
   SystemServiceShPtr m_systemService{};

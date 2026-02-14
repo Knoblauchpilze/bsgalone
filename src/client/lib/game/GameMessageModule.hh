@@ -29,7 +29,7 @@ class GameMessageModule : public bsgo::AbstractMessageListener, public core::Cor
   GameMessageModule(Game &game, const bsgo::DatabaseEntityMapper &entityMapper);
   ~GameMessageModule() override = default;
 
-  void onMessageReceived(const bsgo::IMessage &message) override;
+  void onMessageReceived(const bsgalone::core::IMessage &message) override;
 
   private:
   Game &m_game;

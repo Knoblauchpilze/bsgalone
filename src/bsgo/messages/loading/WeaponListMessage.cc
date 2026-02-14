@@ -39,7 +39,7 @@ bool WeaponListMessage::deserialize(std::istream &in)
   return ok;
 }
 
-auto WeaponListMessage::clone() const -> IMessagePtr
+auto WeaponListMessage::clone() const -> bsgalone::core::IMessagePtr
 {
   auto clone = std::make_unique<WeaponListMessage>(m_weaponsData);
   clone->copyClientIdIfDefined(*this);

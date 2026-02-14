@@ -39,7 +39,7 @@ bool SystemListMessage::deserialize(std::istream &in)
   return ok;
 }
 
-auto SystemListMessage::clone() const -> IMessagePtr
+auto SystemListMessage::clone() const -> bsgalone::core::IMessagePtr
 {
   auto clone = std::make_unique<SystemListMessage>(m_systemsData);
   clone->copyClientIdIfDefined(*this);

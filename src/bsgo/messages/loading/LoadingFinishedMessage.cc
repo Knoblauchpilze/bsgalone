@@ -64,7 +64,7 @@ bool LoadingFinishedMessage::deserialize(std::istream &in)
   return ok;
 }
 
-auto LoadingFinishedMessage::clone() const -> IMessagePtr
+auto LoadingFinishedMessage::clone() const -> bsgalone::core::IMessagePtr
 {
   auto clone = std::make_unique<LoadingFinishedMessage>(m_transition, *m_playerDbId);
   if (m_systemDbId)

@@ -24,8 +24,8 @@ class AbstractSystem : public ISystem
   void update(Coordinator &coordinator, const chrono::TickData &data) const override;
 
   protected:
-  void pushInternalMessage(IMessagePtr message) const;
-  void pushMessage(IMessagePtr message) const;
+  void pushInternalMessage(bsgalone::core::IMessagePtr message) const;
+  void pushMessage(bsgalone::core::IMessagePtr message) const;
 
   virtual void updateEntity(Entity &entity,
                             Coordinator &coordinator,

@@ -16,7 +16,7 @@ class OutpostListMessageConsumer : public AbstractGameMessageConsumer
   ~OutpostListMessageConsumer() override = default;
 
   protected:
-  void onMessageReceivedInternal(const bsgo::IMessage &message) override;
+  void onMessageReceivedInternal(const bsgalone::core::IMessage &message) override;
 
   private:
   bsgo::DatabaseEntityMapper &m_entityMapper;

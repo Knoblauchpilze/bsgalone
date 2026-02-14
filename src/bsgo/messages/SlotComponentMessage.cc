@@ -66,7 +66,7 @@ bool SlotComponentMessage::deserialize(std::istream &in)
   return ok;
 }
 
-auto SlotComponentMessage::clone() const -> IMessagePtr
+auto SlotComponentMessage::clone() const -> bsgalone::core::IMessagePtr
 {
   auto clone                     = std::make_unique<SlotComponentMessage>();
   clone->m_playerDbId            = m_playerDbId;

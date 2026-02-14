@@ -20,7 +20,7 @@ TargetMessageConsumer::TargetMessageConsumer(const Services &services,
   }
 }
 
-void TargetMessageConsumer::onMessageReceived(const IMessage &message)
+void TargetMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
 {
   const auto &target = message.as<TargetMessage>();
 

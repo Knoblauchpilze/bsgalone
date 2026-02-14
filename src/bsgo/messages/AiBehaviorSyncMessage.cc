@@ -63,7 +63,7 @@ bool AiBehaviorSyncMessage::deserialize(std::istream &in)
   return ok;
 }
 
-auto AiBehaviorSyncMessage::clone() const -> IMessagePtr
+auto AiBehaviorSyncMessage::clone() const -> bsgalone::core::IMessagePtr
 {
   auto clone = std::make_unique<AiBehaviorSyncMessage>(m_shipDbId);
   clone->copyClientIdIfDefined(*this);

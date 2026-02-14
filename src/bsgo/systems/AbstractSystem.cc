@@ -62,7 +62,7 @@ void AbstractSystem::update(Coordinator &coordinator, const chrono::TickData &da
   }
 }
 
-void AbstractSystem::pushInternalMessage(IMessagePtr message) const
+void AbstractSystem::pushInternalMessage(bsgalone::core::IMessagePtr message) const
 {
   if (m_internalMessageQueue != nullptr)
   {
@@ -70,7 +70,7 @@ void AbstractSystem::pushInternalMessage(IMessagePtr message) const
   }
 }
 
-void AbstractSystem::pushMessage(IMessagePtr message) const
+void AbstractSystem::pushMessage(bsgalone::core::IMessagePtr message) const
 {
   if (m_outputMessageQueue != nullptr)
   {

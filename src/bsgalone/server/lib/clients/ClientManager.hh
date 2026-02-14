@@ -11,7 +11,7 @@
 
 namespace bsgalone::server {
 
-class ClientManager : public core::CoreObject
+class ClientManager : public ::core::CoreObject
 {
   public:
   ClientManager();

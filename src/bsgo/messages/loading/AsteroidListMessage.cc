@@ -50,7 +50,7 @@ bool AsteroidListMessage::deserialize(std::istream &in)
   return ok;
 }
 
-auto AsteroidListMessage::clone() const -> IMessagePtr
+auto AsteroidListMessage::clone() const -> bsgalone::core::IMessagePtr
 {
   auto clone = std::make_unique<AsteroidListMessage>(m_systemDbId, m_asteroidsData);
   clone->copyClientIdIfDefined(*this);

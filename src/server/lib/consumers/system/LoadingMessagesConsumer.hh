@@ -15,7 +15,7 @@ class LoadingMessagesConsumer : public AbstractMessageConsumer
   LoadingMessagesConsumer(const Services &services, IMessageQueue *const outputMessageQueue);
   ~LoadingMessagesConsumer() override = default;
 
-  void onMessageReceived(const IMessage &message) override;
+  void onMessageReceived(const bsgalone::core::IMessage &message) override;
 
   private:
   LoadingServiceShPtr m_loadingService{};

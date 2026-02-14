@@ -66,7 +66,7 @@ bool EquipMessage::deserialize(std::istream &in)
   return ok;
 }
 
-auto EquipMessage::clone() const -> IMessagePtr
+auto EquipMessage::clone() const -> bsgalone::core::IMessagePtr
 {
   auto clone = std::make_unique<EquipMessage>(m_action, m_shipDbId, m_itemType, m_itemDbId);
   clone->copyClientIdIfDefined(*this);

@@ -25,7 +25,7 @@ EntityRemovedMessageConsumer::EntityRemovedMessageConsumer(SystemServiceShPtr sy
   }
 }
 
-void EntityRemovedMessageConsumer::onMessageReceived(const IMessage &message)
+void EntityRemovedMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
 {
   const auto &removed = message.as<EntityRemovedMessage>();
 

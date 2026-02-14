@@ -12,7 +12,7 @@ class TestMessageQueue : public bsgo::IMessageQueue
   TestMessageQueue()           = default;
   ~TestMessageQueue() override = default;
 
-  void pushMessage(bsgo::IMessagePtr message) override;
+  void pushMessage(bsgalone::core::IMessagePtr message) override;
   void addListener(bsgo::IMessageListenerPtr /*listener*/) override;
   bool empty() override;
   void processMessages() override;
@@ -22,13 +22,13 @@ class TestMessageQueue : public bsgo::IMessageQueue
   /// It is intended to be used after all events have been successfully added
   /// to the queue.
   /// @return - the list of accumulated messages
-  auto messages() const -> const std::vector<bsgo::IMessagePtr> &;
+  auto messages() const -> const std::vector<bsgalone::core::IMessagePtr> &;
 
   void clearMessages();
 
   private:
   std::mutex m_locker{};
-  std::vector<bsgo::IMessagePtr> m_messages{};
+  std::vector<bsgalone::core::IMessagePtr> m_messages{};
 };
 
 } // namespace test

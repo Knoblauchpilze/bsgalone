@@ -32,7 +32,7 @@ EquipMessageConsumer::EquipMessageConsumer(const Services &services,
   }
 }
 
-void EquipMessageConsumer::onMessageReceived(const IMessage &message)
+void EquipMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
 {
   const auto &equip = message.as<EquipMessage>();
   const auto action = equip.getAction();

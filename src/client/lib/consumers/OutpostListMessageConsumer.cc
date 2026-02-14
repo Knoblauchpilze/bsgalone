@@ -12,7 +12,7 @@ OutpostListMessageConsumer::OutpostListMessageConsumer(bsgo::DatabaseEntityMappe
   , m_coordinator(std::move(coordinator))
 {}
 
-void OutpostListMessageConsumer::onMessageReceivedInternal(const bsgo::IMessage &message)
+void OutpostListMessageConsumer::onMessageReceivedInternal(const bsgalone::core::IMessage &message)
 {
   const auto outpostsList = message.as<bsgo::OutpostListMessage>();
 

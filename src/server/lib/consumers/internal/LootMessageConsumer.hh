@@ -13,7 +13,7 @@ class LootMessageConsumer : public AbstractMessageConsumer
   LootMessageConsumer(SystemServiceShPtr systemService, IMessageQueue *const outputMessageQueue);
   ~LootMessageConsumer() override = default;
 
-  void onMessageReceived(const IMessage &message) override;
+  void onMessageReceived(const bsgalone::core::IMessage &message) override;
 
   private:
   SystemServiceShPtr m_systemService{};

@@ -3,7 +3,7 @@
 
 namespace test {
 
-void TestMessageQueue::pushMessage(bsgo::IMessagePtr message)
+void TestMessageQueue::pushMessage(bsgalone::core::IMessagePtr message)
 {
   const std::lock_guard guard(m_locker);
   m_messages.push_back(std::move(message));
@@ -25,7 +25,7 @@ void TestMessageQueue::processMessages()
   throw std::runtime_error("Unsupported operation processMessages in TestMessageQueue");
 }
 
-auto TestMessageQueue::messages() const -> const std::vector<bsgo::IMessagePtr> &
+auto TestMessageQueue::messages() const -> const std::vector<bsgalone::core::IMessagePtr> &
 {
   return m_messages;
 }

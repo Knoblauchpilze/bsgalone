@@ -19,7 +19,7 @@ bool doesMessageContainPlayerShips(const bsgo::PlayerShipListMessage &message)
 }
 } // namespace
 
-void PlayerShipListMessageConsumer::onMessageReceivedInternal(const bsgo::IMessage &message)
+void PlayerShipListMessageConsumer::onMessageReceivedInternal(const bsgalone::core::IMessage &message)
 {
   const auto shipsList = message.as<bsgo::PlayerShipListMessage>();
 

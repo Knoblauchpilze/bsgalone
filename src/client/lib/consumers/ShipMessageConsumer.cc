@@ -15,7 +15,7 @@ ShipMessageConsumer::ShipMessageConsumer(const bsgo::DatabaseEntityMapper &entit
   , m_coordinator(std::move(coordinator))
 {}
 
-void ShipMessageConsumer::onMessageReceived(const bsgo::IMessage &message)
+void ShipMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
 {
   switch (message.type())
   {

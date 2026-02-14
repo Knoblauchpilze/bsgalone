@@ -8,7 +8,7 @@
 
 namespace bsgo {
 
-class DockMessage : public NetworkMessage
+class DockMessage : public bsgalone::core::NetworkMessage
 {
   public:
   DockMessage();
@@ -21,7 +21,7 @@ class DockMessage : public NetworkMessage
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
 
-  auto clone() const -> IMessagePtr override;
+  auto clone() const -> bsgalone::core::IMessagePtr override;
 
   private:
   Uuid m_shipDbId{};

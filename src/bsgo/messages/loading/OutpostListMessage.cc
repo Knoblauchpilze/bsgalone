@@ -50,7 +50,7 @@ bool OutpostListMessage::deserialize(std::istream &in)
   return ok;
 }
 
-auto OutpostListMessage::clone() const -> IMessagePtr
+auto OutpostListMessage::clone() const -> bsgalone::core::IMessagePtr
 {
   auto clone = std::make_unique<OutpostListMessage>(m_systemDbId, m_outpostsData);
   clone->copyClientIdIfDefined(*this);

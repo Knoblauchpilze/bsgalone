@@ -18,7 +18,7 @@ namespace bsgalone::server {
 
 BroadcastMessageModule::BroadcastMessageModule(ClientManagerShPtr clientManager,
                                                net::INetworkServerShPtr server)
-  : core::CoreObject("broadcast")
+  : ::core::CoreObject("broadcast")
   , m_clientManager(std::move(clientManager))
   , m_server(std::move(server))
 {
@@ -33,21 +33,21 @@ const std::unordered_set<bsgo::MessageType> NON_BROADCASTABLE_MESSAGES
      bsgo::MessageType::LOADING_STARTED,
      bsgo::MessageType::LOADING_FINISHED};
 
-bool shouldTryToDetermineClientId(const bsgo::IMessage &message)
+bool shouldTryToDetermineClientId(const core::IMessage &message)
 {
   return NON_BROADCASTABLE_MESSAGES.contains(message.type());
 }
 } // namespace
 
-void BroadcastMessageModule::processMessage(const bsgo::IMessage &message)
+void BroadcastMessageModule::processMessage(const core::IMessage &message)
 {
-  if (!message.isA<bsgo::NetworkMessage>())
+  if (!message.isA<core::NetworkMessage>())
   {
     error("Unsupported message type " + bsgo::str(message.type()),
           "Message is not a network message");
   }
 
-  const auto &network = message.as<bsgo::NetworkMessage>();
+  const auto &network = message.as<core::NetworkMessage>();
   auto maybeClientId  = network.tryGetClientId();
 
   if (!maybeClientId && shouldTryToDetermineClientId(message))
@@ -70,7 +70,7 @@ void BroadcastMessageModule::processMessage(const bsgo::IMessage &message)
 }
 
 namespace {
-auto convertMessage(const bsgo::IMessage &message) -> std::vector<char>
+auto convertMessage(const core::IMessage &message) -> std::vector<char>
 {
   std::ostringstream out{};
   out << message;
@@ -81,7 +81,7 @@ auto convertMessage(const bsgo::IMessage &message) -> std::vector<char>
 } // namespace
 
 void BroadcastMessageModule::sendMessageToClient(const net::ClientId clientId,
-                                                 const bsgo::IMessage &message)
+                                                 const core::IMessage &message)
 {
   m_server->trySend(clientId, convertMessage(message));
 }
@@ -95,13 +95,13 @@ const std::unordered_set<bsgo::MessageType> SYSTEM_DIRECTED_MESSAGES
      bsgo::MessageType::JUMP,
      bsgo::MessageType::TARGET};
 
-bool shouldTryToDetermineSystemId(const bsgo::IMessage &message)
+bool shouldTryToDetermineSystemId(const core::IMessage &message)
 {
   return SYSTEM_DIRECTED_MESSAGES.contains(message.type());
 }
 } // namespace
 
-void BroadcastMessageModule::broadcastMessage(const bsgo::IMessage &message)
+void BroadcastMessageModule::broadcastMessage(const core::IMessage &message)
 {
   std::vector<net::ClientId> clients{};
 
@@ -140,7 +140,7 @@ auto determineClientFor(const T &message, const ClientManager &clientManager)
 }
 } // namespace
 
-auto BroadcastMessageModule::tryDetermineClientId(const bsgo::IMessage &message) const
+auto BroadcastMessageModule::tryDetermineClientId(const core::IMessage &message) const
   -> std::optional<bsgo::Uuid>
 {
   switch (message.type())
@@ -190,7 +190,7 @@ auto determineSystemsFor(const bsgo::JumpMessage &message) -> std::vector<bsgo::
 }
 } // namespace
 
-auto BroadcastMessageModule::tryDetermineSystemIds(const bsgo::IMessage &message) const
+auto BroadcastMessageModule::tryDetermineSystemIds(const core::IMessage &message) const
   -> std::vector<bsgo::Uuid>
 {
   switch (message.type())

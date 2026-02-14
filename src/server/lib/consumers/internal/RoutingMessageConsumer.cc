@@ -20,7 +20,7 @@ RoutingMessageConsumer::RoutingMessageConsumer(SystemServiceShPtr systemService,
   }
 }
 
-void RoutingMessageConsumer::onMessageReceived(const IMessage &message)
+void RoutingMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
 {
   switch (message.type())
   {

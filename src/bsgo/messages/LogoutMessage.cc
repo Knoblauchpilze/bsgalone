@@ -65,7 +65,7 @@ bool LogoutMessage::deserialize(std::istream &in)
   return ok;
 }
 
-auto LogoutMessage::clone() const -> IMessagePtr
+auto LogoutMessage::clone() const -> bsgalone::core::IMessagePtr
 {
   auto clone = std::make_unique<LogoutMessage>(m_playerDbId, m_closeConnection);
   if (m_systemDbId)

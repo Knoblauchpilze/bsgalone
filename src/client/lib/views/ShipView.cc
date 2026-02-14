@@ -282,7 +282,7 @@ bool ShipView::isDead() const
   return bsgo::Status::DEAD == ship.statusComp().status();
 }
 
-void ShipView::handleMessageInternal(const bsgo::IMessage &message)
+void ShipView::handleMessageInternal(const bsgalone::core::IMessage &message)
 {
   switch (message.type())
   {

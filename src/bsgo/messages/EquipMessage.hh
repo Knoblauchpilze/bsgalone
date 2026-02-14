@@ -13,7 +13,7 @@ enum class EquipType
   UNEQUIP
 };
 
-class EquipMessage : public NetworkMessage
+class EquipMessage : public bsgalone::core::NetworkMessage
 {
   public:
   EquipMessage();
@@ -31,7 +31,7 @@ class EquipMessage : public NetworkMessage
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
 
-  auto clone() const -> IMessagePtr override;
+  auto clone() const -> bsgalone::core::IMessagePtr override;
 
   private:
   EquipType m_action{};

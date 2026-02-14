@@ -60,7 +60,7 @@ class ShipView : public AbstractView
   bool isDead() const;
 
   protected:
-  void handleMessageInternal(const bsgo::IMessage &message) override;
+  void handleMessageInternal(const bsgalone::core::IMessage &message) override;
 
   private:
   GameSessionShPtr m_gameSession{};

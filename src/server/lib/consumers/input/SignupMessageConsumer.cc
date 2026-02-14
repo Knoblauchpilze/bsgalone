@@ -19,7 +19,7 @@ SignupMessageConsumer::SignupMessageConsumer(SignupServicePtr signupService,
   }
 }
 
-void SignupMessageConsumer::onMessageReceived(const IMessage &message)
+void SignupMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
 {
   const auto &signup = message.as<SignupMessage>();
   handleSignup(signup);

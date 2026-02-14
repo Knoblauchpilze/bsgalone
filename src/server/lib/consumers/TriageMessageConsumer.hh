@@ -17,17 +17,17 @@ class TriageMessageConsumer : public AbstractMessageConsumer
                         IMessageQueuePtr systemMessageQueue);
   ~TriageMessageConsumer() override = default;
 
-  void onMessageReceived(const IMessage &message) override;
+  void onMessageReceived(const bsgalone::core::IMessage &message) override;
 
   private:
   bsgalone::server::ClientManagerShPtr m_clientManager{};
   SystemQueueMap m_systemQueues{};
   IMessageQueuePtr m_systemQueue{};
 
-  bool discardMessageWithNoClient(const IMessage &message) const;
-  void handleSystemMessage(const IMessage &message) const;
-  void triagePlayerMessage(const IMessage &message) const;
-  void broadcastMessage(const IMessage &message) const;
+  bool discardMessageWithNoClient(const bsgalone::core::IMessage &message) const;
+  void handleSystemMessage(const bsgalone::core::IMessage &message) const;
+  void triagePlayerMessage(const bsgalone::core::IMessage &message) const;
+  void broadcastMessage(const bsgalone::core::IMessage &message) const;
 };
 
 } // namespace bsgo

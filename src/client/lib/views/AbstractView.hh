@@ -18,7 +18,7 @@ class AbstractView : public bsgo::AbstractMessageConsumer, public IView
 
   void addListener(IViewListenerPtr listener) override;
 
-  void onMessageReceived(const bsgo::IMessage &message) override;
+  void onMessageReceived(const bsgalone::core::IMessage &message) override;
 
   protected:
   /// @brief - Used to notify all currently registered listeners of an update of the
@@ -29,7 +29,7 @@ class AbstractView : public bsgo::AbstractMessageConsumer, public IView
   /// behavior when a message received. This is called by the `onMessageReceived`
   /// method after the local processing is done.
   /// @param message - the message to process.
-  virtual void handleMessageInternal(const bsgo::IMessage &message);
+  virtual void handleMessageInternal(const bsgalone::core::IMessage &message);
 
   private:
   std::vector<IViewListenerPtr> m_listeners{};

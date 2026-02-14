@@ -47,7 +47,7 @@ bool DockMessage::deserialize(std::istream &in)
   return ok;
 }
 
-auto DockMessage::clone() const -> IMessagePtr
+auto DockMessage::clone() const -> bsgalone::core::IMessagePtr
 {
   auto clone = std::make_unique<DockMessage>(m_shipDbId, m_transition);
   clone->copyClientIdIfDefined(*this);

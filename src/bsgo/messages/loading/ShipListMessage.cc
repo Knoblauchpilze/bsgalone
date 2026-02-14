@@ -49,7 +49,7 @@ bool ShipListMessage::deserialize(std::istream &in)
   return ok;
 }
 
-auto ShipListMessage::clone() const -> IMessagePtr
+auto ShipListMessage::clone() const -> bsgalone::core::IMessagePtr
 {
   auto clone = std::make_unique<ShipListMessage>(m_faction, m_shipsData);
   clone->copyClientIdIfDefined(*this);

@@ -47,7 +47,7 @@ bool JoinShipMessage::deserialize(std::istream &in)
   return ok;
 }
 
-auto JoinShipMessage::clone() const -> IMessagePtr
+auto JoinShipMessage::clone() const -> bsgalone::core::IMessagePtr
 {
   auto clone = std::make_unique<JoinShipMessage>(m_playerDbId, m_shipDbId);
   clone->copyClientIdIfDefined(*this);

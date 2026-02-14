@@ -1,16 +1,17 @@
 
 #include "AbstractPlayerMessage.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
-AbstractPlayerMessage::AbstractPlayerMessage(const MessageType &type, const Uuid playerDbId)
+AbstractPlayerMessage::AbstractPlayerMessage(const bsgo::MessageType &type,
+                                             const bsgo::Uuid playerDbId)
   : AbstractMessage(type)
   , m_playerDbId(playerDbId)
 {}
 
-auto AbstractPlayerMessage::getPlayerDbId() const -> Uuid
+auto AbstractPlayerMessage::getPlayerDbId() const -> bsgo::Uuid
 {
   return m_playerDbId;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

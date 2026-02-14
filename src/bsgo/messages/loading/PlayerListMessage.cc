@@ -50,7 +50,7 @@ bool PlayerListMessage::deserialize(std::istream &in)
   return ok;
 }
 
-auto PlayerListMessage::clone() const -> IMessagePtr
+auto PlayerListMessage::clone() const -> bsgalone::core::IMessagePtr
 {
   auto clone = std::make_unique<PlayerListMessage>(m_systemDbId, m_playersData);
   clone->copyClientIdIfDefined(*this);

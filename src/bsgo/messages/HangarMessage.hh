@@ -8,7 +8,7 @@
 
 namespace bsgo {
 
-class HangarMessage : public NetworkMessage
+class HangarMessage : public bsgalone::core::NetworkMessage
 {
   public:
   HangarMessage();
@@ -22,7 +22,7 @@ class HangarMessage : public NetworkMessage
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
 
-  auto clone() const -> IMessagePtr override;
+  auto clone() const -> bsgalone::core::IMessagePtr override;
 
   private:
   PlayerShipData m_ship{};

@@ -17,7 +17,7 @@ bool MessageListenerWrapper::isMessageRelevant(const bsgo::MessageType &type) co
   return m_listener->isMessageRelevant(type);
 }
 
-void MessageListenerWrapper::onMessageReceived(const bsgo::IMessage &message)
+void MessageListenerWrapper::onMessageReceived(const bsgalone::core::IMessage &message)
 {
   m_listener->onMessageReceived(message);
 }

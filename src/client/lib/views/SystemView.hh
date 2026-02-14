@@ -34,7 +34,7 @@ class SystemView : public AbstractView
   auto getSystemShips() const -> std::vector<bsgo::PlayerShipData>;
 
   protected:
-  void handleMessageInternal(const bsgo::IMessage &message) override;
+  void handleMessageInternal(const bsgalone::core::IMessage &message) override;
 
   private:
   bsgo::CoordinatorShPtr m_coordinator{};

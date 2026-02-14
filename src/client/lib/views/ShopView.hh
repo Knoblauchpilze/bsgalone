@@ -50,7 +50,7 @@ class ShopView : public AbstractView
   auto getAllShips() const -> std::vector<bsgo::ShipData>;
 
   protected:
-  void handleMessageInternal(const bsgo::IMessage &message) override;
+  void handleMessageInternal(const bsgalone::core::IMessage &message) override;
 
   private:
   GameSessionShPtr m_gameSession{};

@@ -3,7 +3,7 @@
 
 #include "IMessage.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 template<typename Message>
 inline auto IMessage::as() -> Message &
@@ -23,4 +23,4 @@ inline bool IMessage::isA() const
   return dynamic_cast<const Message *>(this) != nullptr;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

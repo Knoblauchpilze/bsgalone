@@ -18,7 +18,7 @@ class SystemMessageConsumer : public bsgo::AbstractMessageConsumer
                         bsgo::CoordinatorShPtr coordinator);
   ~SystemMessageConsumer() override = default;
 
-  void onMessageReceived(const bsgo::IMessage &message) override;
+  void onMessageReceived(const bsgalone::core::IMessage &message) override;
 
   private:
   bsgo::DatabaseEntityMapper &m_entityMapper;

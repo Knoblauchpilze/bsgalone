@@ -20,7 +20,7 @@ LootMessageConsumer::LootMessageConsumer(SystemServiceShPtr systemService,
   }
 }
 
-void LootMessageConsumer::onMessageReceived(const IMessage &message)
+void LootMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
 {
   const auto &loot = message.as<LootMessage>();
 

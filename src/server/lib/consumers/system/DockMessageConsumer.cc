@@ -33,7 +33,7 @@ DockMessageConsumer::DockMessageConsumer(const Services &services,
   }
 }
 
-void DockMessageConsumer::onMessageReceived(const IMessage &message)
+void DockMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
 {
   const auto &dockMessage = message.as<DockMessage>();
 

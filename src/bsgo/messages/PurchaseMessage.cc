@@ -55,7 +55,7 @@ bool PurchaseMessage::deserialize(std::istream &in)
   return ok;
 }
 
-auto PurchaseMessage::clone() const -> IMessagePtr
+auto PurchaseMessage::clone() const -> bsgalone::core::IMessagePtr
 {
   auto clone = std::make_unique<PurchaseMessage>(m_playerDbId, m_itemType, m_itemDbId);
   clone->copyClientIdIfDefined(*this);

@@ -18,7 +18,7 @@ class EntityDeletedMessageConsumer : public AbstractMessageConsumer
   EntityDeletedMessageConsumer(const Services &services, IMessageQueue *const outputMessageQueue);
   ~EntityDeletedMessageConsumer() override = default;
 
-  void onMessageReceived(const IMessage &message) override;
+  void onMessageReceived(const bsgalone::core::IMessage &message) override;
 
   private:
   EntityServiceShPtr m_entityService{};

@@ -4,7 +4,7 @@
 namespace bsgo {
 
 MessageProcessor::MessageProcessor(const std::string &onBehalfOfName,
-                                   std::deque<IMessagePtr> &messages,
+                                   std::deque<bsgalone::core::IMessagePtr> &messages,
                                    std::mutex &locker,
                                    MessageHandler handler)
   : CoreObject(onBehalfOfName)
@@ -26,10 +26,10 @@ void MessageProcessor::processMessages()
   printMessagesInfo(messages);
 }
 
-auto MessageProcessor::acquireAndClearMessages() -> std::deque<IMessagePtr>
+auto MessageProcessor::acquireAndClearMessages() -> std::deque<bsgalone::core::IMessagePtr>
 {
   const std::lock_guard guard(m_locker);
-  std::deque<IMessagePtr> messages;
+  std::deque<bsgalone::core::IMessagePtr> messages;
   std::swap(messages, m_messages);
   return messages;
 }
@@ -46,7 +46,7 @@ struct MessagesInfo
   std::string messagesTypes{};
 };
 
-auto messagesTypesToString(const std::deque<IMessagePtr> &messages) -> MessagesInfo
+auto messagesTypesToString(const std::deque<bsgalone::core::IMessagePtr> &messages) -> MessagesInfo
 {
   MessagesInfo out{.messagesTypes = "{"};
 
@@ -84,7 +84,7 @@ auto messagesTypesToString(const std::deque<IMessagePtr> &messages) -> MessagesI
 }
 } // namespace
 
-void MessageProcessor::printMessagesInfo(const std::deque<IMessagePtr> &messages) const
+void MessageProcessor::printMessagesInfo(const std::deque<bsgalone::core::IMessagePtr> &messages) const
 {
   if (messages.empty())
   {

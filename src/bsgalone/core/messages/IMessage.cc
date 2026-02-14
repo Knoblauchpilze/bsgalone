@@ -1,10 +1,10 @@
 
 #include "IMessage.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 IMessage::IMessage(const std::string &name)
-  : core::CoreObject(name)
+  : ::core::CoreObject(name)
 {
   setService("message");
 }
@@ -21,4 +21,4 @@ auto operator>>(std::istream &in, IMessage &message) -> std::istream &
   return in;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

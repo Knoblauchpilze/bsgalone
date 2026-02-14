@@ -55,7 +55,7 @@ bool LootMessage::deserialize(std::istream &in)
   return ok;
 }
 
-auto LootMessage::clone() const -> IMessagePtr
+auto LootMessage::clone() const -> bsgalone::core::IMessagePtr
 {
   auto clone = std::make_unique<LootMessage>(m_playerDbId, m_resourceDbId, m_amount);
   clone->copyClientIdIfDefined(*this);
