@@ -10,7 +10,7 @@ InternalMessageConsumer::InternalMessageConsumer(const bsgo::DatabaseEntityMappe
   , m_coordinator(std::move(coordinator))
 {}
 
-void InternalMessageConsumer::onMessageReceived(const bsgo::IMessage &message)
+void InternalMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
 {
   switch (message.type())
   {

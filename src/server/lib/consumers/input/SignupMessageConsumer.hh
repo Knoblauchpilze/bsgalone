@@ -14,7 +14,7 @@ class SignupMessageConsumer : public AbstractMessageConsumer
   SignupMessageConsumer(SignupServicePtr signupService, IMessageQueue *const outputMessageQueue);
   ~SignupMessageConsumer() override = default;
 
-  void onMessageReceived(const IMessage &message) override;
+  void onMessageReceived(const bsgalone::core::IMessage &message) override;
 
   private:
   SignupServicePtr m_signupService{};

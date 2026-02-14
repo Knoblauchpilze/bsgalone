@@ -12,7 +12,7 @@ AsteroidListMessageConsumer::AsteroidListMessageConsumer(bsgo::DatabaseEntityMap
   , m_coordinator(std::move(coordinator))
 {}
 
-void AsteroidListMessageConsumer::onMessageReceivedInternal(const bsgo::IMessage &message)
+void AsteroidListMessageConsumer::onMessageReceivedInternal(const bsgalone::core::IMessage &message)
 {
   const auto asteroidsList = message.as<bsgo::AsteroidListMessage>();
 

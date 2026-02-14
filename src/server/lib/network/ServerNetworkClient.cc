@@ -37,7 +37,7 @@ void ServerNetworkClient::stop()
   m_outputQueue.reset();
 }
 
-void ServerNetworkClient::pushMessage(IMessagePtr message)
+void ServerNetworkClient::pushMessage(bsgalone::core::IMessagePtr message)
 {
   if (!m_started.load())
   {

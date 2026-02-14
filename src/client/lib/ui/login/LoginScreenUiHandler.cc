@@ -152,7 +152,7 @@ void LoginScreenUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQue
   messageQueue.addListener(std::move(listener));
 }
 
-void LoginScreenUiHandler::onMessageReceived(const bsgo::IMessage &message)
+void LoginScreenUiHandler::onMessageReceived(const bsgalone::core::IMessage &message)
 {
   switch (message.type())
   {

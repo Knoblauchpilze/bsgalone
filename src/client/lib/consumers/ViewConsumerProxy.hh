@@ -12,7 +12,7 @@ class ViewConsumerProxy : public bsgo::AbstractMessageConsumer
   ViewConsumerProxy(AbstractView &view);
   ~ViewConsumerProxy() override = default;
 
-  void onMessageReceived(const bsgo::IMessage &message) override;
+  void onMessageReceived(const bsgalone::core::IMessage &message) override;
 
   private:
   AbstractView &m_view;

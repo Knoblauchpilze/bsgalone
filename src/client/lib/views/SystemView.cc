@@ -152,7 +152,7 @@ void tryUpdatePlayer(const bsgo::JoinShipMessage &updatedData,
 }
 } // namespace
 
-void SystemView::handleMessageInternal(const bsgo::IMessage &message)
+void SystemView::handleMessageInternal(const bsgalone::core::IMessage &message)
 {
   switch (message.type())
   {

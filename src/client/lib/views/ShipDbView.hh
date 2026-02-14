@@ -47,7 +47,7 @@ class ShipDbView : public AbstractView
   bool canStillEquipItem(const bsgo::Item &type) const;
 
   protected:
-  void handleMessageInternal(const bsgo::IMessage &message) override;
+  void handleMessageInternal(const bsgalone::core::IMessage &message) override;
 
   private:
   GameSessionShPtr m_gameSession{};

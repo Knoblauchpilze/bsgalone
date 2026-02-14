@@ -27,7 +27,7 @@ PurchaseMessageConsumer::PurchaseMessageConsumer(const Services &services,
   }
 }
 
-void PurchaseMessageConsumer::onMessageReceived(const IMessage &message)
+void PurchaseMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
 {
   const auto &purchase = message.as<PurchaseMessage>();
   const auto type      = purchase.getItemType();

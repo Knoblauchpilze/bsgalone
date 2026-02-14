@@ -15,7 +15,7 @@ class EntityAddedMessageConsumer : public AbstractMessageConsumer
   EntityAddedMessageConsumer(const Services &services, IMessageQueue *const outputMessageQueue);
   ~EntityAddedMessageConsumer() override = default;
 
-  void onMessageReceived(const IMessage &message) override;
+  void onMessageReceived(const bsgalone::core::IMessage &message) override;
 
   private:
   EntityServiceShPtr m_entityService{};

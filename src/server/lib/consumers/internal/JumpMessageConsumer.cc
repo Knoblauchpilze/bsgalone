@@ -26,7 +26,7 @@ JumpMessageConsumer::JumpMessageConsumer(SystemServiceShPtr systemService,
   }
 }
 
-void JumpMessageConsumer::onMessageReceived(const IMessage &message)
+void JumpMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
 {
   const auto &jump = message.as<JumpMessage>();
 

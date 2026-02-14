@@ -94,7 +94,7 @@ bool LoginMessage::deserialize(std::istream &in)
   return ok;
 }
 
-auto LoginMessage::clone() const -> IMessagePtr
+auto LoginMessage::clone() const -> bsgalone::core::IMessagePtr
 {
   auto clone = std::make_unique<LoginMessage>(m_role);
   clone->setUserName(m_name);

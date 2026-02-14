@@ -10,13 +10,13 @@
 
 namespace bsgo {
 
-using MessageHandler = std::function<void(const IMessage &)>;
+using MessageHandler = std::function<void(const bsgalone::core::IMessage &)>;
 
 class MessageProcessor : public core::CoreObject
 {
   public:
   MessageProcessor(const std::string &onBehalfOfName,
-                   std::deque<IMessagePtr> &messages,
+                   std::deque<bsgalone::core::IMessagePtr> &messages,
                    std::mutex &locker,
                    MessageHandler handler);
 
@@ -24,11 +24,11 @@ class MessageProcessor : public core::CoreObject
 
   private:
   std::mutex &m_locker;
-  std::deque<IMessagePtr> &m_messages;
+  std::deque<bsgalone::core::IMessagePtr> &m_messages;
   MessageHandler m_handler{};
 
-  auto acquireAndClearMessages() -> std::deque<IMessagePtr>;
-  void printMessagesInfo(const std::deque<IMessagePtr> &messages) const;
+  auto acquireAndClearMessages() -> std::deque<bsgalone::core::IMessagePtr>;
+  void printMessagesInfo(const std::deque<bsgalone::core::IMessagePtr> &messages) const;
 };
 
 } // namespace bsgo

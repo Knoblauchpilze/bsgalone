@@ -142,7 +142,7 @@ bool ComponentSyncMessage::deserialize(std::istream &in)
   return ok;
 }
 
-auto ComponentSyncMessage::clone() const -> IMessagePtr
+auto ComponentSyncMessage::clone() const -> bsgalone::core::IMessagePtr
 {
   auto clone = std::make_unique<ComponentSyncMessage>(m_entityDbId, m_entityKind);
   clone->copyClientIdIfDefined(*this);

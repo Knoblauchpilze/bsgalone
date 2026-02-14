@@ -22,7 +22,7 @@ SystemMessageConsumer::SystemMessageConsumer(bsgo::DatabaseEntityMapper &entityM
   }
 }
 
-void SystemMessageConsumer::onMessageReceived(const bsgo::IMessage &message)
+void SystemMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
 {
   switch (message.type())
   {

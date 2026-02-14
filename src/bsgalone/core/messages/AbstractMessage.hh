@@ -3,18 +3,18 @@
 
 #include "IMessage.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class AbstractMessage : public IMessage
 {
   public:
-  AbstractMessage(const MessageType &type);
+  AbstractMessage(const bsgo::MessageType &type);
   ~AbstractMessage() override = default;
 
-  auto type() const -> MessageType override;
+  auto type() const -> bsgo::MessageType override;
 
   protected:
-  MessageType m_messageType{};
+  bsgo::MessageType m_messageType{};
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

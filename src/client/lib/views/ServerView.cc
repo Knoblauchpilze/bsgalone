@@ -101,7 +101,7 @@ auto ServerView::getMapBounds() const -> Bounds
   return out;
 }
 
-void ServerView::handleMessageInternal(const bsgo::IMessage &message)
+void ServerView::handleMessageInternal(const bsgalone::core::IMessage &message)
 {
   const auto systemList = message.as<bsgo::SystemListMessage>();
   m_systems             = systemList.getSystemsData();

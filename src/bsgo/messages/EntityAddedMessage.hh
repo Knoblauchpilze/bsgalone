@@ -13,7 +13,7 @@
 
 namespace bsgo {
 
-class EntityAddedMessage : public NetworkMessage
+class EntityAddedMessage : public bsgalone::core::NetworkMessage
 {
   public:
   EntityAddedMessage();
@@ -38,7 +38,7 @@ class EntityAddedMessage : public NetworkMessage
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
 
-  auto clone() const -> IMessagePtr override;
+  auto clone() const -> bsgalone::core::IMessagePtr override;
 
   private:
   Uuid m_systemDbId{};

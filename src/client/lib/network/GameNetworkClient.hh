@@ -20,7 +20,7 @@ class GameNetworkClient : public bsgo::IMessageQueue
   void start(const int port);
   void stop();
 
-  void pushMessage(bsgo::IMessagePtr message) override;
+  void pushMessage(bsgalone::core::IMessagePtr message) override;
   void addListener(bsgo::IMessageListenerPtr listener) override;
   bool empty() override;
 
@@ -36,7 +36,7 @@ class GameNetworkClient : public bsgo::IMessageQueue
 
   void initialize();
 
-  void sendMessage(bsgo::IMessage &message) const;
+  void sendMessage(bsgalone::core::IMessage &message) const;
 };
 
 using GameNetworkClientShPtr = std::shared_ptr<GameNetworkClient>;

@@ -14,7 +14,7 @@ ComponentMessageConsumer::ComponentMessageConsumer(const bsgo::DatabaseEntityMap
   , m_coordinator(std::move(coordinator))
 {}
 
-void ComponentMessageConsumer::onMessageReceived(const bsgo::IMessage &message)
+void ComponentMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
 {
   if (!m_entityMapper.doesPlayerHaveAnEntity())
   {

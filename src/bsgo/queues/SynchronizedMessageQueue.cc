@@ -11,7 +11,7 @@ SynchronizedMessageQueue::SynchronizedMessageQueue(const std::string &name)
   setService("message");
 }
 
-void SynchronizedMessageQueue::pushMessage(IMessagePtr message)
+void SynchronizedMessageQueue::pushMessage(bsgalone::core::IMessagePtr message)
 {
   const std::lock_guard guard(m_locker);
   m_messages.emplace_back(std::move(message));
@@ -31,14 +31,17 @@ bool SynchronizedMessageQueue::empty()
 
 void SynchronizedMessageQueue::processMessages()
 {
-  MessageProcessor processor(getName(), m_messages, m_locker, [this](const IMessage &message) {
-    processMessage(message);
-  });
+  MessageProcessor processor(getName(),
+                             m_messages,
+                             m_locker,
+                             [this](const bsgalone::core::IMessage &message) {
+                               processMessage(message);
+                             });
 
   processor.processMessages();
 }
 
-void SynchronizedMessageQueue::processMessage(const IMessage &message) const
+void SynchronizedMessageQueue::processMessage(const bsgalone::core::IMessage &message) const
 {
   // https://stackoverflow.com/questions/72841621/finding-all-the-values-with-given-key-for-multimap
   auto [it, end] = m_listenersTable.equal_range(message.type());

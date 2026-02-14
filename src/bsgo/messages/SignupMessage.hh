@@ -9,7 +9,7 @@
 
 namespace bsgo {
 
-class SignupMessage : public NetworkMessage
+class SignupMessage : public bsgalone::core::NetworkMessage
 {
   public:
   SignupMessage();
@@ -30,7 +30,7 @@ class SignupMessage : public NetworkMessage
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
 
-  auto clone() const -> IMessagePtr override;
+  auto clone() const -> bsgalone::core::IMessagePtr override;
 
   private:
   std::string m_name{};

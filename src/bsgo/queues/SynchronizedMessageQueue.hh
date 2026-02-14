@@ -16,7 +16,7 @@ class SynchronizedMessageQueue : public AbstractMessageQueue, public core::CoreO
   SynchronizedMessageQueue(const std::string &name);
   ~SynchronizedMessageQueue() override = default;
 
-  void pushMessage(IMessagePtr message) override;
+  void pushMessage(bsgalone::core::IMessagePtr message) override;
   void addListener(IMessageListenerPtr listener) override;
   bool empty() override;
 
@@ -24,9 +24,9 @@ class SynchronizedMessageQueue : public AbstractMessageQueue, public core::CoreO
 
   private:
   std::mutex m_locker{};
-  std::deque<IMessagePtr> m_messages{};
+  std::deque<bsgalone::core::IMessagePtr> m_messages{};
 
-  void processMessage(const IMessage &message) const;
+  void processMessage(const bsgalone::core::IMessage &message) const;
 };
 
 } // namespace bsgo

@@ -9,7 +9,7 @@
 
 namespace bsgo {
 
-class EntityRemovedMessage : public NetworkMessage
+class EntityRemovedMessage : public bsgalone::core::NetworkMessage
 {
   public:
   EntityRemovedMessage();
@@ -29,7 +29,7 @@ class EntityRemovedMessage : public NetworkMessage
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
 
-  auto clone() const -> IMessagePtr override;
+  auto clone() const -> bsgalone::core::IMessagePtr override;
 
   private:
   Uuid m_entityDbId{};

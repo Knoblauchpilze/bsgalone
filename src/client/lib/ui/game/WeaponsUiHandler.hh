@@ -26,7 +26,7 @@ class WeaponsUiHandler : public IUiHandler, public bsgo::AbstractMessageListener
   void updateUi() override;
   void connectToMessageQueue(bsgo::IMessageQueue &messageQueue) override;
 
-  void onMessageReceived(const bsgo::IMessage &message) override;
+  void onMessageReceived(const bsgalone::core::IMessage &message) override;
 
   private:
   ShipViewShPtr m_shipView{};

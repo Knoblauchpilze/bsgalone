@@ -24,7 +24,7 @@ class ShipStatusUiHandler : public IUiHandler, public bsgo::AbstractMessageListe
   void updateUi() override;
 
   void connectToMessageQueue(bsgo::IMessageQueue &messageQueue) override;
-  void onMessageReceived(const bsgo::IMessage &message) override;
+  void onMessageReceived(const bsgalone::core::IMessage &message) override;
 
   private:
   ShipViewShPtr m_shipView{};

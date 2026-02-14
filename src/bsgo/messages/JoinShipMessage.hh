@@ -6,7 +6,7 @@
 
 namespace bsgo {
 
-class JoinShipMessage : public NetworkMessage
+class JoinShipMessage : public bsgalone::core::NetworkMessage
 {
   public:
   JoinShipMessage();
@@ -19,7 +19,7 @@ class JoinShipMessage : public NetworkMessage
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
 
-  auto clone() const -> IMessagePtr override;
+  auto clone() const -> bsgalone::core::IMessagePtr override;
 
   private:
   Uuid m_playerDbId{};

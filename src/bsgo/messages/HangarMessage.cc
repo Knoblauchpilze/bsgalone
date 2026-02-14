@@ -51,7 +51,7 @@ bool HangarMessage::deserialize(std::istream &in)
   return ok;
 }
 
-auto HangarMessage::clone() const -> IMessagePtr
+auto HangarMessage::clone() const -> bsgalone::core::IMessagePtr
 {
   auto clone = std::make_unique<HangarMessage>(m_ship);
   clone->copyClientIdIfDefined(*this);

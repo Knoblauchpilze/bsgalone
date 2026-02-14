@@ -15,7 +15,7 @@ class AsyncMessageQueue : public IMessageQueue, public core::CoreObject
   AsyncMessageQueue(IMessageQueuePtr messageQueue);
   ~AsyncMessageQueue() override;
 
-  void pushMessage(IMessagePtr message) override;
+  void pushMessage(bsgalone::core::IMessagePtr message) override;
   void addListener(IMessageListenerPtr listener) override;
   bool empty() override;
 

@@ -65,7 +65,7 @@ bool PlayerShipListMessage::deserialize(std::istream &in)
   return ok;
 }
 
-auto PlayerShipListMessage::clone() const -> IMessagePtr
+auto PlayerShipListMessage::clone() const -> bsgalone::core::IMessagePtr
 {
   auto clone = std::make_unique<PlayerShipListMessage>(m_shipsData);
   if (m_systemDbId)

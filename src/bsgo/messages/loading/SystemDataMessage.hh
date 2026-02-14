@@ -6,7 +6,7 @@
 
 namespace bsgo {
 
-class SystemDataMessage : public NetworkMessage
+class SystemDataMessage : public bsgalone::core::NetworkMessage
 {
   public:
   SystemDataMessage();
@@ -18,7 +18,7 @@ class SystemDataMessage : public NetworkMessage
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
 
-  auto clone() const -> IMessagePtr override;
+  auto clone() const -> bsgalone::core::IMessagePtr override;
 
   private:
   SystemTickData m_tickData{};

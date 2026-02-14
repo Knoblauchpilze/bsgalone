@@ -1,16 +1,17 @@
 
 #include "AbstractSystemMessage.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
-AbstractSystemMessage::AbstractSystemMessage(const MessageType &type, const Uuid systemDbId)
+AbstractSystemMessage::AbstractSystemMessage(const bsgo::MessageType &type,
+                                             const bsgo::Uuid systemDbId)
   : AbstractMessage(type)
   , m_systemDbId(systemDbId)
 {}
 
-auto AbstractSystemMessage::getSystemDbId() const -> Uuid
+auto AbstractSystemMessage::getSystemDbId() const -> bsgo::Uuid
 {
   return m_systemDbId;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

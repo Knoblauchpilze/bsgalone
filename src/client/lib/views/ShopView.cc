@@ -170,7 +170,7 @@ auto ShopView::getAllShips() const -> std::vector<bsgo::ShipData>
   return m_ships;
 }
 
-void ShopView::handleMessageInternal(const bsgo::IMessage &message)
+void ShopView::handleMessageInternal(const bsgalone::core::IMessage &message)
 {
   switch (message.type())
   {

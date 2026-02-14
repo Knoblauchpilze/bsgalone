@@ -21,7 +21,7 @@ LoginMessageConsumer::LoginMessageConsumer(LoginServicePtr loginService,
   }
 }
 
-void LoginMessageConsumer::onMessageReceived(const IMessage &message)
+void LoginMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
 {
   const auto &login = message.as<LoginMessage>();
   handleLogin(login);

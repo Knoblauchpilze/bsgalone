@@ -13,7 +13,7 @@ class VelocityMessageConsumer : public AbstractMessageConsumer
   VelocityMessageConsumer(const Services &services, IMessageQueue *const outputMessageQueue);
   ~VelocityMessageConsumer() override = default;
 
-  void onMessageReceived(const IMessage &message) override;
+  void onMessageReceived(const bsgalone::core::IMessage &message) override;
 
   private:
   ShipServiceShPtr m_shipService{};

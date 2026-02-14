@@ -36,7 +36,7 @@ AsyncMessageQueue::~AsyncMessageQueue()
   }
 }
 
-void AsyncMessageQueue::pushMessage(IMessagePtr message)
+void AsyncMessageQueue::pushMessage(bsgalone::core::IMessagePtr message)
 {
   m_messageQueue->pushMessage(std::move(message));
   std::unique_lock lock(m_messageLocker);

@@ -34,7 +34,7 @@ void GameNetworkClient::stop()
   m_eventBus.reset();
 }
 
-void GameNetworkClient::pushMessage(bsgo::IMessagePtr message)
+void GameNetworkClient::pushMessage(bsgalone::core::IMessagePtr message)
 {
   if (!m_connected.load())
   {
@@ -121,7 +121,7 @@ void GameNetworkClient::initialize()
   m_eventBus->addListener(std::move(eventListener));
 }
 
-void GameNetworkClient::sendMessage(bsgo::IMessage &message) const
+void GameNetworkClient::sendMessage(bsgalone::core::IMessage &message) const
 {
   std::ostringstream out{};
   out << message;

@@ -27,7 +27,7 @@ EntityAddedMessageConsumer::EntityAddedMessageConsumer(const Services &services,
   }
 }
 
-void EntityAddedMessageConsumer::onMessageReceived(const IMessage &message)
+void EntityAddedMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
 {
   const auto &added = message.as<EntityAddedMessage>();
 

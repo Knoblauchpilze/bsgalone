@@ -8,7 +8,7 @@
 
 namespace bsgo {
 
-class SlotMessage : public NetworkMessage
+class SlotMessage : public bsgalone::core::NetworkMessage
 {
   public:
   SlotMessage();
@@ -22,7 +22,7 @@ class SlotMessage : public NetworkMessage
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
 
-  auto clone() const -> IMessagePtr override;
+  auto clone() const -> bsgalone::core::IMessagePtr override;
 
   private:
   Uuid m_shipDbId{};

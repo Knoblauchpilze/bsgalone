@@ -39,7 +39,7 @@ bool ResourceListMessage::deserialize(std::istream &in)
   return ok;
 }
 
-auto ResourceListMessage::clone() const -> IMessagePtr
+auto ResourceListMessage::clone() const -> bsgalone::core::IMessagePtr
 {
   auto clone = std::make_unique<ResourceListMessage>(m_resourcesData);
   clone->copyClientIdIfDefined(*this);

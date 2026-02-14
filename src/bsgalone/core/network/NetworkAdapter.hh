@@ -47,7 +47,7 @@ class NetworkAdapter : public net::IEventListener
   void registerPendingData(const net::DataReceivedEvent &event);
   auto onDataReceived(const std::optional<net::ClientId> &maybeClientId) -> int;
   void feedMessagesToQueue(const std::optional<net::ClientId> &maybeClientId,
-                           std::vector<bsgo::IMessagePtr> &&messages);
+                           std::vector<IMessagePtr> &&messages);
   void removePendingData(const std::optional<net::ClientId> &maybeClientId, const int processed);
 };
 

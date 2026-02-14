@@ -19,7 +19,8 @@
 
 namespace bsgo {
 
-void serializeAndDeserializeMessage(const IMessage &value, IMessage &output);
+void serializeAndDeserializeMessage(const bsgalone::core::IMessage &value,
+                                    bsgalone::core::IMessage &output);
 
 void assertAsteroidDataAreEqual(const AsteroidData &actual, const AsteroidData &expected);
 void assertPlayerComputerDataAreEqual(const PlayerComputerData &actual,

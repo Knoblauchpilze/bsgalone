@@ -76,7 +76,7 @@ bool TargetMessage::deserialize(std::istream &in)
   return ok;
 }
 
-auto TargetMessage::clone() const -> IMessagePtr
+auto TargetMessage::clone() const -> bsgalone::core::IMessagePtr
 {
   auto clone = std::make_unique<TargetMessage>(m_data, m_position);
   clone->copyClientIdIfDefined(*this);

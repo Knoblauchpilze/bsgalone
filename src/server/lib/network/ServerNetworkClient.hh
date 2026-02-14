@@ -21,7 +21,7 @@ class ServerNetworkClient : public IMessageQueue
   void start(const int port);
   void stop();
 
-  void pushMessage(IMessagePtr message) override;
+  void pushMessage(bsgalone::core::IMessagePtr message) override;
   void addListener(IMessageListenerPtr listener) override;
   bool empty() override;
 

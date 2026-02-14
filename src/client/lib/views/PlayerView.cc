@@ -174,7 +174,7 @@ void PlayerView::tryJoin(const bsgo::Uuid playerDbId, const bsgo::Uuid shipDbId)
   m_outputMessageQueue->pushMessage(std::make_unique<bsgo::JoinShipMessage>(playerDbId, shipDbId));
 }
 
-void PlayerView::handleMessageInternal(const bsgo::IMessage &message)
+void PlayerView::handleMessageInternal(const bsgalone::core::IMessage &message)
 {
   switch (message.type())
   {

@@ -49,7 +49,7 @@ bool VelocityMessage::deserialize(std::istream &in)
   return ok;
 }
 
-auto VelocityMessage::clone() const -> IMessagePtr
+auto VelocityMessage::clone() const -> bsgalone::core::IMessagePtr
 {
   auto clone = std::make_unique<VelocityMessage>(m_shipDbId, m_acceleration);
   clone->copyClientIdIfDefined(*this);

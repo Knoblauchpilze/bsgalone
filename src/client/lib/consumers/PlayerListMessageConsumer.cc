@@ -12,7 +12,7 @@ PlayerListMessageConsumer::PlayerListMessageConsumer(bsgo::DatabaseEntityMapper 
   , m_coordinator(std::move(coordinator))
 {}
 
-void PlayerListMessageConsumer::onMessageReceivedInternal(const bsgo::IMessage &message)
+void PlayerListMessageConsumer::onMessageReceivedInternal(const bsgalone::core::IMessage &message)
 {
   const auto playerList = message.as<bsgo::PlayerListMessage>();
 

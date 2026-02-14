@@ -19,7 +19,7 @@ JoinShipMessageConsumer::JoinShipMessageConsumer(PlayerServicePtr playerService,
   }
 }
 
-void JoinShipMessageConsumer::onMessageReceived(const IMessage &message)
+void JoinShipMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
 {
   const auto &joinShip = message.as<JoinShipMessage>();
   handleJoinShip(joinShip);

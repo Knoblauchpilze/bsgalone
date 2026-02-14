@@ -14,7 +14,7 @@ class JoinShipMessageConsumer : public AbstractMessageConsumer
   JoinShipMessageConsumer(PlayerServicePtr playerService, IMessageQueue *const outputMessageQueue);
   ~JoinShipMessageConsumer() override = default;
 
-  void onMessageReceived(const IMessage &message) override;
+  void onMessageReceived(const bsgalone::core::IMessage &message) override;
 
   private:
   PlayerServicePtr m_playerService{};

@@ -104,7 +104,7 @@ bool shouldSlotComponentUpdatedMessageBeFiltered(const bsgo::SlotComponentMessag
   }
 }
 
-bool shouldMessageBeFiltered(const bsgo::IMessage &message, const bsgo::Entity &playerShip)
+bool shouldMessageBeFiltered(const bsgalone::core::IMessage &message, const bsgo::Entity &playerShip)
 {
   switch (message.type())
   {
@@ -117,7 +117,7 @@ bool shouldMessageBeFiltered(const bsgo::IMessage &message, const bsgo::Entity &
 }
 } // namespace
 
-void LogUiHandler::onMessageReceived(const bsgo::IMessage &message)
+void LogUiHandler::onMessageReceived(const bsgalone::core::IMessage &message)
 {
   if (!m_shipView->isReady() || !m_resourceView->isReady())
   {
@@ -215,7 +215,7 @@ auto createSlotMessage(const bsgo::SlotComponentMessage & /*message*/) -> TextCo
   return textConfigFromColor(ELECTRONIC_SUPPORT_TEXT, colors::APPLE_GREEN);
 }
 
-auto createTextConfigForMessage(const bsgo::IMessage &message,
+auto createTextConfigForMessage(const bsgalone::core::IMessage &message,
                                 const SystemView &systemView,
                                 const ResourceView &resourceView) -> TextConfig
 {
@@ -261,7 +261,7 @@ void LogUiHandler::reset()
   m_logsToTrigger.clear();
 }
 
-auto LogUiHandler::createMenuFromMessage(const bsgo::IMessage &message) -> UiMenuPtr
+auto LogUiHandler::createMenuFromMessage(const bsgalone::core::IMessage &message) -> UiMenuPtr
 {
   const Vec2i pos{m_offset.x - LOG_MENU_DIMS.x / 2, m_offset.y};
   const MenuConfig config{.pos = pos, .dims = LOG_MENU_DIMS, .highlightable = false};

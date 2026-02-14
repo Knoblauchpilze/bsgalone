@@ -20,7 +20,7 @@ VelocityMessageConsumer::VelocityMessageConsumer(const Services &services,
   }
 }
 
-void VelocityMessageConsumer::onMessageReceived(const IMessage &message)
+void VelocityMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
 {
   const auto &velocity = message.as<VelocityMessage>();
 

@@ -16,7 +16,7 @@ class IMessageParser
 
   struct ParsingResult
   {
-    std::optional<bsgo::IMessagePtr> message{};
+    std::optional<IMessagePtr> message{};
     int bytesProcessed{0};
   };
   virtual auto tryParseMessage(const std::deque<char> &data) -> ParsingResult = 0;

@@ -5,7 +5,8 @@
 
 namespace bsgo {
 
-void serializeAndDeserializeMessage(const IMessage &value, IMessage &output)
+void serializeAndDeserializeMessage(const bsgalone::core::IMessage &value,
+                                    bsgalone::core::IMessage &output)
 {
   std::ostringstream out{};
   out << value;

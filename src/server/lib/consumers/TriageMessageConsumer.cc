@@ -18,7 +18,7 @@ TriageMessageConsumer::TriageMessageConsumer(bsgalone::server::ClientManagerShPt
   }
 }
 
-void TriageMessageConsumer::onMessageReceived(const IMessage &message)
+void TriageMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
 {
   if (discardMessageWithNoClient(message))
   {
@@ -51,30 +51,30 @@ void TriageMessageConsumer::onMessageReceived(const IMessage &message)
   }
 }
 
-bool TriageMessageConsumer::discardMessageWithNoClient(const IMessage &message) const
+bool TriageMessageConsumer::discardMessageWithNoClient(const bsgalone::core::IMessage &message) const
 {
-  if (!message.isA<NetworkMessage>())
+  if (!message.isA<bsgalone::core::NetworkMessage>())
   {
     return false;
   }
 
-  return !message.as<NetworkMessage>().tryGetClientId().has_value();
+  return !message.as<bsgalone::core::NetworkMessage>().tryGetClientId().has_value();
 }
 
-void TriageMessageConsumer::handleSystemMessage(const IMessage &message) const
+void TriageMessageConsumer::handleSystemMessage(const bsgalone::core::IMessage &message) const
 {
   m_systemQueue->pushMessage(message.clone());
 }
 
-void TriageMessageConsumer::triagePlayerMessage(const IMessage &message) const
+void TriageMessageConsumer::triagePlayerMessage(const bsgalone::core::IMessage &message) const
 {
-  if (!message.isA<NetworkMessage>())
+  if (!message.isA<bsgalone::core::NetworkMessage>())
   {
     broadcastMessage(message);
     return;
   }
 
-  const auto clientId    = message.as<NetworkMessage>().getClientId();
+  const auto clientId    = message.as<bsgalone::core::NetworkMessage>().getClientId();
   const auto maybeSystem = m_clientManager->tryGetSystemForClient(clientId);
 
   if (!maybeSystem)
@@ -93,7 +93,7 @@ void TriageMessageConsumer::triagePlayerMessage(const IMessage &message) const
   maybeQueue->second->pushMessage(message.clone());
 }
 
-void TriageMessageConsumer::broadcastMessage(const IMessage &message) const
+void TriageMessageConsumer::broadcastMessage(const bsgalone::core::IMessage &message) const
 {
   debug("Brodcasting message " + str(message.type()));
 

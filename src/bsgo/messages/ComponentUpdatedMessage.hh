@@ -6,7 +6,7 @@
 
 namespace bsgo {
 
-class ComponentUpdatedMessage : public NetworkMessage
+class ComponentUpdatedMessage : public bsgalone::core::NetworkMessage
 {
   public:
   ComponentUpdatedMessage(const MessageType &type);

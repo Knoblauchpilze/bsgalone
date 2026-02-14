@@ -6,7 +6,7 @@ namespace bsgalone::server {
 
 BroadcastMessageListener::BroadcastMessageListener(ClientManagerShPtr clientManager,
                                                    net::INetworkServerShPtr server)
-  : core::CoreObject("broadcast-message-queue")
+  : ::core::CoreObject("broadcast-message-queue")
   , m_clientManager(clientManager)
   , m_server(server)
   , m_broadcastModule(clientManager, server)
@@ -35,13 +35,13 @@ const std::unordered_set<bsgo::MessageType> CLIENT_MANAGER_RELEVANT_MESSAGES = {
   bsgo::MessageType::LOGOUT,
 };
 
-bool triggersClientManagerUpdate(const bsgo::IMessage &message)
+bool triggersClientManagerUpdate(const core::IMessage &message)
 {
   return CLIENT_MANAGER_RELEVANT_MESSAGES.contains(message.type());
 }
 } // namespace
 
-void BroadcastMessageListener::onMessageReceived(const bsgo::IMessage &message)
+void BroadcastMessageListener::onMessageReceived(const core::IMessage &message)
 {
   if (triggersClientManagerUpdate(message))
   {
@@ -51,7 +51,7 @@ void BroadcastMessageListener::onMessageReceived(const bsgo::IMessage &message)
   triageOutboundMessage(message);
 }
 
-void BroadcastMessageListener::forwardMessageToClientManager(const bsgo::IMessage &message)
+void BroadcastMessageListener::forwardMessageToClientManager(const core::IMessage &message)
 {
   switch (message.type())
   {
@@ -70,7 +70,7 @@ void BroadcastMessageListener::forwardMessageToClientManager(const bsgo::IMessag
 }
 
 namespace {
-auto serializeMessage(const bsgo::IMessage &message) -> std::vector<char>
+auto serializeMessage(const core::IMessage &message) -> std::vector<char>
 {
   std::ostringstream out{};
   out << message;
@@ -80,31 +80,31 @@ auto serializeMessage(const bsgo::IMessage &message) -> std::vector<char>
 }
 } // namespace
 
-void BroadcastMessageListener::triageOutboundMessage(const bsgo::IMessage &message)
+void BroadcastMessageListener::triageOutboundMessage(const core::IMessage &message)
 {
-  if (message.isA<bsgo::AbstractPlayerMessage>())
+  if (message.isA<core::AbstractPlayerMessage>())
   {
-    routePlayerMessage(message.as<bsgo::AbstractPlayerMessage>());
+    routePlayerMessage(message.as<core::AbstractPlayerMessage>());
     return;
   }
 
-  if (message.isA<bsgo::AbstractSystemMessage>())
+  if (message.isA<core::AbstractSystemMessage>())
   {
-    routeSystemMessage(message.as<bsgo::AbstractSystemMessage>());
+    routeSystemMessage(message.as<core::AbstractSystemMessage>());
     return;
   }
 
   m_broadcastModule.processMessage(message);
 }
 
-void BroadcastMessageListener::routePlayerMessage(const bsgo::AbstractPlayerMessage &message)
+void BroadcastMessageListener::routePlayerMessage(const core::AbstractPlayerMessage &message)
 {
   const auto bytes    = serializeMessage(message);
   const auto clientId = m_clientManager->getClientIdForPlayer(message.getPlayerDbId());
   m_server->trySend(clientId, bytes);
 }
 
-void BroadcastMessageListener::routeSystemMessage(const bsgo::AbstractSystemMessage &message)
+void BroadcastMessageListener::routeSystemMessage(const core::AbstractSystemMessage &message)
 {
   const auto bytes   = serializeMessage(message);
   const auto clients = m_clientManager->getAllClientsForSystem(message.getSystemDbId());

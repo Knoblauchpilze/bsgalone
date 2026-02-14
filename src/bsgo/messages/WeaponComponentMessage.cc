@@ -55,7 +55,7 @@ bool WeaponComponentMessage::deserialize(std::istream &in)
   return ok;
 }
 
-auto WeaponComponentMessage::clone() const -> IMessagePtr
+auto WeaponComponentMessage::clone() const -> bsgalone::core::IMessagePtr
 {
   auto clone          = std::make_unique<WeaponComponentMessage>();
   clone->m_shipDbId   = m_shipDbId;

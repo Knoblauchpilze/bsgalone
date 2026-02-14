@@ -20,7 +20,7 @@ AiBehaviorSyncMessageConsumer::AiBehaviorSyncMessageConsumer(SystemServiceShPtr 
   }
 }
 
-void AiBehaviorSyncMessageConsumer::onMessageReceived(const IMessage &message)
+void AiBehaviorSyncMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
 {
   const auto &aiSync = message.as<AiBehaviorSyncMessage>();
 

@@ -14,7 +14,7 @@ class JumpCancelledMessageConsumer : public AbstractMessageConsumer
   JumpCancelledMessageConsumer(const Services &services, IMessageQueue *const outputMessageQueue);
   ~JumpCancelledMessageConsumer() override = default;
 
-  void onMessageReceived(const IMessage &message) override;
+  void onMessageReceived(const bsgalone::core::IMessage &message) override;
 
   private:
   JumpServiceShPtr m_jumpService{};

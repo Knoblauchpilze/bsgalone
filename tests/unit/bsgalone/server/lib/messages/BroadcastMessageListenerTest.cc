@@ -62,7 +62,8 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
       message.setSystemDbId(bsgo::Uuid{19});
       listener.onMessageReceived(message);
     },
-    ThrowsMessage<core::CoreException>("Failed to process login message without client identifier"));
+    ThrowsMessage<::core::CoreException>(
+      "Failed to process login message without client identifier"));
 }
 
 TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
@@ -78,7 +79,8 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
       message.setSystemDbId(bsgo::Uuid{19});
       listener.onMessageReceived(message);
     },
-    ThrowsMessage<core::CoreException>("Failed to process login message without player identifier"));
+    ThrowsMessage<::core::CoreException>(
+      "Failed to process login message without player identifier"));
 }
 
 TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
@@ -94,7 +96,8 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
       message.setPlayerDbId(bsgo::Uuid{18});
       listener.onMessageReceived(message);
     },
-    ThrowsMessage<core::CoreException>("Failed to process login message without system identifier"));
+    ThrowsMessage<::core::CoreException>(
+      "Failed to process login message without system identifier"));
 }
 
 TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
@@ -147,21 +150,21 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
 }
 
 namespace {
-class TestPlayerMessage : public bsgo::AbstractPlayerMessage
+class TestPlayerMessage : public core::AbstractPlayerMessage
 {
   public:
   // The type of message does not matter, it is just defined because it is
   // required to pick one to instantiate an `AbstractPlayerMessage`.
   TestPlayerMessage(const bsgo::Uuid playerDbId)
-    : bsgo::AbstractPlayerMessage(bsgo::MessageType::DOCK, playerDbId)
+    : core::AbstractPlayerMessage(bsgo::MessageType::DOCK, playerDbId)
   {}
 
   ~TestPlayerMessage() override = default;
 
   auto serialize(std::ostream &out) const -> std::ostream & override
   {
-    core::serialize(out, m_messageType);
-    core::serialize(out, m_playerDbId);
+    ::core::serialize(out, m_messageType);
+    ::core::serialize(out, m_playerDbId);
 
     return out;
   }
@@ -169,8 +172,8 @@ class TestPlayerMessage : public bsgo::AbstractPlayerMessage
   bool deserialize(std::istream &in) override
   {
     bool ok{true};
-    ok &= core::deserialize(in, m_messageType);
-    ok &= core::deserialize(in, m_playerDbId);
+    ok &= ::core::deserialize(in, m_messageType);
+    ok &= ::core::deserialize(in, m_playerDbId);
 
     return ok;
   }
@@ -208,21 +211,21 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
 }
 
 namespace {
-class TestSystemMessage : public bsgo::AbstractSystemMessage
+class TestSystemMessage : public core::AbstractSystemMessage
 {
   public:
   // The type of message does not matter, it is just defined because it is
   // required to pick one to instantiate an `AbstractSystemMessage`.
   TestSystemMessage(const bsgo::Uuid systemDbId)
-    : bsgo::AbstractSystemMessage(bsgo::MessageType::DOCK, systemDbId)
+    : core::AbstractSystemMessage(bsgo::MessageType::DOCK, systemDbId)
   {}
 
   ~TestSystemMessage() override = default;
 
   auto serialize(std::ostream &out) const -> std::ostream & override
   {
-    core::serialize(out, m_messageType);
-    core::serialize(out, m_systemDbId);
+    ::core::serialize(out, m_messageType);
+    ::core::serialize(out, m_systemDbId);
 
     return out;
   }
@@ -230,8 +233,8 @@ class TestSystemMessage : public bsgo::AbstractSystemMessage
   bool deserialize(std::istream &in) override
   {
     bool ok{true};
-    ok &= core::deserialize(in, m_messageType);
-    ok &= core::deserialize(in, m_systemDbId);
+    ok &= ::core::deserialize(in, m_messageType);
+    ok &= ::core::deserialize(in, m_systemDbId);
 
     return ok;
   }

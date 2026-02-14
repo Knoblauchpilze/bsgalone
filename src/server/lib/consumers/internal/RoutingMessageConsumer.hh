@@ -26,7 +26,7 @@ class RoutingMessageConsumer : public AbstractMessageConsumer
   RoutingMessageConsumer(SystemServiceShPtr systemService, IMessageQueue *const outputMessageQueue);
   ~RoutingMessageConsumer() override = default;
 
-  void onMessageReceived(const IMessage &message) override;
+  void onMessageReceived(const bsgalone::core::IMessage &message) override;
 
   private:
   SystemServiceShPtr m_systemService{};

@@ -98,7 +98,7 @@ void WeaponsUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQueue)
   messageQueue.addListener(std::move(listener));
 }
 
-void WeaponsUiHandler::onMessageReceived(const bsgo::IMessage &message)
+void WeaponsUiHandler::onMessageReceived(const bsgalone::core::IMessage &message)
 {
   if (!m_shipView->isReady())
   {

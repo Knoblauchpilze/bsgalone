@@ -30,7 +30,7 @@ auto ResourceView::getResourceName(const bsgo::Uuid resource) const -> std::stri
   return maybeResource->second.name;
 }
 
-void ResourceView::handleMessageInternal(const bsgo::IMessage &message)
+void ResourceView::handleMessageInternal(const bsgalone::core::IMessage &message)
 {
   const auto resourceList = message.as<bsgo::ResourceListMessage>();
   const auto resources    = resourceList.getResourcesData();

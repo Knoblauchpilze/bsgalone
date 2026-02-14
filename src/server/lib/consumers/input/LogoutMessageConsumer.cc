@@ -22,7 +22,7 @@ LogoutMessageConsumer::LogoutMessageConsumer(SystemServiceShPtr systemService,
   }
 }
 
-void LogoutMessageConsumer::onMessageReceived(const IMessage &message)
+void LogoutMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
 {
   const auto &logout = message.as<LogoutMessage>();
   handleLogout(logout);

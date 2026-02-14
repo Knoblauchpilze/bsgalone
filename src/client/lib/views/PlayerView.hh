@@ -49,7 +49,7 @@ class PlayerView : public AbstractView
   void tryJoin(const bsgo::Uuid playerDbId, const bsgo::Uuid shipDbId) const;
 
   protected:
-  void handleMessageInternal(const bsgo::IMessage &message) override;
+  void handleMessageInternal(const bsgalone::core::IMessage &message) override;
 
   private:
   GameSessionShPtr m_gameSession{};

@@ -39,7 +39,7 @@ bool JumpCancelledMessage::deserialize(std::istream &in)
   return ok;
 }
 
-auto JumpCancelledMessage::clone() const -> IMessagePtr
+auto JumpCancelledMessage::clone() const -> bsgalone::core::IMessagePtr
 {
   auto clone = std::make_unique<JumpCancelledMessage>(m_shipDbId);
   clone->copyClientIdIfDefined(*this);

@@ -16,7 +16,7 @@ class JumpMessageConsumer : public AbstractMessageConsumer
                       IMessageQueue *const outputMessageQueue);
   ~JumpMessageConsumer() override = default;
 
-  void onMessageReceived(const IMessage &message) override;
+  void onMessageReceived(const bsgalone::core::IMessage &message) override;
 
   private:
   SystemServiceShPtr m_systemService{};

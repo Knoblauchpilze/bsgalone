@@ -47,7 +47,7 @@ bool ScannedMessage::deserialize(std::istream &in)
   return ok;
 }
 
-auto ScannedMessage::clone() const -> IMessagePtr
+auto ScannedMessage::clone() const -> bsgalone::core::IMessagePtr
 {
   auto clone = std::make_unique<ScannedMessage>(m_playerDbId, m_asteroidDbId);
   clone->copyClientIdIfDefined(*this);

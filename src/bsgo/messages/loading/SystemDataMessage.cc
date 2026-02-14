@@ -39,7 +39,7 @@ bool SystemDataMessage::deserialize(std::istream &in)
   return ok;
 }
 
-auto SystemDataMessage::clone() const -> IMessagePtr
+auto SystemDataMessage::clone() const -> bsgalone::core::IMessagePtr
 {
   auto clone = std::make_unique<SystemDataMessage>(m_tickData);
   clone->copyClientIdIfDefined(*this);

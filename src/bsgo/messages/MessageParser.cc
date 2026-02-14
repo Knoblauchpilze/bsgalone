@@ -99,7 +99,7 @@ auto MessageParser::tryParseMessage(const std::deque<char> &data) -> ParsingResu
 
 namespace {
 template<typename MessageType>
-auto readMessage(std::istream &in) -> std::optional<IMessagePtr>
+auto readMessage(std::istream &in) -> std::optional<bsgalone::core::IMessagePtr>
 {
   auto message = std::make_unique<MessageType>();
   if (!message->deserialize(in))
@@ -112,7 +112,7 @@ auto readMessage(std::istream &in) -> std::optional<IMessagePtr>
 } // namespace
 
 auto MessageParser::tryReadMessage(const MessageType &type, std::istream &in)
-  -> std::optional<IMessagePtr>
+  -> std::optional<bsgalone::core::IMessagePtr>
 {
   switch (type)
   {

@@ -27,7 +27,7 @@ HangarMessageConsumer::HangarMessageConsumer(const Services &services,
   }
 }
 
-void HangarMessageConsumer::onMessageReceived(const IMessage &message)
+void HangarMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
 {
   const auto &hangarMessage = message.as<HangarMessage>();
   handleShipSwitchRequest(hangarMessage);
