@@ -14,7 +14,7 @@ void AbstractMessageQueue::addListener(IMessageListenerPtr listener)
     throw std::invalid_argument("Expected a non null listener");
   }
 
-  for (const auto &messageType : allMessageTypes())
+  for (const auto &messageType : allMessageTypesAsSet())
   {
     if (listener->isMessageRelevant(messageType))
     {

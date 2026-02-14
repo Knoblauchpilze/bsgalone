@@ -1,7 +1,6 @@
 
 #pragma once
 
-#include <array>
 #include <string>
 #include <unordered_set>
 
@@ -52,7 +51,6 @@ enum class MessageType
 };
 
 auto str(const MessageType &type) -> std::string;
-auto allMessageTypes() -> std::array<MessageType, 40>;
 
 auto allMessageTypesAsSet() -> std::unordered_set<MessageType>;
 
