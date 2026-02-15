@@ -10,7 +10,8 @@ namespace pge {
 class AbstractGameMessageConsumer : public bsgo::AbstractMessageConsumer
 {
   public:
-  AbstractGameMessageConsumer(const std::string &name, const bsgo::MessageType relevantMessageType);
+  AbstractGameMessageConsumer(const std::string &name,
+                              const bsgalone::core::MessageType relevantMessageType);
   ~AbstractGameMessageConsumer() override = default;
 
   void onMessageReceived(const bsgalone::core::IMessage &message) override;

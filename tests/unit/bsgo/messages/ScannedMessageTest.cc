@@ -44,7 +44,7 @@ TEST(Unit_Bsgo_Serialization_ScannedMessage, Clone)
 
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), MessageType::SCANNED);
+  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::SCANNED);
   assertMessagesAreEqual(cloned->as<ScannedMessage>(), expected);
 }
 

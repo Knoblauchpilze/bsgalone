@@ -5,13 +5,13 @@
 namespace bsgo {
 
 WeaponComponentMessage::WeaponComponentMessage()
-  : ComponentUpdatedMessage(MessageType::WEAPON_COMPONENT_UPDATED)
+  : ComponentUpdatedMessage(bsgalone::core::MessageType::WEAPON_COMPONENT_UPDATED)
 {}
 
 WeaponComponentMessage::WeaponComponentMessage(const Uuid shipDbId,
                                                const Uuid weaponDbId,
                                                const bool active)
-  : ComponentUpdatedMessage(MessageType::WEAPON_COMPONENT_UPDATED,
+  : ComponentUpdatedMessage(bsgalone::core::MessageType::WEAPON_COMPONENT_UPDATED,
                             shipDbId,
                             ComponentType::WEAPON_SLOT)
   , m_weaponDbId(weaponDbId)

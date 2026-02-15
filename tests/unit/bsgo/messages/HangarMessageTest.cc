@@ -127,7 +127,7 @@ TEST(Unit_Bsgo_Serialization_HangarMessage, CloneWithShipDbId)
 
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), MessageType::HANGAR);
+  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::HANGAR);
   assertMessagesAreEqual(cloned->as<HangarMessage>(), expected);
 }
 
@@ -151,7 +151,7 @@ TEST(Unit_Bsgo_Serialization_HangarMessage, CloneWithShip)
 
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), MessageType::HANGAR);
+  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::HANGAR);
   assertMessagesAreEqual(cloned->as<HangarMessage>(), expected);
 }
 

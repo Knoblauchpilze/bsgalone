@@ -48,7 +48,7 @@ TEST(Unit_Bsgo_Serialization_EntityRemovedMessage, Clone)
 {
   EntityRemovedMessage expected(Uuid{789}, EntityKind::ASTEROID, Uuid{123}, false);
   const auto cloned = expected.clone();
-  ASSERT_EQ(cloned->type(), MessageType::ENTITY_REMOVED);
+  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::ENTITY_REMOVED);
   assertMessagesAreEqual(cloned->as<EntityRemovedMessage>(), expected);
 }
 

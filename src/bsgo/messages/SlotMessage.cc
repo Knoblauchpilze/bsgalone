@@ -6,11 +6,11 @@
 namespace bsgo {
 
 SlotMessage::SlotMessage()
-  : NetworkMessage(MessageType::SLOT)
+  : NetworkMessage(bsgalone::core::MessageType::SLOT)
 {}
 
 SlotMessage::SlotMessage(const Uuid shipDbId, const Uuid slotDbId, const Slot &slotType)
-  : NetworkMessage(MessageType::SLOT)
+  : NetworkMessage(bsgalone::core::MessageType::SLOT)
   , m_shipDbId(shipDbId)
   , m_slotDbId(slotDbId)
   , m_slotType(slotType)

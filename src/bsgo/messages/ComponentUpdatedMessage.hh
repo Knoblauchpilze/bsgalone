@@ -9,8 +9,8 @@ namespace bsgo {
 class ComponentUpdatedMessage : public bsgalone::core::NetworkMessage
 {
   public:
-  ComponentUpdatedMessage(const MessageType &type);
-  ComponentUpdatedMessage(const MessageType &type,
+  ComponentUpdatedMessage(const bsgalone::core::MessageType &type);
+  ComponentUpdatedMessage(const bsgalone::core::MessageType &type,
                           const Uuid shipDbId,
                           const ComponentType component);
   ~ComponentUpdatedMessage() override = default;

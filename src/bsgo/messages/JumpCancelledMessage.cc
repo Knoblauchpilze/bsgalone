@@ -5,11 +5,11 @@
 namespace bsgo {
 
 JumpCancelledMessage::JumpCancelledMessage()
-  : NetworkMessage(MessageType::JUMP_CANCELLED)
+  : NetworkMessage(bsgalone::core::MessageType::JUMP_CANCELLED)
 {}
 
 JumpCancelledMessage::JumpCancelledMessage(const Uuid shipDbId)
-  : NetworkMessage(MessageType::JUMP_CANCELLED)
+  : NetworkMessage(bsgalone::core::MessageType::JUMP_CANCELLED)
   , m_shipDbId(shipDbId)
 {}
 

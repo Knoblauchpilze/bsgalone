@@ -9,7 +9,8 @@ namespace pge {
 
 LoginScreenUiHandler::LoginScreenUiHandler(const Views &views)
   : IUiHandler("login")
-  , AbstractMessageListener({bsgo::MessageType::LOGIN, bsgo::MessageType::SIGNUP})
+  , AbstractMessageListener(
+      {bsgalone::core::MessageType::LOGIN, bsgalone::core::MessageType::SIGNUP})
   , m_playerView(views.playerView)
 {
   if (nullptr == m_playerView)
@@ -156,10 +157,10 @@ void LoginScreenUiHandler::onMessageReceived(const bsgalone::core::IMessage &mes
 {
   switch (message.type())
   {
-    case bsgo::MessageType::LOGIN:
+    case bsgalone::core::MessageType::LOGIN:
       handleLoginMessage(message.as<bsgo::LoginMessage>());
       break;
-    case bsgo::MessageType::SIGNUP:
+    case bsgalone::core::MessageType::SIGNUP:
       handleSignupMessage(message.as<bsgo::SignupMessage>());
       break;
     default:

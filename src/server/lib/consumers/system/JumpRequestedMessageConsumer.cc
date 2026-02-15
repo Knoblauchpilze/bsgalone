@@ -6,7 +6,7 @@ namespace bsgo {
 JumpRequestedMessageConsumer::JumpRequestedMessageConsumer(
   const Services &services,
   bsgalone::core::IMessageQueue *const outputMessageQueue)
-  : AbstractMessageConsumer("jump_Requested", {MessageType::JUMP_REQUESTED})
+  : AbstractMessageConsumer("jump_Requested", {bsgalone::core::MessageType::JUMP_REQUESTED})
   , m_jumpService(services.jump)
   , m_outputMessageQueue(outputMessageQueue)
 {

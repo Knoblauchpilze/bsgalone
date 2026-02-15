@@ -6,17 +6,17 @@
 namespace bsgo {
 
 HangarMessage::HangarMessage()
-  : NetworkMessage(MessageType::HANGAR)
+  : NetworkMessage(bsgalone::core::MessageType::HANGAR)
 {}
 
 HangarMessage::HangarMessage(const Uuid shipDbId)
-  : NetworkMessage(MessageType::HANGAR)
+  : NetworkMessage(bsgalone::core::MessageType::HANGAR)
 {
   m_ship.dbId = shipDbId;
 }
 
 HangarMessage::HangarMessage(const PlayerShipData ship)
-  : NetworkMessage(MessageType::HANGAR)
+  : NetworkMessage(bsgalone::core::MessageType::HANGAR)
   , m_ship(ship)
 {}
 

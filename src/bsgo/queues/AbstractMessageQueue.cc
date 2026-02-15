@@ -14,7 +14,7 @@ void AbstractMessageQueue::addListener(bsgalone::core::IMessageListenerPtr liste
     throw std::invalid_argument("Expected a non null listener");
   }
 
-  for (const auto &messageType : allMessageTypesAsSet())
+  for (const auto &messageType : bsgalone::core::allMessageTypesAsSet())
   {
     if (listener->isMessageRelevant(messageType))
     {

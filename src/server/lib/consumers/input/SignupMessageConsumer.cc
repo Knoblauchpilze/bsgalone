@@ -5,7 +5,7 @@ namespace bsgo {
 
 SignupMessageConsumer::SignupMessageConsumer(SignupServicePtr signupService,
                                              bsgalone::core::IMessageQueue *const outputMessageQueue)
-  : AbstractMessageConsumer("signup", {MessageType::SIGNUP})
+  : AbstractMessageConsumer("signup", {bsgalone::core::MessageType::SIGNUP})
   , m_signupService(std::move(signupService))
   , m_outputMessageQueue(outputMessageQueue)
 {

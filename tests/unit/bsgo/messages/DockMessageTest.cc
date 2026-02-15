@@ -55,7 +55,7 @@ TEST(Unit_Bsgo_Serialization_DockMessage, Clone)
 
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), MessageType::DOCK);
+  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::DOCK);
   assertMessagesAreEqual(cloned->as<DockMessage>(), expected);
 }
 

@@ -7,7 +7,7 @@ namespace bsgo {
 EntityAddedMessageConsumer::EntityAddedMessageConsumer(
   const Services &services,
   bsgalone::core::IMessageQueue *const outputMessageQueue)
-  : AbstractMessageConsumer("entity", {MessageType::ENTITY_ADDED})
+  : AbstractMessageConsumer("entity", {bsgalone::core::MessageType::ENTITY_ADDED})
   , m_entityService(services.entity)
   , m_loadingService(services.loading)
   , m_outputMessageQueue(outputMessageQueue)

@@ -5,11 +5,11 @@
 namespace bsgo {
 
 ComputerListMessage::ComputerListMessage()
-  : NetworkMessage(MessageType::COMPUTER_LIST)
+  : NetworkMessage(bsgalone::core::MessageType::COMPUTER_LIST)
 {}
 
 ComputerListMessage::ComputerListMessage(const std::vector<ComputerData> &computersData)
-  : NetworkMessage(MessageType::COMPUTER_LIST)
+  : NetworkMessage(bsgalone::core::MessageType::COMPUTER_LIST)
   , m_computersData(computersData)
 {}
 

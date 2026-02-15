@@ -5,12 +5,12 @@
 namespace bsgo {
 
 PlayerComputerListMessage::PlayerComputerListMessage()
-  : NetworkMessage(MessageType::PLAYER_COMPUTER_LIST)
+  : NetworkMessage(bsgalone::core::MessageType::PLAYER_COMPUTER_LIST)
 {}
 
 PlayerComputerListMessage::PlayerComputerListMessage(
   const std::vector<PlayerComputerData> &computersData)
-  : NetworkMessage(MessageType::PLAYER_COMPUTER_LIST)
+  : NetworkMessage(bsgalone::core::MessageType::PLAYER_COMPUTER_LIST)
   , m_computersData(computersData)
 {}
 

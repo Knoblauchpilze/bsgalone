@@ -7,9 +7,9 @@ namespace pge {
 ComponentMessageConsumer::ComponentMessageConsumer(const bsgo::DatabaseEntityMapper &entityMapper,
                                                    bsgo::CoordinatorShPtr coordinator)
   : bsgo::AbstractMessageConsumer("component",
-                                  {bsgo::MessageType::SLOT_COMPONENT_UPDATED,
-                                   bsgo::MessageType::WEAPON_COMPONENT_UPDATED,
-                                   bsgo::MessageType::AI_BEHAVIOR_SYNC})
+                                  {bsgalone::core::MessageType::SLOT_COMPONENT_UPDATED,
+                                   bsgalone::core::MessageType::WEAPON_COMPONENT_UPDATED,
+                                   bsgalone::core::MessageType::AI_BEHAVIOR_SYNC})
   , m_entityMapper(entityMapper)
   , m_coordinator(std::move(coordinator))
 {}
@@ -24,17 +24,17 @@ void ComponentMessageConsumer::onMessageReceived(const bsgalone::core::IMessage 
 
   switch (message.type())
   {
-    case bsgo::MessageType::SLOT_COMPONENT_UPDATED:
+    case bsgalone::core::MessageType::SLOT_COMPONENT_UPDATED:
       handleComputerSlotUpdated(message.as<bsgo::SlotComponentMessage>());
       break;
-    case bsgo::MessageType::WEAPON_COMPONENT_UPDATED:
+    case bsgalone::core::MessageType::WEAPON_COMPONENT_UPDATED:
       handleWeaponUpdated(message.as<bsgo::WeaponComponentMessage>());
       break;
-    case bsgo::MessageType::AI_BEHAVIOR_SYNC:
+    case bsgalone::core::MessageType::AI_BEHAVIOR_SYNC:
       handleAiBehaviorUpdated(message.as<bsgo::AiBehaviorSyncMessage>());
       break;
     default:
-      error("Unsupported message type " + bsgo::str(message.type()));
+      error("Unsupported message type " + str(message.type()));
   }
 }
 

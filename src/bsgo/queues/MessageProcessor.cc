@@ -35,9 +35,11 @@ auto MessageProcessor::acquireAndClearMessages() -> std::deque<bsgalone::core::I
 }
 
 namespace {
-const auto UNIMPORTANT_MESSAGE_TYPES = std::unordered_set<MessageType>{MessageType::COMPONENT_SYNC,
-                                                                       MessageType::AI_BEHAVIOR_SYNC,
-                                                                       MessageType::VELOCITY};
+const auto UNIMPORTANT_MESSAGE_TYPES = std::unordered_set<bsgalone::core::MessageType>{
+  bsgalone::core::MessageType::COMPONENT_SYNC,
+  bsgalone::core::MessageType::AI_BEHAVIOR_SYNC,
+  bsgalone::core::MessageType::VELOCITY,
+};
 
 struct MessagesInfo
 {

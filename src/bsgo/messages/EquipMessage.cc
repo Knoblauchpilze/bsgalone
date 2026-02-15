@@ -5,14 +5,14 @@
 namespace bsgo {
 
 EquipMessage::EquipMessage()
-  : NetworkMessage(MessageType::EQUIP)
+  : NetworkMessage(bsgalone::core::MessageType::EQUIP)
 {}
 
 EquipMessage::EquipMessage(const EquipType &action,
                            const Uuid shipDbId,
                            const Item &itemType,
                            const Uuid itemDbId)
-  : NetworkMessage(MessageType::EQUIP)
+  : NetworkMessage(bsgalone::core::MessageType::EQUIP)
   , m_action(action)
   , m_shipDbId(shipDbId)
   , m_itemType(itemType)

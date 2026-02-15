@@ -73,7 +73,7 @@ TEST(Unit_Bsgo_Serialization_WeaponListMessage, Clone)
 
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), MessageType::WEAPON_LIST);
+  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::WEAPON_LIST);
   assertMessagesAreEqual(cloned->as<WeaponListMessage>(), expected);
 }
 

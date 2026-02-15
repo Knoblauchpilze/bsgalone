@@ -6,7 +6,7 @@ namespace bsgo {
 EntityDeletedMessageConsumer::EntityDeletedMessageConsumer(
   const Services &services,
   bsgalone::core::IMessageQueue *const outputMessageQueue)
-  : AbstractMessageConsumer("entity", {MessageType::ENTITY_REMOVED})
+  : AbstractMessageConsumer("entity", {bsgalone::core::MessageType::ENTITY_REMOVED})
   , m_entityService(services.entity)
   , m_outputMessageQueue(outputMessageQueue)
 {

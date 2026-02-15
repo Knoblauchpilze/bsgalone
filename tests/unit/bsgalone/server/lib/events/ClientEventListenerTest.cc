@@ -78,7 +78,7 @@ TEST(Unit_Bsgalone_Server_Events_ClientEventListener,
 
   EXPECT_EQ(1u, queue->messages().size());
   const auto &actual = queue->messages().at(0);
-  EXPECT_EQ(bsgo::MessageType::LOGOUT, actual->type());
+  EXPECT_EQ(bsgalone::core::MessageType::LOGOUT, actual->type());
   EXPECT_EQ(net::ClientId{12}, actual->as<bsgo::LogoutMessage>().getClientId());
   EXPECT_EQ(bsgo::Uuid{17}, actual->as<bsgo::LogoutMessage>().getPlayerDbId());
   EXPECT_TRUE(actual->as<bsgo::LogoutMessage>().shouldCloseConnection());

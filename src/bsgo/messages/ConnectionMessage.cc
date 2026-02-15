@@ -5,7 +5,7 @@
 namespace bsgo {
 
 ConnectionMessage::ConnectionMessage()
-  : bsgalone::core::AbstractMessage(MessageType::CONNECTION)
+  : bsgalone::core::AbstractMessage(bsgalone::core::MessageType::CONNECTION)
 {}
 
 auto ConnectionMessage::serialize(std::ostream &out) const -> std::ostream &

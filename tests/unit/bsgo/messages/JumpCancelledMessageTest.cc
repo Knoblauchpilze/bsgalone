@@ -42,7 +42,7 @@ TEST(Unit_Bsgo_Serialization_JumpCancelledMessage, Clone)
 
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), MessageType::JUMP_CANCELLED);
+  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::JUMP_CANCELLED);
   assertMessagesAreEqual(cloned->as<JumpCancelledMessage>(), expected);
 }
 

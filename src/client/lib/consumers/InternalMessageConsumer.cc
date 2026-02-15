@@ -5,7 +5,7 @@ namespace pge {
 
 InternalMessageConsumer::InternalMessageConsumer(const bsgo::DatabaseEntityMapper &entityMapper,
                                                  bsgo::CoordinatorShPtr coordinator)
-  : bsgo::AbstractMessageConsumer("internal", {bsgo::MessageType::VELOCITY})
+  : bsgo::AbstractMessageConsumer("internal", {bsgalone::core::MessageType::VELOCITY})
   , m_entityMapper(entityMapper)
   , m_coordinator(std::move(coordinator))
 {}
@@ -14,11 +14,11 @@ void InternalMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &
 {
   switch (message.type())
   {
-    case bsgo::MessageType::VELOCITY:
+    case bsgalone::core::MessageType::VELOCITY:
       handleVelocityChanged(message.as<bsgo::VelocityMessage>());
       break;
     default:
-      error("Unsupported message type " + bsgo::str(message.type()));
+      error("Unsupported message type " + str(message.type()));
   }
 }
 

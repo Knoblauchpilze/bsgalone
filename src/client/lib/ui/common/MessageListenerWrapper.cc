@@ -12,7 +12,7 @@ MessageListenerWrapper::MessageListenerWrapper(IMessageListener *listener)
   }
 }
 
-bool MessageListenerWrapper::isMessageRelevant(const bsgo::MessageType &type) const
+bool MessageListenerWrapper::isMessageRelevant(const bsgalone::core::MessageType &type) const
 {
   return m_listener->isMessageRelevant(type);
 }

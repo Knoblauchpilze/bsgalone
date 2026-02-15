@@ -5,11 +5,11 @@
 namespace bsgo {
 
 JumpMessage::JumpMessage()
-  : NetworkMessage(MessageType::JUMP)
+  : NetworkMessage(bsgalone::core::MessageType::JUMP)
 {}
 
 JumpMessage::JumpMessage(const Uuid shipDbId, const Uuid playerDbId)
-  : NetworkMessage(MessageType::JUMP)
+  : NetworkMessage(bsgalone::core::MessageType::JUMP)
   , m_shipDbId(shipDbId)
   , m_playerDbId(playerDbId)
 {}
@@ -18,7 +18,7 @@ JumpMessage::JumpMessage(const Uuid shipDbId,
                          const Uuid playerDbId,
                          const Uuid sourceSystemDbId,
                          const Uuid destinationSystemDbId)
-  : NetworkMessage(MessageType::JUMP)
+  : NetworkMessage(bsgalone::core::MessageType::JUMP)
   , m_shipDbId(shipDbId)
   , m_playerDbId(playerDbId)
   , m_sourceSystemDbId(sourceSystemDbId)

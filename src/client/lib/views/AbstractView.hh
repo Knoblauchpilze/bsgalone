@@ -11,7 +11,7 @@ class AbstractView : public bsgo::AbstractMessageConsumer, public IView
 {
   public:
   AbstractView(const std::string &name,
-               const std::unordered_set<bsgo::MessageType> &relevantMessageTypes);
+               const std::unordered_set<bsgalone::core::MessageType> &relevantMessageTypes);
   ~AbstractView() override = default;
 
   bool isReady() const noexcept override;

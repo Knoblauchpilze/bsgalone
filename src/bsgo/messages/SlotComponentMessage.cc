@@ -5,7 +5,7 @@
 namespace bsgo {
 
 SlotComponentMessage::SlotComponentMessage()
-  : ComponentUpdatedMessage(MessageType::SLOT_COMPONENT_UPDATED)
+  : ComponentUpdatedMessage(bsgalone::core::MessageType::SLOT_COMPONENT_UPDATED)
 {}
 
 SlotComponentMessage::SlotComponentMessage(
@@ -14,7 +14,7 @@ SlotComponentMessage::SlotComponentMessage(
   const Uuid shipDbId,
   const Uuid slotDbId,
   const std::optional<chrono::TickDuration> &elapsedSinceLastFired)
-  : ComponentUpdatedMessage(MessageType::SLOT_COMPONENT_UPDATED,
+  : ComponentUpdatedMessage(bsgalone::core::MessageType::SLOT_COMPONENT_UPDATED,
                             shipDbId,
                             ComponentType::COMPUTER_SLOT)
   , m_playerDbId(playerDbId)

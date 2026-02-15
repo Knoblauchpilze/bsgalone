@@ -7,11 +7,11 @@
 namespace bsgo {
 
 VelocityMessage::VelocityMessage()
-  : NetworkMessage(MessageType::VELOCITY)
+  : NetworkMessage(bsgalone::core::MessageType::VELOCITY)
 {}
 
 VelocityMessage::VelocityMessage(const Uuid shipDbId, const Eigen::Vector3f &acceleration)
-  : NetworkMessage(MessageType::VELOCITY)
+  : NetworkMessage(bsgalone::core::MessageType::VELOCITY)
   , m_shipDbId(shipDbId)
   , m_acceleration(acceleration)
 {}

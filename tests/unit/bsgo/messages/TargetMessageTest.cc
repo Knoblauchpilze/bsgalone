@@ -128,7 +128,7 @@ TEST(Unit_Bsgo_Serialization_TargetMessage, Clone)
 
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), MessageType::TARGET);
+  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::TARGET);
   assertMessagesAreEqual(cloned->as<TargetMessage>(), expected);
 }
 
@@ -143,7 +143,7 @@ TEST(Unit_Bsgo_Serialization_TargetMessage, CloneWithSystemDbId)
 
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), MessageType::TARGET);
+  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::TARGET);
   assertMessagesAreEqual(cloned->as<TargetMessage>(), expected);
 }
 

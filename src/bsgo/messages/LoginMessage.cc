@@ -5,11 +5,11 @@
 namespace bsgo {
 
 LoginMessage::LoginMessage()
-  : NetworkMessage(MessageType::LOGIN)
+  : NetworkMessage(bsgalone::core::MessageType::LOGIN)
 {}
 
 LoginMessage::LoginMessage(const GameRole role)
-  : NetworkMessage(MessageType::LOGIN)
+  : NetworkMessage(bsgalone::core::MessageType::LOGIN)
   , m_role(role)
 {}
 

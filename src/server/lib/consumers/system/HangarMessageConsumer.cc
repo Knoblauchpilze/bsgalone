@@ -8,7 +8,7 @@ namespace bsgo {
 HangarMessageConsumer::HangarMessageConsumer(const Services &services,
                                              bsgalone::core::IMessageQueue *const systemMessageQueue,
                                              bsgalone::core::IMessageQueue *const outputMessageQueue)
-  : AbstractMessageConsumer("hangar", {MessageType::HANGAR})
+  : AbstractMessageConsumer("hangar", {bsgalone::core::MessageType::HANGAR})
   , m_shipService(services.ship)
   , m_systemMessageQueue(systemMessageQueue)
   , m_outputMessageQueue(outputMessageQueue)

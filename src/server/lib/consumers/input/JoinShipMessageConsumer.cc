@@ -6,7 +6,7 @@ namespace bsgo {
 JoinShipMessageConsumer::JoinShipMessageConsumer(
   PlayerServicePtr playerService,
   bsgalone::core::IMessageQueue *const outputMessageQueue)
-  : AbstractMessageConsumer("join", {MessageType::JOIN_SHIP})
+  : AbstractMessageConsumer("join", {bsgalone::core::MessageType::JOIN_SHIP})
   , m_playerService(std::move(playerService))
   , m_outputMessageQueue(outputMessageQueue)
 {

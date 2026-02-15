@@ -3,7 +3,7 @@
 
 namespace bsgalone::core {
 
-NetworkMessage::NetworkMessage(const bsgo::MessageType &type)
+NetworkMessage::NetworkMessage(const MessageType &type)
   : AbstractMessage(type)
 {}
 

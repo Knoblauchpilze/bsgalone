@@ -43,7 +43,7 @@ TEST(Unit_Bsgo_Serialization_JumpRequestedMessage, Clone)
 
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), MessageType::JUMP_REQUESTED);
+  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::JUMP_REQUESTED);
   assertMessagesAreEqual(cloned->as<JumpRequestedMessage>(), expected);
 }
 

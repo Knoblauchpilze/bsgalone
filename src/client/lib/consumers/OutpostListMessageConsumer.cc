@@ -7,7 +7,7 @@ namespace pge {
 
 OutpostListMessageConsumer::OutpostListMessageConsumer(bsgo::DatabaseEntityMapper &entityMapper,
                                                        bsgo::CoordinatorShPtr coordinator)
-  : AbstractGameMessageConsumer("outpost", bsgo::MessageType::OUTPOST_LIST)
+  : AbstractGameMessageConsumer("outpost", bsgalone::core::MessageType::OUTPOST_LIST)
   , m_entityMapper(entityMapper)
   , m_coordinator(std::move(coordinator))
 {}

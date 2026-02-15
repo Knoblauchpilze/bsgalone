@@ -5,11 +5,11 @@
 namespace bsgo {
 
 SystemDataMessage::SystemDataMessage()
-  : NetworkMessage(MessageType::SYSTEM_DATA)
+  : NetworkMessage(bsgalone::core::MessageType::SYSTEM_DATA)
 {}
 
 SystemDataMessage::SystemDataMessage(const SystemTickData &tickData)
-  : NetworkMessage(MessageType::SYSTEM_DATA)
+  : NetworkMessage(bsgalone::core::MessageType::SYSTEM_DATA)
   , m_tickData(tickData)
 {}
 

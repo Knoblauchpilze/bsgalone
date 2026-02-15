@@ -65,7 +65,7 @@ TEST(Unit_Bsgo_Serialization_PlayerComputerListMessage, Clone)
 
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), MessageType::PLAYER_COMPUTER_LIST);
+  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::PLAYER_COMPUTER_LIST);
   assertMessagesAreEqual(cloned->as<PlayerComputerListMessage>(), expected);
 }
 

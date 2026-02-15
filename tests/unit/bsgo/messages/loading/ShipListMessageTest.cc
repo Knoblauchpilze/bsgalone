@@ -87,7 +87,7 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, Clone)
 
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), MessageType::SHIP_LIST);
+  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::SHIP_LIST);
   assertMessagesAreEqual(cloned->as<ShipListMessage>(), expected);
 }
 

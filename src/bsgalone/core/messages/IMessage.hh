@@ -13,7 +13,7 @@ class IMessage : public ::core::CoreObject
   IMessage(const std::string &name);
   ~IMessage() override = default;
 
-  virtual auto type() const -> bsgo::MessageType                    = 0;
+  virtual auto type() const -> MessageType                          = 0;
   virtual auto serialize(std::ostream &out) const -> std::ostream & = 0;
   virtual bool deserialize(std::istream &in)                        = 0;
 

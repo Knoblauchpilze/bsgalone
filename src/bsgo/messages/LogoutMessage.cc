@@ -5,7 +5,7 @@
 namespace bsgo {
 
 LogoutMessage::LogoutMessage()
-  : NetworkMessage(MessageType::LOGOUT)
+  : NetworkMessage(bsgalone::core::MessageType::LOGOUT)
 {}
 
 LogoutMessage::LogoutMessage(const Uuid playerDbId)
@@ -13,7 +13,7 @@ LogoutMessage::LogoutMessage(const Uuid playerDbId)
 {}
 
 LogoutMessage::LogoutMessage(const Uuid playerDbId, const bool closeConnection)
-  : NetworkMessage(MessageType::LOGOUT)
+  : NetworkMessage(bsgalone::core::MessageType::LOGOUT)
   , m_playerDbId(playerDbId)
   , m_closeConnection(closeConnection)
 {}

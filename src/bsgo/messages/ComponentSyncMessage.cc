@@ -5,11 +5,11 @@
 namespace bsgo {
 
 ComponentSyncMessage::ComponentSyncMessage()
-  : NetworkMessage(MessageType::COMPONENT_SYNC)
+  : NetworkMessage(bsgalone::core::MessageType::COMPONENT_SYNC)
 {}
 
 ComponentSyncMessage::ComponentSyncMessage(const Uuid entityDbId, const EntityKind entityKind)
-  : NetworkMessage(MessageType::COMPONENT_SYNC)
+  : NetworkMessage(bsgalone::core::MessageType::COMPONENT_SYNC)
   , m_entityDbId(entityDbId)
   , m_entityKind(entityKind)
 {}

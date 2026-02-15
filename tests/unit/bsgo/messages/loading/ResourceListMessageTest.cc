@@ -57,7 +57,7 @@ TEST(Unit_Bsgo_Serialization_ResourceListMessage, Clone)
 
   const ResourceListMessage expected(resourcesData);
   const auto cloned = expected.clone();
-  ASSERT_EQ(cloned->type(), MessageType::RESOURCE_LIST);
+  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::RESOURCE_LIST);
   assertMessagesAreEqual(cloned->as<ResourceListMessage>(), expected);
 }
 

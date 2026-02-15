@@ -73,7 +73,7 @@ TEST(Unit_Bsgo_Serialization_PlayerListMessage, Clone)
 
   const PlayerListMessage expected(Uuid{4572}, playersData);
   const auto cloned = expected.clone();
-  ASSERT_EQ(cloned->type(), MessageType::PLAYER_LIST);
+  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::PLAYER_LIST);
   assertMessagesAreEqual(cloned->as<PlayerListMessage>(), expected);
 }
 

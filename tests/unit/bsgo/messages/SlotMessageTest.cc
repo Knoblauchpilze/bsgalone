@@ -48,7 +48,7 @@ TEST(Unit_Bsgo_Serialization_SlotMessage, Clone)
 {
   const SlotMessage expected(Uuid{28}, Uuid{67}, Slot::WEAPON);
   const auto cloned = expected.clone();
-  ASSERT_EQ(cloned->type(), MessageType::SLOT);
+  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::SLOT);
   assertMessagesAreEqual(cloned->as<SlotMessage>(), expected);
 }
 

@@ -7,7 +7,7 @@ namespace pge {
 
 AsteroidListMessageConsumer::AsteroidListMessageConsumer(bsgo::DatabaseEntityMapper &entityMapper,
                                                          bsgo::CoordinatorShPtr coordinator)
-  : AbstractGameMessageConsumer("asteroid", bsgo::MessageType::ASTEROID_LIST)
+  : AbstractGameMessageConsumer("asteroid", bsgalone::core::MessageType::ASTEROID_LIST)
   , m_entityMapper(entityMapper)
   , m_coordinator(std::move(coordinator))
 {}

@@ -4,17 +4,18 @@
 namespace bsgo {
 
 AbstractMessageListener::AbstractMessageListener(
-  const std::unordered_set<MessageType> &relevantMessageTypes)
+  const std::unordered_set<bsgalone::core::MessageType> &relevantMessageTypes)
   : IMessageListener()
   , m_relevantMessageTypes(relevantMessageTypes)
 {}
 
-bool AbstractMessageListener::isMessageRelevant(const MessageType &type) const
+bool AbstractMessageListener::isMessageRelevant(const bsgalone::core::MessageType &type) const
 {
   return m_relevantMessageTypes.contains(type);
 }
 
-auto AbstractMessageListener::relevantMessageTypes() const -> std::unordered_set<MessageType>
+auto AbstractMessageListener::relevantMessageTypes() const
+  -> std::unordered_set<bsgalone::core::MessageType>
 {
   return m_relevantMessageTypes;
 }

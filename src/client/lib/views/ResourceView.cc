@@ -5,7 +5,7 @@
 namespace pge {
 
 ResourceView::ResourceView()
-  : AbstractView("resource", {bsgo::MessageType::RESOURCE_LIST})
+  : AbstractView("resource", {bsgalone::core::MessageType::RESOURCE_LIST})
 {}
 
 bool ResourceView::isReady() const noexcept

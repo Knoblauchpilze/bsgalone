@@ -8,7 +8,7 @@ namespace bsgo {
 EquipMessageConsumer::EquipMessageConsumer(const Services &services,
                                            bsgalone::core::IMessageQueue *const systemMessageQueue,
                                            bsgalone::core::IMessageQueue *const outputMessageQueue)
-  : AbstractMessageConsumer("equip", {MessageType::EQUIP})
+  : AbstractMessageConsumer("equip", {bsgalone::core::MessageType::EQUIP})
   , m_lockerService(services.locker)
   , m_shipService(services.ship)
   , m_systemMessageQueue(systemMessageQueue)

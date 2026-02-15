@@ -5,12 +5,12 @@
 namespace bsgo {
 
 OutpostListMessage::OutpostListMessage()
-  : NetworkMessage(MessageType::OUTPOST_LIST)
+  : NetworkMessage(bsgalone::core::MessageType::OUTPOST_LIST)
 {}
 
 OutpostListMessage::OutpostListMessage(const Uuid systemDbId,
                                        const std::vector<OutpostData> &outpostsData)
-  : NetworkMessage(MessageType::OUTPOST_LIST)
+  : NetworkMessage(bsgalone::core::MessageType::OUTPOST_LIST)
   , m_systemDbId(systemDbId)
   , m_outpostsData(outpostsData)
 {}

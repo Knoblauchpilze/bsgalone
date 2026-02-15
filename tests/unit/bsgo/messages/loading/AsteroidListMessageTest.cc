@@ -66,7 +66,7 @@ TEST(Unit_Bsgo_Serialization_AsteroidListMessage, Clone)
 
   const AsteroidListMessage expected(Uuid{4572}, asteroidsData);
   const auto cloned = expected.clone();
-  ASSERT_EQ(cloned->type(), MessageType::ASTEROID_LIST);
+  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::ASTEROID_LIST);
   assertMessagesAreEqual(cloned->as<AsteroidListMessage>(), expected);
 }
 } // namespace bsgo

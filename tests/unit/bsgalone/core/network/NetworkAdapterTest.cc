@@ -46,7 +46,7 @@ TEST(Unit_Bsgalone_Core_Network_NetworkAdapter, CorrectlyPublishesCompleteMessag
 
   EXPECT_EQ(1u, queue->messages().size());
   const auto &message = queue->messages().at(0);
-  EXPECT_EQ(bsgo::MessageType::SCANNED, message->type());
+  EXPECT_EQ(bsgalone::core::MessageType::SCANNED, message->type());
   EXPECT_EQ(net::ClientId{1}, message->as<bsgo::ScannedMessage>().getClientId());
   EXPECT_EQ(bsgo::Uuid{2}, message->as<bsgo::ScannedMessage>().getPlayerDbId());
   EXPECT_EQ(bsgo::Uuid{4}, message->as<bsgo::ScannedMessage>().getAsteroidDbId());
@@ -64,7 +64,7 @@ TEST(Unit_Bsgalone_Core_Network_NetworkAdapter, CorrectlyPublishesCompleteMessag
 
   EXPECT_EQ(1u, queue->messages().size());
   const auto &message = queue->messages().at(0);
-  EXPECT_EQ(bsgo::MessageType::SCANNED, message->type());
+  EXPECT_EQ(bsgalone::core::MessageType::SCANNED, message->type());
   EXPECT_FALSE(message->as<bsgo::ScannedMessage>().tryGetClientId().has_value());
   EXPECT_EQ(bsgo::Uuid{2}, message->as<bsgo::ScannedMessage>().getPlayerDbId());
   EXPECT_EQ(bsgo::Uuid{4}, message->as<bsgo::ScannedMessage>().getAsteroidDbId());
@@ -102,7 +102,7 @@ TEST(Unit_Bsgalone_Core_Network_NetworkAdapter, PublishesMessageWhenAllDataIsRec
 
   EXPECT_EQ(1u, queue->messages().size());
   const auto &message = queue->messages().at(0);
-  EXPECT_EQ(bsgo::MessageType::SCANNED, message->type());
+  EXPECT_EQ(bsgalone::core::MessageType::SCANNED, message->type());
   EXPECT_EQ(bsgo::Uuid{2}, message->as<bsgo::ScannedMessage>().getPlayerDbId());
   EXPECT_EQ(bsgo::Uuid{4}, message->as<bsgo::ScannedMessage>().getAsteroidDbId());
 }
@@ -186,7 +186,7 @@ TEST(Unit_Bsgalone_Core_Network_NetworkAdapter, OnlyPublishMessageForReceivedDat
 
   EXPECT_EQ(1u, queue->messages().size());
   const auto &message = queue->messages().at(0);
-  EXPECT_EQ(bsgo::MessageType::SCANNED, message->type());
+  EXPECT_EQ(bsgalone::core::MessageType::SCANNED, message->type());
   EXPECT_EQ(bsgo::Uuid{2}, message->as<bsgo::ScannedMessage>().getPlayerDbId());
   EXPECT_EQ(bsgo::Uuid{4}, message->as<bsgo::ScannedMessage>().getAsteroidDbId());
 }
@@ -220,7 +220,7 @@ TEST(Unit_Bsgalone_Core_Network_NetworkAdapter, SetsClientIdForNetworkMessageWhe
 
   EXPECT_EQ(1u, queue->messages().size());
   const auto &actual = queue->messages().at(0);
-  EXPECT_EQ(bsgo::MessageType::LOOT, actual->type());
+  EXPECT_EQ(bsgalone::core::MessageType::LOOT, actual->type());
   EXPECT_EQ(net::ClientId{17}, actual->as<bsgo::LootMessage>().getClientId());
 }
 
@@ -241,7 +241,7 @@ TEST(Unit_Bsgalone_Core_Network_NetworkAdapter, OverridesExistingClientIdWithCon
 
   EXPECT_EQ(1u, queue->messages().size());
   const auto &actual = queue->messages().at(0);
-  EXPECT_EQ(bsgo::MessageType::LOOT, actual->type());
+  EXPECT_EQ(bsgalone::core::MessageType::LOOT, actual->type());
   EXPECT_EQ(net::ClientId{17}, actual->as<bsgo::LootMessage>().getClientId());
 }
 

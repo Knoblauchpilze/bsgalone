@@ -5,11 +5,11 @@
 namespace bsgo {
 
 JumpRequestedMessage::JumpRequestedMessage()
-  : NetworkMessage(MessageType::JUMP_REQUESTED)
+  : NetworkMessage(bsgalone::core::MessageType::JUMP_REQUESTED)
 {}
 
 JumpRequestedMessage::JumpRequestedMessage(const Uuid shipDbId, const Uuid systemDbId)
-  : NetworkMessage(MessageType::JUMP_REQUESTED)
+  : NetworkMessage(bsgalone::core::MessageType::JUMP_REQUESTED)
   , m_shipDbId(shipDbId)
   , m_systemDbId(systemDbId)
 {}

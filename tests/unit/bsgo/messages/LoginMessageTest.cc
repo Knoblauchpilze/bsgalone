@@ -103,7 +103,7 @@ TEST(Unit_Bsgo_Serialization_LoginMessage, Clone)
 
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), MessageType::LOGIN);
+  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::LOGIN);
   assertMessagesAreEqual(cloned->as<LoginMessage>(), expected);
 }
 

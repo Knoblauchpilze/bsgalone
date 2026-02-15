@@ -5,12 +5,12 @@
 namespace bsgo {
 
 LoadingStartedMessage::LoadingStartedMessage()
-  : NetworkMessage(MessageType::LOADING_STARTED)
+  : NetworkMessage(bsgalone::core::MessageType::LOADING_STARTED)
 {}
 
 LoadingStartedMessage::LoadingStartedMessage(const LoadingTransition transition,
                                              const Uuid playerDbId)
-  : NetworkMessage(MessageType::LOADING_STARTED)
+  : NetworkMessage(bsgalone::core::MessageType::LOADING_STARTED)
   , m_transition(transition)
   , m_playerDbId(playerDbId)
 {}

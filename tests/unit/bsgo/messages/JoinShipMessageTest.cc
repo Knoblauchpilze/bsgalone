@@ -45,7 +45,7 @@ TEST(Unit_Bsgo_Serialization_JoinShipMessage, Clone)
 
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), MessageType::JOIN_SHIP);
+  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::JOIN_SHIP);
   assertMessagesAreEqual(cloned->as<JoinShipMessage>(), expected);
 }
 

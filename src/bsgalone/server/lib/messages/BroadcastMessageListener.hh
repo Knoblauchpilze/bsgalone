@@ -21,7 +21,7 @@ class BroadcastMessageListener : public core::IMessageListener, public ::core::C
   BroadcastMessageListener(ClientManagerShPtr clientManager, net::INetworkServerShPtr server);
   ~BroadcastMessageListener() override = default;
 
-  bool isMessageRelevant(const bsgo::MessageType &type) const override;
+  bool isMessageRelevant(const core::MessageType &type) const override;
   void onMessageReceived(const core::IMessage &message) override;
 
   private:

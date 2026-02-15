@@ -72,7 +72,7 @@ TEST(Unit_Bsgo_Serialization_ComputerListMessage, Clone)
 
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), MessageType::COMPUTER_LIST);
+  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::COMPUTER_LIST);
   assertMessagesAreEqual(cloned->as<ComputerListMessage>(), expected);
 }
 

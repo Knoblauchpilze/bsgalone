@@ -26,12 +26,12 @@ BroadcastMessageModule::BroadcastMessageModule(ClientManagerShPtr clientManager,
 }
 
 namespace {
-const std::unordered_set<bsgo::MessageType> NON_BROADCASTABLE_MESSAGES
-  = {bsgo::MessageType::LOOT,
-     bsgo::MessageType::SCANNED,
-     bsgo::MessageType::SLOT_COMPONENT_UPDATED,
-     bsgo::MessageType::LOADING_STARTED,
-     bsgo::MessageType::LOADING_FINISHED};
+const std::unordered_set<core::MessageType> NON_BROADCASTABLE_MESSAGES
+  = {core::MessageType::LOOT,
+     core::MessageType::SCANNED,
+     core::MessageType::SLOT_COMPONENT_UPDATED,
+     core::MessageType::LOADING_STARTED,
+     core::MessageType::LOADING_FINISHED};
 
 bool shouldTryToDetermineClientId(const core::IMessage &message)
 {
@@ -43,8 +43,7 @@ void BroadcastMessageModule::processMessage(const core::IMessage &message)
 {
   if (!message.isA<core::NetworkMessage>())
   {
-    error("Unsupported message type " + bsgo::str(message.type()),
-          "Message is not a network message");
+    error("Unsupported message type " + str(message.type()), "Message is not a network message");
   }
 
   const auto &network = message.as<core::NetworkMessage>();
@@ -87,13 +86,13 @@ void BroadcastMessageModule::sendMessageToClient(const net::ClientId clientId,
 }
 
 namespace {
-const std::unordered_set<bsgo::MessageType> SYSTEM_DIRECTED_MESSAGES
-  = {bsgo::MessageType::AI_BEHAVIOR_SYNC,
-     bsgo::MessageType::COMPONENT_SYNC,
-     bsgo::MessageType::ENTITY_ADDED,
-     bsgo::MessageType::ENTITY_REMOVED,
-     bsgo::MessageType::JUMP,
-     bsgo::MessageType::TARGET};
+const std::unordered_set<core::MessageType> SYSTEM_DIRECTED_MESSAGES
+  = {core::MessageType::AI_BEHAVIOR_SYNC,
+     core::MessageType::COMPONENT_SYNC,
+     core::MessageType::ENTITY_ADDED,
+     core::MessageType::ENTITY_REMOVED,
+     core::MessageType::JUMP,
+     core::MessageType::TARGET};
 
 bool shouldTryToDetermineSystemId(const core::IMessage &message)
 {
@@ -145,15 +144,15 @@ auto BroadcastMessageModule::tryDetermineClientId(const core::IMessage &message)
 {
   switch (message.type())
   {
-    case bsgo::MessageType::LOOT:
+    case core::MessageType::LOOT:
       return determineClientFor(message.as<bsgo::LootMessage>(), *m_clientManager);
-    case bsgo::MessageType::SCANNED:
+    case core::MessageType::SCANNED:
       return determineClientFor(message.as<bsgo::ScannedMessage>(), *m_clientManager);
-    case bsgo::MessageType::SLOT_COMPONENT_UPDATED:
+    case core::MessageType::SLOT_COMPONENT_UPDATED:
       return determineClientFor(message.as<bsgo::SlotComponentMessage>(), *m_clientManager);
-    case bsgo::MessageType::LOADING_STARTED:
+    case core::MessageType::LOADING_STARTED:
       return determineClientFor(message.as<bsgo::LoadingStartedMessage>(), *m_clientManager);
-    case bsgo::MessageType::LOADING_FINISHED:
+    case core::MessageType::LOADING_FINISHED:
       return determineClientFor(message.as<bsgo::LoadingFinishedMessage>(), *m_clientManager);
     default:
       error("Failed to determine client id", "Unsupported message type " + str(message.type()));
@@ -195,17 +194,17 @@ auto BroadcastMessageModule::tryDetermineSystemIds(const core::IMessage &message
 {
   switch (message.type())
   {
-    case bsgo::MessageType::AI_BEHAVIOR_SYNC:
+    case core::MessageType::AI_BEHAVIOR_SYNC:
       return maybeDetermineSystemsFor(message.as<bsgo::AiBehaviorSyncMessage>());
-    case bsgo::MessageType::COMPONENT_SYNC:
+    case core::MessageType::COMPONENT_SYNC:
       return determineSystemsFor(message.as<bsgo::ComponentSyncMessage>());
-    case bsgo::MessageType::ENTITY_ADDED:
+    case core::MessageType::ENTITY_ADDED:
       return determineSystemsFor(message.as<bsgo::EntityAddedMessage>());
-    case bsgo::MessageType::ENTITY_REMOVED:
+    case core::MessageType::ENTITY_REMOVED:
       return determineSystemsFor(message.as<bsgo::EntityRemovedMessage>());
-    case bsgo::MessageType::JUMP:
+    case core::MessageType::JUMP:
       return determineSystemsFor(message.as<bsgo::JumpMessage>());
-    case bsgo::MessageType::TARGET:
+    case core::MessageType::TARGET:
       return maybeDetermineSystemsFor(message.as<bsgo::TargetMessage>());
     default:
       error("Failed to determine system id", "Unsupported message type " + str(message.type()));

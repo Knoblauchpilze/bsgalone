@@ -5,11 +5,11 @@
 namespace bsgo {
 
 SystemListMessage::SystemListMessage()
-  : NetworkMessage(MessageType::SYSTEM_LIST)
+  : NetworkMessage(bsgalone::core::MessageType::SYSTEM_LIST)
 {}
 
 SystemListMessage::SystemListMessage(const std::vector<SystemData> &systemsData)
-  : NetworkMessage(MessageType::SYSTEM_LIST)
+  : NetworkMessage(bsgalone::core::MessageType::SYSTEM_LIST)
   , m_systemsData(systemsData)
 {}
 

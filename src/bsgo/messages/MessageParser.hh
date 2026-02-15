@@ -19,7 +19,7 @@ class MessageParser : public bsgalone::core::IMessageParser, public core::CoreOb
   auto tryParseMessage(const std::deque<char> &data) -> ParsingResult override;
 
   private:
-  auto tryReadMessage(const MessageType &type, std::istream &in)
+  auto tryReadMessage(const bsgalone::core::MessageType &type, std::istream &in)
     -> std::optional<bsgalone::core::IMessagePtr>;
 };
 

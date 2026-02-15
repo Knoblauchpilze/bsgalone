@@ -23,16 +23,16 @@ BroadcastMessageListener::BroadcastMessageListener(ClientManagerShPtr clientMana
   setService("message");
 }
 
-bool BroadcastMessageListener::isMessageRelevant(const bsgo::MessageType & /*type*/) const
+bool BroadcastMessageListener::isMessageRelevant(const core::MessageType & /*type*/) const
 {
   return true;
 }
 
 namespace {
-const std::unordered_set<bsgo::MessageType> CLIENT_MANAGER_RELEVANT_MESSAGES = {
-  bsgo::MessageType::JUMP,
-  bsgo::MessageType::LOGIN,
-  bsgo::MessageType::LOGOUT,
+const std::unordered_set<core::MessageType> CLIENT_MANAGER_RELEVANT_MESSAGES = {
+  core::MessageType::JUMP,
+  core::MessageType::LOGIN,
+  core::MessageType::LOGOUT,
 };
 
 bool triggersClientManagerUpdate(const core::IMessage &message)
@@ -55,17 +55,17 @@ void BroadcastMessageListener::forwardMessageToClientManager(const core::IMessag
 {
   switch (message.type())
   {
-    case bsgo::MessageType::LOGIN:
+    case core::MessageType::LOGIN:
       registerPlayer(message.as<bsgo::LoginMessage>());
       break;
-    case bsgo::MessageType::LOGOUT:
+    case core::MessageType::LOGOUT:
       unregisterPlayer(message.as<bsgo::LogoutMessage>());
       break;
-    case bsgo::MessageType::JUMP:
+    case core::MessageType::JUMP:
       updatePlayerSystem(message.as<bsgo::JumpMessage>());
       break;
     default:
-      error("Unsupported message type " + bsgo::str(message.type()));
+      error("Unsupported message type " + str(message.type()));
   }
 }
 

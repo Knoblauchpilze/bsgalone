@@ -5,12 +5,12 @@
 namespace bsgo {
 
 PlayerListMessage::PlayerListMessage()
-  : NetworkMessage(MessageType::PLAYER_LIST)
+  : NetworkMessage(bsgalone::core::MessageType::PLAYER_LIST)
 {}
 
 PlayerListMessage::PlayerListMessage(const Uuid systemDbId,
                                      const std::vector<PlayerData> &playersData)
-  : NetworkMessage(MessageType::PLAYER_LIST)
+  : NetworkMessage(bsgalone::core::MessageType::PLAYER_LIST)
   , m_systemDbId(systemDbId)
   , m_playersData(playersData)
 {}

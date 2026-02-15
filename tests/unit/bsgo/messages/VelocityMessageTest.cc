@@ -44,7 +44,7 @@ TEST(Unit_Bsgo_Serialization_VelocityMessage, Clone)
 
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), MessageType::VELOCITY);
+  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::VELOCITY);
   assertMessagesAreEqual(cloned->as<VelocityMessage>(), expected);
 }
 

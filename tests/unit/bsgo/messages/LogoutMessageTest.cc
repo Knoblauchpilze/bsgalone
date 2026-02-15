@@ -75,7 +75,7 @@ TEST(Unit_Bsgo_Serialization_LogoutMessage, Clone)
 
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), MessageType::LOGOUT);
+  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::LOGOUT);
   assertMessagesAreEqual(cloned->as<LogoutMessage>(), expected);
 }
 

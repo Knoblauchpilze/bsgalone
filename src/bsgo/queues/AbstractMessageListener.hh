@@ -9,15 +9,16 @@ namespace bsgo {
 class AbstractMessageListener : public bsgalone::core::IMessageListener
 {
   public:
-  AbstractMessageListener(const std::unordered_set<MessageType> &relevantMessageTypes);
+  AbstractMessageListener(
+    const std::unordered_set<bsgalone::core::MessageType> &relevantMessageTypes);
   ~AbstractMessageListener() override = default;
 
-  bool isMessageRelevant(const MessageType &type) const override;
+  bool isMessageRelevant(const bsgalone::core::MessageType &type) const override;
 
-  auto relevantMessageTypes() const -> std::unordered_set<MessageType>;
+  auto relevantMessageTypes() const -> std::unordered_set<bsgalone::core::MessageType>;
 
   private:
-  std::unordered_set<MessageType> m_relevantMessageTypes{};
+  std::unordered_set<bsgalone::core::MessageType> m_relevantMessageTypes{};
 };
 
 } // namespace bsgo

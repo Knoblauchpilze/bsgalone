@@ -5,11 +5,11 @@
 namespace bsgo {
 
 LootMessage::LootMessage()
-  : NetworkMessage(MessageType::LOOT)
+  : NetworkMessage(bsgalone::core::MessageType::LOOT)
 {}
 
 LootMessage::LootMessage(const Uuid playerDbId, const Uuid resourceDbId, const int amount)
-  : NetworkMessage(MessageType::LOOT)
+  : NetworkMessage(bsgalone::core::MessageType::LOOT)
   , m_playerDbId(playerDbId)
   , m_resourceDbId(resourceDbId)
   , m_amount(amount)
