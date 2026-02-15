@@ -1,5 +1,5 @@
 
-#include "NetworkAdapter.hh"
+#include "InputNetworkAdapter.hh"
 #include "DataReceivedEvent.hh"
 #include "LootMessage.hh"
 #include "MessageParser.hh"
@@ -22,22 +22,22 @@ auto generateCompleteScannedMessage() -> std::vector<char>
 }
 } // namespace
 
-TEST(Unit_Bsgalone_Core_Network_NetworkAdapter, ThrowsWhenEventQueueIsNull)
+TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter, ThrowsWhenEventQueueIsNull)
 {
-  EXPECT_THROW([]() { NetworkAdapter(nullptr, std::make_unique<bsgo::MessageParser>()); }(),
+  EXPECT_THROW([]() { InputNetworkAdapter(nullptr, std::make_unique<bsgo::MessageParser>()); }(),
                std::invalid_argument);
 }
 
-TEST(Unit_Bsgalone_Core_Network_NetworkAdapter, ThrowsWhenMessageParserIsNull)
+TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter, ThrowsWhenMessageParserIsNull)
 {
-  EXPECT_THROW([]() { NetworkAdapter(std::make_shared<TestMessageQueue>(), nullptr); }(),
+  EXPECT_THROW([]() { InputNetworkAdapter(std::make_shared<TestMessageQueue>(), nullptr); }(),
                std::invalid_argument);
 }
 
-TEST(Unit_Bsgalone_Core_Network_NetworkAdapter, CorrectlyPublishesCompleteMessage)
+TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter, CorrectlyPublishesCompleteMessage)
 {
   auto queue = std::make_shared<TestMessageQueue>();
-  NetworkAdapter adapter(queue, std::make_unique<bsgo::MessageParser>());
+  InputNetworkAdapter adapter(queue, std::make_unique<bsgo::MessageParser>());
 
   const auto data = generateCompleteScannedMessage();
   const net::DataReceivedEvent event(net::ClientId{1}, data);
@@ -52,10 +52,10 @@ TEST(Unit_Bsgalone_Core_Network_NetworkAdapter, CorrectlyPublishesCompleteMessag
   EXPECT_EQ(bsgo::Uuid{4}, message->as<bsgo::ScannedMessage>().getAsteroidDbId());
 }
 
-TEST(Unit_Bsgalone_Core_Network_NetworkAdapter, CorrectlyPublishesCompleteMessageWithNoClientId)
+TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter, CorrectlyPublishesCompleteMessageWithNoClientId)
 {
   auto queue = std::make_shared<TestMessageQueue>();
-  NetworkAdapter adapter(queue, std::make_unique<bsgo::MessageParser>());
+  InputNetworkAdapter adapter(queue, std::make_unique<bsgo::MessageParser>());
 
   const auto data = generateCompleteScannedMessage();
   const net::DataReceivedEvent event({}, data);
@@ -70,10 +70,11 @@ TEST(Unit_Bsgalone_Core_Network_NetworkAdapter, CorrectlyPublishesCompleteMessag
   EXPECT_EQ(bsgo::Uuid{4}, message->as<bsgo::ScannedMessage>().getAsteroidDbId());
 }
 
-TEST(Unit_Bsgalone_Core_Network_NetworkAdapter, DoesNotPublishMessageWhenIncompleteDataIsReceived)
+TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter,
+     DoesNotPublishMessageWhenIncompleteDataIsReceived)
 {
   auto queue = std::make_shared<TestMessageQueue>();
-  NetworkAdapter adapter(queue, std::make_unique<bsgo::MessageParser>());
+  InputNetworkAdapter adapter(queue, std::make_unique<bsgo::MessageParser>());
 
   const auto data = generateCompleteScannedMessage();
   ASSERT_LE(6, data.size());
@@ -85,10 +86,10 @@ TEST(Unit_Bsgalone_Core_Network_NetworkAdapter, DoesNotPublishMessageWhenIncompl
   EXPECT_TRUE(queue->empty());
 }
 
-TEST(Unit_Bsgalone_Core_Network_NetworkAdapter, PublishesMessageWhenAllDataIsReceived)
+TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter, PublishesMessageWhenAllDataIsReceived)
 {
   auto queue = std::make_shared<TestMessageQueue>();
-  NetworkAdapter adapter(queue, std::make_unique<bsgo::MessageParser>());
+  InputNetworkAdapter adapter(queue, std::make_unique<bsgo::MessageParser>());
 
   const auto data = generateCompleteScannedMessage();
   ASSERT_LE(6, data.size());
@@ -107,10 +108,10 @@ TEST(Unit_Bsgalone_Core_Network_NetworkAdapter, PublishesMessageWhenAllDataIsRec
   EXPECT_EQ(bsgo::Uuid{4}, message->as<bsgo::ScannedMessage>().getAsteroidDbId());
 }
 
-TEST(Unit_Bsgalone_Core_Network_NetworkAdapter, DoesNotPublishMessageTwice)
+TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter, DoesNotPublishMessageTwice)
 {
   auto queue = std::make_shared<TestMessageQueue>();
-  NetworkAdapter adapter(queue, std::make_unique<bsgo::MessageParser>());
+  InputNetworkAdapter adapter(queue, std::make_unique<bsgo::MessageParser>());
 
   const auto data = generateCompleteScannedMessage();
   net::DataReceivedEvent event(net::ClientId{0}, data);
@@ -126,11 +127,11 @@ TEST(Unit_Bsgalone_Core_Network_NetworkAdapter, DoesNotPublishMessageTwice)
   EXPECT_TRUE(queue->empty());
 }
 
-TEST(Unit_Bsgalone_Core_Network_NetworkAdapter,
+TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter,
      DoesNotPublishMessageWhenDataReceivedForAnotherClient)
 {
   auto queue = std::make_shared<TestMessageQueue>();
-  NetworkAdapter adapter(queue, std::make_unique<bsgo::MessageParser>());
+  InputNetworkAdapter adapter(queue, std::make_unique<bsgo::MessageParser>());
 
   const auto data = generateCompleteScannedMessage();
   ASSERT_LE(6, data.size());
@@ -146,10 +147,11 @@ TEST(Unit_Bsgalone_Core_Network_NetworkAdapter,
   EXPECT_TRUE(queue->empty());
 }
 
-TEST(Unit_Bsgalone_Core_Network_NetworkAdapter, DoesNotPublishMessageWhenDataReceivedForNoClient)
+TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter,
+     DoesNotPublishMessageWhenDataReceivedForNoClient)
 {
   auto queue = std::make_shared<TestMessageQueue>();
-  NetworkAdapter adapter(queue, std::make_unique<bsgo::MessageParser>());
+  InputNetworkAdapter adapter(queue, std::make_unique<bsgo::MessageParser>());
 
   const auto data = generateCompleteScannedMessage();
   ASSERT_LE(6, data.size());
@@ -164,10 +166,10 @@ TEST(Unit_Bsgalone_Core_Network_NetworkAdapter, DoesNotPublishMessageWhenDataRec
   EXPECT_TRUE(queue->empty());
 }
 
-TEST(Unit_Bsgalone_Core_Network_NetworkAdapter, OnlyPublishMessageForReceivedData)
+TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter, OnlyPublishMessageForReceivedData)
 {
   auto queue = std::make_shared<TestMessageQueue>();
-  NetworkAdapter adapter(queue, std::make_unique<bsgo::MessageParser>());
+  InputNetworkAdapter adapter(queue, std::make_unique<bsgo::MessageParser>());
 
   const auto data = generateCompleteScannedMessage();
   ASSERT_LE(6, data.size());
@@ -191,10 +193,10 @@ TEST(Unit_Bsgalone_Core_Network_NetworkAdapter, OnlyPublishMessageForReceivedDat
   EXPECT_EQ(bsgo::Uuid{4}, message->as<bsgo::ScannedMessage>().getAsteroidDbId());
 }
 
-TEST(Unit_Bsgalone_Core_Network_NetworkAdapter, ThrowsWhenReceivingInvalidData)
+TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter, ThrowsWhenReceivingInvalidData)
 {
   auto queue = std::make_shared<TestMessageQueue>();
-  NetworkAdapter adapter(queue, std::make_unique<bsgo::MessageParser>());
+  InputNetworkAdapter adapter(queue, std::make_unique<bsgo::MessageParser>());
 
   const auto data = generateCompleteScannedMessage();
   ASSERT_LE(6, data.size());
@@ -204,10 +206,10 @@ TEST(Unit_Bsgalone_Core_Network_NetworkAdapter, ThrowsWhenReceivingInvalidData)
   EXPECT_THROW(body(), ::core::CoreException);
 }
 
-TEST(Unit_Bsgalone_Core_Network_NetworkAdapter, SetsClientIdForNetworkMessageWhenNotDefined)
+TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter, SetsClientIdForNetworkMessageWhenNotDefined)
 {
   auto queue = std::make_shared<TestMessageQueue>();
-  NetworkAdapter adapter(queue, std::make_unique<bsgo::MessageParser>());
+  InputNetworkAdapter adapter(queue, std::make_unique<bsgo::MessageParser>());
 
   bsgo::LootMessage message(bsgo::Uuid{2}, bsgo::Uuid{4}, 12);
   std::stringstream out;
@@ -224,10 +226,10 @@ TEST(Unit_Bsgalone_Core_Network_NetworkAdapter, SetsClientIdForNetworkMessageWhe
   EXPECT_EQ(net::ClientId{17}, actual->as<bsgo::LootMessage>().getClientId());
 }
 
-TEST(Unit_Bsgalone_Core_Network_NetworkAdapter, OverridesExistingClientIdWithConnectionData)
+TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter, OverridesExistingClientIdWithConnectionData)
 {
   auto queue = std::make_shared<TestMessageQueue>();
-  NetworkAdapter adapter(queue, std::make_unique<bsgo::MessageParser>());
+  InputNetworkAdapter adapter(queue, std::make_unique<bsgo::MessageParser>());
 
   bsgo::LootMessage message(bsgo::Uuid{2}, bsgo::Uuid{4}, 12);
   message.setClientId(net::ClientId{118});
