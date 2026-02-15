@@ -1,18 +1,18 @@
 
 #pragma once
 
-#include "IMessage.hh"
 #include "INetworkClient.hh"
 #include "INetworkServer.hh"
+#include "IOutputNetworkAdapter.hh"
 
 namespace bsgalone::core {
 
-class OutputNetworkAdapter
+class OutputNetworkAdapter : public IOutputNetworkAdapter
 {
   public:
   OutputNetworkAdapter(net::INetworkServerShPtr server);
   OutputNetworkAdapter(net::INetworkClientShPtr client);
-  ~OutputNetworkAdapter() = default;
+  ~OutputNetworkAdapter() override = default;
 
   void sendMessage(const net::ClientId clientId, const IMessage &message);
   void sendMessage(const IMessage &message);

@@ -6,6 +6,7 @@
 #include "ConnectionMessage.hh"
 #include "InputNetworkAdapter.hh"
 #include "MessageParser.hh"
+#include "OutputNetworkAdapter.hh"
 #include "SynchronizedEventBus.hh"
 #include "SynchronizedMessageQueue.hh"
 #include "TcpClient.hh"
@@ -22,6 +23,7 @@ void GameNetworkClient::start(const int port)
 {
   m_eventBus  = std::make_shared<net::AsyncEventBus>(std::make_unique<net::SynchronizedEventBus>());
   m_tcpClient = std::make_shared<net::TcpClient>(m_eventBus);
+  m_adapter   = std::make_unique<bsgalone::core::OutputNetworkAdapter>(m_tcpClient);
 
   initialize();
   m_tcpClient->connect(DEFAULT_SERVER_URL, port);
@@ -30,6 +32,7 @@ void GameNetworkClient::start(const int port)
 void GameNetworkClient::stop()
 {
   m_tcpClient->disconnect();
+  m_adapter.reset();
   m_tcpClient.reset();
   m_eventBus.reset();
 }
@@ -41,7 +44,7 @@ void GameNetworkClient::pushMessage(bsgalone::core::IMessagePtr message)
     throw std::invalid_argument("Failed to send message, not connected to server");
   }
 
-  sendMessage(*message);
+  m_adapter->sendMessage(*message);
 }
 
 void GameNetworkClient::addListener(bsgalone::core::IMessageListenerPtr listener)
@@ -120,17 +123,6 @@ void GameNetworkClient::initialize()
 
   auto eventListener = std::make_unique<NetworkEventListener>(m_connected, m_inputQueue);
   m_eventBus->addListener(std::move(eventListener));
-}
-
-void GameNetworkClient::sendMessage(bsgalone::core::IMessage &message) const
-{
-  std::ostringstream out{};
-  out << message;
-
-  const auto &rawMessage = out.str();
-  std::vector<char> data(rawMessage.begin(), rawMessage.end());
-
-  m_tcpClient->trySend(data);
 }
 
 } // namespace pge

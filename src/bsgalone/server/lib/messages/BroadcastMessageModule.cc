@@ -17,12 +17,21 @@
 namespace bsgalone::server {
 
 BroadcastMessageModule::BroadcastMessageModule(ClientManagerShPtr clientManager,
-                                               net::INetworkServerShPtr server)
+                                               core::IOutputNetworkAdapterShPtr adapter)
   : ::core::CoreObject("broadcast")
   , m_clientManager(std::move(clientManager))
-  , m_server(std::move(server))
+  , m_networkAdapter(std::move(adapter))
 {
   setService("message");
+
+  if (m_clientManager == nullptr)
+  {
+    throw std::invalid_argument("Expected non null client manager");
+  }
+  if (m_networkAdapter == nullptr)
+  {
+    throw std::invalid_argument("Expected non null network adapter");
+  }
 }
 
 namespace {
@@ -68,21 +77,10 @@ void BroadcastMessageModule::processMessage(const core::IMessage &message)
   }
 }
 
-namespace {
-auto convertMessage(const core::IMessage &message) -> std::vector<char>
-{
-  std::ostringstream out{};
-  out << message;
-
-  const auto &rawMessage = out.str();
-  return std::vector<char>(rawMessage.begin(), rawMessage.end());
-}
-} // namespace
-
 void BroadcastMessageModule::sendMessageToClient(const net::ClientId clientId,
                                                  const core::IMessage &message)
 {
-  m_server->trySend(clientId, convertMessage(message));
+  m_networkAdapter->sendMessage(clientId, message);
 }
 
 namespace {
@@ -126,7 +124,7 @@ void BroadcastMessageModule::broadcastMessage(const core::IMessage &message)
 
   for (const auto &clientId : clients)
   {
-    m_server->trySend(clientId, convertMessage(message));
+    m_networkAdapter->sendMessage(clientId, message);
   }
 }
 
