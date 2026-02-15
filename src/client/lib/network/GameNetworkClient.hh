@@ -11,7 +11,7 @@
 
 namespace pge {
 
-class GameNetworkClient : public bsgo::IMessageQueue
+class GameNetworkClient : public bsgalone::core::IMessageQueue
 {
   public:
   GameNetworkClient();
@@ -21,7 +21,7 @@ class GameNetworkClient : public bsgo::IMessageQueue
   void stop();
 
   void pushMessage(bsgalone::core::IMessagePtr message) override;
-  void addListener(bsgo::IMessageListenerPtr listener) override;
+  void addListener(bsgalone::core::IMessageListenerPtr listener) override;
   bool empty() override;
 
   void processMessages() override;
@@ -32,7 +32,7 @@ class GameNetworkClient : public bsgo::IMessageQueue
 
   std::atomic_bool m_connected{};
 
-  bsgo::IMessageQueueShPtr m_inputQueue{};
+  bsgalone::core::IMessageQueueShPtr m_inputQueue{};
 
   void initialize();
 

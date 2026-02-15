@@ -8,7 +8,7 @@
 
 namespace bsgo {
 
-Processes::Processes(const Uuid systemDbId, IMessageQueue *const systemMessageQueue)
+Processes::Processes(const Uuid systemDbId, bsgalone::core::IMessageQueue *const systemMessageQueue)
   : core::CoreObject("processes")
 {
   setService("bsgo");
@@ -24,7 +24,8 @@ void Processes::update(Coordinator &coordinator, const chrono::TickData &data) c
   }
 }
 
-void Processes::initialize(const Uuid systemDbId, IMessageQueue *const systemMessageQueue)
+void Processes::initialize(const Uuid systemDbId,
+                           bsgalone::core::IMessageQueue *const systemMessageQueue)
 {
   Repositories repositories;
 

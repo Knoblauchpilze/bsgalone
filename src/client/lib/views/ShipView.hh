@@ -20,7 +20,7 @@ class ShipView : public AbstractView
   public:
   ShipView(GameSessionShPtr gameSession,
            bsgo::CoordinatorShPtr coordinator,
-           bsgo::IMessageQueue *const outputMessageQueue);
+           bsgalone::core::IMessageQueue *const outputMessageQueue);
   ~ShipView() override = default;
 
   auto getPlayerShip() const -> bsgo::Entity;
@@ -66,7 +66,7 @@ class ShipView : public AbstractView
   GameSessionShPtr m_gameSession{};
   bsgo::CoordinatorShPtr m_coordinator{};
   std::vector<bsgo::SystemData> m_systems{};
-  bsgo::IMessageQueue *const m_outputMessageQueue{};
+  bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
   std::optional<bsgo::Uuid> m_playerShipEntityId{};
   std::optional<bsgo::Uuid> m_systemToJumpTo{};
 

@@ -20,19 +20,19 @@ namespace bsgo {
 class SystemProcessor : public core::CoreObject
 {
   public:
-  SystemProcessor(const Uuid systemDbId, IMessageQueueShPtr inputQueue);
+  SystemProcessor(const Uuid systemDbId, bsgalone::core::IMessageQueueShPtr inputQueue);
   ~SystemProcessor() override;
 
   auto getSystemDbId() const -> Uuid;
 
-  void connectToQueues(IMessageQueue *const internalMessageQueue,
-                       IMessageQueue *const outputMessageQueue);
+  void connectToQueues(bsgalone::core::IMessageQueue *const internalMessageQueue,
+                       bsgalone::core::IMessageQueue *const outputMessageQueue);
   void start();
   void stop();
 
   private:
   Uuid m_systemDbId{};
-  IMessageQueueShPtr m_inputMessagesQueue{};
+  bsgalone::core::IMessageQueueShPtr m_inputMessagesQueue{};
   DatabaseEntityMapper m_entityMapper{};
 
   chrono::TimeManagerPtr m_timeManager{};

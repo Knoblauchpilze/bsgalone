@@ -4,8 +4,9 @@
 
 namespace bsgo {
 
-VelocityMessageConsumer::VelocityMessageConsumer(const Services &services,
-                                                 IMessageQueue *const outputMessageQueue)
+VelocityMessageConsumer::VelocityMessageConsumer(
+  const Services &services,
+  bsgalone::core::IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("velocity", {MessageType::VELOCITY})
   , m_shipService(services.ship)
   , m_outputMessageQueue(outputMessageQueue)

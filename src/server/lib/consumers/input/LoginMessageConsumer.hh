@@ -15,14 +15,14 @@ class LoginMessageConsumer : public AbstractMessageConsumer
   public:
   LoginMessageConsumer(LoginServicePtr loginService,
                        SystemQueueMap systemQueues,
-                       IMessageQueue *const outputMessageQueue);
+                       bsgalone::core::IMessageQueue *const outputMessageQueue);
   ~LoginMessageConsumer() override = default;
 
   void onMessageReceived(const bsgalone::core::IMessage &message) override;
 
   private:
   LoginServicePtr m_loginService{};
-  IMessageQueue *const m_outputMessageQueue{};
+  bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
   LoadingHelper m_helper;
 
   void handleLogin(const LoginMessage &message) const;

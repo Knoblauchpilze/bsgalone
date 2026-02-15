@@ -26,13 +26,14 @@ class MessageExchanger
   public:
   MessageExchanger(const MessageSystemData &messagesData);
 
-  auto getInternalMessageQueue() const -> IMessageQueue *;
+  auto getInternalMessageQueue() const -> bsgalone::core::IMessageQueue *;
 
   private:
-  IMessageQueueShPtr m_internalMessageQueue{};
+  bsgalone::core::IMessageQueueShPtr m_internalMessageQueue{};
 
   void initialize(const MessageSystemData &messagesData);
-  auto initializeSystemMessageQueue(const MessageSystemData &messagesData) -> IMessageQueuePtr;
+  auto initializeSystemMessageQueue(const MessageSystemData &messagesData)
+    -> bsgalone::core::IMessageQueuePtr;
   void initializeInternalConsumers(const MessageSystemData &messagesData);
 };
 

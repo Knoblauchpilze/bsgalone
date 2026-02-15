@@ -16,8 +16,8 @@
 
 namespace bsgo {
 
-void createMessageConsumers(IMessageQueue *const inputMessagesQueue,
-                            IMessageQueue *const outputMessagesQueue,
+void createMessageConsumers(bsgalone::core::IMessageQueue *const inputMessagesQueue,
+                            bsgalone::core::IMessageQueue *const outputMessagesQueue,
                             const Services &services)
 {
   inputMessagesQueue->addListener(

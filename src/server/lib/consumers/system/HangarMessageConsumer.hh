@@ -12,16 +12,16 @@ class HangarMessageConsumer : public AbstractMessageConsumer
 {
   public:
   HangarMessageConsumer(const Services &services,
-                        IMessageQueue *const systemMessageQueue,
-                        IMessageQueue *const outputMessageQueue);
+                        bsgalone::core::IMessageQueue *const systemMessageQueue,
+                        bsgalone::core::IMessageQueue *const outputMessageQueue);
   ~HangarMessageConsumer() override = default;
 
   void onMessageReceived(const bsgalone::core::IMessage &message) override;
 
   private:
   ShipServiceShPtr m_shipService{};
-  IMessageQueue *const m_systemMessageQueue{};
-  IMessageQueue *const m_outputMessageQueue{};
+  bsgalone::core::IMessageQueue *const m_systemMessageQueue{};
+  bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
 
   void handleShipSwitchRequest(const HangarMessage &message) const;
 

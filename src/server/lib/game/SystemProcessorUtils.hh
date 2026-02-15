@@ -15,11 +15,11 @@ auto tryFindSystemDbIdFromEntity(const Uuid dbId,
 auto tryFindSystemAndQueueFromShip(const Uuid shipDbId,
                                    const SystemService &service,
                                    const SystemQueueMap &queues)
-  -> std::pair<std::optional<Uuid>, std::optional<IMessageQueueShPtr>>;
+  -> std::pair<std::optional<Uuid>, std::optional<bsgalone::core::IMessageQueueShPtr>>;
 
 auto tryFindSystemAndQueueFromAsteroid(const Uuid asteroidDbId,
                                        const SystemService &service,
                                        const SystemQueueMap &queues)
-  -> std::pair<std::optional<Uuid>, std::optional<IMessageQueueShPtr>>;
+  -> std::pair<std::optional<Uuid>, std::optional<bsgalone::core::IMessageQueueShPtr>>;
 
 } // namespace bsgo

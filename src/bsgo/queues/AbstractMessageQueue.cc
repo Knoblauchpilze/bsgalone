@@ -7,7 +7,7 @@ AbstractMessageQueue::AbstractMessageQueue()
   : IMessageQueue()
 {}
 
-void AbstractMessageQueue::addListener(IMessageListenerPtr listener)
+void AbstractMessageQueue::addListener(bsgalone::core::IMessageListenerPtr listener)
 {
   if (nullptr == listener)
   {

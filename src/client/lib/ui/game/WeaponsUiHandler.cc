@@ -92,7 +92,7 @@ void WeaponsUiHandler::updateUi()
   }
 }
 
-void WeaponsUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQueue)
+void WeaponsUiHandler::connectToMessageQueue(bsgalone::core::IMessageQueue &messageQueue)
 {
   auto listener = std::make_unique<MessageListenerWrapper>(this);
   messageQueue.addListener(std::move(listener));

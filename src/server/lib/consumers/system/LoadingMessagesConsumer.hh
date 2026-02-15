@@ -12,14 +12,15 @@ namespace bsgo {
 class LoadingMessagesConsumer : public AbstractMessageConsumer
 {
   public:
-  LoadingMessagesConsumer(const Services &services, IMessageQueue *const outputMessageQueue);
+  LoadingMessagesConsumer(const Services &services,
+                          bsgalone::core::IMessageQueue *const outputMessageQueue);
   ~LoadingMessagesConsumer() override = default;
 
   void onMessageReceived(const bsgalone::core::IMessage &message) override;
 
   private:
   LoadingServiceShPtr m_loadingService{};
-  IMessageQueue *const m_outputMessageQueue{};
+  bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
 
   void handleLoadingStartedMessage(const LoadingStartedMessage &message) const;
   void forwardLoadingFinishedMessage(const LoadingFinishedMessage &message) const;

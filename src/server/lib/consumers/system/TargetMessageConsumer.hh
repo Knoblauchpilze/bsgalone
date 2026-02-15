@@ -11,14 +11,15 @@ namespace bsgo {
 class TargetMessageConsumer : public AbstractMessageConsumer
 {
   public:
-  TargetMessageConsumer(const Services &services, IMessageQueue *const outputMessageQueue);
+  TargetMessageConsumer(const Services &services,
+                        bsgalone::core::IMessageQueue *const outputMessageQueue);
   ~TargetMessageConsumer() override = default;
 
   void onMessageReceived(const bsgalone::core::IMessage &message) override;
 
   private:
   ShipServiceShPtr m_shipService{};
-  IMessageQueue *const m_outputMessageQueue{};
+  bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
 
   void broadcastMessageToSystem(std::unique_ptr<TargetMessage> message);
 };

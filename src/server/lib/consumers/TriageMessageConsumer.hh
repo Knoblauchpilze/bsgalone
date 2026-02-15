@@ -14,7 +14,7 @@ class TriageMessageConsumer : public AbstractMessageConsumer
   public:
   TriageMessageConsumer(bsgalone::server::ClientManagerShPtr clientManager,
                         SystemQueueMap systemQueues,
-                        IMessageQueuePtr systemMessageQueue);
+                        bsgalone::core::IMessageQueuePtr systemMessageQueue);
   ~TriageMessageConsumer() override = default;
 
   void onMessageReceived(const bsgalone::core::IMessage &message) override;
@@ -22,7 +22,7 @@ class TriageMessageConsumer : public AbstractMessageConsumer
   private:
   bsgalone::server::ClientManagerShPtr m_clientManager{};
   SystemQueueMap m_systemQueues{};
-  IMessageQueuePtr m_systemQueue{};
+  bsgalone::core::IMessageQueuePtr m_systemQueue{};
 
   bool discardMessageWithNoClient(const bsgalone::core::IMessage &message) const;
   void handleSystemMessage(const bsgalone::core::IMessage &message) const;

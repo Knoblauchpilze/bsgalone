@@ -10,7 +10,7 @@ namespace bsgo {
 
 JumpMessageConsumer::JumpMessageConsumer(SystemServiceShPtr systemService,
                                          SystemQueueMap systemQueues,
-                                         IMessageQueue *const outputMessageQueue)
+                                         bsgalone::core::IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("jump", {MessageType::JUMP})
   , m_systemService(std::move(systemService))
   , m_systemQueues(std::move(systemQueues))

@@ -5,7 +5,8 @@
 
 namespace bsgo {
 
-LoadingHelper::LoadingHelper(SystemQueueMap systemQueues, IMessageQueue *const outputMessageQueue)
+LoadingHelper::LoadingHelper(SystemQueueMap systemQueues,
+                             bsgalone::core::IMessageQueue *const outputMessageQueue)
   : core::CoreObject("helper")
   , m_systemQueues(std::move(systemQueues))
   , m_outputMessageQueue(outputMessageQueue)

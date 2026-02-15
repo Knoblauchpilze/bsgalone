@@ -18,8 +18,8 @@ class ShipDbView : public AbstractView
 {
   public:
   ShipDbView(GameSessionShPtr gameSession,
-             bsgo::IMessageQueue *const internalMessageQueue,
-             bsgo::IMessageQueue *const outputMessageQueue);
+             bsgalone::core::IMessageQueue *const internalMessageQueue,
+             bsgalone::core::IMessageQueue *const outputMessageQueue);
   ~ShipDbView() override = default;
 
   bool isReady() const noexcept override;
@@ -52,8 +52,8 @@ class ShipDbView : public AbstractView
   private:
   GameSessionShPtr m_gameSession{};
   std::optional<bsgo::PlayerShipData> m_playerShip{};
-  bsgo::IMessageQueue *const m_internalMessageQueue{};
-  bsgo::IMessageQueue *const m_outputMessageQueue{};
+  bsgalone::core::IMessageQueue *const m_internalMessageQueue{};
+  bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
   std::optional<bsgo::Uuid> m_systemToJumpTo{};
 };
 

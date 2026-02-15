@@ -18,9 +18,9 @@ class ISystem : public core::CoreObject
   ISystem(const std::string &name);
   ~ISystem() override = default;
 
-  virtual auto type() const -> SystemType                               = 0;
-  virtual void installInternalMessageQueue(IMessageQueue *messageQueue) = 0;
-  virtual void installOutputMessageQueue(IMessageQueue *messageQueue)   = 0;
+  virtual auto type() const -> SystemType                                               = 0;
+  virtual void installInternalMessageQueue(bsgalone::core::IMessageQueue *messageQueue) = 0;
+  virtual void installOutputMessageQueue(bsgalone::core::IMessageQueue *messageQueue)   = 0;
 
   virtual void update(Coordinator &coordinator, const chrono::TickData &data) const = 0;
 };

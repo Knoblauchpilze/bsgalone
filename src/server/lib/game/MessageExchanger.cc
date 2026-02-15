@@ -21,13 +21,13 @@ MessageExchanger::MessageExchanger(const MessageSystemData &messagesData)
   initialize(messagesData);
 }
 
-auto MessageExchanger::getInternalMessageQueue() const -> IMessageQueue *
+auto MessageExchanger::getInternalMessageQueue() const -> bsgalone::core::IMessageQueue *
 {
   return m_internalMessageQueue.get();
 }
 
 namespace {
-auto createInternalMessageQueue() -> IMessageQueueShPtr
+auto createInternalMessageQueue() -> bsgalone::core::IMessageQueueShPtr
 {
   auto messageQueue = std::make_unique<SynchronizedMessageQueue>("synchronized-queue-for-internal");
   return std::make_shared<AsyncMessageQueue>(std::move(messageQueue));
@@ -47,7 +47,7 @@ void MessageExchanger::initialize(const MessageSystemData &messagesData)
 }
 
 namespace {
-auto createSystemMessageQueue() -> IMessageQueuePtr
+auto createSystemMessageQueue() -> bsgalone::core::IMessageQueuePtr
 {
   auto systemQueue = std::make_unique<SynchronizedMessageQueue>("synchronized-queue-for-system");
   return std::make_unique<AsyncMessageQueue>(std::move(systemQueue));
@@ -55,7 +55,7 @@ auto createSystemMessageQueue() -> IMessageQueuePtr
 } // namespace
 
 auto MessageExchanger::initializeSystemMessageQueue(const MessageSystemData &messagesData)
-  -> IMessageQueuePtr
+  -> bsgalone::core::IMessageQueuePtr
 {
   Repositories repositories{};
 

@@ -10,7 +10,8 @@ namespace bsgo {
 class LoadingHelper : public core::CoreObject
 {
   public:
-  LoadingHelper(SystemQueueMap systemQueues, IMessageQueue *const outputMessageQueue);
+  LoadingHelper(SystemQueueMap systemQueues,
+                bsgalone::core::IMessageQueue *const outputMessageQueue);
   ~LoadingHelper() override = default;
 
   void publishLoadingMessages(const Uuid clientId,
@@ -19,7 +20,7 @@ class LoadingHelper : public core::CoreObject
 
   private:
   SystemQueueMap m_systemQueues{};
-  IMessageQueue *const m_outputMessageQueue{};
+  bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
 };
 
 } // namespace bsgo

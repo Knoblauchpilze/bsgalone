@@ -9,7 +9,7 @@ void TestMessageQueue::pushMessage(bsgalone::core::IMessagePtr message)
   m_messages.push_back(std::move(message));
 }
 
-void TestMessageQueue::addListener(bsgo::IMessageListenerPtr /*listener*/)
+void TestMessageQueue::addListener(bsgalone::core::IMessageListenerPtr /*listener*/)
 {
   throw std::runtime_error("Unsupported operation addListener in TestMessageQueue");
 }

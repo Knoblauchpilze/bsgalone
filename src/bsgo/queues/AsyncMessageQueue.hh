@@ -9,20 +9,20 @@
 
 namespace bsgo {
 
-class AsyncMessageQueue : public IMessageQueue, public core::CoreObject
+class AsyncMessageQueue : public bsgalone::core::IMessageQueue, public core::CoreObject
 {
   public:
-  AsyncMessageQueue(IMessageQueuePtr messageQueue);
+  AsyncMessageQueue(bsgalone::core::IMessageQueuePtr messageQueue);
   ~AsyncMessageQueue() override;
 
   void pushMessage(bsgalone::core::IMessagePtr message) override;
-  void addListener(IMessageListenerPtr listener) override;
+  void addListener(bsgalone::core::IMessageListenerPtr listener) override;
   bool empty() override;
 
   void processMessages() override;
 
   private:
-  IMessageQueuePtr m_messageQueue{};
+  bsgalone::core::IMessageQueuePtr m_messageQueue{};
 
   std::atomic_bool m_running{false};
   std::thread m_queueThread{};

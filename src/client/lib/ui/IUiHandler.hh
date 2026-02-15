@@ -25,7 +25,7 @@ class IUiHandler : public core::CoreObject
   virtual void render(Renderer &engine) const             = 0;
   virtual void updateUi()                                 = 0;
 
-  virtual void connectToMessageQueue(bsgo::IMessageQueue &messageQueue);
+  virtual void connectToMessageQueue(bsgalone::core::IMessageQueue &messageQueue);
 };
 
 using IUiHandlerPtr = std::unique_ptr<IUiHandler>;

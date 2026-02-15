@@ -24,7 +24,7 @@ class OutpostScreenUiHandler : public IUiHandler
   void render(Renderer &engine) const override;
   void updateUi() override;
 
-  void connectToMessageQueue(bsgo::IMessageQueue &messageQueue) override;
+  void connectToMessageQueue(bsgalone::core::IMessageQueue &messageQueue) override;
 
   private:
   ShipDbViewShPtr m_shipDbView{};

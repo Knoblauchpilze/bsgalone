@@ -3,8 +3,9 @@
 
 namespace bsgo {
 
-JumpCancelledMessageConsumer::JumpCancelledMessageConsumer(const Services &services,
-                                                           IMessageQueue *const outputMessageQueue)
+JumpCancelledMessageConsumer::JumpCancelledMessageConsumer(
+  const Services &services,
+  bsgalone::core::IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("jump_cancelled", {MessageType::JUMP_CANCELLED})
   , m_jumpService(services.jump)
   , m_outputMessageQueue(outputMessageQueue)

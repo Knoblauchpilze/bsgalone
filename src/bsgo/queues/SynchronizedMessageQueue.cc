@@ -17,7 +17,7 @@ void SynchronizedMessageQueue::pushMessage(bsgalone::core::IMessagePtr message)
   m_messages.emplace_back(std::move(message));
 }
 
-void SynchronizedMessageQueue::addListener(IMessageListenerPtr listener)
+void SynchronizedMessageQueue::addListener(bsgalone::core::IMessageListenerPtr listener)
 {
   const std::lock_guard guard(m_locker);
   this->AbstractMessageQueue::addListener(std::move(listener));

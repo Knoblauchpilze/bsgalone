@@ -91,7 +91,7 @@ void AbilitiesUiHandler::updateUi()
   }
 }
 
-void AbilitiesUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQueue)
+void AbilitiesUiHandler::connectToMessageQueue(bsgalone::core::IMessageQueue &messageQueue)
 {
   auto listener = std::make_unique<MessageListenerWrapper>(this);
   messageQueue.addListener(std::move(listener));

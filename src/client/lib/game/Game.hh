@@ -125,7 +125,7 @@ class Game : public core::CoreObject
   bsgo::DatabaseEntityMapper m_entityMapper{};
   chrono::TimeManagerPtr m_timeManager{};
   bsgo::CoordinatorShPtr m_coordinator{};
-  bsgo::IMessageQueuePtr m_internalMessageQueue{};
+  bsgalone::core::IMessageQueuePtr m_internalMessageQueue{};
   Views m_views{};
   std::unordered_map<Screen, IRendererPtr> m_renderers{};
   std::unordered_map<Screen, IInputHandlerPtr> m_inputHandlers{};

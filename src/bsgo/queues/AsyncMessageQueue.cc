@@ -3,7 +3,7 @@
 
 namespace bsgo {
 
-AsyncMessageQueue::AsyncMessageQueue(IMessageQueuePtr messageQueue)
+AsyncMessageQueue::AsyncMessageQueue(bsgalone::core::IMessageQueuePtr messageQueue)
   : core::CoreObject("async")
   , m_messageQueue(std::move(messageQueue))
 {
@@ -43,7 +43,7 @@ void AsyncMessageQueue::pushMessage(bsgalone::core::IMessagePtr message)
   m_messageNotifier.notify_one();
 }
 
-void AsyncMessageQueue::addListener(IMessageListenerPtr listener)
+void AsyncMessageQueue::addListener(bsgalone::core::IMessageListenerPtr listener)
 {
   m_messageQueue->addListener(std::move(listener));
 }

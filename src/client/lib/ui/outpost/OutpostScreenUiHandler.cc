@@ -154,7 +154,7 @@ void OutpostScreenUiHandler::updateUi()
   }
 }
 
-void OutpostScreenUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQueue)
+void OutpostScreenUiHandler::connectToMessageQueue(bsgalone::core::IMessageQueue &messageQueue)
 {
   m_shopUi->connectToMessageQueue(messageQueue);
   m_lockerUi->connectToMessageQueue(messageQueue);

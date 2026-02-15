@@ -15,7 +15,7 @@ class LogoutMessageConsumer : public AbstractMessageConsumer
   public:
   LogoutMessageConsumer(SystemServiceShPtr systemService,
                         SystemQueueMap systemQueues,
-                        IMessageQueue *const outputMessageQueue);
+                        bsgalone::core::IMessageQueue *const outputMessageQueue);
   ~LogoutMessageConsumer() override = default;
 
   void onMessageReceived(const bsgalone::core::IMessage &message) override;
@@ -23,7 +23,7 @@ class LogoutMessageConsumer : public AbstractMessageConsumer
   private:
   SystemQueueMap m_systemQueues{};
   SystemServiceShPtr m_systemService{};
-  IMessageQueue *const m_outputMessageQueue{};
+  bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
 
   void handleLogout(const LogoutMessage &message) const;
   void notifyClientAndCloseConnectionIfNeeded(const Uuid playerDbId,

@@ -6,7 +6,7 @@
 
 namespace bsgo {
 
-class AbstractMessageListener : public IMessageListener
+class AbstractMessageListener : public bsgalone::core::IMessageListener
 {
   public:
   AbstractMessageListener(const std::unordered_set<MessageType> &relevantMessageTypes);

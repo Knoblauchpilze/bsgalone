@@ -4,8 +4,9 @@
 
 namespace bsgo {
 
-RoutingMessageConsumer::RoutingMessageConsumer(SystemServiceShPtr systemService,
-                                               IMessageQueue *const outputMessageQueue)
+RoutingMessageConsumer::RoutingMessageConsumer(
+  SystemServiceShPtr systemService,
+  bsgalone::core::IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("routing", {MessageType::COMPONENT_SYNC, MessageType::TARGET})
   , m_systemService(std::move(systemService))
   , m_outputMessageQueue(outputMessageQueue)

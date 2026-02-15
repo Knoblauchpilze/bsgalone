@@ -22,7 +22,7 @@ class EntityRemovedMessageConsumer : public AbstractMessageConsumer
   public:
   EntityRemovedMessageConsumer(SystemServiceShPtr systemService,
                                SystemQueueMap systemQueues,
-                               IMessageQueue *const outputMessageQueue);
+                               bsgalone::core::IMessageQueue *const outputMessageQueue);
   ~EntityRemovedMessageConsumer() override = default;
 
   void onMessageReceived(const bsgalone::core::IMessage &message) override;
@@ -30,7 +30,7 @@ class EntityRemovedMessageConsumer : public AbstractMessageConsumer
   private:
   SystemServiceShPtr m_systemService{};
   SystemQueueMap m_systemQueues{};
-  IMessageQueue *const m_outputMessageQueue{};
+  bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
 
   void handleShipEntityRemoved(const Uuid shipDbId, const bool dead) const;
   void handleAsteroidEntityRemoved(const Uuid asteroidDbId, const bool dead) const;

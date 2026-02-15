@@ -23,14 +23,15 @@ class RoutingMessageConsumer : public AbstractMessageConsumer
   /// in which system they belong
   /// @param outputMessageQueue - the message queue to push messages to the client
   /// applications
-  RoutingMessageConsumer(SystemServiceShPtr systemService, IMessageQueue *const outputMessageQueue);
+  RoutingMessageConsumer(SystemServiceShPtr systemService,
+                         bsgalone::core::IMessageQueue *const outputMessageQueue);
   ~RoutingMessageConsumer() override = default;
 
   void onMessageReceived(const bsgalone::core::IMessage &message) override;
 
   private:
   SystemServiceShPtr m_systemService{};
-  IMessageQueue *const m_outputMessageQueue{};
+  bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
 
   void handleComponentSyncMessage(const ComponentSyncMessage &message) const;
   void handleTargetMessage(const TargetMessage &message) const;

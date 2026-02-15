@@ -21,7 +21,7 @@ namespace pge {
 class PlayerView : public AbstractView
 {
   public:
-  PlayerView(GameSessionShPtr gameSession, bsgo::IMessageQueue *const outputMessageQueue);
+  PlayerView(GameSessionShPtr gameSession, bsgalone::core::IMessageQueue *const outputMessageQueue);
   ~PlayerView() override = default;
 
   bool isReady() const noexcept override;
@@ -53,7 +53,7 @@ class PlayerView : public AbstractView
 
   private:
   GameSessionShPtr m_gameSession{};
-  bsgo::IMessageQueue *const m_outputMessageQueue{};
+  bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
 
   std::vector<bsgo::PlayerResourceData> m_playerResources{};
   std::vector<bsgo::PlayerShipData> m_playerShips{};

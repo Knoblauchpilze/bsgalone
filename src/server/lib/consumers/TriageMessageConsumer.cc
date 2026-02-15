@@ -6,7 +6,7 @@ namespace bsgo {
 
 TriageMessageConsumer::TriageMessageConsumer(bsgalone::server::ClientManagerShPtr clientManager,
                                              SystemQueueMap systemQueues,
-                                             IMessageQueuePtr systemMessageQueue)
+                                             bsgalone::core::IMessageQueuePtr systemMessageQueue)
   : AbstractMessageConsumer("triage", allMessageTypesAsSet())
   , m_clientManager(std::move(clientManager))
   , m_systemQueues(std::move(systemQueues))

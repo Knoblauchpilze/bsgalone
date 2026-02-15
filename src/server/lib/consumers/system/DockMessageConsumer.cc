@@ -7,8 +7,8 @@
 namespace bsgo {
 
 DockMessageConsumer::DockMessageConsumer(const Services &services,
-                                         IMessageQueue *const systemMessageQueue,
-                                         IMessageQueue *const outputMessageQueue)
+                                         bsgalone::core::IMessageQueue *const systemMessageQueue,
+                                         bsgalone::core::IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("dock", {MessageType::DOCK})
   , m_shipService(services.ship)
   , m_entityService(services.entity)

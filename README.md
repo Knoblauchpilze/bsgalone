@@ -992,7 +992,7 @@ In order to achieve this, we chose to use a messaging system. This allows commun
 
 ### Message queue
 
-The [IMessageQueue](src/bsgo/queues/IMessageQueue.hh) allows to keep track of all the messages needing to be processed. These messages can be registred through the interface method `pushMessage`.
+The [IMessageQueue](src/bsgalone/core/queues/IMessageQueue.hh) allows to keep track of all the messages needing to be processed. These messages can be registred through the interface method `pushMessage`.
 
 We have several implementations for this interface: the most basic one is a [SynchronousMessageQueue](src/bsgo/queues/SynchronizedMessageQueue.hh) which guarantees that there's no collision between enqueuing messages and processing them, but we also have specialization for the client and the server.
 
@@ -1000,7 +1000,7 @@ A building block is the [AsyncMessageQueue](src/bsgo/queues/AsyncMessageQueue.hh
 
 ### Listeners
 
-The [IMessageListener](src/bsgo/queues/IMessageListener.hh) allows anyone to register to the message queue and get notified of the messages. We expect such objects to provide indications about which messages they are interested in so that we can feed them messages. It is guaranteed that the messages receieved through the `onMessageReceived` method will be of the right type for the listener.
+The [IMessageListener](src/bsgalone/core/queues/IMessageListener.hh) allows anyone to register to the message queue and get notified of the messages. We expect such objects to provide indications about which messages they are interested in so that we can feed them messages. It is guaranteed that the messages receieved through the `onMessageReceived` method will be of the right type for the listener.
 
 ### Messages
 

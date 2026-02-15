@@ -12,7 +12,7 @@
 
 namespace bsgo {
 
-class ServerNetworkClient : public IMessageQueue
+class ServerNetworkClient : public bsgalone::core::IMessageQueue
 {
   public:
   ServerNetworkClient(bsgalone::server::ClientManagerShPtr clientManager);
@@ -22,7 +22,7 @@ class ServerNetworkClient : public IMessageQueue
   void stop();
 
   void pushMessage(bsgalone::core::IMessagePtr message) override;
-  void addListener(IMessageListenerPtr listener) override;
+  void addListener(bsgalone::core::IMessageListenerPtr listener) override;
   bool empty() override;
 
   void processMessages() override;
@@ -34,8 +34,8 @@ class ServerNetworkClient : public IMessageQueue
   std::atomic_bool m_started{};
 
   bsgalone::server::ClientManagerShPtr m_clientManager{};
-  IMessageQueueShPtr m_inputQueue{};
-  IMessageQueueShPtr m_outputQueue{};
+  bsgalone::core::IMessageQueueShPtr m_inputQueue{};
+  bsgalone::core::IMessageQueueShPtr m_outputQueue{};
 
   void initialize();
 };

@@ -10,8 +10,8 @@
 namespace pge {
 
 ShipDbView::ShipDbView(GameSessionShPtr gameSession,
-                       bsgo::IMessageQueue *const internalMessageQueue,
-                       bsgo::IMessageQueue *const outputMessageQueue)
+                       bsgalone::core::IMessageQueue *const internalMessageQueue,
+                       bsgalone::core::IMessageQueue *const outputMessageQueue)
   : AbstractView("ship",
                  {
                    bsgo::MessageType::HANGAR,

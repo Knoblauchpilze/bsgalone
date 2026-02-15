@@ -27,7 +27,7 @@ class LoginScreenUiHandler : public IUiHandler, public bsgo::AbstractMessageList
   void render(Renderer &engine) const override;
   void updateUi() override;
 
-  void connectToMessageQueue(bsgo::IMessageQueue &messageQueue) override;
+  void connectToMessageQueue(bsgalone::core::IMessageQueue &messageQueue) override;
   void onMessageReceived(const bsgalone::core::IMessage &message) override;
 
   private:

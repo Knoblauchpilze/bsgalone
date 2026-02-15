@@ -18,8 +18,8 @@ class AbstractSystem : public ISystem
   ~AbstractSystem() override = default;
 
   auto type() const -> SystemType override;
-  void installInternalMessageQueue(IMessageQueue *messageQueue) override;
-  void installOutputMessageQueue(IMessageQueue *messageQueue) override;
+  void installInternalMessageQueue(bsgalone::core::IMessageQueue *messageQueue) override;
+  void installOutputMessageQueue(bsgalone::core::IMessageQueue *messageQueue) override;
 
   void update(Coordinator &coordinator, const chrono::TickData &data) const override;
 
@@ -35,8 +35,8 @@ class AbstractSystem : public ISystem
   SystemType m_systemType{};
   EntityPredicate m_entitiesFilter{};
   bool m_filterDeadAndRemovedEntities{true};
-  IMessageQueue *m_internalMessageQueue{};
-  IMessageQueue *m_outputMessageQueue{};
+  bsgalone::core::IMessageQueue *m_internalMessageQueue{};
+  bsgalone::core::IMessageQueue *m_outputMessageQueue{};
 };
 
 } // namespace bsgo

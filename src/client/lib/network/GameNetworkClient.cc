@@ -44,7 +44,7 @@ void GameNetworkClient::pushMessage(bsgalone::core::IMessagePtr message)
   sendMessage(*message);
 }
 
-void GameNetworkClient::addListener(bsgo::IMessageListenerPtr listener)
+void GameNetworkClient::addListener(bsgalone::core::IMessageListenerPtr listener)
 {
   m_inputQueue->addListener(std::move(listener));
 }
@@ -60,10 +60,11 @@ void GameNetworkClient::processMessages()
 }
 
 namespace {
+// TODO: Extract this class
 class NetworkEventListener : public net::IEventListener
 {
   public:
-  NetworkEventListener(std::atomic_bool &connected, bsgo::IMessageQueueShPtr inputQueue)
+  NetworkEventListener(std::atomic_bool &connected, bsgalone::core::IMessageQueueShPtr inputQueue)
     : m_connected(connected)
     , m_inputQueue(std::move(inputQueue))
   {}
@@ -93,7 +94,7 @@ class NetworkEventListener : public net::IEventListener
 
   private:
   std::atomic_bool &m_connected;
-  bsgo::IMessageQueueShPtr m_inputQueue{};
+  bsgalone::core::IMessageQueueShPtr m_inputQueue{};
 
   void handleConnectionEstablished(const net::ConnectionEstablishedEvent & /*event*/)
   {

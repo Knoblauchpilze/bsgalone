@@ -5,7 +5,7 @@
 namespace bsgo {
 
 LootMessageConsumer::LootMessageConsumer(SystemServiceShPtr systemService,
-                                         IMessageQueue *const outputMessageQueue)
+                                         bsgalone::core::IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("loot", {MessageType::LOOT})
   , m_systemService(std::move(systemService))
   , m_outputMessageQueue(outputMessageQueue)

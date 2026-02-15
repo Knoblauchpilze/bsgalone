@@ -12,7 +12,7 @@
 
 namespace pge {
 
-void createMessageConsumers(bsgo::IMessageQueue &inputMessagesQueue,
+void createMessageConsumers(bsgalone::core::IMessageQueue &inputMessagesQueue,
                             bsgo::DatabaseEntityMapper &entityMapper,
                             const bsgo::CoordinatorShPtr &coordinator)
 {

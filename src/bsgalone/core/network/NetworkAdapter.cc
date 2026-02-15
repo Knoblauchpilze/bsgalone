@@ -4,7 +4,7 @@
 
 namespace bsgalone::core {
 
-NetworkAdapter::NetworkAdapter(bsgo::IMessageQueueShPtr queue, IMessageParserPtr parser)
+NetworkAdapter::NetworkAdapter(IMessageQueueShPtr queue, IMessageParserPtr parser)
   : m_queue(std::move(queue))
   , m_parser(std::move(parser))
 {

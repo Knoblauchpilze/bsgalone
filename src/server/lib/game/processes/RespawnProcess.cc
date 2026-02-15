@@ -6,7 +6,7 @@ namespace bsgo {
 
 RespawnProcess::RespawnProcess(const Uuid systemDbId,
                                const Repositories &repositories,
-                               IMessageQueue *const systemMessageQueue)
+                               bsgalone::core::IMessageQueue *const systemMessageQueue)
   : AbstractProcess(ProcessType::RESPAWN, repositories)
   , m_systemDbId(systemDbId)
   , m_systemMessageQueue(systemMessageQueue)
