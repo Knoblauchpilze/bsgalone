@@ -6,6 +6,7 @@
 #include "IMessage.hh"
 #include "IMessageQueue.hh"
 #include "INetworkClient.hh"
+#include "IOutputNetworkAdapter.hh"
 #include <atomic>
 #include <memory>
 
@@ -29,14 +30,13 @@ class GameNetworkClient : public bsgalone::core::IMessageQueue
   private:
   net::IEventBusShPtr m_eventBus{};
   net::INetworkClientShPtr m_tcpClient{};
+  bsgalone::core::IOutputNetworkAdapterPtr m_adapter{};
 
   std::atomic_bool m_connected{};
 
   bsgalone::core::IMessageQueueShPtr m_inputQueue{};
 
   void initialize();
-
-  void sendMessage(bsgalone::core::IMessage &message) const;
 };
 
 using GameNetworkClientShPtr = std::shared_ptr<GameNetworkClient>;
