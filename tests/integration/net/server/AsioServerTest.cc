@@ -195,6 +195,8 @@ TEST_F(Integration_Net_Server_AsioServer, WritesDataToClientSocket)
 
   const auto actual = sockets.readClient(data.size());
   EXPECT_EQ("test", actual);
+
+  server->shutdown();
 }
 
 TEST_F(Integration_Net_Server_AsioServer, PublishesDataSentEvent)
