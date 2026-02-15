@@ -5,7 +5,7 @@
 namespace bsgalone::server {
 
 ClientEventListener::ClientEventListener(ClientManagerShPtr clientManager,
-                                         bsgo::IMessageQueueShPtr inputQueue)
+                                         bsgalone::core::IMessageQueueShPtr inputQueue)
   : m_manager(std::move(clientManager))
   , m_inputQueue(std::move(inputQueue))
 {

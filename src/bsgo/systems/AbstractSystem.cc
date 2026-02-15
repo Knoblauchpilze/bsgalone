@@ -22,7 +22,7 @@ auto AbstractSystem::type() const -> SystemType
   return m_systemType;
 }
 
-void AbstractSystem::installInternalMessageQueue(IMessageQueue *messageQueue)
+void AbstractSystem::installInternalMessageQueue(bsgalone::core::IMessageQueue *messageQueue)
 {
   if (nullptr == messageQueue)
   {
@@ -32,7 +32,7 @@ void AbstractSystem::installInternalMessageQueue(IMessageQueue *messageQueue)
   m_internalMessageQueue = messageQueue;
 }
 
-void AbstractSystem::installOutputMessageQueue(IMessageQueue *messageQueue)
+void AbstractSystem::installOutputMessageQueue(bsgalone::core::IMessageQueue *messageQueue)
 {
   if (nullptr == messageQueue)
   {

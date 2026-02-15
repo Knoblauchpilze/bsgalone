@@ -12,8 +12,8 @@ namespace bsgo {
 
 struct SystemsConfig
 {
-  IMessageQueue *const internalMessageQueue{};
-  IMessageQueue *const outputMessageQueue{};
+  bsgalone::core::IMessageQueue *const internalMessageQueue{};
+  bsgalone::core::IMessageQueue *const outputMessageQueue{};
 
   std::unordered_set<SystemType> ignoredSystems{};
 };

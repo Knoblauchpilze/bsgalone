@@ -6,7 +6,8 @@
 
 namespace bsgo {
 
-SystemProcessor::SystemProcessor(const Uuid systemDbId, IMessageQueueShPtr inputQueue)
+SystemProcessor::SystemProcessor(const Uuid systemDbId,
+                                 bsgalone::core::IMessageQueueShPtr inputQueue)
   : core::CoreObject("processor")
   , m_systemDbId(systemDbId)
   , m_inputMessagesQueue(std::move(inputQueue))
@@ -27,8 +28,8 @@ auto SystemProcessor::getSystemDbId() const -> Uuid
   return m_systemDbId;
 }
 
-void SystemProcessor::connectToQueues(IMessageQueue *const internalMessageQueue,
-                                      IMessageQueue *const outputMessageQueue)
+void SystemProcessor::connectToQueues(bsgalone::core::IMessageQueue *const internalMessageQueue,
+                                      bsgalone::core::IMessageQueue *const outputMessageQueue)
 {
   Repositories repositories{};
 

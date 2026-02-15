@@ -11,14 +11,14 @@ class AiBehaviorSyncMessageConsumer : public AbstractMessageConsumer
 {
   public:
   AiBehaviorSyncMessageConsumer(SystemServiceShPtr systemService,
-                                IMessageQueue *const outputMessageQueue);
+                                bsgalone::core::IMessageQueue *const outputMessageQueue);
   ~AiBehaviorSyncMessageConsumer() override = default;
 
   void onMessageReceived(const bsgalone::core::IMessage &message) override;
 
   private:
   SystemServiceShPtr m_systemService{};
-  IMessageQueue *const m_outputMessageQueue{};
+  bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
 };
 
 } // namespace bsgo

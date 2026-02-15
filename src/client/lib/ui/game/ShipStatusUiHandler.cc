@@ -52,7 +52,7 @@ void ShipStatusUiHandler::updateUi()
   updateJumpPanel();
 }
 
-void ShipStatusUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQueue)
+void ShipStatusUiHandler::connectToMessageQueue(bsgalone::core::IMessageQueue &messageQueue)
 {
   auto listener = std::make_unique<MessageListenerWrapper>(this);
   messageQueue.addListener(std::move(listener));

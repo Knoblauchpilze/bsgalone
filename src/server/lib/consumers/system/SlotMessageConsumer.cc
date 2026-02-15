@@ -5,7 +5,7 @@
 namespace bsgo {
 
 SlotMessageConsumer::SlotMessageConsumer(const Services &services,
-                                         IMessageQueue *const outputMessageQueue)
+                                         bsgalone::core::IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("slot", {MessageType::SLOT})
   , m_slotService(services.slot)
   , m_outputMessageQueue(outputMessageQueue)

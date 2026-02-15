@@ -11,14 +11,15 @@ namespace bsgo {
 class JumpRequestedMessageConsumer : public AbstractMessageConsumer
 {
   public:
-  JumpRequestedMessageConsumer(const Services &services, IMessageQueue *const outputMessageQueue);
+  JumpRequestedMessageConsumer(const Services &services,
+                               bsgalone::core::IMessageQueue *const outputMessageQueue);
   ~JumpRequestedMessageConsumer() override = default;
 
   void onMessageReceived(const bsgalone::core::IMessage &message) override;
 
   private:
   JumpServiceShPtr m_jumpService{};
-  IMessageQueue *const m_outputMessageQueue{};
+  bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
 
   void handleJumpRequest(const JumpRequestedMessage &message) const;
 };

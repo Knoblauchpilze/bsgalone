@@ -6,14 +6,14 @@
 
 namespace test {
 
-class TestMessageQueue : public bsgo::IMessageQueue
+class TestMessageQueue : public bsgalone::core::IMessageQueue
 {
   public:
   TestMessageQueue()           = default;
   ~TestMessageQueue() override = default;
 
   void pushMessage(bsgalone::core::IMessagePtr message) override;
-  void addListener(bsgo::IMessageListenerPtr /*listener*/) override;
+  void addListener(bsgalone::core::IMessageListenerPtr /*listener*/) override;
   bool empty() override;
   void processMessages() override;
 

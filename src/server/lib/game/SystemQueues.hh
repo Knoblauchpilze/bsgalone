@@ -7,6 +7,6 @@
 
 namespace bsgo {
 
-using SystemQueueMap = std::unordered_map<Uuid, IMessageQueueShPtr>;
+using SystemQueueMap = std::unordered_map<Uuid, bsgalone::core::IMessageQueueShPtr>;
 
 }

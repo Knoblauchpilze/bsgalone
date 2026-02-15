@@ -144,7 +144,7 @@ void LoginScreenUiHandler::updateUi()
   m_successfulSignupMenu->update();
 }
 
-void LoginScreenUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQueue)
+void LoginScreenUiHandler::connectToMessageQueue(bsgalone::core::IMessageQueue &messageQueue)
 {
   m_credentialsUiHandler.connectToMessageQueue(messageQueue);
 

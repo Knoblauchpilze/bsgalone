@@ -14,14 +14,14 @@ namespace bsgalone::core {
 class NetworkAdapter : public net::IEventListener
 {
   public:
-  NetworkAdapter(bsgo::IMessageQueueShPtr queue, IMessageParserPtr parser);
+  NetworkAdapter(IMessageQueueShPtr queue, IMessageParserPtr parser);
   ~NetworkAdapter() override = default;
 
   bool isEventRelevant(const net::EventType &type) const override;
   void onEventReceived(const net::IEvent &event) override;
 
   private:
-  bsgo::IMessageQueueShPtr m_queue{};
+  IMessageQueueShPtr m_queue{};
   IMessageParserPtr m_parser{};
 
   struct ClientData

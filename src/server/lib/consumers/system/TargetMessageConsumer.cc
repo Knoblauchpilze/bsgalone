@@ -5,7 +5,7 @@
 namespace bsgo {
 
 TargetMessageConsumer::TargetMessageConsumer(const Services &services,
-                                             IMessageQueue *const outputMessageQueue)
+                                             bsgalone::core::IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("target", {MessageType::TARGET})
   , m_shipService(services.ship)
   , m_outputMessageQueue(outputMessageQueue)

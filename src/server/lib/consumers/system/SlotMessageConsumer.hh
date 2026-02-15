@@ -10,14 +10,15 @@ namespace bsgo {
 class SlotMessageConsumer : public AbstractMessageConsumer
 {
   public:
-  SlotMessageConsumer(const Services &services, IMessageQueue *const outputMessageQueue);
+  SlotMessageConsumer(const Services &services,
+                      bsgalone::core::IMessageQueue *const outputMessageQueue);
   ~SlotMessageConsumer() override = default;
 
   void onMessageReceived(const bsgalone::core::IMessage &message) override;
 
   private:
   SlotServiceShPtr m_slotService{};
-  IMessageQueue *const m_outputMessageQueue{};
+  bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
 
   void handleWeapon(const SlotMessage &message) const;
   void handleComputer(const SlotMessage &message) const;

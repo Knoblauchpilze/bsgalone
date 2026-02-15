@@ -8,7 +8,7 @@ namespace pge {
 
 ShipView::ShipView(GameSessionShPtr gameSession,
                    bsgo::CoordinatorShPtr coordinator,
-                   bsgo::IMessageQueue *const outputMessageQueue)
+                   bsgalone::core::IMessageQueue *const outputMessageQueue)
   : AbstractView("ship",
                  {
                    bsgo::MessageType::DOCK,

@@ -12,16 +12,16 @@ class PurchaseMessageConsumer : public AbstractMessageConsumer
 {
   public:
   PurchaseMessageConsumer(const Services &services,
-                          IMessageQueue *const systemMessageQueue,
-                          IMessageQueue *const outputMessageQueue);
+                          bsgalone::core::IMessageQueue *const systemMessageQueue,
+                          bsgalone::core::IMessageQueue *const outputMessageQueue);
   ~PurchaseMessageConsumer() override = default;
 
   void onMessageReceived(const bsgalone::core::IMessage &message) override;
 
   private:
   PurchaseServiceShPtr m_purchaseService{};
-  IMessageQueue *const m_systemMessageQueue{};
-  IMessageQueue *const m_outputMessageQueue{};
+  bsgalone::core::IMessageQueue *const m_systemMessageQueue{};
+  bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
 
   void handleComputerPurchase(const PurchaseMessage &message) const;
   void handleShipPurchase(const PurchaseMessage &message) const;

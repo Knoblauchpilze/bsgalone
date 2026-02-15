@@ -5,17 +5,17 @@
 
 namespace pge {
 
-class MessageListenerWrapper : public bsgo::IMessageListener
+class MessageListenerWrapper : public bsgalone::core::IMessageListener
 {
   public:
-  MessageListenerWrapper(IMessageListener *listener);
+  MessageListenerWrapper(bsgalone::core::IMessageListener *listener);
   ~MessageListenerWrapper() override = default;
 
   bool isMessageRelevant(const bsgo::MessageType &type) const override;
   void onMessageReceived(const bsgalone::core::IMessage &message) override;
 
   private:
-  IMessageListener *m_listener{};
+  bsgalone::core::IMessageListener *m_listener{};
 };
 
 } // namespace pge

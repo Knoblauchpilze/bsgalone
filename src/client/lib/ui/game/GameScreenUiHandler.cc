@@ -55,7 +55,7 @@ void GameScreenUiHandler::updateUi()
   }
 }
 
-void GameScreenUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQueue)
+void GameScreenUiHandler::connectToMessageQueue(bsgalone::core::IMessageQueue &messageQueue)
 {
   for (const auto &ui : m_uis)
   {

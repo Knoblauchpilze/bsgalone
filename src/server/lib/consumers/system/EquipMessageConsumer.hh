@@ -13,8 +13,8 @@ class EquipMessageConsumer : public AbstractMessageConsumer
 {
   public:
   EquipMessageConsumer(const Services &services,
-                       IMessageQueue *const systemMessageQueue,
-                       IMessageQueue *const outputMessageQueue);
+                       bsgalone::core::IMessageQueue *const systemMessageQueue,
+                       bsgalone::core::IMessageQueue *const outputMessageQueue);
   ~EquipMessageConsumer() override = default;
 
   void onMessageReceived(const bsgalone::core::IMessage &message) override;
@@ -22,8 +22,8 @@ class EquipMessageConsumer : public AbstractMessageConsumer
   private:
   LockerServiceShPtr m_lockerService{};
   ShipServiceShPtr m_shipService{};
-  IMessageQueue *const m_systemMessageQueue{};
-  IMessageQueue *const m_outputMessageQueue{};
+  bsgalone::core::IMessageQueue *const m_systemMessageQueue{};
+  bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
 
   void handleEquipRequest(const EquipMessage &message) const;
   void handleUnequipRequest(const EquipMessage &message) const;

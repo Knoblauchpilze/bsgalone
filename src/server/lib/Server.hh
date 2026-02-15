@@ -32,7 +32,7 @@ class Server : public core::CoreObject
   ServerNetworkClientShPtr m_networkClient{};
   MessageExchangerPtr m_messageExchanger{};
 
-  std::unordered_map<Uuid, IMessageQueueShPtr> m_inputQueues{};
+  std::unordered_map<Uuid, bsgalone::core::IMessageQueueShPtr> m_inputQueues{};
   std::vector<SystemProcessorShPtr> m_systemProcessors{};
 
   void initialize();

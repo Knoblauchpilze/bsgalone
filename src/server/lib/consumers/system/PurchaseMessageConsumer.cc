@@ -5,9 +5,10 @@
 
 namespace bsgo {
 
-PurchaseMessageConsumer::PurchaseMessageConsumer(const Services &services,
-                                                 IMessageQueue *const systemMessageQueue,
-                                                 IMessageQueue *const outputMessageQueue)
+PurchaseMessageConsumer::PurchaseMessageConsumer(
+  const Services &services,
+  bsgalone::core::IMessageQueue *const systemMessageQueue,
+  bsgalone::core::IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("purchase", {MessageType::PURCHASE})
   , m_purchaseService(services.purchase)
   , m_systemMessageQueue(systemMessageQueue)

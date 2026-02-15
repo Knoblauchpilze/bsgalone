@@ -26,7 +26,7 @@ struct Views
   ServerViewShPtr serverView{};
   ResourceViewShPtr resourceView{};
 
-  void connectToQueue(bsgo::IMessageQueue *const queue);
+  void connectToQueue(bsgalone::core::IMessageQueue *const queue);
   void reset();
 };
 
@@ -34,8 +34,8 @@ struct ViewsConfig
 {
   GameSessionShPtr gameSession{};
   bsgo::CoordinatorShPtr coordinator{};
-  bsgo::IMessageQueue *const internalMessageQueue{};
-  bsgo::IMessageQueue *const outputMessageQueue{};
+  bsgalone::core::IMessageQueue *const internalMessageQueue{};
+  bsgalone::core::IMessageQueue *const outputMessageQueue{};
 };
 
 auto createViews(const ViewsConfig &config, const bsgo::DatabaseEntityMapper &entityMapper)

@@ -5,7 +5,7 @@ namespace bsgo {
 
 LoginMessageConsumer::LoginMessageConsumer(LoginServicePtr loginService,
                                            SystemQueueMap systemQueues,
-                                           IMessageQueue *const outputMessageQueue)
+                                           bsgalone::core::IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("login", {MessageType::LOGIN})
   , m_loginService(std::move(loginService))
   , m_outputMessageQueue(outputMessageQueue)

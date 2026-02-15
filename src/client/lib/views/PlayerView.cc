@@ -9,7 +9,8 @@
 
 namespace pge {
 
-PlayerView::PlayerView(GameSessionShPtr gameSession, bsgo::IMessageQueue *const outputMessageQueue)
+PlayerView::PlayerView(GameSessionShPtr gameSession,
+                       bsgalone::core::IMessageQueue *const outputMessageQueue)
   : AbstractView("player",
                  {
                    bsgo::MessageType::HANGAR,

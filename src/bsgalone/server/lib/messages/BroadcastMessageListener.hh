@@ -15,7 +15,7 @@
 
 namespace bsgalone::server {
 
-class BroadcastMessageListener : public bsgo::IMessageListener, public ::core::CoreObject
+class BroadcastMessageListener : public core::IMessageListener, public ::core::CoreObject
 {
   public:
   BroadcastMessageListener(ClientManagerShPtr clientManager, net::INetworkServerShPtr server);

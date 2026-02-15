@@ -17,7 +17,7 @@ class SynchronizedMessageQueue : public AbstractMessageQueue, public core::CoreO
   ~SynchronizedMessageQueue() override = default;
 
   void pushMessage(bsgalone::core::IMessagePtr message) override;
-  void addListener(IMessageListenerPtr listener) override;
+  void addListener(bsgalone::core::IMessageListenerPtr listener) override;
   bool empty() override;
 
   void processMessages() override;

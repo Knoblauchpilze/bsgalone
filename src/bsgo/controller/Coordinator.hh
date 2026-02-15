@@ -5,7 +5,6 @@
 #include "CoreObject.hh"
 #include "Entity.hh"
 #include "IBoundingBox.hh"
-#include "IMessageQueue.hh"
 #include "PlayerComputerData.hh"
 #include "PlayerWeaponData.hh"
 #include "Systems.hh"

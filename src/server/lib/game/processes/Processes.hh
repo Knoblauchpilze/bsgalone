@@ -13,7 +13,7 @@ namespace bsgo {
 class Processes : public core::CoreObject
 {
   public:
-  Processes(const Uuid systemDbId, IMessageQueue *const systemMessageQueue);
+  Processes(const Uuid systemDbId, bsgalone::core::IMessageQueue *const systemMessageQueue);
   ~Processes() override = default;
 
   void update(Coordinator &coordinator, const chrono::TickData &data) const;
@@ -21,7 +21,7 @@ class Processes : public core::CoreObject
   private:
   std::vector<IProcessPtr> m_processes{};
 
-  void initialize(const Uuid systemDbId, IMessageQueue *const systemMessageQueue);
+  void initialize(const Uuid systemDbId, bsgalone::core::IMessageQueue *const systemMessageQueue);
 };
 
 using ProcessesPtr = std::unique_ptr<Processes>;

@@ -24,7 +24,7 @@ class WeaponsUiHandler : public IUiHandler, public bsgo::AbstractMessageListener
   bool processUserInput(UserInputData &inputData) override;
   void render(Renderer &engine) const override;
   void updateUi() override;
-  void connectToMessageQueue(bsgo::IMessageQueue &messageQueue) override;
+  void connectToMessageQueue(bsgalone::core::IMessageQueue &messageQueue) override;
 
   void onMessageReceived(const bsgalone::core::IMessage &message) override;
 

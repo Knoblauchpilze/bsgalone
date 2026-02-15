@@ -47,7 +47,7 @@ void ServerNetworkClient::pushMessage(bsgalone::core::IMessagePtr message)
   m_outputQueue->pushMessage(std::move(message));
 }
 
-void ServerNetworkClient::addListener(IMessageListenerPtr listener)
+void ServerNetworkClient::addListener(bsgalone::core::IMessageListenerPtr listener)
 {
   m_inputQueue->addListener(std::move(listener));
 }

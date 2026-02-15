@@ -19,8 +19,9 @@
 
 namespace bsgo {
 
-LoadingMessagesConsumer::LoadingMessagesConsumer(const Services &services,
-                                                 IMessageQueue *const outputMessageQueue)
+LoadingMessagesConsumer::LoadingMessagesConsumer(
+  const Services &services,
+  bsgalone::core::IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("loading", {MessageType::LOADING_FINISHED, MessageType::LOADING_STARTED})
   , m_loadingService(services.loading)
   , m_outputMessageQueue(outputMessageQueue)

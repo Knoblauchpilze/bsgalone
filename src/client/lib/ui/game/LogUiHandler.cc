@@ -81,7 +81,7 @@ void LogUiHandler::updateUi()
   std::erase_if(m_logs, [](const LogMessage &data) { return data.menu->finished(); });
 }
 
-void LogUiHandler::connectToMessageQueue(bsgo::IMessageQueue &messageQueue)
+void LogUiHandler::connectToMessageQueue(bsgalone::core::IMessageQueue &messageQueue)
 {
   auto listener = std::make_unique<MessageListenerWrapper>(this);
   messageQueue.addListener(std::move(listener));

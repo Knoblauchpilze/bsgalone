@@ -23,7 +23,7 @@ auto createViews(const ViewsConfig &config, const bsgo::DatabaseEntityMapper &en
   return out;
 }
 
-void Views::connectToQueue(bsgo::IMessageQueue *const queue)
+void Views::connectToQueue(bsgalone::core::IMessageQueue *const queue)
 {
   queue->addListener(std::make_unique<ViewConsumerProxy>(*playerView));
   queue->addListener(std::make_unique<ViewConsumerProxy>(*shipView));

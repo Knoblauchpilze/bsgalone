@@ -15,14 +15,15 @@ namespace bsgo {
 class EntityDeletedMessageConsumer : public AbstractMessageConsumer
 {
   public:
-  EntityDeletedMessageConsumer(const Services &services, IMessageQueue *const outputMessageQueue);
+  EntityDeletedMessageConsumer(const Services &services,
+                               bsgalone::core::IMessageQueue *const outputMessageQueue);
   ~EntityDeletedMessageConsumer() override = default;
 
   void onMessageReceived(const bsgalone::core::IMessage &message) override;
 
   private:
   EntityServiceShPtr m_entityService{};
-  IMessageQueue *const m_outputMessageQueue{};
+  bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
 
   void handleShipRemoved(const EntityRemovedMessage &message) const;
   void handleAsteroidRemoved(const EntityRemovedMessage &message) const;

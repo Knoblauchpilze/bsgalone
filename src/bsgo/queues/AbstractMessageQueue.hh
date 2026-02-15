@@ -6,17 +6,17 @@
 
 namespace bsgo {
 
-class AbstractMessageQueue : public IMessageQueue
+class AbstractMessageQueue : public bsgalone::core::IMessageQueue
 {
   public:
   AbstractMessageQueue();
   ~AbstractMessageQueue() override = default;
 
-  void addListener(IMessageListenerPtr listener) override;
+  void addListener(bsgalone::core::IMessageListenerPtr listener) override;
 
   protected:
-  std::vector<IMessageListenerPtr> m_listeners{};
-  std::unordered_multimap<MessageType, IMessageListener *> m_listenersTable{};
+  std::vector<bsgalone::core::IMessageListenerPtr> m_listeners{};
+  std::unordered_multimap<MessageType, bsgalone::core::IMessageListener *> m_listenersTable{};
 };
 
 } // namespace bsgo

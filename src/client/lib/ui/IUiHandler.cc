@@ -7,7 +7,7 @@ IUiHandler::IUiHandler(const std::string &name)
   : core::CoreObject(name)
 {}
 
-void IUiHandler::connectToMessageQueue(bsgo::IMessageQueue & /*messageQueue*/)
+void IUiHandler::connectToMessageQueue(bsgalone::core::IMessageQueue & /*messageQueue*/)
 {
   // Intentionally empty.
 }
