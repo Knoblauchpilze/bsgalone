@@ -7,7 +7,7 @@
 #include "ClientManager.hh"
 #include "CoreObject.hh"
 #include "IMessageListener.hh"
-#include "INetworkServer.hh"
+#include "IOutputNetworkAdapter.hh"
 #include "JumpMessage.hh"
 #include "LoginMessage.hh"
 #include "LogoutMessage.hh"
@@ -18,7 +18,8 @@ namespace bsgalone::server {
 class BroadcastMessageListener : public core::IMessageListener, public ::core::CoreObject
 {
   public:
-  BroadcastMessageListener(ClientManagerShPtr clientManager, net::INetworkServerShPtr server);
+  BroadcastMessageListener(ClientManagerShPtr clientManager,
+                           core::IOutputNetworkAdapterShPtr server);
   ~BroadcastMessageListener() override = default;
 
   bool isMessageRelevant(const core::MessageType &type) const override;
@@ -26,7 +27,7 @@ class BroadcastMessageListener : public core::IMessageListener, public ::core::C
 
   private:
   ClientManagerShPtr m_clientManager{};
-  net::INetworkServerShPtr m_server{};
+  core::IOutputNetworkAdapterShPtr m_adapter{};
   BroadcastMessageModule m_broadcastModule;
 
   void forwardMessageToClientManager(const core::IMessage &message);

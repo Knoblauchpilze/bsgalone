@@ -5,19 +5,19 @@
 namespace bsgalone::server {
 
 BroadcastMessageListener::BroadcastMessageListener(ClientManagerShPtr clientManager,
-                                                   net::INetworkServerShPtr server)
+                                                   core::IOutputNetworkAdapterShPtr adapter)
   : ::core::CoreObject("broadcast-message-queue")
   , m_clientManager(clientManager)
-  , m_server(server)
-  , m_broadcastModule(clientManager, server)
+  , m_adapter(adapter)
+  , m_broadcastModule(clientManager, adapter)
 {
   if (m_clientManager == nullptr)
   {
     throw std::invalid_argument("Expected non null client manager");
   }
-  if (m_server == nullptr)
+  if (m_adapter == nullptr)
   {
-    throw std::invalid_argument("Expected non null server");
+    throw std::invalid_argument("Expected non null network adapater");
   }
 
   setService("message");
@@ -69,17 +69,6 @@ void BroadcastMessageListener::forwardMessageToClientManager(const core::IMessag
   }
 }
 
-namespace {
-auto serializeMessage(const core::IMessage &message) -> std::vector<char>
-{
-  std::ostringstream out{};
-  out << message;
-
-  const auto &rawMessage = out.str();
-  return std::vector<char>(rawMessage.begin(), rawMessage.end());
-}
-} // namespace
-
 void BroadcastMessageListener::triageOutboundMessage(const core::IMessage &message)
 {
   if (message.isA<core::AbstractPlayerMessage>())
@@ -99,19 +88,17 @@ void BroadcastMessageListener::triageOutboundMessage(const core::IMessage &messa
 
 void BroadcastMessageListener::routePlayerMessage(const core::AbstractPlayerMessage &message)
 {
-  const auto bytes    = serializeMessage(message);
   const auto clientId = m_clientManager->getClientIdForPlayer(message.getPlayerDbId());
-  m_server->trySend(clientId, bytes);
+  m_adapter->sendMessage(clientId, message);
 }
 
 void BroadcastMessageListener::routeSystemMessage(const core::AbstractSystemMessage &message)
 {
-  const auto bytes   = serializeMessage(message);
   const auto clients = m_clientManager->getAllClientsForSystem(message.getSystemDbId());
 
   for (const auto &clientId : clients)
   {
-    m_server->trySend(clientId, bytes);
+    m_adapter->sendMessage(clientId, message);
   }
 }
 

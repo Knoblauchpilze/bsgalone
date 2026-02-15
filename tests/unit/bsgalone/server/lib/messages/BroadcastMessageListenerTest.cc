@@ -6,7 +6,7 @@
 #include "LoginMessage.hh"
 #include "LogoutMessage.hh"
 #include "SerializationUtils.hh"
-#include "TestNetworkServer.hh"
+#include "TestOutputNetworkAdapter.hh"
 #include <gmock/gmock-matchers.h>
 #include <gtest/gtest.h>
 
@@ -17,11 +17,12 @@ namespace bsgalone::server {
 
 TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener, ThrowsWhenClientManagerIsNull)
 {
-  EXPECT_THROW([]() { BroadcastMessageListener(nullptr, std::make_shared<TestNetworkServer>()); }(),
-               std::invalid_argument);
+  EXPECT_THROW(
+    []() { BroadcastMessageListener(nullptr, std::make_shared<TestOutputNetworkAdapter>()); }(),
+    std::invalid_argument);
 }
 
-TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener, ThrowsWhenServerIsNull)
+TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener, ThrowsWhenNetworkAdapaterIsNull)
 {
   EXPECT_THROW([]() { BroadcastMessageListener(std::make_shared<ClientManager>(), nullptr); }(),
                std::invalid_argument);
@@ -32,7 +33,7 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
 {
   auto manager = std::make_shared<ClientManager>();
   manager->registerClient(net::ClientId{12});
-  BroadcastMessageListener listener(manager, std::make_shared<TestNetworkServer>());
+  BroadcastMessageListener listener(manager, std::make_shared<TestOutputNetworkAdapter>());
 
   EXPECT_FALSE(manager->tryGetPlayerForClient(net::ClientId{12}).has_value());
   EXPECT_FALSE(manager->tryGetSystemForClient(net::ClientId{12}).has_value());
@@ -53,7 +54,7 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
      ThrowsWhenLoginMessageDoesNotDefineClientId)
 {
   auto manager = std::make_shared<ClientManager>();
-  BroadcastMessageListener listener(manager, std::make_shared<TestNetworkServer>());
+  BroadcastMessageListener listener(manager, std::make_shared<TestOutputNetworkAdapter>());
 
   EXPECT_THAT(
     [&listener]() {
@@ -70,7 +71,7 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
      ThrowsWhenLoginMessageDoesNotDefinePlayerId)
 {
   auto manager = std::make_shared<ClientManager>();
-  BroadcastMessageListener listener(manager, std::make_shared<TestNetworkServer>());
+  BroadcastMessageListener listener(manager, std::make_shared<TestOutputNetworkAdapter>());
 
   EXPECT_THAT(
     [&listener]() {
@@ -87,7 +88,7 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
      ThrowsWhenLoginMessageDoesNotDefineSystemId)
 {
   auto manager = std::make_shared<ClientManager>();
-  BroadcastMessageListener listener(manager, std::make_shared<TestNetworkServer>());
+  BroadcastMessageListener listener(manager, std::make_shared<TestOutputNetworkAdapter>());
 
   EXPECT_THAT(
     [&listener]() {
@@ -106,7 +107,7 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
   auto manager = std::make_shared<ClientManager>();
   manager->registerClient(net::ClientId{12});
   manager->registerPlayer(net::ClientId{12}, bsgo::Uuid{18}, bsgo::Uuid{19});
-  BroadcastMessageListener listener(manager, std::make_shared<TestNetworkServer>());
+  BroadcastMessageListener listener(manager, std::make_shared<TestOutputNetworkAdapter>());
 
   EXPECT_EQ(bsgo::Uuid{19}, manager->tryGetSystemForClient(net::ClientId{12}).value());
 
@@ -122,7 +123,7 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
   auto manager = std::make_shared<ClientManager>();
   manager->registerClient(net::ClientId{12});
   manager->registerPlayer(net::ClientId{12}, bsgo::Uuid{18}, bsgo::Uuid{19});
-  BroadcastMessageListener listener(manager, std::make_shared<TestNetworkServer>());
+  BroadcastMessageListener listener(manager, std::make_shared<TestOutputNetworkAdapter>());
 
   EXPECT_EQ(bsgo::Uuid{19}, manager->tryGetSystemForClient(net::ClientId{12}).value());
 
@@ -139,7 +140,7 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
   auto manager = std::make_shared<ClientManager>();
   manager->registerClient(net::ClientId{12});
   manager->registerPlayer(net::ClientId{12}, bsgo::Uuid{18}, bsgo::Uuid{19});
-  BroadcastMessageListener listener(manager, std::make_shared<TestNetworkServer>());
+  BroadcastMessageListener listener(manager, std::make_shared<TestOutputNetworkAdapter>());
 
   EXPECT_EQ(bsgo::Uuid{19}, manager->tryGetSystemForClient(net::ClientId{12}).value());
 
@@ -193,21 +194,17 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
   manager->registerPlayer(net::ClientId{12}, bsgo::Uuid{18}, bsgo::Uuid{19});
   manager->registerClient(net::ClientId{13});
   manager->registerPlayer(net::ClientId{13}, bsgo::Uuid{17}, bsgo::Uuid{19});
-  auto server = std::make_shared<TestNetworkServer>();
+  auto server = std::make_shared<TestOutputNetworkAdapter>();
   BroadcastMessageListener listener(manager, server);
 
   auto message = std::make_unique<TestPlayerMessage>(bsgo::Uuid{18});
-  std::stringstream out;
-  message->serialize(out);
-  const auto outputStr = out.str();
-  std::vector<char> expected(outputStr.begin(), outputStr.end());
-
   listener.onMessageReceived(*message);
 
   EXPECT_EQ(1u, server->messages().size());
   const auto &actual = server->messages().at(0);
   EXPECT_EQ(net::ClientId{12}, actual.clientId);
-  EXPECT_EQ(expected, actual.data);
+  EXPECT_EQ(core::MessageType::DOCK, actual.data->type());
+  EXPECT_EQ(bsgo::Uuid{18}, actual.data->as<TestPlayerMessage>().getPlayerDbId());
 }
 
 namespace {
@@ -244,6 +241,22 @@ class TestSystemMessage : public core::AbstractSystemMessage
     return std::make_unique<TestSystemMessage>(m_systemDbId);
   }
 };
+
+auto assertMessageMatches(const std::vector<TestOutputNetworkAdapter::MessageData> &messages,
+                          const net::ClientId expectedClient,
+                          const bsgo::Uuid expectedSystemMessageId)
+{
+  for (const auto &message : messages)
+  {
+    if (message.clientId == expectedClient)
+    {
+      return message.data->type() == core::MessageType::DOCK
+             && message.data->as<TestSystemMessage>().getSystemDbId() == expectedSystemMessageId;
+    }
+  }
+
+  return false;
+}
 } // namespace
 
 TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
@@ -256,24 +269,23 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
   manager->registerPlayer(net::ClientId{13}, bsgo::Uuid{17}, bsgo::Uuid{19});
   manager->registerClient(net::ClientId{14});
   manager->registerPlayer(net::ClientId{14}, bsgo::Uuid{16}, bsgo::Uuid{20});
-  auto server = std::make_shared<TestNetworkServer>();
+  auto server = std::make_shared<TestOutputNetworkAdapter>();
   BroadcastMessageListener listener(manager, server);
 
   auto message = std::make_unique<TestSystemMessage>(bsgo::Uuid{19});
-  std::stringstream out;
-  message->serialize(out);
-  const auto outputStr = out.str();
-  std::vector<char> expected(outputStr.begin(), outputStr.end());
-
   listener.onMessageReceived(*message);
 
-  EXPECT_EQ(2u, server->messages().size());
-  EXPECT_THAT(server->messages(),
-              Contains(
-                TestNetworkServer::MessageData{.clientId = net::ClientId{12}, .data = expected}));
-  EXPECT_THAT(server->messages(),
-              Contains(
-                TestNetworkServer::MessageData{.clientId = net::ClientId{13}, .data = expected}));
+  const auto &messages = server->messages();
+  EXPECT_EQ(2u, messages.size());
+
+  if (!assertMessageMatches(messages, net::ClientId{12}, bsgo::Uuid{19}))
+  {
+    FAIL() << "Expected message to be sent to client " << net::str(net::ClientId{12});
+  }
+  if (!assertMessageMatches(messages, net::ClientId{13}, bsgo::Uuid{19}))
+  {
+    FAIL() << "Expected message to be sent to client " << net::str(net::ClientId{13});
+  }
 }
 
 } // namespace bsgalone::server
