@@ -7,7 +7,7 @@ namespace bsgo {
 LogoutMessageConsumer::LogoutMessageConsumer(SystemServiceShPtr systemService,
                                              SystemQueueMap systemQueues,
                                              bsgalone::core::IMessageQueue *const outputMessageQueue)
-  : AbstractMessageConsumer("logout", {MessageType::LOGOUT})
+  : AbstractMessageConsumer("logout", {bsgalone::core::MessageType::LOGOUT})
   , m_systemQueues(std::move(systemQueues))
   , m_systemService(std::move(systemService))
   , m_outputMessageQueue(outputMessageQueue)

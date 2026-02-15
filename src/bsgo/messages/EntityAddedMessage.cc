@@ -5,11 +5,11 @@
 namespace bsgo {
 
 EntityAddedMessage::EntityAddedMessage()
-  : NetworkMessage(MessageType::ENTITY_ADDED)
+  : NetworkMessage(bsgalone::core::MessageType::ENTITY_ADDED)
 {}
 
 EntityAddedMessage::EntityAddedMessage(const Uuid systemDbId)
-  : NetworkMessage(MessageType::ENTITY_ADDED)
+  : NetworkMessage(bsgalone::core::MessageType::ENTITY_ADDED)
   , m_systemDbId(systemDbId)
 {}
 

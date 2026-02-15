@@ -39,7 +39,7 @@ TEST(Unit_Bsgo_Serialization_LootMessage, Clone)
 {
   const LootMessage expected(Uuid{3690}, Uuid{14}, 32);
   const auto cloned = expected.clone();
-  ASSERT_EQ(cloned->type(), MessageType::LOOT);
+  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::LOOT);
   assertMessagesAreEqual(cloned->as<LootMessage>(), expected);
 }
 

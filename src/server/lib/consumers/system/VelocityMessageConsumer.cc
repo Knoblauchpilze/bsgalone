@@ -7,7 +7,7 @@ namespace bsgo {
 VelocityMessageConsumer::VelocityMessageConsumer(
   const Services &services,
   bsgalone::core::IMessageQueue *const outputMessageQueue)
-  : AbstractMessageConsumer("velocity", {MessageType::VELOCITY})
+  : AbstractMessageConsumer("velocity", {bsgalone::core::MessageType::VELOCITY})
   , m_shipService(services.ship)
   , m_outputMessageQueue(outputMessageQueue)
 {

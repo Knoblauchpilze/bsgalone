@@ -5,12 +5,12 @@
 namespace bsgo {
 
 PlayerResourceListMessage::PlayerResourceListMessage()
-  : NetworkMessage(MessageType::PLAYER_RESOURCE_LIST)
+  : NetworkMessage(bsgalone::core::MessageType::PLAYER_RESOURCE_LIST)
 {}
 
 PlayerResourceListMessage::PlayerResourceListMessage(
   const std::vector<PlayerResourceData> &resourcesData)
-  : NetworkMessage(MessageType::PLAYER_RESOURCE_LIST)
+  : NetworkMessage(bsgalone::core::MessageType::PLAYER_RESOURCE_LIST)
   , m_resourcesData(resourcesData)
 {}
 

@@ -5,11 +5,11 @@
 namespace bsgo {
 
 PlayerShipListMessage::PlayerShipListMessage()
-  : NetworkMessage(MessageType::PLAYER_SHIP_LIST)
+  : NetworkMessage(bsgalone::core::MessageType::PLAYER_SHIP_LIST)
 {}
 
 PlayerShipListMessage::PlayerShipListMessage(const std::vector<PlayerShipData> &shipsData)
-  : NetworkMessage(MessageType::PLAYER_SHIP_LIST)
+  : NetworkMessage(bsgalone::core::MessageType::PLAYER_SHIP_LIST)
   , m_shipsData(shipsData)
 {}
 

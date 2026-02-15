@@ -11,7 +11,7 @@ class MessageListenerWrapper : public bsgalone::core::IMessageListener
   MessageListenerWrapper(bsgalone::core::IMessageListener *listener);
   ~MessageListenerWrapper() override = default;
 
-  bool isMessageRelevant(const bsgo::MessageType &type) const override;
+  bool isMessageRelevant(const bsgalone::core::MessageType &type) const override;
   void onMessageReceived(const bsgalone::core::IMessage &message) override;
 
   private:

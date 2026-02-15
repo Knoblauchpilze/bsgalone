@@ -41,7 +41,7 @@ TEST(Unit_Bsgo_Serialization_WeaponComponentMessage, Clone)
 {
   const WeaponComponentMessage expected(Uuid{28}, Uuid{67}, true);
   const auto cloned = expected.clone();
-  ASSERT_EQ(cloned->type(), MessageType::WEAPON_COMPONENT_UPDATED);
+  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::WEAPON_COMPONENT_UPDATED);
   assertMessagesAreEqual(cloned->as<WeaponComponentMessage>(), expected);
 }
 

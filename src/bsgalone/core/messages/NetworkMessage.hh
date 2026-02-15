@@ -9,7 +9,7 @@ namespace bsgalone::core {
 class NetworkMessage : public AbstractMessage
 {
   public:
-  NetworkMessage(const bsgo::MessageType &type);
+  NetworkMessage(const MessageType &type);
   ~NetworkMessage() override = default;
 
   // TODO: This should be changed to a net::ClientId

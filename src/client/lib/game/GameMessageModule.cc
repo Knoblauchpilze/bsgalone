@@ -5,18 +5,18 @@
 #include <unordered_set>
 
 namespace pge {
-using Messages                             = std::unordered_set<bsgo::MessageType>;
-const Messages GAME_CHANGING_MESSAGE_TYPES = {bsgo::MessageType::CONNECTION,
-                                              bsgo::MessageType::DOCK,
-                                              bsgo::MessageType::HANGAR,
-                                              bsgo::MessageType::JUMP,
-                                              bsgo::MessageType::LOGIN,
-                                              bsgo::MessageType::LOGOUT,
-                                              bsgo::MessageType::ENTITY_REMOVED,
-                                              bsgo::MessageType::LOADING_STARTED,
-                                              bsgo::MessageType::LOADING_FINISHED,
-                                              bsgo::MessageType::PLAYER_LOGIN_DATA,
-                                              bsgo::MessageType::SYSTEM_DATA};
+using Messages                             = std::unordered_set<bsgalone::core::MessageType>;
+const Messages GAME_CHANGING_MESSAGE_TYPES = {bsgalone::core::MessageType::CONNECTION,
+                                              bsgalone::core::MessageType::DOCK,
+                                              bsgalone::core::MessageType::HANGAR,
+                                              bsgalone::core::MessageType::JUMP,
+                                              bsgalone::core::MessageType::LOGIN,
+                                              bsgalone::core::MessageType::LOGOUT,
+                                              bsgalone::core::MessageType::ENTITY_REMOVED,
+                                              bsgalone::core::MessageType::LOADING_STARTED,
+                                              bsgalone::core::MessageType::LOADING_FINISHED,
+                                              bsgalone::core::MessageType::PLAYER_LOGIN_DATA,
+                                              bsgalone::core::MessageType::SYSTEM_DATA};
 
 GameMessageModule::GameMessageModule(Game &game, const bsgo::DatabaseEntityMapper &entityMapper)
   : bsgo::AbstractMessageListener(GAME_CHANGING_MESSAGE_TYPES)
@@ -31,41 +31,41 @@ void GameMessageModule::onMessageReceived(const bsgalone::core::IMessage &messag
 {
   switch (message.type())
   {
-    case bsgo::MessageType::CONNECTION:
+    case bsgalone::core::MessageType::CONNECTION:
       handleConnectionMessage(message.as<bsgo::ConnectionMessage>());
       break;
-    case bsgo::MessageType::DOCK:
+    case bsgalone::core::MessageType::DOCK:
       handleDockMessage(message.as<bsgo::DockMessage>());
       break;
-    case bsgo::MessageType::ENTITY_REMOVED:
+    case bsgalone::core::MessageType::ENTITY_REMOVED:
       handleEntityRemovedMessage(message.as<bsgo::EntityRemovedMessage>());
       break;
-    case bsgo::MessageType::HANGAR:
+    case bsgalone::core::MessageType::HANGAR:
       handleHangarMessage(message.as<bsgo::HangarMessage>());
       break;
-    case bsgo::MessageType::JUMP:
+    case bsgalone::core::MessageType::JUMP:
       handleJumpMessage(message.as<bsgo::JumpMessage>());
       break;
-    case bsgo::MessageType::LOGIN:
+    case bsgalone::core::MessageType::LOGIN:
       handleLoginMessage(message.as<bsgo::LoginMessage>());
       break;
-    case bsgo::MessageType::LOGOUT:
+    case bsgalone::core::MessageType::LOGOUT:
       handleLogoutMessage(message.as<bsgo::LogoutMessage>());
       break;
-    case bsgo::MessageType::LOADING_STARTED:
+    case bsgalone::core::MessageType::LOADING_STARTED:
       handleLoadingStartedMessage(message.as<bsgo::LoadingStartedMessage>());
       break;
-    case bsgo::MessageType::LOADING_FINISHED:
+    case bsgalone::core::MessageType::LOADING_FINISHED:
       handleLoadingFinishedMessage(message.as<bsgo::LoadingFinishedMessage>());
       break;
-    case bsgo::MessageType::PLAYER_LOGIN_DATA:
+    case bsgalone::core::MessageType::PLAYER_LOGIN_DATA:
       handlePlayerLoginDataMessage(message.as<bsgo::PlayerLoginDataMessage>());
       break;
-    case bsgo::MessageType::SYSTEM_DATA:
+    case bsgalone::core::MessageType::SYSTEM_DATA:
       handleSystemDataMessage(message.as<bsgo::SystemDataMessage>());
       break;
     default:
-      error("Unsupported message type " + bsgo::str(message.type()));
+      error("Unsupported message type " + str(message.type()));
       break;
   }
 }

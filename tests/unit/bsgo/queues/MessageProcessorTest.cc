@@ -51,7 +51,7 @@ TEST(Unit_Bsgo_Queues_MessageProcessor, ForwardsAvailableMessageToHandler)
   std::mutex locker{};
 
   auto handler = [](const bsgalone::core::IMessage &message) {
-    EXPECT_EQ(MessageType::DOCK, message.type());
+    EXPECT_EQ(bsgalone::core::MessageType::DOCK, message.type());
 
     const auto &actual = message.as<DockMessage>();
     EXPECT_EQ(Uuid{3}, actual.getShipDbId());

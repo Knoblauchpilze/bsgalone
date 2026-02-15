@@ -5,13 +5,13 @@
 namespace bsgo {
 
 EntityRemovedMessage::EntityRemovedMessage()
-  : NetworkMessage(MessageType::ENTITY_REMOVED)
+  : NetworkMessage(bsgalone::core::MessageType::ENTITY_REMOVED)
 {}
 
 EntityRemovedMessage::EntityRemovedMessage(const Uuid entityDbId,
                                            const EntityKind entityKind,
                                            const bool dead)
-  : NetworkMessage(MessageType::ENTITY_REMOVED)
+  : NetworkMessage(bsgalone::core::MessageType::ENTITY_REMOVED)
   , m_entityDbId(entityDbId)
   , m_entityKind(entityKind)
   , m_dead(dead)
@@ -21,7 +21,7 @@ EntityRemovedMessage::EntityRemovedMessage(const Uuid entityDbId,
                                            const EntityKind entityKind,
                                            const bool dead,
                                            const Uuid systemDbId)
-  : NetworkMessage(MessageType::ENTITY_REMOVED)
+  : NetworkMessage(bsgalone::core::MessageType::ENTITY_REMOVED)
   , m_entityDbId(entityDbId)
   , m_entityKind(entityKind)
   , m_dead(dead)

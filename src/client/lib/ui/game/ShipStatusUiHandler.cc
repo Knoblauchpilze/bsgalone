@@ -11,7 +11,8 @@ namespace pge {
 
 ShipStatusUiHandler::ShipStatusUiHandler(const Views &views)
   : IUiHandler("ship_status")
-  , AbstractMessageListener({bsgo::MessageType::JUMP_REQUESTED, bsgo::MessageType::JUMP_CANCELLED})
+  , AbstractMessageListener(
+      {bsgalone::core::MessageType::JUMP_REQUESTED, bsgalone::core::MessageType::JUMP_CANCELLED})
   , m_shipView(views.shipView)
 {
   if (nullptr == m_shipView)
@@ -65,11 +66,11 @@ void ShipStatusUiHandler::onMessageReceived(const bsgalone::core::IMessage &mess
     return;
   }
 
-  if (bsgo::MessageType::JUMP_REQUESTED == message.type())
+  if (bsgalone::core::MessageType::JUMP_REQUESTED == message.type())
   {
     m_jumpStartTime = core::now();
   }
-  if (bsgo::MessageType::JUMP_CANCELLED == message.type())
+  if (bsgalone::core::MessageType::JUMP_CANCELLED == message.type())
   {
     m_jumpStartTime.reset();
   }

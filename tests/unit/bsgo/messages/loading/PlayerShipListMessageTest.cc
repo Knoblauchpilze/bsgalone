@@ -142,7 +142,7 @@ TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, CloneWithSystem)
 
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), MessageType::PLAYER_SHIP_LIST);
+  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::PLAYER_SHIP_LIST);
   assertMessagesAreEqual(cloned->as<PlayerShipListMessage>(), expected);
 }
 
@@ -157,7 +157,7 @@ TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, CloneWithPlayer)
 
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), MessageType::PLAYER_SHIP_LIST);
+  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::PLAYER_SHIP_LIST);
   assertMessagesAreEqual(cloned->as<PlayerShipListMessage>(), expected);
 }
 

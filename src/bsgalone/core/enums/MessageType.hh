@@ -4,7 +4,7 @@
 #include <string>
 #include <unordered_set>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 enum class MessageType
 {
@@ -54,4 +54,4 @@ auto str(const MessageType &type) -> std::string;
 
 auto allMessageTypesAsSet() -> std::unordered_set<MessageType>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

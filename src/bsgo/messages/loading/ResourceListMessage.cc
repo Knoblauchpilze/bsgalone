@@ -5,11 +5,11 @@
 namespace bsgo {
 
 ResourceListMessage::ResourceListMessage()
-  : NetworkMessage(MessageType::RESOURCE_LIST)
+  : NetworkMessage(bsgalone::core::MessageType::RESOURCE_LIST)
 {}
 
 ResourceListMessage::ResourceListMessage(const std::vector<ResourceData> &resourcesData)
-  : NetworkMessage(MessageType::RESOURCE_LIST)
+  : NetworkMessage(bsgalone::core::MessageType::RESOURCE_LIST)
   , m_resourcesData(resourcesData)
 {}
 

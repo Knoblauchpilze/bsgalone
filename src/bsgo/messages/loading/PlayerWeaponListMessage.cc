@@ -5,11 +5,11 @@
 namespace bsgo {
 
 PlayerWeaponListMessage::PlayerWeaponListMessage()
-  : NetworkMessage(MessageType::PLAYER_WEAPON_LIST)
+  : NetworkMessage(bsgalone::core::MessageType::PLAYER_WEAPON_LIST)
 {}
 
 PlayerWeaponListMessage::PlayerWeaponListMessage(const std::vector<PlayerWeaponData> &weaponsData)
-  : NetworkMessage(MessageType::PLAYER_WEAPON_LIST)
+  : NetworkMessage(bsgalone::core::MessageType::PLAYER_WEAPON_LIST)
   , m_weaponsData(weaponsData)
 {}
 

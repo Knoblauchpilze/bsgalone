@@ -8,13 +8,13 @@ namespace bsgalone::core {
 class AbstractMessage : public IMessage
 {
   public:
-  AbstractMessage(const bsgo::MessageType &type);
+  AbstractMessage(const MessageType &type);
   ~AbstractMessage() override = default;
 
-  auto type() const -> bsgo::MessageType override;
+  auto type() const -> MessageType override;
 
   protected:
-  bsgo::MessageType m_messageType{};
+  MessageType m_messageType{};
 };
 
 } // namespace bsgalone::core

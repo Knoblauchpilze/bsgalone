@@ -5,12 +5,12 @@
 namespace bsgo {
 
 TargetListMessage::TargetListMessage()
-  : NetworkMessage(MessageType::TARGET_LIST)
+  : NetworkMessage(bsgalone::core::MessageType::TARGET_LIST)
 {}
 
 TargetListMessage::TargetListMessage(const Uuid systemDbId,
                                      const std::vector<TargetData> &targetsData)
-  : NetworkMessage(MessageType::TARGET_LIST)
+  : NetworkMessage(bsgalone::core::MessageType::TARGET_LIST)
   , m_systemDbId(systemDbId)
   , m_targetsData(targetsData)
 {}

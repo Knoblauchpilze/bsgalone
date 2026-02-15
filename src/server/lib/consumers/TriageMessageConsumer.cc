@@ -7,7 +7,7 @@ namespace bsgo {
 TriageMessageConsumer::TriageMessageConsumer(bsgalone::server::ClientManagerShPtr clientManager,
                                              SystemQueueMap systemQueues,
                                              bsgalone::core::IMessageQueuePtr systemMessageQueue)
-  : AbstractMessageConsumer("triage", allMessageTypesAsSet())
+  : AbstractMessageConsumer("triage", bsgalone::core::allMessageTypesAsSet())
   , m_clientManager(std::move(clientManager))
   , m_systemQueues(std::move(systemQueues))
   , m_systemQueue(std::move(systemMessageQueue))
@@ -28,21 +28,21 @@ void TriageMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &me
 
   switch (message.type())
   {
-    case MessageType::SIGNUP:
-    case MessageType::LOGIN:
-    case MessageType::LOGOUT:
-    case MessageType::JOIN_SHIP:
+    case bsgalone::core::MessageType::SIGNUP:
+    case bsgalone::core::MessageType::LOGIN:
+    case bsgalone::core::MessageType::LOGOUT:
+    case bsgalone::core::MessageType::JOIN_SHIP:
       handleSystemMessage(message);
       break;
-    case MessageType::DOCK:
-    case MessageType::EQUIP:
-    case MessageType::HANGAR:
-    case MessageType::JUMP_CANCELLED:
-    case MessageType::JUMP_REQUESTED:
-    case MessageType::PURCHASE:
-    case MessageType::SLOT:
-    case MessageType::TARGET:
-    case MessageType::VELOCITY:
+    case bsgalone::core::MessageType::DOCK:
+    case bsgalone::core::MessageType::EQUIP:
+    case bsgalone::core::MessageType::HANGAR:
+    case bsgalone::core::MessageType::JUMP_CANCELLED:
+    case bsgalone::core::MessageType::JUMP_REQUESTED:
+    case bsgalone::core::MessageType::PURCHASE:
+    case bsgalone::core::MessageType::SLOT:
+    case bsgalone::core::MessageType::TARGET:
+    case bsgalone::core::MessageType::VELOCITY:
       triagePlayerMessage(message);
       break;
     default:

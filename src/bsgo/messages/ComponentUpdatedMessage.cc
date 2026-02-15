@@ -3,11 +3,11 @@
 
 namespace bsgo {
 
-ComponentUpdatedMessage::ComponentUpdatedMessage(const MessageType &type)
+ComponentUpdatedMessage::ComponentUpdatedMessage(const bsgalone::core::MessageType &type)
   : ComponentUpdatedMessage(type, {}, {})
 {}
 
-ComponentUpdatedMessage::ComponentUpdatedMessage(const MessageType &type,
+ComponentUpdatedMessage::ComponentUpdatedMessage(const bsgalone::core::MessageType &type,
                                                  const Uuid shipDbId,
                                                  const ComponentType component)
   : NetworkMessage(type)

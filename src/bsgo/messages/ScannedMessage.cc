@@ -5,11 +5,11 @@
 namespace bsgo {
 
 ScannedMessage::ScannedMessage()
-  : NetworkMessage(MessageType::SCANNED)
+  : NetworkMessage(bsgalone::core::MessageType::SCANNED)
 {}
 
 ScannedMessage::ScannedMessage(const Uuid playerDbId, const Uuid asteroidDbId)
-  : NetworkMessage(MessageType::SCANNED)
+  : NetworkMessage(bsgalone::core::MessageType::SCANNED)
   , m_playerDbId(playerDbId)
   , m_asteroidDbId(asteroidDbId)
 {}

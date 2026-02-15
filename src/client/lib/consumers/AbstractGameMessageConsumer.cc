@@ -5,11 +5,12 @@
 
 namespace pge {
 
-AbstractGameMessageConsumer::AbstractGameMessageConsumer(const std::string &name,
-                                                         const bsgo::MessageType relevantMessageType)
+AbstractGameMessageConsumer::AbstractGameMessageConsumer(
+  const std::string &name,
+  const bsgalone::core::MessageType relevantMessageType)
   : bsgo::AbstractMessageConsumer(name,
-                                  {bsgo::MessageType::LOADING_STARTED,
-                                   bsgo::MessageType::LOADING_FINISHED,
+                                  {bsgalone::core::MessageType::LOADING_STARTED,
+                                   bsgalone::core::MessageType::LOADING_FINISHED,
                                    relevantMessageType})
 {
   addModule("consumer");
@@ -19,10 +20,10 @@ void AbstractGameMessageConsumer::onMessageReceived(const bsgalone::core::IMessa
 {
   switch (message.type())
   {
-    case bsgo::MessageType::LOADING_STARTED:
+    case bsgalone::core::MessageType::LOADING_STARTED:
       handleLoadingStarted(message.as<bsgo::LoadingStartedMessage>());
       break;
-    case bsgo::MessageType::LOADING_FINISHED:
+    case bsgalone::core::MessageType::LOADING_FINISHED:
       handleLoadingFinished(message.as<bsgo::LoadingFinishedMessage>());
       break;
     default:

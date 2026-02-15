@@ -69,7 +69,7 @@ TEST(Unit_Bsgo_Serialization_LoadingFinishedMessage, CloneWithoutSystem)
   const LoadingFinishedMessage expected(LoadingTransition::LOGIN, Uuid{1243});
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), MessageType::LOADING_FINISHED);
+  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::LOADING_FINISHED);
   assertMessagesAreEqual(cloned->as<LoadingFinishedMessage>(), expected);
 }
 
@@ -80,7 +80,7 @@ TEST(Unit_Bsgo_Serialization_LoadingFinishedMessage, CloneWithSystem)
 
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), MessageType::LOADING_FINISHED);
+  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::LOADING_FINISHED);
   assertMessagesAreEqual(cloned->as<LoadingFinishedMessage>(), expected);
 }
 

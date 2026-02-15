@@ -9,7 +9,7 @@ PurchaseMessageConsumer::PurchaseMessageConsumer(
   const Services &services,
   bsgalone::core::IMessageQueue *const systemMessageQueue,
   bsgalone::core::IMessageQueue *const outputMessageQueue)
-  : AbstractMessageConsumer("purchase", {MessageType::PURCHASE})
+  : AbstractMessageConsumer("purchase", {bsgalone::core::MessageType::PURCHASE})
   , m_purchaseService(services.purchase)
   , m_systemMessageQueue(systemMessageQueue)
   , m_outputMessageQueue(outputMessageQueue)

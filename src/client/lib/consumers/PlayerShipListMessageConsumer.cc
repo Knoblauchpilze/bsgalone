@@ -7,7 +7,7 @@ namespace pge {
 
 PlayerShipListMessageConsumer::PlayerShipListMessageConsumer(bsgo::DatabaseEntityMapper &entityMapper,
                                                              bsgo::CoordinatorShPtr coordinator)
-  : AbstractGameMessageConsumer("ship", bsgo::MessageType::PLAYER_SHIP_LIST)
+  : AbstractGameMessageConsumer("ship", bsgalone::core::MessageType::PLAYER_SHIP_LIST)
   , m_entityMapper(entityMapper)
   , m_coordinator(std::move(coordinator))
 {}

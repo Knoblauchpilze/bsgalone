@@ -5,11 +5,11 @@
 namespace bsgo {
 
 PurchaseMessage::PurchaseMessage()
-  : NetworkMessage(MessageType::PURCHASE)
+  : NetworkMessage(bsgalone::core::MessageType::PURCHASE)
 {}
 
 PurchaseMessage::PurchaseMessage(const Uuid playerDbId, const Item &itemType, const Uuid itemDbId)
-  : NetworkMessage(MessageType::PURCHASE)
+  : NetworkMessage(bsgalone::core::MessageType::PURCHASE)
   , m_playerDbId(playerDbId)
   , m_itemType(itemType)
   , m_itemDbId(itemDbId)

@@ -14,10 +14,10 @@ ShipDbView::ShipDbView(GameSessionShPtr gameSession,
                        bsgalone::core::IMessageQueue *const outputMessageQueue)
   : AbstractView("ship",
                  {
-                   bsgo::MessageType::HANGAR,
-                   bsgo::MessageType::JUMP,
-                   bsgo::MessageType::JUMP_CANCELLED,
-                   bsgo::MessageType::JUMP_REQUESTED,
+                   bsgalone::core::MessageType::HANGAR,
+                   bsgalone::core::MessageType::JUMP,
+                   bsgalone::core::MessageType::JUMP_CANCELLED,
+                   bsgalone::core::MessageType::JUMP_REQUESTED,
                  })
   , m_gameSession(std::move(gameSession))
   , m_internalMessageQueue(internalMessageQueue)
@@ -192,19 +192,19 @@ void ShipDbView::handleMessageInternal(const bsgalone::core::IMessage &message)
 {
   switch (message.type())
   {
-    case bsgo::MessageType::HANGAR:
+    case bsgalone::core::MessageType::HANGAR:
       m_playerShip = message.as<bsgo::HangarMessage>().getShip();
       debug("Active ship is now " + bsgo::str(m_playerShip->dbId));
       break;
-    case bsgo::MessageType::JUMP_REQUESTED:
+    case bsgalone::core::MessageType::JUMP_REQUESTED:
       m_playerShip->jumpSystem = message.as<bsgo::JumpRequestedMessage>().getJumpSystem();
       break;
-    case bsgo::MessageType::JUMP_CANCELLED:
-    case bsgo::MessageType::JUMP:
+    case bsgalone::core::MessageType::JUMP_CANCELLED:
+    case bsgalone::core::MessageType::JUMP:
       m_playerShip->jumpSystem.reset();
       break;
     default:
-      error("Unsupported message type " + bsgo::str(message.type()));
+      error("Unsupported message type " + str(message.type()));
       return;
   }
 }

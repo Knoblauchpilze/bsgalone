@@ -7,7 +7,7 @@ namespace bsgo {
 AiBehaviorSyncMessageConsumer::AiBehaviorSyncMessageConsumer(
   SystemServiceShPtr systemService,
   bsgalone::core::IMessageQueue *const outputMessageQueue)
-  : AbstractMessageConsumer("jump", {MessageType::AI_BEHAVIOR_SYNC})
+  : AbstractMessageConsumer("jump", {bsgalone::core::MessageType::AI_BEHAVIOR_SYNC})
   , m_systemService(std::move(systemService))
   , m_outputMessageQueue(outputMessageQueue)
 {

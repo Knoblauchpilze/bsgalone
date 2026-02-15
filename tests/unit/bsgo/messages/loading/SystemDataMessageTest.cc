@@ -70,7 +70,7 @@ TEST(Unit_Bsgo_Serialization_SystemDataMessage, Clone)
   const SystemDataMessage expected(data);
 
   const auto cloned = expected.clone();
-  ASSERT_EQ(cloned->type(), MessageType::SYSTEM_DATA);
+  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::SYSTEM_DATA);
 
   assertMessagesAreEqual(cloned->as<SystemDataMessage>(), expected);
 }

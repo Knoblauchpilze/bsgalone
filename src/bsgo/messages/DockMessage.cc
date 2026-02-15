@@ -5,11 +5,11 @@
 namespace bsgo {
 
 DockMessage::DockMessage()
-  : NetworkMessage(MessageType::DOCK)
+  : NetworkMessage(bsgalone::core::MessageType::DOCK)
 {}
 
 DockMessage::DockMessage(const Uuid shipDbId, const DockTransition transition)
-  : NetworkMessage(MessageType::DOCK)
+  : NetworkMessage(bsgalone::core::MessageType::DOCK)
   , m_shipDbId(shipDbId)
   , m_transition(transition)
 {}

@@ -5,11 +5,11 @@
 namespace bsgo {
 
 AiBehaviorSyncMessage::AiBehaviorSyncMessage()
-  : NetworkMessage(MessageType::AI_BEHAVIOR_SYNC)
+  : NetworkMessage(bsgalone::core::MessageType::AI_BEHAVIOR_SYNC)
 {}
 
 AiBehaviorSyncMessage::AiBehaviorSyncMessage(const Uuid shipDbId)
-  : NetworkMessage(MessageType::AI_BEHAVIOR_SYNC)
+  : NetworkMessage(bsgalone::core::MessageType::AI_BEHAVIOR_SYNC)
   , m_shipDbId(shipDbId)
 {}
 

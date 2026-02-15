@@ -38,11 +38,11 @@ auto ShopItem::type() const -> bsgo::Item
 ShopView::ShopView(GameSessionShPtr gameSession)
   : AbstractView("shop",
                  {
-                   bsgo::MessageType::COMPUTER_LIST,
-                   bsgo::MessageType::PLAYER_RESOURCE_LIST,
-                   bsgo::MessageType::RESOURCE_LIST,
-                   bsgo::MessageType::SHIP_LIST,
-                   bsgo::MessageType::WEAPON_LIST,
+                   bsgalone::core::MessageType::COMPUTER_LIST,
+                   bsgalone::core::MessageType::PLAYER_RESOURCE_LIST,
+                   bsgalone::core::MessageType::RESOURCE_LIST,
+                   bsgalone::core::MessageType::SHIP_LIST,
+                   bsgalone::core::MessageType::WEAPON_LIST,
                  })
   , m_gameSession(std::move(gameSession))
 {
@@ -174,23 +174,23 @@ void ShopView::handleMessageInternal(const bsgalone::core::IMessage &message)
 {
   switch (message.type())
   {
-    case bsgo::MessageType::RESOURCE_LIST:
+    case bsgalone::core::MessageType::RESOURCE_LIST:
       m_resources = message.as<bsgo::ResourceListMessage>().getResourcesData();
       break;
-    case bsgo::MessageType::COMPUTER_LIST:
+    case bsgalone::core::MessageType::COMPUTER_LIST:
       m_computers = message.as<bsgo::ComputerListMessage>().getComputersData();
       break;
-    case bsgo::MessageType::WEAPON_LIST:
+    case bsgalone::core::MessageType::WEAPON_LIST:
       m_weapons = message.as<bsgo::WeaponListMessage>().getWeaponsData();
       break;
-    case bsgo::MessageType::SHIP_LIST:
+    case bsgalone::core::MessageType::SHIP_LIST:
       handleShipsLoading(message.as<bsgo::ShipListMessage>());
       break;
-    case bsgo::MessageType::PLAYER_RESOURCE_LIST:
+    case bsgalone::core::MessageType::PLAYER_RESOURCE_LIST:
       m_playerResources = message.as<bsgo::PlayerResourceListMessage>().getResourcesData();
       break;
     default:
-      error("Unsupported message type " + bsgo::str(message.type()));
+      error("Unsupported message type " + str(message.type()));
   }
 }
 

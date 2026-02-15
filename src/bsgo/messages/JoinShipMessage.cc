@@ -5,11 +5,11 @@
 namespace bsgo {
 
 JoinShipMessage::JoinShipMessage()
-  : NetworkMessage(MessageType::JOIN_SHIP)
+  : NetworkMessage(bsgalone::core::MessageType::JOIN_SHIP)
 {}
 
 JoinShipMessage::JoinShipMessage(const Uuid playerDbId, const Uuid shipDbId)
-  : NetworkMessage(MessageType::JOIN_SHIP)
+  : NetworkMessage(bsgalone::core::MessageType::JOIN_SHIP)
   , m_playerDbId(playerDbId)
   , m_shipDbId(shipDbId)
 {}

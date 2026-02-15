@@ -7,11 +7,11 @@
 namespace bsgo {
 
 TargetMessage::TargetMessage()
-  : NetworkMessage(MessageType::TARGET)
+  : NetworkMessage(bsgalone::core::MessageType::TARGET)
 {}
 
 TargetMessage::TargetMessage(TargetData data, const Eigen::Vector3f &position)
-  : NetworkMessage(MessageType::TARGET)
+  : NetworkMessage(bsgalone::core::MessageType::TARGET)
   , m_data(std::move(data))
   , m_position(position)
 {}

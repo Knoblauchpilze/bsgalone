@@ -54,11 +54,11 @@ MessageParser::MessageParser()
 }
 
 namespace {
-constexpr auto MESSAGE_SIZE = sizeof(std::underlying_type_t<MessageType>);
+constexpr auto MESSAGE_SIZE = sizeof(std::underlying_type_t<bsgalone::core::MessageType>);
 
-auto tryReadMessageType(std::istream &in) -> std::optional<MessageType>
+auto tryReadMessageType(std::istream &in) -> std::optional<bsgalone::core::MessageType>
 {
-  MessageType type{};
+  bsgalone::core::MessageType type{};
   if (!core::deserialize(in, type))
   {
     return {};
@@ -111,90 +111,90 @@ auto readMessage(std::istream &in) -> std::optional<bsgalone::core::IMessagePtr>
 }
 } // namespace
 
-auto MessageParser::tryReadMessage(const MessageType &type, std::istream &in)
+auto MessageParser::tryReadMessage(const bsgalone::core::MessageType &type, std::istream &in)
   -> std::optional<bsgalone::core::IMessagePtr>
 {
   switch (type)
   {
-    case MessageType::AI_BEHAVIOR_SYNC:
+    case bsgalone::core::MessageType::AI_BEHAVIOR_SYNC:
       return readMessage<AiBehaviorSyncMessage>(in);
-    case MessageType::ASTEROID_LIST:
+    case bsgalone::core::MessageType::ASTEROID_LIST:
       return readMessage<AsteroidListMessage>(in);
-    case MessageType::COMPONENT_SYNC:
+    case bsgalone::core::MessageType::COMPONENT_SYNC:
       return readMessage<ComponentSyncMessage>(in);
-    case MessageType::COMPUTER_LIST:
+    case bsgalone::core::MessageType::COMPUTER_LIST:
       return readMessage<ComputerListMessage>(in);
-    case MessageType::CONNECTION:
+    case bsgalone::core::MessageType::CONNECTION:
       return readMessage<ConnectionMessage>(in);
-    case MessageType::DOCK:
+    case bsgalone::core::MessageType::DOCK:
       return readMessage<DockMessage>(in);
-    case MessageType::ENTITY_ADDED:
+    case bsgalone::core::MessageType::ENTITY_ADDED:
       return readMessage<EntityAddedMessage>(in);
-    case MessageType::ENTITY_REMOVED:
+    case bsgalone::core::MessageType::ENTITY_REMOVED:
       return readMessage<EntityRemovedMessage>(in);
-    case MessageType::EQUIP:
+    case bsgalone::core::MessageType::EQUIP:
       return readMessage<EquipMessage>(in);
-    case MessageType::HANGAR:
+    case bsgalone::core::MessageType::HANGAR:
       return readMessage<HangarMessage>(in);
-    case MessageType::JOIN_SHIP:
+    case bsgalone::core::MessageType::JOIN_SHIP:
       return readMessage<JoinShipMessage>(in);
-    case MessageType::JUMP:
+    case bsgalone::core::MessageType::JUMP:
       return readMessage<JumpMessage>(in);
-    case MessageType::JUMP_CANCELLED:
+    case bsgalone::core::MessageType::JUMP_CANCELLED:
       return readMessage<JumpCancelledMessage>(in);
-    case MessageType::JUMP_REQUESTED:
+    case bsgalone::core::MessageType::JUMP_REQUESTED:
       return readMessage<JumpRequestedMessage>(in);
-    case MessageType::LOADING_FINISHED:
+    case bsgalone::core::MessageType::LOADING_FINISHED:
       return readMessage<LoadingFinishedMessage>(in);
-    case MessageType::LOADING_STARTED:
+    case bsgalone::core::MessageType::LOADING_STARTED:
       return readMessage<LoadingStartedMessage>(in);
-    case MessageType::LOGIN:
+    case bsgalone::core::MessageType::LOGIN:
       return readMessage<LoginMessage>(in);
-    case MessageType::LOGOUT:
+    case bsgalone::core::MessageType::LOGOUT:
       return readMessage<LogoutMessage>(in);
-    case MessageType::LOOT:
+    case bsgalone::core::MessageType::LOOT:
       return readMessage<LootMessage>(in);
-    case MessageType::OUTPOST_LIST:
+    case bsgalone::core::MessageType::OUTPOST_LIST:
       return readMessage<OutpostListMessage>(in);
-    case MessageType::PLAYER_COMPUTER_LIST:
+    case bsgalone::core::MessageType::PLAYER_COMPUTER_LIST:
       return readMessage<PlayerComputerListMessage>(in);
-    case MessageType::PLAYER_LIST:
+    case bsgalone::core::MessageType::PLAYER_LIST:
       return readMessage<PlayerListMessage>(in);
-    case MessageType::PLAYER_LOGIN_DATA:
+    case bsgalone::core::MessageType::PLAYER_LOGIN_DATA:
       return readMessage<PlayerLoginDataMessage>(in);
-    case MessageType::PLAYER_RESOURCE_LIST:
+    case bsgalone::core::MessageType::PLAYER_RESOURCE_LIST:
       return readMessage<PlayerResourceListMessage>(in);
-    case MessageType::PLAYER_SHIP_LIST:
+    case bsgalone::core::MessageType::PLAYER_SHIP_LIST:
       return readMessage<PlayerShipListMessage>(in);
-    case MessageType::PLAYER_WEAPON_LIST:
+    case bsgalone::core::MessageType::PLAYER_WEAPON_LIST:
       return readMessage<PlayerWeaponListMessage>(in);
-    case MessageType::PURCHASE:
+    case bsgalone::core::MessageType::PURCHASE:
       return readMessage<PurchaseMessage>(in);
-    case MessageType::RESOURCE_LIST:
+    case bsgalone::core::MessageType::RESOURCE_LIST:
       return readMessage<ResourceListMessage>(in);
-    case MessageType::SCANNED:
+    case bsgalone::core::MessageType::SCANNED:
       return readMessage<ScannedMessage>(in);
-    case MessageType::SHIP_LIST:
+    case bsgalone::core::MessageType::SHIP_LIST:
       return readMessage<ShipListMessage>(in);
-    case MessageType::SIGNUP:
+    case bsgalone::core::MessageType::SIGNUP:
       return readMessage<SignupMessage>(in);
-    case MessageType::SLOT:
+    case bsgalone::core::MessageType::SLOT:
       return readMessage<SlotMessage>(in);
-    case MessageType::SLOT_COMPONENT_UPDATED:
+    case bsgalone::core::MessageType::SLOT_COMPONENT_UPDATED:
       return readMessage<SlotComponentMessage>(in);
-    case MessageType::SYSTEM_DATA:
+    case bsgalone::core::MessageType::SYSTEM_DATA:
       return readMessage<SystemDataMessage>(in);
-    case MessageType::SYSTEM_LIST:
+    case bsgalone::core::MessageType::SYSTEM_LIST:
       return readMessage<SystemListMessage>(in);
-    case MessageType::VELOCITY:
+    case bsgalone::core::MessageType::VELOCITY:
       return readMessage<VelocityMessage>(in);
-    case MessageType::TARGET:
+    case bsgalone::core::MessageType::TARGET:
       return readMessage<TargetMessage>(in);
-    case MessageType::TARGET_LIST:
+    case bsgalone::core::MessageType::TARGET_LIST:
       return readMessage<TargetListMessage>(in);
-    case MessageType::WEAPON_COMPONENT_UPDATED:
+    case bsgalone::core::MessageType::WEAPON_COMPONENT_UPDATED:
       return readMessage<WeaponComponentMessage>(in);
-    case MessageType::WEAPON_LIST:
+    case bsgalone::core::MessageType::WEAPON_LIST:
       return readMessage<WeaponListMessage>(in);
     default:
       error("Unsupported message type " + str(type));

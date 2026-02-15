@@ -156,7 +156,7 @@ class TestPlayerMessage : public core::AbstractPlayerMessage
   // The type of message does not matter, it is just defined because it is
   // required to pick one to instantiate an `AbstractPlayerMessage`.
   TestPlayerMessage(const bsgo::Uuid playerDbId)
-    : core::AbstractPlayerMessage(bsgo::MessageType::DOCK, playerDbId)
+    : core::AbstractPlayerMessage(bsgalone::core::MessageType::DOCK, playerDbId)
   {}
 
   ~TestPlayerMessage() override = default;
@@ -217,7 +217,7 @@ class TestSystemMessage : public core::AbstractSystemMessage
   // The type of message does not matter, it is just defined because it is
   // required to pick one to instantiate an `AbstractSystemMessage`.
   TestSystemMessage(const bsgo::Uuid systemDbId)
-    : core::AbstractSystemMessage(bsgo::MessageType::DOCK, systemDbId)
+    : core::AbstractSystemMessage(bsgalone::core::MessageType::DOCK, systemDbId)
   {}
 
   ~TestSystemMessage() override = default;

@@ -5,12 +5,12 @@
 namespace bsgo {
 
 AsteroidListMessage::AsteroidListMessage()
-  : NetworkMessage(MessageType::ASTEROID_LIST)
+  : NetworkMessage(bsgalone::core::MessageType::ASTEROID_LIST)
 {}
 
 AsteroidListMessage::AsteroidListMessage(const Uuid systemDbId,
                                          const std::vector<AsteroidData> &asteroidsData)
-  : NetworkMessage(MessageType::ASTEROID_LIST)
+  : NetworkMessage(bsgalone::core::MessageType::ASTEROID_LIST)
   , m_systemDbId(systemDbId)
   , m_asteroidsData(asteroidsData)
 {}

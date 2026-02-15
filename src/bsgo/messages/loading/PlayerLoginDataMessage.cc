@@ -5,7 +5,7 @@
 namespace bsgo {
 
 PlayerLoginDataMessage::PlayerLoginDataMessage()
-  : NetworkMessage(MessageType::PLAYER_LOGIN_DATA)
+  : NetworkMessage(bsgalone::core::MessageType::PLAYER_LOGIN_DATA)
 {}
 
 auto PlayerLoginDataMessage::getFaction() const -> Faction

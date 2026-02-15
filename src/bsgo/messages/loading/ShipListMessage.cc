@@ -5,11 +5,11 @@
 namespace bsgo {
 
 ShipListMessage::ShipListMessage()
-  : NetworkMessage(MessageType::SHIP_LIST)
+  : NetworkMessage(bsgalone::core::MessageType::SHIP_LIST)
 {}
 
 ShipListMessage::ShipListMessage(const Faction faction, const std::vector<ShipData> &shipsData)
-  : NetworkMessage(MessageType::SHIP_LIST)
+  : NetworkMessage(bsgalone::core::MessageType::SHIP_LIST)
   , m_faction(faction)
   , m_shipsData(shipsData)
 {}

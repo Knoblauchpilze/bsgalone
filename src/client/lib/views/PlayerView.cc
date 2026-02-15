@@ -13,11 +13,11 @@ PlayerView::PlayerView(GameSessionShPtr gameSession,
                        bsgalone::core::IMessageQueue *const outputMessageQueue)
   : AbstractView("player",
                  {
-                   bsgo::MessageType::HANGAR,
-                   bsgo::MessageType::PLAYER_COMPUTER_LIST,
-                   bsgo::MessageType::PLAYER_RESOURCE_LIST,
-                   bsgo::MessageType::PLAYER_SHIP_LIST,
-                   bsgo::MessageType::PLAYER_WEAPON_LIST,
+                   bsgalone::core::MessageType::HANGAR,
+                   bsgalone::core::MessageType::PLAYER_COMPUTER_LIST,
+                   bsgalone::core::MessageType::PLAYER_RESOURCE_LIST,
+                   bsgalone::core::MessageType::PLAYER_SHIP_LIST,
+                   bsgalone::core::MessageType::PLAYER_WEAPON_LIST,
                  })
   , m_gameSession(std::move(gameSession))
   , m_outputMessageQueue(outputMessageQueue)
@@ -179,23 +179,23 @@ void PlayerView::handleMessageInternal(const bsgalone::core::IMessage &message)
 {
   switch (message.type())
   {
-    case bsgo::MessageType::HANGAR:
+    case bsgalone::core::MessageType::HANGAR:
       handleHangarMessage(message.as<bsgo::HangarMessage>());
       break;
-    case bsgo::MessageType::PLAYER_COMPUTER_LIST:
+    case bsgalone::core::MessageType::PLAYER_COMPUTER_LIST:
       handlePlayerComputersMessage(message.as<bsgo::PlayerComputerListMessage>());
       break;
-    case bsgo::MessageType::PLAYER_RESOURCE_LIST:
+    case bsgalone::core::MessageType::PLAYER_RESOURCE_LIST:
       handlePlayerResourcesMessage(message.as<bsgo::PlayerResourceListMessage>());
       break;
-    case bsgo::MessageType::PLAYER_SHIP_LIST:
+    case bsgalone::core::MessageType::PLAYER_SHIP_LIST:
       handlePlayerShipsMessage(message.as<bsgo::PlayerShipListMessage>());
       break;
-    case bsgo::MessageType::PLAYER_WEAPON_LIST:
+    case bsgalone::core::MessageType::PLAYER_WEAPON_LIST:
       handlePlayerWeaponsMessage(message.as<bsgo::PlayerWeaponListMessage>());
       break;
     default:
-      error("Unsupported message type " + bsgo::str(message.type()));
+      error("Unsupported message type " + str(message.type()));
       break;
   }
 }

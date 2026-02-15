@@ -7,7 +7,9 @@ namespace bsgo {
 RoutingMessageConsumer::RoutingMessageConsumer(
   SystemServiceShPtr systemService,
   bsgalone::core::IMessageQueue *const outputMessageQueue)
-  : AbstractMessageConsumer("routing", {MessageType::COMPONENT_SYNC, MessageType::TARGET})
+  : AbstractMessageConsumer("routing",
+                            {bsgalone::core::MessageType::COMPONENT_SYNC,
+                             bsgalone::core::MessageType::TARGET})
   , m_systemService(std::move(systemService))
   , m_outputMessageQueue(outputMessageQueue)
 {
@@ -25,10 +27,10 @@ void RoutingMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &m
 {
   switch (message.type())
   {
-    case MessageType::COMPONENT_SYNC:
+    case bsgalone::core::MessageType::COMPONENT_SYNC:
       handleComponentSyncMessage(message.as<ComponentSyncMessage>());
       break;
-    case MessageType::TARGET:
+    case bsgalone::core::MessageType::TARGET:
       handleTargetMessage(message.as<TargetMessage>());
       break;
     default:

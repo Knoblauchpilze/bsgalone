@@ -9,7 +9,7 @@ EntityRemovedMessageConsumer::EntityRemovedMessageConsumer(
   SystemServiceShPtr systemService,
   SystemQueueMap systemQueues,
   bsgalone::core::IMessageQueue *const outputMessageQueue)
-  : AbstractMessageConsumer("entity", {MessageType::ENTITY_REMOVED})
+  : AbstractMessageConsumer("entity", {bsgalone::core::MessageType::ENTITY_REMOVED})
   , m_systemService(std::move(systemService))
   , m_systemQueues(std::move(systemQueues))
   , m_outputMessageQueue(outputMessageQueue)

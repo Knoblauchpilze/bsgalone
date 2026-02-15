@@ -11,9 +11,9 @@ ShipView::ShipView(GameSessionShPtr gameSession,
                    bsgalone::core::IMessageQueue *const outputMessageQueue)
   : AbstractView("ship",
                  {
-                   bsgo::MessageType::DOCK,
-                   bsgo::MessageType::JUMP,
-                   bsgo::MessageType::SYSTEM_LIST,
+                   bsgalone::core::MessageType::DOCK,
+                   bsgalone::core::MessageType::JUMP,
+                   bsgalone::core::MessageType::SYSTEM_LIST,
                  })
   , m_gameSession(std::move(gameSession))
   , m_coordinator(std::move(coordinator))
@@ -286,15 +286,15 @@ void ShipView::handleMessageInternal(const bsgalone::core::IMessage &message)
 {
   switch (message.type())
   {
-    case bsgo::MessageType::SYSTEM_LIST:
+    case bsgalone::core::MessageType::SYSTEM_LIST:
       m_systems = message.as<bsgo::SystemListMessage>().getSystemsData();
       break;
-    case bsgo::MessageType::DOCK:
-    case bsgo::MessageType::JUMP:
+    case bsgalone::core::MessageType::DOCK:
+    case bsgalone::core::MessageType::JUMP:
       m_playerShipEntityId.reset();
       break;
     default:
-      error("Unsupported message type " + bsgo::str(message.type()));
+      error("Unsupported message type " + str(message.type()));
   }
 }
 

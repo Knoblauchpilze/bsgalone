@@ -9,9 +9,9 @@ namespace pge {
 SystemView::SystemView(bsgo::CoordinatorShPtr coordinator,
                        const bsgo::DatabaseEntityMapper &entityMapper)
   : AbstractView("system",
-                 {bsgo::MessageType::PLAYER_LIST,
-                  bsgo::MessageType::PLAYER_SHIP_LIST,
-                  bsgo::MessageType::JOIN_SHIP})
+                 {bsgalone::core::MessageType::PLAYER_LIST,
+                  bsgalone::core::MessageType::PLAYER_SHIP_LIST,
+                  bsgalone::core::MessageType::JOIN_SHIP})
   , m_coordinator(std::move(coordinator))
   , m_entityMapper(entityMapper)
 {
@@ -156,13 +156,13 @@ void SystemView::handleMessageInternal(const bsgalone::core::IMessage &message)
 {
   switch (message.type())
   {
-    case bsgo::MessageType::JOIN_SHIP:
+    case bsgalone::core::MessageType::JOIN_SHIP:
       tryUpdatePlayer(message.as<bsgo::JoinShipMessage>(), m_players);
       break;
-    case bsgo::MessageType::PLAYER_LIST:
+    case bsgalone::core::MessageType::PLAYER_LIST:
       m_players = getPlayersList(message.as<bsgo::PlayerListMessage>());
       break;
-    case bsgo::MessageType::PLAYER_SHIP_LIST:
+    case bsgalone::core::MessageType::PLAYER_SHIP_LIST:
       m_playerShips = getPlayerShipsList(message.as<bsgo::PlayerShipListMessage>());
       break;
     default:

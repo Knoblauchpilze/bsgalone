@@ -1,7 +1,7 @@
 
 #include "MessageType.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 auto str(const MessageType &type) -> std::string
 {
@@ -138,4 +138,4 @@ auto allMessageTypesAsSet() -> std::unordered_set<MessageType>
   };
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

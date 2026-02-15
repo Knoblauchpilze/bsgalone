@@ -66,7 +66,7 @@ TEST(Unit_Bsgo_Serialization_PlayerLoginDataMessage, Clone)
   expected.setSystemDbId(Uuid{44});
 
   const auto cloned = expected.clone();
-  ASSERT_EQ(cloned->type(), MessageType::PLAYER_LOGIN_DATA);
+  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::PLAYER_LOGIN_DATA);
   assertMessagesAreEqual(cloned->as<PlayerLoginDataMessage>(), expected);
 }
 

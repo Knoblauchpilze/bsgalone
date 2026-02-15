@@ -22,7 +22,9 @@ namespace bsgo {
 LoadingMessagesConsumer::LoadingMessagesConsumer(
   const Services &services,
   bsgalone::core::IMessageQueue *const outputMessageQueue)
-  : AbstractMessageConsumer("loading", {MessageType::LOADING_FINISHED, MessageType::LOADING_STARTED})
+  : AbstractMessageConsumer("loading",
+                            {bsgalone::core::MessageType::LOADING_FINISHED,
+                             bsgalone::core::MessageType::LOADING_STARTED})
   , m_loadingService(services.loading)
   , m_outputMessageQueue(outputMessageQueue)
 {
@@ -40,10 +42,10 @@ void LoadingMessagesConsumer::onMessageReceived(const bsgalone::core::IMessage &
 {
   switch (message.type())
   {
-    case MessageType::LOADING_STARTED:
+    case bsgalone::core::MessageType::LOADING_STARTED:
       handleLoadingStartedMessage(message.as<LoadingStartedMessage>());
       return;
-    case MessageType::LOADING_FINISHED:
+    case bsgalone::core::MessageType::LOADING_FINISHED:
       forwardLoadingFinishedMessage(message.as<LoadingFinishedMessage>());
       return;
     default:

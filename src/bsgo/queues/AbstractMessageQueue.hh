@@ -16,7 +16,8 @@ class AbstractMessageQueue : public bsgalone::core::IMessageQueue
 
   protected:
   std::vector<bsgalone::core::IMessageListenerPtr> m_listeners{};
-  std::unordered_multimap<MessageType, bsgalone::core::IMessageListener *> m_listenersTable{};
+  std::unordered_multimap<bsgalone::core::MessageType, bsgalone::core::IMessageListener *>
+    m_listenersTable{};
 };
 
 } // namespace bsgo

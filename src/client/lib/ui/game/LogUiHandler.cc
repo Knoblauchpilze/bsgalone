@@ -14,12 +14,12 @@
 
 namespace pge {
 
-const std::unordered_set<bsgo::MessageType> RELEVANT_MESSAGE_TYPES_TO_LOG
-  = {bsgo::MessageType::JUMP_CANCELLED,
-     bsgo::MessageType::JUMP_REQUESTED,
-     bsgo::MessageType::LOOT,
-     bsgo::MessageType::SCANNED,
-     bsgo::MessageType::SLOT_COMPONENT_UPDATED};
+const std::unordered_set<bsgalone::core::MessageType> RELEVANT_MESSAGE_TYPES_TO_LOG
+  = {bsgalone::core::MessageType::JUMP_CANCELLED,
+     bsgalone::core::MessageType::JUMP_REQUESTED,
+     bsgalone::core::MessageType::LOOT,
+     bsgalone::core::MessageType::SCANNED,
+     bsgalone::core::MessageType::SLOT_COMPONENT_UPDATED};
 
 LogUiHandler::LogUiHandler(const Views &views)
   : IUiHandler("log")
@@ -108,7 +108,7 @@ bool shouldMessageBeFiltered(const bsgalone::core::IMessage &message, const bsgo
 {
   switch (message.type())
   {
-    case bsgo::MessageType::SLOT_COMPONENT_UPDATED:
+    case bsgalone::core::MessageType::SLOT_COMPONENT_UPDATED:
       return shouldSlotComponentUpdatedMessageBeFiltered(message.as<bsgo::SlotComponentMessage>(),
                                                          playerShip);
     default:
@@ -223,18 +223,18 @@ auto createTextConfigForMessage(const bsgalone::core::IMessage &message,
 
   switch (message.type())
   {
-    case bsgo::MessageType::JUMP_REQUESTED:
+    case bsgalone::core::MessageType::JUMP_REQUESTED:
       return createJumpRequestedMessage(message.as<bsgo::JumpRequestedMessage>());
-    case bsgo::MessageType::JUMP_CANCELLED:
+    case bsgalone::core::MessageType::JUMP_CANCELLED:
       return createJumpCancelledMessage(message.as<bsgo::JumpCancelledMessage>());
-    case bsgo::MessageType::LOOT:
+    case bsgalone::core::MessageType::LOOT:
       return createLootMessage(message.as<bsgo::LootMessage>(), resourceView);
-    case bsgo::MessageType::SCANNED:
+    case bsgalone::core::MessageType::SCANNED:
       return createScannedMessage(message.as<bsgo::ScannedMessage>(), systemView, resourceView);
-    case bsgo::MessageType::SLOT_COMPONENT_UPDATED:
+    case bsgalone::core::MessageType::SLOT_COMPONENT_UPDATED:
       return createSlotMessage(message.as<bsgo::SlotComponentMessage>());
     default:
-      throw std::invalid_argument("Unsupported message type " + bsgo::str(message.type()));
+      throw std::invalid_argument("Unsupported message type " + str(message.type()));
   }
 
   return config;

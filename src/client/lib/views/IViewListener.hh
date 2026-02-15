@@ -17,7 +17,7 @@ class IViewListener
   /// Inheriting classes should implement this method if they in turn need to update
   /// their state based on the view's state. A typical usecase is to mark some boolean
   /// `isReady` to false so that the next calls to the caller's methods will trigger
-  /// q refresh.
+  /// a refresh.
   virtual void onViewUpdated() = 0;
 };
 

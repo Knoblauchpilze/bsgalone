@@ -7,10 +7,10 @@ namespace pge {
 ShipMessageConsumer::ShipMessageConsumer(const bsgo::DatabaseEntityMapper &entityMapper,
                                          bsgo::CoordinatorShPtr coordinator)
   : bsgo::AbstractMessageConsumer("ship",
-                                  {bsgo::MessageType::COMPONENT_SYNC,
-                                   bsgo::MessageType::JUMP_REQUESTED,
-                                   bsgo::MessageType::JUMP_CANCELLED,
-                                   bsgo::MessageType::TARGET})
+                                  {bsgalone::core::MessageType::COMPONENT_SYNC,
+                                   bsgalone::core::MessageType::JUMP_REQUESTED,
+                                   bsgalone::core::MessageType::JUMP_CANCELLED,
+                                   bsgalone::core::MessageType::TARGET})
   , m_entityMapper(entityMapper)
   , m_coordinator(std::move(coordinator))
 {}
@@ -19,20 +19,20 @@ void ShipMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &mess
 {
   switch (message.type())
   {
-    case bsgo::MessageType::COMPONENT_SYNC:
+    case bsgalone::core::MessageType::COMPONENT_SYNC:
       handleComponentSync(message.as<bsgo::ComponentSyncMessage>());
       break;
-    case bsgo::MessageType::JUMP_REQUESTED:
+    case bsgalone::core::MessageType::JUMP_REQUESTED:
       handleJumpRequested(message.as<bsgo::JumpRequestedMessage>());
       break;
-    case bsgo::MessageType::JUMP_CANCELLED:
+    case bsgalone::core::MessageType::JUMP_CANCELLED:
       handleJumpCancelled(message.as<bsgo::JumpCancelledMessage>());
       break;
-    case bsgo::MessageType::TARGET:
+    case bsgalone::core::MessageType::TARGET:
       handleTargetAcquired(message.as<bsgo::TargetMessage>());
       break;
     default:
-      error("Unsupported message type " + bsgo::str(message.type()));
+      error("Unsupported message type " + str(message.type()));
   }
 }
 

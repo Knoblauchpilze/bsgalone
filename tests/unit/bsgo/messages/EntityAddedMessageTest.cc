@@ -247,7 +247,7 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, CloneWithAsteroidData)
   expected.setAsteroidData(AsteroidData{.dbId = Uuid{36}, .health = 36.5f});
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), MessageType::ENTITY_ADDED);
+  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::ENTITY_ADDED);
   assertMessagesAreEqual(cloned->as<EntityAddedMessage>(), expected);
 }
 
@@ -257,7 +257,7 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, CloneWithShipData)
   expected.setShipData(PlayerShipData{.dbId = Uuid{36}, .name = "my-ship"});
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), MessageType::ENTITY_ADDED);
+  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::ENTITY_ADDED);
   assertMessagesAreEqual(cloned->as<EntityAddedMessage>(), expected);
 }
 
@@ -267,7 +267,7 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, CloneWithOutpostData)
   expected.setOutpostData(OutpostData{.dbId = Uuid{36}, .powerRegen = 36.5f});
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), MessageType::ENTITY_ADDED);
+  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::ENTITY_ADDED);
   assertMessagesAreEqual(cloned->as<EntityAddedMessage>(), expected);
 }
 
@@ -277,7 +277,7 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, CloneWithPlayerData)
   expected.setPlayerData(PlayerData{.dbId = Uuid{36}, .name = "my-player"});
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), MessageType::ENTITY_ADDED);
+  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::ENTITY_ADDED);
   assertMessagesAreEqual(cloned->as<EntityAddedMessage>(), expected);
 }
 

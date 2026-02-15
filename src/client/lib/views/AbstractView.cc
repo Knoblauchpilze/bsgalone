@@ -3,8 +3,9 @@
 
 namespace pge {
 
-AbstractView::AbstractView(const std::string &name,
-                           const std::unordered_set<bsgo::MessageType> &relevantMessageTypes)
+AbstractView::AbstractView(
+  const std::string &name,
+  const std::unordered_set<bsgalone::core::MessageType> &relevantMessageTypes)
   : bsgo::AbstractMessageConsumer(name, relevantMessageTypes)
   , IView()
 {

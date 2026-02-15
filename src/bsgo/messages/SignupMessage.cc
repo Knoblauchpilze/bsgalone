@@ -5,7 +5,7 @@
 namespace bsgo {
 
 SignupMessage::SignupMessage()
-  : NetworkMessage(MessageType::SIGNUP)
+  : NetworkMessage(bsgalone::core::MessageType::SIGNUP)
 {}
 
 SignupMessage::SignupMessage(const std::string &name,
@@ -18,7 +18,7 @@ SignupMessage::SignupMessage(const std::string &name,
                              const std::string &password,
                              const Faction &faction,
                              const std::optional<Uuid> &playerDbId)
-  : NetworkMessage(MessageType::SIGNUP)
+  : NetworkMessage(bsgalone::core::MessageType::SIGNUP)
   , m_name(name)
   , m_password(password)
   , m_faction(faction)

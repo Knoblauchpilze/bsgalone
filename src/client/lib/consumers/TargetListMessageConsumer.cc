@@ -6,7 +6,7 @@ namespace pge {
 
 TargetListMessageConsumer::TargetListMessageConsumer(bsgo::DatabaseEntityMapper &entityMapper,
                                                      bsgo::CoordinatorShPtr coordinator)
-  : AbstractGameMessageConsumer("target", bsgo::MessageType::TARGET_LIST)
+  : AbstractGameMessageConsumer("target", bsgalone::core::MessageType::TARGET_LIST)
   , m_entityMapper(entityMapper)
   , m_coordinator(std::move(coordinator))
 {}
