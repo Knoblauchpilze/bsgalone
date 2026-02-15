@@ -5,4 +5,5 @@ target_include_directories (game_core_lib PUBLIC
 
 target_sources (game_core_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/InputNetworkAdapter.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/OutputNetworkAdapter.cc
 	)
