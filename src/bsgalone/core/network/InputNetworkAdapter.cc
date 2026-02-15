@@ -1,10 +1,10 @@
 
-#include "NetworkAdapter.hh"
+#include "InputNetworkAdapter.hh"
 #include "NetworkMessage.hh"
 
 namespace bsgalone::core {
 
-NetworkAdapter::NetworkAdapter(IMessageQueueShPtr queue, IMessageParserPtr parser)
+InputNetworkAdapter::InputNetworkAdapter(IMessageQueueShPtr queue, IMessageParserPtr parser)
   : m_queue(std::move(queue))
   , m_parser(std::move(parser))
 {
@@ -18,12 +18,12 @@ NetworkAdapter::NetworkAdapter(IMessageQueueShPtr queue, IMessageParserPtr parse
   }
 }
 
-bool NetworkAdapter::isEventRelevant(const net::EventType &type) const
+bool InputNetworkAdapter::isEventRelevant(const net::EventType &type) const
 {
   return type == net::EventType::DATA_RECEIVED;
 }
 
-void NetworkAdapter::onEventReceived(const net::IEvent &event)
+void InputNetworkAdapter::onEventReceived(const net::IEvent &event)
 {
   const auto &dataReceived = event.as<net::DataReceivedEvent>();
   registerPendingData(dataReceived);
@@ -31,7 +31,7 @@ void NetworkAdapter::onEventReceived(const net::IEvent &event)
   removePendingData(dataReceived.tryGetClientId(), processed);
 }
 
-void NetworkAdapter::registerPendingData(const net::DataReceivedEvent &event)
+void InputNetworkAdapter::registerPendingData(const net::DataReceivedEvent &event)
 {
   const std::lock_guard guard(m_locker);
 
@@ -49,7 +49,7 @@ void NetworkAdapter::registerPendingData(const net::DataReceivedEvent &event)
   }
 }
 
-auto NetworkAdapter::onDataReceived(const std::optional<net::ClientId> &maybeClientId) -> int
+auto InputNetworkAdapter::onDataReceived(const std::optional<net::ClientId> &maybeClientId) -> int
 {
   bool processedSomeBytes{true};
   auto processedBytes{0};
@@ -89,8 +89,8 @@ auto NetworkAdapter::onDataReceived(const std::optional<net::ClientId> &maybeCli
   return processedBytes;
 }
 
-void NetworkAdapter::feedMessagesToQueue(const std::optional<net::ClientId> &maybeClientId,
-                                         std::vector<IMessagePtr> &&messages)
+void InputNetworkAdapter::feedMessagesToQueue(const std::optional<net::ClientId> &maybeClientId,
+                                              std::vector<IMessagePtr> &&messages)
 {
   for (auto &message : messages)
   {
@@ -102,8 +102,8 @@ void NetworkAdapter::feedMessagesToQueue(const std::optional<net::ClientId> &may
   }
 }
 
-void NetworkAdapter::removePendingData(const std::optional<net::ClientId> &maybeClientId,
-                                       const int processed)
+void InputNetworkAdapter::removePendingData(const std::optional<net::ClientId> &maybeClientId,
+                                            const int processed)
 {
   if (processed == 0)
   {

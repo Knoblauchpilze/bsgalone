@@ -11,11 +11,11 @@
 
 namespace bsgalone::core {
 
-class NetworkAdapter : public net::IEventListener
+class InputNetworkAdapter : public net::IEventListener
 {
   public:
-  NetworkAdapter(IMessageQueueShPtr queue, IMessageParserPtr parser);
-  ~NetworkAdapter() override = default;
+  InputNetworkAdapter(IMessageQueueShPtr queue, IMessageParserPtr parser);
+  ~InputNetworkAdapter() override = default;
 
   bool isEventRelevant(const net::EventType &type) const override;
   void onEventReceived(const net::IEvent &event) override;

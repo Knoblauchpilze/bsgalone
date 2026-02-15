@@ -813,7 +813,7 @@ We follow a _send and forget_ approach when pushing messages: the idea being tha
 
 The actions that the user takes in the UI usually have a goal to change some state of the player's account: for example buying an item, moving the ship somewhere else, etc. Assuming the server successfully processed a message sent by the client, it will send back an answer. Additionally, some messages will be generated and transmitted to the client because of the actions of other players.
 
-In order to process those incoming messages, the client receives them in a [NetworkAdapter](src/bsgalone/core/network/NetworkAdapter.hh) in a very similar way to the server.
+In order to process those incoming messages, the client receives them in a [InputNetworkAdapter](src/bsgalone/core/network/InputNetworkAdapter.hh) in a very similar way to the server.
 
 We then follow the same approach as in the server: the client defines some [consumers](src/client/lib/consumers) which are responsible to handle the messages received from the server and update the local ECS. As described in the [who's right](#whos-right) section, the difference is that the client applies without check what the server sends.
 
@@ -996,7 +996,7 @@ The [IMessageQueue](src/bsgalone/core/queues/IMessageQueue.hh) allows to keep tr
 
 We have several implementations for this interface: the most basic one is a [SynchronousMessageQueue](src/bsgo/queues/SynchronizedMessageQueue.hh) which guarantees that there's no collision between enqueuing messages and processing them, but we also have specialization for the client and the server.
 
-A building block is the [AsyncMessageQueue](src/bsgo/queues/AsyncMessageQueue.hh) which processes messages in a dedicated thread. Another important is the [NetworkAdapter](src/bsgalone/core/network/NetworkAdapter.hh) which allows to convert events produced by the network subdomain into game messages that can be processed by consumers.
+A building block is the [AsyncMessageQueue](src/bsgo/queues/AsyncMessageQueue.hh) which processes messages in a dedicated thread. Another important is the [InputNetworkAdapter](src/bsgalone/core/network/InputNetworkAdapter.hh) which allows to convert events produced by the network subdomain into game messages that can be processed by consumers.
 
 ### Listeners
 
