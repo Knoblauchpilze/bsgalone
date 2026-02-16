@@ -12,11 +12,15 @@ class AbstractPlayerMessage : public AbstractMessage
   ~AbstractPlayerMessage() override = default;
 
   auto getPlayerDbId() const -> bsgo::Uuid;
+  auto getSystemDbId() const -> bsgo::Uuid;
 
   protected:
-  AbstractPlayerMessage(const bsgalone::core::MessageType &type, const bsgo::Uuid playerDbId);
+  AbstractPlayerMessage(const bsgalone::core::MessageType &type,
+                        const bsgo::Uuid playerDbId,
+                        const bsgo::Uuid systemDbId);
 
   bsgo::Uuid m_playerDbId{};
+  bsgo::Uuid m_systemDbId{};
 };
 
 } // namespace bsgalone::core

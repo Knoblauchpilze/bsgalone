@@ -156,8 +156,8 @@ class TestPlayerMessage : public core::AbstractPlayerMessage
   public:
   // The type of message does not matter, it is just defined because it is
   // required to pick one to instantiate an `AbstractPlayerMessage`.
-  TestPlayerMessage(const bsgo::Uuid playerDbId)
-    : core::AbstractPlayerMessage(bsgalone::core::MessageType::DOCK, playerDbId)
+  TestPlayerMessage(const bsgo::Uuid playerDbId, const bsgo::Uuid systemDbId)
+    : core::AbstractPlayerMessage(bsgalone::core::MessageType::DOCK, playerDbId, systemDbId)
   {}
 
   ~TestPlayerMessage() override = default;
@@ -166,6 +166,7 @@ class TestPlayerMessage : public core::AbstractPlayerMessage
   {
     ::core::serialize(out, m_messageType);
     ::core::serialize(out, m_playerDbId);
+    ::core::serialize(out, m_systemDbId);
 
     return out;
   }
@@ -175,13 +176,14 @@ class TestPlayerMessage : public core::AbstractPlayerMessage
     bool ok{true};
     ok &= ::core::deserialize(in, m_messageType);
     ok &= ::core::deserialize(in, m_playerDbId);
+    ok &= ::core::deserialize(in, m_systemDbId);
 
     return ok;
   }
 
   auto clone() const -> std::unique_ptr<IMessage> override
   {
-    return std::make_unique<TestPlayerMessage>(m_playerDbId);
+    return std::make_unique<TestPlayerMessage>(m_playerDbId, m_systemDbId);
   }
 };
 } // namespace
@@ -197,7 +199,7 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
   auto server = std::make_shared<TestOutputNetworkAdapter>();
   BroadcastMessageListener listener(manager, server);
 
-  auto message = std::make_unique<TestPlayerMessage>(bsgo::Uuid{18});
+  auto message = std::make_unique<TestPlayerMessage>(bsgo::Uuid{18}, bsgo::Uuid{19});
   listener.onMessageReceived(*message);
 
   EXPECT_EQ(1u, server->messages().size());
@@ -205,6 +207,7 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
   EXPECT_EQ(net::ClientId{12}, actual.clientId);
   EXPECT_EQ(core::MessageType::DOCK, actual.data->type());
   EXPECT_EQ(bsgo::Uuid{18}, actual.data->as<TestPlayerMessage>().getPlayerDbId());
+  EXPECT_EQ(bsgo::Uuid{19}, actual.data->as<TestPlayerMessage>().getSystemDbId());
 }
 
 namespace {
