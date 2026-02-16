@@ -10,7 +10,7 @@
 
 namespace pge {
 
-class ComponentMessageConsumer : public bsgo::AbstractMessageConsumer
+class ComponentMessageConsumer : public bsgalone::core::AbstractMessageConsumer
 {
   public:
   ComponentMessageConsumer(const bsgo::DatabaseEntityMapper &entityMapper,

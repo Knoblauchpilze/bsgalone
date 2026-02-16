@@ -4,7 +4,7 @@
 namespace pge {
 
 ViewConsumerProxy::ViewConsumerProxy(AbstractView &view)
-  : bsgo::AbstractMessageConsumer("proxy", view.relevantMessageTypes())
+  : AbstractMessageConsumer("proxy", view.relevantMessageTypes())
   , m_view(view)
 {
   addModule(view.getName());

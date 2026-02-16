@@ -12,7 +12,7 @@
 
 namespace pge {
 
-class WeaponsUiHandler : public IUiHandler, public bsgo::AbstractMessageListener
+class WeaponsUiHandler : public IUiHandler, public bsgalone::core::AbstractMessageListener
 {
   public:
   WeaponsUiHandler(const Views &views);

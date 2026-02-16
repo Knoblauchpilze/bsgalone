@@ -7,7 +7,7 @@
 
 namespace bsgo {
 
-class SlotMessageConsumer : public AbstractMessageConsumer
+class SlotMessageConsumer : public bsgalone::core::AbstractMessageConsumer
 {
   public:
   SlotMessageConsumer(const Services &services,

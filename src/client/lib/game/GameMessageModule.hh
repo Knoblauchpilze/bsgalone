@@ -23,7 +23,7 @@ namespace pge {
 
 class Game;
 
-class GameMessageModule : public bsgo::AbstractMessageListener, public core::CoreObject
+class GameMessageModule : public bsgalone::core::AbstractMessageListener, public core::CoreObject
 {
   public:
   GameMessageModule(Game &game, const bsgo::DatabaseEntityMapper &entityMapper);

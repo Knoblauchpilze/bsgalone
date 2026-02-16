@@ -9,10 +9,10 @@ namespace pge {
 
 SystemMessageConsumer::SystemMessageConsumer(bsgo::DatabaseEntityMapper &entityMapper,
                                              bsgo::CoordinatorShPtr coordinator)
-  : bsgo::AbstractMessageConsumer("system",
-                                  {bsgalone::core::MessageType::SCANNED,
-                                   bsgalone::core::MessageType::ENTITY_ADDED,
-                                   bsgalone::core::MessageType::ENTITY_REMOVED})
+  : AbstractMessageConsumer("system",
+                            {bsgalone::core::MessageType::SCANNED,
+                             bsgalone::core::MessageType::ENTITY_ADDED,
+                             bsgalone::core::MessageType::ENTITY_REMOVED})
   , m_entityMapper(entityMapper)
   , m_coordinator(std::move(coordinator))
 {

@@ -9,7 +9,7 @@
 
 namespace bsgo {
 
-class EntityAddedMessageConsumer : public AbstractMessageConsumer
+class EntityAddedMessageConsumer : public bsgalone::core::AbstractMessageConsumer
 {
   public:
   EntityAddedMessageConsumer(const Services &services,

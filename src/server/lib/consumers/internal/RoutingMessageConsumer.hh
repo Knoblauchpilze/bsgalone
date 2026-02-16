@@ -11,7 +11,7 @@
 
 namespace bsgo {
 
-class RoutingMessageConsumer : public AbstractMessageConsumer
+class RoutingMessageConsumer : public bsgalone::core::AbstractMessageConsumer
 {
   public:
   /// @brief - Consumer in charge or receiving internal messages produced by the

@@ -7,7 +7,7 @@
 
 namespace pge {
 
-class AbstractView : public bsgo::AbstractMessageConsumer, public IView
+class AbstractView : public bsgalone::core::AbstractMessageConsumer, public IView
 {
   public:
   AbstractView(const std::string &name,

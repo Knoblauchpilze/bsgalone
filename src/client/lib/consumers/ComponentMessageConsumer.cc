@@ -6,10 +6,10 @@ namespace pge {
 
 ComponentMessageConsumer::ComponentMessageConsumer(const bsgo::DatabaseEntityMapper &entityMapper,
                                                    bsgo::CoordinatorShPtr coordinator)
-  : bsgo::AbstractMessageConsumer("component",
-                                  {bsgalone::core::MessageType::SLOT_COMPONENT_UPDATED,
-                                   bsgalone::core::MessageType::WEAPON_COMPONENT_UPDATED,
-                                   bsgalone::core::MessageType::AI_BEHAVIOR_SYNC})
+  : AbstractMessageConsumer("component",
+                            {bsgalone::core::MessageType::SLOT_COMPONENT_UPDATED,
+                             bsgalone::core::MessageType::WEAPON_COMPONENT_UPDATED,
+                             bsgalone::core::MessageType::AI_BEHAVIOR_SYNC})
   , m_entityMapper(entityMapper)
   , m_coordinator(std::move(coordinator))
 {}

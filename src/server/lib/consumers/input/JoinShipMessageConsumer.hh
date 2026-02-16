@@ -8,7 +8,7 @@
 
 namespace bsgo {
 
-class JoinShipMessageConsumer : public AbstractMessageConsumer
+class JoinShipMessageConsumer : public bsgalone::core::AbstractMessageConsumer
 {
   public:
   JoinShipMessageConsumer(PlayerServicePtr playerService,

@@ -10,7 +10,7 @@
 
 namespace pge {
 
-class LogUiHandler : public IUiHandler, public bsgo::AbstractMessageListener
+class LogUiHandler : public IUiHandler, public bsgalone::core::AbstractMessageListener
 {
   public:
   LogUiHandler(const Views &views);

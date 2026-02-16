@@ -5,7 +5,7 @@ namespace pge {
 
 InternalMessageConsumer::InternalMessageConsumer(const bsgo::DatabaseEntityMapper &entityMapper,
                                                  bsgo::CoordinatorShPtr coordinator)
-  : bsgo::AbstractMessageConsumer("internal", {bsgalone::core::MessageType::VELOCITY})
+  : AbstractMessageConsumer("internal", {bsgalone::core::MessageType::VELOCITY})
   , m_entityMapper(entityMapper)
   , m_coordinator(std::move(coordinator))
 {}

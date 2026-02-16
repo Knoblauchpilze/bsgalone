@@ -11,7 +11,7 @@
 
 namespace pge {
 
-class ShipMessageConsumer : public bsgo::AbstractMessageConsumer
+class ShipMessageConsumer : public bsgalone::core::AbstractMessageConsumer
 {
   public:
   ShipMessageConsumer(const bsgo::DatabaseEntityMapper &entityMapper,

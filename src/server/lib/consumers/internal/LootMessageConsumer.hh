@@ -7,7 +7,7 @@
 
 namespace bsgo {
 
-class LootMessageConsumer : public AbstractMessageConsumer
+class LootMessageConsumer : public bsgalone::core::AbstractMessageConsumer
 {
   public:
   LootMessageConsumer(SystemServiceShPtr systemService,

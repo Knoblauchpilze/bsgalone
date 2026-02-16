@@ -7,7 +7,7 @@
 
 namespace bsgo {
 
-class VelocityMessageConsumer : public AbstractMessageConsumer
+class VelocityMessageConsumer : public bsgalone::core::AbstractMessageConsumer
 {
   public:
   VelocityMessageConsumer(const Services &services,

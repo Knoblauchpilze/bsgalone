@@ -9,7 +9,7 @@
 
 namespace bsgo {
 
-class DockMessageConsumer : public AbstractMessageConsumer
+class DockMessageConsumer : public bsgalone::core::AbstractMessageConsumer
 {
   public:
   DockMessageConsumer(const Services &services,

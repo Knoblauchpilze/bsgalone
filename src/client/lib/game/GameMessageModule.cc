@@ -19,7 +19,7 @@ const Messages GAME_CHANGING_MESSAGE_TYPES = {bsgalone::core::MessageType::CONNE
                                               bsgalone::core::MessageType::SYSTEM_DATA};
 
 GameMessageModule::GameMessageModule(Game &game, const bsgo::DatabaseEntityMapper &entityMapper)
-  : bsgo::AbstractMessageListener(GAME_CHANGING_MESSAGE_TYPES)
+  : bsgalone::core::AbstractMessageListener(GAME_CHANGING_MESSAGE_TYPES)
   , core::CoreObject("message")
   , m_game(game)
   , m_entityMapper(entityMapper)
