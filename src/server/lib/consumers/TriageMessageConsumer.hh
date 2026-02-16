@@ -25,8 +25,10 @@ class TriageMessageConsumer : public bsgalone::core::AbstractMessageConsumer
   bsgalone::core::IMessageQueuePtr m_systemQueue{};
 
   bool discardMessageWithNoClient(const bsgalone::core::IMessage &message) const;
+  bool tryRoutePlayerOrSystemMessage(const bsgalone::core::IMessage &message) const;
   void handleSystemMessage(const bsgalone::core::IMessage &message) const;
   void triagePlayerMessage(const bsgalone::core::IMessage &message) const;
+  void routeSystemMessage(const Uuid systemDbId, const bsgalone::core::IMessage &message) const;
   void broadcastMessage(const bsgalone::core::IMessage &message) const;
 };
 
