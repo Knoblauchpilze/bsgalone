@@ -6,11 +6,11 @@ namespace pge {
 
 ShipMessageConsumer::ShipMessageConsumer(const bsgo::DatabaseEntityMapper &entityMapper,
                                          bsgo::CoordinatorShPtr coordinator)
-  : bsgo::AbstractMessageConsumer("ship",
-                                  {bsgalone::core::MessageType::COMPONENT_SYNC,
-                                   bsgalone::core::MessageType::JUMP_REQUESTED,
-                                   bsgalone::core::MessageType::JUMP_CANCELLED,
-                                   bsgalone::core::MessageType::TARGET})
+  : AbstractMessageConsumer("ship",
+                            {bsgalone::core::MessageType::COMPONENT_SYNC,
+                             bsgalone::core::MessageType::JUMP_REQUESTED,
+                             bsgalone::core::MessageType::JUMP_CANCELLED,
+                             bsgalone::core::MessageType::TARGET})
   , m_entityMapper(entityMapper)
   , m_coordinator(std::move(coordinator))
 {}

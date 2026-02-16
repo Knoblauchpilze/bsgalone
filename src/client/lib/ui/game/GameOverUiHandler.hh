@@ -1,7 +1,6 @@
 
 #pragma once
 
-#include "AbstractMessageListener.hh"
 #include "IUiHandler.hh"
 #include "UiTextMenu.hh"
 #include "Views.hh"

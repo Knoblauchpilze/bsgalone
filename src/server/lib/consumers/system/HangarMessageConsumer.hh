@@ -8,7 +8,7 @@
 
 namespace bsgo {
 
-class HangarMessageConsumer : public AbstractMessageConsumer
+class HangarMessageConsumer : public bsgalone::core::AbstractMessageConsumer
 {
   public:
   HangarMessageConsumer(const Services &services,

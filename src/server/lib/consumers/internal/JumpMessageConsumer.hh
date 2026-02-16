@@ -8,7 +8,7 @@
 
 namespace bsgo {
 
-class JumpMessageConsumer : public AbstractMessageConsumer
+class JumpMessageConsumer : public bsgalone::core::AbstractMessageConsumer
 {
   public:
   JumpMessageConsumer(SystemServiceShPtr systemService,

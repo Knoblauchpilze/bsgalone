@@ -7,7 +7,7 @@
 
 namespace bsgo {
 
-class AiBehaviorSyncMessageConsumer : public AbstractMessageConsumer
+class AiBehaviorSyncMessageConsumer : public bsgalone::core::AbstractMessageConsumer
 {
   public:
   AiBehaviorSyncMessageConsumer(SystemServiceShPtr systemService,

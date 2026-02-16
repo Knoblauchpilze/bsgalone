@@ -6,7 +6,7 @@ namespace pge {
 AbstractView::AbstractView(
   const std::string &name,
   const std::unordered_set<bsgalone::core::MessageType> &relevantMessageTypes)
-  : bsgo::AbstractMessageConsumer(name, relevantMessageTypes)
+  : AbstractMessageConsumer(name, relevantMessageTypes)
   , IView()
 {
   setService("view");

@@ -10,7 +10,7 @@
 
 namespace bsgo {
 
-class LoginMessageConsumer : public AbstractMessageConsumer
+class LoginMessageConsumer : public bsgalone::core::AbstractMessageConsumer
 {
   public:
   LoginMessageConsumer(LoginServicePtr loginService,

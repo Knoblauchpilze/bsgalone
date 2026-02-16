@@ -8,10 +8,10 @@ namespace pge {
 AbstractGameMessageConsumer::AbstractGameMessageConsumer(
   const std::string &name,
   const bsgalone::core::MessageType relevantMessageType)
-  : bsgo::AbstractMessageConsumer(name,
-                                  {bsgalone::core::MessageType::LOADING_STARTED,
-                                   bsgalone::core::MessageType::LOADING_FINISHED,
-                                   relevantMessageType})
+  : bsgalone::core::AbstractMessageConsumer(name,
+                                            {bsgalone::core::MessageType::LOADING_STARTED,
+                                             bsgalone::core::MessageType::LOADING_FINISHED,
+                                             relevantMessageType})
 {
   addModule("consumer");
 }

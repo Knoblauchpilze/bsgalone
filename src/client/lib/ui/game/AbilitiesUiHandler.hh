@@ -12,7 +12,7 @@
 
 namespace pge {
 
-class AbilitiesUiHandler : public IUiHandler, public bsgo::AbstractMessageListener
+class AbilitiesUiHandler : public IUiHandler, public bsgalone::core::AbstractMessageListener
 {
   public:
   AbilitiesUiHandler(const Views &views);

@@ -10,7 +10,7 @@
 
 namespace pge {
 
-class ShipStatusUiHandler : public IUiHandler, public bsgo::AbstractMessageListener
+class ShipStatusUiHandler : public IUiHandler, public bsgalone::core::AbstractMessageListener
 {
   public:
   ShipStatusUiHandler(const Views &views);

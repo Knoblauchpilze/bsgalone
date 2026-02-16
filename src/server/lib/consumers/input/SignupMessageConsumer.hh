@@ -8,7 +8,7 @@
 
 namespace bsgo {
 
-class SignupMessageConsumer : public AbstractMessageConsumer
+class SignupMessageConsumer : public bsgalone::core::AbstractMessageConsumer
 {
   public:
   SignupMessageConsumer(SignupServicePtr signupService,

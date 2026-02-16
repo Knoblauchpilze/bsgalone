@@ -14,7 +14,7 @@
 
 namespace pge {
 
-class LoginScreenUiHandler : public IUiHandler, public bsgo::AbstractMessageListener
+class LoginScreenUiHandler : public IUiHandler, public bsgalone::core::AbstractMessageListener
 {
   public:
   LoginScreenUiHandler(const Views &views);

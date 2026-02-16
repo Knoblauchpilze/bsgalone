@@ -6,7 +6,7 @@
 
 namespace pge {
 
-class ViewConsumerProxy : public bsgo::AbstractMessageConsumer
+class ViewConsumerProxy : public bsgalone::core::AbstractMessageConsumer
 {
   public:
   ViewConsumerProxy(AbstractView &view);

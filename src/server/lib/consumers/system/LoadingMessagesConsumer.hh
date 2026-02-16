@@ -9,7 +9,7 @@
 
 namespace bsgo {
 
-class LoadingMessagesConsumer : public AbstractMessageConsumer
+class LoadingMessagesConsumer : public bsgalone::core::AbstractMessageConsumer
 {
   public:
   LoadingMessagesConsumer(const Services &services,

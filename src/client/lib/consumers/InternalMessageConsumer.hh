@@ -8,7 +8,7 @@
 
 namespace pge {
 
-class InternalMessageConsumer : public bsgo::AbstractMessageConsumer
+class InternalMessageConsumer : public bsgalone::core::AbstractMessageConsumer
 {
   public:
   InternalMessageConsumer(const bsgo::DatabaseEntityMapper &entityMapper,

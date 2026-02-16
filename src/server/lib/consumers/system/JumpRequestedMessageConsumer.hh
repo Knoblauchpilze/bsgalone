@@ -8,7 +8,7 @@
 
 namespace bsgo {
 
-class JumpRequestedMessageConsumer : public AbstractMessageConsumer
+class JumpRequestedMessageConsumer : public bsgalone::core::AbstractMessageConsumer
 {
   public:
   JumpRequestedMessageConsumer(const Services &services,

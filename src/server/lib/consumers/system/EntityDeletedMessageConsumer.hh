@@ -12,7 +12,7 @@ namespace bsgo {
 /// responsible to handle the entity added/removed messages produced by the
 /// internal consumer. This means deleting the entity from the system processor
 /// and forwarding the messages to the client applications.
-class EntityDeletedMessageConsumer : public AbstractMessageConsumer
+class EntityDeletedMessageConsumer : public bsgalone::core::AbstractMessageConsumer
 {
   public:
   EntityDeletedMessageConsumer(const Services &services,

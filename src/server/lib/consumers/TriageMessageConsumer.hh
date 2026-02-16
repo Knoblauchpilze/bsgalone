@@ -9,7 +9,7 @@
 
 namespace bsgo {
 
-class TriageMessageConsumer : public AbstractMessageConsumer
+class TriageMessageConsumer : public bsgalone::core::AbstractMessageConsumer
 {
   public:
   TriageMessageConsumer(bsgalone::server::ClientManagerShPtr clientManager,

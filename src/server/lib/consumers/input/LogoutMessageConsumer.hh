@@ -10,7 +10,7 @@
 
 namespace bsgo {
 
-class LogoutMessageConsumer : public AbstractMessageConsumer
+class LogoutMessageConsumer : public bsgalone::core::AbstractMessageConsumer
 {
   public:
   LogoutMessageConsumer(SystemServiceShPtr systemService,

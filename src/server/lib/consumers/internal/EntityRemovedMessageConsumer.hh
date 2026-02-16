@@ -17,7 +17,7 @@ namespace bsgo {
 ///   - forwarding messages for asteroids
 /// The messages are then routed to the processors to be processed like a regular
 /// entity added/removed message.
-class EntityRemovedMessageConsumer : public AbstractMessageConsumer
+class EntityRemovedMessageConsumer : public bsgalone::core::AbstractMessageConsumer
 {
   public:
   EntityRemovedMessageConsumer(SystemServiceShPtr systemService,

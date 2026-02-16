@@ -7,7 +7,7 @@
 
 namespace pge {
 
-class AbstractGameMessageConsumer : public bsgo::AbstractMessageConsumer
+class AbstractGameMessageConsumer : public bsgalone::core::AbstractMessageConsumer
 {
   public:
   AbstractGameMessageConsumer(const std::string &name,

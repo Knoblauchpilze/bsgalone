@@ -8,7 +8,7 @@
 
 namespace bsgo {
 
-class PurchaseMessageConsumer : public AbstractMessageConsumer
+class PurchaseMessageConsumer : public bsgalone::core::AbstractMessageConsumer
 {
   public:
   PurchaseMessageConsumer(const Services &services,
