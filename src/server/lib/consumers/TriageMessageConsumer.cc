@@ -1,5 +1,7 @@
 
 #include "TriageMessageConsumer.hh"
+#include "AbstractPlayerMessage.hh"
+#include "AbstractSystemMessage.hh"
 #include "NetworkMessage.hh"
 
 namespace bsgo {
@@ -23,6 +25,11 @@ void TriageMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &me
   if (discardMessageWithNoClient(message))
   {
     warn("Discarding message " + str(message.type()) + " with no client id");
+    return;
+  }
+
+  if (tryRoutePlayerOrSystemMessage(message))
+  {
     return;
   }
 
@@ -61,6 +68,28 @@ bool TriageMessageConsumer::discardMessageWithNoClient(const bsgalone::core::IMe
   return !message.as<bsgalone::core::NetworkMessage>().tryGetClientId().has_value();
 }
 
+bool TriageMessageConsumer::tryRoutePlayerOrSystemMessage(
+  const bsgalone::core::IMessage &message) const
+{
+  std::optional<Uuid> maybeSystemDbId{};
+  if (message.isA<bsgalone::core::AbstractPlayerMessage>())
+  {
+    maybeSystemDbId = message.as<bsgalone::core::AbstractPlayerMessage>().getSystemDbId();
+  }
+  if (message.isA<bsgalone::core::AbstractSystemMessage>())
+  {
+    maybeSystemDbId = message.as<bsgalone::core::AbstractSystemMessage>().getSystemDbId();
+  }
+
+  if (maybeSystemDbId)
+  {
+    routeSystemMessage(*maybeSystemDbId, message);
+    return true;
+  }
+
+  return false;
+}
+
 void TriageMessageConsumer::handleSystemMessage(const bsgalone::core::IMessage &message) const
 {
   m_systemQueue->pushMessage(message.clone());
@@ -83,11 +112,17 @@ void TriageMessageConsumer::triagePlayerMessage(const bsgalone::core::IMessage &
           "Client " + str(clientId) + " does not have a registered system");
   }
 
-  const auto maybeQueue = m_systemQueues.find(*maybeSystem);
+  routeSystemMessage(*maybeSystem, message);
+}
+
+void TriageMessageConsumer::routeSystemMessage(const Uuid systemDbId,
+                                               const bsgalone::core::IMessage &message) const
+{
+  const auto maybeQueue = m_systemQueues.find(systemDbId);
   if (maybeQueue == m_systemQueues.cend())
   {
     error("Failed to process message " + str(message.type()),
-          "Unsupported system " + str(*maybeSystem));
+          "Unsupported system " + str(systemDbId));
   }
 
   maybeQueue->second->pushMessage(message.clone());
