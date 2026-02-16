@@ -130,7 +130,7 @@ void TriageMessageConsumer::routeSystemMessage(const Uuid systemDbId,
 
 void TriageMessageConsumer::broadcastMessage(const bsgalone::core::IMessage &message) const
 {
-  debug("Brodcasting message " + str(message.type()));
+  warn("Brodcasting message " + str(message.type()));
 
   for (const auto &[_, queue] : m_systemQueues)
   {
