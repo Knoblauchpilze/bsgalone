@@ -5,8 +5,9 @@
 #include "JumpMessage.hh"
 #include "LoginMessage.hh"
 #include "LogoutMessage.hh"
-#include "SerializationUtils.hh"
 #include "TestOutputNetworkAdapter.hh"
+#include "TestPlayerMessage.hh"
+#include "TestSystemMessage.hh"
 #include <gmock/gmock-matchers.h>
 #include <gtest/gtest.h>
 
@@ -150,44 +151,6 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
   EXPECT_EQ(bsgo::Uuid{19}, manager->tryGetSystemForClient(net::ClientId{12}).value());
 }
 
-namespace {
-class TestPlayerMessage : public core::AbstractPlayerMessage
-{
-  public:
-  // The type of message does not matter, it is just defined because it is
-  // required to pick one to instantiate an `AbstractPlayerMessage`.
-  TestPlayerMessage(const bsgo::Uuid playerDbId, const bsgo::Uuid systemDbId)
-    : core::AbstractPlayerMessage(bsgalone::core::MessageType::DOCK, playerDbId, systemDbId)
-  {}
-
-  ~TestPlayerMessage() override = default;
-
-  auto serialize(std::ostream &out) const -> std::ostream & override
-  {
-    ::core::serialize(out, m_messageType);
-    ::core::serialize(out, m_playerDbId);
-    ::core::serialize(out, m_systemDbId);
-
-    return out;
-  }
-
-  bool deserialize(std::istream &in) override
-  {
-    bool ok{true};
-    ok &= ::core::deserialize(in, m_messageType);
-    ok &= ::core::deserialize(in, m_playerDbId);
-    ok &= ::core::deserialize(in, m_systemDbId);
-
-    return ok;
-  }
-
-  auto clone() const -> std::unique_ptr<IMessage> override
-  {
-    return std::make_unique<TestPlayerMessage>(m_playerDbId, m_systemDbId);
-  }
-};
-} // namespace
-
 TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
      RoutesPlayerMessageToClientWhenPlayerIsRegistered)
 {
@@ -211,40 +174,6 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
 }
 
 namespace {
-class TestSystemMessage : public core::AbstractSystemMessage
-{
-  public:
-  // The type of message does not matter, it is just defined because it is
-  // required to pick one to instantiate an `AbstractSystemMessage`.
-  TestSystemMessage(const bsgo::Uuid systemDbId)
-    : core::AbstractSystemMessage(bsgalone::core::MessageType::DOCK, systemDbId)
-  {}
-
-  ~TestSystemMessage() override = default;
-
-  auto serialize(std::ostream &out) const -> std::ostream & override
-  {
-    ::core::serialize(out, m_messageType);
-    ::core::serialize(out, m_systemDbId);
-
-    return out;
-  }
-
-  bool deserialize(std::istream &in) override
-  {
-    bool ok{true};
-    ok &= ::core::deserialize(in, m_messageType);
-    ok &= ::core::deserialize(in, m_systemDbId);
-
-    return ok;
-  }
-
-  auto clone() const -> std::unique_ptr<IMessage> override
-  {
-    return std::make_unique<TestSystemMessage>(m_systemDbId);
-  }
-};
-
 auto assertMessageMatches(const std::vector<TestOutputNetworkAdapter::MessageData> &messages,
                           const net::ClientId expectedClient,
                           const bsgo::Uuid expectedSystemMessageId)
