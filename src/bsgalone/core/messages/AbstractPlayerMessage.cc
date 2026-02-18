@@ -3,7 +3,7 @@
 
 namespace bsgalone::core {
 
-AbstractPlayerMessage::AbstractPlayerMessage(const bsgalone::core::MessageType &type,
+AbstractPlayerMessage::AbstractPlayerMessage(const MessageType &type,
                                              const bsgo::Uuid playerDbId,
                                              const bsgo::Uuid systemDbId)
   : AbstractMessage(type)

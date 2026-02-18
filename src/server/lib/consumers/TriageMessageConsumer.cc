@@ -49,7 +49,6 @@ void TriageMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &me
     case bsgalone::core::MessageType::PURCHASE:
     case bsgalone::core::MessageType::SLOT:
     case bsgalone::core::MessageType::TARGET:
-    case bsgalone::core::MessageType::VELOCITY:
       triagePlayerMessage(message);
       break;
     default:

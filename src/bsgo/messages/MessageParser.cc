@@ -187,7 +187,7 @@ auto MessageParser::tryReadMessage(const bsgalone::core::MessageType &type, std:
     case bsgalone::core::MessageType::SYSTEM_LIST:
       return readMessage<SystemListMessage>(in);
     case bsgalone::core::MessageType::VELOCITY:
-      return readMessage<VelocityMessage>(in);
+      return bsgalone::core::VelocityMessage::readFromStream(in);
     case bsgalone::core::MessageType::TARGET:
       return readMessage<TargetMessage>(in);
     case bsgalone::core::MessageType::TARGET_LIST:

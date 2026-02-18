@@ -31,7 +31,6 @@ target_sources(unitTests PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/SlotComponentMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SlotMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/TargetMessageTest.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/VelocityMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/WeaponComponentMessageTest.cc
 	)
 

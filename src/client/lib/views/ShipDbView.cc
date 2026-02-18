@@ -126,8 +126,14 @@ void ShipDbView::cancelJump() const
 
 void ShipDbView::accelerateShip(const Eigen::Vector3f &acceleration) const
 {
-  auto message = std::make_unique<bsgo::VelocityMessage>(m_gameSession->getPlayerActiveShipDbId(),
-                                                         acceleration);
+  const auto playerDbId = m_gameSession->getPlayerDbId();
+  const auto systemDbId = m_gameSession->getSystemDbId();
+
+  auto message
+    = std::make_unique<bsgalone::core::VelocityMessage>(playerDbId,
+                                                        systemDbId,
+                                                        m_gameSession->getPlayerActiveShipDbId(),
+                                                        acceleration);
   m_outputMessageQueue->pushMessage(message->clone());
   m_internalMessageQueue->pushMessage(std::move(message));
 }

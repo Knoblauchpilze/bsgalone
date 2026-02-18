@@ -41,9 +41,8 @@ auto serializeAndDeserialize(const T &expected, const bool truncate) -> std::pai
   return std::make_pair(success, output);
 }
 
-template<>
-auto serializeAndDeserialize(const VelocityMessage &expected, const bool truncate)
-  -> std::pair<bool, VelocityMessage>
+auto serializeAndDeserialize(const bsgalone::core::VelocityMessage &expected, const bool truncate)
+  -> std::optional<bsgalone::core::IMessagePtr>
 {
   std::ostringstream out{};
   expected.serialize(out);
@@ -57,9 +56,7 @@ auto serializeAndDeserialize(const VelocityMessage &expected, const bool truncat
   }
   std::istringstream in(serialized);
 
-  VelocityMessage output{};
-  const auto success = output.deserialize(in);
-  return std::make_pair(success, output);
+  return bsgalone::core::VelocityMessage::readFromStream(in);
 }
 } // namespace
 
@@ -105,15 +102,18 @@ TEST(Unit_Bsgo_Serialization_Behavior, Nominal_Optional)
 
 TEST(Unit_Bsgo_Serialization_Behavior, Nominal_VelocityMessage)
 {
-  const VelocityMessage expected(Uuid{12}, Eigen::Vector3f{1.0f, 2.0f, 3.0f});
+  const bsgalone::core::VelocityMessage expected(Uuid{18},
+                                                 Uuid{19},
+                                                 Uuid{12},
+                                                 Eigen::Vector3f{1.0f, 2.0f, 3.0f});
 
-  const auto [success, actual] = serializeAndDeserialize(expected, false);
+  const auto maybeMessage = serializeAndDeserialize(expected, false);
 
-  EXPECT_TRUE(success);
-
-  EXPECT_EQ(actual.type(), expected.type());
-  EXPECT_EQ(actual.tryGetClientId(), expected.tryGetClientId());
-
+  ASSERT_TRUE(maybeMessage.has_value());
+  EXPECT_EQ((*maybeMessage)->type(), expected.type());
+  const auto &actual = (*maybeMessage)->as<bsgalone::core::VelocityMessage>();
+  EXPECT_EQ(actual.getPlayerDbId(), expected.getPlayerDbId());
+  EXPECT_EQ(actual.getSystemDbId(), expected.getSystemDbId());
   EXPECT_EQ(actual.getShipDbId(), expected.getShipDbId());
   EXPECT_EQ(actual.getAcceleration(), expected.getAcceleration());
 }
@@ -384,11 +384,14 @@ TEST(Unit_Bsgo_Serialization_Behavior, Failure_Optional)
 
 TEST(Unit_Bsgo_Serialization_Behavior, Failure_VelocityMessage)
 {
-  const VelocityMessage value(Uuid{12}, Eigen::Vector3f{1.0f, 2.0f, 3.0f});
+  const bsgalone::core::VelocityMessage value(Uuid{18},
+                                              Uuid{19},
+                                              Uuid{12},
+                                              Eigen::Vector3f{1.0f, 2.0f, 3.0f});
 
-  const auto [success, _] = serializeAndDeserialize(value, true);
+  const auto maybeMessage = serializeAndDeserialize(value, true);
 
-  EXPECT_FALSE(success);
+  EXPECT_FALSE(maybeMessage.has_value());
 }
 
 TEST(Unit_Bsgo_Serialization_Behavior, Failure_Duration)
