@@ -15,14 +15,15 @@ void InternalMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &
   switch (message.type())
   {
     case bsgalone::core::MessageType::VELOCITY:
-      handleVelocityChanged(message.as<bsgo::VelocityMessage>());
+      handleVelocityChanged(message.as<bsgalone::core::VelocityMessage>());
       break;
     default:
       error("Unsupported message type " + str(message.type()));
   }
 }
 
-void InternalMessageConsumer::handleVelocityChanged(const bsgo::VelocityMessage &message) const
+void InternalMessageConsumer::handleVelocityChanged(
+  const bsgalone::core::VelocityMessage &message) const
 {
   const auto shipDbId = message.getShipDbId();
 

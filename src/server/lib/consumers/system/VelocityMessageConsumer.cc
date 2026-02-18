@@ -23,7 +23,7 @@ VelocityMessageConsumer::VelocityMessageConsumer(
 
 void VelocityMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
 {
-  const auto &velocity = message.as<VelocityMessage>();
+  const auto &velocity = message.as<bsgalone::core::VelocityMessage>();
 
   const auto shipDbId     = velocity.getShipDbId();
   const auto acceleration = velocity.getAcceleration();

@@ -21,7 +21,7 @@ class InternalMessageConsumer : public bsgalone::core::AbstractMessageConsumer
   const bsgo::DatabaseEntityMapper &m_entityMapper;
   bsgo::CoordinatorShPtr m_coordinator{};
 
-  void handleVelocityChanged(const bsgo::VelocityMessage &message) const;
+  void handleVelocityChanged(const bsgalone::core::VelocityMessage &message) const;
 };
 
 } // namespace pge
