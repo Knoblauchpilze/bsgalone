@@ -23,7 +23,7 @@ VelocityMessageConsumer::VelocityMessageConsumer(
 
 void VelocityMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
 {
-  const auto &velocity = message.as<VelocityMessage>();
+  const auto &velocity = message.as<bsgalone::core::VelocityMessage>();
 
   const auto shipDbId     = velocity.getShipDbId();
   const auto acceleration = velocity.getAcceleration();
@@ -31,12 +31,7 @@ void VelocityMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &
   if (!m_shipService->accelerateShip(shipDbId, acceleration))
   {
     warn("Failed to process velocity message for ship " + str(shipDbId));
-    return;
   }
-
-  auto out = std::make_unique<VelocityMessage>(shipDbId, acceleration);
-  out->copyClientIdIfDefined(velocity);
-  m_outputMessageQueue->pushMessage(std::move(out));
 }
 
 } // namespace bsgo

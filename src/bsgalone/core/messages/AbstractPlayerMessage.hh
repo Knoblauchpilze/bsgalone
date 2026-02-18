@@ -15,7 +15,7 @@ class AbstractPlayerMessage : public AbstractMessage
   auto getSystemDbId() const -> bsgo::Uuid;
 
   protected:
-  AbstractPlayerMessage(const bsgalone::core::MessageType &type,
+  AbstractPlayerMessage(const MessageType &type,
                         const bsgo::Uuid playerDbId,
                         const bsgo::Uuid systemDbId);
 

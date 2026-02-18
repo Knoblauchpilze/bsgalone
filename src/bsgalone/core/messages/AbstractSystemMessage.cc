@@ -3,8 +3,7 @@
 
 namespace bsgalone::core {
 
-AbstractSystemMessage::AbstractSystemMessage(const bsgalone::core::MessageType &type,
-                                             const bsgo::Uuid systemDbId)
+AbstractSystemMessage::AbstractSystemMessage(const MessageType &type, const bsgo::Uuid systemDbId)
   : AbstractMessage(type)
   , m_systemDbId(systemDbId)
 {}
