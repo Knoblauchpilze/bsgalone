@@ -67,18 +67,11 @@ auto VelocityMessage::readFromStream(std::istream &in) -> std::optional<IMessage
 {
   VelocityMessage message;
 
-  bool ok{true};
-  ok &= ::core::deserialize(in, message.m_messageType);
-  ok &= ::core::deserialize(in, message.m_playerDbId);
-  ok &= ::core::deserialize(in, message.m_systemDbId);
-
-  ok &= ::core::deserialize(in, message.m_shipDbId);
-  ok &= ::core::deserialize(in, message.m_acceleration);
-
-  if (!ok)
+  if (!message.deserialize(in))
   {
     return {};
   }
+
   return message.clone();
 }
 
