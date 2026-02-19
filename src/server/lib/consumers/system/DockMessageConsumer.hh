@@ -25,13 +25,11 @@ class DockMessageConsumer : public bsgalone::core::AbstractMessageConsumer
   bsgalone::core::IMessageQueue *const m_systemMessageQueue{};
   bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
 
-  void handleDocking(const DockMessage &message) const;
-  void handleUndocking(const DockMessage &message) const;
-  void handleReturnToOutpost(const DockMessage &message) const;
+  void handleDocking(const bsgalone::core::DockMessage &message) const;
+  void handleUndocking(const bsgalone::core::DockMessage &message) const;
+  void handleReturnToOutpost(const bsgalone::core::DockMessage &message) const;
 
-  void publishLoadingMessages(const LoadingTransition transition,
-                              const Uuid shipDbId,
-                              const DockMessage &originalDockMessage) const;
+  void publishLoadingMessages(const LoadingTransition transition, const Uuid shipDbId) const;
 };
 
 } // namespace bsgo
