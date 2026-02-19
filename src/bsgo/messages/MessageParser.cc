@@ -127,7 +127,7 @@ auto MessageParser::tryReadMessage(const bsgalone::core::MessageType &type, std:
     case bsgalone::core::MessageType::CONNECTION:
       return readMessage<ConnectionMessage>(in);
     case bsgalone::core::MessageType::DOCK:
-      return readMessage<DockMessage>(in);
+      return bsgalone::core::DockMessage::readFromStream(in);
     case bsgalone::core::MessageType::ENTITY_ADDED:
       return readMessage<EntityAddedMessage>(in);
     case bsgalone::core::MessageType::ENTITY_REMOVED:

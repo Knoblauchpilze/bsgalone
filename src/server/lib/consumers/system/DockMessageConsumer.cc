@@ -35,17 +35,17 @@ DockMessageConsumer::DockMessageConsumer(const Services &services,
 
 void DockMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
 {
-  const auto &dockMessage = message.as<DockMessage>();
+  const auto &dockMessage = message.as<bsgalone::core::DockMessage>();
 
   switch (dockMessage.getTransition())
   {
-    case DockTransition::DOCK:
+    case bsgalone::core::DockTransition::DOCK:
       handleDocking(dockMessage);
       break;
-    case DockTransition::UNDOCK:
+    case bsgalone::core::DockTransition::UNDOCK:
       handleUndocking(dockMessage);
       break;
-    case DockTransition::BACK_TO_OUTPOST:
+    case bsgalone::core::DockTransition::BACK_TO_OUTPOST:
       handleReturnToOutpost(dockMessage);
       break;
     default:
@@ -53,7 +53,7 @@ void DockMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &mess
   }
 }
 
-void DockMessageConsumer::handleDocking(const DockMessage &message) const
+void DockMessageConsumer::handleDocking(const bsgalone::core::DockMessage &message) const
 {
   const auto shipDbId = message.getShipDbId();
 
@@ -63,31 +63,26 @@ void DockMessageConsumer::handleDocking(const DockMessage &message) const
     return;
   }
 
-  auto out = std::make_unique<DockMessage>(shipDbId, DockTransition::DOCK);
-  out->copyClientIdIfDefined(message);
-  m_outputMessageQueue->pushMessage(std::move(out));
-
-  publishLoadingMessages(LoadingTransition::DOCK, shipDbId, message);
+  m_outputMessageQueue->pushMessage(message.clone());
+  publishLoadingMessages(LoadingTransition::DOCK, shipDbId);
 }
 
-void DockMessageConsumer::handleUndocking(const DockMessage &message) const
+void DockMessageConsumer::handleUndocking(const bsgalone::core::DockMessage &message) const
 {
   const auto shipDbId   = message.getShipDbId();
   const auto systemDbId = m_shipService->getSystemDbIdForShip(shipDbId);
 
-  auto out = std::make_unique<DockMessage>(shipDbId, DockTransition::UNDOCK);
-  out->copyClientIdIfDefined(message);
-  m_outputMessageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushMessage(message.clone());
 
   auto added = std::make_unique<EntityAddedMessage>(systemDbId);
   PlayerShipData data{.dbId = shipDbId};
   added->setShipData(data);
   m_systemMessageQueue->pushMessage(std::move(added));
 
-  publishLoadingMessages(LoadingTransition::UNDOCK, shipDbId, message);
+  publishLoadingMessages(LoadingTransition::UNDOCK, shipDbId);
 }
 
-void DockMessageConsumer::handleReturnToOutpost(const DockMessage &message) const
+void DockMessageConsumer::handleReturnToOutpost(const bsgalone::core::DockMessage &message) const
 {
   const auto shipDbId = message.getShipDbId();
 
@@ -97,24 +92,21 @@ void DockMessageConsumer::handleReturnToOutpost(const DockMessage &message) cons
     return;
   }
 
-  publishLoadingMessages(LoadingTransition::DOCK, shipDbId, message);
+  publishLoadingMessages(LoadingTransition::DOCK, shipDbId);
 }
 
 void DockMessageConsumer::publishLoadingMessages(const LoadingTransition transition,
-                                                 const Uuid shipDbId,
-                                                 const DockMessage &originalDockMessage) const
+                                                 const Uuid shipDbId) const
 {
   const auto playerDbId = m_shipService->getPlayerDbIdForShip(shipDbId);
   const auto systemDbId = m_shipService->getSystemDbIdForShip(shipDbId);
 
   auto started = std::make_unique<LoadingStartedMessage>(transition, playerDbId);
   started->setSystemDbId(systemDbId);
-  started->copyClientIdIfDefined(originalDockMessage);
   m_systemMessageQueue->pushMessage(std::move(started));
 
   auto finished = std::make_unique<LoadingFinishedMessage>(transition, playerDbId);
   finished->setSystemDbId(systemDbId);
-  finished->copyClientIdIfDefined(originalDockMessage);
   m_systemMessageQueue->pushMessage(std::move(finished));
 }
 

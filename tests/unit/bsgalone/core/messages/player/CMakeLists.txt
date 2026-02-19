@@ -4,5 +4,6 @@ target_include_directories(unitTests PUBLIC
 	)
 
 target_sources(unitTests PUBLIC
+	${CMAKE_CURRENT_SOURCE_DIR}/DockMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/VelocityMessageTest.cc
 	)

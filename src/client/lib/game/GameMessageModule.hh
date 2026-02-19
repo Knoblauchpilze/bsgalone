@@ -36,7 +36,7 @@ class GameMessageModule : public bsgalone::core::AbstractMessageListener, public
   const bsgo::DatabaseEntityMapper &m_entityMapper;
 
   void handleConnectionMessage(const bsgo::ConnectionMessage &message);
-  void handleDockMessage(const bsgo::DockMessage &message);
+  void handleDockMessage(const bsgalone::core::DockMessage &message);
   void handleHangarMessage(const bsgo::HangarMessage &message);
   void handleJumpMessage(const bsgo::JumpMessage &message);
   void handleLoginMessage(const bsgo::LoginMessage &message);

@@ -35,7 +35,7 @@ void GameMessageModule::onMessageReceived(const bsgalone::core::IMessage &messag
       handleConnectionMessage(message.as<bsgo::ConnectionMessage>());
       break;
     case bsgalone::core::MessageType::DOCK:
-      handleDockMessage(message.as<bsgo::DockMessage>());
+      handleDockMessage(message.as<bsgalone::core::DockMessage>());
       break;
     case bsgalone::core::MessageType::ENTITY_REMOVED:
       handleEntityRemovedMessage(message.as<bsgo::EntityRemovedMessage>());
@@ -75,18 +75,18 @@ void GameMessageModule::handleConnectionMessage(const bsgo::ConnectionMessage & 
   m_game.onConnectedToServer();
 }
 
-void GameMessageModule::handleDockMessage(const bsgo::DockMessage &message)
+void GameMessageModule::handleDockMessage(const bsgalone::core::DockMessage &message)
 {
   switch (message.getTransition())
   {
-    case bsgo::DockTransition::DOCK:
+    case bsgalone::core::DockTransition::DOCK:
       m_game.onShipDocked();
       break;
-    case bsgo::DockTransition::UNDOCK:
+    case bsgalone::core::DockTransition::UNDOCK:
       m_game.onShipUndocked();
       break;
     default:
-      error("Unsupported docking transition " + bsgo::str(message.getTransition()));
+      error("Unsupported docking transition " + str(message.getTransition()));
   }
 }
 

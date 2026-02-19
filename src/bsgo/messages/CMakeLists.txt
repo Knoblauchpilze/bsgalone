@@ -8,7 +8,6 @@ target_sources (bsgo_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/ComponentUpdatedMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ComponentSyncMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ConnectionMessage.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/DockMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/EntityRemovedMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/EntityAddedMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/EquipMessage.cc

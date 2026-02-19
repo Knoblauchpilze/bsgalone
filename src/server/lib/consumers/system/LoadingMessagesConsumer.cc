@@ -174,6 +174,8 @@ void LoadingMessagesConsumer::handleLoginDataLoading(const LoadingStartedMessage
   out->setActiveShipDbId(props.shipDbId);
   out->setDocked(props.docked);
   out->setSystemDbId(props.systemDbId);
+  // TODO: Here and in other places: there's no more client identifier to copy
+  // which leads to the loading messages to be broadcast.
   out->copyClientIdIfDefined(message);
 
   m_outputMessageQueue->pushMessage(std::move(out));
