@@ -13,7 +13,6 @@ target_sources (bsgo_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/EquipMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/HangarMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/JoinShipMessage.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/JumpCancelledMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/JumpMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LoginMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LogoutMessage.cc

@@ -21,7 +21,7 @@ class JumpCancelledMessageConsumer : public bsgalone::core::AbstractMessageConsu
   JumpServiceShPtr m_jumpService{};
   bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
 
-  void handleJumpCancellation(const JumpCancelledMessage &message) const;
+  void handleJumpCancellation(const bsgalone::core::JumpCancelledMessage &message) const;
 };
 
 } // namespace bsgo

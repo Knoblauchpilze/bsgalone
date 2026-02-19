@@ -168,7 +168,7 @@ auto createJumpRequestedMessage(const bsgalone::core::JumpRequestedMessage & /*m
 
 constexpr auto FTL_JUMP_CANCELLED_TEXT = "FTL jump sequence aborted";
 
-auto createJumpCancelledMessage(const bsgo::JumpCancelledMessage & /*message*/)
+auto createJumpCancelledMessage(const bsgalone::core::JumpCancelledMessage & /*message*/)
 {
   return textConfigFromColor(FTL_JUMP_CANCELLED_TEXT, colors::WHITE);
 }
@@ -226,7 +226,7 @@ auto createTextConfigForMessage(const bsgalone::core::IMessage &message,
     case bsgalone::core::MessageType::JUMP_REQUESTED:
       return createJumpRequestedMessage(message.as<bsgalone::core::JumpRequestedMessage>());
     case bsgalone::core::MessageType::JUMP_CANCELLED:
-      return createJumpCancelledMessage(message.as<bsgo::JumpCancelledMessage>());
+      return createJumpCancelledMessage(message.as<bsgalone::core::JumpCancelledMessage>());
     case bsgalone::core::MessageType::LOOT:
       return createLootMessage(message.as<bsgo::LootMessage>(), resourceView);
     case bsgalone::core::MessageType::SCANNED:
