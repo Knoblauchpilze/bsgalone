@@ -35,7 +35,7 @@ class ShopUiHandler : public IUiHandler
   struct ItemData
   {
     bsgo::Uuid itemId{};
-    bsgo::Item itemType{};
+    bsgalone::core::Item itemType{};
     UiMenu *menu{};
     std::unordered_map<bsgo::Uuid, UiTextMenu *> prices{};
   };

@@ -133,7 +133,7 @@ auto MessageParser::tryReadMessage(const bsgalone::core::MessageType &type, std:
     case bsgalone::core::MessageType::ENTITY_REMOVED:
       return readMessage<EntityRemovedMessage>(in);
     case bsgalone::core::MessageType::EQUIP:
-      return readMessage<EquipMessage>(in);
+      return bsgalone::core::EquipMessage::readFromStream(in);
     case bsgalone::core::MessageType::HANGAR:
       return readMessage<HangarMessage>(in);
     case bsgalone::core::MessageType::JOIN_SHIP:

@@ -36,7 +36,7 @@ class PlayerView : public AbstractView
   auto getPlayerShips() const -> std::vector<bsgo::PlayerShipData>;
 
   void trySelectShip(const bsgo::Uuid shipDbId) const;
-  void tryPurchase(const bsgo::Item &type, const bsgo::Uuid itemDbId) const;
+  void tryPurchase(const bsgalone::core::Item &type, const bsgo::Uuid itemDbId) const;
 
   void tryLogin(const std::string &name,
                 const std::string &password,

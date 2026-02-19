@@ -17,7 +17,7 @@ struct AffordabilityData
 {
   Uuid playerId{};
   Uuid itemId{};
-  Item itemType{};
+  bsgalone::core::Item itemType{};
 
   std::vector<PlayerResourceData> playerResources{};
   std::vector<WeaponData> weapons{};

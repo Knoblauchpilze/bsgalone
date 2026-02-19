@@ -8,7 +8,9 @@ PurchaseService::PurchaseService(const Repositories &repositories)
   : AbstractService("purchase", repositories)
 {}
 
-bool PurchaseService::tryPurchase(const Uuid playerId, const Uuid itemId, const Item &type) const
+bool PurchaseService::tryPurchase(const Uuid playerId,
+                                  const Uuid itemId,
+                                  const bsgalone::core::Item &type) const
 {
   if (!verifyAffordability(playerId, itemId, type))
   {
@@ -27,13 +29,13 @@ bool PurchaseService::tryPurchase(const Uuid playerId, const Uuid itemId, const 
 
   switch (type)
   {
-    case Item::WEAPON:
+    case bsgalone::core::Item::WEAPON:
       tryPurchaseWeapon(playerId, itemId);
       break;
-    case Item::COMPUTER:
+    case bsgalone::core::Item::COMPUTER:
       tryPurchaseComputer(playerId, itemId);
       break;
-    case Item::SHIP:
+    case bsgalone::core::Item::SHIP:
       tryPurchaseShip(playerId, itemId);
       break;
     default:
@@ -103,7 +105,7 @@ auto buildShips(const Faction faction,
 
 bool PurchaseService::verifyAffordability(const Uuid playerId,
                                           const Uuid itemId,
-                                          const Item &type) const
+                                          const bsgalone::core::Item &type) const
 {
   const auto player = m_repositories.playerRepository->findOneById(playerId);
 
@@ -127,9 +129,9 @@ bool PurchaseService::verifyAffordability(const Uuid playerId,
 
 bool PurchaseService::verifyPreconditions(const Uuid playerId,
                                           const Uuid itemId,
-                                          const Item &type) const
+                                          const bsgalone::core::Item &type) const
 {
-  if (Item::SHIP == type)
+  if (bsgalone::core::Item::SHIP == type)
   {
     const auto shipsIds = m_repositories.playerShipRepository->findAllByPlayer(playerId);
     for (const auto &shipId : shipsIds)

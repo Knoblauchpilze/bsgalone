@@ -33,10 +33,10 @@ bool LockerService::tryEquip(const LockerItemData &item) const
 
   switch (item.type)
   {
-    case Item::WEAPON:
+    case bsgalone::core::Item::WEAPON:
       tryEquipWeapon(item.shipDbId, item.dbId);
       break;
-    case Item::COMPUTER:
+    case bsgalone::core::Item::COMPUTER:
       tryEquipComputer(item.shipDbId, item.dbId);
       break;
     default:
@@ -66,10 +66,10 @@ bool LockerService::tryUnequip(const LockerItemData &item) const
 
   switch (item.type)
   {
-    case Item::WEAPON:
+    case bsgalone::core::Item::WEAPON:
       tryUnequipWeapon(item.shipDbId, item.dbId);
       break;
-    case Item::COMPUTER:
+    case bsgalone::core::Item::COMPUTER:
       tryUnequipComputer(item.shipDbId, item.dbId);
       break;
     default:
@@ -80,7 +80,8 @@ bool LockerService::tryUnequip(const LockerItemData &item) const
   return true;
 }
 
-bool LockerService::verifySlotAvailability(const Uuid shipDbId, const Item &type) const
+bool LockerService::verifySlotAvailability(const Uuid shipDbId,
+                                           const bsgalone::core::Item &type) const
 {
   EquipData data{.shipId           = shipDbId,
                  .shipWeaponRepo   = m_repositories.shipWeaponRepository,
@@ -89,9 +90,9 @@ bool LockerService::verifySlotAvailability(const Uuid shipDbId, const Item &type
 
   switch (type)
   {
-    case Item::WEAPON:
+    case bsgalone::core::Item::WEAPON:
       return canStillEquipWeapon(data);
-    case Item::COMPUTER:
+    case bsgalone::core::Item::COMPUTER:
       return canStillEquipComputer(data);
     default:
       error("Failed to verify slot availability", "Unsupported item " + str(type));
@@ -103,15 +104,15 @@ bool LockerService::verifySlotAvailability(const Uuid shipDbId, const Item &type
 
 bool LockerService::verifyItemBelongsToPlayer(const Uuid playerDbId,
                                               const Uuid itemId,
-                                              const Item &type) const
+                                              const bsgalone::core::Item &type) const
 {
   bool belong{false};
   switch (type)
   {
-    case Item::WEAPON:
+    case bsgalone::core::Item::WEAPON:
       belong = m_repositories.playerWeaponRepository->findAllByPlayer(playerDbId).contains(itemId);
       break;
-    case Item::COMPUTER:
+    case bsgalone::core::Item::COMPUTER:
       belong = m_repositories.playerComputerRepository->findAllByPlayer(playerDbId).contains(itemId);
       break;
     default:
@@ -123,17 +124,17 @@ bool LockerService::verifyItemBelongsToPlayer(const Uuid playerDbId,
 
 bool LockerService::verifyItemIsEquiped(const Uuid shipDbId,
                                         const Uuid itemId,
-                                        const Item &type) const
+                                        const bsgalone::core::Item &type) const
 {
   bool equiped{false};
 
   switch (type)
   {
-    case Item::WEAPON:
+    case bsgalone::core::Item::WEAPON:
       equiped = m_repositories.shipWeaponRepository->findOneByShipAndWeapon(shipDbId, itemId)
                   .has_value();
       break;
-    case Item::COMPUTER:
+    case bsgalone::core::Item::COMPUTER:
       equiped = m_repositories.shipComputerRepository->existByShipAndComputer(shipDbId, itemId);
       break;
     default:
@@ -143,16 +144,16 @@ bool LockerService::verifyItemIsEquiped(const Uuid shipDbId,
   return equiped;
 }
 
-bool LockerService::verifyItemIsNotEquiped(const Uuid itemId, const Item &type) const
+bool LockerService::verifyItemIsNotEquiped(const Uuid itemId, const bsgalone::core::Item &type) const
 {
   bool equiped{true};
 
   switch (type)
   {
-    case Item::WEAPON:
+    case bsgalone::core::Item::WEAPON:
       equiped = m_repositories.shipWeaponRepository->findOneByWeapon(itemId).has_value();
       break;
-    case Item::COMPUTER:
+    case bsgalone::core::Item::COMPUTER:
       equiped = m_repositories.shipComputerRepository->existByComputer(itemId);
       break;
     default:

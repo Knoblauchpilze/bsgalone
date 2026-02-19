@@ -1,7 +1,7 @@
 
 #include "Item.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 auto str(const Item item) -> std::string
 {
@@ -20,4 +20,4 @@ auto str(const Item item) -> std::string
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

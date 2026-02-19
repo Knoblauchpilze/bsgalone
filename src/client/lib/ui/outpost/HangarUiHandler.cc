@@ -248,7 +248,8 @@ void HangarUiHandler::updateShipMenus()
     {
       shipData.playerShipDbId.reset();
       shipData.button->setText(BUY_SHIP_BUTTON_TEXT);
-      const auto affordability = m_shopView->canPlayerAfford(shipData.shipDbId, bsgo::Item::SHIP);
+      const auto affordability = m_shopView->canPlayerAfford(shipData.shipDbId,
+                                                             bsgalone::core::Item::SHIP);
 
       shipData.button->setEnabled(affordability.canAfford);
       shipData.button->setHighlightable(affordability.canAfford);
@@ -311,7 +312,7 @@ void HangarUiHandler::onPurchaseRequest(const int shipIndex)
   }
 
   const auto &data = m_shipsData.at(shipIndex);
-  m_playerView->tryPurchase(bsgo::Item::SHIP, data.shipDbId);
+  m_playerView->tryPurchase(bsgalone::core::Item::SHIP, data.shipDbId);
 }
 
 void HangarUiHandler::onSelectRequest(const int shipIndex)
