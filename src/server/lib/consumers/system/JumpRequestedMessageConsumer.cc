@@ -22,14 +22,15 @@ JumpRequestedMessageConsumer::JumpRequestedMessageConsumer(
 
 void JumpRequestedMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
 {
-  const auto &jump = message.as<JumpRequestedMessage>();
+  const auto &jump = message.as<bsgalone::core::JumpRequestedMessage>();
   handleJumpRequest(jump);
 }
 
-void JumpRequestedMessageConsumer::handleJumpRequest(const JumpRequestedMessage &message) const
+void JumpRequestedMessageConsumer::handleJumpRequest(
+  const bsgalone::core::JumpRequestedMessage &message) const
 {
   const auto shipDbId   = message.getShipDbId();
-  const auto jumpSystem = message.getJumpSystem();
+  const auto jumpSystem = message.getDestinationSystem();
 
   if (!m_jumpService->tryRegisterJump(shipDbId, jumpSystem))
   {
@@ -37,9 +38,7 @@ void JumpRequestedMessageConsumer::handleJumpRequest(const JumpRequestedMessage 
     return;
   }
 
-  auto out = std::make_unique<JumpRequestedMessage>(shipDbId, jumpSystem);
-  out->copyClientIdIfDefined(message);
-  m_outputMessageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushMessage(message.clone());
 }
 
 } // namespace bsgo

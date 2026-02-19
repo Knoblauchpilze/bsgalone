@@ -21,7 +21,7 @@ class JumpRequestedMessageConsumer : public bsgalone::core::AbstractMessageConsu
   JumpServiceShPtr m_jumpService{};
   bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
 
-  void handleJumpRequest(const JumpRequestedMessage &message) const;
+  void handleJumpRequest(const bsgalone::core::JumpRequestedMessage &message) const;
 };
 
 } // namespace bsgo

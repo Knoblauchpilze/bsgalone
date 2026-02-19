@@ -23,7 +23,7 @@ void ShipMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &mess
       handleComponentSync(message.as<bsgo::ComponentSyncMessage>());
       break;
     case bsgalone::core::MessageType::JUMP_REQUESTED:
-      handleJumpRequested(message.as<bsgo::JumpRequestedMessage>());
+      handleJumpRequested(message.as<bsgalone::core::JumpRequestedMessage>());
       break;
     case bsgalone::core::MessageType::JUMP_CANCELLED:
       handleJumpCancelled(message.as<bsgo::JumpCancelledMessage>());
@@ -62,7 +62,8 @@ void ShipMessageConsumer::handleComponentSync(const bsgo::ComponentSyncMessage &
   }
 }
 
-void ShipMessageConsumer::handleJumpRequested(const bsgo::JumpRequestedMessage &message) const
+void ShipMessageConsumer::handleJumpRequested(
+  const bsgalone::core::JumpRequestedMessage &message) const
 {
   const auto shipDbId = message.getShipDbId();
 
