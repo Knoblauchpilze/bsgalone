@@ -119,9 +119,14 @@ void ShipDbView::startJump() const
     return;
   }
 
-  auto message
-    = std::make_unique<bsgo::JumpRequestedMessage>(m_gameSession->getPlayerActiveShipDbId(),
-                                                   *m_systemToJumpTo);
+  const auto playerDbId = m_gameSession->getPlayerDbId();
+  const auto systemDbId = m_gameSession->getSystemDbId();
+  const auto shipDbId   = m_gameSession->getPlayerActiveShipDbId();
+
+  auto message = std::make_unique<bsgalone::core::JumpRequestedMessage>(playerDbId,
+                                                                        systemDbId,
+                                                                        shipDbId,
+                                                                        *m_systemToJumpTo);
   m_outputMessageQueue->pushMessage(std::move(message));
 }
 
@@ -216,7 +221,8 @@ void ShipDbView::handleMessageInternal(const bsgalone::core::IMessage &message)
       debug("Active ship is now " + bsgo::str(m_playerShip->dbId));
       break;
     case bsgalone::core::MessageType::JUMP_REQUESTED:
-      m_playerShip->jumpSystem = message.as<bsgo::JumpRequestedMessage>().getJumpSystem();
+      m_playerShip->jumpSystem = message.as<bsgalone::core::JumpRequestedMessage>()
+                                   .getDestinationSystem();
       break;
     case bsgalone::core::MessageType::JUMP_CANCELLED:
     case bsgalone::core::MessageType::JUMP:

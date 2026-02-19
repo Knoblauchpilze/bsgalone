@@ -161,7 +161,7 @@ void LogUiHandler::onMessageReceived(const bsgalone::core::IMessage &message)
 namespace {
 constexpr auto FTL_JUMP_STARTED_TEXT = "FTL jump sequence started";
 
-auto createJumpRequestedMessage(const bsgo::JumpRequestedMessage & /*message*/)
+auto createJumpRequestedMessage(const bsgalone::core::JumpRequestedMessage & /*message*/)
 {
   return textConfigFromColor(FTL_JUMP_STARTED_TEXT, colors::WHITE);
 }
@@ -224,7 +224,7 @@ auto createTextConfigForMessage(const bsgalone::core::IMessage &message,
   switch (message.type())
   {
     case bsgalone::core::MessageType::JUMP_REQUESTED:
-      return createJumpRequestedMessage(message.as<bsgo::JumpRequestedMessage>());
+      return createJumpRequestedMessage(message.as<bsgalone::core::JumpRequestedMessage>());
     case bsgalone::core::MessageType::JUMP_CANCELLED:
       return createJumpCancelledMessage(message.as<bsgo::JumpCancelledMessage>());
     case bsgalone::core::MessageType::LOOT:
