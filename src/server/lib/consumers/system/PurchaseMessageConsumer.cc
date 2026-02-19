@@ -35,13 +35,13 @@ void PurchaseMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &
 
   switch (type)
   {
-    case Item::COMPUTER:
+    case bsgalone::core::Item::COMPUTER:
       handleComputerPurchase(purchase);
       break;
-    case Item::SHIP:
+    case bsgalone::core::Item::SHIP:
       handleShipPurchase(purchase);
       break;
-    case Item::WEAPON:
+    case bsgalone::core::Item::WEAPON:
       handleWeaponPurchase(purchase);
       break;
     default:
@@ -55,14 +55,16 @@ void PurchaseMessageConsumer::handleComputerPurchase(const PurchaseMessage &mess
   const auto playerDbId   = message.getPlayerDbId();
   const auto computerDbId = message.getItemDbId();
 
-  if (!m_purchaseService->tryPurchase(playerDbId, computerDbId, Item::COMPUTER))
+  if (!m_purchaseService->tryPurchase(playerDbId, computerDbId, bsgalone::core::Item::COMPUTER))
   {
     warn("Failed to process purchase message for player " + str(playerDbId) + " for computer "
          + str(computerDbId));
     return;
   }
 
-  auto out = std::make_unique<PurchaseMessage>(playerDbId, Item::COMPUTER, computerDbId);
+  auto out = std::make_unique<PurchaseMessage>(playerDbId,
+                                               bsgalone::core::Item::COMPUTER,
+                                               computerDbId);
   out->copyClientIdIfDefined(message);
   m_outputMessageQueue->pushMessage(std::move(out));
 
@@ -74,14 +76,14 @@ void PurchaseMessageConsumer::handleShipPurchase(const PurchaseMessage &message)
   const auto playerDbId = message.getPlayerDbId();
   const auto shipDbId   = message.getItemDbId();
 
-  if (!m_purchaseService->tryPurchase(playerDbId, shipDbId, Item::SHIP))
+  if (!m_purchaseService->tryPurchase(playerDbId, shipDbId, bsgalone::core::Item::SHIP))
   {
     warn("Failed to process purchase message for player " + str(playerDbId) + " for ship "
          + str(shipDbId));
     return;
   }
 
-  auto out = std::make_unique<PurchaseMessage>(playerDbId, Item::SHIP, shipDbId);
+  auto out = std::make_unique<PurchaseMessage>(playerDbId, bsgalone::core::Item::SHIP, shipDbId);
   out->copyClientIdIfDefined(message);
   m_outputMessageQueue->pushMessage(std::move(out));
 
@@ -93,14 +95,14 @@ void PurchaseMessageConsumer::handleWeaponPurchase(const PurchaseMessage &messag
   const auto playerDbId = message.getPlayerDbId();
   const auto weaponDbId = message.getItemDbId();
 
-  if (!m_purchaseService->tryPurchase(playerDbId, weaponDbId, Item::WEAPON))
+  if (!m_purchaseService->tryPurchase(playerDbId, weaponDbId, bsgalone::core::Item::WEAPON))
   {
     warn("Failed to process purchase message for player " + str(playerDbId) + " for weapon "
          + str(weaponDbId));
     return;
   }
 
-  auto out = std::make_unique<PurchaseMessage>(playerDbId, Item::WEAPON, weaponDbId);
+  auto out = std::make_unique<PurchaseMessage>(playerDbId, bsgalone::core::Item::WEAPON, weaponDbId);
   out->copyClientIdIfDefined(message);
   m_outputMessageQueue->pushMessage(std::move(out));
 

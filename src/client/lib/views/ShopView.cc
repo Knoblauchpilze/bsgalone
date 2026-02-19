@@ -21,15 +21,15 @@ auto ShopItem::id() const -> bsgo::Uuid
   throw std::invalid_argument("Expected shop item to be a weapon or a computer");
 }
 
-auto ShopItem::type() const -> bsgo::Item
+auto ShopItem::type() const -> bsgalone::core::Item
 {
   if (weapon)
   {
-    return bsgo::Item::WEAPON;
+    return bsgalone::core::Item::WEAPON;
   }
   else if (computer)
   {
-    return bsgo::Item::COMPUTER;
+    return bsgalone::core::Item::COMPUTER;
   }
 
   throw std::invalid_argument("Expected shop item to be a weapon or a computer");
@@ -149,7 +149,7 @@ auto ShopView::getShopItems() const -> std::vector<ShopItem>
   return out;
 }
 
-auto ShopView::canPlayerAfford(const bsgo::Uuid id, const bsgo::Item &itemType) const
+auto ShopView::canPlayerAfford(const bsgo::Uuid id, const bsgalone::core::Item &itemType) const
   -> bsgo::Affordability
 {
   bsgo::AffordabilityData data{

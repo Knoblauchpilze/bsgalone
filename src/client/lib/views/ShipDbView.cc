@@ -151,32 +151,35 @@ void ShipDbView::accelerateShip(const Eigen::Vector3f &acceleration) const
 {
   const auto playerDbId = m_gameSession->getPlayerDbId();
   const auto systemDbId = m_gameSession->getSystemDbId();
+  const auto shipDbId   = m_gameSession->getPlayerActiveShipDbId();
 
-  auto message
-    = std::make_unique<bsgalone::core::VelocityMessage>(playerDbId,
-                                                        systemDbId,
-                                                        m_gameSession->getPlayerActiveShipDbId(),
-                                                        acceleration);
+  auto message = std::make_unique<bsgalone::core::VelocityMessage>(playerDbId,
+                                                                   systemDbId,
+                                                                   shipDbId,
+                                                                   acceleration);
   m_outputMessageQueue->pushMessage(message->clone());
   m_internalMessageQueue->pushMessage(std::move(message));
 }
 
-void ShipDbView::tryEquipItem(const bsgo::Item &itemType, const bsgo::Uuid itemDbId) const
+void ShipDbView::tryEquipItem(const bsgalone::core::Item &itemType, const bsgo::Uuid itemDbId) const
 {
-  m_outputMessageQueue->pushMessage(
-    std::make_unique<bsgo::EquipMessage>(bsgo::EquipType::EQUIP,
-                                         m_gameSession->getPlayerActiveShipDbId(),
-                                         itemType,
-                                         itemDbId));
+  const auto playerDbId = m_gameSession->getPlayerDbId();
+  const auto systemDbId = m_gameSession->getSystemDbId();
+  const auto shipDbId   = m_gameSession->getPlayerActiveShipDbId();
+
+  m_outputMessageQueue->pushMessage(std::make_unique<bsgalone::core::EquipMessage>(
+    playerDbId, systemDbId, bsgalone::core::EquipType::EQUIP, shipDbId, itemType, itemDbId));
 }
 
-void ShipDbView::tryUnequipItem(const bsgo::Item &itemType, const bsgo::Uuid itemDbId) const
+void ShipDbView::tryUnequipItem(const bsgalone::core::Item &itemType,
+                                const bsgo::Uuid itemDbId) const
 {
-  m_outputMessageQueue->pushMessage(
-    std::make_unique<bsgo::EquipMessage>(bsgo::EquipType::UNEQUIP,
-                                         m_gameSession->getPlayerActiveShipDbId(),
-                                         itemType,
-                                         itemDbId));
+  const auto playerDbId = m_gameSession->getPlayerDbId();
+  const auto systemDbId = m_gameSession->getSystemDbId();
+  const auto shipDbId   = m_gameSession->getPlayerActiveShipDbId();
+
+  m_outputMessageQueue->pushMessage(std::make_unique<bsgalone::core::EquipMessage>(
+    playerDbId, systemDbId, bsgalone::core::EquipType::UNEQUIP, shipDbId, itemType, itemDbId));
 }
 
 auto ShipDbView::getPlayerShipWeapons() const -> std::vector<bsgo::PlayerWeaponData>
@@ -194,23 +197,23 @@ auto ShipDbView::getPlayerShipSlots() const -> std::unordered_map<bsgo::Slot, in
   return m_playerShip->slots;
 }
 
-bool ShipDbView::canStillEquipItem(const bsgo::Item &type) const
+bool ShipDbView::canStillEquipItem(const bsgalone::core::Item &type) const
 {
   int totalSlots = 0;
   int usedSlots  = 0;
 
   switch (type)
   {
-    case bsgo::Item::COMPUTER:
+    case bsgalone::core::Item::COMPUTER:
       totalSlots = m_playerShip->slots.at(bsgo::Slot::COMPUTER);
       usedSlots  = static_cast<int>(m_playerShip->computers.size());
       break;
-    case bsgo::Item::WEAPON:
+    case bsgalone::core::Item::WEAPON:
       totalSlots = m_playerShip->slots.at(bsgo::Slot::WEAPON);
       usedSlots  = static_cast<int>(m_playerShip->weapons.size());
       break;
     default:
-      error("Unsupported item type " + bsgo::str(type));
+      error("Unsupported item type " + str(type));
   }
 
   const auto canEquip = usedSlots < totalSlots;

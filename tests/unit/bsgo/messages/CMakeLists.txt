@@ -15,7 +15,6 @@ target_sources(unitTests PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/ConnectionMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/EntityAddedMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/EntityRemovedMessageTest.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/EquipMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/HangarMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/JoinShipMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/JumpMessageTest.cc

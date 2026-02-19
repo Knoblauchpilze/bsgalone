@@ -25,10 +25,10 @@ class EquipMessageConsumer : public bsgalone::core::AbstractMessageConsumer
   bsgalone::core::IMessageQueue *const m_systemMessageQueue{};
   bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
 
-  void handleEquipRequest(const EquipMessage &message) const;
-  void handleUnequipRequest(const EquipMessage &message) const;
+  void handleEquipRequest(const bsgalone::core::EquipMessage &message) const;
+  void handleUnequipRequest(const bsgalone::core::EquipMessage &message) const;
 
-  void handleSuccessfulRequest(const EquipMessage &message) const;
+  void handleSuccessfulRequest(const bsgalone::core::EquipMessage &message) const;
 };
 
 } // namespace bsgo

@@ -50,13 +50,13 @@ auto computeAffordability(const AffordabilityData &data) -> Affordability
   std::vector<Cost> costs{};
   switch (data.itemType)
   {
-    case Item::WEAPON:
+    case bsgalone::core::Item::WEAPON:
       costs = getItemPrice(data.itemId, data.weapons);
       break;
-    case Item::COMPUTER:
+    case bsgalone::core::Item::COMPUTER:
       costs = getItemPrice(data.itemId, data.computers);
       break;
-    case Item::SHIP:
+    case bsgalone::core::Item::SHIP:
       costs = getItemPrice(data.itemId, data.ships);
       break;
     default:

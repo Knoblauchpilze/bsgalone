@@ -34,15 +34,15 @@ EquipMessageConsumer::EquipMessageConsumer(const Services &services,
 
 void EquipMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
 {
-  const auto &equip = message.as<EquipMessage>();
+  const auto &equip = message.as<bsgalone::core::EquipMessage>();
   const auto action = equip.getAction();
 
   switch (action)
   {
-    case EquipType::EQUIP:
+    case bsgalone::core::EquipType::EQUIP:
       handleEquipRequest(equip);
       break;
-    case EquipType::UNEQUIP:
+    case bsgalone::core::EquipType::UNEQUIP:
       handleUnequipRequest(equip);
       break;
     default:
@@ -50,7 +50,7 @@ void EquipMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &mes
   }
 }
 
-void EquipMessageConsumer::handleEquipRequest(const EquipMessage &message) const
+void EquipMessageConsumer::handleEquipRequest(const bsgalone::core::EquipMessage &message) const
 {
   const auto shipDbId = message.getShipDbId();
   const auto type     = message.getItemType();
@@ -64,14 +64,12 @@ void EquipMessageConsumer::handleEquipRequest(const EquipMessage &message) const
     return;
   }
 
-  auto out = std::make_unique<EquipMessage>(EquipType::EQUIP, shipDbId, type, itemDbId);
-  out->copyClientIdIfDefined(message);
-  m_outputMessageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushMessage(message.clone());
 
   handleSuccessfulRequest(message);
 }
 
-void EquipMessageConsumer::handleUnequipRequest(const EquipMessage &message) const
+void EquipMessageConsumer::handleUnequipRequest(const bsgalone::core::EquipMessage &message) const
 {
   const auto shipDbId = message.getShipDbId();
   const auto type     = message.getItemType();
@@ -85,24 +83,20 @@ void EquipMessageConsumer::handleUnequipRequest(const EquipMessage &message) con
     return;
   }
 
-  auto out = std::make_unique<EquipMessage>(EquipType::UNEQUIP, shipDbId, type, itemDbId);
-  out->copyClientIdIfDefined(message);
-  m_outputMessageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushMessage(message.clone());
 
   handleSuccessfulRequest(message);
 }
 
-void EquipMessageConsumer::handleSuccessfulRequest(const EquipMessage &message) const
+void EquipMessageConsumer::handleSuccessfulRequest(const bsgalone::core::EquipMessage &message) const
 {
   const auto shipDbId   = message.getShipDbId();
   const auto playerDbId = m_shipService->getPlayerDbIdForShip(shipDbId);
 
   auto started = std::make_unique<LoadingStartedMessage>(LoadingTransition::EQUIP, playerDbId);
-  started->copyClientIdIfDefined(message);
   m_systemMessageQueue->pushMessage(std::move(started));
 
   auto finished = std::make_unique<LoadingFinishedMessage>(LoadingTransition::EQUIP, playerDbId);
-  finished->copyClientIdIfDefined(message);
   m_systemMessageQueue->pushMessage(std::move(finished));
 }
 

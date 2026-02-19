@@ -29,7 +29,7 @@ struct ShopItem
   std::optional<bsgo::ComputerData> computer{};
 
   auto id() const -> bsgo::Uuid;
-  auto type() const -> bsgo::Item;
+  auto type() const -> bsgalone::core::Item;
 };
 
 class ShopView : public AbstractView
@@ -44,7 +44,7 @@ class ShopView : public AbstractView
   auto gameSession() const -> const GameSession &;
 
   auto getShopItems() const -> std::vector<ShopItem>;
-  auto canPlayerAfford(const bsgo::Uuid id, const bsgo::Item &itemType) const
+  auto canPlayerAfford(const bsgo::Uuid id, const bsgalone::core::Item &itemType) const
     -> bsgo::Affordability;
 
   auto getAllShips() const -> std::vector<bsgo::ShipData>;

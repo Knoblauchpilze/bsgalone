@@ -11,11 +11,11 @@ class PurchaseMessage : public bsgalone::core::NetworkMessage
 {
   public:
   PurchaseMessage();
-  PurchaseMessage(const Uuid playerDbId, const Item &itemType, const Uuid itemDbId);
+  PurchaseMessage(const Uuid playerDbId, const bsgalone::core::Item &itemType, const Uuid itemDbId);
   ~PurchaseMessage() override = default;
 
   auto getPlayerDbId() const -> Uuid;
-  auto getItemType() const -> Item;
+  auto getItemType() const -> bsgalone::core::Item;
   auto getItemDbId() const -> Uuid;
 
   auto serialize(std::ostream &out) const -> std::ostream & override;
@@ -25,7 +25,7 @@ class PurchaseMessage : public bsgalone::core::NetworkMessage
 
   private:
   Uuid m_playerDbId{};
-  Item m_itemType{};
+  bsgalone::core::Item m_itemType{};
   Uuid m_itemDbId{};
 };
 

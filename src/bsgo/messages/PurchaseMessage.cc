@@ -8,7 +8,9 @@ PurchaseMessage::PurchaseMessage()
   : NetworkMessage(bsgalone::core::MessageType::PURCHASE)
 {}
 
-PurchaseMessage::PurchaseMessage(const Uuid playerDbId, const Item &itemType, const Uuid itemDbId)
+PurchaseMessage::PurchaseMessage(const Uuid playerDbId,
+                                 const bsgalone::core::Item &itemType,
+                                 const Uuid itemDbId)
   : NetworkMessage(bsgalone::core::MessageType::PURCHASE)
   , m_playerDbId(playerDbId)
   , m_itemType(itemType)
@@ -20,7 +22,7 @@ auto PurchaseMessage::getPlayerDbId() const -> Uuid
   return m_playerDbId;
 }
 
-auto PurchaseMessage::getItemType() const -> Item
+auto PurchaseMessage::getItemType() const -> bsgalone::core::Item
 {
   return m_itemType;
 }

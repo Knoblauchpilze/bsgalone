@@ -38,7 +38,7 @@ class LockerUiHandler : public IUiHandler
   struct LockerItem
   {
     bsgo::Uuid itemId{};
-    bsgo::Item itemType{};
+    bsgalone::core::Item itemType{};
     UiMenu *button{};
   };
 
@@ -49,7 +49,7 @@ class LockerUiHandler : public IUiHandler
   struct ShipItem
   {
     bsgo::Uuid itemId{};
-    bsgo::Item itemType{};
+    bsgalone::core::Item itemType{};
   };
 
   std::vector<UiMenu *> m_shipWeapons{};

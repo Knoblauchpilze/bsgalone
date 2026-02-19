@@ -19,8 +19,8 @@ void assertMessagesAreEqual(const PurchaseMessage &actual, const PurchaseMessage
 
 TEST(Unit_Bsgo_Serialization_PurchaseMessage, Resource)
 {
-  const PurchaseMessage expected(Uuid{14}, Item::RESOURCE, Uuid{26});
-  PurchaseMessage actual(Uuid{6}, Item::COMPUTER, Uuid{4});
+  const PurchaseMessage expected(Uuid{14}, bsgalone::core::Item::RESOURCE, Uuid{26});
+  PurchaseMessage actual(Uuid{6}, bsgalone::core::Item::COMPUTER, Uuid{4});
 
   serializeAndDeserializeMessage(expected, actual);
 
@@ -29,8 +29,8 @@ TEST(Unit_Bsgo_Serialization_PurchaseMessage, Resource)
 
 TEST(Unit_Bsgo_Serialization_PurchaseMessage, Weapon)
 {
-  const PurchaseMessage expected(Uuid{14}, Item::WEAPON, Uuid{26});
-  PurchaseMessage actual(Uuid{6}, Item::RESOURCE, Uuid{4});
+  const PurchaseMessage expected(Uuid{14}, bsgalone::core::Item::WEAPON, Uuid{26});
+  PurchaseMessage actual(Uuid{6}, bsgalone::core::Item::RESOURCE, Uuid{4});
 
   serializeAndDeserializeMessage(expected, actual);
 
@@ -39,8 +39,8 @@ TEST(Unit_Bsgo_Serialization_PurchaseMessage, Weapon)
 
 TEST(Unit_Bsgo_Serialization_PurchaseMessage, Computer)
 {
-  const PurchaseMessage expected(Uuid{14}, Item::COMPUTER, Uuid{26});
-  PurchaseMessage actual(Uuid{6}, Item::RESOURCE, Uuid{4});
+  const PurchaseMessage expected(Uuid{14}, bsgalone::core::Item::COMPUTER, Uuid{26});
+  PurchaseMessage actual(Uuid{6}, bsgalone::core::Item::RESOURCE, Uuid{4});
 
   serializeAndDeserializeMessage(expected, actual);
 
@@ -49,8 +49,8 @@ TEST(Unit_Bsgo_Serialization_PurchaseMessage, Computer)
 
 TEST(Unit_Bsgo_Serialization_PurchaseMessage, Ship)
 {
-  const PurchaseMessage expected(Uuid{14}, Item::SHIP, Uuid{26});
-  PurchaseMessage actual(Uuid{6}, Item::RESOURCE, Uuid{4});
+  const PurchaseMessage expected(Uuid{14}, bsgalone::core::Item::SHIP, Uuid{26});
+  PurchaseMessage actual(Uuid{6}, bsgalone::core::Item::RESOURCE, Uuid{4});
 
   serializeAndDeserializeMessage(expected, actual);
 
@@ -59,9 +59,9 @@ TEST(Unit_Bsgo_Serialization_PurchaseMessage, Ship)
 
 TEST(Unit_Bsgo_Serialization_PurchaseMessage, WithClientId)
 {
-  PurchaseMessage expected(Uuid{44}, Item::SHIP, Uuid{17});
+  PurchaseMessage expected(Uuid{44}, bsgalone::core::Item::SHIP, Uuid{17});
   expected.setClientId(Uuid{119});
-  PurchaseMessage actual(Uuid{3}, Item::WEAPON, Uuid{21});
+  PurchaseMessage actual(Uuid{3}, bsgalone::core::Item::WEAPON, Uuid{21});
 
   serializeAndDeserializeMessage(expected, actual);
 
@@ -70,7 +70,7 @@ TEST(Unit_Bsgo_Serialization_PurchaseMessage, WithClientId)
 
 TEST(Unit_Bsgo_Serialization_PurchaseMessage, Clone)
 {
-  const PurchaseMessage expected(Uuid{44}, Item::SHIP, Uuid{17});
+  const PurchaseMessage expected(Uuid{44}, bsgalone::core::Item::SHIP, Uuid{17});
 
   const auto cloned = expected.clone();
 

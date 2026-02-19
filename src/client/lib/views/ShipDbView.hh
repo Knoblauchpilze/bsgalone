@@ -37,14 +37,14 @@ class ShipDbView : public AbstractView
 
   void accelerateShip(const Eigen::Vector3f &acceleration) const;
 
-  void tryEquipItem(const bsgo::Item &itemType, const bsgo::Uuid itemDbId) const;
-  void tryUnequipItem(const bsgo::Item &itemType, const bsgo::Uuid itemDbId) const;
+  void tryEquipItem(const bsgalone::core::Item &itemType, const bsgo::Uuid itemDbId) const;
+  void tryUnequipItem(const bsgalone::core::Item &itemType, const bsgo::Uuid itemDbId) const;
 
   auto getPlayerShipWeapons() const -> std::vector<bsgo::PlayerWeaponData>;
   auto getPlayerShipComputers() const -> std::vector<bsgo::PlayerComputerData>;
   auto getPlayerShipSlots() const -> std::unordered_map<bsgo::Slot, int>;
 
-  bool canStillEquipItem(const bsgo::Item &type) const;
+  bool canStillEquipItem(const bsgalone::core::Item &type) const;
 
   protected:
   void handleMessageInternal(const bsgalone::core::IMessage &message) override;
