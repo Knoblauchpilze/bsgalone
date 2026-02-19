@@ -141,7 +141,7 @@ auto MessageParser::tryReadMessage(const bsgalone::core::MessageType &type, std:
     case bsgalone::core::MessageType::JUMP:
       return readMessage<JumpMessage>(in);
     case bsgalone::core::MessageType::JUMP_CANCELLED:
-      return readMessage<JumpCancelledMessage>(in);
+      return bsgalone::core::JumpCancelledMessage::readFromStream(in);
     case bsgalone::core::MessageType::JUMP_REQUESTED:
       return bsgalone::core::JumpRequestedMessage::readFromStream(in);
     case bsgalone::core::MessageType::LOADING_FINISHED:

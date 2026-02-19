@@ -7,24 +7,22 @@
 
 namespace bsgalone::core {
 
-class JumpRequestedMessage : public AbstractPlayerMessage
+class JumpCancelledMessage : public AbstractPlayerMessage
 {
   public:
-  JumpRequestedMessage(const bsgo::Uuid playerDbId,
-                       const bsgo::Uuid sourceSystemDbId,
-                       const bsgo::Uuid shipDbId,
-                       const bsgo::Uuid destinationSystemDbId);
-  ~JumpRequestedMessage() override = default;
+  JumpCancelledMessage(const bsgo::Uuid playerDbId,
+                       const bsgo::Uuid systemDbId,
+                       const bsgo::Uuid shipDbId);
+  ~JumpCancelledMessage() override = default;
 
   auto getShipDbId() const -> bsgo::Uuid;
-  auto getDestinationSystem() const -> bsgo::Uuid;
 
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
 
   auto clone() const -> IMessagePtr override;
 
-  /// @brief - Tries to read a jump requested message from the input stream.
+  /// @brief - Tries to read a jump cancelled message from the input stream.
   /// If it succeeds, a valid jump message will be returned, otherwise an
   /// empty optional.
   /// The stream will **not be reset** in case the reading fails.
@@ -35,9 +33,8 @@ class JumpRequestedMessage : public AbstractPlayerMessage
 
   private:
   bsgo::Uuid m_shipDbId{};
-  bsgo::Uuid m_destinationSystemDbId{};
 
-  JumpRequestedMessage();
+  JumpCancelledMessage();
 };
 
 } // namespace bsgalone::core

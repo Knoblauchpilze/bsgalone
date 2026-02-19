@@ -26,7 +26,7 @@ void ShipMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &mess
       handleJumpRequested(message.as<bsgalone::core::JumpRequestedMessage>());
       break;
     case bsgalone::core::MessageType::JUMP_CANCELLED:
-      handleJumpCancelled(message.as<bsgo::JumpCancelledMessage>());
+      handleJumpCancelled(message.as<bsgalone::core::JumpCancelledMessage>());
       break;
     case bsgalone::core::MessageType::TARGET:
       handleTargetAcquired(message.as<bsgo::TargetMessage>());
@@ -81,7 +81,8 @@ void ShipMessageConsumer::handleJumpRequested(
   ship.statusComp().setStatus(newStatus);
 }
 
-void ShipMessageConsumer::handleJumpCancelled(const bsgo::JumpCancelledMessage &message) const
+void ShipMessageConsumer::handleJumpCancelled(
+  const bsgalone::core::JumpCancelledMessage &message) const
 {
   const auto shipDbId = message.getShipDbId();
 

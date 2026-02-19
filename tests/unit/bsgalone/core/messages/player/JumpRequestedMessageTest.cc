@@ -17,7 +17,7 @@ void assertMessagesAreEqual(const JumpRequestedMessage &actual, const JumpReques
 }
 } // namespace
 
-TEST(Unit_Bsgalone_Core_Messages_Player_JumpRequestedMessage, Basic)
+TEST(Unit_Bsgalone_Core_Messages_Player_JumpRequestedMessage, SerializationDeserialization)
 {
   const JumpRequestedMessage expected(bsgo::Uuid{18},
                                       bsgo::Uuid{19},
@@ -39,7 +39,7 @@ TEST(Unit_Bsgalone_Core_Messages_Player_JumpRequestedMessage, Clone)
 
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::JUMP_REQUESTED);
+  ASSERT_EQ(cloned->type(), MessageType::JUMP_REQUESTED);
   assertMessagesAreEqual(cloned->as<JumpRequestedMessage>(), expected);
 }
 

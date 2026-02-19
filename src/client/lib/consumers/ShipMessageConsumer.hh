@@ -26,7 +26,7 @@ class ShipMessageConsumer : public bsgalone::core::AbstractMessageConsumer
 
   void handleComponentSync(const bsgo::ComponentSyncMessage &message) const;
   void handleJumpRequested(const bsgalone::core::JumpRequestedMessage &message) const;
-  void handleJumpCancelled(const bsgo::JumpCancelledMessage &message) const;
+  void handleJumpCancelled(const bsgalone::core::JumpCancelledMessage &message) const;
   void handleTargetAcquired(const bsgo::TargetMessage &message) const;
 
   void handleShipComponentsSync(const bsgo::ComponentSyncMessage &message) const;

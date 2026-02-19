@@ -137,8 +137,13 @@ void ShipDbView::cancelJump() const
     return;
   }
 
-  auto message = std::make_unique<bsgo::JumpCancelledMessage>(
-    m_gameSession->getPlayerActiveShipDbId());
+  const auto playerDbId = m_gameSession->getPlayerDbId();
+  const auto systemDbId = m_gameSession->getSystemDbId();
+  const auto shipDbId   = m_gameSession->getPlayerActiveShipDbId();
+
+  auto message = std::make_unique<bsgalone::core::JumpCancelledMessage>(playerDbId,
+                                                                        systemDbId,
+                                                                        shipDbId);
   m_outputMessageQueue->pushMessage(std::move(message));
 }
 

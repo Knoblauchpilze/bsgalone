@@ -22,11 +22,12 @@ JumpCancelledMessageConsumer::JumpCancelledMessageConsumer(
 
 void JumpCancelledMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
 {
-  const auto &jump = message.as<JumpCancelledMessage>();
+  const auto &jump = message.as<bsgalone::core::JumpCancelledMessage>();
   handleJumpCancellation(jump);
 }
 
-void JumpCancelledMessageConsumer::handleJumpCancellation(const JumpCancelledMessage &message) const
+void JumpCancelledMessageConsumer::handleJumpCancellation(
+  const bsgalone::core::JumpCancelledMessage &message) const
 {
   const auto shipDbId = message.getShipDbId();
 
@@ -36,9 +37,7 @@ void JumpCancelledMessageConsumer::handleJumpCancellation(const JumpCancelledMes
     return;
   }
 
-  auto out = std::make_unique<JumpCancelledMessage>(shipDbId);
-  out->copyClientIdIfDefined(message);
-  m_outputMessageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushMessage(message.clone());
 }
 
 } // namespace bsgo
