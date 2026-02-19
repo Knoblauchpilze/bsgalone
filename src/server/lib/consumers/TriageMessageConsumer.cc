@@ -41,11 +41,8 @@ void TriageMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &me
     case bsgalone::core::MessageType::JOIN_SHIP:
       handleSystemMessage(message);
       break;
-    case bsgalone::core::MessageType::DOCK:
     case bsgalone::core::MessageType::EQUIP:
     case bsgalone::core::MessageType::HANGAR:
-    case bsgalone::core::MessageType::JUMP_CANCELLED:
-    case bsgalone::core::MessageType::JUMP_REQUESTED:
     case bsgalone::core::MessageType::PURCHASE:
     case bsgalone::core::MessageType::SLOT:
     case bsgalone::core::MessageType::TARGET:
