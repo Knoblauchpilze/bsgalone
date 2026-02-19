@@ -169,7 +169,7 @@ auto MessageParser::tryReadMessage(const bsgalone::core::MessageType &type, std:
     case bsgalone::core::MessageType::PLAYER_WEAPON_LIST:
       return readMessage<PlayerWeaponListMessage>(in);
     case bsgalone::core::MessageType::PURCHASE:
-      return readMessage<PurchaseMessage>(in);
+      return bsgalone::core::PurchaseMessage::readFromStream(in);
     case bsgalone::core::MessageType::RESOURCE_LIST:
       return readMessage<ResourceListMessage>(in);
     case bsgalone::core::MessageType::SCANNED:

@@ -21,7 +21,6 @@ target_sources(unitTests PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/LoginMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LogoutMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LootMessageTest.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/PurchaseMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ScannedMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SignupMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SlotComponentMessageTest.cc

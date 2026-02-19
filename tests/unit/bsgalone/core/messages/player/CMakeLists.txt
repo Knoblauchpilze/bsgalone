@@ -8,5 +8,6 @@ target_sources(unitTests PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/EquipMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/JumpCancelledMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/JumpRequestedMessageTest.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/PurchaseMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/VelocityMessageTest.cc
 	)

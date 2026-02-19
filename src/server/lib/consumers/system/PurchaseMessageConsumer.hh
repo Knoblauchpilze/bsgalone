@@ -23,11 +23,11 @@ class PurchaseMessageConsumer : public bsgalone::core::AbstractMessageConsumer
   bsgalone::core::IMessageQueue *const m_systemMessageQueue{};
   bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
 
-  void handleComputerPurchase(const PurchaseMessage &message) const;
-  void handleShipPurchase(const PurchaseMessage &message) const;
-  void handleWeaponPurchase(const PurchaseMessage &message) const;
+  void handleComputerPurchase(const bsgalone::core::PurchaseMessage &message) const;
+  void handleShipPurchase(const bsgalone::core::PurchaseMessage &message) const;
+  void handleWeaponPurchase(const bsgalone::core::PurchaseMessage &message) const;
 
-  void handleSuccessfulPurchase(const PurchaseMessage &message) const;
+  void handleSuccessfulPurchase(const bsgalone::core::PurchaseMessage &message) const;
 };
 
 } // namespace bsgo

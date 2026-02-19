@@ -144,7 +144,10 @@ void PlayerView::trySelectShip(const bsgo::Uuid shipDbId) const
 void PlayerView::tryPurchase(const bsgalone::core::Item &type, const bsgo::Uuid itemDbId) const
 {
   m_outputMessageQueue->pushMessage(
-    std::make_unique<bsgo::PurchaseMessage>(m_gameSession->getPlayerDbId(), type, itemDbId));
+    std::make_unique<bsgalone::core::PurchaseMessage>(m_gameSession->getPlayerDbId(),
+                                                      m_gameSession->getSystemDbId(),
+                                                      type,
+                                                      itemDbId));
 }
 
 void PlayerView::tryLogin(const std::string &name,
