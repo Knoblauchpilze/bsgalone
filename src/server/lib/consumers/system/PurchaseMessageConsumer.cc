@@ -30,7 +30,7 @@ PurchaseMessageConsumer::PurchaseMessageConsumer(
 
 void PurchaseMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
 {
-  const auto &purchase = message.as<PurchaseMessage>();
+  const auto &purchase = message.as<bsgalone::core::PurchaseMessage>();
   const auto type      = purchase.getItemType();
 
   switch (type)
@@ -50,7 +50,8 @@ void PurchaseMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &
   }
 }
 
-void PurchaseMessageConsumer::handleComputerPurchase(const PurchaseMessage &message) const
+void PurchaseMessageConsumer::handleComputerPurchase(
+  const bsgalone::core::PurchaseMessage &message) const
 {
   const auto playerDbId   = message.getPlayerDbId();
   const auto computerDbId = message.getItemDbId();
@@ -62,16 +63,12 @@ void PurchaseMessageConsumer::handleComputerPurchase(const PurchaseMessage &mess
     return;
   }
 
-  auto out = std::make_unique<PurchaseMessage>(playerDbId,
-                                               bsgalone::core::Item::COMPUTER,
-                                               computerDbId);
-  out->copyClientIdIfDefined(message);
-  m_outputMessageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushMessage(message.clone());
 
   handleSuccessfulPurchase(message);
 }
 
-void PurchaseMessageConsumer::handleShipPurchase(const PurchaseMessage &message) const
+void PurchaseMessageConsumer::handleShipPurchase(const bsgalone::core::PurchaseMessage &message) const
 {
   const auto playerDbId = message.getPlayerDbId();
   const auto shipDbId   = message.getItemDbId();
@@ -83,14 +80,13 @@ void PurchaseMessageConsumer::handleShipPurchase(const PurchaseMessage &message)
     return;
   }
 
-  auto out = std::make_unique<PurchaseMessage>(playerDbId, bsgalone::core::Item::SHIP, shipDbId);
-  out->copyClientIdIfDefined(message);
-  m_outputMessageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushMessage(message.clone());
 
   handleSuccessfulPurchase(message);
 }
 
-void PurchaseMessageConsumer::handleWeaponPurchase(const PurchaseMessage &message) const
+void PurchaseMessageConsumer::handleWeaponPurchase(
+  const bsgalone::core::PurchaseMessage &message) const
 {
   const auto playerDbId = message.getPlayerDbId();
   const auto weaponDbId = message.getItemDbId();
@@ -102,23 +98,20 @@ void PurchaseMessageConsumer::handleWeaponPurchase(const PurchaseMessage &messag
     return;
   }
 
-  auto out = std::make_unique<PurchaseMessage>(playerDbId, bsgalone::core::Item::WEAPON, weaponDbId);
-  out->copyClientIdIfDefined(message);
-  m_outputMessageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushMessage(message.clone());
 
   handleSuccessfulPurchase(message);
 }
 
-void PurchaseMessageConsumer::handleSuccessfulPurchase(const PurchaseMessage &message) const
+void PurchaseMessageConsumer::handleSuccessfulPurchase(
+  const bsgalone::core::PurchaseMessage &message) const
 {
   const auto playerDbId = message.getPlayerDbId();
 
   auto started = std::make_unique<LoadingStartedMessage>(LoadingTransition::PURCHASE, playerDbId);
-  started->copyClientIdIfDefined(message);
   m_systemMessageQueue->pushMessage(std::move(started));
 
   auto finished = std::make_unique<LoadingFinishedMessage>(LoadingTransition::PURCHASE, playerDbId);
-  finished->copyClientIdIfDefined(message);
   m_systemMessageQueue->pushMessage(std::move(finished));
 }
 
