@@ -55,12 +55,7 @@ bool VelocityMessage::deserialize(std::istream &in)
 
 auto VelocityMessage::clone() const -> IMessagePtr
 {
-  auto clone = std::make_unique<VelocityMessage>(m_playerDbId,
-                                                 m_systemDbId,
-                                                 m_shipDbId,
-                                                 m_acceleration);
-
-  return clone;
+  return std::make_unique<VelocityMessage>(m_playerDbId, m_systemDbId, m_shipDbId, m_acceleration);
 }
 
 auto VelocityMessage::readFromStream(std::istream &in) -> std::optional<IMessagePtr>

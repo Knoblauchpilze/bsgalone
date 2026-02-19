@@ -55,26 +55,39 @@ auto ShipDbView::getPlayerShipDbId() const -> bsgo::Uuid
 
 void ShipDbView::dockPlayerShip() const
 {
+  const auto playerDbId     = m_gameSession->getPlayerDbId();
+  const auto systemDbId     = m_gameSession->getSystemDbId();
   const auto playerShipDbId = m_gameSession->getPlayerActiveShipDbId();
 
-  auto message = std::make_unique<bsgo::DockMessage>(playerShipDbId, bsgo::DockTransition::DOCK);
+  auto message = std::make_unique<bsgalone::core::DockMessage>(playerDbId,
+                                                               systemDbId,
+                                                               playerShipDbId,
+                                                               bsgalone::core::DockTransition::DOCK);
   m_outputMessageQueue->pushMessage(std::move(message));
 }
 
 void ShipDbView::undockPlayerShip() const
 {
+  const auto playerDbId     = m_gameSession->getPlayerDbId();
+  const auto systemDbId     = m_gameSession->getSystemDbId();
   const auto playerShipDbId = m_gameSession->getPlayerActiveShipDbId();
 
-  auto message = std::make_unique<bsgo::DockMessage>(playerShipDbId, bsgo::DockTransition::UNDOCK);
+  auto message
+    = std::make_unique<bsgalone::core::DockMessage>(playerDbId,
+                                                    systemDbId,
+                                                    playerShipDbId,
+                                                    bsgalone::core::DockTransition::UNDOCK);
   m_outputMessageQueue->pushMessage(std::move(message));
 }
 
 void ShipDbView::returnToOutpost() const
 {
+  const auto playerDbId     = m_gameSession->getPlayerDbId();
+  const auto systemDbId     = m_gameSession->getSystemDbId();
   const auto playerShipDbId = m_gameSession->getPlayerActiveShipDbId();
 
-  auto message = std::make_unique<bsgo::DockMessage>(playerShipDbId,
-                                                     bsgo::DockTransition::BACK_TO_OUTPOST);
+  auto message = std::make_unique<bsgalone::core::DockMessage>(
+    playerDbId, systemDbId, playerShipDbId, bsgalone::core::DockTransition::BACK_TO_OUTPOST);
   m_outputMessageQueue->pushMessage(std::move(message));
 }
 

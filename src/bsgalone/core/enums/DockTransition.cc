@@ -1,7 +1,7 @@
 
 #include "DockTransition.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 auto str(const DockTransition transition) -> std::string
 {
@@ -18,4 +18,4 @@ auto str(const DockTransition transition) -> std::string
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

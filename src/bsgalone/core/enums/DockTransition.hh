@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 enum class DockTransition
 {
@@ -14,4 +14,4 @@ enum class DockTransition
 
 auto str(const DockTransition transition) -> std::string;
 
-} // namespace bsgo
+} // namespace bsgalone::core

@@ -30,7 +30,11 @@ TEST(Unit_Bsgo_Queues_MessageProcessor, CallsHandlerForEachAvailableMessage)
   std::vector<char> sampleData{'t', 'e', 's', 't'};
   std::deque<bsgalone::core::IMessagePtr> messages;
   messages.push_back(std::make_unique<ConnectionMessage>());
-  messages.push_back(std::make_unique<DockMessage>(Uuid{3}, DockTransition::UNDOCK));
+  messages.push_back(
+    std::make_unique<bsgalone::core::DockMessage>(Uuid{18},
+                                                  Uuid{19},
+                                                  Uuid{3},
+                                                  bsgalone::core::DockTransition::UNDOCK));
   std::mutex locker{};
 
   std::atomic_int control{0};
@@ -46,16 +50,20 @@ TEST(Unit_Bsgo_Queues_MessageProcessor, CallsHandlerForEachAvailableMessage)
 TEST(Unit_Bsgo_Queues_MessageProcessor, ForwardsAvailableMessageToHandler)
 {
   std::deque<bsgalone::core::IMessagePtr> messages;
-  messages.push_back(std::make_unique<DockMessage>(Uuid{3}, DockTransition::UNDOCK));
+  messages.push_back(
+    std::make_unique<bsgalone::core::DockMessage>(Uuid{18},
+                                                  Uuid{19},
+                                                  Uuid{3},
+                                                  bsgalone::core::DockTransition::UNDOCK));
 
   std::mutex locker{};
 
   auto handler = [](const bsgalone::core::IMessage &message) {
     EXPECT_EQ(bsgalone::core::MessageType::DOCK, message.type());
 
-    const auto &actual = message.as<DockMessage>();
+    const auto &actual = message.as<bsgalone::core::DockMessage>();
     EXPECT_EQ(Uuid{3}, actual.getShipDbId());
-    EXPECT_EQ(DockTransition::UNDOCK, actual.getTransition());
+    EXPECT_EQ(bsgalone::core::DockTransition::UNDOCK, actual.getTransition());
   };
 
   MessageProcessor processor("test", messages, locker, handler);
