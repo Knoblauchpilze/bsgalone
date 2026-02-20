@@ -168,7 +168,7 @@ auto generateShipDescription(const bsgo::ShipData &ship) -> UiMenuPtr
     {
       label += ", ";
     }
-    label += std::to_string(count) + " " + bsgo::str(slot);
+    label += std::to_string(count) + " " + str(slot);
     if (count > 1)
     {
       label += "s";

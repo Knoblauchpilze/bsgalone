@@ -31,7 +31,7 @@ struct ShipData
   chrono::TickDuration jumpTime{};
   chrono::TickDuration jumpTimeInThreat{};
 
-  std::unordered_map<Slot, int> slots{};
+  std::unordered_map<bsgalone::core::Slot, int> slots{};
   std::unordered_map<Uuid, int> price{};
 
   bool operator==(const ShipData &rhs) const;

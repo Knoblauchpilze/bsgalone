@@ -24,7 +24,6 @@ target_sources(unitTests PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/ScannedMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SignupMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SlotComponentMessageTest.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/SlotMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/TargetMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/WeaponComponentMessageTest.cc
 	)

@@ -51,7 +51,7 @@ TEST(Unit_Bsgo_Serialization_PlayerShipData, Basic)
   assertPlayerShipDataAreEqual(output, input);
 }
 
-TEST(Unit_Bsgo_Serialization_PlayerShipData, WithJumpSystem)
+TEST(Unit_Bsgo_Serialization_PlayerShipData, WithSlots)
 {
   PlayerShipData input{.dbId           = Uuid{1234},
                        .shipId         = Uuid{325},
@@ -60,20 +60,21 @@ TEST(Unit_Bsgo_Serialization_PlayerShipData, WithJumpSystem)
                        .maxPowerPoints = 100.0f,
                        .docked         = true,
                        .active         = true,
-                       .slots          = {{Slot::WEAPON, 2}, {Slot::COMPUTER, 14}}};
+                       .slots          = {{bsgalone::core::Slot::WEAPON, 2},
+                                          {bsgalone::core::Slot::COMPUTER, 14}}};
 
   PlayerShipData output{.dbId    = Uuid{14},
                         .shipId  = Uuid{9421},
                         .faction = Faction::CYLON,
                         .status  = Status::JUMP,
-                        .slots   = {{Slot::COMPUTER, 1}}};
+                        .slots   = {{bsgalone::core::Slot::COMPUTER, 1}}};
 
   EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
   assertPlayerShipDataAreEqual(output, input);
 }
 
-TEST(Unit_Bsgo_Serialization_PlayerShipData, WithSlots)
+TEST(Unit_Bsgo_Serialization_PlayerShipData, WithJumpSystem)
 {
   PlayerShipData input{.dbId           = Uuid{1234},
                        .position       = Eigen::Vector3f{1.0f, 2.0f, 3.0f},

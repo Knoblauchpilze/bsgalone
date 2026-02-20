@@ -167,9 +167,15 @@ void ShipView::tryActivateWeapon(const int weaponId) const
           "Ship only has " + std::to_string(playerShip.weapons.size()) + " weapon(s)");
   }
 
-  const auto slotDbId = playerShip.weapons[weaponId]->dbId();
+  const auto slotDbId   = playerShip.weapons[weaponId]->dbId();
+  const auto playerDbId = m_gameSession->getPlayerDbId();
+  const auto systemDbId = m_gameSession->getSystemDbId();
 
-  auto message = std::make_unique<bsgo::SlotMessage>(shipDbId, slotDbId, bsgo::Slot::WEAPON);
+  auto message = std::make_unique<bsgalone::core::SlotMessage>(playerDbId,
+                                                               systemDbId,
+                                                               shipDbId,
+                                                               slotDbId,
+                                                               bsgalone::core::Slot::WEAPON);
   m_outputMessageQueue->pushMessage(std::move(message));
 }
 
@@ -184,9 +190,15 @@ void ShipView::tryActivateSlot(const int slotId) const
           "Ship only has " + std::to_string(playerShip.computers.size()) + " slotweapon(s)");
   }
 
-  const auto slotDbId = playerShip.computers[slotId]->dbId();
+  const auto slotDbId   = playerShip.computers[slotId]->dbId();
+  const auto playerDbId = m_gameSession->getPlayerDbId();
+  const auto systemDbId = m_gameSession->getSystemDbId();
 
-  auto message = std::make_unique<bsgo::SlotMessage>(shipDbId, slotDbId, bsgo::Slot::COMPUTER);
+  auto message = std::make_unique<bsgalone::core::SlotMessage>(playerDbId,
+                                                               systemDbId,
+                                                               shipDbId,
+                                                               slotDbId,
+                                                               bsgalone::core::Slot::COMPUTER);
   m_outputMessageQueue->pushMessage(std::move(message));
 }
 

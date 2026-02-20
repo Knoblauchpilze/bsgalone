@@ -181,7 +181,7 @@ TEST(Unit_Bsgo_Serialization_Behavior, Nominal_Eigen_Vector3f_EmptyOptional)
 
 TEST(Unit_Bsgo_Serialization_Behavior, Nominal_MapSlotInt_Empty)
 {
-  std::unordered_map<Slot, int> empty;
+  std::unordered_map<bsgalone::core::Slot, int> empty;
 
   const auto [success, actual] = serializeAndDeserialize(empty, false);
 
@@ -191,7 +191,10 @@ TEST(Unit_Bsgo_Serialization_Behavior, Nominal_MapSlotInt_Empty)
 
 TEST(Unit_Bsgo_Serialization_Behavior, Nominal_MapSlotInt)
 {
-  std::unordered_map<Slot, int> expected{{Slot::WEAPON, 1}, {Slot::COMPUTER, 2}};
+  std::unordered_map<bsgalone::core::Slot, int> expected{
+    {bsgalone::core::Slot::WEAPON, 1},
+    {bsgalone::core::Slot::COMPUTER, 2},
+  };
 
   const auto [success, actual] = serializeAndDeserialize(expected, false);
 
@@ -414,7 +417,10 @@ TEST(Unit_Bsgo_Serialization_Behavior, Failure_Eigen_Vector3f)
 
 TEST(Unit_Bsgo_Serialization_Behavior, Failure_MapSlotInt)
 {
-  std::unordered_map<Slot, int> expected{{Slot::WEAPON, 1}, {Slot::COMPUTER, 2}};
+  std::unordered_map<bsgalone::core::Slot, int> expected{
+    {bsgalone::core::Slot::WEAPON, 1},
+    {bsgalone::core::Slot::COMPUTER, 2},
+  };
 
   const auto [success, _] = serializeAndDeserialize(expected, true);
 

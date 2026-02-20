@@ -48,12 +48,13 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, Basic)
 
 TEST(Unit_Bsgo_Serialization_ShipListMessage, WithClientId)
 {
-  std::vector<ShipData> shipsData{{.dbId            = Uuid{65},
-                                   .shipClass       = ShipClass::LINE,
-                                   .hullPointsRegen = 12.34f,
-                                   .maxPowerPoints  = 56.78f,
-                                   .jumpTime        = chrono::TickDuration(7456.10f),
-                                   .slots           = {{Slot::COMPUTER, 2}, {Slot::WEAPON, 3}}}};
+  std::vector<ShipData> shipsData{
+    {.dbId            = Uuid{65},
+     .shipClass       = ShipClass::LINE,
+     .hullPointsRegen = 12.34f,
+     .maxPowerPoints  = 56.78f,
+     .jumpTime        = chrono::TickDuration(7456.10f),
+     .slots           = {{bsgalone::core::Slot::COMPUTER, 2}, {bsgalone::core::Slot::WEAPON, 3}}}};
 
   ShipListMessage expected(Faction::COLONIAL, shipsData);
   expected.setClientId(Uuid{78});
@@ -64,7 +65,7 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, WithClientId)
                  .speed          = 78.45f,
                  .radius         = 1.54f,
                },
-               {.dbId = Uuid{18}, .radius = 26.1, .slots = {{Slot::COMPUTER, 2}}}};
+               {.dbId = Uuid{18}, .radius = 26.1, .slots = {{bsgalone::core::Slot::COMPUTER, 2}}}};
   ShipListMessage actual(Faction::COLONIAL, shipsData);
 
   serializeAndDeserializeMessage(expected, actual);
@@ -80,7 +81,7 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, Clone)
      .name             = "another ship",
      .acceleration     = 1.257f,
      .jumpTimeInThreat = chrono::TickDuration(3224.08f),
-     .slots            = {{Slot::WEAPON, 14}}},
+     .slots            = {{bsgalone::core::Slot::WEAPON, 14}}},
   };
 
   ShipListMessage expected(Faction::CYLON, shipsData);
@@ -109,7 +110,7 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, MultipleComplexShips)
       .hullPointsRegen  = 98.76f,
       .jumpTime         = chrono::TickDuration(741.01f),
       .jumpTimeInThreat = chrono::TickDuration(369.502f),
-      .slots            = {{Slot::COMPUTER, 5}},
+      .slots            = {{bsgalone::core::Slot::COMPUTER, 5}},
     },
   };
   ShipListMessage expected(Faction::CYLON, shipsData);
@@ -129,7 +130,7 @@ TEST(Unit_Bsgo_Serialization_ShipListMessage, MultipleComplexShips)
      .shipClass = ShipClass::STRIKE,
      .name      = "the mosquito",
      .speed     = 14.32f,
-     .slots     = {{Slot::WEAPON, 5}, {Slot::COMPUTER, 5}}},
+     .slots     = {{bsgalone::core::Slot::WEAPON, 5}, {bsgalone::core::Slot::COMPUTER, 5}}},
   };
   ShipListMessage actual(Faction::COLONIAL, shipsData);
 

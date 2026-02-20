@@ -215,9 +215,9 @@ void LockerUiHandler::initializeShipLayout()
   const MenuConfig config{.propagateEventsToChildren = false};
 
   const auto slots = m_shipDbView->getPlayerShipSlots();
-  if (slots.contains(bsgo::Slot::WEAPON))
+  if (slots.contains(bsgalone::core::Slot::WEAPON))
   {
-    const auto weaponsCount = slots.at(bsgo::Slot::WEAPON);
+    const auto weaponsCount = slots.at(bsgalone::core::Slot::WEAPON);
     const auto bg           = bgConfigFromColor(colors::BLANK);
     const MenuConfig weaponConfig{.layout = MenuLayout::HORIZONTAL};
     for (auto id = 0; id < weaponsCount; ++id)
@@ -228,9 +228,9 @@ void LockerUiHandler::initializeShipLayout()
     }
   }
 
-  if (slots.contains(bsgo::Slot::COMPUTER))
+  if (slots.contains(bsgalone::core::Slot::COMPUTER))
   {
-    const auto computersCount = slots.at(bsgo::Slot::COMPUTER);
+    const auto computersCount = slots.at(bsgalone::core::Slot::COMPUTER);
     const auto bg             = bgConfigFromColor(colors::BLANK);
     const MenuConfig computerConfig{.layout = MenuLayout::HORIZONTAL};
     for (auto id = 0; id < computersCount; ++id)
@@ -343,7 +343,7 @@ void LockerUiHandler::generateShipWeaponsMenus()
   }
 
   const auto weaponSlots = static_cast<int>(
-    m_shipDbView->getPlayerShipSlots().at(bsgo::Slot::WEAPON));
+    m_shipDbView->getPlayerShipSlots().at(bsgalone::core::Slot::WEAPON));
   for (; id < weaponSlots; ++id)
   {
     const MenuConfig config{.highlightable = false};
@@ -378,7 +378,7 @@ void LockerUiHandler::generateShipComputersMenus()
   }
 
   const auto computerSlots = static_cast<int>(
-    m_shipDbView->getPlayerShipSlots().at(bsgo::Slot::COMPUTER));
+    m_shipDbView->getPlayerShipSlots().at(bsgalone::core::Slot::COMPUTER));
   for (; id < computerSlots; ++id)
   {
     const MenuConfig config{.highlightable = false};

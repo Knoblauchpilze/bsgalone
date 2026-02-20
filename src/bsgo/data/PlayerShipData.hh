@@ -39,7 +39,7 @@ struct PlayerShipData
 
   Uuid playerDbId{};
 
-  std::unordered_map<Slot, int> slots{};
+  std::unordered_map<bsgalone::core::Slot, int> slots{};
   std::vector<Eigen::Vector3f> aiTargets{};
   std::optional<int> reachedTarget{};
 

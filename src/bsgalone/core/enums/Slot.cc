@@ -2,7 +2,7 @@
 #include "Slot.hh"
 #include <stdexcept>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 auto str(const Slot slot) -> std::string
 {
@@ -36,4 +36,4 @@ auto fromDbSlot(const std::string &dbSlot) -> Slot
   throw std::invalid_argument("Unknown slot \"" + dbSlot + "\"");
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

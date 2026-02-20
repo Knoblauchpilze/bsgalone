@@ -22,19 +22,19 @@ SlotMessageConsumer::SlotMessageConsumer(const Services &services,
 
 void SlotMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
 {
-  const auto &slotMessage = message.as<SlotMessage>();
+  const auto &slotMessage = message.as<bsgalone::core::SlotMessage>();
 
-  if (Slot::WEAPON == slotMessage.getSlotType())
+  if (bsgalone::core::Slot::WEAPON == slotMessage.getSlotType())
   {
     handleWeapon(slotMessage);
   }
-  if (Slot::COMPUTER == slotMessage.getSlotType())
+  if (bsgalone::core::Slot::COMPUTER == slotMessage.getSlotType())
   {
     handleComputer(slotMessage);
   }
 }
 
-void SlotMessageConsumer::handleWeapon(const SlotMessage &message) const
+void SlotMessageConsumer::handleWeapon(const bsgalone::core::SlotMessage &message) const
 {
   const auto shipDbId   = message.getShipDbId();
   const auto weaponDbId = message.getSlotDbId();
@@ -47,11 +47,10 @@ void SlotMessageConsumer::handleWeapon(const SlotMessage &message) const
   }
 
   auto out = std::make_unique<WeaponComponentMessage>(shipDbId, weaponDbId, res.active);
-  out->copyClientIdIfDefined(message);
   m_outputMessageQueue->pushMessage(std::move(out));
 }
 
-void SlotMessageConsumer::handleComputer(const SlotMessage &message) const
+void SlotMessageConsumer::handleComputer(const bsgalone::core::SlotMessage &message) const
 {
   const auto shipDbId     = message.getShipDbId();
   const auto computerDbId = message.getSlotDbId();

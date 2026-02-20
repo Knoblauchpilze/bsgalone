@@ -32,7 +32,7 @@ struct Ship
   chrono::TickDuration jumpTime{};
   chrono::TickDuration jumpTimeInThreat{};
 
-  std::unordered_map<Slot, int> slots{};
+  std::unordered_map<bsgalone::core::Slot, int> slots{};
 };
 
 class ShipRepository : public AbstractRepository

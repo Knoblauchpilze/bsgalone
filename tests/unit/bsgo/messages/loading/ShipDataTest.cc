@@ -26,7 +26,7 @@ TEST(Unit_Bsgo_Serialization_ShipData, DifferentWhenDbIdIsDifferent)
                  .shipClass = ShipClass::STRIKE,
                  .radius    = 5.0f,
                  .jumpTime  = chrono::TickDuration(529.0f),
-                 .slots     = {{Slot::COMPUTER, 2}}};
+                 .slots     = {{bsgalone::core::Slot::COMPUTER, 2}}};
 
   ShipData data2 = data1;
   data2.dbId     = Uuid{5678};
@@ -62,13 +62,13 @@ TEST(Unit_Bsgo_Serialization_ShipData, WithSlots)
                  .acceleration   = 2.5f,
                  .speed          = 1.78f,
                  .radius         = 5.0f,
-                 .slots          = {{Slot::COMPUTER, 2}, {Slot::WEAPON, 4}}};
+                 .slots = {{bsgalone::core::Slot::COMPUTER, 2}, {bsgalone::core::Slot::WEAPON, 4}}};
 
   ShipData output{.dbId      = Uuid{14},
                   .faction   = Faction::CYLON,
                   .shipClass = ShipClass::LINE,
                   .name      = "the whale",
-                  .slots     = {{Slot::COMPUTER, 5}}};
+                  .slots     = {{bsgalone::core::Slot::COMPUTER, 5}}};
 
   EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
