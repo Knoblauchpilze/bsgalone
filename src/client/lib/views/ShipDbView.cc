@@ -192,7 +192,7 @@ auto ShipDbView::getPlayerShipComputers() const -> std::vector<bsgo::PlayerCompu
   return m_playerShip->computers;
 }
 
-auto ShipDbView::getPlayerShipSlots() const -> std::unordered_map<bsgo::Slot, int>
+auto ShipDbView::getPlayerShipSlots() const -> std::unordered_map<bsgalone::core::Slot, int>
 {
   return m_playerShip->slots;
 }
@@ -205,11 +205,11 @@ bool ShipDbView::canStillEquipItem(const bsgalone::core::Item &type) const
   switch (type)
   {
     case bsgalone::core::Item::COMPUTER:
-      totalSlots = m_playerShip->slots.at(bsgo::Slot::COMPUTER);
+      totalSlots = m_playerShip->slots.at(bsgalone::core::Slot::COMPUTER);
       usedSlots  = static_cast<int>(m_playerShip->computers.size());
       break;
     case bsgalone::core::Item::WEAPON:
-      totalSlots = m_playerShip->slots.at(bsgo::Slot::WEAPON);
+      totalSlots = m_playerShip->slots.at(bsgalone::core::Slot::WEAPON);
       usedSlots  = static_cast<int>(m_playerShip->weapons.size());
       break;
     default:

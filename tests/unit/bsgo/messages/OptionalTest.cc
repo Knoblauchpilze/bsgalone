@@ -48,7 +48,7 @@ TEST(Unit_Bsgo_Serialization_Optional_Uuid, EmptyAndSomeValueAfter)
 TEST(Unit_Bsgo_Serialization_Optional_Uuid, WithValueAndSomeValueAfter)
 {
   const std::optional<Uuid> expectedOpt{};
-  const auto expectedSlot{Slot::COMPUTER};
+  const auto expectedSlot{bsgalone::core::Slot::COMPUTER};
 
   std::ostringstream out;
   core::serialize(out, expectedOpt);
@@ -56,7 +56,7 @@ TEST(Unit_Bsgo_Serialization_Optional_Uuid, WithValueAndSomeValueAfter)
   std::istringstream in(out.str());
 
   std::optional<Uuid> actualOpt{};
-  Slot actualSlot{};
+  bsgalone::core::Slot actualSlot{};
   core::deserialize(in, actualOpt);
   core::deserialize(in, actualSlot);
 

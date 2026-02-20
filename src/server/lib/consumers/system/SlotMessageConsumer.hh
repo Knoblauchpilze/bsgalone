@@ -20,8 +20,8 @@ class SlotMessageConsumer : public bsgalone::core::AbstractMessageConsumer
   SlotServiceShPtr m_slotService{};
   bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
 
-  void handleWeapon(const SlotMessage &message) const;
-  void handleComputer(const SlotMessage &message) const;
+  void handleWeapon(const bsgalone::core::SlotMessage &message) const;
+  void handleComputer(const bsgalone::core::SlotMessage &message) const;
 };
 
 } // namespace bsgo

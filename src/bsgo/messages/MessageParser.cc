@@ -179,7 +179,7 @@ auto MessageParser::tryReadMessage(const bsgalone::core::MessageType &type, std:
     case bsgalone::core::MessageType::SIGNUP:
       return readMessage<SignupMessage>(in);
     case bsgalone::core::MessageType::SLOT:
-      return readMessage<SlotMessage>(in);
+      return bsgalone::core::SlotMessage::readFromStream(in);
     case bsgalone::core::MessageType::SLOT_COMPONENT_UPDATED:
       return readMessage<SlotComponentMessage>(in);
     case bsgalone::core::MessageType::SYSTEM_DATA:

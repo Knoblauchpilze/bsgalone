@@ -42,7 +42,7 @@ class ShipDbView : public AbstractView
 
   auto getPlayerShipWeapons() const -> std::vector<bsgo::PlayerWeaponData>;
   auto getPlayerShipComputers() const -> std::vector<bsgo::PlayerComputerData>;
-  auto getPlayerShipSlots() const -> std::unordered_map<bsgo::Slot, int>;
+  auto getPlayerShipSlots() const -> std::unordered_map<bsgalone::core::Slot, int>;
 
   bool canStillEquipItem(const bsgalone::core::Item &type) const;
 
