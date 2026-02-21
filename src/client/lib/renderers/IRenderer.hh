@@ -17,9 +17,7 @@ class IRenderer : public core::CoreObject
   ~IRenderer() override = default;
 
   virtual void loadResources(int width, int height, sprites::TexturePack &texturesLoader) = 0;
-  virtual void render(Renderer &engine,
-                      const RenderState &state,
-                      const RenderingPass pass) const                                     = 0;
+  virtual void render(Renderer &engine, const RenderState &state, const RenderingPass pass) const = 0;
 };
 
 using IRendererPtr = std::unique_ptr<IRenderer>;

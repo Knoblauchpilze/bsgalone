@@ -36,8 +36,8 @@ class INetworkServer
   /// @param client - the identifier of the client to send the data to
   /// @param bytes - the raw data to send to the client
   /// @return - a message identifier to use to track the sending process
-  virtual auto trySend(const ClientId clientId, std::vector<char> bytes)
-    -> std::optional<MessageId> = 0;
+  virtual auto trySend(const ClientId clientId, std::vector<char> bytes) -> std::optional<MessageId>
+    = 0;
 };
 
 using INetworkServerShPtr = std::shared_ptr<INetworkServer>;
