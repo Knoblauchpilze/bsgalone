@@ -5,11 +5,11 @@
 #include "EntityAddedMessageConsumer.hh"
 #include "EntityDeletedMessageConsumer.hh"
 #include "EquipMessageConsumer.hh"
-#include "HangarMessageConsumer.hh"
 #include "JumpCancelledMessageConsumer.hh"
 #include "JumpRequestedMessageConsumer.hh"
 #include "LoadingMessagesConsumer.hh"
 #include "PurchaseMessageConsumer.hh"
+#include "ShipSelectedMessageConsumer.hh"
 #include "SlotMessageConsumer.hh"
 #include "TargetMessageConsumer.hh"
 #include "VelocityMessageConsumer.hh"
@@ -21,7 +21,9 @@ void createMessageConsumers(bsgalone::core::IMessageQueue *const inputMessagesQu
                             const Services &services)
 {
   inputMessagesQueue->addListener(
-    std::make_unique<HangarMessageConsumer>(services, inputMessagesQueue, outputMessagesQueue));
+    std::make_unique<ShipSelectedMessageConsumer>(services,
+                                                  inputMessagesQueue,
+                                                  outputMessagesQueue));
 
   inputMessagesQueue->addListener(
     std::make_unique<PurchaseMessageConsumer>(services, inputMessagesQueue, outputMessagesQueue));

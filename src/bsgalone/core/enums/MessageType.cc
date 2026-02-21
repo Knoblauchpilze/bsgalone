@@ -67,6 +67,8 @@ auto str(const MessageType &type) -> std::string
       return "scanned";
     case MessageType::SHIP_LIST:
       return "ship_list";
+    case MessageType::SHIP_SELECTED:
+      return "ship_selected";
     case MessageType::SIGNUP:
       return "signup";
     case MessageType::SLOT:
@@ -125,6 +127,7 @@ auto allMessageTypesAsSet() -> std::unordered_set<MessageType>
     MessageType::RESOURCE_LIST,
     MessageType::SCANNED,
     MessageType::SHIP_LIST,
+    MessageType::SHIP_SELECTED,
     MessageType::SIGNUP,
     MessageType::SLOT,
     MessageType::SLOT_COMPONENT_UPDATED,

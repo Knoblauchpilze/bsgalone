@@ -33,6 +33,7 @@
 #include "ResourceListMessage.hh"
 #include "ScannedMessage.hh"
 #include "ShipListMessage.hh"
+#include "ShipSelectedMessage.hh"
 #include "SignupMessage.hh"
 #include "SlotComponentMessage.hh"
 #include "SlotMessage.hh"
@@ -176,6 +177,8 @@ auto MessageParser::tryReadMessage(const bsgalone::core::MessageType &type, std:
       return readMessage<ScannedMessage>(in);
     case bsgalone::core::MessageType::SHIP_LIST:
       return readMessage<ShipListMessage>(in);
+    case bsgalone::core::MessageType::SHIP_SELECTED:
+      return bsgalone::core::ShipSelectedMessage::readFromStream(in);
     case bsgalone::core::MessageType::SIGNUP:
       return readMessage<SignupMessage>(in);
     case bsgalone::core::MessageType::SLOT:
