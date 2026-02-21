@@ -4,11 +4,16 @@
 # https://askubuntu.com/questions/1473403/how-to-install-clang-16-on-22-04-lts
 
 if [ $# -lt 1 ]; then
-  echo "Usage: $0 folder"
+  echo "Usage: $0 folder [verbose]"
   exit 1
 fi
 
 SOURCE_FOLDER="$1"
+VERBOSE="false"
+
+if [ $# -ge 2 ]; then
+  VERBOSE="true"
+fi
 
 SOURCE_EXTENSION="cc"
 HEADER_EXTENSION="hh"
@@ -24,7 +29,9 @@ for FILE in ${ALL_FILES}; do
   if [ ${WRONG_LINES} -gt 0 ]; then
     ERRORS_FOUND="yes"
     echo "Detected formatting issues in ${FILE}"
-    diff "${FILE}" "${FILE}.clang-format"
+    if [ "${VERBOSE}" == "true" ]; then
+      diff "${FILE}" "${FILE}.clang-format"
+    fi
   fi
 
   rm "${FILE}.clang-format"

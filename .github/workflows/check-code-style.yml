@@ -15,12 +15,16 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
+env:
+  # Use to show the violations detected
+  VERBOSE: false
+
 jobs:
   check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
       - name: Check code style for source files
-        run: ./scripts/check-code-style.sh src
+        run: ./scripts/check-code-style.sh src ${{ env.VERBOSE }}
       - name: Check code style for test files
-        run: ./scripts/check-code-style.sh tests
+        run: ./scripts/check-code-style.sh tests ${{ env.VERBOSE }}
