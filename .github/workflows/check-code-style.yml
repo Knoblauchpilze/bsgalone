@@ -17,7 +17,7 @@ concurrency:
 
 env:
   # Use to show the violations detected
-  VERBOSE: false
+  VERBOSE: true
 
 jobs:
   check:
