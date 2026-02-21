@@ -1,4 +1,4 @@
-name: Build services
+name: Check code style
 
 on:
   push:
