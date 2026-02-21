@@ -1,0 +1,25 @@
+name: Build services
+
+on:
+  push:
+    branches:
+      - "**"
+    paths:
+      - "CMakeLists.txt"
+      - ".github/workflows/check-code-style.yml"
+      - "src/**"
+      - "tests/**"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Check code style for source files
+        run: ./scripts/check-code-style.sh src
+      - name: Check code style for test files
+        run: ./scripts/check-code-style.sh tests
