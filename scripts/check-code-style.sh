@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Relies on clang-format 16
+# https://askubuntu.com/questions/1473403/how-to-install-clang-16-on-22-04-lts
+
 if [ $# -lt 1 ]; then
   echo "Usage: $0 folder"
   exit 1
@@ -15,7 +18,7 @@ ALL_FILES=$(find "${SOURCE_FOLDER}" -iname "*.${HEADER_EXTENSION}" -o -iname "*.
 ERRORS_FOUND="no"
 
 for FILE in ${ALL_FILES}; do
-  clang-format "${FILE}" > "${FILE}.clang-format"
+  clang-format-16 "${FILE}" > "${FILE}.clang-format"
   WRONG_LINES=$(diff "${FILE}" "${FILE}.clang-format" | wc -l)
 
   if [ ${WRONG_LINES} -gt 0 ]; then
