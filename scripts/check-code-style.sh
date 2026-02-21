@@ -20,8 +20,8 @@ for FILE in ${ALL_FILES}; do
 
   if [ ${WRONG_LINES} -gt 0 ]; then
     ERRORS_FOUND="yes"
-    
     echo "Detected formatting issues in ${FILE}"
+    diff "${FILE}" "${FILE}.clang-format"
   fi
 
   rm "${FILE}.clang-format"
