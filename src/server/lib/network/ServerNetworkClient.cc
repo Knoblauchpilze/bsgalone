@@ -74,7 +74,7 @@ void ServerNetworkClient::initialize()
   m_eventBus->addListener(std::move(inputNetworkAdapter));
 
   auto syncQueue = std::make_unique<bsgo::SynchronizedMessageQueue>("synchronized-queue-for-output");
-  m_outputQueue  = std::make_shared<AsyncMessageQueue>(std::move(syncQueue));
+  m_outputQueue = std::make_shared<AsyncMessageQueue>(std::move(syncQueue));
 
   auto outputNetworkAdapter = std::make_shared<bsgalone::core::OutputNetworkAdapter>(m_tcpServer);
   auto broadcastListener

@@ -91,10 +91,8 @@ class Viewport
   /// @param sy - the radius of the element for the `y` axis.
   /// @return - `true` if such an element is at least partially visible
   /// in the viewport.
-  virtual bool visible(const float x,
-                       const float y,
-                       const float sx,
-                       const float sy) const noexcept = 0;
+  virtual bool visible(const float x, const float y, const float sx, const float sy) const noexcept
+    = 0;
 };
 
 using ViewportPtr = std::unique_ptr<Viewport>;
