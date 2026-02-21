@@ -5,6 +5,7 @@
 #include "LoginMessage.hh"
 #include "LogoutMessage.hh"
 #include "PurchaseMessage.hh"
+#include "ShipSelectedMessage.hh"
 #include "SignupMessage.hh"
 
 namespace pge {
@@ -138,7 +139,10 @@ auto PlayerView::getPlayerShips() const -> std::vector<bsgo::PlayerShipData>
 
 void PlayerView::trySelectShip(const bsgo::Uuid shipDbId) const
 {
-  m_outputMessageQueue->pushMessage(std::make_unique<bsgo::HangarMessage>(shipDbId));
+  m_outputMessageQueue->pushMessage(
+    std::make_unique<bsgalone::core::ShipSelectedMessage>(m_gameSession->getPlayerDbId(),
+                                                          m_gameSession->getSystemDbId(),
+                                                          shipDbId));
 }
 
 void PlayerView::tryPurchase(const bsgalone::core::Item &type, const bsgo::Uuid itemDbId) const

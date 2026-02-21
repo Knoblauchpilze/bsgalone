@@ -41,7 +41,6 @@ void TriageMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &me
     case bsgalone::core::MessageType::JOIN_SHIP:
       handleSystemMessage(message);
       break;
-    case bsgalone::core::MessageType::HANGAR:
     case bsgalone::core::MessageType::TARGET:
       triagePlayerMessage(message);
       break;
