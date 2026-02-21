@@ -12,7 +12,7 @@ SOURCE_FOLDER="$1"
 VERBOSE="false"
 
 if [ $# -ge 2 ]; then
-  VERBOSE="true"
+  VERBOSE="$2"
 fi
 
 SOURCE_EXTENSION="cc"
