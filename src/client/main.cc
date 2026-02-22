@@ -34,9 +34,9 @@ int main(int /*argc*/, char ** /*argv*/)
                     .fixedFrame = true,
                     .maxFps     = 20};
 
-    const auto port                = core::getPortFromEnvironmentVariable();
-    const auto maybeUserName       = core::tryGetEnvironmentVariable<std::string>(USERNAME_ENV_KEY);
-    const auto maybePassword       = core::tryGetEnvironmentVariable<std::string>(PASSWORD_ENV_KEY);
+    const auto port          = core::getPortFromEnvironmentVariable();
+    const auto maybeUserName = core::tryGetEnvironmentVariable<std::string>(USERNAME_ENV_KEY);
+    const auto maybePassword = core::tryGetEnvironmentVariable<std::string>(PASSWORD_ENV_KEY);
     const auto maybeGameRoleString = core::tryGetEnvironmentVariable<std::string>(GAME_ROLE_ENV_KEY);
     std::optional<bsgo::GameRole> maybeGameRole;
     if (maybeGameRoleString)
