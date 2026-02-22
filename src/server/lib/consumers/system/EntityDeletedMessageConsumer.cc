@@ -29,10 +29,10 @@ void EntityDeletedMessageConsumer::onMessageReceived(const bsgalone::core::IMess
 
   switch (entityKind)
   {
-    case EntityKind::SHIP:
+    case bsgalone::core::EntityKind::SHIP:
       handleShipRemoved(removed);
       break;
-    case EntityKind::ASTEROID:
+    case bsgalone::core::EntityKind::ASTEROID:
       handleAsteroidRemoved(removed);
       break;
     default:
@@ -50,7 +50,7 @@ void EntityDeletedMessageConsumer::handleShipRemoved(const EntityRemovedMessage 
   m_outputMessageQueue->pushMessage(std::move(ship));
 
   auto player = std::make_unique<EntityRemovedMessage>(playerDbId,
-                                                       EntityKind::PLAYER,
+                                                       bsgalone::core::EntityKind::PLAYER,
                                                        message.isDead(),
                                                        message.getSystemDbId());
   m_outputMessageQueue->pushMessage(std::move(player));

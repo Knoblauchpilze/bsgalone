@@ -85,6 +85,8 @@ auto str(const MessageType &type) -> std::string
       return "target";
     case MessageType::TARGET_LIST:
       return "target_list";
+    case MessageType::TARGET_PICKED:
+      return "target_picked";
     case MessageType::WEAPON_COMPONENT_UPDATED:
       return "weapon_component_updated";
     case MessageType::WEAPON_LIST:
@@ -136,6 +138,7 @@ auto allMessageTypesAsSet() -> std::unordered_set<MessageType>
     MessageType::VELOCITY,
     MessageType::TARGET,
     MessageType::TARGET_LIST,
+    MessageType::TARGET_PICKED,
     MessageType::WEAPON_COMPONENT_UPDATED,
     MessageType::WEAPON_LIST,
   };

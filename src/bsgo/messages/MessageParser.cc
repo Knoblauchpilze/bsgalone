@@ -41,6 +41,7 @@
 #include "SystemListMessage.hh"
 #include "TargetListMessage.hh"
 #include "TargetMessage.hh"
+#include "TargetPickedMessage.hh"
 #include "VelocityMessage.hh"
 #include "WeaponComponentMessage.hh"
 #include "WeaponListMessage.hh"
@@ -195,6 +196,8 @@ auto MessageParser::tryReadMessage(const bsgalone::core::MessageType &type, std:
       return readMessage<TargetMessage>(in);
     case bsgalone::core::MessageType::TARGET_LIST:
       return readMessage<TargetListMessage>(in);
+    case bsgalone::core::MessageType::TARGET_PICKED:
+      return bsgalone::core::TargetPickedMessage::readFromStream(in);
     case bsgalone::core::MessageType::WEAPON_COMPONENT_UPDATED:
       return readMessage<WeaponComponentMessage>(in);
     case bsgalone::core::MessageType::WEAPON_LIST:

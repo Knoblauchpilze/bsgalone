@@ -27,7 +27,7 @@ void LootSystem::updateEntity(Entity &entity,
     return;
   }
 
-  if (entity.kind->kind() != EntityKind::ASTEROID)
+  if (entity.kind->kind() != bsgalone::core::EntityKind::ASTEROID)
   {
     error("Failed to distribute loot", "Expected asteroid but got " + entity.str());
   }

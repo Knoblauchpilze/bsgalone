@@ -15,11 +15,11 @@ class ComponentSyncMessage : public bsgalone::core::NetworkMessage
 {
   public:
   ComponentSyncMessage();
-  ComponentSyncMessage(const Uuid entityDbId, const EntityKind entityKind);
+  ComponentSyncMessage(const Uuid entityDbId, const bsgalone::core::EntityKind entityKind);
   ~ComponentSyncMessage() override = default;
 
   auto getEntityDbId() const -> Uuid;
-  auto getEntityKind() const -> EntityKind;
+  auto getEntityKind() const -> bsgalone::core::EntityKind;
 
   void setSystemDbId(const Uuid systemDbId);
   auto tryGetSystemDbId() const -> std::optional<Uuid>;
@@ -49,7 +49,7 @@ class ComponentSyncMessage : public bsgalone::core::NetworkMessage
 
   private:
   Uuid m_entityDbId{};
-  EntityKind m_entityKind{};
+  bsgalone::core::EntityKind m_entityKind{};
 
   std::optional<Uuid> m_systemDbId{};
   std::optional<Status> m_status{};

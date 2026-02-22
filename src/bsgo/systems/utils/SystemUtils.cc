@@ -15,7 +15,8 @@ bool hasTargetDifferentFaction(const Entity &ent, const Entity &target)
   return true;
 }
 
-bool hasEntityMatchingKind(const Entity &entity, const std::unordered_set<EntityKind> &acceptedKinds)
+bool hasEntityMatchingKind(const Entity &entity,
+                           const std::unordered_set<bsgalone::core::EntityKind> &acceptedKinds)
 {
   return acceptedKinds.contains(entity.kind->kind());
 }

@@ -13,15 +13,17 @@ class EntityRemovedMessage : public bsgalone::core::NetworkMessage
 {
   public:
   EntityRemovedMessage();
-  EntityRemovedMessage(const Uuid entityDbId, const EntityKind entityKind, const bool dead);
   EntityRemovedMessage(const Uuid entityDbId,
-                       const EntityKind entityKind,
+                       const bsgalone::core::EntityKind entityKind,
+                       const bool dead);
+  EntityRemovedMessage(const Uuid entityDbId,
+                       const bsgalone::core::EntityKind entityKind,
                        const bool dead,
                        const Uuid systemDbId);
   ~EntityRemovedMessage() override = default;
 
   auto getEntityDbId() const -> Uuid;
-  auto getEntityKind() const -> EntityKind;
+  auto getEntityKind() const -> bsgalone::core::EntityKind;
   bool isDead() const;
   auto getSystemDbId() const -> Uuid;
   auto tryGetSystemDbId() const -> std::optional<Uuid>;
@@ -33,7 +35,7 @@ class EntityRemovedMessage : public bsgalone::core::NetworkMessage
 
   private:
   Uuid m_entityDbId{};
-  EntityKind m_entityKind{};
+  bsgalone::core::EntityKind m_entityKind{};
   bool m_dead{false};
   std::optional<Uuid> m_systemDbId{};
 };

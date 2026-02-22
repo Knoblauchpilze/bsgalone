@@ -128,7 +128,7 @@ void WeaponSystem::createBulletDirectedTowards(const Entity &ent,
 {
   const auto targetPos = target.transformComp().position();
 
-  const auto bullet = coordinator.createEntity(EntityKind::BULLET);
+  const auto bullet = coordinator.createEntity(bsgalone::core::EntityKind::BULLET);
   coordinator.addFaction(bullet, ent.factionComp().faction());
 
   constexpr auto BULLET_RADIUS = 0.2f;

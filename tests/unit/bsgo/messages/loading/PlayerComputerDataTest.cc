@@ -61,7 +61,9 @@ TEST(Unit_Bsgo_Serialization_PlayerComputerData, AllowedTargets)
                            .level          = 4,
                            .range          = 98765.1234f,
                            .damageModifier = 2.10987f};
-  input.allowedTargets = std::unordered_set<EntityKind>{EntityKind::SHIP, EntityKind::ASTEROID};
+  input.allowedTargets
+    = std::unordered_set<bsgalone::core::EntityKind>{bsgalone::core::EntityKind::SHIP,
+                                                     bsgalone::core::EntityKind::ASTEROID};
 
   PlayerComputerData output{.dbId       = Uuid{14},
                             .name       = "beefy computer",
@@ -85,7 +87,8 @@ TEST(Unit_Bsgo_Serialization_PlayerComputerData, NonEmptyAllowedTargetsInDestina
                             .name       = "another computer",
                             .level      = 12,
                             .reloadTime = chrono::TickDuration(1234.3247f)};
-  output.allowedTargets = std::unordered_set<EntityKind>{EntityKind::OUTPOST};
+  output.allowedTargets = std::unordered_set<bsgalone::core::EntityKind>{
+    bsgalone::core::EntityKind::OUTPOST};
 
   EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 

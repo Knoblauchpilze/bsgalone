@@ -240,7 +240,7 @@ auto fetchSystemOutpostTarget(const Uuid outpostDbId,
 
   return TargetProps{
     .sourceDbId = outpostDbId,
-    .sourceKind = EntityKind::OUTPOST,
+    .sourceKind = bsgalone::core::EntityKind::OUTPOST,
     .targetDbId = targetEntity.dbComp().dbId(),
     .targetKind = targetEntity.kind->kind(),
   };
@@ -289,7 +289,7 @@ auto fetchPlayerShipTarget(const Uuid shipDbId,
 
   return TargetProps{
     .sourceDbId = shipDbId,
-    .sourceKind = EntityKind::SHIP,
+    .sourceKind = bsgalone::core::EntityKind::SHIP,
     .targetDbId = targetEntity.dbComp().dbId(),
     .targetKind = targetEntity.kind->kind(),
   };

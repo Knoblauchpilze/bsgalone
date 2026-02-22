@@ -45,7 +45,7 @@ void LogoutMessageConsumer::handleLogout(const LogoutMessage &message) const
   {
     auto removed = std::make_unique<EntityRemovedMessage>(m_systemService->getShipDbIdForPlayer(
                                                             playerDbId),
-                                                          EntityKind::SHIP,
+                                                          bsgalone::core::EntityKind::SHIP,
                                                           false,
                                                           systemDbId);
     maybeQueue->second->pushMessage(std::move(removed));

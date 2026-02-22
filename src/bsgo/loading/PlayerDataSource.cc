@@ -46,7 +46,7 @@ void PlayerDataSource::registerPlayer(Coordinator &coordinator,
     return;
   }
 
-  const auto playerEntityId = coordinator.createEntity(EntityKind::PLAYER);
+  const auto playerEntityId = coordinator.createEntity(bsgalone::core::EntityKind::PLAYER);
 
   coordinator.addDbId(playerEntityId, data.dbId);
   coordinator.addName(playerEntityId, data.name);

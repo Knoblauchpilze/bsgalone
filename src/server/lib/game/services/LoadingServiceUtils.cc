@@ -205,9 +205,9 @@ auto toSystemTickData(const SystemTick &tickData) -> SystemTickData
   };
 }
 
-auto TargetProps::toTargetData() const -> TargetData
+auto TargetProps::toTarget() const -> bsgalone::core::Target
 {
-  return TargetData{
+  return bsgalone::core::Target{
     .sourceDbId = sourceDbId,
     .sourceKind = sourceKind,
     .targetDbId = targetDbId,

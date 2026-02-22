@@ -202,18 +202,19 @@ auto DatabaseEntityMapper::tryGetOutpostEntityId(const Uuid outpostDbId) const
   return {};
 }
 
-auto DatabaseEntityMapper::tryGetEntityId(const Uuid dbId, const EntityKind kind) const
+auto DatabaseEntityMapper::tryGetEntityId(const Uuid dbId,
+                                          const bsgalone::core::EntityKind kind) const
   -> std::optional<Uuid>
 {
   switch (kind)
   {
-    case EntityKind::SHIP:
+    case bsgalone::core::EntityKind::SHIP:
       return tryGetShipEntityId(dbId);
-    case EntityKind::ASTEROID:
+    case bsgalone::core::EntityKind::ASTEROID:
       return tryGetAsteroidEntityId(dbId);
-    case EntityKind::OUTPOST:
+    case bsgalone::core::EntityKind::OUTPOST:
       return tryGetOutpostEntityId(dbId);
-    case EntityKind::PLAYER:
+    case bsgalone::core::EntityKind::PLAYER:
       return tryGetPlayerEntityId(dbId);
     default:
       error("Unsupported entity kind " + str(kind));

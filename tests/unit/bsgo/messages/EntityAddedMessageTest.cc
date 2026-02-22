@@ -15,7 +15,7 @@ void assertMessagesAreEqual(const EntityAddedMessage &actual, const EntityAddedM
 
   switch (actual.getEntityKind())
   {
-    case EntityKind::ASTEROID:
+    case bsgalone::core::EntityKind::ASTEROID:
       assertAsteroidDataAreEqual(actual.tryGetAsteroidData().value(),
                                  expected.tryGetAsteroidData().value());
       EXPECT_FALSE(actual.tryGetShipData().has_value());
@@ -23,7 +23,7 @@ void assertMessagesAreEqual(const EntityAddedMessage &actual, const EntityAddedM
       EXPECT_FALSE(actual.tryGetPlayerData().has_value());
       break;
 
-    case EntityKind::SHIP:
+    case bsgalone::core::EntityKind::SHIP:
       EXPECT_FALSE(actual.tryGetAsteroidData().has_value());
       assertPlayerShipDataAreEqual(actual.tryGetShipData().value(),
                                    expected.tryGetShipData().value());
@@ -31,7 +31,7 @@ void assertMessagesAreEqual(const EntityAddedMessage &actual, const EntityAddedM
       EXPECT_FALSE(actual.tryGetPlayerData().has_value());
       break;
 
-    case EntityKind::OUTPOST:
+    case bsgalone::core::EntityKind::OUTPOST:
       EXPECT_FALSE(actual.tryGetAsteroidData().has_value());
       EXPECT_FALSE(actual.tryGetShipData().has_value());
       assertOutpostDataAreEqual(actual.tryGetOutpostData().value(),
@@ -39,7 +39,7 @@ void assertMessagesAreEqual(const EntityAddedMessage &actual, const EntityAddedM
       EXPECT_FALSE(actual.tryGetPlayerData().has_value());
       break;
 
-    case EntityKind::PLAYER:
+    case bsgalone::core::EntityKind::PLAYER:
       EXPECT_FALSE(actual.tryGetAsteroidData().has_value());
       EXPECT_FALSE(actual.tryGetShipData().has_value());
       EXPECT_FALSE(actual.tryGetOutpostData().has_value());
@@ -73,7 +73,7 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, SetsEntityKindForAsteroid)
                                        .radius    = 4.5f,
                                        .maxHealth = 14.78f});
 
-  EXPECT_EQ(message.getEntityKind(), EntityKind::ASTEROID);
+  EXPECT_EQ(message.getEntityKind(), bsgalone::core::EntityKind::ASTEROID);
 }
 
 TEST(Unit_Bsgo_Serialization_EntityAddedMessage, SetsEntityKindForShip)
@@ -82,7 +82,7 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, SetsEntityKindForShip)
   message.setShipData(
     PlayerShipData{.dbId = Uuid{123}, .position = Eigen::Vector3f{1, 2, 3}, .radius = 4.5f});
 
-  EXPECT_EQ(message.getEntityKind(), EntityKind::SHIP);
+  EXPECT_EQ(message.getEntityKind(), bsgalone::core::EntityKind::SHIP);
 }
 
 TEST(Unit_Bsgo_Serialization_EntityAddedMessage, SetsEntityKindForOutpost)
@@ -91,7 +91,7 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, SetsEntityKindForOutpost)
   message.setOutpostData(
     OutpostData{.dbId = Uuid{123}, .position = Eigen::Vector3f{1, 2, 3}, .radius = 4.5f});
 
-  EXPECT_EQ(message.getEntityKind(), EntityKind::OUTPOST);
+  EXPECT_EQ(message.getEntityKind(), bsgalone::core::EntityKind::OUTPOST);
 }
 
 TEST(Unit_Bsgo_Serialization_EntityAddedMessage, SetsEntityKindForPlayer)
@@ -99,7 +99,7 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, SetsEntityKindForPlayer)
   EntityAddedMessage message(Uuid{789});
   message.setPlayerData(PlayerData{.dbId = Uuid{123}, .name = "my-player"});
 
-  EXPECT_EQ(message.getEntityKind(), EntityKind::PLAYER);
+  EXPECT_EQ(message.getEntityKind(), bsgalone::core::EntityKind::PLAYER);
 }
 
 TEST(Unit_Bsgo_Serialization_EntityAddedMessage, WhenAnotherKindOfDataIsSetExpectTypeToChange)
@@ -108,12 +108,12 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, WhenAnotherKindOfDataIsSetExpec
   message.setAsteroidData(
     AsteroidData{.dbId = Uuid{123}, .position = Eigen::Vector3f{1, 2, 3}, .radius = 4.5f});
 
-  EXPECT_EQ(message.getEntityKind(), EntityKind::ASTEROID);
+  EXPECT_EQ(message.getEntityKind(), bsgalone::core::EntityKind::ASTEROID);
 
   message.setShipData(
     PlayerShipData{.dbId = Uuid{123}, .position = Eigen::Vector3f{3, 2, 1}, .radius = 4.5f});
 
-  EXPECT_EQ(message.getEntityKind(), EntityKind::SHIP);
+  EXPECT_EQ(message.getEntityKind(), bsgalone::core::EntityKind::SHIP);
   EXPECT_FALSE(message.tryGetAsteroidData().has_value());
 }
 

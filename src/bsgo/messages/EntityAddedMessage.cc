@@ -18,7 +18,7 @@ auto EntityAddedMessage::getSystemDbId() const -> Uuid
   return m_systemDbId;
 }
 
-auto EntityAddedMessage::getEntityKind() const -> EntityKind
+auto EntityAddedMessage::getEntityKind() const -> bsgalone::core::EntityKind
 {
   if (!m_entityKind)
   {
@@ -29,7 +29,7 @@ auto EntityAddedMessage::getEntityKind() const -> EntityKind
 
 void EntityAddedMessage::setAsteroidData(const AsteroidData &data)
 {
-  m_entityKind   = EntityKind::ASTEROID;
+  m_entityKind   = bsgalone::core::EntityKind::ASTEROID;
   m_asteroidData = data;
   m_shipData.reset();
   m_outpostData.reset();
@@ -43,7 +43,7 @@ auto EntityAddedMessage::tryGetAsteroidData() const -> std::optional<AsteroidDat
 
 void EntityAddedMessage::setShipData(const PlayerShipData &data)
 {
-  m_entityKind = EntityKind::SHIP;
+  m_entityKind = bsgalone::core::EntityKind::SHIP;
   m_asteroidData.reset();
   m_shipData = data;
   m_outpostData.reset();
@@ -57,7 +57,7 @@ auto EntityAddedMessage::tryGetShipData() const -> std::optional<PlayerShipData>
 
 void EntityAddedMessage::setOutpostData(const OutpostData &data)
 {
-  m_entityKind = EntityKind::OUTPOST;
+  m_entityKind = bsgalone::core::EntityKind::OUTPOST;
   m_asteroidData.reset();
   m_shipData.reset();
   m_outpostData = data;
@@ -71,7 +71,7 @@ auto EntityAddedMessage::tryGetOutpostData() const -> std::optional<OutpostData>
 
 void EntityAddedMessage::setPlayerData(const PlayerData &data)
 {
-  m_entityKind = EntityKind::PLAYER;
+  m_entityKind = bsgalone::core::EntityKind::PLAYER;
   m_asteroidData.reset();
   m_shipData.reset();
   m_outpostData.reset();
@@ -98,16 +98,16 @@ auto EntityAddedMessage::serialize(std::ostream &out) const -> std::ostream &
 
   switch (*m_entityKind)
   {
-    case EntityKind::ASTEROID:
+    case bsgalone::core::EntityKind::ASTEROID:
       core::serialize(out, *m_asteroidData);
       break;
-    case EntityKind::SHIP:
+    case bsgalone::core::EntityKind::SHIP:
       core::serialize(out, *m_shipData);
       break;
-    case EntityKind::OUTPOST:
+    case bsgalone::core::EntityKind::OUTPOST:
       core::serialize(out, *m_outpostData);
       break;
-    case EntityKind::PLAYER:
+    case bsgalone::core::EntityKind::PLAYER:
       core::serialize(out, *m_playerData);
       break;
     default:
@@ -143,7 +143,7 @@ bool EntityAddedMessage::deserialize(std::istream &in)
 
   ok &= core::deserialize(in, m_systemDbId);
   // The serialization makes sure that the entity kind is always defined.
-  EntityKind kind{};
+  bsgalone::core::EntityKind kind{};
   ok &= core::deserialize(in, kind);
   m_entityKind = kind;
 
@@ -153,16 +153,16 @@ bool EntityAddedMessage::deserialize(std::istream &in)
 
   switch (*m_entityKind)
   {
-    case EntityKind::ASTEROID:
+    case bsgalone::core::EntityKind::ASTEROID:
       ok &= deserializeData(in, m_asteroidData);
       break;
-    case EntityKind::SHIP:
+    case bsgalone::core::EntityKind::SHIP:
       ok &= deserializeData(in, m_shipData);
       break;
-    case EntityKind::OUTPOST:
+    case bsgalone::core::EntityKind::OUTPOST:
       ok &= deserializeData(in, m_outpostData);
       break;
-    case EntityKind::PLAYER:
+    case bsgalone::core::EntityKind::PLAYER:
       ok &= deserializeData(in, m_playerData);
       break;
     default:
@@ -178,16 +178,16 @@ auto EntityAddedMessage::clone() const -> bsgalone::core::IMessagePtr
   auto clone = std::make_unique<EntityAddedMessage>(m_systemDbId);
   switch (*m_entityKind)
   {
-    case EntityKind::ASTEROID:
+    case bsgalone::core::EntityKind::ASTEROID:
       clone->setAsteroidData(*m_asteroidData);
       break;
-    case EntityKind::SHIP:
+    case bsgalone::core::EntityKind::SHIP:
       clone->setShipData(*m_shipData);
       break;
-    case EntityKind::OUTPOST:
+    case bsgalone::core::EntityKind::OUTPOST:
       clone->setOutpostData(*m_outpostData);
       break;
-    case EntityKind::PLAYER:
+    case bsgalone::core::EntityKind::PLAYER:
       clone->setPlayerData(*m_playerData);
       break;
     default:

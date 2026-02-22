@@ -11,7 +11,7 @@
 #include "PurchaseMessageConsumer.hh"
 #include "ShipSelectedMessageConsumer.hh"
 #include "SlotMessageConsumer.hh"
-#include "TargetMessageConsumer.hh"
+#include "TargetPickedMessageConsumer.hh"
 #include "VelocityMessageConsumer.hh"
 
 namespace bsgo {
@@ -41,7 +41,7 @@ void createMessageConsumers(bsgalone::core::IMessageQueue *const inputMessagesQu
     std::make_unique<VelocityMessageConsumer>(services, outputMessagesQueue));
 
   inputMessagesQueue->addListener(
-    std::make_unique<TargetMessageConsumer>(services, outputMessagesQueue));
+    std::make_unique<TargetPickedMessageConsumer>(services, outputMessagesQueue));
 
   inputMessagesQueue->addListener(
     std::make_unique<JumpCancelledMessageConsumer>(services, outputMessagesQueue));

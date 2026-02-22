@@ -46,20 +46,6 @@ TEST(Unit_Bsgalone_Core_Messages_Player_SlotMessage, Weapon)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgalone_Core_Messages_Player_SlotMessage, WithClientId)
-{
-  const SlotMessage expected(bsgo::Uuid{18},
-                             bsgo::Uuid{19},
-                             bsgo::Uuid{28},
-                             bsgo::Uuid{67},
-                             Slot::WEAPON);
-  SlotMessage actual(bsgo::Uuid{43}, bsgo::Uuid{39}, bsgo::Uuid{51}, bsgo::Uuid{180}, Slot::COMPUTER);
-
-  bsgo::serializeAndDeserializeMessage(expected, actual);
-
-  assertMessagesAreEqual(actual, expected);
-}
-
 TEST(Unit_Bsgalone_Core_Messages_Player_SlotMessage, Clone)
 {
   const SlotMessage expected(bsgo::Uuid{18},
@@ -70,7 +56,7 @@ TEST(Unit_Bsgalone_Core_Messages_Player_SlotMessage, Clone)
 
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::SLOT);
+  ASSERT_EQ(cloned->type(), MessageType::SLOT);
   assertMessagesAreEqual(cloned->as<SlotMessage>(), expected);
 }
 

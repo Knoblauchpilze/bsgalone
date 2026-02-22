@@ -201,7 +201,8 @@ void assertSystemTickDataAreEqual(const SystemTickData &actual, const SystemTick
   EXPECT_EQ(actual.step, expected.step);
 }
 
-void assertTargetDataAreEqual(const TargetData &actual, const TargetData &expected)
+void assertTargetAreEqual(const bsgalone::core::Target &actual,
+                          const bsgalone::core::Target &expected)
 {
   EXPECT_EQ(actual.sourceDbId, expected.sourceDbId);
   EXPECT_EQ(actual.sourceKind, expected.sourceKind);

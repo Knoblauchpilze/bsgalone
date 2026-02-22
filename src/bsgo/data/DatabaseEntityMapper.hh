@@ -42,7 +42,8 @@ class DatabaseEntityMapper : public core::CoreObject
   auto tryGetAsteroidEntityId(const Uuid asteroidDbId) const -> std::optional<Uuid>;
   auto tryGetOutpostEntityId(const Uuid outpostDbId) const -> std::optional<Uuid>;
 
-  auto tryGetEntityId(const Uuid dbId, const EntityKind kind) const -> std::optional<Uuid>;
+  auto tryGetEntityId(const Uuid dbId, const bsgalone::core::EntityKind kind) const
+    -> std::optional<Uuid>;
 
   void clearEntities();
   void clearAll();

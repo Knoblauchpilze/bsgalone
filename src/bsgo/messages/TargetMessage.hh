@@ -4,7 +4,7 @@
 
 #include "EntityKind.hh"
 #include "NetworkMessage.hh"
-#include "TargetData.hh"
+#include "Target.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
 
@@ -14,13 +14,13 @@ class TargetMessage : public bsgalone::core::NetworkMessage
 {
   public:
   TargetMessage();
-  TargetMessage(TargetData data, const Eigen::Vector3f &position);
+  TargetMessage(bsgalone::core::Target data, const Eigen::Vector3f &position);
   ~TargetMessage() override = default;
 
   auto getSourceDbId() const -> Uuid;
-  auto getSourceKind() const -> EntityKind;
+  auto getSourceKind() const -> bsgalone::core::EntityKind;
   auto tryGetTargetDbId() const -> std::optional<Uuid>;
-  auto tryGetTargetKind() const -> std::optional<EntityKind>;
+  auto tryGetTargetKind() const -> std::optional<bsgalone::core::EntityKind>;
 
   auto tryGetSystemDbId() const -> std::optional<Uuid>;
   void setSystemDbId(const Uuid systemDbId);
@@ -33,7 +33,7 @@ class TargetMessage : public bsgalone::core::NetworkMessage
   auto clone() const -> bsgalone::core::IMessagePtr override;
 
   private:
-  TargetData m_data{};
+  bsgalone::core::Target m_data{};
   std::optional<Uuid> m_systemDbId{};
   Eigen::Vector3f m_position{Eigen::Vector3f::Zero()};
 };

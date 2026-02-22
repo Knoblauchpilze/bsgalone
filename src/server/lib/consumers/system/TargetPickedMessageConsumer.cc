@@ -1,12 +1,13 @@
 
-#include "TargetMessageConsumer.hh"
+#include "TargetPickedMessageConsumer.hh"
 #include "TargetMessage.hh"
 
 namespace bsgo {
 
-TargetMessageConsumer::TargetMessageConsumer(const Services &services,
-                                             bsgalone::core::IMessageQueue *const outputMessageQueue)
-  : AbstractMessageConsumer("target", {bsgalone::core::MessageType::TARGET})
+TargetPickedMessageConsumer::TargetPickedMessageConsumer(
+  const Services &services,
+  bsgalone::core::IMessageQueue *const outputMessageQueue)
+  : AbstractMessageConsumer("target", {bsgalone::core::MessageType::TARGET_PICKED})
   , m_shipService(services.ship)
   , m_outputMessageQueue(outputMessageQueue)
 {
@@ -20,19 +21,19 @@ TargetMessageConsumer::TargetMessageConsumer(const Services &services,
   }
 }
 
-void TargetMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
+void TargetPickedMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
 {
-  const auto &target = message.as<TargetMessage>();
+  const auto &targetMessage = message.as<bsgalone::core::TargetPickedMessage>();
 
-  const auto position       = target.getPosition();
-  const auto targetDbIdHint = target.tryGetTargetDbId();
+  const auto data     = targetMessage.getTargetData();
+  const auto position = targetMessage.getPosition();
 
   const ShipService::TargetAcquiringData acquiringData{
-    .sourceDbId     = target.getSourceDbId(),
-    .sourceKind     = target.getSourceKind(),
+    .sourceDbId     = data.sourceDbId,
+    .sourceKind     = data.sourceKind,
     .position       = position,
-    .targetDbIdHint = targetDbIdHint,
-    .targetKindHint = target.tryGetTargetKind(),
+    .targetDbIdHint = data.targetDbId,
+    .targetKindHint = data.targetKind,
   };
   const auto res = m_shipService->tryAcquireTarget(acquiringData);
   if (!res.success)
@@ -40,32 +41,33 @@ void TargetMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &me
     // Only print a warning in case there was a hint in the message. In case a hint
     // is provided and we can't find it, it means that there's a discrepency between
     // what the client app knows and what the server knows.
-    if (targetDbIdHint)
+    if (data.targetDbId)
     {
-      warn("Failed to process target message for " + str(target.getSourceKind()) + " "
-           + str(target.getSourceDbId()));
+      warn("Failed to process target message for " + str(data.sourceDbId) + " "
+           + str(data.sourceKind));
     }
     return;
   }
 
-  TargetData data{
-    .sourceDbId = target.getSourceDbId(),
-    .sourceKind = target.getSourceKind(),
+  bsgalone::core::Target target{
+    .sourceDbId = data.sourceDbId,
+    .sourceKind = data.sourceKind,
     .targetDbId = res.targetDbId,
     .targetKind = res.targetKind,
   };
 
-  auto out = std::make_unique<TargetMessage>(data, position);
+  auto out = std::make_unique<TargetMessage>(target, position);
   broadcastMessageToSystem(std::move(out));
 }
 
 namespace {
-auto getSystemDbIdForSource(const Uuid dbId, const EntityKind kind, const ShipService &shipService)
-  -> Uuid
+auto getSystemDbIdForSource(const Uuid dbId,
+                            const bsgalone::core::EntityKind kind,
+                            const ShipService &shipService) -> Uuid
 {
   switch (kind)
   {
-    case EntityKind::SHIP:
+    case bsgalone::core::EntityKind::SHIP:
       return shipService.getSystemDbIdForShip(dbId);
     default:
       throw std::invalid_argument("Unsupported entity kind " + str(kind)
@@ -74,7 +76,7 @@ auto getSystemDbIdForSource(const Uuid dbId, const EntityKind kind, const ShipSe
 }
 } // namespace
 
-void TargetMessageConsumer::broadcastMessageToSystem(std::unique_ptr<TargetMessage> message)
+void TargetPickedMessageConsumer::broadcastMessageToSystem(std::unique_ptr<TargetMessage> message)
 {
   const auto systemDbId = getSystemDbIdForSource(message->getSourceDbId(),
                                                  message->getSourceKind(),

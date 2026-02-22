@@ -21,7 +21,7 @@ class EntityAddedMessage : public bsgalone::core::NetworkMessage
   ~EntityAddedMessage() override = default;
 
   auto getSystemDbId() const -> Uuid;
-  auto getEntityKind() const -> EntityKind;
+  auto getEntityKind() const -> bsgalone::core::EntityKind;
 
   void setAsteroidData(const AsteroidData &data);
   auto tryGetAsteroidData() const -> std::optional<AsteroidData>;
@@ -42,7 +42,7 @@ class EntityAddedMessage : public bsgalone::core::NetworkMessage
 
   private:
   Uuid m_systemDbId{};
-  std::optional<EntityKind> m_entityKind{};
+  std::optional<bsgalone::core::EntityKind> m_entityKind{};
 
   std::optional<AsteroidData> m_asteroidData{};
   std::optional<PlayerShipData> m_shipData{};

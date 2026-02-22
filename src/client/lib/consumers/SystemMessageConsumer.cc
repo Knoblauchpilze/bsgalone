@@ -69,17 +69,18 @@ void SystemMessageConsumer::handleEntityAdded(const bsgo::EntityAddedMessage &me
 
   switch (entityKind)
   {
-    case bsgo::EntityKind::SHIP:
+    case bsgalone::core::EntityKind::SHIP:
       handleShipCreation(*message.tryGetShipData());
       break;
-    case bsgo::EntityKind::ASTEROID:
+    case bsgalone::core::EntityKind::ASTEROID:
       handleAsteroidCreation(*message.tryGetAsteroidData());
       break;
-    case bsgo::EntityKind::PLAYER:
+    case bsgalone::core::EntityKind::PLAYER:
       handlePlayerCreation(*message.tryGetPlayerData());
       break;
     default:
-      error("Failed to handle creation of entity", "Unsupported kind " + bsgo::str(entityKind));
+      error("Failed to handle creation of entity",
+            "Unsupported kind " + bsgalone::core::str(entityKind));
       break;
   }
 }
@@ -99,13 +100,13 @@ void SystemMessageConsumer::handleEntityRemoved(const bsgo::EntityRemovedMessage
 
   switch (entityKind)
   {
-    case bsgo::EntityKind::SHIP:
+    case bsgalone::core::EntityKind::SHIP:
       m_entityMapper.tryRemoveEntityForShip(entityDbId);
       break;
-    case bsgo::EntityKind::ASTEROID:
+    case bsgalone::core::EntityKind::ASTEROID:
       m_entityMapper.removeEntityForAsteroid(entityDbId);
       break;
-    case bsgo::EntityKind::PLAYER:
+    case bsgalone::core::EntityKind::PLAYER:
       m_entityMapper.removeEntityForPlayer(entityDbId);
     default:
       break;
@@ -114,7 +115,7 @@ void SystemMessageConsumer::handleEntityRemoved(const bsgo::EntityRemovedMessage
   if (!entityId)
   {
     error("Failed to handle removal of entity " + bsgo::str(entityDbId),
-          "Unsupported kind " + bsgo::str(entityKind));
+          "Unsupported kind " + bsgalone::core::str(entityKind));
   }
 
   if (didPlayerShipDie(message, m_entityMapper))

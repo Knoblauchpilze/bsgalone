@@ -8,7 +8,8 @@ ComponentSyncMessage::ComponentSyncMessage()
   : NetworkMessage(bsgalone::core::MessageType::COMPONENT_SYNC)
 {}
 
-ComponentSyncMessage::ComponentSyncMessage(const Uuid entityDbId, const EntityKind entityKind)
+ComponentSyncMessage::ComponentSyncMessage(const Uuid entityDbId,
+                                           const bsgalone::core::EntityKind entityKind)
   : NetworkMessage(bsgalone::core::MessageType::COMPONENT_SYNC)
   , m_entityDbId(entityDbId)
   , m_entityKind(entityKind)
@@ -19,7 +20,7 @@ auto ComponentSyncMessage::getEntityDbId() const -> Uuid
   return m_entityDbId;
 }
 
-auto ComponentSyncMessage::getEntityKind() const -> EntityKind
+auto ComponentSyncMessage::getEntityKind() const -> bsgalone::core::EntityKind
 {
   return m_entityKind;
 }

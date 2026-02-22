@@ -126,7 +126,7 @@ namespace {
 auto tryGetEntityAt(const Coordinator &coordinator, const Eigen::Vector3f &position)
   -> std::optional<Entity>
 {
-  auto maybeEntityId = coordinator.getEntityAt(position, {}, EntityKind::BULLET);
+  auto maybeEntityId = coordinator.getEntityAt(position, {}, bsgalone::core::EntityKind::BULLET);
   if (!maybeEntityId)
   {
     return {};
@@ -142,7 +142,7 @@ auto tryGetEntityAt(const Coordinator &coordinator, const Eigen::Vector3f &posit
 }
 
 auto tryGetEntityFromHint(const Uuid entityDbId,
-                          const EntityKind entityKind,
+                          const bsgalone::core::EntityKind entityKind,
                           const DatabaseEntityMapper &entityMapper,
                           const Coordinator &coordinator) -> std::optional<Entity>
 {
@@ -192,7 +192,7 @@ auto overrideTargetWithHintIfNecessary(const std::optional<Entity> &maybeTarget,
 
 auto ShipService::tryAcquireTarget(const TargetAcquiringData &data) const -> AcquiringResult
 {
-  if (data.sourceKind != EntityKind::SHIP)
+  if (data.sourceKind != bsgalone::core::EntityKind::SHIP)
   {
     error("Unsupported entity acquiring target: " + str(data.sourceKind));
   }
@@ -240,7 +240,7 @@ auto ShipService::tryAcquireTarget(const TargetAcquiringData &data) const -> Acq
   }
 
   std::optional<Uuid> maybeTargetDbId{};
-  std::optional<EntityKind> maybeTargetKind{};
+  std::optional<bsgalone::core::EntityKind> maybeTargetKind{};
   if (maybeTarget)
   {
     maybeTargetKind = maybeTarget->kind->kind();
@@ -296,7 +296,7 @@ void ShipService::updateEntityTarget(Entity &entity, const std::optional<Uuid> &
 
 bool ShipService::isSelfSelection(const TargetAcquiringData &data, const Entity &target) const
 {
-  if (data.sourceKind != EntityKind::SHIP)
+  if (data.sourceKind != bsgalone::core::EntityKind::SHIP)
   {
     error("Unsupported entity with kind " + str(data.sourceKind) + " for target selection");
   }
@@ -311,7 +311,7 @@ bool ShipService::isSelfSelection(const TargetAcquiringData &data, const Entity 
   // Currently only ships can select targets. If the target is not a ship it means that
   // it can't possibly belong to the same player as only ships are attached to players
   // and therefore it's not a self selection.
-  if (target.kind->kind() != EntityKind::SHIP)
+  if (target.kind->kind() != bsgalone::core::EntityKind::SHIP)
   {
     return false;
   }

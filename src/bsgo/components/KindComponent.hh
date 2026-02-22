@@ -9,15 +9,15 @@ namespace bsgo {
 class KindComponent : public AbstractComponent
 {
   public:
-  KindComponent(const EntityKind &kind);
+  KindComponent(const bsgalone::core::EntityKind &kind);
   ~KindComponent() override = default;
 
-  auto kind() const noexcept -> EntityKind;
+  auto kind() const noexcept -> bsgalone::core::EntityKind;
 
   void update(const chrono::TickData &data) override;
 
   private:
-  EntityKind m_kind;
+  bsgalone::core::EntityKind m_kind;
 };
 
 using KindComponentShPtr = std::shared_ptr<KindComponent>;

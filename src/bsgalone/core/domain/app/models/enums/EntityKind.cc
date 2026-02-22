@@ -2,7 +2,7 @@
 #include "EntityKind.hh"
 #include <stdexcept>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 auto str(const EntityKind &kind) noexcept -> std::string
 {
@@ -40,4 +40,4 @@ auto fromDbEntityKind(const std::string &dbKind) -> EntityKind
   throw std::invalid_argument("Unknown entity kind \"" + dbKind + "\"");
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

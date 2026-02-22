@@ -41,7 +41,7 @@ void AsteroidDataSource::registerAsteroid(Coordinator &coordinator,
                                           DatabaseEntityMapper &entityMapper) const
 
 {
-  const auto asteroidEntityId = coordinator.createEntity(EntityKind::ASTEROID);
+  const auto asteroidEntityId = coordinator.createEntity(bsgalone::core::EntityKind::ASTEROID);
 
   coordinator.addDbId(asteroidEntityId, data.dbId);
   auto box = std::make_unique<CircleBox>(data.position, data.radius);

@@ -9,7 +9,7 @@
 namespace bsgo {
 
 auto tryFindSystemDbIdFromEntity(const Uuid dbId,
-                                 const EntityKind entityKind,
+                                 const bsgalone::core::EntityKind entityKind,
                                  const SystemService &service) -> std::optional<Uuid>;
 
 auto tryFindSystemAndQueueFromShip(const Uuid shipDbId,

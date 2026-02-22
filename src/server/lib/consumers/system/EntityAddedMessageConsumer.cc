@@ -37,10 +37,10 @@ void EntityAddedMessageConsumer::onMessageReceived(const bsgalone::core::IMessag
 
   switch (entityKind)
   {
-    case EntityKind::SHIP:
+    case bsgalone::core::EntityKind::SHIP:
       handleShipAdded(systemDbId, *added.tryGetShipData());
       break;
-    case EntityKind::ASTEROID:
+    case bsgalone::core::EntityKind::ASTEROID:
       handleAsteroidAdded(systemDbId, *added.tryGetAsteroidData());
       break;
     default:

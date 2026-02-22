@@ -67,7 +67,7 @@ void JumpMessageConsumer::handlePostJumpSystemMessages(const Uuid shipDbId,
   const auto destinationQueue = maybeDestinationQueue->second;
 
   auto removed = std::make_unique<EntityRemovedMessage>(shipDbId,
-                                                        EntityKind::SHIP,
+                                                        bsgalone::core::EntityKind::SHIP,
                                                         false,
                                                         sourceSystemDbId);
   debug("Pushing removed message to " + str(sourceSystemDbId));

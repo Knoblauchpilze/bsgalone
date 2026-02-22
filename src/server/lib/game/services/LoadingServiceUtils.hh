@@ -24,7 +24,7 @@
 #include "SystemOutpostRepository.hh"
 #include "SystemRepository.hh"
 #include "SystemTickData.hh"
-#include "TargetData.hh"
+#include "Target.hh"
 #include "TickRepository.hh"
 #include "Uuid.hh"
 #include "WeaponData.hh"
@@ -113,11 +113,11 @@ auto toSystemTickData(const SystemTick &tickData) -> SystemTickData;
 struct TargetProps
 {
   Uuid sourceDbId{};
-  EntityKind sourceKind{};
+  bsgalone::core::EntityKind sourceKind{};
   Uuid targetDbId{};
-  EntityKind targetKind{};
+  bsgalone::core::EntityKind targetKind{};
 
-  auto toTargetData() const -> TargetData;
+  auto toTarget() const -> bsgalone::core::Target;
 };
 
 } // namespace bsgo

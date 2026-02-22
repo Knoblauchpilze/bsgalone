@@ -19,13 +19,13 @@ void DatabaseSynchronizer::syncEntity(Entity &entity) const
 
   switch (kind)
   {
-    case EntityKind::ASTEROID:
+    case bsgalone::core::EntityKind::ASTEROID:
       syncAsteroid(entity, m_repositories);
       break;
-    case EntityKind::SHIP:
+    case bsgalone::core::EntityKind::SHIP:
       syncPlayerShip(entity, m_repositories);
       break;
-    case EntityKind::OUTPOST:
+    case bsgalone::core::EntityKind::OUTPOST:
       syncSystemOutpost(entity, m_repositories);
       break;
     default:

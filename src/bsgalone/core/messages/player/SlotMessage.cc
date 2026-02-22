@@ -6,7 +6,7 @@
 namespace bsgalone::core {
 
 SlotMessage::SlotMessage()
-  : AbstractPlayerMessage(bsgalone::core::MessageType::SLOT, bsgo::Uuid{0}, bsgo::Uuid{0})
+  : AbstractPlayerMessage(MessageType::SLOT, bsgo::Uuid{0}, bsgo::Uuid{0})
 {}
 
 SlotMessage::SlotMessage(const bsgo::Uuid playerDbId,
@@ -62,7 +62,7 @@ bool SlotMessage::deserialize(std::istream &in)
   return ok;
 }
 
-auto SlotMessage::clone() const -> bsgalone::core::IMessagePtr
+auto SlotMessage::clone() const -> IMessagePtr
 {
   return std::make_unique<SlotMessage>(m_playerDbId,
                                        m_systemDbId,

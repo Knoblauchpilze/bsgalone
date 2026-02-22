@@ -22,27 +22,28 @@ void assertMessagesAreEqual(const TargetListMessage &actual, const TargetListMes
     const auto &actualTargetData   = actualTargetsData[id];
     const auto &expectedTargetData = expectedTargetsData[id];
 
-    assertTargetDataAreEqual(actualTargetData, expectedTargetData);
+    assertTargetAreEqual(actualTargetData, expectedTargetData);
   }
 }
 } // namespace
 
 TEST(Unit_Bsgo_Serialization_TargetListMessage, Basic)
 {
-  std::vector<TargetData> targetsData = {{.sourceDbId = Uuid{174},
-                                          .sourceKind = EntityKind::PLAYER,
-                                          .targetDbId = Uuid{98},
-                                          .targetKind = EntityKind::ASTEROID}};
+  std::vector<bsgalone::core::Target> targetsData = {
+    {.sourceDbId = Uuid{174},
+     .sourceKind = bsgalone::core::EntityKind::PLAYER,
+     .targetDbId = Uuid{98},
+     .targetKind = bsgalone::core::EntityKind::ASTEROID}};
   const TargetListMessage expected(Uuid{8712}, targetsData);
 
   targetsData = {{.sourceDbId = Uuid{23},
-                  .sourceKind = EntityKind::BULLET,
+                  .sourceKind = bsgalone::core::EntityKind::BULLET,
                   .targetDbId = Uuid{36},
-                  .targetKind = EntityKind::OUTPOST},
+                  .targetKind = bsgalone::core::EntityKind::OUTPOST},
                  {.sourceDbId = Uuid{47},
-                  .sourceKind = EntityKind::SHIP,
+                  .sourceKind = bsgalone::core::EntityKind::SHIP,
                   .targetDbId = Uuid{14},
-                  .targetKind = EntityKind::PLAYER}};
+                  .targetKind = bsgalone::core::EntityKind::PLAYER}};
   TargetListMessage actual(Uuid{1515}, targetsData);
   actual.setClientId(Uuid{2});
   serializeAndDeserializeMessage(expected, actual);
@@ -51,22 +52,23 @@ TEST(Unit_Bsgo_Serialization_TargetListMessage, Basic)
 
 TEST(Unit_Bsgo_Serialization_TargetListMessage, WithClientId)
 {
-  std::vector<TargetData> targetsData{{.sourceDbId = Uuid{23},
-                                       .sourceKind = EntityKind::BULLET,
-                                       .targetDbId = Uuid{36},
-                                       .targetKind = EntityKind::OUTPOST},
-                                      {.sourceDbId = Uuid{47},
-                                       .sourceKind = EntityKind::SHIP,
-                                       .targetDbId = Uuid{14},
-                                       .targetKind = EntityKind::PLAYER}};
+  std::vector<bsgalone::core::Target>
+    targetsData{{.sourceDbId = Uuid{23},
+                 .sourceKind = bsgalone::core::EntityKind::BULLET,
+                 .targetDbId = Uuid{36},
+                 .targetKind = bsgalone::core::EntityKind::OUTPOST},
+                {.sourceDbId = Uuid{47},
+                 .sourceKind = bsgalone::core::EntityKind::SHIP,
+                 .targetDbId = Uuid{14},
+                 .targetKind = bsgalone::core::EntityKind::PLAYER}};
 
   TargetListMessage expected(Uuid{123}, targetsData);
   expected.setClientId(Uuid{78});
 
   targetsData = {{.sourceDbId = Uuid{174},
-                  .sourceKind = EntityKind::PLAYER,
+                  .sourceKind = bsgalone::core::EntityKind::PLAYER,
                   .targetDbId = Uuid{98},
-                  .targetKind = EntityKind::ASTEROID}};
+                  .targetKind = bsgalone::core::EntityKind::ASTEROID}};
   TargetListMessage actual(Uuid{745}, targetsData);
   serializeAndDeserializeMessage(expected, actual);
   assertMessagesAreEqual(actual, expected);
@@ -74,19 +76,19 @@ TEST(Unit_Bsgo_Serialization_TargetListMessage, WithClientId)
 
 TEST(Unit_Bsgo_Serialization_TargetListMessage, Clone)
 {
-  const std::vector<TargetData> targetsData{
+  const std::vector<bsgalone::core::Target> targetsData{
     {.sourceDbId = Uuid{85},
-     .sourceKind = EntityKind::PLAYER,
+     .sourceKind = bsgalone::core::EntityKind::PLAYER,
      .targetDbId = Uuid{214},
-     .targetKind = EntityKind::BULLET},
+     .targetKind = bsgalone::core::EntityKind::BULLET},
     {.sourceDbId = Uuid{457},
-     .sourceKind = EntityKind::OUTPOST,
+     .sourceKind = bsgalone::core::EntityKind::OUTPOST,
      .targetDbId = Uuid{1045},
-     .targetKind = EntityKind::ASTEROID},
+     .targetKind = bsgalone::core::EntityKind::ASTEROID},
     {.sourceDbId = Uuid{564},
-     .sourceKind = EntityKind::SHIP,
+     .sourceKind = bsgalone::core::EntityKind::SHIP,
      .targetDbId = Uuid{984},
-     .targetKind = EntityKind::OUTPOST},
+     .targetKind = bsgalone::core::EntityKind::OUTPOST},
   };
 
   const TargetListMessage expected(Uuid{4572}, targetsData);

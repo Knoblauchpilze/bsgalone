@@ -10,7 +10,7 @@ TargetMessage::TargetMessage()
   : NetworkMessage(bsgalone::core::MessageType::TARGET)
 {}
 
-TargetMessage::TargetMessage(TargetData data, const Eigen::Vector3f &position)
+TargetMessage::TargetMessage(bsgalone::core::Target data, const Eigen::Vector3f &position)
   : NetworkMessage(bsgalone::core::MessageType::TARGET)
   , m_data(std::move(data))
   , m_position(position)
@@ -21,7 +21,7 @@ auto TargetMessage::getSourceDbId() const -> Uuid
   return m_data.sourceDbId;
 }
 
-auto TargetMessage::getSourceKind() const -> EntityKind
+auto TargetMessage::getSourceKind() const -> bsgalone::core::EntityKind
 {
   return m_data.sourceKind;
 }
@@ -31,7 +31,7 @@ auto TargetMessage::tryGetTargetDbId() const -> std::optional<Uuid>
   return m_data.targetDbId;
 }
 
-auto TargetMessage::tryGetTargetKind() const -> std::optional<EntityKind>
+auto TargetMessage::tryGetTargetKind() const -> std::optional<bsgalone::core::EntityKind>
 {
   return m_data.targetKind;
 }
