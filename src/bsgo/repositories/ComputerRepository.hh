@@ -21,7 +21,7 @@ struct Computer
   chrono::TickDuration reloadTime{};
 
   std::optional<chrono::TickDuration> duration{};
-  std::optional<std::unordered_set<EntityKind>> allowedTargets{};
+  std::optional<std::unordered_set<bsgalone::core::EntityKind>> allowedTargets{};
   std::optional<float> damageModifier{};
 };
 

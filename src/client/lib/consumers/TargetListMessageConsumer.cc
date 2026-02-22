@@ -24,23 +24,24 @@ void TargetListMessageConsumer::onMessageReceivedInternal(const bsgalone::core::
 namespace {
 auto tryGetEntityId(const bsgo::DatabaseEntityMapper &entityMapper,
                     const bsgo::Uuid dbId,
-                    const bsgo::EntityKind kind) -> std::optional<bsgo::Uuid>
+                    const bsgalone::core::EntityKind kind) -> std::optional<bsgo::Uuid>
 {
   switch (kind)
   {
-    case bsgo::EntityKind::SHIP:
+    case bsgalone::core::EntityKind::SHIP:
       return entityMapper.tryGetShipEntityId(dbId);
-    case bsgo::EntityKind::OUTPOST:
+    case bsgalone::core::EntityKind::OUTPOST:
       return entityMapper.tryGetOutpostEntityId(dbId);
-    case bsgo::EntityKind::ASTEROID:
+    case bsgalone::core::EntityKind::ASTEROID:
       return entityMapper.tryGetAsteroidEntityId(dbId);
     default:
-      throw std::invalid_argument("Failed to get entity with unsupported kind " + bsgo::str(kind));
+      throw std::invalid_argument("Failed to get entity with unsupported kind "
+                                  + bsgalone::core::str(kind));
   }
 }
 } // namespace
 
-void TargetListMessageConsumer::registerTarget(const bsgo::TargetData &data) const
+void TargetListMessageConsumer::registerTarget(const bsgalone::core::Target &data) const
 {
   if (!data.targetDbId || !data.targetKind)
   {

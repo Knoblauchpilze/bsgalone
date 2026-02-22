@@ -171,7 +171,7 @@ void EntityUiHandler::updateDistanceComponent()
 
 void EntityUiHandler::updateDockComponent(const bsgo::Entity &entity)
 {
-  if (bsgo::EntityKind::OUTPOST != entity.kind->kind())
+  if (bsgalone::core::EntityKind::OUTPOST != entity.kind->kind())
   {
     m_menus[DOCK]->setVisible(false);
     return;

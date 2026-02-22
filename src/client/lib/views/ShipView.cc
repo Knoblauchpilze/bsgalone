@@ -2,7 +2,7 @@
 #include "ShipView.hh"
 #include "SlotMessage.hh"
 #include "SystemListMessage.hh"
-#include "TargetMessage.hh"
+#include "TargetPickedMessage.hh"
 
 namespace pge {
 
@@ -38,7 +38,7 @@ auto ShipView::getPlayerShip() const -> bsgo::Entity
   checkPlayerShipEntityIdExists();
 
   const auto ent = m_coordinator->getEntity(*m_playerShipEntityId);
-  if (ent.kind->kind() != bsgo::EntityKind::SHIP)
+  if (ent.kind->kind() != bsgalone::core::EntityKind::SHIP)
   {
     error("Expected " + bsgo::str(*m_playerShipEntityId) + " to have kind ship but got "
           + ent.str());
@@ -105,11 +105,11 @@ auto ShipView::getEntityName(const bsgo::Entity &entity) const -> std::string
 {
   switch (entity.kind->kind())
   {
-    case bsgo::EntityKind::ASTEROID:
+    case bsgalone::core::EntityKind::ASTEROID:
       return "asteroid";
-    case bsgo::EntityKind::OUTPOST:
+    case bsgalone::core::EntityKind::OUTPOST:
       return str(entity.factionComp().faction()) + " outpost";
-    case bsgo::EntityKind::SHIP:
+    case bsgalone::core::EntityKind::SHIP:
       return determineShipName(entity, *m_coordinator);
     default:
       error("Failed to return target name", "Unknown kind " + str(entity.kind->kind()));
@@ -121,7 +121,8 @@ auto ShipView::getEntityName(const bsgo::Entity &entity) const -> std::string
 auto ShipView::getShipsWithin(const bsgo::IBoundingBox &bbox) const -> std::vector<bsgo::Entity>
 {
   const auto predicate = [](const bsgo::Entity &entity) {
-    if (entity.kind->kind() != bsgo::EntityKind::SHIP || !entity.exists<bsgo::StatusComponent>())
+    if (entity.kind->kind() != bsgalone::core::EntityKind::SHIP
+        || !entity.exists<bsgo::StatusComponent>())
     {
       return false;
     }
@@ -206,12 +207,14 @@ void ShipView::tryAcquireTarget(const Eigen::Vector3f &position) const
 {
   const auto playerShip = getPlayerShip();
 
-  bsgo::TargetData data{
+  bsgalone::core::Target data{
     .sourceDbId = playerShip.dbComp().dbId(),
-    .sourceKind = bsgo::EntityKind::SHIP,
+    .sourceKind = bsgalone::core::EntityKind::SHIP,
   };
 
-  const auto maybeTargetId = m_coordinator->getEntityAt(position, {}, bsgo::EntityKind::BULLET);
+  const auto maybeTargetId = m_coordinator->getEntityAt(position,
+                                                        {},
+                                                        bsgalone::core::EntityKind::BULLET);
   if (maybeTargetId)
   {
     const auto target = m_coordinator->getEntity(*maybeTargetId);
@@ -219,7 +222,11 @@ void ShipView::tryAcquireTarget(const Eigen::Vector3f &position) const
     data.targetKind   = target.kind->kind();
   }
 
-  m_outputMessageQueue->pushMessage(std::make_unique<bsgo::TargetMessage>(data, position));
+  const auto playerDbId = m_gameSession->getPlayerDbId();
+  const auto systemDbId = m_gameSession->getSystemDbId();
+
+  m_outputMessageQueue->pushMessage(
+    std::make_unique<bsgalone::core::TargetPickedMessage>(playerDbId, systemDbId, data, position));
 }
 
 void ShipView::setJumpSystem(const bsgo::Uuid system)

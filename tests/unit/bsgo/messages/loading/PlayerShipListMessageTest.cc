@@ -206,9 +206,10 @@ TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, WithComputer)
 {
   std::vector<PlayerComputerData> computers{
     {.dbId = Uuid{1}, .computerDbId = Uuid{14}, .level = 10, .offensive = true, .range = 0.145f},
-    {.dbId           = Uuid{2},
-     .powerCost      = 14.2f,
-     .allowedTargets = std::unordered_set<EntityKind>{EntityKind::PLAYER},
+    {.dbId      = Uuid{2},
+     .powerCost = 14.2f,
+     .allowedTargets
+     = std::unordered_set<bsgalone::core::EntityKind>{bsgalone::core::EntityKind::PLAYER},
      .damageModifier = 1.4587f}};
   std::vector<PlayerShipData> shipsData{{.dbId       = Uuid{65},
                                          .position   = Eigen::Vector3f(1.0f, 2.8f, 3.9f),
@@ -252,9 +253,10 @@ TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, MultipleComplexShips)
          .reloadTime   = chrono::TickDuration::fromInt(23)}},
      .computers
      = {{.dbId = Uuid{1}, .computerDbId = Uuid{14}, .level = 10, .offensive = true, .range = 0.145f},
-        {.dbId           = Uuid{2},
-         .powerCost      = 14.2f,
-         .allowedTargets = std::unordered_set<EntityKind>{EntityKind::PLAYER},
+        {.dbId      = Uuid{2},
+         .powerCost = 14.2f,
+         .allowedTargets
+         = std::unordered_set<bsgalone::core::EntityKind>{bsgalone::core::EntityKind::PLAYER},
          .damageModifier = 1.4587f}}},
     {.dbId             = Uuid{68},
      .shipId           = Uuid{97},
@@ -276,8 +278,9 @@ TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, MultipleComplexShips)
                     .level          = 10,
                     .offensive      = false,
                     .range          = 3.987f,
-                    .allowedTargets = std::unordered_set<EntityKind>{EntityKind::SHIP,
-                                                                     EntityKind::OUTPOST}}}},
+                    .allowedTargets = std::unordered_set<
+                      bsgalone::core::EntityKind>{bsgalone::core::EntityKind::SHIP,
+                                                  bsgalone::core::EntityKind::OUTPOST}}}},
     {.dbId          = Uuid{14},
      .position      = Eigen::Vector3f(-1.0f, -98631.8075f, -37.91f),
      .slots         = {{bsgalone::core::Slot::COMPUTER, 4}},
@@ -290,37 +293,37 @@ TEST(Unit_Bsgo_Serialization_PlayerShipListMessage, MultipleComplexShips)
   expected.setSystemDbId(Uuid{123});
   expected.setClientId(Uuid{78});
 
-  shipsData
-    = {{
-         .dbId     = Uuid{7412},
-         .position = Eigen::Vector3f(1.0f, 2.8f, 3.9f),
-         .jumpTime = chrono::TickDuration(785.174f),
-       },
-       {.dbId = Uuid{7413}, .position = Eigen::Vector3f(98.76f, 54.32f, 1.09f)},
-       {
-         .dbId      = Uuid{7414},
-         .active    = true,
-         .computers = {{.dbId           = Uuid{123456},
-                        .allowedTargets = std::unordered_set<EntityKind>{EntityKind::SHIP,
-                                                                         EntityKind::BULLET}}},
-       },
-       {.dbId      = Uuid{7415},
-        .shipId    = Uuid{134},
-        .slots     = {{bsgalone::core::Slot::COMPUTER, 7}, {bsgalone::core::Slot::WEAPON, 3}},
-        .weapons   = {{.dbId = Uuid{753}, .level = 5},
-                      {.dbId         = Uuid{951},
-                       .slotPosition = Eigen::Vector3f{-21.54f, 65.98f, -54.87f},
-                       .powerCost    = 159.753f}},
-        .computers = {{.computerDbId = 56, .name = "computer 2", .offensive = true},
-                      {.computerDbId = 58, .damageModifier = 963.147f}}},
-       {.dbId             = Uuid{7416},
-        .docked           = true,
-        .jumpTimeInThreat = chrono::TickDuration(5678.098f),
-        .jumpSystem       = Uuid{7932},
-        .aiTargets        = {Eigen::Vector3f(-14.87f, 3628.72f, 19741.1f)},
-        .weapons          = {{.weaponDbId = Uuid{852},
-                              .name       = "my weapon",
-                              .reloadTime = chrono::TickDuration(963.147f)}}}};
+  shipsData = {{
+                 .dbId     = Uuid{7412},
+                 .position = Eigen::Vector3f(1.0f, 2.8f, 3.9f),
+                 .jumpTime = chrono::TickDuration(785.174f),
+               },
+               {.dbId = Uuid{7413}, .position = Eigen::Vector3f(98.76f, 54.32f, 1.09f)},
+               {
+                 .dbId      = Uuid{7414},
+                 .active    = true,
+                 .computers = {{.dbId           = Uuid{123456},
+                                .allowedTargets = std::unordered_set<
+                                  bsgalone::core::EntityKind>{bsgalone::core::EntityKind::SHIP,
+                                                              bsgalone::core::EntityKind::BULLET}}},
+               },
+               {.dbId    = Uuid{7415},
+                .shipId  = Uuid{134},
+                .slots   = {{bsgalone::core::Slot::COMPUTER, 7}, {bsgalone::core::Slot::WEAPON, 3}},
+                .weapons = {{.dbId = Uuid{753}, .level = 5},
+                            {.dbId         = Uuid{951},
+                             .slotPosition = Eigen::Vector3f{-21.54f, 65.98f, -54.87f},
+                             .powerCost    = 159.753f}},
+                .computers = {{.computerDbId = 56, .name = "computer 2", .offensive = true},
+                              {.computerDbId = 58, .damageModifier = 963.147f}}},
+               {.dbId             = Uuid{7416},
+                .docked           = true,
+                .jumpTimeInThreat = chrono::TickDuration(5678.098f),
+                .jumpSystem       = Uuid{7932},
+                .aiTargets        = {Eigen::Vector3f(-14.87f, 3628.72f, 19741.1f)},
+                .weapons          = {{.weaponDbId = Uuid{852},
+                                      .name       = "my weapon",
+                                      .reloadTime = chrono::TickDuration(963.147f)}}}};
   PlayerShipListMessage actual(shipsData);
   actual.setSystemDbId(Uuid{3331});
   actual.setPlayerDbId(Uuid{745});

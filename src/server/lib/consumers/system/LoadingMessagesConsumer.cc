@@ -429,11 +429,11 @@ void LoadingMessagesConsumer::handleSystemTargetsLoading(const LoadingStartedMes
 
   const auto targets = m_loadingService->getTargetsInSystem(systemDbId);
 
-  std::vector<TargetData> targetsData{};
+  std::vector<bsgalone::core::Target> targetsData{};
   std::transform(targets.begin(),
                  targets.end(),
                  std::back_inserter(targetsData),
-                 [](const TargetProps &props) { return props.toTargetData(); });
+                 [](const TargetProps &props) { return props.toTarget(); });
 
   auto out = std::make_unique<TargetListMessage>(systemDbId, targetsData);
   out->copyClientIdIfDefined(message);

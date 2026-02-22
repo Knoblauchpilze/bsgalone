@@ -4,7 +4,7 @@
 #include "AbstractGameMessageConsumer.hh"
 #include "Coordinator.hh"
 #include "DatabaseEntityMapper.hh"
-#include "TargetData.hh"
+#include "Target.hh"
 
 namespace pge {
 
@@ -22,7 +22,7 @@ class TargetListMessageConsumer : public AbstractGameMessageConsumer
   bsgo::DatabaseEntityMapper &m_entityMapper;
   bsgo::CoordinatorShPtr m_coordinator{};
 
-  void registerTarget(const bsgo::TargetData &data) const;
+  void registerTarget(const bsgalone::core::Target &data) const;
 };
 
 } // namespace pge

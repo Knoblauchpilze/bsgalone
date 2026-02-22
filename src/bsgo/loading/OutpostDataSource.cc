@@ -40,7 +40,7 @@ void OutpostDataSource::registerOutpost(Coordinator &coordinator,
                                         const OutpostData &data,
                                         DatabaseEntityMapper &entityMapper) const
 {
-  const auto outpostEntityId = coordinator.createEntity(EntityKind::OUTPOST);
+  const auto outpostEntityId = coordinator.createEntity(bsgalone::core::EntityKind::OUTPOST);
 
   coordinator.addDbId(outpostEntityId, data.dbId);
   auto box = std::make_unique<CircleBox>(data.position, data.radius);

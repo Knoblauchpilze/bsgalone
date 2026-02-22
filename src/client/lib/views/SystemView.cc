@@ -37,7 +37,7 @@ void SystemView::reset()
 auto SystemView::getAsteroidsWithin(const bsgo::IBoundingBox &bbox) const
   -> std::vector<bsgo::Entity>
 {
-  const auto uuids = m_coordinator->getEntitiesWithin(bbox, {bsgo::EntityKind::ASTEROID});
+  const auto uuids = m_coordinator->getEntitiesWithin(bbox, {bsgalone::core::EntityKind::ASTEROID});
 
   std::vector<bsgo::Entity> out;
   for (const auto &uuid : uuids)
@@ -51,7 +51,7 @@ auto SystemView::getAsteroidsWithin(const bsgo::IBoundingBox &bbox) const
 auto SystemView::getOutpostsWithin(const bsgo::IBoundingBox &bbox) const
   -> std::vector<bsgo::Entity>
 {
-  const auto uuids = m_coordinator->getEntitiesWithin(bbox, {bsgo::EntityKind::OUTPOST});
+  const auto uuids = m_coordinator->getEntitiesWithin(bbox, {bsgalone::core::EntityKind::OUTPOST});
 
   std::vector<bsgo::Entity> out;
   for (const auto &uuid : uuids)
@@ -64,7 +64,7 @@ auto SystemView::getOutpostsWithin(const bsgo::IBoundingBox &bbox) const
 
 auto SystemView::getBulletsWithin(const bsgo::IBoundingBox &bbox) const -> std::vector<bsgo::Entity>
 {
-  const auto uuids = m_coordinator->getEntitiesWithin(bbox, {bsgo::EntityKind::BULLET});
+  const auto uuids = m_coordinator->getEntitiesWithin(bbox, {bsgalone::core::EntityKind::BULLET});
 
   std::vector<bsgo::Entity> out;
   for (const auto &uuid : uuids)

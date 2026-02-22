@@ -47,7 +47,7 @@ void ShipDataSource::registerShip(Coordinator &coordinator,
     return;
   }
 
-  const auto shipEntityId = coordinator.createEntity(EntityKind::SHIP);
+  const auto shipEntityId = coordinator.createEntity(bsgalone::core::EntityKind::SHIP);
 
   coordinator.addDbId(shipEntityId, data.dbId);
   auto box = std::make_unique<CircleBox>(data.position, data.radius);

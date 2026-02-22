@@ -48,7 +48,8 @@ TEST(Unit_Bsgo_Serialization_ComputerListMessage, WithClientId)
     {.dbId           = 14,
      .powerCost      = 14.56f,
      .reloadTime     = chrono::TickDuration::fromInt(26),
-     .allowedTargets = std::unordered_set<EntityKind>{EntityKind::OUTPOST}}};
+     .allowedTargets = std::unordered_set<bsgalone::core::EntityKind>{
+       bsgalone::core::EntityKind::OUTPOST}}};
 
   ComputerListMessage expected(computersData);
   expected.setClientId(Uuid{78});
@@ -60,13 +61,14 @@ TEST(Unit_Bsgo_Serialization_ComputerListMessage, WithClientId)
 
 TEST(Unit_Bsgo_Serialization_ComputerListMessage, Clone)
 {
-  const std::vector<ComputerData>
-    computersData{{.dbId           = 1908,
-                   .offensive      = true,
-                   .allowedTargets = std::unordered_set<EntityKind>{EntityKind::ASTEROID}},
-                  {.name       = "beefy computer",
-                   .powerCost  = -3.9878f,
-                   .reloadTime = chrono::TickDuration::fromInt(15001)}};
+  const std::vector<ComputerData> computersData{
+    {.dbId      = 1908,
+     .offensive = true,
+     .allowedTargets
+     = std::unordered_set<bsgalone::core::EntityKind>{bsgalone::core::EntityKind::ASTEROID}},
+    {.name       = "beefy computer",
+     .powerCost  = -3.9878f,
+     .reloadTime = chrono::TickDuration::fromInt(15001)}};
 
   const ComputerListMessage expected(computersData);
 

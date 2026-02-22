@@ -214,12 +214,14 @@ TEST(Unit_Bsgo_Serialization_PlayerShipData, WithComputers)
                        .maxPowerPoints = 100.0f,
                        .playerDbId     = Uuid{6547}};
   input.computers.push_back({
-    .dbId           = Uuid{5001},
-    .computerDbId   = Uuid{5002},
-    .level          = 3,
-    .offensive      = false,
-    .range          = 10.0f,
-    .allowedTargets = std::unordered_set<EntityKind>{EntityKind::SHIP, EntityKind::BULLET},
+    .dbId         = Uuid{5001},
+    .computerDbId = Uuid{5002},
+    .level        = 3,
+    .offensive    = false,
+    .range        = 10.0f,
+    .allowedTargets
+    = std::unordered_set<bsgalone::core::EntityKind>{bsgalone::core::EntityKind::SHIP,
+                                                     bsgalone::core::EntityKind::BULLET},
   });
 
   PlayerShipData output{.dbId = Uuid{14}, .faction = Faction::CYLON, .status = Status::JUMP};

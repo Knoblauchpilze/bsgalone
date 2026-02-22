@@ -56,9 +56,10 @@ TEST(Unit_Bsgo_Serialization_PlayerComputerListMessage, WithClientId)
 TEST(Unit_Bsgo_Serialization_PlayerComputerListMessage, Clone)
 {
   const std::vector<PlayerComputerData> computersData{
-    {.computerDbId   = 1908,
-     .level          = 12,
-     .allowedTargets = std::unordered_set<EntityKind>{EntityKind::ASTEROID}},
+    {.computerDbId = 1908,
+     .level        = 12,
+     .allowedTargets
+     = std::unordered_set<bsgalone::core::EntityKind>{bsgalone::core::EntityKind::ASTEROID}},
     {.offensive = true, .powerCost = -3.9878f, .reloadTime = chrono::TickDuration(15001.2147f)}};
 
   const PlayerComputerListMessage expected(computersData);

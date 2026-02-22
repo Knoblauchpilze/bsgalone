@@ -32,10 +32,10 @@ void EntityRemovedMessageConsumer::onMessageReceived(const bsgalone::core::IMess
 
   switch (removed.getEntityKind())
   {
-    case EntityKind::SHIP:
+    case bsgalone::core::EntityKind::SHIP:
       handleShipEntityRemoved(removed.getEntityDbId(), removed.isDead());
       return;
-    case EntityKind::ASTEROID:
+    case bsgalone::core::EntityKind::ASTEROID:
       handleAsteroidEntityRemoved(removed.getEntityDbId(), removed.isDead());
       return;
     default:
@@ -63,8 +63,10 @@ void EntityRemovedMessageConsumer::handleShipEntityRemoved(const Uuid shipDbId,
   }
 
   const auto &queue = *maybeQueue;
-  queue->pushMessage(
-    std::make_unique<EntityRemovedMessage>(shipDbId, EntityKind::SHIP, dead, *maybeSystemDbId));
+  queue->pushMessage(std::make_unique<EntityRemovedMessage>(shipDbId,
+                                                            bsgalone::core::EntityKind::SHIP,
+                                                            dead,
+                                                            *maybeSystemDbId));
 }
 
 void EntityRemovedMessageConsumer::handleAsteroidEntityRemoved(const Uuid asteroidDbId,
@@ -88,7 +90,7 @@ void EntityRemovedMessageConsumer::handleAsteroidEntityRemoved(const Uuid astero
 
   const auto &processor = *maybeProcessor;
   processor->pushMessage(std::make_unique<EntityRemovedMessage>(asteroidDbId,
-                                                                EntityKind::ASTEROID,
+                                                                bsgalone::core::EntityKind::ASTEROID,
                                                                 dead,
                                                                 *maybeSystemDbId));
 }

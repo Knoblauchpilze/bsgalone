@@ -9,7 +9,7 @@ TargetListMessage::TargetListMessage()
 {}
 
 TargetListMessage::TargetListMessage(const Uuid systemDbId,
-                                     const std::vector<TargetData> &targetsData)
+                                     const std::vector<bsgalone::core::Target> &targetsData)
   : NetworkMessage(bsgalone::core::MessageType::TARGET_LIST)
   , m_systemDbId(systemDbId)
   , m_targetsData(targetsData)
@@ -20,7 +20,7 @@ auto TargetListMessage::getSystemDbId() const -> Uuid
   return m_systemDbId;
 }
 
-auto TargetListMessage::getTargetsData() const -> const std::vector<TargetData> &
+auto TargetListMessage::getTargetsData() const -> const std::vector<bsgalone::core::Target> &
 {
   return m_targetsData;
 }

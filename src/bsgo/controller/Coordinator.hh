@@ -26,7 +26,7 @@ class Coordinator : public core::CoreObject
 
   void clear();
 
-  auto createEntity(const EntityKind &kind) -> Uuid;
+  auto createEntity(const bsgalone::core::EntityKind &kind) -> Uuid;
 
   void addTransform(const Uuid ent, IBoundingBoxPtr bbox);
   void addVelocity(const Uuid ent, const VelocityData &data);
@@ -71,8 +71,9 @@ class Coordinator : public core::CoreObject
   /// @return - the identifier of the closest entity intersecting the position, matching
   /// the filter and not in the exclusion list, an empty identifier otherwise.
   auto getEntityAt(const Eigen::Vector3f &pos,
-                   const std::optional<EntityKind> &filter,
-                   const std::optional<EntityKind> &excluding) const -> std::optional<Uuid>;
+                   const std::optional<bsgalone::core::EntityKind> &filter,
+                   const std::optional<bsgalone::core::EntityKind> &excluding) const
+    -> std::optional<Uuid>;
 
   /// @brief - Returns the list of entityes within the bounding box provided as input.
   /// In case no entity fits within the bounding box, an empty list is returned.
@@ -81,7 +82,8 @@ class Coordinator : public core::CoreObject
   /// @return - a list of identifiers representing all entities within the bounding box
   /// and filter.
   auto getEntitiesWithin(const IBoundingBox &bbox,
-                         const std::optional<EntityKind> &filter = {}) const -> std::vector<Uuid>;
+                         const std::optional<bsgalone::core::EntityKind> &filter = {}) const
+    -> std::vector<Uuid>;
 
   auto getEntitiesSatistying(const EntityPredicate &predicate) const -> std::vector<Entity>;
   auto getEntitiesWithinSatistying(const IBoundingBox &bbox, const EntityPredicate &predicate) const
@@ -96,7 +98,7 @@ class Coordinator : public core::CoreObject
 
   SystemsPtr m_systems{};
 
-  bool hasExpectedKind(const Uuid ent, const std::optional<EntityKind> &kind) const;
+  bool hasExpectedKind(const Uuid ent, const std::optional<bsgalone::core::EntityKind> &kind) const;
 
   void checkEntityExist(const Uuid ent, const std::string &componentName) const;
   template<typename ContainerType>
