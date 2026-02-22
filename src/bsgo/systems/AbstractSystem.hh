@@ -29,7 +29,8 @@ class AbstractSystem : public ISystem
 
   virtual void updateEntity(Entity &entity,
                             Coordinator &coordinator,
-                            const chrono::TickData &data) const = 0;
+                            const chrono::TickData &data) const
+    = 0;
 
   private:
   SystemType m_systemType{};

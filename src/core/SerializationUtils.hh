@@ -44,19 +44,17 @@ bool deserialize(std::istream &in, std::unordered_set<T> &s);
 /// https://cplusplus.com/forum/general/285613/
 /// https://en.cppreference.com/w/cpp/language/constraints.html
 template<typename T>
-concept serializable = requires(T t, std::ostream &out)
-{
+concept serializable = requires(T t, std::ostream &out) {
   {
     t.serialize(out)
-    } -> std::convertible_to<std::ostream &>;
+  } -> std::convertible_to<std::ostream &>;
 };
 
 template<typename T>
-concept deserializable = requires(T t, std::istream &in)
-{
+concept deserializable = requires(T t, std::istream &in) {
   {
     t.deserialize(in)
-    } -> std::convertible_to<bool>;
+  } -> std::convertible_to<bool>;
 };
 
 template<serializable T>

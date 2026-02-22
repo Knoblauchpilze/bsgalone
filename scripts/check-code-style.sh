@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# Relies on clang-format 16
+# https://askubuntu.com/questions/1473403/how-to-install-clang-16-on-22-04-lts
+
+if [ $# -lt 1 ]; then
+  echo "Usage: $0 folder [verbose]"
+  exit 1
+fi
+
+SOURCE_FOLDER="$1"
+VERBOSE="false"
+
+if [ $# -ge 2 ]; then
+  VERBOSE="$2"
+fi
+
+SOURCE_EXTENSION="cc"
+HEADER_EXTENSION="hh"
+
+ALL_FILES=$(find "${SOURCE_FOLDER}" -iname "*.${HEADER_EXTENSION}" -o -iname "*.${SOURCE_EXTENSION}")
+
+ERRORS_FOUND="no"
+
+for FILE in ${ALL_FILES}; do
+  clang-format-16 "${FILE}" > "${FILE}.clang-format"
+  WRONG_LINES=$(diff "${FILE}" "${FILE}.clang-format" | wc -l)
+
+  if [ ${WRONG_LINES} -gt 0 ]; then
+    ERRORS_FOUND="yes"
+    echo "Detected formatting issues in ${FILE}"
+    if [ "${VERBOSE}" == "true" ]; then
+      diff "${FILE}" "${FILE}.clang-format"
+    fi
+  fi
+
+  rm "${FILE}.clang-format"
+done
+
+if [[ "${ERRORS_FOUND}" == "no" ]]; then
+  echo "No violations found"
+else
+  echo "ERROR: Coding style issues found"
+  echo "Please run:"
+  echo "find ${SOURCE_FOLDER} -iname '*.${HEADER_EXTENSION}' -o -iname '*.${SOURCE_EXTENSION}' | xargs clang-format -i"
+  exit 1
+fi
