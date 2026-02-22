@@ -140,10 +140,10 @@ void PlayerComputerRepository::fetchAllowedTargets(const Uuid computer, PlayerCo
   };
   const auto rows = m_connection->executeQuery(query);
 
-  std::unordered_set<EntityKind> targets;
+  std::unordered_set<bsgalone::core::EntityKind> targets;
   for (const auto record : rows)
   {
-    targets.emplace(fromDbEntityKind(record[0].as<std::string>()));
+    targets.emplace(bsgalone::core::fromDbEntityKind(record[0].as<std::string>()));
   }
 
   out.allowedTargets = {targets};

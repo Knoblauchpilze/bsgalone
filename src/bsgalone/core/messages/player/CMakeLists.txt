@@ -11,5 +11,6 @@ target_sources (game_core_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/PurchaseMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ShipSelectedMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SlotMessage.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/TargetPickedMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/VelocityMessage.cc
 	)

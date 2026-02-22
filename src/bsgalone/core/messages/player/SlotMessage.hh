@@ -27,8 +27,8 @@ class SlotMessage : public AbstractPlayerMessage
 
   auto clone() const -> IMessagePtr override;
 
-  /// @brief - Tries to read a velocity message from the input stream. If
-  /// it succeeds, a valid velocity message will be returned, otherwise
+  /// @brief - Tries to read a slot message from the input stream. If
+  /// it succeeds, a valid slot message will be returned, otherwise
   /// an empty optional.
   /// The stream will **not be reset** in case the reading fails.
   /// @param in - the stream to read from

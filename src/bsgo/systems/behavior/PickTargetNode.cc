@@ -14,7 +14,7 @@ constexpr auto ENEMY_DETECTION_RANGE = 15.0f;
 
 bool isEntityTargetable(const Entity &entity, const Faction sourceFaction)
 {
-  if (EntityKind::SHIP != entity.kind->kind())
+  if (bsgalone::core::EntityKind::SHIP != entity.kind->kind())
   {
     return false;
   }

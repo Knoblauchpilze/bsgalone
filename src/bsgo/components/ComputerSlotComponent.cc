@@ -20,7 +20,8 @@ auto ComputerSlotComponent::duration() const -> std::optional<chrono::TickDurati
   return m_duration;
 }
 
-auto ComputerSlotComponent::allowedTargets() const -> std::optional<std::unordered_set<EntityKind>>
+auto ComputerSlotComponent::allowedTargets() const
+  -> std::optional<std::unordered_set<bsgalone::core::EntityKind>>
 {
   return m_allowedTargets;
 }

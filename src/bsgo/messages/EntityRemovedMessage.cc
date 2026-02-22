@@ -9,7 +9,7 @@ EntityRemovedMessage::EntityRemovedMessage()
 {}
 
 EntityRemovedMessage::EntityRemovedMessage(const Uuid entityDbId,
-                                           const EntityKind entityKind,
+                                           const bsgalone::core::EntityKind entityKind,
                                            const bool dead)
   : NetworkMessage(bsgalone::core::MessageType::ENTITY_REMOVED)
   , m_entityDbId(entityDbId)
@@ -18,7 +18,7 @@ EntityRemovedMessage::EntityRemovedMessage(const Uuid entityDbId,
 {}
 
 EntityRemovedMessage::EntityRemovedMessage(const Uuid entityDbId,
-                                           const EntityKind entityKind,
+                                           const bsgalone::core::EntityKind entityKind,
                                            const bool dead,
                                            const Uuid systemDbId)
   : NetworkMessage(bsgalone::core::MessageType::ENTITY_REMOVED)
@@ -33,7 +33,7 @@ auto EntityRemovedMessage::getEntityDbId() const -> Uuid
   return m_entityDbId;
 }
 
-auto EntityRemovedMessage::getEntityKind() const -> EntityKind
+auto EntityRemovedMessage::getEntityKind() const -> bsgalone::core::EntityKind
 {
   return m_entityKind;
 }

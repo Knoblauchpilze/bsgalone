@@ -59,7 +59,7 @@ void Coordinator::clear()
   m_components.clear();
 }
 
-auto Coordinator::createEntity(const EntityKind &kind) -> Uuid
+auto Coordinator::createEntity(const bsgalone::core::EntityKind &kind) -> Uuid
 {
   auto ent = m_nextEntity;
   ++m_nextEntity;
@@ -251,7 +251,7 @@ auto Coordinator::getEntity(const Uuid ent) const -> Entity
   if (!maybeKind)
   {
     // The entity is probably dead, create a default component.
-    maybeKind = std::make_shared<KindComponent>(EntityKind::NONE);
+    maybeKind = std::make_shared<KindComponent>(bsgalone::core::EntityKind::NONE);
   }
   out.kind = *maybeKind;
 
@@ -318,8 +318,8 @@ void Coordinator::deleteEntity(const Uuid ent)
 }
 
 auto Coordinator::getEntityAt(const Eigen::Vector3f &pos,
-                              const std::optional<EntityKind> &filter,
-                              const std::optional<EntityKind> &excluding) const
+                              const std::optional<bsgalone::core::EntityKind> &filter,
+                              const std::optional<bsgalone::core::EntityKind> &excluding) const
   -> std::optional<Uuid>
 {
   std::optional<Uuid> out;
@@ -348,7 +348,7 @@ auto Coordinator::getEntityAt(const Eigen::Vector3f &pos,
 }
 
 auto Coordinator::getEntitiesWithin(const IBoundingBox &bbox,
-                                    const std::optional<EntityKind> &filter) const
+                                    const std::optional<bsgalone::core::EntityKind> &filter) const
   -> std::vector<Uuid>
 {
   std::vector<Uuid> out;
@@ -408,7 +408,8 @@ void Coordinator::update(const chrono::TickData &data)
   cleanUpDeadEntities();
 }
 
-bool Coordinator::hasExpectedKind(const Uuid ent, const std::optional<EntityKind> &kind) const
+bool Coordinator::hasExpectedKind(const Uuid ent,
+                                  const std::optional<bsgalone::core::EntityKind> &kind) const
 {
   if (!kind)
   {

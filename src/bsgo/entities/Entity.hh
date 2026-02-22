@@ -7,7 +7,6 @@
 #include "DbComponent.hh"
 #include "DbSyncComponent.hh"
 #include "EffectComponent.hh"
-#include "EntityKind.hh"
 #include "FactionComponent.hh"
 #include "HealthComponent.hh"
 #include "KindComponent.hh"

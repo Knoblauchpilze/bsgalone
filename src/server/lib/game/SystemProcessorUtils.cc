@@ -4,16 +4,16 @@
 namespace bsgo {
 
 auto tryFindSystemDbIdFromEntity(const Uuid dbId,
-                                 const EntityKind entityKind,
+                                 const bsgalone::core::EntityKind entityKind,
                                  const SystemService &service) -> std::optional<Uuid>
 {
   switch (entityKind)
   {
-    case EntityKind::ASTEROID:
+    case bsgalone::core::EntityKind::ASTEROID:
       return service.getSystemDbIdForAsteroid(dbId);
-    case EntityKind::SHIP:
+    case bsgalone::core::EntityKind::SHIP:
       return service.tryGetSystemDbIdForShip(dbId);
-    case EntityKind::OUTPOST:
+    case bsgalone::core::EntityKind::OUTPOST:
       return service.getSystemDbIdForOutpost(dbId);
     default:
       throw std::invalid_argument("Unsupported entity kind for system lookup, got kind "

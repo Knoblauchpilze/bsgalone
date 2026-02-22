@@ -62,7 +62,7 @@ bool PlayerComputerData::deserialize(std::istream &in)
 
     for (std::size_t id = 0u; id < count; ++id)
     {
-      EntityKind target;
+      bsgalone::core::EntityKind target;
 
       ok &= core::deserialize(in, target);
 

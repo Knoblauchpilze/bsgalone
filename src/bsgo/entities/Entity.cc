@@ -50,7 +50,7 @@ auto safeAccess(const std::optional<std::shared_ptr<Component>> &comp,
 
 bool Entity::valid() const
 {
-  return EntityKind::NONE != kind->kind();
+  return bsgalone::core::EntityKind::NONE != kind->kind();
 }
 
 auto Entity::str() const noexcept -> std::string
@@ -59,7 +59,7 @@ auto Entity::str() const noexcept -> std::string
 
   out += std::to_string(uuid);
   out += ",";
-  out += bsgo::str(kind->kind());
+  out += bsgalone::core::str(kind->kind());
 
   if (faction)
   {

@@ -23,7 +23,7 @@ class VelocityMessage : public AbstractPlayerMessage
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
 
-  auto clone() const -> bsgalone::core::IMessagePtr override;
+  auto clone() const -> IMessagePtr override;
 
   /// @brief - Tries to read a velocity message from the input stream. If
   /// it succeeds, a valid velocity message will be returned, otherwise

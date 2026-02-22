@@ -30,17 +30,17 @@ class ShipService : public AbstractService
   struct TargetAcquiringData
   {
     Uuid sourceDbId{};
-    EntityKind sourceKind{};
+    bsgalone::core::EntityKind sourceKind{};
 
     Eigen::Vector3f position{};
 
     std::optional<Uuid> targetDbIdHint{};
-    std::optional<EntityKind> targetKindHint{};
+    std::optional<bsgalone::core::EntityKind> targetKindHint{};
   };
   struct AcquiringResult
   {
     bool success{false};
-    std::optional<EntityKind> targetKind{};
+    std::optional<bsgalone::core::EntityKind> targetKind{};
     std::optional<Uuid> targetDbId{};
   };
   auto tryAcquireTarget(const TargetAcquiringData &data) const -> AcquiringResult;

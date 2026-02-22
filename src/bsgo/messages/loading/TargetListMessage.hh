@@ -2,7 +2,7 @@
 #pragma once
 
 #include "NetworkMessage.hh"
-#include "TargetData.hh"
+#include "Target.hh"
 #include "Uuid.hh"
 
 namespace bsgo {
@@ -11,11 +11,11 @@ class TargetListMessage : public bsgalone::core::NetworkMessage
 {
   public:
   TargetListMessage();
-  TargetListMessage(const Uuid systemDbId, const std::vector<TargetData> &targetsData);
+  TargetListMessage(const Uuid systemDbId, const std::vector<bsgalone::core::Target> &targetsData);
   ~TargetListMessage() override = default;
 
   auto getSystemDbId() const -> Uuid;
-  auto getTargetsData() const -> const std::vector<TargetData> &;
+  auto getTargetsData() const -> const std::vector<bsgalone::core::Target> &;
 
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
@@ -24,7 +24,7 @@ class TargetListMessage : public bsgalone::core::NetworkMessage
 
   private:
   Uuid m_systemDbId{};
-  std::vector<TargetData> m_targetsData{};
+  std::vector<bsgalone::core::Target> m_targetsData{};
 };
 
 } // namespace bsgo

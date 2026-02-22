@@ -47,17 +47,18 @@ void ShipMessageConsumer::handleComponentSync(const bsgo::ComponentSyncMessage &
   const auto entityKind = message.getEntityKind();
   switch (entityKind)
   {
-    case bsgo::EntityKind::SHIP:
+    case bsgalone::core::EntityKind::SHIP:
       handleShipComponentsSync(message);
       break;
-    case bsgo::EntityKind::ASTEROID:
+    case bsgalone::core::EntityKind::ASTEROID:
       handleAsteroidComponentsSync(message);
       break;
-    case bsgo::EntityKind::OUTPOST:
+    case bsgalone::core::EntityKind::OUTPOST:
       handleOutpostComponentsSync(message);
       break;
     default:
-      error("Unsupported entity kind " + bsgo::str(entityKind) + " in component sync message");
+      error("Unsupported entity kind " + bsgalone::core::str(entityKind)
+            + " in component sync message");
       break;
   }
 }

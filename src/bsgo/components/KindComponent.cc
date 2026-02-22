@@ -3,12 +3,12 @@
 
 namespace bsgo {
 
-KindComponent::KindComponent(const EntityKind &kind)
+KindComponent::KindComponent(const bsgalone::core::EntityKind &kind)
   : AbstractComponent(ComponentType::KIND)
   , m_kind(kind)
 {}
 
-auto KindComponent::kind() const noexcept -> EntityKind
+auto KindComponent::kind() const noexcept -> bsgalone::core::EntityKind
 {
   return m_kind;
 }
