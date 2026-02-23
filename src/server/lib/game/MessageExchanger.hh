@@ -30,8 +30,6 @@ class MessageExchanger
   bsgalone::core::IMessageQueueShPtr m_internalMessageQueue{};
 
   void initialize(const MessageSystemData &messagesData);
-  auto initializeSystemMessageQueue(const MessageSystemData &messagesData)
-    -> bsgalone::core::IMessageQueuePtr;
   void initializeInternalConsumers(const MessageSystemData &messagesData);
 };
 
