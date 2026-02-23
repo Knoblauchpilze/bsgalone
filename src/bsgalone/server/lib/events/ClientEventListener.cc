@@ -6,10 +6,10 @@ namespace bsgalone::server {
 
 ClientEventListener::ClientEventListener(ClientManagerShPtr clientManager,
                                          bsgalone::core::IMessageQueueShPtr inputQueue)
-  : m_manager(std::move(clientManager))
+  : m_clientManager(std::move(clientManager))
   , m_inputQueue(std::move(inputQueue))
 {
-  if (m_manager == nullptr)
+  if (m_clientManager == nullptr)
   {
     throw std::invalid_argument("Expected non null client manager");
   }
@@ -41,14 +41,14 @@ void ClientEventListener::onEventReceived(const net::IEvent &event)
 
 void ClientEventListener::handleClientConnected(const net::ClientConnectedEvent &event)
 {
-  m_manager->registerClient(event.clientId());
+  m_clientManager->registerClient(event.clientId());
 }
 
 void ClientEventListener::handleClientDisconnected(const net::ClientDisconnectedEvent &event)
 {
-  const auto maybePlayerId = m_manager->tryGetPlayerForClient(event.clientId());
+  const auto maybePlayerId = m_clientManager->tryGetPlayerForClient(event.clientId());
 
-  m_manager->removeClient(event.clientId());
+  m_clientManager->removeClient(event.clientId());
 
   if (!maybePlayerId)
   {

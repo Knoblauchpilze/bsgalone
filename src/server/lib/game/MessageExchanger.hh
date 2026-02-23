@@ -1,7 +1,6 @@
 
 #pragma once
 
-#include "ClientManager.hh"
 #include "IEventBus.hh"
 #include "IMessageQueue.hh"
 #include "INetworkServer.hh"
@@ -16,7 +15,6 @@ namespace bsgo {
 
 struct MessageSystemData
 {
-  bsgalone::server::ClientManagerShPtr clientManager{};
   ServerNetworkClientShPtr networkClient{};
   SystemQueueMap systemQueues{};
 };

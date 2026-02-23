@@ -14,10 +14,9 @@
 
 namespace bsgo {
 
-ServerNetworkClient::ServerNetworkClient(bsgalone::server::ClientManagerShPtr clientManager)
-  : m_clientManager(std::move(clientManager))
-  , m_inputQueue(std::make_shared<AsyncMessageQueue>(
-      std::make_unique<SynchronizedMessageQueue>("synchronized-queue-for-input")))
+ServerNetworkClient::ServerNetworkClient()
+  : m_inputQueue(std::make_shared<AsyncMessageQueue>(
+    std::make_unique<SynchronizedMessageQueue>("synchronized-queue-for-input")))
 {}
 
 void ServerNetworkClient::start(const int port)

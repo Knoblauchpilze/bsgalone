@@ -6,11 +6,9 @@
 
 namespace bsgo {
 
-TriageMessageConsumer::TriageMessageConsumer(bsgalone::server::ClientManagerShPtr clientManager,
-                                             SystemQueueMap systemQueues,
+TriageMessageConsumer::TriageMessageConsumer(SystemQueueMap systemQueues,
                                              bsgalone::core::IMessageQueuePtr systemMessageQueue)
   : AbstractMessageConsumer("triage", bsgalone::core::allMessageTypesAsSet())
-  , m_clientManager(std::move(clientManager))
   , m_systemQueues(std::move(systemQueues))
   , m_systemQueue(std::move(systemMessageQueue))
 {
@@ -40,9 +38,6 @@ void TriageMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &me
     case bsgalone::core::MessageType::LOGOUT:
     case bsgalone::core::MessageType::JOIN_SHIP:
       handleSystemMessage(message);
-      break;
-    case bsgalone::core::MessageType::TARGET:
-      triagePlayerMessage(message);
       break;
     default:
       error("Unsupported message type to triage " + str(message.type()));
@@ -87,26 +82,6 @@ void TriageMessageConsumer::handleSystemMessage(const bsgalone::core::IMessage &
   m_systemQueue->pushMessage(message.clone());
 }
 
-void TriageMessageConsumer::triagePlayerMessage(const bsgalone::core::IMessage &message) const
-{
-  if (!message.isA<bsgalone::core::NetworkMessage>())
-  {
-    broadcastMessage(message);
-    return;
-  }
-
-  const auto clientId    = message.as<bsgalone::core::NetworkMessage>().getClientId();
-  const auto maybeSystem = m_clientManager->tryGetSystemForClient(clientId);
-
-  if (!maybeSystem)
-  {
-    error("Failed to process message " + str(message.type()),
-          "Client " + str(clientId) + " does not have a registered system");
-  }
-
-  routeSystemMessage(*maybeSystem, message);
-}
-
 void TriageMessageConsumer::routeSystemMessage(const Uuid systemDbId,
                                                const bsgalone::core::IMessage &message) const
 {
@@ -118,16 +93,6 @@ void TriageMessageConsumer::routeSystemMessage(const Uuid systemDbId,
   }
 
   maybeQueue->second->pushMessage(message.clone());
-}
-
-void TriageMessageConsumer::broadcastMessage(const bsgalone::core::IMessage &message) const
-{
-  warn("Brodcasting message " + str(message.type()));
-
-  for (const auto &[_, queue] : m_systemQueues)
-  {
-    queue->pushMessage(message.clone());
-  }
 }
 
 } // namespace bsgo

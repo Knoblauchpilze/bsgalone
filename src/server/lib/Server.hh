@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "ClientManager.hh"
 #include "CoreObject.hh"
 #include "MessageExchanger.hh"
 #include "ServerNetworkClient.hh"
@@ -27,9 +26,7 @@ class Server : public core::CoreObject
   std::mutex m_runningLocker{};
   std::condition_variable m_runningNotifier{};
 
-  bsgalone::server::ClientManagerShPtr m_clientManager{
-    std::make_shared<bsgalone::server::ClientManager>()};
-  ServerNetworkClientShPtr m_networkClient{};
+  ServerNetworkClientShPtr m_networkClient{std::make_shared<ServerNetworkClient>()};
   MessageExchangerPtr m_messageExchanger{};
 
   std::unordered_map<Uuid, bsgalone::core::IMessageQueueShPtr> m_inputQueues{};
