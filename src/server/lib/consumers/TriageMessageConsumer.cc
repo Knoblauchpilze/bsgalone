@@ -6,17 +6,22 @@
 
 namespace bsgo {
 
-TriageMessageConsumer::TriageMessageConsumer(SystemQueueMap systemQueues,
-                                             bsgalone::core::IMessageQueuePtr systemMessageQueue)
-  : AbstractMessageConsumer("triage", bsgalone::core::allMessageTypesAsSet())
+const std::unordered_set<bsgalone::core::MessageType> RELEVANT_MESSAGES = {
+  bsgalone::core::MessageType::DOCK,
+  bsgalone::core::MessageType::EQUIP,
+  bsgalone::core::MessageType::JUMP_CANCELLED,
+  bsgalone::core::MessageType::JUMP_REQUESTED,
+  bsgalone::core::MessageType::PURCHASE,
+  bsgalone::core::MessageType::SHIP_SELECTED,
+  bsgalone::core::MessageType::SLOT,
+  bsgalone::core::MessageType::TARGET_PICKED,
+  bsgalone::core::MessageType::VELOCITY,
+};
+
+TriageMessageConsumer::TriageMessageConsumer(SystemQueueMap systemQueues)
+  : AbstractMessageConsumer("triage", RELEVANT_MESSAGES)
   , m_systemQueues(std::move(systemQueues))
-  , m_systemQueue(std::move(systemMessageQueue))
-{
-  if (nullptr == m_systemQueue)
-  {
-    throw std::invalid_argument("Expected non null system message queue");
-  }
-}
+{}
 
 void TriageMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
 {
@@ -31,18 +36,7 @@ void TriageMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &me
     return;
   }
 
-  switch (message.type())
-  {
-    case bsgalone::core::MessageType::SIGNUP:
-    case bsgalone::core::MessageType::LOGIN:
-    case bsgalone::core::MessageType::LOGOUT:
-    case bsgalone::core::MessageType::JOIN_SHIP:
-      handleSystemMessage(message);
-      break;
-    default:
-      error("Unsupported message type to triage " + str(message.type()));
-      break;
-  }
+  error("Unsupported message type to triage " + str(message.type()));
 }
 
 bool TriageMessageConsumer::discardMessageWithNoClient(const bsgalone::core::IMessage &message) const
@@ -75,11 +69,6 @@ bool TriageMessageConsumer::tryRoutePlayerOrSystemMessage(
   }
 
   return false;
-}
-
-void TriageMessageConsumer::handleSystemMessage(const bsgalone::core::IMessage &message) const
-{
-  m_systemQueue->pushMessage(message.clone());
 }
 
 void TriageMessageConsumer::routeSystemMessage(const Uuid systemDbId,

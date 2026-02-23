@@ -19,7 +19,7 @@ TEST(Unit_Server_Consumers_TriageMessageConsumer, RoutesPlayerMessageToCorrectSy
   auto system19Queue = std::make_shared<TestMessageQueue>();
   auto system20Queue = std::make_shared<TestMessageQueue>();
   SystemQueueMap systemQueues{{Uuid{19}, system19Queue}, {Uuid{20}, system20Queue}};
-  TriageMessageConsumer consumer(systemQueues, std::make_unique<TestMessageQueue>());
+  TriageMessageConsumer consumer(systemQueues);
 
   TestPlayerMessage message(Uuid{18}, Uuid{19});
   consumer.onMessageReceived(message);
@@ -35,10 +35,8 @@ TEST(Unit_Server_Consumers_TriageMessageConsumer, RoutesPlayerMessageToCorrectSy
 
 TEST(Unit_Server_Consumers_TriageMessageConsumer, ThrowsWhenPlayerMessageReferencesUnknownSystem)
 {
-  TriageMessageConsumer consumer(
-    // Empty map to not have any available system queue
-    SystemQueueMap{},
-    std::make_unique<TestMessageQueue>());
+  // Empty map to not have any available system queue
+  TriageMessageConsumer consumer(SystemQueueMap{});
 
   EXPECT_THAT(
     [&consumer]() {
@@ -53,7 +51,7 @@ TEST(Unit_Server_Consumers_TriageMessageConsumer, RoutesSystemMessageToCorrectSy
   auto system19Queue = std::make_shared<TestMessageQueue>();
   auto system20Queue = std::make_shared<TestMessageQueue>();
   SystemQueueMap systemQueues{{Uuid{19}, system19Queue}, {Uuid{20}, system20Queue}};
-  TriageMessageConsumer consumer(systemQueues, std::make_unique<TestMessageQueue>());
+  TriageMessageConsumer consumer(systemQueues);
 
   TestSystemMessage message(Uuid{19});
   consumer.onMessageReceived(message);
@@ -68,10 +66,8 @@ TEST(Unit_Server_Consumers_TriageMessageConsumer, RoutesSystemMessageToCorrectSy
 
 TEST(Unit_Server_Consumers_TriageMessageConsumer, ThrowsWhenSystemMessageReferencesUnknownSystem)
 {
-  TriageMessageConsumer consumer(
-    // Empty map to not have any available system queue
-    SystemQueueMap{},
-    std::make_unique<TestMessageQueue>());
+  // Empty map to not have any available system queue
+  TriageMessageConsumer consumer(SystemQueueMap{});
 
   EXPECT_THAT(
     [&consumer]() {

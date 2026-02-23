@@ -1,6 +1,7 @@
 
 
 #include "Server.hh"
+#include "SystemMessageConsumerSetup.hh"
 #include "SystemProcessorUtils.hh"
 
 namespace bsgo {
@@ -57,6 +58,8 @@ void Server::initializeMessageSystem()
 {
   const MessageSystemData data{.networkClient = m_networkClient, .systemQueues = m_inputQueues};
   m_messageExchanger = std::make_unique<MessageExchanger>(data);
+
+  createSystemMessageConsumers(*m_networkClient, m_inputQueues, m_networkClient.get());
 
   for (const auto &systemProcessor : m_systemProcessors)
   {
