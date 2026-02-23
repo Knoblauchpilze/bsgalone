@@ -3,14 +3,9 @@
 #include "AiBehaviorSyncMessageConsumer.hh"
 #include "AsyncMessageQueue.hh"
 #include "EntityRemovedMessageConsumer.hh"
-#include "JoinShipMessageConsumer.hh"
 #include "JumpMessageConsumer.hh"
-#include "JumpService.hh"
-#include "LoginMessageConsumer.hh"
-#include "LogoutMessageConsumer.hh"
 #include "LootMessageConsumer.hh"
 #include "RoutingMessageConsumer.hh"
-#include "SignupMessageConsumer.hh"
 #include "SynchronizedMessageQueue.hh"
 #include "TriageMessageConsumer.hh"
 
@@ -36,52 +31,11 @@ auto createInternalMessageQueue() -> bsgalone::core::IMessageQueueShPtr
 
 void MessageExchanger::initialize(const MessageSystemData &messagesData)
 {
-  auto systemMessageQueue = initializeSystemMessageQueue(messagesData);
-  m_internalMessageQueue  = createInternalMessageQueue();
+  m_internalMessageQueue = createInternalMessageQueue();
   initializeInternalConsumers(messagesData);
 
   messagesData.networkClient->addListener(
-    std::make_unique<TriageMessageConsumer>(messagesData.systemQueues,
-                                            std::move(systemMessageQueue)));
-}
-
-namespace {
-auto createSystemMessageQueue() -> bsgalone::core::IMessageQueuePtr
-{
-  auto systemQueue = std::make_unique<SynchronizedMessageQueue>("synchronized-queue-for-system");
-  return std::make_unique<AsyncMessageQueue>(std::move(systemQueue));
-}
-} // namespace
-
-auto MessageExchanger::initializeSystemMessageQueue(const MessageSystemData &messagesData)
-  -> bsgalone::core::IMessageQueuePtr
-{
-  Repositories repositories{};
-
-  auto systemQueue = createSystemMessageQueue();
-
-  auto signupService = std::make_unique<SignupService>(repositories);
-  systemQueue->addListener(
-    std::make_unique<SignupMessageConsumer>(std::move(signupService),
-                                            messagesData.networkClient.get()));
-
-  auto loginService = std::make_unique<LoginService>(repositories);
-  systemQueue->addListener(std::make_unique<LoginMessageConsumer>(std::move(loginService),
-                                                                  messagesData.systemQueues,
-                                                                  messagesData.networkClient.get()));
-
-  auto systemService = std::make_shared<SystemService>(repositories);
-  systemQueue->addListener(
-    std::make_unique<LogoutMessageConsumer>(systemService,
-                                            messagesData.systemQueues,
-                                            messagesData.networkClient.get()));
-
-  auto playerService = std::make_unique<PlayerService>(repositories);
-  systemQueue->addListener(
-    std::make_unique<JoinShipMessageConsumer>(std::move(playerService),
-                                              messagesData.networkClient.get()));
-
-  return systemQueue;
+    std::make_unique<TriageMessageConsumer>(messagesData.systemQueues));
 }
 
 void MessageExchanger::initializeInternalConsumers(const MessageSystemData &messagesData)
