@@ -21,7 +21,7 @@ class ClientEventListener : public net::IEventListener
   void onEventReceived(const net::IEvent &event) override;
 
   private:
-  ClientManagerShPtr m_manager{};
+  ClientManagerShPtr m_clientManager{};
   bsgalone::core::IMessageQueueShPtr m_inputQueue{};
 
   void handleClientConnected(const net::ClientConnectedEvent &event);

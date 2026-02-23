@@ -19,9 +19,7 @@ TEST(Unit_Server_Consumers_TriageMessageConsumer, RoutesPlayerMessageToCorrectSy
   auto system19Queue = std::make_shared<TestMessageQueue>();
   auto system20Queue = std::make_shared<TestMessageQueue>();
   SystemQueueMap systemQueues{{Uuid{19}, system19Queue}, {Uuid{20}, system20Queue}};
-  TriageMessageConsumer consumer(std::make_shared<bsgalone::server::ClientManager>(),
-                                 systemQueues,
-                                 std::make_unique<TestMessageQueue>());
+  TriageMessageConsumer consumer(systemQueues, std::make_unique<TestMessageQueue>());
 
   TestPlayerMessage message(Uuid{18}, Uuid{19});
   consumer.onMessageReceived(message);
@@ -37,10 +35,10 @@ TEST(Unit_Server_Consumers_TriageMessageConsumer, RoutesPlayerMessageToCorrectSy
 
 TEST(Unit_Server_Consumers_TriageMessageConsumer, ThrowsWhenPlayerMessageReferencesUnknownSystem)
 {
-  TriageMessageConsumer consumer(std::make_shared<bsgalone::server::ClientManager>(),
-                                 // Empty map to not have any available system queue
-                                 SystemQueueMap{},
-                                 std::make_unique<TestMessageQueue>());
+  TriageMessageConsumer consumer(
+    // Empty map to not have any available system queue
+    SystemQueueMap{},
+    std::make_unique<TestMessageQueue>());
 
   EXPECT_THAT(
     [&consumer]() {
@@ -55,9 +53,7 @@ TEST(Unit_Server_Consumers_TriageMessageConsumer, RoutesSystemMessageToCorrectSy
   auto system19Queue = std::make_shared<TestMessageQueue>();
   auto system20Queue = std::make_shared<TestMessageQueue>();
   SystemQueueMap systemQueues{{Uuid{19}, system19Queue}, {Uuid{20}, system20Queue}};
-  TriageMessageConsumer consumer(std::make_shared<bsgalone::server::ClientManager>(),
-                                 systemQueues,
-                                 std::make_unique<TestMessageQueue>());
+  TriageMessageConsumer consumer(systemQueues, std::make_unique<TestMessageQueue>());
 
   TestSystemMessage message(Uuid{19});
   consumer.onMessageReceived(message);
@@ -72,10 +68,10 @@ TEST(Unit_Server_Consumers_TriageMessageConsumer, RoutesSystemMessageToCorrectSy
 
 TEST(Unit_Server_Consumers_TriageMessageConsumer, ThrowsWhenSystemMessageReferencesUnknownSystem)
 {
-  TriageMessageConsumer consumer(std::make_shared<bsgalone::server::ClientManager>(),
-                                 // Empty map to not have any available system queue
-                                 SystemQueueMap{},
-                                 std::make_unique<TestMessageQueue>());
+  TriageMessageConsumer consumer(
+    // Empty map to not have any available system queue
+    SystemQueueMap{},
+    std::make_unique<TestMessageQueue>());
 
   EXPECT_THAT(
     [&consumer]() {

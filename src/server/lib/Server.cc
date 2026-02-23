@@ -7,7 +7,6 @@ namespace bsgo {
 
 Server::Server()
   : core::CoreObject("server")
-  , m_networkClient(std::make_shared<ServerNetworkClient>(m_clientManager))
 {
   setService("server");
   initialize();
@@ -56,9 +55,7 @@ void Server::initializeSystems()
 
 void Server::initializeMessageSystem()
 {
-  const MessageSystemData data{.clientManager = m_clientManager,
-                               .networkClient = m_networkClient,
-                               .systemQueues  = m_inputQueues};
+  const MessageSystemData data{.networkClient = m_networkClient, .systemQueues = m_inputQueues};
   m_messageExchanger = std::make_unique<MessageExchanger>(data);
 
   for (const auto &systemProcessor : m_systemProcessors)

@@ -15,7 +15,7 @@ namespace bsgo {
 class ServerNetworkClient : public bsgalone::core::IMessageQueue
 {
   public:
-  ServerNetworkClient(bsgalone::server::ClientManagerShPtr clientManager);
+  ServerNetworkClient();
   ~ServerNetworkClient() = default;
 
   void start(const int port);
@@ -33,7 +33,8 @@ class ServerNetworkClient : public bsgalone::core::IMessageQueue
 
   std::atomic_bool m_started{};
 
-  bsgalone::server::ClientManagerShPtr m_clientManager{};
+  bsgalone::server::ClientManagerShPtr m_clientManager{
+    std::make_shared<bsgalone::server::ClientManager>()};
   bsgalone::core::IMessageQueueShPtr m_inputQueue{};
   bsgalone::core::IMessageQueueShPtr m_outputQueue{};
 

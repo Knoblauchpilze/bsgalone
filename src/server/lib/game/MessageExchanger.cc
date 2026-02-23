@@ -41,8 +41,7 @@ void MessageExchanger::initialize(const MessageSystemData &messagesData)
   initializeInternalConsumers(messagesData);
 
   messagesData.networkClient->addListener(
-    std::make_unique<TriageMessageConsumer>(messagesData.clientManager,
-                                            messagesData.systemQueues,
+    std::make_unique<TriageMessageConsumer>(messagesData.systemQueues,
                                             std::move(systemMessageQueue)));
 }
 
