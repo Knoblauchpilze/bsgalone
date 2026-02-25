@@ -2,6 +2,7 @@
 
 #include "Server.hh"
 #include "SystemMessageConsumerSetup.hh"
+#include "SystemProcessorAdapter.hh"
 #include "SystemProcessorUtils.hh"
 
 namespace bsgo {
@@ -65,6 +66,13 @@ void Server::initializeMessageSystem()
   {
     systemProcessor->connectToQueues(m_messageExchanger->getInternalMessageQueue(),
                                      m_networkClient.get());
+  }
+
+  for (const auto &[systemDbId, systemQueue] : m_inputQueues)
+  {
+    auto adapter = std::make_unique<bsgalone::server::SystemProcessorAdapter>(systemDbId,
+                                                                              systemQueue);
+    m_networkClient->addListener(std::move(adapter));
   }
 }
 

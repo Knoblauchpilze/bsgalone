@@ -7,7 +7,6 @@
 #include "LootMessageConsumer.hh"
 #include "RoutingMessageConsumer.hh"
 #include "SynchronizedMessageQueue.hh"
-#include "TriageMessageConsumer.hh"
 
 namespace bsgo {
 
@@ -33,9 +32,6 @@ void MessageExchanger::initialize(const MessageSystemData &messagesData)
 {
   m_internalMessageQueue = createInternalMessageQueue();
   initializeInternalConsumers(messagesData);
-
-  messagesData.networkClient->addListener(
-    std::make_unique<TriageMessageConsumer>(messagesData.systemQueues));
 }
 
 void MessageExchanger::initializeInternalConsumers(const MessageSystemData &messagesData)

@@ -4,5 +4,5 @@ target_include_directories(unitTests PUBLIC
 	)
 
 target_sources(unitTests PUBLIC
-	${CMAKE_CURRENT_SOURCE_DIR}/TriageMessageConsumerTest.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/SystemProcessorAdapterTest.cc
 	)

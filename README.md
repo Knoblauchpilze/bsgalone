@@ -20,7 +20,7 @@ Multiple players can connect to a ever-running server and compete or band togeth
 
 The goal of this project is to take inspiration from BSGO and copy some of the patterns used in it and also incorporate some original elements when they make sense.
 
-It is also a very good opportunity to actually write a multi-player game which is something we never did before. There are many learnings that will come during the course of the development.
+As a personal project it is also a very good opportunity to get some hands-on experience with multi-player game development: it is a very interesting experience to get a feeling for the variety of problems that come with such an architecture.
 
 ## What works?
 
@@ -173,7 +173,7 @@ apt-get install libasio-dev
 
 You can also download the sources directly from the [official website](https://think-async.com/Asio/) (click on `Downloads`). This gives version `1.30.2` (at the time of writing).
 
-**Note:** we used version `1.28` for the development.
+**Note:** the development process used version `1.28`.
 
 The download process gives a `tar.bz2` file which can be extracted with (change the version as needed) and installed:
 
@@ -255,7 +255,7 @@ Note that this will require you to have a local `g++` version supporting at leas
 
 ### Configuration for CMake
 
-The `cmake` tool extension allows to configure a custom build folder and to set arguments for the configure step. In this project we use conditional targets to build the tests: this is activated (as defined in the [Makefile](Makefile)) by the `ENABLE_TESTS` flag.
+The `cmake` tool extension allows to configure a custom build folder and to set arguments for the configure step. This project defines conditional targets to build the tests: this is activated (as defined in the [Makefile](Makefile)) by the `ENABLE_TESTS` flag.
 
 It is required to instruct the extension to use this flag when configuring the project so that it detects correctly all the target.
 
@@ -401,7 +401,7 @@ There's also a convenience script provided in [scripts/setup_database.sh](script
 
 ## Populating the database
 
-We use `migrate` to manage the database and perform the data migrations. Once the previous step is complete (so the user and the database both exist) one can simply go to the [migrations](database/migrations) folder and run:
+Managing the database and performing data migration is done through a tool called `migrate` (see [prerequisites](#prerequisites)). Once the previous step is complete (so the user and the database both exist) one can simply go to the [migrations](database/migrations) folder and run:
 
 ```bash
 make migrate
@@ -545,11 +545,11 @@ The [client](src/client) folder regroups all the code that is used exclusively b
 
 In a client/server architecture it is necessary to define ways for both applications to communicate with each other through the network. Some changes are just relevant for one client, some are relevant for all players registered in a given system and some elements are relevant for every connected players.
 
-Typically the clients will try to perform some actions which have an impact on the game. In an authoritative server we have to somehow validate these changes before they can be applied.
+Typically the clients will try to perform some actions which have an impact on the game. In an authoritative server changes need to be somehow validated before they can be applied.
 
 ### Transmitting data
 
-Throughout the project we rely on messages. Messages are atomic piece of information that can be interpreted by the server and the client alike. The typical scheme is that the client will send messages to the server and get in return and in an async way one or several messages responding to the initial request.
+The project is messages driven. Messages are atomic piece of information that can be interpreted by the server and the client alike. The typical scheme is that the client will send messages to the server and get in return and in an async way one or several messages responding to the initial request.
 
 The server on the other hand will produce messages on its own (based on what happens in the game loop for example) but also after it validated requests from the clients. Each message will then be sent to connections which might be interested in the change.
 
@@ -569,11 +569,11 @@ When the server is started, it will start listening to incoming connections. Whe
 
 To start the game the client application will present the user with a login/sign up screen: in both cases the idea is to make the client select a username and password and try to log into the game. This will result in a message sent from the client to the server (either [LoginMessage](src/bsgo/messages/LoginMessage.hh) or [SignupMessage](src/bsgo/messages/SignupMessage.hh)) and which can be validated by the server.
 
-On top of the validation the server will also associate the connection (and the client id) with the player id and its current system. This will help determine when a message produced by the server should be transmitted to this client. For example if an entity dies in a system (be it a player or an AI), we need to transmit this information to all clients currently playing in this system. To achieve this, the server has to loop through all the active connections and pick the ones that are associated with a player in the relevant system.
+On top of the validation the server will also associate the connection (and the client id) with the player id and its current system. This will help determine when a message produced by the server should be transmitted to this client. For example if an entity dies in a system (be it a player or an AI), it is needed to transmit this information to all clients currently playing in this system. To achieve this, the server has to loop through all the active connections and pick the ones that are associated with a player in the relevant system.
 
-We provided a mechanism for a player to log out: in this case we send a [LogoutMessage](src/bsgo/messages/LogoutMessage.hh) which will indicate to the server that the corresponding client's connection is no longer associated with the player's id and system: this will help making sure that we stop sending updates for the system to this connection.
+A mechanism is provided for a player to log out: in this case, a [LogoutMessage](src/bsgo/messages/LogoutMessage.hh) is sent which will indicate to the server that the corresponding client's connection is no longer associated with the player's id and system: this will help making sure that updates for the system are not sent to this connection anymore.
 
-In case the connection is lost without graceful termination, we automatically detect this in the server and simulate a logout process by sending a `LogoutMessage` before terminating the connection. This allows to make sure that the player's ship is still sent back to the outpost and that other clients are made aware of the disconnection.
+In case the connection is lost without graceful termination, the server automatically detects it and simulate a logout process by sending a `LogoutMessage` before terminating the connection. This allows to make sure that the player's ship is still sent back to the outpost and that other clients are made aware of the disconnection.
 
 ### Who's right?
 
@@ -581,21 +581,21 @@ There's an asymmetry between how the server and the client applications process 
 
 In such cases, the client will just takes what the server says at face value and make the necessary changes to be up-to-date with what the server indicates. This is not the case for the server: the server always questions what the client applications are sending before making any changes.
 
-Now even if the client should ultimately conform to what the server says, there are nice ways to do it so that it does not degrade too much the game experience of the players. There are a couple of nice resources that we found, the best of which being this article on Gabriel Gambetta's [website](https://www.gabrielgambetta.com/client-server-game-architecture.html). We did not implement any of this until now.
+Now even if the client should ultimately conform to what the server says, there are nice ways to do it so that it does not degrade too much the game experience of the players. There are a couple of nice resources that going more into details, the best of which being this article on Gabriel Gambetta's [website](https://www.gabrielgambetta.com/client-server-game-architecture.html). None of this is implemented yet.
 
 # Server design
 
 ## General idea
 
-Ideally the server should process the events generated by the clients and return an answer to them, in the forms of one or multiple messages. If we designed the data structures right, we should be able to essentially instantiate the same game loop as for the clients and plug in the messages coming from the network into the internal game loop. Those messages will be picked up by the ECS and generate some more messages. In turn, the output messages should be broadcast to the clients that are interested in them.
+Ideally the server should process the events generated by the clients and return an answer to them, in the forms of one or multiple messages. If the data structures are designed correctly, it should be possible to essentially instantiate the same game loop as for the clients and plug in the messages coming from the network into the internal game loop. Those messages will be picked up by the ECS and generate some more messages. In turn, the output messages should be broadcast to the clients that are interested in them.
 
 ## System processing
 
 In the context of this game, the server has to simulate multiple systems which are very similar: there are a bunch of ships (AIs and players) in them, and they can interact with one another.
 
-By its nature, each system is independent: no action taken in one system can have impact on another system. This seems like a very nice simplification as it essentially means that we can easily parallelize and decouple the simulation of each system.
+By its nature, each system is independent: no action taken in one system can have impact on another system. This seems like a very nice simplification because it means that as the simulation of each system is independent of others, it can easily be parallelized.
 
-In order to achieve this, we created a [SystemProcessor](src/server/lib/game/SystemProcessor.hh) class: its role is to regroup all the structures needed to fully simulate what happens in a system and to make it run in its own thread.
+In order to achieve this, the [SystemProcessor](src/server/lib/game/SystemProcessor.hh) class was created: its role is to regroup all the structures needed to fully simulate what happens in a system and to make it run in its own thread.
 
 This class contains:
 
@@ -616,11 +616,11 @@ The messages are processed through a [consumer](#a-note-on-consumers) mechanism:
 
 ## A note on consumers
 
-Messages are usually meant to be processed by some objects responsible to validate them and knowing what effects they might have. A popular approach to handle it is to use a [Publish-Subscribe](https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern) pattern: for each type of message, we have a corresponding consumer which deals with them and handle their consequences. They are registered in the [consumers](src/server/lib/consumers) folder, segregated in their 'kind'.
+Messages are usually meant to be processed by some objects responsible to validate them and knowing what effects they might have. A popular approach to handle it is to use a [Publish-Subscribe](https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern) pattern: for each type of message, there is a corresponding consumer which deals with them and handle their consequences. They are registered in the [consumers](src/server/lib/consumers) folder, segregated in their 'kind'.
 
-Each consumer registers itself to a message queue and indicates its interest in receiving a specific type of messages (or several). When one is received, we can intercept the message and perform the necessary verification before processing it.
+Each consumer registers itself to a message queue and indicates its interest in receiving a specific type of messages (or several). When one is received, it can be processed and the necessary verifications can be performed before processing it.
 
-In the case of a [DockMessage](src/bsgo/messages/DockMessage.hh) for example we can check that the ship concerned by the message is not already docked and that it is close enough to the outpost and that it does not try to dock to an outpost in a different system etc.
+In the case of a [DockMessage](src/bsgo/messages/DockMessage.hh) for example a check is performed to verify that the ship concerned by the message is not already docked and that it is close enough to the outpost and that it does not try to dock to an outpost in a different system etc.
 
 The consumers are usually using a dedicated service to process a message after doing some simple verification related to the messaging framework (for example that all fields are correctly populated). The services are where the business logic lives.
 
@@ -631,8 +631,8 @@ This approach is quite flexible as it allows to easily keep messages which would
 Consumers are separated in the server based on their kind:
 
 - [input](src/server/lib/consumers/input) consumers are responsible to handle user operation such as login or signup: anything that is not part of the game loop
-- [system](src/server/lib/consumers/system) consumers are responsible to handle messages specific to a system. We typically have multiple instances of each consumer in the server, one per system
-- [internal](src/server/lib/consumers/internal) consumers are responsible to handle messages that are generated by the server and need additional processing before being sent out to client applications. A typical example is a jump message: when a client jumps from one system to another we need to handle some changes in the source and the destination system which is handled through an internal message
+- [system](src/server/lib/consumers/system) consumers are responsible to handle messages specific to a system. There are typically multiple instances of each consumer in the server, one per system
+- [internal](src/server/lib/consumers/internal) consumers are responsible to handle messages that are generated by the server and need additional processing before being sent out to client applications. A typical example is a jump message: when a client jumps from one system to another it is needed to handle some changes in the source and the destination system which is handled through an internal message
 
 ## Triaging messages
 
@@ -646,11 +646,11 @@ After several iterations the following design was chosen:
 
 ![diagram](resources/messaging-system.svg)
 
-The main entry point of the server is the `InputMessageQueue`: this sends messages to a triage consumer whose only responsibility is to route messages to a consumer that can process them.
+The main entry point of the server is the `InputMessageQueue`: this queues has a number of listeners registered to it which filter the messages they are interested in for processing. The processing happens in a dedicated consumer. To isolate the network/messaging layer from the game logic, the system processors are protected by an adapter which helps to filter out uninteresting messages and format them in a way that is compatible with the game domain logic.
 
-We have some interconnection between the system message consumers and the system processors: some messages will lead to changes in the systems such as logging out of the game where we need to remove the player ship's entity from its system.
+There are some interconnection between the system message consumers and the system processors: some messages will lead to changes in the systems such as logging out of the game where it is needed to remove the player ship's entity from its system.
 
-We also allow system processors to send internal messages which need to be processed before they can either be sent to the clients or rerouted to be processed by a different system.
+System processors are also allowed to send internal messages which need to be processed before they can either be sent to the clients or rerouted to be processed by a different system.
 
 Finally the [BroadcastMessageListener](src/bsgalone/server/lib/messages/BroadcastMessageListener.hh) is responsible to route the messages produced by the server to the right clients: this can be done by directly checking the client id if available or by checking in which system the messages belong to and broadcasting them to all connected clients.
 
