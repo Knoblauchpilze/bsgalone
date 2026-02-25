@@ -9,6 +9,12 @@ using namespace ::testing;
 
 namespace bsgalone::server {
 
+TEST(Unit_Bsgalone_Server_Consumers_SystemProcessorAdapter, ThrowsWhenInputQueueIsNull)
+{
+  EXPECT_THROW([this]() { SystemProcessorAdapter(bsgo::Uuid{19}, nullptr); }(),
+               std::invalid_argument);
+}
+
 TEST(Unit_Bsgalone_Server_Consumers_SystemProcessorAdapter, ForwardsMessageWhenDirectedToSystem)
 {
   auto queue = std::make_shared<TestMessageQueue>();
