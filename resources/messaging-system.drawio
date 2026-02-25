@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:147.0) Gecko/20100101 Firefox/147.0" version="29.3.8">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:147.0) Gecko/20100101 Firefox/147.0" version="29.5.2">
   <diagram name="Page-1" id="RS5jcFhz8Xbtk4Y77vzj">
     <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -7,27 +7,16 @@
         <mxCell id="ibJAUMSW30bJaouOlocZ-31" edge="1" parent="1" source="ibJAUMSW30bJaouOlocZ-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="ibJAUMSW30bJaouOlocZ-24">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
+        <mxCell id="7xgDBMpAHWdErE4qI85Y-1" edge="1" parent="1" source="ibJAUMSW30bJaouOlocZ-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="ibJAUMSW30bJaouOlocZ-25">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="772" y="60" />
+              <mxPoint x="338" y="60" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
         <mxCell id="ibJAUMSW30bJaouOlocZ-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1ba1e2;fontColor=light-dark(#FFFFFF,#FFFFFF);strokeColor=#006EAF;strokeWidth=3;" value="&lt;div&gt;InputMessageQueue&lt;/div&gt;" vertex="1">
-          <mxGeometry height="40" width="260" x="642" y="-100" as="geometry" />
-        </mxCell>
-        <mxCell id="ibJAUMSW30bJaouOlocZ-33" edge="1" parent="1" source="ibJAUMSW30bJaouOlocZ-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="ibJAUMSW30bJaouOlocZ-23">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="ibJAUMSW30bJaouOlocZ-49" connectable="0" parent="ibJAUMSW30bJaouOlocZ-33" style="edgeLabel;html=1;align=center;verticalAlign=bottom;resizable=0;points=[];fontStyle=1;labelBackgroundColor=default;" value="Yes" vertex="1">
-          <mxGeometry relative="1" x="-0.2966" y="-1" as="geometry">
-            <mxPoint as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="ibJAUMSW30bJaouOlocZ-48" edge="1" parent="1" source="ibJAUMSW30bJaouOlocZ-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="ibJAUMSW30bJaouOlocZ-8">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="ibJAUMSW30bJaouOlocZ-50" connectable="0" parent="ibJAUMSW30bJaouOlocZ-48" style="edgeLabel;html=1;align=left;verticalAlign=middle;resizable=0;points=[];fontStyle=1;textShadow=0;labelBackgroundColor=light-dark(#FFFFFF,#000000);" value="No" vertex="1">
-          <mxGeometry relative="1" x="-0.38" y="1" as="geometry">
-            <mxPoint x="-1" y="19" as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="ibJAUMSW30bJaouOlocZ-3" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=light-dark(#E51400,#E51400);fontColor=#ffffff;strokeColor=#B20000;fontStyle=1" value="Is this a SystemMessage?" vertex="1">
-          <mxGeometry height="90" width="140" x="702.5" y="120" as="geometry" />
+          <mxGeometry height="40" width="260" x="642.5" y="-30" as="geometry" />
         </mxCell>
         <mxCell id="ibJAUMSW30bJaouOlocZ-8" parent="1" style="rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#008a00;fontColor=light-dark(#FFFFFF,#FFFFFF);strokeColor=#005700;" value="SystemProcessor for system 1" vertex="1">
           <mxGeometry height="290" width="315" x="615" y="310" as="geometry" />
@@ -35,17 +24,8 @@
         <mxCell id="ibJAUMSW30bJaouOlocZ-16" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0a30a;fontColor=#000000;strokeColor=#BD7000;strokeWidth=3;verticalAlign=top;" value="Client1" vertex="1">
           <mxGeometry height="70" width="120" x="745.5" y="930" as="geometry" />
         </mxCell>
-        <mxCell id="ibJAUMSW30bJaouOlocZ-34" edge="1" parent="1" source="ibJAUMSW30bJaouOlocZ-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="ibJAUMSW30bJaouOlocZ-25">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="ibJAUMSW30bJaouOlocZ-23" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1ba1e2;fontColor=light-dark(#FFFFFF,#FFFFFF);strokeColor=#006EAF;strokeWidth=3;" value="SystemQueue" vertex="1">
-          <mxGeometry height="40" width="260" x="208" y="270" as="geometry" />
-        </mxCell>
-        <mxCell id="ibJAUMSW30bJaouOlocZ-32" edge="1" parent="1" source="ibJAUMSW30bJaouOlocZ-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="ibJAUMSW30bJaouOlocZ-3">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="ibJAUMSW30bJaouOlocZ-24" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#60a917;fontColor=light-dark(#FFFFFF,#FFFFFF);strokeColor=#2D7600;strokeWidth=3;" value="TriageMessageConsumer" vertex="1">
-          <mxGeometry height="40" width="260" x="642" as="geometry" />
+        <mxCell id="ibJAUMSW30bJaouOlocZ-24" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#60a917;fontColor=light-dark(#FFFFFF,#FFFFFF);strokeColor=#2D7600;strokeWidth=3;verticalAlign=top;" value="SystemProcessorAdapter for system 1" vertex="1">
+          <mxGeometry height="40" width="260" x="642" y="110" as="geometry" />
         </mxCell>
         <mxCell id="ibJAUMSW30bJaouOlocZ-25" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#60a917;fontColor=light-dark(#FFFFFF,#FFFFFF);strokeColor=#2D7600;strokeWidth=3;verticalAlign=top;" value="SystemMessageConsumer1" vertex="1">
           <mxGeometry height="200" width="270" x="203" y="410" as="geometry" />
@@ -172,6 +152,20 @@
         </mxCell>
         <mxCell id="cD9iw5pnWU1XnXtSsHzF-4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#60a917;fontColor=light-dark(#FFFFFF,#FFFFFF);strokeColor=#2D7600;strokeWidth=3;" value="BroadcastMessageListener" vertex="1">
           <mxGeometry height="40" width="170" x="720" y="800" as="geometry" />
+        </mxCell>
+        <mxCell id="7xgDBMpAHWdErE4qI85Y-2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#60a917;fontColor=light-dark(#FFFFFF,#FFFFFF);strokeColor=#2D7600;strokeWidth=3;verticalAlign=top;" value="SystemProcessorAdapter for system 2" vertex="1">
+          <mxGeometry height="40" width="260" x="655" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="7xgDBMpAHWdErE4qI85Y-4" edge="1" parent="1" source="7xgDBMpAHWdErE4qI85Y-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="ibJAUMSW30bJaouOlocZ-8">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="773" y="245" />
+            </Array>
+            <mxPoint x="960" y="190" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7xgDBMpAHWdErE4qI85Y-3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#60a917;fontColor=light-dark(#FFFFFF,#FFFFFF);strokeColor=#2D7600;strokeWidth=3;verticalAlign=top;" value="..." vertex="1">
+          <mxGeometry height="40" width="260" x="670" y="170" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
