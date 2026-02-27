@@ -204,3 +204,15 @@ jobs:
           handle_no_reports_found: true
           files: ./coverage-unit.info,./coverage-integration.info
           token: ${{ secrets.CODECOV_TOKEN }}
+
+  # https://github.com/marketplace/actions/official-sonarqube-scan#3-quick-start-workflow-example-for-sonarqube-cloud
+  sonar-scanner:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v7
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_CLOUD_TOKEN }}
