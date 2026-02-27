@@ -207,6 +207,7 @@ jobs:
 
   # https://github.com/marketplace/actions/official-sonarqube-scan#3-quick-start-workflow-example-for-sonarqube-cloud
   sonar-scanner:
+    if: ${{ github.actor != 'dependabot[bot]' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
