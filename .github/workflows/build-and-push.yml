@@ -7,6 +7,7 @@ on:
     paths:
       - "CMakeLists.txt"
       - "codecov.yml"
+      - "sonar-project.properties"
       - ".github/workflows/build-and-push.yml"
       - "build/**"
       - "src/**"
