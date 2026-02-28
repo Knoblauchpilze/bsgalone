@@ -7,6 +7,21 @@
 using namespace ::testing;
 
 namespace net {
+
+TEST(Unit_Net_Messaging_SynchronizedEventBus, EmptyWhenNoEventAvailable)
+{
+  SynchronizedEventBus bus;
+  EXPECT_TRUE(bus.empty());
+}
+
+TEST(Unit_Net_Messaging_SynchronizedEventBus, NotEmptyWhenAnEventIsAvailable)
+{
+  SynchronizedEventBus bus;
+  bus.pushEvent(std::make_unique<ClientConnectedEvent>(ClientId{3}));
+
+  EXPECT_FALSE(bus.empty());
+}
+
 namespace {
 class DummyEventListener : public IEventListener
 {
@@ -48,20 +63,6 @@ class DummyEventListener : public IEventListener
   std::vector<IEventPtr> m_capturedEvents{};
 };
 } // namespace
-
-TEST(Unit_Net_Messaging_SynchronizedEventBus, EmptyWhenNoEventAvailable)
-{
-  SynchronizedEventBus bus;
-  EXPECT_TRUE(bus.empty());
-}
-
-TEST(Unit_Net_Messaging_SynchronizedEventBus, NotEmptyWhenAnEventIsAvailable)
-{
-  SynchronizedEventBus bus;
-  bus.pushEvent(std::make_unique<ClientConnectedEvent>(ClientId{3}));
-
-  EXPECT_FALSE(bus.empty());
-}
 
 TEST(Unit_Net_Messaging_SynchronizedEventBus, DoesNotCallListenerWhenNoEventIsAvailable)
 {
