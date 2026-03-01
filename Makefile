@@ -116,3 +116,8 @@ ci-cpp-build-image:
 		--tag totocorpsoftwareinc/ci-cpp-build-image:${DOCKER_IMAGE_TAG} \
 		-f build/ci-cpp-build-image/Dockerfile \
 		build/ci-cpp-build-image
+
+# https://stackoverflow.com/questions/28896909/how-to-call-clang-format-over-a-cpp-project-folder
+format:
+	find src/ -iname '*.hh' -o -iname '*.cpp' | xargs clang-format -i
+	find tests/ -iname '*.hh' -o -iname '*.cpp' | xargs clang-format -i

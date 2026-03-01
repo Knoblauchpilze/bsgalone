@@ -31,14 +31,14 @@ bool SynchronizedMessageQueue::empty()
 
 void SynchronizedMessageQueue::processMessages()
 {
-  MessageProcessor processor(getName(),
-                             m_messages,
-                             m_locker,
-                             [this](const bsgalone::core::IMessage &message) {
-                               processMessage(message);
-                             });
+  auto processor = createMessageProcessor(getName(),
+                                          m_messages,
+                                          m_locker,
+                                          [this](const bsgalone::core::IMessage &message) {
+                                            processMessage(message);
+                                          });
 
-  processor.processMessages();
+  processor.processEvents();
 }
 
 void SynchronizedMessageQueue::processMessage(const bsgalone::core::IMessage &message) const

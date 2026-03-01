@@ -38,6 +38,7 @@ add_subdirectory (
 target_link_libraries (game_core_lib PUBLIC
 	bsgalone-interface-library
 	net_lib
+	messaging_lib
 	)
 
 if (${ENABLE_TESTS})

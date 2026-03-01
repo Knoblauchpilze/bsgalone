@@ -16,6 +16,10 @@ add_subdirectory(
 	)
 
 add_subdirectory(
+	${CMAKE_CURRENT_SOURCE_DIR}/messaging
+	)
+
+add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/net
 	)
 
