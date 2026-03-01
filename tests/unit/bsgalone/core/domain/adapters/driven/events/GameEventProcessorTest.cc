@@ -17,7 +17,7 @@ TEST(Unit_Bsgalone_Core_Domain_Adapters_Driven_Events_GameEventProcessor,
   std::atomic_int control{0};
   auto handler = [&control](const IGameEvent & /*event*/) { control.fetch_add(1); };
 
-  GameEventProcessor processor("test", noEvents, locker, handler);
+  auto processor = createGameEventProcessor("test", noEvents, locker, handler);
 
   processor.processEvents();
 
@@ -36,7 +36,7 @@ TEST(Unit_Bsgalone_Core_Domain_Adapters_Driven_Events_GameEventProcessor,
   std::atomic_int control{0};
   auto handler = [&control](const IGameEvent & /*event*/) { control.fetch_add(1); };
 
-  GameEventProcessor processor("test", events, locker, handler);
+  auto processor = createGameEventProcessor("test", events, locker, handler);
 
   processor.processEvents();
 
@@ -58,7 +58,7 @@ TEST(Unit_Bsgalone_Core_Domain_Adapters_Driven_Events_GameEventProcessor,
     EXPECT_EQ(bsgo::Uuid{3}, actual.entityId());
   };
 
-  GameEventProcessor processor("test", events, locker, handler);
+  auto processor = createGameEventProcessor("test", events, locker, handler);
 
   processor.processEvents();
 }
@@ -77,7 +77,7 @@ TEST(Unit_Bsgalone_Core_Domain_Adapters_Driven_Events_GameEventProcessor,
   // Lock the mutex to prevent processing
   locker.lock();
 
-  GameEventProcessor processor("test", events, locker, handler);
+  auto processor = createGameEventProcessor("test", events, locker, handler);
 
   // Trigger the processing of the events in a separate thread so that we
   // can verify that the handler is not called while the thread is locked

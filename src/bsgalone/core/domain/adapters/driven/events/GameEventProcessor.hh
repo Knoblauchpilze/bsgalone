@@ -6,16 +6,11 @@
 
 namespace bsgalone::core {
 
-class GameEventProcessor : public messaging::AbstractEventProcessor<IGameEvent, GameEventType>
-{
-  public:
-  GameEventProcessor(const std::string &onBehalfOfName,
-                     std::deque<IGameEventPtr> &events,
-                     std::mutex &locker,
-                     EventHandler handler);
+using GameEventProcessor = messaging::AbstractEventProcessor<IGameEvent, GameEventType>;
 
-  protected:
-  auto unimportantEventTypes() const -> std::unordered_set<GameEventType> override;
-};
+auto createGameEventProcessor(const std::string &onBehalfOfName,
+                              std::deque<IGameEventPtr> &events,
+                              std::mutex &locker,
+                              GameEventProcessor::EventHandler handler) -> GameEventProcessor;
 
 } // namespace bsgalone::core

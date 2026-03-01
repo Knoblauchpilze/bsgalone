@@ -27,19 +27,16 @@ class AbstractEventProcessor : public core::CoreObject {
   AbstractEventProcessor(const std::string &onBehalfOfName,
                          std::deque<EventPtr> &events,
                          std::mutex &locker,
-                         EventHandler handler);
+                         EventHandler handler,
+                         std::unordered_set<EventType> eventsToFilterForLogging);
 
   void processEvents();
 
-  // clang-format off
-  protected:
-  virtual auto unimportantEventTypes() const->std::unordered_set<EventType> = 0;
-
   private:
-  std::mutex & m_locker;
-  // clang-format on
+  std::mutex &m_locker;
   std::deque<EventPtr> &m_events;
   EventHandler m_handler{};
+  std::unordered_set<EventType> m_loggingFilter{};
 
   auto acquireAndClearEvents() const -> std::deque<EventPtr>;
   void printEventsInfo(const std::deque<EventPtr> &events) const;

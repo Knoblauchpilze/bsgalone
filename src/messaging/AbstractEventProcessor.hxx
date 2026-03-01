@@ -10,11 +10,13 @@ inline AbstractEventProcessor<Event, EventType>::AbstractEventProcessor(
   const std::string &onBehalfOfName,
   std::deque<EventPtr> &events,
   std::mutex &locker,
-  EventHandler handler)
+  EventHandler handler,
+  std::unordered_set<EventType> eventsToFilterForLogging)
   : core::CoreObject(onBehalfOfName)
   , m_locker(locker)
   , m_events(events)
-  , m_handler(handler)
+  , m_handler(std::move(handler))
+  , m_loggingFilter(std::move(eventsToFilterForLogging))
 {
   setService("event");
 }
@@ -67,12 +69,10 @@ inline auto AbstractEventProcessor<Event, EventType>::eventsTypesToString(
 {
   EventsInfo out{.eventsTypes = "{"};
 
-  const auto hiddenEventTypes = this->unimportantEventTypes();
-
   for (const auto &event : events)
   {
     const auto eventType = event->type();
-    if (hiddenEventTypes.contains(eventType))
+    if (m_loggingFilter.contains(eventType))
     {
       ++out.unimportantEventsCount;
       continue;

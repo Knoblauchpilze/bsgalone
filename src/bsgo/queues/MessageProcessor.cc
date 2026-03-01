@@ -3,25 +3,22 @@
 
 namespace bsgo {
 
-MessageProcessor::MessageProcessor(const std::string &onBehalfOfName,
-                                   std::deque<bsgalone::core::IMessagePtr> &messages,
-                                   std::mutex &locker,
-                                   EventHandler handler)
-  : messaging::AbstractEventProcessor<bsgalone::core::IMessage,
-                                      bsgalone::core::MessageType>(onBehalfOfName,
-                                                                   messages,
-                                                                   locker,
-                                                                   std::move(handler))
-{}
+const auto UNIMPORTANT_MESSAGE_TYPES = std::unordered_set<bsgalone::core::MessageType>{
+  bsgalone::core::MessageType::COMPONENT_SYNC,
+  bsgalone::core::MessageType::AI_BEHAVIOR_SYNC,
+  bsgalone::core::MessageType::VELOCITY,
+};
 
-auto MessageProcessor::unimportantEventTypes() const
-  -> std::unordered_set<bsgalone::core::MessageType>
+auto createMessageProcessor(const std::string &onBehalfOfName,
+                            std::deque<bsgalone::core::IMessagePtr> &messages,
+                            std::mutex &locker,
+                            MessageProcessor::EventHandler handler) -> MessageProcessor
 {
-  return std::unordered_set<bsgalone::core::MessageType>{
-    bsgalone::core::MessageType::COMPONENT_SYNC,
-    bsgalone::core::MessageType::AI_BEHAVIOR_SYNC,
-    bsgalone::core::MessageType::VELOCITY,
-  };
+  return MessageProcessor(onBehalfOfName,
+                          messages,
+                          locker,
+                          std::move(handler),
+                          UNIMPORTANT_MESSAGE_TYPES);
 }
 
 } // namespace bsgo

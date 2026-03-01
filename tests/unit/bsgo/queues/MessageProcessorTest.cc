@@ -18,7 +18,7 @@ TEST(Unit_Bsgo_Queues_MessageProcessor, DoesNotCallHandlerWhenNoMessagesAreAvail
   std::atomic_int control{0};
   auto handler = [&control](const bsgalone::core::IMessage & /*message*/) { control.fetch_add(1); };
 
-  MessageProcessor processor("test", noMessages, locker, handler);
+  auto processor = createMessageProcessor("test", noMessages, locker, handler);
 
   processor.processEvents();
 
@@ -40,7 +40,7 @@ TEST(Unit_Bsgo_Queues_MessageProcessor, CallsHandlerForEachAvailableMessage)
   std::atomic_int control{0};
   auto handler = [&control](const bsgalone::core::IMessage & /*message*/) { control.fetch_add(1); };
 
-  MessageProcessor processor("test", messages, locker, handler);
+  auto processor = createMessageProcessor("test", messages, locker, handler);
 
   processor.processEvents();
 
@@ -66,7 +66,7 @@ TEST(Unit_Bsgo_Queues_MessageProcessor, ForwardsAvailableMessageToHandler)
     EXPECT_EQ(bsgalone::core::DockTransition::UNDOCK, actual.getTransition());
   };
 
-  MessageProcessor processor("test", messages, locker, handler);
+  auto processor = createMessageProcessor("test", messages, locker, handler);
 
   processor.processEvents();
 }
@@ -84,7 +84,7 @@ TEST(Unit_Bsgo_Queues_MessageProcessor, AcquiresProvidedLockBeforeProcessing)
   // Lock the mutex to prevent processing
   locker.lock();
 
-  MessageProcessor processor("test", messages, locker, handler);
+  auto processor = createMessageProcessor("test", messages, locker, handler);
 
   // Trigger the processing of the messages in a separate thread so that we
   // can verify that the handler is not called while the thread is locked

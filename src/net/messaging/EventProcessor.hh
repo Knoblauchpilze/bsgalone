@@ -6,16 +6,11 @@
 
 namespace net {
 
-class EventProcessor : public messaging::AbstractEventProcessor<IEvent, EventType>
-{
-  public:
-  EventProcessor(const std::string &onBehalfOfName,
-                 std::deque<IEventPtr> &events,
-                 std::mutex &locker,
-                 EventHandler handler);
+using EventProcessor = messaging::AbstractEventProcessor<IEvent, EventType>;
 
-  protected:
-  auto unimportantEventTypes() const -> std::unordered_set<EventType> override;
-};
+auto createEventProcessor(const std::string &onBehalfOfName,
+                          std::deque<IEventPtr> &events,
+                          std::mutex &locker,
+                          EventProcessor::EventHandler handler) -> EventProcessor;
 
 } // namespace net

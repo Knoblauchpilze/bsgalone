@@ -18,7 +18,7 @@ TEST(Unit_Net_Messaging_EventProcessor, DoesNotCallHandlerWhenNoMessagesAreAvail
   std::atomic_int control{0};
   auto handler = [&control](const IEvent & /*event*/) { control.fetch_add(1); };
 
-  EventProcessor processor("test", noEvents, locker, handler);
+  auto processor = createEventProcessor("test", noEvents, locker, handler);
 
   processor.processEvents();
 
@@ -36,7 +36,7 @@ TEST(Unit_Net_Messaging_EventProcessor, CallsHandlerForEachAvailableMessage)
   std::atomic_int control{0};
   auto handler = [&control](const IEvent & /*event*/) { control.fetch_add(1); };
 
-  EventProcessor processor("test", events, locker, handler);
+  auto processor = createEventProcessor("test", events, locker, handler);
 
   processor.processEvents();
 
@@ -59,7 +59,7 @@ TEST(Unit_Net_Messaging_EventProcessor, ForwardsAvailableMessageToHandler)
     EXPECT_EQ(sampleData, actual.data());
   };
 
-  EventProcessor processor("test", events, locker, handler);
+  auto processor = createEventProcessor("test", events, locker, handler);
 
   processor.processEvents();
 }
@@ -78,7 +78,7 @@ TEST(Unit_Net_Messaging_EventProcessor, AcquiresProvidedLockBeforeProcessing)
   // Lock the mutex to prevent processing
   locker.lock();
 
-  EventProcessor processor("test", events, locker, handler);
+  auto processor = createEventProcessor("test", events, locker, handler);
 
   // Trigger the processing of the events in a separate thread so that we
   // can verify that the handler is not called while the thread is locked
