@@ -7,11 +7,11 @@ MessageProcessor::MessageProcessor(const std::string &onBehalfOfName,
                                    std::deque<bsgalone::core::IMessagePtr> &messages,
                                    std::mutex &locker,
                                    EventHandler handler)
-  : bsgalone::core::AbstractEventProcessor<bsgalone::core::IMessage,
-                                           bsgalone::core::MessageType>(onBehalfOfName,
-                                                                        messages,
-                                                                        locker,
-                                                                        std::move(handler))
+  : messaging::AbstractEventProcessor<bsgalone::core::IMessage,
+                                      bsgalone::core::MessageType>(onBehalfOfName,
+                                                                   messages,
+                                                                   locker,
+                                                                   std::move(handler))
 {}
 
 auto MessageProcessor::unimportantEventTypes() const

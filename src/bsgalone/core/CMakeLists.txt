@@ -28,10 +28,6 @@ add_subdirectory (
 	)
 
 add_subdirectory (
-	${CMAKE_CURRENT_SOURCE_DIR}/messaging
-	)
-
-add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/network
 	)
 
@@ -42,6 +38,7 @@ add_subdirectory (
 target_link_libraries (game_core_lib PUBLIC
 	bsgalone-interface-library
 	net_lib
+	messaging_lib
 	)
 
 if (${ENABLE_TESTS})

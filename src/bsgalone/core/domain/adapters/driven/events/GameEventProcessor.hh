@@ -6,7 +6,7 @@
 
 namespace bsgalone::core {
 
-class GameEventProcessor : public AbstractEventProcessor<IGameEvent, GameEventType>
+class GameEventProcessor : public messaging::AbstractEventProcessor<IGameEvent, GameEventType>
 {
   public:
   GameEventProcessor(const std::string &onBehalfOfName,

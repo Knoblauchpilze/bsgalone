@@ -3,7 +3,7 @@
 
 #include "AbstractEventProcessor.hh"
 
-namespace bsgalone::core {
+namespace messaging {
 
 template<class Event, EnumType EventType>
 inline AbstractEventProcessor<Event, EventType>::AbstractEventProcessor(
@@ -11,7 +11,7 @@ inline AbstractEventProcessor<Event, EventType>::AbstractEventProcessor(
   std::deque<EventPtr> &events,
   std::mutex &locker,
   EventHandler handler)
-  : ::core::CoreObject(onBehalfOfName)
+  : core::CoreObject(onBehalfOfName)
   , m_locker(locker)
   , m_events(events)
   , m_handler(handler)
@@ -40,12 +40,6 @@ inline auto AbstractEventProcessor<Event, EventType>::acquireAndClearEvents() co
   std::swap(events, m_events);
   return events;
 }
-
-// namespace {
-// const auto UNIMPORTANT_EVENT_TYPES = std::unordered_set<EventType>{EventType::DATA_RECEIVED,
-//                                                                    EventType::DATA_SENT};
-
-// } // namespace
 
 template<class Event, EnumType EventType>
 inline void AbstractEventProcessor<Event, EventType>::printEventsInfo(
@@ -108,4 +102,4 @@ inline auto AbstractEventProcessor<Event, EventType>::eventsTypesToString(
   return out;
 }
 
-} // namespace bsgalone::core
+} // namespace messaging

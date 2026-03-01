@@ -8,7 +8,7 @@
 #include <mutex>
 #include <unordered_set>
 
-namespace bsgalone::core {
+namespace messaging {
 
 // https://stackoverflow.com/questions/60524480/how-to-force-a-template-parameter-to-be-an-enum-or-enum-class
 template<typename E>
@@ -18,7 +18,7 @@ concept EnumType = std::is_enum_v<E>;
 // public: using ...
 // clang-format off
 template<class Event, EnumType EventType>
-class AbstractEventProcessor : public ::core::CoreObject {
+class AbstractEventProcessor : public core::CoreObject {
   public:
   using EventPtr     = std::unique_ptr<Event>;
   using EventHandler = std::function<void(const Event &)>;
@@ -54,6 +54,6 @@ class AbstractEventProcessor : public ::core::CoreObject {
 };
 // clang-format on
 
-} // namespace bsgalone::core
+} // namespace messaging
 
 #include "AbstractEventProcessor.hxx"

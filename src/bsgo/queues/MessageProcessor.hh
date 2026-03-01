@@ -6,8 +6,8 @@
 
 namespace bsgo {
 
-class MessageProcessor : public bsgalone::core::AbstractEventProcessor<bsgalone::core::IMessage,
-                                                                       bsgalone::core::MessageType>
+class MessageProcessor
+  : public messaging::AbstractEventProcessor<bsgalone::core::IMessage, bsgalone::core::MessageType>
 {
   public:
   MessageProcessor(const std::string &onBehalfOfName,

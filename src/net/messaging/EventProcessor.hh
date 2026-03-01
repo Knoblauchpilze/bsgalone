@@ -1,18 +1,12 @@
 
 #pragma once
 
-#include "CoreObject.hh"
+#include "AbstractEventProcessor.hh"
 #include "IEvent.hh"
-#include <deque>
-#include <functional>
-#include <mutex>
-#include <optional>
 
 namespace net {
 
-using EventHandler = std::function<void(const IEvent &)>;
-
-class EventProcessor : public core::CoreObject
+class EventProcessor : public messaging::AbstractEventProcessor<IEvent, EventType>
 {
   public:
   EventProcessor(const std::string &onBehalfOfName,
@@ -20,15 +14,8 @@ class EventProcessor : public core::CoreObject
                  std::mutex &locker,
                  EventHandler handler);
 
-  void processEvents();
-
-  private:
-  std::mutex &m_locker;
-  std::deque<IEventPtr> &m_events;
-  EventHandler m_handler{};
-
-  auto acquireAndClearEvents() const -> std::deque<IEventPtr>;
-  void printEventsInfo(const std::deque<IEventPtr> &events) const;
+  protected:
+  auto unimportantEventTypes() const -> std::unordered_set<EventType> override;
 };
 
 } // namespace net
