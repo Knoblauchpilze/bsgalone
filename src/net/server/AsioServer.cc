@@ -1,18 +1,18 @@
 
 #include "AsioServer.hh"
-#include "AsyncEventBus.hh"
+#include "AsyncEventQueue.hh"
 #include "ClientConnectedEvent.hh"
 #include "ClientDisconnectedEvent.hh"
 #include "DataReadFailureEvent.hh"
 #include "DataWriteFailureEvent.hh"
-#include "SynchronizedEventBus.hh"
+#include "SynchronizedEventQueue.hh"
 
 namespace net::details {
 namespace {
-class ServerListenerProxy : public IEventListener
+class ServerListenerProxy : public INetworkEventListener
 {
   public:
-  ServerListenerProxy(IEventListener *listener)
+  ServerListenerProxy(INetworkEventListener *listener)
     : m_listener(listener)
   {}
 
@@ -29,15 +29,15 @@ class ServerListenerProxy : public IEventListener
   }
 
   private:
-  IEventListener *m_listener{};
+  INetworkEventListener *m_listener{};
 };
 } // namespace
 
-AsioServer::AsioServer(AsioContext &context, const int port, IEventBusShPtr eventBus)
+AsioServer::AsioServer(AsioContext &context, const int port, INetworkEventQueueShPtr eventBus)
   : core::CoreObject("server")
   , m_acceptor(context.get(), asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port))
   , m_eventBus(std::move(eventBus))
-  , m_internalBus(std::make_shared<AsyncEventBus>(std::make_unique<SynchronizedEventBus>()))
+  , m_internalBus(createAsyncEventQueue(createSynchronizedEventQueue()))
 {
   setService("net");
 

@@ -6,7 +6,7 @@
 #include "DataReceivedEvent.hh"
 #include "DataSentEvent.hh"
 #include "TcpFixture.hh"
-#include "TestEventBus.hh"
+#include "TestNetworkEventQueue.hh"
 #include <gtest/gtest.h>
 
 using namespace test;
@@ -16,7 +16,7 @@ namespace net {
 using Integration_Net_Server_TcpServer = TcpFixture;
 
 namespace {
-void startServer(std::shared_ptr<TcpServer> &server, const int port, TestEventBusShPtr &bus)
+void startServer(std::shared_ptr<TcpServer> &server, const int port, TestNetworkEventQueueShPtr &bus)
 {
   server->start(port);
 
@@ -32,7 +32,7 @@ TEST_F(Integration_Net_Server_TcpServer, ThrowsWhenEventBusIsNull)
 
 TEST_F(Integration_Net_Server_TcpServer, PublishesServerStartedEvent)
 {
-  auto bus    = std::make_shared<TestEventBus>();
+  auto bus    = std::make_shared<TestNetworkEventQueue>();
   auto server = std::make_shared<TcpServer>(bus);
   server->start(this->port());
 
@@ -42,7 +42,7 @@ TEST_F(Integration_Net_Server_TcpServer, PublishesServerStartedEvent)
 
 TEST_F(Integration_Net_Server_TcpServer, PublishesServerStoppedEvent)
 {
-  auto bus    = std::make_shared<TestEventBus>();
+  auto bus    = std::make_shared<TestNetworkEventQueue>();
   auto server = std::make_shared<TcpServer>(bus);
   startServer(server, this->port(), bus);
 
@@ -54,7 +54,7 @@ TEST_F(Integration_Net_Server_TcpServer, PublishesServerStoppedEvent)
 
 TEST_F(Integration_Net_Server_TcpServer, AcceptsConnectionAndPublishesClientConnectedEvent)
 {
-  auto bus    = std::make_shared<TestEventBus>();
+  auto bus    = std::make_shared<TestNetworkEventQueue>();
   auto server = std::make_shared<TcpServer>(bus);
   startServer(server, this->port(), bus);
 
@@ -72,7 +72,7 @@ TEST_F(Integration_Net_Server_TcpServer, AcceptsConnectionAndPublishesClientConn
 
 TEST_F(Integration_Net_Server_TcpServer, DetectsDisconnectionAndPublishesClientDisconnectedEvent)
 {
-  auto bus    = std::make_shared<TestEventBus>();
+  auto bus    = std::make_shared<TestNetworkEventQueue>();
   auto server = std::make_shared<TcpServer>(bus);
   startServer(server, this->port(), bus);
 
@@ -89,7 +89,7 @@ TEST_F(Integration_Net_Server_TcpServer, DetectsDisconnectionAndPublishesClientD
 
 TEST_F(Integration_Net_Server_TcpServer, PublishesClientDisconnectedEventWhenServerIsStopped)
 {
-  auto bus    = std::make_shared<TestEventBus>();
+  auto bus    = std::make_shared<TestNetworkEventQueue>();
   auto server = std::make_shared<TcpServer>(bus);
   startServer(server, this->port(), bus);
 

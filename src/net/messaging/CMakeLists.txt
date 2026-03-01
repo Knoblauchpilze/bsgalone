@@ -4,8 +4,7 @@ target_include_directories (net_lib PUBLIC
 	)
 
 target_sources (net_lib PRIVATE
-	${CMAKE_CURRENT_SOURCE_DIR}/AbstractEventBus.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/AsyncEventBus.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/AsyncEventQueue.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/EventProcessor.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/SynchronizedEventBus.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/SynchronizedEventQueue.cc
 	)

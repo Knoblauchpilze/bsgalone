@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "IEventBus.hh"
+#include "INetworkEventQueue.hh"
 #include <condition_variable>
 #include <memory>
 #include <mutex>
@@ -9,14 +9,14 @@
 
 namespace test {
 
-class TestEventBus : public net::IEventBus
+class TestNetworkEventQueue : public net::INetworkEventQueue
 {
   public:
-  TestEventBus()           = default;
-  ~TestEventBus() override = default;
+  TestNetworkEventQueue()           = default;
+  ~TestNetworkEventQueue() override = default;
 
   void pushEvent(net::IEventPtr event) override;
-  void addListener(net::IEventListenerPtr listener) override;
+  void addListener(net::INetworkEventListenerPtr listener) override;
   bool empty() override;
 
   void processEvents() override;
@@ -57,6 +57,6 @@ class TestEventBus : public net::IEventBus
   std::vector<net::IEventPtr> m_events{};
 };
 
-using TestEventBusShPtr = std::shared_ptr<TestEventBus>;
+using TestNetworkEventQueueShPtr = std::shared_ptr<TestNetworkEventQueue>;
 
 } // namespace test

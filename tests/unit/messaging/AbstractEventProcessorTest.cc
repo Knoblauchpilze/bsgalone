@@ -1,44 +1,15 @@
 
 #include "AbstractEventProcessor.hh"
-#include "ConnectionMessage.hh"
-#include "DockMessage.hh"
+#include "TestEvent.hh"
 #include <chrono>
 #include <future>
 #include <gtest/gtest.h>
 
+using namespace test;
 using namespace ::testing;
 
 namespace messaging {
 namespace {
-enum class TestEventType
-{
-  EVENT_1,
-  EVENT_2,
-};
-
-auto str(const TestEventType type) -> std::string
-{
-  return std::to_string(static_cast<int>(type));
-}
-
-class TestEvent
-{
-  public:
-  TestEvent(const TestEventType type)
-    : m_type(type)
-  {}
-
-  auto type() const -> TestEventType
-  {
-    return m_type;
-  }
-
-  private:
-  TestEventType m_type{};
-};
-
-using TestEventPtr = std::unique_ptr<TestEvent>;
-
 using TestProcessor = AbstractEventProcessor<TestEventType, TestEvent>;
 
 auto createProcessor(std::deque<TestEventPtr> &events,

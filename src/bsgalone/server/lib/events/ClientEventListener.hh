@@ -4,12 +4,12 @@
 #include "ClientConnectedEvent.hh"
 #include "ClientDisconnectedEvent.hh"
 #include "ClientManager.hh"
-#include "IEventListener.hh"
 #include "IMessageQueue.hh"
+#include "INetworkEventListener.hh"
 
 namespace bsgalone::server {
 
-class ClientEventListener : public net::IEventListener
+class ClientEventListener : public net::INetworkEventListener
 {
   public:
   ClientEventListener(ClientManagerShPtr clientManager,

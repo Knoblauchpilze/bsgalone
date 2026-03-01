@@ -2,9 +2,8 @@
 #include "WritingSocket.hh"
 #include "DataSentEvent.hh"
 #include "DataWriteFailureEvent.hh"
-#include "IEventBus.hh"
 #include "TcpServerFixture.hh"
-#include "TestEventBus.hh"
+#include "TestNetworkEventQueue.hh"
 #include <gmock/gmock-matchers.h>
 #include <gtest/gtest.h>
 
@@ -16,8 +15,9 @@ using Integration_Net_Sockets_WritingSocket = TcpServerFixture;
 
 TEST_F(Integration_Net_Sockets_WritingSocket, ThrowsWhenSocketIsNull)
 {
-  EXPECT_THROW([] { WritingSocket(ClientId{1}, nullptr, std::make_shared<TestEventBus>()); }(),
-               std::invalid_argument);
+  EXPECT_THROW(
+    [] { WritingSocket(ClientId{1}, nullptr, std::make_shared<TestNetworkEventQueue>()); }(),
+    std::invalid_argument);
 }
 
 TEST_F(Integration_Net_Sockets_WritingSocket, ThrowsWhenEventBusIsNull)
@@ -30,7 +30,7 @@ TEST_F(Integration_Net_Sockets_WritingSocket, ThrowsWhenEventBusIsNull)
 TEST_F(Integration_Net_Sockets_WritingSocket, PublishesDataSentEvent)
 {
   auto sockets = this->getTestSockets();
-  auto bus     = std::make_shared<TestEventBus>();
+  auto bus     = std::make_shared<TestNetworkEventQueue>();
   auto socket  = std::make_shared<WritingSocket>(ClientId{1}, sockets.client, bus);
 
   std::string data{"test"};
@@ -46,7 +46,7 @@ TEST_F(Integration_Net_Sockets_WritingSocket, PublishesDataSentEvent)
 TEST_F(Integration_Net_Sockets_WritingSocket, PublishesDataSentEventWithNoClientIdWhenNotSpecified)
 {
   auto sockets = this->getTestSockets();
-  auto bus     = std::make_shared<TestEventBus>();
+  auto bus     = std::make_shared<TestNetworkEventQueue>();
   auto socket  = std::make_shared<WritingSocket>(sockets.client, bus);
 
   std::string data{"test"};
@@ -62,7 +62,7 @@ TEST_F(Integration_Net_Sockets_WritingSocket, PublishesDataSentEventWithNoClient
 TEST_F(Integration_Net_Sockets_WritingSocket, SendsDataToSocket)
 {
   auto sockets = this->getTestSockets();
-  auto bus     = std::make_shared<TestEventBus>();
+  auto bus     = std::make_shared<TestNetworkEventQueue>();
   auto socket  = std::make_shared<WritingSocket>(ClientId{1}, sockets.client, std::move(bus));
 
   std::string data{"test"};
@@ -76,7 +76,7 @@ TEST_F(Integration_Net_Sockets_WritingSocket, SendsDataToSocket)
 TEST_F(Integration_Net_Sockets_WritingSocket, PublishesDataWriteFailureEventWhenClientSocketIsClosed)
 {
   auto sockets = this->getTestSockets();
-  auto bus     = std::make_shared<TestEventBus>();
+  auto bus     = std::make_shared<TestNetworkEventQueue>();
   auto socket  = std::make_shared<WritingSocket>(ClientId{1}, sockets.client, bus);
 
   sockets.client->shutdown(asio::ip::tcp::socket::shutdown_both);
@@ -95,7 +95,7 @@ TEST_F(Integration_Net_Sockets_WritingSocket,
        PublishesDataWriteFailureEventWithNoClientIdentifierWhenServerSocketIsClosed)
 {
   auto sockets = this->getTestSockets();
-  auto bus     = std::make_shared<TestEventBus>();
+  auto bus     = std::make_shared<TestNetworkEventQueue>();
   auto socket  = std::make_shared<WritingSocket>(sockets.client, bus);
 
   sockets.client->shutdown(asio::ip::tcp::socket::shutdown_both);
@@ -120,7 +120,7 @@ TEST_F(Integration_Net_Sockets_WritingSocket,
 TEST_F(Integration_Net_Sockets_WritingSocket, SucceedsToSendDataEvenWhenServerSocketIsClosed)
 {
   auto sockets = this->getTestSockets();
-  auto bus     = std::make_shared<TestEventBus>();
+  auto bus     = std::make_shared<TestNetworkEventQueue>();
   auto socket  = std::make_shared<WritingSocket>(ClientId{1}, sockets.client, bus);
 
   sockets.server->shutdown(asio::ip::tcp::socket::shutdown_both);

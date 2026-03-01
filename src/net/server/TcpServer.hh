@@ -4,7 +4,7 @@
 #include "AsioContext.hh"
 #include "AsioServer.hh"
 #include "CoreObject.hh"
-#include "IEventBus.hh"
+#include "INetworkEventQueue.hh"
 #include "INetworkServer.hh"
 #include <mutex>
 
@@ -13,7 +13,7 @@ namespace net {
 class TcpServer : public INetworkServer, public core::CoreObject
 {
   public:
-  TcpServer(IEventBusShPtr eventBus);
+  TcpServer(INetworkEventQueueShPtr eventBus);
   ~TcpServer() override = default;
 
   void start(const int port) override;
@@ -30,7 +30,7 @@ class TcpServer : public INetworkServer, public core::CoreObject
     -> std::optional<MessageId> override;
 
   private:
-  IEventBusShPtr m_eventBus{};
+  INetworkEventQueueShPtr m_eventBus{};
 
   /// @brief - Protects concurrent access to the context and server.
   std::mutex m_locker{};
