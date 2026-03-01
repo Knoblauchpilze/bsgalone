@@ -39,7 +39,7 @@ class TestEvent
 
 using TestEventPtr = std::unique_ptr<TestEvent>;
 
-using TestProcessor = AbstractEventProcessor<TestEvent, TestEventType>;
+using TestProcessor = AbstractEventProcessor<TestEventType, TestEvent>;
 
 auto createProcessor(std::deque<TestEventPtr> &events,
                      std::mutex &locker,

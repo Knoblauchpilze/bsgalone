@@ -7,7 +7,7 @@
 namespace bsgo {
 
 using MessageProcessor
-  = messaging::AbstractEventProcessor<bsgalone::core::IMessage, bsgalone::core::MessageType>;
+  = messaging::AbstractEventProcessor<bsgalone::core::MessageType, bsgalone::core::IMessage>;
 
 auto createMessageProcessor(const std::string &onBehalfOfName,
                             std::deque<bsgalone::core::IMessagePtr> &messages,

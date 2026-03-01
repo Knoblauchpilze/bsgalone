@@ -11,13 +11,24 @@
 namespace messaging {
 
 // https://stackoverflow.com/questions/60524480/how-to-force-a-template-parameter-to-be-an-enum-or-enum-class
-template<typename E>
-concept EnumType = std::is_enum_v<E>;
+template<typename Type>
+concept EventTypeLike = std::is_enum_v<Type> && requires(Type e) {
+  {
+    str(e)
+  } -> std::convertible_to<std::string>;
+};
+
+template<typename Event, typename EventType>
+concept EventLike = std::is_enum_v<EventType> && requires(Event e) {
+  {
+    e.type()
+  } -> std::same_as<EventType>;
+};
 
 // Template class seems to throw formatting off by formatting as follows:
 // public: using ...
 // clang-format off
-template<class Event, EnumType EventType>
+template<EventTypeLike EventType, EventLike<EventType> Event>
 class AbstractEventProcessor : public core::CoreObject {
   public:
   using EventPtr     = std::unique_ptr<Event>;

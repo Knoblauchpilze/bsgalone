@@ -6,7 +6,7 @@
 
 namespace bsgalone::core {
 
-using GameEventProcessor = messaging::AbstractEventProcessor<IGameEvent, GameEventType>;
+using GameEventProcessor = messaging::AbstractEventProcessor<GameEventType, IGameEvent>;
 
 auto createGameEventProcessor(const std::string &onBehalfOfName,
                               std::deque<IGameEventPtr> &events,

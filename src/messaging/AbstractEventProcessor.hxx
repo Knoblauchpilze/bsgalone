@@ -5,8 +5,8 @@
 
 namespace messaging {
 
-template<class Event, EnumType EventType>
-inline AbstractEventProcessor<Event, EventType>::AbstractEventProcessor(
+template<EventTypeLike EventType, EventLike<EventType> Event>
+inline AbstractEventProcessor<EventType, Event>::AbstractEventProcessor(
   const std::string &onBehalfOfName,
   std::deque<EventPtr> &events,
   std::mutex &locker,
@@ -21,8 +21,8 @@ inline AbstractEventProcessor<Event, EventType>::AbstractEventProcessor(
   setService("event");
 }
 
-template<class Event, EnumType EventType>
-inline void AbstractEventProcessor<Event, EventType>::processEvents()
+template<EventTypeLike EventType, EventLike<EventType> Event>
+inline void AbstractEventProcessor<EventType, Event>::processEvents()
 {
   const auto events = acquireAndClearEvents();
   for (const auto &event : events)
@@ -33,8 +33,8 @@ inline void AbstractEventProcessor<Event, EventType>::processEvents()
   printEventsInfo(events);
 }
 
-template<class Event, EnumType EventType>
-inline auto AbstractEventProcessor<Event, EventType>::acquireAndClearEvents() const
+template<EventTypeLike EventType, EventLike<EventType> Event>
+inline auto AbstractEventProcessor<EventType, Event>::acquireAndClearEvents() const
   -> std::deque<EventPtr>
 {
   const std::lock_guard guard(m_locker);
@@ -43,8 +43,8 @@ inline auto AbstractEventProcessor<Event, EventType>::acquireAndClearEvents() co
   return events;
 }
 
-template<class Event, EnumType EventType>
-inline void AbstractEventProcessor<Event, EventType>::printEventsInfo(
+template<EventTypeLike EventType, EventLike<EventType> Event>
+inline void AbstractEventProcessor<EventType, Event>::printEventsInfo(
   const std::deque<EventPtr> &events) const
 {
   if (events.empty())
@@ -63,8 +63,8 @@ inline void AbstractEventProcessor<Event, EventType>::printEventsInfo(
   }
 }
 
-template<class Event, EnumType EventType>
-inline auto AbstractEventProcessor<Event, EventType>::eventsTypesToString(
+template<EventTypeLike EventType, EventLike<EventType> Event>
+inline auto AbstractEventProcessor<EventType, Event>::eventsTypesToString(
   const std::deque<EventPtr> &events) const -> EventsInfo
 {
   EventsInfo out{.eventsTypes = "{"};
