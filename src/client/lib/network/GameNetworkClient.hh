@@ -2,10 +2,10 @@
 #pragma once
 
 #include "ClientId.hh"
-#include "IEventBus.hh"
 #include "IMessage.hh"
 #include "IMessageQueue.hh"
 #include "INetworkClient.hh"
+#include "INetworkEventQueue.hh"
 #include "IOutputNetworkAdapter.hh"
 #include <atomic>
 #include <memory>
@@ -28,7 +28,7 @@ class GameNetworkClient : public bsgalone::core::IMessageQueue
   void processMessages() override;
 
   private:
-  net::IEventBusShPtr m_eventBus{};
+  net::INetworkEventQueueShPtr m_eventBus{};
   net::INetworkClientShPtr m_tcpClient{};
   bsgalone::core::IOutputNetworkAdapterPtr m_adapter{};
 

@@ -1,6 +1,6 @@
 
 #include "ServerNetworkClient.hh"
-#include "AsyncEventBus.hh"
+#include "AsyncEventQueue.hh"
 #include "AsyncMessageQueue.hh"
 #include "BroadcastMessageListener.hh"
 #include "ClientEventListener.hh"
@@ -8,7 +8,7 @@
 #include "MessageParser.hh"
 #include "OutputNetworkAdapter.hh"
 #include "ServerEventListener.hh"
-#include "SynchronizedEventBus.hh"
+#include "SynchronizedEventQueue.hh"
 #include "SynchronizedMessageQueue.hh"
 #include "TcpServer.hh"
 
@@ -21,7 +21,7 @@ ServerNetworkClient::ServerNetworkClient()
 
 void ServerNetworkClient::start(const int port)
 {
-  m_eventBus  = std::make_shared<net::AsyncEventBus>(std::make_unique<net::SynchronizedEventBus>());
+  m_eventBus  = net::createAsyncEventQueue(net::createSynchronizedEventQueue());
   m_tcpServer = std::make_shared<net::TcpServer>(m_eventBus);
 
   initialize();

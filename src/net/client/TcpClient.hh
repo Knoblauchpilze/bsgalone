@@ -4,8 +4,8 @@
 #include "AsioClient.hh"
 #include "AsioContext.hh"
 #include "CoreObject.hh"
-#include "IEventBus.hh"
 #include "INetworkClient.hh"
+#include "INetworkEventQueue.hh"
 #include <mutex>
 
 namespace net {
@@ -13,7 +13,7 @@ namespace net {
 class TcpClient : public INetworkClient, public core::CoreObject
 {
   public:
-  TcpClient(IEventBusShPtr eventBus);
+  TcpClient(INetworkEventQueueShPtr eventBus);
   ~TcpClient() override = default;
 
   /// @brief - Implements the client interface to asynchronously connect to the server
@@ -41,7 +41,7 @@ class TcpClient : public INetworkClient, public core::CoreObject
   auto trySend(std::vector<char> bytes) -> std::optional<MessageId> override;
 
   private:
-  IEventBusShPtr m_eventBus{};
+  INetworkEventQueueShPtr m_eventBus{};
 
   /// @brief - Protects concurrent access to the context and client.
   std::mutex m_locker{};

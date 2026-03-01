@@ -6,7 +6,8 @@
 #include "CoreObject.hh"
 #include "DataSentEvent.hh"
 #include "DataWriteFailureEvent.hh"
-#include "IEventBus.hh"
+#include "INetworkEventListener.hh"
+#include "INetworkEventQueue.hh"
 #include "ReadingSocket.hh"
 #include "ServerState.hh"
 #include "WritingSocket.hh"
@@ -19,10 +20,10 @@ namespace net::details {
 
 class AsioServer : public core::CoreObject,
                    public std::enable_shared_from_this<AsioServer>,
-                   public IEventListener
+                   public INetworkEventListener
 {
   public:
-  AsioServer(AsioContext &context, const int port, IEventBusShPtr eventBus);
+  AsioServer(AsioContext &context, const int port, INetworkEventQueueShPtr eventBus);
   ~AsioServer() override = default;
 
   /// @brief - Starts the server, instructing to begin listening for incoming connections
@@ -84,7 +85,7 @@ class AsioServer : public core::CoreObject,
   /// being written or received.
   /// Only the server writes to this bus, the underlying sockets are only given access to
   /// the internal bus.
-  IEventBusShPtr m_eventBus{};
+  INetworkEventQueueShPtr m_eventBus{};
 
   /// @brief - Event bus used to receive messages published by the sockets held by the server.
   /// Those events can be interpreted by the server before being published to the external bus.
@@ -94,7 +95,7 @@ class AsioServer : public core::CoreObject,
   /// necessary so that the last internal events received can make it to the event bus when the
   /// server is destroyed. Otherwise there is a segmentation fault as the event bus is deleted
   /// before the last internal events are processed.
-  IEventBusShPtr m_internalBus{};
+  INetworkEventQueueShPtr m_internalBus{};
 
   /// @brief - Holds the next client identifier to assign to an incoming connection. This value
   /// is incremented each time a new connection is received.

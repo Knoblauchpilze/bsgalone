@@ -5,7 +5,7 @@
 #include "DataReceivedEvent.hh"
 #include "DataSentEvent.hh"
 #include "TcpServerFixture.hh"
-#include "TestEventBus.hh"
+#include "TestNetworkEventQueue.hh"
 #include <gtest/gtest.h>
 
 using namespace test;
@@ -23,7 +23,7 @@ TEST_F(Integration_Net_Client_AsioClient, ThrowsWhenEventBusIsNull)
 
 TEST_F(Integration_Net_Client_AsioClient, ConnectsToServerAndPublishesConnectionEstablishedEvent)
 {
-  auto bus    = std::make_shared<TestEventBus>();
+  auto bus    = std::make_shared<TestNetworkEventQueue>();
   auto client = std::make_shared<AsioClient>(bus);
   client->connect(this->asioContext(), LOCALHOST_URL, this->port());
 
@@ -35,7 +35,7 @@ TEST_F(Integration_Net_Client_AsioClient, ConnectsToServerAndPublishesConnection
 
 TEST_F(Integration_Net_Client_AsioClient, DetectsDisconnectionAndPublishesConnectionLostEvent)
 {
-  auto bus    = std::make_shared<TestEventBus>();
+  auto bus    = std::make_shared<TestNetworkEventQueue>();
   auto client = std::make_shared<AsioClient>(bus);
   client->connect(this->asioContext(), LOCALHOST_URL, this->port());
 
@@ -48,7 +48,7 @@ TEST_F(Integration_Net_Client_AsioClient, DetectsDisconnectionAndPublishesConnec
 
 TEST_F(Integration_Net_Client_AsioClient, PublishesDataReceivedEventWhenDataIsReceived)
 {
-  auto bus    = std::make_shared<TestEventBus>();
+  auto bus    = std::make_shared<TestNetworkEventQueue>();
   auto client = std::make_shared<AsioClient>(bus);
   client->connect(this->asioContext(), LOCALHOST_URL, this->port());
 
@@ -66,7 +66,7 @@ TEST_F(Integration_Net_Client_AsioClient, PublishesDataReceivedEventWhenDataIsRe
 
 TEST_F(Integration_Net_Client_AsioClient, PublishesConnectionLostEventWhenDisconnectIsCalled)
 {
-  auto bus = std::make_shared<TestEventBus>();
+  auto bus = std::make_shared<TestNetworkEventQueue>();
 
   auto client = std::make_shared<AsioClient>(bus);
   client->connect(this->asioContext(), LOCALHOST_URL, this->port());
@@ -81,7 +81,7 @@ TEST_F(Integration_Net_Client_AsioClient, PublishesConnectionLostEventWhenDiscon
 
 TEST_F(Integration_Net_Client_AsioClient, SucceedsWhenDisconnectingAndNotConnected)
 {
-  auto bus    = std::make_shared<TestEventBus>();
+  auto bus    = std::make_shared<TestNetworkEventQueue>();
   auto client = std::make_shared<AsioClient>(bus);
 
   client->disconnect();
@@ -89,7 +89,7 @@ TEST_F(Integration_Net_Client_AsioClient, SucceedsWhenDisconnectingAndNotConnect
 
 TEST_F(Integration_Net_Client_AsioClient, ThrowsWhenWritingAMessageAndNotConnected)
 {
-  auto bus    = std::make_shared<TestEventBus>();
+  auto bus    = std::make_shared<TestNetworkEventQueue>();
   auto client = std::make_shared<AsioClient>(bus);
 
   EXPECT_THROW([&client]() { client->trySend(std::vector<char>(2, 0)); }(), core::CoreException);
@@ -97,7 +97,7 @@ TEST_F(Integration_Net_Client_AsioClient, ThrowsWhenWritingAMessageAndNotConnect
 
 TEST_F(Integration_Net_Client_AsioClient, ReturnsEmptyMessageIdentifierWhenMessageIsEmpty)
 {
-  auto bus    = std::make_shared<TestEventBus>();
+  auto bus    = std::make_shared<TestNetworkEventQueue>();
   auto client = std::make_shared<AsioClient>(bus);
   client->connect(this->asioContext(), LOCALHOST_URL, this->port());
 
@@ -110,7 +110,7 @@ TEST_F(Integration_Net_Client_AsioClient, ReturnsEmptyMessageIdentifierWhenMessa
 
 TEST_F(Integration_Net_Client_AsioClient, WritesDataToServerSocket)
 {
-  auto bus    = std::make_shared<TestEventBus>();
+  auto bus    = std::make_shared<TestNetworkEventQueue>();
   auto client = std::make_shared<AsioClient>(bus);
   client->connect(this->asioContext(), LOCALHOST_URL, this->port());
 
@@ -125,7 +125,7 @@ TEST_F(Integration_Net_Client_AsioClient, WritesDataToServerSocket)
 
 TEST_F(Integration_Net_Client_AsioClient, PublishesDataSentEvent)
 {
-  auto bus    = std::make_shared<TestEventBus>();
+  auto bus    = std::make_shared<TestNetworkEventQueue>();
   auto client = std::make_shared<AsioClient>(bus);
   client->connect(this->asioContext(), LOCALHOST_URL, this->port());
 
