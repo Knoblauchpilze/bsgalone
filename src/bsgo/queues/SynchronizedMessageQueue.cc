@@ -38,7 +38,7 @@ void SynchronizedMessageQueue::processMessages()
                                processMessage(message);
                              });
 
-  processor.processMessages();
+  processor.processEvents();
 }
 
 void SynchronizedMessageQueue::processMessage(const bsgalone::core::IMessage &message) const

@@ -1,34 +1,22 @@
 
 #pragma once
 
-#include "CoreObject.hh"
+#include "AbstractEventProcessor.hh"
 #include "IMessage.hh"
-#include <deque>
-#include <functional>
-#include <mutex>
-#include <optional>
 
 namespace bsgo {
 
-using MessageHandler = std::function<void(const bsgalone::core::IMessage &)>;
-
-class MessageProcessor : public core::CoreObject
+class MessageProcessor : public bsgalone::core::AbstractEventProcessor<bsgalone::core::IMessage,
+                                                                       bsgalone::core::MessageType>
 {
   public:
   MessageProcessor(const std::string &onBehalfOfName,
                    std::deque<bsgalone::core::IMessagePtr> &messages,
                    std::mutex &locker,
-                   MessageHandler handler);
+                   EventHandler handler);
 
-  void processMessages();
-
-  private:
-  std::mutex &m_locker;
-  std::deque<bsgalone::core::IMessagePtr> &m_messages;
-  MessageHandler m_handler{};
-
-  auto acquireAndClearMessages() -> std::deque<bsgalone::core::IMessagePtr>;
-  void printMessagesInfo(const std::deque<bsgalone::core::IMessagePtr> &messages) const;
+  protected:
+  auto unimportantEventTypes() const -> std::unordered_set<bsgalone::core::MessageType> override;
 };
 
 } // namespace bsgo

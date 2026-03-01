@@ -20,7 +20,7 @@ TEST(Unit_Bsgo_Queues_MessageProcessor, DoesNotCallHandlerWhenNoMessagesAreAvail
 
   MessageProcessor processor("test", noMessages, locker, handler);
 
-  processor.processMessages();
+  processor.processEvents();
 
   EXPECT_EQ(0, control.load());
 }
@@ -42,7 +42,7 @@ TEST(Unit_Bsgo_Queues_MessageProcessor, CallsHandlerForEachAvailableMessage)
 
   MessageProcessor processor("test", messages, locker, handler);
 
-  processor.processMessages();
+  processor.processEvents();
 
   EXPECT_EQ(2, control.load());
 }
@@ -68,7 +68,7 @@ TEST(Unit_Bsgo_Queues_MessageProcessor, ForwardsAvailableMessageToHandler)
 
   MessageProcessor processor("test", messages, locker, handler);
 
-  processor.processMessages();
+  processor.processEvents();
 }
 
 TEST(Unit_Bsgo_Queues_MessageProcessor, AcquiresProvidedLockBeforeProcessing)
@@ -93,7 +93,7 @@ TEST(Unit_Bsgo_Queues_MessageProcessor, AcquiresProvidedLockBeforeProcessing)
 
   auto result = std::async(std::launch::async, [&processor, &started]() {
     started.set_value(true);
-    processor.processMessages();
+    processor.processEvents();
   });
   threadStarted.get();
 
