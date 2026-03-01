@@ -220,7 +220,7 @@ class Producer
       for (int messageId = 0; messageId < m_messagesCount; ++messageId)
       {
         const auto id = generateUniqueIndex(m_id, messageId);
-        m_queue->pushEvent(std::make_unique<TestEvent>(id));
+        m_queue->pushEvent(std::make_unique<TestEvent>(TestEventType::EVENT_1, id));
       }
     });
   }
@@ -306,7 +306,8 @@ TEST_P(ConcurrentProduction, run)
   // less than this value otherwise there will be collisions.
   EXPECT_LE(param.messages, MULTIPLIER);
 
-  auto queue = std::make_shared<TestQueue>();
+  auto queue = std::make_shared<TestQueue>(allEventTypesAsSet(),
+                                           std::unordered_set<TestEventType>{});
 
   auto listener    = std::make_unique<CounterListener>();
   auto rawListener = listener.get();
@@ -374,7 +375,8 @@ TEST_P(ConcurrentProductionConsumption, run)
   // less than this value otherwise there will be collisions.
   ASSERT_LE(param.messages, MULTIPLIER);
 
-  auto queue = std::make_shared<TestQueue>();
+  auto queue = std::make_shared<TestQueue>(allEventTypesAsSet(),
+                                           std::unordered_set<TestEventType>{});
 
   auto listener    = std::make_unique<CounterListener>();
   auto rawListener = listener.get();
