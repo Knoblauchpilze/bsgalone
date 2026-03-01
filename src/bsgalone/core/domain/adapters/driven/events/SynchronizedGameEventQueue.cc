@@ -31,9 +31,12 @@ bool SynchronizedGameEventQueue::empty()
 
 void SynchronizedGameEventQueue::processEvents()
 {
-  GameEventProcessor processor(getName(), m_events, m_locker, [this](const IGameEvent &event) {
-    processEvent(event);
-  });
+  auto processor = createGameEventProcessor(getName(),
+                                            m_events,
+                                            m_locker,
+                                            [this](const IGameEvent &event) {
+                                              processEvent(event);
+                                            });
 
   processor.processEvents();
 }

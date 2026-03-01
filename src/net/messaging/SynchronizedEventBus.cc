@@ -31,7 +31,7 @@ bool SynchronizedEventBus::empty()
 
 void SynchronizedEventBus::processEvents()
 {
-  EventProcessor processor(getName(), m_events, m_locker, [this](const IEvent &event) {
+  auto processor = createEventProcessor(getName(), m_events, m_locker, [this](const IEvent &event) {
     processEvent(event);
   });
 
