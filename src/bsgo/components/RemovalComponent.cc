@@ -4,7 +4,7 @@
 namespace bsgo {
 
 RemovalComponent::RemovalComponent()
-  : AbstractComponent(ComponentType::REMOVAL)
+  : AbstractComponent(bsgalone::core::ComponentType::REMOVAL)
 {}
 
 void RemovalComponent::markForRemoval(const bool toRemove)

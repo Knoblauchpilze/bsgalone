@@ -63,11 +63,11 @@ void ShipDataSource::registerShip(Coordinator &coordinator,
   coordinator.addName(shipEntityId, data.name);
   coordinator.addTarget(shipEntityId);
   coordinator.addNetworkSync(shipEntityId,
-                             {ComponentType::HEALTH,
-                              ComponentType::POWER,
-                              ComponentType::STATUS,
-                              ComponentType::TRANSFORM,
-                              ComponentType::VELOCITY});
+                             {bsgalone::core::ComponentType::HEALTH,
+                              bsgalone::core::ComponentType::POWER,
+                              bsgalone::core::ComponentType::STATUS,
+                              bsgalone::core::ComponentType::TRANSFORM,
+                              bsgalone::core::ComponentType::VELOCITY});
   coordinator.addDbSync(shipEntityId);
 
   registerShipOwner(coordinator, shipEntityId, data, entityMapper);

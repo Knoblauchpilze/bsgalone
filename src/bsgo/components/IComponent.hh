@@ -14,7 +14,7 @@ class IComponent : public core::CoreObject
   IComponent(const std::string &name);
   ~IComponent() override = default;
 
-  virtual auto type() const -> ComponentType = 0;
+  virtual auto type() const -> bsgalone::core::ComponentType = 0;
 
   virtual void update(const chrono::TickData &data) = 0;
 };

@@ -4,7 +4,7 @@
 namespace bsgo {
 
 DbSyncComponent::DbSyncComponent()
-  : SyncComponent(ComponentType::DB_SYNC)
+  : SyncComponent(bsgalone::core::ComponentType::DB_SYNC)
 {}
 
 } // namespace bsgo

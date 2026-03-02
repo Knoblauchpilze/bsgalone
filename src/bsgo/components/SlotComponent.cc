@@ -3,7 +3,8 @@
 
 namespace bsgo {
 
-SlotComponent::SlotComponent(const ComponentType &type, const SlotComponentData &data)
+SlotComponent::SlotComponent(const bsgalone::core::ComponentType &type,
+                             const SlotComponentData &data)
   : AbstractComponent(type)
   , m_dbId(data.dbId)
   , m_offensive(data.offensive)

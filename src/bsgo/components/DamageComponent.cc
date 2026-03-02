@@ -4,7 +4,7 @@
 namespace bsgo {
 
 DamageComponent::DamageComponent(const float damage)
-  : AbstractComponent(ComponentType::DAMAGE)
+  : AbstractComponent(bsgalone::core::ComponentType::DAMAGE)
   , m_damage(damage)
 {}
 

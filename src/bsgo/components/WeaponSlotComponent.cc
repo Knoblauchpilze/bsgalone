@@ -4,7 +4,7 @@
 namespace bsgo {
 
 WeaponSlotComponent::WeaponSlotComponent(const PlayerWeaponData &weapon)
-  : SlotComponent(ComponentType::WEAPON_SLOT,
+  : SlotComponent(bsgalone::core::ComponentType::WEAPON_SLOT,
                   SlotComponentData{.dbId       = weapon.dbId,
                                     .offensive  = true,
                                     .powerCost  = weapon.powerCost,

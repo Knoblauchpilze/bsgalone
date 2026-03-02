@@ -3,7 +3,8 @@
 
 namespace bsgo {
 
-EffectComponent::EffectComponent(const ComponentType &type, const chrono::TickDuration &duration)
+EffectComponent::EffectComponent(const bsgalone::core::ComponentType &type,
+                                 const chrono::TickDuration &duration)
   : AbstractComponent(type)
   , m_duration(duration)
 {

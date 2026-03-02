@@ -13,7 +13,7 @@ WeaponComponentMessage::WeaponComponentMessage(const Uuid shipDbId,
                                                const bool active)
   : ComponentUpdatedMessage(bsgalone::core::MessageType::WEAPON_COMPONENT_UPDATED,
                             shipDbId,
-                            ComponentType::WEAPON_SLOT)
+                            bsgalone::core::ComponentType::WEAPON_SLOT)
   , m_weaponDbId(weaponDbId)
   , m_active(active)
 {}

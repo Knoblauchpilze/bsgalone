@@ -7,7 +7,7 @@
 namespace bsgo {
 
 TransformComponent::TransformComponent(IBoundingBoxShPtr bbox)
-  : AbstractComponent(ComponentType::TRANSFORM)
+  : AbstractComponent(bsgalone::core::ComponentType::TRANSFORM)
   , m_bbox(std::move(bbox))
 {}
 

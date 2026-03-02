@@ -4,7 +4,7 @@
 namespace bsgo {
 
 ScannedComponent::ScannedComponent()
-  : AbstractComponent(ComponentType::SCANNED)
+  : AbstractComponent(bsgalone::core::ComponentType::SCANNED)
 {}
 
 bool ScannedComponent::scanned() const

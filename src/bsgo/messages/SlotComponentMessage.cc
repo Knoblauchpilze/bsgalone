@@ -16,7 +16,7 @@ SlotComponentMessage::SlotComponentMessage(
   const std::optional<chrono::TickDuration> &elapsedSinceLastFired)
   : ComponentUpdatedMessage(bsgalone::core::MessageType::SLOT_COMPONENT_UPDATED,
                             shipDbId,
-                            ComponentType::COMPUTER_SLOT)
+                            bsgalone::core::ComponentType::COMPUTER_SLOT)
   , m_playerDbId(playerDbId)
   , m_slotDbId(slotDbId)
   , m_elapsedSinceLastFired(elapsedSinceLastFired)

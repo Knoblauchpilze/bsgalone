@@ -16,7 +16,7 @@ auto generateJitteredSyncInterval() -> chrono::TickDuration
 }
 } // namespace
 
-SyncComponent::SyncComponent(const ComponentType type)
+SyncComponent::SyncComponent(const bsgalone::core::ComponentType type)
   : AbstractComponent(type)
   , m_untilNextSync(generateJitteredSyncInterval())
 {}

@@ -4,7 +4,7 @@
 
 namespace bsgo {
 
-RegenerativeComponent::RegenerativeComponent(const ComponentType &type,
+RegenerativeComponent::RegenerativeComponent(const bsgalone::core::ComponentType &type,
                                              const float min,
                                              const float value,
                                              const float max,

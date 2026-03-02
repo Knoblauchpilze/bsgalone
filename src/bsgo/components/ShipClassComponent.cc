@@ -4,7 +4,7 @@
 namespace bsgo {
 
 ShipClassComponent::ShipClassComponent(const ShipClass &shipClass)
-  : AbstractComponent(ComponentType::SHIP_CLASS)
+  : AbstractComponent(bsgalone::core::ComponentType::SHIP_CLASS)
   , m_shipClass(shipClass)
 {}
 

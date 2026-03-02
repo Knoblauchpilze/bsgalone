@@ -20,7 +20,7 @@ class NetworkSystem : public AbstractSystem
   private:
   void syncEntity(Entity &entity) const;
   bool syncComponent(const Entity &entity,
-                     const ComponentType &type,
+                     const bsgalone::core::ComponentType &type,
                      ComponentSyncMessage &message) const;
 
   bool syncHealthComponent(const Entity &entity, ComponentSyncMessage &message) const;

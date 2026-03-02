@@ -5,7 +5,7 @@ namespace bsgo {
 
 WeaponEffectComponent::WeaponEffectComponent(const chrono::TickDuration &duration,
                                              const float damageModifier)
-  : EffectComponent(ComponentType::WEAPON_EFFECT, duration)
+  : EffectComponent(bsgalone::core::ComponentType::WEAPON_EFFECT, duration)
   , m_damageModifier(damageModifier)
 {
   addModule("effect");

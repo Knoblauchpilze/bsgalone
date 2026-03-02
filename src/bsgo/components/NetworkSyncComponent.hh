@@ -10,13 +10,13 @@ namespace bsgo {
 class NetworkSyncComponent : public SyncComponent
 {
   public:
-  NetworkSyncComponent(const std::unordered_set<ComponentType> &toSync);
+  NetworkSyncComponent(const std::unordered_set<bsgalone::core::ComponentType> &toSync);
   ~NetworkSyncComponent() override = default;
 
-  auto componentsToSync() const -> const std::unordered_set<ComponentType> &;
+  auto componentsToSync() const -> const std::unordered_set<bsgalone::core::ComponentType> &;
 
   private:
-  std::unordered_set<ComponentType> m_componentsToSync{};
+  std::unordered_set<bsgalone::core::ComponentType> m_componentsToSync{};
 };
 
 using NetworkSyncComponentShPtr = std::shared_ptr<NetworkSyncComponent>;
