@@ -1,9 +1,9 @@
 
-#include "AsyncEventBus.hh"
+#include "AsyncEventQueue.hh"
 #include "Environment.hh"
 #include "GameServer.hh"
 #include "SafetyNet.hh"
-#include "SynchronizedEventBus.hh"
+#include "SynchronizedEventQueue.hh"
 #include "log/Locator.hh"
 #include "log/PrefixedLogger.hh"
 #include "log/StdLogger.hh"
@@ -25,8 +25,7 @@ int main(int /*argc*/, char ** /*argv*/)
   core::log::PrefixedLogger logger("server", "main");
   core::log::Locator::provide(&raw);
 
-  net::IEventBusShPtr eventBus = std::make_shared<net::AsyncEventBus>(
-    std::make_unique<net::SynchronizedEventBus>());
+  auto eventBus = net::createAsyncEventQueue(net::createSynchronizedEventQueue());
   bsgalone::server::GameServer server(eventBus);
   const auto port = core::getPortFromEnvironmentVariable();
 

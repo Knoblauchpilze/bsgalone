@@ -3,7 +3,7 @@
 
 #include "ClientId.hh"
 #include "CoreObject.hh"
-#include "IEventBus.hh"
+#include "INetworkEventQueue.hh"
 #include "MessageId.hh"
 #include "SocketShPtr.hh"
 #include <deque>
@@ -20,7 +20,7 @@ class WritingSocket : public core::CoreObject, public std::enable_shared_from_th
   /// With this constructor the events will not be attached to any client identifier.
   /// @param socket - the raw socket to send data to
   /// @param eventBus - the event bus to use to publish network related events
-  WritingSocket(SocketShPtr socket, IEventBusShPtr eventBus);
+  WritingSocket(SocketShPtr socket, INetworkEventQueueShPtr eventBus);
 
   /// @brief - Creates a writing socket to instrument the input raw socket and publish
   /// network events to the input event bus.
@@ -28,7 +28,7 @@ class WritingSocket : public core::CoreObject, public std::enable_shared_from_th
   /// @param clientId - the identifier of the client to assign to network events
   /// @param socket - the raw socket to send data to
   /// @param eventBus - the event bus to use to publish network related events
-  WritingSocket(const ClientId clientId, SocketShPtr socket, IEventBusShPtr eventBus);
+  WritingSocket(const ClientId clientId, SocketShPtr socket, INetworkEventQueueShPtr eventBus);
 
   ~WritingSocket() override = default;
 
@@ -50,7 +50,7 @@ class WritingSocket : public core::CoreObject, public std::enable_shared_from_th
   bool m_writingTaskRegistered{false};
   std::deque<MessageToSendPtr> m_outbox{};
 
-  IEventBusShPtr m_eventBus{};
+  INetworkEventQueueShPtr m_eventBus{};
 
   void pushMessageToOutbox(const MessageId messageId, std::vector<char> bytes);
   void registerWritingTaskToAsio();

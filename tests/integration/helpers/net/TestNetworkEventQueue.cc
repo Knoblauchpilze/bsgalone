@@ -1,31 +1,32 @@
 
-#include "TestEventBus.hh"
+#include "TestNetworkEventQueue.hh"
+#include <algorithm>
 
 namespace test {
 
-void TestEventBus::pushEvent(net::IEventPtr event)
+void TestNetworkEventQueue::pushEvent(net::IEventPtr event)
 {
   std::unique_lock guard(m_locker);
   m_events.push_back(std::move(event));
   m_notifier.notify_one();
 }
 
-void TestEventBus::addListener(net::IEventListenerPtr /*listener*/)
+void TestNetworkEventQueue::addListener(net::INetworkEventListenerPtr /*listener*/)
 {
-  throw std::runtime_error("Unexpected call to addListener on DummyEventBus");
+  throw std::runtime_error("Unexpected call to addListener on TestNetworkEventQueue");
 }
 
-bool TestEventBus::empty()
+bool TestNetworkEventQueue::empty()
 {
-  throw std::runtime_error("Unexpected call to empty on DummyEventBus");
+  throw std::runtime_error("Unexpected call to empty on TestNetworkEventQueue");
 }
 
-void TestEventBus::processEvents()
+void TestNetworkEventQueue::processEvents()
 {
-  throw std::runtime_error("Unexpected call to processEvents on DummyEventBus");
+  throw std::runtime_error("Unexpected call to processEvents on TestNetworkEventQueue");
 }
 
-auto TestEventBus::waitForEvents() -> std::vector<net::IEventPtr>
+auto TestNetworkEventQueue::waitForEvents() -> std::vector<net::IEventPtr>
 {
   std::unique_lock guard(m_locker);
 
@@ -69,7 +70,7 @@ auto nameAllEvents(const std::vector<net::IEventPtr> &events) -> std::string
 }
 } // namespace
 
-auto TestEventBus::waitForEvent() -> net::IEventPtr
+auto TestNetworkEventQueue::waitForEvent() -> net::IEventPtr
 {
   auto events = waitForEvents();
   if (events.size() != 1u)
@@ -84,7 +85,8 @@ auto TestEventBus::waitForEvent() -> net::IEventPtr
   return out;
 }
 
-auto TestEventBus::waitForEvent(const net::EventType type, const int maxTries) -> net::IEventPtr
+auto TestNetworkEventQueue::waitForEvent(const net::EventType type, const int maxTries)
+  -> net::IEventPtr
 {
   int tryCount = 0;
   net::IEventPtr out;

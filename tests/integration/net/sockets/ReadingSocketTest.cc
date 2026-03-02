@@ -2,9 +2,8 @@
 #include "ReadingSocket.hh"
 #include "DataReadFailureEvent.hh"
 #include "DataReceivedEvent.hh"
-#include "IEventBus.hh"
 #include "TcpServerFixture.hh"
-#include "TestEventBus.hh"
+#include "TestNetworkEventQueue.hh"
 #include <gmock/gmock-matchers.h>
 #include <gtest/gtest.h>
 
@@ -16,8 +15,9 @@ using Integration_Net_Sockets_ReadingSocket = TcpServerFixture;
 
 TEST_F(Integration_Net_Sockets_ReadingSocket, ThrowsWhenSocketIsNull)
 {
-  EXPECT_THROW([] { ReadingSocket(ClientId{1}, nullptr, std::make_shared<TestEventBus>()); }(),
-               std::invalid_argument);
+  EXPECT_THROW(
+    [] { ReadingSocket(ClientId{1}, nullptr, std::make_shared<TestNetworkEventQueue>()); }(),
+    std::invalid_argument);
 }
 
 TEST_F(Integration_Net_Sockets_ReadingSocket, ThrowsWhenEventBusIsNull)
@@ -30,7 +30,7 @@ TEST_F(Integration_Net_Sockets_ReadingSocket, ThrowsWhenEventBusIsNull)
 TEST_F(Integration_Net_Sockets_ReadingSocket, ThrowsWhenConnectingTwice)
 {
   auto sockets = this->getTestSockets();
-  auto bus     = std::make_shared<TestEventBus>();
+  auto bus     = std::make_shared<TestNetworkEventQueue>();
   auto socket  = std::make_shared<ReadingSocket>(ClientId{1}, sockets.client, std::move(bus));
   socket->connect();
 
@@ -40,7 +40,7 @@ TEST_F(Integration_Net_Sockets_ReadingSocket, ThrowsWhenConnectingTwice)
 TEST_F(Integration_Net_Sockets_ReadingSocket, PublishesDataReceivedEvent)
 {
   auto sockets = this->getTestSockets();
-  auto bus     = std::make_shared<TestEventBus>();
+  auto bus     = std::make_shared<TestNetworkEventQueue>();
   auto socket  = std::make_shared<ReadingSocket>(ClientId{1}, sockets.client, bus);
   socket->connect();
 
@@ -58,7 +58,7 @@ TEST_F(Integration_Net_Sockets_ReadingSocket,
        PublishesDataReceivedEventWithNoClientIdWhenNotSpecified)
 {
   auto sockets = this->getTestSockets();
-  auto bus     = std::make_shared<TestEventBus>();
+  auto bus     = std::make_shared<TestNetworkEventQueue>();
   auto socket  = std::make_shared<ReadingSocket>(sockets.client, bus);
   socket->connect();
 
@@ -75,7 +75,7 @@ TEST_F(Integration_Net_Sockets_ReadingSocket,
 TEST_F(Integration_Net_Sockets_ReadingSocket, PublishesDataReadFailureEventWhenServerSocketIsClosed)
 {
   auto sockets = this->getTestSockets();
-  auto bus     = std::make_shared<TestEventBus>();
+  auto bus     = std::make_shared<TestNetworkEventQueue>();
   auto socket  = std::make_shared<ReadingSocket>(ClientId{1}, sockets.client, bus);
   socket->connect();
 
@@ -90,7 +90,7 @@ TEST_F(Integration_Net_Sockets_ReadingSocket,
        PublishesDataReadFailureEventWithNoClientIdentifierWhenServerSocketIsClosed)
 {
   auto sockets = this->getTestSockets();
-  auto bus     = std::make_shared<TestEventBus>();
+  auto bus     = std::make_shared<TestNetworkEventQueue>();
   auto socket  = std::make_shared<ReadingSocket>(sockets.client, bus);
   socket->connect();
 
@@ -104,7 +104,7 @@ TEST_F(Integration_Net_Sockets_ReadingSocket,
 TEST_F(Integration_Net_Sockets_ReadingSocket, PublishesDataReadFailureEventWhenClientSocketIsClosed)
 {
   auto sockets = this->getTestSockets();
-  auto bus     = std::make_shared<TestEventBus>();
+  auto bus     = std::make_shared<TestNetworkEventQueue>();
   auto socket  = std::make_shared<ReadingSocket>(ClientId{1}, sockets.client, bus);
   socket->connect();
 
@@ -118,7 +118,7 @@ TEST_F(Integration_Net_Sockets_ReadingSocket, PublishesDataReadFailureEventWhenC
 TEST_F(Integration_Net_Sockets_ReadingSocket, FailsToReconnectWhenSocketIsDisconnected)
 {
   auto sockets = this->getTestSockets();
-  auto bus     = std::make_shared<TestEventBus>();
+  auto bus     = std::make_shared<TestNetworkEventQueue>();
   auto socket  = std::make_shared<ReadingSocket>(ClientId{1}, sockets.client, bus);
   socket->connect();
 

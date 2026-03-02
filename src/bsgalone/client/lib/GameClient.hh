@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreObject.hh"
-#include "IEventBus.hh"
 #include "INetworkClient.hh"
+#include "INetworkEventQueue.hh"
 #include <atomic>
 #include <condition_variable>
 #include <mutex>
@@ -13,7 +13,7 @@ namespace bsgalone::client {
 class GameClient : public core::CoreObject
 {
   public:
-  GameClient(net::IEventBusShPtr eventBus);
+  GameClient(net::INetworkEventQueueShPtr eventBus);
   ~GameClient() override = default;
 
   /// @brief - Starts the game server on the specified port. This function will synchronously start

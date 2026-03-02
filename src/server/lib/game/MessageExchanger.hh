@@ -1,7 +1,6 @@
 
 #pragma once
 
-#include "IEventBus.hh"
 #include "IMessageQueue.hh"
 #include "INetworkServer.hh"
 #include "Repositories.hh"

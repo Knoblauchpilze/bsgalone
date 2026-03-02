@@ -1,43 +1,49 @@
 
-#include "SynchronizedEventBus.hh"
-#include "ClientConnectedEvent.hh"
+#include "AbstractSynchronizedEventQueue.hh"
+#include "TestEvent.hh"
 #include <condition_variable>
 #include <gtest/gtest.h>
+#include <thread>
 
+using namespace test;
 using namespace ::testing;
 
-namespace net {
+namespace messaging {
+namespace {
+using TestQueue      = AbstractSynchronizedEventQueue<TestEventType, TestEvent>;
+using TestQueueShPtr = std::shared_ptr<TestQueue>;
+} // namespace
 
-TEST(Unit_Net_Messaging_SynchronizedEventBus, EmptyWhenNoEventAvailable)
+TEST(Unit_Messaging_AbstractSynchronizedEventQueue, EmptyWhenNoEventAvailable)
 {
-  SynchronizedEventBus bus;
-  EXPECT_TRUE(bus.empty());
+  TestQueue queue(allEventTypesAsSet(), {});
+  EXPECT_TRUE(queue.empty());
 }
 
-TEST(Unit_Net_Messaging_SynchronizedEventBus, NotEmptyWhenAnEventIsAvailable)
+TEST(Unit_Messaging_AbstractSynchronizedEventQueue, NotEmptyWhenAnEventIsAvailable)
 {
-  SynchronizedEventBus bus;
-  bus.pushEvent(std::make_unique<ClientConnectedEvent>(ClientId{3}));
+  TestQueue queue(allEventTypesAsSet(), {});
+  queue.pushEvent(std::make_unique<TestEvent>(TestEventType::EVENT_1));
 
-  EXPECT_FALSE(bus.empty());
+  EXPECT_FALSE(queue.empty());
 }
 
 namespace {
-class DummyEventListener : public IEventListener
+class DummyEventListener : public IEventListener<TestEventType, TestEvent>
 {
   public:
-  DummyEventListener(const EventType relevantEvent)
+  DummyEventListener(const TestEventType relevantEvent)
     : m_relevantEvent(relevantEvent)
   {}
 
   ~DummyEventListener() override = default;
 
-  bool isEventRelevant(const EventType &type) const
+  bool isEventRelevant(const TestEventType &type) const
   {
     return type == m_relevantEvent;
   }
 
-  void onEventReceived(const IEvent &event)
+  void onEventReceived(const TestEvent &event)
   {
     m_called.fetch_add(1);
 
@@ -50,116 +56,110 @@ class DummyEventListener : public IEventListener
     return m_called.load();
   }
 
-  auto events() const -> const std::vector<IEventPtr> &
+  auto events() const -> const std::vector<TestEventPtr> &
   {
     return m_capturedEvents;
   }
 
   private:
-  EventType m_relevantEvent{};
+  TestEventType m_relevantEvent{};
   std::atomic_int m_called{};
 
   std::mutex m_lock{};
-  std::vector<IEventPtr> m_capturedEvents{};
+  std::vector<TestEventPtr> m_capturedEvents{};
 };
 } // namespace
 
-TEST(Unit_Net_Messaging_SynchronizedEventBus, DoesNotCallListenerWhenNoEventIsAvailable)
+TEST(Unit_Messaging_AbstractSynchronizedEventQueue, DoesNotCallListenerWhenNoEventIsAvailable)
 {
-  SynchronizedEventBus bus;
+  TestQueue queue(allEventTypesAsSet(), {});
 
-  auto listener    = std::make_unique<DummyEventListener>(EventType::DATA_RECEIVED);
+  auto listener    = std::make_unique<DummyEventListener>(TestEventType::EVENT_1);
   auto rawListener = listener.get();
-  bus.addListener(std::move(listener));
+  queue.addListener(std::move(listener));
 
-  bus.processEvents();
+  queue.processEvents();
 
   EXPECT_EQ(0, rawListener->calledCount());
 }
 
-TEST(Unit_Net_Messaging_SynchronizedEventBus, DoesNotCallListenerWhenEventIsNotRelevant)
+TEST(Unit_Messaging_AbstractSynchronizedEventQueue, DoesNotCallListenerWhenEventIsNotRelevant)
 {
-  SynchronizedEventBus bus;
+  TestQueue queue(allEventTypesAsSet(), {});
 
-  auto listener    = std::make_unique<DummyEventListener>(EventType::DATA_RECEIVED);
+  auto listener    = std::make_unique<DummyEventListener>(TestEventType::EVENT_1);
   auto rawListener = listener.get();
-  bus.addListener(std::move(listener));
+  queue.addListener(std::move(listener));
 
-  bus.pushEvent(std::make_unique<ClientConnectedEvent>(ClientId{3}));
-
-  bus.processEvents();
+  queue.pushEvent(std::make_unique<TestEvent>(TestEventType::EVENT_2));
+  queue.processEvents();
 
   EXPECT_EQ(0, rawListener->calledCount());
 }
 
-TEST(Unit_Net_Messaging_SynchronizedEventBus, CallsListenerWhenEventIsRelevant)
+TEST(Unit_Messaging_AbstractSynchronizedEventQueue, CallsListenerWhenEventIsRelevant)
 {
-  SynchronizedEventBus bus;
+  TestQueue queue(allEventTypesAsSet(), {});
 
-  auto listener    = std::make_unique<DummyEventListener>(EventType::CLIENT_CONNECTED);
+  auto listener    = std::make_unique<DummyEventListener>(TestEventType::EVENT_1);
   auto rawListener = listener.get();
-  bus.addListener(std::move(listener));
+  queue.addListener(std::move(listener));
 
-  bus.pushEvent(std::make_unique<ClientConnectedEvent>(ClientId{3}));
-
-  bus.processEvents();
+  queue.pushEvent(std::make_unique<TestEvent>(TestEventType::EVENT_1));
+  queue.processEvents();
 
   EXPECT_EQ(1, rawListener->calledCount());
 }
 
-TEST(Unit_Net_Messaging_SynchronizedEventBus, ForwardsEventToListener)
+TEST(Unit_Messaging_AbstractSynchronizedEventQueue, ForwardsEventToListener)
 {
-  SynchronizedEventBus bus;
+  TestQueue queue(allEventTypesAsSet(), {});
 
-  auto listener    = std::make_unique<DummyEventListener>(EventType::CLIENT_CONNECTED);
+  auto listener    = std::make_unique<DummyEventListener>(TestEventType::EVENT_1);
   auto rawListener = listener.get();
-  bus.addListener(std::move(listener));
+  queue.addListener(std::move(listener));
 
-  bus.pushEvent(std::make_unique<ClientConnectedEvent>(ClientId{3}));
-
-  bus.processEvents();
+  queue.pushEvent(std::make_unique<TestEvent>(TestEventType::EVENT_1));
+  queue.processEvents();
 
   const auto &actualEvents = rawListener->events();
-
   EXPECT_EQ(1u, actualEvents.size());
   const auto &event = actualEvents.front();
-  EXPECT_EQ(EventType::CLIENT_CONNECTED, event->type());
-  EXPECT_EQ(ClientId{3}, event->as<ClientConnectedEvent>().clientId());
+  EXPECT_EQ(TestEventType::EVENT_1, event->type());
 }
 
-TEST(Unit_Net_Messaging_SynchronizedEventBus, NotifiesMultipleListenersForTheSameEvent)
+TEST(Unit_Messaging_AbstractSynchronizedEventQueue, NotifiesMultipleListenersForTheSameEvent)
 {
-  SynchronizedEventBus bus;
+  TestQueue queue(allEventTypesAsSet(), {});
 
-  auto listener1    = std::make_unique<DummyEventListener>(EventType::CLIENT_CONNECTED);
+  auto listener1    = std::make_unique<DummyEventListener>(TestEventType::EVENT_1);
   auto rawListener1 = listener1.get();
-  bus.addListener(std::move(listener1));
+  queue.addListener(std::move(listener1));
 
-  auto listener2    = std::make_unique<DummyEventListener>(EventType::CLIENT_CONNECTED);
+  auto listener2    = std::make_unique<DummyEventListener>(TestEventType::EVENT_1);
   auto rawListener2 = listener2.get();
-  bus.addListener(std::move(listener2));
+  queue.addListener(std::move(listener2));
 
-  bus.pushEvent(std::make_unique<ClientConnectedEvent>(ClientId{3}));
-
-  bus.processEvents();
+  queue.pushEvent(std::make_unique<TestEvent>(TestEventType::EVENT_1));
+  queue.processEvents();
 
   EXPECT_EQ(1, rawListener1->calledCount());
   EXPECT_EQ(1, rawListener2->calledCount());
 }
 
 namespace {
-class CounterListener : public IEventListener
+class CounterListener : public IEventListener<TestEventType, TestEvent>
 {
   public:
   CounterListener()           = default;
   ~CounterListener() override = default;
 
-  bool isEventRelevant(const EventType &type) const
+  bool isEventRelevant(const TestEventType &type) const
   {
-    return type == EventType::CLIENT_CONNECTED;
+    return type == TestEventType::EVENT_1;
   }
 
-  void onEventReceived(const IEvent & /*event*/)
+  void onEventReceived(const TestEvent & /*event*/)
   {
     m_receivedCount.fetch_add(1);
   }
@@ -192,7 +192,7 @@ using SynchronizationShPtr = std::shared_ptr<Synchronization>;
 
 constexpr auto MULTIPLIER = 10000;
 
-auto generateClientId(const int threadId, const int messageId) -> int
+auto generateUniqueIndex(const int threadId, const int messageId) -> int
 {
   return MULTIPLIER * threadId + messageId;
 }
@@ -203,11 +203,11 @@ class Producer
   Producer(const int id,
            const int messagesCount,
            SynchronizationShPtr synchronization,
-           IEventBusShPtr bus)
+           TestQueueShPtr queue)
     : m_id(id)
     , m_messagesCount(messagesCount)
     , m_sync(std::move(synchronization))
-    , m_bus(std::move(bus))
+    , m_queue(std::move(queue))
   {}
 
   ~Producer() = default;
@@ -219,8 +219,8 @@ class Producer
 
       for (int messageId = 0; messageId < m_messagesCount; ++messageId)
       {
-        const auto clientId = generateClientId(m_id, messageId);
-        m_bus->pushEvent(std::make_unique<ClientConnectedEvent>(ClientId{clientId}));
+        const auto id = generateUniqueIndex(m_id, messageId);
+        m_queue->pushEvent(std::make_unique<TestEvent>(TestEventType::EVENT_1, id));
       }
     });
   }
@@ -234,7 +234,7 @@ class Producer
   int m_id{};
   int m_messagesCount{};
   SynchronizationShPtr m_sync{};
-  IEventBusShPtr m_bus{};
+  TestQueueShPtr m_queue{};
   std::thread m_thread{};
 
   void waitForReadySignal()
@@ -249,10 +249,10 @@ using ProducerPtr = std::unique_ptr<Producer>;
 class Consumer
 {
   public:
-  Consumer(const int id, SynchronizationShPtr synchronization, IEventBusShPtr bus)
+  Consumer(const int id, SynchronizationShPtr synchronization, TestQueueShPtr queue)
     : m_id(id)
     , m_sync(std::move(synchronization))
-    , m_bus(std::move(bus))
+    , m_queue(std::move(queue))
   {}
 
   ~Consumer() = default;
@@ -262,9 +262,9 @@ class Consumer
     m_thread = std::thread([this]() {
       waitForReadySignal();
 
-      while (!m_bus->empty() || !m_sync->productionFinished.load())
+      while (!m_queue->empty() || !m_sync->productionFinished.load())
       {
-        m_bus->processEvents();
+        m_queue->processEvents();
       }
     });
   }
@@ -277,7 +277,7 @@ class Consumer
   private:
   int m_id{};
   SynchronizationShPtr m_sync{};
-  IEventBusShPtr m_bus{};
+  TestQueueShPtr m_queue{};
   std::thread m_thread{};
 
   void waitForReadySignal()
@@ -306,18 +306,19 @@ TEST_P(ConcurrentProduction, run)
   // less than this value otherwise there will be collisions.
   EXPECT_LE(param.messages, MULTIPLIER);
 
-  auto bus = std::make_shared<SynchronizedEventBus>();
+  auto queue = std::make_shared<TestQueue>(allEventTypesAsSet(),
+                                           std::unordered_set<TestEventType>{});
 
   auto listener    = std::make_unique<CounterListener>();
   auto rawListener = listener.get();
-  bus->addListener(std::move(listener));
+  queue->addListener(std::move(listener));
 
   auto sync = std::make_shared<Synchronization>();
 
   std::vector<ProducerPtr> producers{};
   for (int id = 0; id < param.producers; ++id)
   {
-    auto producer = std::make_unique<Producer>(id, param.messages, sync, bus);
+    auto producer = std::make_unique<Producer>(id, param.messages, sync, queue);
     producer->start();
 
     producers.emplace_back(std::move(producer));
@@ -329,13 +330,13 @@ TEST_P(ConcurrentProduction, run)
     producer->join();
   });
 
-  bus->processEvents();
+  queue->processEvents();
 
   const auto expectedMessagesCount = param.messages * param.producers;
   EXPECT_EQ(expectedMessagesCount, rawListener->messagesCount());
 }
 
-INSTANTIATE_TEST_SUITE_P(Unit_Net_Messaging_SynchronizedEventBus,
+INSTANTIATE_TEST_SUITE_P(Unit_Messaging_AbstractSynchronizedEventQueue,
                          ConcurrentProduction,
                          Values(TestCaseConcurrentProduction{.messages = 1, .producers = 1},
                                 TestCaseConcurrentProduction{.messages = 10, .producers = 1},
@@ -374,18 +375,19 @@ TEST_P(ConcurrentProductionConsumption, run)
   // less than this value otherwise there will be collisions.
   ASSERT_LE(param.messages, MULTIPLIER);
 
-  auto bus = std::make_shared<SynchronizedEventBus>();
+  auto queue = std::make_shared<TestQueue>(allEventTypesAsSet(),
+                                           std::unordered_set<TestEventType>{});
 
   auto listener    = std::make_unique<CounterListener>();
   auto rawListener = listener.get();
-  bus->addListener(std::move(listener));
+  queue->addListener(std::move(listener));
 
   auto sync = std::make_shared<Synchronization>();
 
   std::vector<ProducerPtr> producers{};
   for (int id = 0; id < param.producers; ++id)
   {
-    auto producer = std::make_unique<Producer>(id, param.messages, sync, bus);
+    auto producer = std::make_unique<Producer>(id, param.messages, sync, queue);
     producer->start();
 
     producers.emplace_back(std::move(producer));
@@ -394,7 +396,7 @@ TEST_P(ConcurrentProductionConsumption, run)
   std::vector<ConsumerPtr> consumers{};
   for (int id = 0; id < param.consumers; ++id)
   {
-    auto consumer = std::make_unique<Consumer>(id, sync, bus);
+    auto consumer = std::make_unique<Consumer>(id, sync, queue);
     consumer->start();
 
     consumers.emplace_back(std::move(consumer));
@@ -415,7 +417,7 @@ TEST_P(ConcurrentProductionConsumption, run)
 }
 
 INSTANTIATE_TEST_SUITE_P(
-  Unit_Net_Messaging_SynchronizedEventBus,
+  Unit_Messaging_AbstractSynchronizedEventQueue,
   ConcurrentProductionConsumption,
   Values(
     TestCaseConcurrentProductionConsumption{.messages = 1, .producers = 1, .consumers = 1},
@@ -436,4 +438,4 @@ INSTANTIATE_TEST_SUITE_P(
            + std::to_string(info.param.consumers);
   });
 
-} // namespace net
+} // namespace messaging

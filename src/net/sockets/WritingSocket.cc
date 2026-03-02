@@ -5,7 +5,7 @@
 
 namespace net::details {
 
-WritingSocket::WritingSocket(SocketShPtr socket, IEventBusShPtr eventBus)
+WritingSocket::WritingSocket(SocketShPtr socket, INetworkEventQueueShPtr eventBus)
   : core::CoreObject("writing")
   , m_socket(std::move(socket))
   , m_eventBus(std::move(eventBus))
@@ -23,7 +23,9 @@ WritingSocket::WritingSocket(SocketShPtr socket, IEventBusShPtr eventBus)
   }
 }
 
-WritingSocket::WritingSocket(const ClientId clientId, SocketShPtr socket, IEventBusShPtr eventBus)
+WritingSocket::WritingSocket(const ClientId clientId,
+                             SocketShPtr socket,
+                             INetworkEventQueueShPtr eventBus)
   : core::CoreObject("writing")
   , m_clientId(clientId)
   , m_socket(std::move(socket))

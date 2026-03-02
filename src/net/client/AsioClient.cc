@@ -1,17 +1,17 @@
 
 #include "AsioClient.hh"
 #include "AsioUtils.hh"
-#include "AsyncEventBus.hh"
+#include "AsyncEventQueue.hh"
 #include "ConnectionEstablishedEvent.hh"
 #include "ConnectionLostEvent.hh"
-#include "SynchronizedEventBus.hh"
+#include "SynchronizedEventQueue.hh"
 
 namespace net::details {
 namespace {
-class ClientListenerProxy : public IEventListener
+class ClientListenerProxy : public INetworkEventListener
 {
   public:
-  ClientListenerProxy(std::weak_ptr<IEventListener> listener)
+  ClientListenerProxy(std::weak_ptr<INetworkEventListener> listener)
     : m_listener(std::move(listener))
   {}
 
@@ -38,14 +38,14 @@ class ClientListenerProxy : public IEventListener
   }
 
   private:
-  std::weak_ptr<IEventListener> m_listener{};
+  std::weak_ptr<INetworkEventListener> m_listener{};
 };
 } // namespace
 
-AsioClient::AsioClient(IEventBusShPtr eventBus)
+AsioClient::AsioClient(INetworkEventQueueShPtr eventBus)
   : core::CoreObject("client")
   , m_eventBus(std::move(eventBus))
-  , m_internalBus(std::make_shared<AsyncEventBus>(std::make_unique<SynchronizedEventBus>()))
+  , m_internalBus(createAsyncEventQueue(createSynchronizedEventQueue()))
 {
   setService("net");
 

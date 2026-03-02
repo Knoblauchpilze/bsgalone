@@ -3,9 +3,9 @@
 
 #include "ClientId.hh"
 #include "ClientManager.hh"
-#include "IEventBus.hh"
 #include "IMessage.hh"
 #include "IMessageQueue.hh"
+#include "INetworkEventQueue.hh"
 #include "INetworkServer.hh"
 #include <atomic>
 #include <memory>
@@ -28,7 +28,7 @@ class ServerNetworkClient : public bsgalone::core::IMessageQueue
   void processMessages() override;
 
   private:
-  net::IEventBusShPtr m_eventBus{};
+  net::INetworkEventQueueShPtr m_eventBus{};
   net::INetworkServerShPtr m_tcpServer{};
 
   std::atomic_bool m_started{};

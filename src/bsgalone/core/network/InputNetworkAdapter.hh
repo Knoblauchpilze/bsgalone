@@ -3,15 +3,15 @@
 
 #include "ClientId.hh"
 #include "DataReceivedEvent.hh"
-#include "IEventListener.hh"
 #include "IMessage.hh"
 #include "IMessageParser.hh"
 #include "IMessageQueue.hh"
+#include "INetworkEventListener.hh"
 #include <deque>
 
 namespace bsgalone::core {
 
-class InputNetworkAdapter : public net::IEventListener
+class InputNetworkAdapter : public net::INetworkEventListener
 {
   public:
   InputNetworkAdapter(IMessageQueueShPtr queue, IMessageParserPtr parser);
