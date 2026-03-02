@@ -25,7 +25,7 @@ class EntityRemovedMessageConsumer : public bsgalone::core::AbstractMessageConsu
                                bsgalone::core::IMessageQueue *const outputMessageQueue);
   ~EntityRemovedMessageConsumer() override = default;
 
-  void onMessageReceived(const bsgalone::core::IMessage &message) override;
+  void onEventReceived(const bsgalone::core::IMessage &message) override;
 
   private:
   SystemServiceShPtr m_systemService{};

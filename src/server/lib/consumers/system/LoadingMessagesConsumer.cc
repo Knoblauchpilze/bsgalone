@@ -38,7 +38,7 @@ LoadingMessagesConsumer::LoadingMessagesConsumer(
   }
 }
 
-void LoadingMessagesConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
+void LoadingMessagesConsumer::onEventReceived(const bsgalone::core::IMessage &message)
 {
   switch (message.type())
   {
@@ -58,7 +58,7 @@ void LoadingMessagesConsumer::handleLoadingStartedMessage(const LoadingStartedMe
 {
   info("Handling loading transition " + str(message.getTransition()));
 
-  m_outputMessageQueue->pushMessage(message.clone());
+  m_outputMessageQueue->pushEvent(message.clone());
 
   switch (message.getTransition())
   {
@@ -92,7 +92,7 @@ void LoadingMessagesConsumer::handleLoadingStartedMessage(const LoadingStartedMe
 void LoadingMessagesConsumer::forwardLoadingFinishedMessage(
   const LoadingFinishedMessage &message) const
 {
-  m_outputMessageQueue->pushMessage(message.clone());
+  m_outputMessageQueue->pushEvent(message.clone());
 }
 
 void LoadingMessagesConsumer::handleActiveShipChangedTransition(
@@ -178,7 +178,7 @@ void LoadingMessagesConsumer::handleLoginDataLoading(const LoadingStartedMessage
   // which leads to the loading messages to be broadcast.
   out->copyClientIdIfDefined(message);
 
-  m_outputMessageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushEvent(std::move(out));
 }
 
 void LoadingMessagesConsumer::handleResourcesLoading(const LoadingStartedMessage &message) const
@@ -194,7 +194,7 @@ void LoadingMessagesConsumer::handleResourcesLoading(const LoadingStartedMessage
   auto out = std::make_unique<ResourceListMessage>(resourcesData);
   out->copyClientIdIfDefined(message);
 
-  m_outputMessageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushEvent(std::move(out));
 }
 
 void LoadingMessagesConsumer::handleWeaponsLoading(const LoadingStartedMessage &message) const
@@ -210,7 +210,7 @@ void LoadingMessagesConsumer::handleWeaponsLoading(const LoadingStartedMessage &
   auto out = std::make_unique<WeaponListMessage>(weaponsData);
   out->copyClientIdIfDefined(message);
 
-  m_outputMessageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushEvent(std::move(out));
 }
 
 void LoadingMessagesConsumer::handleComputersLoading(const LoadingStartedMessage &message) const
@@ -226,7 +226,7 @@ void LoadingMessagesConsumer::handleComputersLoading(const LoadingStartedMessage
   auto out = std::make_unique<ComputerListMessage>(computersData);
   out->copyClientIdIfDefined(message);
 
-  m_outputMessageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushEvent(std::move(out));
 }
 
 void LoadingMessagesConsumer::handleShipsLoading(const LoadingStartedMessage &message) const
@@ -245,7 +245,7 @@ void LoadingMessagesConsumer::handleShipsLoading(const LoadingStartedMessage &me
   auto out = std::make_unique<ShipListMessage>(player.faction, shipsData);
   out->copyClientIdIfDefined(message);
 
-  m_outputMessageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushEvent(std::move(out));
 }
 
 void LoadingMessagesConsumer::handleSystemsLoading(const LoadingStartedMessage &message) const
@@ -261,7 +261,7 @@ void LoadingMessagesConsumer::handleSystemsLoading(const LoadingStartedMessage &
   auto out = std::make_unique<SystemListMessage>(systemsData);
   out->copyClientIdIfDefined(message);
 
-  m_outputMessageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushEvent(std::move(out));
 }
 
 void LoadingMessagesConsumer::handlePlayerResourcesLoading(const LoadingStartedMessage &message) const
@@ -280,7 +280,7 @@ void LoadingMessagesConsumer::handlePlayerResourcesLoading(const LoadingStartedM
   auto out = std::make_unique<PlayerResourceListMessage>(resourcesData);
   out->copyClientIdIfDefined(message);
 
-  m_outputMessageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushEvent(std::move(out));
 }
 
 void LoadingMessagesConsumer::handlePlayerShipsLoading(const LoadingStartedMessage &message) const
@@ -298,7 +298,7 @@ void LoadingMessagesConsumer::handlePlayerShipsLoading(const LoadingStartedMessa
   out->setPlayerDbId(playerDbId);
   out->copyClientIdIfDefined(message);
 
-  m_outputMessageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushEvent(std::move(out));
 }
 
 void LoadingMessagesConsumer::handlePlayerComputersLoading(const LoadingStartedMessage &message) const
@@ -317,7 +317,7 @@ void LoadingMessagesConsumer::handlePlayerComputersLoading(const LoadingStartedM
   auto out = std::make_unique<PlayerComputerListMessage>(computersData);
   out->copyClientIdIfDefined(message);
 
-  m_outputMessageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushEvent(std::move(out));
 }
 
 void LoadingMessagesConsumer::handlePlayerWeaponsLoading(const LoadingStartedMessage &message) const
@@ -336,7 +336,7 @@ void LoadingMessagesConsumer::handlePlayerWeaponsLoading(const LoadingStartedMes
   auto out = std::make_unique<PlayerWeaponListMessage>(weaopnsData);
   out->copyClientIdIfDefined(message);
 
-  m_outputMessageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushEvent(std::move(out));
 }
 
 void LoadingMessagesConsumer::handleActiveShipLoading(const LoadingStartedMessage &message) const
@@ -347,7 +347,7 @@ void LoadingMessagesConsumer::handleActiveShipLoading(const LoadingStartedMessag
   auto out = std::make_unique<HangarMessage>(ship.toPlayerShipData());
   out->copyClientIdIfDefined(message);
 
-  m_outputMessageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushEvent(std::move(out));
 }
 
 void LoadingMessagesConsumer::handleSystemPlayersLoading(const LoadingStartedMessage &message) const
@@ -365,7 +365,7 @@ void LoadingMessagesConsumer::handleSystemPlayersLoading(const LoadingStartedMes
   auto out = std::make_unique<PlayerListMessage>(systemDbId, playersData);
   out->copyClientIdIfDefined(message);
 
-  m_outputMessageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushEvent(std::move(out));
 }
 
 void LoadingMessagesConsumer::handleSystemAsteroidsLoading(const LoadingStartedMessage &message) const
@@ -383,7 +383,7 @@ void LoadingMessagesConsumer::handleSystemAsteroidsLoading(const LoadingStartedM
   auto out = std::make_unique<AsteroidListMessage>(systemDbId, asteroidsData);
   out->copyClientIdIfDefined(message);
 
-  m_outputMessageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushEvent(std::move(out));
 }
 
 void LoadingMessagesConsumer::handleSystemOutpostsLoading(const LoadingStartedMessage &message) const
@@ -401,7 +401,7 @@ void LoadingMessagesConsumer::handleSystemOutpostsLoading(const LoadingStartedMe
   auto out = std::make_unique<OutpostListMessage>(systemDbId, outpostsData);
   out->copyClientIdIfDefined(message);
 
-  m_outputMessageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushEvent(std::move(out));
 }
 
 void LoadingMessagesConsumer::handleSystemShipsLoading(const LoadingStartedMessage &message) const
@@ -420,7 +420,7 @@ void LoadingMessagesConsumer::handleSystemShipsLoading(const LoadingStartedMessa
   out->setSystemDbId(systemDbId);
   out->copyClientIdIfDefined(message);
 
-  m_outputMessageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushEvent(std::move(out));
 }
 
 void LoadingMessagesConsumer::handleSystemTargetsLoading(const LoadingStartedMessage &message) const
@@ -438,7 +438,7 @@ void LoadingMessagesConsumer::handleSystemTargetsLoading(const LoadingStartedMes
   auto out = std::make_unique<TargetListMessage>(systemDbId, targetsData);
   out->copyClientIdIfDefined(message);
 
-  m_outputMessageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushEvent(std::move(out));
 }
 
 void LoadingMessagesConsumer::handleSystemTickLoading(const LoadingStartedMessage &message) const
@@ -450,7 +450,7 @@ void LoadingMessagesConsumer::handleSystemTickLoading(const LoadingStartedMessag
   auto out = std::make_unique<SystemDataMessage>(toSystemTickData(tickConfig));
   out->copyClientIdIfDefined(message);
 
-  m_outputMessageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushEvent(std::move(out));
 }
 
 } // namespace bsgo

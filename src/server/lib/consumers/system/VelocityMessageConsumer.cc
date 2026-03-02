@@ -21,7 +21,7 @@ VelocityMessageConsumer::VelocityMessageConsumer(
   }
 }
 
-void VelocityMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
+void VelocityMessageConsumer::onEventReceived(const bsgalone::core::IMessage &message)
 {
   const auto &velocity = message.as<bsgalone::core::VelocityMessage>();
 

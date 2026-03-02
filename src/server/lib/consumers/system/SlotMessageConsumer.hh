@@ -14,7 +14,7 @@ class SlotMessageConsumer : public bsgalone::core::AbstractMessageConsumer
                       bsgalone::core::IMessageQueue *const outputMessageQueue);
   ~SlotMessageConsumer() override = default;
 
-  void onMessageReceived(const bsgalone::core::IMessage &message) override;
+  void onEventReceived(const bsgalone::core::IMessage &message) override;
 
   private:
   SlotServiceShPtr m_slotService{};

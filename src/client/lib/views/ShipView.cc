@@ -177,7 +177,7 @@ void ShipView::tryActivateWeapon(const int weaponId) const
                                                                shipDbId,
                                                                slotDbId,
                                                                bsgalone::core::Slot::WEAPON);
-  m_outputMessageQueue->pushMessage(std::move(message));
+  m_outputMessageQueue->pushEvent(std::move(message));
 }
 
 void ShipView::tryActivateSlot(const int slotId) const
@@ -200,7 +200,7 @@ void ShipView::tryActivateSlot(const int slotId) const
                                                                shipDbId,
                                                                slotDbId,
                                                                bsgalone::core::Slot::COMPUTER);
-  m_outputMessageQueue->pushMessage(std::move(message));
+  m_outputMessageQueue->pushEvent(std::move(message));
 }
 
 void ShipView::tryAcquireTarget(const Eigen::Vector3f &position) const
@@ -225,7 +225,7 @@ void ShipView::tryAcquireTarget(const Eigen::Vector3f &position) const
   const auto playerDbId = m_gameSession->getPlayerDbId();
   const auto systemDbId = m_gameSession->getSystemDbId();
 
-  m_outputMessageQueue->pushMessage(
+  m_outputMessageQueue->pushEvent(
     std::make_unique<bsgalone::core::TargetPickedMessage>(playerDbId, systemDbId, data, position));
 }
 

@@ -98,7 +98,7 @@ void InputNetworkAdapter::feedMessagesToQueue(const std::optional<net::ClientId>
     {
       message->as<NetworkMessage>().setClientId(*maybeClientId);
     }
-    m_queue->pushMessage(std::move(message));
+    m_queue->pushEvent(std::move(message));
   }
 }
 

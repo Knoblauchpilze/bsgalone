@@ -15,8 +15,7 @@ namespace pge {
 constexpr auto DEFAULT_SERVER_URL = "127.0.0.1";
 
 GameNetworkClient::GameNetworkClient()
-  : m_inputQueue(
-    std::make_shared<bsgo::SynchronizedMessageQueue>("synchronized-message-queue-for-input"))
+  : m_inputQueue(bsgo::createSynchronizedMessageQueue())
 {}
 
 void GameNetworkClient::start(const int port)
@@ -37,7 +36,7 @@ void GameNetworkClient::stop()
   m_eventBus.reset();
 }
 
-void GameNetworkClient::pushMessage(bsgalone::core::IMessagePtr message)
+void GameNetworkClient::pushEvent(bsgalone::core::IMessagePtr message)
 {
   if (!m_connected.load())
   {
@@ -57,9 +56,9 @@ bool GameNetworkClient::empty()
   return m_inputQueue->empty();
 }
 
-void GameNetworkClient::processMessages()
+void GameNetworkClient::processEvents()
 {
-  m_inputQueue->processMessages();
+  m_inputQueue->processEvents();
 }
 
 namespace {
@@ -104,7 +103,7 @@ class NetworkEventListener : public net::INetworkEventListener
     m_connected.store(true);
 
     auto message = std::make_unique<bsgo::ConnectionMessage>();
-    m_inputQueue->pushMessage(std::move(message));
+    m_inputQueue->pushEvent(std::move(message));
   }
 
   void handleConnectionLost(const net::ConnectionLostEvent & /*event*/)

@@ -117,7 +117,7 @@ bool shouldMessageBeFiltered(const bsgalone::core::IMessage &message, const bsgo
 }
 } // namespace
 
-void LogUiHandler::onMessageReceived(const bsgalone::core::IMessage &message)
+void LogUiHandler::onEventReceived(const bsgalone::core::IMessage &message)
 {
   if (!m_shipView->isReady() || !m_resourceView->isReady())
   {

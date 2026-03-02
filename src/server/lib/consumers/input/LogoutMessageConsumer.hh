@@ -18,7 +18,7 @@ class LogoutMessageConsumer : public bsgalone::core::AbstractMessageConsumer
                         bsgalone::core::IMessageQueue *const outputMessageQueue);
   ~LogoutMessageConsumer() override = default;
 
-  void onMessageReceived(const bsgalone::core::IMessage &message) override;
+  void onEventReceived(const bsgalone::core::IMessage &message) override;
 
   private:
   SystemQueueMap m_systemQueues{};

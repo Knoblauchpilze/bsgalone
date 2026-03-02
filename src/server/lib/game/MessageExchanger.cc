@@ -23,8 +23,8 @@ auto MessageExchanger::getInternalMessageQueue() const -> bsgalone::core::IMessa
 namespace {
 auto createInternalMessageQueue() -> bsgalone::core::IMessageQueueShPtr
 {
-  auto messageQueue = std::make_unique<SynchronizedMessageQueue>("synchronized-queue-for-internal");
-  return std::make_shared<AsyncMessageQueue>(std::move(messageQueue));
+  auto messageQueue = createSynchronizedMessageQueue();
+  return createAsyncMessageQueue(std::move(messageQueue));
 }
 } // namespace
 

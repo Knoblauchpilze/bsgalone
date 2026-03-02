@@ -24,7 +24,7 @@ class LogUiHandler : public IUiHandler, public bsgalone::core::AbstractMessageLi
   void updateUi() override;
 
   void connectToMessageQueue(bsgalone::core::IMessageQueue &messageQueue) override;
-  void onMessageReceived(const bsgalone::core::IMessage &message) override;
+  void onEventReceived(const bsgalone::core::IMessage &message) override;
 
   private:
   SystemViewShPtr m_systemView{};

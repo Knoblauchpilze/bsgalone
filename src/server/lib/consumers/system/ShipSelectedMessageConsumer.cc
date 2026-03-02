@@ -28,7 +28,7 @@ ShipSelectedMessageConsumer::ShipSelectedMessageConsumer(
   }
 }
 
-void ShipSelectedMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
+void ShipSelectedMessageConsumer::onEventReceived(const bsgalone::core::IMessage &message)
 {
   const auto &selectionMessage = message.as<bsgalone::core::ShipSelectedMessage>();
   handleShipSwitchRequest(selectionMessage);
@@ -56,11 +56,11 @@ void ShipSelectedMessageConsumer::handleSuccessfulSwitch(
 
   auto started = std::make_unique<LoadingStartedMessage>(LoadingTransition::ACTIVE_SHIP_CHANGED,
                                                          playerDbId);
-  m_systemMessageQueue->pushMessage(std::move(started));
+  m_systemMessageQueue->pushEvent(std::move(started));
 
   auto finished = std::make_unique<LoadingFinishedMessage>(LoadingTransition::ACTIVE_SHIP_CHANGED,
                                                            playerDbId);
-  m_systemMessageQueue->pushMessage(std::move(finished));
+  m_systemMessageQueue->pushEvent(std::move(finished));
 }
 
 } // namespace bsgo

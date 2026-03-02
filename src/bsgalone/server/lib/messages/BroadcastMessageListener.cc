@@ -23,7 +23,7 @@ BroadcastMessageListener::BroadcastMessageListener(ClientManagerShPtr clientMana
   setService("message");
 }
 
-bool BroadcastMessageListener::isMessageRelevant(const core::MessageType & /*type*/) const
+bool BroadcastMessageListener::isEventRelevant(const core::MessageType & /*type*/) const
 {
   return true;
 }
@@ -41,7 +41,7 @@ bool triggersClientManagerUpdate(const core::IMessage &message)
 }
 } // namespace
 
-void BroadcastMessageListener::onMessageReceived(const core::IMessage &message)
+void BroadcastMessageListener::onEventReceived(const core::IMessage &message)
 {
   if (triggersClientManagerUpdate(message))
   {

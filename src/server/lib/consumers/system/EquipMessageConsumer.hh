@@ -17,7 +17,7 @@ class EquipMessageConsumer : public bsgalone::core::AbstractMessageConsumer
                        bsgalone::core::IMessageQueue *const outputMessageQueue);
   ~EquipMessageConsumer() override = default;
 
-  void onMessageReceived(const bsgalone::core::IMessage &message) override;
+  void onEventReceived(const bsgalone::core::IMessage &message) override;
 
   private:
   LockerServiceShPtr m_lockerService{};

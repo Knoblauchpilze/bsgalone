@@ -48,7 +48,7 @@ void RespawnProcess::respawnAsteroid(Coordinator & /*coordinator*/, Asteroid ast
   auto added = std::make_unique<EntityAddedMessage>(asteroid.system);
   AsteroidData data{.dbId = asteroid.id};
   added->setAsteroidData(data);
-  m_systemMessageQueue->pushMessage(std::move(added));
+  m_systemMessageQueue->pushEvent(std::move(added));
 }
 
 void RespawnProcess::respawnPlayerShip(Coordinator & /*coordinator*/, PlayerShip playerShip) const
@@ -67,7 +67,7 @@ void RespawnProcess::respawnPlayerShip(Coordinator & /*coordinator*/, PlayerShip
   auto added = std::make_unique<EntityAddedMessage>(*playerShip.system);
   PlayerShipData data{.dbId = playerShip.id};
   added->setShipData(data);
-  m_systemMessageQueue->pushMessage(std::move(added));
+  m_systemMessageQueue->pushEvent(std::move(added));
 }
 
 } // namespace bsgo

@@ -20,7 +20,7 @@ JoinShipMessageConsumer::JoinShipMessageConsumer(
   }
 }
 
-void JoinShipMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
+void JoinShipMessageConsumer::onEventReceived(const bsgalone::core::IMessage &message)
 {
   const auto &joinShip = message.as<JoinShipMessage>();
   handleJoinShip(joinShip);
@@ -36,7 +36,7 @@ void JoinShipMessageConsumer::handleJoinShip(const JoinShipMessage &message) con
     return;
   }
 
-  m_outputMessageQueue->pushMessage(message.clone());
+  m_outputMessageQueue->pushEvent(message.clone());
 }
 
 } // namespace bsgo

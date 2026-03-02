@@ -14,7 +14,7 @@ class AbstractGameMessageConsumer : public bsgalone::core::AbstractMessageConsum
                               const bsgalone::core::MessageType relevantMessageType);
   ~AbstractGameMessageConsumer() override = default;
 
-  void onMessageReceived(const bsgalone::core::IMessage &message) override;
+  void onEventReceived(const bsgalone::core::IMessage &message) override;
 
   protected:
   virtual void onMessageReceivedInternal(const bsgalone::core::IMessage &message) = 0;

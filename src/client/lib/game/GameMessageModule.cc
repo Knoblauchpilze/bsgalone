@@ -27,7 +27,7 @@ GameMessageModule::GameMessageModule(Game &game, const bsgo::DatabaseEntityMappe
   setService("game");
 }
 
-void GameMessageModule::onMessageReceived(const bsgalone::core::IMessage &message)
+void GameMessageModule::onEventReceived(const bsgalone::core::IMessage &message)
 {
   switch (message.type())
   {

@@ -28,7 +28,7 @@ PurchaseMessageConsumer::PurchaseMessageConsumer(
   }
 }
 
-void PurchaseMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
+void PurchaseMessageConsumer::onEventReceived(const bsgalone::core::IMessage &message)
 {
   const auto &purchase = message.as<bsgalone::core::PurchaseMessage>();
   const auto type      = purchase.getItemType();
@@ -63,7 +63,7 @@ void PurchaseMessageConsumer::handleComputerPurchase(
     return;
   }
 
-  m_outputMessageQueue->pushMessage(message.clone());
+  m_outputMessageQueue->pushEvent(message.clone());
 
   handleSuccessfulPurchase(message);
 }
@@ -80,7 +80,7 @@ void PurchaseMessageConsumer::handleShipPurchase(const bsgalone::core::PurchaseM
     return;
   }
 
-  m_outputMessageQueue->pushMessage(message.clone());
+  m_outputMessageQueue->pushEvent(message.clone());
 
   handleSuccessfulPurchase(message);
 }
@@ -98,7 +98,7 @@ void PurchaseMessageConsumer::handleWeaponPurchase(
     return;
   }
 
-  m_outputMessageQueue->pushMessage(message.clone());
+  m_outputMessageQueue->pushEvent(message.clone());
 
   handleSuccessfulPurchase(message);
 }
@@ -109,10 +109,10 @@ void PurchaseMessageConsumer::handleSuccessfulPurchase(
   const auto playerDbId = message.getPlayerDbId();
 
   auto started = std::make_unique<LoadingStartedMessage>(LoadingTransition::PURCHASE, playerDbId);
-  m_systemMessageQueue->pushMessage(std::move(started));
+  m_systemMessageQueue->pushEvent(std::move(started));
 
   auto finished = std::make_unique<LoadingFinishedMessage>(LoadingTransition::PURCHASE, playerDbId);
-  m_systemMessageQueue->pushMessage(std::move(finished));
+  m_systemMessageQueue->pushEvent(std::move(finished));
 }
 
 } // namespace bsgo

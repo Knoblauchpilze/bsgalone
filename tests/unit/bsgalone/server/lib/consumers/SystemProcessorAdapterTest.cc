@@ -21,7 +21,7 @@ TEST(Unit_Bsgalone_Server_Consumers_SystemProcessorAdapter, ForwardsMessageWhenD
   SystemProcessorAdapter adapter(bsgo::Uuid{19}, queue);
 
   core::ShipSelectedMessage message(bsgo::Uuid{18}, bsgo::Uuid{19}, bsgo::Uuid{7});
-  adapter.onMessageReceived(message);
+  adapter.onEventReceived(message);
 
   EXPECT_EQ(1u, queue->messages().size());
   const auto &actual = queue->messages().at(0);
@@ -38,7 +38,7 @@ TEST(Unit_Bsgalone_Server_Consumers_SystemProcessorAdapter,
   SystemProcessorAdapter adapter(bsgo::Uuid{19}, queue);
 
   core::ShipSelectedMessage message(bsgo::Uuid{18}, bsgo::Uuid{20}, bsgo::Uuid{7});
-  adapter.onMessageReceived(message);
+  adapter.onEventReceived(message);
 
   EXPECT_TRUE(queue->empty());
 }

@@ -239,8 +239,8 @@ bool Game::step(float elapsedSeconds)
   // Process messages first and then update the coordinator so that
   // the systems have a chance to react to messages before sending
   // everything to the UI.
-  m_networkClient->processMessages();
-  m_internalMessageQueue->processMessages();
+  m_networkClient->processEvents();
+  m_internalMessageQueue->processEvents();
 
   if (shouldUpdateCoordinatorInScreen(m_state.screen))
   {
@@ -276,7 +276,7 @@ void Game::onConnectedToServer()
     auto login = std::make_unique<bsgo::LoginMessage>(*m_gameRole);
     login->setUserName(*m_userName);
     login->setPassword(*m_password);
-    m_networkClient->pushMessage(std::move(login));
+    m_networkClient->pushEvent(std::move(login));
   }
 }
 
@@ -378,8 +378,7 @@ void Game::initialize(const int serverPort)
 
   // Not strictly necessary as the internal messages should only be produced
   // synchronously by the Coordinator but also does not hurt.
-  m_internalMessageQueue = std::make_unique<bsgo::SynchronizedMessageQueue>(
-    "synchronized-message-queue-for-internal");
+  m_internalMessageQueue = bsgo::createSynchronizedMessageQueue();
 
   bsgo::SystemsConfig sConfig{.ignoredSystems = {bsgo::SystemType::LOOT,
                                                  bsgo::SystemType::REMOVAL,

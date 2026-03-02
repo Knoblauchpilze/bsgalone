@@ -33,12 +33,12 @@ void LoadingHelper::publishLoadingMessages(const Uuid clientId,
   auto started = std::make_unique<LoadingStartedMessage>(LoadingTransition::LOGIN, playerDbId);
   started->setSystemDbId(systemDbId);
   started->setClientId(clientId);
-  maybeQueue->second->pushMessage(std::move(started));
+  maybeQueue->second->pushEvent(std::move(started));
 
   auto finished = std::make_unique<LoadingFinishedMessage>(LoadingTransition::LOGIN, playerDbId);
   finished->setSystemDbId(systemDbId);
   finished->setClientId(clientId);
-  maybeQueue->second->pushMessage(std::move(finished));
+  maybeQueue->second->pushEvent(std::move(finished));
 }
 
 } // namespace bsgo

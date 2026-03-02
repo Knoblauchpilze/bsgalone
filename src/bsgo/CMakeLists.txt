@@ -61,6 +61,7 @@ target_link_libraries (bsgo_lib PUBLIC
 	pqxx
 	core_lib
 	net_lib
+	messaging_lib
 	time_lib
 	game_core_lib
 	)

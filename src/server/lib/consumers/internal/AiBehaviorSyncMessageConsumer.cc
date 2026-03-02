@@ -21,7 +21,7 @@ AiBehaviorSyncMessageConsumer::AiBehaviorSyncMessageConsumer(
   }
 }
 
-void AiBehaviorSyncMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
+void AiBehaviorSyncMessageConsumer::onEventReceived(const bsgalone::core::IMessage &message)
 {
   const auto &aiSync = message.as<AiBehaviorSyncMessage>();
 
@@ -44,7 +44,7 @@ void AiBehaviorSyncMessageConsumer::onMessageReceived(const bsgalone::core::IMes
 
   auto out = aiSync.clone();
   out->as<AiBehaviorSyncMessage>().setSystemDbId(*maybeSystemDbId);
-  m_outputMessageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushEvent(std::move(out));
 }
 
 } // namespace bsgo

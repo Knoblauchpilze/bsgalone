@@ -20,7 +20,7 @@ JumpRequestedMessageConsumer::JumpRequestedMessageConsumer(
   }
 }
 
-void JumpRequestedMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
+void JumpRequestedMessageConsumer::onEventReceived(const bsgalone::core::IMessage &message)
 {
   const auto &jump = message.as<bsgalone::core::JumpRequestedMessage>();
   handleJumpRequest(jump);
@@ -38,7 +38,7 @@ void JumpRequestedMessageConsumer::handleJumpRequest(
     return;
   }
 
-  m_outputMessageQueue->pushMessage(message.clone());
+  m_outputMessageQueue->pushEvent(message.clone());
 }
 
 } // namespace bsgo

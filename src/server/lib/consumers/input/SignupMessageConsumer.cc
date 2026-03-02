@@ -19,7 +19,7 @@ SignupMessageConsumer::SignupMessageConsumer(SignupServicePtr signupService,
   }
 }
 
-void SignupMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
+void SignupMessageConsumer::onEventReceived(const bsgalone::core::IMessage &message)
 {
   const auto &signup = message.as<SignupMessage>();
   handleSignup(signup);
@@ -44,7 +44,7 @@ void SignupMessageConsumer::handleSignup(const SignupMessage &message) const
                                              maybePlayer.has_value() ? maybePlayer->id
                                                                      : std::optional<Uuid>{});
   out->copyClientIdIfDefined(message);
-  m_outputMessageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushEvent(std::move(out));
 }
 
 } // namespace bsgo

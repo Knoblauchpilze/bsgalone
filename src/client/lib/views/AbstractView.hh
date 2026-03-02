@@ -18,7 +18,7 @@ class AbstractView : public bsgalone::core::AbstractMessageConsumer, public IVie
 
   void addListener(IViewListenerPtr listener) override;
 
-  void onMessageReceived(const bsgalone::core::IMessage &message) override;
+  void onEventReceived(const bsgalone::core::IMessage &message) override;
 
   protected:
   /// @brief - Used to notify all currently registered listeners of an update of the

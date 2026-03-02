@@ -139,7 +139,7 @@ auto PlayerView::getPlayerShips() const -> std::vector<bsgo::PlayerShipData>
 
 void PlayerView::trySelectShip(const bsgo::Uuid shipDbId) const
 {
-  m_outputMessageQueue->pushMessage(
+  m_outputMessageQueue->pushEvent(
     std::make_unique<bsgalone::core::ShipSelectedMessage>(m_gameSession->getPlayerDbId(),
                                                           m_gameSession->getSystemDbId(),
                                                           shipDbId));
@@ -147,7 +147,7 @@ void PlayerView::trySelectShip(const bsgo::Uuid shipDbId) const
 
 void PlayerView::tryPurchase(const bsgalone::core::Item &type, const bsgo::Uuid itemDbId) const
 {
-  m_outputMessageQueue->pushMessage(
+  m_outputMessageQueue->pushEvent(
     std::make_unique<bsgalone::core::PurchaseMessage>(m_gameSession->getPlayerDbId(),
                                                       m_gameSession->getSystemDbId(),
                                                       type,
@@ -161,12 +161,12 @@ void PlayerView::tryLogin(const std::string &name,
   auto out = std::make_unique<bsgo::LoginMessage>(role);
   out->setUserName(name);
   out->setPassword(password);
-  m_outputMessageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushEvent(std::move(out));
 }
 
 void PlayerView::tryLogout() const
 {
-  m_outputMessageQueue->pushMessage(
+  m_outputMessageQueue->pushEvent(
     std::make_unique<bsgo::LogoutMessage>(m_gameSession->getPlayerDbId()));
 }
 
@@ -174,12 +174,12 @@ void PlayerView::trySignup(const std::string &name,
                            const std::string &password,
                            const bsgo::Faction &faction) const
 {
-  m_outputMessageQueue->pushMessage(std::make_unique<bsgo::SignupMessage>(name, password, faction));
+  m_outputMessageQueue->pushEvent(std::make_unique<bsgo::SignupMessage>(name, password, faction));
 }
 
 void PlayerView::tryJoin(const bsgo::Uuid playerDbId, const bsgo::Uuid shipDbId) const
 {
-  m_outputMessageQueue->pushMessage(std::make_unique<bsgo::JoinShipMessage>(playerDbId, shipDbId));
+  m_outputMessageQueue->pushEvent(std::make_unique<bsgo::JoinShipMessage>(playerDbId, shipDbId));
 }
 
 void PlayerView::handleMessageInternal(const bsgalone::core::IMessage &message)

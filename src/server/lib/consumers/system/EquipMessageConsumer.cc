@@ -32,7 +32,7 @@ EquipMessageConsumer::EquipMessageConsumer(const Services &services,
   }
 }
 
-void EquipMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
+void EquipMessageConsumer::onEventReceived(const bsgalone::core::IMessage &message)
 {
   const auto &equip = message.as<bsgalone::core::EquipMessage>();
   const auto action = equip.getAction();
@@ -64,7 +64,7 @@ void EquipMessageConsumer::handleEquipRequest(const bsgalone::core::EquipMessage
     return;
   }
 
-  m_outputMessageQueue->pushMessage(message.clone());
+  m_outputMessageQueue->pushEvent(message.clone());
 
   handleSuccessfulRequest(message);
 }
@@ -83,7 +83,7 @@ void EquipMessageConsumer::handleUnequipRequest(const bsgalone::core::EquipMessa
     return;
   }
 
-  m_outputMessageQueue->pushMessage(message.clone());
+  m_outputMessageQueue->pushEvent(message.clone());
 
   handleSuccessfulRequest(message);
 }
@@ -94,10 +94,10 @@ void EquipMessageConsumer::handleSuccessfulRequest(const bsgalone::core::EquipMe
   const auto playerDbId = m_shipService->getPlayerDbIdForShip(shipDbId);
 
   auto started = std::make_unique<LoadingStartedMessage>(LoadingTransition::EQUIP, playerDbId);
-  m_systemMessageQueue->pushMessage(std::move(started));
+  m_systemMessageQueue->pushEvent(std::move(started));
 
   auto finished = std::make_unique<LoadingFinishedMessage>(LoadingTransition::EQUIP, playerDbId);
-  m_systemMessageQueue->pushMessage(std::move(finished));
+  m_systemMessageQueue->pushEvent(std::move(finished));
 }
 
 } // namespace bsgo

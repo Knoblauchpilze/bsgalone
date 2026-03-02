@@ -8,7 +8,6 @@
 #include "LoadingFinishedMessage.hh"
 #include "LoadingStartedMessage.hh"
 #include "LootMessage.hh"
-#include "MessageProcessor.hh"
 #include "NetworkMessage.hh"
 #include "ScannedMessage.hh"
 #include "SlotComponentMessage.hh"

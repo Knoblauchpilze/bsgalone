@@ -26,7 +26,7 @@ EntityRemovedMessageConsumer::EntityRemovedMessageConsumer(
   }
 }
 
-void EntityRemovedMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
+void EntityRemovedMessageConsumer::onEventReceived(const bsgalone::core::IMessage &message)
 {
   const auto &removed = message.as<EntityRemovedMessage>();
 
@@ -63,10 +63,10 @@ void EntityRemovedMessageConsumer::handleShipEntityRemoved(const Uuid shipDbId,
   }
 
   const auto &queue = *maybeQueue;
-  queue->pushMessage(std::make_unique<EntityRemovedMessage>(shipDbId,
-                                                            bsgalone::core::EntityKind::SHIP,
-                                                            dead,
-                                                            *maybeSystemDbId));
+  queue->pushEvent(std::make_unique<EntityRemovedMessage>(shipDbId,
+                                                          bsgalone::core::EntityKind::SHIP,
+                                                          dead,
+                                                          *maybeSystemDbId));
 }
 
 void EntityRemovedMessageConsumer::handleAsteroidEntityRemoved(const Uuid asteroidDbId,
@@ -89,10 +89,10 @@ void EntityRemovedMessageConsumer::handleAsteroidEntityRemoved(const Uuid astero
   }
 
   const auto &processor = *maybeProcessor;
-  processor->pushMessage(std::make_unique<EntityRemovedMessage>(asteroidDbId,
-                                                                bsgalone::core::EntityKind::ASTEROID,
-                                                                dead,
-                                                                *maybeSystemDbId));
+  processor->pushEvent(std::make_unique<EntityRemovedMessage>(asteroidDbId,
+                                                              bsgalone::core::EntityKind::ASTEROID,
+                                                              dead,
+                                                              *maybeSystemDbId));
 }
 
 } // namespace bsgo

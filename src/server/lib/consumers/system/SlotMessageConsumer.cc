@@ -20,7 +20,7 @@ SlotMessageConsumer::SlotMessageConsumer(const Services &services,
   }
 }
 
-void SlotMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
+void SlotMessageConsumer::onEventReceived(const bsgalone::core::IMessage &message)
 {
   const auto &slotMessage = message.as<bsgalone::core::SlotMessage>();
 
@@ -47,7 +47,7 @@ void SlotMessageConsumer::handleWeapon(const bsgalone::core::SlotMessage &messag
   }
 
   auto out = std::make_unique<WeaponComponentMessage>(shipDbId, weaponDbId, res.active);
-  m_outputMessageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushEvent(std::move(out));
 }
 
 void SlotMessageConsumer::handleComputer(const bsgalone::core::SlotMessage &message) const

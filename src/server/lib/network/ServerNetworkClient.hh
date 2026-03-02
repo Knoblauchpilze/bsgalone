@@ -21,11 +21,11 @@ class ServerNetworkClient : public bsgalone::core::IMessageQueue
   void start(const int port);
   void stop();
 
-  void pushMessage(bsgalone::core::IMessagePtr message) override;
+  void pushEvent(bsgalone::core::IMessagePtr message) override;
   void addListener(bsgalone::core::IMessageListenerPtr listener) override;
   bool empty() override;
 
-  void processMessages() override;
+  void processEvents() override;
 
   private:
   net::INetworkEventQueueShPtr m_eventBus{};

@@ -22,7 +22,7 @@ LogoutMessageConsumer::LogoutMessageConsumer(SystemServiceShPtr systemService,
   }
 }
 
-void LogoutMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
+void LogoutMessageConsumer::onEventReceived(const bsgalone::core::IMessage &message)
 {
   const auto &logout = message.as<LogoutMessage>();
   handleLogout(logout);
@@ -48,7 +48,7 @@ void LogoutMessageConsumer::handleLogout(const LogoutMessage &message) const
                                                           bsgalone::core::EntityKind::SHIP,
                                                           false,
                                                           systemDbId);
-    maybeQueue->second->pushMessage(std::move(removed));
+    maybeQueue->second->pushEvent(std::move(removed));
   }
 
   notifyClientAndCloseConnectionIfNeeded(playerDbId, message);
@@ -59,7 +59,7 @@ void LogoutMessageConsumer::notifyClientAndCloseConnectionIfNeeded(const Uuid pl
 {
   auto out = std::make_unique<LogoutMessage>(playerDbId, message.shouldCloseConnection());
   out->copyClientIdIfDefined(message);
-  m_outputMessageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushEvent(std::move(out));
 }
 
 } // namespace bsgo

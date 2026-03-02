@@ -21,7 +21,7 @@ TargetPickedMessageConsumer::TargetPickedMessageConsumer(
   }
 }
 
-void TargetPickedMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
+void TargetPickedMessageConsumer::onEventReceived(const bsgalone::core::IMessage &message)
 {
   const auto &targetMessage = message.as<bsgalone::core::TargetPickedMessage>();
 
@@ -83,7 +83,7 @@ void TargetPickedMessageConsumer::broadcastMessageToSystem(std::unique_ptr<Targe
                                                  *m_shipService);
   message->setSystemDbId(systemDbId);
 
-  m_outputMessageQueue->pushMessage(std::move(message));
+  m_outputMessageQueue->pushEvent(std::move(message));
 }
 
 } // namespace bsgo

@@ -16,7 +16,7 @@ AbstractGameMessageConsumer::AbstractGameMessageConsumer(
   addModule("consumer");
 }
 
-void AbstractGameMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
+void AbstractGameMessageConsumer::onEventReceived(const bsgalone::core::IMessage &message)
 {
   switch (message.type())
   {
