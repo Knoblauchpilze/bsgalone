@@ -39,6 +39,7 @@ target_link_libraries (game_core_lib PUBLIC
 	bsgalone-interface-library
 	net_lib
 	messaging_lib
+	time_lib
 	)
 
 if (${ENABLE_TESTS})
