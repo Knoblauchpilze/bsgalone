@@ -8,7 +8,7 @@ AbstractMessageListener::AbstractMessageListener(const MessageTypeSet &relevantM
   , m_relevantMessageTypes(relevantMessageTypes)
 {}
 
-bool AbstractMessageListener::isMessageRelevant(const MessageType &type) const
+bool AbstractMessageListener::isEventRelevant(const MessageType &type) const
 {
   return m_relevantMessageTypes.contains(type);
 }

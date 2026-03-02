@@ -22,7 +22,7 @@ EntityDeletedMessageConsumer::EntityDeletedMessageConsumer(
   }
 }
 
-void EntityDeletedMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
+void EntityDeletedMessageConsumer::onEventReceived(const bsgalone::core::IMessage &message)
 {
   const auto &removed   = message.as<EntityRemovedMessage>();
   const auto entityKind = removed.getEntityKind();
@@ -47,13 +47,13 @@ void EntityDeletedMessageConsumer::handleShipRemoved(const EntityRemovedMessage 
   m_entityService->tryDeleteShipEntity(shipDbId);
 
   auto ship = message.clone();
-  m_outputMessageQueue->pushMessage(std::move(ship));
+  m_outputMessageQueue->pushEvent(std::move(ship));
 
   auto player = std::make_unique<EntityRemovedMessage>(playerDbId,
                                                        bsgalone::core::EntityKind::PLAYER,
                                                        message.isDead(),
                                                        message.getSystemDbId());
-  m_outputMessageQueue->pushMessage(std::move(player));
+  m_outputMessageQueue->pushEvent(std::move(player));
 }
 
 void EntityDeletedMessageConsumer::handleAsteroidRemoved(const EntityRemovedMessage &message) const
@@ -62,7 +62,7 @@ void EntityDeletedMessageConsumer::handleAsteroidRemoved(const EntityRemovedMess
   m_entityService->tryDeleteAsteroidEntity(asteroidDbId);
 
   auto out = message.clone();
-  m_outputMessageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushEvent(std::move(out));
 }
 
 } // namespace bsgo

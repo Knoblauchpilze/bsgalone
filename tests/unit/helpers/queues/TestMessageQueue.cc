@@ -3,7 +3,7 @@
 
 namespace test {
 
-void TestMessageQueue::pushMessage(bsgalone::core::IMessagePtr message)
+void TestMessageQueue::pushEvent(bsgalone::core::IMessagePtr message)
 {
   const std::lock_guard guard(m_locker);
   m_messages.push_back(std::move(message));
@@ -20,7 +20,7 @@ bool TestMessageQueue::empty()
   return m_messages.empty();
 }
 
-void TestMessageQueue::processMessages()
+void TestMessageQueue::processEvents()
 {
   throw std::runtime_error("Unsupported operation processMessages in TestMessageQueue");
 }

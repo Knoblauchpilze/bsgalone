@@ -97,7 +97,7 @@ void AbilitiesUiHandler::connectToMessageQueue(bsgalone::core::IMessageQueue &me
   messageQueue.addListener(std::move(listener));
 }
 
-void AbilitiesUiHandler::onMessageReceived(const bsgalone::core::IMessage &message)
+void AbilitiesUiHandler::onEventReceived(const bsgalone::core::IMessage &message)
 {
   if (!m_shipView->isReady())
   {

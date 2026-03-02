@@ -1,24 +1,15 @@
 
 #pragma once
 
+#include "IEventQueue.hh"
 #include "IMessage.hh"
 #include "IMessageListener.hh"
+#include "MessageType.hh"
 #include <memory>
 
 namespace bsgalone::core {
 
-class IMessageQueue
-{
-  public:
-  virtual ~IMessageQueue() = default;
-
-  virtual void pushMessage(IMessagePtr message)          = 0;
-  virtual void addListener(IMessageListenerPtr listener) = 0;
-  virtual bool empty()                                   = 0;
-
-  virtual void processMessages() = 0;
-};
-
+using IMessageQueue      = messaging::IEventQueue<MessageType, IMessage>;
 using IMessageQueuePtr   = std::unique_ptr<IMessageQueue>;
 using IMessageQueueShPtr = std::shared_ptr<IMessageQueue>;
 

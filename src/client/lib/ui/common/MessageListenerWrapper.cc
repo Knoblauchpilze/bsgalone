@@ -3,7 +3,7 @@
 
 namespace pge {
 
-MessageListenerWrapper::MessageListenerWrapper(IMessageListener *listener)
+MessageListenerWrapper::MessageListenerWrapper(bsgalone::core::IMessageListener *listener)
   : m_listener(listener)
 {
   if (nullptr == m_listener)
@@ -12,14 +12,14 @@ MessageListenerWrapper::MessageListenerWrapper(IMessageListener *listener)
   }
 }
 
-bool MessageListenerWrapper::isMessageRelevant(const bsgalone::core::MessageType &type) const
+bool MessageListenerWrapper::isEventRelevant(const bsgalone::core::MessageType &type) const
 {
-  return m_listener->isMessageRelevant(type);
+  return m_listener->isEventRelevant(type);
 }
 
-void MessageListenerWrapper::onMessageReceived(const bsgalone::core::IMessage &message)
+void MessageListenerWrapper::onEventReceived(const bsgalone::core::IMessage &message)
 {
-  m_listener->onMessageReceived(message);
+  m_listener->onEventReceived(message);
 }
 
 } // namespace pge

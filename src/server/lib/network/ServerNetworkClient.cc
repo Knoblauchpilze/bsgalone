@@ -15,8 +15,7 @@
 namespace bsgo {
 
 ServerNetworkClient::ServerNetworkClient()
-  : m_inputQueue(std::make_shared<AsyncMessageQueue>(
-    std::make_unique<SynchronizedMessageQueue>("synchronized-queue-for-input")))
+  : m_inputQueue(createAsyncMessageQueue(createSynchronizedMessageQueue()))
 {}
 
 void ServerNetworkClient::start(const int port)
@@ -37,14 +36,14 @@ void ServerNetworkClient::stop()
   m_outputQueue.reset();
 }
 
-void ServerNetworkClient::pushMessage(bsgalone::core::IMessagePtr message)
+void ServerNetworkClient::pushEvent(bsgalone::core::IMessagePtr message)
 {
   if (!m_started.load())
   {
     throw std::invalid_argument("Failed to send message, server not started");
   }
 
-  m_outputQueue->pushMessage(std::move(message));
+  m_outputQueue->pushEvent(std::move(message));
 }
 
 void ServerNetworkClient::addListener(bsgalone::core::IMessageListenerPtr listener)
@@ -57,9 +56,9 @@ bool ServerNetworkClient::empty()
   return m_inputQueue->empty();
 }
 
-void ServerNetworkClient::processMessages()
+void ServerNetworkClient::processEvents()
 {
-  m_inputQueue->processMessages();
+  m_inputQueue->processEvents();
 }
 
 void ServerNetworkClient::initialize()
@@ -69,11 +68,11 @@ void ServerNetworkClient::initialize()
 
   auto inputNetworkAdapter
     = std::make_unique<bsgalone::core::InputNetworkAdapter>(m_inputQueue,
-                                                            std::make_unique<bsgo::MessageParser>());
+                                                            std::make_unique<MessageParser>());
   m_eventBus->addListener(std::move(inputNetworkAdapter));
 
-  auto syncQueue = std::make_unique<bsgo::SynchronizedMessageQueue>("synchronized-queue-for-output");
-  m_outputQueue = std::make_shared<AsyncMessageQueue>(std::move(syncQueue));
+  auto syncQueue = createSynchronizedMessageQueue();
+  m_outputQueue  = createAsyncMessageQueue(std::move(syncQueue));
 
   auto outputNetworkAdapter = std::make_shared<bsgalone::core::OutputNetworkAdapter>(m_tcpServer);
   auto broadcastListener

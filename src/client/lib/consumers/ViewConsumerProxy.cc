@@ -10,9 +10,9 @@ ViewConsumerProxy::ViewConsumerProxy(AbstractView &view)
   addModule(view.getName());
 }
 
-void ViewConsumerProxy::onMessageReceived(const bsgalone::core::IMessage &message)
+void ViewConsumerProxy::onEventReceived(const bsgalone::core::IMessage &message)
 {
-  m_view.onMessageReceived(message);
+  m_view.onEventReceived(message);
 }
 
 } // namespace pge

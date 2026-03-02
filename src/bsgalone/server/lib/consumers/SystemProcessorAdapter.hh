@@ -13,7 +13,7 @@ class SystemProcessorAdapter : public core::AbstractMessageConsumer
   SystemProcessorAdapter(const bsgo::Uuid systemDbId, core::IMessageQueueShPtr systemQueue);
   ~SystemProcessorAdapter() override = default;
 
-  void onMessageReceived(const core::IMessage &message) override;
+  void onEventReceived(const core::IMessage &message) override;
 
   private:
   bsgo::Uuid m_systemDbId{};

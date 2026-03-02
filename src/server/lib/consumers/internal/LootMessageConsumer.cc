@@ -20,7 +20,7 @@ LootMessageConsumer::LootMessageConsumer(SystemServiceShPtr systemService,
   }
 }
 
-void LootMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
+void LootMessageConsumer::onEventReceived(const bsgalone::core::IMessage &message)
 {
   const auto &loot = message.as<LootMessage>();
 
@@ -36,7 +36,7 @@ void LootMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &mess
 
   auto out = std::make_unique<LootMessage>(playerDbId, resourceDbId, amount);
   out->copyClientIdIfDefined(loot);
-  m_outputMessageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushEvent(std::move(out));
 }
 
 } // namespace bsgo

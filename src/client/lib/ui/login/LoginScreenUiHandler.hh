@@ -28,7 +28,7 @@ class LoginScreenUiHandler : public IUiHandler, public bsgalone::core::AbstractM
   void updateUi() override;
 
   void connectToMessageQueue(bsgalone::core::IMessageQueue &messageQueue) override;
-  void onMessageReceived(const bsgalone::core::IMessage &message) override;
+  void onEventReceived(const bsgalone::core::IMessage &message) override;
 
   private:
   PlayerViewShPtr m_playerView{};

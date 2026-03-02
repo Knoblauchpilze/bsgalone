@@ -23,7 +23,7 @@ RoutingMessageConsumer::RoutingMessageConsumer(
   }
 }
 
-void RoutingMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
+void RoutingMessageConsumer::onEventReceived(const bsgalone::core::IMessage &message)
 {
   switch (message.type())
   {
@@ -53,7 +53,7 @@ void RoutingMessageConsumer::handleComponentSyncMessage(const ComponentSyncMessa
 
   auto out = message.clone();
   out->as<ComponentSyncMessage>().setSystemDbId(*maybeSystemDbId);
-  m_outputMessageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushEvent(std::move(out));
 }
 
 void RoutingMessageConsumer::handleTargetMessage(const TargetMessage &message) const
@@ -70,7 +70,7 @@ void RoutingMessageConsumer::handleTargetMessage(const TargetMessage &message) c
 
   auto out = message.clone();
   out->as<TargetMessage>().setSystemDbId(*maybeSystemDbId);
-  m_outputMessageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushEvent(std::move(out));
 }
 
 } // namespace bsgo

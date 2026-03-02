@@ -22,8 +22,8 @@ class BroadcastMessageListener : public core::IMessageListener, public ::core::C
                            core::IOutputNetworkAdapterShPtr server);
   ~BroadcastMessageListener() override = default;
 
-  bool isMessageRelevant(const core::MessageType &type) const override;
-  void onMessageReceived(const core::IMessage &message) override;
+  bool isEventRelevant(const core::MessageType &type) const override;
+  void onEventReceived(const core::IMessage &message) override;
 
   private:
   ClientManagerShPtr m_clientManager{};

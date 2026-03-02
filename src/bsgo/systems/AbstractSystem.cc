@@ -66,7 +66,7 @@ void AbstractSystem::pushInternalMessage(bsgalone::core::IMessagePtr message) co
 {
   if (m_internalMessageQueue != nullptr)
   {
-    m_internalMessageQueue->pushMessage(std::move(message));
+    m_internalMessageQueue->pushEvent(std::move(message));
   }
 }
 
@@ -74,7 +74,7 @@ void AbstractSystem::pushMessage(bsgalone::core::IMessagePtr message) const
 {
   if (m_outputMessageQueue != nullptr)
   {
-    m_outputMessageQueue->pushMessage(std::move(message));
+    m_outputMessageQueue->pushEvent(std::move(message));
   }
 }
 

@@ -46,11 +46,9 @@ void Server::initializeSystems()
 
   for (const auto &systemDbId : allSystems)
   {
-    auto inputQueue = std::make_shared<SynchronizedMessageQueue>("synchronized-message-queue-for-"
-                                                                 + std::to_string(systemDbId));
-
+    bsgalone::core::IMessageQueueShPtr inputQueue = createSynchronizedMessageQueue();
     auto processor            = std::make_shared<SystemProcessor>(systemDbId, inputQueue);
-    m_inputQueues[systemDbId] = inputQueue;
+    m_inputQueues[systemDbId] = std::move(inputQueue);
     m_systemProcessors.emplace_back(std::move(processor));
   }
 }

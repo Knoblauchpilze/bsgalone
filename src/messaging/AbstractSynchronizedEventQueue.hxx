@@ -1,6 +1,6 @@
 
+#include "AbstractEventProcessor.hh"
 #include "AbstractSynchronizedEventQueue.hh"
-#include "EventProcessor.hh"
 
 namespace messaging {
 

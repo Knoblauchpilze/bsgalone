@@ -26,7 +26,7 @@ JumpMessageConsumer::JumpMessageConsumer(SystemServiceShPtr systemService,
   }
 }
 
-void JumpMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
+void JumpMessageConsumer::onEventReceived(const bsgalone::core::IMessage &message)
 {
   const auto &jump = message.as<JumpMessage>();
 
@@ -47,7 +47,7 @@ void JumpMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &mess
                                            playerDbId,
                                            res.sourceSystem,
                                            res.destinationSystem);
-  m_outputMessageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushEvent(std::move(out));
 }
 
 void JumpMessageConsumer::handlePostJumpSystemMessages(const Uuid shipDbId,
@@ -71,14 +71,14 @@ void JumpMessageConsumer::handlePostJumpSystemMessages(const Uuid shipDbId,
                                                         false,
                                                         sourceSystemDbId);
   debug("Pushing removed message to " + str(sourceSystemDbId));
-  sourceQueue->pushMessage(std::move(removed));
+  sourceQueue->pushEvent(std::move(removed));
 
   auto added = std::make_unique<EntityAddedMessage>(destinationSystemDbId);
   PlayerShipData data{.dbId = shipDbId};
   added->setShipData(data);
 
   debug("Pushing added message to " + str(destinationSystemDbId));
-  destinationQueue->pushMessage(std::move(added));
+  destinationQueue->pushEvent(std::move(added));
 }
 
 void JumpMessageConsumer::handleLoadingMessages(const Uuid playerDbId,
@@ -95,11 +95,11 @@ void JumpMessageConsumer::handleLoadingMessages(const Uuid playerDbId,
 
   auto started = std::make_unique<LoadingStartedMessage>(LoadingTransition::JUMP, playerDbId);
   started->setSystemDbId(destinationSystemDbId);
-  maybeDestinationQueue->second->pushMessage(std::move(started));
+  maybeDestinationQueue->second->pushEvent(std::move(started));
 
   auto finished = std::make_unique<LoadingFinishedMessage>(LoadingTransition::JUMP, playerDbId);
   finished->setSystemDbId(destinationSystemDbId);
-  maybeDestinationQueue->second->pushMessage(std::move(finished));
+  maybeDestinationQueue->second->pushEvent(std::move(finished));
 }
 
 } // namespace bsgo

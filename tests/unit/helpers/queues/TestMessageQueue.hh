@@ -12,10 +12,10 @@ class TestMessageQueue : public bsgalone::core::IMessageQueue
   TestMessageQueue()           = default;
   ~TestMessageQueue() override = default;
 
-  void pushMessage(bsgalone::core::IMessagePtr message) override;
+  void pushEvent(bsgalone::core::IMessagePtr message) override;
   void addListener(bsgalone::core::IMessageListenerPtr /*listener*/) override;
   bool empty() override;
-  void processMessages() override;
+  void processEvents() override;
 
   /// @brief - Returns the accumulated messages so far. Note that this method
   /// is **not thread-safe**.

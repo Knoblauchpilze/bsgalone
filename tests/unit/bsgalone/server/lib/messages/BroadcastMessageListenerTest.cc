@@ -43,7 +43,7 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
   message.setClientId(net::ClientId{12});
   message.setPlayerDbId(bsgo::Uuid{18});
   message.setSystemDbId(bsgo::Uuid{19});
-  listener.onMessageReceived(message);
+  listener.onEventReceived(message);
 
   EXPECT_EQ(bsgo::Uuid{18}, manager->tryGetPlayerForClient(net::ClientId{12}).value());
   EXPECT_EQ(bsgo::Uuid{19}, manager->tryGetSystemForClient(net::ClientId{12}).value());
@@ -62,7 +62,7 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
       bsgo::LoginMessage message;
       message.setPlayerDbId(bsgo::Uuid{18});
       message.setSystemDbId(bsgo::Uuid{19});
-      listener.onMessageReceived(message);
+      listener.onEventReceived(message);
     },
     ThrowsMessage<::core::CoreException>(
       "Failed to process login message without client identifier"));
@@ -79,7 +79,7 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
       bsgo::LoginMessage message;
       message.setClientId(net::ClientId{12});
       message.setSystemDbId(bsgo::Uuid{19});
-      listener.onMessageReceived(message);
+      listener.onEventReceived(message);
     },
     ThrowsMessage<::core::CoreException>(
       "Failed to process login message without player identifier"));
@@ -96,7 +96,7 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
       bsgo::LoginMessage message;
       message.setClientId(net::ClientId{12});
       message.setPlayerDbId(bsgo::Uuid{18});
-      listener.onMessageReceived(message);
+      listener.onEventReceived(message);
     },
     ThrowsMessage<::core::CoreException>(
       "Failed to process login message without system identifier"));
@@ -113,7 +113,7 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
   EXPECT_EQ(bsgo::Uuid{19}, manager->tryGetSystemForClient(net::ClientId{12}).value());
 
   bsgo::JumpMessage message(bsgo::Uuid{3}, bsgo::Uuid{18}, bsgo::Uuid{19}, bsgo::Uuid{20});
-  listener.onMessageReceived(message);
+  listener.onEventReceived(message);
 
   EXPECT_EQ(bsgo::Uuid{20}, manager->tryGetSystemForClient(net::ClientId{12}).value());
 }
@@ -129,7 +129,7 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
   EXPECT_EQ(bsgo::Uuid{19}, manager->tryGetSystemForClient(net::ClientId{12}).value());
 
   bsgo::LogoutMessage message(bsgo::Uuid{18}, false);
-  listener.onMessageReceived(message);
+  listener.onEventReceived(message);
 
   EXPECT_FALSE(manager->tryGetSystemForClient(net::ClientId{12}).has_value());
   EXPECT_EQ(std::vector<net::ClientId>{net::ClientId{12}}, manager->getAllClients());
@@ -146,7 +146,7 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
   EXPECT_EQ(bsgo::Uuid{19}, manager->tryGetSystemForClient(net::ClientId{12}).value());
 
   bsgo::LogoutMessage message(bsgo::Uuid{18}, true);
-  listener.onMessageReceived(message);
+  listener.onEventReceived(message);
 
   EXPECT_EQ(bsgo::Uuid{19}, manager->tryGetSystemForClient(net::ClientId{12}).value());
 }
@@ -163,7 +163,7 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
   BroadcastMessageListener listener(manager, server);
 
   auto message = std::make_unique<TestPlayerMessage>(bsgo::Uuid{18}, bsgo::Uuid{19});
-  listener.onMessageReceived(*message);
+  listener.onEventReceived(*message);
 
   EXPECT_EQ(1u, server->messages().size());
   const auto &actual = server->messages().at(0);
@@ -205,7 +205,7 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
   BroadcastMessageListener listener(manager, server);
 
   auto message = std::make_unique<TestSystemMessage>(bsgo::Uuid{19});
-  listener.onMessageReceived(*message);
+  listener.onEventReceived(*message);
 
   const auto &messages = server->messages();
   EXPECT_EQ(2u, messages.size());

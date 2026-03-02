@@ -28,7 +28,7 @@ EntityAddedMessageConsumer::EntityAddedMessageConsumer(
   }
 }
 
-void EntityAddedMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
+void EntityAddedMessageConsumer::onEventReceived(const bsgalone::core::IMessage &message)
 {
   const auto &added = message.as<EntityAddedMessage>();
 
@@ -67,11 +67,11 @@ void EntityAddedMessageConsumer::handleShipAdded(const Uuid systemDbId,
 
   auto playerAdded = std::make_unique<EntityAddedMessage>(systemDbId);
   playerAdded->setPlayerData(playerData.toPlayerData());
-  m_outputMessageQueue->pushMessage(std::move(playerAdded));
+  m_outputMessageQueue->pushEvent(std::move(playerAdded));
 
   auto shipAdded = std::make_unique<EntityAddedMessage>(systemDbId);
   shipAdded->setShipData(shipData.toPlayerShipData());
-  m_outputMessageQueue->pushMessage(std::move(shipAdded));
+  m_outputMessageQueue->pushEvent(std::move(shipAdded));
 }
 
 void EntityAddedMessageConsumer::handleAsteroidAdded(const Uuid systemDbId,
@@ -89,7 +89,7 @@ void EntityAddedMessageConsumer::handleAsteroidAdded(const Uuid systemDbId,
 
   auto asteroidAdded = std::make_unique<EntityAddedMessage>(systemDbId);
   asteroidAdded->setAsteroidData(asteroidData.toAsteroidData());
-  m_outputMessageQueue->pushMessage(std::move(asteroidAdded));
+  m_outputMessageQueue->pushEvent(std::move(asteroidAdded));
 }
 
 } // namespace bsgo

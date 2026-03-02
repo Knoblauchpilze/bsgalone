@@ -27,7 +27,7 @@ void AbstractView::addListener(IViewListenerPtr listener)
   m_listeners.emplace_back(std::move(listener));
 }
 
-void AbstractView::onMessageReceived(const bsgalone::core::IMessage &message)
+void AbstractView::onEventReceived(const bsgalone::core::IMessage &message)
 {
   withSafetyNet([this, &message]() { handleMessageInternal(message); }, "onMessageReceived");
   notifyListeners();

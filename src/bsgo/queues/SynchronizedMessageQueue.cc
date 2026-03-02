@@ -1,54 +1,20 @@
 
 #include "SynchronizedMessageQueue.hh"
-#include "MessageProcessor.hh"
+#include "AbstractSynchronizedEventQueue.hh"
 
 namespace bsgo {
 
-SynchronizedMessageQueue::SynchronizedMessageQueue(const std::string &name)
-  : AbstractMessageQueue()
-  , core::CoreObject(name)
-{
-  setService("message");
-}
+const auto UNIMPORTANT_MESSAGE_TYPES = std::unordered_set<bsgalone::core::MessageType>{
+  bsgalone::core::MessageType::COMPONENT_SYNC,
+  bsgalone::core::MessageType::AI_BEHAVIOR_SYNC,
+  bsgalone::core::MessageType::VELOCITY,
+};
 
-void SynchronizedMessageQueue::pushMessage(bsgalone::core::IMessagePtr message)
+auto createSynchronizedMessageQueue() -> bsgalone::core::IMessageQueuePtr
 {
-  const std::lock_guard guard(m_locker);
-  m_messages.emplace_back(std::move(message));
-}
-
-void SynchronizedMessageQueue::addListener(bsgalone::core::IMessageListenerPtr listener)
-{
-  const std::lock_guard guard(m_locker);
-  this->AbstractMessageQueue::addListener(std::move(listener));
-}
-
-bool SynchronizedMessageQueue::empty()
-{
-  const std::lock_guard guard(m_locker);
-  return m_messages.empty();
-}
-
-void SynchronizedMessageQueue::processMessages()
-{
-  auto processor = createMessageProcessor(getName(),
-                                          m_messages,
-                                          m_locker,
-                                          [this](const bsgalone::core::IMessage &message) {
-                                            processMessage(message);
-                                          });
-
-  processor.processEvents();
-}
-
-void SynchronizedMessageQueue::processMessage(const bsgalone::core::IMessage &message) const
-{
-  // https://stackoverflow.com/questions/72841621/finding-all-the-values-with-given-key-for-multimap
-  auto [it, end] = m_listenersTable.equal_range(message.type());
-  for (; it != end; ++it)
-  {
-    it->second->onMessageReceived(message);
-  }
+  return std::make_unique<messaging::AbstractSynchronizedEventQueue<bsgalone::core::MessageType,
+                                                                    bsgalone::core::IMessage>>(
+    bsgalone::core::allMessageTypesAsSet(), UNIMPORTANT_MESSAGE_TYPES);
 }
 
 } // namespace bsgo

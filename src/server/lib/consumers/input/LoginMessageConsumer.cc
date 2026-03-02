@@ -21,7 +21,7 @@ LoginMessageConsumer::LoginMessageConsumer(LoginServicePtr loginService,
   }
 }
 
-void LoginMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
+void LoginMessageConsumer::onEventReceived(const bsgalone::core::IMessage &message)
 {
   const auto &login = message.as<LoginMessage>();
   handleLogin(login);
@@ -65,7 +65,7 @@ void LoginMessageConsumer::handleLogin(const LoginMessage &message) const
   }
   out->copyClientIdIfDefined(message);
 
-  m_outputMessageQueue->pushMessage(std::move(out));
+  m_outputMessageQueue->pushEvent(std::move(out));
 
   if (successfulLogin)
   {

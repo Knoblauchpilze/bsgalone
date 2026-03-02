@@ -14,7 +14,7 @@ class AbstractMessageListener : public IMessageListener
   AbstractMessageListener(const MessageTypeSet &relevantMessageTypes);
   ~AbstractMessageListener() override = default;
 
-  bool isMessageRelevant(const MessageType &type) const override;
+  bool isEventRelevant(const MessageType &type) const override;
 
   auto relevantMessageTypes() const -> MessageTypeSet;
 

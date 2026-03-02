@@ -20,7 +20,7 @@ JumpCancelledMessageConsumer::JumpCancelledMessageConsumer(
   }
 }
 
-void JumpCancelledMessageConsumer::onMessageReceived(const bsgalone::core::IMessage &message)
+void JumpCancelledMessageConsumer::onEventReceived(const bsgalone::core::IMessage &message)
 {
   const auto &jump = message.as<bsgalone::core::JumpCancelledMessage>();
   handleJumpCancellation(jump);
@@ -37,7 +37,7 @@ void JumpCancelledMessageConsumer::handleJumpCancellation(
     return;
   }
 
-  m_outputMessageQueue->pushMessage(message.clone());
+  m_outputMessageQueue->pushEvent(message.clone());
 }
 
 } // namespace bsgo

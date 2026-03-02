@@ -16,7 +16,7 @@ class TargetPickedMessageConsumer : public bsgalone::core::AbstractMessageConsum
                               bsgalone::core::IMessageQueue *const outputMessageQueue);
   ~TargetPickedMessageConsumer() override = default;
 
-  void onMessageReceived(const bsgalone::core::IMessage &message) override;
+  void onEventReceived(const bsgalone::core::IMessage &message) override;
 
   private:
   ShipServiceShPtr m_shipService{};

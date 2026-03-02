@@ -31,7 +31,7 @@ SystemProcessorAdapter::SystemProcessorAdapter(const bsgo::Uuid systemDbId,
   }
 }
 
-void SystemProcessorAdapter::onMessageReceived(const core::IMessage &message)
+void SystemProcessorAdapter::onEventReceived(const core::IMessage &message)
 {
   const auto &playerMessage = message.as<core::AbstractPlayerMessage>();
 
@@ -40,7 +40,7 @@ void SystemProcessorAdapter::onMessageReceived(const core::IMessage &message)
     return;
   }
 
-  m_systemQueue->pushMessage(message.clone());
+  m_systemQueue->pushEvent(message.clone());
 }
 
 } // namespace bsgalone::server

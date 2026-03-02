@@ -57,7 +57,7 @@ void ClientEventListener::handleClientDisconnected(const net::ClientDisconnected
 
   auto message = std::make_unique<bsgo::LogoutMessage>(*maybePlayerId, true);
   message->setClientId(event.clientId());
-  m_inputQueue->pushMessage(std::move(message));
+  m_inputQueue->pushEvent(std::move(message));
 }
 
 } // namespace bsgalone::server

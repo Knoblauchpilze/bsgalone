@@ -100,7 +100,7 @@ void SystemProcessor::asyncSystemProcessing()
     const auto data = m_timeManager->tick(elapsed);
     m_coordinator->update(data);
     m_processes->update(*m_coordinator, data);
-    m_inputMessagesQueue->processMessages();
+    m_inputMessagesQueue->processEvents();
 
     lastFrameTimestamp = thisFrameTimestamp;
 
