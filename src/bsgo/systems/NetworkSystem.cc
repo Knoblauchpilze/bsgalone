@@ -61,24 +61,24 @@ void NetworkSystem::syncEntity(Entity &entity) const
 }
 
 bool NetworkSystem::syncComponent(const Entity &entity,
-                                  const ComponentType &type,
+                                  const bsgalone::core::ComponentType &type,
                                   ComponentSyncMessage &message) const
 {
   switch (type)
   {
-    case ComponentType::HEALTH:
+    case bsgalone::core::ComponentType::HEALTH:
       return syncHealthComponent(entity, message);
       break;
-    case ComponentType::POWER:
+    case bsgalone::core::ComponentType::POWER:
       return syncPowerComponent(entity, message);
       break;
-    case ComponentType::STATUS:
+    case bsgalone::core::ComponentType::STATUS:
       return syncStatusComponent(entity, message);
       break;
-    case ComponentType::TRANSFORM:
+    case bsgalone::core::ComponentType::TRANSFORM:
       return syncTransformComponent(entity, message);
       break;
-    case ComponentType::VELOCITY:
+    case bsgalone::core::ComponentType::VELOCITY:
       return syncVelocityComponent(entity, message);
       break;
     default:

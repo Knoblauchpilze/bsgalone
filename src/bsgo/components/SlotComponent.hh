@@ -29,7 +29,7 @@ enum class FiringState
 class SlotComponent : public AbstractComponent
 {
   public:
-  SlotComponent(const ComponentType &type, const SlotComponentData &data);
+  SlotComponent(const bsgalone::core::ComponentType &type, const SlotComponentData &data);
   ~SlotComponent() override = default;
 
   void update(const chrono::TickData &data) override;

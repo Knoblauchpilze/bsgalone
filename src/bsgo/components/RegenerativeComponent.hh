@@ -8,7 +8,7 @@ namespace bsgo {
 class RegenerativeComponent : public AbstractComponent
 {
   public:
-  RegenerativeComponent(const ComponentType &type,
+  RegenerativeComponent(const bsgalone::core::ComponentType &type,
                         const float min,
                         const float value,
                         const float max,

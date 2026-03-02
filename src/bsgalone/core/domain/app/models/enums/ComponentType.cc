@@ -1,7 +1,7 @@
 
 #include "ComponentType.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 auto str(const ComponentType &type) -> std::string
 {
@@ -58,4 +58,4 @@ auto str(const ComponentType &type) -> std::string
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

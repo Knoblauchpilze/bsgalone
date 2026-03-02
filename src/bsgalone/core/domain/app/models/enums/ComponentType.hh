@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 enum class ComponentType
 {
@@ -34,4 +34,4 @@ enum class ComponentType
 
 auto str(const ComponentType &type) -> std::string;
 
-} // namespace bsgo
+} // namespace bsgalone::core

@@ -4,7 +4,7 @@
 namespace bsgo {
 
 ComputerSlotComponent::ComputerSlotComponent(const PlayerComputerData &computer)
-  : SlotComponent(ComponentType::COMPUTER_SLOT,
+  : SlotComponent(bsgalone::core::ComponentType::COMPUTER_SLOT,
                   SlotComponentData{.dbId       = computer.dbId,
                                     .offensive  = computer.offensive,
                                     .powerCost  = computer.powerCost,

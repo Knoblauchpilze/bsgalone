@@ -6,7 +6,7 @@ namespace bsgo {
 StatusComponent::StatusComponent(const Status &status,
                                  const std::optional<chrono::TickDuration> &jumpTime,
                                  const std::optional<chrono::TickDuration> &threatJumpTime)
-  : AbstractComponent(ComponentType::STATUS)
+  : AbstractComponent(bsgalone::core::ComponentType::STATUS)
   , m_status(status)
   , m_jumpTime(jumpTime)
   , m_threatJumpTime(threatJumpTime)

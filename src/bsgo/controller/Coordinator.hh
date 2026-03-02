@@ -47,7 +47,8 @@ class Coordinator : public core::CoreObject
   void addAi(const Uuid ent, INodePtr behavior, DataContext context);
   void addShipClass(const Uuid ent, const ShipClass &shipClass);
   void addName(const Uuid ent, const std::string &name);
-  void addNetworkSync(const Uuid ent, const std::unordered_set<ComponentType> &toSync);
+  void addNetworkSync(const Uuid ent,
+                      const std::unordered_set<bsgalone::core::ComponentType> &toSync);
   void addDbId(const Uuid ent, const Uuid dbId);
   void addDbSync(const Uuid ent);
   void addWeapon(const Uuid ent, const PlayerWeaponData &weapon);

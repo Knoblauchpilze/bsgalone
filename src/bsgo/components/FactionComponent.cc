@@ -4,7 +4,7 @@
 namespace bsgo {
 
 FactionComponent::FactionComponent(const Faction &faction)
-  : AbstractComponent(ComponentType::FACTION)
+  : AbstractComponent(bsgalone::core::ComponentType::FACTION)
   , m_faction(faction)
 {}
 

@@ -4,7 +4,7 @@
 namespace bsgo {
 
 KindComponent::KindComponent(const bsgalone::core::EntityKind &kind)
-  : AbstractComponent(ComponentType::KIND)
+  : AbstractComponent(bsgalone::core::ComponentType::KIND)
   , m_kind(kind)
 {}
 

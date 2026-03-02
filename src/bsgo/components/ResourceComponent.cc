@@ -4,7 +4,7 @@
 namespace bsgo {
 
 ResourceComponent::ResourceComponent(const Uuid resource, const int amount)
-  : AbstractComponent(ComponentType::RESOURCE)
+  : AbstractComponent(bsgalone::core::ComponentType::RESOURCE)
   , m_resource(resource)
   , m_amount(amount)
 {}

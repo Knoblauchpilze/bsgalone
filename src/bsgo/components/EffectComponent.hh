@@ -9,7 +9,7 @@ namespace bsgo {
 class EffectComponent : public AbstractComponent
 {
   public:
-  EffectComponent(const ComponentType &type, const chrono::TickDuration &duration);
+  EffectComponent(const bsgalone::core::ComponentType &type, const chrono::TickDuration &duration);
   ~EffectComponent() override = default;
 
   bool isFinished() const;

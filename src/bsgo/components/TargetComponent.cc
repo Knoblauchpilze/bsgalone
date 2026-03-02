@@ -4,11 +4,11 @@
 namespace bsgo {
 
 TargetComponent::TargetComponent()
-  : AbstractComponent(ComponentType::TARGET)
+  : AbstractComponent(bsgalone::core::ComponentType::TARGET)
 {}
 
 TargetComponent::TargetComponent(const Uuid target)
-  : AbstractComponent(ComponentType::TARGET)
+  : AbstractComponent(bsgalone::core::ComponentType::TARGET)
   , m_target(target)
 {}
 

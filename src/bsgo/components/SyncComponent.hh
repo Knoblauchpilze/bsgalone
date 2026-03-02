@@ -9,7 +9,7 @@ namespace bsgo {
 class SyncComponent : public AbstractComponent
 {
   public:
-  SyncComponent(const ComponentType type);
+  SyncComponent(const bsgalone::core::ComponentType type);
   ~SyncComponent() override = default;
 
   bool needsSync() const;

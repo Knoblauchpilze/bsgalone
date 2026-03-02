@@ -169,7 +169,8 @@ void Coordinator::addName(const Uuid ent, const std::string &name)
   m_components.names[ent] = std::make_shared<NameComponent>(name);
 }
 
-void Coordinator::addNetworkSync(const Uuid ent, const std::unordered_set<ComponentType> &toSync)
+void Coordinator::addNetworkSync(const Uuid ent,
+                                 const std::unordered_set<bsgalone::core::ComponentType> &toSync)
 {
   checkForOverrides(ent, "NetworkSync", m_components.networkSyncs);
   m_components.networkSyncs[ent] = std::make_shared<NetworkSyncComponent>(toSync);
