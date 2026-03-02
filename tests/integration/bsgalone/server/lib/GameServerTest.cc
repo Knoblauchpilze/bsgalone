@@ -3,7 +3,7 @@
 #include "ClientConnectedEvent.hh"
 #include "ClientDisconnectedEvent.hh"
 #include "TcpFixture.hh"
-#include "TestEventBus.hh"
+#include "TestNetworkEventQueue.hh"
 #include <future>
 #include <gtest/gtest.h>
 
@@ -14,7 +14,7 @@ using Integration_Bsgalone_Server_GameServerTest = TcpFixture;
 
 TEST_F(Integration_Bsgalone_Server_GameServerTest, StopsWhenRequested)
 {
-  auto bus = std::make_shared<TestEventBus>();
+  auto bus = std::make_shared<TestNetworkEventQueue>();
   GameServer server(bus);
 
   auto result = std::async(std::launch::async, [this, &server]() { server.run(this->port()); });
@@ -29,7 +29,7 @@ TEST_F(Integration_Bsgalone_Server_GameServerTest, StopsWhenRequested)
 
 TEST_F(Integration_Bsgalone_Server_GameServerTest, AcceptsConnectionAndPublishesEvent)
 {
-  auto bus = std::make_shared<TestEventBus>();
+  auto bus = std::make_shared<TestNetworkEventQueue>();
   GameServer server(bus);
 
   auto result = std::async(std::launch::async, [this, &server]() { server.run(this->port()); });
@@ -46,7 +46,7 @@ TEST_F(Integration_Bsgalone_Server_GameServerTest, AcceptsConnectionAndPublishes
 
 TEST_F(Integration_Bsgalone_Server_GameServerTest, DetectsDisconnectionAndPublishesEvent)
 {
-  auto bus = std::make_shared<TestEventBus>();
+  auto bus = std::make_shared<TestNetworkEventQueue>();
   GameServer server(bus);
 
   auto result = std::async(std::launch::async, [this, &server]() { server.run(this->port()); });

@@ -4,7 +4,7 @@
 #include "DataReceivedEvent.hh"
 #include "DataSentEvent.hh"
 #include "TcpServerFixture.hh"
-#include "TestEventBus.hh"
+#include "TestNetworkEventQueue.hh"
 #include <gtest/gtest.h>
 
 using namespace test;
@@ -16,7 +16,7 @@ using Integration_Net_Client_TcpClient = TcpServerFixture;
 constexpr auto LOCALHOST_URL = "127.0.0.1";
 
 namespace {
-void startClient(std::shared_ptr<TcpClient> &client, const int port, TestEventBusShPtr &bus)
+void startClient(std::shared_ptr<TcpClient> &client, const int port, TestNetworkEventQueueShPtr &bus)
 {
   client->connect(LOCALHOST_URL, port);
 
@@ -32,7 +32,7 @@ TEST_F(Integration_Net_Client_TcpClient, ThrowsWhenEventBusIsNull)
 
 TEST_F(Integration_Net_Client_TcpClient, ThrowsWhenConnectingMultipleTimes)
 {
-  auto bus    = std::make_shared<TestEventBus>();
+  auto bus    = std::make_shared<TestNetworkEventQueue>();
   auto client = std::make_shared<TcpClient>(bus);
   client->connect(LOCALHOST_URL, this->port());
 
@@ -43,7 +43,7 @@ TEST_F(Integration_Net_Client_TcpClient, ThrowsWhenConnectingMultipleTimes)
 
 TEST_F(Integration_Net_Client_TcpClient, ThrowsWhenDisconnectingWithoutConnecting)
 {
-  auto bus    = std::make_shared<TestEventBus>();
+  auto bus    = std::make_shared<TestNetworkEventQueue>();
   auto client = std::make_shared<TcpClient>(bus);
 
   EXPECT_THROW([&client]() { client->disconnect(); }(), core::CoreException);
@@ -51,7 +51,7 @@ TEST_F(Integration_Net_Client_TcpClient, ThrowsWhenDisconnectingWithoutConnectin
 
 TEST_F(Integration_Net_Client_TcpClient, PublishesServerStartedEvent)
 {
-  auto bus    = std::make_shared<TestEventBus>();
+  auto bus    = std::make_shared<TestNetworkEventQueue>();
   auto client = std::make_shared<TcpClient>(bus);
   client->connect(LOCALHOST_URL, this->port());
 
@@ -61,7 +61,7 @@ TEST_F(Integration_Net_Client_TcpClient, PublishesServerStartedEvent)
 
 TEST_F(Integration_Net_Client_TcpClient, PublishesServerStoppedEvent)
 {
-  auto bus    = std::make_shared<TestEventBus>();
+  auto bus    = std::make_shared<TestNetworkEventQueue>();
   auto client = std::make_shared<TcpClient>(bus);
   startClient(client, this->port(), bus);
   this->waitForConnectionEstablishedEvent(bus);
@@ -76,7 +76,7 @@ TEST_F(Integration_Net_Client_TcpClient, PublishesServerStoppedEvent)
 
 TEST_F(Integration_Net_Client_TcpClient, EstablishesConnectionAndPublishesConnectionEstablishedEvent)
 {
-  auto bus    = std::make_shared<TestEventBus>();
+  auto bus    = std::make_shared<TestNetworkEventQueue>();
   auto client = std::make_shared<TcpClient>(bus);
   startClient(client, this->port(), bus);
 
@@ -88,7 +88,7 @@ TEST_F(Integration_Net_Client_TcpClient, EstablishesConnectionAndPublishesConnec
 
 TEST_F(Integration_Net_Client_TcpClient, DetectsDisconnectionAndPublishesConnectionLostEvent)
 {
-  auto bus    = std::make_shared<TestEventBus>();
+  auto bus    = std::make_shared<TestNetworkEventQueue>();
   auto client = std::make_shared<TcpClient>(bus);
   startClient(client, this->port(), bus);
 
@@ -102,7 +102,7 @@ TEST_F(Integration_Net_Client_TcpClient, DetectsDisconnectionAndPublishesConnect
 
 TEST_F(Integration_Net_Client_TcpClient, PublishesConnectionLostEventWhenClientDisconnects)
 {
-  auto bus    = std::make_shared<TestEventBus>();
+  auto bus    = std::make_shared<TestNetworkEventQueue>();
   auto client = std::make_shared<TcpClient>(bus);
   startClient(client, this->port(), bus);
 
@@ -114,7 +114,7 @@ TEST_F(Integration_Net_Client_TcpClient, PublishesConnectionLostEventWhenClientD
 
 TEST_F(Integration_Net_Client_TcpClient, SendsDataToServerSocket)
 {
-  auto bus    = std::make_shared<TestEventBus>();
+  auto bus    = std::make_shared<TestNetworkEventQueue>();
   auto client = std::make_shared<TcpClient>(bus);
   startClient(client, this->port(), bus);
 
@@ -129,7 +129,7 @@ TEST_F(Integration_Net_Client_TcpClient, SendsDataToServerSocket)
 
 TEST_F(Integration_Net_Client_TcpClient, PublishesDataSentEvent)
 {
-  auto bus    = std::make_shared<TestEventBus>();
+  auto bus    = std::make_shared<TestNetworkEventQueue>();
   auto client = std::make_shared<TcpClient>(bus);
   startClient(client, this->port(), bus);
 

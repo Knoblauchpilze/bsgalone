@@ -1,14 +1,14 @@
 
 #pragma once
 
-#include "IEventListener.hh"
+#include "INetworkEventListener.hh"
 #include "ServerStartedEvent.hh"
 #include "ServerStoppedEvent.hh"
 #include <atomic>
 
 namespace bsgalone::server {
 
-class ServerEventListener : public net::IEventListener
+class ServerEventListener : public net::INetworkEventListener
 {
   public:
   ServerEventListener(std::atomic_bool &started);

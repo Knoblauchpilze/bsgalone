@@ -1,13 +1,13 @@
 
 #include "GameNetworkClient.hh"
-#include "AsyncEventBus.hh"
+#include "AsyncEventQueue.hh"
 #include "ConnectionEstablishedEvent.hh"
 #include "ConnectionLostEvent.hh"
 #include "ConnectionMessage.hh"
 #include "InputNetworkAdapter.hh"
 #include "MessageParser.hh"
 #include "OutputNetworkAdapter.hh"
-#include "SynchronizedEventBus.hh"
+#include "SynchronizedEventQueue.hh"
 #include "SynchronizedMessageQueue.hh"
 #include "TcpClient.hh"
 
@@ -21,7 +21,7 @@ GameNetworkClient::GameNetworkClient()
 
 void GameNetworkClient::start(const int port)
 {
-  m_eventBus  = std::make_shared<net::AsyncEventBus>(std::make_unique<net::SynchronizedEventBus>());
+  m_eventBus  = net::createAsyncEventQueue(net::createSynchronizedEventQueue());
   m_tcpClient = std::make_shared<net::TcpClient>(m_eventBus);
   m_adapter   = std::make_unique<bsgalone::core::OutputNetworkAdapter>(m_tcpClient);
 
@@ -64,7 +64,7 @@ void GameNetworkClient::processMessages()
 
 namespace {
 // TODO: Extract this class
-class NetworkEventListener : public net::IEventListener
+class NetworkEventListener : public net::INetworkEventListener
 {
   public:
   NetworkEventListener(std::atomic_bool &connected, bsgalone::core::IMessageQueueShPtr inputQueue)

@@ -5,7 +5,7 @@
 
 namespace net {
 
-TcpClient::TcpClient(IEventBusShPtr eventBus)
+TcpClient::TcpClient(INetworkEventQueueShPtr eventBus)
   : core::CoreObject("tcp")
   , m_eventBus(std::move(eventBus))
 {

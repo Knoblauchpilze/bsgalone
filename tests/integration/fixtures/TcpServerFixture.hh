@@ -5,7 +5,7 @@
 #include "ConnectedSockets.hh"
 #include "TcpAcceptor.hh"
 #include "TcpFixture.hh"
-#include "TestEventBus.hh"
+#include "TestNetworkEventQueue.hh"
 
 namespace test {
 
@@ -41,9 +41,10 @@ class TcpServerFixture : public TcpFixture
   ///   - waiting for a server socket
   ///   - waiting for a client established event on the test event bus
   /// The output describes the sockets received. Only the server socket holds valid data.
+  /// @param eventBus - the event bus to use to wait for the connection event
   /// @return - sockets received during the connection. Only the server socket will hold a
   /// valid socket
-  auto waitForConnectionEstablishedEvent(TestEventBusShPtr &eventBus) -> ConnectedSockets;
+  auto waitForConnectionEstablishedEvent(TestNetworkEventQueueShPtr &eventBus) -> ConnectedSockets;
 
   private:
   TcpAcceptorShPtr m_acceptor{};

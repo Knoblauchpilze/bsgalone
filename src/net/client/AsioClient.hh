@@ -4,8 +4,8 @@
 #include "AsioContext.hh"
 #include "ConnectionStatus.hh"
 #include "CoreObject.hh"
-#include "IEventBus.hh"
-#include "IEventListener.hh"
+#include "INetworkEventListener.hh"
+#include "INetworkEventQueue.hh"
 #include "ReadingSocket.hh"
 #include "SocketShPtr.hh"
 #include "WritingSocket.hh"
@@ -14,10 +14,10 @@ namespace net::details {
 
 class AsioClient : public core::CoreObject,
                    public std::enable_shared_from_this<AsioClient>,
-                   public IEventListener
+                   public INetworkEventListener
 {
   public:
-  AsioClient(IEventBusShPtr eventBus);
+  AsioClient(INetworkEventQueueShPtr eventBus);
   ~AsioClient() override = default;
 
   /// @brief - Starts the client, instructing to asynchronously attempt to connect to
@@ -55,7 +55,7 @@ class AsioClient : public core::CoreObject,
   /// @brief - Event bus used to communicate events to the outside world. This includes the
   /// information when the client successfully connects to a remote server or when the
   /// connection is lost.
-  IEventBusShPtr m_eventBus{};
+  INetworkEventQueueShPtr m_eventBus{};
 
   /// @brief - Event bus used to receive messages published by the socket held by the client.
   /// Those events can be interpreted by the client before being published to the external bus.
@@ -63,7 +63,7 @@ class AsioClient : public core::CoreObject,
   /// outside world. For example it can be used to interpret a failure to read the data as a
   /// disconnection from the server.
   /// In the future it could also be used as a first gate to attempt to reconnect for example.
-  IEventBusShPtr m_internalBus{};
+  INetworkEventQueueShPtr m_internalBus{};
 
   std::atomic_bool m_registeredToInternalBus{};
 

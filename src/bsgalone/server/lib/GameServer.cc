@@ -5,7 +5,7 @@
 
 namespace bsgalone::server {
 
-GameServer::GameServer(net::IEventBusShPtr eventBus)
+GameServer::GameServer(net::INetworkEventQueueShPtr eventBus)
   : core::CoreObject("server")
   , m_tcpServer(std::make_unique<net::TcpServer>(std::move(eventBus)))
 {

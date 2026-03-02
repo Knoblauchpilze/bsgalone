@@ -3,7 +3,7 @@
 
 #include "ClientId.hh"
 #include "CoreObject.hh"
-#include "IEventBus.hh"
+#include "INetworkEventQueue.hh"
 #include "SocketShPtr.hh"
 #include <memory>
 #include <optional>
@@ -20,7 +20,7 @@ class ReadingSocket : public core::CoreObject, public std::enable_shared_from_th
   /// With this constructor, the events produced will not be assigned a client identifier.
   /// @param socket - the raw socket to read from
   /// @param eventBus - the event bus to use to publish network events
-  ReadingSocket(SocketShPtr socket, IEventBusShPtr eventBus);
+  ReadingSocket(SocketShPtr socket, INetworkEventQueueShPtr eventBus);
 
   /// @brief - Creates a reading socket using the input raw socket as the source of data.
   /// Whenever a network event happens, the socket will publish the events to the event
@@ -30,7 +30,7 @@ class ReadingSocket : public core::CoreObject, public std::enable_shared_from_th
   /// @param clientId - the identifier of the client for which this socket is reading data
   /// @param socket - the raw socket to read from
   /// @param eventBus - the event bus to use to publish network events
-  ReadingSocket(const ClientId clientId, SocketShPtr socket, IEventBusShPtr eventBus);
+  ReadingSocket(const ClientId clientId, SocketShPtr socket, INetworkEventQueueShPtr eventBus);
 
   ~ReadingSocket() override = default;
 
@@ -44,7 +44,7 @@ class ReadingSocket : public core::CoreObject, public std::enable_shared_from_th
 
   std::vector<char> m_incomingDataTempBuffer{};
 
-  IEventBusShPtr m_eventBus{};
+  INetworkEventQueueShPtr m_eventBus{};
 
   void registerReadingTaskToAsio();
 

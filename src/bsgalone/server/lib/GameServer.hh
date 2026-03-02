@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreObject.hh"
-#include "IEventBus.hh"
+#include "INetworkEventQueue.hh"
 #include "INetworkServer.hh"
 #include <atomic>
 #include <condition_variable>
@@ -13,7 +13,7 @@ namespace bsgalone::server {
 class GameServer : public core::CoreObject
 {
   public:
-  GameServer(net::IEventBusShPtr eventBus);
+  GameServer(net::INetworkEventQueueShPtr eventBus);
   ~GameServer() override = default;
 
   /// @brief - Starts the game server on the specified port. This function will synchronously start

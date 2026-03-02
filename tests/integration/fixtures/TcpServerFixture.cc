@@ -30,7 +30,7 @@ auto TcpServerFixture::getTestSockets() -> ConnectedSockets
   return sockets;
 }
 
-auto TcpServerFixture::waitForConnectionEstablishedEvent(TestEventBusShPtr &eventBus)
+auto TcpServerFixture::waitForConnectionEstablishedEvent(TestNetworkEventQueueShPtr &eventBus)
   -> ConnectedSockets
 {
   const auto sockets = this->waitForServerSocket();
