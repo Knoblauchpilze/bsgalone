@@ -4,6 +4,10 @@ target_include_directories (game_core_lib PUBLIC
 	)
 
 add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/components
+	)
+
+add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/entities
 	)
 

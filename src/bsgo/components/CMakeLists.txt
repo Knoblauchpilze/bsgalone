@@ -1,6 +1,5 @@
 
 target_sources (bsgo_lib PRIVATE
-	${CMAKE_CURRENT_SOURCE_DIR}/IComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/AbstractComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/AiComponent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ComputerSlotComponent.cc

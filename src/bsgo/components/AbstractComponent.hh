@@ -1,12 +1,13 @@
 
 #pragma once
 
+#include "CoreObject.hh"
 #include "IComponent.hh"
 #include <string>
 
 namespace bsgo {
 
-class AbstractComponent : public IComponent
+class AbstractComponent : public bsgalone::core::IComponent, public ::core::CoreObject
 {
   public:
   AbstractComponent(const bsgalone::core::ComponentType &type);
