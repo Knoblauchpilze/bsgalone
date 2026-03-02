@@ -8,6 +8,7 @@
 #include "DbSyncComponent.hh"
 #include "EffectComponent.hh"
 #include "FactionComponent.hh"
+#include "GameEntity.hh"
 #include "HealthComponent.hh"
 #include "KindComponent.hh"
 #include "LootComponent.hh"
@@ -31,9 +32,8 @@
 
 namespace bsgo {
 
-struct Entity
+struct Entity : public bsgalone::core::GameEntity
 {
-  Uuid uuid{};
   KindComponentShPtr kind{};
   std::optional<TransformComponentShPtr> transform{};
   std::optional<VelocityComponentShPtr> velocity{};
