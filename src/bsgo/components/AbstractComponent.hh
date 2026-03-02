@@ -15,6 +15,8 @@ class AbstractComponent : public bsgalone::core::IComponent, public ::core::Core
 
   auto type() const -> bsgalone::core::ComponentType override;
 
+  virtual void update(const chrono::TickData &data) = 0;
+
   private:
   bsgalone::core::ComponentType m_componentType{};
 };
