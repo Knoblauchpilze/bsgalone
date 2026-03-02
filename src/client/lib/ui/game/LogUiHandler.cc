@@ -97,7 +97,7 @@ bool shouldSlotComponentUpdatedMessageBeFiltered(const bsgo::SlotComponentMessag
 {
   switch (message.getComponentType())
   {
-    case bsgo::ComponentType::COMPUTER_SLOT:
+    case bsgalone::core::ComponentType::COMPUTER_SLOT:
       return (*playerShip.tryGetComputer(message.getSlotDbId()))->isOffensive();
     default:
       return true;
