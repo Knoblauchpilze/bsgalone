@@ -5,7 +5,7 @@
 
 namespace pge {
 
-class MapScreenRenderer : public DecalScreenRenderer
+class MapScreenRenderer : public bsgalone::client::DecalScreenRenderer
 {
   public:
   MapScreenRenderer();

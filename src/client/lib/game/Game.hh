@@ -24,9 +24,6 @@
 
 namespace pge {
 
-class IRenderer;
-using IRendererPtr = std::unique_ptr<IRenderer>;
-
 class IUiHandler;
 using IUiHandlerPtr = std::unique_ptr<IUiHandler>;
 
@@ -128,7 +125,7 @@ class Game : public ui::IScreenChanger, public core::CoreObject
   bsgo::CoordinatorShPtr m_coordinator{};
   bsgalone::core::IMessageQueuePtr m_internalMessageQueue{};
   Views m_views{};
-  std::unordered_map<Screen, IRendererPtr> m_renderers{};
+  std::unordered_map<Screen, bsgalone::client::IRendererPtr> m_renderers{};
   std::unordered_map<Screen, IInputHandlerPtr> m_inputHandlers{};
   std::unordered_map<Screen, IUiHandlerPtr> m_uiHandlers{};
 

@@ -42,6 +42,7 @@ target_link_libraries (client_lib
 	time_lib
 	ui_lib
 	game_core_lib
+	game_client_lib
 	)
 
 target_include_directories (client_lib PUBLIC

@@ -8,7 +8,7 @@
 namespace pge {
 
 GameScreenRenderer::GameScreenRenderer(const Views &views)
-  : IRenderer("game")
+  : AbstractRenderer("game")
   , m_shipView(views.shipView)
   , m_systemView(views.systemView)
   , m_resourceView(views.resourceView)

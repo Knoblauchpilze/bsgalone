@@ -1,9 +1,9 @@
 
-#include "IRenderer.hh"
+#include "AbstractRenderer.hh"
 
 namespace pge {
 
-IRenderer::IRenderer(const std::string &name)
+AbstractRenderer::AbstractRenderer(const std::string &name)
   : core::CoreObject(name)
 {
   setService("renderer");

@@ -3,6 +3,14 @@ add_library (game_client_lib SHARED "")
 
 set (CMAKE_POSITION_INDEPENDENT_CODE ON)
 
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/enums
+	)
+
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/renderers
+	)
+
 target_sources (game_client_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/GameApp.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/GameClient.cc
