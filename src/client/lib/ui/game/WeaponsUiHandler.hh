@@ -2,7 +2,7 @@
 #pragma once
 
 #include "AbstractMessageListener.hh"
-#include "IUiHandler.hh"
+#include "AbstractUiHandler.hh"
 #include "UiMenu.hh"
 #include "UiPictureMenu.hh"
 #include "UiTextMenu.hh"
@@ -12,7 +12,7 @@
 
 namespace pge {
 
-class WeaponsUiHandler : public IUiHandler, public bsgalone::core::AbstractMessageListener
+class WeaponsUiHandler : public AbstractUiHandler, public bsgalone::core::AbstractMessageListener
 {
   public:
   WeaponsUiHandler(const Views &views);

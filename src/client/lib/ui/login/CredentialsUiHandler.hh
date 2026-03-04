@@ -1,14 +1,14 @@
 
 #pragma once
 
-#include "IUiHandler.hh"
+#include "AbstractUiHandler.hh"
 #include "PlayerCredentials.hh"
 #include "UiMenu.hh"
 #include "UiTextField.hh"
 
 namespace pge {
 
-class CredentialsUiHandler : public IUiHandler
+class CredentialsUiHandler : public AbstractUiHandler
 {
   public:
   CredentialsUiHandler();

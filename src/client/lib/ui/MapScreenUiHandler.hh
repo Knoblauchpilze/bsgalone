@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "IUiHandler.hh"
+#include "AbstractUiHandler.hh"
 #include "SystemData.hh"
 #include "UiMenu.hh"
 #include <optional>
@@ -9,7 +9,7 @@
 
 namespace pge {
 
-class MapScreenUiHandler : public IUiHandler
+class MapScreenUiHandler : public AbstractUiHandler
 {
   public:
   MapScreenUiHandler(const Views &views);

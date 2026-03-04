@@ -1,13 +1,13 @@
 
 #pragma once
 
-#include "IUiHandler.hh"
+#include "AbstractUiHandler.hh"
 #include "UiTextMenu.hh"
 #include <memory>
 
 namespace pge {
 
-class StatusUiHandler : public IUiHandler
+class StatusUiHandler : public AbstractUiHandler
 {
   public:
   StatusUiHandler(const Vec2i &offset, const Views &views);

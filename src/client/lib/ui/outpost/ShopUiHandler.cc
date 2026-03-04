@@ -12,7 +12,7 @@
 namespace pge {
 
 ShopUiHandler::ShopUiHandler(const Views &views)
-  : IUiHandler("shop")
+  : AbstractUiHandler("shop")
   , m_shopView(views.shopView)
   , m_playerView(views.playerView)
 {

@@ -5,7 +5,7 @@
 namespace pge {
 
 CredentialsUiHandler::CredentialsUiHandler()
-  : IUiHandler("credentials")
+  : AbstractUiHandler("credentials")
 {}
 
 auto CredentialsUiHandler::getCredentials() const -> PlayerCredentials

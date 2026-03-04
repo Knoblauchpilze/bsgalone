@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "AbstractUiHandler.hh"
 #include "Controls.hh"
 #include "CoreObject.hh"
 #include "DatabaseEntityMapper.hh"
@@ -9,7 +10,6 @@
 #include "GameSession.hh"
 #include "IInputHandler.hh"
 #include "IRenderer.hh"
-#include "IUiHandler.hh"
 #include "LoadingTransition.hh"
 #include "RenderState.hh"
 #include "Renderer.hh"
@@ -127,7 +127,7 @@ class Game : public ui::IScreenChanger, public core::CoreObject
   Views m_views{};
   std::unordered_map<Screen, bsgalone::client::IRendererPtr> m_renderers{};
   std::unordered_map<Screen, IInputHandlerPtr> m_inputHandlers{};
-  std::unordered_map<Screen, IUiHandlerPtr> m_uiHandlers{};
+  std::unordered_map<Screen, AbstractUiHandlerPtr> m_uiHandlers{};
 
   void initialize(const int serverPort);
   void initializeMessageSystem();

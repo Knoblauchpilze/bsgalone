@@ -1,9 +1,9 @@
 
 #pragma once
 
+#include "AbstractUiHandler.hh"
 #include "GameRoleUiHandler.hh"
 #include "HangarUiHandler.hh"
-#include "IUiHandler.hh"
 #include "LockerUiHandler.hh"
 #include "ShopUiHandler.hh"
 #include "UiMenu.hh"
@@ -11,7 +11,7 @@
 
 namespace pge {
 
-class OutpostScreenUiHandler : public IUiHandler
+class OutpostScreenUiHandler : public AbstractUiHandler
 {
   public:
   OutpostScreenUiHandler(const Views &views);

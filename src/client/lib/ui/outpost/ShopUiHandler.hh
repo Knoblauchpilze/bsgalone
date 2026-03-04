@@ -1,8 +1,8 @@
 
 #pragma once
 
+#include "AbstractUiHandler.hh"
 #include "GameSession.hh"
-#include "IUiHandler.hh"
 #include "UiMenu.hh"
 #include "UiTextMenu.hh"
 #include "Views.hh"
@@ -10,7 +10,7 @@
 
 namespace pge {
 
-class ShopUiHandler : public IUiHandler
+class ShopUiHandler : public AbstractUiHandler
 {
   public:
   ShopUiHandler(const Views &views);

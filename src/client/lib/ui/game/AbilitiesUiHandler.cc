@@ -11,7 +11,7 @@
 namespace pge {
 
 AbilitiesUiHandler::AbilitiesUiHandler(const Views &views)
-  : IUiHandler("abilities")
+  : AbstractUiHandler("abilities")
   , AbstractMessageListener({bsgalone::core::MessageType::ENTITY_REMOVED})
   , m_shipView(views.shipView)
   , m_shipDbView(views.shipDbView)

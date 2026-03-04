@@ -14,7 +14,7 @@ constexpr auto MAP_OFFSET = 10;
 } // namespace
 
 MapScreenUiHandler::MapScreenUiHandler(const Views &views)
-  : IUiHandler("map")
+  : AbstractUiHandler("map")
   , m_serverView(views.serverView)
   , m_shipView(views.shipView)
   , m_shipDbView(views.shipDbView)

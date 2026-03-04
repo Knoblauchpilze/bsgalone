@@ -2,7 +2,7 @@
 #pragma once
 
 #include "AbstractMessageListener.hh"
-#include "IUiHandler.hh"
+#include "AbstractUiHandler.hh"
 #include "TimeUtils.hh"
 #include "UiBlinkingMenu.hh"
 #include "UiTextMenu.hh"
@@ -10,7 +10,7 @@
 
 namespace pge {
 
-class ShipStatusUiHandler : public IUiHandler, public bsgalone::core::AbstractMessageListener
+class ShipStatusUiHandler : public AbstractUiHandler, public bsgalone::core::AbstractMessageListener
 {
   public:
   ShipStatusUiHandler(const Views &views);

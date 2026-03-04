@@ -22,7 +22,7 @@ const std::unordered_set<bsgalone::core::MessageType> RELEVANT_MESSAGE_TYPES_TO_
      bsgalone::core::MessageType::SLOT_COMPONENT_UPDATED};
 
 LogUiHandler::LogUiHandler(const Views &views)
-  : IUiHandler("log")
+  : AbstractUiHandler("log")
   , AbstractMessageListener(RELEVANT_MESSAGE_TYPES_TO_LOG)
   , m_systemView(views.systemView)
   , m_resourceView(views.resourceView)

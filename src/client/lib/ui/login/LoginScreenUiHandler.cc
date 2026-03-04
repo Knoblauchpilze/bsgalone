@@ -8,7 +8,7 @@
 namespace pge {
 
 LoginScreenUiHandler::LoginScreenUiHandler(const Views &views)
-  : IUiHandler("login")
+  : AbstractUiHandler("login")
   , AbstractMessageListener(
       {bsgalone::core::MessageType::LOGIN, bsgalone::core::MessageType::SIGNUP})
   , m_playerView(views.playerView)

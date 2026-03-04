@@ -1,14 +1,14 @@
 
 #pragma once
 
-#include "IUiHandler.hh"
+#include "AbstractUiHandler.hh"
 #include "TimeUtils.hh"
 #include "UiTextMenu.hh"
 #include <optional>
 
 namespace pge {
 
-class LoadingScreenUiHandler : public IUiHandler
+class LoadingScreenUiHandler : public AbstractUiHandler
 {
   public:
   LoadingScreenUiHandler(const Views &views);

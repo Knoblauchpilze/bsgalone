@@ -10,7 +10,7 @@
 namespace pge {
 
 ShipStatusUiHandler::ShipStatusUiHandler(const Views &views)
-  : IUiHandler("ship_status")
+  : AbstractUiHandler("ship_status")
   , AbstractMessageListener(
       {bsgalone::core::MessageType::JUMP_REQUESTED, bsgalone::core::MessageType::JUMP_CANCELLED})
   , m_shipView(views.shipView)

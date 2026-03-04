@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "IUiHandler.hh"
+#include "AbstractUiHandler.hh"
 #include "UiTextMenu.hh"
 #include <memory>
 
@@ -15,7 +15,7 @@ struct EntityUiConfig
   EntityFetcher getEntity{};
 };
 
-class EntityUiHandler : public IUiHandler
+class EntityUiHandler : public AbstractUiHandler
 {
   public:
   EntityUiHandler(const EntityUiConfig &config, const Views &views);

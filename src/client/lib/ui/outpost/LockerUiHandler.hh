@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "IUiHandler.hh"
+#include "AbstractUiHandler.hh"
 #include "PlayerView.hh"
 #include "ShipView.hh"
 #include "UiMenu.hh"
@@ -11,7 +11,7 @@
 
 namespace pge {
 
-class LockerUiHandler : public IUiHandler
+class LockerUiHandler : public AbstractUiHandler
 {
   public:
   LockerUiHandler(const Views &views);
