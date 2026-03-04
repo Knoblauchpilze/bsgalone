@@ -16,18 +16,18 @@ void LoadingScreenUiHandler::initializeMenus(const int width,
   const Vec2i loadingTextDimsPixels{100, 30};
   const Vec2i loadingTextPos{(width - loadingTextDimsPixels.x) / 2,
                              (height - loadingTextDimsPixels.y) / 2};
-  const MenuConfig config{
+  const ui::MenuConfig config{
     .pos  = loadingTextPos,
     .dims = loadingTextDimsPixels,
   };
 
-  const auto bg   = bgConfigFromColor(colors::TRANSPARENT_WHITE);
-  const auto text = textConfigFromColor("Loading", colors::WHITE);
+  const auto bg   = ui::bgConfigFromColor(colors::TRANSPARENT_WHITE);
+  const auto text = ui::textConfigFromColor("Loading", colors::WHITE);
 
-  m_loadingText = std::make_unique<UiTextMenu>(config, bg, text);
+  m_loadingText = std::make_unique<ui::UiTextMenu>(config, bg, text);
 }
 
-bool LoadingScreenUiHandler::processUserInput(UserInputData & /*inputData*/)
+bool LoadingScreenUiHandler::processUserInput(ui::UserInputData & /*inputData*/)
 {
   return false;
 }

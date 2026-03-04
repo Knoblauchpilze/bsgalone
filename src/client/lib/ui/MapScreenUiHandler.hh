@@ -18,7 +18,7 @@ class MapScreenUiHandler : public IUiHandler
   void initializeMenus(const int width,
                        const int height,
                        sprites::TexturePack &texturesLoader) override;
-  bool processUserInput(UserInputData &inputData) override;
+  bool processUserInput(ui::UserInputData &inputData) override;
   void render(Renderer &engine) const override;
   void updateUi() override;
 
@@ -29,9 +29,9 @@ class MapScreenUiHandler : public IUiHandler
 
   Vec2i m_mapDimensions{};
   bool m_initialized{false};
-  std::vector<UiMenuPtr> m_buttons{};
-  UiMenu *m_jumpButton{};
-  std::unordered_map<bsgo::Uuid, UiMenu *> m_systemMenus{};
+  std::vector<ui::UiMenuPtr> m_buttons{};
+  ui::UiMenu *m_jumpButton{};
+  std::unordered_map<bsgo::Uuid, ui::UiMenu *> m_systemMenus{};
 
   struct SelectedSystem
   {

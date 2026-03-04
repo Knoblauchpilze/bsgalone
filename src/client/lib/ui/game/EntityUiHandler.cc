@@ -32,28 +32,28 @@ void EntityUiHandler::initializeMenus(const int /*width*/,
   const Vec2i TARGET_UI_PIXEL_DIMENSION{200, 15};
   constexpr auto REASONABLE_PIXEL_GAP = 15;
 
-  MenuConfig config{.pos           = m_config.offset,
-                    .dims          = TARGET_UI_PIXEL_DIMENSION,
-                    .highlightable = false};
+  ui::MenuConfig config{.pos           = m_config.offset,
+                        .dims          = TARGET_UI_PIXEL_DIMENSION,
+                        .highlightable = false};
 
-  auto bg       = bgConfigFromColor(colors::BLANK);
-  auto text     = textConfigFromColor("N/A", colors::WHITE);
-  m_menus[NAME] = std::make_unique<UiTextMenu>(config, bg, text);
-
-  config.pos.y += REASONABLE_PIXEL_GAP;
-  bg              = bgConfigFromColor(colors::VERY_DARK_RED);
-  text            = textConfigFromColor("Health: N/A", colors::WHITE);
-  m_menus[HEALTH] = std::make_unique<UiTextMenu>(config, bg, text);
+  auto bg       = ui::bgConfigFromColor(colors::BLANK);
+  auto text     = ui::textConfigFromColor("N/A", colors::WHITE);
+  m_menus[NAME] = std::make_unique<ui::UiTextMenu>(config, bg, text);
 
   config.pos.y += REASONABLE_PIXEL_GAP;
-  bg             = bgConfigFromColor(colors::DARK_CYAN);
-  text           = textConfigFromColor("Power: N/A", colors::WHITE);
-  m_menus[POWER] = std::make_unique<UiTextMenu>(config, bg, text);
+  bg              = ui::bgConfigFromColor(colors::VERY_DARK_RED);
+  text            = ui::textConfigFromColor("Health: N/A", colors::WHITE);
+  m_menus[HEALTH] = std::make_unique<ui::UiTextMenu>(config, bg, text);
 
   config.pos.y += REASONABLE_PIXEL_GAP;
-  bg                = bgConfigFromColor(colors::BLANK);
-  text              = textConfigFromColor("N/A m", colors::WHITE);
-  m_menus[DISTANCE] = std::make_unique<UiTextMenu>(config, bg, text);
+  bg             = ui::bgConfigFromColor(colors::DARK_CYAN);
+  text           = ui::textConfigFromColor("Power: N/A", colors::WHITE);
+  m_menus[POWER] = std::make_unique<ui::UiTextMenu>(config, bg, text);
+
+  config.pos.y += REASONABLE_PIXEL_GAP;
+  bg                = ui::bgConfigFromColor(colors::BLANK);
+  text              = ui::textConfigFromColor("N/A m", colors::WHITE);
+  m_menus[DISTANCE] = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_menus[DISTANCE]->setVisible(false);
 
   config.pos.y += REASONABLE_PIXEL_GAP;
@@ -65,13 +65,13 @@ void EntityUiHandler::initializeMenus(const int /*width*/,
       m_shipDbView->dockPlayerShip();
     }
   };
-  bg            = bgConfigFromColor(colors::DARK_GREY);
-  text          = textConfigFromColor("Dock", colors::WHITE);
-  m_menus[DOCK] = std::make_unique<UiTextMenu>(config, bg, text);
+  bg            = ui::bgConfigFromColor(colors::DARK_GREY);
+  text          = ui::textConfigFromColor("Dock", colors::WHITE);
+  m_menus[DOCK] = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_menus[DOCK]->setVisible(false);
 }
 
-bool EntityUiHandler::processUserInput(UserInputData &inputData)
+bool EntityUiHandler::processUserInput(ui::UserInputData &inputData)
 {
   auto out{false};
   for (const auto &menu : m_menus)

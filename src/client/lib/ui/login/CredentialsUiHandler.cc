@@ -15,24 +15,25 @@ auto CredentialsUiHandler::getCredentials() const -> PlayerCredentials
 }
 
 namespace {
-auto addTextFieldSectionToMenu(UiMenu &mainPanel,
+auto addTextFieldSectionToMenu(ui::UiMenu &mainPanel,
                                const std::string &textFieldlabel,
-                               const std::optional<std::string> &defaultValue = {}) -> UiTextField *
+                               const std::optional<std::string> &defaultValue = {})
+  -> ui::UiTextField *
 {
   auto textFieldSection = generateBlankHorizontalMenu();
 
-  const MenuConfig config{.highlightable = false};
-  auto bg    = bgConfigFromColor(semiOpaque(colors::DARK_BLUE));
-  auto text  = textConfigFromColor(textFieldlabel, colors::GREY, TextAlignment::RIGHT);
-  auto label = std::make_unique<UiTextMenu>(config, bg, text);
+  const ui::MenuConfig config{.highlightable = false};
+  auto bg    = ui::bgConfigFromColor(semiOpaque(colors::DARK_BLUE));
+  auto text  = ui::textConfigFromColor(textFieldlabel, colors::GREY, ui::TextAlignment::RIGHT);
+  auto label = std::make_unique<ui::UiTextMenu>(config, bg, text);
   textFieldSection->addMenu(std::move(label));
 
-  TextFieldConfig fieldConfig{};
-  bg               = bgConfigFromColor(semiOpaque(colors::WHITE));
+  ui::TextFieldConfig fieldConfig{};
+  bg               = ui::bgConfigFromColor(semiOpaque(colors::WHITE));
   const auto value = defaultValue.value_or("");
-  text             = textConfigFromColor(value, colors::BLACK, TextAlignment::LEFT);
+  text             = ui::textConfigFromColor(value, colors::BLACK, ui::TextAlignment::LEFT);
 
-  auto field = std::make_unique<UiTextField>(fieldConfig, bg, text);
+  auto field = std::make_unique<ui::UiTextField>(fieldConfig, bg, text);
   auto out   = field.get();
   textFieldSection->addMenu(std::move(field));
 
@@ -56,7 +57,7 @@ void CredentialsUiHandler::initializeMenus(const int width,
   m_passwordTextField = addTextFieldSectionToMenu(*m_credentialsPanel, "Password:", "aze");
 }
 
-bool CredentialsUiHandler::processUserInput(UserInputData &inputData)
+bool CredentialsUiHandler::processUserInput(ui::UserInputData &inputData)
 {
   return m_credentialsPanel->processUserInput(inputData);
 }

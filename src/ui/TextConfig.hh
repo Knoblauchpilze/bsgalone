@@ -4,7 +4,7 @@
 #include "Color.hh"
 #include <string>
 
-namespace pge {
+namespace ui {
 
 enum class TextAlignment
 {
@@ -16,30 +16,30 @@ enum class TextAlignment
 struct TextConfig
 {
   std::string text{""};
-  Color color{colors::BLACK};
-  Color hColor{colors::WHITE};
+  pge::Color color{pge::colors::BLACK};
+  pge::Color hColor{pge::colors::WHITE};
   TextAlignment align{TextAlignment::CENTER};
   int margin{0};
 };
 
 auto textConfigFromColor(const std::string &text,
-                         const Color &color,
+                         const pge::Color &color,
                          const TextAlignment &align = TextAlignment::CENTER) -> TextConfig;
 
 auto textConfigFromColor(const std::string &text,
-                         const Color &color,
+                         const pge::Color &color,
                          const TextAlignment &align,
                          const int margin) -> TextConfig;
 
 auto textConfigFromColor(const std::string &text,
-                         const Color &color,
-                         const Color &hColor,
+                         const pge::Color &color,
+                         const pge::Color &hColor,
                          const TextAlignment &align = TextAlignment::CENTER) -> TextConfig;
 
 auto textConfigFromColor(const std::string &text,
-                         const Color &color,
-                         const Color &hColor,
+                         const pge::Color &color,
+                         const pge::Color &hColor,
                          const TextAlignment &align,
                          const int margin = 0) -> TextConfig;
 
-} // namespace pge
+} // namespace ui

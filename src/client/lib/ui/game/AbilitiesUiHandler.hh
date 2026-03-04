@@ -21,7 +21,7 @@ class AbilitiesUiHandler : public IUiHandler, public bsgalone::core::AbstractMes
   void initializeMenus(const int width,
                        const int height,
                        sprites::TexturePack &texturesLoader) override;
-  bool processUserInput(UserInputData &inputData) override;
+  bool processUserInput(ui::UserInputData &inputData) override;
   void render(Renderer &engine) const override;
   void updateUi() override;
   void connectToMessageQueue(bsgalone::core::IMessageQueue &messageQueue) override;
@@ -36,8 +36,8 @@ class AbilitiesUiHandler : public IUiHandler, public bsgalone::core::AbstractMes
   bool m_disabled{false};
 
   sprites::PackId m_computerTexturesPackId{};
-  std::vector<UiPictureMenuPtr> m_computers{};
-  std::vector<UiTextMenu *> m_statuses{};
+  std::vector<ui::UiPictureMenuPtr> m_computers{};
+  std::vector<ui::UiTextMenu *> m_statuses{};
 
   void subscribeToViews();
   void reset();

@@ -46,7 +46,7 @@ void AbilitiesUiHandler::initializeMenus(const int width,
   generateComputersMenus(width, height);
 }
 
-bool AbilitiesUiHandler::processUserInput(UserInputData &inputData)
+bool AbilitiesUiHandler::processUserInput(ui::UserInputData &inputData)
 {
   if (m_disabled)
   {
@@ -146,15 +146,15 @@ void AbilitiesUiHandler::generateComputersMenus(int width, int height)
   const Vec2i pos{width - NUMBER_OF_ABILITIES * (abilityMenuDims.x + SPACING_IN_PIXELS),
                   height - SPACING_IN_PIXELS - abilityMenuDims.y};
 
-  MenuConfig config{.pos                       = pos,
-                    .dims                      = abilityMenuDims,
-                    .propagateEventsToChildren = false,
-                    .customRenderMode          = CustomRenderMode::PRE_RENDER};
-  const PictureConfig bg{.path = ABILITIES_PICTURE_FILE_PATH};
+  ui::MenuConfig config{.pos                       = pos,
+                        .dims                      = abilityMenuDims,
+                        .propagateEventsToChildren = false,
+                        .customRenderMode          = ui::CustomRenderMode::PRE_RENDER};
+  const ui::PictureConfig bg{.path = ABILITIES_PICTURE_FILE_PATH};
 
   for (auto id = 0u; id < NUMBER_OF_ABILITIES; ++id)
   {
-    auto menu = std::make_unique<UiPictureMenu>(config, bg);
+    auto menu = std::make_unique<ui::UiPictureMenu>(config, bg);
     m_computers.push_back(std::move(menu));
 
     config.pos.x += (abilityMenuDims.x + SPACING_IN_PIXELS);
@@ -208,9 +208,9 @@ void AbilitiesUiHandler::initializeAbilities()
 
   const auto palette = generatePaletteForFaction(m_playerView->getPlayerFaction());
 
-  const MenuConfig config{};
-  const auto bg = bgConfigFromColor(colors::BLANK);
-  auto textConf = textConfigFromColor("", palette.defaultColor);
+  const ui::MenuConfig config{};
+  const auto bg = ui::bgConfigFromColor(colors::BLANK);
+  auto textConf = ui::textConfigFromColor("", palette.defaultColor);
 
   for (const auto &menu : m_computers)
   {
@@ -242,7 +242,7 @@ void AbilitiesUiHandler::initializeAbilities()
 
     menu->setSprite(m_computerTexturesPackId, spriteIdFromComputer(*dbComputer));
 
-    auto prop = std::make_unique<UiTextMenu>(config, bg, textConf);
+    auto prop = std::make_unique<ui::UiTextMenu>(config, bg, textConf);
     m_statuses.push_back(prop.get());
     menu->addMenu(std::move(prop));
 

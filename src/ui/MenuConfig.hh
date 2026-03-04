@@ -6,7 +6,7 @@
 #include <functional>
 #include <optional>
 
-namespace pge {
+namespace ui {
 
 enum class MenuLayout
 {
@@ -26,8 +26,8 @@ using LostFocusCallback = std::function<void()>;
 
 struct MenuConfig
 {
-  Vec2i pos{};
-  Vec2i dims{10, 10};
+  pge::Vec2i pos{};
+  pge::Vec2i dims{10, 10};
 
   MenuLayout layout{MenuLayout::VERTICAL};
 
@@ -48,4 +48,4 @@ struct MenuConfig
   CustomRenderMode customRenderMode{CustomRenderMode::POST_RENDER};
 };
 
-} // namespace pge
+} // namespace ui

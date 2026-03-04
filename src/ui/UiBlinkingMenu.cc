@@ -2,7 +2,7 @@
 #include "UiBlinkingMenu.hh"
 #include "UiTextMenu.hh"
 
-namespace pge {
+namespace ui {
 
 UiBlinkingMenu::UiBlinkingMenu(UiMenuPtr menu)
   : UiBlinkingMenu(BlinkingMenuConfig{}, std::move(menu))
@@ -63,7 +63,7 @@ void UiBlinkingMenu::update()
   }
 }
 
-void UiBlinkingMenu::render(Renderer &engine) const
+void UiBlinkingMenu::render(pge::Renderer &engine) const
 {
   m_menu->render(engine);
 }
@@ -93,7 +93,7 @@ void UiBlinkingMenu::updateOpacity(const float perc)
 {
   if (m_applyToBackground)
   {
-    const auto bg = makeTransparentFromPercentage(m_menu->getBgColor(), perc);
+    const auto bg = pge::makeTransparentFromPercentage(m_menu->getBgColor(), perc);
     m_menu->updateBgColor(bg);
   }
 
@@ -102,10 +102,10 @@ void UiBlinkingMenu::updateOpacity(const float perc)
     const auto maybeTextMenu = dynamic_cast<UiTextMenu *>(m_menu.get());
     if (nullptr != maybeTextMenu)
     {
-      const auto text = makeTransparentFromPercentage(maybeTextMenu->getTextColor(), perc);
+      const auto text = pge::makeTransparentFromPercentage(maybeTextMenu->getTextColor(), perc);
       maybeTextMenu->updateTextColor(text);
     }
   }
 }
 
-} // namespace pge
+} // namespace ui

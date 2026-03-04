@@ -2,21 +2,21 @@
 #include "UiPictureMenu.hh"
 #include <unordered_set>
 
-namespace pge {
+namespace ui {
 
 UiPictureMenu::UiPictureMenu(const MenuConfig &config, const PictureConfig &pictureConfig)
-  : UiMenu(config, BackgroundConfig{.color = colors::BLANK, .hColor = colors::BLANK})
+  : UiMenu(config, BackgroundConfig{.color = pge::colors::BLANK, .hColor = pge::colors::BLANK})
   , m_tint(pictureConfig.tint)
 {
   initializeFromConfig(pictureConfig);
 }
 
-void UiPictureMenu::setPictureTint(Color tint)
+void UiPictureMenu::setPictureTint(pge::Color tint)
 {
   m_tint = tint;
 }
 
-void UiPictureMenu::setSprite(const sprites::PackId texturePack, const Vec2i &spritePos)
+void UiPictureMenu::setSprite(const pge::sprites::PackId texturePack, const pge::Vec2i &spritePos)
 {
   m_sprite = SpriteData{.texturePack = texturePack, .texturePos = spritePos};
 }
@@ -26,10 +26,10 @@ void UiPictureMenu::clearSprite()
   m_sprite.reset();
 }
 
-void UiPictureMenu::renderCustom(Renderer &engine) const
+void UiPictureMenu::renderCustom(pge::Renderer &engine) const
 {
   const auto iPos = absolutePosition();
-  const Vec2f pos{static_cast<float>(iPos.x), static_cast<float>(iPos.y)};
+  const pge::Vec2f pos{static_cast<float>(iPos.x), static_cast<float>(iPos.y)};
 
   if (m_picture != nullptr)
   {
@@ -51,7 +51,7 @@ void UiPictureMenu::initializeFromConfig(const PictureConfig &config)
 
   if (config.path)
   {
-    m_picture = std::make_unique<DecalResource>(*config.path);
+    m_picture = std::make_unique<pge::DecalResource>(*config.path);
   }
   if (config.texturePack)
   {
@@ -66,22 +66,22 @@ void UiPictureMenu::initializeFromConfig(const PictureConfig &config)
   }
 }
 
-void UiPictureMenu::renderDecal(Renderer &renderer, const Vec2f &pos) const
+void UiPictureMenu::renderDecal(pge::Renderer &renderer, const pge::Vec2f &pos) const
 {
   const auto size = dims();
-  const Vec2f scale{1.0f * size.x / m_picture->w(), 1.0f * size.y / m_picture->h()};
+  const pge::Vec2f scale{1.0f * size.x / m_picture->w(), 1.0f * size.y / m_picture->h()};
 
   renderer.drawDecal(pos, *m_picture, scale, m_tint);
 }
 
-void UiPictureMenu::renderSprite(sprites::TexturePack &renderer, const Vec2f &pos) const
+void UiPictureMenu::renderSprite(pge::sprites::TexturePack &renderer, const pge::Vec2f &pos) const
 {
   const auto size = dims();
-  const Vec2f scale{1.0f * size.x, 1.0f * size.y};
+  const pge::Vec2f scale{1.0f * size.x, 1.0f * size.y};
 
-  sprites::Sprite sprite{.pack = m_sprite->texturePack, .sprite = m_sprite->texturePos};
+  pge::sprites::Sprite sprite{.pack = m_sprite->texturePack, .sprite = m_sprite->texturePos};
 
   renderer.draw(sprite, pos, scale);
 }
 
-} // namespace pge
+} // namespace ui

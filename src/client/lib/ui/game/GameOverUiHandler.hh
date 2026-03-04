@@ -17,7 +17,7 @@ class GameOverUiHandler : public IUiHandler
   void initializeMenus(const int width,
                        const int height,
                        sprites::TexturePack &texturesLoader) override;
-  bool processUserInput(UserInputData &inputData) override;
+  bool processUserInput(ui::UserInputData &inputData) override;
   void render(Renderer &engine) const override;
   void updateUi() override;
 
@@ -25,7 +25,7 @@ class GameOverUiHandler : public IUiHandler
   ShipDbViewShPtr m_shipDbView{};
   ShipViewShPtr m_shipView{};
 
-  UiTextMenuPtr m_menu{};
+  ui::UiTextMenuPtr m_menu{};
 
   void subscribeToViews();
   void reset();

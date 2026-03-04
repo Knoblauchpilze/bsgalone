@@ -28,7 +28,7 @@ void GameScreenUiHandler::initializeMenus(const int width,
   }
 }
 
-bool GameScreenUiHandler::processUserInput(UserInputData &inputData)
+bool GameScreenUiHandler::processUserInput(ui::UserInputData &inputData)
 {
   auto out{false};
   for (const auto &ui : m_uis)

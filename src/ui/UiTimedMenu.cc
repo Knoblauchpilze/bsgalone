@@ -2,7 +2,7 @@
 #include "UiTimedMenu.hh"
 #include "UiTextMenu.hh"
 
-namespace pge {
+namespace ui {
 
 UiTimedMenu::UiTimedMenu(UiMenuPtr menu)
   : UiTimedMenu(TimedMenuConfig{}, std::move(menu))
@@ -60,7 +60,7 @@ bool UiTimedMenu::finished() const
   return !m_lastTrigger.has_value();
 }
 
-void UiTimedMenu::render(Renderer &engine) const
+void UiTimedMenu::render(pge::Renderer &engine) const
 {
   m_menu->render(engine);
 }
@@ -103,9 +103,9 @@ void UiTimedMenu::updateOpacity(const float perc)
   const auto maybeTextMenu = dynamic_cast<UiTextMenu *>(m_menu.get());
   if (nullptr != maybeTextMenu)
   {
-    const auto text = makeTransparentFromPercentage(maybeTextMenu->getTextColor(), perc);
+    const auto text = pge::makeTransparentFromPercentage(maybeTextMenu->getTextColor(), perc);
     maybeTextMenu->updateTextColor(text);
   }
 }
 
-} // namespace pge
+} // namespace ui

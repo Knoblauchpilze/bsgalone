@@ -19,7 +19,7 @@ class GameRoleUiHandler : public IUiHandler
   void initializeMenus(const int width,
                        const int height,
                        sprites::TexturePack &texturesLoader) override;
-  bool processUserInput(UserInputData &inputData) override;
+  bool processUserInput(ui::UserInputData &inputData) override;
   void render(Renderer &engine) const override;
   void updateUi() override;
 
@@ -28,7 +28,7 @@ class GameRoleUiHandler : public IUiHandler
   SystemViewShPtr m_systemView{};
   bool m_initialized{false};
 
-  UiMenuPtr m_menu{};
+  ui::UiMenuPtr m_menu{};
 
   enum class State
   {
@@ -40,8 +40,8 @@ class GameRoleUiHandler : public IUiHandler
   {
     bsgo::Uuid shipDbId{};
     bsgo::Uuid playerDbId{};
-    UiMenu *menu{};
-    UiTextMenu *button{};
+    ui::UiMenu *menu{};
+    ui::UiTextMenu *button{};
     State state{State::TO_JOIN};
   };
   std::vector<PlayerShipData> m_shipsData{};

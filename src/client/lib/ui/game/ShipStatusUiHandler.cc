@@ -31,7 +31,7 @@ void ShipStatusUiHandler::initializeMenus(const int width,
   initializeJumpPanel(width, height);
 }
 
-bool ShipStatusUiHandler::processUserInput(UserInputData &inputData)
+bool ShipStatusUiHandler::processUserInput(ui::UserInputData &inputData)
 {
   return m_jumpPanel->processUserInput(inputData);
 }
@@ -101,17 +101,17 @@ void ShipStatusUiHandler::initializeThreatPanel(const int width, const int heigh
                              height - JUMP_UI_PIXEL_DIMENSION.y - REASONABLE_GAP_PIXELS
                                - THREAT_UI_PIXEL_DIMENSION.y};
 
-  const MenuConfig config{.pos           = threatPixelPos,
-                          .dims          = THREAT_UI_PIXEL_DIMENSION,
-                          .highlightable = false};
+  const ui::MenuConfig config{.pos           = threatPixelPos,
+                              .dims          = THREAT_UI_PIXEL_DIMENSION,
+                              .highlightable = false};
 
-  const auto bg   = bgConfigFromColor(colors::BLANK);
-  const auto text = textConfigFromColor("Threat", colors::RED);
+  const auto bg   = ui::bgConfigFromColor(colors::BLANK);
+  const auto text = ui::textConfigFromColor("Threat", colors::RED);
 
-  auto label = std::make_unique<UiTextMenu>(config, bg, text);
-  BlinkingMenuConfig blinkConfig{};
+  auto label = std::make_unique<ui::UiTextMenu>(config, bg, text);
+  ui::BlinkingMenuConfig blinkConfig{};
   blinkConfig.applyToBackground = false;
-  m_threatLabel                 = std::make_unique<UiBlinkingMenu>(blinkConfig, std::move(label));
+  m_threatLabel = std::make_unique<ui::UiBlinkingMenu>(blinkConfig, std::move(label));
 }
 
 void ShipStatusUiHandler::initializeJumpPanel(const int width, const int height)
@@ -119,37 +119,37 @@ void ShipStatusUiHandler::initializeJumpPanel(const int width, const int height)
   const Vec2i jumpUiPixelPos{(width - JUMP_UI_PIXEL_DIMENSION.x) / 2,
                              height - JUMP_UI_PIXEL_DIMENSION.y - REASONABLE_GAP_PIXELS};
 
-  const MenuConfig config{.pos           = jumpUiPixelPos,
-                          .dims          = JUMP_UI_PIXEL_DIMENSION,
-                          .highlightable = false};
+  const ui::MenuConfig config{.pos           = jumpUiPixelPos,
+                              .dims          = JUMP_UI_PIXEL_DIMENSION,
+                              .highlightable = false};
 
-  auto bg     = bgConfigFromColor(semiOpaque(colors::DARK_RED));
-  m_jumpPanel = std::make_unique<UiMenu>(config, bg);
+  auto bg     = ui::bgConfigFromColor(semiOpaque(colors::DARK_RED));
+  m_jumpPanel = std::make_unique<ui::UiMenu>(config, bg);
 
-  bg        = bgConfigFromColor(colors::BLANK);
-  auto text = textConfigFromColor("FTL Jump", colors::WHITE);
-  auto menu = std::make_unique<UiTextMenu>(config, bg, text);
+  bg        = ui::bgConfigFromColor(colors::BLANK);
+  auto text = ui::textConfigFromColor("FTL Jump", colors::WHITE);
+  auto menu = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_jumpPanel->addMenu(std::move(menu));
 
   m_jumpPanel->addMenu(generateSpacer());
 
-  text = textConfigFromColor("Destination:", colors::WHITE);
-  menu = std::make_unique<UiTextMenu>(config, bg, text);
+  text = ui::textConfigFromColor("Destination:", colors::WHITE);
+  menu = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_jumpPanel->addMenu(std::move(menu));
 
-  text              = textConfigFromColor("N/A", colors::WHITE);
-  menu              = std::make_unique<UiTextMenu>(config, bg, text);
+  text              = ui::textConfigFromColor("N/A", colors::WHITE);
+  menu              = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_jumpDestination = menu.get();
   m_jumpPanel->addMenu(std::move(menu));
 
   m_jumpPanel->addMenu(generateSpacer());
 
-  text = textConfigFromColor("Remaining:", colors::WHITE);
-  menu = std::make_unique<UiTextMenu>(config, bg, text);
+  text = ui::textConfigFromColor("Remaining:", colors::WHITE);
+  menu = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_jumpPanel->addMenu(std::move(menu));
 
-  text       = textConfigFromColor("N/A", colors::WHITE);
-  menu       = std::make_unique<UiTextMenu>(config, bg, text);
+  text       = ui::textConfigFromColor("N/A", colors::WHITE);
+  menu       = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_jumpTime = menu.get();
   m_jumpPanel->addMenu(std::move(menu));
 

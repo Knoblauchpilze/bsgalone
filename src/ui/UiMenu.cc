@@ -1,7 +1,7 @@
 
 #include "UiMenu.hh"
 
-namespace pge {
+namespace ui {
 
 UiMenu::UiMenu(const MenuConfig &config, const BackgroundConfig &bg)
   : core::CoreObject("menu")
@@ -30,7 +30,7 @@ void UiMenu::setHighlightable(const bool highlightable) noexcept
   m_state.highlightable = highlightable;
 }
 
-void UiMenu::setPosition(const Vec2i &position)
+void UiMenu::setPosition(const pge::Vec2i &position)
 {
   if (m_parent != nullptr)
   {
@@ -69,17 +69,17 @@ void UiMenu::clearChildren()
   m_children.clear();
 }
 
-auto UiMenu::getBgColor() const -> Color
+auto UiMenu::getBgColor() const -> pge::Color
 {
   return m_bg.color;
 }
 
-void UiMenu::updateBgColor(const Color &color)
+void UiMenu::updateBgColor(const pge::Color &color)
 {
   m_bg = bgConfigFromColor(color);
 }
 
-void UiMenu::render(Renderer &engine) const
+void UiMenu::render(pge::Renderer &engine) const
 {
   if (!m_state.visible)
   {
@@ -114,12 +114,12 @@ bool UiMenu::processUserInput(UserInputData &inputData)
     return inputRelevantForChildren;
   }
 
-  const Vec2i mPos{inputData.controls.mPosX, inputData.controls.mPosY};
+  const pge::Vec2i mPos{inputData.controls.mPosX, inputData.controls.mPosY};
   if (!isWithinMenu(mPos) || inputRelevantForChildren)
   {
     m_state.highlighted = false;
 
-    if (!inputRelevantForChildren && inputData.controls.released(controls::mouse::LEFT)
+    if (!inputRelevantForChildren && inputData.controls.released(pge::controls::mouse::LEFT)
         && m_lostFocusCallback)
     {
       (*m_lostFocusCallback)();
@@ -133,7 +133,7 @@ bool UiMenu::processUserInput(UserInputData &inputData)
   return true;
 }
 
-auto UiMenu::absolutePosition() const noexcept -> Vec2i
+auto UiMenu::absolutePosition() const noexcept -> pge::Vec2i
 {
   auto p = m_pos;
   if (m_parent != nullptr)
@@ -143,7 +143,7 @@ auto UiMenu::absolutePosition() const noexcept -> Vec2i
   return p;
 }
 
-auto UiMenu::dims() const noexcept -> Vec2i
+auto UiMenu::dims() const noexcept -> pge::Vec2i
 {
   return m_dims;
 }
@@ -158,7 +158,7 @@ void UiMenu::setLostFocusCallback(const ClickCallback &callback)
   m_lostFocusCallback = callback;
 }
 
-void UiMenu::renderCustom(Renderer & /*engine*/) const
+void UiMenu::renderCustom(pge::Renderer & /*engine*/) const
 {
   // Intentionally empty to allow subclassing.
 }
@@ -183,7 +183,7 @@ void UiMenu::initializeFromConfig(const MenuConfig &config)
   m_lostFocusCallback = config.lostFocusCallback;
 }
 
-void UiMenu::renderSelf(Renderer &engine) const
+void UiMenu::renderSelf(pge::Renderer &engine) const
 {
   if (CustomRenderMode::PRE_RENDER == m_state.customRenderMode)
   {
@@ -199,7 +199,7 @@ void UiMenu::renderSelf(Renderer &engine) const
   }
 }
 
-auto UiMenu::getColorFromState() const -> Color
+auto UiMenu::getColorFromState() const -> pge::Color
 {
   if (m_state.highlightable && m_state.highlighted)
   {
@@ -208,7 +208,7 @@ auto UiMenu::getColorFromState() const -> Color
   return m_bg.color;
 }
 
-bool UiMenu::isWithinMenu(const Vec2i &pos) const
+bool UiMenu::isWithinMenu(const pge::Vec2i &pos) const
 {
   const auto absPos = absolutePosition();
   const auto minX   = absPos.x;
@@ -237,7 +237,7 @@ void UiMenu::onRelevantInput(UserInputData &inputData)
     (*m_highlightCallback)();
   }
 
-  if (inputData.controls.released(controls::mouse::LEFT))
+  if (inputData.controls.released(pge::controls::mouse::LEFT))
   {
     if (m_clickCallback)
     {
@@ -362,4 +362,4 @@ void UiMenu::adaptChildrenToMatchVerticalSize(const float desiredYSize)
   }
 }
 
-} // namespace pge
+} // namespace ui

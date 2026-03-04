@@ -19,7 +19,7 @@ class ShopUiHandler : public IUiHandler
   void initializeMenus(const int width,
                        const int height,
                        sprites::TexturePack &texturesLoader) override;
-  bool processUserInput(UserInputData &inputData) override;
+  bool processUserInput(ui::UserInputData &inputData) override;
   void render(Renderer &engine) const override;
   void updateUi() override;
 
@@ -28,16 +28,16 @@ class ShopUiHandler : public IUiHandler
   PlayerViewShPtr m_playerView{};
   bool m_initialized{false};
 
-  UiMenuPtr m_resourcesMenu{};
-  UiMenuPtr m_menu{};
-  std::vector<UiMenu *> m_items{};
+  ui::UiMenuPtr m_resourcesMenu{};
+  ui::UiMenuPtr m_menu{};
+  std::vector<ui::UiMenu *> m_items{};
 
   struct ItemData
   {
     bsgo::Uuid itemId{};
     bsgalone::core::Item itemType{};
-    UiMenu *menu{};
-    std::unordered_map<bsgo::Uuid, UiTextMenu *> prices{};
+    ui::UiMenu *menu{};
+    std::unordered_map<bsgo::Uuid, ui::UiTextMenu *> prices{};
   };
   std::vector<ItemData> m_itemsData{};
 
@@ -47,7 +47,7 @@ class ShopUiHandler : public IUiHandler
   void generateResourcesMenus();
   void initializeLayout();
   void generateItemsMenus();
-  auto generateItemMenus(const ShopItem &item, const GameSession &gameSession) -> UiMenuPtr;
+  auto generateItemMenus(const ShopItem &item, const GameSession &gameSession) -> ui::UiMenuPtr;
 
   void onPurchaseRequest(const int itemId);
 };

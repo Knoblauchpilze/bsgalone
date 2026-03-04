@@ -16,7 +16,7 @@ class StatusUiHandler : public IUiHandler
   void initializeMenus(const int width,
                        const int height,
                        sprites::TexturePack &texturesLoader) override;
-  bool processUserInput(UserInputData &inputData) override;
+  bool processUserInput(ui::UserInputData &inputData) override;
   void render(Renderer &engine) const override;
   void updateUi() override;
 
@@ -28,9 +28,9 @@ class StatusUiHandler : public IUiHandler
 
   bool m_logoutRequested{false};
 
-  UiMenuPtr m_statusBar{};
-  UiTextMenu *m_system{};
-  UiMenuPtr m_logoutConfirmation{};
+  ui::UiMenuPtr m_statusBar{};
+  ui::UiTextMenu *m_system{};
+  ui::UiMenuPtr m_logoutConfirmation{};
 
   void subscribeToViews();
   void reset();

@@ -4,7 +4,7 @@
 #include "TextConfig.hh"
 #include "UiMenu.hh"
 
-namespace pge {
+namespace ui {
 
 class UiTextMenu : public UiMenu
 {
@@ -14,18 +14,18 @@ class UiTextMenu : public UiMenu
 
   virtual auto getText() const noexcept -> std::string;
   void setText(const std::string &text);
-  auto getTextColor() const -> Color;
-  void updateTextColor(const Color &color);
+  auto getTextColor() const -> pge::Color;
+  void updateTextColor(const pge::Color &color);
 
   protected:
-  void renderCustom(Renderer &engine) const override;
+  void renderCustom(pge::Renderer &engine) const override;
 
   private:
   TextConfig m_text{};
 
-  auto getTextColorFromState() const -> Color;
+  auto getTextColorFromState() const -> pge::Color;
 };
 
 using UiTextMenuPtr = std::unique_ptr<UiTextMenu>;
 
-} // namespace pge
+} // namespace ui

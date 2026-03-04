@@ -2,16 +2,17 @@
 #include "TextConfig.hh"
 #include "MenuCommon.hh"
 
-namespace pge {
+namespace ui {
 
-auto textConfigFromColor(const std::string &text, const Color &color, const TextAlignment &align)
-  -> TextConfig
+auto textConfigFromColor(const std::string &text,
+                         const pge::Color &color,
+                         const TextAlignment &align) -> TextConfig
 {
   return textConfigFromColor(text, color, findHighlightColor(color), align, 0);
 }
 
 auto textConfigFromColor(const std::string &text,
-                         const Color &color,
+                         const pge::Color &color,
                          const TextAlignment &align,
                          const int margin) -> TextConfig
 {
@@ -19,20 +20,20 @@ auto textConfigFromColor(const std::string &text,
 }
 
 auto textConfigFromColor(const std::string &text,
-                         const Color &color,
-                         const Color &hColor,
+                         const pge::Color &color,
+                         const pge::Color &hColor,
                          const TextAlignment &align) -> TextConfig
 {
   return textConfigFromColor(text, color, hColor, align, 0);
 }
 
 auto textConfigFromColor(const std::string &text,
-                         const Color &color,
-                         const Color &hColor,
+                         const pge::Color &color,
+                         const pge::Color &hColor,
                          const TextAlignment &align,
                          const int margin) -> TextConfig
 {
   return TextConfig{.text = text, .color = color, .hColor = hColor, .align = align, .margin = margin};
 }
 
-} // namespace pge
+} // namespace ui

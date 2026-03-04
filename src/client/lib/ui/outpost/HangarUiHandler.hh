@@ -19,7 +19,7 @@ class HangarUiHandler : public IUiHandler
   void initializeMenus(const int width,
                        const int height,
                        sprites::TexturePack &texturesLoader) override;
-  bool processUserInput(UserInputData &inputData) override;
+  bool processUserInput(ui::UserInputData &inputData) override;
   void render(Renderer &engine) const override;
   void updateUi() override;
 
@@ -28,8 +28,8 @@ class HangarUiHandler : public IUiHandler
   ShopViewShPtr m_shopView{};
   bool m_initialized{false};
 
-  UiMenuPtr m_resourcesMenu{};
-  UiMenuPtr m_menu{};
+  ui::UiMenuPtr m_resourcesMenu{};
+  ui::UiMenuPtr m_menu{};
 
   enum class State
   {
@@ -43,8 +43,8 @@ class HangarUiHandler : public IUiHandler
   {
     bsgo::Uuid shipDbId{};
     std::optional<bsgo::Uuid> playerShipDbId{};
-    UiMenu *menu{};
-    UiTextMenu *button{};
+    ui::UiMenu *menu{};
+    ui::UiTextMenu *button{};
     State state{State::UNAFFORDABLE};
   };
   std::vector<PlayerShipData> m_shipsData{};

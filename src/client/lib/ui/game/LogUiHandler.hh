@@ -19,7 +19,7 @@ class LogUiHandler : public IUiHandler, public bsgalone::core::AbstractMessageLi
   void initializeMenus(const int width,
                        const int height,
                        sprites::TexturePack &texturesLoader) override;
-  bool processUserInput(UserInputData &inputData) override;
+  bool processUserInput(ui::UserInputData &inputData) override;
   void render(Renderer &engine) const override;
   void updateUi() override;
 
@@ -34,16 +34,16 @@ class LogUiHandler : public IUiHandler, public bsgalone::core::AbstractMessageLi
 
   struct LogMessage
   {
-    UiTimedMenuPtr menu{};
-    UiMenu *rawMenu{};
+    ui::UiTimedMenuPtr menu{};
+    ui::UiMenu *rawMenu{};
   };
 
   std::deque<LogMessage> m_logs{};
-  std::vector<UiTimedMenu *> m_logsToTrigger{};
+  std::vector<ui::UiTimedMenu *> m_logsToTrigger{};
 
   void subscribeToViews();
   void reset();
-  auto createMenuFromMessage(const bsgalone::core::IMessage &message) -> UiMenuPtr;
+  auto createMenuFromMessage(const bsgalone::core::IMessage &message) -> ui::UiMenuPtr;
 };
 
 using LogUiHandlerPtr = std::unique_ptr<LogUiHandler>;

@@ -46,7 +46,7 @@ auto Game::getScreen() const noexcept -> Screen
   return m_state.screen;
 }
 
-void Game::setScreen(const Screen &screen)
+void Game::setScreen(const Screen screen)
 {
   m_state.screen = screen;
   if (m_state.dead && Screen::OUTPOST == m_state.screen)
@@ -121,7 +121,7 @@ bool applyInputToUi(const controls::State &controls,
                     Game &g,
                     const std::unordered_map<Screen, IUiHandlerPtr> &uiHandlers)
 {
-  UserInputData uid{.controls = controls};
+  ui::UserInputData uid{.controls = controls};
   bool userInputRelevant{false};
   const auto uiHandler = uiHandlers.find(currentScreen);
   if (uiHandler != uiHandlers.end())

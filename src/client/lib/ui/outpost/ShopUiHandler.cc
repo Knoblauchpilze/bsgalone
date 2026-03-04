@@ -47,7 +47,7 @@ void ShopUiHandler::initializeMenus(const int width,
   m_menu = generateBlankVerticalMenu(pos, dims);
 }
 
-bool ShopUiHandler::processUserInput(UserInputData &inputData)
+bool ShopUiHandler::processUserInput(ui::UserInputData &inputData)
 {
   // The resources menu can't take input.
   return m_menu->processUserInput(inputData);
@@ -60,7 +60,7 @@ void ShopUiHandler::render(Renderer &engine) const
 }
 
 namespace {
-void updateBuyButtonState(UiMenu &buyButton, const bool enable)
+void updateBuyButtonState(ui::UiMenu &buyButton, const bool enable)
 {
   buyButton.setEnabled(enable);
 
@@ -74,7 +74,7 @@ void updateBuyButtonState(UiMenu &buyButton, const bool enable)
   }
 }
 
-void updatePricesState(const std::unordered_map<bsgo::Uuid, UiTextMenu *> &prices,
+void updatePricesState(const std::unordered_map<bsgo::Uuid, ui::UiTextMenu *> &prices,
                        const std::unordered_map<bsgo::Uuid, bool> &resourcesAvailability)
 {
   for (const auto &[resource, menu] : prices)
@@ -145,21 +145,23 @@ void ShopUiHandler::generateResourcesMenus()
 
   const auto resources = m_playerView->getPlayerResources();
 
-  const MenuConfig config{.propagateEventsToChildren = false};
-  const auto bg = bgConfigFromColor(colors::BLANK);
+  const ui::MenuConfig config{.propagateEventsToChildren = false};
+  const auto bg = ui::bgConfigFromColor(colors::BLANK);
 
   // Reverse iteration to get resources ordered according to their id.
   for (auto it = resources.rbegin(); it != resources.rend(); ++it)
   {
-    auto label = textConfigFromColor(bsgo::capitalizeString(it->name, true) + ":",
-                                     colors::DARK_GREY,
-                                     TextAlignment::RIGHT);
-    auto field = std::make_unique<UiTextMenu>(config, bg, label);
+    auto label = ui::textConfigFromColor(bsgo::capitalizeString(it->name, true) + ":",
+                                         colors::DARK_GREY,
+                                         ui::TextAlignment::RIGHT);
+    auto field = std::make_unique<ui::UiTextMenu>(config, bg, label);
     m_resourcesMenu->addMenu(std::move(field));
 
     const auto amount = std::to_string(it->amount);
-    label = textConfigFromColor(amount, colorFromResourceName(it->name), TextAlignment::LEFT);
-    field = std::make_unique<UiTextMenu>(config, bg, label);
+    label             = ui::textConfigFromColor(amount,
+                                    colorFromResourceName(it->name),
+                                    ui::TextAlignment::LEFT);
+    field             = std::make_unique<ui::UiTextMenu>(config, bg, label);
     m_resourcesMenu->addMenu(std::move(field));
   }
 }
@@ -172,9 +174,9 @@ void ShopUiHandler::initializeLayout()
   const auto items = m_shopView->getShopItems();
   for (auto id = 0u; id < items.size(); ++id)
   {
-    const MenuConfig config{.layout = MenuLayout::HORIZONTAL};
-    const auto bg = bgConfigFromColor(colors::BLANK);
-    auto itemMenu = std::make_unique<UiMenu>(config, bg);
+    const ui::MenuConfig config{.layout = ui::MenuLayout::HORIZONTAL};
+    const auto bg = ui::bgConfigFromColor(colors::BLANK);
+    auto itemMenu = std::make_unique<ui::UiMenu>(config, bg);
     m_items.push_back(itemMenu.get());
     m_menu->addMenu(std::move(itemMenu));
   }
@@ -183,8 +185,8 @@ void ShopUiHandler::initializeLayout()
 namespace {
 struct PriceMenu
 {
-  UiMenuPtr menu{};
-  std::vector<UiTextMenu *> costs{};
+  ui::UiMenuPtr menu{};
+  std::vector<ui::UiTextMenu *> costs{};
 };
 
 auto generatePriceMenus(const ShopItem &item) -> PriceMenu
@@ -193,19 +195,19 @@ auto generatePriceMenus(const ShopItem &item) -> PriceMenu
 
   out.menu = generateBlankVerticalMenu();
 
-  const MenuConfig config{.highlightable = false};
-  const auto bg = bgConfigFromColor(colors::BLANK);
+  const ui::MenuConfig config{.highlightable = false};
+  const auto bg = ui::bgConfigFromColor(colors::BLANK);
 
   auto label = std::string("Cost:");
   auto text  = generateTextConfig(label, colors::GREY, 10);
-  auto prop  = std::make_unique<UiTextMenu>(config, bg, text);
+  auto prop  = std::make_unique<ui::UiTextMenu>(config, bg, text);
   out.menu->addMenu(std::move(prop));
 
   for (const auto &cost : item.price)
   {
     label     = cost.resource.name + ": " + std::to_string(cost.amount);
     text      = generateTextConfig(label);
-    auto menu = std::make_unique<UiTextMenu>(config, bg, text);
+    auto menu = std::make_unique<ui::UiTextMenu>(config, bg, text);
     out.costs.push_back(menu.get());
     out.menu->addMenu(std::move(menu));
   }
@@ -253,7 +255,7 @@ void ShopUiHandler::generateItemsMenus()
 }
 
 auto ShopUiHandler::generateItemMenus(const ShopItem &item, const GameSession &gameSession)
-  -> UiMenuPtr
+  -> ui::UiMenuPtr
 {
   auto menu = generateBlankVerticalMenu();
   if (item.weapon)
