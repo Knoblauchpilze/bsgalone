@@ -2,7 +2,9 @@
 #pragma once
 
 #include "GameScreen.hh"
+#include "IRenderer.hh"
 #include "PGEApp.hh"
+#include <unordered_map>
 
 namespace bsgalone::client {
 
@@ -30,6 +32,8 @@ class GameApp : public pge::PGEApp
   /// @brief - Defines the current screen selected in this game. Updated whenever
   /// the user takes action to change it.
   GameScreen screen{GameScreen::LOGIN};
+
+  std::unordered_map<GameScreen, IRendererPtr> m_renderers{};
 };
 
 } // namespace bsgalone::client
