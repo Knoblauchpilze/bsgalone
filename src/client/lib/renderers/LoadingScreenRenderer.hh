@@ -5,7 +5,7 @@
 
 namespace pge {
 
-class LoadingScreenRenderer : public DecalScreenRenderer
+class LoadingScreenRenderer : public bsgalone::client::DecalScreenRenderer
 {
   public:
   LoadingScreenRenderer();

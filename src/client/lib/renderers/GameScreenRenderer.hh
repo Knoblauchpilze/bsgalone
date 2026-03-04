@@ -1,14 +1,14 @@
 
 #pragma once
 
+#include "AbstractRenderer.hh"
 #include "Entity.hh"
-#include "IRenderer.hh"
 #include "TiledBackground.hh"
 #include "Views.hh"
 
 namespace pge {
 
-class GameScreenRenderer : public IRenderer
+class GameScreenRenderer : public AbstractRenderer
 {
   public:
   GameScreenRenderer(const Views &views);

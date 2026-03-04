@@ -5,7 +5,7 @@
 
 namespace pge {
 
-class OutpostScreenRenderer : public DecalScreenRenderer
+class OutpostScreenRenderer : public bsgalone::client::DecalScreenRenderer
 {
   public:
   OutpostScreenRenderer();

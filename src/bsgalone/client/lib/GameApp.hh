@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "GameScreen.hh"
 #include "PGEApp.hh"
 
 namespace bsgalone::client {
@@ -25,6 +26,10 @@ class GameApp : public pge::PGEApp
 
   private:
   int m_serverPort{};
+
+  /// @brief - Defines the current screen selected in this game. Updated whenever
+  /// the user takes action to change it.
+  GameScreen screen{GameScreen::LOGIN};
 };
 
 } // namespace bsgalone::client

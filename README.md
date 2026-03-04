@@ -785,7 +785,7 @@ The application has two main problems to solve:
 
 The client application splits the responsibilities to react to the user's input into several facets:
 
-- the [IRenderer](src/client/lib/renderers/IRenderer.hh) takes care of rendering the visual elements
+- the [IRenderer](src/bsgalone/client/lib/renderers/IRenderer.hh) takes care of rendering the visual elements
 - the [IUIHandler](src/client/lib/ui/IUiHandler.hh) takes care of rendering the UI
 - the [IInputHandler](src/client/lib/inputs/IInputHandler.hh) takes care of interpreting the input of the user
 

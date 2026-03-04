@@ -8,7 +8,7 @@ add_subdirectory (
 	)
 
 target_sources (client_lib PRIVATE
-	${CMAKE_CURRENT_SOURCE_DIR}/IRenderer.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/AbstractRenderer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/GameScreenRenderer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LoadingScreenRenderer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LoginScreenRenderer.cc

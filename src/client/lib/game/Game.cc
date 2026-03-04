@@ -2,9 +2,6 @@
 #include "Game.hh"
 #include "ClientMessageConsumerUtils.hh"
 #include "GameMessageModule.hh"
-#include "IInputHandler.hh"
-#include "IRenderer.hh"
-#include "IUiHandler.hh"
 #include "InternalMessageConsumer.hh"
 #include "SynchronizedMessageQueue.hh"
 
