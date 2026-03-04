@@ -13,7 +13,7 @@
 namespace pge {
 
 GameScreenUiHandler::GameScreenUiHandler(const Views &views)
-  : IUiHandler("game")
+  : AbstractUiHandler("game")
 {
   initializeUis(views);
 }

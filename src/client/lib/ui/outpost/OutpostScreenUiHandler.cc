@@ -8,7 +8,7 @@
 namespace pge {
 
 OutpostScreenUiHandler::OutpostScreenUiHandler(const Views &views)
-  : IUiHandler("outpost")
+  : AbstractUiHandler("outpost")
   , m_shipDbView(views.shipDbView)
   , m_playerView(views.playerView)
   , m_shopUi(std::make_unique<ShopUiHandler>(views))

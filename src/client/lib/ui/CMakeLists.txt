@@ -20,7 +20,7 @@ add_subdirectory (
 	)
 
 target_sources (client_lib PRIVATE
-	${CMAKE_CURRENT_SOURCE_DIR}/IUiHandler.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/AbstractUiHandler.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LoadingScreenUiHandler.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/MapScreenUiHandler.cc
 	)

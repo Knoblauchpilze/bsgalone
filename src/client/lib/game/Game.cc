@@ -116,7 +116,7 @@ auto applyInputToGame(const controls::State &controls,
 bool applyInputToUi(const controls::State &controls,
                     const Screen currentScreen,
                     Game &g,
-                    const std::unordered_map<Screen, IUiHandlerPtr> &uiHandlers)
+                    const std::unordered_map<Screen, AbstractUiHandlerPtr> &uiHandlers)
 {
   ui::UserInputData uid{.controls = controls};
   bool userInputRelevant{false};

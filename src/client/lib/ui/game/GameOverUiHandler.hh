@@ -1,14 +1,14 @@
 
 #pragma once
 
-#include "IUiHandler.hh"
+#include "AbstractUiHandler.hh"
 #include "UiTextMenu.hh"
 #include "Views.hh"
 #include <memory>
 
 namespace pge {
 
-class GameOverUiHandler : public IUiHandler
+class GameOverUiHandler : public AbstractUiHandler
 {
   public:
   GameOverUiHandler(const Views &views);

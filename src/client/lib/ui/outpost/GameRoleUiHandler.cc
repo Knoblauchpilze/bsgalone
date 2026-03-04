@@ -10,7 +10,7 @@
 namespace pge {
 
 GameRoleUiHandler::GameRoleUiHandler(const Views &views)
-  : IUiHandler("role")
+  : AbstractUiHandler("role")
   , m_playerView(views.playerView)
   , m_systemView(views.systemView)
 {

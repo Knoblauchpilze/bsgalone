@@ -6,7 +6,7 @@
 namespace pge {
 
 LoadingScreenUiHandler::LoadingScreenUiHandler(const Views & /*views*/)
-  : IUiHandler("loading")
+  : AbstractUiHandler("loading")
 {}
 
 void LoadingScreenUiHandler::initializeMenus(const int width,

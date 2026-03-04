@@ -6,7 +6,7 @@
 namespace pge {
 
 EntityUiHandler::EntityUiHandler(const EntityUiConfig &config, const Views &views)
-  : IUiHandler("ship")
+  : AbstractUiHandler("ship")
   , m_config(config)
   , m_shipView(views.shipView)
   , m_shipDbView(views.shipDbView)

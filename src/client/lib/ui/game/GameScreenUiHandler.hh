@@ -1,13 +1,13 @@
 
 #pragma once
 
-#include "IUiHandler.hh"
+#include "AbstractUiHandler.hh"
 #include "UiTextMenu.hh"
 #include "Views.hh"
 
 namespace pge {
 
-class GameScreenUiHandler : public IUiHandler
+class GameScreenUiHandler : public AbstractUiHandler
 {
   public:
   GameScreenUiHandler(const Views &views);
@@ -22,7 +22,7 @@ class GameScreenUiHandler : public IUiHandler
   void connectToMessageQueue(bsgalone::core::IMessageQueue &messageQueue) override;
 
   private:
-  std::vector<IUiHandlerPtr> m_uis{};
+  std::vector<AbstractUiHandlerPtr> m_uis{};
 
   void initializeUis(const Views &views);
 };

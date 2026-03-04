@@ -2,9 +2,9 @@
 #pragma once
 
 #include "AbstractMessageListener.hh"
+#include "AbstractUiHandler.hh"
 #include "CredentialsUiHandler.hh"
 #include "GameRole.hh"
-#include "IUiHandler.hh"
 #include "LoginMessage.hh"
 #include "SignupMessage.hh"
 #include "UiMenu.hh"
@@ -14,7 +14,8 @@
 
 namespace pge {
 
-class LoginScreenUiHandler : public IUiHandler, public bsgalone::core::AbstractMessageListener
+class LoginScreenUiHandler : public AbstractUiHandler,
+                             public bsgalone::core::AbstractMessageListener
 {
   public:
   LoginScreenUiHandler(const Views &views);

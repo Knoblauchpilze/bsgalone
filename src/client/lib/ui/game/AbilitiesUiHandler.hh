@@ -2,8 +2,8 @@
 #pragma once
 
 #include "AbstractMessageListener.hh"
+#include "AbstractUiHandler.hh"
 #include "ComputerSlotComponent.hh"
-#include "IUiHandler.hh"
 #include "UiMenu.hh"
 #include "UiPictureMenu.hh"
 #include "UiTextMenu.hh"
@@ -12,7 +12,7 @@
 
 namespace pge {
 
-class AbilitiesUiHandler : public IUiHandler, public bsgalone::core::AbstractMessageListener
+class AbilitiesUiHandler : public AbstractUiHandler, public bsgalone::core::AbstractMessageListener
 {
   public:
   AbilitiesUiHandler(const Views &views);

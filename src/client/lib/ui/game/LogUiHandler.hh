@@ -2,7 +2,7 @@
 #pragma once
 
 #include "AbstractMessageListener.hh"
-#include "IUiHandler.hh"
+#include "AbstractUiHandler.hh"
 #include "UiTimedMenu.hh"
 #include "Views.hh"
 #include <deque>
@@ -10,7 +10,7 @@
 
 namespace pge {
 
-class LogUiHandler : public IUiHandler, public bsgalone::core::AbstractMessageListener
+class LogUiHandler : public AbstractUiHandler, public bsgalone::core::AbstractMessageListener
 {
   public:
   LogUiHandler(const Views &views);
