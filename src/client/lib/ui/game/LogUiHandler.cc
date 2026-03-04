@@ -51,7 +51,7 @@ void LogUiHandler::initializeMenus(const int width,
   m_offset = Vec2i{width / 2, height / 4};
 }
 
-bool LogUiHandler::processUserInput(UserInputData & /*inputData*/)
+bool LogUiHandler::processUserInput(ui::UserInputData & /*inputData*/)
 {
   // Timed menus can't process user input.
   return false;
@@ -139,11 +139,11 @@ void LogUiHandler::onEventReceived(const bsgalone::core::IMessage &message)
   LogMessage data{};
   data.rawMenu = logMenu.get();
 
-  TimedMenuConfig timedConfig{.duration          = core::Milliseconds(LOG_FADE_OUT_DURATION_MS),
-                              .fadeOut           = true,
-                              .fadeOutDuration   = core::Milliseconds(LOG_FADE_OUT_DURATION_MS),
-                              .applyToBackGround = false};
-  data.menu = std::make_unique<UiTimedMenu>(timedConfig, std::move(logMenu));
+  ui::TimedMenuConfig timedConfig{.duration          = core::Milliseconds(LOG_FADE_OUT_DURATION_MS),
+                                  .fadeOut           = true,
+                                  .fadeOutDuration   = core::Milliseconds(LOG_FADE_OUT_DURATION_MS),
+                                  .applyToBackGround = false};
+  data.menu = std::make_unique<ui::UiTimedMenu>(timedConfig, std::move(logMenu));
 
   auto id = 1;
   for (const auto &data : m_logs)
@@ -163,36 +163,36 @@ constexpr auto FTL_JUMP_STARTED_TEXT = "FTL jump sequence started";
 
 auto createJumpRequestedMessage(const bsgalone::core::JumpRequestedMessage & /*message*/)
 {
-  return textConfigFromColor(FTL_JUMP_STARTED_TEXT, colors::WHITE);
+  return ui::textConfigFromColor(FTL_JUMP_STARTED_TEXT, colors::WHITE);
 }
 
 constexpr auto FTL_JUMP_CANCELLED_TEXT = "FTL jump sequence aborted";
 
 auto createJumpCancelledMessage(const bsgalone::core::JumpCancelledMessage & /*message*/)
 {
-  return textConfigFromColor(FTL_JUMP_CANCELLED_TEXT, colors::WHITE);
+  return ui::textConfigFromColor(FTL_JUMP_CANCELLED_TEXT, colors::WHITE);
 }
 
 auto createLootMessage(const bsgo::LootMessage &message, const ResourceView &resourceView)
-  -> TextConfig
+  -> ui::TextConfig
 {
   const auto resource = resourceView.getResourceName(message.getResourceDbId());
   const auto text     = "+" + std::to_string(message.amount()) + " " + resource;
   const auto color    = colorFromResourceName(resource);
-  return textConfigFromColor(text, color);
+  return ui::textConfigFromColor(text, color);
 }
 
 constexpr auto NO_USEFUL_RESOURCES_TEXT = "Mineral analysis: no useful resources";
 
 auto createScannedMessage(const bsgo::ScannedMessage &message,
                           const SystemView &systemView,
-                          const ResourceView &resourceView) -> TextConfig
+                          const ResourceView &resourceView) -> ui::TextConfig
 {
   const auto asteroid = systemView.getAsteroid(message.getAsteroidDbId());
 
   if (!asteroid.exists<bsgo::LootComponent>())
   {
-    return textConfigFromColor(NO_USEFUL_RESOURCES_TEXT, colors::WHITE);
+    return ui::textConfigFromColor(NO_USEFUL_RESOURCES_TEXT, colors::WHITE);
   }
 
   if (asteroid.resources.size() > 1)
@@ -205,21 +205,21 @@ auto createScannedMessage(const bsgo::ScannedMessage &message,
   const auto resource = resourceView.getResourceName(loot->resource());
   const auto text     = "Mineral analysis: " + std::to_string(loot->amount()) + " " + resource;
   const auto color    = colorFromResourceName(resource);
-  return textConfigFromColor(text, color);
+  return ui::textConfigFromColor(text, color);
 }
 
 constexpr auto ELECTRONIC_SUPPORT_TEXT = "Your systems are being improved by electronic support";
 
-auto createSlotMessage(const bsgo::SlotComponentMessage & /*message*/) -> TextConfig
+auto createSlotMessage(const bsgo::SlotComponentMessage & /*message*/) -> ui::TextConfig
 {
-  return textConfigFromColor(ELECTRONIC_SUPPORT_TEXT, colors::APPLE_GREEN);
+  return ui::textConfigFromColor(ELECTRONIC_SUPPORT_TEXT, colors::APPLE_GREEN);
 }
 
 auto createTextConfigForMessage(const bsgalone::core::IMessage &message,
                                 const SystemView &systemView,
-                                const ResourceView &resourceView) -> TextConfig
+                                const ResourceView &resourceView) -> ui::TextConfig
 {
-  TextConfig config{};
+  ui::TextConfig config{};
 
   switch (message.type())
   {
@@ -261,15 +261,15 @@ void LogUiHandler::reset()
   m_logsToTrigger.clear();
 }
 
-auto LogUiHandler::createMenuFromMessage(const bsgalone::core::IMessage &message) -> UiMenuPtr
+auto LogUiHandler::createMenuFromMessage(const bsgalone::core::IMessage &message) -> ui::UiMenuPtr
 {
   const Vec2i pos{m_offset.x - LOG_MENU_DIMS.x / 2, m_offset.y};
-  const MenuConfig config{.pos = pos, .dims = LOG_MENU_DIMS, .highlightable = false};
-  const BackgroundConfig bg = bgConfigFromColor(colors::TRANSPARENT_WHITE);
+  const ui::MenuConfig config{.pos = pos, .dims = LOG_MENU_DIMS, .highlightable = false};
+  const ui::BackgroundConfig bg = ui::bgConfigFromColor(colors::TRANSPARENT_WHITE);
 
   const auto text = createTextConfigForMessage(message, *m_systemView, *m_resourceView);
 
-  return std::make_unique<UiTextMenu>(config, bg, text);
+  return std::make_unique<ui::UiTextMenu>(config, bg, text);
 }
 
 } // namespace pge

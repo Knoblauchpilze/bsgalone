@@ -26,7 +26,7 @@ auto bgColorFromFiringState(const bsgo::SlotComponent &component) -> Color
   }
 }
 
-void resetPictureMenuToDefault(UiPictureMenu &menu, const Color &defaultColor)
+void resetPictureMenuToDefault(ui::UiPictureMenu &menu, const Color &defaultColor)
 {
   menu.setPictureTint(defaultColor);
   menu.updateBgColor(semiOpaque(bgForMissingComponent()));

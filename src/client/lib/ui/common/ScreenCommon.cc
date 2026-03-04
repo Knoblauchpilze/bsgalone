@@ -3,30 +3,32 @@
 
 namespace pge {
 
-auto generateBlankHorizontalMenu(const std::optional<Vec2i> &dims) -> UiMenuPtr
+auto generateBlankHorizontalMenu(const std::optional<Vec2i> &dims) -> ui::UiMenuPtr
 {
   return generateBlankHorizontalMenu({}, dims);
 }
 
-auto generateBlankHorizontalMenu(const Vec2i &pos, const std::optional<Vec2i> &dims) -> UiMenuPtr
+auto generateBlankHorizontalMenu(const Vec2i &pos, const std::optional<Vec2i> &dims)
+  -> ui::UiMenuPtr
 {
-  return generateBlankMenu(pos, MenuLayout::HORIZONTAL, dims);
+  return generateBlankMenu(pos, ui::MenuLayout::HORIZONTAL, dims);
 }
 
-auto generateBlankVerticalMenu(const std::optional<Vec2i> &dims) -> UiMenuPtr
+auto generateBlankVerticalMenu(const std::optional<Vec2i> &dims) -> ui::UiMenuPtr
 {
   return generateBlankVerticalMenu({}, dims);
 }
 
-auto generateBlankVerticalMenu(const Vec2i &pos, const std::optional<Vec2i> &dims) -> UiMenuPtr
+auto generateBlankVerticalMenu(const Vec2i &pos, const std::optional<Vec2i> &dims) -> ui::UiMenuPtr
 {
-  return generateBlankMenu(pos, MenuLayout::VERTICAL, dims);
+  return generateBlankMenu(pos, ui::MenuLayout::VERTICAL, dims);
 }
 
-auto generateBlankMenu(const Vec2i &pos, const MenuLayout &layout, const std::optional<Vec2i> &dims)
-  -> UiMenuPtr
+auto generateBlankMenu(const Vec2i &pos,
+                       const ui::MenuLayout &layout,
+                       const std::optional<Vec2i> &dims) -> ui::UiMenuPtr
 {
-  MenuConfig config{.pos = pos, .layout = layout};
+  ui::MenuConfig config{.pos = pos, .layout = layout};
   if (dims)
   {
     config.dims = *dims;
@@ -34,26 +36,26 @@ auto generateBlankMenu(const Vec2i &pos, const MenuLayout &layout, const std::op
   return generateBlankMenu(config);
 }
 
-auto generateBlankMenu(const MenuConfig &config) -> UiMenuPtr
+auto generateBlankMenu(const ui::MenuConfig &config) -> ui::UiMenuPtr
 {
-  const auto bg = bgConfigFromColor(colors::BLANK);
-  return std::make_unique<UiMenu>(config, bg);
+  const auto bg = ui::bgConfigFromColor(colors::BLANK);
+  return std::make_unique<ui::UiMenu>(config, bg);
 }
 
-auto generateSpacer(const std::optional<Vec2i> &dims) -> UiMenuPtr
+auto generateSpacer(const std::optional<Vec2i> &dims) -> ui::UiMenuPtr
 {
   return generateColoredSpacer(colors::BLANK, dims);
 }
 
-auto generateColoredSpacer(const Color &color, const std::optional<Vec2i> &dims) -> UiMenuPtr
+auto generateColoredSpacer(const Color &color, const std::optional<Vec2i> &dims) -> ui::UiMenuPtr
 {
-  MenuConfig config{.highlightable = false, .propagateEventsToChildren = false};
+  ui::MenuConfig config{.highlightable = false, .propagateEventsToChildren = false};
   if (dims)
   {
     config.dims = *dims;
   }
-  const auto bg = bgConfigFromColor(color);
-  return std::make_unique<UiMenu>(config, bg);
+  const auto bg = ui::bgConfigFromColor(color);
+  return std::make_unique<ui::UiMenu>(config, bg);
 }
 
 } // namespace pge

@@ -1,7 +1,7 @@
 
 #include "UiTextMenu.hh"
 
-namespace pge {
+namespace ui {
 
 UiTextMenu::UiTextMenu(const MenuConfig &config, const BackgroundConfig &bg, const TextConfig &text)
   : UiMenu(config, bg)
@@ -20,24 +20,24 @@ void UiTextMenu::setText(const std::string &text)
   m_text.text = text;
 }
 
-auto UiTextMenu::getTextColor() const -> Color
+auto UiTextMenu::getTextColor() const -> pge::Color
 {
   return m_text.color;
 }
 
-void UiTextMenu::updateTextColor(const Color &color)
+void UiTextMenu::updateTextColor(const pge::Color &color)
 {
   m_text = textConfigFromColor(m_text.text, color, m_text.align, m_text.margin);
 }
 
 namespace {
-auto computeTextPositionFromAlignement(const Vec2i &offset,
-                                       const Vec2i &dims,
-                                       const Vec2i &textDims,
+auto computeTextPositionFromAlignement(const pge::Vec2i &offset,
+                                       const pge::Vec2i &dims,
+                                       const pge::Vec2i &textDims,
                                        const TextAlignment &align,
-                                       const int margin) -> Vec2i
+                                       const int margin) -> pge::Vec2i
 {
-  Vec2i textPos{};
+  pge::Vec2i textPos{};
   switch (align)
   {
     case TextAlignment::CENTER:
@@ -59,7 +59,7 @@ auto computeTextPositionFromAlignement(const Vec2i &offset,
 }
 } // namespace
 
-void UiTextMenu::renderCustom(Renderer &engine) const
+void UiTextMenu::renderCustom(pge::Renderer &engine) const
 {
   const auto absPos   = absolutePosition();
   const auto textDims = engine.getTextSize(m_text.text);
@@ -73,7 +73,7 @@ void UiTextMenu::renderCustom(Renderer &engine) const
   engine.drawString(textPos, m_text.text, color);
 }
 
-auto UiTextMenu::getTextColorFromState() const -> Color
+auto UiTextMenu::getTextColorFromState() const -> pge::Color
 {
   if (state().highlightable && state().highlighted)
   {
@@ -82,4 +82,4 @@ auto UiTextMenu::getTextColorFromState() const -> Color
   return m_text.color;
 }
 
-} // namespace pge
+} // namespace ui

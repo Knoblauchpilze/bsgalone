@@ -4,10 +4,6 @@ target_include_directories (client_lib PUBLIC
 	)
 
 add_subdirectory (
-	${CMAKE_CURRENT_SOURCE_DIR}/menus
-	)
-
-add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/common
 	)
 

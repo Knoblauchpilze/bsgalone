@@ -3,12 +3,12 @@
 
 #include "UiTextMenu.hh"
 
-namespace pge {
+namespace ui {
 
 struct TextFieldConfig
 {
-  Vec2i pos{};
-  Vec2i dims{10, 10};
+  pge::Vec2i pos{};
+  pge::Vec2i dims{10, 10};
 
   bool visible{true};
 
@@ -30,11 +30,11 @@ class UiTextField : public UiTextMenu
   std::string m_fullText{};
   bool m_editing{false};
 
-  void updateInternalText(const controls::State &controls);
-  void updateCursorPosition(const controls::State &controls);
+  void updateInternalText(const pge::controls::State &controls);
+  void updateCursorPosition(const pge::controls::State &controls);
   void generateDisplayedText();
 };
 
 using UiTextFieldPtr = std::unique_ptr<UiTextField>;
 
-} // namespace pge
+} // namespace ui

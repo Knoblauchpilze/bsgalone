@@ -6,7 +6,7 @@
 #include "UiMenu.hh"
 #include <memory>
 
-namespace pge {
+namespace ui {
 
 struct BlinkingMenuConfig
 {
@@ -26,7 +26,7 @@ class UiBlinkingMenu : public core::CoreObject
   void setVisible(const bool visible);
   void update();
 
-  void render(Renderer &engine) const;
+  void render(pge::Renderer &engine) const;
 
   private:
   UiMenuPtr m_menu{};
@@ -50,4 +50,4 @@ class UiBlinkingMenu : public core::CoreObject
 
 using UiBlinkingMenuPtr = std::unique_ptr<UiBlinkingMenu>;
 
-} // namespace pge
+} // namespace ui

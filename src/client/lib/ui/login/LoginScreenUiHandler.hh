@@ -23,7 +23,7 @@ class LoginScreenUiHandler : public IUiHandler, public bsgalone::core::AbstractM
   void initializeMenus(const int width,
                        const int height,
                        sprites::TexturePack &texturesLoader) override;
-  bool processUserInput(UserInputData &inputData) override;
+  bool processUserInput(ui::UserInputData &inputData) override;
   void render(Renderer &engine) const override;
   void updateUi() override;
 
@@ -42,26 +42,26 @@ class LoginScreenUiHandler : public IUiHandler, public bsgalone::core::AbstractM
   bsgo::Faction m_faction{bsgo::Faction::COLONIAL};
   bsgo::GameRole m_role{bsgo::GameRole::PILOT};
 
-  UiMenuPtr m_loginModePanel{};
-  UiTextMenu *m_loginButton{};
-  UiTextMenu *m_signupButton{};
+  ui::UiMenuPtr m_loginModePanel{};
+  ui::UiTextMenu *m_loginButton{};
+  ui::UiTextMenu *m_signupButton{};
 
-  UiMenuPtr m_factionPanel{};
-  UiTextMenu *m_colonialButton{};
-  UiTextMenu *m_cylonButton{};
+  ui::UiMenuPtr m_factionPanel{};
+  ui::UiTextMenu *m_colonialButton{};
+  ui::UiTextMenu *m_cylonButton{};
 
-  UiMenuPtr m_rolePanel{};
-  UiTextMenu *m_pilotButton{};
-  UiTextMenu *m_gunnerButton{};
+  ui::UiMenuPtr m_rolePanel{};
+  ui::UiTextMenu *m_pilotButton{};
+  ui::UiTextMenu *m_gunnerButton{};
 
   CredentialsUiHandler m_credentialsUiHandler{};
-  UiTextMenuPtr m_proceedButton{};
-  UiTextMenuPtr m_quitButton{};
+  ui::UiTextMenuPtr m_proceedButton{};
+  ui::UiTextMenuPtr m_quitButton{};
 
-  UiTimedMenuPtr m_failureMenu{};
-  UiTextMenu *m_failureMenuText{};
+  ui::UiTimedMenuPtr m_failureMenu{};
+  ui::UiTextMenu *m_failureMenuText{};
 
-  UiTimedMenuPtr m_successfulSignupMenu{};
+  ui::UiTimedMenuPtr m_successfulSignupMenu{};
 
   void generateLoginModePanel(const int width, const int height);
   void generateFactionPanel(const int width, const int height);

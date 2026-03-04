@@ -7,9 +7,10 @@
 
 namespace pge {
 
-auto generateTextConfig(const std::string &name, const Color &color, const int margin) -> TextConfig
+auto generateTextConfig(const std::string &name, const Color &color, const int margin)
+  -> ui::TextConfig
 {
-  return textConfigFromColor(name, color, TextAlignment::LEFT, margin);
+  return textConfigFromColor(name, color, ui::TextAlignment::LEFT, margin);
 }
 
 auto generateWeaponMenu(const std::string &name,
@@ -17,38 +18,39 @@ auto generateWeaponMenu(const std::string &name,
                         const float maxDamage,
                         const float range,
                         const chrono::TickDuration &reloadTime,
-                        const chrono::TimeStep &step) -> UiMenuPtr
+                        const chrono::TimeStep &step) -> ui::UiMenuPtr
 {
   auto menu = generateBlankVerticalMenu();
 
-  const MenuConfig config{.highlightable = false};
-  const auto bg = bgConfigFromColor(colors::BLANK);
+  const ui::MenuConfig config{.highlightable = false};
+  const auto bg = ui::bgConfigFromColor(colors::BLANK);
 
   auto label = name + " (weapon)";
   auto text  = generateTextConfig(label, colors::GREY, 10);
-  auto prop  = std::make_unique<UiTextMenu>(config, bg, text);
+  auto prop  = std::make_unique<ui::UiTextMenu>(config, bg, text);
   menu->addMenu(std::move(prop));
 
   label = "Damage: " + bsgo::floatToStr(minDamage, 2) + "-" + bsgo::floatToStr(maxDamage) + "dmg";
   text  = generateTextConfig(label);
-  prop  = std::make_unique<UiTextMenu>(config, bg, text);
+  prop  = std::make_unique<ui::UiTextMenu>(config, bg, text);
   menu->addMenu(std::move(prop));
 
   label = "Range: " + bsgo::floatToStr(range, 0) + "m";
   text  = generateTextConfig(label);
-  prop  = std::make_unique<UiTextMenu>(config, bg, text);
+  prop  = std::make_unique<ui::UiTextMenu>(config, bg, text);
   menu->addMenu(std::move(prop));
 
   const auto secondsToReload = core::toSeconds(convertTickToDuration(reloadTime, step));
   label                      = "Reload: " + bsgo::floatToStr(secondsToReload, 2) + "s";
   text                       = generateTextConfig(label);
-  prop                       = std::make_unique<UiTextMenu>(config, bg, text);
+  prop                       = std::make_unique<ui::UiTextMenu>(config, bg, text);
   menu->addMenu(std::move(prop));
 
   return menu;
 }
 
-auto generateWeaponMenu(const bsgo::WeaponData &weapon, const chrono::TimeStep &step) -> UiMenuPtr
+auto generateWeaponMenu(const bsgo::WeaponData &weapon, const chrono::TimeStep &step)
+  -> ui::UiMenuPtr
 {
   return generateWeaponMenu(weapon.name,
                             weapon.minDamage,
@@ -59,7 +61,7 @@ auto generateWeaponMenu(const bsgo::WeaponData &weapon, const chrono::TimeStep &
 }
 
 auto generateWeaponMenu(const bsgo::PlayerWeaponData &weapon, const chrono::TimeStep &step)
-  -> UiMenuPtr
+  -> ui::UiMenuPtr
 {
   return generateWeaponMenu(weapon.name,
                             weapon.minDamage,
@@ -74,28 +76,28 @@ auto generateComputerMenu(const std::string &name,
                           const std::optional<float> &range,
                           const std::optional<chrono::TickDuration> &duration,
                           const chrono::TickDuration &reloadTime,
-                          const chrono::TimeStep &step) -> UiMenuPtr
+                          const chrono::TimeStep &step) -> ui::UiMenuPtr
 {
   auto menu = generateBlankVerticalMenu();
 
-  const MenuConfig config{.highlightable = false};
-  const auto bg = bgConfigFromColor(colors::BLANK);
+  const ui::MenuConfig config{.highlightable = false};
+  const auto bg = ui::bgConfigFromColor(colors::BLANK);
 
   auto label = name + " (computer)";
   auto text  = generateTextConfig(label, colors::GREY, 10);
-  auto prop  = std::make_unique<UiTextMenu>(config, bg, text);
+  auto prop  = std::make_unique<ui::UiTextMenu>(config, bg, text);
   menu->addMenu(std::move(prop));
 
   label = "Power cost: " + bsgo::floatToStr(powerCost, 0);
   text  = generateTextConfig(label);
-  prop  = std::make_unique<UiTextMenu>(config, bg, text);
+  prop  = std::make_unique<ui::UiTextMenu>(config, bg, text);
   menu->addMenu(std::move(prop));
 
   if (range)
   {
     label = "Range: " + bsgo::floatToStr(*range, 0) + "m";
     text  = generateTextConfig(label);
-    prop  = std::make_unique<UiTextMenu>(config, bg, text);
+    prop  = std::make_unique<ui::UiTextMenu>(config, bg, text);
     menu->addMenu(std::move(prop));
   }
 
@@ -104,21 +106,21 @@ auto generateComputerMenu(const std::string &name,
     const auto secondsDuration = core::toSeconds(convertTickToDuration(*duration, step));
     label                      = "Duration: " + bsgo::floatToStr(secondsDuration, 2) + "s";
     text                       = generateTextConfig(label);
-    prop                       = std::make_unique<UiTextMenu>(config, bg, text);
+    prop                       = std::make_unique<ui::UiTextMenu>(config, bg, text);
     menu->addMenu(std::move(prop));
   }
 
   const auto secondsToReload = core::toSeconds(convertTickToDuration(reloadTime, step));
   label                      = "Reload: " + bsgo::floatToStr(secondsToReload, 2) + "s";
   text                       = generateTextConfig(label);
-  prop                       = std::make_unique<UiTextMenu>(config, bg, text);
+  prop                       = std::make_unique<ui::UiTextMenu>(config, bg, text);
   menu->addMenu(std::move(prop));
 
   return menu;
 }
 
 auto generateComputerMenu(const bsgo::ComputerData &computer, const chrono::TimeStep &step)
-  -> UiMenuPtr
+  -> ui::UiMenuPtr
 {
   return generateComputerMenu(computer.name,
                               computer.powerCost,
@@ -129,7 +131,7 @@ auto generateComputerMenu(const bsgo::ComputerData &computer, const chrono::Time
 }
 
 auto generateComputerMenu(const bsgo::PlayerComputerData &computer, const chrono::TimeStep &step)
-  -> UiMenuPtr
+  -> ui::UiMenuPtr
 {
   return generateComputerMenu(computer.name,
                               computer.powerCost,
@@ -140,7 +142,7 @@ auto generateComputerMenu(const bsgo::PlayerComputerData &computer, const chrono
 }
 
 auto generateInteractiveSection(const std::string &buttonText,
-                                const ClickCallback &callback,
+                                const ui::ClickCallback &callback,
                                 const HorizontalMargin horizontalMargin,
                                 const VerticalMargin verticalMargin) -> InteractiveSection
 {
@@ -152,11 +154,11 @@ auto generateInteractiveSection(const std::string &buttonText,
     middleSection->addMenu(generateSpacer());
   }
 
-  const MenuConfig config{.clickCallback = callback};
+  const ui::MenuConfig config{.clickCallback = callback};
 
-  const auto bg       = bgConfigFromColor(colors::VERY_DARK_GREEN);
-  const auto textConf = textConfigFromColor(buttonText, colors::WHITE, colors::WHITE);
-  auto button         = std::make_unique<UiTextMenu>(config, bg, textConf);
+  const auto bg       = ui::bgConfigFromColor(colors::VERY_DARK_GREEN);
+  const auto textConf = ui::textConfigFromColor(buttonText, colors::WHITE, colors::WHITE);
+  auto button         = std::make_unique<ui::UiTextMenu>(config, bg, textConf);
   section.button      = button.get();
 
   middleSection->addMenu(std::move(button));

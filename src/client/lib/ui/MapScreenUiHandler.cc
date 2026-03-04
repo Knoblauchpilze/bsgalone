@@ -45,7 +45,7 @@ void MapScreenUiHandler::initializeMenus(const int width,
   m_mapDimensions = Vec2i{width - 2 * MAP_OFFSET, height - 2 * MAP_OFFSET};
 }
 
-bool MapScreenUiHandler::processUserInput(UserInputData &inputData)
+bool MapScreenUiHandler::processUserInput(ui::UserInputData &inputData)
 {
   auto out{false};
 
@@ -130,13 +130,15 @@ void MapScreenUiHandler::generateControlButtons(const int width, const int heigh
   const Vec2i buttonPos{width - REASONABLE_GAP_SIZE - controlButtonDimsPixels.x,
                         height - REASONABLE_GAP_SIZE - controlButtonDimsPixels.y};
 
-  MenuConfig config{.pos               = buttonPos,
-                    .dims              = controlButtonDimsPixels,
-                    .gameClickCallback = [this](Game &g) { g.setScreen(Screen::GAME); }};
+  ui::MenuConfig config{.pos               = buttonPos,
+                        .dims              = controlButtonDimsPixels,
+                        .gameClickCallback = [this](ui::IScreenChanger &g) {
+                          g.setScreen(Screen::GAME);
+                        }};
 
-  auto bg         = bgConfigFromColor(colors::VERY_DARK_COBALT_BLUE);
-  auto text       = textConfigFromColor("Close", colors::WHITE);
-  auto quitButton = std::make_unique<UiTextMenu>(config, bg, text);
+  auto bg         = ui::bgConfigFromColor(colors::VERY_DARK_COBALT_BLUE);
+  auto text       = ui::textConfigFromColor("Close", colors::WHITE);
+  auto quitButton = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_buttons.push_back(std::move(quitButton));
 
   config.visible = false;
@@ -144,7 +146,7 @@ void MapScreenUiHandler::generateControlButtons(const int width, const int heigh
   config.clickCallback = [this]() { onJumpRequested(); };
 
   text.text       = "Jump";
-  auto jumpButton = std::make_unique<UiTextMenu>(config, bg, text);
+  auto jumpButton = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_jumpButton    = jumpButton.get();
   m_buttons.push_back(std::move(jumpButton));
 }
@@ -216,13 +218,13 @@ void MapScreenUiHandler::generateSystemButtons(const bsgo::SystemData &system,
   const auto systemId                 = system.dbId;
   constexpr auto OFFSET_DUE_TO_BUTTON = 1;
   const auto labelId                  = m_buttons.size() + OFFSET_DUE_TO_BUTTON;
-  const MenuConfig buttonConfig{.pos           = buttonPos,
-                                .dims          = systemButtonDimsPixels,
-                                .clickCallback = [this, systemId, labelId]() {
-                                  onSystemSelected(systemId, labelId);
-                                }};
-  const auto buttonBg = bgConfigFromColor(colors::DARK_CYAN);
-  auto button         = std::make_unique<UiMenu>(buttonConfig, buttonBg);
+  const ui::MenuConfig buttonConfig{.pos           = buttonPos,
+                                    .dims          = systemButtonDimsPixels,
+                                    .clickCallback = [this, systemId, labelId]() {
+                                      onSystemSelected(systemId, labelId);
+                                    }};
+  const auto buttonBg = ui::bgConfigFromColor(colors::DARK_CYAN);
+  auto button         = std::make_unique<ui::UiMenu>(buttonConfig, buttonBg);
   m_buttons.push_back(std::move(button));
 
   constexpr auto LABEL_BUTTON_WIDTH  = 100;
@@ -234,10 +236,10 @@ void MapScreenUiHandler::generateSystemButtons(const bsgo::SystemData &system,
                        posPixels.y + systemButtonDimsPixels.y / 2
                          + GAP_BETWEEN_BUTTON_AND_LABEL_PIXELS};
 
-  const MenuConfig labelConfig{.pos = labelPos, .dims = labelDimsPixels, .highlightable = false};
-  const auto labelBg         = bgConfigFromColor(SYSTEM_LABEL_DEFAULT_BG_COLOR);
-  const auto text            = textConfigFromColor(system.name, colors::WHITE);
-  auto label                 = std::make_unique<UiTextMenu>(labelConfig, labelBg, text);
+  const ui::MenuConfig labelConfig{.pos = labelPos, .dims = labelDimsPixels, .highlightable = false};
+  const auto labelBg         = ui::bgConfigFromColor(SYSTEM_LABEL_DEFAULT_BG_COLOR);
+  const auto text            = ui::textConfigFromColor(system.name, colors::WHITE);
+  auto label                 = std::make_unique<ui::UiTextMenu>(labelConfig, labelBg, text);
   m_systemMenus[system.dbId] = label.get();
   m_buttons.push_back(std::move(label));
 }

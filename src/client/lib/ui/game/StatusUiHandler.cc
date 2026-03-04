@@ -39,18 +39,18 @@ void StatusUiHandler::initializeMenus(const int width,
 {
   const Vec2i statusMenuDims{width - 2 * m_offset.x, STATUS_MENU_HEIGHT};
 
-  const MenuConfig config{.pos           = m_offset,
-                          .dims          = statusMenuDims,
-                          .layout        = MenuLayout::HORIZONTAL,
-                          .highlightable = false};
-  auto bg = bgConfigFromColor(almostTransparent(colors::WHITE));
+  const ui::MenuConfig config{.pos           = m_offset,
+                              .dims          = statusMenuDims,
+                              .layout        = ui::MenuLayout::HORIZONTAL,
+                              .highlightable = false};
+  auto bg = ui::bgConfigFromColor(almostTransparent(colors::WHITE));
 
-  m_statusBar = std::make_unique<UiMenu>(config, bg);
+  m_statusBar = std::make_unique<ui::UiMenu>(config, bg);
 
-  bg = bgConfigFromColor(colors::BLANK);
+  bg = ui::bgConfigFromColor(colors::BLANK);
 
-  auto text = textConfigFromColor("N/A", colors::BLACK);
-  auto menu = std::make_unique<UiTextMenu>(config, bg, text);
+  auto text = ui::textConfigFromColor("N/A", colors::BLACK);
+  auto menu = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_system  = menu.get();
   m_statusBar->addMenu(std::move(menu));
 
@@ -62,7 +62,7 @@ void StatusUiHandler::initializeMenus(const int width,
   generateLogoutConfirmationPanel(width, height);
 }
 
-bool StatusUiHandler::processUserInput(UserInputData &inputData)
+bool StatusUiHandler::processUserInput(ui::UserInputData &inputData)
 {
   auto out = m_statusBar->processUserInput(inputData);
   out |= m_logoutConfirmation->processUserInput(inputData);
@@ -107,11 +107,11 @@ void StatusUiHandler::reset()
 
 void StatusUiHandler::generateLogoutButton(const int /*width*/, const int /*height*/)
 {
-  const MenuConfig config{.clickCallback = [this]() { requestLogout(); }};
-  const auto bg   = bgConfigFromColor(colors::VERY_DARK_GREY);
-  const auto text = textConfigFromColor("Logout", colors::BLACK, colors::RED);
+  const ui::MenuConfig config{.clickCallback = [this]() { requestLogout(); }};
+  const auto bg   = ui::bgConfigFromColor(colors::VERY_DARK_GREY);
+  const auto text = ui::textConfigFromColor("Logout", colors::BLACK, colors::RED);
 
-  auto logout = std::make_unique<UiTextMenu>(config, bg, text);
+  auto logout = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_statusBar->addMenu(std::move(logout));
 }
 
@@ -120,19 +120,18 @@ void StatusUiHandler::generateLogoutConfirmationPanel(const int width, const int
   auto innerPanel = generateBlankHorizontalMenu();
   innerPanel->addMenu(generateSpacer());
 
-  auto bg = bgConfigFromColor(colors::VERY_DARK_RED);
-  MenuConfig config{.clickCallback = [this]() { confirmLogout(); }};
-  auto text   = textConfigFromColor("Yes", colors::DARK_RED);
-  auto button = std::make_unique<UiTextMenu>(config, bg, text);
+  auto bg = ui::bgConfigFromColor(colors::VERY_DARK_RED);
+  ui::MenuConfig config{.clickCallback = [this]() { confirmLogout(); }};
+  auto text   = ui::textConfigFromColor("Yes", colors::DARK_RED);
+  auto button = std::make_unique<ui::UiTextMenu>(config, bg, text);
   innerPanel->addMenu(std::move(button));
 
   innerPanel->addMenu(generateSpacer());
 
-  bg                       = bgConfigFromColor(colors::VERY_DARK_GREEN);
-  config.gameClickCallback = {};
-  config.clickCallback     = [this]() { cancelLogout(); };
-  text                     = textConfigFromColor("No", colors::DARK_GREEN);
-  button                   = std::make_unique<UiTextMenu>(config, bg, text);
+  bg                   = ui::bgConfigFromColor(colors::VERY_DARK_GREEN);
+  config.clickCallback = [this]() { cancelLogout(); };
+  text                 = ui::textConfigFromColor("No", colors::DARK_GREEN);
+  button               = std::make_unique<ui::UiTextMenu>(config, bg, text);
   innerPanel->addMenu(std::move(button));
 
   innerPanel->addMenu(generateSpacer());
@@ -140,15 +139,15 @@ void StatusUiHandler::generateLogoutConfirmationPanel(const int width, const int
   const Vec2i logoutDims{width / 3, height / 4};
   const Vec2i logoutPos{(width - logoutDims.x) / 2, (height - logoutDims.y) / 2};
 
-  config               = MenuConfig{.pos = logoutPos, .dims = logoutDims};
-  bg                   = bgConfigFromColor(almostOpaque(colors::BLACK));
-  m_logoutConfirmation = std::make_unique<UiMenu>(config, bg);
+  config               = ui::MenuConfig{.pos = logoutPos, .dims = logoutDims};
+  bg                   = ui::bgConfigFromColor(almostOpaque(colors::BLACK));
+  m_logoutConfirmation = std::make_unique<ui::UiMenu>(config, bg);
 
   m_logoutConfirmation->addMenu(generateSpacer());
 
   config.highlightable = false;
-  text                 = textConfigFromColor("Do you really want to logout?", colors::WHITE);
-  auto label           = std::make_unique<UiTextMenu>(config, bg, text);
+  text                 = ui::textConfigFromColor("Do you really want to logout?", colors::WHITE);
+  auto label           = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_logoutConfirmation->addMenu(std::move(label));
 
   m_logoutConfirmation->addMenu(std::move(innerPanel));

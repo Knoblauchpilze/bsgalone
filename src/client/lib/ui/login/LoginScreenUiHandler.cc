@@ -34,7 +34,7 @@ void LoginScreenUiHandler::initializeMenus(const int width,
   m_credentialsUiHandler.initializeMenus(width, height, texturesLoader);
 }
 
-bool LoginScreenUiHandler::processUserInput(UserInputData &inputData)
+bool LoginScreenUiHandler::processUserInput(ui::UserInputData &inputData)
 {
   if (m_loginModePanel->processUserInput(inputData))
   {
@@ -176,18 +176,18 @@ void LoginScreenUiHandler::generateLoginModePanel(const int width, const int /*h
 
   m_loginModePanel = generateBlankHorizontalMenu(loginModePos, loginModeDimsPixels);
 
-  MenuConfig config{};
-  const auto bg = bgConfigFromColor(LOGIN_BUTTON_ACTIVE_COLOR);
+  ui::MenuConfig config{};
+  const auto bg = ui::bgConfigFromColor(LOGIN_BUTTON_ACTIVE_COLOR);
 
   config.clickCallback = [this]() { setLoginMode(Mode::LOGIN); };
-  auto text            = textConfigFromColor("Login", colors::WHITE);
-  auto button          = std::make_unique<UiTextMenu>(config, bg, text);
+  auto text            = ui::textConfigFromColor("Login", colors::WHITE);
+  auto button          = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_loginButton        = button.get();
   m_loginModePanel->addMenu(std::move(button));
 
   config.clickCallback = [this]() { setLoginMode(Mode::SIGNUP); };
-  text                 = textConfigFromColor("Sign up", colors::WHITE);
-  button               = std::make_unique<UiTextMenu>(config, bg, text);
+  text                 = ui::textConfigFromColor("Sign up", colors::WHITE);
+  button               = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_signupButton       = button.get();
   m_loginModePanel->addMenu(std::move(button));
 }
@@ -200,19 +200,19 @@ void LoginScreenUiHandler::generateFactionPanel(const int width, const int /*hei
 
   m_factionPanel = generateBlankHorizontalMenu(factionPos, factionDimsPixels);
 
-  MenuConfig config{};
+  ui::MenuConfig config{};
 
   config.clickCallback = [this]() { setFaction(bsgo::Faction::COLONIAL); };
-  auto bg              = bgConfigFromColor(COLONIAL_BUTTON_ACTIVE_COLOR);
-  auto text            = textConfigFromColor("Colonial", colors::WHITE);
-  auto button          = std::make_unique<UiTextMenu>(config, bg, text);
+  auto bg              = ui::bgConfigFromColor(COLONIAL_BUTTON_ACTIVE_COLOR);
+  auto text            = ui::textConfigFromColor("Colonial", colors::WHITE);
+  auto button          = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_colonialButton     = button.get();
   m_factionPanel->addMenu(std::move(button));
 
   config.clickCallback = [this]() { setFaction(bsgo::Faction::CYLON); };
-  bg                   = bgConfigFromColor(CYLON_BUTTON_INACTIVE_COLOR);
-  text                 = textConfigFromColor("Cylon", colors::WHITE);
-  button               = std::make_unique<UiTextMenu>(config, bg, text);
+  bg                   = ui::bgConfigFromColor(CYLON_BUTTON_INACTIVE_COLOR);
+  text                 = ui::textConfigFromColor("Cylon", colors::WHITE);
+  button               = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_cylonButton        = button.get();
   m_factionPanel->addMenu(std::move(button));
 }
@@ -225,19 +225,19 @@ void LoginScreenUiHandler::generateRolePanel(const int width, const int /*height
 
   m_rolePanel = generateBlankHorizontalMenu(rolePos, roleDimsPixels);
 
-  MenuConfig config{};
+  ui::MenuConfig config{};
 
   config.clickCallback = [this]() { setGameRole(bsgo::GameRole::PILOT); };
-  auto bg              = bgConfigFromColor(GAME_ROLE_BUTTON_ACTIVE_COLOR);
-  auto text            = textConfigFromColor("Pilot", colors::WHITE);
-  auto button          = std::make_unique<UiTextMenu>(config, bg, text);
+  auto bg              = ui::bgConfigFromColor(GAME_ROLE_BUTTON_ACTIVE_COLOR);
+  auto text            = ui::textConfigFromColor("Pilot", colors::WHITE);
+  auto button          = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_pilotButton        = button.get();
   m_rolePanel->addMenu(std::move(button));
 
   config.clickCallback = [this]() { setGameRole(bsgo::GameRole::GUNNER); };
-  bg                   = bgConfigFromColor(GAME_ROLE_BUTTON_INACTIVE_COLOR);
-  text                 = textConfigFromColor("Gunner", colors::WHITE);
-  button               = std::make_unique<UiTextMenu>(config, bg, text);
+  bg                   = ui::bgConfigFromColor(GAME_ROLE_BUTTON_INACTIVE_COLOR);
+  text                 = ui::textConfigFromColor("Gunner", colors::WHITE);
+  button               = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_gunnerButton       = button.get();
   m_rolePanel->addMenu(std::move(button));
 }
@@ -250,13 +250,13 @@ void LoginScreenUiHandler::generateProceedButton(const int width, const int heig
   const Vec2i loginButtonPos{(width - loginButtonDimsPixels.x) / 2,
                              height - REASONABLE_GAP_SIZE - loginButtonDimsPixels.y};
 
-  const MenuConfig config{.pos           = loginButtonPos,
-                          .dims          = loginButtonDimsPixels,
-                          .clickCallback = [this]() { tryLogin(); }};
+  const ui::MenuConfig config{.pos           = loginButtonPos,
+                              .dims          = loginButtonDimsPixels,
+                              .clickCallback = [this]() { tryLogin(); }};
 
-  const auto bg   = bgConfigFromColor(colors::DARK_COBALT_BLUE);
-  const auto text = textConfigFromColor(LOGIN_TEXT, colors::WHITE);
-  m_proceedButton = std::make_unique<UiTextMenu>(config, bg, text);
+  const auto bg   = ui::bgConfigFromColor(colors::DARK_COBALT_BLUE);
+  const auto text = ui::textConfigFromColor(LOGIN_TEXT, colors::WHITE);
+  m_proceedButton = std::make_unique<ui::UiTextMenu>(config, bg, text);
 }
 
 void LoginScreenUiHandler::generateQuitButton(const int width, const int /*height*/)
@@ -266,16 +266,16 @@ void LoginScreenUiHandler::generateQuitButton(const int width, const int /*heigh
   const Vec2i quitButtonPos{width - REASONABLE_GAP_SIZE - quitButtonDimsPixels.x,
                             REASONABLE_GAP_SIZE};
 
-  const MenuConfig config{.pos               = quitButtonPos,
-                          .dims              = quitButtonDimsPixels,
-                          .gameClickCallback = [](Game &g) {
-                            g.setScreen(Screen::EXIT);
-                            g.terminate();
-                          }};
+  const ui::MenuConfig config{.pos               = quitButtonPos,
+                              .dims              = quitButtonDimsPixels,
+                              .gameClickCallback = [](ui::IScreenChanger &g) {
+                                g.setScreen(Screen::EXIT);
+                                g.terminate();
+                              }};
 
-  const auto bg   = bgConfigFromColor(colors::DARK_GREY);
-  const auto text = textConfigFromColor("Quit", colors::WHITE);
-  m_quitButton    = std::make_unique<UiTextMenu>(config, bg, text);
+  const auto bg   = ui::bgConfigFromColor(colors::DARK_GREY);
+  const auto text = ui::textConfigFromColor("Quit", colors::WHITE);
+  m_quitButton    = std::make_unique<ui::UiTextMenu>(config, bg, text);
 }
 
 void LoginScreenUiHandler::generateFailureMenu(const int width, const int /*height*/)
@@ -283,16 +283,16 @@ void LoginScreenUiHandler::generateFailureMenu(const int width, const int /*heig
   const Vec2i failureMenuDimsPixels{350, 80};
   const Vec2i failureMenuPos{(width - failureMenuDimsPixels.x) / 2, 430};
 
-  const MenuConfig config{.pos           = failureMenuPos,
-                          .dims          = failureMenuDimsPixels,
-                          .highlightable = false};
+  const ui::MenuConfig config{.pos           = failureMenuPos,
+                              .dims          = failureMenuDimsPixels,
+                              .highlightable = false};
 
-  const auto bg   = bgConfigFromColor(colors::DARK_RED);
-  const auto text = textConfigFromColor(LOGIN_FAILURE_TEXT, colors::BLACK);
+  const auto bg   = ui::bgConfigFromColor(colors::DARK_RED);
+  const auto text = ui::textConfigFromColor(LOGIN_FAILURE_TEXT, colors::BLACK);
 
-  auto menu         = std::make_unique<UiTextMenu>(config, bg, text);
+  auto menu         = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_failureMenuText = menu.get();
-  m_failureMenu     = std::make_unique<UiTimedMenu>(std::move(menu));
+  m_failureMenu     = std::make_unique<ui::UiTimedMenu>(std::move(menu));
 }
 
 void LoginScreenUiHandler::generateSuccessfulSignupMenu(const int width, const int /*height*/)
@@ -300,15 +300,15 @@ void LoginScreenUiHandler::generateSuccessfulSignupMenu(const int width, const i
   const Vec2i signupSuccessMenuDimsPixels{350, 80};
   const Vec2i signupSuccessMenuPos{(width - signupSuccessMenuDimsPixels.x) / 2, 430};
 
-  const MenuConfig config{.pos           = signupSuccessMenuPos,
-                          .dims          = signupSuccessMenuDimsPixels,
-                          .highlightable = false};
+  const ui::MenuConfig config{.pos           = signupSuccessMenuPos,
+                              .dims          = signupSuccessMenuDimsPixels,
+                              .highlightable = false};
 
-  const auto bg   = bgConfigFromColor(colors::DARK_GREEN);
-  const auto text = textConfigFromColor(SIGNUP_SUCCESS_TEXT, colors::BLACK);
+  const auto bg   = ui::bgConfigFromColor(colors::DARK_GREEN);
+  const auto text = ui::textConfigFromColor(SIGNUP_SUCCESS_TEXT, colors::BLACK);
 
-  auto menu              = std::make_unique<UiTextMenu>(config, bg, text);
-  m_successfulSignupMenu = std::make_unique<UiTimedMenu>(std::move(menu));
+  auto menu              = std::make_unique<ui::UiTextMenu>(config, bg, text);
+  m_successfulSignupMenu = std::make_unique<ui::UiTimedMenu>(std::move(menu));
 }
 
 void LoginScreenUiHandler::setLoginMode(const Mode mode)

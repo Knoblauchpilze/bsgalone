@@ -68,7 +68,7 @@ void LockerUiHandler::initializeMenus(const int width,
   m_menu->addMenu(std::move(ship));
 }
 
-bool LockerUiHandler::processUserInput(UserInputData &inputData)
+bool LockerUiHandler::processUserInput(ui::UserInputData &inputData)
 {
   // The resources menu can't take input.
   return m_menu->processUserInput(inputData);
@@ -82,7 +82,7 @@ void LockerUiHandler::render(Renderer &engine) const
 }
 
 namespace {
-void updateButtonState(UiMenu &button, const bool enable)
+void updateButtonState(ui::UiMenu &button, const bool enable)
 {
   button.setEnabled(enable);
 
@@ -162,14 +162,14 @@ void LockerUiHandler::initializeLayout()
 
   m_headerMenu->updateBgColor(palette.almostOpaqueColor);
 
-  const MenuConfig config{.highlightable = false};
-  const auto bg = bgConfigFromColor(colors::BLANK);
+  const ui::MenuConfig config{.highlightable = false};
+  const auto bg = ui::bgConfigFromColor(colors::BLANK);
 
-  auto text = textConfigFromColor("LOCKER", colors::WHITE);
-  m_headerMenu->addMenu(std::make_unique<UiTextMenu>(config, bg, text));
+  auto text = ui::textConfigFromColor("LOCKER", colors::WHITE);
+  m_headerMenu->addMenu(std::make_unique<ui::UiTextMenu>(config, bg, text));
 
-  text = textConfigFromColor("SHIP", colors::WHITE);
-  m_headerMenu->addMenu(std::make_unique<UiTextMenu>(config, bg, text));
+  text = ui::textConfigFromColor("SHIP", colors::WHITE);
+  m_headerMenu->addMenu(std::make_unique<ui::UiTextMenu>(config, bg, text));
 
   initializeLockerLayout();
   initializeShipLayout();
@@ -182,24 +182,24 @@ void LockerUiHandler::initializeLockerLayout()
 
   m_locker->updateBgColor(palette.almostOpaqueColor);
 
-  const MenuConfig config{.propagateEventsToChildren = false};
+  const ui::MenuConfig config{.propagateEventsToChildren = false};
 
   const auto weapons  = m_playerView->getPlayerWeapons();
-  const auto bgWeapon = bgConfigFromColor(colors::BLANK);
-  const MenuConfig configWeapon{.layout = MenuLayout::HORIZONTAL};
+  const auto bgWeapon = ui::bgConfigFromColor(colors::BLANK);
+  const ui::MenuConfig configWeapon{.layout = ui::MenuLayout::HORIZONTAL};
   for (auto id = 0u; id < weapons.size(); ++id)
   {
-    auto menu = std::make_unique<UiMenu>(configWeapon, bgWeapon);
+    auto menu = std::make_unique<ui::UiMenu>(configWeapon, bgWeapon);
     m_lockerWeapons.push_back(menu.get());
     m_locker->addMenu(std::move(menu));
   }
 
   const auto computers  = m_playerView->getPlayerComputers();
-  const auto bgComputer = bgConfigFromColor(colors::BLANK);
-  const MenuConfig configComputer{.layout = MenuLayout::HORIZONTAL};
+  const auto bgComputer = ui::bgConfigFromColor(colors::BLANK);
+  const ui::MenuConfig configComputer{.layout = ui::MenuLayout::HORIZONTAL};
   for (auto id = 0u; id < computers.size(); ++id)
   {
-    auto menu = std::make_unique<UiMenu>(configComputer, bgComputer);
+    auto menu = std::make_unique<ui::UiMenu>(configComputer, bgComputer);
     m_lockerComputers.push_back(menu.get());
     m_locker->addMenu(std::move(menu));
   }
@@ -212,17 +212,17 @@ void LockerUiHandler::initializeShipLayout()
 
   m_ship->updateBgColor(palette.almostOpaqueColor);
 
-  const MenuConfig config{.propagateEventsToChildren = false};
+  const ui::MenuConfig config{.propagateEventsToChildren = false};
 
   const auto slots = m_shipDbView->getPlayerShipSlots();
   if (slots.contains(bsgalone::core::Slot::WEAPON))
   {
     const auto weaponsCount = slots.at(bsgalone::core::Slot::WEAPON);
-    const auto bg           = bgConfigFromColor(colors::BLANK);
-    const MenuConfig weaponConfig{.layout = MenuLayout::HORIZONTAL};
+    const auto bg           = ui::bgConfigFromColor(colors::BLANK);
+    const ui::MenuConfig weaponConfig{.layout = ui::MenuLayout::HORIZONTAL};
     for (auto id = 0; id < weaponsCount; ++id)
     {
-      auto menu = std::make_unique<UiMenu>(weaponConfig, bg);
+      auto menu = std::make_unique<ui::UiMenu>(weaponConfig, bg);
       m_shipWeapons.push_back(menu.get());
       m_ship->addMenu(std::move(menu));
     }
@@ -231,11 +231,11 @@ void LockerUiHandler::initializeShipLayout()
   if (slots.contains(bsgalone::core::Slot::COMPUTER))
   {
     const auto computersCount = slots.at(bsgalone::core::Slot::COMPUTER);
-    const auto bg             = bgConfigFromColor(colors::BLANK);
-    const MenuConfig computerConfig{.layout = MenuLayout::HORIZONTAL};
+    const auto bg             = ui::bgConfigFromColor(colors::BLANK);
+    const ui::MenuConfig computerConfig{.layout = ui::MenuLayout::HORIZONTAL};
     for (auto id = 0; id < computersCount; ++id)
     {
-      auto menu = std::make_unique<UiMenu>(computerConfig, bg);
+      auto menu = std::make_unique<ui::UiMenu>(computerConfig, bg);
       m_shipComputers.push_back(menu.get());
       m_ship->addMenu(std::move(menu));
     }
@@ -251,21 +251,23 @@ void LockerUiHandler::generateResourcesMenus()
 
   const auto resources = m_playerView->getPlayerResources();
 
-  const MenuConfig config{.propagateEventsToChildren = false};
-  const auto bg = bgConfigFromColor(colors::BLANK);
+  const ui::MenuConfig config{.propagateEventsToChildren = false};
+  const auto bg = ui::bgConfigFromColor(colors::BLANK);
 
   // Reverse iteration to get resources ordered according to their id.
   for (auto it = resources.rbegin(); it != resources.rend(); ++it)
   {
-    auto label = textConfigFromColor(bsgo::capitalizeString(it->name, true) + ":",
-                                     colors::DARK_GREY,
-                                     TextAlignment::RIGHT);
-    auto field = std::make_unique<UiTextMenu>(config, bg, label);
+    auto label = ui::textConfigFromColor(bsgo::capitalizeString(it->name, true) + ":",
+                                         colors::DARK_GREY,
+                                         ui::TextAlignment::RIGHT);
+    auto field = std::make_unique<ui::UiTextMenu>(config, bg, label);
     m_resourcesMenu->addMenu(std::move(field));
 
     const auto amount = std::to_string(it->amount);
-    label = textConfigFromColor(amount, colorFromResourceName(it->name), TextAlignment::LEFT);
-    field = std::make_unique<UiTextMenu>(config, bg, label);
+    label             = ui::textConfigFromColor(amount,
+                                    colorFromResourceName(it->name),
+                                    ui::TextAlignment::LEFT);
+    field             = std::make_unique<ui::UiTextMenu>(config, bg, label);
     m_resourcesMenu->addMenu(std::move(field));
   }
 }
@@ -346,11 +348,11 @@ void LockerUiHandler::generateShipWeaponsMenus()
     m_shipDbView->getPlayerShipSlots().at(bsgalone::core::Slot::WEAPON));
   for (; id < weaponSlots; ++id)
   {
-    const MenuConfig config{.highlightable = false};
-    const auto bg = bgConfigFromColor(colors::BLANK);
+    const ui::MenuConfig config{.highlightable = false};
+    const auto bg = ui::bgConfigFromColor(colors::BLANK);
 
-    auto text = textConfigFromColor("Empty weapon slot", colors::BLACK);
-    auto prop = std::make_unique<UiTextMenu>(config, bg, text);
+    auto text = ui::textConfigFromColor("Empty weapon slot", colors::BLACK);
+    auto prop = std::make_unique<ui::UiTextMenu>(config, bg, text);
     m_shipWeapons[id]->addMenu(std::move(prop));
   }
 }
@@ -381,11 +383,11 @@ void LockerUiHandler::generateShipComputersMenus()
     m_shipDbView->getPlayerShipSlots().at(bsgalone::core::Slot::COMPUTER));
   for (; id < computerSlots; ++id)
   {
-    const MenuConfig config{.highlightable = false};
-    const auto bg = bgConfigFromColor(colors::BLANK);
+    const ui::MenuConfig config{.highlightable = false};
+    const auto bg = ui::bgConfigFromColor(colors::BLANK);
 
-    auto text = textConfigFromColor("Empty computer slot", colors::BLACK);
-    auto prop = std::make_unique<UiTextMenu>(config, bg, text);
+    auto text = ui::textConfigFromColor("Empty computer slot", colors::BLACK);
+    auto prop = std::make_unique<ui::UiTextMenu>(config, bg, text);
     m_shipComputers[id]->addMenu(std::move(prop));
   }
 }

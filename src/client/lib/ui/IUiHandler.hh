@@ -21,9 +21,9 @@ class IUiHandler : public core::CoreObject
                                const int height,
                                sprites::TexturePack &texturesLoader)
     = 0;
-  virtual bool processUserInput(UserInputData &inputData) = 0;
-  virtual void render(Renderer &engine) const             = 0;
-  virtual void updateUi()                                 = 0;
+  virtual bool processUserInput(ui::UserInputData &inputData) = 0;
+  virtual void render(Renderer &engine) const                 = 0;
+  virtual void updateUi()                                     = 0;
 
   virtual void connectToMessageQueue(bsgalone::core::IMessageQueue &messageQueue);
 };

@@ -47,7 +47,7 @@ void HangarUiHandler::initializeMenus(const int width,
   m_menu = generateBlankVerticalMenu(pos, dims);
 }
 
-bool HangarUiHandler::processUserInput(UserInputData &inputData)
+bool HangarUiHandler::processUserInput(ui::UserInputData &inputData)
 {
   // The resources menu can't take input.
   return m_menu->processUserInput(inputData);
@@ -108,57 +108,59 @@ void HangarUiHandler::generateResourcesMenus()
 
   const auto resources = m_playerView->getPlayerResources();
 
-  const MenuConfig config{.propagateEventsToChildren = false};
-  const auto bg = bgConfigFromColor(colors::BLANK);
+  const ui::MenuConfig config{.propagateEventsToChildren = false};
+  const auto bg = ui::bgConfigFromColor(colors::BLANK);
 
   // Reverse iteration to get resources ordered according to their id.
   for (auto it = resources.rbegin(); it != resources.rend(); ++it)
   {
-    auto label = textConfigFromColor(bsgo::capitalizeString(it->name, true) + ":",
-                                     colors::DARK_GREY,
-                                     TextAlignment::RIGHT);
-    auto field = std::make_unique<UiTextMenu>(config, bg, label);
+    auto label = ui::textConfigFromColor(bsgo::capitalizeString(it->name, true) + ":",
+                                         colors::DARK_GREY,
+                                         ui::TextAlignment::RIGHT);
+    auto field = std::make_unique<ui::UiTextMenu>(config, bg, label);
     m_resourcesMenu->addMenu(std::move(field));
 
     const auto amount = std::to_string(it->amount);
-    label = textConfigFromColor(amount, colorFromResourceName(it->name), TextAlignment::LEFT);
-    field = std::make_unique<UiTextMenu>(config, bg, label);
+    label             = ui::textConfigFromColor(amount,
+                                    colorFromResourceName(it->name),
+                                    ui::TextAlignment::LEFT);
+    field             = std::make_unique<ui::UiTextMenu>(config, bg, label);
     m_resourcesMenu->addMenu(std::move(field));
   }
 }
 
 namespace {
-auto generateShipDescription(const bsgo::ShipData &ship) -> UiMenuPtr
+auto generateShipDescription(const bsgo::ShipData &ship) -> ui::UiMenuPtr
 {
-  const MenuConfig config{.highlightable = false};
-  auto bg = bgConfigFromColor(colors::BLANK);
+  const ui::MenuConfig config{.highlightable = false};
+  auto bg = ui::bgConfigFromColor(colors::BLANK);
 
-  auto desc = std::make_unique<UiMenu>(config, bg);
+  auto desc = std::make_unique<ui::UiMenu>(config, bg);
 
   desc->addMenu(generateSpacer());
 
-  bg         = bgConfigFromColor(colors::BLANK);
+  bg         = ui::bgConfigFromColor(colors::BLANK);
   auto label = bsgo::capitalizeString(ship.name + " (" + bsgo::str(ship.shipClass) + ")");
   auto text  = generateTextConfig(label, colors::GREY, 10);
-  auto prop  = std::make_unique<UiTextMenu>(config, bg, text);
+  auto prop  = std::make_unique<ui::UiTextMenu>(config, bg, text);
   desc->addMenu(std::move(prop));
 
   label = bsgo::floatToStr(ship.maxHullPoints, 0) + " hull points (+"
           + bsgo::floatToStr(ship.hullPointsRegen, 2) + "/s)";
   text = generateTextConfig(label);
-  prop = std::make_unique<UiTextMenu>(config, bg, text);
+  prop = std::make_unique<ui::UiTextMenu>(config, bg, text);
   desc->addMenu(std::move(prop));
 
   label = bsgo::floatToStr(ship.maxPowerPoints, 0) + " power (+"
           + bsgo::floatToStr(ship.powerRegen, 2) + "/s)";
   text = generateTextConfig(label);
-  prop = std::make_unique<UiTextMenu>(config, bg, text);
+  prop = std::make_unique<ui::UiTextMenu>(config, bg, text);
   desc->addMenu(std::move(prop));
 
   label = bsgo::floatToStr(ship.speed, 2) + "m/s (+" + bsgo::floatToStr(ship.acceleration, 2)
           + "m/s2)";
   text = generateTextConfig(label);
-  prop = std::make_unique<UiTextMenu>(config, bg, text);
+  prop = std::make_unique<ui::UiTextMenu>(config, bg, text);
   desc->addMenu(std::move(prop));
 
   label = "";
@@ -175,7 +177,7 @@ auto generateShipDescription(const bsgo::ShipData &ship) -> UiMenuPtr
     }
   }
   text = generateTextConfig(label);
-  prop = std::make_unique<UiTextMenu>(config, bg, text);
+  prop = std::make_unique<ui::UiTextMenu>(config, bg, text);
   desc->addMenu(std::move(prop));
 
   desc->addMenu(generateSpacer());
@@ -191,13 +193,13 @@ void HangarUiHandler::initializeLayout()
   const auto palette  = generatePaletteForFaction(faction);
   const auto allShips = m_shopView->getAllShips();
 
-  const MenuConfig config{.layout = MenuLayout::HORIZONTAL, .highlightable = false};
-  const auto bg = bgConfigFromColor(palette.almostOpaqueColor);
+  const ui::MenuConfig config{.layout = ui::MenuLayout::HORIZONTAL, .highlightable = false};
+  const auto bg = ui::bgConfigFromColor(palette.almostOpaqueColor);
 
   auto shipIndex = 0;
   for (const auto &ship : allShips)
   {
-    auto shipMenu = std::make_unique<UiMenu>(config, bg);
+    auto shipMenu = std::make_unique<ui::UiMenu>(config, bg);
 
     PlayerShipData data{.shipDbId = ship.dbId, .menu = shipMenu.get()};
     m_shipsData.emplace_back(std::move(data));

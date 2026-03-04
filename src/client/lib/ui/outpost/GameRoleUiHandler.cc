@@ -40,7 +40,7 @@ void GameRoleUiHandler::initializeMenus(const int width,
   m_menu = generateBlankVerticalMenu(pos, dims);
 }
 
-bool GameRoleUiHandler::processUserInput(UserInputData &inputData)
+bool GameRoleUiHandler::processUserInput(ui::UserInputData &inputData)
 {
   return m_menu->processUserInput(inputData);
 }
@@ -106,38 +106,38 @@ auto findPlayerForShip(const bsgo::Uuid playerDbId, const std::vector<bsgo::Play
 }
 
 auto generateShipDescription(const bsgo::PlayerShipData &ship, const bsgo::PlayerData &player)
-  -> UiMenuPtr
+  -> ui::UiMenuPtr
 {
-  const MenuConfig config{.highlightable = false};
-  auto bg = bgConfigFromColor(colors::BLANK);
+  const ui::MenuConfig config{.highlightable = false};
+  auto bg = ui::bgConfigFromColor(colors::BLANK);
 
-  auto desc = std::make_unique<UiMenu>(config, bg);
+  auto desc = std::make_unique<ui::UiMenu>(config, bg);
 
   desc->addMenu(generateSpacer());
 
-  bg              = bgConfigFromColor(colors::BLANK);
+  bg              = ui::bgConfigFromColor(colors::BLANK);
   const auto isAi = player.isAi ? std::string("AI") : std::string("Player");
   auto label      = bsgo::capitalizeString(player.name + " (" + isAi + ")");
   auto text       = generateTextConfig(label, colors::GREY, 10);
-  auto prop       = std::make_unique<UiTextMenu>(config, bg, text);
+  auto prop       = std::make_unique<ui::UiTextMenu>(config, bg, text);
   desc->addMenu(std::move(prop));
 
-  bg    = bgConfigFromColor(colors::BLANK);
+  bg    = ui::bgConfigFromColor(colors::BLANK);
   label = bsgo::capitalizeString(ship.name + " (" + bsgo::str(ship.shipClass) + ")");
   text  = generateTextConfig(label, colors::GREY, 10);
-  prop  = std::make_unique<UiTextMenu>(config, bg, text);
+  prop  = std::make_unique<ui::UiTextMenu>(config, bg, text);
   desc->addMenu(std::move(prop));
 
   label = bsgo::floatToStr(ship.maxHullPoints, 0) + " hull points (+"
           + bsgo::floatToStr(ship.hullPointsRegen, 2) + "/s)";
   text = generateTextConfig(label);
-  prop = std::make_unique<UiTextMenu>(config, bg, text);
+  prop = std::make_unique<ui::UiTextMenu>(config, bg, text);
   desc->addMenu(std::move(prop));
 
   label = bsgo::floatToStr(ship.maxPowerPoints, 0) + " power (+"
           + bsgo::floatToStr(ship.powerRegen, 2) + "/s)";
   text = generateTextConfig(label);
-  prop = std::make_unique<UiTextMenu>(config, bg, text);
+  prop = std::make_unique<ui::UiTextMenu>(config, bg, text);
   desc->addMenu(std::move(prop));
 
   desc->addMenu(generateSpacer());
@@ -153,13 +153,13 @@ void GameRoleUiHandler::initializeLayout()
   const auto allPlayers = m_systemView->getSystemPlayers();
   const auto allShips   = m_systemView->getSystemShips();
 
-  const MenuConfig config{.layout = MenuLayout::HORIZONTAL, .highlightable = false};
-  const auto bg = bgConfigFromColor(palette.almostOpaqueColor);
+  const ui::MenuConfig config{.layout = ui::MenuLayout::HORIZONTAL, .highlightable = false};
+  const auto bg = ui::bgConfigFromColor(palette.almostOpaqueColor);
 
   auto shipIndex = 0;
   for (const auto &ship : allShips)
   {
-    auto shipMenu          = std::make_unique<UiMenu>(config, bg);
+    auto shipMenu          = std::make_unique<ui::UiMenu>(config, bg);
     const auto maybePlayer = findPlayerForShip(ship.playerDbId, allPlayers);
     if (!maybePlayer)
     {

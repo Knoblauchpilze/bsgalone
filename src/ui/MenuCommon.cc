@@ -1,11 +1,11 @@
 
 #include "MenuCommon.hh"
 
-namespace pge {
+namespace ui {
 
 constexpr auto DARKENING_THRESHOLD = std::uint8_t{128};
 
-auto findHighlightColor(const Color &color) -> Color
+auto findHighlightColor(const pge::Color &color) -> pge::Color
 {
   const auto hsl    = RGBToHSL(color);
   const auto factor = hsl.rgb->b > DARKENING_THRESHOLD ? 0.5f : 2.0f;
@@ -13,4 +13,4 @@ auto findHighlightColor(const Color &color) -> Color
   return modulate(color, factor);
 }
 
-} // namespace pge
+} // namespace ui

@@ -24,7 +24,7 @@ class EntityUiHandler : public IUiHandler
   void initializeMenus(const int width,
                        const int height,
                        sprites::TexturePack &texturesLoader) override;
-  bool processUserInput(UserInputData &inputData) override;
+  bool processUserInput(ui::UserInputData &inputData) override;
   void render(Renderer &engine) const override;
   void updateUi() override;
 
@@ -44,7 +44,7 @@ class EntityUiHandler : public IUiHandler
 
     COUNT = 5,
   };
-  std::vector<UiTextMenuPtr> m_menus{};
+  std::vector<ui::UiTextMenuPtr> m_menus{};
 
   void subscribeToViews();
   void updateNameComponent(const bsgo::Entity &entity);

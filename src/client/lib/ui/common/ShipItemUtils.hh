@@ -14,20 +14,21 @@ namespace pge {
 constexpr auto DEFAULT_MARGIN = 30;
 auto generateTextConfig(const std::string &name,
                         const Color &color = colors::WHITE,
-                        const int margin   = DEFAULT_MARGIN) -> TextConfig;
+                        const int margin   = DEFAULT_MARGIN) -> ui::TextConfig;
 
-auto generateWeaponMenu(const bsgo::WeaponData &weapon, const chrono::TimeStep &step) -> UiMenuPtr;
+auto generateWeaponMenu(const bsgo::WeaponData &weapon, const chrono::TimeStep &step)
+  -> ui::UiMenuPtr;
 auto generateWeaponMenu(const bsgo::PlayerWeaponData &weapon, const chrono::TimeStep &step)
-  -> UiMenuPtr;
+  -> ui::UiMenuPtr;
 auto generateComputerMenu(const bsgo::ComputerData &computer, const chrono::TimeStep &step)
-  -> UiMenuPtr;
+  -> ui::UiMenuPtr;
 auto generateComputerMenu(const bsgo::PlayerComputerData &computer, const chrono::TimeStep &step)
-  -> UiMenuPtr;
+  -> ui::UiMenuPtr;
 
 struct InteractiveSection
 {
-  UiMenuPtr menu{};
-  UiTextMenu *button{};
+  ui::UiMenuPtr menu{};
+  ui::UiTextMenu *button{};
 };
 
 enum class HorizontalMargin
@@ -45,7 +46,7 @@ enum class VerticalMargin
 };
 
 auto generateInteractiveSection(const std::string &buttonText,
-                                const ClickCallback &callback,
+                                const ui::ClickCallback &callback,
                                 const HorizontalMargin horizontalMargin = HorizontalMargin::BOTH,
                                 const VerticalMargin verticalMargin     = VerticalMargin::BOTH)
   -> InteractiveSection;

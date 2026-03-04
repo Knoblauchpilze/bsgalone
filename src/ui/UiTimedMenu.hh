@@ -6,7 +6,7 @@
 #include "UiMenu.hh"
 #include <memory>
 
-namespace pge {
+namespace ui {
 
 struct TimedMenuConfig
 {
@@ -29,7 +29,7 @@ class UiTimedMenu : public core::CoreObject
 
   bool finished() const;
 
-  void render(Renderer &engine) const;
+  void render(pge::Renderer &engine) const;
 
   private:
   UiMenuPtr m_menu{};
@@ -47,4 +47,4 @@ class UiTimedMenu : public core::CoreObject
 
 using UiTimedMenuPtr = std::unique_ptr<UiTimedMenu>;
 
-} // namespace pge
+} // namespace ui

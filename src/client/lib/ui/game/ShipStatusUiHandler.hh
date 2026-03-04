@@ -19,7 +19,7 @@ class ShipStatusUiHandler : public IUiHandler, public bsgalone::core::AbstractMe
   void initializeMenus(const int width,
                        const int height,
                        sprites::TexturePack &texturesLoader) override;
-  bool processUserInput(UserInputData &inputData) override;
+  bool processUserInput(ui::UserInputData &inputData) override;
   void render(Renderer &engine) const override;
   void updateUi() override;
 
@@ -29,11 +29,11 @@ class ShipStatusUiHandler : public IUiHandler, public bsgalone::core::AbstractMe
   private:
   ShipViewShPtr m_shipView{};
 
-  UiBlinkingMenuPtr m_threatLabel{};
+  ui::UiBlinkingMenuPtr m_threatLabel{};
 
-  UiMenuPtr m_jumpPanel{};
-  UiTextMenu *m_jumpDestination{};
-  UiTextMenu *m_jumpTime{};
+  ui::UiMenuPtr m_jumpPanel{};
+  ui::UiTextMenu *m_jumpDestination{};
+  ui::UiTextMenu *m_jumpTime{};
 
   std::optional<core::TimeStamp> m_jumpStartTime{};
 

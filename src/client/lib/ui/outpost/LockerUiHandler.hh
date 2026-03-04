@@ -20,7 +20,7 @@ class LockerUiHandler : public IUiHandler
   void initializeMenus(const int width,
                        const int height,
                        sprites::TexturePack &texturesLoader) override;
-  bool processUserInput(UserInputData &inputData) override;
+  bool processUserInput(ui::UserInputData &inputData) override;
   void render(Renderer &engine) const override;
   void updateUi() override;
 
@@ -29,21 +29,21 @@ class LockerUiHandler : public IUiHandler
   ShipDbViewShPtr m_shipDbView{};
   bool m_initialized{false};
 
-  UiMenuPtr m_resourcesMenu{};
-  UiMenuPtr m_headerMenu{};
-  UiMenuPtr m_menu{};
-  UiMenu *m_locker{};
-  UiMenu *m_ship{};
+  ui::UiMenuPtr m_resourcesMenu{};
+  ui::UiMenuPtr m_headerMenu{};
+  ui::UiMenuPtr m_menu{};
+  ui::UiMenu *m_locker{};
+  ui::UiMenu *m_ship{};
 
   struct LockerItem
   {
     bsgo::Uuid itemId{};
     bsgalone::core::Item itemType{};
-    UiMenu *button{};
+    ui::UiMenu *button{};
   };
 
-  std::vector<UiMenu *> m_lockerWeapons{};
-  std::vector<UiMenu *> m_lockerComputers{};
+  std::vector<ui::UiMenu *> m_lockerWeapons{};
+  std::vector<ui::UiMenu *> m_lockerComputers{};
   std::vector<LockerItem> m_lockerItemsData{};
 
   struct ShipItem
@@ -52,8 +52,8 @@ class LockerUiHandler : public IUiHandler
     bsgalone::core::Item itemType{};
   };
 
-  std::vector<UiMenu *> m_shipWeapons{};
-  std::vector<UiMenu *> m_shipComputers{};
+  std::vector<ui::UiMenu *> m_shipWeapons{};
+  std::vector<ui::UiMenu *> m_shipComputers{};
   std::vector<ShipItem> m_shipItemsData{};
 
   void subscribeToViews();

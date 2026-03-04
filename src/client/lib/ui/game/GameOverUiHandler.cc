@@ -31,7 +31,7 @@ void GameOverUiHandler::initializeMenus(const int width,
   pos.x = (width - dims.x) / 2;
   pos.y = (height - dims.y) / 2;
 
-  const MenuConfig config{
+  const ui::MenuConfig config{
     .pos     = pos,
     .dims    = dims,
     .visible = false,
@@ -44,12 +44,12 @@ void GameOverUiHandler::initializeMenus(const int width,
       },
   };
 
-  auto bg   = bgConfigFromColor(colors::DARK_GREY);
-  auto text = textConfigFromColor("Return to outpost", colors::BLACK);
-  m_menu    = std::make_unique<UiTextMenu>(config, bg, text);
+  auto bg   = ui::bgConfigFromColor(colors::DARK_GREY);
+  auto text = ui::textConfigFromColor("Return to outpost", colors::BLACK);
+  m_menu    = std::make_unique<ui::UiTextMenu>(config, bg, text);
 }
 
-bool GameOverUiHandler::processUserInput(UserInputData &inputData)
+bool GameOverUiHandler::processUserInput(ui::UserInputData &inputData)
 {
   return m_menu->processUserInput(inputData);
 }

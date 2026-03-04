@@ -19,14 +19,14 @@ class CredentialsUiHandler : public IUiHandler
   void initializeMenus(const int width,
                        const int height,
                        sprites::TexturePack &texturesLoader) override;
-  bool processUserInput(UserInputData &inputData) override;
+  bool processUserInput(ui::UserInputData &inputData) override;
   void render(Renderer &engine) const override;
   void updateUi() override;
 
   private:
-  UiMenuPtr m_credentialsPanel{};
-  UiTextField *m_nameTextField{};
-  UiTextField *m_passwordTextField{};
+  ui::UiMenuPtr m_credentialsPanel{};
+  ui::UiTextField *m_nameTextField{};
+  ui::UiTextField *m_passwordTextField{};
 };
 
 } // namespace pge

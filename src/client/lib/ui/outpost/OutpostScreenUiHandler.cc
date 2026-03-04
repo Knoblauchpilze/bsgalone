@@ -38,16 +38,16 @@ void OutpostScreenUiHandler::initializeMenus(const int width,
   const Vec2i pos{(width - UNDOCK_BUTTON_WIDTH) / 2, 10};
   const Vec2i dims{UNDOCK_BUTTON_WIDTH, 50};
 
-  MenuConfig config{.pos = pos, .dims = dims, .clickCallback = [this]() {
-                      if (m_shipDbView->isReady())
-                      {
-                        m_shipDbView->undockPlayerShip();
-                      }
-                    }};
+  ui::MenuConfig config{.pos = pos, .dims = dims, .clickCallback = [this]() {
+                          if (m_shipDbView->isReady())
+                          {
+                            m_shipDbView->undockPlayerShip();
+                          }
+                        }};
 
-  auto bg         = bgConfigFromColor(colors::DARK_GREY);
-  auto text       = textConfigFromColor("Undock", colors::WHITE);
-  m_menus[UNDOCK] = std::make_unique<UiTextMenu>(config, bg, text);
+  auto bg         = ui::bgConfigFromColor(colors::DARK_GREY);
+  auto text       = ui::textConfigFromColor("Undock", colors::WHITE);
+  m_menus[UNDOCK] = std::make_unique<ui::UiTextMenu>(config, bg, text);
 
   constexpr auto REASONABLE_PIXELS_GAP = 40;
   constexpr auto LOGOUT_BUTTON_HEIGHT  = 30;
@@ -61,9 +61,9 @@ void OutpostScreenUiHandler::initializeMenus(const int width,
       m_playerView->tryLogout();
     }
   };
-  bg              = bgConfigFromColor(colors::DARK_RED);
-  text            = textConfigFromColor("Logout", colors::VERY_DARK_RED);
-  m_menus[LOGOUT] = std::make_unique<UiTextMenu>(config, bg, text);
+  bg              = ui::bgConfigFromColor(colors::DARK_RED);
+  text            = ui::textConfigFromColor("Logout", colors::VERY_DARK_RED);
+  m_menus[LOGOUT] = std::make_unique<ui::UiTextMenu>(config, bg, text);
 
   generateGeneralMenu(width, height);
 
@@ -73,7 +73,7 @@ void OutpostScreenUiHandler::initializeMenus(const int width,
   m_gameRoleUi->initializeMenus(width, height, texturesLoader);
 }
 
-bool OutpostScreenUiHandler::processUserInput(UserInputData &inputData)
+bool OutpostScreenUiHandler::processUserInput(ui::UserInputData &inputData)
 {
   bool out{false};
   switch (m_activeScreen)
@@ -194,26 +194,26 @@ void OutpostScreenUiHandler::generateGeneralMenu(const int width, const int heig
   const Vec2i pos{10, (height - viewMenuHeight) / 2};
   const Vec2i dims{viewMenuWidth, viewMenuHeight};
 
-  MenuConfig config{.pos = pos, .dims = dims};
-  auto bg             = bgConfigFromColor(colors::BLANK);
-  m_menus[VIEWS_MENU] = std::make_unique<UiMenu>(config, bg);
+  ui::MenuConfig config{.pos = pos, .dims = dims};
+  auto bg             = ui::bgConfigFromColor(colors::BLANK);
+  m_menus[VIEWS_MENU] = std::make_unique<ui::UiMenu>(config, bg);
 }
 
 void OutpostScreenUiHandler::initializeOutpostScreenOptions()
 {
   const auto palette = generatePaletteForFaction(m_playerView->getPlayerFaction());
 
-  MenuConfig config{};
+  ui::MenuConfig config{};
 
   config.clickCallback = [this]() { setActiveScreen(ActiveScreen::SHOP); };
-  const auto bg        = bgConfigFromColor(palette.almostOpaqueColor);
-  auto text            = textConfigFromColor("Shop", colors::WHITE);
-  auto menu            = std::make_unique<UiTextMenu>(config, bg, text);
+  const auto bg        = ui::bgConfigFromColor(palette.almostOpaqueColor);
+  auto text            = ui::textConfigFromColor("Shop", colors::WHITE);
+  auto menu            = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_menus[VIEWS_MENU]->addMenu(std::move(menu));
 
   config.clickCallback = [this]() { setActiveScreen(ActiveScreen::LOCKER); };
-  text                 = textConfigFromColor("Locker", colors::WHITE);
-  menu                 = std::make_unique<UiTextMenu>(config, bg, text);
+  text                 = ui::textConfigFromColor("Locker", colors::WHITE);
+  menu                 = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_menus[VIEWS_MENU]->addMenu(std::move(menu));
 
   ActiveScreen activeScreen{ActiveScreen::HANGAR};
@@ -234,8 +234,8 @@ void OutpostScreenUiHandler::initializeOutpostScreenOptions()
   }
 
   config.clickCallback = [this, activeScreen]() { setActiveScreen(activeScreen); };
-  text                 = textConfigFromColor(buttonText, colors::WHITE);
-  menu                 = std::make_unique<UiTextMenu>(config, bg, text);
+  text                 = ui::textConfigFromColor(buttonText, colors::WHITE);
+  menu                 = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_menus[VIEWS_MENU]->addMenu(std::move(menu));
 
   m_initialized = true;

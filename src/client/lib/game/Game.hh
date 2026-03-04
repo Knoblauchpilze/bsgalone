@@ -17,6 +17,7 @@
 #include "Screen.hh"
 #include "SystemTickData.hh"
 #include "TimeManager.hh"
+#include "UserInputData.hh"
 #include "Views.hh"
 #include <memory>
 #include <unordered_map>
@@ -32,7 +33,7 @@ using IUiHandlerPtr = std::unique_ptr<IUiHandler>;
 class IInputHandler;
 using IInputHandlerPtr = std::unique_ptr<IInputHandler>;
 
-class Game : public core::CoreObject
+class Game : public ui::IScreenChanger, public core::CoreObject
 {
   public:
   Game(const int serverPort,
@@ -42,7 +43,7 @@ class Game : public core::CoreObject
   ~Game() override;
 
   auto getScreen() const noexcept -> Screen;
-  void setScreen(const Screen &screen);
+  void setScreen(const Screen screen) override;
 
   void generateRenderers(int width, int height, Renderer &engine);
   void generateInputHandlers();
@@ -53,7 +54,7 @@ class Game : public core::CoreObject
 
   /// @brief - Requests the game to be terminated. This is applied to the next
   /// iteration of the game loop.
-  void terminate() noexcept;
+  void terminate() noexcept override;
 
   /// @brief - Returns whether or not the game has been terminated. The game is
   /// terminated when the user wants to exit the app (usually).
