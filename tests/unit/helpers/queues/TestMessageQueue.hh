@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "IMessageListener.hh"
 #include "IMessageQueue.hh"
 #include <mutex>
 

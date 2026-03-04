@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "INetworkEventListener.hh"
 #include "INetworkEventQueue.hh"
 #include <condition_variable>
 #include <memory>
