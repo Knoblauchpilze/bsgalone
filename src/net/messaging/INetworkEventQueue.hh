@@ -4,7 +4,6 @@
 #include "EventType.hh"
 #include "IEvent.hh"
 #include "IEventQueue.hh"
-#include "INetworkEventListener.hh"
 #include <memory>
 
 namespace net {

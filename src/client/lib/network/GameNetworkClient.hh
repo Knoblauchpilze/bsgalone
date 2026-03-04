@@ -3,6 +3,7 @@
 
 #include "ClientId.hh"
 #include "IMessage.hh"
+#include "IMessageListener.hh"
 #include "IMessageQueue.hh"
 #include "INetworkClient.hh"
 #include "INetworkEventQueue.hh"

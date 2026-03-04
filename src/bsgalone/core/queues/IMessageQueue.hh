@@ -3,7 +3,6 @@
 
 #include "IEventQueue.hh"
 #include "IMessage.hh"
-#include "IMessageListener.hh"
 #include "MessageType.hh"
 #include <memory>
 
