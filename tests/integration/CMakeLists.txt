@@ -18,10 +18,6 @@ add_subdirectory (
 	)
 
 add_subdirectory (
-	${CMAKE_CURRENT_SOURCE_DIR}/bsgo
-	)
-
-add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/net
 	)
 
@@ -34,6 +30,7 @@ target_link_libraries (integrationTests
 	bsgalone-interface-test-library
 	core_lib
 	net_lib
+	game_core_lib
 	bsgalone_client_lib
 	bsgalone_server_lib
 	)

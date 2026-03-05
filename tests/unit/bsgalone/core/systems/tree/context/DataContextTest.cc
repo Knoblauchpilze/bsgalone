@@ -6,7 +6,7 @@ using namespace ::testing;
 
 namespace bsgo {
 
-TEST(Unit_Bsgo_Systems_DataContext, SetGet)
+TEST(Unit_Bsgalone_Core_Systems_Tree_Context_DataContext, SetGet)
 {
   DataContext ctx;
 
@@ -18,7 +18,7 @@ TEST(Unit_Bsgo_Systems_DataContext, SetGet)
   EXPECT_EQ(*actual, Uuid{14});
 }
 
-TEST(Unit_Bsgo_Systems_DataContext, HasChangedWhenKeyIsSet)
+TEST(Unit_Bsgalone_Core_Systems_Tree_Context_DataContext, HasChangedWhenKeyIsSet)
 {
   DataContext ctx;
 
@@ -27,7 +27,7 @@ TEST(Unit_Bsgo_Systems_DataContext, HasChangedWhenKeyIsSet)
   EXPECT_TRUE(ctx.changed());
 }
 
-TEST(Unit_Bsgo_Systems_DataContext, HasNotChangedWhenMarkedAsSynced)
+TEST(Unit_Bsgalone_Core_Systems_Tree_Context_DataContext, HasNotChangedWhenMarkedAsSynced)
 {
   DataContext ctx;
 
@@ -37,7 +37,7 @@ TEST(Unit_Bsgo_Systems_DataContext, HasNotChangedWhenMarkedAsSynced)
   EXPECT_FALSE(ctx.changed());
 }
 
-TEST(Unit_Bsgo_Systems_DataContext, HasChangedWhenKeyIsDeleted)
+TEST(Unit_Bsgalone_Core_Systems_Tree_Context_DataContext, HasChangedWhenKeyIsDeleted)
 {
   DataContext ctx;
 
@@ -50,7 +50,7 @@ TEST(Unit_Bsgo_Systems_DataContext, HasChangedWhenKeyIsDeleted)
   EXPECT_TRUE(ctx.changed());
 }
 
-TEST(Unit_Bsgo_Systems_DataContext, HasChangedWhenOverridingExistingKey)
+TEST(Unit_Bsgalone_Core_Systems_Tree_Context_DataContext, HasChangedWhenOverridingExistingKey)
 {
   DataContext ctx;
   ctx.setKey(ContextKey::TARGET_REACHED, Uuid{14});
@@ -61,7 +61,7 @@ TEST(Unit_Bsgo_Systems_DataContext, HasChangedWhenOverridingExistingKey)
   EXPECT_TRUE(ctx.changed());
 }
 
-TEST(Unit_Bsgo_Systems_DataContext, KeyHasChangedWhenOverriding)
+TEST(Unit_Bsgalone_Core_Systems_Tree_Context_DataContext, KeyHasChangedWhenOverriding)
 {
   DataContext ctx;
   ctx.setKey(ContextKey::TARGET_REACHED, Uuid{14});
@@ -74,7 +74,7 @@ TEST(Unit_Bsgo_Systems_DataContext, KeyHasChangedWhenOverriding)
   EXPECT_TRUE(actual->changed());
 }
 
-TEST(Unit_Bsgo_Systems_DataContext, OverridesExistingKey)
+TEST(Unit_Bsgalone_Core_Systems_Tree_Context_DataContext, OverridesExistingKey)
 {
   DataContext ctx;
   ctx.setKey(ContextKey::TARGET_REACHED, Uuid{14});

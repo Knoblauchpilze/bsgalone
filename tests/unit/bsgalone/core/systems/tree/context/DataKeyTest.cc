@@ -6,7 +6,7 @@ using namespace ::testing;
 
 namespace bsgo {
 
-TEST(Unit_Bsgo_Systems_DataKey, IsMarkedAsChangedUponCreation)
+TEST(Unit_Bsgalone_Core_Systems_Tree_Context_DataKey, IsMarkedAsChangedUponCreation)
 {
   const auto key = DataKey::fromValue(Uuid{19});
 
