@@ -1,5 +1,5 @@
 
-target_include_directories (server_lib PUBLIC
+target_include_directories (game_server_lib PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
 	)
 
@@ -7,7 +7,7 @@ add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/database
 	)
 
-target_sources (server_lib PRIVATE
+target_sources (game_server_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/AbstractProcess.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/DbSyncProcess.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/IProcess.cc
