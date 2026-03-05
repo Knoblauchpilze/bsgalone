@@ -1,5 +1,5 @@
 # Default variables
-DB_PATH ?= bsgo
+DB_PATH ?= bsgalone
 DB_HOST ?= localhost
 DB_PORT ?= 5432
 DB_NAME ?= db_bsgalone
