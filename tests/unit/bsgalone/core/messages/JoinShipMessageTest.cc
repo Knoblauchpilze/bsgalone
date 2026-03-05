@@ -16,7 +16,7 @@ void assertMessagesAreEqual(const JoinShipMessage &actual, const JoinShipMessage
 }
 } // namespace
 
-TEST(Unit_Bsgo_Serialization_JoinShipMessage, Basic)
+TEST(Unit_Bsgalone_Core_Messages_JoinShipMessage, Basic)
 {
   const JoinShipMessage expected(Uuid{14}, Uuid{17});
   JoinShipMessage actual(Uuid{37}, Uuid{879871});
@@ -27,7 +27,7 @@ TEST(Unit_Bsgo_Serialization_JoinShipMessage, Basic)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_JoinShipMessage, WithClientId)
+TEST(Unit_Bsgalone_Core_Messages_JoinShipMessage, WithClientId)
 {
   JoinShipMessage expected(Uuid{123}, Uuid{324});
   expected.setClientId(Uuid{119});
@@ -38,7 +38,7 @@ TEST(Unit_Bsgo_Serialization_JoinShipMessage, WithClientId)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_JoinShipMessage, Clone)
+TEST(Unit_Bsgalone_Core_Messages_JoinShipMessage, Clone)
 {
   JoinShipMessage expected(Uuid{14}, Uuid{17});
   expected.setClientId(Uuid{21});

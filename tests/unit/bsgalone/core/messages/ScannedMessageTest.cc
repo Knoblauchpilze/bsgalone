@@ -16,7 +16,7 @@ void assertMessagesAreEqual(const ScannedMessage &actual, const ScannedMessage &
 }
 } // namespace
 
-TEST(Unit_Bsgo_Serialization_ScannedMessage, Basic)
+TEST(Unit_Bsgalone_Core_Messages_ScannedMessage, Basic)
 {
   const ScannedMessage expected(Uuid{1234}, Uuid{21});
   ScannedMessage actual(Uuid{897}, Uuid{36});
@@ -27,7 +27,7 @@ TEST(Unit_Bsgo_Serialization_ScannedMessage, Basic)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_ScannedMessage, WithClientId)
+TEST(Unit_Bsgalone_Core_Messages_ScannedMessage, WithClientId)
 {
   ScannedMessage expected(Uuid{1234}, Uuid{21});
   expected.setClientId(Uuid{78});
@@ -38,7 +38,7 @@ TEST(Unit_Bsgo_Serialization_ScannedMessage, WithClientId)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_ScannedMessage, Clone)
+TEST(Unit_Bsgalone_Core_Messages_ScannedMessage, Clone)
 {
   const ScannedMessage expected(Uuid{1234}, Uuid{21});
 

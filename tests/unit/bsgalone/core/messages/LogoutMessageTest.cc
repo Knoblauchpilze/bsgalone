@@ -17,7 +17,7 @@ void assertMessagesAreEqual(const LogoutMessage &actual, const LogoutMessage &ex
 }
 } // namespace
 
-TEST(Unit_Bsgo_Serialization_LogoutMessage, CorrectlyUpdatesCloseConnection)
+TEST(Unit_Bsgalone_Core_Messages_LogoutMessage, CorrectlyUpdatesCloseConnection)
 {
   const LogoutMessage expected(Uuid{36}, true);
 
@@ -29,7 +29,7 @@ TEST(Unit_Bsgo_Serialization_LogoutMessage, CorrectlyUpdatesCloseConnection)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_LogoutMessage, ClearsSystemDbId)
+TEST(Unit_Bsgalone_Core_Messages_LogoutMessage, ClearsSystemDbId)
 {
   LogoutMessage expected(Uuid{36}, true);
 
@@ -42,7 +42,7 @@ TEST(Unit_Bsgo_Serialization_LogoutMessage, ClearsSystemDbId)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_LogoutMessage, OverridesSystemDbId)
+TEST(Unit_Bsgalone_Core_Messages_LogoutMessage, OverridesSystemDbId)
 {
   LogoutMessage expected(Uuid{36}, true);
   expected.setSystemDbId(Uuid{71});
@@ -56,7 +56,7 @@ TEST(Unit_Bsgo_Serialization_LogoutMessage, OverridesSystemDbId)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_LogoutMessage, WithClientId)
+TEST(Unit_Bsgalone_Core_Messages_LogoutMessage, WithClientId)
 {
   LogoutMessage expected(Uuid{101202}, true);
   expected.setClientId(Uuid{119});
@@ -68,7 +68,7 @@ TEST(Unit_Bsgo_Serialization_LogoutMessage, WithClientId)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_LogoutMessage, Clone)
+TEST(Unit_Bsgalone_Core_Messages_LogoutMessage, Clone)
 {
   LogoutMessage expected(Uuid{101202}, true);
   expected.setSystemDbId(Uuid{17});

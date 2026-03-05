@@ -17,7 +17,7 @@ void assertMessagesAreEqual(const LootMessage &actual, const LootMessage &expect
 }
 } // namespace
 
-TEST(Unit_Bsgo_Serialization_LootMessage, Basic)
+TEST(Unit_Bsgalone_Core_Messages_LootMessage, Basic)
 {
   const LootMessage expected(Uuid{3690}, Uuid{14}, 32);
   LootMessage actual(Uuid{1515}, Uuid{6}, -17);
@@ -26,7 +26,7 @@ TEST(Unit_Bsgo_Serialization_LootMessage, Basic)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_LootMessage, WithClientId)
+TEST(Unit_Bsgalone_Core_Messages_LootMessage, WithClientId)
 {
   LootMessage expected(Uuid{3690}, Uuid{14}, 32);
   expected.setClientId(Uuid{78});
@@ -35,7 +35,7 @@ TEST(Unit_Bsgo_Serialization_LootMessage, WithClientId)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_LootMessage, Clone)
+TEST(Unit_Bsgalone_Core_Messages_LootMessage, Clone)
 {
   const LootMessage expected(Uuid{3690}, Uuid{14}, 32);
   const auto cloned = expected.clone();

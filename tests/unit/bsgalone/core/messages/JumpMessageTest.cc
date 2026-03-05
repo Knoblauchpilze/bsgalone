@@ -18,7 +18,7 @@ void assertMessagesAreEqual(const JumpMessage &actual, const JumpMessage &expect
 }
 } // namespace
 
-TEST(Unit_Bsgo_Serialization_JumpMessage, Basic)
+TEST(Unit_Bsgalone_Core_Messages_JumpMessage, Basic)
 {
   const JumpMessage expected(Uuid{14}, Uuid{6545});
   JumpMessage actual(Uuid{6}, Uuid{17894}, Uuid{47}, Uuid{4521});
@@ -27,7 +27,7 @@ TEST(Unit_Bsgo_Serialization_JumpMessage, Basic)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_JumpMessage, WithSystemDbIds)
+TEST(Unit_Bsgalone_Core_Messages_JumpMessage, WithSystemDbIds)
 {
   const JumpMessage expected(Uuid{14}, Uuid{6545}, Uuid{36}, Uuid{998877});
   JumpMessage actual(Uuid{6}, Uuid{17894});
@@ -36,7 +36,7 @@ TEST(Unit_Bsgo_Serialization_JumpMessage, WithSystemDbIds)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_JumpMessage, WithClientId)
+TEST(Unit_Bsgalone_Core_Messages_JumpMessage, WithClientId)
 {
   JumpMessage expected(Uuid{14}, Uuid{6545}, Uuid{36}, Uuid{998877});
   expected.setClientId(Uuid{119});
@@ -45,7 +45,7 @@ TEST(Unit_Bsgo_Serialization_JumpMessage, WithClientId)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_JumpMessage, Clone)
+TEST(Unit_Bsgalone_Core_Messages_JumpMessage, Clone)
 {
   const JumpMessage expected(Uuid{14}, Uuid{6545}, Uuid{36}, Uuid{998877});
   const auto cloned = expected.clone();

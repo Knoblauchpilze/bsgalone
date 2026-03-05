@@ -18,7 +18,7 @@ void assertMessagesAreEqual(const SignupMessage &actual, const SignupMessage &ex
 }
 } // namespace
 
-TEST(Unit_Bsgo_Serialization_SignupMessage, NoPlayerDbId)
+TEST(Unit_Bsgalone_Core_Messages_SignupMessage, NoPlayerDbId)
 {
   const SignupMessage expected("some-name", "some-password", Faction::COLONIAL);
   SignupMessage actual("some-other-name", "securepassword", Faction::CYLON, Uuid{26});
@@ -28,7 +28,7 @@ TEST(Unit_Bsgo_Serialization_SignupMessage, NoPlayerDbId)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_SignupMessage, WithPlayerDbId)
+TEST(Unit_Bsgalone_Core_Messages_SignupMessage, WithPlayerDbId)
 {
   const SignupMessage expected("some-name", "some-password", Faction::COLONIAL, Uuid{44});
   SignupMessage actual("some-other-name", "securepassword", Faction::CYLON);
@@ -38,7 +38,7 @@ TEST(Unit_Bsgo_Serialization_SignupMessage, WithPlayerDbId)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_SignupMessage, WithClientId)
+TEST(Unit_Bsgalone_Core_Messages_SignupMessage, WithClientId)
 {
   SignupMessage expected("some-name", "some-password", Faction::COLONIAL, Uuid{44});
   expected.setClientId(Uuid{119});
@@ -49,7 +49,7 @@ TEST(Unit_Bsgo_Serialization_SignupMessage, WithClientId)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_SignupMessage, Clone)
+TEST(Unit_Bsgalone_Core_Messages_SignupMessage, Clone)
 {
   const SignupMessage expected("some-name", "some-password", Faction::COLONIAL, Uuid{44});
 

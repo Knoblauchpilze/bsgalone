@@ -8,7 +8,7 @@ using namespace test;
 
 namespace bsgo {
 
-TEST(Unit_Bsgo_Serialization_Uuid, SingleValue)
+TEST(Unit_Bsgalone_Core_Messages_Uuid, SingleValue)
 {
   const Uuid expected{2};
   Uuid actual{1};
@@ -16,7 +16,7 @@ TEST(Unit_Bsgo_Serialization_Uuid, SingleValue)
   EXPECT_EQ(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_Uuid, MultipleValues)
+TEST(Unit_Bsgalone_Core_Messages_Uuid, MultipleValues)
 {
   Uuid expected1{2};
   Uuid expected2{36};

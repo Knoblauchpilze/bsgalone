@@ -18,7 +18,7 @@ void assertMessagesAreEqual(const EntityRemovedMessage &actual, const EntityRemo
 }
 } // namespace
 
-TEST(Unit_Bsgo_Serialization_EntityRemovedMessage, EntityKindAndDead)
+TEST(Unit_Bsgalone_Core_Messages_EntityRemovedMessage, EntityKindAndDead)
 {
   const EntityRemovedMessage expected(Uuid{789}, bsgalone::core::EntityKind::BULLET, true);
   EntityRemovedMessage actual(Uuid{10}, bsgalone::core::EntityKind::OUTPOST, false, Uuid{8564});
@@ -27,7 +27,7 @@ TEST(Unit_Bsgo_Serialization_EntityRemovedMessage, EntityKindAndDead)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_EntityRemovedMessage, EntityKindDeadAndSystem)
+TEST(Unit_Bsgalone_Core_Messages_EntityRemovedMessage, EntityKindDeadAndSystem)
 {
   EntityRemovedMessage expected(Uuid{789}, bsgalone::core::EntityKind::BULLET, false, Uuid{10001});
   EntityRemovedMessage actual(Uuid{10}, bsgalone::core::EntityKind::OUTPOST, true);
@@ -35,7 +35,7 @@ TEST(Unit_Bsgo_Serialization_EntityRemovedMessage, EntityKindDeadAndSystem)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_EntityRemovedMessage, WithClientId)
+TEST(Unit_Bsgalone_Core_Messages_EntityRemovedMessage, WithClientId)
 {
   EntityRemovedMessage expected(Uuid{789}, bsgalone::core::EntityKind::BULLET, true);
   expected.setClientId(Uuid{36});
@@ -44,7 +44,7 @@ TEST(Unit_Bsgo_Serialization_EntityRemovedMessage, WithClientId)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_EntityRemovedMessage, Clone)
+TEST(Unit_Bsgalone_Core_Messages_EntityRemovedMessage, Clone)
 {
   EntityRemovedMessage expected(Uuid{789}, bsgalone::core::EntityKind::ASTEROID, Uuid{123}, false);
   const auto cloned = expected.clone();

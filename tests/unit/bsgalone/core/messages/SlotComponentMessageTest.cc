@@ -19,7 +19,7 @@ void assertMessagesAreEqual(const SlotComponentMessage &actual, const SlotCompon
 }
 } // namespace
 
-TEST(Unit_Bsgo_Serialization_SlotComponentMessage, Empty)
+TEST(Unit_Bsgalone_Core_Messages_SlotComponentMessage, Empty)
 {
   const SlotComponentMessage expected(Uuid{999}, Uuid{14}, Uuid{2}, {});
   SlotComponentMessage actual(Uuid{10}, Uuid{36}, Uuid{1}, chrono::TickDuration::fromInt(300));
@@ -28,7 +28,7 @@ TEST(Unit_Bsgo_Serialization_SlotComponentMessage, Empty)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_SlotComponentMessage, WithElapsedSinceLastFired)
+TEST(Unit_Bsgalone_Core_Messages_SlotComponentMessage, WithElapsedSinceLastFired)
 {
   const SlotComponentMessage expected(Uuid{999}, Uuid{14}, Uuid{2}, chrono::TickDuration(250.1f));
   SlotComponentMessage actual(Uuid{10}, Uuid{36}, Uuid{1}, {});
@@ -37,7 +37,7 @@ TEST(Unit_Bsgo_Serialization_SlotComponentMessage, WithElapsedSinceLastFired)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_SlotComponentMessage, WithClientId)
+TEST(Unit_Bsgalone_Core_Messages_SlotComponentMessage, WithClientId)
 {
   SlotComponentMessage expected(Uuid{999}, Uuid{28}, Uuid{67}, chrono::TickDuration::fromInt(250));
   expected.setClientId(Uuid{119});
@@ -46,7 +46,7 @@ TEST(Unit_Bsgo_Serialization_SlotComponentMessage, WithClientId)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_SlotComponentMessage, Clone)
+TEST(Unit_Bsgalone_Core_Messages_SlotComponentMessage, Clone)
 {
   const SlotComponentMessage expected(Uuid{999},
                                       Uuid{28},

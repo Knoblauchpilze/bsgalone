@@ -15,7 +15,7 @@ void assertMessagesAreEqual(const HangarMessage &actual, const HangarMessage &ex
 }
 } // namespace
 
-TEST(Unit_Bsgo_Serialization_HangarMessage, WithShipDbId)
+TEST(Unit_Bsgalone_Core_Messages_HangarMessage, WithShipDbId)
 {
   const HangarMessage expected(Uuid{14});
   HangarMessage actual(Uuid{6});
@@ -25,7 +25,7 @@ TEST(Unit_Bsgo_Serialization_HangarMessage, WithShipDbId)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_HangarMessage, WithShip)
+TEST(Unit_Bsgalone_Core_Messages_HangarMessage, WithShip)
 {
   const PlayerShipData data{.dbId             = Uuid{8},
                             .radius           = 1.478f,
@@ -62,7 +62,7 @@ TEST(Unit_Bsgo_Serialization_HangarMessage, WithShip)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_HangarMessage, ShipIdIsEqualToShipData)
+TEST(Unit_Bsgalone_Core_Messages_HangarMessage, ShipIdIsEqualToShipData)
 {
   const PlayerShipData data{.dbId     = Uuid{42},
                             .docked   = true,
@@ -72,7 +72,7 @@ TEST(Unit_Bsgo_Serialization_HangarMessage, ShipIdIsEqualToShipData)
   EXPECT_EQ(message.getShipDbId(), data.dbId);
 }
 
-TEST(Unit_Bsgo_Serialization_HangarMessage, OverridesShipProperties)
+TEST(Unit_Bsgalone_Core_Messages_HangarMessage, OverridesShipProperties)
 {
   HangarMessage expected(Uuid{14});
   expected.setClientId(Uuid{26});
@@ -110,7 +110,7 @@ TEST(Unit_Bsgo_Serialization_HangarMessage, OverridesShipProperties)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_HangarMessage, WithClientId)
+TEST(Unit_Bsgalone_Core_Messages_HangarMessage, WithClientId)
 {
   const PlayerShipData data{};
   HangarMessage expected(data);
@@ -123,7 +123,7 @@ TEST(Unit_Bsgo_Serialization_HangarMessage, WithClientId)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_HangarMessage, CloneWithShipDbId)
+TEST(Unit_Bsgalone_Core_Messages_HangarMessage, CloneWithShipDbId)
 {
   const HangarMessage expected(Uuid{14});
 
@@ -133,7 +133,7 @@ TEST(Unit_Bsgo_Serialization_HangarMessage, CloneWithShipDbId)
   assertMessagesAreEqual(cloned->as<HangarMessage>(), expected);
 }
 
-TEST(Unit_Bsgo_Serialization_HangarMessage, CloneWithShip)
+TEST(Unit_Bsgalone_Core_Messages_HangarMessage, CloneWithShip)
 {
   const PlayerShipData data{.dbId       = Uuid{47},
                             .position   = Eigen::Vector3f(-4.74f, 32.154f, 981.032f),

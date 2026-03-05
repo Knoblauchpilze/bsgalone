@@ -19,7 +19,7 @@ void assertMessagesAreEqual(const WeaponComponentMessage &actual,
 }
 } // namespace
 
-TEST(Unit_Bsgo_Serialization_WeaponComponentMessage, Basic)
+TEST(Unit_Bsgalone_Core_Messages_WeaponComponentMessage, Basic)
 {
   const WeaponComponentMessage expected(Uuid{14}, Uuid{2}, false);
   WeaponComponentMessage actual(Uuid{36}, Uuid{1}, true);
@@ -28,7 +28,7 @@ TEST(Unit_Bsgo_Serialization_WeaponComponentMessage, Basic)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_WeaponComponentMessage, WithClientId)
+TEST(Unit_Bsgalone_Core_Messages_WeaponComponentMessage, WithClientId)
 {
   WeaponComponentMessage expected(Uuid{28}, Uuid{67}, true);
   expected.setClientId(Uuid{119});
@@ -37,7 +37,7 @@ TEST(Unit_Bsgo_Serialization_WeaponComponentMessage, WithClientId)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_WeaponComponentMessage, Clone)
+TEST(Unit_Bsgalone_Core_Messages_WeaponComponentMessage, Clone)
 {
   const WeaponComponentMessage expected(Uuid{28}, Uuid{67}, true);
   const auto cloned = expected.clone();
