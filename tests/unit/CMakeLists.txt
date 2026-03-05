@@ -50,7 +50,6 @@ target_link_libraries (unitTests
 	pge_lib
 	time_lib
 	client_lib
-	server_lib
 	game_core_lib
 	bsgalone_server_lib
 	)
