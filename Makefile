@@ -92,12 +92,6 @@ runbsgoclient: copyRelease
 drunbsgoclient: copyDebug
 	cd sandbox && ./debug.sh game_client 2323
 
-runbsgoserver: copyRelease
-	cd sandbox && ./run.sh game_server 2323
-
-drunbsgoserver: copyDebug
-	cd sandbox && ./debug.sh game_server 2323
-
 PHONY: .tests
 tests: debugWithTests copyDebug
 
