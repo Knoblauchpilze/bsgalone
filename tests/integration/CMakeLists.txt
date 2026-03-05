@@ -36,5 +36,5 @@ target_link_libraries (integrationTests
 	bsgo_lib
 	net_lib
 	game_client_lib
-	game_server_lib
+	bsgalone_server_lib
 	)

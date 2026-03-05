@@ -30,10 +30,6 @@ add_subdirectory (
 	)
 
 add_subdirectory (
-	${CMAKE_CURRENT_SOURCE_DIR}/server
-	)
-
-add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/time
 	)
 
@@ -56,5 +52,5 @@ target_link_libraries (unitTests
 	client_lib
 	server_lib
 	game_core_lib
-	game_server_lib
+	bsgalone_server_lib
 	)
