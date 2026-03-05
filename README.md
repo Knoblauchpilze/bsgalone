@@ -539,7 +539,7 @@ The [server](src/bsgalone/server) folder defines all the server specific code. I
 
 ### client
 
-The [client](src/client) folder regroups all the code that is used exclusively by the client. It links against the core library and enriches it to present a compelling application to the player. It also serves the purpose of connecting to the server and updating the local data with what the server transmits.
+The [client](src/bsgalone/client) folder regroups all the code that is used exclusively by the client. It links against the core library and enriches it to present a compelling application to the player. It also serves the purpose of connecting to the server and updating the local data with what the server transmits.
 
 ## Communication between client/server
 
@@ -786,10 +786,10 @@ The application has two main problems to solve:
 The client application splits the responsibilities to react to the user's input into several facets:
 
 - the [IRenderer](src/bsgalone/client/lib/renderers/IRenderer.hh) takes care of rendering the visual elements
-- the [IUIHandler](src/client/lib/ui/IUiHandler.hh) takes care of rendering the UI
-- the [IInputHandler](src/client/lib/inputs/IInputHandler.hh) takes care of interpreting the input of the user
+- the [IUIHandler](src/bsgalone/client/lib/ui/IUiHandler.hh) takes care of rendering the UI
+- the [IInputHandler](src/bsgalone/client/lib/inputs/IInputHandler.hh) takes care of interpreting the input of the user
 
-In addition the client also defines the notion of a [Screen](src/client/lib/game/Screen.hh): this is a way to represent which is the active view currently displayed in the application. Typically the panel of actions available to the user will not be the same whether they are in the outpost or not logged in or playing the game.
+In addition the client also defines the notion of a [Screen](src/bsgalone/client/lib/game/Screen.hh): this is a way to represent which is the active view currently displayed in the application. Typically the panel of actions available to the user will not be the same whether they are in the outpost or not logged in or playing the game.
 
 Typically each screen will have a specific renderer, a UI handler and an input handler. Some screens might only get some of these elements.
 
@@ -801,7 +801,7 @@ When the client has successfully logged in to the server, the user will click on
 
 In order to send these commands to the server, we use the concept of a [IView](src/bsgo/views/IView.hh): a view is the equivalent of the business layer (so a [IService](src/bsgo/services/IService.hh)) but for the client: the idea is that each button of the UI (for example the dock button, or the button to purchase or equip an item) is binded to a method of a view. The view is then responsible to know which action should be triggered to accomplish this action.
 
-Accomplishing an action usually means sending a message to the server. The message is sent once again through a message queue: the [GameNetworkClient](src/client/lib/network/GameNetworkClient.hh). This client is used for:
+Accomplishing an action usually means sending a message to the server. The message is sent once again through a message queue: the [GameNetworkClient](src/bsgalone/client/lib/network/GameNetworkClient.hh). This client is used for:
 
 - connecting to the server
 - receiving data
@@ -815,9 +815,9 @@ The actions that the user takes in the UI usually have a goal to change some sta
 
 In order to process those incoming messages, the client receives them in a [InputNetworkAdapter](src/bsgalone/core/network/InputNetworkAdapter.hh) in a very similar way to the server.
 
-We then follow the same approach as in the server: the client defines some [consumers](src/client/lib/consumers) which are responsible to handle the messages received from the server and update the local ECS. As described in the [who's right](#whos-right) section, the difference is that the client applies without check what the server sends.
+We then follow the same approach as in the server: the client defines some [consumers](src/bsgalone/client/lib/consumers) which are responsible to handle the messages received from the server and update the local ECS. As described in the [who's right](#whos-right) section, the difference is that the client applies without check what the server sends.
 
-A special consumer is the [GameMessageModule](src/client/lib/game/GameMessageModule.hh): its role is to interpret messages which are changing the state of the UI and react to them. This typically includes messages indicating that the player died, or that it changed system.
+A special consumer is the [GameMessageModule](src/bsgalone/client/lib/game/GameMessageModule.hh): its role is to interpret messages which are changing the state of the UI and react to them. This typically includes messages indicating that the player died, or that it changed system.
 
 ## Adapting the ECS
 

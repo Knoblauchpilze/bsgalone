@@ -1,4 +1,5 @@
 
+#include "App.hh"
 #include "AppDesc.hh"
 #include "Environment.hh"
 #include "GameApp.hh"
@@ -7,6 +8,10 @@
 #include "log/Locator.hh"
 #include "log/PrefixedLogger.hh"
 #include "log/StdLogger.hh"
+
+constexpr auto USERNAME_ENV_KEY  = "USERNAME";
+constexpr auto PASSWORD_ENV_KEY  = "PASSWORD";
+constexpr auto GAME_ROLE_ENV_KEY = "GAMEROLE";
 
 int main(int /*argc*/, char ** /*argv*/)
 {
@@ -24,8 +29,17 @@ int main(int /*argc*/, char ** /*argv*/)
                     .fixedFrame = true,
                     .maxFps     = 20};
 
-  const auto port = core::getPortFromEnvironmentVariable();
-  bsgalone::client::GameApp app(desc, port);
+  const auto port                = core::getPortFromEnvironmentVariable();
+  const auto maybeUserName       = core::tryGetEnvironmentVariable<std::string>(USERNAME_ENV_KEY);
+  const auto maybePassword       = core::tryGetEnvironmentVariable<std::string>(PASSWORD_ENV_KEY);
+  const auto maybeGameRoleString = core::tryGetEnvironmentVariable<std::string>(GAME_ROLE_ENV_KEY);
+  std::optional<bsgo::GameRole> maybeGameRole;
+  if (maybeGameRoleString)
+  {
+    maybeGameRole = bsgo::fromDbGameRole(*maybeGameRoleString);
+  }
+
+  pge::App app(desc, port, maybeUserName, maybePassword, maybeGameRole);
 
   auto gameFunc = [&app]() { app.run(); };
 
