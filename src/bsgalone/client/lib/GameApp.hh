@@ -8,6 +8,7 @@
 
 namespace bsgalone::client {
 
+// TODO: This is currently unused but is meant to replace the App class.
 class GameApp : public pge::PGEApp
 {
   public:
