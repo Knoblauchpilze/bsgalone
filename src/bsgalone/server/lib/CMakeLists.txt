@@ -33,6 +33,7 @@ add_subdirectory (
 
 target_sources (game_server_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/GameServer.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/Server.cc
 	)
 
 target_link_libraries (game_server_lib
