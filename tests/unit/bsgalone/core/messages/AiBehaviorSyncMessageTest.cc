@@ -18,7 +18,7 @@ void assertMessagesAreEqual(const AiBehaviorSyncMessage &actual,
 }
 } // namespace
 
-TEST(Unit_Bsgo_Serialization_AiBehaviorSyncMessage, WithoutTargetIndex)
+TEST(Unit_Bsgalone_Core_Messages_AiBehaviorSyncMessage, WithoutTargetIndex)
 {
   AiBehaviorSyncMessage expected(Uuid{14});
   expected.setSystemDbId(28);
@@ -32,7 +32,7 @@ TEST(Unit_Bsgo_Serialization_AiBehaviorSyncMessage, WithoutTargetIndex)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_AiBehaviorSyncMessage, WithTargetIndex)
+TEST(Unit_Bsgalone_Core_Messages_AiBehaviorSyncMessage, WithTargetIndex)
 {
   AiBehaviorSyncMessage expected(Uuid{14});
   expected.setTargetIndex(8719);
@@ -47,7 +47,7 @@ TEST(Unit_Bsgo_Serialization_AiBehaviorSyncMessage, WithTargetIndex)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_AiBehaviorSyncMessage, WithSystemDbId)
+TEST(Unit_Bsgalone_Core_Messages_AiBehaviorSyncMessage, WithSystemDbId)
 {
   AiBehaviorSyncMessage expected(Uuid{14});
   expected.setSystemDbId(8719);
@@ -61,7 +61,7 @@ TEST(Unit_Bsgo_Serialization_AiBehaviorSyncMessage, WithSystemDbId)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_AiBehaviorSyncMessage, WithClientId)
+TEST(Unit_Bsgalone_Core_Messages_AiBehaviorSyncMessage, WithClientId)
 {
   AiBehaviorSyncMessage expected(Uuid{14});
   expected.setClientId(Uuid{119});
@@ -75,7 +75,7 @@ TEST(Unit_Bsgo_Serialization_AiBehaviorSyncMessage, WithClientId)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_AiBehaviorSyncMessage, Clone)
+TEST(Unit_Bsgalone_Core_Messages_AiBehaviorSyncMessage, Clone)
 {
   AiBehaviorSyncMessage expected(Uuid{14});
   expected.setSystemDbId(44);

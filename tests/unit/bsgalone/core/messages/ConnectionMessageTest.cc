@@ -13,7 +13,7 @@ void assertMessagesAreEqual(const ConnectionMessage &actual, const ConnectionMes
 }
 } // namespace
 
-TEST(Unit_Bsgo_Serialization_ConnectionMessage, Basic)
+TEST(Unit_Bsgalone_Core_Messages_ConnectionMessage, Basic)
 {
   const ConnectionMessage expected;
   ConnectionMessage actual;
@@ -23,7 +23,7 @@ TEST(Unit_Bsgo_Serialization_ConnectionMessage, Basic)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_ConnectionMessage, Clone)
+TEST(Unit_Bsgalone_Core_Messages_ConnectionMessage, Clone)
 {
   const ConnectionMessage expected;
 

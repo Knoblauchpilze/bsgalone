@@ -60,7 +60,7 @@ auto serializeAndDeserialize(const bsgalone::core::VelocityMessage &expected, co
 }
 } // namespace
 
-TEST(Unit_Bsgo_Serialization_Behavior, Nominal_Uuid)
+TEST(Unit_Bsgalone_Core_Messages_Behavior, Nominal_Uuid)
 {
   const Uuid expected{2};
 
@@ -70,7 +70,7 @@ TEST(Unit_Bsgo_Serialization_Behavior, Nominal_Uuid)
   EXPECT_EQ(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Nominal_String)
+TEST(Unit_Bsgalone_Core_Messages_Behavior, Nominal_String)
 {
   const std::string expected{"0some-string"};
 
@@ -80,7 +80,7 @@ TEST(Unit_Bsgo_Serialization_Behavior, Nominal_String)
   EXPECT_EQ(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Nominal_EmptyOptional)
+TEST(Unit_Bsgalone_Core_Messages_Behavior, Nominal_EmptyOptional)
 {
   const std::optional<Uuid> expected{};
 
@@ -90,7 +90,7 @@ TEST(Unit_Bsgo_Serialization_Behavior, Nominal_EmptyOptional)
   EXPECT_EQ(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Nominal_Optional)
+TEST(Unit_Bsgalone_Core_Messages_Behavior, Nominal_Optional)
 {
   const std::optional<std::string> expected{"55555some-other-string"};
 
@@ -100,7 +100,7 @@ TEST(Unit_Bsgo_Serialization_Behavior, Nominal_Optional)
   EXPECT_EQ(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Nominal_VelocityMessage)
+TEST(Unit_Bsgalone_Core_Messages_Behavior, Nominal_VelocityMessage)
 {
   const bsgalone::core::VelocityMessage expected(Uuid{18},
                                                  Uuid{19},
@@ -118,7 +118,7 @@ TEST(Unit_Bsgo_Serialization_Behavior, Nominal_VelocityMessage)
   EXPECT_EQ(actual.getAcceleration(), expected.getAcceleration());
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Nominal_Duration)
+TEST(Unit_Bsgalone_Core_Messages_Behavior, Nominal_Duration)
 {
   const core::Duration expected = core::fromMilliseconds(1234);
 
@@ -128,7 +128,7 @@ TEST(Unit_Bsgo_Serialization_Behavior, Nominal_Duration)
   EXPECT_EQ(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, ZeroDuration)
+TEST(Unit_Bsgalone_Core_Messages_Behavior, ZeroDuration)
 {
   const core::Duration expected{};
 
@@ -138,7 +138,7 @@ TEST(Unit_Bsgo_Serialization_Behavior, ZeroDuration)
   EXPECT_EQ(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, SubMillisecondDuration)
+TEST(Unit_Bsgalone_Core_Messages_Behavior, SubMillisecondDuration)
 {
   const core::Duration expected{15};
 
@@ -148,7 +148,7 @@ TEST(Unit_Bsgo_Serialization_Behavior, SubMillisecondDuration)
   EXPECT_EQ(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Nominal_Eigen_Vector3f)
+TEST(Unit_Bsgalone_Core_Messages_Behavior, Nominal_Eigen_Vector3f)
 {
   const Eigen::Vector3f expected(1.0f, -2.12f, 98.74f);
 
@@ -158,7 +158,7 @@ TEST(Unit_Bsgo_Serialization_Behavior, Nominal_Eigen_Vector3f)
   EXPECT_EQ(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Nominal_Eigen_Vector3f_Optional)
+TEST(Unit_Bsgalone_Core_Messages_Behavior, Nominal_Eigen_Vector3f_Optional)
 {
   const std::optional<Eigen::Vector3f> expected = Eigen::Vector3f(1.0f, -2.12f, 98.74f);
 
@@ -168,7 +168,7 @@ TEST(Unit_Bsgo_Serialization_Behavior, Nominal_Eigen_Vector3f_Optional)
   EXPECT_EQ(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Nominal_Eigen_Vector3f_EmptyOptional)
+TEST(Unit_Bsgalone_Core_Messages_Behavior, Nominal_Eigen_Vector3f_EmptyOptional)
 {
   const std::optional<Eigen::Vector3f> expected = {};
   ASSERT_FALSE(expected.has_value());
@@ -179,7 +179,7 @@ TEST(Unit_Bsgo_Serialization_Behavior, Nominal_Eigen_Vector3f_EmptyOptional)
   EXPECT_EQ(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Nominal_MapSlotInt_Empty)
+TEST(Unit_Bsgalone_Core_Messages_Behavior, Nominal_MapSlotInt_Empty)
 {
   std::unordered_map<bsgalone::core::Slot, int> empty;
 
@@ -189,7 +189,7 @@ TEST(Unit_Bsgo_Serialization_Behavior, Nominal_MapSlotInt_Empty)
   EXPECT_EQ(actual, empty);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Nominal_MapSlotInt)
+TEST(Unit_Bsgalone_Core_Messages_Behavior, Nominal_MapSlotInt)
 {
   std::unordered_map<bsgalone::core::Slot, int> expected{
     {bsgalone::core::Slot::WEAPON, 1},
@@ -202,7 +202,7 @@ TEST(Unit_Bsgo_Serialization_Behavior, Nominal_MapSlotInt)
   EXPECT_EQ(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Nominal_MapUuidInt_Empty)
+TEST(Unit_Bsgalone_Core_Messages_Behavior, Nominal_MapUuidInt_Empty)
 {
   std::unordered_map<Uuid, int> empty;
 
@@ -212,7 +212,7 @@ TEST(Unit_Bsgo_Serialization_Behavior, Nominal_MapUuidInt_Empty)
   EXPECT_EQ(actual, empty);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Nominal_MapUuidInt)
+TEST(Unit_Bsgalone_Core_Messages_Behavior, Nominal_MapUuidInt)
 {
   std::unordered_map<Uuid, int> expected{{Uuid{14}, 1789}, {Uuid{7894}, -45}};
 
@@ -222,7 +222,7 @@ TEST(Unit_Bsgo_Serialization_Behavior, Nominal_MapUuidInt)
   EXPECT_EQ(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Nominal_VectorInt_Empty)
+TEST(Unit_Bsgalone_Core_Messages_Behavior, Nominal_VectorInt_Empty)
 {
   std::vector<int> empty;
 
@@ -232,7 +232,7 @@ TEST(Unit_Bsgo_Serialization_Behavior, Nominal_VectorInt_Empty)
   EXPECT_EQ(actual, empty);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Nominal_VectorInt)
+TEST(Unit_Bsgalone_Core_Messages_Behavior, Nominal_VectorInt)
 {
   std::vector<int> expected{1, 2, 3, -4, 6, -9871};
 
@@ -277,7 +277,7 @@ struct DummyStruct
 };
 } // namespace
 
-TEST(Unit_Bsgo_Serialization_Behavior, Nominal_VectorStruct_Empty)
+TEST(Unit_Bsgalone_Core_Messages_Behavior, Nominal_VectorStruct_Empty)
 {
   std::vector<DummyStruct> empty;
 
@@ -287,7 +287,7 @@ TEST(Unit_Bsgo_Serialization_Behavior, Nominal_VectorStruct_Empty)
   EXPECT_EQ(actual, empty);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Nominal_VectorStruct)
+TEST(Unit_Bsgalone_Core_Messages_Behavior, Nominal_VectorStruct)
 {
   std::vector<DummyStruct> expected{
     DummyStruct{
@@ -309,7 +309,7 @@ TEST(Unit_Bsgo_Serialization_Behavior, Nominal_VectorStruct)
   EXPECT_EQ(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Nominal_SetInt_Empty)
+TEST(Unit_Bsgalone_Core_Messages_Behavior, Nominal_SetInt_Empty)
 {
   std::unordered_set<int> empty;
 
@@ -319,7 +319,7 @@ TEST(Unit_Bsgo_Serialization_Behavior, Nominal_SetInt_Empty)
   EXPECT_EQ(actual, empty);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Nominal_SetInt)
+TEST(Unit_Bsgalone_Core_Messages_Behavior, Nominal_SetInt)
 {
   std::unordered_set<int> expected{1, 2, 3, -4, 6, -9871};
 
@@ -329,7 +329,7 @@ TEST(Unit_Bsgo_Serialization_Behavior, Nominal_SetInt)
   EXPECT_EQ(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Nominal_SetFaction_Empty)
+TEST(Unit_Bsgalone_Core_Messages_Behavior, Nominal_SetFaction_Empty)
 {
   std::unordered_set<Faction> empty;
 
@@ -339,7 +339,7 @@ TEST(Unit_Bsgo_Serialization_Behavior, Nominal_SetFaction_Empty)
   EXPECT_EQ(actual, empty);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Nominal_SetFaction)
+TEST(Unit_Bsgalone_Core_Messages_Behavior, Nominal_SetFaction)
 {
   std::unordered_set<Faction> expected{Faction::COLONIAL, Faction::CYLON};
 
@@ -349,7 +349,7 @@ TEST(Unit_Bsgo_Serialization_Behavior, Nominal_SetFaction)
   EXPECT_EQ(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Failure_Uuid)
+TEST(Unit_Bsgalone_Core_Messages_Behavior, Failure_Uuid)
 {
   const Uuid value{2};
 
@@ -358,7 +358,7 @@ TEST(Unit_Bsgo_Serialization_Behavior, Failure_Uuid)
   EXPECT_FALSE(success);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Failure_String)
+TEST(Unit_Bsgalone_Core_Messages_Behavior, Failure_String)
 {
   const std::string value{"some-string"};
 
@@ -367,7 +367,7 @@ TEST(Unit_Bsgo_Serialization_Behavior, Failure_String)
   EXPECT_FALSE(success);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Failure_EmptyOptional)
+TEST(Unit_Bsgalone_Core_Messages_Behavior, Failure_EmptyOptional)
 {
   const std::optional<Uuid> value{};
 
@@ -376,7 +376,7 @@ TEST(Unit_Bsgo_Serialization_Behavior, Failure_EmptyOptional)
   EXPECT_FALSE(success);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Failure_Optional)
+TEST(Unit_Bsgalone_Core_Messages_Behavior, Failure_Optional)
 {
   const std::optional<Uuid> value{36};
 
@@ -385,7 +385,7 @@ TEST(Unit_Bsgo_Serialization_Behavior, Failure_Optional)
   EXPECT_FALSE(success);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Failure_VelocityMessage)
+TEST(Unit_Bsgalone_Core_Messages_Behavior, Failure_VelocityMessage)
 {
   const bsgalone::core::VelocityMessage value(Uuid{18},
                                               Uuid{19},
@@ -397,7 +397,7 @@ TEST(Unit_Bsgo_Serialization_Behavior, Failure_VelocityMessage)
   EXPECT_FALSE(maybeMessage.has_value());
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Failure_Duration)
+TEST(Unit_Bsgalone_Core_Messages_Behavior, Failure_Duration)
 {
   const core::Duration value = core::fromMilliseconds(1234);
 
@@ -406,7 +406,7 @@ TEST(Unit_Bsgo_Serialization_Behavior, Failure_Duration)
   EXPECT_FALSE(success);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Failure_Eigen_Vector3f)
+TEST(Unit_Bsgalone_Core_Messages_Behavior, Failure_Eigen_Vector3f)
 {
   const Eigen::Vector3f expected(1.0f, -2.12f, 98.74f);
 
@@ -415,7 +415,7 @@ TEST(Unit_Bsgo_Serialization_Behavior, Failure_Eigen_Vector3f)
   EXPECT_FALSE(success);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Failure_MapSlotInt)
+TEST(Unit_Bsgalone_Core_Messages_Behavior, Failure_MapSlotInt)
 {
   std::unordered_map<bsgalone::core::Slot, int> expected{
     {bsgalone::core::Slot::WEAPON, 1},
@@ -427,7 +427,7 @@ TEST(Unit_Bsgo_Serialization_Behavior, Failure_MapSlotInt)
   EXPECT_FALSE(success);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Failure_MapUuidInt)
+TEST(Unit_Bsgalone_Core_Messages_Behavior, Failure_MapUuidInt)
 {
   std::unordered_map<Uuid, int> expected{{Uuid{5476}, 136}, {Uuid{13}, -287}};
 
@@ -436,7 +436,7 @@ TEST(Unit_Bsgo_Serialization_Behavior, Failure_MapUuidInt)
   EXPECT_FALSE(success);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Failure_VectorInt)
+TEST(Unit_Bsgalone_Core_Messages_Behavior, Failure_VectorInt)
 {
   std::vector<int> expected{1, 2, 3, -4, 6, -9871};
 
@@ -445,7 +445,7 @@ TEST(Unit_Bsgo_Serialization_Behavior, Failure_VectorInt)
   EXPECT_FALSE(success);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Failure_VectorStruct)
+TEST(Unit_Bsgalone_Core_Messages_Behavior, Failure_VectorStruct)
 {
   std::vector<DummyStruct> expected{
     DummyStruct{
@@ -466,7 +466,7 @@ TEST(Unit_Bsgo_Serialization_Behavior, Failure_VectorStruct)
   EXPECT_FALSE(success);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Failure_SetInt)
+TEST(Unit_Bsgalone_Core_Messages_Behavior, Failure_SetInt)
 {
   std::unordered_set<int> expected{1, 2, 3, -4, 6, -9871};
 
@@ -475,7 +475,7 @@ TEST(Unit_Bsgo_Serialization_Behavior, Failure_SetInt)
   EXPECT_FALSE(success);
 }
 
-TEST(Unit_Bsgo_Serialization_Behavior, Failure_SetFaction)
+TEST(Unit_Bsgalone_Core_Messages_Behavior, Failure_SetFaction)
 {
   std::unordered_set<Faction> expected{Faction::COLONIAL, Faction::CYLON};
 
@@ -508,7 +508,7 @@ TEST_P(Eigen_Vector3f, Serialization_Failure)
   EXPECT_FALSE(success);
 }
 
-INSTANTIATE_TEST_SUITE_P(Unit_Bsgo_Serialization_Behavior,
+INSTANTIATE_TEST_SUITE_P(Unit_Bsgalone_Core_Messages_Behavior,
                          Eigen_Vector3f,
                          Values(TestCaseVector{Eigen::Vector3f{0.0f, 0.0f, 0.0f}},
                                 TestCaseVector{Eigen::Vector3f{1.0f, 0.0f, 0.0f}},

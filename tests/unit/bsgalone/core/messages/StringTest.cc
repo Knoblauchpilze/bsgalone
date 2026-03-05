@@ -8,7 +8,7 @@ using namespace test;
 
 namespace bsgo {
 
-TEST(Unit_Bsgo_Serialization_String, Empty)
+TEST(Unit_Bsgalone_Core_Messages_String, Empty)
 {
   const std::string expected{};
   std::string actual{"some-string"};
@@ -16,7 +16,7 @@ TEST(Unit_Bsgo_Serialization_String, Empty)
   EXPECT_EQ(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_String, WithValue)
+TEST(Unit_Bsgalone_Core_Messages_String, WithValue)
 {
   const std::string expected{"some-string"};
   std::string actual{};
@@ -24,7 +24,7 @@ TEST(Unit_Bsgo_Serialization_String, WithValue)
   EXPECT_EQ(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_String, NumericalValue)
+TEST(Unit_Bsgalone_Core_Messages_String, NumericalValue)
 {
   const std::string expected{"1230"};
   std::string actual{};

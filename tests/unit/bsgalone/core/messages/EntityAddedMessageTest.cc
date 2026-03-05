@@ -53,7 +53,7 @@ void assertMessagesAreEqual(const EntityAddedMessage &actual, const EntityAddedM
 }
 } // namespace
 
-TEST(Unit_Bsgo_Serialization_EntityAddedMessage, SerializationFailsWhenNoEntityKindIsSet)
+TEST(Unit_Bsgalone_Core_Messages_EntityAddedMessage, SerializationFailsWhenNoEntityKindIsSet)
 {
   EntityAddedMessage message(Uuid{789});
 
@@ -65,7 +65,7 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, SerializationFailsWhenNoEntityK
     core::CoreException);
 }
 
-TEST(Unit_Bsgo_Serialization_EntityAddedMessage, SetsEntityKindForAsteroid)
+TEST(Unit_Bsgalone_Core_Messages_EntityAddedMessage, SetsEntityKindForAsteroid)
 {
   EntityAddedMessage message(Uuid{789});
   message.setAsteroidData(AsteroidData{.dbId      = Uuid{123},
@@ -76,7 +76,7 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, SetsEntityKindForAsteroid)
   EXPECT_EQ(message.getEntityKind(), bsgalone::core::EntityKind::ASTEROID);
 }
 
-TEST(Unit_Bsgo_Serialization_EntityAddedMessage, SetsEntityKindForShip)
+TEST(Unit_Bsgalone_Core_Messages_EntityAddedMessage, SetsEntityKindForShip)
 {
   EntityAddedMessage message(Uuid{789});
   message.setShipData(
@@ -85,7 +85,7 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, SetsEntityKindForShip)
   EXPECT_EQ(message.getEntityKind(), bsgalone::core::EntityKind::SHIP);
 }
 
-TEST(Unit_Bsgo_Serialization_EntityAddedMessage, SetsEntityKindForOutpost)
+TEST(Unit_Bsgalone_Core_Messages_EntityAddedMessage, SetsEntityKindForOutpost)
 {
   EntityAddedMessage message(Uuid{789});
   message.setOutpostData(
@@ -94,7 +94,7 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, SetsEntityKindForOutpost)
   EXPECT_EQ(message.getEntityKind(), bsgalone::core::EntityKind::OUTPOST);
 }
 
-TEST(Unit_Bsgo_Serialization_EntityAddedMessage, SetsEntityKindForPlayer)
+TEST(Unit_Bsgalone_Core_Messages_EntityAddedMessage, SetsEntityKindForPlayer)
 {
   EntityAddedMessage message(Uuid{789});
   message.setPlayerData(PlayerData{.dbId = Uuid{123}, .name = "my-player"});
@@ -102,7 +102,7 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, SetsEntityKindForPlayer)
   EXPECT_EQ(message.getEntityKind(), bsgalone::core::EntityKind::PLAYER);
 }
 
-TEST(Unit_Bsgo_Serialization_EntityAddedMessage, WhenAnotherKindOfDataIsSetExpectTypeToChange)
+TEST(Unit_Bsgalone_Core_Messages_EntityAddedMessage, WhenAnotherKindOfDataIsSetExpectTypeToChange)
 {
   EntityAddedMessage message(Uuid{789});
   message.setAsteroidData(
@@ -117,7 +117,7 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, WhenAnotherKindOfDataIsSetExpec
   EXPECT_FALSE(message.tryGetAsteroidData().has_value());
 }
 
-TEST(Unit_Bsgo_Serialization_EntityAddedMessage, WithAsteroidData)
+TEST(Unit_Bsgalone_Core_Messages_EntityAddedMessage, WithAsteroidData)
 {
   EntityAddedMessage expected(Uuid{789});
   expected.setAsteroidData(
@@ -132,7 +132,7 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, WithAsteroidData)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_EntityAddedMessage, OverrideAsteroidData)
+TEST(Unit_Bsgalone_Core_Messages_EntityAddedMessage, OverrideAsteroidData)
 {
   EntityAddedMessage expected(Uuid{789});
   expected.setAsteroidData(
@@ -147,7 +147,7 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, OverrideAsteroidData)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_EntityAddedMessage, WithShipData)
+TEST(Unit_Bsgalone_Core_Messages_EntityAddedMessage, WithShipData)
 {
   EntityAddedMessage expected(Uuid{789});
   expected.setShipData(PlayerShipData{.dbId     = Uuid{123},
@@ -165,7 +165,7 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, WithShipData)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_EntityAddedMessage, OverrideShipData)
+TEST(Unit_Bsgalone_Core_Messages_EntityAddedMessage, OverrideShipData)
 {
   EntityAddedMessage expected(Uuid{789});
   expected.setShipData(
@@ -180,7 +180,7 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, OverrideShipData)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_EntityAddedMessage, WithOutpostData)
+TEST(Unit_Bsgalone_Core_Messages_EntityAddedMessage, WithOutpostData)
 {
   EntityAddedMessage expected(Uuid{789});
   expected.setOutpostData(OutpostData{.dbId     = Uuid{123},
@@ -198,7 +198,7 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, WithOutpostData)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_EntityAddedMessage, OverrideOutpostData)
+TEST(Unit_Bsgalone_Core_Messages_EntityAddedMessage, OverrideOutpostData)
 {
   EntityAddedMessage expected(Uuid{789});
   expected.setOutpostData(
@@ -213,7 +213,7 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, OverrideOutpostData)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_EntityAddedMessage, WithPlayerData)
+TEST(Unit_Bsgalone_Core_Messages_EntityAddedMessage, WithPlayerData)
 {
   EntityAddedMessage expected(Uuid{789});
   expected.setPlayerData(PlayerData{.dbId = Uuid{123}, .name = "player1"});
@@ -227,7 +227,7 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, WithPlayerData)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_EntityAddedMessage, OverridePlayerData)
+TEST(Unit_Bsgalone_Core_Messages_EntityAddedMessage, OverridePlayerData)
 {
   EntityAddedMessage expected(Uuid{789});
   expected.setPlayerData(PlayerData{.dbId = Uuid{123}, .name = "player1"});
@@ -241,7 +241,7 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, OverridePlayerData)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_EntityAddedMessage, CloneWithAsteroidData)
+TEST(Unit_Bsgalone_Core_Messages_EntityAddedMessage, CloneWithAsteroidData)
 {
   EntityAddedMessage expected(Uuid{789});
   expected.setAsteroidData(AsteroidData{.dbId = Uuid{36}, .health = 36.5f});
@@ -251,7 +251,7 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, CloneWithAsteroidData)
   assertMessagesAreEqual(cloned->as<EntityAddedMessage>(), expected);
 }
 
-TEST(Unit_Bsgo_Serialization_EntityAddedMessage, CloneWithShipData)
+TEST(Unit_Bsgalone_Core_Messages_EntityAddedMessage, CloneWithShipData)
 {
   EntityAddedMessage expected(Uuid{789});
   expected.setShipData(PlayerShipData{.dbId = Uuid{36}, .name = "my-ship"});
@@ -261,7 +261,7 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, CloneWithShipData)
   assertMessagesAreEqual(cloned->as<EntityAddedMessage>(), expected);
 }
 
-TEST(Unit_Bsgo_Serialization_EntityAddedMessage, CloneWithOutpostData)
+TEST(Unit_Bsgalone_Core_Messages_EntityAddedMessage, CloneWithOutpostData)
 {
   EntityAddedMessage expected(Uuid{789});
   expected.setOutpostData(OutpostData{.dbId = Uuid{36}, .powerRegen = 36.5f});
@@ -271,7 +271,7 @@ TEST(Unit_Bsgo_Serialization_EntityAddedMessage, CloneWithOutpostData)
   assertMessagesAreEqual(cloned->as<EntityAddedMessage>(), expected);
 }
 
-TEST(Unit_Bsgo_Serialization_EntityAddedMessage, CloneWithPlayerData)
+TEST(Unit_Bsgalone_Core_Messages_EntityAddedMessage, CloneWithPlayerData)
 {
   EntityAddedMessage expected(Uuid{789});
   expected.setPlayerData(PlayerData{.dbId = Uuid{36}, .name = "my-player"});

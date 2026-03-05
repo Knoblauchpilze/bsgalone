@@ -10,7 +10,7 @@ using namespace ::testing;
 using namespace test;
 
 namespace bsgo {
-TEST(Unit_Bsgo_Serialization_Optional_Uuid, Empty)
+TEST(Unit_Bsgalone_Core_Messages_Optional_Uuid, Empty)
 {
   const std::optional<Uuid> expected{};
   std::optional<Uuid> actual{Uuid{1}};
@@ -18,7 +18,7 @@ TEST(Unit_Bsgo_Serialization_Optional_Uuid, Empty)
   EXPECT_EQ(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_Optional_Uuid, WithValue)
+TEST(Unit_Bsgalone_Core_Messages_Optional_Uuid, WithValue)
 {
   const std::optional<Uuid> expected{Uuid{14}};
   std::optional<Uuid> actual{};
@@ -26,7 +26,7 @@ TEST(Unit_Bsgo_Serialization_Optional_Uuid, WithValue)
   EXPECT_EQ(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_Optional_Uuid, EmptyAndSomeValueAfter)
+TEST(Unit_Bsgalone_Core_Messages_Optional_Uuid, EmptyAndSomeValueAfter)
 {
   const std::optional<Uuid> expectedOpt{};
   const auto expectedFloat{1.68f};
@@ -45,7 +45,7 @@ TEST(Unit_Bsgo_Serialization_Optional_Uuid, EmptyAndSomeValueAfter)
   EXPECT_EQ(actualFloat, expectedFloat);
 }
 
-TEST(Unit_Bsgo_Serialization_Optional_Uuid, WithValueAndSomeValueAfter)
+TEST(Unit_Bsgalone_Core_Messages_Optional_Uuid, WithValueAndSomeValueAfter)
 {
   const std::optional<Uuid> expectedOpt{};
   const auto expectedSlot{bsgalone::core::Slot::COMPUTER};
@@ -64,7 +64,7 @@ TEST(Unit_Bsgo_Serialization_Optional_Uuid, WithValueAndSomeValueAfter)
   EXPECT_EQ(actualSlot, expectedSlot);
 }
 
-TEST(Unit_Bsgo_Serialization_Optional_Enum, Empty)
+TEST(Unit_Bsgalone_Core_Messages_Optional_Enum, Empty)
 {
   const std::optional<Faction> expected{};
   std::optional<Faction> actual{Faction::COLONIAL};
@@ -72,7 +72,7 @@ TEST(Unit_Bsgo_Serialization_Optional_Enum, Empty)
   EXPECT_EQ(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_Optional_Enum, WithValue)
+TEST(Unit_Bsgalone_Core_Messages_Optional_Enum, WithValue)
 {
   const std::optional<Faction> expected{Faction::CYLON};
   std::optional<Faction> actual{};

@@ -20,7 +20,7 @@ void assertMessagesAreEqual(const TargetMessage &actual, const TargetMessage &ex
 }
 } // namespace
 
-TEST(Unit_Bsgo_Serialization_TargetMessage, OverridesTarget)
+TEST(Unit_Bsgalone_Core_Messages_TargetMessage, OverridesTarget)
 {
   bsgalone::core::Target data{.sourceDbId = Uuid{21},
                               .sourceKind = bsgalone::core::EntityKind::SHIP,
@@ -40,7 +40,7 @@ TEST(Unit_Bsgo_Serialization_TargetMessage, OverridesTarget)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_TargetMessage, RegistersTarget)
+TEST(Unit_Bsgalone_Core_Messages_TargetMessage, RegistersTarget)
 {
   bsgalone::core::Target data{.sourceDbId = Uuid{21},
                               .sourceKind = bsgalone::core::EntityKind::SHIP,
@@ -58,7 +58,7 @@ TEST(Unit_Bsgo_Serialization_TargetMessage, RegistersTarget)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_TargetMessage, ClearsTarget)
+TEST(Unit_Bsgalone_Core_Messages_TargetMessage, ClearsTarget)
 {
   bsgalone::core::Target data{.sourceDbId = Uuid{21},
                               .sourceKind = bsgalone::core::EntityKind::SHIP};
@@ -76,7 +76,7 @@ TEST(Unit_Bsgo_Serialization_TargetMessage, ClearsTarget)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_TargetMessage, OverrideClientId)
+TEST(Unit_Bsgalone_Core_Messages_TargetMessage, OverrideClientId)
 {
   bsgalone::core::Target data{.sourceDbId = Uuid{21},
                               .sourceKind = bsgalone::core::EntityKind::SHIP};
@@ -93,7 +93,7 @@ TEST(Unit_Bsgo_Serialization_TargetMessage, OverrideClientId)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_TargetMessage, ClearsClientId)
+TEST(Unit_Bsgalone_Core_Messages_TargetMessage, ClearsClientId)
 {
   bsgalone::core::Target data{.sourceDbId = Uuid{21},
                               .sourceKind = bsgalone::core::EntityKind::SHIP};
@@ -109,7 +109,7 @@ TEST(Unit_Bsgo_Serialization_TargetMessage, ClearsClientId)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_TargetMessage, OverridesSystemDbId)
+TEST(Unit_Bsgalone_Core_Messages_TargetMessage, OverridesSystemDbId)
 {
   bsgalone::core::Target data{.sourceDbId = Uuid{21},
                               .sourceKind = bsgalone::core::EntityKind::SHIP};
@@ -126,7 +126,7 @@ TEST(Unit_Bsgo_Serialization_TargetMessage, OverridesSystemDbId)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_TargetMessage, Clone)
+TEST(Unit_Bsgalone_Core_Messages_TargetMessage, Clone)
 {
   const bsgalone::core::Target data{.sourceDbId = Uuid{17},
                                     .sourceKind = bsgalone::core::EntityKind::ASTEROID,
@@ -140,7 +140,7 @@ TEST(Unit_Bsgo_Serialization_TargetMessage, Clone)
   assertMessagesAreEqual(cloned->as<TargetMessage>(), expected);
 }
 
-TEST(Unit_Bsgo_Serialization_TargetMessage, CloneWithSystemDbId)
+TEST(Unit_Bsgalone_Core_Messages_TargetMessage, CloneWithSystemDbId)
 {
   const bsgalone::core::Target data{.sourceDbId = Uuid{17},
                                     .sourceKind = bsgalone::core::EntityKind::ASTEROID,

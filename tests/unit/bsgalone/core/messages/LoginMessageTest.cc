@@ -19,7 +19,7 @@ void assertMessagesAreEqual(const LoginMessage &actual, const LoginMessage &expe
 }
 } // namespace
 
-TEST(Unit_Bsgo_Serialization_LoginMessage, ClearsPlayerCredentials)
+TEST(Unit_Bsgalone_Core_Messages_LoginMessage, ClearsPlayerCredentials)
 {
   LoginMessage expected(GameRole::GUNNER);
 
@@ -32,7 +32,7 @@ TEST(Unit_Bsgo_Serialization_LoginMessage, ClearsPlayerCredentials)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_LoginMessage, ClearsPlayerDbId)
+TEST(Unit_Bsgalone_Core_Messages_LoginMessage, ClearsPlayerDbId)
 {
   LoginMessage expected(GameRole::GUNNER);
   expected.setUserName("some-name");
@@ -48,7 +48,7 @@ TEST(Unit_Bsgo_Serialization_LoginMessage, ClearsPlayerDbId)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_LoginMessage, OverridesPlayerDbId)
+TEST(Unit_Bsgalone_Core_Messages_LoginMessage, OverridesPlayerDbId)
 {
   LoginMessage expected(GameRole::PILOT);
   expected.setUserName("some-name");
@@ -64,7 +64,7 @@ TEST(Unit_Bsgo_Serialization_LoginMessage, OverridesPlayerDbId)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_LoginMessage, OverridesSystemDbId)
+TEST(Unit_Bsgalone_Core_Messages_LoginMessage, OverridesSystemDbId)
 {
   LoginMessage expected(GameRole::GUNNER);
   expected.setSystemDbId(Uuid{17});
@@ -77,7 +77,7 @@ TEST(Unit_Bsgo_Serialization_LoginMessage, OverridesSystemDbId)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_LoginMessage, WithClientId)
+TEST(Unit_Bsgalone_Core_Messages_LoginMessage, WithClientId)
 {
   LoginMessage expected(GameRole::PILOT);
   expected.setUserName("some-name");
@@ -93,7 +93,7 @@ TEST(Unit_Bsgo_Serialization_LoginMessage, WithClientId)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_LoginMessage, Clone)
+TEST(Unit_Bsgalone_Core_Messages_LoginMessage, Clone)
 {
   LoginMessage expected(GameRole::GUNNER);
   expected.setUserName("some-name");

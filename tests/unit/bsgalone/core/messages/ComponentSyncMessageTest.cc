@@ -25,7 +25,7 @@ void assertMessagesAreEqual(const ComponentSyncMessage &actual, const ComponentS
 }
 } // namespace
 
-TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, Basic)
+TEST(Unit_Bsgalone_Core_Messages_ComponentSyncMessage, Basic)
 {
   const ComponentSyncMessage expected(Uuid{987654}, bsgalone::core::EntityKind::ASTEROID);
   ComponentSyncMessage actual(Uuid{44}, bsgalone::core::EntityKind::OUTPOST);
@@ -34,7 +34,7 @@ TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, Basic)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, WithClientId)
+TEST(Unit_Bsgalone_Core_Messages_ComponentSyncMessage, WithClientId)
 {
   ComponentSyncMessage expected(Uuid{987654}, bsgalone::core::EntityKind::SHIP);
   expected.setClientId(Uuid{56789});
@@ -43,7 +43,7 @@ TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, WithClientId)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, WithSystem)
+TEST(Unit_Bsgalone_Core_Messages_ComponentSyncMessage, WithSystem)
 {
   ComponentSyncMessage expected(Uuid{987654}, bsgalone::core::EntityKind::SHIP);
   expected.setSystemDbId(Uuid{271});
@@ -63,7 +63,7 @@ TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, WithSystem)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, WithStatus)
+TEST(Unit_Bsgalone_Core_Messages_ComponentSyncMessage, WithStatus)
 {
   ComponentSyncMessage expected(Uuid{987654}, bsgalone::core::EntityKind::SHIP);
   expected.setStatus(Status::APPEARING);
@@ -83,7 +83,7 @@ TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, WithStatus)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, WithPosition)
+TEST(Unit_Bsgalone_Core_Messages_ComponentSyncMessage, WithPosition)
 {
   ComponentSyncMessage expected(Uuid{987654}, bsgalone::core::EntityKind::SHIP);
   expected.setPosition(Eigen::Vector3f(45.0f, 89.43f, -74.19f));
@@ -103,7 +103,7 @@ TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, WithPosition)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, WithSpeed)
+TEST(Unit_Bsgalone_Core_Messages_ComponentSyncMessage, WithSpeed)
 {
   ComponentSyncMessage expected(Uuid{987654}, bsgalone::core::EntityKind::SHIP);
   expected.setSpeed(Eigen::Vector3f(45.0f, 89.43f, -74.19f));
@@ -123,7 +123,7 @@ TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, WithSpeed)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, WithAcceleration)
+TEST(Unit_Bsgalone_Core_Messages_ComponentSyncMessage, WithAcceleration)
 {
   ComponentSyncMessage expected(Uuid{987654}, bsgalone::core::EntityKind::SHIP);
   expected.setAcceleration(Eigen::Vector3f(45.0f, 89.43f, -74.19f));
@@ -143,7 +143,7 @@ TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, WithAcceleration)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, WithHealth)
+TEST(Unit_Bsgalone_Core_Messages_ComponentSyncMessage, WithHealth)
 {
   ComponentSyncMessage expected(Uuid{987654}, bsgalone::core::EntityKind::SHIP);
   expected.setHealth(36.27f);
@@ -163,7 +163,7 @@ TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, WithHealth)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, WithPower)
+TEST(Unit_Bsgalone_Core_Messages_ComponentSyncMessage, WithPower)
 {
   ComponentSyncMessage expected(Uuid{987654}, bsgalone::core::EntityKind::SHIP);
   expected.setPower(36.27f);
@@ -183,7 +183,7 @@ TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, WithPower)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgo_Serialization_ComponentSyncMessage, Clone)
+TEST(Unit_Bsgalone_Core_Messages_ComponentSyncMessage, Clone)
 {
   ComponentSyncMessage expected(Uuid{987654}, bsgalone::core::EntityKind::BULLET);
   expected.setClientId(Uuid{56789});
