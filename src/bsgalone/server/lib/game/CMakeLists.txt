@@ -12,6 +12,7 @@ add_subdirectory (
 	)
 
 target_sources (game_server_lib PRIVATE
+	${CMAKE_CURRENT_SOURCE_DIR}/MessageExchanger.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SystemProcessor.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SystemProcessorUtils.cc
 	)
