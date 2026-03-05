@@ -378,7 +378,7 @@ The second problem that arised was that once we were able to communicate with TC
 
 Once all of the above is done, we can successfully run the provided scripts to create a user (see [create_user.sh](database/create_user.sh)) first and then use this user to create the database with [create_database.sh](database/create_database.sh).
 
-Both scripts expect a path to be given as argument: this should be the path to the folder containing the migrations and scripts. In this repository it is in [database/bsgo](database/bsgo).
+Both scripts expect a path to be given as argument: this should be the path to the folder containing the migrations and scripts. In this repository it is in [database/bsgalone](database/bsgalone).
 
 Additionally, creating the users for the database follows a similar procedure are described in the [galactic-sovereign](https://github.com/Knoblauchpilze/galactic-sovereign?tab=readme-ov-file#creating-the-database) project.
 
@@ -389,8 +389,8 @@ cd database
 export ADMIN_PASSWORD=admin_password
 export MANAGER_PASSWORD=manager_password
 export USER_PASSWORD=user_password
-./create_user.sh bsgo
-./create_database.sh bsgo
+./create_user.sh bsgalone
+./create_database.sh bsgalone
 ```
 
 There's also a convenience script provided in [scripts/setup_database.sh](scripts/setup_database.sh) which will run all the commands for you. Just run:
@@ -507,7 +507,7 @@ We divided the [source](src) folder into several directories to make it easy to 
 
 When adding new features it is important to think about whether they would benefit only to the client or to the server or both. This most of the times provides a strong hint as to where they should live.
 
-It can also be that later on we realize that the `bsgo` library is too big, or that some separate features (for example Data Transfer Objects) can be shared: this could be achieved by adding more top level folders in the [src](src) directory.
+It can also be that later on we realize that the `bsgalone` library is too big, or that some separate features (for example Data Transfer Objects) can be shared: this could be achieved by adding more top level folders in the [src](src) directory.
 
 ### core
 
@@ -1010,7 +1010,7 @@ The meat of the messaging process is the [IMessage](src/bsgalone/core/messages/I
 
 You can find other examples of messages in the same [source folder](src/bsgalone/core/messages).
 
-An important part of our approach is to provide de/serialization methods for the messages: this allows to easily send them through the network to the server and receive the response back. We added some [unit tests](tests/unit/bsgo/messages) for this behavior to make sure it does not break.
+An important part of our approach is to provide de/serialization methods for the messages: this allows to easily send them through the network to the server and receive the response back. We added some [unit tests](tests/unit/bsgalone/core/messages) for this behavior to make sure it does not break.
 
 ## Database interaction
 

@@ -9,7 +9,7 @@ on:
       - "database/**"
 
 jobs:
-  validate-bsgo-db:
+  validate-bsgalone-db:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -43,7 +43,7 @@ jobs:
             -v manager_password=$MANAGER_PASSWORD \
             -v user_password=$USER_PASSWORD \
             postgresql://postgres@localhost \
-            -f bsgo/db_user_create.sql
+            -f bsgalone/db_user_create.sql
         env:
           PGPASSWORD: postgres
           ADMIN_PASSWORD: admin_password
@@ -51,16 +51,16 @@ jobs:
           USER_PASSWORD: user_password
       - name: Create database
         run: |
-          psql postgresql://postgres@localhost -f bsgo/db_create.sql
+          psql postgresql://postgres@localhost -f bsgalone/db_create.sql
         env:
           PGPASSWORD: postgres
       - name: Migrate schema up
         run: |
-          migrate -path bsgo/migrations -database postgresql://bsgalone_admin@localhost/db_bsgalone?sslmode=disable up
+          migrate -path bsgalone/migrations -database postgresql://bsgalone_admin@localhost/db_bsgalone?sslmode=disable up
         env:
           PGPASSWORD: admin_password
       - name: Migrate schema down
         run: |
-          migrate -path bsgo/migrations -database postgresql://bsgalone_admin@localhost/db_bsgalone?sslmode=disable down -all
+          migrate -path bsgalone/migrations -database postgresql://bsgalone_admin@localhost/db_bsgalone?sslmode=disable down -all
         env:
           PGPASSWORD: admin_password

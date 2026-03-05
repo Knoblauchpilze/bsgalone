@@ -133,7 +133,7 @@ jobs:
           go-version: "1.24.0"
       - name: Install migrate tool
         run: go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
-      - name: Setup bsgo database
+      - name: Setup bsgalone database
         # https://stackoverflow.com/questions/68362490/github-actions-to-connect-postgres-service-with-custom-container-image
         # https://github.com/orgs/community/discussions/25693
         run: |
@@ -142,10 +142,10 @@ jobs:
             -v admin_password=$ADMIN_PASSWORD \
             -v manager_password=$MANAGER_PASSWORD \
             -v user_password=$USER_PASSWORD \
-            -f bsgo/db_user_create.sql
+            -f bsgalone/db_user_create.sql
           psql \
             postgresql://postgres@postgres \
-            -f bsgo/db_create.sql
+            -f bsgalone/db_create.sql
         working-directory: ./database
         env:
           PGPASSWORD: postgres
@@ -155,7 +155,7 @@ jobs:
       - name: Migrate schema up
         run: |
           migrate \
-            -path bsgo/migrations \
+            -path bsgalone/migrations \
             -database postgresql://bsgalone_admin@postgres/db_bsgalone?sslmode=disable \
             up
         working-directory: ./database

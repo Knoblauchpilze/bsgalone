@@ -3,18 +3,18 @@
 echo "Setting up BSGO database..."
 echo "You may need to enter multiple times the postgres password"
 
-# export ADMIN_PASSWORD="admin_password"
-# export MANAGER_PASSWORD="manager_password"
-# export USER_PASSWORD="user_password"
+export ADMIN_PASSWORD="admin_password"
+export MANAGER_PASSWORD="manager_password"
+export USER_PASSWORD="user_password"
 
-# echo "Creating users..."
-# /bin/bash database/create_user.sh database/bsgo
+echo "Creating users..."
+/bin/bash database/create_user.sh database/bsgalone
 
-# echo "Creating database..."
-# /bin/bash database/create_database.sh database/bsgo
+echo "Creating database..."
+/bin/bash database/create_database.sh database/bsgalone
 
 echo "Seeding values..."
-export DB_PATH="database/bsgo"
+export DB_PATH="database/bsgalone"
 make -f database/Makefile migrate
 
 echo "All done!"
