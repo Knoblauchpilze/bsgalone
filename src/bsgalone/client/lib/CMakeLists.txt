@@ -4,7 +4,23 @@ add_library (game_client_lib SHARED "")
 set (CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/consumers
+	)
+
+add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/enums
+	)
+
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/game
+	)
+
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/inputs
+	)
+
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/network
 	)
 
 add_subdirectory (
@@ -13,6 +29,10 @@ add_subdirectory (
 
 add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/ui
+	)
+
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/views
 	)
 
 target_sources (game_client_lib PRIVATE
@@ -25,6 +45,8 @@ target_link_libraries (game_client_lib
 	net_lib
 	pge_lib
 	ui_lib
+	bsgo_lib
+	game_core_lib
 	)
 
 target_include_directories (game_client_lib PUBLIC
