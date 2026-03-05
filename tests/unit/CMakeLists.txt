@@ -46,7 +46,6 @@ target_link_libraries (unitTests
 	GTest::gmock
 	bsgalone-interface-test-library
 	core_lib
-	bsgo_lib
 	pge_lib
 	time_lib
 	game_core_lib

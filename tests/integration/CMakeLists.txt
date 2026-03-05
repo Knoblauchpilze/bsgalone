@@ -33,7 +33,6 @@ target_link_libraries (integrationTests
 	GTest::gtest
 	bsgalone-interface-test-library
 	core_lib
-	bsgo_lib
 	net_lib
 	bsgalone_client_lib
 	bsgalone_server_lib

@@ -4,6 +4,6 @@ target_include_directories (game_core_lib PUBLIC
 	)
 
 target_sources (game_core_lib PRIVATE
-	${CMAKE_CURRENT_SOURCE_DIR}/AsyncMessageQueue.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/SynchronizedMessageQueue.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/SystemUtils.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/TargetUtils.cc
 	)
