@@ -29,7 +29,7 @@ TEST_P(ConversionTest, ConvertsCorrectly)
 }
 
 INSTANTIATE_TEST_SUITE_P(
-  Unit_Client_Ui_TimeStepUtils,
+  Unit_Bsgalone_Client_Ui_Common_TimeStepUtils,
   ConversionTest,
   Values(TestCaseConversion{.id      = 0,
                             .elapsed = chrono::TickDuration::fromInt(1),

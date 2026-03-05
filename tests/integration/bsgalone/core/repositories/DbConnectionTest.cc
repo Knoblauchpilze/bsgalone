@@ -4,7 +4,7 @@
 
 namespace bsgo {
 
-TEST(Integration_Bsgo_DbConnection, ConnectDisconnect)
+TEST(Integration_Bsgalone_Core_Repositories_DbConnection, ConnectDisconnect)
 {
   DbConnection conn;
   conn.connect();

@@ -10,10 +10,6 @@ add_subdirectory (
 	)
 
 add_subdirectory (
-	${CMAKE_CURRENT_SOURCE_DIR}/client
-	)
-
-add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/helpers
 	)
 
@@ -49,5 +45,6 @@ target_link_libraries (unitTests
 	pge_lib
 	time_lib
 	game_core_lib
+	bsgalone_client_lib
 	bsgalone_server_lib
 	)

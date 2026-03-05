@@ -4,7 +4,7 @@
 
 namespace bsgo {
 
-TEST(Unit_Bsgo_GameRole, Str)
+TEST(Unit_Bsgalone_Core_Enums_GameRole, Str)
 {
   auto actual = str(GameRole::PILOT);
   EXPECT_EQ("pilot", actual);
@@ -13,7 +13,7 @@ TEST(Unit_Bsgo_GameRole, Str)
   EXPECT_EQ("gunner", actual);
 }
 
-TEST(Unit_Bsgo_GameRole, ToDbGameRole)
+TEST(Unit_Bsgalone_Core_Enums_GameRole, ToDbGameRole)
 {
   auto actual = toDbGameRole(GameRole::PILOT);
   EXPECT_EQ("pilot", actual);
@@ -22,7 +22,7 @@ TEST(Unit_Bsgo_GameRole, ToDbGameRole)
   EXPECT_EQ("gunner", actual);
 }
 
-TEST(Unit_Bsgo_GameRole, FromDbGameRole)
+TEST(Unit_Bsgalone_Core_Enums_GameRole, FromDbGameRole)
 {
   auto actual = fromDbGameRole("pilot");
   EXPECT_EQ(GameRole::PILOT, actual);
@@ -31,7 +31,7 @@ TEST(Unit_Bsgo_GameRole, FromDbGameRole)
   EXPECT_EQ(GameRole::GUNNER, actual);
 }
 
-TEST(Unit_Bsgo_GameRole, FromDbGameRole_FailsWhenValueIsNotRecognized)
+TEST(Unit_Bsgalone_Core_Enums_GameRole, FromDbGameRole_FailsWhenValueIsNotRecognized)
 {
   EXPECT_THROW([] { fromDbGameRole("not-a-role"); }(), std::invalid_argument);
 }
