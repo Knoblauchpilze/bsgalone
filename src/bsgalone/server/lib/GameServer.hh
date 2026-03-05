@@ -10,6 +10,8 @@
 #include <mutex>
 
 namespace bsgalone::server {
+
+// TODO: This is currently unused but is meant to replace the Server class.
 class GameServer : public core::CoreObject
 {
   public:
