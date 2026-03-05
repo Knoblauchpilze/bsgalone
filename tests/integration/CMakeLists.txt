@@ -30,7 +30,7 @@ target_link_libraries (integrationTests
 	bsgalone-interface-test-library
 	core_lib
 	net_lib
-	game_core_lib
+	bsgalone_core_lib
 	bsgalone_client_lib
 	bsgalone_server_lib
 	)

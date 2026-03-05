@@ -46,7 +46,7 @@ target_link_libraries (bsgalone_client_lib
 	net_lib
 	pge_lib
 	ui_lib
-	game_core_lib
+	bsgalone_core_lib
 	)
 
 target_include_directories (bsgalone_client_lib PUBLIC
