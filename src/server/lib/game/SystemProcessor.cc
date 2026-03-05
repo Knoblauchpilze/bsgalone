@@ -1,8 +1,19 @@
 
 #include "SystemProcessor.hh"
 #include "DataSource.hh"
-#include "MessageConsumerSetup.hh"
+#include "DockMessageConsumer.hh"
+#include "EntityAddedMessageConsumer.hh"
+#include "EntityDeletedMessageConsumer.hh"
+#include "EquipMessageConsumer.hh"
+#include "JumpCancelledMessageConsumer.hh"
+#include "JumpRequestedMessageConsumer.hh"
+#include "LoadingMessagesConsumer.hh"
+#include "PurchaseMessageConsumer.hh"
+#include "ShipSelectedMessageConsumer.hh"
+#include "SlotMessageConsumer.hh"
+#include "TargetPickedMessageConsumer.hh"
 #include "TimeUtils.hh"
+#include "VelocityMessageConsumer.hh"
 
 namespace bsgo {
 
@@ -41,7 +52,7 @@ void SystemProcessor::connectToQueues(bsgalone::core::IMessageQueue *const inter
   dataSource.initialize(*m_coordinator, m_entityMapper);
 
   m_services = createServices(repositories, m_coordinator, m_entityMapper);
-  createMessageConsumers(m_inputMessagesQueue.get(), outputMessageQueue, m_services);
+  createMessageConsumers(outputMessageQueue);
 }
 
 void SystemProcessor::start()
@@ -108,6 +119,52 @@ void SystemProcessor::asyncSystemProcessing()
   }
 
   debug("Stopped processing for system");
+}
+
+void SystemProcessor::createMessageConsumers(bsgalone::core::IMessageQueue *const outputMessagesQueue)
+{
+  m_inputMessagesQueue->addListener(
+    std::make_unique<ShipSelectedMessageConsumer>(m_services,
+                                                  m_inputMessagesQueue.get(),
+                                                  outputMessagesQueue));
+
+  m_inputMessagesQueue->addListener(
+    std::make_unique<PurchaseMessageConsumer>(m_services,
+                                              m_inputMessagesQueue.get(),
+                                              outputMessagesQueue));
+
+  m_inputMessagesQueue->addListener(
+    std::make_unique<EquipMessageConsumer>(m_services,
+                                           m_inputMessagesQueue.get(),
+                                           outputMessagesQueue));
+
+  m_inputMessagesQueue->addListener(std::make_unique<DockMessageConsumer>(m_services,
+                                                                          m_inputMessagesQueue.get(),
+                                                                          outputMessagesQueue));
+
+  m_inputMessagesQueue->addListener(
+    std::make_unique<SlotMessageConsumer>(m_services, outputMessagesQueue));
+
+  m_inputMessagesQueue->addListener(
+    std::make_unique<VelocityMessageConsumer>(m_services, outputMessagesQueue));
+
+  m_inputMessagesQueue->addListener(
+    std::make_unique<TargetPickedMessageConsumer>(m_services, outputMessagesQueue));
+
+  m_inputMessagesQueue->addListener(
+    std::make_unique<JumpCancelledMessageConsumer>(m_services, outputMessagesQueue));
+
+  m_inputMessagesQueue->addListener(
+    std::make_unique<JumpRequestedMessageConsumer>(m_services, outputMessagesQueue));
+
+  m_inputMessagesQueue->addListener(
+    std::make_unique<EntityDeletedMessageConsumer>(m_services, outputMessagesQueue));
+
+  m_inputMessagesQueue->addListener(
+    std::make_unique<EntityAddedMessageConsumer>(m_services, outputMessagesQueue));
+
+  m_inputMessagesQueue->addListener(
+    std::make_unique<LoadingMessagesConsumer>(m_services, outputMessagesQueue));
 }
 
 } // namespace bsgo

@@ -45,6 +45,7 @@ class SystemProcessor : public core::CoreObject
 
   void initialize(const Uuid systemDbId);
   void asyncSystemProcessing();
+  void createMessageConsumers(bsgalone::core::IMessageQueue *const outputMessagesQueue);
 };
 
 using SystemProcessorShPtr = std::shared_ptr<SystemProcessor>;
