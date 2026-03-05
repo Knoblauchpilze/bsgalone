@@ -36,6 +36,7 @@ add_subdirectory (
 	)
 
 target_sources (game_client_lib PRIVATE
+	${CMAKE_CURRENT_SOURCE_DIR}/App.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/GameApp.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/GameClient.cc
 	)
