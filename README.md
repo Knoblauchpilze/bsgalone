@@ -515,9 +515,19 @@ The [core](src/core) folder contains some utilities that are used throughout the
 
 Based on future developments we might decide to externalzie this or to use a submodule instead.
 
-### bsgo
+### bsgalone
 
-The [bsgo](src/bsgo) folder contains the core game library defining the Entity Component System and the interaction with the database. This is used both in the server and the client application.
+### core
+
+The [core](src/bsgalone/core) folder contains the core game library defining the Entity Component System and the interaction with the database. This is used both in the server and the client application.
+
+#### server
+
+The [server](src/bsgalone/server) folder defines all the server specific code. It defines all the structures needed to accept client connections and handle the persistent simulation of the game loop.
+
+#### client
+
+The [client](src/bsgalone/client) folder regroups all the code that is used exclusively by the client. It links against the core library and enriches it to present a compelling application to the player. It also serves the purpose of connecting to the server and updating the local data with what the server transmits.
 
 ### net
 
@@ -532,14 +542,6 @@ For an implementation overview of the network library please refer to the dedica
 The [pge](src/pge) folder contains the code to interact with the `PixelGameEngine`. It is used in the client to handle the rendering of the graphic interface.
 
 By having it in a dedicated folder, we are able to minimize the surface we would have to replace if we want to use a different engine. This also allows to easily update it without having to change too much code: the rest of the modules (mainly the client) do not know that the underlying drawing routines are using the `PixelGameEngine`.
-
-### server
-
-The [server](src/bsgalone/server) folder defines all the server specific code. It defines all the structures needed to accept client connections and handle the persistent simulation of the game loop.
-
-### client
-
-The [client](src/bsgalone/client) folder regroups all the code that is used exclusively by the client. It links against the core library and enriches it to present a compelling application to the player. It also serves the purpose of connecting to the server and updating the local data with what the server transmits.
 
 ## Communication between client/server
 
@@ -559,7 +561,7 @@ Below are presented a few base types for the communication.
 
 #### NetworkMessage
 
-A [NetworkMessage](src/bsgo/messages/NetworkMessage.hh) is a message associated to a client. A client is a unique identifier assigned by the server to a client application. This helps determining who sent a message and sending the response back to the right clients.
+A [NetworkMessage](src/bsgalone/core/messages/NetworkMessage.hh) is a message associated to a client. A client is a unique identifier assigned by the server to a client application. This helps determining who sent a message and sending the response back to the right clients.
 
 These messages are typically sent by the client applications as they know which client identifier they received from the server. The server is usually either propagating the input client id or erasing it in case the response to a message might be interesting for more than one client.
 
@@ -567,11 +569,11 @@ These messages are typically sent by the client applications as they know which 
 
 When the server is started, it will start listening to incoming connections. When one is received, the first thing that the server does is to assign it a client identifier (this is done by the `net` subdomain) to be able to publish events for this client. This identifier is **not sent to the client**: this is because the client does not need to know it as any communication will happen through the connection which the server can associate to the identifier it holds.
 
-To start the game the client application will present the user with a login/sign up screen: in both cases the idea is to make the client select a username and password and try to log into the game. This will result in a message sent from the client to the server (either [LoginMessage](src/bsgo/messages/LoginMessage.hh) or [SignupMessage](src/bsgo/messages/SignupMessage.hh)) and which can be validated by the server.
+To start the game the client application will present the user with a login/sign up screen: in both cases the idea is to make the client select a username and password and try to log into the game. This will result in a message sent from the client to the server (either [LoginMessage](src/bsgalone/core/messages/LoginMessage.hh) or [SignupMessage](src/bsgalone/core/messages/SignupMessage.hh)) and which can be validated by the server.
 
 On top of the validation the server will also associate the connection (and the client id) with the player id and its current system. This will help determine when a message produced by the server should be transmitted to this client. For example if an entity dies in a system (be it a player or an AI), it is needed to transmit this information to all clients currently playing in this system. To achieve this, the server has to loop through all the active connections and pick the ones that are associated with a player in the relevant system.
 
-A mechanism is provided for a player to log out: in this case, a [LogoutMessage](src/bsgo/messages/LogoutMessage.hh) is sent which will indicate to the server that the corresponding client's connection is no longer associated with the player's id and system: this will help making sure that updates for the system are not sent to this connection anymore.
+A mechanism is provided for a player to log out: in this case, a [LogoutMessage](src/bsgalone/core/messages/LogoutMessage.hh) is sent which will indicate to the server that the corresponding client's connection is no longer associated with the player's id and system: this will help making sure that updates for the system are not sent to this connection anymore.
 
 In case the connection is lost without graceful termination, the server automatically detects it and simulate a logout process by sending a `LogoutMessage` before terminating the connection. This allows to make sure that the player's ship is still sent back to the outpost and that other clients are made aware of the disconnection.
 
@@ -599,10 +601,10 @@ In order to achieve this, the [SystemProcessor](src/bsgalone/server/lib/game/Sys
 
 This class contains:
 
-- a [Coordinator](src/bsgo/Coordinator.hh) responsible to list all the entities for this system
+- a [Coordinator](src/bsgalone/core/Coordinator.hh) responsible to list all the entities for this system
 - some [services](src/bsgalone/server/lib/game/services/Services.hh) responsible to process the messages generated by the clients and the internal ECS in this system
 - some [processes](src/bsgalone/server/lib/game/processes/Processes.hh) responsible to update some aspects of the game outside of the ECS (e.g. spawning entities, etc.)
-- an [EntityMapper](src/bsgo/data/DatabaseEntityMapper.hh) responsible to keep track of a mapping between the database and the entities
+- an [EntityMapper](src/bsgalone/core/data/DatabaseEntityMapper.hh) responsible to keep track of a mapping between the database and the entities
 
 This processor runs asynchronously in its own thread and handles the simulation in the following steps:
 
@@ -620,11 +622,11 @@ Messages are usually meant to be processed by some objects responsible to valida
 
 Each consumer registers itself to a message queue and indicates its interest in receiving a specific type of messages (or several). When one is received, it can be processed and the necessary verifications can be performed before processing it.
 
-In the case of a [DockMessage](src/bsgo/messages/DockMessage.hh) for example a check is performed to verify that the ship concerned by the message is not already docked and that it is close enough to the outpost and that it does not try to dock to an outpost in a different system etc.
+In the case of a [DockMessage](src/bsgalone/core/messages/DockMessage.hh) for example a check is performed to verify that the ship concerned by the message is not already docked and that it is close enough to the outpost and that it does not try to dock to an outpost in a different system etc.
 
 The consumers are usually using a dedicated service to process a message after doing some simple verification related to the messaging framework (for example that all fields are correctly populated). The services are where the business logic lives.
 
-To come back to the dock example, the [DockMessageConsumer](src/bsgalone/server/lib/consumers/system/DockMessageConsumer.hh) relies on the [ShipService](src/bsgo/services/ShipService.hh) to perform the docking.
+To come back to the dock example, the [DockMessageConsumer](src/bsgalone/server/lib/consumers/system/DockMessageConsumer.hh) relies on the [ShipService](src/bsgalone/core/services/ShipService.hh) to perform the docking.
 
 This approach is quite flexible as it allows to easily keep messages which would fail to be processed for later analysis and make it easy to separate messages and make them processed by the most relevant consumers.
 
@@ -668,21 +670,21 @@ In comparison with the `agents` project we decide to follow the paradigm a bit b
 
 ### Entity
 
-The [Entity](src/bsgo/entities/Entity.hh) is the base class and is basically just an identifier with a list of components. We added some convenience methods to assess the existence of some component and access them in a secure way.
+The [Entity](src/bsgalone/core/entities/Entity.hh) is the base class and is basically just an identifier with a list of components. We added some convenience methods to assess the existence of some component and access them in a secure way.
 
 ### Component
 
-A [Component](src/bsgo/components/IComponent.hh) is the base class for all components. It just defines one basic method to update the component with some elapsed time. This might or might not be useful to the inheriting components but allows to have some quantity varying over time.
+A [Component](src/bsgalone/core/components/IComponent.hh) is the base class for all components. It just defines one basic method to update the component with some elapsed time. This might or might not be useful to the inheriting components but allows to have some quantity varying over time.
 
 The goal of the implementation is to keep away the processing from the components in favour of putting it in the systems.
 
 ### System
 
-A [System](src/bsgo/systems/ISystem.hh) is iterating over the entities and only processing the ones that are interesting. Our implementation defines an `AbstractSystem` which aims at iterating over the entities.
+A [System](src/bsgalone/core/systems/ISystem.hh) is iterating over the entities and only processing the ones that are interesting. Our implementation defines an `AbstractSystem` which aims at iterating over the entities.
 
 The constructor expects the inheriting classes to pass a callback which will be used to filter the entities and keep only the ones that are interesting for the system. This typically involves checking if an entity has some components which are handled by the system.
 
-Typically if an entity defines a [HealthComponent](src/bsgo/components/HealthComponent.hh) we expect it to be processed by the [HealthSystem](src/bsgo/systems/HealthSystem.hh).
+Typically if an entity defines a [HealthComponent](src/bsgalone/core/components/HealthComponent.hh) we expect it to be processed by the [HealthSystem](src/bsgalone/core/systems/HealthSystem.hh).
 
 ### Process
 
@@ -696,7 +698,7 @@ It is also a server only logic because this mostly correspond to game processes 
 
 ### Coordination
 
-In order to keep together all properties of the ECS, we created (as advised in the initial link we got inspired from) a [Coordinator](src/bsgo/controller/Coordinator.hh) class which is responsible to keep all the entities and their components along with systems.
+In order to keep together all properties of the ECS, we created (as advised in the initial link we got inspired from) a [Coordinator](src/bsgalone/core/controller/Coordinator.hh) class which is responsible to keep all the entities and their components along with systems.
 
 This class has a convenient `update` method which can be called to process all the systems in a consistent order and make the simulation advance one 'step' ahead in time.
 
@@ -710,7 +712,7 @@ In its simplest form, an ECS is initialized when creating it and then updated re
 
 However, when the user is playing, there are some interactions which will influence how the entities evolve: for example if the user tries to move its ship, or attacks another one, we need to make some modifications to some components of some entities.
 
-Similarly, there are cases where the ECS, through its processing, will change the state of one of the component. For example when the countdown to jump to another reaches 0, the [StatusComponent](src/bsgo/components/StatusComponent.hh) will need to notify the outside worl that there's some action required to move the entity it belongs to to another system.
+Similarly, there are cases where the ECS, through its processing, will change the state of one of the component. For example when the countdown to jump to another reaches 0, the [StatusComponent](src/bsgalone/core/components/StatusComponent.hh) will need to notify the outside worl that there's some action required to move the entity it belongs to to another system.
 
 ### Research
 
@@ -734,7 +736,7 @@ In the end we dediced to go with a mixture of both suggestions: we have a `Netwo
 
 The processing to bring information into the ECS is similar whether we're in the client or server application: the idea is that some external process needs to update the components of an entity.
 
-This is done by using the [IService](src/bsgo/services/IService.hh) mechanism: we consider this layer as the business logic of our project and its goal is to get the entity from the `Coordinator` and then update manually its component to their desired value.
+This is done by using the [IService](src/bsgalone/core/services/IService.hh) mechanism: we consider this layer as the business logic of our project and its goal is to get the entity from the `Coordinator` and then update manually its component to their desired value.
 
 A limitation of this is that as we don't have concurrency protection mechanism the processing has to be synchronous with the processing of entities: this is ensured by the `SystemProcessor` which processes first the messages (which in turn calls the consumers and then the services) and after this the `Coordinator::update` method.
 
@@ -758,7 +760,7 @@ One general principle is that as the client applications are running essentially
 
 Going a step further, we even have systems that are not present on the client applications such as the health system of the removal system: this is because such processes need to be validated by the server before any action is taken on the client's side.
 
-In order to solve this problem we created a [NetworkComponent](src/bsgo/components/NetworkComponent.hh): it defines a list of properties that need to be 'synced' and acts in the following way (with its companion [NetworkSystem](src/bsgo/systems/NetworkSystem.hh)):
+In order to solve this problem we created a [NetworkComponent](src/bsgalone/core/components/NetworkComponent.hh): it defines a list of properties that need to be 'synced' and acts in the following way (with its companion [NetworkSystem](src/bsgalone/core/systems/NetworkSystem.hh)):
 
 - each component defines an update interval
 - the network system detects when a component has not been synced since long enough
@@ -799,7 +801,7 @@ As described in the [communication protocol](#communication-protocol), the clien
 
 When the client has successfully logged in to the server, the user will click on items in the UI and generally performed actions that should have an impact on the simulation.
 
-In order to send these commands to the server, we use the concept of a [IView](src/bsgo/views/IView.hh): a view is the equivalent of the business layer (so a [IService](src/bsgo/services/IService.hh)) but for the client: the idea is that each button of the UI (for example the dock button, or the button to purchase or equip an item) is binded to a method of a view. The view is then responsible to know which action should be triggered to accomplish this action.
+In order to send these commands to the server, we use the concept of a [IView](src/bsgalone/core/views/IView.hh): a view is the equivalent of the business layer (so a [IService](src/bsgalone/core/services/IService.hh)) but for the client: the idea is that each button of the UI (for example the dock button, or the button to purchase or equip an item) is binded to a method of a view. The view is then responsible to know which action should be triggered to accomplish this action.
 
 Accomplishing an action usually means sending a message to the server. The message is sent once again through a message queue: the [GameNetworkClient](src/bsgalone/client/lib/network/GameNetworkClient.hh). This client is used for:
 
@@ -821,9 +823,9 @@ A special consumer is the [GameMessageModule](src/bsgalone/client/lib/game/GameM
 
 ## Adapting the ECS
 
-While the ECS in the server is responsible for the whole simulation, there are some aspects that the client does not need to simulate. To this end, the [Coordinator](src/bsgo/controller/Coordinator.hh) class (which is also used in the server) defines a way to deactivate some systems.
+While the ECS in the server is responsible for the whole simulation, there are some aspects that the client does not need to simulate. To this end, the [Coordinator](src/bsgalone/core/controller/Coordinator.hh) class (which is also used in the server) defines a way to deactivate some systems.
 
-The client uses this in order to not instantiate systems dealing with events that need to be confirmed by the server. This includes for example the removal system: we don't want to remove an entity from the client's simulation unless the server says to do so: in this case the [RemovalSystem](src/bsgo/systems/RemovalSystem.hh) is deactivated in all client's applications.
+The client uses this in order to not instantiate systems dealing with events that need to be confirmed by the server. This includes for example the removal system: we don't want to remove an entity from the client's simulation unless the server says to do so: in this case the [RemovalSystem](src/bsgalone/core/systems/RemovalSystem.hh) is deactivated in all client's applications.
 
 # Implementation details
 
@@ -911,7 +913,7 @@ After pondering a bit, we decided to go for behavior tree. The state machine see
 
 The idea behind the behavior tree is to have a list of nodes arranged in a graph. They are executed at each step which allows to easily react to new situations. Contraty to state machines, we don't have to think about switching from any state to any other state: at each frame we just start from the root again and see which state we end up with when the execution of the tree is finished.
 
-Each node has an execution [state](src/bsgo/systems/NodeState.hh) which can be for example `RUNNING`, `FAILED` or `FINISHED`. While a node is `RUNNING` the scheduler will try to execute it. If it reaches one of the terminal state (`FAILED` or `FINISHED`) then the scheduler will continue the execution with the next node in the graph. This can either mean returning to the parent node (in case of a failure) or to the next in chain (for a finished node).
+Each node has an execution [state](src/bsgalone/core/systems/NodeState.hh) which can be for example `RUNNING`, `FAILED` or `FINISHED`. While a node is `RUNNING` the scheduler will try to execute it. If it reaches one of the terminal state (`FAILED` or `FINISHED`) then the scheduler will continue the execution with the next node in the graph. This can either mean returning to the parent node (in case of a failure) or to the next in chain (for a finished node).
 
 The following image shows an example of how the very simplistic AI works at the moment:
 
@@ -994,9 +996,9 @@ In order to achieve this, we chose to use a messaging system. This allows commun
 
 The [IMessageQueue](src/bsgalone/core/queues/IMessageQueue.hh) allows to keep track of all the messages needing to be processed. These messages can be registred through the interface method `pushMessage`.
 
-We have several implementations for this interface: the most basic one is a [SynchronousMessageQueue](src/bsgo/queues/SynchronizedMessageQueue.hh) which guarantees that there's no collision between enqueuing messages and processing them, but we also have specialization for the client and the server.
+We have several implementations for this interface: the most basic one is a [SynchronousMessageQueue](src/bsgalone/core/queues/SynchronizedMessageQueue.hh) which guarantees that there's no collision between enqueuing messages and processing them, but we also have specialization for the client and the server.
 
-A building block is the [AsyncMessageQueue](src/bsgo/queues/AsyncMessageQueue.hh) which processes messages in a dedicated thread. Another important is the [InputNetworkAdapter](src/bsgalone/core/network/InputNetworkAdapter.hh) which allows to convert events produced by the network subdomain into game messages that can be processed by consumers.
+A building block is the [AsyncMessageQueue](src/bsgalone/core/queues/AsyncMessageQueue.hh) which processes messages in a dedicated thread. Another important is the [InputNetworkAdapter](src/bsgalone/core/network/InputNetworkAdapter.hh) which allows to convert events produced by the network subdomain into game messages that can be processed by consumers.
 
 ### Listeners
 
@@ -1004,9 +1006,9 @@ The [IMessageListener](src/bsgalone/core/queues/IMessageListener.hh) allows anyo
 
 ### Messages
 
-The meat of the messaging process is the [IMessage](src/bsgo/messages/IMessage.hh) class. This interface defines a type of message and we can add more type as we see fit. Most of the time a message corresponds to a flow in the game, such as jumping or scanning a resource.
+The meat of the messaging process is the [IMessage](src/bsgalone/core/messages/IMessage.hh) class. This interface defines a type of message and we can add more type as we see fit. Most of the time a message corresponds to a flow in the game, such as jumping or scanning a resource.
 
-You can find other examples of messages in the same [source folder](src/bsgo/messages).
+You can find other examples of messages in the same [source folder](src/bsgalone/core/messages).
 
 An important part of our approach is to provide de/serialization methods for the messages: this allows to easily send them through the network to the server and receive the response back. We added some [unit tests](tests/unit/bsgo/messages) for this behavior to make sure it does not break.
 
@@ -1030,7 +1032,7 @@ In this context, we implemented a business logic layer which aims at separating 
 
 This is probably why it's not popular to put all of this logic in a stored procedure: it is quite complex and can get messy really fast when writing it in the language of the procedure. It is also not easy to debug or validate parameters within the procedures. On the other hand we can very easily do this if we keep a business logic layer in the application.
 
-We chose to use a concept of services, all inheriting from a base [IService](src/bsgo/services/IService.hh) class: there's a service for each kind of action (for example signing up, purchasing an item, etc.). Each of them define the conditions to meet for an action to be allowed, and the logic to actually perform the action.
+We chose to use a concept of services, all inheriting from a base [IService](src/bsgalone/core/services/IService.hh) class: there's a service for each kind of action (for example signing up, purchasing an item, etc.). Each of them define the conditions to meet for an action to be allowed, and the logic to actually perform the action.
 
 These services live in the server as they should not be tempered with: this is what guarantees the integrity of the actions in the game.
 
@@ -1060,7 +1062,7 @@ update ship_system set docked=true where ship in ('1', '5', '4');
 
 The [nlohmann json](https://github.com/nlohmann/json) is a quite famous library to handle json for C++. This might come in handy in the future if we need to introduce json in the project.
 
-In Java there's a quite extensive framework to perform [ORM](https://en.wikipedia.org/wiki/Object%E2%80%93relational_mapping): [Hibernate](https://hibernate.org/). This allows to manipulate objects (entities) in an idiomatic way and have built-in persistence to a data source (for example a database). A similar library for C++ would be [TinyORM](https://github.com/silverqx/TinyORM). Alternatively [ODB](https://www.codesynthesis.com/products/odb/) could also be a good choice. For now we didn't need spend some effort to include such a project (also considering that it seems to have a more limited feature set than what is available in Hibernate for example) and preferred to write our own queries in the [repositories](src/bsgo/repositories) folder.
+In Java there's a quite extensive framework to perform [ORM](https://en.wikipedia.org/wiki/Object%E2%80%93relational_mapping): [Hibernate](https://hibernate.org/). This allows to manipulate objects (entities) in an idiomatic way and have built-in persistence to a data source (for example a database). A similar library for C++ would be [TinyORM](https://github.com/silverqx/TinyORM). Alternatively [ODB](https://www.codesynthesis.com/products/odb/) could also be a good choice. For now we didn't need spend some effort to include such a project (also considering that it seems to have a more limited feature set than what is available in Hibernate for example) and preferred to write our own queries in the [repositories](src/bsgalone/core/repositories) folder.
 
 ## Links
 

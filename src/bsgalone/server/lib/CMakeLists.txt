@@ -39,5 +39,5 @@ target_sources (bsgalone_server_lib PRIVATE
 target_link_libraries (bsgalone_server_lib
 	core_lib
 	net_lib
-	bsgo_lib
+	game_core_lib
 	)
