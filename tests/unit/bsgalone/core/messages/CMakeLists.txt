@@ -4,6 +4,10 @@ target_include_directories(unitTests PUBLIC
 	)
 
 add_subdirectory(
+	${CMAKE_CURRENT_SOURCE_DIR}/loading
+	)
+
+add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/player
 	)
 
