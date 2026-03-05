@@ -1,9 +1,9 @@
 
-target_include_directories (server_lib PUBLIC
+target_include_directories (game_server_lib PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
 	)
 
-target_sources (server_lib PRIVATE
+target_sources (game_server_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/DockMessageConsumer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/EntityAddedMessageConsumer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/EntityDeletedMessageConsumer.cc
@@ -14,6 +14,7 @@ target_sources (server_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/PurchaseMessageConsumer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ShipSelectedMessageConsumer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SlotMessageConsumer.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/SystemMessageConsumerSetup.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/TargetPickedMessageConsumer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/VelocityMessageConsumer.cc
 	)

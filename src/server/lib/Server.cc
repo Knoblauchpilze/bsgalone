@@ -3,7 +3,6 @@
 #include "Server.hh"
 #include "SystemMessageConsumerSetup.hh"
 #include "SystemProcessorAdapter.hh"
-#include "SystemProcessorUtils.hh"
 
 namespace bsgo {
 

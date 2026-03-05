@@ -40,7 +40,8 @@ void ServerNetworkClient::pushEvent(bsgalone::core::IMessagePtr message)
 {
   if (!m_started.load())
   {
-    throw std::invalid_argument("Failed to send message, server not started");
+    throw std::invalid_argument("Failed to send message " + str(message->type())
+                                + ", server not started");
   }
 
   m_outputQueue->pushEvent(std::move(message));
