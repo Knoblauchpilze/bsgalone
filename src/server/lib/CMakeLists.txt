@@ -3,14 +3,6 @@ add_library (server_lib SHARED "")
 
 set (CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-add_subdirectory (
-	${CMAKE_CURRENT_SOURCE_DIR}/game
-	)
-
-add_subdirectory (
-	${CMAKE_CURRENT_SOURCE_DIR}/network
-	)
-
 target_sources (server_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/Server.cc
 	)
