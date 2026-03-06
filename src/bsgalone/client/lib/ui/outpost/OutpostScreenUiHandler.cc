@@ -5,7 +5,7 @@
 #include "LoginMessage.hh"
 #include "MessageListenerWrapper.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
 OutpostScreenUiHandler::OutpostScreenUiHandler(const Views &views)
   : AbstractUiHandler("outpost")
@@ -30,13 +30,13 @@ OutpostScreenUiHandler::OutpostScreenUiHandler(const Views &views)
 
 void OutpostScreenUiHandler::initializeMenus(const int width,
                                              const int height,
-                                             sprites::TexturePack &texturesLoader)
+                                             pge::sprites::TexturePack &texturesLoader)
 {
   m_menus.resize(MenuItem::COUNT);
 
   constexpr auto UNDOCK_BUTTON_WIDTH = 100;
-  const Vec2i pos{(width - UNDOCK_BUTTON_WIDTH) / 2, 10};
-  const Vec2i dims{UNDOCK_BUTTON_WIDTH, 50};
+  const pge::Vec2i pos{(width - UNDOCK_BUTTON_WIDTH) / 2, 10};
+  const pge::Vec2i dims{UNDOCK_BUTTON_WIDTH, 50};
 
   ui::MenuConfig config{.pos = pos, .dims = dims, .clickCallback = [this]() {
                           if (m_shipDbView->isReady())
@@ -45,15 +45,15 @@ void OutpostScreenUiHandler::initializeMenus(const int width,
                           }
                         }};
 
-  auto bg         = ui::bgConfigFromColor(colors::DARK_GREY);
-  auto text       = ui::textConfigFromColor("Undock", colors::WHITE);
+  auto bg         = ui::bgConfigFromColor(pge::colors::DARK_GREY);
+  auto text       = ui::textConfigFromColor("Undock", pge::colors::WHITE);
   m_menus[UNDOCK] = std::make_unique<ui::UiTextMenu>(config, bg, text);
 
   constexpr auto REASONABLE_PIXELS_GAP = 40;
   constexpr auto LOGOUT_BUTTON_HEIGHT  = 30;
   config.pos.x += dims.x + REASONABLE_PIXELS_GAP;
   config.pos.y += (dims.y - LOGOUT_BUTTON_HEIGHT) / 2;
-  config.dims = Vec2i{80, LOGOUT_BUTTON_HEIGHT};
+  config.dims = pge::Vec2i{80, LOGOUT_BUTTON_HEIGHT};
 
   config.clickCallback = [this]() {
     if (m_playerView->isReady())
@@ -61,8 +61,8 @@ void OutpostScreenUiHandler::initializeMenus(const int width,
       m_playerView->tryLogout();
     }
   };
-  bg              = ui::bgConfigFromColor(colors::DARK_RED);
-  text            = ui::textConfigFromColor("Logout", colors::VERY_DARK_RED);
+  bg              = ui::bgConfigFromColor(pge::colors::DARK_RED);
+  text            = ui::textConfigFromColor("Logout", pge::colors::VERY_DARK_RED);
   m_menus[LOGOUT] = std::make_unique<ui::UiTextMenu>(config, bg, text);
 
   generateGeneralMenu(width, height);
@@ -102,7 +102,7 @@ bool OutpostScreenUiHandler::processUserInput(ui::UserInputData &inputData)
   return out;
 }
 
-void OutpostScreenUiHandler::render(Renderer &engine) const
+void OutpostScreenUiHandler::render(pge::Renderer &engine) const
 {
   for (const auto &menu : m_menus)
   {
@@ -154,7 +154,7 @@ void OutpostScreenUiHandler::updateUi()
   }
 }
 
-void OutpostScreenUiHandler::connectToMessageQueue(bsgalone::core::IMessageQueue &messageQueue)
+void OutpostScreenUiHandler::connectToMessageQueue(core::IMessageQueue &messageQueue)
 {
   m_shopUi->connectToMessageQueue(messageQueue);
   m_lockerUi->connectToMessageQueue(messageQueue);
@@ -191,11 +191,11 @@ void OutpostScreenUiHandler::generateGeneralMenu(const int width, const int heig
   const auto viewMenuWidth  = static_cast<int>(VIEW_LIST_WIDTH_TO_SCREEN_WIDTH_RATIO * width);
   const auto viewMenuHeight = static_cast<int>(VIEW_LIST_HEIGHT_TO_SCREEN_HEIGHT_RATIO * height);
 
-  const Vec2i pos{10, (height - viewMenuHeight) / 2};
-  const Vec2i dims{viewMenuWidth, viewMenuHeight};
+  const pge::Vec2i pos{10, (height - viewMenuHeight) / 2};
+  const pge::Vec2i dims{viewMenuWidth, viewMenuHeight};
 
   ui::MenuConfig config{.pos = pos, .dims = dims};
-  auto bg             = ui::bgConfigFromColor(colors::BLANK);
+  auto bg             = ui::bgConfigFromColor(pge::colors::BLANK);
   m_menus[VIEWS_MENU] = std::make_unique<ui::UiMenu>(config, bg);
 }
 
@@ -207,12 +207,12 @@ void OutpostScreenUiHandler::initializeOutpostScreenOptions()
 
   config.clickCallback = [this]() { setActiveScreen(ActiveScreen::SHOP); };
   const auto bg        = ui::bgConfigFromColor(palette.almostOpaqueColor);
-  auto text            = ui::textConfigFromColor("Shop", colors::WHITE);
+  auto text            = ui::textConfigFromColor("Shop", pge::colors::WHITE);
   auto menu            = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_menus[VIEWS_MENU]->addMenu(std::move(menu));
 
   config.clickCallback = [this]() { setActiveScreen(ActiveScreen::LOCKER); };
-  text                 = ui::textConfigFromColor("Locker", colors::WHITE);
+  text                 = ui::textConfigFromColor("Locker", pge::colors::WHITE);
   menu                 = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_menus[VIEWS_MENU]->addMenu(std::move(menu));
 
@@ -222,11 +222,11 @@ void OutpostScreenUiHandler::initializeOutpostScreenOptions()
   const auto role = m_playerView->gameSession().getRole();
   switch (role)
   {
-    case bsgo::GameRole::GUNNER:
+    case core::GameRole::GUNNER:
       activeScreen = ActiveScreen::GAME_ROLE;
       buttonText   = "Squadron";
       break;
-    case bsgo::GameRole::PILOT:
+    case core::GameRole::PILOT:
       // Voluntarily empty, this is already the default case.
       break;
     default:
@@ -234,7 +234,7 @@ void OutpostScreenUiHandler::initializeOutpostScreenOptions()
   }
 
   config.clickCallback = [this, activeScreen]() { setActiveScreen(activeScreen); };
-  text                 = ui::textConfigFromColor(buttonText, colors::WHITE);
+  text                 = ui::textConfigFromColor(buttonText, pge::colors::WHITE);
   menu                 = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_menus[VIEWS_MENU]->addMenu(std::move(menu));
 
@@ -246,4 +246,4 @@ void OutpostScreenUiHandler::setActiveScreen(const ActiveScreen &screen)
   m_activeScreen = screen;
 }
 
-} // namespace pge
+} // namespace bsgalone::client

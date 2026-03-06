@@ -14,7 +14,7 @@ namespace bsgalone::core {
 namespace {
 auto generateCompleteScannedMessage() -> std::vector<char>
 {
-  bsgo::ScannedMessage message(bsgo::Uuid{2}, bsgo::Uuid{4});
+  ScannedMessage message(Uuid{2}, Uuid{4});
   std::stringstream out;
   message.serialize(out);
   const auto serialized = out.str();
@@ -24,7 +24,7 @@ auto generateCompleteScannedMessage() -> std::vector<char>
 
 TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter, ThrowsWhenEventQueueIsNull)
 {
-  EXPECT_THROW([]() { InputNetworkAdapter(nullptr, std::make_unique<bsgo::MessageParser>()); }(),
+  EXPECT_THROW([]() { InputNetworkAdapter(nullptr, std::make_unique<MessageParser>()); }(),
                std::invalid_argument);
 }
 
@@ -37,7 +37,7 @@ TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter, ThrowsWhenMessageParserIsNu
 TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter, CorrectlyPublishesCompleteMessage)
 {
   auto queue = std::make_shared<TestMessageQueue>();
-  InputNetworkAdapter adapter(queue, std::make_unique<bsgo::MessageParser>());
+  InputNetworkAdapter adapter(queue, std::make_unique<MessageParser>());
 
   const auto data = generateCompleteScannedMessage();
   const net::DataReceivedEvent event(net::ClientId{1}, data);
@@ -47,15 +47,15 @@ TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter, CorrectlyPublishesCompleteM
   EXPECT_EQ(1u, queue->messages().size());
   const auto &message = queue->messages().at(0);
   EXPECT_EQ(MessageType::SCANNED, message->type());
-  EXPECT_EQ(net::ClientId{1}, message->as<bsgo::ScannedMessage>().getClientId());
-  EXPECT_EQ(bsgo::Uuid{2}, message->as<bsgo::ScannedMessage>().getPlayerDbId());
-  EXPECT_EQ(bsgo::Uuid{4}, message->as<bsgo::ScannedMessage>().getAsteroidDbId());
+  EXPECT_EQ(net::ClientId{1}, message->as<ScannedMessage>().getClientId());
+  EXPECT_EQ(Uuid{2}, message->as<ScannedMessage>().getPlayerDbId());
+  EXPECT_EQ(Uuid{4}, message->as<ScannedMessage>().getAsteroidDbId());
 }
 
 TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter, CorrectlyPublishesCompleteMessageWithNoClientId)
 {
   auto queue = std::make_shared<TestMessageQueue>();
-  InputNetworkAdapter adapter(queue, std::make_unique<bsgo::MessageParser>());
+  InputNetworkAdapter adapter(queue, std::make_unique<MessageParser>());
 
   const auto data = generateCompleteScannedMessage();
   const net::DataReceivedEvent event({}, data);
@@ -65,16 +65,16 @@ TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter, CorrectlyPublishesCompleteM
   EXPECT_EQ(1u, queue->messages().size());
   const auto &message = queue->messages().at(0);
   EXPECT_EQ(MessageType::SCANNED, message->type());
-  EXPECT_FALSE(message->as<bsgo::ScannedMessage>().tryGetClientId().has_value());
-  EXPECT_EQ(bsgo::Uuid{2}, message->as<bsgo::ScannedMessage>().getPlayerDbId());
-  EXPECT_EQ(bsgo::Uuid{4}, message->as<bsgo::ScannedMessage>().getAsteroidDbId());
+  EXPECT_FALSE(message->as<ScannedMessage>().tryGetClientId().has_value());
+  EXPECT_EQ(Uuid{2}, message->as<ScannedMessage>().getPlayerDbId());
+  EXPECT_EQ(Uuid{4}, message->as<ScannedMessage>().getAsteroidDbId());
 }
 
 TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter,
      DoesNotPublishMessageWhenIncompleteDataIsReceived)
 {
   auto queue = std::make_shared<TestMessageQueue>();
-  InputNetworkAdapter adapter(queue, std::make_unique<bsgo::MessageParser>());
+  InputNetworkAdapter adapter(queue, std::make_unique<MessageParser>());
 
   const auto data = generateCompleteScannedMessage();
   ASSERT_LE(6, data.size());
@@ -89,7 +89,7 @@ TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter,
 TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter, PublishesMessageWhenAllDataIsReceived)
 {
   auto queue = std::make_shared<TestMessageQueue>();
-  InputNetworkAdapter adapter(queue, std::make_unique<bsgo::MessageParser>());
+  InputNetworkAdapter adapter(queue, std::make_unique<MessageParser>());
 
   const auto data = generateCompleteScannedMessage();
   ASSERT_LE(6, data.size());
@@ -104,14 +104,14 @@ TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter, PublishesMessageWhenAllData
   EXPECT_EQ(1u, queue->messages().size());
   const auto &message = queue->messages().at(0);
   EXPECT_EQ(MessageType::SCANNED, message->type());
-  EXPECT_EQ(bsgo::Uuid{2}, message->as<bsgo::ScannedMessage>().getPlayerDbId());
-  EXPECT_EQ(bsgo::Uuid{4}, message->as<bsgo::ScannedMessage>().getAsteroidDbId());
+  EXPECT_EQ(Uuid{2}, message->as<ScannedMessage>().getPlayerDbId());
+  EXPECT_EQ(Uuid{4}, message->as<ScannedMessage>().getAsteroidDbId());
 }
 
 TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter, DoesNotPublishMessageTwice)
 {
   auto queue = std::make_shared<TestMessageQueue>();
-  InputNetworkAdapter adapter(queue, std::make_unique<bsgo::MessageParser>());
+  InputNetworkAdapter adapter(queue, std::make_unique<MessageParser>());
 
   const auto data = generateCompleteScannedMessage();
   net::DataReceivedEvent event(net::ClientId{0}, data);
@@ -131,7 +131,7 @@ TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter,
      DoesNotPublishMessageWhenDataReceivedForAnotherClient)
 {
   auto queue = std::make_shared<TestMessageQueue>();
-  InputNetworkAdapter adapter(queue, std::make_unique<bsgo::MessageParser>());
+  InputNetworkAdapter adapter(queue, std::make_unique<MessageParser>());
 
   const auto data = generateCompleteScannedMessage();
   ASSERT_LE(6, data.size());
@@ -151,7 +151,7 @@ TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter,
      DoesNotPublishMessageWhenDataReceivedForNoClient)
 {
   auto queue = std::make_shared<TestMessageQueue>();
-  InputNetworkAdapter adapter(queue, std::make_unique<bsgo::MessageParser>());
+  InputNetworkAdapter adapter(queue, std::make_unique<MessageParser>());
 
   const auto data = generateCompleteScannedMessage();
   ASSERT_LE(6, data.size());
@@ -169,7 +169,7 @@ TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter,
 TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter, OnlyPublishMessageForReceivedData)
 {
   auto queue = std::make_shared<TestMessageQueue>();
-  InputNetworkAdapter adapter(queue, std::make_unique<bsgo::MessageParser>());
+  InputNetworkAdapter adapter(queue, std::make_unique<MessageParser>());
 
   const auto data = generateCompleteScannedMessage();
   ASSERT_LE(6, data.size());
@@ -189,14 +189,14 @@ TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter, OnlyPublishMessageForReceiv
   EXPECT_EQ(1u, queue->messages().size());
   const auto &message = queue->messages().at(0);
   EXPECT_EQ(MessageType::SCANNED, message->type());
-  EXPECT_EQ(bsgo::Uuid{2}, message->as<bsgo::ScannedMessage>().getPlayerDbId());
-  EXPECT_EQ(bsgo::Uuid{4}, message->as<bsgo::ScannedMessage>().getAsteroidDbId());
+  EXPECT_EQ(Uuid{2}, message->as<ScannedMessage>().getPlayerDbId());
+  EXPECT_EQ(Uuid{4}, message->as<ScannedMessage>().getAsteroidDbId());
 }
 
 TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter, ThrowsWhenReceivingInvalidData)
 {
   auto queue = std::make_shared<TestMessageQueue>();
-  InputNetworkAdapter adapter(queue, std::make_unique<bsgo::MessageParser>());
+  InputNetworkAdapter adapter(queue, std::make_unique<MessageParser>());
 
   const auto data = generateCompleteScannedMessage();
   ASSERT_LE(6, data.size());
@@ -209,9 +209,9 @@ TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter, ThrowsWhenReceivingInvalidD
 TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter, SetsClientIdForNetworkMessageWhenNotDefined)
 {
   auto queue = std::make_shared<TestMessageQueue>();
-  InputNetworkAdapter adapter(queue, std::make_unique<bsgo::MessageParser>());
+  InputNetworkAdapter adapter(queue, std::make_unique<MessageParser>());
 
-  bsgo::LootMessage message(bsgo::Uuid{2}, bsgo::Uuid{4}, 12);
+  LootMessage message(Uuid{2}, Uuid{4}, 12);
   std::stringstream out;
   message.serialize(out);
   const auto serialized = out.str();
@@ -223,15 +223,15 @@ TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter, SetsClientIdForNetworkMessa
   EXPECT_EQ(1u, queue->messages().size());
   const auto &actual = queue->messages().at(0);
   EXPECT_EQ(MessageType::LOOT, actual->type());
-  EXPECT_EQ(net::ClientId{17}, actual->as<bsgo::LootMessage>().getClientId());
+  EXPECT_EQ(net::ClientId{17}, actual->as<LootMessage>().getClientId());
 }
 
 TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter, OverridesExistingClientIdWithConnectionData)
 {
   auto queue = std::make_shared<TestMessageQueue>();
-  InputNetworkAdapter adapter(queue, std::make_unique<bsgo::MessageParser>());
+  InputNetworkAdapter adapter(queue, std::make_unique<MessageParser>());
 
-  bsgo::LootMessage message(bsgo::Uuid{2}, bsgo::Uuid{4}, 12);
+  LootMessage message(Uuid{2}, Uuid{4}, 12);
   message.setClientId(net::ClientId{118});
   std::stringstream out;
   message.serialize(out);
@@ -244,7 +244,7 @@ TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter, OverridesExistingClientIdWi
   EXPECT_EQ(1u, queue->messages().size());
   const auto &actual = queue->messages().at(0);
   EXPECT_EQ(MessageType::LOOT, actual->type());
-  EXPECT_EQ(net::ClientId{17}, actual->as<bsgo::LootMessage>().getClientId());
+  EXPECT_EQ(net::ClientId{17}, actual->as<LootMessage>().getClientId());
 }
 
 } // namespace bsgalone::core

@@ -1,7 +1,7 @@
 
 #include "Screen.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
 auto str(const Screen s) noexcept -> std::string
 {
@@ -24,4 +24,4 @@ auto str(const Screen s) noexcept -> std::string
   }
 }
 
-} // namespace pge
+} // namespace bsgalone::client

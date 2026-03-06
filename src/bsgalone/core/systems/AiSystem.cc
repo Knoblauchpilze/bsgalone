@@ -2,7 +2,7 @@
 #include "AiSystem.hh"
 #include "AiBehaviorSyncMessage.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 namespace {
 bool isEntityRelevant(const Entity &ent)
 {
@@ -73,4 +73,4 @@ void AiSystem::trySendAiBehaviorSyncMessage(const Entity &entity) const
   pushInternalMessage(std::move(out));
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

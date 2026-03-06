@@ -6,22 +6,22 @@
 #include "DatabaseEntityMapper.hh"
 #include "VelocityMessage.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
-class InternalMessageConsumer : public bsgalone::core::AbstractMessageConsumer
+class InternalMessageConsumer : public core::AbstractMessageConsumer
 {
   public:
-  InternalMessageConsumer(const bsgo::DatabaseEntityMapper &entityMapper,
-                          bsgo::CoordinatorShPtr coordinator);
+  InternalMessageConsumer(const core::DatabaseEntityMapper &entityMapper,
+                          core::CoordinatorShPtr coordinator);
   ~InternalMessageConsumer() override = default;
 
-  void onEventReceived(const bsgalone::core::IMessage &message) override;
+  void onEventReceived(const core::IMessage &message) override;
 
   private:
-  const bsgo::DatabaseEntityMapper &m_entityMapper;
-  bsgo::CoordinatorShPtr m_coordinator{};
+  const core::DatabaseEntityMapper &m_entityMapper;
+  core::CoordinatorShPtr m_coordinator{};
 
-  void handleVelocityChanged(const bsgalone::core::VelocityMessage &message) const;
+  void handleVelocityChanged(const core::VelocityMessage &message) const;
 };
 
-} // namespace pge
+} // namespace bsgalone::client

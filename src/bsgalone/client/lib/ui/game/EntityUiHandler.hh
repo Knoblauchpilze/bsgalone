@@ -5,12 +5,12 @@
 #include "UiTextMenu.hh"
 #include <memory>
 
-namespace pge {
+namespace bsgalone::client {
 
-using EntityFetcher = std::function<std::optional<bsgo::Entity>(const ShipView &)>;
+using EntityFetcher = std::function<std::optional<core::Entity>(const ShipView &)>;
 struct EntityUiConfig
 {
-  Vec2i offset{};
+  pge::Vec2i offset{};
   bool displayDistance{false};
   EntityFetcher getEntity{};
 };
@@ -23,9 +23,9 @@ class EntityUiHandler : public AbstractUiHandler
 
   void initializeMenus(const int width,
                        const int height,
-                       sprites::TexturePack &texturesLoader) override;
+                       pge::sprites::TexturePack &texturesLoader) override;
   bool processUserInput(ui::UserInputData &inputData) override;
-  void render(Renderer &engine) const override;
+  void render(pge::Renderer &engine) const override;
   void updateUi() override;
 
   private:
@@ -47,13 +47,13 @@ class EntityUiHandler : public AbstractUiHandler
   std::vector<ui::UiTextMenuPtr> m_menus{};
 
   void subscribeToViews();
-  void updateNameComponent(const bsgo::Entity &entity);
-  void updateHealthComponent(const bsgo::Entity &entity);
-  void updatePowerComponent(const bsgo::Entity &entity);
+  void updateNameComponent(const core::Entity &entity);
+  void updateHealthComponent(const core::Entity &entity);
+  void updatePowerComponent(const core::Entity &entity);
   void updateDistanceComponent();
-  void updateDockComponent(const bsgo::Entity &entity);
+  void updateDockComponent(const core::Entity &entity);
 };
 
 using EntityUiHandlerPtr = std::unique_ptr<EntityUiHandler>;
 
-} // namespace pge
+} // namespace bsgalone::client

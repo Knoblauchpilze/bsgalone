@@ -1,15 +1,15 @@
 
 #include "AbstractUiHandler.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
 AbstractUiHandler::AbstractUiHandler(const std::string &name)
-  : core::CoreObject(name)
+  : ::core::CoreObject(name)
 {}
 
-void AbstractUiHandler::connectToMessageQueue(bsgalone::core::IMessageQueue & /*messageQueue*/)
+void AbstractUiHandler::connectToMessageQueue(core::IMessageQueue & /*messageQueue*/)
 {
   // Intentionally empty.
 }
 
-} // namespace pge
+} // namespace bsgalone::client

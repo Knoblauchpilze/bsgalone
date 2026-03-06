@@ -2,10 +2,10 @@
 #include "ServerView.hh"
 #include "SystemListMessage.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
 ServerView::ServerView(GameSessionShPtr gameSession)
-  : AbstractView("server", {bsgalone::core::MessageType::SYSTEM_LIST})
+  : AbstractView("server", {core::MessageType::SYSTEM_LIST})
   , m_gameSession(std::move(gameSession))
 {
   if (nullptr == m_gameSession)
@@ -24,7 +24,7 @@ void ServerView::reset()
   m_systems.clear();
 }
 
-auto ServerView::getPlayerSystem() const -> bsgo::Uuid
+auto ServerView::getPlayerSystem() const -> core::Uuid
 {
   return m_gameSession->getSystemDbId();
 }
@@ -34,20 +34,20 @@ auto ServerView::getPlayerSystemName() const -> std::string
   const auto playerSystemId = getPlayerSystem();
   const auto maybeSystem    = std::find_if(m_systems.begin(),
                                         m_systems.end(),
-                                        [&playerSystemId](const bsgo::SystemData &system) {
+                                        [&playerSystemId](const core::SystemData &system) {
                                           return system.dbId == playerSystemId;
                                         });
 
   if (maybeSystem == m_systems.end())
   {
     error("Failed to get system name",
-          "No data received from server for system " + bsgo::str(playerSystemId));
+          "No data received from server for system " + core::str(playerSystemId));
   }
 
   return maybeSystem->name;
 }
 
-auto ServerView::getAllSystems() const -> std::vector<bsgo::SystemData>
+auto ServerView::getAllSystems() const -> std::vector<core::SystemData>
 {
   if (m_systems.empty())
   {
@@ -101,10 +101,10 @@ auto ServerView::getMapBounds() const -> Bounds
   return out;
 }
 
-void ServerView::handleMessageInternal(const bsgalone::core::IMessage &message)
+void ServerView::handleMessageInternal(const core::IMessage &message)
 {
-  const auto systemList = message.as<bsgo::SystemListMessage>();
+  const auto systemList = message.as<core::SystemListMessage>();
   m_systems             = systemList.getSystemsData();
 }
 
-} // namespace pge
+} // namespace bsgalone::client

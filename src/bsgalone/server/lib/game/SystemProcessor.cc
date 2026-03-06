@@ -15,16 +15,15 @@
 #include "TimeUtils.hh"
 #include "VelocityMessageConsumer.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-SystemProcessor::SystemProcessor(const Uuid systemDbId,
-                                 bsgalone::core::IMessageQueueShPtr inputQueue)
-  : core::CoreObject("processor")
+SystemProcessor::SystemProcessor(const core::Uuid systemDbId, core::IMessageQueueShPtr inputQueue)
+  : ::core::CoreObject("processor")
   , m_systemDbId(systemDbId)
   , m_inputMessagesQueue(std::move(inputQueue))
 {
   setService("system");
-  addModule(str(systemDbId));
+  addModule(core::str(systemDbId));
 
   initialize(systemDbId);
 }
@@ -34,21 +33,21 @@ SystemProcessor::~SystemProcessor()
   stop();
 }
 
-auto SystemProcessor::getSystemDbId() const -> Uuid
+auto SystemProcessor::getSystemDbId() const -> core::Uuid
 {
   return m_systemDbId;
 }
 
-void SystemProcessor::connectToQueues(bsgalone::core::IMessageQueue *const internalMessageQueue,
-                                      bsgalone::core::IMessageQueue *const outputMessageQueue)
+void SystemProcessor::connectToQueues(core::IMessageQueue *const internalMessageQueue,
+                                      core::IMessageQueue *const outputMessageQueue)
 {
-  Repositories repositories{};
+  core::Repositories repositories{};
 
-  SystemsConfig config{.internalMessageQueue = internalMessageQueue,
-                       .outputMessageQueue   = outputMessageQueue};
-  m_coordinator = std::make_shared<Coordinator>(std::move(config));
+  core::SystemsConfig config{.internalMessageQueue = internalMessageQueue,
+                             .outputMessageQueue   = outputMessageQueue};
+  m_coordinator = std::make_shared<core::Coordinator>(std::move(config));
 
-  DataSource dataSource(m_systemDbId);
+  core::DataSource dataSource(m_systemDbId);
   dataSource.initialize(*m_coordinator, m_entityMapper);
 
   m_services = createServices(repositories, m_coordinator, m_entityMapper);
@@ -80,9 +79,9 @@ void SystemProcessor::stop()
   }
 }
 
-void SystemProcessor::initialize(const Uuid systemDbId)
+void SystemProcessor::initialize(const core::Uuid systemDbId)
 {
-  Repositories repositories{};
+  core::Repositories repositories{};
   const auto tickConfig = repositories.tickRepository->findOneBySystem(m_systemDbId);
   m_timeManager = std::make_unique<chrono::TimeManager>(tickConfig.currentTick, tickConfig.step);
   info("System will start at tick " + tickConfig.currentTick.str());
@@ -93,19 +92,19 @@ void SystemProcessor::initialize(const Uuid systemDbId)
 void SystemProcessor::asyncSystemProcessing()
 {
   bool running{true};
-  auto lastFrameTimestamp = core::now();
+  auto lastFrameTimestamp = ::core::now();
 
   debug("Started processing for system");
   while (running)
   {
-    constexpr auto SLEEP_DURATION_WHEN_PROCESSING = core::Milliseconds(50);
+    constexpr auto SLEEP_DURATION_WHEN_PROCESSING = ::core::Milliseconds(50);
     std::this_thread::sleep_for(SLEEP_DURATION_WHEN_PROCESSING);
 
-    const auto thisFrameTimestamp = core::now();
+    const auto thisFrameTimestamp = ::core::now();
 
     const auto elapsed = chrono::Duration{
       .unit    = chrono::Unit::MILLISECONDS,
-      .elapsed = core::diffInMs(lastFrameTimestamp, thisFrameTimestamp),
+      .elapsed = ::core::diffInMs(lastFrameTimestamp, thisFrameTimestamp),
     };
 
     const auto data = m_timeManager->tick(elapsed);
@@ -121,7 +120,7 @@ void SystemProcessor::asyncSystemProcessing()
   debug("Stopped processing for system");
 }
 
-void SystemProcessor::createMessageConsumers(bsgalone::core::IMessageQueue *const outputMessagesQueue)
+void SystemProcessor::createMessageConsumers(core::IMessageQueue *const outputMessagesQueue)
 {
   m_inputMessagesQueue->addListener(
     std::make_unique<ShipSelectedMessageConsumer>(m_services,
@@ -167,4 +166,4 @@ void SystemProcessor::createMessageConsumers(bsgalone::core::IMessageQueue *cons
     std::make_unique<LoadingMessagesConsumer>(m_services, outputMessagesQueue));
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

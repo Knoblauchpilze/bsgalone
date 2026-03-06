@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 enum class NodeState
 {
@@ -15,4 +15,4 @@ enum class NodeState
 
 auto str(const NodeState &state) -> std::string;
 
-} // namespace bsgo
+} // namespace bsgalone::core

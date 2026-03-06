@@ -19,59 +19,59 @@
 #include <memory>
 #include <vector>
 
-namespace bsgo {
+namespace bsgalone::server {
 
 class LoadingService : public AbstractService
 {
   public:
-  LoadingService(const Repositories &repositories,
-                 CoordinatorShPtr coordinator,
-                 const DatabaseEntityMapper &entityMapper);
+  LoadingService(const core::Repositories &repositories,
+                 core::CoordinatorShPtr coordinator,
+                 const core::DatabaseEntityMapper &entityMapper);
   ~LoadingService() override = default;
 
   struct PlayerDescription
   {
-    Faction faction{};
-    Uuid shipDbId{};
+    core::Faction faction{};
+    core::Uuid shipDbId{};
     bool docked{};
-    Uuid systemDbId{};
+    core::Uuid systemDbId{};
   };
-  auto getDataForPlayer(const Uuid playerDbId) const -> PlayerDescription;
+  auto getDataForPlayer(const core::Uuid playerDbId) const -> PlayerDescription;
 
-  auto getPlayerById(const Uuid playerDbId) const -> PlayerProps;
-  auto getPlayersInSystem(const Uuid systemDbId) const -> std::vector<PlayerProps>;
+  auto getPlayerById(const core::Uuid playerDbId) const -> PlayerProps;
+  auto getPlayersInSystem(const core::Uuid systemDbId) const -> std::vector<PlayerProps>;
 
-  auto getAsteroidById(const Uuid asteroidDbId) const -> AsteroidProps;
-  auto getAsteroidsInSystem(const Uuid systemDbId) const -> std::vector<AsteroidProps>;
+  auto getAsteroidById(const core::Uuid asteroidDbId) const -> AsteroidProps;
+  auto getAsteroidsInSystem(const core::Uuid systemDbId) const -> std::vector<AsteroidProps>;
 
-  auto getOutpostById(const Uuid outpostDbId) const -> OutpostProps;
-  auto getOutpostsInSystem(const Uuid systemDbId) const -> std::vector<OutpostProps>;
+  auto getOutpostById(const core::Uuid outpostDbId) const -> OutpostProps;
+  auto getOutpostsInSystem(const core::Uuid systemDbId) const -> std::vector<OutpostProps>;
 
-  auto getShipById(const Uuid shipDbId) const -> PlayerShipProps;
-  auto getShipsInSystem(const Uuid systemDbId) const -> std::vector<PlayerShipProps>;
+  auto getShipById(const core::Uuid shipDbId) const -> PlayerShipProps;
+  auto getShipsInSystem(const core::Uuid systemDbId) const -> std::vector<PlayerShipProps>;
 
-  auto getSystems() const -> std::vector<System>;
-  auto getSystemTickConfig(const Uuid systemDbId) const -> SystemTick;
+  auto getSystems() const -> std::vector<core::System>;
+  auto getSystemTickConfig(const core::Uuid systemDbId) const -> core::SystemTick;
 
-  auto getTargetsInSystem(const Uuid systemDbId) const -> std::vector<TargetProps>;
+  auto getTargetsInSystem(const core::Uuid systemDbId) const -> std::vector<TargetProps>;
 
-  auto getResources() const -> std::vector<Resource>;
+  auto getResources() const -> std::vector<core::Resource>;
   auto getWeapons() const -> std::vector<WeaponProps>;
   auto getComputers() const -> std::vector<ComputerProps>;
-  auto getShipsForFaction(const Faction faction) const -> std::vector<ShipProps>;
+  auto getShipsForFaction(const core::Faction faction) const -> std::vector<ShipProps>;
 
-  auto getPlayerResources(const Uuid playerDbId) const -> std::vector<PlayerResource>;
-  auto getPlayerShips(const Uuid playerDbId) const -> std::vector<PlayerShipProps>;
-  auto getPlayerComputers(const Uuid playerDbId) const -> std::vector<PlayerComputer>;
-  auto getPlayerWeapons(const Uuid playerDbId) const -> std::vector<PlayerWeaponProps>;
-  auto getActivePlayerShip(const Uuid playerDbId) const -> PlayerShipProps;
+  auto getPlayerResources(const core::Uuid playerDbId) const -> std::vector<core::PlayerResource>;
+  auto getPlayerShips(const core::Uuid playerDbId) const -> std::vector<PlayerShipProps>;
+  auto getPlayerComputers(const core::Uuid playerDbId) const -> std::vector<core::PlayerComputer>;
+  auto getPlayerWeapons(const core::Uuid playerDbId) const -> std::vector<PlayerWeaponProps>;
+  auto getActivePlayerShip(const core::Uuid playerDbId) const -> PlayerShipProps;
 
   private:
-  CoordinatorShPtr m_coordinator{};
-  const DatabaseEntityMapper &m_entityMapper;
+  core::CoordinatorShPtr m_coordinator{};
+  const core::DatabaseEntityMapper &m_entityMapper;
 };
 
 using LoadingServicePtr   = std::unique_ptr<LoadingService>;
 using LoadingServiceShPtr = std::shared_ptr<LoadingService>;
 
-} // namespace bsgo
+} // namespace bsgalone::server

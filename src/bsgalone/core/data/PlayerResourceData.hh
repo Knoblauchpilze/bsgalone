@@ -5,7 +5,7 @@
 #include "Uuid.hh"
 #include <string>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 struct PlayerResourceData
 {
@@ -21,4 +21,4 @@ struct PlayerResourceData
 
 auto fromDbPlayerResource(const PlayerResource &playerResource) -> PlayerResourceData;
 
-} // namespace bsgo
+} // namespace bsgalone::core

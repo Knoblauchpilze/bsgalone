@@ -5,7 +5,7 @@
 #include "DataContext.hh"
 #include "INode.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class AiComponent : public AbstractComponent
 {
@@ -28,4 +28,4 @@ class AiComponent : public AbstractComponent
 
 using AiComponentShPtr = std::shared_ptr<AiComponent>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

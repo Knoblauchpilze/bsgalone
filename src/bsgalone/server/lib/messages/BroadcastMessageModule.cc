@@ -101,7 +101,7 @@ void BroadcastMessageModule::broadcastMessage(const core::IMessage &message)
 {
   std::vector<net::ClientId> clients{};
 
-  std::vector<bsgo::Uuid> systemDbIds{};
+  std::vector<core::Uuid> systemDbIds{};
   if (shouldTryToDetermineSystemId(message))
   {
     systemDbIds = tryDetermineSystemIds(message);
@@ -130,27 +130,27 @@ void BroadcastMessageModule::broadcastMessage(const core::IMessage &message)
 namespace {
 template<typename T>
 auto determineClientFor(const T &message, const ClientManager &clientManager)
-  -> std::optional<bsgo::Uuid>
+  -> std::optional<core::Uuid>
 {
   return clientManager.getClientIdForPlayer(message.getPlayerDbId());
 }
 } // namespace
 
 auto BroadcastMessageModule::tryDetermineClientId(const core::IMessage &message) const
-  -> std::optional<bsgo::Uuid>
+  -> std::optional<core::Uuid>
 {
   switch (message.type())
   {
     case core::MessageType::LOOT:
-      return determineClientFor(message.as<bsgo::LootMessage>(), *m_clientManager);
+      return determineClientFor(message.as<core::LootMessage>(), *m_clientManager);
     case core::MessageType::SCANNED:
-      return determineClientFor(message.as<bsgo::ScannedMessage>(), *m_clientManager);
+      return determineClientFor(message.as<core::ScannedMessage>(), *m_clientManager);
     case core::MessageType::SLOT_COMPONENT_UPDATED:
-      return determineClientFor(message.as<bsgo::SlotComponentMessage>(), *m_clientManager);
+      return determineClientFor(message.as<core::SlotComponentMessage>(), *m_clientManager);
     case core::MessageType::LOADING_STARTED:
-      return determineClientFor(message.as<bsgo::LoadingStartedMessage>(), *m_clientManager);
+      return determineClientFor(message.as<core::LoadingStartedMessage>(), *m_clientManager);
     case core::MessageType::LOADING_FINISHED:
-      return determineClientFor(message.as<bsgo::LoadingFinishedMessage>(), *m_clientManager);
+      return determineClientFor(message.as<core::LoadingFinishedMessage>(), *m_clientManager);
     default:
       error("Failed to determine client id", "Unsupported message type " + str(message.type()));
       break;
@@ -162,13 +162,13 @@ auto BroadcastMessageModule::tryDetermineClientId(const core::IMessage &message)
 
 namespace {
 template<typename T>
-auto determineSystemsFor(const T &message) -> std::vector<bsgo::Uuid>
+auto determineSystemsFor(const T &message) -> std::vector<core::Uuid>
 {
   return {message.getSystemDbId()};
 }
 
 template<typename T>
-auto maybeDetermineSystemsFor(const T &message) -> std::vector<bsgo::Uuid>
+auto maybeDetermineSystemsFor(const T &message) -> std::vector<core::Uuid>
 {
   const auto maybeSystemDbId = message.tryGetSystemDbId();
   if (!maybeSystemDbId)
@@ -180,29 +180,29 @@ auto maybeDetermineSystemsFor(const T &message) -> std::vector<bsgo::Uuid>
 }
 
 template<>
-auto determineSystemsFor(const bsgo::JumpMessage &message) -> std::vector<bsgo::Uuid>
+auto determineSystemsFor(const core::JumpMessage &message) -> std::vector<core::Uuid>
 {
   return {message.getSourceSystemDbId(), message.getDestinationSystemDbId()};
 }
 } // namespace
 
 auto BroadcastMessageModule::tryDetermineSystemIds(const core::IMessage &message) const
-  -> std::vector<bsgo::Uuid>
+  -> std::vector<core::Uuid>
 {
   switch (message.type())
   {
     case core::MessageType::AI_BEHAVIOR_SYNC:
-      return maybeDetermineSystemsFor(message.as<bsgo::AiBehaviorSyncMessage>());
+      return maybeDetermineSystemsFor(message.as<core::AiBehaviorSyncMessage>());
     case core::MessageType::COMPONENT_SYNC:
-      return determineSystemsFor(message.as<bsgo::ComponentSyncMessage>());
+      return determineSystemsFor(message.as<core::ComponentSyncMessage>());
     case core::MessageType::ENTITY_ADDED:
-      return determineSystemsFor(message.as<bsgo::EntityAddedMessage>());
+      return determineSystemsFor(message.as<core::EntityAddedMessage>());
     case core::MessageType::ENTITY_REMOVED:
-      return determineSystemsFor(message.as<bsgo::EntityRemovedMessage>());
+      return determineSystemsFor(message.as<core::EntityRemovedMessage>());
     case core::MessageType::JUMP:
-      return determineSystemsFor(message.as<bsgo::JumpMessage>());
+      return determineSystemsFor(message.as<core::JumpMessage>());
     case core::MessageType::TARGET:
-      return maybeDetermineSystemsFor(message.as<bsgo::TargetMessage>());
+      return maybeDetermineSystemsFor(message.as<core::TargetMessage>());
     default:
       error("Failed to determine system id", "Unsupported message type " + str(message.type()));
       break;

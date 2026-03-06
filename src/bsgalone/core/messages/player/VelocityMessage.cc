@@ -6,19 +6,19 @@
 namespace bsgalone::core {
 
 VelocityMessage::VelocityMessage()
-  : AbstractPlayerMessage(MessageType::VELOCITY, bsgo::Uuid{0}, bsgo::Uuid{0})
+  : AbstractPlayerMessage(MessageType::VELOCITY, Uuid{0}, Uuid{0})
 {}
 
-VelocityMessage::VelocityMessage(const bsgo::Uuid playerDbId,
-                                 const bsgo::Uuid systemDbId,
-                                 const bsgo::Uuid shipDbId,
+VelocityMessage::VelocityMessage(const Uuid playerDbId,
+                                 const Uuid systemDbId,
+                                 const Uuid shipDbId,
                                  const Eigen::Vector3f &acceleration)
   : AbstractPlayerMessage(MessageType::VELOCITY, playerDbId, systemDbId)
   , m_shipDbId(shipDbId)
   , m_acceleration(acceleration)
 {}
 
-auto VelocityMessage::getShipDbId() const -> bsgo::Uuid
+auto VelocityMessage::getShipDbId() const -> Uuid
 {
   return m_shipDbId;
 }

@@ -23,7 +23,7 @@ int main(int /*argc*/, char ** /*argv*/)
   core::log::PrefixedLogger logger("server", "main");
   core::log::Locator::provide(&raw);
 
-  bsgo::Server server;
+  bsgalone::server::Server server;
   const auto port = core::getPortFromEnvironmentVariable();
 
   sigIntProcessing = [&server](const int /*signal*/) { server.requestStop(); };

@@ -3,7 +3,7 @@
 
 #include "RegenerativeComponent.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class PowerComponent : public RegenerativeComponent
 {
@@ -17,4 +17,4 @@ class PowerComponent : public RegenerativeComponent
 
 using PowerComponentShPtr = std::shared_ptr<PowerComponent>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

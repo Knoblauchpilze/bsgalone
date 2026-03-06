@@ -4,14 +4,14 @@
 #include "PlayerListMessage.hh"
 #include "PlayerShipListMessage.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
-SystemView::SystemView(bsgo::CoordinatorShPtr coordinator,
-                       const bsgo::DatabaseEntityMapper &entityMapper)
+SystemView::SystemView(core::CoordinatorShPtr coordinator,
+                       const core::DatabaseEntityMapper &entityMapper)
   : AbstractView("system",
-                 {bsgalone::core::MessageType::PLAYER_LIST,
-                  bsgalone::core::MessageType::PLAYER_SHIP_LIST,
-                  bsgalone::core::MessageType::JOIN_SHIP})
+                 {core::MessageType::PLAYER_LIST,
+                  core::MessageType::PLAYER_SHIP_LIST,
+                  core::MessageType::JOIN_SHIP})
   , m_coordinator(std::move(coordinator))
   , m_entityMapper(entityMapper)
 {
@@ -34,12 +34,12 @@ void SystemView::reset()
   m_playerShips.clear();
 }
 
-auto SystemView::getAsteroidsWithin(const bsgo::IBoundingBox &bbox) const
-  -> std::vector<bsgo::Entity>
+auto SystemView::getAsteroidsWithin(const core::IBoundingBox &bbox) const
+  -> std::vector<core::Entity>
 {
-  const auto uuids = m_coordinator->getEntitiesWithin(bbox, {bsgalone::core::EntityKind::ASTEROID});
+  const auto uuids = m_coordinator->getEntitiesWithin(bbox, {core::EntityKind::ASTEROID});
 
-  std::vector<bsgo::Entity> out;
+  std::vector<core::Entity> out;
   for (const auto &uuid : uuids)
   {
     out.push_back(m_coordinator->getEntity(uuid));
@@ -48,12 +48,12 @@ auto SystemView::getAsteroidsWithin(const bsgo::IBoundingBox &bbox) const
   return out;
 }
 
-auto SystemView::getOutpostsWithin(const bsgo::IBoundingBox &bbox) const
-  -> std::vector<bsgo::Entity>
+auto SystemView::getOutpostsWithin(const core::IBoundingBox &bbox) const
+  -> std::vector<core::Entity>
 {
-  const auto uuids = m_coordinator->getEntitiesWithin(bbox, {bsgalone::core::EntityKind::OUTPOST});
+  const auto uuids = m_coordinator->getEntitiesWithin(bbox, {core::EntityKind::OUTPOST});
 
-  std::vector<bsgo::Entity> out;
+  std::vector<core::Entity> out;
   for (const auto &uuid : uuids)
   {
     out.push_back(m_coordinator->getEntity(uuid));
@@ -62,11 +62,11 @@ auto SystemView::getOutpostsWithin(const bsgo::IBoundingBox &bbox) const
   return out;
 }
 
-auto SystemView::getBulletsWithin(const bsgo::IBoundingBox &bbox) const -> std::vector<bsgo::Entity>
+auto SystemView::getBulletsWithin(const core::IBoundingBox &bbox) const -> std::vector<core::Entity>
 {
-  const auto uuids = m_coordinator->getEntitiesWithin(bbox, {bsgalone::core::EntityKind::BULLET});
+  const auto uuids = m_coordinator->getEntitiesWithin(bbox, {core::EntityKind::BULLET});
 
-  std::vector<bsgo::Entity> out;
+  std::vector<core::Entity> out;
   for (const auto &uuid : uuids)
   {
     out.push_back(m_coordinator->getEntity(uuid));
@@ -75,51 +75,51 @@ auto SystemView::getBulletsWithin(const bsgo::IBoundingBox &bbox) const -> std::
   return out;
 }
 
-auto SystemView::getAsteroid(const bsgo::Uuid asteroidDbId) const -> bsgo::Entity
+auto SystemView::getAsteroid(const core::Uuid asteroidDbId) const -> core::Entity
 {
   const auto maybeAsteroid = m_entityMapper.tryGetAsteroidEntityId(asteroidDbId);
   if (!maybeAsteroid)
   {
-    error("Failed to get asteroid " + bsgo::str(asteroidDbId));
+    error("Failed to get asteroid " + core::str(asteroidDbId));
   }
 
   return m_coordinator->getEntity(*maybeAsteroid);
 }
 
-auto SystemView::getPlayer(const bsgo::Uuid playerDbId) const -> bsgo::PlayerData
+auto SystemView::getPlayer(const core::Uuid playerDbId) const -> core::PlayerData
 {
   const auto maybePlayer = std::find_if(m_players.begin(),
                                         m_players.end(),
-                                        [playerDbId](const bsgo::PlayerData &player) {
+                                        [playerDbId](const core::PlayerData &player) {
                                           return player.dbId == playerDbId;
                                         });
 
   if (maybePlayer == m_players.end())
   {
-    error("Failed to get player " + bsgo::str(playerDbId));
+    error("Failed to get player " + core::str(playerDbId));
   }
 
   return *maybePlayer;
 }
 
-auto SystemView::getSystemPlayers() const -> std::vector<bsgo::PlayerData>
+auto SystemView::getSystemPlayers() const -> std::vector<core::PlayerData>
 {
   return m_players;
 }
 
-auto SystemView::getSystemShips() const -> std::vector<bsgo::PlayerShipData>
+auto SystemView::getSystemShips() const -> std::vector<core::PlayerShipData>
 {
   return m_playerShips;
 }
 
 namespace {
-auto getPlayersList(const bsgo::PlayerListMessage &message) -> std::vector<bsgo::PlayerData>
+auto getPlayersList(const core::PlayerListMessage &message) -> std::vector<core::PlayerData>
 {
   return message.getPlayersData();
 }
 
-auto getPlayerShipsList(const bsgo::PlayerShipListMessage &message)
-  -> std::vector<bsgo::PlayerShipData>
+auto getPlayerShipsList(const core::PlayerShipListMessage &message)
+  -> std::vector<core::PlayerShipData>
 {
   // Ignore the message in case the message has a player identifier. In this case
   // the message does not contain the list of ships in a system but the list of
@@ -132,14 +132,14 @@ auto getPlayerShipsList(const bsgo::PlayerShipListMessage &message)
   return message.getShipsData();
 }
 
-void tryUpdatePlayer(const bsgo::JoinShipMessage &updatedData,
-                     std::vector<bsgo::PlayerData> &players)
+void tryUpdatePlayer(const core::JoinShipMessage &updatedData,
+                     std::vector<core::PlayerData> &players)
 {
   const auto playerDbId = updatedData.getPlayerDbId();
 
   const auto maybePlayer = std::find_if(players.begin(),
                                         players.end(),
-                                        [playerDbId](const bsgo::PlayerData &playerData) {
+                                        [playerDbId](const core::PlayerData &playerData) {
                                           return playerData.dbId == playerDbId;
                                         });
 
@@ -152,18 +152,18 @@ void tryUpdatePlayer(const bsgo::JoinShipMessage &updatedData,
 }
 } // namespace
 
-void SystemView::handleMessageInternal(const bsgalone::core::IMessage &message)
+void SystemView::handleMessageInternal(const core::IMessage &message)
 {
   switch (message.type())
   {
-    case bsgalone::core::MessageType::JOIN_SHIP:
-      tryUpdatePlayer(message.as<bsgo::JoinShipMessage>(), m_players);
+    case core::MessageType::JOIN_SHIP:
+      tryUpdatePlayer(message.as<core::JoinShipMessage>(), m_players);
       break;
-    case bsgalone::core::MessageType::PLAYER_LIST:
-      m_players = getPlayersList(message.as<bsgo::PlayerListMessage>());
+    case core::MessageType::PLAYER_LIST:
+      m_players = getPlayersList(message.as<core::PlayerListMessage>());
       break;
-    case bsgalone::core::MessageType::PLAYER_SHIP_LIST:
-      m_playerShips = getPlayerShipsList(message.as<bsgo::PlayerShipListMessage>());
+    case core::MessageType::PLAYER_SHIP_LIST:
+      m_playerShips = getPlayerShipsList(message.as<core::PlayerShipListMessage>());
       break;
     default:
       error("Unsupported message type received in system view", "Received " + str(message.type()));
@@ -172,4 +172,4 @@ void SystemView::handleMessageInternal(const bsgalone::core::IMessage &message)
   debug("Received " + str(message.type()) + " message");
 }
 
-} // namespace pge
+} // namespace bsgalone::client

@@ -9,7 +9,7 @@
 using namespace ::testing;
 using namespace test;
 
-namespace bsgo {
+namespace bsgalone::core {
 TEST(Unit_Bsgalone_Core_Messages_Optional_Uuid, Empty)
 {
   const std::optional<Uuid> expected{};
@@ -32,14 +32,14 @@ TEST(Unit_Bsgalone_Core_Messages_Optional_Uuid, EmptyAndSomeValueAfter)
   const auto expectedFloat{1.68f};
 
   std::ostringstream out;
-  core::serialize(out, expectedOpt);
-  core::serialize(out, expectedFloat);
+  ::core::serialize(out, expectedOpt);
+  ::core::serialize(out, expectedFloat);
   std::istringstream in(out.str());
 
   std::optional<Uuid> actualOpt{};
   float actualFloat{};
-  core::deserialize(in, actualOpt);
-  core::deserialize(in, actualFloat);
+  ::core::deserialize(in, actualOpt);
+  ::core::deserialize(in, actualFloat);
 
   EXPECT_EQ(actualOpt, expectedOpt);
   EXPECT_EQ(actualFloat, expectedFloat);
@@ -48,17 +48,17 @@ TEST(Unit_Bsgalone_Core_Messages_Optional_Uuid, EmptyAndSomeValueAfter)
 TEST(Unit_Bsgalone_Core_Messages_Optional_Uuid, WithValueAndSomeValueAfter)
 {
   const std::optional<Uuid> expectedOpt{};
-  const auto expectedSlot{bsgalone::core::Slot::COMPUTER};
+  const auto expectedSlot{Slot::COMPUTER};
 
   std::ostringstream out;
-  core::serialize(out, expectedOpt);
-  core::serialize(out, expectedSlot);
+  ::core::serialize(out, expectedOpt);
+  ::core::serialize(out, expectedSlot);
   std::istringstream in(out.str());
 
   std::optional<Uuid> actualOpt{};
-  bsgalone::core::Slot actualSlot{};
-  core::deserialize(in, actualOpt);
-  core::deserialize(in, actualSlot);
+  Slot actualSlot{};
+  ::core::deserialize(in, actualOpt);
+  ::core::deserialize(in, actualSlot);
 
   EXPECT_EQ(actualOpt, expectedOpt);
   EXPECT_EQ(actualSlot, expectedSlot);
@@ -80,4 +80,4 @@ TEST(Unit_Bsgalone_Core_Messages_Optional_Enum, WithValue)
   EXPECT_EQ(actual, expected);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

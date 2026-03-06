@@ -4,8 +4,8 @@
 #include "AxisAlignedBoundingBox.hh"
 #include "CoordinateFrame.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
-auto toIBoundingBox(const CoordinateFrame &frame) -> bsgo::AxisAlignedBoundingBox;
+auto toIBoundingBox(const pge::CoordinateFrame &frame) -> core::AxisAlignedBoundingBox;
 
-} // namespace pge
+} // namespace bsgalone::client

@@ -1,7 +1,7 @@
 
 #include "ShipPriceRepository.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 ShipPriceRepository::ShipPriceRepository(const DbConnectionShPtr &connection)
   : AbstractRepository("ship", connection)
@@ -38,4 +38,4 @@ auto ShipPriceRepository::findAllByShip(const Uuid ship) const -> std::unordered
   return out;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

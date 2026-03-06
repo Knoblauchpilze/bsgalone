@@ -2,7 +2,7 @@
 #include "PurchaseUtils.hh"
 #include <vector>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 namespace {
 struct Cost
@@ -50,13 +50,13 @@ auto computeAffordability(const AffordabilityData &data) -> Affordability
   std::vector<Cost> costs{};
   switch (data.itemType)
   {
-    case bsgalone::core::Item::WEAPON:
+    case Item::WEAPON:
       costs = getItemPrice(data.itemId, data.weapons);
       break;
-    case bsgalone::core::Item::COMPUTER:
+    case Item::COMPUTER:
       costs = getItemPrice(data.itemId, data.computers);
       break;
-    case bsgalone::core::Item::SHIP:
+    case Item::SHIP:
       costs = getItemPrice(data.itemId, data.ships);
       break;
     default:
@@ -79,4 +79,4 @@ auto computeAffordability(const AffordabilityData &data) -> Affordability
   return out;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

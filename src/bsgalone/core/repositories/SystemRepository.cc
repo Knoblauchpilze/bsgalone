@@ -1,7 +1,7 @@
 
 #include "SystemRepository.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 SystemRepository::SystemRepository(const DbConnectionShPtr &connection)
   : AbstractRepository("system", connection)
@@ -233,4 +233,4 @@ void SystemRepository::updateShipForSystem(const Uuid currentShip, const Uuid ne
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

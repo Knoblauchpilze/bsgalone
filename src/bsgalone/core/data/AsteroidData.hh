@@ -5,7 +5,7 @@
 #include <eigen3/Eigen/Eigen>
 #include <optional>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 struct AsteroidData
 {
@@ -25,4 +25,4 @@ struct AsteroidData
   bool deserialize(std::istream &in);
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

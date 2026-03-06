@@ -7,7 +7,7 @@ namespace bsgalone::core {
 
 struct GameEntity
 {
-  bsgo::Uuid uuid{};
+  Uuid uuid{};
 };
 
 } // namespace bsgalone::core

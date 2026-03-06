@@ -5,14 +5,14 @@
 #include "EntityRemovedMessage.hh"
 #include "ShipDbView.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
-bool didPlayerShipDie(const bsgo::EntityRemovedMessage &message,
-                      const bsgo::DatabaseEntityMapper &mapper);
+bool didPlayerShipDie(const core::EntityRemovedMessage &message,
+                      const core::DatabaseEntityMapper &mapper);
 
-bool didPlayerShipDie(const bsgo::EntityRemovedMessage &message, const ShipDbView &shipDbView);
+bool didPlayerShipDie(const core::EntityRemovedMessage &message, const ShipDbView &shipDbView);
 
-bool didPlayerDie(const bsgo::EntityRemovedMessage &message,
-                  const bsgo::DatabaseEntityMapper &mapper);
+bool didPlayerDie(const core::EntityRemovedMessage &message,
+                  const core::DatabaseEntityMapper &mapper);
 
-} // namespace pge
+} // namespace bsgalone::client

@@ -10,12 +10,10 @@ namespace bsgalone::core {
 class JumpCancelledMessage : public AbstractPlayerMessage
 {
   public:
-  JumpCancelledMessage(const bsgo::Uuid playerDbId,
-                       const bsgo::Uuid systemDbId,
-                       const bsgo::Uuid shipDbId);
+  JumpCancelledMessage(const Uuid playerDbId, const Uuid systemDbId, const Uuid shipDbId);
   ~JumpCancelledMessage() override = default;
 
-  auto getShipDbId() const -> bsgo::Uuid;
+  auto getShipDbId() const -> Uuid;
 
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
@@ -32,7 +30,7 @@ class JumpCancelledMessage : public AbstractPlayerMessage
   static auto readFromStream(std::istream &in) -> std::optional<IMessagePtr>;
 
   private:
-  bsgo::Uuid m_shipDbId{};
+  Uuid m_shipDbId{};
 
   JumpCancelledMessage();
 };

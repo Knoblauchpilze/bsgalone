@@ -2,14 +2,12 @@
 #include "AsyncMessageQueue.hh"
 #include "AbstractAsyncEventQueue.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
-auto createAsyncMessageQueue(bsgalone::core::IMessageQueuePtr queue)
-  -> bsgalone::core::IMessageQueueShPtr
+auto createAsyncMessageQueue(IMessageQueuePtr queue) -> IMessageQueueShPtr
 {
-  return std::make_shared<
-    messaging::AbstractAsyncEventQueue<bsgalone::core::MessageType, bsgalone::core::IMessage>>(
+  return std::make_shared<messaging::AbstractAsyncEventQueue<MessageType, IMessage>>(
     std::move(queue));
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

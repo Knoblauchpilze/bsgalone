@@ -4,7 +4,7 @@
 #include "Entity.hh"
 #include <eigen3/Eigen/Eigen>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 bool moveTowardsTarget(Entity &entity, const Eigen::Vector3f &target);
 

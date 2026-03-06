@@ -9,7 +9,7 @@
 #include "UiMenu.hh"
 #include "Views.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
 class OutpostScreenUiHandler : public AbstractUiHandler
 {
@@ -19,12 +19,12 @@ class OutpostScreenUiHandler : public AbstractUiHandler
 
   void initializeMenus(const int width,
                        const int height,
-                       sprites::TexturePack &texturesLoader) override;
+                       pge::sprites::TexturePack &texturesLoader) override;
   bool processUserInput(ui::UserInputData &inputData) override;
-  void render(Renderer &engine) const override;
+  void render(pge::Renderer &engine) const override;
   void updateUi() override;
 
-  void connectToMessageQueue(bsgalone::core::IMessageQueue &messageQueue) override;
+  void connectToMessageQueue(core::IMessageQueue &messageQueue) override;
 
   private:
   ShipDbViewShPtr m_shipDbView{};
@@ -62,4 +62,4 @@ class OutpostScreenUiHandler : public AbstractUiHandler
   void setActiveScreen(const ActiveScreen &screen);
 };
 
-} // namespace pge
+} // namespace bsgalone::client

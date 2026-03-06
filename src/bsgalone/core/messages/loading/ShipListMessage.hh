@@ -6,9 +6,9 @@
 #include "ShipData.hh"
 #include "Uuid.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
-class ShipListMessage : public bsgalone::core::NetworkMessage
+class ShipListMessage : public NetworkMessage
 {
   public:
   ShipListMessage();
@@ -21,11 +21,11 @@ class ShipListMessage : public bsgalone::core::NetworkMessage
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
 
-  auto clone() const -> bsgalone::core::IMessagePtr override;
+  auto clone() const -> IMessagePtr override;
 
   private:
   Faction m_faction{};
   std::vector<ShipData> m_shipsData{};
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

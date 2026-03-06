@@ -3,7 +3,7 @@
 #include "SerializationUtils.hh"
 #include "StringUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 auto str(const Eigen::Vector3f &v) -> std::string
 {
@@ -22,4 +22,4 @@ auto operator*(const Eigen::Vector3f &lhs, const chrono::TickDuration &rhs) -> E
   return Eigen::Vector3f(lhs(0) * rhs, lhs(1) * rhs, lhs(2) * rhs);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

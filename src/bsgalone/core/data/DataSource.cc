@@ -6,10 +6,10 @@
 #include "PlayerDataSource.hh"
 #include "ShipDataSource.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 DataSource::DataSource(const Uuid systemDbId)
-  : core::CoreObject("bsgo")
+  : ::core::CoreObject("bsgo")
   , m_systemDbId(systemDbId)
 {
   setService("data");
@@ -53,4 +53,4 @@ void DataSource::initializeOutposts(Coordinator &coordinator,
   source.initialize(m_systemDbId, coordinator, entityMapper);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

@@ -6,7 +6,7 @@
 #include <memory>
 #include <unordered_set>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 struct Resource
 {
@@ -29,4 +29,4 @@ class ResourceRepository : public AbstractRepository
 
 using ResourceRepositoryShPtr = std::shared_ptr<ResourceRepository>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

@@ -9,17 +9,17 @@
 #include <eigen3/Eigen/Eigen>
 #include <optional>
 
-namespace bsgo {
+namespace bsgalone::core {
 
-class ComponentSyncMessage : public bsgalone::core::NetworkMessage
+class ComponentSyncMessage : public NetworkMessage
 {
   public:
   ComponentSyncMessage();
-  ComponentSyncMessage(const Uuid entityDbId, const bsgalone::core::EntityKind entityKind);
+  ComponentSyncMessage(const Uuid entityDbId, const EntityKind entityKind);
   ~ComponentSyncMessage() override = default;
 
   auto getEntityDbId() const -> Uuid;
-  auto getEntityKind() const -> bsgalone::core::EntityKind;
+  auto getEntityKind() const -> EntityKind;
 
   void setSystemDbId(const Uuid systemDbId);
   auto tryGetSystemDbId() const -> std::optional<Uuid>;
@@ -45,11 +45,11 @@ class ComponentSyncMessage : public bsgalone::core::NetworkMessage
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
 
-  auto clone() const -> bsgalone::core::IMessagePtr override;
+  auto clone() const -> IMessagePtr override;
 
   private:
   Uuid m_entityDbId{};
-  bsgalone::core::EntityKind m_entityKind{};
+  EntityKind m_entityKind{};
 
   std::optional<Uuid> m_systemDbId{};
   std::optional<Status> m_status{};
@@ -60,4 +60,4 @@ class ComponentSyncMessage : public bsgalone::core::NetworkMessage
   std::optional<float> m_power{};
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

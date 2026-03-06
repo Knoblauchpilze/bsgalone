@@ -2,14 +2,14 @@
 #include "AiBehaviorSyncMessage.hh"
 #include "SerializationUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 AiBehaviorSyncMessage::AiBehaviorSyncMessage()
-  : NetworkMessage(bsgalone::core::MessageType::AI_BEHAVIOR_SYNC)
+  : NetworkMessage(MessageType::AI_BEHAVIOR_SYNC)
 {}
 
 AiBehaviorSyncMessage::AiBehaviorSyncMessage(const Uuid shipDbId)
-  : NetworkMessage(bsgalone::core::MessageType::AI_BEHAVIOR_SYNC)
+  : NetworkMessage(MessageType::AI_BEHAVIOR_SYNC)
   , m_shipDbId(shipDbId)
 {}
 
@@ -40,12 +40,12 @@ void AiBehaviorSyncMessage::setTargetIndex(const int targetIndex)
 
 auto AiBehaviorSyncMessage::serialize(std::ostream &out) const -> std::ostream &
 {
-  core::serialize(out, m_messageType);
-  core::serialize(out, m_clientId);
+  ::core::serialize(out, m_messageType);
+  ::core::serialize(out, m_clientId);
 
-  core::serialize(out, m_shipDbId);
-  core::serialize(out, m_systemDbId);
-  core::serialize(out, m_targetIndex);
+  ::core::serialize(out, m_shipDbId);
+  ::core::serialize(out, m_systemDbId);
+  ::core::serialize(out, m_targetIndex);
 
   return out;
 }
@@ -53,17 +53,17 @@ auto AiBehaviorSyncMessage::serialize(std::ostream &out) const -> std::ostream &
 bool AiBehaviorSyncMessage::deserialize(std::istream &in)
 {
   bool ok{true};
-  ok &= core::deserialize(in, m_messageType);
-  ok &= core::deserialize(in, m_clientId);
+  ok &= ::core::deserialize(in, m_messageType);
+  ok &= ::core::deserialize(in, m_clientId);
 
-  ok &= core::deserialize(in, m_shipDbId);
-  ok &= core::deserialize(in, m_systemDbId);
-  ok &= core::deserialize(in, m_targetIndex);
+  ok &= ::core::deserialize(in, m_shipDbId);
+  ok &= ::core::deserialize(in, m_systemDbId);
+  ok &= ::core::deserialize(in, m_targetIndex);
 
   return ok;
 }
 
-auto AiBehaviorSyncMessage::clone() const -> bsgalone::core::IMessagePtr
+auto AiBehaviorSyncMessage::clone() const -> IMessagePtr
 {
   auto clone = std::make_unique<AiBehaviorSyncMessage>(m_shipDbId);
   clone->copyClientIdIfDefined(*this);
@@ -80,4 +80,4 @@ auto AiBehaviorSyncMessage::clone() const -> bsgalone::core::IMessagePtr
   return clone;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

@@ -2,17 +2,17 @@
 #include "JumpService.hh"
 #include "JumpUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-JumpService::JumpService(const Repositories &repositories,
-                         CoordinatorShPtr coordinator,
-                         const DatabaseEntityMapper &entityMapper)
+JumpService::JumpService(const core::Repositories &repositories,
+                         core::CoordinatorShPtr coordinator,
+                         const core::DatabaseEntityMapper &entityMapper)
   : AbstractService("jump", repositories)
   , m_coordinator(std::move(coordinator))
   , m_entityMapper(entityMapper)
 {}
 
-bool JumpService::tryRegisterJump(const Uuid shipDbId, const Uuid system) const
+bool JumpService::tryRegisterJump(const core::Uuid shipDbId, const core::Uuid system) const
 {
   const auto maybeShipEntity = m_entityMapper.tryGetShipEntityId(shipDbId);
   if (!maybeShipEntity)
@@ -22,15 +22,15 @@ bool JumpService::tryRegisterJump(const Uuid shipDbId, const Uuid system) const
 
   auto ship         = m_repositories.playerShipRepository->findOneById(shipDbId);
   const auto status = canShipJump(ship, system);
-  if (JumpCompletionStatus::OK != status)
+  if (core::JumpCompletionStatus::OK != status)
   {
-    warn("Failed to process jump request for ship " + str(ship.id), str(status));
+    warn("Failed to process jump request for ship " + core::str(ship.id), str(status));
     return false;
   }
 
   m_repositories.playerShipRepository->saveJump(shipDbId, system);
 
-  info("Registered jump to " + str(system) + " for ship " + str(shipDbId));
+  info("Registered jump to " + core::str(system) + " for ship " + core::str(shipDbId));
 
   auto playerShip              = m_coordinator->getEntity(*maybeShipEntity);
   const auto currentShipStatus = playerShip.statusComp().status();
@@ -41,7 +41,7 @@ bool JumpService::tryRegisterJump(const Uuid shipDbId, const Uuid system) const
   return true;
 }
 
-bool JumpService::tryCancelJump(const Uuid shipDbId) const
+bool JumpService::tryCancelJump(const core::Uuid shipDbId) const
 {
   const auto maybeShipEntity = m_entityMapper.tryGetShipEntityId(shipDbId);
   if (!maybeShipEntity)
@@ -51,15 +51,15 @@ bool JumpService::tryCancelJump(const Uuid shipDbId) const
 
   auto ship         = m_repositories.playerShipRepository->findOneById(shipDbId);
   const auto status = canShipCancelJump(ship);
-  if (JumpCompletionStatus::OK != status)
+  if (core::JumpCompletionStatus::OK != status)
   {
-    warn("Failed to process jump cancellation for ship " + str(ship.id), str(status));
+    warn("Failed to process jump cancellation for ship " + core::str(ship.id), str(status));
     return false;
   }
 
   m_repositories.playerShipRepository->saveJump(shipDbId, {});
 
-  info("Cancelled jump for ship " + str(shipDbId));
+  info("Cancelled jump for ship " + core::str(shipDbId));
 
   auto playerShip       = m_coordinator->getEntity(*maybeShipEntity);
   const auto shipStatus = playerShip.statusComp().status();
@@ -70,4 +70,4 @@ bool JumpService::tryCancelJump(const Uuid shipDbId) const
   return true;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

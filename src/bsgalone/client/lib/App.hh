@@ -4,9 +4,9 @@
 #include "Game.hh"
 #include "PGEApp.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
-class App : public PGEApp
+class App : public pge::PGEApp
 {
   public:
   /// @brief - Create a new client application for the game. The app will respect
@@ -15,7 +15,7 @@ class App : public PGEApp
   /// @param desc - contains all the needed information to create the canvas needed
   /// @param serverPort - the port to use to connect to the game server
   /// by the app and set up base properties.
-  App(const AppDesc &desc, const int serverPort);
+  App(const pge::AppDesc &desc, const int serverPort);
 
   /// @brief - Create a new client application for the game and performs the login
   /// for the specified user and password.
@@ -25,32 +25,32 @@ class App : public PGEApp
   /// @param password - the password to use to login
   /// @param gameRole - the game role to use to login
   /// by the app and set up base properties.
-  App(const AppDesc &desc,
+  App(const pge::AppDesc &desc,
       const int serverPort,
       const std::optional<std::string> &userName,
       const std::optional<std::string> &password,
-      const std::optional<bsgo::GameRole> &gameRole);
+      const std::optional<core::GameRole> &gameRole);
 
   ~App() override = default;
 
   protected:
   bool onFrame(const float elapsedSeconds) override;
-  void onInputs(const controls::State &controls, CoordinateFrame &frame) override;
+  void onInputs(const pge::controls::State &controls, pge::CoordinateFrame &frame) override;
 
-  void loadResources(const Vec2i &screenDims, Renderer &engine) override;
+  void loadResources(const pge::Vec2i &screenDims, pge::Renderer &engine) override;
   void cleanResources() override;
 
-  void drawDecal(const RenderState &state) override;
-  void draw(const RenderState &state) override;
-  void drawUi(const RenderState &state) override;
-  void drawDebug(const RenderState &state, const Vec2f &mouseScreenPos) override;
+  void drawDecal(const pge::RenderState &state) override;
+  void draw(const pge::RenderState &state) override;
+  void drawUi(const pge::RenderState &state) override;
+  void drawDebug(const pge::RenderState &state, const pge::Vec2f &mouseScreenPos) override;
 
   private:
   int m_serverPort{};
   std::optional<std::string> m_userName{};
   std::optional<std::string> m_password{};
-  std::optional<bsgo::GameRole> m_gameRole{};
+  std::optional<core::GameRole> m_gameRole{};
   GameShPtr m_game{nullptr};
 };
 
-} // namespace pge
+} // namespace bsgalone::client

@@ -5,13 +5,13 @@
 namespace bsgalone::core {
 
 PurchaseMessage::PurchaseMessage()
-  : AbstractPlayerMessage(MessageType::PURCHASE, bsgo::Uuid{0}, bsgo::Uuid{0})
+  : AbstractPlayerMessage(MessageType::PURCHASE, Uuid{0}, Uuid{0})
 {}
 
-PurchaseMessage::PurchaseMessage(const bsgo::Uuid playerDbId,
-                                 const bsgo::Uuid systemDbId,
+PurchaseMessage::PurchaseMessage(const Uuid playerDbId,
+                                 const Uuid systemDbId,
                                  const Item &itemType,
-                                 const bsgo::Uuid itemDbId)
+                                 const Uuid itemDbId)
   : AbstractPlayerMessage(MessageType::PURCHASE, playerDbId, systemDbId)
   , m_itemType(itemType)
   , m_itemDbId(itemDbId)
@@ -22,7 +22,7 @@ auto PurchaseMessage::getItemType() const -> Item
   return m_itemType;
 }
 
-auto PurchaseMessage::getItemDbId() const -> bsgo::Uuid
+auto PurchaseMessage::getItemDbId() const -> Uuid
 {
   return m_itemDbId;
 }

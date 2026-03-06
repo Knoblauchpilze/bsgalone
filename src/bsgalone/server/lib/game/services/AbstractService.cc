@@ -1,9 +1,9 @@
 
 #include "AbstractService.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-AbstractService::AbstractService(const std::string &name, const Repositories &repositories)
+AbstractService::AbstractService(const std::string &name, const core::Repositories &repositories)
   : IService(name)
   , m_repositories(repositories)
 {}
@@ -13,4 +13,4 @@ bool AbstractService::isReady() const noexcept
   return true;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

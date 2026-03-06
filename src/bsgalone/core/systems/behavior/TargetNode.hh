@@ -4,7 +4,7 @@
 #include "LeafNode.hh"
 #include <eigen3/Eigen/Eigen>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class TargetNode : public LeafNode
 {
@@ -34,4 +34,4 @@ class TargetNode : public LeafNode
   void determineCompletionState(DataContext &context);
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

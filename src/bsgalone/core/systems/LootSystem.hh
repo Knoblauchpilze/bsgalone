@@ -3,7 +3,7 @@
 
 #include "AbstractSystem.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class LootSystem : public AbstractSystem
 {
@@ -24,4 +24,4 @@ class LootSystem : public AbstractSystem
   void distributeResourcesTo(const Entity &player, const Entity &deadTarget) const;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

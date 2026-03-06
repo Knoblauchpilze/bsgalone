@@ -68,7 +68,7 @@ TEST(Unit_Bsgalone_Server_Events_ClientEventListener,
 {
   auto manager = std::make_shared<ClientManager>();
   manager->registerClient(net::ClientId{12});
-  manager->registerPlayer(net::ClientId{12}, bsgo::Uuid{17}, bsgo::Uuid{18});
+  manager->registerPlayer(net::ClientId{12}, core::Uuid{17}, core::Uuid{18});
 
   auto queue = std::make_shared<TestMessageQueue>();
   ClientEventListener listener(manager, queue);
@@ -78,10 +78,10 @@ TEST(Unit_Bsgalone_Server_Events_ClientEventListener,
 
   EXPECT_EQ(1u, queue->messages().size());
   const auto &actual = queue->messages().at(0);
-  EXPECT_EQ(bsgalone::core::MessageType::LOGOUT, actual->type());
-  EXPECT_EQ(net::ClientId{12}, actual->as<bsgo::LogoutMessage>().getClientId());
-  EXPECT_EQ(bsgo::Uuid{17}, actual->as<bsgo::LogoutMessage>().getPlayerDbId());
-  EXPECT_TRUE(actual->as<bsgo::LogoutMessage>().shouldCloseConnection());
+  EXPECT_EQ(core::MessageType::LOGOUT, actual->type());
+  EXPECT_EQ(net::ClientId{12}, actual->as<core::LogoutMessage>().getClientId());
+  EXPECT_EQ(core::Uuid{17}, actual->as<core::LogoutMessage>().getPlayerDbId());
+  EXPECT_TRUE(actual->as<core::LogoutMessage>().shouldCloseConnection());
 }
 
 TEST(Unit_Bsgalone_Server_Events_ClientEventListener,

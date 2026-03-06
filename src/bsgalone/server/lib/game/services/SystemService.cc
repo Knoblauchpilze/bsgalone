@@ -2,14 +2,14 @@
 #include "SystemService.hh"
 #include "JumpUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-SystemService::SystemService(const Repositories &repositories)
+SystemService::SystemService(const core::Repositories &repositories)
   : AbstractService("system", repositories)
 {}
 
-bool SystemService::tryDistributeResource(const Uuid playerDbId,
-                                          const Uuid resourceDbId,
+bool SystemService::tryDistributeResource(const core::Uuid playerDbId,
+                                          const core::Uuid resourceDbId,
                                           const int amount) const
 {
   const auto player = m_repositories.playerRepository->findOneById(playerDbId);
@@ -18,7 +18,8 @@ bool SystemService::tryDistributeResource(const Uuid playerDbId,
   // Those players are used to represent bots and should not receive resources.
   if (!player.account)
   {
-    debug("Ignoring distributing resource to " + str(playerDbId) + " as it has no linked account");
+    debug("Ignoring distributing resource to " + core::str(playerDbId)
+          + " as it has no linked account");
     return true;
   }
 
@@ -26,32 +27,32 @@ bool SystemService::tryDistributeResource(const Uuid playerDbId,
   const auto updated  = existing + amount;
   if (updated < 0.0f)
   {
-    warn("Failed to distribute " + std::to_string(amount) + " of " + str(resourceDbId) + " to "
-           + str(playerDbId),
+    warn("Failed to distribute " + std::to_string(amount) + " of " + core::str(resourceDbId)
+           + " to " + core::str(playerDbId),
          "Conflict with existing amount " + std::to_string(existing));
     return false;
   }
 
-  PlayerResource data{.player = playerDbId, .resource = resourceDbId, .amount = updated};
+  core::PlayerResource data{.player = playerDbId, .resource = resourceDbId, .amount = updated};
   m_repositories.playerResourceRepository->save(data);
 
   return true;
 }
 
 namespace {
-bool canShipBeDisposedOf(const PlayerShip &ship)
+bool canShipBeDisposedOf(const core::PlayerShip &ship)
 {
   return ship.active;
 }
 } // namespace
 
-bool SystemService::disposeOfPlayerShip(const Uuid shipDbId, const bool dead) const
+bool SystemService::disposeOfPlayerShip(const core::Uuid shipDbId, const bool dead) const
 {
   auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
 
   if (!canShipBeDisposedOf(ship))
   {
-    warn("Failed to dispose of ship " + str(shipDbId),
+    warn("Failed to dispose of ship " + core::str(shipDbId),
          std::string("Ship ") + (ship.active ? "is" : "is not") + " active and "
            + (ship.docked ? "is" : "is not") + " docked");
     return false;
@@ -69,7 +70,7 @@ bool SystemService::disposeOfPlayerShip(const Uuid shipDbId, const bool dead) co
   }
 }
 
-auto SystemService::sendPlayerBackToOutpost(const Uuid &playerDbId) const -> ForcedDockResult
+auto SystemService::sendPlayerBackToOutpost(const core::Uuid &playerDbId) const -> ForcedDockResult
 {
   auto ship = m_repositories.playerShipRepository->findOneByPlayerAndActive(playerDbId);
 
@@ -95,15 +96,15 @@ auto SystemService::sendPlayerBackToOutpost(const Uuid &playerDbId) const -> For
   return out;
 }
 
-auto SystemService::tryJump(const Uuid shipDbId) const -> JumpResult
+auto SystemService::tryJump(const core::Uuid shipDbId) const -> JumpResult
 {
   JumpResult out{};
 
   auto ship         = m_repositories.playerShipRepository->findOneById(shipDbId);
   const auto status = canShipCompleteJump(ship);
-  if (JumpCompletionStatus::OK != status)
+  if (core::JumpCompletionStatus::OK != status)
   {
-    warn("Failed to process jump for ship " + str(ship.id), str(status));
+    warn("Failed to process jump for ship " + core::str(ship.id), str(status));
     return out;
   }
 
@@ -119,42 +120,44 @@ auto SystemService::tryJump(const Uuid shipDbId) const -> JumpResult
   m_repositories.playerShipRepository->save(ship);
   m_repositories.playerShipRepository->saveJump(ship.id, {});
 
-  info("Completed jump to " + system.name + " for " + str(shipDbId));
+  info("Completed jump to " + system.name + " for " + core::str(shipDbId));
   out.success = true;
 
   return out;
 }
 
-bool SystemService::registerAiBehaviorMilestone(const Uuid shipDbId, const int targetReached) const
+bool SystemService::registerAiBehaviorMilestone(const core::Uuid shipDbId,
+                                                const int targetReached) const
 {
-  AiBehavior behavior{.ship = shipDbId, .targetIndex = targetReached};
+  core::AiBehavior behavior{.ship = shipDbId, .targetIndex = targetReached};
 
   m_repositories.aiBehaviorRepository->save(behavior);
 
   return true;
 }
 
-auto SystemService::tryGetSystemDbIdForShip(const Uuid shipDbId) const -> std::optional<Uuid>
+auto SystemService::tryGetSystemDbIdForShip(const core::Uuid shipDbId) const
+  -> std::optional<core::Uuid>
 {
   return m_repositories.playerShipRepository->findOneById(shipDbId).system;
 }
 
-auto SystemService::getSystemDbIdForPlayer(const Uuid playerDbId) const -> Uuid
+auto SystemService::getSystemDbIdForPlayer(const core::Uuid playerDbId) const -> core::Uuid
 {
   return m_repositories.playerRepository->findSystemByPlayer(playerDbId);
 }
 
-auto SystemService::getSystemDbIdForAsteroid(const Uuid asteroidDbId) const -> Uuid
+auto SystemService::getSystemDbIdForAsteroid(const core::Uuid asteroidDbId) const -> core::Uuid
 {
   return m_repositories.asteroidRepository->findOneById(asteroidDbId).system;
 }
 
-auto SystemService::getSystemDbIdForOutpost(const Uuid outpostDbId) const -> Uuid
+auto SystemService::getSystemDbIdForOutpost(const core::Uuid outpostDbId) const -> core::Uuid
 {
   return m_repositories.systemOutpostRepository->findOneById(outpostDbId).system;
 }
 
-auto SystemService::getShipDbIdForPlayer(const Uuid playerDbId) const -> Uuid
+auto SystemService::getShipDbIdForPlayer(const core::Uuid playerDbId) const -> core::Uuid
 {
   const auto playerShip = m_repositories.playerShipRepository->findOneByPlayerAndActive(playerDbId);
   return playerShip.id;
@@ -164,7 +167,7 @@ namespace {
 const auto ASTEROID_RESPAWN_TIME_IN_TICKS = chrono::TickDuration::fromInt(10);
 }
 
-bool SystemService::tryMarkAsteroidForRespawn(const Uuid asteroidDbId) const
+bool SystemService::tryMarkAsteroidForRespawn(const core::Uuid asteroidDbId) const
 {
   // There's no need to check the health or any other preconditions to
   // mark the asteroid as ready for respawn because this is triggered
@@ -181,8 +184,8 @@ bool SystemService::tryMarkAsteroidForRespawn(const Uuid asteroidDbId) const
   return true;
 }
 
-auto SystemService::findExistingResourceAmount(const Uuid playerDbId, const Uuid resourceDbId) const
-  -> int
+auto SystemService::findExistingResourceAmount(const core::Uuid playerDbId,
+                                               const core::Uuid resourceDbId) const -> int
 {
   const auto resources = m_repositories.playerResourceRepository->findAllByPlayer(playerDbId);
   for (const auto &resource : resources)
@@ -200,15 +203,15 @@ namespace {
 const auto AI_SHIP_RESPAWN_TIME_IN_TICKS = chrono::TickDuration::fromInt(10);
 }
 
-bool SystemService::disposeOfAiShip(const PlayerShip &playerShip, const bool dead) const
+bool SystemService::disposeOfAiShip(const core::PlayerShip &playerShip, const bool dead) const
 {
   if (!playerShip.system)
   {
-    error("AI ship " + str(playerShip.id) + " has no system");
+    error("AI ship " + core::str(playerShip.id) + " has no system");
   }
   if (!dead)
   {
-    error("Cannot dispose of AI ship " + str(playerShip.id), "Ship is not dead");
+    error("Cannot dispose of AI ship " + core::str(playerShip.id), "Ship is not dead");
   }
 
   const auto tickData = m_repositories.tickRepository->findOneBySystem(*playerShip.system);
@@ -221,7 +224,7 @@ bool SystemService::disposeOfAiShip(const PlayerShip &playerShip, const bool dea
   return true;
 }
 
-bool SystemService::disposeOfPlayerShip(PlayerShip playerShip, const bool dead) const
+bool SystemService::disposeOfPlayerShip(core::PlayerShip playerShip, const bool dead) const
 {
   playerShip.docked = true;
   playerShip.jumpSystem.reset();
@@ -241,4 +244,4 @@ bool SystemService::disposeOfPlayerShip(PlayerShip playerShip, const bool dead) 
   return true;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

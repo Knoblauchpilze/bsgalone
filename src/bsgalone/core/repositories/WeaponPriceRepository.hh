@@ -6,7 +6,7 @@
 #include <memory>
 #include <unordered_map>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class WeaponPriceRepository : public AbstractRepository
 {
@@ -21,4 +21,4 @@ class WeaponPriceRepository : public AbstractRepository
 
 using WeaponPriceRepositoryShPtr = std::shared_ptr<WeaponPriceRepository>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

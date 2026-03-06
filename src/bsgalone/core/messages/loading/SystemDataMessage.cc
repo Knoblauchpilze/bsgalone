@@ -2,14 +2,14 @@
 #include "SystemDataMessage.hh"
 #include "SerializationUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 SystemDataMessage::SystemDataMessage()
-  : NetworkMessage(bsgalone::core::MessageType::SYSTEM_DATA)
+  : NetworkMessage(MessageType::SYSTEM_DATA)
 {}
 
 SystemDataMessage::SystemDataMessage(const SystemTickData &tickData)
-  : NetworkMessage(bsgalone::core::MessageType::SYSTEM_DATA)
+  : NetworkMessage(MessageType::SYSTEM_DATA)
   , m_tickData(tickData)
 {}
 
@@ -20,10 +20,10 @@ auto SystemDataMessage::getTickData() const -> SystemTickData
 
 auto SystemDataMessage::serialize(std::ostream &out) const -> std::ostream &
 {
-  core::serialize(out, m_messageType);
-  core::serialize(out, m_clientId);
+  ::core::serialize(out, m_messageType);
+  ::core::serialize(out, m_clientId);
 
-  core::serialize(out, m_tickData);
+  ::core::serialize(out, m_tickData);
 
   return out;
 }
@@ -31,15 +31,15 @@ auto SystemDataMessage::serialize(std::ostream &out) const -> std::ostream &
 bool SystemDataMessage::deserialize(std::istream &in)
 {
   bool ok{true};
-  ok &= core::deserialize(in, m_messageType);
-  ok &= core::deserialize(in, m_clientId);
+  ok &= ::core::deserialize(in, m_messageType);
+  ok &= ::core::deserialize(in, m_clientId);
 
-  ok &= core::deserialize(in, m_tickData);
+  ok &= ::core::deserialize(in, m_tickData);
 
   return ok;
 }
 
-auto SystemDataMessage::clone() const -> bsgalone::core::IMessagePtr
+auto SystemDataMessage::clone() const -> IMessagePtr
 {
   auto clone = std::make_unique<SystemDataMessage>(m_tickData);
   clone->copyClientIdIfDefined(*this);
@@ -47,4 +47,4 @@ auto SystemDataMessage::clone() const -> bsgalone::core::IMessagePtr
   return clone;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

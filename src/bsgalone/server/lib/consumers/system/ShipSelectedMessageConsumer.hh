@@ -6,26 +6,26 @@
 #include "Services.hh"
 #include "ShipSelectedMessage.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-class ShipSelectedMessageConsumer : public bsgalone::core::AbstractMessageConsumer
+class ShipSelectedMessageConsumer : public core::AbstractMessageConsumer
 {
   public:
   ShipSelectedMessageConsumer(const Services &services,
-                              bsgalone::core::IMessageQueue *const systemMessageQueue,
-                              bsgalone::core::IMessageQueue *const outputMessageQueue);
+                              core::IMessageQueue *const systemMessageQueue,
+                              core::IMessageQueue *const outputMessageQueue);
   ~ShipSelectedMessageConsumer() override = default;
 
-  void onEventReceived(const bsgalone::core::IMessage &message) override;
+  void onEventReceived(const core::IMessage &message) override;
 
   private:
   ShipServiceShPtr m_shipService{};
-  bsgalone::core::IMessageQueue *const m_systemMessageQueue{};
-  bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
+  core::IMessageQueue *const m_systemMessageQueue{};
+  core::IMessageQueue *const m_outputMessageQueue{};
 
-  void handleShipSwitchRequest(const bsgalone::core::ShipSelectedMessage &message) const;
+  void handleShipSwitchRequest(const core::ShipSelectedMessage &message) const;
 
-  void handleSuccessfulSwitch(const bsgalone::core::ShipSelectedMessage &message) const;
+  void handleSuccessfulSwitch(const core::ShipSelectedMessage &message) const;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::server

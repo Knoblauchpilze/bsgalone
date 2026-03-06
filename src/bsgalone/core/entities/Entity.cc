@@ -2,7 +2,7 @@
 #include "Entity.hh"
 #include "VectorUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 namespace details {
 template<typename Component>
 bool checkComponentExists(const std::optional<std::shared_ptr<Component>> &comp)
@@ -50,7 +50,7 @@ auto safeAccess(const std::optional<std::shared_ptr<Component>> &comp,
 
 bool Entity::valid() const
 {
-  return bsgalone::core::EntityKind::NONE != kind->kind();
+  return EntityKind::NONE != kind->kind();
 }
 
 auto Entity::str() const noexcept -> std::string
@@ -59,20 +59,20 @@ auto Entity::str() const noexcept -> std::string
 
   out += std::to_string(uuid);
   out += ",";
-  out += bsgalone::core::str(kind->kind());
+  out += core::str(kind->kind());
 
   if (faction)
   {
     const auto f = (*faction)->faction();
     out += ",";
-    out += bsgo::str(f);
+    out += core::str(f);
   }
 
   if (transform)
   {
     const auto p = (*transform)->position();
     out += ",";
-    out += bsgo::str(p);
+    out += core::str(p);
   }
 
   out += "]";
@@ -367,4 +367,4 @@ void Entity::tryMarkForNetworkSync()
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

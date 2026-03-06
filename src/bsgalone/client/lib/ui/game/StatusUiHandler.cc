@@ -4,9 +4,9 @@
 #include "ScreenCommon.hh"
 #include "StringUtils.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
-StatusUiHandler::StatusUiHandler(const Vec2i &offset, const Views &views)
+StatusUiHandler::StatusUiHandler(const pge::Vec2i &offset, const Views &views)
   : AbstractUiHandler("status")
   , m_offset(offset)
   , m_shipView(views.shipView)
@@ -35,21 +35,21 @@ constexpr auto STATUS_MENU_HEIGHT = 20;
 
 void StatusUiHandler::initializeMenus(const int width,
                                       const int height,
-                                      sprites::TexturePack & /*texturesLoader*/)
+                                      pge::sprites::TexturePack & /*texturesLoader*/)
 {
-  const Vec2i statusMenuDims{width - 2 * m_offset.x, STATUS_MENU_HEIGHT};
+  const pge::Vec2i statusMenuDims{width - 2 * m_offset.x, STATUS_MENU_HEIGHT};
 
   const ui::MenuConfig config{.pos           = m_offset,
                               .dims          = statusMenuDims,
                               .layout        = ui::MenuLayout::HORIZONTAL,
                               .highlightable = false};
-  auto bg = ui::bgConfigFromColor(almostTransparent(colors::WHITE));
+  auto bg = ui::bgConfigFromColor(almostTransparent(pge::colors::WHITE));
 
   m_statusBar = std::make_unique<ui::UiMenu>(config, bg);
 
-  bg = ui::bgConfigFromColor(colors::BLANK);
+  bg = ui::bgConfigFromColor(pge::colors::BLANK);
 
-  auto text = ui::textConfigFromColor("N/A", colors::BLACK);
+  auto text = ui::textConfigFromColor("N/A", pge::colors::BLACK);
   auto menu = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_system  = menu.get();
   m_statusBar->addMenu(std::move(menu));
@@ -69,7 +69,7 @@ bool StatusUiHandler::processUserInput(ui::UserInputData &inputData)
   return out;
 }
 
-void StatusUiHandler::render(Renderer &engine) const
+void StatusUiHandler::render(pge::Renderer &engine) const
 {
   m_statusBar->render(engine);
   m_logoutConfirmation->render(engine);
@@ -108,8 +108,8 @@ void StatusUiHandler::reset()
 void StatusUiHandler::generateLogoutButton(const int /*width*/, const int /*height*/)
 {
   const ui::MenuConfig config{.clickCallback = [this]() { requestLogout(); }};
-  const auto bg   = ui::bgConfigFromColor(colors::VERY_DARK_GREY);
-  const auto text = ui::textConfigFromColor("Logout", colors::BLACK, colors::RED);
+  const auto bg   = ui::bgConfigFromColor(pge::colors::VERY_DARK_GREY);
+  const auto text = ui::textConfigFromColor("Logout", pge::colors::BLACK, pge::colors::RED);
 
   auto logout = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_statusBar->addMenu(std::move(logout));
@@ -120,34 +120,34 @@ void StatusUiHandler::generateLogoutConfirmationPanel(const int width, const int
   auto innerPanel = generateBlankHorizontalMenu();
   innerPanel->addMenu(generateSpacer());
 
-  auto bg = ui::bgConfigFromColor(colors::VERY_DARK_RED);
+  auto bg = ui::bgConfigFromColor(pge::colors::VERY_DARK_RED);
   ui::MenuConfig config{.clickCallback = [this]() { confirmLogout(); }};
-  auto text   = ui::textConfigFromColor("Yes", colors::DARK_RED);
+  auto text   = ui::textConfigFromColor("Yes", pge::colors::DARK_RED);
   auto button = std::make_unique<ui::UiTextMenu>(config, bg, text);
   innerPanel->addMenu(std::move(button));
 
   innerPanel->addMenu(generateSpacer());
 
-  bg                   = ui::bgConfigFromColor(colors::VERY_DARK_GREEN);
+  bg                   = ui::bgConfigFromColor(pge::colors::VERY_DARK_GREEN);
   config.clickCallback = [this]() { cancelLogout(); };
-  text                 = ui::textConfigFromColor("No", colors::DARK_GREEN);
+  text                 = ui::textConfigFromColor("No", pge::colors::DARK_GREEN);
   button               = std::make_unique<ui::UiTextMenu>(config, bg, text);
   innerPanel->addMenu(std::move(button));
 
   innerPanel->addMenu(generateSpacer());
 
-  const Vec2i logoutDims{width / 3, height / 4};
-  const Vec2i logoutPos{(width - logoutDims.x) / 2, (height - logoutDims.y) / 2};
+  const pge::Vec2i logoutDims{width / 3, height / 4};
+  const pge::Vec2i logoutPos{(width - logoutDims.x) / 2, (height - logoutDims.y) / 2};
 
   config               = ui::MenuConfig{.pos = logoutPos, .dims = logoutDims};
-  bg                   = ui::bgConfigFromColor(almostOpaque(colors::BLACK));
+  bg                   = ui::bgConfigFromColor(almostOpaque(pge::colors::BLACK));
   m_logoutConfirmation = std::make_unique<ui::UiMenu>(config, bg);
 
   m_logoutConfirmation->addMenu(generateSpacer());
 
   config.highlightable = false;
-  text                 = ui::textConfigFromColor("Do you really want to logout?", colors::WHITE);
-  auto label           = std::make_unique<ui::UiTextMenu>(config, bg, text);
+  text       = ui::textConfigFromColor("Do you really want to logout?", pge::colors::WHITE);
+  auto label = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_logoutConfirmation->addMenu(std::move(label));
 
   m_logoutConfirmation->addMenu(std::move(innerPanel));
@@ -174,4 +174,4 @@ void StatusUiHandler::cancelLogout()
   m_logoutRequested = false;
 }
 
-} // namespace pge
+} // namespace bsgalone::client

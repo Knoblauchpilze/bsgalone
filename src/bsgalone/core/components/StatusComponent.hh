@@ -5,7 +5,7 @@
 #include "Status.hh"
 #include <optional>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class StatusComponent : public AbstractComponent
 {
@@ -48,4 +48,4 @@ class StatusComponent : public AbstractComponent
 
 using StatusComponentShPtr = std::shared_ptr<StatusComponent>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

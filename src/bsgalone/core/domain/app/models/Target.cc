@@ -34,7 +34,7 @@ bool Target::deserialize(std::istream &in)
 
 auto Target::str() const -> std::string
 {
-  std::string out = "[(" + core::str(sourceKind) + "," + bsgo::str(sourceDbId) + "), (";
+  std::string out = "[(" + core::str(sourceKind) + "," + core::str(sourceDbId) + "), (";
 
   if (targetKind)
   {
@@ -48,7 +48,7 @@ auto Target::str() const -> std::string
   if (targetDbId)
   {
     out += ",";
-    out += bsgo::str(*targetDbId);
+    out += core::str(*targetDbId);
   }
   else
   {

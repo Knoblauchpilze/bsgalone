@@ -1,7 +1,7 @@
 
 #include "LeafNode.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 LeafNode::LeafNode(const std::string &name)
   : INode(name)
@@ -41,4 +41,4 @@ void LeafNode::resetInternal(DataContext & /*data*/)
   // Intentionally empty.
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

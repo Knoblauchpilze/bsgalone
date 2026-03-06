@@ -5,7 +5,7 @@
 #include "SlotComponent.hh"
 #include <eigen3/Eigen/Eigen>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class WeaponSlotComponent : public SlotComponent
 {
@@ -32,4 +32,4 @@ class WeaponSlotComponent : public SlotComponent
 
 using WeaponSlotComponentShPtr = std::shared_ptr<WeaponSlotComponent>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

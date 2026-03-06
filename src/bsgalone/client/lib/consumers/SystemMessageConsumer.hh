@@ -9,28 +9,28 @@
 #include "ScannedMessage.hh"
 #include "Uuid.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
-class SystemMessageConsumer : public bsgalone::core::AbstractMessageConsumer
+class SystemMessageConsumer : public core::AbstractMessageConsumer
 {
   public:
-  SystemMessageConsumer(bsgo::DatabaseEntityMapper &entityMapper,
-                        bsgo::CoordinatorShPtr coordinator);
+  SystemMessageConsumer(core::DatabaseEntityMapper &entityMapper,
+                        core::CoordinatorShPtr coordinator);
   ~SystemMessageConsumer() override = default;
 
-  void onEventReceived(const bsgalone::core::IMessage &message) override;
+  void onEventReceived(const core::IMessage &message) override;
 
   private:
-  bsgo::DatabaseEntityMapper &m_entityMapper;
-  bsgo::CoordinatorShPtr m_coordinator{};
+  core::DatabaseEntityMapper &m_entityMapper;
+  core::CoordinatorShPtr m_coordinator{};
 
-  void handleScanOperation(const bsgo::ScannedMessage &message) const;
-  void handleEntityAdded(const bsgo::EntityAddedMessage &message) const;
-  void handleEntityRemoved(const bsgo::EntityRemovedMessage &message) const;
+  void handleScanOperation(const core::ScannedMessage &message) const;
+  void handleEntityAdded(const core::EntityAddedMessage &message) const;
+  void handleEntityRemoved(const core::EntityRemovedMessage &message) const;
 
-  void handleShipCreation(const bsgo::PlayerShipData &data) const;
-  void handleAsteroidCreation(const bsgo::AsteroidData &data) const;
-  void handlePlayerCreation(const bsgo::PlayerData &data) const;
+  void handleShipCreation(const core::PlayerShipData &data) const;
+  void handleAsteroidCreation(const core::AsteroidData &data) const;
+  void handlePlayerCreation(const core::PlayerData &data) const;
 };
 
-} // namespace pge
+} // namespace bsgalone::client

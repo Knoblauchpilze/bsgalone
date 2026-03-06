@@ -10,13 +10,13 @@
 #include "SignupService.hh"
 #include "SystemService.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-void createSystemMessageConsumers(bsgalone::core::IMessageQueue &inputMessagesQueue,
+void createSystemMessageConsumers(core::IMessageQueue &inputMessagesQueue,
                                   SystemQueueMap systemQueues,
-                                  bsgalone::core::IMessageQueue *const outputMessagesQueue)
+                                  core::IMessageQueue *const outputMessagesQueue)
 {
-  Repositories repositories{};
+  core::Repositories repositories{};
 
   auto signupService = std::make_unique<SignupService>(repositories);
   inputMessagesQueue.addListener(
@@ -36,4 +36,4 @@ void createSystemMessageConsumers(bsgalone::core::IMessageQueue &inputMessagesQu
     std::make_unique<JoinShipMessageConsumer>(std::move(playerService), outputMessagesQueue));
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

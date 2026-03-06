@@ -6,7 +6,7 @@
 #include <memory>
 #include <unordered_set>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class ShipComputerRepository : public AbstractRepository
 {
@@ -26,4 +26,4 @@ class ShipComputerRepository : public AbstractRepository
 
 using ShipComputerRepositoryShPtr = std::shared_ptr<ShipComputerRepository>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

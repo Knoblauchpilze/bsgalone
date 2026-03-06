@@ -1,21 +1,21 @@
 
 #include "TickSyncProcess.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-TickSyncProcess::TickSyncProcess(const Uuid systemDbId, const Repositories &repositories)
+TickSyncProcess::TickSyncProcess(const core::Uuid systemDbId, const core::Repositories &repositories)
   : AbstractProcess(ProcessType::TICK_SYNC, repositories)
   , m_systemDbId(systemDbId)
 {}
 
-void TickSyncProcess::update(Coordinator & /*coordinator*/, const chrono::TickData &data)
+void TickSyncProcess::update(core::Coordinator & /*coordinator*/, const chrono::TickData &data)
 {
   if (!shouldSyncTick(data.tick))
   {
     return;
   }
 
-  SystemTick tick{.system = m_systemDbId, .currentTick = data.tick};
+  core::SystemTick tick{.system = m_systemDbId, .currentTick = data.tick};
 
   m_repositories.tickRepository->save(tick);
   m_lastSaved = data.tick.count();
@@ -26,4 +26,4 @@ bool TickSyncProcess::shouldSyncTick(const chrono::Tick &tick) const
   return !m_lastSaved || *m_lastSaved != tick.count();
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

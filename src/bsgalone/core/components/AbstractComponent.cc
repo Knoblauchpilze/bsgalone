@@ -1,9 +1,9 @@
 
 #include "AbstractComponent.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
-AbstractComponent::AbstractComponent(const bsgalone::core::ComponentType &type)
+AbstractComponent::AbstractComponent(const ComponentType &type)
   : IComponent()
   , ::core::CoreObject(str(type))
   , m_componentType(type)
@@ -11,9 +11,9 @@ AbstractComponent::AbstractComponent(const bsgalone::core::ComponentType &type)
   setService("component");
 }
 
-auto AbstractComponent::type() const -> bsgalone::core::ComponentType
+auto AbstractComponent::type() const -> ComponentType
 {
   return m_componentType;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

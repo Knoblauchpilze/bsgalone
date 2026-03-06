@@ -2,7 +2,7 @@
 #include "LockerUtils.hh"
 #include "Slot.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 bool canStillEquipWeapon(const EquipData &data)
 {
@@ -10,7 +10,7 @@ bool canStillEquipWeapon(const EquipData &data)
   const auto slots   = data.playerShipRepo->findOneById(data.shipId).slots;
 
   const auto alreadyEquiped = static_cast<int>(weapons.size());
-  return alreadyEquiped < slots.at(bsgalone::core::Slot::WEAPON);
+  return alreadyEquiped < slots.at(Slot::WEAPON);
 }
 
 bool canStillEquipComputer(const EquipData &data)
@@ -19,7 +19,7 @@ bool canStillEquipComputer(const EquipData &data)
   const auto slots     = data.playerShipRepo->findOneById(data.shipId).slots;
 
   const auto alreadyEquiped = static_cast<int>(computers.size());
-  return alreadyEquiped < slots.at(bsgalone::core::Slot::COMPUTER);
+  return alreadyEquiped < slots.at(Slot::COMPUTER);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

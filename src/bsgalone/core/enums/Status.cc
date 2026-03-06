@@ -2,7 +2,7 @@
 #include "Status.hh"
 #include <stdexcept>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 auto str(const Status &status) -> std::string
 {
@@ -306,4 +306,4 @@ auto determineStartingStatusForShip(const PlayerShip &ship, const Player &player
   return Status::APPEARING;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

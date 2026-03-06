@@ -12,8 +12,7 @@ namespace bsgalone::server {
 class ClientEventListener : public net::INetworkEventListener
 {
   public:
-  ClientEventListener(ClientManagerShPtr clientManager,
-                      bsgalone::core::IMessageQueueShPtr inputQueue);
+  ClientEventListener(ClientManagerShPtr clientManager, core::IMessageQueueShPtr inputQueue);
 
   ~ClientEventListener() override = default;
 
@@ -22,7 +21,7 @@ class ClientEventListener : public net::INetworkEventListener
 
   private:
   ClientManagerShPtr m_clientManager{};
-  bsgalone::core::IMessageQueueShPtr m_inputQueue{};
+  core::IMessageQueueShPtr m_inputQueue{};
 
   void handleClientConnected(const net::ClientConnectedEvent &event);
   void handleClientDisconnected(const net::ClientDisconnectedEvent &event);

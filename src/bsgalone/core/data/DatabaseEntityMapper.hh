@@ -8,11 +8,11 @@
 #include <optional>
 #include <unordered_map>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 using DbIdsToEntityIds = std::unordered_map<Uuid, Uuid>;
 
-class DatabaseEntityMapper : public core::CoreObject
+class DatabaseEntityMapper : public ::core::CoreObject
 {
   public:
   DatabaseEntityMapper();
@@ -42,8 +42,7 @@ class DatabaseEntityMapper : public core::CoreObject
   auto tryGetAsteroidEntityId(const Uuid asteroidDbId) const -> std::optional<Uuid>;
   auto tryGetOutpostEntityId(const Uuid outpostDbId) const -> std::optional<Uuid>;
 
-  auto tryGetEntityId(const Uuid dbId, const bsgalone::core::EntityKind kind) const
-    -> std::optional<Uuid>;
+  auto tryGetEntityId(const Uuid dbId, const EntityKind kind) const -> std::optional<Uuid>;
 
   void clearEntities();
   void clearAll();
@@ -63,4 +62,4 @@ class DatabaseEntityMapper : public core::CoreObject
   void registerShip(const Uuid shipDbId, const Uuid entityId);
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

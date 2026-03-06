@@ -2,7 +2,7 @@
 #include "ShipClass.hh"
 #include <stdexcept>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 auto str(const ShipClass shipClass) -> std::string
 {
@@ -36,4 +36,4 @@ auto fromDbShipClass(const std::string &dbShipClass) -> ShipClass
   throw std::invalid_argument("Unknown ship class \"" + dbShipClass + "\"");
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

@@ -3,7 +3,7 @@
 
 #include "AbstractSystem.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class RemovalSystem : public AbstractSystem
 {
@@ -20,4 +20,4 @@ class RemovalSystem : public AbstractSystem
   void markEntityForRemoval(Entity &entity) const;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

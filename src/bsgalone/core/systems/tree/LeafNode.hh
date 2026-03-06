@@ -3,7 +3,7 @@
 
 #include "INode.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class LeafNode : public INode
 {
@@ -31,4 +31,4 @@ class LeafNode : public INode
   virtual void resetInternal(DataContext &data);
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

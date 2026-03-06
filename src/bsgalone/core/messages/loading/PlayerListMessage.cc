@@ -2,15 +2,15 @@
 #include "PlayerListMessage.hh"
 #include "SerializationUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 PlayerListMessage::PlayerListMessage()
-  : NetworkMessage(bsgalone::core::MessageType::PLAYER_LIST)
+  : NetworkMessage(MessageType::PLAYER_LIST)
 {}
 
 PlayerListMessage::PlayerListMessage(const Uuid systemDbId,
                                      const std::vector<PlayerData> &playersData)
-  : NetworkMessage(bsgalone::core::MessageType::PLAYER_LIST)
+  : NetworkMessage(MessageType::PLAYER_LIST)
   , m_systemDbId(systemDbId)
   , m_playersData(playersData)
 {}
@@ -27,12 +27,12 @@ auto PlayerListMessage::getPlayersData() const -> const std::vector<PlayerData> 
 
 auto PlayerListMessage::serialize(std::ostream &out) const -> std::ostream &
 {
-  core::serialize(out, m_messageType);
-  core::serialize(out, m_clientId);
+  ::core::serialize(out, m_messageType);
+  ::core::serialize(out, m_clientId);
 
-  core::serialize(out, m_systemDbId);
+  ::core::serialize(out, m_systemDbId);
 
-  core::serialize(out, m_playersData);
+  ::core::serialize(out, m_playersData);
 
   return out;
 }
@@ -40,17 +40,17 @@ auto PlayerListMessage::serialize(std::ostream &out) const -> std::ostream &
 bool PlayerListMessage::deserialize(std::istream &in)
 {
   bool ok{true};
-  ok &= core::deserialize(in, m_messageType);
-  ok &= core::deserialize(in, m_clientId);
+  ok &= ::core::deserialize(in, m_messageType);
+  ok &= ::core::deserialize(in, m_clientId);
 
-  ok &= core::deserialize(in, m_systemDbId);
+  ok &= ::core::deserialize(in, m_systemDbId);
 
-  ok &= core::deserialize(in, m_playersData);
+  ok &= ::core::deserialize(in, m_playersData);
 
   return ok;
 }
 
-auto PlayerListMessage::clone() const -> bsgalone::core::IMessagePtr
+auto PlayerListMessage::clone() const -> IMessagePtr
 {
   auto clone = std::make_unique<PlayerListMessage>(m_systemDbId, m_playersData);
   clone->copyClientIdIfDefined(*this);
@@ -58,4 +58,4 @@ auto PlayerListMessage::clone() const -> bsgalone::core::IMessagePtr
   return clone;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

@@ -7,7 +7,7 @@
 #include <memory>
 #include <optional>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 struct PlayerRole
 {
@@ -31,4 +31,4 @@ class PlayerRoleRepository : public AbstractRepository
 
 using PlayerRoleRepositoryShPtr = std::shared_ptr<PlayerRoleRepository>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

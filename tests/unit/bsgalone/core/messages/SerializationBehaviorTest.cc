@@ -14,7 +14,7 @@
 
 using namespace ::testing;
 
-namespace bsgo {
+namespace bsgalone::core {
 namespace {
 auto truncateString(const std::string &in) -> std::string
 {
@@ -27,7 +27,7 @@ template<typename T>
 auto serializeAndDeserialize(const T &expected, const bool truncate) -> std::pair<bool, T>
 {
   std::ostringstream out{};
-  core::serialize(out, expected);
+  ::core::serialize(out, expected);
 
   auto serialized = out.str();
   if (truncate)
@@ -37,12 +37,12 @@ auto serializeAndDeserialize(const T &expected, const bool truncate) -> std::pai
   std::istringstream in(serialized);
 
   T output{};
-  const auto success = core::deserialize(in, output);
+  const auto success = ::core::deserialize(in, output);
   return std::make_pair(success, output);
 }
 
-auto serializeAndDeserialize(const bsgalone::core::VelocityMessage &expected, const bool truncate)
-  -> std::optional<bsgalone::core::IMessagePtr>
+auto serializeAndDeserialize(const VelocityMessage &expected, const bool truncate)
+  -> std::optional<IMessagePtr>
 {
   std::ostringstream out{};
   expected.serialize(out);
@@ -56,7 +56,7 @@ auto serializeAndDeserialize(const bsgalone::core::VelocityMessage &expected, co
   }
   std::istringstream in(serialized);
 
-  return bsgalone::core::VelocityMessage::readFromStream(in);
+  return VelocityMessage::readFromStream(in);
 }
 } // namespace
 
@@ -102,16 +102,13 @@ TEST(Unit_Bsgalone_Core_Messages_Behavior, Nominal_Optional)
 
 TEST(Unit_Bsgalone_Core_Messages_Behavior, Nominal_VelocityMessage)
 {
-  const bsgalone::core::VelocityMessage expected(Uuid{18},
-                                                 Uuid{19},
-                                                 Uuid{12},
-                                                 Eigen::Vector3f{1.0f, 2.0f, 3.0f});
+  const VelocityMessage expected(Uuid{18}, Uuid{19}, Uuid{12}, Eigen::Vector3f{1.0f, 2.0f, 3.0f});
 
   const auto maybeMessage = serializeAndDeserialize(expected, false);
 
   ASSERT_TRUE(maybeMessage.has_value());
   EXPECT_EQ((*maybeMessage)->type(), expected.type());
-  const auto &actual = (*maybeMessage)->as<bsgalone::core::VelocityMessage>();
+  const auto &actual = (*maybeMessage)->as<VelocityMessage>();
   EXPECT_EQ(actual.getPlayerDbId(), expected.getPlayerDbId());
   EXPECT_EQ(actual.getSystemDbId(), expected.getSystemDbId());
   EXPECT_EQ(actual.getShipDbId(), expected.getShipDbId());
@@ -120,7 +117,7 @@ TEST(Unit_Bsgalone_Core_Messages_Behavior, Nominal_VelocityMessage)
 
 TEST(Unit_Bsgalone_Core_Messages_Behavior, Nominal_Duration)
 {
-  const core::Duration expected = core::fromMilliseconds(1234);
+  const ::core::Duration expected = ::core::fromMilliseconds(1234);
 
   const auto [success, actual] = serializeAndDeserialize(expected, false);
 
@@ -130,7 +127,7 @@ TEST(Unit_Bsgalone_Core_Messages_Behavior, Nominal_Duration)
 
 TEST(Unit_Bsgalone_Core_Messages_Behavior, ZeroDuration)
 {
-  const core::Duration expected{};
+  const ::core::Duration expected{};
 
   const auto [success, actual] = serializeAndDeserialize(expected, false);
 
@@ -140,7 +137,7 @@ TEST(Unit_Bsgalone_Core_Messages_Behavior, ZeroDuration)
 
 TEST(Unit_Bsgalone_Core_Messages_Behavior, SubMillisecondDuration)
 {
-  const core::Duration expected{15};
+  const ::core::Duration expected{15};
 
   const auto [success, actual] = serializeAndDeserialize(expected, false);
 
@@ -181,7 +178,7 @@ TEST(Unit_Bsgalone_Core_Messages_Behavior, Nominal_Eigen_Vector3f_EmptyOptional)
 
 TEST(Unit_Bsgalone_Core_Messages_Behavior, Nominal_MapSlotInt_Empty)
 {
-  std::unordered_map<bsgalone::core::Slot, int> empty;
+  std::unordered_map<Slot, int> empty;
 
   const auto [success, actual] = serializeAndDeserialize(empty, false);
 
@@ -191,9 +188,9 @@ TEST(Unit_Bsgalone_Core_Messages_Behavior, Nominal_MapSlotInt_Empty)
 
 TEST(Unit_Bsgalone_Core_Messages_Behavior, Nominal_MapSlotInt)
 {
-  std::unordered_map<bsgalone::core::Slot, int> expected{
-    {bsgalone::core::Slot::WEAPON, 1},
-    {bsgalone::core::Slot::COMPUTER, 2},
+  std::unordered_map<Slot, int> expected{
+    {Slot::WEAPON, 1},
+    {Slot::COMPUTER, 2},
   };
 
   const auto [success, actual] = serializeAndDeserialize(expected, false);
@@ -257,9 +254,9 @@ struct DummyStruct
 
   auto serialize(std::ostream &out) const -> std::ostream &
   {
-    core::serialize(out, a);
-    core::serialize(out, b);
-    core::serialize(out, f);
+    ::core::serialize(out, a);
+    ::core::serialize(out, b);
+    ::core::serialize(out, f);
 
     return out;
   }
@@ -268,9 +265,9 @@ struct DummyStruct
   {
     bool ok{true};
 
-    ok &= core::deserialize(in, a);
-    ok &= core::deserialize(in, b);
-    ok &= core::deserialize(in, f);
+    ok &= ::core::deserialize(in, a);
+    ok &= ::core::deserialize(in, b);
+    ok &= ::core::deserialize(in, f);
 
     return ok;
   }
@@ -387,10 +384,7 @@ TEST(Unit_Bsgalone_Core_Messages_Behavior, Failure_Optional)
 
 TEST(Unit_Bsgalone_Core_Messages_Behavior, Failure_VelocityMessage)
 {
-  const bsgalone::core::VelocityMessage value(Uuid{18},
-                                              Uuid{19},
-                                              Uuid{12},
-                                              Eigen::Vector3f{1.0f, 2.0f, 3.0f});
+  const VelocityMessage value(Uuid{18}, Uuid{19}, Uuid{12}, Eigen::Vector3f{1.0f, 2.0f, 3.0f});
 
   const auto maybeMessage = serializeAndDeserialize(value, true);
 
@@ -399,7 +393,7 @@ TEST(Unit_Bsgalone_Core_Messages_Behavior, Failure_VelocityMessage)
 
 TEST(Unit_Bsgalone_Core_Messages_Behavior, Failure_Duration)
 {
-  const core::Duration value = core::fromMilliseconds(1234);
+  const ::core::Duration value = ::core::fromMilliseconds(1234);
 
   const auto [success, _] = serializeAndDeserialize(value, true);
 
@@ -417,9 +411,9 @@ TEST(Unit_Bsgalone_Core_Messages_Behavior, Failure_Eigen_Vector3f)
 
 TEST(Unit_Bsgalone_Core_Messages_Behavior, Failure_MapSlotInt)
 {
-  std::unordered_map<bsgalone::core::Slot, int> expected{
-    {bsgalone::core::Slot::WEAPON, 1},
-    {bsgalone::core::Slot::COMPUTER, 2},
+  std::unordered_map<Slot, int> expected{
+    {Slot::WEAPON, 1},
+    {Slot::COMPUTER, 2},
   };
 
   const auto [success, _] = serializeAndDeserialize(expected, true);
@@ -526,4 +520,4 @@ INSTANTIATE_TEST_SUITE_P(Unit_Bsgalone_Core_Messages_Behavior,
                            return out;
                          });
 
-} // namespace bsgo
+} // namespace bsgalone::core

@@ -8,23 +8,23 @@
 #include "TickData.hh"
 #include <memory>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class Coordinator;
 
-class ISystem : public core::CoreObject
+class ISystem : public ::core::CoreObject
 {
   public:
   ISystem(const std::string &name);
   ~ISystem() override = default;
 
-  virtual auto type() const -> SystemType                                               = 0;
-  virtual void installInternalMessageQueue(bsgalone::core::IMessageQueue *messageQueue) = 0;
-  virtual void installOutputMessageQueue(bsgalone::core::IMessageQueue *messageQueue)   = 0;
+  virtual auto type() const -> SystemType                               = 0;
+  virtual void installInternalMessageQueue(IMessageQueue *messageQueue) = 0;
+  virtual void installOutputMessageQueue(IMessageQueue *messageQueue)   = 0;
 
   virtual void update(Coordinator &coordinator, const chrono::TickData &data) const = 0;
 };
 
 using ISystemPtr = std::unique_ptr<ISystem>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

@@ -30,9 +30,9 @@
 #include <optional>
 #include <string>
 
-namespace bsgo {
+namespace bsgalone::core {
 
-struct Entity : public bsgalone::core::GameEntity
+struct Entity : public GameEntity
 {
   KindComponentShPtr kind{};
   std::optional<TransformComponentShPtr> transform{};
@@ -111,4 +111,4 @@ struct Entity : public bsgalone::core::GameEntity
 
 using EntityPredicate = std::function<bool(const Entity &entity)>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

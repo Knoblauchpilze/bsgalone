@@ -6,22 +6,22 @@
 #include "SignupMessage.hh"
 #include "SignupService.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-class SignupMessageConsumer : public bsgalone::core::AbstractMessageConsumer
+class SignupMessageConsumer : public core::AbstractMessageConsumer
 {
   public:
   SignupMessageConsumer(SignupServicePtr signupService,
-                        bsgalone::core::IMessageQueue *const outputMessageQueue);
+                        core::IMessageQueue *const outputMessageQueue);
   ~SignupMessageConsumer() override = default;
 
-  void onEventReceived(const bsgalone::core::IMessage &message) override;
+  void onEventReceived(const core::IMessage &message) override;
 
   private:
   SignupServicePtr m_signupService{};
-  bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
+  core::IMessageQueue *const m_outputMessageQueue{};
 
-  void handleSignup(const SignupMessage &message) const;
+  void handleSignup(const core::SignupMessage &message) const;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::server

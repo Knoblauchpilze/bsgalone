@@ -12,7 +12,7 @@
 namespace bsgalone::server {
 
 // TODO: This is currently unused but is meant to replace the Server class.
-class GameServer : public core::CoreObject
+class GameServer : public ::core::CoreObject
 {
   public:
   GameServer(net::INetworkEventQueueShPtr eventBus);

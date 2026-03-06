@@ -1,7 +1,7 @@
 
 #include "FallbackNode.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 FallbackNode::FallbackNode()
   : ControlNode("fallback")
@@ -26,4 +26,4 @@ auto FallbackNode::tick(const BehaviorData &data) -> NodeState
   return NodeState::FAILED;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

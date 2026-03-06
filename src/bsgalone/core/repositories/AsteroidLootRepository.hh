@@ -6,7 +6,7 @@
 #include "Uuid.hh"
 #include <memory>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 struct AsteroidLoot
 {
@@ -27,4 +27,4 @@ class AsteroidLootRepository : public AbstractRepository
 
 using AsteroidLootRepositoryShPtr = std::shared_ptr<AsteroidLootRepository>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

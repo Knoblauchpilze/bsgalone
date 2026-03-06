@@ -6,27 +6,27 @@
 #include "SystemQueues.hh"
 #include "SystemService.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-class JumpMessageConsumer : public bsgalone::core::AbstractMessageConsumer
+class JumpMessageConsumer : public core::AbstractMessageConsumer
 {
   public:
   JumpMessageConsumer(SystemServiceShPtr systemService,
                       SystemQueueMap systemQueues,
-                      bsgalone::core::IMessageQueue *const outputMessageQueue);
+                      core::IMessageQueue *const outputMessageQueue);
   ~JumpMessageConsumer() override = default;
 
-  void onEventReceived(const bsgalone::core::IMessage &message) override;
+  void onEventReceived(const core::IMessage &message) override;
 
   private:
   SystemServiceShPtr m_systemService{};
   SystemQueueMap m_systemQueues{};
-  bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
+  core::IMessageQueue *const m_outputMessageQueue{};
 
-  void handlePostJumpSystemMessages(const Uuid shipDbId,
-                                    const Uuid sourceSystemDbId,
-                                    const Uuid destinationSystemDbId);
-  void handleLoadingMessages(const Uuid playerDbId, const Uuid destinationSystemDbId);
+  void handlePostJumpSystemMessages(const core::Uuid shipDbId,
+                                    const core::Uuid sourceSystemDbId,
+                                    const core::Uuid destinationSystemDbId);
+  void handleLoadingMessages(const core::Uuid playerDbId, const core::Uuid destinationSystemDbId);
 };
 
-} // namespace bsgo
+} // namespace bsgalone::server

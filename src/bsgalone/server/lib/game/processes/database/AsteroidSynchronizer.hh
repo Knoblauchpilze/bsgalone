@@ -4,8 +4,8 @@
 #include "Entity.hh"
 #include "Repositories.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-void syncAsteroid(const Entity &entity, const Repositories &repositories);
+void syncAsteroid(const core::Entity &entity, const core::Repositories &repositories);
 
-} // namespace bsgo
+} // namespace bsgalone::server

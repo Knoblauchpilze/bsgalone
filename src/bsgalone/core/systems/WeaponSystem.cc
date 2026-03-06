@@ -5,7 +5,7 @@
 #include "SystemUtils.hh"
 #include "TargetUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 namespace {
 bool isEntityRelevant(const Entity &entity)
 {
@@ -128,7 +128,7 @@ void WeaponSystem::createBulletDirectedTowards(const Entity &ent,
 {
   const auto targetPos = target.transformComp().position();
 
-  const auto bullet = coordinator.createEntity(bsgalone::core::EntityKind::BULLET);
+  const auto bullet = coordinator.createEntity(EntityKind::BULLET);
   coordinator.addFaction(bullet, ent.factionComp().faction());
 
   constexpr auto BULLET_RADIUS = 0.2f;
@@ -147,4 +147,4 @@ void WeaponSystem::createBulletDirectedTowards(const Entity &ent,
   coordinator.addTarget(bullet, target.uuid);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

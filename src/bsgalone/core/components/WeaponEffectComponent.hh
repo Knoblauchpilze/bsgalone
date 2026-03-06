@@ -3,7 +3,7 @@
 
 #include "EffectComponent.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class WeaponEffectComponent : public EffectComponent
 {
@@ -17,4 +17,4 @@ class WeaponEffectComponent : public EffectComponent
   float m_damageModifier{1.0f};
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

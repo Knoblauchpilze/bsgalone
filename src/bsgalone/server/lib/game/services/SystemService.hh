@@ -5,48 +5,51 @@
 #include <memory>
 #include <optional>
 
-namespace bsgo {
+namespace bsgalone::server {
 
 class SystemService : public AbstractService
 {
   public:
-  SystemService(const Repositories &repositories);
+  SystemService(const core::Repositories &repositories);
   ~SystemService() override = default;
 
-  bool tryDistributeResource(const Uuid playerDbId, const Uuid resourceDbId, const int amount) const;
+  bool tryDistributeResource(const core::Uuid playerDbId,
+                             const core::Uuid resourceDbId,
+                             const int amount) const;
 
-  bool disposeOfPlayerShip(const Uuid shipDbId, const bool dead) const;
+  bool disposeOfPlayerShip(const core::Uuid shipDbId, const bool dead) const;
 
   struct ForcedDockResult
   {
     bool alreadyDocked{false};
   };
-  auto sendPlayerBackToOutpost(const Uuid &playerDbId) const -> ForcedDockResult;
+  auto sendPlayerBackToOutpost(const core::Uuid &playerDbId) const -> ForcedDockResult;
 
   struct JumpResult
   {
     bool success{false};
-    Uuid sourceSystem{};
-    Uuid destinationSystem{};
+    core::Uuid sourceSystem{};
+    core::Uuid destinationSystem{};
   };
-  auto tryJump(const Uuid shipDbId) const -> JumpResult;
+  auto tryJump(const core::Uuid shipDbId) const -> JumpResult;
 
-  bool registerAiBehaviorMilestone(const Uuid shipDbId, const int targetReached) const;
+  bool registerAiBehaviorMilestone(const core::Uuid shipDbId, const int targetReached) const;
 
-  auto tryGetSystemDbIdForShip(const Uuid shipDbId) const -> std::optional<Uuid>;
-  auto getSystemDbIdForPlayer(const Uuid playerDbId) const -> Uuid;
-  auto getSystemDbIdForAsteroid(const Uuid asteroidDbId) const -> Uuid;
-  auto getSystemDbIdForOutpost(const Uuid outpostDbId) const -> Uuid;
-  auto getShipDbIdForPlayer(const Uuid playerDbId) const -> Uuid;
+  auto tryGetSystemDbIdForShip(const core::Uuid shipDbId) const -> std::optional<core::Uuid>;
+  auto getSystemDbIdForPlayer(const core::Uuid playerDbId) const -> core::Uuid;
+  auto getSystemDbIdForAsteroid(const core::Uuid asteroidDbId) const -> core::Uuid;
+  auto getSystemDbIdForOutpost(const core::Uuid outpostDbId) const -> core::Uuid;
+  auto getShipDbIdForPlayer(const core::Uuid playerDbId) const -> core::Uuid;
 
-  bool tryMarkAsteroidForRespawn(const Uuid asteroidDbId) const;
+  bool tryMarkAsteroidForRespawn(const core::Uuid asteroidDbId) const;
 
   private:
-  auto findExistingResourceAmount(const Uuid playerDbId, const Uuid resourceDbId) const -> int;
-  bool disposeOfAiShip(const PlayerShip &playerShip, const bool dead) const;
-  bool disposeOfPlayerShip(PlayerShip playerShip, const bool dead) const;
+  auto findExistingResourceAmount(const core::Uuid playerDbId, const core::Uuid resourceDbId) const
+    -> int;
+  bool disposeOfAiShip(const core::PlayerShip &playerShip, const bool dead) const;
+  bool disposeOfPlayerShip(core::PlayerShip playerShip, const bool dead) const;
 };
 
 using SystemServiceShPtr = std::shared_ptr<SystemService>;
 
-} // namespace bsgo
+} // namespace bsgalone::server

@@ -4,10 +4,11 @@
 
 namespace test {
 
-TestPlayerMessage::TestPlayerMessage(const bsgo::Uuid playerDbId, const bsgo::Uuid systemDbId)
+TestPlayerMessage::TestPlayerMessage(const bsgalone::core::Uuid playerDbId,
+                                     const bsgalone::core::Uuid systemDbId)
   // The type of message does not matter, it is just defined because it is
   // required to pick one to instantiate an `AbstractPlayerMessage`.
-  : bsgalone::core::AbstractPlayerMessage(bsgalone::core::MessageType::DOCK, playerDbId, systemDbId)
+  : AbstractPlayerMessage(bsgalone::core::MessageType::DOCK, playerDbId, systemDbId)
 {}
 
 auto TestPlayerMessage::serialize(std::ostream &out) const -> std::ostream &

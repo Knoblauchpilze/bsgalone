@@ -2,7 +2,7 @@
 #include "MotionSystem.hh"
 #include "VectorUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 namespace {
 bool isEntityRelevant(const Entity &ent)
 {
@@ -32,4 +32,4 @@ void MotionSystem::updateEntity(Entity &entity,
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

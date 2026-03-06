@@ -3,7 +3,7 @@
 
 #include "AbstractSystem.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class AiSystem : public AbstractSystem
 {
@@ -21,4 +21,4 @@ class AiSystem : public AbstractSystem
   void trySendAiBehaviorSyncMessage(const Entity &entity) const;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

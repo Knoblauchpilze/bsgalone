@@ -3,7 +3,7 @@
 #include "Coordinator.hh"
 #include "EntityRemovedMessage.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 namespace {
 bool isEntityRelevant(const Entity &ent)
 {
@@ -48,4 +48,4 @@ void RemovalSystem::markEntityForRemoval(Entity &entity) const
   pushInternalMessage(std::make_unique<EntityRemovedMessage>(entityDbId, entity.kind->kind(), dead));
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

@@ -22,7 +22,7 @@
 #include <memory>
 #include <unordered_map>
 
-namespace pge {
+namespace bsgalone::client {
 
 class IUiHandler;
 using IUiHandlerPtr = std::unique_ptr<IUiHandler>;
@@ -30,24 +30,24 @@ using IUiHandlerPtr = std::unique_ptr<IUiHandler>;
 class IInputHandler;
 using IInputHandlerPtr = std::unique_ptr<IInputHandler>;
 
-class Game : public ui::IScreenChanger, public core::CoreObject
+class Game : public ui::IScreenChanger, public ::core::CoreObject
 {
   public:
   Game(const int serverPort,
        const std::optional<std::string> &userName,
        const std::optional<std::string> &password,
-       const std::optional<bsgo::GameRole> &role);
+       const std::optional<core::GameRole> &role);
   ~Game() override;
 
   auto getScreen() const noexcept -> Screen;
   void setScreen(const Screen screen) override;
 
-  void generateRenderers(int width, int height, Renderer &engine);
+  void generateRenderers(int width, int height, pge::Renderer &engine);
   void generateInputHandlers();
-  void generateUiHandlers(int width, int height, Renderer &engine);
+  void generateUiHandlers(int width, int height, pge::Renderer &engine);
 
-  void processUserInput(const controls::State &controls, CoordinateFrame &frame);
-  void render(const RenderState &state, const RenderingPass pass) const;
+  void processUserInput(const pge::controls::State &controls, pge::CoordinateFrame &frame);
+  void render(const pge::RenderState &state, const pge::RenderingPass pass) const;
 
   /// @brief - Requests the game to be terminated. This is applied to the next
   /// iteration of the game loop.
@@ -64,19 +64,19 @@ class Game : public ui::IScreenChanger, public core::CoreObject
   bool step(float elapsedSeconds);
 
   void onConnectedToServer();
-  void onLogin(const bsgo::Uuid playerDbId, const bsgo::GameRole role);
-  void onLoginDataReceived(const bsgo::Uuid playerShipDbId,
-                           const bsgo::Uuid systemDbId,
-                           const bsgo::Faction faction);
+  void onLogin(const core::Uuid playerDbId, const core::GameRole role);
+  void onLoginDataReceived(const core::Uuid playerShipDbId,
+                           const core::Uuid systemDbId,
+                           const core::Faction faction);
   void onLogout();
-  void onActiveShipChanged(const bsgo::Uuid shipDbId);
-  void onActiveSystemChanged(const bsgo::Uuid systemDbId);
+  void onActiveShipChanged(const core::Uuid shipDbId);
+  void onActiveSystemChanged(const core::Uuid systemDbId);
   void onShipDocked();
   void onShipUndocked();
   void onPlayerKilled();
-  void onSystemDataReceived(const bsgo::SystemTickData &systemData);
-  void onLoadingStarted(const bsgo::LoadingTransition transition);
-  void onLoadingFinished(const bsgo::LoadingTransition transition);
+  void onSystemDataReceived(const core::SystemTickData &systemData);
+  void onLoadingStarted(const core::LoadingTransition transition);
+  void onLoadingFinished(const core::LoadingTransition transition);
 
   private:
   /// @brief - Convenience information defining the state of the
@@ -112,7 +112,7 @@ class Game : public ui::IScreenChanger, public core::CoreObject
 
   /// @brief - Holds the game role to use to login automatically upon connecting
   /// to the server.
-  std::optional<bsgo::GameRole> m_gameRole{};
+  std::optional<core::GameRole> m_gameRole{};
 
   GameNetworkClientShPtr m_networkClient{};
 
@@ -120,10 +120,10 @@ class Game : public ui::IScreenChanger, public core::CoreObject
   /// data about the current player, their ship, the system they are in, etc.
   GameSessionShPtr m_gameSession{std::make_shared<GameSession>()};
 
-  bsgo::DatabaseEntityMapper m_entityMapper{};
+  core::DatabaseEntityMapper m_entityMapper{};
   chrono::TimeManagerPtr m_timeManager{};
-  bsgo::CoordinatorShPtr m_coordinator{};
-  bsgalone::core::IMessageQueuePtr m_internalMessageQueue{};
+  core::CoordinatorShPtr m_coordinator{};
+  core::IMessageQueuePtr m_internalMessageQueue{};
   Views m_views{};
   std::unordered_map<Screen, bsgalone::client::IRendererPtr> m_renderers{};
   std::unordered_map<Screen, IInputHandlerPtr> m_inputHandlers{};
@@ -134,4 +134,4 @@ class Game : public ui::IScreenChanger, public core::CoreObject
 };
 
 using GameShPtr = std::shared_ptr<Game>;
-} // namespace pge
+} // namespace bsgalone::client

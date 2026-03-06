@@ -2,7 +2,7 @@
 #include "EffectSystem.hh"
 #include "Coordinator.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 namespace {
 bool isEntityRelevant(const Entity &entity)
 {
@@ -44,4 +44,4 @@ void EffectSystem::cleanUpFinishedEffects(const Entity &entity, Coordinator &coo
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

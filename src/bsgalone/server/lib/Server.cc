@@ -4,10 +4,10 @@
 #include "SystemMessageConsumerSetup.hh"
 #include "SystemProcessorAdapter.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
 Server::Server()
-  : core::CoreObject("server")
+  : ::core::CoreObject("server")
 {
   setService("server");
   initialize();
@@ -39,15 +39,15 @@ void Server::initialize()
 
 void Server::initializeSystems()
 {
-  const Repositories repositories;
+  const core::Repositories repositories;
 
   const auto allSystems = repositories.systemRepository->findAll();
 
   for (const auto &systemDbId : allSystems)
   {
-    bsgalone::core::IMessageQueueShPtr inputQueue = createSynchronizedMessageQueue();
-    auto processor            = std::make_shared<SystemProcessor>(systemDbId, inputQueue);
-    m_inputQueues[systemDbId] = std::move(inputQueue);
+    core::IMessageQueueShPtr inputQueue = core::createSynchronizedMessageQueue();
+    auto processor                      = std::make_shared<SystemProcessor>(systemDbId, inputQueue);
+    m_inputQueues[systemDbId]           = std::move(inputQueue);
     m_systemProcessors.emplace_back(std::move(processor));
   }
 }
@@ -67,8 +67,7 @@ void Server::initializeMessageSystem()
 
   for (const auto &[systemDbId, systemQueue] : m_inputQueues)
   {
-    auto adapter = std::make_unique<bsgalone::server::SystemProcessorAdapter>(systemDbId,
-                                                                              systemQueue);
+    auto adapter = std::make_unique<SystemProcessorAdapter>(systemDbId, systemQueue);
     m_networkClient->addListener(std::move(adapter));
   }
 }
@@ -108,4 +107,4 @@ void Server::shutdown()
   m_networkClient->stop();
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

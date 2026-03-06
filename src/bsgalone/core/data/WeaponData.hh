@@ -7,7 +7,7 @@
 #include "WeaponRepository.hh"
 #include <unordered_map>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 struct WeaponData
 {
@@ -31,4 +31,4 @@ struct WeaponData
 
 auto fromDbWeapon(const Weapon &weapon, const WeaponPriceRepository &repository) -> WeaponData;
 
-} // namespace bsgo
+} // namespace bsgalone::core

@@ -28,7 +28,7 @@ TEST(Unit_Bsgalone_Core_Network_OutputNetworkAdapter,
 
   EXPECT_THROW(
     [&adapter]() {
-      bsgo::ScannedMessage message(bsgo::Uuid{2}, bsgo::Uuid{4});
+      ScannedMessage message(Uuid{2}, Uuid{4});
       adapter.sendMessage(net::ClientId{12}, message);
     }(),
     std::invalid_argument);
@@ -41,7 +41,7 @@ TEST(Unit_Bsgalone_Core_Network_OutputNetworkAdapter,
 
   EXPECT_THROW(
     [&adapter]() {
-      bsgo::ScannedMessage message(bsgo::Uuid{2}, bsgo::Uuid{4});
+      ScannedMessage message(Uuid{2}, Uuid{4});
       adapter.sendMessage(message);
     }(),
     std::invalid_argument);
@@ -52,7 +52,7 @@ TEST(Unit_Bsgalone_Core_Network_OutputNetworkAdapter, CorrectlySendsServerMessag
   auto server = std::make_shared<TestNetworkServer>();
   OutputNetworkAdapter adapter(server);
 
-  bsgo::ScannedMessage message(bsgo::Uuid{2}, bsgo::Uuid{4});
+  ScannedMessage message(Uuid{2}, Uuid{4});
   adapter.sendMessage(net::ClientId{12}, message);
 
   EXPECT_EQ(1u, server->messages().size());
@@ -71,7 +71,7 @@ TEST(Unit_Bsgalone_Core_Network_OutputNetworkAdapter, CorrectlySendsClientMessag
   auto client = std::make_shared<TestNetworkClient>();
   OutputNetworkAdapter adapter(client);
 
-  bsgo::ScannedMessage message(bsgo::Uuid{2}, bsgo::Uuid{4});
+  ScannedMessage message(Uuid{2}, Uuid{4});
   adapter.sendMessage(message);
 
   EXPECT_EQ(1u, client->messages().size());

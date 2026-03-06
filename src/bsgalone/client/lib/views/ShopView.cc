@@ -5,9 +5,9 @@
 #include "ResourceListMessage.hh"
 #include "WeaponListMessage.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
-auto ShopItem::id() const -> bsgo::Uuid
+auto ShopItem::id() const -> core::Uuid
 {
   if (weapon)
   {
@@ -21,15 +21,15 @@ auto ShopItem::id() const -> bsgo::Uuid
   throw std::invalid_argument("Expected shop item to be a weapon or a computer");
 }
 
-auto ShopItem::type() const -> bsgalone::core::Item
+auto ShopItem::type() const -> core::Item
 {
   if (weapon)
   {
-    return bsgalone::core::Item::WEAPON;
+    return core::Item::WEAPON;
   }
   else if (computer)
   {
-    return bsgalone::core::Item::COMPUTER;
+    return core::Item::COMPUTER;
   }
 
   throw std::invalid_argument("Expected shop item to be a weapon or a computer");
@@ -38,11 +38,11 @@ auto ShopItem::type() const -> bsgalone::core::Item
 ShopView::ShopView(GameSessionShPtr gameSession)
   : AbstractView("shop",
                  {
-                   bsgalone::core::MessageType::COMPUTER_LIST,
-                   bsgalone::core::MessageType::PLAYER_RESOURCE_LIST,
-                   bsgalone::core::MessageType::RESOURCE_LIST,
-                   bsgalone::core::MessageType::SHIP_LIST,
-                   bsgalone::core::MessageType::WEAPON_LIST,
+                   core::MessageType::COMPUTER_LIST,
+                   core::MessageType::PLAYER_RESOURCE_LIST,
+                   core::MessageType::RESOURCE_LIST,
+                   core::MessageType::SHIP_LIST,
+                   core::MessageType::WEAPON_LIST,
                  })
   , m_gameSession(std::move(gameSession))
 {
@@ -74,12 +74,12 @@ auto ShopView::gameSession() const -> const GameSession &
 }
 
 namespace {
-auto tryFindResource(const bsgo::Uuid resourceId, const std::vector<bsgo::ResourceData> &resources)
-  -> std::optional<bsgo::ResourceData>
+auto tryFindResource(const core::Uuid resourceId, const std::vector<core::ResourceData> &resources)
+  -> std::optional<core::ResourceData>
 {
   const auto maybeResource = std::find_if(resources.begin(),
                                           resources.end(),
-                                          [&resourceId](const bsgo::ResourceData &resource) {
+                                          [&resourceId](const core::ResourceData &resource) {
                                             return resource.dbId == resourceId;
                                           });
 
@@ -91,8 +91,8 @@ auto tryFindResource(const bsgo::Uuid resourceId, const std::vector<bsgo::Resour
   return *maybeResource;
 }
 
-auto getWeaponAsShopItem(const bsgo::WeaponData &weapon,
-                         const std::vector<bsgo::ResourceData> &resources) -> ShopItem
+auto getWeaponAsShopItem(const core::WeaponData &weapon,
+                         const std::vector<core::ResourceData> &resources) -> ShopItem
 {
   ShopItem out;
   out.weapon = weapon;
@@ -102,7 +102,7 @@ auto getWeaponAsShopItem(const bsgo::WeaponData &weapon,
     const auto maybeResource = tryFindResource(resourceId, resources);
     if (!maybeResource)
     {
-      throw std::invalid_argument("Unsupported resource " + bsgo::str(resourceId));
+      throw std::invalid_argument("Unsupported resource " + core::str(resourceId));
     }
 
     out.price.emplace_back(*maybeResource, cost);
@@ -111,8 +111,8 @@ auto getWeaponAsShopItem(const bsgo::WeaponData &weapon,
   return out;
 }
 
-auto getComputerAsShopItem(const bsgo::ComputerData &computer,
-                           const std::vector<bsgo::ResourceData> &resources) -> ShopItem
+auto getComputerAsShopItem(const core::ComputerData &computer,
+                           const std::vector<core::ResourceData> &resources) -> ShopItem
 {
   ShopItem out;
   out.computer = computer;
@@ -122,7 +122,7 @@ auto getComputerAsShopItem(const bsgo::ComputerData &computer,
     const auto maybeResource = tryFindResource(resourceId, resources);
     if (!maybeResource)
     {
-      throw std::invalid_argument("Unsupported resource " + bsgo::str(resourceId));
+      throw std::invalid_argument("Unsupported resource " + core::str(resourceId));
     }
 
     out.price.emplace_back(*maybeResource, cost);
@@ -149,10 +149,10 @@ auto ShopView::getShopItems() const -> std::vector<ShopItem>
   return out;
 }
 
-auto ShopView::canPlayerAfford(const bsgo::Uuid id, const bsgalone::core::Item &itemType) const
-  -> bsgo::Affordability
+auto ShopView::canPlayerAfford(const core::Uuid id, const core::Item &itemType) const
+  -> core::Affordability
 {
-  bsgo::AffordabilityData data{
+  core::AffordabilityData data{
     .playerId = m_gameSession->getPlayerDbId(),
     .itemId   = id,
     .itemType = itemType,
@@ -165,44 +165,44 @@ auto ShopView::canPlayerAfford(const bsgo::Uuid id, const bsgalone::core::Item &
   return computeAffordability(data);
 }
 
-auto ShopView::getAllShips() const -> std::vector<bsgo::ShipData>
+auto ShopView::getAllShips() const -> std::vector<core::ShipData>
 {
   return m_ships;
 }
 
-void ShopView::handleMessageInternal(const bsgalone::core::IMessage &message)
+void ShopView::handleMessageInternal(const core::IMessage &message)
 {
   switch (message.type())
   {
-    case bsgalone::core::MessageType::RESOURCE_LIST:
-      m_resources = message.as<bsgo::ResourceListMessage>().getResourcesData();
+    case core::MessageType::RESOURCE_LIST:
+      m_resources = message.as<core::ResourceListMessage>().getResourcesData();
       break;
-    case bsgalone::core::MessageType::COMPUTER_LIST:
-      m_computers = message.as<bsgo::ComputerListMessage>().getComputersData();
+    case core::MessageType::COMPUTER_LIST:
+      m_computers = message.as<core::ComputerListMessage>().getComputersData();
       break;
-    case bsgalone::core::MessageType::WEAPON_LIST:
-      m_weapons = message.as<bsgo::WeaponListMessage>().getWeaponsData();
+    case core::MessageType::WEAPON_LIST:
+      m_weapons = message.as<core::WeaponListMessage>().getWeaponsData();
       break;
-    case bsgalone::core::MessageType::SHIP_LIST:
-      handleShipsLoading(message.as<bsgo::ShipListMessage>());
+    case core::MessageType::SHIP_LIST:
+      handleShipsLoading(message.as<core::ShipListMessage>());
       break;
-    case bsgalone::core::MessageType::PLAYER_RESOURCE_LIST:
-      m_playerResources = message.as<bsgo::PlayerResourceListMessage>().getResourcesData();
+    case core::MessageType::PLAYER_RESOURCE_LIST:
+      m_playerResources = message.as<core::PlayerResourceListMessage>().getResourcesData();
       break;
     default:
       error("Unsupported message type " + str(message.type()));
   }
 }
 
-void ShopView::handleShipsLoading(const bsgo::ShipListMessage &message)
+void ShopView::handleShipsLoading(const core::ShipListMessage &message)
 {
   if (message.getFaction() != m_gameSession->getFaction())
   {
-    error("Received ships for wrong faction, expected " + bsgo::str(m_gameSession->getFaction())
-          + ", got " + bsgo::str(message.getFaction()));
+    error("Received ships for wrong faction, expected " + core::str(m_gameSession->getFaction())
+          + ", got " + core::str(message.getFaction()));
   }
 
   m_ships = message.getShipsData();
 }
 
-} // namespace pge
+} // namespace bsgalone::client

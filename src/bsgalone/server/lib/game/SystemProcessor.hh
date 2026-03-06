@@ -15,39 +15,39 @@
 #include <thread>
 #include <unordered_map>
 
-namespace bsgo {
+namespace bsgalone::server {
 
-class SystemProcessor : public core::CoreObject
+class SystemProcessor : public ::core::CoreObject
 {
   public:
-  SystemProcessor(const Uuid systemDbId, bsgalone::core::IMessageQueueShPtr inputQueue);
+  SystemProcessor(const core::Uuid systemDbId, core::IMessageQueueShPtr inputQueue);
   ~SystemProcessor() override;
 
-  auto getSystemDbId() const -> Uuid;
+  auto getSystemDbId() const -> core::Uuid;
 
-  void connectToQueues(bsgalone::core::IMessageQueue *const internalMessageQueue,
-                       bsgalone::core::IMessageQueue *const outputMessageQueue);
+  void connectToQueues(core::IMessageQueue *const internalMessageQueue,
+                       core::IMessageQueue *const outputMessageQueue);
   void start();
   void stop();
 
   private:
-  Uuid m_systemDbId{};
-  bsgalone::core::IMessageQueueShPtr m_inputMessagesQueue{};
-  DatabaseEntityMapper m_entityMapper{};
+  core::Uuid m_systemDbId{};
+  core::IMessageQueueShPtr m_inputMessagesQueue{};
+  core::DatabaseEntityMapper m_entityMapper{};
 
   chrono::TimeManagerPtr m_timeManager{};
-  CoordinatorShPtr m_coordinator{};
+  core::CoordinatorShPtr m_coordinator{};
   Services m_services{};
   ProcessesPtr m_processes{};
 
   std::atomic_bool m_running{false};
   std::thread m_processingThread{};
 
-  void initialize(const Uuid systemDbId);
+  void initialize(const core::Uuid systemDbId);
   void asyncSystemProcessing();
-  void createMessageConsumers(bsgalone::core::IMessageQueue *const outputMessagesQueue);
+  void createMessageConsumers(core::IMessageQueue *const outputMessagesQueue);
 };
 
 using SystemProcessorShPtr = std::shared_ptr<SystemProcessor>;
 
-} // namespace bsgo
+} // namespace bsgalone::server

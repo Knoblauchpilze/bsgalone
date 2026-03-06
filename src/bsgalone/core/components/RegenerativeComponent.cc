@@ -2,9 +2,9 @@
 #include "RegenerativeComponent.hh"
 #include <algorithm>
 
-namespace bsgo {
+namespace bsgalone::core {
 
-RegenerativeComponent::RegenerativeComponent(const bsgalone::core::ComponentType &type,
+RegenerativeComponent::RegenerativeComponent(const ComponentType &type,
                                              const float min,
                                              const float value,
                                              const float max,
@@ -73,4 +73,4 @@ void RegenerativeComponent::validate()
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

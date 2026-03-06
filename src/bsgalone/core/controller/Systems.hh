@@ -8,17 +8,17 @@
 #include <unordered_set>
 #include <vector>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 struct SystemsConfig
 {
-  bsgalone::core::IMessageQueue *const internalMessageQueue{};
-  bsgalone::core::IMessageQueue *const outputMessageQueue{};
+  IMessageQueue *const internalMessageQueue{};
+  IMessageQueue *const outputMessageQueue{};
 
   std::unordered_set<SystemType> ignoredSystems{};
 };
 
-class Systems : public core::CoreObject
+class Systems : public ::core::CoreObject
 {
   public:
   Systems(SystemsConfig &&config);
@@ -34,4 +34,4 @@ class Systems : public core::CoreObject
 
 using SystemsPtr = std::unique_ptr<Systems>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

@@ -4,7 +4,7 @@
 
 using namespace ::testing;
 
-namespace bsgo {
+namespace bsgalone::core {
 
 TEST(Unit_Bsgalone_Core_Systems_Tree_Context_DataContext, SetGet)
 {
@@ -87,4 +87,4 @@ TEST(Unit_Bsgalone_Core_Systems_Tree_Context_DataContext, OverridesExistingKey)
   EXPECT_EQ(*actual, Uuid{17});
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

@@ -1,11 +1,10 @@
 
 #include "AbstractView.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
-AbstractView::AbstractView(
-  const std::string &name,
-  const std::unordered_set<bsgalone::core::MessageType> &relevantMessageTypes)
+AbstractView::AbstractView(const std::string &name,
+                           const std::unordered_set<core::MessageType> &relevantMessageTypes)
   : AbstractMessageConsumer(name, relevantMessageTypes)
   , IView()
 {
@@ -27,7 +26,7 @@ void AbstractView::addListener(IViewListenerPtr listener)
   m_listeners.emplace_back(std::move(listener));
 }
 
-void AbstractView::onEventReceived(const bsgalone::core::IMessage &message)
+void AbstractView::onEventReceived(const core::IMessage &message)
 {
   withSafetyNet([this, &message]() { handleMessageInternal(message); }, "onMessageReceived");
   notifyListeners();
@@ -41,7 +40,7 @@ void AbstractView::notifyListeners()
   }
 }
 
-void AbstractView::handleMessageInternal(const bsgalone::core::IMessage & /*message*/)
+void AbstractView::handleMessageInternal(const core::IMessage & /*message*/)
 {
   // Default implementation should never be called. It is provided to conform
   // to the AbstractMessageConsumer interface and allow views which are not
@@ -51,4 +50,4 @@ void AbstractView::handleMessageInternal(const bsgalone::core::IMessage & /*mess
   error("Please define an overload for this method if you want to receive messages");
 }
 
-} // namespace pge
+} // namespace bsgalone::client

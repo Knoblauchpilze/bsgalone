@@ -5,9 +5,9 @@
 #include "NetworkMessage.hh"
 #include "Uuid.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
-class LoadingStartedMessage : public bsgalone::core::NetworkMessage
+class LoadingStartedMessage : public NetworkMessage
 {
   public:
   LoadingStartedMessage();
@@ -24,7 +24,7 @@ class LoadingStartedMessage : public bsgalone::core::NetworkMessage
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
 
-  auto clone() const -> bsgalone::core::IMessagePtr override;
+  auto clone() const -> IMessagePtr override;
 
   private:
   LoadingTransition m_transition{};
@@ -32,4 +32,4 @@ class LoadingStartedMessage : public bsgalone::core::NetworkMessage
   std::optional<Uuid> m_playerDbId{};
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

@@ -1,9 +1,9 @@
 
 #include "AbstractProcess.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-AbstractProcess::AbstractProcess(const ProcessType &type, const Repositories &repositories)
+AbstractProcess::AbstractProcess(const ProcessType &type, const core::Repositories &repositories)
   : IProcess(str(type))
   , m_repositories(repositories)
   , m_processType(type)
@@ -14,4 +14,4 @@ auto AbstractProcess::type() const -> ProcessType
   return m_processType;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

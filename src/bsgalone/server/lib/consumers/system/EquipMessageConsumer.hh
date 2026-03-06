@@ -7,28 +7,28 @@
 #include "Item.hh"
 #include "Services.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-class EquipMessageConsumer : public bsgalone::core::AbstractMessageConsumer
+class EquipMessageConsumer : public core::AbstractMessageConsumer
 {
   public:
   EquipMessageConsumer(const Services &services,
-                       bsgalone::core::IMessageQueue *const systemMessageQueue,
-                       bsgalone::core::IMessageQueue *const outputMessageQueue);
+                       core::IMessageQueue *const systemMessageQueue,
+                       core::IMessageQueue *const outputMessageQueue);
   ~EquipMessageConsumer() override = default;
 
-  void onEventReceived(const bsgalone::core::IMessage &message) override;
+  void onEventReceived(const core::IMessage &message) override;
 
   private:
   LockerServiceShPtr m_lockerService{};
   ShipServiceShPtr m_shipService{};
-  bsgalone::core::IMessageQueue *const m_systemMessageQueue{};
-  bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
+  core::IMessageQueue *const m_systemMessageQueue{};
+  core::IMessageQueue *const m_outputMessageQueue{};
 
-  void handleEquipRequest(const bsgalone::core::EquipMessage &message) const;
-  void handleUnequipRequest(const bsgalone::core::EquipMessage &message) const;
+  void handleEquipRequest(const core::EquipMessage &message) const;
+  void handleUnequipRequest(const core::EquipMessage &message) const;
 
-  void handleSuccessfulRequest(const bsgalone::core::EquipMessage &message) const;
+  void handleSuccessfulRequest(const core::EquipMessage &message) const;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::server

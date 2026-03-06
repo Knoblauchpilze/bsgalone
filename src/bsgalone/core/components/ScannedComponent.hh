@@ -3,7 +3,7 @@
 
 #include "AbstractComponent.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class ScannedComponent : public AbstractComponent
 {
@@ -23,4 +23,4 @@ class ScannedComponent : public AbstractComponent
 
 using ScannedComponentShPtr = std::shared_ptr<ScannedComponent>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

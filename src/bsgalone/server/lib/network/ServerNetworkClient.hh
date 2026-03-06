@@ -11,9 +11,9 @@
 #include <atomic>
 #include <memory>
 
-namespace bsgo {
+namespace bsgalone::server {
 
-class ServerNetworkClient : public bsgalone::core::IMessageQueue
+class ServerNetworkClient : public core::IMessageQueue
 {
   public:
   ServerNetworkClient();
@@ -22,8 +22,8 @@ class ServerNetworkClient : public bsgalone::core::IMessageQueue
   void start(const int port);
   void stop();
 
-  void pushEvent(bsgalone::core::IMessagePtr message) override;
-  void addListener(bsgalone::core::IMessageListenerPtr listener) override;
+  void pushEvent(core::IMessagePtr message) override;
+  void addListener(core::IMessageListenerPtr listener) override;
   bool empty() override;
 
   void processEvents() override;
@@ -34,14 +34,13 @@ class ServerNetworkClient : public bsgalone::core::IMessageQueue
 
   std::atomic_bool m_started{};
 
-  bsgalone::server::ClientManagerShPtr m_clientManager{
-    std::make_shared<bsgalone::server::ClientManager>()};
-  bsgalone::core::IMessageQueueShPtr m_inputQueue{};
-  bsgalone::core::IMessageQueueShPtr m_outputQueue{};
+  ClientManagerShPtr m_clientManager{std::make_shared<ClientManager>()};
+  core::IMessageQueueShPtr m_inputQueue{};
+  core::IMessageQueueShPtr m_outputQueue{};
 
   void initialize();
 };
 
 using ServerNetworkClientShPtr = std::shared_ptr<ServerNetworkClient>;
 
-} // namespace bsgo
+} // namespace bsgalone::server

@@ -1,7 +1,7 @@
 
 #include "SyncComponent.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 namespace {
 constexpr auto BASE_SYNC_INTERVAL_TICK    = 1.0f;
@@ -16,7 +16,7 @@ auto generateJitteredSyncInterval() -> chrono::TickDuration
 }
 } // namespace
 
-SyncComponent::SyncComponent(const bsgalone::core::ComponentType type)
+SyncComponent::SyncComponent(const ComponentType type)
   : AbstractComponent(type)
   , m_untilNextSync(generateJitteredSyncInterval())
 {}
@@ -47,4 +47,4 @@ void SyncComponent::update(const chrono::TickData &data)
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

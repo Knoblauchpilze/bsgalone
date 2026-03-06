@@ -5,7 +5,7 @@
 #include "UiTextMenu.hh"
 #include "Views.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
 class GameScreenUiHandler : public AbstractUiHandler
 {
@@ -15,11 +15,11 @@ class GameScreenUiHandler : public AbstractUiHandler
 
   void initializeMenus(const int width,
                        const int height,
-                       sprites::TexturePack &texturesLoader) override;
+                       pge::sprites::TexturePack &texturesLoader) override;
   bool processUserInput(ui::UserInputData &inputData) override;
-  void render(Renderer &engine) const override;
+  void render(pge::Renderer &engine) const override;
   void updateUi() override;
-  void connectToMessageQueue(bsgalone::core::IMessageQueue &messageQueue) override;
+  void connectToMessageQueue(core::IMessageQueue &messageQueue) override;
 
   private:
   std::vector<AbstractUiHandlerPtr> m_uis{};
@@ -27,4 +27,4 @@ class GameScreenUiHandler : public AbstractUiHandler
   void initializeUis(const Views &views);
 };
 
-} // namespace pge
+} // namespace bsgalone::client

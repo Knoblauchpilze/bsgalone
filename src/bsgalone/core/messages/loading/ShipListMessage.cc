@@ -2,14 +2,14 @@
 #include "ShipListMessage.hh"
 #include "SerializationUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 ShipListMessage::ShipListMessage()
-  : NetworkMessage(bsgalone::core::MessageType::SHIP_LIST)
+  : NetworkMessage(MessageType::SHIP_LIST)
 {}
 
 ShipListMessage::ShipListMessage(const Faction faction, const std::vector<ShipData> &shipsData)
-  : NetworkMessage(bsgalone::core::MessageType::SHIP_LIST)
+  : NetworkMessage(MessageType::SHIP_LIST)
   , m_faction(faction)
   , m_shipsData(shipsData)
 {}
@@ -26,12 +26,12 @@ auto ShipListMessage::getShipsData() const -> const std::vector<ShipData> &
 
 auto ShipListMessage::serialize(std::ostream &out) const -> std::ostream &
 {
-  core::serialize(out, m_messageType);
-  core::serialize(out, m_clientId);
+  ::core::serialize(out, m_messageType);
+  ::core::serialize(out, m_clientId);
 
-  core::serialize(out, m_faction);
+  ::core::serialize(out, m_faction);
 
-  core::serialize(out, m_shipsData);
+  ::core::serialize(out, m_shipsData);
 
   return out;
 }
@@ -39,17 +39,17 @@ auto ShipListMessage::serialize(std::ostream &out) const -> std::ostream &
 bool ShipListMessage::deserialize(std::istream &in)
 {
   bool ok{true};
-  ok &= core::deserialize(in, m_messageType);
-  ok &= core::deserialize(in, m_clientId);
+  ok &= ::core::deserialize(in, m_messageType);
+  ok &= ::core::deserialize(in, m_clientId);
 
-  ok &= core::deserialize(in, m_faction);
+  ok &= ::core::deserialize(in, m_faction);
 
-  ok &= core::deserialize(in, m_shipsData);
+  ok &= ::core::deserialize(in, m_shipsData);
 
   return ok;
 }
 
-auto ShipListMessage::clone() const -> bsgalone::core::IMessagePtr
+auto ShipListMessage::clone() const -> IMessagePtr
 {
   auto clone = std::make_unique<ShipListMessage>(m_faction, m_shipsData);
   clone->copyClientIdIfDefined(*this);
@@ -57,4 +57,4 @@ auto ShipListMessage::clone() const -> bsgalone::core::IMessagePtr
   return clone;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

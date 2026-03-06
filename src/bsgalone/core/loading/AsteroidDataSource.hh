@@ -7,11 +7,11 @@
 #include "Repositories.hh"
 #include <optional>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class Coordinator;
 
-class AsteroidDataSource : public core::CoreObject
+class AsteroidDataSource : public ::core::CoreObject
 {
   public:
   AsteroidDataSource();
@@ -37,4 +37,4 @@ class AsteroidDataSource : public core::CoreObject
   std::optional<Repositories> m_repositories{};
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

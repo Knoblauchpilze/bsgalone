@@ -5,7 +5,7 @@
 
 using namespace ::testing;
 
-namespace bsgo {
+namespace bsgalone::core {
 namespace {
 void assertMessagesAreEqual(const EntityAddedMessage &actual, const EntityAddedMessage &expected)
 {
@@ -15,7 +15,7 @@ void assertMessagesAreEqual(const EntityAddedMessage &actual, const EntityAddedM
 
   switch (actual.getEntityKind())
   {
-    case bsgalone::core::EntityKind::ASTEROID:
+    case EntityKind::ASTEROID:
       assertAsteroidDataAreEqual(actual.tryGetAsteroidData().value(),
                                  expected.tryGetAsteroidData().value());
       EXPECT_FALSE(actual.tryGetShipData().has_value());
@@ -23,7 +23,7 @@ void assertMessagesAreEqual(const EntityAddedMessage &actual, const EntityAddedM
       EXPECT_FALSE(actual.tryGetPlayerData().has_value());
       break;
 
-    case bsgalone::core::EntityKind::SHIP:
+    case EntityKind::SHIP:
       EXPECT_FALSE(actual.tryGetAsteroidData().has_value());
       assertPlayerShipDataAreEqual(actual.tryGetShipData().value(),
                                    expected.tryGetShipData().value());
@@ -31,7 +31,7 @@ void assertMessagesAreEqual(const EntityAddedMessage &actual, const EntityAddedM
       EXPECT_FALSE(actual.tryGetPlayerData().has_value());
       break;
 
-    case bsgalone::core::EntityKind::OUTPOST:
+    case EntityKind::OUTPOST:
       EXPECT_FALSE(actual.tryGetAsteroidData().has_value());
       EXPECT_FALSE(actual.tryGetShipData().has_value());
       assertOutpostDataAreEqual(actual.tryGetOutpostData().value(),
@@ -39,7 +39,7 @@ void assertMessagesAreEqual(const EntityAddedMessage &actual, const EntityAddedM
       EXPECT_FALSE(actual.tryGetPlayerData().has_value());
       break;
 
-    case bsgalone::core::EntityKind::PLAYER:
+    case EntityKind::PLAYER:
       EXPECT_FALSE(actual.tryGetAsteroidData().has_value());
       EXPECT_FALSE(actual.tryGetShipData().has_value());
       EXPECT_FALSE(actual.tryGetOutpostData().has_value());
@@ -62,7 +62,7 @@ TEST(Unit_Bsgalone_Core_Messages_EntityAddedMessage, SerializationFailsWhenNoEnt
       std::ostringstream out{};
       message.serialize(out);
     }(),
-    core::CoreException);
+    ::core::CoreException);
 }
 
 TEST(Unit_Bsgalone_Core_Messages_EntityAddedMessage, SetsEntityKindForAsteroid)
@@ -73,7 +73,7 @@ TEST(Unit_Bsgalone_Core_Messages_EntityAddedMessage, SetsEntityKindForAsteroid)
                                        .radius    = 4.5f,
                                        .maxHealth = 14.78f});
 
-  EXPECT_EQ(message.getEntityKind(), bsgalone::core::EntityKind::ASTEROID);
+  EXPECT_EQ(message.getEntityKind(), EntityKind::ASTEROID);
 }
 
 TEST(Unit_Bsgalone_Core_Messages_EntityAddedMessage, SetsEntityKindForShip)
@@ -82,7 +82,7 @@ TEST(Unit_Bsgalone_Core_Messages_EntityAddedMessage, SetsEntityKindForShip)
   message.setShipData(
     PlayerShipData{.dbId = Uuid{123}, .position = Eigen::Vector3f{1, 2, 3}, .radius = 4.5f});
 
-  EXPECT_EQ(message.getEntityKind(), bsgalone::core::EntityKind::SHIP);
+  EXPECT_EQ(message.getEntityKind(), EntityKind::SHIP);
 }
 
 TEST(Unit_Bsgalone_Core_Messages_EntityAddedMessage, SetsEntityKindForOutpost)
@@ -91,7 +91,7 @@ TEST(Unit_Bsgalone_Core_Messages_EntityAddedMessage, SetsEntityKindForOutpost)
   message.setOutpostData(
     OutpostData{.dbId = Uuid{123}, .position = Eigen::Vector3f{1, 2, 3}, .radius = 4.5f});
 
-  EXPECT_EQ(message.getEntityKind(), bsgalone::core::EntityKind::OUTPOST);
+  EXPECT_EQ(message.getEntityKind(), EntityKind::OUTPOST);
 }
 
 TEST(Unit_Bsgalone_Core_Messages_EntityAddedMessage, SetsEntityKindForPlayer)
@@ -99,7 +99,7 @@ TEST(Unit_Bsgalone_Core_Messages_EntityAddedMessage, SetsEntityKindForPlayer)
   EntityAddedMessage message(Uuid{789});
   message.setPlayerData(PlayerData{.dbId = Uuid{123}, .name = "my-player"});
 
-  EXPECT_EQ(message.getEntityKind(), bsgalone::core::EntityKind::PLAYER);
+  EXPECT_EQ(message.getEntityKind(), EntityKind::PLAYER);
 }
 
 TEST(Unit_Bsgalone_Core_Messages_EntityAddedMessage, WhenAnotherKindOfDataIsSetExpectTypeToChange)
@@ -108,12 +108,12 @@ TEST(Unit_Bsgalone_Core_Messages_EntityAddedMessage, WhenAnotherKindOfDataIsSetE
   message.setAsteroidData(
     AsteroidData{.dbId = Uuid{123}, .position = Eigen::Vector3f{1, 2, 3}, .radius = 4.5f});
 
-  EXPECT_EQ(message.getEntityKind(), bsgalone::core::EntityKind::ASTEROID);
+  EXPECT_EQ(message.getEntityKind(), EntityKind::ASTEROID);
 
   message.setShipData(
     PlayerShipData{.dbId = Uuid{123}, .position = Eigen::Vector3f{3, 2, 1}, .radius = 4.5f});
 
-  EXPECT_EQ(message.getEntityKind(), bsgalone::core::EntityKind::SHIP);
+  EXPECT_EQ(message.getEntityKind(), EntityKind::SHIP);
   EXPECT_FALSE(message.tryGetAsteroidData().has_value());
 }
 
@@ -247,7 +247,7 @@ TEST(Unit_Bsgalone_Core_Messages_EntityAddedMessage, CloneWithAsteroidData)
   expected.setAsteroidData(AsteroidData{.dbId = Uuid{36}, .health = 36.5f});
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::ENTITY_ADDED);
+  ASSERT_EQ(cloned->type(), MessageType::ENTITY_ADDED);
   assertMessagesAreEqual(cloned->as<EntityAddedMessage>(), expected);
 }
 
@@ -257,7 +257,7 @@ TEST(Unit_Bsgalone_Core_Messages_EntityAddedMessage, CloneWithShipData)
   expected.setShipData(PlayerShipData{.dbId = Uuid{36}, .name = "my-ship"});
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::ENTITY_ADDED);
+  ASSERT_EQ(cloned->type(), MessageType::ENTITY_ADDED);
   assertMessagesAreEqual(cloned->as<EntityAddedMessage>(), expected);
 }
 
@@ -267,7 +267,7 @@ TEST(Unit_Bsgalone_Core_Messages_EntityAddedMessage, CloneWithOutpostData)
   expected.setOutpostData(OutpostData{.dbId = Uuid{36}, .powerRegen = 36.5f});
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::ENTITY_ADDED);
+  ASSERT_EQ(cloned->type(), MessageType::ENTITY_ADDED);
   assertMessagesAreEqual(cloned->as<EntityAddedMessage>(), expected);
 }
 
@@ -277,8 +277,8 @@ TEST(Unit_Bsgalone_Core_Messages_EntityAddedMessage, CloneWithPlayerData)
   expected.setPlayerData(PlayerData{.dbId = Uuid{36}, .name = "my-player"});
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::ENTITY_ADDED);
+  ASSERT_EQ(cloned->type(), MessageType::ENTITY_ADDED);
   assertMessagesAreEqual(cloned->as<EntityAddedMessage>(), expected);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

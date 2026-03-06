@@ -9,7 +9,7 @@
 #include "StringUtils.hh"
 #include "UiTextMenu.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
 LockerUiHandler::LockerUiHandler(const Views &views)
   : AbstractUiHandler("locker")
@@ -30,7 +30,7 @@ LockerUiHandler::LockerUiHandler(const Views &views)
 
 void LockerUiHandler::initializeMenus(const int width,
                                       const int height,
-                                      sprites::TexturePack & /*texturesLoader*/)
+                                      pge::sprites::TexturePack & /*texturesLoader*/)
 {
   const auto viewWidth  = static_cast<int>(MAIN_VIEW_WIDTH_TO_SCREEN_WIDTH_RATIO * width);
   const auto viewHeight = static_cast<int>(MAIN_VIEW_HEIGHT_TO_SCREEN_HEIGHT_RATIO * height);
@@ -45,9 +45,9 @@ void LockerUiHandler::initializeMenus(const int width,
             + " vertical pixel(s) needed");
   }
 
-  Vec2i pos{width - viewWidth - VIEW_TO_RIGHT_OF_SCREEN_IN_PIXELS,
-            height - viewHeight - VIEW_TO_BOTTOM_OF_SCREEN_IN_PIXELS};
-  Vec2i dims{viewWidth, RESOURCES_MENU_HEIGHT};
+  pge::Vec2i pos{width - viewWidth - VIEW_TO_RIGHT_OF_SCREEN_IN_PIXELS,
+                 height - viewHeight - VIEW_TO_BOTTOM_OF_SCREEN_IN_PIXELS};
+  pge::Vec2i dims{viewWidth, RESOURCES_MENU_HEIGHT};
 
   m_resourcesMenu = generateBlankHorizontalMenu(pos, dims);
 
@@ -74,7 +74,7 @@ bool LockerUiHandler::processUserInput(ui::UserInputData &inputData)
   return m_menu->processUserInput(inputData);
 }
 
-void LockerUiHandler::render(Renderer &engine) const
+void LockerUiHandler::render(pge::Renderer &engine) const
 {
   m_resourcesMenu->render(engine);
   m_headerMenu->render(engine);
@@ -88,11 +88,11 @@ void updateButtonState(ui::UiMenu &button, const bool enable)
 
   if (!enable)
   {
-    button.updateBgColor(colors::VERY_DARK_GREY);
+    button.updateBgColor(pge::colors::VERY_DARK_GREY);
   }
   else
   {
-    button.updateBgColor(colors::VERY_DARK_GREEN);
+    button.updateBgColor(pge::colors::VERY_DARK_GREEN);
   }
 }
 } // namespace
@@ -163,12 +163,12 @@ void LockerUiHandler::initializeLayout()
   m_headerMenu->updateBgColor(palette.almostOpaqueColor);
 
   const ui::MenuConfig config{.highlightable = false};
-  const auto bg = ui::bgConfigFromColor(colors::BLANK);
+  const auto bg = ui::bgConfigFromColor(pge::colors::BLANK);
 
-  auto text = ui::textConfigFromColor("LOCKER", colors::WHITE);
+  auto text = ui::textConfigFromColor("LOCKER", pge::colors::WHITE);
   m_headerMenu->addMenu(std::make_unique<ui::UiTextMenu>(config, bg, text));
 
-  text = ui::textConfigFromColor("SHIP", colors::WHITE);
+  text = ui::textConfigFromColor("SHIP", pge::colors::WHITE);
   m_headerMenu->addMenu(std::make_unique<ui::UiTextMenu>(config, bg, text));
 
   initializeLockerLayout();
@@ -185,7 +185,7 @@ void LockerUiHandler::initializeLockerLayout()
   const ui::MenuConfig config{.propagateEventsToChildren = false};
 
   const auto weapons  = m_playerView->getPlayerWeapons();
-  const auto bgWeapon = ui::bgConfigFromColor(colors::BLANK);
+  const auto bgWeapon = ui::bgConfigFromColor(pge::colors::BLANK);
   const ui::MenuConfig configWeapon{.layout = ui::MenuLayout::HORIZONTAL};
   for (auto id = 0u; id < weapons.size(); ++id)
   {
@@ -195,7 +195,7 @@ void LockerUiHandler::initializeLockerLayout()
   }
 
   const auto computers  = m_playerView->getPlayerComputers();
-  const auto bgComputer = ui::bgConfigFromColor(colors::BLANK);
+  const auto bgComputer = ui::bgConfigFromColor(pge::colors::BLANK);
   const ui::MenuConfig configComputer{.layout = ui::MenuLayout::HORIZONTAL};
   for (auto id = 0u; id < computers.size(); ++id)
   {
@@ -215,10 +215,10 @@ void LockerUiHandler::initializeShipLayout()
   const ui::MenuConfig config{.propagateEventsToChildren = false};
 
   const auto slots = m_shipDbView->getPlayerShipSlots();
-  if (slots.contains(bsgalone::core::Slot::WEAPON))
+  if (slots.contains(core::Slot::WEAPON))
   {
-    const auto weaponsCount = slots.at(bsgalone::core::Slot::WEAPON);
-    const auto bg           = ui::bgConfigFromColor(colors::BLANK);
+    const auto weaponsCount = slots.at(core::Slot::WEAPON);
+    const auto bg           = ui::bgConfigFromColor(pge::colors::BLANK);
     const ui::MenuConfig weaponConfig{.layout = ui::MenuLayout::HORIZONTAL};
     for (auto id = 0; id < weaponsCount; ++id)
     {
@@ -228,10 +228,10 @@ void LockerUiHandler::initializeShipLayout()
     }
   }
 
-  if (slots.contains(bsgalone::core::Slot::COMPUTER))
+  if (slots.contains(core::Slot::COMPUTER))
   {
-    const auto computersCount = slots.at(bsgalone::core::Slot::COMPUTER);
-    const auto bg             = ui::bgConfigFromColor(colors::BLANK);
+    const auto computersCount = slots.at(core::Slot::COMPUTER);
+    const auto bg             = ui::bgConfigFromColor(pge::colors::BLANK);
     const ui::MenuConfig computerConfig{.layout = ui::MenuLayout::HORIZONTAL};
     for (auto id = 0; id < computersCount; ++id)
     {
@@ -252,13 +252,13 @@ void LockerUiHandler::generateResourcesMenus()
   const auto resources = m_playerView->getPlayerResources();
 
   const ui::MenuConfig config{.propagateEventsToChildren = false};
-  const auto bg = ui::bgConfigFromColor(colors::BLANK);
+  const auto bg = ui::bgConfigFromColor(pge::colors::BLANK);
 
   // Reverse iteration to get resources ordered according to their id.
   for (auto it = resources.rbegin(); it != resources.rend(); ++it)
   {
-    auto label = ui::textConfigFromColor(bsgo::capitalizeString(it->name, true) + ":",
-                                         colors::DARK_GREY,
+    auto label = ui::textConfigFromColor(core::capitalizeString(it->name, true) + ":",
+                                         pge::colors::DARK_GREY,
                                          ui::TextAlignment::RIGHT);
     auto field = std::make_unique<ui::UiTextMenu>(config, bg, label);
     m_resourcesMenu->addMenu(std::move(field));
@@ -288,9 +288,7 @@ void LockerUiHandler::generateLockerWeaponsMenus()
       "Equip", [this, itemId]() { onInstallRequest(itemId); }, HorizontalMargin::LEFT);
     m_lockerWeapons[id]->addMenu(std::move(section.menu));
 
-    LockerItem data{.itemId   = weapon.dbId,
-                    .itemType = bsgalone::core::Item::WEAPON,
-                    .button   = section.button};
+    LockerItem data{.itemId = weapon.dbId, .itemType = core::Item::WEAPON, .button = section.button};
     m_lockerItemsData.emplace_back(std::move(data));
 
     ++id;
@@ -314,7 +312,7 @@ void LockerUiHandler::generateLockerComputersMenus()
     m_lockerComputers[id]->addMenu(std::move(section.menu));
 
     LockerItem data{.itemId   = computer.dbId,
-                    .itemType = bsgalone::core::Item::COMPUTER,
+                    .itemType = core::Item::COMPUTER,
                     .button   = section.button};
     m_lockerItemsData.emplace_back(std::move(data));
 
@@ -338,20 +336,20 @@ void LockerUiHandler::generateShipWeaponsMenus()
       "Remove", [this, itemId]() { onUninstallRequest(itemId); }, HorizontalMargin::LEFT);
     m_shipWeapons[id]->addMenu(std::move(section.menu));
 
-    ShipItem data{.itemId = weapon.dbId, .itemType = bsgalone::core::Item::WEAPON};
+    ShipItem data{.itemId = weapon.dbId, .itemType = core::Item::WEAPON};
     m_shipItemsData.emplace_back(std::move(data));
 
     ++id;
   }
 
   const auto weaponSlots = static_cast<int>(
-    m_shipDbView->getPlayerShipSlots().at(bsgalone::core::Slot::WEAPON));
+    m_shipDbView->getPlayerShipSlots().at(core::Slot::WEAPON));
   for (; id < weaponSlots; ++id)
   {
     const ui::MenuConfig config{.highlightable = false};
-    const auto bg = ui::bgConfigFromColor(colors::BLANK);
+    const auto bg = ui::bgConfigFromColor(pge::colors::BLANK);
 
-    auto text = ui::textConfigFromColor("Empty weapon slot", colors::BLACK);
+    auto text = ui::textConfigFromColor("Empty weapon slot", pge::colors::BLACK);
     auto prop = std::make_unique<ui::UiTextMenu>(config, bg, text);
     m_shipWeapons[id]->addMenu(std::move(prop));
   }
@@ -373,20 +371,20 @@ void LockerUiHandler::generateShipComputersMenus()
       "Remove", [this, itemId]() { onUninstallRequest(itemId); }, HorizontalMargin::LEFT);
     m_shipComputers[id]->addMenu(std::move(section.menu));
 
-    ShipItem data{.itemId = computer.dbId, .itemType = bsgalone::core::Item::COMPUTER};
+    ShipItem data{.itemId = computer.dbId, .itemType = core::Item::COMPUTER};
     m_shipItemsData.emplace_back(std::move(data));
 
     ++id;
   }
 
   const auto computerSlots = static_cast<int>(
-    m_shipDbView->getPlayerShipSlots().at(bsgalone::core::Slot::COMPUTER));
+    m_shipDbView->getPlayerShipSlots().at(core::Slot::COMPUTER));
   for (; id < computerSlots; ++id)
   {
     const ui::MenuConfig config{.highlightable = false};
-    const auto bg = ui::bgConfigFromColor(colors::BLANK);
+    const auto bg = ui::bgConfigFromColor(pge::colors::BLANK);
 
-    auto text = ui::textConfigFromColor("Empty computer slot", colors::BLACK);
+    auto text = ui::textConfigFromColor("Empty computer slot", pge::colors::BLACK);
     auto prop = std::make_unique<ui::UiTextMenu>(config, bg, text);
     m_shipComputers[id]->addMenu(std::move(prop));
   }
@@ -414,4 +412,4 @@ void LockerUiHandler::onUninstallRequest(const int itemId)
   m_shipDbView->tryUnequipItem(equip.itemType, equip.itemId);
 }
 
-} // namespace pge
+} // namespace bsgalone::client

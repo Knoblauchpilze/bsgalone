@@ -21,52 +21,42 @@ void assertMessagesAreEqual(const EquipMessage &actual, const EquipMessage &expe
 
 TEST(Unit_Bsgalone_Core_Messages_Player_EquipMessage, Equip)
 {
-  const EquipMessage expected(bsgo::Uuid{18},
-                              bsgo::Uuid{19},
+  const EquipMessage expected(Uuid{18},
+                              Uuid{19},
                               EquipType::EQUIP,
-                              bsgo::Uuid{12},
+                              Uuid{12},
                               Item::COMPUTER,
-                              bsgo::Uuid{27});
-  EquipMessage actual(bsgo::Uuid{34},
-                      bsgo::Uuid{58},
-                      EquipType::UNEQUIP,
-                      bsgo::Uuid{22},
-                      Item::RESOURCE,
-                      bsgo::Uuid{18});
+                              Uuid{27});
+  EquipMessage actual(Uuid{34}, Uuid{58}, EquipType::UNEQUIP, Uuid{22}, Item::RESOURCE, Uuid{18});
 
-  bsgo::serializeAndDeserializeMessage(expected, actual);
+  serializeAndDeserializeMessage(expected, actual);
 
   assertMessagesAreEqual(actual, expected);
 }
 
 TEST(Unit_Bsgalone_Core_Messages_Player_EquipMessage, Unequip)
 {
-  const EquipMessage expected(bsgo::Uuid{18},
-                              bsgo::Uuid{19},
+  const EquipMessage expected(Uuid{18},
+                              Uuid{19},
                               EquipType::UNEQUIP,
-                              bsgo::Uuid{12},
+                              Uuid{12},
                               Item::COMPUTER,
-                              bsgo::Uuid{27});
-  EquipMessage actual(bsgo::Uuid{34},
-                      bsgo::Uuid{58},
-                      EquipType::EQUIP,
-                      bsgo::Uuid{22},
-                      Item::RESOURCE,
-                      bsgo::Uuid{18});
+                              Uuid{27});
+  EquipMessage actual(Uuid{34}, Uuid{58}, EquipType::EQUIP, Uuid{22}, Item::RESOURCE, Uuid{18});
 
-  bsgo::serializeAndDeserializeMessage(expected, actual);
+  serializeAndDeserializeMessage(expected, actual);
 
   assertMessagesAreEqual(actual, expected);
 }
 
 TEST(Unit_Bsgalone_Core_Messages_Player_EquipMessage, Clone)
 {
-  const EquipMessage expected(bsgo::Uuid{18},
-                              bsgo::Uuid{19},
+  const EquipMessage expected(Uuid{18},
+                              Uuid{19},
                               EquipType::UNEQUIP,
-                              bsgo::Uuid{6},
+                              Uuid{6},
                               Item::COMPUTER,
-                              bsgo::Uuid{19});
+                              Uuid{19});
 
   const auto cloned = expected.clone();
 

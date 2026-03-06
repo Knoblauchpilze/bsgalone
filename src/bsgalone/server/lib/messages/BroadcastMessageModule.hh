@@ -25,8 +25,8 @@ class BroadcastMessageModule : public ::core::CoreObject
   void sendMessageToClient(const net::ClientId clientId, const core::IMessage &message);
   void broadcastMessage(const core::IMessage &message);
 
-  auto tryDetermineClientId(const core::IMessage &message) const -> std::optional<bsgo::Uuid>;
-  auto tryDetermineSystemIds(const core::IMessage &message) const -> std::vector<bsgo::Uuid>;
+  auto tryDetermineClientId(const core::IMessage &message) const -> std::optional<core::Uuid>;
+  auto tryDetermineSystemIds(const core::IMessage &message) const -> std::vector<core::Uuid>;
 };
 
 } // namespace bsgalone::server

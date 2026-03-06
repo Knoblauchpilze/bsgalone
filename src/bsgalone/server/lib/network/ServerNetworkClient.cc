@@ -12,10 +12,10 @@
 #include "SynchronizedMessageQueue.hh"
 #include "TcpServer.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
 ServerNetworkClient::ServerNetworkClient()
-  : m_inputQueue(createAsyncMessageQueue(createSynchronizedMessageQueue()))
+  : m_inputQueue(core::createAsyncMessageQueue(core::createSynchronizedMessageQueue()))
 {}
 
 void ServerNetworkClient::start(const int port)
@@ -36,7 +36,7 @@ void ServerNetworkClient::stop()
   m_outputQueue.reset();
 }
 
-void ServerNetworkClient::pushEvent(bsgalone::core::IMessagePtr message)
+void ServerNetworkClient::pushEvent(core::IMessagePtr message)
 {
   if (!m_started.load())
   {
@@ -47,7 +47,7 @@ void ServerNetworkClient::pushEvent(bsgalone::core::IMessagePtr message)
   m_outputQueue->pushEvent(std::move(message));
 }
 
-void ServerNetworkClient::addListener(bsgalone::core::IMessageListenerPtr listener)
+void ServerNetworkClient::addListener(core::IMessageListenerPtr listener)
 {
   m_inputQueue->addListener(std::move(listener));
 }
@@ -64,26 +64,25 @@ void ServerNetworkClient::processEvents()
 
 void ServerNetworkClient::initialize()
 {
-  auto eventListener = std::make_unique<bsgalone::server::ServerEventListener>(m_started);
+  auto eventListener = std::make_unique<ServerEventListener>(m_started);
   m_eventBus->addListener(std::move(eventListener));
 
   auto inputNetworkAdapter
-    = std::make_unique<bsgalone::core::InputNetworkAdapter>(m_inputQueue,
-                                                            std::make_unique<MessageParser>());
+    = std::make_unique<core::InputNetworkAdapter>(m_inputQueue,
+                                                  std::make_unique<core::MessageParser>());
   m_eventBus->addListener(std::move(inputNetworkAdapter));
 
-  auto syncQueue = createSynchronizedMessageQueue();
-  m_outputQueue  = createAsyncMessageQueue(std::move(syncQueue));
+  auto syncQueue = core::createSynchronizedMessageQueue();
+  m_outputQueue  = core::createAsyncMessageQueue(std::move(syncQueue));
 
-  auto outputNetworkAdapter = std::make_shared<bsgalone::core::OutputNetworkAdapter>(m_tcpServer);
-  auto broadcastListener
-    = std::make_unique<bsgalone::server::BroadcastMessageListener>(m_clientManager,
-                                                                   std::move(outputNetworkAdapter));
+  auto outputNetworkAdapter = std::make_shared<core::OutputNetworkAdapter>(m_tcpServer);
+  auto broadcastListener    = std::make_unique<BroadcastMessageListener>(m_clientManager,
+                                                                      std::move(
+                                                                        outputNetworkAdapter));
   m_outputQueue->addListener(std::move(broadcastListener));
 
-  auto clientListener = std::make_unique<bsgalone::server::ClientEventListener>(m_clientManager,
-                                                                                m_inputQueue);
+  auto clientListener = std::make_unique<ClientEventListener>(m_clientManager, m_inputQueue);
   m_eventBus->addListener(std::move(clientListener));
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

@@ -4,9 +4,8 @@
 #include "IMessageQueue.hh"
 #include <memory>
 
-namespace bsgo {
+namespace bsgalone::core {
 
-auto createAsyncMessageQueue(bsgalone::core::IMessageQueuePtr queue)
-  -> bsgalone::core::IMessageQueueShPtr;
+auto createAsyncMessageQueue(IMessageQueuePtr queue) -> IMessageQueueShPtr;
 
-} // namespace bsgo
+} // namespace bsgalone::core

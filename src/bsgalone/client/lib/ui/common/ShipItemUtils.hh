@@ -9,20 +9,20 @@
 #include "UiTextMenu.hh"
 #include "WeaponData.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
 constexpr auto DEFAULT_MARGIN = 30;
 auto generateTextConfig(const std::string &name,
-                        const Color &color = colors::WHITE,
-                        const int margin   = DEFAULT_MARGIN) -> ui::TextConfig;
+                        const pge::Color &color = pge::colors::WHITE,
+                        const int margin        = DEFAULT_MARGIN) -> ui::TextConfig;
 
-auto generateWeaponMenu(const bsgo::WeaponData &weapon, const chrono::TimeStep &step)
+auto generateWeaponMenu(const core::WeaponData &weapon, const chrono::TimeStep &step)
   -> ui::UiMenuPtr;
-auto generateWeaponMenu(const bsgo::PlayerWeaponData &weapon, const chrono::TimeStep &step)
+auto generateWeaponMenu(const core::PlayerWeaponData &weapon, const chrono::TimeStep &step)
   -> ui::UiMenuPtr;
-auto generateComputerMenu(const bsgo::ComputerData &computer, const chrono::TimeStep &step)
+auto generateComputerMenu(const core::ComputerData &computer, const chrono::TimeStep &step)
   -> ui::UiMenuPtr;
-auto generateComputerMenu(const bsgo::PlayerComputerData &computer, const chrono::TimeStep &step)
+auto generateComputerMenu(const core::PlayerComputerData &computer, const chrono::TimeStep &step)
   -> ui::UiMenuPtr;
 
 struct InteractiveSection
@@ -51,4 +51,4 @@ auto generateInteractiveSection(const std::string &buttonText,
                                 const VerticalMargin verticalMargin     = VerticalMargin::BOTH)
   -> InteractiveSection;
 
-} // namespace pge
+} // namespace bsgalone::client

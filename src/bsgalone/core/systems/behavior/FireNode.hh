@@ -3,7 +3,7 @@
 
 #include "LeafNode.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class FireNode : public LeafNode
 {
@@ -34,4 +34,4 @@ class FireNode : public LeafNode
   void fireAllWeapons(Entity &ent);
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

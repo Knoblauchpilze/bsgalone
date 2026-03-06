@@ -3,7 +3,7 @@
 #include "Coordinator.hh"
 #include "TargetMessage.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 namespace {
 bool isEntityRelevant(const Entity &ent)
 {
@@ -95,11 +95,10 @@ void TargetSystem::publishTargetMessage(const Entity &entity) const
   }
 
   const auto dummyPosition = Eigen::Vector3f::Zero();
-  bsgalone::core::Target data{.sourceDbId = entity.dbComp().dbId(),
-                              .sourceKind = entity.kind->kind()};
+  Target data{.sourceDbId = entity.dbComp().dbId(), .sourceKind = entity.kind->kind()};
 
   auto out = std::make_unique<TargetMessage>(data, dummyPosition);
   pushInternalMessage(std::move(out));
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

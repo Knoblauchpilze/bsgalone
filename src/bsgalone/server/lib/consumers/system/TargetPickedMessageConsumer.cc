@@ -2,12 +2,12 @@
 #include "TargetPickedMessageConsumer.hh"
 #include "TargetMessage.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
 TargetPickedMessageConsumer::TargetPickedMessageConsumer(
   const Services &services,
-  bsgalone::core::IMessageQueue *const outputMessageQueue)
-  : AbstractMessageConsumer("target", {bsgalone::core::MessageType::TARGET_PICKED})
+  core::IMessageQueue *const outputMessageQueue)
+  : AbstractMessageConsumer("target", {core::MessageType::TARGET_PICKED})
   , m_shipService(services.ship)
   , m_outputMessageQueue(outputMessageQueue)
 {
@@ -21,9 +21,9 @@ TargetPickedMessageConsumer::TargetPickedMessageConsumer(
   }
 }
 
-void TargetPickedMessageConsumer::onEventReceived(const bsgalone::core::IMessage &message)
+void TargetPickedMessageConsumer::onEventReceived(const core::IMessage &message)
 {
-  const auto &targetMessage = message.as<bsgalone::core::TargetPickedMessage>();
+  const auto &targetMessage = message.as<core::TargetPickedMessage>();
 
   const auto data     = targetMessage.getTargetData();
   const auto position = targetMessage.getPosition();
@@ -43,31 +43,31 @@ void TargetPickedMessageConsumer::onEventReceived(const bsgalone::core::IMessage
     // what the client app knows and what the server knows.
     if (data.targetDbId)
     {
-      warn("Failed to process target message for " + str(data.sourceDbId) + " "
-           + str(data.sourceKind));
+      warn("Failed to process target message for " + core::str(data.sourceDbId) + " "
+           + core::str(data.sourceKind));
     }
     return;
   }
 
-  bsgalone::core::Target target{
+  core::Target target{
     .sourceDbId = data.sourceDbId,
     .sourceKind = data.sourceKind,
     .targetDbId = res.targetDbId,
     .targetKind = res.targetKind,
   };
 
-  auto out = std::make_unique<TargetMessage>(target, position);
+  auto out = std::make_unique<core::TargetMessage>(target, position);
   broadcastMessageToSystem(std::move(out));
 }
 
 namespace {
-auto getSystemDbIdForSource(const Uuid dbId,
-                            const bsgalone::core::EntityKind kind,
-                            const ShipService &shipService) -> Uuid
+auto getSystemDbIdForSource(const core::Uuid dbId,
+                            const core::EntityKind kind,
+                            const ShipService &shipService) -> core::Uuid
 {
   switch (kind)
   {
-    case bsgalone::core::EntityKind::SHIP:
+    case core::EntityKind::SHIP:
       return shipService.getSystemDbIdForShip(dbId);
     default:
       throw std::invalid_argument("Unsupported entity kind " + str(kind)
@@ -76,7 +76,8 @@ auto getSystemDbIdForSource(const Uuid dbId,
 }
 } // namespace
 
-void TargetPickedMessageConsumer::broadcastMessageToSystem(std::unique_ptr<TargetMessage> message)
+void TargetPickedMessageConsumer::broadcastMessageToSystem(
+  std::unique_ptr<core::TargetMessage> message)
 {
   const auto systemDbId = getSystemDbIdForSource(message->getSourceDbId(),
                                                  message->getSourceKind(),
@@ -86,4 +87,4 @@ void TargetPickedMessageConsumer::broadcastMessageToSystem(std::unique_ptr<Targe
   m_outputMessageQueue->pushEvent(std::move(message));
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

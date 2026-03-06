@@ -7,12 +7,12 @@ NetworkMessage::NetworkMessage(const MessageType &type)
   : AbstractMessage(type)
 {}
 
-void NetworkMessage::setClientId(const bsgo::Uuid clientId)
+void NetworkMessage::setClientId(const Uuid clientId)
 {
   m_clientId = clientId;
 }
 
-auto NetworkMessage::getClientId() const -> bsgo::Uuid
+auto NetworkMessage::getClientId() const -> Uuid
 {
   if (!m_clientId)
   {
@@ -21,7 +21,7 @@ auto NetworkMessage::getClientId() const -> bsgo::Uuid
   return *m_clientId;
 }
 
-auto NetworkMessage::tryGetClientId() const -> std::optional<bsgo::Uuid>
+auto NetworkMessage::tryGetClientId() const -> std::optional<Uuid>
 {
   return m_clientId;
 }

@@ -1,12 +1,12 @@
 
 #include "JumpRequestedMessageConsumer.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
 JumpRequestedMessageConsumer::JumpRequestedMessageConsumer(
   const Services &services,
-  bsgalone::core::IMessageQueue *const outputMessageQueue)
-  : AbstractMessageConsumer("jump_Requested", {bsgalone::core::MessageType::JUMP_REQUESTED})
+  core::IMessageQueue *const outputMessageQueue)
+  : AbstractMessageConsumer("jump_Requested", {core::MessageType::JUMP_REQUESTED})
   , m_jumpService(services.jump)
   , m_outputMessageQueue(outputMessageQueue)
 {
@@ -20,25 +20,24 @@ JumpRequestedMessageConsumer::JumpRequestedMessageConsumer(
   }
 }
 
-void JumpRequestedMessageConsumer::onEventReceived(const bsgalone::core::IMessage &message)
+void JumpRequestedMessageConsumer::onEventReceived(const core::IMessage &message)
 {
-  const auto &jump = message.as<bsgalone::core::JumpRequestedMessage>();
+  const auto &jump = message.as<core::JumpRequestedMessage>();
   handleJumpRequest(jump);
 }
 
-void JumpRequestedMessageConsumer::handleJumpRequest(
-  const bsgalone::core::JumpRequestedMessage &message) const
+void JumpRequestedMessageConsumer::handleJumpRequest(const core::JumpRequestedMessage &message) const
 {
   const auto shipDbId   = message.getShipDbId();
   const auto jumpSystem = message.getDestinationSystem();
 
   if (!m_jumpService->tryRegisterJump(shipDbId, jumpSystem))
   {
-    warn("Failed to process jump requested message for ship " + str(shipDbId));
+    warn("Failed to process jump requested message for ship " + core::str(shipDbId));
     return;
   }
 
   m_outputMessageQueue->pushEvent(message.clone());
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

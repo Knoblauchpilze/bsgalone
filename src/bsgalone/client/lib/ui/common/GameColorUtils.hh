@@ -6,17 +6,17 @@
 #include "PlayerView.hh"
 #include <string>
 
-namespace pge {
+namespace bsgalone::client {
 
-auto colorFromResourceName(const std::string &name) -> Color;
-auto colorFromFaction(const bsgo::Faction faction) -> Color;
+auto colorFromResourceName(const std::string &name) -> pge::Color;
+auto colorFromFaction(const core::Faction faction) -> pge::Color;
 
 struct ColorPalette
 {
-  Color defaultColor{};
-  Color almostOpaqueColor{};
+  pge::Color defaultColor{};
+  pge::Color almostOpaqueColor{};
 };
 
-auto generatePaletteForFaction(const bsgo::Faction faction) -> ColorPalette;
+auto generatePaletteForFaction(const core::Faction faction) -> ColorPalette;
 
-} // namespace pge
+} // namespace bsgalone::client

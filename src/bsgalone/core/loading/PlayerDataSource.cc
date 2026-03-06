@@ -2,17 +2,17 @@
 #include "PlayerDataSource.hh"
 #include "Coordinator.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 PlayerDataSource::PlayerDataSource()
-  : core::CoreObject("bsgo")
+  : ::core::CoreObject("bsgo")
 {
   setService("data");
   addModule("player");
 }
 
 PlayerDataSource::PlayerDataSource(const Repositories &repositories)
-  : core::CoreObject("bsgo")
+  : ::core::CoreObject("bsgo")
   , m_repositories(repositories)
 {
   setService("data");
@@ -46,7 +46,7 @@ void PlayerDataSource::registerPlayer(Coordinator &coordinator,
     return;
   }
 
-  const auto playerEntityId = coordinator.createEntity(bsgalone::core::EntityKind::PLAYER);
+  const auto playerEntityId = coordinator.createEntity(EntityKind::PLAYER);
 
   coordinator.addDbId(playerEntityId, data.dbId);
   coordinator.addName(playerEntityId, data.name);
@@ -73,4 +73,4 @@ void PlayerDataSource::registerPlayer(Coordinator &coordinator,
   registerPlayer(coordinator, out, entityMapper);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

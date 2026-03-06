@@ -19,33 +19,33 @@
 #include "PlayerLoginDataMessage.hh"
 #include "SystemDataMessage.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
 class Game;
 
-class GameMessageModule : public bsgalone::core::AbstractMessageListener, public core::CoreObject
+class GameMessageModule : public core::AbstractMessageListener, public ::core::CoreObject
 {
   public:
-  GameMessageModule(Game &game, const bsgo::DatabaseEntityMapper &entityMapper);
+  GameMessageModule(Game &game, const core::DatabaseEntityMapper &entityMapper);
   ~GameMessageModule() override = default;
 
-  void onEventReceived(const bsgalone::core::IMessage &message) override;
+  void onEventReceived(const core::IMessage &message) override;
 
   private:
   Game &m_game;
-  const bsgo::DatabaseEntityMapper &m_entityMapper;
+  const core::DatabaseEntityMapper &m_entityMapper;
 
-  void handleConnectionMessage(const bsgo::ConnectionMessage &message);
-  void handleDockMessage(const bsgalone::core::DockMessage &message);
-  void handleHangarMessage(const bsgo::HangarMessage &message);
-  void handleJumpMessage(const bsgo::JumpMessage &message);
-  void handleLoginMessage(const bsgo::LoginMessage &message);
-  void handleLogoutMessage(const bsgo::LogoutMessage &message);
-  void handleEntityRemovedMessage(const bsgo::EntityRemovedMessage &message);
-  void handleLoadingStartedMessage(const bsgo::LoadingStartedMessage &message) const;
-  void handleLoadingFinishedMessage(const bsgo::LoadingFinishedMessage &message) const;
-  void handlePlayerLoginDataMessage(const bsgo::PlayerLoginDataMessage &message);
-  void handleSystemDataMessage(const bsgo::SystemDataMessage &message) const;
+  void handleConnectionMessage(const core::ConnectionMessage &message);
+  void handleDockMessage(const core::DockMessage &message);
+  void handleHangarMessage(const core::HangarMessage &message);
+  void handleJumpMessage(const core::JumpMessage &message);
+  void handleLoginMessage(const core::LoginMessage &message);
+  void handleLogoutMessage(const core::LogoutMessage &message);
+  void handleEntityRemovedMessage(const core::EntityRemovedMessage &message);
+  void handleLoadingStartedMessage(const core::LoadingStartedMessage &message) const;
+  void handleLoadingFinishedMessage(const core::LoadingFinishedMessage &message) const;
+  void handlePlayerLoginDataMessage(const core::PlayerLoginDataMessage &message);
+  void handleSystemDataMessage(const core::SystemDataMessage &message) const;
 };
 
-} // namespace pge
+} // namespace bsgalone::client

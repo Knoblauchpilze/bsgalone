@@ -1,7 +1,7 @@
 
 #include "SystemUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 bool canTargetBeFiredOn(const Entity &target)
 {
@@ -18,4 +18,4 @@ bool canTargetBeFiredOn(const Entity &target)
   return statusAllowsInteraction(status) && statusAllowsDamage(status);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

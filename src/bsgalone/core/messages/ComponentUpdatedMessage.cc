@@ -1,15 +1,15 @@
 
 #include "ComponentUpdatedMessage.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
-ComponentUpdatedMessage::ComponentUpdatedMessage(const bsgalone::core::MessageType &type)
+ComponentUpdatedMessage::ComponentUpdatedMessage(const MessageType &type)
   : ComponentUpdatedMessage(type, {}, {})
 {}
 
-ComponentUpdatedMessage::ComponentUpdatedMessage(const bsgalone::core::MessageType &type,
+ComponentUpdatedMessage::ComponentUpdatedMessage(const MessageType &type,
                                                  const Uuid shipDbId,
-                                                 const bsgalone::core::ComponentType component)
+                                                 const ComponentType component)
   : NetworkMessage(type)
   , m_shipDbId(shipDbId)
   , m_component(component)
@@ -20,9 +20,9 @@ auto ComponentUpdatedMessage::getShipDbId() const -> Uuid
   return m_shipDbId;
 }
 
-auto ComponentUpdatedMessage::getComponentType() const -> bsgalone::core::ComponentType
+auto ComponentUpdatedMessage::getComponentType() const -> ComponentType
 {
   return m_component;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

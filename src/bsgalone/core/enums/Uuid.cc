@@ -1,7 +1,7 @@
 
 #include "Uuid.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 auto str(const Uuid id) -> std::string
 {
@@ -18,4 +18,4 @@ auto fromDbId(const int dbId) -> Uuid
   return Uuid{dbId - 1};
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

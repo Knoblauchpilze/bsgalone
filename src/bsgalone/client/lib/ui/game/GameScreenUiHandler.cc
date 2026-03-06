@@ -10,7 +10,7 @@
 #include "StringUtils.hh"
 #include "WeaponsUiHandler.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
 GameScreenUiHandler::GameScreenUiHandler(const Views &views)
   : AbstractUiHandler("game")
@@ -20,7 +20,7 @@ GameScreenUiHandler::GameScreenUiHandler(const Views &views)
 
 void GameScreenUiHandler::initializeMenus(const int width,
                                           const int height,
-                                          sprites::TexturePack &texturesLoader)
+                                          pge::sprites::TexturePack &texturesLoader)
 {
   for (const auto &ui : m_uis)
   {
@@ -39,7 +39,7 @@ bool GameScreenUiHandler::processUserInput(ui::UserInputData &inputData)
   return out;
 }
 
-void GameScreenUiHandler::render(Renderer &engine) const
+void GameScreenUiHandler::render(pge::Renderer &engine) const
 {
   for (const auto &ui : m_uis)
   {
@@ -55,7 +55,7 @@ void GameScreenUiHandler::updateUi()
   }
 }
 
-void GameScreenUiHandler::connectToMessageQueue(bsgalone::core::IMessageQueue &messageQueue)
+void GameScreenUiHandler::connectToMessageQueue(core::IMessageQueue &messageQueue)
 {
   for (const auto &ui : m_uis)
   {
@@ -64,9 +64,9 @@ void GameScreenUiHandler::connectToMessageQueue(bsgalone::core::IMessageQueue &m
 }
 
 namespace {
-const Vec2i STATUS_UI_PIXEL_POS{5, 5};
-const Vec2i SHIP_UI_PIXEL_POS{5, 30};
-const Vec2i TARGET_UI_PIXEL_POS{400, 30};
+const pge::Vec2i STATUS_UI_PIXEL_POS{5, 5};
+const pge::Vec2i SHIP_UI_PIXEL_POS{5, 30};
+const pge::Vec2i TARGET_UI_PIXEL_POS{400, 30};
 } // namespace
 
 void GameScreenUiHandler::initializeUis(const Views &views)
@@ -109,4 +109,4 @@ void GameScreenUiHandler::initializeUis(const Views &views)
   m_uis.emplace_back(std::move(logUi));
 }
 
-} // namespace pge
+} // namespace bsgalone::client

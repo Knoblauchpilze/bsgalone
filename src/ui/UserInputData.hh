@@ -6,7 +6,7 @@
 
 // TODO: This is only needed for the `setScreen` method in the interface.
 // Once the screen change is event driven, it should be removed.
-namespace pge {
+namespace bsgalone::client {
 enum class Screen;
 }
 
@@ -21,8 +21,8 @@ class IScreenChanger
   public:
   virtual ~IScreenChanger() = default;
 
-  virtual void setScreen(const pge::Screen screen) = 0;
-  virtual void terminate() noexcept                = 0;
+  virtual void setScreen(const bsgalone::client::Screen screen) = 0;
+  virtual void terminate() noexcept                             = 0;
 };
 
 using GameCallback = std::function<void(IScreenChanger &)>;

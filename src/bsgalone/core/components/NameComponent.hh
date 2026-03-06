@@ -3,7 +3,7 @@
 
 #include "AbstractComponent.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class NameComponent : public AbstractComponent
 {
@@ -21,4 +21,4 @@ class NameComponent : public AbstractComponent
 
 using NameComponentShPtr = std::shared_ptr<NameComponent>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

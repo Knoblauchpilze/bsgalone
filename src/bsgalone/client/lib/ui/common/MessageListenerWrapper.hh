@@ -3,19 +3,19 @@
 
 #include "IMessageListener.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
-class MessageListenerWrapper : public bsgalone::core::IMessageListener
+class MessageListenerWrapper : public core::IMessageListener
 {
   public:
-  MessageListenerWrapper(bsgalone::core::IMessageListener *listener);
+  MessageListenerWrapper(core::IMessageListener *listener);
   ~MessageListenerWrapper() override = default;
 
-  bool isEventRelevant(const bsgalone::core::MessageType &type) const override;
-  void onEventReceived(const bsgalone::core::IMessage &message) override;
+  bool isEventRelevant(const core::MessageType &type) const override;
+  void onEventReceived(const core::IMessage &message) override;
 
   private:
-  bsgalone::core::IMessageListener *m_listener{};
+  core::IMessageListener *m_listener{};
 };
 
-} // namespace pge
+} // namespace bsgalone::client

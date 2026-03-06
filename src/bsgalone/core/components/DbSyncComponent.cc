@@ -1,10 +1,10 @@
 
 #include "DbSyncComponent.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 DbSyncComponent::DbSyncComponent()
-  : SyncComponent(bsgalone::core::ComponentType::DB_SYNC)
+  : SyncComponent(ComponentType::DB_SYNC)
 {}
 
-} // namespace bsgo
+} // namespace bsgalone::core

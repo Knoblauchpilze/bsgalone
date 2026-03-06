@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 enum class LoadingTransition
 {
@@ -18,4 +18,4 @@ enum class LoadingTransition
 
 auto str(const LoadingTransition transition) -> std::string;
 
-} // namespace bsgo
+} // namespace bsgalone::core

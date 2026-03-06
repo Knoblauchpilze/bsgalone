@@ -5,27 +5,27 @@
 #include "AsteroidRepository.hh"
 #include "IMessageQueue.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
 class RespawnProcess : public AbstractProcess
 {
   public:
-  RespawnProcess(const Uuid systemDbId,
-                 const Repositories &repositories,
-                 bsgalone::core::IMessageQueue *const systemMessageQueue);
+  RespawnProcess(const core::Uuid systemDbId,
+                 const core::Repositories &repositories,
+                 core::IMessageQueue *const systemMessageQueue);
   ~RespawnProcess() override = default;
 
-  void update(Coordinator &coordinator, const chrono::TickData &data) override;
+  void update(core::Coordinator &coordinator, const chrono::TickData &data) override;
 
   private:
-  Uuid m_systemDbId{};
-  bsgalone::core::IMessageQueue *const m_systemMessageQueue{};
+  core::Uuid m_systemDbId{};
+  core::IMessageQueue *const m_systemMessageQueue{};
 
-  void respawnAsteroids(Coordinator &coordinator, const chrono::TickData &data) const;
-  void respawnPlayerShips(Coordinator &coordinator, const chrono::TickData &data) const;
+  void respawnAsteroids(core::Coordinator &coordinator, const chrono::TickData &data) const;
+  void respawnPlayerShips(core::Coordinator &coordinator, const chrono::TickData &data) const;
 
-  void respawnAsteroid(Coordinator &coordinator, Asteroid asteroid) const;
-  void respawnPlayerShip(Coordinator &coordinator, PlayerShip playerShip) const;
+  void respawnAsteroid(core::Coordinator &coordinator, core::Asteroid asteroid) const;
+  void respawnPlayerShip(core::Coordinator &coordinator, core::PlayerShip playerShip) const;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::server

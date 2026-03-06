@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 enum class SystemType
 {
@@ -24,4 +24,4 @@ enum class SystemType
 
 auto str(const SystemType &type) -> std::string;
 
-} // namespace bsgo
+} // namespace bsgalone::core

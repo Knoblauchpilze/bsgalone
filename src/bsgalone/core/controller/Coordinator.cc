@@ -6,7 +6,7 @@
 
 #include "VectorUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 namespace {
 template<typename ComponentType>
 auto getComponent(const Uuid ent,
@@ -46,7 +46,7 @@ auto getAllComponent(const Uuid ent,
 } // namespace
 
 Coordinator::Coordinator(SystemsConfig &&config)
-  : core::CoreObject("coordinator")
+  : ::core::CoreObject("coordinator")
   , m_systems(std::make_unique<Systems>(std::move(config)))
 {
   setService("bsgo");
@@ -59,7 +59,7 @@ void Coordinator::clear()
   m_components.clear();
 }
 
-auto Coordinator::createEntity(const bsgalone::core::EntityKind &kind) -> Uuid
+auto Coordinator::createEntity(const EntityKind &kind) -> Uuid
 {
   auto ent = m_nextEntity;
   ++m_nextEntity;
@@ -169,8 +169,7 @@ void Coordinator::addName(const Uuid ent, const std::string &name)
   m_components.names[ent] = std::make_shared<NameComponent>(name);
 }
 
-void Coordinator::addNetworkSync(const Uuid ent,
-                                 const std::unordered_set<bsgalone::core::ComponentType> &toSync)
+void Coordinator::addNetworkSync(const Uuid ent, const std::unordered_set<ComponentType> &toSync)
 {
   checkForOverrides(ent, "NetworkSync", m_components.networkSyncs);
   m_components.networkSyncs[ent] = std::make_shared<NetworkSyncComponent>(toSync);
@@ -252,7 +251,7 @@ auto Coordinator::getEntity(const Uuid ent) const -> Entity
   if (!maybeKind)
   {
     // The entity is probably dead, create a default component.
-    maybeKind = std::make_shared<KindComponent>(bsgalone::core::EntityKind::NONE);
+    maybeKind = std::make_shared<KindComponent>(EntityKind::NONE);
   }
   out.kind = *maybeKind;
 
@@ -319,8 +318,8 @@ void Coordinator::deleteEntity(const Uuid ent)
 }
 
 auto Coordinator::getEntityAt(const Eigen::Vector3f &pos,
-                              const std::optional<bsgalone::core::EntityKind> &filter,
-                              const std::optional<bsgalone::core::EntityKind> &excluding) const
+                              const std::optional<EntityKind> &filter,
+                              const std::optional<EntityKind> &excluding) const
   -> std::optional<Uuid>
 {
   std::optional<Uuid> out;
@@ -349,7 +348,7 @@ auto Coordinator::getEntityAt(const Eigen::Vector3f &pos,
 }
 
 auto Coordinator::getEntitiesWithin(const IBoundingBox &bbox,
-                                    const std::optional<bsgalone::core::EntityKind> &filter) const
+                                    const std::optional<EntityKind> &filter) const
   -> std::vector<Uuid>
 {
   std::vector<Uuid> out;
@@ -409,8 +408,7 @@ void Coordinator::update(const chrono::TickData &data)
   cleanUpDeadEntities();
 }
 
-bool Coordinator::hasExpectedKind(const Uuid ent,
-                                  const std::optional<bsgalone::core::EntityKind> &kind) const
+bool Coordinator::hasExpectedKind(const Uuid ent, const std::optional<EntityKind> &kind) const
 {
   if (!kind)
   {
@@ -459,4 +457,4 @@ void Coordinator::cleanUpDeadEntities()
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

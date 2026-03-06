@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace pge {
+namespace bsgalone::client {
 
 struct PlayerCredentials
 {
@@ -11,4 +11,4 @@ struct PlayerCredentials
   std::string password{};
 };
 
-} // namespace pge
+} // namespace bsgalone::client

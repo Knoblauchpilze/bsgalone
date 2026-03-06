@@ -1,7 +1,7 @@
 
 #include "PlayerResourceRepository.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 PlayerResourceRepository::PlayerResourceRepository(const DbConnectionShPtr &connection)
   : AbstractRepository("player", connection)
@@ -72,4 +72,4 @@ void PlayerResourceRepository::save(const PlayerResource &resource)
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

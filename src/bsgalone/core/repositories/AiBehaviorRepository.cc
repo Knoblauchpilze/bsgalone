@@ -1,7 +1,7 @@
 
 #include "AiBehaviorRepository.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 AiBehaviorRepository::AiBehaviorRepository(const DbConnectionShPtr &connection)
   : AbstractRepository("ai", connection)
@@ -104,4 +104,4 @@ void AiBehaviorRepository::fetchAiTargets(const Uuid shipDbId, AiBehavior &out) 
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

@@ -5,20 +5,22 @@
 #include "DatabaseSynchronizer.hh"
 #include "Entity.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
 class DbSyncProcess : public AbstractProcess
 {
   public:
-  DbSyncProcess(const Repositories &repositories);
+  DbSyncProcess(const core::Repositories &repositories);
   ~DbSyncProcess() override = default;
 
-  void update(Coordinator &coordinator, const chrono::TickData &data) override;
+  void update(core::Coordinator &coordinator, const chrono::TickData &data) override;
 
   private:
   DatabaseSynchronizer m_synchronizer;
 
-  void updateEntity(Entity &entity, Coordinator &coordinator, const chrono::TickData &data) const;
+  void updateEntity(core::Entity &entity,
+                    core::Coordinator &coordinator,
+                    const chrono::TickData &data) const;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::server

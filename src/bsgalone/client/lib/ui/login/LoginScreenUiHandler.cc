@@ -5,12 +5,11 @@
 #include "ScreenCommon.hh"
 #include "SignupMessage.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
 LoginScreenUiHandler::LoginScreenUiHandler(const Views &views)
   : AbstractUiHandler("login")
-  , AbstractMessageListener(
-      {bsgalone::core::MessageType::LOGIN, bsgalone::core::MessageType::SIGNUP})
+  , AbstractMessageListener({core::MessageType::LOGIN, core::MessageType::SIGNUP})
   , m_playerView(views.playerView)
 {
   if (nullptr == m_playerView)
@@ -21,7 +20,7 @@ LoginScreenUiHandler::LoginScreenUiHandler(const Views &views)
 
 void LoginScreenUiHandler::initializeMenus(const int width,
                                            const int height,
-                                           sprites::TexturePack &texturesLoader)
+                                           pge::sprites::TexturePack &texturesLoader)
 {
   generateLoginModePanel(width, height);
   generateFactionPanel(width, height);
@@ -59,7 +58,7 @@ bool LoginScreenUiHandler::processUserInput(ui::UserInputData &inputData)
   return m_proceedButton->processUserInput(inputData);
 }
 
-void LoginScreenUiHandler::render(Renderer &engine) const
+void LoginScreenUiHandler::render(pge::Renderer &engine) const
 {
   m_loginModePanel->render(engine);
   m_factionPanel->render(engine);
@@ -73,8 +72,8 @@ void LoginScreenUiHandler::render(Renderer &engine) const
 }
 
 namespace {
-constexpr auto LOGIN_BUTTON_ACTIVE_COLOR   = semiOpaque(colors::DARK_GREEN);
-constexpr auto LOGIN_BUTTON_INACTIVE_COLOR = semiOpaque(colors::DARK_BLUE);
+constexpr auto LOGIN_BUTTON_ACTIVE_COLOR   = semiOpaque(pge::colors::DARK_GREEN);
+constexpr auto LOGIN_BUTTON_INACTIVE_COLOR = semiOpaque(pge::colors::DARK_BLUE);
 
 constexpr auto LOGIN_TEXT  = "AU JEU!!";
 constexpr auto SIGNUP_TEXT = "Sign up";
@@ -83,14 +82,14 @@ constexpr auto LOGIN_FAILURE_TEXT  = "Login failed, check your credentials!";
 constexpr auto SIGNUP_FAILURE_TEXT = "Sign up failed, check your credentials!";
 constexpr auto SIGNUP_SUCCESS_TEXT = "Signup succeeded, login to start playing!";
 
-constexpr auto COLONIAL_BUTTON_ACTIVE_COLOR   = almostOpaque(colors::VERY_DARK_BLUE);
-constexpr auto COLONIAL_BUTTON_INACTIVE_COLOR = almostOpaque(colors::DARK_BLUE);
+constexpr auto COLONIAL_BUTTON_ACTIVE_COLOR   = almostOpaque(pge::colors::VERY_DARK_BLUE);
+constexpr auto COLONIAL_BUTTON_INACTIVE_COLOR = almostOpaque(pge::colors::DARK_BLUE);
 
-constexpr auto CYLON_BUTTON_ACTIVE_COLOR   = almostOpaque(colors::VERY_DARK_RED);
-constexpr auto CYLON_BUTTON_INACTIVE_COLOR = almostOpaque(colors::DARK_RED);
+constexpr auto CYLON_BUTTON_ACTIVE_COLOR   = almostOpaque(pge::colors::VERY_DARK_RED);
+constexpr auto CYLON_BUTTON_INACTIVE_COLOR = almostOpaque(pge::colors::DARK_RED);
 
-constexpr auto GAME_ROLE_BUTTON_ACTIVE_COLOR   = almostOpaque(colors::VERY_DARK_GREY);
-constexpr auto GAME_ROLE_BUTTON_INACTIVE_COLOR = almostOpaque(colors::DARK_GREY);
+constexpr auto GAME_ROLE_BUTTON_ACTIVE_COLOR   = almostOpaque(pge::colors::VERY_DARK_GREY);
+constexpr auto GAME_ROLE_BUTTON_INACTIVE_COLOR = almostOpaque(pge::colors::DARK_GREY);
 } // namespace
 
 void LoginScreenUiHandler::updateUi()
@@ -108,31 +107,31 @@ void LoginScreenUiHandler::updateUi()
   m_factionPanel->setVisible(Mode::SIGNUP == m_mode);
   if (Mode::SIGNUP == m_mode)
   {
-    const auto colonialButtonColor = bsgo::Faction::COLONIAL == m_faction
+    const auto colonialButtonColor = core::Faction::COLONIAL == m_faction
                                        ? COLONIAL_BUTTON_ACTIVE_COLOR
                                        : COLONIAL_BUTTON_INACTIVE_COLOR;
-    const auto cylonButtonColor    = bsgo::Faction::CYLON == m_faction ? CYLON_BUTTON_ACTIVE_COLOR
+    const auto cylonButtonColor    = core::Faction::CYLON == m_faction ? CYLON_BUTTON_ACTIVE_COLOR
                                                                        : CYLON_BUTTON_INACTIVE_COLOR;
 
     m_colonialButton->updateBgColor(colonialButtonColor);
-    m_colonialButton->setHighlightable(bsgo::Faction::COLONIAL != m_faction);
+    m_colonialButton->setHighlightable(core::Faction::COLONIAL != m_faction);
     m_cylonButton->updateBgColor(cylonButtonColor);
-    m_cylonButton->setHighlightable(bsgo::Faction::CYLON != m_faction);
+    m_cylonButton->setHighlightable(core::Faction::CYLON != m_faction);
   }
 
   m_rolePanel->setVisible(Mode::LOGIN == m_mode);
   if (Mode::LOGIN == m_mode)
   {
-    const auto pilotButtonColor  = bsgo::GameRole::PILOT == m_role ? GAME_ROLE_BUTTON_ACTIVE_COLOR
+    const auto pilotButtonColor  = core::GameRole::PILOT == m_role ? GAME_ROLE_BUTTON_ACTIVE_COLOR
                                                                    : GAME_ROLE_BUTTON_INACTIVE_COLOR;
-    const auto gunnerButtonColor = bsgo::GameRole::GUNNER == m_role
+    const auto gunnerButtonColor = core::GameRole::GUNNER == m_role
                                      ? GAME_ROLE_BUTTON_ACTIVE_COLOR
                                      : GAME_ROLE_BUTTON_INACTIVE_COLOR;
 
     m_pilotButton->updateBgColor(pilotButtonColor);
-    m_pilotButton->setHighlightable(bsgo::GameRole::PILOT != m_role);
+    m_pilotButton->setHighlightable(core::GameRole::PILOT != m_role);
     m_gunnerButton->updateBgColor(gunnerButtonColor);
-    m_gunnerButton->setHighlightable(bsgo::GameRole::GUNNER != m_role);
+    m_gunnerButton->setHighlightable(core::GameRole::GUNNER != m_role);
   }
 
   const auto text = Mode::LOGIN == m_mode ? LOGIN_TEXT : SIGNUP_TEXT;
@@ -145,7 +144,7 @@ void LoginScreenUiHandler::updateUi()
   m_successfulSignupMenu->update();
 }
 
-void LoginScreenUiHandler::connectToMessageQueue(bsgalone::core::IMessageQueue &messageQueue)
+void LoginScreenUiHandler::connectToMessageQueue(core::IMessageQueue &messageQueue)
 {
   m_credentialsUiHandler.connectToMessageQueue(messageQueue);
 
@@ -153,15 +152,15 @@ void LoginScreenUiHandler::connectToMessageQueue(bsgalone::core::IMessageQueue &
   messageQueue.addListener(std::move(listener));
 }
 
-void LoginScreenUiHandler::onEventReceived(const bsgalone::core::IMessage &message)
+void LoginScreenUiHandler::onEventReceived(const core::IMessage &message)
 {
   switch (message.type())
   {
-    case bsgalone::core::MessageType::LOGIN:
-      handleLoginMessage(message.as<bsgo::LoginMessage>());
+    case core::MessageType::LOGIN:
+      handleLoginMessage(message.as<core::LoginMessage>());
       break;
-    case bsgalone::core::MessageType::SIGNUP:
-      handleSignupMessage(message.as<bsgo::SignupMessage>());
+    case core::MessageType::SIGNUP:
+      handleSignupMessage(message.as<core::SignupMessage>());
       break;
     default:
       error("Unsupported message type " + str(message.type()) + " in login UI");
@@ -171,8 +170,8 @@ void LoginScreenUiHandler::onEventReceived(const bsgalone::core::IMessage &messa
 void LoginScreenUiHandler::generateLoginModePanel(const int width, const int /*height*/)
 {
   constexpr auto LOGIN_MODE_Y_PIXELS = 20;
-  const Vec2i loginModeDimsPixels{200, 50};
-  const Vec2i loginModePos{(width - loginModeDimsPixels.x) / 2, LOGIN_MODE_Y_PIXELS};
+  const pge::Vec2i loginModeDimsPixels{200, 50};
+  const pge::Vec2i loginModePos{(width - loginModeDimsPixels.x) / 2, LOGIN_MODE_Y_PIXELS};
 
   m_loginModePanel = generateBlankHorizontalMenu(loginModePos, loginModeDimsPixels);
 
@@ -180,13 +179,13 @@ void LoginScreenUiHandler::generateLoginModePanel(const int width, const int /*h
   const auto bg = ui::bgConfigFromColor(LOGIN_BUTTON_ACTIVE_COLOR);
 
   config.clickCallback = [this]() { setLoginMode(Mode::LOGIN); };
-  auto text            = ui::textConfigFromColor("Login", colors::WHITE);
+  auto text            = ui::textConfigFromColor("Login", pge::colors::WHITE);
   auto button          = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_loginButton        = button.get();
   m_loginModePanel->addMenu(std::move(button));
 
   config.clickCallback = [this]() { setLoginMode(Mode::SIGNUP); };
-  text                 = ui::textConfigFromColor("Sign up", colors::WHITE);
+  text                 = ui::textConfigFromColor("Sign up", pge::colors::WHITE);
   button               = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_signupButton       = button.get();
   m_loginModePanel->addMenu(std::move(button));
@@ -195,23 +194,23 @@ void LoginScreenUiHandler::generateLoginModePanel(const int width, const int /*h
 void LoginScreenUiHandler::generateFactionPanel(const int width, const int /*height*/)
 {
   constexpr auto FACTION_Y_PIXELS = 110;
-  const Vec2i factionDimsPixels{200, 50};
-  const Vec2i factionPos{(width - factionDimsPixels.x) / 2, FACTION_Y_PIXELS};
+  const pge::Vec2i factionDimsPixels{200, 50};
+  const pge::Vec2i factionPos{(width - factionDimsPixels.x) / 2, FACTION_Y_PIXELS};
 
   m_factionPanel = generateBlankHorizontalMenu(factionPos, factionDimsPixels);
 
   ui::MenuConfig config{};
 
-  config.clickCallback = [this]() { setFaction(bsgo::Faction::COLONIAL); };
+  config.clickCallback = [this]() { setFaction(core::Faction::COLONIAL); };
   auto bg              = ui::bgConfigFromColor(COLONIAL_BUTTON_ACTIVE_COLOR);
-  auto text            = ui::textConfigFromColor("Colonial", colors::WHITE);
+  auto text            = ui::textConfigFromColor("Colonial", pge::colors::WHITE);
   auto button          = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_colonialButton     = button.get();
   m_factionPanel->addMenu(std::move(button));
 
-  config.clickCallback = [this]() { setFaction(bsgo::Faction::CYLON); };
+  config.clickCallback = [this]() { setFaction(core::Faction::CYLON); };
   bg                   = ui::bgConfigFromColor(CYLON_BUTTON_INACTIVE_COLOR);
-  text                 = ui::textConfigFromColor("Cylon", colors::WHITE);
+  text                 = ui::textConfigFromColor("Cylon", pge::colors::WHITE);
   button               = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_cylonButton        = button.get();
   m_factionPanel->addMenu(std::move(button));
@@ -220,23 +219,23 @@ void LoginScreenUiHandler::generateFactionPanel(const int width, const int /*hei
 void LoginScreenUiHandler::generateRolePanel(const int width, const int /*height*/)
 {
   constexpr auto ROLE_Y_PIXELS = 110;
-  const Vec2i roleDimsPixels{200, 50};
-  const Vec2i rolePos{(width - roleDimsPixels.x) / 2, ROLE_Y_PIXELS};
+  const pge::Vec2i roleDimsPixels{200, 50};
+  const pge::Vec2i rolePos{(width - roleDimsPixels.x) / 2, ROLE_Y_PIXELS};
 
   m_rolePanel = generateBlankHorizontalMenu(rolePos, roleDimsPixels);
 
   ui::MenuConfig config{};
 
-  config.clickCallback = [this]() { setGameRole(bsgo::GameRole::PILOT); };
+  config.clickCallback = [this]() { setGameRole(core::GameRole::PILOT); };
   auto bg              = ui::bgConfigFromColor(GAME_ROLE_BUTTON_ACTIVE_COLOR);
-  auto text            = ui::textConfigFromColor("Pilot", colors::WHITE);
+  auto text            = ui::textConfigFromColor("Pilot", pge::colors::WHITE);
   auto button          = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_pilotButton        = button.get();
   m_rolePanel->addMenu(std::move(button));
 
-  config.clickCallback = [this]() { setGameRole(bsgo::GameRole::GUNNER); };
+  config.clickCallback = [this]() { setGameRole(core::GameRole::GUNNER); };
   bg                   = ui::bgConfigFromColor(GAME_ROLE_BUTTON_INACTIVE_COLOR);
-  text                 = ui::textConfigFromColor("Gunner", colors::WHITE);
+  text                 = ui::textConfigFromColor("Gunner", pge::colors::WHITE);
   button               = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_gunnerButton       = button.get();
   m_rolePanel->addMenu(std::move(button));
@@ -246,25 +245,25 @@ void LoginScreenUiHandler::generateProceedButton(const int width, const int heig
 {
   constexpr auto REASONABLE_GAP_SIZE = 20;
 
-  const Vec2i loginButtonDimsPixels{200, 50};
-  const Vec2i loginButtonPos{(width - loginButtonDimsPixels.x) / 2,
-                             height - REASONABLE_GAP_SIZE - loginButtonDimsPixels.y};
+  const pge::Vec2i loginButtonDimsPixels{200, 50};
+  const pge::Vec2i loginButtonPos{(width - loginButtonDimsPixels.x) / 2,
+                                  height - REASONABLE_GAP_SIZE - loginButtonDimsPixels.y};
 
   const ui::MenuConfig config{.pos           = loginButtonPos,
                               .dims          = loginButtonDimsPixels,
                               .clickCallback = [this]() { tryLogin(); }};
 
-  const auto bg   = ui::bgConfigFromColor(colors::DARK_COBALT_BLUE);
-  const auto text = ui::textConfigFromColor(LOGIN_TEXT, colors::WHITE);
+  const auto bg   = ui::bgConfigFromColor(pge::colors::DARK_COBALT_BLUE);
+  const auto text = ui::textConfigFromColor(LOGIN_TEXT, pge::colors::WHITE);
   m_proceedButton = std::make_unique<ui::UiTextMenu>(config, bg, text);
 }
 
 void LoginScreenUiHandler::generateQuitButton(const int width, const int /*height*/)
 {
   constexpr auto REASONABLE_GAP_SIZE = 20;
-  const Vec2i quitButtonDimsPixels{100, 50};
-  const Vec2i quitButtonPos{width - REASONABLE_GAP_SIZE - quitButtonDimsPixels.x,
-                            REASONABLE_GAP_SIZE};
+  const pge::Vec2i quitButtonDimsPixels{100, 50};
+  const pge::Vec2i quitButtonPos{width - REASONABLE_GAP_SIZE - quitButtonDimsPixels.x,
+                                 REASONABLE_GAP_SIZE};
 
   const ui::MenuConfig config{.pos               = quitButtonPos,
                               .dims              = quitButtonDimsPixels,
@@ -273,22 +272,22 @@ void LoginScreenUiHandler::generateQuitButton(const int width, const int /*heigh
                                 g.terminate();
                               }};
 
-  const auto bg   = ui::bgConfigFromColor(colors::DARK_GREY);
-  const auto text = ui::textConfigFromColor("Quit", colors::WHITE);
+  const auto bg   = ui::bgConfigFromColor(pge::colors::DARK_GREY);
+  const auto text = ui::textConfigFromColor("Quit", pge::colors::WHITE);
   m_quitButton    = std::make_unique<ui::UiTextMenu>(config, bg, text);
 }
 
 void LoginScreenUiHandler::generateFailureMenu(const int width, const int /*height*/)
 {
-  const Vec2i failureMenuDimsPixels{350, 80};
-  const Vec2i failureMenuPos{(width - failureMenuDimsPixels.x) / 2, 430};
+  const pge::Vec2i failureMenuDimsPixels{350, 80};
+  const pge::Vec2i failureMenuPos{(width - failureMenuDimsPixels.x) / 2, 430};
 
   const ui::MenuConfig config{.pos           = failureMenuPos,
                               .dims          = failureMenuDimsPixels,
                               .highlightable = false};
 
-  const auto bg   = ui::bgConfigFromColor(colors::DARK_RED);
-  const auto text = ui::textConfigFromColor(LOGIN_FAILURE_TEXT, colors::BLACK);
+  const auto bg   = ui::bgConfigFromColor(pge::colors::DARK_RED);
+  const auto text = ui::textConfigFromColor(LOGIN_FAILURE_TEXT, pge::colors::BLACK);
 
   auto menu         = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_failureMenuText = menu.get();
@@ -297,15 +296,15 @@ void LoginScreenUiHandler::generateFailureMenu(const int width, const int /*heig
 
 void LoginScreenUiHandler::generateSuccessfulSignupMenu(const int width, const int /*height*/)
 {
-  const Vec2i signupSuccessMenuDimsPixels{350, 80};
-  const Vec2i signupSuccessMenuPos{(width - signupSuccessMenuDimsPixels.x) / 2, 430};
+  const pge::Vec2i signupSuccessMenuDimsPixels{350, 80};
+  const pge::Vec2i signupSuccessMenuPos{(width - signupSuccessMenuDimsPixels.x) / 2, 430};
 
   const ui::MenuConfig config{.pos           = signupSuccessMenuPos,
                               .dims          = signupSuccessMenuDimsPixels,
                               .highlightable = false};
 
-  const auto bg   = ui::bgConfigFromColor(colors::DARK_GREEN);
-  const auto text = ui::textConfigFromColor(SIGNUP_SUCCESS_TEXT, colors::BLACK);
+  const auto bg   = ui::bgConfigFromColor(pge::colors::DARK_GREEN);
+  const auto text = ui::textConfigFromColor(SIGNUP_SUCCESS_TEXT, pge::colors::BLACK);
 
   auto menu              = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_successfulSignupMenu = std::make_unique<ui::UiTimedMenu>(std::move(menu));
@@ -316,12 +315,12 @@ void LoginScreenUiHandler::setLoginMode(const Mode mode)
   m_mode = mode;
 }
 
-void LoginScreenUiHandler::setFaction(const bsgo::Faction faction)
+void LoginScreenUiHandler::setFaction(const core::Faction faction)
 {
   m_faction = faction;
 }
 
-void LoginScreenUiHandler::setGameRole(const bsgo::GameRole role)
+void LoginScreenUiHandler::setGameRole(const core::GameRole role)
 {
   m_role = role;
 }
@@ -351,7 +350,7 @@ void LoginScreenUiHandler::tryLogin()
   }
 }
 
-void LoginScreenUiHandler::handleLoginMessage(const bsgo::LoginMessage &message)
+void LoginScreenUiHandler::handleLoginMessage(const core::LoginMessage &message)
 {
   if (!message.successfullyLoggedIn())
   {
@@ -359,7 +358,7 @@ void LoginScreenUiHandler::handleLoginMessage(const bsgo::LoginMessage &message)
   }
 }
 
-void LoginScreenUiHandler::handleSignupMessage(const bsgo::SignupMessage &message)
+void LoginScreenUiHandler::handleSignupMessage(const core::SignupMessage &message)
 {
   if (message.successfullySignedup())
   {
@@ -372,4 +371,4 @@ void LoginScreenUiHandler::handleSignupMessage(const bsgo::SignupMessage &messag
   }
 }
 
-} // namespace pge
+} // namespace bsgalone::client

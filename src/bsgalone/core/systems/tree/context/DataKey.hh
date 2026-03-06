@@ -4,7 +4,7 @@
 #include "Uuid.hh"
 #include <variant>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class DataKey
 {
@@ -29,6 +29,6 @@ class DataKey
   std::variant<Uuid> m_key;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core
 
 #include "DataKey.hxx"

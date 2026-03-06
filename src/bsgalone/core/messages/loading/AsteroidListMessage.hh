@@ -5,9 +5,9 @@
 #include "NetworkMessage.hh"
 #include "Uuid.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
-class AsteroidListMessage : public bsgalone::core::NetworkMessage
+class AsteroidListMessage : public NetworkMessage
 {
   public:
   AsteroidListMessage();
@@ -20,11 +20,11 @@ class AsteroidListMessage : public bsgalone::core::NetworkMessage
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
 
-  auto clone() const -> bsgalone::core::IMessagePtr override;
+  auto clone() const -> IMessagePtr override;
 
   private:
   Uuid m_systemDbId{};
   std::vector<AsteroidData> m_asteroidsData{};
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

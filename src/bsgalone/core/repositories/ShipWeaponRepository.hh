@@ -8,7 +8,7 @@
 #include <optional>
 #include <vector>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 struct ShipWeapon
 {
@@ -37,4 +37,4 @@ class ShipWeaponRepository : public AbstractRepository
 
 using ShipWeaponRepositoryShPtr = std::shared_ptr<ShipWeaponRepository>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

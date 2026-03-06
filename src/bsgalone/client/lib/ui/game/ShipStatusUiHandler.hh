@@ -8,9 +8,9 @@
 #include "UiTextMenu.hh"
 #include <memory>
 
-namespace pge {
+namespace bsgalone::client {
 
-class ShipStatusUiHandler : public AbstractUiHandler, public bsgalone::core::AbstractMessageListener
+class ShipStatusUiHandler : public AbstractUiHandler, public core::AbstractMessageListener
 {
   public:
   ShipStatusUiHandler(const Views &views);
@@ -18,13 +18,13 @@ class ShipStatusUiHandler : public AbstractUiHandler, public bsgalone::core::Abs
 
   void initializeMenus(const int width,
                        const int height,
-                       sprites::TexturePack &texturesLoader) override;
+                       pge::sprites::TexturePack &texturesLoader) override;
   bool processUserInput(ui::UserInputData &inputData) override;
-  void render(Renderer &engine) const override;
+  void render(pge::Renderer &engine) const override;
   void updateUi() override;
 
-  void connectToMessageQueue(bsgalone::core::IMessageQueue &messageQueue) override;
-  void onEventReceived(const bsgalone::core::IMessage &message) override;
+  void connectToMessageQueue(core::IMessageQueue &messageQueue) override;
+  void onEventReceived(const core::IMessage &message) override;
 
   private:
   ShipViewShPtr m_shipView{};
@@ -35,7 +35,7 @@ class ShipStatusUiHandler : public AbstractUiHandler, public bsgalone::core::Abs
   ui::UiTextMenu *m_jumpDestination{};
   ui::UiTextMenu *m_jumpTime{};
 
-  std::optional<core::TimeStamp> m_jumpStartTime{};
+  std::optional<::core::TimeStamp> m_jumpStartTime{};
 
   void subscribeToViews();
   void reset();
@@ -48,4 +48,4 @@ class ShipStatusUiHandler : public AbstractUiHandler, public bsgalone::core::Abs
 
 using ShipStatusUiHandlerPtr = std::unique_ptr<ShipStatusUiHandler>;
 
-} // namespace pge
+} // namespace bsgalone::client

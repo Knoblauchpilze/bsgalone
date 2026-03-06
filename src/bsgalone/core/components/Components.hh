@@ -27,7 +27,7 @@
 #include "WeaponSlotComponent.hh"
 #include <unordered_map>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 struct Components
 {
@@ -58,4 +58,4 @@ struct Components
   void clear();
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

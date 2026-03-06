@@ -1,7 +1,7 @@
 
 #include "RepeaterNode.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 RepeaterNode::RepeaterNode(INodePtr node)
   : INode("repeater")
@@ -26,4 +26,4 @@ void RepeaterNode::reset(DataContext &data)
   m_child->reset(data);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

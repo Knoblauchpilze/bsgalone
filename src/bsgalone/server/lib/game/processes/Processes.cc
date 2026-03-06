@@ -6,17 +6,17 @@
 #include "RespawnProcess.hh"
 #include "TickSyncProcess.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-Processes::Processes(const Uuid systemDbId, bsgalone::core::IMessageQueue *const systemMessageQueue)
-  : core::CoreObject("processes")
+Processes::Processes(const core::Uuid systemDbId, core::IMessageQueue *const systemMessageQueue)
+  : ::core::CoreObject("processes")
 {
   setService("bsgo");
 
   initialize(systemDbId, systemMessageQueue);
 }
 
-void Processes::update(Coordinator &coordinator, const chrono::TickData &data) const
+void Processes::update(core::Coordinator &coordinator, const chrono::TickData &data) const
 {
   for (const auto &process : m_processes)
   {
@@ -24,10 +24,10 @@ void Processes::update(Coordinator &coordinator, const chrono::TickData &data) c
   }
 }
 
-void Processes::initialize(const Uuid systemDbId,
-                           bsgalone::core::IMessageQueue *const systemMessageQueue)
+void Processes::initialize(const core::Uuid systemDbId,
+                           core::IMessageQueue *const systemMessageQueue)
 {
-  Repositories repositories;
+  core::Repositories repositories;
 
   auto syncProcess = std::make_unique<DbSyncProcess>(repositories);
   m_processes.emplace_back(std::move(syncProcess));
@@ -39,4 +39,4 @@ void Processes::initialize(const Uuid systemDbId,
   m_processes.emplace_back(std::move(tickSyncProcess));
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

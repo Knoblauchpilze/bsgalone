@@ -3,9 +3,9 @@
 
 #include "CoreObject.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
-class IRepository : public core::CoreObject
+class IRepository : public ::core::CoreObject
 {
   public:
   IRepository(const std::string &name);
@@ -17,4 +17,4 @@ class IRepository : public core::CoreObject
   virtual void initialize() = 0;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

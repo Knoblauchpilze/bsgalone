@@ -19,31 +19,31 @@ class ClientManager : public ::core::CoreObject
 
   void registerClient(const net::ClientId clientId);
   void registerPlayer(const net::ClientId clientId,
-                      const bsgo::Uuid playerDbId,
-                      const bsgo::Uuid playerSystemDbId);
-  void removePlayer(const bsgo::Uuid playerDbId);
-  void removePlayerConnection(const bsgo::Uuid playerDbId);
+                      const core::Uuid playerDbId,
+                      const core::Uuid playerSystemDbId);
+  void removePlayer(const core::Uuid playerDbId);
+  void removePlayerConnection(const core::Uuid playerDbId);
   void removeClient(const net::ClientId clientId);
 
-  auto tryGetPlayerForClient(const net::ClientId clientId) -> std::optional<bsgo::Uuid>;
-  auto getClientIdForPlayer(const bsgo::Uuid playerDbId) const -> net::ClientId;
+  auto tryGetPlayerForClient(const net::ClientId clientId) -> std::optional<core::Uuid>;
+  auto getClientIdForPlayer(const core::Uuid playerDbId) const -> net::ClientId;
 
   auto getAllClients() const -> std::vector<net::ClientId>;
-  auto getAllClientsForSystem(const bsgo::Uuid systemDbId) const -> std::vector<net::ClientId>;
-  auto tryGetSystemForClient(const net::ClientId clientId) const -> std::optional<bsgo::Uuid>;
+  auto getAllClientsForSystem(const core::Uuid systemDbId) const -> std::vector<net::ClientId>;
+  auto tryGetSystemForClient(const net::ClientId clientId) const -> std::optional<core::Uuid>;
 
-  void updateSystemForPlayer(const bsgo::Uuid playerDbId, const bsgo::Uuid systemDbId);
+  void updateSystemForPlayer(const core::Uuid playerDbId, const core::Uuid systemDbId);
 
   private:
   struct ClientData
   {
-    std::optional<bsgo::Uuid> playerDbId{};
-    std::optional<bsgo::Uuid> playerSystemDbId{};
+    std::optional<core::Uuid> playerDbId{};
+    std::optional<core::Uuid> playerSystemDbId{};
   };
 
   mutable std::mutex m_locker{};
   std::unordered_map<net::ClientId, ClientData> m_clients{};
-  std::unordered_map<bsgo::Uuid, net::ClientId> m_playerToClient{};
+  std::unordered_map<core::Uuid, net::ClientId> m_playerToClient{};
 };
 
 using ClientManagerShPtr = std::shared_ptr<ClientManager>;

@@ -6,24 +6,24 @@
 #include "DatabaseEntityMapper.hh"
 #include <memory>
 
-namespace bsgo {
+namespace bsgalone::server {
 
 class JumpService : public AbstractService
 {
   public:
-  JumpService(const Repositories &repositories,
-              CoordinatorShPtr coordinator,
-              const DatabaseEntityMapper &entityMapper);
+  JumpService(const core::Repositories &repositories,
+              core::CoordinatorShPtr coordinator,
+              const core::DatabaseEntityMapper &entityMapper);
   ~JumpService() override = default;
 
-  bool tryRegisterJump(const Uuid shipDbId, const Uuid system) const;
-  bool tryCancelJump(const Uuid shipDbId) const;
+  bool tryRegisterJump(const core::Uuid shipDbId, const core::Uuid system) const;
+  bool tryCancelJump(const core::Uuid shipDbId) const;
 
   private:
-  CoordinatorShPtr m_coordinator{};
-  const DatabaseEntityMapper &m_entityMapper;
+  core::CoordinatorShPtr m_coordinator{};
+  const core::DatabaseEntityMapper &m_entityMapper;
 };
 
 using JumpServiceShPtr = std::shared_ptr<JumpService>;
 
-} // namespace bsgo
+} // namespace bsgalone::server

@@ -1,7 +1,7 @@
 
 #include "JumpUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 bool isShipActive(const PlayerShip &ship)
 {
@@ -105,4 +105,4 @@ auto canShipCancelJump(const PlayerShip &ship) -> JumpCompletionStatus
   return JumpCompletionStatus::OK;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

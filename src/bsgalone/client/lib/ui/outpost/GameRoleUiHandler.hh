@@ -8,7 +8,7 @@
 #include <memory>
 #include <optional>
 
-namespace pge {
+namespace bsgalone::client {
 
 class GameRoleUiHandler : public AbstractUiHandler
 {
@@ -18,9 +18,9 @@ class GameRoleUiHandler : public AbstractUiHandler
 
   void initializeMenus(const int width,
                        const int height,
-                       sprites::TexturePack &texturesLoader) override;
+                       pge::sprites::TexturePack &texturesLoader) override;
   bool processUserInput(ui::UserInputData &inputData) override;
-  void render(Renderer &engine) const override;
+  void render(pge::Renderer &engine) const override;
   void updateUi() override;
 
   private:
@@ -38,8 +38,8 @@ class GameRoleUiHandler : public AbstractUiHandler
 
   struct PlayerShipData
   {
-    bsgo::Uuid shipDbId{};
-    bsgo::Uuid playerDbId{};
+    core::Uuid shipDbId{};
+    core::Uuid playerDbId{};
     ui::UiMenu *menu{};
     ui::UiTextMenu *button{};
     State state{State::TO_JOIN};
@@ -60,4 +60,4 @@ class GameRoleUiHandler : public AbstractUiHandler
 
 using GameRoleUiHandlerPtr = std::unique_ptr<GameRoleUiHandler>;
 
-} // namespace pge
+} // namespace bsgalone::client

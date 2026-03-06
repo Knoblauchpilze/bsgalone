@@ -9,7 +9,7 @@
 #include <optional>
 #include <unordered_set>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 struct PlayerComputer
 {
@@ -26,7 +26,7 @@ struct PlayerComputer
   chrono::TickDuration reloadTime{};
 
   std::optional<chrono::TickDuration> duration{};
-  std::optional<std::unordered_set<bsgalone::core::EntityKind>> allowedTargets{};
+  std::optional<std::unordered_set<EntityKind>> allowedTargets{};
   std::optional<float> damageModifier{};
 };
 
@@ -50,4 +50,4 @@ class PlayerComputerRepository : public AbstractRepository
 
 using PlayerComputerRepositoryShPtr = std::shared_ptr<PlayerComputerRepository>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

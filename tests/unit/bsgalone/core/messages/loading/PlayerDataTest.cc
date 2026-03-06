@@ -6,7 +6,7 @@
 
 using namespace ::testing;
 
-namespace bsgo {
+namespace bsgalone::core {
 
 TEST(Unit_Bsgalone_Core_Messages_PlayerData, EqualWhenDbIdIsEqual)
 {
@@ -71,4 +71,4 @@ TEST(Unit_Bsgalone_Core_Messages_PlayerData, OverridesAttachedShip)
   assertPlayerDataAreEqual(output, input);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

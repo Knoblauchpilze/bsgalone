@@ -1,7 +1,7 @@
 
 #include "ContextKey.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 auto str(const ContextKey &key) -> std::string
 {
@@ -16,4 +16,4 @@ auto str(const ContextKey &key) -> std::string
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

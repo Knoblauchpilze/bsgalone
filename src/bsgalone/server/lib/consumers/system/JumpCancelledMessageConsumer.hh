@@ -6,22 +6,22 @@
 #include "JumpCancelledMessage.hh"
 #include "Services.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-class JumpCancelledMessageConsumer : public bsgalone::core::AbstractMessageConsumer
+class JumpCancelledMessageConsumer : public core::AbstractMessageConsumer
 {
   public:
   JumpCancelledMessageConsumer(const Services &services,
-                               bsgalone::core::IMessageQueue *const outputMessageQueue);
+                               core::IMessageQueue *const outputMessageQueue);
   ~JumpCancelledMessageConsumer() override = default;
 
-  void onEventReceived(const bsgalone::core::IMessage &message) override;
+  void onEventReceived(const core::IMessage &message) override;
 
   private:
   JumpServiceShPtr m_jumpService{};
-  bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
+  core::IMessageQueue *const m_outputMessageQueue{};
 
-  void handleJumpCancellation(const bsgalone::core::JumpCancelledMessage &message) const;
+  void handleJumpCancellation(const core::JumpCancelledMessage &message) const;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::server

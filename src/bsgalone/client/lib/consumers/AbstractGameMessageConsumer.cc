@@ -3,28 +3,27 @@
 #include "AsteroidDataSource.hh"
 #include "AsteroidListMessage.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
-AbstractGameMessageConsumer::AbstractGameMessageConsumer(
-  const std::string &name,
-  const bsgalone::core::MessageType relevantMessageType)
-  : bsgalone::core::AbstractMessageConsumer(name,
-                                            {bsgalone::core::MessageType::LOADING_STARTED,
-                                             bsgalone::core::MessageType::LOADING_FINISHED,
-                                             relevantMessageType})
+AbstractGameMessageConsumer::AbstractGameMessageConsumer(const std::string &name,
+                                                         const core::MessageType relevantMessageType)
+  : core::AbstractMessageConsumer(name,
+                                  {core::MessageType::LOADING_STARTED,
+                                   core::MessageType::LOADING_FINISHED,
+                                   relevantMessageType})
 {
   addModule("consumer");
 }
 
-void AbstractGameMessageConsumer::onEventReceived(const bsgalone::core::IMessage &message)
+void AbstractGameMessageConsumer::onEventReceived(const core::IMessage &message)
 {
   switch (message.type())
   {
-    case bsgalone::core::MessageType::LOADING_STARTED:
-      handleLoadingStarted(message.as<bsgo::LoadingStartedMessage>());
+    case core::MessageType::LOADING_STARTED:
+      handleLoadingStarted(message.as<core::LoadingStartedMessage>());
       break;
-    case bsgalone::core::MessageType::LOADING_FINISHED:
-      handleLoadingFinished(message.as<bsgo::LoadingFinishedMessage>());
+    case core::MessageType::LOADING_FINISHED:
+      handleLoadingFinished(message.as<core::LoadingFinishedMessage>());
       break;
     default:
       handleRelevantMessage(message);
@@ -32,12 +31,12 @@ void AbstractGameMessageConsumer::onEventReceived(const bsgalone::core::IMessage
   }
 }
 
-void AbstractGameMessageConsumer::handleLoadingStarted(const bsgo::LoadingStartedMessage &message)
+void AbstractGameMessageConsumer::handleLoadingStarted(const core::LoadingStartedMessage &message)
 {
   switch (message.getTransition())
   {
-    case bsgo::LoadingTransition::UNDOCK:
-    case bsgo::LoadingTransition::JUMP:
+    case core::LoadingTransition::UNDOCK:
+    case core::LoadingTransition::JUMP:
       m_relevantLoadingTransitionDetected = true;
       break;
     default:
@@ -46,12 +45,12 @@ void AbstractGameMessageConsumer::handleLoadingStarted(const bsgo::LoadingStarte
 }
 
 void AbstractGameMessageConsumer::handleLoadingFinished(
-  const bsgo::LoadingFinishedMessage & /*message*/)
+  const core::LoadingFinishedMessage & /*message*/)
 {
   m_relevantLoadingTransitionDetected = false;
 }
 
-void AbstractGameMessageConsumer::handleRelevantMessage(const bsgalone::core::IMessage &message)
+void AbstractGameMessageConsumer::handleRelevantMessage(const core::IMessage &message)
 {
   if (m_relevantLoadingTransitionDetected)
   {
@@ -59,4 +58,4 @@ void AbstractGameMessageConsumer::handleRelevantMessage(const bsgalone::core::IM
   }
 }
 
-} // namespace pge
+} // namespace bsgalone::client

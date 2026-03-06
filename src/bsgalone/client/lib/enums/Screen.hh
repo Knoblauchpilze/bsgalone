@@ -5,14 +5,16 @@
 
 namespace bsgalone::client {
 
-enum class GameScreen
+enum class Screen
 {
   LOGIN,
   LOADING,
   GAME,
+  MAP,
+  OUTPOST,
   EXIT
 };
 
-auto str(const GameScreen s) noexcept -> std::string;
+auto str(const Screen s) noexcept -> std::string;
 
 } // namespace bsgalone::client

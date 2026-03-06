@@ -14,7 +14,7 @@
 #include "GameSession.hh"
 #include "IMessageQueue.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
 struct Views
 {
@@ -26,19 +26,19 @@ struct Views
   ServerViewShPtr serverView{};
   ResourceViewShPtr resourceView{};
 
-  void connectToQueue(bsgalone::core::IMessageQueue *const queue);
+  void connectToQueue(core::IMessageQueue *const queue);
   void reset();
 };
 
 struct ViewsConfig
 {
   GameSessionShPtr gameSession{};
-  bsgo::CoordinatorShPtr coordinator{};
-  bsgalone::core::IMessageQueue *const internalMessageQueue{};
-  bsgalone::core::IMessageQueue *const outputMessageQueue{};
+  core::CoordinatorShPtr coordinator{};
+  core::IMessageQueue *const internalMessageQueue{};
+  core::IMessageQueue *const outputMessageQueue{};
 };
 
-auto createViews(const ViewsConfig &config, const bsgo::DatabaseEntityMapper &entityMapper)
+auto createViews(const ViewsConfig &config, const core::DatabaseEntityMapper &entityMapper)
   -> Views;
 
-} // namespace pge
+} // namespace bsgalone::client

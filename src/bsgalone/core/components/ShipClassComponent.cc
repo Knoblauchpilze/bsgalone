@@ -1,10 +1,10 @@
 
 #include "ShipClassComponent.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 ShipClassComponent::ShipClassComponent(const ShipClass &shipClass)
-  : AbstractComponent(bsgalone::core::ComponentType::SHIP_CLASS)
+  : AbstractComponent(ComponentType::SHIP_CLASS)
   , m_shipClass(shipClass)
 {}
 
@@ -15,4 +15,4 @@ auto ShipClassComponent::shipClass() const noexcept -> ShipClass
 
 void ShipClassComponent::update(const chrono::TickData & /*data*/) {}
 
-} // namespace bsgo
+} // namespace bsgalone::core

@@ -2,7 +2,7 @@
 #include "GameRole.hh"
 #include <gtest/gtest.h>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 TEST(Unit_Bsgalone_Core_Enums_GameRole, Str)
 {
@@ -36,4 +36,4 @@ TEST(Unit_Bsgalone_Core_Enums_GameRole, FromDbGameRole_FailsWhenValueIsNotRecogn
   EXPECT_THROW([] { fromDbGameRole("not-a-role"); }(), std::invalid_argument);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

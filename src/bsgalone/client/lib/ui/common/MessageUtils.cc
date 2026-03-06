@@ -1,12 +1,12 @@
 
 #include "MessageUtils.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
-bool didPlayerShipDie(const bsgo::EntityRemovedMessage &message,
-                      const bsgo::DatabaseEntityMapper &mapper)
+bool didPlayerShipDie(const core::EntityRemovedMessage &message,
+                      const core::DatabaseEntityMapper &mapper)
 {
-  if (message.getEntityKind() != bsgalone::core::EntityKind::SHIP || !message.isDead())
+  if (message.getEntityKind() != core::EntityKind::SHIP || !message.isDead())
   {
     return false;
   }
@@ -17,9 +17,9 @@ bool didPlayerShipDie(const bsgo::EntityRemovedMessage &message,
   return maybePlayerShipDbId && deadShipDbId == *maybePlayerShipDbId;
 }
 
-bool didPlayerShipDie(const bsgo::EntityRemovedMessage &message, const ShipDbView &shipDbView)
+bool didPlayerShipDie(const core::EntityRemovedMessage &message, const ShipDbView &shipDbView)
 {
-  if (message.getEntityKind() != bsgalone::core::EntityKind::SHIP || !message.isDead())
+  if (message.getEntityKind() != core::EntityKind::SHIP || !message.isDead())
   {
     return false;
   }
@@ -27,10 +27,10 @@ bool didPlayerShipDie(const bsgo::EntityRemovedMessage &message, const ShipDbVie
   return message.getEntityDbId() == shipDbView.getPlayerShipDbId();
 }
 
-bool didPlayerDie(const bsgo::EntityRemovedMessage &message,
-                  const bsgo::DatabaseEntityMapper &mapper)
+bool didPlayerDie(const core::EntityRemovedMessage &message,
+                  const core::DatabaseEntityMapper &mapper)
 {
-  if (message.getEntityKind() != bsgalone::core::EntityKind::PLAYER || !message.isDead())
+  if (message.getEntityKind() != core::EntityKind::PLAYER || !message.isDead())
   {
     return false;
   }
@@ -41,4 +41,4 @@ bool didPlayerDie(const bsgo::EntityRemovedMessage &message,
   return maybePlayerDbId && deadPlayerDbId == *maybePlayerDbId;
 }
 
-} // namespace pge
+} // namespace bsgalone::client

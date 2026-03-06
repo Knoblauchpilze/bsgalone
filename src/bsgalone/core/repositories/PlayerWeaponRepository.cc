@@ -1,7 +1,7 @@
 
 #include "PlayerWeaponRepository.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 PlayerWeaponRepository::PlayerWeaponRepository(const DbConnectionShPtr &connection)
   : AbstractRepository("weapon", connection)
@@ -101,4 +101,4 @@ void PlayerWeaponRepository::save(const PlayerWeapon &weapon)
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

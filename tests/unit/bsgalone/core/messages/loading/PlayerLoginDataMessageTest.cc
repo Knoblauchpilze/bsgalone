@@ -5,7 +5,7 @@
 
 using namespace ::testing;
 
-namespace bsgo {
+namespace bsgalone::core {
 namespace {
 void assertMessagesAreEqual(const PlayerLoginDataMessage &actual,
                             const PlayerLoginDataMessage &expected)
@@ -66,8 +66,8 @@ TEST(Unit_Bsgalone_Core_Messages_PlayerLoginDataMessage, Clone)
   expected.setSystemDbId(Uuid{44});
 
   const auto cloned = expected.clone();
-  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::PLAYER_LOGIN_DATA);
+  ASSERT_EQ(cloned->type(), MessageType::PLAYER_LOGIN_DATA);
   assertMessagesAreEqual(cloned->as<PlayerLoginDataMessage>(), expected);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

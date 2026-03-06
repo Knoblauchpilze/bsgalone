@@ -1,7 +1,7 @@
 
 #include "SystemOutpostRepository.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 SystemOutpostRepository::SystemOutpostRepository(const DbConnectionShPtr &connection)
   : AbstractRepository("system", connection)
@@ -75,4 +75,4 @@ void SystemOutpostRepository::save(const SystemOutpost &outpost)
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

@@ -2,9 +2,9 @@
 #include "LockerService.hh"
 #include "LockerUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-LockerService::LockerService(const Repositories &repositories)
+LockerService::LockerService(const core::Repositories &repositories)
   : AbstractService("locker", repositories)
 {}
 
@@ -14,29 +14,29 @@ bool LockerService::tryEquip(const LockerItemData &item) const
 
   if (!verifySlotAvailability(item.shipDbId, item.type))
   {
-    warn("Failed to equip item " + str(item.dbId) + " on ship " + str(item.shipDbId),
+    warn("Failed to equip item " + core::str(item.dbId) + " on ship " + core::str(item.shipDbId),
          "Ship does not have any available slot anymore");
     return false;
   }
   if (!verifyItemIsNotEquiped(item.dbId, item.type))
   {
-    warn("Failed to equip item " + str(item.dbId) + " on ship " + str(item.shipDbId),
+    warn("Failed to equip item " + core::str(item.dbId) + " on ship " + core::str(item.shipDbId),
          "Item is already equiped");
     return false;
   }
   if (!verifyItemBelongsToPlayer(ship.player, item.dbId, item.type))
   {
-    warn("Failed to equip item " + str(item.dbId) + " on ship " + str(item.shipDbId),
+    warn("Failed to equip item " + core::str(item.dbId) + " on ship " + core::str(item.shipDbId),
          "Item does not belong to player");
     return false;
   }
 
   switch (item.type)
   {
-    case bsgalone::core::Item::WEAPON:
+    case core::Item::WEAPON:
       tryEquipWeapon(item.shipDbId, item.dbId);
       break;
-    case bsgalone::core::Item::COMPUTER:
+    case core::Item::COMPUTER:
       tryEquipComputer(item.shipDbId, item.dbId);
       break;
     default:
@@ -53,23 +53,23 @@ bool LockerService::tryUnequip(const LockerItemData &item) const
 
   if (!verifyItemIsEquiped(item.shipDbId, item.dbId, item.type))
   {
-    warn("Failed to unequip item " + str(item.dbId) + " on ship " + str(item.shipDbId),
+    warn("Failed to unequip item " + core::str(item.dbId) + " on ship " + core::str(item.shipDbId),
          "Item is not equiped");
     return false;
   }
   if (!verifyItemBelongsToPlayer(ship.player, item.dbId, item.type))
   {
-    warn("Failed to unequip item " + str(item.dbId) + " on ship " + str(item.shipDbId),
+    warn("Failed to unequip item " + core::str(item.dbId) + " on ship " + core::str(item.shipDbId),
          "Item does not belong to player");
     return false;
   }
 
   switch (item.type)
   {
-    case bsgalone::core::Item::WEAPON:
+    case core::Item::WEAPON:
       tryUnequipWeapon(item.shipDbId, item.dbId);
       break;
-    case bsgalone::core::Item::COMPUTER:
+    case core::Item::COMPUTER:
       tryUnequipComputer(item.shipDbId, item.dbId);
       break;
     default:
@@ -80,20 +80,19 @@ bool LockerService::tryUnequip(const LockerItemData &item) const
   return true;
 }
 
-bool LockerService::verifySlotAvailability(const Uuid shipDbId,
-                                           const bsgalone::core::Item &type) const
+bool LockerService::verifySlotAvailability(const core::Uuid shipDbId, const core::Item &type) const
 {
-  EquipData data{.shipId           = shipDbId,
-                 .shipWeaponRepo   = m_repositories.shipWeaponRepository,
-                 .shipComputerRepo = m_repositories.shipComputerRepository,
-                 .playerShipRepo   = m_repositories.playerShipRepository};
+  core::EquipData data{.shipId           = shipDbId,
+                       .shipWeaponRepo   = m_repositories.shipWeaponRepository,
+                       .shipComputerRepo = m_repositories.shipComputerRepository,
+                       .playerShipRepo   = m_repositories.playerShipRepository};
 
   switch (type)
   {
-    case bsgalone::core::Item::WEAPON:
-      return canStillEquipWeapon(data);
-    case bsgalone::core::Item::COMPUTER:
-      return canStillEquipComputer(data);
+    case core::Item::WEAPON:
+      return core::canStillEquipWeapon(data);
+    case core::Item::COMPUTER:
+      return core::canStillEquipComputer(data);
     default:
       error("Failed to verify slot availability", "Unsupported item " + str(type));
   }
@@ -102,17 +101,17 @@ bool LockerService::verifySlotAvailability(const Uuid shipDbId,
   return false;
 }
 
-bool LockerService::verifyItemBelongsToPlayer(const Uuid playerDbId,
-                                              const Uuid itemId,
-                                              const bsgalone::core::Item &type) const
+bool LockerService::verifyItemBelongsToPlayer(const core::Uuid playerDbId,
+                                              const core::Uuid itemId,
+                                              const core::Item &type) const
 {
   bool belong{false};
   switch (type)
   {
-    case bsgalone::core::Item::WEAPON:
+    case core::Item::WEAPON:
       belong = m_repositories.playerWeaponRepository->findAllByPlayer(playerDbId).contains(itemId);
       break;
-    case bsgalone::core::Item::COMPUTER:
+    case core::Item::COMPUTER:
       belong = m_repositories.playerComputerRepository->findAllByPlayer(playerDbId).contains(itemId);
       break;
     default:
@@ -122,19 +121,19 @@ bool LockerService::verifyItemBelongsToPlayer(const Uuid playerDbId,
   return belong;
 }
 
-bool LockerService::verifyItemIsEquiped(const Uuid shipDbId,
-                                        const Uuid itemId,
-                                        const bsgalone::core::Item &type) const
+bool LockerService::verifyItemIsEquiped(const core::Uuid shipDbId,
+                                        const core::Uuid itemId,
+                                        const core::Item &type) const
 {
   bool equiped{false};
 
   switch (type)
   {
-    case bsgalone::core::Item::WEAPON:
+    case core::Item::WEAPON:
       equiped = m_repositories.shipWeaponRepository->findOneByShipAndWeapon(shipDbId, itemId)
                   .has_value();
       break;
-    case bsgalone::core::Item::COMPUTER:
+    case core::Item::COMPUTER:
       equiped = m_repositories.shipComputerRepository->existByShipAndComputer(shipDbId, itemId);
       break;
     default:
@@ -144,16 +143,16 @@ bool LockerService::verifyItemIsEquiped(const Uuid shipDbId,
   return equiped;
 }
 
-bool LockerService::verifyItemIsNotEquiped(const Uuid itemId, const bsgalone::core::Item &type) const
+bool LockerService::verifyItemIsNotEquiped(const core::Uuid itemId, const core::Item &type) const
 {
   bool equiped{true};
 
   switch (type)
   {
-    case bsgalone::core::Item::WEAPON:
+    case core::Item::WEAPON:
       equiped = m_repositories.shipWeaponRepository->findOneByWeapon(itemId).has_value();
       break;
-    case bsgalone::core::Item::COMPUTER:
+    case core::Item::COMPUTER:
       equiped = m_repositories.shipComputerRepository->existByComputer(itemId);
       break;
     default:
@@ -163,7 +162,7 @@ bool LockerService::verifyItemIsNotEquiped(const Uuid itemId, const bsgalone::co
   return !equiped;
 }
 
-void LockerService::tryEquipWeapon(const Uuid shipDbId, const Uuid weaponId) const
+void LockerService::tryEquipWeapon(const core::Uuid shipDbId, const core::Uuid weaponId) const
 {
   const auto slots = m_repositories.playerShipRepository->findAllAvailableWeaponSlotByShip(shipDbId);
   if (slots.empty())
@@ -172,28 +171,28 @@ void LockerService::tryEquipWeapon(const Uuid shipDbId, const Uuid weaponId) con
   }
   const auto slot = *slots.begin();
 
-  ShipWeapon weapon{.ship = shipDbId, .weapon = weaponId, .slot = slot};
-  debug("Installing weapon " + str(weaponId) + " in slot " + str(slot));
+  core::ShipWeapon weapon{.ship = shipDbId, .weapon = weaponId, .slot = slot};
+  debug("Installing weapon " + core::str(weaponId) + " in slot " + core::str(slot));
   m_repositories.shipWeaponRepository->save(weapon);
 }
 
-void LockerService::tryEquipComputer(const Uuid shipDbId, const Uuid computerId) const
+void LockerService::tryEquipComputer(const core::Uuid shipDbId, const core::Uuid computerId) const
 {
-  debug("Installing computer " + str(computerId) + " for ship " + str(shipDbId));
+  debug("Installing computer " + core::str(computerId) + " for ship " + core::str(shipDbId));
   m_repositories.shipComputerRepository->save(shipDbId, computerId);
 }
 
-void LockerService::tryUnequipWeapon(const Uuid shipDbId, const Uuid weaponId) const
+void LockerService::tryUnequipWeapon(const core::Uuid shipDbId, const core::Uuid weaponId) const
 {
   const auto data = m_repositories.shipWeaponRepository->findOneByShipAndWeapon(shipDbId, weaponId);
-  debug("Uninstalling weapon " + str(data->weapon) + " from slot " + str(data->slot));
+  debug("Uninstalling weapon " + core::str(data->weapon) + " from slot " + core::str(data->slot));
   m_repositories.shipWeaponRepository->deleteByShipAndSlot(*data);
 }
 
-void LockerService::tryUnequipComputer(const Uuid shipDbId, const Uuid computerId) const
+void LockerService::tryUnequipComputer(const core::Uuid shipDbId, const core::Uuid computerId) const
 {
-  debug("Uninstalling computer " + str(computerId) + " from ship " + str(shipDbId));
+  debug("Uninstalling computer " + core::str(computerId) + " from ship " + core::str(shipDbId));
   m_repositories.shipComputerRepository->deleteByShipAndId(shipDbId, computerId);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

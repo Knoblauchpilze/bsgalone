@@ -4,9 +4,9 @@
 
 #include "AbstractMessage.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
-class ConnectionMessage : public bsgalone::core::AbstractMessage
+class ConnectionMessage : public AbstractMessage
 {
   public:
   ConnectionMessage();
@@ -15,7 +15,7 @@ class ConnectionMessage : public bsgalone::core::AbstractMessage
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
 
-  auto clone() const -> bsgalone::core::IMessagePtr override;
+  auto clone() const -> IMessagePtr override;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

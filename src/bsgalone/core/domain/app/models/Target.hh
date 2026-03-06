@@ -16,7 +16,7 @@ struct Target
 {
   /// @brief - Defines the DB identifier of the source. This represents
   /// the game entity which has the `target` entity as target.
-  bsgo::Uuid sourceDbId{};
+  Uuid sourceDbId{};
 
   /// @brief - Defines the kind of the source entity: this helps interpreting
   /// the DB identifier and distinguish between entity types.
@@ -34,7 +34,7 @@ struct Target
   ///     In such cases, the target is set
   ///   - when a target is cleared from an entity: this can happen when an
   ///     entity dies or jumps to another system
-  std::optional<bsgo::Uuid> targetDbId{};
+  std::optional<Uuid> targetDbId{};
 
   /// @brief - Defines the kind of the target entity. Plays a similar role
   /// as `sourceKind`. Also note that this value contains a value at the

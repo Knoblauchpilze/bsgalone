@@ -3,7 +3,7 @@
 #include "IViewListenerProxy.hh"
 #include "MessageUtils.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
 GameOverUiHandler::GameOverUiHandler(const Views &views)
   : AbstractUiHandler("gameover")
@@ -24,10 +24,10 @@ GameOverUiHandler::GameOverUiHandler(const Views &views)
 
 void GameOverUiHandler::initializeMenus(const int width,
                                         const int height,
-                                        sprites::TexturePack & /*texturesLoader*/)
+                                        pge::sprites::TexturePack & /*texturesLoader*/)
 {
-  Vec2i dims{200, 70};
-  Vec2i pos;
+  pge::Vec2i dims{200, 70};
+  pge::Vec2i pos;
   pos.x = (width - dims.x) / 2;
   pos.y = (height - dims.y) / 2;
 
@@ -44,8 +44,8 @@ void GameOverUiHandler::initializeMenus(const int width,
       },
   };
 
-  auto bg   = ui::bgConfigFromColor(colors::DARK_GREY);
-  auto text = ui::textConfigFromColor("Return to outpost", colors::BLACK);
+  auto bg   = ui::bgConfigFromColor(pge::colors::DARK_GREY);
+  auto text = ui::textConfigFromColor("Return to outpost", pge::colors::BLACK);
   m_menu    = std::make_unique<ui::UiTextMenu>(config, bg, text);
 }
 
@@ -54,7 +54,7 @@ bool GameOverUiHandler::processUserInput(ui::UserInputData &inputData)
   return m_menu->processUserInput(inputData);
 }
 
-void GameOverUiHandler::render(Renderer &engine) const
+void GameOverUiHandler::render(pge::Renderer &engine) const
 {
   m_menu->render(engine);
 }
@@ -85,4 +85,4 @@ void GameOverUiHandler::reset()
   m_menu->setVisible(false);
 }
 
-} // namespace pge
+} // namespace bsgalone::client

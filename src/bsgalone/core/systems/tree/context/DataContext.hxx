@@ -3,7 +3,7 @@
 
 #include "DataContext.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 template<typename Value>
 inline void DataContext::setKey(const ContextKey key, const Value &value)
@@ -29,4 +29,4 @@ inline auto DataContext::tryGetValue(const ContextKey key) const -> std::optiona
   return maybeKey->second.as<Value>();
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

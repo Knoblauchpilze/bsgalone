@@ -10,14 +10,14 @@ namespace bsgalone::core {
 class JumpRequestedMessage : public AbstractPlayerMessage
 {
   public:
-  JumpRequestedMessage(const bsgo::Uuid playerDbId,
-                       const bsgo::Uuid sourceSystemDbId,
-                       const bsgo::Uuid shipDbId,
-                       const bsgo::Uuid destinationSystemDbId);
+  JumpRequestedMessage(const Uuid playerDbId,
+                       const Uuid sourceSystemDbId,
+                       const Uuid shipDbId,
+                       const Uuid destinationSystemDbId);
   ~JumpRequestedMessage() override = default;
 
-  auto getShipDbId() const -> bsgo::Uuid;
-  auto getDestinationSystem() const -> bsgo::Uuid;
+  auto getShipDbId() const -> Uuid;
+  auto getDestinationSystem() const -> Uuid;
 
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
@@ -34,8 +34,8 @@ class JumpRequestedMessage : public AbstractPlayerMessage
   static auto readFromStream(std::istream &in) -> std::optional<IMessagePtr>;
 
   private:
-  bsgo::Uuid m_shipDbId{};
-  bsgo::Uuid m_destinationSystemDbId{};
+  Uuid m_shipDbId{};
+  Uuid m_destinationSystemDbId{};
 
   JumpRequestedMessage();
 };

@@ -3,7 +3,7 @@
 #include "CircleBox.hh"
 #include "Coordinator.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 PickTargetNode::PickTargetNode()
   : LeafNode("pick")
@@ -14,7 +14,7 @@ constexpr auto ENEMY_DETECTION_RANGE = 15.0f;
 
 bool isEntityTargetable(const Entity &entity, const Faction sourceFaction)
 {
-  if (bsgalone::core::EntityKind::SHIP != entity.kind->kind())
+  if (EntityKind::SHIP != entity.kind->kind())
   {
     return false;
   }
@@ -26,8 +26,7 @@ bool isEntityTargetable(const Entity &entity, const Faction sourceFaction)
   return statusVisibleFromDradis(entity.statusComp().status());
 }
 
-auto pickClosestTarget(const std::vector<bsgo::Entity> &enemies, const Eigen::Vector3f &pos)
-  -> Entity
+auto pickClosestTarget(const std::vector<Entity> &enemies, const Eigen::Vector3f &pos) -> Entity
 {
   auto best = std::numeric_limits<float>::max();
   std::optional<Entity> maybeTarget{};
@@ -95,4 +94,4 @@ void PickTargetNode::updateTargetIfNeeded(const BehaviorData &data, const Entity
   data.context.setKey(ContextKey::PICKED_TARGET, target.uuid);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

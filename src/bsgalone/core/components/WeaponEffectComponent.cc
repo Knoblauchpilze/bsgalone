@@ -1,11 +1,11 @@
 
 #include "WeaponEffectComponent.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 WeaponEffectComponent::WeaponEffectComponent(const chrono::TickDuration &duration,
                                              const float damageModifier)
-  : EffectComponent(bsgalone::core::ComponentType::WEAPON_EFFECT, duration)
+  : EffectComponent(ComponentType::WEAPON_EFFECT, duration)
   , m_damageModifier(damageModifier)
 {
   addModule("effect");
@@ -16,4 +16,4 @@ auto WeaponEffectComponent::damageModifier() const -> std::optional<float>
   return {m_damageModifier};
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

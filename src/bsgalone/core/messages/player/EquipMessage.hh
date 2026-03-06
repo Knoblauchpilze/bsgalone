@@ -16,18 +16,18 @@ enum class EquipType
 class EquipMessage : public AbstractPlayerMessage
 {
   public:
-  EquipMessage(const bsgo::Uuid playerDbId,
-               const bsgo::Uuid systemDbId,
+  EquipMessage(const Uuid playerDbId,
+               const Uuid systemDbId,
                const EquipType &action,
-               const bsgo::Uuid shipDbId,
+               const Uuid shipDbId,
                const Item &itemType,
-               const bsgo::Uuid itemDbId);
+               const Uuid itemDbId);
   ~EquipMessage() override = default;
 
   auto getAction() const -> EquipType;
-  auto getShipDbId() const -> bsgo::Uuid;
+  auto getShipDbId() const -> Uuid;
   auto getItemType() const -> Item;
-  auto getItemDbId() const -> bsgo::Uuid;
+  auto getItemDbId() const -> Uuid;
 
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
@@ -45,9 +45,9 @@ class EquipMessage : public AbstractPlayerMessage
 
   private:
   EquipType m_action{};
-  bsgo::Uuid m_shipDbId{};
+  Uuid m_shipDbId{};
   Item m_itemType{};
-  bsgo::Uuid m_itemDbId{};
+  Uuid m_itemDbId{};
 
   EquipMessage();
 };

@@ -10,14 +10,14 @@ namespace bsgalone::core {
 class PurchaseMessage : public AbstractPlayerMessage
 {
   public:
-  PurchaseMessage(const bsgo::Uuid playerDbId,
-                  const bsgo::Uuid systemDbId,
+  PurchaseMessage(const Uuid playerDbId,
+                  const Uuid systemDbId,
                   const Item &itemType,
-                  const bsgo::Uuid itemDbId);
+                  const Uuid itemDbId);
   ~PurchaseMessage() override = default;
 
   auto getItemType() const -> Item;
-  auto getItemDbId() const -> bsgo::Uuid;
+  auto getItemDbId() const -> Uuid;
 
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
@@ -35,7 +35,7 @@ class PurchaseMessage : public AbstractPlayerMessage
 
   private:
   Item m_itemType{};
-  bsgo::Uuid m_itemDbId{};
+  Uuid m_itemDbId{};
 
   PurchaseMessage();
 };

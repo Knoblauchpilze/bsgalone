@@ -5,9 +5,9 @@
 #include "PlayerShipData.hh"
 #include "Uuid.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
-class PlayerShipListMessage : public bsgalone::core::NetworkMessage
+class PlayerShipListMessage : public NetworkMessage
 {
   public:
   PlayerShipListMessage();
@@ -24,7 +24,7 @@ class PlayerShipListMessage : public bsgalone::core::NetworkMessage
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
 
-  auto clone() const -> bsgalone::core::IMessagePtr override;
+  auto clone() const -> IMessagePtr override;
 
   private:
   std::optional<Uuid> m_systemDbId{};
@@ -32,4 +32,4 @@ class PlayerShipListMessage : public bsgalone::core::NetworkMessage
   std::vector<PlayerShipData> m_shipsData{};
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

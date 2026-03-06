@@ -5,11 +5,11 @@
 #include "DatabaseEntityMapper.hh"
 #include "Repositories.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class Coordinator;
 
-class DataSource : public core::CoreObject
+class DataSource : public ::core::CoreObject
 {
   public:
   DataSource(const Uuid systemDbId);
@@ -27,4 +27,4 @@ class DataSource : public core::CoreObject
   void initializeOutposts(Coordinator &coordinator, DatabaseEntityMapper &entityMapper) const;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

@@ -1,14 +1,14 @@
 
 #include "TargetComponent.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 TargetComponent::TargetComponent()
-  : AbstractComponent(bsgalone::core::ComponentType::TARGET)
+  : AbstractComponent(ComponentType::TARGET)
 {}
 
 TargetComponent::TargetComponent(const Uuid target)
-  : AbstractComponent(bsgalone::core::ComponentType::TARGET)
+  : AbstractComponent(ComponentType::TARGET)
   , m_target(target)
 {}
 
@@ -29,4 +29,4 @@ void TargetComponent::setTarget(const Uuid target)
 
 void TargetComponent::update(const chrono::TickData & /*data*/) {}
 
-} // namespace bsgo
+} // namespace bsgalone::core

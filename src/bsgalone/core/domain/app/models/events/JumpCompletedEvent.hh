@@ -9,15 +9,15 @@ namespace bsgalone::core {
 class JumpCompletedEvent : public IGameEvent
 {
   public:
-  JumpCompletedEvent(const bsgo::Uuid entityId);
+  JumpCompletedEvent(const Uuid entityId);
   ~JumpCompletedEvent() override = default;
 
-  auto entityId() const -> bsgo::Uuid;
+  auto entityId() const -> Uuid;
 
   auto clone() const -> IGameEventPtr override;
 
   private:
-  bsgo::Uuid m_entityId{};
+  Uuid m_entityId{};
 };
 
 } // namespace bsgalone::core

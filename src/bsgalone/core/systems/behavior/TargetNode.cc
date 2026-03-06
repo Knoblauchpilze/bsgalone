@@ -4,7 +4,7 @@
 #include "NodeUtils.hh"
 #include "VectorUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 TargetNode::TargetNode(const Eigen::Vector3f &target, const int index)
   : LeafNode("target")
@@ -65,4 +65,4 @@ void TargetNode::determineCompletionState(DataContext &context)
   context.setKey(ContextKey::TARGET_REACHED, m_index);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

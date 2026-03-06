@@ -6,17 +6,17 @@
 namespace bsgalone::core {
 
 ShipSelectedMessage::ShipSelectedMessage()
-  : AbstractPlayerMessage(MessageType::SHIP_SELECTED, bsgo::Uuid{0}, bsgo::Uuid{0})
+  : AbstractPlayerMessage(MessageType::SHIP_SELECTED, Uuid{0}, Uuid{0})
 {}
 
-ShipSelectedMessage::ShipSelectedMessage(const bsgo::Uuid playerDbId,
-                                         const bsgo::Uuid systemDbId,
-                                         const bsgo::Uuid shipDbId)
+ShipSelectedMessage::ShipSelectedMessage(const Uuid playerDbId,
+                                         const Uuid systemDbId,
+                                         const Uuid shipDbId)
   : AbstractPlayerMessage(MessageType::SHIP_SELECTED, playerDbId, systemDbId)
   , m_shipDbId(shipDbId)
 {}
 
-auto ShipSelectedMessage::getShipDbId() const -> bsgo::Uuid
+auto ShipSelectedMessage::getShipDbId() const -> Uuid
 {
   return m_shipDbId;
 }

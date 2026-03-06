@@ -2,7 +2,7 @@
 #include "NetworkSystem.hh"
 #include "Coordinator.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 namespace {
 bool isEntityRelevant(const Entity &ent)
 {
@@ -61,24 +61,24 @@ void NetworkSystem::syncEntity(Entity &entity) const
 }
 
 bool NetworkSystem::syncComponent(const Entity &entity,
-                                  const bsgalone::core::ComponentType &type,
+                                  const ComponentType &type,
                                   ComponentSyncMessage &message) const
 {
   switch (type)
   {
-    case bsgalone::core::ComponentType::HEALTH:
+    case ComponentType::HEALTH:
       return syncHealthComponent(entity, message);
       break;
-    case bsgalone::core::ComponentType::POWER:
+    case ComponentType::POWER:
       return syncPowerComponent(entity, message);
       break;
-    case bsgalone::core::ComponentType::STATUS:
+    case ComponentType::STATUS:
       return syncStatusComponent(entity, message);
       break;
-    case bsgalone::core::ComponentType::TRANSFORM:
+    case ComponentType::TRANSFORM:
       return syncTransformComponent(entity, message);
       break;
-    case bsgalone::core::ComponentType::VELOCITY:
+    case ComponentType::VELOCITY:
       return syncVelocityComponent(entity, message);
       break;
     default:
@@ -143,4 +143,4 @@ bool NetworkSystem::syncVelocityComponent(const Entity &entity, ComponentSyncMes
   return true;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

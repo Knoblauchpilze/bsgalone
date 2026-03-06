@@ -3,8 +3,8 @@
 
 #include "Entity.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 bool canTargetBeFiredOn(const Entity &target);
 
-} // namespace bsgo
+} // namespace bsgalone::core

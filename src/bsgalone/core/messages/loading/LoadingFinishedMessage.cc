@@ -2,15 +2,15 @@
 #include "LoadingFinishedMessage.hh"
 #include "SerializationUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 LoadingFinishedMessage::LoadingFinishedMessage()
-  : NetworkMessage(bsgalone::core::MessageType::LOADING_FINISHED)
+  : NetworkMessage(MessageType::LOADING_FINISHED)
 {}
 
 LoadingFinishedMessage::LoadingFinishedMessage(const LoadingTransition transition,
                                                const Uuid playerDbId)
-  : NetworkMessage(bsgalone::core::MessageType::LOADING_FINISHED)
+  : NetworkMessage(MessageType::LOADING_FINISHED)
   , m_transition(transition)
   , m_playerDbId(playerDbId)
 {}
@@ -41,12 +41,12 @@ void LoadingFinishedMessage::setSystemDbId(const Uuid systemDbId)
 
 auto LoadingFinishedMessage::serialize(std::ostream &out) const -> std::ostream &
 {
-  core::serialize(out, m_messageType);
-  core::serialize(out, m_clientId);
+  ::core::serialize(out, m_messageType);
+  ::core::serialize(out, m_clientId);
 
-  core::serialize(out, m_transition);
-  core::serialize(out, m_systemDbId);
-  core::serialize(out, m_playerDbId);
+  ::core::serialize(out, m_transition);
+  ::core::serialize(out, m_systemDbId);
+  ::core::serialize(out, m_playerDbId);
 
   return out;
 }
@@ -54,17 +54,17 @@ auto LoadingFinishedMessage::serialize(std::ostream &out) const -> std::ostream 
 bool LoadingFinishedMessage::deserialize(std::istream &in)
 {
   bool ok{true};
-  ok &= core::deserialize(in, m_messageType);
-  ok &= core::deserialize(in, m_clientId);
+  ok &= ::core::deserialize(in, m_messageType);
+  ok &= ::core::deserialize(in, m_clientId);
 
-  ok &= core::deserialize(in, m_transition);
-  ok &= core::deserialize(in, m_systemDbId);
-  ok &= core::deserialize(in, m_playerDbId);
+  ok &= ::core::deserialize(in, m_transition);
+  ok &= ::core::deserialize(in, m_systemDbId);
+  ok &= ::core::deserialize(in, m_playerDbId);
 
   return ok;
 }
 
-auto LoadingFinishedMessage::clone() const -> bsgalone::core::IMessagePtr
+auto LoadingFinishedMessage::clone() const -> IMessagePtr
 {
   auto clone = std::make_unique<LoadingFinishedMessage>(m_transition, *m_playerDbId);
   if (m_systemDbId)
@@ -77,4 +77,4 @@ auto LoadingFinishedMessage::clone() const -> bsgalone::core::IMessagePtr
   return clone;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

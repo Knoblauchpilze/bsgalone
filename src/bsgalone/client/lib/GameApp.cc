@@ -11,7 +11,7 @@ GameApp::GameApp(const pge::AppDesc &desc, const int serverPort)
 
 bool GameApp::onFrame(const float /*elapsedSeconds*/)
 {
-  return screen == GameScreen::EXIT;
+  return screen == Screen::EXIT;
 }
 
 void GameApp::onInputs(const pge::controls::State & /*controls*/, pge::CoordinateFrame & /*frame*/)
@@ -24,12 +24,12 @@ void GameApp::loadResources(const pge::Vec2i &screenDims, pge::Renderer &engine)
   constexpr auto LOGIN_BACKGROUND_PATH = "assets/login_bg.png";
   auto login = std::make_unique<DecalScreenRenderer>(LOGIN_BACKGROUND_PATH);
   login->loadResources(screenDims.x, screenDims.y, engine.getTextureHandler());
-  m_renderers[GameScreen::LOGIN] = std::move(login);
+  m_renderers[Screen::LOGIN] = std::move(login);
 
   constexpr auto LOADING_BACKGROUND_PATH = "assets/loading_screen.png";
   auto loading = std::make_unique<DecalScreenRenderer>(LOADING_BACKGROUND_PATH);
   loading->loadResources(screenDims.x, screenDims.y, engine.getTextureHandler());
-  m_renderers[GameScreen::LOADING] = std::move(loading);
+  m_renderers[Screen::LOADING] = std::move(loading);
 }
 
 void GameApp::cleanResources()

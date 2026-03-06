@@ -8,11 +8,11 @@
 #include "SlotComponentUtils.hh"
 #include "StringUtils.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
 AbilitiesUiHandler::AbilitiesUiHandler(const Views &views)
   : AbstractUiHandler("abilities")
-  , AbstractMessageListener({bsgalone::core::MessageType::ENTITY_REMOVED})
+  , AbstractMessageListener({core::MessageType::ENTITY_REMOVED})
   , m_shipView(views.shipView)
   , m_shipDbView(views.shipDbView)
   , m_playerView(views.playerView)
@@ -35,12 +35,12 @@ AbilitiesUiHandler::AbilitiesUiHandler(const Views &views)
 
 void AbilitiesUiHandler::initializeMenus(const int width,
                                          const int height,
-                                         sprites::TexturePack &texturesLoader)
+                                         pge::sprites::TexturePack &texturesLoader)
 {
   constexpr auto SLOTS_TEXTURE_PACK_FILE_PATH = "assets/slots.png";
-  const sprites::PackDesc pack{.file   = SLOTS_TEXTURE_PACK_FILE_PATH,
-                               .sSize  = Vec2i{600, 600},
-                               .layout = Vec2i{2, 1}};
+  const pge::sprites::PackDesc pack{.file   = SLOTS_TEXTURE_PACK_FILE_PATH,
+                                    .sSize  = pge::Vec2i{600, 600},
+                                    .layout = pge::Vec2i{2, 1}};
   m_computerTexturesPackId = texturesLoader.registerPack(pack);
 
   generateComputersMenus(width, height);
@@ -62,7 +62,7 @@ bool AbilitiesUiHandler::processUserInput(ui::UserInputData &inputData)
   return out;
 }
 
-void AbilitiesUiHandler::render(Renderer &engine) const
+void AbilitiesUiHandler::render(pge::Renderer &engine) const
 {
   for (const auto &menu : m_computers)
   {
@@ -91,20 +91,20 @@ void AbilitiesUiHandler::updateUi()
   }
 }
 
-void AbilitiesUiHandler::connectToMessageQueue(bsgalone::core::IMessageQueue &messageQueue)
+void AbilitiesUiHandler::connectToMessageQueue(core::IMessageQueue &messageQueue)
 {
   auto listener = std::make_unique<MessageListenerWrapper>(this);
   messageQueue.addListener(std::move(listener));
 }
 
-void AbilitiesUiHandler::onEventReceived(const bsgalone::core::IMessage &message)
+void AbilitiesUiHandler::onEventReceived(const core::IMessage &message)
 {
   if (!m_shipView->isReady())
   {
     return;
   }
 
-  m_disabled = didPlayerShipDie(message.as<bsgo::EntityRemovedMessage>(), *m_shipDbView);
+  m_disabled = didPlayerShipDie(message.as<core::EntityRemovedMessage>(), *m_shipDbView);
 }
 
 void AbilitiesUiHandler::subscribeToViews()
@@ -141,10 +141,10 @@ constexpr auto ABILITIES_PICTURE_FILE_PATH = "assets/slot.png";
 
 void AbilitiesUiHandler::generateComputersMenus(int width, int height)
 {
-  const Vec2i abilityMenuDims{70, 50};
+  const pge::Vec2i abilityMenuDims{70, 50};
   constexpr auto SPACING_IN_PIXELS = 5;
-  const Vec2i pos{width - NUMBER_OF_ABILITIES * (abilityMenuDims.x + SPACING_IN_PIXELS),
-                  height - SPACING_IN_PIXELS - abilityMenuDims.y};
+  const pge::Vec2i pos{width - NUMBER_OF_ABILITIES * (abilityMenuDims.x + SPACING_IN_PIXELS),
+                       height - SPACING_IN_PIXELS - abilityMenuDims.y};
 
   ui::MenuConfig config{.pos                       = pos,
                         .dims                      = abilityMenuDims,
@@ -162,9 +162,9 @@ void AbilitiesUiHandler::generateComputersMenus(int width, int height)
 }
 
 namespace {
-auto tryGetDbComputer(const bsgo::Uuid computerDbId,
-                      const std::vector<bsgo::PlayerComputerData> &computers)
-  -> std::optional<bsgo::PlayerComputerData>
+auto tryGetDbComputer(const core::Uuid computerDbId,
+                      const std::vector<core::PlayerComputerData> &computers)
+  -> std::optional<core::PlayerComputerData>
 {
   for (const auto &computer : computers)
   {
@@ -177,7 +177,7 @@ auto tryGetDbComputer(const bsgo::Uuid computerDbId,
   return {};
 }
 
-auto spriteIdFromComputer(const bsgo::PlayerComputerData &computer) -> Vec2i
+auto spriteIdFromComputer(const core::PlayerComputerData &computer) -> pge::Vec2i
 {
   if (computer.name == "Scan")
   {
@@ -209,7 +209,7 @@ void AbilitiesUiHandler::initializeAbilities()
   const auto palette = generatePaletteForFaction(m_playerView->getPlayerFaction());
 
   const ui::MenuConfig config{};
-  const auto bg = ui::bgConfigFromColor(colors::BLANK);
+  const auto bg = ui::bgConfigFromColor(pge::colors::BLANK);
   auto textConf = ui::textConfigFromColor("", palette.defaultColor);
 
   for (const auto &menu : m_computers)
@@ -225,8 +225,8 @@ void AbilitiesUiHandler::initializeAbilities()
     const auto dbComputer   = tryGetDbComputer(computerDbId, dbComputers);
     if (!dbComputer)
     {
-      error("Failed to initialize computers for ship " + bsgo::str(ship.dbComp().dbId()),
-            "Failed to find component for computer " + bsgo::str(computerDbId));
+      error("Failed to initialize computers for ship " + core::str(ship.dbComp().dbId()),
+            "Failed to find component for computer " + core::str(computerDbId));
     }
 
     menu->setClickCallback([this, id]() {
@@ -252,7 +252,7 @@ void AbilitiesUiHandler::initializeAbilities()
   m_initialized = true;
 }
 
-void AbilitiesUiHandler::updateComputerMenu(const bsgo::ComputerSlotComponent &computer,
+void AbilitiesUiHandler::updateComputerMenu(const core::ComputerSlotComponent &computer,
                                             const int id)
 {
   auto &menu = *m_computers[id];
@@ -264,9 +264,9 @@ void AbilitiesUiHandler::updateComputerMenu(const bsgo::ComputerSlotComponent &c
   if (!computer.canFire())
   {
     constexpr auto PERCENTAGE_MULTIPLIER = 100.0f;
-    statusText = bsgo::floatToStr(PERCENTAGE_MULTIPLIER * computer.reloadPercentage()) + "%";
+    statusText = core::floatToStr(PERCENTAGE_MULTIPLIER * computer.reloadPercentage()) + "%";
   }
   m_statuses[id]->setText(statusText);
 }
 
-} // namespace pge
+} // namespace bsgalone::client

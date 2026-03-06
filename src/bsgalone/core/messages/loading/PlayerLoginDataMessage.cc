@@ -2,10 +2,10 @@
 #include "PlayerLoginDataMessage.hh"
 #include "SerializationUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 PlayerLoginDataMessage::PlayerLoginDataMessage()
-  : NetworkMessage(bsgalone::core::MessageType::PLAYER_LOGIN_DATA)
+  : NetworkMessage(MessageType::PLAYER_LOGIN_DATA)
 {}
 
 auto PlayerLoginDataMessage::getFaction() const -> Faction
@@ -50,13 +50,13 @@ void PlayerLoginDataMessage::setSystemDbId(const Uuid systemDbId)
 
 auto PlayerLoginDataMessage::serialize(std::ostream &out) const -> std::ostream &
 {
-  core::serialize(out, m_messageType);
-  core::serialize(out, m_clientId);
+  ::core::serialize(out, m_messageType);
+  ::core::serialize(out, m_clientId);
 
-  core::serialize(out, m_faction);
-  core::serialize(out, m_activeShipDbId);
-  core::serialize(out, m_docked);
-  core::serialize(out, m_systemDbId);
+  ::core::serialize(out, m_faction);
+  ::core::serialize(out, m_activeShipDbId);
+  ::core::serialize(out, m_docked);
+  ::core::serialize(out, m_systemDbId);
 
   return out;
 }
@@ -64,18 +64,18 @@ auto PlayerLoginDataMessage::serialize(std::ostream &out) const -> std::ostream 
 bool PlayerLoginDataMessage::deserialize(std::istream &in)
 {
   bool ok{true};
-  ok &= core::deserialize(in, m_messageType);
-  ok &= core::deserialize(in, m_clientId);
+  ok &= ::core::deserialize(in, m_messageType);
+  ok &= ::core::deserialize(in, m_clientId);
 
-  ok &= core::deserialize(in, m_faction);
-  ok &= core::deserialize(in, m_activeShipDbId);
-  ok &= core::deserialize(in, m_docked);
-  ok &= core::deserialize(in, m_systemDbId);
+  ok &= ::core::deserialize(in, m_faction);
+  ok &= ::core::deserialize(in, m_activeShipDbId);
+  ok &= ::core::deserialize(in, m_docked);
+  ok &= ::core::deserialize(in, m_systemDbId);
 
   return ok;
 }
 
-auto PlayerLoginDataMessage::clone() const -> bsgalone::core::IMessagePtr
+auto PlayerLoginDataMessage::clone() const -> IMessagePtr
 {
   auto clone = std::make_unique<PlayerLoginDataMessage>();
   clone->setFaction(m_faction);
@@ -87,4 +87,4 @@ auto PlayerLoginDataMessage::clone() const -> bsgalone::core::IMessagePtr
   return clone;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

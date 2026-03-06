@@ -5,7 +5,7 @@
 
 using namespace ::testing;
 
-namespace bsgo {
+namespace bsgalone::core {
 namespace {
 void assertMessagesAreEqual(const AiBehaviorSyncMessage &actual,
                             const AiBehaviorSyncMessage &expected)
@@ -83,8 +83,8 @@ TEST(Unit_Bsgalone_Core_Messages_AiBehaviorSyncMessage, Clone)
 
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::AI_BEHAVIOR_SYNC);
+  ASSERT_EQ(cloned->type(), MessageType::AI_BEHAVIOR_SYNC);
   assertMessagesAreEqual(cloned->as<AiBehaviorSyncMessage>(), expected);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

@@ -3,7 +3,7 @@
 
 #include "AbstractSystem.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class ComputerSystem : public AbstractSystem
 {
@@ -39,4 +39,4 @@ class ComputerSystem : public AbstractSystem
                                    Coordinator &coordinator) const;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

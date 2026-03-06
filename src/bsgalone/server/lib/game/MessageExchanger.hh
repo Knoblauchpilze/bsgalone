@@ -10,7 +10,7 @@
 #include "Uuid.hh"
 #include <memory>
 
-namespace bsgo {
+namespace bsgalone::server {
 
 struct MessageSystemData
 {
@@ -23,10 +23,10 @@ class MessageExchanger
   public:
   MessageExchanger(const MessageSystemData &messagesData);
 
-  auto getInternalMessageQueue() const -> bsgalone::core::IMessageQueue *;
+  auto getInternalMessageQueue() const -> core::IMessageQueue *;
 
   private:
-  bsgalone::core::IMessageQueueShPtr m_internalMessageQueue{};
+  core::IMessageQueueShPtr m_internalMessageQueue{};
 
   void initialize(const MessageSystemData &messagesData);
   void initializeInternalConsumers(const MessageSystemData &messagesData);
@@ -34,4 +34,4 @@ class MessageExchanger
 
 using MessageExchangerPtr = std::unique_ptr<MessageExchanger>;
 
-} // namespace bsgo
+} // namespace bsgalone::server

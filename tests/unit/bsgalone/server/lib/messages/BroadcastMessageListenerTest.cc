@@ -39,15 +39,15 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
   EXPECT_FALSE(manager->tryGetPlayerForClient(net::ClientId{12}).has_value());
   EXPECT_FALSE(manager->tryGetSystemForClient(net::ClientId{12}).has_value());
 
-  bsgo::LoginMessage message;
+  core::LoginMessage message;
   message.setClientId(net::ClientId{12});
-  message.setPlayerDbId(bsgo::Uuid{18});
-  message.setSystemDbId(bsgo::Uuid{19});
+  message.setPlayerDbId(core::Uuid{18});
+  message.setSystemDbId(core::Uuid{19});
   listener.onEventReceived(message);
 
-  EXPECT_EQ(bsgo::Uuid{18}, manager->tryGetPlayerForClient(net::ClientId{12}).value());
-  EXPECT_EQ(bsgo::Uuid{19}, manager->tryGetSystemForClient(net::ClientId{12}).value());
-  const auto clients = manager->getAllClientsForSystem(bsgo::Uuid{19});
+  EXPECT_EQ(core::Uuid{18}, manager->tryGetPlayerForClient(net::ClientId{12}).value());
+  EXPECT_EQ(core::Uuid{19}, manager->tryGetSystemForClient(net::ClientId{12}).value());
+  const auto clients = manager->getAllClientsForSystem(core::Uuid{19});
   EXPECT_EQ(std::vector<net::ClientId>{net::ClientId{12}}, clients);
 }
 
@@ -59,9 +59,9 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
 
   EXPECT_THAT(
     [&listener]() {
-      bsgo::LoginMessage message;
-      message.setPlayerDbId(bsgo::Uuid{18});
-      message.setSystemDbId(bsgo::Uuid{19});
+      core::LoginMessage message;
+      message.setPlayerDbId(core::Uuid{18});
+      message.setSystemDbId(core::Uuid{19});
       listener.onEventReceived(message);
     },
     ThrowsMessage<::core::CoreException>(
@@ -76,9 +76,9 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
 
   EXPECT_THAT(
     [&listener]() {
-      bsgo::LoginMessage message;
+      core::LoginMessage message;
       message.setClientId(net::ClientId{12});
-      message.setSystemDbId(bsgo::Uuid{19});
+      message.setSystemDbId(core::Uuid{19});
       listener.onEventReceived(message);
     },
     ThrowsMessage<::core::CoreException>(
@@ -93,9 +93,9 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
 
   EXPECT_THAT(
     [&listener]() {
-      bsgo::LoginMessage message;
+      core::LoginMessage message;
       message.setClientId(net::ClientId{12});
-      message.setPlayerDbId(bsgo::Uuid{18});
+      message.setPlayerDbId(core::Uuid{18});
       listener.onEventReceived(message);
     },
     ThrowsMessage<::core::CoreException>(
@@ -107,15 +107,15 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
 {
   auto manager = std::make_shared<ClientManager>();
   manager->registerClient(net::ClientId{12});
-  manager->registerPlayer(net::ClientId{12}, bsgo::Uuid{18}, bsgo::Uuid{19});
+  manager->registerPlayer(net::ClientId{12}, core::Uuid{18}, core::Uuid{19});
   BroadcastMessageListener listener(manager, std::make_shared<TestOutputNetworkAdapter>());
 
-  EXPECT_EQ(bsgo::Uuid{19}, manager->tryGetSystemForClient(net::ClientId{12}).value());
+  EXPECT_EQ(core::Uuid{19}, manager->tryGetSystemForClient(net::ClientId{12}).value());
 
-  bsgo::JumpMessage message(bsgo::Uuid{3}, bsgo::Uuid{18}, bsgo::Uuid{19}, bsgo::Uuid{20});
+  core::JumpMessage message(core::Uuid{3}, core::Uuid{18}, core::Uuid{19}, core::Uuid{20});
   listener.onEventReceived(message);
 
-  EXPECT_EQ(bsgo::Uuid{20}, manager->tryGetSystemForClient(net::ClientId{12}).value());
+  EXPECT_EQ(core::Uuid{20}, manager->tryGetSystemForClient(net::ClientId{12}).value());
 }
 
 TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
@@ -123,12 +123,12 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
 {
   auto manager = std::make_shared<ClientManager>();
   manager->registerClient(net::ClientId{12});
-  manager->registerPlayer(net::ClientId{12}, bsgo::Uuid{18}, bsgo::Uuid{19});
+  manager->registerPlayer(net::ClientId{12}, core::Uuid{18}, core::Uuid{19});
   BroadcastMessageListener listener(manager, std::make_shared<TestOutputNetworkAdapter>());
 
-  EXPECT_EQ(bsgo::Uuid{19}, manager->tryGetSystemForClient(net::ClientId{12}).value());
+  EXPECT_EQ(core::Uuid{19}, manager->tryGetSystemForClient(net::ClientId{12}).value());
 
-  bsgo::LogoutMessage message(bsgo::Uuid{18}, false);
+  core::LogoutMessage message(core::Uuid{18}, false);
   listener.onEventReceived(message);
 
   EXPECT_FALSE(manager->tryGetSystemForClient(net::ClientId{12}).has_value());
@@ -140,15 +140,15 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
 {
   auto manager = std::make_shared<ClientManager>();
   manager->registerClient(net::ClientId{12});
-  manager->registerPlayer(net::ClientId{12}, bsgo::Uuid{18}, bsgo::Uuid{19});
+  manager->registerPlayer(net::ClientId{12}, core::Uuid{18}, core::Uuid{19});
   BroadcastMessageListener listener(manager, std::make_shared<TestOutputNetworkAdapter>());
 
-  EXPECT_EQ(bsgo::Uuid{19}, manager->tryGetSystemForClient(net::ClientId{12}).value());
+  EXPECT_EQ(core::Uuid{19}, manager->tryGetSystemForClient(net::ClientId{12}).value());
 
-  bsgo::LogoutMessage message(bsgo::Uuid{18}, true);
+  core::LogoutMessage message(core::Uuid{18}, true);
   listener.onEventReceived(message);
 
-  EXPECT_EQ(bsgo::Uuid{19}, manager->tryGetSystemForClient(net::ClientId{12}).value());
+  EXPECT_EQ(core::Uuid{19}, manager->tryGetSystemForClient(net::ClientId{12}).value());
 }
 
 TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
@@ -156,27 +156,27 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
 {
   auto manager = std::make_shared<ClientManager>();
   manager->registerClient(net::ClientId{12});
-  manager->registerPlayer(net::ClientId{12}, bsgo::Uuid{18}, bsgo::Uuid{19});
+  manager->registerPlayer(net::ClientId{12}, core::Uuid{18}, core::Uuid{19});
   manager->registerClient(net::ClientId{13});
-  manager->registerPlayer(net::ClientId{13}, bsgo::Uuid{17}, bsgo::Uuid{19});
+  manager->registerPlayer(net::ClientId{13}, core::Uuid{17}, core::Uuid{19});
   auto server = std::make_shared<TestOutputNetworkAdapter>();
   BroadcastMessageListener listener(manager, server);
 
-  auto message = std::make_unique<TestPlayerMessage>(bsgo::Uuid{18}, bsgo::Uuid{19});
+  auto message = std::make_unique<TestPlayerMessage>(core::Uuid{18}, core::Uuid{19});
   listener.onEventReceived(*message);
 
   EXPECT_EQ(1u, server->messages().size());
   const auto &actual = server->messages().at(0);
   EXPECT_EQ(net::ClientId{12}, actual.clientId);
   EXPECT_EQ(core::MessageType::DOCK, actual.data->type());
-  EXPECT_EQ(bsgo::Uuid{18}, actual.data->as<TestPlayerMessage>().getPlayerDbId());
-  EXPECT_EQ(bsgo::Uuid{19}, actual.data->as<TestPlayerMessage>().getSystemDbId());
+  EXPECT_EQ(core::Uuid{18}, actual.data->as<TestPlayerMessage>().getPlayerDbId());
+  EXPECT_EQ(core::Uuid{19}, actual.data->as<TestPlayerMessage>().getSystemDbId());
 }
 
 namespace {
 auto assertMessageMatches(const std::vector<TestOutputNetworkAdapter::MessageData> &messages,
                           const net::ClientId expectedClient,
-                          const bsgo::Uuid expectedSystemMessageId)
+                          const core::Uuid expectedSystemMessageId)
 {
   for (const auto &message : messages)
   {
@@ -196,25 +196,25 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
 {
   auto manager = std::make_shared<ClientManager>();
   manager->registerClient(net::ClientId{12});
-  manager->registerPlayer(net::ClientId{12}, bsgo::Uuid{18}, bsgo::Uuid{19});
+  manager->registerPlayer(net::ClientId{12}, core::Uuid{18}, core::Uuid{19});
   manager->registerClient(net::ClientId{13});
-  manager->registerPlayer(net::ClientId{13}, bsgo::Uuid{17}, bsgo::Uuid{19});
+  manager->registerPlayer(net::ClientId{13}, core::Uuid{17}, core::Uuid{19});
   manager->registerClient(net::ClientId{14});
-  manager->registerPlayer(net::ClientId{14}, bsgo::Uuid{16}, bsgo::Uuid{20});
+  manager->registerPlayer(net::ClientId{14}, core::Uuid{16}, core::Uuid{20});
   auto server = std::make_shared<TestOutputNetworkAdapter>();
   BroadcastMessageListener listener(manager, server);
 
-  auto message = std::make_unique<TestSystemMessage>(bsgo::Uuid{19});
+  auto message = std::make_unique<TestSystemMessage>(core::Uuid{19});
   listener.onEventReceived(*message);
 
   const auto &messages = server->messages();
   EXPECT_EQ(2u, messages.size());
 
-  if (!assertMessageMatches(messages, net::ClientId{12}, bsgo::Uuid{19}))
+  if (!assertMessageMatches(messages, net::ClientId{12}, core::Uuid{19}))
   {
     FAIL() << "Expected message to be sent to client " << net::str(net::ClientId{12});
   }
-  if (!assertMessageMatches(messages, net::ClientId{13}, bsgo::Uuid{19}))
+  if (!assertMessageMatches(messages, net::ClientId{13}, core::Uuid{19}))
   {
     FAIL() << "Expected message to be sent to client " << net::str(net::ClientId{13});
   }

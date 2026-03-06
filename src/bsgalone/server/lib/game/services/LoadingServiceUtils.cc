@@ -1,19 +1,19 @@
 
 #include "LoadingServiceUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-auto PlayerProps::toPlayerData() const -> PlayerData
+auto PlayerProps::toPlayerData() const -> core::PlayerData
 {
-  return PlayerData{.dbId         = dbPlayer.id,
-                    .name         = dbPlayer.name,
-                    .isAi         = !dbPlayer.account.has_value(),
-                    .attachedShip = attachedShip};
+  return core::PlayerData{.dbId         = dbPlayer.id,
+                          .name         = dbPlayer.name,
+                          .isAi         = !dbPlayer.account.has_value(),
+                          .attachedShip = attachedShip};
 }
 
-auto AsteroidProps::toAsteroidData() const -> AsteroidData
+auto AsteroidProps::toAsteroidData() const -> core::AsteroidData
 {
-  return AsteroidData{
+  return core::AsteroidData{
     .dbId      = dbAsteroid.id,
     .position  = dbAsteroid.position,
     .radius    = dbAsteroid.radius,
@@ -24,9 +24,9 @@ auto AsteroidProps::toAsteroidData() const -> AsteroidData
   };
 }
 
-auto OutpostProps::toOutpostData() const -> OutpostData
+auto OutpostProps::toOutpostData() const -> core::OutpostData
 {
-  return OutpostData{
+  return core::OutpostData{
     .dbId            = dbOutpost.id,
     .position        = dbOutpost.position,
     .radius          = dbOutpost.radius,
@@ -40,9 +40,9 @@ auto OutpostProps::toOutpostData() const -> OutpostData
   };
 }
 
-auto PlayerWeaponProps::toPlayerWeaponData() const -> PlayerWeaponData
+auto PlayerWeaponProps::toPlayerWeaponData() const -> core::PlayerWeaponData
 {
-  return PlayerWeaponData{
+  return core::PlayerWeaponData{
     .dbId         = dbWeapon.id,
     .weaponDbId   = dbWeapon.weapon,
     .slotPosition = slotPosition,
@@ -56,9 +56,9 @@ auto PlayerWeaponProps::toPlayerWeaponData() const -> PlayerWeaponData
   };
 }
 
-auto toPlayerComputerData(const PlayerComputer &computer) -> PlayerComputerData
+auto toPlayerComputerData(const core::PlayerComputer &computer) -> core::PlayerComputerData
 {
-  return PlayerComputerData{
+  return core::PlayerComputerData{
     .dbId           = computer.id,
     .computerDbId   = computer.computer,
     .name           = computer.name,
@@ -73,9 +73,9 @@ auto toPlayerComputerData(const PlayerComputer &computer) -> PlayerComputerData
   };
 }
 
-auto PlayerShipProps::toPlayerShipData() const -> PlayerShipData
+auto PlayerShipProps::toPlayerShipData() const -> core::PlayerShipData
 {
-  PlayerShipData data{
+  core::PlayerShipData data{
     .dbId            = dbShip.id,
     .shipId          = dbShip.ship,
     .position        = dbShip.position,
@@ -114,40 +114,40 @@ auto PlayerShipProps::toPlayerShipData() const -> PlayerShipData
   std::transform(computers.begin(),
                  computers.end(),
                  std::back_inserter(data.computers),
-                 [](const PlayerComputer &cp) { return toPlayerComputerData(cp); });
+                 [](const core::PlayerComputer &cp) { return toPlayerComputerData(cp); });
 
   return data;
 }
 
-auto toSystemData(const System &system) -> SystemData
+auto toSystemData(const core::System &system) -> core::SystemData
 {
-  return SystemData{
+  return core::SystemData{
     .dbId     = system.id,
     .name     = system.name,
     .position = system.position,
   };
 }
 
-auto toResourceData(const Resource &resource) -> ResourceData
+auto toResourceData(const core::Resource &resource) -> core::ResourceData
 {
-  return ResourceData{
+  return core::ResourceData{
     .dbId = resource.id,
     .name = resource.name,
   };
 }
 
-auto toPlayerResourceData(const PlayerResource &playerResource) -> PlayerResourceData
+auto toPlayerResourceData(const core::PlayerResource &playerResource) -> core::PlayerResourceData
 {
-  return PlayerResourceData{
+  return core::PlayerResourceData{
     .dbId   = playerResource.resource,
     .name   = playerResource.name,
     .amount = playerResource.amount,
   };
 }
 
-auto WeaponProps::toWeaponData() const -> WeaponData
+auto WeaponProps::toWeaponData() const -> core::WeaponData
 {
-  return WeaponData{
+  return core::WeaponData{
     .dbId       = dbWeapon.id,
     .name       = dbWeapon.name,
     .minDamage  = dbWeapon.minDamage,
@@ -159,9 +159,9 @@ auto WeaponProps::toWeaponData() const -> WeaponData
   };
 }
 
-auto ComputerProps::toComputerData() const -> ComputerData
+auto ComputerProps::toComputerData() const -> core::ComputerData
 {
-  return ComputerData{
+  return core::ComputerData{
     .dbId           = dbComputer.id,
     .name           = dbComputer.name,
     .offensive      = dbComputer.offensive,
@@ -175,9 +175,9 @@ auto ComputerProps::toComputerData() const -> ComputerData
   };
 }
 
-auto ShipProps::toShipData() const -> ShipData
+auto ShipProps::toShipData() const -> core::ShipData
 {
-  return ShipData{
+  return core::ShipData{
     .dbId             = dbShip.id,
     .faction          = dbShip.faction,
     .shipClass        = dbShip.shipClass,
@@ -196,18 +196,18 @@ auto ShipProps::toShipData() const -> ShipData
   };
 }
 
-auto toSystemTickData(const SystemTick &tickData) -> SystemTickData
+auto toSystemTickData(const core::SystemTick &tickData) -> core::SystemTickData
 {
-  return SystemTickData{
+  return core::SystemTickData{
     .dbId        = tickData.system,
     .currentTick = tickData.currentTick,
     .step        = tickData.step,
   };
 }
 
-auto TargetProps::toTarget() const -> bsgalone::core::Target
+auto TargetProps::toTarget() const -> core::Target
 {
-  return bsgalone::core::Target{
+  return core::Target{
     .sourceDbId = sourceDbId,
     .sourceKind = sourceKind,
     .targetDbId = targetDbId,
@@ -215,4 +215,4 @@ auto TargetProps::toTarget() const -> bsgalone::core::Target
   };
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

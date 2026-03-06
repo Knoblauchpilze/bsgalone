@@ -1,7 +1,7 @@
 
 #include "HealthSystem.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 namespace {
 bool isEntityRelevant(const Entity &ent)
 {
@@ -54,4 +54,4 @@ bool HealthSystem::canRegenerateHealth(Entity &entity) const
   return statusAllowsHealthRegeneration(entity.statusComp().status());
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

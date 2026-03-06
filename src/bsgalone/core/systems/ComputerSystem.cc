@@ -5,7 +5,7 @@
 #include "SlotComponentMessage.hh"
 #include "SystemUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 namespace {
 bool isEntityRelevant(const Entity &entity)
 {
@@ -159,4 +159,4 @@ void ComputerSystem::sendComponentUpdatedMessage(const Entity &entity,
                                                      component.elapsedSinceLastFired()));
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

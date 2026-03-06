@@ -8,7 +8,7 @@
 #include <memory>
 #include <unordered_set>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 struct System
 {
@@ -39,4 +39,4 @@ class SystemRepository : public AbstractRepository
 
 using SystemRepositoryShPtr = std::shared_ptr<SystemRepository>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

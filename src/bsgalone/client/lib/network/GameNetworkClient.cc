@@ -11,18 +11,18 @@
 #include "SynchronizedMessageQueue.hh"
 #include "TcpClient.hh"
 
-namespace pge {
+namespace bsgalone::client {
 constexpr auto DEFAULT_SERVER_URL = "127.0.0.1";
 
 GameNetworkClient::GameNetworkClient()
-  : m_inputQueue(bsgo::createSynchronizedMessageQueue())
+  : m_inputQueue(core::createSynchronizedMessageQueue())
 {}
 
 void GameNetworkClient::start(const int port)
 {
   m_eventBus  = net::createAsyncEventQueue(net::createSynchronizedEventQueue());
   m_tcpClient = std::make_shared<net::TcpClient>(m_eventBus);
-  m_adapter   = std::make_unique<bsgalone::core::OutputNetworkAdapter>(m_tcpClient);
+  m_adapter   = std::make_unique<core::OutputNetworkAdapter>(m_tcpClient);
 
   initialize();
   m_tcpClient->connect(DEFAULT_SERVER_URL, port);
@@ -36,7 +36,7 @@ void GameNetworkClient::stop()
   m_eventBus.reset();
 }
 
-void GameNetworkClient::pushEvent(bsgalone::core::IMessagePtr message)
+void GameNetworkClient::pushEvent(core::IMessagePtr message)
 {
   if (!m_connected.load())
   {
@@ -46,7 +46,7 @@ void GameNetworkClient::pushEvent(bsgalone::core::IMessagePtr message)
   m_adapter->sendMessage(*message);
 }
 
-void GameNetworkClient::addListener(bsgalone::core::IMessageListenerPtr listener)
+void GameNetworkClient::addListener(core::IMessageListenerPtr listener)
 {
   m_inputQueue->addListener(std::move(listener));
 }
@@ -66,7 +66,7 @@ namespace {
 class NetworkEventListener : public net::INetworkEventListener
 {
   public:
-  NetworkEventListener(std::atomic_bool &connected, bsgalone::core::IMessageQueueShPtr inputQueue)
+  NetworkEventListener(std::atomic_bool &connected, core::IMessageQueueShPtr inputQueue)
     : m_connected(connected)
     , m_inputQueue(std::move(inputQueue))
   {}
@@ -96,13 +96,13 @@ class NetworkEventListener : public net::INetworkEventListener
 
   private:
   std::atomic_bool &m_connected;
-  bsgalone::core::IMessageQueueShPtr m_inputQueue{};
+  core::IMessageQueueShPtr m_inputQueue{};
 
   void handleConnectionEstablished(const net::ConnectionEstablishedEvent & /*event*/)
   {
     m_connected.store(true);
 
-    auto message = std::make_unique<bsgo::ConnectionMessage>();
+    auto message = std::make_unique<core::ConnectionMessage>();
     m_inputQueue->pushEvent(std::move(message));
   }
 
@@ -116,12 +116,12 @@ class NetworkEventListener : public net::INetworkEventListener
 void GameNetworkClient::initialize()
 {
   auto networkAdapter
-    = std::make_unique<bsgalone::core::InputNetworkAdapter>(m_inputQueue,
-                                                            std::make_unique<bsgo::MessageParser>());
+    = std::make_unique<core::InputNetworkAdapter>(m_inputQueue,
+                                                  std::make_unique<core::MessageParser>());
   m_eventBus->addListener(std::move(networkAdapter));
 
   auto eventListener = std::make_unique<NetworkEventListener>(m_connected, m_inputQueue);
   m_eventBus->addListener(std::move(eventListener));
 }
 
-} // namespace pge
+} // namespace bsgalone::client

@@ -6,7 +6,7 @@
 #include "Views.hh"
 #include <memory>
 
-namespace pge {
+namespace bsgalone::client {
 
 class GameOverUiHandler : public AbstractUiHandler
 {
@@ -16,9 +16,9 @@ class GameOverUiHandler : public AbstractUiHandler
 
   void initializeMenus(const int width,
                        const int height,
-                       sprites::TexturePack &texturesLoader) override;
+                       pge::sprites::TexturePack &texturesLoader) override;
   bool processUserInput(ui::UserInputData &inputData) override;
-  void render(Renderer &engine) const override;
+  void render(pge::Renderer &engine) const override;
   void updateUi() override;
 
   private:
@@ -33,4 +33,4 @@ class GameOverUiHandler : public AbstractUiHandler
 
 using GameOverUiHandlerPtr = std::unique_ptr<GameOverUiHandler>;
 
-} // namespace pge
+} // namespace bsgalone::client

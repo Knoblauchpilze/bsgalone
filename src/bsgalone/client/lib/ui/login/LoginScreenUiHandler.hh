@@ -12,10 +12,9 @@
 #include "UiTimedMenu.hh"
 #include "Views.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
-class LoginScreenUiHandler : public AbstractUiHandler,
-                             public bsgalone::core::AbstractMessageListener
+class LoginScreenUiHandler : public AbstractUiHandler, public core::AbstractMessageListener
 {
   public:
   LoginScreenUiHandler(const Views &views);
@@ -23,13 +22,13 @@ class LoginScreenUiHandler : public AbstractUiHandler,
 
   void initializeMenus(const int width,
                        const int height,
-                       sprites::TexturePack &texturesLoader) override;
+                       pge::sprites::TexturePack &texturesLoader) override;
   bool processUserInput(ui::UserInputData &inputData) override;
-  void render(Renderer &engine) const override;
+  void render(pge::Renderer &engine) const override;
   void updateUi() override;
 
-  void connectToMessageQueue(bsgalone::core::IMessageQueue &messageQueue) override;
-  void onEventReceived(const bsgalone::core::IMessage &message) override;
+  void connectToMessageQueue(core::IMessageQueue &messageQueue) override;
+  void onEventReceived(const core::IMessage &message) override;
 
   private:
   PlayerViewShPtr m_playerView{};
@@ -40,8 +39,8 @@ class LoginScreenUiHandler : public AbstractUiHandler,
     SIGNUP,
   };
   Mode m_mode{Mode::LOGIN};
-  bsgo::Faction m_faction{bsgo::Faction::COLONIAL};
-  bsgo::GameRole m_role{bsgo::GameRole::PILOT};
+  core::Faction m_faction{core::Faction::COLONIAL};
+  core::GameRole m_role{core::GameRole::PILOT};
 
   ui::UiMenuPtr m_loginModePanel{};
   ui::UiTextMenu *m_loginButton{};
@@ -73,12 +72,12 @@ class LoginScreenUiHandler : public AbstractUiHandler,
   void generateSuccessfulSignupMenu(const int width, const int height);
 
   void setLoginMode(const Mode mode);
-  void setFaction(const bsgo::Faction faction);
-  void setGameRole(const bsgo::GameRole role);
+  void setFaction(const core::Faction faction);
+  void setGameRole(const core::GameRole role);
   void tryLogin();
 
-  void handleLoginMessage(const bsgo::LoginMessage &message);
-  void handleSignupMessage(const bsgo::SignupMessage &message);
+  void handleLoginMessage(const core::LoginMessage &message);
+  void handleSignupMessage(const core::SignupMessage &message);
 };
 
-} // namespace pge
+} // namespace bsgalone::client

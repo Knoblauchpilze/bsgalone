@@ -6,7 +6,7 @@
 #include "Uuid.hh"
 #include <unordered_set>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class LootComponent : public AbstractComponent
 {
@@ -26,4 +26,4 @@ class LootComponent : public AbstractComponent
 
 using LootComponentShPtr = std::shared_ptr<LootComponent>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

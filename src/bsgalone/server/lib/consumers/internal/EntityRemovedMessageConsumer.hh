@@ -7,7 +7,7 @@
 #include "SystemService.hh"
 #include <unordered_map>
 
-namespace bsgo {
+namespace bsgalone::server {
 
 /// @brief - This consumer is added to the internal consumers and is responsible
 /// to process the entity added/removed messages produced by the systems in the
@@ -17,23 +17,23 @@ namespace bsgo {
 ///   - forwarding messages for asteroids
 /// The messages are then routed to the processors to be processed like a regular
 /// entity added/removed message.
-class EntityRemovedMessageConsumer : public bsgalone::core::AbstractMessageConsumer
+class EntityRemovedMessageConsumer : public core::AbstractMessageConsumer
 {
   public:
   EntityRemovedMessageConsumer(SystemServiceShPtr systemService,
                                SystemQueueMap systemQueues,
-                               bsgalone::core::IMessageQueue *const outputMessageQueue);
+                               core::IMessageQueue *const outputMessageQueue);
   ~EntityRemovedMessageConsumer() override = default;
 
-  void onEventReceived(const bsgalone::core::IMessage &message) override;
+  void onEventReceived(const core::IMessage &message) override;
 
   private:
   SystemServiceShPtr m_systemService{};
   SystemQueueMap m_systemQueues{};
-  bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
+  core::IMessageQueue *const m_outputMessageQueue{};
 
-  void handleShipEntityRemoved(const Uuid shipDbId, const bool dead) const;
-  void handleAsteroidEntityRemoved(const Uuid asteroidDbId, const bool dead) const;
+  void handleShipEntityRemoved(const core::Uuid shipDbId, const bool dead) const;
+  void handleAsteroidEntityRemoved(const core::Uuid asteroidDbId, const bool dead) const;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::server

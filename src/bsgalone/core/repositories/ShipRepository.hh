@@ -9,7 +9,7 @@
 #include "Uuid.hh"
 #include <memory>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 struct Ship
 {
@@ -32,7 +32,7 @@ struct Ship
   chrono::TickDuration jumpTime{};
   chrono::TickDuration jumpTimeInThreat{};
 
-  std::unordered_map<bsgalone::core::Slot, int> slots{};
+  std::unordered_map<Slot, int> slots{};
 };
 
 class ShipRepository : public AbstractRepository
@@ -54,4 +54,4 @@ class ShipRepository : public AbstractRepository
 
 using ShipRepositoryShPtr = std::shared_ptr<ShipRepository>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

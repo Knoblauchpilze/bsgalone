@@ -5,7 +5,7 @@
 #include "PlayerShipRepository.hh"
 #include <string>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 enum class Status
 {
@@ -45,4 +45,4 @@ auto updateStatusAfterJumpCancellation(const Status &in) -> Status;
 
 auto determineStartingStatusForShip(const PlayerShip &ship, const Player &player) -> Status;
 
-} // namespace bsgo
+} // namespace bsgalone::core

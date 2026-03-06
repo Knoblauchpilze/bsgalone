@@ -9,29 +9,29 @@
 #include "JumpRequestedMessage.hh"
 #include "TargetMessage.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
-class ShipMessageConsumer : public bsgalone::core::AbstractMessageConsumer
+class ShipMessageConsumer : public core::AbstractMessageConsumer
 {
   public:
-  ShipMessageConsumer(const bsgo::DatabaseEntityMapper &entityMapper,
-                      bsgo::CoordinatorShPtr coordinator);
+  ShipMessageConsumer(const core::DatabaseEntityMapper &entityMapper,
+                      core::CoordinatorShPtr coordinator);
   ~ShipMessageConsumer() override = default;
 
-  void onEventReceived(const bsgalone::core::IMessage &message) override;
+  void onEventReceived(const core::IMessage &message) override;
 
   private:
-  const bsgo::DatabaseEntityMapper &m_entityMapper;
-  bsgo::CoordinatorShPtr m_coordinator{};
+  const core::DatabaseEntityMapper &m_entityMapper;
+  core::CoordinatorShPtr m_coordinator{};
 
-  void handleComponentSync(const bsgo::ComponentSyncMessage &message) const;
-  void handleJumpRequested(const bsgalone::core::JumpRequestedMessage &message) const;
-  void handleJumpCancelled(const bsgalone::core::JumpCancelledMessage &message) const;
-  void handleTargetAcquired(const bsgo::TargetMessage &message) const;
+  void handleComponentSync(const core::ComponentSyncMessage &message) const;
+  void handleJumpRequested(const core::JumpRequestedMessage &message) const;
+  void handleJumpCancelled(const core::JumpCancelledMessage &message) const;
+  void handleTargetAcquired(const core::TargetMessage &message) const;
 
-  void handleShipComponentsSync(const bsgo::ComponentSyncMessage &message) const;
-  void handleAsteroidComponentsSync(const bsgo::ComponentSyncMessage &message) const;
-  void handleOutpostComponentsSync(const bsgo::ComponentSyncMessage &message) const;
+  void handleShipComponentsSync(const core::ComponentSyncMessage &message) const;
+  void handleAsteroidComponentsSync(const core::ComponentSyncMessage &message) const;
+  void handleOutpostComponentsSync(const core::ComponentSyncMessage &message) const;
 };
 
-} // namespace pge
+} // namespace bsgalone::client

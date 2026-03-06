@@ -15,10 +15,10 @@
 #include "TargetSystem.hh"
 #include "WeaponSystem.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 Systems::Systems(SystemsConfig &&config)
-  : core::CoreObject("systems")
+  : ::core::CoreObject("systems")
 {
   setService("bsgo");
 
@@ -79,4 +79,4 @@ void Systems::initialize(SystemsConfig &&config)
   createSystem<NetworkSystem>(m_systems, config);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

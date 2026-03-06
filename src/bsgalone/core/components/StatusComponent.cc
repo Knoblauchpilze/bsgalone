@@ -1,12 +1,12 @@
 
 #include "StatusComponent.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 StatusComponent::StatusComponent(const Status &status,
                                  const std::optional<chrono::TickDuration> &jumpTime,
                                  const std::optional<chrono::TickDuration> &threatJumpTime)
-  : AbstractComponent(bsgalone::core::ComponentType::STATUS)
+  : AbstractComponent(ComponentType::STATUS)
   , m_status(status)
   , m_jumpTime(jumpTime)
   , m_threatJumpTime(threatJumpTime)
@@ -151,4 +151,4 @@ void StatusComponent::updateAppearingState(const Status &newStatus)
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

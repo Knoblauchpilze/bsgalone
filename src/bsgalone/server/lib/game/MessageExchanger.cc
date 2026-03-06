@@ -8,23 +8,23 @@
 #include "RoutingMessageConsumer.hh"
 #include "SynchronizedMessageQueue.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
 MessageExchanger::MessageExchanger(const MessageSystemData &messagesData)
 {
   initialize(messagesData);
 }
 
-auto MessageExchanger::getInternalMessageQueue() const -> bsgalone::core::IMessageQueue *
+auto MessageExchanger::getInternalMessageQueue() const -> core::IMessageQueue *
 {
   return m_internalMessageQueue.get();
 }
 
 namespace {
-auto createInternalMessageQueue() -> bsgalone::core::IMessageQueueShPtr
+auto createInternalMessageQueue() -> core::IMessageQueueShPtr
 {
-  auto messageQueue = createSynchronizedMessageQueue();
-  return createAsyncMessageQueue(std::move(messageQueue));
+  auto messageQueue = core::createSynchronizedMessageQueue();
+  return core::createAsyncMessageQueue(std::move(messageQueue));
 }
 } // namespace
 
@@ -36,7 +36,7 @@ void MessageExchanger::initialize(const MessageSystemData &messagesData)
 
 void MessageExchanger::initializeInternalConsumers(const MessageSystemData &messagesData)
 {
-  Repositories repositories{};
+  core::Repositories repositories{};
   auto systemService = std::make_shared<SystemService>(std::move(repositories));
 
   m_internalMessageQueue->addListener(
@@ -60,4 +60,4 @@ void MessageExchanger::initializeInternalConsumers(const MessageSystemData &mess
                                                     messagesData.networkClient.get()));
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

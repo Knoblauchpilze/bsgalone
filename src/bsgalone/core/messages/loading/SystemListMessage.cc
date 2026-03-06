@@ -2,14 +2,14 @@
 #include "SystemListMessage.hh"
 #include "SerializationUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 SystemListMessage::SystemListMessage()
-  : NetworkMessage(bsgalone::core::MessageType::SYSTEM_LIST)
+  : NetworkMessage(MessageType::SYSTEM_LIST)
 {}
 
 SystemListMessage::SystemListMessage(const std::vector<SystemData> &systemsData)
-  : NetworkMessage(bsgalone::core::MessageType::SYSTEM_LIST)
+  : NetworkMessage(MessageType::SYSTEM_LIST)
   , m_systemsData(systemsData)
 {}
 
@@ -20,10 +20,10 @@ auto SystemListMessage::getSystemsData() const -> const std::vector<SystemData> 
 
 auto SystemListMessage::serialize(std::ostream &out) const -> std::ostream &
 {
-  core::serialize(out, m_messageType);
-  core::serialize(out, m_clientId);
+  ::core::serialize(out, m_messageType);
+  ::core::serialize(out, m_clientId);
 
-  core::serialize(out, m_systemsData);
+  ::core::serialize(out, m_systemsData);
 
   return out;
 }
@@ -31,15 +31,15 @@ auto SystemListMessage::serialize(std::ostream &out) const -> std::ostream &
 bool SystemListMessage::deserialize(std::istream &in)
 {
   bool ok{true};
-  ok &= core::deserialize(in, m_messageType);
-  ok &= core::deserialize(in, m_clientId);
+  ok &= ::core::deserialize(in, m_messageType);
+  ok &= ::core::deserialize(in, m_clientId);
 
-  ok &= core::deserialize(in, m_systemsData);
+  ok &= ::core::deserialize(in, m_systemsData);
 
   return ok;
 }
 
-auto SystemListMessage::clone() const -> bsgalone::core::IMessagePtr
+auto SystemListMessage::clone() const -> IMessagePtr
 {
   auto clone = std::make_unique<SystemListMessage>(m_systemsData);
   clone->copyClientIdIfDefined(*this);
@@ -47,4 +47,4 @@ auto SystemListMessage::clone() const -> bsgalone::core::IMessagePtr
   return clone;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

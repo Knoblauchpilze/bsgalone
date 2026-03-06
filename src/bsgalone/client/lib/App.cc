@@ -2,18 +2,18 @@
 #include "App.hh"
 #include "Screen.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
-App::App(const AppDesc &desc, const int serverPort)
+App::App(const pge::AppDesc &desc, const int serverPort)
   : PGEApp(desc)
   , m_serverPort(serverPort)
 {}
 
-App::App(const AppDesc &desc,
+App::App(const pge::AppDesc &desc,
          const int serverPort,
          const std::optional<std::string> &userName,
          const std::optional<std::string> &password,
-         const std::optional<bsgo::GameRole> &gameRole)
+         const std::optional<core::GameRole> &gameRole)
   : PGEApp(desc)
   , m_serverPort(serverPort)
   , m_userName(userName)
@@ -37,7 +37,7 @@ bool App::onFrame(const float elapsedSeconds)
   return m_game->terminated();
 }
 
-void App::onInputs(const controls::State &controls, CoordinateFrame &frame)
+void App::onInputs(const pge::controls::State &controls, pge::CoordinateFrame &frame)
 {
   // Handle case where no game is defined.
   if (m_game == nullptr)
@@ -48,9 +48,9 @@ void App::onInputs(const controls::State &controls, CoordinateFrame &frame)
   m_game->processUserInput(controls, frame);
 }
 
-void App::loadResources(const Vec2i &screenDims, Renderer &engine)
+void App::loadResources(const pge::Vec2i &screenDims, pge::Renderer &engine)
 {
-  setLayerTint(Layer::DRAW, semiOpaque(colors::WHITE));
+  setLayerTint(Layer::DRAW, semiOpaque(pge::colors::WHITE));
 
   m_game = std::make_shared<Game>(m_serverPort, m_userName, m_password, m_gameRole);
 
@@ -64,41 +64,43 @@ void App::cleanResources()
   m_game.reset();
 }
 
-void App::drawDecal(const RenderState &state)
+void App::drawDecal(const pge::RenderState &state)
 {
-  m_game->render(state, RenderingPass::DECAL);
+  m_game->render(state, pge::RenderingPass::DECAL);
 }
 
-void App::draw(const RenderState &state)
+void App::draw(const pge::RenderState &state)
 {
-  m_game->render(state, RenderingPass::SPRITES);
+  m_game->render(state, pge::RenderingPass::SPRITES);
 }
 
-void App::drawUi(const RenderState &state)
+void App::drawUi(const pge::RenderState &state)
 {
-  m_game->render(state, RenderingPass::UI);
+  m_game->render(state, pge::RenderingPass::UI);
 }
 
-void App::drawDebug(const RenderState &state, const Vec2f &mouseScreenPos)
+void App::drawDebug(const pge::RenderState &state, const pge::Vec2f &mouseScreenPos)
 {
-  m_game->render(state, RenderingPass::DEBUG);
+  m_game->render(state, pge::RenderingPass::DEBUG);
 
-  Vec2f it;
+  pge::Vec2f it;
   const auto mtp = state.frame.pixelsToTilesAndIntra(mouseScreenPos, &it);
 
   constexpr auto DEBUG_PIXELS_Y       = 400;
   constexpr auto REASONABLE_PIXEL_GAP = 15;
-  Vec2i pos(0, DEBUG_PIXELS_Y);
+  pge::Vec2i pos(0, DEBUG_PIXELS_Y);
 
-  state.renderer.drawDebugString(pos, "Mouse coords      : " + mouseScreenPos.str(), colors::CYAN);
+  state.renderer.drawDebugString(pos,
+                                 "Mouse coords      : " + mouseScreenPos.str(),
+                                 pge::colors::CYAN);
   pos.y += REASONABLE_PIXEL_GAP;
-  state.renderer.drawDebugString(pos, "World cell coords : " + mtp.str(), colors::CYAN);
+  state.renderer.drawDebugString(pos, "World cell coords : " + mtp.str(), pge::colors::CYAN);
   pos.y += REASONABLE_PIXEL_GAP;
-  state.renderer.drawDebugString(pos, "Intra cell        : " + it.str(), colors::CYAN);
+  state.renderer.drawDebugString(pos, "Intra cell        : " + it.str(), pge::colors::CYAN);
   pos.y += REASONABLE_PIXEL_GAP;
   state.renderer.drawDebugString(pos,
                                  "Screen            : " + str(m_game->getScreen()),
-                                 colors::DARK_GREEN);
+                                 pge::colors::DARK_GREEN);
 }
 
-} // namespace pge
+} // namespace bsgalone::client

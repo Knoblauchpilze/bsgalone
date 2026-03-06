@@ -2,18 +2,18 @@
 #include "WeaponComponentMessage.hh"
 #include "SerializationUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 WeaponComponentMessage::WeaponComponentMessage()
-  : ComponentUpdatedMessage(bsgalone::core::MessageType::WEAPON_COMPONENT_UPDATED)
+  : ComponentUpdatedMessage(MessageType::WEAPON_COMPONENT_UPDATED)
 {}
 
 WeaponComponentMessage::WeaponComponentMessage(const Uuid shipDbId,
                                                const Uuid weaponDbId,
                                                const bool active)
-  : ComponentUpdatedMessage(bsgalone::core::MessageType::WEAPON_COMPONENT_UPDATED,
+  : ComponentUpdatedMessage(MessageType::WEAPON_COMPONENT_UPDATED,
                             shipDbId,
-                            bsgalone::core::ComponentType::WEAPON_SLOT)
+                            ComponentType::WEAPON_SLOT)
   , m_weaponDbId(weaponDbId)
   , m_active(active)
 {}
@@ -30,13 +30,13 @@ bool WeaponComponentMessage::isActive() const
 
 auto WeaponComponentMessage::serialize(std::ostream &out) const -> std::ostream &
 {
-  core::serialize(out, m_messageType);
-  core::serialize(out, m_clientId);
+  ::core::serialize(out, m_messageType);
+  ::core::serialize(out, m_clientId);
 
-  core::serialize(out, m_shipDbId);
-  core::serialize(out, m_component);
-  core::serialize(out, m_weaponDbId);
-  core::serialize(out, m_active);
+  ::core::serialize(out, m_shipDbId);
+  ::core::serialize(out, m_component);
+  ::core::serialize(out, m_weaponDbId);
+  ::core::serialize(out, m_active);
 
   return out;
 }
@@ -44,18 +44,18 @@ auto WeaponComponentMessage::serialize(std::ostream &out) const -> std::ostream 
 bool WeaponComponentMessage::deserialize(std::istream &in)
 {
   bool ok{true};
-  ok &= core::deserialize(in, m_messageType);
-  ok &= core::deserialize(in, m_clientId);
+  ok &= ::core::deserialize(in, m_messageType);
+  ok &= ::core::deserialize(in, m_clientId);
 
-  ok &= core::deserialize(in, m_shipDbId);
-  ok &= core::deserialize(in, m_component);
-  ok &= core::deserialize(in, m_weaponDbId);
-  ok &= core::deserialize(in, m_active);
+  ok &= ::core::deserialize(in, m_shipDbId);
+  ok &= ::core::deserialize(in, m_component);
+  ok &= ::core::deserialize(in, m_weaponDbId);
+  ok &= ::core::deserialize(in, m_active);
 
   return ok;
 }
 
-auto WeaponComponentMessage::clone() const -> bsgalone::core::IMessagePtr
+auto WeaponComponentMessage::clone() const -> IMessagePtr
 {
   auto clone          = std::make_unique<WeaponComponentMessage>();
   clone->m_shipDbId   = m_shipDbId;
@@ -68,4 +68,4 @@ auto WeaponComponentMessage::clone() const -> bsgalone::core::IMessagePtr
   return clone;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

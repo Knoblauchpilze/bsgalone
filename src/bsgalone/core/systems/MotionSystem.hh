@@ -3,7 +3,7 @@
 
 #include "AbstractSystem.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class MotionSystem : public AbstractSystem
 {
@@ -17,4 +17,4 @@ class MotionSystem : public AbstractSystem
                     const chrono::TickData &data) const override;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

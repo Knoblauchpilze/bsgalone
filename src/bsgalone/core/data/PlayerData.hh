@@ -5,7 +5,7 @@
 #include <optional>
 #include <string>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 struct PlayerData
 {
@@ -23,4 +23,4 @@ struct PlayerData
   bool deserialize(std::istream &in);
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

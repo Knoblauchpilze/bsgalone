@@ -4,14 +4,14 @@
 #include "SerializationUtils.hh"
 #include "VectorUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 TargetMessage::TargetMessage()
-  : NetworkMessage(bsgalone::core::MessageType::TARGET)
+  : NetworkMessage(MessageType::TARGET)
 {}
 
-TargetMessage::TargetMessage(bsgalone::core::Target data, const Eigen::Vector3f &position)
-  : NetworkMessage(bsgalone::core::MessageType::TARGET)
+TargetMessage::TargetMessage(Target data, const Eigen::Vector3f &position)
+  : NetworkMessage(MessageType::TARGET)
   , m_data(std::move(data))
   , m_position(position)
 {}
@@ -21,7 +21,7 @@ auto TargetMessage::getSourceDbId() const -> Uuid
   return m_data.sourceDbId;
 }
 
-auto TargetMessage::getSourceKind() const -> bsgalone::core::EntityKind
+auto TargetMessage::getSourceKind() const -> EntityKind
 {
   return m_data.sourceKind;
 }
@@ -31,7 +31,7 @@ auto TargetMessage::tryGetTargetDbId() const -> std::optional<Uuid>
   return m_data.targetDbId;
 }
 
-auto TargetMessage::tryGetTargetKind() const -> std::optional<bsgalone::core::EntityKind>
+auto TargetMessage::tryGetTargetKind() const -> std::optional<EntityKind>
 {
   return m_data.targetKind;
 }
@@ -53,12 +53,12 @@ auto TargetMessage::getPosition() const -> Eigen::Vector3f
 
 auto TargetMessage::serialize(std::ostream &out) const -> std::ostream &
 {
-  core::serialize(out, m_messageType);
-  core::serialize(out, m_clientId);
+  ::core::serialize(out, m_messageType);
+  ::core::serialize(out, m_clientId);
 
-  core::serialize(out, m_data);
-  core::serialize(out, m_systemDbId);
-  core::serialize(out, m_position);
+  ::core::serialize(out, m_data);
+  ::core::serialize(out, m_systemDbId);
+  ::core::serialize(out, m_position);
 
   return out;
 }
@@ -66,17 +66,17 @@ auto TargetMessage::serialize(std::ostream &out) const -> std::ostream &
 bool TargetMessage::deserialize(std::istream &in)
 {
   bool ok{true};
-  ok &= core::deserialize(in, m_messageType);
-  ok &= core::deserialize(in, m_clientId);
+  ok &= ::core::deserialize(in, m_messageType);
+  ok &= ::core::deserialize(in, m_clientId);
 
-  ok &= core::deserialize(in, m_data);
-  ok &= core::deserialize(in, m_systemDbId);
-  ok &= core::deserialize(in, m_position);
+  ok &= ::core::deserialize(in, m_data);
+  ok &= ::core::deserialize(in, m_systemDbId);
+  ok &= ::core::deserialize(in, m_position);
 
   return ok;
 }
 
-auto TargetMessage::clone() const -> bsgalone::core::IMessagePtr
+auto TargetMessage::clone() const -> IMessagePtr
 {
   auto clone = std::make_unique<TargetMessage>(m_data, m_position);
   clone->copyClientIdIfDefined(*this);
@@ -88,4 +88,4 @@ auto TargetMessage::clone() const -> bsgalone::core::IMessagePtr
   return clone;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

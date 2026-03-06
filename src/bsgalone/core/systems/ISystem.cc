@@ -1,12 +1,12 @@
 
 #include "ISystem.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 ISystem::ISystem(const std::string &name)
-  : core::CoreObject(name)
+  : ::core::CoreObject(name)
 {
   setService("system");
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

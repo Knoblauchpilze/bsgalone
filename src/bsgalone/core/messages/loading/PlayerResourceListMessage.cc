@@ -2,15 +2,15 @@
 #include "PlayerResourceListMessage.hh"
 #include "SerializationUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 PlayerResourceListMessage::PlayerResourceListMessage()
-  : NetworkMessage(bsgalone::core::MessageType::PLAYER_RESOURCE_LIST)
+  : NetworkMessage(MessageType::PLAYER_RESOURCE_LIST)
 {}
 
 PlayerResourceListMessage::PlayerResourceListMessage(
   const std::vector<PlayerResourceData> &resourcesData)
-  : NetworkMessage(bsgalone::core::MessageType::PLAYER_RESOURCE_LIST)
+  : NetworkMessage(MessageType::PLAYER_RESOURCE_LIST)
   , m_resourcesData(resourcesData)
 {}
 
@@ -21,10 +21,10 @@ auto PlayerResourceListMessage::getResourcesData() const -> const std::vector<Pl
 
 auto PlayerResourceListMessage::serialize(std::ostream &out) const -> std::ostream &
 {
-  core::serialize(out, m_messageType);
-  core::serialize(out, m_clientId);
+  ::core::serialize(out, m_messageType);
+  ::core::serialize(out, m_clientId);
 
-  core::serialize(out, m_resourcesData);
+  ::core::serialize(out, m_resourcesData);
 
   return out;
 }
@@ -32,15 +32,15 @@ auto PlayerResourceListMessage::serialize(std::ostream &out) const -> std::ostre
 bool PlayerResourceListMessage::deserialize(std::istream &in)
 {
   bool ok{true};
-  ok &= core::deserialize(in, m_messageType);
-  ok &= core::deserialize(in, m_clientId);
+  ok &= ::core::deserialize(in, m_messageType);
+  ok &= ::core::deserialize(in, m_clientId);
 
-  ok &= core::deserialize(in, m_resourcesData);
+  ok &= ::core::deserialize(in, m_resourcesData);
 
   return ok;
 }
 
-auto PlayerResourceListMessage::clone() const -> bsgalone::core::IMessagePtr
+auto PlayerResourceListMessage::clone() const -> IMessagePtr
 {
   auto clone = std::make_unique<PlayerResourceListMessage>(m_resourcesData);
   clone->copyClientIdIfDefined(*this);
@@ -48,4 +48,4 @@ auto PlayerResourceListMessage::clone() const -> bsgalone::core::IMessagePtr
   return clone;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

@@ -6,7 +6,7 @@
 #include <eigen3/Eigen/Eigen>
 #include <memory>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 struct AiBehavior
 {
@@ -33,4 +33,4 @@ class AiBehaviorRepository : public AbstractRepository
 
 using AiBehaviorRepositoryShPtr = std::shared_ptr<AiBehaviorRepository>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

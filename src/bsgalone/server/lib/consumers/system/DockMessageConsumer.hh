@@ -7,29 +7,30 @@
 #include "LoadingTransition.hh"
 #include "Services.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-class DockMessageConsumer : public bsgalone::core::AbstractMessageConsumer
+class DockMessageConsumer : public core::AbstractMessageConsumer
 {
   public:
   DockMessageConsumer(const Services &services,
-                      bsgalone::core::IMessageQueue *const systemMessageQueue,
-                      bsgalone::core::IMessageQueue *const outputMessageQueue);
+                      core::IMessageQueue *const systemMessageQueue,
+                      core::IMessageQueue *const outputMessageQueue);
   ~DockMessageConsumer() override = default;
 
-  void onEventReceived(const bsgalone::core::IMessage &message) override;
+  void onEventReceived(const core::IMessage &message) override;
 
   private:
   ShipServiceShPtr m_shipService{};
   EntityServiceShPtr m_entityService{};
-  bsgalone::core::IMessageQueue *const m_systemMessageQueue{};
-  bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
+  core::IMessageQueue *const m_systemMessageQueue{};
+  core::IMessageQueue *const m_outputMessageQueue{};
 
-  void handleDocking(const bsgalone::core::DockMessage &message) const;
-  void handleUndocking(const bsgalone::core::DockMessage &message) const;
-  void handleReturnToOutpost(const bsgalone::core::DockMessage &message) const;
+  void handleDocking(const core::DockMessage &message) const;
+  void handleUndocking(const core::DockMessage &message) const;
+  void handleReturnToOutpost(const core::DockMessage &message) const;
 
-  void publishLoadingMessages(const LoadingTransition transition, const Uuid shipDbId) const;
+  void publishLoadingMessages(const core::LoadingTransition transition,
+                              const core::Uuid shipDbId) const;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::server

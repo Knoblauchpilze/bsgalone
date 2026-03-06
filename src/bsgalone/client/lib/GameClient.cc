@@ -7,7 +7,7 @@ namespace bsgalone::client {
 constexpr auto DEFAULT_SERVER_URL = "127.0.0.1";
 
 GameClient::GameClient(net::INetworkEventQueueShPtr eventBus)
-  : core::CoreObject("client")
+  : ::core::CoreObject("client")
   , m_tcpClient(std::make_unique<net::TcpClient>(std::move(eventBus)))
 {
   setService("game");

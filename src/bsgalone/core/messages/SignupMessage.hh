@@ -7,9 +7,9 @@
 #include <optional>
 #include <string>
 
-namespace bsgo {
+namespace bsgalone::core {
 
-class SignupMessage : public bsgalone::core::NetworkMessage
+class SignupMessage : public NetworkMessage
 {
   public:
   SignupMessage();
@@ -30,7 +30,7 @@ class SignupMessage : public bsgalone::core::NetworkMessage
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
 
-  auto clone() const -> bsgalone::core::IMessagePtr override;
+  auto clone() const -> IMessagePtr override;
 
   private:
   std::string m_name{};
@@ -40,4 +40,4 @@ class SignupMessage : public bsgalone::core::NetworkMessage
   std::optional<Uuid> m_playerDbId{};
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

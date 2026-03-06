@@ -5,7 +5,7 @@
 namespace bsgalone::server {
 
 ClientEventListener::ClientEventListener(ClientManagerShPtr clientManager,
-                                         bsgalone::core::IMessageQueueShPtr inputQueue)
+                                         core::IMessageQueueShPtr inputQueue)
   : m_clientManager(std::move(clientManager))
   , m_inputQueue(std::move(inputQueue))
 {
@@ -55,7 +55,7 @@ void ClientEventListener::handleClientDisconnected(const net::ClientDisconnected
     return;
   }
 
-  auto message = std::make_unique<bsgo::LogoutMessage>(*maybePlayerId, true);
+  auto message = std::make_unique<core::LogoutMessage>(*maybePlayerId, true);
   message->setClientId(event.clientId());
   m_inputQueue->pushEvent(std::move(message));
 }

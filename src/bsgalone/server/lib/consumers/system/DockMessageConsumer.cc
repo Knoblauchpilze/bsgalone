@@ -4,12 +4,12 @@
 #include "LoadingFinishedMessage.hh"
 #include "LoadingStartedMessage.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
 DockMessageConsumer::DockMessageConsumer(const Services &services,
-                                         bsgalone::core::IMessageQueue *const systemMessageQueue,
-                                         bsgalone::core::IMessageQueue *const outputMessageQueue)
-  : AbstractMessageConsumer("dock", {bsgalone::core::MessageType::DOCK})
+                                         core::IMessageQueue *const systemMessageQueue,
+                                         core::IMessageQueue *const outputMessageQueue)
+  : AbstractMessageConsumer("dock", {core::MessageType::DOCK})
   , m_shipService(services.ship)
   , m_entityService(services.entity)
   , m_systemMessageQueue(systemMessageQueue)
@@ -33,19 +33,19 @@ DockMessageConsumer::DockMessageConsumer(const Services &services,
   }
 }
 
-void DockMessageConsumer::onEventReceived(const bsgalone::core::IMessage &message)
+void DockMessageConsumer::onEventReceived(const core::IMessage &message)
 {
-  const auto &dockMessage = message.as<bsgalone::core::DockMessage>();
+  const auto &dockMessage = message.as<core::DockMessage>();
 
   switch (dockMessage.getTransition())
   {
-    case bsgalone::core::DockTransition::DOCK:
+    case core::DockTransition::DOCK:
       handleDocking(dockMessage);
       break;
-    case bsgalone::core::DockTransition::UNDOCK:
+    case core::DockTransition::UNDOCK:
       handleUndocking(dockMessage);
       break;
-    case bsgalone::core::DockTransition::BACK_TO_OUTPOST:
+    case core::DockTransition::BACK_TO_OUTPOST:
       handleReturnToOutpost(dockMessage);
       break;
     default:
@@ -53,61 +53,61 @@ void DockMessageConsumer::onEventReceived(const bsgalone::core::IMessage &messag
   }
 }
 
-void DockMessageConsumer::handleDocking(const bsgalone::core::DockMessage &message) const
+void DockMessageConsumer::handleDocking(const core::DockMessage &message) const
 {
   const auto shipDbId = message.getShipDbId();
 
   if (!m_shipService->tryDock(shipDbId))
   {
-    warn("Failed to process dock message for ship " + str(shipDbId));
+    warn("Failed to process dock message for ship " + core::str(shipDbId));
     return;
   }
 
   m_outputMessageQueue->pushEvent(message.clone());
-  publishLoadingMessages(LoadingTransition::DOCK, shipDbId);
+  publishLoadingMessages(core::LoadingTransition::DOCK, shipDbId);
 }
 
-void DockMessageConsumer::handleUndocking(const bsgalone::core::DockMessage &message) const
+void DockMessageConsumer::handleUndocking(const core::DockMessage &message) const
 {
   const auto shipDbId   = message.getShipDbId();
   const auto systemDbId = m_shipService->getSystemDbIdForShip(shipDbId);
 
   m_outputMessageQueue->pushEvent(message.clone());
 
-  auto added = std::make_unique<EntityAddedMessage>(systemDbId);
-  PlayerShipData data{.dbId = shipDbId};
+  auto added = std::make_unique<core::EntityAddedMessage>(systemDbId);
+  core::PlayerShipData data{.dbId = shipDbId};
   added->setShipData(data);
   m_systemMessageQueue->pushEvent(std::move(added));
 
-  publishLoadingMessages(LoadingTransition::UNDOCK, shipDbId);
+  publishLoadingMessages(core::LoadingTransition::UNDOCK, shipDbId);
 }
 
-void DockMessageConsumer::handleReturnToOutpost(const bsgalone::core::DockMessage &message) const
+void DockMessageConsumer::handleReturnToOutpost(const core::DockMessage &message) const
 {
   const auto shipDbId = message.getShipDbId();
 
   if (!m_shipService->tryReturnToOutpost(shipDbId))
   {
-    warn("Failed to process dock message for ship " + str(shipDbId));
+    warn("Failed to process dock message for ship " + core::str(shipDbId));
     return;
   }
 
-  publishLoadingMessages(LoadingTransition::DOCK, shipDbId);
+  publishLoadingMessages(core::LoadingTransition::DOCK, shipDbId);
 }
 
-void DockMessageConsumer::publishLoadingMessages(const LoadingTransition transition,
-                                                 const Uuid shipDbId) const
+void DockMessageConsumer::publishLoadingMessages(const core::LoadingTransition transition,
+                                                 const core::Uuid shipDbId) const
 {
   const auto playerDbId = m_shipService->getPlayerDbIdForShip(shipDbId);
   const auto systemDbId = m_shipService->getSystemDbIdForShip(shipDbId);
 
-  auto started = std::make_unique<LoadingStartedMessage>(transition, playerDbId);
+  auto started = std::make_unique<core::LoadingStartedMessage>(transition, playerDbId);
   started->setSystemDbId(systemDbId);
   m_systemMessageQueue->pushEvent(std::move(started));
 
-  auto finished = std::make_unique<LoadingFinishedMessage>(transition, playerDbId);
+  auto finished = std::make_unique<core::LoadingFinishedMessage>(transition, playerDbId);
   finished->setSystemDbId(systemDbId);
   m_systemMessageQueue->pushEvent(std::move(finished));
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

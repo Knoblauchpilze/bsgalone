@@ -1,7 +1,7 @@
 
 #include "PowerSystem.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 namespace {
 bool isEntityRelevant(const Entity &ent)
 {
@@ -32,4 +32,4 @@ bool PowerSystem::canRegeneratePower(Entity &entity) const
   return statusAllowsPowerRegeneration(entity.statusComp().status());
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

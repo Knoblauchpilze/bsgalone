@@ -18,17 +18,17 @@ void assertMessagesAreEqual(const ShipSelectedMessage &actual, const ShipSelecte
 
 TEST(Unit_Bsgalone_Core_Messages_Player_ShipSelectedMessage, SerializationDeserialization)
 {
-  const ShipSelectedMessage expected(bsgo::Uuid{18}, bsgo::Uuid{19}, bsgo::Uuid{26});
-  ShipSelectedMessage actual(bsgo::Uuid{6}, bsgo::Uuid{25}, bsgo::Uuid{4});
+  const ShipSelectedMessage expected(Uuid{18}, Uuid{19}, Uuid{26});
+  ShipSelectedMessage actual(Uuid{6}, Uuid{25}, Uuid{4});
 
-  bsgo::serializeAndDeserializeMessage(expected, actual);
+  serializeAndDeserializeMessage(expected, actual);
 
   assertMessagesAreEqual(actual, expected);
 }
 
 TEST(Unit_Bsgalone_Core_Messages_Player_ShipSelectedMessage, Clone)
 {
-  const ShipSelectedMessage expected(bsgo::Uuid{44}, bsgo::Uuid{94}, bsgo::Uuid{17});
+  const ShipSelectedMessage expected(Uuid{44}, Uuid{94}, Uuid{17});
 
   const auto cloned = expected.clone();
 

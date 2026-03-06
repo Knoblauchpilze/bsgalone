@@ -9,7 +9,7 @@
 #include <optional>
 #include <unordered_set>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 struct Computer
 {
@@ -21,7 +21,7 @@ struct Computer
   chrono::TickDuration reloadTime{};
 
   std::optional<chrono::TickDuration> duration{};
-  std::optional<std::unordered_set<bsgalone::core::EntityKind>> allowedTargets{};
+  std::optional<std::unordered_set<EntityKind>> allowedTargets{};
   std::optional<float> damageModifier{};
 };
 
@@ -43,4 +43,4 @@ class ComputerRepository : public AbstractRepository
 
 using ComputerRepositoryShPtr = std::shared_ptr<ComputerRepository>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

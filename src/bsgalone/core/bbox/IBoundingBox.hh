@@ -4,7 +4,7 @@
 #include <eigen3/Eigen/Eigen>
 #include <memory>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class IBoundingBox
 {
@@ -21,4 +21,4 @@ class IBoundingBox
 using IBoundingBoxPtr   = std::unique_ptr<IBoundingBox>;
 using IBoundingBoxShPtr = std::shared_ptr<IBoundingBox>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

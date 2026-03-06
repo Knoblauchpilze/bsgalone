@@ -5,23 +5,23 @@
 #include "UiTextMenu.hh"
 #include <memory>
 
-namespace pge {
+namespace bsgalone::client {
 
 class StatusUiHandler : public AbstractUiHandler
 {
   public:
-  StatusUiHandler(const Vec2i &offset, const Views &views);
+  StatusUiHandler(const pge::Vec2i &offset, const Views &views);
   ~StatusUiHandler() override = default;
 
   void initializeMenus(const int width,
                        const int height,
-                       sprites::TexturePack &texturesLoader) override;
+                       pge::sprites::TexturePack &texturesLoader) override;
   bool processUserInput(ui::UserInputData &inputData) override;
-  void render(Renderer &engine) const override;
+  void render(pge::Renderer &engine) const override;
   void updateUi() override;
 
   private:
-  Vec2i m_offset{};
+  pge::Vec2i m_offset{};
   ShipViewShPtr m_shipView{};
   ServerViewShPtr m_serverView{};
   PlayerViewShPtr m_playerView{};
@@ -44,4 +44,4 @@ class StatusUiHandler : public AbstractUiHandler
 
 using StatusUiHandlerPtr = std::unique_ptr<StatusUiHandler>;
 
-} // namespace pge
+} // namespace bsgalone::client

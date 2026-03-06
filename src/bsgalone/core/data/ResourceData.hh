@@ -4,7 +4,7 @@
 #include "Uuid.hh"
 #include <string>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 struct ResourceData
 {
@@ -17,4 +17,4 @@ struct ResourceData
   bool deserialize(std::istream &in);
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

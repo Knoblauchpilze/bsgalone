@@ -4,9 +4,9 @@
 #include "NetworkMessage.hh"
 #include "SystemData.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
-class SystemListMessage : public bsgalone::core::NetworkMessage
+class SystemListMessage : public NetworkMessage
 {
   public:
   SystemListMessage();
@@ -18,10 +18,10 @@ class SystemListMessage : public bsgalone::core::NetworkMessage
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
 
-  auto clone() const -> bsgalone::core::IMessagePtr override;
+  auto clone() const -> IMessagePtr override;
 
   private:
   std::vector<SystemData> m_systemsData{};
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

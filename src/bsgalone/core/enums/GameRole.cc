@@ -2,7 +2,7 @@
 #include "GameRole.hh"
 #include <stdexcept>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 auto str(const GameRole role) -> std::string
 {
@@ -36,4 +36,4 @@ auto fromDbGameRole(const std::string &dbGameRole) -> GameRole
   throw std::invalid_argument("Unknown game role \"" + dbGameRole + "\"");
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

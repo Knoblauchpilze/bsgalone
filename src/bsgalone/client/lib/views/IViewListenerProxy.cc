@@ -1,7 +1,7 @@
 
 #include "IViewListenerProxy.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
 IViewListenerProxy::IViewListenerProxy(const OnUpdatedConsumer &listener)
   : IViewListener()
@@ -16,4 +16,4 @@ void IViewListenerProxy::onViewUpdated()
   }
 }
 
-} // namespace pge
+} // namespace bsgalone::client

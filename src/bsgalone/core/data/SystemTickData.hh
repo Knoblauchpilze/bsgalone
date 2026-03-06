@@ -6,7 +6,7 @@
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 struct SystemTickData
 {
@@ -21,4 +21,4 @@ struct SystemTickData
   bool deserialize(std::istream &in);
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

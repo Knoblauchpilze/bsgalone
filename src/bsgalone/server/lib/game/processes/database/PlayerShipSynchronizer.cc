@@ -1,13 +1,13 @@
 
 #include "PlayerShipSynchronizer.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-void syncPlayerShip(const Entity &entity, const Repositories &repositories)
+void syncPlayerShip(const core::Entity &entity, const core::Repositories &repositories)
 {
   const auto dbId = entity.dbComp().dbId();
 
-  PlayerShip ship{
+  core::PlayerShip ship{
     .id          = dbId,
     .name        = entity.nameComp().name(),
     .active      = true,
@@ -19,4 +19,4 @@ void syncPlayerShip(const Entity &entity, const Repositories &repositories)
   repositories.playerShipRepository->save(ship);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

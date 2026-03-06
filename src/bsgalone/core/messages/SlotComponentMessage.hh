@@ -4,7 +4,7 @@
 #include "ComponentUpdatedMessage.hh"
 #include "SlotComponent.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class SlotComponentMessage : public ComponentUpdatedMessage
 {
@@ -23,7 +23,7 @@ class SlotComponentMessage : public ComponentUpdatedMessage
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
 
-  auto clone() const -> bsgalone::core::IMessagePtr override;
+  auto clone() const -> IMessagePtr override;
 
   private:
   Uuid m_playerDbId{};
@@ -31,4 +31,4 @@ class SlotComponentMessage : public ComponentUpdatedMessage
   std::optional<chrono::TickDuration> m_elapsedSinceLastFired{};
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

@@ -3,18 +3,18 @@
 #include "AsteroidDataSource.hh"
 #include "AsteroidListMessage.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
-AsteroidListMessageConsumer::AsteroidListMessageConsumer(bsgo::DatabaseEntityMapper &entityMapper,
-                                                         bsgo::CoordinatorShPtr coordinator)
-  : AbstractGameMessageConsumer("asteroid", bsgalone::core::MessageType::ASTEROID_LIST)
+AsteroidListMessageConsumer::AsteroidListMessageConsumer(core::DatabaseEntityMapper &entityMapper,
+                                                         core::CoordinatorShPtr coordinator)
+  : AbstractGameMessageConsumer("asteroid", core::MessageType::ASTEROID_LIST)
   , m_entityMapper(entityMapper)
   , m_coordinator(std::move(coordinator))
 {}
 
-void AsteroidListMessageConsumer::onMessageReceivedInternal(const bsgalone::core::IMessage &message)
+void AsteroidListMessageConsumer::onMessageReceivedInternal(const core::IMessage &message)
 {
-  const auto asteroidsList = message.as<bsgo::AsteroidListMessage>();
+  const auto asteroidsList = message.as<core::AsteroidListMessage>();
 
   for (const auto &asteroidData : asteroidsList.getAsteroidsData())
   {
@@ -22,10 +22,10 @@ void AsteroidListMessageConsumer::onMessageReceivedInternal(const bsgalone::core
   }
 }
 
-void AsteroidListMessageConsumer::registerAsteroid(const bsgo::AsteroidData &data) const
+void AsteroidListMessageConsumer::registerAsteroid(const core::AsteroidData &data) const
 {
-  bsgo::AsteroidDataSource source;
+  core::AsteroidDataSource source;
   source.registerAsteroid(*m_coordinator, data, m_entityMapper);
 }
 
-} // namespace pge
+} // namespace bsgalone::client

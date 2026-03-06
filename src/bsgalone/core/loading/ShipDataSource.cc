@@ -4,17 +4,17 @@
 #include "CircleBox.hh"
 #include "Coordinator.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 ShipDataSource::ShipDataSource()
-  : core::CoreObject("bsgo")
+  : ::core::CoreObject("bsgo")
 {
   setService("data");
   addModule("ship");
 }
 
 ShipDataSource::ShipDataSource(const Repositories &repositories)
-  : core::CoreObject("bsgo")
+  : ::core::CoreObject("bsgo")
   , m_repositories(repositories)
 {
   setService("data");
@@ -47,7 +47,7 @@ void ShipDataSource::registerShip(Coordinator &coordinator,
     return;
   }
 
-  const auto shipEntityId = coordinator.createEntity(bsgalone::core::EntityKind::SHIP);
+  const auto shipEntityId = coordinator.createEntity(EntityKind::SHIP);
 
   coordinator.addDbId(shipEntityId, data.dbId);
   auto box = std::make_unique<CircleBox>(data.position, data.radius);
@@ -63,11 +63,11 @@ void ShipDataSource::registerShip(Coordinator &coordinator,
   coordinator.addName(shipEntityId, data.name);
   coordinator.addTarget(shipEntityId);
   coordinator.addNetworkSync(shipEntityId,
-                             {bsgalone::core::ComponentType::HEALTH,
-                              bsgalone::core::ComponentType::POWER,
-                              bsgalone::core::ComponentType::STATUS,
-                              bsgalone::core::ComponentType::TRANSFORM,
-                              bsgalone::core::ComponentType::VELOCITY});
+                             {ComponentType::HEALTH,
+                              ComponentType::POWER,
+                              ComponentType::STATUS,
+                              ComponentType::TRANSFORM,
+                              ComponentType::VELOCITY});
   coordinator.addDbSync(shipEntityId);
 
   registerShipOwner(coordinator, shipEntityId, data, entityMapper);
@@ -223,4 +223,4 @@ void ShipDataSource::registerShipComputers(Coordinator &coordinator,
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

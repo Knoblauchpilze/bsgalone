@@ -4,7 +4,7 @@
 #include "AbstractComponent.hh"
 #include "Uuid.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class DbComponent : public AbstractComponent
 {
@@ -22,4 +22,4 @@ class DbComponent : public AbstractComponent
 
 using DbComponentShPtr = std::shared_ptr<DbComponent>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

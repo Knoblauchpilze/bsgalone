@@ -7,17 +7,17 @@
 #include "JumpRequestedMessage.hh"
 #include "VelocityMessage.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
 ShipDbView::ShipDbView(GameSessionShPtr gameSession,
-                       bsgalone::core::IMessageQueue *const internalMessageQueue,
-                       bsgalone::core::IMessageQueue *const outputMessageQueue)
+                       core::IMessageQueue *const internalMessageQueue,
+                       core::IMessageQueue *const outputMessageQueue)
   : AbstractView("ship",
                  {
-                   bsgalone::core::MessageType::HANGAR,
-                   bsgalone::core::MessageType::JUMP,
-                   bsgalone::core::MessageType::JUMP_CANCELLED,
-                   bsgalone::core::MessageType::JUMP_REQUESTED,
+                   core::MessageType::HANGAR,
+                   core::MessageType::JUMP,
+                   core::MessageType::JUMP_CANCELLED,
+                   core::MessageType::JUMP_REQUESTED,
                  })
   , m_gameSession(std::move(gameSession))
   , m_internalMessageQueue(internalMessageQueue)
@@ -48,7 +48,7 @@ void ShipDbView::reset()
   m_playerShip.reset();
 }
 
-auto ShipDbView::getPlayerShipDbId() const -> bsgo::Uuid
+auto ShipDbView::getPlayerShipDbId() const -> core::Uuid
 {
   return m_gameSession->getPlayerActiveShipDbId();
 }
@@ -59,10 +59,10 @@ void ShipDbView::dockPlayerShip() const
   const auto systemDbId     = m_gameSession->getSystemDbId();
   const auto playerShipDbId = m_gameSession->getPlayerActiveShipDbId();
 
-  auto message = std::make_unique<bsgalone::core::DockMessage>(playerDbId,
-                                                               systemDbId,
-                                                               playerShipDbId,
-                                                               bsgalone::core::DockTransition::DOCK);
+  auto message = std::make_unique<core::DockMessage>(playerDbId,
+                                                     systemDbId,
+                                                     playerShipDbId,
+                                                     core::DockTransition::DOCK);
   m_outputMessageQueue->pushEvent(std::move(message));
 }
 
@@ -72,11 +72,10 @@ void ShipDbView::undockPlayerShip() const
   const auto systemDbId     = m_gameSession->getSystemDbId();
   const auto playerShipDbId = m_gameSession->getPlayerActiveShipDbId();
 
-  auto message
-    = std::make_unique<bsgalone::core::DockMessage>(playerDbId,
-                                                    systemDbId,
-                                                    playerShipDbId,
-                                                    bsgalone::core::DockTransition::UNDOCK);
+  auto message = std::make_unique<core::DockMessage>(playerDbId,
+                                                     systemDbId,
+                                                     playerShipDbId,
+                                                     core::DockTransition::UNDOCK);
   m_outputMessageQueue->pushEvent(std::move(message));
 }
 
@@ -86,12 +85,14 @@ void ShipDbView::returnToOutpost() const
   const auto systemDbId     = m_gameSession->getSystemDbId();
   const auto playerShipDbId = m_gameSession->getPlayerActiveShipDbId();
 
-  auto message = std::make_unique<bsgalone::core::DockMessage>(
-    playerDbId, systemDbId, playerShipDbId, bsgalone::core::DockTransition::BACK_TO_OUTPOST);
+  auto message = std::make_unique<core::DockMessage>(playerDbId,
+                                                     systemDbId,
+                                                     playerShipDbId,
+                                                     core::DockTransition::BACK_TO_OUTPOST);
   m_outputMessageQueue->pushEvent(std::move(message));
 }
 
-void ShipDbView::setJumpSystem(const bsgo::Uuid system)
+void ShipDbView::setJumpSystem(const core::Uuid system)
 {
   m_systemToJumpTo = system;
 }
@@ -102,7 +103,7 @@ void ShipDbView::clearJumpSystem()
 }
 
 namespace {
-bool isJumping(const bsgo::PlayerShipData &playerShip)
+bool isJumping(const core::PlayerShipData &playerShip)
 {
   return playerShip.jumpSystem.has_value();
 }
@@ -123,10 +124,10 @@ void ShipDbView::startJump() const
   const auto systemDbId = m_gameSession->getSystemDbId();
   const auto shipDbId   = m_gameSession->getPlayerActiveShipDbId();
 
-  auto message = std::make_unique<bsgalone::core::JumpRequestedMessage>(playerDbId,
-                                                                        systemDbId,
-                                                                        shipDbId,
-                                                                        *m_systemToJumpTo);
+  auto message = std::make_unique<core::JumpRequestedMessage>(playerDbId,
+                                                              systemDbId,
+                                                              shipDbId,
+                                                              *m_systemToJumpTo);
   m_outputMessageQueue->pushEvent(std::move(message));
 }
 
@@ -141,9 +142,7 @@ void ShipDbView::cancelJump() const
   const auto systemDbId = m_gameSession->getSystemDbId();
   const auto shipDbId   = m_gameSession->getPlayerActiveShipDbId();
 
-  auto message = std::make_unique<bsgalone::core::JumpCancelledMessage>(playerDbId,
-                                                                        systemDbId,
-                                                                        shipDbId);
+  auto message = std::make_unique<core::JumpCancelledMessage>(playerDbId, systemDbId, shipDbId);
   m_outputMessageQueue->pushEvent(std::move(message));
 }
 
@@ -153,63 +152,70 @@ void ShipDbView::accelerateShip(const Eigen::Vector3f &acceleration) const
   const auto systemDbId = m_gameSession->getSystemDbId();
   const auto shipDbId   = m_gameSession->getPlayerActiveShipDbId();
 
-  auto message = std::make_unique<bsgalone::core::VelocityMessage>(playerDbId,
-                                                                   systemDbId,
-                                                                   shipDbId,
-                                                                   acceleration);
+  auto message = std::make_unique<core::VelocityMessage>(playerDbId,
+                                                         systemDbId,
+                                                         shipDbId,
+                                                         acceleration);
   m_outputMessageQueue->pushEvent(message->clone());
   m_internalMessageQueue->pushEvent(std::move(message));
 }
 
-void ShipDbView::tryEquipItem(const bsgalone::core::Item &itemType, const bsgo::Uuid itemDbId) const
+void ShipDbView::tryEquipItem(const core::Item &itemType, const core::Uuid itemDbId) const
 {
   const auto playerDbId = m_gameSession->getPlayerDbId();
   const auto systemDbId = m_gameSession->getSystemDbId();
   const auto shipDbId   = m_gameSession->getPlayerActiveShipDbId();
 
-  m_outputMessageQueue->pushEvent(std::make_unique<bsgalone::core::EquipMessage>(
-    playerDbId, systemDbId, bsgalone::core::EquipType::EQUIP, shipDbId, itemType, itemDbId));
+  m_outputMessageQueue->pushEvent(std::make_unique<core::EquipMessage>(playerDbId,
+                                                                       systemDbId,
+                                                                       core::EquipType::EQUIP,
+                                                                       shipDbId,
+                                                                       itemType,
+                                                                       itemDbId));
 }
 
-void ShipDbView::tryUnequipItem(const bsgalone::core::Item &itemType,
-                                const bsgo::Uuid itemDbId) const
+void ShipDbView::tryUnequipItem(const core::Item &itemType, const core::Uuid itemDbId) const
 {
   const auto playerDbId = m_gameSession->getPlayerDbId();
   const auto systemDbId = m_gameSession->getSystemDbId();
   const auto shipDbId   = m_gameSession->getPlayerActiveShipDbId();
 
-  m_outputMessageQueue->pushEvent(std::make_unique<bsgalone::core::EquipMessage>(
-    playerDbId, systemDbId, bsgalone::core::EquipType::UNEQUIP, shipDbId, itemType, itemDbId));
+  m_outputMessageQueue->pushEvent(std::make_unique<core::EquipMessage>(playerDbId,
+                                                                       systemDbId,
+                                                                       core::EquipType::UNEQUIP,
+                                                                       shipDbId,
+                                                                       itemType,
+                                                                       itemDbId));
 }
 
-auto ShipDbView::getPlayerShipWeapons() const -> std::vector<bsgo::PlayerWeaponData>
+auto ShipDbView::getPlayerShipWeapons() const -> std::vector<core::PlayerWeaponData>
 {
   return m_playerShip->weapons;
 }
 
-auto ShipDbView::getPlayerShipComputers() const -> std::vector<bsgo::PlayerComputerData>
+auto ShipDbView::getPlayerShipComputers() const -> std::vector<core::PlayerComputerData>
 {
   return m_playerShip->computers;
 }
 
-auto ShipDbView::getPlayerShipSlots() const -> std::unordered_map<bsgalone::core::Slot, int>
+auto ShipDbView::getPlayerShipSlots() const -> std::unordered_map<core::Slot, int>
 {
   return m_playerShip->slots;
 }
 
-bool ShipDbView::canStillEquipItem(const bsgalone::core::Item &type) const
+bool ShipDbView::canStillEquipItem(const core::Item &type) const
 {
   int totalSlots = 0;
   int usedSlots  = 0;
 
   switch (type)
   {
-    case bsgalone::core::Item::COMPUTER:
-      totalSlots = m_playerShip->slots.at(bsgalone::core::Slot::COMPUTER);
+    case core::Item::COMPUTER:
+      totalSlots = m_playerShip->slots.at(core::Slot::COMPUTER);
       usedSlots  = static_cast<int>(m_playerShip->computers.size());
       break;
-    case bsgalone::core::Item::WEAPON:
-      totalSlots = m_playerShip->slots.at(bsgalone::core::Slot::WEAPON);
+    case core::Item::WEAPON:
+      totalSlots = m_playerShip->slots.at(core::Slot::WEAPON);
       usedSlots  = static_cast<int>(m_playerShip->weapons.size());
       break;
     default:
@@ -220,20 +226,19 @@ bool ShipDbView::canStillEquipItem(const bsgalone::core::Item &type) const
   return canEquip;
 }
 
-void ShipDbView::handleMessageInternal(const bsgalone::core::IMessage &message)
+void ShipDbView::handleMessageInternal(const core::IMessage &message)
 {
   switch (message.type())
   {
-    case bsgalone::core::MessageType::HANGAR:
-      m_playerShip = message.as<bsgo::HangarMessage>().getShip();
-      debug("Active ship is now " + bsgo::str(m_playerShip->dbId));
+    case core::MessageType::HANGAR:
+      m_playerShip = message.as<core::HangarMessage>().getShip();
+      debug("Active ship is now " + core::str(m_playerShip->dbId));
       break;
-    case bsgalone::core::MessageType::JUMP_REQUESTED:
-      m_playerShip->jumpSystem = message.as<bsgalone::core::JumpRequestedMessage>()
-                                   .getDestinationSystem();
+    case core::MessageType::JUMP_REQUESTED:
+      m_playerShip->jumpSystem = message.as<core::JumpRequestedMessage>().getDestinationSystem();
       break;
-    case bsgalone::core::MessageType::JUMP_CANCELLED:
-    case bsgalone::core::MessageType::JUMP:
+    case core::MessageType::JUMP_CANCELLED:
+    case core::MessageType::JUMP:
       m_playerShip->jumpSystem.reset();
       break;
     default:
@@ -242,4 +247,4 @@ void ShipDbView::handleMessageInternal(const bsgalone::core::IMessage &message)
   }
 }
 
-} // namespace pge
+} // namespace bsgalone::client

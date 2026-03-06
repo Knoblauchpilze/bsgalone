@@ -1,7 +1,7 @@
 
 #include "PlayerComputerRepository.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 PlayerComputerRepository::PlayerComputerRepository(const DbConnectionShPtr &connection)
   : AbstractRepository("computer", connection)
@@ -140,13 +140,13 @@ void PlayerComputerRepository::fetchAllowedTargets(const Uuid computer, PlayerCo
   };
   const auto rows = m_connection->executeQuery(query);
 
-  std::unordered_set<bsgalone::core::EntityKind> targets;
+  std::unordered_set<EntityKind> targets;
   for (const auto record : rows)
   {
-    targets.emplace(bsgalone::core::fromDbEntityKind(record[0].as<std::string>()));
+    targets.emplace(fromDbEntityKind(record[0].as<std::string>()));
   }
 
   out.allowedTargets = {targets};
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

@@ -5,7 +5,7 @@
 
 using namespace ::testing;
 
-namespace bsgo {
+namespace bsgalone::core {
 namespace {
 void assertMessagesAreEqual(const HangarMessage &actual, const HangarMessage &expected)
 {
@@ -27,32 +27,31 @@ TEST(Unit_Bsgalone_Core_Messages_HangarMessage, WithShipDbId)
 
 TEST(Unit_Bsgalone_Core_Messages_HangarMessage, WithShip)
 {
-  const PlayerShipData data{.dbId             = Uuid{8},
-                            .radius           = 1.478f,
-                            .hullPoints       = 98.54f,
-                            .jumpTimeInThreat = chrono::TickDuration(45001.0f),
-                            .weapons          = {{
-                                                   .dbId       = Uuid{2},
-                                                   .weaponDbId = Uuid{65},
-                                                   .minDamage  = 45.87f,
-                                        },
-                                                 {.weaponDbId = Uuid{98},
-                                                  .name       = "weapon 1",
-                                                  .reloadTime = chrono::TickDuration::fromInt(45)}},
-                            .computers
-                            = {{.computerDbId   = Uuid{12},
-                                .offensive      = true,
-                                .powerCost      = 56.47f,
-                                .range          = 14.78f,
-                                .allowedTargets = std::unordered_set<
-                                  bsgalone::core::EntityKind>{bsgalone::core::EntityKind::ASTEROID,
-                                                              bsgalone::core::EntityKind::OUTPOST}},
-                               {
-                                 .dbId           = Uuid{27},
-                                 .name           = "beefy computer",
-                                 .reloadTime     = chrono::TickDuration(457.174f),
-                                 .damageModifier = 45.1f,
-                               }}};
+  const PlayerShipData
+    data{.dbId             = Uuid{8},
+         .radius           = 1.478f,
+         .hullPoints       = 98.54f,
+         .jumpTimeInThreat = chrono::TickDuration(45001.0f),
+         .weapons          = {{
+                                .dbId       = Uuid{2},
+                                .weaponDbId = Uuid{65},
+                                .minDamage  = 45.87f,
+                     },
+                              {.weaponDbId = Uuid{98},
+                               .name       = "weapon 1",
+                               .reloadTime = chrono::TickDuration::fromInt(45)}},
+         .computers        = {{.computerDbId   = Uuid{12},
+                               .offensive      = true,
+                               .powerCost      = 56.47f,
+                               .range          = 14.78f,
+                               .allowedTargets = std::unordered_set<EntityKind>{EntityKind::ASTEROID,
+                                                                                EntityKind::OUTPOST}},
+                              {
+                                .dbId           = Uuid{27},
+                                .name           = "beefy computer",
+                                .reloadTime     = chrono::TickDuration(457.174f),
+                                .damageModifier = 45.1f,
+                       }}};
   const HangarMessage expected(data);
 
   HangarMessage actual(Uuid{6});
@@ -77,32 +76,31 @@ TEST(Unit_Bsgalone_Core_Messages_HangarMessage, OverridesShipProperties)
   HangarMessage expected(Uuid{14});
   expected.setClientId(Uuid{26});
 
-  const PlayerShipData data{.dbId             = Uuid{8},
-                            .radius           = 1.478f,
-                            .hullPoints       = 98.54f,
-                            .jumpTimeInThreat = chrono::TickDuration(45001.7f),
-                            .weapons          = {{
-                                                   .dbId       = Uuid{2},
-                                                   .weaponDbId = Uuid{65},
-                                                   .minDamage  = 45.87f,
-                                        },
-                                                 {.weaponDbId = Uuid{98},
-                                                  .name       = "weapon 1",
-                                                  .reloadTime = chrono::TickDuration(45.712f)}},
-                            .computers
-                            = {{.computerDbId   = Uuid{12},
-                                .offensive      = true,
-                                .powerCost      = 56.47f,
-                                .range          = 14.78f,
-                                .allowedTargets = std::unordered_set<
-                                  bsgalone::core::EntityKind>{bsgalone::core::EntityKind::ASTEROID,
-                                                              bsgalone::core::EntityKind::OUTPOST}},
-                               {
-                                 .dbId           = Uuid{27},
-                                 .name           = "beefy computer",
-                                 .reloadTime     = chrono::TickDuration::fromInt(457),
-                                 .damageModifier = 45.1f,
-                               }}};
+  const PlayerShipData
+    data{.dbId             = Uuid{8},
+         .radius           = 1.478f,
+         .hullPoints       = 98.54f,
+         .jumpTimeInThreat = chrono::TickDuration(45001.7f),
+         .weapons          = {{
+                                .dbId       = Uuid{2},
+                                .weaponDbId = Uuid{65},
+                                .minDamage  = 45.87f,
+                     },
+                              {.weaponDbId = Uuid{98},
+                               .name       = "weapon 1",
+                               .reloadTime = chrono::TickDuration(45.712f)}},
+         .computers        = {{.computerDbId   = Uuid{12},
+                               .offensive      = true,
+                               .powerCost      = 56.47f,
+                               .range          = 14.78f,
+                               .allowedTargets = std::unordered_set<EntityKind>{EntityKind::ASTEROID,
+                                                                                EntityKind::OUTPOST}},
+                              {
+                                .dbId           = Uuid{27},
+                                .name           = "beefy computer",
+                                .reloadTime     = chrono::TickDuration::fromInt(457),
+                                .damageModifier = 45.1f,
+                       }}};
   HangarMessage actual(data);
 
   serializeAndDeserializeMessage(expected, actual);
@@ -129,7 +127,7 @@ TEST(Unit_Bsgalone_Core_Messages_HangarMessage, CloneWithShipDbId)
 
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::HANGAR);
+  ASSERT_EQ(cloned->type(), MessageType::HANGAR);
   assertMessagesAreEqual(cloned->as<HangarMessage>(), expected);
 }
 
@@ -153,8 +151,8 @@ TEST(Unit_Bsgalone_Core_Messages_HangarMessage, CloneWithShip)
 
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::HANGAR);
+  ASSERT_EQ(cloned->type(), MessageType::HANGAR);
   assertMessagesAreEqual(cloned->as<HangarMessage>(), expected);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

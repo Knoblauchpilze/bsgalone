@@ -2,18 +2,18 @@
 #include "TargetListMessageConsumer.hh"
 #include "TargetListMessage.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
-TargetListMessageConsumer::TargetListMessageConsumer(bsgo::DatabaseEntityMapper &entityMapper,
-                                                     bsgo::CoordinatorShPtr coordinator)
-  : AbstractGameMessageConsumer("target", bsgalone::core::MessageType::TARGET_LIST)
+TargetListMessageConsumer::TargetListMessageConsumer(core::DatabaseEntityMapper &entityMapper,
+                                                     core::CoordinatorShPtr coordinator)
+  : AbstractGameMessageConsumer("target", core::MessageType::TARGET_LIST)
   , m_entityMapper(entityMapper)
   , m_coordinator(std::move(coordinator))
 {}
 
-void TargetListMessageConsumer::onMessageReceivedInternal(const bsgalone::core::IMessage &message)
+void TargetListMessageConsumer::onMessageReceivedInternal(const core::IMessage &message)
 {
-  const auto targetsList = message.as<bsgo::TargetListMessage>();
+  const auto targetsList = message.as<core::TargetListMessage>();
 
   for (const auto &targetData : targetsList.getTargetsData())
   {
@@ -22,26 +22,25 @@ void TargetListMessageConsumer::onMessageReceivedInternal(const bsgalone::core::
 }
 
 namespace {
-auto tryGetEntityId(const bsgo::DatabaseEntityMapper &entityMapper,
-                    const bsgo::Uuid dbId,
-                    const bsgalone::core::EntityKind kind) -> std::optional<bsgo::Uuid>
+auto tryGetEntityId(const core::DatabaseEntityMapper &entityMapper,
+                    const core::Uuid dbId,
+                    const core::EntityKind kind) -> std::optional<core::Uuid>
 {
   switch (kind)
   {
-    case bsgalone::core::EntityKind::SHIP:
+    case core::EntityKind::SHIP:
       return entityMapper.tryGetShipEntityId(dbId);
-    case bsgalone::core::EntityKind::OUTPOST:
+    case core::EntityKind::OUTPOST:
       return entityMapper.tryGetOutpostEntityId(dbId);
-    case bsgalone::core::EntityKind::ASTEROID:
+    case core::EntityKind::ASTEROID:
       return entityMapper.tryGetAsteroidEntityId(dbId);
     default:
-      throw std::invalid_argument("Failed to get entity with unsupported kind "
-                                  + bsgalone::core::str(kind));
+      throw std::invalid_argument("Failed to get entity with unsupported kind " + core::str(kind));
   }
 }
 } // namespace
 
-void TargetListMessageConsumer::registerTarget(const bsgalone::core::Target &data) const
+void TargetListMessageConsumer::registerTarget(const core::Target &data) const
 {
   if (!data.targetDbId || !data.targetKind)
   {
@@ -69,4 +68,4 @@ void TargetListMessageConsumer::registerTarget(const bsgalone::core::Target &dat
   debug("Registering target " + target.str() + " for " + source.str());
 }
 
-} // namespace pge
+} // namespace bsgalone::client

@@ -8,26 +8,26 @@
 #include "SystemService.hh"
 #include <unordered_map>
 
-namespace bsgo {
+namespace bsgalone::server {
 
-class LogoutMessageConsumer : public bsgalone::core::AbstractMessageConsumer
+class LogoutMessageConsumer : public core::AbstractMessageConsumer
 {
   public:
   LogoutMessageConsumer(SystemServiceShPtr systemService,
                         SystemQueueMap systemQueues,
-                        bsgalone::core::IMessageQueue *const outputMessageQueue);
+                        core::IMessageQueue *const outputMessageQueue);
   ~LogoutMessageConsumer() override = default;
 
-  void onEventReceived(const bsgalone::core::IMessage &message) override;
+  void onEventReceived(const core::IMessage &message) override;
 
   private:
   SystemQueueMap m_systemQueues{};
   SystemServiceShPtr m_systemService{};
-  bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
+  core::IMessageQueue *const m_outputMessageQueue{};
 
-  void handleLogout(const LogoutMessage &message) const;
-  void notifyClientAndCloseConnectionIfNeeded(const Uuid playerDbId,
-                                              const LogoutMessage &message) const;
+  void handleLogout(const core::LogoutMessage &message) const;
+  void notifyClientAndCloseConnectionIfNeeded(const core::Uuid playerDbId,
+                                              const core::LogoutMessage &message) const;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::server

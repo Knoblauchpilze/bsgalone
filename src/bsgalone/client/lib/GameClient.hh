@@ -10,7 +10,7 @@
 #include <mutex>
 
 namespace bsgalone::client {
-class GameClient : public core::CoreObject
+class GameClient : public ::core::CoreObject
 {
   public:
   GameClient(net::INetworkEventQueueShPtr eventBus);

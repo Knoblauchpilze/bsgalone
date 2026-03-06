@@ -1,7 +1,7 @@
 
 #include "Repositories.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 Repositories::Repositories()
 {
@@ -57,4 +57,4 @@ Repositories::Repositories()
   tickRepository->initialize();
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

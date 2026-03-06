@@ -3,7 +3,7 @@
 
 #include "DataContext.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class Entity;
 class Coordinator;
@@ -15,4 +15,4 @@ struct BehaviorData
   DataContext &context;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

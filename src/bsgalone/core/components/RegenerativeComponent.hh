@@ -3,12 +3,12 @@
 
 #include "AbstractComponent.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class RegenerativeComponent : public AbstractComponent
 {
   public:
-  RegenerativeComponent(const bsgalone::core::ComponentType &type,
+  RegenerativeComponent(const ComponentType &type,
                         const float min,
                         const float value,
                         const float max,
@@ -36,4 +36,4 @@ class RegenerativeComponent : public AbstractComponent
   void validate();
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

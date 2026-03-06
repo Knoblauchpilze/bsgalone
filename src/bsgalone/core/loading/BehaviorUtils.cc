@@ -8,7 +8,7 @@
 #include "SequenceNode.hh"
 #include "TargetNode.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 auto generateIdleSequence(const std::vector<Eigen::Vector3f> &targets) -> INodePtr
 {
@@ -47,4 +47,4 @@ auto generateAiBehaviorTree(const std::vector<Eigen::Vector3f> &targets) -> INod
   return repeater;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

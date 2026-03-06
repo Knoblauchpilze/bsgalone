@@ -7,7 +7,7 @@
 #include "Uuid.hh"
 #include <memory>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 struct SystemTick
 {
@@ -32,4 +32,4 @@ class TickRepository : public AbstractRepository
 
 using TickRepositoryShPtr = std::shared_ptr<TickRepository>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

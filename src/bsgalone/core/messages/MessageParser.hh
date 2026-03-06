@@ -8,9 +8,9 @@
 #include <istream>
 #include <optional>
 
-namespace bsgo {
+namespace bsgalone::core {
 
-class MessageParser : public bsgalone::core::IMessageParser, public core::CoreObject
+class MessageParser : public IMessageParser, public ::core::CoreObject
 {
   public:
   MessageParser();
@@ -19,8 +19,7 @@ class MessageParser : public bsgalone::core::IMessageParser, public core::CoreOb
   auto tryParseMessage(const std::deque<char> &data) -> ParsingResult override;
 
   private:
-  auto tryReadMessage(const bsgalone::core::MessageType &type, std::istream &in)
-    -> std::optional<bsgalone::core::IMessagePtr>;
+  auto tryReadMessage(const MessageType &type, std::istream &in) -> std::optional<IMessagePtr>;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

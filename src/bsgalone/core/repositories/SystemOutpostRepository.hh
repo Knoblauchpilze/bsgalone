@@ -7,7 +7,7 @@
 #include <eigen3/Eigen/Eigen>
 #include <memory>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 struct SystemOutpost
 {
@@ -42,4 +42,4 @@ class SystemOutpostRepository : public AbstractRepository
 
 using SystemOutpostRepositoryShPtr = std::shared_ptr<SystemOutpostRepository>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

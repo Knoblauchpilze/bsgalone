@@ -5,9 +5,9 @@
 #include "NetworkMessage.hh"
 #include "Uuid.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
-class ComputerListMessage : public bsgalone::core::NetworkMessage
+class ComputerListMessage : public NetworkMessage
 {
   public:
   ComputerListMessage();
@@ -19,10 +19,10 @@ class ComputerListMessage : public bsgalone::core::NetworkMessage
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
 
-  auto clone() const -> bsgalone::core::IMessagePtr override;
+  auto clone() const -> IMessagePtr override;
 
   private:
   std::vector<ComputerData> m_computersData{};
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

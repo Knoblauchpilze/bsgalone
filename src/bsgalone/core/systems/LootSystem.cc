@@ -3,7 +3,7 @@
 #include "Coordinator.hh"
 #include "LootMessage.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 namespace {
 bool isEntityRelevant(const Entity &entity)
 {
@@ -27,7 +27,7 @@ void LootSystem::updateEntity(Entity &entity,
     return;
   }
 
-  if (entity.kind->kind() != bsgalone::core::EntityKind::ASTEROID)
+  if (entity.kind->kind() != EntityKind::ASTEROID)
   {
     error("Failed to distribute loot", "Expected asteroid but got " + entity.str());
   }
@@ -81,4 +81,4 @@ void LootSystem::distributeResourcesTo(const Entity &player, const Entity &deadT
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

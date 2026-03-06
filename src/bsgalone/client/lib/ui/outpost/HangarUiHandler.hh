@@ -8,7 +8,7 @@
 #include <memory>
 #include <optional>
 
-namespace pge {
+namespace bsgalone::client {
 
 class HangarUiHandler : public AbstractUiHandler
 {
@@ -18,9 +18,9 @@ class HangarUiHandler : public AbstractUiHandler
 
   void initializeMenus(const int width,
                        const int height,
-                       sprites::TexturePack &texturesLoader) override;
+                       pge::sprites::TexturePack &texturesLoader) override;
   bool processUserInput(ui::UserInputData &inputData) override;
-  void render(Renderer &engine) const override;
+  void render(pge::Renderer &engine) const override;
   void updateUi() override;
 
   private:
@@ -41,8 +41,8 @@ class HangarUiHandler : public AbstractUiHandler
 
   struct PlayerShipData
   {
-    bsgo::Uuid shipDbId{};
-    std::optional<bsgo::Uuid> playerShipDbId{};
+    core::Uuid shipDbId{};
+    std::optional<core::Uuid> playerShipDbId{};
     ui::UiMenu *menu{};
     ui::UiTextMenu *button{};
     State state{State::UNAFFORDABLE};
@@ -65,4 +65,4 @@ class HangarUiHandler : public AbstractUiHandler
 
 using HangarUiHandlerPtr = std::unique_ptr<HangarUiHandler>;
 
-} // namespace pge
+} // namespace bsgalone::client

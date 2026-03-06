@@ -1,7 +1,7 @@
 
 #include "TickRepository.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 TickRepository::TickRepository(const DbConnectionShPtr &connection)
   : AbstractRepository("tick", connection)
@@ -79,4 +79,4 @@ void TickRepository::save(const SystemTick &tickData)
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

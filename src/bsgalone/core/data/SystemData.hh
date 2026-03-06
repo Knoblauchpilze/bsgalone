@@ -4,7 +4,7 @@
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 struct SystemData
 {
@@ -18,4 +18,4 @@ struct SystemData
   bool deserialize(std::istream &in);
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

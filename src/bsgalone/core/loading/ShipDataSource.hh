@@ -8,11 +8,11 @@
 #include "Repositories.hh"
 #include <optional>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class Coordinator;
 
-class ShipDataSource : public core::CoreObject
+class ShipDataSource : public ::core::CoreObject
 {
   public:
   ShipDataSource();
@@ -57,4 +57,4 @@ class ShipDataSource : public core::CoreObject
                              const Uuid shipEntity) const;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

@@ -5,9 +5,9 @@
 #include "OutpostData.hh"
 #include "Uuid.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
-class OutpostListMessage : public bsgalone::core::NetworkMessage
+class OutpostListMessage : public NetworkMessage
 {
   public:
   OutpostListMessage();
@@ -20,11 +20,11 @@ class OutpostListMessage : public bsgalone::core::NetworkMessage
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
 
-  auto clone() const -> bsgalone::core::IMessagePtr override;
+  auto clone() const -> IMessagePtr override;
 
   private:
   Uuid m_systemDbId{};
   std::vector<OutpostData> m_outpostsData{};
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

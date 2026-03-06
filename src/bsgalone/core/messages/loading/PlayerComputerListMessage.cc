@@ -2,15 +2,15 @@
 #include "PlayerComputerListMessage.hh"
 #include "SerializationUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 PlayerComputerListMessage::PlayerComputerListMessage()
-  : NetworkMessage(bsgalone::core::MessageType::PLAYER_COMPUTER_LIST)
+  : NetworkMessage(MessageType::PLAYER_COMPUTER_LIST)
 {}
 
 PlayerComputerListMessage::PlayerComputerListMessage(
   const std::vector<PlayerComputerData> &computersData)
-  : NetworkMessage(bsgalone::core::MessageType::PLAYER_COMPUTER_LIST)
+  : NetworkMessage(MessageType::PLAYER_COMPUTER_LIST)
   , m_computersData(computersData)
 {}
 
@@ -21,10 +21,10 @@ auto PlayerComputerListMessage::getComputersData() const -> const std::vector<Pl
 
 auto PlayerComputerListMessage::serialize(std::ostream &out) const -> std::ostream &
 {
-  core::serialize(out, m_messageType);
-  core::serialize(out, m_clientId);
+  ::core::serialize(out, m_messageType);
+  ::core::serialize(out, m_clientId);
 
-  core::serialize(out, m_computersData);
+  ::core::serialize(out, m_computersData);
 
   return out;
 }
@@ -32,15 +32,15 @@ auto PlayerComputerListMessage::serialize(std::ostream &out) const -> std::ostre
 bool PlayerComputerListMessage::deserialize(std::istream &in)
 {
   bool ok{true};
-  ok &= core::deserialize(in, m_messageType);
-  ok &= core::deserialize(in, m_clientId);
+  ok &= ::core::deserialize(in, m_messageType);
+  ok &= ::core::deserialize(in, m_clientId);
 
-  ok &= core::deserialize(in, m_computersData);
+  ok &= ::core::deserialize(in, m_computersData);
 
   return ok;
 }
 
-auto PlayerComputerListMessage::clone() const -> bsgalone::core::IMessagePtr
+auto PlayerComputerListMessage::clone() const -> IMessagePtr
 {
   auto clone = std::make_unique<PlayerComputerListMessage>(m_computersData);
   clone->copyClientIdIfDefined(*this);
@@ -48,4 +48,4 @@ auto PlayerComputerListMessage::clone() const -> bsgalone::core::IMessagePtr
   return clone;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

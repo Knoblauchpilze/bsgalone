@@ -3,7 +3,7 @@
 
 #include "DecalScreenRenderer.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
 class LoginScreenRenderer : public bsgalone::client::DecalScreenRenderer
 {
@@ -12,4 +12,4 @@ class LoginScreenRenderer : public bsgalone::client::DecalScreenRenderer
   ~LoginScreenRenderer() override = default;
 };
 
-} // namespace pge
+} // namespace bsgalone::client

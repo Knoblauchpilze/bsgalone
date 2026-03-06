@@ -5,20 +5,19 @@
 #include "IMessageQueue.hh"
 #include "Services.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-class VelocityMessageConsumer : public bsgalone::core::AbstractMessageConsumer
+class VelocityMessageConsumer : public core::AbstractMessageConsumer
 {
   public:
-  VelocityMessageConsumer(const Services &services,
-                          bsgalone::core::IMessageQueue *const outputMessageQueue);
+  VelocityMessageConsumer(const Services &services, core::IMessageQueue *const outputMessageQueue);
   ~VelocityMessageConsumer() override = default;
 
-  void onEventReceived(const bsgalone::core::IMessage &message) override;
+  void onEventReceived(const core::IMessage &message) override;
 
   private:
   ShipServiceShPtr m_shipService{};
-  bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
+  core::IMessageQueue *const m_outputMessageQueue{};
 };
 
-} // namespace bsgo
+} // namespace bsgalone::server

@@ -1,12 +1,12 @@
 
 #include "IService.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
 IService::IService(const std::string &name)
-  : core::CoreObject(name)
+  : ::core::CoreObject(name)
 {
   setService("service");
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

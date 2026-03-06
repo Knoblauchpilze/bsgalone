@@ -1,19 +1,19 @@
 
 #include "SystemProcessorUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-auto tryFindSystemDbIdFromEntity(const Uuid dbId,
-                                 const bsgalone::core::EntityKind entityKind,
-                                 const SystemService &service) -> std::optional<Uuid>
+auto tryFindSystemDbIdFromEntity(const core::Uuid dbId,
+                                 const core::EntityKind entityKind,
+                                 const SystemService &service) -> std::optional<core::Uuid>
 {
   switch (entityKind)
   {
-    case bsgalone::core::EntityKind::ASTEROID:
+    case core::EntityKind::ASTEROID:
       return service.getSystemDbIdForAsteroid(dbId);
-    case bsgalone::core::EntityKind::SHIP:
+    case core::EntityKind::SHIP:
       return service.tryGetSystemDbIdForShip(dbId);
-    case bsgalone::core::EntityKind::OUTPOST:
+    case core::EntityKind::OUTPOST:
       return service.getSystemDbIdForOutpost(dbId);
     default:
       throw std::invalid_argument("Unsupported entity kind for system lookup, got kind "
@@ -22,8 +22,8 @@ auto tryFindSystemDbIdFromEntity(const Uuid dbId,
 }
 
 namespace {
-auto findSystemQueueFromSystem(const Uuid systemDbId, const SystemQueueMap &queues)
-  -> std::optional<bsgalone::core::IMessageQueueShPtr>
+auto findSystemQueueFromSystem(const core::Uuid systemDbId, const SystemQueueMap &queues)
+  -> std::optional<core::IMessageQueueShPtr>
 {
   const auto queue = queues.find(systemDbId);
   if (queue != queues.cend())
@@ -35,12 +35,12 @@ auto findSystemQueueFromSystem(const Uuid systemDbId, const SystemQueueMap &queu
 }
 } // namespace
 
-auto tryFindSystemAndQueueFromShip(const Uuid shipDbId,
+auto tryFindSystemAndQueueFromShip(const core::Uuid shipDbId,
                                    const SystemService &service,
                                    const SystemQueueMap &queues)
-  -> std::pair<std::optional<Uuid>, std::optional<bsgalone::core::IMessageQueueShPtr>>
+  -> std::pair<std::optional<core::Uuid>, std::optional<core::IMessageQueueShPtr>>
 {
-  std::pair<std::optional<Uuid>, std::optional<bsgalone::core::IMessageQueueShPtr>> out{};
+  std::pair<std::optional<core::Uuid>, std::optional<core::IMessageQueueShPtr>> out{};
 
   out.first = service.tryGetSystemDbIdForShip(shipDbId);
   if (out.first)
@@ -51,12 +51,12 @@ auto tryFindSystemAndQueueFromShip(const Uuid shipDbId,
   return out;
 }
 
-auto tryFindSystemAndQueueFromAsteroid(const Uuid asteroidDbId,
+auto tryFindSystemAndQueueFromAsteroid(const core::Uuid asteroidDbId,
                                        const SystemService &service,
                                        const SystemQueueMap &queues)
-  -> std::pair<std::optional<Uuid>, std::optional<bsgalone::core::IMessageQueueShPtr>>
+  -> std::pair<std::optional<core::Uuid>, std::optional<core::IMessageQueueShPtr>>
 {
-  std::pair<std::optional<Uuid>, std::optional<bsgalone::core::IMessageQueueShPtr>> out{};
+  std::pair<std::optional<core::Uuid>, std::optional<core::IMessageQueueShPtr>> out{};
 
   out.first  = service.getSystemDbIdForAsteroid(asteroidDbId);
   out.second = findSystemQueueFromSystem(*out.first, queues);
@@ -64,4 +64,4 @@ auto tryFindSystemAndQueueFromAsteroid(const Uuid asteroidDbId,
   return out;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

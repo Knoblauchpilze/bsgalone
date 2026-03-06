@@ -7,22 +7,22 @@
 #include "TargetMessage.hh"
 #include "TargetPickedMessage.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-class TargetPickedMessageConsumer : public bsgalone::core::AbstractMessageConsumer
+class TargetPickedMessageConsumer : public core::AbstractMessageConsumer
 {
   public:
   TargetPickedMessageConsumer(const Services &services,
-                              bsgalone::core::IMessageQueue *const outputMessageQueue);
+                              core::IMessageQueue *const outputMessageQueue);
   ~TargetPickedMessageConsumer() override = default;
 
-  void onEventReceived(const bsgalone::core::IMessage &message) override;
+  void onEventReceived(const core::IMessage &message) override;
 
   private:
   ShipServiceShPtr m_shipService{};
-  bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
+  core::IMessageQueue *const m_outputMessageQueue{};
 
-  void broadcastMessageToSystem(std::unique_ptr<TargetMessage> message);
+  void broadcastMessageToSystem(std::unique_ptr<core::TargetMessage> message);
 };
 
-} // namespace bsgo
+} // namespace bsgalone::server

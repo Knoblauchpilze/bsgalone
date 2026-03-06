@@ -14,7 +14,7 @@
 #include <set>
 #include <unordered_set>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 struct PlayerShip
 {
@@ -47,7 +47,7 @@ struct PlayerShip
   chrono::TickDuration jumpTimeInThreat{};
   std::optional<Uuid> jumpSystem{};
 
-  std::unordered_map<bsgalone::core::Slot, int> slots{};
+  std::unordered_map<Slot, int> slots{};
   std::vector<Eigen::Vector3f> aiTargets{};
   std::optional<int> reachedTarget{};
 };
@@ -84,4 +84,4 @@ class PlayerShipRepository : public AbstractRepository
 
 using PlayerShipRepositoryShPtr = std::shared_ptr<PlayerShipRepository>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

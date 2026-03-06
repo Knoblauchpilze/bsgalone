@@ -9,7 +9,7 @@
 #include "StringUtils.hh"
 #include "UiTextMenu.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
 ShopUiHandler::ShopUiHandler(const Views &views)
   : AbstractUiHandler("shop")
@@ -30,15 +30,15 @@ ShopUiHandler::ShopUiHandler(const Views &views)
 
 void ShopUiHandler::initializeMenus(const int width,
                                     const int height,
-                                    sprites::TexturePack & /*texturesLoader*/)
+                                    pge::sprites::TexturePack & /*texturesLoader*/)
 {
   const auto viewWidth  = static_cast<int>(MAIN_VIEW_WIDTH_TO_SCREEN_WIDTH_RATIO * width);
   const auto viewHeight = static_cast<int>(MAIN_VIEW_HEIGHT_TO_SCREEN_HEIGHT_RATIO * height);
 
   constexpr auto RESOURCES_MENU_HEIGHT = 30;
-  Vec2i pos{width - viewWidth - VIEW_TO_RIGHT_OF_SCREEN_IN_PIXELS,
-            height - viewHeight - VIEW_TO_BOTTOM_OF_SCREEN_IN_PIXELS};
-  Vec2i dims{viewWidth, RESOURCES_MENU_HEIGHT};
+  pge::Vec2i pos{width - viewWidth - VIEW_TO_RIGHT_OF_SCREEN_IN_PIXELS,
+                 height - viewHeight - VIEW_TO_BOTTOM_OF_SCREEN_IN_PIXELS};
+  pge::Vec2i dims{viewWidth, RESOURCES_MENU_HEIGHT};
 
   m_resourcesMenu = generateBlankHorizontalMenu(pos, dims);
 
@@ -53,7 +53,7 @@ bool ShopUiHandler::processUserInput(ui::UserInputData &inputData)
   return m_menu->processUserInput(inputData);
 }
 
-void ShopUiHandler::render(Renderer &engine) const
+void ShopUiHandler::render(pge::Renderer &engine) const
 {
   m_resourcesMenu->render(engine);
   m_menu->render(engine);
@@ -66,22 +66,22 @@ void updateBuyButtonState(ui::UiMenu &buyButton, const bool enable)
 
   if (!enable)
   {
-    buyButton.updateBgColor(colors::DARK_GREY);
+    buyButton.updateBgColor(pge::colors::DARK_GREY);
   }
   else
   {
-    buyButton.updateBgColor(colors::DARK_GREEN);
+    buyButton.updateBgColor(pge::colors::DARK_GREEN);
   }
 }
 
-void updatePricesState(const std::unordered_map<bsgo::Uuid, ui::UiTextMenu *> &prices,
-                       const std::unordered_map<bsgo::Uuid, bool> &resourcesAvailability)
+void updatePricesState(const std::unordered_map<core::Uuid, ui::UiTextMenu *> &prices,
+                       const std::unordered_map<core::Uuid, bool> &resourcesAvailability)
 {
   for (const auto &[resource, menu] : prices)
   {
     const auto available = resourcesAvailability.contains(resource)
                            && true == resourcesAvailability.at(resource);
-    const auto color = available ? colors::DARK_GREEN : colors::DARK_RED;
+    const auto color = available ? pge::colors::DARK_GREEN : pge::colors::DARK_RED;
     menu->updateTextColor(color);
   }
 }
@@ -146,13 +146,13 @@ void ShopUiHandler::generateResourcesMenus()
   const auto resources = m_playerView->getPlayerResources();
 
   const ui::MenuConfig config{.propagateEventsToChildren = false};
-  const auto bg = ui::bgConfigFromColor(colors::BLANK);
+  const auto bg = ui::bgConfigFromColor(pge::colors::BLANK);
 
   // Reverse iteration to get resources ordered according to their id.
   for (auto it = resources.rbegin(); it != resources.rend(); ++it)
   {
-    auto label = ui::textConfigFromColor(bsgo::capitalizeString(it->name, true) + ":",
-                                         colors::DARK_GREY,
+    auto label = ui::textConfigFromColor(core::capitalizeString(it->name, true) + ":",
+                                         pge::colors::DARK_GREY,
                                          ui::TextAlignment::RIGHT);
     auto field = std::make_unique<ui::UiTextMenu>(config, bg, label);
     m_resourcesMenu->addMenu(std::move(field));
@@ -175,7 +175,7 @@ void ShopUiHandler::initializeLayout()
   for (auto id = 0u; id < items.size(); ++id)
   {
     const ui::MenuConfig config{.layout = ui::MenuLayout::HORIZONTAL};
-    const auto bg = ui::bgConfigFromColor(colors::BLANK);
+    const auto bg = ui::bgConfigFromColor(pge::colors::BLANK);
     auto itemMenu = std::make_unique<ui::UiMenu>(config, bg);
     m_items.push_back(itemMenu.get());
     m_menu->addMenu(std::move(itemMenu));
@@ -196,10 +196,10 @@ auto generatePriceMenus(const ShopItem &item) -> PriceMenu
   out.menu = generateBlankVerticalMenu();
 
   const ui::MenuConfig config{.highlightable = false};
-  const auto bg = ui::bgConfigFromColor(colors::BLANK);
+  const auto bg = ui::bgConfigFromColor(pge::colors::BLANK);
 
   auto label = std::string("Cost:");
-  auto text  = generateTextConfig(label, colors::GREY, 10);
+  auto text  = generateTextConfig(label, pge::colors::GREY, 10);
   auto prop  = std::make_unique<ui::UiTextMenu>(config, bg, text);
   out.menu->addMenu(std::move(prop));
 
@@ -283,4 +283,4 @@ void ShopUiHandler::onPurchaseRequest(const int itemId)
   m_playerView->tryPurchase(purchase.itemType, purchase.itemId);
 }
 
-} // namespace pge
+} // namespace bsgalone::client

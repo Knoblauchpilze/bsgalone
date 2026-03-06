@@ -4,28 +4,28 @@
 #include "PlayerShipSynchronizer.hh"
 #include "SystemOutpostSynchronizer.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-DatabaseSynchronizer::DatabaseSynchronizer(const Repositories &repositories)
-  : core::CoreObject("synchronizer")
+DatabaseSynchronizer::DatabaseSynchronizer(const core::Repositories &repositories)
+  : ::core::CoreObject("synchronizer")
   , m_repositories(repositories)
 {
   setService("database");
 }
 
-void DatabaseSynchronizer::syncEntity(Entity &entity) const
+void DatabaseSynchronizer::syncEntity(core::Entity &entity) const
 {
   const auto kind = entity.kind->kind();
 
   switch (kind)
   {
-    case bsgalone::core::EntityKind::ASTEROID:
+    case core::EntityKind::ASTEROID:
       syncAsteroid(entity, m_repositories);
       break;
-    case bsgalone::core::EntityKind::SHIP:
+    case core::EntityKind::SHIP:
       syncPlayerShip(entity, m_repositories);
       break;
-    case bsgalone::core::EntityKind::OUTPOST:
+    case core::EntityKind::OUTPOST:
       syncSystemOutpost(entity, m_repositories);
       break;
     default:
@@ -36,4 +36,4 @@ void DatabaseSynchronizer::syncEntity(Entity &entity) const
   entity.dbSyncComp().markAsJustSynced();
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

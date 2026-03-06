@@ -3,12 +3,12 @@
 #include "LoadingFinishedMessage.hh"
 #include "LoadingStartedMessage.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
 EquipMessageConsumer::EquipMessageConsumer(const Services &services,
-                                           bsgalone::core::IMessageQueue *const systemMessageQueue,
-                                           bsgalone::core::IMessageQueue *const outputMessageQueue)
-  : AbstractMessageConsumer("equip", {bsgalone::core::MessageType::EQUIP})
+                                           core::IMessageQueue *const systemMessageQueue,
+                                           core::IMessageQueue *const outputMessageQueue)
+  : AbstractMessageConsumer("equip", {core::MessageType::EQUIP})
   , m_lockerService(services.locker)
   , m_shipService(services.ship)
   , m_systemMessageQueue(systemMessageQueue)
@@ -32,17 +32,17 @@ EquipMessageConsumer::EquipMessageConsumer(const Services &services,
   }
 }
 
-void EquipMessageConsumer::onEventReceived(const bsgalone::core::IMessage &message)
+void EquipMessageConsumer::onEventReceived(const core::IMessage &message)
 {
-  const auto &equip = message.as<bsgalone::core::EquipMessage>();
+  const auto &equip = message.as<core::EquipMessage>();
   const auto action = equip.getAction();
 
   switch (action)
   {
-    case bsgalone::core::EquipType::EQUIP:
+    case core::EquipType::EQUIP:
       handleEquipRequest(equip);
       break;
-    case bsgalone::core::EquipType::UNEQUIP:
+    case core::EquipType::UNEQUIP:
       handleUnequipRequest(equip);
       break;
     default:
@@ -50,7 +50,7 @@ void EquipMessageConsumer::onEventReceived(const bsgalone::core::IMessage &messa
   }
 }
 
-void EquipMessageConsumer::handleEquipRequest(const bsgalone::core::EquipMessage &message) const
+void EquipMessageConsumer::handleEquipRequest(const core::EquipMessage &message) const
 {
   const auto shipDbId = message.getShipDbId();
   const auto type     = message.getItemType();
@@ -59,8 +59,8 @@ void EquipMessageConsumer::handleEquipRequest(const bsgalone::core::EquipMessage
   const LockerItemData data{.dbId = itemDbId, .type = type, .shipDbId = shipDbId};
   if (!m_lockerService->tryEquip(data))
   {
-    warn("Failed to process equip message for ship " + str(shipDbId) + " for " + str(type) + " "
-         + str(itemDbId));
+    warn("Failed to process equip message for ship " + core::str(shipDbId) + " for " + str(type)
+         + " " + core::str(itemDbId));
     return;
   }
 
@@ -69,7 +69,7 @@ void EquipMessageConsumer::handleEquipRequest(const bsgalone::core::EquipMessage
   handleSuccessfulRequest(message);
 }
 
-void EquipMessageConsumer::handleUnequipRequest(const bsgalone::core::EquipMessage &message) const
+void EquipMessageConsumer::handleUnequipRequest(const core::EquipMessage &message) const
 {
   const auto shipDbId = message.getShipDbId();
   const auto type     = message.getItemType();
@@ -78,8 +78,8 @@ void EquipMessageConsumer::handleUnequipRequest(const bsgalone::core::EquipMessa
   const LockerItemData data{.dbId = itemDbId, .type = type, .shipDbId = shipDbId};
   if (!m_lockerService->tryUnequip(data))
   {
-    warn("Failed to process unequip message for ship " + str(shipDbId) + " for " + str(type) + " "
-         + str(itemDbId));
+    warn("Failed to process unequip message for ship " + core::str(shipDbId) + " for " + str(type)
+         + " " + core::str(itemDbId));
     return;
   }
 
@@ -88,16 +88,18 @@ void EquipMessageConsumer::handleUnequipRequest(const bsgalone::core::EquipMessa
   handleSuccessfulRequest(message);
 }
 
-void EquipMessageConsumer::handleSuccessfulRequest(const bsgalone::core::EquipMessage &message) const
+void EquipMessageConsumer::handleSuccessfulRequest(const core::EquipMessage &message) const
 {
   const auto shipDbId   = message.getShipDbId();
   const auto playerDbId = m_shipService->getPlayerDbIdForShip(shipDbId);
 
-  auto started = std::make_unique<LoadingStartedMessage>(LoadingTransition::EQUIP, playerDbId);
+  auto started = std::make_unique<core::LoadingStartedMessage>(core::LoadingTransition::EQUIP,
+                                                               playerDbId);
   m_systemMessageQueue->pushEvent(std::move(started));
 
-  auto finished = std::make_unique<LoadingFinishedMessage>(LoadingTransition::EQUIP, playerDbId);
+  auto finished = std::make_unique<core::LoadingFinishedMessage>(core::LoadingTransition::EQUIP,
+                                                                 playerDbId);
   m_systemMessageQueue->pushEvent(std::move(finished));
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

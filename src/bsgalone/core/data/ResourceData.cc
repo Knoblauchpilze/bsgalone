@@ -2,7 +2,7 @@
 #include "ResourceData.hh"
 #include "SerializationUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 bool ResourceData::operator==(const ResourceData &rhs) const
 {
@@ -11,8 +11,8 @@ bool ResourceData::operator==(const ResourceData &rhs) const
 
 auto ResourceData::serialize(std::ostream &out) const -> std::ostream &
 {
-  core::serialize(out, dbId);
-  core::serialize(out, name);
+  ::core::serialize(out, dbId);
+  ::core::serialize(out, name);
 
   return out;
 }
@@ -21,10 +21,10 @@ bool ResourceData::deserialize(std::istream &in)
 {
   bool ok{true};
 
-  ok &= core::deserialize(in, dbId);
-  ok &= core::deserialize(in, name);
+  ok &= ::core::deserialize(in, dbId);
+  ok &= ::core::deserialize(in, name);
 
   return ok;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

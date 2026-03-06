@@ -1,10 +1,10 @@
 
 #include "FactionComponent.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 FactionComponent::FactionComponent(const Faction &faction)
-  : AbstractComponent(bsgalone::core::ComponentType::FACTION)
+  : AbstractComponent(ComponentType::FACTION)
   , m_faction(faction)
 {}
 
@@ -15,4 +15,4 @@ auto FactionComponent::faction() const noexcept -> Faction
 
 void FactionComponent::update(const chrono::TickData & /*data*/) {}
 
-} // namespace bsgo
+} // namespace bsgalone::core

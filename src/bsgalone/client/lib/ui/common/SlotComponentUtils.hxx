@@ -3,11 +3,11 @@
 
 #include "SlotComponentUtils.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
-constexpr auto bgForMissingComponent() -> Color
+constexpr auto bgForMissingComponent() -> pge::Color
 {
-  return colors::DARK_GREY;
+  return pge::colors::DARK_GREY;
 }
 
-} // namespace pge
+} // namespace bsgalone::client

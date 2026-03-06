@@ -8,9 +8,9 @@
 #include <deque>
 #include <memory>
 
-namespace pge {
+namespace bsgalone::client {
 
-class LogUiHandler : public AbstractUiHandler, public bsgalone::core::AbstractMessageListener
+class LogUiHandler : public AbstractUiHandler, public core::AbstractMessageListener
 {
   public:
   LogUiHandler(const Views &views);
@@ -18,19 +18,19 @@ class LogUiHandler : public AbstractUiHandler, public bsgalone::core::AbstractMe
 
   void initializeMenus(const int width,
                        const int height,
-                       sprites::TexturePack &texturesLoader) override;
+                       pge::sprites::TexturePack &texturesLoader) override;
   bool processUserInput(ui::UserInputData &inputData) override;
-  void render(Renderer &engine) const override;
+  void render(pge::Renderer &engine) const override;
   void updateUi() override;
 
-  void connectToMessageQueue(bsgalone::core::IMessageQueue &messageQueue) override;
-  void onEventReceived(const bsgalone::core::IMessage &message) override;
+  void connectToMessageQueue(core::IMessageQueue &messageQueue) override;
+  void onEventReceived(const core::IMessage &message) override;
 
   private:
   SystemViewShPtr m_systemView{};
   ResourceViewShPtr m_resourceView{};
   ShipViewShPtr m_shipView{};
-  Vec2i m_offset{};
+  pge::Vec2i m_offset{};
 
   struct LogMessage
   {
@@ -43,9 +43,9 @@ class LogUiHandler : public AbstractUiHandler, public bsgalone::core::AbstractMe
 
   void subscribeToViews();
   void reset();
-  auto createMenuFromMessage(const bsgalone::core::IMessage &message) -> ui::UiMenuPtr;
+  auto createMenuFromMessage(const core::IMessage &message) -> ui::UiMenuPtr;
 };
 
 using LogUiHandlerPtr = std::unique_ptr<LogUiHandler>;
 
-} // namespace pge
+} // namespace bsgalone::client

@@ -16,12 +16,12 @@
 #include <memory>
 #include <vector>
 
-namespace pge {
+namespace bsgalone::client {
 
 class PlayerView : public AbstractView
 {
   public:
-  PlayerView(GameSessionShPtr gameSession, bsgalone::core::IMessageQueue *const outputMessageQueue);
+  PlayerView(GameSessionShPtr gameSession, core::IMessageQueue *const outputMessageQueue);
   ~PlayerView() override = default;
 
   bool isReady() const noexcept override;
@@ -29,44 +29,44 @@ class PlayerView : public AbstractView
 
   auto gameSession() const -> const GameSession &;
 
-  auto getPlayerFaction() const -> bsgo::Faction;
-  auto getPlayerResources() const -> std::vector<bsgo::PlayerResourceData>;
-  auto getPlayerWeapons() const -> std::vector<bsgo::PlayerWeaponData>;
-  auto getPlayerComputers() const -> std::vector<bsgo::PlayerComputerData>;
-  auto getPlayerShips() const -> std::vector<bsgo::PlayerShipData>;
+  auto getPlayerFaction() const -> core::Faction;
+  auto getPlayerResources() const -> std::vector<core::PlayerResourceData>;
+  auto getPlayerWeapons() const -> std::vector<core::PlayerWeaponData>;
+  auto getPlayerComputers() const -> std::vector<core::PlayerComputerData>;
+  auto getPlayerShips() const -> std::vector<core::PlayerShipData>;
 
-  void trySelectShip(const bsgo::Uuid shipDbId) const;
-  void tryPurchase(const bsgalone::core::Item &type, const bsgo::Uuid itemDbId) const;
+  void trySelectShip(const core::Uuid shipDbId) const;
+  void tryPurchase(const core::Item &type, const core::Uuid itemDbId) const;
 
   void tryLogin(const std::string &name,
                 const std::string &password,
-                const bsgo::GameRole role) const;
+                const core::GameRole role) const;
   void tryLogout() const;
   void trySignup(const std::string &name,
                  const std::string &password,
-                 const bsgo::Faction &faction) const;
+                 const core::Faction &faction) const;
 
-  void tryJoin(const bsgo::Uuid playerDbId, const bsgo::Uuid shipDbId) const;
+  void tryJoin(const core::Uuid playerDbId, const core::Uuid shipDbId) const;
 
   protected:
-  void handleMessageInternal(const bsgalone::core::IMessage &message) override;
+  void handleMessageInternal(const core::IMessage &message) override;
 
   private:
   GameSessionShPtr m_gameSession{};
-  bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
+  core::IMessageQueue *const m_outputMessageQueue{};
 
-  std::vector<bsgo::PlayerResourceData> m_playerResources{};
-  std::vector<bsgo::PlayerShipData> m_playerShips{};
-  std::vector<bsgo::PlayerComputerData> m_playerComputers{};
-  std::vector<bsgo::PlayerWeaponData> m_playerWeapons{};
+  std::vector<core::PlayerResourceData> m_playerResources{};
+  std::vector<core::PlayerShipData> m_playerShips{};
+  std::vector<core::PlayerComputerData> m_playerComputers{};
+  std::vector<core::PlayerWeaponData> m_playerWeapons{};
 
-  void handleHangarMessage(const bsgo::HangarMessage &message);
-  void handlePlayerComputersMessage(const bsgo::PlayerComputerListMessage &message);
-  void handlePlayerResourcesMessage(const bsgo::PlayerResourceListMessage &message);
-  void handlePlayerShipsMessage(const bsgo::PlayerShipListMessage &message);
-  void handlePlayerWeaponsMessage(const bsgo::PlayerWeaponListMessage &message);
+  void handleHangarMessage(const core::HangarMessage &message);
+  void handlePlayerComputersMessage(const core::PlayerComputerListMessage &message);
+  void handlePlayerResourcesMessage(const core::PlayerResourceListMessage &message);
+  void handlePlayerShipsMessage(const core::PlayerShipListMessage &message);
+  void handlePlayerWeaponsMessage(const core::PlayerWeaponListMessage &message);
 };
 
 using PlayerViewShPtr = std::shared_ptr<PlayerView>;
 
-} // namespace pge
+} // namespace bsgalone::client

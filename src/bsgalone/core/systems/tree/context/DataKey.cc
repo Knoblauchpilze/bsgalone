@@ -1,7 +1,7 @@
 
 #include "DataKey.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 bool DataKey::changed() const
 {
@@ -13,4 +13,4 @@ void DataKey::markAsSynced()
   m_changed = false;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

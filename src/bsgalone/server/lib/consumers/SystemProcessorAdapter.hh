@@ -10,13 +10,13 @@ namespace bsgalone::server {
 class SystemProcessorAdapter : public core::AbstractMessageConsumer
 {
   public:
-  SystemProcessorAdapter(const bsgo::Uuid systemDbId, core::IMessageQueueShPtr systemQueue);
+  SystemProcessorAdapter(const core::Uuid systemDbId, core::IMessageQueueShPtr systemQueue);
   ~SystemProcessorAdapter() override = default;
 
   void onEventReceived(const core::IMessage &message) override;
 
   private:
-  bsgo::Uuid m_systemDbId{};
+  core::Uuid m_systemDbId{};
   core::IMessageQueueShPtr m_systemQueue{};
 };
 

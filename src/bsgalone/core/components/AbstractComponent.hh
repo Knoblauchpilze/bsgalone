@@ -5,20 +5,20 @@
 #include "IComponent.hh"
 #include <string>
 
-namespace bsgo {
+namespace bsgalone::core {
 
-class AbstractComponent : public bsgalone::core::IComponent, public ::core::CoreObject
+class AbstractComponent : public IComponent, public ::core::CoreObject
 {
   public:
-  AbstractComponent(const bsgalone::core::ComponentType &type);
+  AbstractComponent(const ComponentType &type);
   ~AbstractComponent() override = default;
 
-  auto type() const -> bsgalone::core::ComponentType override;
+  auto type() const -> ComponentType override;
 
   virtual void update(const chrono::TickData &data) = 0;
 
   private:
-  bsgalone::core::ComponentType m_componentType{};
+  ComponentType m_componentType{};
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

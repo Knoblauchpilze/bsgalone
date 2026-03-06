@@ -11,13 +11,13 @@
 #include <unordered_map>
 #include <vector>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 struct AffordabilityData
 {
   Uuid playerId{};
   Uuid itemId{};
-  bsgalone::core::Item itemType{};
+  Item itemType{};
 
   std::vector<PlayerResourceData> playerResources{};
   std::vector<WeaponData> weapons{};
@@ -33,4 +33,4 @@ struct Affordability
 
 auto computeAffordability(const AffordabilityData &data) -> Affordability;
 
-} // namespace bsgo
+} // namespace bsgalone::core

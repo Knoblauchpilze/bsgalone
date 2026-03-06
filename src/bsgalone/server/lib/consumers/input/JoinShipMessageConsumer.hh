@@ -6,22 +6,22 @@
 #include "JoinShipMessage.hh"
 #include "PlayerService.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-class JoinShipMessageConsumer : public bsgalone::core::AbstractMessageConsumer
+class JoinShipMessageConsumer : public core::AbstractMessageConsumer
 {
   public:
   JoinShipMessageConsumer(PlayerServicePtr playerService,
-                          bsgalone::core::IMessageQueue *const outputMessageQueue);
+                          core::IMessageQueue *const outputMessageQueue);
   ~JoinShipMessageConsumer() override = default;
 
-  void onEventReceived(const bsgalone::core::IMessage &message) override;
+  void onEventReceived(const core::IMessage &message) override;
 
   private:
   PlayerServicePtr m_playerService{};
-  bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
+  core::IMessageQueue *const m_outputMessageQueue{};
 
-  void handleJoinShip(const JoinShipMessage &message) const;
+  void handleJoinShip(const core::JoinShipMessage &message) const;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::server

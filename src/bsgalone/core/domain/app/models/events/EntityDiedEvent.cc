@@ -3,12 +3,12 @@
 
 namespace bsgalone::core {
 
-EntityDiedEvent::EntityDiedEvent(const bsgo::Uuid entityId)
+EntityDiedEvent::EntityDiedEvent(const Uuid entityId)
   : IGameEvent(GameEventType::ENTITY_DIED)
   , m_entityId(entityId)
 {}
 
-auto EntityDiedEvent::entityId() const -> bsgo::Uuid
+auto EntityDiedEvent::entityId() const -> Uuid
 {
   return m_entityId;
 }
