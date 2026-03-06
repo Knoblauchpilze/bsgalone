@@ -5,7 +5,7 @@
 
 namespace bsgalone::client {
 
-class MapScreenRenderer : public bsgalone::client::DecalScreenRenderer
+class MapScreenRenderer : public DecalScreenRenderer
 {
   public:
   MapScreenRenderer();

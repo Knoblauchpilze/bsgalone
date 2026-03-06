@@ -5,7 +5,7 @@
 
 namespace bsgalone::client {
 
-class OutpostScreenRenderer : public bsgalone::client::DecalScreenRenderer
+class OutpostScreenRenderer : public DecalScreenRenderer
 {
   public:
   OutpostScreenRenderer();
