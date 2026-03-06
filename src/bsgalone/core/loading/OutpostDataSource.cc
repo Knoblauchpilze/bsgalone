@@ -6,14 +6,14 @@
 namespace bsgalone::core {
 
 OutpostDataSource::OutpostDataSource()
-  : ::core::CoreObject("bsgo")
+  : ::core::CoreObject("core")
 {
   setService("data");
   addModule("outpost");
 }
 
 OutpostDataSource::OutpostDataSource(const Repositories &repositories)
-  : ::core::CoreObject("bsgo")
+  : ::core::CoreObject("core")
   , m_repositories(repositories)
 {
   setService("data");

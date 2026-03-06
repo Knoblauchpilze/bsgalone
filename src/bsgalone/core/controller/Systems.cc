@@ -20,7 +20,7 @@ namespace bsgalone::core {
 Systems::Systems(SystemsConfig &&config)
   : ::core::CoreObject("systems")
 {
-  setService("bsgo");
+  setService("core");
 
   initialize(std::move(config));
 }

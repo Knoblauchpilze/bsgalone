@@ -6,14 +6,14 @@
 namespace bsgalone::core {
 
 AsteroidDataSource::AsteroidDataSource()
-  : ::core::CoreObject("bsgo")
+  : ::core::CoreObject("core")
 {
   setService("data");
   addModule("asteroid");
 }
 
 AsteroidDataSource::AsteroidDataSource(const Repositories &repositories)
-  : ::core::CoreObject("bsgo")
+  : ::core::CoreObject("core")
   , m_repositories(repositories)
 {
   setService("data");

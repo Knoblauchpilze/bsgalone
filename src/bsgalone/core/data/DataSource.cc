@@ -9,7 +9,7 @@
 namespace bsgalone::core {
 
 DataSource::DataSource(const Uuid systemDbId)
-  : ::core::CoreObject("bsgo")
+  : ::core::CoreObject("core")
   , m_systemDbId(systemDbId)
 {
   setService("data");
