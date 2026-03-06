@@ -401,7 +401,7 @@ There's also a convenience script provided in [scripts/setup_database.sh](script
 
 ## Populating the database
 
-Managing the database and performing data migration is done through a tool called `migrate` (see [prerequisites](#prerequisites)). Once the previous step is complete (so the user and the database both exist) one can simply go to the [migrations](database/migrations) folder and run:
+Managing the database and performing data migration is done through a tool called `migrate` (see [prerequisites](#prerequisites)). Once the previous step is complete (so the user and the database both exist) one can simply go to the [migrations](database/bsgalone/migrations) folder and run:
 
 ```bash
 make migrate
@@ -517,6 +517,8 @@ Based on future developments we might decide to externalzie this or to use a sub
 
 ### bsgalone
 
+This folder contains the necessary code to define a client, server and core library to play `bsgalone`. As it's segregated in its own folder, this project could potentially host multiple games and become a monorepo.
+
 ### core
 
 The [core](src/bsgalone/core) folder contains the core game library defining the Entity Component System and the interaction with the database. This is used both in the server and the client application.
@@ -528,6 +530,12 @@ The [server](src/bsgalone/server) folder defines all the server specific code. I
 #### client
 
 The [client](src/bsgalone/client) folder regroups all the code that is used exclusively by the client. It links against the core library and enriches it to present a compelling application to the player. It also serves the purpose of connecting to the server and updating the local data with what the server transmits.
+
+### messaging
+
+The [messaging](src/messaging) folder contains template classes to define the messaging framework used in the applications. This allows to easily define event queues/listeners provided that an event type and a polymorphic event class exists. This is used both in the `net` library and in the game.
+
+In the future, this library could be replaced by an external library such as [eventpp](https://github.com/wqking/eventpp).
 
 ### net
 
@@ -542,6 +550,12 @@ For an implementation overview of the network library please refer to the dedica
 The [pge](src/pge) folder contains the code to interact with the `PixelGameEngine`. It is used in the client to handle the rendering of the graphic interface.
 
 By having it in a dedicated folder, we are able to minimize the surface we would have to replace if we want to use a different engine. This also allows to easily update it without having to change too much code: the rest of the modules (mainly the client) do not know that the underlying drawing routines are using the `PixelGameEngine`.
+
+### time
+
+The [time](src/time) folder defines primitives to manipulate time. A general approach in games is that determinism is easier to work with than raw time. For this reason, the game is not using seconds but instead ticks to move forward. At each frame, a certain amount of ticks is provided to the simulation. Speeds, motions, reload times etc. are expressed in ticks rather than raw seconds. This allows to replay events very precisely by passing the same tick sequence. Additionally, it allows to speed up or slow down the game easily by modifying the mapping between a tick and an actual second. `bsgalone` currently stores a tick configuration per system which allows to have faster/slower systems.
+
+This library is used by the `bsgalone` project.
 
 ## Communication between client/server
 
