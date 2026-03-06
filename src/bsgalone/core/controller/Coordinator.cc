@@ -49,7 +49,7 @@ Coordinator::Coordinator(SystemsConfig &&config)
   : ::core::CoreObject("coordinator")
   , m_systems(std::make_unique<Systems>(std::move(config)))
 {
-  setService("bsgo");
+  setService("core");
 }
 
 void Coordinator::clear()

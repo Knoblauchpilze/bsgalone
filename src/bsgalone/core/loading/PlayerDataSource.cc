@@ -5,14 +5,14 @@
 namespace bsgalone::core {
 
 PlayerDataSource::PlayerDataSource()
-  : ::core::CoreObject("bsgo")
+  : ::core::CoreObject("core")
 {
   setService("data");
   addModule("player");
 }
 
 PlayerDataSource::PlayerDataSource(const Repositories &repositories)
-  : ::core::CoreObject("bsgo")
+  : ::core::CoreObject("core")
   , m_repositories(repositories)
 {
   setService("data");

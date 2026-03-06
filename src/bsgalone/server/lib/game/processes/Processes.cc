@@ -11,7 +11,7 @@ namespace bsgalone::server {
 Processes::Processes(const core::Uuid systemDbId, core::IMessageQueue *const systemMessageQueue)
   : ::core::CoreObject("processes")
 {
-  setService("bsgo");
+  setService("server");
 
   initialize(systemDbId, systemMessageQueue);
 }
