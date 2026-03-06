@@ -24,12 +24,6 @@
 
 namespace bsgalone::client {
 
-class IUiHandler;
-using IUiHandlerPtr = std::unique_ptr<IUiHandler>;
-
-class IInputHandler;
-using IInputHandlerPtr = std::unique_ptr<IInputHandler>;
-
 class Game : public ui::IScreenChanger, public ::core::CoreObject
 {
   public:
