@@ -2,7 +2,7 @@
 #include "DbConnection.hh"
 #include "Environment.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 namespace {
 constexpr auto DATABASE_NAME     = "db_bsgalone";
 constexpr auto DATABASE_USER     = "bsgalone_manager";
@@ -30,7 +30,7 @@ auto generateConnectionString() -> std::string
   out += addOption(DATABASE_NAME_OPTION_STRING, DATABASE_NAME);
   out += addOption(DATABASE_USER_OPTION_STRING, DATABASE_USER);
 
-  const auto host = core::getEnvironmentVariable<std::string>(ENV_DATABASE_HOST, DATABASE_HOST);
+  const auto host = ::core::getEnvironmentVariable<std::string>(ENV_DATABASE_HOST, DATABASE_HOST);
   out += addOption(DATABASE_HOST_OPTION_STRING, host);
 
   out += addOption(DATABASE_PORT_OPTION_STRING, DATABASE_PORT);
@@ -41,7 +41,7 @@ auto generateConnectionString() -> std::string
 } // namespace
 
 DbConnection::DbConnection()
-  : core::CoreObject("connection")
+  : ::core::CoreObject("connection")
 {
   setService("db");
 }
@@ -178,4 +178,4 @@ auto DbConnection::nonTransaction() -> pqxx::nontransaction
   return pqxx::nontransaction(*m_connection);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

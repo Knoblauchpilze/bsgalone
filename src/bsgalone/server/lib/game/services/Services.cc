@@ -1,11 +1,11 @@
 
 #include "Services.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-auto createServices(const Repositories &repositories,
-                    const CoordinatorShPtr &coordinator,
-                    DatabaseEntityMapper &entityMapper) -> Services
+auto createServices(const core::Repositories &repositories,
+                    const core::CoordinatorShPtr &coordinator,
+                    core::DatabaseEntityMapper &entityMapper) -> Services
 {
   Services out{};
 
@@ -20,4 +20,4 @@ auto createServices(const Repositories &repositories,
   return out;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

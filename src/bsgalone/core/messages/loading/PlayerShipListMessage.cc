@@ -2,14 +2,14 @@
 #include "PlayerShipListMessage.hh"
 #include "SerializationUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 PlayerShipListMessage::PlayerShipListMessage()
-  : NetworkMessage(bsgalone::core::MessageType::PLAYER_SHIP_LIST)
+  : NetworkMessage(MessageType::PLAYER_SHIP_LIST)
 {}
 
 PlayerShipListMessage::PlayerShipListMessage(const std::vector<PlayerShipData> &shipsData)
-  : NetworkMessage(bsgalone::core::MessageType::PLAYER_SHIP_LIST)
+  : NetworkMessage(MessageType::PLAYER_SHIP_LIST)
   , m_shipsData(shipsData)
 {}
 
@@ -40,13 +40,13 @@ void PlayerShipListMessage::setPlayerDbId(const Uuid playerDbId)
 
 auto PlayerShipListMessage::serialize(std::ostream &out) const -> std::ostream &
 {
-  core::serialize(out, m_messageType);
-  core::serialize(out, m_clientId);
+  ::core::serialize(out, m_messageType);
+  ::core::serialize(out, m_clientId);
 
-  core::serialize(out, m_systemDbId);
-  core::serialize(out, m_playerDbId);
+  ::core::serialize(out, m_systemDbId);
+  ::core::serialize(out, m_playerDbId);
 
-  core::serialize(out, m_shipsData);
+  ::core::serialize(out, m_shipsData);
 
   return out;
 }
@@ -54,18 +54,18 @@ auto PlayerShipListMessage::serialize(std::ostream &out) const -> std::ostream &
 bool PlayerShipListMessage::deserialize(std::istream &in)
 {
   bool ok{true};
-  ok &= core::deserialize(in, m_messageType);
-  ok &= core::deserialize(in, m_clientId);
+  ok &= ::core::deserialize(in, m_messageType);
+  ok &= ::core::deserialize(in, m_clientId);
 
-  ok &= core::deserialize(in, m_systemDbId);
-  ok &= core::deserialize(in, m_playerDbId);
+  ok &= ::core::deserialize(in, m_systemDbId);
+  ok &= ::core::deserialize(in, m_playerDbId);
 
-  ok &= core::deserialize(in, m_shipsData);
+  ok &= ::core::deserialize(in, m_shipsData);
 
   return ok;
 }
 
-auto PlayerShipListMessage::clone() const -> bsgalone::core::IMessagePtr
+auto PlayerShipListMessage::clone() const -> IMessagePtr
 {
   auto clone = std::make_unique<PlayerShipListMessage>(m_shipsData);
   if (m_systemDbId)
@@ -82,4 +82,4 @@ auto PlayerShipListMessage::clone() const -> bsgalone::core::IMessagePtr
   return clone;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

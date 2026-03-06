@@ -1,10 +1,10 @@
 
 #include "AiComponent.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 AiComponent::AiComponent(INodePtr behavior, DataContext context)
-  : AbstractComponent(bsgalone::core::ComponentType::AI)
+  : AbstractComponent(ComponentType::AI)
   , m_behavior(std::move(behavior))
   , m_context(std::move(context))
 {
@@ -36,4 +36,4 @@ auto AiComponent::dataContext() -> DataContext &
 
 void AiComponent::update(const chrono::TickData & /*data*/) {}
 
-} // namespace bsgo
+} // namespace bsgalone::core

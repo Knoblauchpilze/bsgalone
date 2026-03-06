@@ -2,19 +2,19 @@
 #include "ComponentMessageConsumer.hh"
 #include "ComponentUpdatedMessage.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
-ComponentMessageConsumer::ComponentMessageConsumer(const bsgo::DatabaseEntityMapper &entityMapper,
-                                                   bsgo::CoordinatorShPtr coordinator)
+ComponentMessageConsumer::ComponentMessageConsumer(const core::DatabaseEntityMapper &entityMapper,
+                                                   core::CoordinatorShPtr coordinator)
   : AbstractMessageConsumer("component",
-                            {bsgalone::core::MessageType::SLOT_COMPONENT_UPDATED,
-                             bsgalone::core::MessageType::WEAPON_COMPONENT_UPDATED,
-                             bsgalone::core::MessageType::AI_BEHAVIOR_SYNC})
+                            {core::MessageType::SLOT_COMPONENT_UPDATED,
+                             core::MessageType::WEAPON_COMPONENT_UPDATED,
+                             core::MessageType::AI_BEHAVIOR_SYNC})
   , m_entityMapper(entityMapper)
   , m_coordinator(std::move(coordinator))
 {}
 
-void ComponentMessageConsumer::onEventReceived(const bsgalone::core::IMessage &message)
+void ComponentMessageConsumer::onEventReceived(const core::IMessage &message)
 {
   if (!m_entityMapper.doesPlayerHaveAnEntity())
   {
@@ -24,14 +24,14 @@ void ComponentMessageConsumer::onEventReceived(const bsgalone::core::IMessage &m
 
   switch (message.type())
   {
-    case bsgalone::core::MessageType::SLOT_COMPONENT_UPDATED:
-      handleComputerSlotUpdated(message.as<bsgo::SlotComponentMessage>());
+    case core::MessageType::SLOT_COMPONENT_UPDATED:
+      handleComputerSlotUpdated(message.as<core::SlotComponentMessage>());
       break;
-    case bsgalone::core::MessageType::WEAPON_COMPONENT_UPDATED:
-      handleWeaponUpdated(message.as<bsgo::WeaponComponentMessage>());
+    case core::MessageType::WEAPON_COMPONENT_UPDATED:
+      handleWeaponUpdated(message.as<core::WeaponComponentMessage>());
       break;
-    case bsgalone::core::MessageType::AI_BEHAVIOR_SYNC:
-      handleAiBehaviorUpdated(message.as<bsgo::AiBehaviorSyncMessage>());
+    case core::MessageType::AI_BEHAVIOR_SYNC:
+      handleAiBehaviorUpdated(message.as<core::AiBehaviorSyncMessage>());
       break;
     default:
       error("Unsupported message type " + str(message.type()));
@@ -39,7 +39,7 @@ void ComponentMessageConsumer::onEventReceived(const bsgalone::core::IMessage &m
 }
 
 void ComponentMessageConsumer::handleComputerSlotUpdated(
-  const bsgo::SlotComponentMessage &message) const
+  const core::SlotComponentMessage &message) const
 {
   const auto shipDbId     = message.getShipDbId();
   const auto computerDbId = message.getSlotDbId();
@@ -47,7 +47,7 @@ void ComponentMessageConsumer::handleComputerSlotUpdated(
   const auto maybeShip = m_entityMapper.tryGetShipEntityId(shipDbId);
   if (!maybeShip)
   {
-    warn("Failed to process computer component updated message for ship " + bsgo::str(shipDbId));
+    warn("Failed to process computer component updated message for ship " + core::str(shipDbId));
     return;
   }
 
@@ -55,14 +55,14 @@ void ComponentMessageConsumer::handleComputerSlotUpdated(
   const auto maybeComputer = ship.tryGetComputer(computerDbId);
   if (!maybeComputer)
   {
-    warn("Failed to process slot component updated message for ship " + bsgo::str(shipDbId));
+    warn("Failed to process slot component updated message for ship " + core::str(shipDbId));
     return;
   }
 
   (*maybeComputer)->overrideElapsedSinceLastFired(message.getElapsedSinceLastFired());
 }
 
-void ComponentMessageConsumer::handleWeaponUpdated(const bsgo::WeaponComponentMessage &message) const
+void ComponentMessageConsumer::handleWeaponUpdated(const core::WeaponComponentMessage &message) const
 {
   const auto shipDbId   = message.getShipDbId();
   const auto weaponDbId = message.getWeaponDbId();
@@ -70,7 +70,7 @@ void ComponentMessageConsumer::handleWeaponUpdated(const bsgo::WeaponComponentMe
   const auto maybeShip = m_entityMapper.tryGetShipEntityId(shipDbId);
   if (!maybeShip)
   {
-    warn("Failed to process weapon component updated message for ship " + bsgo::str(shipDbId));
+    warn("Failed to process weapon component updated message for ship " + core::str(shipDbId));
     return;
   }
 
@@ -78,7 +78,7 @@ void ComponentMessageConsumer::handleWeaponUpdated(const bsgo::WeaponComponentMe
   const auto maybeWeapon = ship.tryGetWeapon(weaponDbId);
   if (!maybeWeapon)
   {
-    warn("Failed to process computer component updated message for ship " + bsgo::str(shipDbId));
+    warn("Failed to process computer component updated message for ship " + core::str(shipDbId));
     return;
   }
 
@@ -86,21 +86,21 @@ void ComponentMessageConsumer::handleWeaponUpdated(const bsgo::WeaponComponentMe
 }
 
 void ComponentMessageConsumer::handleAiBehaviorUpdated(
-  const bsgo::AiBehaviorSyncMessage &message) const
+  const core::AiBehaviorSyncMessage &message) const
 {
   const auto shipDbId = message.getShipDbId();
 
   const auto maybeShip = m_entityMapper.tryGetShipEntityId(shipDbId);
   if (!maybeShip)
   {
-    warn("Failed to process AI behavior sync message for ship " + bsgo::str(shipDbId));
+    warn("Failed to process AI behavior sync message for ship " + core::str(shipDbId));
     return;
   }
 
   auto ship = m_coordinator->getEntity(*maybeShip);
-  if (!ship.exists<bsgo::AiComponent>())
+  if (!ship.exists<core::AiComponent>())
   {
-    warn("Failed to process AI behavior sync for ship " + bsgo::str(shipDbId),
+    warn("Failed to process AI behavior sync for ship " + core::str(shipDbId),
          "Ship does not have an AI comp");
     return;
   }
@@ -111,15 +111,15 @@ void ComponentMessageConsumer::handleAiBehaviorUpdated(
   const auto maybeTargetIndex = message.tryGetTargetIndex();
   if (maybeTargetIndex)
   {
-    debug("Ship " + bsgo::str(shipDbId) + " now has target index "
+    debug("Ship " + core::str(shipDbId) + " now has target index "
           + std::to_string(*maybeTargetIndex));
-    dataContext.setKey(bsgo::ContextKey::TARGET_REACHED, *maybeTargetIndex);
+    dataContext.setKey(core::ContextKey::TARGET_REACHED, *maybeTargetIndex);
   }
   else
   {
-    verbose("Ship " + bsgo::str(shipDbId) + " does not have a target anymore");
-    dataContext.clear(bsgo::ContextKey::TARGET_REACHED);
+    verbose("Ship " + core::str(shipDbId) + " does not have a target anymore");
+    dataContext.clear(core::ContextKey::TARGET_REACHED);
   }
 }
 
-} // namespace pge
+} // namespace bsgalone::client

@@ -1,10 +1,10 @@
 
 #include "DbComponent.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 DbComponent::DbComponent(const Uuid dbId)
-  : AbstractComponent(bsgalone::core::ComponentType::DB)
+  : AbstractComponent(ComponentType::DB)
   , m_dbId(dbId)
 {}
 
@@ -15,4 +15,4 @@ auto DbComponent::dbId() const noexcept -> Uuid
 
 void DbComponent::update(const chrono::TickData & /*data*/) {}
 
-} // namespace bsgo
+} // namespace bsgalone::core

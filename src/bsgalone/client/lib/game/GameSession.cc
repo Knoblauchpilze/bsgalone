@@ -1,56 +1,56 @@
 
 #include "GameSession.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
 GameSession::GameSession()
-  : core::CoreObject("game")
+  : ::core::CoreObject("game")
 {
   addModule("session");
 }
 
 namespace {
-auto determineNextScreen(const bsgo::LoadingTransition transition)
+auto determineNextScreen(const core::LoadingTransition transition)
 {
   switch (transition)
   {
-    case bsgo::LoadingTransition::ACTIVE_SHIP_CHANGED:
+    case core::LoadingTransition::ACTIVE_SHIP_CHANGED:
       return Screen::OUTPOST;
-    case bsgo::LoadingTransition::DOCK:
+    case core::LoadingTransition::DOCK:
       return Screen::OUTPOST;
-    case bsgo::LoadingTransition::EQUIP:
+    case core::LoadingTransition::EQUIP:
       return Screen::OUTPOST;
-    case bsgo::LoadingTransition::JUMP:
+    case core::LoadingTransition::JUMP:
       return Screen::GAME;
-    case bsgo::LoadingTransition::LOGIN:
+    case core::LoadingTransition::LOGIN:
       return Screen::OUTPOST;
-    case bsgo::LoadingTransition::PURCHASE:
+    case core::LoadingTransition::PURCHASE:
       return Screen::OUTPOST;
-    case bsgo::LoadingTransition::UNDOCK:
+    case core::LoadingTransition::UNDOCK:
       return Screen::GAME;
     default:
-      throw std::invalid_argument("Unsupported transition " + bsgo::str(transition));
+      throw std::invalid_argument("Unsupported transition " + core::str(transition));
   }
 }
 
 bool isTransitionValidForCurrentScreen(const Screen currentScreen,
-                                       const bsgo::LoadingTransition transition)
+                                       const core::LoadingTransition transition)
 {
   switch (transition)
   {
-    case bsgo::LoadingTransition::ACTIVE_SHIP_CHANGED:
+    case core::LoadingTransition::ACTIVE_SHIP_CHANGED:
       return currentScreen == Screen::OUTPOST;
-    case bsgo::LoadingTransition::DOCK:
+    case core::LoadingTransition::DOCK:
       return currentScreen == Screen::GAME;
-    case bsgo::LoadingTransition::EQUIP:
+    case core::LoadingTransition::EQUIP:
       return currentScreen == Screen::OUTPOST;
-    case bsgo::LoadingTransition::JUMP:
+    case core::LoadingTransition::JUMP:
       return currentScreen == Screen::GAME;
-    case bsgo::LoadingTransition::LOGIN:
+    case core::LoadingTransition::LOGIN:
       return currentScreen == Screen::LOGIN;
-    case bsgo::LoadingTransition::PURCHASE:
+    case core::LoadingTransition::PURCHASE:
       return currentScreen == Screen::OUTPOST;
-    case bsgo::LoadingTransition::UNDOCK:
+    case core::LoadingTransition::UNDOCK:
       return currentScreen == Screen::OUTPOST;
     default:
       return false;
@@ -59,11 +59,11 @@ bool isTransitionValidForCurrentScreen(const Screen currentScreen,
 } // namespace
 
 void GameSession::startLoadingTransition(const Screen currentScreen,
-                                         const bsgo::LoadingTransition transition)
+                                         const core::LoadingTransition transition)
 {
   if (m_loading)
   {
-    error("Unexpected start of loading transition " + bsgo::str(transition),
+    error("Unexpected start of loading transition " + core::str(transition),
           "Already in loading screen");
   }
 
@@ -71,8 +71,8 @@ void GameSession::startLoadingTransition(const Screen currentScreen,
 
   if (!isTransitionValidForCurrentScreen(currentScreen, transition))
   {
-    error("Unexpected start of loading transition " + bsgo::str(transition),
-          "Transition " + bsgo::str(transition) + " does not match next screen "
+    error("Unexpected start of loading transition " + core::str(transition),
+          "Transition " + core::str(transition) + " does not match next screen "
             + str(m_loading->nextScreen));
   }
 
@@ -83,7 +83,7 @@ void GameSession::startLoadingTransition(const Screen currentScreen,
   debug("Starting loading transition to " + str(m_loading->nextScreen));
 }
 
-auto GameSession::finishLoadingTransition(const bsgo::LoadingTransition transition)
+auto GameSession::finishLoadingTransition(const core::LoadingTransition transition)
   -> ScreenTransition
 {
   if (!m_loading)
@@ -105,21 +105,21 @@ auto GameSession::finishLoadingTransition(const bsgo::LoadingTransition transiti
   return {.previous = previousScreen, .next = nextScreen};
 }
 
-void GameSession::onPlayerLoggedIn(const bsgo::Uuid playerDbId, const bsgo::GameRole role)
+void GameSession::onPlayerLoggedIn(const core::Uuid playerDbId, const core::GameRole role)
 {
   if (m_playerDbId)
   {
-    error("Unexpected player login", "Already logged in as " + bsgo::str(*m_playerDbId));
+    error("Unexpected player login", "Already logged in as " + core::str(*m_playerDbId));
   }
   if (m_role)
   {
-    error("Unexpected player login", "Already assigned to role " + bsgo::str(*m_role));
+    error("Unexpected player login", "Already assigned to role " + core::str(*m_role));
   }
 
   m_playerDbId = playerDbId;
   m_role       = role;
 
-  debug("Logged in as " + bsgo::str(playerDbId) + " with role " + bsgo::str(role));
+  debug("Logged in as " + core::str(playerDbId) + " with role " + core::str(role));
 }
 
 void GameSession::onPlayerLoggedOut()
@@ -137,7 +137,7 @@ void GameSession::onPlayerLoggedOut()
     error("Unexpected player logout", "No faction defined for player");
   }
 
-  debug("Logged out from " + bsgo::str(*m_playerDbId));
+  debug("Logged out from " + core::str(*m_playerDbId));
 
   m_playerDbId.reset();
   m_faction.reset();
@@ -156,7 +156,7 @@ void GameSession::onTimeStepReceived(const chrono::TimeStep &timeStep)
   m_timeStep = timeStep;
 }
 
-void GameSession::setPlayerFaction(const bsgo::Faction faction)
+void GameSession::setPlayerFaction(const core::Faction faction)
 {
   if (!m_playerDbId)
   {
@@ -171,7 +171,7 @@ bool GameSession::hasPlayerDbId() const
   return m_playerDbId.has_value();
 }
 
-auto GameSession::getPlayerDbId() const -> bsgo::Uuid
+auto GameSession::getPlayerDbId() const -> core::Uuid
 {
   if (!m_playerDbId)
   {
@@ -181,7 +181,7 @@ auto GameSession::getPlayerDbId() const -> bsgo::Uuid
   return *m_playerDbId;
 }
 
-auto GameSession::getFaction() const -> bsgo::Faction
+auto GameSession::getFaction() const -> core::Faction
 {
   if (!m_faction)
   {
@@ -191,7 +191,7 @@ auto GameSession::getFaction() const -> bsgo::Faction
   return *m_faction;
 }
 
-auto GameSession::getRole() const -> bsgo::GameRole
+auto GameSession::getRole() const -> core::GameRole
 {
   if (!m_role)
   {
@@ -206,7 +206,7 @@ bool GameSession::hasSystemDbId() const
   return m_systemDbId.has_value();
 }
 
-auto GameSession::getSystemDbId() const -> bsgo::Uuid
+auto GameSession::getSystemDbId() const -> core::Uuid
 {
   if (!m_systemDbId)
   {
@@ -236,7 +236,7 @@ bool GameSession::hasPlayerActiveShipDbId() const
   return m_playerShipDbId.has_value();
 }
 
-auto GameSession::getPlayerActiveShipDbId() const -> bsgo::Uuid
+auto GameSession::getPlayerActiveShipDbId() const -> core::Uuid
 {
   if (!m_playerShipDbId)
   {
@@ -246,16 +246,16 @@ auto GameSession::getPlayerActiveShipDbId() const -> bsgo::Uuid
   return *m_playerShipDbId;
 }
 
-void GameSession::onActiveSystemChanged(const bsgo::Uuid systemDbId)
+void GameSession::onActiveSystemChanged(const core::Uuid systemDbId)
 {
   m_systemDbId = systemDbId;
-  debug("Active system changed to " + bsgo::str(*m_systemDbId));
+  debug("Active system changed to " + core::str(*m_systemDbId));
 }
 
-void GameSession::onActiveShipChanged(const bsgo::Uuid shipDbId)
+void GameSession::onActiveShipChanged(const core::Uuid shipDbId)
 {
   m_playerShipDbId = shipDbId;
-  debug("Active ship changed to " + bsgo::str(*m_playerShipDbId));
+  debug("Active ship changed to " + core::str(*m_playerShipDbId));
 }
 
-} // namespace pge
+} // namespace bsgalone::client

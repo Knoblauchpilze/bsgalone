@@ -1,7 +1,7 @@
 
 #include "WeaponPriceRepository.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 WeaponPriceRepository::WeaponPriceRepository(const DbConnectionShPtr &connection)
   : AbstractRepository("weapon", connection)
@@ -39,4 +39,4 @@ auto WeaponPriceRepository::findAllByWeapon(const Uuid weapon) const
   return out;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

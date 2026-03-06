@@ -3,7 +3,7 @@
 
 #include "AbstractSystem.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class StatusSystem : public AbstractSystem
 {
@@ -23,4 +23,4 @@ class StatusSystem : public AbstractSystem
   void handleJumpState(Entity &entity, StatusComponent &statusComp, Coordinator &coordinator) const;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

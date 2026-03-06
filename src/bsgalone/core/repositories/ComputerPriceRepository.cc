@@ -1,7 +1,7 @@
 
 #include "ComputerPriceRepository.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 ComputerPriceRepository::ComputerPriceRepository(const DbConnectionShPtr &connection)
   : AbstractRepository("computer", connection)
@@ -39,4 +39,4 @@ auto ComputerPriceRepository::findAllByComputer(const Uuid computer) const
   return out;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

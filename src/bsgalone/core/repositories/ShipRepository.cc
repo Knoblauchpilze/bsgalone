@@ -1,7 +1,7 @@
 
 #include "ShipRepository.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 ShipRepository::ShipRepository(const DbConnectionShPtr &connection)
   : AbstractRepository("ship", connection)
@@ -165,11 +165,11 @@ void ShipRepository::fetchSlots(const Uuid ship, Ship &out) const
 
   for (const auto record : rows)
   {
-    const auto slot  = bsgalone::core::fromDbSlot(record[0].as<std::string>());
+    const auto slot  = fromDbSlot(record[0].as<std::string>());
     const auto count = record[1].as<int>();
 
     out.slots[slot] = count;
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

@@ -5,9 +5,9 @@
 #include "PlayerWeaponData.hh"
 #include "Uuid.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
-class PlayerWeaponListMessage : public bsgalone::core::NetworkMessage
+class PlayerWeaponListMessage : public NetworkMessage
 {
   public:
   PlayerWeaponListMessage();
@@ -19,10 +19,10 @@ class PlayerWeaponListMessage : public bsgalone::core::NetworkMessage
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
 
-  auto clone() const -> bsgalone::core::IMessagePtr override;
+  auto clone() const -> IMessagePtr override;
 
   private:
   std::vector<PlayerWeaponData> m_weaponsData{};
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

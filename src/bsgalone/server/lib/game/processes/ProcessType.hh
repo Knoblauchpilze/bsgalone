@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace bsgo {
+namespace bsgalone::server {
 
 enum class ProcessType
 {
@@ -14,4 +14,4 @@ enum class ProcessType
 
 auto str(const ProcessType &type) -> std::string;
 
-} // namespace bsgo
+} // namespace bsgalone::server

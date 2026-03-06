@@ -6,23 +6,23 @@
 #include "DatabaseEntityMapper.hh"
 #include "Target.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
 class TargetListMessageConsumer : public AbstractGameMessageConsumer
 {
   public:
-  TargetListMessageConsumer(bsgo::DatabaseEntityMapper &entityMapper,
-                            bsgo::CoordinatorShPtr coordinator);
+  TargetListMessageConsumer(core::DatabaseEntityMapper &entityMapper,
+                            core::CoordinatorShPtr coordinator);
   ~TargetListMessageConsumer() override = default;
 
   protected:
-  void onMessageReceivedInternal(const bsgalone::core::IMessage &message) override;
+  void onMessageReceivedInternal(const core::IMessage &message) override;
 
   private:
-  bsgo::DatabaseEntityMapper &m_entityMapper;
-  bsgo::CoordinatorShPtr m_coordinator{};
+  core::DatabaseEntityMapper &m_entityMapper;
+  core::CoordinatorShPtr m_coordinator{};
 
-  void registerTarget(const bsgalone::core::Target &data) const;
+  void registerTarget(const core::Target &data) const;
 };
 
-} // namespace pge
+} // namespace bsgalone::client

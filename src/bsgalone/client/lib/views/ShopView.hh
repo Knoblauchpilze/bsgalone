@@ -14,22 +14,22 @@
 #include <memory>
 #include <vector>
 
-namespace pge {
+namespace bsgalone::client {
 
 struct ResourceCost
 {
-  bsgo::ResourceData resource{};
+  core::ResourceData resource{};
   int amount{};
 };
 
 struct ShopItem
 {
   std::vector<ResourceCost> price;
-  std::optional<bsgo::WeaponData> weapon{};
-  std::optional<bsgo::ComputerData> computer{};
+  std::optional<core::WeaponData> weapon{};
+  std::optional<core::ComputerData> computer{};
 
-  auto id() const -> bsgo::Uuid;
-  auto type() const -> bsgalone::core::Item;
+  auto id() const -> core::Uuid;
+  auto type() const -> core::Item;
 };
 
 class ShopView : public AbstractView
@@ -44,25 +44,25 @@ class ShopView : public AbstractView
   auto gameSession() const -> const GameSession &;
 
   auto getShopItems() const -> std::vector<ShopItem>;
-  auto canPlayerAfford(const bsgo::Uuid id, const bsgalone::core::Item &itemType) const
-    -> bsgo::Affordability;
+  auto canPlayerAfford(const core::Uuid id, const core::Item &itemType) const
+    -> core::Affordability;
 
-  auto getAllShips() const -> std::vector<bsgo::ShipData>;
+  auto getAllShips() const -> std::vector<core::ShipData>;
 
   protected:
-  void handleMessageInternal(const bsgalone::core::IMessage &message) override;
+  void handleMessageInternal(const core::IMessage &message) override;
 
   private:
   GameSessionShPtr m_gameSession{};
-  std::vector<bsgo::ResourceData> m_resources{};
-  std::vector<bsgo::ComputerData> m_computers{};
-  std::vector<bsgo::WeaponData> m_weapons{};
-  std::vector<bsgo::ShipData> m_ships{};
-  std::vector<bsgo::PlayerResourceData> m_playerResources{};
+  std::vector<core::ResourceData> m_resources{};
+  std::vector<core::ComputerData> m_computers{};
+  std::vector<core::WeaponData> m_weapons{};
+  std::vector<core::ShipData> m_ships{};
+  std::vector<core::PlayerResourceData> m_playerResources{};
 
-  void handleShipsLoading(const bsgo::ShipListMessage &message);
+  void handleShipsLoading(const core::ShipListMessage &message);
 };
 
 using ShopViewShPtr = std::shared_ptr<ShopView>;
 
-} // namespace pge
+} // namespace bsgalone::client

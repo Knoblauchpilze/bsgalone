@@ -2,10 +2,10 @@
 #include "SlotComponentMessage.hh"
 #include "SerializationUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 SlotComponentMessage::SlotComponentMessage()
-  : ComponentUpdatedMessage(bsgalone::core::MessageType::SLOT_COMPONENT_UPDATED)
+  : ComponentUpdatedMessage(MessageType::SLOT_COMPONENT_UPDATED)
 {}
 
 SlotComponentMessage::SlotComponentMessage(
@@ -14,9 +14,9 @@ SlotComponentMessage::SlotComponentMessage(
   const Uuid shipDbId,
   const Uuid slotDbId,
   const std::optional<chrono::TickDuration> &elapsedSinceLastFired)
-  : ComponentUpdatedMessage(bsgalone::core::MessageType::SLOT_COMPONENT_UPDATED,
+  : ComponentUpdatedMessage(MessageType::SLOT_COMPONENT_UPDATED,
                             shipDbId,
-                            bsgalone::core::ComponentType::COMPUTER_SLOT)
+                            ComponentType::COMPUTER_SLOT)
   , m_playerDbId(playerDbId)
   , m_slotDbId(slotDbId)
   , m_elapsedSinceLastFired(elapsedSinceLastFired)
@@ -39,14 +39,14 @@ auto SlotComponentMessage::getElapsedSinceLastFired() const -> std::optional<chr
 
 auto SlotComponentMessage::serialize(std::ostream &out) const -> std::ostream &
 {
-  core::serialize(out, m_messageType);
-  core::serialize(out, m_clientId);
+  ::core::serialize(out, m_messageType);
+  ::core::serialize(out, m_clientId);
 
-  core::serialize(out, m_playerDbId);
-  core::serialize(out, m_shipDbId);
-  core::serialize(out, m_component);
-  core::serialize(out, m_slotDbId);
-  core::serialize(out, m_elapsedSinceLastFired);
+  ::core::serialize(out, m_playerDbId);
+  ::core::serialize(out, m_shipDbId);
+  ::core::serialize(out, m_component);
+  ::core::serialize(out, m_slotDbId);
+  ::core::serialize(out, m_elapsedSinceLastFired);
 
   return out;
 }
@@ -54,19 +54,19 @@ auto SlotComponentMessage::serialize(std::ostream &out) const -> std::ostream &
 bool SlotComponentMessage::deserialize(std::istream &in)
 {
   bool ok{true};
-  ok &= core::deserialize(in, m_messageType);
-  ok &= core::deserialize(in, m_clientId);
+  ok &= ::core::deserialize(in, m_messageType);
+  ok &= ::core::deserialize(in, m_clientId);
 
-  ok &= core::deserialize(in, m_playerDbId);
-  ok &= core::deserialize(in, m_shipDbId);
-  ok &= core::deserialize(in, m_component);
-  ok &= core::deserialize(in, m_slotDbId);
-  ok &= core::deserialize(in, m_elapsedSinceLastFired);
+  ok &= ::core::deserialize(in, m_playerDbId);
+  ok &= ::core::deserialize(in, m_shipDbId);
+  ok &= ::core::deserialize(in, m_component);
+  ok &= ::core::deserialize(in, m_slotDbId);
+  ok &= ::core::deserialize(in, m_elapsedSinceLastFired);
 
   return ok;
 }
 
-auto SlotComponentMessage::clone() const -> bsgalone::core::IMessagePtr
+auto SlotComponentMessage::clone() const -> IMessagePtr
 {
   auto clone                     = std::make_unique<SlotComponentMessage>();
   clone->m_playerDbId            = m_playerDbId;
@@ -80,4 +80,4 @@ auto SlotComponentMessage::clone() const -> bsgalone::core::IMessagePtr
   return clone;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

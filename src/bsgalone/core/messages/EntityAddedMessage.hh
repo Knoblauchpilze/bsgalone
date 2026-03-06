@@ -11,9 +11,9 @@
 #include "Uuid.hh"
 #include <optional>
 
-namespace bsgo {
+namespace bsgalone::core {
 
-class EntityAddedMessage : public bsgalone::core::NetworkMessage
+class EntityAddedMessage : public NetworkMessage
 {
   public:
   EntityAddedMessage();
@@ -21,7 +21,7 @@ class EntityAddedMessage : public bsgalone::core::NetworkMessage
   ~EntityAddedMessage() override = default;
 
   auto getSystemDbId() const -> Uuid;
-  auto getEntityKind() const -> bsgalone::core::EntityKind;
+  auto getEntityKind() const -> EntityKind;
 
   void setAsteroidData(const AsteroidData &data);
   auto tryGetAsteroidData() const -> std::optional<AsteroidData>;
@@ -38,11 +38,11 @@ class EntityAddedMessage : public bsgalone::core::NetworkMessage
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
 
-  auto clone() const -> bsgalone::core::IMessagePtr override;
+  auto clone() const -> IMessagePtr override;
 
   private:
   Uuid m_systemDbId{};
-  std::optional<bsgalone::core::EntityKind> m_entityKind{};
+  std::optional<EntityKind> m_entityKind{};
 
   std::optional<AsteroidData> m_asteroidData{};
   std::optional<PlayerShipData> m_shipData{};
@@ -50,4 +50,4 @@ class EntityAddedMessage : public bsgalone::core::NetworkMessage
   std::optional<PlayerData> m_playerData{};
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

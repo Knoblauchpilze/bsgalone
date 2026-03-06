@@ -1,7 +1,7 @@
 
 #include "SystemType.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 auto str(const SystemType &type) -> std::string
 {
@@ -38,4 +38,4 @@ auto str(const SystemType &type) -> std::string
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

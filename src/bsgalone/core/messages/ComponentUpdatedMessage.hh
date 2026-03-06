@@ -4,23 +4,23 @@
 #include "ComponentType.hh"
 #include "NetworkMessage.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
-class ComponentUpdatedMessage : public bsgalone::core::NetworkMessage
+class ComponentUpdatedMessage : public NetworkMessage
 {
   public:
-  ComponentUpdatedMessage(const bsgalone::core::MessageType &type);
-  ComponentUpdatedMessage(const bsgalone::core::MessageType &type,
+  ComponentUpdatedMessage(const MessageType &type);
+  ComponentUpdatedMessage(const MessageType &type,
                           const Uuid shipDbId,
-                          const bsgalone::core::ComponentType component);
+                          const ComponentType component);
   ~ComponentUpdatedMessage() override = default;
 
   auto getShipDbId() const -> Uuid;
-  auto getComponentType() const -> bsgalone::core::ComponentType;
+  auto getComponentType() const -> ComponentType;
 
   protected:
   Uuid m_shipDbId{};
-  bsgalone::core::ComponentType m_component{};
+  ComponentType m_component{};
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

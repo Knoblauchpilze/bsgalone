@@ -4,7 +4,7 @@
 #include "AbstractComponent.hh"
 #include "IBoundingBox.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class TransformComponent : public AbstractComponent
 {
@@ -32,4 +32,4 @@ class TransformComponent : public AbstractComponent
 
 using TransformComponentShPtr = std::shared_ptr<TransformComponent>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

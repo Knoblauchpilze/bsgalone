@@ -1,7 +1,7 @@
 
 #include "AxisAlignedBoundingBox.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 AxisAlignedBoundingBox::AxisAlignedBoundingBox(const Eigen::Vector3f &center,
                                                const Eigen::Vector3f &dims) noexcept
@@ -64,4 +64,4 @@ void AxisAlignedBoundingBox::translate(const Eigen::Vector3f &delta)
   m_center += delta;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

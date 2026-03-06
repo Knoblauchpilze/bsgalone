@@ -6,7 +6,7 @@
 
 using namespace ::testing;
 
-namespace bsgo {
+namespace bsgalone::core {
 
 TEST(Unit_Bsgalone_Core_Messages_PlayerShipData, EqualWhenDbIdIsEqual)
 {
@@ -60,14 +60,13 @@ TEST(Unit_Bsgalone_Core_Messages_PlayerShipData, WithSlots)
                        .maxPowerPoints = 100.0f,
                        .docked         = true,
                        .active         = true,
-                       .slots          = {{bsgalone::core::Slot::WEAPON, 2},
-                                          {bsgalone::core::Slot::COMPUTER, 14}}};
+                       .slots          = {{Slot::WEAPON, 2}, {Slot::COMPUTER, 14}}};
 
   PlayerShipData output{.dbId    = Uuid{14},
                         .shipId  = Uuid{9421},
                         .faction = Faction::CYLON,
                         .status  = Status::JUMP,
-                        .slots   = {{bsgalone::core::Slot::COMPUTER, 1}}};
+                        .slots   = {{Slot::COMPUTER, 1}}};
 
   EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
@@ -214,14 +213,12 @@ TEST(Unit_Bsgalone_Core_Messages_PlayerShipData, WithComputers)
                        .maxPowerPoints = 100.0f,
                        .playerDbId     = Uuid{6547}};
   input.computers.push_back({
-    .dbId         = Uuid{5001},
-    .computerDbId = Uuid{5002},
-    .level        = 3,
-    .offensive    = false,
-    .range        = 10.0f,
-    .allowedTargets
-    = std::unordered_set<bsgalone::core::EntityKind>{bsgalone::core::EntityKind::SHIP,
-                                                     bsgalone::core::EntityKind::BULLET},
+    .dbId           = Uuid{5001},
+    .computerDbId   = Uuid{5002},
+    .level          = 3,
+    .offensive      = false,
+    .range          = 10.0f,
+    .allowedTargets = std::unordered_set<EntityKind>{EntityKind::SHIP, EntityKind::BULLET},
   });
 
   PlayerShipData output{.dbId = Uuid{14}, .faction = Faction::CYLON, .status = Status::JUMP};
@@ -261,4 +258,4 @@ TEST(Unit_Bsgalone_Core_Messages_PlayerShipData, ClearsComputers)
   assertPlayerShipDataAreEqual(output, input);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

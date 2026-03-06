@@ -5,7 +5,7 @@
 #include <eigen3/Eigen/Eigen>
 #include <optional>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 enum class SpeedMode
 {
@@ -70,4 +70,4 @@ class VelocityComponent : public AbstractComponent
 
 using VelocityComponentShPtr = std::shared_ptr<VelocityComponent>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

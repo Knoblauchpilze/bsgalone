@@ -30,94 +30,94 @@
 #include "WeaponData.hh"
 #include "WeaponRepository.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
 struct PlayerProps
 {
-  Player dbPlayer{};
+  core::Player dbPlayer{};
 
-  std::optional<Uuid> attachedShip{};
+  std::optional<core::Uuid> attachedShip{};
 
-  auto toPlayerData() const -> PlayerData;
+  auto toPlayerData() const -> core::PlayerData;
 };
 
 struct AsteroidProps
 {
-  Asteroid dbAsteroid{};
+  core::Asteroid dbAsteroid{};
 
-  std::optional<Uuid> resource{};
+  std::optional<core::Uuid> resource{};
   std::optional<int> amount{};
 
-  auto toAsteroidData() const -> AsteroidData;
+  auto toAsteroidData() const -> core::AsteroidData;
 };
 
 struct OutpostProps
 {
-  SystemOutpost dbOutpost{};
+  core::SystemOutpost dbOutpost{};
 
-  auto toOutpostData() const -> OutpostData;
+  auto toOutpostData() const -> core::OutpostData;
 };
 
 struct PlayerWeaponProps
 {
-  PlayerWeapon dbWeapon{};
+  core::PlayerWeapon dbWeapon{};
   std::optional<Eigen::Vector3f> slotPosition{};
 
-  auto toPlayerWeaponData() const -> PlayerWeaponData;
+  auto toPlayerWeaponData() const -> core::PlayerWeaponData;
 };
 
-auto toPlayerComputerData(const PlayerComputer &computer) -> PlayerComputerData;
+auto toPlayerComputerData(const core::PlayerComputer &computer) -> core::PlayerComputerData;
 
 struct PlayerShipProps
 {
-  PlayerShip dbShip{};
-  Status status{};
+  core::PlayerShip dbShip{};
+  core::Status status{};
   std::vector<PlayerWeaponProps> weapons{};
-  std::vector<PlayerComputer> computers{};
+  std::vector<core::PlayerComputer> computers{};
 
-  auto toPlayerShipData() const -> PlayerShipData;
+  auto toPlayerShipData() const -> core::PlayerShipData;
 };
 
-auto toSystemData(const System &system) -> SystemData;
+auto toSystemData(const core::System &system) -> core::SystemData;
 
-auto toResourceData(const Resource &resource) -> ResourceData;
+auto toResourceData(const core::Resource &resource) -> core::ResourceData;
 
-auto toPlayerResourceData(const PlayerResource &playerResource) -> PlayerResourceData;
+auto toPlayerResourceData(const core::PlayerResource &playerResource) -> core::PlayerResourceData;
 
 struct WeaponProps
 {
-  Weapon dbWeapon{};
-  std::unordered_map<Uuid, int> price{};
+  core::Weapon dbWeapon{};
+  std::unordered_map<core::Uuid, int> price{};
 
-  auto toWeaponData() const -> WeaponData;
+  auto toWeaponData() const -> core::WeaponData;
 };
 
 struct ComputerProps
 {
-  Computer dbComputer{};
-  std::unordered_map<Uuid, int> price{};
+  core::Computer dbComputer{};
+  std::unordered_map<core::Uuid, int> price{};
 
-  auto toComputerData() const -> ComputerData;
+  auto toComputerData() const -> core::ComputerData;
 };
 
 struct ShipProps
 {
-  Ship dbShip{};
-  std::unordered_map<Uuid, int> price{};
+  core::Ship dbShip{};
+  std::unordered_map<core::Uuid, int> price{};
 
-  auto toShipData() const -> ShipData;
+  auto toShipData() const -> core::ShipData;
 };
 
-auto toSystemTickData(const SystemTick &tickData) -> SystemTickData;
+auto toSystemTickData(const core::SystemTick &tickData) -> core::SystemTickData;
 
 struct TargetProps
 {
-  Uuid sourceDbId{};
-  bsgalone::core::EntityKind sourceKind{};
-  Uuid targetDbId{};
-  bsgalone::core::EntityKind targetKind{};
+  core::Uuid sourceDbId{};
+  core::EntityKind sourceKind{};
+  core::Uuid targetDbId{};
+  core::EntityKind targetKind{};
 
-  auto toTarget() const -> bsgalone::core::Target;
+  auto toTarget() const -> core::Target;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::server

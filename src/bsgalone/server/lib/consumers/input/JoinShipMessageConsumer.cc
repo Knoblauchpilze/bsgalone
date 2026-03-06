@@ -1,12 +1,11 @@
 
 #include "JoinShipMessageConsumer.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-JoinShipMessageConsumer::JoinShipMessageConsumer(
-  PlayerServicePtr playerService,
-  bsgalone::core::IMessageQueue *const outputMessageQueue)
-  : AbstractMessageConsumer("join", {bsgalone::core::MessageType::JOIN_SHIP})
+JoinShipMessageConsumer::JoinShipMessageConsumer(PlayerServicePtr playerService,
+                                                 core::IMessageQueue *const outputMessageQueue)
+  : AbstractMessageConsumer("join", {core::MessageType::JOIN_SHIP})
   , m_playerService(std::move(playerService))
   , m_outputMessageQueue(outputMessageQueue)
 {
@@ -20,23 +19,23 @@ JoinShipMessageConsumer::JoinShipMessageConsumer(
   }
 }
 
-void JoinShipMessageConsumer::onEventReceived(const bsgalone::core::IMessage &message)
+void JoinShipMessageConsumer::onEventReceived(const core::IMessage &message)
 {
-  const auto &joinShip = message.as<JoinShipMessage>();
+  const auto &joinShip = message.as<core::JoinShipMessage>();
   handleJoinShip(joinShip);
 }
 
-void JoinShipMessageConsumer::handleJoinShip(const JoinShipMessage &message) const
+void JoinShipMessageConsumer::handleJoinShip(const core::JoinShipMessage &message) const
 {
   if (!m_playerService->tryJoinShip(message.getPlayerDbId(), message.getShipDbId()))
   {
     warn("Failed to process join ship message",
-         "Player " + str(message.getPlayerDbId()) + " cannot join desired ship "
-           + str(message.getShipDbId()));
+         "Player " + core::str(message.getPlayerDbId()) + " cannot join desired ship "
+           + core::str(message.getShipDbId()));
     return;
   }
 
   m_outputMessageQueue->pushEvent(message.clone());
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

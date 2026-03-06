@@ -1,10 +1,10 @@
 
 #include "ScannedComponent.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 ScannedComponent::ScannedComponent()
-  : AbstractComponent(bsgalone::core::ComponentType::SCANNED)
+  : AbstractComponent(ComponentType::SCANNED)
 {}
 
 bool ScannedComponent::scanned() const
@@ -24,4 +24,4 @@ void ScannedComponent::reset()
 
 void ScannedComponent::update(const chrono::TickData & /*data*/) {}
 
-} // namespace bsgo
+} // namespace bsgalone::core

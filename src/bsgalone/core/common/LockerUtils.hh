@@ -6,7 +6,7 @@
 #include "ShipComputerRepository.hh"
 #include "ShipWeaponRepository.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 struct EquipData
 {
@@ -20,4 +20,4 @@ struct EquipData
 bool canStillEquipWeapon(const EquipData &data);
 bool canStillEquipComputer(const EquipData &data);
 
-} // namespace bsgo
+} // namespace bsgalone::core

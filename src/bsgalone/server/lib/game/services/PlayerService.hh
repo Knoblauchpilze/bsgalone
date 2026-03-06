@@ -4,20 +4,20 @@
 #include "AbstractService.hh"
 #include <memory>
 
-namespace bsgo {
+namespace bsgalone::server {
 
 class PlayerService : public AbstractService
 {
   public:
-  PlayerService(const Repositories &repositories);
+  PlayerService(const core::Repositories &repositories);
   ~PlayerService() override = default;
 
-  bool tryJoinShip(const Uuid playerDbId, const Uuid shipDbId) const;
+  bool tryJoinShip(const core::Uuid playerDbId, const core::Uuid shipDbId) const;
 
   private:
-  void makePlayerJoinShip(const Uuid playerDbId, const Uuid shipDbId) const;
+  void makePlayerJoinShip(const core::Uuid playerDbId, const core::Uuid shipDbId) const;
 };
 
 using PlayerServicePtr = std::unique_ptr<PlayerService>;
 
-} // namespace bsgo
+} // namespace bsgalone::server

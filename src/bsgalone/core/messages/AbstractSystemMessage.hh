@@ -11,12 +11,12 @@ class AbstractSystemMessage : public AbstractMessage
   public:
   ~AbstractSystemMessage() override = default;
 
-  auto getSystemDbId() const -> bsgo::Uuid;
+  auto getSystemDbId() const -> Uuid;
 
   protected:
-  AbstractSystemMessage(const MessageType &type, const bsgo::Uuid systemDbId);
+  AbstractSystemMessage(const MessageType &type, const Uuid systemDbId);
 
-  bsgo::Uuid m_systemDbId{};
+  Uuid m_systemDbId{};
 };
 
 } // namespace bsgalone::core

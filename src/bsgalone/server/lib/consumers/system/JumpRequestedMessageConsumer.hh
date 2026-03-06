@@ -6,22 +6,22 @@
 #include "JumpRequestedMessage.hh"
 #include "Services.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-class JumpRequestedMessageConsumer : public bsgalone::core::AbstractMessageConsumer
+class JumpRequestedMessageConsumer : public core::AbstractMessageConsumer
 {
   public:
   JumpRequestedMessageConsumer(const Services &services,
-                               bsgalone::core::IMessageQueue *const outputMessageQueue);
+                               core::IMessageQueue *const outputMessageQueue);
   ~JumpRequestedMessageConsumer() override = default;
 
-  void onEventReceived(const bsgalone::core::IMessage &message) override;
+  void onEventReceived(const core::IMessage &message) override;
 
   private:
   JumpServiceShPtr m_jumpService{};
-  bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
+  core::IMessageQueue *const m_outputMessageQueue{};
 
-  void handleJumpRequest(const bsgalone::core::JumpRequestedMessage &message) const;
+  void handleJumpRequest(const core::JumpRequestedMessage &message) const;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::server

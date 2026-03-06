@@ -2,7 +2,7 @@
 #include "CredentialsUiHandler.hh"
 #include "ScreenCommon.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
 CredentialsUiHandler::CredentialsUiHandler()
   : AbstractUiHandler("credentials")
@@ -23,15 +23,15 @@ auto addTextFieldSectionToMenu(ui::UiMenu &mainPanel,
   auto textFieldSection = generateBlankHorizontalMenu();
 
   const ui::MenuConfig config{.highlightable = false};
-  auto bg    = ui::bgConfigFromColor(semiOpaque(colors::DARK_BLUE));
-  auto text  = ui::textConfigFromColor(textFieldlabel, colors::GREY, ui::TextAlignment::RIGHT);
+  auto bg    = ui::bgConfigFromColor(semiOpaque(pge::colors::DARK_BLUE));
+  auto text  = ui::textConfigFromColor(textFieldlabel, pge::colors::GREY, ui::TextAlignment::RIGHT);
   auto label = std::make_unique<ui::UiTextMenu>(config, bg, text);
   textFieldSection->addMenu(std::move(label));
 
   ui::TextFieldConfig fieldConfig{};
-  bg               = ui::bgConfigFromColor(semiOpaque(colors::WHITE));
+  bg               = ui::bgConfigFromColor(semiOpaque(pge::colors::WHITE));
   const auto value = defaultValue.value_or("");
-  text             = ui::textConfigFromColor(value, colors::BLACK, ui::TextAlignment::LEFT);
+  text             = ui::textConfigFromColor(value, pge::colors::BLACK, ui::TextAlignment::LEFT);
 
   auto field = std::make_unique<ui::UiTextField>(fieldConfig, bg, text);
   auto out   = field.get();
@@ -45,11 +45,11 @@ auto addTextFieldSectionToMenu(ui::UiMenu &mainPanel,
 
 void CredentialsUiHandler::initializeMenus(const int width,
                                            const int /*height*/,
-                                           sprites::TexturePack & /*texturesLoader*/)
+                                           pge::sprites::TexturePack & /*texturesLoader*/)
 {
-  const Vec2i loginDimsPixels{400, 200};
+  const pge::Vec2i loginDimsPixels{400, 200};
   constexpr auto LOGIN_PANEL_Y_PIXELS = 200;
-  const Vec2i loginPos{(width - loginDimsPixels.x) / 2, LOGIN_PANEL_Y_PIXELS};
+  const pge::Vec2i loginPos{(width - loginDimsPixels.x) / 2, LOGIN_PANEL_Y_PIXELS};
 
   m_credentialsPanel = generateBlankVerticalMenu(loginPos, loginDimsPixels);
 
@@ -62,11 +62,11 @@ bool CredentialsUiHandler::processUserInput(ui::UserInputData &inputData)
   return m_credentialsPanel->processUserInput(inputData);
 }
 
-void CredentialsUiHandler::render(Renderer &engine) const
+void CredentialsUiHandler::render(pge::Renderer &engine) const
 {
   m_credentialsPanel->render(engine);
 }
 
 void CredentialsUiHandler::updateUi() {}
 
-} // namespace pge
+} // namespace bsgalone::client

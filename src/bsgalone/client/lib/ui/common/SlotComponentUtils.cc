@@ -1,32 +1,32 @@
 
 #include "SlotComponentUtils.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
-auto bgColorFromFiringState(const bsgo::SlotComponent &component) -> Color
+auto bgColorFromFiringState(const core::SlotComponent &component) -> pge::Color
 {
   switch (component.firingState())
   {
-    case bsgo::FiringState::READY:
-      return colors::DARK_GREEN;
-    case bsgo::FiringState::DISABLED:
+    case core::FiringState::READY:
+      return pge::colors::DARK_GREEN;
+    case core::FiringState::DISABLED:
       return bgForMissingComponent();
-    case bsgo::FiringState::INVALID_TARGET:
-    case bsgo::FiringState::OUT_OF_RANGE:
-      return colors::DARK_RED;
-    case bsgo::FiringState::OUT_OF_POWER:
-      return colors::DARK_ORANGE;
-    case bsgo::FiringState::RELOADING:
-      return colorGradient(colors::DARK_YELLOW,
-                           colors::DARK_GREEN,
+    case core::FiringState::INVALID_TARGET:
+    case core::FiringState::OUT_OF_RANGE:
+      return pge::colors::DARK_RED;
+    case core::FiringState::OUT_OF_POWER:
+      return pge::colors::DARK_ORANGE;
+    case core::FiringState::RELOADING:
+      return colorGradient(pge::colors::DARK_YELLOW,
+                           pge::colors::DARK_GREEN,
                            component.reloadPercentage(),
-                           alpha::OPAQUE);
+                           pge::alpha::OPAQUE);
     default:
-      return colors::PINK;
+      return pge::colors::PINK;
   }
 }
 
-void resetPictureMenuToDefault(ui::UiPictureMenu &menu, const Color &defaultColor)
+void resetPictureMenuToDefault(ui::UiPictureMenu &menu, const pge::Color &defaultColor)
 {
   menu.setPictureTint(defaultColor);
   menu.updateBgColor(semiOpaque(bgForMissingComponent()));
@@ -35,4 +35,4 @@ void resetPictureMenuToDefault(ui::UiPictureMenu &menu, const Color &defaultColo
   menu.setEnabled(false);
 }
 
-} // namespace pge
+} // namespace bsgalone::client

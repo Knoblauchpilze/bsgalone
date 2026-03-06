@@ -4,7 +4,7 @@
 #include "IViewListener.hh"
 #include <functional>
 
-namespace pge {
+namespace bsgalone::client {
 
 class IViewListenerProxy : public IViewListener
 {
@@ -20,4 +20,4 @@ class IViewListenerProxy : public IViewListener
   OnUpdatedConsumer m_listener{};
 };
 
-} // namespace pge
+} // namespace bsgalone::client

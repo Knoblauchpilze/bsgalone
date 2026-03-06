@@ -9,11 +9,11 @@
 #include "StringUtils.hh"
 #include "UiPictureMenu.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
 WeaponsUiHandler::WeaponsUiHandler(const Views &views)
   : AbstractUiHandler("weapons")
-  , AbstractMessageListener({bsgalone::core::MessageType::ENTITY_REMOVED})
+  , AbstractMessageListener({core::MessageType::ENTITY_REMOVED})
   , m_shipView(views.shipView)
   , m_shipDbView(views.shipDbView)
   , m_playerView(views.playerView)
@@ -36,12 +36,12 @@ WeaponsUiHandler::WeaponsUiHandler(const Views &views)
 
 void WeaponsUiHandler::initializeMenus(const int width,
                                        const int height,
-                                       sprites::TexturePack &texturesLoader)
+                                       pge::sprites::TexturePack &texturesLoader)
 {
   constexpr auto WEAPONS_TEXTURE_PACK_FILE_PATH = "assets/weapons.png";
-  const sprites::PackDesc pack{.file   = WEAPONS_TEXTURE_PACK_FILE_PATH,
-                               .sSize  = Vec2i{44, 92},
-                               .layout = Vec2i{3, 1}};
+  const pge::sprites::PackDesc pack{.file   = WEAPONS_TEXTURE_PACK_FILE_PATH,
+                                    .sSize  = pge::Vec2i{44, 92},
+                                    .layout = pge::Vec2i{3, 1}};
   m_weaponTexturesPackId = texturesLoader.registerPack(pack);
 
   generateWeaponsMenus(width, height);
@@ -63,7 +63,7 @@ bool WeaponsUiHandler::processUserInput(ui::UserInputData &inputData)
   return out;
 }
 
-void WeaponsUiHandler::render(Renderer &engine) const
+void WeaponsUiHandler::render(pge::Renderer &engine) const
 {
   for (const auto &menu : m_weapons)
   {
@@ -92,20 +92,20 @@ void WeaponsUiHandler::updateUi()
   }
 }
 
-void WeaponsUiHandler::connectToMessageQueue(bsgalone::core::IMessageQueue &messageQueue)
+void WeaponsUiHandler::connectToMessageQueue(core::IMessageQueue &messageQueue)
 {
   auto listener = std::make_unique<MessageListenerWrapper>(this);
   messageQueue.addListener(std::move(listener));
 }
 
-void WeaponsUiHandler::onEventReceived(const bsgalone::core::IMessage &message)
+void WeaponsUiHandler::onEventReceived(const core::IMessage &message)
 {
   if (!m_shipView->isReady())
   {
     return;
   }
 
-  m_disabled = didPlayerShipDie(message.as<bsgo::EntityRemovedMessage>(), *m_shipDbView);
+  m_disabled = didPlayerShipDie(message.as<core::EntityRemovedMessage>(), *m_shipDbView);
 }
 
 void WeaponsUiHandler::subscribeToViews()
@@ -143,9 +143,10 @@ constexpr auto ABILITIES_PICTURE_FILE_PATH = "assets/slot.png";
 void WeaponsUiHandler::generateWeaponsMenus(int width, int height)
 {
   constexpr auto WEAPON_MENU_PIXEL_DIMS = 50;
-  const Vec2i weaponMenuDims{WEAPON_MENU_PIXEL_DIMS, WEAPON_MENU_PIXEL_DIMS};
+  const pge::Vec2i weaponMenuDims{WEAPON_MENU_PIXEL_DIMS, WEAPON_MENU_PIXEL_DIMS};
   constexpr auto SPACING_IN_PIXELS = 5;
-  const Vec2i pos{width - NUMBER_OF_WEAPONS * (weaponMenuDims.x + SPACING_IN_PIXELS), height / 2};
+  const pge::Vec2i pos{width - NUMBER_OF_WEAPONS * (weaponMenuDims.x + SPACING_IN_PIXELS),
+                       height / 2};
 
   ui::MenuConfig config{.pos                       = pos,
                         .dims                      = weaponMenuDims,
@@ -163,8 +164,8 @@ void WeaponsUiHandler::generateWeaponsMenus(int width, int height)
 }
 
 namespace {
-auto tryGetDbWeapon(const bsgo::Uuid weaponDbId, const std::vector<bsgo::PlayerWeaponData> &weapons)
-  -> std::optional<bsgo::PlayerWeaponData>
+auto tryGetDbWeapon(const core::Uuid weaponDbId, const std::vector<core::PlayerWeaponData> &weapons)
+  -> std::optional<core::PlayerWeaponData>
 {
   for (const auto &weapon : weapons)
   {
@@ -177,7 +178,7 @@ auto tryGetDbWeapon(const bsgo::Uuid weaponDbId, const std::vector<bsgo::PlayerW
   return {};
 }
 
-auto spriteIdFromWeapon(const bsgo::PlayerWeaponData &weapon) -> Vec2i
+auto spriteIdFromWeapon(const core::PlayerWeaponData &weapon) -> pge::Vec2i
 {
   if (weapon.name == "Short range cannon")
   {
@@ -213,8 +214,8 @@ void WeaponsUiHandler::initializeWeapons()
   const auto palette = generatePaletteForFaction(m_playerView->getPlayerFaction());
 
   const ui::MenuConfig config{};
-  const auto bg = ui::bgConfigFromColor(colors::BLANK);
-  auto textConf = ui::textConfigFromColor("", colors::WHITE);
+  const auto bg = ui::bgConfigFromColor(pge::colors::BLANK);
+  auto textConf = ui::textConfigFromColor("", pge::colors::WHITE);
 
   for (const auto &menu : m_weapons)
   {
@@ -229,8 +230,8 @@ void WeaponsUiHandler::initializeWeapons()
     const auto dbWeapon   = tryGetDbWeapon(weaponDbId, dbWeapons);
     if (!dbWeapon)
     {
-      error("Failed to initialize weapons for ship " + bsgo::str(ship.dbComp().dbId()),
-            "Failed to find component for weapon " + bsgo::str(weaponDbId));
+      error("Failed to initialize weapons for ship " + core::str(ship.dbComp().dbId()),
+            "Failed to find component for weapon " + core::str(weaponDbId));
     }
 
     menu->setClickCallback([this, id]() {
@@ -254,7 +255,7 @@ void WeaponsUiHandler::initializeWeapons()
   m_initialized = true;
 }
 
-void WeaponsUiHandler::updateWeaponMenu(const bsgo::WeaponSlotComponent &weapon, const int id)
+void WeaponsUiHandler::updateWeaponMenu(const core::WeaponSlotComponent &weapon, const int id)
 {
   auto &menu = *m_weapons[id];
 
@@ -271,9 +272,9 @@ void WeaponsUiHandler::updateWeaponMenu(const bsgo::WeaponSlotComponent &weapon,
   else if (percentage < 1.0f)
   {
     constexpr auto PERCENTAGE_MULTIPLIER = 100.0f;
-    statusText = bsgo::floatToStr(PERCENTAGE_MULTIPLIER * weapon.reloadPercentage()) + "%";
+    statusText = core::floatToStr(PERCENTAGE_MULTIPLIER * weapon.reloadPercentage()) + "%";
   }
   m_statuses[id]->setText(statusText);
 }
 
-} // namespace pge
+} // namespace bsgalone::client

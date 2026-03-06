@@ -9,34 +9,34 @@
 #include "Uuid.hh"
 #include <memory>
 
-namespace bsgo {
+namespace bsgalone::server {
 
 class EntityService : public AbstractService
 {
   public:
-  EntityService(const Repositories &repositories,
-                CoordinatorShPtr coordinator,
-                DatabaseEntityMapper &entityMapper);
+  EntityService(const core::Repositories &repositories,
+                core::CoordinatorShPtr coordinator,
+                core::DatabaseEntityMapper &entityMapper);
   ~EntityService() override = default;
 
-  bool tryCreateShipEntity(const Uuid shipDbId) const;
-  void tryDeleteShipEntity(const Uuid shipDbId) const;
-  bool tryCreateAsteroidEntity(const Uuid asteroidDbId) const;
-  void tryDeleteAsteroidEntity(const Uuid asteroidDbId) const;
+  bool tryCreateShipEntity(const core::Uuid shipDbId) const;
+  void tryDeleteShipEntity(const core::Uuid shipDbId) const;
+  bool tryCreateAsteroidEntity(const core::Uuid asteroidDbId) const;
+  void tryDeleteAsteroidEntity(const core::Uuid asteroidDbId) const;
 
-  auto getPlayerDbIdForShip(const Uuid shipDbId) const -> Uuid;
+  auto getPlayerDbIdForShip(const core::Uuid shipDbId) const -> core::Uuid;
 
   private:
-  CoordinatorShPtr m_coordinator{};
-  DatabaseEntityMapper &m_entityMapper;
+  core::CoordinatorShPtr m_coordinator{};
+  core::DatabaseEntityMapper &m_entityMapper;
 
-  void handlePlayerCreationForShip(const Uuid &shipDbId) const;
-  void handlePlayerDeletionForShip(const Uuid &shipDbId) const;
+  void handlePlayerCreationForShip(const core::Uuid &shipDbId) const;
+  void handlePlayerDeletionForShip(const core::Uuid &shipDbId) const;
 
-  void performEntityDeletion(Entity &entity) const;
+  void performEntityDeletion(core::Entity &entity) const;
 };
 
 using EntityServicePtr   = std::unique_ptr<EntityService>;
 using EntityServiceShPtr = std::shared_ptr<EntityService>;
 
-} // namespace bsgo
+} // namespace bsgalone::server

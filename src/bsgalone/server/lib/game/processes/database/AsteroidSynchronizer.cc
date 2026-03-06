@@ -1,15 +1,15 @@
 
 #include "AsteroidSynchronizer.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-void syncAsteroid(const Entity &entity, const Repositories &repositories)
+void syncAsteroid(const core::Entity &entity, const core::Repositories &repositories)
 {
   const auto dbId        = entity.dbComp().dbId();
   const auto &healthComp = entity.healthComp();
 
-  Asteroid asteroid{.id = dbId, .health = healthComp.value()};
+  core::Asteroid asteroid{.id = dbId, .health = healthComp.value()};
   repositories.asteroidRepository->save(asteroid);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

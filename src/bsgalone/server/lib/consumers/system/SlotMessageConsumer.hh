@@ -5,23 +5,22 @@
 #include "Services.hh"
 #include "SlotMessage.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-class SlotMessageConsumer : public bsgalone::core::AbstractMessageConsumer
+class SlotMessageConsumer : public core::AbstractMessageConsumer
 {
   public:
-  SlotMessageConsumer(const Services &services,
-                      bsgalone::core::IMessageQueue *const outputMessageQueue);
+  SlotMessageConsumer(const Services &services, core::IMessageQueue *const outputMessageQueue);
   ~SlotMessageConsumer() override = default;
 
-  void onEventReceived(const bsgalone::core::IMessage &message) override;
+  void onEventReceived(const core::IMessage &message) override;
 
   private:
   SlotServiceShPtr m_slotService{};
-  bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
+  core::IMessageQueue *const m_outputMessageQueue{};
 
-  void handleWeapon(const bsgalone::core::SlotMessage &message) const;
-  void handleComputer(const bsgalone::core::SlotMessage &message) const;
+  void handleWeapon(const core::SlotMessage &message) const;
+  void handleComputer(const core::SlotMessage &message) const;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::server

@@ -3,7 +3,7 @@
 
 #include "Controls.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
 struct Motion
 {
@@ -11,8 +11,8 @@ struct Motion
   int y{0};
   int z{0};
 
-  void updateFromKeys(const controls::State &inputs);
+  void updateFromKeys(const pge::controls::State &inputs);
   bool hasMotion() const;
 };
 
-} // namespace pge
+} // namespace bsgalone::client

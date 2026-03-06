@@ -11,39 +11,39 @@
 #include <memory>
 #include <optional>
 
-namespace pge {
+namespace bsgalone::client {
 
 class SystemView : public AbstractView
 {
   public:
-  SystemView(bsgo::CoordinatorShPtr coordinator, const bsgo::DatabaseEntityMapper &entityMapper);
+  SystemView(core::CoordinatorShPtr coordinator, const core::DatabaseEntityMapper &entityMapper);
   ~SystemView() override = default;
 
   bool isReady() const noexcept override;
   void reset() override;
 
-  auto getAsteroidsWithin(const bsgo::IBoundingBox &bbox) const -> std::vector<bsgo::Entity>;
-  auto getOutpostsWithin(const bsgo::IBoundingBox &bbox) const -> std::vector<bsgo::Entity>;
-  auto getBulletsWithin(const bsgo::IBoundingBox &bbox) const -> std::vector<bsgo::Entity>;
+  auto getAsteroidsWithin(const core::IBoundingBox &bbox) const -> std::vector<core::Entity>;
+  auto getOutpostsWithin(const core::IBoundingBox &bbox) const -> std::vector<core::Entity>;
+  auto getBulletsWithin(const core::IBoundingBox &bbox) const -> std::vector<core::Entity>;
 
-  auto getAsteroid(const bsgo::Uuid asteroidDbId) const -> bsgo::Entity;
+  auto getAsteroid(const core::Uuid asteroidDbId) const -> core::Entity;
 
-  auto getPlayer(const bsgo::Uuid playerDbId) const -> bsgo::PlayerData;
+  auto getPlayer(const core::Uuid playerDbId) const -> core::PlayerData;
 
-  auto getSystemPlayers() const -> std::vector<bsgo::PlayerData>;
-  auto getSystemShips() const -> std::vector<bsgo::PlayerShipData>;
+  auto getSystemPlayers() const -> std::vector<core::PlayerData>;
+  auto getSystemShips() const -> std::vector<core::PlayerShipData>;
 
   protected:
-  void handleMessageInternal(const bsgalone::core::IMessage &message) override;
+  void handleMessageInternal(const core::IMessage &message) override;
 
   private:
-  bsgo::CoordinatorShPtr m_coordinator{};
-  const bsgo::DatabaseEntityMapper &m_entityMapper;
+  core::CoordinatorShPtr m_coordinator{};
+  const core::DatabaseEntityMapper &m_entityMapper;
 
-  std::vector<bsgo::PlayerData> m_players{};
-  std::vector<bsgo::PlayerShipData> m_playerShips{};
+  std::vector<core::PlayerData> m_players{};
+  std::vector<core::PlayerShipData> m_playerShips{};
 };
 
 using SystemViewShPtr = std::shared_ptr<SystemView>;
 
-} // namespace pge
+} // namespace bsgalone::client

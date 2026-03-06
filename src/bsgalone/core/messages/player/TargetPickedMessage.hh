@@ -12,8 +12,8 @@ namespace bsgalone::core {
 class TargetPickedMessage : public AbstractPlayerMessage
 {
   public:
-  TargetPickedMessage(const bsgo::Uuid playerDbId,
-                      const bsgo::Uuid systemDbId,
+  TargetPickedMessage(const Uuid playerDbId,
+                      const Uuid systemDbId,
                       Target data,
                       const Eigen::Vector3f &position);
   ~TargetPickedMessage() override = default;

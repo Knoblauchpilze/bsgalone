@@ -3,7 +3,7 @@
 
 #include "LeafNode.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class PickTargetNode : public LeafNode
 {
@@ -18,4 +18,4 @@ class PickTargetNode : public LeafNode
   void updateTargetIfNeeded(const BehaviorData &data, const Entity &maybeTarget) const;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

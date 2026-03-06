@@ -10,7 +10,7 @@ namespace {
 void assertMessagesAreEqual(const TargetPickedMessage &actual, const TargetPickedMessage &expected)
 {
   EXPECT_EQ(actual.type(), expected.type());
-  bsgo::assertTargetAreEqual(actual.getTargetData(), expected.getTargetData());
+  assertTargetAreEqual(actual.getTargetData(), expected.getTargetData());
   EXPECT_EQ(actual.getPosition(), expected.getPosition());
   EXPECT_EQ(actual.getPlayerDbId(), expected.getPlayerDbId());
   EXPECT_EQ(actual.getSystemDbId(), expected.getSystemDbId());
@@ -19,56 +19,50 @@ void assertMessagesAreEqual(const TargetPickedMessage &actual, const TargetPicke
 
 TEST(Unit_Bsgalone_Core_Messages_Player_TargetPickedMessage, RegistersTarget)
 {
-  Target data{.sourceDbId = bsgo::Uuid{21},
+  Target data{.sourceDbId = Uuid{21},
               .sourceKind = EntityKind::SHIP,
-              .targetDbId = bsgo::Uuid{38},
+              .targetDbId = Uuid{38},
               .targetKind = EntityKind::OUTPOST};
-  const TargetPickedMessage expected(bsgo::Uuid{18},
-                                     bsgo::Uuid{19},
+  const TargetPickedMessage expected(Uuid{18},
+                                     Uuid{19},
                                      data,
                                      Eigen::Vector3f(1.68f, -185.0f, 326.895f));
 
-  data = Target{.sourceDbId = bsgo::Uuid{17}, .sourceKind = EntityKind::ASTEROID};
-  TargetPickedMessage actual(bsgo::Uuid{20},
-                             bsgo::Uuid{21},
-                             data,
-                             Eigen::Vector3f(0.0f, 26.37f, -0.111f));
+  data = Target{.sourceDbId = Uuid{17}, .sourceKind = EntityKind::ASTEROID};
+  TargetPickedMessage actual(Uuid{20}, Uuid{21}, data, Eigen::Vector3f(0.0f, 26.37f, -0.111f));
 
-  bsgo::serializeAndDeserializeMessage(expected, actual);
+  serializeAndDeserializeMessage(expected, actual);
 
   assertMessagesAreEqual(actual, expected);
 }
 
 TEST(Unit_Bsgalone_Core_Messages_Player_TargetPickedMessage, ClearsTarget)
 {
-  Target data{.sourceDbId = bsgo::Uuid{21}, .sourceKind = EntityKind::SHIP};
-  const TargetPickedMessage expected(bsgo::Uuid{18},
-                                     bsgo::Uuid{19},
+  Target data{.sourceDbId = Uuid{21}, .sourceKind = EntityKind::SHIP};
+  const TargetPickedMessage expected(Uuid{18},
+                                     Uuid{19},
                                      data,
                                      Eigen::Vector3f(1.68f, -185.0f, 326.895f));
 
-  data = Target{.sourceDbId = bsgo::Uuid{17},
+  data = Target{.sourceDbId = Uuid{17},
                 .sourceKind = EntityKind::ASTEROID,
-                .targetDbId = bsgo::Uuid{14},
+                .targetDbId = Uuid{14},
                 .targetKind = EntityKind::BULLET};
-  TargetPickedMessage actual(bsgo::Uuid{20},
-                             bsgo::Uuid{21},
-                             data,
-                             Eigen::Vector3f(0.0f, 26.37f, -0.111f));
+  TargetPickedMessage actual(Uuid{20}, Uuid{21}, data, Eigen::Vector3f(0.0f, 26.37f, -0.111f));
 
-  bsgo::serializeAndDeserializeMessage(expected, actual);
+  serializeAndDeserializeMessage(expected, actual);
 
   assertMessagesAreEqual(actual, expected);
 }
 
 TEST(Unit_Bsgalone_Core_Messages_Player_TargetPickedMessage, Clone)
 {
-  const Target data{.sourceDbId = bsgo::Uuid{17},
+  const Target data{.sourceDbId = Uuid{17},
                     .sourceKind = EntityKind::ASTEROID,
-                    .targetDbId = bsgo::Uuid{14},
+                    .targetDbId = Uuid{14},
                     .targetKind = EntityKind::BULLET};
-  const TargetPickedMessage expected(bsgo::Uuid{18},
-                                     bsgo::Uuid{19},
+  const TargetPickedMessage expected(Uuid{18},
+                                     Uuid{19},
                                      data,
                                      Eigen::Vector3f(1.68f, -185.0f, 326.895f));
 

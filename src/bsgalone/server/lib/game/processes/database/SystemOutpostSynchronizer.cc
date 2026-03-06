@@ -1,13 +1,13 @@
 
 #include "SystemOutpostSynchronizer.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-void syncSystemOutpost(const Entity &entity, const Repositories &repositories)
+void syncSystemOutpost(const core::Entity &entity, const core::Repositories &repositories)
 {
   const auto dbId = entity.dbComp().dbId();
 
-  SystemOutpost outpost{
+  core::SystemOutpost outpost{
     .id          = dbId,
     .hullPoints  = entity.healthComp().value(),
     .powerPoints = entity.powerComp().value(),
@@ -16,4 +16,4 @@ void syncSystemOutpost(const Entity &entity, const Repositories &repositories)
   repositories.systemOutpostRepository->save(outpost);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

@@ -5,24 +5,24 @@
 namespace bsgalone::core {
 
 JumpRequestedMessage::JumpRequestedMessage()
-  : AbstractPlayerMessage(MessageType::JUMP_REQUESTED, bsgo::Uuid{0}, bsgo::Uuid{0})
+  : AbstractPlayerMessage(MessageType::JUMP_REQUESTED, Uuid{0}, Uuid{0})
 {}
 
-JumpRequestedMessage::JumpRequestedMessage(const bsgo::Uuid playerDbId,
-                                           const bsgo::Uuid sourceSystemDbId,
-                                           const bsgo::Uuid shipDbId,
-                                           const bsgo::Uuid destinationSystemDbId)
+JumpRequestedMessage::JumpRequestedMessage(const Uuid playerDbId,
+                                           const Uuid sourceSystemDbId,
+                                           const Uuid shipDbId,
+                                           const Uuid destinationSystemDbId)
   : AbstractPlayerMessage(MessageType::JUMP_REQUESTED, playerDbId, sourceSystemDbId)
   , m_shipDbId(shipDbId)
   , m_destinationSystemDbId(destinationSystemDbId)
 {}
 
-auto JumpRequestedMessage::getShipDbId() const -> bsgo::Uuid
+auto JumpRequestedMessage::getShipDbId() const -> Uuid
 {
   return m_shipDbId;
 }
 
-auto JumpRequestedMessage::getDestinationSystem() const -> bsgo::Uuid
+auto JumpRequestedMessage::getDestinationSystem() const -> Uuid
 {
   return m_destinationSystemDbId;
 }

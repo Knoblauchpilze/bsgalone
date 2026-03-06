@@ -1,10 +1,10 @@
 
 #include "HealthComponent.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 HealthComponent::HealthComponent(const float current, const float max, const float regen)
-  : RegenerativeComponent(bsgalone::core::ComponentType::HEALTH, 0.0f, current, max, regen)
+  : RegenerativeComponent(ComponentType::HEALTH, 0.0f, current, max, regen)
 {}
 
 bool HealthComponent::isAlive() const noexcept
@@ -17,4 +17,4 @@ void HealthComponent::damage(const float damage)
   updateValue(-damage);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

@@ -1,12 +1,12 @@
 
 #include "LoginMessageConsumer.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
 LoginMessageConsumer::LoginMessageConsumer(LoginServicePtr loginService,
                                            SystemQueueMap systemQueues,
-                                           bsgalone::core::IMessageQueue *const outputMessageQueue)
-  : AbstractMessageConsumer("login", {bsgalone::core::MessageType::LOGIN})
+                                           core::IMessageQueue *const outputMessageQueue)
+  : AbstractMessageConsumer("login", {core::MessageType::LOGIN})
   , m_loginService(std::move(loginService))
   , m_outputMessageQueue(outputMessageQueue)
   , m_helper(std::move(systemQueues), outputMessageQueue)
@@ -21,13 +21,13 @@ LoginMessageConsumer::LoginMessageConsumer(LoginServicePtr loginService,
   }
 }
 
-void LoginMessageConsumer::onEventReceived(const bsgalone::core::IMessage &message)
+void LoginMessageConsumer::onEventReceived(const core::IMessage &message)
 {
-  const auto &login = message.as<LoginMessage>();
+  const auto &login = message.as<core::LoginMessage>();
   handleLogin(login);
 }
 
-void LoginMessageConsumer::handleLogin(const LoginMessage &message) const
+void LoginMessageConsumer::handleLogin(const core::LoginMessage &message) const
 {
   const auto clientId = message.getClientId();
 
@@ -41,7 +41,7 @@ void LoginMessageConsumer::handleLogin(const LoginMessage &message) const
 
   const auto successfulLogin = maybePlayerDbId.has_value();
 
-  std::optional<Uuid> maybeSystemDbId{};
+  std::optional<core::Uuid> maybeSystemDbId{};
 
   if (!successfulLogin)
   {
@@ -52,7 +52,7 @@ void LoginMessageConsumer::handleLogin(const LoginMessage &message) const
     maybeSystemDbId = m_loginService->getPlayerSystemDbId(*maybePlayerDbId);
   }
 
-  auto out = std::make_unique<LoginMessage>(data.role);
+  auto out = std::make_unique<core::LoginMessage>(data.role);
   out->setUserName(data.name);
   out->setPassword(data.password);
   if (maybePlayerDbId)
@@ -73,4 +73,4 @@ void LoginMessageConsumer::handleLogin(const LoginMessage &message) const
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

@@ -8,22 +8,22 @@
 #include <memory>
 #include <vector>
 
-namespace bsgo {
+namespace bsgalone::server {
 
-class Processes : public core::CoreObject
+class Processes : public ::core::CoreObject
 {
   public:
-  Processes(const Uuid systemDbId, bsgalone::core::IMessageQueue *const systemMessageQueue);
+  Processes(const core::Uuid systemDbId, core::IMessageQueue *const systemMessageQueue);
   ~Processes() override = default;
 
-  void update(Coordinator &coordinator, const chrono::TickData &data) const;
+  void update(core::Coordinator &coordinator, const chrono::TickData &data) const;
 
   private:
   std::vector<IProcessPtr> m_processes{};
 
-  void initialize(const Uuid systemDbId, bsgalone::core::IMessageQueue *const systemMessageQueue);
+  void initialize(const core::Uuid systemDbId, core::IMessageQueue *const systemMessageQueue);
 };
 
 using ProcessesPtr = std::unique_ptr<Processes>;
 
-} // namespace bsgo
+} // namespace bsgalone::server

@@ -3,18 +3,18 @@
 #include "PlayerDataSource.hh"
 #include "PlayerListMessage.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
-PlayerListMessageConsumer::PlayerListMessageConsumer(bsgo::DatabaseEntityMapper &entityMapper,
-                                                     bsgo::CoordinatorShPtr coordinator)
-  : AbstractGameMessageConsumer("player", bsgalone::core::MessageType::PLAYER_LIST)
+PlayerListMessageConsumer::PlayerListMessageConsumer(core::DatabaseEntityMapper &entityMapper,
+                                                     core::CoordinatorShPtr coordinator)
+  : AbstractGameMessageConsumer("player", core::MessageType::PLAYER_LIST)
   , m_entityMapper(entityMapper)
   , m_coordinator(std::move(coordinator))
 {}
 
-void PlayerListMessageConsumer::onMessageReceivedInternal(const bsgalone::core::IMessage &message)
+void PlayerListMessageConsumer::onMessageReceivedInternal(const core::IMessage &message)
 {
-  const auto playerList = message.as<bsgo::PlayerListMessage>();
+  const auto playerList = message.as<core::PlayerListMessage>();
 
   for (const auto &playerData : playerList.getPlayersData())
   {
@@ -22,10 +22,10 @@ void PlayerListMessageConsumer::onMessageReceivedInternal(const bsgalone::core::
   }
 }
 
-void PlayerListMessageConsumer::registerPlayer(const bsgo::PlayerData &data) const
+void PlayerListMessageConsumer::registerPlayer(const core::PlayerData &data) const
 {
-  bsgo::PlayerDataSource source;
+  core::PlayerDataSource source;
   source.registerPlayer(*m_coordinator, data, m_entityMapper);
 }
 
-} // namespace pge
+} // namespace bsgalone::client

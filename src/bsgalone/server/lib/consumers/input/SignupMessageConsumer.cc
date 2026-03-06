@@ -1,11 +1,11 @@
 
 #include "SignupMessageConsumer.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
 SignupMessageConsumer::SignupMessageConsumer(SignupServicePtr signupService,
-                                             bsgalone::core::IMessageQueue *const outputMessageQueue)
-  : AbstractMessageConsumer("signup", {bsgalone::core::MessageType::SIGNUP})
+                                             core::IMessageQueue *const outputMessageQueue)
+  : AbstractMessageConsumer("signup", {core::MessageType::SIGNUP})
   , m_signupService(std::move(signupService))
   , m_outputMessageQueue(outputMessageQueue)
 {
@@ -19,13 +19,13 @@ SignupMessageConsumer::SignupMessageConsumer(SignupServicePtr signupService,
   }
 }
 
-void SignupMessageConsumer::onEventReceived(const bsgalone::core::IMessage &message)
+void SignupMessageConsumer::onEventReceived(const core::IMessage &message)
 {
-  const auto &signup = message.as<SignupMessage>();
+  const auto &signup = message.as<core::SignupMessage>();
   handleSignup(signup);
 }
 
-void SignupMessageConsumer::handleSignup(const SignupMessage &message) const
+void SignupMessageConsumer::handleSignup(const core::SignupMessage &message) const
 {
   const auto name     = message.getUserName();
   const auto password = message.getUserPassword();
@@ -38,13 +38,14 @@ void SignupMessageConsumer::handleSignup(const SignupMessage &message) const
     warn("Failed to process signup message for player " + name);
   }
 
-  auto out = std::make_unique<SignupMessage>(name,
-                                             password,
-                                             faction,
-                                             maybePlayer.has_value() ? maybePlayer->id
-                                                                     : std::optional<Uuid>{});
+  auto out = std::make_unique<core::SignupMessage>(name,
+                                                   password,
+                                                   faction,
+                                                   maybePlayer.has_value()
+                                                     ? maybePlayer->id
+                                                     : std::optional<core::Uuid>{});
   out->copyClientIdIfDefined(message);
   m_outputMessageQueue->pushEvent(std::move(out));
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

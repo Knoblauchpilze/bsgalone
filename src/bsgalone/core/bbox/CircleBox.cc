@@ -2,7 +2,7 @@
 
 #include "CircleBox.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 CircleBox::CircleBox(const Eigen::Vector3f &center, const float radius) noexcept
   : m_center(center)
@@ -35,4 +35,4 @@ void CircleBox::translate(const Eigen::Vector3f &delta)
   m_center += delta;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

@@ -4,7 +4,7 @@
 
 using namespace ::testing;
 
-namespace pge {
+namespace bsgalone::client {
 
 struct TestCaseConversion
 {
@@ -64,4 +64,4 @@ INSTANTIATE_TEST_SUITE_P(
     return std::to_string(info.param.id);
   });
 
-} // namespace pge
+} // namespace bsgalone::client

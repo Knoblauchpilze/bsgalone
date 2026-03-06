@@ -1,15 +1,15 @@
 
 #include "SignupService.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-SignupService::SignupService(const Repositories &repositories)
+SignupService::SignupService(const core::Repositories &repositories)
   : AbstractService("signup", repositories)
 {}
 
 auto SignupService::trySignup(const std::string &name,
                               const std::string &password,
-                              const Faction &faction) const -> std::optional<Player>
+                              const core::Faction &faction) const -> std::optional<core::Player>
 {
   const auto maybeAccount = m_repositories.accountRepository->findOneByName(name);
   if (maybeAccount)
@@ -18,10 +18,10 @@ auto SignupService::trySignup(const std::string &name,
     return {};
   }
 
-  Account account{.name = name, .password = password};
+  core::Account account{.name = name, .password = password};
   account.id = registerAccount(account);
 
-  Player player{.account = account.id, .name = name, .faction = faction};
+  core::Player player{.account = account.id, .name = name, .faction = faction};
   player.id = registerPlayer(player);
 
   registerResources(player);
@@ -30,12 +30,12 @@ auto SignupService::trySignup(const std::string &name,
   return player;
 }
 
-auto SignupService::getPlayerSystemDbId(const Uuid playerDbId) const -> Uuid
+auto SignupService::getPlayerSystemDbId(const core::Uuid playerDbId) const -> core::Uuid
 {
   return m_repositories.playerRepository->findSystemByPlayer(playerDbId);
 }
 
-auto SignupService::registerAccount(const Account &account) const -> Uuid
+auto SignupService::registerAccount(const core::Account &account) const -> core::Uuid
 {
   m_repositories.accountRepository->save(account);
   const auto dbAccount = m_repositories.accountRepository->findOneByName(account.name);
@@ -47,7 +47,7 @@ auto SignupService::registerAccount(const Account &account) const -> Uuid
   return dbAccount->id;
 }
 
-auto SignupService::registerPlayer(const Player &player) const -> Uuid
+auto SignupService::registerPlayer(const core::Player &player) const -> core::Uuid
 {
   m_repositories.playerRepository->save(player);
   const auto dbPlayer = m_repositories.playerRepository->findOneByAccount(*player.account);
@@ -62,9 +62,9 @@ constexpr auto TITANE_NAME         = "titane";
 constexpr auto TITANE_START_AMOUNT = 10000;
 } // namespace
 
-void SignupService::registerResources(const Player &player) const
+void SignupService::registerResources(const core::Player &player) const
 {
-  PlayerResource data{
+  core::PlayerResource data{
     .player = player.id,
   };
 
@@ -79,12 +79,12 @@ void SignupService::registerResources(const Player &player) const
   m_repositories.playerResourceRepository->save(data);
 }
 
-void SignupService::registerShip(const Player &player) const
+void SignupService::registerShip(const core::Player &player) const
 {
   const auto shipTemplate = m_repositories.shipRepository
                               ->findOneByFactionAndStarting(player.faction, true);
 
-  PlayerShip ship{
+  core::PlayerShip ship{
     .ship        = shipTemplate.id,
     .name        = shipTemplate.name,
     .player      = player.id,
@@ -98,7 +98,7 @@ void SignupService::registerShip(const Player &player) const
   const auto ships = m_repositories.playerShipRepository->findAllByPlayer(player.id);
   if (1u != ships.size())
   {
-    error("Expected only one ship for new player " + str(player.id));
+    error("Expected only one ship for new player " + core::str(player.id));
   }
   const auto dbShip = *ships.begin();
 
@@ -107,4 +107,4 @@ void SignupService::registerShip(const Player &player) const
   m_repositories.systemRepository->updateSystemForShip(dbShip, startingSystem, true);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

@@ -8,9 +8,9 @@
 #include <optional>
 #include <string>
 
-namespace bsgo {
+namespace bsgalone::core {
 
-class LoginMessage : public bsgalone::core::NetworkMessage
+class LoginMessage : public NetworkMessage
 {
   public:
   LoginMessage();
@@ -33,7 +33,7 @@ class LoginMessage : public bsgalone::core::NetworkMessage
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
 
-  auto clone() const -> bsgalone::core::IMessagePtr override;
+  auto clone() const -> IMessagePtr override;
 
   private:
   std::string m_name{};
@@ -44,4 +44,4 @@ class LoginMessage : public bsgalone::core::NetworkMessage
   std::optional<Uuid> m_systemDbId{};
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

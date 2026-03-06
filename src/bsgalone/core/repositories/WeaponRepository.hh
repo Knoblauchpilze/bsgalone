@@ -7,7 +7,7 @@
 #include <memory>
 #include <unordered_set>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 struct Weapon
 {
@@ -38,4 +38,4 @@ class WeaponRepository : public AbstractRepository
 
 using WeaponRepositoryShPtr = std::shared_ptr<WeaponRepository>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

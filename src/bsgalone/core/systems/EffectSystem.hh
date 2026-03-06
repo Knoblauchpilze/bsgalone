@@ -3,7 +3,7 @@
 
 #include "AbstractSystem.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class EffectSystem : public AbstractSystem
 {
@@ -20,4 +20,4 @@ class EffectSystem : public AbstractSystem
   void cleanUpFinishedEffects(const Entity &entity, Coordinator &coordinator) const;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

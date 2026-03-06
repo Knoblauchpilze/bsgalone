@@ -5,15 +5,15 @@
 namespace bsgalone::core {
 
 EquipMessage::EquipMessage()
-  : AbstractPlayerMessage(MessageType::EQUIP, bsgo::Uuid{0}, bsgo::Uuid{0})
+  : AbstractPlayerMessage(MessageType::EQUIP, Uuid{0}, Uuid{0})
 {}
 
-EquipMessage::EquipMessage(const bsgo::Uuid playerDbId,
-                           const bsgo::Uuid systemDbId,
+EquipMessage::EquipMessage(const Uuid playerDbId,
+                           const Uuid systemDbId,
                            const EquipType &action,
-                           const bsgo::Uuid shipDbId,
+                           const Uuid shipDbId,
                            const Item &itemType,
-                           const bsgo::Uuid itemDbId)
+                           const Uuid itemDbId)
   : AbstractPlayerMessage(MessageType::EQUIP, playerDbId, systemDbId)
   , m_action(action)
   , m_shipDbId(shipDbId)
@@ -26,7 +26,7 @@ auto EquipMessage::getAction() const -> EquipType
   return m_action;
 }
 
-auto EquipMessage::getShipDbId() const -> bsgo::Uuid
+auto EquipMessage::getShipDbId() const -> Uuid
 {
   return m_shipDbId;
 }
@@ -36,7 +36,7 @@ auto EquipMessage::getItemType() const -> Item
   return m_itemType;
 }
 
-auto EquipMessage::getItemDbId() const -> bsgo::Uuid
+auto EquipMessage::getItemDbId() const -> Uuid
 {
   return m_itemDbId;
 }

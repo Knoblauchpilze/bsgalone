@@ -3,7 +3,7 @@
 
 #include "ControlNode.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class FallbackNode : public ControlNode
 {
@@ -14,4 +14,4 @@ class FallbackNode : public ControlNode
   auto tick(const BehaviorData &data) -> NodeState override;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

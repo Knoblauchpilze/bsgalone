@@ -3,7 +3,7 @@
 
 #include "DataKey.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 template<typename Value>
 inline auto DataKey::as() const -> Value
@@ -26,4 +26,4 @@ inline auto DataKey::fromValue(const Value &value) -> DataKey
   return key;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

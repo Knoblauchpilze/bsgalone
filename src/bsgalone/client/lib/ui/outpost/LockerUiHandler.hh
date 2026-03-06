@@ -9,7 +9,7 @@
 #include <memory>
 #include <vector>
 
-namespace pge {
+namespace bsgalone::client {
 
 class LockerUiHandler : public AbstractUiHandler
 {
@@ -19,9 +19,9 @@ class LockerUiHandler : public AbstractUiHandler
 
   void initializeMenus(const int width,
                        const int height,
-                       sprites::TexturePack &texturesLoader) override;
+                       pge::sprites::TexturePack &texturesLoader) override;
   bool processUserInput(ui::UserInputData &inputData) override;
-  void render(Renderer &engine) const override;
+  void render(pge::Renderer &engine) const override;
   void updateUi() override;
 
   private:
@@ -37,8 +37,8 @@ class LockerUiHandler : public AbstractUiHandler
 
   struct LockerItem
   {
-    bsgo::Uuid itemId{};
-    bsgalone::core::Item itemType{};
+    core::Uuid itemId{};
+    core::Item itemType{};
     ui::UiMenu *button{};
   };
 
@@ -48,8 +48,8 @@ class LockerUiHandler : public AbstractUiHandler
 
   struct ShipItem
   {
-    bsgo::Uuid itemId{};
-    bsgalone::core::Item itemType{};
+    core::Uuid itemId{};
+    core::Item itemType{};
   };
 
   std::vector<ui::UiMenu *> m_shipWeapons{};
@@ -74,4 +74,4 @@ class LockerUiHandler : public AbstractUiHandler
 
 using LockerUiHandlerPtr = std::unique_ptr<LockerUiHandler>;
 
-} // namespace pge
+} // namespace bsgalone::client

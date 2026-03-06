@@ -4,7 +4,7 @@
 
 #include "SyncComponent.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class DbSyncComponent : public SyncComponent
 {
@@ -15,4 +15,4 @@ class DbSyncComponent : public SyncComponent
 
 using DbSyncComponentShPtr = std::shared_ptr<DbSyncComponent>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

@@ -5,7 +5,7 @@
 #include "Uuid.hh"
 #include <optional>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class TargetComponent : public AbstractComponent
 {
@@ -26,4 +26,4 @@ class TargetComponent : public AbstractComponent
 
 using TargetComponentShPtr = std::shared_ptr<TargetComponent>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

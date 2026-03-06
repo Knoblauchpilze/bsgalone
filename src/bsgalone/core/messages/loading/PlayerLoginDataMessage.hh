@@ -5,9 +5,9 @@
 #include "NetworkMessage.hh"
 #include "Uuid.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
-class PlayerLoginDataMessage : public bsgalone::core::NetworkMessage
+class PlayerLoginDataMessage : public NetworkMessage
 {
   public:
   PlayerLoginDataMessage();
@@ -26,7 +26,7 @@ class PlayerLoginDataMessage : public bsgalone::core::NetworkMessage
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
 
-  auto clone() const -> bsgalone::core::IMessagePtr override;
+  auto clone() const -> IMessagePtr override;
 
   private:
   Faction m_faction{};
@@ -35,4 +35,4 @@ class PlayerLoginDataMessage : public bsgalone::core::NetworkMessage
   Uuid m_systemDbId{};
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

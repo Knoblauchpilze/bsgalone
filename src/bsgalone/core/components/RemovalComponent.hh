@@ -3,7 +3,7 @@
 
 #include "AbstractComponent.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class RemovalComponent : public AbstractComponent
 {
@@ -22,4 +22,4 @@ class RemovalComponent : public AbstractComponent
 
 using RemovalComponentShPtr = std::shared_ptr<RemovalComponent>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

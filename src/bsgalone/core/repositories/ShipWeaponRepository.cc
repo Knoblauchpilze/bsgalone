@@ -1,7 +1,7 @@
 
 #include "ShipWeaponRepository.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 ShipWeaponRepository::ShipWeaponRepository(const DbConnectionShPtr &connection)
   : AbstractRepository("weapon", connection)
@@ -205,4 +205,4 @@ void ShipWeaponRepository::deleteByShipAndSlot(const ShipWeapon &weapon)
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

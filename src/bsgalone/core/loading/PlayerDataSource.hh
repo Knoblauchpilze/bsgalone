@@ -7,11 +7,11 @@
 #include "Repositories.hh"
 #include <optional>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class Coordinator;
 
-class PlayerDataSource : public core::CoreObject
+class PlayerDataSource : public ::core::CoreObject
 {
   public:
   PlayerDataSource();
@@ -34,4 +34,4 @@ class PlayerDataSource : public core::CoreObject
   std::optional<Repositories> m_repositories{};
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

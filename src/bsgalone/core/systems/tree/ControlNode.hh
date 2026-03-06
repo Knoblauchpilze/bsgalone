@@ -3,7 +3,7 @@
 
 #include "INode.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class ControlNode : public INode
 {
@@ -18,4 +18,4 @@ class ControlNode : public INode
   std::vector<INodePtr> m_children{};
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

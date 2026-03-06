@@ -11,8 +11,8 @@
 #include <condition_variable>
 #include <unordered_map>
 
-namespace bsgo {
-class Server : public core::CoreObject
+namespace bsgalone::server {
+class Server : public ::core::CoreObject
 {
   public:
   Server();
@@ -29,7 +29,7 @@ class Server : public core::CoreObject
   ServerNetworkClientShPtr m_networkClient{std::make_shared<ServerNetworkClient>()};
   MessageExchangerPtr m_messageExchanger{};
 
-  std::unordered_map<Uuid, bsgalone::core::IMessageQueueShPtr> m_inputQueues{};
+  std::unordered_map<core::Uuid, core::IMessageQueueShPtr> m_inputQueues{};
   std::vector<SystemProcessorShPtr> m_systemProcessors{};
 
   void initialize();
@@ -41,4 +41,4 @@ class Server : public core::CoreObject
   void shutdown();
 };
 
-} // namespace bsgo
+} // namespace bsgalone::server

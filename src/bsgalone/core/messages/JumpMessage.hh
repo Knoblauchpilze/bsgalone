@@ -5,9 +5,9 @@
 #include "Uuid.hh"
 #include <optional>
 
-namespace bsgo {
+namespace bsgalone::core {
 
-class JumpMessage : public bsgalone::core::NetworkMessage
+class JumpMessage : public NetworkMessage
 {
   public:
   JumpMessage();
@@ -28,7 +28,7 @@ class JumpMessage : public bsgalone::core::NetworkMessage
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
 
-  auto clone() const -> bsgalone::core::IMessagePtr override;
+  auto clone() const -> IMessagePtr override;
 
   private:
   Uuid m_shipDbId{};
@@ -37,4 +37,4 @@ class JumpMessage : public bsgalone::core::NetworkMessage
   std::optional<Uuid> m_destinationSystemDbId{};
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 using Uuid = int;
 
@@ -11,4 +11,4 @@ auto str(const Uuid id) -> std::string;
 auto toDbId(const Uuid id) -> int;
 auto fromDbId(const int dbId) -> Uuid;
 
-} // namespace bsgo
+} // namespace bsgalone::core

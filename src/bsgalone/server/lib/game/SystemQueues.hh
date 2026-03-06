@@ -5,8 +5,8 @@
 #include "Uuid.hh"
 #include <unordered_map>
 
-namespace bsgo {
+namespace bsgalone::server {
 
-using SystemQueueMap = std::unordered_map<Uuid, bsgalone::core::IMessageQueueShPtr>;
+using SystemQueueMap = std::unordered_map<core::Uuid, core::IMessageQueueShPtr>;
 
 }

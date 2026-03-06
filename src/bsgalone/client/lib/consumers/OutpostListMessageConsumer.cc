@@ -3,18 +3,18 @@
 #include "OutpostDataSource.hh"
 #include "OutpostListMessage.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
-OutpostListMessageConsumer::OutpostListMessageConsumer(bsgo::DatabaseEntityMapper &entityMapper,
-                                                       bsgo::CoordinatorShPtr coordinator)
-  : AbstractGameMessageConsumer("outpost", bsgalone::core::MessageType::OUTPOST_LIST)
+OutpostListMessageConsumer::OutpostListMessageConsumer(core::DatabaseEntityMapper &entityMapper,
+                                                       core::CoordinatorShPtr coordinator)
+  : AbstractGameMessageConsumer("outpost", core::MessageType::OUTPOST_LIST)
   , m_entityMapper(entityMapper)
   , m_coordinator(std::move(coordinator))
 {}
 
-void OutpostListMessageConsumer::onMessageReceivedInternal(const bsgalone::core::IMessage &message)
+void OutpostListMessageConsumer::onMessageReceivedInternal(const core::IMessage &message)
 {
-  const auto outpostsList = message.as<bsgo::OutpostListMessage>();
+  const auto outpostsList = message.as<core::OutpostListMessage>();
 
   for (const auto &outpostData : outpostsList.getOutpostsData())
   {
@@ -22,10 +22,10 @@ void OutpostListMessageConsumer::onMessageReceivedInternal(const bsgalone::core:
   }
 }
 
-void OutpostListMessageConsumer::registerOutpost(const bsgo::OutpostData &data) const
+void OutpostListMessageConsumer::registerOutpost(const core::OutpostData &data) const
 {
-  bsgo::OutpostDataSource source;
+  core::OutpostDataSource source;
   source.registerOutpost(*m_coordinator, data, m_entityMapper);
 }
 
-} // namespace pge
+} // namespace bsgalone::client

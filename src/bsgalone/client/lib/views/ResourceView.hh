@@ -7,7 +7,7 @@
 #include <memory>
 #include <unordered_map>
 
-namespace pge {
+namespace bsgalone::client {
 
 class ResourceView : public AbstractView
 {
@@ -18,15 +18,15 @@ class ResourceView : public AbstractView
   bool isReady() const noexcept override;
   void reset() override;
 
-  auto getResourceName(const bsgo::Uuid resource) const -> std::string;
+  auto getResourceName(const core::Uuid resource) const -> std::string;
 
   protected:
-  void handleMessageInternal(const bsgalone::core::IMessage &message) override;
+  void handleMessageInternal(const core::IMessage &message) override;
 
   private:
-  std::unordered_map<bsgo::Uuid, bsgo::ResourceData> m_resources{};
+  std::unordered_map<core::Uuid, core::ResourceData> m_resources{};
 };
 
 using ResourceViewShPtr = std::shared_ptr<ResourceView>;
 
-} // namespace pge
+} // namespace bsgalone::client

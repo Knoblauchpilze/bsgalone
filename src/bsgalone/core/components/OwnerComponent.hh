@@ -5,7 +5,7 @@
 #include "AbstractComponent.hh"
 #include "Uuid.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 enum class OwnerType
 {
@@ -31,4 +31,4 @@ class OwnerComponent : public AbstractComponent
 
 using OwnerComponentShPtr = std::shared_ptr<OwnerComponent>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

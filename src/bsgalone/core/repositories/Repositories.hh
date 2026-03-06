@@ -26,7 +26,7 @@
 #include "WeaponPriceRepository.hh"
 #include "WeaponRepository.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 struct Repositories
 {
@@ -60,4 +60,4 @@ struct Repositories
   DbConnectionShPtr dbConnection{};
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

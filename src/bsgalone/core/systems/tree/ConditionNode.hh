@@ -4,7 +4,7 @@
 #include "INode.hh"
 #include <functional>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 using Condition = std::function<bool(const BehaviorData &)>;
 
@@ -21,4 +21,4 @@ class ConditionNode : public INode
   Condition m_condition;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

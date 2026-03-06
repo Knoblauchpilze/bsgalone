@@ -1,7 +1,7 @@
 
 #include "ConditionNode.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 ConditionNode::ConditionNode(const Condition &condition)
   : INode("condition")
@@ -20,4 +20,4 @@ auto ConditionNode::tick(const BehaviorData &data) -> NodeState
 
 void ConditionNode::reset(DataContext & /*data*/) {}
 
-} // namespace bsgo
+} // namespace bsgalone::core

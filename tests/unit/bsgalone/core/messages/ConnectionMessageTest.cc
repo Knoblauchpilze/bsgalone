@@ -5,7 +5,7 @@
 
 using namespace ::testing;
 
-namespace bsgo {
+namespace bsgalone::core {
 namespace {
 void assertMessagesAreEqual(const ConnectionMessage &actual, const ConnectionMessage &expected)
 {
@@ -29,8 +29,8 @@ TEST(Unit_Bsgalone_Core_Messages_ConnectionMessage, Clone)
 
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::CONNECTION);
+  ASSERT_EQ(cloned->type(), MessageType::CONNECTION);
   assertMessagesAreEqual(cloned->as<ConnectionMessage>(), expected);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

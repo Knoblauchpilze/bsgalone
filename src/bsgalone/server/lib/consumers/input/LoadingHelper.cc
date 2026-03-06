@@ -3,11 +3,11 @@
 #include "LoadingFinishedMessage.hh"
 #include "LoadingStartedMessage.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
 LoadingHelper::LoadingHelper(SystemQueueMap systemQueues,
-                             bsgalone::core::IMessageQueue *const outputMessageQueue)
-  : core::CoreObject("helper")
+                             core::IMessageQueue *const outputMessageQueue)
+  : ::core::CoreObject("helper")
   , m_systemQueues(std::move(systemQueues))
   , m_outputMessageQueue(outputMessageQueue)
 {
@@ -19,26 +19,28 @@ LoadingHelper::LoadingHelper(SystemQueueMap systemQueues,
   }
 }
 
-void LoadingHelper::publishLoadingMessages(const Uuid clientId,
-                                           const Uuid playerDbId,
-                                           const Uuid systemDbId) const
+void LoadingHelper::publishLoadingMessages(const core::Uuid clientId,
+                                           const core::Uuid playerDbId,
+                                           const core::Uuid systemDbId) const
 {
   const auto maybeQueue = m_systemQueues.find(systemDbId);
   if (maybeQueue == m_systemQueues.cend())
   {
-    error("Failed to process login message for " + str(playerDbId),
-          "Unknown system " + str(systemDbId));
+    error("Failed to process login message for " + core::str(playerDbId),
+          "Unknown system " + core::str(systemDbId));
   }
 
-  auto started = std::make_unique<LoadingStartedMessage>(LoadingTransition::LOGIN, playerDbId);
+  auto started = std::make_unique<core::LoadingStartedMessage>(core::LoadingTransition::LOGIN,
+                                                               playerDbId);
   started->setSystemDbId(systemDbId);
   started->setClientId(clientId);
   maybeQueue->second->pushEvent(std::move(started));
 
-  auto finished = std::make_unique<LoadingFinishedMessage>(LoadingTransition::LOGIN, playerDbId);
+  auto finished = std::make_unique<core::LoadingFinishedMessage>(core::LoadingTransition::LOGIN,
+                                                                 playerDbId);
   finished->setSystemDbId(systemDbId);
   finished->setClientId(clientId);
   maybeQueue->second->pushEvent(std::move(finished));
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

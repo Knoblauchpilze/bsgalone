@@ -5,20 +5,20 @@
 #include "IView.hh"
 #include <string>
 
-namespace pge {
+namespace bsgalone::client {
 
-class AbstractView : public bsgalone::core::AbstractMessageConsumer, public IView
+class AbstractView : public core::AbstractMessageConsumer, public IView
 {
   public:
   AbstractView(const std::string &name,
-               const std::unordered_set<bsgalone::core::MessageType> &relevantMessageTypes);
+               const std::unordered_set<core::MessageType> &relevantMessageTypes);
   ~AbstractView() override = default;
 
   bool isReady() const noexcept override;
 
   void addListener(IViewListenerPtr listener) override;
 
-  void onEventReceived(const bsgalone::core::IMessage &message) override;
+  void onEventReceived(const core::IMessage &message) override;
 
   protected:
   /// @brief - Used to notify all currently registered listeners of an update of the
@@ -29,10 +29,10 @@ class AbstractView : public bsgalone::core::AbstractMessageConsumer, public IVie
   /// behavior when a message received. This is called by the `onMessageReceived`
   /// method after the local processing is done.
   /// @param message - the message to process.
-  virtual void handleMessageInternal(const bsgalone::core::IMessage &message);
+  virtual void handleMessageInternal(const core::IMessage &message);
 
   private:
   std::vector<IViewListenerPtr> m_listeners{};
 };
 
-} // namespace pge
+} // namespace bsgalone::client

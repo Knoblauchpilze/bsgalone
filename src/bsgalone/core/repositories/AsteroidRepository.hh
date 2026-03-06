@@ -8,7 +8,7 @@
 #include <memory>
 #include <optional>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 struct Asteroid
 {
@@ -46,4 +46,4 @@ class AsteroidRepository : public AbstractRepository
 
 using AsteroidRepositoryShPtr = std::shared_ptr<AsteroidRepository>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

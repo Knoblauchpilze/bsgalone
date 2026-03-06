@@ -16,7 +16,7 @@ const std::unordered_set<core::MessageType> RELEVANT_MESSAGES = {
   core::MessageType::VELOCITY,
 };
 
-SystemProcessorAdapter::SystemProcessorAdapter(const bsgo::Uuid systemDbId,
+SystemProcessorAdapter::SystemProcessorAdapter(const core::Uuid systemDbId,
                                                core::IMessageQueueShPtr systemQueue)
   : core::AbstractMessageConsumer("adapter", RELEVANT_MESSAGES)
   , m_systemDbId(systemDbId)

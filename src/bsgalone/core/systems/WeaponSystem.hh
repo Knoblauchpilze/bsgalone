@@ -4,7 +4,7 @@
 #include "AbstractSystem.hh"
 #include <eigen3/Eigen/Eigen>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class WeaponSystem : public AbstractSystem
 {
@@ -36,4 +36,4 @@ class WeaponSystem : public AbstractSystem
                                    Coordinator &coordinator) const;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

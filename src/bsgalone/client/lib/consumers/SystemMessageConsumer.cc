@@ -5,14 +5,14 @@
 #include "PlayerDataSource.hh"
 #include "ShipDataSource.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
-SystemMessageConsumer::SystemMessageConsumer(bsgo::DatabaseEntityMapper &entityMapper,
-                                             bsgo::CoordinatorShPtr coordinator)
+SystemMessageConsumer::SystemMessageConsumer(core::DatabaseEntityMapper &entityMapper,
+                                             core::CoordinatorShPtr coordinator)
   : AbstractMessageConsumer("system",
-                            {bsgalone::core::MessageType::SCANNED,
-                             bsgalone::core::MessageType::ENTITY_ADDED,
-                             bsgalone::core::MessageType::ENTITY_REMOVED})
+                            {core::MessageType::SCANNED,
+                             core::MessageType::ENTITY_ADDED,
+                             core::MessageType::ENTITY_REMOVED})
   , m_entityMapper(entityMapper)
   , m_coordinator(std::move(coordinator))
 {
@@ -22,32 +22,32 @@ SystemMessageConsumer::SystemMessageConsumer(bsgo::DatabaseEntityMapper &entityM
   }
 }
 
-void SystemMessageConsumer::onEventReceived(const bsgalone::core::IMessage &message)
+void SystemMessageConsumer::onEventReceived(const core::IMessage &message)
 {
   switch (message.type())
   {
-    case bsgalone::core::MessageType::SCANNED:
-      handleScanOperation(message.as<bsgo::ScannedMessage>());
+    case core::MessageType::SCANNED:
+      handleScanOperation(message.as<core::ScannedMessage>());
       break;
-    case bsgalone::core::MessageType::ENTITY_ADDED:
-      handleEntityAdded(message.as<bsgo::EntityAddedMessage>());
+    case core::MessageType::ENTITY_ADDED:
+      handleEntityAdded(message.as<core::EntityAddedMessage>());
       break;
-    case bsgalone::core::MessageType::ENTITY_REMOVED:
-      handleEntityRemoved(message.as<bsgo::EntityRemovedMessage>());
+    case core::MessageType::ENTITY_REMOVED:
+      handleEntityRemoved(message.as<core::EntityRemovedMessage>());
       break;
     default:
       error("Unsupported message type " + str(message.type()));
   }
 }
 
-void SystemMessageConsumer::handleScanOperation(const bsgo::ScannedMessage &message) const
+void SystemMessageConsumer::handleScanOperation(const core::ScannedMessage &message) const
 {
   const auto asteroidDbId = message.getAsteroidDbId();
 
   const auto maybeAsteroid = m_entityMapper.tryGetAsteroidEntityId(asteroidDbId);
   if (!maybeAsteroid)
   {
-    warn("Failed to process scan message for asteroid " + bsgo::str(asteroidDbId));
+    warn("Failed to process scan message for asteroid " + core::str(asteroidDbId));
     return;
   }
 
@@ -55,7 +55,7 @@ void SystemMessageConsumer::handleScanOperation(const bsgo::ScannedMessage &mess
   asteroid.scannedComp().scan();
 }
 
-void SystemMessageConsumer::handleEntityAdded(const bsgo::EntityAddedMessage &message) const
+void SystemMessageConsumer::handleEntityAdded(const core::EntityAddedMessage &message) const
 {
   if (!m_entityMapper.doesPlayerHaveAnEntity())
   {
@@ -63,29 +63,28 @@ void SystemMessageConsumer::handleEntityAdded(const bsgo::EntityAddedMessage &me
     return;
   }
 
-  std::optional<bsgo::Uuid> entityId{};
+  std::optional<core::Uuid> entityId{};
 
   const auto entityKind = message.getEntityKind();
 
   switch (entityKind)
   {
-    case bsgalone::core::EntityKind::SHIP:
+    case core::EntityKind::SHIP:
       handleShipCreation(*message.tryGetShipData());
       break;
-    case bsgalone::core::EntityKind::ASTEROID:
+    case core::EntityKind::ASTEROID:
       handleAsteroidCreation(*message.tryGetAsteroidData());
       break;
-    case bsgalone::core::EntityKind::PLAYER:
+    case core::EntityKind::PLAYER:
       handlePlayerCreation(*message.tryGetPlayerData());
       break;
     default:
-      error("Failed to handle creation of entity",
-            "Unsupported kind " + bsgalone::core::str(entityKind));
+      error("Failed to handle creation of entity", "Unsupported kind " + core::str(entityKind));
       break;
   }
 }
 
-void SystemMessageConsumer::handleEntityRemoved(const bsgo::EntityRemovedMessage &message) const
+void SystemMessageConsumer::handleEntityRemoved(const core::EntityRemovedMessage &message) const
 {
   if (!m_entityMapper.doesPlayerHaveAnEntity())
   {
@@ -100,13 +99,13 @@ void SystemMessageConsumer::handleEntityRemoved(const bsgo::EntityRemovedMessage
 
   switch (entityKind)
   {
-    case bsgalone::core::EntityKind::SHIP:
+    case core::EntityKind::SHIP:
       m_entityMapper.tryRemoveEntityForShip(entityDbId);
       break;
-    case bsgalone::core::EntityKind::ASTEROID:
+    case core::EntityKind::ASTEROID:
       m_entityMapper.removeEntityForAsteroid(entityDbId);
       break;
-    case bsgalone::core::EntityKind::PLAYER:
+    case core::EntityKind::PLAYER:
       m_entityMapper.removeEntityForPlayer(entityDbId);
     default:
       break;
@@ -114,8 +113,8 @@ void SystemMessageConsumer::handleEntityRemoved(const bsgo::EntityRemovedMessage
 
   if (!entityId)
   {
-    error("Failed to handle removal of entity " + bsgo::str(entityDbId),
-          "Unsupported kind " + bsgalone::core::str(entityKind));
+    error("Failed to handle removal of entity " + core::str(entityDbId),
+          "Unsupported kind " + core::str(entityKind));
   }
 
   if (didPlayerShipDie(message, m_entityMapper))
@@ -125,7 +124,7 @@ void SystemMessageConsumer::handleEntityRemoved(const bsgo::EntityRemovedMessage
     // However we set its status to DEAD to disable among other things firing
     // weapons or reloading of computers.
     auto playerShip = m_coordinator->getEntity(*entityId);
-    playerShip.statusComp().setStatus(bsgo::Status::DEAD);
+    playerShip.statusComp().setStatus(core::Status::DEAD);
 
     return;
   }
@@ -141,28 +140,28 @@ void SystemMessageConsumer::handleEntityRemoved(const bsgo::EntityRemovedMessage
   m_coordinator->deleteEntity(*entityId);
 }
 
-void SystemMessageConsumer::handleShipCreation(const bsgo::PlayerShipData &data) const
+void SystemMessageConsumer::handleShipCreation(const core::PlayerShipData &data) const
 {
-  bsgo::ShipDataSource source;
+  core::ShipDataSource source;
   source.registerShip(*m_coordinator, data, m_entityMapper, false);
 
-  info("Registered entity for ship " + bsgo::str(data.dbId));
+  info("Registered entity for ship " + core::str(data.dbId));
 }
 
-void SystemMessageConsumer::handleAsteroidCreation(const bsgo::AsteroidData &data) const
+void SystemMessageConsumer::handleAsteroidCreation(const core::AsteroidData &data) const
 {
-  bsgo::AsteroidDataSource source;
+  core::AsteroidDataSource source;
   source.registerAsteroid(*m_coordinator, data, m_entityMapper);
 
-  info("Registered entity for asteroid " + bsgo::str(data.dbId));
+  info("Registered entity for asteroid " + core::str(data.dbId));
 }
 
-void SystemMessageConsumer::handlePlayerCreation(const bsgo::PlayerData &data) const
+void SystemMessageConsumer::handlePlayerCreation(const core::PlayerData &data) const
 {
-  bsgo::PlayerDataSource source;
+  core::PlayerDataSource source;
   source.registerPlayer(*m_coordinator, data, m_entityMapper);
 
-  info("Registered entity for player " + bsgo::str(data.dbId));
+  info("Registered entity for player " + core::str(data.dbId));
 }
 
-} // namespace pge
+} // namespace bsgalone::client

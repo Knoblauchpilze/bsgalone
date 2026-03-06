@@ -3,7 +3,7 @@
 
 #include "AbstractSystem.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class BulletSystem : public AbstractSystem
 {
@@ -22,4 +22,4 @@ class BulletSystem : public AbstractSystem
   void damageOnImpact(Entity &entity, Entity &target) const;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

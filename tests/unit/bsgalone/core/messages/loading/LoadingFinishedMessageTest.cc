@@ -5,7 +5,7 @@
 
 using namespace ::testing;
 
-namespace bsgo {
+namespace bsgalone::core {
 namespace {
 void assertMessagesAreEqual(const LoadingFinishedMessage &actual,
                             const LoadingFinishedMessage &expected)
@@ -69,7 +69,7 @@ TEST(Unit_Bsgalone_Core_Messages_LoadingFinishedMessage, CloneWithoutSystem)
   const LoadingFinishedMessage expected(LoadingTransition::LOGIN, Uuid{1243});
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::LOADING_FINISHED);
+  ASSERT_EQ(cloned->type(), MessageType::LOADING_FINISHED);
   assertMessagesAreEqual(cloned->as<LoadingFinishedMessage>(), expected);
 }
 
@@ -80,8 +80,8 @@ TEST(Unit_Bsgalone_Core_Messages_LoadingFinishedMessage, CloneWithSystem)
 
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::LOADING_FINISHED);
+  ASSERT_EQ(cloned->type(), MessageType::LOADING_FINISHED);
   assertMessagesAreEqual(cloned->as<LoadingFinishedMessage>(), expected);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

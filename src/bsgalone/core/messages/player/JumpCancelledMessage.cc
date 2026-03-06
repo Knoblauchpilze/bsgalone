@@ -5,17 +5,17 @@
 namespace bsgalone::core {
 
 JumpCancelledMessage::JumpCancelledMessage()
-  : AbstractPlayerMessage(MessageType::JUMP_CANCELLED, bsgo::Uuid{0}, bsgo::Uuid{0})
+  : AbstractPlayerMessage(MessageType::JUMP_CANCELLED, Uuid{0}, Uuid{0})
 {}
 
-JumpCancelledMessage::JumpCancelledMessage(const bsgo::Uuid playerDbId,
-                                           const bsgo::Uuid systemDbId,
-                                           const bsgo::Uuid shipDbId)
+JumpCancelledMessage::JumpCancelledMessage(const Uuid playerDbId,
+                                           const Uuid systemDbId,
+                                           const Uuid shipDbId)
   : AbstractPlayerMessage(MessageType::JUMP_CANCELLED, playerDbId, systemDbId)
   , m_shipDbId(shipDbId)
 {}
 
-auto JumpCancelledMessage::getShipDbId() const -> bsgo::Uuid
+auto JumpCancelledMessage::getShipDbId() const -> Uuid
 {
   return m_shipDbId;
 }

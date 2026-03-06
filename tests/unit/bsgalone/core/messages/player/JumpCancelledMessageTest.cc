@@ -18,17 +18,17 @@ void assertMessagesAreEqual(const JumpCancelledMessage &actual, const JumpCancel
 
 TEST(Unit_Bsgalone_Core_Messages_Player_JumpCancelledMessage, SerializationDeserialization)
 {
-  const JumpCancelledMessage expected(bsgo::Uuid{18}, bsgo::Uuid{19}, bsgo::Uuid{14});
-  JumpCancelledMessage actual(bsgo::Uuid{16}, bsgo::Uuid{71}, bsgo::Uuid{6});
+  const JumpCancelledMessage expected(Uuid{18}, Uuid{19}, Uuid{14});
+  JumpCancelledMessage actual(Uuid{16}, Uuid{71}, Uuid{6});
 
-  bsgo::serializeAndDeserializeMessage(expected, actual);
+  serializeAndDeserializeMessage(expected, actual);
 
   assertMessagesAreEqual(actual, expected);
 }
 
 TEST(Unit_Bsgalone_Core_Messages_Player_JumpCancelledMessage, Clone)
 {
-  const JumpCancelledMessage expected(bsgo::Uuid{18}, bsgo::Uuid{19}, bsgo::Uuid{14});
+  const JumpCancelledMessage expected(Uuid{18}, Uuid{19}, Uuid{14});
 
   const auto cloned = expected.clone();
 

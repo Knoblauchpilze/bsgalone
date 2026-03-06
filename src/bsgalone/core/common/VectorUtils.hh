@@ -5,7 +5,7 @@
 #include <eigen3/Eigen/Eigen>
 #include <string>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 auto str(const Eigen::Vector3f &v) -> std::string;
 
@@ -20,4 +20,4 @@ auto str(const Eigen::Vector3f &v) -> std::string;
 /// @return - the result of lhs * rhs
 auto operator*(const Eigen::Vector3f &lhs, const chrono::TickDuration &rhs) -> Eigen::Vector3f;
 
-} // namespace bsgo
+} // namespace bsgalone::core

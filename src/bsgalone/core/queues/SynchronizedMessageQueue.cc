@@ -2,19 +2,18 @@
 #include "SynchronizedMessageQueue.hh"
 #include "AbstractSynchronizedEventQueue.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
-const auto UNIMPORTANT_MESSAGE_TYPES = std::unordered_set<bsgalone::core::MessageType>{
-  bsgalone::core::MessageType::COMPONENT_SYNC,
-  bsgalone::core::MessageType::AI_BEHAVIOR_SYNC,
-  bsgalone::core::MessageType::VELOCITY,
+const auto UNIMPORTANT_MESSAGE_TYPES = std::unordered_set<MessageType>{
+  MessageType::COMPONENT_SYNC,
+  MessageType::AI_BEHAVIOR_SYNC,
+  MessageType::VELOCITY,
 };
 
-auto createSynchronizedMessageQueue() -> bsgalone::core::IMessageQueuePtr
+auto createSynchronizedMessageQueue() -> IMessageQueuePtr
 {
-  return std::make_unique<messaging::AbstractSynchronizedEventQueue<bsgalone::core::MessageType,
-                                                                    bsgalone::core::IMessage>>(
-    bsgalone::core::allMessageTypesAsSet(), UNIMPORTANT_MESSAGE_TYPES);
+  return std::make_unique<messaging::AbstractSynchronizedEventQueue<MessageType, IMessage>>(
+    allMessageTypesAsSet(), UNIMPORTANT_MESSAGE_TYPES);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

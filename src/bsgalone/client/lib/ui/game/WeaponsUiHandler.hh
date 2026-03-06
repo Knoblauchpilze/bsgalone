@@ -10,9 +10,9 @@
 #include "WeaponSlotComponent.hh"
 #include <memory>
 
-namespace pge {
+namespace bsgalone::client {
 
-class WeaponsUiHandler : public AbstractUiHandler, public bsgalone::core::AbstractMessageListener
+class WeaponsUiHandler : public AbstractUiHandler, public core::AbstractMessageListener
 {
   public:
   WeaponsUiHandler(const Views &views);
@@ -20,13 +20,13 @@ class WeaponsUiHandler : public AbstractUiHandler, public bsgalone::core::Abstra
 
   void initializeMenus(const int width,
                        const int height,
-                       sprites::TexturePack &texturesLoader) override;
+                       pge::sprites::TexturePack &texturesLoader) override;
   bool processUserInput(ui::UserInputData &inputData) override;
-  void render(Renderer &engine) const override;
+  void render(pge::Renderer &engine) const override;
   void updateUi() override;
-  void connectToMessageQueue(bsgalone::core::IMessageQueue &messageQueue) override;
+  void connectToMessageQueue(core::IMessageQueue &messageQueue) override;
 
-  void onEventReceived(const bsgalone::core::IMessage &message) override;
+  void onEventReceived(const core::IMessage &message) override;
 
   private:
   ShipViewShPtr m_shipView{};
@@ -35,7 +35,7 @@ class WeaponsUiHandler : public AbstractUiHandler, public bsgalone::core::Abstra
   bool m_initialized{false};
   bool m_disabled{false};
 
-  sprites::PackId m_weaponTexturesPackId{};
+  pge::sprites::PackId m_weaponTexturesPackId{};
   std::vector<ui::UiPictureMenuPtr> m_weapons{};
   std::vector<ui::UiTextMenu *> m_statuses{};
 
@@ -43,9 +43,9 @@ class WeaponsUiHandler : public AbstractUiHandler, public bsgalone::core::Abstra
   void reset();
   void generateWeaponsMenus(int width, int height);
   void initializeWeapons();
-  void updateWeaponMenu(const bsgo::WeaponSlotComponent &weapon, const int id);
+  void updateWeaponMenu(const core::WeaponSlotComponent &weapon, const int id);
 };
 
 using WeaponsUiHandlerPtr = std::unique_ptr<WeaponsUiHandler>;
 
-} // namespace pge
+} // namespace bsgalone::client

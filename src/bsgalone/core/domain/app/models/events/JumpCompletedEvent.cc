@@ -3,12 +3,12 @@
 
 namespace bsgalone::core {
 
-JumpCompletedEvent::JumpCompletedEvent(const bsgo::Uuid entityId)
+JumpCompletedEvent::JumpCompletedEvent(const Uuid entityId)
   : IGameEvent(GameEventType::JUMP_COMPLETED)
   , m_entityId(entityId)
 {}
 
-auto JumpCompletedEvent::entityId() const -> bsgo::Uuid
+auto JumpCompletedEvent::entityId() const -> Uuid
 {
   return m_entityId;
 }

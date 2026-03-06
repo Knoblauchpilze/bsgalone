@@ -1,10 +1,10 @@
 
 #include "LootComponent.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 LootComponent::LootComponent()
-  : AbstractComponent(bsgalone::core::ComponentType::LOOT)
+  : AbstractComponent(ComponentType::LOOT)
 {}
 
 void LootComponent::registerRecipient(const Uuid entity)
@@ -24,4 +24,4 @@ void LootComponent::clearRecipients()
 
 void LootComponent::update(const chrono::TickData & /*data*/) {}
 
-} // namespace bsgo
+} // namespace bsgalone::core

@@ -1,7 +1,7 @@
 
 #include "LoadingTransition.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 auto str(const LoadingTransition transition) -> std::string
 {
@@ -26,4 +26,4 @@ auto str(const LoadingTransition transition) -> std::string
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

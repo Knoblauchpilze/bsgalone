@@ -5,19 +5,19 @@
 namespace bsgalone::core {
 
 DockMessage::DockMessage()
-  : AbstractPlayerMessage(MessageType::DOCK, bsgo::Uuid{0}, bsgo::Uuid{0})
+  : AbstractPlayerMessage(MessageType::DOCK, Uuid{0}, Uuid{0})
 {}
 
-DockMessage::DockMessage(const bsgo::Uuid playerDbId,
-                         const bsgo::Uuid systemDbId,
-                         const bsgo::Uuid shipDbId,
+DockMessage::DockMessage(const Uuid playerDbId,
+                         const Uuid systemDbId,
+                         const Uuid shipDbId,
                          const DockTransition transition)
   : AbstractPlayerMessage(MessageType::DOCK, playerDbId, systemDbId)
   , m_shipDbId(shipDbId)
   , m_transition(transition)
 {}
 
-auto DockMessage::getShipDbId() const -> bsgo::Uuid
+auto DockMessage::getShipDbId() const -> Uuid
 {
   return m_shipDbId;
 }

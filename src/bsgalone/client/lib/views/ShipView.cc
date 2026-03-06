@@ -4,16 +4,16 @@
 #include "SystemListMessage.hh"
 #include "TargetPickedMessage.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
 ShipView::ShipView(GameSessionShPtr gameSession,
-                   bsgo::CoordinatorShPtr coordinator,
-                   bsgalone::core::IMessageQueue *const outputMessageQueue)
+                   core::CoordinatorShPtr coordinator,
+                   core::IMessageQueue *const outputMessageQueue)
   : AbstractView("ship",
                  {
-                   bsgalone::core::MessageType::DOCK,
-                   bsgalone::core::MessageType::JUMP,
-                   bsgalone::core::MessageType::SYSTEM_LIST,
+                   core::MessageType::DOCK,
+                   core::MessageType::JUMP,
+                   core::MessageType::SYSTEM_LIST,
                  })
   , m_gameSession(std::move(gameSession))
   , m_coordinator(std::move(coordinator))
@@ -33,20 +33,20 @@ ShipView::ShipView(GameSessionShPtr gameSession,
   }
 }
 
-auto ShipView::getPlayerShip() const -> bsgo::Entity
+auto ShipView::getPlayerShip() const -> core::Entity
 {
   checkPlayerShipEntityIdExists();
 
   const auto ent = m_coordinator->getEntity(*m_playerShipEntityId);
-  if (ent.kind->kind() != bsgalone::core::EntityKind::SHIP)
+  if (ent.kind->kind() != core::EntityKind::SHIP)
   {
-    error("Expected " + bsgo::str(*m_playerShipEntityId) + " to have kind ship but got "
+    error("Expected " + core::str(*m_playerShipEntityId) + " to have kind ship but got "
           + ent.str());
   }
   return ent;
 }
 
-void ShipView::setPlayerShipEntityId(const std::optional<bsgo::Uuid> ship)
+void ShipView::setPlayerShipEntityId(const std::optional<core::Uuid> ship)
 {
   m_playerShipEntityId = ship;
 }
@@ -72,7 +72,7 @@ bool ShipView::hasTarget() const
   return getPlayerTarget().has_value();
 }
 
-auto ShipView::getPlayerTarget() const -> std::optional<bsgo::Entity>
+auto ShipView::getPlayerTarget() const -> std::optional<core::Entity>
 {
   const auto ship     = getPlayerShip();
   const auto targetId = ship.targetComp().target();
@@ -86,10 +86,10 @@ auto ShipView::getPlayerTarget() const -> std::optional<bsgo::Entity>
 }
 
 namespace {
-auto determineShipName(const bsgo::Entity &ship, const bsgo::Coordinator &coordinator)
+auto determineShipName(const core::Entity &ship, const core::Coordinator &coordinator)
   -> std::string
 {
-  if (ship.exists<bsgo::OwnerComponent>())
+  if (ship.exists<core::OwnerComponent>())
   {
     const auto playerEntityId = ship.ownerComp().owner();
     const auto player         = coordinator.getEntity(playerEntityId);
@@ -101,15 +101,15 @@ auto determineShipName(const bsgo::Entity &ship, const bsgo::Coordinator &coordi
 }
 } // namespace
 
-auto ShipView::getEntityName(const bsgo::Entity &entity) const -> std::string
+auto ShipView::getEntityName(const core::Entity &entity) const -> std::string
 {
   switch (entity.kind->kind())
   {
-    case bsgalone::core::EntityKind::ASTEROID:
+    case core::EntityKind::ASTEROID:
       return "asteroid";
-    case bsgalone::core::EntityKind::OUTPOST:
+    case core::EntityKind::OUTPOST:
       return str(entity.factionComp().faction()) + " outpost";
-    case bsgalone::core::EntityKind::SHIP:
+    case core::EntityKind::SHIP:
       return determineShipName(entity, *m_coordinator);
     default:
       error("Failed to return target name", "Unknown kind " + str(entity.kind->kind()));
@@ -118,11 +118,10 @@ auto ShipView::getEntityName(const bsgo::Entity &entity) const -> std::string
   }
 }
 
-auto ShipView::getShipsWithin(const bsgo::IBoundingBox &bbox) const -> std::vector<bsgo::Entity>
+auto ShipView::getShipsWithin(const core::IBoundingBox &bbox) const -> std::vector<core::Entity>
 {
-  const auto predicate = [](const bsgo::Entity &entity) {
-    if (entity.kind->kind() != bsgalone::core::EntityKind::SHIP
-        || !entity.exists<bsgo::StatusComponent>())
+  const auto predicate = [](const core::Entity &entity) {
+    if (entity.kind->kind() != core::EntityKind::SHIP || !entity.exists<core::StatusComponent>())
     {
       return false;
     }
@@ -172,11 +171,11 @@ void ShipView::tryActivateWeapon(const int weaponId) const
   const auto playerDbId = m_gameSession->getPlayerDbId();
   const auto systemDbId = m_gameSession->getSystemDbId();
 
-  auto message = std::make_unique<bsgalone::core::SlotMessage>(playerDbId,
-                                                               systemDbId,
-                                                               shipDbId,
-                                                               slotDbId,
-                                                               bsgalone::core::Slot::WEAPON);
+  auto message = std::make_unique<core::SlotMessage>(playerDbId,
+                                                     systemDbId,
+                                                     shipDbId,
+                                                     slotDbId,
+                                                     core::Slot::WEAPON);
   m_outputMessageQueue->pushEvent(std::move(message));
 }
 
@@ -195,11 +194,11 @@ void ShipView::tryActivateSlot(const int slotId) const
   const auto playerDbId = m_gameSession->getPlayerDbId();
   const auto systemDbId = m_gameSession->getSystemDbId();
 
-  auto message = std::make_unique<bsgalone::core::SlotMessage>(playerDbId,
-                                                               systemDbId,
-                                                               shipDbId,
-                                                               slotDbId,
-                                                               bsgalone::core::Slot::COMPUTER);
+  auto message = std::make_unique<core::SlotMessage>(playerDbId,
+                                                     systemDbId,
+                                                     shipDbId,
+                                                     slotDbId,
+                                                     core::Slot::COMPUTER);
   m_outputMessageQueue->pushEvent(std::move(message));
 }
 
@@ -207,14 +206,12 @@ void ShipView::tryAcquireTarget(const Eigen::Vector3f &position) const
 {
   const auto playerShip = getPlayerShip();
 
-  bsgalone::core::Target data{
+  core::Target data{
     .sourceDbId = playerShip.dbComp().dbId(),
-    .sourceKind = bsgalone::core::EntityKind::SHIP,
+    .sourceKind = core::EntityKind::SHIP,
   };
 
-  const auto maybeTargetId = m_coordinator->getEntityAt(position,
-                                                        {},
-                                                        bsgalone::core::EntityKind::BULLET);
+  const auto maybeTargetId = m_coordinator->getEntityAt(position, {}, core::EntityKind::BULLET);
   if (maybeTargetId)
   {
     const auto target = m_coordinator->getEntity(*maybeTargetId);
@@ -226,10 +223,10 @@ void ShipView::tryAcquireTarget(const Eigen::Vector3f &position) const
   const auto systemDbId = m_gameSession->getSystemDbId();
 
   m_outputMessageQueue->pushEvent(
-    std::make_unique<bsgalone::core::TargetPickedMessage>(playerDbId, systemDbId, data, position));
+    std::make_unique<core::TargetPickedMessage>(playerDbId, systemDbId, data, position));
 }
 
-void ShipView::setJumpSystem(const bsgo::Uuid system)
+void ShipView::setJumpSystem(const core::Uuid system)
 {
   m_systemToJumpTo = system;
 }
@@ -246,12 +243,12 @@ bool ShipView::isJumping() const
 }
 
 namespace {
-auto findSystemName(const std::vector<bsgo::SystemData> &systems, const bsgo::Uuid &systemDbId)
+auto findSystemName(const std::vector<core::SystemData> &systems, const core::Uuid &systemDbId)
   -> std::optional<std::string>
 {
   const auto maybeSystem = std::find_if(systems.begin(),
                                         systems.end(),
-                                        [&systemDbId](const bsgo::SystemData &system) {
+                                        [&systemDbId](const core::SystemData &system) {
                                           return system.dbId == systemDbId;
                                         });
 
@@ -278,7 +275,7 @@ auto ShipView::getJumpData() const -> JumpData
   const auto maybeSystemName = findSystemName(m_systems, *m_systemToJumpTo);
   if (!maybeSystemName)
   {
-    error("Failed to find system name for " + bsgo::str(*m_systemToJumpTo));
+    error("Failed to find system name for " + core::str(*m_systemToJumpTo));
   }
 
   const auto ship = getPlayerShip();
@@ -298,18 +295,18 @@ bool ShipView::isInThreat() const
 bool ShipView::isDead() const
 {
   const auto ship = getPlayerShip();
-  return bsgo::Status::DEAD == ship.statusComp().status();
+  return core::Status::DEAD == ship.statusComp().status();
 }
 
-void ShipView::handleMessageInternal(const bsgalone::core::IMessage &message)
+void ShipView::handleMessageInternal(const core::IMessage &message)
 {
   switch (message.type())
   {
-    case bsgalone::core::MessageType::SYSTEM_LIST:
-      m_systems = message.as<bsgo::SystemListMessage>().getSystemsData();
+    case core::MessageType::SYSTEM_LIST:
+      m_systems = message.as<core::SystemListMessage>().getSystemsData();
       break;
-    case bsgalone::core::MessageType::DOCK:
-    case bsgalone::core::MessageType::JUMP:
+    case core::MessageType::DOCK:
+    case core::MessageType::JUMP:
       m_playerShipEntityId.reset();
       break;
     default:
@@ -325,4 +322,4 @@ void ShipView::checkPlayerShipEntityIdExists() const
   }
 }
 
-} // namespace pge
+} // namespace bsgalone::client

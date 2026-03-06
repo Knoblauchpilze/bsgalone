@@ -1,10 +1,10 @@
 
 #include "DatabaseEntityMapper.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 DatabaseEntityMapper::DatabaseEntityMapper()
-  : core::CoreObject("database")
+  : ::core::CoreObject("database")
 {
   setService("mapper");
 }
@@ -202,19 +202,18 @@ auto DatabaseEntityMapper::tryGetOutpostEntityId(const Uuid outpostDbId) const
   return {};
 }
 
-auto DatabaseEntityMapper::tryGetEntityId(const Uuid dbId,
-                                          const bsgalone::core::EntityKind kind) const
+auto DatabaseEntityMapper::tryGetEntityId(const Uuid dbId, const EntityKind kind) const
   -> std::optional<Uuid>
 {
   switch (kind)
   {
-    case bsgalone::core::EntityKind::SHIP:
+    case EntityKind::SHIP:
       return tryGetShipEntityId(dbId);
-    case bsgalone::core::EntityKind::ASTEROID:
+    case EntityKind::ASTEROID:
       return tryGetAsteroidEntityId(dbId);
-    case bsgalone::core::EntityKind::OUTPOST:
+    case EntityKind::OUTPOST:
       return tryGetOutpostEntityId(dbId);
-    case bsgalone::core::EntityKind::PLAYER:
+    case EntityKind::PLAYER:
       return tryGetPlayerEntityId(dbId);
     default:
       error("Unsupported entity kind " + str(kind));
@@ -260,4 +259,4 @@ void DatabaseEntityMapper::registerShip(const Uuid shipDbId, const Uuid entityId
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

@@ -6,7 +6,7 @@
 
 using namespace ::testing;
 
-namespace bsgo {
+namespace bsgalone::core {
 
 TEST(Unit_Bsgalone_Core_Messages_SystemData, EqualWhenDbIdIsEqual)
 {
@@ -46,4 +46,4 @@ TEST(Unit_Bsgalone_Core_Messages_SystemData, Basic)
   assertSystemDataAreEqual(output, input);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

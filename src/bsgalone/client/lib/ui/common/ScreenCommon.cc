@@ -1,32 +1,33 @@
 
 #include "ScreenCommon.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
-auto generateBlankHorizontalMenu(const std::optional<Vec2i> &dims) -> ui::UiMenuPtr
+auto generateBlankHorizontalMenu(const std::optional<pge::Vec2i> &dims) -> ui::UiMenuPtr
 {
   return generateBlankHorizontalMenu({}, dims);
 }
 
-auto generateBlankHorizontalMenu(const Vec2i &pos, const std::optional<Vec2i> &dims)
+auto generateBlankHorizontalMenu(const pge::Vec2i &pos, const std::optional<pge::Vec2i> &dims)
   -> ui::UiMenuPtr
 {
   return generateBlankMenu(pos, ui::MenuLayout::HORIZONTAL, dims);
 }
 
-auto generateBlankVerticalMenu(const std::optional<Vec2i> &dims) -> ui::UiMenuPtr
+auto generateBlankVerticalMenu(const std::optional<pge::Vec2i> &dims) -> ui::UiMenuPtr
 {
   return generateBlankVerticalMenu({}, dims);
 }
 
-auto generateBlankVerticalMenu(const Vec2i &pos, const std::optional<Vec2i> &dims) -> ui::UiMenuPtr
+auto generateBlankVerticalMenu(const pge::Vec2i &pos, const std::optional<pge::Vec2i> &dims)
+  -> ui::UiMenuPtr
 {
   return generateBlankMenu(pos, ui::MenuLayout::VERTICAL, dims);
 }
 
-auto generateBlankMenu(const Vec2i &pos,
+auto generateBlankMenu(const pge::Vec2i &pos,
                        const ui::MenuLayout &layout,
-                       const std::optional<Vec2i> &dims) -> ui::UiMenuPtr
+                       const std::optional<pge::Vec2i> &dims) -> ui::UiMenuPtr
 {
   ui::MenuConfig config{.pos = pos, .layout = layout};
   if (dims)
@@ -38,16 +39,17 @@ auto generateBlankMenu(const Vec2i &pos,
 
 auto generateBlankMenu(const ui::MenuConfig &config) -> ui::UiMenuPtr
 {
-  const auto bg = ui::bgConfigFromColor(colors::BLANK);
+  const auto bg = ui::bgConfigFromColor(pge::colors::BLANK);
   return std::make_unique<ui::UiMenu>(config, bg);
 }
 
-auto generateSpacer(const std::optional<Vec2i> &dims) -> ui::UiMenuPtr
+auto generateSpacer(const std::optional<pge::Vec2i> &dims) -> ui::UiMenuPtr
 {
-  return generateColoredSpacer(colors::BLANK, dims);
+  return generateColoredSpacer(pge::colors::BLANK, dims);
 }
 
-auto generateColoredSpacer(const Color &color, const std::optional<Vec2i> &dims) -> ui::UiMenuPtr
+auto generateColoredSpacer(const pge::Color &color, const std::optional<pge::Vec2i> &dims)
+  -> ui::UiMenuPtr
 {
   ui::MenuConfig config{.highlightable = false, .propagateEventsToChildren = false};
   if (dims)
@@ -58,4 +60,4 @@ auto generateColoredSpacer(const Color &color, const std::optional<Vec2i> &dims)
   return std::make_unique<ui::UiMenu>(config, bg);
 }
 
-} // namespace pge
+} // namespace bsgalone::client

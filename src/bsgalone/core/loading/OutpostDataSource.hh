@@ -7,11 +7,11 @@
 #include "Repositories.hh"
 #include <optional>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class Coordinator;
 
-class OutpostDataSource : public core::CoreObject
+class OutpostDataSource : public ::core::CoreObject
 {
   public:
   OutpostDataSource();
@@ -34,4 +34,4 @@ class OutpostDataSource : public core::CoreObject
                        DatabaseEntityMapper &entityMapper) const;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

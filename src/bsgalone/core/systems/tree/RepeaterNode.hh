@@ -3,7 +3,7 @@
 
 #include "INode.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class RepeaterNode : public INode
 {
@@ -18,4 +18,4 @@ class RepeaterNode : public INode
   INodePtr m_child{};
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

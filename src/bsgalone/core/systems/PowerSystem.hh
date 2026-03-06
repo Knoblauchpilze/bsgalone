@@ -3,7 +3,7 @@
 
 #include "AbstractSystem.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class PowerSystem : public AbstractSystem
 {
@@ -20,4 +20,4 @@ class PowerSystem : public AbstractSystem
   bool canRegeneratePower(Entity &entity) const;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

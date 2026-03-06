@@ -11,9 +11,9 @@
 #include <atomic>
 #include <memory>
 
-namespace pge {
+namespace bsgalone::client {
 
-class GameNetworkClient : public bsgalone::core::IMessageQueue
+class GameNetworkClient : public core::IMessageQueue
 {
   public:
   GameNetworkClient();
@@ -22,8 +22,8 @@ class GameNetworkClient : public bsgalone::core::IMessageQueue
   void start(const int port);
   void stop();
 
-  void pushEvent(bsgalone::core::IMessagePtr message) override;
-  void addListener(bsgalone::core::IMessageListenerPtr listener) override;
+  void pushEvent(core::IMessagePtr message) override;
+  void addListener(core::IMessageListenerPtr listener) override;
   bool empty() override;
 
   void processEvents() override;
@@ -31,15 +31,15 @@ class GameNetworkClient : public bsgalone::core::IMessageQueue
   private:
   net::INetworkEventQueueShPtr m_eventBus{};
   net::INetworkClientShPtr m_tcpClient{};
-  bsgalone::core::IOutputNetworkAdapterPtr m_adapter{};
+  core::IOutputNetworkAdapterPtr m_adapter{};
 
   std::atomic_bool m_connected{};
 
-  bsgalone::core::IMessageQueueShPtr m_inputQueue{};
+  core::IMessageQueueShPtr m_inputQueue{};
 
   void initialize();
 };
 
 using GameNetworkClientShPtr = std::shared_ptr<GameNetworkClient>;
 
-} // namespace pge
+} // namespace bsgalone::client

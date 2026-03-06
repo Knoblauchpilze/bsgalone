@@ -13,15 +13,15 @@ class NetworkMessage : public AbstractMessage
   ~NetworkMessage() override = default;
 
   // TODO: This should be changed to a net::ClientId
-  void setClientId(const bsgo::Uuid clientId);
+  void setClientId(const Uuid clientId);
 
-  auto getClientId() const -> bsgo::Uuid;
-  auto tryGetClientId() const -> std::optional<bsgo::Uuid>;
+  auto getClientId() const -> Uuid;
+  auto tryGetClientId() const -> std::optional<Uuid>;
 
   void copyClientIdIfDefined(const NetworkMessage &source);
 
   protected:
-  std::optional<bsgo::Uuid> m_clientId{};
+  std::optional<Uuid> m_clientId{};
 };
 
 } // namespace bsgalone::core

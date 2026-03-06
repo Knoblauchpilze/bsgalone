@@ -6,7 +6,7 @@
 #include <eigen3/Eigen/Eigen>
 #include <optional>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 struct PlayerWeaponData
 {
@@ -29,4 +29,4 @@ struct PlayerWeaponData
   bool deserialize(std::istream &in);
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

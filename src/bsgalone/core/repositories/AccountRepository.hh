@@ -9,7 +9,7 @@
 #include <optional>
 #include <unordered_set>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 struct Account
 {
@@ -34,4 +34,4 @@ class AccountRepository : public AbstractRepository
 
 using AccountRepositoryShPtr = std::shared_ptr<AccountRepository>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

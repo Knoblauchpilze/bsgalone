@@ -5,7 +5,7 @@
 
 using namespace ::testing;
 
-namespace bsgo {
+namespace bsgalone::core {
 namespace {
 void assertMessagesAreEqual(const JoinShipMessage &actual, const JoinShipMessage &expected)
 {
@@ -45,8 +45,8 @@ TEST(Unit_Bsgalone_Core_Messages_JoinShipMessage, Clone)
 
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::JOIN_SHIP);
+  ASSERT_EQ(cloned->type(), MessageType::JOIN_SHIP);
   assertMessagesAreEqual(cloned->as<JoinShipMessage>(), expected);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

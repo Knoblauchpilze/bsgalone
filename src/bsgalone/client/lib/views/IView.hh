@@ -4,7 +4,7 @@
 #include "IViewListener.hh"
 #include <memory>
 
-namespace pge {
+namespace bsgalone::client {
 
 class IView
 {
@@ -23,4 +23,4 @@ class IView
 
 using IViewShPtr = std::shared_ptr<IView>;
 
-} // namespace pge
+} // namespace bsgalone::client

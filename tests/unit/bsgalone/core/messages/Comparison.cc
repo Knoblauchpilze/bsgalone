@@ -3,10 +3,9 @@
 #include "SerializationUtils.hh"
 #include <gtest/gtest.h>
 
-namespace bsgo {
+namespace bsgalone::core {
 
-void serializeAndDeserializeMessage(const bsgalone::core::IMessage &value,
-                                    bsgalone::core::IMessage &output)
+void serializeAndDeserializeMessage(const IMessage &value, IMessage &output)
 {
   std::ostringstream out{};
   out << value;
@@ -201,8 +200,7 @@ void assertSystemTickDataAreEqual(const SystemTickData &actual, const SystemTick
   EXPECT_EQ(actual.step, expected.step);
 }
 
-void assertTargetAreEqual(const bsgalone::core::Target &actual,
-                          const bsgalone::core::Target &expected)
+void assertTargetAreEqual(const Target &actual, const Target &expected)
 {
   EXPECT_EQ(actual.sourceDbId, expected.sourceDbId);
   EXPECT_EQ(actual.sourceKind, expected.sourceKind);
@@ -210,4 +208,4 @@ void assertTargetAreEqual(const bsgalone::core::Target &actual,
   EXPECT_EQ(actual.targetKind, expected.targetKind);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

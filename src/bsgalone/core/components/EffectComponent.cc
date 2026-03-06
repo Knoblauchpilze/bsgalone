@@ -1,10 +1,9 @@
 
 #include "EffectComponent.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
-EffectComponent::EffectComponent(const bsgalone::core::ComponentType &type,
-                                 const chrono::TickDuration &duration)
+EffectComponent::EffectComponent(const ComponentType &type, const chrono::TickDuration &duration)
   : AbstractComponent(type)
   , m_duration(duration)
 {
@@ -26,4 +25,4 @@ void EffectComponent::update(const chrono::TickData &data)
   m_elapsedSinceStart += data.elapsed;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

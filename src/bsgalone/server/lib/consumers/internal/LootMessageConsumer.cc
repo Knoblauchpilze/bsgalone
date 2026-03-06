@@ -2,11 +2,11 @@
 #include "LootMessageConsumer.hh"
 #include "LootMessage.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
 LootMessageConsumer::LootMessageConsumer(SystemServiceShPtr systemService,
-                                         bsgalone::core::IMessageQueue *const outputMessageQueue)
-  : AbstractMessageConsumer("loot", {bsgalone::core::MessageType::LOOT})
+                                         core::IMessageQueue *const outputMessageQueue)
+  : AbstractMessageConsumer("loot", {core::MessageType::LOOT})
   , m_systemService(std::move(systemService))
   , m_outputMessageQueue(outputMessageQueue)
 {
@@ -20,9 +20,9 @@ LootMessageConsumer::LootMessageConsumer(SystemServiceShPtr systemService,
   }
 }
 
-void LootMessageConsumer::onEventReceived(const bsgalone::core::IMessage &message)
+void LootMessageConsumer::onEventReceived(const core::IMessage &message)
 {
-  const auto &loot = message.as<LootMessage>();
+  const auto &loot = message.as<core::LootMessage>();
 
   const auto playerDbId   = loot.getPlayerDbId();
   const auto resourceDbId = loot.getResourceDbId();
@@ -30,13 +30,13 @@ void LootMessageConsumer::onEventReceived(const bsgalone::core::IMessage &messag
 
   if (!m_systemService->tryDistributeResource(playerDbId, resourceDbId, amount))
   {
-    warn("Failed to process loot message for player " + str(playerDbId));
+    warn("Failed to process loot message for player " + core::str(playerDbId));
     return;
   }
 
-  auto out = std::make_unique<LootMessage>(playerDbId, resourceDbId, amount);
+  auto out = std::make_unique<core::LootMessage>(playerDbId, resourceDbId, amount);
   out->copyClientIdIfDefined(loot);
   m_outputMessageQueue->pushEvent(std::move(out));
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

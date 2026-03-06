@@ -6,7 +6,7 @@
 
 using namespace ::testing;
 
-namespace bsgo {
+namespace bsgalone::core {
 
 TEST(Unit_Bsgalone_Core_Messages_WeaponData, EqualWhenDbIdIsEqual)
 {
@@ -50,4 +50,4 @@ TEST(Unit_Bsgalone_Core_Messages_WeaponData, Basic)
   assertWeaponDataAreEqual(output, input);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

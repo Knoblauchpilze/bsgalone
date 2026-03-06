@@ -2,7 +2,7 @@
 #include "DbConnection.hh"
 #include <gtest/gtest.h>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 TEST(Integration_Bsgalone_Core_Repositories_DbConnection, ConnectDisconnect)
 {
@@ -11,4 +11,4 @@ TEST(Integration_Bsgalone_Core_Repositories_DbConnection, ConnectDisconnect)
   conn.disconnect();
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

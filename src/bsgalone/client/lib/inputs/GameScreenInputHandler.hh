@@ -7,7 +7,7 @@
 #include "Views.hh"
 #include <optional>
 
-namespace pge {
+namespace bsgalone::client {
 
 class GameScreenInputHandler : public IInputHandler
 {
@@ -15,8 +15,8 @@ class GameScreenInputHandler : public IInputHandler
   GameScreenInputHandler(const Views &views);
   ~GameScreenInputHandler() override = default;
 
-  void processUserInput(const controls::State &controls, CoordinateFrame &frame) override;
-  void performAction(float x, float y, const controls::State &controls) override;
+  void processUserInput(const pge::controls::State &controls, pge::CoordinateFrame &frame) override;
+  void performAction(float x, float y, const pge::controls::State &controls) override;
 
   private:
   ShipViewShPtr m_shipView{};
@@ -24,10 +24,10 @@ class GameScreenInputHandler : public IInputHandler
   std::optional<Motion> m_lastMotion{};
 
   void moveShip(const Motion &motion);
-  void keepShipCentered(CoordinateFrame &frame);
-  void handleWeapons(const controls::State &controls);
-  void handleAbilities(const controls::State &controls);
-  void handleJumpState(const controls::State &controls);
+  void keepShipCentered(pge::CoordinateFrame &frame);
+  void handleWeapons(const pge::controls::State &controls);
+  void handleAbilities(const pge::controls::State &controls);
+  void handleJumpState(const pge::controls::State &controls);
 };
 
-} // namespace pge
+} // namespace bsgalone::client

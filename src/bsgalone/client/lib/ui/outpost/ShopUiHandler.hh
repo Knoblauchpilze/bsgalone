@@ -8,7 +8,7 @@
 #include "Views.hh"
 #include <memory>
 
-namespace pge {
+namespace bsgalone::client {
 
 class ShopUiHandler : public AbstractUiHandler
 {
@@ -18,9 +18,9 @@ class ShopUiHandler : public AbstractUiHandler
 
   void initializeMenus(const int width,
                        const int height,
-                       sprites::TexturePack &texturesLoader) override;
+                       pge::sprites::TexturePack &texturesLoader) override;
   bool processUserInput(ui::UserInputData &inputData) override;
-  void render(Renderer &engine) const override;
+  void render(pge::Renderer &engine) const override;
   void updateUi() override;
 
   private:
@@ -34,10 +34,10 @@ class ShopUiHandler : public AbstractUiHandler
 
   struct ItemData
   {
-    bsgo::Uuid itemId{};
-    bsgalone::core::Item itemType{};
+    core::Uuid itemId{};
+    core::Item itemType{};
     ui::UiMenu *menu{};
-    std::unordered_map<bsgo::Uuid, ui::UiTextMenu *> prices{};
+    std::unordered_map<core::Uuid, ui::UiTextMenu *> prices{};
   };
   std::vector<ItemData> m_itemsData{};
 
@@ -54,4 +54,4 @@ class ShopUiHandler : public AbstractUiHandler
 
 using ShopUiHandlerPtr = std::unique_ptr<ShopUiHandler>;
 
-} // namespace pge
+} // namespace bsgalone::client

@@ -1,10 +1,10 @@
 
 #include "DamageComponent.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 DamageComponent::DamageComponent(const float damage)
-  : AbstractComponent(bsgalone::core::ComponentType::DAMAGE)
+  : AbstractComponent(ComponentType::DAMAGE)
   , m_damage(damage)
 {}
 
@@ -15,4 +15,4 @@ auto DamageComponent::damage() const noexcept -> float
 
 void DamageComponent::update(const chrono::TickData & /*data*/) {}
 
-} // namespace bsgo
+} // namespace bsgalone::core

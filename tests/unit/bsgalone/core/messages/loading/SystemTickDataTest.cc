@@ -6,7 +6,7 @@
 
 using namespace ::testing;
 
-namespace bsgo {
+namespace bsgalone::core {
 
 TEST(Unit_Bsgalone_Core_Messages_SystemTickData, EqualWhenDbIdIsEqual)
 {
@@ -58,4 +58,4 @@ TEST(Unit_Bsgalone_Core_Messages_SystemTickData, Basic)
   assertSystemTickDataAreEqual(output, input);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

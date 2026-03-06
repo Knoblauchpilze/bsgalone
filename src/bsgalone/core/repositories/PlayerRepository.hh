@@ -8,7 +8,7 @@
 #include <optional>
 #include <unordered_set>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 struct Player
 {
@@ -38,4 +38,4 @@ class PlayerRepository : public AbstractRepository
 
 using PlayerRepositoryShPtr = std::shared_ptr<PlayerRepository>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

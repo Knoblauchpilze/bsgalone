@@ -3,7 +3,7 @@
 
 #include "IBoundingBox.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class AxisAlignedBoundingBox : public IBoundingBox
 {
@@ -24,4 +24,4 @@ class AxisAlignedBoundingBox : public IBoundingBox
   Eigen::Vector3f m_dims{Eigen::Vector3f::Ones()};
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

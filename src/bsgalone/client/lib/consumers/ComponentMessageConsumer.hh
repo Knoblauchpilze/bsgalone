@@ -8,24 +8,24 @@
 #include "SlotComponentMessage.hh"
 #include "WeaponComponentMessage.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
-class ComponentMessageConsumer : public bsgalone::core::AbstractMessageConsumer
+class ComponentMessageConsumer : public core::AbstractMessageConsumer
 {
   public:
-  ComponentMessageConsumer(const bsgo::DatabaseEntityMapper &entityMapper,
-                           bsgo::CoordinatorShPtr coordinator);
+  ComponentMessageConsumer(const core::DatabaseEntityMapper &entityMapper,
+                           core::CoordinatorShPtr coordinator);
   ~ComponentMessageConsumer() override = default;
 
-  void onEventReceived(const bsgalone::core::IMessage &message) override;
+  void onEventReceived(const core::IMessage &message) override;
 
   private:
-  const bsgo::DatabaseEntityMapper &m_entityMapper;
-  bsgo::CoordinatorShPtr m_coordinator{};
+  const core::DatabaseEntityMapper &m_entityMapper;
+  core::CoordinatorShPtr m_coordinator{};
 
-  void handleComputerSlotUpdated(const bsgo::SlotComponentMessage &message) const;
-  void handleWeaponUpdated(const bsgo::WeaponComponentMessage &message) const;
-  void handleAiBehaviorUpdated(const bsgo::AiBehaviorSyncMessage &message) const;
+  void handleComputerSlotUpdated(const core::SlotComponentMessage &message) const;
+  void handleWeaponUpdated(const core::WeaponComponentMessage &message) const;
+  void handleAiBehaviorUpdated(const core::AiBehaviorSyncMessage &message) const;
 };
 
-} // namespace pge
+} // namespace bsgalone::client

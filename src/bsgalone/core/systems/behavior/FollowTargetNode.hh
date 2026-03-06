@@ -3,7 +3,7 @@
 
 #include "LeafNode.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class FollowTargetNode : public LeafNode
 {
@@ -15,4 +15,4 @@ class FollowTargetNode : public LeafNode
   void run(const BehaviorData &data) override;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

@@ -5,7 +5,7 @@
 
 using namespace ::testing;
 
-namespace bsgo {
+namespace bsgalone::core {
 namespace {
 void assertMessagesAreEqual(const PlayerComputerListMessage &actual,
                             const PlayerComputerListMessage &expected)
@@ -56,18 +56,17 @@ TEST(Unit_Bsgalone_Core_Messages_PlayerComputerListMessage, WithClientId)
 TEST(Unit_Bsgalone_Core_Messages_PlayerComputerListMessage, Clone)
 {
   const std::vector<PlayerComputerData> computersData{
-    {.computerDbId = 1908,
-     .level        = 12,
-     .allowedTargets
-     = std::unordered_set<bsgalone::core::EntityKind>{bsgalone::core::EntityKind::ASTEROID}},
+    {.computerDbId   = 1908,
+     .level          = 12,
+     .allowedTargets = std::unordered_set<EntityKind>{EntityKind::ASTEROID}},
     {.offensive = true, .powerCost = -3.9878f, .reloadTime = chrono::TickDuration(15001.2147f)}};
 
   const PlayerComputerListMessage expected(computersData);
 
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::PLAYER_COMPUTER_LIST);
+  ASSERT_EQ(cloned->type(), MessageType::PLAYER_COMPUTER_LIST);
   assertMessagesAreEqual(cloned->as<PlayerComputerListMessage>(), expected);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

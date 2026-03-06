@@ -6,27 +6,27 @@
 #include "IMessageQueue.hh"
 #include "Services.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
 /// @brief - This consumer is added to the system processors consumers and is
 /// responsible to handle the entity added/removed messages produced by the
 /// internal consumer. This means deleting the entity from the system processor
 /// and forwarding the messages to the client applications.
-class EntityDeletedMessageConsumer : public bsgalone::core::AbstractMessageConsumer
+class EntityDeletedMessageConsumer : public core::AbstractMessageConsumer
 {
   public:
   EntityDeletedMessageConsumer(const Services &services,
-                               bsgalone::core::IMessageQueue *const outputMessageQueue);
+                               core::IMessageQueue *const outputMessageQueue);
   ~EntityDeletedMessageConsumer() override = default;
 
-  void onEventReceived(const bsgalone::core::IMessage &message) override;
+  void onEventReceived(const core::IMessage &message) override;
 
   private:
   EntityServiceShPtr m_entityService{};
-  bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
+  core::IMessageQueue *const m_outputMessageQueue{};
 
-  void handleShipRemoved(const EntityRemovedMessage &message) const;
-  void handleAsteroidRemoved(const EntityRemovedMessage &message) const;
+  void handleShipRemoved(const core::EntityRemovedMessage &message) const;
+  void handleAsteroidRemoved(const core::EntityRemovedMessage &message) const;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::server

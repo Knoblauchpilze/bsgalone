@@ -11,15 +11,15 @@ namespace bsgalone::core {
 class SlotMessage : public AbstractPlayerMessage
 {
   public:
-  SlotMessage(const bsgo::Uuid playerDbId,
-              const bsgo::Uuid systemDbId,
-              const bsgo::Uuid shipDbId,
-              const bsgo::Uuid slotDbId,
+  SlotMessage(const Uuid playerDbId,
+              const Uuid systemDbId,
+              const Uuid shipDbId,
+              const Uuid slotDbId,
               const Slot slotType);
   ~SlotMessage() override = default;
 
-  auto getShipDbId() const -> bsgo::Uuid;
-  auto getSlotDbId() const -> bsgo::Uuid;
+  auto getShipDbId() const -> Uuid;
+  auto getSlotDbId() const -> Uuid;
   auto getSlotType() const -> Slot;
 
   auto serialize(std::ostream &out) const -> std::ostream & override;
@@ -37,8 +37,8 @@ class SlotMessage : public AbstractPlayerMessage
   static auto readFromStream(std::istream &in) -> std::optional<IMessagePtr>;
 
   private:
-  bsgo::Uuid m_shipDbId{};
-  bsgo::Uuid m_slotDbId{};
+  Uuid m_shipDbId{};
+  Uuid m_slotDbId{};
   Slot m_slotType{};
 
   SlotMessage();

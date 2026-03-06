@@ -6,7 +6,7 @@
 #include <optional>
 #include <unordered_map>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class DataContext
 {
@@ -37,6 +37,6 @@ class DataContext
   KeyMap m_keys{};
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core
 
 #include "DataContext.hxx"

@@ -4,8 +4,8 @@
 #include "IMessageQueue.hh"
 #include <memory>
 
-namespace bsgo {
+namespace bsgalone::core {
 
-auto createSynchronizedMessageQueue() -> bsgalone::core::IMessageQueuePtr;
+auto createSynchronizedMessageQueue() -> IMessageQueuePtr;
 
-} // namespace bsgo
+} // namespace bsgalone::core

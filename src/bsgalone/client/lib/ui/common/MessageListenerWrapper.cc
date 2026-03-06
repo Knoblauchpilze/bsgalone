@@ -1,9 +1,9 @@
 
 #include "MessageListenerWrapper.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
-MessageListenerWrapper::MessageListenerWrapper(bsgalone::core::IMessageListener *listener)
+MessageListenerWrapper::MessageListenerWrapper(core::IMessageListener *listener)
   : m_listener(listener)
 {
   if (nullptr == m_listener)
@@ -12,14 +12,14 @@ MessageListenerWrapper::MessageListenerWrapper(bsgalone::core::IMessageListener 
   }
 }
 
-bool MessageListenerWrapper::isEventRelevant(const bsgalone::core::MessageType &type) const
+bool MessageListenerWrapper::isEventRelevant(const core::MessageType &type) const
 {
   return m_listener->isEventRelevant(type);
 }
 
-void MessageListenerWrapper::onEventReceived(const bsgalone::core::IMessage &message)
+void MessageListenerWrapper::onEventReceived(const core::IMessage &message)
 {
   m_listener->onEventReceived(message);
 }
 
-} // namespace pge
+} // namespace bsgalone::client

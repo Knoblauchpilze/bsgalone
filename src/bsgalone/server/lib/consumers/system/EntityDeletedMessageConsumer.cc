@@ -1,12 +1,12 @@
 
 #include "EntityDeletedMessageConsumer.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
 EntityDeletedMessageConsumer::EntityDeletedMessageConsumer(
   const Services &services,
-  bsgalone::core::IMessageQueue *const outputMessageQueue)
-  : AbstractMessageConsumer("entity", {bsgalone::core::MessageType::ENTITY_REMOVED})
+  core::IMessageQueue *const outputMessageQueue)
+  : AbstractMessageConsumer("entity", {core::MessageType::ENTITY_REMOVED})
   , m_entityService(services.entity)
   , m_outputMessageQueue(outputMessageQueue)
 {
@@ -22,25 +22,25 @@ EntityDeletedMessageConsumer::EntityDeletedMessageConsumer(
   }
 }
 
-void EntityDeletedMessageConsumer::onEventReceived(const bsgalone::core::IMessage &message)
+void EntityDeletedMessageConsumer::onEventReceived(const core::IMessage &message)
 {
-  const auto &removed   = message.as<EntityRemovedMessage>();
+  const auto &removed   = message.as<core::EntityRemovedMessage>();
   const auto entityKind = removed.getEntityKind();
 
   switch (entityKind)
   {
-    case bsgalone::core::EntityKind::SHIP:
+    case core::EntityKind::SHIP:
       handleShipRemoved(removed);
       break;
-    case bsgalone::core::EntityKind::ASTEROID:
+    case core::EntityKind::ASTEROID:
       handleAsteroidRemoved(removed);
       break;
     default:
-      error("Unsupported type of entity removed: " + str(entityKind));
+      error("Unsupported type of entity removed: " + core::str(entityKind));
   }
 }
 
-void EntityDeletedMessageConsumer::handleShipRemoved(const EntityRemovedMessage &message) const
+void EntityDeletedMessageConsumer::handleShipRemoved(const core::EntityRemovedMessage &message) const
 {
   const auto shipDbId   = message.getEntityDbId();
   const auto playerDbId = m_entityService->getPlayerDbIdForShip(shipDbId);
@@ -49,14 +49,15 @@ void EntityDeletedMessageConsumer::handleShipRemoved(const EntityRemovedMessage 
   auto ship = message.clone();
   m_outputMessageQueue->pushEvent(std::move(ship));
 
-  auto player = std::make_unique<EntityRemovedMessage>(playerDbId,
-                                                       bsgalone::core::EntityKind::PLAYER,
-                                                       message.isDead(),
-                                                       message.getSystemDbId());
+  auto player = std::make_unique<core::EntityRemovedMessage>(playerDbId,
+                                                             core::EntityKind::PLAYER,
+                                                             message.isDead(),
+                                                             message.getSystemDbId());
   m_outputMessageQueue->pushEvent(std::move(player));
 }
 
-void EntityDeletedMessageConsumer::handleAsteroidRemoved(const EntityRemovedMessage &message) const
+void EntityDeletedMessageConsumer::handleAsteroidRemoved(
+  const core::EntityRemovedMessage &message) const
 {
   const auto asteroidDbId = message.getEntityDbId();
   m_entityService->tryDeleteAsteroidEntity(asteroidDbId);
@@ -65,4 +66,4 @@ void EntityDeletedMessageConsumer::handleAsteroidRemoved(const EntityRemovedMess
   m_outputMessageQueue->pushEvent(std::move(out));
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

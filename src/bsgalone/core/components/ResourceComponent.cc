@@ -1,10 +1,10 @@
 
 #include "ResourceComponent.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 ResourceComponent::ResourceComponent(const Uuid resource, const int amount)
-  : AbstractComponent(bsgalone::core::ComponentType::RESOURCE)
+  : AbstractComponent(ComponentType::RESOURCE)
   , m_resource(resource)
   , m_amount(amount)
 {}
@@ -31,4 +31,4 @@ void ResourceComponent::setAmount(const int amount)
   m_amount = amount;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

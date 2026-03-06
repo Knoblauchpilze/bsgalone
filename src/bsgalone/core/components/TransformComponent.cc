@@ -4,10 +4,10 @@
 #include "CircleBox.hh"
 #include <cxxabi.h>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 TransformComponent::TransformComponent(IBoundingBoxShPtr bbox)
-  : AbstractComponent(bsgalone::core::ComponentType::TRANSFORM)
+  : AbstractComponent(ComponentType::TRANSFORM)
   , m_bbox(std::move(bbox))
 {}
 
@@ -77,4 +77,4 @@ auto TransformComponent::transformToGlobal(const Eigen::Vector3f &localPos) cons
   return m_bbox->position() + offset;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

@@ -7,7 +7,7 @@
 #include <optional>
 #include <unordered_map>
 
-namespace pge {
+namespace bsgalone::client {
 
 class MapScreenUiHandler : public AbstractUiHandler
 {
@@ -17,9 +17,9 @@ class MapScreenUiHandler : public AbstractUiHandler
 
   void initializeMenus(const int width,
                        const int height,
-                       sprites::TexturePack &texturesLoader) override;
+                       pge::sprites::TexturePack &texturesLoader) override;
   bool processUserInput(ui::UserInputData &inputData) override;
-  void render(Renderer &engine) const override;
+  void render(pge::Renderer &engine) const override;
   void updateUi() override;
 
   private:
@@ -27,15 +27,15 @@ class MapScreenUiHandler : public AbstractUiHandler
   ShipViewShPtr m_shipView{};
   ShipDbViewShPtr m_shipDbView{};
 
-  Vec2i m_mapDimensions{};
+  pge::Vec2i m_mapDimensions{};
   bool m_initialized{false};
   std::vector<ui::UiMenuPtr> m_buttons{};
   ui::UiMenu *m_jumpButton{};
-  std::unordered_map<bsgo::Uuid, ui::UiMenu *> m_systemMenus{};
+  std::unordered_map<core::Uuid, ui::UiMenu *> m_systemMenus{};
 
   struct SelectedSystem
   {
-    bsgo::Uuid systemId{};
+    core::Uuid systemId{};
     int labelId{};
   };
   std::optional<SelectedSystem> m_selectedSystem{};
@@ -44,12 +44,12 @@ class MapScreenUiHandler : public AbstractUiHandler
   void reset();
   void generateControlButtons(const int width, const int height);
   void generateMap();
-  void generateSystemButtons(const bsgo::SystemData &system,
+  void generateSystemButtons(const core::SystemData &system,
                              const ServerView::Bounds &bounds,
-                             const Vec2i &mapOffset);
+                             const pge::Vec2i &mapOffset);
 
-  void onSystemSelected(const bsgo::Uuid systemId, const int labelId);
+  void onSystemSelected(const core::Uuid systemId, const int labelId);
   void onJumpRequested();
 };
 
-} // namespace pge
+} // namespace bsgalone::client

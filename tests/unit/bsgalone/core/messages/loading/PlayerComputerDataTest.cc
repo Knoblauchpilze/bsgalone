@@ -6,7 +6,7 @@
 
 using namespace ::testing;
 
-namespace bsgo {
+namespace bsgalone::core {
 
 TEST(Unit_Bsgalone_Core_Messages_PlayerComputerData, EqualWhenDbIdIsEqual)
 {
@@ -61,9 +61,7 @@ TEST(Unit_Bsgalone_Core_Messages_PlayerComputerData, AllowedTargets)
                            .level          = 4,
                            .range          = 98765.1234f,
                            .damageModifier = 2.10987f};
-  input.allowedTargets
-    = std::unordered_set<bsgalone::core::EntityKind>{bsgalone::core::EntityKind::SHIP,
-                                                     bsgalone::core::EntityKind::ASTEROID};
+  input.allowedTargets = std::unordered_set<EntityKind>{EntityKind::SHIP, EntityKind::ASTEROID};
 
   PlayerComputerData output{.dbId       = Uuid{14},
                             .name       = "beefy computer",
@@ -87,8 +85,7 @@ TEST(Unit_Bsgalone_Core_Messages_PlayerComputerData, NonEmptyAllowedTargetsInDes
                             .name       = "another computer",
                             .level      = 12,
                             .reloadTime = chrono::TickDuration(1234.3247f)};
-  output.allowedTargets = std::unordered_set<bsgalone::core::EntityKind>{
-    bsgalone::core::EntityKind::OUTPOST};
+  output.allowedTargets = std::unordered_set<EntityKind>{EntityKind::OUTPOST};
 
   EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
@@ -106,4 +103,4 @@ TEST(Unit_Bsgalone_Core_Messages_PlayerComputerData, NonEmptyDamageModifierInDes
   assertPlayerComputerDataAreEqual(output, input);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

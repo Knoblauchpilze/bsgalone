@@ -3,7 +3,7 @@
 
 #include <memory>
 
-namespace pge {
+namespace bsgalone::client {
 
 class IViewListener
 {
@@ -23,4 +23,4 @@ class IViewListener
 
 using IViewListenerPtr = std::unique_ptr<IViewListener>;
 
-} // namespace pge
+} // namespace bsgalone::client

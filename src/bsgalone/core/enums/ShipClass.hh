@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 enum class ShipClass
 {
@@ -15,4 +15,4 @@ auto str(const ShipClass shipClass) -> std::string;
 auto toDbShipClass(const ShipClass shipClass) -> std::string;
 auto fromDbShipClass(const std::string &dbShipClass) -> ShipClass;
 
-} // namespace bsgo
+} // namespace bsgalone::core

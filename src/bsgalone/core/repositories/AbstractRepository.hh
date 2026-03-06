@@ -4,7 +4,7 @@
 #include "DbConnection.hh"
 #include "IRepository.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class AbstractRepository : public IRepository
 {
@@ -16,4 +16,4 @@ class AbstractRepository : public IRepository
   DbConnectionShPtr m_connection;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

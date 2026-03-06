@@ -12,7 +12,7 @@
 #include "ShipService.hh"
 #include "SlotService.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
 struct Services
 {
@@ -25,8 +25,8 @@ struct Services
   LoadingServiceShPtr loading{};
 };
 
-auto createServices(const Repositories &repositories,
-                    const CoordinatorShPtr &coordinator,
-                    DatabaseEntityMapper &entityMapper) -> Services;
+auto createServices(const core::Repositories &repositories,
+                    const core::CoordinatorShPtr &coordinator,
+                    core::DatabaseEntityMapper &entityMapper) -> Services;
 
-} // namespace bsgo
+} // namespace bsgalone::server

@@ -1,12 +1,12 @@
 
 #include "AbstractRenderer.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
 AbstractRenderer::AbstractRenderer(const std::string &name)
-  : core::CoreObject(name)
+  : ::core::CoreObject(name)
 {
   setService("renderer");
 }
 
-} // namespace pge
+} // namespace bsgalone::client

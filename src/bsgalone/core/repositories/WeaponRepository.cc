@@ -2,7 +2,7 @@
 
 #include "WeaponRepository.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 WeaponRepository::WeaponRepository(const DbConnectionShPtr &connection)
   : AbstractRepository("weapon", connection)
@@ -70,4 +70,4 @@ auto WeaponRepository::findOneById(const Uuid weapon) const -> Weapon
   return out;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

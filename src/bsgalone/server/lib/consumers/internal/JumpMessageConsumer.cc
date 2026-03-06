@@ -6,12 +6,12 @@
 #include "LoadingFinishedMessage.hh"
 #include "LoadingStartedMessage.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
 JumpMessageConsumer::JumpMessageConsumer(SystemServiceShPtr systemService,
                                          SystemQueueMap systemQueues,
-                                         bsgalone::core::IMessageQueue *const outputMessageQueue)
-  : AbstractMessageConsumer("jump", {bsgalone::core::MessageType::JUMP})
+                                         core::IMessageQueue *const outputMessageQueue)
+  : AbstractMessageConsumer("jump", {core::MessageType::JUMP})
   , m_systemService(std::move(systemService))
   , m_systemQueues(std::move(systemQueues))
   , m_outputMessageQueue(outputMessageQueue)
@@ -26,9 +26,9 @@ JumpMessageConsumer::JumpMessageConsumer(SystemServiceShPtr systemService,
   }
 }
 
-void JumpMessageConsumer::onEventReceived(const bsgalone::core::IMessage &message)
+void JumpMessageConsumer::onEventReceived(const core::IMessage &message)
 {
-  const auto &jump = message.as<JumpMessage>();
+  const auto &jump = message.as<core::JumpMessage>();
 
   const auto shipDbId   = jump.getShipDbId();
   const auto playerDbId = jump.getPlayerDbId();
@@ -36,70 +36,73 @@ void JumpMessageConsumer::onEventReceived(const bsgalone::core::IMessage &messag
   const auto res = m_systemService->tryJump(shipDbId);
   if (!res.success)
   {
-    warn("Failed to process jump message for ship " + str(shipDbId));
+    warn("Failed to process jump message for ship " + core::str(shipDbId));
     return;
   }
 
   handlePostJumpSystemMessages(shipDbId, res.sourceSystem, res.destinationSystem);
   handleLoadingMessages(playerDbId, res.destinationSystem);
 
-  auto out = std::make_unique<JumpMessage>(shipDbId,
-                                           playerDbId,
-                                           res.sourceSystem,
-                                           res.destinationSystem);
+  auto out = std::make_unique<core::JumpMessage>(shipDbId,
+                                                 playerDbId,
+                                                 res.sourceSystem,
+                                                 res.destinationSystem);
   m_outputMessageQueue->pushEvent(std::move(out));
 }
 
-void JumpMessageConsumer::handlePostJumpSystemMessages(const Uuid shipDbId,
-                                                       const Uuid sourceSystemDbId,
-                                                       const Uuid destinationSystemDbId)
+void JumpMessageConsumer::handlePostJumpSystemMessages(const core::Uuid shipDbId,
+                                                       const core::Uuid sourceSystemDbId,
+                                                       const core::Uuid destinationSystemDbId)
 {
   const auto maybeSourceQueue      = m_systemQueues.find(sourceSystemDbId);
   const auto maybeDestinationQueue = m_systemQueues.find(destinationSystemDbId);
 
   if (maybeSourceQueue == m_systemQueues.cend() || maybeDestinationQueue == m_systemQueues.cend())
   {
-    warn("Failed to process jump message for " + str(shipDbId), "No system for ship");
+    warn("Failed to process jump message for " + core::str(shipDbId), "No system for ship");
     return;
   }
 
   const auto sourceQueue      = maybeSourceQueue->second;
   const auto destinationQueue = maybeDestinationQueue->second;
 
-  auto removed = std::make_unique<EntityRemovedMessage>(shipDbId,
-                                                        bsgalone::core::EntityKind::SHIP,
-                                                        false,
-                                                        sourceSystemDbId);
-  debug("Pushing removed message to " + str(sourceSystemDbId));
+  auto removed = std::make_unique<core::EntityRemovedMessage>(shipDbId,
+                                                              core::EntityKind::SHIP,
+                                                              false,
+                                                              sourceSystemDbId);
+  debug("Pushing removed message to " + core::str(sourceSystemDbId));
   sourceQueue->pushEvent(std::move(removed));
 
-  auto added = std::make_unique<EntityAddedMessage>(destinationSystemDbId);
-  PlayerShipData data{.dbId = shipDbId};
+  auto added = std::make_unique<core::EntityAddedMessage>(destinationSystemDbId);
+  core::PlayerShipData data{.dbId = shipDbId};
   added->setShipData(data);
 
-  debug("Pushing added message to " + str(destinationSystemDbId));
+  debug("Pushing added message to " + core::str(destinationSystemDbId));
   destinationQueue->pushEvent(std::move(added));
 }
 
-void JumpMessageConsumer::handleLoadingMessages(const Uuid playerDbId,
-                                                const Uuid destinationSystemDbId)
+void JumpMessageConsumer::handleLoadingMessages(const core::Uuid playerDbId,
+                                                const core::Uuid destinationSystemDbId)
 {
   const auto maybeDestinationQueue = m_systemQueues.find(destinationSystemDbId);
   if (maybeDestinationQueue == m_systemQueues.cend())
   {
-    warn("Failed to process jump message for " + str(playerDbId), "No destination system for ship");
+    warn("Failed to process jump message for " + core::str(playerDbId),
+         "No destination system for ship");
     return;
   }
 
-  debug("Pushing loading messages to " + str(destinationSystemDbId));
+  debug("Pushing loading messages to " + core::str(destinationSystemDbId));
 
-  auto started = std::make_unique<LoadingStartedMessage>(LoadingTransition::JUMP, playerDbId);
+  auto started = std::make_unique<core::LoadingStartedMessage>(core::LoadingTransition::JUMP,
+                                                               playerDbId);
   started->setSystemDbId(destinationSystemDbId);
   maybeDestinationQueue->second->pushEvent(std::move(started));
 
-  auto finished = std::make_unique<LoadingFinishedMessage>(LoadingTransition::JUMP, playerDbId);
+  auto finished = std::make_unique<core::LoadingFinishedMessage>(core::LoadingTransition::JUMP,
+                                                                 playerDbId);
   finished->setSystemDbId(destinationSystemDbId);
   maybeDestinationQueue->second->pushEvent(std::move(finished));
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

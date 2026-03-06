@@ -1,7 +1,7 @@
 
 #include "ProcessType.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
 auto str(const ProcessType &type) -> std::string
 {
@@ -18,4 +18,4 @@ auto str(const ProcessType &type) -> std::string
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

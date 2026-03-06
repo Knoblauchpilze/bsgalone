@@ -11,13 +11,13 @@ namespace bsgalone::core {
 class VelocityMessage : public AbstractPlayerMessage
 {
   public:
-  VelocityMessage(const bsgo::Uuid playerDbId,
-                  const bsgo::Uuid systemDbId,
-                  const bsgo::Uuid shipDbId,
+  VelocityMessage(const Uuid playerDbId,
+                  const Uuid systemDbId,
+                  const Uuid shipDbId,
                   const Eigen::Vector3f &acceleration);
   ~VelocityMessage() override = default;
 
-  auto getShipDbId() const -> bsgo::Uuid;
+  auto getShipDbId() const -> Uuid;
   auto getAcceleration() const -> Eigen::Vector3f;
 
   auto serialize(std::ostream &out) const -> std::ostream & override;
@@ -35,7 +35,7 @@ class VelocityMessage : public AbstractPlayerMessage
   static auto readFromStream(std::istream &in) -> std::optional<IMessagePtr>;
 
   private:
-  bsgo::Uuid m_shipDbId{};
+  Uuid m_shipDbId{};
   Eigen::Vector3f m_acceleration{Eigen::Vector3f::Zero()};
 
   /// @brief - Private constructor to help with deserialization. This will

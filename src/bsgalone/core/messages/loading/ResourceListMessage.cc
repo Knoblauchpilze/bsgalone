@@ -2,14 +2,14 @@
 #include "ResourceListMessage.hh"
 #include "SerializationUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 ResourceListMessage::ResourceListMessage()
-  : NetworkMessage(bsgalone::core::MessageType::RESOURCE_LIST)
+  : NetworkMessage(MessageType::RESOURCE_LIST)
 {}
 
 ResourceListMessage::ResourceListMessage(const std::vector<ResourceData> &resourcesData)
-  : NetworkMessage(bsgalone::core::MessageType::RESOURCE_LIST)
+  : NetworkMessage(MessageType::RESOURCE_LIST)
   , m_resourcesData(resourcesData)
 {}
 
@@ -20,10 +20,10 @@ auto ResourceListMessage::getResourcesData() const -> const std::vector<Resource
 
 auto ResourceListMessage::serialize(std::ostream &out) const -> std::ostream &
 {
-  core::serialize(out, m_messageType);
-  core::serialize(out, m_clientId);
+  ::core::serialize(out, m_messageType);
+  ::core::serialize(out, m_clientId);
 
-  core::serialize(out, m_resourcesData);
+  ::core::serialize(out, m_resourcesData);
 
   return out;
 }
@@ -31,15 +31,15 @@ auto ResourceListMessage::serialize(std::ostream &out) const -> std::ostream &
 bool ResourceListMessage::deserialize(std::istream &in)
 {
   bool ok{true};
-  ok &= core::deserialize(in, m_messageType);
-  ok &= core::deserialize(in, m_clientId);
+  ok &= ::core::deserialize(in, m_messageType);
+  ok &= ::core::deserialize(in, m_clientId);
 
-  ok &= core::deserialize(in, m_resourcesData);
+  ok &= ::core::deserialize(in, m_resourcesData);
 
   return ok;
 }
 
-auto ResourceListMessage::clone() const -> bsgalone::core::IMessagePtr
+auto ResourceListMessage::clone() const -> IMessagePtr
 {
   auto clone = std::make_unique<ResourceListMessage>(m_resourcesData);
   clone->copyClientIdIfDefined(*this);
@@ -47,4 +47,4 @@ auto ResourceListMessage::clone() const -> bsgalone::core::IMessagePtr
   return clone;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

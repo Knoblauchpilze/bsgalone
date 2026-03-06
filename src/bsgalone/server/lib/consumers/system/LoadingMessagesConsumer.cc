@@ -17,14 +17,13 @@
 #include "TargetListMessage.hh"
 #include "WeaponListMessage.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-LoadingMessagesConsumer::LoadingMessagesConsumer(
-  const Services &services,
-  bsgalone::core::IMessageQueue *const outputMessageQueue)
+LoadingMessagesConsumer::LoadingMessagesConsumer(const Services &services,
+                                                 core::IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("loading",
-                            {bsgalone::core::MessageType::LOADING_FINISHED,
-                             bsgalone::core::MessageType::LOADING_STARTED})
+                            {core::MessageType::LOADING_FINISHED,
+                             core::MessageType::LOADING_STARTED})
   , m_loadingService(services.loading)
   , m_outputMessageQueue(outputMessageQueue)
 {
@@ -38,15 +37,15 @@ LoadingMessagesConsumer::LoadingMessagesConsumer(
   }
 }
 
-void LoadingMessagesConsumer::onEventReceived(const bsgalone::core::IMessage &message)
+void LoadingMessagesConsumer::onEventReceived(const core::IMessage &message)
 {
   switch (message.type())
   {
-    case bsgalone::core::MessageType::LOADING_STARTED:
-      handleLoadingStartedMessage(message.as<LoadingStartedMessage>());
+    case core::MessageType::LOADING_STARTED:
+      handleLoadingStartedMessage(message.as<core::LoadingStartedMessage>());
       return;
-    case bsgalone::core::MessageType::LOADING_FINISHED:
-      forwardLoadingFinishedMessage(message.as<LoadingFinishedMessage>());
+    case core::MessageType::LOADING_FINISHED:
+      forwardLoadingFinishedMessage(message.as<core::LoadingFinishedMessage>());
       return;
     default:
       error("Unsupported loading operation " + str(message.type()));
@@ -54,7 +53,8 @@ void LoadingMessagesConsumer::onEventReceived(const bsgalone::core::IMessage &me
   }
 }
 
-void LoadingMessagesConsumer::handleLoadingStartedMessage(const LoadingStartedMessage &message) const
+void LoadingMessagesConsumer::handleLoadingStartedMessage(
+  const core::LoadingStartedMessage &message) const
 {
   info("Handling loading transition " + str(message.getTransition()));
 
@@ -62,25 +62,25 @@ void LoadingMessagesConsumer::handleLoadingStartedMessage(const LoadingStartedMe
 
   switch (message.getTransition())
   {
-    case LoadingTransition::ACTIVE_SHIP_CHANGED:
+    case core::LoadingTransition::ACTIVE_SHIP_CHANGED:
       handleActiveShipChangedTransition(message);
       break;
-    case LoadingTransition::DOCK:
+    case core::LoadingTransition::DOCK:
       handleDockTransition(message);
       break;
-    case LoadingTransition::EQUIP:
+    case core::LoadingTransition::EQUIP:
       handleEquipTransition(message);
       break;
-    case LoadingTransition::JUMP:
+    case core::LoadingTransition::JUMP:
       handleJumpTransition(message);
       break;
-    case LoadingTransition::LOGIN:
+    case core::LoadingTransition::LOGIN:
       handleLoginTransition(message);
       break;
-    case LoadingTransition::UNDOCK:
+    case core::LoadingTransition::UNDOCK:
       handleUndockTransition(message);
       break;
-    case LoadingTransition::PURCHASE:
+    case core::LoadingTransition::PURCHASE:
       handlePurchaseTransition(message);
       break;
     default:
@@ -90,19 +90,19 @@ void LoadingMessagesConsumer::handleLoadingStartedMessage(const LoadingStartedMe
 }
 
 void LoadingMessagesConsumer::forwardLoadingFinishedMessage(
-  const LoadingFinishedMessage &message) const
+  const core::LoadingFinishedMessage &message) const
 {
   m_outputMessageQueue->pushEvent(message.clone());
 }
 
 void LoadingMessagesConsumer::handleActiveShipChangedTransition(
-  const LoadingStartedMessage &message) const
+  const core::LoadingStartedMessage &message) const
 {
   handleActiveShipLoading(message);
   handlePlayerShipsLoading(message);
 }
 
-void LoadingMessagesConsumer::handleDockTransition(const LoadingStartedMessage &message) const
+void LoadingMessagesConsumer::handleDockTransition(const core::LoadingStartedMessage &message) const
 {
   handleResourcesLoading(message);
   handleWeaponsLoading(message);
@@ -111,14 +111,14 @@ void LoadingMessagesConsumer::handleDockTransition(const LoadingStartedMessage &
   handlePlayerResourcesLoading(message);
 }
 
-void LoadingMessagesConsumer::handleEquipTransition(const LoadingStartedMessage &message) const
+void LoadingMessagesConsumer::handleEquipTransition(const core::LoadingStartedMessage &message) const
 {
   handleActiveShipLoading(message);
   handlePlayerComputersLoading(message);
   handlePlayerWeaponsLoading(message);
 }
 
-void LoadingMessagesConsumer::handleJumpTransition(const LoadingStartedMessage &message) const
+void LoadingMessagesConsumer::handleJumpTransition(const core::LoadingStartedMessage &message) const
 {
   handleSystemPlayersLoading(message);
   handleSystemAsteroidsLoading(message);
@@ -128,7 +128,7 @@ void LoadingMessagesConsumer::handleJumpTransition(const LoadingStartedMessage &
   handleSystemTickLoading(message);
 }
 
-void LoadingMessagesConsumer::handleLoginTransition(const LoadingStartedMessage &message) const
+void LoadingMessagesConsumer::handleLoginTransition(const core::LoadingStartedMessage &message) const
 {
   handleLoginDataLoading(message);
   handleResourcesLoading(message);
@@ -146,7 +146,8 @@ void LoadingMessagesConsumer::handleLoginTransition(const LoadingStartedMessage 
   handleSystemShipsLoading(message);
 }
 
-void LoadingMessagesConsumer::handlePurchaseTransition(const LoadingStartedMessage &message) const
+void LoadingMessagesConsumer::handlePurchaseTransition(
+  const core::LoadingStartedMessage &message) const
 {
   handlePlayerResourcesLoading(message);
   handlePlayerShipsLoading(message);
@@ -154,7 +155,7 @@ void LoadingMessagesConsumer::handlePurchaseTransition(const LoadingStartedMessa
   handlePlayerWeaponsLoading(message);
 }
 
-void LoadingMessagesConsumer::handleUndockTransition(const LoadingStartedMessage &message) const
+void LoadingMessagesConsumer::handleUndockTransition(const core::LoadingStartedMessage &message) const
 {
   handleSystemPlayersLoading(message);
   handleSystemAsteroidsLoading(message);
@@ -164,12 +165,12 @@ void LoadingMessagesConsumer::handleUndockTransition(const LoadingStartedMessage
   handleSystemTickLoading(message);
 }
 
-void LoadingMessagesConsumer::handleLoginDataLoading(const LoadingStartedMessage &message) const
+void LoadingMessagesConsumer::handleLoginDataLoading(const core::LoadingStartedMessage &message) const
 {
   const auto playerDbId = message.getPlayerDbId();
   const auto props      = m_loadingService->getDataForPlayer(playerDbId);
 
-  auto out = std::make_unique<PlayerLoginDataMessage>();
+  auto out = std::make_unique<core::PlayerLoginDataMessage>();
   out->setFaction(props.faction);
   out->setActiveShipDbId(props.shipDbId);
   out->setDocked(props.docked);
@@ -181,151 +182,155 @@ void LoadingMessagesConsumer::handleLoginDataLoading(const LoadingStartedMessage
   m_outputMessageQueue->pushEvent(std::move(out));
 }
 
-void LoadingMessagesConsumer::handleResourcesLoading(const LoadingStartedMessage &message) const
+void LoadingMessagesConsumer::handleResourcesLoading(const core::LoadingStartedMessage &message) const
 {
   const auto resources = m_loadingService->getResources();
 
-  std::vector<ResourceData> resourcesData{};
+  std::vector<core::ResourceData> resourcesData{};
   std::transform(resources.begin(),
                  resources.end(),
                  std::back_inserter(resourcesData),
-                 [](const Resource &resource) { return toResourceData(resource); });
+                 [](const core::Resource &resource) { return toResourceData(resource); });
 
-  auto out = std::make_unique<ResourceListMessage>(resourcesData);
+  auto out = std::make_unique<core::ResourceListMessage>(resourcesData);
   out->copyClientIdIfDefined(message);
 
   m_outputMessageQueue->pushEvent(std::move(out));
 }
 
-void LoadingMessagesConsumer::handleWeaponsLoading(const LoadingStartedMessage &message) const
+void LoadingMessagesConsumer::handleWeaponsLoading(const core::LoadingStartedMessage &message) const
 {
   const auto weapons = m_loadingService->getWeapons();
 
-  std::vector<WeaponData> weaponsData{};
+  std::vector<core::WeaponData> weaponsData{};
   std::transform(weapons.begin(),
                  weapons.end(),
                  std::back_inserter(weaponsData),
                  [](const WeaponProps &weapon) { return weapon.toWeaponData(); });
 
-  auto out = std::make_unique<WeaponListMessage>(weaponsData);
+  auto out = std::make_unique<core::WeaponListMessage>(weaponsData);
   out->copyClientIdIfDefined(message);
 
   m_outputMessageQueue->pushEvent(std::move(out));
 }
 
-void LoadingMessagesConsumer::handleComputersLoading(const LoadingStartedMessage &message) const
+void LoadingMessagesConsumer::handleComputersLoading(const core::LoadingStartedMessage &message) const
 {
   const auto computers = m_loadingService->getComputers();
 
-  std::vector<ComputerData> computersData{};
+  std::vector<core::ComputerData> computersData{};
   std::transform(computers.begin(),
                  computers.end(),
                  std::back_inserter(computersData),
                  [](const ComputerProps &computer) { return computer.toComputerData(); });
 
-  auto out = std::make_unique<ComputerListMessage>(computersData);
+  auto out = std::make_unique<core::ComputerListMessage>(computersData);
   out->copyClientIdIfDefined(message);
 
   m_outputMessageQueue->pushEvent(std::move(out));
 }
 
-void LoadingMessagesConsumer::handleShipsLoading(const LoadingStartedMessage &message) const
+void LoadingMessagesConsumer::handleShipsLoading(const core::LoadingStartedMessage &message) const
 {
   const auto playerDbId = message.getPlayerDbId();
   const auto player     = m_loadingService->getDataForPlayer(playerDbId);
 
   const auto ships = m_loadingService->getShipsForFaction(player.faction);
 
-  std::vector<ShipData> shipsData{};
+  std::vector<core::ShipData> shipsData{};
   std::transform(ships.begin(),
                  ships.end(),
                  std::back_inserter(shipsData),
                  [](const ShipProps &ship) { return ship.toShipData(); });
 
-  auto out = std::make_unique<ShipListMessage>(player.faction, shipsData);
+  auto out = std::make_unique<core::ShipListMessage>(player.faction, shipsData);
   out->copyClientIdIfDefined(message);
 
   m_outputMessageQueue->pushEvent(std::move(out));
 }
 
-void LoadingMessagesConsumer::handleSystemsLoading(const LoadingStartedMessage &message) const
+void LoadingMessagesConsumer::handleSystemsLoading(const core::LoadingStartedMessage &message) const
 {
   const auto systems = m_loadingService->getSystems();
 
-  std::vector<SystemData> systemsData{};
+  std::vector<core::SystemData> systemsData{};
   std::transform(systems.begin(),
                  systems.end(),
                  std::back_inserter(systemsData),
-                 [](const System &system) { return toSystemData(system); });
+                 [](const core::System &system) { return toSystemData(system); });
 
-  auto out = std::make_unique<SystemListMessage>(systemsData);
+  auto out = std::make_unique<core::SystemListMessage>(systemsData);
   out->copyClientIdIfDefined(message);
 
   m_outputMessageQueue->pushEvent(std::move(out));
 }
 
-void LoadingMessagesConsumer::handlePlayerResourcesLoading(const LoadingStartedMessage &message) const
+void LoadingMessagesConsumer::handlePlayerResourcesLoading(
+  const core::LoadingStartedMessage &message) const
 {
   const auto playerDbId      = message.getPlayerDbId();
   const auto playerResources = m_loadingService->getPlayerResources(playerDbId);
 
-  std::vector<PlayerResourceData> resourcesData{};
+  std::vector<core::PlayerResourceData> resourcesData{};
   std::transform(playerResources.begin(),
                  playerResources.end(),
                  std::back_inserter(resourcesData),
-                 [](const PlayerResource &playerResource) {
+                 [](const core::PlayerResource &playerResource) {
                    return toPlayerResourceData(playerResource);
                  });
 
-  auto out = std::make_unique<PlayerResourceListMessage>(resourcesData);
+  auto out = std::make_unique<core::PlayerResourceListMessage>(resourcesData);
   out->copyClientIdIfDefined(message);
 
   m_outputMessageQueue->pushEvent(std::move(out));
 }
 
-void LoadingMessagesConsumer::handlePlayerShipsLoading(const LoadingStartedMessage &message) const
+void LoadingMessagesConsumer::handlePlayerShipsLoading(
+  const core::LoadingStartedMessage &message) const
 {
   const auto playerDbId = message.getPlayerDbId();
   const auto ships      = m_loadingService->getPlayerShips(playerDbId);
 
-  std::vector<PlayerShipData> shipsData{};
+  std::vector<core::PlayerShipData> shipsData{};
   std::transform(ships.begin(),
                  ships.end(),
                  std::back_inserter(shipsData),
                  [](const PlayerShipProps &props) { return props.toPlayerShipData(); });
 
-  auto out = std::make_unique<PlayerShipListMessage>(shipsData);
+  auto out = std::make_unique<core::PlayerShipListMessage>(shipsData);
   out->setPlayerDbId(playerDbId);
   out->copyClientIdIfDefined(message);
 
   m_outputMessageQueue->pushEvent(std::move(out));
 }
 
-void LoadingMessagesConsumer::handlePlayerComputersLoading(const LoadingStartedMessage &message) const
+void LoadingMessagesConsumer::handlePlayerComputersLoading(
+  const core::LoadingStartedMessage &message) const
 {
   const auto playerDbId      = message.getPlayerDbId();
   const auto playerComputers = m_loadingService->getPlayerComputers(playerDbId);
 
-  std::vector<PlayerComputerData> computersData{};
+  std::vector<core::PlayerComputerData> computersData{};
   std::transform(playerComputers.begin(),
                  playerComputers.end(),
                  std::back_inserter(computersData),
-                 [](const PlayerComputer &playerComputer) {
+                 [](const core::PlayerComputer &playerComputer) {
                    return toPlayerComputerData(playerComputer);
                  });
 
-  auto out = std::make_unique<PlayerComputerListMessage>(computersData);
+  auto out = std::make_unique<core::PlayerComputerListMessage>(computersData);
   out->copyClientIdIfDefined(message);
 
   m_outputMessageQueue->pushEvent(std::move(out));
 }
 
-void LoadingMessagesConsumer::handlePlayerWeaponsLoading(const LoadingStartedMessage &message) const
+void LoadingMessagesConsumer::handlePlayerWeaponsLoading(
+  const core::LoadingStartedMessage &message) const
 {
   const auto playerDbId    = message.getPlayerDbId();
   const auto playerWeapons = m_loadingService->getPlayerWeapons(playerDbId);
 
-  std::vector<PlayerWeaponData> weaopnsData{};
+  std::vector<core::PlayerWeaponData> weaopnsData{};
   std::transform(playerWeapons.begin(),
                  playerWeapons.end(),
                  std::back_inserter(weaopnsData),
@@ -333,124 +338,129 @@ void LoadingMessagesConsumer::handlePlayerWeaponsLoading(const LoadingStartedMes
                    return playerWeapon.toPlayerWeaponData();
                  });
 
-  auto out = std::make_unique<PlayerWeaponListMessage>(weaopnsData);
+  auto out = std::make_unique<core::PlayerWeaponListMessage>(weaopnsData);
   out->copyClientIdIfDefined(message);
 
   m_outputMessageQueue->pushEvent(std::move(out));
 }
 
-void LoadingMessagesConsumer::handleActiveShipLoading(const LoadingStartedMessage &message) const
+void LoadingMessagesConsumer::handleActiveShipLoading(const core::LoadingStartedMessage &message) const
 {
   const auto playerDbId = message.getPlayerDbId();
   const auto ship       = m_loadingService->getActivePlayerShip(playerDbId);
 
-  auto out = std::make_unique<HangarMessage>(ship.toPlayerShipData());
+  auto out = std::make_unique<core::HangarMessage>(ship.toPlayerShipData());
   out->copyClientIdIfDefined(message);
 
   m_outputMessageQueue->pushEvent(std::move(out));
 }
 
-void LoadingMessagesConsumer::handleSystemPlayersLoading(const LoadingStartedMessage &message) const
+void LoadingMessagesConsumer::handleSystemPlayersLoading(
+  const core::LoadingStartedMessage &message) const
 {
   const auto systemDbId = message.getSystemDbId();
 
   const auto players = m_loadingService->getPlayersInSystem(systemDbId);
 
-  std::vector<PlayerData> playersData{};
+  std::vector<core::PlayerData> playersData{};
   std::transform(players.begin(),
                  players.end(),
                  std::back_inserter(playersData),
                  [](const PlayerProps &props) { return props.toPlayerData(); });
 
-  auto out = std::make_unique<PlayerListMessage>(systemDbId, playersData);
+  auto out = std::make_unique<core::PlayerListMessage>(systemDbId, playersData);
   out->copyClientIdIfDefined(message);
 
   m_outputMessageQueue->pushEvent(std::move(out));
 }
 
-void LoadingMessagesConsumer::handleSystemAsteroidsLoading(const LoadingStartedMessage &message) const
+void LoadingMessagesConsumer::handleSystemAsteroidsLoading(
+  const core::LoadingStartedMessage &message) const
 {
   const auto systemDbId = message.getSystemDbId();
 
   const auto asteroids = m_loadingService->getAsteroidsInSystem(systemDbId);
 
-  std::vector<AsteroidData> asteroidsData{};
+  std::vector<core::AsteroidData> asteroidsData{};
   std::transform(asteroids.begin(),
                  asteroids.end(),
                  std::back_inserter(asteroidsData),
                  [](const AsteroidProps &props) { return props.toAsteroidData(); });
 
-  auto out = std::make_unique<AsteroidListMessage>(systemDbId, asteroidsData);
+  auto out = std::make_unique<core::AsteroidListMessage>(systemDbId, asteroidsData);
   out->copyClientIdIfDefined(message);
 
   m_outputMessageQueue->pushEvent(std::move(out));
 }
 
-void LoadingMessagesConsumer::handleSystemOutpostsLoading(const LoadingStartedMessage &message) const
+void LoadingMessagesConsumer::handleSystemOutpostsLoading(
+  const core::LoadingStartedMessage &message) const
 {
   const auto systemDbId = message.getSystemDbId();
 
   const auto outposts = m_loadingService->getOutpostsInSystem(systemDbId);
 
-  std::vector<OutpostData> outpostsData{};
+  std::vector<core::OutpostData> outpostsData{};
   std::transform(outposts.begin(),
                  outposts.end(),
                  std::back_inserter(outpostsData),
                  [](const OutpostProps &props) { return props.toOutpostData(); });
 
-  auto out = std::make_unique<OutpostListMessage>(systemDbId, outpostsData);
+  auto out = std::make_unique<core::OutpostListMessage>(systemDbId, outpostsData);
   out->copyClientIdIfDefined(message);
 
   m_outputMessageQueue->pushEvent(std::move(out));
 }
 
-void LoadingMessagesConsumer::handleSystemShipsLoading(const LoadingStartedMessage &message) const
+void LoadingMessagesConsumer::handleSystemShipsLoading(
+  const core::LoadingStartedMessage &message) const
 {
   const auto systemDbId = message.getSystemDbId();
 
   const auto ships = m_loadingService->getShipsInSystem(systemDbId);
 
-  std::vector<PlayerShipData> shipsData{};
+  std::vector<core::PlayerShipData> shipsData{};
   std::transform(ships.begin(),
                  ships.end(),
                  std::back_inserter(shipsData),
                  [](const PlayerShipProps &props) { return props.toPlayerShipData(); });
 
-  auto out = std::make_unique<PlayerShipListMessage>(shipsData);
+  auto out = std::make_unique<core::PlayerShipListMessage>(shipsData);
   out->setSystemDbId(systemDbId);
   out->copyClientIdIfDefined(message);
 
   m_outputMessageQueue->pushEvent(std::move(out));
 }
 
-void LoadingMessagesConsumer::handleSystemTargetsLoading(const LoadingStartedMessage &message) const
+void LoadingMessagesConsumer::handleSystemTargetsLoading(
+  const core::LoadingStartedMessage &message) const
 {
   const auto systemDbId = message.getSystemDbId();
 
   const auto targets = m_loadingService->getTargetsInSystem(systemDbId);
 
-  std::vector<bsgalone::core::Target> targetsData{};
+  std::vector<core::Target> targetsData{};
   std::transform(targets.begin(),
                  targets.end(),
                  std::back_inserter(targetsData),
                  [](const TargetProps &props) { return props.toTarget(); });
 
-  auto out = std::make_unique<TargetListMessage>(systemDbId, targetsData);
+  auto out = std::make_unique<core::TargetListMessage>(systemDbId, targetsData);
   out->copyClientIdIfDefined(message);
 
   m_outputMessageQueue->pushEvent(std::move(out));
 }
 
-void LoadingMessagesConsumer::handleSystemTickLoading(const LoadingStartedMessage &message) const
+void LoadingMessagesConsumer::handleSystemTickLoading(const core::LoadingStartedMessage &message) const
 {
   const auto systemDbId = message.getSystemDbId();
 
   const auto tickConfig = m_loadingService->getSystemTickConfig(systemDbId);
 
-  auto out = std::make_unique<SystemDataMessage>(toSystemTickData(tickConfig));
+  auto out = std::make_unique<core::SystemDataMessage>(toSystemTickData(tickConfig));
   out->copyClientIdIfDefined(message);
 
   m_outputMessageQueue->pushEvent(std::move(out));
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

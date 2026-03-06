@@ -11,29 +11,29 @@
 #include <memory>
 #include <optional>
 
-namespace pge {
+namespace bsgalone::client {
 
-class GameSession : public core::CoreObject
+class GameSession : public ::core::CoreObject
 {
   public:
   GameSession();
   ~GameSession() override = default;
 
-  void startLoadingTransition(const Screen currentScreen, const bsgo::LoadingTransition transition);
+  void startLoadingTransition(const Screen currentScreen, const core::LoadingTransition transition);
 
   struct ScreenTransition
   {
     Screen previous{};
     Screen next{};
   };
-  auto finishLoadingTransition(const bsgo::LoadingTransition transition) -> ScreenTransition;
+  auto finishLoadingTransition(const core::LoadingTransition transition) -> ScreenTransition;
 
-  void onPlayerLoggedIn(const bsgo::Uuid playerDbId, const bsgo::GameRole role);
+  void onPlayerLoggedIn(const core::Uuid playerDbId, const core::GameRole role);
   void onPlayerLoggedOut();
 
   void onTimeStepReceived(const chrono::TimeStep &timeStep);
 
-  void setPlayerFaction(const bsgo::Faction faction);
+  void setPlayerFaction(const core::Faction faction);
 
   /// @brief - Returns true whenever the player DB identifier is set. This allows
   /// to safely call getPlayerDbId.
@@ -42,15 +42,15 @@ class GameSession : public core::CoreObject
 
   /// @brief - Returns the DB identifier of the player currently logged in.
   /// If no player is logged in, an error is raised.
-  auto getPlayerDbId() const -> bsgo::Uuid;
+  auto getPlayerDbId() const -> core::Uuid;
 
   /// @brief - Returns the faction of the player currently logged in. If no faction
   /// is defined, an error is raised.
-  auto getFaction() const -> bsgo::Faction;
+  auto getFaction() const -> core::Faction;
 
   /// @brief - Returns the game role of the player currently logged in. If no role
   /// is defined, an error is raised.
-  auto getRole() const -> bsgo::GameRole;
+  auto getRole() const -> core::GameRole;
 
   /// @brief - Returns true whenever the player's system DB identifier is set. This
   /// allows to safely call getSystemDbId.
@@ -59,7 +59,7 @@ class GameSession : public core::CoreObject
 
   /// @brief - Returns the DB identifier of the system the player is currently in.
   /// If no player is logged in or if the system is not defined, an error is raised.
-  auto getSystemDbId() const -> bsgo::Uuid;
+  auto getSystemDbId() const -> core::Uuid;
 
   /// @brief - Returns true whenever the time step for the current system is set.
   /// It allows to safely call getTimeStep.
@@ -77,25 +77,25 @@ class GameSession : public core::CoreObject
 
   /// @brief - Returns the DB identifier of the active ship for the player
   /// currently logged in. If no ship is active, an error is raised.
-  auto getPlayerActiveShipDbId() const -> bsgo::Uuid;
+  auto getPlayerActiveShipDbId() const -> core::Uuid;
 
-  void onActiveSystemChanged(const bsgo::Uuid systemDbId);
-  void onActiveShipChanged(const bsgo::Uuid shipDbId);
+  void onActiveSystemChanged(const core::Uuid systemDbId);
+  void onActiveShipChanged(const core::Uuid shipDbId);
 
   private:
   /// @brief - if defined, the DB identifier of the player currently logged in.
-  std::optional<bsgo::Uuid> m_playerDbId{};
+  std::optional<core::Uuid> m_playerDbId{};
 
   /// @brief - if defined, the faction of the player currently logged in.
-  std::optional<bsgo::Faction> m_faction{};
+  std::optional<core::Faction> m_faction{};
 
   /// @brief - if defined, the role of the player currently logged in.
-  std::optional<bsgo::GameRole> m_role{};
+  std::optional<core::GameRole> m_role{};
 
   /// @brief - if defined, the DB identifier of the system the player is currently
   /// in. It is populated when the player logs in and changed when the player jumps
   /// to another system.
-  std::optional<bsgo::Uuid> m_systemDbId{};
+  std::optional<core::Uuid> m_systemDbId{};
 
   /// @brief - if defined, the time step of the system the player is currently in.
   /// It is populated when the player undocks or jumps to another system.
@@ -106,7 +106,7 @@ class GameSession : public core::CoreObject
   /// is not defined when the player initially logs in. It gets assigned when the
   /// player leaves the outpost and changed when the player changes ship in the
   /// hangar view in the outpost.
-  std::optional<bsgo::Uuid> m_playerShipDbId{};
+  std::optional<core::Uuid> m_playerShipDbId{};
 
   struct LoadingData
   {
@@ -121,7 +121,7 @@ class GameSession : public core::CoreObject
     /// @brief - if defined, represents the loading transition received from the
     /// server. It is set upon receiving a `LoadingStartedMessage` and is unset
     /// upon receiving a `LoadingFinishedMessage`.
-    std::optional<bsgo::LoadingTransition> transition{};
+    std::optional<core::LoadingTransition> transition{};
   };
 
   /// @brief - if defined, the current loading transition. The process is that:
@@ -149,4 +149,4 @@ class GameSession : public core::CoreObject
 
 using GameSessionShPtr = std::shared_ptr<GameSession>;
 
-} // namespace pge
+} // namespace bsgalone::client

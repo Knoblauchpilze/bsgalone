@@ -4,18 +4,18 @@
 #include "AbstractMessageConsumer.hh"
 #include "AbstractView.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
-class ViewConsumerProxy : public bsgalone::core::AbstractMessageConsumer
+class ViewConsumerProxy : public core::AbstractMessageConsumer
 {
   public:
   ViewConsumerProxy(AbstractView &view);
   ~ViewConsumerProxy() override = default;
 
-  void onEventReceived(const bsgalone::core::IMessage &message) override;
+  void onEventReceived(const core::IMessage &message) override;
 
   private:
   AbstractView &m_view;
 };
 
-} // namespace pge
+} // namespace bsgalone::client

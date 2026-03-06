@@ -2,9 +2,9 @@
 #include "Views.hh"
 #include "ViewConsumerProxy.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
-auto createViews(const ViewsConfig &config, const bsgo::DatabaseEntityMapper &entityMapper) -> Views
+auto createViews(const ViewsConfig &config, const core::DatabaseEntityMapper &entityMapper) -> Views
 {
   Views out{};
 
@@ -23,7 +23,7 @@ auto createViews(const ViewsConfig &config, const bsgo::DatabaseEntityMapper &en
   return out;
 }
 
-void Views::connectToQueue(bsgalone::core::IMessageQueue *const queue)
+void Views::connectToQueue(core::IMessageQueue *const queue)
 {
   queue->addListener(std::make_unique<ViewConsumerProxy>(*playerView));
   queue->addListener(std::make_unique<ViewConsumerProxy>(*shipView));
@@ -45,4 +45,4 @@ void Views::reset()
   resourceView->reset();
 }
 
-} // namespace pge
+} // namespace bsgalone::client

@@ -3,11 +3,11 @@
 #include "Coordinator.hh"
 #include "TargetUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 namespace {
 bool isEntityRelevant(const Entity &entity)
 {
-  return bsgalone::core::EntityKind::BULLET == entity.kind->kind();
+  return EntityKind::BULLET == entity.kind->kind();
 }
 } // namespace
 
@@ -83,7 +83,7 @@ void BulletSystem::damageOnImpact(Entity &entity, Entity &target) const
       target.tryMarkForNetworkSync();
     }
   }
-  if (bsgalone::core::EntityKind::ASTEROID == target.kind->kind())
+  if (EntityKind::ASTEROID == target.kind->kind())
   {
     target.tryMarkForNetworkSync();
   }
@@ -91,4 +91,4 @@ void BulletSystem::damageOnImpact(Entity &entity, Entity &target) const
   entity.removalComp().markForRemoval();
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

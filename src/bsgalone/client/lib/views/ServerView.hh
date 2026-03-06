@@ -9,7 +9,7 @@
 #include <memory>
 #include <vector>
 
-namespace pge {
+namespace bsgalone::client {
 
 class ServerView : public AbstractView
 {
@@ -20,9 +20,9 @@ class ServerView : public AbstractView
   bool isReady() const noexcept override;
   void reset() override;
 
-  auto getPlayerSystem() const -> bsgo::Uuid;
+  auto getPlayerSystem() const -> core::Uuid;
   auto getPlayerSystemName() const -> std::string;
-  auto getAllSystems() const -> std::vector<bsgo::SystemData>;
+  auto getAllSystems() const -> std::vector<core::SystemData>;
 
   struct Bounds
   {
@@ -32,13 +32,13 @@ class ServerView : public AbstractView
   auto getMapBounds() const -> Bounds;
 
   protected:
-  void handleMessageInternal(const bsgalone::core::IMessage &message) override;
+  void handleMessageInternal(const core::IMessage &message) override;
 
   private:
   GameSessionShPtr m_gameSession{};
-  std::vector<bsgo::SystemData> m_systems{};
+  std::vector<core::SystemData> m_systems{};
 };
 
 using ServerViewShPtr = std::shared_ptr<ServerView>;
 
-} // namespace pge
+} // namespace bsgalone::client

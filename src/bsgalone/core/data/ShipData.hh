@@ -10,7 +10,7 @@
 #include <eigen3/Eigen/Eigen>
 #include <optional>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 struct ShipData
 {
@@ -31,7 +31,7 @@ struct ShipData
   chrono::TickDuration jumpTime{};
   chrono::TickDuration jumpTimeInThreat{};
 
-  std::unordered_map<bsgalone::core::Slot, int> slots{};
+  std::unordered_map<Slot, int> slots{};
   std::unordered_map<Uuid, int> price{};
 
   bool operator==(const ShipData &rhs) const;
@@ -42,4 +42,4 @@ struct ShipData
 
 auto fromDbShip(const Ship &ship, const ShipPriceRepository &repository) -> ShipData;
 
-} // namespace bsgo
+} // namespace bsgalone::core

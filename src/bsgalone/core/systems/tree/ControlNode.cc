@@ -1,7 +1,7 @@
 
 #include "ControlNode.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 ControlNode::ControlNode(const std::string &name)
   : INode(name)
@@ -20,4 +20,4 @@ void ControlNode::reset(DataContext &data)
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

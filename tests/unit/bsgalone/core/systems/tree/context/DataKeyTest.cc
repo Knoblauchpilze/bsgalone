@@ -4,7 +4,7 @@
 
 using namespace ::testing;
 
-namespace bsgo {
+namespace bsgalone::core {
 
 TEST(Unit_Bsgalone_Core_Systems_Tree_Context_DataKey, IsMarkedAsChangedUponCreation)
 {
@@ -13,4 +13,4 @@ TEST(Unit_Bsgalone_Core_Systems_Tree_Context_DataKey, IsMarkedAsChangedUponCreat
   EXPECT_TRUE(key.changed());
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

@@ -10,11 +10,11 @@
 #include "SystemMessageConsumer.hh"
 #include "TargetListMessageConsumer.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
-void createMessageConsumers(bsgalone::core::IMessageQueue &inputMessagesQueue,
-                            bsgo::DatabaseEntityMapper &entityMapper,
-                            const bsgo::CoordinatorShPtr &coordinator)
+void createMessageConsumers(core::IMessageQueue &inputMessagesQueue,
+                            core::DatabaseEntityMapper &entityMapper,
+                            const core::CoordinatorShPtr &coordinator)
 {
   inputMessagesQueue.addListener(
     std::make_unique<ComponentMessageConsumer>(entityMapper, coordinator));
@@ -32,4 +32,4 @@ void createMessageConsumers(bsgalone::core::IMessageQueue &inputMessagesQueue,
     std::make_unique<TargetListMessageConsumer>(entityMapper, coordinator));
 }
 
-} // namespace pge
+} // namespace bsgalone::client

@@ -3,7 +3,7 @@
 
 #include "RegenerativeComponent.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class HealthComponent : public RegenerativeComponent
 {
@@ -17,4 +17,4 @@ class HealthComponent : public RegenerativeComponent
 
 using HealthComponentShPtr = std::shared_ptr<HealthComponent>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

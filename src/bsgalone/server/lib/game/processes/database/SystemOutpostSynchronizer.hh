@@ -4,8 +4,8 @@
 #include "Entity.hh"
 #include "Repositories.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-void syncSystemOutpost(const Entity &entity, const Repositories &repositories);
+void syncSystemOutpost(const core::Entity &entity, const core::Repositories &repositories);
 
-} // namespace bsgo
+} // namespace bsgalone::server

@@ -7,51 +7,50 @@
 #include "LoadingStartedMessage.hh"
 #include "Services.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-class LoadingMessagesConsumer : public bsgalone::core::AbstractMessageConsumer
+class LoadingMessagesConsumer : public core::AbstractMessageConsumer
 {
   public:
-  LoadingMessagesConsumer(const Services &services,
-                          bsgalone::core::IMessageQueue *const outputMessageQueue);
+  LoadingMessagesConsumer(const Services &services, core::IMessageQueue *const outputMessageQueue);
   ~LoadingMessagesConsumer() override = default;
 
-  void onEventReceived(const bsgalone::core::IMessage &message) override;
+  void onEventReceived(const core::IMessage &message) override;
 
   private:
   LoadingServiceShPtr m_loadingService{};
-  bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
+  core::IMessageQueue *const m_outputMessageQueue{};
 
-  void handleLoadingStartedMessage(const LoadingStartedMessage &message) const;
-  void forwardLoadingFinishedMessage(const LoadingFinishedMessage &message) const;
+  void handleLoadingStartedMessage(const core::LoadingStartedMessage &message) const;
+  void forwardLoadingFinishedMessage(const core::LoadingFinishedMessage &message) const;
 
-  void handleActiveShipChangedTransition(const LoadingStartedMessage &message) const;
-  void handleDockTransition(const LoadingStartedMessage &message) const;
-  void handleEquipTransition(const LoadingStartedMessage &message) const;
-  void handleJumpTransition(const LoadingStartedMessage &message) const;
-  void handleLoginTransition(const LoadingStartedMessage &message) const;
-  void handlePurchaseTransition(const LoadingStartedMessage &message) const;
-  void handleUndockTransition(const LoadingStartedMessage &message) const;
+  void handleActiveShipChangedTransition(const core::LoadingStartedMessage &message) const;
+  void handleDockTransition(const core::LoadingStartedMessage &message) const;
+  void handleEquipTransition(const core::LoadingStartedMessage &message) const;
+  void handleJumpTransition(const core::LoadingStartedMessage &message) const;
+  void handleLoginTransition(const core::LoadingStartedMessage &message) const;
+  void handlePurchaseTransition(const core::LoadingStartedMessage &message) const;
+  void handleUndockTransition(const core::LoadingStartedMessage &message) const;
 
-  void handleLoginDataLoading(const LoadingStartedMessage &message) const;
-  void handleResourcesLoading(const LoadingStartedMessage &message) const;
-  void handleWeaponsLoading(const LoadingStartedMessage &message) const;
-  void handleComputersLoading(const LoadingStartedMessage &message) const;
-  void handleShipsLoading(const LoadingStartedMessage &message) const;
-  void handleSystemsLoading(const LoadingStartedMessage &message) const;
+  void handleLoginDataLoading(const core::LoadingStartedMessage &message) const;
+  void handleResourcesLoading(const core::LoadingStartedMessage &message) const;
+  void handleWeaponsLoading(const core::LoadingStartedMessage &message) const;
+  void handleComputersLoading(const core::LoadingStartedMessage &message) const;
+  void handleShipsLoading(const core::LoadingStartedMessage &message) const;
+  void handleSystemsLoading(const core::LoadingStartedMessage &message) const;
 
-  void handlePlayerResourcesLoading(const LoadingStartedMessage &message) const;
-  void handlePlayerShipsLoading(const LoadingStartedMessage &message) const;
-  void handlePlayerComputersLoading(const LoadingStartedMessage &message) const;
-  void handlePlayerWeaponsLoading(const LoadingStartedMessage &message) const;
-  void handleActiveShipLoading(const LoadingStartedMessage &message) const;
+  void handlePlayerResourcesLoading(const core::LoadingStartedMessage &message) const;
+  void handlePlayerShipsLoading(const core::LoadingStartedMessage &message) const;
+  void handlePlayerComputersLoading(const core::LoadingStartedMessage &message) const;
+  void handlePlayerWeaponsLoading(const core::LoadingStartedMessage &message) const;
+  void handleActiveShipLoading(const core::LoadingStartedMessage &message) const;
 
-  void handleSystemPlayersLoading(const LoadingStartedMessage &message) const;
-  void handleSystemAsteroidsLoading(const LoadingStartedMessage &message) const;
-  void handleSystemOutpostsLoading(const LoadingStartedMessage &message) const;
-  void handleSystemShipsLoading(const LoadingStartedMessage &message) const;
-  void handleSystemTargetsLoading(const LoadingStartedMessage &message) const;
-  void handleSystemTickLoading(const LoadingStartedMessage &message) const;
+  void handleSystemPlayersLoading(const core::LoadingStartedMessage &message) const;
+  void handleSystemAsteroidsLoading(const core::LoadingStartedMessage &message) const;
+  void handleSystemOutpostsLoading(const core::LoadingStartedMessage &message) const;
+  void handleSystemShipsLoading(const core::LoadingStartedMessage &message) const;
+  void handleSystemTargetsLoading(const core::LoadingStartedMessage &message) const;
+  void handleSystemTickLoading(const core::LoadingStartedMessage &message) const;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::server

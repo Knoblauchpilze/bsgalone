@@ -4,7 +4,7 @@
 #include "Entity.hh"
 #include "ISystem.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class Coordinator;
 
@@ -18,14 +18,14 @@ class AbstractSystem : public ISystem
   ~AbstractSystem() override = default;
 
   auto type() const -> SystemType override;
-  void installInternalMessageQueue(bsgalone::core::IMessageQueue *messageQueue) override;
-  void installOutputMessageQueue(bsgalone::core::IMessageQueue *messageQueue) override;
+  void installInternalMessageQueue(IMessageQueue *messageQueue) override;
+  void installOutputMessageQueue(IMessageQueue *messageQueue) override;
 
   void update(Coordinator &coordinator, const chrono::TickData &data) const override;
 
   protected:
-  void pushInternalMessage(bsgalone::core::IMessagePtr message) const;
-  void pushMessage(bsgalone::core::IMessagePtr message) const;
+  void pushInternalMessage(IMessagePtr message) const;
+  void pushMessage(IMessagePtr message) const;
 
   virtual void updateEntity(Entity &entity,
                             Coordinator &coordinator,
@@ -36,8 +36,8 @@ class AbstractSystem : public ISystem
   SystemType m_systemType{};
   EntityPredicate m_entitiesFilter{};
   bool m_filterDeadAndRemovedEntities{true};
-  bsgalone::core::IMessageQueue *m_internalMessageQueue{};
-  bsgalone::core::IMessageQueue *m_outputMessageQueue{};
+  IMessageQueue *m_internalMessageQueue{};
+  IMessageQueue *m_outputMessageQueue{};
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

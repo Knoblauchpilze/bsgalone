@@ -2,26 +2,26 @@
 #include "EntityRemovedMessage.hh"
 #include "SerializationUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 EntityRemovedMessage::EntityRemovedMessage()
-  : NetworkMessage(bsgalone::core::MessageType::ENTITY_REMOVED)
+  : NetworkMessage(MessageType::ENTITY_REMOVED)
 {}
 
 EntityRemovedMessage::EntityRemovedMessage(const Uuid entityDbId,
-                                           const bsgalone::core::EntityKind entityKind,
+                                           const EntityKind entityKind,
                                            const bool dead)
-  : NetworkMessage(bsgalone::core::MessageType::ENTITY_REMOVED)
+  : NetworkMessage(MessageType::ENTITY_REMOVED)
   , m_entityDbId(entityDbId)
   , m_entityKind(entityKind)
   , m_dead(dead)
 {}
 
 EntityRemovedMessage::EntityRemovedMessage(const Uuid entityDbId,
-                                           const bsgalone::core::EntityKind entityKind,
+                                           const EntityKind entityKind,
                                            const bool dead,
                                            const Uuid systemDbId)
-  : NetworkMessage(bsgalone::core::MessageType::ENTITY_REMOVED)
+  : NetworkMessage(MessageType::ENTITY_REMOVED)
   , m_entityDbId(entityDbId)
   , m_entityKind(entityKind)
   , m_dead(dead)
@@ -33,7 +33,7 @@ auto EntityRemovedMessage::getEntityDbId() const -> Uuid
   return m_entityDbId;
 }
 
-auto EntityRemovedMessage::getEntityKind() const -> bsgalone::core::EntityKind
+auto EntityRemovedMessage::getEntityKind() const -> EntityKind
 {
   return m_entityKind;
 }
@@ -59,13 +59,13 @@ auto EntityRemovedMessage::tryGetSystemDbId() const -> std::optional<Uuid>
 
 auto EntityRemovedMessage::serialize(std::ostream &out) const -> std::ostream &
 {
-  core::serialize(out, m_messageType);
-  core::serialize(out, m_clientId);
+  ::core::serialize(out, m_messageType);
+  ::core::serialize(out, m_clientId);
 
-  core::serialize(out, m_entityDbId);
-  core::serialize(out, m_entityKind);
-  core::serialize(out, m_dead);
-  core::serialize(out, m_systemDbId);
+  ::core::serialize(out, m_entityDbId);
+  ::core::serialize(out, m_entityKind);
+  ::core::serialize(out, m_dead);
+  ::core::serialize(out, m_systemDbId);
 
   return out;
 }
@@ -73,18 +73,18 @@ auto EntityRemovedMessage::serialize(std::ostream &out) const -> std::ostream &
 bool EntityRemovedMessage::deserialize(std::istream &in)
 {
   bool ok{true};
-  ok &= core::deserialize(in, m_messageType);
-  ok &= core::deserialize(in, m_clientId);
+  ok &= ::core::deserialize(in, m_messageType);
+  ok &= ::core::deserialize(in, m_clientId);
 
-  ok &= core::deserialize(in, m_entityDbId);
-  ok &= core::deserialize(in, m_entityKind);
-  ok &= core::deserialize(in, m_dead);
-  ok &= core::deserialize(in, m_systemDbId);
+  ok &= ::core::deserialize(in, m_entityDbId);
+  ok &= ::core::deserialize(in, m_entityKind);
+  ok &= ::core::deserialize(in, m_dead);
+  ok &= ::core::deserialize(in, m_systemDbId);
 
   return ok;
 }
 
-auto EntityRemovedMessage::clone() const -> bsgalone::core::IMessagePtr
+auto EntityRemovedMessage::clone() const -> IMessagePtr
 {
   auto clone          = std::make_unique<EntityRemovedMessage>(m_entityDbId, m_entityKind, m_dead);
   clone->m_systemDbId = m_systemDbId;
@@ -93,4 +93,4 @@ auto EntityRemovedMessage::clone() const -> bsgalone::core::IMessagePtr
   return clone;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

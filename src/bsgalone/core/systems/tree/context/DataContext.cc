@@ -2,7 +2,7 @@
 #include "DataContext.hh"
 #include <algorithm>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 auto DataContext::tryGetKey(const ContextKey key) const -> std::optional<DataKey>
 {
@@ -38,4 +38,4 @@ void DataContext::markAsSynced()
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

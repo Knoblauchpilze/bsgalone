@@ -17,10 +17,9 @@
 #include "Target.hh"
 #include "WeaponData.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
-void serializeAndDeserializeMessage(const bsgalone::core::IMessage &value,
-                                    bsgalone::core::IMessage &output);
+void serializeAndDeserializeMessage(const IMessage &value, IMessage &output);
 
 void assertAsteroidDataAreEqual(const AsteroidData &actual, const AsteroidData &expected);
 void assertPlayerComputerDataAreEqual(const PlayerComputerData &actual,
@@ -38,7 +37,6 @@ void assertWeaponDataAreEqual(const WeaponData &actual, const WeaponData &expect
 void assertComputerDataAreEqual(const ComputerData &actual, const ComputerData &expected);
 void assertShipDataAreEqual(const ShipData &actual, const ShipData &expected);
 void assertSystemTickDataAreEqual(const SystemTickData &actual, const SystemTickData &expected);
-void assertTargetAreEqual(const bsgalone::core::Target &actual,
-                          const bsgalone::core::Target &expected);
+void assertTargetAreEqual(const Target &actual, const Target &expected);
 
-} // namespace bsgo
+} // namespace bsgalone::core

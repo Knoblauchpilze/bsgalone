@@ -4,11 +4,11 @@
 #include "ScreenCommon.hh"
 #include "UiTextMenu.hh"
 
-namespace pge {
+namespace bsgalone::client {
 namespace {
-constexpr auto SYSTEM_LABEL_DEFAULT_BG_COLOR  = colors::DARK_GREY;
-constexpr auto SYSTEM_LABEL_SELECTED_BG_COLOR = colors::DARK_GREEN;
-constexpr auto SYSTEM_LABEL_CURRENT_BG_COLOR  = colors::DARK_CYAN;
+constexpr auto SYSTEM_LABEL_DEFAULT_BG_COLOR  = pge::colors::DARK_GREY;
+constexpr auto SYSTEM_LABEL_SELECTED_BG_COLOR = pge::colors::DARK_GREEN;
+constexpr auto SYSTEM_LABEL_CURRENT_BG_COLOR  = pge::colors::DARK_CYAN;
 
 constexpr auto MAP_OFFSET = 10;
 } // namespace
@@ -37,12 +37,12 @@ MapScreenUiHandler::MapScreenUiHandler(const Views &views)
 
 void MapScreenUiHandler::initializeMenus(const int width,
                                          const int height,
-                                         sprites::TexturePack & /*texturesLoader*/)
+                                         pge::sprites::TexturePack & /*texturesLoader*/)
 {
   generateControlButtons(width, height);
 
-  const Vec2i mapOffset{MAP_OFFSET, MAP_OFFSET};
-  m_mapDimensions = Vec2i{width - 2 * MAP_OFFSET, height - 2 * MAP_OFFSET};
+  const pge::Vec2i mapOffset{MAP_OFFSET, MAP_OFFSET};
+  m_mapDimensions = pge::Vec2i{width - 2 * MAP_OFFSET, height - 2 * MAP_OFFSET};
 }
 
 bool MapScreenUiHandler::processUserInput(ui::UserInputData &inputData)
@@ -54,7 +54,7 @@ bool MapScreenUiHandler::processUserInput(ui::UserInputData &inputData)
     out |= menu->processUserInput(inputData);
   }
 
-  if (!out && m_selectedSystem && inputData.controls.released(controls::mouse::LEFT))
+  if (!out && m_selectedSystem && inputData.controls.released(pge::controls::mouse::LEFT))
   {
     debug("reset");
     m_selectedSystem.reset();
@@ -63,7 +63,7 @@ bool MapScreenUiHandler::processUserInput(ui::UserInputData &inputData)
   return out;
 }
 
-void MapScreenUiHandler::render(Renderer &engine) const
+void MapScreenUiHandler::render(pge::Renderer &engine) const
 {
   for (const auto &menu : m_buttons)
   {
@@ -126,9 +126,9 @@ void MapScreenUiHandler::reset()
 void MapScreenUiHandler::generateControlButtons(const int width, const int height)
 {
   constexpr auto REASONABLE_GAP_SIZE = 20;
-  const Vec2i controlButtonDimsPixels{100, 30};
-  const Vec2i buttonPos{width - REASONABLE_GAP_SIZE - controlButtonDimsPixels.x,
-                        height - REASONABLE_GAP_SIZE - controlButtonDimsPixels.y};
+  const pge::Vec2i controlButtonDimsPixels{100, 30};
+  const pge::Vec2i buttonPos{width - REASONABLE_GAP_SIZE - controlButtonDimsPixels.x,
+                             height - REASONABLE_GAP_SIZE - controlButtonDimsPixels.y};
 
   ui::MenuConfig config{.pos               = buttonPos,
                         .dims              = controlButtonDimsPixels,
@@ -136,8 +136,8 @@ void MapScreenUiHandler::generateControlButtons(const int width, const int heigh
                           g.setScreen(Screen::GAME);
                         }};
 
-  auto bg         = ui::bgConfigFromColor(colors::VERY_DARK_COBALT_BLUE);
-  auto text       = ui::textConfigFromColor("Close", colors::WHITE);
+  auto bg         = ui::bgConfigFromColor(pge::colors::VERY_DARK_COBALT_BLUE);
+  auto text       = ui::textConfigFromColor("Close", pge::colors::WHITE);
   auto quitButton = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_buttons.push_back(std::move(quitButton));
 
@@ -156,7 +156,7 @@ void MapScreenUiHandler::generateMap()
   const auto bounds  = m_serverView->getMapBounds();
   const auto systems = m_serverView->getAllSystems();
 
-  const Vec2i mapOffset{MAP_OFFSET, MAP_OFFSET};
+  const pge::Vec2i mapOffset{MAP_OFFSET, MAP_OFFSET};
 
   for (const auto &system : systems)
   {
@@ -193,27 +193,28 @@ auto remapRatioToScale(const Eigen::Vector3f &ratio, const float scale) -> Eigen
   return out;
 }
 
-auto posRatioToPixelPos(const Eigen::Vector3f &posRatio, const Vec2i &offset, const Vec2i &dims)
-  -> Vec2i
+auto posRatioToPixelPos(const Eigen::Vector3f &posRatio,
+                        const pge::Vec2i &offset,
+                        const pge::Vec2i &dims) -> pge::Vec2i
 {
-  Vec2i out{};
+  pge::Vec2i out{};
   out.x = offset.x + static_cast<int>(posRatio(0) * dims.x);
   out.y = offset.y + static_cast<int>(posRatio(1) * dims.y);
   return out;
 }
 } // namespace
 
-void MapScreenUiHandler::generateSystemButtons(const bsgo::SystemData &system,
+void MapScreenUiHandler::generateSystemButtons(const core::SystemData &system,
                                                const ServerView::Bounds &bounds,
-                                               const Vec2i &mapOffset)
+                                               const pge::Vec2i &mapOffset)
 {
   constexpr auto SERVER_MAP_TO_PIXEL_MAP_SCALE = 1.5f;
-  const Vec2i systemButtonDimsPixels{10, 10};
+  const pge::Vec2i systemButtonDimsPixels{10, 10};
 
-  const auto posRatio      = systemPosToRatio(bounds, system.position);
-  const auto ratioRemapped = remapRatioToScale(posRatio, SERVER_MAP_TO_PIXEL_MAP_SCALE);
-  const auto posPixels     = posRatioToPixelPos(ratioRemapped, mapOffset, m_mapDimensions);
-  const Vec2i buttonPos    = posPixels - systemButtonDimsPixels / 2;
+  const auto posRatio        = systemPosToRatio(bounds, system.position);
+  const auto ratioRemapped   = remapRatioToScale(posRatio, SERVER_MAP_TO_PIXEL_MAP_SCALE);
+  const auto posPixels       = posRatioToPixelPos(ratioRemapped, mapOffset, m_mapDimensions);
+  const pge::Vec2i buttonPos = posPixels - systemButtonDimsPixels / 2;
 
   const auto systemId                 = system.dbId;
   constexpr auto OFFSET_DUE_TO_BUTTON = 1;
@@ -223,28 +224,28 @@ void MapScreenUiHandler::generateSystemButtons(const bsgo::SystemData &system,
                                     .clickCallback = [this, systemId, labelId]() {
                                       onSystemSelected(systemId, labelId);
                                     }};
-  const auto buttonBg = ui::bgConfigFromColor(colors::DARK_CYAN);
+  const auto buttonBg = ui::bgConfigFromColor(pge::colors::DARK_CYAN);
   auto button         = std::make_unique<ui::UiMenu>(buttonConfig, buttonBg);
   m_buttons.push_back(std::move(button));
 
   constexpr auto LABEL_BUTTON_WIDTH  = 100;
   constexpr auto LABEL_BUTTON_HEIGHT = 20;
-  const Vec2i labelDimsPixels{LABEL_BUTTON_WIDTH, LABEL_BUTTON_HEIGHT};
+  const pge::Vec2i labelDimsPixels{LABEL_BUTTON_WIDTH, LABEL_BUTTON_HEIGHT};
 
   constexpr auto GAP_BETWEEN_BUTTON_AND_LABEL_PIXELS = 5;
-  const Vec2i labelPos{posPixels.x - LABEL_BUTTON_WIDTH / 2,
-                       posPixels.y + systemButtonDimsPixels.y / 2
-                         + GAP_BETWEEN_BUTTON_AND_LABEL_PIXELS};
+  const pge::Vec2i labelPos{posPixels.x - LABEL_BUTTON_WIDTH / 2,
+                            posPixels.y + systemButtonDimsPixels.y / 2
+                              + GAP_BETWEEN_BUTTON_AND_LABEL_PIXELS};
 
   const ui::MenuConfig labelConfig{.pos = labelPos, .dims = labelDimsPixels, .highlightable = false};
   const auto labelBg         = ui::bgConfigFromColor(SYSTEM_LABEL_DEFAULT_BG_COLOR);
-  const auto text            = ui::textConfigFromColor(system.name, colors::WHITE);
+  const auto text            = ui::textConfigFromColor(system.name, pge::colors::WHITE);
   auto label                 = std::make_unique<ui::UiTextMenu>(labelConfig, labelBg, text);
   m_systemMenus[system.dbId] = label.get();
   m_buttons.push_back(std::move(label));
 }
 
-void MapScreenUiHandler::onSystemSelected(const bsgo::Uuid systemId, const int labelId)
+void MapScreenUiHandler::onSystemSelected(const core::Uuid systemId, const int labelId)
 {
   if (!m_serverView->isReady())
   {
@@ -276,4 +277,4 @@ void MapScreenUiHandler::onJumpRequested()
   m_shipDbView->startJump();
 }
 
-} // namespace pge
+} // namespace bsgalone::client

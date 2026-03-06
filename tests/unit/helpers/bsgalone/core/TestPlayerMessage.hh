@@ -11,7 +11,7 @@ class TestPlayerMessage : public bsgalone::core::AbstractPlayerMessage
   public:
   // The type of message does not matter, it is just defined because it is
   // required to pick one to instantiate an `AbstractPlayerMessage`.
-  TestPlayerMessage(const bsgo::Uuid playerDbId, const bsgo::Uuid systemDbId);
+  TestPlayerMessage(const bsgalone::core::Uuid playerDbId, const bsgalone::core::Uuid systemDbId);
   ~TestPlayerMessage() override = default;
 
   auto serialize(std::ostream &out) const -> std::ostream & override;

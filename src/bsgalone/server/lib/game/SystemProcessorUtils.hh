@@ -6,20 +6,20 @@
 #include "SystemService.hh"
 #include <vector>
 
-namespace bsgo {
+namespace bsgalone::server {
 
-auto tryFindSystemDbIdFromEntity(const Uuid dbId,
-                                 const bsgalone::core::EntityKind entityKind,
-                                 const SystemService &service) -> std::optional<Uuid>;
+auto tryFindSystemDbIdFromEntity(const core::Uuid dbId,
+                                 const core::EntityKind entityKind,
+                                 const SystemService &service) -> std::optional<core::Uuid>;
 
-auto tryFindSystemAndQueueFromShip(const Uuid shipDbId,
+auto tryFindSystemAndQueueFromShip(const core::Uuid shipDbId,
                                    const SystemService &service,
                                    const SystemQueueMap &queues)
-  -> std::pair<std::optional<Uuid>, std::optional<bsgalone::core::IMessageQueueShPtr>>;
+  -> std::pair<std::optional<core::Uuid>, std::optional<core::IMessageQueueShPtr>>;
 
-auto tryFindSystemAndQueueFromAsteroid(const Uuid asteroidDbId,
+auto tryFindSystemAndQueueFromAsteroid(const core::Uuid asteroidDbId,
                                        const SystemService &service,
                                        const SystemQueueMap &queues)
-  -> std::pair<std::optional<Uuid>, std::optional<bsgalone::core::IMessageQueueShPtr>>;
+  -> std::pair<std::optional<core::Uuid>, std::optional<core::IMessageQueueShPtr>>;
 
-} // namespace bsgo
+} // namespace bsgalone::server

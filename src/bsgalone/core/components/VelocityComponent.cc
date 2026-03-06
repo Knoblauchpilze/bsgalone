@@ -2,11 +2,11 @@
 #include "VelocityComponent.hh"
 #include "VectorUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 constexpr auto FRICTION_ACCELERATION = 0.5f;
 
 VelocityComponent::VelocityComponent(const VelocityData &data)
-  : AbstractComponent(bsgalone::core::ComponentType::VELOCITY)
+  : AbstractComponent(ComponentType::VELOCITY)
   , m_speedMode(data.speedMode)
   , m_maxAcceleration(data.maxAcceleration)
   , m_maxSpeed(data.maxSpeed)
@@ -99,4 +99,4 @@ void VelocityComponent::updateVariableSpeed(const chrono::TickData &data)
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

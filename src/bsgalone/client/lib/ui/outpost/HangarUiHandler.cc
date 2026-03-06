@@ -9,7 +9,7 @@
 #include "StringUtils.hh"
 #include "UiTextMenu.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
 HangarUiHandler::HangarUiHandler(const Views &views)
   : AbstractUiHandler("hangar")
@@ -30,15 +30,15 @@ HangarUiHandler::HangarUiHandler(const Views &views)
 
 void HangarUiHandler::initializeMenus(const int width,
                                       const int height,
-                                      sprites::TexturePack & /*texturesLoader*/)
+                                      pge::sprites::TexturePack & /*texturesLoader*/)
 {
   const auto viewWidth  = static_cast<int>(MAIN_VIEW_WIDTH_TO_SCREEN_WIDTH_RATIO * width);
   const auto viewHeight = static_cast<int>(MAIN_VIEW_HEIGHT_TO_SCREEN_HEIGHT_RATIO * height);
 
   constexpr auto RESOURCES_MENU_HEIGHT = 30;
-  Vec2i pos{width - viewWidth - VIEW_TO_RIGHT_OF_SCREEN_IN_PIXELS,
-            height - viewHeight - VIEW_TO_BOTTOM_OF_SCREEN_IN_PIXELS};
-  Vec2i dims{viewWidth, RESOURCES_MENU_HEIGHT};
+  pge::Vec2i pos{width - viewWidth - VIEW_TO_RIGHT_OF_SCREEN_IN_PIXELS,
+                 height - viewHeight - VIEW_TO_BOTTOM_OF_SCREEN_IN_PIXELS};
+  pge::Vec2i dims{viewWidth, RESOURCES_MENU_HEIGHT};
 
   m_resourcesMenu = generateBlankHorizontalMenu(pos, dims);
 
@@ -53,7 +53,7 @@ bool HangarUiHandler::processUserInput(ui::UserInputData &inputData)
   return m_menu->processUserInput(inputData);
 }
 
-void HangarUiHandler::render(Renderer &engine) const
+void HangarUiHandler::render(pge::Renderer &engine) const
 {
   m_resourcesMenu->render(engine);
   m_menu->render(engine);
@@ -109,13 +109,13 @@ void HangarUiHandler::generateResourcesMenus()
   const auto resources = m_playerView->getPlayerResources();
 
   const ui::MenuConfig config{.propagateEventsToChildren = false};
-  const auto bg = ui::bgConfigFromColor(colors::BLANK);
+  const auto bg = ui::bgConfigFromColor(pge::colors::BLANK);
 
   // Reverse iteration to get resources ordered according to their id.
   for (auto it = resources.rbegin(); it != resources.rend(); ++it)
   {
-    auto label = ui::textConfigFromColor(bsgo::capitalizeString(it->name, true) + ":",
-                                         colors::DARK_GREY,
+    auto label = ui::textConfigFromColor(core::capitalizeString(it->name, true) + ":",
+                                         pge::colors::DARK_GREY,
                                          ui::TextAlignment::RIGHT);
     auto field = std::make_unique<ui::UiTextMenu>(config, bg, label);
     m_resourcesMenu->addMenu(std::move(field));
@@ -130,34 +130,34 @@ void HangarUiHandler::generateResourcesMenus()
 }
 
 namespace {
-auto generateShipDescription(const bsgo::ShipData &ship) -> ui::UiMenuPtr
+auto generateShipDescription(const core::ShipData &ship) -> ui::UiMenuPtr
 {
   const ui::MenuConfig config{.highlightable = false};
-  auto bg = ui::bgConfigFromColor(colors::BLANK);
+  auto bg = ui::bgConfigFromColor(pge::colors::BLANK);
 
   auto desc = std::make_unique<ui::UiMenu>(config, bg);
 
   desc->addMenu(generateSpacer());
 
-  bg         = ui::bgConfigFromColor(colors::BLANK);
-  auto label = bsgo::capitalizeString(ship.name + " (" + bsgo::str(ship.shipClass) + ")");
-  auto text  = generateTextConfig(label, colors::GREY, 10);
+  bg         = ui::bgConfigFromColor(pge::colors::BLANK);
+  auto label = core::capitalizeString(ship.name + " (" + core::str(ship.shipClass) + ")");
+  auto text  = generateTextConfig(label, pge::colors::GREY, 10);
   auto prop  = std::make_unique<ui::UiTextMenu>(config, bg, text);
   desc->addMenu(std::move(prop));
 
-  label = bsgo::floatToStr(ship.maxHullPoints, 0) + " hull points (+"
-          + bsgo::floatToStr(ship.hullPointsRegen, 2) + "/s)";
+  label = core::floatToStr(ship.maxHullPoints, 0) + " hull points (+"
+          + core::floatToStr(ship.hullPointsRegen, 2) + "/s)";
   text = generateTextConfig(label);
   prop = std::make_unique<ui::UiTextMenu>(config, bg, text);
   desc->addMenu(std::move(prop));
 
-  label = bsgo::floatToStr(ship.maxPowerPoints, 0) + " power (+"
-          + bsgo::floatToStr(ship.powerRegen, 2) + "/s)";
+  label = core::floatToStr(ship.maxPowerPoints, 0) + " power (+"
+          + core::floatToStr(ship.powerRegen, 2) + "/s)";
   text = generateTextConfig(label);
   prop = std::make_unique<ui::UiTextMenu>(config, bg, text);
   desc->addMenu(std::move(prop));
 
-  label = bsgo::floatToStr(ship.speed, 2) + "m/s (+" + bsgo::floatToStr(ship.acceleration, 2)
+  label = core::floatToStr(ship.speed, 2) + "m/s (+" + core::floatToStr(ship.acceleration, 2)
           + "m/s2)";
   text = generateTextConfig(label);
   prop = std::make_unique<ui::UiTextMenu>(config, bg, text);
@@ -222,8 +222,8 @@ namespace {
 constexpr auto BUY_SHIP_BUTTON_TEXT = "Purchase";
 constexpr auto USE_SHIP_BUTTON_TEXT = "Select";
 
-auto getPlayerShipWithId(const std::vector<bsgo::PlayerShipData> &ships, const bsgo::Uuid shipId)
-  -> std::optional<bsgo::PlayerShipData>
+auto getPlayerShipWithId(const std::vector<core::PlayerShipData> &ships, const core::Uuid shipId)
+  -> std::optional<core::PlayerShipData>
 {
   for (const auto &ship : ships)
   {
@@ -250,20 +250,19 @@ void HangarUiHandler::updateShipMenus()
     {
       shipData.playerShipDbId.reset();
       shipData.button->setText(BUY_SHIP_BUTTON_TEXT);
-      const auto affordability = m_shopView->canPlayerAfford(shipData.shipDbId,
-                                                             bsgalone::core::Item::SHIP);
+      const auto affordability = m_shopView->canPlayerAfford(shipData.shipDbId, core::Item::SHIP);
 
       shipData.button->setEnabled(affordability.canAfford);
       shipData.button->setHighlightable(affordability.canAfford);
       if (affordability.canAfford)
       {
         shipData.state = State::TO_BUY;
-        shipData.button->updateBgColor(colors::DARK_GREEN);
+        shipData.button->updateBgColor(pge::colors::DARK_GREEN);
       }
       else
       {
         shipData.state = State::UNAFFORDABLE;
-        shipData.button->updateBgColor(colors::DARK_RED);
+        shipData.button->updateBgColor(pge::colors::DARK_RED);
       }
     }
     else
@@ -275,12 +274,12 @@ void HangarUiHandler::updateShipMenus()
       if (maybePlayerShip->active)
       {
         shipData.state = State::EQUIPED;
-        shipData.button->updateBgColor(colors::DARK_GREY);
+        shipData.button->updateBgColor(pge::colors::DARK_GREY);
       }
       else
       {
         shipData.state = State::TO_EQUIP;
-        shipData.button->updateBgColor(colors::DARK_GREEN);
+        shipData.button->updateBgColor(pge::colors::DARK_GREEN);
       }
     }
 
@@ -314,7 +313,7 @@ void HangarUiHandler::onPurchaseRequest(const int shipIndex)
   }
 
   const auto &data = m_shipsData.at(shipIndex);
-  m_playerView->tryPurchase(bsgalone::core::Item::SHIP, data.shipDbId);
+  m_playerView->tryPurchase(core::Item::SHIP, data.shipDbId);
 }
 
 void HangarUiHandler::onSelectRequest(const int shipIndex)
@@ -323,4 +322,4 @@ void HangarUiHandler::onSelectRequest(const int shipIndex)
   m_playerView->trySelectShip(*data.playerShipDbId);
 }
 
-} // namespace pge
+} // namespace bsgalone::client

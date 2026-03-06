@@ -2,7 +2,7 @@
 #include "AbstractSystem.hh"
 #include "Coordinator.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 AbstractSystem::AbstractSystem(const SystemType &type, const EntityPredicate &entitiesFilter)
   : AbstractSystem(type, entitiesFilter, true)
@@ -22,7 +22,7 @@ auto AbstractSystem::type() const -> SystemType
   return m_systemType;
 }
 
-void AbstractSystem::installInternalMessageQueue(bsgalone::core::IMessageQueue *messageQueue)
+void AbstractSystem::installInternalMessageQueue(IMessageQueue *messageQueue)
 {
   if (nullptr == messageQueue)
   {
@@ -32,7 +32,7 @@ void AbstractSystem::installInternalMessageQueue(bsgalone::core::IMessageQueue *
   m_internalMessageQueue = messageQueue;
 }
 
-void AbstractSystem::installOutputMessageQueue(bsgalone::core::IMessageQueue *messageQueue)
+void AbstractSystem::installOutputMessageQueue(IMessageQueue *messageQueue)
 {
   if (nullptr == messageQueue)
   {
@@ -62,7 +62,7 @@ void AbstractSystem::update(Coordinator &coordinator, const chrono::TickData &da
   }
 }
 
-void AbstractSystem::pushInternalMessage(bsgalone::core::IMessagePtr message) const
+void AbstractSystem::pushInternalMessage(IMessagePtr message) const
 {
   if (m_internalMessageQueue != nullptr)
   {
@@ -70,7 +70,7 @@ void AbstractSystem::pushInternalMessage(bsgalone::core::IMessagePtr message) co
   }
 }
 
-void AbstractSystem::pushMessage(bsgalone::core::IMessagePtr message) const
+void AbstractSystem::pushMessage(IMessagePtr message) const
 {
   if (m_outputMessageQueue != nullptr)
   {
@@ -78,4 +78,4 @@ void AbstractSystem::pushMessage(bsgalone::core::IMessagePtr message) const
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

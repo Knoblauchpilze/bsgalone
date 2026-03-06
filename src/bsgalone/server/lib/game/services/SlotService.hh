@@ -6,14 +6,14 @@
 #include "DatabaseEntityMapper.hh"
 #include <memory>
 
-namespace bsgo {
+namespace bsgalone::server {
 
 class SlotService : public AbstractService
 {
   public:
-  SlotService(const Repositories &repositories,
-              CoordinatorShPtr coordinator,
-              const DatabaseEntityMapper &entityMapper);
+  SlotService(const core::Repositories &repositories,
+              core::CoordinatorShPtr coordinator,
+              const core::DatabaseEntityMapper &entityMapper);
   ~SlotService() override = default;
 
   struct TogglingResult
@@ -21,14 +21,15 @@ class SlotService : public AbstractService
     bool success{false};
     bool active{false};
   };
-  auto tryToggleWeapon(const Uuid shipDbId, const Uuid weaponDbId) const -> TogglingResult;
-  bool tryToggleComputer(const Uuid shipDbId, const Uuid computerDbId) const;
+  auto tryToggleWeapon(const core::Uuid shipDbId, const core::Uuid weaponDbId) const
+    -> TogglingResult;
+  bool tryToggleComputer(const core::Uuid shipDbId, const core::Uuid computerDbId) const;
 
   private:
-  CoordinatorShPtr m_coordinator{};
-  const DatabaseEntityMapper &m_entityMapper;
+  core::CoordinatorShPtr m_coordinator{};
+  const core::DatabaseEntityMapper &m_entityMapper;
 };
 
 using SlotServiceShPtr = std::shared_ptr<SlotService>;
 
-} // namespace bsgo
+} // namespace bsgalone::server

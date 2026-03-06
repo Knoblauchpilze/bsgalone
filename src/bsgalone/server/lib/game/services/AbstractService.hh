@@ -4,18 +4,18 @@
 #include "IService.hh"
 #include "Repositories.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
 class AbstractService : public IService
 {
   public:
-  AbstractService(const std::string &name, const Repositories &repositories);
+  AbstractService(const std::string &name, const core::Repositories &repositories);
   ~AbstractService() override = default;
 
   bool isReady() const noexcept override;
 
   protected:
-  Repositories m_repositories{};
+  core::Repositories m_repositories{};
 };
 
-} // namespace bsgo
+} // namespace bsgalone::server

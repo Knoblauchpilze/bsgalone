@@ -4,10 +4,10 @@
 
 namespace test {
 
-TestSystemMessage::TestSystemMessage(const bsgo::Uuid systemDbId)
+TestSystemMessage::TestSystemMessage(const bsgalone::core::Uuid systemDbId)
   // The type of message does not matter, it is just defined because it is
   // required to pick one to instantiate an `AbstractSystemMessage`.
-  : bsgalone::core::AbstractSystemMessage(bsgalone::core::MessageType::DOCK, systemDbId)
+  : AbstractSystemMessage(bsgalone::core::MessageType::DOCK, systemDbId)
 {}
 
 auto TestSystemMessage::serialize(std::ostream &out) const -> std::ostream &

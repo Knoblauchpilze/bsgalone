@@ -8,19 +8,19 @@
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
 
-namespace bsgo {
+namespace bsgalone::core {
 
-class TargetMessage : public bsgalone::core::NetworkMessage
+class TargetMessage : public NetworkMessage
 {
   public:
   TargetMessage();
-  TargetMessage(bsgalone::core::Target data, const Eigen::Vector3f &position);
+  TargetMessage(Target data, const Eigen::Vector3f &position);
   ~TargetMessage() override = default;
 
   auto getSourceDbId() const -> Uuid;
-  auto getSourceKind() const -> bsgalone::core::EntityKind;
+  auto getSourceKind() const -> EntityKind;
   auto tryGetTargetDbId() const -> std::optional<Uuid>;
-  auto tryGetTargetKind() const -> std::optional<bsgalone::core::EntityKind>;
+  auto tryGetTargetKind() const -> std::optional<EntityKind>;
 
   auto tryGetSystemDbId() const -> std::optional<Uuid>;
   void setSystemDbId(const Uuid systemDbId);
@@ -30,12 +30,12 @@ class TargetMessage : public bsgalone::core::NetworkMessage
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
 
-  auto clone() const -> bsgalone::core::IMessagePtr override;
+  auto clone() const -> IMessagePtr override;
 
   private:
-  bsgalone::core::Target m_data{};
+  Target m_data{};
   std::optional<Uuid> m_systemDbId{};
   Eigen::Vector3f m_position{Eigen::Vector3f::Zero()};
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

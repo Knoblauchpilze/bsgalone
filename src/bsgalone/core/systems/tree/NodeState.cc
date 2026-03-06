@@ -1,7 +1,7 @@
 
 #include "NodeState.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 auto str(const NodeState &state) -> std::string
 {
@@ -20,4 +20,4 @@ auto str(const NodeState &state) -> std::string
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

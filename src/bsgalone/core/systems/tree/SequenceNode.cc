@@ -1,7 +1,7 @@
 
 #include "SequenceNode.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 SequenceNode::SequenceNode()
   : ControlNode("sequence")
@@ -26,4 +26,4 @@ auto SequenceNode::tick(const BehaviorData &data) -> NodeState
   return NodeState::SUCCESS;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

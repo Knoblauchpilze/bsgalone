@@ -7,7 +7,7 @@
 #include <optional>
 #include <unordered_set>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class ComputerSlotComponent : public SlotComponent
 {
@@ -16,15 +16,15 @@ class ComputerSlotComponent : public SlotComponent
   ~ComputerSlotComponent() override = default;
 
   auto duration() const -> std::optional<chrono::TickDuration>;
-  auto allowedTargets() const -> std::optional<std::unordered_set<bsgalone::core::EntityKind>>;
+  auto allowedTargets() const -> std::optional<std::unordered_set<EntityKind>>;
   auto damageModifier() const -> std::optional<float>;
 
   private:
   std::optional<chrono::TickDuration> m_duration;
-  std::optional<std::unordered_set<bsgalone::core::EntityKind>> m_allowedTargets;
+  std::optional<std::unordered_set<EntityKind>> m_allowedTargets;
   std::optional<float> m_damageModifier;
 };
 
 using ComputerSlotComponentShPtr = std::shared_ptr<ComputerSlotComponent>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

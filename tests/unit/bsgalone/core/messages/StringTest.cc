@@ -6,7 +6,7 @@
 using namespace ::testing;
 using namespace test;
 
-namespace bsgo {
+namespace bsgalone::core {
 
 TEST(Unit_Bsgalone_Core_Messages_String, Empty)
 {
@@ -32,4 +32,4 @@ TEST(Unit_Bsgalone_Core_Messages_String, NumericalValue)
   EXPECT_EQ(actual, expected);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

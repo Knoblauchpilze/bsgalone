@@ -1,7 +1,7 @@
 
 #include "ResourceRepository.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 ResourceRepository::ResourceRepository(const DbConnectionShPtr &connection)
   : AbstractRepository("resource", connection)
@@ -83,4 +83,4 @@ auto ResourceRepository::findOneByName(const std::string &name) const -> std::op
   return out;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

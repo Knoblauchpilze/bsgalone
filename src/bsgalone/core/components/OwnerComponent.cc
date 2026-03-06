@@ -1,10 +1,10 @@
 
 #include "OwnerComponent.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 OwnerComponent::OwnerComponent(const Uuid owner, const OwnerType &ownerType)
-  : AbstractComponent(bsgalone::core::ComponentType::OWNER)
+  : AbstractComponent(ComponentType::OWNER)
   , m_owner(owner)
   , m_ownerType(ownerType)
 {}
@@ -21,4 +21,4 @@ auto OwnerComponent::category() const -> OwnerType
 
 void OwnerComponent::update(const chrono::TickData & /*data*/) {}
 
-} // namespace bsgo
+} // namespace bsgalone::core

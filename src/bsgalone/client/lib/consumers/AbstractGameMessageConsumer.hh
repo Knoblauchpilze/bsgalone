@@ -5,26 +5,25 @@
 #include "LoadingFinishedMessage.hh"
 #include "LoadingStartedMessage.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
-class AbstractGameMessageConsumer : public bsgalone::core::AbstractMessageConsumer
+class AbstractGameMessageConsumer : public core::AbstractMessageConsumer
 {
   public:
-  AbstractGameMessageConsumer(const std::string &name,
-                              const bsgalone::core::MessageType relevantMessageType);
+  AbstractGameMessageConsumer(const std::string &name, const core::MessageType relevantMessageType);
   ~AbstractGameMessageConsumer() override = default;
 
-  void onEventReceived(const bsgalone::core::IMessage &message) override;
+  void onEventReceived(const core::IMessage &message) override;
 
   protected:
-  virtual void onMessageReceivedInternal(const bsgalone::core::IMessage &message) = 0;
+  virtual void onMessageReceivedInternal(const core::IMessage &message) = 0;
 
   private:
   bool m_relevantLoadingTransitionDetected{false};
 
-  void handleLoadingStarted(const bsgo::LoadingStartedMessage &message);
-  void handleLoadingFinished(const bsgo::LoadingFinishedMessage &message);
-  void handleRelevantMessage(const bsgalone::core::IMessage &message);
+  void handleLoadingStarted(const core::LoadingStartedMessage &message);
+  void handleLoadingFinished(const core::LoadingFinishedMessage &message);
+  void handleRelevantMessage(const core::IMessage &message);
 };
 
-} // namespace pge
+} // namespace bsgalone::client

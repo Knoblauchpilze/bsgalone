@@ -3,7 +3,7 @@
 
 #include "DecalScreenRenderer.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
 class MapScreenRenderer : public bsgalone::client::DecalScreenRenderer
 {
@@ -12,4 +12,4 @@ class MapScreenRenderer : public bsgalone::client::DecalScreenRenderer
   ~MapScreenRenderer() override = default;
 };
 
-} // namespace pge
+} // namespace bsgalone::client

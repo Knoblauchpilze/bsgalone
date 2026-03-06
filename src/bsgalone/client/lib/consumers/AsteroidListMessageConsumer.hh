@@ -7,26 +7,26 @@
 #include "DatabaseEntityMapper.hh"
 #include "Uuid.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
 class AsteroidListMessageConsumer : public AbstractGameMessageConsumer
 {
   public:
-  AsteroidListMessageConsumer(bsgo::DatabaseEntityMapper &entityMapper,
-                              bsgo::CoordinatorShPtr coordinator);
+  AsteroidListMessageConsumer(core::DatabaseEntityMapper &entityMapper,
+                              core::CoordinatorShPtr coordinator);
   ~AsteroidListMessageConsumer() override = default;
 
   protected:
-  void onMessageReceivedInternal(const bsgalone::core::IMessage &message) override;
+  void onMessageReceivedInternal(const core::IMessage &message) override;
 
   private:
-  bsgo::DatabaseEntityMapper &m_entityMapper;
-  bsgo::CoordinatorShPtr m_coordinator{};
+  core::DatabaseEntityMapper &m_entityMapper;
+  core::CoordinatorShPtr m_coordinator{};
 
   /// @brief -
   bool m_relevantLoadingTransitionDetected{false};
 
-  void registerAsteroid(const bsgo::AsteroidData &data) const;
+  void registerAsteroid(const core::AsteroidData &data) const;
 };
 
-} // namespace pge
+} // namespace bsgalone::client

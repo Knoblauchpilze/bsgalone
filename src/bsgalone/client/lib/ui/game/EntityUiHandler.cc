@@ -3,7 +3,7 @@
 #include "IViewListenerProxy.hh"
 #include "StringUtils.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
 EntityUiHandler::EntityUiHandler(const EntityUiConfig &config, const Views &views)
   : AbstractUiHandler("ship")
@@ -25,48 +25,48 @@ EntityUiHandler::EntityUiHandler(const EntityUiConfig &config, const Views &view
 
 void EntityUiHandler::initializeMenus(const int /*width*/,
                                       const int /*height*/,
-                                      sprites::TexturePack & /*texturesLoader*/)
+                                      pge::sprites::TexturePack & /*texturesLoader*/)
 {
   m_menus.resize(MenuItem::COUNT);
 
-  const Vec2i TARGET_UI_PIXEL_DIMENSION{200, 15};
+  const pge::Vec2i TARGET_UI_PIXEL_DIMENSION{200, 15};
   constexpr auto REASONABLE_PIXEL_GAP = 15;
 
   ui::MenuConfig config{.pos           = m_config.offset,
                         .dims          = TARGET_UI_PIXEL_DIMENSION,
                         .highlightable = false};
 
-  auto bg       = ui::bgConfigFromColor(colors::BLANK);
-  auto text     = ui::textConfigFromColor("N/A", colors::WHITE);
+  auto bg       = ui::bgConfigFromColor(pge::colors::BLANK);
+  auto text     = ui::textConfigFromColor("N/A", pge::colors::WHITE);
   m_menus[NAME] = std::make_unique<ui::UiTextMenu>(config, bg, text);
 
   config.pos.y += REASONABLE_PIXEL_GAP;
-  bg              = ui::bgConfigFromColor(colors::VERY_DARK_RED);
-  text            = ui::textConfigFromColor("Health: N/A", colors::WHITE);
+  bg              = ui::bgConfigFromColor(pge::colors::VERY_DARK_RED);
+  text            = ui::textConfigFromColor("Health: N/A", pge::colors::WHITE);
   m_menus[HEALTH] = std::make_unique<ui::UiTextMenu>(config, bg, text);
 
   config.pos.y += REASONABLE_PIXEL_GAP;
-  bg             = ui::bgConfigFromColor(colors::DARK_CYAN);
-  text           = ui::textConfigFromColor("Power: N/A", colors::WHITE);
+  bg             = ui::bgConfigFromColor(pge::colors::DARK_CYAN);
+  text           = ui::textConfigFromColor("Power: N/A", pge::colors::WHITE);
   m_menus[POWER] = std::make_unique<ui::UiTextMenu>(config, bg, text);
 
   config.pos.y += REASONABLE_PIXEL_GAP;
-  bg                = ui::bgConfigFromColor(colors::BLANK);
-  text              = ui::textConfigFromColor("N/A m", colors::WHITE);
+  bg                = ui::bgConfigFromColor(pge::colors::BLANK);
+  text              = ui::textConfigFromColor("N/A m", pge::colors::WHITE);
   m_menus[DISTANCE] = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_menus[DISTANCE]->setVisible(false);
 
   config.pos.y += REASONABLE_PIXEL_GAP;
   config.highlightable = true;
-  config.dims          = Vec2i{100, 25};
+  config.dims          = pge::Vec2i{100, 25};
   config.clickCallback = [this]() {
     if (m_shipDbView->isReady())
     {
       m_shipDbView->dockPlayerShip();
     }
   };
-  bg            = ui::bgConfigFromColor(colors::DARK_GREY);
-  text          = ui::textConfigFromColor("Dock", colors::WHITE);
+  bg            = ui::bgConfigFromColor(pge::colors::DARK_GREY);
+  text          = ui::textConfigFromColor("Dock", pge::colors::WHITE);
   m_menus[DOCK] = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_menus[DOCK]->setVisible(false);
 }
@@ -82,7 +82,7 @@ bool EntityUiHandler::processUserInput(ui::UserInputData &inputData)
   return out;
 }
 
-void EntityUiHandler::render(Renderer &engine) const
+void EntityUiHandler::render(pge::Renderer &engine) const
 {
   for (const auto &menu : m_menus)
   {
@@ -128,50 +128,50 @@ void EntityUiHandler::subscribeToViews()
   // In case this changes, take inspiration from the other handlers.
 }
 
-void EntityUiHandler::updateNameComponent(const bsgo::Entity &entity)
+void EntityUiHandler::updateNameComponent(const core::Entity &entity)
 {
   m_menus[NAME]->setText(m_shipView->getEntityName(entity));
 }
 
-void EntityUiHandler::updateHealthComponent(const bsgo::Entity &entity)
+void EntityUiHandler::updateHealthComponent(const core::Entity &entity)
 {
-  if (!entity.exists<bsgo::HealthComponent>())
+  if (!entity.exists<core::HealthComponent>())
   {
     m_menus[HEALTH]->setText("Health: N/A");
     return;
   }
 
   std::string text{"Health: "};
-  text += bsgo::floatToStr(std::floor(std::max(entity.healthComp().value(), 0.0f)), 0);
+  text += core::floatToStr(std::floor(std::max(entity.healthComp().value(), 0.0f)), 0);
   text += "/";
-  text += bsgo::floatToStr(std::floor(entity.healthComp().max()), 0);
+  text += core::floatToStr(std::floor(entity.healthComp().max()), 0);
   m_menus[HEALTH]->setText(text);
 }
 
-void EntityUiHandler::updatePowerComponent(const bsgo::Entity &entity)
+void EntityUiHandler::updatePowerComponent(const core::Entity &entity)
 {
-  if (!entity.exists<bsgo::PowerComponent>())
+  if (!entity.exists<core::PowerComponent>())
   {
     m_menus[POWER]->setText("Power: N/A");
     return;
   }
 
   std::string text{"Power: "};
-  text += bsgo::floatToStr(std::floor(entity.powerComp().value()), 0);
+  text += core::floatToStr(std::floor(entity.powerComp().value()), 0);
   text += "/";
-  text += bsgo::floatToStr(std::floor(entity.powerComp().max()), 0);
+  text += core::floatToStr(std::floor(entity.powerComp().max()), 0);
   m_menus[POWER]->setText(text);
 }
 
 void EntityUiHandler::updateDistanceComponent()
 {
   const auto d = m_shipView->distanceToTarget();
-  m_menus[DISTANCE]->setText(bsgo::floatToStr(d, 1) + "m");
+  m_menus[DISTANCE]->setText(core::floatToStr(d, 1) + "m");
 }
 
-void EntityUiHandler::updateDockComponent(const bsgo::Entity &entity)
+void EntityUiHandler::updateDockComponent(const core::Entity &entity)
 {
-  if (bsgalone::core::EntityKind::OUTPOST != entity.kind->kind())
+  if (core::EntityKind::OUTPOST != entity.kind->kind())
   {
     m_menus[DOCK]->setVisible(false);
     return;
@@ -189,4 +189,4 @@ void EntityUiHandler::updateDockComponent(const bsgo::Entity &entity)
   m_menus[DOCK]->setVisible(dockButtonVisible);
 }
 
-} // namespace pge
+} // namespace bsgalone::client

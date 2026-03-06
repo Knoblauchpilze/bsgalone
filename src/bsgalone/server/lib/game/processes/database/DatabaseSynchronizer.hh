@@ -5,17 +5,17 @@
 #include "Entity.hh"
 #include "Repositories.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-class DatabaseSynchronizer : public core::CoreObject
+class DatabaseSynchronizer : public ::core::CoreObject
 {
   public:
-  DatabaseSynchronizer(const Repositories &repositories);
+  DatabaseSynchronizer(const core::Repositories &repositories);
 
-  void syncEntity(Entity &entity) const;
+  void syncEntity(core::Entity &entity) const;
 
   private:
-  Repositories m_repositories{};
+  core::Repositories m_repositories{};
 };
 
-} // namespace bsgo
+} // namespace bsgalone::server

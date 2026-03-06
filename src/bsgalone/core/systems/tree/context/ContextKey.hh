@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 enum class ContextKey
 {
@@ -13,4 +13,4 @@ enum class ContextKey
 
 auto str(const ContextKey &key) -> std::string;
 
-} // namespace bsgo
+} // namespace bsgalone::core

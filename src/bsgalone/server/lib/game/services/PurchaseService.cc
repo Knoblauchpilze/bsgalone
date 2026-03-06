@@ -2,40 +2,40 @@
 #include "PurchaseService.hh"
 #include "PurchaseUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-PurchaseService::PurchaseService(const Repositories &repositories)
+PurchaseService::PurchaseService(const core::Repositories &repositories)
   : AbstractService("purchase", repositories)
 {}
 
-bool PurchaseService::tryPurchase(const Uuid playerId,
-                                  const Uuid itemId,
-                                  const bsgalone::core::Item &type) const
+bool PurchaseService::tryPurchase(const core::Uuid playerId,
+                                  const core::Uuid itemId,
+                                  const core::Item &type) const
 {
   if (!verifyAffordability(playerId, itemId, type))
   {
-    warn("Failed to purchase item " + str(itemId) + " with type " + str(type) + " for player "
-           + str(playerId),
+    warn("Failed to purchase item " + core::str(itemId) + " with type " + str(type) + " for player "
+           + core::str(playerId),
          "Player can not afford it");
     return false;
   }
   if (!verifyPreconditions(playerId, itemId, type))
   {
-    warn("Failed to purchase item " + str(itemId) + " with type " + str(type) + " for player "
-           + str(playerId),
+    warn("Failed to purchase item " + core::str(itemId) + " with type " + str(type) + " for player "
+           + core::str(playerId),
          "Preconditions are not met");
     return false;
   }
 
   switch (type)
   {
-    case bsgalone::core::Item::WEAPON:
+    case core::Item::WEAPON:
       tryPurchaseWeapon(playerId, itemId);
       break;
-    case bsgalone::core::Item::COMPUTER:
+    case core::Item::COMPUTER:
       tryPurchaseComputer(playerId, itemId);
       break;
-    case bsgalone::core::Item::SHIP:
+    case core::Item::SHIP:
       tryPurchaseShip(playerId, itemId);
       break;
     default:
@@ -47,10 +47,11 @@ bool PurchaseService::tryPurchase(const Uuid playerId,
 }
 
 namespace {
-auto buildPlayerResources(const Uuid playerDbId, const PlayerResourceRepository &repository)
-  -> std::vector<PlayerResourceData>
+auto buildPlayerResources(const core::Uuid playerDbId,
+                          const core::PlayerResourceRepository &repository)
+  -> std::vector<core::PlayerResourceData>
 {
-  std::vector<PlayerResourceData> out;
+  std::vector<core::PlayerResourceData> out;
 
   for (const auto &resource : repository.findAllByPlayer(playerDbId))
   {
@@ -60,10 +61,11 @@ auto buildPlayerResources(const Uuid playerDbId, const PlayerResourceRepository 
   return out;
 }
 
-auto buildWeapons(const WeaponRepository &repository, const WeaponPriceRepository &priceRepository)
-  -> std::vector<WeaponData>
+auto buildWeapons(const core::WeaponRepository &repository,
+                  const core::WeaponPriceRepository &priceRepository)
+  -> std::vector<core::WeaponData>
 {
-  std::vector<WeaponData> out;
+  std::vector<core::WeaponData> out;
 
   for (const auto &id : repository.findAll())
   {
@@ -74,10 +76,11 @@ auto buildWeapons(const WeaponRepository &repository, const WeaponPriceRepositor
   return out;
 }
 
-auto buildComputers(const ComputerRepository &repository,
-                    const ComputerPriceRepository &priceRepository) -> std::vector<ComputerData>
+auto buildComputers(const core::ComputerRepository &repository,
+                    const core::ComputerPriceRepository &priceRepository)
+  -> std::vector<core::ComputerData>
 {
-  std::vector<ComputerData> out;
+  std::vector<core::ComputerData> out;
 
   for (const auto &id : repository.findAll())
   {
@@ -88,11 +91,11 @@ auto buildComputers(const ComputerRepository &repository,
   return out;
 }
 
-auto buildShips(const Faction faction,
-                const ShipRepository &repository,
-                const ShipPriceRepository &priceRepository) -> std::vector<ShipData>
+auto buildShips(const core::Faction faction,
+                const core::ShipRepository &repository,
+                const core::ShipPriceRepository &priceRepository) -> std::vector<core::ShipData>
 {
-  std::vector<ShipData> out;
+  std::vector<core::ShipData> out;
 
   for (const auto &ship : repository.findAllByFaction(faction))
   {
@@ -103,13 +106,13 @@ auto buildShips(const Faction faction,
 }
 } // namespace
 
-bool PurchaseService::verifyAffordability(const Uuid playerId,
-                                          const Uuid itemId,
-                                          const bsgalone::core::Item &type) const
+bool PurchaseService::verifyAffordability(const core::Uuid playerId,
+                                          const core::Uuid itemId,
+                                          const core::Item &type) const
 {
   const auto player = m_repositories.playerRepository->findOneById(playerId);
 
-  AffordabilityData data{
+  core::AffordabilityData data{
     .playerId = playerId,
     .itemId   = itemId,
     .itemType = type,
@@ -127,11 +130,11 @@ bool PurchaseService::verifyAffordability(const Uuid playerId,
   return affordability.canAfford;
 }
 
-bool PurchaseService::verifyPreconditions(const Uuid playerId,
-                                          const Uuid itemId,
-                                          const bsgalone::core::Item &type) const
+bool PurchaseService::verifyPreconditions(const core::Uuid playerId,
+                                          const core::Uuid itemId,
+                                          const core::Item &type) const
 {
-  if (bsgalone::core::Item::SHIP == type)
+  if (core::Item::SHIP == type)
   {
     const auto shipsIds = m_repositories.playerShipRepository->findAllByPlayer(playerId);
     for (const auto &shipId : shipsIds)
@@ -147,31 +150,32 @@ bool PurchaseService::verifyPreconditions(const Uuid playerId,
   return true;
 }
 
-void PurchaseService::tryPurchaseWeapon(const Uuid playerId, const Uuid weaponId) const
+void PurchaseService::tryPurchaseWeapon(const core::Uuid playerId, const core::Uuid weaponId) const
 {
   const auto costs = m_repositories.weaponPriceRepository->findAllByWeapon(weaponId);
   debitResources(playerId, costs);
 
-  PlayerWeapon weapon{
+  core::PlayerWeapon weapon{
     .weapon = weaponId,
     .player = playerId,
   };
   m_repositories.playerWeaponRepository->save(weapon);
 }
 
-void PurchaseService::tryPurchaseComputer(const Uuid playerId, const Uuid computerId) const
+void PurchaseService::tryPurchaseComputer(const core::Uuid playerId,
+                                          const core::Uuid computerId) const
 {
   const auto costs = m_repositories.computerPriceRepository->findAllByComputer(computerId);
   debitResources(playerId, costs);
 
-  PlayerComputer computer{
+  core::PlayerComputer computer{
     .computer = computerId,
     .player   = playerId,
   };
   m_repositories.playerComputerRepository->save(computer);
 }
 
-void PurchaseService::tryPurchaseShip(const Uuid playerId, const Uuid shipId) const
+void PurchaseService::tryPurchaseShip(const core::Uuid playerId, const core::Uuid shipId) const
 {
   const auto costs = m_repositories.shipPriceRepository->findAllByShip(shipId);
   debitResources(playerId, costs);
@@ -179,7 +183,7 @@ void PurchaseService::tryPurchaseShip(const Uuid playerId, const Uuid shipId) co
   const auto player       = m_repositories.playerRepository->findOneById(playerId);
   const auto shipTemplate = m_repositories.shipRepository->findOneById(shipId);
 
-  PlayerShip ship{
+  core::PlayerShip ship{
     .ship        = shipTemplate.id,
     .name        = shipTemplate.name,
     .player      = player.id,
@@ -192,7 +196,7 @@ void PurchaseService::tryPurchaseShip(const Uuid playerId, const Uuid shipId) co
 }
 
 namespace {
-auto findExistingAmount(const std::vector<PlayerResource> &resources, const Uuid toFind)
+auto findExistingAmount(const std::vector<core::PlayerResource> &resources, const core::Uuid toFind)
   -> std::optional<int>
 {
   for (const auto &resource : resources)
@@ -207,8 +211,8 @@ auto findExistingAmount(const std::vector<PlayerResource> &resources, const Uuid
 }
 } // namespace
 
-void PurchaseService::debitResources(const Uuid playerId,
-                                     const std::unordered_map<Uuid, int> &costs) const
+void PurchaseService::debitResources(const core::Uuid playerId,
+                                     const std::unordered_map<core::Uuid, int> &costs) const
 {
   const auto funds = m_repositories.playerResourceRepository->findAllByPlayer(playerId);
 
@@ -221,7 +225,7 @@ void PurchaseService::debitResources(const Uuid playerId,
       sum += *fund;
     }
 
-    PlayerResource data{
+    core::PlayerResource data{
       .player   = playerId,
       .resource = resource,
       .amount   = sum,
@@ -231,4 +235,4 @@ void PurchaseService::debitResources(const Uuid playerId,
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

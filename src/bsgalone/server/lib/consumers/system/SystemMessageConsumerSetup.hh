@@ -5,10 +5,10 @@
 #include "Services.hh"
 #include "SystemQueues.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-void createSystemMessageConsumers(bsgalone::core::IMessageQueue &inputMessagesQueue,
+void createSystemMessageConsumers(core::IMessageQueue &inputMessagesQueue,
                                   SystemQueueMap systemQueues,
-                                  bsgalone::core::IMessageQueue *const outputMessagesQueue);
+                                  core::IMessageQueue *const outputMessagesQueue);
 
 }

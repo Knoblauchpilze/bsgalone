@@ -2,15 +2,15 @@
 #include "AsteroidListMessage.hh"
 #include "SerializationUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 AsteroidListMessage::AsteroidListMessage()
-  : NetworkMessage(bsgalone::core::MessageType::ASTEROID_LIST)
+  : NetworkMessage(MessageType::ASTEROID_LIST)
 {}
 
 AsteroidListMessage::AsteroidListMessage(const Uuid systemDbId,
                                          const std::vector<AsteroidData> &asteroidsData)
-  : NetworkMessage(bsgalone::core::MessageType::ASTEROID_LIST)
+  : NetworkMessage(MessageType::ASTEROID_LIST)
   , m_systemDbId(systemDbId)
   , m_asteroidsData(asteroidsData)
 {}
@@ -27,12 +27,12 @@ auto AsteroidListMessage::getAsteroidsData() const -> const std::vector<Asteroid
 
 auto AsteroidListMessage::serialize(std::ostream &out) const -> std::ostream &
 {
-  core::serialize(out, m_messageType);
-  core::serialize(out, m_clientId);
+  ::core::serialize(out, m_messageType);
+  ::core::serialize(out, m_clientId);
 
-  core::serialize(out, m_systemDbId);
+  ::core::serialize(out, m_systemDbId);
 
-  core::serialize(out, m_asteroidsData);
+  ::core::serialize(out, m_asteroidsData);
 
   return out;
 }
@@ -40,17 +40,17 @@ auto AsteroidListMessage::serialize(std::ostream &out) const -> std::ostream &
 bool AsteroidListMessage::deserialize(std::istream &in)
 {
   bool ok{true};
-  ok &= core::deserialize(in, m_messageType);
-  ok &= core::deserialize(in, m_clientId);
+  ok &= ::core::deserialize(in, m_messageType);
+  ok &= ::core::deserialize(in, m_clientId);
 
-  ok &= core::deserialize(in, m_systemDbId);
+  ok &= ::core::deserialize(in, m_systemDbId);
 
-  ok &= core::deserialize(in, m_asteroidsData);
+  ok &= ::core::deserialize(in, m_asteroidsData);
 
   return ok;
 }
 
-auto AsteroidListMessage::clone() const -> bsgalone::core::IMessagePtr
+auto AsteroidListMessage::clone() const -> IMessagePtr
 {
   auto clone = std::make_unique<AsteroidListMessage>(m_systemDbId, m_asteroidsData);
   clone->copyClientIdIfDefined(*this);
@@ -58,4 +58,4 @@ auto AsteroidListMessage::clone() const -> bsgalone::core::IMessagePtr
   return clone;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

@@ -6,23 +6,23 @@
 #include "DatabaseEntityMapper.hh"
 #include "OutpostData.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
 class OutpostListMessageConsumer : public AbstractGameMessageConsumer
 {
   public:
-  OutpostListMessageConsumer(bsgo::DatabaseEntityMapper &entityMapper,
-                             bsgo::CoordinatorShPtr coordinator);
+  OutpostListMessageConsumer(core::DatabaseEntityMapper &entityMapper,
+                             core::CoordinatorShPtr coordinator);
   ~OutpostListMessageConsumer() override = default;
 
   protected:
-  void onMessageReceivedInternal(const bsgalone::core::IMessage &message) override;
+  void onMessageReceivedInternal(const core::IMessage &message) override;
 
   private:
-  bsgo::DatabaseEntityMapper &m_entityMapper;
-  bsgo::CoordinatorShPtr m_coordinator{};
+  core::DatabaseEntityMapper &m_entityMapper;
+  core::CoordinatorShPtr m_coordinator{};
 
-  void registerOutpost(const bsgo::OutpostData &data) const;
+  void registerOutpost(const core::OutpostData &data) const;
 };
 
-} // namespace pge
+} // namespace bsgalone::client

@@ -6,18 +6,19 @@
 #include "CoreObject.hh"
 #include <memory>
 
-namespace pge {
+namespace bsgalone::client {
 
-class IInputHandler : public core::CoreObject
+class IInputHandler : public ::core::CoreObject
 {
   public:
   IInputHandler(const std::string &name);
   ~IInputHandler() override = default;
 
-  virtual void processUserInput(const controls::State &controls, CoordinateFrame &frame) = 0;
-  virtual void performAction(float x, float y, const controls::State &controls)          = 0;
+  virtual void processUserInput(const pge::controls::State &controls, pge::CoordinateFrame &frame)
+    = 0;
+  virtual void performAction(float x, float y, const pge::controls::State &controls) = 0;
 };
 
 using IInputHandlerPtr = std::unique_ptr<IInputHandler>;
 
-} // namespace pge
+} // namespace bsgalone::client

@@ -4,12 +4,12 @@
 #include "AbstractComponent.hh"
 #include <optional>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class EffectComponent : public AbstractComponent
 {
   public:
-  EffectComponent(const bsgalone::core::ComponentType &type, const chrono::TickDuration &duration);
+  EffectComponent(const ComponentType &type, const chrono::TickDuration &duration);
   ~EffectComponent() override = default;
 
   bool isFinished() const;
@@ -25,4 +25,4 @@ class EffectComponent : public AbstractComponent
 
 using EffectComponentShPtr = std::shared_ptr<EffectComponent>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

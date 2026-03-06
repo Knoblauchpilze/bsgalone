@@ -2,7 +2,7 @@
 #include "App.hh"
 #include "AppDesc.hh"
 #include "Environment.hh"
-#include "GameApp.hh"
+#include "GameRole.hh"
 #include "SafetyNet.hh"
 #include "TopViewFrame.hh"
 #include "log/Locator.hh"
@@ -33,13 +33,13 @@ int main(int /*argc*/, char ** /*argv*/)
   const auto maybeUserName       = core::tryGetEnvironmentVariable<std::string>(USERNAME_ENV_KEY);
   const auto maybePassword       = core::tryGetEnvironmentVariable<std::string>(PASSWORD_ENV_KEY);
   const auto maybeGameRoleString = core::tryGetEnvironmentVariable<std::string>(GAME_ROLE_ENV_KEY);
-  std::optional<bsgo::GameRole> maybeGameRole;
+  std::optional<bsgalone::core::GameRole> maybeGameRole;
   if (maybeGameRoleString)
   {
-    maybeGameRole = bsgo::fromDbGameRole(*maybeGameRoleString);
+    maybeGameRole = bsgalone::core::fromDbGameRole(*maybeGameRoleString);
   }
 
-  pge::App app(desc, port, maybeUserName, maybePassword, maybeGameRole);
+  bsgalone::client::App app(desc, port, maybeUserName, maybePassword, maybeGameRole);
 
   auto gameFunc = [&app]() { app.run(); };
 

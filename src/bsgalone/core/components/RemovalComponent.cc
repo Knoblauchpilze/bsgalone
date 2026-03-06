@@ -1,10 +1,10 @@
 
 #include "RemovalComponent.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 RemovalComponent::RemovalComponent()
-  : AbstractComponent(bsgalone::core::ComponentType::REMOVAL)
+  : AbstractComponent(ComponentType::REMOVAL)
 {}
 
 void RemovalComponent::markForRemoval(const bool toRemove)
@@ -19,4 +19,4 @@ bool RemovalComponent::toBeDeleted() const
 
 void RemovalComponent::update(const chrono::TickData & /*data*/) {}
 
-} // namespace bsgo
+} // namespace bsgalone::core

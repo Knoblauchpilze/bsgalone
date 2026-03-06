@@ -7,24 +7,24 @@
 #include "PlayerShipData.hh"
 #include "Services.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-class EntityAddedMessageConsumer : public bsgalone::core::AbstractMessageConsumer
+class EntityAddedMessageConsumer : public core::AbstractMessageConsumer
 {
   public:
   EntityAddedMessageConsumer(const Services &services,
-                             bsgalone::core::IMessageQueue *const outputMessageQueue);
+                             core::IMessageQueue *const outputMessageQueue);
   ~EntityAddedMessageConsumer() override = default;
 
-  void onEventReceived(const bsgalone::core::IMessage &message) override;
+  void onEventReceived(const core::IMessage &message) override;
 
   private:
   EntityServiceShPtr m_entityService{};
   LoadingServiceShPtr m_loadingService{};
-  bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
+  core::IMessageQueue *const m_outputMessageQueue{};
 
-  void handleShipAdded(const Uuid systemDbId, const PlayerShipData &data) const;
-  void handleAsteroidAdded(const Uuid systemDbId, const AsteroidData &data) const;
+  void handleShipAdded(const core::Uuid systemDbId, const core::PlayerShipData &data) const;
+  void handleAsteroidAdded(const core::Uuid systemDbId, const core::AsteroidData &data) const;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::server

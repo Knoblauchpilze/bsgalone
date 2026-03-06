@@ -35,9 +35,9 @@ class BroadcastMessageListener : public core::IMessageListener, public ::core::C
   void routePlayerMessage(const core::AbstractPlayerMessage &message);
   void routeSystemMessage(const core::AbstractSystemMessage &message);
 
-  void registerPlayer(const bsgo::LoginMessage &message);
-  void unregisterPlayer(const bsgo::LogoutMessage &message);
-  void updatePlayerSystem(const bsgo::JumpMessage &message);
+  void registerPlayer(const core::LoginMessage &message);
+  void unregisterPlayer(const core::LogoutMessage &message);
+  void updatePlayerSystem(const core::JumpMessage &message);
 };
 
 using BroadcastMessageListenerPtr = std::unique_ptr<BroadcastMessageListener>;

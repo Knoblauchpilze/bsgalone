@@ -4,7 +4,7 @@
 #include "IBoundingBox.hh"
 #include <eigen3/Eigen/Eigen>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class CircleBox : public IBoundingBox
 {
@@ -26,4 +26,4 @@ class CircleBox : public IBoundingBox
   float m_squaredRadius{1.0f};
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

@@ -4,12 +4,12 @@
 
 #include "AbstractComponent.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class SyncComponent : public AbstractComponent
 {
   public:
-  SyncComponent(const bsgalone::core::ComponentType type);
+  SyncComponent(const ComponentType type);
   ~SyncComponent() override = default;
 
   bool needsSync() const;
@@ -24,4 +24,4 @@ class SyncComponent : public AbstractComponent
   chrono::TickDuration m_elapsedSinceLastSync{};
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

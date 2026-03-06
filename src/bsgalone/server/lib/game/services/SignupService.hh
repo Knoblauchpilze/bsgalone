@@ -6,26 +6,27 @@
 #include <memory>
 #include <optional>
 
-namespace bsgo {
+namespace bsgalone::server {
 
 class SignupService : public AbstractService
 {
   public:
-  SignupService(const Repositories &repositories);
+  SignupService(const core::Repositories &repositories);
   ~SignupService() override = default;
 
-  auto trySignup(const std::string &name, const std::string &password, const Faction &faction) const
-    -> std::optional<Player>;
+  auto trySignup(const std::string &name,
+                 const std::string &password,
+                 const core::Faction &faction) const -> std::optional<core::Player>;
 
-  auto getPlayerSystemDbId(const Uuid playerDbId) const -> Uuid;
+  auto getPlayerSystemDbId(const core::Uuid playerDbId) const -> core::Uuid;
 
   private:
-  auto registerAccount(const Account &account) const -> Uuid;
-  auto registerPlayer(const Player &player) const -> Uuid;
-  void registerResources(const Player &player) const;
-  void registerShip(const Player &player) const;
+  auto registerAccount(const core::Account &account) const -> core::Uuid;
+  auto registerPlayer(const core::Player &player) const -> core::Uuid;
+  void registerResources(const core::Player &player) const;
+  void registerShip(const core::Player &player) const;
 };
 
 using SignupServicePtr = std::unique_ptr<SignupService>;
 
-} // namespace bsgo
+} // namespace bsgalone::server

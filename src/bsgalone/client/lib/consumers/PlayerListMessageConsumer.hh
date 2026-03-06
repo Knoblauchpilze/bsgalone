@@ -6,23 +6,23 @@
 #include "DatabaseEntityMapper.hh"
 #include "PlayerData.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
 class PlayerListMessageConsumer : public AbstractGameMessageConsumer
 {
   public:
-  PlayerListMessageConsumer(bsgo::DatabaseEntityMapper &entityMapper,
-                            bsgo::CoordinatorShPtr coordinator);
+  PlayerListMessageConsumer(core::DatabaseEntityMapper &entityMapper,
+                            core::CoordinatorShPtr coordinator);
   ~PlayerListMessageConsumer() override = default;
 
   protected:
-  void onMessageReceivedInternal(const bsgalone::core::IMessage &message) override;
+  void onMessageReceivedInternal(const core::IMessage &message) override;
 
   private:
-  bsgo::DatabaseEntityMapper &m_entityMapper;
-  bsgo::CoordinatorShPtr m_coordinator{};
+  core::DatabaseEntityMapper &m_entityMapper;
+  core::CoordinatorShPtr m_coordinator{};
 
-  void registerPlayer(const bsgo::PlayerData &data) const;
+  void registerPlayer(const core::PlayerData &data) const;
 };
 
-} // namespace pge
+} // namespace bsgalone::client

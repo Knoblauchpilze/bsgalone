@@ -3,7 +3,7 @@
 
 #include "AbstractSystem.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class TargetSystem : public AbstractSystem
 {
@@ -21,4 +21,4 @@ class TargetSystem : public AbstractSystem
   void publishTargetMessage(const Entity &entity) const;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

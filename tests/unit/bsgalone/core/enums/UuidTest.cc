@@ -2,7 +2,7 @@
 #include "Uuid.hh"
 #include <gtest/gtest.h>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 TEST(Unit_Bsgalone_Core_Enums_Uuid, toDbId)
 {
@@ -22,4 +22,4 @@ TEST(Unit_Bsgalone_Core_Enums_Uuid, str)
   EXPECT_EQ("10", actual);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

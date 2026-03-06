@@ -6,13 +6,13 @@
 namespace bsgalone::core {
 
 SlotMessage::SlotMessage()
-  : AbstractPlayerMessage(MessageType::SLOT, bsgo::Uuid{0}, bsgo::Uuid{0})
+  : AbstractPlayerMessage(MessageType::SLOT, Uuid{0}, Uuid{0})
 {}
 
-SlotMessage::SlotMessage(const bsgo::Uuid playerDbId,
-                         const bsgo::Uuid systemDbId,
-                         const bsgo::Uuid shipDbId,
-                         const bsgo::Uuid slotDbId,
+SlotMessage::SlotMessage(const Uuid playerDbId,
+                         const Uuid systemDbId,
+                         const Uuid shipDbId,
+                         const Uuid slotDbId,
                          const Slot slotType)
   : AbstractPlayerMessage(MessageType::SLOT, playerDbId, systemDbId)
   , m_shipDbId(shipDbId)
@@ -20,12 +20,12 @@ SlotMessage::SlotMessage(const bsgo::Uuid playerDbId,
   , m_slotType(slotType)
 {}
 
-auto SlotMessage::getShipDbId() const -> bsgo::Uuid
+auto SlotMessage::getShipDbId() const -> Uuid
 {
   return m_shipDbId;
 }
 
-auto SlotMessage::getSlotDbId() const -> bsgo::Uuid
+auto SlotMessage::getSlotDbId() const -> Uuid
 {
   return m_slotDbId;
 }

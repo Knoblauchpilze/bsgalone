@@ -10,7 +10,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 struct ComputerData
 {
@@ -23,7 +23,7 @@ struct ComputerData
   chrono::TickDuration reloadTime{};
 
   std::optional<chrono::TickDuration> duration{};
-  std::optional<std::unordered_set<bsgalone::core::EntityKind>> allowedTargets{};
+  std::optional<std::unordered_set<EntityKind>> allowedTargets{};
   std::optional<float> damageModifier{};
 
   std::unordered_map<Uuid, int> price{};
@@ -37,4 +37,4 @@ struct ComputerData
 auto fromDbComputer(const Computer &computer, const ComputerPriceRepository &repository)
   -> ComputerData;
 
-} // namespace bsgo
+} // namespace bsgalone::core

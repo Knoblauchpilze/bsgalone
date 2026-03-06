@@ -3,7 +3,7 @@
 #include "Coordinator.hh"
 #include "JumpMessage.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 namespace {
 bool isEntityRelevant(const Entity &ent)
 {
@@ -117,4 +117,4 @@ void StatusSystem::handleJumpState(Entity &entity,
   entity.tryMarkForNetworkSync();
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

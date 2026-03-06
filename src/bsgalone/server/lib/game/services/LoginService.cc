@@ -1,13 +1,13 @@
 
 #include "LoginService.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-LoginService::LoginService(const Repositories &repositories)
+LoginService::LoginService(const core::Repositories &repositories)
   : AbstractService("login", repositories)
 {}
 
-auto LoginService::tryLogin(const LoginData &data) const -> std::optional<Uuid>
+auto LoginService::tryLogin(const LoginData &data) const -> std::optional<core::Uuid>
 {
   const auto maybeAccount = m_repositories.accountRepository->findOneByName(data.name);
   if (!maybeAccount)
@@ -23,20 +23,20 @@ auto LoginService::tryLogin(const LoginData &data) const -> std::optional<Uuid>
   }
 
   const auto player = m_repositories.playerRepository->findOneByAccount(maybeAccount->id);
-  PlayerRole playerRole{
+  core::PlayerRole playerRole{
     .player = player.id,
     .role   = data.role,
   };
   m_repositories.playerRoleRepository->save(playerRole);
 
-  info("Player " + data.name + " logged in with role " + str(data.role));
+  info("Player " + data.name + " logged in with role " + core::str(data.role));
 
   return player.id;
 }
 
-auto LoginService::getPlayerSystemDbId(const Uuid playerDbId) const -> Uuid
+auto LoginService::getPlayerSystemDbId(const core::Uuid playerDbId) const -> core::Uuid
 {
   return m_repositories.playerRepository->findSystemByPlayer(playerDbId);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

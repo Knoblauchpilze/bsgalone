@@ -2,14 +2,12 @@
 #include "RoutingMessageConsumer.hh"
 #include "SystemProcessorUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-RoutingMessageConsumer::RoutingMessageConsumer(
-  SystemServiceShPtr systemService,
-  bsgalone::core::IMessageQueue *const outputMessageQueue)
+RoutingMessageConsumer::RoutingMessageConsumer(SystemServiceShPtr systemService,
+                                               core::IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("routing",
-                            {bsgalone::core::MessageType::COMPONENT_SYNC,
-                             bsgalone::core::MessageType::TARGET})
+                            {core::MessageType::COMPONENT_SYNC, core::MessageType::TARGET})
   , m_systemService(std::move(systemService))
   , m_outputMessageQueue(outputMessageQueue)
 {
@@ -23,15 +21,15 @@ RoutingMessageConsumer::RoutingMessageConsumer(
   }
 }
 
-void RoutingMessageConsumer::onEventReceived(const bsgalone::core::IMessage &message)
+void RoutingMessageConsumer::onEventReceived(const core::IMessage &message)
 {
   switch (message.type())
   {
-    case bsgalone::core::MessageType::COMPONENT_SYNC:
-      handleComponentSyncMessage(message.as<ComponentSyncMessage>());
+    case core::MessageType::COMPONENT_SYNC:
+      handleComponentSyncMessage(message.as<core::ComponentSyncMessage>());
       break;
-    case bsgalone::core::MessageType::TARGET:
-      handleTargetMessage(message.as<TargetMessage>());
+    case core::MessageType::TARGET:
+      handleTargetMessage(message.as<core::TargetMessage>());
       break;
     default:
       error("Unsupported message " + str(message.type()) + " to route");
@@ -39,7 +37,8 @@ void RoutingMessageConsumer::onEventReceived(const bsgalone::core::IMessage &mes
   }
 }
 
-void RoutingMessageConsumer::handleComponentSyncMessage(const ComponentSyncMessage &message) const
+void RoutingMessageConsumer::handleComponentSyncMessage(
+  const core::ComponentSyncMessage &message) const
 {
   const auto dbId       = message.getEntityDbId();
   const auto entityKind = message.getEntityKind();
@@ -48,15 +47,16 @@ void RoutingMessageConsumer::handleComponentSyncMessage(const ComponentSyncMessa
 
   if (!maybeSystemDbId)
   {
-    error("Failed to determine system for entity " + str(dbId) + " with kind " + str(entityKind));
+    error("Failed to determine system for entity " + core::str(dbId) + " with kind "
+          + str(entityKind));
   }
 
   auto out = message.clone();
-  out->as<ComponentSyncMessage>().setSystemDbId(*maybeSystemDbId);
+  out->as<core::ComponentSyncMessage>().setSystemDbId(*maybeSystemDbId);
   m_outputMessageQueue->pushEvent(std::move(out));
 }
 
-void RoutingMessageConsumer::handleTargetMessage(const TargetMessage &message) const
+void RoutingMessageConsumer::handleTargetMessage(const core::TargetMessage &message) const
 {
   const auto dbId       = message.getSourceDbId();
   const auto entityKind = message.getSourceKind();
@@ -65,12 +65,13 @@ void RoutingMessageConsumer::handleTargetMessage(const TargetMessage &message) c
 
   if (!maybeSystemDbId)
   {
-    error("Failed to determine system for entity " + str(dbId) + " with kind " + str(entityKind));
+    error("Failed to determine system for entity " + core::str(dbId) + " with kind "
+          + str(entityKind));
   }
 
   auto out = message.clone();
-  out->as<TargetMessage>().setSystemDbId(*maybeSystemDbId);
+  out->as<core::TargetMessage>().setSystemDbId(*maybeSystemDbId);
   m_outputMessageQueue->pushEvent(std::move(out));
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

@@ -4,11 +4,9 @@
 #include "CoreObject.hh"
 #include <memory>
 
-namespace bsgo {
+namespace bsgalone::server {
 
-class Coordinator;
-
-class IService : public core::CoreObject
+class IService : public ::core::CoreObject
 {
   public:
   IService(const std::string &name);
@@ -19,4 +17,4 @@ class IService : public core::CoreObject
 
 using IServicePtr = std::unique_ptr<IService>;
 
-} // namespace bsgo
+} // namespace bsgalone::server

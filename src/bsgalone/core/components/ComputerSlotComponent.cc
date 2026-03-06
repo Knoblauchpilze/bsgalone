@@ -1,10 +1,10 @@
 
 #include "ComputerSlotComponent.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 ComputerSlotComponent::ComputerSlotComponent(const PlayerComputerData &computer)
-  : SlotComponent(bsgalone::core::ComponentType::COMPUTER_SLOT,
+  : SlotComponent(ComponentType::COMPUTER_SLOT,
                   SlotComponentData{.dbId       = computer.dbId,
                                     .offensive  = computer.offensive,
                                     .powerCost  = computer.powerCost,
@@ -20,8 +20,7 @@ auto ComputerSlotComponent::duration() const -> std::optional<chrono::TickDurati
   return m_duration;
 }
 
-auto ComputerSlotComponent::allowedTargets() const
-  -> std::optional<std::unordered_set<bsgalone::core::EntityKind>>
+auto ComputerSlotComponent::allowedTargets() const -> std::optional<std::unordered_set<EntityKind>>
 {
   return m_allowedTargets;
 }
@@ -31,4 +30,4 @@ auto ComputerSlotComponent::damageModifier() const -> std::optional<float>
   return m_damageModifier;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

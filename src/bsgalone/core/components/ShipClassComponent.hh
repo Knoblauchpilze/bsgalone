@@ -4,7 +4,7 @@
 #include "AbstractComponent.hh"
 #include "ShipClass.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class ShipClassComponent : public AbstractComponent
 {
@@ -22,4 +22,4 @@ class ShipClassComponent : public AbstractComponent
 
 using ShipClassComponentShPtr = std::shared_ptr<ShipClassComponent>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

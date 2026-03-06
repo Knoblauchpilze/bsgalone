@@ -20,39 +20,27 @@ void assertMessagesAreEqual(const SlotMessage &actual, const SlotMessage &expect
 
 TEST(Unit_Bsgalone_Core_Messages_Player_SlotMessage, Computer)
 {
-  const SlotMessage expected(bsgo::Uuid{18},
-                             bsgo::Uuid{19},
-                             bsgo::Uuid{14},
-                             bsgo::Uuid{2},
-                             Slot::COMPUTER);
-  SlotMessage actual(bsgo::Uuid{43}, bsgo::Uuid{39}, bsgo::Uuid{36}, bsgo::Uuid{1}, Slot::WEAPON);
+  const SlotMessage expected(Uuid{18}, Uuid{19}, Uuid{14}, Uuid{2}, Slot::COMPUTER);
+  SlotMessage actual(Uuid{43}, Uuid{39}, Uuid{36}, Uuid{1}, Slot::WEAPON);
 
-  bsgo::serializeAndDeserializeMessage(expected, actual);
+  serializeAndDeserializeMessage(expected, actual);
 
   assertMessagesAreEqual(actual, expected);
 }
 
 TEST(Unit_Bsgalone_Core_Messages_Player_SlotMessage, Weapon)
 {
-  const SlotMessage expected(bsgo::Uuid{18},
-                             bsgo::Uuid{19},
-                             bsgo::Uuid{1},
-                             bsgo::Uuid{49},
-                             Slot::WEAPON);
-  SlotMessage actual(bsgo::Uuid{43}, bsgo::Uuid{39}, bsgo::Uuid{57}, bsgo::Uuid{48}, Slot::COMPUTER);
+  const SlotMessage expected(Uuid{18}, Uuid{19}, Uuid{1}, Uuid{49}, Slot::WEAPON);
+  SlotMessage actual(Uuid{43}, Uuid{39}, Uuid{57}, Uuid{48}, Slot::COMPUTER);
 
-  bsgo::serializeAndDeserializeMessage(expected, actual);
+  serializeAndDeserializeMessage(expected, actual);
 
   assertMessagesAreEqual(actual, expected);
 }
 
 TEST(Unit_Bsgalone_Core_Messages_Player_SlotMessage, Clone)
 {
-  const SlotMessage expected(bsgo::Uuid{18},
-                             bsgo::Uuid{19},
-                             bsgo::Uuid{28},
-                             bsgo::Uuid{67},
-                             Slot::WEAPON);
+  const SlotMessage expected(Uuid{18}, Uuid{19}, Uuid{28}, Uuid{67}, Slot::WEAPON);
 
   const auto cloned = expected.clone();
 

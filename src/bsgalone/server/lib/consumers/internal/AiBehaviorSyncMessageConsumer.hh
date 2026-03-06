@@ -5,20 +5,20 @@
 #include "IMessageQueue.hh"
 #include "SystemService.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-class AiBehaviorSyncMessageConsumer : public bsgalone::core::AbstractMessageConsumer
+class AiBehaviorSyncMessageConsumer : public core::AbstractMessageConsumer
 {
   public:
   AiBehaviorSyncMessageConsumer(SystemServiceShPtr systemService,
-                                bsgalone::core::IMessageQueue *const outputMessageQueue);
+                                core::IMessageQueue *const outputMessageQueue);
   ~AiBehaviorSyncMessageConsumer() override = default;
 
-  void onEventReceived(const bsgalone::core::IMessage &message) override;
+  void onEventReceived(const core::IMessage &message) override;
 
   private:
   SystemServiceShPtr m_systemService{};
-  bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
+  core::IMessageQueue *const m_outputMessageQueue{};
 };
 
-} // namespace bsgo
+} // namespace bsgalone::server

@@ -1,7 +1,7 @@
 
 #include "NodeUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 bool moveTowardsTarget(Entity &entity, const Eigen::Vector3f &target)
 {
@@ -20,4 +20,4 @@ bool moveTowardsTarget(Entity &entity, const Eigen::Vector3f &target)
   return false;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

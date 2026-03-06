@@ -1,7 +1,7 @@
 
 #include "AsteroidRepository.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 AsteroidRepository::AsteroidRepository(const DbConnectionShPtr &connection)
   : AbstractRepository("asteroid", connection)
@@ -171,4 +171,4 @@ void AsteroidRepository::fetchLoot(const Uuid asteroid, Asteroid &out) const
   out.loot = record[0].as<int>() > 0;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

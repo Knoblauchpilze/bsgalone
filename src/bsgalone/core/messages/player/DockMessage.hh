@@ -11,13 +11,13 @@ namespace bsgalone::core {
 class DockMessage : public AbstractPlayerMessage
 {
   public:
-  DockMessage(const bsgo::Uuid playerDbId,
-              const bsgo::Uuid systemDbId,
-              const bsgo::Uuid shipDbId,
+  DockMessage(const Uuid playerDbId,
+              const Uuid systemDbId,
+              const Uuid shipDbId,
               const DockTransition transition);
   ~DockMessage() override = default;
 
-  auto getShipDbId() const -> bsgo::Uuid;
+  auto getShipDbId() const -> Uuid;
   auto getTransition() const -> DockTransition;
 
   auto serialize(std::ostream &out) const -> std::ostream & override;
@@ -35,7 +35,7 @@ class DockMessage : public AbstractPlayerMessage
   static auto readFromStream(std::istream &in) -> std::optional<IMessagePtr>;
 
   private:
-  bsgo::Uuid m_shipDbId{};
+  Uuid m_shipDbId{};
   DockTransition m_transition{DockTransition::UNDOCK};
 
   DockMessage();

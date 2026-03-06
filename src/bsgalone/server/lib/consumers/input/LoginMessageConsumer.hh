@@ -8,24 +8,24 @@
 #include "LoginService.hh"
 #include "SystemQueues.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-class LoginMessageConsumer : public bsgalone::core::AbstractMessageConsumer
+class LoginMessageConsumer : public core::AbstractMessageConsumer
 {
   public:
   LoginMessageConsumer(LoginServicePtr loginService,
                        SystemQueueMap systemQueues,
-                       bsgalone::core::IMessageQueue *const outputMessageQueue);
+                       core::IMessageQueue *const outputMessageQueue);
   ~LoginMessageConsumer() override = default;
 
-  void onEventReceived(const bsgalone::core::IMessage &message) override;
+  void onEventReceived(const core::IMessage &message) override;
 
   private:
   LoginServicePtr m_loginService{};
-  bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
+  core::IMessageQueue *const m_outputMessageQueue{};
   LoadingHelper m_helper;
 
-  void handleLogin(const LoginMessage &message) const;
+  void handleLogin(const core::LoginMessage &message) const;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::server

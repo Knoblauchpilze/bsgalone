@@ -2,41 +2,41 @@
 #include "ShipMessageConsumer.hh"
 #include "VectorUtils.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
-ShipMessageConsumer::ShipMessageConsumer(const bsgo::DatabaseEntityMapper &entityMapper,
-                                         bsgo::CoordinatorShPtr coordinator)
+ShipMessageConsumer::ShipMessageConsumer(const core::DatabaseEntityMapper &entityMapper,
+                                         core::CoordinatorShPtr coordinator)
   : AbstractMessageConsumer("ship",
-                            {bsgalone::core::MessageType::COMPONENT_SYNC,
-                             bsgalone::core::MessageType::JUMP_REQUESTED,
-                             bsgalone::core::MessageType::JUMP_CANCELLED,
-                             bsgalone::core::MessageType::TARGET})
+                            {core::MessageType::COMPONENT_SYNC,
+                             core::MessageType::JUMP_REQUESTED,
+                             core::MessageType::JUMP_CANCELLED,
+                             core::MessageType::TARGET})
   , m_entityMapper(entityMapper)
   , m_coordinator(std::move(coordinator))
 {}
 
-void ShipMessageConsumer::onEventReceived(const bsgalone::core::IMessage &message)
+void ShipMessageConsumer::onEventReceived(const core::IMessage &message)
 {
   switch (message.type())
   {
-    case bsgalone::core::MessageType::COMPONENT_SYNC:
-      handleComponentSync(message.as<bsgo::ComponentSyncMessage>());
+    case core::MessageType::COMPONENT_SYNC:
+      handleComponentSync(message.as<core::ComponentSyncMessage>());
       break;
-    case bsgalone::core::MessageType::JUMP_REQUESTED:
-      handleJumpRequested(message.as<bsgalone::core::JumpRequestedMessage>());
+    case core::MessageType::JUMP_REQUESTED:
+      handleJumpRequested(message.as<core::JumpRequestedMessage>());
       break;
-    case bsgalone::core::MessageType::JUMP_CANCELLED:
-      handleJumpCancelled(message.as<bsgalone::core::JumpCancelledMessage>());
+    case core::MessageType::JUMP_CANCELLED:
+      handleJumpCancelled(message.as<core::JumpCancelledMessage>());
       break;
-    case bsgalone::core::MessageType::TARGET:
-      handleTargetAcquired(message.as<bsgo::TargetMessage>());
+    case core::MessageType::TARGET:
+      handleTargetAcquired(message.as<core::TargetMessage>());
       break;
     default:
       error("Unsupported message type " + str(message.type()));
   }
 }
 
-void ShipMessageConsumer::handleComponentSync(const bsgo::ComponentSyncMessage &message) const
+void ShipMessageConsumer::handleComponentSync(const core::ComponentSyncMessage &message) const
 {
   if (!m_entityMapper.doesPlayerHaveAnEntity())
   {
@@ -47,61 +47,58 @@ void ShipMessageConsumer::handleComponentSync(const bsgo::ComponentSyncMessage &
   const auto entityKind = message.getEntityKind();
   switch (entityKind)
   {
-    case bsgalone::core::EntityKind::SHIP:
+    case core::EntityKind::SHIP:
       handleShipComponentsSync(message);
       break;
-    case bsgalone::core::EntityKind::ASTEROID:
+    case core::EntityKind::ASTEROID:
       handleAsteroidComponentsSync(message);
       break;
-    case bsgalone::core::EntityKind::OUTPOST:
+    case core::EntityKind::OUTPOST:
       handleOutpostComponentsSync(message);
       break;
     default:
-      error("Unsupported entity kind " + bsgalone::core::str(entityKind)
-            + " in component sync message");
+      error("Unsupported entity kind " + core::str(entityKind) + " in component sync message");
       break;
   }
 }
 
-void ShipMessageConsumer::handleJumpRequested(
-  const bsgalone::core::JumpRequestedMessage &message) const
+void ShipMessageConsumer::handleJumpRequested(const core::JumpRequestedMessage &message) const
 {
   const auto shipDbId = message.getShipDbId();
 
   const auto maybeShip = m_entityMapper.tryGetShipEntityId(shipDbId);
   if (!maybeShip)
   {
-    warn("Failed to process jump requested message for ship " + bsgo::str(shipDbId));
+    warn("Failed to process jump requested message for ship " + core::str(shipDbId));
     return;
   }
 
   auto ship         = m_coordinator->getEntity(*maybeShip);
   const auto status = ship.statusComp().status();
 
-  const auto newStatus = bsgo::updateStatusForJump(status);
+  const auto newStatus = core::updateStatusForJump(status);
   ship.statusComp().setStatus(newStatus);
 }
 
-void ShipMessageConsumer::handleJumpCancelled(
-  const bsgalone::core::JumpCancelledMessage &message) const
+void ShipMessageConsumer::handleJumpCancelled(const core::JumpCancelledMessage &message) const
 {
   const auto shipDbId = message.getShipDbId();
 
   const auto maybeShip = m_entityMapper.tryGetShipEntityId(shipDbId);
   if (!maybeShip)
   {
-    warn("Failed to process jump cancelled message for ship " + bsgo::str(shipDbId));
+    warn("Failed to process jump cancelled message for ship " + core::str(shipDbId));
     return;
   }
 
   auto ship         = m_coordinator->getEntity(*maybeShip);
   const auto status = ship.statusComp().status();
 
-  const auto newStatus = bsgo::updateStatusAfterJumpCancellation(status);
+  const auto newStatus = core::updateStatusAfterJumpCancellation(status);
   ship.statusComp().setStatus(newStatus);
 }
 
-void ShipMessageConsumer::handleTargetAcquired(const bsgo::TargetMessage &message) const
+void ShipMessageConsumer::handleTargetAcquired(const core::TargetMessage &message) const
 {
   if (!m_entityMapper.doesPlayerHaveAnEntity())
   {
@@ -115,7 +112,7 @@ void ShipMessageConsumer::handleTargetAcquired(const bsgo::TargetMessage &messag
                                                                  message.getSourceKind());
   if (!maybeSourceEntityId)
   {
-    error("Failed to process target updated for " + bsgo::str(message.getSourceDbId()),
+    error("Failed to process target updated for " + core::str(message.getSourceDbId()),
           "No entity attached to source");
   }
 
@@ -130,7 +127,7 @@ void ShipMessageConsumer::handleTargetAcquired(const bsgo::TargetMessage &messag
                                                                    *maybeTargetKind);
     if (!maybeTargetEntityId)
     {
-      error("Failed to process target updated for " + bsgo::str(message.getSourceDbId()),
+      error("Failed to process target updated for " + core::str(message.getSourceDbId()),
             "No entity attached to target");
     }
     targetComp.setTarget(*maybeTargetEntityId);
@@ -144,7 +141,7 @@ void ShipMessageConsumer::handleTargetAcquired(const bsgo::TargetMessage &messag
 namespace {
 constexpr auto DISTANCE_THRESHOLD_FOR_FORCED_UPDATE = 1.0f;
 
-bool positionDifferenceIsBiggerThanThreshold(const bsgo::Entity &ship,
+bool positionDifferenceIsBiggerThanThreshold(const core::Entity &ship,
                                              const Eigen::Vector3f &newPosition)
 {
   const Eigen::Vector3f currentPosition = ship.transformComp().position();
@@ -154,14 +151,14 @@ bool positionDifferenceIsBiggerThanThreshold(const bsgo::Entity &ship,
 }
 } // namespace
 
-void ShipMessageConsumer::handleShipComponentsSync(const bsgo::ComponentSyncMessage &message) const
+void ShipMessageConsumer::handleShipComponentsSync(const core::ComponentSyncMessage &message) const
 {
   const auto shipDbId = message.getEntityDbId();
 
   const auto maybeShip = m_entityMapper.tryGetShipEntityId(shipDbId);
   if (!maybeShip)
   {
-    warn("Failed to process component sync message for ship " + bsgo::str(shipDbId));
+    warn("Failed to process component sync message for ship " + core::str(shipDbId));
     return;
   }
 
@@ -175,7 +172,7 @@ void ShipMessageConsumer::handleShipComponentsSync(const bsgo::ComponentSyncMess
 
     if (oldStatus != *maybeShipStatus)
     {
-      info("Setting status of " + bsgo::str(shipDbId) + " to " + bsgo::str(*maybeShipStatus));
+      info("Setting status of " + core::str(shipDbId) + " to " + core::str(*maybeShipStatus));
     }
   }
 
@@ -188,13 +185,13 @@ void ShipMessageConsumer::handleShipComponentsSync(const bsgo::ComponentSyncMess
     {
       if (isPlayerShipUpdate)
       {
-        warn("Overriding player ship position with " + bsgo::str(*maybeShipPosition)
+        warn("Overriding player ship position with " + core::str(*maybeShipPosition)
              + " as it's too different from local position "
-             + bsgo::str(ship.transformComp().position()));
+             + core::str(ship.transformComp().position()));
       }
 
-      verbose("override position from " + bsgo::str(ship.transformComp().position()) + " with "
-              + bsgo::str(*maybeShipPosition));
+      verbose("override position from " + core::str(ship.transformComp().position()) + " with "
+              + core::str(*maybeShipPosition));
 
       ship.transformComp().overridePosition(*maybeShipPosition);
     }
@@ -203,8 +200,8 @@ void ShipMessageConsumer::handleShipComponentsSync(const bsgo::ComponentSyncMess
   const auto maybeShipSpeed = message.tryGetSpeed();
   if (maybeShipSpeed)
   {
-    verbose("override speed from " + bsgo::str(ship.velocityComp().speed()) + " with "
-            + bsgo::str(*maybeShipSpeed));
+    verbose("override speed from " + core::str(ship.velocityComp().speed()) + " with "
+            + core::str(*maybeShipSpeed));
 
     ship.velocityComp().overrideSpeed(*maybeShipSpeed);
   }
@@ -212,8 +209,8 @@ void ShipMessageConsumer::handleShipComponentsSync(const bsgo::ComponentSyncMess
   const auto maybeShipAcceleration = message.tryGetAcceleration();
   if (maybeShipAcceleration)
   {
-    verbose("override acceleration from " + bsgo::str(ship.velocityComp().acceleration()) + " with "
-            + bsgo::str(*maybeShipAcceleration));
+    verbose("override acceleration from " + core::str(ship.velocityComp().acceleration()) + " with "
+            + core::str(*maybeShipAcceleration));
     ship.velocityComp().overrideAcceleration(*maybeShipAcceleration);
   }
 
@@ -230,14 +227,14 @@ void ShipMessageConsumer::handleShipComponentsSync(const bsgo::ComponentSyncMess
   }
 }
 
-void ShipMessageConsumer::handleAsteroidComponentsSync(const bsgo::ComponentSyncMessage &message) const
+void ShipMessageConsumer::handleAsteroidComponentsSync(const core::ComponentSyncMessage &message) const
 {
   const auto asteroidDbId = message.getEntityDbId();
 
   const auto maybeAsteroid = m_entityMapper.tryGetAsteroidEntityId(asteroidDbId);
   if (!maybeAsteroid)
   {
-    warn("Failed to process component sync message for asteroid " + bsgo::str(asteroidDbId));
+    warn("Failed to process component sync message for asteroid " + core::str(asteroidDbId));
     return;
   }
 
@@ -250,14 +247,14 @@ void ShipMessageConsumer::handleAsteroidComponentsSync(const bsgo::ComponentSync
   }
 }
 
-void ShipMessageConsumer::handleOutpostComponentsSync(const bsgo::ComponentSyncMessage &message) const
+void ShipMessageConsumer::handleOutpostComponentsSync(const core::ComponentSyncMessage &message) const
 {
   const auto outpostDbId = message.getEntityDbId();
 
   const auto maybeOutpost = m_entityMapper.tryGetOutpostEntityId(outpostDbId);
   if (!maybeOutpost)
   {
-    warn("Failed to process component sync message for outpost " + bsgo::str(outpostDbId));
+    warn("Failed to process component sync message for outpost " + core::str(outpostDbId));
     return;
   }
 
@@ -276,4 +273,4 @@ void ShipMessageConsumer::handleOutpostComponentsSync(const bsgo::ComponentSyncM
   }
 }
 
-} // namespace pge
+} // namespace bsgalone::client

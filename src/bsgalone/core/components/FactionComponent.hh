@@ -4,7 +4,7 @@
 #include "AbstractComponent.hh"
 #include "Faction.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class FactionComponent : public AbstractComponent
 {
@@ -22,4 +22,4 @@ class FactionComponent : public AbstractComponent
 
 using FactionComponentShPtr = std::shared_ptr<FactionComponent>;
 
-} // namespace bsgo
+} // namespace bsgalone::core

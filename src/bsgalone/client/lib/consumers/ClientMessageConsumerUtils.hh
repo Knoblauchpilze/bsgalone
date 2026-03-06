@@ -5,10 +5,10 @@
 #include "DatabaseEntityMapper.hh"
 #include "IMessageQueue.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
-void createMessageConsumers(bsgalone::core::IMessageQueue &inputMessagesQueue,
-                            bsgo::DatabaseEntityMapper &entityMapper,
-                            const bsgo::CoordinatorShPtr &coordinator);
+void createMessageConsumers(core::IMessageQueue &inputMessagesQueue,
+                            core::DatabaseEntityMapper &entityMapper,
+                            const core::CoordinatorShPtr &coordinator);
 
 }

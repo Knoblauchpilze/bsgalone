@@ -1,7 +1,7 @@
 
 #include "ViewConsumerProxy.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
 ViewConsumerProxy::ViewConsumerProxy(AbstractView &view)
   : AbstractMessageConsumer("proxy", view.relevantMessageTypes())
@@ -10,9 +10,9 @@ ViewConsumerProxy::ViewConsumerProxy(AbstractView &view)
   addModule(view.getName());
 }
 
-void ViewConsumerProxy::onEventReceived(const bsgalone::core::IMessage &message)
+void ViewConsumerProxy::onEventReceived(const core::IMessage &message)
 {
   m_view.onEventReceived(message);
 }
 
-} // namespace pge
+} // namespace bsgalone::client

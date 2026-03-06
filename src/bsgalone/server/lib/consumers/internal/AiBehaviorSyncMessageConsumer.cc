@@ -2,12 +2,12 @@
 #include "AiBehaviorSyncMessageConsumer.hh"
 #include "AiBehaviorSyncMessage.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
 AiBehaviorSyncMessageConsumer::AiBehaviorSyncMessageConsumer(
   SystemServiceShPtr systemService,
-  bsgalone::core::IMessageQueue *const outputMessageQueue)
-  : AbstractMessageConsumer("jump", {bsgalone::core::MessageType::AI_BEHAVIOR_SYNC})
+  core::IMessageQueue *const outputMessageQueue)
+  : AbstractMessageConsumer("jump", {core::MessageType::AI_BEHAVIOR_SYNC})
   , m_systemService(std::move(systemService))
   , m_outputMessageQueue(outputMessageQueue)
 {
@@ -21,30 +21,30 @@ AiBehaviorSyncMessageConsumer::AiBehaviorSyncMessageConsumer(
   }
 }
 
-void AiBehaviorSyncMessageConsumer::onEventReceived(const bsgalone::core::IMessage &message)
+void AiBehaviorSyncMessageConsumer::onEventReceived(const core::IMessage &message)
 {
-  const auto &aiSync = message.as<AiBehaviorSyncMessage>();
+  const auto &aiSync = message.as<core::AiBehaviorSyncMessage>();
 
   const auto shipDbId = aiSync.getShipDbId();
 
   const auto maybeTarget = aiSync.tryGetTargetIndex();
   if (maybeTarget && !m_systemService->registerAiBehaviorMilestone(shipDbId, *maybeTarget))
   {
-    warn("Failed to process AI behavior sync message for " + str(shipDbId));
+    warn("Failed to process AI behavior sync message for " + core::str(shipDbId));
     return;
   }
 
   const auto maybeSystemDbId = m_systemService->tryGetSystemDbIdForShip(shipDbId);
   if (!maybeSystemDbId)
   {
-    warn("Failed to process AI behavior sync message for " + str(shipDbId),
+    warn("Failed to process AI behavior sync message for " + core::str(shipDbId),
          "Ship is not registered in any system");
     return;
   }
 
   auto out = aiSync.clone();
-  out->as<AiBehaviorSyncMessage>().setSystemDbId(*maybeSystemDbId);
+  out->as<core::AiBehaviorSyncMessage>().setSystemDbId(*maybeSystemDbId);
   m_outputMessageQueue->pushEvent(std::move(out));
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

@@ -4,7 +4,7 @@
 #include "PlayerShipRepository.hh"
 #include <string>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 bool isShipActive(const PlayerShip &ship);
 
@@ -24,4 +24,4 @@ auto canShipJump(const PlayerShip &ship, const Uuid newSystem) -> JumpCompletion
 auto canShipCompleteJump(const PlayerShip &ship) -> JumpCompletionStatus;
 auto canShipCancelJump(const PlayerShip &ship) -> JumpCompletionStatus;
 
-} // namespace bsgo
+} // namespace bsgalone::core

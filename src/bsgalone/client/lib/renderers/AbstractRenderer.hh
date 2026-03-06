@@ -4,13 +4,13 @@
 #include "CoreObject.hh"
 #include "IRenderer.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
-class AbstractRenderer : public bsgalone::client::IRenderer, public core::CoreObject
+class AbstractRenderer : public bsgalone::client::IRenderer, public ::core::CoreObject
 {
   public:
   AbstractRenderer(const std::string &name);
   ~AbstractRenderer() override = default;
 };
 
-} // namespace pge
+} // namespace bsgalone::client

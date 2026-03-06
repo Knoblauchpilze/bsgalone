@@ -13,18 +13,18 @@
 #include <optional>
 #include <unordered_map>
 
-namespace pge {
+namespace bsgalone::client {
 
 class ShipView : public AbstractView
 {
   public:
   ShipView(GameSessionShPtr gameSession,
-           bsgo::CoordinatorShPtr coordinator,
-           bsgalone::core::IMessageQueue *const outputMessageQueue);
+           core::CoordinatorShPtr coordinator,
+           core::IMessageQueue *const outputMessageQueue);
   ~ShipView() override = default;
 
-  auto getPlayerShip() const -> bsgo::Entity;
-  void setPlayerShipEntityId(const std::optional<bsgo::Uuid> ship);
+  auto getPlayerShip() const -> core::Entity;
+  void setPlayerShipEntityId(const std::optional<core::Uuid> ship);
 
   bool isReady() const noexcept override;
   void reset() override;
@@ -32,10 +32,10 @@ class ShipView : public AbstractView
   auto gameSession() const -> const GameSession &;
 
   bool hasTarget() const;
-  auto getPlayerTarget() const -> std::optional<bsgo::Entity>;
+  auto getPlayerTarget() const -> std::optional<core::Entity>;
 
-  auto getEntityName(const bsgo::Entity &entity) const -> std::string;
-  auto getShipsWithin(const bsgo::IBoundingBox &bbox) const -> std::vector<bsgo::Entity>;
+  auto getEntityName(const core::Entity &entity) const -> std::string;
+  auto getShipsWithin(const core::IBoundingBox &bbox) const -> std::vector<core::Entity>;
 
   auto distanceToTarget() const -> float;
   auto getWeaponsCount() const -> int;
@@ -46,7 +46,7 @@ class ShipView : public AbstractView
 
   void tryAcquireTarget(const Eigen::Vector3f &position) const;
 
-  void setJumpSystem(const bsgo::Uuid system);
+  void setJumpSystem(const core::Uuid system);
   void clearJumpSystem();
   bool isJumping() const;
   struct JumpData
@@ -60,19 +60,19 @@ class ShipView : public AbstractView
   bool isDead() const;
 
   protected:
-  void handleMessageInternal(const bsgalone::core::IMessage &message) override;
+  void handleMessageInternal(const core::IMessage &message) override;
 
   private:
   GameSessionShPtr m_gameSession{};
-  bsgo::CoordinatorShPtr m_coordinator{};
-  std::vector<bsgo::SystemData> m_systems{};
-  bsgalone::core::IMessageQueue *const m_outputMessageQueue{};
-  std::optional<bsgo::Uuid> m_playerShipEntityId{};
-  std::optional<bsgo::Uuid> m_systemToJumpTo{};
+  core::CoordinatorShPtr m_coordinator{};
+  std::vector<core::SystemData> m_systems{};
+  core::IMessageQueue *const m_outputMessageQueue{};
+  std::optional<core::Uuid> m_playerShipEntityId{};
+  std::optional<core::Uuid> m_systemToJumpTo{};
 
   void checkPlayerShipEntityIdExists() const;
 };
 
 using ShipViewShPtr = std::shared_ptr<ShipView>;
 
-} // namespace pge
+} // namespace bsgalone::client

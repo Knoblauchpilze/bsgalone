@@ -2,7 +2,7 @@
 #include "Faction.hh"
 #include <stdexcept>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 auto str(const Faction faction) -> std::string
 {
@@ -36,4 +36,4 @@ auto fromDbFaction(const std::string &dbFaction) -> Faction
   throw std::invalid_argument("Unknown faction \"" + dbFaction + "\"");
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

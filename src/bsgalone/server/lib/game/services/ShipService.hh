@@ -8,55 +8,56 @@
 #include <memory>
 #include <optional>
 
-namespace bsgo {
+namespace bsgalone::server {
 
 class ShipService : public AbstractService
 {
   public:
-  ShipService(const Repositories &repositories,
-              CoordinatorShPtr coordinator,
-              DatabaseEntityMapper &entityMapper);
+  ShipService(const core::Repositories &repositories,
+              core::CoordinatorShPtr coordinator,
+              core::DatabaseEntityMapper &entityMapper);
   ~ShipService() override = default;
 
-  bool trySelectShip(const Uuid shipDbId) const;
-  bool tryDock(const Uuid shipDbId) const;
-  bool tryReturnToOutpost(const Uuid shipDbId) const;
+  bool trySelectShip(const core::Uuid shipDbId) const;
+  bool tryDock(const core::Uuid shipDbId) const;
+  bool tryReturnToOutpost(const core::Uuid shipDbId) const;
 
-  bool accelerateShip(const Uuid shipDbId, const Eigen::Vector3f &acceleration) const;
+  bool accelerateShip(const core::Uuid shipDbId, const Eigen::Vector3f &acceleration) const;
 
-  auto getPlayerDbIdForShip(const Uuid shipDbId) -> Uuid;
-  auto getSystemDbIdForShip(const Uuid shipDbId) const -> Uuid;
+  auto getPlayerDbIdForShip(const core::Uuid shipDbId) -> core::Uuid;
+  auto getSystemDbIdForShip(const core::Uuid shipDbId) const -> core::Uuid;
 
   struct TargetAcquiringData
   {
-    Uuid sourceDbId{};
-    bsgalone::core::EntityKind sourceKind{};
+    core::Uuid sourceDbId{};
+    core::EntityKind sourceKind{};
 
     Eigen::Vector3f position{};
 
-    std::optional<Uuid> targetDbIdHint{};
-    std::optional<bsgalone::core::EntityKind> targetKindHint{};
+    std::optional<core::Uuid> targetDbIdHint{};
+    std::optional<core::EntityKind> targetKindHint{};
   };
   struct AcquiringResult
   {
     bool success{false};
-    std::optional<bsgalone::core::EntityKind> targetKind{};
-    std::optional<Uuid> targetDbId{};
+    std::optional<core::EntityKind> targetKind{};
+    std::optional<core::Uuid> targetDbId{};
   };
   auto tryAcquireTarget(const TargetAcquiringData &data) const -> AcquiringResult;
 
   private:
-  CoordinatorShPtr m_coordinator{};
-  DatabaseEntityMapper &m_entityMapper;
+  core::CoordinatorShPtr m_coordinator{};
+  core::DatabaseEntityMapper &m_entityMapper;
 
-  void switchActiveShip(PlayerShip currentActiveShip, PlayerShip newActiveShip) const;
-  void switchShipSystem(const PlayerShip &currentActiveShip, const PlayerShip &newActiveShip) const;
+  void switchActiveShip(core::PlayerShip currentActiveShip, core::PlayerShip newActiveShip) const;
+  void switchShipSystem(const core::PlayerShip &currentActiveShip,
+                        const core::PlayerShip &newActiveShip) const;
 
-  void updateEntityTarget(Entity &entity, const std::optional<Uuid> &targetId) const;
+  void updateEntityTarget(core::Entity &entity, const std::optional<core::Uuid> &targetId) const;
 
-  bool isSelfSelection(const TargetAcquiringData &data, const Entity &target) const;
+  bool isSelfSelection(const TargetAcquiringData &data, const core::Entity &target) const;
 };
 
 using ShipServiceShPtr = std::shared_ptr<ShipService>;
 
-} // namespace bsgo
+} // namespace bsgalone::server

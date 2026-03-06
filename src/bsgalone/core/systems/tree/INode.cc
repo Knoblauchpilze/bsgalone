@@ -1,12 +1,12 @@
 
 #include "INode.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 INode::INode(const std::string &name)
-  : core::CoreObject(name)
+  : ::core::CoreObject(name)
 {
   setService("node");
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

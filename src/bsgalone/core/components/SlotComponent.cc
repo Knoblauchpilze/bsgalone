@@ -1,10 +1,9 @@
 
 #include "SlotComponent.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
-SlotComponent::SlotComponent(const bsgalone::core::ComponentType &type,
-                             const SlotComponentData &data)
+SlotComponent::SlotComponent(const ComponentType &type, const SlotComponentData &data)
   : AbstractComponent(type)
   , m_dbId(data.dbId)
   , m_offensive(data.offensive)
@@ -130,4 +129,4 @@ void SlotComponent::handleReload(const chrono::TickData &data)
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

@@ -3,17 +3,17 @@
 #include "CircleBox.hh"
 #include "Coordinator.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 AsteroidDataSource::AsteroidDataSource()
-  : core::CoreObject("bsgo")
+  : ::core::CoreObject("bsgo")
 {
   setService("data");
   addModule("asteroid");
 }
 
 AsteroidDataSource::AsteroidDataSource(const Repositories &repositories)
-  : core::CoreObject("bsgo")
+  : ::core::CoreObject("bsgo")
   , m_repositories(repositories)
 {
   setService("data");
@@ -41,7 +41,7 @@ void AsteroidDataSource::registerAsteroid(Coordinator &coordinator,
                                           DatabaseEntityMapper &entityMapper) const
 
 {
-  const auto asteroidEntityId = coordinator.createEntity(bsgalone::core::EntityKind::ASTEROID);
+  const auto asteroidEntityId = coordinator.createEntity(EntityKind::ASTEROID);
 
   coordinator.addDbId(asteroidEntityId, data.dbId);
   auto box = std::make_unique<CircleBox>(data.position, data.radius);
@@ -54,7 +54,7 @@ void AsteroidDataSource::registerAsteroid(Coordinator &coordinator,
     coordinator.addLoot(asteroidEntityId);
     coordinator.addResourceComponent(asteroidEntityId, *data.resource, *data.amount);
   }
-  coordinator.addNetworkSync(asteroidEntityId, {bsgalone::core::ComponentType::HEALTH});
+  coordinator.addNetworkSync(asteroidEntityId, {ComponentType::HEALTH});
   coordinator.addDbSync(asteroidEntityId);
 
   entityMapper.registerAsteroid(data.dbId, asteroidEntityId);
@@ -84,4 +84,4 @@ void AsteroidDataSource::registerAsteroid(Coordinator &coordinator,
   registerAsteroid(coordinator, out, entityMapper);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

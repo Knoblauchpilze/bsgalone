@@ -4,25 +4,25 @@
 #include "AbstractService.hh"
 #include <memory>
 
-namespace bsgo {
+namespace bsgalone::server {
 
 class LoginService : public AbstractService
 {
   public:
-  LoginService(const Repositories &repositories);
+  LoginService(const core::Repositories &repositories);
   ~LoginService() override = default;
 
   struct LoginData
   {
     std::string name{};
     std::string password{};
-    GameRole role{};
+    core::GameRole role{};
   };
-  auto tryLogin(const LoginData &data) const -> std::optional<Uuid>;
+  auto tryLogin(const LoginData &data) const -> std::optional<core::Uuid>;
 
-  auto getPlayerSystemDbId(const Uuid playerDbId) const -> Uuid;
+  auto getPlayerSystemDbId(const core::Uuid playerDbId) const -> core::Uuid;
 };
 
 using LoginServicePtr = std::unique_ptr<LoginService>;
 
-} // namespace bsgo
+} // namespace bsgalone::server

@@ -1,7 +1,7 @@
 
 #include "AccountRepository.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 AccountRepository::AccountRepository(const DbConnectionShPtr &connection)
   : AbstractRepository("account", connection)
@@ -86,4 +86,4 @@ void AccountRepository::save(const Account &account)
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

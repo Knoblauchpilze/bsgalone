@@ -5,13 +5,13 @@
 #include "SlotComponent.hh"
 #include "UiPictureMenu.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
-constexpr auto bgForMissingComponent() -> Color;
-auto bgColorFromFiringState(const bsgo::SlotComponent &component) -> Color;
+constexpr auto bgForMissingComponent() -> pge::Color;
+auto bgColorFromFiringState(const core::SlotComponent &component) -> pge::Color;
 
-void resetPictureMenuToDefault(ui::UiPictureMenu &menu, const Color &defaultColor);
+void resetPictureMenuToDefault(ui::UiPictureMenu &menu, const pge::Color &defaultColor);
 
-} // namespace pge
+} // namespace bsgalone::client
 
 #include "SlotComponentUtils.hxx"

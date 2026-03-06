@@ -4,9 +4,9 @@
 #include "NetworkMessage.hh"
 #include "SystemTickData.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
-class SystemDataMessage : public bsgalone::core::NetworkMessage
+class SystemDataMessage : public NetworkMessage
 {
   public:
   SystemDataMessage();
@@ -18,10 +18,10 @@ class SystemDataMessage : public bsgalone::core::NetworkMessage
   auto serialize(std::ostream &out) const -> std::ostream & override;
   bool deserialize(std::istream &in) override;
 
-  auto clone() const -> bsgalone::core::IMessagePtr override;
+  auto clone() const -> IMessagePtr override;
 
   private:
   SystemTickData m_tickData{};
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

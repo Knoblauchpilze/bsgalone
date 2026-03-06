@@ -4,7 +4,7 @@
 #include <iomanip>
 #include <sstream>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 auto floatToStr(const float value, const int decimals) -> std::string
 {
@@ -35,4 +35,4 @@ auto capitalizeString(const std::string &s, const bool onlyFirstLetter) -> std::
   return out;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

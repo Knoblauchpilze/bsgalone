@@ -56,13 +56,13 @@ void BroadcastMessageListener::forwardMessageToClientManager(const core::IMessag
   switch (message.type())
   {
     case core::MessageType::LOGIN:
-      registerPlayer(message.as<bsgo::LoginMessage>());
+      registerPlayer(message.as<core::LoginMessage>());
       break;
     case core::MessageType::LOGOUT:
-      unregisterPlayer(message.as<bsgo::LogoutMessage>());
+      unregisterPlayer(message.as<core::LogoutMessage>());
       break;
     case core::MessageType::JUMP:
-      updatePlayerSystem(message.as<bsgo::JumpMessage>());
+      updatePlayerSystem(message.as<core::JumpMessage>());
       break;
     default:
       error("Unsupported message type " + str(message.type()));
@@ -102,7 +102,7 @@ void BroadcastMessageListener::routeSystemMessage(const core::AbstractSystemMess
   }
 }
 
-void BroadcastMessageListener::registerPlayer(const bsgo::LoginMessage &message)
+void BroadcastMessageListener::registerPlayer(const core::LoginMessage &message)
 {
   const auto maybeClientId   = message.tryGetClientId();
   const auto maybePlayerDbId = message.tryGetPlayerDbId();
@@ -124,7 +124,7 @@ void BroadcastMessageListener::registerPlayer(const bsgo::LoginMessage &message)
   m_clientManager->registerPlayer(*maybeClientId, *maybePlayerDbId, *maybeSystemDbId);
 }
 
-void BroadcastMessageListener::unregisterPlayer(const bsgo::LogoutMessage &message)
+void BroadcastMessageListener::unregisterPlayer(const core::LogoutMessage &message)
 {
   const auto playerDbId = message.getPlayerDbId();
 
@@ -137,7 +137,7 @@ void BroadcastMessageListener::unregisterPlayer(const bsgo::LogoutMessage &messa
   }
 }
 
-void BroadcastMessageListener::updatePlayerSystem(const bsgo::JumpMessage &message)
+void BroadcastMessageListener::updatePlayerSystem(const core::JumpMessage &message)
 {
   m_clientManager->updateSystemForPlayer(message.getPlayerDbId(),
                                          message.getDestinationSystemDbId());

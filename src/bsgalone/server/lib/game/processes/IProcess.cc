@@ -1,12 +1,12 @@
 
 #include "IProcess.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
 IProcess::IProcess(const std::string &name)
-  : core::CoreObject(name)
+  : ::core::CoreObject(name)
 {
   setService("process");
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

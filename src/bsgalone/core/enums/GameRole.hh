@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace bsgo {
+namespace bsgalone::core {
 
 enum class GameRole
 {
@@ -15,4 +15,4 @@ auto str(const GameRole role) -> std::string;
 auto toDbGameRole(const GameRole role) -> std::string;
 auto fromDbGameRole(const std::string &dbGameRole) -> GameRole;
 
-} // namespace bsgo
+} // namespace bsgalone::core

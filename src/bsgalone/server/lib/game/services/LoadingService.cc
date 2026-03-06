@@ -1,24 +1,24 @@
 
 #include "LoadingService.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-LoadingService::LoadingService(const Repositories &repositories,
-                               CoordinatorShPtr coordinator,
-                               const DatabaseEntityMapper &entityMapper)
+LoadingService::LoadingService(const core::Repositories &repositories,
+                               core::CoordinatorShPtr coordinator,
+                               const core::DatabaseEntityMapper &entityMapper)
   : AbstractService("loading", repositories)
   , m_coordinator(std::move(coordinator))
   , m_entityMapper(entityMapper)
 {}
 
-auto LoadingService::getDataForPlayer(const Uuid playerDbId) const -> PlayerDescription
+auto LoadingService::getDataForPlayer(const core::Uuid playerDbId) const -> PlayerDescription
 {
   const auto player = m_repositories.playerRepository->findOneById(playerDbId);
   const auto ship   = m_repositories.playerShipRepository->findOneByPlayerAndActive(playerDbId);
 
   if (!ship.system)
   {
-    error("Failed to get data for player " + str(playerDbId),
+    error("Failed to get data for player " + core::str(playerDbId),
           "Active ship does not have a system assigned");
   }
 
@@ -30,7 +30,7 @@ auto LoadingService::getDataForPlayer(const Uuid playerDbId) const -> PlayerDesc
   };
 }
 
-auto LoadingService::getPlayerById(const Uuid playerDbId) const -> PlayerProps
+auto LoadingService::getPlayerById(const core::Uuid playerDbId) const -> PlayerProps
 {
   const auto player = m_repositories.playerRepository->findOneById(playerDbId);
   const auto role   = m_repositories.playerRoleRepository->findOneByPlayer(playerDbId);
@@ -41,7 +41,8 @@ auto LoadingService::getPlayerById(const Uuid playerDbId) const -> PlayerProps
   };
 }
 
-auto LoadingService::getPlayersInSystem(const Uuid systemDbId) const -> std::vector<PlayerProps>
+auto LoadingService::getPlayersInSystem(const core::Uuid systemDbId) const
+  -> std::vector<PlayerProps>
 {
   const auto playerIds = m_repositories.playerRepository->findAllBySystem(systemDbId);
 
@@ -57,11 +58,11 @@ auto LoadingService::getPlayersInSystem(const Uuid systemDbId) const -> std::vec
   return players;
 }
 
-auto LoadingService::getAsteroidById(const Uuid asteroidDbId) const -> AsteroidProps
+auto LoadingService::getAsteroidById(const core::Uuid asteroidDbId) const -> AsteroidProps
 {
   const auto asteroid = m_repositories.asteroidRepository->findOneById(asteroidDbId);
 
-  std::optional<Uuid> resource{};
+  std::optional<core::Uuid> resource{};
   std::optional<int> amount{};
   if (asteroid.loot)
   {
@@ -77,7 +78,8 @@ auto LoadingService::getAsteroidById(const Uuid asteroidDbId) const -> AsteroidP
   };
 }
 
-auto LoadingService::getAsteroidsInSystem(const Uuid systemDbId) const -> std::vector<AsteroidProps>
+auto LoadingService::getAsteroidsInSystem(const core::Uuid systemDbId) const
+  -> std::vector<AsteroidProps>
 {
   const auto asteroidDbIds = m_repositories.systemRepository->findAllAsteroidsBySystem(systemDbId);
 
@@ -87,7 +89,7 @@ auto LoadingService::getAsteroidsInSystem(const Uuid systemDbId) const -> std::v
   {
     const auto asteroid = m_repositories.asteroidRepository->findOneById(asteroidDbId);
 
-    std::optional<Uuid> resource{};
+    std::optional<core::Uuid> resource{};
     std::optional<int> amount{};
     if (asteroid.loot)
     {
@@ -102,7 +104,7 @@ auto LoadingService::getAsteroidsInSystem(const Uuid systemDbId) const -> std::v
   return asteroids;
 }
 
-auto LoadingService::getOutpostById(const Uuid outpostDbId) const -> OutpostProps
+auto LoadingService::getOutpostById(const core::Uuid outpostDbId) const -> OutpostProps
 {
   const auto outpost = m_repositories.systemOutpostRepository->findOneById(outpostDbId);
 
@@ -111,7 +113,8 @@ auto LoadingService::getOutpostById(const Uuid outpostDbId) const -> OutpostProp
   };
 }
 
-auto LoadingService::getOutpostsInSystem(const Uuid systemDbId) const -> std::vector<OutpostProps>
+auto LoadingService::getOutpostsInSystem(const core::Uuid systemDbId) const
+  -> std::vector<OutpostProps>
 {
   const auto outpostDbIds = m_repositories.systemRepository->findAllOutpostsBySystem(systemDbId);
 
@@ -128,7 +131,7 @@ auto LoadingService::getOutpostsInSystem(const Uuid systemDbId) const -> std::ve
 }
 
 namespace {
-auto getWeaponsForShip(const Repositories &repositories, const Uuid shipDbId)
+auto getWeaponsForShip(const core::Repositories &repositories, const core::Uuid shipDbId)
   -> std::vector<PlayerWeaponProps>
 {
   std::vector<PlayerWeaponProps> weapons{};
@@ -144,10 +147,10 @@ auto getWeaponsForShip(const Repositories &repositories, const Uuid shipDbId)
   return weapons;
 }
 
-auto getComputersForShip(const Repositories &repositories, const Uuid shipDbId)
-  -> std::vector<PlayerComputer>
+auto getComputersForShip(const core::Repositories &repositories, const core::Uuid shipDbId)
+  -> std::vector<core::PlayerComputer>
 {
-  std::vector<PlayerComputer> computers{};
+  std::vector<core::PlayerComputer> computers{};
 
   const auto shipComputers = repositories.shipComputerRepository->findAllByShip(shipDbId);
   for (const auto &computer : shipComputers)
@@ -160,7 +163,7 @@ auto getComputersForShip(const Repositories &repositories, const Uuid shipDbId)
 }
 } // namespace
 
-auto LoadingService::getShipById(const Uuid shipDbId) const -> PlayerShipProps
+auto LoadingService::getShipById(const core::Uuid shipDbId) const -> PlayerShipProps
 {
   const auto ship      = m_repositories.playerShipRepository->findOneById(shipDbId);
   const auto player    = m_repositories.playerRepository->findOneById(ship.player);
@@ -176,7 +179,8 @@ auto LoadingService::getShipById(const Uuid shipDbId) const -> PlayerShipProps
   };
 }
 
-auto LoadingService::getShipsInSystem(const Uuid systemDbId) const -> std::vector<PlayerShipProps>
+auto LoadingService::getShipsInSystem(const core::Uuid systemDbId) const
+  -> std::vector<PlayerShipProps>
 {
   const auto shipDbIds = m_repositories.systemRepository->findAllShipsBySystem(systemDbId);
 
@@ -198,9 +202,9 @@ auto LoadingService::getShipsInSystem(const Uuid systemDbId) const -> std::vecto
   return ships;
 }
 
-auto LoadingService::getSystems() const -> std::vector<System>
+auto LoadingService::getSystems() const -> std::vector<core::System>
 {
-  std::vector<System> out;
+  std::vector<core::System> out;
 
   const auto ids = m_repositories.systemRepository->findAll();
   for (const auto &id : ids)
@@ -212,15 +216,15 @@ auto LoadingService::getSystems() const -> std::vector<System>
   return out;
 }
 
-auto LoadingService::getSystemTickConfig(const Uuid systemDbId) const -> SystemTick
+auto LoadingService::getSystemTickConfig(const core::Uuid systemDbId) const -> core::SystemTick
 {
   return m_repositories.tickRepository->findOneBySystem(systemDbId);
 }
 
 namespace {
-auto fetchSystemOutpostTarget(const Uuid outpostDbId,
-                              const DatabaseEntityMapper &entityMapper,
-                              const Coordinator &coordinator) -> std::optional<TargetProps>
+auto fetchSystemOutpostTarget(const core::Uuid outpostDbId,
+                              const core::DatabaseEntityMapper &entityMapper,
+                              const core::Coordinator &coordinator) -> std::optional<TargetProps>
 {
   const auto maybeEntityId = entityMapper.tryGetOutpostEntityId(outpostDbId);
   if (!maybeEntityId)
@@ -240,16 +244,16 @@ auto fetchSystemOutpostTarget(const Uuid outpostDbId,
 
   return TargetProps{
     .sourceDbId = outpostDbId,
-    .sourceKind = bsgalone::core::EntityKind::OUTPOST,
+    .sourceKind = core::EntityKind::OUTPOST,
     .targetDbId = targetEntity.dbComp().dbId(),
     .targetKind = targetEntity.kind->kind(),
   };
 }
 
-auto fetchSystemOutpostsTargets(const Repositories &repositories,
-                                const Uuid systemDbId,
-                                const DatabaseEntityMapper &entityMapper,
-                                const Coordinator &coordinator) -> std::vector<TargetProps>
+auto fetchSystemOutpostsTargets(const core::Repositories &repositories,
+                                const core::Uuid systemDbId,
+                                const core::DatabaseEntityMapper &entityMapper,
+                                const core::Coordinator &coordinator) -> std::vector<TargetProps>
 {
   std::vector<TargetProps> out{};
 
@@ -267,9 +271,9 @@ auto fetchSystemOutpostsTargets(const Repositories &repositories,
   return out;
 }
 
-auto fetchPlayerShipTarget(const Uuid shipDbId,
-                           const DatabaseEntityMapper &entityMapper,
-                           const Coordinator &coordinator) -> std::optional<TargetProps>
+auto fetchPlayerShipTarget(const core::Uuid shipDbId,
+                           const core::DatabaseEntityMapper &entityMapper,
+                           const core::Coordinator &coordinator) -> std::optional<TargetProps>
 {
   const auto maybeEntityId = entityMapper.tryGetShipEntityId(shipDbId);
   if (!maybeEntityId)
@@ -289,16 +293,16 @@ auto fetchPlayerShipTarget(const Uuid shipDbId,
 
   return TargetProps{
     .sourceDbId = shipDbId,
-    .sourceKind = bsgalone::core::EntityKind::SHIP,
+    .sourceKind = core::EntityKind::SHIP,
     .targetDbId = targetEntity.dbComp().dbId(),
     .targetKind = targetEntity.kind->kind(),
   };
 }
 
-auto fetchPlayerShipsTargets(const Repositories &repositories,
-                             const Uuid systemDbId,
-                             const DatabaseEntityMapper &entityMapper,
-                             const Coordinator &coordinator) -> std::vector<TargetProps>
+auto fetchPlayerShipsTargets(const core::Repositories &repositories,
+                             const core::Uuid systemDbId,
+                             const core::DatabaseEntityMapper &entityMapper,
+                             const core::Coordinator &coordinator) -> std::vector<TargetProps>
 {
   std::vector<TargetProps> out{};
 
@@ -317,7 +321,8 @@ auto fetchPlayerShipsTargets(const Repositories &repositories,
 }
 } // namespace
 
-auto LoadingService::getTargetsInSystem(const Uuid systemDbId) const -> std::vector<TargetProps>
+auto LoadingService::getTargetsInSystem(const core::Uuid systemDbId) const
+  -> std::vector<TargetProps>
 {
   std::vector<TargetProps> out{};
 
@@ -336,9 +341,9 @@ auto LoadingService::getTargetsInSystem(const Uuid systemDbId) const -> std::vec
   return out;
 }
 
-auto LoadingService::getResources() const -> std::vector<Resource>
+auto LoadingService::getResources() const -> std::vector<core::Resource>
 {
-  std::vector<Resource> out;
+  std::vector<core::Resource> out;
 
   const auto ids = m_repositories.resourceRepository->findAll();
   for (const auto &id : ids)
@@ -380,7 +385,7 @@ auto LoadingService::getComputers() const -> std::vector<ComputerProps>
   return out;
 }
 
-auto LoadingService::getShipsForFaction(const Faction faction) const -> std::vector<ShipProps>
+auto LoadingService::getShipsForFaction(const core::Faction faction) const -> std::vector<ShipProps>
 {
   std::vector<ShipProps> out;
 
@@ -394,12 +399,14 @@ auto LoadingService::getShipsForFaction(const Faction faction) const -> std::vec
   return out;
 }
 
-auto LoadingService::getPlayerResources(const Uuid playerDbId) const -> std::vector<PlayerResource>
+auto LoadingService::getPlayerResources(const core::Uuid playerDbId) const
+  -> std::vector<core::PlayerResource>
 {
   return m_repositories.playerResourceRepository->findAllByPlayer(playerDbId);
 }
 
-auto LoadingService::getPlayerShips(const Uuid playerDbId) const -> std::vector<PlayerShipProps>
+auto LoadingService::getPlayerShips(const core::Uuid playerDbId) const
+  -> std::vector<PlayerShipProps>
 {
   const auto shipDbIds = m_repositories.playerShipRepository->findAllByPlayer(playerDbId);
 
@@ -421,11 +428,12 @@ auto LoadingService::getPlayerShips(const Uuid playerDbId) const -> std::vector<
   return ships;
 }
 
-auto LoadingService::getPlayerComputers(const Uuid playerDbId) const -> std::vector<PlayerComputer>
+auto LoadingService::getPlayerComputers(const core::Uuid playerDbId) const
+  -> std::vector<core::PlayerComputer>
 {
   const auto computerDbIds = m_repositories.playerComputerRepository->findAllByPlayer(playerDbId);
 
-  std::vector<PlayerComputer> computers{};
+  std::vector<core::PlayerComputer> computers{};
 
   for (const auto &computerDbId : computerDbIds)
   {
@@ -437,7 +445,8 @@ auto LoadingService::getPlayerComputers(const Uuid playerDbId) const -> std::vec
   return computers;
 }
 
-auto LoadingService::getPlayerWeapons(const Uuid playerDbId) const -> std::vector<PlayerWeaponProps>
+auto LoadingService::getPlayerWeapons(const core::Uuid playerDbId) const
+  -> std::vector<PlayerWeaponProps>
 {
   const auto weaponDbIds = m_repositories.playerWeaponRepository->findAllByPlayer(playerDbId);
 
@@ -453,7 +462,7 @@ auto LoadingService::getPlayerWeapons(const Uuid playerDbId) const -> std::vecto
   return weapons;
 }
 
-auto LoadingService::getActivePlayerShip(const Uuid playerDbId) const -> PlayerShipProps
+auto LoadingService::getActivePlayerShip(const core::Uuid playerDbId) const -> PlayerShipProps
 {
   const auto ship   = m_repositories.playerShipRepository->findOneByPlayerAndActive(playerDbId);
   const auto player = m_repositories.playerRepository->findOneById(ship.player);
@@ -471,4 +480,4 @@ auto LoadingService::getActivePlayerShip(const Uuid playerDbId) const -> PlayerS
   };
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

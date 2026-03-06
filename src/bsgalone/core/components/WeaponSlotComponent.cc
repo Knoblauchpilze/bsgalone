@@ -1,10 +1,10 @@
 
 #include "WeaponSlotComponent.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 WeaponSlotComponent::WeaponSlotComponent(const PlayerWeaponData &weapon)
-  : SlotComponent(bsgalone::core::ComponentType::WEAPON_SLOT,
+  : SlotComponent(ComponentType::WEAPON_SLOT,
                   SlotComponentData{.dbId       = weapon.dbId,
                                     .offensive  = true,
                                     .powerCost  = weapon.powerCost,
@@ -56,4 +56,4 @@ auto WeaponSlotComponent::generateDamage() const -> float
   return (m_minDamage + m_maxDamage) / 2.0f;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

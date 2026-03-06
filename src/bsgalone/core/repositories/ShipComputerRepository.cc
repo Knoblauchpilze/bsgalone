@@ -1,7 +1,7 @@
 
 #include "ShipComputerRepository.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 ShipComputerRepository::ShipComputerRepository(const DbConnectionShPtr &connection)
   : AbstractRepository("computer", connection)
@@ -109,4 +109,4 @@ void ShipComputerRepository::deleteByShipAndId(const Uuid ship, const Uuid compu
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

@@ -3,7 +3,7 @@
 
 #include "ControlNode.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class SequenceNode : public ControlNode
 {
@@ -14,4 +14,4 @@ class SequenceNode : public ControlNode
   auto tick(const BehaviorData &data) -> NodeState override;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

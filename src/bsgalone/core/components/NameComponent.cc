@@ -1,10 +1,10 @@
 
 #include "NameComponent.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 NameComponent::NameComponent(const std::string &name)
-  : AbstractComponent(bsgalone::core::ComponentType::NAME)
+  : AbstractComponent(ComponentType::NAME)
   , m_name(name)
 {}
 
@@ -15,4 +15,4 @@ auto NameComponent::name() const noexcept -> std::string
 
 void NameComponent::update(const chrono::TickData & /*data*/) {}
 
-} // namespace bsgo
+} // namespace bsgalone::core

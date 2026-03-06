@@ -1,7 +1,7 @@
 
 #include "Components.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 void Components::clear()
 {
@@ -30,4 +30,4 @@ void Components::clear()
   resources.clear();
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

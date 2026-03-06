@@ -6,11 +6,13 @@
 #include "TickData.hh"
 #include <memory>
 
-namespace bsgo {
-
+namespace bsgalone::core {
 class Coordinator;
+}
 
-class IProcess : public core::CoreObject
+namespace bsgalone::server {
+
+class IProcess : public ::core::CoreObject
 {
   public:
   IProcess(const std::string &name);
@@ -18,9 +20,9 @@ class IProcess : public core::CoreObject
 
   virtual auto type() const -> ProcessType = 0;
 
-  virtual void update(Coordinator &coordinator, const chrono::TickData &data) = 0;
+  virtual void update(core::Coordinator &coordinator, const chrono::TickData &data) = 0;
 };
 
 using IProcessPtr = std::unique_ptr<IProcess>;
 
-} // namespace bsgo
+} // namespace bsgalone::server

@@ -5,9 +5,9 @@
 #include "TimeStep.hh"
 #include "TimeUtils.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
 auto convertTickToDuration(const chrono::TickDuration &elapsed, const chrono::TimeStep &timeStep)
-  -> core::Duration;
+  -> ::core::Duration;
 
 }

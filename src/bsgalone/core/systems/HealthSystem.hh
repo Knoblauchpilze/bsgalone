@@ -3,7 +3,7 @@
 
 #include "AbstractSystem.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class HealthSystem : public AbstractSystem
 {
@@ -21,4 +21,4 @@ class HealthSystem : public AbstractSystem
   bool canRegenerateHealth(Entity &entity) const;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

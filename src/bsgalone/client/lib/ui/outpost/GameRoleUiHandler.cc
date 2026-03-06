@@ -7,7 +7,7 @@
 #include "ShipItemUtils.hh"
 #include "StringUtils.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
 GameRoleUiHandler::GameRoleUiHandler(const Views &views)
   : AbstractUiHandler("role")
@@ -28,14 +28,14 @@ GameRoleUiHandler::GameRoleUiHandler(const Views &views)
 
 void GameRoleUiHandler::initializeMenus(const int width,
                                         const int height,
-                                        sprites::TexturePack & /*texturesLoader*/)
+                                        pge::sprites::TexturePack & /*texturesLoader*/)
 {
   const auto viewWidth  = static_cast<int>(MAIN_VIEW_WIDTH_TO_SCREEN_WIDTH_RATIO * width);
   const auto viewHeight = static_cast<int>(MAIN_VIEW_HEIGHT_TO_SCREEN_HEIGHT_RATIO * height);
 
-  Vec2i pos{width - viewWidth - VIEW_TO_RIGHT_OF_SCREEN_IN_PIXELS,
-            height - viewHeight - VIEW_TO_BOTTOM_OF_SCREEN_IN_PIXELS};
-  Vec2i dims{viewWidth, viewHeight};
+  pge::Vec2i pos{width - viewWidth - VIEW_TO_RIGHT_OF_SCREEN_IN_PIXELS,
+                 height - viewHeight - VIEW_TO_BOTTOM_OF_SCREEN_IN_PIXELS};
+  pge::Vec2i dims{viewWidth, viewHeight};
 
   m_menu = generateBlankVerticalMenu(pos, dims);
 }
@@ -45,7 +45,7 @@ bool GameRoleUiHandler::processUserInput(ui::UserInputData &inputData)
   return m_menu->processUserInput(inputData);
 }
 
-void GameRoleUiHandler::render(Renderer &engine) const
+void GameRoleUiHandler::render(pge::Renderer &engine) const
 {
   m_menu->render(engine);
 }
@@ -89,12 +89,12 @@ void GameRoleUiHandler::initializeAvailableShips()
 }
 
 namespace {
-auto findPlayerForShip(const bsgo::Uuid playerDbId, const std::vector<bsgo::PlayerData> &players)
-  -> std::optional<bsgo::PlayerData>
+auto findPlayerForShip(const core::Uuid playerDbId, const std::vector<core::PlayerData> &players)
+  -> std::optional<core::PlayerData>
 {
   const auto maybePlayer = std::find_if(players.begin(),
                                         players.end(),
-                                        [playerDbId](const bsgo::PlayerData &playerData) {
+                                        [playerDbId](const core::PlayerData &playerData) {
                                           return playerData.dbId == playerDbId;
                                         });
 
@@ -105,37 +105,37 @@ auto findPlayerForShip(const bsgo::Uuid playerDbId, const std::vector<bsgo::Play
   return *maybePlayer;
 }
 
-auto generateShipDescription(const bsgo::PlayerShipData &ship, const bsgo::PlayerData &player)
+auto generateShipDescription(const core::PlayerShipData &ship, const core::PlayerData &player)
   -> ui::UiMenuPtr
 {
   const ui::MenuConfig config{.highlightable = false};
-  auto bg = ui::bgConfigFromColor(colors::BLANK);
+  auto bg = ui::bgConfigFromColor(pge::colors::BLANK);
 
   auto desc = std::make_unique<ui::UiMenu>(config, bg);
 
   desc->addMenu(generateSpacer());
 
-  bg              = ui::bgConfigFromColor(colors::BLANK);
+  bg              = ui::bgConfigFromColor(pge::colors::BLANK);
   const auto isAi = player.isAi ? std::string("AI") : std::string("Player");
-  auto label      = bsgo::capitalizeString(player.name + " (" + isAi + ")");
-  auto text       = generateTextConfig(label, colors::GREY, 10);
+  auto label      = core::capitalizeString(player.name + " (" + isAi + ")");
+  auto text       = generateTextConfig(label, pge::colors::GREY, 10);
   auto prop       = std::make_unique<ui::UiTextMenu>(config, bg, text);
   desc->addMenu(std::move(prop));
 
-  bg    = ui::bgConfigFromColor(colors::BLANK);
-  label = bsgo::capitalizeString(ship.name + " (" + bsgo::str(ship.shipClass) + ")");
-  text  = generateTextConfig(label, colors::GREY, 10);
+  bg    = ui::bgConfigFromColor(pge::colors::BLANK);
+  label = core::capitalizeString(ship.name + " (" + core::str(ship.shipClass) + ")");
+  text  = generateTextConfig(label, pge::colors::GREY, 10);
   prop  = std::make_unique<ui::UiTextMenu>(config, bg, text);
   desc->addMenu(std::move(prop));
 
-  label = bsgo::floatToStr(ship.maxHullPoints, 0) + " hull points (+"
-          + bsgo::floatToStr(ship.hullPointsRegen, 2) + "/s)";
+  label = core::floatToStr(ship.maxHullPoints, 0) + " hull points (+"
+          + core::floatToStr(ship.hullPointsRegen, 2) + "/s)";
   text = generateTextConfig(label);
   prop = std::make_unique<ui::UiTextMenu>(config, bg, text);
   desc->addMenu(std::move(prop));
 
-  label = bsgo::floatToStr(ship.maxPowerPoints, 0) + " power (+"
-          + bsgo::floatToStr(ship.powerRegen, 2) + "/s)";
+  label = core::floatToStr(ship.maxPowerPoints, 0) + " power (+"
+          + core::floatToStr(ship.powerRegen, 2) + "/s)";
   text = generateTextConfig(label);
   prop = std::make_unique<ui::UiTextMenu>(config, bg, text);
   desc->addMenu(std::move(prop));
@@ -163,7 +163,7 @@ void GameRoleUiHandler::initializeLayout()
     const auto maybePlayer = findPlayerForShip(ship.playerDbId, allPlayers);
     if (!maybePlayer)
     {
-      error("Failed to find player for ship " + bsgo::str(ship.dbId));
+      error("Failed to find player for ship " + core::str(ship.dbId));
     }
 
     PlayerShipData data{
@@ -198,12 +198,12 @@ constexpr auto UNAVAILABLE_SHIP_BUTTON_TEXT = "Unavailable";
 /// @param players - the list of players potentially attached to the ship
 /// @return - an optional value representing (when filled) the player attached to the
 /// ship.
-auto tryFindPlayerForShip(const bsgo::Uuid shipDbId, const std::vector<bsgo::PlayerData> &players)
-  -> std::optional<bsgo::PlayerData>
+auto tryFindPlayerForShip(const core::Uuid shipDbId, const std::vector<core::PlayerData> &players)
+  -> std::optional<core::PlayerData>
 {
   const auto maybePlayer = std::find_if(players.begin(),
                                         players.end(),
-                                        [shipDbId](const bsgo::PlayerData &playerData) {
+                                        [shipDbId](const core::PlayerData &playerData) {
                                           return playerData.attachedShip
                                                  && *playerData.attachedShip == shipDbId;
                                         });
@@ -253,7 +253,7 @@ void GameRoleUiHandler::updateShipMenus()
     shipData.button->setEnabled(!joined);
     shipData.button->setHighlightable(!joined);
     shipData.state   = joined ? State::JOINED : State::TO_JOIN;
-    const auto color = joined ? colors::DARK_GREY : colors::DARK_GREEN;
+    const auto color = joined ? pge::colors::DARK_GREY : pge::colors::DARK_GREEN;
     const auto text  = determineButtonText(joined, playerJoined);
     shipData.button->setText(text);
     shipData.button->updateBgColor(color);
@@ -288,4 +288,4 @@ void GameRoleUiHandler::onJoinRequest(const int shipIndex)
   m_playerView->tryJoin(m_playerView->gameSession().getPlayerDbId(), data.shipDbId);
 }
 
-} // namespace pge
+} // namespace bsgalone::client

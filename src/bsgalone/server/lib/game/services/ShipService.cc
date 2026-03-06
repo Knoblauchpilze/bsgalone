@@ -2,17 +2,17 @@
 #include "ShipService.hh"
 #include "ShipDataSource.hh"
 
-namespace bsgo {
+namespace bsgalone::server {
 
-ShipService::ShipService(const Repositories &repositories,
-                         CoordinatorShPtr coordinator,
-                         DatabaseEntityMapper &entityMapper)
+ShipService::ShipService(const core::Repositories &repositories,
+                         core::CoordinatorShPtr coordinator,
+                         core::DatabaseEntityMapper &entityMapper)
   : AbstractService("ship", repositories)
   , m_coordinator(std::move(coordinator))
   , m_entityMapper(entityMapper)
 {}
 
-bool ShipService::trySelectShip(const Uuid shipDbId) const
+bool ShipService::trySelectShip(const core::Uuid shipDbId) const
 {
   const auto newActiveShip     = m_repositories.playerShipRepository->findOneById(shipDbId);
   const auto currentActiveShip = m_repositories.playerShipRepository->findOneByPlayerAndActive(
@@ -20,14 +20,14 @@ bool ShipService::trySelectShip(const Uuid shipDbId) const
 
   if (newActiveShip.active)
   {
-    warn("Failed to select ship " + str(shipDbId), "Ship is already active");
+    warn("Failed to select ship " + core::str(shipDbId), "Ship is already active");
     return false;
   }
   if (currentActiveShip.player != newActiveShip.player)
   {
-    warn("Failed to select ship " + str(shipDbId),
-         "Current ship belongs to " + str(currentActiveShip.player) + " but new one belongs to "
-           + str(newActiveShip.player));
+    warn("Failed to select ship " + core::str(shipDbId),
+         "Current ship belongs to " + core::str(currentActiveShip.player)
+           + " but new one belongs to " + core::str(newActiveShip.player));
     return false;
   }
 
@@ -37,12 +37,12 @@ bool ShipService::trySelectShip(const Uuid shipDbId) const
   return true;
 }
 
-bool ShipService::tryDock(const Uuid shipDbId) const
+bool ShipService::tryDock(const core::Uuid shipDbId) const
 {
   const auto maybeEntityId = m_entityMapper.tryGetShipEntityId(shipDbId);
   if (!maybeEntityId)
   {
-    warn("Failed to dock ship " + str(shipDbId), "No entity attached to it");
+    warn("Failed to dock ship " + core::str(shipDbId), "No entity attached to it");
     return false;
   }
 
@@ -51,7 +51,7 @@ bool ShipService::tryDock(const Uuid shipDbId) const
 
   if (!statusAllowsDocking(statusComp.status()))
   {
-    warn("Failed to dock ship " + str(shipDbId),
+    warn("Failed to dock ship " + core::str(shipDbId),
          "Status " + str(statusComp.status()) + " does not allow docking");
     return false;
   }
@@ -59,45 +59,47 @@ bool ShipService::tryDock(const Uuid shipDbId) const
   const auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
   m_repositories.systemRepository->updateSystemForShip(shipDbId, *ship.system, true);
 
-  statusComp.setStatus(Status::DOCKED);
+  statusComp.setStatus(core::Status::DOCKED);
 
   return true;
 }
 
-bool ShipService::tryReturnToOutpost(const Uuid shipDbId) const
+bool ShipService::tryReturnToOutpost(const core::Uuid shipDbId) const
 {
   const auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
   if (!ship.docked)
   {
-    warn("Failed to send ship ship " + str(shipDbId) + " to outpost", "Ship is not already docked");
+    warn("Failed to send ship ship " + core::str(shipDbId) + " to outpost",
+         "Ship is not already docked");
     return false;
   }
 
   return true;
 }
 
-bool ShipService::accelerateShip(const Uuid shipDbId, const Eigen::Vector3f &acceleration) const
+bool ShipService::accelerateShip(const core::Uuid shipDbId,
+                                 const Eigen::Vector3f &acceleration) const
 {
   const auto maybeEntityId = m_entityMapper.tryGetShipEntityId(shipDbId);
   if (!maybeEntityId)
   {
-    warn("Failed to dock ship " + str(shipDbId), "No entity attached to it");
+    warn("Failed to dock ship " + core::str(shipDbId), "No entity attached to it");
     return {};
   }
 
   auto ship = m_coordinator->getEntity(*maybeEntityId);
 
-  if (!ship.exists<OwnerComponent>())
+  if (!ship.exists<core::OwnerComponent>())
   {
     // Ship is an AI: we should not come through this route to change its
     // acceleration but rather through the AI system directly.
-    warn("Failed to accelerate ship " + str(shipDbId), "Ship does not belong to a player");
+    warn("Failed to accelerate ship " + core::str(shipDbId), "Ship does not belong to a player");
     return false;
   }
 
   ship.velocityComp().accelerate(acceleration);
 
-  if (ship.exists<NetworkSyncComponent>())
+  if (ship.exists<core::NetworkSyncComponent>())
   {
     ship.networkSyncComp().markForSync();
   }
@@ -105,35 +107,36 @@ bool ShipService::accelerateShip(const Uuid shipDbId, const Eigen::Vector3f &acc
   return true;
 }
 
-auto ShipService::getPlayerDbIdForShip(const Uuid shipDbId) -> Uuid
+auto ShipService::getPlayerDbIdForShip(const core::Uuid shipDbId) -> core::Uuid
 {
   const auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
   return ship.player;
 }
 
-auto ShipService::getSystemDbIdForShip(const Uuid shipDbId) const -> Uuid
+auto ShipService::getSystemDbIdForShip(const core::Uuid shipDbId) const -> core::Uuid
 {
   const auto ship = m_repositories.playerShipRepository->findOneById(shipDbId);
   if (!ship.system)
   {
-    error("Expected ship " + str(shipDbId) + " to be present in a system");
+    error("Expected ship " + core::str(shipDbId) + " to be present in a system");
   }
 
   return *ship.system;
 }
 
 namespace {
-auto tryGetEntityAt(const Coordinator &coordinator, const Eigen::Vector3f &position)
-  -> std::optional<Entity>
+auto tryGetEntityAt(const core::Coordinator &coordinator, const Eigen::Vector3f &position)
+  -> std::optional<core::Entity>
 {
-  auto maybeEntityId = coordinator.getEntityAt(position, {}, bsgalone::core::EntityKind::BULLET);
+  auto maybeEntityId = coordinator.getEntityAt(position, {}, core::EntityKind::BULLET);
   if (!maybeEntityId)
   {
     return {};
   }
 
   const auto entity = coordinator.getEntity(*maybeEntityId);
-  if (entity.exists<StatusComponent>() && !statusVisibleFromDradis(entity.statusComp().status()))
+  if (entity.exists<core::StatusComponent>()
+      && !core::statusVisibleFromDradis(entity.statusComp().status()))
   {
     return {};
   }
@@ -141,10 +144,10 @@ auto tryGetEntityAt(const Coordinator &coordinator, const Eigen::Vector3f &posit
   return entity;
 }
 
-auto tryGetEntityFromHint(const Uuid entityDbId,
-                          const bsgalone::core::EntityKind entityKind,
-                          const DatabaseEntityMapper &entityMapper,
-                          const Coordinator &coordinator) -> std::optional<Entity>
+auto tryGetEntityFromHint(const core::Uuid entityDbId,
+                          const core::EntityKind entityKind,
+                          const core::DatabaseEntityMapper &entityMapper,
+                          const core::Coordinator &coordinator) -> std::optional<core::Entity>
 {
   const auto entityId = entityMapper.tryGetEntityId(entityDbId, entityKind);
 
@@ -158,10 +161,10 @@ auto tryGetEntityFromHint(const Uuid entityDbId,
 
 constexpr auto MAXIMUM_TARGET_DISTANCE_TOLERANCE = 1.0f;
 
-auto overrideTargetWithHintIfNecessary(const std::optional<Entity> &maybeTarget,
-                                       const std::optional<Entity> &maybeHint,
+auto overrideTargetWithHintIfNecessary(const std::optional<core::Entity> &maybeTarget,
+                                       const std::optional<core::Entity> &maybeHint,
                                        const Eigen::Vector3f &referencePosition)
-  -> std::optional<Entity>
+  -> std::optional<core::Entity>
 {
   auto dToTarget = std::numeric_limits<float>::max();
   if (maybeTarget)
@@ -192,7 +195,7 @@ auto overrideTargetWithHintIfNecessary(const std::optional<Entity> &maybeTarget,
 
 auto ShipService::tryAcquireTarget(const TargetAcquiringData &data) const -> AcquiringResult
 {
-  if (data.sourceKind != bsgalone::core::EntityKind::SHIP)
+  if (data.sourceKind != core::EntityKind::SHIP)
   {
     error("Unsupported entity acquiring target: " + str(data.sourceKind));
   }
@@ -200,7 +203,7 @@ auto ShipService::tryAcquireTarget(const TargetAcquiringData &data) const -> Acq
   const auto maybeEntityId = m_entityMapper.tryGetShipEntityId(data.sourceDbId);
   if (!maybeEntityId)
   {
-    warn("Failed to acquire target for " + str(data.sourceKind) + " " + str(data.sourceDbId),
+    warn("Failed to acquire target for " + str(data.sourceKind) + " " + core::str(data.sourceDbId),
          "No entity attached to it");
     return {};
   }
@@ -217,7 +220,7 @@ auto ShipService::tryAcquireTarget(const TargetAcquiringData &data) const -> Acq
 
     const Eigen::Vector3f shipPosition = ship.transformComp().position();
 
-    std::optional<Uuid> oldTarget{};
+    std::optional<core::Uuid> oldTarget{};
     if (maybeTarget)
     {
       oldTarget = maybeTarget->uuid;
@@ -239,15 +242,15 @@ auto ShipService::tryAcquireTarget(const TargetAcquiringData &data) const -> Acq
     return AcquiringResult{.success = true};
   }
 
-  std::optional<Uuid> maybeTargetDbId{};
-  std::optional<bsgalone::core::EntityKind> maybeTargetKind{};
+  std::optional<core::Uuid> maybeTargetDbId{};
+  std::optional<core::EntityKind> maybeTargetKind{};
   if (maybeTarget)
   {
     maybeTargetKind = maybeTarget->kind->kind();
     maybeTargetDbId = maybeTarget->dbComp().dbId();
   }
 
-  std::optional<Uuid> maybeTargetId{};
+  std::optional<core::Uuid> maybeTargetId{};
   if (maybeTarget)
   {
     maybeTargetId = maybeTarget->uuid;
@@ -259,7 +262,8 @@ auto ShipService::tryAcquireTarget(const TargetAcquiringData &data) const -> Acq
                          .targetDbId = maybeTargetDbId};
 }
 
-void ShipService::switchActiveShip(PlayerShip currentActiveShip, PlayerShip newActiveShip) const
+void ShipService::switchActiveShip(core::PlayerShip currentActiveShip,
+                                   core::PlayerShip newActiveShip) const
 {
   currentActiveShip.active = false;
   newActiveShip.active     = true;
@@ -268,15 +272,16 @@ void ShipService::switchActiveShip(PlayerShip currentActiveShip, PlayerShip newA
   m_repositories.playerShipRepository->save(newActiveShip);
 }
 
-void ShipService::switchShipSystem(const PlayerShip &currentActiveShip,
-                                   const PlayerShip &newActiveShip) const
+void ShipService::switchShipSystem(const core::PlayerShip &currentActiveShip,
+                                   const core::PlayerShip &newActiveShip) const
 {
   m_repositories.systemRepository->updateShipForSystem(currentActiveShip.id, newActiveShip.id);
 }
 
-void ShipService::updateEntityTarget(Entity &entity, const std::optional<Uuid> &targetId) const
+void ShipService::updateEntityTarget(core::Entity &entity,
+                                     const std::optional<core::Uuid> &targetId) const
 {
-  if (!entity.exists<TargetComponent>())
+  if (!entity.exists<core::TargetComponent>())
   {
     return;
   }
@@ -294,16 +299,16 @@ void ShipService::updateEntityTarget(Entity &entity, const std::optional<Uuid> &
   targetComp.setTarget(*targetId);
 }
 
-bool ShipService::isSelfSelection(const TargetAcquiringData &data, const Entity &target) const
+bool ShipService::isSelfSelection(const TargetAcquiringData &data, const core::Entity &target) const
 {
-  if (data.sourceKind != bsgalone::core::EntityKind::SHIP)
+  if (data.sourceKind != core::EntityKind::SHIP)
   {
     error("Unsupported entity with kind " + str(data.sourceKind) + " for target selection");
   }
 
   // In case the target entity does not have a DB component, it means it can't be a ship
   // belonging to the same player and therefore it's not a self selection.
-  if (!target.exists<DbComponent>())
+  if (!target.exists<core::DbComponent>())
   {
     return false;
   }
@@ -311,7 +316,7 @@ bool ShipService::isSelfSelection(const TargetAcquiringData &data, const Entity 
   // Currently only ships can select targets. If the target is not a ship it means that
   // it can't possibly belong to the same player as only ships are attached to players
   // and therefore it's not a self selection.
-  if (target.kind->kind() != bsgalone::core::EntityKind::SHIP)
+  if (target.kind->kind() != core::EntityKind::SHIP)
   {
     return false;
   }
@@ -322,4 +327,4 @@ bool ShipService::isSelfSelection(const TargetAcquiringData &data, const Entity 
   return sourceShip.player == targetShip.player;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::server

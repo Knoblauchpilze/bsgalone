@@ -4,7 +4,7 @@
 #include "AbstractSystem.hh"
 #include "ComponentSyncMessage.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 class NetworkSystem : public AbstractSystem
 {
@@ -20,7 +20,7 @@ class NetworkSystem : public AbstractSystem
   private:
   void syncEntity(Entity &entity) const;
   bool syncComponent(const Entity &entity,
-                     const bsgalone::core::ComponentType &type,
+                     const ComponentType &type,
                      ComponentSyncMessage &message) const;
 
   bool syncHealthComponent(const Entity &entity, ComponentSyncMessage &message) const;
@@ -30,4 +30,4 @@ class NetworkSystem : public AbstractSystem
   bool syncVelocityComponent(const Entity &entity, ComponentSyncMessage &message) const;
 };
 
-} // namespace bsgo
+} // namespace bsgalone::core

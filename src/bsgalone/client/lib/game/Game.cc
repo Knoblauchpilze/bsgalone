@@ -17,13 +17,13 @@
 #include "OutpostScreenRenderer.hh"
 #include "OutpostScreenUiHandler.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
 Game::Game(const int serverPort,
            const std::optional<std::string> &userName,
            const std::optional<std::string> &password,
-           const std::optional<bsgo::GameRole> &role)
-  : core::CoreObject("game")
+           const std::optional<core::GameRole> &role)
+  : ::core::CoreObject("game")
   , m_userName(userName)
   , m_password(password)
   , m_gameRole(role)
@@ -52,7 +52,7 @@ void Game::setScreen(const Screen screen)
   }
 }
 
-void Game::generateRenderers(int width, int height, Renderer &engine)
+void Game::generateRenderers(int width, int height, pge::Renderer &engine)
 {
   auto login = std::make_unique<LoginScreenRenderer>();
   login->loadResources(width, height, engine.getTextureHandler());
@@ -80,7 +80,7 @@ void Game::generateInputHandlers()
   m_inputHandlers[Screen::GAME] = std::make_unique<GameScreenInputHandler>(m_views);
 }
 
-void Game::generateUiHandlers(int width, int height, Renderer &engine)
+void Game::generateUiHandlers(int width, int height, pge::Renderer &engine)
 {
   m_uiHandlers[Screen::LOGIN]   = std::make_unique<LoginScreenUiHandler>(m_views);
   m_uiHandlers[Screen::LOADING] = std::make_unique<LoadingScreenUiHandler>(m_views);
@@ -96,9 +96,9 @@ void Game::generateUiHandlers(int width, int height, Renderer &engine)
 }
 
 namespace {
-auto applyInputToGame(const controls::State &controls,
+auto applyInputToGame(const pge::controls::State &controls,
                       const Screen currentScreen,
-                      CoordinateFrame &frame,
+                      pge::CoordinateFrame &frame,
                       const std::unordered_map<Screen, IInputHandlerPtr> &inputHandlers)
   -> std::optional<IInputHandler *>
 {
@@ -113,7 +113,7 @@ auto applyInputToGame(const controls::State &controls,
   return maybeInputHandler->second.get();
 }
 
-bool applyInputToUi(const controls::State &controls,
+bool applyInputToUi(const pge::controls::State &controls,
                     const Screen currentScreen,
                     Game &g,
                     const std::unordered_map<Screen, AbstractUiHandlerPtr> &uiHandlers)
@@ -134,10 +134,10 @@ bool applyInputToUi(const controls::State &controls,
   return userInputRelevant;
 }
 
-auto applyInputToScreen(const controls::State &controls, const Screen currentScreen)
+auto applyInputToScreen(const pge::controls::State &controls, const Screen currentScreen)
   -> std::optional<Screen>
 {
-  if (!controls.released(controls::keys::M))
+  if (!controls.released(pge::controls::keys::M))
   {
     return {};
   }
@@ -154,7 +154,7 @@ auto applyInputToScreen(const controls::State &controls, const Screen currentScr
 }
 } // namespace
 
-void Game::processUserInput(const controls::State &controls, CoordinateFrame &frame)
+void Game::processUserInput(const pge::controls::State &controls, pge::CoordinateFrame &frame)
 {
   if (m_state.dead)
   {
@@ -165,11 +165,11 @@ void Game::processUserInput(const controls::State &controls, CoordinateFrame &fr
   const auto maybeInputHandler  = applyInputToGame(controls, getScreen(), frame, m_inputHandlers);
   const auto inputRelevantForUi = applyInputToUi(controls, getScreen(), *this, m_uiHandlers);
 
-  if (controls.released(controls::mouse::LEFT) && maybeInputHandler.has_value()
+  if (controls.released(pge::controls::mouse::LEFT) && maybeInputHandler.has_value()
       && !inputRelevantForUi)
   {
-    Vec2f it;
-    const auto tp = frame.pixelsToTilesAndIntra(Vec2f(controls.mPosX, controls.mPosY), &it);
+    pge::Vec2f it;
+    const auto tp = frame.pixelsToTilesAndIntra(pge::Vec2f(controls.mPosX, controls.mPosY), &it);
     (*maybeInputHandler)->performAction(tp.x + it.x, tp.y + it.y, controls);
   }
 
@@ -180,28 +180,28 @@ void Game::processUserInput(const controls::State &controls, CoordinateFrame &fr
   }
 }
 
-void Game::render(const RenderState &state, const RenderingPass pass) const
+void Game::render(const pge::RenderState &state, const pge::RenderingPass pass) const
 {
   const auto itRenderer = m_renderers.find(getScreen());
   const auto itUi       = m_uiHandlers.find(getScreen());
 
   switch (pass)
   {
-    case RenderingPass::SPRITES:
+    case pge::RenderingPass::SPRITES:
       break;
-    case RenderingPass::DECAL:
+    case pge::RenderingPass::DECAL:
       if (itRenderer != m_renderers.end())
       {
         itRenderer->second->render(state.renderer, state, pass);
       }
       break;
-    case RenderingPass::UI:
+    case pge::RenderingPass::UI:
       if (itUi != m_uiHandlers.end())
       {
         itUi->second->render(state.renderer);
       }
       break;
-    case RenderingPass::DEBUG:
+    case pge::RenderingPass::DEBUG:
       if (itRenderer != m_renderers.end())
       {
         itRenderer->second->render(state.renderer, state, pass);
@@ -270,25 +270,25 @@ void Game::onConnectedToServer()
 
   if (m_userName && m_password && m_gameRole)
   {
-    auto login = std::make_unique<bsgo::LoginMessage>(*m_gameRole);
+    auto login = std::make_unique<core::LoginMessage>(*m_gameRole);
     login->setUserName(*m_userName);
     login->setPassword(*m_password);
     m_networkClient->pushEvent(std::move(login));
   }
 }
 
-void Game::onLogin(const bsgo::Uuid playerDbId, const bsgo::GameRole role)
+void Game::onLogin(const core::Uuid playerDbId, const core::GameRole role)
 {
-  info("Processing login for " + bsgo::str(playerDbId));
+  info("Processing login for " + core::str(playerDbId));
   m_gameSession->onPlayerLoggedIn(playerDbId, role);
   m_entityMapper.setPlayerDbId(playerDbId);
 }
 
-void Game::onLoginDataReceived(const bsgo::Uuid playerShipDbId,
-                               const bsgo::Uuid systemDbId,
-                               const bsgo::Faction faction)
+void Game::onLoginDataReceived(const core::Uuid playerShipDbId,
+                               const core::Uuid systemDbId,
+                               const core::Faction faction)
 {
-  info("Received active ship " + bsgo::str(playerShipDbId) + " in system " + bsgo::str(systemDbId));
+  info("Received active ship " + core::str(playerShipDbId) + " in system " + core::str(systemDbId));
   m_gameSession->setPlayerFaction(faction);
   m_gameSession->onActiveShipChanged(playerShipDbId);
   m_gameSession->onActiveSystemChanged(systemDbId);
@@ -307,13 +307,13 @@ void Game::onLogout()
   setScreen(Screen::LOGIN);
 }
 
-void Game::onActiveShipChanged(const bsgo::Uuid shipDbId)
+void Game::onActiveShipChanged(const core::Uuid shipDbId)
 {
   m_gameSession->onActiveShipChanged(shipDbId);
   m_entityMapper.setPlayerShipDbId(shipDbId);
 }
 
-void Game::onActiveSystemChanged(const bsgo::Uuid systemDbId)
+void Game::onActiveSystemChanged(const core::Uuid systemDbId)
 {
   m_views.shipView->clearJumpSystem();
   m_views.shipDbView->clearJumpSystem();
@@ -345,20 +345,20 @@ void Game::onPlayerKilled()
   }
 }
 
-void Game::onSystemDataReceived(const bsgo::SystemTickData &systemData)
+void Game::onSystemDataReceived(const core::SystemTickData &systemData)
 {
   info("Received current tick " + systemData.currentTick.str());
   m_gameSession->onTimeStepReceived(systemData.step);
   m_timeManager = std::make_unique<chrono::TimeManager>(systemData.currentTick, systemData.step);
 }
 
-void Game::onLoadingStarted(const bsgo::LoadingTransition transition)
+void Game::onLoadingStarted(const core::LoadingTransition transition)
 {
   m_gameSession->startLoadingTransition(m_state.screen, transition);
   setScreen(Screen::LOADING);
 }
 
-void Game::onLoadingFinished(const bsgo::LoadingTransition transition)
+void Game::onLoadingFinished(const core::LoadingTransition transition)
 {
   const auto [previousScreen, nextScreen] = m_gameSession->finishLoadingTransition(transition);
   m_state.screen                          = previousScreen;
@@ -375,15 +375,15 @@ void Game::initialize(const int serverPort)
 
   // Not strictly necessary as the internal messages should only be produced
   // synchronously by the Coordinator but also does not hurt.
-  m_internalMessageQueue = bsgo::createSynchronizedMessageQueue();
+  m_internalMessageQueue = core::createSynchronizedMessageQueue();
 
-  bsgo::SystemsConfig sConfig{.ignoredSystems = {bsgo::SystemType::LOOT,
-                                                 bsgo::SystemType::REMOVAL,
-                                                 bsgo::SystemType::STATUS,
-                                                 bsgo::SystemType::HEALTH,
-                                                 bsgo::SystemType::POWER,
-                                                 bsgo::SystemType::NETWORK}};
-  m_coordinator = std::make_shared<bsgo::Coordinator>(std::move(sConfig));
+  core::SystemsConfig sConfig{.ignoredSystems = {core::SystemType::LOOT,
+                                                 core::SystemType::REMOVAL,
+                                                 core::SystemType::STATUS,
+                                                 core::SystemType::HEALTH,
+                                                 core::SystemType::POWER,
+                                                 core::SystemType::NETWORK}};
+  m_coordinator = std::make_shared<core::Coordinator>(std::move(sConfig));
 
   ViewsConfig vConfig{.gameSession          = m_gameSession,
                       .coordinator          = m_coordinator,
@@ -407,4 +407,4 @@ void Game::initializeMessageSystem()
   m_views.connectToQueue(m_networkClient.get());
 }
 
-} // namespace pge
+} // namespace bsgalone::client

@@ -3,7 +3,7 @@
 #include "Coordinator.hh"
 #include "SystemUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 FireNode::FireNode()
   : LeafNode("fire")
@@ -102,4 +102,4 @@ void FireNode::fireAllWeapons(Entity &ent)
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

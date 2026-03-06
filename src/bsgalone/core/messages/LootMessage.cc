@@ -2,14 +2,14 @@
 #include "LootMessage.hh"
 #include "SerializationUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 LootMessage::LootMessage()
-  : NetworkMessage(bsgalone::core::MessageType::LOOT)
+  : NetworkMessage(MessageType::LOOT)
 {}
 
 LootMessage::LootMessage(const Uuid playerDbId, const Uuid resourceDbId, const int amount)
-  : NetworkMessage(bsgalone::core::MessageType::LOOT)
+  : NetworkMessage(MessageType::LOOT)
   , m_playerDbId(playerDbId)
   , m_resourceDbId(resourceDbId)
   , m_amount(amount)
@@ -32,12 +32,12 @@ auto LootMessage::amount() const -> int
 
 auto LootMessage::serialize(std::ostream &out) const -> std::ostream &
 {
-  core::serialize(out, m_messageType);
-  core::serialize(out, m_clientId);
+  ::core::serialize(out, m_messageType);
+  ::core::serialize(out, m_clientId);
 
-  core::serialize(out, m_playerDbId);
-  core::serialize(out, m_resourceDbId);
-  core::serialize(out, m_amount);
+  ::core::serialize(out, m_playerDbId);
+  ::core::serialize(out, m_resourceDbId);
+  ::core::serialize(out, m_amount);
 
   return out;
 }
@@ -45,17 +45,17 @@ auto LootMessage::serialize(std::ostream &out) const -> std::ostream &
 bool LootMessage::deserialize(std::istream &in)
 {
   bool ok{true};
-  ok &= core::deserialize(in, m_messageType);
-  ok &= core::deserialize(in, m_clientId);
+  ok &= ::core::deserialize(in, m_messageType);
+  ok &= ::core::deserialize(in, m_clientId);
 
-  ok &= core::deserialize(in, m_playerDbId);
-  ok &= core::deserialize(in, m_resourceDbId);
-  ok &= core::deserialize(in, m_amount);
+  ok &= ::core::deserialize(in, m_playerDbId);
+  ok &= ::core::deserialize(in, m_resourceDbId);
+  ok &= ::core::deserialize(in, m_amount);
 
   return ok;
 }
 
-auto LootMessage::clone() const -> bsgalone::core::IMessagePtr
+auto LootMessage::clone() const -> IMessagePtr
 {
   auto clone = std::make_unique<LootMessage>(m_playerDbId, m_resourceDbId, m_amount);
   clone->copyClientIdIfDefined(*this);
@@ -63,4 +63,4 @@ auto LootMessage::clone() const -> bsgalone::core::IMessagePtr
   return clone;
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

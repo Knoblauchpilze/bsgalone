@@ -5,7 +5,7 @@
 
 using namespace ::testing;
 
-namespace bsgo {
+namespace bsgalone::core {
 namespace {
 void assertMessagesAreEqual(const TargetMessage &actual, const TargetMessage &expected)
 {
@@ -22,16 +22,16 @@ void assertMessagesAreEqual(const TargetMessage &actual, const TargetMessage &ex
 
 TEST(Unit_Bsgalone_Core_Messages_TargetMessage, OverridesTarget)
 {
-  bsgalone::core::Target data{.sourceDbId = Uuid{21},
-                              .sourceKind = bsgalone::core::EntityKind::SHIP,
-                              .targetDbId = Uuid{38},
-                              .targetKind = bsgalone::core::EntityKind::OUTPOST};
+  Target data{.sourceDbId = Uuid{21},
+              .sourceKind = EntityKind::SHIP,
+              .targetDbId = Uuid{38},
+              .targetKind = EntityKind::OUTPOST};
   const TargetMessage expected(data, Eigen::Vector3f(1.68f, -185.0f, 326.895f));
 
-  data = bsgalone::core::Target{.sourceDbId = Uuid{17},
-                                .sourceKind = bsgalone::core::EntityKind::ASTEROID,
-                                .targetDbId = Uuid{14},
-                                .targetKind = bsgalone::core::EntityKind::BULLET};
+  data = Target{.sourceDbId = Uuid{17},
+                .sourceKind = EntityKind::ASTEROID,
+                .targetDbId = Uuid{14},
+                .targetKind = EntityKind::BULLET};
   TargetMessage actual(data, Eigen::Vector3f(0.0f, 26.37f, -0.111f));
   actual.setClientId(Uuid{78});
 
@@ -42,14 +42,13 @@ TEST(Unit_Bsgalone_Core_Messages_TargetMessage, OverridesTarget)
 
 TEST(Unit_Bsgalone_Core_Messages_TargetMessage, RegistersTarget)
 {
-  bsgalone::core::Target data{.sourceDbId = Uuid{21},
-                              .sourceKind = bsgalone::core::EntityKind::SHIP,
-                              .targetDbId = Uuid{38},
-                              .targetKind = bsgalone::core::EntityKind::OUTPOST};
+  Target data{.sourceDbId = Uuid{21},
+              .sourceKind = EntityKind::SHIP,
+              .targetDbId = Uuid{38},
+              .targetKind = EntityKind::OUTPOST};
   const TargetMessage expected(data, Eigen::Vector3f(1.68f, -185.0f, 326.895f));
 
-  data = bsgalone::core::Target{.sourceDbId = Uuid{17},
-                                .sourceKind = bsgalone::core::EntityKind::ASTEROID};
+  data = Target{.sourceDbId = Uuid{17}, .sourceKind = EntityKind::ASTEROID};
   TargetMessage actual(data, Eigen::Vector3f(0.0f, 26.37f, -0.111f));
   actual.setClientId(Uuid{78});
 
@@ -60,14 +59,13 @@ TEST(Unit_Bsgalone_Core_Messages_TargetMessage, RegistersTarget)
 
 TEST(Unit_Bsgalone_Core_Messages_TargetMessage, ClearsTarget)
 {
-  bsgalone::core::Target data{.sourceDbId = Uuid{21},
-                              .sourceKind = bsgalone::core::EntityKind::SHIP};
+  Target data{.sourceDbId = Uuid{21}, .sourceKind = EntityKind::SHIP};
   const TargetMessage expected(data, Eigen::Vector3f(1.68f, -185.0f, 326.895f));
 
-  data = bsgalone::core::Target{.sourceDbId = Uuid{17},
-                                .sourceKind = bsgalone::core::EntityKind::ASTEROID,
-                                .targetDbId = Uuid{14},
-                                .targetKind = bsgalone::core::EntityKind::BULLET};
+  data = Target{.sourceDbId = Uuid{17},
+                .sourceKind = EntityKind::ASTEROID,
+                .targetDbId = Uuid{14},
+                .targetKind = EntityKind::BULLET};
   TargetMessage actual(data, Eigen::Vector3f(0.0f, 26.37f, -0.111f));
   actual.setClientId(Uuid{78});
 
@@ -78,13 +76,11 @@ TEST(Unit_Bsgalone_Core_Messages_TargetMessage, ClearsTarget)
 
 TEST(Unit_Bsgalone_Core_Messages_TargetMessage, OverrideClientId)
 {
-  bsgalone::core::Target data{.sourceDbId = Uuid{21},
-                              .sourceKind = bsgalone::core::EntityKind::SHIP};
+  Target data{.sourceDbId = Uuid{21}, .sourceKind = EntityKind::SHIP};
   TargetMessage expected(data, Eigen::Vector3f(1.68f, -185.0f, 326.895f));
   expected.setClientId(Uuid{87});
 
-  data = bsgalone::core::Target{.sourceDbId = Uuid{17},
-                                .sourceKind = bsgalone::core::EntityKind::ASTEROID};
+  data = Target{.sourceDbId = Uuid{17}, .sourceKind = EntityKind::ASTEROID};
   TargetMessage actual(data, Eigen::Vector3f(0.0f, 26.37f, -0.111f));
   actual.setClientId(Uuid{41});
 
@@ -95,12 +91,10 @@ TEST(Unit_Bsgalone_Core_Messages_TargetMessage, OverrideClientId)
 
 TEST(Unit_Bsgalone_Core_Messages_TargetMessage, ClearsClientId)
 {
-  bsgalone::core::Target data{.sourceDbId = Uuid{21},
-                              .sourceKind = bsgalone::core::EntityKind::SHIP};
+  Target data{.sourceDbId = Uuid{21}, .sourceKind = EntityKind::SHIP};
   TargetMessage expected(data, Eigen::Vector3f(1.68f, -185.0f, 326.895f));
 
-  data = bsgalone::core::Target{.sourceDbId = Uuid{17},
-                                .sourceKind = bsgalone::core::EntityKind::ASTEROID};
+  data = Target{.sourceDbId = Uuid{17}, .sourceKind = EntityKind::ASTEROID};
   TargetMessage actual(data, Eigen::Vector3f(0.0f, 26.37f, -0.111f));
   actual.setClientId(Uuid{41});
 
@@ -111,13 +105,11 @@ TEST(Unit_Bsgalone_Core_Messages_TargetMessage, ClearsClientId)
 
 TEST(Unit_Bsgalone_Core_Messages_TargetMessage, OverridesSystemDbId)
 {
-  bsgalone::core::Target data{.sourceDbId = Uuid{21},
-                              .sourceKind = bsgalone::core::EntityKind::SHIP};
+  Target data{.sourceDbId = Uuid{21}, .sourceKind = EntityKind::SHIP};
   TargetMessage expected(data, Eigen::Vector3f(1.68f, -185.0f, 326.895f));
   expected.setSystemDbId(Uuid{61});
 
-  data = bsgalone::core::Target{.sourceDbId = Uuid{17},
-                                .sourceKind = bsgalone::core::EntityKind::ASTEROID};
+  data = Target{.sourceDbId = Uuid{17}, .sourceKind = EntityKind::ASTEROID};
   TargetMessage actual(data, Eigen::Vector3f(0.0f, 26.37f, -0.111f));
   actual.setClientId(Uuid{41});
 
@@ -128,31 +120,31 @@ TEST(Unit_Bsgalone_Core_Messages_TargetMessage, OverridesSystemDbId)
 
 TEST(Unit_Bsgalone_Core_Messages_TargetMessage, Clone)
 {
-  const bsgalone::core::Target data{.sourceDbId = Uuid{17},
-                                    .sourceKind = bsgalone::core::EntityKind::ASTEROID,
-                                    .targetDbId = Uuid{14},
-                                    .targetKind = bsgalone::core::EntityKind::BULLET};
+  const Target data{.sourceDbId = Uuid{17},
+                    .sourceKind = EntityKind::ASTEROID,
+                    .targetDbId = Uuid{14},
+                    .targetKind = EntityKind::BULLET};
   const TargetMessage expected(data, Eigen::Vector3f(1.68f, -185.0f, 326.895f));
 
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::TARGET);
+  ASSERT_EQ(cloned->type(), MessageType::TARGET);
   assertMessagesAreEqual(cloned->as<TargetMessage>(), expected);
 }
 
 TEST(Unit_Bsgalone_Core_Messages_TargetMessage, CloneWithSystemDbId)
 {
-  const bsgalone::core::Target data{.sourceDbId = Uuid{17},
-                                    .sourceKind = bsgalone::core::EntityKind::ASTEROID,
-                                    .targetDbId = Uuid{14},
-                                    .targetKind = bsgalone::core::EntityKind::BULLET};
+  const Target data{.sourceDbId = Uuid{17},
+                    .sourceKind = EntityKind::ASTEROID,
+                    .targetDbId = Uuid{14},
+                    .targetKind = EntityKind::BULLET};
   TargetMessage expected(data, Eigen::Vector3f(1.68f, -185.0f, 326.895f));
   expected.setSystemDbId(Uuid{16});
 
   const auto cloned = expected.clone();
 
-  ASSERT_EQ(cloned->type(), bsgalone::core::MessageType::TARGET);
+  ASSERT_EQ(cloned->type(), MessageType::TARGET);
   assertMessagesAreEqual(cloned->as<TargetMessage>(), expected);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

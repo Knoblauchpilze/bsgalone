@@ -2,10 +2,10 @@
 #include "ResourceView.hh"
 #include "ResourceListMessage.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
 ResourceView::ResourceView()
-  : AbstractView("resource", {bsgalone::core::MessageType::RESOURCE_LIST})
+  : AbstractView("resource", {core::MessageType::RESOURCE_LIST})
 {}
 
 bool ResourceView::isReady() const noexcept
@@ -18,21 +18,21 @@ void ResourceView::reset()
   m_resources.clear();
 }
 
-auto ResourceView::getResourceName(const bsgo::Uuid resource) const -> std::string
+auto ResourceView::getResourceName(const core::Uuid resource) const -> std::string
 {
   const auto maybeResource = m_resources.find(resource);
 
   if (maybeResource == m_resources.end())
   {
-    error("Failed to get resource", "No resource registered for id " + bsgo::str(resource));
+    error("Failed to get resource", "No resource registered for id " + core::str(resource));
   }
 
   return maybeResource->second.name;
 }
 
-void ResourceView::handleMessageInternal(const bsgalone::core::IMessage &message)
+void ResourceView::handleMessageInternal(const core::IMessage &message)
 {
-  const auto resourceList = message.as<bsgo::ResourceListMessage>();
+  const auto resourceList = message.as<core::ResourceListMessage>();
   const auto resources    = resourceList.getResourcesData();
 
   m_resources.clear();
@@ -43,4 +43,4 @@ void ResourceView::handleMessageInternal(const bsgalone::core::IMessage &message
   }
 }
 
-} // namespace pge
+} // namespace bsgalone::client

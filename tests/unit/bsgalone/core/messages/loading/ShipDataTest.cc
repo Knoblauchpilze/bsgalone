@@ -6,7 +6,7 @@
 
 using namespace ::testing;
 
-namespace bsgo {
+namespace bsgalone::core {
 
 TEST(Unit_Bsgalone_Core_Messages_ShipData, EqualWhenDbIdIsEqual)
 {
@@ -26,7 +26,7 @@ TEST(Unit_Bsgalone_Core_Messages_ShipData, DifferentWhenDbIdIsDifferent)
                  .shipClass = ShipClass::STRIKE,
                  .radius    = 5.0f,
                  .jumpTime  = chrono::TickDuration(529.0f),
-                 .slots     = {{bsgalone::core::Slot::COMPUTER, 2}}};
+                 .slots     = {{Slot::COMPUTER, 2}}};
 
   ShipData data2 = data1;
   data2.dbId     = Uuid{5678};
@@ -62,13 +62,13 @@ TEST(Unit_Bsgalone_Core_Messages_ShipData, WithSlots)
                  .acceleration   = 2.5f,
                  .speed          = 1.78f,
                  .radius         = 5.0f,
-                 .slots = {{bsgalone::core::Slot::COMPUTER, 2}, {bsgalone::core::Slot::WEAPON, 4}}};
+                 .slots          = {{Slot::COMPUTER, 2}, {Slot::WEAPON, 4}}};
 
   ShipData output{.dbId      = Uuid{14},
                   .faction   = Faction::CYLON,
                   .shipClass = ShipClass::LINE,
                   .name      = "the whale",
-                  .slots     = {{bsgalone::core::Slot::COMPUTER, 5}}};
+                  .slots     = {{Slot::COMPUTER, 5}}};
 
   EXPECT_TRUE(test::serializeAndDeserialize(input, output));
 
@@ -95,4 +95,4 @@ TEST(Unit_Bsgalone_Core_Messages_ShipData, WithPrice)
   assertShipDataAreEqual(output, input);
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

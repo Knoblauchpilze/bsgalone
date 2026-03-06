@@ -5,7 +5,7 @@
 
 #include "VectorUtils.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
 FollowTargetNode::FollowTargetNode()
   : LeafNode("follow")
@@ -49,4 +49,4 @@ void FollowTargetNode::run(const BehaviorData &data)
   }
 }
 
-} // namespace bsgo
+} // namespace bsgalone::core

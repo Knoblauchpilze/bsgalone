@@ -7,12 +7,11 @@
 #include "TimeStepUtils.hh"
 #include "TimeUtils.hh"
 
-namespace pge {
+namespace bsgalone::client {
 
 ShipStatusUiHandler::ShipStatusUiHandler(const Views &views)
   : AbstractUiHandler("ship_status")
-  , AbstractMessageListener(
-      {bsgalone::core::MessageType::JUMP_REQUESTED, bsgalone::core::MessageType::JUMP_CANCELLED})
+  , AbstractMessageListener({core::MessageType::JUMP_REQUESTED, core::MessageType::JUMP_CANCELLED})
   , m_shipView(views.shipView)
 {
   if (nullptr == m_shipView)
@@ -25,7 +24,7 @@ ShipStatusUiHandler::ShipStatusUiHandler(const Views &views)
 
 void ShipStatusUiHandler::initializeMenus(const int width,
                                           const int height,
-                                          sprites::TexturePack & /*texturesLoader*/)
+                                          pge::sprites::TexturePack & /*texturesLoader*/)
 {
   initializeThreatPanel(width, height);
   initializeJumpPanel(width, height);
@@ -36,7 +35,7 @@ bool ShipStatusUiHandler::processUserInput(ui::UserInputData &inputData)
   return m_jumpPanel->processUserInput(inputData);
 }
 
-void ShipStatusUiHandler::render(Renderer &engine) const
+void ShipStatusUiHandler::render(pge::Renderer &engine) const
 {
   m_threatLabel->render(engine);
   m_jumpPanel->render(engine);
@@ -53,24 +52,24 @@ void ShipStatusUiHandler::updateUi()
   updateJumpPanel();
 }
 
-void ShipStatusUiHandler::connectToMessageQueue(bsgalone::core::IMessageQueue &messageQueue)
+void ShipStatusUiHandler::connectToMessageQueue(core::IMessageQueue &messageQueue)
 {
   auto listener = std::make_unique<MessageListenerWrapper>(this);
   messageQueue.addListener(std::move(listener));
 }
 
-void ShipStatusUiHandler::onEventReceived(const bsgalone::core::IMessage &message)
+void ShipStatusUiHandler::onEventReceived(const core::IMessage &message)
 {
   if (!m_shipView->isReady())
   {
     return;
   }
 
-  if (bsgalone::core::MessageType::JUMP_REQUESTED == message.type())
+  if (core::MessageType::JUMP_REQUESTED == message.type())
   {
-    m_jumpStartTime = core::now();
+    m_jumpStartTime = ::core::now();
   }
-  if (bsgalone::core::MessageType::JUMP_CANCELLED == message.type())
+  if (core::MessageType::JUMP_CANCELLED == message.type())
   {
     m_jumpStartTime.reset();
   }
@@ -90,23 +89,23 @@ void ShipStatusUiHandler::reset()
 }
 
 namespace {
-const Vec2i THREAT_UI_PIXEL_DIMENSION{100, 20};
-const Vec2i JUMP_UI_PIXEL_DIMENSION{100, 100};
+const pge::Vec2i THREAT_UI_PIXEL_DIMENSION{100, 20};
+const pge::Vec2i JUMP_UI_PIXEL_DIMENSION{100, 100};
 constexpr auto REASONABLE_GAP_PIXELS = 15;
 } // namespace
 
 void ShipStatusUiHandler::initializeThreatPanel(const int width, const int height)
 {
-  const Vec2i threatPixelPos{(width - THREAT_UI_PIXEL_DIMENSION.x) / 2,
-                             height - JUMP_UI_PIXEL_DIMENSION.y - REASONABLE_GAP_PIXELS
-                               - THREAT_UI_PIXEL_DIMENSION.y};
+  const pge::Vec2i threatPixelPos{(width - THREAT_UI_PIXEL_DIMENSION.x) / 2,
+                                  height - JUMP_UI_PIXEL_DIMENSION.y - REASONABLE_GAP_PIXELS
+                                    - THREAT_UI_PIXEL_DIMENSION.y};
 
   const ui::MenuConfig config{.pos           = threatPixelPos,
                               .dims          = THREAT_UI_PIXEL_DIMENSION,
                               .highlightable = false};
 
-  const auto bg   = ui::bgConfigFromColor(colors::BLANK);
-  const auto text = ui::textConfigFromColor("Threat", colors::RED);
+  const auto bg   = ui::bgConfigFromColor(pge::colors::BLANK);
+  const auto text = ui::textConfigFromColor("Threat", pge::colors::RED);
 
   auto label = std::make_unique<ui::UiTextMenu>(config, bg, text);
   ui::BlinkingMenuConfig blinkConfig{};
@@ -116,39 +115,39 @@ void ShipStatusUiHandler::initializeThreatPanel(const int width, const int heigh
 
 void ShipStatusUiHandler::initializeJumpPanel(const int width, const int height)
 {
-  const Vec2i jumpUiPixelPos{(width - JUMP_UI_PIXEL_DIMENSION.x) / 2,
-                             height - JUMP_UI_PIXEL_DIMENSION.y - REASONABLE_GAP_PIXELS};
+  const pge::Vec2i jumpUiPixelPos{(width - JUMP_UI_PIXEL_DIMENSION.x) / 2,
+                                  height - JUMP_UI_PIXEL_DIMENSION.y - REASONABLE_GAP_PIXELS};
 
   const ui::MenuConfig config{.pos           = jumpUiPixelPos,
                               .dims          = JUMP_UI_PIXEL_DIMENSION,
                               .highlightable = false};
 
-  auto bg     = ui::bgConfigFromColor(semiOpaque(colors::DARK_RED));
+  auto bg     = ui::bgConfigFromColor(semiOpaque(pge::colors::DARK_RED));
   m_jumpPanel = std::make_unique<ui::UiMenu>(config, bg);
 
-  bg        = ui::bgConfigFromColor(colors::BLANK);
-  auto text = ui::textConfigFromColor("FTL Jump", colors::WHITE);
+  bg        = ui::bgConfigFromColor(pge::colors::BLANK);
+  auto text = ui::textConfigFromColor("FTL Jump", pge::colors::WHITE);
   auto menu = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_jumpPanel->addMenu(std::move(menu));
 
   m_jumpPanel->addMenu(generateSpacer());
 
-  text = ui::textConfigFromColor("Destination:", colors::WHITE);
+  text = ui::textConfigFromColor("Destination:", pge::colors::WHITE);
   menu = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_jumpPanel->addMenu(std::move(menu));
 
-  text              = ui::textConfigFromColor("N/A", colors::WHITE);
+  text              = ui::textConfigFromColor("N/A", pge::colors::WHITE);
   menu              = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_jumpDestination = menu.get();
   m_jumpPanel->addMenu(std::move(menu));
 
   m_jumpPanel->addMenu(generateSpacer());
 
-  text = ui::textConfigFromColor("Remaining:", colors::WHITE);
+  text = ui::textConfigFromColor("Remaining:", pge::colors::WHITE);
   menu = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_jumpPanel->addMenu(std::move(menu));
 
-  text       = ui::textConfigFromColor("N/A", colors::WHITE);
+  text       = ui::textConfigFromColor("N/A", pge::colors::WHITE);
   menu       = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_jumpTime = menu.get();
   m_jumpPanel->addMenu(std::move(menu));
@@ -184,10 +183,10 @@ void ShipStatusUiHandler::updateJumpPanel()
 
   m_jumpDestination->setText(data.systemName);
 
-  const auto elapsedSinceJumpStarted = core::now() - *m_jumpStartTime;
+  const auto elapsedSinceJumpStarted = ::core::now() - *m_jumpStartTime;
   const auto remainingJumpTime       = jumpTime - elapsedSinceJumpStarted;
 
-  m_jumpTime->setText(core::durationToPrettyString(remainingJumpTime));
+  m_jumpTime->setText(::core::durationToPrettyString(remainingJumpTime));
 }
 
-} // namespace pge
+} // namespace bsgalone::client

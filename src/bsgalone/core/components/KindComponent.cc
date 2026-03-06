@@ -1,18 +1,18 @@
 
 #include "KindComponent.hh"
 
-namespace bsgo {
+namespace bsgalone::core {
 
-KindComponent::KindComponent(const bsgalone::core::EntityKind &kind)
-  : AbstractComponent(bsgalone::core::ComponentType::KIND)
+KindComponent::KindComponent(const EntityKind &kind)
+  : AbstractComponent(ComponentType::KIND)
   , m_kind(kind)
 {}
 
-auto KindComponent::kind() const noexcept -> bsgalone::core::EntityKind
+auto KindComponent::kind() const noexcept -> EntityKind
 {
   return m_kind;
 }
 
 void KindComponent::update(const chrono::TickData & /*data*/) {}
 
-} // namespace bsgo
+} // namespace bsgalone::core
