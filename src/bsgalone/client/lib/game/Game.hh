@@ -119,7 +119,7 @@ class Game : public ui::IScreenChanger, public ::core::CoreObject
   core::CoordinatorShPtr m_coordinator{};
   core::IMessageQueuePtr m_internalMessageQueue{};
   Views m_views{};
-  std::unordered_map<Screen, bsgalone::client::IRendererPtr> m_renderers{};
+  std::unordered_map<Screen, IRendererPtr> m_renderers{};
   std::unordered_map<Screen, IInputHandlerPtr> m_inputHandlers{};
   std::unordered_map<Screen, AbstractUiHandlerPtr> m_uiHandlers{};
 

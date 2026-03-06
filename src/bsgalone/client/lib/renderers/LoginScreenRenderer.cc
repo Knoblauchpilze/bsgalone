@@ -6,7 +6,7 @@ namespace bsgalone::client {
 constexpr auto LOGIN_TEXTURE_FILE_PATH = "assets/login_bg.png";
 
 LoginScreenRenderer::LoginScreenRenderer()
-  : bsgalone::client::DecalScreenRenderer(LOGIN_TEXTURE_FILE_PATH)
+  : DecalScreenRenderer(LOGIN_TEXTURE_FILE_PATH)
 {}
 
 } // namespace bsgalone::client

@@ -6,7 +6,7 @@
 
 namespace bsgalone::client {
 
-class AbstractRenderer : public bsgalone::client::IRenderer, public ::core::CoreObject
+class AbstractRenderer : public IRenderer, public ::core::CoreObject
 {
   public:
   AbstractRenderer(const std::string &name);

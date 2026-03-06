@@ -5,7 +5,7 @@
 
 namespace bsgalone::client {
 
-class LoginScreenRenderer : public bsgalone::client::DecalScreenRenderer
+class LoginScreenRenderer : public DecalScreenRenderer
 {
   public:
   LoginScreenRenderer();

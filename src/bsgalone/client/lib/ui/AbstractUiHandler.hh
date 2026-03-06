@@ -9,7 +9,7 @@
 
 namespace bsgalone::client {
 
-class AbstractUiHandler : public bsgalone::client::IUiHandler, public ::core::CoreObject
+class AbstractUiHandler : public IUiHandler, public ::core::CoreObject
 {
   public:
   AbstractUiHandler(const std::string &name);
