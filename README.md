@@ -46,6 +46,18 @@ Some known limitations:
 - limited content in the systems
 - various edge cases where the server will crash
 
+## Next steps
+
+Below is a list of technical tasks that would be needed to make the project easier to extend:
+
+- the game logic should be changed to not use the `IMessageQueue` but instead publish domain events: this approach would help to decouple the consumers (e.g. DB update, publishing to the client applications) from the game logic.
+- the internal message consumers could be consuming domain events. For example instead of having a `JumpMessageConsumer` receiving the `JumpMessage`, we could have a `ShipJumpCompleted` which would be consumed by a single consumer performing all necessary updates atomically. Or a `ShipDiedMessage` which would be interpreted to remove entities in systems
+- the above changes would allow to remove the `MessageExchanger` or at least to have one per system
+- most of the internal message consumers could be made a part of the `SystemProcessor`: this would allow to make other messages inherit from the `AbstractSystemMessage` and always provide the system identifier (as they would be instantiated by the `SystemProcessor`). There are challenges for certain consumers which need to propagate information to other systems (e.g. jump)
+- the loading messages are currently broadcast: this could be easily fixed by making them inherit from `AbstractPlayerMessage`. However, it would be better to tackle the loading process as a whole (see next point)
+- the client application is currently a bit hard to extend. A possible way to improve this would be to leverage event driven architecture. Instead of having the views use callbacks, they could emit events or commands (e.g. `PurchaseCommant`) which would be forwarded to an internal module before being sent to the server. Additionally, it would also help to have a central place for storing the game data and the player data rather than duplicating the data in all views.
+- this last step would help to clearly separate the UI concerns with the way and time data is received. It would also allow to have elements of the UI which are already ready when others wait for data
+
 # Badges
 
 [![Build CI docker image](https://github.com/Knoblauchpilze/bsgalone/actions/workflows/build-ci-docker-image.yml/badge.svg)](https://github.com/Knoblauchpilze/bsgalone/actions/workflows/build-ci-docker-image.yml)
