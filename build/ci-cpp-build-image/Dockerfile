@@ -7,18 +7,18 @@ ENV DEBIAN_FRONTEND="noninteractive"
 # https://stackoverflow.com/questions/37970990/ssl-certificate-verification-fails-inside-docker-container-on-specific-server
 RUN apt-get update && apt-get install -y --no-install-recommends \
   ca-certificates=20240203 \
-  gcc-13=13.3.0-6ubuntu2~24.04 \
-  g++-13=13.3.0-6ubuntu2~24.04 \
+  gcc-13=13.3.0-6ubuntu2~24.04.1 \
+  g++-13=13.3.0-6ubuntu2~24.04.1 \
   wget=1.21.4-1ubuntu4.1 \
   make=4.3-4.1build2 \
   cmake=3.28.3-1build7 \
   pkg-config=1.8.1-2build1 \
-  libpq-dev=16.11-0ubuntu0.24.04.1 \
+  libpq-dev=16.13-0ubuntu0.24.04.1 \
   libx11-dev=2:1.8.7-1build1 \
   libgl-dev=1.7.0-1build1 \
   libasio-dev=1:1.28.1-0.2 \
   libeigen3-dev=3.4.0-4build0.1 \
-  libpng-dev=1.6.43-5ubuntu0.1 \
+  libpng-dev=1.6.43-5ubuntu0.5 \
   libgtest-dev=1.14.0-1 \
   libgmock-dev=1.14.0-1 \
   postgresql=16+257build1.1 \
