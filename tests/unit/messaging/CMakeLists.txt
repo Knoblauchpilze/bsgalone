@@ -8,4 +8,3 @@ target_sources(unitTests PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/AbstractEventProcessorTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/AbstractSynchronizedEventQueueTest.cc
 	)
-
