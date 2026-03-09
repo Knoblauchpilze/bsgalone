@@ -4,7 +4,7 @@
 namespace net {
 
 ClientDisconnectedEvent::ClientDisconnectedEvent(const ClientId clientId)
-  : INetworkEvent(EventType::CLIENT_DISCONNECTED)
+  : INetworkEvent(NetworkEventType::CLIENT_DISCONNECTED)
   , m_clientId(clientId)
 {}
 

@@ -21,7 +21,7 @@ void startClient(std::shared_ptr<TcpClient> &client, const int port, TestNetwork
   client->connect(LOCALHOST_URL, port);
 
   const auto actual = bus->waitForEvent();
-  EXPECT_EQ(EventType::SERVER_STARTED, actual->type());
+  EXPECT_EQ(NetworkEventType::SERVER_STARTED, actual->type());
 }
 } // namespace
 
@@ -56,7 +56,7 @@ TEST_F(Integration_Net_Client_TcpClient, PublishesServerStartedEvent)
   client->connect(LOCALHOST_URL, this->port());
 
   const auto actual = bus->waitForEvent();
-  EXPECT_EQ(EventType::SERVER_STARTED, actual->type());
+  EXPECT_EQ(NetworkEventType::SERVER_STARTED, actual->type());
 }
 
 TEST_F(Integration_Net_Client_TcpClient, PublishesServerStoppedEvent)
@@ -71,7 +71,7 @@ TEST_F(Integration_Net_Client_TcpClient, PublishesServerStoppedEvent)
   // The event bus will receive both a client disconnected event and the
   // server stopped event. This test only cares about the server stopped
   // one.
-  bus->waitForEvent(EventType::SERVER_STOPPED);
+  bus->waitForEvent(NetworkEventType::SERVER_STOPPED);
 }
 
 TEST_F(Integration_Net_Client_TcpClient, EstablishesConnectionAndPublishesConnectionEstablishedEvent)
@@ -83,7 +83,7 @@ TEST_F(Integration_Net_Client_TcpClient, EstablishesConnectionAndPublishesConnec
   const auto sockets = this->waitForServerSocket();
 
   const auto actual = bus->waitForEvent();
-  EXPECT_EQ(EventType::CONNECTION_ESTABLISHED, actual->type());
+  EXPECT_EQ(NetworkEventType::CONNECTION_ESTABLISHED, actual->type());
 }
 
 TEST_F(Integration_Net_Client_TcpClient, DetectsDisconnectionAndPublishesConnectionLostEvent)
@@ -97,7 +97,7 @@ TEST_F(Integration_Net_Client_TcpClient, DetectsDisconnectionAndPublishesConnect
   sockets.server->shutdown(asio::ip::tcp::socket::shutdown_both);
   const auto event = bus->waitForEvent();
 
-  EXPECT_EQ(EventType::CONNECTION_LOST, event->type());
+  EXPECT_EQ(NetworkEventType::CONNECTION_LOST, event->type());
 }
 
 TEST_F(Integration_Net_Client_TcpClient, PublishesConnectionLostEventWhenClientDisconnects)
@@ -109,7 +109,7 @@ TEST_F(Integration_Net_Client_TcpClient, PublishesConnectionLostEventWhenClientD
   this->waitForConnectionEstablishedEvent(bus);
   client->disconnect();
 
-  bus->waitForEvent(EventType::CONNECTION_LOST);
+  bus->waitForEvent(NetworkEventType::CONNECTION_LOST);
 }
 
 TEST_F(Integration_Net_Client_TcpClient, SendsDataToServerSocket)
@@ -140,7 +140,7 @@ TEST_F(Integration_Net_Client_TcpClient, PublishesDataSentEvent)
   EXPECT_TRUE(expectedMessageId.has_value());
 
   const auto event = bus->waitForEvent();
-  EXPECT_EQ(EventType::DATA_SENT, event->type());
+  EXPECT_EQ(NetworkEventType::DATA_SENT, event->type());
   EXPECT_FALSE(event->as<DataSentEvent>().tryGetClientId().has_value());
   const std::vector<char> expectedData(data.begin(), data.end());
   EXPECT_EQ(expectedMessageId.value(), event->as<DataSentEvent>().messageId());

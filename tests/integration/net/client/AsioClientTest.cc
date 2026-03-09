@@ -30,7 +30,7 @@ TEST_F(Integration_Net_Client_AsioClient, ConnectsToServerAndPublishesConnection
   const auto sockets = this->waitForServerSocket();
 
   const auto actual = bus->waitForEvent();
-  EXPECT_EQ(EventType::CONNECTION_ESTABLISHED, actual->type());
+  EXPECT_EQ(NetworkEventType::CONNECTION_ESTABLISHED, actual->type());
 }
 
 TEST_F(Integration_Net_Client_AsioClient, DetectsDisconnectionAndPublishesConnectionLostEvent)
@@ -43,7 +43,7 @@ TEST_F(Integration_Net_Client_AsioClient, DetectsDisconnectionAndPublishesConnec
   sockets.server->shutdown(asio::ip::tcp::socket::shutdown_both);
 
   const auto event = bus->waitForEvent();
-  EXPECT_EQ(EventType::CONNECTION_LOST, event->type());
+  EXPECT_EQ(NetworkEventType::CONNECTION_LOST, event->type());
 }
 
 TEST_F(Integration_Net_Client_AsioClient, PublishesDataReceivedEventWhenDataIsReceived)
@@ -58,7 +58,7 @@ TEST_F(Integration_Net_Client_AsioClient, PublishesDataReceivedEventWhenDataIsRe
   sockets.writeServer(data);
 
   const auto event = bus->waitForEvent();
-  EXPECT_EQ(EventType::DATA_RECEIVED, event->type());
+  EXPECT_EQ(NetworkEventType::DATA_RECEIVED, event->type());
   EXPECT_FALSE(event->as<DataReceivedEvent>().tryGetClientId().has_value());
   const std::vector<char> expectedData(data.begin(), data.end());
   EXPECT_EQ(expectedData, event->as<DataReceivedEvent>().data());
@@ -76,7 +76,7 @@ TEST_F(Integration_Net_Client_AsioClient, PublishesConnectionLostEventWhenDiscon
   client->disconnect();
 
   const auto event = bus->waitForEvent();
-  EXPECT_EQ(EventType::CONNECTION_LOST, event->type());
+  EXPECT_EQ(NetworkEventType::CONNECTION_LOST, event->type());
 }
 
 TEST_F(Integration_Net_Client_AsioClient, SucceedsWhenDisconnectingAndNotConnected)
@@ -136,7 +136,7 @@ TEST_F(Integration_Net_Client_AsioClient, PublishesDataSentEvent)
   EXPECT_TRUE(expectedMessageId.has_value());
 
   const auto event = bus->waitForEvent();
-  EXPECT_EQ(EventType::DATA_SENT, event->type());
+  EXPECT_EQ(NetworkEventType::DATA_SENT, event->type());
   EXPECT_FALSE(event->as<DataSentEvent>().tryGetClientId().has_value());
   const std::vector<char> expectedData(data.begin(), data.end());
   EXPECT_EQ(expectedMessageId.value(), event->as<DataSentEvent>().messageId());

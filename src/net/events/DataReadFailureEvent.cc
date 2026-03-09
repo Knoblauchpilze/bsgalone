@@ -4,7 +4,7 @@
 namespace net {
 
 DataReadFailureEvent::DataReadFailureEvent(const std::optional<ClientId> &clientId)
-  : INetworkEvent(EventType::DATA_READ_FAILURE)
+  : INetworkEvent(NetworkEventType::DATA_READ_FAILURE)
   , m_clientId(clientId)
 {}
 

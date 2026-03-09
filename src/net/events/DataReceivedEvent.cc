@@ -4,7 +4,7 @@
 namespace net {
 
 DataReceivedEvent::DataReceivedEvent(const std::optional<ClientId> &clientId, std::vector<char> data)
-  : INetworkEvent(EventType::DATA_RECEIVED)
+  : INetworkEvent(NetworkEventType::DATA_RECEIVED)
   , m_clientId(clientId)
   , m_data(std::move(data))
 {}

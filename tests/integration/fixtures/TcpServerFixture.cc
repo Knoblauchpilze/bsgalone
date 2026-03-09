@@ -36,7 +36,7 @@ auto TcpServerFixture::waitForConnectionEstablishedEvent(TestNetworkEventQueueSh
   const auto sockets = this->waitForServerSocket();
 
   const auto event = eventBus->waitForEvent();
-  if (event->type() != net::EventType::CONNECTION_ESTABLISHED)
+  if (event->type() != net::NetworkEventType::CONNECTION_ESTABLISHED)
   {
     throw std::runtime_error("Received unexpected event " + net::str(event->type())
                              + " while waiting for connection established event");

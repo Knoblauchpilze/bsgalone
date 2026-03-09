@@ -17,7 +17,7 @@ class InputNetworkAdapter : public net::INetworkEventListener
   InputNetworkAdapter(IMessageQueueShPtr queue, IMessageParserPtr parser);
   ~InputNetworkAdapter() override = default;
 
-  bool isEventRelevant(const net::EventType &type) const override;
+  bool isEventRelevant(const net::NetworkEventType &type) const override;
   void onEventReceived(const net::INetworkEvent &event) override;
 
   private:

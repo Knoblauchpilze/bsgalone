@@ -4,7 +4,7 @@
 namespace net {
 
 ConnectionLostEvent::ConnectionLostEvent()
-  : INetworkEvent(EventType::CONNECTION_LOST)
+  : INetworkEvent(NetworkEventType::CONNECTION_LOST)
 {}
 
 auto ConnectionLostEvent::clone() const -> INetworkEventPtr

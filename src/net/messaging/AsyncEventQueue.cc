@@ -6,7 +6,7 @@ namespace net {
 
 auto createAsyncEventQueue(INetworkEventQueuePtr queue) -> INetworkEventQueueShPtr
 {
-  return std::make_shared<messaging::AbstractAsyncEventQueue<EventType, INetworkEvent>>(
+  return std::make_shared<messaging::AbstractAsyncEventQueue<NetworkEventType, INetworkEvent>>(
     std::move(queue));
 }
 

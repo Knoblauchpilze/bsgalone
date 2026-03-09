@@ -4,7 +4,7 @@
 namespace net {
 
 ClientConnectedEvent::ClientConnectedEvent(const ClientId clientId)
-  : INetworkEvent(EventType::CLIENT_CONNECTED)
+  : INetworkEvent(NetworkEventType::CLIENT_CONNECTED)
   , m_clientId(clientId)
 {}
 

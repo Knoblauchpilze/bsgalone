@@ -4,7 +4,7 @@
 namespace net {
 
 ServerStoppedEvent::ServerStoppedEvent()
-  : INetworkEvent(EventType::SERVER_STOPPED)
+  : INetworkEvent(NetworkEventType::SERVER_STOPPED)
 {}
 
 auto ServerStoppedEvent::clone() const -> INetworkEventPtr

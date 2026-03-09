@@ -18,9 +18,9 @@ InputNetworkAdapter::InputNetworkAdapter(IMessageQueueShPtr queue, IMessageParse
   }
 }
 
-bool InputNetworkAdapter::isEventRelevant(const net::EventType &type) const
+bool InputNetworkAdapter::isEventRelevant(const net::NetworkEventType &type) const
 {
-  return type == net::EventType::DATA_RECEIVED;
+  return type == net::NetworkEventType::DATA_RECEIVED;
 }
 
 void InputNetworkAdapter::onEventReceived(const net::INetworkEvent &event)

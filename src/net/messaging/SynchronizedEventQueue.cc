@@ -4,15 +4,15 @@
 
 namespace net {
 
-const auto UNIMPORTANT_EVENT_TYPES = std::unordered_set<EventType>{
-  EventType::DATA_RECEIVED,
-  EventType::DATA_SENT,
+const auto UNIMPORTANT_EVENT_TYPES = std::unordered_set<NetworkEventType>{
+  NetworkEventType::DATA_RECEIVED,
+  NetworkEventType::DATA_SENT,
 };
 
 auto createSynchronizedEventQueue() -> INetworkEventQueuePtr
 {
-  return std::make_unique<messaging::AbstractSynchronizedEventQueue<EventType, INetworkEvent>>(
-    allEventTypesAsSet(), UNIMPORTANT_EVENT_TYPES);
+  return std::make_unique<messaging::AbstractSynchronizedEventQueue<NetworkEventType, INetworkEvent>>(
+    allNetworkEventTypesAsSet(), UNIMPORTANT_EVENT_TYPES);
 }
 
 } // namespace net

@@ -19,19 +19,20 @@ ClientEventListener::ClientEventListener(ClientManagerShPtr clientManager,
   }
 }
 
-bool ClientEventListener::isEventRelevant(const net::EventType &type) const
+bool ClientEventListener::isEventRelevant(const net::NetworkEventType &type) const
 {
-  return type == net::EventType::CLIENT_CONNECTED || type == net::EventType::CLIENT_DISCONNECTED;
+  return type == net::NetworkEventType::CLIENT_CONNECTED
+         || type == net::NetworkEventType::CLIENT_DISCONNECTED;
 }
 
 void ClientEventListener::onEventReceived(const net::INetworkEvent &event)
 {
   switch (event.type())
   {
-    case net::EventType::CLIENT_CONNECTED:
+    case net::NetworkEventType::CLIENT_CONNECTED:
       handleClientConnected(event.as<net::ClientConnectedEvent>());
       break;
-    case net::EventType::CLIENT_DISCONNECTED:
+    case net::NetworkEventType::CLIENT_DISCONNECTED:
       handleClientDisconnected(event.as<net::ClientDisconnectedEvent>());
       break;
     default:

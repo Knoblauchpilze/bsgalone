@@ -863,7 +863,7 @@ The content of this [video series](https://youtu.be/2hNdkYInj4g?si=Q-NOTJ__p-5a2
 
 We use the [asio](#asio) library without boost to handle network communication in the project. We extracted all the logic to perform the calls, connect to the server and to the client in a dedicated [net](src/net) folder: similarly to what happens for the `PixelGameEngine` wrapping, we want to be able to swap libraries or update relatively easily.
 
-This module is designed using the event driven approach. Instead of using callbacks or direct method calls, the network activity is represented by various events which can be received by external components. The available events are defined in the [EventType](src/net/enums/EventType.hh) enum class and covers connection/disconnection but also data operation (send or receive).
+This module is designed using the event driven approach. Instead of using callbacks or direct method calls, the network activity is represented by various events which can be received by external components. The available events are defined in the [NetworkEventType](src/net/enums/NetworkEventType.hh) enum class and covers connection/disconnection but also data operation (send or receive).
 
 The general architecture is presented in the following diagram:
 

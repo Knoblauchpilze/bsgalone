@@ -73,20 +73,20 @@ class NetworkEventListener : public net::INetworkEventListener
 
   ~NetworkEventListener() = default;
 
-  bool isEventRelevant(const net::EventType &type) const override
+  bool isEventRelevant(const net::NetworkEventType &type) const override
   {
-    return type == net::EventType::CONNECTION_ESTABLISHED
-           || type == net::EventType::CONNECTION_LOST;
+    return type == net::NetworkEventType::CONNECTION_ESTABLISHED
+           || type == net::NetworkEventType::CONNECTION_LOST;
   }
 
   void onEventReceived(const net::INetworkEvent &event) override
   {
     switch (event.type())
     {
-      case net::EventType::CONNECTION_ESTABLISHED:
+      case net::NetworkEventType::CONNECTION_ESTABLISHED:
         handleConnectionEstablished(event.as<net::ConnectionEstablishedEvent>());
         break;
-      case net::EventType::CONNECTION_LOST:
+      case net::NetworkEventType::CONNECTION_LOST:
         handleConnectionLost(event.as<net::ConnectionLostEvent>());
         break;
       default:

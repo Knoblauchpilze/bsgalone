@@ -85,7 +85,7 @@ auto TestNetworkEventQueue::waitForEvent() -> net::INetworkEventPtr
   return out;
 }
 
-auto TestNetworkEventQueue::waitForEvent(const net::EventType type, const int maxTries)
+auto TestNetworkEventQueue::waitForEvent(const net::NetworkEventType type, const int maxTries)
   -> net::INetworkEventPtr
 {
   int tryCount = 0;

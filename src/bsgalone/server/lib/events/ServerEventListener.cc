@@ -7,19 +7,20 @@ ServerEventListener::ServerEventListener(std::atomic_bool &started)
   : m_started(started)
 {}
 
-bool ServerEventListener::isEventRelevant(const net::EventType &type) const
+bool ServerEventListener::isEventRelevant(const net::NetworkEventType &type) const
 {
-  return type == net::EventType::SERVER_STARTED || type == net::EventType::SERVER_STOPPED;
+  return type == net::NetworkEventType::SERVER_STARTED
+         || type == net::NetworkEventType::SERVER_STOPPED;
 }
 
 void ServerEventListener::onEventReceived(const net::INetworkEvent &event)
 {
   switch (event.type())
   {
-    case net::EventType::SERVER_STARTED:
+    case net::NetworkEventType::SERVER_STARTED:
       handleServerStarted(event.as<net::ServerStartedEvent>());
       break;
-    case net::EventType::SERVER_STOPPED:
+    case net::NetworkEventType::SERVER_STOPPED:
       handleServerStopped(event.as<net::ServerStoppedEvent>());
       break;
     default:

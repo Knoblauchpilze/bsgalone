@@ -38,7 +38,7 @@ TEST_F(Integration_Net_Sockets_WritingSocket, PublishesDataSentEvent)
   socket->send(MessageId{4}, toSend);
 
   const auto actual = bus->waitForEvent();
-  EXPECT_EQ(EventType::DATA_SENT, actual->type());
+  EXPECT_EQ(NetworkEventType::DATA_SENT, actual->type());
   EXPECT_EQ(ClientId{1}, actual->as<DataSentEvent>().tryGetClientId().value());
   EXPECT_EQ(MessageId{4}, actual->as<DataSentEvent>().messageId());
 }
@@ -54,7 +54,7 @@ TEST_F(Integration_Net_Sockets_WritingSocket, PublishesDataSentEventWithNoClient
   socket->send(MessageId{4}, toSend);
 
   const auto actual = bus->waitForEvent();
-  EXPECT_EQ(EventType::DATA_SENT, actual->type());
+  EXPECT_EQ(NetworkEventType::DATA_SENT, actual->type());
   EXPECT_FALSE(actual->as<DataSentEvent>().tryGetClientId().has_value());
   EXPECT_EQ(MessageId{4}, actual->as<DataSentEvent>().messageId());
 }
@@ -86,7 +86,7 @@ TEST_F(Integration_Net_Sockets_WritingSocket, PublishesDataWriteFailureEventWhen
   socket->send(MessageId{3}, toSend);
 
   const auto actual = bus->waitForEvent();
-  EXPECT_EQ(EventType::DATA_WRITE_FAILURE, actual->type());
+  EXPECT_EQ(NetworkEventType::DATA_WRITE_FAILURE, actual->type());
   EXPECT_EQ(ClientId{1}, actual->as<DataWriteFailureEvent>().tryGetClientId().value());
   EXPECT_EQ(MessageId{3}, actual->as<DataWriteFailureEvent>().messageId());
 }
@@ -105,7 +105,7 @@ TEST_F(Integration_Net_Sockets_WritingSocket,
   socket->send(MessageId{3}, toSend);
 
   const auto actual = bus->waitForEvent();
-  EXPECT_EQ(EventType::DATA_WRITE_FAILURE, actual->type());
+  EXPECT_EQ(NetworkEventType::DATA_WRITE_FAILURE, actual->type());
   EXPECT_FALSE(actual->as<DataWriteFailureEvent>().tryGetClientId().has_value());
   EXPECT_EQ(MessageId{3}, actual->as<DataWriteFailureEvent>().messageId());
 }
@@ -130,7 +130,7 @@ TEST_F(Integration_Net_Sockets_WritingSocket, SucceedsToSendDataEvenWhenServerSo
   socket->send(MessageId{2}, toSend);
 
   const auto actual = bus->waitForEvent();
-  EXPECT_EQ(EventType::DATA_SENT, actual->type());
+  EXPECT_EQ(NetworkEventType::DATA_SENT, actual->type());
   EXPECT_EQ(ClientId{1}, actual->as<DataSentEvent>().tryGetClientId().value());
   EXPECT_EQ(MessageId{2}, actual->as<DataSentEvent>().messageId());
 }

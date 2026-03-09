@@ -21,7 +21,7 @@ void startServer(std::shared_ptr<TcpServer> &server, const int port, TestNetwork
   server->start(port);
 
   const auto actual = bus->waitForEvent();
-  EXPECT_EQ(EventType::SERVER_STARTED, actual->type());
+  EXPECT_EQ(NetworkEventType::SERVER_STARTED, actual->type());
 }
 } // namespace
 
@@ -37,7 +37,7 @@ TEST_F(Integration_Net_Server_TcpServer, PublishesServerStartedEvent)
   server->start(this->port());
 
   const auto actual = bus->waitForEvent();
-  EXPECT_EQ(EventType::SERVER_STARTED, actual->type());
+  EXPECT_EQ(NetworkEventType::SERVER_STARTED, actual->type());
 }
 
 TEST_F(Integration_Net_Server_TcpServer, PublishesServerStoppedEvent)
@@ -49,7 +49,7 @@ TEST_F(Integration_Net_Server_TcpServer, PublishesServerStoppedEvent)
   server->stop();
 
   const auto actual = bus->waitForEvent();
-  EXPECT_EQ(EventType::SERVER_STOPPED, actual->type());
+  EXPECT_EQ(NetworkEventType::SERVER_STOPPED, actual->type());
 }
 
 TEST_F(Integration_Net_Server_TcpServer, AcceptsConnectionAndPublishesClientConnectedEvent)
@@ -63,7 +63,7 @@ TEST_F(Integration_Net_Server_TcpServer, AcceptsConnectionAndPublishesClientConn
   auto socket = this->connectToRunningServer();
 
   const auto actual = bus->waitForEvent();
-  EXPECT_EQ(EventType::CLIENT_CONNECTED, actual->type());
+  EXPECT_EQ(NetworkEventType::CLIENT_CONNECTED, actual->type());
   // The first client identifier should be 0 as the counter starts from 0
   EXPECT_EQ(ClientId{0}, actual->as<ClientConnectedEvent>().clientId());
 
@@ -78,12 +78,12 @@ TEST_F(Integration_Net_Server_TcpServer, DetectsDisconnectionAndPublishesClientD
 
   auto socket = this->connectToRunningServer();
   auto event  = bus->waitForEvent();
-  EXPECT_EQ(EventType::CLIENT_CONNECTED, event->type());
+  EXPECT_EQ(NetworkEventType::CLIENT_CONNECTED, event->type());
   const auto expectedClientId = event->as<ClientConnectedEvent>().clientId();
 
   socket->shutdown(asio::ip::tcp::socket::shutdown_both);
   event = bus->waitForEvent();
-  EXPECT_EQ(EventType::CLIENT_DISCONNECTED, event->type());
+  EXPECT_EQ(NetworkEventType::CLIENT_DISCONNECTED, event->type());
   EXPECT_EQ(expectedClientId, event->as<ClientDisconnectedEvent>().clientId());
 }
 
@@ -95,13 +95,13 @@ TEST_F(Integration_Net_Server_TcpServer, PublishesClientDisconnectedEventWhenSer
 
   auto socket = this->connectToRunningServer();
   auto event  = bus->waitForEvent();
-  EXPECT_EQ(EventType::CLIENT_CONNECTED, event->type());
+  EXPECT_EQ(NetworkEventType::CLIENT_CONNECTED, event->type());
   const auto expectedClientId = event->as<ClientConnectedEvent>().clientId();
 
   server->stop();
 
-  event = bus->waitForEvent(EventType::CLIENT_DISCONNECTED);
-  EXPECT_EQ(EventType::CLIENT_DISCONNECTED, event->type());
+  event = bus->waitForEvent(NetworkEventType::CLIENT_DISCONNECTED);
+  EXPECT_EQ(NetworkEventType::CLIENT_DISCONNECTED, event->type());
   EXPECT_EQ(expectedClientId, event->as<ClientDisconnectedEvent>().clientId());
 }
 

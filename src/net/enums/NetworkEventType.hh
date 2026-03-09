@@ -6,7 +6,7 @@
 
 namespace net {
 
-enum class EventType
+enum class NetworkEventType
 {
   CONNECTION_ESTABLISHED,
   CONNECTION_LOST,
@@ -20,8 +20,8 @@ enum class EventType
   SERVER_STOPPED
 };
 
-auto str(const EventType &type) -> std::string;
+auto str(const NetworkEventType &type) -> std::string;
 
-auto allEventTypesAsSet() -> std::unordered_set<EventType>;
+auto allNetworkEventTypesAsSet() -> std::unordered_set<NetworkEventType>;
 
 } // namespace net

@@ -49,7 +49,8 @@ class TestNetworkEventQueue : public net::INetworkEventQueue
   /// @param maxTries - the maximum number of tries to perform when waiting
   /// for an event
   /// @return - the event with the desired type
-  auto waitForEvent(const net::EventType type, const int maxTries = 2) -> net::INetworkEventPtr;
+  auto waitForEvent(const net::NetworkEventType type, const int maxTries = 2)
+    -> net::INetworkEventPtr;
 
   private:
   std::mutex m_locker{};

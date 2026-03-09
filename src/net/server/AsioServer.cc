@@ -18,7 +18,7 @@ class ServerListenerProxy : public INetworkEventListener
 
   ~ServerListenerProxy() override = default;
 
-  bool isEventRelevant(const EventType &type) const
+  bool isEventRelevant(const NetworkEventType &type) const
   {
     return m_listener->isEventRelevant(type);
   }
@@ -77,7 +77,7 @@ void AsioServer::shutdown()
   }
 }
 
-bool AsioServer::isEventRelevant(const EventType & /*type*/) const
+bool AsioServer::isEventRelevant(const NetworkEventType & /*type*/) const
 {
   // All events are relevant: they are either forwarded or handled locally.
   return true;
@@ -87,8 +87,8 @@ void AsioServer::onEventReceived(const INetworkEvent &event)
 {
   switch (event.type())
   {
-    case EventType::DATA_READ_FAILURE:
-    case EventType::DATA_WRITE_FAILURE:
+    case NetworkEventType::DATA_READ_FAILURE:
+    case NetworkEventType::DATA_WRITE_FAILURE:
       handleConnectionFailure(event);
       break;
     default:
@@ -156,9 +156,9 @@ auto tryGetClientId(const INetworkEvent &event) -> std::optional<ClientId>
 {
   switch (event.type())
   {
-    case EventType::DATA_READ_FAILURE:
+    case NetworkEventType::DATA_READ_FAILURE:
       return event.as<DataReadFailureEvent>().tryGetClientId();
-    case EventType::DATA_WRITE_FAILURE:
+    case NetworkEventType::DATA_WRITE_FAILURE:
       return event.as<DataWriteFailureEvent>().tryGetClientId();
     default:
       return {};

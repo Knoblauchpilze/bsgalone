@@ -18,11 +18,11 @@ TEST_F(Integration_Bsgalone_Server_GameServerTest, StopsWhenRequested)
   GameServer server(bus);
 
   auto result = std::async(std::launch::async, [this, &server]() { server.run(this->port()); });
-  bus->waitForEvent(net::EventType::SERVER_STARTED);
+  bus->waitForEvent(net::NetworkEventType::SERVER_STARTED);
 
   server.requestStop();
   const auto event = bus->waitForEvent();
-  EXPECT_EQ(net::EventType::SERVER_STOPPED, event->type());
+  EXPECT_EQ(net::NetworkEventType::SERVER_STOPPED, event->type());
 
   result.get();
 }
@@ -33,11 +33,11 @@ TEST_F(Integration_Bsgalone_Server_GameServerTest, AcceptsConnectionAndPublishes
   GameServer server(bus);
 
   auto result = std::async(std::launch::async, [this, &server]() { server.run(this->port()); });
-  bus->waitForEvent(net::EventType::SERVER_STARTED);
+  bus->waitForEvent(net::NetworkEventType::SERVER_STARTED);
 
   const auto socket = this->connectToRunningServer();
   const auto event  = bus->waitForEvent();
-  EXPECT_EQ(net::EventType::CLIENT_CONNECTED, event->type());
+  EXPECT_EQ(net::NetworkEventType::CLIENT_CONNECTED, event->type());
   EXPECT_EQ(net::ClientId{0}, event->as<net::ClientConnectedEvent>().clientId());
 
   server.requestStop();
@@ -50,17 +50,17 @@ TEST_F(Integration_Bsgalone_Server_GameServerTest, DetectsDisconnectionAndPublis
   GameServer server(bus);
 
   auto result = std::async(std::launch::async, [this, &server]() { server.run(this->port()); });
-  bus->waitForEvent(net::EventType::SERVER_STARTED);
+  bus->waitForEvent(net::NetworkEventType::SERVER_STARTED);
 
   {
     const auto socket = this->connectToRunningServer();
     const auto event  = bus->waitForEvent();
-    EXPECT_EQ(net::EventType::CLIENT_CONNECTED, event->type());
+    EXPECT_EQ(net::NetworkEventType::CLIENT_CONNECTED, event->type());
     EXPECT_EQ(net::ClientId{0}, event->as<net::ClientConnectedEvent>().clientId());
   }
 
   const auto event = bus->waitForEvent();
-  EXPECT_EQ(net::EventType::CLIENT_DISCONNECTED, event->type());
+  EXPECT_EQ(net::NetworkEventType::CLIENT_DISCONNECTED, event->type());
   EXPECT_EQ(net::ClientId{0}, event->as<net::ClientDisconnectedEvent>().clientId());
 
   server.requestStop();

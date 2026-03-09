@@ -43,7 +43,7 @@ class AsioServer : public core::CoreObject,
   /// would not be running anymore at that point.
   void shutdown();
 
-  bool isEventRelevant(const EventType &type) const override;
+  bool isEventRelevant(const NetworkEventType &type) const override;
   void onEventReceived(const INetworkEvent &event) override;
 
   /// @brief - Used to send a message to the client identified by the input identifier.

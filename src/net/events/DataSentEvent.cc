@@ -4,7 +4,7 @@
 namespace net {
 
 DataSentEvent::DataSentEvent(const std::optional<ClientId> &clientId, const MessageId messageId)
-  : INetworkEvent(EventType::DATA_SENT)
+  : INetworkEvent(NetworkEventType::DATA_SENT)
   , m_clientId(clientId)
   , m_messageId(messageId)
 {}

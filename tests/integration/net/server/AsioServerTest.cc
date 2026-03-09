@@ -32,7 +32,7 @@ TEST_F(Integration_Net_Server_AsioServer, AcceptsConnectionAndPublishesClientCon
   auto socket = this->connectToRunningServer();
 
   const auto actual = bus->waitForEvent();
-  EXPECT_EQ(EventType::CLIENT_CONNECTED, actual->type());
+  EXPECT_EQ(NetworkEventType::CLIENT_CONNECTED, actual->type());
   // The first client identifier should be 0 as the counter starts from 0
   EXPECT_EQ(ClientId{0}, actual->as<ClientConnectedEvent>().clientId());
 
@@ -47,12 +47,12 @@ TEST_F(Integration_Net_Server_AsioServer, AcceptsMultipleConnections)
 
   auto socket1 = this->connectToRunningServer();
   auto actual  = bus->waitForEvent();
-  EXPECT_EQ(EventType::CLIENT_CONNECTED, actual->type());
+  EXPECT_EQ(NetworkEventType::CLIENT_CONNECTED, actual->type());
   EXPECT_EQ(ClientId{0}, actual->as<ClientConnectedEvent>().clientId());
 
   auto socket2 = this->connectToRunningServer();
   actual       = bus->waitForEvent();
-  EXPECT_EQ(EventType::CLIENT_CONNECTED, actual->type());
+  EXPECT_EQ(NetworkEventType::CLIENT_CONNECTED, actual->type());
   EXPECT_EQ(ClientId{1}, actual->as<ClientConnectedEvent>().clientId());
 
   server->shutdown();
@@ -66,12 +66,12 @@ TEST_F(Integration_Net_Server_AsioServer, DetectsDisconnectionAndPublishesClient
 
   auto socket = this->connectToRunningServer();
   auto event  = bus->waitForEvent();
-  EXPECT_EQ(EventType::CLIENT_CONNECTED, event->type());
+  EXPECT_EQ(NetworkEventType::CLIENT_CONNECTED, event->type());
   const auto expectedClientId = event->as<ClientConnectedEvent>().clientId();
 
   socket->shutdown(asio::ip::tcp::socket::shutdown_both);
   event = bus->waitForEvent();
-  EXPECT_EQ(EventType::CLIENT_DISCONNECTED, event->type());
+  EXPECT_EQ(NetworkEventType::CLIENT_DISCONNECTED, event->type());
   EXPECT_EQ(expectedClientId, event->as<ClientDisconnectedEvent>().clientId());
 }
 
@@ -83,14 +83,14 @@ TEST_F(Integration_Net_Server_AsioServer, PublishesDataReceivedEventWhenDataIsRe
 
   auto socket = this->connectToRunningServer();
   auto event  = bus->waitForEvent();
-  EXPECT_EQ(EventType::CLIENT_CONNECTED, event->type());
+  EXPECT_EQ(NetworkEventType::CLIENT_CONNECTED, event->type());
   const auto expectedClientId = event->as<ClientConnectedEvent>().clientId();
 
   std::string data("test");
   this->write(socket, data);
 
   event = bus->waitForEvent();
-  EXPECT_EQ(EventType::DATA_RECEIVED, event->type());
+  EXPECT_EQ(NetworkEventType::DATA_RECEIVED, event->type());
   EXPECT_EQ(expectedClientId, event->as<DataReceivedEvent>().tryGetClientId().value());
   const std::vector<char> expectedData(data.begin(), data.end());
   EXPECT_EQ(expectedData, event->as<DataReceivedEvent>().data());
@@ -108,12 +108,12 @@ TEST_F(Integration_Net_Server_AsioServer, PublishesClientDisconnectedEventWhenCl
   {
     auto socket = this->connectToRunningServer();
     auto event  = bus->waitForEvent();
-    EXPECT_EQ(EventType::CLIENT_CONNECTED, event->type());
+    EXPECT_EQ(NetworkEventType::CLIENT_CONNECTED, event->type());
     expectedClientId = event->as<ClientConnectedEvent>().clientId();
   }
 
   auto event = bus->waitForEvent();
-  EXPECT_EQ(EventType::CLIENT_DISCONNECTED, event->type());
+  EXPECT_EQ(NetworkEventType::CLIENT_DISCONNECTED, event->type());
   ASSERT_TRUE(expectedClientId.has_value());
   EXPECT_EQ(*expectedClientId, event->as<ClientDisconnectedEvent>().clientId());
 }
@@ -126,13 +126,13 @@ TEST_F(Integration_Net_Server_AsioServer, PublishesClientDisconnectedEventWhenSe
 
   auto socket = this->connectToRunningServer();
   auto event  = bus->waitForEvent();
-  EXPECT_EQ(EventType::CLIENT_CONNECTED, event->type());
+  EXPECT_EQ(NetworkEventType::CLIENT_CONNECTED, event->type());
   const auto expectedClientId = event->as<ClientConnectedEvent>().clientId();
 
   server->shutdown();
 
   event = bus->waitForEvent();
-  EXPECT_EQ(EventType::CLIENT_DISCONNECTED, event->type());
+  EXPECT_EQ(NetworkEventType::CLIENT_DISCONNECTED, event->type());
   EXPECT_EQ(expectedClientId, event->as<ClientDisconnectedEvent>().clientId());
 }
 
@@ -169,7 +169,7 @@ TEST_F(Integration_Net_Server_AsioServer, ReturnsEmptyMessageIdentifierWhenMessa
 
   auto socket = this->connectToRunningServer();
   auto event  = bus->waitForEvent();
-  EXPECT_EQ(EventType::CLIENT_CONNECTED, event->type());
+  EXPECT_EQ(NetworkEventType::CLIENT_CONNECTED, event->type());
   const auto clientId = event->as<ClientConnectedEvent>().clientId();
 
   const auto actualId = server->trySend(clientId, std::vector<char>{});
@@ -187,7 +187,7 @@ TEST_F(Integration_Net_Server_AsioServer, WritesDataToClientSocket)
 
   ConnectedSockets sockets{.client = this->connectToRunningServer()};
   auto event = bus->waitForEvent();
-  EXPECT_EQ(EventType::CLIENT_CONNECTED, event->type());
+  EXPECT_EQ(NetworkEventType::CLIENT_CONNECTED, event->type());
   const auto expectedClientId = event->as<ClientConnectedEvent>().clientId();
 
   std::string data("test");
@@ -207,7 +207,7 @@ TEST_F(Integration_Net_Server_AsioServer, PublishesDataSentEvent)
 
   auto socket = this->connectToRunningServer();
   auto event  = bus->waitForEvent();
-  EXPECT_EQ(EventType::CLIENT_CONNECTED, event->type());
+  EXPECT_EQ(NetworkEventType::CLIENT_CONNECTED, event->type());
   const auto expectedClientId = event->as<ClientConnectedEvent>().clientId();
 
   std::string data("test");
@@ -216,7 +216,7 @@ TEST_F(Integration_Net_Server_AsioServer, PublishesDataSentEvent)
   EXPECT_TRUE(expectedMessageId.has_value());
 
   event = bus->waitForEvent();
-  EXPECT_EQ(EventType::DATA_SENT, event->type());
+  EXPECT_EQ(NetworkEventType::DATA_SENT, event->type());
   EXPECT_EQ(expectedClientId, event->as<DataSentEvent>().tryGetClientId().value());
   const std::vector<char> expectedData(data.begin(), data.end());
   EXPECT_EQ(expectedMessageId.value(), event->as<DataSentEvent>().messageId());

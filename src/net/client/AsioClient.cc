@@ -17,7 +17,7 @@ class ClientListenerProxy : public INetworkEventListener
 
   ~ClientListenerProxy() override = default;
 
-  bool isEventRelevant(const EventType &type) const
+  bool isEventRelevant(const NetworkEventType &type) const
   {
     auto listener = m_listener.lock();
     if (listener)
@@ -131,7 +131,7 @@ void AsioClient::disconnect()
   m_socket.reset();
 }
 
-bool AsioClient::isEventRelevant(const EventType & /*type*/) const
+bool AsioClient::isEventRelevant(const NetworkEventType & /*type*/) const
 {
   // Either the events are forwarded as is or they are handled locally
   // so all of them are interesting.
@@ -142,8 +142,8 @@ void AsioClient::onEventReceived(const INetworkEvent &event)
 {
   switch (event.type())
   {
-    case EventType::DATA_READ_FAILURE:
-    case EventType::DATA_WRITE_FAILURE:
+    case NetworkEventType::DATA_READ_FAILURE:
+    case NetworkEventType::DATA_WRITE_FAILURE:
       handleConnectionFailure(event);
       break;
     default:

@@ -1,14 +1,14 @@
 
 #pragma once
 
-#include "EventType.hh"
 #include "IEventListener.hh"
 #include "INetworkEvent.hh"
+#include "NetworkEventType.hh"
 #include <memory>
 
 namespace net {
 
-using INetworkEventListener    = messaging::IEventListener<EventType, INetworkEvent>;
+using INetworkEventListener    = messaging::IEventListener<NetworkEventType, INetworkEvent>;
 using INetworkEventListenerPtr = std::unique_ptr<INetworkEventListener>;
 
 } // namespace net

@@ -4,7 +4,7 @@
 namespace net {
 
 ConnectionEstablishedEvent::ConnectionEstablishedEvent()
-  : INetworkEvent(EventType::CONNECTION_ESTABLISHED)
+  : INetworkEvent(NetworkEventType::CONNECTION_ESTABLISHED)
 {}
 
 auto ConnectionEstablishedEvent::clone() const -> INetworkEventPtr

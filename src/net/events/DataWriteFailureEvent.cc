@@ -5,7 +5,7 @@ namespace net {
 
 DataWriteFailureEvent::DataWriteFailureEvent(const std::optional<ClientId> &clientId,
                                              const MessageId messageId)
-  : INetworkEvent(EventType::DATA_WRITE_FAILURE)
+  : INetworkEvent(NetworkEventType::DATA_WRITE_FAILURE)
   , m_clientId(clientId)
   , m_messageId(messageId)
 {}

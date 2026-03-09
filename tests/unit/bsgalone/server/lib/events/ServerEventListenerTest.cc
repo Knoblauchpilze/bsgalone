@@ -12,14 +12,14 @@ TEST(Unit_Bsgalone_Server_Events_ServerEventListener, ConsidersServerStartedEven
 {
   std::atomic_bool started;
   ServerEventListener listener(started);
-  EXPECT_TRUE(listener.isEventRelevant(net::EventType::SERVER_STARTED));
+  EXPECT_TRUE(listener.isEventRelevant(net::NetworkEventType::SERVER_STARTED));
 }
 
 TEST(Unit_Bsgalone_Server_Events_ServerEventListener, ConsidersServerStoppedEventAsRelevant)
 {
   std::atomic_bool started;
   ServerEventListener listener(started);
-  EXPECT_TRUE(listener.isEventRelevant(net::EventType::SERVER_STOPPED));
+  EXPECT_TRUE(listener.isEventRelevant(net::NetworkEventType::SERVER_STOPPED));
 }
 
 TEST(Unit_Bsgalone_Server_Events_ServerEventListener,

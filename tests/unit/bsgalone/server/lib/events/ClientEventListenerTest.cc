@@ -27,14 +27,14 @@ TEST(Unit_Bsgalone_Server_Events_ClientEventListener, ConsidersClientConnectedEv
 {
   ClientEventListener listener(std::make_shared<ClientManager>(),
                                std::make_shared<TestMessageQueue>());
-  EXPECT_TRUE(listener.isEventRelevant(net::EventType::CLIENT_CONNECTED));
+  EXPECT_TRUE(listener.isEventRelevant(net::NetworkEventType::CLIENT_CONNECTED));
 }
 
 TEST(Unit_Bsgalone_Server_Events_ClientEventListener, ConsidersClientDisconnectedEventAsRelevant)
 {
   ClientEventListener listener(std::make_shared<ClientManager>(),
                                std::make_shared<TestMessageQueue>());
-  EXPECT_TRUE(listener.isEventRelevant(net::EventType::CLIENT_DISCONNECTED));
+  EXPECT_TRUE(listener.isEventRelevant(net::NetworkEventType::CLIENT_DISCONNECTED));
 }
 
 TEST(Unit_Bsgalone_Server_Events_ClientEventListener,

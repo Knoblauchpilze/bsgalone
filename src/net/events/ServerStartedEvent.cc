@@ -4,7 +4,7 @@
 namespace net {
 
 ServerStartedEvent::ServerStartedEvent()
-  : INetworkEvent(EventType::SERVER_STARTED)
+  : INetworkEvent(NetworkEventType::SERVER_STARTED)
 {}
 
 auto ServerStartedEvent::clone() const -> INetworkEventPtr

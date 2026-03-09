@@ -37,7 +37,7 @@ class AsioClient : public core::CoreObject,
   /// Calling this method before calling `connect` will fail.
   void disconnect();
 
-  bool isEventRelevant(const EventType &type) const override;
+  bool isEventRelevant(const NetworkEventType &type) const override;
   void onEventReceived(const INetworkEvent &event) override;
 
   /// @brief - Used to send a message to the server. Sending the data is queued for processing
