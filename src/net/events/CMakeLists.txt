@@ -4,7 +4,6 @@ target_include_directories (net_lib PUBLIC
 	)
 
 target_sources (net_lib PRIVATE
-	${CMAKE_CURRENT_SOURCE_DIR}/INetworkEvent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ConnectionEstablishedEvent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ConnectionLostEvent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ClientConnectedEvent.cc
