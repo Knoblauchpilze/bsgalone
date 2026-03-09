@@ -4,7 +4,7 @@
 
 namespace test {
 
-void TestNetworkEventQueue::pushEvent(net::IEventPtr event)
+void TestNetworkEventQueue::pushEvent(net::INetworkEventPtr event)
 {
   std::unique_lock guard(m_locker);
   m_events.push_back(std::move(event));
@@ -26,13 +26,13 @@ void TestNetworkEventQueue::processEvents()
   throw std::runtime_error("Unexpected call to processEvents on TestNetworkEventQueue");
 }
 
-auto TestNetworkEventQueue::waitForEvents() -> std::vector<net::IEventPtr>
+auto TestNetworkEventQueue::waitForEvents() -> std::vector<net::INetworkEventPtr>
 {
   std::unique_lock guard(m_locker);
 
   if (!m_events.empty())
   {
-    std::vector<net::IEventPtr> events{};
+    std::vector<net::INetworkEventPtr> events{};
     std::swap(events, m_events);
     return events;
   }
@@ -42,13 +42,13 @@ auto TestNetworkEventQueue::waitForEvents() -> std::vector<net::IEventPtr>
   constexpr auto REASONABLE_TIMEOUT = std::chrono::seconds(5);
   m_notifier.wait_for(guard, REASONABLE_TIMEOUT, [this] { return !m_events.empty(); });
 
-  std::vector<net::IEventPtr> events{};
+  std::vector<net::INetworkEventPtr> events{};
   std::swap(events, m_events);
   return events;
 }
 
 namespace {
-auto nameAllEvents(const std::vector<net::IEventPtr> &events) -> std::string
+auto nameAllEvents(const std::vector<net::INetworkEventPtr> &events) -> std::string
 {
   std::string out;
   if (events.empty())
@@ -70,7 +70,7 @@ auto nameAllEvents(const std::vector<net::IEventPtr> &events) -> std::string
 }
 } // namespace
 
-auto TestNetworkEventQueue::waitForEvent() -> net::IEventPtr
+auto TestNetworkEventQueue::waitForEvent() -> net::INetworkEventPtr
 {
   auto events = waitForEvents();
   if (events.size() != 1u)
@@ -79,24 +79,24 @@ auto TestNetworkEventQueue::waitForEvent() -> net::IEventPtr
                              + std::to_string(events.size()) + ": " + nameAllEvents(events));
   }
 
-  net::IEventPtr out{};
+  net::INetworkEventPtr out{};
   std::swap(out, events.at(0));
 
   return out;
 }
 
 auto TestNetworkEventQueue::waitForEvent(const net::EventType type, const int maxTries)
-  -> net::IEventPtr
+  -> net::INetworkEventPtr
 {
   int tryCount = 0;
-  net::IEventPtr out;
+  net::INetworkEventPtr out;
 
   while (out == nullptr && tryCount < maxTries)
   {
     auto events           = waitForEvents();
     const auto maybeEvent = std::find_if(events.begin(),
                                          events.end(),
-                                         [type](const net::IEventPtr &event) {
+                                         [type](const net::INetworkEventPtr &event) {
                                            return event->type() == type;
                                          });
     if (maybeEvent != events.end())

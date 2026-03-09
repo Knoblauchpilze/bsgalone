@@ -44,7 +44,7 @@ class AsioServer : public core::CoreObject,
   void shutdown();
 
   bool isEventRelevant(const EventType &type) const override;
-  void onEventReceived(const IEvent &event) override;
+  void onEventReceived(const INetworkEvent &event) override;
 
   /// @brief - Used to send a message to the client identified by the input identifier.
   /// Sending the data is queued for processing and will be send asynchronously.
@@ -132,7 +132,7 @@ class AsioServer : public core::CoreObject,
 
   void onConnectionRequest(const std::error_code &code, asio::ip::tcp::socket socket);
 
-  void handleConnectionFailure(const IEvent &event);
+  void handleConnectionFailure(const INetworkEvent &event);
 
   auto registerConnection(asio::ip::tcp::socket rawSocket) -> net::ClientId;
 

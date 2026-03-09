@@ -4,7 +4,7 @@
 namespace net {
 
 DataSentEvent::DataSentEvent(const std::optional<ClientId> &clientId, const MessageId messageId)
-  : IEvent(EventType::DATA_SENT)
+  : INetworkEvent(EventType::DATA_SENT)
   , m_clientId(clientId)
   , m_messageId(messageId)
 {}
@@ -19,7 +19,7 @@ auto DataSentEvent::messageId() const -> MessageId
   return m_messageId;
 }
 
-auto DataSentEvent::clone() const -> IEventPtr
+auto DataSentEvent::clone() const -> INetworkEventPtr
 {
   return std::make_unique<DataSentEvent>(m_clientId, m_messageId);
 }

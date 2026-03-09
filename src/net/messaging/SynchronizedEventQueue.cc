@@ -11,7 +11,7 @@ const auto UNIMPORTANT_EVENT_TYPES = std::unordered_set<EventType>{
 
 auto createSynchronizedEventQueue() -> INetworkEventQueuePtr
 {
-  return std::make_unique<messaging::AbstractSynchronizedEventQueue<EventType, IEvent>>(
+  return std::make_unique<messaging::AbstractSynchronizedEventQueue<EventType, INetworkEvent>>(
     allEventTypesAsSet(), UNIMPORTANT_EVENT_TYPES);
 }
 

@@ -28,7 +28,7 @@ class ClientListenerProxy : public INetworkEventListener
     return false;
   }
 
-  void onEventReceived(const IEvent &event)
+  void onEventReceived(const INetworkEvent &event)
   {
     auto listener = m_listener.lock();
     if (listener)
@@ -138,7 +138,7 @@ bool AsioClient::isEventRelevant(const EventType & /*type*/) const
   return true;
 }
 
-void AsioClient::onEventReceived(const IEvent &event)
+void AsioClient::onEventReceived(const INetworkEvent &event)
 {
   switch (event.type())
   {
@@ -226,7 +226,7 @@ void AsioClient::setupConnection()
   m_status = ConnectionStatus::CONNECTED;
 }
 
-void AsioClient::handleConnectionFailure(const IEvent & /*event*/)
+void AsioClient::handleConnectionFailure(const INetworkEvent & /*event*/)
 {
   debug("Detected network failure");
   m_eventBus->pushEvent(std::make_unique<ConnectionLostEvent>());

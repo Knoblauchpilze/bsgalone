@@ -23,7 +23,7 @@ bool InputNetworkAdapter::isEventRelevant(const net::EventType &type) const
   return type == net::EventType::DATA_RECEIVED;
 }
 
-void InputNetworkAdapter::onEventReceived(const net::IEvent &event)
+void InputNetworkAdapter::onEventReceived(const net::INetworkEvent &event)
 {
   const auto &dataReceived = event.as<net::DataReceivedEvent>();
   registerPendingData(dataReceived);

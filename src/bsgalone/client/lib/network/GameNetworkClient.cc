@@ -79,7 +79,7 @@ class NetworkEventListener : public net::INetworkEventListener
            || type == net::EventType::CONNECTION_LOST;
   }
 
-  void onEventReceived(const net::IEvent &event) override
+  void onEventReceived(const net::INetworkEvent &event) override
   {
     switch (event.type())
     {

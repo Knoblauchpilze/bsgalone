@@ -16,7 +16,7 @@ class TestNetworkEventQueue : public net::INetworkEventQueue
   TestNetworkEventQueue()           = default;
   ~TestNetworkEventQueue() override = default;
 
-  void pushEvent(net::IEventPtr event) override;
+  void pushEvent(net::INetworkEventPtr event) override;
   void addListener(net::INetworkEventListenerPtr listener) override;
   bool empty() override;
 
@@ -30,13 +30,13 @@ class TestNetworkEventQueue : public net::INetworkEventQueue
   /// received.
   /// When it succeeds, the function returns all available events.
   /// @return - the received events
-  auto waitForEvents() -> std::vector<net::IEventPtr>;
+  auto waitForEvents() -> std::vector<net::INetworkEventPtr>;
 
   /// @brief - Wraps a call to `waitForEvents` and expects a single event
   /// to be returned. In case more than one or none is returned an error
   /// will be raised.
   /// @return - the single event that was received
-  auto waitForEvent() -> net::IEventPtr;
+  auto waitForEvent() -> net::INetworkEventPtr;
 
   /// @brief - Used to wait until an event with the specified type is received.
   /// In case other events are received they will be ignored. This method will
@@ -49,13 +49,13 @@ class TestNetworkEventQueue : public net::INetworkEventQueue
   /// @param maxTries - the maximum number of tries to perform when waiting
   /// for an event
   /// @return - the event with the desired type
-  auto waitForEvent(const net::EventType type, const int maxTries = 2) -> net::IEventPtr;
+  auto waitForEvent(const net::EventType type, const int maxTries = 2) -> net::INetworkEventPtr;
 
   private:
   std::mutex m_locker{};
   std::condition_variable m_notifier{};
 
-  std::vector<net::IEventPtr> m_events{};
+  std::vector<net::INetworkEventPtr> m_events{};
 };
 
 using TestNetworkEventQueueShPtr = std::shared_ptr<TestNetworkEventQueue>;

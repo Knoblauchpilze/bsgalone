@@ -4,10 +4,10 @@
 namespace net {
 
 ServerStartedEvent::ServerStartedEvent()
-  : IEvent(EventType::SERVER_STARTED)
+  : INetworkEvent(EventType::SERVER_STARTED)
 {}
 
-auto ServerStartedEvent::clone() const -> IEventPtr
+auto ServerStartedEvent::clone() const -> INetworkEventPtr
 {
   return std::make_unique<ServerStartedEvent>();
 }

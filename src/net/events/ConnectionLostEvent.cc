@@ -4,10 +4,10 @@
 namespace net {
 
 ConnectionLostEvent::ConnectionLostEvent()
-  : IEvent(EventType::CONNECTION_LOST)
+  : INetworkEvent(EventType::CONNECTION_LOST)
 {}
 
-auto ConnectionLostEvent::clone() const -> IEventPtr
+auto ConnectionLostEvent::clone() const -> INetworkEventPtr
 {
   return std::make_unique<ConnectionLostEvent>();
 }

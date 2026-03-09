@@ -1,17 +1,17 @@
 
 #pragma once
 
-#include "IEvent.hh"
+#include "INetworkEvent.hh"
 
 namespace net {
 
-class ServerStoppedEvent : public IEvent
+class ServerStoppedEvent : public INetworkEvent
 {
   public:
   ServerStoppedEvent();
   ~ServerStoppedEvent() override = default;
 
-  auto clone() const -> IEventPtr override;
+  auto clone() const -> INetworkEventPtr override;
 };
 
 } // namespace net

@@ -2,12 +2,12 @@
 #pragma once
 
 #include "ClientId.hh"
-#include "IEvent.hh"
+#include "INetworkEvent.hh"
 #include <optional>
 
 namespace net {
 
-class DataReadFailureEvent : public IEvent
+class DataReadFailureEvent : public INetworkEvent
 {
   public:
   DataReadFailureEvent(const std::optional<ClientId> &clientId);
@@ -15,7 +15,7 @@ class DataReadFailureEvent : public IEvent
 
   auto tryGetClientId() const -> std::optional<ClientId>;
 
-  auto clone() const -> IEventPtr override;
+  auto clone() const -> INetworkEventPtr override;
 
   private:
   std::optional<ClientId> m_clientId{};

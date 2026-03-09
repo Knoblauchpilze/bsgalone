@@ -4,7 +4,7 @@
 namespace net {
 
 DataReceivedEvent::DataReceivedEvent(const std::optional<ClientId> &clientId, std::vector<char> data)
-  : IEvent(EventType::DATA_RECEIVED)
+  : INetworkEvent(EventType::DATA_RECEIVED)
   , m_clientId(clientId)
   , m_data(std::move(data))
 {}
@@ -19,7 +19,7 @@ auto DataReceivedEvent::data() const -> std::vector<char>
   return m_data;
 }
 
-auto DataReceivedEvent::clone() const -> IEventPtr
+auto DataReceivedEvent::clone() const -> INetworkEventPtr
 {
   return std::make_unique<DataReceivedEvent>(m_clientId, m_data);
 }

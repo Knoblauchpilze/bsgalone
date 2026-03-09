@@ -2,13 +2,13 @@
 #pragma once
 
 #include "EventType.hh"
-#include "IEvent.hh"
 #include "IEventQueue.hh"
+#include "INetworkEvent.hh"
 #include <memory>
 
 namespace net {
 
-using INetworkEventQueue      = messaging::IEventQueue<EventType, IEvent>;
+using INetworkEventQueue      = messaging::IEventQueue<EventType, INetworkEvent>;
 using INetworkEventQueuePtr   = std::unique_ptr<INetworkEventQueue>;
 using INetworkEventQueueShPtr = std::shared_ptr<INetworkEventQueue>;
 

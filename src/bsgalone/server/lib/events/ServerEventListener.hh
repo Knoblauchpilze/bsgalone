@@ -15,7 +15,7 @@ class ServerEventListener : public net::INetworkEventListener
   ~ServerEventListener() = default;
 
   bool isEventRelevant(const net::EventType &type) const override;
-  void onEventReceived(const net::IEvent &event) override;
+  void onEventReceived(const net::INetworkEvent &event) override;
 
   private:
   std::atomic_bool &m_started;

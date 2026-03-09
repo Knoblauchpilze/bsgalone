@@ -4,10 +4,10 @@
 namespace net {
 
 ConnectionEstablishedEvent::ConnectionEstablishedEvent()
-  : IEvent(EventType::CONNECTION_ESTABLISHED)
+  : INetworkEvent(EventType::CONNECTION_ESTABLISHED)
 {}
 
-auto ConnectionEstablishedEvent::clone() const -> IEventPtr
+auto ConnectionEstablishedEvent::clone() const -> INetworkEventPtr
 {
   return std::make_unique<ConnectionEstablishedEvent>();
 }

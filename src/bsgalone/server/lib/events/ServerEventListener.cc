@@ -12,7 +12,7 @@ bool ServerEventListener::isEventRelevant(const net::EventType &type) const
   return type == net::EventType::SERVER_STARTED || type == net::EventType::SERVER_STOPPED;
 }
 
-void ServerEventListener::onEventReceived(const net::IEvent &event)
+void ServerEventListener::onEventReceived(const net::INetworkEvent &event)
 {
   switch (event.type())
   {

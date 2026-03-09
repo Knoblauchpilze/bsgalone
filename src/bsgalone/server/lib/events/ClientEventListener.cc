@@ -24,7 +24,7 @@ bool ClientEventListener::isEventRelevant(const net::EventType &type) const
   return type == net::EventType::CLIENT_CONNECTED || type == net::EventType::CLIENT_DISCONNECTED;
 }
 
-void ClientEventListener::onEventReceived(const net::IEvent &event)
+void ClientEventListener::onEventReceived(const net::INetworkEvent &event)
 {
   switch (event.type())
   {

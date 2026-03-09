@@ -5,7 +5,7 @@ namespace net {
 
 DataWriteFailureEvent::DataWriteFailureEvent(const std::optional<ClientId> &clientId,
                                              const MessageId messageId)
-  : IEvent(EventType::DATA_WRITE_FAILURE)
+  : INetworkEvent(EventType::DATA_WRITE_FAILURE)
   , m_clientId(clientId)
   , m_messageId(messageId)
 {}
@@ -20,7 +20,7 @@ auto DataWriteFailureEvent::messageId() const -> MessageId
   return m_messageId;
 }
 
-auto DataWriteFailureEvent::clone() const -> IEventPtr
+auto DataWriteFailureEvent::clone() const -> INetworkEventPtr
 {
   return std::make_unique<DataWriteFailureEvent>(m_clientId, m_messageId);
 }

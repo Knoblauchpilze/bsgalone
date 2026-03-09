@@ -1,17 +1,17 @@
 
 #pragma once
 
-#include "IEvent.hh"
+#include "INetworkEvent.hh"
 
 namespace net {
 
-class ConnectionLostEvent : public IEvent
+class ConnectionLostEvent : public INetworkEvent
 {
   public:
   ConnectionLostEvent();
   ~ConnectionLostEvent() override = default;
 
-  auto clone() const -> IEventPtr override;
+  auto clone() const -> INetworkEventPtr override;
 };
 
 } // namespace net

@@ -23,7 +23,7 @@ class ServerListenerProxy : public INetworkEventListener
     return m_listener->isEventRelevant(type);
   }
 
-  void onEventReceived(const IEvent &event)
+  void onEventReceived(const INetworkEvent &event)
   {
     m_listener->onEventReceived(event);
   }
@@ -83,7 +83,7 @@ bool AsioServer::isEventRelevant(const EventType & /*type*/) const
   return true;
 }
 
-void AsioServer::onEventReceived(const IEvent &event)
+void AsioServer::onEventReceived(const INetworkEvent &event)
 {
   switch (event.type())
   {
@@ -152,7 +152,7 @@ void AsioServer::onConnectionRequest(const std::error_code &code, asio::ip::tcp:
 }
 
 namespace {
-auto tryGetClientId(const IEvent &event) -> std::optional<ClientId>
+auto tryGetClientId(const INetworkEvent &event) -> std::optional<ClientId>
 {
   switch (event.type())
   {
@@ -166,7 +166,7 @@ auto tryGetClientId(const IEvent &event) -> std::optional<ClientId>
 }
 } // namespace
 
-void AsioServer::handleConnectionFailure(const IEvent &event)
+void AsioServer::handleConnectionFailure(const INetworkEvent &event)
 {
   const auto maybeClientId = tryGetClientId(event);
   if (!maybeClientId)

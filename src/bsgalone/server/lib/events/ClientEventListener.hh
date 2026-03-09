@@ -17,7 +17,7 @@ class ClientEventListener : public net::INetworkEventListener
   ~ClientEventListener() override = default;
 
   bool isEventRelevant(const net::EventType &type) const override;
-  void onEventReceived(const net::IEvent &event) override;
+  void onEventReceived(const net::INetworkEvent &event) override;
 
   private:
   ClientManagerShPtr m_clientManager{};

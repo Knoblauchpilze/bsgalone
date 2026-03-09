@@ -6,14 +6,14 @@
 
 namespace net {
 
-class IEvent
+class INetworkEvent
 {
   public:
-  virtual ~IEvent() = default;
+  virtual ~INetworkEvent() = default;
 
   auto type() const -> EventType;
 
-  virtual auto clone() const -> std::unique_ptr<IEvent> = 0;
+  virtual auto clone() const -> std::unique_ptr<INetworkEvent> = 0;
 
   template<typename Event>
   auto as() -> Event &;
@@ -25,14 +25,14 @@ class IEvent
   bool isA() const;
 
   protected:
-  IEvent(const EventType type);
+  INetworkEvent(const EventType type);
 
   private:
   EventType m_type{};
 };
 
-using IEventPtr = std::unique_ptr<IEvent>;
+using INetworkEventPtr = std::unique_ptr<INetworkEvent>;
 
 } // namespace net
 
-#include "IEvent.hxx"
+#include "INetworkEvent.hxx"

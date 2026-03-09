@@ -38,7 +38,7 @@ class AsioClient : public core::CoreObject,
   void disconnect();
 
   bool isEventRelevant(const EventType &type) const override;
-  void onEventReceived(const IEvent &event) override;
+  void onEventReceived(const INetworkEvent &event) override;
 
   /// @brief - Used to send a message to the server. Sending the data is queued for processing
   /// and will be send asynchronously. Some notes:
@@ -114,7 +114,7 @@ class AsioClient : public core::CoreObject,
   /// information is not available to the client.
   void setupConnection();
 
-  void handleConnectionFailure(const IEvent &event);
+  void handleConnectionFailure(const INetworkEvent &event);
 
   /// @brief - Used to acquire the lock, set the connection status to the desired status and
   /// notify one waiting thread on the condition variable.

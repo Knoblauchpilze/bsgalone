@@ -2,11 +2,11 @@
 #pragma once
 
 #include "ClientId.hh"
-#include "IEvent.hh"
+#include "INetworkEvent.hh"
 
 namespace net {
 
-class ClientConnectedEvent : public IEvent
+class ClientConnectedEvent : public INetworkEvent
 {
   public:
   ClientConnectedEvent(const ClientId clientId);
@@ -14,7 +14,7 @@ class ClientConnectedEvent : public IEvent
 
   auto clientId() const -> ClientId;
 
-  auto clone() const -> IEventPtr override;
+  auto clone() const -> INetworkEventPtr override;
 
   private:
   ClientId m_clientId{};
