@@ -85,7 +85,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       # https://docs.github.com/en/actions/publishing-packages/publishing-docker-images#publishing-images-to-docker-hub
       - name: Build and push
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./build/ci-cpp-build-image/Dockerfile
