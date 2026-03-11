@@ -43,10 +43,10 @@ struct Target
 
   bool operator==(const Target &rhs) const;
 
-  auto serialize(std::ostream &out) const -> std::ostream &;
-  bool deserialize(std::istream &in);
-
   auto str() const -> std::string;
 };
+
+auto operator<<(std::ostream &out, const Target &target) -> std::ostream &;
+bool operator>>(std::istream &in, Target &target);
 
 } // namespace bsgalone::core

@@ -24,11 +24,11 @@ struct WeaponData
   std::unordered_map<Uuid, int> price{};
 
   bool operator==(const WeaponData &rhs) const;
-
-  auto serialize(std::ostream &out) const -> std::ostream &;
-  bool deserialize(std::istream &in);
 };
 
 auto fromDbWeapon(const Weapon &weapon, const WeaponPriceRepository &repository) -> WeaponData;
+
+auto operator<<(std::ostream &out, const WeaponData &data) -> std::ostream &;
+bool operator>>(std::istream &in, WeaponData &data);
 
 } // namespace bsgalone::core

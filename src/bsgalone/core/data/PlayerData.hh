@@ -18,9 +18,9 @@ struct PlayerData
   std::optional<Uuid> attachedShip{};
 
   bool operator==(const PlayerData &rhs) const;
-
-  auto serialize(std::ostream &out) const -> std::ostream &;
-  bool deserialize(std::istream &in);
 };
+
+auto operator<<(std::ostream &out, const PlayerData &data) -> std::ostream &;
+bool operator>>(std::istream &in, PlayerData &data);
 
 } // namespace bsgalone::core

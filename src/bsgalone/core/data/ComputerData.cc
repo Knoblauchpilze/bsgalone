@@ -9,46 +9,6 @@ bool ComputerData::operator==(const ComputerData &rhs) const
   return dbId == rhs.dbId;
 }
 
-auto ComputerData::serialize(std::ostream &out) const -> std::ostream &
-{
-  ::core::serialize(out, dbId);
-  ::core::serialize(out, name);
-  ::core::serialize(out, offensive);
-  ::core::serialize(out, powerCost);
-  ::core::serialize(out, range);
-  ::core::serialize(out, reloadTime);
-  ::core::serialize(out, duration);
-
-  ::core::serialize(out, allowedTargets);
-
-  ::core::serialize(out, damageModifier);
-
-  ::core::serialize(out, price);
-
-  return out;
-}
-
-bool ComputerData::deserialize(std::istream &in)
-{
-  bool ok{true};
-
-  ok &= ::core::deserialize(in, dbId);
-  ok &= ::core::deserialize(in, name);
-  ok &= ::core::deserialize(in, offensive);
-  ok &= ::core::deserialize(in, powerCost);
-  ok &= ::core::deserialize(in, range);
-  ok &= ::core::deserialize(in, reloadTime);
-  ok &= ::core::deserialize(in, duration);
-
-  ok &= ::core::deserialize(in, allowedTargets);
-
-  ok &= ::core::deserialize(in, damageModifier);
-
-  ok &= ::core::deserialize(in, price);
-
-  return ok;
-}
-
 auto fromDbComputer(const Computer &computer, const ComputerPriceRepository &repository)
   -> ComputerData
 {
@@ -70,6 +30,40 @@ auto fromDbComputer(const Computer &computer, const ComputerPriceRepository &rep
   }
 
   return out;
+}
+
+auto operator<<(std::ostream &out, const ComputerData &data) -> std::ostream &
+{
+  ::core::serialize(out, data.dbId);
+  ::core::serialize(out, data.name);
+  ::core::serialize(out, data.offensive);
+  ::core::serialize(out, data.powerCost);
+  ::core::serialize(out, data.range);
+  ::core::serialize(out, data.reloadTime);
+  ::core::serialize(out, data.duration);
+  ::core::serialize(out, data.allowedTargets);
+  ::core::serialize(out, data.damageModifier);
+  ::core::serialize(out, data.price);
+
+  return out;
+}
+
+bool operator>>(std::istream &in, ComputerData &data)
+{
+  bool ok{true};
+
+  ok &= ::core::deserialize(in, data.dbId);
+  ok &= ::core::deserialize(in, data.name);
+  ok &= ::core::deserialize(in, data.offensive);
+  ok &= ::core::deserialize(in, data.powerCost);
+  ok &= ::core::deserialize(in, data.range);
+  ok &= ::core::deserialize(in, data.reloadTime);
+  ok &= ::core::deserialize(in, data.duration);
+  ok &= ::core::deserialize(in, data.allowedTargets);
+  ok &= ::core::deserialize(in, data.damageModifier);
+  ok &= ::core::deserialize(in, data.price);
+
+  return ok;
 }
 
 } // namespace bsgalone::core

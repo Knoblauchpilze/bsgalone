@@ -9,22 +9,22 @@ bool SystemTickData::operator==(const SystemTickData &rhs) const
   return dbId == rhs.dbId;
 }
 
-auto SystemTickData::serialize(std::ostream &out) const -> std::ostream &
+auto operator<<(std::ostream &out, const SystemTickData &data) -> std::ostream &
 {
-  ::core::serialize(out, dbId);
-  ::core::serialize(out, currentTick);
-  ::core::serialize(out, step);
+  ::core::serialize(out, data.dbId);
+  ::core::serialize(out, data.currentTick);
+  ::core::serialize(out, data.step);
 
   return out;
 }
 
-bool SystemTickData::deserialize(std::istream &in)
+bool operator>>(std::istream &in, SystemTickData &data)
 {
   bool ok{true};
 
-  ok &= ::core::deserialize(in, dbId);
-  ok &= ::core::deserialize(in, currentTick);
-  ok &= ::core::deserialize(in, step);
+  ok &= ::core::deserialize(in, data.dbId);
+  ok &= ::core::deserialize(in, data.currentTick);
+  ok &= ::core::deserialize(in, data.step);
 
   return ok;
 }

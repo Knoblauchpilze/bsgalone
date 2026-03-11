@@ -59,9 +59,6 @@ class TickDuration
   /// @return - the result of this - rhs or TickDuration in case rhs is greater than this
   auto operator-(const TickDuration &rhs) const -> TickDuration;
 
-  auto serialize(std::ostream &out) const -> std::ostream &;
-  bool deserialize(std::istream &in);
-
   /// @brief - Creates a duration from an integer. This overload is to make it very
   /// intentional when a duration should be created from an integer rather than rely
   /// on the implicit conversion to floating point value.
@@ -81,6 +78,9 @@ class TickDuration
   // `Tick` class.
   friend class Tick;
 
+  friend auto operator<<(std::ostream &out, const TickDuration &tick) -> std::ostream &;
+  friend bool operator>>(std::istream &in, TickDuration &tick);
+
   void validate();
 };
 
@@ -90,5 +90,8 @@ class TickDuration
 /// @param rhs - a tick duration
 /// @return - the result of lhs * rhs as a float
 auto operator*(const float lhs, const TickDuration &rhs) -> float;
+
+auto operator<<(std::ostream &out, const TickDuration &tick) -> std::ostream &;
+bool operator>>(std::istream &in, TickDuration &tick);
 
 } // namespace chrono

@@ -20,9 +20,9 @@ struct AsteroidData
   std::optional<int> amount{};
 
   bool operator==(const AsteroidData &rhs) const;
-
-  auto serialize(std::ostream &out) const -> std::ostream &;
-  bool deserialize(std::istream &in);
 };
+
+auto operator<<(std::ostream &out, const AsteroidData &data) -> std::ostream &;
+bool operator>>(std::istream &in, AsteroidData &data);
 
 } // namespace bsgalone::core

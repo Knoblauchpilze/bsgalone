@@ -35,11 +35,11 @@ struct ShipData
   std::unordered_map<Uuid, int> price{};
 
   bool operator==(const ShipData &rhs) const;
-
-  auto serialize(std::ostream &out) const -> std::ostream &;
-  bool deserialize(std::istream &in);
 };
 
 auto fromDbShip(const Ship &ship, const ShipPriceRepository &repository) -> ShipData;
+
+auto operator<<(std::ostream &out, const ShipData &data) -> std::ostream &;
+bool operator>>(std::istream &in, ShipData &data);
 
 } // namespace bsgalone::core

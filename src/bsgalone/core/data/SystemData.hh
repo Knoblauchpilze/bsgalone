@@ -13,9 +13,9 @@ struct SystemData
   Eigen::Vector3f position{Eigen::Vector3f::Zero()};
 
   bool operator==(const SystemData &rhs) const;
-
-  auto serialize(std::ostream &out) const -> std::ostream &;
-  bool deserialize(std::istream &in);
 };
+
+auto operator<<(std::ostream &out, const SystemData &data) -> std::ostream &;
+bool operator>>(std::istream &in, SystemData &data);
 
 } // namespace bsgalone::core

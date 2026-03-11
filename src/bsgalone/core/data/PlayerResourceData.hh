@@ -14,11 +14,11 @@ struct PlayerResourceData
   int amount{};
 
   bool operator==(const PlayerResourceData &rhs) const;
-
-  auto serialize(std::ostream &out) const -> std::ostream &;
-  bool deserialize(std::istream &in);
 };
 
 auto fromDbPlayerResource(const PlayerResource &playerResource) -> PlayerResourceData;
+
+auto operator<<(std::ostream &out, const PlayerResourceData &data) -> std::ostream &;
+bool operator>>(std::istream &in, PlayerResourceData &data);
 
 } // namespace bsgalone::core

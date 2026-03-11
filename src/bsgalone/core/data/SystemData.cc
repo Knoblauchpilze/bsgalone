@@ -9,22 +9,22 @@ bool SystemData::operator==(const SystemData &rhs) const
   return dbId == rhs.dbId;
 }
 
-auto SystemData::serialize(std::ostream &out) const -> std::ostream &
+auto operator<<(std::ostream &out, const SystemData &data) -> std::ostream &
 {
-  ::core::serialize(out, dbId);
-  ::core::serialize(out, name);
-  ::core::serialize(out, position);
+  ::core::serialize(out, data.dbId);
+  ::core::serialize(out, data.name);
+  ::core::serialize(out, data.position);
 
   return out;
 }
 
-bool SystemData::deserialize(std::istream &in)
+bool operator>>(std::istream &in, SystemData &data)
 {
   bool ok{true};
 
-  ok &= ::core::deserialize(in, dbId);
-  ok &= ::core::deserialize(in, name);
-  ok &= ::core::deserialize(in, position);
+  ok &= ::core::deserialize(in, data.dbId);
+  ok &= ::core::deserialize(in, data.name);
+  ok &= ::core::deserialize(in, data.position);
 
   return ok;
 }

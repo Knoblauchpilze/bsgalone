@@ -9,76 +9,76 @@ bool PlayerShipData::operator==(const PlayerShipData &rhs) const
   return dbId == rhs.dbId;
 }
 
-auto PlayerShipData::serialize(std::ostream &out) const -> std::ostream &
+auto operator<<(std::ostream &out, const PlayerShipData &data) -> std::ostream &
 {
-  ::core::serialize(out, dbId);
-  ::core::serialize(out, shipId);
-  ::core::serialize(out, position);
-  ::core::serialize(out, radius);
-  ::core::serialize(out, acceleration);
-  ::core::serialize(out, speed);
-  ::core::serialize(out, hullPoints);
-  ::core::serialize(out, maxHullPoints);
-  ::core::serialize(out, hullPointsRegen);
-  ::core::serialize(out, powerPoints);
-  ::core::serialize(out, maxPowerPoints);
-  ::core::serialize(out, powerRegen);
-  ::core::serialize(out, faction);
-  ::core::serialize(out, status);
-  ::core::serialize(out, shipClass);
-  ::core::serialize(out, name);
-  ::core::serialize(out, docked);
-  ::core::serialize(out, active);
-  ::core::serialize(out, jumpTime);
-  ::core::serialize(out, jumpTimeInThreat);
-  ::core::serialize(out, jumpSystem);
+  ::core::serialize(out, data.dbId);
+  ::core::serialize(out, data.shipId);
+  ::core::serialize(out, data.position);
+  ::core::serialize(out, data.radius);
+  ::core::serialize(out, data.acceleration);
+  ::core::serialize(out, data.speed);
+  ::core::serialize(out, data.hullPoints);
+  ::core::serialize(out, data.maxHullPoints);
+  ::core::serialize(out, data.hullPointsRegen);
+  ::core::serialize(out, data.powerPoints);
+  ::core::serialize(out, data.maxPowerPoints);
+  ::core::serialize(out, data.powerRegen);
+  ::core::serialize(out, data.faction);
+  ::core::serialize(out, data.status);
+  ::core::serialize(out, data.shipClass);
+  ::core::serialize(out, data.name);
+  ::core::serialize(out, data.docked);
+  ::core::serialize(out, data.active);
+  ::core::serialize(out, data.jumpTime);
+  ::core::serialize(out, data.jumpTimeInThreat);
+  ::core::serialize(out, data.jumpSystem);
 
-  ::core::serialize(out, playerDbId);
+  ::core::serialize(out, data.playerDbId);
 
-  ::core::serialize(out, slots);
-  ::core::serialize(out, aiTargets);
-  ::core::serialize(out, reachedTarget);
+  ::core::serialize(out, data.slots);
+  ::core::serialize(out, data.aiTargets);
+  ::core::serialize(out, data.reachedTarget);
 
-  ::core::serialize(out, weapons);
-  ::core::serialize(out, computers);
+  ::core::serialize(out, data.weapons);
+  ::core::serialize(out, data.computers);
 
   return out;
 }
 
-bool PlayerShipData::deserialize(std::istream &in)
+bool operator>>(std::istream &in, PlayerShipData &data)
 {
   bool ok{true};
 
-  ok &= ::core::deserialize(in, dbId);
-  ok &= ::core::deserialize(in, shipId);
-  ok &= ::core::deserialize(in, position);
-  ok &= ::core::deserialize(in, radius);
-  ok &= ::core::deserialize(in, acceleration);
-  ok &= ::core::deserialize(in, speed);
-  ok &= ::core::deserialize(in, hullPoints);
-  ok &= ::core::deserialize(in, maxHullPoints);
-  ok &= ::core::deserialize(in, hullPointsRegen);
-  ok &= ::core::deserialize(in, powerPoints);
-  ok &= ::core::deserialize(in, maxPowerPoints);
-  ok &= ::core::deserialize(in, powerRegen);
-  ok &= ::core::deserialize(in, faction);
-  ok &= ::core::deserialize(in, status);
-  ok &= ::core::deserialize(in, shipClass);
-  ok &= ::core::deserialize(in, name);
-  ok &= ::core::deserialize(in, docked);
-  ok &= ::core::deserialize(in, active);
-  ok &= ::core::deserialize(in, jumpTime);
-  ok &= ::core::deserialize(in, jumpTimeInThreat);
-  ok &= ::core::deserialize(in, jumpSystem);
+  ok &= ::core::deserialize(in, data.dbId);
+  ok &= ::core::deserialize(in, data.shipId);
+  ok &= ::core::deserialize(in, data.position);
+  ok &= ::core::deserialize(in, data.radius);
+  ok &= ::core::deserialize(in, data.acceleration);
+  ok &= ::core::deserialize(in, data.speed);
+  ok &= ::core::deserialize(in, data.hullPoints);
+  ok &= ::core::deserialize(in, data.maxHullPoints);
+  ok &= ::core::deserialize(in, data.hullPointsRegen);
+  ok &= ::core::deserialize(in, data.powerPoints);
+  ok &= ::core::deserialize(in, data.maxPowerPoints);
+  ok &= ::core::deserialize(in, data.powerRegen);
+  ok &= ::core::deserialize(in, data.faction);
+  ok &= ::core::deserialize(in, data.status);
+  ok &= ::core::deserialize(in, data.shipClass);
+  ok &= ::core::deserialize(in, data.name);
+  ok &= ::core::deserialize(in, data.docked);
+  ok &= ::core::deserialize(in, data.active);
+  ok &= ::core::deserialize(in, data.jumpTime);
+  ok &= ::core::deserialize(in, data.jumpTimeInThreat);
+  ok &= ::core::deserialize(in, data.jumpSystem);
 
-  ok &= ::core::deserialize(in, playerDbId);
+  ok &= ::core::deserialize(in, data.playerDbId);
 
-  ok &= ::core::deserialize(in, slots);
-  ok &= ::core::deserialize(in, aiTargets);
-  ok &= ::core::deserialize(in, reachedTarget);
+  ok &= ::core::deserialize(in, data.slots);
+  ok &= ::core::deserialize(in, data.aiTargets);
+  ok &= ::core::deserialize(in, data.reachedTarget);
 
-  ok &= ::core::deserialize(in, weapons);
-  ok &= ::core::deserialize(in, computers);
+  ok &= ::core::deserialize(in, data.weapons);
+  ok &= ::core::deserialize(in, data.computers);
 
   return ok;
 }

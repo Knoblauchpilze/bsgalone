@@ -16,9 +16,9 @@ struct SystemTickData
   chrono::TimeStep step{};
 
   bool operator==(const SystemTickData &rhs) const;
-
-  auto serialize(std::ostream &out) const -> std::ostream &;
-  bool deserialize(std::istream &in);
 };
+
+auto operator<<(std::ostream &out, const SystemTickData &data) -> std::ostream &;
+bool operator>>(std::istream &in, SystemTickData &data);
 
 } // namespace bsgalone::core

@@ -9,38 +9,6 @@ bool WeaponData::operator==(const WeaponData &rhs) const
   return dbId == rhs.dbId;
 }
 
-auto WeaponData::serialize(std::ostream &out) const -> std::ostream &
-{
-  ::core::serialize(out, dbId);
-  ::core::serialize(out, name);
-  ::core::serialize(out, minDamage);
-  ::core::serialize(out, maxDamage);
-  ::core::serialize(out, powerCost);
-  ::core::serialize(out, range);
-  ::core::serialize(out, reloadTime);
-
-  ::core::serialize(out, price);
-
-  return out;
-}
-
-bool WeaponData::deserialize(std::istream &in)
-{
-  bool ok{true};
-
-  ok &= ::core::deserialize(in, dbId);
-  ok &= ::core::deserialize(in, name);
-  ok &= ::core::deserialize(in, minDamage);
-  ok &= ::core::deserialize(in, maxDamage);
-  ok &= ::core::deserialize(in, powerCost);
-  ok &= ::core::deserialize(in, range);
-  ok &= ::core::deserialize(in, reloadTime);
-
-  ok &= ::core::deserialize(in, price);
-
-  return ok;
-}
-
 auto fromDbWeapon(const Weapon &weapon, const WeaponPriceRepository &repository) -> WeaponData
 {
   WeaponData out{
@@ -59,6 +27,36 @@ auto fromDbWeapon(const Weapon &weapon, const WeaponPriceRepository &repository)
   }
 
   return out;
+}
+
+auto operator<<(std::ostream &out, const WeaponData &data) -> std::ostream &
+{
+  ::core::serialize(out, data.dbId);
+  ::core::serialize(out, data.name);
+  ::core::serialize(out, data.minDamage);
+  ::core::serialize(out, data.maxDamage);
+  ::core::serialize(out, data.powerCost);
+  ::core::serialize(out, data.range);
+  ::core::serialize(out, data.reloadTime);
+  ::core::serialize(out, data.price);
+
+  return out;
+}
+
+bool operator>>(std::istream &in, WeaponData &data)
+{
+  bool ok{true};
+
+  ok &= ::core::deserialize(in, data.dbId);
+  ok &= ::core::deserialize(in, data.name);
+  ok &= ::core::deserialize(in, data.minDamage);
+  ok &= ::core::deserialize(in, data.maxDamage);
+  ok &= ::core::deserialize(in, data.powerCost);
+  ok &= ::core::deserialize(in, data.range);
+  ok &= ::core::deserialize(in, data.reloadTime);
+  ok &= ::core::deserialize(in, data.price);
+
+  return ok;
 }
 
 } // namespace bsgalone::core

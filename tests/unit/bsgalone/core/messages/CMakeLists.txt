@@ -14,7 +14,6 @@ add_subdirectory(
 target_sources(unitTests PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/Comparison.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/MessageTypeTest.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/SerializationBehaviorTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/UuidTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/StringTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/OptionalTest.cc

@@ -47,9 +47,9 @@ struct PlayerShipData
   std::vector<PlayerComputerData> computers{};
 
   bool operator==(const PlayerShipData &rhs) const;
-
-  auto serialize(std::ostream &out) const -> std::ostream &;
-  bool deserialize(std::istream &in);
 };
+
+auto operator<<(std::ostream &out, const PlayerShipData &data) -> std::ostream &;
+bool operator>>(std::istream &in, PlayerShipData &data);
 
 } // namespace bsgalone::core

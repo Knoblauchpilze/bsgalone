@@ -9,24 +9,24 @@ bool PlayerData::operator==(const PlayerData &rhs) const
   return dbId == rhs.dbId;
 }
 
-auto PlayerData::serialize(std::ostream &out) const -> std::ostream &
+auto operator<<(std::ostream &out, const PlayerData &data) -> std::ostream &
 {
-  ::core::serialize(out, dbId);
-  ::core::serialize(out, name);
-  ::core::serialize(out, isAi);
-  ::core::serialize(out, attachedShip);
+  ::core::serialize(out, data.dbId);
+  ::core::serialize(out, data.name);
+  ::core::serialize(out, data.isAi);
+  ::core::serialize(out, data.attachedShip);
 
   return out;
 }
 
-bool PlayerData::deserialize(std::istream &in)
+bool operator>>(std::istream &in, PlayerData &data)
 {
   bool ok{true};
 
-  ok &= ::core::deserialize(in, dbId);
-  ok &= ::core::deserialize(in, name);
-  ok &= ::core::deserialize(in, isAi);
-  ok &= ::core::deserialize(in, attachedShip);
+  ok &= ::core::deserialize(in, data.dbId);
+  ok &= ::core::deserialize(in, data.name);
+  ok &= ::core::deserialize(in, data.isAi);
+  ok &= ::core::deserialize(in, data.attachedShip);
 
   return ok;
 }

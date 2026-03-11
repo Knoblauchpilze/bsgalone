@@ -9,52 +9,6 @@ bool ShipData::operator==(const ShipData &rhs) const
   return dbId == rhs.dbId;
 }
 
-auto ShipData::serialize(std::ostream &out) const -> std::ostream &
-{
-  ::core::serialize(out, dbId);
-  ::core::serialize(out, faction);
-  ::core::serialize(out, shipClass);
-  ::core::serialize(out, name);
-  ::core::serialize(out, maxHullPoints);
-  ::core::serialize(out, hullPointsRegen);
-  ::core::serialize(out, maxPowerPoints);
-  ::core::serialize(out, powerRegen);
-  ::core::serialize(out, acceleration);
-  ::core::serialize(out, speed);
-  ::core::serialize(out, radius);
-  ::core::serialize(out, jumpTime);
-  ::core::serialize(out, jumpTimeInThreat);
-
-  ::core::serialize(out, slots);
-  ::core::serialize(out, price);
-
-  return out;
-}
-
-bool ShipData::deserialize(std::istream &in)
-{
-  bool ok{true};
-
-  ok &= ::core::deserialize(in, dbId);
-  ok &= ::core::deserialize(in, faction);
-  ok &= ::core::deserialize(in, shipClass);
-  ok &= ::core::deserialize(in, name);
-  ok &= ::core::deserialize(in, maxHullPoints);
-  ok &= ::core::deserialize(in, hullPointsRegen);
-  ok &= ::core::deserialize(in, maxPowerPoints);
-  ok &= ::core::deserialize(in, powerRegen);
-  ok &= ::core::deserialize(in, acceleration);
-  ok &= ::core::deserialize(in, speed);
-  ok &= ::core::deserialize(in, radius);
-  ok &= ::core::deserialize(in, jumpTime);
-  ok &= ::core::deserialize(in, jumpTimeInThreat);
-
-  ok &= ::core::deserialize(in, slots);
-  ok &= ::core::deserialize(in, price);
-
-  return ok;
-}
-
 auto fromDbShip(const Ship &ship, const ShipPriceRepository &repository) -> ShipData
 {
   ShipData out{
@@ -82,6 +36,50 @@ auto fromDbShip(const Ship &ship, const ShipPriceRepository &repository) -> Ship
   }
 
   return out;
+}
+
+auto operator<<(std::ostream &out, const ShipData &data) -> std::ostream &
+{
+  ::core::serialize(out, data.dbId);
+  ::core::serialize(out, data.faction);
+  ::core::serialize(out, data.shipClass);
+  ::core::serialize(out, data.name);
+  ::core::serialize(out, data.maxHullPoints);
+  ::core::serialize(out, data.hullPointsRegen);
+  ::core::serialize(out, data.maxPowerPoints);
+  ::core::serialize(out, data.powerRegen);
+  ::core::serialize(out, data.acceleration);
+  ::core::serialize(out, data.speed);
+  ::core::serialize(out, data.radius);
+  ::core::serialize(out, data.jumpTime);
+  ::core::serialize(out, data.jumpTimeInThreat);
+  ::core::serialize(out, data.slots);
+  ::core::serialize(out, data.price);
+
+  return out;
+}
+
+bool operator>>(std::istream &in, ShipData &data)
+{
+  bool ok{true};
+
+  ok &= ::core::deserialize(in, data.dbId);
+  ok &= ::core::deserialize(in, data.faction);
+  ok &= ::core::deserialize(in, data.shipClass);
+  ok &= ::core::deserialize(in, data.name);
+  ok &= ::core::deserialize(in, data.maxHullPoints);
+  ok &= ::core::deserialize(in, data.hullPointsRegen);
+  ok &= ::core::deserialize(in, data.maxPowerPoints);
+  ok &= ::core::deserialize(in, data.powerRegen);
+  ok &= ::core::deserialize(in, data.acceleration);
+  ok &= ::core::deserialize(in, data.speed);
+  ok &= ::core::deserialize(in, data.radius);
+  ok &= ::core::deserialize(in, data.jumpTime);
+  ok &= ::core::deserialize(in, data.jumpTimeInThreat);
+  ok &= ::core::deserialize(in, data.slots);
+  ok &= ::core::deserialize(in, data.price);
+
+  return ok;
 }
 
 } // namespace bsgalone::core

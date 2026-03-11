@@ -23,7 +23,6 @@ auto PlayerResourceListMessage::serialize(std::ostream &out) const -> std::ostre
 {
   ::core::serialize(out, m_messageType);
   ::core::serialize(out, m_clientId);
-
   ::core::serialize(out, m_resourcesData);
 
   return out;
@@ -34,7 +33,6 @@ bool PlayerResourceListMessage::deserialize(std::istream &in)
   bool ok{true};
   ok &= ::core::deserialize(in, m_messageType);
   ok &= ::core::deserialize(in, m_clientId);
-
   ok &= ::core::deserialize(in, m_resourcesData);
 
   return ok;

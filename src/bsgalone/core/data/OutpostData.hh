@@ -22,9 +22,9 @@ struct OutpostData
   Faction faction{};
 
   bool operator==(const OutpostData &rhs) const;
-
-  auto serialize(std::ostream &out) const -> std::ostream &;
-  bool deserialize(std::istream &in);
 };
+
+auto operator<<(std::ostream &out, const OutpostData &data) -> std::ostream &;
+bool operator>>(std::istream &in, OutpostData &data);
 
 } // namespace bsgalone::core

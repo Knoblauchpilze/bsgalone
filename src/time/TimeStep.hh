@@ -17,12 +17,15 @@ class TimeStep
 
   auto operator==(const TimeStep &rhs) const -> bool;
 
-  auto serialize(std::ostream &out) const -> std::ostream &;
-  bool deserialize(std::istream &in);
-
   private:
   int m_ticks{1};
   Duration m_duration{.unit = Unit::MILLISECONDS, .elapsed = 100.0f};
+
+  friend auto operator<<(std::ostream &out, const TimeStep &step) -> std::ostream &;
+  friend bool operator>>(std::istream &in, TimeStep &step);
 };
+
+auto operator<<(std::ostream &out, const TimeStep &step) -> std::ostream &;
+bool operator>>(std::istream &in, TimeStep &step);
 
 } // namespace chrono

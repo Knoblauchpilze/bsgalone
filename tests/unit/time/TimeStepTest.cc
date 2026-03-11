@@ -117,9 +117,9 @@ namespace {
 inline void serializeAndDeserializeTimeStep(const TimeStep &value, TimeStep &output)
 {
   std::ostringstream out{};
-  value.serialize(out);
+  out << value;
   std::istringstream in(out.str());
-  output.deserialize(in);
+  in >> output;
 }
 } // namespace
 

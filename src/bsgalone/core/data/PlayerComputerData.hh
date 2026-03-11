@@ -26,9 +26,9 @@ struct PlayerComputerData
   std::optional<float> damageModifier{};
 
   bool operator==(const PlayerComputerData &rhs) const;
-
-  auto serialize(std::ostream &out) const -> std::ostream &;
-  bool deserialize(std::istream &in);
 };
+
+auto operator<<(std::ostream &out, const PlayerComputerData &data) -> std::ostream &;
+bool operator>>(std::istream &in, PlayerComputerData &data);
 
 } // namespace bsgalone::core

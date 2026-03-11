@@ -10,30 +10,30 @@ bool AsteroidData::operator==(const AsteroidData &rhs) const
   return dbId == rhs.dbId;
 }
 
-auto AsteroidData::serialize(std::ostream &out) const -> std::ostream &
+auto operator<<(std::ostream &out, const AsteroidData &data) -> std::ostream &
 {
-  ::core::serialize(out, dbId);
-  ::core::serialize(out, position);
-  ::core::serialize(out, radius);
-  ::core::serialize(out, health);
-  ::core::serialize(out, maxHealth);
-  ::core::serialize(out, resource);
-  ::core::serialize(out, amount);
+  ::core::serialize(out, data.dbId);
+  ::core::serialize(out, data.position);
+  ::core::serialize(out, data.radius);
+  ::core::serialize(out, data.health);
+  ::core::serialize(out, data.maxHealth);
+  ::core::serialize(out, data.resource);
+  ::core::serialize(out, data.amount);
 
   return out;
 }
 
-bool AsteroidData::deserialize(std::istream &in)
+bool operator>>(std::istream &in, AsteroidData &data)
 {
   bool ok{true};
 
-  ok &= ::core::deserialize(in, dbId);
-  ok &= ::core::deserialize(in, position);
-  ok &= ::core::deserialize(in, radius);
-  ok &= ::core::deserialize(in, health);
-  ok &= ::core::deserialize(in, maxHealth);
-  ok &= ::core::deserialize(in, resource);
-  ok &= ::core::deserialize(in, amount);
+  ok &= ::core::deserialize(in, data.dbId);
+  ok &= ::core::deserialize(in, data.position);
+  ok &= ::core::deserialize(in, data.radius);
+  ok &= ::core::deserialize(in, data.health);
+  ok &= ::core::deserialize(in, data.maxHealth);
+  ok &= ::core::deserialize(in, data.resource);
+  ok &= ::core::deserialize(in, data.amount);
 
   return ok;
 }

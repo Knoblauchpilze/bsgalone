@@ -9,20 +9,20 @@ bool ResourceData::operator==(const ResourceData &rhs) const
   return dbId == rhs.dbId;
 }
 
-auto ResourceData::serialize(std::ostream &out) const -> std::ostream &
+auto operator<<(std::ostream &out, const ResourceData &data) -> std::ostream &
 {
-  ::core::serialize(out, dbId);
-  ::core::serialize(out, name);
+  ::core::serialize(out, data.dbId);
+  ::core::serialize(out, data.name);
 
   return out;
 }
 
-bool ResourceData::deserialize(std::istream &in)
+bool operator>>(std::istream &in, ResourceData &data)
 {
   bool ok{true};
 
-  ok &= ::core::deserialize(in, dbId);
-  ok &= ::core::deserialize(in, name);
+  ok &= ::core::deserialize(in, data.dbId);
+  ok &= ::core::deserialize(in, data.name);
 
   return ok;
 }

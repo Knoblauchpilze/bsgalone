@@ -75,21 +75,6 @@ auto TickDuration::operator-(const TickDuration &rhs) const -> TickDuration
   return TickDuration(duration);
 }
 
-auto TickDuration::serialize(std::ostream &out) const -> std::ostream &
-{
-  core::serialize(out, m_elapsed);
-
-  return out;
-}
-
-bool TickDuration::deserialize(std::istream &in)
-{
-  bool ok{true};
-  ok &= core::deserialize(in, m_elapsed);
-
-  return ok;
-}
-
 auto TickDuration::fromInt(const int duration) -> TickDuration
 {
   return TickDuration(static_cast<float>(duration));
@@ -107,6 +92,21 @@ void TickDuration::validate()
 auto operator*(const float lhs, const TickDuration &rhs) -> float
 {
   return rhs * lhs;
+}
+
+auto operator<<(std::ostream &out, const TickDuration &tick) -> std::ostream &
+{
+  core::serialize(out, tick.m_elapsed);
+
+  return out;
+}
+
+bool operator>>(std::istream &in, TickDuration &tick)
+{
+  bool ok{true};
+  ok &= core::deserialize(in, tick.m_elapsed);
+
+  return ok;
 }
 
 } // namespace chrono

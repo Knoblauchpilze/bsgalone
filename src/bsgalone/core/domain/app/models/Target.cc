@@ -10,28 +10,6 @@ bool Target::operator==(const Target &rhs) const
          && targetDbId == rhs.targetDbId && targetKind == rhs.targetKind;
 }
 
-auto Target::serialize(std::ostream &out) const -> std::ostream &
-{
-  ::core::serialize(out, sourceDbId);
-  ::core::serialize(out, sourceKind);
-  ::core::serialize(out, targetDbId);
-  ::core::serialize(out, targetKind);
-
-  return out;
-}
-
-bool Target::deserialize(std::istream &in)
-{
-  bool ok{true};
-
-  ok &= ::core::deserialize(in, sourceDbId);
-  ok &= ::core::deserialize(in, sourceKind);
-  ok &= ::core::deserialize(in, targetDbId);
-  ok &= ::core::deserialize(in, targetKind);
-
-  return ok;
-}
-
 auto Target::str() const -> std::string
 {
   std::string out = "[(" + core::str(sourceKind) + "," + core::str(sourceDbId) + "), (";
@@ -58,6 +36,28 @@ auto Target::str() const -> std::string
   out += ")]";
 
   return out;
+}
+
+auto operator<<(std::ostream &out, const Target &target) -> std::ostream &
+{
+  ::core::serialize(out, target.sourceDbId);
+  ::core::serialize(out, target.sourceKind);
+  ::core::serialize(out, target.targetDbId);
+  ::core::serialize(out, target.targetKind);
+
+  return out;
+}
+
+bool operator>>(std::istream &in, Target &target)
+{
+  bool ok{true};
+
+  ok &= ::core::deserialize(in, target.sourceDbId);
+  ok &= ::core::deserialize(in, target.sourceKind);
+  ok &= ::core::deserialize(in, target.targetDbId);
+  ok &= ::core::deserialize(in, target.targetKind);
+
+  return ok;
 }
 
 } // namespace bsgalone::core

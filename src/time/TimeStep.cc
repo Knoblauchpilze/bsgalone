@@ -25,21 +25,21 @@ auto TimeStep::operator==(const TimeStep &rhs) const -> bool
   return sameDuration && (m_ticks == rhs.m_ticks);
 }
 
-auto TimeStep::serialize(std::ostream &out) const -> std::ostream &
+auto operator<<(std::ostream &out, const TimeStep &step) -> std::ostream &
 {
-  core::serialize(out, m_ticks);
-  core::serialize(out, m_duration.unit);
-  core::serialize(out, m_duration.elapsed);
+  core::serialize(out, step.m_ticks);
+  core::serialize(out, step.m_duration.unit);
+  core::serialize(out, step.m_duration.elapsed);
 
   return out;
 }
 
-bool TimeStep::deserialize(std::istream &in)
+bool operator>>(std::istream &in, TimeStep &step)
 {
   bool ok{true};
-  ok &= core::deserialize(in, m_ticks);
-  ok &= core::deserialize(in, m_duration.unit);
-  ok &= core::deserialize(in, m_duration.elapsed);
+  ok &= core::deserialize(in, step.m_ticks);
+  ok &= core::deserialize(in, step.m_duration.unit);
+  ok &= core::deserialize(in, step.m_duration.elapsed);
 
   return ok;
 }

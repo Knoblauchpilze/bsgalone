@@ -29,12 +29,12 @@ struct ComputerData
   std::unordered_map<Uuid, int> price{};
 
   bool operator==(const ComputerData &rhs) const;
-
-  auto serialize(std::ostream &out) const -> std::ostream &;
-  bool deserialize(std::istream &in);
 };
 
 auto fromDbComputer(const Computer &computer, const ComputerPriceRepository &repository)
   -> ComputerData;
+
+auto operator<<(std::ostream &out, const ComputerData &data) -> std::ostream &;
+bool operator>>(std::istream &in, ComputerData &data);
 
 } // namespace bsgalone::core

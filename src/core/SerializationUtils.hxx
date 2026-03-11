@@ -213,13 +213,15 @@ bool deserialize(std::istream &in, std::unordered_set<T> &s)
 template<serializable T>
 inline auto serialize(std::ostream &out, const T &e) -> std::ostream &
 {
-  return e.serialize(out);
+  out << e;
+  return out;
 }
 
 template<deserializable T>
 bool deserialize(std::istream &in, T &e)
 {
-  return e.deserialize(in);
+  in >> e;
+  return in.good();
 }
 
 /// https://en.cppreference.com/w/cpp/types/is_arithmetic.html
