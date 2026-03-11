@@ -5,5 +5,6 @@ target_include_directories(unitTests PUBLIC
 
 target_sources(unitTests PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/GameRoleTest.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/MessageTypeTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/UuidTest.cc
 	)

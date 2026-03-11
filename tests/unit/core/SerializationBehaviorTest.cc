@@ -1,4 +1,5 @@
 
+#include "Common.hh"
 #include "Faction.hh"
 #include "SerializationUtils.hh"
 #include "Slot.hh"
@@ -70,13 +71,27 @@ TEST(Unit_Core_Serialization, Nominal_Uuid)
   EXPECT_EQ(actual, expected);
 }
 
-TEST(Unit_Core_Serialization, Nominal_String)
+TEST(Unit_Core_Serialization, Nominal_Empty)
+{
+  const std::string expected{};
+  std::string actual{"some-string"};
+  test::serializeAndDeserialize(expected, actual);
+  EXPECT_EQ(actual, expected);
+}
+
+TEST(Unit_Core_Serialization, Nominal_WithValue)
 {
   const std::string expected{"0some-string"};
+  std::string actual{};
+  test::serializeAndDeserialize(expected, actual);
+  EXPECT_EQ(actual, expected);
+}
 
-  const auto [success, actual] = serializeAndDeserialize(expected, false);
-
-  EXPECT_TRUE(success);
+TEST(Unit_Core_Serialization, Nominal_NumericalValue)
+{
+  const std::string expected{"1230"};
+  std::string actual{};
+  test::serializeAndDeserialize(expected, actual);
   EXPECT_EQ(actual, expected);
 }
 
@@ -97,6 +112,76 @@ TEST(Unit_Core_Serialization, Nominal_Optional)
   const auto [success, actual] = serializeAndDeserialize(expected, false);
 
   EXPECT_TRUE(success);
+  EXPECT_EQ(actual, expected);
+}
+
+TEST(Unit_Core_Serialization, Nominal_Optional_Uuid_Empty)
+{
+  const std::optional<Uuid> expected{};
+  std::optional<Uuid> actual{Uuid{1}};
+  test::serializeAndDeserialize(expected, actual);
+  EXPECT_EQ(actual, expected);
+}
+
+TEST(Unit_Core_Serialization, Nominal_Optional_Uuid_WithValue)
+{
+  const std::optional<Uuid> expected{Uuid{14}};
+  std::optional<Uuid> actual{};
+  test::serializeAndDeserialize(expected, actual);
+  EXPECT_EQ(actual, expected);
+}
+
+TEST(Unit_Core_Serialization, Nominal_Optional_EmptyAndSomeValueAfter)
+{
+  const std::optional<Uuid> expectedOpt{};
+  const auto expectedFloat{1.68f};
+
+  std::ostringstream out;
+  ::core::serialize(out, expectedOpt);
+  ::core::serialize(out, expectedFloat);
+  std::istringstream in(out.str());
+
+  std::optional<Uuid> actualOpt{};
+  float actualFloat{};
+  ::core::deserialize(in, actualOpt);
+  ::core::deserialize(in, actualFloat);
+
+  EXPECT_EQ(actualOpt, expectedOpt);
+  EXPECT_EQ(actualFloat, expectedFloat);
+}
+
+TEST(Unit_Core_Serialization, Nominal_Optional_WithValueAndSomeValueAfter)
+{
+  const std::optional<Uuid> expectedOpt{};
+  const auto expectedSlot{Slot::COMPUTER};
+
+  std::ostringstream out;
+  ::core::serialize(out, expectedOpt);
+  ::core::serialize(out, expectedSlot);
+  std::istringstream in(out.str());
+
+  std::optional<Uuid> actualOpt{};
+  Slot actualSlot{};
+  ::core::deserialize(in, actualOpt);
+  ::core::deserialize(in, actualSlot);
+
+  EXPECT_EQ(actualOpt, expectedOpt);
+  EXPECT_EQ(actualSlot, expectedSlot);
+}
+
+TEST(Unit_Core_Serialization, Nominal_Optional_Faction_Empty)
+{
+  const std::optional<Faction> expected{};
+  std::optional<Faction> actual{Faction::COLONIAL};
+  test::serializeAndDeserialize(expected, actual);
+  EXPECT_EQ(actual, expected);
+}
+
+TEST(Unit_Core_Serialization, Nominal_Optional_Faction_WithValue)
+{
+  const std::optional<Faction> expected{Faction::CYLON};
+  std::optional<Faction> actual{};
+  test::serializeAndDeserialize(expected, actual);
   EXPECT_EQ(actual, expected);
 }
 

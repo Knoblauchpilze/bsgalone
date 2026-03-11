@@ -29,7 +29,7 @@ TEST_P(TestCaseSerialization, Serialization)
   EXPECT_EQ(param.type, expected);
 }
 
-INSTANTIATE_TEST_SUITE_P(Unit_Bsgalone_Core_Messages_MessageType,
+INSTANTIATE_TEST_SUITE_P(Unit_Bsgalone_Core_Enums_MessageType,
                          TestCaseSerialization,
                          Values(TestCaseMessageType{MessageType::DOCK},
                                 TestCaseMessageType{MessageType::EQUIP},
