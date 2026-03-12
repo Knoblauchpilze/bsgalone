@@ -60,6 +60,7 @@ TEST(Unit_Bsgalone_Core_Domain_App_Models_Target, DifferentWhenOnePropIsDifferen
   EXPECT_FALSE(data1 == data2);
 }
 
+// TODO: This should not be in the models but in the driven adapters.
 TEST(Unit_Bsgalone_Core_Domain_App_Models_Target, Basic)
 {
   Target input{.sourceDbId = Uuid{1234},

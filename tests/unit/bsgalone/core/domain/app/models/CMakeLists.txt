@@ -4,5 +4,6 @@ target_include_directories(unitTests PUBLIC
 	)
 
 target_sources(unitTests PUBLIC
+	${CMAKE_CURRENT_SOURCE_DIR}/SystemTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/TargetTest.cc
 	)

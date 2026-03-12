@@ -20,5 +20,6 @@ add_subdirectory (
 	)
 
 target_sources (bsgalone_core_lib PRIVATE
+	${CMAKE_CURRENT_SOURCE_DIR}/System.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/Target.cc
 	)
