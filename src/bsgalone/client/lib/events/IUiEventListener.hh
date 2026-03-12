@@ -1,14 +1,14 @@
 
 #pragma once
 
-#include "IEvent.hh"
 #include "IEventListener.hh"
+#include "IUiEvent.hh"
 #include "UiEventType.hh"
 #include <memory>
 
 namespace bsgalone::client {
 
-using IUiEventListener    = messaging::IEventListener<UiEventType, IEvent>;
+using IUiEventListener    = messaging::IEventListener<UiEventType, IUiEvent>;
 using IUiEventListenerPtr = std::unique_ptr<IUiEventListener>;
 
 } // namespace bsgalone::client
