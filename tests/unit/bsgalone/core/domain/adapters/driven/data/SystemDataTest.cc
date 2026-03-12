@@ -8,7 +8,7 @@ using namespace ::testing;
 
 namespace bsgalone::core {
 
-TEST(Unit_Bsgalone_Core_Messages_SystemData, EqualWhenDbIdIsEqual)
+TEST(Unit_Bsgalone_Core_Domain_Adapters_Driven_Data_SystemData, EqualWhenDbIdIsEqual)
 {
   SystemData data1{.dbId     = Uuid{1234},
                    .name     = "system-1",
@@ -19,7 +19,7 @@ TEST(Unit_Bsgalone_Core_Messages_SystemData, EqualWhenDbIdIsEqual)
   EXPECT_TRUE(data1 == data2);
 }
 
-TEST(Unit_Bsgalone_Core_Messages_SystemData, DifferentWhenDbIdIsDifferent)
+TEST(Unit_Bsgalone_Core_Domain_Adapters_Driven_Data_SystemData, DifferentWhenDbIdIsDifferent)
 {
   SystemData data1{.dbId     = Uuid{1234},
                    .name     = "a-place",
@@ -31,7 +31,7 @@ TEST(Unit_Bsgalone_Core_Messages_SystemData, DifferentWhenDbIdIsDifferent)
   EXPECT_FALSE(data1 == data2);
 }
 
-TEST(Unit_Bsgalone_Core_Messages_SystemData, Basic)
+TEST(Unit_Bsgalone_Core_Domain_Adapters_Driven_Data_SystemData, Basic)
 {
   SystemData input{.dbId     = Uuid{1234},
                    .name     = "test-system",

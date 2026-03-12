@@ -4,5 +4,9 @@ target_include_directories (bsgalone_core_lib PUBLIC
 	)
 
 add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/data
+	)
+
+add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/events
 	)

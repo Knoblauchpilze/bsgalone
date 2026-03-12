@@ -8,7 +8,7 @@ using namespace ::testing;
 
 namespace bsgalone::core {
 
-TEST(Unit_Bsgalone_Core_Messages_SystemTickData, EqualWhenDbIdIsEqual)
+TEST(Unit_Bsgalone_Core_Domain_Adapters_Driven_Data_SystemTickData, EqualWhenDbIdIsEqual)
 {
   SystemTickData data1{.dbId        = Uuid{1234},
                        .currentTick = chrono::Tick(1.2f),
@@ -25,7 +25,7 @@ TEST(Unit_Bsgalone_Core_Messages_SystemTickData, EqualWhenDbIdIsEqual)
   EXPECT_TRUE(data1 == data2);
 }
 
-TEST(Unit_Bsgalone_Core_Messages_SystemTickData, DifferentWhenDbIdIsDifferent)
+TEST(Unit_Bsgalone_Core_Domain_Adapters_Driven_Data_SystemTickData, DifferentWhenDbIdIsDifferent)
 {
   SystemTickData data1{.dbId        = Uuid{1234},
                        .currentTick = chrono::Tick(1.2f),
@@ -39,7 +39,7 @@ TEST(Unit_Bsgalone_Core_Messages_SystemTickData, DifferentWhenDbIdIsDifferent)
   EXPECT_FALSE(data1 == data2);
 }
 
-TEST(Unit_Bsgalone_Core_Messages_SystemTickData, Basic)
+TEST(Unit_Bsgalone_Core_Domain_Adapters_Driven_Data_SystemTickData, Basic)
 {
   SystemTickData input{.dbId        = Uuid{1234},
                        .currentTick = chrono::Tick(0.04705f),
