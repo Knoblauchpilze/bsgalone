@@ -14,10 +14,7 @@ class TestPlayerMessage : public bsgalone::core::AbstractPlayerMessage
   TestPlayerMessage(const bsgalone::core::Uuid playerDbId, const bsgalone::core::Uuid systemDbId);
   ~TestPlayerMessage() override = default;
 
-  auto serialize(std::ostream &out) const -> std::ostream & override;
-  bool deserialize(std::istream &in) override;
-
-  auto clone() const -> std::unique_ptr<IMessage> override;
+  auto clone() const -> bsgalone::core::IMessagePtr override;
 };
 
 } // namespace test

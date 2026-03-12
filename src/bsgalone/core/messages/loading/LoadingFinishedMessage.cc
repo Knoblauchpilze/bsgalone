@@ -29,7 +29,7 @@ auto LoadingFinishedMessage::getPlayerDbId() const -> Uuid
 {
   if (!m_playerDbId)
   {
-    error("Expected player db id to be defined but it was not");
+    throw std::runtime_error("Expected player db id to be defined but it was not");
   }
   return *m_playerDbId;
 }
@@ -37,31 +37,6 @@ auto LoadingFinishedMessage::getPlayerDbId() const -> Uuid
 void LoadingFinishedMessage::setSystemDbId(const Uuid systemDbId)
 {
   m_systemDbId = systemDbId;
-}
-
-auto LoadingFinishedMessage::serialize(std::ostream &out) const -> std::ostream &
-{
-  ::core::serialize(out, m_messageType);
-  ::core::serialize(out, m_clientId);
-
-  ::core::serialize(out, m_transition);
-  ::core::serialize(out, m_systemDbId);
-  ::core::serialize(out, m_playerDbId);
-
-  return out;
-}
-
-bool LoadingFinishedMessage::deserialize(std::istream &in)
-{
-  bool ok{true};
-  ok &= ::core::deserialize(in, m_messageType);
-  ok &= ::core::deserialize(in, m_clientId);
-
-  ok &= ::core::deserialize(in, m_transition);
-  ok &= ::core::deserialize(in, m_systemDbId);
-  ok &= ::core::deserialize(in, m_playerDbId);
-
-  return ok;
 }
 
 auto LoadingFinishedMessage::clone() const -> IMessagePtr
@@ -75,6 +50,28 @@ auto LoadingFinishedMessage::clone() const -> IMessagePtr
   clone->copyClientIdIfDefined(*this);
 
   return clone;
+}
+
+auto operator<<(std::ostream &out, const LoadingFinishedMessage &message) -> std::ostream &
+{
+  ::core::serialize(out, message.m_type);
+  ::core::serialize(out, message.m_clientId);
+  ::core::serialize(out, message.m_transition);
+  ::core::serialize(out, message.m_systemDbId);
+  ::core::serialize(out, message.m_playerDbId);
+
+  return out;
+}
+
+auto operator>>(std::istream &in, LoadingFinishedMessage &message) -> std::istream &
+{
+  ::core::deserialize(in, message.m_type);
+  ::core::deserialize(in, message.m_clientId);
+  ::core::deserialize(in, message.m_transition);
+  ::core::deserialize(in, message.m_systemDbId);
+  ::core::deserialize(in, message.m_playerDbId);
+
+  return in;
 }
 
 } // namespace bsgalone::core

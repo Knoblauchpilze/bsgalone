@@ -19,11 +19,10 @@ void assertMessagesAreEqual(const ShipSelectedMessage &actual, const ShipSelecte
 TEST(Unit_Bsgalone_Core_Messages_Player_ShipSelectedMessage, SerializationDeserialization)
 {
   const ShipSelectedMessage expected(Uuid{18}, Uuid{19}, Uuid{26});
-  ShipSelectedMessage actual(Uuid{6}, Uuid{25}, Uuid{4});
 
-  serializeAndDeserializeMessage(expected, actual);
+  const auto actual = serializeAndDeserializePlayerMessage(expected);
 
-  assertMessagesAreEqual(actual, expected);
+  assertMessagesAreEqual(actual->as<ShipSelectedMessage>(), expected);
 }
 
 TEST(Unit_Bsgalone_Core_Messages_Player_ShipSelectedMessage, Clone)

@@ -47,7 +47,7 @@ auto EntityRemovedMessage::getSystemDbId() const -> Uuid
 {
   if (!m_systemDbId)
   {
-    error("Expected system db id to be defined but it was not");
+    throw std::runtime_error("Expected system db id to be defined but it was not");
   }
   return *m_systemDbId;
 }
@@ -57,33 +57,6 @@ auto EntityRemovedMessage::tryGetSystemDbId() const -> std::optional<Uuid>
   return m_systemDbId;
 }
 
-auto EntityRemovedMessage::serialize(std::ostream &out) const -> std::ostream &
-{
-  ::core::serialize(out, m_messageType);
-  ::core::serialize(out, m_clientId);
-
-  ::core::serialize(out, m_entityDbId);
-  ::core::serialize(out, m_entityKind);
-  ::core::serialize(out, m_dead);
-  ::core::serialize(out, m_systemDbId);
-
-  return out;
-}
-
-bool EntityRemovedMessage::deserialize(std::istream &in)
-{
-  bool ok{true};
-  ok &= ::core::deserialize(in, m_messageType);
-  ok &= ::core::deserialize(in, m_clientId);
-
-  ok &= ::core::deserialize(in, m_entityDbId);
-  ok &= ::core::deserialize(in, m_entityKind);
-  ok &= ::core::deserialize(in, m_dead);
-  ok &= ::core::deserialize(in, m_systemDbId);
-
-  return ok;
-}
-
 auto EntityRemovedMessage::clone() const -> IMessagePtr
 {
   auto clone          = std::make_unique<EntityRemovedMessage>(m_entityDbId, m_entityKind, m_dead);
@@ -91,6 +64,30 @@ auto EntityRemovedMessage::clone() const -> IMessagePtr
   clone->copyClientIdIfDefined(*this);
 
   return clone;
+}
+
+auto operator<<(std::ostream &out, const EntityRemovedMessage &message) -> std::ostream &
+{
+  ::core::serialize(out, message.m_type);
+  ::core::serialize(out, message.m_clientId);
+  ::core::serialize(out, message.m_entityDbId);
+  ::core::serialize(out, message.m_entityKind);
+  ::core::serialize(out, message.m_dead);
+  ::core::serialize(out, message.m_systemDbId);
+
+  return out;
+}
+
+auto operator>>(std::istream &in, EntityRemovedMessage &message) -> std::istream &
+{
+  ::core::deserialize(in, message.m_type);
+  ::core::deserialize(in, message.m_clientId);
+  ::core::deserialize(in, message.m_entityDbId);
+  ::core::deserialize(in, message.m_entityKind);
+  ::core::deserialize(in, message.m_dead);
+  ::core::deserialize(in, message.m_systemDbId);
+
+  return in;
 }
 
 } // namespace bsgalone::core

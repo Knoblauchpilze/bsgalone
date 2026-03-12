@@ -46,7 +46,7 @@ auto serializeAndDeserialize(const VelocityMessage &expected, const bool truncat
   -> std::optional<IMessagePtr>
 {
   std::ostringstream out{};
-  expected.serialize(out);
+  out << expected;
 
   auto serialized = out.str();
   if (truncate)

@@ -10,24 +10,7 @@ TestSystemMessage::TestSystemMessage(const bsgalone::core::Uuid systemDbId)
   : AbstractSystemMessage(bsgalone::core::MessageType::DOCK, systemDbId)
 {}
 
-auto TestSystemMessage::serialize(std::ostream &out) const -> std::ostream &
-{
-  ::core::serialize(out, m_messageType);
-  ::core::serialize(out, m_systemDbId);
-
-  return out;
-}
-
-bool TestSystemMessage::deserialize(std::istream &in)
-{
-  bool ok{true};
-  ok &= ::core::deserialize(in, m_messageType);
-  ok &= ::core::deserialize(in, m_systemDbId);
-
-  return ok;
-}
-
-auto TestSystemMessage::clone() const -> std::unique_ptr<IMessage>
+auto TestSystemMessage::clone() const -> bsgalone::core::IMessagePtr
 {
   return std::make_unique<TestSystemMessage>(m_systemDbId);
 }

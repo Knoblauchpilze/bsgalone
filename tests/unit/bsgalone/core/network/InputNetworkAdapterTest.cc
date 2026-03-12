@@ -16,7 +16,7 @@ auto generateCompleteScannedMessage() -> std::vector<char>
 {
   ScannedMessage message(Uuid{2}, Uuid{4});
   std::stringstream out;
-  message.serialize(out);
+  out << message;
   const auto serialized = out.str();
   return std::vector<char>(serialized.begin(), serialized.end());
 }
@@ -213,7 +213,7 @@ TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter, SetsClientIdForNetworkMessa
 
   LootMessage message(Uuid{2}, Uuid{4}, 12);
   std::stringstream out;
-  message.serialize(out);
+  out << message;
   const auto serialized = out.str();
   std::vector<char> data(serialized.begin(), serialized.end());
 
@@ -234,7 +234,7 @@ TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter, OverridesExistingClientIdWi
   LootMessage message(Uuid{2}, Uuid{4}, 12);
   message.setClientId(net::ClientId{118});
   std::stringstream out;
-  message.serialize(out);
+  out << message;
   const auto serialized = out.str();
   std::vector<char> data(serialized.begin(), serialized.end());
 

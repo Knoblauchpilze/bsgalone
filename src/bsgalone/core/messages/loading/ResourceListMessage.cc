@@ -18,33 +18,30 @@ auto ResourceListMessage::getResourcesData() const -> const std::vector<Resource
   return m_resourcesData;
 }
 
-auto ResourceListMessage::serialize(std::ostream &out) const -> std::ostream &
-{
-  ::core::serialize(out, m_messageType);
-  ::core::serialize(out, m_clientId);
-
-  ::core::serialize(out, m_resourcesData);
-
-  return out;
-}
-
-bool ResourceListMessage::deserialize(std::istream &in)
-{
-  bool ok{true};
-  ok &= ::core::deserialize(in, m_messageType);
-  ok &= ::core::deserialize(in, m_clientId);
-
-  ok &= ::core::deserialize(in, m_resourcesData);
-
-  return ok;
-}
-
 auto ResourceListMessage::clone() const -> IMessagePtr
 {
   auto clone = std::make_unique<ResourceListMessage>(m_resourcesData);
   clone->copyClientIdIfDefined(*this);
 
   return clone;
+}
+
+auto operator<<(std::ostream &out, const ResourceListMessage &message) -> std::ostream &
+{
+  ::core::serialize(out, message.m_type);
+  ::core::serialize(out, message.m_clientId);
+  ::core::serialize(out, message.m_resourcesData);
+
+  return out;
+}
+
+auto operator>>(std::istream &in, ResourceListMessage &message) -> std::istream &
+{
+  ::core::deserialize(in, message.m_type);
+  ::core::deserialize(in, message.m_clientId);
+  ::core::deserialize(in, message.m_resourcesData);
+
+  return in;
 }
 
 } // namespace bsgalone::core

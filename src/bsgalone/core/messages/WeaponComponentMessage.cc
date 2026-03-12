@@ -28,33 +28,6 @@ bool WeaponComponentMessage::isActive() const
   return m_active;
 }
 
-auto WeaponComponentMessage::serialize(std::ostream &out) const -> std::ostream &
-{
-  ::core::serialize(out, m_messageType);
-  ::core::serialize(out, m_clientId);
-
-  ::core::serialize(out, m_shipDbId);
-  ::core::serialize(out, m_component);
-  ::core::serialize(out, m_weaponDbId);
-  ::core::serialize(out, m_active);
-
-  return out;
-}
-
-bool WeaponComponentMessage::deserialize(std::istream &in)
-{
-  bool ok{true};
-  ok &= ::core::deserialize(in, m_messageType);
-  ok &= ::core::deserialize(in, m_clientId);
-
-  ok &= ::core::deserialize(in, m_shipDbId);
-  ok &= ::core::deserialize(in, m_component);
-  ok &= ::core::deserialize(in, m_weaponDbId);
-  ok &= ::core::deserialize(in, m_active);
-
-  return ok;
-}
-
 auto WeaponComponentMessage::clone() const -> IMessagePtr
 {
   auto clone          = std::make_unique<WeaponComponentMessage>();
@@ -66,6 +39,30 @@ auto WeaponComponentMessage::clone() const -> IMessagePtr
   clone->copyClientIdIfDefined(*this);
 
   return clone;
+}
+
+auto operator<<(std::ostream &out, const WeaponComponentMessage &message) -> std::ostream &
+{
+  ::core::serialize(out, message.m_type);
+  ::core::serialize(out, message.m_clientId);
+  ::core::serialize(out, message.m_shipDbId);
+  ::core::serialize(out, message.m_component);
+  ::core::serialize(out, message.m_weaponDbId);
+  ::core::serialize(out, message.m_active);
+
+  return out;
+}
+
+auto operator>>(std::istream &in, WeaponComponentMessage &message) -> std::istream &
+{
+  ::core::deserialize(in, message.m_type);
+  ::core::deserialize(in, message.m_clientId);
+  ::core::deserialize(in, message.m_shipDbId);
+  ::core::deserialize(in, message.m_component);
+  ::core::deserialize(in, message.m_weaponDbId);
+  ::core::deserialize(in, message.m_active);
+
+  return in;
 }
 
 } // namespace bsgalone::core

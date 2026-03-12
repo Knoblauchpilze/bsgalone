@@ -21,21 +21,19 @@ void assertMessagesAreEqual(const SlotMessage &actual, const SlotMessage &expect
 TEST(Unit_Bsgalone_Core_Messages_Player_SlotMessage, Computer)
 {
   const SlotMessage expected(Uuid{18}, Uuid{19}, Uuid{14}, Uuid{2}, Slot::COMPUTER);
-  SlotMessage actual(Uuid{43}, Uuid{39}, Uuid{36}, Uuid{1}, Slot::WEAPON);
 
-  serializeAndDeserializeMessage(expected, actual);
+  const auto actual = serializeAndDeserializePlayerMessage(expected);
 
-  assertMessagesAreEqual(actual, expected);
+  assertMessagesAreEqual(actual->as<SlotMessage>(), expected);
 }
 
 TEST(Unit_Bsgalone_Core_Messages_Player_SlotMessage, Weapon)
 {
   const SlotMessage expected(Uuid{18}, Uuid{19}, Uuid{1}, Uuid{49}, Slot::WEAPON);
-  SlotMessage actual(Uuid{43}, Uuid{39}, Uuid{57}, Uuid{48}, Slot::COMPUTER);
 
-  serializeAndDeserializeMessage(expected, actual);
+  const auto actual = serializeAndDeserializePlayerMessage(expected);
 
-  assertMessagesAreEqual(actual, expected);
+  assertMessagesAreEqual(actual->as<SlotMessage>(), expected);
 }
 
 TEST(Unit_Bsgalone_Core_Messages_Player_SlotMessage, Clone)

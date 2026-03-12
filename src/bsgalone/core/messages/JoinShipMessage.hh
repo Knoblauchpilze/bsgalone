@@ -16,14 +16,17 @@ class JoinShipMessage : public NetworkMessage
   auto getPlayerDbId() const -> Uuid;
   auto getShipDbId() const -> Uuid;
 
-  auto serialize(std::ostream &out) const -> std::ostream & override;
-  bool deserialize(std::istream &in) override;
-
   auto clone() const -> IMessagePtr override;
 
   private:
   Uuid m_playerDbId{};
   Uuid m_shipDbId{};
+
+  friend auto operator<<(std::ostream &out, const JoinShipMessage &message) -> std::ostream &;
+  friend auto operator>>(std::istream &in, JoinShipMessage &message) -> std::istream &;
 };
+
+auto operator<<(std::ostream &out, const JoinShipMessage &message) -> std::ostream &;
+auto operator>>(std::istream &in, JoinShipMessage &message) -> std::istream &;
 
 } // namespace bsgalone::core

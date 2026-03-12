@@ -50,41 +50,36 @@ auto SignupMessage::getPlayerDbId() const -> std::optional<Uuid>
   return m_playerDbId;
 }
 
-auto SignupMessage::serialize(std::ostream &out) const -> std::ostream &
-{
-  ::core::serialize(out, m_messageType);
-  ::core::serialize(out, m_clientId);
-
-  ::core::serialize(out, m_name);
-  ::core::serialize(out, m_password);
-  ::core::serialize(out, m_faction);
-
-  ::core::serialize(out, m_playerDbId);
-
-  return out;
-}
-
-bool SignupMessage::deserialize(std::istream &in)
-{
-  bool ok{true};
-  ok &= ::core::deserialize(in, m_messageType);
-  ok &= ::core::deserialize(in, m_clientId);
-
-  ok &= ::core::deserialize(in, m_name);
-  ok &= ::core::deserialize(in, m_password);
-  ok &= ::core::deserialize(in, m_faction);
-
-  ok &= ::core::deserialize(in, m_playerDbId);
-
-  return ok;
-}
-
 auto SignupMessage::clone() const -> IMessagePtr
 {
   auto clone = std::make_unique<SignupMessage>(m_name, m_password, m_faction, m_playerDbId);
   clone->copyClientIdIfDefined(*this);
 
   return clone;
+}
+
+auto operator<<(std::ostream &out, const SignupMessage &message) -> std::ostream &
+{
+  ::core::serialize(out, message.m_type);
+  ::core::serialize(out, message.m_clientId);
+  ::core::serialize(out, message.m_name);
+  ::core::serialize(out, message.m_password);
+  ::core::serialize(out, message.m_faction);
+  ::core::serialize(out, message.m_playerDbId);
+
+  return out;
+}
+
+auto operator>>(std::istream &in, SignupMessage &message) -> std::istream &
+{
+  ::core::deserialize(in, message.m_type);
+  ::core::deserialize(in, message.m_clientId);
+  ::core::deserialize(in, message.m_name);
+  ::core::deserialize(in, message.m_password);
+  ::core::deserialize(in, message.m_faction);
+  ::core::deserialize(in, message.m_playerDbId);
+
+  return in;
 }
 
 } // namespace bsgalone::core

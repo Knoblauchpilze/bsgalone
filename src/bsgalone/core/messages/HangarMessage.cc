@@ -30,33 +30,30 @@ auto HangarMessage::getShip() const -> PlayerShipData
   return m_ship;
 }
 
-auto HangarMessage::serialize(std::ostream &out) const -> std::ostream &
-{
-  ::core::serialize(out, m_messageType);
-  ::core::serialize(out, m_clientId);
-
-  ::core::serialize(out, m_ship);
-
-  return out;
-}
-
-bool HangarMessage::deserialize(std::istream &in)
-{
-  bool ok{true};
-  ok &= ::core::deserialize(in, m_messageType);
-  ok &= ::core::deserialize(in, m_clientId);
-
-  ok &= ::core::deserialize(in, m_ship);
-
-  return ok;
-}
-
 auto HangarMessage::clone() const -> IMessagePtr
 {
   auto clone = std::make_unique<HangarMessage>(m_ship);
   clone->copyClientIdIfDefined(*this);
 
   return clone;
+}
+
+auto operator<<(std::ostream &out, const HangarMessage &message) -> std::ostream &
+{
+  ::core::serialize(out, message.m_type);
+  ::core::serialize(out, message.m_clientId);
+  ::core::serialize(out, message.m_ship);
+
+  return out;
+}
+
+auto operator>>(std::istream &in, HangarMessage &message) -> std::istream &
+{
+  ::core::deserialize(in, message.m_type);
+  ::core::deserialize(in, message.m_clientId);
+  ::core::deserialize(in, message.m_ship);
+
+  return in;
 }
 
 } // namespace bsgalone::core

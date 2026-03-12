@@ -19,9 +19,6 @@ class PurchaseMessage : public AbstractPlayerMessage
   auto getItemType() const -> Item;
   auto getItemDbId() const -> Uuid;
 
-  auto serialize(std::ostream &out) const -> std::ostream & override;
-  bool deserialize(std::istream &in) override;
-
   auto clone() const -> IMessagePtr override;
 
   /// @brief - Tries to read a purchase message from the input stream. If
@@ -38,6 +35,10 @@ class PurchaseMessage : public AbstractPlayerMessage
   Uuid m_itemDbId{};
 
   PurchaseMessage();
+
+  friend auto operator<<(std::ostream &out, const PurchaseMessage &message) -> std::ostream &;
 };
+
+auto operator<<(std::ostream &out, const PurchaseMessage &message) -> std::ostream &;
 
 } // namespace bsgalone::core

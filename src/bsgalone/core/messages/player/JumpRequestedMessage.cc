@@ -27,31 +27,6 @@ auto JumpRequestedMessage::getDestinationSystem() const -> Uuid
   return m_destinationSystemDbId;
 }
 
-auto JumpRequestedMessage::serialize(std::ostream &out) const -> std::ostream &
-{
-  ::core::serialize(out, m_messageType);
-  ::core::serialize(out, m_playerDbId);
-  ::core::serialize(out, m_systemDbId);
-
-  ::core::serialize(out, m_shipDbId);
-  ::core::serialize(out, m_destinationSystemDbId);
-
-  return out;
-}
-
-bool JumpRequestedMessage::deserialize(std::istream &in)
-{
-  bool ok{true};
-  ok &= ::core::deserialize(in, m_messageType);
-  ok &= ::core::deserialize(in, m_playerDbId);
-  ok &= ::core::deserialize(in, m_systemDbId);
-
-  ok &= ::core::deserialize(in, m_shipDbId);
-  ok &= ::core::deserialize(in, m_destinationSystemDbId);
-
-  return ok;
-}
-
 auto JumpRequestedMessage::clone() const -> IMessagePtr
 {
   return std::make_unique<JumpRequestedMessage>(m_playerDbId,
@@ -64,12 +39,30 @@ auto JumpRequestedMessage::readFromStream(std::istream &in) -> std::optional<IMe
 {
   JumpRequestedMessage message;
 
-  if (!message.deserialize(in))
+  bool ok{true};
+  ok &= ::core::deserialize(in, message.m_type);
+  ok &= ::core::deserialize(in, message.m_playerDbId);
+  ok &= ::core::deserialize(in, message.m_systemDbId);
+  ok &= ::core::deserialize(in, message.m_shipDbId);
+  ok &= ::core::deserialize(in, message.m_destinationSystemDbId);
+
+  if (!ok)
   {
     return {};
   }
 
   return message.clone();
+}
+
+auto operator<<(std::ostream &out, const JumpRequestedMessage &message) -> std::ostream &
+{
+  ::core::serialize(out, message.m_type);
+  ::core::serialize(out, message.m_playerDbId);
+  ::core::serialize(out, message.m_systemDbId);
+  ::core::serialize(out, message.m_shipDbId);
+  ::core::serialize(out, message.m_destinationSystemDbId);
+
+  return out;
 }
 
 } // namespace bsgalone::core

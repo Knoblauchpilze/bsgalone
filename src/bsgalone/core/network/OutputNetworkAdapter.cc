@@ -46,7 +46,6 @@ auto OutputNetworkAdapter::serializeMessage(const IMessage &message) const -> st
 {
   std::ostringstream out{};
   out << message;
-
   const auto &rawMessage = out.str();
   return std::vector<char>(rawMessage.begin(), rawMessage.end());
 }

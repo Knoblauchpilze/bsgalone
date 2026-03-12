@@ -15,13 +15,16 @@ class SystemDataMessage : public NetworkMessage
 
   auto getTickData() const -> SystemTickData;
 
-  auto serialize(std::ostream &out) const -> std::ostream & override;
-  bool deserialize(std::istream &in) override;
-
   auto clone() const -> IMessagePtr override;
 
   private:
   SystemTickData m_tickData{};
+
+  friend auto operator<<(std::ostream &out, const SystemDataMessage &message) -> std::ostream &;
+  friend auto operator>>(std::istream &in, SystemDataMessage &message) -> std::istream &;
 };
+
+auto operator<<(std::ostream &out, const SystemDataMessage &message) -> std::ostream &;
+auto operator>>(std::istream &in, SystemDataMessage &message) -> std::istream &;
 
 } // namespace bsgalone::core

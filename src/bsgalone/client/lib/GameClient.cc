@@ -2,6 +2,7 @@
 
 #include "GameClient.hh"
 #include "TcpClient.hh"
+#include <format>
 
 namespace bsgalone::client {
 constexpr auto DEFAULT_SERVER_URL = "127.0.0.1";

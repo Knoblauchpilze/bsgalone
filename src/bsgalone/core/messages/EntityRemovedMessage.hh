@@ -26,9 +26,6 @@ class EntityRemovedMessage : public NetworkMessage
   auto getSystemDbId() const -> Uuid;
   auto tryGetSystemDbId() const -> std::optional<Uuid>;
 
-  auto serialize(std::ostream &out) const -> std::ostream & override;
-  bool deserialize(std::istream &in) override;
-
   auto clone() const -> IMessagePtr override;
 
   private:
@@ -36,6 +33,12 @@ class EntityRemovedMessage : public NetworkMessage
   EntityKind m_entityKind{};
   bool m_dead{false};
   std::optional<Uuid> m_systemDbId{};
+
+  friend auto operator<<(std::ostream &out, const EntityRemovedMessage &message) -> std::ostream &;
+  friend auto operator>>(std::istream &in, EntityRemovedMessage &message) -> std::istream &;
 };
+
+auto operator<<(std::ostream &out, const EntityRemovedMessage &message) -> std::ostream &;
+auto operator>>(std::istream &in, EntityRemovedMessage &message) -> std::istream &;
 
 } // namespace bsgalone::core

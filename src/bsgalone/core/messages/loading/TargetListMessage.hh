@@ -17,14 +17,17 @@ class TargetListMessage : public NetworkMessage
   auto getSystemDbId() const -> Uuid;
   auto getTargetsData() const -> const std::vector<Target> &;
 
-  auto serialize(std::ostream &out) const -> std::ostream & override;
-  bool deserialize(std::istream &in) override;
-
   auto clone() const -> IMessagePtr override;
 
   private:
   Uuid m_systemDbId{};
   std::vector<Target> m_targetsData{};
+
+  friend auto operator<<(std::ostream &out, const TargetListMessage &message) -> std::ostream &;
+  friend auto operator>>(std::istream &in, TargetListMessage &message) -> std::istream &;
 };
+
+auto operator<<(std::ostream &out, const TargetListMessage &message) -> std::ostream &;
+auto operator>>(std::istream &in, TargetListMessage &message) -> std::istream &;
 
 } // namespace bsgalone::core

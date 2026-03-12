@@ -20,11 +20,10 @@ void assertMessagesAreEqual(const JumpRequestedMessage &actual, const JumpReques
 TEST(Unit_Bsgalone_Core_Messages_Player_JumpRequestedMessage, SerializationDeserialization)
 {
   const JumpRequestedMessage expected(Uuid{18}, Uuid{19}, Uuid{14}, Uuid{44});
-  JumpRequestedMessage actual(Uuid{87}, Uuid{21}, Uuid{6}, Uuid{1});
 
-  serializeAndDeserializeMessage(expected, actual);
+  const auto actual = serializeAndDeserializePlayerMessage(expected);
 
-  assertMessagesAreEqual(actual, expected);
+  assertMessagesAreEqual(actual->as<JumpRequestedMessage>(), expected);
 }
 
 TEST(Unit_Bsgalone_Core_Messages_Player_JumpRequestedMessage, Clone)

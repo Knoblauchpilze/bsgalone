@@ -30,9 +30,6 @@ class LoginMessage : public NetworkMessage
 
   bool successfullyLoggedIn() const;
 
-  auto serialize(std::ostream &out) const -> std::ostream & override;
-  bool deserialize(std::istream &in) override;
-
   auto clone() const -> IMessagePtr override;
 
   private:
@@ -42,6 +39,12 @@ class LoginMessage : public NetworkMessage
 
   std::optional<Uuid> m_playerDbId{};
   std::optional<Uuid> m_systemDbId{};
+
+  friend auto operator<<(std::ostream &out, const LoginMessage &message) -> std::ostream &;
+  friend auto operator>>(std::istream &in, LoginMessage &message) -> std::istream &;
 };
+
+auto operator<<(std::ostream &out, const LoginMessage &message) -> std::ostream &;
+auto operator>>(std::istream &in, LoginMessage &message) -> std::istream &;
 
 } // namespace bsgalone::core

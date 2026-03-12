@@ -25,9 +25,6 @@ class JumpMessage : public NetworkMessage
   auto tryGetDestinationSystemDbId() const -> std::optional<Uuid>;
   auto getDestinationSystemDbId() const -> Uuid;
 
-  auto serialize(std::ostream &out) const -> std::ostream & override;
-  bool deserialize(std::istream &in) override;
-
   auto clone() const -> IMessagePtr override;
 
   private:
@@ -35,6 +32,12 @@ class JumpMessage : public NetworkMessage
   Uuid m_playerDbId{};
   std::optional<Uuid> m_sourceSystemDbId{};
   std::optional<Uuid> m_destinationSystemDbId{};
+
+  friend auto operator<<(std::ostream &out, const JumpMessage &message) -> std::ostream &;
+  friend auto operator>>(std::istream &in, JumpMessage &message) -> std::istream &;
 };
+
+auto operator<<(std::ostream &out, const JumpMessage &message) -> std::ostream &;
+auto operator>>(std::istream &in, JumpMessage &message) -> std::istream &;
 
 } // namespace bsgalone::core

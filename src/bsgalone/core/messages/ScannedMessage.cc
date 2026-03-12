@@ -24,35 +24,32 @@ auto ScannedMessage::getAsteroidDbId() const -> Uuid
   return m_asteroidDbId;
 }
 
-auto ScannedMessage::serialize(std::ostream &out) const -> std::ostream &
-{
-  ::core::serialize(out, m_messageType);
-  ::core::serialize(out, m_clientId);
-
-  ::core::serialize(out, m_playerDbId);
-  ::core::serialize(out, m_asteroidDbId);
-
-  return out;
-}
-
-bool ScannedMessage::deserialize(std::istream &in)
-{
-  bool ok{true};
-  ok &= ::core::deserialize(in, m_messageType);
-  ok &= ::core::deserialize(in, m_clientId);
-
-  ok &= ::core::deserialize(in, m_playerDbId);
-  ok &= ::core::deserialize(in, m_asteroidDbId);
-
-  return ok;
-}
-
 auto ScannedMessage::clone() const -> IMessagePtr
 {
   auto clone = std::make_unique<ScannedMessage>(m_playerDbId, m_asteroidDbId);
   clone->copyClientIdIfDefined(*this);
 
   return clone;
+}
+
+auto operator<<(std::ostream &out, const ScannedMessage &message) -> std::ostream &
+{
+  ::core::serialize(out, message.m_type);
+  ::core::serialize(out, message.m_clientId);
+  ::core::serialize(out, message.m_playerDbId);
+  ::core::serialize(out, message.m_asteroidDbId);
+
+  return out;
+}
+
+auto operator>>(std::istream &in, ScannedMessage &message) -> std::istream &
+{
+  ::core::deserialize(in, message.m_type);
+  ::core::deserialize(in, message.m_clientId);
+  ::core::deserialize(in, message.m_playerDbId);
+  ::core::deserialize(in, message.m_asteroidDbId);
+
+  return in;
 }
 
 } // namespace bsgalone::core

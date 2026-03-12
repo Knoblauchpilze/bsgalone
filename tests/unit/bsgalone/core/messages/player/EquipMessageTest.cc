@@ -27,11 +27,10 @@ TEST(Unit_Bsgalone_Core_Messages_Player_EquipMessage, Equip)
                               Uuid{12},
                               Item::COMPUTER,
                               Uuid{27});
-  EquipMessage actual(Uuid{34}, Uuid{58}, EquipType::UNEQUIP, Uuid{22}, Item::RESOURCE, Uuid{18});
 
-  serializeAndDeserializeMessage(expected, actual);
+  const auto actual = serializeAndDeserializePlayerMessage(expected);
 
-  assertMessagesAreEqual(actual, expected);
+  assertMessagesAreEqual(actual->as<EquipMessage>(), expected);
 }
 
 TEST(Unit_Bsgalone_Core_Messages_Player_EquipMessage, Unequip)
@@ -42,11 +41,10 @@ TEST(Unit_Bsgalone_Core_Messages_Player_EquipMessage, Unequip)
                               Uuid{12},
                               Item::COMPUTER,
                               Uuid{27});
-  EquipMessage actual(Uuid{34}, Uuid{58}, EquipType::EQUIP, Uuid{22}, Item::RESOURCE, Uuid{18});
 
-  serializeAndDeserializeMessage(expected, actual);
+  const auto actual = serializeAndDeserializePlayerMessage(expected);
 
-  assertMessagesAreEqual(actual, expected);
+  assertMessagesAreEqual(actual->as<EquipMessage>(), expected);
 }
 
 TEST(Unit_Bsgalone_Core_Messages_Player_EquipMessage, Clone)

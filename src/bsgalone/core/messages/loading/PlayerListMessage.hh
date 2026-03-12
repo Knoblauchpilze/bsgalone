@@ -17,14 +17,17 @@ class PlayerListMessage : public NetworkMessage
   auto getSystemDbId() const -> Uuid;
   auto getPlayersData() const -> const std::vector<PlayerData> &;
 
-  auto serialize(std::ostream &out) const -> std::ostream & override;
-  bool deserialize(std::istream &in) override;
-
   auto clone() const -> IMessagePtr override;
 
   private:
   Uuid m_systemDbId{};
   std::vector<PlayerData> m_playersData{};
+
+  friend auto operator<<(std::ostream &out, const PlayerListMessage &message) -> std::ostream &;
+  friend auto operator>>(std::istream &in, PlayerListMessage &message) -> std::istream &;
 };
+
+auto operator<<(std::ostream &out, const PlayerListMessage &message) -> std::ostream &;
+auto operator>>(std::istream &in, PlayerListMessage &message) -> std::istream &;
 
 } // namespace bsgalone::core

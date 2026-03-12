@@ -19,33 +19,30 @@ auto PlayerComputerListMessage::getComputersData() const -> const std::vector<Pl
   return m_computersData;
 }
 
-auto PlayerComputerListMessage::serialize(std::ostream &out) const -> std::ostream &
-{
-  ::core::serialize(out, m_messageType);
-  ::core::serialize(out, m_clientId);
-
-  ::core::serialize(out, m_computersData);
-
-  return out;
-}
-
-bool PlayerComputerListMessage::deserialize(std::istream &in)
-{
-  bool ok{true};
-  ok &= ::core::deserialize(in, m_messageType);
-  ok &= ::core::deserialize(in, m_clientId);
-
-  ok &= ::core::deserialize(in, m_computersData);
-
-  return ok;
-}
-
 auto PlayerComputerListMessage::clone() const -> IMessagePtr
 {
   auto clone = std::make_unique<PlayerComputerListMessage>(m_computersData);
   clone->copyClientIdIfDefined(*this);
 
   return clone;
+}
+
+auto operator<<(std::ostream &out, const PlayerComputerListMessage &message) -> std::ostream &
+{
+  ::core::serialize(out, message.m_type);
+  ::core::serialize(out, message.m_clientId);
+  ::core::serialize(out, message.m_computersData);
+
+  return out;
+}
+
+auto operator>>(std::istream &in, PlayerComputerListMessage &message) -> std::istream &
+{
+  ::core::deserialize(in, message.m_type);
+  ::core::deserialize(in, message.m_clientId);
+  ::core::deserialize(in, message.m_computersData);
+
+  return in;
 }
 
 } // namespace bsgalone::core

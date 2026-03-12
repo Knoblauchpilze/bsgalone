@@ -41,35 +41,6 @@ auto EquipMessage::getItemDbId() const -> Uuid
   return m_itemDbId;
 }
 
-auto EquipMessage::serialize(std::ostream &out) const -> std::ostream &
-{
-  ::core::serialize(out, m_messageType);
-  ::core::serialize(out, m_playerDbId);
-  ::core::serialize(out, m_systemDbId);
-
-  ::core::serialize(out, m_action);
-  ::core::serialize(out, m_shipDbId);
-  ::core::serialize(out, m_itemType);
-  ::core::serialize(out, m_itemDbId);
-
-  return out;
-}
-
-bool EquipMessage::deserialize(std::istream &in)
-{
-  bool ok{true};
-  ok &= ::core::deserialize(in, m_messageType);
-  ok &= ::core::deserialize(in, m_playerDbId);
-  ok &= ::core::deserialize(in, m_systemDbId);
-
-  ok &= ::core::deserialize(in, m_action);
-  ok &= ::core::deserialize(in, m_shipDbId);
-  ok &= ::core::deserialize(in, m_itemType);
-  ok &= ::core::deserialize(in, m_itemDbId);
-
-  return ok;
-}
-
 auto EquipMessage::clone() const -> IMessagePtr
 {
   return std::make_unique<EquipMessage>(m_playerDbId,
@@ -84,12 +55,34 @@ auto EquipMessage::readFromStream(std::istream &in) -> std::optional<IMessagePtr
 {
   EquipMessage message;
 
-  if (!message.deserialize(in))
+  bool ok{true};
+  ok &= ::core::deserialize(in, message.m_type);
+  ok &= ::core::deserialize(in, message.m_playerDbId);
+  ok &= ::core::deserialize(in, message.m_systemDbId);
+  ok &= ::core::deserialize(in, message.m_action);
+  ok &= ::core::deserialize(in, message.m_shipDbId);
+  ok &= ::core::deserialize(in, message.m_itemType);
+  ok &= ::core::deserialize(in, message.m_itemDbId);
+
+  if (!ok)
   {
     return {};
   }
 
   return message.clone();
+}
+
+auto operator<<(std::ostream &out, const EquipMessage &message) -> std::ostream &
+{
+  ::core::serialize(out, message.m_type);
+  ::core::serialize(out, message.m_playerDbId);
+  ::core::serialize(out, message.m_systemDbId);
+  ::core::serialize(out, message.m_action);
+  ::core::serialize(out, message.m_shipDbId);
+  ::core::serialize(out, message.m_itemType);
+  ::core::serialize(out, message.m_itemDbId);
+
+  return out;
 }
 
 } // namespace bsgalone::core

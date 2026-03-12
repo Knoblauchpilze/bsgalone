@@ -44,7 +44,7 @@ auto JumpMessage::getSourceSystemDbId() const -> Uuid
 {
   if (!m_sourceSystemDbId)
   {
-    error("Expected source system db id to be defined but it was not");
+    throw std::runtime_error("Expected source system db id to be defined but it was not");
   }
   return *m_sourceSystemDbId;
 }
@@ -58,36 +58,9 @@ auto JumpMessage::getDestinationSystemDbId() const -> Uuid
 {
   if (!m_destinationSystemDbId)
   {
-    error("Expected destination system db id to be defined but it was not");
+    throw std::runtime_error("Expected destination system db id to be defined but it was not");
   }
   return *m_destinationSystemDbId;
-}
-
-auto JumpMessage::serialize(std::ostream &out) const -> std::ostream &
-{
-  ::core::serialize(out, m_messageType);
-  ::core::serialize(out, m_clientId);
-
-  ::core::serialize(out, m_shipDbId);
-  ::core::serialize(out, m_playerDbId);
-  ::core::serialize(out, m_sourceSystemDbId);
-  ::core::serialize(out, m_destinationSystemDbId);
-
-  return out;
-}
-
-bool JumpMessage::deserialize(std::istream &in)
-{
-  bool ok{true};
-  ok &= ::core::deserialize(in, m_messageType);
-  ok &= ::core::deserialize(in, m_clientId);
-
-  ok &= ::core::deserialize(in, m_shipDbId);
-  ok &= ::core::deserialize(in, m_playerDbId);
-  ok &= ::core::deserialize(in, m_sourceSystemDbId);
-  ok &= ::core::deserialize(in, m_destinationSystemDbId);
-
-  return ok;
 }
 
 auto JumpMessage::clone() const -> IMessagePtr
@@ -98,6 +71,30 @@ auto JumpMessage::clone() const -> IMessagePtr
   clone->copyClientIdIfDefined(*this);
 
   return clone;
+}
+
+auto operator<<(std::ostream &out, const JumpMessage &message) -> std::ostream &
+{
+  ::core::serialize(out, message.m_type);
+  ::core::serialize(out, message.m_clientId);
+  ::core::serialize(out, message.m_shipDbId);
+  ::core::serialize(out, message.m_playerDbId);
+  ::core::serialize(out, message.m_sourceSystemDbId);
+  ::core::serialize(out, message.m_destinationSystemDbId);
+
+  return out;
+}
+
+auto operator>>(std::istream &in, JumpMessage &message) -> std::istream &
+{
+  ::core::deserialize(in, message.m_type);
+  ::core::deserialize(in, message.m_clientId);
+  ::core::deserialize(in, message.m_shipDbId);
+  ::core::deserialize(in, message.m_playerDbId);
+  ::core::deserialize(in, message.m_sourceSystemDbId);
+  ::core::deserialize(in, message.m_destinationSystemDbId);
+
+  return in;
 }
 
 } // namespace bsgalone::core

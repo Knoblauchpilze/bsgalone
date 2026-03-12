@@ -29,9 +29,6 @@ class EquipMessage : public AbstractPlayerMessage
   auto getItemType() const -> Item;
   auto getItemDbId() const -> Uuid;
 
-  auto serialize(std::ostream &out) const -> std::ostream & override;
-  bool deserialize(std::istream &in) override;
-
   auto clone() const -> IMessagePtr override;
 
   /// @brief - Tries to read a equip message from the input stream. If
@@ -50,6 +47,10 @@ class EquipMessage : public AbstractPlayerMessage
   Uuid m_itemDbId{};
 
   EquipMessage();
+
+  friend auto operator<<(std::ostream &out, const EquipMessage &message) -> std::ostream &;
 };
+
+auto operator<<(std::ostream &out, const EquipMessage &message) -> std::ostream &;
 
 } // namespace bsgalone::core

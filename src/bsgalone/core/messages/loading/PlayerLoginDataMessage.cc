@@ -48,33 +48,6 @@ void PlayerLoginDataMessage::setSystemDbId(const Uuid systemDbId)
   m_systemDbId = systemDbId;
 }
 
-auto PlayerLoginDataMessage::serialize(std::ostream &out) const -> std::ostream &
-{
-  ::core::serialize(out, m_messageType);
-  ::core::serialize(out, m_clientId);
-
-  ::core::serialize(out, m_faction);
-  ::core::serialize(out, m_activeShipDbId);
-  ::core::serialize(out, m_docked);
-  ::core::serialize(out, m_systemDbId);
-
-  return out;
-}
-
-bool PlayerLoginDataMessage::deserialize(std::istream &in)
-{
-  bool ok{true};
-  ok &= ::core::deserialize(in, m_messageType);
-  ok &= ::core::deserialize(in, m_clientId);
-
-  ok &= ::core::deserialize(in, m_faction);
-  ok &= ::core::deserialize(in, m_activeShipDbId);
-  ok &= ::core::deserialize(in, m_docked);
-  ok &= ::core::deserialize(in, m_systemDbId);
-
-  return ok;
-}
-
 auto PlayerLoginDataMessage::clone() const -> IMessagePtr
 {
   auto clone = std::make_unique<PlayerLoginDataMessage>();
@@ -85,6 +58,30 @@ auto PlayerLoginDataMessage::clone() const -> IMessagePtr
   clone->copyClientIdIfDefined(*this);
 
   return clone;
+}
+
+auto operator<<(std::ostream &out, const PlayerLoginDataMessage &message) -> std::ostream &
+{
+  ::core::serialize(out, message.m_type);
+  ::core::serialize(out, message.m_clientId);
+  ::core::serialize(out, message.m_faction);
+  ::core::serialize(out, message.m_activeShipDbId);
+  ::core::serialize(out, message.m_docked);
+  ::core::serialize(out, message.m_systemDbId);
+
+  return out;
+}
+
+auto operator>>(std::istream &in, PlayerLoginDataMessage &message) -> std::istream &
+{
+  ::core::deserialize(in, message.m_type);
+  ::core::deserialize(in, message.m_clientId);
+  ::core::deserialize(in, message.m_faction);
+  ::core::deserialize(in, message.m_activeShipDbId);
+  ::core::deserialize(in, message.m_docked);
+  ::core::deserialize(in, message.m_systemDbId);
+
+  return in;
 }
 
 } // namespace bsgalone::core

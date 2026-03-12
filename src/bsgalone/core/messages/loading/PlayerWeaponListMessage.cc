@@ -18,33 +18,30 @@ auto PlayerWeaponListMessage::getWeaponsData() const -> const std::vector<Player
   return m_weaponsData;
 }
 
-auto PlayerWeaponListMessage::serialize(std::ostream &out) const -> std::ostream &
-{
-  ::core::serialize(out, m_messageType);
-  ::core::serialize(out, m_clientId);
-
-  ::core::serialize(out, m_weaponsData);
-
-  return out;
-}
-
-bool PlayerWeaponListMessage::deserialize(std::istream &in)
-{
-  bool ok{true};
-  ok &= ::core::deserialize(in, m_messageType);
-  ok &= ::core::deserialize(in, m_clientId);
-
-  ok &= ::core::deserialize(in, m_weaponsData);
-
-  return ok;
-}
-
 auto PlayerWeaponListMessage::clone() const -> IMessagePtr
 {
   auto clone = std::make_unique<PlayerWeaponListMessage>(m_weaponsData);
   clone->copyClientIdIfDefined(*this);
 
   return clone;
+}
+
+auto operator<<(std::ostream &out, const PlayerWeaponListMessage &message) -> std::ostream &
+{
+  ::core::serialize(out, message.m_type);
+  ::core::serialize(out, message.m_clientId);
+  ::core::serialize(out, message.m_weaponsData);
+
+  return out;
+}
+
+auto operator>>(std::istream &in, PlayerWeaponListMessage &message) -> std::istream &
+{
+  ::core::deserialize(in, message.m_type);
+  ::core::deserialize(in, message.m_clientId);
+  ::core::deserialize(in, message.m_weaponsData);
+
+  return in;
 }
 
 } // namespace bsgalone::core

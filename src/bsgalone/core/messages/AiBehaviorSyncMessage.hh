@@ -20,15 +20,18 @@ class AiBehaviorSyncMessage : public NetworkMessage
   void setSystemDbId(const Uuid systemDbId);
   void setTargetIndex(const int targetIndex);
 
-  auto serialize(std::ostream &out) const -> std::ostream & override;
-  bool deserialize(std::istream &in) override;
-
   auto clone() const -> IMessagePtr override;
 
   private:
   Uuid m_shipDbId{};
   std::optional<Uuid> m_systemDbId{};
   std::optional<int> m_targetIndex{};
+
+  friend auto operator<<(std::ostream &out, const AiBehaviorSyncMessage &message) -> std::ostream &;
+  friend auto operator>>(std::istream &in, AiBehaviorSyncMessage &message) -> std::istream &;
 };
+
+auto operator<<(std::ostream &out, const AiBehaviorSyncMessage &message) -> std::ostream &;
+auto operator>>(std::istream &in, AiBehaviorSyncMessage &message) -> std::istream &;
 
 } // namespace bsgalone::core

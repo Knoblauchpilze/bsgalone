@@ -27,31 +27,6 @@ auto PurchaseMessage::getItemDbId() const -> Uuid
   return m_itemDbId;
 }
 
-auto PurchaseMessage::serialize(std::ostream &out) const -> std::ostream &
-{
-  ::core::serialize(out, m_messageType);
-  ::core::serialize(out, m_playerDbId);
-  ::core::serialize(out, m_systemDbId);
-
-  ::core::serialize(out, m_itemType);
-  ::core::serialize(out, m_itemDbId);
-
-  return out;
-}
-
-bool PurchaseMessage::deserialize(std::istream &in)
-{
-  bool ok{true};
-  ok &= ::core::deserialize(in, m_messageType);
-  ok &= ::core::deserialize(in, m_playerDbId);
-  ok &= ::core::deserialize(in, m_systemDbId);
-
-  ok &= ::core::deserialize(in, m_itemType);
-  ok &= ::core::deserialize(in, m_itemDbId);
-
-  return ok;
-}
-
 auto PurchaseMessage::clone() const -> IMessagePtr
 {
   return std::make_unique<PurchaseMessage>(m_playerDbId, m_systemDbId, m_itemType, m_itemDbId);
@@ -61,12 +36,30 @@ auto PurchaseMessage::readFromStream(std::istream &in) -> std::optional<IMessage
 {
   PurchaseMessage message;
 
-  if (!message.deserialize(in))
+  bool ok{true};
+  ok &= ::core::deserialize(in, message.m_type);
+  ok &= ::core::deserialize(in, message.m_playerDbId);
+  ok &= ::core::deserialize(in, message.m_systemDbId);
+  ok &= ::core::deserialize(in, message.m_itemType);
+  ok &= ::core::deserialize(in, message.m_itemDbId);
+
+  if (!ok)
   {
     return {};
   }
 
   return message.clone();
+}
+
+auto operator<<(std::ostream &out, const PurchaseMessage &message) -> std::ostream &
+{
+  ::core::serialize(out, message.m_type);
+  ::core::serialize(out, message.m_playerDbId);
+  ::core::serialize(out, message.m_systemDbId);
+  ::core::serialize(out, message.m_itemType);
+  ::core::serialize(out, message.m_itemDbId);
+
+  return out;
 }
 
 } // namespace bsgalone::core

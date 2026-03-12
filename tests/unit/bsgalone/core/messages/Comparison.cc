@@ -5,14 +5,6 @@
 
 namespace bsgalone::core {
 
-void serializeAndDeserializeMessage(const IMessage &value, IMessage &output)
-{
-  std::ostringstream out{};
-  out << value;
-  std::istringstream in(out.str());
-  in >> output;
-}
-
 void assertAsteroidDataAreEqual(const AsteroidData &actual, const AsteroidData &expected)
 {
   EXPECT_EQ(actual.dbId, expected.dbId);

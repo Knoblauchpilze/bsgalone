@@ -20,15 +20,18 @@ class SlotComponentMessage : public ComponentUpdatedMessage
   auto getSlotDbId() const -> Uuid;
   auto getElapsedSinceLastFired() const -> std::optional<chrono::TickDuration>;
 
-  auto serialize(std::ostream &out) const -> std::ostream & override;
-  bool deserialize(std::istream &in) override;
-
   auto clone() const -> IMessagePtr override;
 
   private:
   Uuid m_playerDbId{};
   Uuid m_slotDbId{};
   std::optional<chrono::TickDuration> m_elapsedSinceLastFired{};
+
+  friend auto operator<<(std::ostream &out, const SlotComponentMessage &message) -> std::ostream &;
+  friend auto operator>>(std::istream &in, SlotComponentMessage &message) -> std::istream &;
 };
+
+auto operator<<(std::ostream &out, const SlotComponentMessage &message) -> std::ostream &;
+auto operator>>(std::istream &in, SlotComponentMessage &message) -> std::istream &;
 
 } // namespace bsgalone::core

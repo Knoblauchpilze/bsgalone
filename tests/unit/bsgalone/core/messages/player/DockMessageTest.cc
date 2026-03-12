@@ -20,31 +20,28 @@ void assertMessagesAreEqual(const DockMessage &actual, const DockMessage &expect
 TEST(Unit_Bsgalone_Core_Messages_Player_DockMessage, Docking)
 {
   const DockMessage expected(Uuid{18}, Uuid{19}, Uuid{44}, DockTransition::DOCK);
-  DockMessage actual(Uuid{97}, Uuid{37}, Uuid{26}, DockTransition::UNDOCK);
 
-  serializeAndDeserializeMessage(expected, actual);
+  const auto actual = serializeAndDeserializePlayerMessage(expected);
 
-  assertMessagesAreEqual(actual, expected);
+  assertMessagesAreEqual(actual->as<DockMessage>(), expected);
 }
 
 TEST(Unit_Bsgalone_Core_Messages_Player_DockMessage, NotDocking)
 {
   const DockMessage expected(Uuid{18}, Uuid{19}, Uuid{123456}, DockTransition::UNDOCK);
-  DockMessage actual(Uuid{97}, Uuid{37}, Uuid{17}, DockTransition::DOCK);
 
-  serializeAndDeserializeMessage(expected, actual);
+  const auto actual = serializeAndDeserializePlayerMessage(expected);
 
-  assertMessagesAreEqual(actual, expected);
+  assertMessagesAreEqual(actual->as<DockMessage>(), expected);
 }
 
 TEST(Unit_Bsgalone_Core_Messages_Player_DockMessage, BackToOutpost)
 {
   DockMessage expected(Uuid{18}, Uuid{19}, Uuid{44}, DockTransition::BACK_TO_OUTPOST);
-  DockMessage actual(Uuid{97}, Uuid{37}, Uuid{26}, DockTransition::UNDOCK);
 
-  serializeAndDeserializeMessage(expected, actual);
+  const auto actual = serializeAndDeserializePlayerMessage(expected);
 
-  assertMessagesAreEqual(actual, expected);
+  assertMessagesAreEqual(actual->as<DockMessage>(), expected);
 }
 
 TEST(Unit_Bsgalone_Core_Messages_Player_DockMessage, Clone)

@@ -20,15 +20,19 @@ class LoadingFinishedMessage : public NetworkMessage
 
   void setSystemDbId(const Uuid systemDbId);
 
-  auto serialize(std::ostream &out) const -> std::ostream & override;
-  bool deserialize(std::istream &in) override;
-
   auto clone() const -> IMessagePtr override;
 
   private:
   LoadingTransition m_transition{};
   std::optional<Uuid> m_systemDbId{};
   std::optional<Uuid> m_playerDbId{};
+
+  friend auto operator<<(std::ostream &out, const LoadingFinishedMessage &message)
+    -> std::ostream &;
+  friend auto operator>>(std::istream &in, LoadingFinishedMessage &message) -> std::istream &;
 };
+
+auto operator<<(std::ostream &out, const LoadingFinishedMessage &message) -> std::ostream &;
+auto operator>>(std::istream &in, LoadingFinishedMessage &message) -> std::istream &;
 
 } // namespace bsgalone::core

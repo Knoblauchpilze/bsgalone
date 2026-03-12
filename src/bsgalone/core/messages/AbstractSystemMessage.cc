@@ -4,7 +4,7 @@
 namespace bsgalone::core {
 
 AbstractSystemMessage::AbstractSystemMessage(const MessageType &type, const Uuid systemDbId)
-  : AbstractMessage(type)
+  : IMessage(type)
   , m_systemDbId(systemDbId)
 {}
 

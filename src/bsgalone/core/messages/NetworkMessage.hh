@@ -1,12 +1,12 @@
 
 #pragma once
 
-#include "AbstractMessage.hh"
+#include "IMessage.hh"
 #include "Uuid.hh"
 
 namespace bsgalone::core {
 
-class NetworkMessage : public AbstractMessage
+class NetworkMessage : public IMessage
 {
   public:
   NetworkMessage(const MessageType &type);

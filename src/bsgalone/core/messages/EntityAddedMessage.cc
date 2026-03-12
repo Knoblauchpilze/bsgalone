@@ -22,7 +22,7 @@ auto EntityAddedMessage::getEntityKind() const -> EntityKind
 {
   if (!m_entityKind)
   {
-    error("Expected entity kind to be defined but it was not");
+    throw std::runtime_error("Expected entity kind to be defined but it was not");
   }
   return *m_entityKind;
 }
@@ -83,96 +83,6 @@ auto EntityAddedMessage::tryGetPlayerData() const -> std::optional<PlayerData>
   return m_playerData;
 }
 
-auto EntityAddedMessage::serialize(std::ostream &out) const -> std::ostream &
-{
-  ::core::serialize(out, m_messageType);
-  ::core::serialize(out, m_clientId);
-
-  if (!m_entityKind)
-  {
-    error("Expected entity kind to be defined but it was not");
-  }
-
-  ::core::serialize(out, m_systemDbId);
-  ::core::serialize(out, *m_entityKind);
-
-  switch (*m_entityKind)
-  {
-    case EntityKind::ASTEROID:
-      ::core::serialize(out, *m_asteroidData);
-      break;
-    case EntityKind::SHIP:
-      ::core::serialize(out, *m_shipData);
-      break;
-    case EntityKind::OUTPOST:
-      ::core::serialize(out, *m_outpostData);
-      break;
-    case EntityKind::PLAYER:
-      ::core::serialize(out, *m_playerData);
-      break;
-    default:
-      error("Unsupported entity kind for serialization: " + str(*m_entityKind));
-      break;
-  }
-
-  return out;
-}
-
-namespace {
-template<typename T>
-auto deserializeData(std::istream &in, std::optional<T> &out) -> bool
-{
-  T data{};
-  bool ok = ::core::deserialize(in, data);
-
-  out.reset();
-  if (ok)
-  {
-    out = data;
-  }
-
-  return ok;
-}
-} // namespace
-
-bool EntityAddedMessage::deserialize(std::istream &in)
-{
-  bool ok{true};
-  ok &= ::core::deserialize(in, m_messageType);
-  ok &= ::core::deserialize(in, m_clientId);
-
-  ok &= ::core::deserialize(in, m_systemDbId);
-  // The serialization makes sure that the entity kind is always defined.
-  EntityKind kind{};
-  ok &= ::core::deserialize(in, kind);
-  m_entityKind = kind;
-
-  m_asteroidData.reset();
-  m_shipData.reset();
-  m_outpostData.reset();
-
-  switch (*m_entityKind)
-  {
-    case EntityKind::ASTEROID:
-      ok &= deserializeData(in, m_asteroidData);
-      break;
-    case EntityKind::SHIP:
-      ok &= deserializeData(in, m_shipData);
-      break;
-    case EntityKind::OUTPOST:
-      ok &= deserializeData(in, m_outpostData);
-      break;
-    case EntityKind::PLAYER:
-      ok &= deserializeData(in, m_playerData);
-      break;
-    default:
-      error("Unsupported entity kind for deserialization: " + str(*m_entityKind));
-      break;
-  }
-
-  return ok;
-}
-
 auto EntityAddedMessage::clone() const -> IMessagePtr
 {
   auto clone = std::make_unique<EntityAddedMessage>(m_systemDbId);
@@ -191,13 +101,102 @@ auto EntityAddedMessage::clone() const -> IMessagePtr
       clone->setPlayerData(*m_playerData);
       break;
     default:
-      error("Unsupported entity kind for cloning: " + str(*m_entityKind));
+      throw std::invalid_argument("Unsupported entity kind for cloning: " + str(*m_entityKind));
       break;
   }
 
   clone->copyClientIdIfDefined(*this);
 
   return clone;
+}
+
+auto operator<<(std::ostream &out, const EntityAddedMessage &message) -> std::ostream &
+{
+  ::core::serialize(out, message.m_type);
+  ::core::serialize(out, message.m_clientId);
+
+  if (!message.m_entityKind)
+  {
+    throw std::runtime_error("Expected entity kind to be defined but it was not");
+  }
+
+  ::core::serialize(out, message.m_systemDbId);
+  ::core::serialize(out, *message.m_entityKind);
+
+  switch (*message.m_entityKind)
+  {
+    case EntityKind::ASTEROID:
+      ::core::serialize(out, *message.m_asteroidData);
+      break;
+    case EntityKind::SHIP:
+      ::core::serialize(out, *message.m_shipData);
+      break;
+    case EntityKind::OUTPOST:
+      ::core::serialize(out, *message.m_outpostData);
+      break;
+    case EntityKind::PLAYER:
+      ::core::serialize(out, *message.m_playerData);
+      break;
+    default:
+      throw std::invalid_argument("Unsupported entity kind for serialization: "
+                                  + str(*message.m_entityKind));
+      break;
+  }
+
+  return out;
+}
+
+namespace {
+template<typename T>
+void deserializeData(std::istream &in, std::optional<T> &out)
+{
+  T data{};
+  bool ok = ::core::deserialize(in, data);
+
+  out.reset();
+  if (ok)
+  {
+    out = data;
+  }
+}
+} // namespace
+
+auto operator>>(std::istream &in, EntityAddedMessage &message) -> std::istream &
+{
+  ::core::deserialize(in, message.m_type);
+  ::core::deserialize(in, message.m_clientId);
+
+  ::core::deserialize(in, message.m_systemDbId);
+  // The serialization makes sure that the entity kind is always defined.
+  EntityKind kind{};
+  ::core::deserialize(in, kind);
+  message.m_entityKind = kind;
+
+  message.m_asteroidData.reset();
+  message.m_shipData.reset();
+  message.m_outpostData.reset();
+
+  switch (*message.m_entityKind)
+  {
+    case EntityKind::ASTEROID:
+      deserializeData(in, message.m_asteroidData);
+      break;
+    case EntityKind::SHIP:
+      deserializeData(in, message.m_shipData);
+      break;
+    case EntityKind::OUTPOST:
+      deserializeData(in, message.m_outpostData);
+      break;
+    case EntityKind::PLAYER:
+      deserializeData(in, message.m_playerData);
+      break;
+    default:
+      throw std::invalid_argument("Unsupported entity kind for deserialization: "
+                                  + str(*message.m_entityKind));
+      break;
+  }
+
+  return in;
 }
 
 } // namespace bsgalone::core

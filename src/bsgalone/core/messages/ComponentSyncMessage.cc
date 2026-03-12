@@ -38,7 +38,7 @@ auto ComponentSyncMessage::getSystemDbId() const -> Uuid
 {
   if (!m_systemDbId)
   {
-    error("Expected system db id to be defined but it was not");
+    throw std::runtime_error("Expected system db id to be defined but it was not");
   }
   return *m_systemDbId;
 }
@@ -103,45 +103,6 @@ auto ComponentSyncMessage::tryGetPower() const -> std::optional<float>
   return m_power;
 }
 
-auto ComponentSyncMessage::serialize(std::ostream &out) const -> std::ostream &
-{
-  ::core::serialize(out, m_messageType);
-  ::core::serialize(out, m_clientId);
-
-  ::core::serialize(out, m_entityDbId);
-  ::core::serialize(out, m_entityKind);
-
-  ::core::serialize(out, m_systemDbId);
-  ::core::serialize(out, m_status);
-  ::core::serialize(out, m_position);
-  ::core::serialize(out, m_speed);
-  ::core::serialize(out, m_acceleration);
-  ::core::serialize(out, m_health);
-  ::core::serialize(out, m_power);
-
-  return out;
-}
-
-bool ComponentSyncMessage::deserialize(std::istream &in)
-{
-  bool ok{true};
-  ok &= ::core::deserialize(in, m_messageType);
-  ok &= ::core::deserialize(in, m_clientId);
-
-  ok &= ::core::deserialize(in, m_entityDbId);
-  ok &= ::core::deserialize(in, m_entityKind);
-
-  ok &= ::core::deserialize(in, m_systemDbId);
-  ok &= ::core::deserialize(in, m_status);
-  ok &= ::core::deserialize(in, m_position);
-  ok &= ::core::deserialize(in, m_speed);
-  ok &= ::core::deserialize(in, m_acceleration);
-  ok &= ::core::deserialize(in, m_health);
-  ok &= ::core::deserialize(in, m_power);
-
-  return ok;
-}
-
 auto ComponentSyncMessage::clone() const -> IMessagePtr
 {
   auto clone = std::make_unique<ComponentSyncMessage>(m_entityDbId, m_entityKind);
@@ -156,6 +117,40 @@ auto ComponentSyncMessage::clone() const -> IMessagePtr
   clone->m_power        = m_power;
 
   return clone;
+}
+
+auto operator<<(std::ostream &out, const ComponentSyncMessage &message) -> std::ostream &
+{
+  ::core::serialize(out, message.m_type);
+  ::core::serialize(out, message.m_clientId);
+  ::core::serialize(out, message.m_entityDbId);
+  ::core::serialize(out, message.m_entityKind);
+  ::core::serialize(out, message.m_systemDbId);
+  ::core::serialize(out, message.m_status);
+  ::core::serialize(out, message.m_position);
+  ::core::serialize(out, message.m_speed);
+  ::core::serialize(out, message.m_acceleration);
+  ::core::serialize(out, message.m_health);
+  ::core::serialize(out, message.m_power);
+
+  return out;
+}
+
+auto operator>>(std::istream &in, ComponentSyncMessage &message) -> std::istream &
+{
+  ::core::deserialize(in, message.m_type);
+  ::core::deserialize(in, message.m_clientId);
+  ::core::deserialize(in, message.m_entityDbId);
+  ::core::deserialize(in, message.m_entityKind);
+  ::core::deserialize(in, message.m_systemDbId);
+  ::core::deserialize(in, message.m_status);
+  ::core::deserialize(in, message.m_position);
+  ::core::deserialize(in, message.m_speed);
+  ::core::deserialize(in, message.m_acceleration);
+  ::core::deserialize(in, message.m_health);
+  ::core::deserialize(in, message.m_power);
+
+  return in;
 }
 
 } // namespace bsgalone::core

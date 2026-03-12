@@ -16,14 +16,17 @@ class ScannedMessage : public NetworkMessage
   auto getPlayerDbId() const -> Uuid;
   auto getAsteroidDbId() const -> Uuid;
 
-  auto serialize(std::ostream &out) const -> std::ostream & override;
-  bool deserialize(std::istream &in) override;
-
   auto clone() const -> IMessagePtr override;
 
   private:
   Uuid m_playerDbId{};
   Uuid m_asteroidDbId{};
+
+  friend auto operator<<(std::ostream &out, const ScannedMessage &message) -> std::ostream &;
+  friend auto operator>>(std::istream &in, ScannedMessage &message) -> std::istream &;
 };
+
+auto operator<<(std::ostream &out, const ScannedMessage &message) -> std::ostream &;
+auto operator>>(std::istream &in, ScannedMessage &message) -> std::istream &;
 
 } // namespace bsgalone::core

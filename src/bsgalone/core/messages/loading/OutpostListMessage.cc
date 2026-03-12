@@ -25,37 +25,32 @@ auto OutpostListMessage::getOutpostsData() const -> const std::vector<OutpostDat
   return m_outpostsData;
 }
 
-auto OutpostListMessage::serialize(std::ostream &out) const -> std::ostream &
-{
-  ::core::serialize(out, m_messageType);
-  ::core::serialize(out, m_clientId);
-
-  ::core::serialize(out, m_systemDbId);
-
-  ::core::serialize(out, m_outpostsData);
-
-  return out;
-}
-
-bool OutpostListMessage::deserialize(std::istream &in)
-{
-  bool ok{true};
-  ok &= ::core::deserialize(in, m_messageType);
-  ok &= ::core::deserialize(in, m_clientId);
-
-  ok &= ::core::deserialize(in, m_systemDbId);
-
-  ok &= ::core::deserialize(in, m_outpostsData);
-
-  return ok;
-}
-
 auto OutpostListMessage::clone() const -> IMessagePtr
 {
   auto clone = std::make_unique<OutpostListMessage>(m_systemDbId, m_outpostsData);
   clone->copyClientIdIfDefined(*this);
 
   return clone;
+}
+
+auto operator<<(std::ostream &out, const OutpostListMessage &message) -> std::ostream &
+{
+  ::core::serialize(out, message.m_type);
+  ::core::serialize(out, message.m_clientId);
+  ::core::serialize(out, message.m_systemDbId);
+  ::core::serialize(out, message.m_outpostsData);
+
+  return out;
+}
+
+auto operator>>(std::istream &in, OutpostListMessage &message) -> std::istream &
+{
+  ::core::deserialize(in, message.m_type);
+  ::core::deserialize(in, message.m_clientId);
+  ::core::deserialize(in, message.m_systemDbId);
+  ::core::deserialize(in, message.m_outpostsData);
+
+  return in;
 }
 
 } // namespace bsgalone::core

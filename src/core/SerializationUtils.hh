@@ -45,10 +45,12 @@ bool deserialize(std::istream &in, std::unordered_set<T> &s);
 /// https://en.cppreference.com/w/cpp/language/constraints.html
 /// https://stackoverflow.com/questions/62823360/c-20-concepts-require-operator-overloading
 template<typename T>
-concept serializable = !std::is_arithmetic_v<T> && requires(T t, std::ostream &out) { out << t; };
+concept serializable = !std::is_arithmetic_v<T> && !std::is_enum_v<T>
+                       && requires(T t, std::ostream &out) { out << t; };
 
 template<typename T>
-concept deserializable = !std::is_arithmetic_v<T> && requires(T t, std::istream &in) { in >> t; };
+concept deserializable = !std::is_arithmetic_v<T> && !std::is_enum_v<T>
+                         && requires(T t, std::istream &in) { in >> t; };
 
 template<serializable T>
 auto serialize(std::ostream &out, const T &e) -> std::ostream &;

@@ -20,9 +20,6 @@ class DockMessage : public AbstractPlayerMessage
   auto getShipDbId() const -> Uuid;
   auto getTransition() const -> DockTransition;
 
-  auto serialize(std::ostream &out) const -> std::ostream & override;
-  bool deserialize(std::istream &in) override;
-
   auto clone() const -> IMessagePtr override;
 
   /// @brief - Tries to read a dock message from the input stream. If
@@ -39,6 +36,10 @@ class DockMessage : public AbstractPlayerMessage
   DockTransition m_transition{DockTransition::UNDOCK};
 
   DockMessage();
+
+  friend auto operator<<(std::ostream &out, const DockMessage &message) -> std::ostream &;
 };
+
+auto operator<<(std::ostream &out, const DockMessage &message) -> std::ostream &;
 
 } // namespace bsgalone::core

@@ -35,9 +35,6 @@ class EntityAddedMessage : public NetworkMessage
   void setPlayerData(const PlayerData &data);
   auto tryGetPlayerData() const -> std::optional<PlayerData>;
 
-  auto serialize(std::ostream &out) const -> std::ostream & override;
-  bool deserialize(std::istream &in) override;
-
   auto clone() const -> IMessagePtr override;
 
   private:
@@ -48,6 +45,12 @@ class EntityAddedMessage : public NetworkMessage
   std::optional<PlayerShipData> m_shipData{};
   std::optional<OutpostData> m_outpostData{};
   std::optional<PlayerData> m_playerData{};
+
+  friend auto operator<<(std::ostream &out, const EntityAddedMessage &message) -> std::ostream &;
+  friend auto operator>>(std::istream &in, EntityAddedMessage &message) -> std::istream &;
 };
+
+auto operator<<(std::ostream &out, const EntityAddedMessage &message) -> std::ostream &;
+auto operator>>(std::istream &in, EntityAddedMessage &message) -> std::istream &;
 
 } // namespace bsgalone::core

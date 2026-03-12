@@ -60,9 +60,9 @@ TEST(Unit_Bsgalone_Core_Messages_EntityAddedMessage, SerializationFailsWhenNoEnt
   EXPECT_THROW(
     [&message] {
       std::ostringstream out{};
-      message.serialize(out);
+      out << message;
     }(),
-    ::core::CoreException);
+    std::runtime_error);
 }
 
 TEST(Unit_Bsgalone_Core_Messages_EntityAddedMessage, SetsEntityKindForAsteroid)

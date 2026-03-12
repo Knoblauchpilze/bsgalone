@@ -16,14 +16,18 @@ class WeaponComponentMessage : public ComponentUpdatedMessage
   auto getWeaponDbId() const -> Uuid;
   bool isActive() const;
 
-  auto serialize(std::ostream &out) const -> std::ostream & override;
-  bool deserialize(std::istream &in) override;
-
   auto clone() const -> IMessagePtr override;
 
   private:
   Uuid m_weaponDbId{};
   bool m_active{};
+
+  friend auto operator<<(std::ostream &out, const WeaponComponentMessage &message)
+    -> std::ostream &;
+  friend auto operator>>(std::istream &in, WeaponComponentMessage &message) -> std::istream &;
 };
+
+auto operator<<(std::ostream &out, const WeaponComponentMessage &message) -> std::ostream &;
+auto operator>>(std::istream &in, WeaponComponentMessage &message) -> std::istream &;
 
 } // namespace bsgalone::core

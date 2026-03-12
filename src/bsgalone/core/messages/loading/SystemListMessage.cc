@@ -18,33 +18,30 @@ auto SystemListMessage::getSystemsData() const -> const std::vector<SystemData> 
   return m_systemsData;
 }
 
-auto SystemListMessage::serialize(std::ostream &out) const -> std::ostream &
-{
-  ::core::serialize(out, m_messageType);
-  ::core::serialize(out, m_clientId);
-
-  ::core::serialize(out, m_systemsData);
-
-  return out;
-}
-
-bool SystemListMessage::deserialize(std::istream &in)
-{
-  bool ok{true};
-  ok &= ::core::deserialize(in, m_messageType);
-  ok &= ::core::deserialize(in, m_clientId);
-
-  ok &= ::core::deserialize(in, m_systemsData);
-
-  return ok;
-}
-
 auto SystemListMessage::clone() const -> IMessagePtr
 {
   auto clone = std::make_unique<SystemListMessage>(m_systemsData);
   clone->copyClientIdIfDefined(*this);
 
   return clone;
+}
+
+auto operator<<(std::ostream &out, const SystemListMessage &message) -> std::ostream &
+{
+  ::core::serialize(out, message.m_type);
+  ::core::serialize(out, message.m_clientId);
+  ::core::serialize(out, message.m_systemsData);
+
+  return out;
+}
+
+auto operator>>(std::istream &in, SystemListMessage &message) -> std::istream &
+{
+  ::core::deserialize(in, message.m_type);
+  ::core::deserialize(in, message.m_clientId);
+  ::core::deserialize(in, message.m_systemsData);
+
+  return in;
 }
 
 } // namespace bsgalone::core

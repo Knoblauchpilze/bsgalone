@@ -20,41 +20,37 @@ void assertMessagesAreEqual(const PurchaseMessage &actual, const PurchaseMessage
 TEST(Unit_Bsgalone_Core_Messages_Player_PurchaseMessage, Resource)
 {
   const PurchaseMessage expected(Uuid{14}, Uuid{19}, Item::RESOURCE, Uuid{26});
-  PurchaseMessage actual(Uuid{6}, Uuid{25}, Item::COMPUTER, Uuid{4});
 
-  serializeAndDeserializeMessage(expected, actual);
+  const auto actual = serializeAndDeserializePlayerMessage(expected);
 
-  assertMessagesAreEqual(actual, expected);
+  assertMessagesAreEqual(actual->as<PurchaseMessage>(), expected);
 }
 
 TEST(Unit_Bsgalone_Core_Messages_Player_PurchaseMessage, Weapon)
 {
   const PurchaseMessage expected(Uuid{14}, Uuid{19}, Item::WEAPON, Uuid{26});
-  PurchaseMessage actual(Uuid{6}, Uuid{25}, Item::RESOURCE, Uuid{4});
 
-  serializeAndDeserializeMessage(expected, actual);
+  const auto actual = serializeAndDeserializePlayerMessage(expected);
 
-  assertMessagesAreEqual(actual, expected);
+  assertMessagesAreEqual(actual->as<PurchaseMessage>(), expected);
 }
 
 TEST(Unit_Bsgalone_Core_Messages_Player_PurchaseMessage, Computer)
 {
   const PurchaseMessage expected(Uuid{14}, Uuid{19}, Item::COMPUTER, Uuid{26});
-  PurchaseMessage actual(Uuid{6}, Uuid{25}, Item::RESOURCE, Uuid{4});
 
-  serializeAndDeserializeMessage(expected, actual);
+  const auto actual = serializeAndDeserializePlayerMessage(expected);
 
-  assertMessagesAreEqual(actual, expected);
+  assertMessagesAreEqual(actual->as<PurchaseMessage>(), expected);
 }
 
 TEST(Unit_Bsgalone_Core_Messages_Player_PurchaseMessage, Ship)
 {
   const PurchaseMessage expected(Uuid{14}, Uuid{19}, Item::SHIP, Uuid{26});
-  PurchaseMessage actual(Uuid{6}, Uuid{25}, Item::RESOURCE, Uuid{4});
 
-  serializeAndDeserializeMessage(expected, actual);
+  const auto actual = serializeAndDeserializePlayerMessage(expected);
 
-  assertMessagesAreEqual(actual, expected);
+  assertMessagesAreEqual(actual->as<PurchaseMessage>(), expected);
 }
 
 TEST(Unit_Bsgalone_Core_Messages_Player_PurchaseMessage, Clone)

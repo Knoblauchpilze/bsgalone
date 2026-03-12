@@ -20,9 +20,6 @@ class LogoutMessage : public NetworkMessage
 
   void setSystemDbId(const Uuid systemDbId);
 
-  auto serialize(std::ostream &out) const -> std::ostream & override;
-  bool deserialize(std::istream &in) override;
-
   auto clone() const -> IMessagePtr override;
 
   private:
@@ -30,6 +27,12 @@ class LogoutMessage : public NetworkMessage
   bool m_closeConnection{};
 
   std::optional<Uuid> m_systemDbId{};
+
+  friend auto operator<<(std::ostream &out, const LogoutMessage &message) -> std::ostream &;
+  friend auto operator>>(std::istream &in, LogoutMessage &message) -> std::istream &;
 };
+
+auto operator<<(std::ostream &out, const LogoutMessage &message) -> std::ostream &;
+auto operator>>(std::istream &in, LogoutMessage &message) -> std::istream &;
 
 } // namespace bsgalone::core

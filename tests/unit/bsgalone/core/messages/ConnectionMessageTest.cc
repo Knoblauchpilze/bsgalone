@@ -13,16 +13,6 @@ void assertMessagesAreEqual(const ConnectionMessage &actual, const ConnectionMes
 }
 } // namespace
 
-TEST(Unit_Bsgalone_Core_Messages_ConnectionMessage, Basic)
-{
-  const ConnectionMessage expected;
-  ConnectionMessage actual;
-
-  serializeAndDeserializeMessage(expected, actual);
-
-  assertMessagesAreEqual(actual, expected);
-}
-
 TEST(Unit_Bsgalone_Core_Messages_ConnectionMessage, Clone)
 {
   const ConnectionMessage expected;

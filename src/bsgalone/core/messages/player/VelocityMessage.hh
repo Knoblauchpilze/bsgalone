@@ -20,9 +20,6 @@ class VelocityMessage : public AbstractPlayerMessage
   auto getShipDbId() const -> Uuid;
   auto getAcceleration() const -> Eigen::Vector3f;
 
-  auto serialize(std::ostream &out) const -> std::ostream & override;
-  bool deserialize(std::istream &in) override;
-
   auto clone() const -> IMessagePtr override;
 
   /// @brief - Tries to read a velocity message from the input stream. If
@@ -42,6 +39,10 @@ class VelocityMessage : public AbstractPlayerMessage
   /// initialize an empty message to be used to deserialize properties into
   /// it.
   VelocityMessage();
+
+  friend auto operator<<(std::ostream &out, const VelocityMessage &message) -> std::ostream &;
 };
+
+auto operator<<(std::ostream &out, const VelocityMessage &message) -> std::ostream &;
 
 } // namespace bsgalone::core

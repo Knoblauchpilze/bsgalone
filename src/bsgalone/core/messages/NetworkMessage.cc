@@ -4,7 +4,7 @@
 namespace bsgalone::core {
 
 NetworkMessage::NetworkMessage(const MessageType &type)
-  : AbstractMessage(type)
+  : IMessage(type)
 {}
 
 void NetworkMessage::setClientId(const Uuid clientId)

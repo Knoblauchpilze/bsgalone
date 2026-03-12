@@ -15,13 +15,16 @@ class ResourceListMessage : public NetworkMessage
 
   auto getResourcesData() const -> const std::vector<ResourceData> &;
 
-  auto serialize(std::ostream &out) const -> std::ostream & override;
-  bool deserialize(std::istream &in) override;
-
   auto clone() const -> IMessagePtr override;
 
   private:
   std::vector<ResourceData> m_resourcesData{};
+
+  friend auto operator<<(std::ostream &out, const ResourceListMessage &message) -> std::ostream &;
+  friend auto operator>>(std::istream &in, ResourceListMessage &message) -> std::istream &;
 };
+
+auto operator<<(std::ostream &out, const ResourceListMessage &message) -> std::ostream &;
+auto operator>>(std::istream &in, ResourceListMessage &message) -> std::istream &;
 
 } // namespace bsgalone::core

@@ -37,35 +37,6 @@ auto SlotComponentMessage::getElapsedSinceLastFired() const -> std::optional<chr
   return m_elapsedSinceLastFired;
 }
 
-auto SlotComponentMessage::serialize(std::ostream &out) const -> std::ostream &
-{
-  ::core::serialize(out, m_messageType);
-  ::core::serialize(out, m_clientId);
-
-  ::core::serialize(out, m_playerDbId);
-  ::core::serialize(out, m_shipDbId);
-  ::core::serialize(out, m_component);
-  ::core::serialize(out, m_slotDbId);
-  ::core::serialize(out, m_elapsedSinceLastFired);
-
-  return out;
-}
-
-bool SlotComponentMessage::deserialize(std::istream &in)
-{
-  bool ok{true};
-  ok &= ::core::deserialize(in, m_messageType);
-  ok &= ::core::deserialize(in, m_clientId);
-
-  ok &= ::core::deserialize(in, m_playerDbId);
-  ok &= ::core::deserialize(in, m_shipDbId);
-  ok &= ::core::deserialize(in, m_component);
-  ok &= ::core::deserialize(in, m_slotDbId);
-  ok &= ::core::deserialize(in, m_elapsedSinceLastFired);
-
-  return ok;
-}
-
 auto SlotComponentMessage::clone() const -> IMessagePtr
 {
   auto clone                     = std::make_unique<SlotComponentMessage>();
@@ -78,6 +49,32 @@ auto SlotComponentMessage::clone() const -> IMessagePtr
   clone->copyClientIdIfDefined(*this);
 
   return clone;
+}
+
+auto operator<<(std::ostream &out, const SlotComponentMessage &message) -> std::ostream &
+{
+  ::core::serialize(out, message.m_type);
+  ::core::serialize(out, message.m_clientId);
+  ::core::serialize(out, message.m_playerDbId);
+  ::core::serialize(out, message.m_shipDbId);
+  ::core::serialize(out, message.m_component);
+  ::core::serialize(out, message.m_slotDbId);
+  ::core::serialize(out, message.m_elapsedSinceLastFired);
+
+  return out;
+}
+
+auto operator>>(std::istream &in, SlotComponentMessage &message) -> std::istream &
+{
+  ::core::deserialize(in, message.m_type);
+  ::core::deserialize(in, message.m_clientId);
+  ::core::deserialize(in, message.m_playerDbId);
+  ::core::deserialize(in, message.m_shipDbId);
+  ::core::deserialize(in, message.m_component);
+  ::core::deserialize(in, message.m_slotDbId);
+  ::core::deserialize(in, message.m_elapsedSinceLastFired);
+
+  return in;
 }
 
 } // namespace bsgalone::core

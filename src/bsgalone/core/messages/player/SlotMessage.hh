@@ -22,9 +22,6 @@ class SlotMessage : public AbstractPlayerMessage
   auto getSlotDbId() const -> Uuid;
   auto getSlotType() const -> Slot;
 
-  auto serialize(std::ostream &out) const -> std::ostream & override;
-  bool deserialize(std::istream &in) override;
-
   auto clone() const -> IMessagePtr override;
 
   /// @brief - Tries to read a slot message from the input stream. If
@@ -42,6 +39,10 @@ class SlotMessage : public AbstractPlayerMessage
   Slot m_slotType{};
 
   SlotMessage();
+
+  friend auto operator<<(std::ostream &out, const SlotMessage &message) -> std::ostream &;
 };
+
+auto operator<<(std::ostream &out, const SlotMessage &message) -> std::ostream &;
 
 } // namespace bsgalone::core

@@ -25,37 +25,32 @@ auto PlayerListMessage::getPlayersData() const -> const std::vector<PlayerData> 
   return m_playersData;
 }
 
-auto PlayerListMessage::serialize(std::ostream &out) const -> std::ostream &
-{
-  ::core::serialize(out, m_messageType);
-  ::core::serialize(out, m_clientId);
-
-  ::core::serialize(out, m_systemDbId);
-
-  ::core::serialize(out, m_playersData);
-
-  return out;
-}
-
-bool PlayerListMessage::deserialize(std::istream &in)
-{
-  bool ok{true};
-  ok &= ::core::deserialize(in, m_messageType);
-  ok &= ::core::deserialize(in, m_clientId);
-
-  ok &= ::core::deserialize(in, m_systemDbId);
-
-  ok &= ::core::deserialize(in, m_playersData);
-
-  return ok;
-}
-
 auto PlayerListMessage::clone() const -> IMessagePtr
 {
   auto clone = std::make_unique<PlayerListMessage>(m_systemDbId, m_playersData);
   clone->copyClientIdIfDefined(*this);
 
   return clone;
+}
+
+auto operator<<(std::ostream &out, const PlayerListMessage &message) -> std::ostream &
+{
+  ::core::serialize(out, message.m_type);
+  ::core::serialize(out, message.m_clientId);
+  ::core::serialize(out, message.m_systemDbId);
+  ::core::serialize(out, message.m_playersData);
+
+  return out;
+}
+
+auto operator>>(std::istream &in, PlayerListMessage &message) -> std::istream &
+{
+  ::core::deserialize(in, message.m_type);
+  ::core::deserialize(in, message.m_clientId);
+  ::core::deserialize(in, message.m_systemDbId);
+  ::core::deserialize(in, message.m_playersData);
+
+  return in;
 }
 
 } // namespace bsgalone::core

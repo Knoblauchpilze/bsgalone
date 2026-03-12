@@ -6,7 +6,7 @@ namespace bsgalone::core {
 AbstractPlayerMessage::AbstractPlayerMessage(const MessageType &type,
                                              const Uuid playerDbId,
                                              const Uuid systemDbId)
-  : AbstractMessage(type)
+  : IMessage(type)
   , m_playerDbId(playerDbId)
   , m_systemDbId(systemDbId)
 {}

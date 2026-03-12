@@ -51,31 +51,6 @@ auto TargetMessage::getPosition() const -> Eigen::Vector3f
   return m_position;
 }
 
-auto TargetMessage::serialize(std::ostream &out) const -> std::ostream &
-{
-  ::core::serialize(out, m_messageType);
-  ::core::serialize(out, m_clientId);
-
-  ::core::serialize(out, m_data);
-  ::core::serialize(out, m_systemDbId);
-  ::core::serialize(out, m_position);
-
-  return out;
-}
-
-bool TargetMessage::deserialize(std::istream &in)
-{
-  bool ok{true};
-  ok &= ::core::deserialize(in, m_messageType);
-  ok &= ::core::deserialize(in, m_clientId);
-
-  ok &= ::core::deserialize(in, m_data);
-  ok &= ::core::deserialize(in, m_systemDbId);
-  ok &= ::core::deserialize(in, m_position);
-
-  return ok;
-}
-
 auto TargetMessage::clone() const -> IMessagePtr
 {
   auto clone = std::make_unique<TargetMessage>(m_data, m_position);
@@ -86,6 +61,28 @@ auto TargetMessage::clone() const -> IMessagePtr
   }
 
   return clone;
+}
+
+auto operator<<(std::ostream &out, const TargetMessage &message) -> std::ostream &
+{
+  ::core::serialize(out, message.m_type);
+  ::core::serialize(out, message.m_clientId);
+  ::core::serialize(out, message.m_data);
+  ::core::serialize(out, message.m_systemDbId);
+  ::core::serialize(out, message.m_position);
+
+  return out;
+}
+
+auto operator>>(std::istream &in, TargetMessage &message) -> std::istream &
+{
+  ::core::deserialize(in, message.m_type);
+  ::core::deserialize(in, message.m_clientId);
+  ::core::deserialize(in, message.m_data);
+  ::core::deserialize(in, message.m_systemDbId);
+  ::core::deserialize(in, message.m_position);
+
+  return in;
 }
 
 } // namespace bsgalone::core

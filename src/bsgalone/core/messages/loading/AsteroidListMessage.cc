@@ -25,37 +25,32 @@ auto AsteroidListMessage::getAsteroidsData() const -> const std::vector<Asteroid
   return m_asteroidsData;
 }
 
-auto AsteroidListMessage::serialize(std::ostream &out) const -> std::ostream &
-{
-  ::core::serialize(out, m_messageType);
-  ::core::serialize(out, m_clientId);
-
-  ::core::serialize(out, m_systemDbId);
-
-  ::core::serialize(out, m_asteroidsData);
-
-  return out;
-}
-
-bool AsteroidListMessage::deserialize(std::istream &in)
-{
-  bool ok{true};
-  ok &= ::core::deserialize(in, m_messageType);
-  ok &= ::core::deserialize(in, m_clientId);
-
-  ok &= ::core::deserialize(in, m_systemDbId);
-
-  ok &= ::core::deserialize(in, m_asteroidsData);
-
-  return ok;
-}
-
 auto AsteroidListMessage::clone() const -> IMessagePtr
 {
   auto clone = std::make_unique<AsteroidListMessage>(m_systemDbId, m_asteroidsData);
   clone->copyClientIdIfDefined(*this);
 
   return clone;
+}
+
+auto operator<<(std::ostream &out, const AsteroidListMessage &message) -> std::ostream &
+{
+  ::core::serialize(out, message.m_type);
+  ::core::serialize(out, message.m_clientId);
+  ::core::serialize(out, message.m_systemDbId);
+  ::core::serialize(out, message.m_asteroidsData);
+
+  return out;
+}
+
+auto operator>>(std::istream &in, AsteroidListMessage &message) -> std::istream &
+{
+  ::core::deserialize(in, message.m_type);
+  ::core::deserialize(in, message.m_clientId);
+  ::core::deserialize(in, message.m_systemDbId);
+  ::core::deserialize(in, message.m_asteroidsData);
+
+  return in;
 }
 
 } // namespace bsgalone::core

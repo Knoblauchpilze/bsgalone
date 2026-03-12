@@ -16,13 +16,17 @@ class PlayerComputerListMessage : public NetworkMessage
 
   auto getComputersData() const -> const std::vector<PlayerComputerData> &;
 
-  auto serialize(std::ostream &out) const -> std::ostream & override;
-  bool deserialize(std::istream &in) override;
-
   auto clone() const -> IMessagePtr override;
 
   private:
   std::vector<PlayerComputerData> m_computersData{};
+
+  friend auto operator<<(std::ostream &out, const PlayerComputerListMessage &message)
+    -> std::ostream &;
+  friend auto operator>>(std::istream &in, PlayerComputerListMessage &message) -> std::istream &;
 };
+
+auto operator<<(std::ostream &out, const PlayerComputerListMessage &message) -> std::ostream &;
+auto operator>>(std::istream &in, PlayerComputerListMessage &message) -> std::istream &;
 
 } // namespace bsgalone::core

@@ -13,10 +13,7 @@ class TestSystemMessage : public bsgalone::core::AbstractSystemMessage
   TestSystemMessage(const bsgalone::core::Uuid systemDbId);
   ~TestSystemMessage() override = default;
 
-  auto serialize(std::ostream &out) const -> std::ostream & override;
-  bool deserialize(std::istream &in) override;
-
-  auto clone() const -> std::unique_ptr<IMessage> override;
+  auto clone() const -> bsgalone::core::IMessagePtr override;
 };
 
 } // namespace test

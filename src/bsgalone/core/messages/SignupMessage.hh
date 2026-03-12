@@ -27,9 +27,6 @@ class SignupMessage : public NetworkMessage
   bool successfullySignedup() const;
   auto getPlayerDbId() const -> std::optional<Uuid>;
 
-  auto serialize(std::ostream &out) const -> std::ostream & override;
-  bool deserialize(std::istream &in) override;
-
   auto clone() const -> IMessagePtr override;
 
   private:
@@ -38,6 +35,12 @@ class SignupMessage : public NetworkMessage
   Faction m_faction{};
 
   std::optional<Uuid> m_playerDbId{};
+
+  friend auto operator<<(std::ostream &out, const SignupMessage &message) -> std::ostream &;
+  friend auto operator>>(std::istream &in, SignupMessage &message) -> std::istream &;
 };
+
+auto operator<<(std::ostream &out, const SignupMessage &message) -> std::ostream &;
+auto operator>>(std::istream &in, SignupMessage &message) -> std::istream &;
 
 } // namespace bsgalone::core

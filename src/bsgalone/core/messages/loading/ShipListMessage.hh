@@ -18,14 +18,17 @@ class ShipListMessage : public NetworkMessage
   auto getFaction() const -> Faction;
   auto getShipsData() const -> const std::vector<ShipData> &;
 
-  auto serialize(std::ostream &out) const -> std::ostream & override;
-  bool deserialize(std::istream &in) override;
-
   auto clone() const -> IMessagePtr override;
 
   private:
   Faction m_faction{};
   std::vector<ShipData> m_shipsData{};
+
+  friend auto operator<<(std::ostream &out, const ShipListMessage &message) -> std::ostream &;
+  friend auto operator>>(std::istream &in, ShipListMessage &message) -> std::istream &;
 };
+
+auto operator<<(std::ostream &out, const ShipListMessage &message) -> std::ostream &;
+auto operator>>(std::istream &in, ShipListMessage &message) -> std::istream &;
 
 } // namespace bsgalone::core

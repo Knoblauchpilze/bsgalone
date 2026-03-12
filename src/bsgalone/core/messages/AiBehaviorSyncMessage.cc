@@ -38,31 +38,6 @@ void AiBehaviorSyncMessage::setTargetIndex(const int targetIndex)
   m_targetIndex = targetIndex;
 }
 
-auto AiBehaviorSyncMessage::serialize(std::ostream &out) const -> std::ostream &
-{
-  ::core::serialize(out, m_messageType);
-  ::core::serialize(out, m_clientId);
-
-  ::core::serialize(out, m_shipDbId);
-  ::core::serialize(out, m_systemDbId);
-  ::core::serialize(out, m_targetIndex);
-
-  return out;
-}
-
-bool AiBehaviorSyncMessage::deserialize(std::istream &in)
-{
-  bool ok{true};
-  ok &= ::core::deserialize(in, m_messageType);
-  ok &= ::core::deserialize(in, m_clientId);
-
-  ok &= ::core::deserialize(in, m_shipDbId);
-  ok &= ::core::deserialize(in, m_systemDbId);
-  ok &= ::core::deserialize(in, m_targetIndex);
-
-  return ok;
-}
-
 auto AiBehaviorSyncMessage::clone() const -> IMessagePtr
 {
   auto clone = std::make_unique<AiBehaviorSyncMessage>(m_shipDbId);
@@ -78,6 +53,28 @@ auto AiBehaviorSyncMessage::clone() const -> IMessagePtr
   }
 
   return clone;
+}
+
+auto operator<<(std::ostream &out, const AiBehaviorSyncMessage &message) -> std::ostream &
+{
+  ::core::serialize(out, message.m_type);
+  ::core::serialize(out, message.m_clientId);
+  ::core::serialize(out, message.m_shipDbId);
+  ::core::serialize(out, message.m_systemDbId);
+  ::core::serialize(out, message.m_targetIndex);
+
+  return out;
+}
+
+auto operator>>(std::istream &in, AiBehaviorSyncMessage &message) -> std::istream &
+{
+  ::core::deserialize(in, message.m_type);
+  ::core::deserialize(in, message.m_clientId);
+  ::core::deserialize(in, message.m_shipDbId);
+  ::core::deserialize(in, message.m_systemDbId);
+  ::core::deserialize(in, message.m_targetIndex);
+
+  return in;
 }
 
 } // namespace bsgalone::core

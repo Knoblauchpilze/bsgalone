@@ -21,9 +21,6 @@ class TargetPickedMessage : public AbstractPlayerMessage
   auto getTargetData() const -> Target;
   auto getPosition() const -> Eigen::Vector3f;
 
-  auto serialize(std::ostream &out) const -> std::ostream & override;
-  bool deserialize(std::istream &in) override;
-
   auto clone() const -> IMessagePtr override;
 
   /// @brief - Tries to read a target message from the input stream. If
@@ -40,6 +37,10 @@ class TargetPickedMessage : public AbstractPlayerMessage
   Eigen::Vector3f m_position{Eigen::Vector3f::Zero()};
 
   TargetPickedMessage();
+
+  friend auto operator<<(std::ostream &out, const TargetPickedMessage &message) -> std::ostream &;
 };
+
+auto operator<<(std::ostream &out, const TargetPickedMessage &message) -> std::ostream &;
 
 } // namespace bsgalone::core

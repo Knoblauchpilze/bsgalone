@@ -24,14 +24,10 @@ TEST(Unit_Bsgalone_Core_Messages_Player_VelocityMessage, SerializationDeserializ
                                  Uuid{19},
                                  Uuid{21},
                                  Eigen::Vector3f(-3.45f, 37.26f, -0.145f));
-  VelocityMessage actual(Uuid{97},
-                         Uuid{37},
-                         Uuid{36},
-                         Eigen::Vector3f(-23.104f, -1089.784f, 4.897f));
 
-  serializeAndDeserializeMessage(expected, actual);
+  const auto actual = serializeAndDeserializePlayerMessage(expected);
 
-  assertMessagesAreEqual(actual, expected);
+  assertMessagesAreEqual(actual->as<VelocityMessage>(), expected);
 }
 
 TEST(Unit_Bsgalone_Core_Messages_Player_VelocityMessage, Clone)

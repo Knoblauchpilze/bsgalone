@@ -19,7 +19,11 @@
 
 namespace bsgalone::core {
 
-void serializeAndDeserializeMessage(const IMessage &value, IMessage &output);
+template<typename T>
+void serializeAndDeserializeMessage(const T &value, T &output);
+
+template<typename T>
+auto serializeAndDeserializePlayerMessage(const T &value) -> IMessagePtr;
 
 void assertAsteroidDataAreEqual(const AsteroidData &actual, const AsteroidData &expected);
 void assertPlayerComputerDataAreEqual(const PlayerComputerData &actual,
@@ -40,3 +44,5 @@ void assertSystemTickDataAreEqual(const SystemTickData &actual, const SystemTick
 void assertTargetAreEqual(const Target &actual, const Target &expected);
 
 } // namespace bsgalone::core
+
+#include "Comparison.hxx"

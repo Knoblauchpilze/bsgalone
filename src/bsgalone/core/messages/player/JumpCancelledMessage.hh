@@ -15,9 +15,6 @@ class JumpCancelledMessage : public AbstractPlayerMessage
 
   auto getShipDbId() const -> Uuid;
 
-  auto serialize(std::ostream &out) const -> std::ostream & override;
-  bool deserialize(std::istream &in) override;
-
   auto clone() const -> IMessagePtr override;
 
   /// @brief - Tries to read a jump cancelled message from the input stream.
@@ -33,6 +30,10 @@ class JumpCancelledMessage : public AbstractPlayerMessage
   Uuid m_shipDbId{};
 
   JumpCancelledMessage();
+
+  friend auto operator<<(std::ostream &out, const JumpCancelledMessage &message) -> std::ostream &;
 };
+
+auto operator<<(std::ostream &out, const JumpCancelledMessage &message) -> std::ostream &;
 
 } // namespace bsgalone::core

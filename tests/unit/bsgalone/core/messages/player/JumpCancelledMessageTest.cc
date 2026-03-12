@@ -19,11 +19,10 @@ void assertMessagesAreEqual(const JumpCancelledMessage &actual, const JumpCancel
 TEST(Unit_Bsgalone_Core_Messages_Player_JumpCancelledMessage, SerializationDeserialization)
 {
   const JumpCancelledMessage expected(Uuid{18}, Uuid{19}, Uuid{14});
-  JumpCancelledMessage actual(Uuid{16}, Uuid{71}, Uuid{6});
 
-  serializeAndDeserializeMessage(expected, actual);
+  const auto actual = serializeAndDeserializePlayerMessage(expected);
 
-  assertMessagesAreEqual(actual, expected);
+  assertMessagesAreEqual(actual->as<JumpCancelledMessage>(), expected);
 }
 
 TEST(Unit_Bsgalone_Core_Messages_Player_JumpCancelledMessage, Clone)

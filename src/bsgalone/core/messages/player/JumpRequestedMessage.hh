@@ -19,9 +19,6 @@ class JumpRequestedMessage : public AbstractPlayerMessage
   auto getShipDbId() const -> Uuid;
   auto getDestinationSystem() const -> Uuid;
 
-  auto serialize(std::ostream &out) const -> std::ostream & override;
-  bool deserialize(std::istream &in) override;
-
   auto clone() const -> IMessagePtr override;
 
   /// @brief - Tries to read a jump requested message from the input stream.
@@ -38,6 +35,10 @@ class JumpRequestedMessage : public AbstractPlayerMessage
   Uuid m_destinationSystemDbId{};
 
   JumpRequestedMessage();
+
+  friend auto operator<<(std::ostream &out, const JumpRequestedMessage &message) -> std::ostream &;
 };
+
+auto operator<<(std::ostream &out, const JumpRequestedMessage &message) -> std::ostream &;
 
 } // namespace bsgalone::core

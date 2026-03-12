@@ -21,15 +21,18 @@ class PlayerShipListMessage : public NetworkMessage
   void setSystemDbId(const Uuid systemDbId);
   void setPlayerDbId(const Uuid playerDbId);
 
-  auto serialize(std::ostream &out) const -> std::ostream & override;
-  bool deserialize(std::istream &in) override;
-
   auto clone() const -> IMessagePtr override;
 
   private:
   std::optional<Uuid> m_systemDbId{};
   std::optional<Uuid> m_playerDbId{};
   std::vector<PlayerShipData> m_shipsData{};
+
+  friend auto operator<<(std::ostream &out, const PlayerShipListMessage &message) -> std::ostream &;
+  friend auto operator>>(std::istream &in, PlayerShipListMessage &message) -> std::istream &;
 };
+
+auto operator<<(std::ostream &out, const PlayerShipListMessage &message) -> std::ostream &;
+auto operator>>(std::istream &in, PlayerShipListMessage &message) -> std::istream &;
 
 } // namespace bsgalone::core

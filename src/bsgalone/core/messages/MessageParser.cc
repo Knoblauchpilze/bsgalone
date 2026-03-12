@@ -7,7 +7,6 @@
 #include "AsteroidListMessage.hh"
 #include "ComponentSyncMessage.hh"
 #include "ComputerListMessage.hh"
-#include "ConnectionMessage.hh"
 #include "DockMessage.hh"
 #include "EntityAddedMessage.hh"
 #include "EntityRemovedMessage.hh"
@@ -104,7 +103,9 @@ template<typename MessageType>
 auto readMessage(std::istream &in) -> std::optional<IMessagePtr>
 {
   auto message = std::make_unique<MessageType>();
-  if (!message->deserialize(in))
+  in >> *message;
+
+  if (!in.good())
   {
     return {};
   }
@@ -126,8 +127,6 @@ auto MessageParser::tryReadMessage(const MessageType &type, std::istream &in)
       return readMessage<ComponentSyncMessage>(in);
     case MessageType::COMPUTER_LIST:
       return readMessage<ComputerListMessage>(in);
-    case MessageType::CONNECTION:
-      return readMessage<ConnectionMessage>(in);
     case MessageType::DOCK:
       return DockMessage::readFromStream(in);
     case MessageType::ENTITY_ADDED:

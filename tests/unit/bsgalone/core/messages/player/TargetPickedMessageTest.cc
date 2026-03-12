@@ -17,7 +17,7 @@ void assertMessagesAreEqual(const TargetPickedMessage &actual, const TargetPicke
 }
 } // namespace
 
-TEST(Unit_Bsgalone_Core_Messages_Player_TargetPickedMessage, RegistersTarget)
+TEST(Unit_Bsgalone_Core_Messages_Player_TargetPickedMessage, SerializationDeserialization)
 {
   Target data{.sourceDbId = Uuid{21},
               .sourceKind = EntityKind::SHIP,
@@ -28,31 +28,9 @@ TEST(Unit_Bsgalone_Core_Messages_Player_TargetPickedMessage, RegistersTarget)
                                      data,
                                      Eigen::Vector3f(1.68f, -185.0f, 326.895f));
 
-  data = Target{.sourceDbId = Uuid{17}, .sourceKind = EntityKind::ASTEROID};
-  TargetPickedMessage actual(Uuid{20}, Uuid{21}, data, Eigen::Vector3f(0.0f, 26.37f, -0.111f));
+  const auto actual = serializeAndDeserializePlayerMessage(expected);
 
-  serializeAndDeserializeMessage(expected, actual);
-
-  assertMessagesAreEqual(actual, expected);
-}
-
-TEST(Unit_Bsgalone_Core_Messages_Player_TargetPickedMessage, ClearsTarget)
-{
-  Target data{.sourceDbId = Uuid{21}, .sourceKind = EntityKind::SHIP};
-  const TargetPickedMessage expected(Uuid{18},
-                                     Uuid{19},
-                                     data,
-                                     Eigen::Vector3f(1.68f, -185.0f, 326.895f));
-
-  data = Target{.sourceDbId = Uuid{17},
-                .sourceKind = EntityKind::ASTEROID,
-                .targetDbId = Uuid{14},
-                .targetKind = EntityKind::BULLET};
-  TargetPickedMessage actual(Uuid{20}, Uuid{21}, data, Eigen::Vector3f(0.0f, 26.37f, -0.111f));
-
-  serializeAndDeserializeMessage(expected, actual);
-
-  assertMessagesAreEqual(actual, expected);
+  assertMessagesAreEqual(actual->as<TargetPickedMessage>(), expected);
 }
 
 TEST(Unit_Bsgalone_Core_Messages_Player_TargetPickedMessage, Clone)

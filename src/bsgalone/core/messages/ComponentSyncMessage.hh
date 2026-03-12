@@ -42,9 +42,6 @@ class ComponentSyncMessage : public NetworkMessage
   void setPower(const float power);
   auto tryGetPower() const -> std::optional<float>;
 
-  auto serialize(std::ostream &out) const -> std::ostream & override;
-  bool deserialize(std::istream &in) override;
-
   auto clone() const -> IMessagePtr override;
 
   private:
@@ -58,6 +55,12 @@ class ComponentSyncMessage : public NetworkMessage
   std::optional<Eigen::Vector3f> m_acceleration{};
   std::optional<float> m_health{};
   std::optional<float> m_power{};
+
+  friend auto operator<<(std::ostream &out, const ComponentSyncMessage &message) -> std::ostream &;
+  friend auto operator>>(std::istream &in, ComponentSyncMessage &message) -> std::istream &;
 };
+
+auto operator<<(std::ostream &out, const ComponentSyncMessage &message) -> std::ostream &;
+auto operator>>(std::istream &in, ComponentSyncMessage &message) -> std::istream &;
 
 } // namespace bsgalone::core

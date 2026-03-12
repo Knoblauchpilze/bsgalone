@@ -19,13 +19,16 @@ class HangarMessage : public NetworkMessage
   auto getShipDbId() const -> Uuid;
   auto getShip() const -> PlayerShipData;
 
-  auto serialize(std::ostream &out) const -> std::ostream & override;
-  bool deserialize(std::istream &in) override;
-
   auto clone() const -> IMessagePtr override;
 
   private:
   PlayerShipData m_ship{};
+
+  friend auto operator<<(std::ostream &out, const HangarMessage &message) -> std::ostream &;
+  friend auto operator>>(std::istream &in, HangarMessage &message) -> std::istream &;
 };
+
+auto operator<<(std::ostream &out, const HangarMessage &message) -> std::ostream &;
+auto operator>>(std::istream &in, HangarMessage &message) -> std::istream &;
 
 } // namespace bsgalone::core

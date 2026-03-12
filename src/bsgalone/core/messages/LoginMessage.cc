@@ -63,37 +63,6 @@ bool LoginMessage::successfullyLoggedIn() const
   return m_playerDbId.has_value();
 }
 
-auto LoginMessage::serialize(std::ostream &out) const -> std::ostream &
-{
-  ::core::serialize(out, m_messageType);
-  ::core::serialize(out, m_clientId);
-
-  ::core::serialize(out, m_name);
-  ::core::serialize(out, m_password);
-  ::core::serialize(out, m_role);
-
-  ::core::serialize(out, m_playerDbId);
-  ::core::serialize(out, m_systemDbId);
-
-  return out;
-}
-
-bool LoginMessage::deserialize(std::istream &in)
-{
-  bool ok{true};
-  ok &= ::core::deserialize(in, m_messageType);
-  ok &= ::core::deserialize(in, m_clientId);
-
-  ok &= ::core::deserialize(in, m_name);
-  ok &= ::core::deserialize(in, m_password);
-  ok &= ::core::deserialize(in, m_role);
-
-  ok &= ::core::deserialize(in, m_playerDbId);
-  ok &= ::core::deserialize(in, m_systemDbId);
-
-  return ok;
-}
-
 auto LoginMessage::clone() const -> IMessagePtr
 {
   auto clone = std::make_unique<LoginMessage>(m_role);
@@ -110,6 +79,32 @@ auto LoginMessage::clone() const -> IMessagePtr
   clone->copyClientIdIfDefined(*this);
 
   return clone;
+}
+
+auto operator<<(std::ostream &out, const LoginMessage &message) -> std::ostream &
+{
+  ::core::serialize(out, message.m_type);
+  ::core::serialize(out, message.m_clientId);
+  ::core::serialize(out, message.m_name);
+  ::core::serialize(out, message.m_password);
+  ::core::serialize(out, message.m_role);
+  ::core::serialize(out, message.m_playerDbId);
+  ::core::serialize(out, message.m_systemDbId);
+
+  return out;
+}
+
+auto operator>>(std::istream &in, LoginMessage &message) -> std::istream &
+{
+  ::core::deserialize(in, message.m_type);
+  ::core::deserialize(in, message.m_clientId);
+  ::core::deserialize(in, message.m_name);
+  ::core::deserialize(in, message.m_password);
+  ::core::deserialize(in, message.m_role);
+  ::core::deserialize(in, message.m_playerDbId);
+  ::core::deserialize(in, message.m_systemDbId);
+
+  return in;
 }
 
 } // namespace bsgalone::core

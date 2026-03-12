@@ -17,15 +17,18 @@ class LootMessage : public NetworkMessage
   auto getResourceDbId() const -> Uuid;
   auto amount() const -> int;
 
-  auto serialize(std::ostream &out) const -> std::ostream & override;
-  bool deserialize(std::istream &in) override;
-
   auto clone() const -> IMessagePtr override;
 
   private:
   Uuid m_playerDbId{};
   Uuid m_resourceDbId{};
   int m_amount{};
+
+  friend auto operator<<(std::ostream &out, const LootMessage &message) -> std::ostream &;
+  friend auto operator>>(std::istream &in, LootMessage &message) -> std::istream &;
 };
+
+auto operator<<(std::ostream &out, const LootMessage &message) -> std::ostream &;
+auto operator>>(std::istream &in, LootMessage &message) -> std::istream &;
 
 } // namespace bsgalone::core

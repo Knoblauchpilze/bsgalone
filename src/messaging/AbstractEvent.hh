@@ -28,7 +28,6 @@ class AbstractEvent
   protected:
   AbstractEvent(const EventType type);
 
-  private:
   EventType m_type{};
 };
 

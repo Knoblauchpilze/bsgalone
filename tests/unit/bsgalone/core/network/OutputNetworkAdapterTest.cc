@@ -60,7 +60,7 @@ TEST(Unit_Bsgalone_Core_Network_OutputNetworkAdapter, CorrectlySendsServerMessag
   EXPECT_EQ(net::ClientId{12}, actual.clientId);
 
   std::stringstream out;
-  message.serialize(out);
+  out << message;
   const auto serialized = out.str();
   std::vector<char> expected(serialized.begin(), serialized.end());
   EXPECT_EQ(expected, actual.data);
@@ -78,7 +78,7 @@ TEST(Unit_Bsgalone_Core_Network_OutputNetworkAdapter, CorrectlySendsClientMessag
   const auto &actual = client->messages().at(0);
 
   std::stringstream out;
-  message.serialize(out);
+  out << message;
   const auto serialized = out.str();
   std::vector<char> expected(serialized.begin(), serialized.end());
   EXPECT_EQ(expected, actual.data);

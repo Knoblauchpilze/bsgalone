@@ -1,12 +1,12 @@
 
 #pragma once
 
-#include "AbstractMessage.hh"
+#include "IMessage.hh"
 #include "Uuid.hh"
 
 namespace bsgalone::core {
 
-class AbstractPlayerMessage : public AbstractMessage
+class AbstractPlayerMessage : public IMessage
 {
   public:
   ~AbstractPlayerMessage() override = default;

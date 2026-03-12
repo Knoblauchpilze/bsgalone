@@ -15,13 +15,16 @@ class SystemListMessage : public NetworkMessage
 
   auto getSystemsData() const -> const std::vector<SystemData> &;
 
-  auto serialize(std::ostream &out) const -> std::ostream & override;
-  bool deserialize(std::istream &in) override;
-
   auto clone() const -> IMessagePtr override;
 
   private:
   std::vector<SystemData> m_systemsData{};
+
+  friend auto operator<<(std::ostream &out, const SystemListMessage &message) -> std::ostream &;
+  friend auto operator>>(std::istream &in, SystemListMessage &message) -> std::istream &;
 };
+
+auto operator<<(std::ostream &out, const SystemListMessage &message) -> std::ostream &;
+auto operator>>(std::istream &in, SystemListMessage &message) -> std::istream &;
 
 } // namespace bsgalone::core

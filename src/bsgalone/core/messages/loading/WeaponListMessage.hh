@@ -16,13 +16,16 @@ class WeaponListMessage : public NetworkMessage
 
   auto getWeaponsData() const -> const std::vector<WeaponData> &;
 
-  auto serialize(std::ostream &out) const -> std::ostream & override;
-  bool deserialize(std::istream &in) override;
-
   auto clone() const -> IMessagePtr override;
 
   private:
   std::vector<WeaponData> m_weaponsData{};
+
+  friend auto operator<<(std::ostream &out, const WeaponListMessage &message) -> std::ostream &;
+  friend auto operator>>(std::istream &in, WeaponListMessage &message) -> std::istream &;
 };
+
+auto operator<<(std::ostream &out, const WeaponListMessage &message) -> std::ostream &;
+auto operator>>(std::istream &in, WeaponListMessage &message) -> std::istream &;
 
 } // namespace bsgalone::core
