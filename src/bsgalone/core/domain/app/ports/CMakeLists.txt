@@ -6,3 +6,7 @@ target_include_directories (bsgalone_core_lib PUBLIC
 add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/driven
 	)
+
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/driving
+	)

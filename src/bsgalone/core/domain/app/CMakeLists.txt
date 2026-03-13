@@ -10,3 +10,7 @@ add_subdirectory (
 add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/ports
 	)
+
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/usecases
+	)

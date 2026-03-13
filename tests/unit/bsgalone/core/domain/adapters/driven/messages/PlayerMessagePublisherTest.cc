@@ -12,7 +12,7 @@ namespace bsgalone::core {
 TEST(Unit_Bsgalone_Core_Domain_Adapters_Driven_Messages_PlayerMessagePublisher,
      ThrowsWhenEventBusIsNull)
 {
-  EXPECT_THROW([this]() { PlayerMessagePublisher(nullptr); }(), std::invalid_argument);
+  EXPECT_THROW([]() { PlayerMessagePublisher(nullptr); }(), std::invalid_argument);
 }
 
 TEST(Unit_Bsgalone_Core_Domain_Adapters_Driven_Messages_PlayerMessagePublisher,
