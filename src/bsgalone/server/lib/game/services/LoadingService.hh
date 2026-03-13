@@ -2,20 +2,11 @@
 #pragma once
 
 #include "AbstractService.hh"
-#include "AsteroidRepository.hh"
-#include "ComputerRepository.hh"
 #include "Coordinator.hh"
 #include "DatabaseEntityMapper.hh"
 #include "LoadingServiceUtils.hh"
-#include "PlayerRepository.hh"
-#include "PlayerShipRepository.hh"
-#include "ResourceRepository.hh"
-#include "ShipRepository.hh"
+#include "Repositories.hh"
 #include "Status.hh"
-#include "SystemOutpostRepository.hh"
-#include "SystemRepository.hh"
-#include "TickRepository.hh"
-#include "WeaponRepository.hh"
 #include <memory>
 #include <vector>
 
