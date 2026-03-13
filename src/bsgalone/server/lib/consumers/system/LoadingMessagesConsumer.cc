@@ -3,10 +3,12 @@
 #include "AsteroidListMessage.hh"
 #include "ComputerListMessage.hh"
 #include "HangarMessage.hh"
+#include "LoginUseCase.hh"
 #include "OutpostListMessage.hh"
 #include "PlayerComputerListMessage.hh"
 #include "PlayerListMessage.hh"
 #include "PlayerLoginDataMessage.hh"
+#include "PlayerMessagePublisher.hh"
 #include "PlayerResourceListMessage.hh"
 #include "PlayerShipListMessage.hh"
 #include "PlayerWeaponListMessage.hh"
@@ -25,7 +27,7 @@ LoadingMessagesConsumer::LoadingMessagesConsumer(const Services &services,
                             {core::MessageType::LOADING_FINISHED,
                              core::MessageType::LOADING_STARTED})
   , m_loadingService(services.loading)
-  , m_outputMessageQueue(std::move(outputMessageQueue))
+  , m_outputMessageQueue(outputMessageQueue)
 {
   if (nullptr == m_loadingService)
   {
@@ -35,6 +37,11 @@ LoadingMessagesConsumer::LoadingMessagesConsumer(const Services &services,
   {
     throw std::invalid_argument("Expected non null message queue");
   }
+
+  auto publisher = std::make_shared<core::PlayerMessagePublisher>(outputMessageQueue);
+  m_loginUseCase
+    = std::make_unique<core::LoginUseCase>(m_loadingService->repositories().systemRepository,
+                                           std::move(publisher));
 }
 
 void LoadingMessagesConsumer::onEventReceived(const core::IMessage &message)

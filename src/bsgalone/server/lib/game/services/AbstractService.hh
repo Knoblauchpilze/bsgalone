@@ -14,6 +14,11 @@ class AbstractService : public IService
 
   bool isReady() const noexcept override;
 
+  // TODO: This method is meant as a temporary access to allow migrating to use
+  // cases. The use cases will be instantiated by the message consumer and might
+  // need the repositories.
+  auto repositories() -> core::Repositories &;
+
   protected:
   core::Repositories m_repositories{};
 };

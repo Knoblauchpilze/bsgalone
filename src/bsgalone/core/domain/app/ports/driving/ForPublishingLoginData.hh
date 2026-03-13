@@ -15,6 +15,6 @@ class ForPublishingLoginData
   virtual void publishLoginData(const Uuid playerDbId) = 0;
 };
 
-using ForPublishingLoginDataShPtr = std::shared_ptr<ForPublishingLoginData>;
+using ForPublishingLoginDataPtr = std::unique_ptr<ForPublishingLoginData>;
 
 } // namespace bsgalone::core

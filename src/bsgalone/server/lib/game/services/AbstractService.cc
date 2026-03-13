@@ -13,4 +13,9 @@ bool AbstractService::isReady() const noexcept
   return true;
 }
 
+auto AbstractService::repositories() -> core::Repositories &
+{
+  return m_repositories;
+}
+
 } // namespace bsgalone::server
