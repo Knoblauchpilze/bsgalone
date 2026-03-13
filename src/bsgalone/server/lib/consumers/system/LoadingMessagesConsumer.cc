@@ -454,10 +454,9 @@ void LoadingMessagesConsumer::handleSystemTargetsLoading(
 void LoadingMessagesConsumer::handleSystemTickLoading(const core::LoadingStartedMessage &message) const
 {
   const auto systemDbId = message.getSystemDbId();
+  const auto system     = m_loadingService->getSystem(systemDbId);
 
-  const auto tickConfig = m_loadingService->getSystemTickConfig(systemDbId);
-
-  auto out = std::make_unique<core::SystemDataMessage>(toSystemTickData(tickConfig));
+  auto out = std::make_unique<core::SystemDataMessage>(toSystemTickData(system));
   out->copyClientIdIfDefined(message);
 
   m_outputMessageQueue->pushEvent(std::move(out));

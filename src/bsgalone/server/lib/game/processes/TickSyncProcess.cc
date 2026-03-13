@@ -15,9 +15,9 @@ void TickSyncProcess::update(core::Coordinator & /*coordinator*/, const chrono::
     return;
   }
 
-  core::SystemTick tick{.system = m_systemDbId, .currentTick = data.tick};
+  core::System system{.dbId = m_systemDbId, .currentTick = data.tick};
 
-  m_repositories.tickRepository->save(tick);
+  m_repositories.systemRepository->save(system);
   m_lastSaved = data.tick.count();
 }
 

@@ -82,9 +82,9 @@ void SystemProcessor::stop()
 void SystemProcessor::initialize(const core::Uuid systemDbId)
 {
   core::Repositories repositories{};
-  const auto tickConfig = repositories.tickRepository->findOneBySystem(m_systemDbId);
-  m_timeManager = std::make_unique<chrono::TimeManager>(tickConfig.currentTick, tickConfig.step);
-  info("System will start at tick " + tickConfig.currentTick.str());
+  const auto data = repositories.systemRepository->findOneById(m_systemDbId);
+  m_timeManager   = std::make_unique<chrono::TimeManager>(data.currentTick, data.step);
+  info("System will start at tick " + data.currentTick.str());
 
   m_processes = std::make_unique<Processes>(systemDbId, m_inputMessagesQueue.get());
 }

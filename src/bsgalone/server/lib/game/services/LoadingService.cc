@@ -216,9 +216,9 @@ auto LoadingService::getSystems() const -> std::vector<core::System>
   return out;
 }
 
-auto LoadingService::getSystemTickConfig(const core::Uuid systemDbId) const -> core::SystemTick
+auto LoadingService::getSystem(const core::Uuid systemDbId) const -> core::System
 {
-  return m_repositories.tickRepository->findOneBySystem(systemDbId);
+  return m_repositories.systemRepository->findOneById(systemDbId);
 }
 
 namespace {

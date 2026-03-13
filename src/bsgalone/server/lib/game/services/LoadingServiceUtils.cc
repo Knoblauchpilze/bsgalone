@@ -196,12 +196,12 @@ auto ShipProps::toShipData() const -> core::ShipData
   };
 }
 
-auto toSystemTickData(const core::SystemTick &tickData) -> core::SystemTickData
+auto toSystemTickData(const core::System &system) -> core::SystemTickData
 {
   return core::SystemTickData{
-    .dbId        = tickData.system,
-    .currentTick = tickData.currentTick,
-    .step        = tickData.step,
+    .dbId        = system.dbId,
+    .currentTick = system.currentTick,
+    .step        = system.step,
   };
 }
 

@@ -42,7 +42,7 @@ class LoadingService : public AbstractService
   auto getShipsInSystem(const core::Uuid systemDbId) const -> std::vector<PlayerShipProps>;
 
   auto getSystems() const -> std::vector<core::System>;
-  auto getSystemTickConfig(const core::Uuid systemDbId) const -> core::SystemTick;
+  auto getSystem(const core::Uuid systemDbId) const -> core::System;
 
   auto getTargetsInSystem(const core::Uuid systemDbId) const -> std::vector<TargetProps>;
 

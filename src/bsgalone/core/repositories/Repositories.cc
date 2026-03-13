@@ -30,7 +30,6 @@ Repositories::Repositories()
   systemRepository         = std::make_shared<SystemRepository>(dbConnection);
   weaponPriceRepository    = std::make_shared<WeaponPriceRepository>(dbConnection);
   weaponRepository         = std::make_shared<WeaponRepository>(dbConnection);
-  tickRepository           = std::make_shared<TickRepository>(dbConnection);
 
   accountRepository->initialize();
   aiBehaviorRepository->initialize();
@@ -54,7 +53,6 @@ Repositories::Repositories()
   systemRepository->initialize();
   weaponPriceRepository->initialize();
   weaponRepository->initialize();
-  tickRepository->initialize();
 }
 
 } // namespace bsgalone::core

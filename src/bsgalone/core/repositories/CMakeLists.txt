@@ -22,7 +22,6 @@ target_sources (bsgalone_core_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/ShipRepository.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ShipWeaponRepository.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SystemOutpostRepository.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/TickRepository.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/WeaponPriceRepository.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/WeaponRepository.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/Repositories.cc

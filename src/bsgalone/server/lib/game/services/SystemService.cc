@@ -173,10 +173,10 @@ bool SystemService::tryMarkAsteroidForRespawn(const core::Uuid asteroidDbId) con
   // mark the asteroid as ready for respawn because this is triggered
   // by the processing of a EntityRemovedMessage in the server. It is
   // therefore assumed that the process is validated ahead of time.
-  const auto asteroid = m_repositories.asteroidRepository->findOneById(asteroidDbId);
-  const auto tickData = m_repositories.tickRepository->findOneBySystem(asteroid.system);
+  const auto asteroid   = m_repositories.asteroidRepository->findOneById(asteroidDbId);
+  const auto systemData = m_repositories.systemRepository->findOneById(asteroid.system);
 
-  const auto deathTick   = tickData.currentTick;
+  const auto deathTick   = systemData.currentTick;
   const auto respawnTick = deathTick + ASTEROID_RESPAWN_TIME_IN_TICKS;
 
   m_repositories.asteroidRepository->saveRespawn(asteroidDbId, deathTick, respawnTick);
@@ -214,9 +214,9 @@ bool SystemService::disposeOfAiShip(const core::PlayerShip &playerShip, const bo
     error("Cannot dispose of AI ship " + core::str(playerShip.id), "Ship is not dead");
   }
 
-  const auto tickData = m_repositories.tickRepository->findOneBySystem(*playerShip.system);
+  const auto systemData = m_repositories.systemRepository->findOneById(*playerShip.system);
 
-  const auto deathTick   = tickData.currentTick;
+  const auto deathTick   = systemData.currentTick;
   const auto respawnTick = deathTick + AI_SHIP_RESPAWN_TIME_IN_TICKS;
 
   m_repositories.playerShipRepository->saveRespawn(playerShip.id, deathTick, respawnTick);

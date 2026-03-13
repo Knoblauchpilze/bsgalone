@@ -22,7 +22,6 @@
 #include "ShipWeaponRepository.hh"
 #include "SystemOutpostRepository.hh"
 #include "SystemRepository.hh"
-#include "TickRepository.hh"
 #include "WeaponPriceRepository.hh"
 #include "WeaponRepository.hh"
 
@@ -53,7 +52,6 @@ struct Repositories
   ShipWeaponRepositoryShPtr shipWeaponRepository{};
   SystemOutpostRepositoryShPtr systemOutpostRepository{};
   SystemRepositoryShPtr systemRepository{};
-  TickRepositoryShPtr tickRepository{};
   WeaponPriceRepositoryShPtr weaponPriceRepository{};
   WeaponRepositoryShPtr weaponRepository{};
 
