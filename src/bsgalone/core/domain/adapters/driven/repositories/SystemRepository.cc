@@ -14,14 +14,20 @@ constexpr auto FIND_ALL_QUERY      = "SELECT id FROM system";
 constexpr auto FIND_ONE_QUERY_NAME = "system_find_one";
 constexpr auto FIND_ONE_QUERY      = R"(
 SELECT
-  name,
-  x_pos,
-  y_pos,
-  z_pos
+  s.name,
+  s.x_pos,
+  s.y_pos,
+  s.z_pos,
+  t.current_tick,
+  tc.duration,
+  tc.unit,
+  tc.ticks
 FROM
-  system
+  system AS s
+  INNER JOIN tick AS t ON t.system = s.id
+  INNER JOIN tick_config AS tc ON tc.system = s.id
 WHERE
-  id = $1
+  s.id = $1
 )";
 
 constexpr auto FIND_ONE_BY_FACTION_QUERY_NAME = "system_find_one_by_faction";
@@ -137,6 +143,16 @@ auto SystemRepository::findOneById(const Uuid system) const -> System
   const auto y = record[2].as<float>();
   const auto z = record[3].as<float>();
   out.position = Eigen::Vector3f(x, y, z);
+
+  out.currentTick = chrono::Tick::fromInt(record[4].as<int>());
+
+  const auto tick = record[5].as<int>();
+  chrono::Duration step{
+    .unit    = chrono::fromString(record[6].view()),
+    .elapsed = static_cast<float>(record[7].as<int>()),
+  };
+
+  out.step = chrono::TimeStep(tick, step);
 
   return out;
 }
