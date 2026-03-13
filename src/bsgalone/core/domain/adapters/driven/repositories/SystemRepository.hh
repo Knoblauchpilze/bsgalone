@@ -19,8 +19,8 @@ class SystemRepository : public AbstractRepository, public ForManagingSystem
 
   void initialize() override;
 
-  auto findAll() const -> std::unordered_set<Uuid>;
   auto findOneById(const Uuid system) const -> System override;
+  auto findAll() const -> std::vector<System> override;
   auto findOneByFactionAndStarting(const Faction &faction) const -> Uuid;
 
   auto findAllAsteroidsBySystem(const Uuid system) const -> std::unordered_set<Uuid>;

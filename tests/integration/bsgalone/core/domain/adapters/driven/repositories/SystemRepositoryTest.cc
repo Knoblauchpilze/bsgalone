@@ -131,6 +131,39 @@ TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_SystemRepos
 }
 
 TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_SystemRepository,
+       ReturnsAllExistingSystems)
+{
+  SystemRepository repo(this->dbConnection());
+  repo.initialize();
+
+  const auto system1 = insertTestSystem(*this->dbConnection(), true);
+  const auto system2 = insertTestSystem(*this->dbConnection(), true);
+
+  const auto allSystems = repo.findAll();
+
+  // The other tests also insert systems so there might be more than the two
+  // inseretd in this one. This could be solved by isolated test DB but is
+  // fine for now.
+  EXPECT_LE(2u, allSystems.size());
+
+  const auto maybeSystem1 = std::find_if(allSystems.begin(),
+                                         allSystems.end(),
+                                         [&system1](const System &system) {
+                                           return system.dbId == system1.dbId;
+                                         });
+  EXPECT_NE(maybeSystem1, allSystems.end())
+    << "Expected to find system " << system1.name << " among " << allSystems.size();
+
+  const auto maybeSystem2 = std::find_if(allSystems.begin(),
+                                         allSystems.end(),
+                                         [&system2](const System &system) {
+                                           return system.dbId == system2.dbId;
+                                         });
+  EXPECT_NE(maybeSystem2, allSystems.end())
+    << "Expected to find system " << system2.name << " among " << allSystems.size();
+}
+
+TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_SystemRepository,
        UpdatesCurrentTickWhenSaving)
 {
   SystemRepository repo(this->dbConnection());

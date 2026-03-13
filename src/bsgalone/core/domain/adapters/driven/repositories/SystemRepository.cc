@@ -8,12 +8,11 @@ SystemRepository::SystemRepository(const DbConnectionShPtr &connection)
 {}
 
 namespace {
-constexpr auto FIND_ALL_QUERY_NAME = "system_find_all";
-constexpr auto FIND_ALL_QUERY      = "SELECT id FROM system";
 
 constexpr auto FIND_ONE_QUERY_NAME = "system_find_one";
 constexpr auto FIND_ONE_QUERY      = R"(
 SELECT
+  s.id,
   s.name,
   s.x_pos,
   s.y_pos,
@@ -28,6 +27,24 @@ FROM
   INNER JOIN tick_config AS tc ON tc.system = s.id
 WHERE
   s.id = $1
+)";
+
+constexpr auto FIND_ALL_QUERY_NAME = "system_find_all";
+constexpr auto FIND_ALL_QUERY      = R"(
+SELECT
+  s.id,
+  s.name,
+  s.x_pos,
+  s.y_pos,
+  s.z_pos,
+  t.current_tick,
+  tc.duration,
+  tc.unit,
+  tc.ticks
+FROM
+  system AS s
+  INNER JOIN tick AS t ON t.system = s.id
+  INNER JOIN tick_config AS tc ON tc.system = s.id
 )";
 
 constexpr auto FIND_ONE_BY_FACTION_QUERY_NAME = "system_find_one_by_faction";
@@ -120,22 +137,28 @@ void SystemRepository::initialize()
   m_connection->prepare(UPDATE_SYSTEM_TICK_QUERY_NAME, UPDATE_SYSTEM_TICK_QUERY);
 }
 
-auto SystemRepository::findAll() const -> std::unordered_set<Uuid>
+namespace {
+auto fromDbRow(const pqxx::row &record) -> System
 {
-  // https://github.com/jtv/libpqxx/blob/9dd71102e1f3e10b0f14eed253873ee6ce2a4880/include/pqxx/doc/prepared-statement.md#preparing-a-statement
-  const auto query = [](pqxx::nontransaction &work) {
-    return work.exec(pqxx::prepped{FIND_ALL_QUERY_NAME});
+  const auto x = record[2].as<float>();
+  const auto y = record[3].as<float>();
+  const auto z = record[4].as<float>();
+
+  const auto tick = record[6].as<int>();
+  chrono::Duration step{
+    .unit    = chrono::fromString(record[7].view()),
+    .elapsed = static_cast<float>(record[8].as<int>()),
   };
-  const auto rows = m_connection->executeQuery(query);
 
-  std::unordered_set<Uuid> out;
-  for (const auto record : rows)
-  {
-    out.emplace(fromDbId(record[0].as<int>()));
-  }
-
-  return out;
+  return System{
+    .dbId        = fromDbId(record[0].as<int>()),
+    .name        = record[1].as<std::string>(),
+    .position    = Eigen::Vector3f(x, y, z),
+    .currentTick = chrono::Tick::fromInt(record[5].as<int>()),
+    .step        = chrono::TimeStep(tick, step),
+  };
 }
+} // namespace
 
 auto SystemRepository::findOneById(const Uuid system) const -> System
 {
@@ -144,25 +167,22 @@ auto SystemRepository::findOneById(const Uuid system) const -> System
   };
   const auto record = m_connection->executeQueryReturningSingleRow(query);
 
-  System out{};
+  return fromDbRow(record);
+}
 
-  out.dbId = system;
-  out.name = record[0].as<std::string>();
-
-  const auto x = record[1].as<float>();
-  const auto y = record[2].as<float>();
-  const auto z = record[3].as<float>();
-  out.position = Eigen::Vector3f(x, y, z);
-
-  out.currentTick = chrono::Tick::fromInt(record[4].as<int>());
-
-  const auto tick = record[5].as<int>();
-  chrono::Duration step{
-    .unit    = chrono::fromString(record[6].view()),
-    .elapsed = static_cast<float>(record[7].as<int>()),
+auto SystemRepository::findAll() const -> std::vector<System>
+{
+  // https://github.com/jtv/libpqxx/blob/9dd71102e1f3e10b0f14eed253873ee6ce2a4880/include/pqxx/doc/prepared-statement.md#preparing-a-statement
+  const auto query = [](pqxx::nontransaction &work) {
+    return work.exec(pqxx::prepped{FIND_ALL_QUERY_NAME});
   };
+  const auto rows = m_connection->executeQuery(query);
 
-  out.step = chrono::TimeStep(tick, step);
+  std::vector<System> out;
+  for (const auto record : rows)
+  {
+    out.emplace_back(fromDbRow(record));
+  }
 
   return out;
 }

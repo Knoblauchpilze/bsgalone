@@ -204,16 +204,7 @@ auto LoadingService::getShipsInSystem(const core::Uuid systemDbId) const
 
 auto LoadingService::getSystems() const -> std::vector<core::System>
 {
-  std::vector<core::System> out;
-
-  const auto ids = m_repositories.systemRepository->findAll();
-  for (const auto &id : ids)
-  {
-    auto system = m_repositories.systemRepository->findOneById(id);
-    out.push_back(std::move(system));
-  }
-
-  return out;
+  return m_repositories.systemRepository->findAll();
 }
 
 auto LoadingService::getSystem(const core::Uuid systemDbId) const -> core::System

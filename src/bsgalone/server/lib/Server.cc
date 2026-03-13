@@ -43,11 +43,11 @@ void Server::initializeSystems()
 
   const auto allSystems = repositories.systemRepository->findAll();
 
-  for (const auto &systemDbId : allSystems)
+  for (const auto &system : allSystems)
   {
     core::IMessageQueueShPtr inputQueue = core::createSynchronizedMessageQueue();
-    auto processor                      = std::make_shared<SystemProcessor>(systemDbId, inputQueue);
-    m_inputQueues[systemDbId]           = std::move(inputQueue);
+    auto processor             = std::make_shared<SystemProcessor>(system.dbId, inputQueue);
+    m_inputQueues[system.dbId] = std::move(inputQueue);
     m_systemProcessors.emplace_back(std::move(processor));
   }
 }
