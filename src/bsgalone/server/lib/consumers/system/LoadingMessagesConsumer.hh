@@ -12,14 +12,14 @@ namespace bsgalone::server {
 class LoadingMessagesConsumer : public core::AbstractMessageConsumer
 {
   public:
-  LoadingMessagesConsumer(const Services &services, core::IMessageQueue *const outputMessageQueue);
+  LoadingMessagesConsumer(const Services &services, core::IMessageQueueShPtr outputMessageQueue);
   ~LoadingMessagesConsumer() override = default;
 
   void onEventReceived(const core::IMessage &message) override;
 
   private:
   LoadingServiceShPtr m_loadingService{};
-  core::IMessageQueue *const m_outputMessageQueue{};
+  core::IMessageQueueShPtr m_outputMessageQueue{};
 
   void handleLoadingStartedMessage(const core::LoadingStartedMessage &message) const;
   void forwardLoadingFinishedMessage(const core::LoadingFinishedMessage &message) const;

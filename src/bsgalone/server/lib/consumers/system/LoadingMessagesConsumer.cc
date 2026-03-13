@@ -20,12 +20,12 @@
 namespace bsgalone::server {
 
 LoadingMessagesConsumer::LoadingMessagesConsumer(const Services &services,
-                                                 core::IMessageQueue *const outputMessageQueue)
+                                                 core::IMessageQueueShPtr outputMessageQueue)
   : AbstractMessageConsumer("loading",
                             {core::MessageType::LOADING_FINISHED,
                              core::MessageType::LOADING_STARTED})
   , m_loadingService(services.loading)
-  , m_outputMessageQueue(outputMessageQueue)
+  , m_outputMessageQueue(std::move(outputMessageQueue))
 {
   if (nullptr == m_loadingService)
   {

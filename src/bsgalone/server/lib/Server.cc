@@ -61,8 +61,7 @@ void Server::initializeMessageSystem()
 
   for (const auto &systemProcessor : m_systemProcessors)
   {
-    systemProcessor->connectToQueues(m_messageExchanger->getInternalMessageQueue(),
-                                     m_networkClient.get());
+    systemProcessor->connectToQueues(m_messageExchanger->getInternalMessageQueue(), m_networkClient);
   }
 
   for (const auto &[systemDbId, systemQueue] : m_inputQueues)

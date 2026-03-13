@@ -26,7 +26,7 @@ class SystemProcessor : public ::core::CoreObject
   auto getSystemDbId() const -> core::Uuid;
 
   void connectToQueues(core::IMessageQueue *const internalMessageQueue,
-                       core::IMessageQueue *const outputMessageQueue);
+                       core::IMessageQueueShPtr outputMessageQueue);
   void start();
   void stop();
 
@@ -45,7 +45,7 @@ class SystemProcessor : public ::core::CoreObject
 
   void initialize(const core::Uuid systemDbId);
   void asyncSystemProcessing();
-  void createMessageConsumers(core::IMessageQueue *const outputMessagesQueue);
+  void createMessageConsumers(core::IMessageQueueShPtr outputMessagesQueue);
 };
 
 using SystemProcessorShPtr = std::shared_ptr<SystemProcessor>;

@@ -39,12 +39,12 @@ auto SystemProcessor::getSystemDbId() const -> core::Uuid
 }
 
 void SystemProcessor::connectToQueues(core::IMessageQueue *const internalMessageQueue,
-                                      core::IMessageQueue *const outputMessageQueue)
+                                      core::IMessageQueueShPtr outputMessageQueue)
 {
   core::Repositories repositories{};
 
   core::SystemsConfig config{.internalMessageQueue = internalMessageQueue,
-                             .outputMessageQueue   = outputMessageQueue};
+                             .outputMessageQueue   = outputMessageQueue.get()};
   m_coordinator = std::make_shared<core::Coordinator>(std::move(config));
 
   core::DataSource dataSource(m_systemDbId);
@@ -120,47 +120,48 @@ void SystemProcessor::asyncSystemProcessing()
   debug("Stopped processing for system");
 }
 
-void SystemProcessor::createMessageConsumers(core::IMessageQueue *const outputMessagesQueue)
+void SystemProcessor::createMessageConsumers(core::IMessageQueueShPtr outputMessagesQueue)
 {
   m_inputMessagesQueue->addListener(
     std::make_unique<ShipSelectedMessageConsumer>(m_services,
                                                   m_inputMessagesQueue.get(),
-                                                  outputMessagesQueue));
+                                                  outputMessagesQueue.get()));
 
   m_inputMessagesQueue->addListener(
     std::make_unique<PurchaseMessageConsumer>(m_services,
                                               m_inputMessagesQueue.get(),
-                                              outputMessagesQueue));
+                                              outputMessagesQueue.get()));
 
   m_inputMessagesQueue->addListener(
     std::make_unique<EquipMessageConsumer>(m_services,
                                            m_inputMessagesQueue.get(),
-                                           outputMessagesQueue));
-
-  m_inputMessagesQueue->addListener(std::make_unique<DockMessageConsumer>(m_services,
-                                                                          m_inputMessagesQueue.get(),
-                                                                          outputMessagesQueue));
+                                           outputMessagesQueue.get()));
 
   m_inputMessagesQueue->addListener(
-    std::make_unique<SlotMessageConsumer>(m_services, outputMessagesQueue));
+    std::make_unique<DockMessageConsumer>(m_services,
+                                          m_inputMessagesQueue.get(),
+                                          outputMessagesQueue.get()));
 
   m_inputMessagesQueue->addListener(
-    std::make_unique<VelocityMessageConsumer>(m_services, outputMessagesQueue));
+    std::make_unique<SlotMessageConsumer>(m_services, outputMessagesQueue.get()));
 
   m_inputMessagesQueue->addListener(
-    std::make_unique<TargetPickedMessageConsumer>(m_services, outputMessagesQueue));
+    std::make_unique<VelocityMessageConsumer>(m_services, outputMessagesQueue.get()));
 
   m_inputMessagesQueue->addListener(
-    std::make_unique<JumpCancelledMessageConsumer>(m_services, outputMessagesQueue));
+    std::make_unique<TargetPickedMessageConsumer>(m_services, outputMessagesQueue.get()));
 
   m_inputMessagesQueue->addListener(
-    std::make_unique<JumpRequestedMessageConsumer>(m_services, outputMessagesQueue));
+    std::make_unique<JumpCancelledMessageConsumer>(m_services, outputMessagesQueue.get()));
 
   m_inputMessagesQueue->addListener(
-    std::make_unique<EntityDeletedMessageConsumer>(m_services, outputMessagesQueue));
+    std::make_unique<JumpRequestedMessageConsumer>(m_services, outputMessagesQueue.get()));
 
   m_inputMessagesQueue->addListener(
-    std::make_unique<EntityAddedMessageConsumer>(m_services, outputMessagesQueue));
+    std::make_unique<EntityDeletedMessageConsumer>(m_services, outputMessagesQueue.get()));
+
+  m_inputMessagesQueue->addListener(
+    std::make_unique<EntityAddedMessageConsumer>(m_services, outputMessagesQueue.get()));
 
   m_inputMessagesQueue->addListener(
     std::make_unique<LoadingMessagesConsumer>(m_services, outputMessagesQueue));
