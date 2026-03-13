@@ -3,6 +3,7 @@
 
 #include "AbstractRepository.hh"
 #include "Faction.hh"
+#include "ForFetchingSystem.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
 #include <memory>
@@ -10,14 +11,7 @@
 
 namespace bsgalone::core {
 
-struct System
-{
-  Uuid id{};
-  std::string name{};
-  Eigen::Vector3f position{};
-};
-
-class SystemRepository : public AbstractRepository
+class SystemRepository : public AbstractRepository, public ForFetchingSystem
 {
   public:
   SystemRepository(const DbConnectionShPtr &connection);
@@ -26,7 +20,7 @@ class SystemRepository : public AbstractRepository
   void initialize() override;
 
   auto findAll() const -> std::unordered_set<Uuid>;
-  auto findOneById(const Uuid system) const -> System;
+  auto findOneById(const Uuid system) const -> System override;
   auto findOneByFactionAndStarting(const Faction &faction) const -> Uuid;
 
   auto findAllAsteroidsBySystem(const Uuid system) const -> std::unordered_set<Uuid>;

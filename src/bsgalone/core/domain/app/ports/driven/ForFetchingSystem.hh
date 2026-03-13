@@ -12,7 +12,7 @@ class ForFetchingSystem
   ForFetchingSystem()          = default;
   virtual ~ForFetchingSystem() = default;
 
-  virtual auto findOneById(const Uuid systemDbId) -> System = 0;
+  virtual auto findOneById(const Uuid systemDbId) const -> System = 0;
 };
 
 using ForFetchingSystemShPtr = std::shared_ptr<ForFetchingSystem>;
