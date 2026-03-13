@@ -96,6 +96,15 @@ UPDATE ship_system
   WHERE
     ship_system.ship = $2
 )";
+
+constexpr auto UPDATE_SYSTEM_TICK_QUERY_NAME = "system_update_tick";
+constexpr auto UPDATE_SYSTEM_TICK_QUERY      = R"(
+UPDATE tick
+  SET
+    current_tick = $1
+  WHERE
+    system = $2
+)";
 } // namespace
 
 void SystemRepository::initialize()
@@ -108,6 +117,7 @@ void SystemRepository::initialize()
   m_connection->prepare(FIND_OUTPOSTS_QUERY_NAME, FIND_OUTPOSTS_QUERY);
   m_connection->prepare(UPDATE_SYSTEM_QUERY_NAME, UPDATE_SYSTEM_QUERY);
   m_connection->prepare(UPDATE_SHIP_QUERY_NAME, UPDATE_SHIP_QUERY);
+  m_connection->prepare(UPDATE_SYSTEM_TICK_QUERY_NAME, UPDATE_SYSTEM_TICK_QUERY);
 }
 
 auto SystemRepository::findAll() const -> std::unordered_set<Uuid>
@@ -246,6 +256,22 @@ void SystemRepository::updateShipForSystem(const Uuid currentShip, const Uuid ne
   if (res.error)
   {
     error("Failed to update ship in system: " + *res.error);
+  }
+}
+
+void SystemRepository::save(const System &system)
+{
+  auto query = [&system](pqxx::work &transaction) {
+    return transaction
+      .exec(pqxx::prepped{UPDATE_SYSTEM_TICK_QUERY_NAME},
+            pqxx::params{system.currentTick.count(), toDbId(system.dbId)})
+      .no_rows();
+  };
+
+  const auto res = m_connection->tryExecuteTransaction(query);
+  if (res.error)
+  {
+    error("Failed to save system: " + *res.error);
   }
 }
 

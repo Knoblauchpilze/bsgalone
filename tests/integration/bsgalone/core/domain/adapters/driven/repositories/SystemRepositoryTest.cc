@@ -130,4 +130,22 @@ TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_SystemRepos
               ThrowsMessage<::core::CoreException>("Failed to execute query returning single row"));
 }
 
+TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_SystemRepository,
+       UpdatesCurrentTickWhenSaving)
+{
+  SystemRepository repo(this->dbConnection());
+  repo.initialize();
+
+  auto system = insertTestSystem(*this->dbConnection(), true);
+
+  const auto duration = chrono::TickDuration::fromInt(12);
+  system.currentTick += duration;
+
+  repo.save(system);
+
+  const auto actual = repo.findOneById(system.dbId);
+
+  EXPECT_EQ(actual.currentTick, system.currentTick);
+}
+
 } // namespace bsgalone::core
