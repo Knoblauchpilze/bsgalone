@@ -142,7 +142,7 @@ void LoadingMessagesConsumer::handleLoginTransition(const core::LoadingStartedMe
   handleWeaponsLoading(message);
   handleComputersLoading(message);
   handleShipsLoading(message);
-  handleSystemsLoading(message);
+  m_loginUseCase->publishLoginData(message.getPlayerDbId());
   handleSystemTickLoading(message);
   handlePlayerResourcesLoading(message);
   handlePlayerShipsLoading(message);
@@ -251,22 +251,6 @@ void LoadingMessagesConsumer::handleShipsLoading(const core::LoadingStartedMessa
                  [](const ShipProps &ship) { return ship.toShipData(); });
 
   auto out = std::make_unique<core::ShipListMessage>(player.faction, shipsData);
-  out->copyClientIdIfDefined(message);
-
-  m_outputMessageQueue->pushEvent(std::move(out));
-}
-
-void LoadingMessagesConsumer::handleSystemsLoading(const core::LoadingStartedMessage &message) const
-{
-  const auto systems = m_loadingService->getSystems();
-
-  std::vector<core::SystemData> systemsData{};
-  std::transform(systems.begin(),
-                 systems.end(),
-                 std::back_inserter(systemsData),
-                 [](const core::System &system) { return toSystemData(system); });
-
-  auto out = std::make_unique<core::SystemListMessage>(systemsData);
   out->copyClientIdIfDefined(message);
 
   m_outputMessageQueue->pushEvent(std::move(out));

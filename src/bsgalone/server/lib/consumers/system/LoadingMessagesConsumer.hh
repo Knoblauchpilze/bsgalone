@@ -39,7 +39,6 @@ class LoadingMessagesConsumer : public core::AbstractMessageConsumer
   void handleWeaponsLoading(const core::LoadingStartedMessage &message) const;
   void handleComputersLoading(const core::LoadingStartedMessage &message) const;
   void handleShipsLoading(const core::LoadingStartedMessage &message) const;
-  void handleSystemsLoading(const core::LoadingStartedMessage &message) const;
 
   void handlePlayerResourcesLoading(const core::LoadingStartedMessage &message) const;
   void handlePlayerShipsLoading(const core::LoadingStartedMessage &message) const;
