@@ -75,8 +75,6 @@ auto str(const MessageType &type) -> std::string
       return "slot";
     case MessageType::SLOT_COMPONENT_UPDATED:
       return "slot_component_updated";
-    case MessageType::SYSTEM_DATA:
-      return "system_data";
     case MessageType::SYSTEM_LIST:
       return "system_list";
     case MessageType::VELOCITY:
@@ -133,7 +131,6 @@ auto allMessageTypesAsSet() -> std::unordered_set<MessageType>
     MessageType::SIGNUP,
     MessageType::SLOT,
     MessageType::SLOT_COMPONENT_UPDATED,
-    MessageType::SYSTEM_DATA,
     MessageType::SYSTEM_LIST,
     MessageType::VELOCITY,
     MessageType::TARGET,

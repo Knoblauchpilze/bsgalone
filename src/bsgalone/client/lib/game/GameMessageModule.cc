@@ -16,7 +16,7 @@ const Messages GAME_CHANGING_MESSAGE_TYPES = {core::MessageType::CONNECTION,
                                               core::MessageType::LOADING_STARTED,
                                               core::MessageType::LOADING_FINISHED,
                                               core::MessageType::PLAYER_LOGIN_DATA,
-                                              core::MessageType::SYSTEM_DATA};
+                                              core::MessageType::SYSTEM_LIST};
 
 GameMessageModule::GameMessageModule(Game &game, const core::DatabaseEntityMapper &entityMapper)
   : core::AbstractMessageListener(GAME_CHANGING_MESSAGE_TYPES)
@@ -61,8 +61,8 @@ void GameMessageModule::onEventReceived(const core::IMessage &message)
     case core::MessageType::PLAYER_LOGIN_DATA:
       handlePlayerLoginDataMessage(message.as<core::PlayerLoginDataMessage>());
       break;
-    case core::MessageType::SYSTEM_DATA:
-      handleSystemDataMessage(message.as<core::SystemDataMessage>());
+    case core::MessageType::SYSTEM_LIST:
+      handleSystemListMessage(message.as<core::SystemListMessage>());
       break;
     default:
       error("Unsupported message type " + str(message.type()));
@@ -149,9 +149,9 @@ void GameMessageModule::handlePlayerLoginDataMessage(const core::PlayerLoginData
                              message.getFaction());
 }
 
-void GameMessageModule::handleSystemDataMessage(const core::SystemDataMessage &message) const
+void GameMessageModule::handleSystemListMessage(const core::SystemListMessage &message) const
 {
-  m_game.onSystemDataReceived(message.getTickData());
+  m_game.onSystemListReceived(message.getSystemsData());
 }
 
 } // namespace bsgalone::client

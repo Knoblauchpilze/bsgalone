@@ -15,7 +15,6 @@
 #include "Renderer.hh"
 #include "RenderingPass.hh"
 #include "Screen.hh"
-#include "SystemTickData.hh"
 #include "TimeManager.hh"
 #include "UserInputData.hh"
 #include "Views.hh"
@@ -68,7 +67,7 @@ class Game : public ui::IScreenChanger, public ::core::CoreObject
   void onShipDocked();
   void onShipUndocked();
   void onPlayerKilled();
-  void onSystemDataReceived(const core::SystemTickData &systemData);
+  void onSystemListReceived(const std::vector<core::System> &systemsData);
   void onLoadingStarted(const core::LoadingTransition transition);
   void onLoadingFinished(const core::LoadingTransition transition);
 

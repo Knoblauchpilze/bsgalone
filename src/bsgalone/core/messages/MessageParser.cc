@@ -36,7 +36,6 @@
 #include "SignupMessage.hh"
 #include "SlotComponentMessage.hh"
 #include "SlotMessage.hh"
-#include "SystemDataMessage.hh"
 #include "SystemListMessage.hh"
 #include "TargetListMessage.hh"
 #include "TargetMessage.hh"
@@ -185,8 +184,6 @@ auto MessageParser::tryReadMessage(const MessageType &type, std::istream &in)
       return SlotMessage::readFromStream(in);
     case MessageType::SLOT_COMPONENT_UPDATED:
       return readMessage<SlotComponentMessage>(in);
-    case MessageType::SYSTEM_DATA:
-      return readMessage<SystemDataMessage>(in);
     case MessageType::SYSTEM_LIST:
       return SystemListMessage::readFromStream(in);
     case MessageType::VELOCITY:

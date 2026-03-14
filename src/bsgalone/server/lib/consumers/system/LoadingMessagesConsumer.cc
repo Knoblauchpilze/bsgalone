@@ -14,7 +14,6 @@
 #include "PlayerWeaponListMessage.hh"
 #include "ResourceListMessage.hh"
 #include "ShipListMessage.hh"
-#include "SystemDataMessage.hh"
 #include "SystemListMessage.hh"
 #include "TargetListMessage.hh"
 #include "WeaponListMessage.hh"
@@ -143,7 +142,6 @@ void LoadingMessagesConsumer::handleLoginTransition(const core::LoadingStartedMe
   handleComputersLoading(message);
   handleShipsLoading(message);
   m_loginUseCase->publishLoginData(message.getPlayerDbId());
-  handleSystemTickLoading(message);
   handlePlayerResourcesLoading(message);
   handlePlayerShipsLoading(message);
   handlePlayerComputersLoading(message);
@@ -444,11 +442,14 @@ void LoadingMessagesConsumer::handleSystemTargetsLoading(
 
 void LoadingMessagesConsumer::handleSystemTickLoading(const core::LoadingStartedMessage &message) const
 {
+  const auto playerDbId = message.getPlayerDbId();
   const auto systemDbId = message.getSystemDbId();
-  const auto system     = m_loadingService->getSystem(systemDbId);
+  // TODO: This could probably be removed as the game already receives the
+  // list of all systems upon loading. It will be easy to do when the client
+  // application is reworked to centralize the game data.
+  const auto systems = m_loadingService->getSystems();
 
-  auto out = std::make_unique<core::SystemDataMessage>(toSystemTickData(system));
-  out->copyClientIdIfDefined(message);
+  auto out = std::make_unique<core::SystemListMessage>(playerDbId, systemDbId, systems);
 
   m_outputMessageQueue->pushEvent(std::move(out));
 }

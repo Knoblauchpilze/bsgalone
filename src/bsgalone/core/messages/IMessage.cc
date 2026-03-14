@@ -34,7 +34,6 @@
 #include "SignupMessage.hh"
 #include "SlotComponentMessage.hh"
 #include "SlotMessage.hh"
-#include "SystemDataMessage.hh"
 #include "SystemListMessage.hh"
 #include "TargetListMessage.hh"
 #include "TargetMessage.hh"
@@ -129,8 +128,6 @@ auto operator<<(std::ostream &out, const IMessage &message) -> std::ostream &
       return serializeMessage<SlotMessage>(out, message.as<SlotMessage>());
     case MessageType::SLOT_COMPONENT_UPDATED:
       return serializeMessage<SlotComponentMessage>(out, message.as<SlotComponentMessage>());
-    case MessageType::SYSTEM_DATA:
-      return serializeMessage<SystemDataMessage>(out, message.as<SystemDataMessage>());
     case MessageType::SYSTEM_LIST:
       return serializeMessage<SystemListMessage>(out, message.as<SystemListMessage>());
     case MessageType::VELOCITY:

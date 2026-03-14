@@ -17,7 +17,7 @@
 #include "LoginMessage.hh"
 #include "LogoutMessage.hh"
 #include "PlayerLoginDataMessage.hh"
-#include "SystemDataMessage.hh"
+#include "SystemListMessage.hh"
 
 namespace bsgalone::client {
 
@@ -45,7 +45,7 @@ class GameMessageModule : public core::AbstractMessageListener, public ::core::C
   void handleLoadingStartedMessage(const core::LoadingStartedMessage &message) const;
   void handleLoadingFinishedMessage(const core::LoadingFinishedMessage &message) const;
   void handlePlayerLoginDataMessage(const core::PlayerLoginDataMessage &message);
-  void handleSystemDataMessage(const core::SystemDataMessage &message) const;
+  void handleSystemListMessage(const core::SystemListMessage &message) const;
 };
 
 } // namespace bsgalone::client

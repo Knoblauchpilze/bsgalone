@@ -22,7 +22,6 @@
 #include "Status.hh"
 #include "System.hh"
 #include "SystemOutpostRepository.hh"
-#include "SystemTickData.hh"
 #include "Target.hh"
 #include "Uuid.hh"
 #include "WeaponData.hh"
@@ -103,8 +102,6 @@ struct ShipProps
 
   auto toShipData() const -> core::ShipData;
 };
-
-auto toSystemTickData(const core::System &system) -> core::SystemTickData;
 
 struct TargetProps
 {

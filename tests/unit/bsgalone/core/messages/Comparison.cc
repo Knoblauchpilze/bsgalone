@@ -187,13 +187,6 @@ void assertShipDataAreEqual(const ShipData &actual, const ShipData &expected)
   EXPECT_EQ(actual.price, expected.price);
 }
 
-void assertSystemTickDataAreEqual(const SystemTickData &actual, const SystemTickData &expected)
-{
-  EXPECT_EQ(actual.dbId, expected.dbId);
-  EXPECT_EQ(actual.currentTick, expected.currentTick);
-  EXPECT_EQ(actual.step, expected.step);
-}
-
 void assertTargetAreEqual(const Target &actual, const Target &expected)
 {
   EXPECT_EQ(actual.sourceDbId, expected.sourceDbId);

@@ -17,7 +17,6 @@ target_sources (bsgalone_core_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/PlayerWeaponListMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ResourceListMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ShipListMessage.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/SystemDataMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/TargetListMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/WeaponListMessage.cc
 	)

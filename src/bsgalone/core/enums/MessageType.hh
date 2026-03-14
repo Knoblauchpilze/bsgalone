@@ -42,7 +42,6 @@ enum class MessageType
   SIGNUP,
   SLOT,
   SLOT_COMPONENT_UPDATED,
-  SYSTEM_DATA,
   SYSTEM_LIST,
   VELOCITY,
   TARGET,

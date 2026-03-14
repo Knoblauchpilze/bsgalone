@@ -187,15 +187,6 @@ auto ShipProps::toShipData() const -> core::ShipData
   };
 }
 
-auto toSystemTickData(const core::System &system) -> core::SystemTickData
-{
-  return core::SystemTickData{
-    .dbId        = system.dbId,
-    .currentTick = system.currentTick,
-    .step        = system.step,
-  };
-}
-
 auto TargetProps::toTarget() const -> core::Target
 {
   return core::Target{

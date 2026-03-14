@@ -13,7 +13,6 @@
 #include "ResourceData.hh"
 #include "ShipData.hh"
 #include "System.hh"
-#include "SystemTickData.hh"
 #include "Target.hh"
 #include "WeaponData.hh"
 
@@ -40,7 +39,6 @@ void assertPlayerResourceDataAreEqual(const PlayerResourceData &actual,
 void assertWeaponDataAreEqual(const WeaponData &actual, const WeaponData &expected);
 void assertComputerDataAreEqual(const ComputerData &actual, const ComputerData &expected);
 void assertShipDataAreEqual(const ShipData &actual, const ShipData &expected);
-void assertSystemTickDataAreEqual(const SystemTickData &actual, const SystemTickData &expected);
 void assertTargetAreEqual(const Target &actual, const Target &expected);
 
 } // namespace bsgalone::core

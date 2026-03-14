@@ -345,8 +345,22 @@ void Game::onPlayerKilled()
   }
 }
 
-void Game::onSystemDataReceived(const core::SystemTickData &systemData)
+void Game::onSystemListReceived(const std::vector<core::System> &systemsData)
 {
+  const auto systemDbId  = m_gameSession->getSystemDbId();
+  const auto maybeSystem = std::find_if(systemsData.begin(),
+                                        systemsData.end(),
+                                        [&systemDbId](const core::System &systemData) {
+                                          return systemData.dbId == systemDbId;
+                                        });
+
+  if (maybeSystem == systemsData.end())
+  {
+    error("Server did not send data for current system " + core::str(systemDbId));
+  }
+
+  const auto &systemData = *maybeSystem;
+
   info("Received current tick " + systemData.currentTick.str());
   m_gameSession->onTimeStepReceived(systemData.step);
   m_timeManager = std::make_unique<chrono::TimeManager>(systemData.currentTick, systemData.step);
