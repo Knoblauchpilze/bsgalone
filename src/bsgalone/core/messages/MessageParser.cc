@@ -188,7 +188,7 @@ auto MessageParser::tryReadMessage(const MessageType &type, std::istream &in)
     case MessageType::SYSTEM_DATA:
       return readMessage<SystemDataMessage>(in);
     case MessageType::SYSTEM_LIST:
-      return readMessage<SystemListMessage>(in);
+      return SystemListMessage::readFromStream(in);
     case MessageType::VELOCITY:
       return VelocityMessage::readFromStream(in);
     case MessageType::TARGET:

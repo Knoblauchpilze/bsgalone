@@ -25,7 +25,7 @@ auto toSystemData(const System &system) -> SystemData
 }
 } // namespace
 
-void PlayerMessagePublisher::publishSystemList(const Uuid /*playerDbId*/,
+void PlayerMessagePublisher::publishSystemList(const Uuid playerDbId,
                                                const std::vector<System> &systems)
 {
   if (systems.empty())
@@ -39,7 +39,8 @@ void PlayerMessagePublisher::publishSystemList(const Uuid /*playerDbId*/,
                  std::back_inserter(systemsData),
                  [](const System &system) { return toSystemData(system); });
 
-  auto out = std::make_unique<SystemListMessage>(systemsData);
+  // TODO: The system identifier should be fetched for the player
+  auto out = std::make_unique<SystemListMessage>(playerDbId, Uuid{0}, systemsData);
 
   m_outputMessageQueue->pushEvent(std::move(out));
 }

@@ -48,7 +48,9 @@ TEST(Unit_Bsgalone_Core_Domain_Adapters_Driven_Messages_PlayerMessagePublisher,
   EXPECT_EQ(1u, queue->messages().size());
   EXPECT_EQ(MessageType::SYSTEM_LIST, queue->messages().at(0)->type());
   const auto &actual = queue->messages().at(0)->as<SystemListMessage>();
-  EXPECT_FALSE(actual.tryGetClientId().has_value());
+  EXPECT_EQ(Uuid{18}, actual.getPlayerDbId());
+  // TODO: Should be a real system
+  EXPECT_EQ(Uuid{0}, actual.getSystemDbId());
   const auto systems = actual.getSystemsData();
 
   const auto maybeSystem1 = std::find_if(systems.begin(),
