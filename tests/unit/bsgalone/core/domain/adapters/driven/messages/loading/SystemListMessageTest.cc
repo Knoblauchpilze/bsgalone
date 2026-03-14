@@ -26,7 +26,7 @@ void assertMessagesAreEqual(const SystemListMessage &actual, const SystemListMes
 }
 } // namespace
 
-TEST(Unit_Bsgalone_Core_Messages_SystemListMessage, Basic)
+TEST(Unit_Bsgalone_Core_Domain_Adapters_Messages_Loading_SystemListMessage, Basic)
 {
   const SystemListMessage expected(std::vector<SystemData>{});
 
@@ -40,7 +40,7 @@ TEST(Unit_Bsgalone_Core_Messages_SystemListMessage, Basic)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgalone_Core_Messages_SystemListMessage, WithClientId)
+TEST(Unit_Bsgalone_Core_Domain_Adapters_Messages_Loading_SystemListMessage, WithClientId)
 {
   std::vector<SystemData> systemsData{{.dbId = 14, .name = "foo bar"}};
 
@@ -54,7 +54,7 @@ TEST(Unit_Bsgalone_Core_Messages_SystemListMessage, WithClientId)
   assertMessagesAreEqual(actual, expected);
 }
 
-TEST(Unit_Bsgalone_Core_Messages_SystemListMessage, Clone)
+TEST(Unit_Bsgalone_Core_Domain_Adapters_Messages_Loading_SystemListMessage, Clone)
 {
   const std::vector<SystemData> systemsData{
     {.dbId = 1908, .name = "a name", .position = Eigen::Vector3f::Ones(3)},

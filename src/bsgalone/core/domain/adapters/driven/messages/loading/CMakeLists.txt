@@ -3,10 +3,6 @@ target_include_directories (bsgalone_core_lib PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
 	)
 
-add_subdirectory (
-	${CMAKE_CURRENT_SOURCE_DIR}/loading
-	)
-
 target_sources (bsgalone_core_lib PRIVATE
-	${CMAKE_CURRENT_SOURCE_DIR}/PlayerMessagePublisher.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/SystemListMessage.cc
 	)
