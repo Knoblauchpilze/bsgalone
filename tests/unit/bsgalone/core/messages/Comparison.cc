@@ -114,11 +114,13 @@ void assertPlayerShipDataAreEqual(const PlayerShipData &actual, const PlayerShip
   }
 }
 
-void assertSystemDataAreEqual(const SystemData &actual, const SystemData &expected)
+void assertSystemAreEqual(const System &actual, const System &expected)
 {
   EXPECT_EQ(actual.dbId, expected.dbId);
   EXPECT_EQ(actual.name, expected.name);
   EXPECT_EQ(actual.position, expected.position);
+  EXPECT_EQ(actual.currentTick, expected.currentTick);
+  EXPECT_EQ(actual.step, expected.step);
 }
 
 void assertResourceDataAreEqual(const ResourceData &actual, const ResourceData &expected)

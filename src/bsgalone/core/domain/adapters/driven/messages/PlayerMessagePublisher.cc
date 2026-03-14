@@ -1,6 +1,5 @@
 
 #include "PlayerMessagePublisher.hh"
-#include "SystemData.hh"
 #include "SystemListMessage.hh"
 
 namespace bsgalone::core {
@@ -14,17 +13,6 @@ PlayerMessagePublisher::PlayerMessagePublisher(IMessageQueueShPtr outputMessageQ
   }
 }
 
-namespace {
-auto toSystemData(const System &system) -> SystemData
-{
-  return SystemData{
-    .dbId     = system.dbId,
-    .name     = system.name,
-    .position = system.position,
-  };
-}
-} // namespace
-
 void PlayerMessagePublisher::publishSystemList(const Uuid playerDbId,
                                                const std::vector<System> &systems)
 {
@@ -33,14 +21,8 @@ void PlayerMessagePublisher::publishSystemList(const Uuid playerDbId,
     return;
   }
 
-  std::vector<SystemData> systemsData{};
-  std::transform(systems.begin(),
-                 systems.end(),
-                 std::back_inserter(systemsData),
-                 [](const System &system) { return toSystemData(system); });
-
   // TODO: The system identifier should be fetched for the player
-  auto out = std::make_unique<SystemListMessage>(playerDbId, Uuid{0}, systemsData);
+  auto out = std::make_unique<SystemListMessage>(playerDbId, Uuid{0}, systems);
 
   m_outputMessageQueue->pushEvent(std::move(out));
 }

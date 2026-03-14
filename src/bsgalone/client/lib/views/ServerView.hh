@@ -3,7 +3,7 @@
 
 #include "AbstractView.hh"
 #include "GameSession.hh"
-#include "SystemData.hh"
+#include "System.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
 #include <memory>
@@ -22,7 +22,7 @@ class ServerView : public AbstractView
 
   auto getPlayerSystem() const -> core::Uuid;
   auto getPlayerSystemName() const -> std::string;
-  auto getAllSystems() const -> std::vector<core::SystemData>;
+  auto getAllSystems() const -> std::vector<core::System>;
 
   struct Bounds
   {
@@ -36,7 +36,7 @@ class ServerView : public AbstractView
 
   private:
   GameSessionShPtr m_gameSession{};
-  std::vector<core::SystemData> m_systems{};
+  std::vector<core::System> m_systems{};
 };
 
 using ServerViewShPtr = std::shared_ptr<ServerView>;

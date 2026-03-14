@@ -20,9 +20,8 @@
 #include "ShipData.hh"
 #include "ShipRepository.hh"
 #include "Status.hh"
-#include "SystemData.hh"
+#include "System.hh"
 #include "SystemOutpostRepository.hh"
-#include "SystemRepository.hh"
 #include "SystemTickData.hh"
 #include "Target.hh"
 #include "Uuid.hh"
@@ -76,8 +75,6 @@ struct PlayerShipProps
 
   auto toPlayerShipData() const -> core::PlayerShipData;
 };
-
-auto toSystemData(const core::System &system) -> core::SystemData;
 
 auto toResourceData(const core::Resource &resource) -> core::ResourceData;
 

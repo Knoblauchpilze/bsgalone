@@ -6,7 +6,7 @@
 #include "Entity.hh"
 #include "GameSession.hh"
 #include "IMessageQueue.hh"
-#include "SystemData.hh"
+#include "System.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
 #include <memory>
@@ -65,7 +65,7 @@ class ShipView : public AbstractView
   private:
   GameSessionShPtr m_gameSession{};
   core::CoordinatorShPtr m_coordinator{};
-  std::vector<core::SystemData> m_systems{};
+  std::vector<core::System> m_systems{};
   core::IMessageQueue *const m_outputMessageQueue{};
   std::optional<core::Uuid> m_playerShipEntityId{};
   std::optional<core::Uuid> m_systemToJumpTo{};

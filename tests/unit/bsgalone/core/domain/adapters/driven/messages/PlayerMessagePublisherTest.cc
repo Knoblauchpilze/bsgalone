@@ -26,6 +26,22 @@ TEST(Unit_Bsgalone_Core_Domain_Adapters_Driven_Messages_PlayerMessagePublisher,
   EXPECT_TRUE(queue->empty());
 }
 
+namespace {
+bool doesSystemExist(const std::vector<System> &systems, const System &expected)
+{
+  const auto maybeSystem = std::find_if(systems.begin(),
+                                        systems.end(),
+                                        [&expected](const System &data) {
+                                          return data.dbId == expected.dbId
+                                                 && data.name == expected.name
+                                                 && data.position == expected.position
+                                                 && data.step == expected.step
+                                                 && data.currentTick == expected.currentTick;
+                                        });
+  return maybeSystem != systems.end();
+}
+} // namespace
+
 TEST(Unit_Bsgalone_Core_Domain_Adapters_Driven_Messages_PlayerMessagePublisher,
      PublishesSystemListMessage)
 {
@@ -37,11 +53,10 @@ TEST(Unit_Bsgalone_Core_Domain_Adapters_Driven_Messages_PlayerMessagePublisher,
     .name     = "random-name",
     .position = Eigen::Vector3f(1.0f, -2.0f, 3.0f),
   };
-  System system2{
-    .dbId     = Uuid{20},
-    .name     = "system2",
-    .position = Eigen::Vector3f(-98.75f, -14.745f, 36.01f),
-  };
+  System system2{.dbId        = Uuid{20},
+                 .name        = "system2",
+                 .position    = Eigen::Vector3f(-98.75f, -14.745f, 36.01f),
+                 .currentTick = chrono::Tick::fromInt(2)};
 
   publisher.publishSystemList(Uuid{18}, {system1, system2});
 
@@ -53,23 +68,9 @@ TEST(Unit_Bsgalone_Core_Domain_Adapters_Driven_Messages_PlayerMessagePublisher,
   EXPECT_EQ(Uuid{0}, actual.getSystemDbId());
   const auto systems = actual.getSystemsData();
 
-  const auto maybeSystem1 = std::find_if(systems.begin(),
-                                         systems.end(),
-                                         [&system1](const SystemData &data) {
-                                           return data.dbId == system1.dbId
-                                                  && data.name == system1.name
-                                                  && data.position == system1.position;
-                                         });
-  EXPECT_NE(maybeSystem1, systems.end())
+  EXPECT_TRUE(doesSystemExist(systems, system1))
     << "Expected to find system " << system1.name << " among " << systems.size();
-  const auto maybeSystem2 = std::find_if(systems.begin(),
-                                         systems.end(),
-                                         [&system2](const SystemData &data) {
-                                           return data.dbId == system2.dbId
-                                                  && data.name == system2.name
-                                                  && data.position == system2.position;
-                                         });
-  EXPECT_NE(maybeSystem2, systems.end())
+  EXPECT_TRUE(doesSystemExist(systems, system2))
     << "Expected to find system " << system2.name << " among " << systems.size();
 }
 

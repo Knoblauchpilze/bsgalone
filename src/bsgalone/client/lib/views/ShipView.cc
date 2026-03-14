@@ -243,12 +243,12 @@ bool ShipView::isJumping() const
 }
 
 namespace {
-auto findSystemName(const std::vector<core::SystemData> &systems, const core::Uuid &systemDbId)
+auto findSystemName(const std::vector<core::System> &systems, const core::Uuid &systemDbId)
   -> std::optional<std::string>
 {
   const auto maybeSystem = std::find_if(systems.begin(),
                                         systems.end(),
-                                        [&systemDbId](const core::SystemData &system) {
+                                        [&systemDbId](const core::System &system) {
                                           return system.dbId == systemDbId;
                                         });
 

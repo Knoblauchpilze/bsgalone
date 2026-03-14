@@ -119,15 +119,6 @@ auto PlayerShipProps::toPlayerShipData() const -> core::PlayerShipData
   return data;
 }
 
-auto toSystemData(const core::System &system) -> core::SystemData
-{
-  return core::SystemData{
-    .dbId     = system.dbId,
-    .name     = system.name,
-    .position = system.position,
-  };
-}
-
 auto toResourceData(const core::Resource &resource) -> core::ResourceData
 {
   return core::ResourceData{

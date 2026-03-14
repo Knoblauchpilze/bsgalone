@@ -2,7 +2,7 @@
 #pragma once
 
 #include "AbstractPlayerMessage.hh"
-#include "SystemData.hh"
+#include "System.hh"
 
 namespace bsgalone::core {
 
@@ -17,10 +17,10 @@ class SystemListMessage : public AbstractPlayerMessage
   public:
   SystemListMessage(const Uuid playerDbId,
                     const Uuid systemDbId,
-                    const std::vector<SystemData> &systemsData);
+                    const std::vector<System> &systemsData);
   ~SystemListMessage() override = default;
 
-  auto getSystemsData() const -> const std::vector<SystemData> &;
+  auto getSystemsData() const -> const std::vector<System> &;
 
   auto clone() const -> IMessagePtr override;
 
@@ -34,7 +34,7 @@ class SystemListMessage : public AbstractPlayerMessage
   static auto readFromStream(std::istream &in) -> std::optional<IMessagePtr>;
 
   private:
-  std::vector<SystemData> m_systemsData{};
+  std::vector<System> m_systemsData{};
 
   SystemListMessage();
 

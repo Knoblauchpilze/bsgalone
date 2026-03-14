@@ -1,6 +1,7 @@
 
 #include "SystemListMessage.hh"
 #include "SerializationUtils.hh"
+#include "SystemSerialization.hh"
 
 namespace bsgalone::core {
 
@@ -10,12 +11,12 @@ SystemListMessage::SystemListMessage()
 
 SystemListMessage::SystemListMessage(const Uuid playerDbId,
                                      const Uuid systemDbId,
-                                     const std::vector<SystemData> &systemsData)
+                                     const std::vector<System> &systemsData)
   : AbstractPlayerMessage(MessageType::SYSTEM_LIST, playerDbId, systemDbId)
   , m_systemsData(systemsData)
 {}
 
-auto SystemListMessage::getSystemsData() const -> const std::vector<SystemData> &
+auto SystemListMessage::getSystemsData() const -> const std::vector<System> &
 {
   return m_systemsData;
 }

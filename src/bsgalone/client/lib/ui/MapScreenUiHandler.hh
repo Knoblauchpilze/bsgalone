@@ -2,7 +2,7 @@
 #pragma once
 
 #include "AbstractUiHandler.hh"
-#include "SystemData.hh"
+#include "System.hh"
 #include "UiMenu.hh"
 #include <optional>
 #include <unordered_map>
@@ -44,7 +44,7 @@ class MapScreenUiHandler : public AbstractUiHandler
   void reset();
   void generateControlButtons(const int width, const int height);
   void generateMap();
-  void generateSystemButtons(const core::SystemData &system,
+  void generateSystemButtons(const core::System &system,
                              const ServerView::Bounds &bounds,
                              const pge::Vec2i &mapOffset);
 

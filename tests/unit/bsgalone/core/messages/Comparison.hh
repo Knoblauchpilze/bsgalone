@@ -12,7 +12,7 @@
 #include "PlayerWeaponData.hh"
 #include "ResourceData.hh"
 #include "ShipData.hh"
-#include "SystemData.hh"
+#include "System.hh"
 #include "SystemTickData.hh"
 #include "Target.hh"
 #include "WeaponData.hh"
@@ -33,7 +33,7 @@ void assertPlayerWeaponDataAreEqual(const PlayerWeaponData &actual,
 void assertOutpostDataAreEqual(const OutpostData &actual, const OutpostData &expected);
 void assertPlayerDataAreEqual(const PlayerData &actual, const PlayerData &expected);
 void assertPlayerShipDataAreEqual(const PlayerShipData &actual, const PlayerShipData &expected);
-void assertSystemDataAreEqual(const SystemData &actual, const SystemData &expected);
+void assertSystemAreEqual(const System &actual, const System &expected);
 void assertResourceDataAreEqual(const ResourceData &actual, const ResourceData &expected);
 void assertPlayerResourceDataAreEqual(const PlayerResourceData &actual,
                                       const PlayerResourceData &expected);

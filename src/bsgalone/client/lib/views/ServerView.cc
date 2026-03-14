@@ -34,7 +34,7 @@ auto ServerView::getPlayerSystemName() const -> std::string
   const auto playerSystemId = getPlayerSystem();
   const auto maybeSystem    = std::find_if(m_systems.begin(),
                                         m_systems.end(),
-                                        [&playerSystemId](const core::SystemData &system) {
+                                        [&playerSystemId](const core::System &system) {
                                           return system.dbId == playerSystemId;
                                         });
 
@@ -47,7 +47,7 @@ auto ServerView::getPlayerSystemName() const -> std::string
   return maybeSystem->name;
 }
 
-auto ServerView::getAllSystems() const -> std::vector<core::SystemData>
+auto ServerView::getAllSystems() const -> std::vector<core::System>
 {
   if (m_systems.empty())
   {

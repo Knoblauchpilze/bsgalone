@@ -204,7 +204,7 @@ auto posRatioToPixelPos(const Eigen::Vector3f &posRatio,
 }
 } // namespace
 
-void MapScreenUiHandler::generateSystemButtons(const core::SystemData &system,
+void MapScreenUiHandler::generateSystemButtons(const core::System &system,
                                                const ServerView::Bounds &bounds,
                                                const pge::Vec2i &mapOffset)
 {
