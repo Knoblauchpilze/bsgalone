@@ -2,21 +2,15 @@
 #pragma once
 
 #include "Game.hh"
+#include "IUiEventQueue.hh"
 #include "PGEApp.hh"
+#include "SynchronizedUiEventQueue.hh"
 
 namespace bsgalone::client {
 
 class App : public pge::PGEApp
 {
   public:
-  /// @brief - Create a new client application for the game. The app will respect
-  /// the input properties and attempt to connect to the server listening on the
-  /// specified port.
-  /// @param desc - contains all the needed information to create the canvas needed
-  /// @param serverPort - the port to use to connect to the game server
-  /// by the app and set up base properties.
-  App(const pge::AppDesc &desc, const int serverPort);
-
   /// @brief - Create a new client application for the game and performs the login
   /// for the specified user and password.
   /// @param desc - contains all the needed information to create the canvas needed
@@ -51,6 +45,17 @@ class App : public pge::PGEApp
   std::optional<std::string> m_password{};
   std::optional<core::GameRole> m_gameRole{};
   GameShPtr m_game{nullptr};
+
+  /// @brief - Used to publish incoming events that are relevant for the UI
+  /// components. This is used to asynchronously notify the UI from changes
+  /// to the game.
+  IUiEventQueuePtr m_uiEventBus{createSynchronizedUiEventQueue()};
+
+  /// @brief - Used by the UI components to trigger updates based on actions
+  /// taken by the user (e.g. clicks or buttons). Some actions may result in
+  /// commands sent to the server while others will trigger internal changes
+  /// in the UI or client application in general.
+  IUiEventQueuePtr m_uiCommandQueue{createSynchronizedUiEventQueue()};
 };
 
 } // namespace bsgalone::client

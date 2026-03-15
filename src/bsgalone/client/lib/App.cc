@@ -4,11 +4,6 @@
 
 namespace bsgalone::client {
 
-App::App(const pge::AppDesc &desc, const int serverPort)
-  : PGEApp(desc)
-  , m_serverPort(serverPort)
-{}
-
 App::App(const pge::AppDesc &desc,
          const int serverPort,
          const std::optional<std::string> &userName,
