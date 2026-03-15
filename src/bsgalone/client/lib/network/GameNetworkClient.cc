@@ -1,11 +1,9 @@
 
 #include "GameNetworkClient.hh"
 #include "AsyncEventQueue.hh"
-#include "ConnectionEstablishedEvent.hh"
-#include "ConnectionLostEvent.hh"
-#include "ConnectionMessage.hh"
 #include "InputNetworkAdapter.hh"
 #include "MessageParser.hh"
+#include "NetworkEventListener.hh"
 #include "OutputNetworkAdapter.hh"
 #include "SynchronizedEventQueue.hh"
 #include "SynchronizedMessageQueue.hh"
@@ -60,58 +58,6 @@ void GameNetworkClient::processEvents()
 {
   m_inputQueue->processEvents();
 }
-
-namespace {
-// TODO: Extract this class
-class NetworkEventListener : public net::INetworkEventListener
-{
-  public:
-  NetworkEventListener(std::atomic_bool &connected, core::IMessageQueueShPtr inputQueue)
-    : m_connected(connected)
-    , m_inputQueue(std::move(inputQueue))
-  {}
-
-  ~NetworkEventListener() = default;
-
-  bool isEventRelevant(const net::NetworkEventType &type) const override
-  {
-    return type == net::NetworkEventType::CONNECTION_ESTABLISHED
-           || type == net::NetworkEventType::CONNECTION_LOST;
-  }
-
-  void onEventReceived(const net::INetworkEvent &event) override
-  {
-    switch (event.type())
-    {
-      case net::NetworkEventType::CONNECTION_ESTABLISHED:
-        handleConnectionEstablished(event.as<net::ConnectionEstablishedEvent>());
-        break;
-      case net::NetworkEventType::CONNECTION_LOST:
-        handleConnectionLost(event.as<net::ConnectionLostEvent>());
-        break;
-      default:
-        throw std::invalid_argument("Unsupported event type " + net::str(event.type()));
-    }
-  }
-
-  private:
-  std::atomic_bool &m_connected;
-  core::IMessageQueueShPtr m_inputQueue{};
-
-  void handleConnectionEstablished(const net::ConnectionEstablishedEvent & /*event*/)
-  {
-    m_connected.store(true);
-
-    auto message = std::make_unique<core::ConnectionMessage>();
-    m_inputQueue->pushEvent(std::move(message));
-  }
-
-  void handleConnectionLost(const net::ConnectionLostEvent & /*event*/)
-  {
-    m_connected.store(false);
-  }
-};
-} // namespace
 
 void GameNetworkClient::initialize()
 {
