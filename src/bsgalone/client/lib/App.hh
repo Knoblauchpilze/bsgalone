@@ -3,8 +3,11 @@
 
 #include "Game.hh"
 #include "IUiEventQueue.hh"
+#include "IUiHandler.hh"
 #include "PGEApp.hh"
+#include "Screen.hh"
 #include "SynchronizedUiEventQueue.hh"
+#include <unordered_map>
 
 namespace bsgalone::client {
 
@@ -46,6 +49,10 @@ class App : public pge::PGEApp
   std::optional<core::GameRole> m_gameRole{};
   GameShPtr m_game{nullptr};
 
+  /// @brief - Defines the current screen selected in this game. Updated when
+  /// the user takes action to change it.
+  Screen m_screen{Screen::LOGIN};
+
   /// @brief - Used to publish incoming events that are relevant for the UI
   /// components. This is used to asynchronously notify the UI from changes
   /// to the game.
@@ -56,6 +63,8 @@ class App : public pge::PGEApp
   /// commands sent to the server while others will trigger internal changes
   /// in the UI or client application in general.
   IUiEventQueuePtr m_uiCommandQueue{createSynchronizedUiEventQueue()};
+
+  std::unordered_map<Screen, IUiHandlerPtr> m_uiHandlers{};
 };
 
 } // namespace bsgalone::client
