@@ -4,6 +4,7 @@
 #include "Environment.hh"
 #include "GameRole.hh"
 #include "SafetyNet.hh"
+#include "ServerConfig.hh"
 #include "TopViewFrame.hh"
 #include "log/Locator.hh"
 #include "log/PrefixedLogger.hh"
@@ -29,7 +30,7 @@ int main(int /*argc*/, char ** /*argv*/)
                     .fixedFrame = true,
                     .maxFps     = 20};
 
-  const auto port                = core::getPortFromEnvironmentVariable();
+  bsgalone::client::ServerConfig config{.port = core::getPortFromEnvironmentVariable()};
   const auto maybeUserName       = core::tryGetEnvironmentVariable<std::string>(USERNAME_ENV_KEY);
   const auto maybePassword       = core::tryGetEnvironmentVariable<std::string>(PASSWORD_ENV_KEY);
   const auto maybeGameRoleString = core::tryGetEnvironmentVariable<std::string>(GAME_ROLE_ENV_KEY);
@@ -39,7 +40,16 @@ int main(int /*argc*/, char ** /*argv*/)
     maybeGameRole = bsgalone::core::fromDbGameRole(*maybeGameRoleString);
   }
 
-  bsgalone::client::App app(desc, port, maybeUserName, maybePassword, maybeGameRole);
+  if (maybeUserName && maybePassword && maybeGameRole)
+  {
+    config.autoConnect = bsgalone::client::User{
+      .name     = *maybeUserName,
+      .password = *maybePassword,
+      .role     = *maybeGameRole,
+    };
+  }
+
+  bsgalone::client::App app(desc, config);
 
   auto gameFunc = [&app]() { app.run(); };
 

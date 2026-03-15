@@ -6,6 +6,7 @@
 #include "IUiHandler.hh"
 #include "PGEApp.hh"
 #include "Screen.hh"
+#include "ServerConfig.hh"
 #include "SynchronizedUiEventQueue.hh"
 #include <unordered_map>
 
@@ -17,16 +18,9 @@ class App : public pge::PGEApp
   /// @brief - Create a new client application for the game and performs the login
   /// for the specified user and password.
   /// @param desc - contains all the needed information to create the canvas needed
-  /// @param serverPort - the port to use to connect to the game server
-  /// @param userName - the name of the user to login with
-  /// @param password - the password to use to login
-  /// @param gameRole - the game role to use to login
-  /// by the app and set up base properties.
-  App(const pge::AppDesc &desc,
-      const int serverPort,
-      const std::optional<std::string> &userName,
-      const std::optional<std::string> &password,
-      const std::optional<core::GameRole> &gameRole);
+  /// @param config - description of the configuration to connect to the server and
+  /// possibly auto connect to it with a specified user.
+  App(const pge::AppDesc &desc, ServerConfig config);
 
   ~App() override = default;
 
@@ -43,10 +37,7 @@ class App : public pge::PGEApp
   void drawDebug(const pge::RenderState &state, const pge::Vec2f &mouseScreenPos) override;
 
   private:
-  int m_serverPort{};
-  std::optional<std::string> m_userName{};
-  std::optional<std::string> m_password{};
-  std::optional<core::GameRole> m_gameRole{};
+  ServerConfig m_config{};
   GameShPtr m_game{nullptr};
 
   /// @brief - Defines the current screen selected in this game. Updated when
@@ -65,6 +56,8 @@ class App : public pge::PGEApp
   IUiEventQueuePtr m_uiCommandQueue{createSynchronizedUiEventQueue()};
 
   std::unordered_map<Screen, IUiHandlerPtr> m_uiHandlers{};
+
+  void initializeMessageSystem();
 };
 
 } // namespace bsgalone::client

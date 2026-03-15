@@ -1,4 +1,8 @@
 
+target_include_directories (bsgalone_client_lib PUBLIC
+	${CMAKE_CURRENT_SOURCE_DIR}
+	)
+
 target_sources (bsgalone_client_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/AbstractView.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/IViewListenerProxy.cc
@@ -10,8 +14,4 @@ target_sources (bsgalone_client_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/ShopView.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SystemView.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/Views.cc
-	)
-
-target_include_directories (bsgalone_client_lib PUBLIC
-	${CMAKE_CURRENT_SOURCE_DIR}
 	)

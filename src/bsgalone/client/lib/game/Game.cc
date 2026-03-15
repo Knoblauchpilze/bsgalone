@@ -19,17 +19,12 @@
 
 namespace bsgalone::client {
 
-Game::Game(const int serverPort,
-           const std::optional<std::string> &userName,
-           const std::optional<std::string> &password,
-           const std::optional<core::GameRole> &role)
+Game::Game(const ServerConfig &config)
   : ::core::CoreObject("game")
-  , m_userName(userName)
-  , m_password(password)
-  , m_gameRole(role)
+  , m_user(config.autoConnect)
 {
   setService("game");
-  initialize(serverPort);
+  initialize(config.port);
 }
 
 Game::~Game()
@@ -268,11 +263,11 @@ void Game::onConnectedToServer()
 {
   info("Connected to server");
 
-  if (m_userName && m_password && m_gameRole)
+  if (m_user.has_value())
   {
-    auto login = std::make_unique<core::LoginMessage>(*m_gameRole);
-    login->setUserName(*m_userName);
-    login->setPassword(*m_password);
+    auto login = std::make_unique<core::LoginMessage>(m_user->role);
+    login->setUserName(m_user->name);
+    login->setPassword(m_user->password);
     m_networkClient->pushEvent(std::move(login));
   }
 }

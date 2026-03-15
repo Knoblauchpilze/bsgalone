@@ -1,19 +1,12 @@
 
 #include "App.hh"
-#include "Screen.hh"
+#include "InputGameMessageAdapter.hh"
 
 namespace bsgalone::client {
 
-App::App(const pge::AppDesc &desc,
-         const int serverPort,
-         const std::optional<std::string> &userName,
-         const std::optional<std::string> &password,
-         const std::optional<core::GameRole> &gameRole)
+App::App(const pge::AppDesc &desc, ServerConfig config)
   : PGEApp(desc)
-  , m_serverPort(serverPort)
-  , m_userName(userName)
-  , m_password(password)
-  , m_gameRole(gameRole)
+  , m_config(std::move(config))
 {}
 
 bool App::onFrame(const float elapsedSeconds)
@@ -53,11 +46,13 @@ void App::loadResources(const pge::Vec2i &screenDims, pge::Renderer &engine)
 {
   setLayerTint(Layer::DRAW, semiOpaque(pge::colors::WHITE));
 
-  m_game = std::make_shared<Game>(m_serverPort, m_userName, m_password, m_gameRole);
+  m_game = std::make_shared<Game>(m_config);
 
   m_game->generateRenderers(screenDims.x, screenDims.y, engine);
   m_game->generateInputHandlers();
   m_game->generateUiHandlers(screenDims.x, screenDims.y, engine);
+
+  initializeMessageSystem();
 }
 
 void App::cleanResources()
@@ -102,6 +97,11 @@ void App::drawDebug(const pge::RenderState &state, const pge::Vec2f &mouseScreen
   state.renderer.drawDebugString(pos,
                                  "Screen            : " + str(m_game->getScreen()),
                                  pge::colors::DARK_GREEN);
+}
+
+void App::initializeMessageSystem()
+{
+  auto inputAdapter = std::make_unique<InputGameMessageAdapter>();
 }
 
 } // namespace bsgalone::client

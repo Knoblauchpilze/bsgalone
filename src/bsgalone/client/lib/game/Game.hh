@@ -15,6 +15,7 @@
 #include "Renderer.hh"
 #include "RenderingPass.hh"
 #include "Screen.hh"
+#include "ServerConfig.hh"
 #include "TimeManager.hh"
 #include "UserInputData.hh"
 #include "Views.hh"
@@ -26,10 +27,7 @@ namespace bsgalone::client {
 class Game : public ui::IScreenChanger, public ::core::CoreObject
 {
   public:
-  Game(const int serverPort,
-       const std::optional<std::string> &userName,
-       const std::optional<std::string> &password,
-       const std::optional<core::GameRole> &role);
+  Game(const ServerConfig &config);
   ~Game() override;
 
   auto getScreen() const noexcept -> Screen;
@@ -92,20 +90,12 @@ class Game : public ui::IScreenChanger, public ::core::CoreObject
   /// @brief - The definition of the game state.
   State m_state{};
 
-  /// @brief - Holds the user name to use to login automatically upon connecting
-  /// to the server. If this vaule is empty the login/signup screen will stay
-  /// visible for the user to enter their credentials.
-  /// In case it is defined, the game will try to login automatically using the
-  /// provided user name and password.
-  std::optional<std::string> m_userName{};
-
-  /// @brief - Holds the password to use to login automatically upon connecting
-  /// to the server.
-  std::optional<std::string> m_password{};
-
-  /// @brief - Holds the game role to use to login automatically upon connecting
-  /// to the server.
-  std::optional<core::GameRole> m_gameRole{};
+  /// @brief - Holds the user to automatically login with upon connecting
+  /// to the server. If this vaule is empty the login/signup screen will
+  /// stay visible for the user to enter their credentials.
+  /// In case it is defined, the game will try to login automatically using
+  /// the provided user name and password.
+  std::optional<User> m_user{};
 
   GameNetworkClientShPtr m_networkClient{};
 
