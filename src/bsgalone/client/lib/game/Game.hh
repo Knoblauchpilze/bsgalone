@@ -5,17 +5,16 @@
 #include "Controls.hh"
 #include "CoreObject.hh"
 #include "DatabaseEntityMapper.hh"
-#include "GameNetworkClient.hh"
 #include "GameRole.hh"
 #include "GameSession.hh"
 #include "IInputHandler.hh"
+#include "IMessageQueue.hh"
 #include "IRenderer.hh"
 #include "LoadingTransition.hh"
 #include "RenderState.hh"
 #include "Renderer.hh"
 #include "RenderingPass.hh"
 #include "Screen.hh"
-#include "ServerConfig.hh"
 #include "TimeManager.hh"
 #include "UserInputData.hh"
 #include "Views.hh"
@@ -27,15 +26,18 @@ namespace bsgalone::client {
 class Game : public ui::IScreenChanger, public ::core::CoreObject
 {
   public:
-  Game(const ServerConfig &config);
-  ~Game() override;
+  Game(core::IMessageQueueShPtr inputOutputQueue);
+  ~Game() override = default;
 
   auto getScreen() const noexcept -> Screen;
   void setScreen(const Screen screen) override;
 
   void generateRenderers(int width, int height, pge::Renderer &engine);
   void generateInputHandlers();
-  void generateUiHandlers(int width, int height, pge::Renderer &engine);
+  void generateUiHandlers(int width,
+                          int height,
+                          pge::Renderer &engine,
+                          core::IMessageQueueShPtr inputQueue);
 
   void processUserInput(const pge::controls::State &controls, pge::CoordinateFrame &frame);
   void render(const pge::RenderState &state, const pge::RenderingPass pass) const;
@@ -89,8 +91,6 @@ class Game : public ui::IScreenChanger, public ::core::CoreObject
   /// @brief - The definition of the game state.
   State m_state{};
 
-  GameNetworkClientShPtr m_networkClient{};
-
   /// @brief - Holds information about the current game session. This includes
   /// data about the current player, their ship, the system they are in, etc.
   GameSessionShPtr m_gameSession{std::make_shared<GameSession>()};
@@ -104,8 +104,8 @@ class Game : public ui::IScreenChanger, public ::core::CoreObject
   std::unordered_map<Screen, IInputHandlerPtr> m_inputHandlers{};
   std::unordered_map<Screen, AbstractUiHandlerPtr> m_uiHandlers{};
 
-  void initialize(const ServerConfig &config);
-  void initializeMessageSystem();
+  void initialize(core::IMessageQueueShPtr inputOutputQueue);
+  void initializeMessageSystem(core::IMessageQueueShPtr inputQueue);
 };
 
 using GameShPtr = std::shared_ptr<Game>;

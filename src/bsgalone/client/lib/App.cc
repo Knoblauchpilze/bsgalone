@@ -17,6 +17,11 @@ bool App::onFrame(const float elapsedSeconds)
     return false;
   }
 
+  // Process messages first and then update the game so that
+  // the systems have a chance to react to messages before the
+  // UI is updated.
+  m_networkClient->processEvents();
+
   if (!m_game->step(elapsedSeconds))
   {
     info("This is game over");
@@ -46,17 +51,27 @@ void App::loadResources(const pge::Vec2i &screenDims, pge::Renderer &engine)
 {
   setLayerTint(Layer::DRAW, semiOpaque(pge::colors::WHITE));
 
-  m_game = std::make_shared<Game>(m_config);
+  m_networkClient = std::make_shared<GameNetworkClient>();
+  if (m_config.autoConnect.has_value())
+  {
+    m_networkClient->setAutoLogin(*m_config.autoConnect);
+  }
+  m_game = std::make_shared<Game>(m_networkClient);
 
   m_game->generateRenderers(screenDims.x, screenDims.y, engine);
   m_game->generateInputHandlers();
-  m_game->generateUiHandlers(screenDims.x, screenDims.y, engine);
+  m_game->generateUiHandlers(screenDims.x, screenDims.y, engine, m_networkClient);
 
   initializeMessageSystem();
+
+  m_networkClient->start(m_config.port);
 }
 
 void App::cleanResources()
 {
+  m_networkClient->stop();
+  m_networkClient.reset();
+
   m_game.reset();
 }
 

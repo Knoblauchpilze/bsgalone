@@ -19,17 +19,11 @@
 
 namespace bsgalone::client {
 
-Game::Game(const ServerConfig &config)
+Game::Game(core::IMessageQueueShPtr inputOutputQueue)
   : ::core::CoreObject("game")
 {
   setService("game");
-  initialize(config);
-}
-
-Game::~Game()
-{
-  m_networkClient->stop();
-  m_networkClient.reset();
+  initialize(std::move(inputOutputQueue));
 }
 
 auto Game::getScreen() const noexcept -> Screen
@@ -74,7 +68,10 @@ void Game::generateInputHandlers()
   m_inputHandlers[Screen::GAME] = std::make_unique<GameScreenInputHandler>(m_views);
 }
 
-void Game::generateUiHandlers(int width, int height, pge::Renderer &engine)
+void Game::generateUiHandlers(int width,
+                              int height,
+                              pge::Renderer &engine,
+                              core::IMessageQueueShPtr inputQueue)
 {
   m_uiHandlers[Screen::LOGIN]   = std::make_unique<LoginScreenUiHandler>(m_views);
   m_uiHandlers[Screen::LOADING] = std::make_unique<LoadingScreenUiHandler>(m_views);
@@ -85,7 +82,7 @@ void Game::generateUiHandlers(int width, int height, pge::Renderer &engine)
   for (const auto &[_, handler] : m_uiHandlers)
   {
     handler->initializeMenus(width, height, engine.getTextureHandler());
-    handler->connectToMessageQueue(*m_networkClient);
+    handler->connectToMessageQueue(*inputQueue);
   }
 }
 
@@ -227,10 +224,6 @@ bool shouldUpdateCoordinatorInScreen(const Screen &screen)
 
 bool Game::step(float elapsedSeconds)
 {
-  // Process messages first and then update the coordinator so that
-  // the systems have a chance to react to messages before sending
-  // everything to the UI.
-  m_networkClient->processEvents();
   m_internalMessageQueue->processEvents();
 
   if (shouldUpdateCoordinatorInScreen(m_state.screen))
@@ -363,15 +356,8 @@ void Game::onLoadingFinished(const core::LoadingTransition transition)
   m_views.shipView->setPlayerShipEntityId(maybePlayerShipEntityId);
 }
 
-void Game::initialize(const ServerConfig &config)
+void Game::initialize(core::IMessageQueueShPtr inputOutputQueue)
 {
-  m_networkClient = std::make_shared<GameNetworkClient>();
-  if (config.autoConnect.has_value())
-  {
-    m_networkClient->setAutoLogin(*config.autoConnect);
-  }
-  m_networkClient->start(config.port);
-
   // Not strictly necessary as the internal messages should only be produced
   // synchronously by the Coordinator but also does not hurt.
   m_internalMessageQueue = core::createSynchronizedMessageQueue();
@@ -387,23 +373,23 @@ void Game::initialize(const ServerConfig &config)
   ViewsConfig vConfig{.gameSession          = m_gameSession,
                       .coordinator          = m_coordinator,
                       .internalMessageQueue = m_internalMessageQueue.get(),
-                      .outputMessageQueue   = m_networkClient.get()};
+                      .outputMessageQueue   = inputOutputQueue.get()};
   m_views = createViews(vConfig, m_entityMapper);
 
-  initializeMessageSystem();
+  initializeMessageSystem(inputOutputQueue);
 }
 
-void Game::initializeMessageSystem()
+void Game::initializeMessageSystem(core::IMessageQueueShPtr inputQueue)
 {
-  createMessageConsumers(*m_networkClient, m_entityMapper, m_coordinator);
+  createMessageConsumers(*inputQueue, m_entityMapper, m_coordinator);
 
   m_internalMessageQueue->addListener(
     std::make_unique<InternalMessageConsumer>(m_entityMapper, m_coordinator));
 
   auto messageModule = std::make_unique<GameMessageModule>(*this, m_entityMapper);
-  m_networkClient->addListener(std::move(messageModule));
+  inputQueue->addListener(std::move(messageModule));
 
-  m_views.connectToQueue(m_networkClient.get());
+  m_views.connectToQueue(inputQueue.get());
 }
 
 } // namespace bsgalone::client

@@ -2,6 +2,7 @@
 #pragma once
 
 #include "Game.hh"
+#include "GameNetworkClient.hh"
 #include "IUiEventQueue.hh"
 #include "IUiHandler.hh"
 #include "PGEApp.hh"
@@ -43,6 +44,10 @@ class App : public pge::PGEApp
   /// @brief - Defines the current screen selected in this game. Updated when
   /// the user takes action to change it.
   Screen m_screen{Screen::LOGIN};
+
+  /// @brief - The network client used to connect to the server and transmit
+  /// commands and receive updates to the game.
+  GameNetworkClientShPtr m_networkClient{};
 
   /// @brief - Used to publish incoming events that are relevant for the UI
   /// components. This is used to asynchronously notify the UI from changes
