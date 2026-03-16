@@ -5,17 +5,12 @@
 
 namespace net {
 
-TcpClient::TcpClient(INetworkEventQueueShPtr eventBus)
+TcpClient::TcpClient(INetworkEventQueueWPtr eventBus)
   : core::CoreObject("tcp")
-  , m_eventBus(std::move(eventBus))
+  , m_eventBus(eventBus)
 {
   setService("net");
   addModule("client");
-
-  if (m_eventBus == nullptr)
-  {
-    throw std::invalid_argument("Expected non null event bus");
-  }
 }
 
 void TcpClient::connect(const std::string &url, const int port)
@@ -32,7 +27,12 @@ void TcpClient::connect(const std::string &url, const int port)
   m_client  = std::make_shared<details::AsioClient>(m_eventBus);
   m_client->connect(*m_context, url, port);
 
-  m_eventBus->pushEvent(std::make_unique<ServerStartedEvent>());
+  auto eventBus = m_eventBus.lock();
+  if (!eventBus)
+  {
+    error("Cannot connect client, event bus is no longer available");
+  }
+  eventBus->pushEvent(std::make_unique<ServerStartedEvent>());
 }
 
 void TcpClient::disconnect()
@@ -49,7 +49,12 @@ void TcpClient::disconnect()
   m_client.reset();
   m_context.reset();
 
-  m_eventBus->pushEvent(std::make_unique<ServerStoppedEvent>());
+  auto eventBus = m_eventBus.lock();
+  if (!eventBus)
+  {
+    error("Cannot disconnect client, event bus is no longer available");
+  }
+  eventBus->pushEvent(std::make_unique<ServerStoppedEvent>());
 }
 
 auto TcpClient::trySend(std::vector<char> bytes) -> std::optional<MessageId>

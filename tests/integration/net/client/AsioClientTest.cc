@@ -16,11 +16,6 @@ using Integration_Net_Client_AsioClient = TcpServerFixture;
 
 constexpr auto LOCALHOST_URL = "127.0.0.1";
 
-TEST_F(Integration_Net_Client_AsioClient, ThrowsWhenEventBusIsNull)
-{
-  EXPECT_THROW([this]() { AsioClient(nullptr); }(), std::invalid_argument);
-}
-
 TEST_F(Integration_Net_Client_AsioClient, ConnectsToServerAndPublishesConnectionEstablishedEvent)
 {
   auto bus    = std::make_shared<TestNetworkEventQueue>();

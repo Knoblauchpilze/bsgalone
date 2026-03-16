@@ -42,17 +42,12 @@ class ClientListenerProxy : public INetworkEventListener
 };
 } // namespace
 
-AsioClient::AsioClient(INetworkEventQueueShPtr eventBus)
+AsioClient::AsioClient(INetworkEventQueueWPtr eventBus)
   : core::CoreObject("client")
   , m_eventBus(std::move(eventBus))
   , m_internalBus(createAsyncEventQueue(createSynchronizedEventQueue()))
 {
   setService("net");
-
-  if (m_eventBus == nullptr)
-  {
-    throw std::invalid_argument("Expected non null event bus");
-  }
 }
 
 void AsioClient::connect(AsioContext &context, const std::string &url, const int port)
@@ -147,7 +142,7 @@ void AsioClient::onEventReceived(const INetworkEvent &event)
       handleConnectionFailure(event);
       break;
     default:
-      m_eventBus->pushEvent(event.clone());
+      forwardEvent(event);
       break;
   }
 }
@@ -200,7 +195,11 @@ void AsioClient::onConnectionEstablished(const std::error_code &code,
 
   setupConnection();
 
-  m_eventBus->pushEvent(std::make_unique<ConnectionEstablishedEvent>());
+  auto eventBus = m_eventBus.lock();
+  if (eventBus)
+  {
+    eventBus->pushEvent(std::make_unique<ConnectionEstablishedEvent>());
+  }
 }
 
 bool AsioClient::handlePrematureDisconnection()
@@ -226,10 +225,25 @@ void AsioClient::setupConnection()
   m_status = ConnectionStatus::CONNECTED;
 }
 
+void AsioClient::forwardEvent(const INetworkEvent &event)
+{
+  auto eventBus = m_eventBus.lock();
+  if (!eventBus)
+  {
+    return;
+  }
+
+  eventBus->pushEvent(event.clone());
+}
+
 void AsioClient::handleConnectionFailure(const INetworkEvent & /*event*/)
 {
   debug("Detected network failure");
-  m_eventBus->pushEvent(std::make_unique<ConnectionLostEvent>());
+  auto eventBus = m_eventBus.lock();
+  if (eventBus)
+  {
+    eventBus->pushEvent(std::make_unique<ConnectionLostEvent>());
+  }
   setConnectionStatusAndNotify(ConnectionStatus::DISCONNECTED);
 }
 

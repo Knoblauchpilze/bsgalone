@@ -13,7 +13,12 @@ namespace net {
 class TcpClient : public INetworkClient, public core::CoreObject
 {
   public:
-  TcpClient(INetworkEventQueueShPtr eventBus);
+  /// @brief - Creates a new client which will publish events to the provided
+  /// bus but does not own it. This allows to have a parent object owning it
+  /// and avoid problems if this parent object wants to register itself as a
+  /// listener to the event bus (which would create a circular dependency).
+  /// @param eventBus - a pointer to the event bus to use to publish updates.
+  TcpClient(INetworkEventQueueWPtr eventBus);
   ~TcpClient() override = default;
 
   /// @brief - Implements the client interface to asynchronously connect to the server
@@ -41,7 +46,7 @@ class TcpClient : public INetworkClient, public core::CoreObject
   auto trySend(std::vector<char> bytes) -> std::optional<MessageId> override;
 
   private:
-  INetworkEventQueueShPtr m_eventBus{};
+  INetworkEventQueueWPtr m_eventBus{};
 
   /// @brief - Protects concurrent access to the context and client.
   std::mutex m_locker{};

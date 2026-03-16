@@ -25,11 +25,6 @@ void startClient(std::shared_ptr<TcpClient> &client, const int port, TestNetwork
 }
 } // namespace
 
-TEST_F(Integration_Net_Client_TcpClient, ThrowsWhenEventBusIsNull)
-{
-  EXPECT_THROW([this]() { TcpClient(nullptr); }(), std::invalid_argument);
-}
-
 TEST_F(Integration_Net_Client_TcpClient, ThrowsWhenConnectingMultipleTimes)
 {
   auto bus    = std::make_shared<TestNetworkEventQueue>();
@@ -57,6 +52,17 @@ TEST_F(Integration_Net_Client_TcpClient, PublishesServerStartedEvent)
 
   const auto actual = bus->waitForEvent();
   EXPECT_EQ(NetworkEventType::SERVER_STARTED, actual->type());
+}
+
+TEST_F(Integration_Net_Client_TcpClient, ThrowsWhenEventBusIsReleasedEarly)
+{
+  auto bus    = std::make_shared<TestNetworkEventQueue>();
+  auto client = std::make_shared<TcpClient>(bus);
+
+  bus.reset();
+
+  auto code = [&client, this]() { client->connect(LOCALHOST_URL, this->port()); };
+  EXPECT_THROW(code(), core::CoreException);
 }
 
 TEST_F(Integration_Net_Client_TcpClient, PublishesServerStoppedEvent)

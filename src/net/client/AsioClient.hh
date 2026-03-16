@@ -17,7 +17,7 @@ class AsioClient : public core::CoreObject,
                    public INetworkEventListener
 {
   public:
-  AsioClient(INetworkEventQueueShPtr eventBus);
+  AsioClient(INetworkEventQueueWPtr eventBus);
   ~AsioClient() override = default;
 
   /// @brief - Starts the client, instructing to asynchronously attempt to connect to
@@ -55,7 +55,9 @@ class AsioClient : public core::CoreObject,
   /// @brief - Event bus used to communicate events to the outside world. This includes the
   /// information when the client successfully connects to a remote server or when the
   /// connection is lost.
-  INetworkEventQueueShPtr m_eventBus{};
+  /// The weak pointer allows the client to not own the publishing infrastructure it uses
+  /// to publish event. The component instantiating the client should own it instead.
+  INetworkEventQueueWPtr m_eventBus{};
 
   /// @brief - Event bus used to receive messages published by the socket held by the client.
   /// Those events can be interpreted by the client before being published to the external bus.
@@ -114,6 +116,7 @@ class AsioClient : public core::CoreObject,
   /// information is not available to the client.
   void setupConnection();
 
+  void forwardEvent(const INetworkEvent &event);
   void handleConnectionFailure(const INetworkEvent &event);
 
   /// @brief - Used to acquire the lock, set the connection status to the desired status and
