@@ -16,11 +16,16 @@ GameNetworkClient::GameNetworkClient()
   : m_inputQueue(core::createSynchronizedMessageQueue())
 {}
 
+void GameNetworkClient::setAutoLogin(User autoLogin)
+{
+  m_autoLogin = std::move(autoLogin);
+}
+
 void GameNetworkClient::start(const int port)
 {
   m_eventBus  = net::createAsyncEventQueue(net::createSynchronizedEventQueue());
   m_tcpClient = std::make_shared<net::TcpClient>(m_eventBus);
-  m_adapter   = std::make_unique<core::OutputNetworkAdapter>(m_tcpClient);
+  m_adapter   = std::make_shared<core::OutputNetworkAdapter>(m_tcpClient);
 
   initialize();
   m_tcpClient->connect(DEFAULT_SERVER_URL, port);
@@ -66,7 +71,7 @@ void GameNetworkClient::initialize()
                                                   std::make_unique<core::MessageParser>());
   m_eventBus->addListener(std::move(networkAdapter));
 
-  auto eventListener = std::make_unique<NetworkEventListener>(m_connected, m_inputQueue);
+  auto eventListener = std::make_unique<NetworkEventListener>(m_connected, m_adapter, m_autoLogin);
   m_eventBus->addListener(std::move(eventListener));
 }
 

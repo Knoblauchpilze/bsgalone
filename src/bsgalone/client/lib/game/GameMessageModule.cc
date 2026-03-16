@@ -31,9 +31,6 @@ void GameMessageModule::onEventReceived(const core::IMessage &message)
 {
   switch (message.type())
   {
-    case core::MessageType::CONNECTION:
-      handleConnectionMessage(message.as<core::ConnectionMessage>());
-      break;
     case core::MessageType::DOCK:
       handleDockMessage(message.as<core::DockMessage>());
       break;
@@ -68,11 +65,6 @@ void GameMessageModule::onEventReceived(const core::IMessage &message)
       error("Unsupported message type " + str(message.type()));
       break;
   }
-}
-
-void GameMessageModule::handleConnectionMessage(const core::ConnectionMessage & /*message*/)
-{
-  m_game.onConnectedToServer();
 }
 
 void GameMessageModule::handleDockMessage(const core::DockMessage &message)

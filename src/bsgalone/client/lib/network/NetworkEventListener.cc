@@ -1,17 +1,19 @@
 
 #include "NetworkEventListener.hh"
-#include "ConnectionMessage.hh"
+#include "LoginMessage.hh"
 
 namespace bsgalone::client {
 
 NetworkEventListener::NetworkEventListener(std::atomic_bool &connected,
-                                           core::IMessageQueueShPtr inputQueue)
+                                           core::IOutputNetworkAdapterShPtr outputAdapter,
+                                           std::optional<User> autoLogin)
   : m_connected(connected)
-  , m_inputQueue(std::move(inputQueue))
+  , m_outputAdapter(std::move(outputAdapter))
+  , m_autoLogin(std::move(autoLogin))
 {
-  if (m_inputQueue == nullptr)
+  if (m_outputAdapter == nullptr)
   {
-    throw std::invalid_argument("Expected non null input queue");
+    throw std::invalid_argument("Expected non null output adaptae");
   }
 }
 
@@ -41,8 +43,16 @@ void NetworkEventListener::handleConnectionEstablished(
 {
   m_connected.store(true);
 
-  auto message = std::make_unique<core::ConnectionMessage>();
-  m_inputQueue->pushEvent(std::move(message));
+  if (!m_autoLogin.has_value())
+  {
+    return;
+  }
+
+  core::LoginMessage login(m_autoLogin->role);
+  login.setUserName(m_autoLogin->name);
+  login.setPassword(m_autoLogin->password);
+
+  m_outputAdapter->sendMessage(login);
 }
 
 void NetworkEventListener::handleConnectionLost(const net::ConnectionLostEvent & /*event*/)

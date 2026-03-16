@@ -54,7 +54,6 @@ class Game : public ui::IScreenChanger, public ::core::CoreObject
   /// the game is ended).
   bool step(float elapsedSeconds);
 
-  void onConnectedToServer();
   void onLogin(const core::Uuid playerDbId, const core::GameRole role);
   void onLoginDataReceived(const core::Uuid playerShipDbId,
                            const core::Uuid systemDbId,
@@ -90,13 +89,6 @@ class Game : public ui::IScreenChanger, public ::core::CoreObject
   /// @brief - The definition of the game state.
   State m_state{};
 
-  /// @brief - Holds the user to automatically login with upon connecting
-  /// to the server. If this vaule is empty the login/signup screen will
-  /// stay visible for the user to enter their credentials.
-  /// In case it is defined, the game will try to login automatically using
-  /// the provided user name and password.
-  std::optional<User> m_user{};
-
   GameNetworkClientShPtr m_networkClient{};
 
   /// @brief - Holds information about the current game session. This includes
@@ -112,7 +104,7 @@ class Game : public ui::IScreenChanger, public ::core::CoreObject
   std::unordered_map<Screen, IInputHandlerPtr> m_inputHandlers{};
   std::unordered_map<Screen, AbstractUiHandlerPtr> m_uiHandlers{};
 
-  void initialize(const int serverPort);
+  void initialize(const ServerConfig &config);
   void initializeMessageSystem();
 };
 

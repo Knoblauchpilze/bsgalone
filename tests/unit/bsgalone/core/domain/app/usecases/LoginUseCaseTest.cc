@@ -3,7 +3,6 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-// using namespace test;
 using namespace ::testing;
 
 namespace bsgalone::core {

@@ -6,7 +6,6 @@
 #include "Uuid.hh"
 #include <optional>
 
-#include "ConnectionMessage.hh"
 #include "DatabaseEntityMapper.hh"
 #include "DockMessage.hh"
 #include "EntityRemovedMessage.hh"
@@ -35,7 +34,6 @@ class GameMessageModule : public core::AbstractMessageListener, public ::core::C
   Game &m_game;
   const core::DatabaseEntityMapper &m_entityMapper;
 
-  void handleConnectionMessage(const core::ConnectionMessage &message);
   void handleDockMessage(const core::DockMessage &message);
   void handleHangarMessage(const core::HangarMessage &message);
   void handleJumpMessage(const core::JumpMessage &message);

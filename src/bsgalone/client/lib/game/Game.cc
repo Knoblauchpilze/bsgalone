@@ -21,10 +21,9 @@ namespace bsgalone::client {
 
 Game::Game(const ServerConfig &config)
   : ::core::CoreObject("game")
-  , m_user(config.autoConnect)
 {
   setService("game");
-  initialize(config.port);
+  initialize(config);
 }
 
 Game::~Game()
@@ -259,19 +258,6 @@ bool Game::step(float elapsedSeconds)
   return true;
 }
 
-void Game::onConnectedToServer()
-{
-  info("Connected to server");
-
-  if (m_user.has_value())
-  {
-    auto login = std::make_unique<core::LoginMessage>(m_user->role);
-    login->setUserName(m_user->name);
-    login->setPassword(m_user->password);
-    m_networkClient->pushEvent(std::move(login));
-  }
-}
-
 void Game::onLogin(const core::Uuid playerDbId, const core::GameRole role)
 {
   info("Processing login for " + core::str(playerDbId));
@@ -377,10 +363,14 @@ void Game::onLoadingFinished(const core::LoadingTransition transition)
   m_views.shipView->setPlayerShipEntityId(maybePlayerShipEntityId);
 }
 
-void Game::initialize(const int serverPort)
+void Game::initialize(const ServerConfig &config)
 {
   m_networkClient = std::make_shared<GameNetworkClient>();
-  m_networkClient->start(serverPort);
+  if (config.autoConnect.has_value())
+  {
+    m_networkClient->setAutoLogin(*config.autoConnect);
+  }
+  m_networkClient->start(config.port);
 
   // Not strictly necessary as the internal messages should only be produced
   // synchronously by the Coordinator but also does not hurt.
