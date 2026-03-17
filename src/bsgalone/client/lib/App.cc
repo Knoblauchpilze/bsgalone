@@ -74,12 +74,14 @@ void App::loadResources(const pge::Vec2i &screenDims, pge::Renderer &engine)
 void App::cleanResources()
 {
   m_networkClient->stop();
-  m_networkClient.reset();
 
+  m_uiHandlers.clear();
   m_game.reset();
 
   m_uiEventBus.reset();
   m_uiCommandQueue.reset();
+
+  m_networkClient.reset();
 }
 
 void App::drawDecal(const pge::RenderState &state)
