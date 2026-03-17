@@ -27,11 +27,15 @@ bool App::onFrame(const float elapsedSeconds)
     info("This is game over");
   }
 
+  m_uiEventBus->processEvents();
+
   const auto it = m_uiHandlers.find(m_screen);
   if (it != m_uiHandlers.end())
   {
     it->second->updateUi();
   }
+
+  m_uiCommandQueue->processEvents();
 
   return m_game->terminated();
 }
