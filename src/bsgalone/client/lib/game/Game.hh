@@ -23,14 +23,16 @@
 
 namespace bsgalone::client {
 
-class Game : public ui::IScreenChanger, public ::core::CoreObject
+class Game : public ::core::CoreObject
 {
   public:
-  Game(core::IMessageQueueShPtr inputOutputQueue);
+  Game(core::IMessageQueueShPtr inputOutputQueue, ui::IScreenChanger &screenChanger);
   ~Game() override = default;
 
-  auto getScreen() const noexcept -> Screen;
-  void setScreen(const Screen screen) override;
+  /// @brief - Notifies the game that the active screen changed. This allows
+  /// the game to update its internal state in reaction to screen transitions
+  /// (e.g. clearing the dead flag when the player respawns at the outpost).
+  void onScreenChanged(const Screen screen);
 
   void generateRenderers(int width, int height, pge::Renderer &engine);
   void generateInputHandlers();
@@ -41,14 +43,6 @@ class Game : public ui::IScreenChanger, public ::core::CoreObject
 
   void processUserInput(const pge::controls::State &controls, pge::CoordinateFrame &frame);
   void render(const pge::RenderState &state, const pge::RenderingPass pass) const;
-
-  /// @brief - Requests the game to be terminated. This is applied to the next
-  /// iteration of the game loop.
-  void terminate() noexcept override;
-
-  /// @brief - Returns whether or not the game has been terminated. The game is
-  /// terminated when the user wants to exit the app (usually).
-  bool terminated() const noexcept;
 
   /// @brief - Forward the call to step one step ahead in time to the internal world.
   /// @param elapsedSeconds - the duration of the last frame in seconds.
@@ -77,19 +71,16 @@ class Game : public ui::IScreenChanger, public ::core::CoreObject
   /// or not.
   struct State
   {
-    /// @brief - Defines the current screen selected in this game. Updated whenever
-    /// the user takes action to change it.
-    Screen screen{Screen::LOGIN};
-
-    /// @brief - Whether the game was terminated (usually because the app was closed).
-    bool terminated{false};
-
     /// @brief - Whether the player is dead or not.
     bool dead{false};
   };
 
   /// @brief - The definition of the game state.
   State m_state{};
+
+  /// @brief - Reference to the screen manager. Used to query and update the
+  /// active screen from outside the Game class.
+  ui::IScreenChanger &m_screenChanger;
 
   /// @brief - Holds information about the current game session. This includes
   /// data about the current player, their ship, the system they are in, etc.

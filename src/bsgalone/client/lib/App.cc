@@ -9,6 +9,26 @@ App::App(const pge::AppDesc &desc, ServerConfig config)
   , m_config(std::move(config))
 {}
 
+auto App::getScreen() const noexcept -> Screen
+{
+  return m_screen;
+}
+
+void App::setScreen(const Screen screen)
+{
+  m_screen = screen;
+  if (m_game)
+  {
+    m_game->onScreenChanged(screen);
+  }
+}
+
+void App::terminate() noexcept
+{
+  info("App has been terminated");
+  m_terminated = true;
+}
+
 bool App::onFrame(const float elapsedSeconds)
 {
   // Handle case where no game is defined.
@@ -33,7 +53,7 @@ bool App::onFrame(const float elapsedSeconds)
     it->second->updateUi();
   }
 
-  return m_game->terminated();
+  return m_terminated;
 }
 
 void App::onInputs(const pge::controls::State &controls, pge::CoordinateFrame &frame)
@@ -56,7 +76,7 @@ void App::loadResources(const pge::Vec2i &screenDims, pge::Renderer &engine)
   {
     m_networkClient->setAutoLogin(*m_config.autoConnect);
   }
-  m_game = std::make_shared<Game>(m_networkClient);
+  m_game = std::make_shared<Game>(m_networkClient, *this);
 
   m_game->generateRenderers(screenDims.x, screenDims.y, engine);
   m_game->generateInputHandlers();
@@ -113,7 +133,7 @@ void App::drawDebug(const pge::RenderState &state, const pge::Vec2f &mouseScreen
   state.renderer.drawDebugString(pos, "Intra cell        : " + it.str(), pge::colors::CYAN);
   pos.y += REASONABLE_PIXEL_GAP;
   state.renderer.drawDebugString(pos,
-                                 "Screen            : " + str(m_game->getScreen()),
+                                 "Screen            : " + str(m_screen),
                                  pge::colors::DARK_GREEN);
 }
 

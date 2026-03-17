@@ -21,8 +21,9 @@ class IScreenChanger
   public:
   virtual ~IScreenChanger() = default;
 
-  virtual void setScreen(const bsgalone::client::Screen screen) = 0;
-  virtual void terminate() noexcept                             = 0;
+  virtual auto getScreen() const noexcept -> bsgalone::client::Screen = 0;
+  virtual void setScreen(const bsgalone::client::Screen screen)       = 0;
+  virtual void terminate() noexcept                                    = 0;
 };
 
 using GameCallback = std::function<void(IScreenChanger &)>;

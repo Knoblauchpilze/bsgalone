@@ -19,22 +19,17 @@
 
 namespace bsgalone::client {
 
-Game::Game(core::IMessageQueueShPtr inputOutputQueue)
+Game::Game(core::IMessageQueueShPtr inputOutputQueue, ui::IScreenChanger &screenChanger)
   : ::core::CoreObject("game")
+  , m_screenChanger(screenChanger)
 {
   setService("game");
   initialize(std::move(inputOutputQueue));
 }
 
-auto Game::getScreen() const noexcept -> Screen
+void Game::onScreenChanged(const Screen screen)
 {
-  return m_state.screen;
-}
-
-void Game::setScreen(const Screen screen)
-{
-  m_state.screen = screen;
-  if (m_state.dead && Screen::OUTPOST == m_state.screen)
+  if (m_state.dead && Screen::OUTPOST == screen)
   {
     m_state.dead = false;
   }
@@ -106,7 +101,7 @@ auto applyInputToGame(const pge::controls::State &controls,
 
 bool applyInputToUi(const pge::controls::State &controls,
                     const Screen currentScreen,
-                    Game &g,
+                    ui::IScreenChanger &screenChanger,
                     const std::unordered_map<Screen, AbstractUiHandlerPtr> &uiHandlers)
 {
   ui::UserInputData uid{.controls = controls};
@@ -118,7 +113,7 @@ bool applyInputToUi(const pge::controls::State &controls,
 
     for (const auto &action : uid.actions)
     {
-      action(g);
+      action(screenChanger);
     }
   }
 
@@ -147,14 +142,16 @@ auto applyInputToScreen(const pge::controls::State &controls, const Screen curre
 
 void Game::processUserInput(const pge::controls::State &controls, pge::CoordinateFrame &frame)
 {
+  const auto currentScreen = m_screenChanger.getScreen();
+
   if (m_state.dead)
   {
-    applyInputToUi(controls, getScreen(), *this, m_uiHandlers);
+    applyInputToUi(controls, currentScreen, m_screenChanger, m_uiHandlers);
     return;
   }
 
-  const auto maybeInputHandler  = applyInputToGame(controls, getScreen(), frame, m_inputHandlers);
-  const auto inputRelevantForUi = applyInputToUi(controls, getScreen(), *this, m_uiHandlers);
+  const auto maybeInputHandler  = applyInputToGame(controls, currentScreen, frame, m_inputHandlers);
+  const auto inputRelevantForUi = applyInputToUi(controls, currentScreen, m_screenChanger, m_uiHandlers);
 
   if (controls.released(pge::controls::mouse::LEFT) && maybeInputHandler.has_value()
       && !inputRelevantForUi)
@@ -164,17 +161,18 @@ void Game::processUserInput(const pge::controls::State &controls, pge::Coordinat
     (*maybeInputHandler)->performAction(tp.x + it.x, tp.y + it.y, controls);
   }
 
-  const auto nextScreen = applyInputToScreen(controls, getScreen());
+  const auto nextScreen = applyInputToScreen(controls, currentScreen);
   if (nextScreen)
   {
-    setScreen(*nextScreen);
+    m_screenChanger.setScreen(*nextScreen);
   }
 }
 
 void Game::render(const pge::RenderState &state, const pge::RenderingPass pass) const
 {
-  const auto itRenderer = m_renderers.find(getScreen());
-  const auto itUi       = m_uiHandlers.find(getScreen());
+  const auto currentScreen = m_screenChanger.getScreen();
+  const auto itRenderer    = m_renderers.find(currentScreen);
+  const auto itUi          = m_uiHandlers.find(currentScreen);
 
   switch (pass)
   {
@@ -204,17 +202,6 @@ void Game::render(const pge::RenderState &state, const pge::RenderingPass pass) 
   }
 }
 
-void Game::terminate() noexcept
-{
-  info("Game has been terminated");
-  m_state.terminated = true;
-}
-
-bool Game::terminated() const noexcept
-{
-  return m_state.terminated;
-}
-
 namespace {
 bool shouldUpdateCoordinatorInScreen(const Screen &screen)
 {
@@ -226,7 +213,8 @@ bool Game::step(float elapsedSeconds)
 {
   m_internalMessageQueue->processEvents();
 
-  if (shouldUpdateCoordinatorInScreen(m_state.screen))
+  const auto currentScreen = m_screenChanger.getScreen();
+  if (shouldUpdateCoordinatorInScreen(currentScreen))
   {
     const auto elapsed = chrono::Duration{
       .unit    = chrono::Unit::SECONDS,
@@ -242,7 +230,7 @@ bool Game::step(float elapsedSeconds)
     m_coordinator->update(data);
   }
 
-  const auto it = m_uiHandlers.find(m_state.screen);
+  const auto it = m_uiHandlers.find(currentScreen);
   if (it != m_uiHandlers.end())
   {
     it->second->updateUi();
@@ -278,7 +266,7 @@ void Game::onLogout()
   m_entityMapper.clearAll();
   m_views.reset();
 
-  setScreen(Screen::LOGIN);
+  m_screenChanger.setScreen(Screen::LOGIN);
 }
 
 void Game::onActiveShipChanged(const core::Uuid shipDbId)
@@ -313,9 +301,9 @@ void Game::onPlayerKilled()
 {
   info("Player got killed");
   m_state.dead = true;
-  if (m_state.screen != Screen::GAME)
+  if (m_screenChanger.getScreen() != Screen::GAME)
   {
-    setScreen(Screen::GAME);
+    m_screenChanger.setScreen(Screen::GAME);
   }
 }
 
@@ -342,15 +330,14 @@ void Game::onSystemListReceived(const std::vector<core::System> &systemsData)
 
 void Game::onLoadingStarted(const core::LoadingTransition transition)
 {
-  m_gameSession->startLoadingTransition(m_state.screen, transition);
-  setScreen(Screen::LOADING);
+  m_gameSession->startLoadingTransition(m_screenChanger.getScreen(), transition);
+  m_screenChanger.setScreen(Screen::LOADING);
 }
 
 void Game::onLoadingFinished(const core::LoadingTransition transition)
 {
-  const auto [previousScreen, nextScreen] = m_gameSession->finishLoadingTransition(transition);
-  m_state.screen                          = previousScreen;
-  setScreen(nextScreen);
+  const auto screenTransition = m_gameSession->finishLoadingTransition(transition);
+  m_screenChanger.setScreen(screenTransition.next);
 
   const auto maybePlayerShipEntityId = m_entityMapper.tryGetPlayerShipEntityId();
   m_views.shipView->setPlayerShipEntityId(maybePlayerShipEntityId);
