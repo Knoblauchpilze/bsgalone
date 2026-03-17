@@ -9,11 +9,12 @@
 #include "Screen.hh"
 #include "ServerConfig.hh"
 #include "SynchronizedUiEventQueue.hh"
+#include "UserInputData.hh"
 #include <unordered_map>
 
 namespace bsgalone::client {
 
-class App : public pge::PGEApp
+class App : public pge::PGEApp, public ui::IScreenChanger
 {
   public:
   /// @brief - Create a new client application for the game and performs the login
@@ -24,6 +25,10 @@ class App : public pge::PGEApp
   App(const pge::AppDesc &desc, ServerConfig config);
 
   ~App() override = default;
+
+  auto getScreen() const noexcept -> Screen override;
+  void setScreen(const Screen screen) override;
+  void terminate() noexcept override;
 
   protected:
   bool onFrame(const float elapsedSeconds) override;
@@ -44,6 +49,9 @@ class App : public pge::PGEApp
   /// @brief - Defines the current screen selected in this game. Updated when
   /// the user takes action to change it.
   Screen m_screen{Screen::LOGIN};
+
+  /// @brief - Whether the application has been requested to terminate.
+  bool m_terminated{false};
 
   /// @brief - The network client used to connect to the server and transmit
   /// commands and receive updates to the game.
