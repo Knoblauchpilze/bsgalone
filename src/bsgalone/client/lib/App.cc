@@ -73,6 +73,9 @@ void App::cleanResources()
   m_networkClient.reset();
 
   m_game.reset();
+
+  m_uiEventBus.reset();
+  m_uiCommandQueue.reset();
 }
 
 void App::drawDecal(const pge::RenderState &state)
@@ -116,7 +119,8 @@ void App::drawDebug(const pge::RenderState &state, const pge::Vec2f &mouseScreen
 
 void App::initializeMessageSystem()
 {
-  auto inputAdapter = std::make_unique<InputGameMessageAdapter>();
+  auto inputAdapter = std::make_unique<InputGameMessageAdapter>(m_uiEventBus);
+  m_networkClient->addListener(std::move(inputAdapter));
 }
 
 } // namespace bsgalone::client

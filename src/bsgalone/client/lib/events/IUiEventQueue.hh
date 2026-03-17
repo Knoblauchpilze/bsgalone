@@ -10,6 +10,7 @@ namespace bsgalone::client {
 
 using IUiEventQueue      = messaging::IEventQueue<UiEventType, IUiEvent>;
 using IUiEventQueuePtr   = std::unique_ptr<IUiEventQueue>;
+using IUiEventQueueWPtr  = std::weak_ptr<IUiEventQueue>;
 using IUiEventQueueShPtr = std::shared_ptr<IUiEventQueue>;
 
 } // namespace bsgalone::client

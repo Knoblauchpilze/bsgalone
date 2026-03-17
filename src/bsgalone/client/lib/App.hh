@@ -52,7 +52,7 @@ class App : public pge::PGEApp
   /// @brief - Used to publish incoming events that are relevant for the UI
   /// components. This is used to asynchronously notify the UI from changes
   /// to the game.
-  IUiEventQueuePtr m_uiEventBus{createSynchronizedUiEventQueue()};
+  IUiEventQueueShPtr m_uiEventBus{createSynchronizedUiEventQueue()};
 
   /// @brief - Used by the UI components to trigger updates based on actions
   /// taken by the user (e.g. clicks or buttons). Some actions may result in
