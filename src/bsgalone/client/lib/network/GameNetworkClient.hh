@@ -17,10 +17,18 @@ namespace bsgalone::client {
 class GameNetworkClient : public core::IMessageQueue
 {
   public:
+  /// @brief - Creates a new client which will attempt to connect to the remote server
+  /// when the start method is called.
   GameNetworkClient();
-  ~GameNetworkClient() = default;
 
-  void setAutoLogin(User autoLogin);
+  /// @brief - Creates a new client which will attempt to login as the user specified
+  /// in input when the connection to the server is established.
+  /// In case `autoLogin` does not have a value, the client will only attempt to connect
+  /// to the server.
+  /// @param autoLogin - the user to connect as when the connection is established.
+  GameNetworkClient(std::optional<User> autoLogin);
+
+  ~GameNetworkClient() = default;
 
   void start(const int port);
   void stop();

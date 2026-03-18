@@ -1,9 +1,10 @@
 
 #pragma once
 
-#include "IRenderer.hh"
+#include "GameNetworkClient.hh"
 #include "PGEApp.hh"
 #include "Screen.hh"
+#include "ServerConfig.hh"
 #include <unordered_map>
 
 namespace bsgalone::client {
@@ -12,7 +13,13 @@ namespace bsgalone::client {
 class GameApp : public pge::PGEApp
 {
   public:
-  GameApp(const pge::AppDesc &desc, const int serverPort);
+  /// @brief - Create a new client application for the game and performs the login
+  /// for the specified user and password.
+  /// @param desc - contains all the needed information to create the canvas needed
+  /// @param config - description of the configuration to connect to the server and
+  /// possibly auto connect to it with a specified user.
+  GameApp(const pge::AppDesc &desc, ServerConfig config);
+
   ~GameApp() override = default;
 
   protected:
@@ -28,13 +35,17 @@ class GameApp : public pge::PGEApp
   void drawDebug(const pge::RenderState &state, const pge::Vec2f &mouseScreenPos) override;
 
   private:
+  /// @brief - The port the server is listening on. Used when attempting to connect
+  /// to the remote server.
   int m_serverPort{};
 
   /// @brief - Defines the current screen selected in this game. Updated whenever
   /// the user takes action to change it.
   Screen screen{Screen::LOGIN};
 
-  std::unordered_map<Screen, IRendererPtr> m_renderers{};
+  /// @brief - The network client used to connect to the server and transmit
+  /// commands and receive updates to the game.
+  GameNetworkClientShPtr m_networkClient{};
 };
 
 } // namespace bsgalone::client

@@ -55,12 +55,8 @@ void App::loadResources(const pge::Vec2i &screenDims, pge::Renderer &engine)
 {
   setLayerTint(Layer::DRAW, semiOpaque(pge::colors::WHITE));
 
-  m_networkClient = std::make_shared<GameNetworkClient>();
-  if (m_config.autoConnect.has_value())
-  {
-    m_networkClient->setAutoLogin(*m_config.autoConnect);
-  }
-  m_game = std::make_shared<Game>(m_networkClient);
+  m_networkClient = std::make_shared<GameNetworkClient>(m_config.autoConnect);
+  m_game          = std::make_shared<Game>(m_networkClient);
 
   m_game->generateRenderers(screenDims.x, screenDims.y, engine);
   m_game->generateInputHandlers();

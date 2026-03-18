@@ -16,10 +16,10 @@ GameNetworkClient::GameNetworkClient()
   : m_inputQueue(core::createSynchronizedMessageQueue())
 {}
 
-void GameNetworkClient::setAutoLogin(User autoLogin)
-{
-  m_autoLogin = std::move(autoLogin);
-}
+GameNetworkClient::GameNetworkClient(std::optional<User> autoLogin)
+  : m_inputQueue(core::createSynchronizedMessageQueue())
+  , m_autoLogin(std::move(autoLogin))
+{}
 
 void GameNetworkClient::start(const int port)
 {

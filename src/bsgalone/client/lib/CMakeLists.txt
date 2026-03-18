@@ -3,6 +3,14 @@ add_library (bsgalone_client_lib SHARED "")
 
 set (CMAKE_POSITION_INDEPENDENT_CODE ON)
 
+target_include_directories (bsgalone_client_lib PUBLIC
+	${CMAKE_CURRENT_SOURCE_DIR}
+	)
+
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/app
+	)
+
 add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/consumers
 	)
@@ -41,7 +49,6 @@ add_subdirectory (
 
 target_sources (bsgalone_client_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/App.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/GameApp.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/GameClient.cc
 	)
 
@@ -51,8 +58,4 @@ target_link_libraries (bsgalone_client_lib
 	pge_lib
 	ui_lib
 	bsgalone_core_lib
-	)
-
-target_include_directories (bsgalone_client_lib PUBLIC
-	${CMAKE_CURRENT_SOURCE_DIR}
 	)
