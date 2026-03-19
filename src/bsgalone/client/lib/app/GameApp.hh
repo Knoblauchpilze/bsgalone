@@ -7,6 +7,7 @@
 #include "PGEApp.hh"
 #include "Screen.hh"
 #include "ServerConfig.hh"
+#include "SynchronizedUiEventQueue.hh"
 #include <unordered_map>
 
 namespace bsgalone::client {
@@ -49,6 +50,12 @@ class GameApp : public pge::PGEApp
   /// commands and receive updates to the game.
   GameNetworkClientShPtr m_networkClient{};
 
+  /// @brief - Used by the UI components to trigger updates based on actions
+  /// taken by the user (e.g. clicks or buttons). Some actions may result in
+  /// commands sent to the server while others will trigger internal changes
+  /// in the UI or client application in general.
+  IUiEventQueueShPtr m_uiCommandQueue{createSynchronizedUiEventQueue()};
+
   /// @brief - A map holding the renderers attached to each screen. The renderer
   /// is guaranteed to be triggered when the screen is active.
   std::unordered_map<Screen, IRendererPtr> m_renderers{};
@@ -56,6 +63,10 @@ class GameApp : public pge::PGEApp
   /// @brief - A map holding the UI handlers attached to each screen. The renderer
   /// is guaranteed to be triggered when the screen is active.
   std::unordered_map<Screen, IUiHandlerPtr> m_uiHandlers{};
+
+  void generateRenderers(const pge::Vec2i &screenDims, pge::Renderer &engine);
+  void generateUiHandlers(const pge::Vec2i &screenDims, pge::Renderer &engine);
+  void initializeMessageSystem();
 };
 
 } // namespace bsgalone::client

@@ -7,4 +7,5 @@ target_sources (bsgalone_client_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/GameNetworkClient.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/InputGameMessageAdapter.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/NetworkEventListener.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/OutputUiCommandAdapter.cc
 	)

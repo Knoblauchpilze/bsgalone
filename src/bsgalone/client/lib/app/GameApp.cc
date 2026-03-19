@@ -3,6 +3,7 @@
 #include "DecalScreenRenderer.hh"
 #include "LoginScreenRenderer.hh"
 #include "LoginUiHandler.hh"
+#include "OutputUiCommandAdapter.hh"
 
 namespace bsgalone::client {
 
@@ -21,6 +22,8 @@ bool GameApp::onFrame(const float /*elapsedSeconds*/)
   {
     maybeUiHandler->second->updateUi();
   }
+
+  m_uiCommandQueue->processEvents();
 
   return m_screen == Screen::EXIT;
 }
@@ -51,17 +54,9 @@ void GameApp::loadResources(const pge::Vec2i &screenDims, pge::Renderer &engine)
 {
   setLayerTint(Layer::DRAW, pge::semiOpaque(pge::colors::WHITE));
 
-  auto login = std::make_unique<DecalScreenRenderer>(LOGIN_TEXTURE_FILE_PATH);
-  login->loadResources(screenDims.x, screenDims.y, engine.getTextureHandler());
-  m_renderers[Screen::LOGIN] = std::move(login);
-
-  auto loading = std::make_unique<DecalScreenRenderer>(LOADING_TEXTURE_FILE_PATH);
-  loading->loadResources(screenDims.x, screenDims.y, engine.getTextureHandler());
-  m_renderers[Screen::LOADING] = std::move(loading);
-
-  auto loginUi = std::make_unique<LoginUiHandler>();
-  loginUi->initializeMenus(screenDims.x, screenDims.y, engine.getTextureHandler());
-  m_uiHandlers[Screen::LOGIN] = std::move(loginUi);
+  generateRenderers(screenDims, engine);
+  generateUiHandlers(screenDims, engine);
+  initializeMessageSystem();
 
   m_networkClient->start(m_serverPort);
 }
@@ -72,6 +67,8 @@ void GameApp::cleanResources()
 
   m_renderers.clear();
   m_uiHandlers.clear();
+
+  m_uiCommandQueue.reset();
 
   m_networkClient.reset();
 }
@@ -122,6 +119,29 @@ void GameApp::drawDebug(const pge::RenderState &state, const pge::Vec2f &mouseSc
   state.renderer.drawDebugString(pos,
                                  "Screen            : " + str(m_screen),
                                  pge::colors::DARK_GREEN);
+}
+
+void GameApp::generateRenderers(const pge::Vec2i &screenDims, pge::Renderer &engine)
+{
+  auto login = std::make_unique<DecalScreenRenderer>(LOGIN_TEXTURE_FILE_PATH);
+  login->loadResources(screenDims.x, screenDims.y, engine.getTextureHandler());
+  m_renderers[Screen::LOGIN] = std::move(login);
+
+  auto loading = std::make_unique<DecalScreenRenderer>(LOADING_TEXTURE_FILE_PATH);
+  loading->loadResources(screenDims.x, screenDims.y, engine.getTextureHandler());
+  m_renderers[Screen::LOADING] = std::move(loading);
+}
+
+void GameApp::generateUiHandlers(const pge::Vec2i &screenDims, pge::Renderer &engine)
+{
+  auto loginUi = std::make_unique<LoginUiHandler>(m_uiCommandQueue);
+  loginUi->initializeMenus(screenDims.x, screenDims.y, engine.getTextureHandler());
+  m_uiHandlers[Screen::LOGIN] = std::move(loginUi);
+}
+
+void GameApp::initializeMessageSystem()
+{
+  m_uiCommandQueue->addListener(std::make_unique<OutputUiCommandAdapter>(m_networkClient));
 }
 
 } // namespace bsgalone::client

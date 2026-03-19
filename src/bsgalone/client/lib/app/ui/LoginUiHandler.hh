@@ -1,23 +1,18 @@
 
 #pragma once
 
-#include "AbstractMessageListener.hh"
-#include "AbstractUiHandler.hh"
-#include "CredentialsUiHandler.hh"
-#include "GameRole.hh"
-#include "LoginMessage.hh"
-#include "SignupMessage.hh"
+#include "IUiEventQueue.hh"
+#include "IUiHandler.hh"
 #include "UiMenu.hh"
+#include "UiTextField.hh"
 #include "UiTextMenu.hh"
-#include "UiTimedMenu.hh"
-#include "Views.hh"
 
 namespace bsgalone::client {
 
 class LoginUiHandler : public IUiHandler
 {
   public:
-  LoginUiHandler();
+  LoginUiHandler(IUiEventQueueShPtr eventQueue);
   ~LoginUiHandler() override = default;
 
   void initializeMenus(const int width,
@@ -28,6 +23,21 @@ class LoginUiHandler : public IUiHandler
   void updateUi() override;
 
   private:
+  ui::UiMenuPtr m_credentialsPanel{};
+
+  ui::UiTextField *m_nameTextField{};
+  ui::UiTextField *m_passwordTextField{};
+
+  ui::UiTextMenuPtr m_proceedButton{};
+  ui::UiTextMenuPtr m_quitButton{};
+
+  IUiEventQueueShPtr m_eventQueue{};
+
+  void generateProceedButton(const int width, const int height);
+  void generateQuitButton(const int width, const int height);
+
+  void triggerLoginCommand();
+  void triggerExitCommand();
 };
 
 } // namespace bsgalone::client

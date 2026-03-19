@@ -7,8 +7,12 @@ auto str(const UiEventType type) -> std::string
 {
   switch (type)
   {
+    case UiEventType::EXIT_REQUESTED:
+      return "exit_requested";
     case UiEventType::JUMP_REQUESTED:
       return "jump_requested";
+    case UiEventType::LOGIN_REQUESTED:
+      return "login_requested";
     case UiEventType::SYSTEM_SELECTED:
       return "system_selected";
     case UiEventType::SYSTEMS_LIST_RECEIVED:
@@ -21,7 +25,9 @@ auto str(const UiEventType type) -> std::string
 auto allUiEventTypesAsSet() -> std::unordered_set<UiEventType>
 {
   return std::unordered_set<UiEventType>{
+    UiEventType::EXIT_REQUESTED,
     UiEventType::JUMP_REQUESTED,
+    UiEventType::LOGIN_REQUESTED,
     UiEventType::SYSTEM_SELECTED,
     UiEventType::SYSTEMS_LIST_RECEIVED,
   };

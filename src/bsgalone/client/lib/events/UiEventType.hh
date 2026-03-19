@@ -8,7 +8,9 @@ namespace bsgalone::client {
 
 enum class UiEventType
 {
+  EXIT_REQUESTED,
   JUMP_REQUESTED,
+  LOGIN_REQUESTED,
   SYSTEM_SELECTED,
   SYSTEMS_LIST_RECEIVED,
 };
