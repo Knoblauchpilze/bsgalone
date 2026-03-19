@@ -3,6 +3,7 @@
 
 #include "GameNetworkClient.hh"
 #include "IRenderer.hh"
+#include "IUiHandler.hh"
 #include "PGEApp.hh"
 #include "Screen.hh"
 #include "ServerConfig.hh"
@@ -51,6 +52,10 @@ class GameApp : public pge::PGEApp
   /// @brief - A map holding the renderers attached to each screen. The renderer
   /// is guaranteed to be triggered when the screen is active.
   std::unordered_map<Screen, IRendererPtr> m_renderers{};
+
+  /// @brief - A map holding the UI handlers attached to each screen. The renderer
+  /// is guaranteed to be triggered when the screen is active.
+  std::unordered_map<Screen, IUiHandlerPtr> m_uiHandlers{};
 };
 
 } // namespace bsgalone::client

@@ -2,6 +2,7 @@
 #include "GameApp.hh"
 #include "DecalScreenRenderer.hh"
 #include "LoginScreenRenderer.hh"
+#include "LoginUiHandler.hh"
 
 namespace bsgalone::client {
 
@@ -15,11 +16,31 @@ bool GameApp::onFrame(const float /*elapsedSeconds*/)
 {
   m_networkClient->processEvents();
 
+  const auto maybeUiHandler = m_uiHandlers.find(m_screen);
+  if (maybeUiHandler != m_uiHandlers.end())
+  {
+    maybeUiHandler->second->updateUi();
+  }
+
   return m_screen == Screen::EXIT;
 }
 
-void GameApp::onInputs(const pge::controls::State & /*controls*/, pge::CoordinateFrame & /*frame*/)
-{}
+void GameApp::onInputs(const pge::controls::State &controls, pge::CoordinateFrame & /*frame*/)
+{
+  const auto maybeUiHandler = m_uiHandlers.find(m_screen);
+  if (maybeUiHandler == m_uiHandlers.end())
+  {
+    return;
+  }
+
+  ui::UserInputData input{.controls = controls};
+  maybeUiHandler->second->processUserInput(input);
+
+  if (!input.actions.empty())
+  {
+    error("Received " + std::to_string(input.actions.size()) + " unsupported game action(s)");
+  }
+}
 
 namespace {
 constexpr auto LOGIN_TEXTURE_FILE_PATH   = "assets/login_bg.png";
@@ -38,6 +59,10 @@ void GameApp::loadResources(const pge::Vec2i &screenDims, pge::Renderer &engine)
   loading->loadResources(screenDims.x, screenDims.y, engine.getTextureHandler());
   m_renderers[Screen::LOADING] = std::move(loading);
 
+  auto loginUi = std::make_unique<LoginUiHandler>();
+  loginUi->initializeMenus(screenDims.x, screenDims.y, engine.getTextureHandler());
+  m_uiHandlers[Screen::LOGIN] = std::move(loginUi);
+
   m_networkClient->start(m_serverPort);
 }
 
@@ -46,6 +71,7 @@ void GameApp::cleanResources()
   m_networkClient->stop();
 
   m_renderers.clear();
+  m_uiHandlers.clear();
 
   m_networkClient.reset();
 }
@@ -61,7 +87,14 @@ void GameApp::drawDecal(const pge::RenderState &state)
 
 void GameApp::draw(const pge::RenderState & /*state*/) {}
 
-void GameApp::drawUi(const pge::RenderState & /*state*/) {}
+void GameApp::drawUi(const pge::RenderState &state)
+{
+  const auto maybeUiHandler = m_uiHandlers.find(m_screen);
+  if (maybeUiHandler != m_uiHandlers.end())
+  {
+    maybeUiHandler->second->render(state.renderer);
+  }
+}
 
 void GameApp::drawDebug(const pge::RenderState &state, const pge::Vec2f &mouseScreenPos)
 {
