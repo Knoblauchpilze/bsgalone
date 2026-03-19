@@ -13,21 +13,11 @@ namespace bsgalone::client {
 AbilitiesUiHandler::AbilitiesUiHandler(const Views &views)
   : AbstractUiHandler("abilities")
   , AbstractMessageListener({core::MessageType::ENTITY_REMOVED})
-  , m_shipView(views.shipView)
-  , m_shipDbView(views.shipDbView)
-  , m_playerView(views.playerView)
+  , m_gameView(views.gameView)
 {
-  if (nullptr == m_shipView)
+  if (nullptr == m_gameView)
   {
-    throw std::invalid_argument("Expected non null ship view");
-  }
-  if (nullptr == m_shipDbView)
-  {
-    throw std::invalid_argument("Expected non null ship db view");
-  }
-  if (nullptr == m_playerView)
-  {
-    throw std::invalid_argument("Expected non null player view");
+    throw std::invalid_argument("Expected non null game view");
   }
 
   subscribeToViews();
@@ -72,7 +62,7 @@ void AbilitiesUiHandler::render(pge::Renderer &engine) const
 
 void AbilitiesUiHandler::updateUi()
 {
-  if (!m_shipView->isReady() || !m_playerView->isReady())
+  if (!m_gameView->isReady())
   {
     return;
   }
@@ -81,7 +71,7 @@ void AbilitiesUiHandler::updateUi()
     initializeAbilities();
   }
 
-  const auto ship = m_shipView->getPlayerShip();
+  const auto ship = m_gameView->getPlayerShip();
 
   auto id = 0;
   for (const auto &computer : ship.computers)
@@ -99,12 +89,12 @@ void AbilitiesUiHandler::connectToMessageQueue(core::IMessageQueue &messageQueue
 
 void AbilitiesUiHandler::onEventReceived(const core::IMessage &message)
 {
-  if (!m_shipView->isReady())
+  if (!m_gameView->isReady())
   {
     return;
   }
 
-  m_disabled = didPlayerShipDie(message.as<core::EntityRemovedMessage>(), *m_shipDbView);
+  m_disabled = didPlayerShipDie(message.as<core::EntityRemovedMessage>(), *m_gameView);
 }
 
 void AbilitiesUiHandler::subscribeToViews()
@@ -112,13 +102,7 @@ void AbilitiesUiHandler::subscribeToViews()
   auto consumer = [this]() { reset(); };
 
   auto listener = std::make_unique<IViewListenerProxy>(consumer);
-  m_shipView->addListener(std::move(listener));
-
-  listener = std::make_unique<IViewListenerProxy>(consumer);
-  m_shipDbView->addListener(std::move(listener));
-
-  listener = std::make_unique<IViewListenerProxy>(consumer);
-  m_playerView->addListener(std::move(listener));
+  m_gameView->addListener(std::move(listener));
 }
 
 void AbilitiesUiHandler::reset()
@@ -196,8 +180,8 @@ auto spriteIdFromComputer(const core::PlayerComputerData &computer) -> pge::Vec2
 
 void AbilitiesUiHandler::initializeAbilities()
 {
-  const auto ship           = m_shipView->getPlayerShip();
-  const auto dbComputers    = m_shipDbView->getPlayerShipComputers();
+  const auto ship           = m_gameView->getPlayerShip();
+  const auto dbComputers    = m_gameView->getPlayerShipComputers();
   const auto computersCount = ship.computers.size();
   if (computersCount > NUMBER_OF_ABILITIES)
   {
@@ -206,7 +190,7 @@ void AbilitiesUiHandler::initializeAbilities()
             + std::to_string(ship.computers.size()));
   }
 
-  const auto palette = generatePaletteForFaction(m_playerView->getPlayerFaction());
+  const auto palette = generatePaletteForFaction(m_gameView->getPlayerFaction());
 
   const ui::MenuConfig config{};
   const auto bg = ui::bgConfigFromColor(pge::colors::BLANK);
@@ -230,11 +214,11 @@ void AbilitiesUiHandler::initializeAbilities()
     }
 
     menu->setClickCallback([this, id]() {
-      if (!m_shipView->isReady())
+      if (!m_gameView->isReady())
       {
         return;
       }
-      m_shipView->tryActivateSlot(id);
+      m_gameView->tryActivateSlot(id);
     });
     menu->setEnabled(true);
 

@@ -13,16 +13,11 @@ namespace bsgalone::client {
 
 LockerUiHandler::LockerUiHandler(const Views &views)
   : AbstractUiHandler("locker")
-  , m_playerView(views.playerView)
-  , m_shipDbView(views.shipDbView)
+  , m_gameView(views.gameView)
 {
-  if (nullptr == m_playerView)
+  if (nullptr == m_gameView)
   {
-    throw std::invalid_argument("Expected non null player view");
-  }
-  if (nullptr == m_shipDbView)
-  {
-    throw std::invalid_argument("Expected non null ship db view");
+    throw std::invalid_argument("Expected non null game view");
   }
 
   subscribeToViews();
@@ -99,7 +94,7 @@ void updateButtonState(ui::UiMenu &button, const bool enable)
 
 void LockerUiHandler::updateUi()
 {
-  if (!m_playerView->isReady() || !m_shipDbView->isReady())
+  if (!m_gameView->isReady())
   {
     return;
   }
@@ -110,7 +105,7 @@ void LockerUiHandler::updateUi()
 
   for (const auto data : m_lockerItemsData)
   {
-    const auto equipable = m_shipDbView->canStillEquipItem(data.itemType);
+    const auto equipable = m_gameView->canStillEquipItem(data.itemType);
     updateButtonState(*data.button, equipable);
   }
 }
@@ -120,10 +115,7 @@ void LockerUiHandler::subscribeToViews()
   auto consumer = [this]() { reset(); };
 
   auto listener = std::make_unique<IViewListenerProxy>(consumer);
-  m_playerView->addListener(std::move(listener));
-
-  listener = std::make_unique<IViewListenerProxy>(consumer);
-  m_shipDbView->addListener(std::move(listener));
+  m_gameView->addListener(std::move(listener));
 }
 
 void LockerUiHandler::reset()
@@ -157,7 +149,7 @@ void LockerUiHandler::initializeLocker()
 
 void LockerUiHandler::initializeLayout()
 {
-  const auto faction = m_playerView->getPlayerFaction();
+  const auto faction = m_gameView->getPlayerFaction();
   const auto palette = generatePaletteForFaction(faction);
 
   m_headerMenu->updateBgColor(palette.almostOpaqueColor);
@@ -177,14 +169,14 @@ void LockerUiHandler::initializeLayout()
 
 void LockerUiHandler::initializeLockerLayout()
 {
-  const auto faction = m_playerView->getPlayerFaction();
+  const auto faction = m_gameView->getPlayerFaction();
   const auto palette = generatePaletteForFaction(faction);
 
   m_locker->updateBgColor(palette.almostOpaqueColor);
 
   const ui::MenuConfig config{.propagateEventsToChildren = false};
 
-  const auto weapons  = m_playerView->getPlayerWeapons();
+  const auto weapons  = m_gameView->getPlayerWeapons();
   const auto bgWeapon = ui::bgConfigFromColor(pge::colors::BLANK);
   const ui::MenuConfig configWeapon{.layout = ui::MenuLayout::HORIZONTAL};
   for (auto id = 0u; id < weapons.size(); ++id)
@@ -194,7 +186,7 @@ void LockerUiHandler::initializeLockerLayout()
     m_locker->addMenu(std::move(menu));
   }
 
-  const auto computers  = m_playerView->getPlayerComputers();
+  const auto computers  = m_gameView->getPlayerComputers();
   const auto bgComputer = ui::bgConfigFromColor(pge::colors::BLANK);
   const ui::MenuConfig configComputer{.layout = ui::MenuLayout::HORIZONTAL};
   for (auto id = 0u; id < computers.size(); ++id)
@@ -207,14 +199,14 @@ void LockerUiHandler::initializeLockerLayout()
 
 void LockerUiHandler::initializeShipLayout()
 {
-  const auto faction = m_playerView->getPlayerFaction();
+  const auto faction = m_gameView->getPlayerFaction();
   const auto palette = generatePaletteForFaction(faction);
 
   m_ship->updateBgColor(palette.almostOpaqueColor);
 
   const ui::MenuConfig config{.propagateEventsToChildren = false};
 
-  const auto slots = m_shipDbView->getPlayerShipSlots();
+  const auto slots = m_gameView->getPlayerShipSlots();
   if (slots.contains(core::Slot::WEAPON))
   {
     const auto weaponsCount = slots.at(core::Slot::WEAPON);
@@ -244,12 +236,12 @@ void LockerUiHandler::initializeShipLayout()
 
 void LockerUiHandler::generateResourcesMenus()
 {
-  const auto faction = m_playerView->getPlayerFaction();
+  const auto faction = m_gameView->getPlayerFaction();
   const auto palette = generatePaletteForFaction(faction);
 
   m_resourcesMenu->updateBgColor(palette.almostOpaqueColor);
 
-  const auto resources = m_playerView->getPlayerResources();
+  const auto resources = m_gameView->getPlayerResources();
 
   const ui::MenuConfig config{.propagateEventsToChildren = false};
   const auto bg = ui::bgConfigFromColor(pge::colors::BLANK);
@@ -274,10 +266,10 @@ void LockerUiHandler::generateResourcesMenus()
 
 void LockerUiHandler::generateLockerWeaponsMenus()
 {
-  const auto &gameSession = m_playerView->gameSession();
+  const auto &gameSession = m_gameView->gameSession();
 
   auto id            = 0;
-  const auto weapons = m_playerView->getPlayerWeapons();
+  const auto weapons = m_gameView->getPlayerWeapons();
   for (const auto &weapon : weapons)
   {
     auto details = generateWeaponMenu(weapon, gameSession.getTimeStep());
@@ -297,10 +289,10 @@ void LockerUiHandler::generateLockerWeaponsMenus()
 
 void LockerUiHandler::generateLockerComputersMenus()
 {
-  const auto &gameSession = m_playerView->gameSession();
+  const auto &gameSession = m_gameView->gameSession();
 
   auto id              = 0;
-  const auto computers = m_playerView->getPlayerComputers();
+  const auto computers = m_gameView->getPlayerComputers();
   for (const auto &computer : computers)
   {
     auto details = generateComputerMenu(computer, gameSession.getTimeStep());
@@ -322,10 +314,10 @@ void LockerUiHandler::generateLockerComputersMenus()
 
 void LockerUiHandler::generateShipWeaponsMenus()
 {
-  const auto &gameSession = m_playerView->gameSession();
+  const auto &gameSession = m_gameView->gameSession();
 
   auto id            = 0;
-  const auto weapons = m_shipDbView->getPlayerShipWeapons();
+  const auto weapons = m_gameView->getPlayerShipWeapons();
   for (const auto &weapon : weapons)
   {
     auto details = generateWeaponMenu(weapon, gameSession.getTimeStep());
@@ -342,8 +334,7 @@ void LockerUiHandler::generateShipWeaponsMenus()
     ++id;
   }
 
-  const auto weaponSlots = static_cast<int>(
-    m_shipDbView->getPlayerShipSlots().at(core::Slot::WEAPON));
+  const auto weaponSlots = static_cast<int>(m_gameView->getPlayerShipSlots().at(core::Slot::WEAPON));
   for (; id < weaponSlots; ++id)
   {
     const ui::MenuConfig config{.highlightable = false};
@@ -357,10 +348,10 @@ void LockerUiHandler::generateShipWeaponsMenus()
 
 void LockerUiHandler::generateShipComputersMenus()
 {
-  const auto &gameSession = m_playerView->gameSession();
+  const auto &gameSession = m_gameView->gameSession();
 
   auto id              = 0;
-  const auto computers = m_shipDbView->getPlayerShipComputers();
+  const auto computers = m_gameView->getPlayerShipComputers();
   for (const auto &computer : computers)
   {
     auto details = generateComputerMenu(computer, gameSession.getTimeStep());
@@ -378,7 +369,7 @@ void LockerUiHandler::generateShipComputersMenus()
   }
 
   const auto computerSlots = static_cast<int>(
-    m_shipDbView->getPlayerShipSlots().at(core::Slot::COMPUTER));
+    m_gameView->getPlayerShipSlots().at(core::Slot::COMPUTER));
   for (; id < computerSlots; ++id)
   {
     const ui::MenuConfig config{.highlightable = false};
@@ -392,24 +383,24 @@ void LockerUiHandler::generateShipComputersMenus()
 
 void LockerUiHandler::onInstallRequest(const int itemId)
 {
-  if (!m_shipDbView->isReady())
+  if (!m_gameView->isReady())
   {
     return;
   }
 
   const auto &equip = m_lockerItemsData.at(itemId);
-  m_shipDbView->tryEquipItem(equip.itemType, equip.itemId);
+  m_gameView->tryEquipItem(equip.itemType, equip.itemId);
 }
 
 void LockerUiHandler::onUninstallRequest(const int itemId)
 {
-  if (!m_shipDbView->isReady())
+  if (!m_gameView->isReady())
   {
     return;
   }
 
   const auto &equip = m_shipItemsData.at(itemId);
-  m_shipDbView->tryUnequipItem(equip.itemType, equip.itemId);
+  m_gameView->tryUnequipItem(equip.itemType, equip.itemId);
 }
 
 } // namespace bsgalone::client

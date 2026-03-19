@@ -24,8 +24,7 @@ class HangarUiHandler : public AbstractUiHandler
   void updateUi() override;
 
   private:
-  PlayerViewShPtr m_playerView{};
-  ShopViewShPtr m_shopView{};
+  GameViewShPtr m_gameView{};
   bool m_initialized{false};
 
   ui::UiMenuPtr m_resourcesMenu{};

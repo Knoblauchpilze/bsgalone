@@ -289,8 +289,7 @@ void Game::onActiveShipChanged(const core::Uuid shipDbId)
 
 void Game::onActiveSystemChanged(const core::Uuid systemDbId)
 {
-  m_views.shipView->clearJumpSystem();
-  m_views.shipDbView->clearJumpSystem();
+  m_views.gameView->clearJumpSystem();
   m_gameSession->onActiveSystemChanged(systemDbId);
 
   m_coordinator->clear();
@@ -353,7 +352,7 @@ void Game::onLoadingFinished(const core::LoadingTransition transition)
   setScreen(nextScreen);
 
   const auto maybePlayerShipEntityId = m_entityMapper.tryGetPlayerShipEntityId();
-  m_views.shipView->setPlayerShipEntityId(maybePlayerShipEntityId);
+  m_views.gameView->setPlayerShipEntityId(maybePlayerShipEntityId);
 }
 
 void Game::initialize(core::IMessageQueueShPtr inputOutputQueue)
@@ -372,8 +371,8 @@ void Game::initialize(core::IMessageQueueShPtr inputOutputQueue)
 
   ViewsConfig vConfig{.gameSession          = m_gameSession,
                       .coordinator          = m_coordinator,
-                      .internalMessageQueue = m_internalMessageQueue.get(),
-                      .outputMessageQueue   = inputOutputQueue.get()};
+                      .internalMessageQueue = m_internalMessageQueue,
+                      .outputMessageQueue   = inputOutputQueue};
   m_views = createViews(vConfig, m_entityMapper);
 
   initializeMessageSystem(inputOutputQueue);

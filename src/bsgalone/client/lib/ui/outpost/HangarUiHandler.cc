@@ -13,16 +13,11 @@ namespace bsgalone::client {
 
 HangarUiHandler::HangarUiHandler(const Views &views)
   : AbstractUiHandler("hangar")
-  , m_playerView(views.playerView)
-  , m_shopView(views.shopView)
+  , m_gameView(views.gameView)
 {
-  if (nullptr == m_playerView)
+  if (nullptr == m_gameView)
   {
-    throw std::invalid_argument("Expected non null player view");
-  }
-  if (nullptr == m_shopView)
-  {
-    throw std::invalid_argument("Expected non null shop view");
+    throw std::invalid_argument("Expected non null game view");
   }
 
   subscribeToViews();
@@ -61,7 +56,7 @@ void HangarUiHandler::render(pge::Renderer &engine) const
 
 void HangarUiHandler::updateUi()
 {
-  if (!m_playerView->isReady())
+  if (!m_gameView->isReady())
   {
     return;
   }
@@ -76,10 +71,7 @@ void HangarUiHandler::subscribeToViews()
   auto consumer = [this]() { reset(); };
 
   auto listener = std::make_unique<IViewListenerProxy>(consumer);
-  m_playerView->addListener(std::move(listener));
-
-  listener = std::make_unique<IViewListenerProxy>(consumer);
-  m_shopView->addListener(std::move(listener));
+  m_gameView->addListener(std::move(listener));
 }
 
 void HangarUiHandler::reset()
@@ -101,12 +93,12 @@ void HangarUiHandler::initializeHangar()
 
 void HangarUiHandler::generateResourcesMenus()
 {
-  const auto faction = m_playerView->getPlayerFaction();
+  const auto faction = m_gameView->getPlayerFaction();
   const auto palette = generatePaletteForFaction(faction);
 
   m_resourcesMenu->updateBgColor(palette.almostOpaqueColor);
 
-  const auto resources = m_playerView->getPlayerResources();
+  const auto resources = m_gameView->getPlayerResources();
 
   const ui::MenuConfig config{.propagateEventsToChildren = false};
   const auto bg = ui::bgConfigFromColor(pge::colors::BLANK);
@@ -189,9 +181,9 @@ auto generateShipDescription(const core::ShipData &ship) -> ui::UiMenuPtr
 
 void HangarUiHandler::initializeLayout()
 {
-  const auto faction  = m_playerView->getPlayerFaction();
+  const auto faction  = m_gameView->getPlayerFaction();
   const auto palette  = generatePaletteForFaction(faction);
-  const auto allShips = m_shopView->getAllShips();
+  const auto allShips = m_gameView->getAllShips();
 
   const ui::MenuConfig config{.layout = ui::MenuLayout::HORIZONTAL, .highlightable = false};
   const auto bg = ui::bgConfigFromColor(palette.almostOpaqueColor);
@@ -239,7 +231,7 @@ auto getPlayerShipWithId(const std::vector<core::PlayerShipData> &ships, const c
 
 void HangarUiHandler::updateShipMenus()
 {
-  const auto ships = m_playerView->getPlayerShips();
+  const auto ships = m_gameView->getPlayerShips();
 
   auto shipIndex = 0;
   for (auto &shipData : m_shipsData)
@@ -250,7 +242,7 @@ void HangarUiHandler::updateShipMenus()
     {
       shipData.playerShipDbId.reset();
       shipData.button->setText(BUY_SHIP_BUTTON_TEXT);
-      const auto affordability = m_shopView->canPlayerAfford(shipData.shipDbId, core::Item::SHIP);
+      const auto affordability = m_gameView->canPlayerAfford(shipData.shipDbId, core::Item::SHIP);
 
       shipData.button->setEnabled(affordability.canAfford);
       shipData.button->setHighlightable(affordability.canAfford);
@@ -307,19 +299,19 @@ void HangarUiHandler::onShipRequest(const int shipIndex)
 
 void HangarUiHandler::onPurchaseRequest(const int shipIndex)
 {
-  if (!m_playerView->isReady())
+  if (!m_gameView->isReady())
   {
     return;
   }
 
   const auto &data = m_shipsData.at(shipIndex);
-  m_playerView->tryPurchase(core::Item::SHIP, data.shipDbId);
+  m_gameView->tryPurchase(core::Item::SHIP, data.shipDbId);
 }
 
 void HangarUiHandler::onSelectRequest(const int shipIndex)
 {
   const auto &data = m_shipsData.at(shipIndex);
-  m_playerView->trySelectShip(*data.playerShipDbId);
+  m_gameView->trySelectShip(*data.playerShipDbId);
 }
 
 } // namespace bsgalone::client

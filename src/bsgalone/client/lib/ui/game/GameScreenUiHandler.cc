@@ -77,8 +77,8 @@ void GameScreenUiHandler::initializeUis(const Views &views)
   auto shipUi = std::make_unique<EntityUiHandler>(EntityUiConfig{.offset = SHIP_UI_PIXEL_POS,
                                                                  .displayDistance = false,
                                                                  .getEntity =
-                                                                   [](const ShipView &shipView) {
-                                                                     return shipView.getPlayerShip();
+                                                                   [](const GameView &gameView) {
+                                                                     return gameView.getPlayerShip();
                                                                    }},
                                                   views);
   m_uis.emplace_back(std::move(shipUi));
@@ -86,8 +86,8 @@ void GameScreenUiHandler::initializeUis(const Views &views)
   auto targetUi = std::make_unique<EntityUiHandler>(EntityUiConfig{.offset = TARGET_UI_PIXEL_POS,
                                                                    .displayDistance = true,
                                                                    .getEntity =
-                                                                     [](const ShipView &shipView) {
-                                                                       return shipView
+                                                                     [](const GameView &gameView) {
+                                                                       return gameView
                                                                          .getPlayerTarget();
                                                                      }},
                                                     views);

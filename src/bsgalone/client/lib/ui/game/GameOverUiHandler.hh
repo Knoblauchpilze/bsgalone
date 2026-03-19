@@ -22,8 +22,7 @@ class GameOverUiHandler : public AbstractUiHandler
   void updateUi() override;
 
   private:
-  ShipDbViewShPtr m_shipDbView{};
-  ShipViewShPtr m_shipView{};
+  GameViewShPtr m_gameView{};
 
   ui::UiTextMenuPtr m_menu{};
 

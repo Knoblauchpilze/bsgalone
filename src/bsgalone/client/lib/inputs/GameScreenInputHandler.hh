@@ -19,8 +19,7 @@ class GameScreenInputHandler : public IInputHandler
   void performAction(float x, float y, const pge::controls::State &controls) override;
 
   private:
-  ShipViewShPtr m_shipView{};
-  ShipDbViewShPtr m_shipDbView{};
+  GameViewShPtr m_gameView{};
   std::optional<Motion> m_lastMotion{};
 
   void moveShip(const Motion &motion);

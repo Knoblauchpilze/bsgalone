@@ -17,14 +17,14 @@ bool didPlayerShipDie(const core::EntityRemovedMessage &message,
   return maybePlayerShipDbId && deadShipDbId == *maybePlayerShipDbId;
 }
 
-bool didPlayerShipDie(const core::EntityRemovedMessage &message, const ShipDbView &shipDbView)
+bool didPlayerShipDie(const core::EntityRemovedMessage &message, const GameView &gameView)
 {
   if (message.getEntityKind() != core::EntityKind::SHIP || !message.isDead())
   {
     return false;
   }
 
-  return message.getEntityDbId() == shipDbView.getPlayerShipDbId();
+  return message.getEntityDbId() == gameView.getPlayerShipDbId();
 }
 
 bool didPlayerDie(const core::EntityRemovedMessage &message,

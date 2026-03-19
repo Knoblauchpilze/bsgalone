@@ -29,9 +29,7 @@ class WeaponsUiHandler : public AbstractUiHandler, public core::AbstractMessageL
   void onEventReceived(const core::IMessage &message) override;
 
   private:
-  ShipViewShPtr m_shipView{};
-  ShipDbViewShPtr m_shipDbView{};
-  PlayerViewShPtr m_playerView{};
+  GameViewShPtr m_gameView{};
   bool m_initialized{false};
   bool m_disabled{false};
 

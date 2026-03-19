@@ -2,8 +2,6 @@
 #pragma once
 
 #include "AbstractUiHandler.hh"
-#include "PlayerView.hh"
-#include "ShipView.hh"
 #include "UiMenu.hh"
 #include "Views.hh"
 #include <memory>
@@ -25,8 +23,7 @@ class LockerUiHandler : public AbstractUiHandler
   void updateUi() override;
 
   private:
-  PlayerViewShPtr m_playerView{};
-  ShipDbViewShPtr m_shipDbView{};
+  GameViewShPtr m_gameView{};
   bool m_initialized{false};
 
   ui::UiMenuPtr m_resourcesMenu{};

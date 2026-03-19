@@ -6,12 +6,6 @@ target_include_directories (bsgalone_client_lib PUBLIC
 target_sources (bsgalone_client_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/AbstractView.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/IViewListenerProxy.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/PlayerView.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/ResourceView.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/ServerView.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/ShipView.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/ShipDbView.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/ShopView.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/SystemView.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/GameView.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/Views.cc
 	)

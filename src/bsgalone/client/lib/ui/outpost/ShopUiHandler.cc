@@ -13,16 +13,11 @@ namespace bsgalone::client {
 
 ShopUiHandler::ShopUiHandler(const Views &views)
   : AbstractUiHandler("shop")
-  , m_shopView(views.shopView)
-  , m_playerView(views.playerView)
+  , m_gameView(views.gameView)
 {
-  if (nullptr == m_shopView)
+  if (nullptr == m_gameView)
   {
-    throw std::invalid_argument("Expected non null shop view");
-  }
-  if (nullptr == m_playerView)
-  {
-    throw std::invalid_argument("Expected non null player view");
+    throw std::invalid_argument("Expected non null game view");
   }
 
   subscribeToViews();
@@ -89,7 +84,7 @@ void updatePricesState(const std::unordered_map<core::Uuid, ui::UiTextMenu *> &p
 
 void ShopUiHandler::updateUi()
 {
-  if (!m_shopView->isReady() || !m_playerView->isReady())
+  if (!m_gameView->isReady())
   {
     return;
   }
@@ -100,7 +95,7 @@ void ShopUiHandler::updateUi()
 
   for (const auto &itemData : m_itemsData)
   {
-    const auto affordability = m_shopView->canPlayerAfford(itemData.itemId, itemData.itemType);
+    const auto affordability = m_gameView->canPlayerAfford(itemData.itemId, itemData.itemType);
     updateBuyButtonState(*itemData.menu, affordability.canAfford);
     updatePricesState(itemData.prices, affordability.resourceAvailibility);
   }
@@ -111,10 +106,7 @@ void ShopUiHandler::subscribeToViews()
   auto consumer = [this]() { reset(); };
 
   auto listener = std::make_unique<IViewListenerProxy>(consumer);
-  m_shopView->addListener(std::move(listener));
-
-  listener = std::make_unique<IViewListenerProxy>(consumer);
-  m_playerView->addListener(std::move(listener));
+  m_gameView->addListener(std::move(listener));
 }
 
 void ShopUiHandler::reset()
@@ -138,12 +130,12 @@ void ShopUiHandler::initializeShop()
 
 void ShopUiHandler::generateResourcesMenus()
 {
-  const auto faction = m_playerView->getPlayerFaction();
+  const auto faction = m_gameView->getPlayerFaction();
   const auto palette = generatePaletteForFaction(faction);
 
   m_resourcesMenu->updateBgColor(palette.almostOpaqueColor);
 
-  const auto resources = m_playerView->getPlayerResources();
+  const auto resources = m_gameView->getPlayerResources();
 
   const ui::MenuConfig config{.propagateEventsToChildren = false};
   const auto bg = ui::bgConfigFromColor(pge::colors::BLANK);
@@ -168,10 +160,10 @@ void ShopUiHandler::generateResourcesMenus()
 
 void ShopUiHandler::initializeLayout()
 {
-  const auto palette = generatePaletteForFaction(m_playerView->getPlayerFaction());
+  const auto palette = generatePaletteForFaction(m_gameView->getPlayerFaction());
   m_menu->updateBgColor(palette.almostOpaqueColor);
 
-  const auto items = m_shopView->getShopItems();
+  const auto items = m_gameView->getShopItems();
   for (auto id = 0u; id < items.size(); ++id)
   {
     const ui::MenuConfig config{.layout = ui::MenuLayout::HORIZONTAL};
@@ -189,7 +181,7 @@ struct PriceMenu
   std::vector<ui::UiTextMenu *> costs{};
 };
 
-auto generatePriceMenus(const ShopItem &item) -> PriceMenu
+auto generatePriceMenus(const GameView::ShopItem &item) -> PriceMenu
 {
   PriceMenu out{};
 
@@ -218,8 +210,8 @@ auto generatePriceMenus(const ShopItem &item) -> PriceMenu
 
 void ShopUiHandler::generateItemsMenus()
 {
-  const auto &gameSession = m_shopView->gameSession();
-  const auto items        = m_shopView->getShopItems();
+  const auto &gameSession = m_gameView->gameSession();
+  const auto items        = m_gameView->getShopItems();
 
   auto itemId = 0;
   for (const auto &item : items)
@@ -254,8 +246,8 @@ void ShopUiHandler::generateItemsMenus()
   }
 }
 
-auto ShopUiHandler::generateItemMenus(const ShopItem &item, const GameSession &gameSession)
-  -> ui::UiMenuPtr
+auto ShopUiHandler::generateItemMenus(const GameView::ShopItem &item,
+                                      const GameSession &gameSession) -> ui::UiMenuPtr
 {
   auto menu = generateBlankVerticalMenu();
   if (item.weapon)
@@ -274,13 +266,13 @@ auto ShopUiHandler::generateItemMenus(const ShopItem &item, const GameSession &g
 
 void ShopUiHandler::onPurchaseRequest(const int itemId)
 {
-  if (!m_playerView->isReady())
+  if (!m_gameView->isReady())
   {
     return;
   }
 
   const auto &purchase = m_itemsData.at(itemId);
-  m_playerView->tryPurchase(purchase.itemType, purchase.itemId);
+  m_gameView->tryPurchase(purchase.itemType, purchase.itemId);
 }
 
 } // namespace bsgalone::client

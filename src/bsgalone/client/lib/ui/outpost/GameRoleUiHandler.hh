@@ -24,8 +24,7 @@ class GameRoleUiHandler : public AbstractUiHandler
   void updateUi() override;
 
   private:
-  PlayerViewShPtr m_playerView{};
-  SystemViewShPtr m_systemView{};
+  GameViewShPtr m_gameView{};
   bool m_initialized{false};
 
   ui::UiMenuPtr m_menu{};

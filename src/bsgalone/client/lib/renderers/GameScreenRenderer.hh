@@ -20,9 +20,7 @@ class GameScreenRenderer : public AbstractRenderer
               const pge::RenderingPass pass) const override;
 
   private:
-  ShipViewShPtr m_shipView;
-  SystemViewShPtr m_systemView;
-  ResourceViewShPtr m_resourceView;
+  GameViewShPtr m_gameView{};
 
   pge::TiledBackgroundPtr m_systemBackground{};
 
