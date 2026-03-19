@@ -2,6 +2,7 @@
 #pragma once
 
 #include "GameNetworkClient.hh"
+#include "IRenderer.hh"
 #include "PGEApp.hh"
 #include "Screen.hh"
 #include "ServerConfig.hh"
@@ -41,11 +42,15 @@ class GameApp : public pge::PGEApp
 
   /// @brief - Defines the current screen selected in this game. Updated whenever
   /// the user takes action to change it.
-  Screen screen{Screen::LOGIN};
+  Screen m_screen{Screen::LOGIN};
 
   /// @brief - The network client used to connect to the server and transmit
   /// commands and receive updates to the game.
   GameNetworkClientShPtr m_networkClient{};
+
+  /// @brief - A map holding the renderers attached to each screen. The renderer
+  /// is guaranteed to be triggered when the screen is active.
+  std::unordered_map<Screen, IRendererPtr> m_renderers{};
 };
 
 } // namespace bsgalone::client
