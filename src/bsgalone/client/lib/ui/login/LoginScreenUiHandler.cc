@@ -10,11 +10,11 @@ namespace bsgalone::client {
 LoginScreenUiHandler::LoginScreenUiHandler(const Views &views)
   : AbstractUiHandler("login")
   , AbstractMessageListener({core::MessageType::LOGIN, core::MessageType::SIGNUP})
-  , m_playerView(views.playerView)
+  , m_gameView(views.gameView)
 {
-  if (nullptr == m_playerView)
+  if (nullptr == m_gameView)
   {
-    throw std::invalid_argument("Expected non null player view");
+    throw std::invalid_argument("Expected non null game view");
   }
 }
 
@@ -339,10 +339,10 @@ void LoginScreenUiHandler::tryLogin()
   switch (m_mode)
   {
     case Mode::LOGIN:
-      m_playerView->tryLogin(data.name, data.password, m_role);
+      m_gameView->tryLogin(data.name, data.password, m_role);
       break;
     case Mode::SIGNUP:
-      m_playerView->trySignup(data.name, data.password, m_faction);
+      m_gameView->trySignup(data.name, data.password, m_faction);
       break;
     default:
       error("Unknown mode");

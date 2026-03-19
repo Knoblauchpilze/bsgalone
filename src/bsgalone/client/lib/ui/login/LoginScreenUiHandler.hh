@@ -31,7 +31,7 @@ class LoginScreenUiHandler : public AbstractUiHandler, public core::AbstractMess
   void onEventReceived(const core::IMessage &message) override;
 
   private:
-  PlayerViewShPtr m_playerView{};
+  GameViewShPtr m_gameView{};
 
   enum class Mode
   {

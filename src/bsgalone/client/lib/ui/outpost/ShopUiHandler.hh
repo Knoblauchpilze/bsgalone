@@ -24,8 +24,7 @@ class ShopUiHandler : public AbstractUiHandler
   void updateUi() override;
 
   private:
-  ShopViewShPtr m_shopView{};
-  PlayerViewShPtr m_playerView{};
+  GameViewShPtr m_gameView{};
   bool m_initialized{false};
 
   ui::UiMenuPtr m_resourcesMenu{};
@@ -47,7 +46,8 @@ class ShopUiHandler : public AbstractUiHandler
   void generateResourcesMenus();
   void initializeLayout();
   void generateItemsMenus();
-  auto generateItemMenus(const ShopItem &item, const GameSession &gameSession) -> ui::UiMenuPtr;
+  auto generateItemMenus(const GameView::ShopItem &item, const GameSession &gameSession)
+    -> ui::UiMenuPtr;
 
   void onPurchaseRequest(const int itemId);
 };

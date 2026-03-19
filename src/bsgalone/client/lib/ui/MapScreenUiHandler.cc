@@ -15,21 +15,11 @@ constexpr auto MAP_OFFSET = 10;
 
 MapScreenUiHandler::MapScreenUiHandler(const Views &views)
   : AbstractUiHandler("map")
-  , m_serverView(views.serverView)
-  , m_shipView(views.shipView)
-  , m_shipDbView(views.shipDbView)
+  , m_gameView(views.gameView)
 {
-  if (nullptr == m_serverView)
+  if (nullptr == m_gameView)
   {
-    throw std::invalid_argument("Expected non null server view");
-  }
-  if (nullptr == m_shipView)
-  {
-    throw std::invalid_argument("Expected non null ship view");
-  }
-  if (nullptr == m_shipDbView)
-  {
-    throw std::invalid_argument("Expected non null ship db view");
+    throw std::invalid_argument("Expected non null game view");
   }
 
   subscribeToViews();
@@ -73,7 +63,7 @@ void MapScreenUiHandler::render(pge::Renderer &engine) const
 
 void MapScreenUiHandler::updateUi()
 {
-  if (!m_serverView->isReady())
+  if (!m_gameView->isReady())
   {
     return;
   }
@@ -84,7 +74,7 @@ void MapScreenUiHandler::updateUi()
 
   m_jumpButton->setVisible(m_selectedSystem.has_value());
 
-  const auto currentSystem = m_serverView->getPlayerSystem();
+  const auto currentSystem = m_gameView->getPlayerSystem();
   for (const auto &[systemId, menu] : m_systemMenus)
   {
     const auto isSelected = m_selectedSystem && (systemId == m_selectedSystem->systemId);
@@ -108,13 +98,7 @@ void MapScreenUiHandler::subscribeToViews()
   auto consumer = [this]() { reset(); };
 
   auto listener = std::make_unique<IViewListenerProxy>(consumer);
-  m_serverView->addListener(std::move(listener));
-
-  listener = std::make_unique<IViewListenerProxy>(consumer);
-  m_shipView->addListener(std::move(listener));
-
-  listener = std::make_unique<IViewListenerProxy>(consumer);
-  m_shipDbView->addListener(std::move(listener));
+  m_gameView->addListener(std::move(listener));
 }
 
 void MapScreenUiHandler::reset()
@@ -153,8 +137,8 @@ void MapScreenUiHandler::generateControlButtons(const int width, const int heigh
 
 void MapScreenUiHandler::generateMap()
 {
-  const auto bounds  = m_serverView->getMapBounds();
-  const auto systems = m_serverView->getAllSystems();
+  const auto bounds  = m_gameView->getMapBounds();
+  const auto systems = m_gameView->getAllSystems();
 
   const pge::Vec2i mapOffset{MAP_OFFSET, MAP_OFFSET};
 
@@ -167,8 +151,7 @@ void MapScreenUiHandler::generateMap()
 }
 
 namespace {
-auto systemPosToRatio(const ServerView::Bounds &bounds, const Eigen::Vector3f &pos)
-  -> Eigen::Vector3f
+auto systemPosToRatio(const GameView::Bounds &bounds, const Eigen::Vector3f &pos) -> Eigen::Vector3f
 {
   const auto range  = bounds.max - bounds.min;
   const auto offset = pos - bounds.min;
@@ -205,7 +188,7 @@ auto posRatioToPixelPos(const Eigen::Vector3f &posRatio,
 } // namespace
 
 void MapScreenUiHandler::generateSystemButtons(const core::System &system,
-                                               const ServerView::Bounds &bounds,
+                                               const GameView::Bounds &bounds,
                                                const pge::Vec2i &mapOffset)
 {
   constexpr auto SERVER_MAP_TO_PIXEL_MAP_SCALE = 1.5f;
@@ -247,12 +230,12 @@ void MapScreenUiHandler::generateSystemButtons(const core::System &system,
 
 void MapScreenUiHandler::onSystemSelected(const core::Uuid systemId, const int labelId)
 {
-  if (!m_serverView->isReady())
+  if (!m_gameView->isReady())
   {
     return;
   }
 
-  if (systemId == m_serverView->getPlayerSystem())
+  if (systemId == m_gameView->getPlayerSystem())
   {
     return;
   }
@@ -265,16 +248,15 @@ void MapScreenUiHandler::onJumpRequested()
   {
     error("Failed to start jump", "No selected system");
   }
-  if (!m_shipDbView->isReady() || !m_shipView->isReady())
+  if (!m_gameView->isReady() || !m_gameView->isReady())
   {
     return;
   }
 
   const auto systemId = m_selectedSystem->systemId;
 
-  m_shipView->setJumpSystem(systemId);
-  m_shipDbView->setJumpSystem(systemId);
-  m_shipDbView->startJump();
+  m_gameView->setJumpSystem(systemId);
+  m_gameView->startJump();
 }
 
 } // namespace bsgalone::client

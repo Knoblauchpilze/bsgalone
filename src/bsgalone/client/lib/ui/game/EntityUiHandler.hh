@@ -7,7 +7,7 @@
 
 namespace bsgalone::client {
 
-using EntityFetcher = std::function<std::optional<core::Entity>(const ShipView &)>;
+using EntityFetcher = std::function<std::optional<core::Entity>(const GameView &)>;
 struct EntityUiConfig
 {
   pge::Vec2i offset{};
@@ -30,8 +30,7 @@ class EntityUiHandler : public AbstractUiHandler
 
   private:
   EntityUiConfig m_config{};
-  ShipViewShPtr m_shipView{};
-  ShipDbViewShPtr m_shipDbView{};
+  GameViewShPtr m_gameView{};
 
   enum MenuItem
   {

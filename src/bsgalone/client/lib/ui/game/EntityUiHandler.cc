@@ -1,6 +1,5 @@
 
 #include "EntityUiHandler.hh"
-#include "IViewListenerProxy.hh"
 #include "StringUtils.hh"
 
 namespace bsgalone::client {
@@ -8,16 +7,11 @@ namespace bsgalone::client {
 EntityUiHandler::EntityUiHandler(const EntityUiConfig &config, const Views &views)
   : AbstractUiHandler("ship")
   , m_config(config)
-  , m_shipView(views.shipView)
-  , m_shipDbView(views.shipDbView)
+  , m_gameView(views.gameView)
 {
-  if (nullptr == m_shipView)
+  if (nullptr == m_gameView)
   {
-    throw std::invalid_argument("Expected non null ship view");
-  }
-  if (nullptr == m_shipDbView)
-  {
-    throw std::invalid_argument("Expected non null ship db view");
+    throw std::invalid_argument("Expected non null game view");
   }
 
   subscribeToViews();
@@ -60,9 +54,9 @@ void EntityUiHandler::initializeMenus(const int /*width*/,
   config.highlightable = true;
   config.dims          = pge::Vec2i{100, 25};
   config.clickCallback = [this]() {
-    if (m_shipDbView->isReady())
+    if (m_gameView->isReady())
     {
-      m_shipDbView->dockPlayerShip();
+      m_gameView->dockPlayerShip();
     }
   };
   bg            = ui::bgConfigFromColor(pge::colors::DARK_GREY);
@@ -92,12 +86,12 @@ void EntityUiHandler::render(pge::Renderer &engine) const
 
 void EntityUiHandler::updateUi()
 {
-  if (!m_shipView->isReady())
+  if (!m_gameView->isReady())
   {
     return;
   }
 
-  const auto maybeShip = m_config.getEntity(*m_shipView);
+  const auto maybeShip = m_config.getEntity(*m_gameView);
 
   m_menus[NAME]->setVisible(maybeShip.has_value());
   m_menus[HEALTH]->setVisible(maybeShip.has_value());
@@ -130,7 +124,7 @@ void EntityUiHandler::subscribeToViews()
 
 void EntityUiHandler::updateNameComponent(const core::Entity &entity)
 {
-  m_menus[NAME]->setText(m_shipView->getEntityName(entity));
+  m_menus[NAME]->setText(m_gameView->getEntityName(entity));
 }
 
 void EntityUiHandler::updateHealthComponent(const core::Entity &entity)
@@ -165,7 +159,7 @@ void EntityUiHandler::updatePowerComponent(const core::Entity &entity)
 
 void EntityUiHandler::updateDistanceComponent()
 {
-  const auto d = m_shipView->distanceToTarget();
+  const auto d = m_gameView->distanceToTarget();
   m_menus[DISTANCE]->setText(core::floatToStr(d, 1) + "m");
 }
 
@@ -178,9 +172,9 @@ void EntityUiHandler::updateDockComponent(const core::Entity &entity)
   }
 
   constexpr auto MAXIMUM_DISTANCE_TO_DOCK = 5.0f;
-  auto dockButtonVisible = m_shipView->distanceToTarget() <= MAXIMUM_DISTANCE_TO_DOCK;
+  auto dockButtonVisible = m_gameView->distanceToTarget() <= MAXIMUM_DISTANCE_TO_DOCK;
 
-  const auto playerShip        = m_shipView->getPlayerShip();
+  const auto playerShip        = m_gameView->getPlayerShip();
   const auto factionIsMatching = entity.factionComp().faction()
                                  == playerShip.factionComp().faction();
 

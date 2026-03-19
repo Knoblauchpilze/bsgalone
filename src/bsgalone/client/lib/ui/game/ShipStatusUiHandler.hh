@@ -27,7 +27,7 @@ class ShipStatusUiHandler : public AbstractUiHandler, public core::AbstractMessa
   void onEventReceived(const core::IMessage &message) override;
 
   private:
-  ShipViewShPtr m_shipView{};
+  GameViewShPtr m_gameView{};
 
   ui::UiBlinkingMenuPtr m_threatLabel{};
 

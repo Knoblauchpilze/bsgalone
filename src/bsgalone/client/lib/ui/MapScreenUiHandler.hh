@@ -23,9 +23,7 @@ class MapScreenUiHandler : public AbstractUiHandler
   void updateUi() override;
 
   private:
-  ServerViewShPtr m_serverView{};
-  ShipViewShPtr m_shipView{};
-  ShipDbViewShPtr m_shipDbView{};
+  GameViewShPtr m_gameView{};
 
   pge::Vec2i m_mapDimensions{};
   bool m_initialized{false};
@@ -45,7 +43,7 @@ class MapScreenUiHandler : public AbstractUiHandler
   void generateControlButtons(const int width, const int height);
   void generateMap();
   void generateSystemButtons(const core::System &system,
-                             const ServerView::Bounds &bounds,
+                             const GameView::Bounds &bounds,
                              const pge::Vec2i &mapOffset);
 
   void onSystemSelected(const core::Uuid systemId, const int labelId);

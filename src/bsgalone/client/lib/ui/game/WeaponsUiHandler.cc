@@ -14,21 +14,11 @@ namespace bsgalone::client {
 WeaponsUiHandler::WeaponsUiHandler(const Views &views)
   : AbstractUiHandler("weapons")
   , AbstractMessageListener({core::MessageType::ENTITY_REMOVED})
-  , m_shipView(views.shipView)
-  , m_shipDbView(views.shipDbView)
-  , m_playerView(views.playerView)
+  , m_gameView(views.gameView)
 {
-  if (nullptr == m_shipView)
+  if (nullptr == m_gameView)
   {
-    throw std::invalid_argument("Expected non null ship view");
-  }
-  if (nullptr == m_shipDbView)
-  {
-    throw std::invalid_argument("Expected non null ship db view");
-  }
-  if (nullptr == m_playerView)
-  {
-    throw std::invalid_argument("Expected non null player view");
+    throw std::invalid_argument("Expected non null game view");
   }
 
   subscribeToViews();
@@ -73,7 +63,7 @@ void WeaponsUiHandler::render(pge::Renderer &engine) const
 
 void WeaponsUiHandler::updateUi()
 {
-  if (!m_shipView->isReady() || !m_playerView->isReady())
+  if (!m_gameView->isReady())
   {
     return;
   }
@@ -82,7 +72,7 @@ void WeaponsUiHandler::updateUi()
     initializeWeapons();
   }
 
-  const auto ship = m_shipView->getPlayerShip();
+  const auto ship = m_gameView->getPlayerShip();
 
   auto id = 0;
   for (const auto &weapon : ship.weapons)
@@ -100,12 +90,12 @@ void WeaponsUiHandler::connectToMessageQueue(core::IMessageQueue &messageQueue)
 
 void WeaponsUiHandler::onEventReceived(const core::IMessage &message)
 {
-  if (!m_shipView->isReady())
+  if (!m_gameView->isReady())
   {
     return;
   }
 
-  m_disabled = didPlayerShipDie(message.as<core::EntityRemovedMessage>(), *m_shipDbView);
+  m_disabled = didPlayerShipDie(message.as<core::EntityRemovedMessage>(), *m_gameView);
 }
 
 void WeaponsUiHandler::subscribeToViews()
@@ -113,13 +103,7 @@ void WeaponsUiHandler::subscribeToViews()
   auto consumer = [this]() { reset(); };
 
   auto listener = std::make_unique<IViewListenerProxy>(consumer);
-  m_shipView->addListener(std::move(listener));
-
-  listener = std::make_unique<IViewListenerProxy>(consumer);
-  m_shipDbView->addListener(std::move(listener));
-
-  listener = std::make_unique<IViewListenerProxy>(consumer);
-  m_playerView->addListener(std::move(listener));
+  m_gameView->addListener(std::move(listener));
 }
 
 void WeaponsUiHandler::reset()
@@ -201,8 +185,8 @@ auto spriteIdFromWeapon(const core::PlayerWeaponData &weapon) -> pge::Vec2i
 
 void WeaponsUiHandler::initializeWeapons()
 {
-  const auto ship         = m_shipView->getPlayerShip();
-  const auto dbWeapons    = m_shipDbView->getPlayerShipWeapons();
+  const auto ship         = m_gameView->getPlayerShip();
+  const auto dbWeapons    = m_gameView->getPlayerShipWeapons();
   const auto weaponsCount = ship.weapons.size();
   if (weaponsCount > NUMBER_OF_WEAPONS)
   {
@@ -211,7 +195,7 @@ void WeaponsUiHandler::initializeWeapons()
             + std::to_string(ship.weapons.size()));
   }
 
-  const auto palette = generatePaletteForFaction(m_playerView->getPlayerFaction());
+  const auto palette = generatePaletteForFaction(m_gameView->getPlayerFaction());
 
   const ui::MenuConfig config{};
   const auto bg = ui::bgConfigFromColor(pge::colors::BLANK);
@@ -235,11 +219,11 @@ void WeaponsUiHandler::initializeWeapons()
     }
 
     menu->setClickCallback([this, id]() {
-      if (!m_shipView->isReady())
+      if (!m_gameView->isReady())
       {
         return;
       }
-      m_shipView->tryActivateWeapon(id);
+      m_gameView->tryActivateWeapon(id);
     });
     menu->setEnabled(true);
 

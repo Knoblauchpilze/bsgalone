@@ -24,21 +24,11 @@ const std::unordered_set<core::MessageType> RELEVANT_MESSAGE_TYPES_TO_LOG
 LogUiHandler::LogUiHandler(const Views &views)
   : AbstractUiHandler("log")
   , AbstractMessageListener(RELEVANT_MESSAGE_TYPES_TO_LOG)
-  , m_systemView(views.systemView)
-  , m_resourceView(views.resourceView)
-  , m_shipView(views.shipView)
+  , m_gameView(views.gameView)
 {
-  if (nullptr == m_systemView)
+  if (nullptr == m_gameView)
   {
-    throw std::invalid_argument("Expected non null system view");
-  }
-  if (nullptr == m_resourceView)
-  {
-    throw std::invalid_argument("Expected non null resource view");
-  }
-  if (nullptr == m_shipView)
-  {
-    throw std::invalid_argument("Expected non null ship view");
+    throw std::invalid_argument("Expected non null game view");
   }
 
   subscribeToViews();
@@ -119,7 +109,7 @@ bool shouldMessageBeFiltered(const core::IMessage &message, const core::Entity &
 
 void LogUiHandler::onEventReceived(const core::IMessage &message)
 {
-  if (!m_shipView->isReady() || !m_resourceView->isReady())
+  if (!m_gameView->isReady())
   {
     return;
   }
@@ -129,7 +119,7 @@ void LogUiHandler::onEventReceived(const core::IMessage &message)
     m_logs.pop_back();
   }
 
-  const auto ship = m_shipView->getPlayerShip();
+  const auto ship = m_gameView->getPlayerShip();
   if (shouldMessageBeFiltered(message, ship))
   {
     return;
@@ -173,10 +163,9 @@ auto createJumpCancelledMessage(const core::JumpCancelledMessage & /*message*/)
   return ui::textConfigFromColor(FTL_JUMP_CANCELLED_TEXT, pge::colors::WHITE);
 }
 
-auto createLootMessage(const core::LootMessage &message, const ResourceView &resourceView)
-  -> ui::TextConfig
+auto createLootMessage(const core::LootMessage &message, const GameView &gameView) -> ui::TextConfig
 {
-  const auto resource = resourceView.getResourceName(message.getResourceDbId());
+  const auto resource = gameView.getResourceName(message.getResourceDbId());
   const auto text     = "+" + std::to_string(message.amount()) + " " + resource;
   const auto color    = colorFromResourceName(resource);
   return ui::textConfigFromColor(text, color);
@@ -184,11 +173,10 @@ auto createLootMessage(const core::LootMessage &message, const ResourceView &res
 
 constexpr auto NO_USEFUL_RESOURCES_TEXT = "Mineral analysis: no useful resources";
 
-auto createScannedMessage(const core::ScannedMessage &message,
-                          const SystemView &systemView,
-                          const ResourceView &resourceView) -> ui::TextConfig
+auto createScannedMessage(const core::ScannedMessage &message, const GameView &gameView)
+  -> ui::TextConfig
 {
-  const auto asteroid = systemView.getAsteroid(message.getAsteroidDbId());
+  const auto asteroid = gameView.getAsteroid(message.getAsteroidDbId());
 
   if (!asteroid.exists<core::LootComponent>())
   {
@@ -202,7 +190,7 @@ auto createScannedMessage(const core::ScannedMessage &message,
   }
   const auto loot = asteroid.resources.at(0);
 
-  const auto resource = resourceView.getResourceName(loot->resource());
+  const auto resource = gameView.getResourceName(loot->resource());
   const auto text     = "Mineral analysis: " + std::to_string(loot->amount()) + " " + resource;
   const auto color    = colorFromResourceName(resource);
   return ui::textConfigFromColor(text, color);
@@ -215,9 +203,8 @@ auto createSlotMessage(const core::SlotComponentMessage & /*message*/) -> ui::Te
   return ui::textConfigFromColor(ELECTRONIC_SUPPORT_TEXT, pge::colors::APPLE_GREEN);
 }
 
-auto createTextConfigForMessage(const core::IMessage &message,
-                                const SystemView &systemView,
-                                const ResourceView &resourceView) -> ui::TextConfig
+auto createTextConfigForMessage(const core::IMessage &message, const GameView &gameView)
+  -> ui::TextConfig
 {
   ui::TextConfig config{};
 
@@ -228,9 +215,9 @@ auto createTextConfigForMessage(const core::IMessage &message,
     case core::MessageType::JUMP_CANCELLED:
       return createJumpCancelledMessage(message.as<core::JumpCancelledMessage>());
     case core::MessageType::LOOT:
-      return createLootMessage(message.as<core::LootMessage>(), resourceView);
+      return createLootMessage(message.as<core::LootMessage>(), gameView);
     case core::MessageType::SCANNED:
-      return createScannedMessage(message.as<core::ScannedMessage>(), systemView, resourceView);
+      return createScannedMessage(message.as<core::ScannedMessage>(), gameView);
     case core::MessageType::SLOT_COMPONENT_UPDATED:
       return createSlotMessage(message.as<core::SlotComponentMessage>());
     default:
@@ -246,13 +233,7 @@ void LogUiHandler::subscribeToViews()
   auto consumer = [this]() { reset(); };
 
   auto listener = std::make_unique<IViewListenerProxy>(consumer);
-  m_systemView->addListener(std::move(listener));
-
-  listener = std::make_unique<IViewListenerProxy>(consumer);
-  m_resourceView->addListener(std::move(listener));
-
-  listener = std::make_unique<IViewListenerProxy>(consumer);
-  m_shipView->addListener(std::move(listener));
+  m_gameView->addListener(std::move(listener));
 }
 
 void LogUiHandler::reset()
@@ -267,7 +248,7 @@ auto LogUiHandler::createMenuFromMessage(const core::IMessage &message) -> ui::U
   const ui::MenuConfig config{.pos = pos, .dims = LOG_MENU_DIMS, .highlightable = false};
   const ui::BackgroundConfig bg = ui::bgConfigFromColor(pge::colors::TRANSPARENT_WHITE);
 
-  const auto text = createTextConfigForMessage(message, *m_systemView, *m_resourceView);
+  const auto text = createTextConfigForMessage(message, *m_gameView);
 
   return std::make_unique<ui::UiTextMenu>(config, bg, text);
 }

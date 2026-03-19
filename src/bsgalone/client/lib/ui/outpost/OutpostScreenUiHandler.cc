@@ -9,20 +9,15 @@ namespace bsgalone::client {
 
 OutpostScreenUiHandler::OutpostScreenUiHandler(const Views &views)
   : AbstractUiHandler("outpost")
-  , m_shipDbView(views.shipDbView)
-  , m_playerView(views.playerView)
+  , m_gameView(views.gameView)
   , m_shopUi(std::make_unique<ShopUiHandler>(views))
   , m_lockerUi(std::make_unique<LockerUiHandler>(views))
   , m_hangarUi(std::make_unique<HangarUiHandler>(views))
   , m_gameRoleUi(std::make_unique<GameRoleUiHandler>(views))
 {
-  if (nullptr == m_shipDbView)
+  if (nullptr == m_gameView)
   {
-    throw std::invalid_argument("Expected non null ship db view");
-  }
-  if (nullptr == m_playerView)
-  {
-    throw std::invalid_argument("Expected non null player view");
+    throw std::invalid_argument("Expected non null game view");
   }
 
   subscribeToViews();
@@ -39,9 +34,9 @@ void OutpostScreenUiHandler::initializeMenus(const int width,
   const pge::Vec2i dims{UNDOCK_BUTTON_WIDTH, 50};
 
   ui::MenuConfig config{.pos = pos, .dims = dims, .clickCallback = [this]() {
-                          if (m_shipDbView->isReady())
+                          if (m_gameView->isReady())
                           {
-                            m_shipDbView->undockPlayerShip();
+                            m_gameView->undockPlayerShip();
                           }
                         }};
 
@@ -56,9 +51,9 @@ void OutpostScreenUiHandler::initializeMenus(const int width,
   config.dims = pge::Vec2i{80, LOGOUT_BUTTON_HEIGHT};
 
   config.clickCallback = [this]() {
-    if (m_playerView->isReady())
+    if (m_gameView->isReady())
     {
-      m_playerView->tryLogout();
+      m_gameView->tryLogout();
     }
   };
   bg              = ui::bgConfigFromColor(pge::colors::DARK_RED);
@@ -130,7 +125,7 @@ void OutpostScreenUiHandler::render(pge::Renderer &engine) const
 
 void OutpostScreenUiHandler::updateUi()
 {
-  if (m_playerView->isReady() && !m_initialized)
+  if (m_gameView->isReady() && !m_initialized)
   {
     initializeOutpostScreenOptions();
   }
@@ -167,10 +162,7 @@ void OutpostScreenUiHandler::subscribeToViews()
   auto consumer = [this]() { reset(); };
 
   auto listener = std::make_unique<IViewListenerProxy>(consumer);
-  m_shipDbView->addListener(std::move(listener));
-
-  listener = std::make_unique<IViewListenerProxy>(consumer);
-  m_playerView->addListener(std::move(listener));
+  m_gameView->addListener(std::move(listener));
 }
 
 void OutpostScreenUiHandler::reset()
@@ -201,7 +193,7 @@ void OutpostScreenUiHandler::generateGeneralMenu(const int width, const int heig
 
 void OutpostScreenUiHandler::initializeOutpostScreenOptions()
 {
-  const auto palette = generatePaletteForFaction(m_playerView->getPlayerFaction());
+  const auto palette = generatePaletteForFaction(m_gameView->getPlayerFaction());
 
   ui::MenuConfig config{};
 
@@ -219,7 +211,7 @@ void OutpostScreenUiHandler::initializeOutpostScreenOptions()
   ActiveScreen activeScreen{ActiveScreen::HANGAR};
   std::string buttonText("Hangar");
 
-  const auto role = m_playerView->gameSession().getRole();
+  const auto role = m_gameView->gameSession().getRole();
   switch (role)
   {
     case core::GameRole::GUNNER:

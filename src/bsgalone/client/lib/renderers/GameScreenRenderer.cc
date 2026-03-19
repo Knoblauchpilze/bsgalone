@@ -9,21 +9,11 @@ namespace bsgalone::client {
 
 GameScreenRenderer::GameScreenRenderer(const Views &views)
   : AbstractRenderer("game")
-  , m_shipView(views.shipView)
-  , m_systemView(views.systemView)
-  , m_resourceView(views.resourceView)
+  , m_gameView(views.gameView)
 {
-  if (nullptr == m_shipView)
+  if (nullptr == m_gameView)
   {
-    throw std::invalid_argument("Expected non null ship view");
-  }
-  if (nullptr == m_systemView)
-  {
-    throw std::invalid_argument("Expected non null system view");
-  }
-  if (nullptr == m_resourceView)
-  {
-    throw std::invalid_argument("Expected non null resource view");
+    throw std::invalid_argument("Expected non null game view");
   }
 }
 
@@ -107,10 +97,10 @@ void GameScreenRenderer::renderDecal(pge::Renderer &engine, const pge::RenderSta
   m_systemBackground->render(engine, state);
 
   const auto bbox      = toIBoundingBox(state.frame);
-  const auto asteroids = m_systemView->getAsteroidsWithin(bbox);
-  const auto outposts  = m_systemView->getOutpostsWithin(bbox);
-  const auto bullets   = m_systemView->getBulletsWithin(bbox);
-  const auto ships     = m_shipView->getShipsWithin(bbox);
+  const auto asteroids = m_gameView->getAsteroidsWithin(bbox);
+  const auto outposts  = m_gameView->getOutpostsWithin(bbox);
+  const auto bullets   = m_gameView->getBulletsWithin(bbox);
+  const auto ships     = m_gameView->getShipsWithin(bbox);
 
   for (const auto &asteroid : asteroids)
   {
@@ -136,7 +126,7 @@ void GameScreenRenderer::renderDecal(pge::Renderer &engine, const pge::RenderSta
 void GameScreenRenderer::renderDebug(pge::Renderer &engine, const pge::RenderState &state) const
 {
   const auto bbox  = toIBoundingBox(state.frame);
-  const auto ships = m_shipView->getShipsWithin(bbox);
+  const auto ships = m_gameView->getShipsWithin(bbox);
 
   for (const auto &ship : ships)
   {
@@ -175,7 +165,7 @@ void GameScreenRenderer::renderAsteroid(const core::Entity &asteroid,
             "Asteroid contains " + std::to_string(asteroid.resources.size()) + " resource(s)");
     }
 
-    const auto res = m_resourceView->getResourceName(asteroid.resources[0]->resource());
+    const auto res = m_gameView->getResourceName(asteroid.resources[0]->resource());
     tint           = colorFromResourceName(res);
   }
   t.sprite.tint = tint;

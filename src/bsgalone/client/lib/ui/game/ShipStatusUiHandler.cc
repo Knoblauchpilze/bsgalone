@@ -12,11 +12,11 @@ namespace bsgalone::client {
 ShipStatusUiHandler::ShipStatusUiHandler(const Views &views)
   : AbstractUiHandler("ship_status")
   , AbstractMessageListener({core::MessageType::JUMP_REQUESTED, core::MessageType::JUMP_CANCELLED})
-  , m_shipView(views.shipView)
+  , m_gameView(views.gameView)
 {
-  if (nullptr == m_shipView)
+  if (nullptr == m_gameView)
   {
-    throw std::invalid_argument("Expected non null ship view");
+    throw std::invalid_argument("Expected non null game view");
   }
 
   subscribeToViews();
@@ -43,7 +43,7 @@ void ShipStatusUiHandler::render(pge::Renderer &engine) const
 
 void ShipStatusUiHandler::updateUi()
 {
-  if (!m_shipView->isReady())
+  if (!m_gameView->isReady())
   {
     return;
   }
@@ -60,7 +60,7 @@ void ShipStatusUiHandler::connectToMessageQueue(core::IMessageQueue &messageQueu
 
 void ShipStatusUiHandler::onEventReceived(const core::IMessage &message)
 {
-  if (!m_shipView->isReady())
+  if (!m_gameView->isReady())
   {
     return;
   }
@@ -80,7 +80,7 @@ void ShipStatusUiHandler::subscribeToViews()
   auto consumer = [this]() { reset(); };
 
   auto listener = std::make_unique<IViewListenerProxy>(consumer);
-  m_shipView->addListener(std::move(listener));
+  m_gameView->addListener(std::move(listener));
 }
 
 void ShipStatusUiHandler::reset()
@@ -159,13 +159,13 @@ void ShipStatusUiHandler::initializeJumpPanel(const int width, const int height)
 
 void ShipStatusUiHandler::updateThreatPanel()
 {
-  m_threatLabel->setVisible(m_shipView->isInThreat());
+  m_threatLabel->setVisible(m_gameView->isInThreat());
   m_threatLabel->update();
 }
 
 void ShipStatusUiHandler::updateJumpPanel()
 {
-  const auto jumping = m_shipView->isJumping();
+  const auto jumping = m_gameView->isJumping();
   m_jumpPanel->setVisible(jumping);
 
   if (!jumping)
@@ -177,9 +177,9 @@ void ShipStatusUiHandler::updateJumpPanel()
     error("Failed to process jump time with no registered jump");
   }
 
-  const auto data     = m_shipView->getJumpData();
+  const auto data     = m_gameView->getJumpData();
   const auto jumpTime = convertTickToDuration(data.jumpTime,
-                                              m_shipView->gameSession().getTimeStep());
+                                              m_gameView->gameSession().getTimeStep());
 
   m_jumpDestination->setText(data.systemName);
 

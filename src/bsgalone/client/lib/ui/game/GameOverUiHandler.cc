@@ -7,16 +7,11 @@ namespace bsgalone::client {
 
 GameOverUiHandler::GameOverUiHandler(const Views &views)
   : AbstractUiHandler("gameover")
-  , m_shipDbView(views.shipDbView)
-  , m_shipView(views.shipView)
+  , m_gameView(views.gameView)
 {
-  if (nullptr == m_shipDbView)
+  if (nullptr == m_gameView)
   {
-    throw std::invalid_argument("Expected non null ship db view");
-  }
-  if (nullptr == m_shipView)
-  {
-    throw std::invalid_argument("Expected non null ship view");
+    throw std::invalid_argument("Expected non null game view");
   }
 
   subscribeToViews();
@@ -37,9 +32,9 @@ void GameOverUiHandler::initializeMenus(const int width,
     .visible = false,
     .clickCallback =
       [this]() {
-        if (m_shipDbView->isReady())
+        if (m_gameView->isReady())
         {
-          m_shipDbView->returnToOutpost();
+          m_gameView->returnToOutpost();
         }
       },
   };
@@ -61,12 +56,12 @@ void GameOverUiHandler::render(pge::Renderer &engine) const
 
 void GameOverUiHandler::updateUi()
 {
-  if (!m_shipView->isReady())
+  if (!m_gameView->isReady())
   {
     return;
   }
 
-  m_menu->setVisible(m_shipView->isDead());
+  m_menu->setVisible(m_gameView->isDead());
 }
 
 void GameOverUiHandler::subscribeToViews()
@@ -74,10 +69,7 @@ void GameOverUiHandler::subscribeToViews()
   auto consumer = [this]() { reset(); };
 
   auto listener = std::make_unique<IViewListenerProxy>(consumer);
-  m_shipDbView->addListener(std::move(listener));
-
-  listener = std::make_unique<IViewListenerProxy>(consumer);
-  m_shipView->addListener(std::move(listener));
+  m_gameView->addListener(std::move(listener));
 }
 
 void GameOverUiHandler::reset()

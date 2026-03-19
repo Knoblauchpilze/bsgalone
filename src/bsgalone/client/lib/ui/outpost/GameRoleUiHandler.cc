@@ -11,16 +11,11 @@ namespace bsgalone::client {
 
 GameRoleUiHandler::GameRoleUiHandler(const Views &views)
   : AbstractUiHandler("role")
-  , m_playerView(views.playerView)
-  , m_systemView(views.systemView)
+  , m_gameView(views.gameView)
 {
-  if (nullptr == m_playerView)
+  if (nullptr == m_gameView)
   {
-    throw std::invalid_argument("Expected non null player view");
-  }
-  if (nullptr == m_systemView)
-  {
-    throw std::invalid_argument("Expected non null system view");
+    throw std::invalid_argument("Expected non null game view");
   }
 
   subscribeToViews();
@@ -52,7 +47,7 @@ void GameRoleUiHandler::render(pge::Renderer &engine) const
 
 void GameRoleUiHandler::updateUi()
 {
-  if (!m_playerView->isReady())
+  if (!m_gameView->isReady())
   {
     return;
   }
@@ -67,10 +62,7 @@ void GameRoleUiHandler::subscribeToViews()
   auto consumer = [this]() { reset(); };
 
   auto listener = std::make_unique<IViewListenerProxy>(consumer);
-  m_playerView->addListener(std::move(listener));
-
-  listener = std::make_unique<IViewListenerProxy>(consumer);
-  m_systemView->addListener(std::move(listener));
+  m_gameView->addListener(std::move(listener));
 }
 
 void GameRoleUiHandler::reset()
@@ -148,10 +140,10 @@ auto generateShipDescription(const core::PlayerShipData &ship, const core::Playe
 
 void GameRoleUiHandler::initializeLayout()
 {
-  const auto faction    = m_playerView->getPlayerFaction();
+  const auto faction    = m_gameView->getPlayerFaction();
   const auto palette    = generatePaletteForFaction(faction);
-  const auto allPlayers = m_systemView->getSystemPlayers();
-  const auto allShips   = m_systemView->getSystemShips();
+  const auto allPlayers = m_gameView->getSystemPlayers();
+  const auto allShips   = m_gameView->getSystemShips();
 
   const ui::MenuConfig config{.layout = ui::MenuLayout::HORIZONTAL, .highlightable = false};
   const auto bg = ui::bgConfigFromColor(palette.almostOpaqueColor);
@@ -236,11 +228,11 @@ auto determineButtonText(const bool joined, const bool playerJoined) -> std::str
 
 void GameRoleUiHandler::updateShipMenus()
 {
-  const auto playerDbId = m_playerView->gameSession().getPlayerDbId();
-  const auto player     = m_systemView->getPlayer(playerDbId);
+  const auto playerDbId = m_gameView->gameSession().getPlayerDbId();
+  const auto player     = m_gameView->getPlayer(playerDbId);
 
-  const auto players = m_systemView->getSystemPlayers();
-  const auto ships   = m_systemView->getSystemShips();
+  const auto players = m_gameView->getSystemPlayers();
+  const auto ships   = m_gameView->getSystemShips();
 
   auto shipIndex = 0;
   for (auto &shipData : m_shipsData)
@@ -279,13 +271,13 @@ void GameRoleUiHandler::onShipRequest(const int shipIndex)
 
 void GameRoleUiHandler::onJoinRequest(const int shipIndex)
 {
-  if (!m_playerView->isReady())
+  if (!m_gameView->isReady())
   {
     return;
   }
 
   const auto &data = m_shipsData.at(shipIndex);
-  m_playerView->tryJoin(m_playerView->gameSession().getPlayerDbId(), data.shipDbId);
+  m_gameView->tryJoin(m_gameView->gameSession().getPlayerDbId(), data.shipDbId);
 }
 
 } // namespace bsgalone::client

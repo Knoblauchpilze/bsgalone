@@ -3,7 +3,6 @@
 
 #include "Color.hh"
 #include "Faction.hh"
-#include "PlayerView.hh"
 #include <string>
 
 namespace bsgalone::client {

@@ -9,21 +9,11 @@ namespace bsgalone::client {
 StatusUiHandler::StatusUiHandler(const pge::Vec2i &offset, const Views &views)
   : AbstractUiHandler("status")
   , m_offset(offset)
-  , m_shipView(views.shipView)
-  , m_serverView(views.serverView)
-  , m_playerView(views.playerView)
+  , m_gameView(views.gameView)
 {
-  if (nullptr == m_shipView)
+  if (nullptr == m_gameView)
   {
-    throw std::invalid_argument("Expected non null ship view");
-  }
-  if (nullptr == m_serverView)
-  {
-    throw std::invalid_argument("Expected non null server view");
-  }
-  if (nullptr == m_playerView)
-  {
-    throw std::invalid_argument("Expected non null player view");
+    throw std::invalid_argument("Expected non null game view");
   }
 
   subscribeToViews();
@@ -77,12 +67,12 @@ void StatusUiHandler::render(pge::Renderer &engine) const
 
 void StatusUiHandler::updateUi()
 {
-  if (!m_serverView->isReady())
+  if (!m_gameView->isReady())
   {
     return;
   }
 
-  m_system->setText(m_serverView->getPlayerSystemName());
+  m_system->setText(m_gameView->getPlayerSystemName());
   m_logoutConfirmation->setVisible(m_logoutRequested);
 }
 
@@ -91,13 +81,7 @@ void StatusUiHandler::subscribeToViews()
   auto consumer = [this]() { reset(); };
 
   auto listener = std::make_unique<IViewListenerProxy>(consumer);
-  m_shipView->addListener(std::move(listener));
-
-  listener = std::make_unique<IViewListenerProxy>(consumer);
-  m_serverView->addListener(std::move(listener));
-
-  listener = std::make_unique<IViewListenerProxy>(consumer);
-  m_playerView->addListener(std::move(listener));
+  m_gameView->addListener(std::move(listener));
 }
 
 void StatusUiHandler::reset()
@@ -161,12 +145,12 @@ void StatusUiHandler::requestLogout()
 
 void StatusUiHandler::confirmLogout()
 {
-  if (!m_playerView->isReady())
+  if (!m_gameView->isReady())
   {
     return;
   }
 
-  m_playerView->tryLogout();
+  m_gameView->tryLogout();
 }
 
 void StatusUiHandler::cancelLogout()

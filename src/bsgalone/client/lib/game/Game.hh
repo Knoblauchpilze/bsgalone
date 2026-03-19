@@ -98,7 +98,7 @@ class Game : public ui::IScreenChanger, public ::core::CoreObject
   core::DatabaseEntityMapper m_entityMapper{};
   chrono::TimeManagerPtr m_timeManager{};
   core::CoordinatorShPtr m_coordinator{};
-  core::IMessageQueuePtr m_internalMessageQueue{};
+  core::IMessageQueueShPtr m_internalMessageQueue{};
   Views m_views{};
   std::unordered_map<Screen, IRendererPtr> m_renderers{};
   std::unordered_map<Screen, IInputHandlerPtr> m_inputHandlers{};

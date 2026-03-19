@@ -27,9 +27,7 @@ class LogUiHandler : public AbstractUiHandler, public core::AbstractMessageListe
   void onEventReceived(const core::IMessage &message) override;
 
   private:
-  SystemViewShPtr m_systemView{};
-  ResourceViewShPtr m_resourceView{};
-  ShipViewShPtr m_shipView{};
+  GameViewShPtr m_gameView{};
   pge::Vec2i m_offset{};
 
   struct LogMessage

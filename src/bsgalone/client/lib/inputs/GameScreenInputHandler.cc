@@ -5,23 +5,18 @@ namespace bsgalone::client {
 
 GameScreenInputHandler::GameScreenInputHandler(const Views &views)
   : IInputHandler("game")
-  , m_shipView(views.shipView)
-  , m_shipDbView(views.shipDbView)
+  , m_gameView(views.gameView)
 {
-  if (nullptr == m_shipView)
+  if (nullptr == m_gameView)
   {
-    throw std::invalid_argument("Expected non null ship view");
-  }
-  if (nullptr == m_shipDbView)
-  {
-    throw std::invalid_argument("Expected non null ship db view");
+    throw std::invalid_argument("Expected non null game view");
   }
 }
 
 void GameScreenInputHandler::processUserInput(const pge::controls::State &controls,
                                               pge::CoordinateFrame &frame)
 {
-  if (!m_shipView->isReady() || !m_shipDbView->isReady())
+  if (!m_gameView->isReady())
   {
     return;
   }
@@ -38,14 +33,14 @@ void GameScreenInputHandler::processUserInput(const pge::controls::State &contro
 
 void GameScreenInputHandler::performAction(float x, float y, const pge::controls::State & /*state*/)
 {
-  if (!m_shipView->isReady())
+  if (!m_gameView->isReady())
   {
     return;
   }
 
   const Eigen::Vector3f pos(x, y, 0.0f);
 
-  m_shipView->tryAcquireTarget(pos);
+  m_gameView->tryAcquireTarget(pos);
 }
 
 namespace {
@@ -93,12 +88,12 @@ void GameScreenInputHandler::moveShip(const Motion &motion)
   direction(2)              = motion.z;
   direction.normalize();
 
-  m_shipDbView->accelerateShip(direction);
+  m_gameView->accelerateShip(direction);
 }
 
 void GameScreenInputHandler::keepShipCentered(pge::CoordinateFrame &frame)
 {
-  const auto ent = m_shipView->getPlayerShip();
+  const auto ent = m_gameView->getPlayerShip();
   const auto pos = ent.transformComp().position();
   const pge::Vec2f pos2d{pos(0), pos(1)};
   frame.moveTo(pos2d);
@@ -106,49 +101,49 @@ void GameScreenInputHandler::keepShipCentered(pge::CoordinateFrame &frame)
 
 void GameScreenInputHandler::handleWeapons(const pge::controls::State &controls)
 {
-  const auto weaponsCount = m_shipView->getWeaponsCount();
+  const auto weaponsCount = m_gameView->getWeaponsCount();
 
   if (controls.released(pge::controls::keys::G))
   {
     for (auto id = 0; id < weaponsCount; ++id)
     {
-      m_shipView->tryActivateWeapon(id);
+      m_gameView->tryActivateWeapon(id);
     }
     return;
   }
 
   if (controls.released(pge::controls::keys::K1) && weaponsCount > 0)
   {
-    m_shipView->tryActivateWeapon(0);
+    m_gameView->tryActivateWeapon(0);
   }
   if (controls.released(pge::controls::keys::K2) && weaponsCount > 1)
   {
-    m_shipView->tryActivateWeapon(1);
+    m_gameView->tryActivateWeapon(1);
   }
   if (controls.released(pge::controls::keys::K3) && weaponsCount > 2)
   {
-    m_shipView->tryActivateWeapon(2);
+    m_gameView->tryActivateWeapon(2);
   }
 }
 
 void GameScreenInputHandler::handleAbilities(const pge::controls::State &controls)
 {
-  const auto abilitiesCount = m_shipView->getAbilitiesCount();
+  const auto abilitiesCount = m_gameView->getAbilitiesCount();
   if (controls.released(pge::controls::keys::W) && abilitiesCount > 0)
   {
-    m_shipView->tryActivateSlot(0);
+    m_gameView->tryActivateSlot(0);
   }
   if (controls.released(pge::controls::keys::X) && abilitiesCount > 1)
   {
-    m_shipView->tryActivateSlot(1);
+    m_gameView->tryActivateSlot(1);
   }
   if (controls.released(pge::controls::keys::C) && abilitiesCount > 2)
   {
-    m_shipView->tryActivateSlot(2);
+    m_gameView->tryActivateSlot(2);
   }
   if (controls.released(pge::controls::keys::V) && abilitiesCount > 3)
   {
-    m_shipView->tryActivateSlot(3);
+    m_gameView->tryActivateSlot(3);
   }
 }
 
@@ -156,11 +151,11 @@ void GameScreenInputHandler::handleJumpState(const pge::controls::State &control
 {
   if (controls.released(pge::controls::keys::J))
   {
-    m_shipDbView->startJump();
+    m_gameView->startJump();
   }
   if (controls.released(pge::controls::keys::K))
   {
-    m_shipDbView->cancelJump();
+    m_gameView->cancelJump();
   }
 }
 

@@ -27,8 +27,7 @@ class OutpostScreenUiHandler : public AbstractUiHandler
   void connectToMessageQueue(core::IMessageQueue &messageQueue) override;
 
   private:
-  ShipDbViewShPtr m_shipDbView{};
-  PlayerViewShPtr m_playerView{};
+  GameViewShPtr m_gameView{};
   bool m_initialized{false};
 
   enum MenuItem

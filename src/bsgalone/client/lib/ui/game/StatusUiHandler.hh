@@ -22,9 +22,7 @@ class StatusUiHandler : public AbstractUiHandler
 
   private:
   pge::Vec2i m_offset{};
-  ShipViewShPtr m_shipView{};
-  ServerViewShPtr m_serverView{};
-  PlayerViewShPtr m_playerView{};
+  GameViewShPtr m_gameView{};
 
   bool m_logoutRequested{false};
 

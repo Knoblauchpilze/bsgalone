@@ -3,6 +3,7 @@
 
 #include "Game.hh"
 #include "GameNetworkClient.hh"
+#include "GameSession.hh"
 #include "IUiEventQueue.hh"
 #include "IUiHandler.hh"
 #include "PGEApp.hh"
@@ -48,6 +49,10 @@ class App : public pge::PGEApp
   /// @brief - The network client used to connect to the server and transmit
   /// commands and receive updates to the game.
   GameNetworkClientShPtr m_networkClient{};
+
+  /// @brief - Holds information about the current game session. This includes
+  /// data about the current player, their ship, the system they are in, etc.
+  GameSessionShPtr m_gameSession{std::make_shared<GameSession>()};
 
   /// @brief - Used to publish incoming events that are relevant for the UI
   /// components. This is used to asynchronously notify the UI from changes
