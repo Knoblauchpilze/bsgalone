@@ -39,7 +39,8 @@ LoadingMessagesConsumer::LoadingMessagesConsumer(const Services &services,
 
   auto publisher = std::make_shared<core::PlayerMessagePublisher>(outputMessageQueue);
   m_loginUseCase
-    = std::make_unique<core::LoginUseCase>(m_loadingService->repositories().systemRepository,
+    = std::make_unique<core::LoginUseCase>(m_loadingService->repositories().accountRepository,
+                                           m_loadingService->repositories().systemRepository,
                                            std::move(publisher));
 }
 
