@@ -66,7 +66,7 @@ void PlayerDataSource::registerPlayer(Coordinator &coordinator,
   const auto data = m_repositories->playerRepository->findOneById(playerDbId);
 
   PlayerData out{
-    .dbId = data.id,
+    .dbId = data.dbId,
     .name = data.name,
   };
 

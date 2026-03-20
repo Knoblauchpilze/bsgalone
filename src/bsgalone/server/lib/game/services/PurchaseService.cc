@@ -186,7 +186,7 @@ void PurchaseService::tryPurchaseShip(const core::Uuid playerId, const core::Uui
   core::PlayerShip ship{
     .ship        = shipTemplate.id,
     .name        = shipTemplate.name,
-    .player      = player.id,
+    .player      = player.dbId,
     .active      = false,
     .hullPoints  = shipTemplate.maxHullPoints,
     .powerPoints = shipTemplate.maxPowerPoints,

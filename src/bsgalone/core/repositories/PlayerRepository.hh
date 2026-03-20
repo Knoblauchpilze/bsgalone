@@ -3,20 +3,13 @@
 
 #include "AbstractRepository.hh"
 #include "Faction.hh"
+#include "Player.hh"
 #include "Uuid.hh"
 #include <memory>
 #include <optional>
 #include <unordered_set>
 
 namespace bsgalone::core {
-
-struct Player
-{
-  Uuid id{};
-  std::optional<Uuid> account{};
-  std::string name{};
-  Faction faction{};
-};
 
 class PlayerRepository : public AbstractRepository
 {

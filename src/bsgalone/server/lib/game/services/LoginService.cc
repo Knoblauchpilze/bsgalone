@@ -24,14 +24,14 @@ auto LoginService::tryLogin(const LoginData &data) const -> std::optional<core::
 
   const auto player = m_repositories.playerRepository->findOneByAccount(maybeAccount->dbId);
   core::PlayerRole playerRole{
-    .player = player.id,
+    .player = player.dbId,
     .role   = data.role,
   };
   m_repositories.playerRoleRepository->save(playerRole);
 
   info("Player " + data.name + " logged in with role " + core::str(data.role));
 
-  return player.id;
+  return player.dbId;
 }
 
 auto LoginService::getPlayerSystemDbId(const core::Uuid playerDbId) const -> core::Uuid

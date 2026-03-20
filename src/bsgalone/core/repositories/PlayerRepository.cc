@@ -150,7 +150,7 @@ auto PlayerRepository::findOneById(const Uuid player) const -> Player
 
   Player out;
 
-  out.id = player;
+  out.dbId = player;
   if (!record[0].is_null())
   {
     out.account = fromDbId(record[0].as<int>());
@@ -171,7 +171,7 @@ auto PlayerRepository::findOneByAccount(const Uuid account) const -> Player
 
   Player out;
 
-  out.id      = fromDbId(record[0].as<int>());
+  out.dbId    = fromDbId(record[0].as<int>());
   out.account = account;
   out.name    = record[1].as<std::string>();
   out.faction = fromDbFaction(record[2].as<std::string>());

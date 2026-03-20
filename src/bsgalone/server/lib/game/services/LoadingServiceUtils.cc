@@ -5,7 +5,7 @@ namespace bsgalone::server {
 
 auto PlayerProps::toPlayerData() const -> core::PlayerData
 {
-  return core::PlayerData{.dbId         = dbPlayer.id,
+  return core::PlayerData{.dbId         = dbPlayer.dbId,
                           .name         = dbPlayer.name,
                           .isAi         = !dbPlayer.account.has_value(),
                           .attachedShip = attachedShip};

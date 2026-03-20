@@ -22,7 +22,7 @@ auto SignupService::trySignup(const std::string &name,
   account.dbId = registerAccount(account);
 
   core::Player player{.account = account.dbId, .name = name, .faction = faction};
-  player.id = registerPlayer(player);
+  player.dbId = registerPlayer(player);
 
   registerResources(player);
   registerShip(player);
@@ -51,7 +51,7 @@ auto SignupService::registerPlayer(const core::Player &player) const -> core::Uu
 {
   m_repositories.playerRepository->save(player);
   const auto dbPlayer = m_repositories.playerRepository->findOneByAccount(*player.account);
-  return dbPlayer.id;
+  return dbPlayer.dbId;
 }
 
 namespace {
@@ -65,7 +65,7 @@ constexpr auto TITANE_START_AMOUNT = 10000;
 void SignupService::registerResources(const core::Player &player) const
 {
   core::PlayerResource data{
-    .player = player.id,
+    .player = player.dbId,
   };
 
   const auto tylium = m_repositories.resourceRepository->findOneByName(TYLIUM_NAME);
@@ -87,7 +87,7 @@ void SignupService::registerShip(const core::Player &player) const
   core::PlayerShip ship{
     .ship        = shipTemplate.id,
     .name        = shipTemplate.name,
-    .player      = player.id,
+    .player      = player.dbId,
     .active      = true,
     .hullPoints  = shipTemplate.maxHullPoints,
     .powerPoints = shipTemplate.maxPowerPoints,
@@ -95,10 +95,10 @@ void SignupService::registerShip(const core::Player &player) const
 
   m_repositories.playerShipRepository->create(ship);
 
-  const auto ships = m_repositories.playerShipRepository->findAllByPlayer(player.id);
+  const auto ships = m_repositories.playerShipRepository->findAllByPlayer(player.dbId);
   if (1u != ships.size())
   {
-    error("Expected only one ship for new player " + core::str(player.id));
+    error("Expected only one ship for new player " + core::str(player.dbId));
   }
   const auto dbShip = *ships.begin();
 

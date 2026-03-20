@@ -42,7 +42,7 @@ void SignupMessageConsumer::handleSignup(const core::SignupMessage &message) con
                                                    password,
                                                    faction,
                                                    maybePlayer.has_value()
-                                                     ? maybePlayer->id
+                                                     ? maybePlayer->dbId
                                                      : std::optional<core::Uuid>{});
   out->copyClientIdIfDefined(message);
   m_outputMessageQueue->pushEvent(std::move(out));
