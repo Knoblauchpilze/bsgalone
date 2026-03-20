@@ -1,6 +1,6 @@
 
 #include "OutputUiCommandAdapter.hh"
-#include "LoginMessage.hh"
+#include "LoginRequest.hh"
 
 namespace bsgalone::client {
 
@@ -33,9 +33,9 @@ void OutputUiCommandAdapter::onEventReceived(const IUiEvent &event)
 
 void OutputUiCommandAdapter::publishLoginMessage(const LoginCommand &command)
 {
-  auto login = std::make_unique<core::LoginMessage>(command.getRole());
-  login->setUserName(command.getUsername());
-  login->setPassword(command.getPassword());
+  auto login = std::make_unique<core::LoginRequest>(command.getUsername(),
+                                                    command.getPassword(),
+                                                    command.getRole());
 
   m_outputQueue->pushEvent(std::move(login));
 }
