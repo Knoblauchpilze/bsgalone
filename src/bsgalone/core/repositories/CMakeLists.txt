@@ -10,7 +10,6 @@ target_sources (bsgalone_core_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/ComputerRepository.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/OutpostRepository.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/PlayerComputerRepository.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/PlayerRepository.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/PlayerResourceRepository.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/PlayerRoleRepository.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/PlayerShipRepository.cc

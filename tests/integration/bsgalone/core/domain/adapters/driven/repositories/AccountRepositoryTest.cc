@@ -1,6 +1,7 @@
 
 #include "AccountRepository.hh"
 #include "DbConnectionFixture.hh"
+#include "DbQueryHelper.hh"
 #include "TimeUtils.hh"
 #include <gmock/gmock-matchers.h>
 #include <gtest/gtest.h>
@@ -11,33 +12,6 @@ using namespace ::testing;
 namespace bsgalone::core {
 using Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_AccountRepository
   = DbConnectionFixture;
-
-namespace {
-auto insertTestAccount(DbConnection &dbConnection) -> Account
-{
-  const auto username = std::format("random-account-{:%F%T}", ::core::now());
-
-  constexpr auto QUERY = R"(
-      INSERT INTO account ("name", "password")
-        VALUES ($1, 'password')
-        RETURNING id
-    )";
-
-  const auto query = [&username](pqxx::nontransaction &work) {
-    return work.exec(QUERY, pqxx::params{username}).one_row();
-  };
-  auto record = dbConnection.executeQueryReturningSingleRow(query);
-
-  Account out{
-    .dbId     = fromDbId(record[0].as<int>()),
-    .username = username,
-    .password = "password",
-  };
-
-  return out;
-}
-
-} // namespace
 
 TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_AccountRepository,
        InitializeDoesNotThrow)

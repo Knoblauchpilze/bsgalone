@@ -2,7 +2,7 @@
 #pragma once
 
 #include "AbstractRepository.hh"
-#include "Faction.hh"
+#include "ForManagingPlayer.hh"
 #include "Player.hh"
 #include "Uuid.hh"
 #include <memory>
@@ -11,7 +11,7 @@
 
 namespace bsgalone::core {
 
-class PlayerRepository : public AbstractRepository
+class PlayerRepository : public AbstractRepository, public ForManagingPlayer
 {
   public:
   PlayerRepository(const DbConnectionShPtr &connection);
@@ -23,7 +23,7 @@ class PlayerRepository : public AbstractRepository
   auto findAllBySystem(const Uuid system) const -> std::unordered_set<Uuid>;
   auto findAllUndockedBySystem(const Uuid system) const -> std::unordered_set<Uuid>;
   auto findOneById(const Uuid player) const -> Player;
-  auto findOneByAccount(const Uuid account) const -> Player;
+  auto findOneByAccount(const Uuid account) const -> Player override;
   auto findSystemByPlayer(const Uuid player) const -> Uuid;
 
   void save(const Player &player);

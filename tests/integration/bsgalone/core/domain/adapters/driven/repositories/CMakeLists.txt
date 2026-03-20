@@ -5,5 +5,6 @@ target_include_directories(integrationTests PUBLIC
 
 target_sources(integrationTests PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/AccountRepositoryTest.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/PlayerRepositoryTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SystemRepositoryTest.cc
 	)
