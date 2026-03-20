@@ -13,6 +13,7 @@ add_subdirectory (
 
 target_sources (bsgalone_core_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/IMessage.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/AbstractPlayerCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/AbstractPlayerMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/AbstractSystemMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/AiBehaviorSyncMessage.cc
