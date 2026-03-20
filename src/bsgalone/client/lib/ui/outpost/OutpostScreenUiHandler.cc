@@ -2,7 +2,6 @@
 #include "OutpostScreenUiHandler.hh"
 #include "GameColorUtils.hh"
 #include "IViewListenerProxy.hh"
-#include "LoginMessage.hh"
 #include "MessageListenerWrapper.hh"
 
 namespace bsgalone::client {
