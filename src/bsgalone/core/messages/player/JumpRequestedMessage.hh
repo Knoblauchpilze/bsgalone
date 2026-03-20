@@ -21,8 +21,8 @@ class JumpRequestedMessage : public AbstractPlayerCommand
 
   auto clone() const -> IMessagePtr override;
 
-  /// @brief - Tries to read a jump requested message from the input stream.
-  /// If it succeeds, a valid jump message will be returned, otherwise an
+  /// @brief - Tries to read a message from the input stream. If it
+  /// succeeds, a valid dock message will be returned, otherwise an
   /// empty optional.
   /// The stream will **not be reset** in case the reading fails.
   /// @param in - the stream to read from

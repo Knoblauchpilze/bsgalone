@@ -16,9 +16,9 @@ class SystemListMessage : public AbstractPlayerMessage
 
   auto clone() const -> IMessagePtr override;
 
-  /// @brief - Tries to read a system list message from the input stream.
-  /// If it succeeds, a valid message will be returned, otherwise an empty
-  /// optional.
+  /// @brief - Tries to read a message from the input stream. If it
+  /// succeeds, a valid dock message will be returned, otherwise an
+  /// empty optional.
   /// The stream will **not be reset** in case the reading fails.
   /// @param in - the stream to read from
   /// @return - the deserialized message or an empty optional if reading
