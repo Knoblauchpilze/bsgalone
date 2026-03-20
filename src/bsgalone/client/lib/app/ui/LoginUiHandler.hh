@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "GameRole.hh"
 #include "IUiEventQueue.hh"
 #include "IUiHandler.hh"
 #include "UiMenu.hh"
@@ -23,16 +24,23 @@ class LoginUiHandler : public IUiHandler
   void updateUi() override;
 
   private:
+  core::GameRole m_activeRole{core::GameRole::PILOT};
+
   ui::UiMenuPtr m_credentialsPanel{};
 
   ui::UiTextField *m_nameTextField{};
   ui::UiTextField *m_passwordTextField{};
+
+  ui::UiMenuPtr m_rolePanel{};
+  ui::UiTextMenu *m_pilotButton{};
+  ui::UiTextMenu *m_gunnerButton{};
 
   ui::UiTextMenuPtr m_proceedButton{};
   ui::UiTextMenuPtr m_quitButton{};
 
   IUiEventQueueShPtr m_eventQueue{};
 
+  void generateRolePanel(const int width, const int height);
   void generateProceedButton(const int width, const int height);
   void generateQuitButton(const int width, const int height);
 

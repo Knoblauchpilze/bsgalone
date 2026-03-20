@@ -58,6 +58,7 @@ void LoginUiHandler::initializeMenus(const int width,
   m_nameTextField     = addTextFieldSectionToMenu(*m_credentialsPanel, "Name:", "colo");
   m_passwordTextField = addTextFieldSectionToMenu(*m_credentialsPanel, "Password:", "aze");
 
+  generateRolePanel(width, height);
   generateProceedButton(width, height);
   generateQuitButton(width, height);
 }
@@ -65,6 +66,10 @@ void LoginUiHandler::initializeMenus(const int width,
 bool LoginUiHandler::processUserInput(ui::UserInputData &inputData)
 {
   if (m_credentialsPanel->processUserInput(inputData))
+  {
+    return true;
+  }
+  if (m_rolePanel->processUserInput(inputData))
   {
     return true;
   }
@@ -78,11 +83,55 @@ bool LoginUiHandler::processUserInput(ui::UserInputData &inputData)
 void LoginUiHandler::render(pge::Renderer &engine) const
 {
   m_credentialsPanel->render(engine);
+  m_rolePanel->render(engine);
   m_proceedButton->render(engine);
   m_quitButton->render(engine);
 }
 
-void LoginUiHandler::updateUi() {}
+namespace {
+constexpr auto GAME_ROLE_BUTTON_ACTIVE_COLOR   = almostOpaque(pge::colors::VERY_DARK_GREY);
+constexpr auto GAME_ROLE_BUTTON_INACTIVE_COLOR = almostOpaque(pge::colors::DARK_GREY);
+} // namespace
+
+void LoginUiHandler::updateUi()
+{
+  const auto pilotButtonColor  = core::GameRole::PILOT == m_activeRole
+                                   ? GAME_ROLE_BUTTON_ACTIVE_COLOR
+                                   : GAME_ROLE_BUTTON_INACTIVE_COLOR;
+  const auto gunnerButtonColor = core::GameRole::GUNNER == m_activeRole
+                                   ? GAME_ROLE_BUTTON_ACTIVE_COLOR
+                                   : GAME_ROLE_BUTTON_INACTIVE_COLOR;
+
+  m_pilotButton->updateBgColor(pilotButtonColor);
+  m_pilotButton->setHighlightable(core::GameRole::PILOT != m_activeRole);
+  m_gunnerButton->updateBgColor(gunnerButtonColor);
+  m_gunnerButton->setHighlightable(core::GameRole::GUNNER != m_activeRole);
+}
+
+void LoginUiHandler::generateRolePanel(const int width, const int /*height*/)
+{
+  constexpr auto ROLE_Y_PIXELS = 110;
+  const pge::Vec2i roleDimsPixels{200, 50};
+  const pge::Vec2i rolePos{(width - roleDimsPixels.x) / 2, ROLE_Y_PIXELS};
+
+  m_rolePanel = generateBlankHorizontalMenu(rolePos, roleDimsPixels);
+
+  ui::MenuConfig config{};
+
+  config.clickCallback = [this]() { m_activeRole = core::GameRole::PILOT; };
+  auto bg              = ui::bgConfigFromColor(GAME_ROLE_BUTTON_ACTIVE_COLOR);
+  auto text            = ui::textConfigFromColor("Pilot", pge::colors::WHITE);
+  auto button          = std::make_unique<ui::UiTextMenu>(config, bg, text);
+  m_pilotButton        = button.get();
+  m_rolePanel->addMenu(std::move(button));
+
+  config.clickCallback = [this]() { m_activeRole = core::GameRole::GUNNER; };
+  bg                   = ui::bgConfigFromColor(GAME_ROLE_BUTTON_INACTIVE_COLOR);
+  text                 = ui::textConfigFromColor("Gunner", pge::colors::WHITE);
+  button               = std::make_unique<ui::UiTextMenu>(config, bg, text);
+  m_gunnerButton       = button.get();
+  m_rolePanel->addMenu(std::move(button));
+}
 
 void LoginUiHandler::generateProceedButton(const int width, const int height)
 {
@@ -123,10 +172,9 @@ void LoginUiHandler::generateQuitButton(const int width, const int /*height*/)
 
 void LoginUiHandler::triggerLoginCommand()
 {
-  // TODO: the game role should come from the UI
   m_eventQueue->pushEvent(std::make_unique<LoginCommand>(m_nameTextField->getText(),
                                                          m_passwordTextField->getText(),
-                                                         core::GameRole::PILOT));
+                                                         m_activeRole));
 }
 
 void LoginUiHandler::triggerExitCommand()
