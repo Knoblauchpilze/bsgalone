@@ -4,6 +4,14 @@ target_include_directories(unitTests PUBLIC
 	)
 
 add_subdirectory(
+	${CMAKE_CURRENT_SOURCE_DIR}/commands
+	)
+
+add_subdirectory(
+	${CMAKE_CURRENT_SOURCE_DIR}/credentials
+	)
+
+add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/loading
 	)
 
@@ -20,7 +28,6 @@ target_sources(unitTests PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/HangarMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/JoinShipMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/JumpMessageTest.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/LoginMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LogoutMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LootMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ScannedMessageTest.cc

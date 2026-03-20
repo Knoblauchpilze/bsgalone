@@ -41,6 +41,8 @@ auto str(const MessageType &type) -> std::string
       return "loading_started";
     case MessageType::LOGIN:
       return "login";
+    case MessageType::LOGIN_REQUEST:
+      return "login_request";
     case MessageType::LOGOUT:
       return "logout";
     case MessageType::LOOT:
@@ -115,6 +117,7 @@ auto allMessageTypesAsSet() -> std::unordered_set<MessageType>
     MessageType::LOADING_STARTED,
     MessageType::LOOT,
     MessageType::LOGIN,
+    MessageType::LOGIN_REQUEST,
     MessageType::LOGOUT,
     MessageType::OUTPOST_LIST,
     MessageType::PLAYER_COMPUTER_LIST,

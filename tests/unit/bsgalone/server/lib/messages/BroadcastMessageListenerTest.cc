@@ -38,67 +38,36 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
   EXPECT_FALSE(manager->tryGetPlayerForClient(net::ClientId{12}).has_value());
   EXPECT_FALSE(manager->tryGetSystemForClient(net::ClientId{12}).has_value());
 
-  core::LoginMessage message;
-  message.setClientId(net::ClientId{12});
+  core::LoginMessage message(net::ClientId{12});
   message.setPlayerDbId(core::Uuid{18});
+  message.setRole(core::GameRole::GUNNER);
   message.setSystemDbId(core::Uuid{19});
   listener.onEventReceived(message);
 
+  std::cout << "hoho\n";
   EXPECT_EQ(core::Uuid{18}, manager->tryGetPlayerForClient(net::ClientId{12}).value());
+  std::cout << "hehe\n";
   EXPECT_EQ(core::Uuid{19}, manager->tryGetSystemForClient(net::ClientId{12}).value());
+  std::cout << "hihi\n";
   const auto clients = manager->getAllClientsForSystem(core::Uuid{19});
   EXPECT_EQ(std::vector<net::ClientId>{net::ClientId{12}}, clients);
 }
 
 TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
-     ThrowsWhenLoginMessageDoesNotDefineClientId)
+     DoesNotRegisterPlayerWhenLoginMessageIndicatesFailure)
 {
   auto manager = std::make_shared<ClientManager>();
+  manager->registerClient(net::ClientId{12});
   BroadcastMessageListener listener(manager, std::make_shared<TestOutputNetworkAdapter>());
 
-  EXPECT_THAT(
-    [&listener]() {
-      core::LoginMessage message;
-      message.setPlayerDbId(core::Uuid{18});
-      message.setSystemDbId(core::Uuid{19});
-      listener.onEventReceived(message);
-    },
-    ThrowsMessage<::core::CoreException>(
-      "Failed to process login message without client identifier"));
-}
+  EXPECT_FALSE(manager->tryGetPlayerForClient(net::ClientId{12}).has_value());
+  EXPECT_FALSE(manager->tryGetSystemForClient(net::ClientId{12}).has_value());
 
-TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
-     ThrowsWhenLoginMessageDoesNotDefinePlayerId)
-{
-  auto manager = std::make_shared<ClientManager>();
-  BroadcastMessageListener listener(manager, std::make_shared<TestOutputNetworkAdapter>());
+  core::LoginMessage message(net::ClientId{12});
+  listener.onEventReceived(message);
 
-  EXPECT_THAT(
-    [&listener]() {
-      core::LoginMessage message;
-      message.setClientId(net::ClientId{12});
-      message.setSystemDbId(core::Uuid{19});
-      listener.onEventReceived(message);
-    },
-    ThrowsMessage<::core::CoreException>(
-      "Failed to process login message without player identifier"));
-}
-
-TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
-     ThrowsWhenLoginMessageDoesNotDefineSystemId)
-{
-  auto manager = std::make_shared<ClientManager>();
-  BroadcastMessageListener listener(manager, std::make_shared<TestOutputNetworkAdapter>());
-
-  EXPECT_THAT(
-    [&listener]() {
-      core::LoginMessage message;
-      message.setClientId(net::ClientId{12});
-      message.setPlayerDbId(core::Uuid{18});
-      listener.onEventReceived(message);
-    },
-    ThrowsMessage<::core::CoreException>(
-      "Failed to process login message without system identifier"));
+  EXPECT_FALSE(manager->tryGetPlayerForClient(net::ClientId{12}).has_value());
+  EXPECT_FALSE(manager->tryGetSystemForClient(net::ClientId{12}).has_value());
 }
 
 TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,

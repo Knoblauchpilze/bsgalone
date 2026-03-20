@@ -108,7 +108,7 @@ void GameMessageModule::handleLoginMessage(const core::LoginMessage &message)
     return;
   }
 
-  m_game.onLogin(*message.tryGetPlayerDbId(), message.getGameRole());
+  m_game.onLogin(message.getPlayerDbId(), message.getRole());
 }
 
 void GameMessageModule::handleLogoutMessage(const core::LogoutMessage & /*message*/)

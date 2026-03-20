@@ -4,6 +4,14 @@ target_include_directories (bsgalone_core_lib PUBLIC
 	)
 
 add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/commands
+	)
+
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/credentials
+	)
+
+add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/loading
 	)
 
@@ -24,7 +32,6 @@ target_sources (bsgalone_core_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/HangarMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/JoinShipMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/JumpMessage.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/LoginMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LogoutMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LootMessage.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/MessageParser.cc

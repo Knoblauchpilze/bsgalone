@@ -1,12 +1,14 @@
 
 #include "LoginMessageConsumer.hh"
+#include "LoginMessage.hh"
+#include "LoginRequest.hh"
 
 namespace bsgalone::server {
 
 LoginMessageConsumer::LoginMessageConsumer(LoginServicePtr loginService,
                                            SystemQueueMap systemQueues,
                                            core::IMessageQueue *const outputMessageQueue)
-  : AbstractMessageConsumer("login", {core::MessageType::LOGIN})
+  : AbstractMessageConsumer("login", {core::MessageType::LOGIN_REQUEST})
   , m_loginService(std::move(loginService))
   , m_outputMessageQueue(outputMessageQueue)
   , m_helper(std::move(systemQueues), outputMessageQueue)
@@ -23,53 +25,42 @@ LoginMessageConsumer::LoginMessageConsumer(LoginServicePtr loginService,
 
 void LoginMessageConsumer::onEventReceived(const core::IMessage &message)
 {
-  const auto &login = message.as<core::LoginMessage>();
-  handleLogin(login);
-}
+  const auto &request = message.as<core::LoginRequest>();
 
-void LoginMessageConsumer::handleLogin(const core::LoginMessage &message) const
-{
-  const auto clientId = message.getClientId();
+  const auto maybeClientId = request.tryGetClientId();
+  if (!maybeClientId.has_value())
+  {
+    warn("Failed to process login request without client identifier");
+    return;
+  }
 
   LoginService::LoginData data{
-    .name     = message.getUserName(),
-    .password = message.getPassword(),
-    .role     = message.getGameRole(),
+    .name     = request.getUsername(),
+    .password = request.getPassword(),
+    .role     = request.getRole(),
   };
 
   const auto maybePlayerDbId = m_loginService->tryLogin(data);
-
   const auto successfulLogin = maybePlayerDbId.has_value();
-
-  std::optional<core::Uuid> maybeSystemDbId{};
-
-  if (!successfulLogin)
-  {
-    warn("Failed to process login message for player " + data.name);
-  }
-  else
-  {
-    maybeSystemDbId = m_loginService->getPlayerSystemDbId(*maybePlayerDbId);
-  }
-
-  auto out = std::make_unique<core::LoginMessage>(data.role);
-  out->setUserName(data.name);
-  out->setPassword(data.password);
-  if (maybePlayerDbId)
-  {
-    out->setPlayerDbId(*maybePlayerDbId);
-  }
-  if (maybeSystemDbId)
-  {
-    out->setSystemDbId(*maybeSystemDbId);
-  }
-  out->copyClientIdIfDefined(message);
-
-  m_outputMessageQueue->pushEvent(std::move(out));
 
   if (successfulLogin)
   {
-    m_helper.publishLoadingMessages(clientId, maybePlayerDbId.value(), maybeSystemDbId.value());
+    const auto systemDbId = m_loginService->getPlayerSystemDbId(*maybePlayerDbId);
+
+    auto out = std::make_unique<core::LoginMessage>(*maybeClientId);
+    out->setPlayerDbId(*maybePlayerDbId);
+    out->setRole(data.role);
+    out->setSystemDbId(systemDbId);
+    m_outputMessageQueue->pushEvent(std::move(out));
+
+    m_helper.publishLoadingMessages(*maybeClientId, *maybePlayerDbId, systemDbId);
+  }
+  else
+  {
+    warn("Failed to process login message for player " + data.name);
+
+    auto out = std::make_unique<core::LoginMessage>(*maybeClientId);
+    m_outputMessageQueue->pushEvent(std::move(out));
   }
 }
 

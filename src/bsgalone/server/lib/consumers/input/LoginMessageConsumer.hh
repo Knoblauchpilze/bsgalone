@@ -4,7 +4,6 @@
 #include "AbstractMessageConsumer.hh"
 #include "IMessageQueue.hh"
 #include "LoadingHelper.hh"
-#include "LoginMessage.hh"
 #include "LoginService.hh"
 #include "SystemQueues.hh"
 
@@ -24,8 +23,6 @@ class LoginMessageConsumer : public core::AbstractMessageConsumer
   LoginServicePtr m_loginService{};
   core::IMessageQueue *const m_outputMessageQueue{};
   LoadingHelper m_helper;
-
-  void handleLogin(const core::LoginMessage &message) const;
 };
 
 } // namespace bsgalone::server

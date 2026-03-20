@@ -1,5 +1,6 @@
 
 #include "InputNetworkAdapter.hh"
+#include "LoginRequest.hh"
 #include "NetworkMessage.hh"
 
 namespace bsgalone::core {
@@ -97,6 +98,10 @@ void InputNetworkAdapter::feedMessagesToQueue(const std::optional<net::ClientId>
     if (maybeClientId && message->isA<NetworkMessage>())
     {
       message->as<NetworkMessage>().setClientId(*maybeClientId);
+    }
+    if (maybeClientId && message->isA<LoginRequest>())
+    {
+      message->as<LoginRequest>().setClientId(*maybeClientId);
     }
     m_queue->pushEvent(std::move(message));
   }

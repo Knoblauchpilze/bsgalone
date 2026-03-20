@@ -17,6 +17,7 @@
 #include "LoadingFinishedMessage.hh"
 #include "LoadingStartedMessage.hh"
 #include "LoginMessage.hh"
+#include "LoginRequest.hh"
 #include "LogoutMessage.hh"
 #include "LootMessage.hh"
 #include "OutpostListMessage.hh"
@@ -92,6 +93,8 @@ auto operator<<(std::ostream &out, const IMessage &message) -> std::ostream &
       return serializeMessage<LoadingStartedMessage>(out, message.as<LoadingStartedMessage>());
     case MessageType::LOGIN:
       return serializeMessage<LoginMessage>(out, message.as<LoginMessage>());
+    case MessageType::LOGIN_REQUEST:
+      return serializeMessage<LoginRequest>(out, message.as<LoginRequest>());
     case MessageType::LOGOUT:
       return serializeMessage<LogoutMessage>(out, message.as<LogoutMessage>());
     case MessageType::LOOT:

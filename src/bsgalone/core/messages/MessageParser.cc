@@ -19,6 +19,7 @@
 #include "LoadingFinishedMessage.hh"
 #include "LoadingStartedMessage.hh"
 #include "LoginMessage.hh"
+#include "LoginRequest.hh"
 #include "LogoutMessage.hh"
 #include "LootMessage.hh"
 #include "OutpostListMessage.hh"
@@ -149,7 +150,9 @@ auto MessageParser::tryReadMessage(const MessageType &type, std::istream &in)
     case MessageType::LOADING_STARTED:
       return readMessage<LoadingStartedMessage>(in);
     case MessageType::LOGIN:
-      return readMessage<LoginMessage>(in);
+      return LoginMessage::readFromStream(in);
+    case MessageType::LOGIN_REQUEST:
+      return LoginRequest::readFromStream(in);
     case MessageType::LOGOUT:
       return readMessage<LogoutMessage>(in);
     case MessageType::LOOT:

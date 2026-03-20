@@ -2,7 +2,7 @@
 #include "PlayerView.hh"
 #include "HangarMessage.hh"
 #include "JoinShipMessage.hh"
-#include "LoginMessage.hh"
+#include "LoginRequest.hh"
 #include "LogoutMessage.hh"
 #include "PurchaseMessage.hh"
 #include "ShipSelectedMessage.hh"
@@ -157,9 +157,7 @@ void PlayerView::tryLogin(const std::string &name,
                           const std::string &password,
                           const core::GameRole role) const
 {
-  auto out = std::make_unique<core::LoginMessage>(role);
-  out->setUserName(name);
-  out->setPassword(password);
+  auto out = std::make_unique<core::LoginRequest>(name, password, role);
   m_outputMessageQueue->pushEvent(std::move(out));
 }
 

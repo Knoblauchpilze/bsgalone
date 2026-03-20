@@ -36,6 +36,7 @@ class BroadcastMessageListener : public core::IMessageListener, public ::core::C
   void routePlayerCommand(const core::AbstractPlayerCommand &message);
   void routePlayerMessage(const core::AbstractPlayerMessage &message);
   void routeSystemMessage(const core::AbstractSystemMessage &message);
+  void routeLoginMessage(const core::LoginMessage &message);
 
   void registerPlayer(const core::LoginMessage &message);
   void unregisterPlayer(const core::LogoutMessage &message);

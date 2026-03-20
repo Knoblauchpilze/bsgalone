@@ -1,6 +1,6 @@
 
 #include "NetworkEventListener.hh"
-#include "LoginMessage.hh"
+#include "LoginRequest.hh"
 
 namespace bsgalone::client {
 
@@ -48,10 +48,7 @@ void NetworkEventListener::handleConnectionEstablished(
     return;
   }
 
-  core::LoginMessage login(m_autoLogin->role);
-  login.setUserName(m_autoLogin->name);
-  login.setPassword(m_autoLogin->password);
-
+  core::LoginRequest login(m_autoLogin->name, m_autoLogin->password, m_autoLogin->role);
   m_outputAdapter->sendMessage(login);
 }
 

@@ -2,7 +2,7 @@
 #include "NetworkEventListener.hh"
 #include "ConnectionEstablishedEvent.hh"
 #include "ConnectionLostEvent.hh"
-#include "LoginMessage.hh"
+#include "LoginRequest.hh"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
@@ -58,7 +58,7 @@ TEST(Unit_Bsgalone_Client_Network_NetworkEventListener,
 }
 
 TEST(Unit_Bsgalone_Client_Network_NetworkEventListener,
-     PublishesLoginMessageWhenConnectionIsEstablishedAndAutoLoginIsSet)
+     PublishesLoginRequestWhenConnectionIsEstablishedAndAutoLoginIsSet)
 {
   std::atomic_bool connected(false);
   auto mockAdapter = std::make_shared<MockOutputAdapter>();
@@ -79,17 +79,16 @@ TEST(Unit_Bsgalone_Client_Network_NetworkEventListener,
   listener.onEventReceived(event);
 
   ASSERT_NE(captured.get(), nullptr) << "Expected a message to be captured";
-  EXPECT_EQ(core::MessageType::LOGIN, captured->type());
-  const auto &actual = captured->as<core::LoginMessage>();
-  EXPECT_EQ("player", actual.getUserName());
+  EXPECT_EQ(core::MessageType::LOGIN_REQUEST, captured->type());
+  const auto &actual = captured->as<core::LoginRequest>();
+  EXPECT_EQ("player", actual.getUsername());
   EXPECT_EQ("secret", actual.getPassword());
-  EXPECT_EQ(core::GameRole::GUNNER, actual.getGameRole());
-  EXPECT_FALSE(actual.tryGetPlayerDbId().has_value());
-  EXPECT_FALSE(actual.tryGetSystemDbId().has_value());
+  EXPECT_EQ(core::GameRole::GUNNER, actual.getRole());
+  EXPECT_FALSE(actual.tryGetClientId().has_value());
 }
 
 TEST(Unit_Bsgalone_Client_Network_NetworkEventListener,
-     DoesNotPublishLoginMessageWhenAutoLoginIsDisabled)
+     DoesNotPublishLoginRequestWhenAutoLoginIsDisabled)
 {
   std::atomic_bool connected(false);
   auto mockAdapter = std::make_shared<MockOutputAdapter>();

@@ -89,6 +89,12 @@ void BroadcastMessageListener::triageOutboundMessage(const core::IMessage &messa
     return;
   }
 
+  if (message.isA<core::LoginMessage>())
+  {
+    routeLoginMessage(message.as<core::LoginMessage>());
+    return;
+  }
+
   m_broadcastModule.processMessage(message);
 }
 
@@ -114,26 +120,22 @@ void BroadcastMessageListener::routeSystemMessage(const core::AbstractSystemMess
   }
 }
 
+void BroadcastMessageListener::routeLoginMessage(const core::LoginMessage &message)
+{
+  m_adapter->sendMessage(message.getClientId(), message);
+}
+
 void BroadcastMessageListener::registerPlayer(const core::LoginMessage &message)
 {
-  const auto maybeClientId   = message.tryGetClientId();
-  const auto maybePlayerDbId = message.tryGetPlayerDbId();
-  const auto maybeSystemDbId = message.tryGetSystemDbId();
-
-  if (!maybeClientId)
+  if (!message.successfullyLoggedIn())
   {
-    error("Failed to process login message without client identifier");
-  }
-  if (!maybePlayerDbId)
-  {
-    error("Failed to process login message without player identifier");
-  }
-  if (!maybeSystemDbId)
-  {
-    error("Failed to process login message without system identifier");
+    return;
   }
 
-  m_clientManager->registerPlayer(*maybeClientId, *maybePlayerDbId, *maybeSystemDbId);
+  const auto clientId   = message.getClientId();
+  const auto playerDbId = message.getPlayerDbId();
+  const auto systemDbId = message.getSystemDbId();
+  m_clientManager->registerPlayer(clientId, playerDbId, systemDbId);
 }
 
 void BroadcastMessageListener::unregisterPlayer(const core::LogoutMessage &message)

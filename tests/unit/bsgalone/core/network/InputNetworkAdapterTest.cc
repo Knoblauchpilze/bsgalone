@@ -1,6 +1,7 @@
 
 #include "InputNetworkAdapter.hh"
 #include "DataReceivedEvent.hh"
+#include "LoginRequest.hh"
 #include "LootMessage.hh"
 #include "MessageParser.hh"
 #include "ScannedMessage.hh"
@@ -224,6 +225,26 @@ TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter, SetsClientIdForNetworkMessa
   const auto &actual = queue->messages().at(0);
   EXPECT_EQ(MessageType::LOOT, actual->type());
   EXPECT_EQ(net::ClientId{17}, actual->as<LootMessage>().getClientId());
+}
+
+TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter, SetsClientIdForLoginRequestWhenNotDefined)
+{
+  auto queue = std::make_shared<TestMessageQueue>();
+  InputNetworkAdapter adapter(queue, std::make_unique<MessageParser>());
+
+  LoginRequest message("player", "password", GameRole::GUNNER);
+  std::stringstream out;
+  out << message;
+  const auto serialized = out.str();
+  std::vector<char> data(serialized.begin(), serialized.end());
+
+  net::DataReceivedEvent event(net::ClientId{17}, std::vector<char>(data.begin(), data.end()));
+  adapter.onEventReceived(event);
+
+  EXPECT_EQ(1u, queue->messages().size());
+  const auto &actual = queue->messages().at(0);
+  EXPECT_EQ(MessageType::LOGIN_REQUEST, actual->type());
+  EXPECT_EQ(net::ClientId{17}, actual->as<LoginRequest>().tryGetClientId());
 }
 
 TEST(Unit_Bsgalone_Core_Network_InputNetworkAdapter, OverridesExistingClientIdWithConnectionData)
