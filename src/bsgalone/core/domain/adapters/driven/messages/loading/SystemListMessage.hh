@@ -6,18 +6,10 @@
 
 namespace bsgalone::core {
 
-/// TODO: It would make sense to have a separate base class for what is
-/// currently the AbstractPlayerMessage. Instead it could be more akin
-/// to a command, e.g. AbstractCommandMessage. In this context it makes
-/// sense to have the system identifier. For AbstractPlayerMessages that
-/// the server sends, it is not needed as the client is attached to a
-/// player and it is enough to route it.
 class SystemListMessage : public AbstractPlayerMessage
 {
   public:
-  SystemListMessage(const Uuid playerDbId,
-                    const Uuid systemDbId,
-                    const std::vector<System> &systemsData);
+  SystemListMessage(const Uuid playerDbId, const std::vector<System> &systemsData);
   ~SystemListMessage() override = default;
 
   auto getSystemsData() const -> const std::vector<System> &;

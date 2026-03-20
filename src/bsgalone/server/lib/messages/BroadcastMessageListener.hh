@@ -2,6 +2,7 @@
 #pragma once
 
 #include "AbstractPlayerCommand.hh"
+#include "AbstractPlayerMessage.hh"
 #include "AbstractSystemMessage.hh"
 #include "BroadcastMessageModule.hh"
 #include "ClientManager.hh"
@@ -33,6 +34,7 @@ class BroadcastMessageListener : public core::IMessageListener, public ::core::C
   void forwardMessageToClientManager(const core::IMessage &message);
   void triageOutboundMessage(const core::IMessage &message);
   void routePlayerCommand(const core::AbstractPlayerCommand &message);
+  void routePlayerMessage(const core::AbstractPlayerMessage &message);
   void routeSystemMessage(const core::AbstractSystemMessage &message);
 
   void registerPlayer(const core::LoginMessage &message);

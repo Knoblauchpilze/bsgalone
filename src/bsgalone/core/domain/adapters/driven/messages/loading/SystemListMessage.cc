@@ -6,13 +6,11 @@
 namespace bsgalone::core {
 
 SystemListMessage::SystemListMessage()
-  : AbstractPlayerMessage(MessageType::SYSTEM_LIST, Uuid{0}, Uuid{0})
+  : AbstractPlayerMessage(MessageType::SYSTEM_LIST, Uuid{0})
 {}
 
-SystemListMessage::SystemListMessage(const Uuid playerDbId,
-                                     const Uuid systemDbId,
-                                     const std::vector<System> &systemsData)
-  : AbstractPlayerMessage(MessageType::SYSTEM_LIST, playerDbId, systemDbId)
+SystemListMessage::SystemListMessage(const Uuid playerDbId, const std::vector<System> &systemsData)
+  : AbstractPlayerMessage(MessageType::SYSTEM_LIST, playerDbId)
   , m_systemsData(systemsData)
 {}
 
@@ -23,7 +21,7 @@ auto SystemListMessage::getSystemsData() const -> const std::vector<System> &
 
 auto SystemListMessage::clone() const -> IMessagePtr
 {
-  return std::make_unique<SystemListMessage>(m_playerDbId, m_systemDbId, m_systemsData);
+  return std::make_unique<SystemListMessage>(m_playerDbId, m_systemsData);
 }
 
 auto SystemListMessage::readFromStream(std::istream &in) -> std::optional<IMessagePtr>
@@ -33,7 +31,6 @@ auto SystemListMessage::readFromStream(std::istream &in) -> std::optional<IMessa
   bool ok{true};
   ok &= ::core::deserialize(in, message.m_type);
   ok &= ::core::deserialize(in, message.m_playerDbId);
-  ok &= ::core::deserialize(in, message.m_systemDbId);
   ok &= ::core::deserialize(in, message.m_systemsData);
 
   if (!ok)
@@ -48,7 +45,6 @@ auto operator<<(std::ostream &out, const SystemListMessage &message) -> std::ost
 {
   ::core::serialize(out, message.m_type);
   ::core::serialize(out, message.m_playerDbId);
-  ::core::serialize(out, message.m_systemDbId);
   ::core::serialize(out, message.m_systemsData);
 
   return out;

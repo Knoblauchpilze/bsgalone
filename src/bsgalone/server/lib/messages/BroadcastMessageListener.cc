@@ -77,6 +77,12 @@ void BroadcastMessageListener::triageOutboundMessage(const core::IMessage &messa
     return;
   }
 
+  if (message.isA<core::AbstractPlayerMessage>())
+  {
+    routePlayerMessage(message.as<core::AbstractPlayerMessage>());
+    return;
+  }
+
   if (message.isA<core::AbstractSystemMessage>())
   {
     routeSystemMessage(message.as<core::AbstractSystemMessage>());
@@ -87,6 +93,12 @@ void BroadcastMessageListener::triageOutboundMessage(const core::IMessage &messa
 }
 
 void BroadcastMessageListener::routePlayerCommand(const core::AbstractPlayerCommand &message)
+{
+  const auto clientId = m_clientManager->getClientIdForPlayer(message.getPlayerDbId());
+  m_adapter->sendMessage(clientId, message);
+}
+
+void BroadcastMessageListener::routePlayerMessage(const core::AbstractPlayerMessage &message)
 {
   const auto clientId = m_clientManager->getClientIdForPlayer(message.getPlayerDbId());
   m_adapter->sendMessage(clientId, message);

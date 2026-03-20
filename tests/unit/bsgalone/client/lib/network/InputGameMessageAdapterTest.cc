@@ -24,7 +24,7 @@ TEST(Unit_Bsgalone_Client_Network_InputGameMessageAdapter,
                                           .dbId = core::Uuid{20},
                                           .name = "system2",
                                         }};
-  core::SystemListMessage message(core::Uuid{18}, core::Uuid{19}, systemsData);
+  core::SystemListMessage message(core::Uuid{18}, systemsData);
   adapter.onEventReceived(message);
 
   EXPECT_EQ(1u, queue->messages().size());

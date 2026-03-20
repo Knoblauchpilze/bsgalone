@@ -443,13 +443,12 @@ void LoadingMessagesConsumer::handleSystemTargetsLoading(
 void LoadingMessagesConsumer::handleSystemTickLoading(const core::LoadingStartedMessage &message) const
 {
   const auto playerDbId = message.getPlayerDbId();
-  const auto systemDbId = message.getSystemDbId();
   // TODO: This could probably be removed as the game already receives the
   // list of all systems upon loading. It will be easy to do when the client
   // application is reworked to centralize the game data.
   const auto systems = m_loadingService->getSystems();
 
-  auto out = std::make_unique<core::SystemListMessage>(playerDbId, systemDbId, systems);
+  auto out = std::make_unique<core::SystemListMessage>(playerDbId, systems);
 
   m_outputMessageQueue->pushEvent(std::move(out));
 }

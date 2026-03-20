@@ -64,8 +64,6 @@ TEST(Unit_Bsgalone_Core_Domain_Adapters_Driven_Messages_PlayerMessagePublisher,
   EXPECT_EQ(MessageType::SYSTEM_LIST, queue->messages().at(0)->type());
   const auto &actual = queue->messages().at(0)->as<SystemListMessage>();
   EXPECT_EQ(Uuid{18}, actual.getPlayerDbId());
-  // TODO: Should be a real system
-  EXPECT_EQ(Uuid{0}, actual.getSystemDbId());
   const auto systems = actual.getSystemsData();
 
   EXPECT_TRUE(doesSystemExist(systems, system1))

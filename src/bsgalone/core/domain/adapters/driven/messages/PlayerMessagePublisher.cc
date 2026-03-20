@@ -21,8 +21,7 @@ void PlayerMessagePublisher::publishSystemList(const Uuid playerDbId,
     return;
   }
 
-  // TODO: The system identifier should be fetched for the player
-  auto out = std::make_unique<SystemListMessage>(playerDbId, Uuid{0}, systems);
+  auto out = std::make_unique<SystemListMessage>(playerDbId, systems);
 
   m_outputMessageQueue->pushEvent(std::move(out));
 }
