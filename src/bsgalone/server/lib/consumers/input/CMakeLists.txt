@@ -4,7 +4,6 @@ target_include_directories (bsgalone_server_lib PUBLIC
 	)
 
 target_sources (bsgalone_server_lib PRIVATE
-	${CMAKE_CURRENT_SOURCE_DIR}/LoadingHelper.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/JoinShipMessageConsumer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LoginMessageConsumer.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LogoutMessageConsumer.cc

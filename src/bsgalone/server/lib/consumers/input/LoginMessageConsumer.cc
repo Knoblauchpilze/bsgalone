@@ -1,5 +1,7 @@
 
 #include "LoginMessageConsumer.hh"
+#include "LoadingFinishedMessage.hh"
+#include "LoadingStartedMessage.hh"
 #include "LoginMessage.hh"
 #include "LoginRequest.hh"
 
@@ -10,8 +12,8 @@ LoginMessageConsumer::LoginMessageConsumer(LoginServicePtr loginService,
                                            core::IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("login", {core::MessageType::LOGIN_REQUEST})
   , m_loginService(std::move(loginService))
+  , m_systemQueues(std::move(systemQueues))
   , m_outputMessageQueue(outputMessageQueue)
-  , m_helper(std::move(systemQueues), outputMessageQueue)
 {
   if (nullptr == m_loginService)
   {
@@ -53,7 +55,7 @@ void LoginMessageConsumer::onEventReceived(const core::IMessage &message)
     out->setSystemDbId(systemDbId);
     m_outputMessageQueue->pushEvent(std::move(out));
 
-    m_helper.publishLoadingMessages(*maybeClientId, *maybePlayerDbId, systemDbId);
+    publishLoadingMessages(*maybeClientId, *maybePlayerDbId, systemDbId);
   }
   else
   {
@@ -62,6 +64,30 @@ void LoginMessageConsumer::onEventReceived(const core::IMessage &message)
     auto out = std::make_unique<core::LoginMessage>(*maybeClientId);
     m_outputMessageQueue->pushEvent(std::move(out));
   }
+}
+
+void LoginMessageConsumer::publishLoadingMessages(const core::Uuid clientId,
+                                                  const core::Uuid playerDbId,
+                                                  const core::Uuid systemDbId) const
+{
+  const auto maybeQueue = m_systemQueues.find(systemDbId);
+  if (maybeQueue == m_systemQueues.cend())
+  {
+    error("Failed to process login message for " + core::str(playerDbId),
+          "Unknown system " + core::str(systemDbId));
+  }
+
+  auto started = std::make_unique<core::LoadingStartedMessage>(core::LoadingTransition::LOGIN,
+                                                               playerDbId);
+  started->setSystemDbId(systemDbId);
+  started->setClientId(clientId);
+  maybeQueue->second->pushEvent(std::move(started));
+
+  auto finished = std::make_unique<core::LoadingFinishedMessage>(core::LoadingTransition::LOGIN,
+                                                                 playerDbId);
+  finished->setSystemDbId(systemDbId);
+  finished->setClientId(clientId);
+  maybeQueue->second->pushEvent(std::move(finished));
 }
 
 } // namespace bsgalone::server
