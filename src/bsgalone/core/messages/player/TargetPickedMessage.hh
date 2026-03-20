@@ -2,14 +2,14 @@
 
 #pragma once
 
-#include "AbstractPlayerMessage.hh"
+#include "AbstractPlayerCommand.hh"
 #include "Target.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
 
 namespace bsgalone::core {
 
-class TargetPickedMessage : public AbstractPlayerMessage
+class TargetPickedMessage : public AbstractPlayerCommand
 {
   public:
   TargetPickedMessage(const Uuid playerDbId,

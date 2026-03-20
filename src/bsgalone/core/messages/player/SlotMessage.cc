@@ -6,7 +6,7 @@
 namespace bsgalone::core {
 
 SlotMessage::SlotMessage()
-  : AbstractPlayerMessage(MessageType::SLOT, Uuid{0}, Uuid{0})
+  : AbstractPlayerCommand(MessageType::SLOT, Uuid{0}, Uuid{0})
 {}
 
 SlotMessage::SlotMessage(const Uuid playerDbId,
@@ -14,7 +14,7 @@ SlotMessage::SlotMessage(const Uuid playerDbId,
                          const Uuid shipDbId,
                          const Uuid slotDbId,
                          const Slot slotType)
-  : AbstractPlayerMessage(MessageType::SLOT, playerDbId, systemDbId)
+  : AbstractPlayerCommand(MessageType::SLOT, playerDbId, systemDbId)
   , m_shipDbId(shipDbId)
   , m_slotDbId(slotDbId)
   , m_slotType(slotType)

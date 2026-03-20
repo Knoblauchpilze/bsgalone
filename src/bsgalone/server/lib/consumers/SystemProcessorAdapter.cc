@@ -1,6 +1,6 @@
 
 #include "SystemProcessorAdapter.hh"
-#include "AbstractPlayerMessage.hh"
+#include "AbstractPlayerCommand.hh"
 
 namespace bsgalone::server {
 
@@ -33,9 +33,9 @@ SystemProcessorAdapter::SystemProcessorAdapter(const core::Uuid systemDbId,
 
 void SystemProcessorAdapter::onEventReceived(const core::IMessage &message)
 {
-  const auto &playerMessage = message.as<core::AbstractPlayerMessage>();
+  const auto &playerCommand = message.as<core::AbstractPlayerCommand>();
 
-  if (m_systemDbId != playerMessage.getSystemDbId())
+  if (m_systemDbId != playerCommand.getSystemDbId())
   {
     return;
   }

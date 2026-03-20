@@ -2,13 +2,13 @@
 
 #pragma once
 
-#include "AbstractPlayerMessage.hh"
+#include "AbstractPlayerCommand.hh"
 #include "Uuid.hh"
 #include <eigen3/Eigen/Eigen>
 
 namespace bsgalone::core {
 
-class VelocityMessage : public AbstractPlayerMessage
+class VelocityMessage : public AbstractPlayerCommand
 {
   public:
   VelocityMessage(const Uuid playerDbId,

@@ -5,14 +5,14 @@
 namespace bsgalone::core {
 
 DockMessage::DockMessage()
-  : AbstractPlayerMessage(MessageType::DOCK, Uuid{0}, Uuid{0})
+  : AbstractPlayerCommand(MessageType::DOCK, Uuid{0}, Uuid{0})
 {}
 
 DockMessage::DockMessage(const Uuid playerDbId,
                          const Uuid systemDbId,
                          const Uuid shipDbId,
                          const DockTransition transition)
-  : AbstractPlayerMessage(MessageType::DOCK, playerDbId, systemDbId)
+  : AbstractPlayerCommand(MessageType::DOCK, playerDbId, systemDbId)
   , m_shipDbId(shipDbId)
   , m_transition(transition)
 {}

@@ -5,13 +5,13 @@
 namespace bsgalone::core {
 
 JumpCancelledMessage::JumpCancelledMessage()
-  : AbstractPlayerMessage(MessageType::JUMP_CANCELLED, Uuid{0}, Uuid{0})
+  : AbstractPlayerCommand(MessageType::JUMP_CANCELLED, Uuid{0}, Uuid{0})
 {}
 
 JumpCancelledMessage::JumpCancelledMessage(const Uuid playerDbId,
                                            const Uuid systemDbId,
                                            const Uuid shipDbId)
-  : AbstractPlayerMessage(MessageType::JUMP_CANCELLED, playerDbId, systemDbId)
+  : AbstractPlayerCommand(MessageType::JUMP_CANCELLED, playerDbId, systemDbId)
   , m_shipDbId(shipDbId)
 {}
 

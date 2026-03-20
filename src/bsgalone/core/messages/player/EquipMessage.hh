@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "AbstractPlayerMessage.hh"
+#include "AbstractPlayerCommand.hh"
 #include "Item.hh"
 #include "Uuid.hh"
 
@@ -13,7 +13,7 @@ enum class EquipType
   UNEQUIP
 };
 
-class EquipMessage : public AbstractPlayerMessage
+class EquipMessage : public AbstractPlayerCommand
 {
   public:
   EquipMessage(const Uuid playerDbId,

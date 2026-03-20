@@ -6,13 +6,13 @@
 namespace bsgalone::core {
 
 ShipSelectedMessage::ShipSelectedMessage()
-  : AbstractPlayerMessage(MessageType::SHIP_SELECTED, Uuid{0}, Uuid{0})
+  : AbstractPlayerCommand(MessageType::SHIP_SELECTED, Uuid{0}, Uuid{0})
 {}
 
 ShipSelectedMessage::ShipSelectedMessage(const Uuid playerDbId,
                                          const Uuid systemDbId,
                                          const Uuid shipDbId)
-  : AbstractPlayerMessage(MessageType::SHIP_SELECTED, playerDbId, systemDbId)
+  : AbstractPlayerCommand(MessageType::SHIP_SELECTED, playerDbId, systemDbId)
   , m_shipDbId(shipDbId)
 {}
 

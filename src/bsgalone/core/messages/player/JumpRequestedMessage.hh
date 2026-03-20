@@ -1,13 +1,13 @@
 
 #pragma once
 
-#include "AbstractPlayerMessage.hh"
+#include "AbstractPlayerCommand.hh"
 #include "Uuid.hh"
 #include <optional>
 
 namespace bsgalone::core {
 
-class JumpRequestedMessage : public AbstractPlayerMessage
+class JumpRequestedMessage : public AbstractPlayerCommand
 {
   public:
   JumpRequestedMessage(const Uuid playerDbId,

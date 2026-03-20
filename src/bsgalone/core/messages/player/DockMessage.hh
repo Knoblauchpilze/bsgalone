@@ -2,13 +2,13 @@
 
 #pragma once
 
-#include "AbstractPlayerMessage.hh"
+#include "AbstractPlayerCommand.hh"
 #include "DockTransition.hh"
 #include "Uuid.hh"
 
 namespace bsgalone::core {
 
-class DockMessage : public AbstractPlayerMessage
+class DockMessage : public AbstractPlayerCommand
 {
   public:
   DockMessage(const Uuid playerDbId,

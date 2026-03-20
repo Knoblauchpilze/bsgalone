@@ -1,12 +1,10 @@
 
 #include "BroadcastMessageListener.hh"
-#include "AbstractPlayerMessage.hh"
-#include "AbstractSystemMessage.hh"
 #include "JumpMessage.hh"
 #include "LoginMessage.hh"
 #include "LogoutMessage.hh"
 #include "TestOutputNetworkAdapter.hh"
-#include "TestPlayerMessage.hh"
+#include "TestPlayerCommand.hh"
 #include "TestSystemMessage.hh"
 #include <gmock/gmock-matchers.h>
 #include <gtest/gtest.h>
@@ -162,15 +160,15 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
   auto server = std::make_shared<TestOutputNetworkAdapter>();
   BroadcastMessageListener listener(manager, server);
 
-  auto message = std::make_unique<TestPlayerMessage>(core::Uuid{18}, core::Uuid{19});
+  auto message = std::make_unique<TestPlayerCommand>(core::Uuid{18}, core::Uuid{19});
   listener.onEventReceived(*message);
 
   EXPECT_EQ(1u, server->messages().size());
   const auto &actual = server->messages().at(0);
   EXPECT_EQ(net::ClientId{12}, actual.clientId);
   EXPECT_EQ(core::MessageType::DOCK, actual.data->type());
-  EXPECT_EQ(core::Uuid{18}, actual.data->as<TestPlayerMessage>().getPlayerDbId());
-  EXPECT_EQ(core::Uuid{19}, actual.data->as<TestPlayerMessage>().getSystemDbId());
+  EXPECT_EQ(core::Uuid{18}, actual.data->as<TestPlayerCommand>().getPlayerDbId());
+  EXPECT_EQ(core::Uuid{19}, actual.data->as<TestPlayerCommand>().getSystemDbId());
 }
 
 namespace {

@@ -71,9 +71,9 @@ void BroadcastMessageListener::forwardMessageToClientManager(const core::IMessag
 
 void BroadcastMessageListener::triageOutboundMessage(const core::IMessage &message)
 {
-  if (message.isA<core::AbstractPlayerMessage>())
+  if (message.isA<core::AbstractPlayerCommand>())
   {
-    routePlayerMessage(message.as<core::AbstractPlayerMessage>());
+    routePlayerCommand(message.as<core::AbstractPlayerCommand>());
     return;
   }
 
@@ -86,7 +86,7 @@ void BroadcastMessageListener::triageOutboundMessage(const core::IMessage &messa
   m_broadcastModule.processMessage(message);
 }
 
-void BroadcastMessageListener::routePlayerMessage(const core::AbstractPlayerMessage &message)
+void BroadcastMessageListener::routePlayerCommand(const core::AbstractPlayerCommand &message)
 {
   const auto clientId = m_clientManager->getClientIdForPlayer(message.getPlayerDbId());
   m_adapter->sendMessage(clientId, message);

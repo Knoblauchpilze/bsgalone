@@ -5,14 +5,14 @@
 namespace bsgalone::core {
 
 JumpRequestedMessage::JumpRequestedMessage()
-  : AbstractPlayerMessage(MessageType::JUMP_REQUESTED, Uuid{0}, Uuid{0})
+  : AbstractPlayerCommand(MessageType::JUMP_REQUESTED, Uuid{0}, Uuid{0})
 {}
 
 JumpRequestedMessage::JumpRequestedMessage(const Uuid playerDbId,
                                            const Uuid sourceSystemDbId,
                                            const Uuid shipDbId,
                                            const Uuid destinationSystemDbId)
-  : AbstractPlayerMessage(MessageType::JUMP_REQUESTED, playerDbId, sourceSystemDbId)
+  : AbstractPlayerCommand(MessageType::JUMP_REQUESTED, playerDbId, sourceSystemDbId)
   , m_shipDbId(shipDbId)
   , m_destinationSystemDbId(destinationSystemDbId)
 {}

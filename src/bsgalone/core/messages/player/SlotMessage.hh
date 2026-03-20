@@ -2,13 +2,13 @@
 
 #pragma once
 
-#include "AbstractPlayerMessage.hh"
+#include "AbstractPlayerCommand.hh"
 #include "Slot.hh"
 #include "Uuid.hh"
 
 namespace bsgalone::core {
 
-class SlotMessage : public AbstractPlayerMessage
+class SlotMessage : public AbstractPlayerCommand
 {
   public:
   SlotMessage(const Uuid playerDbId,

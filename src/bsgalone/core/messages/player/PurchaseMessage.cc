@@ -5,14 +5,14 @@
 namespace bsgalone::core {
 
 PurchaseMessage::PurchaseMessage()
-  : AbstractPlayerMessage(MessageType::PURCHASE, Uuid{0}, Uuid{0})
+  : AbstractPlayerCommand(MessageType::PURCHASE, Uuid{0}, Uuid{0})
 {}
 
 PurchaseMessage::PurchaseMessage(const Uuid playerDbId,
                                  const Uuid systemDbId,
                                  const Item &itemType,
                                  const Uuid itemDbId)
-  : AbstractPlayerMessage(MessageType::PURCHASE, playerDbId, systemDbId)
+  : AbstractPlayerCommand(MessageType::PURCHASE, playerDbId, systemDbId)
   , m_itemType(itemType)
   , m_itemDbId(itemDbId)
 {}

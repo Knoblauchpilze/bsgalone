@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include "AbstractPlayerMessage.hh"
+#include "AbstractPlayerCommand.hh"
 #include "Uuid.hh"
 
 namespace bsgalone::core {
 
-class ShipSelectedMessage : public AbstractPlayerMessage
+class ShipSelectedMessage : public AbstractPlayerCommand
 {
   public:
   ShipSelectedMessage(const Uuid playerDbId, const Uuid systemDbId, const Uuid shipDbId);

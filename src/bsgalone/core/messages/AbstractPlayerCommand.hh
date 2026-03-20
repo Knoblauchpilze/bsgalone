@@ -19,6 +19,12 @@ class AbstractPlayerCommand : public IMessage
   auto getSystemDbId() const -> Uuid;
 
   protected:
+  /// @brief - Creates a new command with the specified type. This constructor
+  /// is protected to only allow subclasses to use it.
+  /// @param type - the type of the command to create.
+  /// @param playerDbId - the identifier of the player who initiated the command.
+  /// @param systemDbId - the system in which the player is currently located. It
+  /// allows the server to route the command to the correct processor.
   AbstractPlayerCommand(const MessageType &type, const Uuid playerDbId, const Uuid systemDbId);
 
   Uuid m_playerDbId{};

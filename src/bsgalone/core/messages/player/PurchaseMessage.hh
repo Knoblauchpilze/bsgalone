@@ -1,13 +1,13 @@
 
 #pragma once
 
-#include "AbstractPlayerMessage.hh"
+#include "AbstractPlayerCommand.hh"
 #include "Item.hh"
 #include "Uuid.hh"
 
 namespace bsgalone::core {
 
-class PurchaseMessage : public AbstractPlayerMessage
+class PurchaseMessage : public AbstractPlayerCommand
 {
   public:
   PurchaseMessage(const Uuid playerDbId,

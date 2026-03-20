@@ -5,7 +5,7 @@
 namespace bsgalone::core {
 
 EquipMessage::EquipMessage()
-  : AbstractPlayerMessage(MessageType::EQUIP, Uuid{0}, Uuid{0})
+  : AbstractPlayerCommand(MessageType::EQUIP, Uuid{0}, Uuid{0})
 {}
 
 EquipMessage::EquipMessage(const Uuid playerDbId,
@@ -14,7 +14,7 @@ EquipMessage::EquipMessage(const Uuid playerDbId,
                            const Uuid shipDbId,
                            const Item &itemType,
                            const Uuid itemDbId)
-  : AbstractPlayerMessage(MessageType::EQUIP, playerDbId, systemDbId)
+  : AbstractPlayerCommand(MessageType::EQUIP, playerDbId, systemDbId)
   , m_action(action)
   , m_shipDbId(shipDbId)
   , m_itemType(itemType)

@@ -6,14 +6,14 @@
 namespace bsgalone::core {
 
 VelocityMessage::VelocityMessage()
-  : AbstractPlayerMessage(MessageType::VELOCITY, Uuid{0}, Uuid{0})
+  : AbstractPlayerCommand(MessageType::VELOCITY, Uuid{0}, Uuid{0})
 {}
 
 VelocityMessage::VelocityMessage(const Uuid playerDbId,
                                  const Uuid systemDbId,
                                  const Uuid shipDbId,
                                  const Eigen::Vector3f &acceleration)
-  : AbstractPlayerMessage(MessageType::VELOCITY, playerDbId, systemDbId)
+  : AbstractPlayerCommand(MessageType::VELOCITY, playerDbId, systemDbId)
   , m_shipDbId(shipDbId)
   , m_acceleration(acceleration)
 {}

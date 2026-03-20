@@ -6,14 +6,14 @@
 namespace bsgalone::core {
 
 TargetPickedMessage::TargetPickedMessage()
-  : AbstractPlayerMessage(MessageType::TARGET_PICKED, Uuid{0}, Uuid{0})
+  : AbstractPlayerCommand(MessageType::TARGET_PICKED, Uuid{0}, Uuid{0})
 {}
 
 TargetPickedMessage::TargetPickedMessage(const Uuid playerDbId,
                                          const Uuid systemDbId,
                                          Target data,
                                          const Eigen::Vector3f &position)
-  : AbstractPlayerMessage(MessageType::TARGET_PICKED, playerDbId, systemDbId)
+  : AbstractPlayerCommand(MessageType::TARGET_PICKED, playerDbId, systemDbId)
   , m_data(std::move(data))
   , m_position(position)
 {}
