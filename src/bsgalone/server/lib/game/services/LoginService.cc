@@ -22,7 +22,7 @@ auto LoginService::tryLogin(const LoginData &data) const -> std::optional<core::
     return {};
   }
 
-  const auto player = m_repositories.playerRepository->findOneByAccount(maybeAccount->id);
+  const auto player = m_repositories.playerRepository->findOneByAccount(maybeAccount->dbId);
   core::PlayerRole playerRole{
     .player = player.id,
     .role   = data.role,

@@ -18,10 +18,10 @@ auto SignupService::trySignup(const std::string &name,
     return {};
   }
 
-  core::Account account{.name = name, .password = password};
-  account.id = registerAccount(account);
+  core::Account account{.username = name, .password = password};
+  account.dbId = registerAccount(account);
 
-  core::Player player{.account = account.id, .name = name, .faction = faction};
+  core::Player player{.account = account.dbId, .name = name, .faction = faction};
   player.id = registerPlayer(player);
 
   registerResources(player);
@@ -38,13 +38,13 @@ auto SignupService::getPlayerSystemDbId(const core::Uuid playerDbId) const -> co
 auto SignupService::registerAccount(const core::Account &account) const -> core::Uuid
 {
   m_repositories.accountRepository->save(account);
-  const auto dbAccount = m_repositories.accountRepository->findOneByName(account.name);
+  const auto dbAccount = m_repositories.accountRepository->findOneByName(account.username);
 
   if (!dbAccount)
   {
     error("Failed to register account");
   }
-  return dbAccount->id;
+  return dbAccount->dbId;
 }
 
 auto SignupService::registerPlayer(const core::Player &player) const -> core::Uuid
