@@ -37,8 +37,8 @@ auto AccountRepository::findOneById(const Uuid account) const -> Account
 
   Account out;
 
-  out.id       = account;
-  out.name     = record[0].as<std::string>();
+  out.dbId     = account;
+  out.username = record[0].as<std::string>();
   out.password = record[1].as<std::string>();
 
   return out;
@@ -64,8 +64,8 @@ auto AccountRepository::findOneByName(const std::string &name) const -> std::opt
   Account out;
 
   const auto &record = rows[0];
-  out.id             = fromDbId(record[0].as<int>());
-  out.name           = name;
+  out.dbId           = fromDbId(record[0].as<int>());
+  out.username       = name;
   out.password       = record[1].as<std::string>();
 
   return out;
@@ -75,7 +75,8 @@ void AccountRepository::save(const Account &account)
 {
   auto query = [&account](pqxx::work &transaction) {
     return transaction
-      .exec(pqxx::prepped{UPDATE_ACCOUNT_QUERY_NAME}, pqxx::params{account.name, account.password})
+      .exec(pqxx::prepped{UPDATE_ACCOUNT_QUERY_NAME},
+            pqxx::params{account.username, account.password})
       .no_rows();
   };
 
