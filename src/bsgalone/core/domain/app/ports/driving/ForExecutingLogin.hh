@@ -1,9 +1,8 @@
 
 #pragma once
 
-#include "GameRole.hh"
+#include "LoginData.hh"
 #include <memory>
-#include <string>
 
 namespace bsgalone::core {
 
@@ -13,13 +12,7 @@ class ForExecutingLogin
   ForExecutingLogin()          = default;
   virtual ~ForExecutingLogin() = default;
 
-  struct Data
-  {
-    std::string username{};
-    std::string password{};
-    GameRole role{};
-  };
-  virtual void performLogin(const Data &data) = 0;
+  virtual void performLogin(const LoginData &data) = 0;
 };
 
 using ForExecutingLoginPtr = std::unique_ptr<ForExecutingLogin>;

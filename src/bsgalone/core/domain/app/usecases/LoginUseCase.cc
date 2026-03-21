@@ -12,7 +12,7 @@ LoginUseCase::LoginUseCase(ForManagingAccountShPtr accountRepo)
   }
 }
 
-void LoginUseCase::performLogin(const Data &data)
+void LoginUseCase::performLogin(const LoginData &data)
 {
   m_accountRepo->findOneByName(data.username);
   // TODO: Implement the rest of the flow

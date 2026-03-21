@@ -12,7 +12,7 @@ class LoginUseCase : public ForExecutingLogin
   LoginUseCase(ForManagingAccountShPtr accountRepo);
   ~LoginUseCase() override = default;
 
-  void performLogin(const Data &data) override;
+  void performLogin(const LoginData &data) override;
 
   private:
   ForManagingAccountShPtr m_accountRepo{};

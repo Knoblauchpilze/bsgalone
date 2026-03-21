@@ -27,9 +27,7 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase, FetchesAccount)
   auto mockAccountRepo = std::make_shared<MockAccountRepo>();
   LoginUseCase usecase(mockAccountRepo);
 
-  ForExecutingLogin::Data data{.username = "player",
-                               .password = "password",
-                               .role     = GameRole::PILOT};
+  LoginData data{.username = "player", .password = "password", .role = GameRole::PILOT};
 
   EXPECT_CALL(*mockAccountRepo, findOneByName("player"))
     .Times(1)
