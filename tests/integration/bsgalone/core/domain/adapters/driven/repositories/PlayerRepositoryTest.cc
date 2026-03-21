@@ -14,7 +14,23 @@ using Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_PlayerReposi
   = DbConnectionFixture;
 
 namespace {
-auto insertTestPlayer(DbConnection &dbConnection, const Uuid accountDbId) -> Player
+void insertTestPlayerRole(DbConnection &dbConnection, Player &player)
+{
+  constexpr auto QUERY = R"(
+      INSERT INTO player_role ("player", "role")
+        VALUES ($1, 'pilot')
+    )";
+
+  const auto query = [&player](pqxx::nontransaction &work) {
+    return work.exec(QUERY, pqxx::params{toDbId(player.dbId)}).no_rows();
+  };
+  dbConnection.executeQuery(query);
+
+  player.role = GameRole::PILOT;
+}
+
+auto insertTestPlayer(DbConnection &dbConnection, const Uuid accountDbId, const bool withRole)
+  -> Player
 {
   const auto name = std::format("random-player-{:%F%T}", ::core::now());
 
@@ -37,6 +53,11 @@ auto insertTestPlayer(DbConnection &dbConnection, const Uuid accountDbId) -> Pla
     .faction = Faction::CYLON,
   };
 
+  if (withRole)
+  {
+    insertTestPlayerRole(dbConnection, out);
+  }
+
   return out;
 }
 } // namespace
@@ -50,23 +71,6 @@ TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_PlayerRepos
 }
 
 TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_PlayerRepository,
-       FetchesExistingPlayer)
-{
-  PlayerRepository repo(this->dbConnection());
-  repo.initialize();
-
-  const auto account        = insertTestAccount(*this->dbConnection());
-  const auto expectedPlayer = insertTestPlayer(*this->dbConnection(), account.dbId);
-
-  const auto actual = repo.findOneByAccount(account.dbId);
-
-  EXPECT_EQ(expectedPlayer.dbId, actual.dbId);
-  EXPECT_EQ(expectedPlayer.account, actual.account);
-  EXPECT_EQ(expectedPlayer.name, actual.name);
-  EXPECT_EQ(expectedPlayer.faction, actual.faction);
-}
-
-TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_PlayerRepository,
        FailsWhenInitializeIsNotCalled)
 {
   PlayerRepository repo(this->dbConnection());
@@ -76,7 +80,83 @@ TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_PlayerRepos
 }
 
 TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_PlayerRepository,
-       ThrowsWhenFetchingUnknownPlayer)
+       FindOneById_FetchesExistingPlayer)
+{
+  PlayerRepository repo(this->dbConnection());
+  repo.initialize();
+
+  const auto account        = insertTestAccount(*this->dbConnection());
+  const auto expectedPlayer = insertTestPlayer(*this->dbConnection(), account.dbId, true);
+
+  const auto actual = repo.findOneById(expectedPlayer.dbId);
+
+  EXPECT_EQ(expectedPlayer.dbId, actual.dbId);
+  EXPECT_EQ(expectedPlayer.account, actual.account);
+  EXPECT_EQ(expectedPlayer.name, actual.name);
+  EXPECT_EQ(expectedPlayer.faction, actual.faction);
+  EXPECT_EQ(expectedPlayer.role, actual.role);
+}
+
+TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_PlayerRepository,
+       FindOneById_FailsWhenPlayerDoesNotDefineRole)
+{
+  PlayerRepository repo(this->dbConnection());
+  repo.initialize();
+
+  const auto account        = insertTestAccount(*this->dbConnection());
+  const auto expectedPlayer = insertTestPlayer(*this->dbConnection(), account.dbId, false);
+
+  const auto function = [&repo, &expectedPlayer]() { repo.findOneById(expectedPlayer.dbId); };
+  EXPECT_THAT(function,
+              ThrowsMessage<::core::CoreException>("Failed to execute query returning single row"));
+}
+
+TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_PlayerRepository,
+       FindOneById_ThrowsWhenFetchingUnknownPlayer)
+{
+  PlayerRepository repo(this->dbConnection());
+  repo.initialize();
+
+  EXPECT_THAT([&repo]() { repo.findOneById(Uuid{269871}); },
+              ThrowsMessage<::core::CoreException>("Failed to execute query returning single row"));
+}
+
+TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_PlayerRepository,
+       FindOneByAccount_FetchesExistingPlayer)
+{
+  PlayerRepository repo(this->dbConnection());
+  repo.initialize();
+
+  const auto account        = insertTestAccount(*this->dbConnection());
+  const auto expectedPlayer = insertTestPlayer(*this->dbConnection(), account.dbId, true);
+
+  const auto actual = repo.findOneByAccount(account.dbId);
+
+  EXPECT_EQ(expectedPlayer.dbId, actual.dbId);
+  EXPECT_EQ(expectedPlayer.account, actual.account);
+  EXPECT_EQ(expectedPlayer.name, actual.name);
+  EXPECT_EQ(expectedPlayer.faction, actual.faction);
+  EXPECT_EQ(expectedPlayer.role, actual.role);
+}
+
+TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_PlayerRepository,
+       FindOneByAccount_FailsWhenPlayerDoesNotDefineRole)
+{
+  PlayerRepository repo(this->dbConnection());
+  repo.initialize();
+
+  const auto account        = insertTestAccount(*this->dbConnection());
+  const auto expectedPlayer = insertTestPlayer(*this->dbConnection(), account.dbId, false);
+
+  const auto function = [&repo, &expectedPlayer]() {
+    repo.findOneByAccount(*expectedPlayer.account);
+  };
+  EXPECT_THAT(function,
+              ThrowsMessage<::core::CoreException>("Failed to execute query returning single row"));
+}
+
+TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_PlayerRepository,
+       FindOneByAccount_ThrowsWhenFetchingUnknownPlayer)
 {
   PlayerRepository repo(this->dbConnection());
   repo.initialize();

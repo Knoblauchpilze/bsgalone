@@ -39,25 +39,31 @@ WHERE
 constexpr auto FIND_ONE_QUERY_NAME = "player_find_one";
 constexpr auto FIND_ONE_QUERY      = R"(
 SELECT
-  account,
-  name,
-  faction
+  p.id,
+  p.account,
+  p.name,
+  p.faction,
+  pr.role
 FROM
-  player
+  player AS p
+  INNER JOIN player_role AS pr ON pr.player = p.id
 WHERE
-  id = $1
+  p.id = $1
 )";
 
 constexpr auto FIND_ONE_BY_ACCOUNT_QUERY_NAME = "player_find_one_by_account";
 constexpr auto FIND_ONE_BY_ACCOUNT_QUERY      = R"(
 SELECT
-  id,
-  name,
-  faction
+  p.id,
+  p.account,
+  p.name,
+  p.faction,
+  pr.role
 FROM
-  player
+  player AS p
+  INNER JOIN player_role AS pr ON pr.player = p.id
 WHERE
-  account = $1
+  p.account = $1
 )";
 
 constexpr auto FIND_SYSTEM_QUERY_NAME = "player_find_system";
@@ -141,42 +147,45 @@ auto PlayerRepository::findAllUndockedBySystem(const Uuid system) const -> std::
   return out;
 }
 
-auto PlayerRepository::findOneById(const Uuid player) const -> Player
+namespace {
+auto fromDbRow(const pqxx::row &record) -> Player
 {
-  const auto query = [player](pqxx::nontransaction &work) {
-    return work.exec(pqxx::prepped{FIND_ONE_QUERY_NAME}, pqxx::params{toDbId(player)}).one_row();
+  std::optional<Uuid> maybeAccountDbId{};
+  if (!record[1].is_null())
+  {
+    maybeAccountDbId = fromDbId(record[1].as<int>());
+  }
+
+  return Player{
+    .dbId    = fromDbId(record[0].as<int>()),
+    .account = maybeAccountDbId,
+    .name    = record[2].as<std::string>(),
+    .faction = fromDbFaction(record[3].as<std::string>()),
+    .role    = fromDbGameRole(record[4].as<std::string>()),
+  };
+}
+} // namespace
+
+auto PlayerRepository::findOneById(const Uuid playerDbId) const -> Player
+{
+  const auto query = [playerDbId](pqxx::nontransaction &work) {
+    return work.exec(pqxx::prepped{FIND_ONE_QUERY_NAME}, pqxx::params{toDbId(playerDbId)}).one_row();
   };
   const auto record = m_connection->executeQueryReturningSingleRow(query);
 
-  Player out;
-
-  out.dbId = player;
-  if (!record[0].is_null())
-  {
-    out.account = fromDbId(record[0].as<int>());
-  }
-  out.name    = record[1].as<std::string>();
-  out.faction = fromDbFaction(record[2].as<std::string>());
-
-  return out;
+  return fromDbRow(record);
 }
 
-auto PlayerRepository::findOneByAccount(const Uuid account) const -> Player
+auto PlayerRepository::findOneByAccount(const Uuid accountDbId) const -> Player
 {
-  const auto query = [account](pqxx::nontransaction &work) {
-    return work.exec(pqxx::prepped{FIND_ONE_BY_ACCOUNT_QUERY_NAME}, pqxx::params{toDbId(account)})
+  const auto query = [accountDbId](pqxx::nontransaction &work) {
+    return work
+      .exec(pqxx::prepped{FIND_ONE_BY_ACCOUNT_QUERY_NAME}, pqxx::params{toDbId(accountDbId)})
       .one_row();
   };
   const auto record = m_connection->executeQueryReturningSingleRow(query);
 
-  Player out;
-
-  out.dbId    = fromDbId(record[0].as<int>());
-  out.account = account;
-  out.name    = record[1].as<std::string>();
-  out.faction = fromDbFaction(record[2].as<std::string>());
-
-  return out;
+  return fromDbRow(record);
 }
 
 auto PlayerRepository::findSystemByPlayer(const Uuid player) const -> Uuid
