@@ -3,7 +3,6 @@
 #include "AsteroidListMessage.hh"
 #include "ComputerListMessage.hh"
 #include "HangarMessage.hh"
-#include "LoginUseCase.hh"
 #include "OutpostListMessage.hh"
 #include "PlayerComputerListMessage.hh"
 #include "PlayerListMessage.hh"
@@ -13,6 +12,7 @@
 #include "PlayerShipListMessage.hh"
 #include "PlayerWeaponListMessage.hh"
 #include "ResourceListMessage.hh"
+#include "SendLoginDataUseCase.hh"
 #include "ShipListMessage.hh"
 #include "SystemListMessage.hh"
 #include "TargetListMessage.hh"
@@ -38,10 +38,9 @@ LoadingMessagesConsumer::LoadingMessagesConsumer(const Services &services,
   }
 
   auto publisher = std::make_shared<core::PlayerMessagePublisher>(outputMessageQueue);
-  m_loginUseCase
-    = std::make_unique<core::LoginUseCase>(m_loadingService->repositories().accountRepository,
-                                           m_loadingService->repositories().systemRepository,
-                                           std::move(publisher));
+  m_sendLoginDataUseCase
+    = std::make_unique<core::SendLoginDataUseCase>(m_loadingService->repositories().systemRepository,
+                                                   std::move(publisher));
 }
 
 void LoadingMessagesConsumer::onEventReceived(const core::IMessage &message)
@@ -142,7 +141,7 @@ void LoadingMessagesConsumer::handleLoginTransition(const core::LoadingStartedMe
   handleWeaponsLoading(message);
   handleComputersLoading(message);
   handleShipsLoading(message);
-  m_loginUseCase->publishLoginData(message.getPlayerDbId());
+  m_sendLoginDataUseCase->publishLoginData(message.getPlayerDbId());
   handlePlayerResourcesLoading(message);
   handlePlayerShipsLoading(message);
   handlePlayerComputersLoading(message);

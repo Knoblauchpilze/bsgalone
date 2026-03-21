@@ -21,7 +21,7 @@ class LoadingMessagesConsumer : public core::AbstractMessageConsumer
   private:
   LoadingServiceShPtr m_loadingService{};
   core::IMessageQueueShPtr m_outputMessageQueue{};
-  core::ForPublishingLoginDataPtr m_loginUseCase{};
+  core::ForPublishingLoginDataPtr m_sendLoginDataUseCase{};
 
   void handleLoadingStartedMessage(const core::LoadingStartedMessage &message) const;
   void forwardLoadingFinishedMessage(const core::LoadingFinishedMessage &message) const;
