@@ -60,7 +60,10 @@ TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_PlayerRepos
 
   const auto actual = repo.findOneByAccount(account.dbId);
 
-  EXPECT_EQ(expectedPlayer, actual);
+  EXPECT_EQ(expectedPlayer.dbId, actual.dbId);
+  EXPECT_EQ(expectedPlayer.account, actual.account);
+  EXPECT_EQ(expectedPlayer.name, actual.name);
+  EXPECT_EQ(expectedPlayer.faction, actual.faction);
 }
 
 TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_PlayerRepository,

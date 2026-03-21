@@ -31,7 +31,10 @@ TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_AccountRepo
 
   const auto actual = repo.findOneByName(expectedAccount.username);
 
-  EXPECT_EQ(expectedAccount, actual);
+  ASSERT_TRUE(actual.has_value());
+  EXPECT_EQ(expectedAccount.dbId, actual->dbId);
+  EXPECT_EQ(expectedAccount.username, actual->username);
+  EXPECT_EQ(expectedAccount.password, actual->password);
 }
 
 TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_AccountRepository,
