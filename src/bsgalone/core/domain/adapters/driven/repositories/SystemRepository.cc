@@ -18,9 +18,9 @@ SELECT
   s.y_pos,
   s.z_pos,
   t.current_tick,
+  tc.ticks,
   tc.duration,
-  tc.unit,
-  tc.ticks
+  tc.unit
 FROM
   system AS s
   INNER JOIN tick AS t ON t.system = s.id
@@ -38,9 +38,9 @@ SELECT
   s.y_pos,
   s.z_pos,
   t.current_tick,
+  tc.ticks,
   tc.duration,
-  tc.unit,
-  tc.ticks
+  tc.unit
 FROM
   system AS s
   INNER JOIN tick AS t ON t.system = s.id
@@ -146,8 +146,8 @@ auto fromDbRow(const pqxx::row &record) -> System
 
   const auto tick = record[6].as<int>();
   chrono::Duration step{
-    .unit    = chrono::fromString(record[7].view()),
-    .elapsed = static_cast<float>(record[8].as<int>()),
+    .unit    = chrono::fromString(record[8].view()),
+    .elapsed = static_cast<float>(record[7].as<int>()),
   };
 
   return System{

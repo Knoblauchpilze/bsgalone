@@ -95,7 +95,11 @@ TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_SystemRepos
 
   const auto actual = repo.findOneById(expectedSystem.dbId);
 
-  EXPECT_EQ(expectedSystem, actual);
+  EXPECT_EQ(expectedSystem.dbId, actual.dbId);
+  EXPECT_EQ(expectedSystem.name, actual.name);
+  EXPECT_EQ(expectedSystem.position, actual.position);
+  EXPECT_EQ(expectedSystem.currentTick, actual.currentTick);
+  EXPECT_EQ(expectedSystem.step, actual.step);
 }
 
 TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_SystemRepository,
