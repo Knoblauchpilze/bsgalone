@@ -16,7 +16,7 @@ using Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_PlayerReposi
 namespace {
 auto insertTestPlayer(DbConnection &dbConnection, const Uuid accountDbId) -> Player
 {
-  const auto name = std::format("random-system-{:%F%T}", ::core::now());
+  const auto name = std::format("random-player-{:%F%T}", ::core::now());
 
   constexpr auto QUERY = R"(
       INSERT INTO player ("account", "name", "faction")
