@@ -1,6 +1,7 @@
 
 #include "TargetListMessage.hh"
 #include "SerializationUtils.hh"
+#include "TargetSerialization.hh"
 
 namespace bsgalone::core {
 

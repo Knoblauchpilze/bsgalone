@@ -7,6 +7,10 @@ add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/loading
 	)
 
+add_subdirectory(
+	${CMAKE_CURRENT_SOURCE_DIR}/serialization
+	)
+
 target_sources(unitTests PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/PlayerMessagePublisherTest.cc
 	)

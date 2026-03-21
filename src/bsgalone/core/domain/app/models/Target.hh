@@ -46,7 +46,4 @@ struct Target
   auto str() const -> std::string;
 };
 
-auto operator<<(std::ostream &out, const Target &target) -> std::ostream &;
-bool operator>>(std::istream &in, Target &target);
-
 } // namespace bsgalone::core

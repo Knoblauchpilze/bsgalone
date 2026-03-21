@@ -1,7 +1,5 @@
 
 #include "Target.hh"
-#include "Common.hh"
-#include "Comparison.hh"
 #include <gtest/gtest.h>
 
 using namespace ::testing;
@@ -58,52 +56,6 @@ TEST(Unit_Bsgalone_Core_Domain_App_Models_Target, DifferentWhenOnePropIsDifferen
   data2 = data1;
   data2.targetKind.reset();
   EXPECT_FALSE(data1 == data2);
-}
-
-// TODO: This should not be in the models but in the driven adapters.
-TEST(Unit_Bsgalone_Core_Domain_App_Models_Target, Basic)
-{
-  Target input{.sourceDbId = Uuid{1234},
-               .sourceKind = EntityKind::PLAYER,
-               .targetDbId = Uuid{14},
-               .targetKind = EntityKind::SHIP};
-
-  Target output{.sourceDbId = Uuid{17640},
-                .sourceKind = EntityKind::OUTPOST,
-                .targetDbId = Uuid{5874},
-                .targetKind = EntityKind::ASTEROID};
-
-  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
-
-  assertTargetAreEqual(output, input);
-}
-
-TEST(Unit_Bsgalone_Core_Domain_App_Models_Target, OverridesTarget)
-{
-  Target input{.sourceDbId = Uuid{1234}, .sourceKind = EntityKind::PLAYER};
-
-  Target output{.sourceDbId = Uuid{17640},
-                .sourceKind = EntityKind::OUTPOST,
-                .targetDbId = Uuid{5874},
-                .targetKind = EntityKind::ASTEROID};
-
-  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
-
-  assertTargetAreEqual(output, input);
-}
-
-TEST(Unit_Bsgalone_Core_Domain_App_Models_Target, ClearsTarget)
-{
-  Target input{.sourceDbId = Uuid{1234},
-               .sourceKind = EntityKind::PLAYER,
-               .targetDbId = Uuid{14},
-               .targetKind = EntityKind::SHIP};
-
-  Target output{.sourceDbId = Uuid{17640}, .sourceKind = EntityKind::OUTPOST};
-
-  EXPECT_TRUE(test::serializeAndDeserialize(input, output));
-
-  assertTargetAreEqual(output, input);
 }
 
 } // namespace bsgalone::core

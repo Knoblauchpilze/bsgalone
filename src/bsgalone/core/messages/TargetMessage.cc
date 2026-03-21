@@ -2,6 +2,7 @@
 
 #include "TargetMessage.hh"
 #include "SerializationUtils.hh"
+#include "TargetSerialization.hh"
 #include "VectorUtils.hh"
 
 namespace bsgalone::core {
