@@ -4,6 +4,7 @@ target_include_directories(unitTests PUBLIC
 	)
 
 target_sources(unitTests PUBLIC
+	${CMAKE_CURRENT_SOURCE_DIR}/TestEventPublisher.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/TestOutputNetworkAdapter.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/TestPlayerCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/TestPlayerMessage.cc

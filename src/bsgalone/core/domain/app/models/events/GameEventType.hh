@@ -9,7 +9,8 @@ namespace bsgalone::core {
 enum class GameEventType
 {
   ENTITY_DIED,
-  JUMP_COMPLETED
+  JUMP_COMPLETED,
+  PLAYER_LOGIN
 };
 
 auto str(const GameEventType &type) -> std::string;

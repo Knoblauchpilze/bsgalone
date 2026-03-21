@@ -95,6 +95,7 @@ TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_PlayerRepos
   EXPECT_EQ(expectedPlayer.name, actual.name);
   EXPECT_EQ(expectedPlayer.faction, actual.faction);
   EXPECT_EQ(expectedPlayer.role, actual.role);
+  EXPECT_EQ(expectedPlayer.systemDbId, actual.systemDbId);
 }
 
 TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_PlayerRepository,
@@ -137,6 +138,7 @@ TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_PlayerRepos
   EXPECT_EQ(expectedPlayer.name, actual.name);
   EXPECT_EQ(expectedPlayer.faction, actual.faction);
   EXPECT_EQ(expectedPlayer.role, actual.role);
+  EXPECT_EQ(expectedPlayer.systemDbId, actual.systemDbId);
 }
 
 TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_PlayerRepository,
