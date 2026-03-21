@@ -44,11 +44,8 @@ TEST(Unit_Bsgalone_Server_Messages_BroadcastMessageListener,
   message.setSystemDbId(core::Uuid{19});
   listener.onEventReceived(message);
 
-  std::cout << "hoho\n";
   EXPECT_EQ(core::Uuid{18}, manager->tryGetPlayerForClient(net::ClientId{12}).value());
-  std::cout << "hehe\n";
   EXPECT_EQ(core::Uuid{19}, manager->tryGetSystemForClient(net::ClientId{12}).value());
-  std::cout << "hihi\n";
   const auto clients = manager->getAllClientsForSystem(core::Uuid{19});
   EXPECT_EQ(std::vector<net::ClientId>{net::ClientId{12}}, clients);
 }
