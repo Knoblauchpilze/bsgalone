@@ -22,11 +22,11 @@ class PlayerRepository : public AbstractRepository, public ForManagingPlayer
   auto findAll() const -> std::unordered_set<Uuid>;
   auto findAllBySystem(const Uuid system) const -> std::unordered_set<Uuid>;
   auto findAllUndockedBySystem(const Uuid system) const -> std::unordered_set<Uuid>;
-  auto findOneById(const Uuid playerDbId) const -> Player override;
-  auto findOneByAccount(const Uuid accountDbId) const -> Player override;
   auto findSystemByPlayer(const Uuid player) const -> Uuid;
 
-  void save(const Player &player);
+  auto findOneById(const Uuid playerDbId) const -> Player override;
+  auto findOneByAccount(const Uuid accountDbId) const -> Player override;
+  auto save(Player player) -> Player override;
 };
 
 using PlayerRepositoryShPtr = std::shared_ptr<PlayerRepository>;

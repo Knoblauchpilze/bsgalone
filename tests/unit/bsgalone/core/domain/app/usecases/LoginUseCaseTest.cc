@@ -27,6 +27,7 @@ class MockPlayerRepo : public ForManagingPlayer
 
   MOCK_METHOD(Player, findOneById, (const Uuid), (const, override));
   MOCK_METHOD(Player, findOneByAccount, (const Uuid), (const, override));
+  MOCK_METHOD(Player, save, (Player), (override));
 };
 
 } // namespace

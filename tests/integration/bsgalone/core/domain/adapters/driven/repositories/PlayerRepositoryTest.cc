@@ -167,4 +167,107 @@ TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_PlayerRepos
               ThrowsMessage<::core::CoreException>("Failed to execute query returning single row"));
 }
 
+TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_PlayerRepository,
+       Save_InsertsNewPlayer)
+{
+  PlayerRepository repo(this->dbConnection());
+  repo.initialize();
+
+  const auto account = insertTestAccount(*this->dbConnection());
+
+  const auto name = std::format("random-player-{:%F%T}", ::core::now());
+  // TODO: Should include the system
+  Player player{
+    .account = account.dbId,
+    .name    = name,
+    .faction = Faction::CYLON,
+    .role    = GameRole::GUNNER,
+  };
+
+  const auto actual = repo.save(player);
+
+  std::cout << "actual.name = " << actual.name << "\n";
+  std::cout << "actual.id = " << actual.dbId << "\n";
+
+  const auto dbPlayer = repo.findOneById(actual.dbId);
+  EXPECT_EQ(player.account, dbPlayer.account);
+  EXPECT_EQ(player.name, dbPlayer.name);
+  EXPECT_EQ(player.faction, dbPlayer.faction);
+  EXPECT_EQ(player.role, dbPlayer.role);
+  EXPECT_EQ(player.systemDbId, dbPlayer.systemDbId);
+}
+
+TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_PlayerRepository,
+       Save_FailsWhenPlayerAlreadyExistsWithSameName)
+{
+  PlayerRepository repo(this->dbConnection());
+  repo.initialize();
+
+  const auto account1 = insertTestAccount(*this->dbConnection());
+  const auto player1  = insertTestPlayer(*this->dbConnection(), account1.dbId, true);
+
+  const auto account2 = insertTestAccount(*this->dbConnection());
+  Player player2{
+    .account = account2.dbId,
+    .name    = player1.name,
+    .faction = Faction::CYLON,
+    .role    = GameRole::GUNNER,
+  };
+
+  auto code = [&repo, &player2]() { repo.save(player2); };
+  EXPECT_THAT(code,
+              ThrowsMessage<::core::CoreException>("Failed to execute query returning single row"));
+}
+
+TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_PlayerRepository,
+       Save_UpdatesPlayerWithSameAccount)
+{
+  PlayerRepository repo(this->dbConnection());
+  repo.initialize();
+
+  const auto account = insertTestAccount(*this->dbConnection());
+  const auto player  = insertTestPlayer(*this->dbConnection(), account.dbId, true);
+
+  auto updatedPlayer = player;
+  updatedPlayer.name = std::format("random-player-{:%F%T}", ::core::now());
+
+  const auto actual = repo.save(updatedPlayer);
+
+  const auto dbPlayer = repo.findOneById(actual.dbId);
+  EXPECT_EQ(player.account, dbPlayer.account);
+  EXPECT_EQ(player.account, dbPlayer.account);
+  EXPECT_EQ(updatedPlayer.name, dbPlayer.name);
+  EXPECT_EQ(player.faction, dbPlayer.faction);
+  EXPECT_EQ(player.role, dbPlayer.role);
+  EXPECT_EQ(player.systemDbId, dbPlayer.systemDbId);
+}
+
+TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_PlayerRepository,
+       Save_DoesNotUpdateOtherPlayersOrRoles)
+{
+  PlayerRepository repo(this->dbConnection());
+  repo.initialize();
+
+  const auto account1 = insertTestAccount(*this->dbConnection());
+  Player player1{
+    .account = account1.dbId,
+    .name    = std::format("random-player-{:%F%T}", ::core::now()),
+    .faction = Faction::CYLON,
+    .role    = GameRole::PILOT,
+  };
+  player1 = repo.save(player1);
+
+  const auto account2 = insertTestAccount(*this->dbConnection());
+  Player player2{
+    .account = account2.dbId,
+    .name    = std::format("random-player-{:%F%T}", ::core::now()),
+    .faction = Faction::COLONIAL,
+    .role    = GameRole::GUNNER,
+  };
+  player2 = repo.save(player2);
+
+  const auto actual = repo.findOneById(player1.dbId);
+  EXPECT_EQ(GameRole::PILOT, actual.role);
+}
+
 } // namespace bsgalone::core

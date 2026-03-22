@@ -10,6 +10,7 @@ CREATE TABLE player (
   updated_at TIMESTAMP WITH TIME ZONE,
   PRIMARY KEY (id),
   UNIQUE (name),
+  UNIQUE (account),
   FOREIGN KEY (account) REFERENCES account(id),
   FOREIGN KEY (faction) REFERENCES faction(name)
 );

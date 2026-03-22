@@ -36,6 +36,19 @@ WHERE
   AND ss.system = $1
 )";
 
+constexpr auto FIND_SYSTEM_QUERY_NAME = "player_find_system";
+constexpr auto FIND_SYSTEM_QUERY      = R"(
+SELECT
+  ss.system
+FROM
+  player_ship AS ps
+  LEFT JOIN ship_system AS ss ON ps.id = ss.ship
+  LEFT JOIN player AS p ON ps.player = p.id
+WHERE
+  ps.active = true
+  AND ps.player = $1
+)";
+
 constexpr auto FIND_ONE_QUERY_NAME = "player_find_one";
 constexpr auto FIND_ONE_QUERY      = R"(
 SELECT
@@ -66,23 +79,23 @@ WHERE
   p.account = $1
 )";
 
-constexpr auto FIND_SYSTEM_QUERY_NAME = "player_find_system";
-constexpr auto FIND_SYSTEM_QUERY      = R"(
-SELECT
-  ss.system
-FROM
-  player_ship AS ps
-  LEFT JOIN ship_system AS ss ON ps.id = ss.ship
-  LEFT JOIN player AS p ON ps.player = p.id
-WHERE
-  ps.active = true
-  AND ps.player = $1
-)";
-
 constexpr auto UPDATE_PLAYER_QUERY_NAME = "player_update";
 constexpr auto UPDATE_PLAYER_QUERY      = R"(
 INSERT INTO player (account, name, faction)
   VALUES ($1, $2, $3)
+  ON CONFLICT (account) DO UPDATE
+  SET
+    name = excluded.name
+  RETURNING id
+)";
+
+constexpr auto UPDATE_PLAYER_ROLE_QUERY_NAME = "player_role_update";
+constexpr auto UPDATE_PLAYER_ROLE_QUERY      = R"(
+INSERT INTO player_role (player, role)
+  VALUES ($1, $2)
+  ON CONFLICT (player) DO UPDATE
+  SET
+    role = excluded.role
 )";
 } // namespace
 
@@ -91,10 +104,11 @@ void PlayerRepository::initialize()
   m_connection->prepare(FIND_ALL_QUERY_NAME, FIND_ALL_QUERY);
   m_connection->prepare(FIND_ALL_BY_SYSTEM_QUERY_NAME, FIND_ALL_BY_SYSTEM_QUERY);
   m_connection->prepare(FIND_ALL_UNDOCKED_BY_SYSTEM_QUERY_NAME, FIND_ALL_UNDOCKED_BY_SYSTEM_QUERY);
+  m_connection->prepare(FIND_SYSTEM_QUERY_NAME, FIND_SYSTEM_QUERY);
   m_connection->prepare(FIND_ONE_QUERY_NAME, FIND_ONE_QUERY);
   m_connection->prepare(FIND_ONE_BY_ACCOUNT_QUERY_NAME, FIND_ONE_BY_ACCOUNT_QUERY);
-  m_connection->prepare(FIND_SYSTEM_QUERY_NAME, FIND_SYSTEM_QUERY);
   m_connection->prepare(UPDATE_PLAYER_QUERY_NAME, UPDATE_PLAYER_QUERY);
+  m_connection->prepare(UPDATE_PLAYER_ROLE_QUERY_NAME, UPDATE_PLAYER_ROLE_QUERY);
 }
 
 auto PlayerRepository::findAll() const -> std::unordered_set<Uuid>
@@ -147,6 +161,16 @@ auto PlayerRepository::findAllUndockedBySystem(const Uuid system) const -> std::
   return out;
 }
 
+auto PlayerRepository::findSystemByPlayer(const Uuid player) const -> Uuid
+{
+  const auto query = [player](pqxx::nontransaction &work) {
+    return work.exec(pqxx::prepped{FIND_SYSTEM_QUERY_NAME}, pqxx::params{toDbId(player)}).one_row();
+  };
+  const auto record = m_connection->executeQueryReturningSingleRow(query);
+
+  return fromDbId(record[0].as<int>());
+}
+
 namespace {
 auto fromDbRow(const pqxx::row &record) -> Player
 {
@@ -188,36 +212,38 @@ auto PlayerRepository::findOneByAccount(const Uuid accountDbId) const -> Player
   return fromDbRow(record);
 }
 
-auto PlayerRepository::findSystemByPlayer(const Uuid player) const -> Uuid
+auto PlayerRepository::save(Player player) -> Player
 {
-  const auto query = [player](pqxx::nontransaction &work) {
-    return work.exec(pqxx::prepped{FIND_SYSTEM_QUERY_NAME}, pqxx::params{toDbId(player)}).one_row();
-  };
-  const auto record = m_connection->executeQueryReturningSingleRow(query);
-
-  return fromDbId(record[0].as<int>());
-}
-
-void PlayerRepository::save(const Player &player)
-{
-  auto query = [&player](pqxx::work &transaction) {
+  auto playerQuery = [&player](pqxx::nontransaction &work) {
     std::optional<int> maybeAccount{};
     if (player.account)
     {
       maybeAccount = toDbId(*player.account);
     }
 
-    return transaction
+    return work
       .exec(pqxx::prepped{UPDATE_PLAYER_QUERY_NAME},
             pqxx::params{maybeAccount, player.name, toDbFaction(player.faction)})
+      .one_row();
+  };
+
+  const auto record = m_connection->executeQueryReturningSingleRow(playerQuery);
+  player.dbId       = fromDbId(record[0].as<int>());
+
+  auto roleQuery = [&player](pqxx::work &transaction) {
+    return transaction
+      .exec(pqxx::prepped{UPDATE_PLAYER_ROLE_QUERY_NAME},
+            pqxx::params{toDbId(player.dbId), toDbGameRole(player.role)})
       .no_rows();
   };
 
-  const auto res = m_connection->tryExecuteTransaction(query);
+  const auto res = m_connection->tryExecuteTransaction(roleQuery);
   if (res.error)
   {
-    error("Failed to save player: " + *res.error);
+    error("Failed to save player role: " + *res.error);
   }
+
+  return player;
 }
 
 } // namespace bsgalone::core
