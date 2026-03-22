@@ -2,9 +2,11 @@
 
 #pragma once
 
+#include "AsyncGameEventQueue.hh"
 #include "CoreObject.hh"
 #include "MessageExchanger.hh"
 #include "ServerNetworkClient.hh"
+#include "SynchronizedGameEventQueue.hh"
 #include "SystemProcessor.hh"
 #include "SystemQueues.hh"
 #include <atomic>
@@ -31,6 +33,9 @@ class Server : public ::core::CoreObject
 
   std::unordered_map<core::Uuid, core::IMessageQueueShPtr> m_inputQueues{};
   std::vector<SystemProcessorShPtr> m_systemProcessors{};
+
+  core::IGameEventQueueShPtr m_eventQueue{
+    core::createAsyncGameEventQueue(core::createSynchronizedGameEventQueue())};
 
   void initialize();
   void initializeSystems();
