@@ -4,9 +4,5 @@ target_include_directories(unitTests PUBLIC
 	)
 
 add_subdirectory(
-	${CMAKE_CURRENT_SOURCE_DIR}/driven
-	)
-
-add_subdirectory(
-	${CMAKE_CURRENT_SOURCE_DIR}/driving
+	${CMAKE_CURRENT_SOURCE_DIR}/consumers
 	)
