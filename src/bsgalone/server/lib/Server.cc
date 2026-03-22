@@ -2,7 +2,7 @@
 
 #include "Server.hh"
 #include "JoinShipMessageConsumer.hh"
-#include "LoginMessageConsumer.hh"
+#include "LoginRequestConsumer.hh"
 #include "LoginService.hh"
 #include "LogoutMessageConsumer.hh"
 #include "PlayerService.hh"
@@ -70,7 +70,7 @@ void createSystemMessageConsumers(core::IMessageQueue &inputMessagesQueue,
     std::make_unique<SignupMessageConsumer>(std::move(signupService), outputMessagesQueue));
 
   auto loginService = std::make_unique<LoginService>(repositories);
-  inputMessagesQueue.addListener(std::make_unique<LoginMessageConsumer>(std::move(loginService),
+  inputMessagesQueue.addListener(std::make_unique<LoginRequestConsumer>(std::move(loginService),
                                                                         systemQueues,
                                                                         outputMessagesQueue));
 

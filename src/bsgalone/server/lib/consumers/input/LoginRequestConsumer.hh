@@ -8,13 +8,13 @@
 
 namespace bsgalone::server {
 
-class LoginMessageConsumer : public core::AbstractMessageConsumer
+class LoginRequestConsumer : public core::AbstractMessageConsumer
 {
   public:
-  LoginMessageConsumer(LoginServicePtr loginService,
+  LoginRequestConsumer(LoginServicePtr loginService,
                        SystemQueueMap systemQueues,
                        core::IMessageQueue *const outputMessageQueue);
-  ~LoginMessageConsumer() override = default;
+  ~LoginRequestConsumer() override = default;
 
   void onEventReceived(const core::IMessage &message) override;
 

@@ -1,5 +1,5 @@
 
-#include "LoginMessageConsumer.hh"
+#include "LoginRequestConsumer.hh"
 #include "LoadingFinishedMessage.hh"
 #include "LoadingStartedMessage.hh"
 #include "LoginMessage.hh"
@@ -7,7 +7,7 @@
 
 namespace bsgalone::server {
 
-LoginMessageConsumer::LoginMessageConsumer(LoginServicePtr loginService,
+LoginRequestConsumer::LoginRequestConsumer(LoginServicePtr loginService,
                                            SystemQueueMap systemQueues,
                                            core::IMessageQueue *const outputMessageQueue)
   : AbstractMessageConsumer("login", {core::MessageType::LOGIN_REQUEST})
@@ -25,7 +25,7 @@ LoginMessageConsumer::LoginMessageConsumer(LoginServicePtr loginService,
   }
 }
 
-void LoginMessageConsumer::onEventReceived(const core::IMessage &message)
+void LoginRequestConsumer::onEventReceived(const core::IMessage &message)
 {
   const auto &request = message.as<core::LoginRequest>();
 
@@ -66,7 +66,7 @@ void LoginMessageConsumer::onEventReceived(const core::IMessage &message)
   }
 }
 
-void LoginMessageConsumer::publishLoadingMessages(const core::Uuid clientId,
+void LoginRequestConsumer::publishLoadingMessages(const core::Uuid clientId,
                                                   const core::Uuid playerDbId,
                                                   const core::Uuid systemDbId) const
 {
