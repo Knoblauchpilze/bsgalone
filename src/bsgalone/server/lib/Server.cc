@@ -1,7 +1,13 @@
 
 
 #include "Server.hh"
-#include "SystemMessageConsumerSetup.hh"
+#include "JoinShipMessageConsumer.hh"
+#include "LoginMessageConsumer.hh"
+#include "LoginService.hh"
+#include "LogoutMessageConsumer.hh"
+#include "PlayerService.hh"
+#include "SignupMessageConsumer.hh"
+#include "SignupService.hh"
 #include "SystemProcessorAdapter.hh"
 
 namespace bsgalone::server {
@@ -51,6 +57,32 @@ void Server::initializeSystems()
     m_systemProcessors.emplace_back(std::move(processor));
   }
 }
+
+namespace {
+void createSystemMessageConsumers(core::IMessageQueue &inputMessagesQueue,
+                                  SystemQueueMap systemQueues,
+                                  core::IMessageQueue *const outputMessagesQueue)
+{
+  core::Repositories repositories{};
+
+  auto signupService = std::make_unique<SignupService>(repositories);
+  inputMessagesQueue.addListener(
+    std::make_unique<SignupMessageConsumer>(std::move(signupService), outputMessagesQueue));
+
+  auto loginService = std::make_unique<LoginService>(repositories);
+  inputMessagesQueue.addListener(std::make_unique<LoginMessageConsumer>(std::move(loginService),
+                                                                        systemQueues,
+                                                                        outputMessagesQueue));
+
+  auto systemService = std::make_shared<SystemService>(repositories);
+  inputMessagesQueue.addListener(
+    std::make_unique<LogoutMessageConsumer>(systemService, systemQueues, outputMessagesQueue));
+
+  auto playerService = std::make_unique<PlayerService>(repositories);
+  inputMessagesQueue.addListener(
+    std::make_unique<JoinShipMessageConsumer>(std::move(playerService), outputMessagesQueue));
+}
+} // namespace
 
 void Server::initializeMessageSystem()
 {
