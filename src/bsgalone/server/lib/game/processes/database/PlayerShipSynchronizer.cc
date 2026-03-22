@@ -8,7 +8,7 @@ void syncPlayerShip(const core::Entity &entity, const core::Repositories &reposi
   const auto dbId = entity.dbComp().dbId();
 
   core::PlayerShip ship{
-    .id          = dbId,
+    .dbId        = dbId,
     .name        = entity.nameComp().name(),
     .active      = true,
     .hullPoints  = entity.healthComp().value(),

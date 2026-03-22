@@ -59,17 +59,17 @@ void RespawnProcess::respawnPlayerShip(core::Coordinator & /*coordinator*/,
 {
   if (!playerShip.system)
   {
-    error("Cannot respawn player ship " + core::str(playerShip.id) + " with no system defined");
+    error("Cannot respawn player ship " + core::str(playerShip.dbId) + " with no system defined");
   }
 
   playerShip.hullPoints = playerShip.maxHullPoints;
   playerShip.position   = Eigen::Vector3f::Zero();
 
   m_repositories.playerShipRepository->save(playerShip);
-  m_repositories.playerShipRepository->deleteRespawn(playerShip.id);
+  m_repositories.playerShipRepository->deleteRespawn(playerShip.dbId);
 
   auto added = std::make_unique<core::EntityAddedMessage>(*playerShip.system);
-  core::PlayerShipData data{.dbId = playerShip.id};
+  core::PlayerShipData data{.dbId = playerShip.dbId};
   added->setShipData(data);
   m_systemMessageQueue->pushEvent(std::move(added));
 }

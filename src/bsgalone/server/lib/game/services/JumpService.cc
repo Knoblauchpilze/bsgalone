@@ -24,7 +24,7 @@ bool JumpService::tryRegisterJump(const core::Uuid shipDbId, const core::Uuid sy
   const auto status = canShipJump(ship, system);
   if (core::JumpCompletionStatus::OK != status)
   {
-    warn("Failed to process jump request for ship " + core::str(ship.id), str(status));
+    warn("Failed to process jump request for ship " + core::str(ship.dbId), str(status));
     return false;
   }
 
@@ -53,7 +53,7 @@ bool JumpService::tryCancelJump(const core::Uuid shipDbId) const
   const auto status = canShipCancelJump(ship);
   if (core::JumpCompletionStatus::OK != status)
   {
-    warn("Failed to process jump cancellation for ship " + core::str(ship.id), str(status));
+    warn("Failed to process jump cancellation for ship " + core::str(ship.dbId), str(status));
     return false;
   }
 

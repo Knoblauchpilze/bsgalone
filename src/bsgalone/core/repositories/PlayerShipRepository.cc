@@ -291,7 +291,7 @@ void PlayerShipRepository::save(const PlayerShip &ship)
                          ship.position(0),
                          ship.position(1),
                          ship.position(2),
-                         toDbId(ship.id)})
+                         toDbId(ship.dbId)})
       .no_rows();
   };
 
@@ -355,7 +355,7 @@ auto PlayerShipRepository::fetchShipBase(const Uuid ship) const -> PlayerShip
 
   PlayerShip out;
 
-  out.id              = ship;
+  out.dbId            = ship;
   out.faction         = fromDbFaction(record[0].as<std::string>());
   out.shipClass       = fromDbShipClass(record[1].as<std::string>());
   out.ship            = fromDbId(record[2].as<int>());

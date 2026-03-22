@@ -83,9 +83,9 @@ auto SystemService::sendPlayerBackToOutpost(const core::Uuid &playerDbId) const 
   ship.position    = Eigen::Vector3f::Zero();
   ship.powerPoints = 0.0f;
 
-  m_repositories.systemRepository->updateSystemForShip(ship.id, *ship.system, ship.docked);
+  m_repositories.systemRepository->updateSystemForShip(ship.dbId, *ship.system, ship.docked);
   m_repositories.playerShipRepository->save(ship);
-  m_repositories.playerShipRepository->saveJump(ship.id, {});
+  m_repositories.playerShipRepository->saveJump(ship.dbId, {});
 
   // Reset the role so that the spot on a ship might be made available to other
   // players.
@@ -104,7 +104,7 @@ auto SystemService::tryJump(const core::Uuid shipDbId) const -> JumpResult
   const auto status = canShipCompleteJump(ship);
   if (core::JumpCompletionStatus::OK != status)
   {
-    warn("Failed to process jump for ship " + core::str(ship.id), str(status));
+    warn("Failed to process jump for ship " + core::str(ship.dbId), str(status));
     return out;
   }
 
@@ -116,9 +116,9 @@ auto SystemService::tryJump(const core::Uuid shipDbId) const -> JumpResult
 
   const auto system = m_repositories.systemRepository->findOneById(*ship.jumpSystem);
 
-  m_repositories.systemRepository->updateSystemForShip(ship.id, *ship.jumpSystem, ship.docked);
+  m_repositories.systemRepository->updateSystemForShip(ship.dbId, *ship.jumpSystem, ship.docked);
   m_repositories.playerShipRepository->save(ship);
-  m_repositories.playerShipRepository->saveJump(ship.id, {});
+  m_repositories.playerShipRepository->saveJump(ship.dbId, {});
 
   info("Completed jump to " + system.name + " for " + core::str(shipDbId));
   out.success = true;
@@ -160,7 +160,7 @@ auto SystemService::getSystemDbIdForOutpost(const core::Uuid outpostDbId) const 
 auto SystemService::getShipDbIdForPlayer(const core::Uuid playerDbId) const -> core::Uuid
 {
   const auto playerShip = m_repositories.playerShipRepository->findOneByPlayerAndActive(playerDbId);
-  return playerShip.id;
+  return playerShip.dbId;
 }
 
 namespace {
@@ -207,11 +207,11 @@ bool SystemService::disposeOfAiShip(const core::PlayerShip &playerShip, const bo
 {
   if (!playerShip.system)
   {
-    error("AI ship " + core::str(playerShip.id) + " has no system");
+    error("AI ship " + core::str(playerShip.dbId) + " has no system");
   }
   if (!dead)
   {
-    error("Cannot dispose of AI ship " + core::str(playerShip.id), "Ship is not dead");
+    error("Cannot dispose of AI ship " + core::str(playerShip.dbId), "Ship is not dead");
   }
 
   const auto systemData = m_repositories.systemRepository->findOneById(*playerShip.system);
@@ -219,7 +219,7 @@ bool SystemService::disposeOfAiShip(const core::PlayerShip &playerShip, const bo
   const auto deathTick   = systemData.currentTick;
   const auto respawnTick = deathTick + AI_SHIP_RESPAWN_TIME_IN_TICKS;
 
-  m_repositories.playerShipRepository->saveRespawn(playerShip.id, deathTick, respawnTick);
+  m_repositories.playerShipRepository->saveRespawn(playerShip.dbId, deathTick, respawnTick);
 
   return true;
 }
@@ -234,12 +234,12 @@ bool SystemService::disposeOfPlayerShip(core::PlayerShip playerShip, const bool 
   }
   playerShip.powerPoints = 0.0f;
 
-  m_repositories.systemRepository->updateSystemForShip(playerShip.id,
+  m_repositories.systemRepository->updateSystemForShip(playerShip.dbId,
                                                        *playerShip.system,
                                                        playerShip.docked);
   m_repositories.playerShipRepository->save(playerShip);
   // Cancel jump to another system.
-  m_repositories.playerShipRepository->saveJump(playerShip.id, {});
+  m_repositories.playerShipRepository->saveJump(playerShip.dbId, {});
 
   return true;
 }

@@ -76,7 +76,7 @@ auto toPlayerComputerData(const core::PlayerComputer &computer) -> core::PlayerC
 auto PlayerShipProps::toPlayerShipData() const -> core::PlayerShipData
 {
   core::PlayerShipData data{
-    .dbId            = dbShip.id,
+    .dbId            = dbShip.dbId,
     .shipId          = dbShip.ship,
     .position        = dbShip.position,
     .radius          = dbShip.radius,

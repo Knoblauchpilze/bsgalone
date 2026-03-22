@@ -24,7 +24,7 @@ auto LoadingService::getDataForPlayer(const core::Uuid playerDbId) const -> Play
 
   return {
     .faction    = player.faction,
-    .shipDbId   = ship.id,
+    .shipDbId   = ship.dbId,
     .docked     = ship.docked,
     .systemDbId = *ship.system,
   };
@@ -458,8 +458,8 @@ auto LoadingService::getActivePlayerShip(const core::Uuid playerDbId) const -> P
   const auto ship   = m_repositories.playerShipRepository->findOneByPlayerAndActive(playerDbId);
   const auto player = m_repositories.playerRepository->findOneById(ship.player);
 
-  const auto weapons   = getWeaponsForShip(m_repositories, ship.id);
-  const auto computers = getComputersForShip(m_repositories, ship.id);
+  const auto weapons   = getWeaponsForShip(m_repositories, ship.dbId);
+  const auto computers = getComputersForShip(m_repositories, ship.dbId);
 
   const auto status = determineStartingStatusForShip(ship, player);
 

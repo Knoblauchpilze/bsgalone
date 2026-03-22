@@ -275,7 +275,7 @@ void ShipService::switchActiveShip(core::PlayerShip currentActiveShip,
 void ShipService::switchShipSystem(const core::PlayerShip &currentActiveShip,
                                    const core::PlayerShip &newActiveShip) const
 {
-  m_repositories.systemRepository->updateShipForSystem(currentActiveShip.id, newActiveShip.id);
+  m_repositories.systemRepository->updateShipForSystem(currentActiveShip.dbId, newActiveShip.dbId);
 }
 
 void ShipService::updateEntityTarget(core::Entity &entity,

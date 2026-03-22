@@ -2,55 +2,16 @@
 #pragma once
 
 #include "AbstractRepository.hh"
-#include "Faction.hh"
-#include "ShipClass.hh"
-#include "Slot.hh"
+#include "PlayerShip.hh"
 #include "Tick.hh"
-#include "TickDuration.hh"
 #include "Uuid.hh"
-#include <eigen3/Eigen/Eigen>
 #include <memory>
 #include <optional>
 #include <set>
 #include <unordered_set>
+#include <vector>
 
 namespace bsgalone::core {
-
-struct PlayerShip
-{
-  Uuid id{};
-  Faction faction{};
-  ShipClass shipClass{};
-  Uuid ship{};
-  std::string name{};
-  Uuid player{};
-  bool active{};
-
-  float hullPoints{0.0f};
-  float maxHullPoints{0.0f};
-  float hullPointsRegen{0.0f};
-
-  float powerPoints{0.0f};
-  float maxPowerPoints{0.0f};
-  float powerRegen{0.0f};
-
-  float acceleration{5.0f};
-  float speed{4.0f};
-
-  float radius{0.5f};
-  Eigen::Vector3f position{Eigen::Vector3f::Zero()};
-
-  std::optional<Uuid> system{};
-  bool docked{};
-
-  chrono::TickDuration jumpTime{};
-  chrono::TickDuration jumpTimeInThreat{};
-  std::optional<Uuid> jumpSystem{};
-
-  std::unordered_map<Slot, int> slots{};
-  std::vector<Eigen::Vector3f> aiTargets{};
-  std::optional<int> reachedTarget{};
-};
 
 class PlayerShipRepository : public AbstractRepository
 {
