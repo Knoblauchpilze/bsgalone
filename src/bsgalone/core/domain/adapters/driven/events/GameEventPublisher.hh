@@ -2,16 +2,20 @@
 #pragma once
 
 #include "ForPublishingEvent.hh"
+#include "IGameEventQueue.hh"
 
 namespace bsgalone::core {
 
 class GameEventPublisher : public ForPublishingEvent
 {
   public:
-  GameEventPublisher()           = default;
+  GameEventPublisher(IGameEventQueueShPtr queue);
   ~GameEventPublisher() override = default;
 
   void publishEvent(IGameEventPtr event) override;
+
+  private:
+  IGameEventQueueShPtr m_queue{};
 };
 
 } // namespace bsgalone::core

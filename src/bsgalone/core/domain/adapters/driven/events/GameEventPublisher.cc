@@ -3,9 +3,18 @@
 
 namespace bsgalone::core {
 
-void GameEventPublisher::publishEvent(IGameEventPtr /*event*/)
+GameEventPublisher::GameEventPublisher(IGameEventQueueShPtr queue)
+  : m_queue(std::move(queue))
 {
-  // TODO: Should handle this
+  if (m_queue == nullptr)
+  {
+    throw std::invalid_argument("Expected non null event queue");
+  }
+}
+
+void GameEventPublisher::publishEvent(IGameEventPtr event)
+{
+  m_queue->pushEvent(std::move(event));
 }
 
 } // namespace bsgalone::core
