@@ -68,9 +68,9 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase, ThrowsWhenEventPublish
 TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase,
      PublishesFailedLoginEventWhenAccountDoesNotExist)
 {
-  auto mockAccountRepo = std::make_shared<MockAccountRepo>();
-  auto mockPlayerRepo  = std::make_shared<MockPlayerRepo>();
-  auto publisher       = std::make_shared<TestEventPublisher>();
+  auto mockAccountRepo = std::make_shared<StrictMock<MockAccountRepo>>();
+  auto mockPlayerRepo  = std::make_shared<StrictMock<MockPlayerRepo>>();
+  auto publisher       = std::make_shared<StrictMock<TestEventPublisher>>();
   LoginUseCase usecase(mockAccountRepo, mockPlayerRepo, publisher);
 
   LoginData data{.username = "player", .password = "password", .role = GameRole::PILOT};
@@ -91,9 +91,9 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase,
 TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase,
      PublishesFailedLoginEventWhenCredentialsDoNotMatch)
 {
-  auto mockAccountRepo = std::make_shared<MockAccountRepo>();
-  auto mockPlayerRepo  = std::make_shared<MockPlayerRepo>();
-  auto publisher       = std::make_shared<TestEventPublisher>();
+  auto mockAccountRepo = std::make_shared<StrictMock<MockAccountRepo>>();
+  auto mockPlayerRepo  = std::make_shared<StrictMock<MockPlayerRepo>>();
+  auto publisher       = std::make_shared<StrictMock<TestEventPublisher>>();
   LoginUseCase usecase(mockAccountRepo, mockPlayerRepo, publisher);
 
   LoginData data{.username = "player", .password = "password", .role = GameRole::PILOT};
@@ -117,9 +117,9 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase,
 TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase,
      PublishesSuccessfulLoginEventWhenLoginSucceed)
 {
-  auto mockAccountRepo = std::make_shared<MockAccountRepo>();
-  auto mockPlayerRepo  = std::make_shared<MockPlayerRepo>();
-  auto publisher       = std::make_shared<TestEventPublisher>();
+  auto mockAccountRepo = std::make_shared<StrictMock<MockAccountRepo>>();
+  auto mockPlayerRepo  = std::make_shared<StrictMock<MockPlayerRepo>>();
+  auto publisher       = std::make_shared<StrictMock<TestEventPublisher>>();
   LoginUseCase usecase(mockAccountRepo, mockPlayerRepo, publisher);
 
   LoginData data{.username = "player", .password = "password", .role = GameRole::PILOT};
@@ -141,6 +141,10 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase,
   };
   EXPECT_CALL(*mockPlayerRepo, findOneByAccount(account.dbId)).Times(1).WillOnce(Return(player));
 
+  Player expectedPlayer = player;
+  expectedPlayer.role   = data.role;
+  EXPECT_CALL(*mockPlayerRepo, save(expectedPlayer)).Times(1).WillOnce(Return(expectedPlayer));
+
   usecase.performLogin(data);
 
   EXPECT_EQ(1u, publisher->queue().messages().size());
@@ -149,7 +153,7 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase,
   // TODO: Assert client identifier
   EXPECT_TRUE(event->as<PlayerLoginEvent>().successfulLogin());
   EXPECT_EQ(player.dbId, event->as<PlayerLoginEvent>().tryGetPlayerDbId());
-  EXPECT_EQ(player.role, event->as<PlayerLoginEvent>().tryGetRole());
+  EXPECT_EQ(data.role, event->as<PlayerLoginEvent>().tryGetRole());
   EXPECT_EQ(player.systemDbId, event->as<PlayerLoginEvent>().tryGetSystemDbId());
 }
 

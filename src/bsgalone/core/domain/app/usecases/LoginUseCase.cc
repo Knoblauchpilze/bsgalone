@@ -34,8 +34,9 @@ void LoginUseCase::performLogin(const LoginData &data)
     return;
   }
 
-  const auto player = m_playerRepo->findOneByAccount(maybeAccount->dbId);
-  // TODO: Register player role
+  auto player = m_playerRepo->findOneByAccount(maybeAccount->dbId);
+  player.role = data.role;
+  m_playerRepo->save(player);
 
   auto event = std::make_unique<PlayerLoginEvent>();
   event->setPlayerDbId(player.dbId);
