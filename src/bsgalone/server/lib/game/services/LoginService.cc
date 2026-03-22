@@ -7,17 +7,17 @@ LoginService::LoginService(const core::Repositories &repositories)
   : AbstractService("login", repositories)
 {}
 
-auto LoginService::tryLogin(const LoginData &data) const -> std::optional<core::Uuid>
+auto LoginService::tryLogin(const core::LoginData &data) const -> std::optional<core::Uuid>
 {
-  const auto maybeAccount = m_repositories.accountRepository->findOneByName(data.name);
+  const auto maybeAccount = m_repositories.accountRepository->findOneByName(data.username);
   if (!maybeAccount)
   {
-    warn("No account with name \"" + data.name + "\"");
+    warn("No account with name \"" + data.username + "\"");
     return {};
   }
   if (maybeAccount->password != data.password)
   {
-    warn("Wrong password for player \"" + data.name + "\"",
+    warn("Wrong password for player \"" + data.username + "\"",
          "Expected " + maybeAccount->password + " but got " + data.password);
     return {};
   }
@@ -29,7 +29,7 @@ auto LoginService::tryLogin(const LoginData &data) const -> std::optional<core::
   };
   m_repositories.playerRoleRepository->save(playerRole);
 
-  info("Player " + data.name + " logged in with role " + core::str(data.role));
+  info("Player " + data.username + " logged in with role " + core::str(data.role));
 
   return player.dbId;
 }

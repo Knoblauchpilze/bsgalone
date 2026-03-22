@@ -36,10 +36,11 @@ void LoginRequestConsumer::onEventReceived(const core::IMessage &message)
     return;
   }
 
-  LoginService::LoginData data{
-    .name     = request.getUsername(),
+  core::LoginData data{
+    .username = request.getUsername(),
     .password = request.getPassword(),
     .role     = request.getRole(),
+    .clientId = request.tryGetClientId().value(),
   };
 
   const auto maybePlayerDbId = m_loginService->tryLogin(data);
@@ -59,7 +60,7 @@ void LoginRequestConsumer::onEventReceived(const core::IMessage &message)
   }
   else
   {
-    warn("Failed to process login message for player " + data.name);
+    warn("Failed to process login message for player " + data.username);
 
     auto out = std::make_unique<core::LoginMessage>(*maybeClientId);
     m_outputMessageQueue->pushEvent(std::move(out));
