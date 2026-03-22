@@ -89,7 +89,7 @@ INSERT INTO player (account, name, faction)
   RETURNING id
 )";
 
-constexpr auto UPDATE_PLAYER_ROLE_QUERY_NAME = "player_role_update";
+constexpr auto UPDATE_PLAYER_ROLE_QUERY_NAME = "player_update_role";
 constexpr auto UPDATE_PLAYER_ROLE_QUERY      = R"(
 INSERT INTO player_role (player, role)
   VALUES ($1, $2)
