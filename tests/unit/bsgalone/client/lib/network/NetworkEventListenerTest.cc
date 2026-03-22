@@ -61,7 +61,7 @@ TEST(Unit_Bsgalone_Client_Network_NetworkEventListener,
      PublishesLoginRequestWhenConnectionIsEstablishedAndAutoLoginIsSet)
 {
   std::atomic_bool connected(false);
-  auto mockAdapter = std::make_shared<MockOutputAdapter>();
+  auto mockAdapter = std::make_shared<StrictMock<MockOutputAdapter>>();
   User autoLogin{
     .name     = "player",
     .password = "secret",
@@ -91,7 +91,7 @@ TEST(Unit_Bsgalone_Client_Network_NetworkEventListener,
      DoesNotPublishLoginRequestWhenAutoLoginIsDisabled)
 {
   std::atomic_bool connected(false);
-  auto mockAdapter = std::make_shared<MockOutputAdapter>();
+  auto mockAdapter = std::make_shared<StrictMock<MockOutputAdapter>>();
   NetworkEventListener listener(connected, mockAdapter, {});
 
   EXPECT_CALL(*mockAdapter, sendMessage(_)).Times(0);
