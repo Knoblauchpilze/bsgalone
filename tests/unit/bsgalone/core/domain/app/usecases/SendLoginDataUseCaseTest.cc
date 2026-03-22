@@ -48,25 +48,14 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_SendLoginDataUseCase, ThrowsWhenEven
     std::invalid_argument);
 }
 
-TEST(Unit_Bsgalone_Core_Domain_App_Usecases_SendLoginDataUseCase, FetchesAllSystems)
+TEST(Unit_Bsgalone_Core_Domain_App_Usecases_SendLoginDataUseCase, FetchesSystemsAndPublishesEvent)
 {
-  auto mockSystemRepo = std::make_shared<MockSystemRepo>();
-  auto mockPublisher  = std::make_shared<MockPublisher>();
-  SendLoginDataUseCase usecase(mockSystemRepo, mockPublisher);
-
-  EXPECT_CALL(*mockSystemRepo, findAll()).Times(1).WillOnce(Return(std::vector<System>()));
-
-  usecase.publishLoginData(Uuid{18});
-}
-
-TEST(Unit_Bsgalone_Core_Domain_App_Usecases_SendLoginDataUseCase, ForwardsSystemsToPublisher)
-{
-  auto mockSystemRepo = std::make_shared<MockSystemRepo>();
-  auto mockPublisher  = std::make_shared<MockPublisher>();
+  auto mockSystemRepo = std::make_shared<StrictMock<MockSystemRepo>>();
+  auto mockPublisher  = std::make_shared<StrictMock<MockPublisher>>();
   SendLoginDataUseCase usecase(mockSystemRepo, mockPublisher);
 
   const std::vector<System> systems{System{.dbId = {17}}, System{.dbId = {19}}};
-  ON_CALL(*mockSystemRepo, findAll()).WillByDefault(Return(systems));
+  EXPECT_CALL(*mockSystemRepo, findAll()).Times(1).WillOnce(Return(systems));
   EXPECT_CALL(*mockPublisher, publishSystemList(Uuid{18}, systems)).Times(1);
 
   usecase.publishLoginData(Uuid{18});
