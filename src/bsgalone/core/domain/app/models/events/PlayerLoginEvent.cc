@@ -3,13 +3,19 @@
 
 namespace bsgalone::core {
 
-PlayerLoginEvent::PlayerLoginEvent()
+PlayerLoginEvent::PlayerLoginEvent(const net::ClientId clientId)
   : IGameEvent(GameEventType::PLAYER_LOGIN)
+  , m_clientId(clientId)
 {}
 
 bool PlayerLoginEvent::successfulLogin() const
 {
   return m_playerDbId.has_value() && m_systemDbId.has_value();
+}
+
+auto PlayerLoginEvent::getClientId() const -> net::ClientId
+{
+  return m_clientId;
 }
 
 auto PlayerLoginEvent::tryGetPlayerDbId() const -> std::optional<Uuid>
@@ -44,7 +50,7 @@ void PlayerLoginEvent::setSystemDbId(const Uuid systemDbId)
 
 auto PlayerLoginEvent::clone() const -> IGameEventPtr
 {
-  auto out          = std::make_unique<PlayerLoginEvent>();
+  auto out          = std::make_unique<PlayerLoginEvent>(m_clientId);
   out->m_playerDbId = m_playerDbId;
   out->m_role       = m_role;
   out->m_systemDbId = m_systemDbId;

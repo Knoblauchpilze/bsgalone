@@ -29,7 +29,7 @@ TEST(Unit_Bsgalone_Core_Domain_Adapters_Driving_Consumers_PlayerLoginEventConsum
 TEST(Unit_Bsgalone_Core_Domain_Adapters_Driving_Consumers_PlayerLoginEventConsumer,
      ForwardsSuccessfulLoginMessageToUseCase)
 {
-  PlayerLoginEvent event;
+  PlayerLoginEvent event(net::ClientId{12});
   event.setPlayerDbId(Uuid{18});
   event.setRole(GameRole::GUNNER);
   event.setSystemDbId(Uuid{19});
@@ -46,7 +46,7 @@ TEST(Unit_Bsgalone_Core_Domain_Adapters_Driving_Consumers_PlayerLoginEventConsum
 {
   PlayerLoginEventConsumer consumer(std::make_unique<StrictMock<MockPublisher>>());
 
-  PlayerLoginEvent event;
+  PlayerLoginEvent event(net::ClientId{12});
   consumer.onEventReceived(event);
 }
 

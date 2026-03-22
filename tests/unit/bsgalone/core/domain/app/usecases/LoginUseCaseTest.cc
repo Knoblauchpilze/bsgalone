@@ -73,7 +73,12 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase,
   auto publisher       = std::make_shared<StrictMock<TestEventPublisher>>();
   LoginUseCase usecase(mockAccountRepo, mockPlayerRepo, publisher);
 
-  LoginData data{.username = "player", .password = "password", .role = GameRole::PILOT};
+  LoginData data{
+    .username = "player",
+    .password = "password",
+    .role     = GameRole::PILOT,
+    .clientId = net::ClientId{12},
+  };
 
   EXPECT_CALL(*mockAccountRepo, findOneByName("player"))
     .Times(1)
@@ -84,7 +89,7 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase,
   EXPECT_EQ(1u, publisher->queue().messages().size());
   const auto &event = publisher->queue().messages().at(0);
   EXPECT_EQ(GameEventType::PLAYER_LOGIN, event->type());
-  // TODO: Assert client identifier
+  EXPECT_EQ(data.clientId, event->as<PlayerLoginEvent>().getClientId());
   EXPECT_FALSE(event->as<PlayerLoginEvent>().successfulLogin());
 }
 
@@ -96,7 +101,12 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase,
   auto publisher       = std::make_shared<StrictMock<TestEventPublisher>>();
   LoginUseCase usecase(mockAccountRepo, mockPlayerRepo, publisher);
 
-  LoginData data{.username = "player", .password = "password", .role = GameRole::PILOT};
+  LoginData data{
+    .username = "player",
+    .password = "password",
+    .role     = GameRole::PILOT,
+    .clientId = net::ClientId{12},
+  };
 
   Account account{
     .dbId     = Uuid{0},
@@ -110,7 +120,7 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase,
   EXPECT_EQ(1u, publisher->queue().messages().size());
   const auto &event = publisher->queue().messages().at(0);
   EXPECT_EQ(GameEventType::PLAYER_LOGIN, event->type());
-  // TODO: Assert client identifier
+  EXPECT_EQ(data.clientId, event->as<PlayerLoginEvent>().getClientId());
   EXPECT_FALSE(event->as<PlayerLoginEvent>().successfulLogin());
 }
 
@@ -122,7 +132,12 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase,
   auto publisher       = std::make_shared<StrictMock<TestEventPublisher>>();
   LoginUseCase usecase(mockAccountRepo, mockPlayerRepo, publisher);
 
-  LoginData data{.username = "player", .password = "password", .role = GameRole::PILOT};
+  LoginData data{
+    .username = "player",
+    .password = "password",
+    .role     = GameRole::PILOT,
+    .clientId = net::ClientId{12},
+  };
 
   Account account{
     .dbId     = Uuid{145},
@@ -150,7 +165,7 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase,
   EXPECT_EQ(1u, publisher->queue().messages().size());
   const auto &event = publisher->queue().messages().at(0);
   EXPECT_EQ(GameEventType::PLAYER_LOGIN, event->type());
-  // TODO: Assert client identifier
+  EXPECT_EQ(data.clientId, event->as<PlayerLoginEvent>().getClientId());
   EXPECT_TRUE(event->as<PlayerLoginEvent>().successfulLogin());
   EXPECT_EQ(player.dbId, event->as<PlayerLoginEvent>().tryGetPlayerDbId());
   EXPECT_EQ(data.role, event->as<PlayerLoginEvent>().tryGetRole());

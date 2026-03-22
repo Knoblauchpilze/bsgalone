@@ -27,10 +27,11 @@ LoginUseCase::LoginUseCase(ForManagingAccountShPtr accountRepo,
 
 void LoginUseCase::performLogin(const LoginData &data)
 {
+  auto event              = std::make_unique<PlayerLoginEvent>(data.clientId);
   const auto maybeAccount = m_accountRepo->findOneByName(data.username);
   if (!maybeAccount || maybeAccount->password != data.password)
   {
-    m_eventPublisher->publishEvent(std::make_unique<PlayerLoginEvent>());
+    m_eventPublisher->publishEvent(std::move(event));
     return;
   }
 
@@ -38,7 +39,6 @@ void LoginUseCase::performLogin(const LoginData &data)
   player.role = data.role;
   m_playerRepo->save(player);
 
-  auto event = std::make_unique<PlayerLoginEvent>();
   event->setPlayerDbId(player.dbId);
   event->setRole(player.role);
   event->setSystemDbId(player.systemDbId);

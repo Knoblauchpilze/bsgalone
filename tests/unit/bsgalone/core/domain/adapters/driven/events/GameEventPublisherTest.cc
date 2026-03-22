@@ -20,12 +20,13 @@ TEST(Unit_Bsgalone_Core_Domain_Adapters_Driven_Events_GameEventPublisher,
   auto queue = std::make_shared<TestGameEventQueue>();
   GameEventPublisher publisher(queue);
 
-  PlayerLoginEvent event;
+  PlayerLoginEvent event(net::ClientId{12});
   publisher.publishEvent(event.clone());
 
   EXPECT_EQ(1u, queue->messages().size());
   EXPECT_EQ(GameEventType::PLAYER_LOGIN, queue->messages().at(0)->type());
   const auto &actual = queue->messages().at(0)->as<PlayerLoginEvent>();
+  EXPECT_EQ(net::ClientId{12}, actual.getClientId());
   EXPECT_FALSE(actual.successfulLogin());
   EXPECT_FALSE(actual.tryGetPlayerDbId().has_value());
   EXPECT_FALSE(actual.tryGetRole().has_value());

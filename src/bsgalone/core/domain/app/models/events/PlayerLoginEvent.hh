@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "ClientId.hh"
 #include "GameRole.hh"
 #include "IGameEvent.hh"
 #include "Uuid.hh"
@@ -11,11 +12,12 @@ namespace bsgalone::core {
 class PlayerLoginEvent : public IGameEvent
 {
   public:
-  PlayerLoginEvent();
+  PlayerLoginEvent(const net::ClientId clientId);
   ~PlayerLoginEvent() override = default;
 
   bool successfulLogin() const;
 
+  auto getClientId() const -> net::ClientId;
   auto tryGetPlayerDbId() const -> std::optional<Uuid>;
   auto tryGetRole() const -> std::optional<GameRole>;
   auto tryGetSystemDbId() const -> std::optional<Uuid>;
@@ -27,6 +29,7 @@ class PlayerLoginEvent : public IGameEvent
   auto clone() const -> IGameEventPtr override;
 
   private:
+  net::ClientId m_clientId{};
   std::optional<Uuid> m_playerDbId{};
   std::optional<GameRole> m_role{};
   std::optional<Uuid> m_systemDbId{};
