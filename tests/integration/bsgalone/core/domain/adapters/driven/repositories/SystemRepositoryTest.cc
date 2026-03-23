@@ -1,5 +1,6 @@
 
 #include "SystemRepository.hh"
+#include "Comparison.hh"
 #include "DbConnectionFixture.hh"
 #include "TimeUtils.hh"
 #include <gmock/gmock-matchers.h>
@@ -95,11 +96,7 @@ TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_SystemRepos
 
   const auto actual = repo.findOneById(expectedSystem.dbId);
 
-  EXPECT_EQ(expectedSystem.dbId, actual.dbId);
-  EXPECT_EQ(expectedSystem.name, actual.name);
-  EXPECT_EQ(expectedSystem.position, actual.position);
-  EXPECT_EQ(expectedSystem.currentTick, actual.currentTick);
-  EXPECT_EQ(expectedSystem.step, actual.step);
+  assertSystemAreEqual(expectedSystem, actual);
 }
 
 TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_SystemRepository,

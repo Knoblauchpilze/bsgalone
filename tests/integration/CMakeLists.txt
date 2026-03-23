@@ -28,6 +28,7 @@ target_sources (integrationTests PRIVATE
 target_link_libraries (integrationTests
 	GTest::gtest
 	bsgalone-interface-test-library
+	tests_helper_lib
 	core_lib
 	net_lib
 	bsgalone_core_lib

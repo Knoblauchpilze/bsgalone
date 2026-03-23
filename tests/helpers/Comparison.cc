@@ -119,7 +119,6 @@ void assertPlayerShipDataAreEqual(const bsgalone::core::PlayerShipData &actual,
   }
 }
 
-// TODO: This could be used in the integration tests
 void assertSystemAreEqual(const bsgalone::core::System &actual,
                           const bsgalone::core::System &expected)
 {
