@@ -34,8 +34,7 @@ class Server : public ::core::CoreObject
   std::unordered_map<core::Uuid, core::IMessageQueueShPtr> m_inputQueues{};
   std::vector<SystemProcessorShPtr> m_systemProcessors{};
 
-  core::IGameEventQueueShPtr m_eventQueue{
-    core::createAsyncGameEventQueue(core::createSynchronizedGameEventQueue())};
+  core::IGameEventQueueShPtr m_eventQueue{};
 
   void initialize();
   void initializeSystems();

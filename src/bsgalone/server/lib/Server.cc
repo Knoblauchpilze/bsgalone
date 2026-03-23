@@ -39,6 +39,8 @@ void Server::requestStop()
 
 void Server::initialize()
 {
+  m_eventQueue = core::createAsyncGameEventQueue(core::createSynchronizedGameEventQueue());
+
   initializeSystems();
   initializeMessageSystem();
 }
@@ -131,6 +133,8 @@ void Server::activeRunLoop()
   {
     systemProcessor->stop();
   }
+
+  m_eventQueue.reset();
 }
 
 void Server::shutdown()
