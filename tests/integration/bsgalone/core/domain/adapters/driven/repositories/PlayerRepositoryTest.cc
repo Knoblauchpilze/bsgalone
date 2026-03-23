@@ -116,7 +116,7 @@ TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_PlayerRepos
 
   const auto account        = insertTestAccount(*this->dbConnection());
   const auto expectedPlayer = insertTestPlayer(*this->dbConnection(), account.dbId, true);
-  insertTestPlayerShip(*this->dbConnection(), expectedPlayer, Uuid{2});
+  insertTestPlayerShip(*this->dbConnection(), expectedPlayer, Uuid{1});
 
   const auto actual = repo.findOneById(expectedPlayer.dbId);
 
@@ -125,7 +125,7 @@ TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_PlayerRepos
   EXPECT_EQ(expectedPlayer.name, actual.name);
   EXPECT_EQ(expectedPlayer.faction, actual.faction);
   EXPECT_EQ(expectedPlayer.role, actual.role);
-  EXPECT_EQ(Uuid{2}, actual.systemDbId);
+  EXPECT_EQ(Uuid{1}, actual.systemDbId);
 }
 
 TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_PlayerRepository,
@@ -180,7 +180,7 @@ TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_PlayerRepos
 
   const auto account        = insertTestAccount(*this->dbConnection());
   const auto expectedPlayer = insertTestPlayer(*this->dbConnection(), account.dbId, false);
-  insertTestPlayerShip(*this->dbConnection(), expectedPlayer, Uuid{2});
+  insertTestPlayerShip(*this->dbConnection(), expectedPlayer, Uuid{0});
 
   const auto function = [&repo, &expectedPlayer]() {
     repo.findOneByAccount(*expectedPlayer.account);
@@ -235,7 +235,7 @@ TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_PlayerRepos
 
   // TODO: This is currently needed because the player does not define
   // the ships but requires them to fetch the system.
-  insertTestPlayerShip(*this->dbConnection(), actual, Uuid{2});
+  insertTestPlayerShip(*this->dbConnection(), actual, Uuid{0});
 
   const auto dbPlayer = repo.findOneById(actual.dbId);
   EXPECT_EQ(player.account, dbPlayer.account);
@@ -252,14 +252,14 @@ TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_PlayerRepos
 
   const auto account = insertTestAccount(*this->dbConnection());
   auto player        = insertTestPlayer(*this->dbConnection(), account.dbId, true);
-  insertTestPlayerShip(*this->dbConnection(), player, Uuid{2});
+  insertTestPlayerShip(*this->dbConnection(), player, Uuid{0});
 
   player.systemDbId = Uuid{1};
 
   const auto actual = repo.save(player);
 
   const auto dbPlayer = repo.findOneById(actual.dbId);
-  EXPECT_EQ(Uuid{2}, dbPlayer.systemDbId);
+  EXPECT_EQ(Uuid{0}, dbPlayer.systemDbId);
 }
 
 TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_PlayerRepository,
