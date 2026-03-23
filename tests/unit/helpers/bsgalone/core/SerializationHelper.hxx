@@ -1,9 +1,9 @@
 
 #pragma once
 
-#include "Comparison.hh"
+#include "SerializationHelper.hh"
 
-namespace bsgalone::core {
+namespace test {
 
 template<typename T>
 inline void serializeAndDeserializeMessage(const T &value, T &output)
@@ -15,7 +15,7 @@ inline void serializeAndDeserializeMessage(const T &value, T &output)
 }
 
 template<typename T>
-inline auto serializeAndDeserializePlayerMessage(const T &value) -> IMessagePtr
+inline auto serializeAndDeserializePlayerMessage(const T &value) -> bsgalone::core::IMessagePtr
 {
   std::ostringstream out{};
   out << value;
@@ -31,4 +31,4 @@ inline auto serializeAndDeserializePlayerMessage(const T &value) -> IMessagePtr
   return std::move(*maybeOut);
 }
 
-} // namespace bsgalone::core
+} // namespace test

@@ -1,8 +1,10 @@
 
 #include "SlotComponentMessage.hh"
 #include "Comparison.hh"
+#include "SerializationHelper.hh"
 #include <gtest/gtest.h>
 
+using namespace test;
 using namespace ::testing;
 
 namespace bsgalone::core {

@@ -20,7 +20,6 @@ add_subdirectory(
 	)
 
 target_sources(unitTests PUBLIC
-	${CMAKE_CURRENT_SOURCE_DIR}/Comparison.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/AiBehaviorSyncMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ComponentSyncMessageTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/EntityAddedMessageTest.cc

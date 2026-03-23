@@ -3,9 +3,10 @@
 #include "SerializationUtils.hh"
 #include <gtest/gtest.h>
 
-namespace bsgalone::core {
+namespace test {
 
-void assertAsteroidDataAreEqual(const AsteroidData &actual, const AsteroidData &expected)
+void assertAsteroidDataAreEqual(const bsgalone::core::AsteroidData &actual,
+                                const bsgalone::core::AsteroidData &expected)
 {
   EXPECT_EQ(actual.dbId, expected.dbId);
   EXPECT_EQ(actual.position, expected.position);
@@ -16,8 +17,8 @@ void assertAsteroidDataAreEqual(const AsteroidData &actual, const AsteroidData &
   EXPECT_EQ(actual.amount, expected.amount);
 }
 
-void assertPlayerComputerDataAreEqual(const PlayerComputerData &actual,
-                                      const PlayerComputerData &expected)
+void assertPlayerComputerDataAreEqual(const bsgalone::core::PlayerComputerData &actual,
+                                      const bsgalone::core::PlayerComputerData &expected)
 {
   EXPECT_EQ(actual.dbId, expected.dbId);
   EXPECT_EQ(actual.computerDbId, expected.computerDbId);
@@ -32,7 +33,8 @@ void assertPlayerComputerDataAreEqual(const PlayerComputerData &actual,
   EXPECT_EQ(actual.damageModifier, expected.damageModifier);
 }
 
-void assertPlayerWeaponDataAreEqual(const PlayerWeaponData &actual, const PlayerWeaponData &expected)
+void assertPlayerWeaponDataAreEqual(const bsgalone::core::PlayerWeaponData &actual,
+                                    const bsgalone::core::PlayerWeaponData &expected)
 {
   EXPECT_EQ(actual.dbId, expected.dbId);
   EXPECT_EQ(actual.weaponDbId, expected.weaponDbId);
@@ -46,7 +48,8 @@ void assertPlayerWeaponDataAreEqual(const PlayerWeaponData &actual, const Player
   EXPECT_EQ(actual.reloadTime, expected.reloadTime);
 }
 
-void assertOutpostDataAreEqual(const OutpostData &actual, const OutpostData &expected)
+void assertOutpostDataAreEqual(const bsgalone::core::OutpostData &actual,
+                               const bsgalone::core::OutpostData &expected)
 {
   EXPECT_EQ(actual.dbId, expected.dbId);
   EXPECT_EQ(actual.position, expected.position);
@@ -60,14 +63,16 @@ void assertOutpostDataAreEqual(const OutpostData &actual, const OutpostData &exp
   EXPECT_EQ(actual.faction, expected.faction);
 }
 
-void assertPlayerDataAreEqual(const PlayerData &actual, const PlayerData &expected)
+void assertPlayerDataAreEqual(const bsgalone::core::PlayerData &actual,
+                              const bsgalone::core::PlayerData &expected)
 {
   EXPECT_EQ(actual.dbId, expected.dbId);
   EXPECT_EQ(actual.name, expected.name);
   EXPECT_EQ(actual.isAi, expected.isAi);
 }
 
-void assertPlayerShipDataAreEqual(const PlayerShipData &actual, const PlayerShipData &expected)
+void assertPlayerShipDataAreEqual(const bsgalone::core::PlayerShipData &actual,
+                                  const bsgalone::core::PlayerShipData &expected)
 {
   EXPECT_EQ(actual.dbId, expected.dbId);
   EXPECT_EQ(actual.shipId, expected.shipId);
@@ -114,7 +119,9 @@ void assertPlayerShipDataAreEqual(const PlayerShipData &actual, const PlayerShip
   }
 }
 
-void assertSystemAreEqual(const System &actual, const System &expected)
+// TODO: This could be used in the integration tests
+void assertSystemAreEqual(const bsgalone::core::System &actual,
+                          const bsgalone::core::System &expected)
 {
   EXPECT_EQ(actual.dbId, expected.dbId);
   EXPECT_EQ(actual.name, expected.name);
@@ -123,21 +130,23 @@ void assertSystemAreEqual(const System &actual, const System &expected)
   EXPECT_EQ(actual.step, expected.step);
 }
 
-void assertResourceDataAreEqual(const ResourceData &actual, const ResourceData &expected)
+void assertResourceDataAreEqual(const bsgalone::core::ResourceData &actual,
+                                const bsgalone::core::ResourceData &expected)
 {
   EXPECT_EQ(actual.dbId, expected.dbId);
   EXPECT_EQ(actual.name, expected.name);
 }
 
-void assertPlayerResourceDataAreEqual(const PlayerResourceData &actual,
-                                      const PlayerResourceData &expected)
+void assertPlayerResourceDataAreEqual(const bsgalone::core::PlayerResourceData &actual,
+                                      const bsgalone::core::PlayerResourceData &expected)
 {
   EXPECT_EQ(actual.dbId, expected.dbId);
   EXPECT_EQ(actual.name, expected.name);
   EXPECT_EQ(actual.amount, expected.amount);
 }
 
-void assertWeaponDataAreEqual(const WeaponData &actual, const WeaponData &expected)
+void assertWeaponDataAreEqual(const bsgalone::core::WeaponData &actual,
+                              const bsgalone::core::WeaponData &expected)
 {
   EXPECT_EQ(actual.dbId, expected.dbId);
   EXPECT_EQ(actual.name, expected.name);
@@ -149,7 +158,8 @@ void assertWeaponDataAreEqual(const WeaponData &actual, const WeaponData &expect
   EXPECT_EQ(actual.price, expected.price);
 }
 
-void assertComputerDataAreEqual(const ComputerData &actual, const ComputerData &expected)
+void assertComputerDataAreEqual(const bsgalone::core::ComputerData &actual,
+                                const bsgalone::core::ComputerData &expected)
 {
   EXPECT_EQ(actual.dbId, expected.dbId);
   EXPECT_EQ(actual.name, expected.name);
@@ -164,7 +174,8 @@ void assertComputerDataAreEqual(const ComputerData &actual, const ComputerData &
   EXPECT_EQ(actual.price, expected.price);
 }
 
-void assertShipDataAreEqual(const ShipData &actual, const ShipData &expected)
+void assertShipDataAreEqual(const bsgalone::core::ShipData &actual,
+                            const bsgalone::core::ShipData &expected)
 {
   EXPECT_EQ(actual.dbId, expected.dbId);
   EXPECT_EQ(actual.faction, expected.faction);
@@ -187,7 +198,8 @@ void assertShipDataAreEqual(const ShipData &actual, const ShipData &expected)
   EXPECT_EQ(actual.price, expected.price);
 }
 
-void assertTargetAreEqual(const Target &actual, const Target &expected)
+void assertTargetAreEqual(const bsgalone::core::Target &actual,
+                          const bsgalone::core::Target &expected)
 {
   EXPECT_EQ(actual.sourceDbId, expected.sourceDbId);
   EXPECT_EQ(actual.sourceKind, expected.sourceKind);
@@ -195,4 +207,4 @@ void assertTargetAreEqual(const Target &actual, const Target &expected)
   EXPECT_EQ(actual.targetKind, expected.targetKind);
 }
 
-} // namespace bsgalone::core
+} // namespace test

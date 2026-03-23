@@ -2,6 +2,10 @@
 find_package(GTest REQUIRED)
 
 add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/helpers
+	)
+
+add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/unit
 	)
 
