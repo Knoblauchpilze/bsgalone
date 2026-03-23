@@ -147,15 +147,12 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase,
   EXPECT_CALL(*mockAccountRepo, findOneByName("player")).Times(1).WillOnce(Return(account));
 
   Player player{
-    .dbId    = Uuid{236},
-    .account = account.dbId,
-    .name    = "player",
-    .faction = Faction::COLONIAL,
-    .role    = GameRole::GUNNER,
-    .ships = {
-      PlayerShip{.dbId = Uuid{14}, .active = false, .system = Uuid{18}},
-      PlayerShip{.dbId = Uuid{15}, .active = true, .system = Uuid{19}},
-    },
+    .dbId       = Uuid{236},
+    .account    = account.dbId,
+    .name       = "player",
+    .faction    = Faction::COLONIAL,
+    .role       = GameRole::GUNNER,
+    .systemDbId = Uuid{19},
   };
   EXPECT_CALL(*mockPlayerRepo, findOneByAccount(account.dbId)).Times(1).WillOnce(Return(player));
 

@@ -27,6 +27,9 @@ class PlayerRepository : public AbstractRepository, public ForManagingPlayer
   auto findOneById(const Uuid playerDbId) const -> Player override;
   auto findOneByAccount(const Uuid accountDbId) const -> Player override;
   auto save(Player player) -> Player override;
+
+  private:
+  auto enrichWithSystem(Player player) const -> Player;
 };
 
 using PlayerRepositoryShPtr = std::shared_ptr<PlayerRepository>;

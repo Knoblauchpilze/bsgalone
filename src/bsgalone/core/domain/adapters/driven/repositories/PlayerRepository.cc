@@ -172,7 +172,7 @@ auto PlayerRepository::findSystemByPlayer(const Uuid player) const -> Uuid
 }
 
 namespace {
-auto fromDbRow(const pqxx::row &record) -> Player
+auto buildPlayerFromDbRow(const pqxx::row &record) -> Player
 {
   std::optional<Uuid> maybeAccountDbId{};
   if (!record[1].is_null())
@@ -197,7 +197,7 @@ auto PlayerRepository::findOneById(const Uuid playerDbId) const -> Player
   };
   const auto record = m_connection->executeQueryReturningSingleRow(query);
 
-  return fromDbRow(record);
+  return enrichWithSystem(buildPlayerFromDbRow(record));
 }
 
 auto PlayerRepository::findOneByAccount(const Uuid accountDbId) const -> Player
@@ -209,7 +209,7 @@ auto PlayerRepository::findOneByAccount(const Uuid accountDbId) const -> Player
   };
   const auto record = m_connection->executeQueryReturningSingleRow(query);
 
-  return fromDbRow(record);
+  return enrichWithSystem(buildPlayerFromDbRow(record));
 }
 
 auto PlayerRepository::save(Player player) -> Player
@@ -242,6 +242,20 @@ auto PlayerRepository::save(Player player) -> Player
   {
     error("Failed to save player role: " + *res.error);
   }
+
+  return player;
+}
+
+auto PlayerRepository::enrichWithSystem(Player player) const -> Player
+{
+  const auto query = [&player](pqxx::nontransaction &work) {
+    return work.exec(pqxx::prepped{FIND_SYSTEM_QUERY_NAME}, pqxx::params{toDbId(player.dbId)})
+      .one_row();
+  };
+
+  const auto record = m_connection->executeQueryReturningSingleRow(query);
+
+  player.systemDbId = fromDbId(record[0].as<int>());
 
   return player;
 }
