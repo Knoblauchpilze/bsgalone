@@ -4,16 +4,22 @@
 #include "LoadingStartedMessage.hh"
 #include "LoginMessage.hh"
 #include "LoginRequest.hh"
+#include "LoginUseCase.hh"
 
 namespace bsgalone::server {
 
 LoginRequestConsumer::LoginRequestConsumer(LoginServicePtr loginService,
                                            SystemQueueMap systemQueues,
-                                           core::IMessageQueue *const outputMessageQueue)
+                                           core::IMessageQueue *const outputMessageQueue,
+                                           core::ForPublishingEventShPtr gameEventPublisher)
   : AbstractMessageConsumer("login", {core::MessageType::LOGIN_REQUEST})
   , m_loginService(std::move(loginService))
   , m_systemQueues(std::move(systemQueues))
   , m_outputMessageQueue(outputMessageQueue)
+  , m_executeLoginUseCase(
+      std::make_unique<core::LoginUseCase>(m_loginService->repositories().accountRepository,
+                                           m_loginService->repositories().playerRepository,
+                                           std::move(gameEventPublisher)))
 {
   if (nullptr == m_loginService)
   {
@@ -46,6 +52,7 @@ void LoginRequestConsumer::onEventReceived(const core::IMessage &message)
   const auto maybePlayerDbId = m_loginService->tryLogin(data);
   const auto successfulLogin = maybePlayerDbId.has_value();
 
+  // TODO: Should be replaced by the login use case
   if (successfulLogin)
   {
     const auto systemDbId = m_loginService->getPlayerSystemDbId(*maybePlayerDbId);

@@ -1,11 +1,15 @@
 
 
 #include "Server.hh"
+#include "GameEventPublisher.hh"
 #include "JoinShipMessageConsumer.hh"
 #include "LoginRequestConsumer.hh"
 #include "LoginService.hh"
 #include "LogoutMessageConsumer.hh"
+#include "PlayerLoginEventConsumer.hh"
+#include "PlayerMessagePublisher.hh"
 #include "PlayerService.hh"
+#include "SendLoginDataUseCase.hh"
 #include "SignupMessageConsumer.hh"
 #include "SignupService.hh"
 #include "SystemProcessorAdapter.hh"
@@ -63,7 +67,8 @@ void Server::initializeSystems()
 namespace {
 void createSystemMessageConsumers(core::IMessageQueue &inputMessagesQueue,
                                   SystemQueueMap systemQueues,
-                                  core::IMessageQueue *const outputMessagesQueue)
+                                  core::IMessageQueue *const outputMessagesQueue,
+                                  core::IGameEventQueueShPtr gameEventQueue)
 {
   core::Repositories repositories{};
 
@@ -71,10 +76,13 @@ void createSystemMessageConsumers(core::IMessageQueue &inputMessagesQueue,
   inputMessagesQueue.addListener(
     std::make_unique<SignupMessageConsumer>(std::move(signupService), outputMessagesQueue));
 
-  auto loginService = std::make_unique<LoginService>(repositories);
-  inputMessagesQueue.addListener(std::make_unique<LoginRequestConsumer>(std::move(loginService),
-                                                                        systemQueues,
-                                                                        outputMessagesQueue));
+  auto loginService       = std::make_unique<LoginService>(repositories);
+  auto gameEventPublisher = std::make_shared<core::GameEventPublisher>(std::move(gameEventQueue));
+  inputMessagesQueue.addListener(
+    std::make_unique<LoginRequestConsumer>(std::move(loginService),
+                                           systemQueues,
+                                           outputMessagesQueue,
+                                           std::move(gameEventPublisher)));
 
   auto systemService = std::make_shared<SystemService>(repositories);
   inputMessagesQueue.addListener(
@@ -84,6 +92,18 @@ void createSystemMessageConsumers(core::IMessageQueue &inputMessagesQueue,
   inputMessagesQueue.addListener(
     std::make_unique<JoinShipMessageConsumer>(std::move(playerService), outputMessagesQueue));
 }
+
+void createGameEventConsumers(core::IGameEventQueue &queue,
+                              core::IMessageQueueShPtr outputMessagesQueue)
+{
+  core::Repositories repositories;
+
+  auto publisher = std::make_shared<core::PlayerMessagePublisher>(std::move(outputMessagesQueue));
+  auto useCase   = std::make_unique<core::SendLoginDataUseCase>(repositories.systemRepository,
+                                                              std::move(publisher));
+  auto loginEventConsumer = std::make_unique<core::PlayerLoginEventConsumer>(std::move(useCase));
+  queue.addListener(std::move(loginEventConsumer));
+}
 } // namespace
 
 void Server::initializeMessageSystem()
@@ -91,7 +111,8 @@ void Server::initializeMessageSystem()
   const MessageSystemData data{.networkClient = m_networkClient, .systemQueues = m_inputQueues};
   m_messageExchanger = std::make_unique<MessageExchanger>(data);
 
-  createSystemMessageConsumers(*m_networkClient, m_inputQueues, m_networkClient.get());
+  createSystemMessageConsumers(*m_networkClient, m_inputQueues, m_networkClient.get(), m_eventQueue);
+  createGameEventConsumers(*m_eventQueue, m_networkClient);
 
   for (const auto &systemProcessor : m_systemProcessors)
   {

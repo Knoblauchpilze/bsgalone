@@ -27,6 +27,9 @@ void PlayerLoginEventConsumer::onEventReceived(const IGameEvent &event)
     return;
   }
 
+  // TODO: This should include the rest of LoadingMessagesConsumer::handleLoginTransition
+  // TODO: It should also publish the LoginMessage
+  // TODO: Also in case the login failed
   m_useCase->publishLoginData(login.tryGetPlayerDbId().value());
 }
 
