@@ -14,10 +14,6 @@ add_subdirectory (
 	)
 
 add_subdirectory (
-	${CMAKE_CURRENT_SOURCE_DIR}/bsgalone
-	)
-
-add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/net
 	)
 
@@ -28,10 +24,6 @@ target_sources (integrationTests PRIVATE
 target_link_libraries (integrationTests
 	GTest::gtest
 	bsgalone-interface-test-library
-	tests_helper_lib
 	core_lib
 	net_lib
-	bsgalone_core_lib
-	bsgalone_client_lib
-	bsgalone_server_lib
 	)
