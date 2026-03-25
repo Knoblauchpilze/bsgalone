@@ -46,11 +46,6 @@ void UiMenu::setClickCallback(const std::optional<ClickCallback> &callback)
   m_clickCallback = callback;
 }
 
-void UiMenu::setGameClickCallback(const std::optional<GameCallback> &callback)
-{
-  m_gameClickCallback = callback;
-}
-
 void UiMenu::addMenu(UiMenuPtr child)
 {
   if (child->m_parent != nullptr)
@@ -93,7 +88,7 @@ void UiMenu::render(pge::Renderer &engine) const
   }
 }
 
-bool UiMenu::processUserInput(UserInputData &inputData)
+bool UiMenu::processUserInput(const UserInputData &inputData)
 {
   if (!m_state.visible)
   {
@@ -179,7 +174,6 @@ void UiMenu::initializeFromConfig(const MenuConfig &config)
 
   m_highlightCallback = config.highlightCallback;
   m_clickCallback     = config.clickCallback;
-  m_gameClickCallback = config.gameClickCallback;
   m_lostFocusCallback = config.lostFocusCallback;
 }
 
@@ -228,7 +222,7 @@ bool UiMenu::isWithinMenu(const pge::Vec2i &pos) const
   return true;
 }
 
-void UiMenu::onRelevantInput(UserInputData &inputData)
+void UiMenu::onRelevantInput(const UserInputData &inputData)
 {
   m_state.highlighted = true;
 
@@ -242,10 +236,6 @@ void UiMenu::onRelevantInput(UserInputData &inputData)
     if (m_clickCallback)
     {
       (*m_clickCallback)();
-    }
-    if (m_gameClickCallback)
-    {
-      inputData.actions.emplace_back(*m_gameClickCallback);
     }
   }
 }

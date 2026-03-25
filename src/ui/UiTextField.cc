@@ -18,7 +18,6 @@ UiTextField::UiTextField(const TextFieldConfig &config,
       .highlightCallback         = {},
       .clickCallback             = {},
       .lostFocusCallback         = {},
-      .gameClickCallback         = config.gameClickCallback,
     },
     bg,
     text)
@@ -34,7 +33,7 @@ auto UiTextField::getText() const noexcept -> std::string
   return m_fullText;
 }
 
-bool UiTextField::processUserInput(UserInputData &inputData)
+bool UiTextField::processUserInput(const UserInputData &inputData)
 {
   if (m_editing)
   {

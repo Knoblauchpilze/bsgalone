@@ -11,8 +11,6 @@ struct TextFieldConfig
   pge::Vec2i dims{10, 10};
 
   bool visible{true};
-
-  std::optional<GameCallback> gameClickCallback{};
 };
 
 class UiTextField : public UiTextMenu
@@ -23,7 +21,7 @@ class UiTextField : public UiTextMenu
 
   auto getText() const noexcept -> std::string override;
 
-  bool processUserInput(UserInputData &inputData) override;
+  bool processUserInput(const UserInputData &inputData) override;
 
   private:
   int m_cursorPos{0};
