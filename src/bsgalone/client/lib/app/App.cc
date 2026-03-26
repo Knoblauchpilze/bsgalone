@@ -9,6 +9,12 @@ App::App(const pge::AppDesc &desc)
 
 bool App::onFrame(const float /*elapsedSeconds*/)
 {
+  const auto maybeHandler = m_uiHandlers.find(m_screen);
+  if (maybeHandler != m_uiHandlers.end())
+  {
+    maybeHandler->second->updateUi();
+  }
+
   return m_screen == Screen::EXIT;
 }
 
@@ -35,14 +41,40 @@ void App::cleanResources()
   m_renderers.clear();
 }
 
-void App::drawDecal(const pge::RenderState & /*state*/) {}
+void App::drawDecal(const pge::RenderState &state)
+{
+  const auto maybeRenderer = m_renderers.find(m_screen);
+  if (maybeRenderer == m_renderers.end())
+  {
+    return;
+  }
+
+  maybeRenderer->second->render(state.renderer, state, pge::RenderingPass::DECAL);
+}
 
 void App::draw(const pge::RenderState & /*state*/) {}
 
-void App::drawUi(const pge::RenderState & /*state*/) {}
+void App::drawUi(const pge::RenderState &state)
+{
+  const auto maybeRenderer = m_renderers.find(m_screen);
+  if (maybeRenderer == m_renderers.end())
+  {
+    return;
+  }
+
+  maybeRenderer->second->render(state.renderer, state, pge::RenderingPass::UI);
+}
 
 void App::drawDebug(const pge::RenderState &state, const pge::Vec2f &mouseScreenPos)
 {
+  const auto maybeRenderer = m_renderers.find(m_screen);
+  if (maybeRenderer == m_renderers.end())
+  {
+    return;
+  }
+
+  maybeRenderer->second->render(state.renderer, state, pge::RenderingPass::DEBUG);
+
   pge::Vec2f it;
   const auto mtp = state.frame.pixelsToTilesAndIntra(mouseScreenPos, &it);
 
