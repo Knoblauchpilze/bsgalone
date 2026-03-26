@@ -15,6 +15,18 @@ add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/enums
 	)
 
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/inputs
+	)
+
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/renderers
+	)
+
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/ui
+	)
+
 target_link_libraries (bsgalone_client_lib
 	core_lib
 	pge_lib
