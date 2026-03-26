@@ -3,6 +3,10 @@ add_library (net_lib SHARED "")
 
 set (CMAKE_POSITION_INDEPENDENT_CODE ON)
 
+target_include_directories (net_lib PUBLIC
+	${CMAKE_CURRENT_SOURCE_DIR}
+	)
+
 add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/client
 	)
@@ -25,10 +29,6 @@ add_subdirectory(
 
 add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/sockets
-	)
-
-target_include_directories (net_lib PUBLIC
-	${CMAKE_CURRENT_SOURCE_DIR}
 	)
 
 target_link_libraries (net_lib PUBLIC

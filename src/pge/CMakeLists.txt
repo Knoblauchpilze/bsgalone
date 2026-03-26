@@ -7,6 +7,10 @@ target_compile_options(pge_lib PRIVATE
 	-Wno-error=unknown-pragmas
 	)
 
+target_include_directories (pge_lib PUBLIC
+	${CMAKE_CURRENT_SOURCE_DIR}
+	)
+
 add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/olc
 	)
