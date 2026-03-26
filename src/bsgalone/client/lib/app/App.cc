@@ -12,14 +12,28 @@ bool App::onFrame(const float /*elapsedSeconds*/)
   return m_screen == Screen::EXIT;
 }
 
-void App::onInputs(const pge::controls::State & /*controls*/, pge::CoordinateFrame & /*frame*/) {}
+void App::onInputs(const pge::controls::State &controls, pge::CoordinateFrame &frame)
+{
+  const auto maybeHandler = m_inputHandlers.find(m_screen);
+  if (maybeHandler == m_inputHandlers.end())
+  {
+    return;
+  }
+
+  maybeHandler->second->processUserInput(controls, frame);
+}
 
 void App::loadResources(const pge::Vec2i & /*screenDims*/, pge::Renderer & /*engine*/)
 {
   setLayerTint(Layer::DRAW, semiOpaque(pge::colors::WHITE));
 }
 
-void App::cleanResources() {}
+void App::cleanResources()
+{
+  m_inputHandlers.clear();
+  m_uiHandlers.clear();
+  m_renderers.clear();
+}
 
 void App::drawDecal(const pge::RenderState & /*state*/) {}
 

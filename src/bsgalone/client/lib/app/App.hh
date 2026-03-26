@@ -1,6 +1,9 @@
 
 #pragma once
 
+#include "IInputHandler.hh"
+#include "IRenderer.hh"
+#include "IUiHandler.hh"
 #include "PGEApp.hh"
 #include "Screen.hh"
 #include <unordered_map>
@@ -33,6 +36,18 @@ class App : public pge::PGEApp
   /// @brief - Defines the current screen selected in this game. Updated when
   /// the user takes action to change it.
   Screen m_screen{Screen::LOGIN};
+
+  /// @brief - Holds the renderers associated to each screen. The app guarantees
+  /// calling each renderer once per frame when the corresponding screen is active.
+  std::unordered_map<Screen, IRendererPtr> m_renderers{};
+
+  /// @brief - Holds the UI handlers associated to each screen. The app guarantees
+  /// calling each handler once per frame when the corresponding screen is active.
+  std::unordered_map<Screen, IUiHandlerPtr> m_uiHandlers{};
+
+  /// @brief - Holds the input handlers associated to each screen. The app guarantees
+  /// calling each handler once per frame when the corresponding screen is active.
+  std::unordered_map<Screen, IInputHandlerPtr> m_inputHandlers{};
 };
 
 } // namespace bsgalone::client
