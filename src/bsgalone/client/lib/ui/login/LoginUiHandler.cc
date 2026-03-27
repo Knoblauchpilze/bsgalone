@@ -1,14 +1,23 @@
 
 #include "LoginUiHandler.hh"
+#include "ExitCommand.hh"
+#include "LoginCommand.hh"
 #include "Palette.hh"
 #include "ScreenCommon.hh"
+#include "SignupCommand.hh"
 
 namespace bsgalone::client {
 
-LoginUiHandler::LoginUiHandler()
+LoginUiHandler::LoginUiHandler(IUiCommandQueueShPtr queue)
   : IUiHandler()
   , ::core::CoreObject("login")
-{}
+  , m_queue(std::move(queue))
+{
+  if (m_queue == nullptr)
+  {
+    throw std::invalid_argument("Expected non null command queue");
+  }
+}
 
 void LoginUiHandler::initializeMenus(const pge::Vec2i &dimensions,
                                      pge::sprites::TexturePack &texturesLoader)
@@ -220,7 +229,7 @@ void LoginUiHandler::generateProceedButton(const pge::Vec2i &dimensions)
 
   const ui::MenuConfig config{.pos           = loginButtonPos,
                               .dims          = loginButtonDimsPixels,
-                              .clickCallback = [this]() { tryLogin(); }};
+                              .clickCallback = [this]() { onProceedRequested(); }};
 
   const auto bg   = ui::bgConfigFromColor(pge::colors::DARK_COBALT_BLUE);
   const auto text = ui::textConfigFromColor(LOGIN_TEXT, pge::colors::WHITE);
@@ -234,14 +243,9 @@ void LoginUiHandler::generateQuitButton(const pge::Vec2i &dimensions)
   const pge::Vec2i quitButtonPos{dimensions.x - REASONABLE_GAP_SIZE - quitButtonDimsPixels.x,
                                  REASONABLE_GAP_SIZE};
 
-  const ui::MenuConfig config
-  {
-    .pos = quitButtonPos, .dims = quitButtonDimsPixels,
-    // TODO: Restore exit behavior
-                              /* .gameClickCallback = [](ui::IScreenChanger &g) {
-                                g.setScreen(Screen::EXIT);
-                                g.terminate();
-                              }*/ };
+  const ui::MenuConfig config{.pos           = quitButtonPos,
+                              .dims          = quitButtonDimsPixels,
+                              .clickCallback = [this]() { onExitRequested(); }};
 
   const auto bg   = ui::bgConfigFromColor(pge::colors::DARK_GREY);
   const auto text = ui::textConfigFromColor("Quit", pge::colors::WHITE);
@@ -296,7 +300,7 @@ void LoginUiHandler::setGameRole(const core::GameRole role)
   m_role = role;
 }
 
-void LoginUiHandler::tryLogin()
+void LoginUiHandler::onProceedRequested()
 {
   const auto data = m_credentialsUiHandler.getCredentials();
 
@@ -307,19 +311,23 @@ void LoginUiHandler::tryLogin()
     return;
   }
 
-  // TODO: Restore handling of login events
-  // switch (m_mode)
-  // {
-  //   case Mode::LOGIN:
-  //     m_playerView->tryLogin(data.name, data.password, m_role);
-  //     break;
-  //   case Mode::SIGNUP:
-  //     m_playerView->trySignup(data.name, data.password, m_faction);
-  //     break;
-  //   default:
-  //     error("Unknown mode");
-  //     break;
-  // }
+  switch (m_mode)
+  {
+    case Mode::LOGIN:
+      m_queue->pushEvent(std::make_unique<LoginCommand>(data.username, data.password, m_role));
+      break;
+    case Mode::SIGNUP:
+      m_queue->pushEvent(std::make_unique<SignupCommand>(data.username, data.password, m_faction));
+      break;
+    default:
+      error("Unknown mode");
+      break;
+  }
+}
+
+void LoginUiHandler::onExitRequested()
+{
+  m_queue->pushEvent(std::make_unique<ExitCommand>());
 }
 
 // TODO: Restore loading handling.

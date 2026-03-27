@@ -1,11 +1,14 @@
 
 #include "App.hh"
+#include "AsyncUiCommandQueue.hh"
 #include "LoginUiHandler.hh"
+#include "SynchronizedUiCommandQueue.hh"
 
 namespace bsgalone::client {
 
 App::App(const pge::AppDesc &desc)
   : PGEApp(desc)
+  , m_uiCommandQueue(createSynchronizedUiCommandQueue())
 {}
 
 bool App::onFrame(const float /*elapsedSeconds*/)
@@ -48,6 +51,8 @@ void App::loadResources(const pge::Vec2i &screenDims, pge::Renderer &engine)
 {
   setLayerTint(Layer::DRAW, semiOpaque(pge::colors::WHITE));
 
+  m_uiCommandQueue = createAsyncUiCommandQueue(createSynchronizedUiCommandQueue());
+
   generateUiHandlers(screenDims, engine.getTextureHandler());
 }
 
@@ -56,6 +61,8 @@ void App::cleanResources()
   m_inputHandlers.clear();
   m_uiHandlers.clear();
   m_renderers.clear();
+
+  m_uiCommandQueue.reset();
 }
 
 void App::drawDecal(const pge::RenderState &state)
@@ -114,7 +121,7 @@ void App::drawDebug(const pge::RenderState &state, const pge::Vec2f &mouseScreen
 
 void App::generateUiHandlers(const pge::Vec2i &screenDims, pge::sprites::TexturePack &texturesLoader)
 {
-  auto login = std::make_unique<LoginUiHandler>();
+  auto login = std::make_unique<LoginUiHandler>(m_uiCommandQueue);
   login->initializeMenus(screenDims, texturesLoader);
   m_uiHandlers[Screen::LOGIN] = std::move(login);
 }

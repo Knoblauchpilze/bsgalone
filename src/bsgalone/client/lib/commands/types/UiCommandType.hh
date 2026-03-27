@@ -10,6 +10,7 @@ enum class UiCommandType
 {
   EXIT_REQUESTED,
   LOGIN_REQUESTED,
+  SIGNUP_REQUESTED
 };
 
 auto str(const UiCommandType type) -> std::string;

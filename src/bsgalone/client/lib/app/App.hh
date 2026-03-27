@@ -3,6 +3,7 @@
 
 #include "IInputHandler.hh"
 #include "IRenderer.hh"
+#include "IUiCommandQueue.hh"
 #include "IUiHandler.hh"
 #include "PGEApp.hh"
 #include "Screen.hh"
@@ -48,6 +49,12 @@ class App : public pge::PGEApp
   /// @brief - Holds the input handlers associated to each screen. The app guarantees
   /// calling each handler once per frame when the corresponding screen is active.
   std::unordered_map<Screen, IInputHandlerPtr> m_inputHandlers{};
+
+  /// @brief - Used by the UI components to trigger updates based on actions
+  /// taken by the user (e.g. clicks or buttons). Some actions may result in
+  /// commands sent to the server while others will trigger internal changes
+  /// in the UI or client application in general.
+  IUiCommandQueueShPtr m_uiCommandQueue{};
 
   void generateUiHandlers(const pge::Vec2i &screenDims, pge::sprites::TexturePack &texturesLoader);
 };

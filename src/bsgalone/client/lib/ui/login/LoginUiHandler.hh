@@ -5,6 +5,7 @@
 #include "CredentialsUiHandler.hh"
 #include "Faction.hh"
 #include "GameRole.hh"
+#include "IUiCommandQueue.hh"
 #include "IUiHandler.hh"
 #include "UiMenu.hh"
 #include "UiTextMenu.hh"
@@ -15,7 +16,7 @@ namespace bsgalone::client {
 class LoginUiHandler : public IUiHandler, public ::core::CoreObject
 {
   public:
-  LoginUiHandler();
+  LoginUiHandler(IUiCommandQueueShPtr queue);
   ~LoginUiHandler() override = default;
 
   void initializeMenus(const pge::Vec2i &dimensions,
@@ -55,6 +56,8 @@ class LoginUiHandler : public IUiHandler, public ::core::CoreObject
 
   ui::UiTimedMenuPtr m_successfulSignupMenu{};
 
+  IUiCommandQueueShPtr m_queue{};
+
   void generateLoginModePanel(const pge::Vec2i &dimensions);
   void generateFactionPanel(const pge::Vec2i &dimensions);
   void generateRolePanel(const pge::Vec2i &dimensions);
@@ -66,7 +69,9 @@ class LoginUiHandler : public IUiHandler, public ::core::CoreObject
   void setLoginMode(const Mode mode);
   void setFaction(const core::Faction faction);
   void setGameRole(const core::GameRole role);
-  void tryLogin();
+
+  void onProceedRequested();
+  void onExitRequested();
 };
 
 } // namespace bsgalone::client
