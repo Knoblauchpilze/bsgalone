@@ -5,12 +5,16 @@
 
 namespace ui {
 
+using ChangedCallback = std::function<void()>;
+
 struct TextFieldConfig
 {
   pge::Vec2i pos{};
   pge::Vec2i dims{10, 10};
 
   bool visible{true};
+
+  std::optional<ChangedCallback> changedCallback{};
 };
 
 class UiTextField : public UiTextMenu
@@ -27,6 +31,8 @@ class UiTextField : public UiTextMenu
   int m_cursorPos{0};
   std::string m_fullText{};
   bool m_editing{false};
+
+  std::optional<ChangedCallback> m_changedCallback{};
 
   void updateInternalText(const pge::controls::State &controls);
   void updateCursorPosition(const pge::controls::State &controls);
