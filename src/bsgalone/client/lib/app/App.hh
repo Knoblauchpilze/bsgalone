@@ -57,6 +57,7 @@ class App : public pge::PGEApp
   IUiCommandQueueShPtr m_uiCommandQueue{};
 
   void generateUiHandlers(const pge::Vec2i &screenDims, pge::sprites::TexturePack &texturesLoader);
+  void generateRenderers(const pge::Vec2i &dimensions, pge::sprites::TexturePack &texturesLoader);
 };
 
 } // namespace bsgalone::client

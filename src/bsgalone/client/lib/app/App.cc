@@ -1,6 +1,7 @@
 
 #include "App.hh"
 #include "AsyncUiCommandQueue.hh"
+#include "DecalRenderer.hh"
 #include "LoginUiHandler.hh"
 #include "SynchronizedUiCommandQueue.hh"
 
@@ -54,6 +55,7 @@ void App::loadResources(const pge::Vec2i &screenDims, pge::Renderer &engine)
   m_uiCommandQueue = createAsyncUiCommandQueue(createSynchronizedUiCommandQueue());
 
   generateUiHandlers(screenDims, engine.getTextureHandler());
+  generateRenderers(screenDims, engine.getTextureHandler());
 }
 
 void App::cleanResources()
@@ -124,6 +126,17 @@ void App::generateUiHandlers(const pge::Vec2i &screenDims, pge::sprites::Texture
   auto login = std::make_unique<LoginUiHandler>(m_uiCommandQueue);
   login->initializeMenus(screenDims, texturesLoader);
   m_uiHandlers[Screen::LOGIN] = std::move(login);
+}
+
+namespace {
+constexpr auto LOGIN_TEXTURE_FILE_PATH = "assets/login_bg.png";
+}
+
+void App::generateRenderers(const pge::Vec2i &dimensions, pge::sprites::TexturePack &texturesLoader)
+{
+  auto login = std::make_unique<DecalRenderer>(LOGIN_TEXTURE_FILE_PATH);
+  login->loadResources(dimensions, texturesLoader);
+  m_renderers[Screen::LOGIN] = std::move(login);
 }
 
 } // namespace bsgalone::client
