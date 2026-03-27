@@ -231,12 +231,9 @@ void UiMenu::onRelevantInput(const UserInputData &inputData)
     (*m_highlightCallback)();
   }
 
-  if (inputData.controls.released(pge::controls::mouse::LEFT))
+  if (inputData.controls.released(pge::controls::mouse::LEFT) && m_clickCallback)
   {
-    if (m_clickCallback)
-    {
-      (*m_clickCallback)();
-    }
+    (*m_clickCallback)();
   }
 }
 

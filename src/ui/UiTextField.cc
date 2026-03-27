@@ -23,7 +23,7 @@ UiTextField::UiTextField(const TextFieldConfig &config,
     text)
   , m_cursorPos(static_cast<int>(text.text.size()))
   , m_fullText(text.text)
-  , m_textChangedCallback(std::move(config.textChangedCallback))
+  , m_textChangedCallback(config.textChangedCallback)
 {
   setClickCallback([this]() { m_editing = true; });
   setLostFocusCallback([this]() { m_editing = false; });
