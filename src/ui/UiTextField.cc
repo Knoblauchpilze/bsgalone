@@ -23,7 +23,7 @@ UiTextField::UiTextField(const TextFieldConfig &config,
     text)
   , m_cursorPos(static_cast<int>(text.text.size()))
   , m_fullText(text.text)
-  , m_changedCallback(std::move(config.changedCallback))
+  , m_textChangedCallback(std::move(config.textChangedCallback))
 {
   setClickCallback([this]() { m_editing = true; });
   setLostFocusCallback([this]() { m_editing = false; });
@@ -155,9 +155,9 @@ void UiTextField::updateInternalText(const pge::controls::State &controls)
     deleteFrom(m_fullText, m_cursorPos);
   }
 
-  if (initialSize != m_fullText.size() && m_changedCallback.has_value())
+  if (initialSize != m_fullText.size() && m_textChangedCallback.has_value())
   {
-    (*m_changedCallback)();
+    (*m_textChangedCallback)(m_fullText);
   }
 }
 

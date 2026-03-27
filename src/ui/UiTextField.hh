@@ -5,7 +5,7 @@
 
 namespace ui {
 
-using ChangedCallback = std::function<void()>;
+using TextChangedCallback = std::function<void(const std::string &)>;
 
 struct TextFieldConfig
 {
@@ -14,7 +14,7 @@ struct TextFieldConfig
 
   bool visible{true};
 
-  std::optional<ChangedCallback> changedCallback{};
+  std::optional<TextChangedCallback> textChangedCallback{};
 };
 
 class UiTextField : public UiTextMenu
@@ -32,7 +32,7 @@ class UiTextField : public UiTextMenu
   std::string m_fullText{};
   bool m_editing{false};
 
-  std::optional<ChangedCallback> m_changedCallback{};
+  std::optional<TextChangedCallback> m_textChangedCallback{};
 
   void updateInternalText(const pge::controls::State &controls);
   void updateCursorPosition(const pge::controls::State &controls);

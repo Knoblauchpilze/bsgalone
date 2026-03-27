@@ -8,19 +8,16 @@ CredentialsUiHandler::CredentialsUiHandler()
   : IUiHandler()
 {}
 
-auto CredentialsUiHandler::getCredentials() const -> PlayerCredentials
+auto CredentialsUiHandler::getCredentials() const -> const PlayerCredentials &
 {
-  return PlayerCredentials{
-    .name     = m_nameTextField->getText(),
-    .password = m_passwordTextField->getText(),
-  };
+  return m_credentials;
 }
 
 namespace {
-auto addTextFieldSectionToMenu(ui::UiMenu &mainPanel,
+void addTextFieldSectionToMenu(ui::UiMenu &mainPanel,
                                const std::string &textFieldlabel,
-                               const std::optional<std::string> &defaultValue = {})
-  -> ui::UiTextField *
+                               ui::TextChangedCallback callback,
+                               const std::optional<std::string> &defaultValue)
 {
   auto textFieldSection = generateBlankHorizontalMenu();
 
@@ -30,18 +27,15 @@ auto addTextFieldSectionToMenu(ui::UiMenu &mainPanel,
   auto label = std::make_unique<ui::UiTextMenu>(config, bg, text);
   textFieldSection->addMenu(std::move(label));
 
-  ui::TextFieldConfig fieldConfig{};
+  ui::TextFieldConfig fieldConfig{.textChangedCallback = callback};
   bg               = ui::bgConfigFromColor(semiOpaque(pge::colors::WHITE));
   const auto value = defaultValue.value_or("");
   text             = ui::textConfigFromColor(value, pge::colors::BLACK, ui::TextAlignment::LEFT);
 
   auto field = std::make_unique<ui::UiTextField>(fieldConfig, bg, text);
-  auto out   = field.get();
   textFieldSection->addMenu(std::move(field));
 
   mainPanel.addMenu(std::move(textFieldSection));
-
-  return out;
 }
 } // namespace
 
@@ -54,8 +48,14 @@ void CredentialsUiHandler::initializeMenus(const pge::Vec2i &dimensions,
 
   m_credentialsPanel = generateBlankVerticalMenu(loginPos, loginDimsPixels);
 
-  m_nameTextField     = addTextFieldSectionToMenu(*m_credentialsPanel, "Name:", "colo");
-  m_passwordTextField = addTextFieldSectionToMenu(*m_credentialsPanel, "Password:", "aze");
+  auto userCallback = [this](const std::string &text) { onUsernameChanged(text); };
+  addTextFieldSectionToMenu(*m_credentialsPanel, "Name:", userCallback, "colo");
+
+  auto pwdCallback = [this](const std::string &text) { onPasswordChanged(text); };
+  addTextFieldSectionToMenu(*m_credentialsPanel, "Password:", pwdCallback, "aze");
+
+  m_credentials.username = "colo";
+  m_credentials.password = "aze";
 }
 
 bool CredentialsUiHandler::processUserInput(ui::UserInputData &inputData)
@@ -68,6 +68,19 @@ void CredentialsUiHandler::render(pge::Renderer &engine) const
   m_credentialsPanel->render(engine);
 }
 
-void CredentialsUiHandler::updateUi() {}
+void CredentialsUiHandler::updateUi()
+{
+  // Intentionally empty
+}
+
+void CredentialsUiHandler::onUsernameChanged(const std::string &username)
+{
+  m_credentials.username = username;
+}
+
+void CredentialsUiHandler::onPasswordChanged(const std::string &password)
+{
+  m_credentials.password = password;
+}
 
 } // namespace bsgalone::client

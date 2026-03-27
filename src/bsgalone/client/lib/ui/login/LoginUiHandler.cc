@@ -218,9 +218,9 @@ void LoginUiHandler::generateProceedButton(const pge::Vec2i &dimensions)
   const pge::Vec2i loginButtonPos{(dimensions.x - loginButtonDimsPixels.x) / 2,
                                   dimensions.y - REASONABLE_GAP_SIZE - loginButtonDimsPixels.y};
 
-  const ui::MenuConfig config{.pos = loginButtonPos, .dims = loginButtonDimsPixels,
-                              // TODO: Restore try login behavior
-                              /*.clickCallback = [this]() { tryLogin(); }*/};
+  const ui::MenuConfig config{.pos           = loginButtonPos,
+                              .dims          = loginButtonDimsPixels,
+                              .clickCallback = [this]() { tryLogin(); }};
 
   const auto bg   = ui::bgConfigFromColor(pge::colors::DARK_COBALT_BLUE);
   const auto text = ui::textConfigFromColor(LOGIN_TEXT, pge::colors::WHITE);
@@ -296,32 +296,33 @@ void LoginUiHandler::setGameRole(const core::GameRole role)
   m_role = role;
 }
 
+void LoginUiHandler::tryLogin()
+{
+  const auto data = m_credentialsUiHandler.getCredentials();
+
+  if (!data.valid())
+  {
+    warn("Can't login with empty name or password");
+    m_failureMenu->trigger();
+    return;
+  }
+
+  // TODO: Restore handling of login events
+  // switch (m_mode)
+  // {
+  //   case Mode::LOGIN:
+  //     m_playerView->tryLogin(data.name, data.password, m_role);
+  //     break;
+  //   case Mode::SIGNUP:
+  //     m_playerView->trySignup(data.name, data.password, m_faction);
+  //     break;
+  //   default:
+  //     error("Unknown mode");
+  //     break;
+  // }
+}
+
 // TODO: Restore loading handling.
-// void LoginUiHandler::tryLogin()
-// {
-//   const auto data = m_credentialsUiHandler.getCredentials();
-
-//   if (data.name.empty() || data.password.empty())
-//   {
-//     warn("Can't login with empty name or password");
-//     m_failureMenu->trigger();
-//     return;
-//   }
-
-//   switch (m_mode)
-//   {
-//     case Mode::LOGIN:
-//       m_playerView->tryLogin(data.name, data.password, m_role);
-//       break;
-//     case Mode::SIGNUP:
-//       m_playerView->trySignup(data.name, data.password, m_faction);
-//       break;
-//     default:
-//       error("Unknown mode");
-//       break;
-//   }
-// }
-
 // void LoginUiHandler::handleLoginMessage(const core::LoginMessage &message)
 // {
 //   if (!message.successfullyLoggedIn())

@@ -14,9 +14,7 @@ class CredentialsUiHandler : public IUiHandler
   CredentialsUiHandler();
   ~CredentialsUiHandler() override = default;
 
-  // TODO: Maybe the text fields could have a onChanged callback in the
-  // config which would allow to not have to keep raw pointers.
-  auto getCredentials() const -> PlayerCredentials;
+  auto getCredentials() const -> const PlayerCredentials &;
 
   void initializeMenus(const pge::Vec2i &dimensions,
                        pge::sprites::TexturePack &texturesLoader) override;
@@ -26,8 +24,11 @@ class CredentialsUiHandler : public IUiHandler
 
   private:
   ui::UiMenuPtr m_credentialsPanel{};
-  ui::UiTextField *m_nameTextField{};
-  ui::UiTextField *m_passwordTextField{};
+
+  PlayerCredentials m_credentials{};
+
+  void onUsernameChanged(const std::string &username);
+  void onPasswordChanged(const std::string &password);
 };
 
 } // namespace bsgalone::client
