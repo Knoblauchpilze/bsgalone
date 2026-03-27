@@ -21,6 +21,8 @@ class App : public pge::PGEApp
 
   ~App() override = default;
 
+  void onScreenChanged(const Screen screen);
+
   protected:
   bool onFrame(const float elapsedSeconds) override;
   void onInputs(const pge::controls::State &controls, pge::CoordinateFrame &frame) override;
@@ -55,6 +57,8 @@ class App : public pge::PGEApp
   /// commands sent to the server while others will trigger internal changes
   /// in the UI or client application in general.
   IUiCommandQueueShPtr m_uiCommandQueue{};
+
+  void initializeMessageSystem();
 
   void generateUiHandlers(const pge::Vec2i &screenDims, pge::sprites::TexturePack &texturesLoader);
   void generateRenderers(const pge::Vec2i &dimensions, pge::sprites::TexturePack &texturesLoader);

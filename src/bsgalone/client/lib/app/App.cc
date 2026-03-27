@@ -2,6 +2,7 @@
 #include "App.hh"
 #include "AsyncUiCommandQueue.hh"
 #include "DecalRenderer.hh"
+#include "IUiCommandListener.hh"
 #include "LoginUiHandler.hh"
 #include "SynchronizedUiCommandQueue.hh"
 
@@ -53,6 +54,8 @@ void App::loadResources(const pge::Vec2i &screenDims, pge::Renderer &engine)
   setLayerTint(Layer::DRAW, semiOpaque(pge::colors::WHITE));
 
   m_uiCommandQueue = createAsyncUiCommandQueue(createSynchronizedUiCommandQueue());
+
+  initializeMessageSystem();
 
   generateUiHandlers(screenDims, engine.getTextureHandler());
   generateRenderers(screenDims, engine.getTextureHandler());
@@ -121,6 +124,37 @@ void App::drawDebug(const pge::RenderState &state, const pge::Vec2f &mouseScreen
                                  pge::colors::DARK_GREEN);
 }
 
+namespace {
+class ListenerProxy : public IUiCommandListener
+{
+  public:
+  ListenerProxy(App &app)
+    : IUiCommandListener()
+    , m_app(app)
+  {}
+
+  ~ListenerProxy() override = default;
+
+  bool isEventRelevant(const UiCommandType &type) const override
+  {
+    return type == UiCommandType::EXIT_REQUESTED;
+  }
+
+  void onEventReceived(const IUiCommand & /*event*/) override
+  {
+    m_app.onScreenChanged(Screen::EXIT);
+  }
+
+  private:
+  App &m_app;
+};
+} // namespace
+
+void App::initializeMessageSystem()
+{
+  m_uiCommandQueue->addListener(std::make_unique<ListenerProxy>(*this));
+}
+
 void App::generateUiHandlers(const pge::Vec2i &screenDims, pge::sprites::TexturePack &texturesLoader)
 {
   auto login = std::make_unique<LoginUiHandler>(m_uiCommandQueue);
@@ -137,6 +171,11 @@ void App::generateRenderers(const pge::Vec2i &dimensions, pge::sprites::TextureP
   auto login = std::make_unique<DecalRenderer>(LOGIN_TEXTURE_FILE_PATH);
   login->loadResources(dimensions, texturesLoader);
   m_renderers[Screen::LOGIN] = std::move(login);
+}
+
+void App::onScreenChanged(const Screen screen)
+{
+  m_screen = screen;
 }
 
 } // namespace bsgalone::client
