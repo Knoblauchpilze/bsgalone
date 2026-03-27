@@ -31,4 +31,5 @@ target_link_libraries (bsgalone_client_lib
 	core_lib
 	pge_lib
 	ui_lib
+	bsgalone_core_lib
 	)

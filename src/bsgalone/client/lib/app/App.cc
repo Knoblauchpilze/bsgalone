@@ -1,5 +1,6 @@
 
 #include "App.hh"
+#include "LoginUiHandler.hh"
 
 namespace bsgalone::client {
 
@@ -20,18 +21,34 @@ bool App::onFrame(const float /*elapsedSeconds*/)
 
 void App::onInputs(const pge::controls::State &controls, pge::CoordinateFrame &frame)
 {
-  const auto maybeHandler = m_inputHandlers.find(m_screen);
-  if (maybeHandler == m_inputHandlers.end())
+  const auto maybeInputHandler = m_inputHandlers.find(m_screen);
+  if (maybeInputHandler != m_inputHandlers.end())
   {
-    return;
+    maybeInputHandler->second->processUserInput(controls, frame);
   }
 
-  maybeHandler->second->processUserInput(controls, frame);
+  bool inputRelevantForUi{false};
+  const auto maybeUiHandler = m_uiHandlers.find(m_screen);
+  if (maybeUiHandler != m_uiHandlers.end())
+  {
+    ui::UserInputData data{.controls = controls};
+    inputRelevantForUi = maybeUiHandler->second->processUserInput(data);
+  }
+
+  if (controls.released(pge::controls::mouse::LEFT) && maybeInputHandler != m_inputHandlers.end()
+      && !inputRelevantForUi)
+  {
+    pge::Vec2f it;
+    const auto tp = frame.pixelsToTilesAndIntra(pge::Vec2f(controls.mPosX, controls.mPosY), &it);
+    maybeInputHandler->second->performAction(tp.x + it.x, tp.y + it.y, controls);
+  }
 }
 
-void App::loadResources(const pge::Vec2i & /*screenDims*/, pge::Renderer & /*engine*/)
+void App::loadResources(const pge::Vec2i &screenDims, pge::Renderer &engine)
 {
   setLayerTint(Layer::DRAW, semiOpaque(pge::colors::WHITE));
+
+  generateUiHandlers(screenDims, engine.getTextureHandler());
 }
 
 void App::cleanResources()
@@ -56,13 +73,13 @@ void App::draw(const pge::RenderState & /*state*/) {}
 
 void App::drawUi(const pge::RenderState &state)
 {
-  const auto maybeRenderer = m_renderers.find(m_screen);
-  if (maybeRenderer == m_renderers.end())
+  const auto maybeHandler = m_uiHandlers.find(m_screen);
+  if (maybeHandler == m_uiHandlers.end())
   {
     return;
   }
 
-  maybeRenderer->second->render(state.renderer, state, pge::RenderingPass::UI);
+  maybeHandler->second->render(state.renderer);
 }
 
 void App::drawDebug(const pge::RenderState &state, const pge::Vec2f &mouseScreenPos)
@@ -93,6 +110,13 @@ void App::drawDebug(const pge::RenderState &state, const pge::Vec2f &mouseScreen
   state.renderer.drawDebugString(pos,
                                  "Screen            : " + str(m_screen),
                                  pge::colors::DARK_GREEN);
+}
+
+void App::generateUiHandlers(const pge::Vec2i &screenDims, pge::sprites::TexturePack &texturesLoader)
+{
+  auto login = std::make_unique<LoginUiHandler>();
+  login->initializeMenus(screenDims, texturesLoader);
+  m_uiHandlers[Screen::LOGIN] = std::move(login);
 }
 
 } // namespace bsgalone::client

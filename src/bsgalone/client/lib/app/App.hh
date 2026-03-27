@@ -48,6 +48,8 @@ class App : public pge::PGEApp
   /// @brief - Holds the input handlers associated to each screen. The app guarantees
   /// calling each handler once per frame when the corresponding screen is active.
   std::unordered_map<Screen, IInputHandlerPtr> m_inputHandlers{};
+
+  void generateUiHandlers(const pge::Vec2i &screenDims, pge::sprites::TexturePack &texturesLoader);
 };
 
 } // namespace bsgalone::client
