@@ -12,6 +12,10 @@ add_subdirectory (
 	)
 
 add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/commands
+	)
+
+add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/enums
 	)
 
@@ -31,5 +35,6 @@ target_link_libraries (bsgalone_client_lib
 	core_lib
 	pge_lib
 	ui_lib
+	messaging_lib
 	bsgalone_core_lib
 	)
