@@ -4,7 +4,6 @@
 
 namespace bsgalone::core {
 
-// TODO: Add tests for this class
 LoginRequest::LoginRequest()
   : IMessage(MessageType::LOGIN_REQUEST)
 {}

@@ -4,7 +4,6 @@
 
 namespace bsgalone::core {
 
-// TODO: Add tests for this class
 SignupRequest::SignupRequest()
   : IMessage(MessageType::SIGNUP_REQUEST)
 {}
