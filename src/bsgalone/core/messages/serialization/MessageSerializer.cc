@@ -28,7 +28,6 @@ auto MessageSerializer::serializeMessage(const IMessage &message) -> std::vector
       break;
     default:
       throw std::invalid_argument("Unsupported message type " + str(message.type()));
-      break;
   }
 
   const auto &rawMessage = out.str();
