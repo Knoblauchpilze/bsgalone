@@ -1,10 +1,12 @@
 
 #pragma once
 
+#include "GameNetworkClient.hh"
 #include "IInputHandler.hh"
 #include "IRenderer.hh"
 #include "IUiCommandQueue.hh"
 #include "IUiHandler.hh"
+#include "NetworkConfig.hh"
 #include "PGEApp.hh"
 #include "Screen.hh"
 #include <unordered_map>
@@ -17,7 +19,8 @@ class App : public pge::PGEApp
   /// @brief - Create a new client application for the game and performs the login
   /// for the specified user and password.
   /// @param desc - contains all the needed information to create the canvas needed
-  App(const pge::AppDesc &desc);
+  /// @param config - description of the configuration to connect to the server
+  App(const pge::AppDesc &desc, const NetworkConfig &config);
 
   ~App() override = default;
 
@@ -57,6 +60,14 @@ class App : public pge::PGEApp
   /// commands sent to the server while others will trigger internal changes
   /// in the UI or client application in general.
   IUiCommandQueueShPtr m_uiCommandQueue{};
+
+  /// @brief - Holds the configuration to forward to the network client when the
+  /// app is started.
+  NetworkConfig m_config{};
+
+  /// @brief - The network client used to connect to the server and transmit
+  /// commands and receive updates to the game.
+  GameNetworkClientShPtr m_networkClient{};
 
   void initializeMessageSystem();
 

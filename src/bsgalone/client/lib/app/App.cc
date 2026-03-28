@@ -8,9 +8,10 @@
 
 namespace bsgalone::client {
 
-App::App(const pge::AppDesc &desc)
+App::App(const pge::AppDesc &desc, const NetworkConfig &config)
   : PGEApp(desc)
   , m_uiCommandQueue(createSynchronizedUiCommandQueue())
+  , m_config(config)
 {}
 
 bool App::onFrame(const float /*elapsedSeconds*/)
@@ -59,15 +60,22 @@ void App::loadResources(const pge::Vec2i &screenDims, pge::Renderer &engine)
 
   generateUiHandlers(screenDims, engine.getTextureHandler());
   generateRenderers(screenDims, engine.getTextureHandler());
+
+  m_networkClient = std::make_shared<GameNetworkClient>();
+  m_networkClient->start(m_config.port);
 }
 
 void App::cleanResources()
 {
+  m_networkClient->stop();
+
   m_inputHandlers.clear();
   m_uiHandlers.clear();
   m_renderers.clear();
 
   m_uiCommandQueue.reset();
+
+  m_networkClient.reset();
 }
 
 void App::drawDecal(const pge::RenderState &state)

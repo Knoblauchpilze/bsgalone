@@ -28,7 +28,9 @@ int main(int /*argc*/, char ** /*argv*/)
                     .fixedFrame = true,
                     .maxFps     = 20};
 
-  bsgalone::client::App app(desc);
+  bsgalone::client::NetworkConfig config{.port = core::getPortFromEnvironmentVariable()};
+
+  bsgalone::client::App app(desc, config);
 
   auto gameFunc = [&app]() { app.run(); };
 
