@@ -85,6 +85,7 @@ TEST(Unit_Bsgalone_Core_Messages_Network_OutputNetworkAdapter, SerializeServersM
 
   auto serializer = std::make_unique<StrictMock<MockSerializer>>();
   core::IMessagePtr captured;
+  // https://stackoverflow.com/questions/46157888/gmock-capture-a-reference-argument-in-a-mocked-function
   EXPECT_CALL(*serializer, serializeMessage(_))
     .Times(1)
     .WillOnce(Invoke([&captured](const core::IMessage &message) {

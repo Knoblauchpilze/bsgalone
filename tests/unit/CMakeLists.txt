@@ -46,4 +46,5 @@ target_link_libraries (unitTests
 	time_lib
 	net_lib
 	bsgalone_core_lib
+	bsgalone_client_lib
 	)
