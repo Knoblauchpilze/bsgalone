@@ -14,7 +14,6 @@ auto serialize(std::ostream &out, const T &message) -> std::ostream &
 }
 } // namespace
 
-// TODO: Add tests for this class
 auto MessageSerializer::serializeMessage(const IMessage &message) -> std::vector<char>
 {
   std::ostringstream out{};
