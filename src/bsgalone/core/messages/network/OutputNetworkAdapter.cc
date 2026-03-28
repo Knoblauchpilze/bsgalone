@@ -4,7 +4,6 @@
 
 namespace bsgalone::core {
 
-// TODO: Add tests for this class
 OutputNetworkAdapter::OutputNetworkAdapter(net::INetworkServerShPtr server,
                                            IMessageSerializerPtr serializer)
   : IOutputNetworkAdapter()
