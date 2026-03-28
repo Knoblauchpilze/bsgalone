@@ -14,7 +14,8 @@ namespace bsgalone::client {
 constexpr auto DEFAULT_SERVER_URL = "127.0.0.1";
 
 GameNetworkClient::GameNetworkClient()
-  : m_inputQueue(core::createSynchronizedMessageQueue())
+  : ::core::CoreObject("network")
+  , m_inputQueue(core::createSynchronizedMessageQueue())
 {}
 
 void GameNetworkClient::start(const int port)
@@ -42,7 +43,8 @@ void GameNetworkClient::pushEvent(core::IMessagePtr message)
 {
   if (!m_connected.load())
   {
-    throw std::invalid_argument("Failed to send message, not connected to server");
+    warn("Discarding message " + str(message->type()) + ", not connected to server");
+    return;
   }
 
   m_adapter->sendMessage(*message);

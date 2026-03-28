@@ -4,6 +4,7 @@
 #include "DecalRenderer.hh"
 #include "IUiCommandListener.hh"
 #include "LoginUiHandler.hh"
+#include "OutputUiCommandAdapter.hh"
 #include "SynchronizedUiCommandQueue.hh"
 
 namespace bsgalone::client {
@@ -56,12 +57,12 @@ void App::loadResources(const pge::Vec2i &screenDims, pge::Renderer &engine)
 
   m_uiCommandQueue = createAsyncUiCommandQueue(createSynchronizedUiCommandQueue());
 
+  m_networkClient = std::make_shared<GameNetworkClient>();
   initializeMessageSystem();
 
   generateUiHandlers(screenDims, engine.getTextureHandler());
   generateRenderers(screenDims, engine.getTextureHandler());
 
-  m_networkClient = std::make_shared<GameNetworkClient>();
   m_networkClient->start(m_config.port);
 }
 
@@ -161,6 +162,7 @@ class ListenerProxy : public IUiCommandListener
 void App::initializeMessageSystem()
 {
   m_uiCommandQueue->addListener(std::make_unique<ListenerProxy>(*this));
+  m_uiCommandQueue->addListener(std::make_unique<OutputUiCommandAdapter>(m_networkClient));
 }
 
 void App::generateUiHandlers(const pge::Vec2i &screenDims, pge::sprites::TexturePack &texturesLoader)

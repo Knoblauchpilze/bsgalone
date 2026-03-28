@@ -2,6 +2,7 @@
 #pragma once
 
 #include "ClientId.hh"
+#include "CoreObject.hh"
 #include "IMessage.hh"
 #include "IMessageListener.hh"
 #include "IMessageQueue.hh"
@@ -13,7 +14,7 @@
 
 namespace bsgalone::client {
 
-class GameNetworkClient : public core::IMessageQueue
+class GameNetworkClient : public core::IMessageQueue, public ::core::CoreObject
 {
   public:
   /// @brief - Creates a new client which will attempt to connect to the remote server
