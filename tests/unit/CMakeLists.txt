@@ -6,6 +6,10 @@ target_include_directories (unitTests PUBLIC
 	)
 
 add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/bsgalone
+	)
+
+add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/core
 	)
 
@@ -41,4 +45,5 @@ target_link_libraries (unitTests
 	pge_lib
 	time_lib
 	net_lib
+	bsgalone_core_lib
 	)
