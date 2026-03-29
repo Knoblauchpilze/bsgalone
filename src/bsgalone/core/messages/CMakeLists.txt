@@ -4,6 +4,10 @@ target_include_directories (bsgalone_core_lib PUBLIC
 	)
 
 add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/commands
+	)
+
+add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/network
 	)
 
@@ -17,9 +21,4 @@ add_subdirectory (
 
 add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/types
-	)
-
-target_sources (bsgalone_core_lib PRIVATE
-	${CMAKE_CURRENT_SOURCE_DIR}/LoginRequest.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/SignupRequest.cc
 	)
