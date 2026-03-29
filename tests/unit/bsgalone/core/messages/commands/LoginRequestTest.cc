@@ -17,14 +17,14 @@ void assertMessagesAreEqual(const LoginRequest &actual, const LoginRequest &expe
 }
 } // namespace
 
-TEST(Unit_Bsgalone_Core_Messages_LoginRequest, DoesNotDefineClientIdByDefault)
+TEST(Unit_Bsgalone_Core_Messages_Commands_LoginRequest, DoesNotDefineClientIdByDefault)
 {
   const LoginRequest request("player", "secret", GameRole::GUNNER);
 
   EXPECT_FALSE(request.tryGetClientId().has_value());
 }
 
-TEST(Unit_Bsgalone_Core_Messages_LoginRequest, WithoutClientId)
+TEST(Unit_Bsgalone_Core_Messages_Commands_LoginRequest, WithoutClientId)
 {
   const LoginRequest expected("player", "secret", GameRole::GUNNER);
 
@@ -33,7 +33,7 @@ TEST(Unit_Bsgalone_Core_Messages_LoginRequest, WithoutClientId)
   assertMessagesAreEqual(actual->as<LoginRequest>(), expected);
 }
 
-TEST(Unit_Bsgalone_Core_Messages_LoginRequest, WithClientId)
+TEST(Unit_Bsgalone_Core_Messages_Commands_LoginRequest, WithClientId)
 {
   LoginRequest expected("player", "secret", GameRole::GUNNER);
   expected.setClientId(net::ClientId{2});
@@ -43,7 +43,7 @@ TEST(Unit_Bsgalone_Core_Messages_LoginRequest, WithClientId)
   assertMessagesAreEqual(actual->as<LoginRequest>(), expected);
 }
 
-TEST(Unit_Bsgalone_Core_Messages_LoginRequest, CloneWithoutClientId)
+TEST(Unit_Bsgalone_Core_Messages_Commands_LoginRequest, CloneWithoutClientId)
 {
   const LoginRequest expected("player", "secret", GameRole::GUNNER);
 
@@ -53,7 +53,7 @@ TEST(Unit_Bsgalone_Core_Messages_LoginRequest, CloneWithoutClientId)
   assertMessagesAreEqual(cloned->as<LoginRequest>(), expected);
 }
 
-TEST(Unit_Bsgalone_Core_Messages_LoginRequest, CloneWithClientId)
+TEST(Unit_Bsgalone_Core_Messages_Commands_LoginRequest, CloneWithClientId)
 {
   LoginRequest expected("player", "secret", GameRole::GUNNER);
   expected.setClientId(net::ClientId{2});

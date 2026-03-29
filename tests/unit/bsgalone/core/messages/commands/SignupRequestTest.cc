@@ -17,14 +17,14 @@ void assertMessagesAreEqual(const SignupRequest &actual, const SignupRequest &ex
 }
 } // namespace
 
-TEST(Unit_Bsgalone_Core_Messages_SignupRequest, DoesNotDefineClientIdByDefault)
+TEST(Unit_Bsgalone_Core_Messages_Commands_SignupRequest, DoesNotDefineClientIdByDefault)
 {
   const SignupRequest request("player", "secret", Faction::COLONIAL);
 
   EXPECT_FALSE(request.tryGetClientId().has_value());
 }
 
-TEST(Unit_Bsgalone_Core_Messages_SignupRequest, WithoutClientId)
+TEST(Unit_Bsgalone_Core_Messages_Commands_SignupRequest, WithoutClientId)
 {
   const SignupRequest expected("player", "secret", Faction::CYLON);
 
@@ -33,7 +33,7 @@ TEST(Unit_Bsgalone_Core_Messages_SignupRequest, WithoutClientId)
   assertMessagesAreEqual(actual->as<SignupRequest>(), expected);
 }
 
-TEST(Unit_Bsgalone_Core_Messages_SignupRequest, WithClientId)
+TEST(Unit_Bsgalone_Core_Messages_Commands_SignupRequest, WithClientId)
 {
   SignupRequest expected("player", "secret", Faction::COLONIAL);
   expected.setClientId(net::ClientId{2});
@@ -43,7 +43,7 @@ TEST(Unit_Bsgalone_Core_Messages_SignupRequest, WithClientId)
   assertMessagesAreEqual(actual->as<SignupRequest>(), expected);
 }
 
-TEST(Unit_Bsgalone_Core_Messages_SignupRequest, CloneWithoutClientId)
+TEST(Unit_Bsgalone_Core_Messages_Commands_SignupRequest, CloneWithoutClientId)
 {
   const SignupRequest expected("player", "secret", Faction::CYLON);
 
@@ -53,7 +53,7 @@ TEST(Unit_Bsgalone_Core_Messages_SignupRequest, CloneWithoutClientId)
   assertMessagesAreEqual(cloned->as<SignupRequest>(), expected);
 }
 
-TEST(Unit_Bsgalone_Core_Messages_SignupRequest, CloneWithClientId)
+TEST(Unit_Bsgalone_Core_Messages_Commands_SignupRequest, CloneWithClientId)
 {
   SignupRequest expected("player", "secret", Faction::COLONIAL);
   expected.setClientId(net::ClientId{2});
