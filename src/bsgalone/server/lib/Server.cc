@@ -37,10 +37,10 @@ void Server::initialize()
 {
   m_networkClient = std::make_shared<ServerNetworkClient>();
 
-  initializeMessageSystem();
+  initializeExternalFacingUseCases();
 }
 
-void Server::initializeMessageSystem()
+void Server::initializeExternalFacingUseCases()
 {
   m_eventQueue   = createAsyncGameEventQueue(createSynchronizedGameEventQueue());
   auto publisher = std::make_shared<core::GameEventPublisher>(m_eventQueue);
