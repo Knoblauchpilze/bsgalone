@@ -3,8 +3,8 @@
 ignore:
   - "tests"
   # Is it not desirable at the moment to test the engine
-  - "src/pge/olcEngine.cc"
-  - "src/pge/olcPixelGameEngine.h"
+  - "src/pge/olc/olcEngine.cc"
+  - "src/pge/olc/olcPixelGameEngine.h"
 # https://docs.codecov.com/docs/fixing-paths#how-to-provide-path-fixes-manually
 fixes:
   - "/__w/::"
