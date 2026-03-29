@@ -17,6 +17,8 @@ App::App(const pge::AppDesc &desc, const NetworkConfig &config)
 
 bool App::onFrame(const float /*elapsedSeconds*/)
 {
+  m_networkClient->processEvents();
+
   const auto maybeHandler = m_uiHandlers.find(m_screen);
   if (maybeHandler != m_uiHandlers.end())
   {
