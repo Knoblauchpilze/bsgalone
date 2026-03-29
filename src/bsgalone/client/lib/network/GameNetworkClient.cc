@@ -15,7 +15,6 @@ constexpr auto DEFAULT_SERVER_URL = "127.0.0.1";
 
 GameNetworkClient::GameNetworkClient()
   : ::core::CoreObject("network")
-  , m_inputQueue(core::createSynchronizedMessageQueue())
 {}
 
 void GameNetworkClient::start(const int port)
@@ -25,6 +24,8 @@ void GameNetworkClient::start(const int port)
   m_adapter
     = std::make_shared<core::OutputNetworkAdapter>(m_tcpClient,
                                                    std::make_unique<core::MessageSerializer>());
+
+  m_inputQueue = core::createSynchronizedMessageQueue();
 
   initialize();
 
@@ -37,6 +38,8 @@ void GameNetworkClient::stop()
   m_adapter.reset();
   m_tcpClient.reset();
   m_eventBus.reset();
+
+  m_inputQueue.reset();
 }
 
 void GameNetworkClient::pushEvent(core::IMessagePtr message)
@@ -67,13 +70,13 @@ void GameNetworkClient::processEvents()
 
 void GameNetworkClient::initialize()
 {
+  auto eventListener = std::make_unique<NetworkEventListener>(m_connected);
+  m_eventBus->addListener(std::move(eventListener));
+
   auto networkAdapter
     = std::make_unique<core::InputNetworkAdapter>(m_inputQueue,
                                                   std::make_unique<core::MessageParser>());
   m_eventBus->addListener(std::move(networkAdapter));
-
-  auto eventListener = std::make_unique<NetworkEventListener>(m_connected);
-  m_eventBus->addListener(std::move(eventListener));
 }
 
 } // namespace bsgalone::client
