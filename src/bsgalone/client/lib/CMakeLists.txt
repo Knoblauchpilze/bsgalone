@@ -35,10 +35,17 @@ add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/ui
 	)
 
-target_link_libraries (bsgalone_client_lib
+target_link_libraries (bsgalone_client_lib PUBLIC
+	bsgalone-interface-library
 	core_lib
 	pge_lib
 	ui_lib
 	messaging_lib
 	bsgalone_core_lib
 	)
+
+if (${ENABLE_TESTS})
+	target_link_libraries (bsgalone_client_lib PUBLIC
+		bsgalone-interface-test-library
+		)
+endif ()

@@ -30,4 +30,5 @@ target_link_libraries (integrationTests
 	bsgalone-interface-test-library
 	core_lib
 	net_lib
+	bsgalone_server_lib
 	)
