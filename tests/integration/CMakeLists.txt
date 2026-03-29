@@ -6,11 +6,15 @@ target_include_directories (integrationTests PUBLIC
 	)
 
 add_subdirectory (
-	${CMAKE_CURRENT_SOURCE_DIR}/helpers
+	${CMAKE_CURRENT_SOURCE_DIR}/bsgalone
 	)
 
 add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/fixtures
+	)
+
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/helpers
 	)
 
 add_subdirectory (

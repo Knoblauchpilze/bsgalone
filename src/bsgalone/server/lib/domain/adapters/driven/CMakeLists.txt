@@ -4,9 +4,8 @@ target_include_directories (bsgalone_server_lib PUBLIC
 	)
 
 add_subdirectory (
-	${CMAKE_CURRENT_SOURCE_DIR}/driven
+	${CMAKE_CURRENT_SOURCE_DIR}/repositories
 	)
 
-add_subdirectory (
-	${CMAKE_CURRENT_SOURCE_DIR}/driving
+target_sources (bsgalone_server_lib PRIVATE
 	)
