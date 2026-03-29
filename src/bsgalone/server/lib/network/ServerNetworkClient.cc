@@ -1,14 +1,12 @@
 
 #include "ServerNetworkClient.hh"
 #include "AsyncEventQueue.hh"
-#include "AsyncMessageQueue.hh"
 #include "ClientEventListener.hh"
 #include "InputNetworkAdapter.hh"
 #include "MessageParser.hh"
 #include "MessageSerializer.hh"
 #include "ServerEventListener.hh"
 #include "SynchronizedEventQueue.hh"
-#include "SynchronizedMessageQueue.hh"
 #include "TcpServer.hh"
 
 namespace bsgalone::server {
@@ -17,8 +15,6 @@ void ServerNetworkClient::start(const int port)
 {
   m_eventBus  = net::createAsyncEventQueue(net::createSynchronizedEventQueue());
   m_tcpServer = std::make_shared<net::TcpServer>(m_eventBus);
-
-  m_inputQueue = core::createAsyncMessageQueue(core::createSynchronizedMessageQueue());
 
   initialize();
 
@@ -30,8 +26,6 @@ void ServerNetworkClient::stop()
   m_tcpServer->stop();
   m_tcpServer.reset();
   m_eventBus.reset();
-
-  m_inputQueue.reset();
 }
 
 void ServerNetworkClient::pushEvent(core::IMessagePtr message)

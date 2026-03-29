@@ -1,6 +1,10 @@
 
 
 #include "Server.hh"
+#include "AsyncGameEventQueue.hh"
+#include "Configurator.hh"
+#include "GameEventPublisher.hh"
+#include "SynchronizedGameEventQueue.hh"
 
 namespace bsgalone::server {
 
@@ -32,6 +36,18 @@ void Server::requestStop()
 void Server::initialize()
 {
   m_networkClient = std::make_shared<ServerNetworkClient>();
+
+  initializeMessageSystem();
+}
+
+void Server::initializeMessageSystem()
+{
+  m_eventQueue   = createAsyncGameEventQueue(createSynchronizedGameEventQueue());
+  auto publisher = std::make_shared<core::GameEventPublisher>(m_eventQueue);
+
+  Configurator configurator{};
+
+  m_networkClient->addListener(configurator.createLoginDrivingAdapter(publisher));
 }
 
 void Server::setup(const int port)
@@ -57,6 +73,7 @@ void Server::activeRunLoop()
 void Server::shutdown()
 {
   m_networkClient->stop();
+  m_eventQueue.reset();
 }
 
 } // namespace bsgalone::server

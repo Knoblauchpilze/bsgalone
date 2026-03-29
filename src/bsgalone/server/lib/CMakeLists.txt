@@ -24,6 +24,7 @@ add_subdirectory (
 	)
 
 target_sources (bsgalone_server_lib PRIVATE
+	${CMAKE_CURRENT_SOURCE_DIR}/Configurator.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/Server.cc
 	)
 
