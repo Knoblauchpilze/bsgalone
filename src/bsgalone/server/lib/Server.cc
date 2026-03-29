@@ -29,11 +29,15 @@ void Server::requestStop()
   m_runningNotifier.notify_one();
 }
 
-void Server::initialize() {}
+void Server::initialize()
+{
+  m_networkClient = std::make_shared<ServerNetworkClient>();
+}
 
 void Server::setup(const int port)
 {
   info("Starting listening on port " + std::to_string(port));
+  m_networkClient->start(port);
 }
 
 void Server::activeRunLoop()
@@ -50,6 +54,9 @@ void Server::activeRunLoop()
   }
 }
 
-void Server::shutdown() {}
+void Server::shutdown()
+{
+  m_networkClient->stop();
+}
 
 } // namespace bsgalone::server
