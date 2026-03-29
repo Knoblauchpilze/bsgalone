@@ -27,7 +27,6 @@ class UiMenu : public core::CoreObject
   void setPosition(const pge::Vec2i &position);
 
   void setClickCallback(const std::optional<ClickCallback> &callback);
-  void setGameClickCallback(const std::optional<GameCallback> &callback);
 
   void addMenu(UiMenuPtr child);
   void clearChildren();
@@ -35,7 +34,7 @@ class UiMenu : public core::CoreObject
   void updateBgColor(const pge::Color &color);
 
   void render(pge::Renderer &engine) const;
-  virtual bool processUserInput(UserInputData &inputData);
+  virtual bool processUserInput(const UserInputData &inputData);
 
   protected:
   auto absolutePosition() const noexcept -> pge::Vec2i;
@@ -71,7 +70,6 @@ class UiMenu : public core::CoreObject
   std::optional<HighlightCallback> m_highlightCallback{};
   std::optional<ClickCallback> m_clickCallback{};
   std::optional<LostFocusCallback> m_lostFocusCallback{};
-  std::optional<GameCallback> m_gameClickCallback{};
 
   UiMenu *m_parent{nullptr};
   std::vector<UiMenuPtr> m_children{};
@@ -80,7 +78,7 @@ class UiMenu : public core::CoreObject
   void renderSelf(pge::Renderer &engine) const;
   auto getColorFromState() const -> pge::Color;
   bool isWithinMenu(const pge::Vec2i &pos) const;
-  void onRelevantInput(UserInputData &inputData);
+  void onRelevantInput(const UserInputData &inputData);
   void updateLayoutAfterChildChange();
   void adaptChildrenToMatchHorizontalSize(const float desiredXSize);
   void adaptChildrenToMatchVerticalSize(const float desiredYSize);

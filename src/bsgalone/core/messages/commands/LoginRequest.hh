@@ -4,6 +4,7 @@
 #include "ClientId.hh"
 #include "GameRole.hh"
 #include "IMessage.hh"
+#include <optional>
 #include <string>
 
 namespace bsgalone::core {

@@ -1,68 +1,69 @@
 
 #include "App.hh"
-#include "InputGameMessageAdapter.hh"
+#include "AsyncUiCommandQueue.hh"
+#include "DecalRenderer.hh"
+#include "IUiCommandListener.hh"
+#include "LoginUiHandler.hh"
+#include "OutputUiCommandAdapter.hh"
+#include "SynchronizedUiCommandQueue.hh"
 
 namespace bsgalone::client {
 
-App::App(const pge::AppDesc &desc, ServerConfig config)
+App::App(const pge::AppDesc &desc, const NetworkConfig &config)
   : PGEApp(desc)
-  , m_config(std::move(config))
+  , m_uiCommandQueue(createSynchronizedUiCommandQueue())
+  , m_config(config)
 {}
 
-bool App::onFrame(const float elapsedSeconds)
+bool App::onFrame(const float /*elapsedSeconds*/)
 {
-  // Handle case where no game is defined.
-  if (m_game == nullptr)
-  {
-    return false;
-  }
-
-  // Process messages first and then update the game so that
-  // the systems have a chance to react to messages before the
-  // UI is updated.
   m_networkClient->processEvents();
 
-  if (!m_game->step(elapsedSeconds))
+  const auto maybeHandler = m_uiHandlers.find(m_screen);
+  if (maybeHandler != m_uiHandlers.end())
   {
-    info("This is game over");
+    maybeHandler->second->updateUi();
   }
 
-  m_uiEventBus->processEvents();
-
-  const auto it = m_uiHandlers.find(m_screen);
-  if (it != m_uiHandlers.end())
-  {
-    it->second->updateUi();
-  }
-
-  m_uiCommandQueue->processEvents();
-
-  return m_game->terminated();
+  return m_screen == Screen::EXIT;
 }
 
 void App::onInputs(const pge::controls::State &controls, pge::CoordinateFrame &frame)
 {
-  // Handle case where no game is defined.
-  if (m_game == nullptr)
+  const auto maybeInputHandler = m_inputHandlers.find(m_screen);
+  if (maybeInputHandler != m_inputHandlers.end())
   {
-    return;
+    maybeInputHandler->second->processUserInput(controls, frame);
   }
 
-  m_game->processUserInput(controls, frame);
+  bool inputRelevantForUi{false};
+  const auto maybeUiHandler = m_uiHandlers.find(m_screen);
+  if (maybeUiHandler != m_uiHandlers.end())
+  {
+    ui::UserInputData data{.controls = controls};
+    inputRelevantForUi = maybeUiHandler->second->processUserInput(data);
+  }
+
+  if (controls.released(pge::controls::mouse::LEFT) && maybeInputHandler != m_inputHandlers.end()
+      && !inputRelevantForUi)
+  {
+    pge::Vec2f it;
+    const auto tp = frame.pixelsToTilesAndIntra(pge::Vec2f(controls.mPosX, controls.mPosY), &it);
+    maybeInputHandler->second->performAction(tp.x + it.x, tp.y + it.y, controls);
+  }
 }
 
 void App::loadResources(const pge::Vec2i &screenDims, pge::Renderer &engine)
 {
   setLayerTint(Layer::DRAW, semiOpaque(pge::colors::WHITE));
 
-  m_networkClient = std::make_shared<GameNetworkClient>(m_config.autoConnect);
-  m_game          = std::make_shared<Game>(m_networkClient);
+  m_uiCommandQueue = createAsyncUiCommandQueue(createSynchronizedUiCommandQueue());
 
-  m_game->generateRenderers(screenDims.x, screenDims.y, engine);
-  m_game->generateInputHandlers();
-  m_game->generateUiHandlers(screenDims.x, screenDims.y, engine, m_networkClient);
-
+  m_networkClient = std::make_shared<GameNetworkClient>();
   initializeMessageSystem();
+
+  generateUiHandlers(screenDims, engine.getTextureHandler());
+  generateRenderers(screenDims, engine.getTextureHandler());
 
   m_networkClient->start(m_config.port);
 }
@@ -71,10 +72,10 @@ void App::cleanResources()
 {
   m_networkClient->stop();
 
+  m_inputHandlers.clear();
   m_uiHandlers.clear();
-  m_game.reset();
+  m_renderers.clear();
 
-  m_uiEventBus.reset();
   m_uiCommandQueue.reset();
 
   m_networkClient.reset();
@@ -82,22 +83,37 @@ void App::cleanResources()
 
 void App::drawDecal(const pge::RenderState &state)
 {
-  m_game->render(state, pge::RenderingPass::DECAL);
+  const auto maybeRenderer = m_renderers.find(m_screen);
+  if (maybeRenderer == m_renderers.end())
+  {
+    return;
+  }
+
+  maybeRenderer->second->render(state.renderer, state, pge::RenderingPass::DECAL);
 }
 
-void App::draw(const pge::RenderState &state)
-{
-  m_game->render(state, pge::RenderingPass::SPRITES);
-}
+void App::draw(const pge::RenderState & /*state*/) {}
 
 void App::drawUi(const pge::RenderState &state)
 {
-  m_game->render(state, pge::RenderingPass::UI);
+  const auto maybeHandler = m_uiHandlers.find(m_screen);
+  if (maybeHandler == m_uiHandlers.end())
+  {
+    return;
+  }
+
+  maybeHandler->second->render(state.renderer);
 }
 
 void App::drawDebug(const pge::RenderState &state, const pge::Vec2f &mouseScreenPos)
 {
-  m_game->render(state, pge::RenderingPass::DEBUG);
+  const auto maybeRenderer = m_renderers.find(m_screen);
+  if (maybeRenderer == m_renderers.end())
+  {
+    return;
+  }
+
+  maybeRenderer->second->render(state.renderer, state, pge::RenderingPass::DEBUG);
 
   pge::Vec2f it;
   const auto mtp = state.frame.pixelsToTilesAndIntra(mouseScreenPos, &it);
@@ -115,14 +131,63 @@ void App::drawDebug(const pge::RenderState &state, const pge::Vec2f &mouseScreen
   state.renderer.drawDebugString(pos, "Intra cell        : " + it.str(), pge::colors::CYAN);
   pos.y += REASONABLE_PIXEL_GAP;
   state.renderer.drawDebugString(pos,
-                                 "Screen            : " + str(m_game->getScreen()),
+                                 "Screen            : " + str(m_screen),
                                  pge::colors::DARK_GREEN);
 }
 
+namespace {
+class ListenerProxy : public IUiCommandListener
+{
+  public:
+  ListenerProxy(App &app)
+    : IUiCommandListener()
+    , m_app(app)
+  {}
+
+  ~ListenerProxy() override = default;
+
+  bool isEventRelevant(const UiCommandType &type) const override
+  {
+    return type == UiCommandType::EXIT_REQUESTED;
+  }
+
+  void onEventReceived(const IUiCommand & /*event*/) override
+  {
+    m_app.onScreenChanged(Screen::EXIT);
+  }
+
+  private:
+  App &m_app;
+};
+} // namespace
+
 void App::initializeMessageSystem()
 {
-  auto inputAdapter = std::make_unique<InputGameMessageAdapter>(m_uiEventBus);
-  m_networkClient->addListener(std::move(inputAdapter));
+  m_uiCommandQueue->addListener(std::make_unique<ListenerProxy>(*this));
+  m_uiCommandQueue->addListener(std::make_unique<OutputUiCommandAdapter>(m_networkClient));
+}
+
+void App::generateUiHandlers(const pge::Vec2i &screenDims, pge::sprites::TexturePack &texturesLoader)
+{
+  auto login = std::make_unique<LoginUiHandler>(m_uiCommandQueue);
+  login->initializeMenus(screenDims, texturesLoader);
+  m_uiHandlers[Screen::LOGIN] = std::move(login);
+}
+
+namespace {
+constexpr auto LOGIN_TEXTURE_FILE_PATH = "assets/login_bg.png";
+}
+
+void App::generateRenderers(const pge::Vec2i &dimensions, pge::sprites::TexturePack &texturesLoader)
+{
+  auto login = std::make_unique<DecalRenderer>(LOGIN_TEXTURE_FILE_PATH);
+  login->loadResources(dimensions, texturesLoader);
+  m_renderers[Screen::LOGIN] = std::move(login);
+}
+
+void App::onScreenChanged(const Screen screen)
+{
+  m_screen = screen;
 }
 
 } // namespace bsgalone::client

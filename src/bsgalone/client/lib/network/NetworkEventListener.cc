@@ -4,18 +4,9 @@
 
 namespace bsgalone::client {
 
-NetworkEventListener::NetworkEventListener(std::atomic_bool &connected,
-                                           core::IOutputNetworkAdapterShPtr outputAdapter,
-                                           std::optional<User> autoLogin)
+NetworkEventListener::NetworkEventListener(std::atomic_bool &connected)
   : m_connected(connected)
-  , m_outputAdapter(std::move(outputAdapter))
-  , m_autoLogin(std::move(autoLogin))
-{
-  if (m_outputAdapter == nullptr)
-  {
-    throw std::invalid_argument("Expected non null output adaptae");
-  }
-}
+{}
 
 bool NetworkEventListener::isEventRelevant(const net::NetworkEventType &type) const
 {
@@ -42,14 +33,6 @@ void NetworkEventListener::handleConnectionEstablished(
   const net::ConnectionEstablishedEvent & /*event*/)
 {
   m_connected.store(true);
-
-  if (!m_autoLogin.has_value())
-  {
-    return;
-  }
-
-  core::LoginRequest login(m_autoLogin->name, m_autoLogin->password, m_autoLogin->role);
-  m_outputAdapter->sendMessage(login);
 }
 
 void NetworkEventListener::handleConnectionLost(const net::ConnectionLostEvent & /*event*/)

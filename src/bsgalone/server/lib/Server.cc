@@ -1,18 +1,10 @@
 
 
 #include "Server.hh"
+#include "AsyncGameEventQueue.hh"
+#include "Configurator.hh"
 #include "GameEventPublisher.hh"
-#include "JoinShipMessageConsumer.hh"
-#include "LoginRequestConsumer.hh"
-#include "LoginService.hh"
-#include "LogoutMessageConsumer.hh"
-#include "PlayerLoginEventConsumer.hh"
-#include "PlayerMessagePublisher.hh"
-#include "PlayerService.hh"
-#include "SendLoginDataUseCase.hh"
-#include "SignupMessageConsumer.hh"
-#include "SignupService.hh"
-#include "SystemProcessorAdapter.hh"
+#include "SynchronizedGameEventQueue.hh"
 
 namespace bsgalone::server {
 
@@ -43,87 +35,19 @@ void Server::requestStop()
 
 void Server::initialize()
 {
-  m_eventQueue = core::createAsyncGameEventQueue(core::createSynchronizedGameEventQueue());
+  m_networkClient = std::make_shared<ServerNetworkClient>();
 
-  initializeSystems();
-  initializeMessageSystem();
+  initializeExternalFacingUseCases();
 }
 
-void Server::initializeSystems()
+void Server::initializeExternalFacingUseCases()
 {
-  const core::Repositories repositories;
+  m_eventQueue   = createAsyncGameEventQueue(createSynchronizedGameEventQueue());
+  auto publisher = std::make_shared<core::GameEventPublisher>(m_eventQueue);
 
-  const auto allSystems = repositories.systemRepository->findAll();
+  Configurator configurator{};
 
-  for (const auto &system : allSystems)
-  {
-    core::IMessageQueueShPtr inputQueue = core::createSynchronizedMessageQueue();
-    auto processor             = std::make_shared<SystemProcessor>(system.dbId, inputQueue);
-    m_inputQueues[system.dbId] = std::move(inputQueue);
-    m_systemProcessors.emplace_back(std::move(processor));
-  }
-}
-
-namespace {
-void createSystemMessageConsumers(core::IMessageQueue &inputMessagesQueue,
-                                  SystemQueueMap systemQueues,
-                                  core::IMessageQueue *const outputMessagesQueue,
-                                  core::IGameEventQueueShPtr gameEventQueue)
-{
-  core::Repositories repositories{};
-
-  auto signupService = std::make_unique<SignupService>(repositories);
-  inputMessagesQueue.addListener(
-    std::make_unique<SignupMessageConsumer>(std::move(signupService), outputMessagesQueue));
-
-  auto loginService       = std::make_unique<LoginService>(repositories);
-  auto gameEventPublisher = std::make_shared<core::GameEventPublisher>(std::move(gameEventQueue));
-  inputMessagesQueue.addListener(
-    std::make_unique<LoginRequestConsumer>(std::move(loginService),
-                                           systemQueues,
-                                           outputMessagesQueue,
-                                           std::move(gameEventPublisher)));
-
-  auto systemService = std::make_shared<SystemService>(repositories);
-  inputMessagesQueue.addListener(
-    std::make_unique<LogoutMessageConsumer>(systemService, systemQueues, outputMessagesQueue));
-
-  auto playerService = std::make_unique<PlayerService>(repositories);
-  inputMessagesQueue.addListener(
-    std::make_unique<JoinShipMessageConsumer>(std::move(playerService), outputMessagesQueue));
-}
-
-void createGameEventConsumers(core::IGameEventQueue &queue,
-                              core::IMessageQueueShPtr outputMessagesQueue)
-{
-  core::Repositories repositories;
-
-  auto publisher = std::make_shared<core::PlayerMessagePublisher>(std::move(outputMessagesQueue));
-  auto useCase   = std::make_unique<core::SendLoginDataUseCase>(repositories.systemRepository,
-                                                              std::move(publisher));
-  auto loginEventConsumer = std::make_unique<core::PlayerLoginEventConsumer>(std::move(useCase));
-  queue.addListener(std::move(loginEventConsumer));
-}
-} // namespace
-
-void Server::initializeMessageSystem()
-{
-  const MessageSystemData data{.networkClient = m_networkClient, .systemQueues = m_inputQueues};
-  m_messageExchanger = std::make_unique<MessageExchanger>(data);
-
-  createSystemMessageConsumers(*m_networkClient, m_inputQueues, m_networkClient.get(), m_eventQueue);
-  createGameEventConsumers(*m_eventQueue, m_networkClient);
-
-  for (const auto &systemProcessor : m_systemProcessors)
-  {
-    systemProcessor->connectToQueues(m_messageExchanger->getInternalMessageQueue(), m_networkClient);
-  }
-
-  for (const auto &[systemDbId, systemQueue] : m_inputQueues)
-  {
-    auto adapter = std::make_unique<SystemProcessorAdapter>(systemDbId, systemQueue);
-    m_networkClient->addListener(std::move(adapter));
-  }
+  m_networkClient->addListener(configurator.createLoginDrivingAdapter(publisher));
 }
 
 void Server::setup(const int port)
@@ -137,11 +61,6 @@ void Server::activeRunLoop()
   m_running.store(true);
   bool running{true};
 
-  for (const auto &processor : m_systemProcessors)
-  {
-    processor->start();
-  }
-
   while (running)
   {
     std::unique_lock lock(m_runningLocker);
@@ -149,18 +68,12 @@ void Server::activeRunLoop()
 
     running = m_running.load();
   }
-
-  for (const auto &systemProcessor : m_systemProcessors)
-  {
-    systemProcessor->stop();
-  }
-
-  m_eventQueue.reset();
 }
 
 void Server::shutdown()
 {
   m_networkClient->stop();
+  m_eventQueue.reset();
 }
 
 } // namespace bsgalone::server

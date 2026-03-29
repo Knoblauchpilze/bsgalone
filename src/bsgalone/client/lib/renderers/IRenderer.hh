@@ -4,6 +4,7 @@
 #include "RenderState.hh"
 #include "Renderer.hh"
 #include "RenderingPass.hh"
+#include "Vector2d.hh"
 #include <memory>
 
 namespace bsgalone::client {
@@ -15,13 +16,10 @@ class IRenderer
   virtual ~IRenderer() = default;
 
   /// @brief - Prompts the renderer to load the resources needed to display its content.
-  /// @param width - the width in pixels given to the renderer to draw
-  /// @param height - the height in pixels given to the renderer to draw
+  /// @param dimensions - the dimensions in pixels given to the renderer to draw
   /// @param texturesLoader - a common object to load textures. Allows to mutualize the
   /// loading of textures across the application
-  virtual void loadResources(const int width,
-                             const int height,
-                             pge::sprites::TexturePack &texturesLoader)
+  virtual void loadResources(const pge::Vec2i &dimensions, pge::sprites::TexturePack &texturesLoader)
     = 0;
 
   /// @brief - Called each frame to give the renderer the opportunity to draw content

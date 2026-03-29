@@ -8,11 +8,11 @@
 
 namespace bsgalone::client {
 
-class IInputHandler : public ::core::CoreObject
+class IInputHandler
 {
   public:
-  IInputHandler(const std::string &name);
-  ~IInputHandler() override = default;
+  IInputHandler()          = default;
+  virtual ~IInputHandler() = default;
 
   virtual void processUserInput(const pge::controls::State &controls, pge::CoordinateFrame &frame)
     = 0;

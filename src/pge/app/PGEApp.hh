@@ -94,8 +94,8 @@ class PGEApp : public core::CoreObject
   /// an occasion to process the app logic.
   /// The return value indicates whether or not the game loop should be stopped.
   /// @param fElapsed - the duration in seconds of the last frame.
-  ///  @return - `true` if the game loop should continue and `false` if the app
-  /// should exit.
+  ///  @return - `true` if the game loop should stop and `false` if the app
+  /// should continue running.
   virtual bool onFrame(float fElapsed) = 0;
 
   /// @brief - Interface method called at each frame when the inputs should be

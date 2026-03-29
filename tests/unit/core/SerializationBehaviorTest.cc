@@ -1,18 +1,14 @@
 
 #include "Common.hh"
-#include "Faction.hh"
 #include "SerializationUtils.hh"
-#include "Slot.hh"
+#include "TestEventType.hh"
 #include "Tick.hh"
 #include "TickDuration.hh"
 #include "TimeUtils.hh"
-#include "Uuid.hh"
-#include "VectorUtils.hh"
 #include <gtest/gtest.h>
 #include <sstream>
 
-#include "VelocityMessage.hh"
-
+using namespace test;
 using namespace ::testing;
 
 namespace bsgalone::core {
@@ -41,35 +37,7 @@ auto serializeAndDeserialize(const T &expected, const bool truncate) -> std::pai
   const auto success = ::core::deserialize(in, output);
   return std::make_pair(success, output);
 }
-
-auto serializeAndDeserialize(const VelocityMessage &expected, const bool truncate)
-  -> std::optional<IMessagePtr>
-{
-  std::ostringstream out{};
-  out << expected;
-
-  auto serialized = out.str();
-  if (truncate)
-  {
-    const auto truncated = truncateString(serialized);
-    EXPECT_NE(truncated, serialized);
-    serialized = truncated;
-  }
-  std::istringstream in(serialized);
-
-  return VelocityMessage::readFromStream(in);
-}
 } // namespace
-
-TEST(Unit_Core_Serialization, Nominal_Uuid)
-{
-  const Uuid expected{2};
-
-  const auto [success, actual] = serializeAndDeserialize(expected, false);
-
-  EXPECT_TRUE(success);
-  EXPECT_EQ(actual, expected);
-}
 
 TEST(Unit_Core_Serialization, Nominal_Empty)
 {
@@ -97,7 +65,7 @@ TEST(Unit_Core_Serialization, Nominal_NumericalValue)
 
 TEST(Unit_Core_Serialization, Nominal_EmptyOptional)
 {
-  const std::optional<Uuid> expected{};
+  const std::optional<int> expected{};
 
   const auto [success, actual] = serializeAndDeserialize(expected, false);
 
@@ -115,25 +83,9 @@ TEST(Unit_Core_Serialization, Nominal_Optional)
   EXPECT_EQ(actual, expected);
 }
 
-TEST(Unit_Core_Serialization, Nominal_Optional_Uuid_Empty)
-{
-  const std::optional<Uuid> expected{};
-  std::optional<Uuid> actual{Uuid{1}};
-  test::serializeAndDeserialize(expected, actual);
-  EXPECT_EQ(actual, expected);
-}
-
-TEST(Unit_Core_Serialization, Nominal_Optional_Uuid_WithValue)
-{
-  const std::optional<Uuid> expected{Uuid{14}};
-  std::optional<Uuid> actual{};
-  test::serializeAndDeserialize(expected, actual);
-  EXPECT_EQ(actual, expected);
-}
-
 TEST(Unit_Core_Serialization, Nominal_Optional_EmptyAndSomeValueAfter)
 {
-  const std::optional<Uuid> expectedOpt{};
+  const std::optional<int> expectedOpt{};
   const auto expectedFloat{1.68f};
 
   std::ostringstream out;
@@ -141,7 +93,7 @@ TEST(Unit_Core_Serialization, Nominal_Optional_EmptyAndSomeValueAfter)
   ::core::serialize(out, expectedFloat);
   std::istringstream in(out.str());
 
-  std::optional<Uuid> actualOpt{};
+  std::optional<int> actualOpt{};
   float actualFloat{};
   ::core::deserialize(in, actualOpt);
   ::core::deserialize(in, actualFloat);
@@ -152,52 +104,21 @@ TEST(Unit_Core_Serialization, Nominal_Optional_EmptyAndSomeValueAfter)
 
 TEST(Unit_Core_Serialization, Nominal_Optional_WithValueAndSomeValueAfter)
 {
-  const std::optional<Uuid> expectedOpt{};
-  const auto expectedSlot{Slot::COMPUTER};
+  const std::optional<int> expectedOpt{};
+  const auto expectedEventType{TestEventType::EVENT_1};
 
   std::ostringstream out;
   ::core::serialize(out, expectedOpt);
-  ::core::serialize(out, expectedSlot);
+  ::core::serialize(out, expectedEventType);
   std::istringstream in(out.str());
 
-  std::optional<Uuid> actualOpt{};
-  Slot actualSlot{};
+  std::optional<int> actualOpt{};
+  TestEventType actualEventType{};
   ::core::deserialize(in, actualOpt);
-  ::core::deserialize(in, actualSlot);
+  ::core::deserialize(in, actualEventType);
 
   EXPECT_EQ(actualOpt, expectedOpt);
-  EXPECT_EQ(actualSlot, expectedSlot);
-}
-
-TEST(Unit_Core_Serialization, Nominal_Optional_Faction_Empty)
-{
-  const std::optional<Faction> expected{};
-  std::optional<Faction> actual{Faction::COLONIAL};
-  test::serializeAndDeserialize(expected, actual);
-  EXPECT_EQ(actual, expected);
-}
-
-TEST(Unit_Core_Serialization, Nominal_Optional_Faction_WithValue)
-{
-  const std::optional<Faction> expected{Faction::CYLON};
-  std::optional<Faction> actual{};
-  test::serializeAndDeserialize(expected, actual);
-  EXPECT_EQ(actual, expected);
-}
-
-TEST(Unit_Core_Serialization, Nominal_VelocityMessage)
-{
-  const VelocityMessage expected(Uuid{18}, Uuid{19}, Uuid{12}, Eigen::Vector3f{1.0f, 2.0f, 3.0f});
-
-  const auto maybeMessage = serializeAndDeserialize(expected, false);
-
-  ASSERT_TRUE(maybeMessage.has_value());
-  EXPECT_EQ((*maybeMessage)->type(), expected.type());
-  const auto &actual = (*maybeMessage)->as<VelocityMessage>();
-  EXPECT_EQ(actual.getPlayerDbId(), expected.getPlayerDbId());
-  EXPECT_EQ(actual.getSystemDbId(), expected.getSystemDbId());
-  EXPECT_EQ(actual.getShipDbId(), expected.getShipDbId());
-  EXPECT_EQ(actual.getAcceleration(), expected.getAcceleration());
+  EXPECT_EQ(actualEventType, expectedEventType);
 }
 
 TEST(Unit_Core_Serialization, Nominal_Duration)
@@ -261,49 +182,6 @@ TEST(Unit_Core_Serialization, Nominal_Eigen_Vector3f_EmptyOptional)
   EXPECT_EQ(actual, expected);
 }
 
-TEST(Unit_Core_Serialization, Nominal_MapSlotInt_Empty)
-{
-  std::unordered_map<Slot, int> empty;
-
-  const auto [success, actual] = serializeAndDeserialize(empty, false);
-
-  EXPECT_TRUE(success);
-  EXPECT_EQ(actual, empty);
-}
-
-TEST(Unit_Core_Serialization, Nominal_MapSlotInt)
-{
-  std::unordered_map<Slot, int> expected{
-    {Slot::WEAPON, 1},
-    {Slot::COMPUTER, 2},
-  };
-
-  const auto [success, actual] = serializeAndDeserialize(expected, false);
-
-  EXPECT_TRUE(success);
-  EXPECT_EQ(actual, expected);
-}
-
-TEST(Unit_Core_Serialization, Nominal_MapUuidInt_Empty)
-{
-  std::unordered_map<Uuid, int> empty;
-
-  const auto [success, actual] = serializeAndDeserialize(empty, false);
-
-  EXPECT_TRUE(success);
-  EXPECT_EQ(actual, empty);
-}
-
-TEST(Unit_Core_Serialization, Nominal_MapUuidInt)
-{
-  std::unordered_map<Uuid, int> expected{{Uuid{14}, 1789}, {Uuid{7894}, -45}};
-
-  const auto [success, actual] = serializeAndDeserialize(expected, false);
-
-  EXPECT_TRUE(success);
-  EXPECT_EQ(actual, expected);
-}
-
 TEST(Unit_Core_Serialization, Nominal_VectorInt_Empty)
 {
   std::vector<int> empty;
@@ -330,11 +208,11 @@ struct DummyStruct
 {
   int a{-1};
   float b{5.0f};
-  Faction f{Faction::CYLON};
+  TestEventType t{TestEventType::EVENT_2};
 
   bool operator==(const DummyStruct &rhs) const
   {
-    return a == rhs.a && b == rhs.b && f == rhs.f;
+    return a == rhs.a && b == rhs.b && t == rhs.t;
   }
 };
 
@@ -342,7 +220,7 @@ auto operator<<(std::ostream &out, const DummyStruct &v) -> std::ostream &
 {
   ::core::serialize(out, v.a);
   ::core::serialize(out, v.b);
-  ::core::serialize(out, v.f);
+  ::core::serialize(out, v.t);
 
   return out;
 }
@@ -353,7 +231,7 @@ bool operator>>(std::istream &in, DummyStruct &v)
 
   ok &= ::core::deserialize(in, v.a);
   ok &= ::core::deserialize(in, v.b);
-  ok &= ::core::deserialize(in, v.f);
+  ok &= ::core::deserialize(in, v.t);
 
   return ok;
 }
@@ -375,12 +253,12 @@ TEST(Unit_Core_Serialization, Nominal_VectorStruct)
     DummyStruct{
       .a = -74,
       .b = 18.057f,
-      .f = Faction::COLONIAL,
+      .t = TestEventType::EVENT_1,
     },
     DummyStruct{
       .a = 910257,
       .b = -74.14087f,
-      .f = Faction::CYLON,
+      .t = TestEventType::EVENT_2,
     },
     DummyStruct{},
   };
@@ -411,35 +289,6 @@ TEST(Unit_Core_Serialization, Nominal_SetInt)
   EXPECT_EQ(actual, expected);
 }
 
-TEST(Unit_Core_Serialization, Nominal_SetFaction_Empty)
-{
-  std::unordered_set<Faction> empty;
-
-  const auto [success, actual] = serializeAndDeserialize(empty, false);
-
-  EXPECT_TRUE(success);
-  EXPECT_EQ(actual, empty);
-}
-
-TEST(Unit_Core_Serialization, Nominal_SetFaction)
-{
-  std::unordered_set<Faction> expected{Faction::COLONIAL, Faction::CYLON};
-
-  const auto [success, actual] = serializeAndDeserialize(expected, false);
-
-  EXPECT_TRUE(success);
-  EXPECT_EQ(actual, expected);
-}
-
-TEST(Unit_Core_Serialization, Failure_Uuid)
-{
-  const Uuid value{2};
-
-  const auto [success, _] = serializeAndDeserialize(value, true);
-
-  EXPECT_FALSE(success);
-}
-
 TEST(Unit_Core_Serialization, Failure_String)
 {
   const std::string value{"some-string"};
@@ -451,7 +300,7 @@ TEST(Unit_Core_Serialization, Failure_String)
 
 TEST(Unit_Core_Serialization, Failure_EmptyOptional)
 {
-  const std::optional<Uuid> value{};
+  const std::optional<int> value{};
 
   const auto [success, _] = serializeAndDeserialize(value, true);
 
@@ -460,20 +309,11 @@ TEST(Unit_Core_Serialization, Failure_EmptyOptional)
 
 TEST(Unit_Core_Serialization, Failure_Optional)
 {
-  const std::optional<Uuid> value{36};
+  const std::optional<int> value{36};
 
   const auto [success, _] = serializeAndDeserialize(value, true);
 
   EXPECT_FALSE(success);
-}
-
-TEST(Unit_Core_Serialization, Failure_VelocityMessage)
-{
-  const VelocityMessage value(Uuid{18}, Uuid{19}, Uuid{12}, Eigen::Vector3f{1.0f, 2.0f, 3.0f});
-
-  const auto maybeMessage = serializeAndDeserialize(value, true);
-
-  EXPECT_FALSE(maybeMessage.has_value());
 }
 
 TEST(Unit_Core_Serialization, Failure_Duration)
@@ -488,27 +328,6 @@ TEST(Unit_Core_Serialization, Failure_Duration)
 TEST(Unit_Core_Serialization, Failure_Eigen_Vector3f)
 {
   const Eigen::Vector3f expected(1.0f, -2.12f, 98.74f);
-
-  const auto [success, _] = serializeAndDeserialize(expected, true);
-
-  EXPECT_FALSE(success);
-}
-
-TEST(Unit_Core_Serialization, Failure_MapSlotInt)
-{
-  std::unordered_map<Slot, int> expected{
-    {Slot::WEAPON, 1},
-    {Slot::COMPUTER, 2},
-  };
-
-  const auto [success, _] = serializeAndDeserialize(expected, true);
-
-  EXPECT_FALSE(success);
-}
-
-TEST(Unit_Core_Serialization, Failure_MapUuidInt)
-{
-  std::unordered_map<Uuid, int> expected{{Uuid{5476}, 136}, {Uuid{13}, -287}};
 
   const auto [success, _] = serializeAndDeserialize(expected, true);
 
@@ -530,12 +349,12 @@ TEST(Unit_Core_Serialization, Failure_VectorStruct)
     DummyStruct{
       .a = -74,
       .b = 18.057f,
-      .f = Faction::COLONIAL,
+      .t = TestEventType::EVENT_1,
     },
     DummyStruct{
       .a = 910257,
       .b = -74.14087f,
-      .f = Faction::CYLON,
+      .t = TestEventType::EVENT_2,
     },
     DummyStruct{},
   };
@@ -548,15 +367,6 @@ TEST(Unit_Core_Serialization, Failure_VectorStruct)
 TEST(Unit_Core_Serialization, Failure_SetInt)
 {
   std::unordered_set<int> expected{1, 2, 3, -4, 6, -9871};
-
-  const auto [success, actual] = serializeAndDeserialize(expected, true);
-
-  EXPECT_FALSE(success);
-}
-
-TEST(Unit_Core_Serialization, Failure_SetFaction)
-{
-  std::unordered_set<Faction> expected{Faction::COLONIAL, Faction::CYLON};
 
   const auto [success, actual] = serializeAndDeserialize(expected, true);
 
@@ -599,7 +409,10 @@ INSTANTIATE_TEST_SUITE_P(Unit_Core_Serialization,
                                 TestCaseVector{Eigen::Vector3f{-0.25f, -18.0f, -52.0f}},
                                 TestCaseVector{Eigen::Vector3f{0.01871f, -0.9817f, 0.987f}}),
                          [](const TestParamInfo<TestCaseVector> &info) -> std::string {
-                           auto out = str(info.param.expected);
+                           auto out = std::format("{}x{}x{}",
+                                                  info.param.expected(0),
+                                                  info.param.expected(1),
+                                                  info.param.expected(2));
                            std::replace(out.begin(), out.end(), '.', '_');
                            std::replace(out.begin(), out.end(), '-', 'm');
                            return out;

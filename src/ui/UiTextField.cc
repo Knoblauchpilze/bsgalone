@@ -18,12 +18,12 @@ UiTextField::UiTextField(const TextFieldConfig &config,
       .highlightCallback         = {},
       .clickCallback             = {},
       .lostFocusCallback         = {},
-      .gameClickCallback         = config.gameClickCallback,
     },
     bg,
     text)
   , m_cursorPos(static_cast<int>(text.text.size()))
   , m_fullText(text.text)
+  , m_textChangedCallback(config.textChangedCallback)
 {
   setClickCallback([this]() { m_editing = true; });
   setLostFocusCallback([this]() { m_editing = false; });
@@ -34,7 +34,7 @@ auto UiTextField::getText() const noexcept -> std::string
   return m_fullText;
 }
 
-bool UiTextField::processUserInput(UserInputData &inputData)
+bool UiTextField::processUserInput(const UserInputData &inputData)
 {
   if (m_editing)
   {
@@ -132,10 +132,12 @@ void deleteFrom(std::string &str, const int size)
 
 void UiTextField::updateInternalText(const pge::controls::State &controls)
 {
-  const KeyMapping *keysMapping = controls.shift ? &KEYS_TO_TEXT_MAPPING_WITH_SHIFT
-                                                 : &KEYS_TO_TEXT_MAPPING;
+  const KeyMapping &keysMapping = controls.shift ? KEYS_TO_TEXT_MAPPING_WITH_SHIFT
+                                                 : KEYS_TO_TEXT_MAPPING;
 
-  for (const auto &[key, mapping] : *keysMapping)
+  const std::size_t initialSize{m_fullText.size()};
+
+  for (const auto &[key, mapping] : keysMapping)
   {
     if (controls.released(key))
     {
@@ -151,6 +153,11 @@ void UiTextField::updateInternalText(const pge::controls::State &controls)
   if (controls.released(pge::controls::keys::DEL) && !m_fullText.empty())
   {
     deleteFrom(m_fullText, m_cursorPos);
+  }
+
+  if (initialSize != m_fullText.size() && m_textChangedCallback.has_value())
+  {
+    (*m_textChangedCallback)(m_fullText);
   }
 }
 

@@ -4,27 +4,10 @@ target_include_directories (bsgalone_client_lib PUBLIC
 	)
 
 add_subdirectory (
-	${CMAKE_CURRENT_SOURCE_DIR}/commands
-	)
-
-add_subdirectory (
-	${CMAKE_CURRENT_SOURCE_DIR}/common
-	)
-
-add_subdirectory (
-	${CMAKE_CURRENT_SOURCE_DIR}/game
-	)
-
-add_subdirectory (
-	${CMAKE_CURRENT_SOURCE_DIR}/outpost
-	)
-
-add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/login
 	)
 
 target_sources (bsgalone_client_lib PRIVATE
-	${CMAKE_CURRENT_SOURCE_DIR}/AbstractUiHandler.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/LoadingScreenUiHandler.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/MapScreenUiHandler.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/Palette.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/ScreenCommon.cc
 	)

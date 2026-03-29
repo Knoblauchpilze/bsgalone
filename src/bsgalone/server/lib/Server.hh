@@ -2,13 +2,9 @@
 
 #pragma once
 
-#include "AsyncGameEventQueue.hh"
 #include "CoreObject.hh"
-#include "MessageExchanger.hh"
+#include "IGameEventQueue.hh"
 #include "ServerNetworkClient.hh"
-#include "SynchronizedGameEventQueue.hh"
-#include "SystemProcessor.hh"
-#include "SystemQueues.hh"
 #include <atomic>
 #include <condition_variable>
 #include <unordered_map>
@@ -28,17 +24,18 @@ class Server : public ::core::CoreObject
   std::mutex m_runningLocker{};
   std::condition_variable m_runningNotifier{};
 
-  ServerNetworkClientShPtr m_networkClient{std::make_shared<ServerNetworkClient>()};
-  MessageExchangerPtr m_messageExchanger{};
+  /// @brief - The network client used to accept and process client connections
+  ServerNetworkClientShPtr m_networkClient{};
 
-  std::unordered_map<core::Uuid, core::IMessageQueueShPtr> m_inputQueues{};
-  std::vector<SystemProcessorShPtr> m_systemProcessors{};
-
-  core::IGameEventQueueShPtr m_eventQueue{};
+  /// @brief - Defines the event queue used by use cases to communicate with
+  /// one another through events. This is used as:
+  ///   - an output queue for use cases when they need to produce events to
+  ///     send to the client applications or to other use cases
+  ///   - an input queue for use cases to receive updates from other use cases
+  IGameEventQueueShPtr m_eventQueue{};
 
   void initialize();
-  void initializeSystems();
-  void initializeMessageSystem();
+  void initializeExternalFacingUseCases();
 
   void setup(const int port);
   void activeRunLoop();
