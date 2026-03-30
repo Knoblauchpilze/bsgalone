@@ -10,24 +10,24 @@ using namespace ::testing;
 
 namespace bsgalone::server {
 
-TEST(Unit_Bsgalone_Server_Events_ClientEventListener, ThrowsWhenClientManagerIsNull)
+TEST(Unit_Bsgalone_Server_Network_ClientEventListener, ThrowsWhenClientManagerIsNull)
 {
   EXPECT_THROW([]() { ClientEventListener(nullptr); }(), std::invalid_argument);
 }
 
-TEST(Unit_Bsgalone_Server_Events_ClientEventListener, ConsidersClientConnectedEventAsRelevant)
+TEST(Unit_Bsgalone_Server_Network_ClientEventListener, ConsidersClientConnectedEventAsRelevant)
 {
   ClientEventListener listener(std::make_shared<ClientManager>());
   EXPECT_TRUE(listener.isEventRelevant(net::NetworkEventType::CLIENT_CONNECTED));
 }
 
-TEST(Unit_Bsgalone_Server_Events_ClientEventListener, ConsidersClientDisconnectedEventAsRelevant)
+TEST(Unit_Bsgalone_Server_Network_ClientEventListener, ConsidersClientDisconnectedEventAsRelevant)
 {
   ClientEventListener listener(std::make_shared<ClientManager>());
   EXPECT_TRUE(listener.isEventRelevant(net::NetworkEventType::CLIENT_DISCONNECTED));
 }
 
-TEST(Unit_Bsgalone_Server_Events_ClientEventListener,
+TEST(Unit_Bsgalone_Server_Network_ClientEventListener,
      RegistersClientWhenClientConnectedEventIsReceived)
 {
   auto manager = std::make_shared<ClientManager>();
@@ -40,7 +40,7 @@ TEST(Unit_Bsgalone_Server_Events_ClientEventListener,
   EXPECT_EQ(std::vector<net::ClientId>{net::ClientId{12}}, clients);
 }
 
-TEST(Unit_Bsgalone_Server_Events_ClientEventListener,
+TEST(Unit_Bsgalone_Server_Network_ClientEventListener,
      RemovesClientWhenClientDisconnectedEventIsReceived)
 {
   auto manager = std::make_shared<ClientManager>();
