@@ -5,5 +5,6 @@ target_include_directories (unitTests PUBLIC
 
 target_sources (unitTests PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/ClientEventListenerTest.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/OutputGameEventAdapterTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ServerEventListenerTest.cc
 	)
