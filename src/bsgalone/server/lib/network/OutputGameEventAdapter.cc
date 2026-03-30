@@ -5,13 +5,13 @@
 
 namespace bsgalone::server {
 
-OutputGameEventAdapter::OutputGameEventAdapter(core::IMessageQueueShPtr outputQueue)
+OutputGameEventAdapter::OutputGameEventAdapter(core::IOutputNetworkAdapterPtr networkClient)
   : IGameEventListener()
-  , m_outputQueue(std::move(outputQueue))
+  , m_networkClient(std::move(networkClient))
 {
-  if (m_outputQueue == nullptr)
+  if (m_networkClient == nullptr)
   {
-    throw std::invalid_argument("Expected non null output queue");
+    throw std::invalid_argument("Expected non null network client");
   }
 }
 
@@ -21,17 +21,18 @@ bool OutputGameEventAdapter::isEventRelevant(const core::GameEventType &type) co
 }
 
 namespace {
-void publishLoginMessage(core::IMessageQueue &queue, const core::PlayerLoginEvent &event)
+void publishLoginMessage(core::IOutputNetworkAdapter &adapter, const core::PlayerLoginEvent &event)
 {
-  auto message = std::make_unique<core::LoginMessage>(event.getClientId());
+  // TODO: Client id could be removed.
+  core::LoginMessage message(event.getClientId());
   if (event.successfulLogin())
   {
-    message->setPlayerDbId(event.tryGetPlayerDbId().value());
-    message->setRole(event.tryGetRole().value());
-    message->setSystemDbId(event.tryGetSystemDbId().value());
+    message.setPlayerDbId(event.tryGetPlayerDbId().value());
+    message.setRole(event.tryGetRole().value());
+    message.setSystemDbId(event.tryGetSystemDbId().value());
   }
 
-  queue.pushEvent(std::move(message));
+  adapter.sendMessage(event.getClientId(), message);
 }
 } // namespace
 
@@ -40,7 +41,7 @@ void OutputGameEventAdapter::onEventReceived(const core::IGameEvent &event)
   switch (event.type())
   {
     case core::GameEventType::PLAYER_LOGIN:
-      publishLoginMessage(*m_outputQueue, event.as<core::PlayerLoginEvent>());
+      publishLoginMessage(*m_networkClient, event.as<core::PlayerLoginEvent>());
       break;
     default:
       throw std::invalid_argument("Unsupported game event type " + str(event.type()));

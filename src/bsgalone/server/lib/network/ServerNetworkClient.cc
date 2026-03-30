@@ -4,7 +4,6 @@
 #include "ClientEventListener.hh"
 #include "InputNetworkAdapter.hh"
 #include "MessageParser.hh"
-#include "MessageSerializer.hh"
 #include "ServerEventListener.hh"
 #include "SynchronizedEventQueue.hh"
 #include "TcpServer.hh"
