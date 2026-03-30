@@ -8,6 +8,7 @@ namespace bsgalone::core {
 
 enum class MessageType
 {
+  LOGIN,
   LOGIN_REQUEST,
   SIGNUP_REQUEST
 };

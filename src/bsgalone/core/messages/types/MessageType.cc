@@ -7,6 +7,8 @@ auto str(const MessageType &type) -> std::string
 {
   switch (type)
   {
+    case MessageType::LOGIN:
+      return "login";
     case MessageType::LOGIN_REQUEST:
       return "login_request";
     case MessageType::SIGNUP_REQUEST:
@@ -19,6 +21,7 @@ auto str(const MessageType &type) -> std::string
 auto allMessageTypesAsSet() -> std::unordered_set<MessageType>
 {
   return std::unordered_set<MessageType>{
+    MessageType::LOGIN,
     MessageType::LOGIN_REQUEST,
     MessageType::SIGNUP_REQUEST,
   };
