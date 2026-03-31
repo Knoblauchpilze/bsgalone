@@ -14,8 +14,10 @@ namespace bsgalone::client {
 constexpr auto DEFAULT_SERVER_URL = "127.0.0.1";
 
 GameNetworkClient::GameNetworkClient()
-  : ::core::CoreObject("network")
-{}
+  : ::core::CoreObject("client")
+{
+  setService("network");
+}
 
 void GameNetworkClient::start(const int port)
 {
