@@ -1,6 +1,7 @@
 
 
 #include "MessageParser.hh"
+#include "LoginMessage.hh"
 #include "LoginRequest.hh"
 #include "SignupRequest.hh"
 #include <gtest/gtest.h>
@@ -52,6 +53,28 @@ TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageParser,
   EXPECT_EQ(loginBytes.size(), maybeResult.bytesProcessed);
   EXPECT_TRUE(maybeResult.message.has_value());
   EXPECT_EQ(MessageType::LOGIN_REQUEST, (*maybeResult.message)->type());
+}
+
+TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageParser, DeserializesLoginMessage)
+{
+  MessageParser parser{};
+
+  LoginMessage message(net::ClientId{12});
+  message.setPlayerDbId(Uuid{18});
+  message.setRole(GameRole::GUNNER);
+  message.setSystemDbId(Uuid{19});
+  const auto bytes = serializeMessage(message);
+
+  const auto maybeResult = parser.tryParseMessage(bytes);
+
+  EXPECT_EQ(bytes.size(), maybeResult.bytesProcessed);
+  EXPECT_TRUE(maybeResult.message.has_value());
+  EXPECT_EQ(MessageType::LOGIN, (*maybeResult.message)->type());
+  const auto &actual = (*maybeResult.message)->as<LoginMessage>();
+  EXPECT_EQ(net::ClientId{12}, actual.getClientId());
+  EXPECT_EQ(Uuid{18}, actual.getPlayerDbId());
+  EXPECT_EQ(GameRole::GUNNER, actual.getRole());
+  EXPECT_EQ(Uuid{19}, actual.getSystemDbId());
 }
 
 TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageParser, DeserializesLoginRequest)
