@@ -140,15 +140,15 @@ void App::drawDebug(const pge::RenderState &state, const pge::Vec2f &mouseScreen
 }
 
 namespace {
-class ListenerProxy : public IUiCommandListener
+class UiCommandListenerProxy : public IUiCommandListener
 {
   public:
-  ListenerProxy(App &app)
+  UiCommandListenerProxy(App &app)
     : IUiCommandListener()
     , m_app(app)
   {}
 
-  ~ListenerProxy() override = default;
+  ~UiCommandListenerProxy() override = default;
 
   bool isEventRelevant(const UiCommandType &type) const override
   {
@@ -172,7 +172,7 @@ void App::initializeIncomingMessageSystem()
 
 void App::initializeOutgoingMessageSystem()
 {
-  m_uiCommandQueue->addListener(std::make_unique<ListenerProxy>(*this));
+  m_uiCommandQueue->addListener(std::make_unique<UiCommandListenerProxy>(*this));
   m_uiCommandQueue->addListener(std::make_unique<OutputUiCommandAdapter>(m_networkClient));
 }
 
