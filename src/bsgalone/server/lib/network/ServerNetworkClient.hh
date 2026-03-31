@@ -4,6 +4,7 @@
 #include "AsyncMessageQueue.hh"
 #include "ClientId.hh"
 #include "ClientManager.hh"
+#include "CoreObject.hh"
 #include "IMessageListener.hh"
 #include "IMessageQueue.hh"
 #include "INetworkEventQueue.hh"
@@ -14,20 +15,18 @@
 
 namespace bsgalone::server {
 
-class ServerNetworkClient : public core::IMessageQueue
+class ServerNetworkClient : public net::INetworkServer, public ::core::CoreObject
 {
   public:
-  ServerNetworkClient()  = default;
+  ServerNetworkClient();
   ~ServerNetworkClient() = default;
 
-  void start(const int port);
-  void stop();
+  void start(const int port) override;
+  void stop() override;
+  auto trySend(const net::ClientId clientId, std::vector<char> bytes)
+    -> std::optional<net::MessageId> override;
 
-  void pushEvent(core::IMessagePtr message) override;
-  void addListener(core::IMessageListenerPtr listener) override;
-  bool empty() override;
-
-  void processEvents() override;
+  void addListener(core::IMessageListenerPtr listener);
 
   private:
   net::INetworkEventQueueShPtr m_eventBus{};

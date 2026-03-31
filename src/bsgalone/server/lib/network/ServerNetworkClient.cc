@@ -10,6 +10,12 @@
 
 namespace bsgalone::server {
 
+ServerNetworkClient::ServerNetworkClient()
+  : ::core::CoreObject("client")
+{
+  setService("network");
+}
+
 void ServerNetworkClient::start(const int port)
 {
   m_eventBus  = net::createAsyncEventQueue(net::createSynchronizedEventQueue());
@@ -27,30 +33,20 @@ void ServerNetworkClient::stop()
   m_eventBus.reset();
 }
 
-void ServerNetworkClient::pushEvent(core::IMessagePtr message)
+auto ServerNetworkClient::trySend(const net::ClientId clientId, std::vector<char> bytes)
+  -> std::optional<net::MessageId>
 {
   if (!m_started.load())
   {
-    throw std::invalid_argument("Failed to send message " + str(message->type())
-                                + ", server not started");
+    throw std::invalid_argument("Failed to send message, server not started");
   }
 
-  throw std::invalid_argument("Unsupported operation, not implemented");
+  return m_tcpServer->trySend(clientId, std::move(bytes));
 }
 
 void ServerNetworkClient::addListener(core::IMessageListenerPtr listener)
 {
   m_inputQueue->addListener(std::move(listener));
-}
-
-bool ServerNetworkClient::empty()
-{
-  return m_inputQueue->empty();
-}
-
-void ServerNetworkClient::processEvents()
-{
-  m_inputQueue->processEvents();
 }
 
 void ServerNetworkClient::initialize()

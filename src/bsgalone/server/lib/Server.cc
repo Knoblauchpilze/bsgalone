@@ -4,6 +4,9 @@
 #include "AsyncGameEventQueue.hh"
 #include "Configurator.hh"
 #include "GameEventPublisher.hh"
+#include "MessageSerializer.hh"
+#include "OutputGameEventAdapter.hh"
+#include "OutputNetworkAdapter.hh"
 #include "SynchronizedGameEventQueue.hh"
 
 namespace bsgalone::server {
@@ -38,6 +41,11 @@ void Server::initialize()
   m_networkClient = std::make_shared<ServerNetworkClient>();
 
   initializeExternalFacingUseCases();
+
+  auto outputAdapter
+    = std::make_unique<core::OutputNetworkAdapter>(m_networkClient,
+                                                   std::make_unique<core::MessageSerializer>());
+  m_eventQueue->addListener(std::make_unique<OutputGameEventAdapter>(std::move(outputAdapter)));
 }
 
 void Server::initializeExternalFacingUseCases()
