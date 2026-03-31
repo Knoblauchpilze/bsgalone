@@ -15,6 +15,7 @@ constexpr auto DEFAULT_SERVER_URL = "127.0.0.1";
 
 GameNetworkClient::GameNetworkClient()
   : ::core::CoreObject("client")
+  , m_inputQueue(core::createSynchronizedMessageQueue())
 {
   setService("network");
 }
@@ -27,8 +28,6 @@ void GameNetworkClient::start(const int port)
     = std::make_shared<core::OutputNetworkAdapter>(m_tcpClient,
                                                    std::make_unique<core::MessageSerializer>());
 
-  m_inputQueue = core::createSynchronizedMessageQueue();
-
   initialize();
 
   m_tcpClient->connect(DEFAULT_SERVER_URL, port);
@@ -40,8 +39,6 @@ void GameNetworkClient::stop()
   m_adapter.reset();
   m_tcpClient.reset();
   m_eventBus.reset();
-
-  m_inputQueue.reset();
 }
 
 void GameNetworkClient::pushEvent(core::IMessagePtr message)

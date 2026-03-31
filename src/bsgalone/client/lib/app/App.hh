@@ -2,6 +2,7 @@
 #pragma once
 
 #include "GameNetworkClient.hh"
+#include "IDataStore.hh"
 #include "IInputHandler.hh"
 #include "IRenderer.hh"
 #include "IUiCommandQueue.hh"
@@ -69,7 +70,14 @@ class App : public pge::PGEApp
   /// commands and receive updates to the game.
   GameNetworkClientShPtr m_networkClient{};
 
-  void initializeMessageSystem();
+  /// @brief - Holds the data received from the server about the current session. This
+  /// acts as a central facade to access the data about the game and controls the flow
+  /// of the application. It allows to gate access to certain UI elements until the
+  /// data has been received from the server.
+  IDataStoreShPtr m_dataStore{};
+
+  void initializeIncomingMessageSystem();
+  void initializeOutgoingMessageSystem();
 
   void generateUiHandlers(const pge::Vec2i &screenDims, pge::sprites::TexturePack &texturesLoader);
   void generateRenderers(const pge::Vec2i &dimensions, pge::sprites::TexturePack &texturesLoader);

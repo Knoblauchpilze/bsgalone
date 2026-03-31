@@ -3,8 +3,10 @@
 #include "AsyncUiCommandQueue.hh"
 #include "DecalRenderer.hh"
 #include "IUiCommandListener.hh"
+#include "LoginMessageConsumer.hh"
 #include "LoginUiHandler.hh"
 #include "OutputUiCommandAdapter.hh"
+#include "ServerDataStore.hh"
 #include "SynchronizedUiCommandQueue.hh"
 
 namespace bsgalone::client {
@@ -13,6 +15,7 @@ App::App(const pge::AppDesc &desc, const NetworkConfig &config)
   : PGEApp(desc)
   , m_uiCommandQueue(createSynchronizedUiCommandQueue())
   , m_config(config)
+  , m_dataStore(std::make_shared<ServerDataStore>())
 {}
 
 bool App::onFrame(const float /*elapsedSeconds*/)
@@ -60,7 +63,8 @@ void App::loadResources(const pge::Vec2i &screenDims, pge::Renderer &engine)
   m_uiCommandQueue = createAsyncUiCommandQueue(createSynchronizedUiCommandQueue());
 
   m_networkClient = std::make_shared<GameNetworkClient>();
-  initializeMessageSystem();
+  initializeIncomingMessageSystem();
+  initializeOutgoingMessageSystem();
 
   generateUiHandlers(screenDims, engine.getTextureHandler());
   generateRenderers(screenDims, engine.getTextureHandler());
@@ -161,7 +165,12 @@ class ListenerProxy : public IUiCommandListener
 };
 } // namespace
 
-void App::initializeMessageSystem()
+void App::initializeIncomingMessageSystem()
+{
+  m_networkClient->addListener(std::make_unique<LoginMessageConsumer>(m_dataStore));
+}
+
+void App::initializeOutgoingMessageSystem()
 {
   m_uiCommandQueue->addListener(std::make_unique<ListenerProxy>(*this));
   m_uiCommandQueue->addListener(std::make_unique<OutputUiCommandAdapter>(m_networkClient));

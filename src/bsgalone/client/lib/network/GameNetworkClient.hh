@@ -27,7 +27,15 @@ class GameNetworkClient : public core::IMessageQueue, public ::core::CoreObject
   void stop();
 
   void pushEvent(core::IMessagePtr message) override;
+
+  /// @brief - Adds a listener to the input queue held by the client. Note that
+  /// any listener added through this method will persist through the start/stop
+  /// cyles.
+  /// The listener will be receiving messages coming from the network (i.e. the
+  /// server). There's no protection against double registration.
+  /// @param listener - the listener to register
   void addListener(core::IMessageListenerPtr listener) override;
+
   bool empty() override;
 
   void processEvents() override;
