@@ -5,6 +5,7 @@
 #include <gtest/gtest.h>
 
 namespace bsgalone::client {
+
 TEST(Unit_Bsgalone_Client_Network_NetworkEventListener,
      ConsidersConnectionEstablishedEventAsRelevant)
 {

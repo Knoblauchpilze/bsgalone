@@ -10,6 +10,7 @@
 using namespace test;
 
 namespace bsgalone::client {
+
 TEST(Unit_Bsgalone_Client_Network_OutputUiCommandAdapter, ThrowsWhenQueueIsNull)
 {
   EXPECT_THROW([this]() { OutputUiCommandAdapter(nullptr); }(), std::invalid_argument);
