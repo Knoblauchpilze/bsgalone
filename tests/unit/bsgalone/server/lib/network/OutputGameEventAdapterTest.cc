@@ -44,7 +44,6 @@ TEST(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsFailedLoginMess
 
   EXPECT_EQ(core::MessageType::LOGIN, captured->type());
   const auto &actual = captured->as<core::LoginMessage>();
-  EXPECT_EQ(net::ClientId{12}, actual.getClientId());
   EXPECT_FALSE(actual.successfullyLoggedIn());
 }
 
@@ -68,7 +67,6 @@ TEST(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsSuccessfulLogin
 
   EXPECT_EQ(core::MessageType::LOGIN, captured->type());
   const auto &actual = captured->as<core::LoginMessage>();
-  EXPECT_EQ(net::ClientId{12}, actual.getClientId());
   EXPECT_TRUE(actual.successfullyLoggedIn());
   EXPECT_EQ(core::Uuid{18}, actual.getPlayerDbId());
   EXPECT_EQ(core::GameRole::GUNNER, actual.getRole());

@@ -12,7 +12,7 @@ TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageSerializer, SerializesLogi
 {
   MessageSerializer serializer{};
 
-  LoginMessage message(net::ClientId{12});
+  LoginMessage message;
   message.setPlayerDbId(Uuid{18});
   message.setRole(GameRole::PILOT);
   message.setSystemDbId(Uuid{19});

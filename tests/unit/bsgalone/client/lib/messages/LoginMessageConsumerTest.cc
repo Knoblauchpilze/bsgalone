@@ -39,7 +39,7 @@ TEST(Unit_Bsgalone_Client_Messages_LoginMessageConsumer, DoesNotCallStoreWhenLog
 
   LoginMessageConsumer consumer(mockStore, std::make_shared<TestUiEventQueue>());
 
-  core::LoginMessage message(net::ClientId{12});
+  core::LoginMessage message;
   consumer.onEventReceived(message);
 }
 
@@ -48,7 +48,7 @@ TEST(Unit_Bsgalone_Client_Messages_LoginMessageConsumer, PublishesLoginFailedEve
   auto queue = std::make_shared<TestUiEventQueue>();
   LoginMessageConsumer consumer(std::make_shared<MockDataStore>(), queue);
 
-  core::LoginMessage message(net::ClientId{12});
+  core::LoginMessage message;
   consumer.onEventReceived(message);
 
   EXPECT_EQ(1u, queue->messages().size());
@@ -63,7 +63,7 @@ TEST(Unit_Bsgalone_Client_Messages_LoginMessageConsumer, ForwardsToStoreWhenLogi
 
   LoginMessageConsumer consumer(mockStore, std::make_shared<TestUiEventQueue>());
 
-  core::LoginMessage message(net::ClientId{12});
+  core::LoginMessage message;
   message.setPlayerDbId(core::Uuid{18});
   message.setRole(core::GameRole::PILOT);
   message.setSystemDbId(core::Uuid{19});
@@ -77,7 +77,7 @@ TEST(Unit_Bsgalone_Client_Messages_LoginMessageConsumer,
   auto queue = std::make_shared<TestUiEventQueue>();
   LoginMessageConsumer consumer(std::make_shared<MockDataStore>(), queue);
 
-  core::LoginMessage message(net::ClientId{12});
+  core::LoginMessage message;
   message.setPlayerDbId(core::Uuid{18});
   message.setRole(core::GameRole::PILOT);
   message.setSystemDbId(core::Uuid{19});

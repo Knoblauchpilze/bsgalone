@@ -59,7 +59,7 @@ TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageParser, DeserializesLoginM
 {
   MessageParser parser{};
 
-  LoginMessage message(net::ClientId{12});
+  LoginMessage message;
   message.setPlayerDbId(Uuid{18});
   message.setRole(GameRole::GUNNER);
   message.setSystemDbId(Uuid{19});
@@ -71,7 +71,6 @@ TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageParser, DeserializesLoginM
   EXPECT_TRUE(maybeResult.message.has_value());
   EXPECT_EQ(MessageType::LOGIN, (*maybeResult.message)->type());
   const auto &actual = (*maybeResult.message)->as<LoginMessage>();
-  EXPECT_EQ(net::ClientId{12}, actual.getClientId());
   EXPECT_EQ(Uuid{18}, actual.getPlayerDbId());
   EXPECT_EQ(GameRole::GUNNER, actual.getRole());
   EXPECT_EQ(Uuid{19}, actual.getSystemDbId());

@@ -8,16 +8,6 @@ LoginMessage::LoginMessage()
   : IMessage(MessageType::LOGIN)
 {}
 
-LoginMessage::LoginMessage(const net::ClientId clientId)
-  : IMessage(MessageType::LOGIN)
-  , m_clientId(clientId)
-{}
-
-auto LoginMessage::getClientId() const -> net::ClientId
-{
-  return m_clientId;
-}
-
 bool LoginMessage::successfullyLoggedIn() const
 {
   return m_playerDbId.has_value() && m_role.has_value() && m_systemDbId.has_value();
@@ -55,7 +45,7 @@ void LoginMessage::setSystemDbId(const Uuid systemDbId)
 
 auto LoginMessage::clone() const -> IMessagePtr
 {
-  auto clone          = std::make_unique<LoginMessage>(m_clientId);
+  auto clone          = std::make_unique<LoginMessage>();
   clone->m_playerDbId = m_playerDbId;
   clone->m_role       = m_role;
   clone->m_systemDbId = m_systemDbId;
@@ -69,7 +59,6 @@ auto LoginMessage::readFromStream(std::istream &in) -> std::optional<IMessagePtr
 
   bool ok{true};
   ok &= ::core::deserialize(in, message.m_type);
-  ok &= ::core::deserialize(in, message.m_clientId);
   ok &= ::core::deserialize(in, message.m_playerDbId);
   ok &= ::core::deserialize(in, message.m_role);
   ok &= ::core::deserialize(in, message.m_systemDbId);
@@ -85,7 +74,6 @@ auto LoginMessage::readFromStream(std::istream &in) -> std::optional<IMessagePtr
 auto operator<<(std::ostream &out, const LoginMessage &message) -> std::ostream &
 {
   ::core::serialize(out, message.m_type);
-  ::core::serialize(out, message.m_clientId);
   ::core::serialize(out, message.m_playerDbId);
   ::core::serialize(out, message.m_role);
   ::core::serialize(out, message.m_systemDbId);

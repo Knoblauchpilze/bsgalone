@@ -10,7 +10,6 @@ namespace {
 void assertMessagesAreEqual(const LoginMessage &actual, const LoginMessage &expected)
 {
   EXPECT_EQ(actual.type(), expected.type());
-  EXPECT_EQ(actual.getClientId(), expected.getClientId());
   EXPECT_EQ(actual.successfullyLoggedIn(), expected.successfullyLoggedIn());
 
   if (actual.successfullyLoggedIn())
@@ -24,14 +23,14 @@ void assertMessagesAreEqual(const LoginMessage &actual, const LoginMessage &expe
 
 TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage, IndicatesFailedLoginByDefault)
 {
-  LoginMessage message(net::ClientId{12});
+  LoginMessage message;
 
   EXPECT_FALSE(message.successfullyLoggedIn());
 }
 
 TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage, DoesNotDefinePlayerDataByDefault)
 {
-  LoginMessage message(net::ClientId{12});
+  LoginMessage message;
 
   EXPECT_THROW([&message]() { message.getPlayerDbId(); }(), std::bad_optional_access);
   EXPECT_THROW([&message]() { message.getRole(); }(), std::bad_optional_access);
@@ -41,7 +40,7 @@ TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage, DoesNotDefinePlayerDataByD
 TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage,
      IndicatesSuccessfulLoginWhenPlayerDataIsDefined)
 {
-  LoginMessage message(net::ClientId{12});
+  LoginMessage message;
 
   EXPECT_FALSE(message.successfullyLoggedIn());
 
@@ -57,7 +56,7 @@ TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage,
 
 TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage, ReturnsPlayerDataWhenSet)
 {
-  LoginMessage message(net::ClientId{12});
+  LoginMessage message;
   message.setPlayerDbId(Uuid{18});
   message.setRole(GameRole::PILOT);
   message.setSystemDbId(Uuid{19});
@@ -69,7 +68,7 @@ TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage, ReturnsPlayerDataWhenSet)
 
 TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage, WithoutPlayerData)
 {
-  LoginMessage expected(net::ClientId{12});
+  LoginMessage expected;
 
   const auto actual = serializeAndDeserializeMessage(expected);
 
@@ -78,7 +77,7 @@ TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage, WithoutPlayerData)
 
 TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage, WithPlayerData)
 {
-  LoginMessage expected(net::ClientId{12});
+  LoginMessage expected;
   expected.setPlayerDbId(Uuid{18});
   expected.setRole(GameRole::PILOT);
   expected.setSystemDbId(Uuid{19});
@@ -90,7 +89,7 @@ TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage, WithPlayerData)
 
 TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage, CloneWithoutPlayerData)
 {
-  LoginMessage expected(net::ClientId{12});
+  LoginMessage expected;
 
   const auto cloned = expected.clone();
 
@@ -100,7 +99,7 @@ TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage, CloneWithoutPlayerData)
 
 TEST(Unit_Bsgalone_Core_Messages_Credentials_LoginMessage, CloneWithPlayerData)
 {
-  LoginMessage expected(net::ClientId{12});
+  LoginMessage expected;
   expected.setPlayerDbId(Uuid{18});
   expected.setRole(GameRole::PILOT);
   expected.setSystemDbId(Uuid{19});

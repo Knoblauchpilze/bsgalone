@@ -23,8 +23,7 @@ bool OutputGameEventAdapter::isEventRelevant(const core::GameEventType &type) co
 namespace {
 void publishLoginMessage(core::IOutputNetworkAdapter &adapter, const core::PlayerLoginEvent &event)
 {
-  // TODO: Client id could be removed.
-  core::LoginMessage message(event.getClientId());
+  core::LoginMessage message;
   if (event.successfulLogin())
   {
     message.setPlayerDbId(event.tryGetPlayerDbId().value());

@@ -12,10 +12,9 @@ namespace bsgalone::core {
 class LoginMessage : public IMessage
 {
   public:
-  LoginMessage(const net::ClientId clientId);
+  LoginMessage();
   ~LoginMessage() override = default;
 
-  auto getClientId() const -> net::ClientId;
   bool successfullyLoggedIn() const;
   auto getPlayerDbId() const -> Uuid;
   auto getRole() const -> GameRole;
@@ -37,12 +36,9 @@ class LoginMessage : public IMessage
   static auto readFromStream(std::istream &in) -> std::optional<IMessagePtr>;
 
   private:
-  net::ClientId m_clientId{};
   std::optional<Uuid> m_playerDbId{};
   std::optional<GameRole> m_role{};
   std::optional<Uuid> m_systemDbId{};
-
-  LoginMessage();
 
   friend auto operator<<(std::ostream &out, const LoginMessage &message) -> std::ostream &;
 };
