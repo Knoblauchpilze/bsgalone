@@ -6,6 +6,6 @@
 
 namespace bsgalone::client {
 
-auto createAsyncUiCommandQueue(IUiEventQueuePtr queue) -> IUiEventQueuePtr;
+auto createAsyncUiEventQueue(IUiEventQueuePtr queue) -> IUiEventQueuePtr;
 
 } // namespace bsgalone::client

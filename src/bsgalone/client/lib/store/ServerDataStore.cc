@@ -1,12 +1,19 @@
 
 #include "ServerDataStore.hh"
+#include "LoginSucceededEvent.hh"
 
 namespace bsgalone::client {
 
-ServerDataStore::ServerDataStore()
+ServerDataStore::ServerDataStore(IUiEventQueueShPtr queue)
   : ::core::CoreObject("data")
+  , m_queue(std::move(queue))
 {
   setService("store");
+
+  if (m_queue == nullptr)
+  {
+    throw std::invalid_argument("Expected non null event queue");
+  }
 }
 
 void ServerDataStore::onPlayerLoggedIn(const core::Uuid playerDbId,
@@ -25,6 +32,8 @@ void ServerDataStore::onPlayerLoggedIn(const core::Uuid playerDbId,
   };
 
   debug("Logged in as " + core::str(playerDbId) + " with role " + core::str(role));
+
+  m_queue->pushEvent(std::make_unique<LoginSucceededEvent>());
 }
 
 } // namespace bsgalone::client

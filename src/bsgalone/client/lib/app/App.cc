@@ -1,6 +1,7 @@
 
 #include "App.hh"
 #include "AsyncUiCommandQueue.hh"
+#include "AsyncUiEventQueue.hh"
 #include "DecalRenderer.hh"
 #include "IUiCommandListener.hh"
 #include "LoginMessageConsumer.hh"
@@ -8,14 +9,13 @@
 #include "OutputUiCommandAdapter.hh"
 #include "ServerDataStore.hh"
 #include "SynchronizedUiCommandQueue.hh"
+#include "SynchronizedUiEventQueue.hh"
 
 namespace bsgalone::client {
 
 App::App(const pge::AppDesc &desc, const NetworkConfig &config)
   : PGEApp(desc)
-  , m_uiCommandQueue(createSynchronizedUiCommandQueue())
   , m_config(config)
-  , m_dataStore(std::make_shared<ServerDataStore>())
 {}
 
 bool App::onFrame(const float /*elapsedSeconds*/)
@@ -61,6 +61,9 @@ void App::loadResources(const pge::Vec2i &screenDims, pge::Renderer &engine)
   setLayerTint(Layer::DRAW, semiOpaque(pge::colors::WHITE));
 
   m_uiCommandQueue = createAsyncUiCommandQueue(createSynchronizedUiCommandQueue());
+  m_uiEventQueue   = createAsyncUiEventQueue(createSynchronizedUiEventQueue());
+
+  m_dataStore = std::make_shared<ServerDataStore>(m_uiEventQueue);
 
   m_networkClient = std::make_shared<GameNetworkClient>();
   initializeIncomingMessageSystem();
@@ -80,6 +83,7 @@ void App::cleanResources()
   m_uiHandlers.clear();
   m_renderers.clear();
 
+  m_uiEventQueue.reset();
   m_uiCommandQueue.reset();
 
   m_networkClient.reset();

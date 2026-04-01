@@ -6,6 +6,7 @@
 #include "IInputHandler.hh"
 #include "IRenderer.hh"
 #include "IUiCommandQueue.hh"
+#include "IUiEventQueue.hh"
 #include "IUiHandler.hh"
 #include "NetworkConfig.hh"
 #include "PGEApp.hh"
@@ -61,6 +62,12 @@ class App : public pge::PGEApp
   /// commands sent to the server while others will trigger internal changes
   /// in the UI or client application in general.
   IUiCommandQueueShPtr m_uiCommandQueue{};
+
+  /// @brief - Used by components of the app (e.g. network components, data
+  /// store) to communicate updates to the UI elements. This allows to make
+  /// the UI update itself independently from the way the server or the game
+  /// provides updates.
+  IUiEventQueueShPtr m_uiEventQueue{};
 
   /// @brief - Holds the configuration to forward to the network client when the
   /// app is started.
