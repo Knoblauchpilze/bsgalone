@@ -63,7 +63,7 @@ void App::loadResources(const pge::Vec2i &screenDims, pge::Renderer &engine)
   m_uiCommandQueue = createAsyncUiCommandQueue(createSynchronizedUiCommandQueue());
   m_uiEventQueue   = createAsyncUiEventQueue(createSynchronizedUiEventQueue());
 
-  m_dataStore = std::make_shared<ServerDataStore>(m_uiEventQueue);
+  m_dataStore = std::make_shared<ServerDataStore>();
 
   m_networkClient = std::make_shared<GameNetworkClient>();
   initializeIncomingMessageSystem();
@@ -171,7 +171,7 @@ class UiCommandListenerProxy : public IUiCommandListener
 
 void App::initializeIncomingMessageSystem()
 {
-  m_networkClient->addListener(std::make_unique<LoginMessageConsumer>(m_dataStore));
+  m_networkClient->addListener(std::make_unique<LoginMessageConsumer>(m_dataStore, m_uiEventQueue));
 }
 
 void App::initializeOutgoingMessageSystem()

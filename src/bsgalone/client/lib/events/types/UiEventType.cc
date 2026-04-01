@@ -8,7 +8,7 @@ auto str(const UiEventType type) -> std::string
   switch (type)
   {
     case UiEventType::LOGIN_FAILED:
-      return "exit_failed";
+      return "login_failed";
     case UiEventType::LOGIN_SUCCEEDED:
       return "login_succeeded";
     default:
