@@ -1,22 +1,60 @@
 
 #include "LoginUiHandler.hh"
 #include "ExitCommand.hh"
+#include "IUiEventListener.hh"
 #include "LoginCommand.hh"
+#include "LoginFailedEvent.hh"
 #include "Palette.hh"
 #include "ScreenCommon.hh"
 #include "SignupCommand.hh"
 
 namespace bsgalone::client {
+class UiEventListenerLoginProxy : public IUiEventListener
+{
+  public:
+  UiEventListenerLoginProxy(LoginUiHandler &handler)
+    : IUiEventListener()
+    , m_handler(handler)
+  {}
 
-LoginUiHandler::LoginUiHandler(IUiCommandQueueShPtr queue)
+  ~UiEventListenerLoginProxy() override = default;
+
+  bool isEventRelevant(const UiEventType &type) const override
+  {
+    return type == UiEventType::LOGIN_FAILED;
+  }
+
+  void onEventReceived(const IUiEvent &event) override
+  {
+    switch (event.type())
+    {
+      case UiEventType::LOGIN_FAILED:
+        m_handler.onLoginFailed();
+        break;
+      default:
+        throw std::invalid_argument("Unsupported UI event type " + str(event.type()));
+    }
+  }
+
+  private:
+  LoginUiHandler &m_handler;
+};
+
+LoginUiHandler::LoginUiHandler(IUiEventQueueShPtr inputQueue, IUiCommandQueueShPtr outputQueue)
   : IUiHandler()
   , ::core::CoreObject("login")
-  , m_queue(std::move(queue))
+  , m_queue(std::move(outputQueue))
 {
+  if (inputQueue == nullptr)
+  {
+    throw std::invalid_argument("Expected non null event queue");
+  }
   if (m_queue == nullptr)
   {
     throw std::invalid_argument("Expected non null command queue");
   }
+
+  registerToQueue(std::move(inputQueue));
 }
 
 void LoginUiHandler::initializeMenus(const pge::Vec2i &dimensions,
@@ -140,6 +178,11 @@ void LoginUiHandler::updateUi()
 
   m_failureMenu->update();
   m_successfulSignupMenu->update();
+}
+
+void LoginUiHandler::registerToQueue(IUiEventQueueShPtr inputQueue)
+{
+  inputQueue->addListener(std::make_unique<UiEventListenerLoginProxy>(*this));
 }
 
 void LoginUiHandler::generateLoginModePanel(const pge::Vec2i &dimensions)
@@ -330,15 +373,12 @@ void LoginUiHandler::onExitRequested()
   m_queue->pushEvent(std::make_unique<ExitCommand>());
 }
 
-// TODO: Restore loading handling.
-// void LoginUiHandler::handleLoginMessage(const core::LoginMessage &message)
-// {
-//   if (!message.successfullyLoggedIn())
-//   {
-//     m_failureMenu->trigger();
-//   }
-// }
+void LoginUiHandler::onLoginFailed()
+{
+  m_failureMenu->trigger();
+}
 
+// TODO: Restore loading handling.
 // void LoginUiHandler::handleSignupMessage(const core::SignupMessage &message)
 // {
 //   if (message.successfullySignedup())

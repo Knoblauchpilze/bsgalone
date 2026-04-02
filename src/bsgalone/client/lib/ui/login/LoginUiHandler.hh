@@ -6,6 +6,7 @@
 #include "Faction.hh"
 #include "GameRole.hh"
 #include "IUiCommandQueue.hh"
+#include "IUiEventQueue.hh"
 #include "IUiHandler.hh"
 #include "UiMenu.hh"
 #include "UiTextMenu.hh"
@@ -13,10 +14,15 @@
 
 namespace bsgalone::client {
 
+/// @brief - Forward declaration of the proxy class allowing the handler
+/// to listen to UI events. This allows to make this class a friend class
+/// of the handler.
+class UiEventListenerLoginProxy;
+
 class LoginUiHandler : public IUiHandler, public ::core::CoreObject
 {
   public:
-  LoginUiHandler(IUiCommandQueueShPtr queue);
+  LoginUiHandler(IUiEventQueueShPtr inputQueue, IUiCommandQueueShPtr outputQueue);
   ~LoginUiHandler() override = default;
 
   void initializeMenus(const pge::Vec2i &dimensions,
@@ -58,6 +64,8 @@ class LoginUiHandler : public IUiHandler, public ::core::CoreObject
 
   IUiCommandQueueShPtr m_queue{};
 
+  void registerToQueue(IUiEventQueueShPtr inputQueue);
+
   void generateLoginModePanel(const pge::Vec2i &dimensions);
   void generateFactionPanel(const pge::Vec2i &dimensions);
   void generateRolePanel(const pge::Vec2i &dimensions);
@@ -72,6 +80,9 @@ class LoginUiHandler : public IUiHandler, public ::core::CoreObject
 
   void onProceedRequested();
   void onExitRequested();
+  void onLoginFailed();
+
+  friend class UiEventListenerLoginProxy;
 };
 
 } // namespace bsgalone::client

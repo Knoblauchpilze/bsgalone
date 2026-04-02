@@ -79,11 +79,12 @@ void App::cleanResources()
 {
   m_networkClient->stop();
 
+  m_uiEventQueue.reset();
+
   m_inputHandlers.clear();
   m_uiHandlers.clear();
   m_renderers.clear();
 
-  m_uiEventQueue.reset();
   m_uiCommandQueue.reset();
 
   m_networkClient.reset();
@@ -182,7 +183,7 @@ void App::initializeOutgoingMessageSystem()
 
 void App::generateUiHandlers(const pge::Vec2i &screenDims, pge::sprites::TexturePack &texturesLoader)
 {
-  auto login = std::make_unique<LoginUiHandler>(m_uiCommandQueue);
+  auto login = std::make_unique<LoginUiHandler>(m_uiEventQueue, m_uiCommandQueue);
   login->initializeMenus(screenDims, texturesLoader);
   m_uiHandlers[Screen::LOGIN] = std::move(login);
 }
