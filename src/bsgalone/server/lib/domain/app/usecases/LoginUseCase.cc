@@ -43,7 +43,6 @@ void LoginUseCase::performLogin(const LoginData &data)
   event->setRole(player.role);
   event->setSystemDbId(player.systemDbId);
 
-  // TODO: Consumers should also publish login data
   m_eventPublisher->publishEvent(std::move(event));
 }
 
