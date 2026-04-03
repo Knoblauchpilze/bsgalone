@@ -3,6 +3,7 @@
 #include "MessageParser.hh"
 #include "LoginMessage.hh"
 #include "LoginRequest.hh"
+#include "SignupMessage.hh"
 #include "SignupRequest.hh"
 #include <gtest/gtest.h>
 
@@ -113,6 +114,22 @@ TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageParser, DeserializesLoginR
   EXPECT_EQ("secret", actual.getPassword());
   EXPECT_EQ(GameRole::PILOT, actual.getRole());
   EXPECT_EQ(net::ClientId{12}, actual.tryGetClientId().value());
+}
+
+TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageParser, DeserializesSignupMessage)
+{
+  MessageParser parser{};
+
+  SignupMessage message(true);
+  const auto bytes = serializeMessage(message);
+
+  const auto maybeResult = parser.tryParseMessage(bytes);
+
+  EXPECT_EQ(bytes.size(), maybeResult.bytesProcessed);
+  EXPECT_TRUE(maybeResult.message.has_value());
+  EXPECT_EQ(MessageType::SIGNUP, (*maybeResult.message)->type());
+  const auto &actual = (*maybeResult.message)->as<SignupMessage>();
+  EXPECT_TRUE(actual.successfullySignedUp());
 }
 
 TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageParser, DeserializesSignupRequest)

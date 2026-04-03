@@ -3,6 +3,7 @@
 #include "LoginMessage.hh"
 #include "LoginRequest.hh"
 #include "SerializationUtils.hh"
+#include "SignupMessage.hh"
 #include "SignupRequest.hh"
 #include <sstream>
 
@@ -84,6 +85,8 @@ auto MessageParser::tryReadMessage(const MessageType &type, std::istream &in)
       return LoginMessage::readFromStream(in);
     case MessageType::LOGIN_REQUEST:
       return LoginRequest::readFromStream(in);
+    case MessageType::SIGNUP:
+      return SignupMessage::readFromStream(in);
     case MessageType::SIGNUP_REQUEST:
       return SignupRequest::readFromStream(in);
     default:

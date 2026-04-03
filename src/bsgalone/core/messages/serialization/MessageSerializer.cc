@@ -2,6 +2,7 @@
 #include "MessageSerializer.hh"
 #include "LoginMessage.hh"
 #include "LoginRequest.hh"
+#include "SignupMessage.hh"
 #include "SignupRequest.hh"
 #include <sstream>
 
@@ -26,6 +27,9 @@ auto MessageSerializer::serializeMessage(const IMessage &message) -> std::vector
       break;
     case MessageType::LOGIN_REQUEST:
       serialize(out, message.as<LoginRequest>());
+      break;
+    case MessageType::SIGNUP:
+      serialize(out, message.as<SignupMessage>());
       break;
     case MessageType::SIGNUP_REQUEST:
       serialize(out, message.as<SignupRequest>());
