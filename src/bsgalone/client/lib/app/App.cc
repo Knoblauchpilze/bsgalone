@@ -8,6 +8,7 @@
 #include "LoginUiHandler.hh"
 #include "OutputUiCommandAdapter.hh"
 #include "ServerDataStore.hh"
+#include "SignupMessageConsumer.hh"
 #include "SynchronizedUiCommandQueue.hh"
 #include "SynchronizedUiEventQueue.hh"
 
@@ -173,6 +174,7 @@ class UiCommandListenerProxy : public IUiCommandListener
 void App::initializeIncomingMessageSystem()
 {
   m_networkClient->addListener(std::make_unique<LoginMessageConsumer>(m_dataStore, m_uiEventQueue));
+  m_networkClient->addListener(std::make_unique<SignupMessageConsumer>(m_uiEventQueue));
 }
 
 void App::initializeOutgoingMessageSystem()
