@@ -81,6 +81,8 @@ class LoginUiHandler : public IUiHandler, public ::core::CoreObject
   void onProceedRequested();
   void onExitRequested();
   void onLoginFailed();
+  void onSignupSucceeded();
+  void onSignupFailed();
 
   friend class UiEventListenerLoginProxy;
 };

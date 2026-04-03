@@ -9,6 +9,14 @@
 #include "SignupCommand.hh"
 
 namespace bsgalone::client {
+namespace {
+const std::unordered_set<UiEventType> RELEVANT_EVENT_TYPES = {
+  UiEventType::LOGIN_FAILED,
+  UiEventType::SIGNUP_FAILED,
+  UiEventType::SIGNUP_SUCCEEDED,
+};
+}
+
 class UiEventListenerLoginProxy : public IUiEventListener
 {
   public:
@@ -21,7 +29,7 @@ class UiEventListenerLoginProxy : public IUiEventListener
 
   bool isEventRelevant(const UiEventType &type) const override
   {
-    return type == UiEventType::LOGIN_FAILED;
+    return RELEVANT_EVENT_TYPES.contains(type);
   }
 
   void onEventReceived(const IUiEvent &event) override
@@ -30,6 +38,12 @@ class UiEventListenerLoginProxy : public IUiEventListener
     {
       case UiEventType::LOGIN_FAILED:
         m_handler.onLoginFailed();
+        break;
+      case UiEventType::SIGNUP_FAILED:
+        m_handler.onSignupFailed();
+        break;
+      case UiEventType::SIGNUP_SUCCEEDED:
+        m_handler.onSignupSucceeded();
         break;
       default:
         throw std::invalid_argument("Unsupported UI event type " + str(event.type()));
@@ -378,18 +392,15 @@ void LoginUiHandler::onLoginFailed()
   m_failureMenu->trigger();
 }
 
-// TODO: Restore loading handling.
-// void LoginUiHandler::handleSignupMessage(const core::SignupMessage &message)
-// {
-//   if (message.successfullySignedup())
-//   {
-//     setLoginMode(Mode::LOGIN);
-//     m_successfulSignupMenu->trigger();
-//   }
-//   else
-//   {
-//     m_failureMenu->trigger();
-//   }
-// }
+void LoginUiHandler::onSignupSucceeded()
+{
+  setLoginMode(Mode::LOGIN);
+  m_successfulSignupMenu->trigger();
+}
+
+void LoginUiHandler::onSignupFailed()
+{
+  m_failureMenu->trigger();
+}
 
 } // namespace bsgalone::client
