@@ -13,6 +13,9 @@ class Configurator
   Configurator()  = default;
   ~Configurator() = default;
 
+  auto createSignupDrivingAdapter(core::ForPublishingEventShPtr publisher) const
+    -> core::IMessageListenerPtr;
+
   auto createLoginDrivingAdapter(core::ForPublishingEventShPtr publisher) const
     -> core::IMessageListenerPtr;
 

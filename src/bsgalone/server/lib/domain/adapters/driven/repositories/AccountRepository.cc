@@ -52,4 +52,10 @@ auto AccountRepository::findOneByName(const std::string &name) const -> std::opt
   return out;
 }
 
+auto AccountRepository::save(Account /*account*/) const -> Account
+{
+  // TODO: Implement this function
+  throw std::runtime_error("Not implemented");
+}
+
 } // namespace bsgalone::core

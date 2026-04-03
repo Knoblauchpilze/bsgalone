@@ -8,7 +8,8 @@ namespace bsgalone::core {
 
 enum class GameEventType
 {
-  PLAYER_LOGIN
+  PLAYER_LOGIN,
+  PLAYER_SIGNUP
 };
 
 auto str(const GameEventType &type) -> std::string;

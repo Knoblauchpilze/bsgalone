@@ -55,6 +55,7 @@ void Server::initializeExternalFacingUseCases()
 
   Configurator configurator{};
 
+  m_networkClient->addListener(configurator.createSignupDrivingAdapter(publisher));
   m_networkClient->addListener(configurator.createLoginDrivingAdapter(publisher));
 }
 

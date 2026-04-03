@@ -9,6 +9,8 @@ auto str(const GameEventType &type) -> std::string
   {
     case GameEventType::PLAYER_LOGIN:
       return "player_login";
+    case GameEventType::PLAYER_SIGNUP:
+      return "player_signup";
     default:
       return "unknown";
   }
@@ -18,6 +20,7 @@ auto allGameEventTypesAsSet() -> std::unordered_set<GameEventType>
 {
   return std::unordered_set<GameEventType>{
     GameEventType::PLAYER_LOGIN,
+    GameEventType::PLAYER_SIGNUP,
   };
 }
 

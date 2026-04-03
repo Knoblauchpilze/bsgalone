@@ -21,6 +21,7 @@ class AccountRepository : public ForManagingAccount, public AbstractRepository
   void initialize() override;
 
   auto findOneByName(const std::string &name) const -> std::optional<Account> override;
+  auto save(Account account) const -> Account override;
 };
 
 using AccountRepositoryShPtr = std::shared_ptr<AccountRepository>;

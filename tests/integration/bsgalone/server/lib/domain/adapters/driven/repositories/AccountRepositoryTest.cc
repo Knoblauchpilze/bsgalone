@@ -22,7 +22,7 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_AccountRe
 }
 
 TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_AccountRepository,
-       FetchesExistingAccount)
+       FindOneByName_FetchesExistingAccount)
 {
   AccountRepository repo(this->dbConnection());
   repo.initialize();
@@ -38,7 +38,7 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_AccountRe
 }
 
 TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_AccountRepository,
-       FailsWhenInitializeIsNotCalled)
+       FindOneByName_FailsWhenInitializeIsNotCalled)
 {
   AccountRepository repo(this->dbConnection());
 
@@ -47,7 +47,7 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_AccountRe
 }
 
 TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_AccountRepository,
-       ReturnsEmptyOptionalWhenFetchingUnknownAccount)
+       FindOneByName_ReturnsEmptyOptionalWhenFetchingUnknownAccount)
 {
   AccountRepository repo(this->dbConnection());
   repo.initialize();
@@ -55,6 +55,15 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_AccountRe
   const auto actual = repo.findOneByName("not-a-name");
 
   EXPECT_FALSE(actual.has_value());
+}
+
+TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_AccountRepository,
+       Save_NotImplemented)
+{
+  AccountRepository repo(this->dbConnection());
+  repo.initialize();
+
+  EXPECT_THROW([&repo]() { repo.save(Account{}); }(), std::runtime_error);
 }
 
 } // namespace bsgalone::core

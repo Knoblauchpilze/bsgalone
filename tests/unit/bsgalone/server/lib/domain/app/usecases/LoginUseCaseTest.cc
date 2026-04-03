@@ -1,5 +1,7 @@
 
 #include "LoginUseCase.hh"
+#include "MockAccountRepository.hh"
+#include "MockPlayerRepository.hh"
 #include "PlayerLoginEvent.hh"
 #include "TestGameEventPublisher.hh"
 #include <gmock/gmock.h>
@@ -9,34 +11,12 @@ using namespace test;
 using namespace ::testing;
 
 namespace bsgalone::core {
-namespace {
-class MockAccountRepo : public ForManagingAccount
-{
-  public:
-  MockAccountRepo()           = default;
-  ~MockAccountRepo() override = default;
-
-  MOCK_METHOD(std::optional<Account>, findOneByName, (const std::string &), (const, override));
-};
-
-class MockPlayerRepo : public ForManagingPlayer
-{
-  public:
-  MockPlayerRepo()           = default;
-  ~MockPlayerRepo() override = default;
-
-  MOCK_METHOD(Player, findOneById, (const Uuid), (const, override));
-  MOCK_METHOD(Player, findOneByAccount, (const Uuid), (const, override));
-  MOCK_METHOD(Player, save, (Player), (override));
-};
-
-} // namespace
 
 TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase, ThrowsWhenAccountRepositoryIsNull)
 {
   EXPECT_THROW(
     []() {
-      auto mockPlayerRepo = std::make_shared<MockPlayerRepo>();
+      auto mockPlayerRepo = std::make_shared<MockPlayerRepository>();
       auto publisher      = std::make_shared<TestGameEventPublisher>();
       LoginUseCase(nullptr, mockPlayerRepo, publisher);
     }(),
@@ -47,7 +27,7 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase, ThrowsWhenPlayerReposi
 {
   EXPECT_THROW(
     []() {
-      auto mockAccountRepo = std::make_shared<MockAccountRepo>();
+      auto mockAccountRepo = std::make_shared<MockAccountRepository>();
       auto publisher       = std::make_shared<TestGameEventPublisher>();
       LoginUseCase(mockAccountRepo, nullptr, publisher);
     }(),
@@ -58,8 +38,8 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase, ThrowsWhenEventPublish
 {
   EXPECT_THROW(
     []() {
-      auto mockAccountRepo = std::make_shared<MockAccountRepo>();
-      auto mockPlayerRepo  = std::make_shared<MockPlayerRepo>();
+      auto mockAccountRepo = std::make_shared<MockAccountRepository>();
+      auto mockPlayerRepo  = std::make_shared<MockPlayerRepository>();
       LoginUseCase(mockAccountRepo, mockPlayerRepo, nullptr);
     }(),
     std::invalid_argument);
@@ -68,8 +48,8 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase, ThrowsWhenEventPublish
 TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase,
      PublishesFailedLoginEventWhenAccountDoesNotExist)
 {
-  auto mockAccountRepo = std::make_shared<StrictMock<MockAccountRepo>>();
-  auto mockPlayerRepo  = std::make_shared<StrictMock<MockPlayerRepo>>();
+  auto mockAccountRepo = std::make_shared<StrictMock<MockAccountRepository>>();
+  auto mockPlayerRepo  = std::make_shared<StrictMock<MockPlayerRepository>>();
   auto publisher       = std::make_shared<StrictMock<TestGameEventPublisher>>();
   LoginUseCase usecase(mockAccountRepo, mockPlayerRepo, publisher);
 
@@ -96,8 +76,8 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase,
 TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase,
      PublishesFailedLoginEventWhenCredentialsDoNotMatch)
 {
-  auto mockAccountRepo = std::make_shared<StrictMock<MockAccountRepo>>();
-  auto mockPlayerRepo  = std::make_shared<StrictMock<MockPlayerRepo>>();
+  auto mockAccountRepo = std::make_shared<StrictMock<MockAccountRepository>>();
+  auto mockPlayerRepo  = std::make_shared<StrictMock<MockPlayerRepository>>();
   auto publisher       = std::make_shared<StrictMock<TestGameEventPublisher>>();
   LoginUseCase usecase(mockAccountRepo, mockPlayerRepo, publisher);
 
@@ -127,8 +107,8 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase,
 TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase,
      PublishesSuccessfulLoginEventWhenLoginSucceed)
 {
-  auto mockAccountRepo = std::make_shared<StrictMock<MockAccountRepo>>();
-  auto mockPlayerRepo  = std::make_shared<StrictMock<MockPlayerRepo>>();
+  auto mockAccountRepo = std::make_shared<StrictMock<MockAccountRepository>>();
+  auto mockPlayerRepo  = std::make_shared<StrictMock<MockPlayerRepository>>();
   auto publisher       = std::make_shared<StrictMock<TestGameEventPublisher>>();
   LoginUseCase usecase(mockAccountRepo, mockPlayerRepo, publisher);
 
