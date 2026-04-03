@@ -58,12 +58,42 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_AccountRe
 }
 
 TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_AccountRepository,
-       Save_NotImplemented)
+       Save_InsertsNewAccount)
 {
   AccountRepository repo(this->dbConnection());
   repo.initialize();
 
-  EXPECT_THROW([&repo]() { repo.save(Account{}); }(), std::runtime_error);
+  const auto name = std::format("random-player-{:%F%T}", ::core::now());
+  Account account{
+    .username = name,
+    .password = "secret",
+  };
+
+  const auto actual = repo.save(account);
+
+  const auto maybeDbAccount = repo.findOneByName(actual.username);
+  ASSERT_TRUE(maybeDbAccount.has_value());
+  EXPECT_EQ(actual.dbId, maybeDbAccount->dbId);
+  EXPECT_EQ(actual.username, maybeDbAccount->username);
+  EXPECT_EQ(actual.password, maybeDbAccount->password);
+}
+
+TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_AccountRepository,
+       Save_FailsWhenAccountAlreadyExistsWithSameName)
+{
+  AccountRepository repo(this->dbConnection());
+  repo.initialize();
+
+  const auto account1 = insertTestAccount(*this->dbConnection());
+
+  Account account2{
+    .username = account1.username,
+    .password = "super-secret",
+  };
+
+  auto code = [&repo, &account2]() { repo.save(account2); };
+  EXPECT_THAT(code,
+              ThrowsMessage<::core::CoreException>("Failed to execute query returning single row"));
 }
 
 } // namespace bsgalone::core

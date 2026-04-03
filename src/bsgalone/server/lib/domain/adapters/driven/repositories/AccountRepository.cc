@@ -18,11 +18,19 @@ FROM
 WHERE
   name = $1
 )";
+
+constexpr auto SAVE_ACCOUNT_QUERY_NAME = "account_save";
+constexpr auto SAVE_ACCOUNT_QUERY      = R"(
+INSERT INTO account (name, password)
+  VALUES ($1, $2)
+  RETURNING id
+)";
 } // namespace
 
 void AccountRepository::initialize()
 {
   m_connection->prepare(FIND_ONE_BY_NAME_QUERY_NAME, FIND_ONE_BY_NAME_QUERY);
+  m_connection->prepare(SAVE_ACCOUNT_QUERY_NAME, SAVE_ACCOUNT_QUERY);
 }
 
 auto AccountRepository::findOneByName(const std::string &name) const -> std::optional<Account>
@@ -52,10 +60,18 @@ auto AccountRepository::findOneByName(const std::string &name) const -> std::opt
   return out;
 }
 
-auto AccountRepository::save(Account /*account*/) const -> Account
+auto AccountRepository::save(Account account) const -> Account
 {
-  // TODO: Implement this function
-  throw std::runtime_error("Not implemented");
+  auto query = [&account](pqxx::nontransaction &work) {
+    return work
+      .exec(pqxx::prepped{SAVE_ACCOUNT_QUERY_NAME}, pqxx::params{account.username, account.password})
+      .one_row();
+  };
+
+  const auto record = m_connection->executeQueryReturningSingleRow(query);
+  account.dbId      = fromDbId(record[0].as<int>());
+
+  return account;
 }
 
 } // namespace bsgalone::core
