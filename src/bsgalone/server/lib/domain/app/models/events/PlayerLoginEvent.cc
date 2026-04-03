@@ -10,8 +10,7 @@ PlayerLoginEvent::PlayerLoginEvent(const net::ClientId clientId)
 
 bool PlayerLoginEvent::successfulLogin() const
 {
-  // TODO: Shouldn't this include the role as well?
-  return m_playerDbId.has_value() && m_systemDbId.has_value();
+  return m_playerDbId.has_value() && m_role.has_value() && m_systemDbId.has_value();
 }
 
 auto PlayerLoginEvent::getClientId() const -> net::ClientId
