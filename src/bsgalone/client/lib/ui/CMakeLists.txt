@@ -8,6 +8,7 @@ add_subdirectory (
 	)
 
 target_sources (bsgalone_client_lib PRIVATE
+	${CMAKE_CURRENT_SOURCE_DIR}/LoadingUiHandler.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/Palette.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/ScreenCommon.cc
 	)

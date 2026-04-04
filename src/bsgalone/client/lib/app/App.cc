@@ -4,6 +4,8 @@
 #include "AsyncUiEventQueue.hh"
 #include "DecalRenderer.hh"
 #include "IUiCommandListener.hh"
+#include "IUiEventListener.hh"
+#include "LoadingUiHandler.hh"
 #include "LoginMessageConsumer.hh"
 #include "LoginUiHandler.hh"
 #include "OutputUiCommandAdapter.hh"
@@ -69,6 +71,7 @@ void App::loadResources(const pge::Vec2i &screenDims, pge::Renderer &engine)
   m_networkClient = std::make_shared<GameNetworkClient>();
   initializeIncomingMessageSystem();
   initializeOutgoingMessageSystem();
+  initializeInternalMessageSystem();
 
   generateUiHandlers(screenDims, engine.getTextureHandler());
   generateRenderers(screenDims, engine.getTextureHandler());
@@ -169,6 +172,30 @@ class UiCommandListenerProxy : public IUiCommandListener
   private:
   App &m_app;
 };
+
+class UiEventListenerProxy : public IUiEventListener
+{
+  public:
+  UiEventListenerProxy(App &app)
+    : IUiEventListener()
+    , m_app(app)
+  {}
+
+  ~UiEventListenerProxy() override = default;
+
+  bool isEventRelevant(const UiEventType &type) const override
+  {
+    return type == UiEventType::LOGIN_SUCCEEDED;
+  }
+
+  void onEventReceived(const IUiEvent & /*event*/) override
+  {
+    m_app.onScreenChanged(Screen::LOADING);
+  }
+
+  private:
+  App &m_app;
+};
 } // namespace
 
 void App::initializeIncomingMessageSystem()
@@ -183,22 +210,36 @@ void App::initializeOutgoingMessageSystem()
   m_uiCommandQueue->addListener(std::make_unique<OutputUiCommandAdapter>(m_networkClient));
 }
 
+void App::initializeInternalMessageSystem()
+{
+  m_uiEventQueue->addListener(std::make_unique<UiEventListenerProxy>(*this));
+}
+
 void App::generateUiHandlers(const pge::Vec2i &screenDims, pge::sprites::TexturePack &texturesLoader)
 {
   auto login = std::make_unique<LoginUiHandler>(m_uiEventQueue, m_uiCommandQueue);
   login->initializeMenus(screenDims, texturesLoader);
   m_uiHandlers[Screen::LOGIN] = std::move(login);
+
+  auto loading = std::make_unique<LoadingUiHandler>();
+  loading->initializeMenus(screenDims, texturesLoader);
+  m_uiHandlers[Screen::LOADING] = std::move(loading);
 }
 
 namespace {
-constexpr auto LOGIN_TEXTURE_FILE_PATH = "assets/login_bg.png";
-}
+constexpr auto LOGIN_TEXTURE_FILE_PATH   = "assets/login_bg.png";
+constexpr auto LOADING_TEXTURE_FILE_PATH = "assets/loading_screen.png";
+} // namespace
 
 void App::generateRenderers(const pge::Vec2i &dimensions, pge::sprites::TexturePack &texturesLoader)
 {
   auto login = std::make_unique<DecalRenderer>(LOGIN_TEXTURE_FILE_PATH);
   login->loadResources(dimensions, texturesLoader);
   m_renderers[Screen::LOGIN] = std::move(login);
+
+  auto loading = std::make_unique<DecalRenderer>(LOADING_TEXTURE_FILE_PATH);
+  loading->loadResources(dimensions, texturesLoader);
+  m_renderers[Screen::LOADING] = std::move(loading);
 }
 
 void App::onScreenChanged(const Screen screen)
