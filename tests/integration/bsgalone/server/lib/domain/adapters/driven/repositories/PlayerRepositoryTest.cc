@@ -29,35 +29,6 @@ void insertTestPlayerRole(DbConnection &dbConnection, Player &player)
   player.role = GameRole::PILOT;
 }
 
-void insertTestPlayerShip(DbConnection &dbConnection, const Player &player, const Uuid systemDbId)
-{
-  const auto name = std::format("random-ship-{:%F%T}", ::core::now());
-
-  constexpr auto QUERY_SHIP = R"(
-      INSERT INTO player_ship ("ship", "player", "name", "active",
-        "hull_points", "power_points", "x_pos", "y_pos", "z_pos")
-        VALUES (1, $1, $2, true, 100.0, 100.0, 0.0, 0.0, 0.0)
-        RETURNING id
-    )";
-
-  auto queryShip = [&name, &player](pqxx::nontransaction &work) {
-    return work.exec(QUERY_SHIP, pqxx::params{toDbId(player.dbId), name}).one_row();
-  };
-  const auto record         = dbConnection.executeQueryReturningSingleRow(queryShip);
-  const auto playerShipDbId = fromDbId(record[0].as<int>());
-
-  constexpr auto QUERY_SYSTEM = R"(
-      INSERT INTO ship_system ("ship", "system", "docked")
-        VALUES ($1, $2, true)
-    )";
-
-  auto querySystem = [playerShipDbId, systemDbId](pqxx::nontransaction &work) {
-    return work.exec(QUERY_SYSTEM, pqxx::params{toDbId(playerShipDbId), toDbId(systemDbId)})
-      .no_rows();
-  };
-  dbConnection.executeQuery(querySystem);
-}
-
 auto insertTestPlayer(DbConnection &dbConnection, const Uuid accountDbId, const bool withRole)
   -> Player
 {
@@ -117,7 +88,6 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
 
   const auto account        = insertTestAccount(*this->dbConnection());
   const auto expectedPlayer = insertTestPlayer(*this->dbConnection(), account.dbId, true);
-  insertTestPlayerShip(*this->dbConnection(), expectedPlayer, Uuid{1});
 
   const auto actual = repo.findOneById(expectedPlayer.dbId);
 
@@ -126,7 +96,6 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
   EXPECT_EQ(expectedPlayer.name, actual.name);
   EXPECT_EQ(expectedPlayer.faction, actual.faction);
   EXPECT_EQ(expectedPlayer.role, actual.role);
-  EXPECT_EQ(Uuid{1}, actual.systemDbId);
 }
 
 TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRepository,
@@ -163,7 +132,6 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
 
   const auto account        = insertTestAccount(*this->dbConnection());
   const auto expectedPlayer = insertTestPlayer(*this->dbConnection(), account.dbId, true);
-  insertTestPlayerShip(*this->dbConnection(), expectedPlayer, Uuid{1});
 
   const auto actual = repo.findOneByAccount(account.dbId);
 
@@ -172,7 +140,6 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
   EXPECT_EQ(expectedPlayer.name, actual.name);
   EXPECT_EQ(expectedPlayer.faction, actual.faction);
   EXPECT_EQ(expectedPlayer.role, actual.role);
-  EXPECT_EQ(Uuid{1}, actual.systemDbId);
 }
 
 TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRepository,
@@ -183,24 +150,6 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
 
   const auto account        = insertTestAccount(*this->dbConnection());
   const auto expectedPlayer = insertTestPlayer(*this->dbConnection(), account.dbId, false);
-  insertTestPlayerShip(*this->dbConnection(), expectedPlayer, Uuid{0});
-
-  const auto function = [&repo, &expectedPlayer]() {
-    repo.findOneByAccount(*expectedPlayer.account);
-  };
-  EXPECT_THAT(function,
-              ThrowsMessage<::core::CoreException>(
-                "Failed to execute sql query returning single row"));
-}
-
-TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRepository,
-       FindOneByAccount_FailsWhenPlayerDoesNotHaveActiveShip)
-{
-  PlayerRepository repo(this->dbConnection());
-  repo.initialize();
-
-  const auto account        = insertTestAccount(*this->dbConnection());
-  const auto expectedPlayer = insertTestPlayer(*this->dbConnection(), account.dbId, true);
 
   const auto function = [&repo, &expectedPlayer]() {
     repo.findOneByAccount(*expectedPlayer.account);
@@ -239,33 +188,11 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
 
   const auto actual = repo.save(player);
 
-  // TODO: This is currently needed because the player does not define
-  // the ships but requires them to fetch the system.
-  insertTestPlayerShip(*this->dbConnection(), actual, Uuid{0});
-
   const auto dbPlayer = repo.findOneById(actual.dbId);
   EXPECT_EQ(player.account, dbPlayer.account);
   EXPECT_EQ(player.name, dbPlayer.name);
   EXPECT_EQ(player.faction, dbPlayer.faction);
   EXPECT_EQ(player.role, dbPlayer.role);
-}
-
-TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRepository,
-       Save_DoesNotUpdateSystem)
-{
-  PlayerRepository repo(this->dbConnection());
-  repo.initialize();
-
-  const auto account = insertTestAccount(*this->dbConnection());
-  auto player        = insertTestPlayer(*this->dbConnection(), account.dbId, true);
-  insertTestPlayerShip(*this->dbConnection(), player, Uuid{0});
-
-  player.systemDbId = Uuid{1};
-
-  const auto actual = repo.save(player);
-
-  const auto dbPlayer = repo.findOneById(actual.dbId);
-  EXPECT_EQ(Uuid{0}, dbPlayer.systemDbId);
 }
 
 TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRepository,
@@ -299,7 +226,6 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
 
   const auto account = insertTestAccount(*this->dbConnection());
   const auto player  = insertTestPlayer(*this->dbConnection(), account.dbId, true);
-  insertTestPlayerShip(*this->dbConnection(), player, Uuid{1});
 
   auto updatedPlayer = player;
   updatedPlayer.name = std::format("random-player-{:%F%T}", ::core::now());
@@ -328,7 +254,6 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
     .role    = GameRole::PILOT,
   };
   player1 = repo.save(player1);
-  insertTestPlayerShip(*this->dbConnection(), player1, Uuid{1});
 
   const auto account2 = insertTestAccount(*this->dbConnection());
   Player player2{

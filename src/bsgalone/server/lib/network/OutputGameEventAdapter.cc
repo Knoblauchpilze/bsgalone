@@ -36,7 +36,6 @@ void publishLoginMessage(core::IOutputNetworkAdapter &adapter, const core::Playe
   {
     message.setPlayerDbId(event.tryGetPlayerDbId().value());
     message.setRole(event.tryGetRole().value());
-    message.setSystemDbId(event.tryGetSystemDbId().value());
   }
 
   adapter.sendMessage(event.getClientId(), message);

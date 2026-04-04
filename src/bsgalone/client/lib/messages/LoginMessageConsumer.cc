@@ -35,7 +35,7 @@ void LoginMessageConsumer::onEventReceived(const core::IMessage &event)
     return;
   }
 
-  m_store->onPlayerLoggedIn(login.getPlayerDbId(), login.getSystemDbId(), login.getRole());
+  m_store->onPlayerLoggedIn(login.getPlayerDbId(), login.getRole());
   m_queue->pushEvent(std::make_unique<LoginSucceededEvent>());
 }
 

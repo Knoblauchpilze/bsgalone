@@ -16,7 +16,6 @@ void assertMessagesAreEqual(const LoginMessage &actual, const LoginMessage &expe
   {
     EXPECT_EQ(actual.getPlayerDbId(), expected.getPlayerDbId());
     EXPECT_EQ(actual.getRole(), expected.getRole());
-    EXPECT_EQ(actual.getSystemDbId(), expected.getSystemDbId());
   }
 }
 } // namespace
@@ -34,7 +33,6 @@ TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage, DoesNotDefinePlayerDataByD
 
   EXPECT_THROW([&message]() { message.getPlayerDbId(); }(), std::bad_optional_access);
   EXPECT_THROW([&message]() { message.getRole(); }(), std::bad_optional_access);
-  EXPECT_THROW([&message]() { message.getSystemDbId(); }(), std::bad_optional_access);
 }
 
 TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage,
@@ -48,9 +46,6 @@ TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage,
   EXPECT_FALSE(message.successfullyLoggedIn());
 
   message.setRole(GameRole::PILOT);
-  EXPECT_FALSE(message.successfullyLoggedIn());
-
-  message.setSystemDbId(Uuid{19});
   EXPECT_TRUE(message.successfullyLoggedIn());
 }
 
@@ -59,11 +54,9 @@ TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage, ReturnsPlayerDataWhenSet)
   LoginMessage message;
   message.setPlayerDbId(Uuid{18});
   message.setRole(GameRole::PILOT);
-  message.setSystemDbId(Uuid{19});
 
   EXPECT_EQ(Uuid{18}, message.getPlayerDbId());
   EXPECT_EQ(GameRole::PILOT, message.getRole());
-  EXPECT_EQ(Uuid{19}, message.getSystemDbId());
 }
 
 TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage, WithoutPlayerData)
@@ -80,7 +73,6 @@ TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage, WithPlayerData)
   LoginMessage expected;
   expected.setPlayerDbId(Uuid{18});
   expected.setRole(GameRole::PILOT);
-  expected.setSystemDbId(Uuid{19});
 
   const auto actual = serializeAndDeserializeMessage(expected);
 
@@ -102,7 +94,6 @@ TEST(Unit_Bsgalone_Core_Messages_Credentials_LoginMessage, CloneWithPlayerData)
   LoginMessage expected;
   expected.setPlayerDbId(Uuid{18});
   expected.setRole(GameRole::PILOT);
-  expected.setSystemDbId(Uuid{19});
 
   const auto cloned = expected.clone();
 

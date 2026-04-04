@@ -16,7 +16,6 @@ struct Player
   std::string name{};
   Faction faction{};
   GameRole role{};
-  Uuid systemDbId{};
 
   bool operator==(const Player &rhs) const;
 };

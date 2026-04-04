@@ -127,12 +127,11 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase,
   EXPECT_CALL(*mockAccountRepo, findOneByName("player")).Times(1).WillOnce(Return(account));
 
   Player player{
-    .dbId       = Uuid{236},
-    .account    = account.dbId,
-    .name       = "player",
-    .faction    = Faction::COLONIAL,
-    .role       = GameRole::GUNNER,
-    .systemDbId = Uuid{19},
+    .dbId    = Uuid{236},
+    .account = account.dbId,
+    .name    = "player",
+    .faction = Faction::COLONIAL,
+    .role    = GameRole::GUNNER,
   };
   EXPECT_CALL(*mockPlayerRepo, findOneByAccount(account.dbId)).Times(1).WillOnce(Return(player));
 
@@ -149,7 +148,6 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase,
   EXPECT_TRUE(event->as<PlayerLoginEvent>().successfulLogin());
   EXPECT_EQ(player.dbId, event->as<PlayerLoginEvent>().tryGetPlayerDbId());
   EXPECT_EQ(data.role, event->as<PlayerLoginEvent>().tryGetRole());
-  EXPECT_EQ(Uuid{19}, event->as<PlayerLoginEvent>().tryGetSystemDbId());
 }
 
 } // namespace bsgalone::core

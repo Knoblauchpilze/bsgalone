@@ -42,7 +42,6 @@ void SignupUseCase::performSignup(const SignupData &data)
 
   event->setPlayerDbId(maybePlayer->dbId);
   event->setFaction(maybePlayer->faction);
-  event->setSystemDbId(maybePlayer->systemDbId);
 
   m_eventPublisher->publishEvent(std::move(event));
 }
@@ -85,7 +84,6 @@ auto SignupUseCase::registerPlayer(const core::Account &account, const SignupDat
     .name    = data.username,
     .faction = data.faction,
     .role    = core::GameRole::PILOT,
-    // TODO: System
   };
   return m_playerRepo->save(player);
 }

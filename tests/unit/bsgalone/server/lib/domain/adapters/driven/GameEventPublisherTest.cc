@@ -29,7 +29,6 @@ TEST(Unit_Bsgalone_Server_Domain_Adapters_Driven_GameEventPublisher, ForwardsMes
   EXPECT_FALSE(actual.successfulLogin());
   EXPECT_FALSE(actual.tryGetPlayerDbId().has_value());
   EXPECT_FALSE(actual.tryGetRole().has_value());
-  EXPECT_FALSE(actual.tryGetSystemDbId().has_value());
 }
 
 } // namespace bsgalone::core

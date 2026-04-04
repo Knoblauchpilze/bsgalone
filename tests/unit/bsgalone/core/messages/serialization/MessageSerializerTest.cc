@@ -16,7 +16,6 @@ TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageSerializer, SerializesLogi
   LoginMessage message;
   message.setPlayerDbId(Uuid{18});
   message.setRole(GameRole::PILOT);
-  message.setSystemDbId(Uuid{19});
 
   const auto actual = serializer.serializeMessage(message);
 

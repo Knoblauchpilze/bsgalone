@@ -56,19 +56,6 @@ INSERT INTO player_role (player, role)
   SET
     role = excluded.role
 )";
-
-constexpr auto FIND_SYSTEM_QUERY_NAME = "player_find_system";
-constexpr auto FIND_SYSTEM_QUERY      = R"(
-SELECT
-  ss.system
-FROM
-  player_ship AS ps
-  LEFT JOIN ship_system AS ss ON ps.id = ss.ship
-  LEFT JOIN player AS p ON ps.player = p.id
-WHERE
-  ps.active = true
-  AND ps.player = $1
-)";
 } // namespace
 
 void PlayerRepository::initialize()
@@ -77,7 +64,6 @@ void PlayerRepository::initialize()
   m_connection->prepare(FIND_ONE_BY_ACCOUNT_QUERY_NAME, FIND_ONE_BY_ACCOUNT_QUERY);
   m_connection->prepare(UPDATE_PLAYER_QUERY_NAME, UPDATE_PLAYER_QUERY);
   m_connection->prepare(UPDATE_PLAYER_ROLE_QUERY_NAME, UPDATE_PLAYER_ROLE_QUERY);
-  m_connection->prepare(FIND_SYSTEM_QUERY_NAME, FIND_SYSTEM_QUERY);
 }
 
 namespace {
@@ -106,7 +92,7 @@ auto PlayerRepository::findOneById(const Uuid playerDbId) const -> Player
   };
   const auto record = m_connection->executeQueryReturningSingleRow(query);
 
-  return enrichWithSystem(buildPlayerFromDbRow(record));
+  return buildPlayerFromDbRow(record);
 }
 
 auto PlayerRepository::findOneByAccount(const Uuid accountDbId) const -> Player
@@ -118,7 +104,7 @@ auto PlayerRepository::findOneByAccount(const Uuid accountDbId) const -> Player
   };
   const auto record = m_connection->executeQueryReturningSingleRow(query);
 
-  return enrichWithSystem(buildPlayerFromDbRow(record));
+  return buildPlayerFromDbRow(record);
 }
 
 auto PlayerRepository::save(Player player) -> Player
@@ -151,20 +137,6 @@ auto PlayerRepository::save(Player player) -> Player
   {
     error("Failed to save player role: " + *res.error);
   }
-
-  return player;
-}
-
-auto PlayerRepository::enrichWithSystem(Player player) const -> Player
-{
-  const auto query = [&player](pqxx::nontransaction &work) {
-    return work.exec(pqxx::prepped{FIND_SYSTEM_QUERY_NAME}, pqxx::params{toDbId(player.dbId)})
-      .one_row();
-  };
-
-  const auto record = m_connection->executeQueryReturningSingleRow(query);
-
-  player.systemDbId = fromDbId(record[0].as<int>());
 
   return player;
 }

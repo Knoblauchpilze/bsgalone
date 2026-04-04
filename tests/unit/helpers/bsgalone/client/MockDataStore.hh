@@ -14,9 +14,7 @@ class MockDataStore : public bsgalone::client::IDataStore
 
   MOCK_METHOD(void,
               onPlayerLoggedIn,
-              (const bsgalone::core::Uuid,
-               const bsgalone::core::Uuid,
-               const bsgalone::core::GameRole),
+              (const bsgalone::core::Uuid, const bsgalone::core::GameRole),
               (override));
 };
 

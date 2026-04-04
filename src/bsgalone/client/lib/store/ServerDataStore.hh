@@ -13,16 +13,13 @@ class ServerDataStore : public IDataStore, public ::core::CoreObject
 
   ~ServerDataStore() override = default;
 
-  void onPlayerLoggedIn(const core::Uuid playerDbId,
-                        const core::Uuid systemDbId,
-                        const core::GameRole role) override;
+  void onPlayerLoggedIn(const core::Uuid playerDbId, const core::GameRole role) override;
 
   private:
   /// @brief - Holds the data representing the player currently logged in.
   struct PlayerData
   {
     core::Uuid playerDbId{};
-    core::Uuid systemDbId{};
     core::GameRole role{};
   };
 

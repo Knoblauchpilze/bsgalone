@@ -138,8 +138,6 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_SignupUseCase,
       .name    = data.username,
       .faction = data.faction,
       .role    = core::GameRole::PILOT,
-      // TODO: Can this value come from the adapter?
-      .systemDbId = Uuid{19},
     }));
 
   usecase.performSignup(data);
@@ -152,7 +150,6 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_SignupUseCase,
   EXPECT_TRUE(actual.successfulSignup());
   EXPECT_EQ(Uuid{17}, actual.tryGetPlayerDbId().value());
   EXPECT_EQ(data.faction, actual.tryGetFaction());
-  EXPECT_EQ(Uuid{19}, actual.tryGetSystemDbId());
 }
 
 TEST(Unit_Bsgalone_Core_Domain_App_Usecases_SignupUseCase, DelegatesAccountCreationToAdapter)

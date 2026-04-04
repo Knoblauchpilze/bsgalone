@@ -20,11 +20,9 @@ class PlayerLoginEvent : public IGameEvent
   auto getClientId() const -> net::ClientId;
   auto tryGetPlayerDbId() const -> std::optional<Uuid>;
   auto tryGetRole() const -> std::optional<GameRole>;
-  auto tryGetSystemDbId() const -> std::optional<Uuid>;
 
   void setPlayerDbId(const Uuid playerDbId);
   void setRole(const GameRole role);
-  void setSystemDbId(const Uuid systemDbId);
 
   auto clone() const -> IGameEventPtr override;
 
@@ -32,7 +30,6 @@ class PlayerLoginEvent : public IGameEvent
   net::ClientId m_clientId{};
   std::optional<Uuid> m_playerDbId{};
   std::optional<GameRole> m_role{};
-  std::optional<Uuid> m_systemDbId{};
 };
 
 } // namespace bsgalone::core

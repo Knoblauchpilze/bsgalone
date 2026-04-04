@@ -18,11 +18,9 @@ class LoginMessage : public IMessage
   bool successfullyLoggedIn() const;
   auto getPlayerDbId() const -> Uuid;
   auto getRole() const -> GameRole;
-  auto getSystemDbId() const -> Uuid;
 
   void setPlayerDbId(const Uuid playerDbId);
   void setRole(const GameRole role);
-  void setSystemDbId(const Uuid systemDbId);
 
   auto clone() const -> IMessagePtr override;
 
@@ -38,7 +36,6 @@ class LoginMessage : public IMessage
   private:
   std::optional<Uuid> m_playerDbId{};
   std::optional<GameRole> m_role{};
-  std::optional<Uuid> m_systemDbId{};
 
   friend auto operator<<(std::ostream &out, const LoginMessage &message) -> std::ostream &;
 };

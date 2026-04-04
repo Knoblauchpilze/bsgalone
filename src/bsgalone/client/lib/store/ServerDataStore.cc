@@ -9,9 +9,7 @@ ServerDataStore::ServerDataStore()
   setService("store");
 }
 
-void ServerDataStore::onPlayerLoggedIn(const core::Uuid playerDbId,
-                                       const core::Uuid systemDbId,
-                                       const core::GameRole role)
+void ServerDataStore::onPlayerLoggedIn(const core::Uuid playerDbId, const core::GameRole role)
 {
   if (m_playerData.has_value())
   {
@@ -20,7 +18,6 @@ void ServerDataStore::onPlayerLoggedIn(const core::Uuid playerDbId,
 
   m_playerData = PlayerData{
     .playerDbId = playerDbId,
-    .systemDbId = systemDbId,
     .role       = role,
   };
 

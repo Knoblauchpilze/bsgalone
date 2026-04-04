@@ -58,15 +58,13 @@ TEST(Unit_Bsgalone_Client_Messages_LoginMessageConsumer, PublishesLoginFailedEve
 TEST(Unit_Bsgalone_Client_Messages_LoginMessageConsumer, ForwardsToStoreWhenLoginSucceeded)
 {
   auto mockStore = std::make_shared<StrictMock<MockDataStore>>();
-  EXPECT_CALL(*mockStore, onPlayerLoggedIn(core::Uuid{18}, core::Uuid{19}, core::GameRole::PILOT))
-    .Times(1);
+  EXPECT_CALL(*mockStore, onPlayerLoggedIn(core::Uuid{18}, core::GameRole::PILOT)).Times(1);
 
   LoginMessageConsumer consumer(mockStore, std::make_shared<TestUiEventQueue>());
 
   core::LoginMessage message;
   message.setPlayerDbId(core::Uuid{18});
   message.setRole(core::GameRole::PILOT);
-  message.setSystemDbId(core::Uuid{19});
 
   consumer.onEventReceived(message);
 }
@@ -80,7 +78,6 @@ TEST(Unit_Bsgalone_Client_Messages_LoginMessageConsumer,
   core::LoginMessage message;
   message.setPlayerDbId(core::Uuid{18});
   message.setRole(core::GameRole::PILOT);
-  message.setSystemDbId(core::Uuid{19});
   consumer.onEventReceived(message);
 
   EXPECT_EQ(1u, queue->messages().size());

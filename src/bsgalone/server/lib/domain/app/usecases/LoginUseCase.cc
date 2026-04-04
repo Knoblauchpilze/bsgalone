@@ -41,7 +41,6 @@ void LoginUseCase::performLogin(const LoginData &data)
 
   event->setPlayerDbId(player.dbId);
   event->setRole(player.role);
-  event->setSystemDbId(player.systemDbId);
 
   m_eventPublisher->publishEvent(std::move(event));
 }
