@@ -1,7 +1,6 @@
 
 #pragma once
 
-#include "ClientManager.hh"
 #include "IGameEventListener.hh"
 #include "IMessageQueue.hh"
 #include "IOutputNetworkAdapter.hh"
