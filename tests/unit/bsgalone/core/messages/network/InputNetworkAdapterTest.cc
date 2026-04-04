@@ -1,6 +1,7 @@
 
 #include "InputNetworkAdapter.hh"
 #include "DataReceivedEvent.hh"
+#include "LoginMessage.hh"
 #include "LoginRequest.hh"
 #include "MessageParser.hh"
 #include "SignupRequest.hh"
@@ -53,7 +54,31 @@ TEST(Unit_Bsgalone_Core_Messages_Network_InputNetworkAdapter, CorrectlyPublishes
   EXPECT_EQ(GameRole::PILOT, actual.getRole());
 }
 
-// TODO: Restore a test when a message exists with no client identifier.
+TEST(Unit_Bsgalone_Core_Messages_Network_InputNetworkAdapter,
+     CorrectlyPublishesCompleteMessageWithNoClientId)
+{
+  auto queue = std::make_shared<TestMessageQueue>();
+  InputNetworkAdapter adapter(queue, std::make_unique<MessageParser>());
+
+  LoginMessage message;
+  message.setPlayerDbId(Uuid{18});
+  message.setRole(GameRole::PILOT);
+
+  std::stringstream out;
+  out << message;
+  const auto serialized = out.str();
+  const std::vector<char> data(serialized.begin(), serialized.end());
+
+  const net::DataReceivedEvent event({}, data);
+
+  adapter.onEventReceived(event);
+
+  EXPECT_EQ(1u, queue->messages().size());
+  EXPECT_EQ(MessageType::LOGIN, queue->messages().at(0)->type());
+  const auto &actual = queue->messages().at(0)->as<LoginMessage>();
+  EXPECT_EQ(Uuid{18}, actual.getPlayerDbId());
+  EXPECT_EQ(GameRole::PILOT, actual.getRole());
+}
 
 TEST(Unit_Bsgalone_Core_Messages_Network_InputNetworkAdapter,
      DoesNotPublishMessageWhenIncompleteDataIsReceived)

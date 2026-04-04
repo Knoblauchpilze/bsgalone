@@ -211,23 +211,6 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_SignupUseCase, DelegatesPlayerCreati
   EXPECT_EQ(data.username, captured.name);
   EXPECT_EQ(data.faction, captured.faction);
   EXPECT_EQ(GameRole::PILOT, captured.role);
-  // TODO: Assert system
 }
-
-// TODO: Implement those tests
-TEST(Unit_Bsgalone_Core_Domain_App_Usecases_SignupUseCase, CreatesDefaultResourcesForNewPlayer) {}
-
-TEST(Unit_Bsgalone_Core_Domain_App_Usecases_SignupUseCase, AssignsDefaultShipForNewColonialPlayer)
-{}
-
-TEST(Unit_Bsgalone_Core_Domain_App_Usecases_SignupUseCase, AssignsDefaultShipForNewCylonPlayer) {}
-
-TEST(Unit_Bsgalone_Core_Domain_App_Usecases_SignupUseCase,
-     RegistersDefaultSystemForNewColonialPlayer)
-{}
-
-TEST(Unit_Bsgalone_Core_Domain_App_Usecases_SignupUseCase, CreatesColonialPlayerInStartingSystem) {}
-
-TEST(Unit_Bsgalone_Core_Domain_App_Usecases_SignupUseCase, CreatesCylonPlayerInStartingSystem) {}
 
 } // namespace bsgalone::core
