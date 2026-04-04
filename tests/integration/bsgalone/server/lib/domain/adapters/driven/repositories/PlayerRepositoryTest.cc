@@ -105,7 +105,8 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
   PlayerRepository repo(this->dbConnection());
 
   EXPECT_THAT([&repo]() { repo.findOneByAccount(Uuid{269871}); },
-              ThrowsMessage<::core::CoreException>("Failed to execute query returning single row"));
+              ThrowsMessage<::core::CoreException>(
+                "Failed to execute sql query returning single row"));
 }
 
 TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRepository,
@@ -139,7 +140,8 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
 
   const auto function = [&repo, &expectedPlayer]() { repo.findOneById(expectedPlayer.dbId); };
   EXPECT_THAT(function,
-              ThrowsMessage<::core::CoreException>("Failed to execute query returning single row"));
+              ThrowsMessage<::core::CoreException>(
+                "Failed to execute sql query returning single row"));
 }
 
 TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRepository,
@@ -149,7 +151,8 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
   repo.initialize();
 
   EXPECT_THAT([&repo]() { repo.findOneById(Uuid{269871}); },
-              ThrowsMessage<::core::CoreException>("Failed to execute query returning single row"));
+              ThrowsMessage<::core::CoreException>(
+                "Failed to execute sql query returning single row"));
 }
 
 TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRepository,
@@ -186,7 +189,8 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
     repo.findOneByAccount(*expectedPlayer.account);
   };
   EXPECT_THAT(function,
-              ThrowsMessage<::core::CoreException>("Failed to execute query returning single row"));
+              ThrowsMessage<::core::CoreException>(
+                "Failed to execute sql query returning single row"));
 }
 
 TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRepository,
@@ -202,7 +206,8 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
     repo.findOneByAccount(*expectedPlayer.account);
   };
   EXPECT_THAT(function,
-              ThrowsMessage<::core::CoreException>("Failed to execute query returning single row"));
+              ThrowsMessage<::core::CoreException>(
+                "Failed to execute sql query returning single row"));
 }
 
 TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRepository,
@@ -212,7 +217,8 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
   repo.initialize();
 
   EXPECT_THAT([&repo]() { repo.findOneByAccount(Uuid{269871}); },
-              ThrowsMessage<::core::CoreException>("Failed to execute query returning single row"));
+              ThrowsMessage<::core::CoreException>(
+                "Failed to execute sql query returning single row"));
 }
 
 TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRepository,
@@ -281,7 +287,8 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
 
   auto code = [&repo, &player2]() { repo.save(player2); };
   EXPECT_THAT(code,
-              ThrowsMessage<::core::CoreException>("Failed to execute query returning single row"));
+              ThrowsMessage<::core::CoreException>(
+                "Failed to execute sql query returning single row"));
 }
 
 TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRepository,

@@ -43,7 +43,7 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_AccountRe
   AccountRepository repo(this->dbConnection());
 
   EXPECT_THAT([&repo]() { repo.findOneByName("player"); },
-              ThrowsMessage<::core::CoreException>("Failed to execute query"));
+              ThrowsMessage<::core::CoreException>("Failed to execute sql query"));
 }
 
 TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_AccountRepository,
@@ -93,7 +93,8 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_AccountRe
 
   auto code = [&repo, &account2]() { repo.save(account2); };
   EXPECT_THAT(code,
-              ThrowsMessage<::core::CoreException>("Failed to execute query returning single row"));
+              ThrowsMessage<::core::CoreException>(
+                "Failed to execute sql query returning single row"));
 }
 
 } // namespace bsgalone::core

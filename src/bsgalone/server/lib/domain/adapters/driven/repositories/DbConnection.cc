@@ -65,23 +65,12 @@ void DbConnection::prepare(const std::string &queryName, const std::string &sql)
 
 auto DbConnection::executeQuery(const SqlQuery &query) -> pqxx::result
 {
-  const auto res = tryExecuteQuery(query);
-  if (res.error)
-  {
-    error("Failed to execute query", *res.error);
-  }
-
-  return *res.result;
-}
-
-auto DbConnection::tryExecuteQuery(const SqlQuery &query) -> SqlResult
-{
-  SqlResult out{};
+  checkConnected();
 
   try
   {
-    auto work  = nonTransaction();
-    out.result = query(work);
+    auto work = nonTransaction();
+    return query(work);
   }
   catch (const pqxx::sql_error &e)
   {
@@ -90,56 +79,48 @@ auto DbConnection::tryExecuteQuery(const SqlQuery &query) -> SqlResult
            + ", location[column: " + std::to_string(e.location.column()) + ", file_name:"
            + e.location.file_name() + ", function_name: " + e.location.function_name()
            + ", line: " + std::to_string(e.location.line()));
-    out.error = e.sqlstate();
+    error("Failed to execute sql query", e.sqlstate());
   }
   catch (const std::exception &e)
   {
-    warn("Failed to execute sql query", e.what());
-    out.error = e.what();
+    error("Failed to execute sql query", e.what());
   }
 
-  return out;
+  // Note: this is not reachable because the error statements above
+  // will always throw.
+  return {};
 }
 
 auto DbConnection::executeQueryReturningSingleRow(const SqlQueryReturningSingleRow &query)
   -> pqxx::row
 {
-  const auto res = tryExecuteQueryReturningSingleRow(query);
-  if (res.error)
-  {
-    error("Failed to execute query returning single row", *res.error);
-  }
-
-  return *res.result;
-}
-
-auto DbConnection::tryExecuteQueryReturningSingleRow(const SqlQueryReturningSingleRow &query)
-  -> SingleSqlRowResult
-{
-  SingleSqlRowResult out{};
+  checkConnected();
 
   try
   {
-    auto work  = nonTransaction();
-    out.result = query(work);
+    auto work = nonTransaction();
+    return query(work);
   }
   catch (const pqxx::sql_error &e)
   {
     warn("Failed to execute sql query returning single row",
          "Query: " + e.query() + ", code: " + e.sqlstate());
-    out.error = e.sqlstate();
+    error("Failed to execute sql query returning single row", e.sqlstate());
   }
   catch (const std::exception &e)
   {
-    warn("Failed to execute sql query returning single row", e.what());
-    out.error = e.what();
+    error("Failed to execute sql query returning single row", e.what());
   }
 
-  return out;
+  // Note: this is not reachable because the error statements above
+  // will always throw.
+  return {};
 }
 
 auto DbConnection::tryExecuteTransaction(const SqlTransaction &query) -> SqlResult
 {
+  checkConnected();
+
   SqlResult out{};
 
   try
@@ -166,6 +147,14 @@ void DbConnection::setupDbConnection()
 {
   const auto connectionStr = generateConnectionString();
   m_connection             = std::make_unique<pqxx::connection>(connectionStr);
+}
+
+void DbConnection::checkConnected()
+{
+  if (m_connection == nullptr)
+  {
+    error("Not connected, please call connect before executing sql queries");
+  }
 }
 
 auto DbConnection::transaction() -> pqxx::work
