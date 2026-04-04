@@ -54,6 +54,7 @@ void CredentialsUiHandler::initializeMenus(const pge::Vec2i &dimensions,
   auto pwdCallback = [this](const std::string &text) { onPasswordChanged(text); };
   addTextFieldSectionToMenu(*m_credentialsPanel, "Password:", pwdCallback, "aze");
 
+  // Note: this makes it faster to test by not having to type credentials in.
   m_credentials.username = "colo";
   m_credentials.password = "aze";
 }

@@ -8,10 +8,6 @@
 #include "log/PrefixedLogger.hh"
 #include "log/StdLogger.hh"
 
-constexpr auto USERNAME_ENV_KEY  = "USERNAME";
-constexpr auto PASSWORD_ENV_KEY  = "PASSWORD";
-constexpr auto GAME_ROLE_ENV_KEY = "GAMEROLE";
-
 int main(int /*argc*/, char ** /*argv*/)
 {
   core::log::StdLogger raw;
