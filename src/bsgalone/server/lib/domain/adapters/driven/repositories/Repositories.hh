@@ -4,7 +4,7 @@
 #include "AccountRepository.hh"
 #include "PlayerRepository.hh"
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 
 struct Repositories
 {
@@ -15,4 +15,4 @@ struct Repositories
   PlayerRepositoryShPtr playerRepository{};
 };
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server

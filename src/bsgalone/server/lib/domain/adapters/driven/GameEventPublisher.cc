@@ -1,7 +1,7 @@
 
 #include "GameEventPublisher.hh"
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 
 GameEventPublisher::GameEventPublisher(server::IGameEventQueueShPtr queue)
   : m_queue(std::move(queue))
@@ -17,4 +17,4 @@ void GameEventPublisher::publishEvent(IGameEventPtr event)
   m_queue->pushEvent(std::move(event));
 }
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server

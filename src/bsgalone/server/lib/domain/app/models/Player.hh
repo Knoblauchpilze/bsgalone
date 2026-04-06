@@ -7,17 +7,17 @@
 #include <optional>
 #include <string>
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 
 struct Player
 {
-  Uuid dbId{};
-  std::optional<Uuid> account{};
+  core::Uuid dbId{};
+  std::optional<core::Uuid> account{};
   std::string name{};
-  Faction faction{};
-  GameRole role{};
+  core::Faction faction{};
+  core::GameRole role{};
 
   bool operator==(const Player &rhs) const;
 };
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server

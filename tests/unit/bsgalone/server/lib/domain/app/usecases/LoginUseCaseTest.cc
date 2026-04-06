@@ -10,9 +10,9 @@
 using namespace test;
 using namespace ::testing;
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 
-TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase, ThrowsWhenAccountRepositoryIsNull)
+TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase, ThrowsWhenAccountRepositoryIsNull)
 {
   EXPECT_THROW(
     []() {
@@ -23,7 +23,7 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase, ThrowsWhenAccountRepos
     std::invalid_argument);
 }
 
-TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase, ThrowsWhenPlayerRepositoryIsNull)
+TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase, ThrowsWhenPlayerRepositoryIsNull)
 {
   EXPECT_THROW(
     []() {
@@ -34,7 +34,7 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase, ThrowsWhenPlayerReposi
     std::invalid_argument);
 }
 
-TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase, ThrowsWhenEventPublisherIsNull)
+TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase, ThrowsWhenEventPublisherIsNull)
 {
   EXPECT_THROW(
     []() {
@@ -45,7 +45,7 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase, ThrowsWhenEventPublish
     std::invalid_argument);
 }
 
-TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase,
+TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase,
      PublishesFailedLoginEventWhenAccountDoesNotExist)
 {
   auto mockAccountRepo = std::make_shared<StrictMock<MockAccountRepository>>();
@@ -56,7 +56,7 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase,
   LoginData data{
     .username = "player",
     .password = "password",
-    .role     = GameRole::PILOT,
+    .role     = core::GameRole::PILOT,
     .clientId = net::ClientId{12},
   };
 
@@ -73,7 +73,7 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase,
   EXPECT_FALSE(event->as<PlayerLoginEvent>().successfulLogin());
 }
 
-TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase,
+TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase,
      PublishesFailedLoginEventWhenCredentialsDoNotMatch)
 {
   auto mockAccountRepo = std::make_shared<StrictMock<MockAccountRepository>>();
@@ -84,12 +84,12 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase,
   LoginData data{
     .username = "player",
     .password = "password",
-    .role     = GameRole::PILOT,
+    .role     = core::GameRole::PILOT,
     .clientId = net::ClientId{12},
   };
 
   Account account{
-    .dbId     = Uuid{0},
+    .dbId     = core::Uuid{0},
     .username = "player",
     .password = "new-password",
   };
@@ -104,7 +104,7 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase,
   EXPECT_FALSE(event->as<PlayerLoginEvent>().successfulLogin());
 }
 
-TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase,
+TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase,
      PublishesSuccessfulLoginEventWhenLoginSucceed)
 {
   auto mockAccountRepo = std::make_shared<StrictMock<MockAccountRepository>>();
@@ -115,23 +115,23 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase,
   LoginData data{
     .username = "player",
     .password = "password",
-    .role     = GameRole::PILOT,
+    .role     = core::GameRole::PILOT,
     .clientId = net::ClientId{12},
   };
 
   Account account{
-    .dbId     = Uuid{145},
+    .dbId     = core::Uuid{145},
     .username = "player",
     .password = "password",
   };
   EXPECT_CALL(*mockAccountRepo, findOneByName("player")).Times(1).WillOnce(Return(account));
 
   Player player{
-    .dbId    = Uuid{236},
+    .dbId    = core::Uuid{236},
     .account = account.dbId,
     .name    = "player",
-    .faction = Faction::COLONIAL,
-    .role    = GameRole::GUNNER,
+    .faction = core::Faction::COLONIAL,
+    .role    = core::GameRole::GUNNER,
   };
   EXPECT_CALL(*mockPlayerRepo, findOneByAccount(account.dbId)).Times(1).WillOnce(Return(player));
 
@@ -150,4 +150,4 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_LoginUseCase,
   EXPECT_EQ(data.role, event->as<PlayerLoginEvent>().tryGetRole());
 }
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server

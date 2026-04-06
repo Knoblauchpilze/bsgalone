@@ -5,7 +5,7 @@
 #include <memory>
 #include <optional>
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 
 class ForManagingAccount
 {
@@ -19,4 +19,4 @@ class ForManagingAccount
 
 using ForManagingAccountShPtr = std::shared_ptr<ForManagingAccount>;
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server

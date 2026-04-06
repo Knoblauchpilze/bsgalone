@@ -3,7 +3,7 @@
 
 namespace test {
 
-void TestGameEventPublisher::publishEvent(bsgalone::core::IGameEventPtr event)
+void TestGameEventPublisher::publishEvent(bsgalone::server::IGameEventPtr event)
 {
   m_queue.pushEvent(std::move(event));
 }

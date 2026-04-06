@@ -1,11 +1,11 @@
 
 #include "Player.hh"
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 
 bool Player::operator==(const Player &rhs) const
 {
   return dbId == rhs.dbId;
 }
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server

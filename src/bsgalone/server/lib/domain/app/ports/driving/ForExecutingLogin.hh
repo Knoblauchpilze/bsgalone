@@ -4,7 +4,7 @@
 #include "LoginData.hh"
 #include <memory>
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 
 class ForExecutingLogin
 {
@@ -17,4 +17,4 @@ class ForExecutingLogin
 
 using ForExecutingLoginPtr = std::unique_ptr<ForExecutingLogin>;
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server

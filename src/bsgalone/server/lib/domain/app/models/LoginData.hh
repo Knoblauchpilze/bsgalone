@@ -5,14 +5,14 @@
 #include "GameRole.hh"
 #include <string>
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 
 struct LoginData
 {
   std::string username{};
   std::string password{};
-  GameRole role{};
+  core::GameRole role{};
   net::ClientId clientId{};
 };
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server

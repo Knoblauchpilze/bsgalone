@@ -4,7 +4,7 @@
 #include "ForPublishingEvent.hh"
 #include "IGameEventQueue.hh"
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 
 class GameEventPublisher : public ForPublishingEvent
 {
@@ -18,4 +18,4 @@ class GameEventPublisher : public ForPublishingEvent
   server::IGameEventQueueShPtr m_queue{};
 };
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server

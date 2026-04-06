@@ -7,21 +7,21 @@
 
 namespace bsgalone::server {
 
-auto Configurator::createSignupDrivingAdapter(core::ForPublishingEventShPtr publisher) const
+auto Configurator::createSignupDrivingAdapter(ForPublishingEventShPtr publisher) const
   -> core::IMessageListenerPtr
 {
-  auto useCase = std::make_unique<core::SignupUseCase>(m_repositories.accountRepository,
-                                                       m_repositories.playerRepository,
-                                                       std::move(publisher));
+  auto useCase = std::make_unique<SignupUseCase>(m_repositories.accountRepository,
+                                                 m_repositories.playerRepository,
+                                                 std::move(publisher));
   return std::make_unique<SignupRequestConsumer>(std::move(useCase));
 }
 
-auto Configurator::createLoginDrivingAdapter(core::ForPublishingEventShPtr publisher) const
+auto Configurator::createLoginDrivingAdapter(ForPublishingEventShPtr publisher) const
   -> core::IMessageListenerPtr
 {
-  auto useCase = std::make_unique<core::LoginUseCase>(m_repositories.accountRepository,
-                                                      m_repositories.playerRepository,
-                                                      std::move(publisher));
+  auto useCase = std::make_unique<LoginUseCase>(m_repositories.accountRepository,
+                                                m_repositories.playerRepository,
+                                                std::move(publisher));
   return std::make_unique<LoginRequestConsumer>(std::move(useCase));
 }
 

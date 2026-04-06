@@ -1,7 +1,7 @@
 
 #include "AccountRepository.hh"
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 
 AccountRepository::AccountRepository(DbConnectionShPtr connection)
   : AbstractRepository("account", std::move(connection))
@@ -53,7 +53,7 @@ auto AccountRepository::findOneByName(const std::string &name) const -> std::opt
   Account out;
 
   const auto &record = rows[0];
-  out.dbId           = fromDbId(record[0].as<int>());
+  out.dbId           = core::fromDbId(record[0].as<int>());
   out.username       = name;
   out.password       = record[1].as<std::string>();
 
@@ -69,9 +69,9 @@ auto AccountRepository::save(Account account) const -> Account
   };
 
   const auto record = m_connection->executeQueryReturningSingleRow(query);
-  account.dbId      = fromDbId(record[0].as<int>());
+  account.dbId      = core::fromDbId(record[0].as<int>());
 
   return account;
 }
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server

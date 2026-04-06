@@ -13,8 +13,8 @@ class OutputGameEventAdapter : public IGameEventListener
   OutputGameEventAdapter(core::IOutputNetworkAdapterPtr networkClient);
   ~OutputGameEventAdapter() override = default;
 
-  bool isEventRelevant(const core::GameEventType &type) const override;
-  void onEventReceived(const core::IGameEvent &event) override;
+  bool isEventRelevant(const GameEventType &type) const override;
+  void onEventReceived(const IGameEvent &event) override;
 
   private:
   core::IOutputNetworkAdapterPtr m_networkClient{};

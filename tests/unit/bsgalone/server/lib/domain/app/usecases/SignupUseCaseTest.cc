@@ -10,9 +10,9 @@
 using namespace test;
 using namespace ::testing;
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 
-TEST(Unit_Bsgalone_Core_Domain_App_Usecases_SignupUseCase, ThrowsWhenAccountRepositoryIsNull)
+TEST(Unit_Bsgalone_Server_Domain_App_Usecases_SignupUseCase, ThrowsWhenAccountRepositoryIsNull)
 {
   EXPECT_THROW(
     []() {
@@ -23,7 +23,7 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_SignupUseCase, ThrowsWhenAccountRepo
     std::invalid_argument);
 }
 
-TEST(Unit_Bsgalone_Core_Domain_App_Usecases_SignupUseCase, ThrowsWhenPlayerRepositoryIsNull)
+TEST(Unit_Bsgalone_Server_Domain_App_Usecases_SignupUseCase, ThrowsWhenPlayerRepositoryIsNull)
 {
   EXPECT_THROW(
     []() {
@@ -34,7 +34,7 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_SignupUseCase, ThrowsWhenPlayerRepos
     std::invalid_argument);
 }
 
-TEST(Unit_Bsgalone_Core_Domain_App_Usecases_SignupUseCase, ThrowsWhenEventPublisherIsNull)
+TEST(Unit_Bsgalone_Server_Domain_App_Usecases_SignupUseCase, ThrowsWhenEventPublisherIsNull)
 {
   EXPECT_THROW(
     []() {
@@ -45,7 +45,7 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_SignupUseCase, ThrowsWhenEventPublis
     std::invalid_argument);
 }
 
-TEST(Unit_Bsgalone_Core_Domain_App_Usecases_SignupUseCase,
+TEST(Unit_Bsgalone_Server_Domain_App_Usecases_SignupUseCase,
      PublishesFailedSignupEventWhenSavingAccountFails)
 {
   auto mockAccountRepo = std::make_shared<StrictMock<MockAccountRepository>>();
@@ -56,7 +56,7 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_SignupUseCase,
   SignupData data{
     .username = "player",
     .password = "password",
-    .faction  = Faction::COLONIAL,
+    .faction  = core::Faction::COLONIAL,
     .clientId = net::ClientId{12},
   };
 
@@ -74,7 +74,7 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_SignupUseCase,
   EXPECT_FALSE(actual.successfulSignup());
 }
 
-TEST(Unit_Bsgalone_Core_Domain_App_Usecases_SignupUseCase,
+TEST(Unit_Bsgalone_Server_Domain_App_Usecases_SignupUseCase,
      PublishesFailedSignupEventWhenSavingPlayerFails)
 {
   auto mockAccountRepo = std::make_shared<StrictMock<MockAccountRepository>>();
@@ -85,14 +85,14 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_SignupUseCase,
   SignupData data{
     .username = "player",
     .password = "password",
-    .faction  = Faction::COLONIAL,
+    .faction  = core::Faction::COLONIAL,
     .clientId = net::ClientId{12},
   };
 
   EXPECT_CALL(*mockAccountRepo, save(_))
     .Times(1)
     .WillOnce(Return(Account{
-      .dbId     = Uuid{2},
+      .dbId     = core::Uuid{2},
       .username = "player",
       .password = "password",
     }));
@@ -108,7 +108,7 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_SignupUseCase,
   EXPECT_FALSE(actual.successfulSignup());
 }
 
-TEST(Unit_Bsgalone_Core_Domain_App_Usecases_SignupUseCase,
+TEST(Unit_Bsgalone_Server_Domain_App_Usecases_SignupUseCase,
      PublishesSuccessfulSignupEventWhenSignupSucceed)
 {
   auto mockAccountRepo = std::make_shared<StrictMock<MockAccountRepository>>();
@@ -119,22 +119,22 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_SignupUseCase,
   SignupData data{
     .username = "player",
     .password = "password",
-    .faction  = Faction::COLONIAL,
+    .faction  = core::Faction::COLONIAL,
     .clientId = net::ClientId{12},
   };
 
   EXPECT_CALL(*mockAccountRepo, save(_))
     .Times(1)
     .WillOnce(Return(Account{
-      .dbId     = Uuid{2},
+      .dbId     = core::Uuid{2},
       .username = data.username,
       .password = data.password,
     }));
   EXPECT_CALL(*mockPlayerRepo, save(_))
     .Times(1)
     .WillOnce(Return(Player{
-      .dbId    = Uuid{17},
-      .account = Uuid{2},
+      .dbId    = core::Uuid{17},
+      .account = core::Uuid{2},
       .name    = data.username,
       .faction = data.faction,
       .role    = core::GameRole::PILOT,
@@ -148,11 +148,11 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_SignupUseCase,
   const auto &actual = event->as<PlayerSignupEvent>();
   EXPECT_EQ(data.clientId, actual.getClientId());
   EXPECT_TRUE(actual.successfulSignup());
-  EXPECT_EQ(Uuid{17}, actual.tryGetPlayerDbId().value());
+  EXPECT_EQ(core::Uuid{17}, actual.tryGetPlayerDbId().value());
   EXPECT_EQ(data.faction, actual.tryGetFaction());
 }
 
-TEST(Unit_Bsgalone_Core_Domain_App_Usecases_SignupUseCase, DelegatesAccountCreationToAdapter)
+TEST(Unit_Bsgalone_Server_Domain_App_Usecases_SignupUseCase, DelegatesAccountCreationToAdapter)
 {
   auto mockAccountRepo = std::make_shared<StrictMock<MockAccountRepository>>();
   SignupUseCase usecase(mockAccountRepo,
@@ -162,11 +162,11 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_SignupUseCase, DelegatesAccountCreat
   SignupData data{
     .username = "player",
     .password = "password",
-    .faction  = Faction::COLONIAL,
+    .faction  = core::Faction::COLONIAL,
     .clientId = net::ClientId{12},
   };
 
-  core::Account captured{};
+  Account captured{};
   EXPECT_CALL(*mockAccountRepo, save(_)).Times(1).WillOnce(Invoke([&captured](Account account) {
     captured = account;
     return account;
@@ -178,7 +178,7 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_SignupUseCase, DelegatesAccountCreat
   EXPECT_EQ(data.password, captured.password);
 }
 
-TEST(Unit_Bsgalone_Core_Domain_App_Usecases_SignupUseCase, DelegatesPlayerCreationToAdapter)
+TEST(Unit_Bsgalone_Server_Domain_App_Usecases_SignupUseCase, DelegatesPlayerCreationToAdapter)
 {
   auto mockAccountRepo = std::make_shared<StrictMock<MockAccountRepository>>();
   auto mockPlayerRepo  = std::make_shared<StrictMock<MockPlayerRepository>>();
@@ -187,19 +187,19 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_SignupUseCase, DelegatesPlayerCreati
   SignupData data{
     .username = "player",
     .password = "password",
-    .faction  = Faction::COLONIAL,
+    .faction  = core::Faction::COLONIAL,
     .clientId = net::ClientId{12},
   };
 
   EXPECT_CALL(*mockAccountRepo, save(_))
     .Times(1)
     .WillOnce(Return(Account{
-      .dbId     = Uuid{2},
+      .dbId     = core::Uuid{2},
       .username = data.username,
       .password = data.password,
     }));
 
-  core::Player captured{};
+  Player captured{};
   EXPECT_CALL(*mockPlayerRepo, save(_)).Times(1).WillOnce(Invoke([&captured](Player player) {
     captured = player;
     return player;
@@ -207,10 +207,10 @@ TEST(Unit_Bsgalone_Core_Domain_App_Usecases_SignupUseCase, DelegatesPlayerCreati
 
   usecase.performSignup(data);
 
-  EXPECT_EQ(Uuid{2}, captured.account);
+  EXPECT_EQ(core::Uuid{2}, captured.account);
   EXPECT_EQ(data.username, captured.name);
   EXPECT_EQ(data.faction, captured.faction);
-  EXPECT_EQ(GameRole::PILOT, captured.role);
+  EXPECT_EQ(core::GameRole::PILOT, captured.role);
 }
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server

@@ -13,13 +13,13 @@ class Configurator
   Configurator()  = default;
   ~Configurator() = default;
 
-  auto createSignupDrivingAdapter(core::ForPublishingEventShPtr publisher) const
+  auto createSignupDrivingAdapter(ForPublishingEventShPtr publisher) const
     -> core::IMessageListenerPtr;
 
-  auto createLoginDrivingAdapter(core::ForPublishingEventShPtr publisher) const
+  auto createLoginDrivingAdapter(ForPublishingEventShPtr publisher) const
     -> core::IMessageListenerPtr;
 
   private:
-  core::Repositories m_repositories{};
+  Repositories m_repositories{};
 };
 } // namespace bsgalone::server

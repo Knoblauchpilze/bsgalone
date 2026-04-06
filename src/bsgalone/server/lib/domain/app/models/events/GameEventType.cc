@@ -1,7 +1,7 @@
 
 #include "GameEventType.hh"
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 
 auto str(const GameEventType &type) -> std::string
 {
@@ -24,4 +24,4 @@ auto allGameEventTypesAsSet() -> std::unordered_set<GameEventType>
   };
 }
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server

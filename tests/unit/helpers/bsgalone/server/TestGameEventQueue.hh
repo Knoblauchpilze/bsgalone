@@ -8,6 +8,6 @@
 namespace test {
 
 using TestGameEventQueue
-  = TestAbstractEventQueue<bsgalone::core::GameEventType, bsgalone::core::IGameEvent>;
+  = TestAbstractEventQueue<bsgalone::server::GameEventType, bsgalone::server::IGameEvent>;
 
 } // namespace test

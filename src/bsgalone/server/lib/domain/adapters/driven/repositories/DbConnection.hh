@@ -5,7 +5,7 @@
 #include <memory>
 #include <pqxx/pqxx>
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 
 class DbConnection : public ::core::CoreObject
 {
@@ -85,4 +85,4 @@ class DbConnection : public ::core::CoreObject
 
 using DbConnectionShPtr = std::shared_ptr<DbConnection>;
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server

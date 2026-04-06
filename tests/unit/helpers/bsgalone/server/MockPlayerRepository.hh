@@ -6,18 +6,21 @@
 
 namespace test {
 
-class MockPlayerRepository : public bsgalone::core::ForManagingPlayer
+class MockPlayerRepository : public bsgalone::server::ForManagingPlayer
 {
   public:
   MockPlayerRepository()           = default;
   ~MockPlayerRepository() override = default;
 
-  MOCK_METHOD(bsgalone::core::Player, findOneById, (const bsgalone::core::Uuid), (const, override));
-  MOCK_METHOD(bsgalone::core::Player,
+  MOCK_METHOD(bsgalone::server::Player,
+              findOneById,
+              (const bsgalone::core::Uuid),
+              (const, override));
+  MOCK_METHOD(bsgalone::server::Player,
               findOneByAccount,
               (const bsgalone::core::Uuid),
               (const, override));
-  MOCK_METHOD(bsgalone::core::Player, save, (bsgalone::core::Player), (override));
+  MOCK_METHOD(bsgalone::server::Player, save, (bsgalone::server::Player), (override));
 };
 
 } // namespace test

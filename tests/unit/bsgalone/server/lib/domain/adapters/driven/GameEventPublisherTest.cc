@@ -7,7 +7,7 @@
 using namespace test;
 using namespace ::testing;
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 
 TEST(Unit_Bsgalone_Server_Domain_Adapters_Driven_GameEventPublisher, ThrowsWhenEventQueueIsNull)
 {
@@ -31,4 +31,4 @@ TEST(Unit_Bsgalone_Server_Domain_Adapters_Driven_GameEventPublisher, ForwardsMes
   EXPECT_FALSE(actual.tryGetRole().has_value());
 }
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server

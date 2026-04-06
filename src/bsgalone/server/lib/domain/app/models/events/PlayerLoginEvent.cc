@@ -1,7 +1,7 @@
 
 #include "PlayerLoginEvent.hh"
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 
 PlayerLoginEvent::PlayerLoginEvent(const net::ClientId clientId)
   : IGameEvent(GameEventType::PLAYER_LOGIN)
@@ -18,22 +18,22 @@ auto PlayerLoginEvent::getClientId() const -> net::ClientId
   return m_clientId;
 }
 
-auto PlayerLoginEvent::tryGetPlayerDbId() const -> std::optional<Uuid>
+auto PlayerLoginEvent::tryGetPlayerDbId() const -> std::optional<core::Uuid>
 {
   return m_playerDbId;
 }
 
-auto PlayerLoginEvent::tryGetRole() const -> std::optional<GameRole>
+auto PlayerLoginEvent::tryGetRole() const -> std::optional<core::GameRole>
 {
   return m_role;
 }
 
-void PlayerLoginEvent::setPlayerDbId(const Uuid playerDbId)
+void PlayerLoginEvent::setPlayerDbId(const core::Uuid playerDbId)
 {
   m_playerDbId = playerDbId;
 }
 
-void PlayerLoginEvent::setRole(const GameRole role)
+void PlayerLoginEvent::setRole(const core::GameRole role)
 {
   m_role = role;
 }
@@ -47,4 +47,4 @@ auto PlayerLoginEvent::clone() const -> IGameEventPtr
   return out;
 }
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server

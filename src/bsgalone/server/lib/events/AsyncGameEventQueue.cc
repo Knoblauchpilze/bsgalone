@@ -6,7 +6,7 @@ namespace bsgalone::server {
 
 auto createAsyncGameEventQueue(IGameEventQueuePtr queue) -> IGameEventQueueShPtr
 {
-  return std::make_shared<messaging::AbstractAsyncEventQueue<core::GameEventType, core::IGameEvent>>(
+  return std::make_shared<messaging::AbstractAsyncEventQueue<GameEventType, IGameEvent>>(
     std::move(queue));
 }
 

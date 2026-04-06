@@ -6,6 +6,6 @@
 
 namespace test {
 
-auto insertTestAccount(bsgalone::core::DbConnection &dbConnection) -> bsgalone::core::Account;
+auto insertTestAccount(bsgalone::server::DbConnection &dbConnection) -> bsgalone::server::Account;
 
 }

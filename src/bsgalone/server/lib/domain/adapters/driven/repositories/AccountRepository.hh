@@ -10,7 +10,7 @@
 #include <optional>
 #include <unordered_set>
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 
 class AccountRepository : public ForManagingAccount, public AbstractRepository
 {
@@ -33,4 +33,4 @@ class AccountRepository : public ForManagingAccount, public AbstractRepository
 
 using AccountRepositoryShPtr = std::shared_ptr<AccountRepository>;
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server

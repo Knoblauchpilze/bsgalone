@@ -7,7 +7,7 @@
 #include "ForManagingPlayer.hh"
 #include "ForPublishingEvent.hh"
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 
 class SignupUseCase : public ForExecutingSignup, public ::core::CoreObject
 {
@@ -24,12 +24,10 @@ class SignupUseCase : public ForExecutingSignup, public ::core::CoreObject
   ForManagingPlayerShPtr m_playerRepo{};
   ForPublishingEventShPtr m_eventPublisher{};
 
-  auto tryRegisterPlayer(const SignupData &data) const -> std::optional<core::Player>;
+  auto tryRegisterPlayer(const SignupData &data) const -> std::optional<Player>;
 
-  auto registerAccount(const SignupData &data) const -> core::Account;
-  auto registerPlayer(const core::Account &account, const SignupData &data) const -> core::Player;
-  void registerResources(const core::Player &player) const;
-  void registerShip(const core::Player &player) const;
+  auto registerAccount(const SignupData &data) const -> Account;
+  auto registerPlayer(const Account &account, const SignupData &data) const -> Player;
 };
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server

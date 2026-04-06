@@ -7,7 +7,7 @@
 #include "Uuid.hh"
 #include <optional>
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 
 class PlayerSignupEvent : public IGameEvent
 {
@@ -18,18 +18,18 @@ class PlayerSignupEvent : public IGameEvent
   bool successfulSignup() const;
 
   auto getClientId() const -> net::ClientId;
-  auto tryGetPlayerDbId() const -> std::optional<Uuid>;
-  auto tryGetFaction() const -> std::optional<Faction>;
+  auto tryGetPlayerDbId() const -> std::optional<core::Uuid>;
+  auto tryGetFaction() const -> std::optional<core::Faction>;
 
-  void setPlayerDbId(const Uuid playerDbId);
-  void setFaction(const Faction role);
+  void setPlayerDbId(const core::Uuid playerDbId);
+  void setFaction(const core::Faction role);
 
   auto clone() const -> IGameEventPtr override;
 
   private:
   net::ClientId m_clientId{};
-  std::optional<Uuid> m_playerDbId{};
-  std::optional<Faction> m_faction{};
+  std::optional<core::Uuid> m_playerDbId{};
+  std::optional<core::Faction> m_faction{};
 };
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server

@@ -4,7 +4,7 @@
 #include "IGameEvent.hh"
 #include <memory>
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 
 class ForPublishingEvent
 {
@@ -17,4 +17,4 @@ class ForPublishingEvent
 
 using ForPublishingEventShPtr = std::shared_ptr<ForPublishingEvent>;
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server

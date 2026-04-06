@@ -2,7 +2,7 @@
 #include "DbConnection.hh"
 #include "Environment.hh"
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 namespace {
 constexpr auto DATABASE_NAME     = "db_bsgalone";
 constexpr auto DATABASE_USER     = "bsgalone_manager";
@@ -167,4 +167,4 @@ auto DbConnection::nonTransaction() -> pqxx::nontransaction
   return pqxx::nontransaction(*m_connection);
 }
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server

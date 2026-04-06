@@ -2,7 +2,7 @@
 #include "Repositories.hh"
 #include "DbConnection.hh"
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 
 Repositories::Repositories()
 {
@@ -16,4 +16,4 @@ Repositories::Repositories()
   playerRepository->initialize();
 }
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server

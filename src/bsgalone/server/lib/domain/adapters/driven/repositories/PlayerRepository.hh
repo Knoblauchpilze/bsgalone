@@ -9,7 +9,7 @@
 #include <optional>
 #include <unordered_set>
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 
 class PlayerRepository : public ForManagingPlayer, public AbstractRepository
 {
@@ -19,8 +19,8 @@ class PlayerRepository : public ForManagingPlayer, public AbstractRepository
 
   void initialize() override;
 
-  auto findOneById(const Uuid playerDbId) const -> Player override;
-  auto findOneByAccount(const Uuid accountDbId) const -> Player override;
+  auto findOneById(const core::Uuid playerDbId) const -> Player override;
+  auto findOneByAccount(const core::Uuid accountDbId) const -> Player override;
 
   /// @brief - Saves the player to the database. This function will attempt to insert
   /// the player's data as a new entity in the database. In case there's already a
@@ -36,4 +36,4 @@ class PlayerRepository : public ForManagingPlayer, public AbstractRepository
 
 using PlayerRepositoryShPtr = std::shared_ptr<PlayerRepository>;
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server

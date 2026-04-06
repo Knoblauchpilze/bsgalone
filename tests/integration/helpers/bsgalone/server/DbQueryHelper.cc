@@ -4,7 +4,7 @@
 
 namespace test {
 
-auto insertTestAccount(bsgalone::core::DbConnection &dbConnection) -> bsgalone::core::Account
+auto insertTestAccount(bsgalone::server::DbConnection &dbConnection) -> bsgalone::server::Account
 {
   const auto username = std::format("random-account-{:%F%T}", ::core::now());
 
@@ -19,7 +19,7 @@ auto insertTestAccount(bsgalone::core::DbConnection &dbConnection) -> bsgalone::
   };
   auto record = dbConnection.executeQueryReturningSingleRow(query);
 
-  bsgalone::core::Account out{
+  bsgalone::server::Account out{
     .dbId     = bsgalone::core::fromDbId(record[0].as<int>()),
     .username = username,
     .password = "password",

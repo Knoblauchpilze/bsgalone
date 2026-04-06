@@ -4,7 +4,7 @@
 
 namespace bsgalone::server {
 
-SignupRequestConsumer::SignupRequestConsumer(core::ForExecutingSignupPtr signupUseCase)
+SignupRequestConsumer::SignupRequestConsumer(ForExecutingSignupPtr signupUseCase)
   : ::core::CoreObject("signup")
   , m_useCase(std::move(signupUseCase))
 {
@@ -32,7 +32,7 @@ void SignupRequestConsumer::onEventReceived(const core::IMessage &message)
     return;
   }
 
-  core::SignupData data{
+  SignupData data{
     .username = request.getUsername(),
     .password = request.getPassword(),
     .faction  = request.getFaction(),

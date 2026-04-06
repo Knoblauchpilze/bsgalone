@@ -9,7 +9,7 @@
 using namespace test;
 using namespace ::testing;
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 using Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_AccountRepository
   = DbConnectionFixture;
 
@@ -97,4 +97,4 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_AccountRe
                 "Failed to execute sql query returning single row"));
 }
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server

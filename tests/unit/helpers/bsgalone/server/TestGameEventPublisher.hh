@@ -6,13 +6,13 @@
 
 namespace test {
 
-class TestGameEventPublisher : public bsgalone::core::ForPublishingEvent
+class TestGameEventPublisher : public bsgalone::server::ForPublishingEvent
 {
   public:
   TestGameEventPublisher()           = default;
   ~TestGameEventPublisher() override = default;
 
-  void publishEvent(bsgalone::core::IGameEventPtr event) override;
+  void publishEvent(bsgalone::server::IGameEventPtr event) override;
 
   /// @brief - Retrieves the underlying test game event queue which stores the
   /// messages received through the publishEvent public interface.

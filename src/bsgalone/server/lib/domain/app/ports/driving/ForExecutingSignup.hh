@@ -4,7 +4,7 @@
 #include "SignupData.hh"
 #include <memory>
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 
 class ForExecutingSignup
 {
@@ -17,4 +17,4 @@ class ForExecutingSignup
 
 using ForExecutingSignupPtr = std::unique_ptr<ForExecutingSignup>;
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server

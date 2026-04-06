@@ -6,7 +6,7 @@
 #include "ForManagingPlayer.hh"
 #include "ForPublishingEvent.hh"
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 
 class LoginUseCase : public ForExecutingLogin
 {
@@ -24,4 +24,4 @@ class LoginUseCase : public ForExecutingLogin
   ForPublishingEventShPtr m_eventPublisher{};
 };
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server

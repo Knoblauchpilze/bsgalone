@@ -8,7 +8,7 @@
 
 namespace bsgalone::server {
 
-using IGameEventQueue      = messaging::IEventQueue<core::GameEventType, core::IGameEvent>;
+using IGameEventQueue      = messaging::IEventQueue<GameEventType, IGameEvent>;
 using IGameEventQueuePtr   = std::unique_ptr<IGameEventQueue>;
 using IGameEventQueueShPtr = std::shared_ptr<IGameEventQueue>;
 

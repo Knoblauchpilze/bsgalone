@@ -4,7 +4,7 @@
 
 namespace bsgalone::server {
 
-LoginRequestConsumer::LoginRequestConsumer(core::ForExecutingLoginPtr loginUseCase)
+LoginRequestConsumer::LoginRequestConsumer(ForExecutingLoginPtr loginUseCase)
   : ::core::CoreObject("login")
   , m_useCase(std::move(loginUseCase))
 {
@@ -32,7 +32,7 @@ void LoginRequestConsumer::onEventReceived(const core::IMessage &message)
     return;
   }
 
-  core::LoginData data{
+  LoginData data{
     .username = request.getUsername(),
     .password = request.getPassword(),
     .role     = request.getRole(),

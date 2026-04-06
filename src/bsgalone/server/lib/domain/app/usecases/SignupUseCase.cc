@@ -2,7 +2,7 @@
 #include "SignupUseCase.hh"
 #include "PlayerSignupEvent.hh"
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 
 SignupUseCase::SignupUseCase(ForManagingAccountShPtr accountRepo,
                              ForManagingPlayerShPtr playerRepo,
@@ -46,28 +46,21 @@ void SignupUseCase::performSignup(const SignupData &data)
   m_eventPublisher->publishEvent(std::move(event));
 }
 
-auto SignupUseCase::tryRegisterPlayer(const SignupData &data) const -> std::optional<core::Player>
+auto SignupUseCase::tryRegisterPlayer(const SignupData &data) const -> std::optional<Player>
 {
-  std::optional<core::Player> maybePlayer{};
+  std::optional<Player> maybePlayer{};
 
   withSafetyNet(
     [&data, &maybePlayer, this]() {
       const auto account = registerAccount(data);
-      const auto player  = registerPlayer(account, data);
-      registerResources(player);
-      registerShip(player);
-
-      // This is to handle cases where the player was successfully registered
-      // but the resources or the ships were not. It would better to have a
-      // single transaction in the future.
-      maybePlayer = player;
+      maybePlayer        = registerPlayer(account, data);
     },
     "tryRegisterPlayer");
 
   return maybePlayer;
 }
 
-auto SignupUseCase::registerAccount(const SignupData &data) const -> core::Account
+auto SignupUseCase::registerAccount(const SignupData &data) const -> Account
 {
   Account account{
     .username = data.username,
@@ -76,8 +69,7 @@ auto SignupUseCase::registerAccount(const SignupData &data) const -> core::Accou
   return m_accountRepo->save(account);
 }
 
-auto SignupUseCase::registerPlayer(const core::Account &account, const SignupData &data) const
-  -> core::Player
+auto SignupUseCase::registerPlayer(const Account &account, const SignupData &data) const -> Player
 {
   Player player{
     .account = account.dbId,
@@ -88,14 +80,4 @@ auto SignupUseCase::registerPlayer(const core::Account &account, const SignupDat
   return m_playerRepo->save(player);
 }
 
-void SignupUseCase::registerResources(const core::Player & /*player*/) const
-{
-  // TODO: Implement this function
-}
-
-void SignupUseCase::registerShip(const core::Player & /*player*/) const
-{
-  // TODO: Implement this function
-}
-
-} // namespace bsgalone::core
+} // namespace bsgalone::server

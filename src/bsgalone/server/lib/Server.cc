@@ -51,7 +51,7 @@ void Server::initialize()
 void Server::initializeExternalFacingUseCases()
 {
   m_eventQueue   = createAsyncGameEventQueue(createSynchronizedGameEventQueue());
-  auto publisher = std::make_shared<core::GameEventPublisher>(m_eventQueue);
+  auto publisher = std::make_shared<GameEventPublisher>(m_eventQueue);
 
   Configurator configurator{};
 

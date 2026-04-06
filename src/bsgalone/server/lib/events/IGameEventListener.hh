@@ -7,7 +7,7 @@
 
 namespace bsgalone::server {
 
-using IGameEventListener    = messaging::IEventListener<core::GameEventType, core::IGameEvent>;
+using IGameEventListener    = messaging::IEventListener<GameEventType, IGameEvent>;
 using IGameEventListenerPtr = std::unique_ptr<IGameEventListener>;
 
 } // namespace bsgalone::server

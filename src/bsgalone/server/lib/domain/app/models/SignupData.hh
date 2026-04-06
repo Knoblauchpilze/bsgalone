@@ -5,14 +5,14 @@
 #include "Faction.hh"
 #include <string>
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 
 struct SignupData
 {
   std::string username{};
   std::string password{};
-  Faction faction{};
+  core::Faction faction{};
   net::ClientId clientId{};
 };
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server

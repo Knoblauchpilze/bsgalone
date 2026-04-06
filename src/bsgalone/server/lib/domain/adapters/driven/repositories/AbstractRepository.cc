@@ -1,7 +1,7 @@
 
 #include "AbstractRepository.hh"
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 
 AbstractRepository::AbstractRepository(const std::string &name, DbConnectionShPtr connection)
   : ::core::CoreObject(name)
@@ -15,4 +15,4 @@ AbstractRepository::AbstractRepository(const std::string &name, DbConnectionShPt
   }
 }
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server

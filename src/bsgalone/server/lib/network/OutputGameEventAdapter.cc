@@ -18,18 +18,18 @@ OutputGameEventAdapter::OutputGameEventAdapter(core::IOutputNetworkAdapterPtr ne
 }
 
 namespace {
-const std::unordered_set<core::GameEventType> RELEVANT_EVENT_TYPES = {
-  core::GameEventType::PLAYER_LOGIN,
-  core::GameEventType::PLAYER_SIGNUP,
+const std::unordered_set<GameEventType> RELEVANT_EVENT_TYPES = {
+  GameEventType::PLAYER_LOGIN,
+  GameEventType::PLAYER_SIGNUP,
 };
 }
-bool OutputGameEventAdapter::isEventRelevant(const core::GameEventType &type) const
+bool OutputGameEventAdapter::isEventRelevant(const GameEventType &type) const
 {
   return RELEVANT_EVENT_TYPES.contains(type);
 }
 
 namespace {
-void publishLoginMessage(core::IOutputNetworkAdapter &adapter, const core::PlayerLoginEvent &event)
+void publishLoginMessage(core::IOutputNetworkAdapter &adapter, const PlayerLoginEvent &event)
 {
   core::LoginMessage message;
   if (event.successfulLogin())
@@ -41,23 +41,23 @@ void publishLoginMessage(core::IOutputNetworkAdapter &adapter, const core::Playe
   adapter.sendMessage(event.getClientId(), message);
 }
 
-void publishSignupMessage(core::IOutputNetworkAdapter &adapter, const core::PlayerSignupEvent &event)
+void publishSignupMessage(core::IOutputNetworkAdapter &adapter, const PlayerSignupEvent &event)
 {
   core::SignupMessage message(event.successfulSignup());
   adapter.sendMessage(event.getClientId(), message);
 }
 } // namespace
 
-void OutputGameEventAdapter::onEventReceived(const core::IGameEvent &event)
+void OutputGameEventAdapter::onEventReceived(const IGameEvent &event)
 {
   switch (event.type())
   {
-    case core::GameEventType::PLAYER_LOGIN:
+    case GameEventType::PLAYER_LOGIN:
       // TODO: Should register in the client manager
-      publishLoginMessage(*m_networkClient, event.as<core::PlayerLoginEvent>());
+      publishLoginMessage(*m_networkClient, event.as<PlayerLoginEvent>());
       break;
-    case core::GameEventType::PLAYER_SIGNUP:
-      publishSignupMessage(*m_networkClient, event.as<core::PlayerSignupEvent>());
+    case GameEventType::PLAYER_SIGNUP:
+      publishSignupMessage(*m_networkClient, event.as<PlayerSignupEvent>());
       break;
     default:
       throw std::invalid_argument("Unsupported game event type " + str(event.type()));

@@ -1,7 +1,7 @@
 
 #include "PlayerSignupEvent.hh"
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 
 PlayerSignupEvent::PlayerSignupEvent(const net::ClientId clientId)
   : IGameEvent(GameEventType::PLAYER_SIGNUP)
@@ -18,22 +18,22 @@ auto PlayerSignupEvent::getClientId() const -> net::ClientId
   return m_clientId;
 }
 
-auto PlayerSignupEvent::tryGetPlayerDbId() const -> std::optional<Uuid>
+auto PlayerSignupEvent::tryGetPlayerDbId() const -> std::optional<core::Uuid>
 {
   return m_playerDbId;
 }
 
-auto PlayerSignupEvent::tryGetFaction() const -> std::optional<Faction>
+auto PlayerSignupEvent::tryGetFaction() const -> std::optional<core::Faction>
 {
   return m_faction;
 }
 
-void PlayerSignupEvent::setPlayerDbId(const Uuid playerDbId)
+void PlayerSignupEvent::setPlayerDbId(const core::Uuid playerDbId)
 {
   m_playerDbId = playerDbId;
 }
 
-void PlayerSignupEvent::setFaction(const Faction faction)
+void PlayerSignupEvent::setFaction(const core::Faction faction)
 {
   m_faction = faction;
 }
@@ -47,4 +47,4 @@ auto PlayerSignupEvent::clone() const -> IGameEventPtr
   return out;
 }
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server

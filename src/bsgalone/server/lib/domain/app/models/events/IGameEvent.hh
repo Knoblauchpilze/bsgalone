@@ -5,9 +5,9 @@
 #include "GameEventType.hh"
 #include <memory>
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 
 using IGameEvent    = messaging::AbstractEvent<GameEventType>;
 using IGameEventPtr = std::unique_ptr<IGameEvent>;
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server

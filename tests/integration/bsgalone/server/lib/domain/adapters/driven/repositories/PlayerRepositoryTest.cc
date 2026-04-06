@@ -9,7 +9,7 @@
 using namespace test;
 using namespace ::testing;
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 using Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRepository
   = DbConnectionFixture;
 
@@ -22,14 +22,14 @@ void insertTestPlayerRole(DbConnection &dbConnection, Player &player)
     )";
 
   const auto query = [&player](pqxx::nontransaction &work) {
-    return work.exec(QUERY, pqxx::params{toDbId(player.dbId)}).no_rows();
+    return work.exec(QUERY, pqxx::params{core::toDbId(player.dbId)}).no_rows();
   };
   dbConnection.executeQuery(query);
 
-  player.role = GameRole::PILOT;
+  player.role = core::GameRole::PILOT;
 }
 
-auto insertTestPlayer(DbConnection &dbConnection, const Uuid accountDbId, const bool withRole)
+auto insertTestPlayer(DbConnection &dbConnection, const core::Uuid accountDbId, const bool withRole)
   -> Player
 {
   const auto name = std::format("random-player-{:%F%T}", ::core::now());
@@ -41,16 +41,18 @@ auto insertTestPlayer(DbConnection &dbConnection, const Uuid accountDbId, const 
     )";
 
   const auto query = [&name, &accountDbId](pqxx::nontransaction &work) {
-    return work.exec(QUERY, pqxx::params{toDbId(accountDbId), name, toDbFaction(Faction::CYLON)})
+    return work
+      .exec(QUERY,
+            pqxx::params{core::toDbId(accountDbId), name, core::toDbFaction(core::Faction::CYLON)})
       .one_row();
   };
   auto record = dbConnection.executeQueryReturningSingleRow(query);
 
   Player out{
-    .dbId    = fromDbId(record[0].as<int>()),
+    .dbId    = core::fromDbId(record[0].as<int>()),
     .account = accountDbId,
     .name    = name,
-    .faction = Faction::CYLON,
+    .faction = core::Faction::CYLON,
   };
 
   if (withRole)
@@ -75,7 +77,7 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
 {
   PlayerRepository repo(this->dbConnection());
 
-  EXPECT_THAT([&repo]() { repo.findOneByAccount(Uuid{269871}); },
+  EXPECT_THAT([&repo]() { repo.findOneByAccount(core::Uuid{269871}); },
               ThrowsMessage<::core::CoreException>(
                 "Failed to execute sql query returning single row"));
 }
@@ -119,7 +121,7 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
   PlayerRepository repo(this->dbConnection());
   repo.initialize();
 
-  EXPECT_THAT([&repo]() { repo.findOneById(Uuid{269871}); },
+  EXPECT_THAT([&repo]() { repo.findOneById(core::Uuid{269871}); },
               ThrowsMessage<::core::CoreException>(
                 "Failed to execute sql query returning single row"));
 }
@@ -165,7 +167,7 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
   PlayerRepository repo(this->dbConnection());
   repo.initialize();
 
-  EXPECT_THAT([&repo]() { repo.findOneByAccount(Uuid{269871}); },
+  EXPECT_THAT([&repo]() { repo.findOneByAccount(core::Uuid{269871}); },
               ThrowsMessage<::core::CoreException>(
                 "Failed to execute sql query returning single row"));
 }
@@ -182,8 +184,8 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
   Player player{
     .account = account.dbId,
     .name    = name,
-    .faction = Faction::CYLON,
-    .role    = GameRole::GUNNER,
+    .faction = core::Faction::CYLON,
+    .role    = core::GameRole::GUNNER,
   };
 
   const auto actual = repo.save(player);
@@ -208,8 +210,8 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
   Player player2{
     .account = account2.dbId,
     .name    = player1.name,
-    .faction = Faction::CYLON,
-    .role    = GameRole::GUNNER,
+    .faction = core::Faction::CYLON,
+    .role    = core::GameRole::GUNNER,
   };
 
   auto code = [&repo, &player2]() { repo.save(player2); };
@@ -250,8 +252,8 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
   Player player1{
     .account = account1.dbId,
     .name    = std::format("random-player-{:%F%T}", ::core::now()),
-    .faction = Faction::CYLON,
-    .role    = GameRole::PILOT,
+    .faction = core::Faction::CYLON,
+    .role    = core::GameRole::PILOT,
   };
   player1 = repo.save(player1);
 
@@ -259,13 +261,13 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
   Player player2{
     .account = account2.dbId,
     .name    = std::format("random-player-{:%F%T}", ::core::now()),
-    .faction = Faction::COLONIAL,
-    .role    = GameRole::GUNNER,
+    .faction = core::Faction::COLONIAL,
+    .role    = core::GameRole::GUNNER,
   };
   player2 = repo.save(player2);
 
   const auto actual = repo.findOneById(player1.dbId);
-  EXPECT_EQ(GameRole::PILOT, actual.role);
+  EXPECT_EQ(core::GameRole::PILOT, actual.role);
 }
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server

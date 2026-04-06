@@ -31,7 +31,7 @@ TEST(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ThrowsWhenNetworkClient
 
 TEST(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsFailedLoginMessage)
 {
-  core::PlayerLoginEvent event(net::ClientId{12});
+  PlayerLoginEvent event(net::ClientId{12});
 
   auto networkClient = std::make_unique<StrictMock<MockOutputAdapter>>();
   core::IMessagePtr captured;
@@ -51,7 +51,7 @@ TEST(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsFailedLoginMess
 
 TEST(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsSuccessfulLoginMessage)
 {
-  core::PlayerLoginEvent event(net::ClientId{12});
+  PlayerLoginEvent event(net::ClientId{12});
   event.setPlayerDbId(core::Uuid{18});
   event.setRole(core::GameRole::GUNNER);
 
@@ -75,7 +75,7 @@ TEST(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsSuccessfulLogin
 
 TEST(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsFailedSignupMessage)
 {
-  core::PlayerSignupEvent event(net::ClientId{12});
+  PlayerSignupEvent event(net::ClientId{12});
 
   auto networkClient = std::make_unique<StrictMock<MockOutputAdapter>>();
   core::IMessagePtr captured;
@@ -95,7 +95,7 @@ TEST(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsFailedSignupMes
 
 TEST(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsSuccessfulSignupMessage)
 {
-  core::PlayerSignupEvent event(net::ClientId{12});
+  PlayerSignupEvent event(net::ClientId{12});
   event.setPlayerDbId(core::Uuid{18});
   event.setFaction(core::Faction::CYLON);
 

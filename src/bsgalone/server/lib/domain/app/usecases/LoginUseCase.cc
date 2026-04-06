@@ -2,7 +2,7 @@
 #include "LoginUseCase.hh"
 #include "PlayerLoginEvent.hh"
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 
 LoginUseCase::LoginUseCase(ForManagingAccountShPtr accountRepo,
                            ForManagingPlayerShPtr playerRepo,
@@ -45,4 +45,4 @@ void LoginUseCase::performLogin(const LoginData &data)
   m_eventPublisher->publishEvent(std::move(event));
 }
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server

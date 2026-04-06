@@ -8,22 +8,22 @@ using namespace ::testing;
 
 namespace bsgalone::server {
 namespace {
-class MockUseCase : public core::ForExecutingLogin
+class MockUseCase : public ForExecutingLogin
 {
   public:
   MockUseCase()           = default;
   ~MockUseCase() override = default;
 
-  MOCK_METHOD(void, performLogin, (const core::LoginData &), (override));
+  MOCK_METHOD(void, performLogin, (const LoginData &), (override));
 };
 } // namespace
 
-TEST(Unit_Bsgalone_Core_Domain_Adapters_Driving_LoginRequestConsumer, ThrowsWhenUseCaseIsNull)
+TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_LoginRequestConsumer, ThrowsWhenUseCaseIsNull)
 {
   EXPECT_THROW([]() { LoginRequestConsumer(nullptr); }(), std::invalid_argument);
 }
 
-TEST(Unit_Bsgalone_Core_Domain_Adapters_Driving_LoginRequestConsumer,
+TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_LoginRequestConsumer,
      ConsidersLoginRequestEventAsRelevant)
 {
   LoginRequestConsumer consumer(std::make_unique<MockUseCase>());
@@ -31,7 +31,7 @@ TEST(Unit_Bsgalone_Core_Domain_Adapters_Driving_LoginRequestConsumer,
   EXPECT_TRUE(consumer.isEventRelevant(core::MessageType::LOGIN_REQUEST));
 }
 
-TEST(Unit_Bsgalone_Core_Domain_Adapters_Driving_LoginRequestConsumer,
+TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_LoginRequestConsumer,
      IgnoresLoginRequestWhenClientIdIsNotSet)
 {
   auto usecase = std::make_unique<StrictMock<MockUseCase>>();
@@ -43,14 +43,14 @@ TEST(Unit_Bsgalone_Core_Domain_Adapters_Driving_LoginRequestConsumer,
   consumer.onEventReceived(request);
 }
 
-TEST(Unit_Bsgalone_Core_Domain_Adapters_Driving_LoginRequestConsumer,
+TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_LoginRequestConsumer,
      DelegatesLoginToUseCaseWhenClientIdIsSet)
 {
   auto usecase = std::make_unique<StrictMock<MockUseCase>>();
-  core::LoginData captured{};
-  EXPECT_CALL(*usecase, performLogin(_))
-    .Times(1)
-    .WillOnce(Invoke([&captured](const core::LoginData &data) { captured = data; }));
+  LoginData captured{};
+  EXPECT_CALL(*usecase, performLogin(_)).Times(1).WillOnce(Invoke([&captured](const LoginData &data) {
+    captured = data;
+  }));
 
   core::LoginRequest request("username", "password", core::GameRole::PILOT);
   request.setClientId(net::ClientId{12});

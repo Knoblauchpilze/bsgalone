@@ -1,7 +1,7 @@
 
 #include "PlayerRepository.hh"
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 
 PlayerRepository::PlayerRepository(DbConnectionShPtr connection)
   : AbstractRepository("player", std::move(connection))
@@ -69,37 +69,38 @@ void PlayerRepository::initialize()
 namespace {
 auto buildPlayerFromDbRow(const pqxx::row &record) -> Player
 {
-  std::optional<Uuid> maybeAccountDbId{};
+  std::optional<core::Uuid> maybeAccountDbId{};
   if (!record[1].is_null())
   {
-    maybeAccountDbId = fromDbId(record[1].as<int>());
+    maybeAccountDbId = core::fromDbId(record[1].as<int>());
   }
 
   return Player{
-    .dbId    = fromDbId(record[0].as<int>()),
+    .dbId    = core::fromDbId(record[0].as<int>()),
     .account = maybeAccountDbId,
     .name    = record[2].as<std::string>(),
-    .faction = fromDbFaction(record[3].as<std::string>()),
-    .role    = fromDbGameRole(record[4].as<std::string>()),
+    .faction = core::fromDbFaction(record[3].as<std::string>()),
+    .role    = core::fromDbGameRole(record[4].as<std::string>()),
   };
 }
 } // namespace
 
-auto PlayerRepository::findOneById(const Uuid playerDbId) const -> Player
+auto PlayerRepository::findOneById(const core::Uuid playerDbId) const -> Player
 {
   const auto query = [playerDbId](pqxx::nontransaction &work) {
-    return work.exec(pqxx::prepped{FIND_ONE_QUERY_NAME}, pqxx::params{toDbId(playerDbId)}).one_row();
+    return work.exec(pqxx::prepped{FIND_ONE_QUERY_NAME}, pqxx::params{core::toDbId(playerDbId)})
+      .one_row();
   };
   const auto record = m_connection->executeQueryReturningSingleRow(query);
 
   return buildPlayerFromDbRow(record);
 }
 
-auto PlayerRepository::findOneByAccount(const Uuid accountDbId) const -> Player
+auto PlayerRepository::findOneByAccount(const core::Uuid accountDbId) const -> Player
 {
   const auto query = [accountDbId](pqxx::nontransaction &work) {
     return work
-      .exec(pqxx::prepped{FIND_ONE_BY_ACCOUNT_QUERY_NAME}, pqxx::params{toDbId(accountDbId)})
+      .exec(pqxx::prepped{FIND_ONE_BY_ACCOUNT_QUERY_NAME}, pqxx::params{core::toDbId(accountDbId)})
       .one_row();
   };
   const auto record = m_connection->executeQueryReturningSingleRow(query);
@@ -113,7 +114,7 @@ auto PlayerRepository::save(Player player) -> Player
     std::optional<int> maybeAccount{};
     if (player.account)
     {
-      maybeAccount = toDbId(*player.account);
+      maybeAccount = core::toDbId(*player.account);
     }
 
     return work
@@ -123,12 +124,12 @@ auto PlayerRepository::save(Player player) -> Player
   };
 
   const auto record = m_connection->executeQueryReturningSingleRow(playerQuery);
-  player.dbId       = fromDbId(record[0].as<int>());
+  player.dbId       = core::fromDbId(record[0].as<int>());
 
   auto roleQuery = [&player](pqxx::work &transaction) {
     return transaction
       .exec(pqxx::prepped{UPDATE_PLAYER_ROLE_QUERY_NAME},
-            pqxx::params{toDbId(player.dbId), toDbGameRole(player.role)})
+            pqxx::params{core::toDbId(player.dbId), toDbGameRole(player.role)})
       .no_rows();
   };
 
@@ -141,4 +142,4 @@ auto PlayerRepository::save(Player player) -> Player
   return player;
 }
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server
