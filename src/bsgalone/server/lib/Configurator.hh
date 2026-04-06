@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "ForManagingClient.hh"
 #include "ForPublishingEvent.hh"
 #include "IMessageListener.hh"
 #include "Repositories.hh"
@@ -16,7 +17,8 @@ class Configurator
   auto createSignupDrivingAdapter(ForPublishingEventShPtr publisher) const
     -> core::IMessageListenerPtr;
 
-  auto createLoginDrivingAdapter(ForPublishingEventShPtr publisher) const
+  auto createLoginDrivingAdapter(ForManagingClientShPtr clientManager,
+                                 ForPublishingEventShPtr publisher) const
     -> core::IMessageListenerPtr;
 
   private:

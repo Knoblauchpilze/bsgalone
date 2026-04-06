@@ -10,10 +10,16 @@
 
 namespace bsgalone::server {
 
-ServerNetworkClient::ServerNetworkClient()
+ServerNetworkClient::ServerNetworkClient(ClientManagerShPtr clientManager)
   : ::core::CoreObject("client")
+  , m_clientManager(std::move(clientManager))
 {
   setService("network");
+
+  if (m_clientManager == nullptr)
+  {
+    throw std::invalid_argument("Expected non null client manager");
+  }
 }
 
 void ServerNetworkClient::start(const int port)

@@ -16,11 +16,13 @@ auto Configurator::createSignupDrivingAdapter(ForPublishingEventShPtr publisher)
   return std::make_unique<SignupRequestConsumer>(std::move(useCase));
 }
 
-auto Configurator::createLoginDrivingAdapter(ForPublishingEventShPtr publisher) const
+auto Configurator::createLoginDrivingAdapter(ForManagingClientShPtr clientManager,
+                                             ForPublishingEventShPtr publisher) const
   -> core::IMessageListenerPtr
 {
   auto useCase = std::make_unique<LoginUseCase>(m_repositories.accountRepository,
                                                 m_repositories.playerRepository,
+                                                std::move(clientManager),
                                                 std::move(publisher));
   return std::make_unique<LoginRequestConsumer>(std::move(useCase));
 }

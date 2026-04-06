@@ -2,6 +2,7 @@
 
 #include "Server.hh"
 #include "AsyncGameEventQueue.hh"
+#include "ClientManager.hh"
 #include "Configurator.hh"
 #include "GameEventPublisher.hh"
 #include "MessageSerializer.hh"
@@ -38,7 +39,9 @@ void Server::requestStop()
 
 void Server::initialize()
 {
-  m_networkClient = std::make_shared<ServerNetworkClient>();
+  auto clientManager = std::make_shared<ClientManager>();
+  m_networkClient    = std::make_shared<ServerNetworkClient>(clientManager);
+  m_clientManager    = std::move(clientManager);
 
   initializeExternalFacingUseCases();
 
@@ -56,7 +59,7 @@ void Server::initializeExternalFacingUseCases()
   Configurator configurator{};
 
   m_networkClient->addListener(configurator.createSignupDrivingAdapter(publisher));
-  m_networkClient->addListener(configurator.createLoginDrivingAdapter(publisher));
+  m_networkClient->addListener(configurator.createLoginDrivingAdapter(m_clientManager, publisher));
 }
 
 void Server::setup(const int port)

@@ -6,9 +6,11 @@ namespace bsgalone::server {
 
 LoginUseCase::LoginUseCase(ForManagingAccountShPtr accountRepo,
                            ForManagingPlayerShPtr playerRepo,
+                           ForManagingClientShPtr clientManager,
                            ForPublishingEventShPtr eventPublisher)
   : m_accountRepo(std::move(accountRepo))
   , m_playerRepo(std::move(playerRepo))
+  , m_clientManager(std::move(clientManager))
   , m_eventPublisher(std::move(eventPublisher))
 {
   if (m_accountRepo == nullptr)
@@ -18,6 +20,10 @@ LoginUseCase::LoginUseCase(ForManagingAccountShPtr accountRepo,
   if (m_playerRepo == nullptr)
   {
     throw std::invalid_argument("Expected non null player repository");
+  }
+  if (m_clientManager == nullptr)
+  {
+    throw std::invalid_argument("Expected non null client manager");
   }
   if (m_eventPublisher == nullptr)
   {

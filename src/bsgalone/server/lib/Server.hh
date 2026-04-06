@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreObject.hh"
+#include "ForManagingClient.hh"
 #include "IGameEventQueue.hh"
 #include "ServerNetworkClient.hh"
 #include <atomic>
@@ -23,6 +24,11 @@ class Server : public ::core::CoreObject
   std::atomic_bool m_running{false};
   std::mutex m_runningLocker{};
   std::condition_variable m_runningNotifier{};
+
+  /// @brief - Manages the association between clients and players. This
+  /// helps routing of messaging produced by the game to the right client
+  /// applications.
+  ForManagingClientShPtr m_clientManager{};
 
   /// @brief - The network client used to accept and process client connections
   ServerNetworkClientShPtr m_networkClient{};

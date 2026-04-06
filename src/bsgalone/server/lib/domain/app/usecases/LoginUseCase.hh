@@ -3,6 +3,7 @@
 
 #include "ForExecutingLogin.hh"
 #include "ForManagingAccount.hh"
+#include "ForManagingClient.hh"
 #include "ForManagingPlayer.hh"
 #include "ForPublishingEvent.hh"
 
@@ -13,6 +14,7 @@ class LoginUseCase : public ForExecutingLogin
   public:
   LoginUseCase(ForManagingAccountShPtr accountRepo,
                ForManagingPlayerShPtr playerRepo,
+               ForManagingClientShPtr clientManager,
                ForPublishingEventShPtr eventPublisher);
   ~LoginUseCase() override = default;
 
@@ -21,6 +23,7 @@ class LoginUseCase : public ForExecutingLogin
   private:
   ForManagingAccountShPtr m_accountRepo{};
   ForManagingPlayerShPtr m_playerRepo{};
+  ForManagingClientShPtr m_clientManager{};
   ForPublishingEventShPtr m_eventPublisher{};
 };
 
