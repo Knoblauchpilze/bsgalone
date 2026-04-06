@@ -3,6 +3,7 @@
 
 #include "ClientId.hh"
 #include "CoreObject.hh"
+#include "ForManagingClient.hh"
 #include "Uuid.hh"
 #include <memory>
 #include <mutex>
@@ -11,7 +12,7 @@
 
 namespace bsgalone::server {
 
-class ClientManager : public ::core::CoreObject
+class ClientManager : public ForManagingClient, public ::core::CoreObject
 {
   public:
   ClientManager();
