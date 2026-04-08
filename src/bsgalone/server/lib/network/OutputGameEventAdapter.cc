@@ -53,7 +53,6 @@ void OutputGameEventAdapter::onEventReceived(const IGameEvent &event)
   switch (event.type())
   {
     case GameEventType::PLAYER_LOGIN:
-      // TODO: Should register in the client manager
       publishLoginMessage(*m_networkClient, event.as<PlayerLoginEvent>());
       break;
     case GameEventType::PLAYER_SIGNUP:
