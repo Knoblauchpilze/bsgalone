@@ -11,6 +11,7 @@
 #include "OutputUiCommandAdapter.hh"
 #include "ServerDataStore.hh"
 #include "SignupMessageConsumer.hh"
+#include "StatusUiHandler.hh"
 #include "SynchronizedUiCommandQueue.hh"
 #include "SynchronizedUiEventQueue.hh"
 
@@ -190,7 +191,7 @@ class UiEventListenerProxy : public IUiEventListener
 
   void onEventReceived(const IUiEvent & /*event*/) override
   {
-    m_app.onScreenChanged(Screen::LOADING);
+    m_app.onScreenChanged(Screen::GAME);
   }
 
   private:
@@ -224,6 +225,10 @@ void App::generateUiHandlers(const pge::Vec2i &screenDims, pge::sprites::Texture
   auto loading = std::make_unique<LoadingUiHandler>();
   loading->initializeMenus(screenDims, texturesLoader);
   m_uiHandlers[Screen::LOADING] = std::move(loading);
+
+  auto status = std::make_unique<StatusUiHandler>(m_uiCommandQueue);
+  status->initializeMenus(screenDims, texturesLoader);
+  m_uiHandlers[Screen::GAME] = std::move(status);
 }
 
 namespace {

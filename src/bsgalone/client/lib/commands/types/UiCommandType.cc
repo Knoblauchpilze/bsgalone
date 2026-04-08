@@ -11,6 +11,8 @@ auto str(const UiCommandType type) -> std::string
       return "exit_requested";
     case UiCommandType::LOGIN_REQUESTED:
       return "login_requested";
+    case UiCommandType::LOGOUT_REQUESTED:
+      return "logout_requested";
     case UiCommandType::SIGNUP_REQUESTED:
       return "signup_requested";
     default:
@@ -23,6 +25,7 @@ auto allUiCommandTypesAsSet() -> std::unordered_set<UiCommandType>
   return std::unordered_set<UiCommandType>{
     UiCommandType::EXIT_REQUESTED,
     UiCommandType::LOGIN_REQUESTED,
+    UiCommandType::LOGOUT_REQUESTED,
     UiCommandType::SIGNUP_REQUESTED,
   };
 }

@@ -10,6 +10,7 @@ enum class UiCommandType
 {
   EXIT_REQUESTED,
   LOGIN_REQUESTED,
+  LOGOUT_REQUESTED,
   SIGNUP_REQUESTED
 };
 

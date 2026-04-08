@@ -14,5 +14,6 @@ add_subdirectory (
 target_sources (bsgalone_client_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/ExitCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LoginCommand.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/LogoutCommand.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SignupCommand.cc
 	)
