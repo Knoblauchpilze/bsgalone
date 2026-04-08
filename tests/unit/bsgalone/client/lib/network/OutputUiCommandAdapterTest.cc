@@ -2,6 +2,8 @@
 #include "OutputUiCommandAdapter.hh"
 #include "LoginCommand.hh"
 #include "LoginRequest.hh"
+#include "LogoutCommand.hh"
+#include "LogoutRequest.hh"
 #include "SignupCommand.hh"
 #include "SignupRequest.hh"
 #include "TestMessageQueue.hh"
@@ -31,6 +33,20 @@ TEST(Unit_Bsgalone_Client_Network_OutputUiCommandAdapter, CorrectlyPublishesLogi
   EXPECT_EQ("user", actual.getUsername());
   EXPECT_EQ("secure", actual.getPassword());
   EXPECT_EQ(core::GameRole::GUNNER, actual.getRole());
+}
+
+TEST(Unit_Bsgalone_Client_Network_OutputUiCommandAdapter, CorrectlyPublishesLogoutRequest)
+{
+  auto queue = std::make_shared<TestMessageQueue>();
+  OutputUiCommandAdapter adapter(queue);
+
+  LogoutCommand command;
+  adapter.onEventReceived(command);
+
+  EXPECT_EQ(1u, queue->messages().size());
+  EXPECT_EQ(core::MessageType::LOGOUT_REQUEST, queue->messages().at(0)->type());
+  const auto &actual = queue->messages().at(0)->as<core::LogoutRequest>();
+  EXPECT_EQ(core::Uuid{7}, actual.getPlayerDbId());
 }
 
 TEST(Unit_Bsgalone_Client_Network_OutputUiCommandAdapter, CorrectlyPublishesSignupRequest)
