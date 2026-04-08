@@ -214,7 +214,7 @@ TEST(Unit_Bsgalone_Core_Messages_Network_InputNetworkAdapter, ThrowsWhenReceivin
 
   const auto data = generateSerializedTestMessage();
   ASSERT_LE(6, data.size());
-  net::DataReceivedEvent event(net::ClientId{0}, std::vector<char>(data.begin() + 4, data.end()));
+  net::DataReceivedEvent event(net::ClientId{0}, std::vector<char>(data.begin() + 5, data.end()));
 
   auto body = [&adapter, &event]() { adapter.onEventReceived(event); };
   EXPECT_THROW(body(), ::core::CoreException);
