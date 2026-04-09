@@ -98,7 +98,9 @@ void StatusUiHandler::generateLogoutConfirmationPanel(const pge::Vec2i &dimensio
 
   m_logoutConfirmation->addMenu(generateSpacer());
 
+  config.visible       = true;
   config.highlightable = false;
+  bg.color             = pge::colors::TRANSPARENT_BLACK;
   text       = ui::textConfigFromColor("Do you really want to logout?", pge::colors::WHITE);
   auto label = std::make_unique<ui::UiTextMenu>(config, bg, text);
   m_logoutConfirmation->addMenu(std::move(label));
