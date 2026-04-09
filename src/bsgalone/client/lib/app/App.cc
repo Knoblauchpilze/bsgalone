@@ -208,7 +208,8 @@ void App::initializeIncomingMessageSystem()
 void App::initializeOutgoingMessageSystem()
 {
   m_uiCommandQueue->addListener(std::make_unique<UiCommandListenerProxy>(*this));
-  m_uiCommandQueue->addListener(std::make_unique<OutputUiCommandAdapter>(m_networkClient));
+  m_uiCommandQueue->addListener(
+    std::make_unique<OutputUiCommandAdapter>(m_dataStore, m_networkClient));
 }
 
 void App::initializeInternalMessageSystem()

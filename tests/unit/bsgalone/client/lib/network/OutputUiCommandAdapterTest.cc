@@ -4,6 +4,7 @@
 #include "LoginRequest.hh"
 #include "LogoutCommand.hh"
 #include "LogoutRequest.hh"
+#include "MockDataStore.hh"
 #include "SignupCommand.hh"
 #include "SignupRequest.hh"
 #include "TestMessageQueue.hh"
@@ -13,15 +14,22 @@ using namespace test;
 
 namespace bsgalone::client {
 
+TEST(Unit_Bsgalone_Client_Network_OutputUiCommandAdapter, ThrowsWhenDataStoreIsNull)
+{
+  EXPECT_THROW([this]() { OutputUiCommandAdapter(nullptr, std::make_shared<TestMessageQueue>()); }(),
+               std::invalid_argument);
+}
+
 TEST(Unit_Bsgalone_Client_Network_OutputUiCommandAdapter, ThrowsWhenQueueIsNull)
 {
-  EXPECT_THROW([this]() { OutputUiCommandAdapter(nullptr); }(), std::invalid_argument);
+  EXPECT_THROW([this]() { OutputUiCommandAdapter(std::make_shared<MockDataStore>(), nullptr); }(),
+               std::invalid_argument);
 }
 
 TEST(Unit_Bsgalone_Client_Network_OutputUiCommandAdapter, CorrectlyPublishesLoginRequest)
 {
   auto queue = std::make_shared<TestMessageQueue>();
-  OutputUiCommandAdapter adapter(queue);
+  OutputUiCommandAdapter adapter(std::make_shared<MockDataStore>(), queue);
 
   LoginCommand command("user", "secure", core::GameRole::GUNNER);
   adapter.onEventReceived(command);
@@ -38,7 +46,7 @@ TEST(Unit_Bsgalone_Client_Network_OutputUiCommandAdapter, CorrectlyPublishesLogi
 TEST(Unit_Bsgalone_Client_Network_OutputUiCommandAdapter, CorrectlyPublishesLogoutRequest)
 {
   auto queue = std::make_shared<TestMessageQueue>();
-  OutputUiCommandAdapter adapter(queue);
+  OutputUiCommandAdapter adapter(std::make_shared<MockDataStore>(), queue);
 
   LogoutCommand command;
   adapter.onEventReceived(command);
@@ -52,7 +60,7 @@ TEST(Unit_Bsgalone_Client_Network_OutputUiCommandAdapter, CorrectlyPublishesLogo
 TEST(Unit_Bsgalone_Client_Network_OutputUiCommandAdapter, CorrectlyPublishesSignupRequest)
 {
   auto queue = std::make_shared<TestMessageQueue>();
-  OutputUiCommandAdapter adapter(queue);
+  OutputUiCommandAdapter adapter(std::make_shared<MockDataStore>(), queue);
 
   SignupCommand command("user", "secure", core::Faction::CYLON);
   adapter.onEventReceived(command);

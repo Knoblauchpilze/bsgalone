@@ -9,10 +9,16 @@
 
 namespace bsgalone::client {
 
-OutputUiCommandAdapter::OutputUiCommandAdapter(core::IMessageQueueShPtr outputQueue)
+OutputUiCommandAdapter::OutputUiCommandAdapter(IDataStoreShPtr dataStore,
+                                               core::IMessageQueueShPtr outputQueue)
   : IUiCommandListener()
+  , m_dataStore(std::move(dataStore))
   , m_outputQueue(std::move(outputQueue))
 {
+  if (m_dataStore == nullptr)
+  {
+    throw std::invalid_argument("Expected non null data store");
+  }
   if (m_outputQueue == nullptr)
   {
     throw std::invalid_argument("Expected non null output queue");
