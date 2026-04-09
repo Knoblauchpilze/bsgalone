@@ -10,8 +10,9 @@ class ServerDataStore : public IDataStore, public ::core::CoreObject
 {
   public:
   ServerDataStore();
-
   ~ServerDataStore() override = default;
+
+  auto getPlayerDbId() const -> core::Uuid override;
 
   void onPlayerLoggedIn(const core::Uuid playerDbId, const core::GameRole role) override;
 

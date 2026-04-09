@@ -13,6 +13,11 @@ class IDataStore
   IDataStore()          = default;
   virtual ~IDataStore() = default;
 
+  /// @brief - Returns the identifier of the player currently logged in. In case
+  /// the player is not logged in, an exception should be raised.
+  /// @return - the identifier of the player currently logged in
+  virtual auto getPlayerDbId() const -> core::Uuid = 0;
+
   virtual void onPlayerLoggedIn(const core::Uuid playerDbId, const core::GameRole role) = 0;
 };
 

@@ -12,6 +12,8 @@ class MockDataStore : public bsgalone::client::IDataStore
   MockDataStore()           = default;
   ~MockDataStore() override = default;
 
+  MOCK_METHOD(bsgalone::core::Uuid, getPlayerDbId, (), (const, override));
+
   MOCK_METHOD(void,
               onPlayerLoggedIn,
               (const bsgalone::core::Uuid, const bsgalone::core::GameRole),
