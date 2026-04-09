@@ -234,7 +234,8 @@ void App::generateUiHandlers(const pge::Vec2i &screenDims, pge::sprites::Texture
 
 namespace {
 constexpr auto LOGIN_TEXTURE_FILE_PATH   = "assets/login_bg.png";
-constexpr auto LOADING_TEXTURE_FILE_PATH = "assets/loading_screen.png";
+constexpr auto LOADING_TEXTURE_FILE_PATH = "assets/loading_bg.png";
+constexpr auto GAME_TEXTURE_FILE_PATH    = "assets/game_bg.png";
 } // namespace
 
 void App::generateRenderers(const pge::Vec2i &dimensions, pge::sprites::TexturePack &texturesLoader)
@@ -246,6 +247,10 @@ void App::generateRenderers(const pge::Vec2i &dimensions, pge::sprites::TextureP
   auto loading = std::make_unique<DecalRenderer>(LOADING_TEXTURE_FILE_PATH);
   loading->loadResources(dimensions, texturesLoader);
   m_renderers[Screen::LOADING] = std::move(loading);
+
+  auto game = std::make_unique<DecalRenderer>(GAME_TEXTURE_FILE_PATH);
+  game->loadResources(dimensions, texturesLoader);
+  m_renderers[Screen::GAME] = std::move(game);
 }
 
 void App::onScreenChanged(const Screen screen)
