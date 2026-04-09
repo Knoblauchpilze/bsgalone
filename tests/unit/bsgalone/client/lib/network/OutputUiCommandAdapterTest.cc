@@ -11,6 +11,7 @@
 #include <gtest/gtest.h>
 
 using namespace test;
+using namespace ::testing;
 
 namespace bsgalone::client {
 
@@ -45,8 +46,11 @@ TEST(Unit_Bsgalone_Client_Network_OutputUiCommandAdapter, CorrectlyPublishesLogi
 
 TEST(Unit_Bsgalone_Client_Network_OutputUiCommandAdapter, CorrectlyPublishesLogoutRequest)
 {
+  auto store = std::make_shared<MockDataStore>();
+  EXPECT_CALL(*store, getPlayerDbId()).Times(1).WillOnce(Return(core::Uuid{27}));
+
   auto queue = std::make_shared<TestMessageQueue>();
-  OutputUiCommandAdapter adapter(std::make_shared<MockDataStore>(), queue);
+  OutputUiCommandAdapter adapter(store, queue);
 
   LogoutCommand command;
   adapter.onEventReceived(command);
@@ -54,7 +58,7 @@ TEST(Unit_Bsgalone_Client_Network_OutputUiCommandAdapter, CorrectlyPublishesLogo
   EXPECT_EQ(1u, queue->messages().size());
   EXPECT_EQ(core::MessageType::LOGOUT_REQUEST, queue->messages().at(0)->type());
   const auto &actual = queue->messages().at(0)->as<core::LogoutRequest>();
-  EXPECT_EQ(core::Uuid{7}, actual.getPlayerDbId());
+  EXPECT_EQ(core::Uuid{27}, actual.getPlayerDbId());
 }
 
 TEST(Unit_Bsgalone_Client_Network_OutputUiCommandAdapter, CorrectlyPublishesSignupRequest)

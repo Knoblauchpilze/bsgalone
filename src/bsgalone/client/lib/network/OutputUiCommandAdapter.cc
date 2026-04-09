@@ -46,12 +46,9 @@ void publishLoginRequest(core::IMessageQueue &queue, const LoginCommand &command
                                                        command.getRole()));
 }
 
-void publishLogoutRequest(core::IMessageQueue &queue, const LogoutCommand & /*command*/)
+void publishLogoutRequest(core::IMessageQueue &queue, const core::Uuid playerDbId)
 {
-  // TODO: Player identifier should be real
-  // TODO: This could be achieved by having the server data store in the adapter
-  // and the player can be retrieved from it
-  queue.pushEvent(std::make_unique<core::LogoutRequest>(core::Uuid{7}));
+  queue.pushEvent(std::make_unique<core::LogoutRequest>(playerDbId));
 }
 
 void publishSignupRequest(core::IMessageQueue &queue, const SignupCommand &command)
@@ -70,7 +67,7 @@ void OutputUiCommandAdapter::onEventReceived(const IUiCommand &event)
       publishLoginRequest(*m_outputQueue, event.as<LoginCommand>());
       break;
     case UiCommandType::LOGOUT_REQUESTED:
-      publishLogoutRequest(*m_outputQueue, event.as<LogoutCommand>());
+      publishLogoutRequest(*m_outputQueue, m_dataStore->getPlayerDbId());
       break;
     case UiCommandType::SIGNUP_REQUESTED:
       publishSignupRequest(*m_outputQueue, event.as<SignupCommand>());
