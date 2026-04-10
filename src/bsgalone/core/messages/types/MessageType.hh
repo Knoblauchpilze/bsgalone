@@ -10,6 +10,7 @@ enum class MessageType
 {
   LOGIN,
   LOGIN_REQUEST,
+  LOGOUT,
   LOGOUT_REQUEST,
   SIGNUP,
   SIGNUP_REQUEST

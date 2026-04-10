@@ -89,7 +89,7 @@ TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage, CloneWithoutPlayerData)
   assertMessagesAreEqual(cloned->as<LoginMessage>(), expected);
 }
 
-TEST(Unit_Bsgalone_Core_Messages_Credentials_LoginMessage, CloneWithPlayerData)
+TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage, CloneWithPlayerData)
 {
   LoginMessage expected;
   expected.setPlayerDbId(Uuid{18});

@@ -23,7 +23,7 @@ TEST(Unit_Bsgalone_Core_Messages_Events_SignupMessage, CorrectlyReportsSignupSta
   EXPECT_TRUE(success.successfullySignedUp());
 }
 
-TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage, SerializationDeserialization)
+TEST(Unit_Bsgalone_Core_Messages_Events_SignupMessage, SerializationDeserialization)
 {
   SignupMessage failure(true);
   auto actual = serializeAndDeserializeMessage(failure);
@@ -34,7 +34,7 @@ TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage, SerializationDeserializati
   assertMessagesAreEqual(actual->as<SignupMessage>(), success);
 }
 
-TEST(Unit_Bsgalone_Core_Messages_Credentials_LoginMessage, Clone)
+TEST(Unit_Bsgalone_Core_Messages_Events_SignupMessage, Clone)
 {
   SignupMessage expected(true);
 

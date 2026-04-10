@@ -3,6 +3,7 @@
 #include "MessageSerializer.hh"
 #include "LoginMessage.hh"
 #include "LoginRequest.hh"
+#include "LogoutMessage.hh"
 #include "LogoutRequest.hh"
 #include "SignupMessage.hh"
 #include "SignupRequest.hh"
@@ -32,6 +33,21 @@ TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageSerializer, SerializesLogi
   MessageSerializer serializer{};
 
   LoginRequest message("player", "pwd", GameRole::PILOT);
+
+  const auto actual = serializer.serializeMessage(message);
+
+  std::stringstream out;
+  out << message;
+  const auto serialized = out.str();
+  std::vector<char> expected(serialized.begin(), serialized.end());
+  EXPECT_EQ(expected, actual);
+}
+
+TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageSerializer, SerializesLogoutMessage)
+{
+  MessageSerializer serializer{};
+
+  LogoutMessage message;
 
   const auto actual = serializer.serializeMessage(message);
 
