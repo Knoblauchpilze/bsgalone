@@ -60,6 +60,7 @@ void Server::initializeExternalFacingUseCases()
 
   m_networkClient->addListener(configurator.createSignupDrivingAdapter(publisher));
   m_networkClient->addListener(configurator.createLoginDrivingAdapter(m_clientManager, publisher));
+  m_networkClient->addListener(configurator.createLogoutDrivingAdapter(m_clientManager, publisher));
 }
 
 void Server::setup(const int port)

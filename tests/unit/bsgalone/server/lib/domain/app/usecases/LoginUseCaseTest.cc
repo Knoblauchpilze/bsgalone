@@ -1,6 +1,7 @@
 
 #include "LoginUseCase.hh"
 #include "MockAccountRepository.hh"
+#include "MockClientManager.hh"
 #include "MockPlayerRepository.hh"
 #include "PlayerLoginEvent.hh"
 #include "TestGameEventPublisher.hh"
@@ -11,19 +12,6 @@ using namespace test;
 using namespace ::testing;
 
 namespace bsgalone::server {
-namespace {
-class MockClientManager : public ForManagingClient
-{
-  public:
-  MockClientManager()           = default;
-  ~MockClientManager() override = default;
-
-  MOCK_METHOD(void,
-              registerPlayer,
-              (const net::ClientId, const core::Uuid, const core::Uuid),
-              (override));
-};
-} // namespace
 
 TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase, ThrowsWhenAccountRepositoryIsNull)
 {

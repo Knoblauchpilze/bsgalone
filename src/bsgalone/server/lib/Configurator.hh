@@ -21,6 +21,10 @@ class Configurator
                                  ForPublishingEventShPtr publisher) const
     -> core::IMessageListenerPtr;
 
+  auto createLogoutDrivingAdapter(ForManagingClientShPtr clientManager,
+                                  ForPublishingEventShPtr publisher) const
+    -> core::IMessageListenerPtr;
+
   private:
   Repositories m_repositories{};
 };
