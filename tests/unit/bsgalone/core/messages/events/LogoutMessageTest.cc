@@ -10,12 +10,13 @@ namespace {
 void assertMessagesAreEqual(const LogoutMessage &actual, const LogoutMessage &expected)
 {
   EXPECT_EQ(actual.type(), expected.type());
+  EXPECT_EQ(actual.getPlayerDbId(), expected.getPlayerDbId());
 }
 } // namespace
 
 TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage, SerializationDeserialization)
 {
-  LogoutMessage expected;
+  LogoutMessage expected(Uuid{24});
 
   const auto actual = serializeAndDeserializeMessage(expected);
 
@@ -24,7 +25,7 @@ TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage, SerializationDeserializati
 
 TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage, Clone)
 {
-  LogoutMessage expected;
+  LogoutMessage expected(Uuid{24});
 
   const auto cloned = expected.clone();
 

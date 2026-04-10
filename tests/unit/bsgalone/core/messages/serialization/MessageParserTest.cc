@@ -120,7 +120,7 @@ TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageParser, DeserializesLogout
 {
   MessageParser parser{};
 
-  LogoutMessage message;
+  LogoutMessage message(Uuid{14});
   const auto bytes = serializeMessage(message);
 
   const auto maybeResult = parser.tryParseMessage(bytes);

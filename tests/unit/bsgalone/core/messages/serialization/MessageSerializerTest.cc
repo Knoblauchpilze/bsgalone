@@ -47,7 +47,7 @@ TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageSerializer, SerializesLogo
 {
   MessageSerializer serializer{};
 
-  LogoutMessage message;
+  LogoutMessage message(Uuid{31});
 
   const auto actual = serializer.serializeMessage(message);
 

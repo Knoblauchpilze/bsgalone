@@ -12,8 +12,10 @@ namespace bsgalone::core {
 class LogoutMessage : public IMessage
 {
   public:
-  LogoutMessage();
+  LogoutMessage(const Uuid playerDbId);
   ~LogoutMessage() override = default;
+
+  auto getPlayerDbId() const -> Uuid;
 
   auto clone() const -> IMessagePtr override;
 
@@ -27,6 +29,10 @@ class LogoutMessage : public IMessage
   static auto readFromStream(std::istream &in) -> std::optional<IMessagePtr>;
 
   private:
+  Uuid m_playerDbId{};
+
+  LogoutMessage();
+
   friend auto operator<<(std::ostream &out, const LogoutMessage &message) -> std::ostream &;
 };
 
