@@ -34,4 +34,16 @@ void ServerDataStore::onPlayerLoggedIn(const core::Uuid playerDbId, const core::
   debug("Logged in as " + core::str(playerDbId) + " with role " + core::str(role));
 }
 
+void ServerDataStore::onPlayerLoggedOut(const core::Uuid playerDbId)
+{
+  if (!m_playerData.has_value() || m_playerData->playerDbId != playerDbId)
+  {
+    return;
+  }
+
+  m_playerData.reset();
+
+  debug("Logged out from session with " + core::str(playerDbId));
+}
+
 } // namespace bsgalone::client

@@ -19,6 +19,7 @@ class IDataStore
   virtual auto getPlayerDbId() const -> core::Uuid = 0;
 
   virtual void onPlayerLoggedIn(const core::Uuid playerDbId, const core::GameRole role) = 0;
+  virtual void onPlayerLoggedOut(const core::Uuid playerDbId)                           = 0;
 };
 
 using IDataStoreShPtr = std::shared_ptr<IDataStore>;

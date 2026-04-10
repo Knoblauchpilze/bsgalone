@@ -15,6 +15,7 @@ class ServerDataStore : public IDataStore, public ::core::CoreObject
   auto getPlayerDbId() const -> core::Uuid override;
 
   void onPlayerLoggedIn(const core::Uuid playerDbId, const core::GameRole role) override;
+  void onPlayerLoggedOut(const core::Uuid playerDbId) override;
 
   private:
   /// @brief - Holds the data representing the player currently logged in.

@@ -23,4 +23,27 @@ TEST(Unit_Bsgalone_Client_Store_ServerDataStore, GetPlayerDbId_ReturnsIdentifier
   EXPECT_EQ(core::Uuid{7}, store.getPlayerDbId());
 }
 
+TEST(Unit_Bsgalone_Client_Store_ServerDataStore, GetPlayerDbId_ThrowsAfterLogoutForLoggedInPlayer)
+{
+  ServerDataStore store;
+
+  store.onPlayerLoggedIn(core::Uuid{7}, core::GameRole::GUNNER);
+  EXPECT_EQ(core::Uuid{7}, store.getPlayerDbId());
+
+  store.onPlayerLoggedOut(core::Uuid{7});
+  EXPECT_THROW([&store]() { store.getPlayerDbId(); }(), ::core::CoreException);
+}
+
+TEST(Unit_Bsgalone_Client_Store_ServerDataStore,
+     GetPlayerDbId_PreservesPlayerIdWhenLogoutForAnotherPlayerIsReceived)
+{
+  ServerDataStore store;
+
+  store.onPlayerLoggedIn(core::Uuid{7}, core::GameRole::GUNNER);
+  EXPECT_EQ(core::Uuid{7}, store.getPlayerDbId());
+
+  store.onPlayerLoggedOut(core::Uuid{8});
+  EXPECT_EQ(core::Uuid{7}, store.getPlayerDbId());
+}
+
 } // namespace bsgalone::client
