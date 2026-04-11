@@ -6,5 +6,6 @@ target_include_directories (bsgalone_core_lib PUBLIC
 target_sources (bsgalone_core_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/GameEventType.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/PlayerLoginEvent.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/PlayerLogoutEvent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/PlayerSignupEvent.cc
 	)

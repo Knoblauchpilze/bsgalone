@@ -9,6 +9,7 @@ namespace bsgalone::server {
 enum class GameEventType
 {
   PLAYER_LOGIN,
+  PLAYER_LOGOUT,
   PLAYER_SIGNUP
 };
 

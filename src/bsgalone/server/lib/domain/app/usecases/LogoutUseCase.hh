@@ -1,13 +1,14 @@
 
 #pragma once
 
+#include "CoreObject.hh"
 #include "ForExecutingLogout.hh"
 #include "ForManagingClient.hh"
 #include "ForPublishingEvent.hh"
 
 namespace bsgalone::server {
 
-class LogoutUseCase : public ForExecutingLogout
+class LogoutUseCase : public ForExecutingLogout, public ::core::CoreObject
 {
   public:
   LogoutUseCase(ForManagingClientShPtr clientManager, ForPublishingEventShPtr eventPublisher);

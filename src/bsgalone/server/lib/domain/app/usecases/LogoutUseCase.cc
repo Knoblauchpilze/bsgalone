@@ -1,15 +1,17 @@
 
 #include "LogoutUseCase.hh"
-
-#include <iostream>
+#include "PlayerLogoutEvent.hh"
 
 namespace bsgalone::server {
 
 LogoutUseCase::LogoutUseCase(ForManagingClientShPtr clientManager,
                              ForPublishingEventShPtr eventPublisher)
-  : m_clientManager(std::move(clientManager))
+  : ::core::CoreObject("logout")
+  , m_clientManager(std::move(clientManager))
   , m_eventPublisher(std::move(eventPublisher))
 {
+  setService("usecase");
+
   if (m_clientManager == nullptr)
   {
     throw std::invalid_argument("Expected non null client manager");
@@ -22,7 +24,13 @@ LogoutUseCase::LogoutUseCase(ForManagingClientShPtr clientManager,
 
 void LogoutUseCase::performLogout(const LogoutData &data)
 {
-  m_clientManager->removePlayer(data.playerDbId);
+  auto success = withSafetyNet([this, &data]() { m_clientManager->removePlayer(data.playerDbId); },
+                               "performLogout");
+
+  if (success)
+  {
+    m_eventPublisher->publishEvent(std::make_unique<PlayerLogoutEvent>(data.playerDbId));
+  }
 }
 
 } // namespace bsgalone::server
