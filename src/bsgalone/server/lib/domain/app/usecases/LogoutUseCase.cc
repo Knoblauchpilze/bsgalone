@@ -20,9 +20,9 @@ LogoutUseCase::LogoutUseCase(ForManagingClientShPtr clientManager,
   }
 }
 
-void LogoutUseCase::performLogout(const LogoutData & /*data*/)
+void LogoutUseCase::performLogout(const LogoutData &data)
 {
-  // TODO: Implement this.
+  m_clientManager->removePlayer(data.playerDbId);
 }
 
 } // namespace bsgalone::server

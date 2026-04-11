@@ -30,17 +30,17 @@ TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LogoutUseCase, ThrowsWhenEventPubl
     std::invalid_argument);
 }
 
-TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LogoutUseCase, TODO_GiveABetterName)
+TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LogoutUseCase, RemovesPlayerFromClient)
 {
   auto mockClientManager = std::make_shared<StrictMock<MockClientManager>>();
-  auto publisher         = std::make_shared<StrictMock<TestGameEventPublisher>>();
+  EXPECT_CALL(*mockClientManager, removePlayer(core::Uuid{17})).Times(1);
+
+  auto publisher = std::make_shared<StrictMock<TestGameEventPublisher>>();
   LogoutUseCase usecase(mockClientManager, publisher);
 
   LogoutData data{.playerDbId = core::Uuid{17}};
 
   usecase.performLogout(data);
-
-  // TODO: Assert things.
 }
 
 } // namespace bsgalone::server

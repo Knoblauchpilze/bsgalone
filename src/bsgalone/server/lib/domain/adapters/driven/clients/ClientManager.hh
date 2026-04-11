@@ -21,8 +21,8 @@ class ClientManager : public ForManagingClient, public ::core::CoreObject
   void registerClient(const net::ClientId clientId);
   void registerPlayer(const net::ClientId clientId,
                       const core::Uuid playerDbId,
-                      const core::Uuid playerSystemDbId);
-  void removePlayer(const core::Uuid playerDbId);
+                      const core::Uuid playerSystemDbId) override;
+  void removePlayer(const core::Uuid playerDbId) override;
   void removePlayerConnection(const core::Uuid playerDbId);
   void removeClient(const net::ClientId clientId);
 
