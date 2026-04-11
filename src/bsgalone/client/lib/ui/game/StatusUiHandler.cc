@@ -117,6 +117,7 @@ void StatusUiHandler::onLogoutRequested()
 void StatusUiHandler::onLogoutConfirmed()
 {
   m_queue->pushEvent(std::make_unique<LogoutCommand>());
+  m_logoutRequested = false;
 }
 
 void StatusUiHandler::onLogoutCanceled()

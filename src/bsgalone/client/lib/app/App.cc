@@ -175,6 +175,11 @@ class UiCommandListenerProxy : public IUiCommandListener
   App &m_app;
 };
 
+const std::unordered_set<UiEventType> RELEVANT_UI_EVENT_TYPES = {
+  UiEventType::LOGIN_SUCCEEDED,
+  UiEventType::LOGOUT,
+};
+
 class UiEventListenerProxy : public IUiEventListener
 {
   public:
@@ -187,12 +192,22 @@ class UiEventListenerProxy : public IUiEventListener
 
   bool isEventRelevant(const UiEventType &type) const override
   {
-    return type == UiEventType::LOGIN_SUCCEEDED;
+    return RELEVANT_UI_EVENT_TYPES.contains(type);
   }
 
-  void onEventReceived(const IUiEvent & /*event*/) override
+  void onEventReceived(const IUiEvent &event) override
   {
-    m_app.onScreenChanged(Screen::GAME);
+    switch (event.type())
+    {
+      case UiEventType::LOGIN_SUCCEEDED:
+        m_app.onScreenChanged(Screen::GAME);
+        break;
+      case UiEventType::LOGOUT:
+        m_app.onScreenChanged(Screen::LOGIN);
+        break;
+      default:
+        throw std::invalid_argument("Unsupported UI event type " + str(event.type()));
+    }
   }
 
   private:
