@@ -1,5 +1,6 @@
 
 #include "OutputGameEventAdapter.hh"
+#include "ClientManager.hh"
 #include "LoginMessage.hh"
 #include "PlayerLoginEvent.hh"
 #include "PlayerSignupEvent.hh"
@@ -24,9 +25,16 @@ class MockOutputAdapter : public core::IOutputNetworkAdapter
 };
 } // namespace
 
+TEST(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ThrowsWhenClientManagerIsNull)
+{
+  EXPECT_THROW([]() { OutputGameEventAdapter(nullptr, std::make_unique<MockOutputAdapter>()); }(),
+               std::invalid_argument);
+}
+
 TEST(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ThrowsWhenNetworkClientIsNull)
 {
-  EXPECT_THROW([]() { OutputGameEventAdapter(nullptr); }(), std::invalid_argument);
+  EXPECT_THROW([]() { OutputGameEventAdapter(std::make_shared<ClientManager>(), nullptr); }(),
+               std::invalid_argument);
 }
 
 TEST(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsFailedLoginMessage)
@@ -41,7 +49,7 @@ TEST(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsFailedLoginMess
       captured = message.clone();
     }));
 
-  OutputGameEventAdapter adapter(std::move(networkClient));
+  OutputGameEventAdapter adapter(std::make_shared<ClientManager>(), std::move(networkClient));
   adapter.onEventReceived(event);
 
   EXPECT_EQ(core::MessageType::LOGIN, captured->type());
@@ -63,7 +71,7 @@ TEST(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsSuccessfulLogin
       captured = message.clone();
     }));
 
-  OutputGameEventAdapter adapter(std::move(networkClient));
+  OutputGameEventAdapter adapter(std::make_shared<ClientManager>(), std::move(networkClient));
   adapter.onEventReceived(event);
 
   EXPECT_EQ(core::MessageType::LOGIN, captured->type());
@@ -85,7 +93,7 @@ TEST(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsFailedSignupMes
       captured = message.clone();
     }));
 
-  OutputGameEventAdapter adapter(std::move(networkClient));
+  OutputGameEventAdapter adapter(std::make_shared<ClientManager>(), std::move(networkClient));
   adapter.onEventReceived(event);
 
   EXPECT_EQ(core::MessageType::SIGNUP, captured->type());
@@ -107,7 +115,7 @@ TEST(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsSuccessfulSignu
       captured = message.clone();
     }));
 
-  OutputGameEventAdapter adapter(std::move(networkClient));
+  OutputGameEventAdapter adapter(std::make_shared<ClientManager>(), std::move(networkClient));
   adapter.onEventReceived(event);
 
   EXPECT_EQ(core::MessageType::SIGNUP, captured->type());

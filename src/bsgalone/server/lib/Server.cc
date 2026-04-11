@@ -48,7 +48,8 @@ void Server::initialize()
   auto outputAdapter
     = std::make_unique<core::OutputNetworkAdapter>(m_networkClient,
                                                    std::make_unique<core::MessageSerializer>());
-  m_eventQueue->addListener(std::make_unique<OutputGameEventAdapter>(std::move(outputAdapter)));
+  m_eventQueue->addListener(
+    std::make_unique<OutputGameEventAdapter>(m_clientManager, std::move(outputAdapter)));
 }
 
 void Server::initializeExternalFacingUseCases()

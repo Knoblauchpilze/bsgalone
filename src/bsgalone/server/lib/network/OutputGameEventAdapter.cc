@@ -1,16 +1,24 @@
 
 #include "OutputGameEventAdapter.hh"
 #include "LoginMessage.hh"
+#include "LogoutMessage.hh"
 #include "PlayerLoginEvent.hh"
+#include "PlayerLogoutEvent.hh"
 #include "PlayerSignupEvent.hh"
 #include "SignupMessage.hh"
 
 namespace bsgalone::server {
 
-OutputGameEventAdapter::OutputGameEventAdapter(core::IOutputNetworkAdapterPtr networkClient)
+OutputGameEventAdapter::OutputGameEventAdapter(ForManagingClientShPtr clientManager,
+                                               core::IOutputNetworkAdapterPtr networkClient)
   : IGameEventListener()
+  , m_clientManager(std::move(clientManager))
   , m_networkClient(std::move(networkClient))
 {
+  if (m_clientManager == nullptr)
+  {
+    throw std::invalid_argument("Expected non null client manager");
+  }
   if (m_networkClient == nullptr)
   {
     throw std::invalid_argument("Expected non null network client");
@@ -20,6 +28,7 @@ OutputGameEventAdapter::OutputGameEventAdapter(core::IOutputNetworkAdapterPtr ne
 namespace {
 const std::unordered_set<GameEventType> RELEVANT_EVENT_TYPES = {
   GameEventType::PLAYER_LOGIN,
+  GameEventType::PLAYER_LOGOUT,
   GameEventType::PLAYER_SIGNUP,
 };
 }
