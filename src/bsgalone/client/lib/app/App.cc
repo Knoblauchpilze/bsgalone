@@ -107,7 +107,10 @@ void App::drawDecal(const pge::RenderState &state)
   maybeRenderer->second->render(state.renderer, state, pge::RenderingPass::DECAL);
 }
 
-void App::draw(const pge::RenderState & /*state*/) {}
+void App::draw(const pge::RenderState & /*state*/)
+{
+  // Voluntarily empty, no resources are using the sprites pass.
+}
 
 void App::drawUi(const pge::RenderState &state)
 {

@@ -39,7 +39,7 @@ void InputNetworkAdapter::registerPendingData(const net::DataReceivedEvent &even
   std::vector<char> toAdd(event.data());
 
   const auto maybeClientId = event.tryGetClientId();
-  if (!maybeClientId)
+  if (!maybeClientId.has_value())
   {
     m_noClientData.bytes.insert(m_noClientData.bytes.end(), toAdd.begin(), toAdd.end());
   }
@@ -59,7 +59,7 @@ auto InputNetworkAdapter::onDataReceived(const std::optional<net::ClientId> &may
   std::deque<char> workingData;
   {
     const std::lock_guard guard(m_locker);
-    if (!maybeClientId)
+    if (!maybeClientId.has_value())
     {
       workingData.insert(workingData.end(),
                          m_noClientData.bytes.begin(),
@@ -95,11 +95,11 @@ void InputNetworkAdapter::feedMessagesToQueue(const std::optional<net::ClientId>
 {
   for (auto &message : messages)
   {
-    if (maybeClientId && message->isA<LoginRequest>())
+    if (maybeClientId.has_value() && message->isA<LoginRequest>())
     {
       message->as<LoginRequest>().setClientId(*maybeClientId);
     }
-    if (maybeClientId && message->isA<SignupRequest>())
+    if (maybeClientId.has_value() && message->isA<SignupRequest>())
     {
       message->as<SignupRequest>().setClientId(*maybeClientId);
     }
@@ -116,7 +116,7 @@ void InputNetworkAdapter::removePendingData(const std::optional<net::ClientId> &
   }
 
   const std::lock_guard guard(m_locker);
-  if (!maybeClientId)
+  if (!maybeClientId.has_value())
   {
     m_noClientData.bytes.erase(m_noClientData.bytes.begin(),
                                m_noClientData.bytes.begin() + processed);
