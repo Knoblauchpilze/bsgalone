@@ -12,7 +12,7 @@ SignupUseCase::SignupUseCase(ForManagingAccountShPtr accountRepo,
   , m_playerRepo(std::move(playerRepo))
   , m_eventPublisher(std::move(eventPublisher))
 {
-  setService("consumer");
+  setService("usecase");
 
   if (m_accountRepo == nullptr)
   {
