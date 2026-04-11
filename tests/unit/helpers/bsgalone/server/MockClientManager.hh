@@ -18,6 +18,8 @@ class MockClientManager : public bsgalone::server::ForManagingClient
               (override));
 
   MOCK_METHOD(void, removePlayer, (const bsgalone::core::Uuid), (override));
+
+  MOCK_METHOD(net::ClientId, getClientIdForPlayer, (const bsgalone::core::Uuid), (const, override));
 };
 
 } // namespace test

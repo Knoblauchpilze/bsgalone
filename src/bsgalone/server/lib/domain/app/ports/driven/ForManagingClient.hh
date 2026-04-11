@@ -31,6 +31,14 @@ class ForManagingClient
   /// might change.
   /// @param playerDbId - the identifier of the player to remove
   virtual void removePlayer(const core::Uuid playerDbId) = 0;
+
+  /// @brief - Fetches the client identifier associated to the player provided
+  /// in input. In case the player is not associated with a known client, the
+  /// implementations are encouraged to throw.
+  /// @param playerDbId - the identifier of the player
+  /// @return - the identifier of the network client owning the connection the
+  /// player is logged into.
+  virtual auto getClientIdForPlayer(const core::Uuid playerDbId) const -> net::ClientId = 0;
 };
 
 using ForManagingClientShPtr = std::shared_ptr<ForManagingClient>;
