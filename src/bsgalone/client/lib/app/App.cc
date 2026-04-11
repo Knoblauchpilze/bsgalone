@@ -8,6 +8,7 @@
 #include "LoadingUiHandler.hh"
 #include "LoginMessageConsumer.hh"
 #include "LoginUiHandler.hh"
+#include "LogoutMessageConsumer.hh"
 #include "OutputUiCommandAdapter.hh"
 #include "ServerDataStore.hh"
 #include "SignupMessageConsumer.hh"
@@ -201,8 +202,9 @@ class UiEventListenerProxy : public IUiEventListener
 
 void App::initializeIncomingMessageSystem()
 {
-  m_networkClient->addListener(std::make_unique<LoginMessageConsumer>(m_dataStore, m_uiEventQueue));
   m_networkClient->addListener(std::make_unique<SignupMessageConsumer>(m_uiEventQueue));
+  m_networkClient->addListener(std::make_unique<LoginMessageConsumer>(m_dataStore, m_uiEventQueue));
+  m_networkClient->addListener(std::make_unique<LogoutMessageConsumer>(m_dataStore, m_uiEventQueue));
 }
 
 void App::initializeOutgoingMessageSystem()
