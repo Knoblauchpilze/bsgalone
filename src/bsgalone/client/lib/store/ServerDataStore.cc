@@ -9,6 +9,11 @@ ServerDataStore::ServerDataStore()
   setService("store");
 }
 
+bool ServerDataStore::isLoggedIn() const
+{
+  return m_playerData.has_value();
+}
+
 auto ServerDataStore::getPlayerDbId() const -> core::Uuid
 {
   if (!m_playerData.has_value())

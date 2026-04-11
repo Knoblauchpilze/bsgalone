@@ -13,6 +13,12 @@ class IDataStore
   IDataStore()          = default;
   virtual ~IDataStore() = default;
 
+  /// @brief - Whether or not the server indicated that the player has
+  /// successfully logged in.
+  /// @return - true if a successful login operation was confirmed by
+  /// the server
+  virtual bool isLoggedIn() const = 0;
+
   /// @brief - Returns the identifier of the player currently logged in. In case
   /// the player is not logged in, an exception should be raised.
   /// @return - the identifier of the player currently logged in
