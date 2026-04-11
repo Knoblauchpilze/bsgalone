@@ -12,9 +12,13 @@ namespace bsgalone::server {
 OutputGameEventAdapter::OutputGameEventAdapter(ForManagingClientShPtr clientManager,
                                                core::IOutputNetworkAdapterPtr networkClient)
   : IGameEventListener()
+  , ::core::CoreObject("game")
   , m_clientManager(std::move(clientManager))
   , m_networkClient(std::move(networkClient))
 {
+  setService("adapter");
+  addModule("event");
+
   if (m_clientManager == nullptr)
   {
     throw std::invalid_argument("Expected non null client manager");
@@ -64,12 +68,34 @@ void OutputGameEventAdapter::onEventReceived(const IGameEvent &event)
     case GameEventType::PLAYER_LOGIN:
       publishLoginMessage(*m_networkClient, event.as<PlayerLoginEvent>());
       break;
+    case GameEventType::PLAYER_LOGOUT:
+      handleLogoutEvent(event.as<PlayerLogoutEvent>());
+      break;
     case GameEventType::PLAYER_SIGNUP:
       publishSignupMessage(*m_networkClient, event.as<PlayerSignupEvent>());
       break;
     default:
       throw std::invalid_argument("Unsupported game event type " + str(event.type()));
   }
+}
+
+void OutputGameEventAdapter::handleLogoutEvent(const PlayerLogoutEvent &event)
+{
+  std::optional<core::Uuid> maybeClientId{};
+
+  withSafetyNet(
+    [this, &event, &maybeClientId]() {
+      maybeClientId = m_clientManager->getClientIdForPlayer(event.getPlayerDbId());
+    },
+    "handleLogoutEvent");
+
+  if (!maybeClientId.has_value())
+  {
+    return;
+  }
+
+  core::LogoutMessage message(event.getPlayerDbId());
+  m_networkClient->sendMessage(*maybeClientId, message);
 }
 
 } // namespace bsgalone::server

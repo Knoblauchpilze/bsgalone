@@ -2,7 +2,9 @@
 #include "OutputGameEventAdapter.hh"
 #include "ClientManager.hh"
 #include "LoginMessage.hh"
+#include "LogoutMessage.hh"
 #include "PlayerLoginEvent.hh"
+#include "PlayerLogoutEvent.hh"
 #include "PlayerSignupEvent.hh"
 #include "SignupMessage.hh"
 #include "TestMessageQueue.hh"
@@ -121,6 +123,41 @@ TEST(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsSuccessfulSignu
   EXPECT_EQ(core::MessageType::SIGNUP, captured->type());
   const auto &actual = captured->as<core::SignupMessage>();
   EXPECT_TRUE(actual.successfullySignedUp());
+}
+
+TEST(Unit_Bsgalone_Server_Events_OutputGameEventAdapter,
+     DoesNotForwardLogoutMessageWhenPlayerIsNotRegistered)
+{
+  PlayerLogoutEvent event(core::Uuid{18});
+
+  auto networkClient = std::make_unique<StrictMock<MockOutputAdapter>>();
+  EXPECT_CALL(*networkClient, sendMessage(_, _)).Times(0);
+
+  OutputGameEventAdapter adapter(std::make_shared<ClientManager>(), std::move(networkClient));
+  adapter.onEventReceived(event);
+}
+
+TEST(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsLogoutMessageWhenPlayerIsRegistered)
+{
+  PlayerLogoutEvent event(core::Uuid{18});
+  auto clientManager = std::make_shared<ClientManager>();
+  clientManager->registerClient(net::ClientId{12});
+  clientManager->registerPlayer(net::ClientId{12}, core::Uuid{18}, core::Uuid{19});
+
+  auto networkClient = std::make_unique<StrictMock<MockOutputAdapter>>();
+  core::IMessagePtr captured;
+  EXPECT_CALL(*networkClient, sendMessage(net::ClientId{12}, _))
+    .Times(1)
+    .WillOnce(Invoke([&captured](const net::ClientId /*clientId*/, const core::IMessage &message) {
+      captured = message.clone();
+    }));
+
+  OutputGameEventAdapter adapter(clientManager, std::move(networkClient));
+  adapter.onEventReceived(event);
+
+  EXPECT_EQ(core::MessageType::LOGOUT, captured->type());
+  const auto &actual = captured->as<core::LogoutMessage>();
+  EXPECT_EQ(core::Uuid{18}, actual.getPlayerDbId());
 }
 
 } // namespace bsgalone::server
