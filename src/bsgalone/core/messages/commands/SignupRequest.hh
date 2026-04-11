@@ -45,6 +45,4 @@ class SignupRequest : public IMessage
   friend auto operator<<(std::ostream &out, const SignupRequest &message) -> std::ostream &;
 };
 
-auto operator<<(std::ostream &out, const SignupRequest &message) -> std::ostream &;
-
 } // namespace bsgalone::core

@@ -34,6 +34,4 @@ class LogoutRequest : public IMessage
   friend auto operator<<(std::ostream &out, const LogoutRequest &message) -> std::ostream &;
 };
 
-auto operator<<(std::ostream &out, const LogoutRequest &message) -> std::ostream &;
-
 } // namespace bsgalone::core

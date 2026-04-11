@@ -45,6 +45,4 @@ class LoginRequest : public IMessage
   friend auto operator<<(std::ostream &out, const LoginRequest &message) -> std::ostream &;
 };
 
-auto operator<<(std::ostream &out, const LoginRequest &message) -> std::ostream &;
-
 } // namespace bsgalone::core
