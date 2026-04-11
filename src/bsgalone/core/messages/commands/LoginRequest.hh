@@ -4,6 +4,7 @@
 #include "ClientId.hh"
 #include "GameRole.hh"
 #include "IMessage.hh"
+#include <optional>
 #include <string>
 
 namespace bsgalone::core {
@@ -43,7 +44,5 @@ class LoginRequest : public IMessage
 
   friend auto operator<<(std::ostream &out, const LoginRequest &message) -> std::ostream &;
 };
-
-auto operator<<(std::ostream &out, const LoginRequest &message) -> std::ostream &;
 
 } // namespace bsgalone::core

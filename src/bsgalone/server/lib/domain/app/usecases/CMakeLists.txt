@@ -1,0 +1,10 @@
+
+target_include_directories (bsgalone_server_lib PUBLIC
+	${CMAKE_CURRENT_SOURCE_DIR}
+	)
+
+target_sources (bsgalone_server_lib PRIVATE
+	${CMAKE_CURRENT_SOURCE_DIR}/LoginUseCase.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/LogoutUseCase.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/SignupUseCase.cc
+	)

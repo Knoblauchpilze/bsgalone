@@ -5,6 +5,8 @@
 
 namespace ui {
 
+using TextChangedCallback = std::function<void(const std::string &)>;
+
 struct TextFieldConfig
 {
   pge::Vec2i pos{};
@@ -12,7 +14,7 @@ struct TextFieldConfig
 
   bool visible{true};
 
-  std::optional<GameCallback> gameClickCallback{};
+  std::optional<TextChangedCallback> textChangedCallback{};
 };
 
 class UiTextField : public UiTextMenu
@@ -23,12 +25,14 @@ class UiTextField : public UiTextMenu
 
   auto getText() const noexcept -> std::string override;
 
-  bool processUserInput(UserInputData &inputData) override;
+  bool processUserInput(const UserInputData &inputData) override;
 
   private:
   int m_cursorPos{0};
   std::string m_fullText{};
   bool m_editing{false};
+
+  std::optional<TextChangedCallback> m_textChangedCallback{};
 
   void updateInternalText(const pge::controls::State &controls);
   void updateCursorPosition(const pge::controls::State &controls);

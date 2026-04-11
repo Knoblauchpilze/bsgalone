@@ -4,6 +4,7 @@
 #include "RenderState.hh"
 #include "Renderer.hh"
 #include "UserInputData.hh"
+#include "Vector2d.hh"
 #include <memory>
 
 namespace bsgalone::client {
@@ -14,13 +15,12 @@ class IUiHandler
   IUiHandler()          = default;
   virtual ~IUiHandler() = default;
 
-  /// @brief - Initializes all UI widgets, menus and text resources needed by the handler.
-  /// This is expected to be called once when application resources are loaded.
-  /// @param width - the viewport width in pixels.
-  /// @param height - the viewport height in pixels.
+  /// @brief - Initializes UI widgets, menus and text resources needed by the
+  /// handler. This function is guaranteed to be called once when application
+  /// resources are loaded.
+  /// @param dimensions - the dimensions of the viewport in pixels.
   /// @param texturesLoader - shared texture loader used to build UI assets.
-  virtual void initializeMenus(const int width,
-                               const int height,
+  virtual void initializeMenus(const pge::Vec2i &dimensions,
                                pge::sprites::TexturePack &texturesLoader)
     = 0;
 

@@ -1,47 +1,38 @@
 
 #pragma once
 
-#include "AbstractUiHandler.hh"
+#include "IUiCommandQueue.hh"
+#include "IUiHandler.hh"
 #include "UiTextMenu.hh"
-#include <memory>
 
 namespace bsgalone::client {
 
-class StatusUiHandler : public AbstractUiHandler
+class StatusUiHandler : public IUiHandler
 {
   public:
-  StatusUiHandler(const pge::Vec2i &offset, const Views &views);
+  explicit StatusUiHandler(IUiCommandQueueShPtr outputQueue);
   ~StatusUiHandler() override = default;
 
-  void initializeMenus(const int width,
-                       const int height,
+  void initializeMenus(const pge::Vec2i &dimensions,
                        pge::sprites::TexturePack &texturesLoader) override;
   bool processUserInput(ui::UserInputData &inputData) override;
   void render(pge::Renderer &engine) const override;
   void updateUi() override;
 
   private:
-  pge::Vec2i m_offset{};
-  ShipViewShPtr m_shipView{};
-  ServerViewShPtr m_serverView{};
-  PlayerViewShPtr m_playerView{};
-
   bool m_logoutRequested{false};
 
   ui::UiMenuPtr m_statusBar{};
-  ui::UiTextMenu *m_system{};
   ui::UiMenuPtr m_logoutConfirmation{};
 
-  void subscribeToViews();
-  void reset();
-  void generateLogoutButton(const int width, const int height);
-  void generateLogoutConfirmationPanel(const int width, const int height);
+  IUiCommandQueueShPtr m_queue{};
 
-  void requestLogout();
-  void confirmLogout();
-  void cancelLogout();
+  void generateLogoutButton(const pge::Vec2i &dimensions);
+  void generateLogoutConfirmationPanel(const pge::Vec2i &dimensions);
+
+  void onLogoutRequested();
+  void onLogoutConfirmed();
+  void onLogoutCanceled();
 };
-
-using StatusUiHandlerPtr = std::unique_ptr<StatusUiHandler>;
 
 } // namespace bsgalone::client

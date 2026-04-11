@@ -39,7 +39,6 @@ struct MenuConfig
   std::optional<HighlightCallback> highlightCallback{};
   std::optional<ClickCallback> clickCallback{};
   std::optional<LostFocusCallback> lostFocusCallback{};
-  std::optional<GameCallback> gameClickCallback{};
 
   /// @brief - Define when the custom rendering method is called. The two values
   /// correspond to either before or after the main menu rendering method. This

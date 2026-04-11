@@ -2,31 +2,24 @@
 #pragma once
 
 #include "ClientId.hh"
+#include "CoreObject.hh"
 #include "IMessage.hh"
 #include "IMessageListener.hh"
 #include "IMessageQueue.hh"
 #include "INetworkClient.hh"
 #include "INetworkEventQueue.hh"
 #include "IOutputNetworkAdapter.hh"
-#include "ServerConfig.hh"
 #include <atomic>
 #include <memory>
 
 namespace bsgalone::client {
 
-class GameNetworkClient : public core::IMessageQueue
+class GameNetworkClient : public core::IMessageQueue, public ::core::CoreObject
 {
   public:
   /// @brief - Creates a new client which will attempt to connect to the remote server
   /// when the start method is called.
   GameNetworkClient();
-
-  /// @brief - Creates a new client which will attempt to login as the user specified
-  /// in input when the connection to the server is established.
-  /// In case `autoLogin` does not have a value, the client will only attempt to connect
-  /// to the server.
-  /// @param autoLogin - the user to connect as when the connection is established.
-  GameNetworkClient(std::optional<User> autoLogin);
 
   ~GameNetworkClient() = default;
 
@@ -34,7 +27,15 @@ class GameNetworkClient : public core::IMessageQueue
   void stop();
 
   void pushEvent(core::IMessagePtr message) override;
+
+  /// @brief - Adds a listener to the input queue held by the client. Note that
+  /// any listener added through this method will persist through the start/stop
+  /// cyles.
+  /// The listener will be receiving messages coming from the network (i.e. the
+  /// server). There's no protection against double registration.
+  /// @param listener - the listener to register
   void addListener(core::IMessageListenerPtr listener) override;
+
   bool empty() override;
 
   void processEvents() override;
@@ -47,11 +48,6 @@ class GameNetworkClient : public core::IMessageQueue
   std::atomic_bool m_connected{};
 
   core::IMessageQueueShPtr m_inputQueue{};
-
-  /// @brief - When set, represents the credentials to use to register an
-  /// automatic login attempt to the server. This is mainly used during
-  /// the development process to allow faster login.
-  std::optional<User> m_autoLogin{};
 
   void initialize();
 };

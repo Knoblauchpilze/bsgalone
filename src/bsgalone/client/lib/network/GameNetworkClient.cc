@@ -3,6 +3,7 @@
 #include "AsyncEventQueue.hh"
 #include "InputNetworkAdapter.hh"
 #include "MessageParser.hh"
+#include "MessageSerializer.hh"
 #include "NetworkEventListener.hh"
 #include "OutputNetworkAdapter.hh"
 #include "SynchronizedEventQueue.hh"
@@ -13,21 +14,22 @@ namespace bsgalone::client {
 constexpr auto DEFAULT_SERVER_URL = "127.0.0.1";
 
 GameNetworkClient::GameNetworkClient()
-  : m_inputQueue(core::createSynchronizedMessageQueue())
-{}
-
-GameNetworkClient::GameNetworkClient(std::optional<User> autoLogin)
-  : m_inputQueue(core::createSynchronizedMessageQueue())
-  , m_autoLogin(std::move(autoLogin))
-{}
+  : ::core::CoreObject("client")
+  , m_inputQueue(core::createSynchronizedMessageQueue())
+{
+  setService("network");
+}
 
 void GameNetworkClient::start(const int port)
 {
   m_eventBus  = net::createAsyncEventQueue(net::createSynchronizedEventQueue());
   m_tcpClient = std::make_shared<net::TcpClient>(m_eventBus);
-  m_adapter   = std::make_shared<core::OutputNetworkAdapter>(m_tcpClient);
+  m_adapter
+    = std::make_shared<core::OutputNetworkAdapter>(m_tcpClient,
+                                                   std::make_unique<core::MessageSerializer>());
 
   initialize();
+
   m_tcpClient->connect(DEFAULT_SERVER_URL, port);
 }
 
@@ -43,7 +45,8 @@ void GameNetworkClient::pushEvent(core::IMessagePtr message)
 {
   if (!m_connected.load())
   {
-    throw std::invalid_argument("Failed to send message, not connected to server");
+    warn("Discarding message " + str(message->type()) + ", not connected to server");
+    return;
   }
 
   m_adapter->sendMessage(*message);
@@ -66,13 +69,13 @@ void GameNetworkClient::processEvents()
 
 void GameNetworkClient::initialize()
 {
+  auto eventListener = std::make_unique<NetworkEventListener>(m_connected);
+  m_eventBus->addListener(std::move(eventListener));
+
   auto networkAdapter
     = std::make_unique<core::InputNetworkAdapter>(m_inputQueue,
                                                   std::make_unique<core::MessageParser>());
   m_eventBus->addListener(std::move(networkAdapter));
-
-  auto eventListener = std::make_unique<NetworkEventListener>(m_connected, m_adapter, m_autoLogin);
-  m_eventBus->addListener(std::move(eventListener));
 }
 
 } // namespace bsgalone::client

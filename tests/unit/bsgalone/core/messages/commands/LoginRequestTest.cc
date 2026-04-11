@@ -1,11 +1,9 @@
 
 #include "LoginRequest.hh"
-#include "Comparison.hh"
 #include "SerializationHelper.hh"
 #include <gtest/gtest.h>
 
 using namespace test;
-using namespace ::testing;
 
 namespace bsgalone::core {
 namespace {
@@ -30,7 +28,7 @@ TEST(Unit_Bsgalone_Core_Messages_Commands_LoginRequest, WithoutClientId)
 {
   const LoginRequest expected("player", "secret", GameRole::GUNNER);
 
-  const auto actual = serializeAndDeserializePlayerMessage(expected);
+  const auto actual = serializeAndDeserializeMessage(expected);
 
   assertMessagesAreEqual(actual->as<LoginRequest>(), expected);
 }
@@ -40,7 +38,7 @@ TEST(Unit_Bsgalone_Core_Messages_Commands_LoginRequest, WithClientId)
   LoginRequest expected("player", "secret", GameRole::GUNNER);
   expected.setClientId(net::ClientId{2});
 
-  const auto actual = serializeAndDeserializePlayerMessage(expected);
+  const auto actual = serializeAndDeserializeMessage(expected);
 
   assertMessagesAreEqual(actual->as<LoginRequest>(), expected);
 }

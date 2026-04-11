@@ -1,23 +1,22 @@
 
 #pragma once
 
-#include "AbstractUiHandler.hh"
+#include "IUiHandler.hh"
 #include "PlayerCredentials.hh"
 #include "UiMenu.hh"
 #include "UiTextField.hh"
 
 namespace bsgalone::client {
 
-class CredentialsUiHandler : public AbstractUiHandler
+class CredentialsUiHandler : public IUiHandler
 {
   public:
   CredentialsUiHandler();
   ~CredentialsUiHandler() override = default;
 
-  auto getCredentials() const -> PlayerCredentials;
+  auto getCredentials() const -> const PlayerCredentials &;
 
-  void initializeMenus(const int width,
-                       const int height,
+  void initializeMenus(const pge::Vec2i &dimensions,
                        pge::sprites::TexturePack &texturesLoader) override;
   bool processUserInput(ui::UserInputData &inputData) override;
   void render(pge::Renderer &engine) const override;
@@ -25,8 +24,11 @@ class CredentialsUiHandler : public AbstractUiHandler
 
   private:
   ui::UiMenuPtr m_credentialsPanel{};
-  ui::UiTextField *m_nameTextField{};
-  ui::UiTextField *m_passwordTextField{};
+
+  PlayerCredentials m_credentials{};
+
+  void onUsernameChanged(const std::string_view username);
+  void onPasswordChanged(const std::string_view password);
 };
 
 } // namespace bsgalone::client

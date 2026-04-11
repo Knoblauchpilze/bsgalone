@@ -12,7 +12,7 @@ add_subdirectory (
 	)
 
 add_subdirectory (
-	${CMAKE_CURRENT_SOURCE_DIR}/consumers
+	${CMAKE_CURRENT_SOURCE_DIR}/commands
 	)
 
 add_subdirectory (
@@ -24,11 +24,11 @@ add_subdirectory (
 	)
 
 add_subdirectory (
-	${CMAKE_CURRENT_SOURCE_DIR}/game
+	${CMAKE_CURRENT_SOURCE_DIR}/inputs
 	)
 
 add_subdirectory (
-	${CMAKE_CURRENT_SOURCE_DIR}/inputs
+	${CMAKE_CURRENT_SOURCE_DIR}/messages
 	)
 
 add_subdirectory (
@@ -40,21 +40,24 @@ add_subdirectory (
 	)
 
 add_subdirectory (
-	${CMAKE_CURRENT_SOURCE_DIR}/ui
+	${CMAKE_CURRENT_SOURCE_DIR}/store
 	)
 
 add_subdirectory (
-	${CMAKE_CURRENT_SOURCE_DIR}/views
+	${CMAKE_CURRENT_SOURCE_DIR}/ui
 	)
 
-target_sources (bsgalone_client_lib PRIVATE
-	${CMAKE_CURRENT_SOURCE_DIR}/GameClient.cc
-	)
-
-target_link_libraries (bsgalone_client_lib
+target_link_libraries (bsgalone_client_lib PUBLIC
+	bsgalone-interface-library
 	core_lib
-	net_lib
 	pge_lib
 	ui_lib
+	messaging_lib
 	bsgalone_core_lib
 	)
+
+if (${ENABLE_TESTS})
+	target_link_libraries (bsgalone_client_lib PUBLIC
+		bsgalone-interface-test-library
+		)
+endif ()

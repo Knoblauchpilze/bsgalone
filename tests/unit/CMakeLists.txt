@@ -1,6 +1,10 @@
 
 add_executable (unitTests)
 
+target_include_directories (unitTests PUBLIC
+	${CMAKE_CURRENT_SOURCE_DIR}
+	)
+
 add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/bsgalone
 	)
@@ -33,18 +37,14 @@ target_sources (unitTests PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/main.cc
 	)
 
-target_include_directories (unitTests PUBLIC
-	${CMAKE_CURRENT_SOURCE_DIR}
-	)
-
 target_link_libraries (unitTests
 	GTest::gtest
 	GTest::gmock
 	bsgalone-interface-test-library
-	tests_helper_lib
 	core_lib
 	pge_lib
 	time_lib
+	net_lib
 	bsgalone_core_lib
 	bsgalone_client_lib
 	bsgalone_server_lib

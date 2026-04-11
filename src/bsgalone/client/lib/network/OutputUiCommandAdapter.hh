@@ -1,27 +1,24 @@
 
 #pragma once
 
+#include "IDataStore.hh"
 #include "IMessageQueue.hh"
-#include "IUiEvent.hh"
-#include "IUiEventListener.hh"
-#include "IUiEventQueue.hh"
-#include "LoginCommand.hh"
+#include "IUiCommandListener.hh"
 
 namespace bsgalone::client {
 
-class OutputUiCommandAdapter : public IUiEventListener
+class OutputUiCommandAdapter : public IUiCommandListener
 {
   public:
-  OutputUiCommandAdapter(core::IMessageQueueShPtr outputQueue);
+  OutputUiCommandAdapter(IDataStoreShPtr dataStore, core::IMessageQueueShPtr outputQueue);
   ~OutputUiCommandAdapter() override = default;
 
-  bool isEventRelevant(const UiEventType &type) const override;
-  void onEventReceived(const IUiEvent &event) override;
+  bool isEventRelevant(const UiCommandType &type) const override;
+  void onEventReceived(const IUiCommand &event) override;
 
   private:
+  IDataStoreShPtr m_dataStore{};
   core::IMessageQueueShPtr m_outputQueue{};
-
-  void publishLoginMessage(const LoginCommand &command);
 };
 
 } // namespace bsgalone::client

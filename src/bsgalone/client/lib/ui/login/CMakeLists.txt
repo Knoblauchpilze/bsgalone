@@ -4,6 +4,7 @@ target_include_directories (bsgalone_client_lib PUBLIC
 	)
 
 target_sources (bsgalone_client_lib PRIVATE
-	${CMAKE_CURRENT_SOURCE_DIR}/LoginScreenUiHandler.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/LoginUiHandler.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/CredentialsUiHandler.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/PlayerCredentials.cc
 	)

@@ -3,10 +3,14 @@ target_include_directories(unitTests PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
 	)
 
-add_subdirectory(
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/messages
+	)
+
+add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/network
 	)
 
-add_subdirectory(
-	${CMAKE_CURRENT_SOURCE_DIR}/ui
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/store
 	)
