@@ -25,6 +25,15 @@ class MockOutputAdapter : public core::IOutputNetworkAdapter
   MOCK_METHOD(void, sendMessage, (const net::ClientId, const core::IMessage &), (override));
   MOCK_METHOD(void, sendMessage, (const core::IMessage &), (override));
 };
+
+void expectSendMessageAndCaptureArg(MockOutputAdapter &adapter, core::IMessagePtr &captured)
+{
+  EXPECT_CALL(adapter, sendMessage(net::ClientId{12}, _))
+    .Times(1)
+    .WillOnce(Invoke([&captured](const net::ClientId /*clientId*/, const core::IMessage &message) {
+      captured = message.clone();
+    }));
+}
 } // namespace
 
 TEST(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ThrowsWhenClientManagerIsNull)
@@ -45,11 +54,7 @@ TEST(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsFailedLoginMess
 
   auto networkClient = std::make_unique<StrictMock<MockOutputAdapter>>();
   core::IMessagePtr captured;
-  EXPECT_CALL(*networkClient, sendMessage(net::ClientId{12}, _))
-    .Times(1)
-    .WillOnce(Invoke([&captured](const net::ClientId /*clientId*/, const core::IMessage &message) {
-      captured = message.clone();
-    }));
+  expectSendMessageAndCaptureArg(*networkClient, captured);
 
   OutputGameEventAdapter adapter(std::make_shared<ClientManager>(), std::move(networkClient));
   adapter.onEventReceived(event);
@@ -67,11 +72,7 @@ TEST(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsSuccessfulLogin
 
   auto networkClient = std::make_unique<StrictMock<MockOutputAdapter>>();
   core::IMessagePtr captured;
-  EXPECT_CALL(*networkClient, sendMessage(net::ClientId{12}, _))
-    .Times(1)
-    .WillOnce(Invoke([&captured](const net::ClientId /*clientId*/, const core::IMessage &message) {
-      captured = message.clone();
-    }));
+  expectSendMessageAndCaptureArg(*networkClient, captured);
 
   OutputGameEventAdapter adapter(std::make_shared<ClientManager>(), std::move(networkClient));
   adapter.onEventReceived(event);
@@ -89,11 +90,7 @@ TEST(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsFailedSignupMes
 
   auto networkClient = std::make_unique<StrictMock<MockOutputAdapter>>();
   core::IMessagePtr captured;
-  EXPECT_CALL(*networkClient, sendMessage(net::ClientId{12}, _))
-    .Times(1)
-    .WillOnce(Invoke([&captured](const net::ClientId /*clientId*/, const core::IMessage &message) {
-      captured = message.clone();
-    }));
+  expectSendMessageAndCaptureArg(*networkClient, captured);
 
   OutputGameEventAdapter adapter(std::make_shared<ClientManager>(), std::move(networkClient));
   adapter.onEventReceived(event);
@@ -111,11 +108,7 @@ TEST(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsSuccessfulSignu
 
   auto networkClient = std::make_unique<StrictMock<MockOutputAdapter>>();
   core::IMessagePtr captured;
-  EXPECT_CALL(*networkClient, sendMessage(net::ClientId{12}, _))
-    .Times(1)
-    .WillOnce(Invoke([&captured](const net::ClientId /*clientId*/, const core::IMessage &message) {
-      captured = message.clone();
-    }));
+  expectSendMessageAndCaptureArg(*networkClient, captured);
 
   OutputGameEventAdapter adapter(std::make_shared<ClientManager>(), std::move(networkClient));
   adapter.onEventReceived(event);
