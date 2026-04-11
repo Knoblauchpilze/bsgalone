@@ -26,7 +26,7 @@ class MockOutputAdapter : public core::IOutputNetworkAdapter
   MOCK_METHOD(void, sendMessage, (const core::IMessage &), (override));
 };
 
-class Unit_Bsgalone_Server_Events_OutputGameEventAdapter : public ::testing::Test
+class Unit_Bsgalone_Server_Events_OutputGameEventAdapter : public Test
 {
   protected:
   void SetUp() override
