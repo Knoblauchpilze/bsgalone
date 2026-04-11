@@ -26,56 +26,67 @@ class MockOutputAdapter : public core::IOutputNetworkAdapter
   MOCK_METHOD(void, sendMessage, (const core::IMessage &), (override));
 };
 
-void expectSendMessageAndCaptureArg(MockOutputAdapter &adapter, core::IMessagePtr &captured)
+class Unit_Bsgalone_Server_Events_OutputGameEventAdapter : public ::testing::Test
 {
-  EXPECT_CALL(adapter, sendMessage(net::ClientId{12}, _))
-    .Times(1)
-    .WillOnce(Invoke([&captured](const net::ClientId /*clientId*/, const core::IMessage &message) {
-      captured = message.clone();
-    }));
-}
+  protected:
+  void SetUp() override
+  {
+    // Intentionally empty
+  }
+
+  void TearDown() override
+  {
+    // Intentionally empty
+  }
+
+  template<typename GameEvent>
+  auto executeTestCase(GameEvent &event) -> core::IMessagePtr
+  {
+    auto networkClient = std::make_unique<StrictMock<MockOutputAdapter>>();
+    core::IMessagePtr captured;
+    EXPECT_CALL(*networkClient, sendMessage(net::ClientId{12}, _))
+      .Times(1)
+      .WillOnce(Invoke([&captured](const net::ClientId /*clientId*/,
+                                   const core::IMessage &message) { captured = message.clone(); }));
+
+    OutputGameEventAdapter adapter(std::make_shared<ClientManager>(), std::move(networkClient));
+    adapter.onEventReceived(event);
+
+    return captured;
+  }
+};
 } // namespace
 
-TEST(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ThrowsWhenClientManagerIsNull)
+TEST_F(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ThrowsWhenClientManagerIsNull)
 {
   EXPECT_THROW([]() { OutputGameEventAdapter(nullptr, std::make_unique<MockOutputAdapter>()); }(),
                std::invalid_argument);
 }
 
-TEST(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ThrowsWhenNetworkClientIsNull)
+TEST_F(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ThrowsWhenNetworkClientIsNull)
 {
   EXPECT_THROW([]() { OutputGameEventAdapter(std::make_shared<ClientManager>(), nullptr); }(),
                std::invalid_argument);
 }
 
-TEST(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsFailedLoginMessage)
+TEST_F(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsFailedLoginMessage)
 {
   PlayerLoginEvent event(net::ClientId{12});
 
-  auto networkClient = std::make_unique<StrictMock<MockOutputAdapter>>();
-  core::IMessagePtr captured;
-  expectSendMessageAndCaptureArg(*networkClient, captured);
-
-  OutputGameEventAdapter adapter(std::make_shared<ClientManager>(), std::move(networkClient));
-  adapter.onEventReceived(event);
+  auto captured = this->executeTestCase(event);
 
   EXPECT_EQ(core::MessageType::LOGIN, captured->type());
   const auto &actual = captured->as<core::LoginMessage>();
   EXPECT_FALSE(actual.successfullyLoggedIn());
 }
 
-TEST(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsSuccessfulLoginMessage)
+TEST_F(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsSuccessfulLoginMessage)
 {
   PlayerLoginEvent event(net::ClientId{12});
   event.setPlayerDbId(core::Uuid{18});
   event.setRole(core::GameRole::GUNNER);
 
-  auto networkClient = std::make_unique<StrictMock<MockOutputAdapter>>();
-  core::IMessagePtr captured;
-  expectSendMessageAndCaptureArg(*networkClient, captured);
-
-  OutputGameEventAdapter adapter(std::make_shared<ClientManager>(), std::move(networkClient));
-  adapter.onEventReceived(event);
+  auto captured = this->executeTestCase(event);
 
   EXPECT_EQ(core::MessageType::LOGIN, captured->type());
   const auto &actual = captured->as<core::LoginMessage>();
@@ -84,41 +95,32 @@ TEST(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsSuccessfulLogin
   EXPECT_EQ(core::GameRole::GUNNER, actual.getRole());
 }
 
-TEST(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsFailedSignupMessage)
+TEST_F(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsFailedSignupMessage)
 {
   PlayerSignupEvent event(net::ClientId{12});
 
-  auto networkClient = std::make_unique<StrictMock<MockOutputAdapter>>();
-  core::IMessagePtr captured;
-  expectSendMessageAndCaptureArg(*networkClient, captured);
-
-  OutputGameEventAdapter adapter(std::make_shared<ClientManager>(), std::move(networkClient));
-  adapter.onEventReceived(event);
+  auto captured = this->executeTestCase(event);
 
   EXPECT_EQ(core::MessageType::SIGNUP, captured->type());
   const auto &actual = captured->as<core::SignupMessage>();
   EXPECT_FALSE(actual.successfullySignedUp());
 }
 
-TEST(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsSuccessfulSignupMessage)
+TEST_F(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsSuccessfulSignupMessage)
 {
   PlayerSignupEvent event(net::ClientId{12});
   event.setPlayerDbId(core::Uuid{18});
   event.setFaction(core::Faction::CYLON);
 
-  auto networkClient = std::make_unique<StrictMock<MockOutputAdapter>>();
-  core::IMessagePtr captured;
-  expectSendMessageAndCaptureArg(*networkClient, captured);
-
-  OutputGameEventAdapter adapter(std::make_shared<ClientManager>(), std::move(networkClient));
-  adapter.onEventReceived(event);
+  auto captured = this->executeTestCase(event);
 
   EXPECT_EQ(core::MessageType::SIGNUP, captured->type());
   const auto &actual = captured->as<core::SignupMessage>();
   EXPECT_TRUE(actual.successfullySignedUp());
 }
 
-TEST(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsLogoutMessageToAllRegisteredClients)
+TEST_F(Unit_Bsgalone_Server_Events_OutputGameEventAdapter,
+       ForwardsLogoutMessageToAllRegisteredClients)
 {
   PlayerLogoutEvent event(core::Uuid{18});
   auto clientManager = std::make_shared<ClientManager>();
