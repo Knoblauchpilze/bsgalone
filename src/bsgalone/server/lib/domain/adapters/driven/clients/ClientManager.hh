@@ -29,7 +29,7 @@ class ClientManager : public ForManagingClient, public ::core::CoreObject
   auto tryGetPlayerForClient(const net::ClientId clientId) -> std::optional<core::Uuid>;
   auto getClientIdForPlayer(const core::Uuid playerDbId) const -> net::ClientId override;
 
-  auto getAllClients() const -> std::vector<net::ClientId>;
+  auto getAllClients() const -> std::vector<net::ClientId> override;
   auto getAllClientsForSystem(const core::Uuid systemDbId) const -> std::vector<net::ClientId>;
   auto tryGetSystemForClient(const net::ClientId clientId) const -> std::optional<core::Uuid>;
 

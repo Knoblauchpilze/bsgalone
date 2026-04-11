@@ -125,39 +125,37 @@ TEST(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsSuccessfulSignu
   EXPECT_TRUE(actual.successfullySignedUp());
 }
 
-TEST(Unit_Bsgalone_Server_Events_OutputGameEventAdapter,
-     DoesNotForwardLogoutMessageWhenPlayerIsNotRegistered)
-{
-  PlayerLogoutEvent event(core::Uuid{18});
-
-  auto networkClient = std::make_unique<StrictMock<MockOutputAdapter>>();
-  EXPECT_CALL(*networkClient, sendMessage(_, _)).Times(0);
-
-  OutputGameEventAdapter adapter(std::make_shared<ClientManager>(), std::move(networkClient));
-  adapter.onEventReceived(event);
-}
-
-TEST(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsLogoutMessageWhenPlayerIsRegistered)
+TEST(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsLogoutMessageToAllRegisteredClients)
 {
   PlayerLogoutEvent event(core::Uuid{18});
   auto clientManager = std::make_shared<ClientManager>();
   clientManager->registerClient(net::ClientId{12});
   clientManager->registerPlayer(net::ClientId{12}, core::Uuid{18}, core::Uuid{19});
 
+  clientManager->registerClient(net::ClientId{13});
+
   auto networkClient = std::make_unique<StrictMock<MockOutputAdapter>>();
-  core::IMessagePtr captured;
+  core::IMessagePtr captured1;
   EXPECT_CALL(*networkClient, sendMessage(net::ClientId{12}, _))
     .Times(1)
-    .WillOnce(Invoke([&captured](const net::ClientId /*clientId*/, const core::IMessage &message) {
-      captured = message.clone();
+    .WillOnce(Invoke([&captured1](const net::ClientId /*clientId*/, const core::IMessage &message) {
+      captured1 = message.clone();
+    }));
+  core::IMessagePtr captured2;
+  EXPECT_CALL(*networkClient, sendMessage(net::ClientId{13}, _))
+    .Times(1)
+    .WillOnce(Invoke([&captured2](const net::ClientId /*clientId*/, const core::IMessage &message) {
+      captured2 = message.clone();
     }));
 
   OutputGameEventAdapter adapter(clientManager, std::move(networkClient));
   adapter.onEventReceived(event);
 
-  EXPECT_EQ(core::MessageType::LOGOUT, captured->type());
-  const auto &actual = captured->as<core::LogoutMessage>();
-  EXPECT_EQ(core::Uuid{18}, actual.getPlayerDbId());
+  EXPECT_EQ(core::MessageType::LOGOUT, captured1->type());
+  EXPECT_EQ(core::Uuid{18}, captured1->as<core::LogoutMessage>().getPlayerDbId());
+
+  EXPECT_EQ(core::MessageType::LOGOUT, captured2->type());
+  EXPECT_EQ(core::Uuid{18}, captured2->as<core::LogoutMessage>().getPlayerDbId());
 }
 
 } // namespace bsgalone::server

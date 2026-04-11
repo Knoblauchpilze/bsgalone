@@ -81,21 +81,12 @@ void OutputGameEventAdapter::onEventReceived(const IGameEvent &event)
 
 void OutputGameEventAdapter::handleLogoutEvent(const PlayerLogoutEvent &event)
 {
-  std::optional<core::Uuid> maybeClientId{};
-
-  withSafetyNet(
-    [this, &event, &maybeClientId]() {
-      maybeClientId = m_clientManager->getClientIdForPlayer(event.getPlayerDbId());
-    },
-    "handleLogoutEvent");
-
-  if (!maybeClientId.has_value())
-  {
-    return;
-  }
-
   core::LogoutMessage message(event.getPlayerDbId());
-  m_networkClient->sendMessage(*maybeClientId, message);
+
+  for (const auto &clientId : m_clientManager->getAllClients())
+  {
+    m_networkClient->sendMessage(clientId, message);
+  }
 }
 
 } // namespace bsgalone::server

@@ -4,6 +4,7 @@
 #include "ClientId.hh"
 #include "Uuid.hh"
 #include <memory>
+#include <vector>
 
 namespace bsgalone::server {
 
@@ -39,6 +40,10 @@ class ForManagingClient
   /// @return - the identifier of the network client owning the connection the
   /// player is logged into.
   virtual auto getClientIdForPlayer(const core::Uuid playerDbId) const -> net::ClientId = 0;
+
+  /// @brief - Returns the list of all connected clients.
+  /// @return - all clients connected to the server
+  virtual auto getAllClients() const -> std::vector<net::ClientId> = 0;
 };
 
 using ForManagingClientShPtr = std::shared_ptr<ForManagingClient>;
