@@ -32,7 +32,6 @@ void LogoutMessageConsumer::onEventReceived(const core::IMessage &event)
 
   if (!m_store->isLoggedIn())
   {
-    // TODO: This should only happen when the current player logged out
     m_queue->pushEvent(std::make_unique<LogoutEvent>());
   }
 }

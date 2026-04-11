@@ -10,6 +10,7 @@ enum class UiEventType
 {
   LOGIN_FAILED,
   LOGIN_SUCCEEDED,
+  LOGOUT,
   SIGNUP_FAILED,
   SIGNUP_SUCCEEDED
 };
