@@ -50,7 +50,7 @@ TEST(Unit_Bsgalone_Server_Domain_App_Usecases_SignupUseCase,
 {
   auto mockAccountRepo = std::make_shared<StrictMock<MockAccountRepository>>();
   auto mockPlayerRepo  = std::make_shared<StrictMock<MockPlayerRepository>>();
-  auto publisher       = std::make_shared<StrictMock<TestGameEventPublisher>>();
+  auto publisher       = std::make_shared<TestGameEventPublisher>();
   SignupUseCase usecase(mockAccountRepo, mockPlayerRepo, publisher);
 
   SignupData data{
@@ -79,7 +79,7 @@ TEST(Unit_Bsgalone_Server_Domain_App_Usecases_SignupUseCase,
 {
   auto mockAccountRepo = std::make_shared<StrictMock<MockAccountRepository>>();
   auto mockPlayerRepo  = std::make_shared<StrictMock<MockPlayerRepository>>();
-  auto publisher       = std::make_shared<StrictMock<TestGameEventPublisher>>();
+  auto publisher       = std::make_shared<TestGameEventPublisher>();
   SignupUseCase usecase(mockAccountRepo, mockPlayerRepo, publisher);
 
   SignupData data{
@@ -113,7 +113,7 @@ TEST(Unit_Bsgalone_Server_Domain_App_Usecases_SignupUseCase,
 {
   auto mockAccountRepo = std::make_shared<StrictMock<MockAccountRepository>>();
   auto mockPlayerRepo  = std::make_shared<StrictMock<MockPlayerRepository>>();
-  auto publisher       = std::make_shared<StrictMock<TestGameEventPublisher>>();
+  auto publisher       = std::make_shared<TestGameEventPublisher>();
   SignupUseCase usecase(mockAccountRepo, mockPlayerRepo, publisher);
 
   SignupData data{
