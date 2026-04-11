@@ -157,7 +157,7 @@ namespace {
 class UiCommandListenerProxy : public IUiCommandListener
 {
   public:
-  UiCommandListenerProxy(App &app)
+  explicit UiCommandListenerProxy(App &app)
     : IUiCommandListener()
     , m_app(app)
   {}
@@ -186,7 +186,7 @@ const std::unordered_set<UiEventType> RELEVANT_UI_EVENT_TYPES = {
 class UiEventListenerProxy : public IUiEventListener
 {
   public:
-  UiEventListenerProxy(App &app)
+  explicit UiEventListenerProxy(App &app)
     : IUiEventListener()
     , m_app(app)
   {}
