@@ -10,7 +10,7 @@ namespace bsgalone::client {
 class StatusUiHandler : public IUiHandler
 {
   public:
-  StatusUiHandler(IUiCommandQueueShPtr outputQueue);
+  explicit StatusUiHandler(IUiCommandQueueShPtr outputQueue);
   ~StatusUiHandler() override = default;
 
   void initializeMenus(const pge::Vec2i &dimensions,

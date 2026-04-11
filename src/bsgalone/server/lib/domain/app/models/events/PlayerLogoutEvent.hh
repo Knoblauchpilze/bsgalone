@@ -9,7 +9,7 @@ namespace bsgalone::server {
 class PlayerLogoutEvent : public IGameEvent
 {
   public:
-  PlayerLogoutEvent(const core::Uuid playerDbId);
+  explicit PlayerLogoutEvent(const core::Uuid playerDbId);
   ~PlayerLogoutEvent() override = default;
 
   auto getPlayerDbId() const -> core::Uuid;

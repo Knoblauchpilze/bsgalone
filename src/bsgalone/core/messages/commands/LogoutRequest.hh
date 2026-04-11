@@ -10,7 +10,7 @@ namespace bsgalone::core {
 class LogoutRequest : public IMessage
 {
   public:
-  LogoutRequest(const Uuid playerDbId);
+  explicit LogoutRequest(const Uuid playerDbId);
   ~LogoutRequest() override = default;
 
   auto getPlayerDbId() const -> Uuid;

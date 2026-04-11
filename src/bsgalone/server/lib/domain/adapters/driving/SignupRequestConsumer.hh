@@ -10,7 +10,7 @@ namespace bsgalone::server {
 class SignupRequestConsumer : public core::IMessageListener, public ::core::CoreObject
 {
   public:
-  SignupRequestConsumer(ForExecutingSignupPtr signupUseCase);
+  explicit SignupRequestConsumer(ForExecutingSignupPtr signupUseCase);
   ~SignupRequestConsumer() override = default;
 
   bool isEventRelevant(const core::MessageType &type) const override;

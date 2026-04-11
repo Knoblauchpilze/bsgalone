@@ -12,7 +12,7 @@ namespace bsgalone::core {
 class SignupMessage : public IMessage
 {
   public:
-  SignupMessage(const bool success);
+  explicit SignupMessage(const bool success);
   ~SignupMessage() override = default;
 
   bool successfullySignedUp() const;

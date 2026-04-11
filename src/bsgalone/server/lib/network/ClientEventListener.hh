@@ -11,7 +11,7 @@ namespace bsgalone::server {
 class ClientEventListener : public net::INetworkEventListener
 {
   public:
-  ClientEventListener(ClientManagerShPtr clientManager);
+  explicit ClientEventListener(ClientManagerShPtr clientManager);
 
   ~ClientEventListener() override = default;
 

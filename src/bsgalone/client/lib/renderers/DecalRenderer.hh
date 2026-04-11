@@ -9,7 +9,7 @@ namespace bsgalone::client {
 class DecalRenderer : public IRenderer
 {
   public:
-  DecalRenderer(const std::string &decalFileName);
+  explicit DecalRenderer(const std::string &decalFileName);
   ~DecalRenderer() override = default;
 
   void loadResources(const pge::Vec2i &dimensions,

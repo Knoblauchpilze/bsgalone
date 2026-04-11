@@ -10,7 +10,7 @@ namespace bsgalone::server {
 class LoginRequestConsumer : public core::IMessageListener, public ::core::CoreObject
 {
   public:
-  LoginRequestConsumer(ForExecutingLoginPtr loginUseCase);
+  explicit LoginRequestConsumer(ForExecutingLoginPtr loginUseCase);
   ~LoginRequestConsumer() override = default;
 
   bool isEventRelevant(const core::MessageType &type) const override;

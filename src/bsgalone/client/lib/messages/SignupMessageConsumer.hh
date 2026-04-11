@@ -9,7 +9,7 @@ namespace bsgalone::client {
 class SignupMessageConsumer : public core::IMessageListener
 {
   public:
-  SignupMessageConsumer(IUiEventQueueShPtr queue);
+  explicit SignupMessageConsumer(IUiEventQueueShPtr queue);
   ~SignupMessageConsumer() override = default;
 
   bool isEventRelevant(const core::MessageType &type) const override;

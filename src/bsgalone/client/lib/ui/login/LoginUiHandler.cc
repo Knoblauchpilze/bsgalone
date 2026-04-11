@@ -20,7 +20,7 @@ const std::unordered_set<UiEventType> RELEVANT_EVENT_TYPES = {
 class UiEventListenerLoginProxy : public IUiEventListener
 {
   public:
-  UiEventListenerLoginProxy(LoginUiHandler &handler)
+  explicit UiEventListenerLoginProxy(LoginUiHandler &handler)
     : IUiEventListener()
     , m_handler(handler)
   {}

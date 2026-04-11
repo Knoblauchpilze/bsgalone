@@ -18,7 +18,7 @@ namespace bsgalone::server {
 class ServerNetworkClient : public net::INetworkServer, public ::core::CoreObject
 {
   public:
-  ServerNetworkClient(ClientManagerShPtr clientManager);
+  explicit ServerNetworkClient(ClientManagerShPtr clientManager);
   ~ServerNetworkClient() = default;
 
   void start(const int port) override;

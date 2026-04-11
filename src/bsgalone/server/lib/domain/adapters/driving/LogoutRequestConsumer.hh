@@ -10,7 +10,7 @@ namespace bsgalone::server {
 class LogoutRequestConsumer : public core::IMessageListener, public ::core::CoreObject
 {
   public:
-  LogoutRequestConsumer(ForExecutingLogoutPtr logoutUseCase);
+  explicit LogoutRequestConsumer(ForExecutingLogoutPtr logoutUseCase);
   ~LogoutRequestConsumer() override = default;
 
   bool isEventRelevant(const core::MessageType &type) const override;

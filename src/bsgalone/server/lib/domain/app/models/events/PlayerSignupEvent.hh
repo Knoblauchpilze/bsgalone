@@ -12,7 +12,7 @@ namespace bsgalone::server {
 class PlayerSignupEvent : public IGameEvent
 {
   public:
-  PlayerSignupEvent(const net::ClientId clientId);
+  explicit PlayerSignupEvent(const net::ClientId clientId);
   ~PlayerSignupEvent() override = default;
 
   bool successfulSignup() const;

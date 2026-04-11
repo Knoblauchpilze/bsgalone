@@ -12,7 +12,7 @@ namespace bsgalone::client {
 class NetworkEventListener : public net::INetworkEventListener
 {
   public:
-  NetworkEventListener(std::atomic_bool &connected);
+  explicit NetworkEventListener(std::atomic_bool &connected);
   ~NetworkEventListener() override = default;
 
   bool isEventRelevant(const net::NetworkEventType &type) const override;
