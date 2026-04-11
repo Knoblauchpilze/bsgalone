@@ -74,12 +74,12 @@ void CredentialsUiHandler::updateUi()
   // Intentionally empty
 }
 
-void CredentialsUiHandler::onUsernameChanged(const std::string &username)
+void CredentialsUiHandler::onUsernameChanged(const std::string_view username)
 {
   m_credentials.username = username;
 }
 
-void CredentialsUiHandler::onPasswordChanged(const std::string &password)
+void CredentialsUiHandler::onPasswordChanged(const std::string_view password)
 {
   m_credentials.password = password;
 }

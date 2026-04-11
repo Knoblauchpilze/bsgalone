@@ -27,8 +27,8 @@ class CredentialsUiHandler : public IUiHandler
 
   PlayerCredentials m_credentials{};
 
-  void onUsernameChanged(const std::string &username);
-  void onPasswordChanged(const std::string &password);
+  void onUsernameChanged(const std::string_view username);
+  void onPasswordChanged(const std::string_view password);
 };
 
 } // namespace bsgalone::client
