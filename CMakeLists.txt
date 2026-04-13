@@ -1,5 +1,15 @@
 cmake_minimum_required (VERSION 3.28)
 
+include (FetchContent)
+
+FetchContent_Declare (
+	entt
+	GIT_REPOSITORY https://github.com/skypjack/entt.git
+	GIT_TAG v3.16.0
+)
+
+FetchContent_MakeAvailable (entt)
+
 option (ENABLE_TESTS "Enable tests" OFF)
 
 # https://stackoverflow.com/questions/66680147/how-to-change-c-version-being-used-by-vs-code
