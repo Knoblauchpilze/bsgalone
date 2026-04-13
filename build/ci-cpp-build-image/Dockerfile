@@ -49,6 +49,7 @@ RUN cmake \
       -DCMAKE_CXX_STANDARD=${CPP_VERSION} \
       -DCMAKE_BUILD_TYPE=Release \
       -DBUILD_SHARED_LIBS=1 \
+      -DSKIP_BUILD_TEST=on \
       .
 RUN cmake --build . -j 8
 RUN cmake --install .
