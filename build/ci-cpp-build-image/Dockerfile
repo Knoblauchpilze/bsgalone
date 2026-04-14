@@ -29,6 +29,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   python3=3.12.3-0ubuntu2.1 \
   # https://superuser.com/questions/801159/cannot-decompress-tar-xz-file-getting-xz-cannot-exec-no-such-file-or-direct
   xz-utils=5.6.1+really5.4.5-1ubuntu0.2 \
+  git=1:2.43.0-1ubuntu7.3 \
   && rm -rf /var/lib/apt/lists/*
 # https://www.dedicatedcore.com/blog/install-gcc-compiler-ubuntu/
 RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 13 --slave /usr/bin/g++ g++ /usr/bin/g++-13
@@ -48,6 +49,7 @@ RUN cmake \
       -DCMAKE_CXX_STANDARD=${CPP_VERSION} \
       -DCMAKE_BUILD_TYPE=Release \
       -DBUILD_SHARED_LIBS=1 \
+      -DSKIP_BUILD_TEST=on \
       .
 RUN cmake --build . -j 8
 RUN cmake --install .
