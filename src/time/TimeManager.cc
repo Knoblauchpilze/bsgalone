@@ -5,7 +5,8 @@
 namespace chrono {
 
 TimeManager::TimeManager(const Tick tick, const TimeStep step)
-  : core::CoreObject("manager")
+  : ITimeManager()
+  , core::CoreObject("manager")
   , m_currentTick(tick)
   , m_step(step)
 {

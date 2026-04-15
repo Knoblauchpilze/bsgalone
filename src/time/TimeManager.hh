@@ -2,27 +2,21 @@
 #pragma once
 
 #include "CoreObject.hh"
-#include "Duration.hh"
-#include "Tick.hh"
-#include "TickData.hh"
-#include "TimeStep.hh"
-#include <memory>
+#include "ITimeManager.hh"
 
 namespace chrono {
 
-class TimeManager : public core::CoreObject
+class TimeManager : public ITimeManager, public core::CoreObject
 {
   public:
   TimeManager(const Tick tick, const TimeStep step);
   ~TimeManager() = default;
 
-  auto tick(const Duration elapsed) -> TickData;
+  auto tick(const Duration elapsed) -> TickData override;
 
   private:
   Tick m_currentTick{};
   TimeStep m_step{};
 };
-
-using TimeManagerPtr = std::unique_ptr<TimeManager>;
 
 } // namespace chrono
