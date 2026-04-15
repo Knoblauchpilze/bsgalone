@@ -3,6 +3,7 @@
 
 #include "AccountRepository.hh"
 #include "PlayerRepository.hh"
+#include "SystemRepository.hh"
 
 namespace bsgalone::server {
 
@@ -13,6 +14,7 @@ struct Repositories
 
   AccountRepositoryShPtr accountRepository{};
   PlayerRepositoryShPtr playerRepository{};
+  SystemRepositoryShPtr systemRepository{};
 };
 
 } // namespace bsgalone::server
