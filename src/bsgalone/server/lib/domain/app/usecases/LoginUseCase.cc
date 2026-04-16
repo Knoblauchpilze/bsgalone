@@ -49,7 +49,7 @@ void LoginUseCase::performLogin(const LoginData &data)
   event->setRole(player.role);
 
   // TODO: The system should come from the player.
-  m_clientManager->registerPlayer(data.clientId, player.dbId, core::Uuid{0});
+  m_clientManager->registerPlayer(data.clientId, player.dbId, core::Uuid::random());
   m_eventPublisher->publishEvent(std::move(event));
 }
 

@@ -55,24 +55,24 @@ TEST(Unit_Bsgalone_Core_Domain_App_Models_Uuid, str)
 
 TEST(Unit_Bsgalone_Core_Domain_App_Models_Uuid, SingleValue)
 {
-  const Uuid expected{2};
-  Uuid actual{1};
+  const Uuid expected = Uuid::random();
+  Uuid actual         = Uuid::random();
   serializeAndDeserialize(expected, actual);
   EXPECT_EQ(actual, expected);
 }
 
 TEST(Unit_Bsgalone_Core_Domain_App_Models_Uuid, MultipleValues)
 {
-  Uuid expected1{2};
-  Uuid expected2{36};
+  Uuid expected1 = Uuid::random();
+  Uuid expected2 = Uuid::random();
 
   std::ostringstream out;
   ::core::serialize(out, expected1);
   ::core::serialize(out, expected2);
   std::istringstream in(out.str());
 
-  Uuid actual1{3};
-  Uuid actual2{27};
+  Uuid actual1 = Uuid::random();
+  Uuid actual2 = Uuid::random();
   ::core::deserialize(in, actual1);
   ::core::deserialize(in, actual2);
 

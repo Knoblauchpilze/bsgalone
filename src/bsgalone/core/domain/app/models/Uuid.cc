@@ -1,6 +1,6 @@
 
 #include "Uuid.hh"
-#include "SerializationUtils.hh"
+#include <array>
 
 namespace bsgalone::core {
 
@@ -39,24 +39,37 @@ auto Uuid::fromDbId(const std::string_view dbId) -> std::optional<Uuid>
 
 auto Uuid::readFromStream(std::istream &in) -> std::optional<Uuid>
 {
-  Uuid uuid;
-
-  bool ok{true};
-  ok &= ::core::deserialize(in, uuid.m_uuid);
-
-  if (!ok)
+  std::array<uuids::uuid::value_type, 16> rawUuid{};
+  in.read(reinterpret_cast<char *>(rawUuid.data()), rawUuid.size());
+  if (!in.good())
   {
     return {};
   }
 
-  return uuid;
+  return Uuid(uuids::uuid(rawUuid));
 }
 
 auto operator<<(std::ostream &out, const Uuid &uuid) -> std::ostream &
 {
-  ::core::serialize(out, uuid.m_uuid);
+  const auto bytes = uuid.m_uuid.as_bytes();
+  out.write(reinterpret_cast<const char *>(bytes.data()),
+            static_cast<std::streamsize>(bytes.size()));
 
   return out;
+}
+
+auto operator>>(std::istream &in, Uuid &uuid) -> std::istream &
+{
+  const auto maybeUuid = Uuid::readFromStream(in);
+  if (!maybeUuid)
+  {
+    in.setstate(std::ios::failbit);
+    return in;
+  }
+
+  uuid = *maybeUuid;
+
+  return in;
 }
 
 bool Uuid::operator==(const Uuid &rhs) const

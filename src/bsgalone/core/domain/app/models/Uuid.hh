@@ -1,7 +1,9 @@
 
 #pragma once
 
+#include <istream>
 #include <optional>
+#include <ostream>
 #include <string>
 #include <uuid.h>
 
@@ -50,6 +52,7 @@ class Uuid
   Uuid(uuids::uuid uuid);
 
   friend auto operator<<(std::ostream &out, const Uuid &uuid) -> std::ostream &;
+  friend auto operator>>(std::istream &in, Uuid &uuid) -> std::istream &;
   friend std::hash<Uuid>;
 };
 
