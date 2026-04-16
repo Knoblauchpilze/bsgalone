@@ -28,6 +28,7 @@ target_link_libraries (bsgalone_core_lib PUBLIC
 	net_lib
 	time_lib
 	EnTT::EnTT
+	stduuid
 	)
 
 if (${ENABLE_TESTS})
