@@ -53,7 +53,7 @@ auto AccountRepository::findOneByName(const std::string &name) const -> std::opt
   Account out;
 
   const auto &record = rows[0];
-  out.dbId           = core::fromDbId(record[0].as<int>());
+  out.dbId           = core::Uuid::fromDbId(record[0].view());
   out.username       = name;
   out.password       = record[1].as<std::string>();
 
@@ -69,7 +69,7 @@ auto AccountRepository::save(Account account) const -> Account
   };
 
   const auto record = m_connection->executeQueryReturningSingleRow(query);
-  account.dbId      = core::fromDbId(record[0].as<int>());
+  account.dbId      = core::Uuid::fromDbId(record[0].view());
 
   return account;
 }

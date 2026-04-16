@@ -26,15 +26,15 @@ auto Uuid::random() -> Uuid
   return Uuid(generator());
 }
 
-auto Uuid::fromDbId(const std::string_view dbId) -> std::optional<Uuid>
+auto Uuid::fromDbId(const std::string_view dbId) -> Uuid
 {
   const auto maybeUuid = uuids::uuid::from_string(dbId);
-  if (maybeUuid)
+  if (!maybeUuid.has_value())
   {
-    return Uuid(*maybeUuid);
+    throw std::invalid_argument("Unrecognized uuid " + std::string(dbId));
   }
 
-  return {};
+  return Uuid(*maybeUuid);
 }
 
 auto Uuid::readFromStream(std::istream &in) -> std::optional<Uuid>

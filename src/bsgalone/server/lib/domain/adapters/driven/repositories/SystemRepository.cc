@@ -78,7 +78,7 @@ auto fromDbRow(const pqxx::row &record) -> System
   };
 
   return System{
-    .dbId        = core::fromDbId(record[0].as<int>()),
+    .dbId        = core::Uuid::fromDbId(record[0].view()),
     .name        = record[1].as<std::string>(),
     .position    = Eigen::Vector3f(x, y, z),
     .currentTick = chrono::Tick::fromInt(record[5].as<int>()),
@@ -90,8 +90,7 @@ auto fromDbRow(const pqxx::row &record) -> System
 auto SystemRepository::findOneById(const core::Uuid system) const -> System
 {
   const auto query = [system](pqxx::nontransaction &work) {
-    return work.exec(pqxx::prepped{FIND_ONE_QUERY_NAME}, pqxx::params{core::toDbId(system)})
-      .one_row();
+    return work.exec(pqxx::prepped{FIND_ONE_QUERY_NAME}, pqxx::params{system.toDbId()}).one_row();
   };
   const auto record = m_connection->executeQueryReturningSingleRow(query);
 
@@ -120,7 +119,7 @@ void SystemRepository::save(const System &system)
   auto query = [&system](pqxx::work &transaction) {
     return transaction
       .exec(pqxx::prepped{UPDATE_SYSTEM_TICK_QUERY_NAME},
-            pqxx::params{system.currentTick.count(), core::toDbId(system.dbId)})
+            pqxx::params{system.currentTick.count(), system.dbId.toDbId()})
       .no_rows();
   };
 

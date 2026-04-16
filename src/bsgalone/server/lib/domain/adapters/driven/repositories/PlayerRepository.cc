@@ -72,11 +72,11 @@ auto buildPlayerFromDbRow(const pqxx::row &record) -> Player
   std::optional<core::Uuid> maybeAccountDbId{};
   if (!record[1].is_null())
   {
-    maybeAccountDbId = core::fromDbId(record[1].as<int>());
+    maybeAccountDbId = core::Uuid::fromDbId(record[1].view());
   }
 
   return Player{
-    .dbId    = core::fromDbId(record[0].as<int>()),
+    .dbId    = core::Uuid::fromDbId(record[0].view()),
     .account = maybeAccountDbId,
     .name    = record[2].as<std::string>(),
     .faction = core::fromDbFaction(record[3].as<std::string>()),
@@ -88,8 +88,7 @@ auto buildPlayerFromDbRow(const pqxx::row &record) -> Player
 auto PlayerRepository::findOneById(const core::Uuid playerDbId) const -> Player
 {
   const auto query = [playerDbId](pqxx::nontransaction &work) {
-    return work.exec(pqxx::prepped{FIND_ONE_QUERY_NAME}, pqxx::params{core::toDbId(playerDbId)})
-      .one_row();
+    return work.exec(pqxx::prepped{FIND_ONE_QUERY_NAME}, pqxx::params{playerDbId.toDbId()}).one_row();
   };
   const auto record = m_connection->executeQueryReturningSingleRow(query);
 
@@ -100,7 +99,7 @@ auto PlayerRepository::findOneByAccount(const core::Uuid accountDbId) const -> P
 {
   const auto query = [accountDbId](pqxx::nontransaction &work) {
     return work
-      .exec(pqxx::prepped{FIND_ONE_BY_ACCOUNT_QUERY_NAME}, pqxx::params{core::toDbId(accountDbId)})
+      .exec(pqxx::prepped{FIND_ONE_BY_ACCOUNT_QUERY_NAME}, pqxx::params{accountDbId.toDbId()})
       .one_row();
   };
   const auto record = m_connection->executeQueryReturningSingleRow(query);
@@ -111,10 +110,10 @@ auto PlayerRepository::findOneByAccount(const core::Uuid accountDbId) const -> P
 auto PlayerRepository::save(Player player) -> Player
 {
   auto playerQuery = [&player](pqxx::nontransaction &work) {
-    std::optional<int> maybeAccount{};
+    std::optional<std::string> maybeAccount{};
     if (player.account)
     {
-      maybeAccount = core::toDbId(*player.account);
+      maybeAccount = player.account->toDbId();
     }
 
     return work
@@ -124,12 +123,12 @@ auto PlayerRepository::save(Player player) -> Player
   };
 
   const auto record = m_connection->executeQueryReturningSingleRow(playerQuery);
-  player.dbId       = core::fromDbId(record[0].as<int>());
+  player.dbId       = core::Uuid::fromDbId(record[0].view());
 
   auto roleQuery = [&player](pqxx::work &transaction) {
     return transaction
       .exec(pqxx::prepped{UPDATE_PLAYER_ROLE_QUERY_NAME},
-            pqxx::params{core::toDbId(player.dbId), toDbGameRole(player.role)})
+            pqxx::params{player.dbId.toDbId(), toDbGameRole(player.role)})
       .no_rows();
   };
 

@@ -30,10 +30,10 @@ class Uuid
   static auto random() -> Uuid;
 
   /// @brief - Attempts to parse an identifier fetched from the database into
-  /// a valid uuid. In case this fails, an empty optional is returned.
+  /// a valid uuid. In case this fails, an error is raised.
   /// @param dbId - the string describing an identifier from the database
-  /// @return - when available the uuid parsed from the input string
-  static auto fromDbId(const std::string_view dbId) -> std::optional<Uuid>;
+  /// @return - the uuid parsed from the input string
+  static auto fromDbId(const std::string_view dbId) -> Uuid;
 
   /// @brief - Tries to read a uuid from the input stream. If it
   /// succeeds, a valid message will be returned, otherwise an empty

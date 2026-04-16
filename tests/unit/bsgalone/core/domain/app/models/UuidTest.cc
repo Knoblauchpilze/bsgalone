@@ -1,9 +1,11 @@
 
 #include "Uuid.hh"
 #include "Common.hh"
+#include <gmock/gmock-matchers.h>
 #include <gtest/gtest.h>
 
 using namespace test;
+using namespace ::testing;
 
 namespace bsgalone::core {
 
@@ -32,24 +34,24 @@ TEST(Unit_Bsgalone_Core_Domain_App_Models_Uuid, RandomUuidsAreNotEqual)
 TEST(Unit_Bsgalone_Core_Domain_App_Models_Uuid, CorrectlyParsesValidUuid)
 {
   const auto actual = Uuid::fromDbId("0c7a7231-2055-40f6-8f38-b73e821427a4");
-  EXPECT_EQ("0c7a7231-2055-40f6-8f38-b73e821427a4", actual->str());
+  EXPECT_EQ("0c7a7231-2055-40f6-8f38-b73e821427a4", actual.str());
 }
 
 TEST(Unit_Bsgalone_Core_Domain_App_Models_Uuid, FailsToParseInvalidUuidString)
 {
-  const auto actual = Uuid::fromDbId("not-a-uuid");
-  EXPECT_FALSE(actual.has_value());
+  EXPECT_THAT(Uuid::fromDbId("not-a-uuid"),
+              ThrowsMessage<std::invalid_argument>("Unrecognized uuid not-a-uuid"));
 }
 
 TEST(Unit_Bsgalone_Core_Domain_App_Models_Uuid, toDbId)
 {
-  const auto uuid = Uuid::fromDbId("0c7a7231-2055-40f6-8f38-b73e821427a4").value();
+  const auto uuid = Uuid::fromDbId("0c7a7231-2055-40f6-8f38-b73e821427a4");
   EXPECT_EQ("0c7a7231-2055-40f6-8f38-b73e821427a4", uuid.toDbId());
 }
 
 TEST(Unit_Bsgalone_Core_Domain_App_Models_Uuid, str)
 {
-  const auto uuid = Uuid::fromDbId("0c7a7231-2055-40f6-8f38-b73e821427a4").value();
+  const auto uuid = Uuid::fromDbId("0c7a7231-2055-40f6-8f38-b73e821427a4");
   EXPECT_EQ("0c7a7231-2055-40f6-8f38-b73e821427a4", uuid.str());
 }
 
