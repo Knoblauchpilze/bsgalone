@@ -44,8 +44,6 @@ class EntityRegistry
   /// by `entt` to agnostic identifier that can be communicated to the rest of the app
   /// without leaking the library details.
   std::unordered_map<Uuid, entt::entity> m_entities{};
-
-  Uuid m_nextEntity{Uuid(0)};
 };
 
 } // namespace bsgalone::core
