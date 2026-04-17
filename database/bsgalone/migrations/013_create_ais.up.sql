@@ -1,6 +1,6 @@
 
 CREATE TABLE ai_targets (
-  ship INTEGER NOT NULL,
+  ship UUID NOT NULL,
   index INTEGER NOT NULL,
   x_pos NUMERIC(12, 2) NOT NULL,
   y_pos NUMERIC(12, 2) NOT NULL,
@@ -12,7 +12,7 @@ CREATE TABLE ai_targets (
 );
 
 CREATE TABLE ai_behaviors (
-  ship INTEGER NOT NULL,
+  ship UUID NOT NULL,
   index INTEGER NOT NULL,
   updated_at TIMESTAMP WITH TIME ZONE,
   PRIMARY KEY (ship, index),

@@ -8,7 +8,7 @@ CREATE TABLE ship_class (
 
 -- https://www.postgresqltutorial.com/postgresql-tutorial/postgresql-numeric/
 CREATE TABLE ship (
-  id INTEGER GENERATED ALWAYS AS IDENTITY,
+  id UUID NOT NULL,
   name TEXT NOT NULL,
   faction TEXT NOT NULL,
   class TEXT NOT NULL,
@@ -29,8 +29,8 @@ CREATE TABLE ship (
 );
 
 CREATE TABLE ship_price (
-  ship INTEGER NOT NULL,
-  resource INTEGER NOT NULL,
+  ship UUID NOT NULL,
+  resource UUID NOT NULL,
   cost INTEGER NOT NULL,
   PRIMARY KEY (ship, resource),
   FOREIGN KEY (ship) REFERENCES ship(id),
@@ -38,8 +38,8 @@ CREATE TABLE ship_price (
 );
 
 CREATE TABLE ship_slot (
-  id INTEGER GENERATED ALWAYS AS IDENTITY,
-  ship INTEGER NOT NULL,
+  id UUID NOT NULL,
+  ship UUID NOT NULL,
   type TEXT NOT NULL,
   x_pos NUMERIC(12, 2) DEFAULT NULL,
   y_pos NUMERIC(12, 2) DEFAULT NULL,

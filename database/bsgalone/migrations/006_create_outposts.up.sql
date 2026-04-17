@@ -1,6 +1,6 @@
 
 CREATE TABLE outpost (
-  id INTEGER GENERATED ALWAYS AS IDENTITY,
+  id UUID NOT NULL,
   faction TEXT NOT NULL,
   max_hull_points NUMERIC(8, 2) NOT NULL,
   hull_points_regen NUMERIC(8, 2) NOT NULL,

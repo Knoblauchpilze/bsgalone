@@ -1,6 +1,6 @@
 
 CREATE TABLE asteroid_respawn (
-  asteroid INTEGER NOT NULL,
+  asteroid UUID NOT NULL,
   died_at INTEGER NOT NULL,
   respawn_at INTEGER NOT NULL,
   PRIMARY KEY (asteroid),
@@ -8,7 +8,7 @@ CREATE TABLE asteroid_respawn (
 );
 
 CREATE TABLE player_ship_respawn (
-  ship INTEGER NOT NULL,
+  ship UUID NOT NULL,
   died_at INTEGER NOT NULL,
   respawn_at INTEGER NOT NULL,
   PRIMARY KEY (ship),

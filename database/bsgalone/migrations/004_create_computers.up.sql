@@ -1,6 +1,6 @@
 
 CREATE TABLE computer (
-  id INTEGER GENERATED ALWAYS AS IDENTITY,
+  id UUID NOT NULL,
   name TEXT NOT NULL,
   offensive BOOLEAN NOT NULL,
   power_cost NUMERIC(8, 2) NOT NULL,
@@ -15,8 +15,8 @@ CREATE TABLE computer (
 );
 
 CREATE TABLE computer_price (
-  computer INTEGER NOT NULL,
-  resource INTEGER NOT NULL,
+  computer UUID NOT NULL,
+  resource UUID NOT NULL,
   cost INTEGER NOT NULL,
   PRIMARY KEY (computer, resource),
   FOREIGN KEY (computer) REFERENCES computer(id),
@@ -24,7 +24,7 @@ CREATE TABLE computer_price (
 );
 
 CREATE TABLE computer_allowed_target (
-  computer INTEGER NOT NULL,
+  computer UUID NOT NULL,
   entity TEXT NOT NULL,
   PRIMARY KEY (computer, entity),
   FOREIGN KEY (computer) REFERENCES computer(id),
