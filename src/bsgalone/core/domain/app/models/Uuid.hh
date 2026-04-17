@@ -12,7 +12,9 @@ namespace bsgalone::core {
 class Uuid
 {
   public:
-  Uuid()  = default;
+  /// @brief - Generates a new random identifier.
+  Uuid();
+
   ~Uuid() = default;
 
   /// @brief - Returns a string representing the identifier. This can be used for
@@ -24,10 +26,6 @@ class Uuid
   /// written to the database. This is implemented by calling the `str` method.
   /// @return - a string representing the identifier
   auto toDbId() const -> std::string;
-
-  /// @brief - Generates a new random identifier.
-  /// @return - the new identifier
-  static auto random() -> Uuid;
 
   /// @brief - Attempts to parse an identifier fetched from the database into
   /// a valid uuid. In case this fails, an error is raised.

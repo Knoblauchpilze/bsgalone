@@ -20,7 +20,7 @@ auto insertTestAccount(bsgalone::server::DbConnection &dbConnection) -> bsgalone
   auto record = dbConnection.executeQueryReturningSingleRow(query);
 
   bsgalone::server::Account out{
-    .dbId     = bsgalone::core::fromDbId(record[0].as<int>()),
+    .dbId     = bsgalone::core::Uuid::fromDbId(record[0].view()),
     .username = username,
     .password = "password",
   };

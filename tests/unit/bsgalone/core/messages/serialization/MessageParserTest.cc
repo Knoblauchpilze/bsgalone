@@ -63,7 +63,7 @@ TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageParser, DeserializesLoginM
   MessageParser parser{};
 
   LoginMessage message;
-  message.setPlayerDbId(Uuid{18});
+  message.setPlayerDbId(Uuid{});
   message.setRole(GameRole::GUNNER);
   const auto bytes = serializeMessage(message);
 
@@ -73,7 +73,7 @@ TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageParser, DeserializesLoginM
   EXPECT_TRUE(maybeResult.message.has_value());
   EXPECT_EQ(MessageType::LOGIN, (*maybeResult.message)->type());
   const auto &actual = (*maybeResult.message)->as<LoginMessage>();
-  EXPECT_EQ(Uuid{18}, actual.getPlayerDbId());
+  EXPECT_EQ(message.getPlayerDbId(), actual.getPlayerDbId());
   EXPECT_EQ(GameRole::GUNNER, actual.getRole());
 }
 
@@ -120,7 +120,7 @@ TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageParser, DeserializesLogout
 {
   MessageParser parser{};
 
-  LogoutMessage message(Uuid{14});
+  LogoutMessage message(Uuid{});
   const auto bytes = serializeMessage(message);
 
   const auto maybeResult = parser.tryParseMessage(bytes);
@@ -128,13 +128,15 @@ TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageParser, DeserializesLogout
   EXPECT_EQ(bytes.size(), maybeResult.bytesProcessed);
   EXPECT_TRUE(maybeResult.message.has_value());
   EXPECT_EQ(MessageType::LOGOUT, (*maybeResult.message)->type());
+  const auto &actual = (*maybeResult.message)->as<LogoutMessage>();
+  EXPECT_EQ(message.getPlayerDbId(), actual.getPlayerDbId());
 }
 
 TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageParser, DeserializesLogoutRequest)
 {
   MessageParser parser{};
 
-  LogoutRequest message(Uuid{19});
+  LogoutRequest message(Uuid{});
   const auto bytes = serializeMessage(message);
 
   const auto maybeResult = parser.tryParseMessage(bytes);
@@ -143,7 +145,7 @@ TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageParser, DeserializesLogout
   EXPECT_TRUE(maybeResult.message.has_value());
   EXPECT_EQ(MessageType::LOGOUT_REQUEST, (*maybeResult.message)->type());
   const auto &actual = (*maybeResult.message)->as<LogoutRequest>();
-  EXPECT_EQ(Uuid{19}, actual.getPlayerDbId());
+  EXPECT_EQ(message.getPlayerDbId(), actual.getPlayerDbId());
 }
 
 TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageParser, DeserializesSignupMessage)

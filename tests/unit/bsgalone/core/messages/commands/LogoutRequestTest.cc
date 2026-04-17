@@ -16,7 +16,7 @@ void assertMessagesAreEqual(const LogoutRequest &actual, const LogoutRequest &ex
 
 TEST(Unit_Bsgalone_Core_Messages_Commands_LogoutRequest, SerializationDeserialization)
 {
-  LogoutRequest expected(Uuid{18});
+  LogoutRequest expected(Uuid{});
 
   const auto actual = serializeAndDeserializeMessage(expected);
 
@@ -25,7 +25,7 @@ TEST(Unit_Bsgalone_Core_Messages_Commands_LogoutRequest, SerializationDeserializ
 
 TEST(Unit_Bsgalone_Core_Messages_Commands_LogoutRequest, Clone)
 {
-  LogoutRequest expected(Uuid{18});
+  LogoutRequest expected(Uuid{});
 
   const auto cloned = expected.clone();
 

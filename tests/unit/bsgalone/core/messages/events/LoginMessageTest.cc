@@ -42,7 +42,7 @@ TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage,
 
   EXPECT_FALSE(message.successfullyLoggedIn());
 
-  message.setPlayerDbId(Uuid{18});
+  message.setPlayerDbId(Uuid{});
   EXPECT_FALSE(message.successfullyLoggedIn());
 
   message.setRole(GameRole::PILOT);
@@ -51,11 +51,13 @@ TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage,
 
 TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage, ReturnsPlayerDataWhenSet)
 {
+  const Uuid playerDbId;
+
   LoginMessage message;
-  message.setPlayerDbId(Uuid{18});
+  message.setPlayerDbId(playerDbId);
   message.setRole(GameRole::PILOT);
 
-  EXPECT_EQ(Uuid{18}, message.getPlayerDbId());
+  EXPECT_EQ(playerDbId, message.getPlayerDbId());
   EXPECT_EQ(GameRole::PILOT, message.getRole());
 }
 
@@ -71,7 +73,7 @@ TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage, WithoutPlayerData)
 TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage, WithPlayerData)
 {
   LoginMessage expected;
-  expected.setPlayerDbId(Uuid{18});
+  expected.setPlayerDbId(Uuid{});
   expected.setRole(GameRole::PILOT);
 
   const auto actual = serializeAndDeserializeMessage(expected);
@@ -92,7 +94,7 @@ TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage, CloneWithoutPlayerData)
 TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage, CloneWithPlayerData)
 {
   LoginMessage expected;
-  expected.setPlayerDbId(Uuid{18});
+  expected.setPlayerDbId(Uuid{});
   expected.setRole(GameRole::PILOT);
 
   const auto cloned = expected.clone();

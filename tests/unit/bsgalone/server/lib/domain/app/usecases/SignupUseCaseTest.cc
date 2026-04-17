@@ -92,7 +92,7 @@ TEST(Unit_Bsgalone_Server_Domain_App_Usecases_SignupUseCase,
   EXPECT_CALL(*mockAccountRepo, save(_))
     .Times(1)
     .WillOnce(Return(Account{
-      .dbId     = core::Uuid{2},
+      .dbId     = core::Uuid{},
       .username = "player",
       .password = "password",
     }));
@@ -123,18 +123,21 @@ TEST(Unit_Bsgalone_Server_Domain_App_Usecases_SignupUseCase,
     .clientId = net::ClientId{12},
   };
 
+  const core::Uuid accountDbId;
+  const core::Uuid playerDbId;
+
   EXPECT_CALL(*mockAccountRepo, save(_))
     .Times(1)
     .WillOnce(Return(Account{
-      .dbId     = core::Uuid{2},
+      .dbId     = accountDbId,
       .username = data.username,
       .password = data.password,
     }));
   EXPECT_CALL(*mockPlayerRepo, save(_))
     .Times(1)
     .WillOnce(Return(Player{
-      .dbId    = core::Uuid{17},
-      .account = core::Uuid{2},
+      .dbId    = playerDbId,
+      .account = accountDbId,
       .name    = data.username,
       .faction = data.faction,
       .role    = core::GameRole::PILOT,
@@ -148,7 +151,7 @@ TEST(Unit_Bsgalone_Server_Domain_App_Usecases_SignupUseCase,
   const auto &actual = event->as<PlayerSignupEvent>();
   EXPECT_EQ(data.clientId, actual.getClientId());
   EXPECT_TRUE(actual.successfulSignup());
-  EXPECT_EQ(core::Uuid{17}, actual.tryGetPlayerDbId().value());
+  EXPECT_EQ(playerDbId, actual.tryGetPlayerDbId().value());
   EXPECT_EQ(data.faction, actual.tryGetFaction());
 }
 
@@ -191,10 +194,12 @@ TEST(Unit_Bsgalone_Server_Domain_App_Usecases_SignupUseCase, DelegatesPlayerCrea
     .clientId = net::ClientId{12},
   };
 
+  const core::Uuid accountDbId;
+
   EXPECT_CALL(*mockAccountRepo, save(_))
     .Times(1)
     .WillOnce(Return(Account{
-      .dbId     = core::Uuid{2},
+      .dbId     = accountDbId,
       .username = data.username,
       .password = data.password,
     }));
@@ -207,7 +212,7 @@ TEST(Unit_Bsgalone_Server_Domain_App_Usecases_SignupUseCase, DelegatesPlayerCrea
 
   usecase.performSignup(data);
 
-  EXPECT_EQ(core::Uuid{2}, captured.account);
+  EXPECT_EQ(accountDbId, captured.account);
   EXPECT_EQ(data.username, captured.name);
   EXPECT_EQ(data.faction, captured.faction);
   EXPECT_EQ(core::GameRole::PILOT, captured.role);

@@ -3,6 +3,21 @@
 #include <array>
 
 namespace bsgalone::core {
+namespace {
+auto generate() -> uuids::uuid
+{
+  // https://stackoverflow.com/questions/29549873/stdmt19937-doesnt-return-random-number
+  std::random_device entropy;
+  // https://github.com/mariusbancila/stduuid?tab=readme-ov-file#using-the-library
+  std::mt19937 device{entropy()};
+  uuids::uuid_random_generator generator{device};
+  return generator();
+}
+} // namespace
+
+Uuid::Uuid()
+  : Uuid(generate())
+{}
 
 Uuid::Uuid(uuids::uuid uuid)
   : m_uuid(std::move(uuid))
@@ -16,14 +31,6 @@ auto Uuid::str() const -> std::string
 auto Uuid::toDbId() const -> std::string
 {
   return str();
-}
-
-auto Uuid::random() -> Uuid
-{
-  // https://github.com/mariusbancila/stduuid?tab=readme-ov-file#using-the-library
-  std::mt19937 device;
-  uuids::uuid_random_generator generator{device};
-  return Uuid(generator());
 }
 
 auto Uuid::fromDbId(const std::string_view dbId) -> Uuid
@@ -49,6 +56,11 @@ auto Uuid::readFromStream(std::istream &in) -> std::optional<Uuid>
   return Uuid(uuids::uuid(rawUuid));
 }
 
+bool Uuid::operator==(const Uuid &rhs) const
+{
+  return m_uuid == rhs.m_uuid;
+}
+
 auto operator<<(std::ostream &out, const Uuid &uuid) -> std::ostream &
 {
   const auto bytes = uuid.m_uuid.as_bytes();
@@ -70,11 +82,6 @@ auto operator>>(std::istream &in, Uuid &uuid) -> std::istream &
   uuid = *maybeUuid;
 
   return in;
-}
-
-bool Uuid::operator==(const Uuid &rhs) const
-{
-  return m_uuid == rhs.m_uuid;
 }
 
 } // namespace bsgalone::core

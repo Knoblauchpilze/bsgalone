@@ -22,7 +22,7 @@ void insertTestPlayerRole(DbConnection &dbConnection, Player &player)
     )";
 
   const auto query = [&player](pqxx::nontransaction &work) {
-    return work.exec(QUERY, pqxx::params{core::toDbId(player.dbId)}).no_rows();
+    return work.exec(QUERY, pqxx::params{player.dbId.toDbId()}).no_rows();
   };
   dbConnection.executeQuery(query);
 
@@ -42,14 +42,13 @@ auto insertTestPlayer(DbConnection &dbConnection, const core::Uuid accountDbId, 
 
   const auto query = [&name, &accountDbId](pqxx::nontransaction &work) {
     return work
-      .exec(QUERY,
-            pqxx::params{core::toDbId(accountDbId), name, core::toDbFaction(core::Faction::CYLON)})
+      .exec(QUERY, pqxx::params{accountDbId.toDbId(), name, core::toDbFaction(core::Faction::CYLON)})
       .one_row();
   };
   auto record = dbConnection.executeQueryReturningSingleRow(query);
 
   Player out{
-    .dbId    = core::fromDbId(record[0].as<int>()),
+    .dbId    = core::Uuid::fromDbId(record[0].view()),
     .account = accountDbId,
     .name    = name,
     .faction = core::Faction::CYLON,
@@ -77,7 +76,7 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
 {
   PlayerRepository repo(this->dbConnection());
 
-  EXPECT_THAT([&repo]() { repo.findOneByAccount(core::Uuid{269871}); },
+  EXPECT_THAT([&repo]() { repo.findOneByAccount(core::Uuid{}); },
               ThrowsMessage<::core::CoreException>(
                 "Failed to execute sql query returning single row"));
 }
@@ -121,7 +120,7 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
   PlayerRepository repo(this->dbConnection());
   repo.initialize();
 
-  EXPECT_THAT([&repo]() { repo.findOneById(core::Uuid{269871}); },
+  EXPECT_THAT([&repo]() { repo.findOneById(core::Uuid{}); },
               ThrowsMessage<::core::CoreException>(
                 "Failed to execute sql query returning single row"));
 }
@@ -167,7 +166,7 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRep
   PlayerRepository repo(this->dbConnection());
   repo.initialize();
 
-  EXPECT_THAT([&repo]() { repo.findOneByAccount(core::Uuid{269871}); },
+  EXPECT_THAT([&repo]() { repo.findOneByAccount(core::Uuid{}); },
               ThrowsMessage<::core::CoreException>(
                 "Failed to execute sql query returning single row"));
 }

@@ -16,7 +16,7 @@ void assertMessagesAreEqual(const LogoutMessage &actual, const LogoutMessage &ex
 
 TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage, SerializationDeserialization)
 {
-  LogoutMessage expected(Uuid{24});
+  LogoutMessage expected(Uuid{});
 
   const auto actual = serializeAndDeserializeMessage(expected);
 
@@ -25,7 +25,7 @@ TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage, SerializationDeserializati
 
 TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage, Clone)
 {
-  LogoutMessage expected(Uuid{24});
+  LogoutMessage expected(Uuid{});
 
   const auto cloned = expected.clone();
 

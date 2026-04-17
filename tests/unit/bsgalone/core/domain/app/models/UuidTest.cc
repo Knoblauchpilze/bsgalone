@@ -9,24 +9,10 @@ using namespace ::testing;
 
 namespace bsgalone::core {
 
-TEST(Unit_Bsgalone_Core_Domain_App_Models_Uuid, GeneratesEmptyUuid)
-{
-  Uuid uuid{};
-  EXPECT_EQ("eee", uuid.str());
-}
-
-TEST(Unit_Bsgalone_Core_Domain_App_Models_Uuid, DefaultUuidsAreEqual)
+TEST(Unit_Bsgalone_Core_Domain_App_Models_Uuid, DefaultUuidsAreNotEqual)
 {
   Uuid uuid1{};
   Uuid uuid2{};
-
-  EXPECT_EQ(uuid1, uuid2);
-}
-
-TEST(Unit_Bsgalone_Core_Domain_App_Models_Uuid, RandomUuidsAreNotEqual)
-{
-  const auto uuid1 = Uuid::random();
-  const auto uuid2 = Uuid::random();
 
   EXPECT_NE(uuid1, uuid2);
 }
@@ -39,7 +25,7 @@ TEST(Unit_Bsgalone_Core_Domain_App_Models_Uuid, CorrectlyParsesValidUuid)
 
 TEST(Unit_Bsgalone_Core_Domain_App_Models_Uuid, FailsToParseInvalidUuidString)
 {
-  EXPECT_THAT(Uuid::fromDbId("not-a-uuid"),
+  EXPECT_THAT([]() { Uuid::fromDbId("not-a-uuid"); },
               ThrowsMessage<std::invalid_argument>("Unrecognized uuid not-a-uuid"));
 }
 
@@ -57,24 +43,24 @@ TEST(Unit_Bsgalone_Core_Domain_App_Models_Uuid, str)
 
 TEST(Unit_Bsgalone_Core_Domain_App_Models_Uuid, SingleValue)
 {
-  const Uuid expected = Uuid::random();
-  Uuid actual         = Uuid::random();
+  const Uuid expected;
+  Uuid actual;
   serializeAndDeserialize(expected, actual);
   EXPECT_EQ(actual, expected);
 }
 
 TEST(Unit_Bsgalone_Core_Domain_App_Models_Uuid, MultipleValues)
 {
-  Uuid expected1 = Uuid::random();
-  Uuid expected2 = Uuid::random();
+  Uuid expected1;
+  Uuid expected2;
 
   std::ostringstream out;
   ::core::serialize(out, expected1);
   ::core::serialize(out, expected2);
   std::istringstream in(out.str());
 
-  Uuid actual1 = Uuid::random();
-  Uuid actual2 = Uuid::random();
+  Uuid actual1;
+  Uuid actual2;
   ::core::deserialize(in, actual1);
   ::core::deserialize(in, actual2);
 

@@ -80,7 +80,7 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_DbConnect
   ASSERT_EQ(1, out.result->size());
 
   const auto &record      = (*out.result)[0];
-  const auto expectedDbId = core::fromDbId(record[0].as<int>());
+  const auto expectedDbId = core::Uuid::fromDbId(record[0].view());
 
   const auto fetchQuery = [&username](pqxx::nontransaction &work) {
     constexpr auto FETCH_QUERY = R"(
@@ -96,7 +96,7 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_DbConnect
   };
 
   const auto accountRecord = this->dbConnection()->executeQueryReturningSingleRow(fetchQuery);
-  EXPECT_EQ(expectedDbId, core::fromDbId(accountRecord[0].as<int>()));
+  EXPECT_EQ(expectedDbId, core::Uuid::fromDbId(accountRecord[0].view()));
   EXPECT_EQ("password", accountRecord[1].as<std::string>());
 }
 

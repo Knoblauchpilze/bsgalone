@@ -6,7 +6,7 @@ namespace bsgalone::core {
 auto EntityRegistry::createEntity() -> Uuid
 {
   const auto entity = m_registry.create();
-  const auto uuid   = Uuid::random();
+  const Uuid uuid;
 
   m_entities.emplace(uuid, entity);
 

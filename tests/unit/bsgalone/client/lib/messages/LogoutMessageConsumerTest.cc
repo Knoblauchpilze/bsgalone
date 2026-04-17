@@ -33,11 +33,12 @@ TEST(Unit_Bsgalone_Client_Messages_LogoutMessageConsumer, ConsidersLogoutMessage
 TEST(Unit_Bsgalone_Client_Messages_LogoutMessageConsumer, ForwardsToStore)
 {
   auto mockStore = std::make_shared<NiceMock<MockDataStore>>();
-  EXPECT_CALL(*mockStore, onPlayerLoggedOut(core::Uuid{19})).Times(1);
+  const core::Uuid playerDbId;
+  EXPECT_CALL(*mockStore, onPlayerLoggedOut(playerDbId)).Times(1);
 
   LogoutMessageConsumer consumer(mockStore, std::make_shared<TestUiEventQueue>());
 
-  core::LogoutMessage message(core::Uuid{19});
+  core::LogoutMessage message(playerDbId);
 
   consumer.onEventReceived(message);
 }
@@ -46,13 +47,14 @@ TEST(Unit_Bsgalone_Client_Messages_LogoutMessageConsumer,
      PublishesLogoutEventWhenPlayerIsNoLongerLoggedin)
 {
   auto mockStore = std::make_shared<StrictMock<MockDataStore>>();
-  EXPECT_CALL(*mockStore, onPlayerLoggedOut(core::Uuid{19})).Times(1);
+  const core::Uuid playerDbId;
+  EXPECT_CALL(*mockStore, onPlayerLoggedOut(playerDbId)).Times(1);
   EXPECT_CALL(*mockStore, isLoggedIn()).Times(1).WillOnce(Return(false));
 
   auto queue = std::make_shared<TestUiEventQueue>();
   LogoutMessageConsumer consumer(mockStore, queue);
 
-  core::LogoutMessage message(core::Uuid{19});
+  core::LogoutMessage message(playerDbId);
   consumer.onEventReceived(message);
 
   EXPECT_EQ(1u, queue->messages().size());
@@ -63,13 +65,14 @@ TEST(Unit_Bsgalone_Client_Messages_LogoutMessageConsumer,
      DoesNotPublishEventWhenPlayerIsStillLoggedIn)
 {
   auto mockStore = std::make_shared<StrictMock<MockDataStore>>();
-  EXPECT_CALL(*mockStore, onPlayerLoggedOut(core::Uuid{20})).Times(1);
+  const core::Uuid playerDbId;
+  EXPECT_CALL(*mockStore, onPlayerLoggedOut(playerDbId)).Times(1);
   EXPECT_CALL(*mockStore, isLoggedIn()).Times(1).WillOnce(Return(true));
 
   auto queue = std::make_shared<TestUiEventQueue>();
   LogoutMessageConsumer consumer(mockStore, queue);
 
-  core::LogoutMessage message(core::Uuid{20});
+  core::LogoutMessage message(playerDbId);
   consumer.onEventReceived(message);
 
   EXPECT_TRUE(queue->messages().empty());

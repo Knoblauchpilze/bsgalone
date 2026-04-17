@@ -10,12 +10,14 @@ namespace bsgalone::core {
 
 TEST(Unit_Bsgalone_Core_Entities_EntityRegistry, ThrowsWhenAddingComponentToUnknownEntity)
 {
-  auto code = []() {
+  const Uuid entityId;
+
+  auto code = [&entityId]() {
     EntityRegistry registry;
     FactionComponent component{.faction = Faction::COLONIAL};
-    registry.addComponent(Uuid{17}, std::move(component));
+    registry.addComponent(entityId, std::move(component));
   };
-  EXPECT_THAT(code, ThrowsMessage<std::invalid_argument>("No such entity 17"));
+  EXPECT_THAT(code, ThrowsMessage<std::invalid_argument>("No such entity " + entityId.str()));
 }
 
 TEST(Unit_Bsgalone_Core_Entities_EntityRegistry, RegistersComponentForEntity)

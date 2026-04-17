@@ -21,7 +21,7 @@ void insertTestTickConfig(DbConnection &dbConnection, System &system)
     )";
 
   const auto query = [&system](pqxx::nontransaction &work) {
-    return work.exec(QUERY, pqxx::params{core::toDbId(system.dbId)}).no_rows();
+    return work.exec(QUERY, pqxx::params{system.dbId.toDbId()}).no_rows();
   };
   dbConnection.executeQuery(query);
 
@@ -36,7 +36,7 @@ void insertTestTick(DbConnection &dbConnection, System &system)
     )";
 
   const auto query = [&system](pqxx::nontransaction &work) {
-    return work.exec(QUERY, pqxx::params{core::toDbId(system.dbId)}).no_rows();
+    return work.exec(QUERY, pqxx::params{system.dbId.toDbId()}).no_rows();
   };
   dbConnection.executeQuery(query);
 
@@ -61,7 +61,7 @@ auto insertTestSystem(DbConnection &dbConnection, const bool withTick) -> System
   auto record = dbConnection.executeQueryReturningSingleRow(query);
 
   System out{
-    .dbId     = core::fromDbId(record[0].as<int>()),
+    .dbId     = core::Uuid::fromDbId(record[0].view()),
     .name     = name,
     .position = Eigen::Vector3f(2.5f, -1.2f, 3.4f),
   };
@@ -121,7 +121,7 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_SystemRep
 {
   SystemRepository repo(this->dbConnection());
 
-  EXPECT_THAT([&repo]() { repo.findOneById(core::Uuid{269871}); },
+  EXPECT_THAT([&repo]() { repo.findOneById(core::Uuid{}); },
               ThrowsMessage<::core::CoreException>(
                 "Failed to execute sql query returning single row"));
 }
@@ -132,7 +132,7 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_SystemRep
   SystemRepository repo(this->dbConnection());
   repo.initialize();
 
-  EXPECT_THAT([&repo]() { repo.findOneById(core::Uuid{269871}); },
+  EXPECT_THAT([&repo]() { repo.findOneById(core::Uuid{}); },
               ThrowsMessage<::core::CoreException>(
                 "Failed to execute sql query returning single row"));
 }
