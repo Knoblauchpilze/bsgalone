@@ -21,9 +21,11 @@ WHERE
 
 constexpr auto SAVE_ACCOUNT_QUERY_NAME = "account_save";
 constexpr auto SAVE_ACCOUNT_QUERY      = R"(
-INSERT INTO account (name, password)
-  VALUES ($1, $2)
-  RETURNING id
+INSERT INTO account (id, name, password)
+  VALUES ($1, $2, $3)
+  ON CONFLICT (id) DO UPDATE
+  SET
+    password = excluded.password
 )";
 } // namespace
 
@@ -63,13 +65,11 @@ auto AccountRepository::findOneByName(const std::string &name) const -> std::opt
 auto AccountRepository::save(Account account) const -> Account
 {
   auto query = [&account](pqxx::nontransaction &work) {
-    return work
-      .exec(pqxx::prepped{SAVE_ACCOUNT_QUERY_NAME}, pqxx::params{account.username, account.password})
-      .one_row();
+    return work.exec(pqxx::prepped{SAVE_ACCOUNT_QUERY_NAME},
+                     pqxx::params{account.dbId.toDbId(), account.username, account.password});
   };
 
-  const auto record = m_connection->executeQueryReturningSingleRow(query);
-  account.dbId      = core::Uuid::fromDbId(record[0].view());
+  m_connection->executeQuery(query);
 
   return account;
 }

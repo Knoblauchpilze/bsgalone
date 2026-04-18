@@ -6,26 +6,24 @@ namespace test {
 
 auto insertTestAccount(bsgalone::server::DbConnection &dbConnection) -> bsgalone::server::Account
 {
+  const bsgalone::core::Uuid uuid;
   const auto username = std::format("random-account-{:%F%T}", ::core::now());
 
   constexpr auto QUERY = R"(
-      INSERT INTO account ("name", "password")
-        VALUES ($1, 'password')
-        RETURNING id
+      INSERT INTO account ("id", "name", "password")
+        VALUES ($1, $2, 'password')
     )";
 
-  const auto query = [&username](pqxx::nontransaction &work) {
-    return work.exec(QUERY, pqxx::params{username}).one_row();
+  const auto query = [&uuid, &username](pqxx::nontransaction &work) {
+    return work.exec(QUERY, pqxx::params{uuid.toDbId(), username});
   };
-  auto record = dbConnection.executeQueryReturningSingleRow(query);
+  dbConnection.executeQuery(query);
 
-  bsgalone::server::Account out{
-    .dbId     = bsgalone::core::Uuid::fromDbId(record[0].view()),
+  return bsgalone::server::Account{
+    .dbId     = uuid,
     .username = username,
     .password = "password",
   };
-
-  return out;
 }
 
 } // namespace test

@@ -24,8 +24,10 @@ class AccountRepository : public ForManagingAccount, public AbstractRepository
 
   /// @brief - Saves the account and returns the up to date version from the
   /// database. Some notes:
-  ///  - the account is inserted: if it already exists, it will fail
-  ///  - the identifier of the account is ignored, the DB generated one will be returned
+  ///  - if an account with the same identifier already exists, the password
+  ///    will be updated
+  ///  - if an account with the same name already exists, an error will be
+  ///    raised
   /// @param account - the account to save
   /// @return - the up to date version of the save account
   auto save(Account account) const -> Account override;
