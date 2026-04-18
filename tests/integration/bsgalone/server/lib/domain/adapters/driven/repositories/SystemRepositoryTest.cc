@@ -45,23 +45,23 @@ void insertTestTick(DbConnection &dbConnection, System &system)
 
 auto insertTestSystem(DbConnection &dbConnection, const bool withTick) -> System
 {
+  const core::Uuid uuid;
   // https://stackoverflow.com/questions/34857119/how-to-convert-stdchronotime-point-to-string
   // https://en.cppreference.com/w/cpp/chrono/system_clock/formatter.html
   const auto name = std::format("random-system-{:%F%T}", ::core::now());
 
   constexpr auto QUERY = R"(
-      INSERT INTO system ("name", "x_pos", "y_pos", "z_pos")
-        VALUES ($1, 2.5, -1.2, 3.4)
-        RETURNING id
+      INSERT INTO system ("id", "name", "x_pos", "y_pos", "z_pos")
+        VALUES ($1, $2, 2.5, -1.2, 3.4)
     )";
 
-  const auto query = [&name](pqxx::nontransaction &work) {
-    return work.exec(QUERY, pqxx::params{name}).one_row();
+  const auto query = [&uuid, &name](pqxx::nontransaction &work) {
+    return work.exec(QUERY, pqxx::params{uuid.toDbId(), name});
   };
-  auto record = dbConnection.executeQueryReturningSingleRow(query);
+  dbConnection.executeQuery(query);
 
   System out{
-    .dbId     = core::Uuid::fromDbId(record[0].view()),
+    .dbId     = uuid,
     .name     = name,
     .position = Eigen::Vector3f(2.5f, -1.2f, 3.4f),
   };
@@ -86,13 +86,46 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_SystemRep
 }
 
 TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_SystemRepository,
-       FetchesExistingSystem)
+       FindOneById_FailsWhenInitializeIsNotCalled)
+{
+  SystemRepository repo(this->dbConnection());
+
+  EXPECT_THAT([&repo]() { repo.findOneById(core::Uuid{}); },
+              ThrowsMessage<::core::CoreException>(
+                "Failed to execute sql query returning single row"));
+}
+
+TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_SystemRepository,
+       FindOneById_ThrowsWhenFetchingUnknownSystem)
 {
   SystemRepository repo(this->dbConnection());
   repo.initialize();
 
+  EXPECT_THAT([&repo]() { repo.findOneById(core::Uuid{}); },
+              ThrowsMessage<::core::CoreException>(
+                "Failed to execute sql query returning single row"));
+}
+
+TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_SystemRepository,
+       FindOneById_FailsWhenSystemDoesNotDefineTick)
+{
+  const auto expectedSystem = insertTestSystem(*this->dbConnection(), false);
+
+  SystemRepository repo(this->dbConnection());
+  repo.initialize();
+  const auto function = [&repo, &expectedSystem]() { repo.findOneById(expectedSystem.dbId); };
+  EXPECT_THAT(function,
+              ThrowsMessage<::core::CoreException>(
+                "Failed to execute sql query returning single row"));
+}
+
+TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_SystemRepository,
+       FindOneById_FetchesExistingSystem)
+{
   const auto expectedSystem = insertTestSystem(*this->dbConnection(), true);
 
+  SystemRepository repo(this->dbConnection());
+  repo.initialize();
   const auto actual = repo.findOneById(expectedSystem.dbId);
 
   EXPECT_EQ(expectedSystem.dbId, actual.dbId);
@@ -103,49 +136,13 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_SystemRep
 }
 
 TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_SystemRepository,
-       FailsWhenSystemDoesNotDefineTick)
+       FindAll_ReturnsAllExistingSystems)
 {
-  SystemRepository repo(this->dbConnection());
-  repo.initialize();
-
-  const auto expectedSystem = insertTestSystem(*this->dbConnection(), false);
-
-  const auto function = [&repo, &expectedSystem]() { repo.findOneById(expectedSystem.dbId); };
-  EXPECT_THAT(function,
-              ThrowsMessage<::core::CoreException>(
-                "Failed to execute sql query returning single row"));
-}
-
-TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_SystemRepository,
-       FailsWhenInitializeIsNotCalled)
-{
-  SystemRepository repo(this->dbConnection());
-
-  EXPECT_THAT([&repo]() { repo.findOneById(core::Uuid{}); },
-              ThrowsMessage<::core::CoreException>(
-                "Failed to execute sql query returning single row"));
-}
-
-TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_SystemRepository,
-       ThrowsWhenFetchingUnknownSystem)
-{
-  SystemRepository repo(this->dbConnection());
-  repo.initialize();
-
-  EXPECT_THAT([&repo]() { repo.findOneById(core::Uuid{}); },
-              ThrowsMessage<::core::CoreException>(
-                "Failed to execute sql query returning single row"));
-}
-
-TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_SystemRepository,
-       ReturnsAllExistingSystems)
-{
-  SystemRepository repo(this->dbConnection());
-  repo.initialize();
-
   const auto system1 = insertTestSystem(*this->dbConnection(), true);
   const auto system2 = insertTestSystem(*this->dbConnection(), true);
 
+  SystemRepository repo(this->dbConnection());
+  repo.initialize();
   const auto allSystems = repo.findAll();
 
   // The other tests also insert systems so there might be more than the two
@@ -171,21 +168,92 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_SystemRep
 }
 
 TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_SystemRepository,
-       UpdatesCurrentTickWhenSaving)
+       Save_PersistsSystemWhenItDoesNotExist)
 {
+  System system{
+    .dbId        = core::Uuid{},
+    .name        = std::format("random-system-{:%F%T}", ::core::now()),
+    .position    = Eigen::Vector3f(2.5f, -1.2f, 3.4f),
+    .currentTick = chrono::Tick::fromInt(34),
+    .step        = chrono::TimeStep(15, chrono::Duration::fromSeconds(1.0f)),
+  };
+
   SystemRepository repo(this->dbConnection());
   repo.initialize();
-
-  auto system = insertTestSystem(*this->dbConnection(), true);
-
-  const auto duration = chrono::TickDuration::fromInt(12);
-  system.currentTick += duration;
-
   repo.save(system);
 
   const auto actual = repo.findOneById(system.dbId);
+  EXPECT_EQ(system.dbId, actual.dbId);
+  EXPECT_EQ(system.name, actual.name);
+  EXPECT_EQ(system.position, actual.position);
+  EXPECT_EQ(system.currentTick, actual.currentTick);
+  EXPECT_EQ(system.step, actual.step);
+}
 
-  EXPECT_EQ(actual.currentTick, system.currentTick);
+TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_SystemRepository,
+       Save_TruncatesTimeStepWhenNotInteger)
+{
+  System system{
+    .dbId        = core::Uuid{},
+    .name        = std::format("random-system-{:%F%T}", ::core::now()),
+    .position    = Eigen::Vector3f(2.5f, -1.2f, 3.4f),
+    .currentTick = chrono::Tick::fromInt(34),
+    .step        = chrono::TimeStep(15, chrono::Duration::fromSeconds(1.1f)),
+  };
+
+  SystemRepository repo(this->dbConnection());
+  repo.initialize();
+  repo.save(system);
+
+  const auto actual = repo.findOneById(system.dbId).step.data();
+  EXPECT_EQ(1.0f, actual.duration.elapsed);
+  EXPECT_EQ(chrono::Unit::SECONDS, actual.duration.unit);
+}
+
+TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_SystemRepository,
+       Save_UpdatesPositionWhenSystemAlreadyExists)
+{
+  auto system = insertTestSystem(*this->dbConnection(), true);
+
+  // Note: the position is a numeric value with 2 decimal places. It
+  // is not possible to put more digits in the below vector.
+  const Eigen::Vector3f updatedPosition(-78.45f, 654.51f, 1247.03f);
+  ASSERT_NE(updatedPosition, system.position);
+  system.position = updatedPosition;
+  SystemRepository repo(this->dbConnection());
+  repo.initialize();
+  repo.save(system);
+
+  const auto actual = repo.findOneById(system.dbId);
+  EXPECT_EQ(updatedPosition, actual.position);
+}
+
+TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_SystemRepository,
+       Save_UpdatesCurrentTickWhenSystemAlreadyExists)
+{
+  auto system = insertTestSystem(*this->dbConnection(), true);
+
+  system.currentTick += chrono::TickDuration::fromInt(12);
+  SystemRepository repo(this->dbConnection());
+  repo.initialize();
+  repo.save(system);
+
+  const auto actual = repo.findOneById(system.dbId);
+  EXPECT_EQ(system.currentTick, actual.currentTick);
+}
+
+TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_SystemRepository,
+       Save_UpdatesTickConfigWhenSystemAlreadyExists)
+{
+  auto system = insertTestSystem(*this->dbConnection(), true);
+
+  system.step = chrono::TimeStep(27, chrono::Duration::fromSeconds(3.0f));
+  SystemRepository repo(this->dbConnection());
+  repo.initialize();
+  repo.save(system);
+
+  const auto actual = repo.findOneById(system.dbId);
+  EXPECT_EQ(system.step, actual.step);
 }
 
 } // namespace bsgalone::server

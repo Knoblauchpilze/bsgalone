@@ -16,6 +16,8 @@ struct Duration
 
   static auto fromSeconds(const float duration) -> Duration;
   static auto fromMilliseconds(const float duration) -> Duration;
+
+  bool operator==(const Duration &rhs) const;
 };
 
 } // namespace chrono

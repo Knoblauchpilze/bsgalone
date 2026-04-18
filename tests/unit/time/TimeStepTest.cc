@@ -17,6 +17,15 @@ struct TestCaseTimeStepCount
 
 using CountTest = TestWithParam<TestCaseTimeStepCount>;
 
+TEST(Unit_Chrono_TimeStep, StepDataReturnsCurrentValues)
+{
+  TimeStep step(2, Duration(Unit::SECONDS, 45.78f));
+
+  auto actual = step.data();
+  EXPECT_EQ(2, actual.ticks);
+  EXPECT_EQ(Duration(Unit::SECONDS, 45.78f), actual.duration);
+}
+
 TEST_P(CountTest, CountsCorrectly)
 {
   const auto &param = GetParam();

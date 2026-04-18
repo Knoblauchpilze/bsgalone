@@ -13,6 +13,13 @@ class TimeStep
   TimeStep(const int ticks, const Duration &inDuration);
   ~TimeStep() = default;
 
+  struct StepData
+  {
+    int ticks{};
+    Duration duration{};
+  };
+  auto data() const -> StepData;
+
   auto count(const Duration &elapsed) const -> TickDuration;
 
   auto operator==(const TimeStep &rhs) const -> bool;

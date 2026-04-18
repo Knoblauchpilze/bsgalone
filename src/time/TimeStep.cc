@@ -9,6 +9,14 @@ TimeStep::TimeStep(const int ticks, const Duration &inDuration)
   , m_duration(inDuration)
 {}
 
+auto TimeStep::data() const -> StepData
+{
+  return StepData{
+    .ticks    = m_ticks,
+    .duration = m_duration,
+  };
+}
+
 auto TimeStep::count(const Duration &elapsed) const -> TickDuration
 {
   const auto in     = elapsed.convert(m_duration.unit);
@@ -19,10 +27,7 @@ auto TimeStep::count(const Duration &elapsed) const -> TickDuration
 
 auto TimeStep::operator==(const TimeStep &rhs) const -> bool
 {
-  const auto sameDuration = (m_duration.unit == rhs.m_duration.unit)
-                            && (m_duration.elapsed == rhs.m_duration.elapsed);
-
-  return sameDuration && (m_ticks == rhs.m_ticks);
+  return (m_ticks == rhs.m_ticks) && (m_duration == rhs.m_duration);
 }
 
 auto operator<<(std::ostream &out, const TimeStep &step) -> std::ostream &
