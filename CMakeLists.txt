@@ -8,7 +8,14 @@ FetchContent_Declare (
 	GIT_TAG v3.16.0
 )
 
+FetchContent_Declare (
+	stduuid
+	GIT_REPOSITORY https://github.com/mariusbancila/stduuid.git
+	GIT_TAG v1.2.3
+)
+
 FetchContent_MakeAvailable (entt)
+FetchContent_MakeAvailable (stduuid)
 
 option (ENABLE_TESTS "Enable tests" OFF)
 
