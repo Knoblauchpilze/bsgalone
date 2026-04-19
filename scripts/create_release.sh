@@ -3,7 +3,10 @@
 if [[ $# -ge 1 ]]; then
   VERSION=${1}
   if ! [[ $VERSION =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-    echo "Usage: ./publish.sh v1.2.3"
+    echo "Usage: creates a new release from the provided tag or a default one"
+    echo "Examples:"
+    echo "./create-release.sh v1.2.3"
+    echo "./create-release.sh"
     exit 1
   fi
 
