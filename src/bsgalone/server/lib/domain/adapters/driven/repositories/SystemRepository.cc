@@ -138,33 +138,38 @@ auto SystemRepository::findAll() const -> std::vector<System>
   return out;
 }
 
+namespace {
+auto upsertSystemQuery(pqxx::work &transaction, const System &system) -> pqxx::result
+{
+  transaction
+    .exec(pqxx::prepped{UPDATE_SYSTEM_QUERY_NAME},
+          pqxx::params{system.dbId.toDbId(),
+                       system.name,
+                       system.position(0),
+                       system.position(1),
+                       system.position(2)})
+    .no_rows();
+
+  transaction
+    .exec(pqxx::prepped{UPDATE_SYSTEM_TICK_QUERY_NAME},
+          pqxx::params{system.dbId.toDbId(), system.currentTick.count()})
+    .no_rows();
+
+  const auto tickData = system.step.data();
+
+  return transaction
+    .exec(pqxx::prepped{UPDATE_SYSTEM_TICK_CONFIG_QUERY_NAME},
+          pqxx::params{system.dbId.toDbId(),
+                       static_cast<int>(tickData.duration.elapsed),
+                       str(tickData.duration.unit),
+                       tickData.ticks})
+    .no_rows();
+}
+} // namespace
+
 void SystemRepository::save(const System &system) const
 {
-  auto query = [&system](pqxx::work &transaction) {
-    transaction
-      .exec(pqxx::prepped{UPDATE_SYSTEM_QUERY_NAME},
-            pqxx::params{system.dbId.toDbId(),
-                         system.name,
-                         system.position(0),
-                         system.position(1),
-                         system.position(2)})
-      .no_rows();
-
-    transaction
-      .exec(pqxx::prepped{UPDATE_SYSTEM_TICK_QUERY_NAME},
-            pqxx::params{system.dbId.toDbId(), system.currentTick.count()})
-      .no_rows();
-
-    const auto tickData = system.step.data();
-
-    return transaction
-      .exec(pqxx::prepped{UPDATE_SYSTEM_TICK_CONFIG_QUERY_NAME},
-            pqxx::params{system.dbId.toDbId(),
-                         static_cast<int>(tickData.duration.elapsed),
-                         str(tickData.duration.unit),
-                         tickData.ticks})
-      .no_rows();
-  };
+  auto query = [&system](pqxx::work &transaction) { return upsertSystemQuery(transaction, system); };
 
   const auto res = m_connection->tryExecuteTransaction(query);
   if (res.error)

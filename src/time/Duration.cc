@@ -68,9 +68,4 @@ auto Duration::fromMilliseconds(const float duration) -> Duration
   return Duration{.unit = Unit::MILLISECONDS, .elapsed = duration};
 }
 
-bool Duration::operator==(const Duration &rhs) const
-{
-  return unit == rhs.unit && elapsed == rhs.elapsed;
-}
-
 } // namespace chrono

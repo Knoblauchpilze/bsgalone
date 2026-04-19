@@ -25,11 +25,6 @@ auto TimeStep::count(const Duration &elapsed) const -> TickDuration
   return TickDuration(epochs * static_cast<float>(m_ticks));
 }
 
-auto TimeStep::operator==(const TimeStep &rhs) const -> bool
-{
-  return (m_ticks == rhs.m_ticks) && (m_duration == rhs.m_duration);
-}
-
 auto operator<<(std::ostream &out, const TimeStep &step) -> std::ostream &
 {
   core::serialize(out, step.m_ticks);

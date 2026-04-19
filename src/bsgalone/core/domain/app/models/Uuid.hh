@@ -47,7 +47,7 @@ class Uuid
   private:
   uuids::uuid m_uuid{};
 
-  Uuid(uuids::uuid uuid);
+  explicit Uuid(uuids::uuid uuid);
 
   friend auto operator<<(std::ostream &out, const Uuid &uuid) -> std::ostream &;
   friend auto operator>>(std::istream &in, Uuid &uuid) -> std::istream &;

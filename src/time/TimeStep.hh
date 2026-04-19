@@ -22,7 +22,7 @@ class TimeStep
 
   auto count(const Duration &elapsed) const -> TickDuration;
 
-  auto operator==(const TimeStep &rhs) const -> bool;
+  bool operator==(const TimeStep &rhs) const = default;
 
   private:
   int m_ticks{1};
