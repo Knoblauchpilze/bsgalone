@@ -40,12 +40,11 @@ WHERE
 
 constexpr auto UPDATE_PLAYER_QUERY_NAME = "player_update";
 constexpr auto UPDATE_PLAYER_QUERY      = R"(
-INSERT INTO player (account, name, faction)
-  VALUES ($1, $2, $3)
-  ON CONFLICT (account) DO UPDATE
+INSERT INTO player (id, account, name, faction)
+  VALUES ($1, $2, $3, $4)
+  ON CONFLICT (id) DO UPDATE
   SET
     name = excluded.name
-  RETURNING id
 )";
 
 constexpr auto UPDATE_PLAYER_ROLE_QUERY_NAME = "player_update_role";
@@ -107,38 +106,34 @@ auto PlayerRepository::findOneByAccount(const core::Uuid accountDbId) const -> P
   return buildPlayerFromDbRow(record);
 }
 
-auto PlayerRepository::save(Player player) -> Player
+void PlayerRepository::save(Player player) const
 {
-  auto playerQuery = [&player](pqxx::nontransaction &work) {
+  auto query = [&player](pqxx::work &transaction) {
     std::optional<std::string> maybeAccount{};
     if (player.account)
     {
       maybeAccount = player.account->toDbId();
     }
 
-    return work
+    transaction
       .exec(pqxx::prepped{UPDATE_PLAYER_QUERY_NAME},
-            pqxx::params{maybeAccount, player.name, toDbFaction(player.faction)})
-      .one_row();
-  };
+            pqxx::params{player.dbId.toDbId(),
+                         maybeAccount,
+                         player.name,
+                         toDbFaction(player.faction)})
+      .no_rows();
 
-  const auto record = m_connection->executeQueryReturningSingleRow(playerQuery);
-  player.dbId       = core::Uuid::fromDbId(record[0].view());
-
-  auto roleQuery = [&player](pqxx::work &transaction) {
     return transaction
       .exec(pqxx::prepped{UPDATE_PLAYER_ROLE_QUERY_NAME},
             pqxx::params{player.dbId.toDbId(), toDbGameRole(player.role)})
       .no_rows();
   };
 
-  const auto res = m_connection->tryExecuteTransaction(roleQuery);
+  const auto res = m_connection->tryExecuteTransaction(query);
   if (res.error)
   {
-    error("Failed to save player role: " + *res.error);
+    error("Failed to save player: " + *res.error);
   }
-
-  return player;
 }
 
 } // namespace bsgalone::server

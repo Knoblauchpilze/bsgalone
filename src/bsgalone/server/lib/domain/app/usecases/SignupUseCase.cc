@@ -63,21 +63,25 @@ auto SignupUseCase::tryRegisterPlayer(const SignupData &data) const -> std::opti
 auto SignupUseCase::registerAccount(const SignupData &data) const -> Account
 {
   Account account{
+    .dbId     = core::Uuid{},
     .username = data.username,
     .password = data.password,
   };
-  return m_accountRepo->save(account);
+  m_accountRepo->save(account);
+  return account;
 }
 
 auto SignupUseCase::registerPlayer(const Account &account, const SignupData &data) const -> Player
 {
   Player player{
+    .dbId    = core::Uuid{},
     .account = account.dbId,
     .name    = data.username,
     .faction = data.faction,
     .role    = core::GameRole::PILOT,
   };
-  return m_playerRepo->save(player);
+  m_playerRepo->save(player);
+  return player;
 }
 
 } // namespace bsgalone::server

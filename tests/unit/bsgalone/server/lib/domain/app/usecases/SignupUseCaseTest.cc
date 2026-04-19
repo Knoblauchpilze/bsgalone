@@ -89,13 +89,7 @@ TEST(Unit_Bsgalone_Server_Domain_App_Usecases_SignupUseCase,
     .clientId = net::ClientId{12},
   };
 
-  EXPECT_CALL(*mockAccountRepo, save(_))
-    .Times(1)
-    .WillOnce(Return(Account{
-      .dbId     = core::Uuid{},
-      .username = "player",
-      .password = "password",
-    }));
+  EXPECT_CALL(*mockAccountRepo, save(_)).Times(1);
   EXPECT_CALL(*mockPlayerRepo, save(_)).Times(1).WillOnce(Throw(std::runtime_error("Stubbed error")));
 
   usecase.performSignup(data);
@@ -123,25 +117,13 @@ TEST(Unit_Bsgalone_Server_Domain_App_Usecases_SignupUseCase,
     .clientId = net::ClientId{12},
   };
 
-  const core::Uuid accountDbId;
   const core::Uuid playerDbId;
 
-  EXPECT_CALL(*mockAccountRepo, save(_))
-    .Times(1)
-    .WillOnce(Return(Account{
-      .dbId     = accountDbId,
-      .username = data.username,
-      .password = data.password,
-    }));
-  EXPECT_CALL(*mockPlayerRepo, save(_))
-    .Times(1)
-    .WillOnce(Return(Player{
-      .dbId    = playerDbId,
-      .account = accountDbId,
-      .name    = data.username,
-      .faction = data.faction,
-      .role    = core::GameRole::PILOT,
-    }));
+  EXPECT_CALL(*mockAccountRepo, save(_)).Times(1);
+  Player captured;
+  EXPECT_CALL(*mockPlayerRepo, save(_)).Times(1).WillOnce(Invoke([&captured](Player player) {
+    captured = player;
+  }));
 
   usecase.performSignup(data);
 
@@ -151,7 +133,7 @@ TEST(Unit_Bsgalone_Server_Domain_App_Usecases_SignupUseCase,
   const auto &actual = event->as<PlayerSignupEvent>();
   EXPECT_EQ(data.clientId, actual.getClientId());
   EXPECT_TRUE(actual.successfulSignup());
-  EXPECT_EQ(playerDbId, actual.tryGetPlayerDbId().value());
+  EXPECT_EQ(captured.dbId, actual.tryGetPlayerDbId().value());
   EXPECT_EQ(data.faction, actual.tryGetFaction());
 }
 
@@ -172,7 +154,6 @@ TEST(Unit_Bsgalone_Server_Domain_App_Usecases_SignupUseCase, DelegatesAccountCre
   Account captured{};
   EXPECT_CALL(*mockAccountRepo, save(_)).Times(1).WillOnce(Invoke([&captured](Account account) {
     captured = account;
-    return account;
   }));
 
   usecase.performSignup(data);
@@ -196,26 +177,22 @@ TEST(Unit_Bsgalone_Server_Domain_App_Usecases_SignupUseCase, DelegatesPlayerCrea
 
   const core::Uuid accountDbId;
 
+  Account capturedAccount{};
   EXPECT_CALL(*mockAccountRepo, save(_))
     .Times(1)
-    .WillOnce(Return(Account{
-      .dbId     = accountDbId,
-      .username = data.username,
-      .password = data.password,
-    }));
+    .WillOnce(Invoke([&capturedAccount](Account account) { capturedAccount = account; }));
 
-  Player captured{};
-  EXPECT_CALL(*mockPlayerRepo, save(_)).Times(1).WillOnce(Invoke([&captured](Player player) {
-    captured = player;
-    return player;
+  Player capturedPlayer{};
+  EXPECT_CALL(*mockPlayerRepo, save(_)).Times(1).WillOnce(Invoke([&capturedPlayer](Player player) {
+    capturedPlayer = player;
   }));
 
   usecase.performSignup(data);
 
-  EXPECT_EQ(accountDbId, captured.account);
-  EXPECT_EQ(data.username, captured.name);
-  EXPECT_EQ(data.faction, captured.faction);
-  EXPECT_EQ(core::GameRole::PILOT, captured.role);
+  EXPECT_EQ(capturedAccount.dbId, capturedPlayer.account.value());
+  EXPECT_EQ(data.username, capturedPlayer.name);
+  EXPECT_EQ(data.faction, capturedPlayer.faction);
+  EXPECT_EQ(core::GameRole::PILOT, capturedPlayer.role);
 }
 
 } // namespace bsgalone::server

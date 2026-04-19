@@ -86,7 +86,7 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_SystemRep
 }
 
 TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_SystemRepository,
-       FindOneById_FailsWhenInitializeIsNotCalled)
+       FailsWhenInitializeIsNotCalled)
 {
   SystemRepository repo(this->dbConnection());
 
@@ -254,6 +254,26 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_SystemRep
 
   const auto actual = repo.findOneById(system.dbId);
   EXPECT_EQ(system.step, actual.step);
+}
+
+TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_SystemRepository,
+       Save_FailsWhenSystemExistsWithSameName)
+{
+  auto system1 = insertTestSystem(*this->dbConnection(), true);
+
+  System system2{
+    .dbId        = core::Uuid{},
+    .name        = system1.name,
+    .position    = Eigen::Vector3f(2.5f, -1.2f, 3.4f),
+    .currentTick = chrono::Tick::fromInt(34),
+    .step        = chrono::TimeStep(15, chrono::Duration::fromSeconds(1.0f)),
+  };
+
+  SystemRepository repo(this->dbConnection());
+  repo.initialize();
+
+  auto code = [&repo, &system2]() { repo.save(system2); };
+  EXPECT_THAT(code, ThrowsMessage<::core::CoreException>("Failed to save system: 23505"));
 }
 
 } // namespace bsgalone::server

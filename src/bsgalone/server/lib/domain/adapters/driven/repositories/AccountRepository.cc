@@ -62,16 +62,16 @@ auto AccountRepository::findOneByName(const std::string &name) const -> std::opt
   return out;
 }
 
-auto AccountRepository::save(Account account) const -> Account
+void AccountRepository::save(Account account) const
 {
   auto query = [&account](pqxx::nontransaction &work) {
-    return work.exec(pqxx::prepped{SAVE_ACCOUNT_QUERY_NAME},
-                     pqxx::params{account.dbId.toDbId(), account.username, account.password});
+    return work
+      .exec(pqxx::prepped{SAVE_ACCOUNT_QUERY_NAME},
+            pqxx::params{account.dbId.toDbId(), account.username, account.password})
+      .no_rows();
   };
 
   m_connection->executeQuery(query);
-
-  return account;
 }
 
 } // namespace bsgalone::server

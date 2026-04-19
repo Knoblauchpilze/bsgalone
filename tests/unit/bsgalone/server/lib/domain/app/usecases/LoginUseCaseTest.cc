@@ -156,7 +156,7 @@ TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase,
 
   Player expectedPlayer = player;
   expectedPlayer.role   = data.role;
-  EXPECT_CALL(*mockPlayerRepo, save(expectedPlayer)).Times(1).WillOnce(Return(expectedPlayer));
+  EXPECT_CALL(*mockPlayerRepo, save(expectedPlayer)).Times(1);
 
   usecase.performLogin(data);
 
@@ -202,9 +202,8 @@ TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase, RegistersPlayerWhenL
 
   Player expectedPlayer = player;
   expectedPlayer.role   = data.role;
-  EXPECT_CALL(*mockPlayerRepo, save(expectedPlayer)).WillOnce(Return(expectedPlayer));
+  EXPECT_CALL(*mockPlayerRepo, save(expectedPlayer)).Times(1);
 
-  // TODO: This will fail as the uuid is random
   EXPECT_CALL(*mockClientManager,
               registerPlayer(net::ClientId{12},
                              player.dbId,

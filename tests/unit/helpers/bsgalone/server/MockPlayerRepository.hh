@@ -20,7 +20,7 @@ class MockPlayerRepository : public bsgalone::server::ForManagingPlayer
               findOneByAccount,
               (const bsgalone::core::Uuid),
               (const, override));
-  MOCK_METHOD(bsgalone::server::Player, save, (bsgalone::server::Player), (override));
+  MOCK_METHOD(void, save, (bsgalone::server::Player), (const, override));
 };
 
 } // namespace test

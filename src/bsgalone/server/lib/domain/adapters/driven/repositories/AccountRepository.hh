@@ -22,15 +22,13 @@ class AccountRepository : public ForManagingAccount, public AbstractRepository
 
   auto findOneByName(const std::string &name) const -> std::optional<Account> override;
 
-  /// @brief - Saves the account and returns the up to date version from the
-  /// database. Some notes:
+  /// @brief - Saves the account to the database. Some notes:
   ///  - if an account with the same identifier already exists, the password
   ///    will be updated
   ///  - if an account with the same name already exists, an error will be
   ///    raised
   /// @param account - the account to save
-  /// @return - the up to date version of the save account
-  auto save(Account account) const -> Account override;
+  void save(Account account) const override;
 };
 
 using AccountRepositoryShPtr = std::shared_ptr<AccountRepository>;

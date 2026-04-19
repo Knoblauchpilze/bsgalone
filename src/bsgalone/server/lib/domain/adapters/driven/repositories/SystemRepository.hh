@@ -30,7 +30,7 @@ class SystemRepository : public ForManagingSystem, public AbstractRepository
   /// with the same identifier exists, it will update it's tick, tick config
   /// and position.
   /// @param system - the system to persist
-  void save(const System &system) override;
+  void save(const System &system) const override;
 };
 
 using SystemRepositoryShPtr = std::shared_ptr<SystemRepository>;

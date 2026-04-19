@@ -14,7 +14,7 @@ class ForManagingPlayer
 
   virtual auto findOneById(const core::Uuid playerDbId) const -> Player       = 0;
   virtual auto findOneByAccount(const core::Uuid accountDbId) const -> Player = 0;
-  virtual auto save(Player player) -> Player                                  = 0;
+  virtual void save(Player player) const                                      = 0;
 };
 
 using ForManagingPlayerShPtr = std::shared_ptr<ForManagingPlayer>;

@@ -16,7 +16,7 @@ class MockAccountRepository : public bsgalone::server::ForManagingAccount
               findOneByName,
               (const std::string &),
               (const, override));
-  MOCK_METHOD(bsgalone::server::Account, save, (bsgalone::server::Account), (const, override));
+  MOCK_METHOD(void, save, (bsgalone::server::Account), (const, override));
 };
 
 } // namespace test

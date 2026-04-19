@@ -22,7 +22,7 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_AccountRe
 }
 
 TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_AccountRepository,
-       FindOneByName_FailsWhenInitializeIsNotCalled)
+       FailsWhenInitializeIsNotCalled)
 {
   AccountRepository repo(this->dbConnection());
 
@@ -60,9 +60,6 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_AccountRe
 TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_AccountRepository,
        Save_InsertsNewAccount)
 {
-  AccountRepository repo(this->dbConnection());
-  repo.initialize();
-
   const auto name = std::format("random-player-{:%F%T}", ::core::now());
   Account account{
     .dbId     = core::Uuid{},
@@ -70,12 +67,11 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_AccountRe
     .password = "secret",
   };
 
-  const auto actual = repo.save(account);
-  EXPECT_EQ(account.dbId, actual.dbId);
-  EXPECT_EQ(account.username, actual.username);
-  EXPECT_EQ(account.password, actual.password);
+  AccountRepository repo(this->dbConnection());
+  repo.initialize();
+  repo.save(account);
 
-  const auto maybeDbAccount = repo.findOneByName(actual.username);
+  const auto maybeDbAccount = repo.findOneByName(account.username);
   ASSERT_TRUE(maybeDbAccount.has_value());
   EXPECT_EQ(account.dbId, maybeDbAccount->dbId);
   EXPECT_EQ(account.username, maybeDbAccount->username);
@@ -85,9 +81,6 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_AccountRe
 TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_AccountRepository,
        Save_UpdatesPasswordWhenAccountAlreadyExistsWithSameName)
 {
-  AccountRepository repo(this->dbConnection());
-  repo.initialize();
-
   const auto account1 = insertTestAccount(*this->dbConnection());
 
   EXPECT_NE("super-secret", account1.password);
@@ -97,6 +90,8 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_AccountRe
     .password = "super-secret",
   };
 
+  AccountRepository repo(this->dbConnection());
+  repo.initialize();
   repo.save(account2);
 
   const auto maybeDbAccount = repo.findOneByName(account1.username);
@@ -109,15 +104,15 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_AccountRe
 TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_AccountRepository,
        Save_FailsWhenAccountAlreadyExistsWithSameName)
 {
-  AccountRepository repo(this->dbConnection());
-  repo.initialize();
-
   const auto account1 = insertTestAccount(*this->dbConnection());
 
   Account account2{
     .username = account1.username,
     .password = "super-secret",
   };
+
+  AccountRepository repo(this->dbConnection());
+  repo.initialize();
 
   auto code = [&repo, &account2]() { repo.save(account2); };
   EXPECT_THAT(code, ThrowsMessage<::core::CoreException>("Failed to execute sql query"));

@@ -138,7 +138,7 @@ auto SystemRepository::findAll() const -> std::vector<System>
   return out;
 }
 
-void SystemRepository::save(const System &system)
+void SystemRepository::save(const System &system) const
 {
   auto query = [&system](pqxx::work &transaction) {
     transaction
