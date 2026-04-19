@@ -42,7 +42,7 @@ class Uuid
   /// the message's data fails
   static auto readFromStream(std::istream &in) -> std::optional<Uuid>;
 
-  bool operator==(const Uuid &rhs) const;
+  bool operator==(const Uuid &rhs) const = default;
 
   private:
   uuids::uuid m_uuid{};

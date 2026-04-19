@@ -56,11 +56,6 @@ auto Uuid::readFromStream(std::istream &in) -> std::optional<Uuid>
   return Uuid(uuids::uuid(rawUuid));
 }
 
-bool Uuid::operator==(const Uuid &rhs) const
-{
-  return m_uuid == rhs.m_uuid;
-}
-
 auto operator<<(std::ostream &out, const Uuid &uuid) -> std::ostream &
 {
   const auto bytes = uuid.m_uuid.as_bytes();
