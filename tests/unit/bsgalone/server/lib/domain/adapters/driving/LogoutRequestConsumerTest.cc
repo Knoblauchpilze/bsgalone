@@ -39,12 +39,13 @@ TEST(Unit_Bsgalone_Server_Domain_Adapters_Driving_LogoutRequestConsumer, Delegat
     .Times(1)
     .WillOnce(Invoke([&captured](const LogoutData &data) { captured = data; }));
 
-  core::LogoutRequest request(core::Uuid{371});
+  const core::Uuid playerDbId;
+  core::LogoutRequest request(playerDbId);
 
   LogoutRequestConsumer consumer(std::move(usecase));
   consumer.onEventReceived(request);
 
-  EXPECT_EQ(core::Uuid{371}, captured.playerDbId);
+  EXPECT_EQ(playerDbId, captured.playerDbId);
 }
 
 } // namespace bsgalone::server

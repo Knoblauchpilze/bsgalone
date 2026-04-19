@@ -10,7 +10,7 @@ CREATE TABLE entity (
 );
 
 CREATE TABLE resource (
-  id INTEGER GENERATED ALWAYS AS IDENTITY,
+  id UUID NOT NULL,
   name TEXT NOT NULL,
   PRIMARY KEY (id),
   UNIQUE (name)

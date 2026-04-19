@@ -1,6 +1,6 @@
 
 CREATE TABLE weapon (
-  id INTEGER GENERATED ALWAYS AS IDENTITY,
+  id UUID NOT NULL,
   name TEXT NOT NULL,
   min_damage NUMERIC(8, 2) NOT NULL,
   max_damage NUMERIC(8, 2) NOT NULL,
@@ -14,8 +14,8 @@ CREATE TABLE weapon (
 );
 
 CREATE TABLE weapon_price (
-  weapon INTEGER NOT NULL,
-  resource INTEGER NOT NULL,
+  weapon UUID NOT NULL,
+  resource UUID NOT NULL,
   cost INTEGER NOT NULL,
   PRIMARY KEY (weapon, resource),
   FOREIGN KEY (weapon) REFERENCES weapon(id),

@@ -1,8 +1,8 @@
 
 CREATE TABLE system_outpost (
-  id INTEGER GENERATED ALWAYS AS IDENTITY,
-  outpost INTEGER NOT NULL,
-  system INTEGER NOT NULL,
+  id UUID NOT NULL,
+  outpost UUID NOT NULL,
+  system UUID NOT NULL,
   hull_points NUMERIC(8, 2) NOT NULL,
   power_points NUMERIC(8, 2) NOT NULL,
   x_pos NUMERIC(12, 2) NOT NULL,

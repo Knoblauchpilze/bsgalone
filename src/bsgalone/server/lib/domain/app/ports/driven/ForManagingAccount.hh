@@ -14,7 +14,7 @@ class ForManagingAccount
   virtual ~ForManagingAccount() = default;
 
   virtual auto findOneByName(const std::string &name) const -> std::optional<Account> = 0;
-  virtual auto save(Account account) const -> Account                                 = 0;
+  virtual void save(Account account) const                                            = 0;
 };
 
 using ForManagingAccountShPtr = std::shared_ptr<ForManagingAccount>;

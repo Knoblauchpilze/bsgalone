@@ -47,7 +47,8 @@ TEST(Unit_Bsgalone_Client_Network_OutputUiCommandAdapter, CorrectlyPublishesLogi
 TEST(Unit_Bsgalone_Client_Network_OutputUiCommandAdapter, CorrectlyPublishesLogoutRequest)
 {
   auto store = std::make_shared<MockDataStore>();
-  EXPECT_CALL(*store, getPlayerDbId()).Times(1).WillOnce(Return(core::Uuid{27}));
+  const core::Uuid expectedPlayerDbId;
+  EXPECT_CALL(*store, getPlayerDbId()).Times(1).WillOnce(Return(expectedPlayerDbId));
 
   auto queue = std::make_shared<TestMessageQueue>();
   OutputUiCommandAdapter adapter(store, queue);
@@ -58,7 +59,7 @@ TEST(Unit_Bsgalone_Client_Network_OutputUiCommandAdapter, CorrectlyPublishesLogo
   EXPECT_EQ(1u, queue->messages().size());
   EXPECT_EQ(core::MessageType::LOGOUT_REQUEST, queue->messages().at(0)->type());
   const auto &actual = queue->messages().at(0)->as<core::LogoutRequest>();
-  EXPECT_EQ(core::Uuid{27}, actual.getPlayerDbId());
+  EXPECT_EQ(expectedPlayerDbId, actual.getPlayerDbId());
 }
 
 TEST(Unit_Bsgalone_Client_Network_OutputUiCommandAdapter, CorrectlyPublishesSignupRequest)

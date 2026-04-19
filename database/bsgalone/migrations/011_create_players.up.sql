@@ -2,8 +2,8 @@
 -- https://www.postgresqltutorial.com/postgresql-tutorial/postgresql-identity-column/
 -- https://www.postgresql.org/docs/current/functions-datetime.html#FUNCTIONS-DATETIME-CURRENT
 CREATE TABLE player (
-  id INTEGER GENERATED ALWAYS AS IDENTITY,
-  account INTEGER DEFAULT NULL,
+  id UUID NOT NULL,
+  account UUID DEFAULT NULL,
   name TEXT NOT NULL,
   faction TEXT NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -16,8 +16,8 @@ CREATE TABLE player (
 );
 
 CREATE TABLE player_resource (
-  player INTEGER NOT NULL,
-  resource INTEGER NOT NULL,
+  player UUID NOT NULL,
+  resource UUID NOT NULL,
   amount INTEGER NOT NULL,
   PRIMARY KEY (player, resource),
   FOREIGN KEY (player) REFERENCES player(id),
@@ -25,9 +25,9 @@ CREATE TABLE player_resource (
 );
 
 CREATE TABLE player_weapon (
-  id INTEGER GENERATED ALWAYS AS IDENTITY,
-  weapon INTEGER NOT NULL,
-  player INTEGER NOT NULL,
+  id UUID NOT NULL,
+  weapon UUID NOT NULL,
+  player UUID NOT NULL,
   level INTEGER NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP WITH TIME ZONE,
@@ -37,9 +37,9 @@ CREATE TABLE player_weapon (
 );
 
 CREATE TABLE player_computer (
-  id INTEGER GENERATED ALWAYS AS IDENTITY,
-  computer INTEGER NOT NULL,
-  player INTEGER NOT NULL,
+  id UUID NOT NULL,
+  computer UUID NOT NULL,
+  player UUID NOT NULL,
   level INTEGER NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP WITH TIME ZONE,

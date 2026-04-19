@@ -34,13 +34,15 @@ TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LogoutUseCase, ThrowsWhenEventPubl
 
 TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LogoutUseCase, RemovesPlayerFromClient)
 {
+  const core::Uuid playerDbId;
+
   auto mockClientManager = std::make_shared<StrictMock<MockClientManager>>();
-  EXPECT_CALL(*mockClientManager, removePlayer(core::Uuid{17})).Times(1);
+  EXPECT_CALL(*mockClientManager, removePlayer(playerDbId)).Times(1);
 
   auto publisher = std::make_shared<TestGameEventPublisher>();
   LogoutUseCase usecase(mockClientManager, publisher);
 
-  LogoutData data{.playerDbId = core::Uuid{17}};
+  LogoutData data{.playerDbId = playerDbId};
 
   usecase.performLogout(data);
 }
@@ -48,13 +50,15 @@ TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LogoutUseCase, RemovesPlayerFromCl
 TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LogoutUseCase,
      PublishesPlayerLogoutEventWhenPlayerRemoved)
 {
+  const core::Uuid playerDbId;
+
   auto mockClientManager = std::make_shared<StrictMock<MockClientManager>>();
-  EXPECT_CALL(*mockClientManager, removePlayer(core::Uuid{17})).Times(1);
+  EXPECT_CALL(*mockClientManager, removePlayer(playerDbId)).Times(1);
 
   auto publisher = std::make_shared<TestGameEventPublisher>();
   LogoutUseCase usecase(mockClientManager, publisher);
 
-  LogoutData data{.playerDbId = core::Uuid{17}};
+  LogoutData data{.playerDbId = playerDbId};
 
   usecase.performLogout(data);
 
@@ -72,7 +76,7 @@ TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LogoutUseCase,
   auto publisher     = std::make_shared<TestGameEventPublisher>();
   LogoutUseCase usecase(clientManager, publisher);
 
-  LogoutData data{.playerDbId = core::Uuid{17}};
+  LogoutData data{.playerDbId = core::Uuid{}};
 
   usecase.performLogout(data);
 

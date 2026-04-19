@@ -1,8 +1,8 @@
 
 CREATE TABLE player_ship (
-  id INTEGER GENERATED ALWAYS AS IDENTITY,
-  ship INTEGER NOT NULL,
-  player INTEGER NOT NULL,
+  id UUID NOT NULL,
+  ship UUID NOT NULL,
+  player UUID NOT NULL,
   name TEXT NOT NULL,
   active BOOLEAN NOT NULL,
   hull_points NUMERIC(8, 2) NOT NULL,
@@ -19,9 +19,9 @@ CREATE TABLE player_ship (
 );
 
 CREATE TABLE ship_weapon (
-  ship INTEGER NOT NULL,
-  weapon INTEGER NOT NULL,
-  slot INTEGER NOT NULL,
+  ship UUID NOT NULL,
+  weapon UUID NOT NULL,
+  slot UUID NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP WITH TIME ZONE,
   PRIMARY KEY (ship, weapon),
@@ -32,8 +32,8 @@ CREATE TABLE ship_weapon (
 );
 
 CREATE TABLE ship_computer (
-  ship INTEGER NOT NULL,
-  computer INTEGER NOT NULL,
+  ship UUID NOT NULL,
+  computer UUID NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP WITH TIME ZONE,
   PRIMARY KEY (ship, computer),
@@ -42,8 +42,8 @@ CREATE TABLE ship_computer (
 );
 
 CREATE TABLE ship_system (
-  ship INTEGER NOT NULL,
-  system INTEGER NOT NULL,
+  ship UUID NOT NULL,
+  system UUID NOT NULL,
   docked BOOLEAN NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP WITH TIME ZONE,
@@ -53,20 +53,20 @@ CREATE TABLE ship_system (
 );
 
 CREATE TABLE ship_jump (
-  ship INTEGER NOT NULL,
-  system INTEGER NOT NULL,
+  ship UUID NOT NULL,
+  system UUID NOT NULL,
   PRIMARY KEY (ship, system),
   FOREIGN KEY (ship) REFERENCES player_ship(id),
   FOREIGN KEY (system) REFERENCES system(id)
 );
 
 CREATE TABLE player_role (
-  player INTEGER NOT NULL,
+  player UUID NOT NULL,
   role TEXT NOT NULL,
-  target_ship INTEGER DEFAULT NULL,
+  target_ship UUID DEFAULT NULL,
   FOREIGN KEY (player) REFERENCES player(id),
   FOREIGN KEY (role) REFERENCES game_role(name),
-  FOREIGN KEY (target_ship) REFERENCES player_ship,
+  FOREIGN KEY (target_ship) REFERENCES player_ship(id),
   UNIQUE (player),
   UNIQUE (target_ship)
 );

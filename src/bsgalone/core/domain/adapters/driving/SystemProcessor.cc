@@ -10,7 +10,7 @@ SystemProcessor::SystemProcessor(const Uuid systemDbId, chrono::ITimeManagerPtr 
   , m_timeManager(std::move(timeManager))
 {
   setService("system");
-  addModule(str(systemDbId));
+  addModule(systemDbId.str());
 
   if (m_timeManager == nullptr)
   {

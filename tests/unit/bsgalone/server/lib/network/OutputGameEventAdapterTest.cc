@@ -82,8 +82,10 @@ TEST_F(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsFailedLoginMe
 
 TEST_F(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsSuccessfulLoginMessage)
 {
+  const core::Uuid playerDbId;
+
   PlayerLoginEvent event(net::ClientId{12});
-  event.setPlayerDbId(core::Uuid{18});
+  event.setPlayerDbId(playerDbId);
   event.setRole(core::GameRole::GUNNER);
 
   auto captured = this->executeTestCase(event);
@@ -91,7 +93,7 @@ TEST_F(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsSuccessfulLog
   EXPECT_EQ(core::MessageType::LOGIN, captured->type());
   const auto &actual = captured->as<core::LoginMessage>();
   EXPECT_TRUE(actual.successfullyLoggedIn());
-  EXPECT_EQ(core::Uuid{18}, actual.getPlayerDbId());
+  EXPECT_EQ(playerDbId, actual.getPlayerDbId());
   EXPECT_EQ(core::GameRole::GUNNER, actual.getRole());
 }
 
@@ -109,7 +111,7 @@ TEST_F(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsFailedSignupM
 TEST_F(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsSuccessfulSignupMessage)
 {
   PlayerSignupEvent event(net::ClientId{12});
-  event.setPlayerDbId(core::Uuid{18});
+  event.setPlayerDbId(core::Uuid{});
   event.setFaction(core::Faction::CYLON);
 
   auto captured = this->executeTestCase(event);
@@ -122,10 +124,12 @@ TEST_F(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsSuccessfulSig
 TEST_F(Unit_Bsgalone_Server_Events_OutputGameEventAdapter,
        ForwardsLogoutMessageToAllRegisteredClients)
 {
-  PlayerLogoutEvent event(core::Uuid{18});
+  const core::Uuid playerDbId;
+
+  PlayerLogoutEvent event(playerDbId);
   auto clientManager = std::make_shared<ClientManager>();
   clientManager->registerClient(net::ClientId{12});
-  clientManager->registerPlayer(net::ClientId{12}, core::Uuid{18}, core::Uuid{19});
+  clientManager->registerPlayer(net::ClientId{12}, playerDbId, core::Uuid{});
 
   clientManager->registerClient(net::ClientId{13});
 
@@ -147,10 +151,10 @@ TEST_F(Unit_Bsgalone_Server_Events_OutputGameEventAdapter,
   adapter.onEventReceived(event);
 
   EXPECT_EQ(core::MessageType::LOGOUT, captured1->type());
-  EXPECT_EQ(core::Uuid{18}, captured1->as<core::LogoutMessage>().getPlayerDbId());
+  EXPECT_EQ(playerDbId, captured1->as<core::LogoutMessage>().getPlayerDbId());
 
   EXPECT_EQ(core::MessageType::LOGOUT, captured2->type());
-  EXPECT_EQ(core::Uuid{18}, captured2->as<core::LogoutMessage>().getPlayerDbId());
+  EXPECT_EQ(playerDbId, captured2->as<core::LogoutMessage>().getPlayerDbId());
 }
 
 } // namespace bsgalone::server

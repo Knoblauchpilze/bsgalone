@@ -60,27 +60,23 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_DbConnect
 TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_DbConnection,
        TryExecuteTransaction_CommitsWhenSuccessful)
 {
+  const core::Uuid uuid;
   const auto username = std::format("random-account-{:%F%T}", ::core::now());
 
-  const auto insertQuery = [&username](pqxx::work &transaction) {
+  const auto insertQuery = [&uuid, &username](pqxx::work &transaction) {
     constexpr auto INSERT_QUERY = R"(
-      INSERT INTO account ("name", "password")
-        VALUES ($1, 'password')
-        RETURNING id
+      INSERT INTO account ("id", "name", "password")
+        VALUES ($1, $2, 'password')
     )";
 
-    return transaction.exec(INSERT_QUERY, pqxx::params{username});
+    return transaction.exec(INSERT_QUERY, pqxx::params{uuid.toDbId(), username});
   };
 
   const auto out = this->dbConnection()->tryExecuteTransaction(insertQuery);
 
   ASSERT_FALSE(out.error.has_value());
   ASSERT_TRUE(out.result.has_value());
-  ASSERT_FALSE(out.result->empty());
-  ASSERT_EQ(1, out.result->size());
-
-  const auto &record      = (*out.result)[0];
-  const auto expectedDbId = core::fromDbId(record[0].as<int>());
+  ASSERT_TRUE(out.result->empty());
 
   const auto fetchQuery = [&username](pqxx::nontransaction &work) {
     constexpr auto FETCH_QUERY = R"(
@@ -96,26 +92,26 @@ TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_DbConnect
   };
 
   const auto accountRecord = this->dbConnection()->executeQueryReturningSingleRow(fetchQuery);
-  EXPECT_EQ(expectedDbId, core::fromDbId(accountRecord[0].as<int>()));
+  EXPECT_EQ(uuid.toDbId(), accountRecord[0].as<std::string>());
   EXPECT_EQ("password", accountRecord[1].as<std::string>());
 }
 
 TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_DbConnection,
        TryExecuteTransaction_RollsBackWhenAStatementFails)
 {
+  const core::Uuid uuid;
   const auto username = std::format("random-account-{:%F%T}", ::core::now());
 
-  const auto insertQuery = [&username](pqxx::work &transaction) {
+  const auto insertQuery = [&uuid, &username](pqxx::work &transaction) {
     constexpr auto INSERT_QUERY = R"(
-      INSERT INTO account ("name", "password")
-        VALUES ($1, 'password')
-        RETURNING id
+      INSERT INTO account ("id", "name", "password")
+        VALUES ($1, $2, 'password')
     )";
 
-    transaction.exec(INSERT_QUERY, pqxx::params{username});
+    transaction.exec(INSERT_QUERY, pqxx::params{uuid.toDbId(), username});
 
     // Second insert should fail due to unique constraint
-    return transaction.exec(INSERT_QUERY, pqxx::params{username});
+    return transaction.exec(INSERT_QUERY, pqxx::params{uuid.toDbId(), username});
   };
 
   const auto out = this->dbConnection()->tryExecuteTransaction(insertQuery);

@@ -60,8 +60,10 @@ TEST(Unit_Bsgalone_Core_Messages_Network_InputNetworkAdapter,
   auto queue = std::make_shared<TestMessageQueue>();
   InputNetworkAdapter adapter(queue, std::make_unique<MessageParser>());
 
+  const Uuid playerDbId;
+
   LoginMessage message;
-  message.setPlayerDbId(Uuid{18});
+  message.setPlayerDbId(playerDbId);
   message.setRole(GameRole::PILOT);
 
   std::stringstream out;
@@ -76,7 +78,7 @@ TEST(Unit_Bsgalone_Core_Messages_Network_InputNetworkAdapter,
   EXPECT_EQ(1u, queue->messages().size());
   EXPECT_EQ(MessageType::LOGIN, queue->messages().at(0)->type());
   const auto &actual = queue->messages().at(0)->as<LoginMessage>();
-  EXPECT_EQ(Uuid{18}, actual.getPlayerDbId());
+  EXPECT_EQ(playerDbId, actual.getPlayerDbId());
   EXPECT_EQ(GameRole::PILOT, actual.getRole());
 }
 

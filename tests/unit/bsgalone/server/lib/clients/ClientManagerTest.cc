@@ -19,17 +19,19 @@ TEST(Unit_Bsgalone_Server_Clients_ClientManager, ThrowsWhenRegisteringPlayerForU
   ClientManager manager;
 
   EXPECT_THROW(
-    [&manager]() { manager.registerPlayer(net::ClientId{12}, core::Uuid{18}, core::Uuid{19}); }(),
+    [&manager]() { manager.registerPlayer(net::ClientId{12}, core::Uuid{}, core::Uuid{}); }(),
     ::core::CoreException);
 }
 
 TEST(Unit_Bsgalone_Server_Clients_ClientManager, RegisteredPlayerCanBeQueried)
 {
+  const core::Uuid playerDbId;
+
   ClientManager manager;
   manager.registerClient(net::ClientId{12});
-  manager.registerPlayer(net::ClientId{12}, core::Uuid{18}, core::Uuid{19});
+  manager.registerPlayer(net::ClientId{12}, playerDbId, core::Uuid{});
 
-  const auto clientId = manager.getClientIdForPlayer(core::Uuid{18});
+  const auto clientId = manager.getClientIdForPlayer(playerDbId);
   EXPECT_EQ(net::ClientId{12}, clientId);
 }
 
@@ -37,28 +39,32 @@ TEST(Unit_Bsgalone_Server_Clients_ClientManager, ThrowsWhenFetchingClientForUnkn
 {
   ClientManager manager;
 
-  EXPECT_THROW([&manager]() { manager.getClientIdForPlayer(net::ClientId{12}); }(),
+  EXPECT_THROW([&manager]() { manager.getClientIdForPlayer(core::Uuid{}); }(),
                ::core::CoreException);
 }
 
 TEST(Unit_Bsgalone_Server_Clients_ClientManager, ReturnsClientForRegisteredPlayer)
 {
+  const core::Uuid playerDbId;
+
   ClientManager manager;
   manager.registerClient(net::ClientId{12});
-  manager.registerPlayer(net::ClientId{12}, core::Uuid{18}, core::Uuid{19});
+  manager.registerPlayer(net::ClientId{12}, playerDbId, core::Uuid{});
 
   const auto maybePlayer = manager.tryGetPlayerForClient(net::ClientId{12});
-  EXPECT_EQ(core::Uuid{18}, maybePlayer.value());
+  EXPECT_EQ(playerDbId, maybePlayer.value());
 }
 
 TEST(Unit_Bsgalone_Server_Clients_ClientManager, ReturnsSystemForRegisteredPlayer)
 {
+  const core::Uuid systemDbId;
+
   ClientManager manager;
   manager.registerClient(net::ClientId{12});
-  manager.registerPlayer(net::ClientId{12}, core::Uuid{18}, core::Uuid{19});
+  manager.registerPlayer(net::ClientId{12}, core::Uuid{}, systemDbId);
 
   const auto maybeSystem = manager.tryGetSystemForClient(net::ClientId{12});
-  EXPECT_EQ(core::Uuid{19}, maybeSystem.value());
+  EXPECT_EQ(systemDbId, maybeSystem.value());
 }
 
 TEST(Unit_Bsgalone_Server_Clients_ClientManager, DoesNotReturnPlayerWhenClientHasNoPlayer)
@@ -66,27 +72,32 @@ TEST(Unit_Bsgalone_Server_Clients_ClientManager, DoesNotReturnPlayerWhenClientHa
   ClientManager manager;
   manager.registerClient(net::ClientId{12});
 
-  const auto clients = manager.getAllClientsForSystem(core::Uuid{19});
+  const auto clients = manager.getAllClientsForSystem(core::Uuid{});
   EXPECT_EQ(std::vector<net::ClientId>{}, clients);
 }
 
 TEST(Unit_Bsgalone_Server_Clients_ClientManager, DoesNotReturnPlayerWhenNotRegisteredInSystem)
 {
+  const core::Uuid systemDbId1;
+  const core::Uuid systemDbId2;
+
   ClientManager manager;
   manager.registerClient(net::ClientId{12});
-  manager.registerPlayer(net::ClientId{12}, core::Uuid{18}, core::Uuid{19});
+  manager.registerPlayer(net::ClientId{12}, core::Uuid{}, systemDbId1);
 
-  const auto clients = manager.getAllClientsForSystem(core::Uuid{20});
+  const auto clients = manager.getAllClientsForSystem(systemDbId2);
   EXPECT_EQ(std::vector<net::ClientId>{}, clients);
 }
 
 TEST(Unit_Bsgalone_Server_Clients_ClientManager, ReturnsClientWhenRegisteredInSystem)
 {
+  const core::Uuid systemDbId;
+
   ClientManager manager;
   manager.registerClient(net::ClientId{12});
-  manager.registerPlayer(net::ClientId{12}, core::Uuid{18}, core::Uuid{19});
+  manager.registerPlayer(net::ClientId{12}, core::Uuid{}, systemDbId);
 
-  const auto clients = manager.getAllClientsForSystem(core::Uuid{19});
+  const auto clients = manager.getAllClientsForSystem(systemDbId);
   EXPECT_EQ(std::vector<net::ClientId>{net::ClientId{12}}, clients);
 }
 
@@ -101,7 +112,7 @@ TEST(Unit_Bsgalone_Server_Clients_ClientManager, RemovedClientCannotBeQueriedAny
 {
   ClientManager manager;
   manager.registerClient(net::ClientId{12});
-  manager.registerPlayer(net::ClientId{12}, core::Uuid{18}, core::Uuid{19});
+  manager.registerPlayer(net::ClientId{12}, core::Uuid{}, core::Uuid{});
 
   manager.removeClient(net::ClientId{12});
 
@@ -116,26 +127,30 @@ TEST(Unit_Bsgalone_Server_Clients_ClientManager, ThrowsWhenUpdatingSystemForUnkn
 {
   ClientManager manager;
 
-  EXPECT_THROW([&manager]() { manager.updateSystemForPlayer(core::Uuid{18}, core::Uuid{20}); }(),
+  EXPECT_THROW([&manager]() { manager.updateSystemForPlayer(core::Uuid{}, core::Uuid{}); }(),
                ::core::CoreException);
 }
 
 TEST(Unit_Bsgalone_Server_Clients_ClientManager, SuccessfullyUpdatesPlayerSystem)
 {
+  const core::Uuid playerDbId;
+  const core::Uuid systemDbId1;
+  const core::Uuid systemDbId2;
+
   ClientManager manager;
   manager.registerClient(net::ClientId{12});
-  manager.registerPlayer(net::ClientId{12}, core::Uuid{18}, core::Uuid{19});
+  manager.registerPlayer(net::ClientId{12}, playerDbId, systemDbId1);
 
-  auto clients = manager.getAllClientsForSystem(core::Uuid{19});
+  auto clients = manager.getAllClientsForSystem(systemDbId1);
   EXPECT_EQ(std::vector<net::ClientId>{net::ClientId{12}}, clients);
-  clients = manager.getAllClientsForSystem(core::Uuid{20});
+  clients = manager.getAllClientsForSystem(systemDbId2);
   EXPECT_EQ(std::vector<net::ClientId>(), clients);
 
-  manager.updateSystemForPlayer(core::Uuid{18}, core::Uuid{20});
+  manager.updateSystemForPlayer(playerDbId, systemDbId2);
 
-  clients = manager.getAllClientsForSystem(core::Uuid{19});
+  clients = manager.getAllClientsForSystem(systemDbId1);
   EXPECT_EQ(std::vector<net::ClientId>(), clients);
-  clients = manager.getAllClientsForSystem(core::Uuid{20});
+  clients = manager.getAllClientsForSystem(systemDbId2);
   EXPECT_EQ(std::vector<net::ClientId>{net::ClientId{12}}, clients);
 }
 

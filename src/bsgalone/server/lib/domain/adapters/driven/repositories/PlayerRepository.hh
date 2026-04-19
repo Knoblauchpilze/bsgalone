@@ -23,15 +23,15 @@ class PlayerRepository : public ForManagingPlayer, public AbstractRepository
   auto findOneByAccount(const core::Uuid accountDbId) const -> Player override;
 
   /// @brief - Saves the player to the database. This function will attempt to insert
-  /// the player's data as a new entity in the database. In case there's already a
-  /// player attached to the account, its name will be overridden by the value defined
-  /// in the input of this function.
+  /// the player's data as a new entity in the database. An entry for the role of the
+  /// player will be created.
+  /// In case there's already a player with the same identifier, it will be updated:
+  //   - the name will be updated
+  //   - the game role will be updated
   /// Additionally, player role will be inserted in the database. In case the player
   /// already has a role, it will be updated.
-  /// The identifier of the player is ignored and will be returned in the output model.
   /// @param player - the player to save
-  /// @return - an up to date version of the player as saved in the database
-  auto save(Player player) -> Player override;
+  void save(Player player) const override;
 };
 
 using PlayerRepositoryShPtr = std::shared_ptr<PlayerRepository>;

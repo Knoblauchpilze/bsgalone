@@ -24,10 +24,6 @@ auto DbConnectionFixture::dbConnection() const -> bsgalone::server::DbConnection
 }
 
 namespace {
-// Note: the sequences are not reset: this is because this would require
-// executing the tests with the admin user as sequences belong to the user
-// who created them. As tests do not depend on precise identifiers it is
-// not an issue.
 constexpr auto RESET_DATABASE_QUERY = R"(
 TRUNCATE TABLE
   ai_behaviors,

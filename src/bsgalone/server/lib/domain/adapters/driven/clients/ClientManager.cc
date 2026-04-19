@@ -28,8 +28,7 @@ void ClientManager::registerPlayer(const net::ClientId clientId,
   const auto maybeClientData = m_clients.find(clientId);
   if (maybeClientData == m_clients.cend())
   {
-    error("Failed to register player " + core::str(playerDbId),
-          "Unknown client " + core::str(clientId));
+    error("Failed to register player " + playerDbId.str(), "Unknown client " + net::str(clientId));
   }
 
   auto &clientData            = maybeClientData->second;
@@ -37,7 +36,7 @@ void ClientManager::registerPlayer(const net::ClientId clientId,
   clientData.playerSystemDbId = playerSystemDbId;
   m_playerToClient.emplace(playerDbId, clientId);
 
-  info("Registered player " + core::str(playerDbId) + " in system " + core::str(playerSystemDbId));
+  info("Registered player " + playerDbId.str() + " in system " + playerSystemDbId.str());
 }
 
 void ClientManager::removePlayer(const core::Uuid playerDbId)
@@ -47,7 +46,7 @@ void ClientManager::removePlayer(const core::Uuid playerDbId)
   const auto maybeClientId = m_playerToClient.find(playerDbId);
   if (maybeClientId == m_playerToClient.cend())
   {
-    error("Failed to unregister player " + core::str(playerDbId), "Unable to find client id");
+    error("Failed to unregister player " + playerDbId.str(), "Unable to find client id");
   }
 
   auto &clientData = m_clients.at(maybeClientId->second);
@@ -55,7 +54,7 @@ void ClientManager::removePlayer(const core::Uuid playerDbId)
   clientData.playerSystemDbId.reset();
   m_playerToClient.erase(playerDbId);
 
-  info("Removed player " + core::str(playerDbId));
+  info("Removed player " + playerDbId.str());
 }
 
 void ClientManager::removePlayerConnection(const core::Uuid playerDbId)
@@ -65,14 +64,14 @@ void ClientManager::removePlayerConnection(const core::Uuid playerDbId)
   const auto maybeClientId = m_playerToClient.find(playerDbId);
   if (maybeClientId == m_playerToClient.cend())
   {
-    error("Failed to unregister connection for player " + core::str(playerDbId));
+    error("Failed to unregister connection for player " + playerDbId.str());
   }
 
   const auto clientId = maybeClientId->second;
   m_clients.erase(clientId);
   m_playerToClient.erase(maybeClientId);
 
-  info("Removed client " + net::str(clientId) + " for player " + core::str(playerDbId));
+  info("Removed client " + net::str(clientId) + " for player " + playerDbId.str());
 }
 
 void ClientManager::removeClient(const net::ClientId clientId)
@@ -114,7 +113,7 @@ auto ClientManager::getClientIdForPlayer(const core::Uuid playerDbId) const -> n
   const auto maybeClientId = m_playerToClient.find(playerDbId);
   if (maybeClientId == m_playerToClient.cend())
   {
-    error("Failed to get client id for " + core::str(playerDbId), "No such player");
+    error("Failed to get client id for " + playerDbId.str(), "No such player");
   }
 
   return maybeClientId->second;
@@ -174,22 +173,22 @@ void ClientManager::updateSystemForPlayer(const core::Uuid playerDbId, const cor
   const auto maybeClientId = m_playerToClient.find(playerDbId);
   if (maybeClientId == m_playerToClient.cend())
   {
-    error("Failed to get system for " + core::str(playerDbId), "No such player");
+    error("Failed to get system for " + playerDbId.str(), "No such player");
   }
 
   const auto maybeClientData = m_clients.find(maybeClientId->second);
   if (maybeClientData == m_clients.cend())
   {
-    error("Failed to get system for " + core::str(playerDbId), "No such client");
+    error("Failed to get system for " + playerDbId.str(), "No such client");
   }
 
   auto &clientData = maybeClientData->second;
   if (!clientData.playerDbId)
   {
-    error("Failed to update system for " + core::str(playerDbId), "No associated player");
+    error("Failed to update system for " + playerDbId.str(), "No associated player");
   }
 
-  info("Moved player " + core::str(*clientData.playerDbId) + " to system " + core::str(systemDbId));
+  info("Moved player " + clientData.playerDbId->str() + " to system " + systemDbId.str());
   clientData.playerSystemDbId = systemDbId;
 }
 

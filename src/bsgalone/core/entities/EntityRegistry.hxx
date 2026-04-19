@@ -11,7 +11,7 @@ inline void EntityRegistry::addComponent(const Uuid entityId, Component &&compon
   const auto maybeEntity = m_entities.find(entityId);
   if (maybeEntity == m_entities.end())
   {
-    throw std::invalid_argument("No such entity " + str(entityId));
+    throw std::invalid_argument("No such entity " + entityId.str());
   }
 
   m_registry.emplace<Component>(maybeEntity->second, std::forward<Component>(component));

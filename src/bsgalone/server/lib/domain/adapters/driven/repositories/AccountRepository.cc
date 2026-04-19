@@ -21,9 +21,11 @@ WHERE
 
 constexpr auto SAVE_ACCOUNT_QUERY_NAME = "account_save";
 constexpr auto SAVE_ACCOUNT_QUERY      = R"(
-INSERT INTO account (name, password)
-  VALUES ($1, $2)
-  RETURNING id
+INSERT INTO account (id, name, password)
+  VALUES ($1, $2, $3)
+  ON CONFLICT (id) DO UPDATE
+  SET
+    password = excluded.password
 )";
 } // namespace
 
@@ -53,25 +55,23 @@ auto AccountRepository::findOneByName(const std::string &name) const -> std::opt
   Account out;
 
   const auto &record = rows[0];
-  out.dbId           = core::fromDbId(record[0].as<int>());
+  out.dbId           = core::Uuid::fromDbId(record[0].view());
   out.username       = name;
   out.password       = record[1].as<std::string>();
 
   return out;
 }
 
-auto AccountRepository::save(Account account) const -> Account
+void AccountRepository::save(Account account) const
 {
   auto query = [&account](pqxx::nontransaction &work) {
     return work
-      .exec(pqxx::prepped{SAVE_ACCOUNT_QUERY_NAME}, pqxx::params{account.username, account.password})
-      .one_row();
+      .exec(pqxx::prepped{SAVE_ACCOUNT_QUERY_NAME},
+            pqxx::params{account.dbId.toDbId(), account.username, account.password})
+      .no_rows();
   };
 
-  const auto record = m_connection->executeQueryReturningSingleRow(query);
-  account.dbId      = core::fromDbId(record[0].as<int>());
-
-  return account;
+  m_connection->executeQuery(query);
 }
 
 } // namespace bsgalone::server

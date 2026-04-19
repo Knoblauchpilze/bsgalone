@@ -28,7 +28,7 @@ void ServerDataStore::onPlayerLoggedIn(const core::Uuid playerDbId, const core::
 {
   if (m_playerData.has_value())
   {
-    error("Unexpected player login", "Already logged in as " + core::str(m_playerData->playerDbId));
+    error("Unexpected player login", "Already logged in as " + m_playerData->playerDbId.str());
   }
 
   m_playerData = PlayerData{
@@ -36,7 +36,7 @@ void ServerDataStore::onPlayerLoggedIn(const core::Uuid playerDbId, const core::
     .role       = role,
   };
 
-  debug("Logged in as " + core::str(playerDbId) + " with role " + core::str(role));
+  debug("Logged in as " + playerDbId.str() + " with role " + core::str(role));
 }
 
 void ServerDataStore::onPlayerLoggedOut(const core::Uuid playerDbId)
@@ -48,7 +48,7 @@ void ServerDataStore::onPlayerLoggedOut(const core::Uuid playerDbId)
 
   m_playerData.reset();
 
-  debug("Logged out from session with " + core::str(playerDbId));
+  debug("Logged out from session with " + playerDbId.str());
 }
 
 } // namespace bsgalone::client

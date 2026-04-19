@@ -107,7 +107,7 @@ TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase,
   };
 
   Account account{
-    .dbId     = core::Uuid{0},
+    .dbId     = core::Uuid{},
     .username = "player",
     .password = "new-password",
   };
@@ -139,14 +139,14 @@ TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase,
   };
 
   Account account{
-    .dbId     = core::Uuid{145},
+    .dbId     = core::Uuid{},
     .username = "player",
     .password = "password",
   };
   EXPECT_CALL(*mockAccountRepo, findOneByName("player")).Times(1).WillOnce(Return(account));
 
   Player player{
-    .dbId    = core::Uuid{236},
+    .dbId    = core::Uuid{},
     .account = account.dbId,
     .name    = "player",
     .faction = core::Faction::COLONIAL,
@@ -156,7 +156,7 @@ TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase,
 
   Player expectedPlayer = player;
   expectedPlayer.role   = data.role;
-  EXPECT_CALL(*mockPlayerRepo, save(expectedPlayer)).Times(1).WillOnce(Return(expectedPlayer));
+  EXPECT_CALL(*mockPlayerRepo, save(expectedPlayer)).Times(1);
 
   usecase.performLogin(data);
 
@@ -185,14 +185,14 @@ TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase, RegistersPlayerWhenL
   };
 
   Account account{
-    .dbId     = core::Uuid{145},
+    .dbId     = core::Uuid{},
     .username = "player",
     .password = "password",
   };
   EXPECT_CALL(*mockAccountRepo, findOneByName("player")).WillOnce(Return(account));
 
   Player player{
-    .dbId    = core::Uuid{236},
+    .dbId    = core::Uuid{},
     .account = account.dbId,
     .name    = "player",
     .faction = core::Faction::COLONIAL,
@@ -202,9 +202,12 @@ TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase, RegistersPlayerWhenL
 
   Player expectedPlayer = player;
   expectedPlayer.role   = data.role;
-  EXPECT_CALL(*mockPlayerRepo, save(expectedPlayer)).WillOnce(Return(expectedPlayer));
+  EXPECT_CALL(*mockPlayerRepo, save(expectedPlayer)).Times(1);
 
-  EXPECT_CALL(*mockClientManager, registerPlayer(net::ClientId{12}, core::Uuid{236}, core::Uuid{0}))
+  EXPECT_CALL(*mockClientManager,
+              registerPlayer(net::ClientId{12},
+                             player.dbId,
+                             core::Uuid::fromDbId("7b83bcfe-2785-40e9-894a-04f21a6346ac")))
     .Times(1);
 
   usecase.performLogin(data);

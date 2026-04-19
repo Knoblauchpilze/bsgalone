@@ -1,6 +1,6 @@
 
 CREATE TABLE system (
-  id INTEGER GENERATED ALWAYS AS IDENTITY,
+  id UUID NOT NULL,
   name TEXT NOT NULL,
   x_pos NUMERIC(6, 2) NOT NULL,
   y_pos NUMERIC(6, 2) NOT NULL,
@@ -12,7 +12,7 @@ CREATE TABLE system (
 );
 
 CREATE TABLE starting_system (
-  system INTEGER NOT NULL,
+  system UUID NOT NULL,
   faction TEXT NOT NULL,
   PRIMARY KEY (system, faction),
   FOREIGN KEY (system) REFERENCES system(id),
@@ -20,8 +20,8 @@ CREATE TABLE starting_system (
 );
 
 CREATE TABLE asteroid (
-  id INTEGER GENERATED ALWAYS AS IDENTITY,
-  system INTEGER NOT NULL,
+  id UUID NOT NULL,
+  system UUID NOT NULL,
   max_health NUMERIC(8, 2) NOT NULL,
   health NUMERIC(12, 2) NOT NULL,
   radius NUMERIC(12, 2) NOT NULL,
@@ -35,8 +35,8 @@ CREATE TABLE asteroid (
 );
 
 CREATE TABLE asteroid_loot (
-  asteroid INTEGER NOT NULL,
-  resource INTEGER NOT NULL,
+  asteroid UUID NOT NULL,
+  resource UUID NOT NULL,
   amount INTEGER NOT NULL,
   PRIMARY KEY (asteroid),
   FOREIGN KEY (asteroid) REFERENCES asteroid(id),

@@ -15,7 +15,7 @@ class ForManagingSystem
 
   virtual auto findOneById(const core::Uuid systemDbId) const -> System = 0;
   virtual auto findAll() const -> std::vector<System>                   = 0;
-  virtual void save(const System &system)                               = 0;
+  virtual void save(const System &system) const                         = 0;
 };
 
 using ForManagingSystemShPtr = std::shared_ptr<ForManagingSystem>;

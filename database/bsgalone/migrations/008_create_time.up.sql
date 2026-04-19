@@ -1,6 +1,6 @@
 
 CREATE TABLE tick_config (
-  system INTEGER NOT NULL,
+  system UUID NOT NULL,
   duration INTEGER NOT NULL,
   unit TEXT NOT NULL,
   ticks INTEGER NOT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE tick_config (
 );
 
 CREATE TABLE tick (
-  system INTEGER NOT NULL,
+  system UUID NOT NULL,
   current_tick INTEGER NOT NULL,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (system),

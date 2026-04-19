@@ -47,13 +47,35 @@ FROM
   INNER JOIN tick_config AS tc ON tc.system = s.id
 )";
 
+constexpr auto UPDATE_SYSTEM_QUERY_NAME = "system_insert";
+constexpr auto UPDATE_SYSTEM_QUERY      = R"(
+INSERT INTO system (id, name, x_pos, y_pos, z_pos)
+  VALUES ($1, $2, $3, $4, $5)
+  ON CONFLICT (id) DO UPDATE
+  SET
+    x_pos = excluded.x_pos,
+    y_pos = excluded.y_pos,
+    z_pos = excluded.z_pos
+)";
+
 constexpr auto UPDATE_SYSTEM_TICK_QUERY_NAME = "system_update_tick";
 constexpr auto UPDATE_SYSTEM_TICK_QUERY      = R"(
-UPDATE tick
+INSERT INTO tick (system, current_tick)
+  VALUES ($1, $2)
+  ON CONFLICT (system) DO UPDATE
   SET
-    current_tick = $1
-  WHERE
-    system = $2
+    current_tick = excluded.current_tick
+)";
+
+constexpr auto UPDATE_SYSTEM_TICK_CONFIG_QUERY_NAME = "system_update_tick_config";
+constexpr auto UPDATE_SYSTEM_TICK_CONFIG_QUERY      = R"(
+INSERT INTO tick_config (system, duration, unit, ticks)
+  VALUES ($1, $2, $3, $4)
+  ON CONFLICT (system) DO UPDATE
+  SET
+    duration = excluded.duration,
+    unit = excluded.unit,
+    ticks = excluded.ticks
 )";
 } // namespace
 
@@ -61,7 +83,9 @@ void SystemRepository::initialize()
 {
   m_connection->prepare(FIND_ALL_QUERY_NAME, FIND_ALL_QUERY);
   m_connection->prepare(FIND_ONE_QUERY_NAME, FIND_ONE_QUERY);
+  m_connection->prepare(UPDATE_SYSTEM_QUERY_NAME, UPDATE_SYSTEM_QUERY);
   m_connection->prepare(UPDATE_SYSTEM_TICK_QUERY_NAME, UPDATE_SYSTEM_TICK_QUERY);
+  m_connection->prepare(UPDATE_SYSTEM_TICK_CONFIG_QUERY_NAME, UPDATE_SYSTEM_TICK_CONFIG_QUERY);
 }
 
 namespace {
@@ -78,7 +102,7 @@ auto fromDbRow(const pqxx::row &record) -> System
   };
 
   return System{
-    .dbId        = core::fromDbId(record[0].as<int>()),
+    .dbId        = core::Uuid::fromDbId(record[0].view()),
     .name        = record[1].as<std::string>(),
     .position    = Eigen::Vector3f(x, y, z),
     .currentTick = chrono::Tick::fromInt(record[5].as<int>()),
@@ -90,8 +114,7 @@ auto fromDbRow(const pqxx::row &record) -> System
 auto SystemRepository::findOneById(const core::Uuid system) const -> System
 {
   const auto query = [system](pqxx::nontransaction &work) {
-    return work.exec(pqxx::prepped{FIND_ONE_QUERY_NAME}, pqxx::params{core::toDbId(system)})
-      .one_row();
+    return work.exec(pqxx::prepped{FIND_ONE_QUERY_NAME}, pqxx::params{system.toDbId()}).one_row();
   };
   const auto record = m_connection->executeQueryReturningSingleRow(query);
 
@@ -115,14 +138,38 @@ auto SystemRepository::findAll() const -> std::vector<System>
   return out;
 }
 
-void SystemRepository::save(const System &system)
+namespace {
+auto upsertSystemQuery(pqxx::work &transaction, const System &system) -> pqxx::result
 {
-  auto query = [&system](pqxx::work &transaction) {
-    return transaction
-      .exec(pqxx::prepped{UPDATE_SYSTEM_TICK_QUERY_NAME},
-            pqxx::params{system.currentTick.count(), core::toDbId(system.dbId)})
-      .no_rows();
-  };
+  transaction
+    .exec(pqxx::prepped{UPDATE_SYSTEM_QUERY_NAME},
+          pqxx::params{system.dbId.toDbId(),
+                       system.name,
+                       system.position(0),
+                       system.position(1),
+                       system.position(2)})
+    .no_rows();
+
+  transaction
+    .exec(pqxx::prepped{UPDATE_SYSTEM_TICK_QUERY_NAME},
+          pqxx::params{system.dbId.toDbId(), system.currentTick.count()})
+    .no_rows();
+
+  const auto tickData = system.step.data();
+
+  return transaction
+    .exec(pqxx::prepped{UPDATE_SYSTEM_TICK_CONFIG_QUERY_NAME},
+          pqxx::params{system.dbId.toDbId(),
+                       static_cast<int>(tickData.duration.elapsed),
+                       str(tickData.duration.unit),
+                       tickData.ticks})
+    .no_rows();
+}
+} // namespace
+
+void SystemRepository::save(const System &system) const
+{
+  auto query = [&system](pqxx::work &transaction) { return upsertSystemQuery(transaction, system); };
 
   const auto res = m_connection->tryExecuteTransaction(query);
   if (res.error)
