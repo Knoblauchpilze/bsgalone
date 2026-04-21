@@ -203,7 +203,7 @@ class UiEventListenerProxy : public IUiEventListener
     switch (event.type())
     {
       case UiEventType::LOGIN_SUCCEEDED:
-        m_app.onScreenChanged(Screen::GAME);
+        m_app.onScreenChanged(Screen::OUTPOST);
         break;
       case UiEventType::LOGOUT:
         m_app.onScreenChanged(Screen::LOGIN);
@@ -255,6 +255,7 @@ void App::generateUiHandlers(const pge::Vec2i &screenDims, pge::sprites::Texture
 namespace {
 constexpr auto LOGIN_TEXTURE_FILE_PATH   = "assets/login_bg.png";
 constexpr auto LOADING_TEXTURE_FILE_PATH = "assets/loading_bg.png";
+constexpr auto OUTPOST_TEXTURE_FILE_PATH = "assets/outpost_bg.png";
 constexpr auto GAME_TEXTURE_FILE_PATH    = "assets/game_bg.png";
 } // namespace
 
@@ -267,6 +268,10 @@ void App::generateRenderers(const pge::Vec2i &dimensions, pge::sprites::TextureP
   auto loading = std::make_unique<DecalRenderer>(LOADING_TEXTURE_FILE_PATH);
   loading->loadResources(dimensions, texturesLoader);
   m_renderers[Screen::LOADING] = std::move(loading);
+
+  auto outpost = std::make_unique<DecalRenderer>(OUTPOST_TEXTURE_FILE_PATH);
+  outpost->loadResources(dimensions, texturesLoader);
+  m_renderers[Screen::OUTPOST] = std::move(outpost);
 
   auto game = std::make_unique<DecalRenderer>(GAME_TEXTURE_FILE_PATH);
   game->loadResources(dimensions, texturesLoader);
