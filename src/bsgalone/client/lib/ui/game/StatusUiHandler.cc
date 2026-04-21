@@ -8,7 +8,12 @@ namespace bsgalone::client {
 StatusUiHandler::StatusUiHandler(IUiCommandQueueShPtr outputQueue)
   : IUiHandler()
   , m_queue(std::move(outputQueue))
-{}
+{
+  if (nullptr == m_queue)
+  {
+    throw std::invalid_argument("Expected non null command queue");
+  }
+}
 
 namespace {
 const pge::Vec2i STATUS_UI_PIXEL_POS{5, 5};
