@@ -117,11 +117,6 @@ void OutpostUiHandler::generateTabsMenu(const pge::Vec2i &dimensions)
 
 void OutpostUiHandler::initializeTabsMenuOptions()
 {
-  // TODO: It is not possible to get the player faction until the player
-  // is logged in.
-  // We should find a way to delay the initialization after the player
-  // has logged in.
-  // It can probably work similarly to the login UI handler
   const auto palette = generatePaletteForFaction(m_dataStore->getPlayerFaction());
 
   ui::ClickCallback callback = [this]() { setActiveScreen(ActiveScreen::SHOP); };
@@ -139,6 +134,9 @@ void OutpostUiHandler::setActiveScreen(const ActiveScreen screen)
   m_activeScreen = screen;
 }
 
-void OutpostUiHandler::onLoadingFinished() {}
+void OutpostUiHandler::onLoadingFinished()
+{
+  initializeTabsMenuOptions();
+}
 
 } // namespace bsgalone::client
