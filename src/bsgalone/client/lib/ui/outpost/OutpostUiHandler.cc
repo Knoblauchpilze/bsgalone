@@ -1,11 +1,43 @@
 
 #include "OutpostUiHandler.hh"
+#include "IUiEventListener.hh"
 #include "Palette.hh"
 #include "UiTextMenu.hh"
 
 namespace bsgalone::client {
+namespace {
+const std::unordered_set<UiEventType> RELEVANT_EVENT_TYPES = {
+  UiEventType::LOADING_FINISHED,
+};
+}
 
-OutpostUiHandler::OutpostUiHandler(IDataStoreShPtr dataStore, IUiCommandQueueShPtr outputQueue)
+class UiEventListenerOutpostProxy : public IUiEventListener
+{
+  public:
+  explicit UiEventListenerOutpostProxy(OutpostUiHandler &handler)
+    : IUiEventListener()
+    , m_handler(handler)
+  {}
+
+  ~UiEventListenerOutpostProxy() override = default;
+
+  bool isEventRelevant(const UiEventType &type) const override
+  {
+    return RELEVANT_EVENT_TYPES.contains(type);
+  }
+
+  void onEventReceived(const IUiEvent & /*event*/) override
+  {
+    m_handler.onLoadingFinished();
+  }
+
+  private:
+  OutpostUiHandler &m_handler;
+};
+
+OutpostUiHandler::OutpostUiHandler(IDataStoreShPtr dataStore,
+                                   IUiEventQueueShPtr inputQueue,
+                                   IUiCommandQueueShPtr outputQueue)
   : IUiHandler()
   , m_dataStore(std::move(dataStore))
   , m_queue(std::move(outputQueue))
@@ -14,10 +46,16 @@ OutpostUiHandler::OutpostUiHandler(IDataStoreShPtr dataStore, IUiCommandQueueShP
   {
     throw std::invalid_argument("Expected non null data store");
   }
+  if (inputQueue == nullptr)
+  {
+    throw std::invalid_argument("Expected non null event queue");
+  }
   if (nullptr == m_queue)
   {
     throw std::invalid_argument("Expected non null command queue");
   }
+
+  registerToQueue(std::move(inputQueue));
 }
 
 void OutpostUiHandler::initializeMenus(const pge::Vec2i &dimensions,
@@ -37,6 +75,11 @@ void OutpostUiHandler::render(pge::Renderer &engine) const
 }
 
 void OutpostUiHandler::updateUi() {}
+
+void OutpostUiHandler::registerToQueue(IUiEventQueueShPtr inputQueue)
+{
+  inputQueue->addListener(std::make_unique<UiEventListenerOutpostProxy>(*this));
+}
 
 namespace {
 constexpr auto VIEW_LIST_WIDTH_TO_SCREEN_WIDTH_RATIO   = 0.2f;
@@ -95,5 +138,7 @@ void OutpostUiHandler::setActiveScreen(const ActiveScreen screen)
 {
   m_activeScreen = screen;
 }
+
+void OutpostUiHandler::onLoadingFinished() {}
 
 } // namespace bsgalone::client

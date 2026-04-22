@@ -248,7 +248,7 @@ void App::generateUiHandlers(const pge::Vec2i &screenDims, pge::sprites::Texture
   loading->initializeMenus(screenDims, texturesLoader);
   m_uiHandlers[Screen::LOADING] = std::move(loading);
 
-  auto outpost = std::make_unique<OutpostUiHandler>(m_dataStore, m_uiCommandQueue);
+  auto outpost = std::make_unique<OutpostUiHandler>(m_dataStore, m_uiEventQueue, m_uiCommandQueue);
   outpost->initializeMenus(screenDims, texturesLoader);
   m_uiHandlers[Screen::OUTPOST] = std::move(outpost);
 
