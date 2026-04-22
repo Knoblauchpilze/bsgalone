@@ -30,8 +30,11 @@ class IDataStore
   /// @return - the faction of the player currently logged in.
   virtual auto getPlayerFaction() const -> core::Faction = 0;
 
-  virtual void onPlayerLoggedIn(const core::Uuid playerDbId, const core::GameRole role) = 0;
-  virtual void onPlayerLoggedOut(const core::Uuid playerDbId)                           = 0;
+  virtual void onPlayerLoggedIn(const core::Uuid playerDbId,
+                                const core::Faction faction,
+                                const core::GameRole role)
+    = 0;
+  virtual void onPlayerLoggedOut(const core::Uuid playerDbId) = 0;
 };
 
 using IDataStoreShPtr = std::shared_ptr<IDataStore>;

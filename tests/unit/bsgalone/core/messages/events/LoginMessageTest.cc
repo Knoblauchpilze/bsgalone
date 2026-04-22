@@ -15,6 +15,7 @@ void assertMessagesAreEqual(const LoginMessage &actual, const LoginMessage &expe
   if (actual.successfullyLoggedIn())
   {
     EXPECT_EQ(actual.getPlayerDbId(), expected.getPlayerDbId());
+    EXPECT_EQ(actual.getFaction(), expected.getFaction());
     EXPECT_EQ(actual.getRole(), expected.getRole());
   }
 }
@@ -43,6 +44,9 @@ TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage,
   EXPECT_FALSE(message.successfullyLoggedIn());
 
   message.setPlayerDbId(Uuid{});
+  EXPECT_FALSE(message.successfullyLoggedIn());
+
+  message.setFaction(Faction::COLONIAL);
   EXPECT_FALSE(message.successfullyLoggedIn());
 
   message.setRole(GameRole::PILOT);
@@ -74,6 +78,7 @@ TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage, WithPlayerData)
 {
   LoginMessage expected;
   expected.setPlayerDbId(Uuid{});
+  expected.setFaction(Faction::CYLON);
   expected.setRole(GameRole::PILOT);
 
   const auto actual = serializeAndDeserializeMessage(expected);
@@ -95,6 +100,7 @@ TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage, CloneWithPlayerData)
 {
   LoginMessage expected;
   expected.setPlayerDbId(Uuid{});
+  expected.setFaction(Faction::COLONIAL);
   expected.setRole(GameRole::PILOT);
 
   const auto cloned = expected.clone();

@@ -59,12 +59,15 @@ TEST(Unit_Bsgalone_Client_Messages_LoginMessageConsumer, ForwardsToStoreWhenLogi
 {
   auto mockStore = std::make_shared<StrictMock<MockDataStore>>();
   const core::Uuid playerDbId;
-  EXPECT_CALL(*mockStore, onPlayerLoggedIn(playerDbId, core::GameRole::PILOT)).Times(1);
+  EXPECT_CALL(*mockStore,
+              onPlayerLoggedIn(playerDbId, core::Faction::COLONIAL, core::GameRole::PILOT))
+    .Times(1);
 
   LoginMessageConsumer consumer(mockStore, std::make_shared<TestUiEventQueue>());
 
   core::LoginMessage message;
   message.setPlayerDbId(playerDbId);
+  message.setFaction(core::Faction::COLONIAL);
   message.setRole(core::GameRole::PILOT);
 
   consumer.onEventReceived(message);
@@ -78,6 +81,7 @@ TEST(Unit_Bsgalone_Client_Messages_LoginMessageConsumer,
 
   core::LoginMessage message;
   message.setPlayerDbId(core::Uuid{});
+  message.setFaction(core::Faction::CYLON);
   message.setRole(core::GameRole::PILOT);
   consumer.onEventReceived(message);
 

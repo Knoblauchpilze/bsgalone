@@ -35,7 +35,9 @@ auto ServerDataStore::getPlayerFaction() const -> core::Faction
   return m_playerData->faction;
 }
 
-void ServerDataStore::onPlayerLoggedIn(const core::Uuid playerDbId, const core::GameRole role)
+void ServerDataStore::onPlayerLoggedIn(const core::Uuid playerDbId,
+                                       const core::Faction faction,
+                                       const core::GameRole role)
 {
   if (m_playerData.has_value())
   {
@@ -44,10 +46,12 @@ void ServerDataStore::onPlayerLoggedIn(const core::Uuid playerDbId, const core::
 
   m_playerData = PlayerData{
     .playerDbId = playerDbId,
+    .faction    = faction,
     .role       = role,
   };
 
-  debug("Logged in as " + playerDbId.str() + " with role " + core::str(role));
+  debug("Logged in as " + playerDbId.str() + " with faction " + core::str(faction) + " and role "
+        + core::str(role));
 }
 
 void ServerDataStore::onPlayerLoggedOut(const core::Uuid playerDbId)
