@@ -15,6 +15,7 @@ class ServerDataStore : public IDataStore, public ::core::CoreObject
   bool isLoggedIn() const override;
 
   auto getPlayerDbId() const -> core::Uuid override;
+  auto getPlayerFaction() const -> core::Faction override;
 
   void onPlayerLoggedIn(const core::Uuid playerDbId, const core::GameRole role) override;
   void onPlayerLoggedOut(const core::Uuid playerDbId) override;
@@ -25,6 +26,7 @@ class ServerDataStore : public IDataStore, public ::core::CoreObject
   {
     core::Uuid playerDbId{};
     core::GameRole role{};
+    core::Faction faction{};
   };
 
   /// @brief - If defined, the data for the player currently logged in. When

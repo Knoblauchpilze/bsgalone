@@ -9,6 +9,7 @@
 #include "LoginMessageConsumer.hh"
 #include "LoginUiHandler.hh"
 #include "LogoutMessageConsumer.hh"
+#include "OutpostUiHandler.hh"
 #include "OutputUiCommandAdapter.hh"
 #include "ServerDataStore.hh"
 #include "SignupMessageConsumer.hh"
@@ -247,6 +248,10 @@ void App::generateUiHandlers(const pge::Vec2i &screenDims, pge::sprites::Texture
   loading->initializeMenus(screenDims, texturesLoader);
   m_uiHandlers[Screen::LOADING] = std::move(loading);
 
+  auto outpost = std::make_unique<OutpostUiHandler>(m_dataStore, m_uiCommandQueue);
+  outpost->initializeMenus(screenDims, texturesLoader);
+  m_uiHandlers[Screen::OUTPOST] = std::move(outpost);
+
   auto status = std::make_unique<StatusUiHandler>(m_uiCommandQueue);
   status->initializeMenus(screenDims, texturesLoader);
   m_uiHandlers[Screen::GAME] = std::move(status);
@@ -281,6 +286,7 @@ void App::generateRenderers(const pge::Vec2i &dimensions, pge::sprites::TextureP
 void App::onScreenChanged(const Screen screen)
 {
   m_screen = screen;
+  info("Switched to screen " + str(screen));
 }
 
 } // namespace bsgalone::client

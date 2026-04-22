@@ -11,6 +11,10 @@ add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/login
 	)
 
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/outpost
+	)
+
 target_sources (bsgalone_client_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/LoadingUiHandler.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/Palette.cc

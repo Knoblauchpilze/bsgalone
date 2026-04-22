@@ -24,6 +24,17 @@ auto ServerDataStore::getPlayerDbId() const -> core::Uuid
   return m_playerData->playerDbId;
 }
 
+auto ServerDataStore::getPlayerFaction() const -> core::Faction
+{
+  if (!m_playerData.has_value())
+  {
+    error("Cannot return faction, no player logged in");
+  }
+
+  // TODO: This is never set to a valid value
+  return m_playerData->faction;
+}
+
 void ServerDataStore::onPlayerLoggedIn(const core::Uuid playerDbId, const core::GameRole role)
 {
   if (m_playerData.has_value())
