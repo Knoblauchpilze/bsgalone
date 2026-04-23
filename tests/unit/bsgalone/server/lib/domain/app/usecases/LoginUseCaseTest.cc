@@ -12,100 +12,93 @@ using namespace test;
 using namespace ::testing;
 
 namespace bsgalone::server {
+namespace {
+class Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase : public Test
+{
+  protected:
+  void SetUp() override
+  {
+    mockAccountRepo   = std::make_shared<StrictMock<MockAccountRepository>>();
+    mockPlayerRepo    = std::make_shared<StrictMock<MockPlayerRepository>>();
+    mockClientManager = std::make_shared<StrictMock<MockClientManager>>();
+    publisher         = std::make_shared<TestGameEventPublisher>();
 
-TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase, ThrowsWhenAccountRepositoryIsNull)
+    usecase = std::make_unique<LoginUseCase>(mockAccountRepo,
+                                             mockPlayerRepo,
+                                             mockClientManager,
+                                             publisher);
+  }
+
+  void TearDown() override
+  {
+    // Intentionally empty
+  }
+
+  void executeTestCase()
+  {
+    LoginData data{
+      .username = "player",
+      .password = "password",
+      .role     = core::GameRole::PILOT,
+      .clientId = net::ClientId{12},
+    };
+
+    usecase->performLogin(data);
+  }
+
+  std::shared_ptr<MockAccountRepository> mockAccountRepo{};
+  std::shared_ptr<MockPlayerRepository> mockPlayerRepo{};
+  std::shared_ptr<MockClientManager> mockClientManager{};
+  std::shared_ptr<TestGameEventPublisher> publisher{};
+
+  std::unique_ptr<LoginUseCase> usecase{};
+};
+} // namespace
+
+TEST_F(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase, ThrowsWhenAccountRepositoryIsNull)
+{
+  EXPECT_THROW([this]() { LoginUseCase(nullptr, mockPlayerRepo, mockClientManager, publisher); }(),
+               std::invalid_argument);
+}
+
+TEST_F(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase, ThrowsWhenPlayerRepositoryIsNull)
+{
+  EXPECT_THROW([this]() { LoginUseCase(mockAccountRepo, nullptr, mockClientManager, publisher); }(),
+               std::invalid_argument);
+}
+
+TEST_F(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase, ThrowsWhenClientManagerIsNull)
+{
+  EXPECT_THROW([this]() { LoginUseCase(mockAccountRepo, mockPlayerRepo, nullptr, publisher); }(),
+               std::invalid_argument);
+}
+
+TEST_F(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase, ThrowsWhenEventPublisherIsNull)
 {
   EXPECT_THROW(
-    []() {
-      auto mockPlayerRepo    = std::make_shared<MockPlayerRepository>();
-      auto mockClientManager = std::make_shared<MockClientManager>();
-      auto publisher         = std::make_shared<TestGameEventPublisher>();
-      LoginUseCase(nullptr, mockPlayerRepo, mockClientManager, publisher);
-    }(),
+    [this]() { LoginUseCase(mockAccountRepo, mockPlayerRepo, mockClientManager, nullptr); }(),
     std::invalid_argument);
 }
 
-TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase, ThrowsWhenPlayerRepositoryIsNull)
+TEST_F(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase,
+       PublishesFailedLoginEventWhenAccountDoesNotExist)
 {
-  EXPECT_THROW(
-    []() {
-      auto mockAccountRepo   = std::make_shared<MockAccountRepository>();
-      auto mockClientManager = std::make_shared<MockClientManager>();
-      auto publisher         = std::make_shared<TestGameEventPublisher>();
-      LoginUseCase(mockAccountRepo, nullptr, mockClientManager, publisher);
-    }(),
-    std::invalid_argument);
-}
-
-TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase, ThrowsWhenClientManagerIsNull)
-{
-  EXPECT_THROW(
-    []() {
-      auto mockAccountRepo = std::make_shared<MockAccountRepository>();
-      auto mockPlayerRepo  = std::make_shared<MockPlayerRepository>();
-      auto publisher       = std::make_shared<TestGameEventPublisher>();
-      LoginUseCase(mockAccountRepo, mockPlayerRepo, nullptr, publisher);
-    }(),
-    std::invalid_argument);
-}
-
-TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase, ThrowsWhenEventPublisherIsNull)
-{
-  EXPECT_THROW(
-    []() {
-      auto mockAccountRepo   = std::make_shared<MockAccountRepository>();
-      auto mockPlayerRepo    = std::make_shared<MockPlayerRepository>();
-      auto mockClientManager = std::make_shared<MockClientManager>();
-      LoginUseCase(mockAccountRepo, mockPlayerRepo, mockClientManager, nullptr);
-    }(),
-    std::invalid_argument);
-}
-
-TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase,
-     PublishesFailedLoginEventWhenAccountDoesNotExist)
-{
-  auto mockAccountRepo   = std::make_shared<StrictMock<MockAccountRepository>>();
-  auto mockPlayerRepo    = std::make_shared<StrictMock<MockPlayerRepository>>();
-  auto mockClientManager = std::make_shared<StrictMock<MockClientManager>>();
-  auto publisher         = std::make_shared<TestGameEventPublisher>();
-  LoginUseCase usecase(mockAccountRepo, mockPlayerRepo, mockClientManager, publisher);
-
-  LoginData data{
-    .username = "player",
-    .password = "password",
-    .role     = core::GameRole::PILOT,
-    .clientId = net::ClientId{12},
-  };
-
   EXPECT_CALL(*mockAccountRepo, findOneByName("player"))
     .Times(1)
     .WillOnce(Return(std::optional<Account>{}));
 
-  usecase.performLogin(data);
+  this->executeTestCase();
 
   EXPECT_EQ(1u, publisher->queue().messages().size());
   const auto &event = publisher->queue().messages().at(0);
   EXPECT_EQ(GameEventType::PLAYER_LOGIN, event->type());
-  EXPECT_EQ(data.clientId, event->as<PlayerLoginEvent>().getClientId());
+  EXPECT_EQ(net::ClientId{12}, event->as<PlayerLoginEvent>().getClientId());
   EXPECT_FALSE(event->as<PlayerLoginEvent>().successfulLogin());
 }
 
-TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase,
-     PublishesFailedLoginEventWhenCredentialsDoNotMatch)
+TEST_F(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase,
+       PublishesFailedLoginEventWhenCredentialsDoNotMatch)
 {
-  auto mockAccountRepo   = std::make_shared<StrictMock<MockAccountRepository>>();
-  auto mockPlayerRepo    = std::make_shared<StrictMock<MockPlayerRepository>>();
-  auto mockClientManager = std::make_shared<StrictMock<MockClientManager>>();
-  auto publisher         = std::make_shared<TestGameEventPublisher>();
-  LoginUseCase usecase(mockAccountRepo, mockPlayerRepo, mockClientManager, publisher);
-
-  LoginData data{
-    .username = "player",
-    .password = "password",
-    .role     = core::GameRole::PILOT,
-    .clientId = net::ClientId{12},
-  };
-
   Account account{
     .dbId     = core::Uuid{},
     .username = "player",
@@ -113,31 +106,18 @@ TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase,
   };
   EXPECT_CALL(*mockAccountRepo, findOneByName("player")).Times(1).WillOnce(Return(account));
 
-  usecase.performLogin(data);
+  this->executeTestCase();
 
   EXPECT_EQ(1u, publisher->queue().messages().size());
   const auto &event = publisher->queue().messages().at(0);
   EXPECT_EQ(GameEventType::PLAYER_LOGIN, event->type());
-  EXPECT_EQ(data.clientId, event->as<PlayerLoginEvent>().getClientId());
+  EXPECT_EQ(net::ClientId{12}, event->as<PlayerLoginEvent>().getClientId());
   EXPECT_FALSE(event->as<PlayerLoginEvent>().successfulLogin());
 }
 
-TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase,
-     PublishesSuccessfulLoginEventWhenLoginSucceed)
+TEST_F(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase,
+       PublishesSuccessfulLoginEventWhenLoginSucceeds)
 {
-  auto mockAccountRepo   = std::make_shared<StrictMock<MockAccountRepository>>();
-  auto mockPlayerRepo    = std::make_shared<StrictMock<MockPlayerRepository>>();
-  auto mockClientManager = std::make_shared<NiceMock<MockClientManager>>();
-  auto publisher         = std::make_shared<TestGameEventPublisher>();
-  LoginUseCase usecase(mockAccountRepo, mockPlayerRepo, mockClientManager, publisher);
-
-  LoginData data{
-    .username = "player",
-    .password = "password",
-    .role     = core::GameRole::PILOT,
-    .clientId = net::ClientId{12},
-  };
-
   Account account{
     .dbId     = core::Uuid{},
     .username = "player",
@@ -155,37 +135,30 @@ TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase,
   EXPECT_CALL(*mockPlayerRepo, findOneByAccount(account.dbId)).Times(1).WillOnce(Return(player));
 
   Player expectedPlayer = player;
-  expectedPlayer.role   = data.role;
+  expectedPlayer.role   = core::GameRole::PILOT;
   EXPECT_CALL(*mockPlayerRepo, save(expectedPlayer)).Times(1);
 
-  usecase.performLogin(data);
+  EXPECT_CALL(*mockClientManager,
+              registerPlayer(net::ClientId{12},
+                             player.dbId,
+                             core::Uuid::fromDbId("7b83bcfe-2785-40e9-894a-04f21a6346ac")))
+    .Times(1);
+
+  this->executeTestCase();
 
   EXPECT_EQ(1u, publisher->queue().messages().size());
   const auto &event = publisher->queue().messages().at(0);
   EXPECT_EQ(GameEventType::PLAYER_LOGIN, event->type());
   const auto &actual = event->as<PlayerLoginEvent>();
-  EXPECT_EQ(data.clientId, actual.getClientId());
+  EXPECT_EQ(net::ClientId{12}, actual.getClientId());
   EXPECT_TRUE(actual.successfulLogin());
   EXPECT_EQ(player.dbId, actual.tryGetPlayerDbId());
   EXPECT_EQ(player.faction, actual.tryGetFaction());
-  EXPECT_EQ(data.role, actual.tryGetRole());
+  EXPECT_EQ(core::GameRole::PILOT, actual.tryGetRole());
 }
 
-TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase, RegistersPlayerWhenLoginSucceeds)
+TEST_F(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase, RegistersPlayerWhenLoginSucceeds)
 {
-  auto mockAccountRepo   = std::make_shared<MockAccountRepository>();
-  auto mockPlayerRepo    = std::make_shared<MockPlayerRepository>();
-  auto mockClientManager = std::make_shared<StrictMock<MockClientManager>>();
-  auto publisher         = std::make_shared<TestGameEventPublisher>();
-  LoginUseCase usecase(mockAccountRepo, mockPlayerRepo, mockClientManager, publisher);
-
-  LoginData data{
-    .username = "player",
-    .password = "password",
-    .role     = core::GameRole::PILOT,
-    .clientId = net::ClientId{12},
-  };
-
   Account account{
     .dbId     = core::Uuid{},
     .username = "player",
@@ -203,7 +176,7 @@ TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase, RegistersPlayerWhenL
   EXPECT_CALL(*mockPlayerRepo, findOneByAccount(account.dbId)).WillOnce(Return(player));
 
   Player expectedPlayer = player;
-  expectedPlayer.role   = data.role;
+  expectedPlayer.role   = core::GameRole::PILOT;
   EXPECT_CALL(*mockPlayerRepo, save(expectedPlayer)).Times(1);
 
   EXPECT_CALL(*mockClientManager,
@@ -212,17 +185,7 @@ TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase, RegistersPlayerWhenL
                              core::Uuid::fromDbId("7b83bcfe-2785-40e9-894a-04f21a6346ac")))
     .Times(1);
 
-  usecase.performLogin(data);
-
-  EXPECT_EQ(1u, publisher->queue().messages().size());
-  const auto &event = publisher->queue().messages().at(0);
-  EXPECT_EQ(GameEventType::PLAYER_LOGIN, event->type());
-  const auto &actual = event->as<PlayerLoginEvent>();
-  EXPECT_EQ(data.clientId, actual.getClientId());
-  EXPECT_TRUE(actual.successfulLogin());
-  EXPECT_EQ(player.dbId, actual.tryGetPlayerDbId());
-  EXPECT_EQ(player.faction, actual.tryGetFaction());
-  EXPECT_EQ(data.role, actual.tryGetRole());
+  this->executeTestCase();
 }
 
 } // namespace bsgalone::server
