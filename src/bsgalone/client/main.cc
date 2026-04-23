@@ -15,10 +15,10 @@ int main(int /*argc*/, char ** /*argv*/)
   core::log::PrefixedLogger logger("client", "main");
   core::log::Locator::provide(&raw);
 
-  auto tiles  = pge::CenteredViewport({0.0f, 0.0f}, {16.0f, 12.0f});
-  auto pixels = pge::TopLeftViewport({0.0f, 0.0f}, {800.0f, 600.0f});
+  auto tiles  = pge::CenteredViewport({0.0f, 0.0f}, {21.3f, 12.0f});
+  auto pixels = pge::TopLeftViewport({0.0f, 0.0f}, {1067.0f, 600.0f});
 
-  pge::AppDesc desc{.dims       = pge::Vec2i{800, 600},
+  pge::AppDesc desc{.dims       = pge::Vec2i{1067, 600},
                     .frame      = std::make_shared<pge::TopViewFrame>(tiles, pixels),
                     .name       = "bsgalone",
                     .fixedFrame = true,

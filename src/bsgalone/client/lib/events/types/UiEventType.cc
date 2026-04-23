@@ -7,6 +7,8 @@ auto str(const UiEventType type) -> std::string
 {
   switch (type)
   {
+    case UiEventType::LOADING_FINISHED:
+      return "loading_finished";
     case UiEventType::LOGIN_FAILED:
       return "login_failed";
     case UiEventType::LOGIN_SUCCEEDED:
@@ -25,6 +27,7 @@ auto str(const UiEventType type) -> std::string
 auto allUiEventTypesAsSet() -> std::unordered_set<UiEventType>
 {
   return std::unordered_set<UiEventType>{
+    UiEventType::LOADING_FINISHED,
     UiEventType::LOGIN_FAILED,
     UiEventType::LOGIN_SUCCEEDED,
     UiEventType::LOGOUT,

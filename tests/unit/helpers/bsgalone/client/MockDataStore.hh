@@ -15,10 +15,13 @@ class MockDataStore : public bsgalone::client::IDataStore
   MOCK_METHOD(bool, isLoggedIn, (), (const, override));
 
   MOCK_METHOD(bsgalone::core::Uuid, getPlayerDbId, (), (const, override));
+  MOCK_METHOD(bsgalone::core::Faction, getPlayerFaction, (), (const, override));
 
   MOCK_METHOD(void,
               onPlayerLoggedIn,
-              (const bsgalone::core::Uuid, const bsgalone::core::GameRole),
+              (const bsgalone::core::Uuid,
+               const bsgalone::core::Faction,
+               const bsgalone::core::GameRole),
               (override));
   MOCK_METHOD(void, onPlayerLoggedOut, (const bsgalone::core::Uuid), (override));
 };

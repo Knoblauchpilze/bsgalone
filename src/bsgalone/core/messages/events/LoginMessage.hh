@@ -2,6 +2,7 @@
 #pragma once
 
 #include "ClientId.hh"
+#include "Faction.hh"
 #include "GameRole.hh"
 #include "IMessage.hh"
 #include "Uuid.hh"
@@ -17,9 +18,11 @@ class LoginMessage : public IMessage
 
   bool successfullyLoggedIn() const;
   auto getPlayerDbId() const -> Uuid;
+  auto getFaction() const -> Faction;
   auto getRole() const -> GameRole;
 
   void setPlayerDbId(const Uuid playerDbId);
+  void setFaction(const Faction faction);
   void setRole(const GameRole role);
 
   auto clone() const -> IMessagePtr override;
@@ -35,6 +38,7 @@ class LoginMessage : public IMessage
 
   private:
   std::optional<Uuid> m_playerDbId{};
+  std::optional<Faction> m_faction{};
   std::optional<GameRole> m_role{};
 
   friend auto operator<<(std::ostream &out, const LoginMessage &message) -> std::ostream &;

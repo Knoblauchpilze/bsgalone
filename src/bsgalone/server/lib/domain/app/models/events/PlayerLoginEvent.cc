@@ -23,6 +23,11 @@ auto PlayerLoginEvent::tryGetPlayerDbId() const -> std::optional<core::Uuid>
   return m_playerDbId;
 }
 
+auto PlayerLoginEvent::tryGetFaction() const -> std::optional<core::Faction>
+{
+  return m_faction;
+}
+
 auto PlayerLoginEvent::tryGetRole() const -> std::optional<core::GameRole>
 {
   return m_role;
@@ -31,6 +36,11 @@ auto PlayerLoginEvent::tryGetRole() const -> std::optional<core::GameRole>
 void PlayerLoginEvent::setPlayerDbId(const core::Uuid playerDbId)
 {
   m_playerDbId = playerDbId;
+}
+
+void PlayerLoginEvent::setFaction(const core::Faction faction)
+{
+  m_faction = faction;
 }
 
 void PlayerLoginEvent::setRole(const core::GameRole role)

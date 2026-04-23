@@ -64,6 +64,7 @@ TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageParser, DeserializesLoginM
 
   LoginMessage message;
   message.setPlayerDbId(Uuid{});
+  message.setFaction(Faction::CYLON);
   message.setRole(GameRole::GUNNER);
   const auto bytes = serializeMessage(message);
 
@@ -74,6 +75,7 @@ TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageParser, DeserializesLoginM
   EXPECT_EQ(MessageType::LOGIN, (*maybeResult.message)->type());
   const auto &actual = (*maybeResult.message)->as<LoginMessage>();
   EXPECT_EQ(message.getPlayerDbId(), actual.getPlayerDbId());
+  EXPECT_EQ(message.getFaction(), actual.getFaction());
   EXPECT_EQ(GameRole::GUNNER, actual.getRole());
 }
 

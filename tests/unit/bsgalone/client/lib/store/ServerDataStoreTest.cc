@@ -12,6 +12,13 @@ TEST(Unit_Bsgalone_Client_Store_ServerDataStore, GetPlayerDbId_ThrowsWhenNoPlaye
       store.getPlayerDbId();
     }(),
     ::core::CoreException);
+
+  EXPECT_THROW(
+    []() {
+      ServerDataStore store;
+      store.getPlayerFaction();
+    }(),
+    ::core::CoreException);
 }
 
 TEST(Unit_Bsgalone_Client_Store_ServerDataStore, ReturnsIdentifierOfLoggedInPlayer)
@@ -19,9 +26,10 @@ TEST(Unit_Bsgalone_Client_Store_ServerDataStore, ReturnsIdentifierOfLoggedInPlay
   ServerDataStore store;
 
   const core::Uuid expectedPlayerDbId;
-  store.onPlayerLoggedIn(expectedPlayerDbId, core::GameRole::GUNNER);
+  store.onPlayerLoggedIn(expectedPlayerDbId, core::Faction::CYLON, core::GameRole::GUNNER);
 
   EXPECT_EQ(expectedPlayerDbId, store.getPlayerDbId());
+  EXPECT_EQ(core::Faction::CYLON, store.getPlayerFaction());
 }
 
 TEST(Unit_Bsgalone_Client_Store_ServerDataStore, IndicatesLoginWhenSuccessful)
@@ -29,7 +37,7 @@ TEST(Unit_Bsgalone_Client_Store_ServerDataStore, IndicatesLoginWhenSuccessful)
   ServerDataStore store;
   EXPECT_FALSE(store.isLoggedIn());
 
-  store.onPlayerLoggedIn(core::Uuid{}, core::GameRole::GUNNER);
+  store.onPlayerLoggedIn(core::Uuid{}, core::Faction::COLONIAL, core::GameRole::GUNNER);
 
   EXPECT_TRUE(store.isLoggedIn());
 }
@@ -39,7 +47,7 @@ TEST(Unit_Bsgalone_Client_Store_ServerDataStore, ThrowsAfterLogoutForLoggedInPla
   ServerDataStore store;
 
   const core::Uuid expectedPlayerDbId;
-  store.onPlayerLoggedIn(expectedPlayerDbId, core::GameRole::GUNNER);
+  store.onPlayerLoggedIn(expectedPlayerDbId, core::Faction::CYLON, core::GameRole::GUNNER);
   EXPECT_EQ(expectedPlayerDbId, store.getPlayerDbId());
 
   store.onPlayerLoggedOut(expectedPlayerDbId);
@@ -51,7 +59,7 @@ TEST(Unit_Bsgalone_Client_Store_ServerDataStore, DoesNotIndicateLoginWhenPlayerL
   ServerDataStore store;
 
   const core::Uuid expectedPlayerDbId;
-  store.onPlayerLoggedIn(expectedPlayerDbId, core::GameRole::GUNNER);
+  store.onPlayerLoggedIn(expectedPlayerDbId, core::Faction::CYLON, core::GameRole::GUNNER);
   EXPECT_TRUE(store.isLoggedIn());
 
   store.onPlayerLoggedOut(expectedPlayerDbId);
@@ -64,7 +72,7 @@ TEST(Unit_Bsgalone_Client_Store_ServerDataStore,
   ServerDataStore store;
 
   const core::Uuid playerDbId1;
-  store.onPlayerLoggedIn(playerDbId1, core::GameRole::GUNNER);
+  store.onPlayerLoggedIn(playerDbId1, core::Faction::CYLON, core::GameRole::GUNNER);
   EXPECT_EQ(playerDbId1, store.getPlayerDbId());
 
   const core::Uuid playerDbId2;
@@ -78,7 +86,7 @@ TEST(Unit_Bsgalone_Client_Store_ServerDataStore,
   ServerDataStore store;
 
   const core::Uuid playerDbId1;
-  store.onPlayerLoggedIn(playerDbId1, core::GameRole::GUNNER);
+  store.onPlayerLoggedIn(playerDbId1, core::Faction::CYLON, core::GameRole::GUNNER);
   EXPECT_TRUE(store.isLoggedIn());
 
   const core::Uuid playerDbId2;

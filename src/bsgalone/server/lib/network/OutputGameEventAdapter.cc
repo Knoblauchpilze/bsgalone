@@ -48,6 +48,7 @@ void publishLoginMessage(core::IOutputNetworkAdapter &adapter, const PlayerLogin
   if (event.successfulLogin())
   {
     message.setPlayerDbId(event.tryGetPlayerDbId().value());
+    message.setFaction(event.tryGetFaction().value());
     message.setRole(event.tryGetRole().value());
   }
 

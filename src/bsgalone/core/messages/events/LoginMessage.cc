@@ -10,12 +10,17 @@ LoginMessage::LoginMessage()
 
 bool LoginMessage::successfullyLoggedIn() const
 {
-  return m_playerDbId.has_value() && m_role.has_value();
+  return m_playerDbId.has_value() && m_faction.has_value() && m_role.has_value();
 }
 
 auto LoginMessage::getPlayerDbId() const -> Uuid
 {
   return m_playerDbId.value();
+}
+
+auto LoginMessage::getFaction() const -> Faction
+{
+  return m_faction.value();
 }
 
 auto LoginMessage::getRole() const -> GameRole
@@ -28,6 +33,11 @@ void LoginMessage::setPlayerDbId(const Uuid playerDbId)
   m_playerDbId = playerDbId;
 }
 
+void LoginMessage::setFaction(const Faction faction)
+{
+  m_faction = faction;
+}
+
 void LoginMessage::setRole(const GameRole role)
 {
   m_role = role;
@@ -37,6 +47,7 @@ auto LoginMessage::clone() const -> IMessagePtr
 {
   auto clone          = std::make_unique<LoginMessage>();
   clone->m_playerDbId = m_playerDbId;
+  clone->m_faction    = m_faction;
   clone->m_role       = m_role;
 
   return clone;
@@ -49,6 +60,7 @@ auto LoginMessage::readFromStream(std::istream &in) -> std::optional<IMessagePtr
   bool ok{true};
   ok &= ::core::deserialize(in, message.m_type);
   ok &= ::core::deserialize(in, message.m_playerDbId);
+  ok &= ::core::deserialize(in, message.m_faction);
   ok &= ::core::deserialize(in, message.m_role);
 
   if (!ok)
@@ -63,6 +75,7 @@ auto operator<<(std::ostream &out, const LoginMessage &message) -> std::ostream 
 {
   ::core::serialize(out, message.m_type);
   ::core::serialize(out, message.m_playerDbId);
+  ::core::serialize(out, message.m_faction);
   ::core::serialize(out, message.m_role);
 
   return out;

@@ -86,6 +86,7 @@ TEST_F(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsSuccessfulLog
 
   PlayerLoginEvent event(net::ClientId{12});
   event.setPlayerDbId(playerDbId);
+  event.setFaction(core::Faction::CYLON);
   event.setRole(core::GameRole::GUNNER);
 
   auto captured = this->executeTestCase(event);
@@ -94,6 +95,7 @@ TEST_F(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsSuccessfulLog
   const auto &actual = captured->as<core::LoginMessage>();
   EXPECT_TRUE(actual.successfullyLoggedIn());
   EXPECT_EQ(playerDbId, actual.getPlayerDbId());
+  EXPECT_EQ(core::Faction::CYLON, actual.getFaction());
   EXPECT_EQ(core::GameRole::GUNNER, actual.getRole());
 }
 

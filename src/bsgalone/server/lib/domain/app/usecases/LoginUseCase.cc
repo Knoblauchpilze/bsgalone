@@ -46,6 +46,7 @@ void LoginUseCase::performLogin(const LoginData &data)
   m_playerRepo->save(player);
 
   event->setPlayerDbId(player.dbId);
+  event->setFaction(player.faction);
   event->setRole(player.role);
 
   // TODO: The system should come from the player.
