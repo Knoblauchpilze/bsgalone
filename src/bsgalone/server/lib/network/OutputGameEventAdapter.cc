@@ -48,7 +48,7 @@ void publishLoginMessage(core::IOutputNetworkAdapter &adapter, const PlayerLogin
   if (event.successfulLogin())
   {
     message.setPlayerDbId(event.tryGetPlayerDbId().value());
-    // TODO: Should set the player faction
+    message.setFaction(event.tryGetFaction().value());
     message.setRole(event.tryGetRole().value());
   }
 

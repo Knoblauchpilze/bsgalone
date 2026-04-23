@@ -86,7 +86,7 @@ TEST_F(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsSuccessfulLog
 
   PlayerLoginEvent event(net::ClientId{12});
   event.setPlayerDbId(playerDbId);
-  // TODO: Should set the player faction
+  event.setFaction(core::Faction::CYLON);
   event.setRole(core::GameRole::GUNNER);
 
   auto captured = this->executeTestCase(event);

@@ -163,10 +163,12 @@ TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase,
   EXPECT_EQ(1u, publisher->queue().messages().size());
   const auto &event = publisher->queue().messages().at(0);
   EXPECT_EQ(GameEventType::PLAYER_LOGIN, event->type());
-  EXPECT_EQ(data.clientId, event->as<PlayerLoginEvent>().getClientId());
-  EXPECT_TRUE(event->as<PlayerLoginEvent>().successfulLogin());
-  EXPECT_EQ(player.dbId, event->as<PlayerLoginEvent>().tryGetPlayerDbId());
-  EXPECT_EQ(data.role, event->as<PlayerLoginEvent>().tryGetRole());
+  const auto &actual = event->as<PlayerLoginEvent>();
+  EXPECT_EQ(data.clientId, actual.getClientId());
+  EXPECT_TRUE(actual.successfulLogin());
+  EXPECT_EQ(player.dbId, actual.tryGetPlayerDbId());
+  EXPECT_EQ(player.faction, actual.tryGetFaction());
+  EXPECT_EQ(data.role, actual.tryGetRole());
 }
 
 TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase, RegistersPlayerWhenLoginSucceeds)
@@ -215,10 +217,12 @@ TEST(Unit_Bsgalone_Server_Domain_App_Usecases_LoginUseCase, RegistersPlayerWhenL
   EXPECT_EQ(1u, publisher->queue().messages().size());
   const auto &event = publisher->queue().messages().at(0);
   EXPECT_EQ(GameEventType::PLAYER_LOGIN, event->type());
-  EXPECT_EQ(data.clientId, event->as<PlayerLoginEvent>().getClientId());
-  EXPECT_TRUE(event->as<PlayerLoginEvent>().successfulLogin());
-  EXPECT_EQ(player.dbId, event->as<PlayerLoginEvent>().tryGetPlayerDbId());
-  EXPECT_EQ(data.role, event->as<PlayerLoginEvent>().tryGetRole());
+  const auto &actual = event->as<PlayerLoginEvent>();
+  EXPECT_EQ(data.clientId, actual.getClientId());
+  EXPECT_TRUE(actual.successfulLogin());
+  EXPECT_EQ(player.dbId, actual.tryGetPlayerDbId());
+  EXPECT_EQ(player.faction, actual.tryGetFaction());
+  EXPECT_EQ(data.role, actual.tryGetRole());
 }
 
 } // namespace bsgalone::server
