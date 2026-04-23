@@ -7,7 +7,7 @@
 namespace bsgalone::client {
 namespace {
 const std::unordered_set<UiEventType> RELEVANT_EVENT_TYPES = {
-  UiEventType::LOADING_FINISHED,
+  UiEventType::LOGIN_SUCCEEDED,
 };
 }
 
@@ -28,7 +28,7 @@ class UiEventListenerOutpostProxy : public IUiEventListener
 
   void onEventReceived(const IUiEvent & /*event*/) override
   {
-    m_handler.onLoadingFinished();
+    m_handler.onLoginSucceeded();
   }
 
   private:
@@ -134,7 +134,7 @@ void OutpostUiHandler::setActiveScreen(const ActiveScreen screen)
   m_activeScreen = screen;
 }
 
-void OutpostUiHandler::onLoadingFinished()
+void OutpostUiHandler::onLoginSucceeded()
 {
   initializeTabsMenuOptions();
 }

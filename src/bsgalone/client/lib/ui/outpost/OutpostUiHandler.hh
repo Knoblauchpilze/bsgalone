@@ -50,7 +50,7 @@ class OutpostUiHandler : public IUiHandler
 
   void setActiveScreen(const ActiveScreen screen);
 
-  void onLoadingFinished();
+  void onLoginSucceeded();
 
   friend class UiEventListenerOutpostProxy;
 };
