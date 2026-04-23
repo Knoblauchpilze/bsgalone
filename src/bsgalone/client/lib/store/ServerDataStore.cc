@@ -31,7 +31,6 @@ auto ServerDataStore::getPlayerFaction() const -> core::Faction
     error("Cannot return faction, no player logged in");
   }
 
-  // TODO: This is never set to a valid value
   return m_playerData->faction;
 }
 

@@ -74,7 +74,10 @@ void OutpostUiHandler::render(pge::Renderer &engine) const
   m_tabsMenu->render(engine);
 }
 
-void OutpostUiHandler::updateUi() {}
+void OutpostUiHandler::updateUi()
+{
+  // Intentionally empty: nothing to update at this step.
+}
 
 void OutpostUiHandler::registerToQueue(IUiEventQueueShPtr inputQueue)
 {
