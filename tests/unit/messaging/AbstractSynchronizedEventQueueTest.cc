@@ -1,10 +1,10 @@
 
 #include "AbstractSynchronizedEventQueue.hh"
 #include "TestEvent.hh"
+#include <algorithm>
 #include <condition_variable>
 #include <gtest/gtest.h>
 #include <thread>
-#include <algorithm>
 
 using namespace test;
 using namespace ::testing;
