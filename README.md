@@ -67,7 +67,7 @@ This projects uses (among other things):
 - [google test](https://github.com/google/googletest) as a testing library
 - graphical libraries such as `X11`, `GL` and `PNG` for rendering
 - [rsync](https://linux.die.net/man/1/rsync) for file management
-- [urlencode](https://manpages.ubuntu.com/manpages/jammy/man1/urlencode.1.html) to handle escaping characters in passwords
+- [urlencode](https://manpages.ubuntu.com/manpages/resolute/man1/urlencode.1.html) to handle escaping characters in passwords
 
 ## TL; DR
 
