@@ -153,6 +153,18 @@ sudo cmake --install .
 
 This should have installed the version `7.10.1` of `libpqxx` under `/user/local/include/pqxx`.
 
+**Note:** it might be needed to run the following command:
+```bash
+sudo ldconfig
+```
+
+This solved problems where executing the tests or the binaries would lead to the following error:
+
+```bash
+cd sandbox && ./run.sh bsgalone_server 2323
+./bin/bsgalone_server: error while loading shared libraries: libpqxx-7.10.so: cannot open shared object file: No such file or directory
+```
+
 ## asio
 
 This project uses the `asio` library for networking. There are two ways to install it: either using the version available in the packages. At the time of writing with Ubuntu 20.04 the packaged version is `1.18.1` which is quite old (2020). If you choose to do so, you can run:
