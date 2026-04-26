@@ -6,6 +6,7 @@
 #include "LogoutRequest.hh"
 #include "SignupCommand.hh"
 #include "SignupRequest.hh"
+#include "UndockRequest.hh"
 
 namespace bsgalone::client {
 
@@ -30,6 +31,7 @@ const std::unordered_set<UiCommandType> RELEVANT_COMMAND_TYPES = {
   UiCommandType::LOGIN_REQUESTED,
   UiCommandType::LOGOUT_REQUESTED,
   UiCommandType::SIGNUP_REQUESTED,
+  UiCommandType::UNDOCK_REQUESTED,
 };
 }
 
@@ -57,6 +59,11 @@ void publishSignupRequest(core::IMessageQueue &queue, const SignupCommand &comma
                                                         command.getPassword(),
                                                         command.getFaction()));
 }
+
+void publishUndockRequest(core::IMessageQueue &queue, const core::Uuid playerDbId)
+{
+  queue.pushEvent(std::make_unique<core::UndockRequest>(playerDbId));
+}
 } // namespace
 
 void OutputUiCommandAdapter::onEventReceived(const IUiCommand &event)
@@ -71,6 +78,9 @@ void OutputUiCommandAdapter::onEventReceived(const IUiCommand &event)
       break;
     case UiCommandType::SIGNUP_REQUESTED:
       publishSignupRequest(*m_outputQueue, event.as<SignupCommand>());
+      break;
+    case UiCommandType::UNDOCK_REQUESTED:
+      publishUndockRequest(*m_outputQueue, m_dataStore->getPlayerDbId());
       break;
     default:
       throw std::invalid_argument("Unsupported command type " + str(event.type()));

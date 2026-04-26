@@ -7,4 +7,5 @@ target_sources (bsgalone_core_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/LoginRequest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LogoutRequest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SignupRequest.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/UndockRequest.cc
 	)

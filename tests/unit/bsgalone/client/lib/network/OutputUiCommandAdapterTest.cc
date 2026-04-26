@@ -8,6 +8,8 @@
 #include "SignupCommand.hh"
 #include "SignupRequest.hh"
 #include "TestMessageQueue.hh"
+#include "UndockCommand.hh"
+#include "UndockRequest.hh"
 #include <gtest/gtest.h>
 
 using namespace test;
@@ -77,6 +79,24 @@ TEST(Unit_Bsgalone_Client_Network_OutputUiCommandAdapter, CorrectlyPublishesSign
   EXPECT_EQ("user", actual.getUsername());
   EXPECT_EQ("secure", actual.getPassword());
   EXPECT_EQ(core::Faction::CYLON, actual.getFaction());
+}
+
+TEST(Unit_Bsgalone_Client_Network_OutputUiCommandAdapter, CorrectlyPublishesUndockRequest)
+{
+  auto store = std::make_shared<MockDataStore>();
+  const core::Uuid expectedPlayerDbId;
+  EXPECT_CALL(*store, getPlayerDbId()).Times(1).WillOnce(Return(expectedPlayerDbId));
+
+  auto queue = std::make_shared<TestMessageQueue>();
+  OutputUiCommandAdapter adapter(store, queue);
+
+  UndockCommand command;
+  adapter.onEventReceived(command);
+
+  EXPECT_EQ(1u, queue->messages().size());
+  EXPECT_EQ(core::MessageType::UNDOCK_REQUEST, queue->messages().at(0)->type());
+  const auto &actual = queue->messages().at(0)->as<core::UndockRequest>();
+  EXPECT_EQ(expectedPlayerDbId, actual.getPlayerDbId());
 }
 
 } // namespace bsgalone::client

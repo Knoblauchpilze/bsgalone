@@ -19,6 +19,8 @@ auto str(const MessageType &type) -> std::string
       return "signup";
     case MessageType::SIGNUP_REQUEST:
       return "signup_request";
+    case MessageType::UNDOCK_REQUEST:
+      return "undock_request";
     default:
       return "unknown";
   }
@@ -33,6 +35,7 @@ auto allMessageTypesAsSet() -> std::unordered_set<MessageType>
     MessageType::LOGOUT_REQUEST,
     MessageType::SIGNUP,
     MessageType::SIGNUP_REQUEST,
+    MessageType::UNDOCK_REQUEST,
   };
 }
 

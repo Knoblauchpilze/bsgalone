@@ -15,6 +15,8 @@ auto str(const UiCommandType type) -> std::string
       return "logout_requested";
     case UiCommandType::SIGNUP_REQUESTED:
       return "signup_requested";
+    case UiCommandType::UNDOCK_REQUESTED:
+      return "undock_requested";
     default:
       return "unknown";
   }
@@ -27,6 +29,7 @@ auto allUiCommandTypesAsSet() -> std::unordered_set<UiCommandType>
     UiCommandType::LOGIN_REQUESTED,
     UiCommandType::LOGOUT_REQUESTED,
     UiCommandType::SIGNUP_REQUESTED,
+    UiCommandType::UNDOCK_REQUESTED,
   };
 }
 

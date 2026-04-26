@@ -7,4 +7,5 @@ target_sources (unitTests PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/LoginRequestTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/LogoutRequestTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SignupRequestTest.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/UndockRequestTest.cc
 	)

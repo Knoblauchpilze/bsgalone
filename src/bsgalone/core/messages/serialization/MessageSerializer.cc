@@ -6,6 +6,7 @@
 #include "LogoutRequest.hh"
 #include "SignupMessage.hh"
 #include "SignupRequest.hh"
+#include "UndockRequest.hh"
 #include <sstream>
 
 namespace bsgalone::core {
@@ -41,6 +42,9 @@ auto MessageSerializer::serializeMessage(const IMessage &message) -> std::vector
       break;
     case MessageType::SIGNUP_REQUEST:
       serialize(out, message.as<SignupRequest>());
+      break;
+    case MessageType::UNDOCK_REQUEST:
+      serialize(out, message.as<UndockRequest>());
       break;
     default:
       throw std::invalid_argument("Unsupported message type " + str(message.type()));

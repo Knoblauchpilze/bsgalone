@@ -40,6 +40,8 @@ class OutpostUiHandler : public IUiHandler
   ActiveScreen m_activeScreen{ActiveScreen::LOCKER};
 
   ui::UiMenuPtr m_tabsMenu{};
+  ui::UiMenuPtr m_undockButton{};
+  ui::UiMenuPtr m_quitButton{};
 
   IUiCommandQueueShPtr m_queue{};
 
@@ -50,6 +52,8 @@ class OutpostUiHandler : public IUiHandler
 
   void setActiveScreen(const ActiveScreen screen);
 
+  void onUndockRequested();
+  void onLogoutRequested();
   void onLoginSucceeded();
 
   friend class UiEventListenerOutpostProxy;

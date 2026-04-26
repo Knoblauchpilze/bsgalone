@@ -7,6 +7,7 @@
 #include "LogoutRequest.hh"
 #include "SignupMessage.hh"
 #include "SignupRequest.hh"
+#include "UndockRequest.hh"
 #include <gtest/gtest.h>
 
 namespace bsgalone::core {
@@ -204,6 +205,22 @@ TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageParser, DeserializesSignup
   EXPECT_EQ(Faction::CYLON, actual.getFaction());
   EXPECT_TRUE(actual.tryGetClientId().has_value());
   EXPECT_EQ(net::ClientId{12}, actual.tryGetClientId().value());
+}
+
+TEST(Unit_Bsgalone_Core_Messages_Serialization_MessageParser, DeserializesUndockRequest)
+{
+  MessageParser parser{};
+
+  UndockRequest message(Uuid{});
+  const auto bytes = serializeMessage(message);
+
+  const auto maybeResult = parser.tryParseMessage(bytes);
+
+  EXPECT_EQ(bytes.size(), maybeResult.bytesProcessed);
+  EXPECT_TRUE(maybeResult.message.has_value());
+  EXPECT_EQ(MessageType::UNDOCK_REQUEST, (*maybeResult.message)->type());
+  const auto &actual = (*maybeResult.message)->as<UndockRequest>();
+  EXPECT_EQ(message.getPlayerDbId(), actual.getPlayerDbId());
 }
 
 } // namespace bsgalone::core

@@ -13,7 +13,8 @@ enum class MessageType
   LOGOUT,
   LOGOUT_REQUEST,
   SIGNUP,
-  SIGNUP_REQUEST
+  SIGNUP_REQUEST,
+  UNDOCK_REQUEST
 };
 
 auto str(const MessageType &type) -> std::string;
