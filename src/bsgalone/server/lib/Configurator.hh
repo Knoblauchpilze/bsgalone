@@ -25,6 +25,9 @@ class Configurator
                                   ForPublishingEventShPtr publisher) const
     -> core::IMessageListenerPtr;
 
+  auto createUndockDrivingAdapter(ForPublishingEventShPtr publisher) const
+    -> core::IMessageListenerPtr;
+
   private:
   Repositories m_repositories{};
 };

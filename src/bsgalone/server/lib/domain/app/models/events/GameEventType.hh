@@ -10,7 +10,8 @@ enum class GameEventType
 {
   PLAYER_LOGIN,
   PLAYER_LOGOUT,
-  PLAYER_SIGNUP
+  PLAYER_SIGNUP,
+  PLAYER_UNDOCK
 };
 
 auto str(const GameEventType &type) -> std::string;

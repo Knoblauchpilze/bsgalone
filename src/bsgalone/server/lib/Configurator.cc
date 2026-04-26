@@ -6,6 +6,8 @@
 #include "LogoutUseCase.hh"
 #include "SignupRequestConsumer.hh"
 #include "SignupUseCase.hh"
+#include "UndockRequestConsumer.hh"
+#include "UndockUseCase.hh"
 
 namespace bsgalone::server {
 
@@ -35,6 +37,13 @@ auto Configurator::createLogoutDrivingAdapter(ForManagingClientShPtr clientManag
 {
   auto useCase = std::make_unique<LogoutUseCase>(std::move(clientManager), std::move(publisher));
   return std::make_unique<LogoutRequestConsumer>(std::move(useCase));
+}
+
+auto Configurator::createUndockDrivingAdapter(ForPublishingEventShPtr publisher) const
+  -> core::IMessageListenerPtr
+{
+  auto useCase = std::make_unique<UndockUseCase>(std::move(publisher));
+  return std::make_unique<UndockRequestConsumer>(std::move(useCase));
 }
 
 } // namespace bsgalone::server
