@@ -14,7 +14,7 @@ void assertMessagesAreEqual(const LogoutMessage &actual, const LogoutMessage &ex
 }
 } // namespace
 
-TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage, SerializationDeserialization)
+TEST(Unit_Bsgalone_Core_Messages_Events_LogoutMessage, SerializationDeserialization)
 {
   LogoutMessage expected(Uuid{});
 
@@ -23,7 +23,7 @@ TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage, SerializationDeserializati
   assertMessagesAreEqual(actual->as<LogoutMessage>(), expected);
 }
 
-TEST(Unit_Bsgalone_Core_Messages_Events_LoginMessage, Clone)
+TEST(Unit_Bsgalone_Core_Messages_Events_LogoutMessage, Clone)
 {
   LogoutMessage expected(Uuid{});
 

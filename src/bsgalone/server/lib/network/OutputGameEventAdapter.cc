@@ -6,6 +6,7 @@
 #include "PlayerLogoutEvent.hh"
 #include "PlayerSignupEvent.hh"
 #include "SignupMessage.hh"
+#include "UndockMessage.hh"
 
 namespace bsgalone::server {
 
@@ -34,6 +35,7 @@ const std::unordered_set<GameEventType> RELEVANT_EVENT_TYPES = {
   GameEventType::PLAYER_LOGIN,
   GameEventType::PLAYER_LOGOUT,
   GameEventType::PLAYER_SIGNUP,
+  GameEventType::PLAYER_UNDOCK,
 };
 }
 bool OutputGameEventAdapter::isEventRelevant(const GameEventType &type) const
@@ -75,6 +77,9 @@ void OutputGameEventAdapter::onEventReceived(const IGameEvent &event)
     case GameEventType::PLAYER_SIGNUP:
       publishSignupMessage(*m_networkClient, event.as<PlayerSignupEvent>());
       break;
+    case GameEventType::PLAYER_UNDOCK:
+      handleUndockEvent(event.as<PlayerUndockEvent>());
+      break;
     default:
       throw std::invalid_argument("Unsupported game event type " + str(event.type()));
   }
@@ -88,6 +93,14 @@ void OutputGameEventAdapter::handleLogoutEvent(const PlayerLogoutEvent &event)
   {
     m_networkClient->sendMessage(clientId, message);
   }
+}
+
+void OutputGameEventAdapter::handleUndockEvent(const PlayerUndockEvent &event)
+{
+  core::UndockMessage message(event.getPlayerDbId());
+
+  const auto clientId = m_clientManager->getClientIdForPlayer(event.getPlayerDbId());
+  m_networkClient->sendMessage(clientId, message);
 }
 
 } // namespace bsgalone::server

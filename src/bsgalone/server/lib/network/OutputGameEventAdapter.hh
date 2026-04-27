@@ -7,6 +7,7 @@
 #include "IMessageQueue.hh"
 #include "IOutputNetworkAdapter.hh"
 #include "PlayerLogoutEvent.hh"
+#include "PlayerUndockEvent.hh"
 
 namespace bsgalone::server {
 
@@ -25,6 +26,7 @@ class OutputGameEventAdapter : public IGameEventListener, public ::core::CoreObj
   core::IOutputNetworkAdapterPtr m_networkClient{};
 
   void handleLogoutEvent(const PlayerLogoutEvent &event);
+  void handleUndockEvent(const PlayerUndockEvent &event);
 };
 
 } // namespace bsgalone::server

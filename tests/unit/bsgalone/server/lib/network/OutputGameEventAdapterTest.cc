@@ -6,8 +6,10 @@
 #include "PlayerLoginEvent.hh"
 #include "PlayerLogoutEvent.hh"
 #include "PlayerSignupEvent.hh"
+#include "PlayerUndockEvent.hh"
 #include "SignupMessage.hh"
 #include "TestMessageQueue.hh"
+#include "UndockMessage.hh"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
@@ -157,6 +159,30 @@ TEST_F(Unit_Bsgalone_Server_Events_OutputGameEventAdapter,
 
   EXPECT_EQ(core::MessageType::LOGOUT, captured2->type());
   EXPECT_EQ(playerDbId, captured2->as<core::LogoutMessage>().getPlayerDbId());
+}
+
+TEST_F(Unit_Bsgalone_Server_Events_OutputGameEventAdapter, ForwardsUndockMessage)
+{
+  const core::Uuid playerDbId;
+
+  PlayerUndockEvent event(playerDbId);
+  auto clientManager = std::make_shared<ClientManager>();
+  clientManager->registerClient(net::ClientId{12});
+  clientManager->registerPlayer(net::ClientId{12}, playerDbId, core::Uuid{});
+
+  auto networkClient = std::make_unique<StrictMock<MockOutputAdapter>>();
+  core::IMessagePtr captured;
+  EXPECT_CALL(*networkClient, sendMessage(net::ClientId{12}, _))
+    .Times(1)
+    .WillOnce(Invoke([&captured](const net::ClientId /*clientId*/, const core::IMessage &message) {
+      captured = message.clone();
+    }));
+
+  OutputGameEventAdapter adapter(clientManager, std::move(networkClient));
+  adapter.onEventReceived(event);
+
+  EXPECT_EQ(core::MessageType::UNDOCK, captured->type());
+  EXPECT_EQ(playerDbId, captured->as<core::UndockMessage>().getPlayerDbId());
 }
 
 } // namespace bsgalone::server

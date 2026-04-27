@@ -14,6 +14,7 @@ enum class MessageType
   LOGOUT_REQUEST,
   SIGNUP,
   SIGNUP_REQUEST,
+  UNDOCK,
   UNDOCK_REQUEST
 };
 

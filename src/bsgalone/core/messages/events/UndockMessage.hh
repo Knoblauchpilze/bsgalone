@@ -7,11 +7,11 @@
 
 namespace bsgalone::core {
 
-class LogoutMessage : public IMessage
+class UndockMessage : public IMessage
 {
   public:
-  LogoutMessage(const Uuid playerDbId);
-  ~LogoutMessage() override = default;
+  UndockMessage(const Uuid playerDbId);
+  ~UndockMessage() override = default;
 
   auto getPlayerDbId() const -> Uuid;
 
@@ -29,11 +29,11 @@ class LogoutMessage : public IMessage
   private:
   Uuid m_playerDbId{};
 
-  LogoutMessage();
+  UndockMessage();
 
-  friend auto operator<<(std::ostream &out, const LogoutMessage &message) -> std::ostream &;
+  friend auto operator<<(std::ostream &out, const UndockMessage &message) -> std::ostream &;
 };
 
-auto operator<<(std::ostream &out, const LogoutMessage &message) -> std::ostream &;
+auto operator<<(std::ostream &out, const UndockMessage &message) -> std::ostream &;
 
 } // namespace bsgalone::core
