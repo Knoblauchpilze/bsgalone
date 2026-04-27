@@ -16,6 +16,7 @@
 #include "StatusUiHandler.hh"
 #include "SynchronizedUiCommandQueue.hh"
 #include "SynchronizedUiEventQueue.hh"
+#include "UndockMessageConsumer.hh"
 
 namespace bsgalone::client {
 
@@ -182,6 +183,7 @@ class UiCommandListenerProxy : public IUiCommandListener
 const std::unordered_set<UiEventType> RELEVANT_UI_EVENT_TYPES = {
   UiEventType::LOGIN_SUCCEEDED,
   UiEventType::LOGOUT,
+  UiEventType::UNDOCK,
 };
 
 class UiEventListenerProxy : public IUiEventListener
@@ -209,6 +211,9 @@ class UiEventListenerProxy : public IUiEventListener
       case UiEventType::LOGOUT:
         m_app.onScreenChanged(Screen::LOGIN);
         break;
+      case UiEventType::UNDOCK:
+        m_app.onScreenChanged(Screen::GAME);
+        break;
       default:
         throw std::invalid_argument("Unsupported UI event type " + str(event.type()));
     }
@@ -224,6 +229,7 @@ void App::initializeIncomingMessageSystem()
   m_networkClient->addListener(std::make_unique<SignupMessageConsumer>(m_uiEventQueue));
   m_networkClient->addListener(std::make_unique<LoginMessageConsumer>(m_dataStore, m_uiEventQueue));
   m_networkClient->addListener(std::make_unique<LogoutMessageConsumer>(m_dataStore, m_uiEventQueue));
+  m_networkClient->addListener(std::make_unique<UndockMessageConsumer>(m_dataStore, m_uiEventQueue));
 }
 
 void App::initializeOutgoingMessageSystem()

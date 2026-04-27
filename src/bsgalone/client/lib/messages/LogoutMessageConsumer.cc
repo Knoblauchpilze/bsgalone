@@ -30,6 +30,8 @@ void LogoutMessageConsumer::onEventReceived(const core::IMessage &event)
 
   m_store->onPlayerLoggedOut(login.getPlayerDbId());
 
+  // TODO: This probably does not account for cases where a logout event
+  // is received when the player is still in the login page.
   if (!m_store->isLoggedIn())
   {
     m_queue->pushEvent(std::make_unique<LogoutEvent>());

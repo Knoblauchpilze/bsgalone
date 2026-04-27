@@ -14,6 +14,8 @@ class LogoutMessageConsumer : public core::IMessageListener
   /// messages. Upon receiving a message, this consumer will inform the
   /// data store that the player is no longer logged in and publish the
   /// corresponding events to the queue so that the UI is informed.
+  /// In case the message is received for a different player than the one
+  /// currently logged in, no UI message will be puslibhed.
   /// @param store - the data store where logout information should be stored
   /// @param queue - a queue to publish UI relevant updates
   LogoutMessageConsumer(IDataStoreShPtr store, IUiEventQueueShPtr queue);

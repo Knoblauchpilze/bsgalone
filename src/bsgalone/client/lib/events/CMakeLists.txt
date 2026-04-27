@@ -18,4 +18,5 @@ target_sources (bsgalone_client_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/LogoutEvent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SignupSucceededEvent.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SignupFailedEvent.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/UndockEvent.cc
 	)

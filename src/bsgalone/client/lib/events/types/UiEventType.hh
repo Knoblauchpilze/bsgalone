@@ -13,7 +13,8 @@ enum class UiEventType
   LOGIN_SUCCEEDED,
   LOGOUT,
   SIGNUP_FAILED,
-  SIGNUP_SUCCEEDED
+  SIGNUP_SUCCEEDED,
+  UNDOCK
 };
 
 auto str(const UiEventType type) -> std::string;

@@ -19,6 +19,8 @@ auto str(const UiEventType type) -> std::string
       return "signup_failed";
     case UiEventType::SIGNUP_SUCCEEDED:
       return "signup_succeeded";
+    case UiEventType::UNDOCK:
+      return "undock";
     default:
       return "unknown";
   }
@@ -33,6 +35,7 @@ auto allUiEventTypesAsSet() -> std::unordered_set<UiEventType>
     UiEventType::LOGOUT,
     UiEventType::SIGNUP_FAILED,
     UiEventType::SIGNUP_SUCCEEDED,
+    UiEventType::UNDOCK,
   };
 }
 
