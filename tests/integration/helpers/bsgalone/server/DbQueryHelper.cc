@@ -4,7 +4,7 @@
 
 namespace test {
 
-auto insertTestAccount(bsgalone::server::DbConnection &dbConnection) -> bsgalone::server::Account
+auto insertTestAccount(bsgalone::core::DbConnection &dbConnection) -> bsgalone::server::Account
 {
   const bsgalone::core::Uuid uuid;
   const auto username = std::format("random-account-{:%F%T}", ::core::now());

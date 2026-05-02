@@ -1,7 +1,7 @@
 
 #pragma once
 
-namespace bsgalone::server {
+namespace bsgalone::core {
 
 class IRepository
 {
@@ -15,4 +15,4 @@ class IRepository
   virtual void initialize() = 0;
 };
 
-} // namespace bsgalone::server
+} // namespace bsgalone::core

@@ -12,10 +12,10 @@
 
 namespace bsgalone::server {
 
-class AccountRepository : public ForManagingAccount, public AbstractRepository
+class AccountRepository : public ForManagingAccount, public core::AbstractRepository
 {
   public:
-  AccountRepository(DbConnectionShPtr connection);
+  AccountRepository(core::DbConnectionShPtr connection);
   ~AccountRepository() override = default;
 
   void initialize() override;

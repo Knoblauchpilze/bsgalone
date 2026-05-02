@@ -3,8 +3,8 @@
 
 namespace bsgalone::server {
 
-AccountRepository::AccountRepository(DbConnectionShPtr connection)
-  : AbstractRepository("account", std::move(connection))
+AccountRepository::AccountRepository(core::DbConnectionShPtr connection)
+  : core::AbstractRepository("account", std::move(connection))
 {}
 
 namespace {

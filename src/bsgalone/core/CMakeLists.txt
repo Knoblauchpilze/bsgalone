@@ -23,8 +23,14 @@ add_subdirectory (
 	${CMAKE_CURRENT_SOURCE_DIR}/messages
 	)
 
+add_subdirectory (
+	${CMAKE_CURRENT_SOURCE_DIR}/repositories
+	)
+
 target_link_libraries (bsgalone_core_lib PUBLIC
 	bsgalone-interface-library
+	pq
+	pqxx
 	net_lib
 	time_lib
 	EnTT::EnTT

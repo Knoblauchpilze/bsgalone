@@ -13,7 +13,7 @@ using Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_SystemRepo
   = DbConnectionFixture;
 
 namespace {
-void insertTestTickConfig(DbConnection &dbConnection, System &system)
+void insertTestTickConfig(core::DbConnection &dbConnection, System &system)
 {
   constexpr auto QUERY = R"(
       INSERT INTO tick_config ("system", "duration", "unit", "ticks")
@@ -28,7 +28,7 @@ void insertTestTickConfig(DbConnection &dbConnection, System &system)
   system.step = chrono::TimeStep(14, chrono::Duration::fromSeconds(1.0f));
 }
 
-void insertTestTick(DbConnection &dbConnection, System &system)
+void insertTestTick(core::DbConnection &dbConnection, System &system)
 {
   constexpr auto QUERY = R"(
       INSERT INTO tick ("system", "current_tick")
@@ -43,7 +43,7 @@ void insertTestTick(DbConnection &dbConnection, System &system)
   system.currentTick = chrono::Tick::fromInt(27);
 }
 
-auto insertTestSystem(DbConnection &dbConnection, const bool withTick) -> System
+auto insertTestSystem(core::DbConnection &dbConnection, const bool withTick) -> System
 {
   const core::Uuid uuid;
   // https://stackoverflow.com/questions/34857119/how-to-convert-stdchronotime-point-to-string

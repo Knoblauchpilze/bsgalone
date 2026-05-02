@@ -6,7 +6,7 @@ namespace bsgalone::server {
 
 Repositories::Repositories()
 {
-  auto connection = std::make_shared<DbConnection>();
+  auto connection = std::make_shared<core::DbConnection>();
   connection->connect();
 
   accountRepository = std::make_shared<AccountRepository>(connection);

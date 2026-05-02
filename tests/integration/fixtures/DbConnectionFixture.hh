@@ -16,10 +16,10 @@ class DbConnectionFixture : public ::testing::Test
   void SetUp() override;
   void TearDown() override;
 
-  auto dbConnection() const -> bsgalone::server::DbConnectionShPtr;
+  auto dbConnection() const -> bsgalone::core::DbConnectionShPtr;
 
   private:
-  bsgalone::server::DbConnectionShPtr m_dbConn{};
+  bsgalone::core::DbConnectionShPtr m_dbConn{};
 
   /// @brief - Used in the `SetUp` step to clean tables of the database
   /// which are affected by tests. This is an intermediate solution to

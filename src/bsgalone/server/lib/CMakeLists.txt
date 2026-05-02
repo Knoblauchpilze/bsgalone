@@ -26,8 +26,6 @@ target_sources (bsgalone_server_lib PRIVATE
 
 target_link_libraries (bsgalone_server_lib PUBLIC
 	bsgalone-interface-library
-	pq
-	pqxx
 	core_lib
 	net_lib
 	bsgalone_core_lib
