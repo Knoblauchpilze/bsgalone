@@ -8,5 +8,6 @@ add_subdirectory(
 	)
 
 target_sources (bsgalone_core_lib PRIVATE
+	${CMAKE_CURRENT_SOURCE_DIR}/Asteroid.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/Uuid.cc
 	)

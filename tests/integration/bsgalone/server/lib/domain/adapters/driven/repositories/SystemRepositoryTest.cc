@@ -46,8 +46,6 @@ void insertTestTick(core::DbConnection &dbConnection, System &system)
 auto insertTestSystem(core::DbConnection &dbConnection, const bool withTick) -> System
 {
   const core::Uuid uuid;
-  // https://stackoverflow.com/questions/34857119/how-to-convert-stdchronotime-point-to-string
-  // https://en.cppreference.com/w/cpp/chrono/system_clock/formatter.html
   const auto name = std::format("random-system-{:%F%T}", ::core::now());
 
   constexpr auto QUERY = R"(
