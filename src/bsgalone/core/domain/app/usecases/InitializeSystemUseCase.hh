@@ -19,6 +19,8 @@ class InitializeSystemUseCase : public ForInitializingSystem
   private:
   ForManagingAsteroidShPtr m_asteroidRepo{};
   ForRegisteringEntityShPtr m_entityRegisry{};
+
+  void initializeAsteroids(const Uuid systemDbId);
 };
 
 } // namespace bsgalone::core

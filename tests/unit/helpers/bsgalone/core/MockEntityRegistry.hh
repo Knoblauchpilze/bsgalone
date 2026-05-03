@@ -12,7 +12,10 @@ class MockEntityRegistry : public bsgalone::core::ForRegisteringEntity
   MockEntityRegistry()           = default;
   ~MockEntityRegistry() override = default;
 
-  MOCK_METHOD(void, registerAsteroid, (const bsgalone::core::Asteroid &), (override));
+  MOCK_METHOD(bsgalone::core::EntityId,
+              registerAsteroid,
+              (const bsgalone::core::Asteroid &),
+              (override));
 };
 
 } // namespace test

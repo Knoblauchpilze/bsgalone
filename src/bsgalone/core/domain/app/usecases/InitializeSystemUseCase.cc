@@ -18,6 +18,17 @@ InitializeSystemUseCase::InitializeSystemUseCase(ForManagingAsteroidShPtr astero
   }
 }
 
-void InitializeSystemUseCase::initializeSystem(const Uuid /*systemDbId*/) {}
+void InitializeSystemUseCase::initializeSystem(const Uuid systemDbId)
+{
+  initializeAsteroids(systemDbId);
+}
+
+void InitializeSystemUseCase::initializeAsteroids(const Uuid systemDbId)
+{
+  for (const auto &asteroid : m_asteroidRepo->findAllBySystem(systemDbId))
+  {
+    m_entityRegisry->registerAsteroid(asteroid);
+  }
+}
 
 } // namespace bsgalone::core
