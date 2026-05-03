@@ -43,16 +43,11 @@ void Server::initialize()
   m_networkClient    = std::make_shared<ServerNetworkClient>(clientManager);
   m_clientManager    = std::move(clientManager);
 
-  initializeExternalFacingUseCases();
-
-  auto outputAdapter
-    = std::make_unique<core::OutputNetworkAdapter>(m_networkClient,
-                                                   std::make_unique<core::MessageSerializer>());
-  m_eventQueue->addListener(
-    std::make_unique<OutputGameEventAdapter>(m_clientManager, std::move(outputAdapter)));
+  initializeInboundUseCases();
+  initializeOutboundUseCases();
 }
 
-void Server::initializeExternalFacingUseCases()
+void Server::initializeInboundUseCases()
 {
   m_eventQueue   = createAsyncGameEventQueue(createSynchronizedGameEventQueue());
   auto publisher = std::make_shared<GameEventPublisher>(m_eventQueue);
@@ -63,6 +58,15 @@ void Server::initializeExternalFacingUseCases()
   m_networkClient->addListener(configurator.createLoginDrivingAdapter(m_clientManager, publisher));
   m_networkClient->addListener(configurator.createLogoutDrivingAdapter(m_clientManager, publisher));
   m_networkClient->addListener(configurator.createUndockDrivingAdapter(publisher));
+}
+
+void Server::initializeOutboundUseCases()
+{
+  auto outputAdapter
+    = std::make_unique<core::OutputNetworkAdapter>(m_networkClient,
+                                                   std::make_unique<core::MessageSerializer>());
+  m_eventQueue->addListener(
+    std::make_unique<OutputGameEventAdapter>(m_clientManager, std::move(outputAdapter)));
 }
 
 void Server::setup(const int port)

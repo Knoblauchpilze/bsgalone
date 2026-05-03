@@ -41,7 +41,8 @@ class Server : public ::core::CoreObject
   IGameEventQueueShPtr m_eventQueue{};
 
   void initialize();
-  void initializeExternalFacingUseCases();
+  void initializeInboundUseCases();
+  void initializeOutboundUseCases();
 
   void setup(const int port);
   void activeRunLoop();
