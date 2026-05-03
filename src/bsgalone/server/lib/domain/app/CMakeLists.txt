@@ -1,16 +1,16 @@
 
-target_include_directories (bsgalone_server_lib PUBLIC
+target_include_directories(bsgalone_server_lib PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
 	)
 
-add_subdirectory (
+add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/models
 	)
 
-add_subdirectory (
+add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/ports
 	)
 
-add_subdirectory (
+add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/usecases
 	)

@@ -1,29 +1,29 @@
 
-add_library (core_lib SHARED "")
+add_library(core_lib SHARED "")
 
-set (CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-target_include_directories (core_lib PUBLIC
+target_include_directories(core_lib PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
 	)
 
-add_subdirectory (
+add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/log
 	)
 
-target_sources (core_lib PRIVATE
+target_sources(core_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/CoreException.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/CoreObject.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/Environment.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/SafetyNet.cc
 	)
 
-target_link_libraries (core_lib PUBLIC
+target_link_libraries(core_lib PUBLIC
 	bsgalone-interface-library
 	)
 
-if (${ENABLE_TESTS})
-	target_link_libraries (core_lib PUBLIC
+if(${ENABLE_TESTS})
+	target_link_libraries(core_lib PUBLIC
 		bsgalone-interface-test-library
 		)
-endif ()
+endif()

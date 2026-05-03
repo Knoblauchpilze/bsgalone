@@ -1,9 +1,9 @@
 
-target_include_directories (pge_lib PUBLIC
+target_include_directories(pge_lib PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
 	)
 
-target_sources (pge_lib PRIVATE
+target_sources(pge_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/Viewport.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/CenteredViewport.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/TopLeftViewport.cc

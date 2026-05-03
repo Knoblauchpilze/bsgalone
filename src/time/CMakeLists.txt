@@ -1,13 +1,13 @@
 
-add_library (time_lib SHARED "")
+add_library(time_lib SHARED "")
 
-set (CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-target_include_directories (time_lib PUBLIC
+target_include_directories(time_lib PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
 	)
 
-target_sources (time_lib PRIVATE
+target_sources(time_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/Duration.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/Tick.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/TickDuration.cc
@@ -16,13 +16,13 @@ target_sources (time_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/Unit.cc
 	)
 
-target_link_libraries (time_lib PUBLIC
+target_link_libraries(time_lib PUBLIC
 	bsgalone-interface-library
 	core_lib
 	)
 
-if (${ENABLE_TESTS})
-	target_link_libraries (time_lib PUBLIC
+if(${ENABLE_TESTS})
+	target_link_libraries(time_lib PUBLIC
 		bsgalone-interface-test-library
 		)
-endif ()
+endif()

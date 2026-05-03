@@ -1,43 +1,43 @@
 
-add_executable (unitTests)
+add_executable(unitTests)
 
-target_include_directories (unitTests PUBLIC
+target_include_directories(unitTests PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
 	)
 
-add_subdirectory (
+add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/bsgalone
 	)
 
-add_subdirectory (
+add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/core
 	)
 
-add_subdirectory (
+add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/helpers
 	)
 
-add_subdirectory (
+add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/messaging
 	)
 
-add_subdirectory (
+add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/net
 	)
 
-add_subdirectory (
+add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/pge
 	)
 
-add_subdirectory (
+add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/time
 	)
 
-target_sources (unitTests PRIVATE
+target_sources(unitTests PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/main.cc
 	)
 
-target_link_libraries (unitTests
+target_link_libraries(unitTests
 	GTest::gtest
 	GTest::gmock
 	bsgalone-interface-test-library

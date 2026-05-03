@@ -1,9 +1,9 @@
 
-add_library (net_lib SHARED "")
+add_library(net_lib SHARED "")
 
-set (CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-target_include_directories (net_lib PUBLIC
+target_include_directories(net_lib PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
 	)
 
@@ -31,14 +31,14 @@ add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/sockets
 	)
 
-target_link_libraries (net_lib PUBLIC
+target_link_libraries(net_lib PUBLIC
 	bsgalone-interface-library
 	core_lib
 	messaging_lib
 	)
 
-if (${ENABLE_TESTS})
-	target_link_libraries (net_lib PUBLIC
+if(${ENABLE_TESTS})
+	target_link_libraries(net_lib PUBLIC
 		bsgalone-interface-test-library
 		)
-endif ()
+endif()

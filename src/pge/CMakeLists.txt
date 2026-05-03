@@ -1,45 +1,45 @@
 
-add_library (pge_lib SHARED "")
+add_library(pge_lib SHARED "")
 
-set (CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 target_compile_options(pge_lib PRIVATE
 	-Wno-error=unknown-pragmas
 	)
 
-target_include_directories (pge_lib PUBLIC
+target_include_directories(pge_lib PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
 	)
 
-add_subdirectory (
+add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/olc
 	)
 
-add_subdirectory (
+add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/vector
 	)
 
-add_subdirectory (
+add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/colors
 	)
 
-add_subdirectory (
+add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/sprites
 	)
 
-add_subdirectory (
+add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/rendering
 	)
 
-add_subdirectory (
+add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/app
 	)
 
-add_subdirectory (
+add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/coordinates
 	)
 
-target_link_libraries (pge_lib PUBLIC
+target_link_libraries(pge_lib PUBLIC
 	bsgalone-interface-library
 	png
 	X11
@@ -48,8 +48,8 @@ target_link_libraries (pge_lib PUBLIC
 	core_lib
 	)
 
-if (${ENABLE_TESTS})
-	target_link_libraries (pge_lib PUBLIC
+if(${ENABLE_TESTS})
+	target_link_libraries(pge_lib PUBLIC
 		bsgalone-interface-test-library
 		)
-endif ()
+endif()

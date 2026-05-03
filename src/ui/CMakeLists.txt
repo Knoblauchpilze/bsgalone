@@ -1,13 +1,13 @@
 
-add_library (ui_lib SHARED "")
+add_library(ui_lib SHARED "")
 
-set (CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-target_include_directories (ui_lib PUBLIC
+target_include_directories(ui_lib PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
 	)
 
-target_sources (ui_lib PRIVATE
+target_sources(ui_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/BackgroundConfig.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/MenuCommon.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/TextConfig.cc
@@ -19,13 +19,13 @@ target_sources (ui_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/UiTimedMenu.cc
 	)
 
-target_link_libraries (ui_lib PUBLIC
+target_link_libraries(ui_lib PUBLIC
 	bsgalone-interface-library
 	pge_lib
 	)
 
-if (${ENABLE_TESTS})
-	target_link_libraries (ui_lib PUBLIC
+if(${ENABLE_TESTS})
+	target_link_libraries(ui_lib PUBLIC
 		bsgalone-interface-test-library
 		)
-endif ()
+endif()

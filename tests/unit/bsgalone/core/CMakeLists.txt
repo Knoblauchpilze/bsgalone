@@ -3,14 +3,14 @@ target_include_directories(unitTests PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}
 	)
 
-add_subdirectory (
+add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/domain
 	)
 
-add_subdirectory (
+add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/entities
 	)
 
-add_subdirectory (
+add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/messages
 	)
