@@ -5,12 +5,12 @@
 namespace bsgalone::core {
 
 // TODO: Add tests for this class
-SystemProcessor::SystemProcessor(const Uuid systemDbId, chrono::ITimeManagerPtr timeManager)
+SystemProcessor::SystemProcessor(const std::string &name, chrono::ITimeManagerPtr timeManager)
   : ::core::CoreObject("processor")
   , m_timeManager(std::move(timeManager))
 {
   setService("system");
-  addModule(systemDbId.str());
+  addModule(name);
 
   if (m_timeManager == nullptr)
   {

@@ -43,8 +43,24 @@ void Server::initialize()
   m_networkClient    = std::make_shared<ServerNetworkClient>(clientManager);
   m_clientManager    = std::move(clientManager);
 
+  initializeSystemProcessors();
   initializeInboundUseCases();
   initializeOutboundUseCases();
+}
+
+void Server::initializeSystemProcessors()
+{
+  auto connection = std::make_shared<core::DbConnection>();
+  connection->connect();
+  SystemRepository repository(std::move(connection));
+  repository.initialize();
+
+  for (const auto &system : repository.findAll())
+  {
+    auto manager   = std::make_unique<chrono::TimeManager>(system.currentTick, system.step);
+    auto processor = std::make_shared<core::SystemProcessor>(system.name, std::move(manager));
+    m_systemProcessors.emplace_back(std::move(processor));
+  }
 }
 
 void Server::initializeInboundUseCases()
@@ -73,6 +89,11 @@ void Server::setup(const int port)
 {
   info("Starting listening on port " + std::to_string(port));
   m_networkClient->start(port);
+
+  for (const auto &processor : m_systemProcessors)
+  {
+    processor->start();
+  }
 }
 
 void Server::activeRunLoop()
@@ -91,6 +112,11 @@ void Server::activeRunLoop()
 
 void Server::shutdown()
 {
+  for (const auto &systemProcessor : m_systemProcessors)
+  {
+    systemProcessor->stop();
+  }
+
   m_networkClient->stop();
   m_eventQueue.reset();
 }

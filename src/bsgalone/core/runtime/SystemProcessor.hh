@@ -14,7 +14,7 @@ namespace bsgalone::core {
 class SystemProcessor : public ::core::CoreObject
 {
   public:
-  SystemProcessor(const Uuid systemDbId, chrono::ITimeManagerPtr timeManager);
+  SystemProcessor(const std::string &name, chrono::ITimeManagerPtr timeManager);
   ~SystemProcessor() override;
 
   void start();
@@ -38,5 +38,7 @@ class SystemProcessor : public ::core::CoreObject
   /// @return - true if the processing thread was started and needs to be joined
   bool tryStopProcessing();
 };
+
+using SystemProcessorShPtr = std::shared_ptr<SystemProcessor>;
 
 } // namespace bsgalone::core
