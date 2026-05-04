@@ -1,6 +1,7 @@
 
 #include "InitializeSystemUseCase.hh"
 #include "DbComponent.hh"
+#include "HealthComponent.hh"
 
 namespace bsgalone::core {
 
@@ -30,6 +31,12 @@ void InitializeSystemUseCase::initializeAsteroids(const Uuid systemDbId)
   {
     const auto uuid = m_entityRegisry->createEntity();
     m_entityRegisry->addComponent(uuid, DbComponent{.dbId = asteroid.dbId});
+    // https://stackoverflow.com/questions/47333843/using-initializer-list-for-a-struct-with-inheritance
+    m_entityRegisry->addComponent(uuid,
+                                  HealthComponent{{
+                                    .value = asteroid.health,
+                                    .max   = asteroid.maxHealth,
+                                  }});
   }
 }
 
