@@ -1,10 +1,11 @@
 
 #include "InitializeSystemUseCase.hh"
+#include "DbComponent.hh"
 
 namespace bsgalone::core {
 
 InitializeSystemUseCase::InitializeSystemUseCase(ForManagingAsteroidShPtr asteroidRepo,
-                                                 ForRegisteringEntityShPtr entityRegisry)
+                                                 EntityRegistryShPtr entityRegisry)
   : m_asteroidRepo(std::move(asteroidRepo))
   , m_entityRegisry(std::move(entityRegisry))
 {
@@ -27,7 +28,8 @@ void InitializeSystemUseCase::initializeAsteroids(const Uuid systemDbId)
 {
   for (const auto &asteroid : m_asteroidRepo->findAllBySystem(systemDbId))
   {
-    m_entityRegisry->registerAsteroid(asteroid);
+    const auto uuid = m_entityRegisry->createEntity();
+    m_entityRegisry->addComponent(uuid, DbComponent{.dbId = asteroid.dbId});
   }
 }
 

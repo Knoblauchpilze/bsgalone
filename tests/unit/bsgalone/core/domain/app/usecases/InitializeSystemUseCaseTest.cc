@@ -1,7 +1,8 @@
 
 #include "InitializeSystemUseCase.hh"
+#include "DbComponent.hh"
+#include "EntityRegistry.hh"
 #include "MockAsteroidRepository.hh"
-#include "MockEntityRegistry.hh"
 #include <gtest/gtest.h>
 
 using namespace test;
@@ -14,10 +15,10 @@ class Unit_Bsgalone_Core_Domain_App_Usecases_InitializeSystemUseCase : public Te
   protected:
   void SetUp() override
   {
-    mockAsteroidRepo   = std::make_shared<StrictMock<MockAsteroidRepository>>();
-    mockEntityRegistry = std::make_shared<StrictMock<MockEntityRegistry>>();
+    mockAsteroidRepo = std::make_shared<StrictMock<MockAsteroidRepository>>();
+    entityRegistry   = std::make_shared<EntityRegistry>();
 
-    usecase = std::make_unique<InitializeSystemUseCase>(mockAsteroidRepo, mockEntityRegistry);
+    usecase = std::make_unique<InitializeSystemUseCase>(mockAsteroidRepo, entityRegistry);
   }
 
   void TearDown() override
@@ -26,7 +27,7 @@ class Unit_Bsgalone_Core_Domain_App_Usecases_InitializeSystemUseCase : public Te
   }
 
   std::shared_ptr<MockAsteroidRepository> mockAsteroidRepo{};
-  std::shared_ptr<MockEntityRegistry> mockEntityRegistry{};
+  std::shared_ptr<EntityRegistry> entityRegistry{};
 
   std::unique_ptr<InitializeSystemUseCase> usecase{};
 };
@@ -35,7 +36,7 @@ class Unit_Bsgalone_Core_Domain_App_Usecases_InitializeSystemUseCase : public Te
 TEST_F(Unit_Bsgalone_Core_Domain_App_Usecases_InitializeSystemUseCase,
        ThrowsWhenAsteroidRepositoryIsNull)
 {
-  EXPECT_THROW([this]() { InitializeSystemUseCase(nullptr, mockEntityRegistry); }(),
+  EXPECT_THROW([this]() { InitializeSystemUseCase(nullptr, entityRegistry); }(),
                std::invalid_argument);
 }
 
@@ -71,18 +72,14 @@ TEST_F(Unit_Bsgalone_Core_Domain_App_Usecases_InitializeSystemUseCase,
   };
   EXPECT_CALL(*mockAsteroidRepo, findAllBySystem(systemDbId)).Times(1).WillOnce(Return(asteroids));
 
-  EXPECT_CALL(*mockEntityRegistry, registerAsteroid(_))
-    .Times(2)
-    .WillOnce(Invoke([&asteroidDbId1](const Asteroid &asteroid) {
-      EXPECT_EQ(asteroidDbId1, asteroid.dbId);
-      return EntityId{};
-    }))
-    .WillOnce(Invoke([&asteroidDbId2](const Asteroid &asteroid) {
-      EXPECT_EQ(asteroidDbId2, asteroid.dbId);
-      return EntityId{};
-    }));
-
   usecase->initializeSystem(systemDbId);
+
+  std::unordered_set<Uuid> actualIds{};
+  entityRegistry->apply<DbComponent>(
+    [&actualIds](const DbComponent &component) { actualIds.emplace(component.dbId); });
+
+  const std::unordered_set<Uuid> expectedIds{asteroidDbId1, asteroidDbId2};
+  EXPECT_EQ(expectedIds, actualIds);
 }
 
 } // namespace bsgalone::core

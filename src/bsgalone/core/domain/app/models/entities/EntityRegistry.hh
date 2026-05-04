@@ -3,6 +3,7 @@
 
 #include "Uuid.hh"
 #include <entt/entt.hpp>
+#include <memory>
 #include <unordered_map>
 
 namespace bsgalone::core {
@@ -17,7 +18,7 @@ class EntityRegistry
   /// be used later on to modify the entity for example when adding components.
   /// This is currently not thread-safe.
   /// @return - the identifier of the entity
-  auto createEntity() -> Uuid;
+  [[nodiscard]] auto createEntity() -> Uuid;
 
   /// @brief - Adds a component to the entity. If the entity does not exist, this function
   /// will raise an error.
@@ -45,6 +46,8 @@ class EntityRegistry
   /// without leaking the library details.
   std::unordered_map<Uuid, entt::entity> m_entities{};
 };
+
+using EntityRegistryShPtr = std::shared_ptr<EntityRegistry>;
 
 } // namespace bsgalone::core
 

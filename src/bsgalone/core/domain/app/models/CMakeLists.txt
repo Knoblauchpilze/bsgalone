@@ -4,6 +4,10 @@ target_include_directories(bsgalone_core_lib PUBLIC
 	)
 
 add_subdirectory(
+	${CMAKE_CURRENT_SOURCE_DIR}/components
+	)
+
+add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/entities
 	)
 
@@ -13,6 +17,5 @@ add_subdirectory(
 
 target_sources(bsgalone_core_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/Asteroid.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/EntityId.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/Uuid.cc
 	)
