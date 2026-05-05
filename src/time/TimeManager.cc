@@ -13,7 +13,7 @@ TimeManager::TimeManager(const Tick tick, const TimeStep step)
   setService("time");
 }
 
-auto TimeManager::tick(const Duration elapsed) -> TickData
+auto TimeManager::tick(const Duration &elapsed) -> TickData
 {
   const auto duration = m_step.count(elapsed);
   m_currentTick += duration;

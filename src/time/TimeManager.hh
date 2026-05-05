@@ -12,7 +12,7 @@ class TimeManager : public ITimeManager, public core::CoreObject
   TimeManager(const Tick tick, const TimeStep step);
   ~TimeManager() = default;
 
-  auto tick(const Duration elapsed) -> TickData override;
+  auto tick(const Duration &elapsed) -> TickData override;
 
   private:
   Tick m_currentTick{};

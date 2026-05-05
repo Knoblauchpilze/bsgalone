@@ -13,7 +13,7 @@ class ITimeManager
   public:
   virtual ~ITimeManager() = default;
 
-  virtual auto tick(const Duration elapsed) -> TickData = 0;
+  virtual auto tick(const Duration &elapsed) -> TickData = 0;
 };
 
 using ITimeManagerPtr = std::unique_ptr<ITimeManager>;
