@@ -4,14 +4,20 @@
 
 namespace bsgalone::core {
 
-// TODO: Add tests for this class
-SystemProcessor::SystemProcessor(const std::string &name, chrono::ITimeManagerPtr timeManager)
+SystemProcessor::SystemProcessor(const std::string &name,
+                                 IEcsCoordinatorPtr coordinator,
+                                 chrono::ITimeManagerPtr timeManager)
   : ::core::CoreObject("processor")
+  , m_coordinator(std::move(coordinator))
   , m_timeManager(std::move(timeManager))
 {
   setService("system");
   addModule(name);
 
+  if (m_coordinator == nullptr)
+  {
+    throw std::invalid_argument("Expected non null coordinator");
+  }
   if (m_timeManager == nullptr)
   {
     throw std::invalid_argument("Expected non null time manager");
@@ -69,8 +75,8 @@ void SystemProcessor::asyncProcessing()
       .elapsed = ::core::diffInMs(lastFrameTimestamp, thisFrameTimestamp),
     };
 
-    /*const auto data =*/m_timeManager->tick(elapsed);
-    // TODO: Run the simulation
+    const auto data = m_timeManager->tick(elapsed);
+    m_coordinator->update(data);
 
     lastFrameTimestamp = thisFrameTimestamp;
 

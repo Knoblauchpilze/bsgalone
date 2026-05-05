@@ -2,6 +2,7 @@
 #pragma once
 
 #include "CoreObject.hh"
+#include "IEcsCoordinator.hh"
 #include "TimeManager.hh"
 #include "Uuid.hh"
 #include <atomic>
@@ -14,7 +15,9 @@ namespace bsgalone::core {
 class SystemProcessor : public ::core::CoreObject
 {
   public:
-  SystemProcessor(const std::string &name, chrono::ITimeManagerPtr timeManager);
+  SystemProcessor(const std::string &name,
+                  IEcsCoordinatorPtr coordinator,
+                  chrono::ITimeManagerPtr timeManager);
   ~SystemProcessor() override;
 
   void start();
@@ -27,6 +30,7 @@ class SystemProcessor : public ::core::CoreObject
   bool m_running{false};
   std::thread m_processingThread{};
 
+  IEcsCoordinatorPtr m_coordinator{};
   chrono::ITimeManagerPtr m_timeManager{};
 
   void asyncProcessing();

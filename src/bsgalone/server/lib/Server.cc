@@ -4,6 +4,7 @@
 #include "AsyncGameEventQueue.hh"
 #include "ClientManager.hh"
 #include "Configurator.hh"
+#include "EcsCoordinator.hh"
 #include "GameEventPublisher.hh"
 #include "MessageSerializer.hh"
 #include "OutputGameEventAdapter.hh"
@@ -57,8 +58,13 @@ void Server::initializeSystemProcessors()
 
   for (const auto &system : repository.findAll())
   {
-    auto manager   = std::make_unique<chrono::TimeManager>(system.currentTick, system.step);
-    auto processor = std::make_shared<core::SystemProcessor>(system.name, std::move(manager));
+    auto manager = std::make_unique<chrono::TimeManager>(system.currentTick, system.step);
+    // TODO: The registry should be kept locally to initialize other things
+    auto coordinator = std::make_unique<core::EcsCoordinator>(
+      std::make_shared<core::EntityRegistry>());
+    auto processor = std::make_shared<core::SystemProcessor>(system.name,
+                                                             std::move(coordinator),
+                                                             std::move(manager));
     m_systemProcessors.emplace_back(std::move(processor));
   }
 }

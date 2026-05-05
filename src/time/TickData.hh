@@ -10,6 +10,8 @@ struct TickData
 {
   Tick tick{};
   TickDuration elapsed{};
+
+  bool operator==(const TickData &rhs) const = default;
 };
 
 } // namespace chrono
