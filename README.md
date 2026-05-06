@@ -125,7 +125,7 @@ This library is available in the package manager for Ubuntu. That being said, it
 
 Notably, this project uses c++20 which can cause problem. In case you're unlucky and the version shipped with your package manager does not work, you can try to compile the library from source.
 
-Additionally, the CI uses the `ubuntu:24.04` runner image which ships with [CMake 3.31.6](https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2404-Readme.md#tools): this generates some error with version `7.9.1` (see issue [#851](https://github.com/jtv/libpqxx/issues/851)). Therefore we bumped all the way to `7.10.1` (the most recent at the time of writing).
+Additionally, the CI uses the `ubuntu:24.04` runner image which ships with [CMake 3.31.6](https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2404-Readme.md#tools): this generates some error with version `7.9.1` (see issue [#851](https://github.com/jtv/libpqxx/issues/851)). Therefore we bumped all the way to `8.0.1` (the most recent at the time of writing).
 
 The first step is to install `libpq`: it's automatically installed as part of `libpqxx` but not if you compile the library from source. You can run:
 
@@ -141,7 +141,7 @@ Loosely based on what is described in the [README](https://github.com/jtv/libpqx
 cd /tmp
 git clone https://github.com/jtv/libpqxx.git
 cd libpqxx
-git checkout 7.10.1
+git checkout 8.0.1
 cmake \
   -DCMAKE_CXX_STANDARD=20 \
   -DCMAKE_BUILD_TYPE=Release \
@@ -151,7 +151,7 @@ cmake --build . -j 8
 sudo cmake --install .
 ```
 
-This should have installed the version `7.10.1` of `libpqxx` under `/user/local/include/pqxx`.
+This should have installed the version `8.0.1` of `libpqxx` under `/user/local/include/pqxx`.
 
 **Note:** it might be needed to run the following command:
 ```bash
@@ -162,7 +162,7 @@ This solved problems where executing the tests or the binaries would lead to the
 
 ```bash
 cd sandbox && ./run.sh bsgalone_server 2323
-./bin/bsgalone_server: error while loading shared libraries: libpqxx-7.10.so: cannot open shared object file: No such file or directory
+./bin/bsgalone_server: error while loading shared libraries: libpqxx-8.0.so: cannot open shared object file: No such file or directory
 ```
 
 ## asio
