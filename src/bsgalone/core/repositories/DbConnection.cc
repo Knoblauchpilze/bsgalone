@@ -74,12 +74,18 @@ auto DbConnection::executeQuery(const SqlQuery &query) -> pqxx::result
   }
   catch (const pqxx::sql_error &e)
   {
-    warn("Failed to execute sql query",
-         "Query: " + e.query() + ", code: " + e.sqlstate() + ", what: " + e.what()
-           + ", location[column: " + std::to_string(e.location.column()) + ", file_name:"
-           + e.location.file_name() + ", function_name: " + e.location.function_name()
-           + ", line: " + std::to_string(e.location.line()));
-    error("Failed to execute sql query", e.sqlstate());
+    auto cause = std::format(
+      "Query: {}, code: {}, what: {}, location[column: {}, file: {}, function: {}, line: {}]",
+      e.query(),
+      e.sqlstate(),
+      e.what(),
+      e.location().column(),
+      e.location().file_name(),
+      e.location().function_name(),
+      e.location().line());
+    warn("Failed to execute sql query", cause);
+
+    error("Failed to execute sql query", std::string(e.sqlstate()));
   }
   catch (const std::exception &e)
   {
@@ -103,9 +109,10 @@ auto DbConnection::executeQueryReturningSingleRow(const SqlQueryReturningSingleR
   }
   catch (const pqxx::sql_error &e)
   {
-    warn("Failed to execute sql query returning single row",
-         "Query: " + e.query() + ", code: " + e.sqlstate());
-    error("Failed to execute sql query returning single row", e.sqlstate());
+    auto cause = std::format("Query: {}, code: {},", e.query(), e.sqlstate());
+    warn("Failed to execute sql query returning single row", cause);
+
+    error("Failed to execute sql query returning single row", std::string(e.sqlstate()));
   }
   catch (const std::exception &e)
   {
@@ -131,7 +138,8 @@ auto DbConnection::tryExecuteTransaction(const SqlTransaction &query) -> SqlResu
   }
   catch (const pqxx::sql_error &e)
   {
-    warn("Failed to execute transaction", "Query: " + e.query() + ", code: " + e.sqlstate());
+    auto cause = std::format("Query: {}, code: {},", e.query(), e.sqlstate());
+    warn("Failed to execute transaction", cause);
     out.error = e.sqlstate();
   }
   catch (const std::exception &e)
