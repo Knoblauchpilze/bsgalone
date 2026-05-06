@@ -20,7 +20,7 @@ on:
       libpqxx_version:
         description: "Version of libpqxx to use"
         required: false
-        default: "7.10.1"
+        default: "8.0.1"
       ccache_version:
         description: "Version of ccache to use"
         required: false
@@ -33,7 +33,7 @@ concurrency:
 env:
   # Keep in sync with the CI workflow, the Dockerfile describing the CI build image and the local Makefile
   CPP_VERSION: 20
-  LIBPQXX_VERSION: 7.10.1
+  LIBPQXX_VERSION: 8.0.1
   CCACHE_VERSION: 4.12.2
 
 jobs:

@@ -35,7 +35,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 13 --slave /usr/bin/g++ g++ /usr/bin/g++-13
 
 ARG CPP_VERSION="20"
-ARG LIBPQXX_VERSION="7.10.1"
+ARG LIBPQXX_VERSION="8.0.1"
 ARG CCACHE_VERSION="4.12.2"
 ENV CPP_VERSION=$CPP_VERSION
 ENV LIBPQXX_VERSION=$LIBPQXX_VERSION

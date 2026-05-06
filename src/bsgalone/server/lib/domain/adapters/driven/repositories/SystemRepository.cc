@@ -132,7 +132,7 @@ auto SystemRepository::findAll() const -> std::vector<System>
   std::vector<System> out;
   for (const auto record : rows)
   {
-    out.emplace_back(fromDbRow(record));
+    out.emplace_back(fromDbRow(pqxx::row(record)));
   }
 
   return out;

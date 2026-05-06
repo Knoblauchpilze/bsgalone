@@ -38,7 +38,7 @@ void AsteroidRepository::initialize()
 }
 
 namespace {
-auto fromDbRow(const pqxx::row &record) -> Asteroid
+auto fromDbRow(const pqxx::row_ref &record) -> Asteroid
 {
   const auto x = record[5].as<float>();
   const auto y = record[6].as<float>();
