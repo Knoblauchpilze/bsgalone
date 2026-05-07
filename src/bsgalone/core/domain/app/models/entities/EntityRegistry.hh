@@ -37,6 +37,17 @@ class EntityRegistry
   template<typename... Components, typename Func>
   void apply(Func &&modifier);
 
+  /// @brief - Applied the function to all the entities having all required components set.
+  /// The identifier of the entity owning the components is provided to the modifier function.
+  /// @tparam ...Components - the required components for an entity to qualify for the
+  /// application of the function
+  /// @tparam Func - the signature of the function: this parameter should be inferred from
+  /// the signature of of the lambda provided and does not need to be provided explicitly
+  /// in general.
+  /// @param modifier - a function to update components. Can be provided as a lambda
+  template<typename... Components, typename Func>
+  void applyWithId(Func &&modifier);
+
   private:
   /// @brief - The registry used by entt to store entities.
   entt::registry m_registry{};
@@ -44,7 +55,8 @@ class EntityRegistry
   /// @brief - A table of association between the identifier of the entities as defined
   /// by `entt` to agnostic identifier that can be communicated to the rest of the app
   /// without leaking the library details.
-  std::unordered_map<Uuid, entt::entity> m_entities{};
+  std::unordered_map<Uuid, entt::entity> m_entityToId{};
+  std::unordered_map<entt::entity, Uuid> m_idToEntity{};
 };
 
 using EntityRegistryShPtr = std::shared_ptr<EntityRegistry>;

@@ -8,7 +8,8 @@ auto EntityRegistry::createEntity() -> Uuid
   const auto entity = m_registry.create();
   const Uuid uuid;
 
-  m_entities.emplace(uuid, entity);
+  m_entityToId.emplace(uuid, entity);
+  m_idToEntity.emplace(entity, uuid);
 
   return uuid;
 }
