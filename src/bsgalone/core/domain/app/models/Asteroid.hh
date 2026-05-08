@@ -19,7 +19,7 @@ struct Asteroid
 
   std::optional<Loot> loot{};
 
-  bool operator==(const Asteroid &rhs) const;
+  bool operator==(const Asteroid &rhs) const = default;
 };
 
 } // namespace bsgalone::core
