@@ -6,7 +6,7 @@
 
 namespace test {
 
-class MockAsteroidRepository : public bsgalone::core::ForManagingAsteroid
+class MockAsteroidRepository : public bsgalone::server::ForManagingAsteroid
 {
   public:
   MockAsteroidRepository()           = default;

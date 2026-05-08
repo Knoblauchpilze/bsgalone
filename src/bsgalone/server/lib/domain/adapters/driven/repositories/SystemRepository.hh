@@ -9,10 +9,10 @@
 
 namespace bsgalone::server {
 
-class SystemRepository : public ForManagingSystem, public core::AbstractRepository
+class SystemRepository : public ForManagingSystem, public AbstractRepository
 {
   public:
-  SystemRepository(core::DbConnectionShPtr connection);
+  SystemRepository(DbConnectionShPtr connection);
   ~SystemRepository() override = default;
 
   void initialize() override;

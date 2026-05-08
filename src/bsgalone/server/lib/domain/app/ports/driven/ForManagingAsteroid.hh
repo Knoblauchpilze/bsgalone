@@ -5,7 +5,7 @@
 #include <memory>
 #include <vector>
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 
 class ForManagingAsteroid
 {
@@ -13,9 +13,10 @@ class ForManagingAsteroid
   ForManagingAsteroid()          = default;
   virtual ~ForManagingAsteroid() = default;
 
-  virtual auto findAllBySystem(const Uuid systemDbId) const -> std::vector<Asteroid> = 0;
+  virtual auto findAllBySystem(const core::Uuid systemDbId) const -> std::vector<core::Asteroid>
+    = 0;
 };
 
 using ForManagingAsteroidShPtr = std::shared_ptr<ForManagingAsteroid>;
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server

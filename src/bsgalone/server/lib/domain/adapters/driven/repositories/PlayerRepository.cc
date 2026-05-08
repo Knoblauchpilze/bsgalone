@@ -3,8 +3,8 @@
 
 namespace bsgalone::server {
 
-PlayerRepository::PlayerRepository(core::DbConnectionShPtr connection)
-  : core::AbstractRepository("player", std::move(connection))
+PlayerRepository::PlayerRepository(DbConnectionShPtr connection)
+  : AbstractRepository("player", std::move(connection))
 {}
 
 namespace {

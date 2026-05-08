@@ -14,7 +14,7 @@ using Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_PlayerRepo
   = DbConnectionFixture;
 
 namespace {
-void insertTestPlayerRole(core::DbConnection &dbConnection, Player &player)
+void insertTestPlayerRole(DbConnection &dbConnection, Player &player)
 {
   constexpr auto QUERY = R"(
       INSERT INTO player_role ("player", "role")
@@ -29,9 +29,8 @@ void insertTestPlayerRole(core::DbConnection &dbConnection, Player &player)
   player.role = core::GameRole::PILOT;
 }
 
-auto insertTestPlayer(core::DbConnection &dbConnection,
-                      const core::Uuid accountDbId,
-                      const bool withRole) -> Player
+auto insertTestPlayer(DbConnection &dbConnection, const core::Uuid accountDbId, const bool withRole)
+  -> Player
 {
   const core::Uuid uuid;
   const auto name = std::format("random-player-{:%F%T}", ::core::now());

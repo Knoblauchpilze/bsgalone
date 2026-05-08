@@ -19,6 +19,10 @@ add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/network
 	)
 
+add_subdirectory(
+	${CMAKE_CURRENT_SOURCE_DIR}/repositories
+	)
+
 target_sources(bsgalone_server_lib PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/Configurator.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/Server.cc
@@ -26,6 +30,8 @@ target_sources(bsgalone_server_lib PRIVATE
 
 target_link_libraries(bsgalone_server_lib PUBLIC
 	bsgalone-interface-library
+	pq
+	pqxx
 	core_lib
 	net_lib
 	bsgalone_core_lib

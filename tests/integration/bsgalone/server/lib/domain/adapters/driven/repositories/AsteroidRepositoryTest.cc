@@ -8,12 +8,12 @@
 using namespace test;
 using namespace ::testing;
 
-namespace bsgalone::core {
-using Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_AsteroidRepository
+namespace bsgalone::server {
+using Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_AsteroidRepository
   = DbConnectionFixture;
 
 namespace {
-auto insertTestAsteroid(core::DbConnection &dbConnection, const core::Uuid systemDbId) -> Asteroid
+auto insertTestAsteroid(DbConnection &dbConnection, const core::Uuid systemDbId) -> core::Asteroid
 {
   const bsgalone::core::Uuid uuid;
 
@@ -27,7 +27,7 @@ auto insertTestAsteroid(core::DbConnection &dbConnection, const core::Uuid syste
   };
   dbConnection.executeQuery(query);
 
-  return Asteroid{
+  return core::Asteroid{
     .dbId       = uuid,
     .systemDbId = systemDbId,
     .position   = Eigen::Vector3f(1.0f, 2.87f, -32.14f),
@@ -37,7 +37,7 @@ auto insertTestAsteroid(core::DbConnection &dbConnection, const core::Uuid syste
   };
 }
 
-auto insertTestLoot(core::DbConnection &dbConnection, const core::Uuid asteroidDbId) -> Loot
+auto insertTestLoot(DbConnection &dbConnection, const core::Uuid asteroidDbId) -> core::Loot
 {
   const bsgalone::core::Uuid uuid;
 
@@ -52,14 +52,14 @@ auto insertTestLoot(core::DbConnection &dbConnection, const core::Uuid asteroidD
   };
   dbConnection.executeQuery(query);
 
-  return Loot{
-    .resource = Uuid::fromDbId("f9f7636d-5a23-453e-b934-840b8b3ce74b"),
+  return core::Loot{
+    .resource = core::Uuid::fromDbId("f9f7636d-5a23-453e-b934-840b8b3ce74b"),
     .amount   = 1569,
   };
 }
 } // namespace
 
-TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_AsteroidRepository,
+TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_AsteroidRepository,
        InitializeDoesNotThrow)
 {
   AsteroidRepository repo(this->dbConnection());
@@ -67,16 +67,16 @@ TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_AsteroidRep
   EXPECT_NO_THROW([&repo]() { repo.initialize(); }());
 }
 
-TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_AsteroidRepository,
+TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_AsteroidRepository,
        FailsWhenInitializeIsNotCalled)
 {
   AsteroidRepository repo(this->dbConnection());
 
-  EXPECT_THAT([&repo]() { repo.findAllBySystem(Uuid{}); },
+  EXPECT_THAT([&repo]() { repo.findAllBySystem(core::Uuid{}); },
               ThrowsMessage<::core::CoreException>("Failed to execute sql query"));
 }
 
-TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_AsteroidRepository,
+TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_AsteroidRepository,
        FindAllBySystem_ReturnsEmptyListWhenNoAsteroidAreRegistered)
 {
   AsteroidRepository repo(this->dbConnection());
@@ -87,7 +87,7 @@ TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_AsteroidRep
   EXPECT_TRUE(actual.empty());
 }
 
-TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_AsteroidRepository,
+TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_AsteroidRepository,
        FindAllBySystem_ReturnsAsteroidWhenSomeAreAvailable)
 {
   auto system   = insertTestSystem(*this->dbConnection());
@@ -109,7 +109,7 @@ TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_AsteroidRep
   EXPECT_EQ(asteroid.loot, actual[0].loot);
 }
 
-TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_AsteroidRepository,
+TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_AsteroidRepository,
        FindAllBySystem_ReturnsOnlyAsteroidFromRequestedSystem)
 {
   auto system1   = insertTestSystem(*this->dbConnection());
@@ -127,7 +127,7 @@ TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_AsteroidRep
   EXPECT_EQ(asteroid1.dbId, actual[0].dbId);
 }
 
-TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_AsteroidRepository,
+TEST_F(Integration_Bsgalone_Server_Domain_Adapters_Driven_Repositories_AsteroidRepository,
        FindAllBySystem_ReturnsLootWhenAsteroidHasOne)
 {
   auto system   = insertTestSystem(*this->dbConnection());
@@ -144,4 +144,4 @@ TEST_F(Integration_Bsgalone_Core_Domain_Adapters_Driven_Repositories_AsteroidRep
   EXPECT_EQ(loot.amount, actual[0].loot->amount);
 }
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server

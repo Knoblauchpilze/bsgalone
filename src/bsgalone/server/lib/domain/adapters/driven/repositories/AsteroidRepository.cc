@@ -1,7 +1,7 @@
 
 #include "AsteroidRepository.hh"
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 
 AsteroidRepository::AsteroidRepository(DbConnectionShPtr connection)
   : AbstractRepository("account", std::move(connection))
@@ -38,13 +38,13 @@ void AsteroidRepository::initialize()
 }
 
 namespace {
-auto fromDbRow(const pqxx::row_ref &record) -> Asteroid
+auto fromDbRow(const pqxx::row_ref &record) -> core::Asteroid
 {
   const auto x = record[5].as<float>();
   const auto y = record[6].as<float>();
   const auto z = record[7].as<float>();
 
-  return Asteroid{
+  return core::Asteroid{
     .dbId       = core::Uuid::fromDbId(record[0].view()),
     .systemDbId = core::Uuid::fromDbId(record[1].view()),
     .position   = Eigen::Vector3f(x, y, z),
@@ -55,7 +55,8 @@ auto fromDbRow(const pqxx::row_ref &record) -> Asteroid
 }
 } // namespace
 
-auto AsteroidRepository::findAllBySystem(const Uuid systemDbId) const -> std::vector<Asteroid>
+auto AsteroidRepository::findAllBySystem(const core::Uuid systemDbId) const
+  -> std::vector<core::Asteroid>
 {
   const auto query = [systemDbId](pqxx::nontransaction &work) {
     return work.exec(pqxx::prepped{FIND_ALL_BY_SYSTEM_QUERY_NAME},
@@ -63,18 +64,18 @@ auto AsteroidRepository::findAllBySystem(const Uuid systemDbId) const -> std::ve
   };
   const auto rows = m_connection->executeQuery(query);
 
-  std::vector<Asteroid> out;
+  std::vector<core::Asteroid> out;
   for (const auto record : rows)
   {
-    Asteroid asteroid = fromDbRow(record);
-    asteroid.loot     = fetchLoot(asteroid.dbId);
+    core::Asteroid asteroid = fromDbRow(record);
+    asteroid.loot           = fetchLoot(asteroid.dbId);
     out.emplace_back(std::move(asteroid));
   }
 
   return out;
 }
 
-auto AsteroidRepository::fetchLoot(const Uuid asteroidDbId) const -> std::optional<Loot>
+auto AsteroidRepository::fetchLoot(const core::Uuid asteroidDbId) const -> std::optional<core::Loot>
 {
   const auto query = [asteroidDbId](pqxx::nontransaction &work) {
     return work.exec(pqxx::prepped{FIND_LOOT_QUERY_NAME}, pqxx::params{asteroidDbId.toDbId()});
@@ -92,10 +93,10 @@ auto AsteroidRepository::fetchLoot(const Uuid asteroidDbId) const -> std::option
   }
 
   const auto &record = rows[0];
-  return Loot{
+  return core::Loot{
     .resource = core::Uuid::fromDbId(record[0].view()),
     .amount   = record[1].as<int>(),
   };
 }
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server

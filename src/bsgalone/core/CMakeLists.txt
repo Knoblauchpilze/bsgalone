@@ -20,17 +20,11 @@ add_subdirectory(
 	)
 
 add_subdirectory(
-	${CMAKE_CURRENT_SOURCE_DIR}/repositories
-	)
-
-add_subdirectory(
 	${CMAKE_CURRENT_SOURCE_DIR}/runtime
 	)
 
 target_link_libraries(bsgalone_core_lib PUBLIC
 	bsgalone-interface-library
-	pq
-	pqxx
 	net_lib
 	time_lib
 	EnTT::EnTT

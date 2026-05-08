@@ -10,9 +10,9 @@ using namespace test;
 using namespace ::testing;
 
 namespace bsgalone::server {
-using Integration_Bsgalone_Core_Repositories_DbConnection = DbConnectionFixture;
+using Integration_Bsgalone_Server_Repositories_DbConnection = DbConnectionFixture;
 
-TEST_F(Integration_Bsgalone_Core_Repositories_DbConnection, ThrowsOnValidSqlWhenDisconnected)
+TEST_F(Integration_Bsgalone_Server_Repositories_DbConnection, ThrowsOnValidSqlWhenDisconnected)
 {
   auto code = [this]() {
     const auto query = [](pqxx::nontransaction &work) {
@@ -31,7 +31,7 @@ TEST_F(Integration_Bsgalone_Core_Repositories_DbConnection, ThrowsOnValidSqlWhen
                 "Not connected, please call connect before executing sql queries"));
 }
 
-TEST_F(Integration_Bsgalone_Core_Repositories_DbConnection, ExecuteQuery_ThrowsOnSqlError)
+TEST_F(Integration_Bsgalone_Server_Repositories_DbConnection, ExecuteQuery_ThrowsOnSqlError)
 {
   const auto query = [](pqxx::nontransaction &work) {
     return work.exec("SELECT id FROM table_that_does_not_exist");
@@ -41,7 +41,7 @@ TEST_F(Integration_Bsgalone_Core_Repositories_DbConnection, ExecuteQuery_ThrowsO
   EXPECT_THAT(code, ThrowsMessage<::core::CoreException>("Failed to execute sql query"));
 }
 
-TEST_F(Integration_Bsgalone_Core_Repositories_DbConnection,
+TEST_F(Integration_Bsgalone_Server_Repositories_DbConnection,
        ExecuteQueryReturningSingleRow_ThrowsWhenNoRowsAreReturned)
 {
   const auto query = [](pqxx::nontransaction &work) {
@@ -54,7 +54,7 @@ TEST_F(Integration_Bsgalone_Core_Repositories_DbConnection,
                 "Failed to execute sql query returning single row"));
 }
 
-TEST_F(Integration_Bsgalone_Core_Repositories_DbConnection,
+TEST_F(Integration_Bsgalone_Server_Repositories_DbConnection,
        TryExecuteTransaction_CommitsWhenSuccessful)
 {
   const core::Uuid uuid;
@@ -93,7 +93,7 @@ TEST_F(Integration_Bsgalone_Core_Repositories_DbConnection,
   EXPECT_EQ("password", accountRecord[1].as<std::string>());
 }
 
-TEST_F(Integration_Bsgalone_Core_Repositories_DbConnection,
+TEST_F(Integration_Bsgalone_Server_Repositories_DbConnection,
        TryExecuteTransaction_RollsBackWhenAStatementFails)
 {
   const core::Uuid uuid;

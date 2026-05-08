@@ -24,7 +24,7 @@ class SystemProcessor : public ::core::CoreObject
   void stop();
 
   private:
-  core::Uuid m_systemDbId{};
+  Uuid m_systemDbId{};
 
   std::mutex m_locker{};
   bool m_running{false};

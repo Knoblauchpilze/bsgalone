@@ -3,8 +3,8 @@
 
 namespace bsgalone::server {
 
-SystemRepository::SystemRepository(core::DbConnectionShPtr connection)
-  : core::AbstractRepository("system", connection)
+SystemRepository::SystemRepository(DbConnectionShPtr connection)
+  : AbstractRepository("system", connection)
 {}
 
 namespace {

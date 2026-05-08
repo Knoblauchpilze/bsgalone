@@ -11,10 +11,10 @@
 
 namespace bsgalone::server {
 
-class PlayerRepository : public ForManagingPlayer, public core::AbstractRepository
+class PlayerRepository : public ForManagingPlayer, public AbstractRepository
 {
   public:
-  PlayerRepository(core::DbConnectionShPtr connection);
+  PlayerRepository(DbConnectionShPtr connection);
   ~PlayerRepository() override = default;
 
   void initialize() override;

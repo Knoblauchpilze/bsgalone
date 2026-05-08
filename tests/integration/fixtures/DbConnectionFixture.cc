@@ -4,7 +4,7 @@
 namespace test {
 
 DbConnectionFixture::DbConnectionFixture()
-  : m_dbConn(std::make_shared<bsgalone::core::DbConnection>())
+  : m_dbConn(std::make_shared<bsgalone::server::DbConnection>())
 {}
 
 void DbConnectionFixture::SetUp()
@@ -18,7 +18,7 @@ void DbConnectionFixture::TearDown()
   m_dbConn->disconnect();
 }
 
-auto DbConnectionFixture::dbConnection() const -> bsgalone::core::DbConnectionShPtr
+auto DbConnectionFixture::dbConnection() const -> bsgalone::server::DbConnectionShPtr
 {
   return m_dbConn;
 }

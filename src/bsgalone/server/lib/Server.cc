@@ -51,7 +51,7 @@ void Server::initialize()
 
 void Server::initializeSystemProcessors()
 {
-  auto connection = std::make_shared<core::DbConnection>();
+  auto connection = std::make_shared<DbConnection>();
   connection->connect();
   SystemRepository repository(std::move(connection));
   repository.initialize();

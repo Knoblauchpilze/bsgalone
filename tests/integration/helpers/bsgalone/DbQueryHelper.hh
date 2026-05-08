@@ -7,7 +7,7 @@
 
 namespace test {
 
-auto insertTestAccount(bsgalone::core::DbConnection &dbConnection) -> bsgalone::server::Account;
-auto insertTestSystem(bsgalone::core::DbConnection &dbConnection) -> bsgalone::server::System;
+auto insertTestAccount(bsgalone::server::DbConnection &dbConnection) -> bsgalone::server::Account;
+auto insertTestSystem(bsgalone::server::DbConnection &dbConnection) -> bsgalone::server::System;
 
 } // namespace test

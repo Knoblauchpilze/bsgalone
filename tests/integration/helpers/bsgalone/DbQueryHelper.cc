@@ -4,7 +4,7 @@
 
 namespace test {
 
-auto insertTestAccount(bsgalone::core::DbConnection &dbConnection) -> bsgalone::server::Account
+auto insertTestAccount(bsgalone::server::DbConnection &dbConnection) -> bsgalone::server::Account
 {
   const bsgalone::core::Uuid uuid;
   const auto username = std::format("random-account-{:%F%T}", core::now());
@@ -26,7 +26,7 @@ auto insertTestAccount(bsgalone::core::DbConnection &dbConnection) -> bsgalone::
   };
 }
 
-auto insertTestSystem(bsgalone::core::DbConnection &dbConnection) -> bsgalone::server::System
+auto insertTestSystem(bsgalone::server::DbConnection &dbConnection) -> bsgalone::server::System
 {
   const bsgalone::core::Uuid uuid;
   // https://stackoverflow.com/questions/34857119/how-to-convert-stdchronotime-point-to-string

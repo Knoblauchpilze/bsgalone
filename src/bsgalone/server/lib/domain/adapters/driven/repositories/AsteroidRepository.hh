@@ -5,7 +5,7 @@
 #include "Asteroid.hh"
 #include "ForManagingAsteroid.hh"
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 
 class AsteroidRepository : public ForManagingAsteroid, public AbstractRepository
 {
@@ -15,12 +15,12 @@ class AsteroidRepository : public ForManagingAsteroid, public AbstractRepository
 
   void initialize() override;
 
-  auto findAllBySystem(const Uuid systemDbId) const -> std::vector<Asteroid> override;
+  auto findAllBySystem(const core::Uuid systemDbId) const -> std::vector<core::Asteroid> override;
 
   private:
-  auto fetchLoot(const Uuid asteroidDbId) const -> std::optional<Loot>;
+  auto fetchLoot(const core::Uuid asteroidDbId) const -> std::optional<core::Loot>;
 };
 
 using AsteroidRepositoryShPtr = std::shared_ptr<AsteroidRepository>;
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server
