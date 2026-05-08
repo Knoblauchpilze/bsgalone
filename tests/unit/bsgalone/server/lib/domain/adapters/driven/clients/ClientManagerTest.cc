@@ -4,7 +4,8 @@
 
 namespace bsgalone::server {
 
-TEST(Unit_Bsgalone_Server_Clients_ClientManager, RegisteredClientIsReturnedInListOfAllClients)
+TEST(Unit_Bsgalone_Server_Domain_Adapters_Driven_Clients_ClientManager,
+     RegisteredClientIsReturnedInListOfAllClients)
 {
   ClientManager manager;
 
@@ -14,7 +15,8 @@ TEST(Unit_Bsgalone_Server_Clients_ClientManager, RegisteredClientIsReturnedInLis
   EXPECT_EQ(std::vector<net::ClientId>{net::ClientId{12}}, allClients);
 }
 
-TEST(Unit_Bsgalone_Server_Clients_ClientManager, ThrowsWhenRegisteringPlayerForUnknownClient)
+TEST(Unit_Bsgalone_Server_Domain_Adapters_Driven_Clients_ClientManager,
+     ThrowsWhenRegisteringPlayerForUnknownClient)
 {
   ClientManager manager;
 
@@ -23,7 +25,7 @@ TEST(Unit_Bsgalone_Server_Clients_ClientManager, ThrowsWhenRegisteringPlayerForU
     ::core::CoreException);
 }
 
-TEST(Unit_Bsgalone_Server_Clients_ClientManager, RegisteredPlayerCanBeQueried)
+TEST(Unit_Bsgalone_Server_Domain_Adapters_Driven_Clients_ClientManager, RegisteredPlayerCanBeQueried)
 {
   const core::Uuid playerDbId;
 
@@ -35,7 +37,8 @@ TEST(Unit_Bsgalone_Server_Clients_ClientManager, RegisteredPlayerCanBeQueried)
   EXPECT_EQ(net::ClientId{12}, clientId);
 }
 
-TEST(Unit_Bsgalone_Server_Clients_ClientManager, ThrowsWhenFetchingClientForUnknownPlayer)
+TEST(Unit_Bsgalone_Server_Domain_Adapters_Driven_Clients_ClientManager,
+     ThrowsWhenFetchingClientForUnknownPlayer)
 {
   ClientManager manager;
 
@@ -43,7 +46,8 @@ TEST(Unit_Bsgalone_Server_Clients_ClientManager, ThrowsWhenFetchingClientForUnkn
                ::core::CoreException);
 }
 
-TEST(Unit_Bsgalone_Server_Clients_ClientManager, ReturnsClientForRegisteredPlayer)
+TEST(Unit_Bsgalone_Server_Domain_Adapters_Driven_Clients_ClientManager,
+     ReturnsClientForRegisteredPlayer)
 {
   const core::Uuid playerDbId;
 
@@ -55,7 +59,8 @@ TEST(Unit_Bsgalone_Server_Clients_ClientManager, ReturnsClientForRegisteredPlaye
   EXPECT_EQ(playerDbId, maybePlayer.value());
 }
 
-TEST(Unit_Bsgalone_Server_Clients_ClientManager, ReturnsSystemForRegisteredPlayer)
+TEST(Unit_Bsgalone_Server_Domain_Adapters_Driven_Clients_ClientManager,
+     ReturnsSystemForRegisteredPlayer)
 {
   const core::Uuid systemDbId;
 
@@ -67,7 +72,8 @@ TEST(Unit_Bsgalone_Server_Clients_ClientManager, ReturnsSystemForRegisteredPlaye
   EXPECT_EQ(systemDbId, maybeSystem.value());
 }
 
-TEST(Unit_Bsgalone_Server_Clients_ClientManager, DoesNotReturnPlayerWhenClientHasNoPlayer)
+TEST(Unit_Bsgalone_Server_Domain_Adapters_Driven_Clients_ClientManager,
+     DoesNotReturnPlayerWhenClientHasNoPlayer)
 {
   ClientManager manager;
   manager.registerClient(net::ClientId{12});
@@ -76,7 +82,8 @@ TEST(Unit_Bsgalone_Server_Clients_ClientManager, DoesNotReturnPlayerWhenClientHa
   EXPECT_EQ(std::vector<net::ClientId>{}, clients);
 }
 
-TEST(Unit_Bsgalone_Server_Clients_ClientManager, DoesNotReturnPlayerWhenNotRegisteredInSystem)
+TEST(Unit_Bsgalone_Server_Domain_Adapters_Driven_Clients_ClientManager,
+     DoesNotReturnPlayerWhenNotRegisteredInSystem)
 {
   const core::Uuid systemDbId1;
   const core::Uuid systemDbId2;
@@ -89,7 +96,8 @@ TEST(Unit_Bsgalone_Server_Clients_ClientManager, DoesNotReturnPlayerWhenNotRegis
   EXPECT_EQ(std::vector<net::ClientId>{}, clients);
 }
 
-TEST(Unit_Bsgalone_Server_Clients_ClientManager, ReturnsClientWhenRegisteredInSystem)
+TEST(Unit_Bsgalone_Server_Domain_Adapters_Driven_Clients_ClientManager,
+     ReturnsClientWhenRegisteredInSystem)
 {
   const core::Uuid systemDbId;
 
@@ -101,14 +109,16 @@ TEST(Unit_Bsgalone_Server_Clients_ClientManager, ReturnsClientWhenRegisteredInSy
   EXPECT_EQ(std::vector<net::ClientId>{net::ClientId{12}}, clients);
 }
 
-TEST(Unit_Bsgalone_Server_Clients_ClientManager, ThrowsWhenRemovingUnknownClient)
+TEST(Unit_Bsgalone_Server_Domain_Adapters_Driven_Clients_ClientManager,
+     ThrowsWhenRemovingUnknownClient)
 {
   ClientManager manager;
 
   EXPECT_THROW([&manager]() { manager.removeClient(net::ClientId{12}); }(), ::core::CoreException);
 }
 
-TEST(Unit_Bsgalone_Server_Clients_ClientManager, RemovedClientCannotBeQueriedAnymore)
+TEST(Unit_Bsgalone_Server_Domain_Adapters_Driven_Clients_ClientManager,
+     RemovedClientCannotBeQueriedAnymore)
 {
   ClientManager manager;
   manager.registerClient(net::ClientId{12});
@@ -123,7 +133,8 @@ TEST(Unit_Bsgalone_Server_Clients_ClientManager, RemovedClientCannotBeQueriedAny
   EXPECT_EQ(std::vector<net::ClientId>{}, allClients);
 }
 
-TEST(Unit_Bsgalone_Server_Clients_ClientManager, ThrowsWhenUpdatingSystemForUnknownPlayer)
+TEST(Unit_Bsgalone_Server_Domain_Adapters_Driven_Clients_ClientManager,
+     ThrowsWhenUpdatingSystemForUnknownPlayer)
 {
   ClientManager manager;
 
@@ -131,7 +142,8 @@ TEST(Unit_Bsgalone_Server_Clients_ClientManager, ThrowsWhenUpdatingSystemForUnkn
                ::core::CoreException);
 }
 
-TEST(Unit_Bsgalone_Server_Clients_ClientManager, SuccessfullyUpdatesPlayerSystem)
+TEST(Unit_Bsgalone_Server_Domain_Adapters_Driven_Clients_ClientManager,
+     SuccessfullyUpdatesPlayerSystem)
 {
   const core::Uuid playerDbId;
   const core::Uuid systemDbId1;
