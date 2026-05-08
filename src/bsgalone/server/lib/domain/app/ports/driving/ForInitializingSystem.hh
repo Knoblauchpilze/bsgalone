@@ -3,7 +3,7 @@
 
 #include "Uuid.hh"
 
-namespace bsgalone::core {
+namespace bsgalone::server {
 
 class ForInitializingSystem
 {
@@ -11,7 +11,7 @@ class ForInitializingSystem
   ForInitializingSystem()          = default;
   virtual ~ForInitializingSystem() = default;
 
-  virtual void initializeSystem(const Uuid systemDbId) = 0;
+  virtual void initializeSystem(const core::Uuid systemDbId) = 0;
 };
 
-} // namespace bsgalone::core
+} // namespace bsgalone::server
