@@ -12,7 +12,7 @@ class MockEntityManager : public bsgalone::server::ForManagingEntity
   MockEntityManager()           = default;
   ~MockEntityManager() override = default;
 
-  MOCK_METHOD(void, createAsteroid, (const bsgalone::core::Asteroid &), (override));
+  MOCK_METHOD(bsgalone::core::Uuid, createAsteroid, (const bsgalone::core::Asteroid &), (override));
 };
 
 } // namespace test

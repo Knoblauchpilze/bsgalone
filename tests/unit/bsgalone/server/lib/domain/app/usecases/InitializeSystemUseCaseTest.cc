@@ -85,8 +85,14 @@ TEST_F(Unit_Bsgalone_Server_Domain_App_Usecases_InitializeSystemUseCase,
   core::Asteroid captured2{};
   EXPECT_CALL(*mockEntityManager, createAsteroid(_))
     .Times(2)
-    .WillOnce(Invoke([&captured1](const core::Asteroid &asteroid) { captured1 = asteroid; }))
-    .WillOnce(Invoke([&captured2](const core::Asteroid &asteroid) { captured2 = asteroid; }));
+    .WillOnce(Invoke([&captured1](const core::Asteroid &asteroid) {
+      captured1 = asteroid;
+      return core::Uuid{};
+    }))
+    .WillOnce(Invoke([&captured2](const core::Asteroid &asteroid) {
+      captured2 = asteroid;
+      return core::Uuid{};
+    }));
 
   usecase->initializeSystem(systemDbId);
 

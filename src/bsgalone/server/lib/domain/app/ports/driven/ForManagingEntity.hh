@@ -13,7 +13,7 @@ class ForManagingEntity
   ForManagingEntity()          = default;
   virtual ~ForManagingEntity() = default;
 
-  virtual void createAsteroid(const core::Asteroid &asteroid) = 0;
+  virtual auto createAsteroid(const core::Asteroid &asteroid) -> core::Uuid = 0;
 };
 
 using ForManagingEntityShPtr = std::shared_ptr<ForManagingEntity>;

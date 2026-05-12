@@ -8,5 +8,6 @@ add_subdirectory(
 	)
 
 target_sources(unitTests PRIVATE
+	${CMAKE_CURRENT_SOURCE_DIR}/EntityManagerTest.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/GameEventPublisherTest.cc
 	)

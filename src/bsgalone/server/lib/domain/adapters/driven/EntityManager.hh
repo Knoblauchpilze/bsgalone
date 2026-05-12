@@ -13,7 +13,7 @@ class EntityManager : public ForManagingEntity
   EntityManager(core::EntityRegistryShPtr registry);
   ~EntityManager() override = default;
 
-  void createAsteroid(const core::Asteroid &asteroid) override;
+  auto createAsteroid(const core::Asteroid &asteroid) -> core::Uuid override;
 
   private:
   core::ForCreatingAsteroidPtr m_asteroidCreator{};

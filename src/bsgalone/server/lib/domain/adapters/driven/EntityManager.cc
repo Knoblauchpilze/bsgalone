@@ -14,9 +14,9 @@ EntityManager::EntityManager(core::EntityRegistryShPtr registry)
   initialize(std::move(registry));
 }
 
-void EntityManager::createAsteroid(const core::Asteroid &asteroid)
+auto EntityManager::createAsteroid(const core::Asteroid &asteroid) -> core::Uuid
 {
-  m_asteroidCreator->create(asteroid);
+  return m_asteroidCreator->create(asteroid);
 }
 
 void EntityManager::initialize(core::EntityRegistryShPtr registry)
