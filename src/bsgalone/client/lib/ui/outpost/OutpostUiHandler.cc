@@ -184,7 +184,6 @@ void OutpostUiHandler::setActiveScreen(const ActiveScreen screen)
 
 void OutpostUiHandler::onUndockRequested()
 {
-  // TODO: Add a couple of tests for this use case
   m_queue->pushEvent(std::make_unique<UndockCommand>());
 }
 

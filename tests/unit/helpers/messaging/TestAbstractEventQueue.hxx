@@ -4,6 +4,11 @@
 namespace test {
 
 template<messaging::EventTypeLike EventType, messaging::EventLike<EventType> Event>
+TestAbstractEventQueue<EventType, Event>::TestAbstractEventQueue(const bool throwOnAddListener)
+  : m_throwOnAddListener(throwOnAddListener)
+{}
+
+template<messaging::EventTypeLike EventType, messaging::EventLike<EventType> Event>
 void TestAbstractEventQueue<EventType, Event>::pushEvent(Base::EventPtr message)
 {
   const std::lock_guard guard(m_locker);
@@ -13,7 +18,10 @@ void TestAbstractEventQueue<EventType, Event>::pushEvent(Base::EventPtr message)
 template<messaging::EventTypeLike EventType, messaging::EventLike<EventType> Event>
 void TestAbstractEventQueue<EventType, Event>::addListener(Base::EventListenerPtr /*listener*/)
 {
-  throw std::runtime_error("Unsupported operation addListener in TestMessageQueue");
+  if (m_throwOnAddListener)
+  {
+    throw std::runtime_error("Unsupported operation addListener in TestMessageQueue");
+  }
 }
 
 template<messaging::EventTypeLike EventType, messaging::EventLike<EventType> Event>

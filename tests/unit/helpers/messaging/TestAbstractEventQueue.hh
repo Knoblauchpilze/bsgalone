@@ -11,7 +11,7 @@ template<messaging::EventTypeLike EventType, messaging::EventLike<EventType> Eve
 class TestAbstractEventQueue : public messaging::IEventQueue<EventType, Event>
 {
   public:
-  TestAbstractEventQueue()           = default;
+  TestAbstractEventQueue(const bool throwOnAddListener = true);
   ~TestAbstractEventQueue() override = default;
 
   using Base = messaging::IEventQueue<EventType, Event>;
@@ -31,6 +31,7 @@ class TestAbstractEventQueue : public messaging::IEventQueue<EventType, Event>
   void clearMessages();
 
   private:
+  bool m_throwOnAddListener{true};
   std::mutex m_locker{};
   std::vector<typename Base::EventPtr> m_messages{};
 };
