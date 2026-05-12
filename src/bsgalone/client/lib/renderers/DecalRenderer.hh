@@ -13,7 +13,7 @@ class DecalRenderer : public IRenderer
   ~DecalRenderer() override = default;
 
   void loadResources(const pge::Vec2i &dimensions,
-                     pge::sprites::TexturePack &texturesLoader) override;
+                     pge::sprites::ITexturePack &texturesLoader) override;
   void render(pge::Renderer &engine,
               const pge::RenderState &state,
               const pge::RenderingPass pass) const override;

@@ -87,8 +87,8 @@ class App : public pge::PGEApp
   void initializeOutgoingMessageSystem();
   void initializeInternalMessageSystem();
 
-  void generateUiHandlers(const pge::Vec2i &screenDims, pge::sprites::TexturePack &texturesLoader);
-  void generateRenderers(const pge::Vec2i &dimensions, pge::sprites::TexturePack &texturesLoader);
+  void generateUiHandlers(const pge::Vec2i &screenDims, pge::sprites::ITexturePack &texturesLoader);
+  void generateRenderers(const pge::Vec2i &dimensions, pge::sprites::ITexturePack &texturesLoader);
 };
 
 } // namespace bsgalone::client

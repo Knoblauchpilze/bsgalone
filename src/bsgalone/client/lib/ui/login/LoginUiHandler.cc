@@ -72,7 +72,7 @@ LoginUiHandler::LoginUiHandler(IUiEventQueueShPtr inputQueue, IUiCommandQueueShP
 }
 
 void LoginUiHandler::initializeMenus(const pge::Vec2i &dimensions,
-                                     pge::sprites::TexturePack &texturesLoader)
+                                     pge::sprites::ITexturePack &texturesLoader)
 {
   generateLoginModePanel(dimensions);
   generateFactionPanel(dimensions);

@@ -74,7 +74,7 @@ void UiPictureMenu::renderDecal(pge::Renderer &renderer, const pge::Vec2f &pos) 
   renderer.drawDecal(pos, *m_picture, scale, m_tint);
 }
 
-void UiPictureMenu::renderSprite(pge::sprites::TexturePack &renderer, const pge::Vec2f &pos) const
+void UiPictureMenu::renderSprite(pge::sprites::ITexturePack &renderer, const pge::Vec2f &pos) const
 {
   const auto size = dims();
   const pge::Vec2f scale{1.0f * size.x, 1.0f * size.y};

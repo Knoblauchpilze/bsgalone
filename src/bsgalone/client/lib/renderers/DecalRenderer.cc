@@ -9,7 +9,7 @@ DecalRenderer::DecalRenderer(const std::string &decalFileName)
 {}
 
 void DecalRenderer::loadResources(const pge::Vec2i &dimensions,
-                                  pge::sprites::TexturePack &texturesLoader)
+                                  pge::sprites::ITexturePack &texturesLoader)
 {
   m_bgDecal = texturesLoader.loadDecal(m_decalFileName);
   m_scale.x = 1.0f * dimensions.x / m_bgDecal->w();

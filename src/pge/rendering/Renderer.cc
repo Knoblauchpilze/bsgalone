@@ -13,18 +13,18 @@ Renderer::Renderer(olc::PixelGameEngine *const renderer)
     throw std::invalid_argument("Expected non null instance of PixelGameEngine");
   }
 
-  m_packs = std::make_unique<sprites::TexturePack>(m_renderer);
+  m_pack = std::make_unique<sprites::TexturePack>(m_renderer);
 }
 
-auto Renderer::getTextureHandler() noexcept -> sprites::TexturePack &
+auto Renderer::getTextureHandler() -> sprites::ITexturePack &
 {
-  return *m_packs;
+  return *m_pack;
 }
 
 void Renderer::drawSprite(const SpriteDesc &t, const CoordinateFrame &frame)
 {
   const auto p = frame.tilesToPixels(t.x, t.y);
-  m_packs->draw(t.sprite, p, t.radius * frame.tileSize());
+  m_pack->draw(t.sprite, p, t.radius * frame.tileSize());
 }
 
 void Renderer::drawWarpedSprite(const SpriteDesc &t, const CoordinateFrame &frame)
@@ -35,13 +35,13 @@ void Renderer::drawWarpedSprite(const SpriteDesc &t, const CoordinateFrame &fram
   const auto p3 = frame.tilesToPixels(t.x + t.radius, t.y + t.radius);
 
   const auto p = std::array<Vec2f, 4>{p0, p1, p2, p3};
-  m_packs->draw(t.sprite, p);
+  m_pack->draw(t.sprite, p);
 }
 
 void Renderer::drawRotatedSprite(const SpriteDesc &t, const CoordinateFrame &frame)
 {
   const auto p = frame.tilesToPixels(t.x, t.y);
-  m_packs->draw(t.sprite, p, t.radius * frame.tileSize(), t.rotation);
+  m_pack->draw(t.sprite, p, t.radius * frame.tileSize(), t.rotation);
 }
 
 void Renderer::drawRect(const SpriteDesc &t, const CoordinateFrame &frame)

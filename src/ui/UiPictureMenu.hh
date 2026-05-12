@@ -44,7 +44,7 @@ class UiPictureMenu : public UiMenu
   void initializeFromConfig(const PictureConfig &config);
 
   void renderDecal(pge::Renderer &renderer, const pge::Vec2f &pos) const;
-  void renderSprite(pge::sprites::TexturePack &renderer, const pge::Vec2f &pos) const;
+  void renderSprite(pge::sprites::ITexturePack &renderer, const pge::Vec2f &pos) const;
 };
 
 using UiPictureMenuPtr = std::unique_ptr<UiPictureMenu>;

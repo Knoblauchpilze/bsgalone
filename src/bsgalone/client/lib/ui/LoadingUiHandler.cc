@@ -6,7 +6,7 @@
 namespace bsgalone::client {
 
 void LoadingUiHandler::initializeMenus(const pge::Vec2i &dimensions,
-                                       pge::sprites::TexturePack & /*texturesLoader*/)
+                                       pge::sprites::ITexturePack & /*texturesLoader*/)
 {
   const pge::Vec2i loadingTextDimsPixels{100, 30};
   const pge::Vec2i loadingTextPos{(dimensions.x - loadingTextDimsPixels.x) / 2,

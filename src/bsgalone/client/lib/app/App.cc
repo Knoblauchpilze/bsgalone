@@ -244,7 +244,8 @@ void App::initializeInternalMessageSystem()
   m_uiEventQueue->addListener(std::make_unique<UiEventListenerProxy>(*this));
 }
 
-void App::generateUiHandlers(const pge::Vec2i &screenDims, pge::sprites::TexturePack &texturesLoader)
+void App::generateUiHandlers(const pge::Vec2i &screenDims,
+                             pge::sprites::ITexturePack &texturesLoader)
 {
   auto login = std::make_unique<LoginUiHandler>(m_uiEventQueue, m_uiCommandQueue);
   login->initializeMenus(screenDims, texturesLoader);
@@ -270,7 +271,7 @@ constexpr auto OUTPOST_TEXTURE_FILE_PATH = "assets/outpost_bg.png";
 constexpr auto GAME_TEXTURE_FILE_PATH    = "assets/game_bg.png";
 } // namespace
 
-void App::generateRenderers(const pge::Vec2i &dimensions, pge::sprites::TexturePack &texturesLoader)
+void App::generateRenderers(const pge::Vec2i &dimensions, pge::sprites::ITexturePack &texturesLoader)
 {
   auto login = std::make_unique<DecalRenderer>(LOGIN_TEXTURE_FILE_PATH);
   login->loadResources(dimensions, texturesLoader);

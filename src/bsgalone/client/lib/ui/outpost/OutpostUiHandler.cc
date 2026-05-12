@@ -61,7 +61,7 @@ OutpostUiHandler::OutpostUiHandler(IDataStoreShPtr dataStore,
 }
 
 void OutpostUiHandler::initializeMenus(const pge::Vec2i &dimensions,
-                                       pge::sprites::TexturePack & /*texturesLoader*/)
+                                       pge::sprites::ITexturePack & /*texturesLoader*/)
 {
   generateTabsMenu(dimensions);
 }

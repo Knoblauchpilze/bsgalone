@@ -28,7 +28,7 @@ class Renderer
   public:
   Renderer(olc::PixelGameEngine *const renderer);
 
-  auto getTextureHandler() noexcept -> sprites::TexturePack &;
+  auto getTextureHandler() -> sprites::ITexturePack &;
 
   /// @brief - Used to draw the tile referenced by the input struct to the screen
   /// using the corresponding visual representation.
@@ -117,7 +117,7 @@ class Renderer
 
   private:
   olc::PixelGameEngine *m_renderer{nullptr};
-  sprites::TexturePackPtr m_packs{};
+  sprites::ITexturePackPtr m_pack{};
 };
 
 using RendererPtr = std::unique_ptr<Renderer>;

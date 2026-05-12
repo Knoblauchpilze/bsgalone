@@ -21,7 +21,7 @@ constexpr auto STATUS_MENU_HEIGHT = 20;
 } // namespace
 
 void StatusUiHandler::initializeMenus(const pge::Vec2i &dimensions,
-                                      pge::sprites::TexturePack & /*texturesLoader*/)
+                                      pge::sprites::ITexturePack & /*texturesLoader*/)
 {
   const pge::Vec2i statusMenuDims{dimensions.x - 2 * STATUS_UI_PIXEL_POS.x, STATUS_MENU_HEIGHT};
 

@@ -19,7 +19,8 @@ class IRenderer
   /// @param dimensions - the dimensions in pixels given to the renderer to draw
   /// @param texturesLoader - a common object to load textures. Allows to mutualize the
   /// loading of textures across the application
-  virtual void loadResources(const pge::Vec2i &dimensions, pge::sprites::TexturePack &texturesLoader)
+  virtual void loadResources(const pge::Vec2i &dimensions,
+                             pge::sprites::ITexturePack &texturesLoader)
     = 0;
 
   /// @brief - Called each frame to give the renderer the opportunity to draw content

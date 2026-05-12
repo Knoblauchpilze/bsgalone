@@ -23,7 +23,7 @@ class OutpostUiHandler : public IUiHandler
   ~OutpostUiHandler() override = default;
 
   void initializeMenus(const pge::Vec2i &dimensions,
-                       pge::sprites::TexturePack &texturesLoader) override;
+                       pge::sprites::ITexturePack &texturesLoader) override;
   bool processUserInput(ui::UserInputData &inputData) override;
   void render(pge::Renderer &engine) const override;
   void updateUi() override;

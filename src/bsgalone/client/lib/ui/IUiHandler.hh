@@ -21,7 +21,7 @@ class IUiHandler
   /// @param dimensions - the dimensions of the viewport in pixels.
   /// @param texturesLoader - shared texture loader used to build UI assets.
   virtual void initializeMenus(const pge::Vec2i &dimensions,
-                               pge::sprites::TexturePack &texturesLoader)
+                               pge::sprites::ITexturePack &texturesLoader)
     = 0;
 
   /// @brief - Processes one frame of user input and records UI-triggered actions.

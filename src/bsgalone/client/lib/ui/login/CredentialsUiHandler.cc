@@ -40,7 +40,7 @@ void addTextFieldSectionToMenu(ui::UiMenu &mainPanel,
 } // namespace
 
 void CredentialsUiHandler::initializeMenus(const pge::Vec2i &dimensions,
-                                           pge::sprites::TexturePack & /*texturesLoader*/)
+                                           pge::sprites::ITexturePack & /*texturesLoader*/)
 {
   const pge::Vec2i loginDimsPixels{400, 200};
   constexpr auto LOGIN_PANEL_Y_PIXELS = 200;
